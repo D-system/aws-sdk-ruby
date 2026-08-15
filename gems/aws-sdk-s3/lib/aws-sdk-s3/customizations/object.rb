@@ -54,6 +54,27 @@ module Aws
       #   and any checksums will not change. This is especially useful if the
       #   source object has parts with varied sizes.
       #
+      # @option options [String] :tags_directive Only used when
+      #   `:multipart_copy` is `true`. When set to `'COPY'`, source object
+      #   tags are fetched and applied to the destination via PutObjectTagging.
+      #   When set to `'REPLACE'`, the provided `:tagging` value is parsed and
+      #   applied via PutObjectTagging. When not set, `:tagging` (if provided)
+      #   is passed to CreateMultipartUpload directly. Works with or without
+      #   `:content_length` — tags are fetched from source regardless of
+      #   whether HeadObject is skipped.
+      #
+      # @option options [String] :annotations_directive Only used when
+      #   `:multipart_copy` is `true`. When set to `'COPY'`, source object
+      #   annotations are fetched and applied to the destination after the
+      #   multipart upload completes. Works with or without `:content_length`.
+      #
+      # @option options [String] :metadata_directive Only used when
+      #   `:multipart_copy` is `true`. When set to `'REPLACE'`, source metadata
+      #   from HeadObject is not merged into CreateMultipartUpload — only
+      #   caller-supplied values (e.g. `:metadata`, `:content_type`) are used.
+      #   Has no effect when `:content_length` is provided since HeadObject
+      #   is already skipped.
+      #
       # @example Basic object copy
       #
       #   bucket = Aws::S3::Bucket.new('target-bucket')
@@ -358,8 +379,8 @@ module Aws
       #   {Client#complete_multipart_upload},
       #   and {Client#upload_part} can be provided.
       #
-      # @option options [Integer] :thread_count (10) The number of parallel
-      #   multipart uploads
+      # @option options [Integer] :thread_count (10) The number of parallel multipart uploads.
+      #   An additional thread is used internally for task coordination.
       #
       # @option options [Boolean] :tempfile (false) Normally read data is stored
       #   in memory when building the parts in order to complete the underlying
@@ -383,29 +404,28 @@ module Aws
       # @see Client#complete_multipart_upload
       # @see Client#upload_part
       def upload_stream(options = {}, &block)
-        uploading_options = options.dup
+        upload_opts = options.merge(bucket: bucket_name, key: key)
+        executor = DefaultExecutor.new(max_threads: upload_opts.delete(:thread_count))
         uploader = MultipartStreamUploader.new(
           client: client,
-          thread_count: uploading_options.delete(:thread_count),
-          tempfile: uploading_options.delete(:tempfile),
-          part_size: uploading_options.delete(:part_size)
+          executor: executor,
+          tempfile: upload_opts.delete(:tempfile),
+          part_size: upload_opts.delete(:part_size)
         )
         Aws::Plugins::UserAgent.metric('RESOURCE_MODEL') do
-          uploader.upload(
-            uploading_options.merge(bucket: bucket_name, key: key),
-            &block
-          )
+          uploader.upload(upload_opts, &block)
         end
+        executor.shutdown
         true
       end
+      deprecated(:upload_stream, use: 'Aws::S3::TransferManager#upload_stream', version: 'next major version')
 
       # Uploads a file from disk to the current object in S3.
       #
       #     # small files are uploaded in a single API call
       #     obj.upload_file('/path/to/file')
       #
-      # Files larger than or equal to `:multipart_threshold` are uploaded
-      # using the Amazon S3 multipart upload APIs.
+      # Files larger than or equal to `:multipart_threshold` are uploaded using the Amazon S3 multipart upload APIs.
       #
       #     # large files are automatically split into parts
       #     # and the parts are uploaded in parallel
@@ -421,74 +441,65 @@ module Aws
       # You can provide a callback to monitor progress of the upload:
       #
       #     # bytes and totals are each an array with 1 entry per part
-      #     progress = Proc.new do |bytes, totals|
-      #       puts bytes.map.with_index { |b, i| "Part #{i+1}: #{b} / #{totals[i]}"}.join(' ') + "Total: #{100.0 * bytes.sum / totals.sum }%" }
+      #     progress = proc do |bytes, totals|
+      #       puts bytes.map.with_index { |b, i| "Part #{i+1}: #{b} / #{totals[i]}"}.join(' ') + "Total: #{100.0 * bytes.sum / totals.sum }%"
       #     end
       #     obj.upload_file('/path/to/file', progress_callback: progress)
       #
-      # @param [String, Pathname, File, Tempfile] source A file on the local
-      #   file system that will be uploaded as this object. This can either be
-      #   a String or Pathname to the file, an open File object, or an open
-      #   Tempfile object. If you pass an open File or Tempfile object, then
-      #   you are responsible for closing it after the upload completes. When
-      #   using an open Tempfile, rewind it before uploading or else the object
+      # @param [String, Pathname, File, Tempfile] source A file on the local file system that will be uploaded as
+      #   this object. This can either be a String or Pathname to the file, an open File object, or an open
+      #   Tempfile object. If you pass an open File or Tempfile object, then you are responsible for closing it
+      #   after the upload completes. When using an open Tempfile, rewind it before uploading or else the object
       #   will be empty.
       #
       # @param [Hash] options
-      #   Additional options for {Client#put_object}
-      #   when file sizes below the multipart threshold. For files larger than
-      #   the multipart threshold, options for {Client#create_multipart_upload},
-      #   {Client#complete_multipart_upload},
-      #   and {Client#upload_part} can be provided.
+      #   Additional options for {Client#put_object} when file sizes below the multipart threshold.
+      #   For files larger than the multipart threshold, options for {Client#create_multipart_upload},
+      #   {Client#complete_multipart_upload}, and {Client#upload_part} can be provided.
       #
-      # @option options [Integer] :multipart_threshold (104857600) Files larger
-      #   than or equal to `:multipart_threshold` are uploaded using the S3
-      #   multipart APIs.
-      #   Default threshold is 100MB.
+      # @option options [Integer] :multipart_threshold (104857600) Files larger han or equal to
+      #  `:multipart_threshold` are uploaded using the S3 multipart APIs. Default threshold is 100MB.
       #
-      # @option options [Integer] :thread_count (10) The number of parallel
-      #   multipart uploads. This option is not used if the file is smaller than
-      #   `:multipart_threshold`.
+      # @option options [Integer] :thread_count (10) The number of parallel multipart uploads.
+      #    This option is not used if the file is smaller than `:multipart_threshold`.
       #
       # @option options [Proc] :progress_callback
       #   A Proc that will be called when each chunk of the upload is sent.
       #   It will be invoked with [bytes_read], [total_sizes]
       #
-      # @raise [MultipartUploadError] If an object is being uploaded in
-      #   parts, and the upload can not be completed, then the upload is
-      #   aborted and this error is raised.  The raised error has a `#errors`
-      #   method that returns the failures that caused the upload to be
-      #   aborted.
+      # @raise [MultipartUploadError] If an object is being uploaded in parts, and the upload can not be completed,
+      #   then the upload is aborted and this error is raised.  The raised error has a `#errors` method that
+      #   returns the failures that caused the upload to be aborted.
       #
-      # @return [Boolean] Returns `true` when the object is uploaded
-      #   without any errors.
+      # @return [Boolean] Returns `true` when the object is uploaded without any errors.
       #
       # @see Client#put_object
       # @see Client#create_multipart_upload
       # @see Client#complete_multipart_upload
       # @see Client#upload_part
       def upload_file(source, options = {})
-        uploading_options = options.dup
+        upload_opts = options.merge(bucket: bucket_name, key: key)
+        executor = DefaultExecutor.new(max_threads: upload_opts.delete(:thread_count))
         uploader = FileUploader.new(
-          multipart_threshold: uploading_options.delete(:multipart_threshold),
-          client: client
+          client: client,
+          executor: executor,
+          multipart_threshold: upload_opts.delete(:multipart_threshold)
         )
         response = Aws::Plugins::UserAgent.metric('RESOURCE_MODEL') do
-          uploader.upload(
-            source,
-            uploading_options.merge(bucket: bucket_name, key: key)
-          )
+          uploader.upload(source, upload_opts)
         end
         yield response if block_given?
+        executor.shutdown
         true
       end
+      deprecated(:upload_file, use: 'Aws::S3::TransferManager#upload_file', version: 'next major version')
 
       # Downloads a file in S3 to a path on disk.
       #
       #     # small files (< 5MB) are downloaded in a single API call
       #     obj.download_file('/path/to/file')
       #
-      # Files larger than 5MB are downloaded using multipart method
+      # Files larger than 5MB are downloaded using multipart method:
       #
       #     # large files are split into parts
       #     # and the parts are downloaded in parallel
@@ -498,67 +509,67 @@ module Aws
       #
       #     # bytes and part_sizes are each an array with 1 entry per part
       #     # part_sizes may not be known until the first bytes are retrieved
-      #     progress = Proc.new do |bytes, part_sizes, file_size|
-      #       puts bytes.map.with_index { |b, i| "Part #{i+1}: #{b} / #{part_sizes[i]}"}.join(' ') + "Total: #{100.0 * bytes.sum / file_size}%" }
+      #     progress = proc do |bytes, part_sizes, file_size|
+      #       puts bytes.map.with_index { |b, i| "Part #{i + 1}: #{b} / #{part_sizes[i]}" }.join(' ') + "Total: #{100.0 * bytes.sum / file_size}%"
       #     end
       #     obj.download_file('/path/to/file', progress_callback: progress)
       #
-      # @param [String] destination Where to download the file to.
+      # @param [String, Pathname, File, Tempfile] destination
+      #   Where to download the file to. This can either be a String or Pathname to the file, an open File object,
+      #   or an open Tempfile object. If you pass an open File or Tempfile object, then you are responsible for
+      #   closing it after the download completes. Download behavior varies by destination type:
+      #
+      #   * **String/Pathname paths**: Downloads to a temporary file first, then atomically moves to the final
+      #    destination. This prevents corruption of any existing file if the download fails.
+      #   * **File/Tempfile objects**: Downloads directly to the file object without using temporary files.
+      #    You are responsible for managing the file object's state and closing it after the download completes.
+      #    If the download fails, the file object may contain partial data.
       #
       # @param [Hash] options
-      #   Additional options for {Client#get_object} and #{Client#head_object}
-      #   may be provided.
+      #   Additional options for {Client#get_object} and #{Client#head_object} may be provided.
       #
-      # @option options [String] mode `auto`, `single_request`, `get_range`
-      #  `single_request` mode forces only 1 GET request is made in download,
-      #  `get_range` mode allows `chunk_size` parameter to configured in
-      #  customizing each range size in multipart_download,
-      #  By default, `auto` mode is enabled, which performs multipart_download
+      # @option options [String] :mode ("auto") `"auto"`, `"single_request"` or `"get_range"`
       #
-      # @option options [Integer] chunk_size required in get_range mode.
+      #  * `auto` mode is enabled by default,  which performs `multipart_download`
+      #  * `"single_request`" mode forces only 1 GET request is made in download
+      #  * `"get_range"` mode requires `:chunk_size` parameter to configured in customizing each range size
       #
-      # @option options [Integer] thread_count (10) Customize threads used in
-      #   the multipart download.
+      # @option options [Integer] :chunk_size required in `"get_range"` mode.
       #
-      # @option options [String] version_id The object version id used to
-      #   retrieve the object. For more about object versioning, see:
-      #   https://docs.aws.amazon.com/AmazonS3/latest/dev/ObjectVersioning.html
+      # @option options [Integer] :thread_count (10) Customize threads used in the multipart download.
       #
-      # @option options [String] checksum_mode (ENABLED) When `ENABLED` and
-      #   the object has a stored checksum, it will be used to validate the
-      #   download and will raise an `Aws::Errors::ChecksumError` if
-      #   checksum validation fails. You may provide a `on_checksum_validated`
-      #   callback if you need to verify that validation occurred and which
-      #   algorithm was used.  To disable checksum validation, set
-      #   `checksum_mode` to "DISABLED".
+      # @option options [String] :checksum_mode ("ENABLED")
+      #   This option is deprecated. Use `:response_checksum_validation` on your S3 client instead.
+      #   To disable checksum validation, set `response_checksum_validation: 'when_required'`
+      #   when creating your S3 client.
       #
-      # @option options [Callable] on_checksum_validated Called each time a
-      #   request's checksum is validated with the checksum algorithm and the
-      #   response.  For multipart downloads, this will be called for each
-      #   part that is downloaded and validated.
+      # @option options [Callable] :on_checksum_validated
+      #   Called each time a request's checksum is validated with the checksum algorithm and the
+      #   response.  For multipart downloads, this will be called for each part that is downloaded and validated.
       #
       # @option options [Proc] :progress_callback
-      #   A Proc that will be called when each chunk of the download is received.
-      #   It will be invoked with [bytes_read], [part_sizes], file_size.
-      #   When the object is downloaded as parts (rather than by ranges), the
-      #   part_sizes will not be known ahead of time and will be nil in the
-      #   callback until the first bytes in the part are received.
+      #   A Proc that will be called when each chunk of the download is received. It will be invoked with
+      #   `bytes_read`, `part_sizes`, `file_size`. When the object is downloaded as parts (rather than by ranges),
+      #   the `part_sizes` will not be known ahead of time and will be `nil` in the callback until the first bytes
+      #   in the part are received.
       #
-      # @return [Boolean] Returns `true` when the file is downloaded without
-      #   any errors.
+      # @raise [MultipartDownloadError] Raised when an object validation fails outside of service errors.
+      #
+      # @return [Boolean] Returns `true` when the file is downloaded without any errors.
       #
       # @see Client#get_object
       # @see Client#head_object
       def download_file(destination, options = {})
-        downloader = FileDownloader.new(client: client)
+        download_opts = options.merge(bucket: bucket_name, key: key)
+        executor = DefaultExecutor.new(max_threads: download_opts.delete([:thread_count]))
+        downloader = FileDownloader.new(client: client, executor: executor)
         Aws::Plugins::UserAgent.metric('RESOURCE_MODEL') do
-          downloader.download(
-            destination,
-            options.merge(bucket: bucket_name, key: key)
-          )
+          downloader.download(destination, download_opts)
         end
+        executor.shutdown
         true
       end
+      deprecated(:download_file, use: 'Aws::S3::TransferManager#download_file', version: 'next major version')
 
       class Collection < Aws::Resources::Collection
         alias_method :delete, :batch_delete!

@@ -1,6 +1,171 @@
 Unreleased Changes
 ------------------
 
+1.96.0 (2026-08-03)
+------------------
+
+* Feature - This launch allows customers to use Network Firewall as an explicit Proxy and protect their workloads against threat of data exfiltration.
+
+1.95.0 (2026-07-31)
+------------------
+
+* Feature - Doc Updates for Container Attributes
+
+1.94.0 (2026-07-30)
+------------------
+
+* Feature - Adds UPDATING field to Container Association Status
+
+1.93.0 (2026-07-09)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.92.0 (2026-06-30)
+------------------
+
+* Feature - AWS Network Firewall now supports container associations for monitoring ECS and EKS workloads. You can create container associations to dynamically track the IP addresses of running containers in your Amazon ECS and Amazon EKS clusters.
+
+1.91.0 (2026-05-22)
+------------------
+
+* Feature - Adding new BDD representation of endpoint ruleset
+
+1.90.0 (2026-05-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.89.0 (2026-05-19)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.88.0 (2026-05-13)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.87.0 (2026-04-21)
+------------------
+
+* Feature - Support for new types of partner managed rulegroups for Network Firewall Service
+
+1.86.0 (2026-03-18)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.85.0 (2026-01-16)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.84.0 (2026-01-08)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.83.0 (2026-01-05)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.82.0 (2025-11-25)
+------------------
+
+* Feature - Network Firewall release of the Proxy feature.
+
+1.81.0 (2025-11-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.80.0 (2025-11-19)
+------------------
+
+* Feature - Partner Managed Rulegroup feature support
+
+1.79.0 (2025-10-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.78.0 (2025-10-17)
+------------------
+
+* Feature - Update endpoint ruleset parameters casing
+
+1.77.0 (2025-09-25)
+------------------
+
+* Feature - Network Firewall now introduces Reject and Alert action support for stateful domain list rule groups, providing customers with more granular control over their network traffic.
+
+1.76.0 (2025-09-17)
+------------------
+
+* Feature - Network Firewall now prevents TLS handshakes with the target server until after the Server Name Indication (SNI) has been seen and verified. The monitoring dashboard now provides deeper insights into PrivateLink endpoint candidates and offers filters based on IP addresses and protocol.
+
+1.75.0 (2025-08-28)
+------------------
+
+* Feature - Remove incorrect endpoint tests
+
+1.74.0 (2025-08-26)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.73.0 (2025-08-04)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.72.0 (2025-07-31)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.71.0 (2025-07-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.70.0 (2025-06-17)
+------------------
+
+* Feature - Release of Active Threat Defense in Network Firewall
+
+1.69.0 (2025-06-16)
+------------------
+
+* Feature - You can now create firewalls using a Transit Gateway instead of a VPC, resulting in a TGW attachment.
+
+1.68.0 (2025-06-04)
+------------------
+
+* Feature - You can now monitor flow and alert log metrics from the Network Firewall console.
+
+1.67.0 (2025-06-02)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.66.0 (2025-05-28)
+------------------
+
+* Feature - You can now use VPC endpoint associations to create multiple firewall endpoints for a single firewall.
+
+1.65.0 (2025-05-12)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.64.0 (2025-05-01)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
 1.63.0 (2025-03-20)
 ------------------
 

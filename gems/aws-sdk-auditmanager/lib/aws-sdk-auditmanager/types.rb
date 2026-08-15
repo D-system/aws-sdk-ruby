@@ -36,15 +36,16 @@ module Aws::AuditManager
       include Aws::Structure
     end
 
-    # An Amazon Web Service such as Amazon S3 or CloudTrail.
+    # An Amazon Web Services service such as Amazon S3 or CloudTrail.
     #
-    # For an example of how to find an Amazon Web Service name and how to
-    # define it in your assessment scope, see the following:
+    # For an example of how to find an Amazon Web Services service name and
+    # how to define it in your assessment scope, see the following:
     #
-    # * [Finding an Amazon Web Service name to use in your assessment
-    #   scope][1]
+    # * [Finding an Amazon Web Services service name to use in your
+    #   assessment scope][1]
     #
-    # * [Defining an Amazon Web Service name in your assessment scope][2]
+    # * [Defining an Amazon Web Services service name in your assessment
+    #   scope][2]
     #
     #
     #
@@ -52,7 +53,7 @@ module Aws::AuditManager
     # [2]: https://docs.aws.amazon.com/audit-manager/latest/APIReference/API_GetServicesInScope.html#API_GetServicesInScope_Example_3
     #
     # @!attribute [rw] service_name
-    #   The name of the Amazon Web Service.
+    #   The name of the Amazon Web Services service.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/auditmanager-2017-07-25/AWSService AWS API Documentation
@@ -248,7 +249,8 @@ module Aws::AuditManager
     #   @return [String]
     #
     # @!attribute [rw] data_source
-    #   The Amazon Web Service that the evidence was collected from.
+    #   The Amazon Web Services service that the evidence was collected
+    #   from.
     #   @return [String]
     #
     # @!attribute [rw] author
@@ -275,7 +277,8 @@ module Aws::AuditManager
     # @!attribute [rw] evidence_by_type_configuration_data_count
     #   The number of evidence that falls under the configuration data
     #   category. This evidence is collected from configuration snapshots of
-    #   other Amazon Web Services such as Amazon EC2, Amazon S3, or IAM.
+    #   other Amazon Web Services services such as Amazon EC2, Amazon S3, or
+    #   IAM.
     #   @return [Integer]
     #
     # @!attribute [rw] evidence_by_type_manual_count
@@ -285,12 +288,13 @@ module Aws::AuditManager
     #
     # @!attribute [rw] evidence_by_type_compliance_check_count
     #   The number of evidence that falls under the compliance check
-    #   category. This evidence is collected from Config or Security Hub.
+    #   category. This evidence is collected from Config or Security Hub
+    #   CSPM.
     #   @return [Integer]
     #
     # @!attribute [rw] evidence_by_type_compliance_check_issues_count
     #   The total number of issues that were reported directly from Security
-    #   Hub, Config, or both.
+    #   Hub CSPM, Config, or both.
     #   @return [Integer]
     #
     # @!attribute [rw] evidence_by_type_user_activity_count
@@ -1402,8 +1406,8 @@ module Aws::AuditManager
     #   is a file or text.
     #
     #   For automated evidence, this keyword identifies a specific
-    #   CloudTrail event, Config rule, Security Hub control, or Amazon Web
-    #   Services API name.
+    #   CloudTrail event, Config rule, Security Hub CSPM control, or Amazon
+    #   Web Services API name.
     #
     #   To learn more about the supported keywords that you can use when
     #   mapping a control data source, see the following pages in the *Audit
@@ -1411,7 +1415,7 @@ module Aws::AuditManager
     #
     #   * [Config rules supported by Audit Manager][1]
     #
-    #   * [Security Hub controls supported by Audit Manager][2]
+    #   * [Security Hub CSPM controls supported by Audit Manager][2]
     #
     #   * [API calls supported by Audit Manager][3]
     #
@@ -1566,6 +1570,11 @@ module Aws::AuditManager
     #
     # @!attribute [rw] control_sets
     #   The control sets that are associated with the framework.
+    #
+    #   <note markdown="1"> The `Controls` object returns a partial response when called through
+    #   Framework APIs. For a complete `Controls` object, use `GetControl`.
+    #
+    #    </note>
     #   @return [Array<Types::CreateAssessmentFrameworkControlSet>]
     #
     # @!attribute [rw] tags
@@ -1585,8 +1594,8 @@ module Aws::AuditManager
     end
 
     # @!attribute [rw] framework
-    #   The name of the new framework that the `CreateAssessmentFramework`
-    #   API returned.
+    #   The new framework object that the `CreateAssessmentFramework` API
+    #   returned.
     #   @return [Types::Framework]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/auditmanager-2017-07-25/CreateAssessmentFrameworkResponse AWS API Documentation
@@ -1676,17 +1685,17 @@ module Aws::AuditManager
     #   The wrapper that contains the Amazon Web Services accounts that are
     #   in scope for the assessment.
     #
-    #   <note markdown="1"> You no longer need to specify which Amazon Web Services are in scope
-    #   when you create or update an assessment. Audit Manager infers the
-    #   services in scope by examining your assessment controls and their
-    #   data sources, and then mapping this information to the relevant
-    #   Amazon Web Services.
+    #   <note markdown="1"> You no longer need to specify which Amazon Web Services services are
+    #   in scope when you create or update an assessment. Audit Manager
+    #   infers the services in scope by examining your assessment controls
+    #   and their data sources, and then mapping this information to the
+    #   relevant Amazon Web Services services.
     #
     #    If an underlying data source changes for your assessment, we
     #   automatically update the services scope as needed to reflect the
-    #   correct Amazon Web Services. This ensures that your assessment
-    #   collects accurate and comprehensive evidence about all of the
-    #   relevant services in your AWS environment.
+    #   correct Amazon Web Services services. This ensures that your
+    #   assessment collects accurate and comprehensive evidence about all of
+    #   the relevant services in your AWS environment.
     #
     #    </note>
     #   @return [Types::Scope]
@@ -1771,8 +1780,8 @@ module Aws::AuditManager
     #   is a file or text.
     #
     #   For automated evidence, this keyword identifies a specific
-    #   CloudTrail event, Config rule, Security Hub control, or Amazon Web
-    #   Services API name.
+    #   CloudTrail event, Config rule, Security Hub CSPM control, or Amazon
+    #   Web Services API name.
     #
     #   To learn more about the supported keywords that you can use when
     #   mapping a control data source, see the following pages in the *Audit
@@ -1780,7 +1789,7 @@ module Aws::AuditManager
     #
     #   * [Config rules supported by Audit Manager][1]
     #
-    #   * [Security Hub controls supported by Audit Manager][2]
+    #   * [Security Hub CSPM controls supported by Audit Manager][2]
     #
     #   * [API calls supported by Audit Manager][3]
     #
@@ -2260,7 +2269,7 @@ module Aws::AuditManager
     #   @return [Time]
     #
     # @!attribute [rw] event_source
-    #   The Amazon Web Service that the evidence is collected from.
+    #   The Amazon Web Services service that the evidence is collected from.
     #   @return [String]
     #
     # @!attribute [rw] event_name
@@ -2291,20 +2300,20 @@ module Aws::AuditManager
     #   compliance check category.
     #
     #   * Audit Manager classes evidence as non-compliant if Security Hub
-    #     reports a *Fail* result, or if Config reports a *Non-compliant*
-    #     result.
+    #     CSPM reports a *Fail* result, or if Config reports a
+    #     *Non-compliant* result.
     #
-    #   * Audit Manager classes evidence as compliant if Security Hub
+    #   * Audit Manager classes evidence as compliant if Security Hub CSPM
     #     reports a *Pass* result, or if Config reports a *Compliant*
     #     result.
     #
     #   * If a compliance check isn't available or applicable, then no
     #     compliance evaluation can be made for that evidence. This is the
-    #     case if the evidence uses Config or Security Hub as the underlying
-    #     data source type, but those services aren't enabled. This is also
-    #     the case if the evidence uses an underlying data source type that
-    #     doesn't support compliance checks (such as manual evidence,
-    #     Amazon Web Services API calls, or CloudTrail).
+    #     case if the evidence uses Config or Security Hub CSPM as the
+    #     underlying data source type, but those services aren't enabled.
+    #     This is also the case if the evidence uses an underlying data
+    #     source type that doesn't support compliance checks (such as
+    #     manual evidence, Amazon Web Services API calls, or CloudTrail).
     #   @return [String]
     #
     # @!attribute [rw] aws_organization
@@ -2424,24 +2433,24 @@ module Aws::AuditManager
     # @!attribute [rw] noncompliant_evidence_count
     #   The number of compliance check evidence that Audit Manager
     #   classified as non-compliant. This includes evidence that was
-    #   collected from Security Hub with a *Fail* ruling, or collected from
-    #   Config with a *Non-compliant* ruling.
+    #   collected from Security Hub CSPM with a *Fail* ruling, or collected
+    #   from Config with a *Non-compliant* ruling.
     #   @return [Integer]
     #
     # @!attribute [rw] compliant_evidence_count
     #   The number of compliance check evidence that Audit Manager
     #   classified as compliant. This includes evidence that was collected
-    #   from Security Hub with a *Pass* ruling, or collected from Config
-    #   with a *Compliant* ruling.
+    #   from Security Hub CSPM with a *Pass* ruling, or collected from
+    #   Config with a *Compliant* ruling.
     #   @return [Integer]
     #
     # @!attribute [rw] inconclusive_evidence_count
     #   The number of evidence that a compliance check ruling isn't
     #   available for. Evidence is inconclusive when the associated control
-    #   uses Security Hub or Config as a data source but you didn't enable
-    #   those services. This is also the case when a control uses a data
-    #   source that doesn’t support compliance checks (for example, manual
-    #   evidence, API calls, or CloudTrail).
+    #   uses Security Hub CSPM or Config as a data source but you didn't
+    #   enable those services. This is also the case when a control uses a
+    #   data source that doesn’t support compliance checks (for example,
+    #   manual evidence, API calls, or CloudTrail).
     #
     #   <note markdown="1"> If evidence has a compliance check status of *not applicable* in the
     #   console, it's classified as *inconclusive* in `EvidenceInsights`
@@ -2495,10 +2504,17 @@ module Aws::AuditManager
     #
     # @!attribute [rw] control_sources
     #   The control data sources where Audit Manager collects evidence from.
+    #
+    #   This API parameter is no longer supported.
     #   @return [String]
     #
     # @!attribute [rw] control_sets
     #   The control sets that are associated with the framework.
+    #
+    #   <note markdown="1"> The `Controls` object returns a partial response when called through
+    #   Framework APIs. For a complete `Controls` object, use `GetControl`.
+    #
+    #    </note>
     #   @return [Array<Types::ControlSet>]
     #
     # @!attribute [rw] created_at
@@ -2604,6 +2620,11 @@ module Aws::AuditManager
 
     # @!attribute [rw] framework
     #   The framework that the `GetAssessmentFramework` API returned.
+    #
+    #   <note markdown="1"> The `Controls` object returns a partial response when called through
+    #   Framework APIs. For a complete `Controls` object, use `GetControl`.
+    #
+    #    </note>
     #   @return [Types::Framework]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/auditmanager-2017-07-25/GetAssessmentFrameworkResponse AWS API Documentation
@@ -3111,7 +3132,8 @@ module Aws::AuditManager
     class GetServicesInScopeRequest < Aws::EmptyStructure; end
 
     # @!attribute [rw] service_metadata
-    #   The metadata that's associated with the Amazon Web Service.
+    #   The metadata that's associated with the Amazon Web Services
+    #   service.
     #   @return [Array<Types::ServiceMetadata>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/auditmanager-2017-07-25/GetServicesInScopeResponse AWS API Documentation
@@ -3180,22 +3202,22 @@ module Aws::AuditManager
     # @!attribute [rw] noncompliant_evidence_count
     #   The number of compliance check evidence that Audit Manager
     #   classified as non-compliant on the `lastUpdated` date. This includes
-    #   evidence that was collected from Security Hub with a *Fail* ruling,
-    #   or collected from Config with a *Non-compliant* ruling.
+    #   evidence that was collected from Security Hub CSPM with a *Fail*
+    #   ruling, or collected from Config with a *Non-compliant* ruling.
     #   @return [Integer]
     #
     # @!attribute [rw] compliant_evidence_count
     #   The number of compliance check evidence that Audit Manager
     #   classified as compliant on the `lastUpdated` date. This includes
-    #   evidence that was collected from Security Hub with a *Pass* ruling,
-    #   or collected from Config with a *Compliant* ruling.
+    #   evidence that was collected from Security Hub CSPM with a *Pass*
+    #   ruling, or collected from Config with a *Compliant* ruling.
     #   @return [Integer]
     #
     # @!attribute [rw] inconclusive_evidence_count
     #   The number of evidence without a compliance check ruling. Evidence
-    #   is inconclusive when the associated control uses Security Hub or
-    #   Config as a data source but you didn't enable those services. This
-    #   is also the case when a control uses a data source that doesn’t
+    #   is inconclusive when the associated control uses Security Hub CSPM
+    #   or Config as a data source but you didn't enable those services.
+    #   This is also the case when a control uses a data source that doesn’t
     #   support compliance checks (for example: manual evidence, API calls,
     #   or CloudTrail).
     #
@@ -3262,20 +3284,20 @@ module Aws::AuditManager
     # @!attribute [rw] noncompliant_evidence_count
     #   The number of compliance check evidence that Audit Manager
     #   classified as non-compliant. This includes evidence that was
-    #   collected from Security Hub with a *Fail* ruling, or collected from
-    #   Config with a *Non-compliant* ruling.
+    #   collected from Security Hub CSPM with a *Fail* ruling, or collected
+    #   from Config with a *Non-compliant* ruling.
     #   @return [Integer]
     #
     # @!attribute [rw] compliant_evidence_count
     #   The number of compliance check evidence that Audit Manager
     #   classified as compliant. This includes evidence that was collected
-    #   from Security Hub with a *Pass* ruling, or collected from Config
-    #   with a *Compliant* ruling.
+    #   from Security Hub CSPM with a *Pass* ruling, or collected from
+    #   Config with a *Compliant* ruling.
     #   @return [Integer]
     #
     # @!attribute [rw] inconclusive_evidence_count
     #   The amount of evidence without a compliance check ruling. Evidence
-    #   is inconclusive if the associated control uses Security Hub or
+    #   is inconclusive if the associated control uses Security Hub CSPM or
     #   Config as a data source and you didn't enable those services. This
     #   is also the case if a control uses a data source that doesn’t
     #   support compliance checks (for example, manual evidence, API calls,
@@ -3997,18 +4019,18 @@ module Aws::AuditManager
     #   collecting compliance check evidence.
     #
     #   * Audit Manager classes the resource as non-compliant if Security
-    #     Hub reports a *Fail* result, or if Config reports a
+    #     Hub CSPM reports a *Fail* result, or if Config reports a
     #     *Non-compliant* result.
     #
     #   * Audit Manager classes the resource as compliant if Security Hub
-    #     reports a *Pass* result, or if Config reports a *Compliant*
+    #     CSPM reports a *Pass* result, or if Config reports a *Compliant*
     #     result.
     #
     #   * If a compliance check isn't available or applicable, then no
     #     compliance evaluation can be made for that resource. This is the
-    #     case if a resource assessment uses Config or Security Hub as the
-    #     underlying data source type, but those services aren't enabled.
-    #     This is also the case if the resource assessment uses an
+    #     case if a resource assessment uses Config or Security Hub CSPM as
+    #     the underlying data source type, but those services aren't
+    #     enabled. This is also the case if the resource assessment uses an
     #     underlying data source type that doesn't support compliance
     #     checks (such as manual evidence, Amazon Web Services API calls, or
     #     CloudTrail).
@@ -4080,17 +4102,17 @@ module Aws::AuditManager
     # The wrapper that contains the Amazon Web Services accounts that are in
     # scope for the assessment.
     #
-    # <note markdown="1"> You no longer need to specify which Amazon Web Services are in scope
-    # when you create or update an assessment. Audit Manager infers the
-    # services in scope by examining your assessment controls and their data
-    # sources, and then mapping this information to the relevant Amazon Web
-    # Services.
+    # <note markdown="1"> You no longer need to specify which Amazon Web Services services are
+    # in scope when you create or update an assessment. Audit Manager infers
+    # the services in scope by examining your assessment controls and their
+    # data sources, and then mapping this information to the relevant Amazon
+    # Web Services services.
     #
     #  If an underlying data source changes for your assessment, we
     # automatically update the services scope as needed to reflect the
-    # correct Amazon Web Services. This ensures that your assessment
-    # collects accurate and comprehensive evidence about all of the relevant
-    # services in your AWS environment.
+    # correct Amazon Web Services services. This ensures that your
+    # assessment collects accurate and comprehensive evidence about all of
+    # the relevant services in your AWS environment.
     #
     #  </note>
     #
@@ -4104,8 +4126,9 @@ module Aws::AuditManager
     #   the assessment.
     #
     #   This API parameter is no longer supported. If you use this parameter
-    #   to specify one or more Amazon Web Services, Audit Manager ignores
-    #   this input. Instead, the value for `awsServices` will show as empty.
+    #   to specify one or more Amazon Web Services services, Audit Manager
+    #   ignores this input. Instead, the value for `awsServices` will show
+    #   as empty.
     #   @return [Array<Types::AWSService>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/auditmanager-2017-07-25/Scope AWS API Documentation
@@ -4117,23 +4140,23 @@ module Aws::AuditManager
       include Aws::Structure
     end
 
-    # The metadata that's associated with the Amazon Web Service.
+    # The metadata that's associated with the Amazon Web Services service.
     #
     # @!attribute [rw] name
-    #   The name of the Amazon Web Service.
+    #   The name of the Amazon Web Services service.
     #   @return [String]
     #
     # @!attribute [rw] display_name
-    #   The display name of the Amazon Web Service.
+    #   The display name of the Amazon Web Services service.
     #   @return [String]
     #
     # @!attribute [rw] description
-    #   The description of the Amazon Web Service.
+    #   The description of the Amazon Web Services service.
     #   @return [String]
     #
     # @!attribute [rw] category
-    #   The category that the Amazon Web Service belongs to, such as
-    #   compute, storage, or database.
+    #   The category that the Amazon Web Services service belongs to, such
+    #   as compute, storage, or database.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/auditmanager-2017-07-25/ServiceMetadata AWS API Documentation
@@ -4228,8 +4251,8 @@ module Aws::AuditManager
     # a file or text.
     #
     # For automated evidence, this keyword identifies a specific CloudTrail
-    # event, Config rule, Security Hub control, or Amazon Web Services API
-    # name.
+    # event, Config rule, Security Hub CSPM control, or Amazon Web Services
+    # API name.
     #
     # To learn more about the supported keywords that you can use when
     # mapping a control data source, see the following pages in the *Audit
@@ -4237,7 +4260,7 @@ module Aws::AuditManager
     #
     # * [Config rules supported by Audit Manager][1]
     #
-    # * [Security Hub controls supported by Audit Manager][2]
+    # * [Security Hub CSPM controls supported by Audit Manager][2]
     #
     # * [API calls supported by Audit Manager][3]
     #
@@ -4259,8 +4282,8 @@ module Aws::AuditManager
     #     * When `keywordInputType` is `SELECT_FROM_LIST`, a keyword must be
     #       selected to collect automated evidence. For example, this
     #       keyword can be a CloudTrail event name, a rule name for Config,
-    #       a Security Hub control, or the name of an Amazon Web Services
-    #       API call.
+    #       a Security Hub CSPM control, or the name of an Amazon Web
+    #       Services API call.
     #
     #     ^
     #   * `UPLOAD_FILE` and `INPUT_TEXT` are only used when mapping a data
@@ -4276,8 +4299,8 @@ module Aws::AuditManager
     # @!attribute [rw] keyword_value
     #   The value of the keyword that's used when mapping a control data
     #   source. For example, this can be a CloudTrail event name, a rule
-    #   name for Config, a Security Hub control, or the name of an Amazon
-    #   Web Services API call.
+    #   name for Config, a Security Hub CSPM control, or the name of an
+    #   Amazon Web Services API call.
     #
     #   If you’re mapping a data source to a rule in Config, the
     #   `keywordValue` that you specify depends on the type of rule:
@@ -4342,9 +4365,9 @@ module Aws::AuditManager
     #         of the custom rule name itself may vary. For accuracy, we
     #         recommend that you visit the [Config console][7] to verify
     #         your custom rule name.
-    #   2.  For Security Hub: The format varies for Security Hub control
-    #       names. For accuracy, we recommend that you reference the list of
-    #       [supported Security Hub controls][8].
+    #   2.  For Security Hub CSPM: The format varies for Security Hub CSPM
+    #       control names. For accuracy, we recommend that you reference the
+    #       list of [supported Security Hub CSPM controls][8].
     #
     #   3.  For Amazon Web Services API calls: Make sure that the
     #       `keywordValue` is written as `serviceprefix_ActionName`. For
@@ -4354,8 +4377,8 @@ module Aws::AuditManager
     #   4.  For CloudTrail: Make sure that the `keywordValue` is written as
     #       `serviceprefix_ActionName`. For example,
     #       `cloudtrail_StartLogging`. For accuracy, we recommend that you
-    #       review the Amazon Web Service prefix and action names in the
-    #       [Service Authorization Reference][10].
+    #       review the Amazon Web Services service prefix and action names
+    #       in the [Service Authorization Reference][10].
     #
     #
     #
@@ -4624,6 +4647,11 @@ module Aws::AuditManager
     #
     # @!attribute [rw] control_sets
     #   The control sets that are associated with the framework.
+    #
+    #   <note markdown="1"> The `Controls` object returns a partial response when called through
+    #   Framework APIs. For a complete `Controls` object, use `GetControl`.
+    #
+    #    </note>
     #   @return [Array<Types::UpdateAssessmentFrameworkControlSet>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/auditmanager-2017-07-25/UpdateAssessmentFrameworkRequest AWS API Documentation
@@ -4639,7 +4667,7 @@ module Aws::AuditManager
     end
 
     # @!attribute [rw] framework
-    #   The name of the framework.
+    #   The framework object.
     #   @return [Types::Framework]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/auditmanager-2017-07-25/UpdateAssessmentFrameworkResponse AWS API Documentation

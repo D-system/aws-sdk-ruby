@@ -20,7 +20,7 @@
     "DeactivateKeySigningKey": "<p>Deactivates a key-signing key (KSK) so that it will not be used for signing by DNSSEC. This operation changes the KSK status to <code>INACTIVE</code>.</p>",
     "DeleteCidrCollection": "<p>Deletes a CIDR collection in the current Amazon Web Services account. The collection must be empty before it can be deleted.</p>",
     "DeleteHealthCheck": "<p>Deletes a health check.</p> <important> <p>Amazon Route 53 does not prevent you from deleting a health check even if the health check is associated with one or more resource record sets. If you delete a health check and you don't update the associated resource record sets, the future status of the health check can't be predicted and may change. This will affect the routing of DNS queries for your DNS failover configuration. For more information, see <a href=\"https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/health-checks-creating-deleting.html#health-checks-deleting.html\">Replacing and Deleting Health Checks</a> in the <i>Amazon Route 53 Developer Guide</i>.</p> </important> <p>If you're using Cloud Map and you configured Cloud Map to create a Route 53 health check when you register an instance, you can't use the Route 53 <code>DeleteHealthCheck</code> command to delete the health check. The health check is deleted automatically when you deregister the instance; there can be a delay of several hours before the health check is deleted from Route 53. </p>",
-    "DeleteHostedZone": "<p>Deletes a hosted zone.</p> <p>If the hosted zone was created by another service, such as Cloud Map, see <a href=\"https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/DeleteHostedZone.html#delete-public-hosted-zone-created-by-another-service\">Deleting Public Hosted Zones That Were Created by Another Service</a> in the <i>Amazon Route 53 Developer Guide</i> for information about how to delete it. (The process is the same for public and private hosted zones that were created by another service.)</p> <p>If you want to keep your domain registration but you want to stop routing internet traffic to your website or web application, we recommend that you delete resource record sets in the hosted zone instead of deleting the hosted zone.</p> <important> <p>If you delete a hosted zone, you can't undelete it. You must create a new hosted zone and update the name servers for your domain registration, which can require up to 48 hours to take effect. (If you delegated responsibility for a subdomain to a hosted zone and you delete the child hosted zone, you must update the name servers in the parent hosted zone.) In addition, if you delete a hosted zone, someone could hijack the domain and route traffic to their own resources using your domain name.</p> </important> <p>If you want to avoid the monthly charge for the hosted zone, you can transfer DNS service for the domain to a free DNS service. When you transfer DNS service, you have to update the name servers for the domain registration. If the domain is registered with Route 53, see <a href=\"https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_UpdateDomainNameservers.html\">UpdateDomainNameservers</a> for information about how to replace Route 53 name servers with name servers for the new DNS service. If the domain is registered with another registrar, use the method provided by the registrar to update name servers for the domain registration. For more information, perform an internet search on \"free DNS service.\"</p> <p>You can delete a hosted zone only if it contains only the default SOA record and NS resource record sets. If the hosted zone contains other resource record sets, you must delete them before you can delete the hosted zone. If you try to delete a hosted zone that contains other resource record sets, the request fails, and Route 53 returns a <code>HostedZoneNotEmpty</code> error. For information about deleting records from your hosted zone, see <a href=\"https://docs.aws.amazon.com/Route53/latest/APIReference/API_ChangeResourceRecordSets.html\">ChangeResourceRecordSets</a>.</p> <p>To verify that the hosted zone has been deleted, do one of the following:</p> <ul> <li> <p>Use the <code>GetHostedZone</code> action to request information about the hosted zone.</p> </li> <li> <p>Use the <code>ListHostedZones</code> action to get a list of the hosted zones associated with the current Amazon Web Services account.</p> </li> </ul>",
+    "DeleteHostedZone": "<p>Deletes a hosted zone.</p> <p>If the hosted zone was created by another service, such as Cloud Map, see <a href=\"https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/DeleteHostedZone.html#delete-public-hosted-zone-created-by-another-service\">Deleting Public Hosted Zones That Were Created by Another Service</a> in the <i>Amazon Route 53 Developer Guide</i> for information about how to delete it. (The process is the same for public and private hosted zones that were created by another service.)</p> <p>If you want to keep your domain registration but you want to stop routing internet traffic to your website or web application, we recommend that you delete resource record sets in the hosted zone instead of deleting the hosted zone.</p> <important> <p>If you delete a hosted zone, you can't undelete it. You must create a new hosted zone and update the name servers for your domain registration, which can require up to 48 hours to take effect. (If you delegated responsibility for a subdomain to a hosted zone and you delete the child hosted zone, you must update the name servers in the parent hosted zone.) In addition, if you delete a hosted zone, someone could hijack the domain and route traffic to their own resources using your domain name.</p> </important> <p>If you want to avoid the monthly charge for the hosted zone, you can transfer DNS service for the domain to a free DNS service. When you transfer DNS service, you have to update the name servers for the domain registration. If the domain is registered with Route 53, see <a href=\"https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_UpdateDomainNameservers.html\">UpdateDomainNameservers</a> for information about how to replace Route 53 name servers with name servers for the new DNS service. If the domain is registered with another registrar, use the method provided by the registrar to update name servers for the domain registration. For more information, perform an internet search on \"free DNS service.\"</p> <p>You can delete a hosted zone only if it contains only the default SOA and NS records and has DNSSEC signing disabled. If the hosted zone contains other records or has DNSSEC enabled, you must delete the records and disable DNSSEC before deletion. Attempting to delete a hosted zone with additional records or DNSSEC enabled returns a <code>HostedZoneNotEmpty</code> error. For information about deleting records, see <a href=\"https://docs.aws.amazon.com/Route53/latest/APIReference/API_ChangeResourceRecordSets.html\">ChangeResourceRecordSets</a>. </p> <p>To verify that the hosted zone has been deleted, do one of the following:</p> <ul> <li> <p>Use the <code>GetHostedZone</code> action to request information about the hosted zone.</p> </li> <li> <p>Use the <code>ListHostedZones</code> action to get a list of the hosted zones associated with the current Amazon Web Services account.</p> </li> </ul>",
     "DeleteKeySigningKey": "<p>Deletes a key-signing key (KSK). Before you can delete a KSK, you must deactivate it. The KSK must be deactivated before you can delete it regardless of whether the hosted zone is enabled for DNSSEC signing.</p> <p>You can use <a href=\"https://docs.aws.amazon.com/Route53/latest/APIReference/API_DeactivateKeySigningKey.html\">DeactivateKeySigningKey</a> to deactivate the key before you delete it.</p> <p>Use <a href=\"https://docs.aws.amazon.com/Route53/latest/APIReference/API_GetDNSSEC.html\">GetDNSSEC</a> to verify that the KSK is in an <code>INACTIVE</code> status.</p>",
     "DeleteQueryLoggingConfig": "<p>Deletes a configuration for DNS query logging. If you delete a configuration, Amazon Route 53 stops sending query logs to CloudWatch Logs. Route 53 doesn't delete any logs that are already in CloudWatch Logs.</p> <p>For more information about DNS query logs, see <a href=\"https://docs.aws.amazon.com/Route53/latest/APIReference/API_CreateQueryLoggingConfig.html\">CreateQueryLoggingConfig</a>.</p>",
     "DeleteReusableDelegationSet": "<p>Deletes a reusable delegation set.</p> <important> <p>You can delete a reusable delegation set only if it isn't associated with any hosted zones.</p> </important> <p>To verify that the reusable delegation set is not associated with any hosted zones, submit a <a href=\"https://docs.aws.amazon.com/Route53/latest/APIReference/API_GetReusableDelegationSet.html\">GetReusableDelegationSet</a> request and specify the ID of the reusable delegation set that you want to delete.</p>",
@@ -70,6 +70,7 @@
     "TestDNSAnswer": "<p>Gets the value that Amazon Route 53 returns in response to a DNS request for a specified record name and type. You can optionally specify the IP address of a DNS resolver, an EDNS0 client subnet IP address, and a subnet mask. </p> <p>This call only supports querying public hosted zones.</p> <note> <p>The <code>TestDnsAnswer </code> returns information similar to what you would expect from the answer section of the <code>dig</code> command. Therefore, if you query for the name servers of a subdomain that point to the parent name servers, those will not be returned.</p> </note>",
     "UpdateHealthCheck": "<p>Updates an existing health check. Note that some values can't be updated. </p> <p>For more information about updating health checks, see <a href=\"https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/health-checks-creating-deleting.html\">Creating, Updating, and Deleting Health Checks</a> in the <i>Amazon Route 53 Developer Guide</i>.</p>",
     "UpdateHostedZoneComment": "<p>Updates the comment for a specified hosted zone.</p>",
+    "UpdateHostedZoneFeatures": "<p>Updates the features configuration for a hosted zone. This operation allows you to enable or disable specific features for your hosted zone, such as accelerated recovery.</p> <p>Accelerated recovery enables you to update DNS records in your public hosted zone even when the us-east-1 region is unavailable.</p>",
     "UpdateTrafficPolicyComment": "<p>Updates the comment for a specified traffic policy version.</p>",
     "UpdateTrafficPolicyInstance": "<note> <p>After you submit a <code>UpdateTrafficPolicyInstance</code> request, there's a brief delay while Route 53 creates the resource record sets that are specified in the traffic policy definition. Use <code>GetTrafficPolicyInstance</code> with the <code>id</code> of updated traffic policy instance confirm that the <code>UpdateTrafficPolicyInstance</code> request completed successfully. For more information, see the <code>State</code> response element.</p> </note> <p>Updates the resource record sets in a specified hosted zone that were created based on the settings in a specified traffic policy version.</p> <p>When you update a traffic policy instance, Amazon Route 53 continues to respond to DNS queries for the root resource record set name (such as example.com) while it replaces one group of resource record sets with another. Route 53 performs the following operations:</p> <ol> <li> <p>Route 53 creates a new group of resource record sets based on the specified traffic policy. This is true regardless of how significant the differences are between the existing resource record sets and the new resource record sets. </p> </li> <li> <p>When all of the new resource record sets have been created, Route 53 starts to respond to DNS queries for the root resource record set name (such as example.com) by using the new resource record sets.</p> </li> <li> <p>Route 53 deletes the old group of resource record sets that are associated with the root resource record set name.</p> </li> </ol>"
   },
@@ -93,6 +94,18 @@
         "GeoProximityLocation$AWSRegion": "<p> The Amazon Web Services Region the resource you are directing DNS traffic to, is in. </p>"
       }
     },
+    "AcceleratedRecoveryEnabled": {
+      "base": null,
+      "refs": {
+        "UpdateHostedZoneFeaturesRequest$EnableAcceleratedRecovery": "<p>Specifies whether to enable accelerated recovery for the hosted zone. Set to <code>true</code> to enable accelerated recovery, or <code>false</code> to disable it.</p>"
+      }
+    },
+    "AcceleratedRecoveryStatus": {
+      "base": null,
+      "refs": {
+        "HostedZoneFeatures$AcceleratedRecoveryStatus": "<p>The current status of accelerated recovery for the hosted zone.</p>"
+      }
+    },
     "AccountLimit": {
       "base": "<p>A complex type that contains the type of limit that you specified in the request and the current value for that limit.</p>",
       "refs": {
@@ -108,13 +121,11 @@
     },
     "ActivateKeySigningKeyRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ActivateKeySigningKeyResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "AlarmIdentifier": {
       "base": "<p>A complex type that identifies the CloudWatch alarm that you want Amazon Route 53 health checkers to use to determine whether the specified health check is healthy.</p>",
@@ -132,7 +143,7 @@
     "AliasHealthEnabled": {
       "base": null,
       "refs": {
-        "AliasTarget$EvaluateTargetHealth": "<p> <i>Applies only to alias, failover alias, geolocation alias, latency alias, and weighted alias resource record sets:</i> When <code>EvaluateTargetHealth</code> is <code>true</code>, an alias resource record set inherits the health of the referenced Amazon Web Services resource, such as an ELB load balancer or another resource record set in the hosted zone.</p> <p>Note the following:</p> <dl> <dt>CloudFront distributions</dt> <dd> <p>You can't set <code>EvaluateTargetHealth</code> to <code>true</code> when the alias target is a CloudFront distribution.</p> </dd> <dt>Elastic Beanstalk environments that have regionalized subdomains</dt> <dd> <p>If you specify an Elastic Beanstalk environment in <code>DNSName</code> and the environment contains an ELB load balancer, Elastic Load Balancing routes queries only to the healthy Amazon EC2 instances that are registered with the load balancer. (An environment automatically contains an ELB load balancer if it includes more than one Amazon EC2 instance.) If you set <code>EvaluateTargetHealth</code> to <code>true</code> and either no Amazon EC2 instances are healthy or the load balancer itself is unhealthy, Route 53 routes queries to other available resources that are healthy, if any. </p> <p>If the environment contains a single Amazon EC2 instance, there are no special requirements.</p> </dd> <dt>ELB load balancers</dt> <dd> <p>Health checking behavior depends on the type of load balancer:</p> <ul> <li> <p> <b>Classic Load Balancers</b>: If you specify an ELB Classic Load Balancer in <code>DNSName</code>, Elastic Load Balancing routes queries only to the healthy Amazon EC2 instances that are registered with the load balancer. If you set <code>EvaluateTargetHealth</code> to <code>true</code> and either no EC2 instances are healthy or the load balancer itself is unhealthy, Route 53 routes queries to other resources.</p> </li> <li> <p> <b>Application and Network Load Balancers</b>: If you specify an ELB Application or Network Load Balancer and you set <code>EvaluateTargetHealth</code> to <code>true</code>, Route 53 routes queries to the load balancer based on the health of the target groups that are associated with the load balancer:</p> <ul> <li> <p>For an Application or Network Load Balancer to be considered healthy, every target group that contains targets must contain at least one healthy target. If any target group contains only unhealthy targets, the load balancer is considered unhealthy, and Route 53 routes queries to other resources.</p> </li> <li> <p>A target group that has no registered targets is considered unhealthy.</p> </li> </ul> </li> </ul> <note> <p>When you create a load balancer, you configure settings for Elastic Load Balancing health checks; they're not Route 53 health checks, but they perform a similar function. Do not create Route 53 health checks for the EC2 instances that you register with an ELB load balancer. </p> </note> </dd> <dt>S3 buckets</dt> <dd> <p>There are no special requirements for setting <code>EvaluateTargetHealth</code> to <code>true</code> when the alias target is an S3 bucket.</p> </dd> <dt>Other records in the same hosted zone</dt> <dd> <p>If the Amazon Web Services resource that you specify in <code>DNSName</code> is a record or a group of records (for example, a group of weighted records) but is not another alias record, we recommend that you associate a health check with all of the records in the alias target. For more information, see <a href=\"https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-complex-configs.html#dns-failover-complex-configs-hc-omitting\">What Happens When You Omit Health Checks?</a> in the <i>Amazon Route 53 Developer Guide</i>.</p> </dd> </dl> <p>For more information and examples, see <a href=\"https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover.html\">Amazon Route 53 Health Checks and DNS Failover</a> in the <i>Amazon Route 53 Developer Guide</i>.</p>"
+        "AliasTarget$EvaluateTargetHealth": "<p> <i>Applies only to alias, failover alias, geolocation alias, latency alias, and weighted alias resource record sets:</i> When <code>EvaluateTargetHealth</code> is <code>true</code>, an alias resource record set inherits the health of the referenced Amazon Web Services resource, such as an ELB load balancer or another resource record set in the hosted zone.</p> <p>Note the following:</p> <dl> <dt>CloudFront distributions</dt> <dd> <p>You can't set <code>EvaluateTargetHealth</code> to <code>true</code> when the alias target is a CloudFront distribution.</p> </dd> <dt>Elastic Beanstalk environments that have regionalized subdomains</dt> <dd> <p>If you specify an Elastic Beanstalk environment in <code>DNSName</code> and the environment contains an ELB load balancer, Elastic Load Balancing routes queries only to the healthy Amazon EC2 instances that are registered with the load balancer. (An environment automatically contains an ELB load balancer if it includes more than one Amazon EC2 instance.) If you set <code>EvaluateTargetHealth</code> to <code>true</code> and either no Amazon EC2 instances are healthy or the load balancer itself is unhealthy, Route 53 routes queries to other available resources that are healthy, if any. </p> <p>If the environment contains a single Amazon EC2 instance, there are no special requirements.</p> </dd> <dt>ELB load balancers</dt> <dd> <p>Health checking behavior depends on the type of load balancer:</p> <ul> <li> <p> <b>Classic Load Balancers</b>: If you specify an ELB Classic Load Balancer in <code>DNSName</code>, Elastic Load Balancing routes queries only to the healthy Amazon EC2 instances that are registered with the load balancer. If you set <code>EvaluateTargetHealth</code> to <code>true</code> and either no EC2 instances are healthy or the load balancer itself is unhealthy, Route 53 routes queries to other resources.</p> </li> <li> <p> <b>Application and Network Load Balancers</b>: If you specify an ELB Application or Network Load Balancer and you set <code>EvaluateTargetHealth</code> to <code>true</code>, Route 53 routes queries to the load balancer based on the health of the target groups that are associated with the load balancer:</p> <ul> <li> <p>For an Application or Network Load Balancer to be considered healthy, every target group that contains targets must contain at least one healthy target. If any target group contains only unhealthy targets, the load balancer is considered unhealthy, and Route 53 routes queries to other resources.</p> </li> <li> <p>A target group that has no registered targets is considered unhealthy.</p> </li> </ul> </li> </ul> <note> <p>When you create a load balancer, you configure settings for Elastic Load Balancing health checks; they're not Route 53 health checks, but they perform a similar function. Do not create Route 53 health checks for the EC2 instances that you register with an ELB load balancer. </p> </note> </dd> <dt>API Gateway APIs</dt> <dd> <p>There are no special requirements for setting <code>EvaluateTargetHealth</code> to <code>true</code> when the alias target is an API Gateway API. However, because API Gateway is highly available by design, <code>EvaluateTargetHealth</code> provides no operational benefit and <a href=\"https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover.html\">Route 53 health checks</a> are recommended instead for failover scenarios.</p> </dd> <dt>S3 buckets</dt> <dd> <p>There are no special requirements for setting <code>EvaluateTargetHealth</code> to <code>true</code> when the alias target is an S3 bucket. However, because S3 buckets are highly available by design, <code>EvaluateTargetHealth</code> provides no operational benefit and <a href=\"https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover.html\">Route 53 health checks</a> are recommended instead for failover scenarios.</p> </dd> <dt>VPC interface endpoints</dt> <dd> <p>There are no special requirements for setting <code>EvaluateTargetHealth</code> to <code>true</code> when the alias target is a VPC interface endpoint. However, because VPC interface endpoints are highly available by design, <code>EvaluateTargetHealth</code> provides no operational benefit and <a href=\"https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover.html\">Route 53 health checks</a> are recommended instead for failover scenarios.</p> </dd> <dt>Other records in the same hosted zone</dt> <dd> <p>If the Amazon Web Services resource that you specify in <code>DNSName</code> is a record or a group of records (for example, a group of weighted records) but is not another alias record, we recommend that you associate a health check with all of the records in the alias target. For more information, see <a href=\"https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-complex-configs.html#dns-failover-complex-configs-hc-omitting\">What Happens When You Omit Health Checks?</a> in the <i>Amazon Route 53 Developer Guide</i>.</p> </dd> </dl> <note> <p>While <code>EvaluateTargetHealth</code> can be set to <code>true</code> for highly available Amazon Web Services services (such as S3 buckets, VPC interface endpoints, and API Gateway), these services are designed for high availability and rarely experience outages that would be detected by this feature. For failover scenarios with these services, consider using <a href=\"https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover.html\">Route 53 health checks</a> that monitor your application's ability to access the service instead.</p> </note> <p>For more information and examples, see <a href=\"https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover.html\">Amazon Route 53 Health Checks and DNS Failover</a> in the <i>Amazon Route 53 Developer Guide</i>.</p>"
       }
     },
     "AliasTarget": {
@@ -149,13 +160,11 @@
     },
     "AssociateVPCWithHostedZoneRequest": {
       "base": "<p>A complex type that contains information about the request to associate a VPC with a private hosted zone.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "AssociateVPCWithHostedZoneResponse": {
       "base": "<p>A complex type that contains the response information for the <code>AssociateVPCWithHostedZone</code> request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "Bias": {
       "base": null,
@@ -183,13 +192,11 @@
     },
     "ChangeCidrCollectionRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ChangeCidrCollectionResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ChangeId": {
       "base": null,
@@ -217,13 +224,11 @@
     },
     "ChangeResourceRecordSetsRequest": {
       "base": "<p>A complex type that contains change information for the resource record set.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ChangeResourceRecordSetsResponse": {
       "base": "<p>A complex type containing the response for the request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ChangeStatus": {
       "base": null,
@@ -233,13 +238,11 @@
     },
     "ChangeTagsForResourceRequest": {
       "base": "<p>A complex type that contains information about the tags that you want to add, edit, or delete.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ChangeTagsForResourceResponse": {
       "base": "<p>Empty response for the request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "Changes": {
       "base": null,
@@ -269,8 +272,7 @@
     },
     "CidrBlockInUseException": {
       "base": "<p>This CIDR block is already in use.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CidrBlockSummaries": {
       "base": null,
@@ -292,8 +294,7 @@
     },
     "CidrCollectionAlreadyExistsException": {
       "base": "<p>A CIDR collection with this name and a different caller reference already exists in this account.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CidrCollectionChange": {
       "base": "<p>A complex type that contains information about the CIDR collection change.</p>",
@@ -315,13 +316,11 @@
     },
     "CidrCollectionInUseException": {
       "base": "<p>This CIDR collection is in use, and isn't empty.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CidrCollectionVersionMismatchException": {
       "base": "<p>The CIDR collection version you provided, doesn't match the one in the <code>ListCidrCollections</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CidrList": {
       "base": null,
@@ -411,18 +410,15 @@
     },
     "ConcurrentModification": {
       "base": "<p>Another user submitted a request to create, update, or delete the object at the same time that you did. Retry the request. </p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ConflictingDomainExists": {
       "base": "<p>The cause of this error depends on the operation that you're performing:</p> <ul> <li> <p> <b>Create a public hosted zone:</b> Two hosted zones that have the same name or that have a parent/child relationship (example.com and test.example.com) can't have any common name servers. You tried to create a hosted zone that has the same name as an existing hosted zone or that's the parent or child of an existing hosted zone, and you specified a delegation set that shares one or more name servers with the existing hosted zone. For more information, see <a href=\"https://docs.aws.amazon.com/Route53/latest/APIReference/API_CreateReusableDelegationSet.html\">CreateReusableDelegationSet</a>.</p> </li> <li> <p> <b>Create a private hosted zone:</b> A hosted zone with the specified name already exists and is already associated with the Amazon VPC that you specified.</p> </li> <li> <p> <b>Associate VPCs with a private hosted zone:</b> The VPC that you specified is already associated with another hosted zone that has the same name.</p> </li> </ul>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ConflictingTypes": {
       "base": "<p>You tried to update a traffic policy instance by using a traffic policy version that has a different DNS type than the current type for the instance. You specified the type in the JSON document in the <code>CreateTrafficPolicy</code> or <code>CreateTrafficPolicyVersion</code>request. </p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "Coordinates": {
       "base": "<p> A complex type that lists the coordinates for a geoproximity resource record. </p>",
@@ -432,103 +428,83 @@
     },
     "CreateCidrCollectionRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateCidrCollectionResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateHealthCheckRequest": {
       "base": "<p>A complex type that contains the health check request information.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateHealthCheckResponse": {
       "base": "<p>A complex type containing the response information for the new health check.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateHostedZoneRequest": {
       "base": "<p>A complex type that contains information about the request to create a public or private hosted zone.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateHostedZoneResponse": {
       "base": "<p>A complex type containing the response information for the hosted zone.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateKeySigningKeyRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateKeySigningKeyResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateQueryLoggingConfigRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateQueryLoggingConfigResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateReusableDelegationSetRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateReusableDelegationSetResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateTrafficPolicyInstanceRequest": {
       "base": "<p>A complex type that contains information about the resource record sets that you want to create based on a specified traffic policy.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateTrafficPolicyInstanceResponse": {
       "base": "<p>A complex type that contains the response information for the <code>CreateTrafficPolicyInstance</code> request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateTrafficPolicyRequest": {
       "base": "<p>A complex type that contains information about the traffic policy that you want to create.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateTrafficPolicyResponse": {
       "base": "<p>A complex type that contains the response information for the <code>CreateTrafficPolicy</code> request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateTrafficPolicyVersionRequest": {
       "base": "<p>A complex type that contains information about the traffic policy that you want to create a new version for.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateTrafficPolicyVersionResponse": {
       "base": "<p>A complex type that contains the response information for the <code>CreateTrafficPolicyVersion</code> request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateVPCAssociationAuthorizationRequest": {
       "base": "<p>A complex type that contains information about the request to authorize associating a VPC with your private hosted zone. Authorization is only required when a private hosted zone and a VPC were created by using different accounts.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateVPCAssociationAuthorizationResponse": {
       "base": "<p>A complex type that contains the response information from a <code>CreateVPCAssociationAuthorization</code> request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DNSName": {
       "base": null,
@@ -564,8 +540,7 @@
     },
     "DNSSECNotFound": {
       "base": "<p>The hosted zone doesn't have any DNSSEC resources.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DNSSECStatus": {
       "base": "<p>A string representing the status of DNSSEC signing.</p>",
@@ -575,13 +550,11 @@
     },
     "DeactivateKeySigningKeyRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeactivateKeySigningKeyResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DelegationSet": {
       "base": "<p>A complex type that lists the name servers in a delegation set, as well as the <code>CallerReference</code> and the <code>ID</code> for the delegation set.</p>",
@@ -595,18 +568,15 @@
     },
     "DelegationSetAlreadyCreated": {
       "base": "<p>A delegation set with the same owner and caller reference combination has already been created.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DelegationSetAlreadyReusable": {
       "base": "<p>The specified delegation set has already been marked as reusable.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DelegationSetInUse": {
       "base": "<p>The specified delegation contains associated hosted zones which must be deleted before the reusable delegation set can be deleted.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DelegationSetNameServers": {
       "base": null,
@@ -616,13 +586,11 @@
     },
     "DelegationSetNotAvailable": {
       "base": "<p>You can create a hosted zone that has the same name as an existing hosted zone (example.com is common), but there is a limit to the number of hosted zones that have the same name. If you get this error, Amazon Route 53 has reached that limit. If you own the domain name and Route 53 generates this error, contact Customer Support.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DelegationSetNotReusable": {
       "base": "<p>A reusable delegation set with the specified ID does not exist.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DelegationSets": {
       "base": null,
@@ -632,93 +600,75 @@
     },
     "DeleteCidrCollectionRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteCidrCollectionResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteHealthCheckRequest": {
       "base": "<p>This action deletes a health check.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteHealthCheckResponse": {
       "base": "<p>An empty element.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteHostedZoneRequest": {
       "base": "<p>A request to delete a hosted zone.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteHostedZoneResponse": {
       "base": "<p>A complex type that contains the response to a <code>DeleteHostedZone</code> request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteKeySigningKeyRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteKeySigningKeyResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteQueryLoggingConfigRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteQueryLoggingConfigResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteReusableDelegationSetRequest": {
       "base": "<p>A request to delete a reusable delegation set.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteReusableDelegationSetResponse": {
       "base": "<p>An empty element.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteTrafficPolicyInstanceRequest": {
       "base": "<p>A request to delete a specified traffic policy instance.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteTrafficPolicyInstanceResponse": {
       "base": "<p>An empty element.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteTrafficPolicyRequest": {
       "base": "<p>A request to delete a specified traffic policy version.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteTrafficPolicyResponse": {
       "base": "<p>An empty element.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteVPCAssociationAuthorizationRequest": {
       "base": "<p>A complex type that contains information about the request to remove authorization to associate a VPC that was created by one Amazon Web Services account with a hosted zone that was created with a different Amazon Web Services account. </p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteVPCAssociationAuthorizationResponse": {
       "base": "<p>Empty response for the request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "Dimension": {
       "base": "<p>For the metric that the CloudWatch alarm is associated with, a complex type that contains information about one dimension.</p>",
@@ -741,19 +691,17 @@
     },
     "DisableHostedZoneDNSSECRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DisableHostedZoneDNSSECResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "Disabled": {
       "base": null,
       "refs": {
         "HealthCheckConfig$Disabled": "<p>Stops Route 53 from performing health checks. When you disable a health check, here's what happens:</p> <ul> <li> <p> <b>Health checks that check the health of endpoints:</b> Route 53 stops submitting requests to your application, server, or other resource.</p> </li> <li> <p> <b>Calculated health checks:</b> Route 53 stops aggregating the status of the referenced health checks.</p> </li> <li> <p> <b>Health checks that monitor CloudWatch alarms:</b> Route 53 stops monitoring the corresponding CloudWatch metrics.</p> </li> </ul> <p>After you disable a health check, Route 53 considers the status of the health check to always be healthy. If you configured DNS failover, Route 53 continues to route traffic to the corresponding resources. If you want to stop routing traffic to a resource, change the value of <a href=\"https://docs.aws.amazon.com/Route53/latest/APIReference/API_UpdateHealthCheck.html#Route53-UpdateHealthCheck-request-Inverted\">Inverted</a>. </p> <p>Charges for a health check still apply when the health check is disabled. For more information, see <a href=\"http://aws.amazon.com/route53/pricing/\">Amazon Route 53 Pricing</a>.</p>",
-        "UpdateHealthCheckRequest$Disabled": "<p>Stops Route 53 from performing health checks. When you disable a health check, here's what happens:</p> <ul> <li> <p> <b>Health checks that check the health of endpoints:</b> Route 53 stops submitting requests to your application, server, or other resource.</p> </li> <li> <p> <b>Calculated health checks:</b> Route 53 stops aggregating the status of the referenced health checks.</p> </li> <li> <p> <b>Health checks that monitor CloudWatch alarms:</b> Route 53 stops monitoring the corresponding CloudWatch metrics.</p> </li> </ul> <p>After you disable a health check, Route 53 considers the status of the health check to always be healthy. If you configured DNS failover, Route 53 continues to route traffic to the corresponding resources. If you want to stop routing traffic to a resource, change the value of <a href=\"https://docs.aws.amazon.com/Route53/latest/APIReference/API_UpdateHealthCheck.html#Route53-UpdateHealthCheck-request-Inverted\">Inverted</a>. </p> <p>Charges for a health check still apply when the health check is disabled. For more information, see <a href=\"http://aws.amazon.com/route53/pricing/\">Amazon Route 53 Pricing</a>.</p>"
+        "UpdateHealthCheckRequest$Disabled": "<p>Stops Route 53 from performing health checks. When you disable a health check, here's what happens:</p> <ul> <li> <p> <b>Health checks that check the health of endpoints:</b> Route 53 stops submitting requests to your application, server, or other resource.</p> </li> <li> <p> <b>Calculated health checks:</b> Route 53 stops aggregating the status of the referenced health checks.</p> </li> <li> <p> <b>Health checks that monitor CloudWatch alarms:</b> Route 53 stops monitoring the corresponding CloudWatch metrics.</p> </li> </ul> <p>After you disable a health check, Route 53 considers the status of the health check to always be healthy. If you configured DNS failover, Route 53 continues to route traffic to the corresponding resources. Additionally, in disabled state, you can also invert the status of the health check to route traffic differently. For more information, see <a href=\"https://docs.aws.amazon.com/Route53/latest/APIReference/API_UpdateHealthCheck.html#Route53-UpdateHealthCheck-request-Inverted\">Inverted</a>. </p> <p>Charges for a health check still apply when the health check is disabled. For more information, see <a href=\"http://aws.amazon.com/route53/pricing/\">Amazon Route 53 Pricing</a>.</p>"
       }
     },
     "DisassociateVPCComment": {
@@ -764,23 +712,19 @@
     },
     "DisassociateVPCFromHostedZoneRequest": {
       "base": "<p>A complex type that contains information about the VPC that you want to disassociate from a specified private hosted zone.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DisassociateVPCFromHostedZoneResponse": {
       "base": "<p>A complex type that contains the response information for the disassociate request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "EnableHostedZoneDNSSECRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "EnableHostedZoneDNSSECResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "EnableSNI": {
       "base": null,
@@ -876,11 +820,17 @@
         "CloudWatchAlarmConfiguration$EvaluationPeriods": "<p>For the metric that the CloudWatch alarm is associated with, the number of periods that the metric is compared to the threshold.</p>"
       }
     },
+    "FailureReason": {
+      "base": null,
+      "refs": {
+        "HostedZoneFailureReasons$AcceleratedRecovery": "<p>The reason why accelerated recovery failed to be enabled or disabled for the hosted zone, if applicable.</p>"
+      }
+    },
     "FailureThreshold": {
       "base": null,
       "refs": {
-        "HealthCheckConfig$FailureThreshold": "<p>The number of consecutive health checks that an endpoint must pass or fail for Amazon Route 53 to change the current status of the endpoint from unhealthy to healthy or vice versa. For more information, see <a href=\"https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-determining-health-of-endpoints.html\">How Amazon Route 53 Determines Whether an Endpoint Is Healthy</a> in the <i>Amazon Route 53 Developer Guide</i>.</p> <p>If you don't specify a value for <code>FailureThreshold</code>, the default value is three health checks.</p>",
-        "UpdateHealthCheckRequest$FailureThreshold": "<p>The number of consecutive health checks that an endpoint must pass or fail for Amazon Route 53 to change the current status of the endpoint from unhealthy to healthy or vice versa. For more information, see <a href=\"https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-determining-health-of-endpoints.html\">How Amazon Route 53 Determines Whether an Endpoint Is Healthy</a> in the <i>Amazon Route 53 Developer Guide</i>.</p> <p>If you don't specify a value for <code>FailureThreshold</code>, the default value is three health checks.</p>"
+        "HealthCheckConfig$FailureThreshold": "<p>The number of consecutive health checks that an endpoint must pass or fail for Amazon Route 53 to change the current status of the endpoint from unhealthy to healthy or vice versa. For more information, see <a href=\"https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-determining-health-of-endpoints.html\">How Amazon Route 53 Determines Whether an Endpoint Is Healthy</a> in the <i>Amazon Route 53 Developer Guide</i>.</p> <p> <code>FailureThreshold</code> is not supported when you specify a value for <code>Type</code> of <code>RECOVERY_CONTROL</code>.</p> <p>Otherwise, if you don't specify a value for <code>FailureThreshold</code>, the default value is three health checks.</p>",
+        "UpdateHealthCheckRequest$FailureThreshold": "<p>The number of consecutive health checks that an endpoint must pass or fail for Amazon Route 53 to change the current status of the endpoint from unhealthy to healthy or vice versa. For more information, see <a href=\"https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-determining-health-of-endpoints.html\">How Amazon Route 53 Determines Whether an Endpoint Is Healthy</a> in the <i>Amazon Route 53 Developer Guide</i>.</p> <p>Otherwise, if you don't specify a value for <code>FailureThreshold</code>, the default value is three health checks.</p>"
       }
     },
     "FullyQualifiedDomainName": {
@@ -965,183 +915,147 @@
     },
     "GetAccountLimitRequest": {
       "base": "<p>A complex type that contains information about the request to create a hosted zone.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetAccountLimitResponse": {
       "base": "<p>A complex type that contains the requested limit. </p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetChangeRequest": {
       "base": "<p>The input for a GetChange request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetChangeResponse": {
       "base": "<p>A complex type that contains the <code>ChangeInfo</code> element.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetCheckerIpRangesRequest": {
       "base": "<p>Empty request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetCheckerIpRangesResponse": {
       "base": "<p>A complex type that contains the <code>CheckerIpRanges</code> element.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetDNSSECRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetDNSSECResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetGeoLocationRequest": {
       "base": "<p>A request for information about whether a specified geographic location is supported for Amazon Route 53 geolocation resource record sets.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetGeoLocationResponse": {
       "base": "<p>A complex type that contains the response information for the specified geolocation code.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetHealthCheckCountRequest": {
       "base": "<p>A request for the number of health checks that are associated with the current Amazon Web Services account.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetHealthCheckCountResponse": {
       "base": "<p>A complex type that contains the response to a <code>GetHealthCheckCount</code> request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetHealthCheckLastFailureReasonRequest": {
       "base": "<p>A request for the reason that a health check failed most recently.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetHealthCheckLastFailureReasonResponse": {
       "base": "<p>A complex type that contains the response to a <code>GetHealthCheckLastFailureReason</code> request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetHealthCheckRequest": {
       "base": "<p>A request to get information about a specified health check. </p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetHealthCheckResponse": {
       "base": "<p>A complex type that contains the response to a <code>GetHealthCheck</code> request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetHealthCheckStatusRequest": {
       "base": "<p>A request to get the status for a health check.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetHealthCheckStatusResponse": {
       "base": "<p>A complex type that contains the response to a <code>GetHealthCheck</code> request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetHostedZoneCountRequest": {
       "base": "<p>A request to retrieve a count of all the hosted zones that are associated with the current Amazon Web Services account.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetHostedZoneCountResponse": {
       "base": "<p>A complex type that contains the response to a <code>GetHostedZoneCount</code> request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetHostedZoneLimitRequest": {
       "base": "<p>A complex type that contains information about the request to create a hosted zone.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetHostedZoneLimitResponse": {
       "base": "<p>A complex type that contains the requested limit. </p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetHostedZoneRequest": {
       "base": "<p>A request to get information about a specified hosted zone. </p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetHostedZoneResponse": {
       "base": "<p>A complex type that contain the response to a <code>GetHostedZone</code> request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetQueryLoggingConfigRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetQueryLoggingConfigResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetReusableDelegationSetLimitRequest": {
       "base": "<p>A complex type that contains information about the request to create a hosted zone.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetReusableDelegationSetLimitResponse": {
       "base": "<p>A complex type that contains the requested limit. </p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetReusableDelegationSetRequest": {
       "base": "<p>A request to get information about a specified reusable delegation set.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetReusableDelegationSetResponse": {
       "base": "<p>A complex type that contains the response to the <code>GetReusableDelegationSet</code> request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetTrafficPolicyInstanceCountRequest": {
       "base": "<p>Request to get the number of traffic policy instances that are associated with the current Amazon Web Services account.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetTrafficPolicyInstanceCountResponse": {
       "base": "<p>A complex type that contains information about the resource record sets that Amazon Route 53 created based on a specified traffic policy.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetTrafficPolicyInstanceRequest": {
       "base": "<p>Gets information about a specified traffic policy instance.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetTrafficPolicyInstanceResponse": {
       "base": "<p>A complex type that contains information about the resource record sets that Amazon Route 53 created based on a specified traffic policy.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetTrafficPolicyRequest": {
       "base": "<p>Gets information about a specific traffic policy version.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetTrafficPolicyResponse": {
       "base": "<p>A complex type that contains the response information for the request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "HealthCheck": {
       "base": "<p>A complex type that contains information about one health check that is associated with the current Amazon Web Services account.</p>",
@@ -1154,8 +1068,7 @@
     },
     "HealthCheckAlreadyExists": {
       "base": "<p> The health check you're attempting to create already exists. Amazon Route 53 returns this error when you submit a request that has the following values:</p> <ul> <li> <p>The same value for <code>CallerReference</code> as an existing health check, and one or more values that differ from the existing health check that has the same caller reference.</p> </li> <li> <p>The same value for <code>CallerReference</code> as a health check that you created and later deleted, regardless of the other settings in the request.</p> </li> </ul>",
-      "refs": {
-      }
+      "refs": {}
     },
     "HealthCheckConfig": {
       "base": "<p>A complex type that contains information about the health check.</p>",
@@ -1185,13 +1098,12 @@
     },
     "HealthCheckInUse": {
       "base": "<p>This error code is not in use.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "HealthCheckNonce": {
       "base": null,
       "refs": {
-        "CreateHealthCheckRequest$CallerReference": "<p>A unique string that identifies the request and that allows you to retry a failed <code>CreateHealthCheck</code> request without the risk of creating two identical health checks:</p> <ul> <li> <p>If you send a <code>CreateHealthCheck</code> request with the same <code>CallerReference</code> and settings as a previous request, and if the health check doesn't exist, Amazon Route 53 creates the health check. If the health check does exist, Route 53 returns the settings for the existing health check.</p> </li> <li> <p>If you send a <code>CreateHealthCheck</code> request with the same <code>CallerReference</code> as a deleted health check, regardless of the settings, Route 53 returns a <code>HealthCheckAlreadyExists</code> error.</p> </li> <li> <p>If you send a <code>CreateHealthCheck</code> request with the same <code>CallerReference</code> as an existing health check but with different settings, Route 53 returns a <code>HealthCheckAlreadyExists</code> error.</p> </li> <li> <p>If you send a <code>CreateHealthCheck</code> request with a unique <code>CallerReference</code> but settings identical to an existing health check, Route 53 creates the health check.</p> </li> </ul> <p> Route 53 does not store the <code>CallerReference</code> for a deleted health check indefinitely. The <code>CallerReference</code> for a deleted health check will be deleted after a number of days.</p>",
+        "CreateHealthCheckRequest$CallerReference": "<p>A unique string that identifies the request and that allows you to retry a failed <code>CreateHealthCheck</code> request without the risk of creating two identical health checks:</p> <ul> <li> <p>If you send a <code>CreateHealthCheck</code> request with the same <code>CallerReference</code> and settings as a previous request, and if the health check doesn't exist, Amazon Route 53 creates the health check. If the health check does exist, Route 53 returns the health check configuration in the response. </p> </li> <li> <p>If you send a <code>CreateHealthCheck</code> request with the same <code>CallerReference</code> as a deleted health check, regardless of the settings, Route 53 returns a <code>HealthCheckAlreadyExists</code> error.</p> </li> <li> <p>If you send a <code>CreateHealthCheck</code> request with the same <code>CallerReference</code> as an existing health check but with different settings, Route 53 returns a <code>HealthCheckAlreadyExists</code> error.</p> </li> <li> <p>If you send a <code>CreateHealthCheck</code> request with a unique <code>CallerReference</code> but settings identical to an existing health check, Route 53 creates the health check.</p> </li> </ul> <p> Route 53 does not store the <code>CallerReference</code> for a deleted health check indefinitely. The <code>CallerReference</code> for a deleted health check will be deleted after a number of days.</p>",
         "HealthCheck$CallerReference": "<p>A unique string that you specified when you created the health check.</p>"
       }
     },
@@ -1237,8 +1149,7 @@
     },
     "HealthCheckVersionMismatch": {
       "base": "<p>The value of <code>HealthCheckVersion</code> in the request doesn't match the value of <code>HealthCheckVersion</code> in the health check.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "HealthChecks": {
       "base": null,
@@ -1264,8 +1175,7 @@
     },
     "HostedZoneAlreadyExists": {
       "base": "<p>The hosted zone you're trying to create already exists. Amazon Route 53 returns this error when a hosted zone has already been created with the specified <code>CallerReference</code>.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "HostedZoneConfig": {
       "base": "<p>A complex type that contains an optional comment about your hosted zone. If you don't want to specify a comment, omit both the <code>HostedZoneConfig</code> and <code>Comment</code> elements.</p>",
@@ -1278,6 +1188,18 @@
       "base": null,
       "refs": {
         "GetHostedZoneCountResponse$HostedZoneCount": "<p>The total number of public and private hosted zones that are associated with the current Amazon Web Services account.</p>"
+      }
+    },
+    "HostedZoneFailureReasons": {
+      "base": "<p>Contains information about why certain features failed to be enabled or configured for the hosted zone.</p>",
+      "refs": {
+        "HostedZoneFeatures$FailureReasons": "<p>Information about any failures that occurred when attempting to enable or configure features for the hosted zone.</p>"
+      }
+    },
+    "HostedZoneFeatures": {
+      "base": "<p>Represents the features configuration for a hosted zone, including the status of various features and any associated failure reasons.</p>",
+      "refs": {
+        "HostedZone$Features": "<p>The features configuration for the hosted zone, including accelerated recovery settings and status information.</p>"
       }
     },
     "HostedZoneLimit": {
@@ -1295,18 +1217,15 @@
     },
     "HostedZoneNotEmpty": {
       "base": "<p>The hosted zone contains resource records that are not SOA or NS records.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "HostedZoneNotFound": {
       "base": "<p>The specified HostedZone can't be found.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "HostedZoneNotPrivate": {
       "base": "<p>The specified hosted zone is a public hosted zone, not a private hosted zone.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "HostedZoneOwner": {
       "base": "<p>A complex type that identifies a hosted zone that a specified Amazon VPC is associated with and the owner of the hosted zone. If there is a value for <code>OwningAccount</code>, there is no value for <code>OwningService</code>, and vice versa. </p>",
@@ -1322,8 +1241,7 @@
     },
     "HostedZonePartiallyDelegated": {
       "base": "<p>The hosted zone nameservers don't match the parent nameservers. The hosted zone and parent must have the same nameservers.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "HostedZoneRRSetCount": {
       "base": null,
@@ -1374,13 +1292,11 @@
     },
     "IncompatibleVersion": {
       "base": "<p>The resource you're trying to access is unsupported on this Amazon Route 53 endpoint.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InsufficientCloudWatchLogsResourcePolicy": {
       "base": "<p>Amazon Route 53 doesn't have the permissions required to create log streams and send query logs to log streams. Possible causes include the following:</p> <ul> <li> <p>There is no resource policy that specifies the log group ARN in the value for <code>Resource</code>.</p> </li> <li> <p>The resource policy that includes the log group ARN in the value for <code>Resource</code> doesn't have the necessary permissions.</p> </li> <li> <p>The resource policy hasn't finished propagating yet.</p> </li> <li> <p>The Key management service (KMS) key you specified doesn’t exist or it can’t be used with the log group associated with query log. Update or provide a resource policy to grant permissions for the KMS key.</p> </li> <li> <p>The Key management service (KMS) key you specified is marked as disabled for the log group associated with query log. Update or provide a resource policy to grant permissions for the KMS key.</p> </li> </ul>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InsufficientDataHealthStatus": {
       "base": null,
@@ -1391,58 +1307,47 @@
     },
     "InvalidArgument": {
       "base": "<p>Parameter name is not valid.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidChangeBatch": {
       "base": "<p>This exception contains a list of messages that might contain one or more error messages. Each error message indicates one error in the change batch.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidDomainName": {
       "base": "<p>The specified domain name is not valid.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidInput": {
       "base": "<p>The input is not valid.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidKMSArn": {
       "base": "<p>The KeyManagementServiceArn that you specified isn't valid to use with DNSSEC signing.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidKeySigningKeyName": {
       "base": "<p>The key-signing key (KSK) name that you specified isn't a valid name.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidKeySigningKeyStatus": {
       "base": "<p>The key-signing key (KSK) status isn't valid or another KSK has the status <code>INTERNAL_FAILURE</code>.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidPaginationToken": {
       "base": "<p>The value that you specified to get the second or subsequent page of results is invalid.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidSigningStatus": {
       "base": "<p>Your hosted zone status isn't valid for this operation. In the hosted zone, change the status to enable <code>DNSSEC</code> or disable <code>DNSSEC</code>.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidTrafficPolicyDocument": {
       "base": "<p>The format of the traffic policy document that you specified in the <code>Document</code> element is not valid.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidVPCId": {
       "base": "<p>The VPC ID that you specified either isn't a valid ID or the current account is not authorized to access this VPC.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "Inverted": {
       "base": null,
@@ -1466,23 +1371,19 @@
     },
     "KeySigningKeyAlreadyExists": {
       "base": "<p>You've already created a key-signing key (KSK) with this name or with the same customer managed key ARN.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "KeySigningKeyInParentDSRecord": {
       "base": "<p>The key-signing key (KSK) is specified in a parent DS record.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "KeySigningKeyInUse": {
       "base": "<p>The key-signing key (KSK) that you specified can't be deactivated because it's the only KSK for a currently-enabled DNSSEC. Disable DNSSEC signing, or add or enable another KSK.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "KeySigningKeyWithActiveStatusNotFound": {
       "base": "<p>A key-signing key (KSK) with <code>ACTIVE</code> status wasn't found.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "KeySigningKeys": {
       "base": null,
@@ -1492,8 +1393,7 @@
     },
     "LastVPCAssociation": {
       "base": "<p>The VPC that you're trying to disassociate from the private hosted zone is the last VPC that is associated with the hosted zone. Amazon Route 53 doesn't support disassociating the last VPC from a hosted zone.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "Latitude": {
       "base": null,
@@ -1511,8 +1411,7 @@
     },
     "LimitsExceeded": {
       "base": "<p>This operation can't be completed because the current account has reached the limit on the resource you are trying to create. To request a higher limit, <a href=\"http://aws.amazon.com/route53-request\">create a case</a> with the Amazon Web Services Support Center.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "LinkedService": {
       "base": "<p>If a health check or hosted zone was created by another service, <code>LinkedService</code> is a complex type that describes the service that created the resource. When a resource is created by another service, you can't edit or delete it using Amazon Route 53. </p>",
@@ -1523,193 +1422,155 @@
     },
     "ListCidrBlocksRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListCidrBlocksResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListCidrCollectionsRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListCidrCollectionsResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListCidrLocationsRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListCidrLocationsResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListGeoLocationsRequest": {
       "base": "<p>A request to get a list of geographic locations that Amazon Route 53 supports for geolocation resource record sets. </p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListGeoLocationsResponse": {
       "base": "<p>A complex type containing the response information for the request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListHealthChecksRequest": {
       "base": "<p>A request to retrieve a list of the health checks that are associated with the current Amazon Web Services account.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListHealthChecksResponse": {
       "base": "<p>A complex type that contains the response to a <code>ListHealthChecks</code> request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListHostedZonesByNameRequest": {
       "base": "<p>Retrieves a list of the public and private hosted zones that are associated with the current Amazon Web Services account in ASCII order by domain name. </p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListHostedZonesByNameResponse": {
       "base": "<p>A complex type that contains the response information for the request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListHostedZonesByVPCRequest": {
       "base": "<p>Lists all the private hosted zones that a specified VPC is associated with, regardless of which Amazon Web Services account created the hosted zones.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListHostedZonesByVPCResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListHostedZonesRequest": {
       "base": "<p>A request to retrieve a list of the public and private hosted zones that are associated with the current Amazon Web Services account.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListHostedZonesResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListQueryLoggingConfigsRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListQueryLoggingConfigsResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListResourceRecordSetsRequest": {
       "base": "<p>A request for the resource record sets that are associated with a specified hosted zone.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListResourceRecordSetsResponse": {
       "base": "<p>A complex type that contains list information for the resource record set.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListReusableDelegationSetsRequest": {
       "base": "<p>A request to get a list of the reusable delegation sets that are associated with the current Amazon Web Services account.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListReusableDelegationSetsResponse": {
       "base": "<p>A complex type that contains information about the reusable delegation sets that are associated with the current Amazon Web Services account.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListTagsForResourceRequest": {
       "base": "<p>A complex type containing information about a request for a list of the tags that are associated with an individual resource.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListTagsForResourceResponse": {
       "base": "<p>A complex type that contains information about the health checks or hosted zones for which you want to list tags.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListTagsForResourcesRequest": {
       "base": "<p>A complex type that contains information about the health checks or hosted zones for which you want to list tags.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListTagsForResourcesResponse": {
       "base": "<p>A complex type containing tags for the specified resources.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListTrafficPoliciesRequest": {
       "base": "<p>A complex type that contains the information about the request to list the traffic policies that are associated with the current Amazon Web Services account.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListTrafficPoliciesResponse": {
       "base": "<p>A complex type that contains the response information for the request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListTrafficPolicyInstancesByHostedZoneRequest": {
       "base": "<p>A request for the traffic policy instances that you created in a specified hosted zone.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListTrafficPolicyInstancesByHostedZoneResponse": {
       "base": "<p>A complex type that contains the response information for the request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListTrafficPolicyInstancesByPolicyRequest": {
       "base": "<p>A complex type that contains the information about the request to list your traffic policy instances.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListTrafficPolicyInstancesByPolicyResponse": {
       "base": "<p>A complex type that contains the response information for the request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListTrafficPolicyInstancesRequest": {
       "base": "<p>A request to get information about the traffic policy instances that you created by using the current Amazon Web Services account.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListTrafficPolicyInstancesResponse": {
       "base": "<p>A complex type that contains the response information for the request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListTrafficPolicyVersionsRequest": {
       "base": "<p>A complex type that contains the information about the request to list your traffic policies.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListTrafficPolicyVersionsResponse": {
       "base": "<p>A complex type that contains the response information for the request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListVPCAssociationAuthorizationsRequest": {
       "base": "<p>A complex type that contains information about that can be associated with your hosted zone.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListVPCAssociationAuthorizationsResponse": {
       "base": "<p>A complex type that contains the response information for the request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "LocalZoneGroup": {
       "base": null,
@@ -1748,7 +1609,7 @@
     "MeasureLatency": {
       "base": null,
       "refs": {
-        "HealthCheckConfig$MeasureLatency": "<p>Specify whether you want Amazon Route 53 to measure the latency between health checkers in multiple Amazon Web Services regions and your endpoint, and to display CloudWatch latency graphs on the <b>Health Checks</b> page in the Route 53 console.</p> <important> <p>You can't change the value of <code>MeasureLatency</code> after you create a health check.</p> </important>"
+        "HealthCheckConfig$MeasureLatency": "<p>Specify whether you want Amazon Route 53 to measure the latency between health checkers in multiple Amazon Web Services regions and your endpoint, and to display CloudWatch latency graphs on the <b>Health Checks</b> page in the Route 53 console.</p> <p> <code>MeasureLatency</code> is not supported when you specify a value for <code>Type</code> of <code>RECOVERY_CONTROL</code>.</p> <important> <p>You can't change the value of <code>MeasureLatency</code> after you create a health check.</p> </important>"
       }
     },
     "Message": {
@@ -1777,63 +1638,51 @@
     },
     "NoSuchChange": {
       "base": "<p>A change with the specified change ID does not exist.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "NoSuchCidrCollectionException": {
       "base": "<p>The CIDR collection you specified, doesn't exist.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "NoSuchCidrLocationException": {
       "base": "<p>The CIDR collection location doesn't match any locations in your account.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "NoSuchCloudWatchLogsLogGroup": {
       "base": "<p>There is no CloudWatch Logs log group with the specified ARN.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "NoSuchDelegationSet": {
       "base": "<p>A reusable delegation set with the specified ID does not exist.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "NoSuchGeoLocation": {
       "base": "<p>Amazon Route 53 doesn't support the specified geographic location. For a list of supported geolocation codes, see the <a href=\"https://docs.aws.amazon.com/Route53/latest/APIReference/API_GeoLocation.html\">GeoLocation</a> data type.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "NoSuchHealthCheck": {
       "base": "<p>No health check exists with the specified ID.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "NoSuchHostedZone": {
       "base": "<p>No hosted zone exists with the ID that you specified.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "NoSuchKeySigningKey": {
       "base": "<p>The specified key-signing key (KSK) doesn't exist.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "NoSuchQueryLoggingConfig": {
       "base": "<p>There is no DNS query logging configuration with the specified ID.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "NoSuchTrafficPolicy": {
       "base": "<p>No traffic policy exists with the specified ID.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "NoSuchTrafficPolicyInstance": {
       "base": "<p>No traffic policy instance exists with the specified ID.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "Nonce": {
       "base": null,
@@ -1847,8 +1696,7 @@
     },
     "NotAuthorizedException": {
       "base": "<p>Associating the specified VPC with the specified hosted zone has not been authorized.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "PageMarker": {
       "base": null,
@@ -1941,13 +1789,11 @@
     },
     "PriorRequestNotComplete": {
       "base": "<p>If Amazon Route 53 can't process a request before the next request arrives, it will reject subsequent requests for the same hosted zone and return an <code>HTTP 400 error</code> (<code>Bad request</code>). If Route 53 returns this error repeatedly for the same request, we recommend that you wait, in intervals of increasing duration, before you try the request again.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "PublicZoneVPCAssociation": {
       "base": "<p>You're trying to associate a VPC with a public hosted zone. Amazon Route 53 doesn't support associating a VPC with a public hosted zone.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "QueryLoggingConfig": {
       "base": "<p>A complex type that contains information about a configuration for DNS query logging.</p>",
@@ -1959,8 +1805,7 @@
     },
     "QueryLoggingConfigAlreadyExists": {
       "base": "<p>You can create only one query logging configuration for a hosted zone, and a query logging configuration already exists for this hosted zone.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "QueryLoggingConfigId": {
       "base": null,
@@ -2016,7 +1861,7 @@
     "RequestInterval": {
       "base": null,
       "refs": {
-        "HealthCheckConfig$RequestInterval": "<p>The number of seconds between the time that Amazon Route 53 gets a response from your endpoint and the time that it sends the next health check request. Each Route 53 health checker makes requests at this interval.</p> <important> <p>You can't change the value of <code>RequestInterval</code> after you create a health check.</p> </important> <p>If you don't specify a value for <code>RequestInterval</code>, the default value is <code>30</code> seconds.</p>"
+        "HealthCheckConfig$RequestInterval": "<p>The number of seconds between the time that Amazon Route 53 gets a response from your endpoint and the time that it sends the next health check request. Each Route 53 health checker makes requests at this interval.</p> <p> <code>RequestInterval</code> is not supported when you specify a value for <code>Type</code> of <code>RECOVERY_CONTROL</code>.</p> <important> <p>You can't change the value of <code>RequestInterval</code> after you create a health check.</p> </important> <p>If you don't specify a value for <code>RequestInterval</code>, the default value is <code>30</code> seconds.</p>"
       }
     },
     "ResettableElementName": {
@@ -2088,7 +1933,8 @@
         "QueryLoggingConfig$HostedZoneId": "<p>The ID of the hosted zone that CloudWatch Logs is logging queries for. </p>",
         "TestDNSAnswerRequest$HostedZoneId": "<p>The ID of the hosted zone that you want Amazon Route 53 to simulate a query for.</p>",
         "TrafficPolicyInstance$HostedZoneId": "<p>The ID of the hosted zone that Amazon Route 53 created resource record sets in.</p>",
-        "UpdateHostedZoneCommentRequest$Id": "<p>The ID for the hosted zone that you want to update the comment for.</p>"
+        "UpdateHostedZoneCommentRequest$Id": "<p>The ID for the hosted zone that you want to update the comment for.</p>",
+        "UpdateHostedZoneFeaturesRequest$HostedZoneId": "<p>The ID of the hosted zone for which you want to update features. This is the unique identifier for your hosted zone.</p>"
       }
     },
     "ResourcePath": {
@@ -2362,13 +2208,11 @@
     },
     "TestDNSAnswerRequest": {
       "base": "<p>Gets the value that Amazon Route 53 returns in response to a DNS request for a specified record name and type. You can optionally specify the IP address of a DNS resolver, an EDNS0 client subnet IP address, and a subnet mask. </p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "TestDNSAnswerResponse": {
       "base": "<p>A complex type that contains the response to a <code>TestDNSAnswer</code> request. </p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "Threshold": {
       "base": null,
@@ -2378,8 +2222,7 @@
     },
     "ThrottlingException": {
       "base": "<p>The limit on the number of requests per second was exceeded.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "TimeStamp": {
       "base": null,
@@ -2392,38 +2235,31 @@
     },
     "TooManyHealthChecks": {
       "base": "<p>This health check can't be created because the current account has reached the limit on the number of active health checks.</p> <p>For information about default limits, see <a href=\"https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/DNSLimitations.html\">Limits</a> in the <i>Amazon Route 53 Developer Guide</i>.</p> <p>For information about how to get the current limit for an account, see <a href=\"https://docs.aws.amazon.com/Route53/latest/APIReference/API_GetAccountLimit.html\">GetAccountLimit</a>. To request a higher limit, <a href=\"http://aws.amazon.com/route53-request\">create a case</a> with the Amazon Web Services Support Center.</p> <p>You have reached the maximum number of active health checks for an Amazon Web Services account. To request a higher limit, <a href=\"http://aws.amazon.com/route53-request\">create a case</a> with the Amazon Web Services Support Center.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "TooManyHostedZones": {
       "base": "<p>This operation can't be completed either because the current account has reached the limit on the number of hosted zones or because you've reached the limit on the number of hosted zones that can be associated with a reusable delegation set.</p> <p>For information about default limits, see <a href=\"https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/DNSLimitations.html\">Limits</a> in the <i>Amazon Route 53 Developer Guide</i>.</p> <p>To get the current limit on hosted zones that can be created by an account, see <a href=\"https://docs.aws.amazon.com/Route53/latest/APIReference/API_GetAccountLimit.html\">GetAccountLimit</a>.</p> <p>To get the current limit on hosted zones that can be associated with a reusable delegation set, see <a href=\"https://docs.aws.amazon.com/Route53/latest/APIReference/API_GetReusableDelegationSetLimit.html\">GetReusableDelegationSetLimit</a>.</p> <p>To request a higher limit, <a href=\"http://aws.amazon.com/route53-request\">create a case</a> with the Amazon Web Services Support Center.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "TooManyKeySigningKeys": {
       "base": "<p>You've reached the limit for the number of key-signing keys (KSKs). Remove at least one KSK, and then try again.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "TooManyTrafficPolicies": {
       "base": "<p>This traffic policy can't be created because the current account has reached the limit on the number of traffic policies.</p> <p>For information about default limits, see <a href=\"https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/DNSLimitations.html\">Limits</a> in the <i>Amazon Route 53 Developer Guide</i>.</p> <p>To get the current limit for an account, see <a href=\"https://docs.aws.amazon.com/Route53/latest/APIReference/API_GetAccountLimit.html\">GetAccountLimit</a>. </p> <p>To request a higher limit, <a href=\"http://aws.amazon.com/route53-request\">create a case</a> with the Amazon Web Services Support Center.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "TooManyTrafficPolicyInstances": {
       "base": "<p>This traffic policy instance can't be created because the current account has reached the limit on the number of traffic policy instances.</p> <p>For information about default limits, see <a href=\"https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/DNSLimitations.html\">Limits</a> in the <i>Amazon Route 53 Developer Guide</i>.</p> <p>For information about how to get the current limit for an account, see <a href=\"https://docs.aws.amazon.com/Route53/latest/APIReference/API_GetAccountLimit.html\">GetAccountLimit</a>.</p> <p>To request a higher limit, <a href=\"http://aws.amazon.com/route53-request\">create a case</a> with the Amazon Web Services Support Center.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "TooManyTrafficPolicyVersionsForCurrentPolicy": {
       "base": "<p>This traffic policy version can't be created because you've reached the limit of 1000 on the number of versions that you can create for the current traffic policy.</p> <p>To create more traffic policy versions, you can use <a href=\"https://docs.aws.amazon.com/Route53/latest/APIReference/API_GetTrafficPolicy.html\">GetTrafficPolicy</a> to get the traffic policy document for a specified traffic policy version, and then use <a href=\"https://docs.aws.amazon.com/Route53/latest/APIReference/API_CreateTrafficPolicy.html\">CreateTrafficPolicy</a> to create a new traffic policy using the traffic policy document.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "TooManyVPCAssociationAuthorizations": {
       "base": "<p>You've created the maximum number of authorizations that can be created for the specified hosted zone. To authorize another VPC to be associated with the hosted zone, submit a <code>DeleteVPCAssociationAuthorization</code> request to remove an existing authorization. To get a list of existing authorizations, submit a <code>ListVPCAssociationAuthorizations</code> request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "TrafficPolicies": {
       "base": null,
@@ -2443,8 +2279,7 @@
     },
     "TrafficPolicyAlreadyExists": {
       "base": "<p>A traffic policy that has the same value for <code>Name</code> already exists.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "TrafficPolicyComment": {
       "base": null,
@@ -2483,8 +2318,7 @@
     },
     "TrafficPolicyInUse": {
       "base": "<p>One or more traffic policy instances were created by using the specified traffic policy.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "TrafficPolicyInstance": {
       "base": "<p>A complex type that contains settings for the new traffic policy instance.</p>",
@@ -2497,8 +2331,7 @@
     },
     "TrafficPolicyInstanceAlreadyExists": {
       "base": "<p>There is already a traffic policy instance with the specified ID.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "TrafficPolicyInstanceCount": {
       "base": null,
@@ -2592,43 +2425,43 @@
     },
     "UpdateHealthCheckRequest": {
       "base": "<p>A complex type that contains information about a request to update a health check.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateHealthCheckResponse": {
       "base": "<p>A complex type that contains the response to the <code>UpdateHealthCheck</code> request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateHostedZoneCommentRequest": {
       "base": "<p>A request to update the comment for a hosted zone.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateHostedZoneCommentResponse": {
       "base": "<p>A complex type that contains the response to the <code>UpdateHostedZoneComment</code> request.</p>",
-      "refs": {
-      }
+      "refs": {}
+    },
+    "UpdateHostedZoneFeaturesRequest": {
+      "base": null,
+      "refs": {}
+    },
+    "UpdateHostedZoneFeaturesResponse": {
+      "base": null,
+      "refs": {}
     },
     "UpdateTrafficPolicyCommentRequest": {
       "base": "<p>A complex type that contains information about the traffic policy that you want to update the comment for.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateTrafficPolicyCommentResponse": {
       "base": "<p>A complex type that contains the response information for the traffic policy.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateTrafficPolicyInstanceRequest": {
       "base": "<p>A complex type that contains information about the resource record sets that you want to update based on a specified traffic policy instance.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateTrafficPolicyInstanceResponse": {
       "base": "<p>A complex type that contains information about the resource record sets that Amazon Route 53 created based on a specified traffic policy.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "UsageCount": {
       "base": null,
@@ -2653,13 +2486,11 @@
     },
     "VPCAssociationAuthorizationNotFound": {
       "base": "<p>The VPC that you specified is not authorized to be associated with the hosted zone.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "VPCAssociationNotFound": {
       "base": "<p>The specified VPC and hosted zone are not currently associated.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "VPCId": {
       "base": "<p>(Private hosted zones only) The ID of an Amazon VPC. </p>",

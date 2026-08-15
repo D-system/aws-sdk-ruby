@@ -1,6 +1,456 @@
 Unreleased Changes
 ------------------
 
+1.385.0 (2026-08-14)
+------------------
+
+* Feature - Release support for g7.2xlarge, g7.4xlarge, g7.8xlarge, g7.12xlarge, g7.24xlarge, and g7.48xlarge instance types for SageMaker HyperPod
+
+1.384.0 (2026-08-10)
+------------------
+
+* Feature - Added PREFIX AWARE routing strategy and PrefixAwareRoutingConfig to CreateEndpointConfig. Configure PrefixLength and ConcurrencyThreshold to route requests that share the same prompt prefix to the same instance.
+
+1.383.0 (2026-08-07)
+------------------
+
+* Feature - Amazon SageMaker adds maintenance lifecycle statuses for Notebook Instances
+
+1.382.0 (2026-08-06)
+------------------
+
+* Feature - Releases new Model Customization SequenceLength parameter for Training and g7 instance types for Training and Processing.
+
+1.381.0 (2026-07-30)
+------------------
+
+* Feature - Adds support for g7 family instance types for SageMaker Studio JupyterLab and CodeEditor apps for IAD (us-east-1), PDX (us-west-2), CMH (us-east-2).
+
+1.380.0 (2026-07-27)
+------------------
+
+* Feature - This release adds LoRA adapters, training plans, and new instance types to SageMaker inference optimization. CreateAIRecommendationJob accepts optional AdapterSource and CreateOptimizationJob accepts optional TrainingPlanArns and the ml.g7e and ml.p6-b200 families.
+
+1.379.0 (2026-07-23)
+------------------
+
+* Feature - Release support for c6a, m6a, m6g, m7g, m8g instance types for SageMaker HyperPod
+
+1.378.0 (2026-07-16)
+------------------
+
+* Feature - Release support for g7 instance type for SageMaker inference endpoints.
+
+1.377.0 (2026-07-10)
+------------------
+
+* Feature - Release support for g4d, c6g, c7g, c8g instance types for SageMaker HyperPod
+
+1.376.0 (2026-07-09)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.375.0 (2026-06-18)
+------------------
+
+* Feature - Adds support for automatic AMI patching on HyperPod clusters. Customers can configure patching strategies to automatically apply security patch with zero job termination. Customers can also specify an AMI version at instance group level and update cluster software to a certain AMI version.
+
+1.374.0 (2026-06-16)
+------------------
+
+* Feature - Add EnableDetailedObservability to Endpoint MetricsConfig. Publishes GPU, host, and framework-native inference metrics to CloudWatch with per-inference-component, availability-zone, and instance dimensions. Adds Inference Component provisioning lifecycle and multi-AZ placement metrics.
+
+1.373.0 (2026-06-10)
+------------------
+
+* Feature - Add support for G6e instances (ml.g6e.xlarge through ml.g6e.48xlarge) on Amazon SageMaker Notebook Instances.
+
+1.372.0 (2026-06-05)
+------------------
+
+* Feature - This release adds support for MLflow experiment tracking in SageMaker inference optimization. CreateAIRecommendationJob and CreateAIBenchmarkJob now accept an optional OutputConfig.MlflowConfig (MLflow App ARN, experiment, run name) to stream benchmark metrics and artifacts to your own MLflow App.
+
+1.371.0 (2026-06-04)
+------------------
+
+* Feature - Adds the IncludedData parameter to DescribeModelCard and DescribeModelPackage. Set it to MetadataOnly to retrieve a model card without decrypt permission on the customer managed AWS KMS key (default AllData returns full content). Adds support for the MTRL Job resource in SageMaker Search.
+
+1.370.0 (2026-06-02)
+------------------
+
+* Feature - Amazon SageMaker Job is a new service to help you manage various workloads related to model fine tuning, evaluation etc. Two job categories are supported today, AgentRFT for multi-turn agentic reinforcement fine tuning, and AgentRFTEvaluation for evaluating base model or trained model from AgentRFT.
+
+1.369.0 (2026-05-27)
+------------------
+
+* Feature - Adds shared environment support for Restricted Instance Groups (RIGs) on SageMaker HyperPod, enabling cross-RIG workload scheduling and FSx sharing. This unlocks shared CPU-GPU environments needed for cost-efficient RL training (e.g., Nova Forge). Adds p6 instance support for recommendation jobs
+
+1.368.0 (2026-05-21)
+------------------
+
+* Feature - Add support for disabling home EFS file system creation on SageMaker domains.
+
+1.367.0 (2026-05-19)
+------------------
+
+* Feature - Add support for ml.p5.4xlarge and ml.p5en.48xlarge instances on SageMaker Notebook Instances Platform.
+
+1.366.0 (2026-05-13)
+------------------
+
+* Feature - Adds execution role session name mode to reflect user identity in Studio. Adds Flexible Training Plans on Studio apps. Adds restricted model packages to control access to proprietary model artifacts via IAM. Fixed instance type parity between inference endpoints and managed shadow tests.
+
+1.365.0 (2026-05-06)
+------------------
+
+* Feature - Amazon SageMaker HyperPod now returns ImageVersionStatus in DescribeCluster, DescribeClusterNode, and ListClusterNodes responses, indicating whether cluster instances are running the latest available image version.
+
+1.364.0 (2026-05-05)
+------------------
+
+* Feature - Adds support for ml.p5.4xlarge instance type for SageMaker Studio JupyterLab and CodeEditor apps for IAD (us-east-1), NRT (ap-northeast-1), BOM (ap-south-1), CGK (ap-southeast-3), GRU (sa-east-1), PDX (us-west-2), CMH (us-east-2).
+
+1.363.0 (2026-04-30)
+------------------
+
+* Feature - Add InstancePools support to Endpoint for flexible provisioning across a prioritized list of instance types. Add Specifications support to InferenceComponent for per-instance-type model configurations.
+
+1.362.0 (2026-04-27)
+------------------
+
+* Feature - Updated API documentation for endpoint MetricsConfig. Added details on supported metric publish frequencies and clarified how EnableEnhancedMetrics controls utilization and invocation metric behavior.
+
+1.361.0 (2026-04-21)
+------------------
+
+* Feature - SageMaker AI now supports generative AI inference recommendations. Provide your model and workload, and SageMaker AI optimizes configurations, benchmarks them on real GPUs, and returns deployment-ready recommendations with validated metrics, accelerating the path to production from weeks to hours.
+
+1.360.0 (2026-04-17)
+------------------
+
+* Feature - Adds support for providing NetworkInterface for efa enabled instances and Simplified cluster creation for Slurm-orchestrated clusters with optional Lifecycle Script (LCS) configuration.
+
+1.359.0 (2026-04-10)
+------------------
+
+* Feature - Support new SageMaker StartClusterHealthCheck API for on-demand DHC on Hyperpod EKS cluster. Support updated CreateCluster, UpdateCluster, DescribeCluster, BatchAddClusterNodes APIs for flexible instance group on HyperPod cluster
+
+1.358.0 (2026-04-09)
+------------------
+
+* Feature - Release support for g7e instance types for SageMaker HyperPod
+
+1.357.0 (2026-03-30)
+------------------
+
+* Feature - Added support for placement strategy and consolidation for SageMaker inference component endpoints. Customers can now configure how inference component copies are distributed across instances and availability zones (AZs), and enable automatic consolidation to optimizes resource utilization.
+
+1.356.0 (2026-03-26)
+------------------
+
+* Feature - Release support for ml.r5d.16xlarge instance types for SageMaker HyperPod
+
+1.355.0 (2026-03-18)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.354.0 (2026-03-11)
+------------------
+
+* Feature - SageMaker training plans allow you to extend your existing training plans to avoid workload interruptions without workload reconfiguration. When a training plan is approaching expiration, you can extend it directly through the SageMaker AI console or programmatically using the API or AWS CLI.
+
+1.353.0 (2026-03-05)
+------------------
+
+* Feature - Adds support for S3 Bucket Ownership validation for SageMaker Managed MLflow.
+
+1.352.0 (2026-03-03)
+------------------
+
+* Feature - This release adds b300 and g7e instance types for SageMaker inference endpoints.
+
+1.351.0 (2026-02-13)
+------------------
+
+* Feature - Enable g7e instance type support for SageMaker Processing, and enable single file configuration provisioning for HyperPod Slurm, where customers have the option to use HyperPod API to provide the provisioning parameters.
+
+1.350.0 (2026-02-06)
+------------------
+
+* Feature - Adding g7e instance support in Sagemaker Training
+
+1.349.0 (2026-01-27)
+------------------
+
+* Feature - Idle resource sharing enables teams to borrow unused compute resources in your SageMaker HyperPod cluster. This capability maximizes resource utilization by allowing teams to borrow idle compute capacity beyond their allocated compute quotas.
+
+1.348.0 (2026-01-16)
+------------------
+
+* Feature - Adding security consideration comments for lcc accessing execution role under root access
+
+1.347.0 (2026-01-12)
+------------------
+
+* Feature - Added ultraServerType to the UltraServerInfo structure to support server type identification for SageMaker HyperPod
+
+1.346.0 (2026-01-08)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.345.0 (2026-01-05)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.344.0 (2025-12-17)
+------------------
+
+* Feature - Adding the newly launched p6-b300.48xlarge ec2  instance support in Sagemaker(Hyperpod,Training and Sceptor)
+
+1.343.0 (2025-12-03)
+------------------
+
+* Feature - Introduces Serverless training: A fully managed compute infrastructure that abstracts away all infrastructure complexity, allowing you to focus purely on model development. Added AI model customization assets used to train, refine, and evaluate custom models during the model customization process.
+
+1.342.0 (2025-12-02)
+------------------
+
+* Feature - Added support for serverless MLflow Apps. Added support for new HubContentTypes (DataSet and JsonDoc) in Private Hub for AI model customization assets, enabling tracking and management of training datasets and evaluators (reward functions/prompts) throughout the ML lifecycle.
+
+1.341.0 (2025-11-21)
+------------------
+
+* Feature - Enhanced SageMaker HyperPod instance groups with support for MinInstanceCount, CapacityRequirements (Spot/On-Demand), and KubernetesConfig (labels and taints). Also Added speculative decoding and MaxInstanceCount for model optimization jobs.
+
+1.340.0 (2025-11-20)
+------------------
+
+* Feature - Added training plan support for inference endpoints. Added HyperPod task governance with accelerator partition-based quota allocation. Added BatchRebootClusterNodes and BatchReplaceClusterNodes APIs. Updated ListClusterNodes to include privateDnsHostName.
+
+1.339.0 (2025-11-19)
+------------------
+
+* Feature - Added support for enhanced metrics for SageMaker AI Endpoints. This features provides Utilization Metrics at instance and container granularity and also provides easy configuration of metric publish frequency from 10 sec -> 5 mins
+
+1.338.0 (2025-11-13)
+------------------
+
+* Feature - Added support for minor version upgrades and AWS Identity Center integration for SageMaker Hadron Partner Apps, enabling automated version management and IdC group-based access control.
+
+1.337.0 (2025-11-12)
+------------------
+
+* Feature - Add support for trn2.3xlarge instance type for SageMaker Hyperpod
+
+1.336.0 (2025-11-06)
+------------------
+
+* Feature - Added NodeProvisioningMode parameter to UpdateCluster API to determine how instance provisioning is handled during cluster operations; in Continuous mode. Added VpcId field in UpdateDomain request for SageMaker Unified Studio domains with no VPC to add a customer VPC.
+
+1.335.0 (2025-11-05)
+------------------
+
+* Feature - Add new fields in SageMaker Hyperpod DescribeCluster API response: TargetStateCount, SoftwareUpdateStatus and ActiveSoftwareDeploymentConfig to provide AMI update progress visibility .
+
+1.334.0 (2025-10-31)
+------------------
+
+* Feature - Allow update of platform identifier via UpdateNotebookInstance operation.
+
+1.333.0 (2025-10-28)
+------------------
+
+* Feature - Amazon SageMaker now supports deleting training and processing jobs in a terminal status.
+
+1.332.0 (2025-10-24)
+------------------
+
+* Feature - Added inference components model data caching feature
+
+1.331.0 (2025-10-23)
+------------------
+
+* Feature - Update endpoint ruleset parameters casing
+
+1.330.0 (2025-10-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.329.0 (2025-09-09)
+------------------
+
+* Feature - Released IPv6 support with dual-stack domain options on SageMaker Studio and introduced support for p6-b200.48xlarge instance type on SageMaker Studio for JupyterLab and CodeEditor applications.
+
+1.328.0 (2025-09-05)
+------------------
+
+* Feature - Release IPv6 support with dualstack in SageMaker Notebooks, Tiered Storage Checkpointing Support in SageMaker HyperPod and P5.4xlarge instance type for SageMaker Hosting.
+
+1.327.0 (2025-08-27)
+------------------
+
+* Feature - This release adds support for AutoScaling on SageMaker HyperPod.
+
+1.326.0 (2025-08-26)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.325.0 (2025-08-22)
+------------------
+
+* Feature - Launch SageMaker Notebook Instances support for AL2023 along with P6-B200 instance type and Rootless Docker support for SageMaker Studio.
+
+1.324.0 (2025-08-20)
+------------------
+
+* Feature - This release adds 1/ Launch ml.p5.4xlarge instance in Processing jobs, Training jobs and Training Plan 2/ Makes S3Uri to be required for S3FileSystem and S3FileSystemConfig.
+
+1.323.0 (2025-08-18)
+------------------
+
+* Feature - Customer managed keys now available for volume encryption of SageMaker HyperPod clusters.
+
+1.322.0 (2025-08-13)
+------------------
+
+* Feature - This release introduces compute quota for GPU, Trainium accelerators, vCPU, and vCPU memory utilization across teams in HyperPod clusters
+
+1.321.0 (2025-08-12)
+------------------
+
+* Feature - IAM Identity Center trusted identity propagation is now supported in SageMaker Studio.
+
+1.320.0 (2025-08-08)
+------------------
+
+* Feature - Adds support for GB200 UltraServers in Amazon SageMaker training jobs, training plans, and HyperPod clusters
+
+1.319.0 (2025-08-05)
+------------------
+
+* Feature - Add support for SageMaker Hyperpod continuous scaling and custom AMI; Introduce new APIs: ListClusterEvents, DescribeClusterEvent, BatchAddClusterNodes
+
+1.318.0 (2025-08-04)
+------------------
+
+* Feature - This release adds the ability for customers to attach and detach their EBS volumes to EKS-orchestrated HyperPod cluster nodes.
+
+1.317.0 (2025-07-31)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.316.0 (2025-07-21)
+------------------
+
+* Feature - This release adds 1/ Support for S3FileSystem in CustomFileSystems 2/ The ability for a customer to select their preferred IpAddressType for use with private Workforces 3/ Support for p4de instance type in SageMaker Training Plans
+
+1.315.0 (2025-07-15)
+------------------
+
+* Feature - This release adds support for a new Restricted instance group type to enable a specialized environment for running Nova customization jobs on SageMaker HyperPod clusters. This release also adds support for SageMaker pipeline versioning.
+
+1.314.0 (2025-07-03)
+------------------
+
+* Feature - Changes include new StartSession API for SageMaker Studio spaces and CreateHubContentPresignedUrls API for SageMaker JumpStart.
+
+1.313.0 (2025-07-01)
+------------------
+
+* Feature - Updated field validation requirements for InstanceGroups.
+
+1.312.0 (2025-06-19)
+------------------
+
+* Feature - This release introduces alternative support for utilizing CFN templates from S3 for SageMaker Projects.
+
+1.311.0 (2025-06-18)
+------------------
+
+* Feature - Add support for p6-b200 instance type for SageMaker Hyperpod
+
+1.310.0 (2025-06-16)
+------------------
+
+* Feature - This release 1) adds a new S3DataType Converse for SageMaker training 2)adds C8g R7gd M8g C6in P6 P6e instance type for SageMaker endpoint 3) adds m7i, r7i, c7i instance type for SageMaker Training and Processing.
+
+1.309.0 (2025-06-04)
+------------------
+
+* Feature - Added support for p6-b200 instance type in SageMaker Training Jobs and Training Plans.
+
+1.308.0 (2025-06-02)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.307.0 (2025-05-30)
+------------------
+
+* Feature - Release new parameter CapacityReservationConfig in ProductionVariant
+
+1.306.0 (2025-05-29)
+------------------
+
+* Feature - Add maintenance status field to DescribeMlflowTrackingServer API response
+
+1.305.0 (2025-05-12)
+------------------
+
+* Feature - No API changes from previous release. This release migrated the model to Smithy keeping all features unchanged.
+
+1.304.0 (2025-05-07)
+------------------
+
+* Feature - SageMaker AI Studio users can now migrate to SageMaker Unified Studio, which offers a unified web-based development experience that integrates AWS data, analytics, artificial intelligence (AI), and machine learning (ML) services, as well as additional tools and resource
+
+1.303.0 (2025-05-01)
+------------------
+
+* Feature - Feature - Adding support for Scheduled and Rolling Update Software in Sagemaker Hyperpod.
+
+1.302.0 (2025-04-29)
+------------------
+
+* Feature - Introduced support for P5en instance types on SageMaker Studio for JupyterLab and CodeEditor applications.
+
+1.301.0 (2025-04-18)
+------------------
+
+* Feature - This release adds a new Neuron driver option in InferenceAmiVersion parameter for ProductionVariant. Additionally, it adds support for fetching model lifecycle status in the ListModelPackages API. Users can now use this API to view the lifecycle stage of models that have been shared with them.
+
+1.300.0 (2025-04-03)
+------------------
+
+* Feature - Adds support for i3en, m7i, r7i instance types for SageMaker Hyperpod
+
+1.299.0 (2025-04-01)
+------------------
+
+* Feature - Added tagging support for SageMaker notebook instance lifecycle configurations
+
+1.298.0 (2025-03-28)
+------------------
+
+* Feature - TransformAmiVersion for Batch Transform and SageMaker Search Service Aggregate Search API Extension
+
+1.297.0 (2025-03-27)
+------------------
+
+* Feature - add: recovery mode for SageMaker Studio apps
+
+1.296.0 (2025-03-25)
+------------------
+
+* Feature - This release adds support for customer-managed KMS keys in Amazon SageMaker Partner AI Apps
+
 1.295.0 (2025-03-21)
 ------------------
 

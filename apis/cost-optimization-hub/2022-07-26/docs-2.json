@@ -4,17 +4,17 @@
   "operations": {
     "GetPreferences": "<p>Returns a set of preferences for an account in order to add account-specific preferences into the service. These preferences impact how the savings associated with recommendations are presented—estimated savings after discounts or estimated savings before discounts, for example.</p>",
     "GetRecommendation": "<p>Returns both the current and recommended resource configuration and the estimated cost impact for a recommendation.</p> <p>The <code>recommendationId</code> is only valid for up to a maximum of 24 hours as recommendations are refreshed daily. To retrieve the <code>recommendationId</code>, use the <code>ListRecommendations</code> API.</p>",
+    "ListEfficiencyMetrics": "<p>Returns cost efficiency metrics aggregated over time and optionally grouped by a specified dimension. The metrics provide insights into your cost optimization progress by tracking estimated savings, spending, and measures how effectively you're optimizing your Cloud resources.</p> <p>The operation supports both daily and monthly time granularities and allows grouping results by account ID, Amazon Web Services Region. Results are returned as time-series data, enabling you to analyze trends in your cost optimization performance over the specified time period.</p>",
     "ListEnrollmentStatuses": "<p>Retrieves the enrollment status for an account. It can also return the list of accounts that are enrolled under the organization.</p>",
     "ListRecommendationSummaries": "<p>Returns a concise representation of savings estimates for resources. Also returns de-duped savings across different types of recommendations.</p> <note> <p>The following filters are not supported for this API: <code>recommendationIds</code>, <code>resourceArns</code>, and <code>resourceIds</code>.</p> </note>",
     "ListRecommendations": "<p>Returns a list of recommendations.</p>",
-    "UpdateEnrollmentStatus": "<p>Updates the enrollment (opt in and opt out) status of an account to the Cost Optimization Hub service.</p> <p>If the account is a management account or delegated administrator of an organization, this action can also be used to enroll member accounts of the organization.</p> <p>You must have the appropriate permissions to opt in to Cost Optimization Hub and to view its recommendations. When you opt in, Cost Optimization Hub automatically creates a service-linked role in your account to access its data.</p>",
+    "UpdateEnrollmentStatus": "<p>Updates the enrollment (opt in and opt out) status of an account to the Cost Optimization Hub service.</p> <p>If the account is a management account of an organization, this action can also be used to enroll member accounts of the organization.</p> <p>You must have the appropriate permissions to opt in to Cost Optimization Hub and to view its recommendations. When you opt in, Cost Optimization Hub automatically creates a service-linked role in your account to access its data.</p>",
     "UpdatePreferences": "<p>Updates a set of preferences for an account in order to add account-specific preferences into the service. These preferences impact how the savings associated with recommendations are presented.</p>"
   },
   "shapes": {
     "AccessDeniedException": {
       "base": "<p>You are not authorized to use this operation with the given parameters.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "AccountEnrollmentStatus": {
       "base": "<p>Describes the enrollment status of an organization's member accounts in Cost Optimization Hub.</p>",
@@ -39,7 +39,7 @@
     "AccountIdList": {
       "base": null,
       "refs": {
-        "Filter$accountIds": "<p>The account that the recommendation is for.</p>"
+        "Filter$accountIds": "<p>The account to which the recommendation applies.</p>"
       }
     },
     "ActionType": {
@@ -61,6 +61,18 @@
         "Ec2AutoScalingGroupConfiguration$allocationStrategy": "<p>The strategy used for allocating instances, based on a predefined priority order or based on the lowest available price.</p>"
       }
     },
+    "AuroraDbClusterStorage": {
+      "base": "<p>Contains the details of an Aurora DB cluster storage.</p>",
+      "refs": {
+        "ResourceDetails$auroraDbClusterStorage": "<p>The Aurora DB cluster storage recommendation details.</p>"
+      }
+    },
+    "AuroraDbClusterStorageConfiguration": {
+      "base": "<p>The Aurora DB cluster storage configuration used for recommendations.</p>",
+      "refs": {
+        "AuroraDbClusterStorage$configuration": "<p>The Aurora DB cluster storage configuration used for recommendations.</p>"
+      }
+    },
     "BlockStoragePerformanceConfiguration": {
       "base": "<p>Describes the Amazon Elastic Block Store performance configuration of the current and recommended resource configuration for a recommendation.</p>",
       "refs": {
@@ -77,6 +89,7 @@
         "GetRecommendationResponse$restartNeeded": "<p>Whether or not implementing the recommendation requires a restart.</p>",
         "GetRecommendationResponse$rollbackPossible": "<p>Whether or not implementing the recommendation can be rolled back.</p>",
         "ListEnrollmentStatusesResponse$includeMemberAccounts": "<p>The enrollment status of all member accounts in the organization if the account is the management account or delegated administrator.</p>",
+        "MemoryDbReservedInstancesConfiguration$sizeFlexEligible": "<p>Determines whether the recommendation is size flexible.</p>",
         "OpenSearchReservedInstancesConfiguration$sizeFlexEligible": "<p>Determines whether the recommendation is size flexible.</p>",
         "RdsReservedInstancesConfiguration$sizeFlexEligible": "<p>Determines whether the recommendation is size flexible.</p>",
         "Recommendation$restartNeeded": "<p>Whether or not implementing the recommendation requires a restart.</p>",
@@ -117,6 +130,12 @@
         "RdsDbInstanceConfiguration$instance": "<p>Details about the instance configuration.</p>"
       }
     },
+    "DocumentDbCluster": {
+      "base": "<p>The Amazon DocumentDB cluster recommendation details.</p>",
+      "refs": {
+        "ResourceDetails$documentDbCluster": "<p>The Amazon DocumentDB cluster recommendation details.</p>"
+      }
+    },
     "Double": {
       "base": null,
       "refs": {
@@ -131,6 +150,9 @@
         "GetRecommendationResponse$estimatedMonthlySavings": "<p>The estimated monthly savings amount for the recommendation.</p>",
         "GetRecommendationResponse$estimatedMonthlyCost": "<p>The estimated monthly cost of the current resource. For Reserved Instances and Savings Plans, it refers to the cost for eligible usage.</p>",
         "ListRecommendationSummariesResponse$estimatedTotalDedupedSavings": "<p>The total overall savings for the aggregated view.</p>",
+        "MetricsByTime$score": "<p>The efficiency score for this time period. The score represents a measure of how effectively the cloud resources are being optimized, with higher scores indicating better optimization performance.</p>",
+        "MetricsByTime$savings": "<p>The estimated savings amount for this time period, representing the potential cost reduction achieved through optimization recommendations.</p>",
+        "MetricsByTime$spend": "<p>The total spending amount for this time period.</p>",
         "RdsDbInstanceStorageConfiguration$allocatedStorageInGb": "<p>The new amount of storage in GB to allocate for the DB instance.</p>",
         "RdsDbInstanceStorageConfiguration$iops": "<p>The amount of Provisioned IOPS (input/output operations per second) to be initially allocated for the DB instance.</p>",
         "RdsDbInstanceStorageConfiguration$storageThroughput": "<p>The storage throughput for the DB instance.</p>",
@@ -145,12 +167,30 @@
         "ResourcePricing$estimatedCostBeforeDiscounts": "<p>The savings estimate using Amazon Web Services public pricing without incorporating any discounts.</p>",
         "ResourcePricing$estimatedNetUnusedAmortizedCommitments": "<p>The estimated net unused amortized commitment for the recommendation.</p>",
         "ResourcePricing$estimatedCostAfterDiscounts": "<p>The savings estimate incorporating all discounts with Amazon Web Services, such as Reserved Instances and Savings Plans.</p>",
-        "SavingsPlansPricing$monthlySavingsPlansEligibleCost": "<p>The cost of paying for the recommended Savings Plan monthly.</p>",
-        "SavingsPlansPricing$estimatedMonthlyCommitment": "<p>Estimated monthly commitment for the Savings Plan.</p>",
-        "SavingsPlansPricing$savingsPercentage": "<p>Estimated savings as a percentage of your overall costs after buying the Savings Plan.</p>",
-        "SavingsPlansPricing$estimatedOnDemandCost": "<p>Estimated On-Demand cost you will pay after buying the Savings Plan.</p>",
+        "SavingsPlansPricing$monthlySavingsPlansEligibleCost": "<p>The cost of paying for the recommended Savings Plans monthly.</p>",
+        "SavingsPlansPricing$estimatedMonthlyCommitment": "<p>Estimated monthly commitment for the Savings Plans.</p>",
+        "SavingsPlansPricing$savingsPercentage": "<p>Estimated savings as a percentage of your overall costs after buying the Savings Plans.</p>",
+        "SavingsPlansPricing$estimatedOnDemandCost": "<p>Estimated On-Demand cost you will pay after buying the Savings Plans.</p>",
         "StorageConfiguration$sizeInGb": "<p>The storage volume.</p>",
         "Usage$usageAmount": "<p>The usage amount.</p>"
+      }
+    },
+    "DynamoDbReservedCapacity": {
+      "base": "<p>The DynamoDB reserved capacity recommendation details.</p>",
+      "refs": {
+        "ResourceDetails$dynamoDbReservedCapacity": "<p>The DynamoDB reserved capacity recommendation details.</p>"
+      }
+    },
+    "DynamoDbReservedCapacityConfiguration": {
+      "base": "<p>The DynamoDB reserved capacity configuration used for recommendations.</p>",
+      "refs": {
+        "DynamoDbReservedCapacity$configuration": "<p>The DynamoDB reserved capacity configuration used for recommendations.</p>"
+      }
+    },
+    "DynamoDbTable": {
+      "base": "<p>The DynamoDB table recommendation details.</p>",
+      "refs": {
+        "ResourceDetails$dynamoDbTable": "<p>The DynamoDB table recommendation details.</p>"
       }
     },
     "EbsVolume": {
@@ -231,6 +271,24 @@
         "EcsService$configuration": "<p>The ECS service configuration used for recommendations.</p>"
       }
     },
+    "EfficiencyMetricsByGroup": {
+      "base": "<p>Contains cost efficiency metrics for a specific group over time. The group is defined by the grouping dimension specified in the request, such as account ID, Amazon Web Services Region.</p>",
+      "refs": {
+        "EfficiencyMetricsByGroupList$member": "<p>An individual group's cost efficiency metrics over time.</p>"
+      }
+    },
+    "EfficiencyMetricsByGroupList": {
+      "base": "<p>A list of cost efficiency metrics grouped by the specified dimension.</p>",
+      "refs": {
+        "ListEfficiencyMetricsResponse$efficiencyMetricsByGroup": "<p>A list of cost efficiency metrics grouped by the specified dimension. Each group contains time-series data points with cost efficiency, potential savings, and optimzable spend for the specified time period.</p>"
+      }
+    },
+    "ElastiCacheCluster": {
+      "base": "<p>The ElastiCache cluster recommendation details.</p>",
+      "refs": {
+        "ResourceDetails$elastiCacheCluster": "<p>The ElastiCache cluster recommendation details.</p>"
+      }
+    },
     "ElastiCacheReservedInstances": {
       "base": "<p>The ElastiCache reserved instances recommendation details.</p>",
       "refs": {
@@ -265,22 +323,24 @@
     },
     "GetPreferencesRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetPreferencesResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetRecommendationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetRecommendationResponse": {
       "base": null,
+      "refs": {}
+    },
+    "GranularityType": {
+      "base": "<p>The time granularity for aggregating the cost efficiency metrics.</p>",
       "refs": {
+        "ListEfficiencyMetricsRequest$granularity": "<p>The time granularity for the cost efficiency metrics. Specify <code>Daily</code> for metrics aggregated by day, or <code>Monthly</code> for metrics aggregated by month.</p>"
       }
     },
     "ImplementationEffort": {
@@ -315,8 +375,7 @@
     },
     "InternalServerException": {
       "base": "<p>An error on the server occurred during the processing of your request. Try again later.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "LambdaFunction": {
       "base": "<p>The Lambda function recommendation details.</p>",
@@ -330,20 +389,31 @@
         "LambdaFunction$configuration": "<p>The Lambda function configuration used for recommendations.</p>"
       }
     },
-    "ListEnrollmentStatusesRequest": {
+    "ListEfficiencyMetricsRequest": {
+      "base": null,
+      "refs": {}
+    },
+    "ListEfficiencyMetricsRequestMaxResultsInteger": {
       "base": null,
       "refs": {
+        "ListEfficiencyMetricsRequest$maxResults": "<p>The maximum number of groups to return in the response. Valid values range from 0 to 1000. Use in conjunction with <code>nextToken</code> to paginate through results when the total number of groups exceeds this limit.</p>"
       }
+    },
+    "ListEfficiencyMetricsResponse": {
+      "base": null,
+      "refs": {}
+    },
+    "ListEnrollmentStatusesRequest": {
+      "base": null,
+      "refs": {}
     },
     "ListEnrollmentStatusesResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListRecommendationSummariesRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListRecommendationSummariesRequestMaxResultsInteger": {
       "base": null,
@@ -353,13 +423,11 @@
     },
     "ListRecommendationSummariesResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListRecommendationsRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListRecommendationsRequestMaxResultsInteger": {
       "base": null,
@@ -369,7 +437,14 @@
     },
     "ListRecommendationsResponse": {
       "base": null,
+      "refs": {}
+    },
+    "Long": {
+      "base": null,
       "refs": {
+        "NatGatewayConfiguration$activeConnectionCount": "<p>The number of active connections through the NAT Gateway.</p>",
+        "NatGatewayConfiguration$packetsInFromSource": "<p>The number of packets received from the source through the NAT Gateway.</p>",
+        "NatGatewayConfiguration$packetsInFromDestination": "<p>The number of packets received from the destination through the NAT Gateway.</p>"
       }
     },
     "MaxResults": {
@@ -386,6 +461,36 @@
         "UpdatePreferencesResponse$memberAccountDiscountVisibility": "<p>Shows the status of the \"member account discount visibility\" preference.</p>"
       }
     },
+    "MemoryDbCluster": {
+      "base": "<p>The MemoryDB cluster recommendation details.</p>",
+      "refs": {
+        "ResourceDetails$memoryDbCluster": "<p>The MemoryDB cluster recommendation details.</p>"
+      }
+    },
+    "MemoryDbReservedInstances": {
+      "base": "<p>The MemoryDB reserved instances recommendation details.</p> <note> <p>While the API reference uses \"MemoryDB reserved instances\", the user guide and other documentation refer to them as \"MemoryDB reserved nodes\", as the terms are used interchangeably.</p> </note>",
+      "refs": {
+        "ResourceDetails$memoryDbReservedInstances": "<p>The MemoryDB reserved instances recommendation details.</p>"
+      }
+    },
+    "MemoryDbReservedInstancesConfiguration": {
+      "base": "<p>The MemoryDB reserved instances configuration used for recommendations.</p> <note> <p>While the API reference uses \"MemoryDB reserved instances\", the user guide and other documentation refer to them as \"MemoryDB reserved nodes\", as the terms are used interchangeably.</p> </note>",
+      "refs": {
+        "MemoryDbReservedInstances$configuration": "<p>The MemoryDB reserved instances configuration used for recommendations.</p>"
+      }
+    },
+    "MetricsByTime": {
+      "base": "<p>Contains efficiency metrics for a specific point in time, including an efficiency score, potential savings, optimizable spend, and timestamp.</p>",
+      "refs": {
+        "MetricsByTimeList$member": "<p>A single time-series data point containing efficiency metrics.</p>"
+      }
+    },
+    "MetricsByTimeList": {
+      "base": "<p>A list of time-series efficiency metric data points.</p>",
+      "refs": {
+        "EfficiencyMetricsByGroup$metricsByTime": "<p>A list of time-series data points containing efficiency metrics for this group. Each data point includes an efficiency score, estimated savings, spending, and a timestamp corresponding to the specified granularity. This field is null when efficiency metrics cannot be calculated for the group, in which case the message field provides an explanation.</p>"
+      }
+    },
     "MixedInstanceConfiguration": {
       "base": "<p>The configuration for the EC2 Auto Scaling group with mixed instance types.</p>",
       "refs": {
@@ -396,6 +501,18 @@
       "base": null,
       "refs": {
         "Ec2AutoScalingGroupConfiguration$mixedInstances": "<p>A list of instance types for an EC2 Auto Scaling group with mixed instance types.</p>"
+      }
+    },
+    "NatGateway": {
+      "base": "<p>The NAT Gateway recommendation details.</p>",
+      "refs": {
+        "ResourceDetails$natGateway": "<p>The NAT Gateway recommendation details.</p>"
+      }
+    },
+    "NatGatewayConfiguration": {
+      "base": "<p>The NAT Gateway configuration used for recommendations.</p>",
+      "refs": {
+        "NatGateway$configuration": "<p>The NAT Gateway configuration used for recommendations.</p>"
       }
     },
     "OpenSearchReservedInstances": {
@@ -419,7 +536,22 @@
     "OrderBy": {
       "base": "<p>Defines how rows will be sorted in the response.</p>",
       "refs": {
+        "ListEfficiencyMetricsRequest$orderBy": "<p>The ordering specification for the results. Defines which dimension to sort by and whether to sort in ascending or descending order.</p>",
         "ListRecommendationsRequest$orderBy": "<p>The ordering of recommendations by a dimension.</p>"
+      }
+    },
+    "PaymentOption": {
+      "base": null,
+      "refs": {
+        "PreferredCommitment$paymentOption": "<p>The preferred upfront payment structure for commitments. If the value is null, it will default to <code>AllUpfront</code> (highest savings) where applicable.</p>"
+      }
+    },
+    "PreferredCommitment": {
+      "base": "<p>The preferred configuration for Reserved Instances and Savings Plans commitment-based discounts, consisting of a payment option and a commitment duration.</p>",
+      "refs": {
+        "GetPreferencesResponse$preferredCommitment": "<p>Retrieves the current preferences for how Reserved Instances and Savings Plans cost-saving opportunities are prioritized in terms of payment option and term length.</p>",
+        "UpdatePreferencesRequest$preferredCommitment": "<p>Sets the preferences for how Reserved Instances and Savings Plans cost-saving opportunities are prioritized in terms of payment option and term length.</p>",
+        "UpdatePreferencesResponse$preferredCommitment": "<p>Shows the updated preferences for how Reserved Instances and Savings Plans cost-saving opportunities are prioritized in terms of payment option and term length.</p>"
       }
     },
     "PrimitiveBoolean": {
@@ -516,8 +648,10 @@
     "ReservedInstancesCostCalculation": {
       "base": "<p>Cost impact of the purchase recommendation.</p>",
       "refs": {
+        "DynamoDbReservedCapacity$costCalculation": null,
         "Ec2ReservedInstances$costCalculation": "<p>Cost impact of the purchase recommendation.</p>",
         "ElastiCacheReservedInstances$costCalculation": "<p>Cost impact of the purchase recommendation.</p>",
+        "MemoryDbReservedInstances$costCalculation": null,
         "OpenSearchReservedInstances$costCalculation": "<p>Cost impact of the purchase recommendation.</p>",
         "RdsReservedInstances$costCalculation": "<p>Cost impact of the purchase recommendation.</p>",
         "RedshiftReservedInstances$costCalculation": "<p>Cost impact of the purchase recommendation.</p>"
@@ -538,13 +672,21 @@
     "ResourceCostCalculation": {
       "base": "<p>Cost impact of the resource recommendation.</p>",
       "refs": {
+        "AuroraDbClusterStorage$costCalculation": null,
+        "DocumentDbCluster$costCalculation": null,
+        "DynamoDbTable$costCalculation": null,
         "EbsVolume$costCalculation": "<p>Cost impact of the recommendation.</p>",
         "Ec2AutoScalingGroup$costCalculation": "<p>Cost impact of the recommendation.</p>",
         "Ec2Instance$costCalculation": "<p>Cost impact of the recommendation.</p>",
         "EcsService$costCalculation": "<p>Cost impact of the recommendation.</p>",
+        "ElastiCacheCluster$costCalculation": null,
         "LambdaFunction$costCalculation": "<p>Cost impact of the recommendation.</p>",
+        "MemoryDbCluster$costCalculation": null,
+        "NatGateway$costCalculation": null,
         "RdsDbInstance$costCalculation": null,
-        "RdsDbInstanceStorage$costCalculation": null
+        "RdsDbInstanceStorage$costCalculation": null,
+        "SageMakerEndpoint$costCalculation": null,
+        "WorkSpaces$costCalculation": null
       }
     },
     "ResourceDetails": {
@@ -562,8 +704,7 @@
     },
     "ResourceNotFoundException": {
       "base": "<p>The specified Amazon Resource Name (ARN) in the request doesn't exist.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ResourcePricing": {
       "base": "<p>Contains pricing information about the specified resource.</p>",
@@ -583,6 +724,12 @@
       "base": null,
       "refs": {
         "Filter$resourceTypes": "<p>The resource type of the recommendation.</p>"
+      }
+    },
+    "SageMakerEndpoint": {
+      "base": "<p>The SageMaker endpoint recommendation details.</p>",
+      "refs": {
+        "ResourceDetails$sageMakerEndpoint": "<p>The SageMaker endpoint recommendation details.</p>"
       }
     },
     "SageMakerSavingsPlans": {
@@ -614,7 +761,7 @@
       }
     },
     "SavingsPlansPricing": {
-      "base": "<p>Pricing information about a Savings Plan.</p>",
+      "base": "<p>Pricing information about a Savings Plans.</p>",
       "refs": {
         "SavingsPlansCostCalculation$pricing": "<p>Pricing details of the purchase recommendation.</p>"
       }
@@ -636,56 +783,71 @@
       "base": null,
       "refs": {
         "AccessDeniedException$message": null,
+        "AuroraDbClusterStorageConfiguration$storageType": "<p>The storage type to associate with the Aurora DB cluster.</p>",
         "ComputeConfiguration$architecture": "<p>The architecture of the resource.</p>",
         "ComputeConfiguration$platform": "<p>The platform of the resource. The platform is the specific combination of operating system, license model, and software on an instance.</p>",
-        "ComputeSavingsPlansConfiguration$accountScope": "<p>The account scope that you want your recommendations for. Amazon Web Services calculates recommendations including the management account and member accounts if the value is set to <code>PAYER</code>. If the value is <code>LINKED</code>, recommendations are calculated for individual member accounts only.</p>",
+        "ComputeSavingsPlansConfiguration$accountScope": "<p>The account scope for which you want recommendations. Amazon Web Services calculates recommendations including the management account and member accounts if the value is set to <code>PAYER</code>. If the value is <code>LINKED</code>, recommendations are calculated for individual member accounts only.</p>",
         "ComputeSavingsPlansConfiguration$term": "<p>The Savings Plans recommendation term in years.</p>",
         "ComputeSavingsPlansConfiguration$paymentOption": "<p>The payment option for the commitment.</p>",
         "ComputeSavingsPlansConfiguration$hourlyCommitment": "<p>The hourly commitment for the Savings Plans type.</p>",
         "DbInstanceConfiguration$dbInstanceClass": "<p>The DB instance class of the DB instance.</p>",
+        "DynamoDbReservedCapacityConfiguration$accountScope": "<p>The account scope for which you want recommendations.</p>",
+        "DynamoDbReservedCapacityConfiguration$service": "<p>The service for which you want recommendations.</p>",
+        "DynamoDbReservedCapacityConfiguration$term": "<p>The reserved capacity recommendation term in years.</p>",
+        "DynamoDbReservedCapacityConfiguration$paymentOption": "<p>The payment option for the commitment.</p>",
+        "DynamoDbReservedCapacityConfiguration$reservedInstancesRegion": "<p>The Amazon Web Services Region of the commitment.</p>",
+        "DynamoDbReservedCapacityConfiguration$upfrontCost": "<p>How much purchasing this reserved capacity costs you upfront.</p>",
+        "DynamoDbReservedCapacityConfiguration$monthlyRecurringCost": "<p>How much purchasing this reserved capacity costs you on a monthly basis.</p>",
+        "DynamoDbReservedCapacityConfiguration$numberOfCapacityUnitsToPurchase": "<p>The number of reserved capacity units that Amazon Web Services recommends that you purchase.</p>",
+        "DynamoDbReservedCapacityConfiguration$capacityUnits": "<p>The capacity unit of the recommended reservation.</p>",
         "EbsVolumeConfiguration$attachmentState": "<p>The Amazon Elastic Block Store attachment state.</p>",
-        "Ec2InstanceSavingsPlansConfiguration$accountScope": "<p>The account scope that you want your recommendations for.</p>",
+        "Ec2InstanceSavingsPlansConfiguration$accountScope": "<p>The account scope for which you want recommendations.</p>",
         "Ec2InstanceSavingsPlansConfiguration$term": "<p>The Savings Plans recommendation term in years.</p>",
         "Ec2InstanceSavingsPlansConfiguration$paymentOption": "<p>The payment option for the commitment.</p>",
         "Ec2InstanceSavingsPlansConfiguration$hourlyCommitment": "<p>The hourly commitment for the Savings Plans type.</p>",
-        "Ec2InstanceSavingsPlansConfiguration$instanceFamily": "<p>The instance family of the recommended Savings Plan.</p>",
+        "Ec2InstanceSavingsPlansConfiguration$instanceFamily": "<p>The instance family of the recommended Savings Plans.</p>",
         "Ec2InstanceSavingsPlansConfiguration$savingsPlansRegion": "<p>The Amazon Web Services Region of the commitment.</p>",
-        "Ec2ReservedInstancesConfiguration$accountScope": "<p>The account scope that you want your recommendations for.</p>",
-        "Ec2ReservedInstancesConfiguration$service": "<p>The service that you want your recommendations for.</p>",
-        "Ec2ReservedInstancesConfiguration$normalizedUnitsToPurchase": "<p>The number of normalized units that Amazon Web Services recommends that you purchase.</p>",
+        "Ec2ReservedInstancesConfiguration$accountScope": "<p>The account scope for which you want recommendations.</p>",
+        "Ec2ReservedInstancesConfiguration$service": "<p>The service for which you want recommendations.</p>",
         "Ec2ReservedInstancesConfiguration$term": "<p>The reserved instances recommendation term in years.</p>",
         "Ec2ReservedInstancesConfiguration$paymentOption": "<p>The payment option for the commitment.</p>",
+        "Ec2ReservedInstancesConfiguration$reservedInstancesRegion": "<p>The Amazon Web Services Region of the commitment.</p>",
+        "Ec2ReservedInstancesConfiguration$upfrontCost": "<p>How much purchasing this instance costs you upfront.</p>",
+        "Ec2ReservedInstancesConfiguration$monthlyRecurringCost": "<p>How much purchasing these reserved instances costs you on a monthly basis.</p>",
+        "Ec2ReservedInstancesConfiguration$normalizedUnitsToPurchase": "<p>The number of normalized units that Amazon Web Services recommends that you purchase.</p>",
         "Ec2ReservedInstancesConfiguration$numberOfInstancesToPurchase": "<p>The number of instances that Amazon Web Services recommends that you purchase.</p>",
         "Ec2ReservedInstancesConfiguration$offeringClass": "<p>Indicates whether the recommendation is for standard or convertible reservations.</p>",
         "Ec2ReservedInstancesConfiguration$instanceFamily": "<p>The instance family of the recommended reservation.</p>",
         "Ec2ReservedInstancesConfiguration$instanceType": "<p>The type of instance that Amazon Web Services recommends.</p>",
-        "Ec2ReservedInstancesConfiguration$reservedInstancesRegion": "<p>The Amazon Web Services Region of the commitment.</p>",
         "Ec2ReservedInstancesConfiguration$currentGeneration": "<p>Determines whether the recommendation is for a current generation instance.</p>",
         "Ec2ReservedInstancesConfiguration$platform": "<p>The platform of the recommended reservation. The platform is the specific combination of operating system, license model, and software on an instance.</p>",
         "Ec2ReservedInstancesConfiguration$tenancy": "<p>Determines whether the recommended reservation is dedicated or shared.</p>",
-        "Ec2ReservedInstancesConfiguration$upfrontCost": "<p>How much purchasing this instance costs you upfront.</p>",
-        "Ec2ReservedInstancesConfiguration$monthlyRecurringCost": "<p>How much purchasing reserved instances costs you on a monthly basis.</p>",
-        "ElastiCacheReservedInstancesConfiguration$accountScope": "<p>The account scope that you want your recommendations for.</p>",
-        "ElastiCacheReservedInstancesConfiguration$service": "<p>The service that you want your recommendations for.</p>",
-        "ElastiCacheReservedInstancesConfiguration$normalizedUnitsToPurchase": "<p>The number of normalized units that Amazon Web Services recommends that you purchase.</p>",
+        "EfficiencyMetricsByGroup$group": "<p>The value of the grouping dimension for this set of metrics. For example, if grouped by account ID, this field contains the account ID. If no grouping is specified, this field is empty.</p>",
+        "EfficiencyMetricsByGroup$message": "<p>An explanation of why efficiency metrics could not be calculated for this group when the metricsByTime field is null. Common reasons include insufficient or inconclusive cost and usage data during the specified time period. This field is null or empty when metrics are successfully calculated.</p>",
+        "ElastiCacheReservedInstancesConfiguration$accountScope": "<p>The account scope for which you want recommendations.</p>",
+        "ElastiCacheReservedInstancesConfiguration$service": "<p>The service for which you want recommendations.</p>",
         "ElastiCacheReservedInstancesConfiguration$term": "<p>The reserved instances recommendation term in years.</p>",
         "ElastiCacheReservedInstancesConfiguration$paymentOption": "<p>The payment option for the commitment.</p>",
+        "ElastiCacheReservedInstancesConfiguration$reservedInstancesRegion": "<p>The Amazon Web Services Region of the commitment.</p>",
+        "ElastiCacheReservedInstancesConfiguration$upfrontCost": "<p>How much purchasing this instance costs you upfront.</p>",
+        "ElastiCacheReservedInstancesConfiguration$monthlyRecurringCost": "<p>How much purchasing these reserved instances costs you on a monthly basis.</p>",
+        "ElastiCacheReservedInstancesConfiguration$normalizedUnitsToPurchase": "<p>The number of normalized units that Amazon Web Services recommends that you purchase.</p>",
         "ElastiCacheReservedInstancesConfiguration$numberOfInstancesToPurchase": "<p>The number of instances that Amazon Web Services recommends that you purchase.</p>",
         "ElastiCacheReservedInstancesConfiguration$instanceFamily": "<p>The instance family of the recommended reservation.</p>",
         "ElastiCacheReservedInstancesConfiguration$instanceType": "<p>The type of instance that Amazon Web Services recommends.</p>",
-        "ElastiCacheReservedInstancesConfiguration$reservedInstancesRegion": "<p>The Amazon Web Services Region of the commitment.</p>",
         "ElastiCacheReservedInstancesConfiguration$currentGeneration": "<p>Determines whether the recommendation is for a current generation instance.</p>",
-        "ElastiCacheReservedInstancesConfiguration$upfrontCost": "<p>How much purchasing this instance costs you upfront.</p>",
-        "ElastiCacheReservedInstancesConfiguration$monthlyRecurringCost": "<p>How much purchasing reserved instances costs you on a monthly basis.</p>",
         "GetRecommendationRequest$recommendationId": "<p>The ID for the recommendation.</p>",
         "GetRecommendationResponse$recommendationId": "<p>The ID for the recommendation.</p>",
         "GetRecommendationResponse$resourceId": "<p>The unique identifier for the resource. This is the same as the Amazon Resource Name (ARN), if available.</p>",
         "GetRecommendationResponse$resourceArn": "<p>The Amazon Resource Name (ARN) of the resource.</p>",
-        "GetRecommendationResponse$accountId": "<p>The account that the recommendation is for.</p>",
+        "GetRecommendationResponse$accountId": "<p>The account to which the recommendation applies.</p>",
         "GetRecommendationResponse$currencyCode": "<p>The currency code used for the recommendation.</p>",
         "GetRecommendationResponse$region": "<p>The Amazon Web Services Region of the resource.</p>",
         "InstanceConfiguration$type": "<p>The instance type of the configuration.</p>",
         "InternalServerException$message": null,
+        "ListEfficiencyMetricsRequest$groupBy": "<p>The dimension by which to group the cost efficiency metrics. Valid values include account ID, Amazon Web Services Region. When no grouping is specified, metrics are aggregated across all resources in the specified time period.</p>",
+        "ListEfficiencyMetricsRequest$nextToken": "<p>The token to retrieve the next page of results. This value is returned in the response when the number of groups exceeds the specified <code>maxResults</code> value.</p>",
+        "ListEfficiencyMetricsResponse$nextToken": "<p>The token to retrieve the next page of results. When this value is present in the response, additional groups are available. Pass this token in the <code>nextToken</code> parameter of a subsequent request to retrieve the next page.</p>",
         "ListEnrollmentStatusesRequest$nextToken": "<p>The token to retrieve the next set of results.</p>",
         "ListEnrollmentStatusesResponse$nextToken": "<p>The token to retrieve the next set of results.</p>",
         "ListRecommendationSummariesRequest$groupBy": "<p>The grouping of recommendations by a dimension.</p>",
@@ -695,38 +857,51 @@
         "ListRecommendationSummariesResponse$nextToken": "<p>The token to retrieve the next set of results.</p>",
         "ListRecommendationsRequest$nextToken": "<p>The token to retrieve the next set of results.</p>",
         "ListRecommendationsResponse$nextToken": "<p>The token to retrieve the next set of results.</p>",
+        "MemoryDbReservedInstancesConfiguration$accountScope": "<p>The account scope for which you want recommendations.</p>",
+        "MemoryDbReservedInstancesConfiguration$service": "<p>The service for which you want recommendations.</p>",
+        "MemoryDbReservedInstancesConfiguration$term": "<p>The reserved instances recommendation term in years.</p>",
+        "MemoryDbReservedInstancesConfiguration$paymentOption": "<p>The payment option for the commitment.</p>",
+        "MemoryDbReservedInstancesConfiguration$reservedInstancesRegion": "<p>The Amazon Web Services Region of the commitment.</p>",
+        "MemoryDbReservedInstancesConfiguration$upfrontCost": "<p>How much purchasing these reserved instances costs you upfront.</p>",
+        "MemoryDbReservedInstancesConfiguration$monthlyRecurringCost": "<p>How much purchasing these reserved instances costs you on a monthly basis.</p>",
+        "MemoryDbReservedInstancesConfiguration$normalizedUnitsToPurchase": "<p>The number of normalized units that Amazon Web Services recommends that you purchase.</p>",
+        "MemoryDbReservedInstancesConfiguration$numberOfInstancesToPurchase": "<p>The number of instances that Amazon Web Services recommends that you purchase.</p>",
+        "MemoryDbReservedInstancesConfiguration$instanceType": "<p>The type of instance that Amazon Web Services recommends.</p>",
+        "MemoryDbReservedInstancesConfiguration$instanceFamily": "<p>The instance family of the recommended reservation.</p>",
+        "MemoryDbReservedInstancesConfiguration$currentGeneration": "<p>Determines whether the recommendation is for a current generation instance.</p>",
+        "MetricsByTime$timestamp": "<p>The timestamp for this data point. The format depends on the granularity: YYYY-MM-DD for daily metrics, or YYYY-MM for monthly metrics.</p>",
         "MixedInstanceConfiguration$type": "<p>The instance type of the configuration.</p>",
-        "OpenSearchReservedInstancesConfiguration$accountScope": "<p>The account scope that you want your recommendations for.</p>",
-        "OpenSearchReservedInstancesConfiguration$service": "<p>The service that you want your recommendations for.</p>",
-        "OpenSearchReservedInstancesConfiguration$normalizedUnitsToPurchase": "<p>The number of normalized units that Amazon Web Services recommends that you purchase.</p>",
+        "OpenSearchReservedInstancesConfiguration$accountScope": "<p>The account scope for which you want recommendations.</p>",
+        "OpenSearchReservedInstancesConfiguration$service": "<p>The service for which you want recommendations.</p>",
         "OpenSearchReservedInstancesConfiguration$term": "<p>The reserved instances recommendation term in years.</p>",
         "OpenSearchReservedInstancesConfiguration$paymentOption": "<p>The payment option for the commitment.</p>",
+        "OpenSearchReservedInstancesConfiguration$reservedInstancesRegion": "<p>The Amazon Web Services Region of the commitment.</p>",
+        "OpenSearchReservedInstancesConfiguration$upfrontCost": "<p>How much purchasing this instance costs you upfront.</p>",
+        "OpenSearchReservedInstancesConfiguration$monthlyRecurringCost": "<p>How much purchasing these reserved instances costs you on a monthly basis.</p>",
+        "OpenSearchReservedInstancesConfiguration$normalizedUnitsToPurchase": "<p>The number of normalized units that Amazon Web Services recommends that you purchase.</p>",
         "OpenSearchReservedInstancesConfiguration$numberOfInstancesToPurchase": "<p>The number of instances that Amazon Web Services recommends that you purchase.</p>",
         "OpenSearchReservedInstancesConfiguration$instanceType": "<p>The type of instance that Amazon Web Services recommends.</p>",
-        "OpenSearchReservedInstancesConfiguration$reservedInstancesRegion": "<p>The Amazon Web Services Region of the commitment.</p>",
         "OpenSearchReservedInstancesConfiguration$currentGeneration": "<p>Determines whether the recommendation is for a current generation instance.</p>",
-        "OpenSearchReservedInstancesConfiguration$upfrontCost": "<p>How much purchasing this instance costs you upfront.</p>",
-        "OpenSearchReservedInstancesConfiguration$monthlyRecurringCost": "<p>How much purchasing reserved instances costs you on a monthly basis.</p>",
         "OrderBy$dimension": "<p>Sorts by dimension values.</p>",
         "RdsDbInstanceStorageConfiguration$storageType": "<p>The storage type to associate with the DB instance.</p>",
-        "RdsReservedInstancesConfiguration$accountScope": "<p>The account scope that you want your recommendations for.</p>",
-        "RdsReservedInstancesConfiguration$service": "<p>The service that you want your recommendations for.</p>",
-        "RdsReservedInstancesConfiguration$normalizedUnitsToPurchase": "<p>The number of normalized units that Amazon Web Services recommends that you purchase.</p>",
+        "RdsReservedInstancesConfiguration$accountScope": "<p>The account scope for which you want recommendations.</p>",
+        "RdsReservedInstancesConfiguration$service": "<p>The service for which you want recommendations.</p>",
         "RdsReservedInstancesConfiguration$term": "<p>The reserved instances recommendation term in years.</p>",
         "RdsReservedInstancesConfiguration$paymentOption": "<p>The payment option for the commitment.</p>",
+        "RdsReservedInstancesConfiguration$reservedInstancesRegion": "<p>The Amazon Web Services Region of the commitment.</p>",
+        "RdsReservedInstancesConfiguration$upfrontCost": "<p>How much purchasing this instance costs you upfront.</p>",
+        "RdsReservedInstancesConfiguration$monthlyRecurringCost": "<p>How much purchasing this instance costs you on a monthly basis.</p>",
+        "RdsReservedInstancesConfiguration$normalizedUnitsToPurchase": "<p>The number of normalized units that Amazon Web Services recommends that you purchase.</p>",
         "RdsReservedInstancesConfiguration$numberOfInstancesToPurchase": "<p>The number of instances that Amazon Web Services recommends that you purchase.</p>",
         "RdsReservedInstancesConfiguration$instanceFamily": "<p>The instance family of the recommended reservation.</p>",
         "RdsReservedInstancesConfiguration$instanceType": "<p>The type of instance that Amazon Web Services recommends.</p>",
-        "RdsReservedInstancesConfiguration$reservedInstancesRegion": "<p>The Amazon Web Services Region of the commitment.</p>",
         "RdsReservedInstancesConfiguration$currentGeneration": "<p>Determines whether the recommendation is for a current generation instance.</p>",
-        "RdsReservedInstancesConfiguration$upfrontCost": "<p>How much purchasing this instance costs you upfront.</p>",
-        "RdsReservedInstancesConfiguration$monthlyRecurringCost": "<p>How much purchasing this instance costs you on a monthly basis.</p>",
         "RdsReservedInstancesConfiguration$licenseModel": "<p>The license model that the recommended reservation supports.</p>",
         "RdsReservedInstancesConfiguration$databaseEdition": "<p>The database edition that the recommended reservation supports.</p>",
         "RdsReservedInstancesConfiguration$databaseEngine": "<p>The database engine that the recommended reservation supports.</p>",
         "RdsReservedInstancesConfiguration$deploymentOption": "<p>Determines whether the recommendation is for a reservation in a single Availability Zone or a reservation with a backup in a second Availability Zone.</p>",
         "Recommendation$recommendationId": "<p>The ID for the recommendation.</p>",
-        "Recommendation$accountId": "<p>The account that the recommendation is for.</p>",
+        "Recommendation$accountId": "<p>The account to which the recommendation applies.</p>",
         "Recommendation$region": "<p>The Amazon Web Services Region of the resource.</p>",
         "Recommendation$resourceId": "<p>The resource ID for the recommendation.</p>",
         "Recommendation$resourceArn": "<p>The Amazon Resource Name (ARN) for the recommendation.</p>",
@@ -739,24 +914,24 @@
         "Recommendation$recommendedResourceSummary": "<p>Describes the recommended resource.</p>",
         "RecommendationIdList$member": null,
         "RecommendationSummary$group": "<p>The grouping of recommendations.</p>",
-        "RedshiftReservedInstancesConfiguration$accountScope": "<p>The account scope that you want your recommendations for.</p>",
-        "RedshiftReservedInstancesConfiguration$service": "<p>The service that you want your recommendations for.</p>",
-        "RedshiftReservedInstancesConfiguration$normalizedUnitsToPurchase": "<p>The number of normalized units that Amazon Web Services recommends that you purchase.</p>",
+        "RedshiftReservedInstancesConfiguration$accountScope": "<p>The account scope for which you want recommendations.</p>",
+        "RedshiftReservedInstancesConfiguration$service": "<p>The service for which you want recommendations.</p>",
         "RedshiftReservedInstancesConfiguration$term": "<p>The reserved instances recommendation term in years.</p>",
         "RedshiftReservedInstancesConfiguration$paymentOption": "<p>The payment option for the commitment.</p>",
+        "RedshiftReservedInstancesConfiguration$reservedInstancesRegion": "<p>The Amazon Web Services Region of the commitment.</p>",
+        "RedshiftReservedInstancesConfiguration$upfrontCost": "<p>How much purchasing this instance costs you upfront.</p>",
+        "RedshiftReservedInstancesConfiguration$monthlyRecurringCost": "<p>How much purchasing these reserved instances costs you on a monthly basis.</p>",
+        "RedshiftReservedInstancesConfiguration$normalizedUnitsToPurchase": "<p>The number of normalized units that Amazon Web Services recommends that you purchase.</p>",
         "RedshiftReservedInstancesConfiguration$numberOfInstancesToPurchase": "<p>The number of instances that Amazon Web Services recommends that you purchase.</p>",
         "RedshiftReservedInstancesConfiguration$instanceFamily": "<p>The instance family of the recommended reservation.</p>",
         "RedshiftReservedInstancesConfiguration$instanceType": "<p>The type of instance that Amazon Web Services recommends.</p>",
-        "RedshiftReservedInstancesConfiguration$reservedInstancesRegion": "<p>The Amazon Web Services Region of the commitment.</p>",
         "RedshiftReservedInstancesConfiguration$currentGeneration": "<p>Determines whether the recommendation is for a current generation instance.</p>",
-        "RedshiftReservedInstancesConfiguration$upfrontCost": "<p>How much purchasing this instance costs you upfront.</p>",
-        "RedshiftReservedInstancesConfiguration$monthlyRecurringCost": "<p>How much purchasing reserved instances costs you on a monthly basis.</p>",
         "RegionList$member": null,
         "ResourceArnList$member": null,
         "ResourceIdList$member": null,
         "ResourceNotFoundException$message": null,
         "ResourceNotFoundException$resourceId": "<p>The identifier of the resource that was not found.</p>",
-        "SageMakerSavingsPlansConfiguration$accountScope": "<p>The account scope that you want your recommendations for.</p>",
+        "SageMakerSavingsPlansConfiguration$accountScope": "<p>The account scope for which you want recommendations.</p>",
         "SageMakerSavingsPlansConfiguration$term": "<p>The Savings Plans recommendation term in years.</p>",
         "SageMakerSavingsPlansConfiguration$paymentOption": "<p>The payment option for the commitment.</p>",
         "SageMakerSavingsPlansConfiguration$hourlyCommitment": "<p>The hourly commitment for the Savings Plans type.</p>",
@@ -765,6 +940,8 @@
         "Tag$key": "<p>The key that's associated with the tag.</p>",
         "Tag$value": "<p>The value that's associated with the tag.</p>",
         "ThrottlingException$message": null,
+        "TimePeriod$start": "<p>The beginning of the time period (inclusive). Specify the date in ISO 8601 format, such as 2024-01-01.</p>",
+        "TimePeriod$end": "<p>The end of the time period (exclusive). Specify the date in ISO 8601 format, such as 2024-12-31.</p>",
         "UpdateEnrollmentStatusResponse$status": "<p>The enrollment status of the account.</p>",
         "Usage$usageType": "<p>The usage type.</p>",
         "Usage$operation": "<p>The operation value.</p>",
@@ -807,9 +984,20 @@
         "Recommendation$tags": "<p>A list of tags assigned to the recommendation.</p>"
       }
     },
+    "Term": {
+      "base": null,
+      "refs": {
+        "PreferredCommitment$term": "<p>The preferred length of the commitment period. If the value is null, it will default to <code>ThreeYears</code> (highest savings) where applicable.</p>"
+      }
+    },
     "ThrottlingException": {
       "base": "<p>The request was denied due to request throttling.</p>",
+      "refs": {}
+    },
+    "TimePeriod": {
+      "base": "<p>Specifies a date range for retrieving efficiency metrics. The start date is inclusive and the end date is exclusive.</p>",
       "refs": {
+        "ListEfficiencyMetricsRequest$timePeriod": "<p>The time period for which to retrieve the cost efficiency metrics. The start date is inclusive and the end date is exclusive. Dates can be specified in either YYYY-MM-DD format or YYYY-MM format depending on the desired granularity.</p>"
       }
     },
     "Timestamp": {
@@ -821,23 +1009,19 @@
     },
     "UpdateEnrollmentStatusRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateEnrollmentStatusResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdatePreferencesRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdatePreferencesResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "Usage": {
       "base": "<p>Details about the usage.</p>",
@@ -853,8 +1037,7 @@
     },
     "ValidationException": {
       "base": "<p>The input fails to satisfy the constraints specified by an Amazon Web Services service.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ValidationExceptionDetail": {
       "base": "<p>The input failed to meet the constraints specified by the Amazon Web Services service in a specified field.</p>",
@@ -872,6 +1055,12 @@
       "base": null,
       "refs": {
         "ValidationException$reason": "<p>The reason for the validation exception.</p>"
+      }
+    },
+    "WorkSpaces": {
+      "base": "<p>The WorkSpaces recommendation details.</p>",
+      "refs": {
+        "ResourceDetails$workSpaces": "<p>The WorkSpaces recommendation details.</p>"
       }
     }
   }

@@ -13,6 +13,19 @@ module Aws::Kafka
       SENSITIVE: []
     end
 
+    class ApacheKafkaCluster
+      attr_accessor apache_kafka_cluster_id: ::String
+      attr_accessor bootstrap_broker_string: ::String
+      SENSITIVE: []
+    end
+
+    class AuthorizerLogs
+      attr_accessor cloud_watch_logs: Types::CloudWatchLogs
+      attr_accessor firehose: Types::Firehose
+      attr_accessor s3: Types::S3
+      SENSITIVE: []
+    end
+
     class BatchAssociateScramSecretRequest
       attr_accessor cluster_arn: ::String
       attr_accessor secret_arn_list: ::Array[::String]
@@ -73,6 +86,40 @@ module Aws::Kafka
       SENSITIVE: []
     end
 
+    class Catalog
+      attr_accessor catalog_arn: ::String
+      attr_accessor warehouse_location: ::String
+      SENSITIVE: []
+    end
+
+    class ChannelInfo
+      attr_accessor channel_arn: ::String
+      attr_accessor channel_name: ::String
+      attr_accessor status: ("CREATING" | "ACTIVE" | "UPDATING" | "DELETING" | "FAILED" | "SUSPENDING" | "SUSPENDED")
+      attr_accessor creation_time: ::Time
+      attr_accessor destination_type: ("ICEBERG" | "S3")
+      attr_accessor cluster_operation_arn: ::String
+      SENSITIVE: []
+    end
+
+    class ChannelStateInfo
+      attr_accessor code: ::String
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class CreateChannelRequest
+      attr_accessor channel_name: ::String
+      attr_accessor cluster_arn: ::String
+      attr_accessor encryption_configuration: Types::EncryptionConfiguration
+      attr_accessor iceberg_destination_configuration: Types::IcebergDestinationConfiguration
+      attr_accessor logging_info: Types::ChannelLoggingInfo
+      attr_accessor s3_destination_configuration: Types::S3DestinationConfiguration
+      attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor topic_configuration_list: ::Array[Types::TopicConfiguration]
+      SENSITIVE: []
+    end
+
     class ClientAuthentication
       attr_accessor sasl: Types::Sasl
       attr_accessor tls: Types::Tls
@@ -112,6 +159,7 @@ module Aws::Kafka
       attr_accessor zookeeper_connect_string: ::String
       attr_accessor zookeeper_connect_string_tls: ::String
       attr_accessor storage_mode: ("LOCAL" | "TIERED")
+      attr_accessor rebalancing: Types::Rebalancing
       attr_accessor customer_action_status: ("CRITICAL_ACTION_REQUIRED" | "ACTION_RECOMMENDED" | "NONE")
       SENSITIVE: []
     end
@@ -165,6 +213,8 @@ module Aws::Kafka
     end
 
     class ClusterOperationV2Serverless
+      attr_accessor source_cluster_info: Types::ServerlessConnectivityInfo
+      attr_accessor target_cluster_info: Types::ServerlessConnectivityInfo
       attr_accessor vpc_connection_info: Types::VpcConnectionInfoServerless
       SENSITIVE: []
     end
@@ -238,6 +288,7 @@ module Aws::Kafka
     class ConnectivityInfo
       attr_accessor public_access: Types::PublicAccess
       attr_accessor vpc_connectivity: Types::VpcConnectivity
+      attr_accessor network_type: ("IPV4" | "DUAL")
       SENSITIVE: []
     end
 
@@ -252,6 +303,7 @@ module Aws::Kafka
       attr_accessor consumer_groups_to_replicate: ::Array[::String]
       attr_accessor detect_and_copy_new_consumer_groups: bool
       attr_accessor synchronise_consumer_group_offsets: bool
+      attr_accessor consumer_group_offset_sync_mode: ("LEGACY" | "ENHANCED")
       SENSITIVE: []
     end
 
@@ -260,6 +312,12 @@ module Aws::Kafka
       attr_accessor consumer_groups_to_replicate: ::Array[::String]
       attr_accessor detect_and_copy_new_consumer_groups: bool
       attr_accessor synchronise_consumer_group_offsets: bool
+      SENSITIVE: []
+    end
+
+    class CreateChannelResponse
+      attr_accessor channel_arn: ::String
+      attr_accessor cluster_operation_arn: ::String
       SENSITIVE: []
     end
 
@@ -275,6 +333,7 @@ module Aws::Kafka
       attr_accessor number_of_broker_nodes: ::Integer
       attr_accessor open_monitoring: Types::OpenMonitoringInfo
       attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor rebalancing: Types::Rebalancing
       attr_accessor storage_mode: ("LOCAL" | "TIERED")
       SENSITIVE: []
     end
@@ -306,6 +365,7 @@ module Aws::Kafka
     class CreateReplicatorRequest
       attr_accessor description: ::String
       attr_accessor kafka_clusters: ::Array[Types::KafkaCluster]
+      attr_accessor log_delivery: Types::LogDelivery
       attr_accessor replication_info_list: ::Array[Types::ReplicationInfo]
       attr_accessor replicator_name: ::String
       attr_accessor service_execution_role_arn: ::String
@@ -317,6 +377,22 @@ module Aws::Kafka
       attr_accessor replicator_arn: ::String
       attr_accessor replicator_name: ::String
       attr_accessor replicator_state: ("RUNNING" | "CREATING" | "UPDATING" | "DELETING" | "FAILED")
+      SENSITIVE: []
+    end
+
+    class CreateTopicRequest
+      attr_accessor cluster_arn: ::String
+      attr_accessor topic_name: ::String
+      attr_accessor partition_count: ::Integer
+      attr_accessor replication_factor: ::Integer
+      attr_accessor configs: ::String
+      SENSITIVE: []
+    end
+
+    class CreateTopicResponse
+      attr_accessor topic_arn: ::String
+      attr_accessor topic_name: ::String
+      attr_accessor status: ("CREATING" | "UPDATING" | "DELETING" | "ACTIVE")
       SENSITIVE: []
     end
 
@@ -377,6 +453,19 @@ module Aws::Kafka
       SENSITIVE: []
     end
 
+    class DeleteTopicRequest
+      attr_accessor cluster_arn: ::String
+      attr_accessor topic_name: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteTopicResponse
+      attr_accessor topic_arn: ::String
+      attr_accessor topic_name: ::String
+      attr_accessor status: ("CREATING" | "UPDATING" | "DELETING" | "ACTIVE")
+      SENSITIVE: []
+    end
+
     class DeleteVpcConnectionRequest
       attr_accessor arn: ::String
       SENSITIVE: []
@@ -388,6 +477,12 @@ module Aws::Kafka
       SENSITIVE: []
     end
 
+    class DescribeChannelRequest
+      attr_accessor channel_arn: ::String
+      attr_accessor cluster_arn: ::String
+      SENSITIVE: []
+    end
+
     class DescribeClusterOperationRequest
       attr_accessor cluster_operation_arn: ::String
       SENSITIVE: []
@@ -395,6 +490,23 @@ module Aws::Kafka
 
     class DescribeClusterOperationV2Request
       attr_accessor cluster_operation_arn: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeChannelResponse
+      attr_accessor channel_arn: ::String
+      attr_accessor channel_name: ::String
+      attr_accessor encryption_configuration: Types::EncryptionConfiguration
+      attr_accessor iceberg_destination_configuration: Types::IcebergDestinationConfiguration
+      attr_accessor s3_destination_configuration: Types::S3DestinationConfiguration
+      attr_accessor status: ("CREATING" | "ACTIVE" | "UPDATING" | "DELETING" | "FAILED" | "SUSPENDING" | "SUSPENDED")
+      attr_accessor destination_type: ("ICEBERG" | "S3")
+      attr_accessor creation_time: ::Time
+      attr_accessor topic_configuration_list: ::Array[Types::TopicConfiguration]
+      attr_accessor logging_info: Types::ChannelLoggingInfo
+      attr_accessor state_info: Types::ChannelStateInfo
+      attr_accessor cluster_operation_arn: ::String
+      attr_accessor tags: ::Hash[::String, ::String]
       SENSITIVE: []
     end
 
@@ -449,6 +561,51 @@ module Aws::Kafka
       SENSITIVE: []
     end
 
+    class DescribeTopicRequest
+      attr_accessor cluster_arn: ::String
+      attr_accessor topic_name: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeTopicPartitionsRequest
+      attr_accessor cluster_arn: ::String
+      attr_accessor topic_name: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class DestinationTable
+      attr_accessor destination_database_name: ::String
+      attr_accessor destination_table_name: ::String
+      attr_accessor partition_spec: Types::PartitionSpec
+      SENSITIVE: []
+    end
+
+    class DescribeTopicResponse
+      attr_accessor topic_arn: ::String
+      attr_accessor topic_name: ::String
+      attr_accessor replication_factor: ::Integer
+      attr_accessor partition_count: ::Integer
+      attr_accessor configs: ::String
+      attr_accessor status: ("CREATING" | "UPDATING" | "DELETING" | "ACTIVE")
+      SENSITIVE: []
+    end
+
+    class DescribeTopicPartitionsResponse
+      attr_accessor partitions: ::Array[Types::TopicPartitionInfo]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class TopicPartitionInfo
+      attr_accessor partition: ::Integer
+      attr_accessor leader: ::Integer
+      attr_accessor replicas: ::Array[::Integer]
+      attr_accessor isr: ::Array[::Integer]
+      SENSITIVE: []
+    end
+
     class DescribeReplicatorRequest
       attr_accessor replicator_arn: ::String
       SENSITIVE: []
@@ -459,6 +616,7 @@ module Aws::Kafka
       attr_accessor current_version: ::String
       attr_accessor is_replicator_reference: bool
       attr_accessor kafka_clusters: ::Array[Types::KafkaClusterDescription]
+      attr_accessor log_delivery: Types::LogDelivery
       attr_accessor replication_info_list: ::Array[Types::ReplicationInfoDescription]
       attr_accessor replicator_arn: ::String
       attr_accessor replicator_description: ::String
@@ -504,6 +662,11 @@ module Aws::Kafka
     class EBSStorageInfo
       attr_accessor provisioned_throughput: Types::ProvisionedThroughput
       attr_accessor volume_size: ::Integer
+      SENSITIVE: []
+    end
+
+    class EncryptionConfiguration
+      attr_accessor kms_key_arn: ::String
       SENSITIVE: []
     end
 
@@ -564,6 +727,10 @@ module Aws::Kafka
       attr_accessor bootstrap_broker_string_vpc_connectivity_tls: ::String
       attr_accessor bootstrap_broker_string_vpc_connectivity_sasl_scram: ::String
       attr_accessor bootstrap_broker_string_vpc_connectivity_sasl_iam: ::String
+      attr_accessor bootstrap_broker_string_ipv_6: ::String
+      attr_accessor bootstrap_broker_string_tls_ipv_6: ::String
+      attr_accessor bootstrap_broker_string_sasl_scram_ipv_6: ::String
+      attr_accessor bootstrap_broker_string_sasl_iam_ipv_6: ::String
       SENSITIVE: []
     end
 
@@ -577,6 +744,19 @@ module Aws::Kafka
       SENSITIVE: []
     end
 
+    class IcebergDestinationConfiguration
+      attr_accessor append_only: bool
+      attr_accessor catalog: Types::Catalog
+      attr_accessor data_freshness_in_seconds: ::Integer
+      attr_accessor dead_letter_queue_s3: Types::DeadLetterQueueS3
+      attr_accessor destination_table_list: ::Array[Types::DestinationTable]
+      attr_accessor schema_evolution: Types::SchemaEvolution
+      attr_accessor service_execution_role_arn: ::String
+      attr_accessor table_creation: Types::TableCreation
+      attr_accessor compression_type: ("ZSTD" | "SNAPPY")
+      SENSITIVE: []
+    end
+
     class InternalServerErrorException
       attr_accessor invalid_parameter: ::String
       attr_accessor message: ::String
@@ -585,7 +765,10 @@ module Aws::Kafka
 
     class KafkaCluster
       attr_accessor amazon_msk_cluster: Types::AmazonMskCluster
+      attr_accessor apache_kafka_cluster: Types::ApacheKafkaCluster
       attr_accessor vpc_config: Types::KafkaClusterClientVpcConfig
+      attr_accessor client_authentication: Types::KafkaClusterClientAuthentication
+      attr_accessor encryption_in_transit: Types::KafkaClusterEncryptionInTransit
       SENSITIVE: []
     end
 
@@ -595,15 +778,42 @@ module Aws::Kafka
       SENSITIVE: []
     end
 
+    class KafkaClusterClientAuthentication
+      attr_accessor sasl_scram: Types::KafkaClusterSaslScramAuthentication
+      attr_accessor mtls: Types::KafkaClusterMTLSAuthentication
+      SENSITIVE: []
+    end
+
+    class KafkaClusterSaslScramAuthentication
+      attr_accessor mechanism: ("SHA256" | "SHA512")
+      attr_accessor secret_arn: ::String
+      SENSITIVE: []
+    end
+
+    class KafkaClusterMTLSAuthentication
+      attr_accessor secret_arn: ::String
+      SENSITIVE: []
+    end
+
+    class KafkaClusterEncryptionInTransit
+      attr_accessor encryption_type: ("TLS")
+      attr_accessor root_ca_certificate: ::String
+      SENSITIVE: []
+    end
+
     class KafkaClusterDescription
       attr_accessor amazon_msk_cluster: Types::AmazonMskCluster
+      attr_accessor apache_kafka_cluster: Types::ApacheKafkaCluster
       attr_accessor kafka_cluster_alias: ::String
       attr_accessor vpc_config: Types::KafkaClusterClientVpcConfig
+      attr_accessor client_authentication: Types::KafkaClusterClientAuthentication
+      attr_accessor encryption_in_transit: Types::KafkaClusterEncryptionInTransit
       SENSITIVE: []
     end
 
     class KafkaClusterSummary
       attr_accessor amazon_msk_cluster: Types::AmazonMskCluster
+      attr_accessor apache_kafka_cluster: Types::ApacheKafkaCluster
       attr_accessor kafka_cluster_alias: ::String
       SENSITIVE: []
     end
@@ -670,6 +880,13 @@ module Aws::Kafka
       SENSITIVE: []
     end
 
+    class DeadLetterQueueS3
+      attr_accessor bucket_arn: ::String
+      attr_accessor error_output_prefix: ::String
+      attr_accessor expected_bucket_owner: ::String
+      SENSITIVE: []
+    end
+
     class DescribeClusterV2Request
       attr_accessor cluster_arn: ::String
       SENSITIVE: []
@@ -677,6 +894,18 @@ module Aws::Kafka
 
     class DescribeClusterV2Response
       attr_accessor cluster_info: Types::Cluster
+      SENSITIVE: []
+    end
+
+    class DeleteChannelRequest
+      attr_accessor channel_arn: ::String
+      attr_accessor cluster_arn: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteChannelResponse
+      attr_accessor channel_arn: ::String
+      attr_accessor cluster_operation_arn: ::String
       SENSITIVE: []
     end
 
@@ -696,6 +925,16 @@ module Aws::Kafka
     class GetClusterPolicyResponse
       attr_accessor current_version: ::String
       attr_accessor policy: ::String
+      SENSITIVE: []
+    end
+
+    class RecordConverter
+      attr_accessor value_converter: ("BYTE_ARRAY" | "JSON" | "JSON_SCHEMA_GSR" | "STRING")
+      SENSITIVE: []
+    end
+
+    class RecordSchema
+      attr_accessor gsr_arn: ::String
       SENSITIVE: []
     end
 
@@ -726,6 +965,11 @@ module Aws::Kafka
       SENSITIVE: []
     end
 
+    class Rebalancing
+      attr_accessor status: ("PAUSED" | "ACTIVE")
+      SENSITIVE: []
+    end
+
     class ProvisionedRequest
       attr_accessor broker_node_group_info: Types::BrokerNodeGroupInfo
       attr_accessor client_authentication: Types::ClientAuthentication
@@ -737,6 +981,7 @@ module Aws::Kafka
       attr_accessor logging_info: Types::LoggingInfo
       attr_accessor number_of_broker_nodes: ::Integer
       attr_accessor storage_mode: ("LOCAL" | "TIERED")
+      attr_accessor rebalancing: Types::Rebalancing
       SENSITIVE: []
     end
 
@@ -752,6 +997,7 @@ module Aws::Kafka
       attr_accessor zookeeper_connect_string: ::String
       attr_accessor zookeeper_connect_string_tls: ::String
       attr_accessor storage_mode: ("LOCAL" | "TIERED")
+      attr_accessor rebalancing: Types::Rebalancing
       attr_accessor customer_action_status: ("CRITICAL_ACTION_REQUIRED" | "ACTION_RECOMMENDED" | "NONE")
       SENSITIVE: []
     end
@@ -778,9 +1024,29 @@ module Aws::Kafka
       SENSITIVE: []
     end
 
+    class ServerlessConnectivityInfo
+      attr_accessor network_type: ("IPV4" | "DUAL")
+      SENSITIVE: []
+    end
+
     class Serverless
       attr_accessor vpc_configs: ::Array[Types::VpcConfig]
       attr_accessor client_authentication: Types::ServerlessClientAuthentication
+      attr_accessor connectivity_info: Types::ServerlessConnectivityInfo
+      SENSITIVE: []
+    end
+
+    class ListChannelsRequest
+      attr_accessor cluster_arn: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      attr_accessor topic_name_filter: ::String
+      SENSITIVE: []
+    end
+
+    class ListChannelsResponse
+      attr_accessor channels: ::Array[Types::ChannelInfo]
+      attr_accessor next_token: ::String
       SENSITIVE: []
     end
 
@@ -871,7 +1137,15 @@ module Aws::Kafka
     end
 
     class LoggingInfo
+      attr_accessor authorizer_logs: Types::AuthorizerLogs
       attr_accessor broker_logs: Types::BrokerLogs
+      SENSITIVE: []
+    end
+
+    class ChannelLoggingInfo
+      attr_accessor cloud_watch_logs: Types::CloudWatchLogs
+      attr_accessor firehose: Types::Firehose
+      attr_accessor s3: Types::S3
       SENSITIVE: []
     end
 
@@ -885,6 +1159,20 @@ module Aws::Kafka
     class ListClientVpcConnectionsResponse
       attr_accessor next_token: ::String
       attr_accessor client_vpc_connections: ::Array[Types::ClientVpcConnection]
+      SENSITIVE: []
+    end
+
+    class ListTopicsRequest
+      attr_accessor cluster_arn: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      attr_accessor topic_name_filter: ::String
+      SENSITIVE: []
+    end
+
+    class ListTopicsResponse
+      attr_accessor topics: ::Array[Types::TopicInfo]
+      attr_accessor next_token: ::String
       SENSITIVE: []
     end
 
@@ -934,8 +1222,10 @@ module Aws::Kafka
       attr_accessor client_authentication: Types::ClientAuthentication
       attr_accessor encryption_info: Types::EncryptionInfo
       attr_accessor connectivity_info: Types::ConnectivityInfo
+      attr_accessor zookeeper_access: Types::ZookeeperAccess
       attr_accessor storage_mode: ("LOCAL" | "TIERED")
       attr_accessor broker_count_update_info: Types::BrokerCountUpdateInfo
+      attr_accessor rebalancing: Types::Rebalancing
       SENSITIVE: []
     end
 
@@ -950,6 +1240,11 @@ module Aws::Kafka
       SENSITIVE: []
     end
 
+    class ZookeeperAccess
+      attr_accessor enabled: bool
+      SENSITIVE: []
+    end
+
     class NotFoundException
       attr_accessor invalid_parameter: ::String
       attr_accessor message: ::String
@@ -959,8 +1254,10 @@ module Aws::Kafka
     class ReplicationInfo
       attr_accessor consumer_group_replication: Types::ConsumerGroupReplication
       attr_accessor source_kafka_cluster_arn: ::String
+      attr_accessor source_kafka_cluster_id: ::String
       attr_accessor target_compression_type: ("NONE" | "GZIP" | "SNAPPY" | "LZ4" | "ZSTD")
       attr_accessor target_kafka_cluster_arn: ::String
+      attr_accessor target_kafka_cluster_id: ::String
       attr_accessor topic_replication: Types::TopicReplication
       SENSITIVE: []
     end
@@ -990,6 +1287,37 @@ module Aws::Kafka
       SENSITIVE: []
     end
 
+    class ReplicatorCloudWatchLogs
+      attr_accessor enabled: bool
+      attr_accessor log_group: ::String
+      SENSITIVE: []
+    end
+
+    class ReplicatorFirehose
+      attr_accessor delivery_stream: ::String
+      attr_accessor enabled: bool
+      SENSITIVE: []
+    end
+
+    class ReplicatorS3
+      attr_accessor bucket: ::String
+      attr_accessor enabled: bool
+      attr_accessor prefix: ::String
+      SENSITIVE: []
+    end
+
+    class LogDelivery
+      attr_accessor replicator_log_delivery: Types::ReplicatorLogDelivery
+      SENSITIVE: []
+    end
+
+    class ReplicatorLogDelivery
+      attr_accessor cloud_watch_logs: Types::ReplicatorCloudWatchLogs
+      attr_accessor firehose: Types::ReplicatorFirehose
+      attr_accessor s3: Types::ReplicatorS3
+      SENSITIVE: []
+    end
+
     class ReplicationStateInfo
       attr_accessor code: ::String
       attr_accessor message: ::String
@@ -1006,6 +1334,11 @@ module Aws::Kafka
       attr_accessor replicator_name: ::String
       attr_accessor replicator_resource_arn: ::String
       attr_accessor replicator_state: ("RUNNING" | "CREATING" | "UPDATING" | "DELETING" | "FAILED")
+      SENSITIVE: []
+    end
+
+    class SchemaEvolution
+      attr_accessor enable_schema_evolution: bool
       SENSITIVE: []
     end
 
@@ -1058,6 +1391,11 @@ module Aws::Kafka
       SENSITIVE: []
     end
 
+    class TableCreation
+      attr_accessor enable_table_creation: bool
+      SENSITIVE: []
+    end
+
     class TagResourceRequest
       attr_accessor resource_arn: ::String
       attr_accessor tags: ::Hash[::String, ::String]
@@ -1090,6 +1428,22 @@ module Aws::Kafka
       SENSITIVE: []
     end
 
+    class TopicConfiguration
+      attr_accessor record_converter: Types::RecordConverter
+      attr_accessor record_schema: Types::RecordSchema
+      attr_accessor topic_arn: ::String
+      SENSITIVE: []
+    end
+
+    class TopicInfo
+      attr_accessor topic_arn: ::String
+      attr_accessor topic_name: ::String
+      attr_accessor replication_factor: ::Integer
+      attr_accessor partition_count: ::Integer
+      attr_accessor out_of_sync_replica_count: ::Integer
+      SENSITIVE: []
+    end
+
     class VpcConnectivityTls
       attr_accessor enabled: bool
       SENSITIVE: []
@@ -1107,6 +1461,60 @@ module Aws::Kafka
     end
 
     class UnauthorizedException
+      attr_accessor invalid_parameter: ::String
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class TopicExistsException
+      attr_accessor invalid_parameter: ::String
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class ClusterConnectivityException
+      attr_accessor invalid_parameter: ::String
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class KafkaTimeoutException
+      attr_accessor invalid_parameter: ::String
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class UnknownTopicOrPartitionException
+      attr_accessor invalid_parameter: ::String
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class ControllerMovedException
+      attr_accessor invalid_parameter: ::String
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class NotControllerException
+      attr_accessor invalid_parameter: ::String
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class ReassignmentInProgressException
+      attr_accessor invalid_parameter: ::String
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class GroupSubscribedToTopicException
+      attr_accessor invalid_parameter: ::String
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class KafkaRequestException
       attr_accessor invalid_parameter: ::String
       attr_accessor message: ::String
       SENSITIVE: []
@@ -1151,6 +1559,19 @@ module Aws::Kafka
       SENSITIVE: []
     end
 
+    class UpdateRebalancingRequest
+      attr_accessor cluster_arn: ::String
+      attr_accessor current_version: ::String
+      attr_accessor rebalancing: Types::Rebalancing
+      SENSITIVE: []
+    end
+
+    class UpdateRebalancingResponse
+      attr_accessor cluster_arn: ::String
+      attr_accessor cluster_operation_arn: ::String
+      SENSITIVE: []
+    end
+
     class UpdateBrokerStorageRequest
       attr_accessor cluster_arn: ::String
       attr_accessor current_version: ::String
@@ -1160,6 +1581,48 @@ module Aws::Kafka
 
     class UpdateBrokerStorageResponse
       attr_accessor cluster_arn: ::String
+      attr_accessor cluster_operation_arn: ::String
+      SENSITIVE: []
+    end
+
+    class S3DestinationConfiguration
+      attr_accessor data_freshness_in_seconds: ::Integer
+      attr_accessor dead_letter_queue_s3: Types::DeadLetterQueueS3
+      attr_accessor service_execution_role_arn: ::String
+      attr_accessor storage: Types::S3Storage
+      SENSITIVE: []
+    end
+
+    class IcebergDestinationUpdate
+      attr_accessor data_freshness_in_seconds: ::Integer
+      SENSITIVE: []
+    end
+
+    class S3DestinationUpdate
+      attr_accessor data_freshness_in_seconds: ::Integer
+      SENSITIVE: []
+    end
+
+    class S3Storage
+      attr_accessor bucket_arn: ::String
+      attr_accessor compression_type: ("NONE" | "GZIP" | "ZSTD")
+      attr_accessor output_prefix: ::String
+      attr_accessor output_key_template: ::String
+      attr_accessor storage_class: ("STANDARD" | "INTELLIGENT_TIERING" | "GLACIER_IR")
+      attr_accessor expected_bucket_owner: ::String
+      SENSITIVE: []
+    end
+
+    class UpdateChannelRequest
+      attr_accessor channel_arn: ::String
+      attr_accessor cluster_arn: ::String
+      attr_accessor iceberg_destination_update: Types::IcebergDestinationUpdate
+      attr_accessor s3_destination_update: Types::S3DestinationUpdate
+      SENSITIVE: []
+    end
+
+    class UpdateChannelResponse
+      attr_accessor channel_arn: ::String
       attr_accessor cluster_operation_arn: ::String
       SENSITIVE: []
     end
@@ -1208,6 +1671,7 @@ module Aws::Kafka
       attr_accessor cluster_arn: ::String
       attr_accessor connectivity_info: Types::ConnectivityInfo
       attr_accessor current_version: ::String
+      attr_accessor zookeeper_access: Types::ZookeeperAccess
       SENSITIVE: []
     end
 
@@ -1235,9 +1699,12 @@ module Aws::Kafka
     class UpdateReplicationInfoRequest
       attr_accessor consumer_group_replication: Types::ConsumerGroupReplicationUpdate
       attr_accessor current_version: ::String
+      attr_accessor log_delivery: Types::LogDelivery
       attr_accessor replicator_arn: ::String
       attr_accessor source_kafka_cluster_arn: ::String
+      attr_accessor source_kafka_cluster_id: ::String
       attr_accessor target_kafka_cluster_arn: ::String
+      attr_accessor target_kafka_cluster_id: ::String
       attr_accessor topic_replication: Types::TopicReplicationUpdate
       SENSITIVE: []
     end
@@ -1268,6 +1735,21 @@ module Aws::Kafka
       attr_accessor provisioned_throughput: Types::ProvisionedThroughput
       attr_accessor storage_mode: ("LOCAL" | "TIERED")
       attr_accessor volume_size_gb: ::Integer
+      SENSITIVE: []
+    end
+
+    class UpdateTopicRequest
+      attr_accessor cluster_arn: ::String
+      attr_accessor topic_name: ::String
+      attr_accessor configs: ::String
+      attr_accessor partition_count: ::Integer
+      SENSITIVE: []
+    end
+
+    class UpdateTopicResponse
+      attr_accessor topic_arn: ::String
+      attr_accessor topic_name: ::String
+      attr_accessor status: ("CREATING" | "UPDATING" | "DELETING" | "ACTIVE")
       SENSITIVE: []
     end
 
@@ -1304,6 +1786,17 @@ module Aws::Kafka
 
     class OpenMonitoringInfo
       attr_accessor prometheus: Types::PrometheusInfo
+      SENSITIVE: []
+    end
+
+    class PartitionSource
+      attr_accessor source_name: ::String
+      SENSITIVE: []
+    end
+
+    class PartitionSpec
+      attr_accessor partition_strategy: ("TIME_HOUR")
+      attr_accessor source_list: ::Array[Types::PartitionSource]
       SENSITIVE: []
     end
 

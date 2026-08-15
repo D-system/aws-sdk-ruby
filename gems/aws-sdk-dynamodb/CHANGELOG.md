@@ -1,6 +1,178 @@
 Unreleased Changes
 ------------------
 
+1.172.0 (2026-08-04)
+------------------
+
+* Feature - Vector indexes are a type of index in Amazon DynamoDB that enable similarity search on vector embedding stored in your table items. Vector indexes use approximate nearest neighbor search to find items whose vectors are most similar to a query vector that you provide.
+
+1.171.0 (2026-07-24)
+------------------
+
+* Feature - Endpoint test standardizations
+
+1.170.0 (2026-07-09)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.169.0 (2026-06-05)
+------------------
+
+* Feature - Adding new BDD representation of endpoint ruleset
+
+1.168.0 (2026-05-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+* Feature - When `AWS_NEW_RETRIES_2026` is enabled, DynamoDB clients default to 4 max attempts with a 25ms backoff scalar in `standard` and `adaptive` retry modes.
+
+1.167.0 (2026-05-19)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.166.0 (2026-05-13)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.165.0 (2026-03-20)
+------------------
+
+* Feature - Adding ReplicaArn to ReplicaDescription of a global table replica
+
+1.164.0 (2026-03-18)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.163.0 (2026-02-23)
+------------------
+
+* Feature - This change supports the creation of multi-account global tables. It adds one new arguments to UpdateTable, GlobalTableSettingsReplicationMode.
+
+1.162.0 (2026-02-03)
+------------------
+
+* Feature - This change supports the creation of multi-account global tables. It adds two new arguments to CreateTable, GlobalTableSourceArn and GlobalTableSettingsReplicationMode. DescribeTable is also updated to include information about GlobalTableSettingsReplicationMode.
+
+1.161.0 (2026-01-22)
+------------------
+
+* Feature - Adds additional waiters to Amazon DynamoDB.
+
+1.160.0 (2026-01-16)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.159.0 (2026-01-08)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.158.0 (2026-01-05)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.157.0 (2025-11-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.156.0 (2025-11-19)
+------------------
+
+* Feature - Extended Global Secondary Index (GSI) composite keys to support up to 8 attributes.
+
+1.155.0 (2025-10-21)
+------------------
+
+* Feature - Add AccountID based endpoint metric to endpoint rules.
+
+1.154.0 (2025-10-02)
+------------------
+
+* Feature - Add support for dual-stack account endpoint generation
+
+1.153.0 (2025-08-28)
+------------------
+
+* Feature - Remove incorrect endpoint tests
+
+1.152.0 (2025-08-26)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.151.0 (2025-08-20)
+------------------
+
+* Feature - Remove incorrect endpoint tests
+
+1.150.0 (2025-08-14)
+------------------
+
+* Feature - This release 1/ Adds support for throttled keys mode for CloudWatch Contributor Insights, 2/ Adds throttling reasons to exceptions across dataplane APIs. 3/ Explicitly models ThrottlingException as a class in statically typed languages. Refer to the launch day blog post for more details.
+
+1.149.0 (2025-08-04)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.148.0 (2025-07-31)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.147.0 (2025-07-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.146.0 (2025-06-30)
+------------------
+
+* Feature - This change adds support for witnesses in global tables. It also adds a new table status, REPLICATION_NOT_AUTHORIZED. This status will indicate scenarios where global replicas table can't be utilized for data plane operations.
+
+1.145.0 (2025-06-02)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.144.0 (2025-05-12)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.143.0 (2025-05-01)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.142.0 (2025-04-28)
+------------------
+
+* Feature - Doc only update for GSI descriptions.
+
+1.141.0 (2025-04-24)
+------------------
+
+* Feature - Add support for ARN-sourced account endpoint generation for TransactWriteItems. This will generate account endpoints for DynamoDB TransactWriteItems requests using ARN-sourced account ID when available.
+
+1.140.0 (2025-04-11)
+------------------
+
+* Feature - Doc only update for API descriptions.
+
+1.139.0 (2025-04-09)
+------------------
+
+* Feature - Documentation update for secondary indexes and Create_Table.
+
 1.138.0 (2025-03-13)
 ------------------
 

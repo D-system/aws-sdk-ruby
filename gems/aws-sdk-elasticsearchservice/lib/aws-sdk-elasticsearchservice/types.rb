@@ -529,6 +529,88 @@ module Aws::ElasticsearchService
       include Aws::Structure
     end
 
+    # Specifies the automated snapshot pause options for the domain. These
+    # options allow you to temporarily pause automated snapshots for a
+    # specified time period.
+    #
+    # @!attribute [rw] enabled
+    #   Whether automated snapshot pause is enabled for the domain.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] start_time
+    #   The timestamp at which the automated snapshot pause begins.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   The timestamp at which the automated snapshot pause ends.
+    #   @return [Time]
+    #
+    # @!attribute [rw] state
+    #   The current state of the automated snapshot pause. Valid values are
+    #   `Active`, `Completed`, `Scheduled`, and `Disabled`.
+    #   @return [String]
+    #
+    class AutomatedSnapshotPauseOptions < Struct.new(
+      :enabled,
+      :start_time,
+      :end_time,
+      :state)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The status of automated snapshot pause options for the specified
+    # Elasticsearch domain.
+    #
+    # @!attribute [rw] options
+    #   Automated snapshot pause options for the specified Elasticsearch
+    #   domain.
+    #   @return [Types::AutomatedSnapshotPauseOptions]
+    #
+    # @!attribute [rw] status
+    #   The current status of the automated snapshot pause options for the
+    #   specified Elasticsearch domain.
+    #   @return [Types::OptionStatus]
+    #
+    class AutomatedSnapshotPauseOptionsStatus < Struct.new(
+      :options,
+      :status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Specifies the automated snapshot pause request options for the domain.
+    #
+    # Suspending snapshots reduces data protection. You cannot restore your
+    # domain to points in time when snapshots are suspended. Use this
+    # feature only for short-term operational needs such as migrations or
+    # maintenance windows.
+    #
+    # Maximum suspension duration: 3 days.
+    #
+    # @!attribute [rw] enabled
+    #   Whether to enable or disable automated snapshot pause for the
+    #   domain.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] start_time
+    #   The timestamp at which the automated snapshot pause should begin.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   The timestamp at which the automated snapshot pause should end. The
+    #   maximum allowed duration between `StartTime` and `EndTime` is 3
+    #   days.
+    #   @return [Time]
+    #
+    class AutomatedSnapshotPauseRequestOptions < Struct.new(
+      :enabled,
+      :start_time,
+      :end_time)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # An error occurred while processing the request.
     #
     # @!attribute [rw] message
@@ -955,6 +1037,31 @@ module Aws::ElasticsearchService
     #   A list of `Tag` added during domain creation.
     #   @return [Array<Types::Tag>]
     #
+    # @!attribute [rw] deployment_strategy_options
+    #   Specifies the deployment strategy options.
+    #   @return [Types::DeploymentStrategyOptions]
+    #
+    # @!attribute [rw] automated_snapshot_pause_options
+    #   Specifies the automated snapshot pause options for the domain.
+    #
+    #   Suspending snapshots reduces data protection. You cannot restore
+    #   your domain to points in time when snapshots are suspended. Use this
+    #   feature only for short-term operational needs such as migrations or
+    #   maintenance windows.
+    #
+    #   Maximum suspension duration: 3 days.
+    #   @return [Types::AutomatedSnapshotPauseRequestOptions]
+    #
+    # @!attribute [rw] use_case
+    #   The primary use case for the domain. For valid values, see
+    #   `DomainUseCase`.
+    #   @return [String]
+    #
+    # @!attribute [rw] engine_mode
+    #   The engine mode for the domain. For valid values and requirements,
+    #   see `DomainEngineMode`.
+    #   @return [String]
+    #
     class CreateElasticsearchDomainRequest < Struct.new(
       :domain_name,
       :elasticsearch_version,
@@ -971,7 +1078,11 @@ module Aws::ElasticsearchService
       :domain_endpoint_options,
       :advanced_security_options,
       :auto_tune_options,
-      :tag_list)
+      :tag_list,
+      :deployment_strategy_options,
+      :automated_snapshot_pause_options,
+      :use_case,
+      :engine_mode)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1264,6 +1375,39 @@ module Aws::ElasticsearchService
     #
     class DeleteVpcEndpointResponse < Struct.new(
       :vpc_endpoint_summary)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Specifies the deployment strategy options for the domain.
+    #
+    # @!attribute [rw] deployment_strategy
+    #   Specifies the deployment strategy for the domain. Valid values are
+    #   `Default` and `CapacityOptimized`.
+    #   @return [String]
+    #
+    class DeploymentStrategyOptions < Struct.new(
+      :deployment_strategy)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Specifies the status of deployment strategy options for the specified
+    # Elasticsearch domain.
+    #
+    # @!attribute [rw] options
+    #   Specifies deployment strategy options for the specified
+    #   Elasticsearch domain.
+    #   @return [Types::DeploymentStrategyOptions]
+    #
+    # @!attribute [rw] status
+    #   Specifies the status of the deployment strategy options for the
+    #   specified Elasticsearch domain.
+    #   @return [Types::OptionStatus]
+    #
+    class DeploymentStrategyOptionsStatus < Struct.new(
+      :options,
+      :status)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1819,6 +1963,8 @@ module Aws::ElasticsearchService
     #   * <b>Policy-Min-TLS-1-2-PFS-2023-10: </b> TLS security policy that
     #     supports TLS version 1.2 to TLS version 1.3 with perfect forward
     #     secrecy cipher suites
+    #   * <b>Policy-Min-TLS-1-2-RFC9151-FIPS-2024-08: </b> TLS security
+    #     policy that supports TLS version 1.3 with FIPS
     #   @return [String]
     #
     # @!attribute [rw] custom_endpoint_enabled
@@ -2245,6 +2391,22 @@ module Aws::ElasticsearchService
     #   modified.
     #   @return [Array<Types::ModifyingProperties>]
     #
+    # @!attribute [rw] deployment_strategy_options
+    #   Specifies `DeploymentStrategyOptions` for the domain.
+    #   @return [Types::DeploymentStrategyOptionsStatus]
+    #
+    # @!attribute [rw] automated_snapshot_pause_options
+    #   Specifies `AutomatedSnapshotPauseOptions` for the domain.
+    #   @return [Types::AutomatedSnapshotPauseOptionsStatus]
+    #
+    # @!attribute [rw] use_case
+    #   The use case configured for the domain.
+    #   @return [Types::UseCaseStatus]
+    #
+    # @!attribute [rw] engine_mode
+    #   The engine mode configured for the domain.
+    #   @return [Types::EngineModeStatus]
+    #
     class ElasticsearchDomainConfig < Struct.new(
       :elasticsearch_version,
       :elasticsearch_cluster_config,
@@ -2261,7 +2423,11 @@ module Aws::ElasticsearchService
       :advanced_security_options,
       :auto_tune_options,
       :change_progress_details,
-      :modifying_properties)
+      :modifying_properties,
+      :deployment_strategy_options,
+      :automated_snapshot_pause_options,
+      :use_case,
+      :engine_mode)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2414,6 +2580,24 @@ module Aws::ElasticsearchService
     #   modified.
     #   @return [Array<Types::ModifyingProperties>]
     #
+    # @!attribute [rw] deployment_strategy_options
+    #   The current status of the Elasticsearch domain's deployment
+    #   strategy options.
+    #   @return [Types::DeploymentStrategyOptions]
+    #
+    # @!attribute [rw] automated_snapshot_pause_options
+    #   The current status of the Elasticsearch domain's automated snapshot
+    #   pause options.
+    #   @return [Types::AutomatedSnapshotPauseOptions]
+    #
+    # @!attribute [rw] use_case
+    #   The primary use case for the domain.
+    #   @return [String]
+    #
+    # @!attribute [rw] engine_mode
+    #   The engine mode for the domain.
+    #   @return [String]
+    #
     class ElasticsearchDomainStatus < Struct.new(
       :domain_id,
       :domain_name,
@@ -2441,7 +2625,11 @@ module Aws::ElasticsearchService
       :auto_tune_options,
       :change_progress_details,
       :domain_processing_status,
-      :modifying_properties)
+      :modifying_properties,
+      :deployment_strategy_options,
+      :automated_snapshot_pause_options,
+      :use_case,
+      :engine_mode)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2497,6 +2685,23 @@ module Aws::ElasticsearchService
     #   @return [Types::OptionStatus]
     #
     class EncryptionAtRestOptionsStatus < Struct.new(
+      :options,
+      :status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The status of the engine mode for the domain.
+    #
+    # @!attribute [rw] options
+    #   The engine mode configured for the domain.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the engine mode for the domain.
+    #   @return [Types::OptionStatus]
+    #
+    class EngineModeStatus < Struct.new(
       :options,
       :status)
       SENSITIVE = []
@@ -4213,6 +4418,31 @@ module Aws::ElasticsearchService
     #   perform the Update.
     #   @return [Boolean]
     #
+    # @!attribute [rw] deployment_strategy_options
+    #   Specifies the deployment strategy options.
+    #   @return [Types::DeploymentStrategyOptions]
+    #
+    # @!attribute [rw] automated_snapshot_pause_options
+    #   Specifies the automated snapshot pause options for the domain.
+    #
+    #   Suspending snapshots reduces data protection. You cannot restore
+    #   your domain to points in time when snapshots are suspended. Use this
+    #   feature only for short-term operational needs such as migrations or
+    #   maintenance windows.
+    #
+    #   Maximum suspension duration: 3 days.
+    #   @return [Types::AutomatedSnapshotPauseRequestOptions]
+    #
+    # @!attribute [rw] use_case
+    #   The primary use case for the domain. For valid values, see
+    #   `DomainUseCase`.
+    #   @return [String]
+    #
+    # @!attribute [rw] engine_mode
+    #   The engine mode for the domain. For valid values and requirements,
+    #   see `DomainEngineMode`.
+    #   @return [String]
+    #
     class UpdateElasticsearchDomainConfigRequest < Struct.new(
       :domain_name,
       :elasticsearch_cluster_config,
@@ -4228,7 +4458,11 @@ module Aws::ElasticsearchService
       :node_to_node_encryption_options,
       :encryption_at_rest_options,
       :auto_tune_options,
-      :dry_run)
+      :dry_run,
+      :deployment_strategy_options,
+      :automated_snapshot_pause_options,
+      :use_case,
+      :engine_mode)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4452,6 +4686,23 @@ module Aws::ElasticsearchService
       :upgrade_step_status,
       :issues,
       :progress_percent)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The status of the use case for the domain.
+    #
+    # @!attribute [rw] options
+    #   The use case configured for the domain.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the use case for the domain.
+    #   @return [Types::OptionStatus]
+    #
+    class UseCaseStatus < Struct.new(
+      :options,
+      :status)
       SENSITIVE = []
       include Aws::Structure
     end

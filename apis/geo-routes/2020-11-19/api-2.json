@@ -17,7 +17,7 @@
       "name":"CalculateIsolines",
       "http":{
         "method":"POST",
-        "requestUri":"/isolines",
+        "requestUri":"/v2/isolines",
         "responseCode":200
       },
       "input":{"shape":"CalculateIsolinesRequest"},
@@ -27,13 +27,14 @@
         {"shape":"AccessDeniedException"},
         {"shape":"ValidationException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "CalculateRouteMatrix":{
       "name":"CalculateRouteMatrix",
       "http":{
         "method":"POST",
-        "requestUri":"/route-matrix",
+        "requestUri":"/v2/route-matrix",
         "responseCode":200
       },
       "input":{"shape":"CalculateRouteMatrixRequest"},
@@ -43,13 +44,14 @@
         {"shape":"AccessDeniedException"},
         {"shape":"ValidationException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "CalculateRoutes":{
       "name":"CalculateRoutes",
       "http":{
         "method":"POST",
-        "requestUri":"/routes",
+        "requestUri":"/v2/routes",
         "responseCode":200
       },
       "input":{"shape":"CalculateRoutesRequest"},
@@ -59,13 +61,14 @@
         {"shape":"AccessDeniedException"},
         {"shape":"ValidationException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "OptimizeWaypoints":{
       "name":"OptimizeWaypoints",
       "http":{
         "method":"POST",
-        "requestUri":"/optimize-waypoints",
+        "requestUri":"/v2/optimize-waypoints",
         "responseCode":200
       },
       "input":{"shape":"OptimizeWaypointsRequest"},
@@ -75,13 +78,14 @@
         {"shape":"AccessDeniedException"},
         {"shape":"ValidationException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "SnapToRoads":{
       "name":"SnapToRoads",
       "http":{
         "method":"POST",
-        "requestUri":"/snap-to-roads",
+        "requestUri":"/v2/snap-to-roads",
         "responseCode":200
       },
       "input":{"shape":"SnapToRoadsRequest"},
@@ -91,7 +95,8 @@
         {"shape":"AccessDeniedException"},
         {"shape":"ValidationException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     }
   },
   "shapes":{
@@ -120,10 +125,6 @@
       "type":"list",
       "member":{"shape":"WaypointIndex"}
     },
-    "Boolean":{
-      "type":"boolean",
-      "box":true
-    },
     "BoundingBox":{
       "type":"list",
       "member":{"shape":"Double"},
@@ -138,7 +139,7 @@
         "Allow":{"shape":"IsolineAllowOptions"},
         "ArrivalTime":{"shape":"TimestampWithTimezoneOffset"},
         "Avoid":{"shape":"IsolineAvoidanceOptions"},
-        "DepartNow":{"shape":"Boolean"},
+        "DepartNow":{"shape":"SensitiveBoolean"},
         "DepartureTime":{"shape":"TimestampWithTimezoneOffset"},
         "Destination":{"shape":"Position"},
         "DestinationOptions":{"shape":"IsolineDestinationOptions"},
@@ -184,13 +185,12 @@
       "type":"structure",
       "required":[
         "Destinations",
-        "Origins",
-        "RoutingBoundary"
+        "Origins"
       ],
       "members":{
         "Allow":{"shape":"RouteMatrixAllowOptions"},
         "Avoid":{"shape":"RouteMatrixAvoidanceOptions"},
-        "DepartNow":{"shape":"Boolean"},
+        "DepartNow":{"shape":"SensitiveBoolean"},
         "DepartureTime":{"shape":"TimestampWithTimezoneOffset"},
         "Destinations":{"shape":"CalculateRouteMatrixRequestDestinationsList"},
         "Exclude":{"shape":"RouteMatrixExclusionOptions"},
@@ -251,7 +251,7 @@
         "Allow":{"shape":"RouteAllowOptions"},
         "ArrivalTime":{"shape":"TimestampWithTimezoneOffset"},
         "Avoid":{"shape":"RouteAvoidanceOptions"},
-        "DepartNow":{"shape":"Boolean"},
+        "DepartNow":{"shape":"SensitiveBoolean"},
         "DepartureTime":{"shape":"TimestampWithTimezoneOffset"},
         "Destination":{"shape":"Position"},
         "DestinationOptions":{"shape":"RouteDestinationOptions"},
@@ -318,7 +318,7 @@
       ],
       "members":{
         "Center":{"shape":"Position"},
-        "Radius":{"shape":"Double"}
+        "Radius":{"shape":"SensitiveDouble"}
       },
       "sensitive":true
     },
@@ -343,13 +343,15 @@
       "type":"string",
       "max":3,
       "min":2,
-      "pattern":"([A-Z]{2}|[A-Z]{3})"
+      "pattern":"([A-Z]{2}|[A-Z]{3})",
+      "sensitive":true
     },
     "CountryCode3":{
       "type":"string",
       "max":3,
       "min":3,
-      "pattern":"[A-Z]{3}"
+      "pattern":"[A-Z]{3}",
+      "sensitive":true
     },
     "CountryCodeList":{
       "type":"list",
@@ -373,17 +375,20 @@
         "Friday",
         "Saturday",
         "Sunday"
-      ]
+      ],
+      "sensitive":true
     },
     "DimensionCentimeters":{
       "type":"long",
       "max":4294967295,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "DistanceMeters":{
       "type":"long",
       "max":4294967295,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "DistanceThresholdList":{
       "type":"list",
@@ -394,7 +399,8 @@
     "DistanceThresholdListMemberLong":{
       "type":"long",
       "max":300000,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "Double":{
       "type":"double",
@@ -403,7 +409,14 @@
     "DurationSeconds":{
       "type":"long",
       "max":4294967295,
-      "min":0
+      "min":0,
+      "sensitive":true
+    },
+    "EnergyKilowattHours":{
+      "type":"double",
+      "box":true,
+      "min":0.0,
+      "sensitive":true
     },
     "GeometryFormat":{
       "type":"string",
@@ -415,7 +428,13 @@
     "Heading":{
       "type":"double",
       "max":360.0,
-      "min":0.0
+      "min":0.0,
+      "sensitive":true
+    },
+    "HexColor":{
+      "type":"string",
+      "pattern":".*#[0-9A-Fa-f]{6}.*",
+      "sensitive":true
     },
     "IndexList":{
       "type":"list",
@@ -455,8 +474,8 @@
     "IsolineAllowOptions":{
       "type":"structure",
       "members":{
-        "Hot":{"shape":"Boolean"},
-        "Hov":{"shape":"Boolean"}
+        "Hot":{"shape":"SensitiveBoolean"},
+        "Hov":{"shape":"SensitiveBoolean"}
       }
     },
     "IsolineAvoidanceArea":{
@@ -501,16 +520,16 @@
       "type":"structure",
       "members":{
         "Areas":{"shape":"IsolineAvoidanceAreaList"},
-        "CarShuttleTrains":{"shape":"Boolean"},
-        "ControlledAccessHighways":{"shape":"Boolean"},
-        "DirtRoads":{"shape":"Boolean"},
-        "Ferries":{"shape":"Boolean"},
-        "SeasonalClosure":{"shape":"Boolean"},
-        "TollRoads":{"shape":"Boolean"},
-        "TollTransponders":{"shape":"Boolean"},
+        "CarShuttleTrains":{"shape":"SensitiveBoolean"},
+        "ControlledAccessHighways":{"shape":"SensitiveBoolean"},
+        "DirtRoads":{"shape":"SensitiveBoolean"},
+        "Ferries":{"shape":"SensitiveBoolean"},
+        "SeasonalClosure":{"shape":"SensitiveBoolean"},
+        "TollRoads":{"shape":"SensitiveBoolean"},
+        "TollTransponders":{"shape":"SensitiveBoolean"},
         "TruckRoadTypes":{"shape":"TruckRoadTypeList"},
-        "Tunnels":{"shape":"Boolean"},
-        "UTurns":{"shape":"Boolean"},
+        "Tunnels":{"shape":"SensitiveBoolean"},
+        "UTurns":{"shape":"SensitiveBoolean"},
         "ZoneCategories":{"shape":"IsolineAvoidanceZoneCategoryList"}
       }
     },
@@ -541,12 +560,14 @@
     "IsolineCarOptionsMaxSpeedDouble":{
       "type":"double",
       "max":252.0,
-      "min":3.6
+      "min":3.6,
+      "sensitive":true
     },
     "IsolineCarOptionsOccupancyInteger":{
       "type":"integer",
       "box":true,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "IsolineConnection":{
       "type":"structure",
@@ -597,7 +618,8 @@
         "Electric",
         "InternalCombustion",
         "PluginHybrid"
-      ]
+      ],
+      "sensitive":true
     },
     "IsolineGranularityOptions":{
       "type":"structure",
@@ -625,7 +647,8 @@
         "Poison",
         "PoisonousInhalation",
         "Radioactive"
-      ]
+      ],
+      "sensitive":true
     },
     "IsolineHazardousCargoTypeList":{
       "type":"list",
@@ -680,12 +703,14 @@
     "IsolineScooterOptionsMaxSpeedDouble":{
       "type":"double",
       "max":252.0,
-      "min":3.6
+      "min":3.6,
+      "sensitive":true
     },
     "IsolineScooterOptionsOccupancyInteger":{
       "type":"integer",
       "box":true,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "IsolineShapeGeometry":{
       "type":"structure",
@@ -730,13 +755,15 @@
     "IsolineTrailerOptionsAxleCountInteger":{
       "type":"integer",
       "box":true,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "IsolineTrailerOptionsTrailerCountInteger":{
       "type":"integer",
       "box":true,
       "max":255,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "IsolineTravelMode":{
       "type":"string",
@@ -786,43 +813,51 @@
       "type":"integer",
       "box":true,
       "max":255,
-      "min":2
+      "min":2,
+      "sensitive":true
     },
     "IsolineTruckOptionsHeightAboveFirstAxleLong":{
       "type":"long",
       "max":5000,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "IsolineTruckOptionsHeightLong":{
       "type":"long",
       "max":5000,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "IsolineTruckOptionsLengthLong":{
       "type":"long",
       "max":30000,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "IsolineTruckOptionsMaxSpeedDouble":{
       "type":"double",
       "max":252.0,
-      "min":3.6
+      "min":3.6,
+      "sensitive":true
     },
     "IsolineTruckOptionsOccupancyInteger":{
       "type":"integer",
       "box":true,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "IsolineTruckOptionsTireCountInteger":{
       "type":"integer",
       "box":true,
       "max":255,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "IsolineTruckOptionsWidthLong":{
       "type":"long",
       "max":5000,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "IsolineTruckType":{
       "type":"string",
@@ -836,7 +871,8 @@
       "type":"structure",
       "members":{
         "LastCharacter":{"shape":"IsolineVehicleLicensePlateLastCharacterString"}
-      }
+      },
+      "sensitive":true
     },
     "IsolineVehicleLicensePlateLastCharacterString":{
       "type":"string",
@@ -876,7 +912,7 @@
       "required":["Value"],
       "members":{
         "Language":{"shape":"LanguageTag"},
-        "Value":{"shape":"String"}
+        "Value":{"shape":"SensitiveString"}
       }
     },
     "LocalizedStringList":{
@@ -988,6 +1024,12 @@
       "min":2,
       "sensitive":true
     },
+    "PowerKilowatts":{
+      "type":"double",
+      "box":true,
+      "min":0.0,
+      "sensitive":true
+    },
     "RoadSnapHazardousCargoType":{
       "type":"string",
       "enum":[
@@ -1002,7 +1044,8 @@
         "Poison",
         "PoisonousInhalation",
         "Radioactive"
-      ]
+      ],
+      "sensitive":true
     },
     "RoadSnapHazardousCargoTypeList":{
       "type":"list",
@@ -1019,7 +1062,7 @@
       ],
       "members":{
         "Code":{"shape":"RoadSnapNoticeCode"},
-        "Title":{"shape":"String"},
+        "Title":{"shape":"SensitiveString"},
         "TracePointIndexes":{"shape":"RoadSnapTracePointIndexList"}
       }
     },
@@ -1033,7 +1076,8 @@
         "TracePointsOutOfSequence",
         "TracePointsSpeedEstimated",
         "TracePointsSpeedIgnored"
-      ]
+      ],
+      "sensitive":true
     },
     "RoadSnapNoticeList":{
       "type":"list",
@@ -1063,7 +1107,8 @@
       "type":"double",
       "box":true,
       "max":1,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RoadSnapSnappedTracePointList":{
       "type":"list",
@@ -1083,7 +1128,8 @@
       "type":"list",
       "member":{"shape":"Integer"},
       "max":1000,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "RoadSnapTrailerOptions":{
       "type":"structure",
@@ -1094,8 +1140,9 @@
     "RoadSnapTrailerOptionsTrailerCountInteger":{
       "type":"integer",
       "box":true,
-      "max":255,
-      "min":0
+      "max":4,
+      "min":0,
+      "sensitive":true
     },
     "RoadSnapTravelMode":{
       "type":"string",
@@ -1127,17 +1174,20 @@
     "RoadSnapTruckOptionsHeightLong":{
       "type":"long",
       "max":5000,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RoadSnapTruckOptionsLengthLong":{
       "type":"long",
       "max":30000,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RoadSnapTruckOptionsWidthLong":{
       "type":"long",
       "max":5000,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RoundaboutAngle":{
       "type":"double",
@@ -1156,12 +1206,64 @@
         "Summary":{"shape":"RouteSummary"}
       }
     },
+    "RouteAccessPointDetails":{
+      "type":"structure",
+      "members":{
+        "Accessibility":{"shape":"RouteAccessibilityAvailabilityDetails"}
+      }
+    },
+    "RouteAccessibilityAttribute":{
+      "type":"string",
+      "enum":["Wheelchair"],
+      "sensitive":true
+    },
+    "RouteAccessibilityAttributeList":{
+      "type":"list",
+      "member":{"shape":"RouteAccessibilityAttribute"},
+      "max":1,
+      "min":0
+    },
+    "RouteAccessibilityAvailability":{
+      "type":"string",
+      "enum":[
+        "Available",
+        "Limited",
+        "Unavailable",
+        "Unknown"
+      ]
+    },
+    "RouteAccessibilityAvailabilityDetails":{
+      "type":"structure",
+      "members":{
+        "Wheelchair":{"shape":"RouteAccessibilityAvailability"}
+      }
+    },
     "RouteAllowOptions":{
       "type":"structure",
       "members":{
-        "Hot":{"shape":"Boolean"},
-        "Hov":{"shape":"Boolean"}
+        "Hot":{"shape":"SensitiveBoolean"},
+        "Hov":{"shape":"SensitiveBoolean"}
       }
+    },
+    "RouteAttribution":{
+      "type":"structure",
+      "required":["WebLink"],
+      "members":{
+        "AttributionType":{"shape":"RouteAttributionType"},
+        "WebLink":{"shape":"RouteWebLink"}
+      }
+    },
+    "RouteAttributionList":{
+      "type":"list",
+      "member":{"shape":"RouteAttribution"}
+    },
+    "RouteAttributionType":{
+      "type":"string",
+      "enum":[
+        "Disclaimer",
+        "Tariff"
+      ],
+      "sensitive":true
     },
     "RouteAvoidanceArea":{
       "type":"structure",
@@ -1205,16 +1307,16 @@
       "type":"structure",
       "members":{
         "Areas":{"shape":"RouteAvoidanceAreaList"},
-        "CarShuttleTrains":{"shape":"Boolean"},
-        "ControlledAccessHighways":{"shape":"Boolean"},
-        "DirtRoads":{"shape":"Boolean"},
-        "Ferries":{"shape":"Boolean"},
-        "SeasonalClosure":{"shape":"Boolean"},
-        "TollRoads":{"shape":"Boolean"},
-        "TollTransponders":{"shape":"Boolean"},
+        "CarShuttleTrains":{"shape":"SensitiveBoolean"},
+        "ControlledAccessHighways":{"shape":"SensitiveBoolean"},
+        "DirtRoads":{"shape":"SensitiveBoolean"},
+        "Ferries":{"shape":"SensitiveBoolean"},
+        "SeasonalClosure":{"shape":"SensitiveBoolean"},
+        "TollRoads":{"shape":"SensitiveBoolean"},
+        "TollTransponders":{"shape":"SensitiveBoolean"},
         "TruckRoadTypes":{"shape":"TruckRoadTypeList"},
-        "Tunnels":{"shape":"Boolean"},
-        "UTurns":{"shape":"Boolean"},
+        "Tunnels":{"shape":"SensitiveBoolean"},
+        "UTurns":{"shape":"SensitiveBoolean"},
         "ZoneCategories":{"shape":"RouteAvoidanceZoneCategoryList"}
       }
     },
@@ -1246,12 +1348,22 @@
     "RouteCarOptionsMaxSpeedDouble":{
       "type":"double",
       "max":252.0,
-      "min":3.6
+      "min":3.6,
+      "sensitive":true
     },
     "RouteCarOptionsOccupancyInteger":{
       "type":"integer",
       "box":true,
-      "min":1
+      "min":1,
+      "sensitive":true
+    },
+    "RouteChargeStepDetails":{
+      "type":"structure",
+      "members":{
+        "ArrivalCharge":{"shape":"EnergyKilowattHours"},
+        "ConsumablePower":{"shape":"PowerKilowatts"},
+        "DesiredCharge":{"shape":"EnergyKilowattHours"}
+      }
     },
     "RouteContinueHighwayStepDetails":{
       "type":"structure",
@@ -1274,7 +1386,7 @@
       "type":"structure",
       "members":{
         "AvoidActionsForDistance":{"shape":"RouteDestinationOptionsAvoidActionsForDistanceLong"},
-        "AvoidUTurns":{"shape":"Boolean"},
+        "AvoidUTurns":{"shape":"SensitiveBoolean"},
         "Heading":{"shape":"Heading"},
         "Matching":{"shape":"RouteMatchingOptions"},
         "SideOfStreet":{"shape":"RouteSideOfStreetOptions"},
@@ -1283,7 +1395,8 @@
     },
     "RouteDestinationOptionsAvoidActionsForDistanceLong":{
       "type":"long",
-      "max":2000
+      "max":2000,
+      "sensitive":true
     },
     "RouteDirection":{
       "type":"string",
@@ -1292,7 +1405,8 @@
         "North",
         "South",
         "West"
-      ]
+      ],
+      "sensitive":true
     },
     "RouteDriverOptions":{
       "type":"structure",
@@ -1319,8 +1433,8 @@
       "type":"structure",
       "required":["Type"],
       "members":{
-        "Co2EmissionClass":{"shape":"String"},
-        "Type":{"shape":"String"}
+        "Co2EmissionClass":{"shape":"SensitiveString"},
+        "Type":{"shape":"SensitiveString"}
       }
     },
     "RouteEngineType":{
@@ -1329,7 +1443,8 @@
         "Electric",
         "InternalCombustion",
         "PluginHybrid"
-      ]
+      ],
+      "sensitive":true
     },
     "RouteEnterHighwayStepDetails":{
       "type":"structure",
@@ -1363,7 +1478,8 @@
       "type":"integer",
       "box":true,
       "max":12,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "RouteFerryAfterTravelStep":{
       "type":"structure",
@@ -1373,7 +1489,7 @@
       ],
       "members":{
         "Duration":{"shape":"DurationSeconds"},
-        "Instruction":{"shape":"String"},
+        "Instruction":{"shape":"SensitiveString"},
         "Type":{"shape":"RouteFerryAfterTravelStepType"}
       }
     },
@@ -1383,7 +1499,8 @@
     },
     "RouteFerryAfterTravelStepType":{
       "type":"string",
-      "enum":["Deboard"]
+      "enum":["Deboard"],
+      "sensitive":true
     },
     "RouteFerryArrival":{
       "type":"structure",
@@ -1401,7 +1518,7 @@
       ],
       "members":{
         "Duration":{"shape":"DurationSeconds"},
-        "Instruction":{"shape":"String"},
+        "Instruction":{"shape":"SensitiveString"},
         "Type":{"shape":"RouteFerryBeforeTravelStepType"}
       }
     },
@@ -1411,7 +1528,8 @@
     },
     "RouteFerryBeforeTravelStepType":{
       "type":"string",
-      "enum":["Board"]
+      "enum":["Board"],
+      "sensitive":true
     },
     "RouteFerryDeparture":{
       "type":"structure",
@@ -1440,7 +1558,7 @@
         "Departure":{"shape":"RouteFerryDeparture"},
         "Notices":{"shape":"RouteFerryNoticeList"},
         "PassThroughWaypoints":{"shape":"RoutePassThroughWaypointList"},
-        "RouteName":{"shape":"String"},
+        "RouteName":{"shape":"SensitiveString"},
         "Spans":{"shape":"RouteFerrySpanList"},
         "Summary":{"shape":"RouteFerrySummary"},
         "TravelSteps":{"shape":"RouteFerryTravelStepList"}
@@ -1462,7 +1580,10 @@
         "Other",
         "ViolatedAvoidFerry",
         "ViolatedAvoidRailFerry",
-        "SeasonalClosure"
+        "SeasonalClosure",
+        "PotentialViolatedVehicleRestrictionUsage",
+        "ViolatedAvoidAreas",
+        "ViolatedVehicleRestriction"
       ]
     },
     "RouteFerryNoticeList":{
@@ -1484,7 +1605,7 @@
       "type":"structure",
       "required":["Position"],
       "members":{
-        "Name":{"shape":"String"},
+        "Name":{"shape":"SensitiveString"},
         "OriginalPosition":{"shape":"Position23"},
         "Position":{"shape":"Position23"},
         "WaypointIndex":{"shape":"RouteFerryPlaceWaypointIndexInteger"}
@@ -1493,7 +1614,8 @@
     "RouteFerryPlaceWaypointIndexInteger":{
       "type":"integer",
       "box":true,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RouteFerrySpan":{
       "type":"structure",
@@ -1518,7 +1640,8 @@
     "RouteFerrySpanRegionString":{
       "type":"string",
       "max":3,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RouteFerrySummary":{
       "type":"structure",
@@ -1544,7 +1667,7 @@
         "Distance":{"shape":"DistanceMeters"},
         "Duration":{"shape":"DurationSeconds"},
         "GeometryOffset":{"shape":"RouteFerryTravelStepGeometryOffsetInteger"},
-        "Instruction":{"shape":"String"},
+        "Instruction":{"shape":"SensitiveString"},
         "Type":{"shape":"RouteFerryTravelStepType"}
       }
     },
@@ -1563,7 +1686,8 @@
         "Depart",
         "Continue",
         "Arrive"
-      ]
+      ],
+      "sensitive":true
     },
     "RouteHazardousCargoType":{
       "type":"string",
@@ -1579,13 +1703,105 @@
         "Poison",
         "PoisonousInhalation",
         "Radioactive"
-      ]
+      ],
+      "sensitive":true
     },
     "RouteHazardousCargoTypeList":{
       "type":"list",
       "member":{"shape":"RouteHazardousCargoType"},
       "max":11,
       "min":0
+    },
+    "RouteIntermodalEnabledLegs":{
+      "type":"string",
+      "enum":[
+        "FirstLeg",
+        "LastLeg",
+        "EntireRoute",
+        "None"
+      ],
+      "sensitive":true
+    },
+    "RouteIntermodalEnabledLegsList":{
+      "type":"list",
+      "member":{"shape":"RouteIntermodalEnabledLegs"},
+      "max":2,
+      "min":1
+    },
+    "RouteIntermodalOptions":{
+      "type":"structure",
+      "members":{
+        "AccessibilityAttributes":{"shape":"RouteAccessibilityAttributeList"},
+        "MaxTransfers":{"shape":"RouteIntermodalOptionsMaxTransfersInteger"},
+        "Pedestrian":{"shape":"RouteIntermodalPedestrianOptions"},
+        "Rental":{"shape":"RouteIntermodalRentalOptions"},
+        "Taxi":{"shape":"RouteIntermodalTaxiOptions"},
+        "Transit":{"shape":"RouteIntermodalTransitOptions"},
+        "Vehicle":{"shape":"RouteIntermodalVehicleOptions"}
+      }
+    },
+    "RouteIntermodalOptionsMaxTransfersInteger":{
+      "type":"integer",
+      "box":true,
+      "max":6,
+      "min":0
+    },
+    "RouteIntermodalPedestrianOptions":{
+      "type":"structure",
+      "members":{
+        "MaxDistance":{
+          "shape":"RouteIntermodalPedestrianOptionsMaxDistanceLong",
+          "box":true
+        },
+        "Speed":{
+          "shape":"RouteIntermodalPedestrianOptionsSpeedDouble",
+          "box":true
+        }
+      }
+    },
+    "RouteIntermodalPedestrianOptionsMaxDistanceLong":{
+      "type":"long",
+      "max":6000,
+      "min":0,
+      "sensitive":true
+    },
+    "RouteIntermodalPedestrianOptionsSpeedDouble":{
+      "type":"double",
+      "max":7.2,
+      "min":1.8,
+      "sensitive":true
+    },
+    "RouteIntermodalRentalOptions":{
+      "type":"structure",
+      "members":{
+        "AllowedModes":{"shape":"RouteRentalModeList"},
+        "EnabledFor":{"shape":"RouteIntermodalEnabledLegsList"},
+        "ExcludedModes":{"shape":"RouteRentalModeList"}
+      }
+    },
+    "RouteIntermodalTaxiOptions":{
+      "type":"structure",
+      "members":{
+        "AllowedModes":{"shape":"RouteTaxiModeList"},
+        "EnabledFor":{"shape":"RouteIntermodalEnabledLegsList"},
+        "ExcludedModes":{"shape":"RouteTaxiModeList"}
+      }
+    },
+    "RouteIntermodalTransitOptions":{
+      "type":"structure",
+      "members":{
+        "AllowedModes":{"shape":"RouteTransitModeList"},
+        "EnabledFor":{"shape":"RouteIntermodalEnabledLegsList"},
+        "ExcludedModes":{"shape":"RouteTransitModeList"}
+      }
+    },
+    "RouteIntermodalVehicleOptions":{
+      "type":"structure",
+      "members":{
+        "AllowedModes":{"shape":"RouteVehicleModeList"},
+        "EnabledFor":{"shape":"RouteIntermodalEnabledLegsList"},
+        "ExcludedModes":{"shape":"RouteVehicleModeList"}
+      }
     },
     "RouteKeepStepDetails":{
       "type":"structure",
@@ -1611,7 +1827,10 @@
         "PedestrianLegDetails":{"shape":"RoutePedestrianLegDetails"},
         "TravelMode":{"shape":"RouteLegTravelMode"},
         "Type":{"shape":"RouteLegType"},
-        "VehicleLegDetails":{"shape":"RouteVehicleLegDetails"}
+        "VehicleLegDetails":{"shape":"RouteVehicleLegDetails"},
+        "RentalLegDetails":{"shape":"RouteRentalLegDetails"},
+        "TaxiLegDetails":{"shape":"RouteTaxiLegDetails"},
+        "TransitLegDetails":{"shape":"RouteTransitLegDetails"}
       }
     },
     "RouteLegAdditionalFeature":{
@@ -1625,13 +1844,17 @@
         "TravelStepInstructions",
         "TruckRoadTypes",
         "TypicalDuration",
-        "Zones"
-      ]
+        "Zones",
+        "Bookings",
+        "IntermediateStops",
+        "NextDepartures"
+      ],
+      "sensitive":true
     },
     "RouteLegAdditionalFeatureList":{
       "type":"list",
       "member":{"shape":"RouteLegAdditionalFeature"},
-      "max":9,
+      "max":12,
       "min":0
     },
     "RouteLegGeometry":{
@@ -1653,16 +1876,35 @@
         "Pedestrian",
         "Scooter",
         "Truck",
-        "CarShuttleTrain"
-      ]
+        "CarShuttleTrain",
+        "AerialTramway",
+        "Airplane",
+        "Bus",
+        "BusRapidTransit",
+        "CityTrain",
+        "FunicularRailway",
+        "HighSpeedTrain",
+        "IntercityTrain",
+        "InterregionalTrain",
+        "LightRail",
+        "Monorail",
+        "PrivateBus",
+        "RegionalTrain",
+        "Subway"
+      ],
+      "sensitive":true
     },
     "RouteLegType":{
       "type":"string",
       "enum":[
         "Ferry",
         "Pedestrian",
-        "Vehicle"
-      ]
+        "Vehicle",
+        "Rental",
+        "Taxi",
+        "Transit"
+      ],
+      "sensitive":true
     },
     "RouteList":{
       "type":"list",
@@ -1703,9 +1945,10 @@
     "RouteMatrixAllowOptions":{
       "type":"structure",
       "members":{
-        "Hot":{"shape":"Boolean"},
-        "Hov":{"shape":"Boolean"}
-      }
+        "Hot":{"shape":"SensitiveBoolean"},
+        "Hov":{"shape":"SensitiveBoolean"}
+      },
+      "sensitive":true
     },
     "RouteMatrixAutoCircle":{
       "type":"structure",
@@ -1717,12 +1960,14 @@
     "RouteMatrixAutoCircleMarginLong":{
       "type":"long",
       "max":200000,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RouteMatrixAutoCircleMaxRadiusLong":{
       "type":"long",
       "max":200000,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RouteMatrixAvoidanceArea":{
       "type":"structure",
@@ -1755,15 +2000,15 @@
       "type":"structure",
       "members":{
         "Areas":{"shape":"RouteMatrixAvoidanceOptionsAreasList"},
-        "CarShuttleTrains":{"shape":"Boolean"},
-        "ControlledAccessHighways":{"shape":"Boolean"},
-        "DirtRoads":{"shape":"Boolean"},
-        "Ferries":{"shape":"Boolean"},
-        "TollRoads":{"shape":"Boolean"},
-        "TollTransponders":{"shape":"Boolean"},
+        "CarShuttleTrains":{"shape":"SensitiveBoolean"},
+        "ControlledAccessHighways":{"shape":"SensitiveBoolean"},
+        "DirtRoads":{"shape":"SensitiveBoolean"},
+        "Ferries":{"shape":"SensitiveBoolean"},
+        "TollRoads":{"shape":"SensitiveBoolean"},
+        "TollTransponders":{"shape":"SensitiveBoolean"},
         "TruckRoadTypes":{"shape":"TruckRoadTypeList"},
-        "Tunnels":{"shape":"Boolean"},
-        "UTurns":{"shape":"Boolean"},
+        "Tunnels":{"shape":"SensitiveBoolean"},
+        "UTurns":{"shape":"SensitiveBoolean"},
         "ZoneCategories":{"shape":"RouteMatrixAvoidanceZoneCategoryList"}
       }
     },
@@ -1789,7 +2034,7 @@
       "type":"structure",
       "members":{
         "Geometry":{"shape":"RouteMatrixBoundaryGeometry"},
-        "Unbounded":{"shape":"Boolean"}
+        "Unbounded":{"shape":"SensitiveBoolean"}
       }
     },
     "RouteMatrixBoundaryGeometry":{
@@ -1821,12 +2066,14 @@
     "RouteMatrixCarOptionsMaxSpeedDouble":{
       "type":"double",
       "max":252.0,
-      "min":3.6
+      "min":3.6,
+      "sensitive":true
     },
     "RouteMatrixCarOptionsOccupancyInteger":{
       "type":"integer",
       "box":true,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "RouteMatrixDestination":{
       "type":"structure",
@@ -1847,7 +2094,8 @@
     },
     "RouteMatrixDestinationOptionsAvoidActionsForDistanceLong":{
       "type":"long",
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RouteMatrixEntry":{
       "type":"structure",
@@ -1896,7 +2144,8 @@
         "Poison",
         "PoisonousInhalation",
         "Radioactive"
-      ]
+      ],
+      "sensitive":true
     },
     "RouteMatrixHazardousCargoTypeList":{
       "type":"list",
@@ -1915,7 +2164,8 @@
     },
     "RouteMatrixMatchingOptionsOnRoadThresholdLong":{
       "type":"long",
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RouteMatrixOrigin":{
       "type":"structure",
@@ -1936,7 +2186,8 @@
     },
     "RouteMatrixOriginOptionsAvoidActionsForDistanceLong":{
       "type":"long",
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RouteMatrixRow":{
       "type":"list",
@@ -1956,12 +2207,14 @@
     "RouteMatrixScooterOptionsMaxSpeedDouble":{
       "type":"double",
       "max":252.0,
-      "min":3.6
+      "min":3.6,
+      "sensitive":true
     },
     "RouteMatrixScooterOptionsOccupancyInteger":{
       "type":"integer",
       "box":true,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "RouteMatrixSideOfStreetOptions":{
       "type":"structure",
@@ -1988,7 +2241,8 @@
       "type":"integer",
       "box":true,
       "max":255,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RouteMatrixTravelMode":{
       "type":"string",
@@ -2035,32 +2289,38 @@
       "type":"integer",
       "box":true,
       "max":255,
-      "min":2
+      "min":2,
+      "sensitive":true
     },
     "RouteMatrixTruckOptionsHeightLong":{
       "type":"long",
       "max":5000,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RouteMatrixTruckOptionsLengthLong":{
       "type":"long",
       "max":30000,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RouteMatrixTruckOptionsMaxSpeedDouble":{
       "type":"double",
       "max":252.0,
-      "min":3.6
+      "min":3.6,
+      "sensitive":true
     },
     "RouteMatrixTruckOptionsOccupancyInteger":{
       "type":"integer",
       "box":true,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "RouteMatrixTruckOptionsWidthLong":{
       "type":"long",
       "max":5000,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RouteMatrixTruckType":{
       "type":"string",
@@ -2068,13 +2328,15 @@
         "LightTruck",
         "StraightTruck",
         "Tractor"
-      ]
+      ],
+      "sensitive":true
     },
     "RouteMatrixVehicleLicensePlate":{
       "type":"structure",
       "members":{
         "LastCharacter":{"shape":"RouteMatrixVehicleLicensePlateLastCharacterString"}
-      }
+      },
+      "sensitive":true
     },
     "RouteMatrixVehicleLicensePlateLastCharacterString":{
       "type":"string",
@@ -2087,7 +2349,8 @@
         "CongestionPricing",
         "Environmental",
         "Vignette"
-      ]
+      ],
+      "sensitive":true
     },
     "RouteNoticeDetailRange":{
       "type":"structure",
@@ -2119,7 +2382,7 @@
       "members":{
         "Direction":{"shape":"RouteDirection"},
         "Language":{"shape":"LanguageTag"},
-        "Value":{"shape":"String"}
+        "Value":{"shape":"SensitiveString"}
       }
     },
     "RouteNumberList":{
@@ -2130,7 +2393,7 @@
       "type":"structure",
       "members":{
         "AvoidActionsForDistance":{"shape":"RouteOriginOptionsAvoidActionsForDistanceLong"},
-        "AvoidUTurns":{"shape":"Boolean"},
+        "AvoidUTurns":{"shape":"SensitiveBoolean"},
         "Heading":{"shape":"Heading"},
         "Matching":{"shape":"RouteMatchingOptions"},
         "SideOfStreet":{"shape":"RouteSideOfStreetOptions"}
@@ -2138,7 +2401,8 @@
     },
     "RouteOriginOptionsAvoidActionsForDistanceLong":{
       "type":"long",
-      "max":2000
+      "max":2000,
+      "sensitive":true
     },
     "RoutePassThroughPlace":{
       "type":"structure",
@@ -2152,7 +2416,8 @@
     "RoutePassThroughPlaceWaypointIndexInteger":{
       "type":"integer",
       "box":true,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RoutePassThroughWaypoint":{
       "type":"structure",
@@ -2170,6 +2435,30 @@
     "RoutePassThroughWaypointList":{
       "type":"list",
       "member":{"shape":"RoutePassThroughWaypoint"}
+    },
+    "RoutePedestrianAfterTravelStep":{
+      "type":"structure",
+      "required":[
+        "Duration",
+        "Type"
+      ],
+      "members":{
+        "Duration":{
+          "shape":"DurationSeconds",
+          "box":true
+        },
+        "Instruction":{"shape":"SensitiveString"},
+        "Type":{"shape":"RoutePedestrianAfterTravelStepType"}
+      }
+    },
+    "RoutePedestrianAfterTravelStepList":{
+      "type":"list",
+      "member":{"shape":"RoutePedestrianAfterTravelStep"}
+    },
+    "RoutePedestrianAfterTravelStepType":{
+      "type":"string",
+      "enum":["Wait"],
+      "sensitive":true
     },
     "RoutePedestrianArrival":{
       "type":"structure",
@@ -2190,6 +2479,7 @@
     "RoutePedestrianLegDetails":{
       "type":"structure",
       "required":[
+        "AfterTravelSteps",
         "Arrival",
         "Departure",
         "Notices",
@@ -2198,6 +2488,7 @@
         "TravelSteps"
       ],
       "members":{
+        "AfterTravelSteps":{"shape":"RoutePedestrianAfterTravelStepList"},
         "Arrival":{"shape":"RoutePedestrianArrival"},
         "Departure":{"shape":"RoutePedestrianDeparture"},
         "Notices":{"shape":"RoutePedestrianNoticeList"},
@@ -2222,7 +2513,8 @@
         "Other",
         "ViolatedAvoidDirtRoad",
         "ViolatedAvoidTunnel",
-        "ViolatedPedestrianOption"
+        "ViolatedPedestrianOption",
+        "ViolatedAvoidAreas"
       ]
     },
     "RoutePedestrianNoticeList":{
@@ -2241,7 +2533,8 @@
     "RoutePedestrianOptionsSpeedDouble":{
       "type":"double",
       "max":7.2,
-      "min":1.8
+      "min":1.8,
+      "sensitive":true
     },
     "RoutePedestrianOverviewSummary":{
       "type":"structure",
@@ -2258,17 +2551,31 @@
       "type":"structure",
       "required":["Position"],
       "members":{
-        "Name":{"shape":"String"},
+        "AccessPointDetails":{"shape":"RouteAccessPointDetails"},
+        "Name":{"shape":"SensitiveString"},
         "OriginalPosition":{"shape":"Position23"},
         "Position":{"shape":"Position23"},
         "SideOfStreet":{"shape":"RouteSideOfStreet"},
+        "StationDetails":{"shape":"RouteStationDetails"},
+        "Type":{"shape":"RoutePedestrianPlaceType"},
         "WaypointIndex":{"shape":"RoutePedestrianPlaceWaypointIndexInteger"}
       }
+    },
+    "RoutePedestrianPlaceType":{
+      "type":"string",
+      "enum":[
+        "AccessPoint",
+        "DockingStation",
+        "ParkingLot",
+        "Station"
+      ],
+      "sensitive":true
     },
     "RoutePedestrianPlaceWaypointIndexInteger":{
       "type":"integer",
       "box":true,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RoutePedestrianSpan":{
       "type":"structure",
@@ -2294,7 +2601,8 @@
       "type":"integer",
       "box":true,
       "max":5,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "RoutePedestrianSpanGeometryOffsetInteger":{
       "type":"integer",
@@ -2308,7 +2616,8 @@
     "RoutePedestrianSpanRegionString":{
       "type":"string",
       "max":3,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RoutePedestrianSummary":{
       "type":"structure",
@@ -2337,7 +2646,7 @@
         "Duration":{"shape":"DurationSeconds"},
         "ExitNumber":{"shape":"LocalizedStringList"},
         "GeometryOffset":{"shape":"RoutePedestrianTravelStepGeometryOffsetInteger"},
-        "Instruction":{"shape":"String"},
+        "Instruction":{"shape":"SensitiveString"},
         "KeepStepDetails":{"shape":"RouteKeepStepDetails"},
         "NextRoad":{"shape":"RouteRoad"},
         "RoundaboutEnterStepDetails":{"shape":"RouteRoundaboutEnterStepDetails"},
@@ -2367,11 +2676,9 @@
         "RoundaboutEnter",
         "RoundaboutExit",
         "RoundaboutPass",
-        "Turn",
-        "Exit",
-        "Ramp",
-        "UTurn"
-      ]
+        "Turn"
+      ],
+      "sensitive":true
     },
     "RouteRampStepDetails":{
       "type":"structure",
@@ -2382,6 +2689,257 @@
         "TurnAngle":{"shape":"TurnAngle"},
         "TurnIntensity":{"shape":"RouteTurnIntensity"}
       }
+    },
+    "RouteRentalAfterTravelStep":{
+      "type":"structure",
+      "required":[
+        "Duration",
+        "Type"
+      ],
+      "members":{
+        "Duration":{
+          "shape":"DurationSeconds",
+          "box":true
+        },
+        "Instruction":{"shape":"SensitiveString"},
+        "Type":{"shape":"RouteRentalAfterTravelStepType"}
+      }
+    },
+    "RouteRentalAfterTravelStepList":{
+      "type":"list",
+      "member":{"shape":"RouteRentalAfterTravelStep"}
+    },
+    "RouteRentalAfterTravelStepType":{
+      "type":"string",
+      "enum":["Park"],
+      "sensitive":true
+    },
+    "RouteRentalAgency":{
+      "type":"structure",
+      "required":["Name"],
+      "members":{
+        "Name":{"shape":"SensitiveString"},
+        "Url":{"shape":"SensitiveString"}
+      }
+    },
+    "RouteRentalArrival":{
+      "type":"structure",
+      "required":["Place"],
+      "members":{
+        "Place":{"shape":"RouteRentalPlace"},
+        "Time":{"shape":"TimestampWithTimezoneOffset"}
+      }
+    },
+    "RouteRentalBeforeTravelStep":{
+      "type":"structure",
+      "required":[
+        "Duration",
+        "Type"
+      ],
+      "members":{
+        "Duration":{
+          "shape":"DurationSeconds",
+          "box":true
+        },
+        "Instruction":{"shape":"SensitiveString"},
+        "Type":{"shape":"RouteRentalBeforeTravelStepType"}
+      }
+    },
+    "RouteRentalBeforeTravelStepList":{
+      "type":"list",
+      "member":{"shape":"RouteRentalBeforeTravelStep"}
+    },
+    "RouteRentalBeforeTravelStepType":{
+      "type":"string",
+      "enum":["Setup"],
+      "sensitive":true
+    },
+    "RouteRentalDeparture":{
+      "type":"structure",
+      "required":["Place"],
+      "members":{
+        "Place":{"shape":"RouteRentalPlace"},
+        "Time":{"shape":"TimestampWithTimezoneOffset"}
+      }
+    },
+    "RouteRentalLegDetails":{
+      "type":"structure",
+      "required":[
+        "AfterTravelSteps",
+        "Agency",
+        "Arrival",
+        "Attributions",
+        "BeforeTravelSteps",
+        "BookingWebLinks",
+        "Departure",
+        "Transport",
+        "TravelSteps"
+      ],
+      "members":{
+        "AfterTravelSteps":{"shape":"RouteRentalAfterTravelStepList"},
+        "Agency":{"shape":"RouteRentalAgency"},
+        "Arrival":{"shape":"RouteRentalArrival"},
+        "Attributions":{"shape":"RouteAttributionList"},
+        "BeforeTravelSteps":{"shape":"RouteRentalBeforeTravelStepList"},
+        "BookingWebLinks":{"shape":"RouteWebLinkList"},
+        "Departure":{"shape":"RouteRentalDeparture"},
+        "Summary":{"shape":"RouteRentalSummary"},
+        "Transport":{"shape":"RouteRentalTransportModeDetails"},
+        "TravelSteps":{"shape":"RouteRentalTravelStepList"}
+      }
+    },
+    "RouteRentalMode":{
+      "type":"string",
+      "enum":[
+        "All",
+        "Car"
+      ],
+      "sensitive":true
+    },
+    "RouteRentalModeList":{
+      "type":"list",
+      "member":{"shape":"RouteRentalMode"},
+      "max":1,
+      "min":1
+    },
+    "RouteRentalOverviewSummary":{
+      "type":"structure",
+      "required":[
+        "Duration",
+        "Distance"
+      ],
+      "members":{
+        "Duration":{
+          "shape":"DurationSeconds",
+          "box":true
+        },
+        "Distance":{
+          "shape":"DistanceMeters",
+          "box":true
+        }
+      }
+    },
+    "RouteRentalPlace":{
+      "type":"structure",
+      "required":["Position"],
+      "members":{
+        "AccessPointDetails":{"shape":"RouteAccessPointDetails"},
+        "Name":{"shape":"SensitiveString"},
+        "OriginalPosition":{"shape":"Position23"},
+        "Position":{"shape":"Position23"},
+        "StationDetails":{"shape":"RouteStationDetails"},
+        "Type":{"shape":"RouteRentalPlaceType"},
+        "WaypointIndex":{"shape":"RouteRentalPlaceWaypointIndexInteger"}
+      }
+    },
+    "RouteRentalPlaceType":{
+      "type":"string",
+      "enum":[
+        "AccessPoint",
+        "DockingStation",
+        "ParkingLot",
+        "Station"
+      ],
+      "sensitive":true
+    },
+    "RouteRentalPlaceWaypointIndexInteger":{
+      "type":"integer",
+      "box":true,
+      "min":0,
+      "sensitive":true
+    },
+    "RouteRentalSummary":{
+      "type":"structure",
+      "members":{
+        "Overview":{"shape":"RouteRentalOverviewSummary"},
+        "TravelOnly":{"shape":"RouteRentalTravelOnlySummary"}
+      }
+    },
+    "RouteRentalTransportModeDetails":{
+      "type":"structure",
+      "required":["Mode"],
+      "members":{
+        "AvailableSeats":{"shape":"RouteRentalTransportModeDetailsAvailableSeatsInteger"},
+        "Category":{"shape":"SensitiveString"},
+        "Color":{"shape":"SensitiveString"},
+        "Engine":{"shape":"RouteEngineType"},
+        "LicensePlate":{"shape":"SensitiveString"},
+        "Mode":{"shape":"RouteRentalMode"},
+        "Model":{"shape":"SensitiveString"},
+        "Name":{"shape":"SensitiveString"},
+        "TextColor":{"shape":"SensitiveString"}
+      }
+    },
+    "RouteRentalTransportModeDetailsAvailableSeatsInteger":{
+      "type":"integer",
+      "box":true,
+      "min":0,
+      "sensitive":true
+    },
+    "RouteRentalTravelOnlySummary":{
+      "type":"structure",
+      "required":["Duration"],
+      "members":{
+        "Duration":{
+          "shape":"DurationSeconds",
+          "box":true
+        }
+      }
+    },
+    "RouteRentalTravelStep":{
+      "type":"structure",
+      "required":[
+        "Duration",
+        "Type"
+      ],
+      "members":{
+        "ContinueStepDetails":{"shape":"RouteContinueStepDetails"},
+        "Distance":{
+          "shape":"DistanceMeters",
+          "box":true
+        },
+        "Duration":{
+          "shape":"DurationSeconds",
+          "box":true
+        },
+        "ExitStepDetails":{"shape":"RouteExitStepDetails"},
+        "GeometryOffset":{"shape":"RouteRentalTravelStepGeometryOffsetInteger"},
+        "Instruction":{"shape":"SensitiveString"},
+        "KeepStepDetails":{"shape":"RouteKeepStepDetails"},
+        "RampStepDetails":{"shape":"RouteRampStepDetails"},
+        "RoundaboutEnterStepDetails":{"shape":"RouteRoundaboutEnterStepDetails"},
+        "RoundaboutExitStepDetails":{"shape":"RouteRoundaboutExitStepDetails"},
+        "RoundaboutPassStepDetails":{"shape":"RouteRoundaboutPassStepDetails"},
+        "TurnStepDetails":{"shape":"RouteTurnStepDetails"},
+        "Type":{"shape":"RouteRentalTravelStepType"},
+        "UTurnStepDetails":{"shape":"RouteUTurnStepDetails"}
+      }
+    },
+    "RouteRentalTravelStepGeometryOffsetInteger":{
+      "type":"integer",
+      "box":true,
+      "min":0
+    },
+    "RouteRentalTravelStepList":{
+      "type":"list",
+      "member":{"shape":"RouteRentalTravelStep"}
+    },
+    "RouteRentalTravelStepType":{
+      "type":"string",
+      "enum":[
+        "Arrive",
+        "Continue",
+        "Depart",
+        "Exit",
+        "Keep",
+        "Ramp",
+        "RoundaboutEnter",
+        "RoundaboutExit",
+        "RoundaboutPass",
+        "Turn",
+        "UTurn"
+      ],
+      "sensitive":true
     },
     "RouteResponseNotice":{
       "type":"structure",
@@ -2396,7 +2954,10 @@
       "enum":[
         "MainLanguageNotFound",
         "Other",
-        "TravelTimeExceedsDriverWorkHours"
+        "TravelTimeExceedsDriverWorkHours",
+        "TransitDataUnavailable",
+        "TransitRouteUnavailable",
+        "NoTransitStationsFound"
       ]
     },
     "RouteResponseNoticeList":{
@@ -2423,7 +2984,8 @@
         "Highway",
         "Rural",
         "Urban"
-      ]
+      ],
+      "sensitive":true
     },
     "RouteRoundaboutEnterStepDetails":{
       "type":"structure",
@@ -2449,7 +3011,8 @@
       "type":"integer",
       "box":true,
       "max":12,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "RouteRoundaboutPassStepDetails":{
       "type":"structure",
@@ -2476,19 +3039,22 @@
     "RouteScooterOptionsMaxSpeedDouble":{
       "type":"double",
       "max":252.0,
-      "min":3.6
+      "min":3.6,
+      "sensitive":true
     },
     "RouteScooterOptionsOccupancyInteger":{
       "type":"integer",
       "box":true,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "RouteSideOfStreet":{
       "type":"string",
       "enum":[
         "Left",
         "Right"
-      ]
+      ],
+      "sensitive":true
     },
     "RouteSideOfStreetOptions":{
       "type":"structure",
@@ -2557,7 +3123,8 @@
         "Allowed",
         "NoThroughTraffic",
         "TollRoad"
-      ]
+      ],
+      "sensitive":true
     },
     "RouteSpanCarAccessAttributeList":{
       "type":"list",
@@ -2579,7 +3146,8 @@
         "Emergency",
         "KeyAccess",
         "PermissionRequired"
-      ]
+      ],
+      "sensitive":true
     },
     "RouteSpanPedestrianAccessAttribute":{
       "type":"string",
@@ -2590,7 +3158,8 @@
         "Park",
         "Stairs",
         "TollRoad"
-      ]
+      ],
+      "sensitive":true
     },
     "RouteSpanPedestrianAccessAttributeList":{
       "type":"list",
@@ -2603,7 +3172,8 @@
       "enum":[
         "Protected",
         "Unprotected"
-      ]
+      ],
+      "sensitive":true
     },
     "RouteSpanRoadAttribute":{
       "type":"string",
@@ -2620,7 +3190,8 @@
         "Roundabout",
         "Tunnel",
         "UnderConstruction"
-      ]
+      ],
+      "sensitive":true
     },
     "RouteSpanRoadAttributeList":{
       "type":"list",
@@ -2634,7 +3205,8 @@
         "Allowed",
         "NoThroughTraffic",
         "TollRoad"
-      ]
+      ],
+      "sensitive":true
     },
     "RouteSpanScooterAccessAttributeList":{
       "type":"list",
@@ -2646,7 +3218,7 @@
       "type":"structure",
       "members":{
         "MaxSpeed":{"shape":"SpeedKilometersPerHour"},
-        "Unlimited":{"shape":"Boolean"}
+        "Unlimited":{"shape":"SensitiveBoolean"}
       }
     },
     "RouteSpanTruckAccessAttribute":{
@@ -2655,7 +3227,8 @@
         "Allowed",
         "NoThroughTraffic",
         "TollRoad"
-      ]
+      ],
+      "sensitive":true
     },
     "RouteSpanTruckAccessAttributeList":{
       "type":"list",
@@ -2663,13 +3236,22 @@
       "max":3,
       "min":0
     },
+    "RouteStationDetails":{
+      "type":"structure",
+      "members":{
+        "Accessibility":{"shape":"RouteAccessibilityAvailabilityDetails"},
+        "PlatformName":{"shape":"SensitiveString"},
+        "ShortName":{"shape":"SensitiveString"}
+      }
+    },
     "RouteSteeringDirection":{
       "type":"string",
       "enum":[
         "Left",
         "Right",
         "Straight"
-      ]
+      ],
+      "sensitive":true
     },
     "RouteSummary":{
       "type":"structure",
@@ -2678,6 +3260,276 @@
         "Duration":{"shape":"DurationSeconds"},
         "Tolls":{"shape":"RouteTollSummary"}
       }
+    },
+    "RouteTaxiAfterTravelStep":{
+      "type":"structure",
+      "required":[
+        "Duration",
+        "Type"
+      ],
+      "members":{
+        "Duration":{
+          "shape":"DurationSeconds",
+          "box":true
+        },
+        "Instruction":{"shape":"SensitiveString"},
+        "Type":{"shape":"RouteTaxiAfterTravelStepType"}
+      }
+    },
+    "RouteTaxiAfterTravelStepList":{
+      "type":"list",
+      "member":{"shape":"RouteTaxiAfterTravelStep"}
+    },
+    "RouteTaxiAfterTravelStepType":{
+      "type":"string",
+      "enum":["Park"],
+      "sensitive":true
+    },
+    "RouteTaxiAgency":{
+      "type":"structure",
+      "required":["Name"],
+      "members":{
+        "Name":{"shape":"SensitiveString"},
+        "Url":{"shape":"SensitiveString"}
+      }
+    },
+    "RouteTaxiArrival":{
+      "type":"structure",
+      "required":["Place"],
+      "members":{
+        "Place":{"shape":"RouteTaxiPlace"},
+        "Time":{"shape":"TimestampWithTimezoneOffset"}
+      }
+    },
+    "RouteTaxiBeforeTravelStep":{
+      "type":"structure",
+      "required":[
+        "Duration",
+        "Type"
+      ],
+      "members":{
+        "Duration":{
+          "shape":"DurationSeconds",
+          "box":true
+        },
+        "Instruction":{"shape":"SensitiveString"},
+        "Type":{"shape":"RouteTaxiBeforeTravelStepType"}
+      }
+    },
+    "RouteTaxiBeforeTravelStepList":{
+      "type":"list",
+      "member":{"shape":"RouteTaxiBeforeTravelStep"}
+    },
+    "RouteTaxiBeforeTravelStepType":{
+      "type":"string",
+      "enum":["Wait"],
+      "sensitive":true
+    },
+    "RouteTaxiDeparture":{
+      "type":"structure",
+      "required":["Place"],
+      "members":{
+        "Place":{"shape":"RouteTaxiPlace"},
+        "Time":{"shape":"TimestampWithTimezoneOffset"}
+      }
+    },
+    "RouteTaxiLegDetails":{
+      "type":"structure",
+      "required":[
+        "AfterTravelSteps",
+        "Agency",
+        "Arrival",
+        "Attributions",
+        "BeforeTravelSteps",
+        "BookingWebLinks",
+        "Departure",
+        "Notices",
+        "Transport",
+        "TravelSteps"
+      ],
+      "members":{
+        "AfterTravelSteps":{"shape":"RouteTaxiAfterTravelStepList"},
+        "Agency":{"shape":"RouteTaxiAgency"},
+        "Arrival":{"shape":"RouteTaxiArrival"},
+        "Attributions":{"shape":"RouteAttributionList"},
+        "BeforeTravelSteps":{"shape":"RouteTaxiBeforeTravelStepList"},
+        "BookingWebLinks":{"shape":"RouteWebLinkList"},
+        "Departure":{"shape":"RouteTaxiDeparture"},
+        "Notices":{"shape":"RouteTaxiNoticeList"},
+        "Summary":{"shape":"RouteTaxiSummary"},
+        "Transport":{"shape":"RouteTaxiTransportModeDetails"},
+        "TravelSteps":{"shape":"RouteTaxiTravelStepList"}
+      }
+    },
+    "RouteTaxiMode":{
+      "type":"string",
+      "enum":[
+        "All",
+        "Car"
+      ],
+      "sensitive":true
+    },
+    "RouteTaxiModeList":{
+      "type":"list",
+      "member":{"shape":"RouteTaxiMode"},
+      "max":1,
+      "min":1
+    },
+    "RouteTaxiNotice":{
+      "type":"structure",
+      "required":["Code"],
+      "members":{
+        "Code":{"shape":"RouteTaxiNoticeCode"},
+        "Impact":{"shape":"RouteNoticeImpact"}
+      }
+    },
+    "RouteTaxiNoticeCode":{
+      "type":"string",
+      "enum":[
+        "AccuratePolylineUnavailable",
+        "Other"
+      ]
+    },
+    "RouteTaxiNoticeList":{
+      "type":"list",
+      "member":{"shape":"RouteTaxiNotice"}
+    },
+    "RouteTaxiOverviewSummary":{
+      "type":"structure",
+      "required":[
+        "Duration",
+        "Distance"
+      ],
+      "members":{
+        "Duration":{
+          "shape":"DurationSeconds",
+          "box":true
+        },
+        "Distance":{
+          "shape":"DistanceMeters",
+          "box":true
+        }
+      }
+    },
+    "RouteTaxiPlace":{
+      "type":"structure",
+      "required":["Position"],
+      "members":{
+        "AccessPointDetails":{"shape":"RouteAccessPointDetails"},
+        "Name":{"shape":"SensitiveString"},
+        "OriginalPosition":{"shape":"Position23"},
+        "Position":{"shape":"Position23"},
+        "StationDetails":{"shape":"RouteStationDetails"},
+        "Type":{"shape":"RouteTaxiPlaceType"},
+        "WaypointIndex":{"shape":"RouteTaxiPlaceWaypointIndexInteger"}
+      }
+    },
+    "RouteTaxiPlaceType":{
+      "type":"string",
+      "enum":[
+        "AccessPoint",
+        "Station"
+      ],
+      "sensitive":true
+    },
+    "RouteTaxiPlaceWaypointIndexInteger":{
+      "type":"integer",
+      "box":true,
+      "min":0,
+      "sensitive":true
+    },
+    "RouteTaxiSummary":{
+      "type":"structure",
+      "members":{
+        "Overview":{"shape":"RouteTaxiOverviewSummary"},
+        "TravelOnly":{"shape":"RouteTaxiTravelOnlySummary"}
+      }
+    },
+    "RouteTaxiTransportModeDetails":{
+      "type":"structure",
+      "required":["Mode"],
+      "members":{
+        "AvailableSeats":{"shape":"RouteTaxiTransportModeDetailsAvailableSeatsInteger"},
+        "Category":{"shape":"SensitiveString"},
+        "Color":{"shape":"SensitiveString"},
+        "Engine":{"shape":"RouteEngineType"},
+        "LicensePlate":{"shape":"SensitiveString"},
+        "Mode":{"shape":"RouteTaxiMode"},
+        "Model":{"shape":"SensitiveString"},
+        "Name":{"shape":"SensitiveString"},
+        "TextColor":{"shape":"SensitiveString"}
+      }
+    },
+    "RouteTaxiTransportModeDetailsAvailableSeatsInteger":{
+      "type":"integer",
+      "box":true,
+      "min":0,
+      "sensitive":true
+    },
+    "RouteTaxiTravelOnlySummary":{
+      "type":"structure",
+      "required":["Duration"],
+      "members":{
+        "Duration":{
+          "shape":"DurationSeconds",
+          "box":true
+        }
+      }
+    },
+    "RouteTaxiTravelStep":{
+      "type":"structure",
+      "required":[
+        "Duration",
+        "Type"
+      ],
+      "members":{
+        "ContinueStepDetails":{"shape":"RouteContinueStepDetails"},
+        "Distance":{
+          "shape":"DistanceMeters",
+          "box":true
+        },
+        "Duration":{
+          "shape":"DurationSeconds",
+          "box":true
+        },
+        "ExitStepDetails":{"shape":"RouteExitStepDetails"},
+        "GeometryOffset":{"shape":"RouteTaxiTravelStepGeometryOffsetInteger"},
+        "Instruction":{"shape":"SensitiveString"},
+        "KeepStepDetails":{"shape":"RouteKeepStepDetails"},
+        "RampStepDetails":{"shape":"RouteRampStepDetails"},
+        "RoundaboutEnterStepDetails":{"shape":"RouteRoundaboutEnterStepDetails"},
+        "RoundaboutExitStepDetails":{"shape":"RouteRoundaboutExitStepDetails"},
+        "RoundaboutPassStepDetails":{"shape":"RouteRoundaboutPassStepDetails"},
+        "TurnStepDetails":{"shape":"RouteTurnStepDetails"},
+        "Type":{"shape":"RouteTaxiTravelStepType"},
+        "UTurnStepDetails":{"shape":"RouteUTurnStepDetails"}
+      }
+    },
+    "RouteTaxiTravelStepGeometryOffsetInteger":{
+      "type":"integer",
+      "box":true,
+      "min":0
+    },
+    "RouteTaxiTravelStepList":{
+      "type":"list",
+      "member":{"shape":"RouteTaxiTravelStep"}
+    },
+    "RouteTaxiTravelStepType":{
+      "type":"string",
+      "enum":[
+        "Arrive",
+        "Continue",
+        "Depart",
+        "Exit",
+        "Keep",
+        "Ramp",
+        "RoundaboutEnter",
+        "RoundaboutExit",
+        "RoundaboutPass",
+        "Turn",
+        "UTurn"
+      ],
+      "sensitive":true
     },
     "RouteToll":{
       "type":"structure",
@@ -2700,8 +3552,8 @@
     "RouteTollOptions":{
       "type":"structure",
       "members":{
-        "AllTransponders":{"shape":"Boolean"},
-        "AllVignettes":{"shape":"Boolean"},
+        "AllTransponders":{"shape":"SensitiveBoolean"},
+        "AllVignettes":{"shape":"SensitiveBoolean"},
         "Currency":{"shape":"CurrencyCode"},
         "EmissionType":{"shape":"RouteEmissionType"},
         "VehicleCategory":{"shape":"RouteTollVehicleCategory"}
@@ -2710,8 +3562,8 @@
     "RouteTollPass":{
       "type":"structure",
       "members":{
-        "IncludesReturnTrip":{"shape":"Boolean"},
-        "SeniorPass":{"shape":"Boolean"},
+        "IncludesReturnTrip":{"shape":"SensitiveBoolean"},
+        "SeniorPass":{"shape":"SensitiveBoolean"},
         "TransferCount":{"shape":"RouteTollPassTransferCountInteger"},
         "TripCount":{"shape":"RouteTollPassTripCountInteger"},
         "ValidityPeriod":{"shape":"RouteTollPassValidityPeriod"}
@@ -2720,12 +3572,14 @@
     "RouteTollPassTransferCountInteger":{
       "type":"integer",
       "box":true,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RouteTollPassTripCountInteger":{
       "type":"integer",
       "box":true,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RouteTollPassValidityPeriod":{
       "type":"structure",
@@ -2738,7 +3592,8 @@
     "RouteTollPassValidityPeriodPeriodCountInteger":{
       "type":"integer",
       "box":true,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RouteTollPassValidityPeriodType":{
       "type":"string",
@@ -2748,7 +3603,8 @@
         "ExtendedAnnual",
         "Minutes",
         "Months"
-      ]
+      ],
+      "sensitive":true
     },
     "RouteTollPaymentMethod":{
       "type":"string",
@@ -2761,7 +3617,8 @@
         "TravelCard",
         "Transponder",
         "VideoToll"
-      ]
+      ],
+      "sensitive":true
     },
     "RouteTollPaymentMethodList":{
       "type":"list",
@@ -2791,9 +3648,9 @@
       ],
       "members":{
         "Currency":{"shape":"CurrencyCode"},
-        "Estimate":{"shape":"Boolean"},
+        "Estimate":{"shape":"SensitiveBoolean"},
         "PerDuration":{"shape":"DurationSeconds"},
-        "Range":{"shape":"Boolean"},
+        "Range":{"shape":"SensitiveBoolean"},
         "RangeValue":{"shape":"RouteTollPriceValueRange"},
         "Value":{"shape":"RouteTollPriceValueDouble"}
       }
@@ -2808,8 +3665,8 @@
       ],
       "members":{
         "Currency":{"shape":"CurrencyCode"},
-        "Estimate":{"shape":"Boolean"},
-        "Range":{"shape":"Boolean"},
+        "Estimate":{"shape":"SensitiveBoolean"},
+        "Range":{"shape":"SensitiveBoolean"},
         "RangeValue":{"shape":"RouteTollPriceValueRange"},
         "Value":{"shape":"RouteTollPriceSummaryValueDouble"}
       }
@@ -2817,12 +3674,14 @@
     "RouteTollPriceSummaryValueDouble":{
       "type":"double",
       "box":true,
-      "min":0.0
+      "min":0.0,
+      "sensitive":true
     },
     "RouteTollPriceValueDouble":{
       "type":"double",
       "box":true,
-      "min":0.0
+      "min":0.0,
+      "sensitive":true
     },
     "RouteTollPriceValueRange":{
       "type":"structure",
@@ -2838,12 +3697,14 @@
     "RouteTollPriceValueRangeMaxDouble":{
       "type":"double",
       "box":true,
-      "min":0.0
+      "min":0.0,
+      "sensitive":true
     },
     "RouteTollPriceValueRangeMinDouble":{
       "type":"double",
       "box":true,
-      "min":0.0
+      "min":0.0,
+      "sensitive":true
     },
     "RouteTollRate":{
       "type":"structure",
@@ -2855,11 +3716,11 @@
         "Transponders"
       ],
       "members":{
-        "ApplicableTimes":{"shape":"String"},
+        "ApplicableTimes":{"shape":"SensitiveString"},
         "ConvertedPrice":{"shape":"RouteTollPrice"},
-        "Id":{"shape":"String"},
+        "Id":{"shape":"SensitiveString"},
         "LocalPrice":{"shape":"RouteTollPrice"},
-        "Name":{"shape":"String"},
+        "Name":{"shape":"SensitiveString"},
         "Pass":{"shape":"RouteTollPass"},
         "PaymentMethods":{"shape":"RouteTollPaymentMethodList"},
         "Transponders":{"shape":"RouteTransponderList"}
@@ -2878,7 +3739,7 @@
     "RouteTollSystem":{
       "type":"structure",
       "members":{
-        "Name":{"shape":"String"}
+        "Name":{"shape":"SensitiveString"}
       }
     },
     "RouteTollSystemList":{
@@ -2887,7 +3748,8 @@
     },
     "RouteTollVehicleCategory":{
       "type":"string",
-      "enum":["Minibus"]
+      "enum":["Minibus"],
+      "sensitive":true
     },
     "RouteTrafficOptions":{
       "type":"structure",
@@ -2906,18 +3768,491 @@
     "RouteTrailerOptionsAxleCountInteger":{
       "type":"integer",
       "box":true,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "RouteTrailerOptionsTrailerCountInteger":{
       "type":"integer",
       "box":true,
       "max":255,
+      "min":1,
+      "sensitive":true
+    },
+    "RouteTransitAfterTravelStep":{
+      "type":"structure",
+      "required":[
+        "Duration",
+        "Type"
+      ],
+      "members":{
+        "Duration":{
+          "shape":"DurationSeconds",
+          "box":true
+        },
+        "Instruction":{"shape":"SensitiveString"},
+        "Type":{"shape":"RouteTransitAfterTravelStepType"}
+      }
+    },
+    "RouteTransitAfterTravelStepList":{
+      "type":"list",
+      "member":{"shape":"RouteTransitAfterTravelStep"}
+    },
+    "RouteTransitAfterTravelStepType":{
+      "type":"string",
+      "enum":["Deboard"],
+      "sensitive":true
+    },
+    "RouteTransitAgency":{
+      "type":"structure",
+      "required":["Name"],
+      "members":{
+        "Name":{"shape":"SensitiveString"},
+        "Url":{"shape":"SensitiveString"}
+      }
+    },
+    "RouteTransitArrival":{
+      "type":"structure",
+      "required":["Place"],
+      "members":{
+        "Delay":{
+          "shape":"DurationSeconds",
+          "box":true
+        },
+        "Place":{"shape":"RouteTransitPlace"},
+        "Status":{"shape":"RouteTransitTripStatus"},
+        "Time":{"shape":"TimestampWithTimezoneOffset"}
+      }
+    },
+    "RouteTransitBeforeTravelStep":{
+      "type":"structure",
+      "required":[
+        "Duration",
+        "Type"
+      ],
+      "members":{
+        "Duration":{
+          "shape":"DurationSeconds",
+          "box":true
+        },
+        "Instruction":{"shape":"SensitiveString"},
+        "Type":{"shape":"RouteTransitBeforeTravelStepType"}
+      }
+    },
+    "RouteTransitBeforeTravelStepList":{
+      "type":"list",
+      "member":{"shape":"RouteTransitBeforeTravelStep"}
+    },
+    "RouteTransitBeforeTravelStepType":{
+      "type":"string",
+      "enum":["Board"],
+      "sensitive":true
+    },
+    "RouteTransitDeparture":{
+      "type":"structure",
+      "required":["Place"],
+      "members":{
+        "Delay":{
+          "shape":"DurationSeconds",
+          "box":true
+        },
+        "Place":{"shape":"RouteTransitPlace"},
+        "Status":{"shape":"RouteTransitTripStatus"},
+        "Time":{"shape":"TimestampWithTimezoneOffset"}
+      }
+    },
+    "RouteTransitIncident":{
+      "type":"structure",
+      "required":[
+        "Effect",
+        "Type"
+      ],
+      "members":{
+        "Description":{"shape":"SensitiveString"},
+        "Effect":{"shape":"RouteTransitIncidentEffect"},
+        "EndTime":{"shape":"TimestampWithTimezoneOffset"},
+        "StartTime":{"shape":"TimestampWithTimezoneOffset"},
+        "Type":{"shape":"RouteTransitIncidentType"},
+        "Url":{"shape":"SensitiveString"}
+      }
+    },
+    "RouteTransitIncidentEffect":{
+      "type":"string",
+      "enum":[
+        "Delayed",
+        "Detoured",
+        "Other",
+        "ServiceAdded",
+        "ServiceCancelled",
+        "ServiceModified",
+        "ServiceReduced",
+        "StopMoved"
+      ],
+      "sensitive":true
+    },
+    "RouteTransitIncidentList":{
+      "type":"list",
+      "member":{"shape":"RouteTransitIncident"}
+    },
+    "RouteTransitIncidentType":{
+      "type":"string",
+      "enum":[
+        "Accident",
+        "Construction",
+        "Demonstration",
+        "Holiday",
+        "Maintenance",
+        "MedicalEmergency",
+        "Other",
+        "PoliceActivity",
+        "Strike",
+        "TechnicalProblem",
+        "Weather"
+      ],
+      "sensitive":true
+    },
+    "RouteTransitIntermediateStop":{
+      "type":"structure",
+      "required":[
+        "Departure",
+        "Duration"
+      ],
+      "members":{
+        "Attributes":{"shape":"RouteTransitIntermediateStopAttributeList"},
+        "Departure":{"shape":"RouteTransitDeparture"},
+        "Duration":{
+          "shape":"DurationSeconds",
+          "box":true
+        },
+        "GeometryOffset":{"shape":"RouteTransitIntermediateStopGeometryOffsetInteger"},
+        "Transport":{"shape":"RouteTransitTransportModeDetails"}
+      }
+    },
+    "RouteTransitIntermediateStopAttribute":{
+      "type":"string",
+      "enum":[
+        "NoEntry",
+        "NoExit"
+      ],
+      "sensitive":true
+    },
+    "RouteTransitIntermediateStopAttributeList":{
+      "type":"list",
+      "member":{"shape":"RouteTransitIntermediateStopAttribute"},
+      "max":2,
+      "min":0
+    },
+    "RouteTransitIntermediateStopGeometryOffsetInteger":{
+      "type":"integer",
+      "box":true,
+      "min":0
+    },
+    "RouteTransitIntermediateStopList":{
+      "type":"list",
+      "member":{"shape":"RouteTransitIntermediateStop"}
+    },
+    "RouteTransitLegDetails":{
+      "type":"structure",
+      "required":[
+        "AfterTravelSteps",
+        "Arrival",
+        "Attributions",
+        "BeforeTravelSteps",
+        "BookingWebLinks",
+        "Departure",
+        "Incidents",
+        "IntermediateStops",
+        "NextDepartures",
+        "Notices",
+        "PassThroughWaypoints",
+        "Spans",
+        "Transport",
+        "TravelSteps"
+      ],
+      "members":{
+        "AfterTravelSteps":{"shape":"RouteTransitAfterTravelStepList"},
+        "Agency":{"shape":"RouteTransitAgency"},
+        "Arrival":{"shape":"RouteTransitArrival"},
+        "Attributions":{"shape":"RouteAttributionList"},
+        "BeforeTravelSteps":{"shape":"RouteTransitBeforeTravelStepList"},
+        "BookingWebLinks":{"shape":"RouteWebLinkList"},
+        "Departure":{"shape":"RouteTransitDeparture"},
+        "Incidents":{"shape":"RouteTransitIncidentList"},
+        "IntermediateStops":{"shape":"RouteTransitIntermediateStopList"},
+        "NextDepartures":{"shape":"RouteTransitNextDepartureList"},
+        "Notices":{"shape":"RouteTransitNoticeList"},
+        "PassThroughWaypoints":{"shape":"RoutePassThroughWaypointList"},
+        "Spans":{"shape":"RouteTransitSpanList"},
+        "Summary":{"shape":"RouteTransitSummary"},
+        "Transport":{"shape":"RouteTransitTransportModeDetails"},
+        "TravelSteps":{"shape":"RouteTransitTravelStepList"}
+      }
+    },
+    "RouteTransitMode":{
+      "type":"string",
+      "enum":[
+        "AerialTramway",
+        "Airplane",
+        "All",
+        "Bus",
+        "BusRapidTransit",
+        "CityTrain",
+        "Ferry",
+        "FunicularRailway",
+        "HighSpeedTrain",
+        "IntercityTrain",
+        "InterregionalTrain",
+        "LightRail",
+        "Monorail",
+        "PrivateBus",
+        "RegionalTrain",
+        "Subway"
+      ],
+      "sensitive":true
+    },
+    "RouteTransitModeList":{
+      "type":"list",
+      "member":{"shape":"RouteTransitMode"},
+      "max":15,
       "min":1
+    },
+    "RouteTransitNextDeparture":{
+      "type":"structure",
+      "required":["Time"],
+      "members":{
+        "Delay":{
+          "shape":"DurationSeconds",
+          "box":true
+        },
+        "PlatformName":{"shape":"SensitiveString"},
+        "Status":{"shape":"RouteTransitTripStatus"},
+        "Time":{"shape":"TimestampWithTimezoneOffset"},
+        "Transport":{"shape":"RouteTransitTransportModeDetails"}
+      }
+    },
+    "RouteTransitNextDepartureList":{
+      "type":"list",
+      "member":{"shape":"RouteTransitNextDeparture"}
+    },
+    "RouteTransitNotice":{
+      "type":"structure",
+      "required":["Code"],
+      "members":{
+        "Code":{"shape":"RouteTransitNoticeCode"},
+        "Impact":{"shape":"RouteNoticeImpact"}
+      }
+    },
+    "RouteTransitNoticeCode":{
+      "type":"string",
+      "enum":[
+        "AccuratePolylineUnavailable",
+        "IntermediateStopsUnavailable",
+        "NoSchedule",
+        "Other",
+        "PotentialViolatedVehicleRestrictionUsage",
+        "ScheduledTimes",
+        "SeasonalClosure",
+        "ViolatedAvoidFerry",
+        "ViolatedAvoidRailFerry",
+        "ViolatedExcludedTransitMode",
+        "ViolatedVehicleRestriction",
+        "ViolatedAvoidAreas"
+      ]
+    },
+    "RouteTransitNoticeList":{
+      "type":"list",
+      "member":{"shape":"RouteTransitNotice"}
+    },
+    "RouteTransitOptions":{
+      "type":"structure",
+      "members":{
+        "AccessibilityAttributes":{"shape":"RouteAccessibilityAttributeList"},
+        "AllowedModes":{"shape":"RouteTransitModeList"},
+        "ExcludedModes":{"shape":"RouteTransitModeList"},
+        "MaxTransfers":{"shape":"RouteTransitOptionsMaxTransfersInteger"},
+        "Pedestrian":{"shape":"RouteTransitPedestrianOptions"}
+      }
+    },
+    "RouteTransitOptionsMaxTransfersInteger":{
+      "type":"integer",
+      "box":true,
+      "max":6,
+      "min":0
+    },
+    "RouteTransitOverviewSummary":{
+      "type":"structure",
+      "required":[
+        "Distance",
+        "Duration"
+      ],
+      "members":{
+        "Distance":{
+          "shape":"DistanceMeters",
+          "box":true
+        },
+        "Duration":{
+          "shape":"DurationSeconds",
+          "box":true
+        }
+      }
+    },
+    "RouteTransitPedestrianOptions":{
+      "type":"structure",
+      "members":{
+        "MaxDistance":{
+          "shape":"RouteTransitPedestrianOptionsMaxDistanceLong",
+          "box":true
+        },
+        "Speed":{
+          "shape":"RouteTransitPedestrianOptionsSpeedDouble",
+          "box":true
+        }
+      }
+    },
+    "RouteTransitPedestrianOptionsMaxDistanceLong":{
+      "type":"long",
+      "max":6000,
+      "sensitive":true
+    },
+    "RouteTransitPedestrianOptionsSpeedDouble":{
+      "type":"double",
+      "max":7.2,
+      "min":1.8,
+      "sensitive":true
+    },
+    "RouteTransitPlace":{
+      "type":"structure",
+      "required":["Position"],
+      "members":{
+        "Name":{"shape":"SensitiveString"},
+        "OriginalPosition":{"shape":"Position23"},
+        "Position":{"shape":"Position23"},
+        "StationDetails":{"shape":"RouteStationDetails"},
+        "Type":{"shape":"RouteTransitPlaceType"},
+        "WaypointIndex":{"shape":"RouteTransitPlaceWaypointIndexInteger"}
+      }
+    },
+    "RouteTransitPlaceType":{
+      "type":"string",
+      "enum":["Station"],
+      "sensitive":true
+    },
+    "RouteTransitPlaceWaypointIndexInteger":{
+      "type":"integer",
+      "box":true,
+      "min":0,
+      "sensitive":true
+    },
+    "RouteTransitSpan":{
+      "type":"structure",
+      "members":{
+        "Country":{"shape":"CountryCode3"},
+        "Distance":{
+          "shape":"DistanceMeters",
+          "box":true
+        },
+        "Duration":{
+          "shape":"DurationSeconds",
+          "box":true
+        },
+        "GeometryOffset":{"shape":"RouteTransitSpanGeometryOffsetInteger"},
+        "Names":{"shape":"LocalizedStringList"},
+        "Region":{"shape":"RouteTransitSpanRegionString"}
+      }
+    },
+    "RouteTransitSpanGeometryOffsetInteger":{
+      "type":"integer",
+      "box":true,
+      "min":0
+    },
+    "RouteTransitSpanList":{
+      "type":"list",
+      "member":{"shape":"RouteTransitSpan"}
+    },
+    "RouteTransitSpanRegionString":{
+      "type":"string",
+      "max":3,
+      "min":0,
+      "sensitive":true
+    },
+    "RouteTransitSummary":{
+      "type":"structure",
+      "members":{
+        "Overview":{"shape":"RouteTransitOverviewSummary"},
+        "TravelOnly":{"shape":"RouteTransitTravelOnlySummary"}
+      }
+    },
+    "RouteTransitTransportModeDetails":{
+      "type":"structure",
+      "required":["Mode"],
+      "members":{
+        "Accessibility":{"shape":"RouteAccessibilityAvailabilityDetails"},
+        "Color":{"shape":"HexColor"},
+        "Headsign":{"shape":"SensitiveString"},
+        "LongRouteName":{"shape":"SensitiveString"},
+        "Mode":{"shape":"RouteTransitMode"},
+        "RouteName":{"shape":"SensitiveString"},
+        "ShortRouteName":{"shape":"SensitiveString"},
+        "TextColor":{"shape":"HexColor"}
+      }
+    },
+    "RouteTransitTravelOnlySummary":{
+      "type":"structure",
+      "required":["Duration"],
+      "members":{
+        "Duration":{
+          "shape":"DurationSeconds",
+          "box":true
+        }
+      }
+    },
+    "RouteTransitTravelStep":{
+      "type":"structure",
+      "required":[
+        "Duration",
+        "Type"
+      ],
+      "members":{
+        "Distance":{
+          "shape":"DistanceMeters",
+          "box":true
+        },
+        "Duration":{
+          "shape":"DurationSeconds",
+          "box":true
+        },
+        "GeometryOffset":{"shape":"RouteTransitTravelStepGeometryOffsetInteger"},
+        "Instruction":{"shape":"SensitiveString"},
+        "Type":{"shape":"RouteTransitTravelStepType"}
+      }
+    },
+    "RouteTransitTravelStepGeometryOffsetInteger":{
+      "type":"integer",
+      "box":true,
+      "min":0
+    },
+    "RouteTransitTravelStepList":{
+      "type":"list",
+      "member":{"shape":"RouteTransitTravelStep"}
+    },
+    "RouteTransitTravelStepType":{
+      "type":"string",
+      "enum":["Depart"],
+      "sensitive":true
+    },
+    "RouteTransitTripStatus":{
+      "type":"string",
+      "enum":[
+        "Added",
+        "Cancelled",
+        "Replaced",
+        "Scheduled"
+      ],
+      "sensitive":true
     },
     "RouteTransponder":{
       "type":"structure",
       "members":{
-        "SystemName":{"shape":"String"}
+        "SystemName":{"shape":"SensitiveString"}
       }
     },
     "RouteTransponderList":{
@@ -2930,7 +4265,9 @@
         "Car",
         "Pedestrian",
         "Scooter",
-        "Truck"
+        "Truck",
+        "Intermodal",
+        "Transit"
       ]
     },
     "RouteTravelModeOptions":{
@@ -2939,7 +4276,9 @@
         "Car":{"shape":"RouteCarOptions"},
         "Pedestrian":{"shape":"RoutePedestrianOptions"},
         "Scooter":{"shape":"RouteScooterOptions"},
-        "Truck":{"shape":"RouteTruckOptions"}
+        "Truck":{"shape":"RouteTruckOptions"},
+        "Intermodal":{"shape":"RouteIntermodalOptions"},
+        "Transit":{"shape":"RouteTransitOptions"}
       }
     },
     "RouteTravelStepType":{
@@ -2980,48 +4319,57 @@
       "type":"integer",
       "box":true,
       "max":255,
-      "min":2
+      "min":2,
+      "sensitive":true
     },
     "RouteTruckOptionsHeightAboveFirstAxleLong":{
       "type":"long",
       "max":5000,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RouteTruckOptionsHeightLong":{
       "type":"long",
       "max":5000,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RouteTruckOptionsLengthLong":{
       "type":"long",
       "max":30000,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RouteTruckOptionsMaxSpeedDouble":{
       "type":"double",
       "max":252.0,
-      "min":3.6
+      "min":3.6,
+      "sensitive":true
     },
     "RouteTruckOptionsOccupancyInteger":{
       "type":"integer",
       "box":true,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "RouteTruckOptionsTireCountInteger":{
       "type":"integer",
       "box":true,
       "max":255,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "RouteTruckOptionsTunnelRestrictionCodeString":{
       "type":"string",
       "max":20,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RouteTruckOptionsWidthLong":{
       "type":"long",
       "max":5000,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RouteTruckType":{
       "type":"string",
@@ -3029,7 +4377,8 @@
         "LightTruck",
         "StraightTruck",
         "Tractor"
-      ]
+      ],
+      "sensitive":true
     },
     "RouteTurnIntensity":{
       "type":"string",
@@ -3037,7 +4386,8 @@
         "Sharp",
         "Slight",
         "Typical"
-      ]
+      ],
+      "sensitive":true
     },
     "RouteTurnStepDetails":{
       "type":"structure",
@@ -3059,6 +4409,31 @@
         "TurnIntensity":{"shape":"RouteTurnIntensity"}
       }
     },
+    "RouteVehicleAfterTravelStep":{
+      "type":"structure",
+      "required":[
+        "Duration",
+        "Type"
+      ],
+      "members":{
+        "ChargeStepDetails":{"shape":"RouteChargeStepDetails"},
+        "Duration":{
+          "shape":"DurationSeconds",
+          "box":true
+        },
+        "Instruction":{"shape":"SensitiveString"},
+        "Type":{"shape":"RouteVehicleAfterTravelStepType"}
+      }
+    },
+    "RouteVehicleAfterTravelStepList":{
+      "type":"list",
+      "member":{"shape":"RouteVehicleAfterTravelStep"}
+    },
+    "RouteVehicleAfterTravelStepType":{
+      "type":"string",
+      "enum":["Park"],
+      "sensitive":true
+    },
     "RouteVehicleArrival":{
       "type":"structure",
       "required":["Place"],
@@ -3078,7 +4453,7 @@
     "RouteVehicleIncident":{
       "type":"structure",
       "members":{
-        "Description":{"shape":"String"},
+        "Description":{"shape":"SensitiveString"},
         "EndTime":{"shape":"TimestampWithTimezoneOffset"},
         "Severity":{"shape":"RouteVehicleIncidentSeverity"},
         "StartTime":{"shape":"TimestampWithTimezoneOffset"},
@@ -3096,7 +4471,8 @@
         "High",
         "Medium",
         "Low"
-      ]
+      ],
+      "sensitive":true
     },
     "RouteVehicleIncidentType":{
       "type":"string",
@@ -3112,11 +4488,13 @@
         "RoadClosure",
         "RoadHazard",
         "Weather"
-      ]
+      ],
+      "sensitive":true
     },
     "RouteVehicleLegDetails":{
       "type":"structure",
       "required":[
+        "AfterTravelSteps",
         "Arrival",
         "Departure",
         "Incidents",
@@ -3130,6 +4508,7 @@
         "Zones"
       ],
       "members":{
+        "AfterTravelSteps":{"shape":"RouteVehicleAfterTravelStepList"},
         "Arrival":{"shape":"RouteVehicleArrival"},
         "Departure":{"shape":"RouteVehicleDeparture"},
         "Incidents":{"shape":"RouteVehicleIncidentList"},
@@ -3152,6 +4531,21 @@
     },
     "RouteVehicleLicensePlateLastCharacterString":{
       "type":"string",
+      "max":1,
+      "min":1,
+      "sensitive":true
+    },
+    "RouteVehicleMode":{
+      "type":"string",
+      "enum":[
+        "All",
+        "Car"
+      ],
+      "sensitive":true
+    },
+    "RouteVehicleModeList":{
+      "type":"list",
+      "member":{"shape":"RouteVehicleMode"},
       "max":1,
       "min":1
     },
@@ -3196,13 +4590,14 @@
         "ViolatedStartDirection",
         "ViolatedTurnRestriction",
         "ViolatedVehicleRestriction",
-        "ViolatedZoneRestriction"
+        "ViolatedZoneRestriction",
+        "TravelTimeExceedsDriverWorkHours"
       ]
     },
     "RouteVehicleNoticeDetail":{
       "type":"structure",
       "members":{
-        "Title":{"shape":"String"},
+        "Title":{"shape":"SensitiveString"},
         "ViolatedConstraints":{"shape":"RouteViolatedConstraints"}
       }
     },
@@ -3231,17 +4626,31 @@
       "type":"structure",
       "required":["Position"],
       "members":{
-        "Name":{"shape":"String"},
+        "Name":{"shape":"SensitiveString"},
         "OriginalPosition":{"shape":"Position23"},
         "Position":{"shape":"Position23"},
         "SideOfStreet":{"shape":"RouteSideOfStreet"},
-        "WaypointIndex":{"shape":"RouteVehiclePlaceWaypointIndexInteger"}
+        "WaypointIndex":{"shape":"RouteVehiclePlaceWaypointIndexInteger"},
+        "AccessPointDetails":{"shape":"RouteAccessPointDetails"},
+        "StationDetails":{"shape":"RouteStationDetails"},
+        "Type":{"shape":"RouteVehiclePlaceType"}
       }
+    },
+    "RouteVehiclePlaceType":{
+      "type":"string",
+      "enum":[
+        "AccessPoint",
+        "DockingStation",
+        "ParkingLot",
+        "Station"
+      ],
+      "sensitive":true
     },
     "RouteVehiclePlaceWaypointIndexInteger":{
       "type":"integer",
       "box":true,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RouteVehicleSpan":{
       "type":"structure",
@@ -3275,7 +4684,8 @@
       "type":"integer",
       "box":true,
       "max":5,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "RouteVehicleSpanGeometryOffsetInteger":{
       "type":"integer",
@@ -3289,7 +4699,8 @@
     "RouteVehicleSpanRegionString":{
       "type":"string",
       "max":3,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RouteVehicleSummary":{
       "type":"structure",
@@ -3323,7 +4734,7 @@
         "ExitNumber":{"shape":"LocalizedStringList"},
         "ExitStepDetails":{"shape":"RouteExitStepDetails"},
         "GeometryOffset":{"shape":"RouteVehicleTravelStepGeometryOffsetInteger"},
-        "Instruction":{"shape":"String"},
+        "Instruction":{"shape":"SensitiveString"},
         "KeepStepDetails":{"shape":"RouteKeepStepDetails"},
         "NextRoad":{"shape":"RouteRoad"},
         "RampStepDetails":{"shape":"RouteRampStepDetails"},
@@ -3361,13 +4772,14 @@
         "RoundaboutPass",
         "Turn",
         "UTurn"
-      ]
+      ],
+      "sensitive":true
     },
     "RouteViolatedConstraints":{
       "type":"structure",
       "required":["HazardousCargos"],
       "members":{
-        "AllHazardsRestricted":{"shape":"Boolean"},
+        "AllHazardsRestricted":{"shape":"SensitiveBoolean"},
         "AxleCount":{"shape":"RouteNoticeDetailRange"},
         "HazardousCargos":{"shape":"RouteHazardousCargoTypeList"},
         "MaxHeight":{"shape":"DimensionCentimeters"},
@@ -3380,9 +4792,9 @@
         "MaxWidth":{"shape":"DimensionCentimeters"},
         "Occupancy":{"shape":"RouteNoticeDetailRange"},
         "RestrictedTimes":{"shape":"String"},
-        "TimeDependent":{"shape":"Boolean"},
+        "TimeDependent":{"shape":"SensitiveBoolean"},
         "TrailerCount":{"shape":"RouteNoticeDetailRange"},
-        "TravelMode":{"shape":"Boolean"},
+        "TravelMode":{"shape":"SensitiveBoolean"},
         "TruckRoadType":{"shape":"String"},
         "TruckType":{"shape":"RouteTruckType"},
         "TunnelRestrictionCode":{"shape":"TunnelRestrictionCode"}
@@ -3393,22 +4805,51 @@
       "required":["Position"],
       "members":{
         "AvoidActionsForDistance":{"shape":"RouteWaypointAvoidActionsForDistanceLong"},
-        "AvoidUTurns":{"shape":"Boolean"},
+        "AvoidUTurns":{"shape":"SensitiveBoolean"},
         "Heading":{"shape":"Heading"},
         "Matching":{"shape":"RouteMatchingOptions"},
-        "PassThrough":{"shape":"Boolean"},
+        "PassThrough":{"shape":"SensitiveBoolean"},
         "Position":{"shape":"Position"},
         "SideOfStreet":{"shape":"RouteSideOfStreetOptions"},
-        "StopDuration":{"shape":"DurationSeconds"}
+        "StopDuration":{"shape":"RouteWaypointStopDurationLong"}
       }
     },
     "RouteWaypointAvoidActionsForDistanceLong":{
       "type":"long",
-      "max":2000
+      "max":2000,
+      "sensitive":true
     },
     "RouteWaypointList":{
       "type":"list",
       "member":{"shape":"RouteWaypoint"}
+    },
+    "RouteWaypointStopDurationLong":{
+      "type":"long",
+      "max":49999,
+      "sensitive":true
+    },
+    "RouteWebLink":{
+      "type":"structure",
+      "required":["Description"],
+      "members":{
+        "AnchorText":{"shape":"SensitiveString"},
+        "Description":{"shape":"SensitiveString"},
+        "DeviceType":{"shape":"RouteWebLinkDeviceType"},
+        "Url":{"shape":"SensitiveString"}
+      }
+    },
+    "RouteWebLinkDeviceType":{
+      "type":"string",
+      "enum":[
+        "Android",
+        "Ios",
+        "Web"
+      ],
+      "sensitive":true
+    },
+    "RouteWebLinkList":{
+      "type":"list",
+      "member":{"shape":"RouteWebLink"}
     },
     "RouteWeightConstraint":{
       "type":"structure",
@@ -3433,7 +4874,7 @@
       "type":"structure",
       "members":{
         "Category":{"shape":"RouteZoneCategory"},
-        "Name":{"shape":"String"}
+        "Name":{"shape":"SensitiveString"}
       }
     },
     "RouteZoneCategory":{
@@ -3442,7 +4883,8 @@
         "CongestionPricing",
         "Environmental",
         "Vignette"
-      ]
+      ],
+      "sensitive":true
     },
     "RouteZoneList":{
       "type":"list",
@@ -3454,6 +4896,16 @@
         "FastestRoute",
         "ShortestRoute"
       ]
+    },
+    "SensitiveBoolean":{
+      "type":"boolean",
+      "box":true,
+      "sensitive":true
+    },
+    "SensitiveDouble":{
+      "type":"double",
+      "box":true,
+      "sensitive":true
     },
     "SensitiveString":{
       "type":"string",
@@ -3485,7 +4937,8 @@
     "SnapToRoadsRequestSnapRadiusLong":{
       "type":"long",
       "max":10000,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "SnapToRoadsRequestTracePointsList":{
       "type":"list",
@@ -3515,7 +4968,8 @@
     },
     "SpeedKilometersPerHour":{
       "type":"double",
-      "min":0.0
+      "min":0.0,
+      "sensitive":true
     },
     "String":{"type":"string"},
     "ThrottlingException":{
@@ -3536,7 +4990,8 @@
     },
     "TimeOfDay":{
       "type":"string",
-      "pattern":"([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](Z|[+-]([0-1]?[0-9]|2[0-3]):[0-5][0-9])"
+      "pattern":"([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](Z|[+-]([0-1]?[0-9]|2[0-3]):[0-5][0-9])",
+      "sensitive":true
     },
     "TimeThresholdList":{
       "type":"list",
@@ -3547,11 +5002,13 @@
     "TimeThresholdListMemberLong":{
       "type":"long",
       "max":10800,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "TimestampWithTimezoneOffset":{
       "type":"string",
-      "pattern":"([1-2][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\\.[0-9]{0,9})?(Z|[+-]([01][0-9]|2[0-3]):[0-5][0-9])"
+      "pattern":"([1-2][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\\.[0-9]{0,9})?(Z|[+-]([01][0-9]|2[0-3]):[0-5][0-9])",
+      "sensitive":true
     },
     "TrafficUsage":{
       "type":"string",
@@ -3563,7 +5020,8 @@
     "TruckRoadType":{
       "type":"string",
       "max":3,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "TruckRoadTypeList":{
       "type":"list",
@@ -3574,7 +5032,8 @@
     "TunnelRestrictionCode":{
       "type":"string",
       "max":1,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "TurnAngle":{
       "type":"double",
@@ -3643,7 +5102,8 @@
     "WaypointId":{
       "type":"string",
       "max":100,
-      "min":1
+      "min":1,
+      "pattern":"[^,;!]+"
     },
     "WaypointIndex":{"type":"integer"},
     "WaypointOptimizationAccessHours":{
@@ -3685,13 +5145,13 @@
       "type":"structure",
       "members":{
         "Areas":{"shape":"WaypointOptimizationAvoidanceOptionsAreasList"},
-        "CarShuttleTrains":{"shape":"Boolean"},
-        "ControlledAccessHighways":{"shape":"Boolean"},
-        "DirtRoads":{"shape":"Boolean"},
-        "Ferries":{"shape":"Boolean"},
-        "TollRoads":{"shape":"Boolean"},
-        "Tunnels":{"shape":"Boolean"},
-        "UTurns":{"shape":"Boolean"}
+        "CarShuttleTrains":{"shape":"SensitiveBoolean"},
+        "ControlledAccessHighways":{"shape":"SensitiveBoolean"},
+        "DirtRoads":{"shape":"SensitiveBoolean"},
+        "Ferries":{"shape":"SensitiveBoolean"},
+        "TollRoads":{"shape":"SensitiveBoolean"},
+        "Tunnels":{"shape":"SensitiveBoolean"},
+        "UTurns":{"shape":"SensitiveBoolean"}
       }
     },
     "WaypointOptimizationAvoidanceOptionsAreasList":{
@@ -3705,7 +5165,8 @@
       "enum":[
         "DrivingDistance",
         "TopologySegment"
-      ]
+      ],
+      "sensitive":true
     },
     "WaypointOptimizationClusteringOptions":{
       "type":"structure",
@@ -3747,7 +5208,8 @@
         "Heading",
         "ServiceDuration",
         "SideOfStreet"
-      ]
+      ],
+      "sensitive":true
     },
     "WaypointOptimizationDestinationOptions":{
       "type":"structure",
@@ -3772,8 +5234,14 @@
       "type":"structure",
       "required":["DrivingDistance"],
       "members":{
-        "DrivingDistance":{"shape":"DistanceMeters"}
+        "DrivingDistance":{"shape":"WaypointOptimizationDrivingDistanceOptionsDrivingDistanceLong"}
       }
+    },
+    "WaypointOptimizationDrivingDistanceOptionsDrivingDistanceLong":{
+      "type":"long",
+      "box":true,
+      "max":50000,
+      "min":5
     },
     "WaypointOptimizationExclusionOptions":{
       "type":"structure",
@@ -3786,7 +5254,7 @@
       "type":"structure",
       "members":{
         "Constraint":{"shape":"WaypointOptimizationConstraint"},
-        "Reason":{"shape":"String"}
+        "Reason":{"shape":"SensitiveString"}
       }
     },
     "WaypointOptimizationFailedConstraintList":{
@@ -3807,7 +5275,8 @@
         "Poison",
         "PoisonousInhalation",
         "Radioactive"
-      ]
+      ],
+      "sensitive":true
     },
     "WaypointOptimizationHazardousCargoTypeList":{
       "type":"list",
@@ -3867,7 +5336,8 @@
     "WaypointOptimizationPedestrianOptionsSpeedDouble":{
       "type":"double",
       "max":7.2,
-      "min":1.8
+      "min":1.8,
+      "sensitive":true
     },
     "WaypointOptimizationRestCycleDurations":{
       "type":"structure",
@@ -3901,7 +5371,8 @@
     "WaypointOptimizationRestProfileProfileString":{
       "type":"string",
       "max":2,
-      "min":2
+      "min":2,
+      "sensitive":true
     },
     "WaypointOptimizationSequencingObjective":{
       "type":"string",
@@ -3915,7 +5386,8 @@
       "enum":[
         "Rest",
         "Work"
-      ]
+      ],
+      "sensitive":true
     },
     "WaypointOptimizationSideOfStreetOptions":{
       "type":"structure",
@@ -3956,7 +5428,8 @@
       "type":"integer",
       "box":true,
       "max":255,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "WaypointOptimizationTravelMode":{
       "type":"string",
@@ -3991,24 +5464,28 @@
     "WaypointOptimizationTruckOptionsHeightLong":{
       "type":"long",
       "max":5000,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "WaypointOptimizationTruckOptionsLengthLong":{
       "type":"long",
       "max":30000,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "WaypointOptimizationTruckOptionsWidthLong":{
       "type":"long",
       "max":5000,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "WaypointOptimizationTruckType":{
       "type":"string",
       "enum":[
         "StraightTruck",
         "Tractor"
-      ]
+      ],
+      "sensitive":true
     },
     "WaypointOptimizationWaypoint":{
       "type":"structure",
@@ -4031,7 +5508,8 @@
     "WeightKilograms":{
       "type":"long",
       "max":4294967295,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "WeightPerAxleGroup":{
       "type":"structure",

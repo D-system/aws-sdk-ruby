@@ -11,6 +11,30 @@ module Aws
       class ServiceError < ::Aws::Errors::ServiceError
       end
 
+      class AliasLimitExceededException < ::Aws::Errors::ServiceError
+        def type: () -> ::String
+        def message: () -> ::String
+      end
+      class CallbackTimeoutException < ::Aws::Errors::ServiceError
+        def type: () -> ::String
+        def message: () -> ::String
+      end
+      class CapacityProviderLimitExceededException < ::Aws::Errors::ServiceError
+        def type: () -> ::String
+        def message: () -> ::String
+      end
+      class CodeArtifactUserDeletedException < ::Aws::Errors::ServiceError
+        def type: () -> ::String
+        def message: () -> ::String
+      end
+      class CodeArtifactUserFailedException < ::Aws::Errors::ServiceError
+        def type: () -> ::String
+        def message: () -> ::String
+      end
+      class CodeArtifactUserPendingException < ::Aws::Errors::ServiceError
+        def type: () -> ::String
+        def message: () -> ::String
+      end
       class CodeSigningConfigNotFoundException < ::Aws::Errors::ServiceError
         def type: () -> ::String
         def message: () -> ::String
@@ -20,6 +44,10 @@ module Aws
         def message: () -> ::String
       end
       class CodeVerificationFailedException < ::Aws::Errors::ServiceError
+        def type: () -> ::String
+        def message: () -> ::String
+      end
+      class DurableExecutionAlreadyStartedException < ::Aws::Errors::ServiceError
         def type: () -> ::String
         def message: () -> ::String
       end
@@ -53,6 +81,14 @@ module Aws
         def message: () -> ::String
       end
       class ENILimitReachedException < ::Aws::Errors::ServiceError
+        def type: () -> ::String
+        def message: () -> ::String
+      end
+      class ENINotReadyException < ::Aws::Errors::ServiceError
+        def type: () -> ::String
+        def message: () -> ::String
+      end
+      class FunctionVersionsPerCapacityProviderLimitExceededException < ::Aws::Errors::ServiceError
         def type: () -> ::String
         def message: () -> ::String
       end
@@ -100,6 +136,14 @@ module Aws
         def type: () -> ::String
         def message: () -> ::String
       end
+      class ModeNotSupportedException < ::Aws::Errors::ServiceError
+        def type: () -> ::String
+        def message: () -> ::String
+      end
+      class NoPublishedVersionException < ::Aws::Errors::ServiceError
+        def type: () -> ::String
+        def message: () -> ::String
+      end
       class PolicyLengthExceededException < ::Aws::Errors::ServiceError
         def type: () -> ::String
         def message: () -> ::String
@@ -109,6 +153,10 @@ module Aws
         def message: () -> ::String
       end
       class ProvisionedConcurrencyConfigNotFoundException < ::Aws::Errors::ServiceError
+        def type: () -> ::String
+        def message: () -> ::String
+      end
+      class PublicPolicyException < ::Aws::Errors::ServiceError
         def type: () -> ::String
         def message: () -> ::String
       end
@@ -136,7 +184,27 @@ module Aws
         def type: () -> ::String
         def message: () -> ::String
       end
+      class S3FilesMountConnectivityException < ::Aws::Errors::ServiceError
+        def type: () -> ::String
+        def message: () -> ::String
+      end
+      class S3FilesMountFailureException < ::Aws::Errors::ServiceError
+        def type: () -> ::String
+        def message: () -> ::String
+      end
+      class S3FilesMountTimeoutException < ::Aws::Errors::ServiceError
+        def type: () -> ::String
+        def message: () -> ::String
+      end
+      class SerializedRequestEntityTooLargeException < ::Aws::Errors::ServiceError
+        def type: () -> ::String
+        def message: () -> ::String
+      end
       class ServiceException < ::Aws::Errors::ServiceError
+        def type: () -> ::String
+        def message: () -> ::String
+      end
+      class ServiceQuotaExceededException < ::Aws::Errors::ServiceError
         def type: () -> ::String
         def message: () -> ::String
       end
@@ -145,6 +213,10 @@ module Aws
         def message: () -> ::String
       end
       class SnapStartNotReadyException < ::Aws::Errors::ServiceError
+        def type: () -> ::String
+        def message: () -> ::String
+      end
+      class SnapStartRegenerationFailureException < ::Aws::Errors::ServiceError
         def type: () -> ::String
         def message: () -> ::String
       end

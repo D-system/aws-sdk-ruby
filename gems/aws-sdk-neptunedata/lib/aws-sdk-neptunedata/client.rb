@@ -95,8 +95,8 @@ module Aws::Neptunedata
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::Neptunedata
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::Neptunedata
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::Neptunedata
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::Neptunedata
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::Neptunedata
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::Neptunedata
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::Neptunedata
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -976,12 +980,12 @@ module Aws::Neptunedata
     # @option params [required, String] :action
     #   The fast reset action. One of the following values:
     #
-    #   * <b> <code>initiateDatabaseReset</code> </b>   –   This action
-    #     generates a unique token needed to actually perform the fast reset.
+    #   * <b> <code>initiateDatabaseReset</code> </b> - This action generates
+    #     a unique token needed to actually perform the fast reset.
     #
-    #   * <b> <code>performDatabaseReset</code> </b>   –   This action uses
-    #     the token generated by the `initiateDatabaseReset` action to
-    #     actually perform the fast reset.
+    #   * <b> <code>performDatabaseReset</code> </b> - This action uses the
+    #     token generated by the `initiateDatabaseReset` action to actually
+    #     perform the fast reset.
     #
     # @option params [String] :token
     #   The fast-reset token to initiate the reset.
@@ -1925,20 +1929,20 @@ module Aws::Neptunedata
     # @option params [String] :iterator_type
     #   Can be one of:
     #
-    #   * `AT_SEQUENCE_NUMBER`   –   Indicates that reading should start from
-    #     the event sequence number specified jointly by the `commitNum` and
+    #   * `AT_SEQUENCE_NUMBER` - Indicates that reading should start from the
+    #     event sequence number specified jointly by the `commitNum` and
     #     `opNum` parameters.
     #
-    #   * `AFTER_SEQUENCE_NUMBER`   –   Indicates that reading should start
-    #     right after the event sequence number specified jointly by the
-    #     `commitNum` and `opNum` parameters.
+    #   * `AFTER_SEQUENCE_NUMBER` - Indicates that reading should start right
+    #     after the event sequence number specified jointly by the `commitNum`
+    #     and `opNum` parameters.
     #
-    #   * `TRIM_HORIZON`   –   Indicates that reading should start at the last
+    #   * `TRIM_HORIZON` - Indicates that reading should start at the last
     #     untrimmed record in the system, which is the oldest unexpired (not
     #     yet deleted) record in the change-log stream.
     #
-    #   * `LATEST`   –   Indicates that reading should start at the most
-    #     recent record in the system, which is the latest unexpired (not yet
+    #   * `LATEST` - Indicates that reading should start at the most recent
+    #     record in the system, which is the latest unexpired (not yet
     #     deleted) record in the change-log stream.
     #
     # @option params [Integer] :commit_num
@@ -2194,20 +2198,20 @@ module Aws::Neptunedata
     # @option params [String] :iterator_type
     #   Can be one of:
     #
-    #   * `AT_SEQUENCE_NUMBER`   –   Indicates that reading should start from
-    #     the event sequence number specified jointly by the `commitNum` and
+    #   * `AT_SEQUENCE_NUMBER` - Indicates that reading should start from the
+    #     event sequence number specified jointly by the `commitNum` and
     #     `opNum` parameters.
     #
-    #   * `AFTER_SEQUENCE_NUMBER`   –   Indicates that reading should start
-    #     right after the event sequence number specified jointly by the
-    #     `commitNum` and `opNum` parameters.
+    #   * `AFTER_SEQUENCE_NUMBER` - Indicates that reading should start right
+    #     after the event sequence number specified jointly by the `commitNum`
+    #     and `opNum` parameters.
     #
-    #   * `TRIM_HORIZON`   –   Indicates that reading should start at the last
+    #   * `TRIM_HORIZON` - Indicates that reading should start at the last
     #     untrimmed record in the system, which is the oldest unexpired (not
     #     yet deleted) record in the change-log stream.
     #
-    #   * `LATEST`   –   Indicates that reading should start at the most
-    #     recent record in the system, which is the latest unexpired (not yet
+    #   * `LATEST` - Indicates that reading should start at the most recent
+    #     record in the system, which is the latest unexpired (not yet
     #     deleted) record in the change-log stream.
     #
     # @option params [Integer] :commit_num
@@ -2790,8 +2794,8 @@ module Aws::Neptunedata
     #
     #   ****
     #
-    #   * `RESUME`   –   In RESUME mode, the loader looks for a previous load
-    #     from this source, and if it finds one, resumes that load job. If no
+    #   * `RESUME` - In RESUME mode, the loader looks for a previous load from
+    #     this source, and if it finds one, resumes that load job. If no
     #     previous load job is found, the loader stops.
     #
     #     The loader avoids reloading files that were successfully loaded in a
@@ -2801,21 +2805,21 @@ module Aws::Neptunedata
     #     the same source successfully, nothing is reloaded, and the loader
     #     returns success.
     #
-    #   * `NEW`   –   In NEW mode, the creates a new load request regardless
-    #     of any previous loads. You can use this mode to reload all the data
+    #   * `NEW` - In NEW mode, the creates a new load request regardless of
+    #     any previous loads. You can use this mode to reload all the data
     #     from a source after dropping previously loaded data from your
     #     Neptune cluster, or to load new data available at the same source.
     #
-    #   * `AUTO`   –   In AUTO mode, the loader looks for a previous load job
-    #     from the same source, and if it finds one, resumes that job, just as
-    #     in `RESUME` mode.
+    #   * `AUTO` - In AUTO mode, the loader looks for a previous load job from
+    #     the same source, and if it finds one, resumes that job, just as in
+    #     `RESUME` mode.
     #
     #     If the loader doesn't find a previous load job from the same
     #     source, it loads all data from the source, just as in `NEW` mode.
     #
     # @option params [Boolean] :fail_on_error
-    #   <b> <code>failOnError</code> </b>   –   A flag to toggle a complete
-    #   stop on an error.
+    #   <b> <code>failOnError</code> </b> - A flag to toggle a complete stop
+    #   on an error.
     #
     #   *Allowed values*: `"TRUE"`, `"FALSE"`.
     #
@@ -2866,23 +2870,23 @@ module Aws::Neptunedata
     #
     #   ****
     #
-    #   * <b> <code>namedGraphUri</code> </b>   –   The default graph for all
-    #     RDF formats when no graph is specified (for non-quads formats and
-    #     NQUAD entries with no graph).
+    #   * <b> <code>namedGraphUri</code> </b> - The default graph for all RDF
+    #     formats when no graph is specified (for non-quads formats and NQUAD
+    #     entries with no graph).
     #
     #     The default is
     #     `https://aws.amazon.com/neptune/vocab/v01/DefaultNamedGraph`.
     #
-    #   * <b> <code>baseUri</code> </b>   –   The base URI for RDF/XML and
-    #     Turtle formats.
+    #   * <b> <code>baseUri</code> </b> - The base URI for RDF/XML and Turtle
+    #     formats.
     #
     #     The default is `https://aws.amazon.com/neptune/default`.
     #
-    #   * <b> <code>allowEmptyStrings</code> </b>   –   Gremlin users need to
-    #     be able to pass empty string values("") as node and edge
-    #     properties when loading CSV data. If `allowEmptyStrings` is set to
-    #     `false` (the default), such empty strings are treated as nulls and
-    #     are not loaded.
+    #   * <b> <code>allowEmptyStrings</code> </b> - Gremlin users need to be
+    #     able to pass empty string values("") as node and edge properties
+    #     when loading CSV data. If `allowEmptyStrings` is set to `false` (the
+    #     default), such empty strings are treated as nulls and are not
+    #     loaded.
     #
     #     If `allowEmptyStrings` is set to `true`, the loader treats empty
     #     strings as valid property values and loads them accordingly.
@@ -2976,6 +2980,21 @@ module Aws::Neptunedata
     #   loader cannot resume a failed load if any relationship file has had to
     #   be corrected, and must instead reload all the relationships.
     #
+    # @option params [Boolean] :edge_only_load
+    #   <b> <code>edgeOnlyLoad</code> </b> - A flag that controls file
+    #   processing order during bulk loading.
+    #
+    #   *Allowed values*: `"TRUE"`, `"FALSE"`.
+    #
+    #   *Default value*: `"FALSE"`.
+    #
+    #   When this parameter is set to "FALSE", the loader automatically
+    #   loads vertex files first, then edge files afterwards. It does this by
+    #   first scanning all files to determine their contents (vertices or
+    #   edges). When this parameter is set to "TRUE", the loader skips the
+    #   initial scanning phase and immediately loads all files in the order
+    #   they appear.
+    #
     # @return [Types::StartLoaderJobOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::StartLoaderJobOutput#status #status} => String
@@ -2986,7 +3005,7 @@ module Aws::Neptunedata
     #   resp = client.start_loader_job({
     #     source: "String", # required
     #     format: "csv", # required, accepts csv, opencypher, ntriples, nquads, rdfxml, turtle
-    #     s3_bucket_region: "us-east-1", # required, accepts us-east-1, us-east-2, us-west-1, us-west-2, ca-central-1, sa-east-1, eu-north-1, eu-west-1, eu-west-2, eu-west-3, eu-central-1, me-south-1, af-south-1, ap-east-1, ap-northeast-1, ap-northeast-2, ap-southeast-1, ap-southeast-2, ap-south-1, cn-north-1, cn-northwest-1, us-gov-west-1, us-gov-east-1
+    #     s3_bucket_region: "us-east-1", # required, accepts us-east-1, us-east-2, us-west-1, us-west-2, ca-central-1, sa-east-1, eu-north-1, eu-west-1, eu-west-2, eu-west-3, eu-central-1, me-south-1, af-south-1, ap-east-1, ap-northeast-1, ap-northeast-2, ap-southeast-1, ap-southeast-2, ap-south-1, cn-north-1, cn-northwest-1, us-gov-west-1, us-gov-east-1, ca-west-1, eu-south-2, il-central-1, me-central-1, ap-northeast-3, ap-southeast-3, ap-southeast-4, ap-southeast-5, ap-southeast-7, mx-central-1, ap-east-2, ap-south-2, eu-central-2
     #     iam_role_arn: "String", # required
     #     mode: "RESUME", # accepts RESUME, NEW, AUTO
     #     fail_on_error: false,
@@ -2998,6 +3017,7 @@ module Aws::Neptunedata
     #     queue_request: false,
     #     dependencies: ["String"],
     #     user_provided_edge_ids: false,
+    #     edge_only_load: false,
     #   })
     #
     # @example Response structure
@@ -3421,7 +3441,7 @@ module Aws::Neptunedata
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-neptunedata'
-      context[:gem_version] = '1.24.0'
+      context[:gem_version] = '1.46.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

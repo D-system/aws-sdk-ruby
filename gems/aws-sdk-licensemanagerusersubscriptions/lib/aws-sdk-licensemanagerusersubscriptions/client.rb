@@ -95,8 +95,8 @@ module Aws::LicenseManagerUserSubscriptions
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::LicenseManagerUserSubscriptions
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::LicenseManagerUserSubscriptions
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::LicenseManagerUserSubscriptions
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::LicenseManagerUserSubscriptions
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::LicenseManagerUserSubscriptions
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::LicenseManagerUserSubscriptions
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::LicenseManagerUserSubscriptions
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -485,21 +489,21 @@ module Aws::LicenseManagerUserSubscriptions
     #
     # [1]: https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/invoice.html
     #
-    # @option params [String] :domain
-    #   The domain name of the Active Directory that contains information for
-    #   the user to associate.
-    #
-    # @option params [required, Types::IdentityProvider] :identity_provider
-    #   The identity provider for the user.
+    # @option params [required, String] :username
+    #   The user name from the identity provider.
     #
     # @option params [required, String] :instance_id
     #   The ID of the EC2 instance that provides the user-based subscription.
     #
+    # @option params [required, Types::IdentityProvider] :identity_provider
+    #   The identity provider for the user.
+    #
+    # @option params [String] :domain
+    #   The domain name of the Active Directory that contains information for
+    #   the user to associate.
+    #
     # @option params [Hash<String,String>] :tags
     #   The tags that apply for the user association.
-    #
-    # @option params [required, String] :username
-    #   The user name from the identity provider.
     #
     # @return [Types::AssociateUserResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -508,50 +512,55 @@ module Aws::LicenseManagerUserSubscriptions
     # @example Request syntax with placeholder values
     #
     #   resp = client.associate_user({
-    #     domain: "String",
+    #     username: "String", # required
+    #     instance_id: "String", # required
     #     identity_provider: { # required
     #       active_directory_identity_provider: {
+    #         directory_id: "Directory",
     #         active_directory_settings: {
+    #           domain_name: "String",
+    #           domain_ipv_4_list: ["IpV4"],
+    #           domain_ipv_6_list: ["IpV6"],
     #           domain_credentials_provider: {
     #             secrets_manager_credentials_provider: {
     #               secret_id: "SecretsManagerCredentialsProviderSecretIdString",
     #             },
     #           },
-    #           domain_ipv_4_list: ["IpV4"],
-    #           domain_name: "String",
     #           domain_network_settings: {
     #             subnets: ["Subnet"], # required
     #           },
     #         },
     #         active_directory_type: "SELF_MANAGED", # accepts SELF_MANAGED, AWS_MANAGED
-    #         directory_id: "Directory",
+    #         is_shared_active_directory: false,
     #       },
     #     },
-    #     instance_id: "String", # required
+    #     domain: "String",
     #     tags: {
     #       "String" => "String",
     #     },
-    #     username: "String", # required
     #   })
     #
     # @example Response structure
     #
-    #   resp.instance_user_summary.association_date #=> String
-    #   resp.instance_user_summary.disassociation_date #=> String
-    #   resp.instance_user_summary.domain #=> String
-    #   resp.instance_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_credentials_provider.secrets_manager_credentials_provider.secret_id #=> String
+    #   resp.instance_user_summary.username #=> String
+    #   resp.instance_user_summary.instance_id #=> String
+    #   resp.instance_user_summary.identity_provider.active_directory_identity_provider.directory_id #=> String
+    #   resp.instance_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_name #=> String
     #   resp.instance_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_4_list #=> Array
     #   resp.instance_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_4_list[0] #=> String
-    #   resp.instance_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_name #=> String
+    #   resp.instance_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_6_list #=> Array
+    #   resp.instance_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_6_list[0] #=> String
+    #   resp.instance_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_credentials_provider.secrets_manager_credentials_provider.secret_id #=> String
     #   resp.instance_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_network_settings.subnets #=> Array
     #   resp.instance_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_network_settings.subnets[0] #=> String
     #   resp.instance_user_summary.identity_provider.active_directory_identity_provider.active_directory_type #=> String, one of "SELF_MANAGED", "AWS_MANAGED"
-    #   resp.instance_user_summary.identity_provider.active_directory_identity_provider.directory_id #=> String
-    #   resp.instance_user_summary.instance_id #=> String
-    #   resp.instance_user_summary.instance_user_arn #=> String
+    #   resp.instance_user_summary.identity_provider.active_directory_identity_provider.is_shared_active_directory #=> Boolean
     #   resp.instance_user_summary.status #=> String
+    #   resp.instance_user_summary.instance_user_arn #=> String
     #   resp.instance_user_summary.status_message #=> String
-    #   resp.instance_user_summary.username #=> String
+    #   resp.instance_user_summary.domain #=> String
+    #   resp.instance_user_summary.association_date #=> String
+    #   resp.instance_user_summary.disassociation_date #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-user-subscriptions-2018-05-10/AssociateUser AWS API Documentation
     #
@@ -591,6 +600,7 @@ module Aws::LicenseManagerUserSubscriptions
     #   resp = client.create_license_server_endpoint({
     #     identity_provider_arn: "Arn", # required
     #     license_server_settings: { # required
+    #       server_type: "RDS_SAL", # required, accepts RDS_SAL
     #       server_settings: { # required
     #         rds_sal_settings: {
     #           rds_sal_credentials_provider: { # required
@@ -600,7 +610,6 @@ module Aws::LicenseManagerUserSubscriptions
     #           },
     #         },
     #       },
-    #       server_type: "RDS_SAL", # required, accepts RDS_SAL
     #     },
     #     tags: {
     #       "String" => "String",
@@ -643,18 +652,19 @@ module Aws::LicenseManagerUserSubscriptions
     #
     # @example Response structure
     #
-    #   resp.license_server_endpoint.creation_time #=> Time
     #   resp.license_server_endpoint.identity_provider_arn #=> String
-    #   resp.license_server_endpoint.license_server_endpoint_arn #=> String
+    #   resp.license_server_endpoint.server_type #=> String, one of "RDS_SAL"
+    #   resp.license_server_endpoint.server_endpoint.endpoint #=> String
+    #   resp.license_server_endpoint.status_message #=> String
     #   resp.license_server_endpoint.license_server_endpoint_id #=> String
+    #   resp.license_server_endpoint.license_server_endpoint_arn #=> String
     #   resp.license_server_endpoint.license_server_endpoint_provisioning_status #=> String, one of "PROVISIONING", "PROVISIONING_FAILED", "PROVISIONED", "DELETING", "DELETION_FAILED", "DELETED"
     #   resp.license_server_endpoint.license_servers #=> Array
+    #   resp.license_server_endpoint.license_servers[0].provisioning_status #=> String, one of "PROVISIONING", "PROVISIONING_FAILED", "PROVISIONED", "DELETING", "DELETION_FAILED", "DELETED"
     #   resp.license_server_endpoint.license_servers[0].health_status #=> String, one of "HEALTHY", "UNHEALTHY", "NOT_APPLICABLE"
     #   resp.license_server_endpoint.license_servers[0].ipv_4_address #=> String
-    #   resp.license_server_endpoint.license_servers[0].provisioning_status #=> String, one of "PROVISIONING", "PROVISIONING_FAILED", "PROVISIONED", "DELETING", "DELETION_FAILED", "DELETED"
-    #   resp.license_server_endpoint.server_endpoint.endpoint #=> String
-    #   resp.license_server_endpoint.server_type #=> String, one of "RDS_SAL"
-    #   resp.license_server_endpoint.status_message #=> String
+    #   resp.license_server_endpoint.license_servers[0].ipv_6_address #=> String
+    #   resp.license_server_endpoint.creation_time #=> Time
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-user-subscriptions-2018-05-10/DeleteLicenseServerEndpoint AWS API Documentation
     #
@@ -672,16 +682,16 @@ module Aws::LicenseManagerUserSubscriptions
     #   An object that specifies details for the Active Directory identity
     #   provider.
     #
-    # @option params [String] :identity_provider_arn
-    #   The Amazon Resource Name (ARN) that identifies the identity provider
-    #   to deregister.
-    #
     # @option params [String] :product
     #   The name of the user-based subscription product.
     #
     #   Valid values: `VISUAL_STUDIO_ENTERPRISE` \|
     #   `VISUAL_STUDIO_PROFESSIONAL` \| `OFFICE_PROFESSIONAL_PLUS` \|
     #   `REMOTE_DESKTOP_SERVICES`
+    #
+    # @option params [String] :identity_provider_arn
+    #   The Amazon Resource Name (ARN) that identifies the identity provider
+    #   to deregister.
     #
     # @return [Types::DeregisterIdentityProviderResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -692,43 +702,49 @@ module Aws::LicenseManagerUserSubscriptions
     #   resp = client.deregister_identity_provider({
     #     identity_provider: {
     #       active_directory_identity_provider: {
+    #         directory_id: "Directory",
     #         active_directory_settings: {
+    #           domain_name: "String",
+    #           domain_ipv_4_list: ["IpV4"],
+    #           domain_ipv_6_list: ["IpV6"],
     #           domain_credentials_provider: {
     #             secrets_manager_credentials_provider: {
     #               secret_id: "SecretsManagerCredentialsProviderSecretIdString",
     #             },
     #           },
-    #           domain_ipv_4_list: ["IpV4"],
-    #           domain_name: "String",
     #           domain_network_settings: {
     #             subnets: ["Subnet"], # required
     #           },
     #         },
     #         active_directory_type: "SELF_MANAGED", # accepts SELF_MANAGED, AWS_MANAGED
-    #         directory_id: "Directory",
+    #         is_shared_active_directory: false,
     #       },
     #     },
-    #     identity_provider_arn: "Arn",
     #     product: "String",
+    #     identity_provider_arn: "Arn",
     #   })
     #
     # @example Response structure
     #
-    #   resp.identity_provider_summary.failure_message #=> String
-    #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_credentials_provider.secrets_manager_credentials_provider.secret_id #=> String
+    #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.directory_id #=> String
+    #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_name #=> String
     #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_4_list #=> Array
     #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_4_list[0] #=> String
-    #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_name #=> String
+    #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_6_list #=> Array
+    #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_6_list[0] #=> String
+    #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_credentials_provider.secrets_manager_credentials_provider.secret_id #=> String
     #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_network_settings.subnets #=> Array
     #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_network_settings.subnets[0] #=> String
     #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_type #=> String, one of "SELF_MANAGED", "AWS_MANAGED"
-    #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.directory_id #=> String
-    #   resp.identity_provider_summary.identity_provider_arn #=> String
-    #   resp.identity_provider_summary.product #=> String
-    #   resp.identity_provider_summary.settings.security_group_id #=> String
+    #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.is_shared_active_directory #=> Boolean
     #   resp.identity_provider_summary.settings.subnets #=> Array
     #   resp.identity_provider_summary.settings.subnets[0] #=> String
+    #   resp.identity_provider_summary.settings.security_group_id #=> String
+    #   resp.identity_provider_summary.product #=> String
     #   resp.identity_provider_summary.status #=> String
+    #   resp.identity_provider_summary.identity_provider_arn #=> String
+    #   resp.identity_provider_summary.failure_message #=> String
+    #   resp.identity_provider_summary.owner_account_id #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-user-subscriptions-2018-05-10/DeregisterIdentityProvider AWS API Documentation
     #
@@ -742,24 +758,24 @@ module Aws::LicenseManagerUserSubscriptions
     # Disassociates the user from an EC2 instance providing user-based
     # subscriptions.
     #
-    # @option params [String] :domain
-    #   The domain name of the Active Directory that contains information for
-    #   the user to disassociate.
+    # @option params [String] :username
+    #   The user name from the Active Directory identity provider for the
+    #   user.
+    #
+    # @option params [String] :instance_id
+    #   The ID of the EC2 instance which provides user-based subscriptions.
     #
     # @option params [Types::IdentityProvider] :identity_provider
     #   An object that specifies details for the Active Directory identity
     #   provider.
     #
-    # @option params [String] :instance_id
-    #   The ID of the EC2 instance which provides user-based subscriptions.
-    #
     # @option params [String] :instance_user_arn
     #   The Amazon Resource Name (ARN) of the user to disassociate from the
     #   EC2 instance.
     #
-    # @option params [String] :username
-    #   The user name from the Active Directory identity provider for the
-    #   user.
+    # @option params [String] :domain
+    #   The domain name of the Active Directory that contains information for
+    #   the user to disassociate.
     #
     # @return [Types::DisassociateUserResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -768,48 +784,53 @@ module Aws::LicenseManagerUserSubscriptions
     # @example Request syntax with placeholder values
     #
     #   resp = client.disassociate_user({
-    #     domain: "String",
+    #     username: "String",
+    #     instance_id: "String",
     #     identity_provider: {
     #       active_directory_identity_provider: {
+    #         directory_id: "Directory",
     #         active_directory_settings: {
+    #           domain_name: "String",
+    #           domain_ipv_4_list: ["IpV4"],
+    #           domain_ipv_6_list: ["IpV6"],
     #           domain_credentials_provider: {
     #             secrets_manager_credentials_provider: {
     #               secret_id: "SecretsManagerCredentialsProviderSecretIdString",
     #             },
     #           },
-    #           domain_ipv_4_list: ["IpV4"],
-    #           domain_name: "String",
     #           domain_network_settings: {
     #             subnets: ["Subnet"], # required
     #           },
     #         },
     #         active_directory_type: "SELF_MANAGED", # accepts SELF_MANAGED, AWS_MANAGED
-    #         directory_id: "Directory",
+    #         is_shared_active_directory: false,
     #       },
     #     },
-    #     instance_id: "String",
     #     instance_user_arn: "Arn",
-    #     username: "String",
+    #     domain: "String",
     #   })
     #
     # @example Response structure
     #
-    #   resp.instance_user_summary.association_date #=> String
-    #   resp.instance_user_summary.disassociation_date #=> String
-    #   resp.instance_user_summary.domain #=> String
-    #   resp.instance_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_credentials_provider.secrets_manager_credentials_provider.secret_id #=> String
+    #   resp.instance_user_summary.username #=> String
+    #   resp.instance_user_summary.instance_id #=> String
+    #   resp.instance_user_summary.identity_provider.active_directory_identity_provider.directory_id #=> String
+    #   resp.instance_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_name #=> String
     #   resp.instance_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_4_list #=> Array
     #   resp.instance_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_4_list[0] #=> String
-    #   resp.instance_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_name #=> String
+    #   resp.instance_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_6_list #=> Array
+    #   resp.instance_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_6_list[0] #=> String
+    #   resp.instance_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_credentials_provider.secrets_manager_credentials_provider.secret_id #=> String
     #   resp.instance_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_network_settings.subnets #=> Array
     #   resp.instance_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_network_settings.subnets[0] #=> String
     #   resp.instance_user_summary.identity_provider.active_directory_identity_provider.active_directory_type #=> String, one of "SELF_MANAGED", "AWS_MANAGED"
-    #   resp.instance_user_summary.identity_provider.active_directory_identity_provider.directory_id #=> String
-    #   resp.instance_user_summary.instance_id #=> String
-    #   resp.instance_user_summary.instance_user_arn #=> String
+    #   resp.instance_user_summary.identity_provider.active_directory_identity_provider.is_shared_active_directory #=> Boolean
     #   resp.instance_user_summary.status #=> String
+    #   resp.instance_user_summary.instance_user_arn #=> String
     #   resp.instance_user_summary.status_message #=> String
-    #   resp.instance_user_summary.username #=> String
+    #   resp.instance_user_summary.domain #=> String
+    #   resp.instance_user_summary.association_date #=> String
+    #   resp.instance_user_summary.disassociation_date #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-user-subscriptions-2018-05-10/DisassociateUser AWS API Documentation
     #
@@ -823,15 +844,15 @@ module Aws::LicenseManagerUserSubscriptions
     # Lists the Active Directory identity providers for user-based
     # subscriptions.
     #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return from a single request.
+    #
     # @option params [Array<Types::Filter>] :filters
     #   You can use the following filters to streamline results:
     #
     #   * Product
     #
     #   * DirectoryId
-    #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to return from a single request.
     #
     # @option params [String] :next_token
     #   A token to specify where to start paginating. This is the nextToken
@@ -847,6 +868,7 @@ module Aws::LicenseManagerUserSubscriptions
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_identity_providers({
+    #     max_results: 1,
     #     filters: [
     #       {
     #         attribute: "String",
@@ -854,28 +876,31 @@ module Aws::LicenseManagerUserSubscriptions
     #         value: "String",
     #       },
     #     ],
-    #     max_results: 1,
     #     next_token: "String",
     #   })
     #
     # @example Response structure
     #
     #   resp.identity_provider_summaries #=> Array
-    #   resp.identity_provider_summaries[0].failure_message #=> String
-    #   resp.identity_provider_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_credentials_provider.secrets_manager_credentials_provider.secret_id #=> String
+    #   resp.identity_provider_summaries[0].identity_provider.active_directory_identity_provider.directory_id #=> String
+    #   resp.identity_provider_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_name #=> String
     #   resp.identity_provider_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_4_list #=> Array
     #   resp.identity_provider_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_4_list[0] #=> String
-    #   resp.identity_provider_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_name #=> String
+    #   resp.identity_provider_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_6_list #=> Array
+    #   resp.identity_provider_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_6_list[0] #=> String
+    #   resp.identity_provider_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_credentials_provider.secrets_manager_credentials_provider.secret_id #=> String
     #   resp.identity_provider_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_network_settings.subnets #=> Array
     #   resp.identity_provider_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_network_settings.subnets[0] #=> String
     #   resp.identity_provider_summaries[0].identity_provider.active_directory_identity_provider.active_directory_type #=> String, one of "SELF_MANAGED", "AWS_MANAGED"
-    #   resp.identity_provider_summaries[0].identity_provider.active_directory_identity_provider.directory_id #=> String
-    #   resp.identity_provider_summaries[0].identity_provider_arn #=> String
-    #   resp.identity_provider_summaries[0].product #=> String
-    #   resp.identity_provider_summaries[0].settings.security_group_id #=> String
+    #   resp.identity_provider_summaries[0].identity_provider.active_directory_identity_provider.is_shared_active_directory #=> Boolean
     #   resp.identity_provider_summaries[0].settings.subnets #=> Array
     #   resp.identity_provider_summaries[0].settings.subnets[0] #=> String
+    #   resp.identity_provider_summaries[0].settings.security_group_id #=> String
+    #   resp.identity_provider_summaries[0].product #=> String
     #   resp.identity_provider_summaries[0].status #=> String
+    #   resp.identity_provider_summaries[0].identity_provider_arn #=> String
+    #   resp.identity_provider_summaries[0].failure_message #=> String
+    #   resp.identity_provider_summaries[0].owner_account_id #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-user-subscriptions-2018-05-10/ListIdentityProviders AWS API Documentation
@@ -889,19 +914,19 @@ module Aws::LicenseManagerUserSubscriptions
 
     # Lists the EC2 instances providing user-based subscriptions.
     #
-    # @option params [Array<Types::Filter>] :filters
-    #   You can use the following filters to streamline results:
-    #
-    #   * Status
-    #
-    #   * InstanceId
-    #
     # @option params [Integer] :max_results
     #   The maximum number of results to return from a single request.
     #
     # @option params [String] :next_token
     #   A token to specify where to start paginating. This is the nextToken
     #   from a previously truncated response.
+    #
+    # @option params [Array<Types::Filter>] :filters
+    #   You can use the following filters to streamline results:
+    #
+    #   * Status
+    #
+    #   * InstanceId
     #
     # @return [Types::ListInstancesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -913,6 +938,8 @@ module Aws::LicenseManagerUserSubscriptions
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_instances({
+    #     max_results: 1,
+    #     next_token: "String",
     #     filters: [
     #       {
     #         attribute: "String",
@@ -920,19 +947,29 @@ module Aws::LicenseManagerUserSubscriptions
     #         value: "String",
     #       },
     #     ],
-    #     max_results: 1,
-    #     next_token: "String",
     #   })
     #
     # @example Response structure
     #
     #   resp.instance_summaries #=> Array
     #   resp.instance_summaries[0].instance_id #=> String
-    #   resp.instance_summaries[0].last_status_check_date #=> String
+    #   resp.instance_summaries[0].status #=> String
     #   resp.instance_summaries[0].products #=> Array
     #   resp.instance_summaries[0].products[0] #=> String
-    #   resp.instance_summaries[0].status #=> String
+    #   resp.instance_summaries[0].last_status_check_date #=> String
     #   resp.instance_summaries[0].status_message #=> String
+    #   resp.instance_summaries[0].owner_account_id #=> String
+    #   resp.instance_summaries[0].identity_provider.active_directory_identity_provider.directory_id #=> String
+    #   resp.instance_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_name #=> String
+    #   resp.instance_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_4_list #=> Array
+    #   resp.instance_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_4_list[0] #=> String
+    #   resp.instance_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_6_list #=> Array
+    #   resp.instance_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_6_list[0] #=> String
+    #   resp.instance_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_credentials_provider.secrets_manager_credentials_provider.secret_id #=> String
+    #   resp.instance_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_network_settings.subnets #=> Array
+    #   resp.instance_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_network_settings.subnets[0] #=> String
+    #   resp.instance_summaries[0].identity_provider.active_directory_identity_provider.active_directory_type #=> String, one of "SELF_MANAGED", "AWS_MANAGED"
+    #   resp.instance_summaries[0].identity_provider.active_directory_identity_provider.is_shared_active_directory #=> Boolean
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-user-subscriptions-2018-05-10/ListInstances AWS API Documentation
@@ -946,15 +983,15 @@ module Aws::LicenseManagerUserSubscriptions
 
     # List the Remote Desktop Services (RDS) License Server endpoints
     #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return from a single request.
+    #
     # @option params [Array<Types::Filter>] :filters
     #   You can use the following filters to streamline results:
     #
     #   * IdentityProviderArn
     #
     #   ^
-    #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to return from a single request.
     #
     # @option params [String] :next_token
     #   A token to specify where to start paginating. This is the nextToken
@@ -970,6 +1007,7 @@ module Aws::LicenseManagerUserSubscriptions
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_license_server_endpoints({
+    #     max_results: 1,
     #     filters: [
     #       {
     #         attribute: "String",
@@ -977,25 +1015,25 @@ module Aws::LicenseManagerUserSubscriptions
     #         value: "String",
     #       },
     #     ],
-    #     max_results: 1,
     #     next_token: "String",
     #   })
     #
     # @example Response structure
     #
     #   resp.license_server_endpoints #=> Array
-    #   resp.license_server_endpoints[0].creation_time #=> Time
     #   resp.license_server_endpoints[0].identity_provider_arn #=> String
-    #   resp.license_server_endpoints[0].license_server_endpoint_arn #=> String
+    #   resp.license_server_endpoints[0].server_type #=> String, one of "RDS_SAL"
+    #   resp.license_server_endpoints[0].server_endpoint.endpoint #=> String
+    #   resp.license_server_endpoints[0].status_message #=> String
     #   resp.license_server_endpoints[0].license_server_endpoint_id #=> String
+    #   resp.license_server_endpoints[0].license_server_endpoint_arn #=> String
     #   resp.license_server_endpoints[0].license_server_endpoint_provisioning_status #=> String, one of "PROVISIONING", "PROVISIONING_FAILED", "PROVISIONED", "DELETING", "DELETION_FAILED", "DELETED"
     #   resp.license_server_endpoints[0].license_servers #=> Array
+    #   resp.license_server_endpoints[0].license_servers[0].provisioning_status #=> String, one of "PROVISIONING", "PROVISIONING_FAILED", "PROVISIONED", "DELETING", "DELETION_FAILED", "DELETED"
     #   resp.license_server_endpoints[0].license_servers[0].health_status #=> String, one of "HEALTHY", "UNHEALTHY", "NOT_APPLICABLE"
     #   resp.license_server_endpoints[0].license_servers[0].ipv_4_address #=> String
-    #   resp.license_server_endpoints[0].license_servers[0].provisioning_status #=> String, one of "PROVISIONING", "PROVISIONING_FAILED", "PROVISIONED", "DELETING", "DELETION_FAILED", "DELETED"
-    #   resp.license_server_endpoints[0].server_endpoint.endpoint #=> String
-    #   resp.license_server_endpoints[0].server_type #=> String, one of "RDS_SAL"
-    #   resp.license_server_endpoints[0].status_message #=> String
+    #   resp.license_server_endpoints[0].license_servers[0].ipv_6_address #=> String
+    #   resp.license_server_endpoints[0].creation_time #=> Time
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-user-subscriptions-2018-05-10/ListLicenseServerEndpoints AWS API Documentation
@@ -1010,6 +1048,19 @@ module Aws::LicenseManagerUserSubscriptions
     # Lists the user-based subscription products available from an identity
     # provider.
     #
+    # @option params [String] :product
+    #   The name of the user-based subscription product.
+    #
+    #   Valid values: `VISUAL_STUDIO_ENTERPRISE` \|
+    #   `VISUAL_STUDIO_PROFESSIONAL` \| `OFFICE_PROFESSIONAL_PLUS` \|
+    #   `REMOTE_DESKTOP_SERVICES`
+    #
+    # @option params [required, Types::IdentityProvider] :identity_provider
+    #   An object that specifies details for the identity provider.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return from a single request.
+    #
     # @option params [Array<Types::Filter>] :filters
     #   You can use the following filters to streamline results:
     #
@@ -1019,33 +1070,42 @@ module Aws::LicenseManagerUserSubscriptions
     #
     #   * Domain
     #
-    # @option params [required, Types::IdentityProvider] :identity_provider
-    #   An object that specifies details for the identity provider.
-    #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to return from a single request.
-    #
     # @option params [String] :next_token
     #   A token to specify where to start paginating. This is the nextToken
     #   from a previously truncated response.
     #
-    # @option params [String] :product
-    #   The name of the user-based subscription product.
-    #
-    #   Valid values: `VISUAL_STUDIO_ENTERPRISE` \|
-    #   `VISUAL_STUDIO_PROFESSIONAL` \| `OFFICE_PROFESSIONAL_PLUS` \|
-    #   `REMOTE_DESKTOP_SERVICES`
-    #
     # @return [Types::ListProductSubscriptionsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::ListProductSubscriptionsResponse#next_token #next_token} => String
     #   * {Types::ListProductSubscriptionsResponse#product_user_summaries #product_user_summaries} => Array&lt;Types::ProductUserSummary&gt;
+    #   * {Types::ListProductSubscriptionsResponse#next_token #next_token} => String
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_product_subscriptions({
+    #     product: "String",
+    #     identity_provider: { # required
+    #       active_directory_identity_provider: {
+    #         directory_id: "Directory",
+    #         active_directory_settings: {
+    #           domain_name: "String",
+    #           domain_ipv_4_list: ["IpV4"],
+    #           domain_ipv_6_list: ["IpV6"],
+    #           domain_credentials_provider: {
+    #             secrets_manager_credentials_provider: {
+    #               secret_id: "SecretsManagerCredentialsProviderSecretIdString",
+    #             },
+    #           },
+    #           domain_network_settings: {
+    #             subnets: ["Subnet"], # required
+    #           },
+    #         },
+    #         active_directory_type: "SELF_MANAGED", # accepts SELF_MANAGED, AWS_MANAGED
+    #         is_shared_active_directory: false,
+    #       },
+    #     },
+    #     max_results: 1,
     #     filters: [
     #       {
     #         attribute: "String",
@@ -1053,49 +1113,32 @@ module Aws::LicenseManagerUserSubscriptions
     #         value: "String",
     #       },
     #     ],
-    #     identity_provider: { # required
-    #       active_directory_identity_provider: {
-    #         active_directory_settings: {
-    #           domain_credentials_provider: {
-    #             secrets_manager_credentials_provider: {
-    #               secret_id: "SecretsManagerCredentialsProviderSecretIdString",
-    #             },
-    #           },
-    #           domain_ipv_4_list: ["IpV4"],
-    #           domain_name: "String",
-    #           domain_network_settings: {
-    #             subnets: ["Subnet"], # required
-    #           },
-    #         },
-    #         active_directory_type: "SELF_MANAGED", # accepts SELF_MANAGED, AWS_MANAGED
-    #         directory_id: "Directory",
-    #       },
-    #     },
-    #     max_results: 1,
     #     next_token: "String",
-    #     product: "String",
     #   })
     #
     # @example Response structure
     #
-    #   resp.next_token #=> String
     #   resp.product_user_summaries #=> Array
-    #   resp.product_user_summaries[0].domain #=> String
-    #   resp.product_user_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_credentials_provider.secrets_manager_credentials_provider.secret_id #=> String
+    #   resp.product_user_summaries[0].username #=> String
+    #   resp.product_user_summaries[0].product #=> String
+    #   resp.product_user_summaries[0].identity_provider.active_directory_identity_provider.directory_id #=> String
+    #   resp.product_user_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_name #=> String
     #   resp.product_user_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_4_list #=> Array
     #   resp.product_user_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_4_list[0] #=> String
-    #   resp.product_user_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_name #=> String
+    #   resp.product_user_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_6_list #=> Array
+    #   resp.product_user_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_6_list[0] #=> String
+    #   resp.product_user_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_credentials_provider.secrets_manager_credentials_provider.secret_id #=> String
     #   resp.product_user_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_network_settings.subnets #=> Array
     #   resp.product_user_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_network_settings.subnets[0] #=> String
     #   resp.product_user_summaries[0].identity_provider.active_directory_identity_provider.active_directory_type #=> String, one of "SELF_MANAGED", "AWS_MANAGED"
-    #   resp.product_user_summaries[0].identity_provider.active_directory_identity_provider.directory_id #=> String
-    #   resp.product_user_summaries[0].product #=> String
-    #   resp.product_user_summaries[0].product_user_arn #=> String
+    #   resp.product_user_summaries[0].identity_provider.active_directory_identity_provider.is_shared_active_directory #=> Boolean
     #   resp.product_user_summaries[0].status #=> String
+    #   resp.product_user_summaries[0].product_user_arn #=> String
     #   resp.product_user_summaries[0].status_message #=> String
-    #   resp.product_user_summaries[0].subscription_end_date #=> String
+    #   resp.product_user_summaries[0].domain #=> String
     #   resp.product_user_summaries[0].subscription_start_date #=> String
-    #   resp.product_user_summaries[0].username #=> String
+    #   resp.product_user_summaries[0].subscription_end_date #=> String
+    #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-user-subscriptions-2018-05-10/ListProductSubscriptions AWS API Documentation
     #
@@ -1138,6 +1181,15 @@ module Aws::LicenseManagerUserSubscriptions
 
     # Lists user associations for an identity provider.
     #
+    # @option params [required, String] :instance_id
+    #   The ID of the EC2 instance, which provides user-based subscriptions.
+    #
+    # @option params [required, Types::IdentityProvider] :identity_provider
+    #   An object that specifies details for the identity provider.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return from a single request.
+    #
     # @option params [Array<Types::Filter>] :filters
     #   You can use the following filters to streamline results:
     #
@@ -1146,15 +1198,6 @@ module Aws::LicenseManagerUserSubscriptions
     #   * Username
     #
     #   * Domain
-    #
-    # @option params [required, Types::IdentityProvider] :identity_provider
-    #   An object that specifies details for the identity provider.
-    #
-    # @option params [required, String] :instance_id
-    #   The ID of the EC2 instance, which provides user-based subscriptions.
-    #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to return from a single request.
     #
     # @option params [String] :next_token
     #   A token to specify where to start paginating. This is the nextToken
@@ -1170,6 +1213,28 @@ module Aws::LicenseManagerUserSubscriptions
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_user_associations({
+    #     instance_id: "String", # required
+    #     identity_provider: { # required
+    #       active_directory_identity_provider: {
+    #         directory_id: "Directory",
+    #         active_directory_settings: {
+    #           domain_name: "String",
+    #           domain_ipv_4_list: ["IpV4"],
+    #           domain_ipv_6_list: ["IpV6"],
+    #           domain_credentials_provider: {
+    #             secrets_manager_credentials_provider: {
+    #               secret_id: "SecretsManagerCredentialsProviderSecretIdString",
+    #             },
+    #           },
+    #           domain_network_settings: {
+    #             subnets: ["Subnet"], # required
+    #           },
+    #         },
+    #         active_directory_type: "SELF_MANAGED", # accepts SELF_MANAGED, AWS_MANAGED
+    #         is_shared_active_directory: false,
+    #       },
+    #     },
+    #     max_results: 1,
     #     filters: [
     #       {
     #         attribute: "String",
@@ -1177,48 +1242,31 @@ module Aws::LicenseManagerUserSubscriptions
     #         value: "String",
     #       },
     #     ],
-    #     identity_provider: { # required
-    #       active_directory_identity_provider: {
-    #         active_directory_settings: {
-    #           domain_credentials_provider: {
-    #             secrets_manager_credentials_provider: {
-    #               secret_id: "SecretsManagerCredentialsProviderSecretIdString",
-    #             },
-    #           },
-    #           domain_ipv_4_list: ["IpV4"],
-    #           domain_name: "String",
-    #           domain_network_settings: {
-    #             subnets: ["Subnet"], # required
-    #           },
-    #         },
-    #         active_directory_type: "SELF_MANAGED", # accepts SELF_MANAGED, AWS_MANAGED
-    #         directory_id: "Directory",
-    #       },
-    #     },
-    #     instance_id: "String", # required
-    #     max_results: 1,
     #     next_token: "String",
     #   })
     #
     # @example Response structure
     #
     #   resp.instance_user_summaries #=> Array
-    #   resp.instance_user_summaries[0].association_date #=> String
-    #   resp.instance_user_summaries[0].disassociation_date #=> String
-    #   resp.instance_user_summaries[0].domain #=> String
-    #   resp.instance_user_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_credentials_provider.secrets_manager_credentials_provider.secret_id #=> String
+    #   resp.instance_user_summaries[0].username #=> String
+    #   resp.instance_user_summaries[0].instance_id #=> String
+    #   resp.instance_user_summaries[0].identity_provider.active_directory_identity_provider.directory_id #=> String
+    #   resp.instance_user_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_name #=> String
     #   resp.instance_user_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_4_list #=> Array
     #   resp.instance_user_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_4_list[0] #=> String
-    #   resp.instance_user_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_name #=> String
+    #   resp.instance_user_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_6_list #=> Array
+    #   resp.instance_user_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_6_list[0] #=> String
+    #   resp.instance_user_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_credentials_provider.secrets_manager_credentials_provider.secret_id #=> String
     #   resp.instance_user_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_network_settings.subnets #=> Array
     #   resp.instance_user_summaries[0].identity_provider.active_directory_identity_provider.active_directory_settings.domain_network_settings.subnets[0] #=> String
     #   resp.instance_user_summaries[0].identity_provider.active_directory_identity_provider.active_directory_type #=> String, one of "SELF_MANAGED", "AWS_MANAGED"
-    #   resp.instance_user_summaries[0].identity_provider.active_directory_identity_provider.directory_id #=> String
-    #   resp.instance_user_summaries[0].instance_id #=> String
-    #   resp.instance_user_summaries[0].instance_user_arn #=> String
+    #   resp.instance_user_summaries[0].identity_provider.active_directory_identity_provider.is_shared_active_directory #=> Boolean
     #   resp.instance_user_summaries[0].status #=> String
+    #   resp.instance_user_summaries[0].instance_user_arn #=> String
     #   resp.instance_user_summaries[0].status_message #=> String
-    #   resp.instance_user_summaries[0].username #=> String
+    #   resp.instance_user_summaries[0].domain #=> String
+    #   resp.instance_user_summaries[0].association_date #=> String
+    #   resp.instance_user_summaries[0].disassociation_date #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-user-subscriptions-2018-05-10/ListUserAssociations AWS API Documentation
@@ -1259,26 +1307,28 @@ module Aws::LicenseManagerUserSubscriptions
     #   resp = client.register_identity_provider({
     #     identity_provider: { # required
     #       active_directory_identity_provider: {
+    #         directory_id: "Directory",
     #         active_directory_settings: {
+    #           domain_name: "String",
+    #           domain_ipv_4_list: ["IpV4"],
+    #           domain_ipv_6_list: ["IpV6"],
     #           domain_credentials_provider: {
     #             secrets_manager_credentials_provider: {
     #               secret_id: "SecretsManagerCredentialsProviderSecretIdString",
     #             },
     #           },
-    #           domain_ipv_4_list: ["IpV4"],
-    #           domain_name: "String",
     #           domain_network_settings: {
     #             subnets: ["Subnet"], # required
     #           },
     #         },
     #         active_directory_type: "SELF_MANAGED", # accepts SELF_MANAGED, AWS_MANAGED
-    #         directory_id: "Directory",
+    #         is_shared_active_directory: false,
     #       },
     #     },
     #     product: "String", # required
     #     settings: {
-    #       security_group_id: "SecurityGroup", # required
     #       subnets: ["Subnet"], # required
+    #       security_group_id: "SecurityGroup", # required
     #     },
     #     tags: {
     #       "String" => "String",
@@ -1287,21 +1337,25 @@ module Aws::LicenseManagerUserSubscriptions
     #
     # @example Response structure
     #
-    #   resp.identity_provider_summary.failure_message #=> String
-    #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_credentials_provider.secrets_manager_credentials_provider.secret_id #=> String
+    #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.directory_id #=> String
+    #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_name #=> String
     #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_4_list #=> Array
     #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_4_list[0] #=> String
-    #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_name #=> String
+    #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_6_list #=> Array
+    #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_6_list[0] #=> String
+    #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_credentials_provider.secrets_manager_credentials_provider.secret_id #=> String
     #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_network_settings.subnets #=> Array
     #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_network_settings.subnets[0] #=> String
     #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_type #=> String, one of "SELF_MANAGED", "AWS_MANAGED"
-    #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.directory_id #=> String
-    #   resp.identity_provider_summary.identity_provider_arn #=> String
-    #   resp.identity_provider_summary.product #=> String
-    #   resp.identity_provider_summary.settings.security_group_id #=> String
+    #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.is_shared_active_directory #=> Boolean
     #   resp.identity_provider_summary.settings.subnets #=> Array
     #   resp.identity_provider_summary.settings.subnets[0] #=> String
+    #   resp.identity_provider_summary.settings.security_group_id #=> String
+    #   resp.identity_provider_summary.product #=> String
     #   resp.identity_provider_summary.status #=> String
+    #   resp.identity_provider_summary.identity_provider_arn #=> String
+    #   resp.identity_provider_summary.failure_message #=> String
+    #   resp.identity_provider_summary.owner_account_id #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-user-subscriptions-2018-05-10/RegisterIdentityProvider AWS API Documentation
     #
@@ -1327,9 +1381,8 @@ module Aws::LicenseManagerUserSubscriptions
     #
     # [1]: https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/invoice.html
     #
-    # @option params [String] :domain
-    #   The domain name of the Active Directory that contains the user for
-    #   whom to start the product subscription.
+    # @option params [required, String] :username
+    #   The user name from the identity provider of the user.
     #
     # @option params [required, Types::IdentityProvider] :identity_provider
     #   An object that specifies details for the identity provider.
@@ -1341,11 +1394,12 @@ module Aws::LicenseManagerUserSubscriptions
     #   `VISUAL_STUDIO_PROFESSIONAL` \| `OFFICE_PROFESSIONAL_PLUS` \|
     #   `REMOTE_DESKTOP_SERVICES`
     #
+    # @option params [String] :domain
+    #   The domain name of the Active Directory that contains the user for
+    #   whom to start the product subscription.
+    #
     # @option params [Hash<String,String>] :tags
     #   The tags that apply to the product subscription.
-    #
-    # @option params [required, String] :username
-    #   The user name from the identity provider of the user.
     #
     # @return [Types::StartProductSubscriptionResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1354,50 +1408,55 @@ module Aws::LicenseManagerUserSubscriptions
     # @example Request syntax with placeholder values
     #
     #   resp = client.start_product_subscription({
-    #     domain: "String",
+    #     username: "String", # required
     #     identity_provider: { # required
     #       active_directory_identity_provider: {
+    #         directory_id: "Directory",
     #         active_directory_settings: {
+    #           domain_name: "String",
+    #           domain_ipv_4_list: ["IpV4"],
+    #           domain_ipv_6_list: ["IpV6"],
     #           domain_credentials_provider: {
     #             secrets_manager_credentials_provider: {
     #               secret_id: "SecretsManagerCredentialsProviderSecretIdString",
     #             },
     #           },
-    #           domain_ipv_4_list: ["IpV4"],
-    #           domain_name: "String",
     #           domain_network_settings: {
     #             subnets: ["Subnet"], # required
     #           },
     #         },
     #         active_directory_type: "SELF_MANAGED", # accepts SELF_MANAGED, AWS_MANAGED
-    #         directory_id: "Directory",
+    #         is_shared_active_directory: false,
     #       },
     #     },
     #     product: "String", # required
+    #     domain: "String",
     #     tags: {
     #       "String" => "String",
     #     },
-    #     username: "String", # required
     #   })
     #
     # @example Response structure
     #
-    #   resp.product_user_summary.domain #=> String
-    #   resp.product_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_credentials_provider.secrets_manager_credentials_provider.secret_id #=> String
+    #   resp.product_user_summary.username #=> String
+    #   resp.product_user_summary.product #=> String
+    #   resp.product_user_summary.identity_provider.active_directory_identity_provider.directory_id #=> String
+    #   resp.product_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_name #=> String
     #   resp.product_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_4_list #=> Array
     #   resp.product_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_4_list[0] #=> String
-    #   resp.product_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_name #=> String
+    #   resp.product_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_6_list #=> Array
+    #   resp.product_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_6_list[0] #=> String
+    #   resp.product_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_credentials_provider.secrets_manager_credentials_provider.secret_id #=> String
     #   resp.product_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_network_settings.subnets #=> Array
     #   resp.product_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_network_settings.subnets[0] #=> String
     #   resp.product_user_summary.identity_provider.active_directory_identity_provider.active_directory_type #=> String, one of "SELF_MANAGED", "AWS_MANAGED"
-    #   resp.product_user_summary.identity_provider.active_directory_identity_provider.directory_id #=> String
-    #   resp.product_user_summary.product #=> String
-    #   resp.product_user_summary.product_user_arn #=> String
+    #   resp.product_user_summary.identity_provider.active_directory_identity_provider.is_shared_active_directory #=> Boolean
     #   resp.product_user_summary.status #=> String
+    #   resp.product_user_summary.product_user_arn #=> String
     #   resp.product_user_summary.status_message #=> String
-    #   resp.product_user_summary.subscription_end_date #=> String
+    #   resp.product_user_summary.domain #=> String
     #   resp.product_user_summary.subscription_start_date #=> String
-    #   resp.product_user_summary.username #=> String
+    #   resp.product_user_summary.subscription_end_date #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-user-subscriptions-2018-05-10/StartProductSubscription AWS API Documentation
     #
@@ -1411,9 +1470,8 @@ module Aws::LicenseManagerUserSubscriptions
     # Stops a product subscription for a user with the specified identity
     # provider.
     #
-    # @option params [String] :domain
-    #   The domain name of the Active Directory that contains the user for
-    #   whom to stop the product subscription.
+    # @option params [String] :username
+    #   The user name from the identity provider for the user.
     #
     # @option params [Types::IdentityProvider] :identity_provider
     #   An object that specifies details for the identity provider.
@@ -1428,8 +1486,9 @@ module Aws::LicenseManagerUserSubscriptions
     # @option params [String] :product_user_arn
     #   The Amazon Resource Name (ARN) of the product user.
     #
-    # @option params [String] :username
-    #   The user name from the identity provider for the user.
+    # @option params [String] :domain
+    #   The domain name of the Active Directory that contains the user for
+    #   whom to stop the product subscription.
     #
     # @return [Types::StopProductSubscriptionResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1438,48 +1497,53 @@ module Aws::LicenseManagerUserSubscriptions
     # @example Request syntax with placeholder values
     #
     #   resp = client.stop_product_subscription({
-    #     domain: "String",
+    #     username: "String",
     #     identity_provider: {
     #       active_directory_identity_provider: {
+    #         directory_id: "Directory",
     #         active_directory_settings: {
+    #           domain_name: "String",
+    #           domain_ipv_4_list: ["IpV4"],
+    #           domain_ipv_6_list: ["IpV6"],
     #           domain_credentials_provider: {
     #             secrets_manager_credentials_provider: {
     #               secret_id: "SecretsManagerCredentialsProviderSecretIdString",
     #             },
     #           },
-    #           domain_ipv_4_list: ["IpV4"],
-    #           domain_name: "String",
     #           domain_network_settings: {
     #             subnets: ["Subnet"], # required
     #           },
     #         },
     #         active_directory_type: "SELF_MANAGED", # accepts SELF_MANAGED, AWS_MANAGED
-    #         directory_id: "Directory",
+    #         is_shared_active_directory: false,
     #       },
     #     },
     #     product: "String",
     #     product_user_arn: "Arn",
-    #     username: "String",
+    #     domain: "String",
     #   })
     #
     # @example Response structure
     #
-    #   resp.product_user_summary.domain #=> String
-    #   resp.product_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_credentials_provider.secrets_manager_credentials_provider.secret_id #=> String
+    #   resp.product_user_summary.username #=> String
+    #   resp.product_user_summary.product #=> String
+    #   resp.product_user_summary.identity_provider.active_directory_identity_provider.directory_id #=> String
+    #   resp.product_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_name #=> String
     #   resp.product_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_4_list #=> Array
     #   resp.product_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_4_list[0] #=> String
-    #   resp.product_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_name #=> String
+    #   resp.product_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_6_list #=> Array
+    #   resp.product_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_6_list[0] #=> String
+    #   resp.product_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_credentials_provider.secrets_manager_credentials_provider.secret_id #=> String
     #   resp.product_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_network_settings.subnets #=> Array
     #   resp.product_user_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_network_settings.subnets[0] #=> String
     #   resp.product_user_summary.identity_provider.active_directory_identity_provider.active_directory_type #=> String, one of "SELF_MANAGED", "AWS_MANAGED"
-    #   resp.product_user_summary.identity_provider.active_directory_identity_provider.directory_id #=> String
-    #   resp.product_user_summary.product #=> String
-    #   resp.product_user_summary.product_user_arn #=> String
+    #   resp.product_user_summary.identity_provider.active_directory_identity_provider.is_shared_active_directory #=> Boolean
     #   resp.product_user_summary.status #=> String
+    #   resp.product_user_summary.product_user_arn #=> String
     #   resp.product_user_summary.status_message #=> String
-    #   resp.product_user_summary.subscription_end_date #=> String
+    #   resp.product_user_summary.domain #=> String
     #   resp.product_user_summary.subscription_start_date #=> String
-    #   resp.product_user_summary.username #=> String
+    #   resp.product_user_summary.subscription_end_date #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-user-subscriptions-2018-05-10/StopProductSubscription AWS API Documentation
     #
@@ -1551,15 +1615,15 @@ module Aws::LicenseManagerUserSubscriptions
     # @option params [Types::IdentityProvider] :identity_provider
     #   Refers to an identity provider.
     #
-    # @option params [String] :identity_provider_arn
-    #   The Amazon Resource Name (ARN) of the identity provider to update.
-    #
     # @option params [String] :product
     #   The name of the user-based subscription product.
     #
     #   Valid values: `VISUAL_STUDIO_ENTERPRISE` \|
     #   `VISUAL_STUDIO_PROFESSIONAL` \| `OFFICE_PROFESSIONAL_PLUS` \|
     #   `REMOTE_DESKTOP_SERVICES`
+    #
+    # @option params [String] :identity_provider_arn
+    #   The Amazon Resource Name (ARN) of the identity provider to update.
     #
     # @option params [required, Types::UpdateSettings] :update_settings
     #   Updates the registered identity provider’s product related
@@ -1581,24 +1645,26 @@ module Aws::LicenseManagerUserSubscriptions
     #   resp = client.update_identity_provider_settings({
     #     identity_provider: {
     #       active_directory_identity_provider: {
+    #         directory_id: "Directory",
     #         active_directory_settings: {
+    #           domain_name: "String",
+    #           domain_ipv_4_list: ["IpV4"],
+    #           domain_ipv_6_list: ["IpV6"],
     #           domain_credentials_provider: {
     #             secrets_manager_credentials_provider: {
     #               secret_id: "SecretsManagerCredentialsProviderSecretIdString",
     #             },
     #           },
-    #           domain_ipv_4_list: ["IpV4"],
-    #           domain_name: "String",
     #           domain_network_settings: {
     #             subnets: ["Subnet"], # required
     #           },
     #         },
     #         active_directory_type: "SELF_MANAGED", # accepts SELF_MANAGED, AWS_MANAGED
-    #         directory_id: "Directory",
+    #         is_shared_active_directory: false,
     #       },
     #     },
-    #     identity_provider_arn: "Arn",
     #     product: "String",
+    #     identity_provider_arn: "Arn",
     #     update_settings: { # required
     #       add_subnets: ["Subnet"], # required
     #       remove_subnets: ["Subnet"], # required
@@ -1608,21 +1674,25 @@ module Aws::LicenseManagerUserSubscriptions
     #
     # @example Response structure
     #
-    #   resp.identity_provider_summary.failure_message #=> String
-    #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_credentials_provider.secrets_manager_credentials_provider.secret_id #=> String
+    #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.directory_id #=> String
+    #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_name #=> String
     #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_4_list #=> Array
     #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_4_list[0] #=> String
-    #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_name #=> String
+    #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_6_list #=> Array
+    #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_ipv_6_list[0] #=> String
+    #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_credentials_provider.secrets_manager_credentials_provider.secret_id #=> String
     #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_network_settings.subnets #=> Array
     #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_settings.domain_network_settings.subnets[0] #=> String
     #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.active_directory_type #=> String, one of "SELF_MANAGED", "AWS_MANAGED"
-    #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.directory_id #=> String
-    #   resp.identity_provider_summary.identity_provider_arn #=> String
-    #   resp.identity_provider_summary.product #=> String
-    #   resp.identity_provider_summary.settings.security_group_id #=> String
+    #   resp.identity_provider_summary.identity_provider.active_directory_identity_provider.is_shared_active_directory #=> Boolean
     #   resp.identity_provider_summary.settings.subnets #=> Array
     #   resp.identity_provider_summary.settings.subnets[0] #=> String
+    #   resp.identity_provider_summary.settings.security_group_id #=> String
+    #   resp.identity_provider_summary.product #=> String
     #   resp.identity_provider_summary.status #=> String
+    #   resp.identity_provider_summary.identity_provider_arn #=> String
+    #   resp.identity_provider_summary.failure_message #=> String
+    #   resp.identity_provider_summary.owner_account_id #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-user-subscriptions-2018-05-10/UpdateIdentityProviderSettings AWS API Documentation
     #
@@ -1651,7 +1721,7 @@ module Aws::LicenseManagerUserSubscriptions
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-licensemanagerusersubscriptions'
-      context[:gem_version] = '1.31.0'
+      context[:gem_version] = '1.53.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

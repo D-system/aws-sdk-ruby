@@ -42,6 +42,185 @@ module Aws::Billing
       include Aws::Structure
     end
 
+    # An additional charge applied to an Enterprise Support contract.
+    #
+    # @!attribute [rw] description
+    #   A description of the additional charge.
+    #   @return [String]
+    #
+    # @!attribute [rw] amount
+    #   The charge amount.
+    #   @return [String]
+    #
+    # @!attribute [rw] charge_type
+    #   The type of additional charge.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/AdditionalCharge AWS API Documentation
+    #
+    class AdditionalCharge < Struct.new(
+      :description,
+      :amount,
+      :charge_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A monetary amount with a currency code. Used throughout the Billing
+    # API to represent credit balances, allocations, and adjustments.
+    #
+    # @!attribute [rw] currency_code
+    #   The ISO 4217 currency code for the amount (for example, `USD`).
+    #   @return [String]
+    #
+    # @!attribute [rw] currency_amount
+    #   The amount as a decimal string (for example, `"743.21"`). Negative
+    #   values represent credits that reduce a bill.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/Amount AWS API Documentation
+    #
+    class Amount < Struct.new(
+      :currency_code,
+      :currency_amount)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the billing view to associate
+    #   source views with.
+    #   @return [String]
+    #
+    # @!attribute [rw] source_views
+    #   A list of ARNs of the source billing views to associate.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/AssociateSourceViewsRequest AWS API Documentation
+    #
+    class AssociateSourceViewsRequest < Struct.new(
+      :arn,
+      :source_views)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The ARN of the billing view that the source views were associated
+    #   with.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/AssociateSourceViewsResponse AWS API Documentation
+    #
+    class AssociateSourceViewsResponse < Struct.new(
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A filter that narrows the set of preferences returned by
+    # `GetBillingPreferences`.
+    #
+    # @!attribute [rw] name
+    #   The filter name. Currently the only supported value is
+    #   `PREFERENCE_KEY`.
+    #   @return [String]
+    #
+    # @!attribute [rw] value
+    #   The filter values to match. For `PREFERENCE_KEY`, supply 1 to 10
+    #   preference key values to match.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/BillingFeatureFilter AWS API Documentation
+    #
+    class BillingFeatureFilter < Struct.new(
+      :name,
+      :value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A specific billing period identified by year and month.
+    #
+    # @!attribute [rw] year
+    #   The four-digit year of the billing period.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] month
+    #   The month of the billing period as an integer between 1 and 12.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/BillingPeriod AWS API Documentation
+    #
+    class BillingPeriod < Struct.new(
+      :year,
+      :month)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A single key/value entry used to update a billing preference.
+    #
+    # @!attribute [rw] key
+    #   The preference key. Format depends on the feature being updated.
+    #   @return [String]
+    #
+    # @!attribute [rw] value
+    #   The preference value. Valid values: `ENABLED` or `DISABLED`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/BillingPreferenceForKey AWS API Documentation
+    #
+    class BillingPreferenceForKey < Struct.new(
+      :key,
+      :value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A single billing preference entry returned by `GetBillingPreferences`.
+    #
+    # @!attribute [rw] feature
+    #   The feature this preference belongs to.
+    #   @return [String]
+    #
+    # @!attribute [rw] key
+    #   The preference key. Format depends on the feature.
+    #   @return [String]
+    #
+    # @!attribute [rw] value
+    #   The preference value. Valid values: `ENABLED` or `DISABLED`.
+    #   @return [String]
+    #
+    # @!attribute [rw] account_name
+    #   The display name of the account. Populated together with
+    #   `accountId`; `null` otherwise.
+    #   @return [String]
+    #
+    # @!attribute [rw] account_id
+    #   The associated Amazon Web Services account ID. Populated for
+    #   account-list keys; `null` otherwise.
+    #   @return [String]
+    #
+    # @!attribute [rw] billing_period
+    #   The billing period associated with the preference change. Populated
+    #   only for the history features `RI_SHARING_HISTORY` and
+    #   `CREDIT_SHARING_HISTORY`.
+    #   @return [Types::BillingPeriod]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/BillingPreferenceSummary AWS API Documentation
+    #
+    class BillingPreferenceSummary < Struct.new(
+      :feature,
+      :key,
+      :value,
+      :account_name,
+      :account_id,
+      :billing_period)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The metadata associated to the billing view.
     #
     # @!attribute [rw] arn
@@ -50,7 +229,7 @@ module Aws::Billing
     #   @return [String]
     #
     # @!attribute [rw] name
-    #   A list of names of the billing view.
+    #   The account name of the billing view.
     #   @return [String]
     #
     # @!attribute [rw] description
@@ -62,16 +241,21 @@ module Aws::Billing
     #   @return [String]
     #
     # @!attribute [rw] owner_account_id
-    #   The list of owners of the billing view.
+    #   The account owner of the billing view.
+    #   @return [String]
+    #
+    # @!attribute [rw] source_account_id
+    #   The Amazon Web Services account ID that owns the source billing
+    #   view, if this is a derived billing view.
     #   @return [String]
     #
     # @!attribute [rw] data_filter_expression
-    #   See [Expression][1]. Billing view only supports `LINKED_ACCOUNT` and
-    #   `Tags`.
+    #   See [Expression][1]. Billing view only supports `LINKED_ACCOUNT`,
+    #   `Tags`, and `CostCategories`.
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_Expression.html
+    #   [1]: https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_billing_Expression.html
     #   @return [Types::Expression]
     #
     # @!attribute [rw] created_at
@@ -82,6 +266,22 @@ module Aws::Billing
     #   The time when the billing view was last updated.
     #   @return [Time]
     #
+    # @!attribute [rw] derived_view_count
+    #   The number of billing views that use this billing view as a source.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] source_view_count
+    #   The number of source views associated with this billing view.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] view_definition_last_updated_at
+    #   The timestamp of when the billing view definition was last updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] health_status
+    #   The current health status of the billing view.
+    #   @return [Types::BillingViewHealthStatus]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/BillingViewElement AWS API Documentation
     #
     class BillingViewElement < Struct.new(
@@ -90,10 +290,51 @@ module Aws::Billing
       :description,
       :billing_view_type,
       :owner_account_id,
+      :source_account_id,
       :data_filter_expression,
       :created_at,
-      :updated_at)
+      :updated_at,
+      :derived_view_count,
+      :source_view_count,
+      :view_definition_last_updated_at,
+      :health_status)
       SENSITIVE = [:name, :description]
+      include Aws::Structure
+    end
+
+    # Represents the health status of a billing view, including a status
+    # code and optional reasons for the status.
+    #
+    # @!attribute [rw] status_code
+    #   The current health status code of the billing view.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_reasons
+    #   A list of reasons explaining the current health status, if
+    #   applicable.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/BillingViewHealthStatus AWS API Documentation
+    #
+    class BillingViewHealthStatus < Struct.new(
+      :status_code,
+      :status_reasons)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Exception thrown when a billing view's health status prevents an
+    # operation from being performed. This may occur if the billing view is
+    # in a state other than `HEALTHY`.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/BillingViewHealthStatusException AWS API Documentation
+    #
+    class BillingViewHealthStatusException < Struct.new(
+      :message)
+      SENSITIVE = []
       include Aws::Structure
     end
 
@@ -116,9 +357,18 @@ module Aws::Billing
     #   The list of owners of the Billing view.
     #   @return [String]
     #
+    # @!attribute [rw] source_account_id
+    #   The Amazon Web Services account ID that owns the source billing
+    #   view, if this is a derived billing view.
+    #   @return [String]
+    #
     # @!attribute [rw] billing_view_type
     #   The type of billing view.
     #   @return [String]
+    #
+    # @!attribute [rw] health_status
+    #   The current health status of the billing view.
+    #   @return [Types::BillingViewHealthStatus]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/BillingViewListElement AWS API Documentation
     #
@@ -127,8 +377,31 @@ module Aws::Billing
       :name,
       :description,
       :owner_account_id,
-      :billing_view_type)
+      :source_account_id,
+      :billing_view_type,
+      :health_status)
       SENSITIVE = [:name, :description]
+      include Aws::Structure
+    end
+
+    # An account that is charged all or a portion of the total Support
+    # charge and the percentage of the charge allocated to it.
+    #
+    # @!attribute [rw] account_id
+    #   The account ID.
+    #   @return [String]
+    #
+    # @!attribute [rw] charge_percentage
+    #   The percentage of the total Support charge allocated to this
+    #   account. This is 0.0 when supportAllocationMethod = Proportional.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/ChargeAccount AWS API Documentation
+    #
+    class ChargeAccount < Struct.new(
+      :account_id,
+      :charge_percentage)
+      SENSITIVE = []
       include Aws::Structure
     end
 
@@ -157,6 +430,45 @@ module Aws::Billing
       include Aws::Structure
     end
 
+    # An account that is covered by the Enterprise Support contract.
+    #
+    # @!attribute [rw] account_id
+    #   The account ID.
+    #   @return [String]
+    #
+    # @!attribute [rw] is_gdn
+    #   When true, Support charges are calculated on charges before private
+    #   discounts. When false, they are calculated after private discounts.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/ContractAccount AWS API Documentation
+    #
+    class ContractAccount < Struct.new(
+      :account_id,
+      :is_gdn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The Cost Categories values used for filtering the costs.
+    #
+    # @!attribute [rw] key
+    #   The unique name of the Cost Category.
+    #   @return [String]
+    #
+    # @!attribute [rw] values
+    #   The specific value of the Cost Category.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/CostCategoryValues AWS API Documentation
+    #
+    class CostCategoryValues < Struct.new(
+      :key,
+      :values)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] name
     #   The name of the billing view.
     #   @return [String]
@@ -171,12 +483,12 @@ module Aws::Billing
     #   @return [Array<String>]
     #
     # @!attribute [rw] data_filter_expression
-    #   See [Expression][1]. Billing view only supports `LINKED_ACCOUNT` and
-    #   `Tags`.
+    #   See [Expression][1]. Billing view only supports `LINKED_ACCOUNT`,
+    #   `Tags`, and `CostCategories`.
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_Expression.html
+    #   [1]: https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_billing_Expression.html
     #   @return [Types::Expression]
     #
     # @!attribute [rw] client_token
@@ -226,15 +538,190 @@ module Aws::Billing
       include Aws::Structure
     end
 
+    # A single entry in the credit allocation history, representing how a
+    # credit was applied to a specific service during a billing month.
+    #
+    # @!attribute [rw] credit_id
+    #   The identifier of the credit that was applied.
+    #   @return [String]
+    #
+    # @!attribute [rw] credit_amount
+    #   The amount of credit applied. Negative values represent credits that
+    #   reduced the bill.
+    #   @return [Types::Amount]
+    #
+    # @!attribute [rw] description
+    #   A human-readable description of the credit allocation.
+    #   @return [String]
+    #
+    # @!attribute [rw] account_id
+    #   The Amazon Web Services account the credit was applied to.
+    #   @return [String]
+    #
+    # @!attribute [rw] applied_service_name
+    #   The Amazon Web Services service the credit was applied to.
+    #   @return [String]
+    #
+    # @!attribute [rw] billing_month
+    #   The billing month of the application in `YYYY-MM` format.
+    #   @return [String]
+    #
+    # @!attribute [rw] is_estimated_bill
+    #   `true` when the entry was applied to an in-flight bill that has not
+    #   yet been finalized.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/CreditAllocationHistoryEntry AWS API Documentation
+    #
+    class CreditAllocationHistoryEntry < Struct.new(
+      :credit_id,
+      :credit_amount,
+      :description,
+      :account_id,
+      :applied_service_name,
+      :billing_month,
+      :is_estimated_bill)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Detailed information about an Amazon Web Services credit, including
+    # its identifier, type, monetary amounts, applicable products, sharing
+    # configuration, and current enabled status.
+    #
+    # @!attribute [rw] credit_id
+    #   The unique identifier for the credit.
+    #   @return [String]
+    #
+    # @!attribute [rw] account_id
+    #   The Amazon Web Services account ID that owns the credit.
+    #   @return [String]
+    #
+    # @!attribute [rw] credit_type
+    #   The type of credit. Examples: `Promotion`, `Refund`, `TrueUp`.
+    #   @return [String]
+    #
+    # @!attribute [rw] initial_amount
+    #   The initial amount of the credit when it was issued.
+    #   @return [Types::Amount]
+    #
+    # @!attribute [rw] remaining_amount
+    #   The unused balance of the credit.
+    #   @return [Types::Amount]
+    #
+    # @!attribute [rw] estimated_amount
+    #   The estimated remaining balance, including in-flight (open) bills
+    #   that have not yet been finalized.
+    #   @return [Types::Amount]
+    #
+    # @!attribute [rw] applicable_product_names
+    #   The names of Amazon Web Services services this credit applies to.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] description
+    #   A human-readable description of the credit.
+    #   @return [String]
+    #
+    # @!attribute [rw] start_date
+    #   The date the credit becomes valid, as Unix epoch seconds.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_date
+    #   The date the credit expires, as Unix epoch seconds.
+    #   @return [Time]
+    #
+    # @!attribute [rw] exhaust_date
+    #   The date the credit balance reached zero, as Unix epoch seconds.
+    #   @return [Time]
+    #
+    # @!attribute [rw] application_type
+    #   When the credit is applied during bill computation. Valid values:
+    #   `BEFORE_CROSS_SERVICE_DISCOUNTS`, `AFTER_DISCOUNTS`.
+    #   @return [String]
+    #
+    # @!attribute [rw] shareable_accounts
+    #   The Amazon Web Services account IDs entitled to apply this credit.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] account_has_credit_sharing_enabled
+    #   Whether the owning account has account-level credit sharing turned
+    #   on.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] credit_console_visibility
+    #   The display configuration for the credit in the Amazon Web Services
+    #   Billing console.
+    #   @return [String]
+    #
+    # @!attribute [rw] credit_sharing_type
+    #   The sharing configuration for the credit. Valid values: `DEFAULT`,
+    #   `DISABLED`, `CUSTOM`, `COST_CATEGORY_RULE`.
+    #   @return [String]
+    #
+    # @!attribute [rw] cost_category_arn
+    #   The Amazon Resource Name (ARN) of the Cost Category controlling the
+    #   credit's sharing scope. Present only when `creditSharingType` is
+    #   `COST_CATEGORY_RULE`.
+    #   @return [String]
+    #
+    # @!attribute [rw] rule_name
+    #   The rule name within the Cost Category. Present only when
+    #   `creditSharingType` is `COST_CATEGORY_RULE`.
+    #   @return [String]
+    #
+    # @!attribute [rw] credit_status
+    #   Whether the credit participates in billing runs. Valid values:
+    #   `ENABLED`, `DISABLED`.
+    #   @return [String]
+    #
+    # @!attribute [rw] purchase_type_applications
+    #   Restricts which purchase types this credit applies to. When `null`
+    #   or omitted, the credit applies to all purchase types.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/CreditData AWS API Documentation
+    #
+    class CreditData < Struct.new(
+      :credit_id,
+      :account_id,
+      :credit_type,
+      :initial_amount,
+      :remaining_amount,
+      :estimated_amount,
+      :applicable_product_names,
+      :description,
+      :start_date,
+      :end_date,
+      :exhaust_date,
+      :application_type,
+      :shareable_accounts,
+      :account_has_credit_sharing_enabled,
+      :credit_console_visibility,
+      :credit_sharing_type,
+      :cost_category_arn,
+      :rule_name,
+      :credit_status,
+      :purchase_type_applications)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] arn
     #   The Amazon Resource Name (ARN) that can be used to uniquely identify
     #   the billing view.
     #   @return [String]
     #
+    # @!attribute [rw] force
+    #   If set to true, forces deletion of the billing view even if it has
+    #   derived resources (e.g. other billing views or budgets). Use with
+    #   caution as this may break dependent resources.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/DeleteBillingViewRequest AWS API Documentation
     #
     class DeleteBillingViewRequest < Struct.new(
-      :arn)
+      :arn,
+      :force)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -273,12 +760,62 @@ module Aws::Billing
       include Aws::Structure
     end
 
-    # See [Expression][1]. Billing view only supports `LINKED_ACCOUNT` and
-    # `Tags`.
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the billing view to disassociate
+    #   source views from.
+    #   @return [String]
+    #
+    # @!attribute [rw] source_views
+    #   A list of ARNs of the source billing views to disassociate.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/DisassociateSourceViewsRequest AWS API Documentation
+    #
+    class DisassociateSourceViewsRequest < Struct.new(
+      :arn,
+      :source_views)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The ARN of the billing view that the source views were disassociated
+    #   from.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/DisassociateSourceViewsResponse AWS API Documentation
+    #
+    class DisassociateSourceViewsResponse < Struct.new(
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A time period for Enterprise Support billing.
+    #
+    # @!attribute [rw] begin_date
+    #   The begin date of the time period.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_date
+    #   The end date of the time period.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/EnterpriseSupportTimePeriod AWS API Documentation
+    #
+    class EnterpriseSupportTimePeriod < Struct.new(
+      :begin_date,
+      :end_date)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # See [Expression][1]. Billing view only supports `LINKED_ACCOUNT`,
+    # `Tags`, and `CostCategories`.
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_Expression.html
+    # [1]: https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_billing_Expression.html
     #
     # @!attribute [rw] dimensions
     #   The specific `Dimension` to use for `Expression`.
@@ -288,11 +825,73 @@ module Aws::Billing
     #   The specific `Tag` to use for `Expression`.
     #   @return [Types::TagValues]
     #
+    # @!attribute [rw] cost_categories
+    #   The filter that's based on `CostCategory` values.
+    #   @return [Types::CostCategoryValues]
+    #
+    # @!attribute [rw] time_range
+    #   Specifies a time range filter for the billing view data.
+    #   @return [Types::TimeRange]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/Expression AWS API Documentation
     #
     class Expression < Struct.new(
       :dimensions,
-      :tags)
+      :tags,
+      :cost_categories,
+      :time_range)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   Pagination token from a previous response. Pass the value returned
+    #   in `nextToken` to retrieve the next page of results.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of records to return per page. Range: 1 to 50.
+    #   Default: 50.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] features
+    #   The feature to retrieve. Specify exactly one value. Valid values:
+    #   `BILLING_ALERTS`, `RI_SHARING`, `RI_SHARING_HISTORY`,
+    #   `CREDIT_SHARING`, `CREDIT_SHARING_HISTORY`, `CREDIT_LEVEL_SHARING`,
+    #   `CREDIT_PREFERENCE_OPTIONS`.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] filters
+    #   Filters to narrow results. Specify exactly one filter when supplied.
+    #   The supported filter name is `PREFERENCE_KEY`, which accepts 1 to 10
+    #   values to match preference keys.
+    #   @return [Array<Types::BillingFeatureFilter>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/GetBillingPreferencesRequest AWS API Documentation
+    #
+    class GetBillingPreferencesRequest < Struct.new(
+      :next_token,
+      :max_results,
+      :features,
+      :filters)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] billing_preferences
+    #   The list of preference entries matching the request.
+    #   @return [Array<Types::BillingPreferenceSummary>]
+    #
+    # @!attribute [rw] next_token
+    #   Pagination token. Present when more pages are available; `null` when
+    #   there are no more results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/GetBillingPreferencesResponse AWS API Documentation
+    #
+    class GetBillingPreferencesResponse < Struct.new(
+      :billing_preferences,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -318,6 +917,349 @@ module Aws::Billing
     #
     class GetBillingViewResponse < Struct.new(
       :billing_view)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] account_id
+    #   The Amazon Web Services account ID whose allocation history to
+    #   retrieve. Must be a 12-digit numeric string.
+    #   @return [String]
+    #
+    # @!attribute [rw] credit_id
+    #   Filters the result to a single credit. When omitted, returns
+    #   allocation entries for all credits.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] start_date
+    #   Inclusive start date as Unix epoch seconds. Must be on or before
+    #   `endDate`. The range from `startDate` to `endDate` cannot exceed 24
+    #   billing months.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_date
+    #   Inclusive end date as Unix epoch seconds.
+    #   @return [Time]
+    #
+    # @!attribute [rw] next_token
+    #   Pagination token from a previous response. Pass the value returned
+    #   in `nextToken` to retrieve the next page of results.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of records to return per page. Range: 1 to 1000.
+    #   Default: 100.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/GetCreditAllocationHistoryRequest AWS API Documentation
+    #
+    class GetCreditAllocationHistoryRequest < Struct.new(
+      :account_id,
+      :credit_id,
+      :start_date,
+      :end_date,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] credit_allocation_history_list
+    #   Allocation entries sorted by `billingMonth` in descending order.
+    #   @return [Array<Types::CreditAllocationHistoryEntry>]
+    #
+    # @!attribute [rw] partial_results
+    #   `true` when data could not be retrieved for one or more billing
+    #   months. The `failedMonths` field lists which months are missing.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] failed_months
+    #   Billing months in `YYYY-MM` format that failed to return data.
+    #   Non-empty only when `partialResults` is `true`.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] next_token
+    #   Pagination token. Present when more pages are available; `null` when
+    #   there are no more results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/GetCreditAllocationHistoryResponse AWS API Documentation
+    #
+    class GetCreditAllocationHistoryResponse < Struct.new(
+      :credit_allocation_history_list,
+      :partial_results,
+      :failed_months,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] account_id
+    #   The Amazon Web Services account ID. Must be a 12-digit numeric
+    #   string.
+    #   @return [String]
+    #
+    # @!attribute [rw] start_date
+    #   The start date for the credit period as Unix epoch seconds. Must be
+    #   a past date that is not more than one year before the current date.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_date
+    #   The end date for the credit period as Unix epoch seconds. Must not
+    #   be a future date and must be on or after `startDate`. Defaults to
+    #   the current date when omitted.
+    #   @return [Time]
+    #
+    # @!attribute [rw] payer_account_flag
+    #   When `true` and the caller is the management account, the response
+    #   aggregates credits across the entire consolidated billing family.
+    #   When `false` or omitted, returns only credits for the specified
+    #   `accountId`.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/GetCreditsRequest AWS API Documentation
+    #
+    class GetCreditsRequest < Struct.new(
+      :account_id,
+      :start_date,
+      :end_date,
+      :payer_account_flag)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] credits
+    #   The list of credits matching the request. Returns an empty list when
+    #   no credits exist.
+    #   @return [Array<Types::CreditData>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/GetCreditsResponse AWS API Documentation
+    #
+    class GetCreditsResponse < Struct.new(
+      :credits)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The request structure for GetEnterpriseSupportChargeSummary.
+    #
+    # @!attribute [rw] billing_month
+    #   The billing month in YYYY-MM format. This must be a month in the
+    #   past.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/GetEnterpriseSupportChargeSummaryRequest AWS API Documentation
+    #
+    class GetEnterpriseSupportChargeSummaryRequest < Struct.new(
+      :billing_month)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The response structure for GetEnterpriseSupportChargeSummary.
+    #
+    # @!attribute [rw] payer_account_id
+    #   The payer account ID that is authorized to view Enterprise Support
+    #   data for all accounts in its Support profile.
+    #   @return [String]
+    #
+    # @!attribute [rw] billing_month
+    #   The billing month in YYYY-MM format. This must be a month in the
+    #   past.
+    #   @return [String]
+    #
+    # @!attribute [rw] billing_period_start_date
+    #   The start date of the billing period.
+    #   @return [Time]
+    #
+    # @!attribute [rw] billing_period_end_date
+    #   The end date of the billing period.
+    #   @return [Time]
+    #
+    # @!attribute [rw] is_estimated
+    #   When true, the Support charge amount is estimated. When false, the
+    #   Support charge amount is finalized.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] bill_date
+    #   The date the bill was generated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] support_charge
+    #   The Support charge amount for the account.
+    #   @return [String]
+    #
+    # @!attribute [rw] total_support_charge
+    #   The total Support charge amount for all accounts in the Support
+    #   profile.
+    #   @return [String]
+    #
+    # @!attribute [rw] support_discount
+    #   The support discount amount.
+    #   @return [String]
+    #
+    # @!attribute [rw] total_support_eligible_spend
+    #   The total Support-eligible Spend from all accounts in the Support
+    #   profile. This includes eligible spend from usage of Amazon Web
+    #   Services, Reserved Instances, and Savings Plans.
+    #   @return [String]
+    #
+    # @!attribute [rw] total_support_eligible_usage_spend
+    #   The total Support-eligible spend from usage of Amazon Web Services
+    #   from all accounts in the Support profile.
+    #   @return [String]
+    #
+    # @!attribute [rw] total_support_eligible_reserved_instance_spend
+    #   The total Support-eligible Reserved Instance spend from all accounts
+    #   in the Support profile.
+    #   @return [String]
+    #
+    # @!attribute [rw] total_support_eligible_savings_plan_spend
+    #   The total Support-eligible Savings Plan spend from all accounts in
+    #   the Support profile.
+    #   @return [String]
+    #
+    # @!attribute [rw] support_charge_percentage
+    #   The percentage applied to the total Support-eligible spend to
+    #   calculate the total Support charge across all accounts in the
+    #   Support profile.
+    #   @return [String]
+    #
+    # @!attribute [rw] support_effective_pricing_plan
+    #   The effective pricing plan used for the support charge calculation.
+    #   @return [Types::PricingPlan]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/GetEnterpriseSupportChargeSummaryResponse AWS API Documentation
+    #
+    class GetEnterpriseSupportChargeSummaryResponse < Struct.new(
+      :payer_account_id,
+      :billing_month,
+      :billing_period_start_date,
+      :billing_period_end_date,
+      :is_estimated,
+      :bill_date,
+      :support_charge,
+      :total_support_charge,
+      :support_discount,
+      :total_support_eligible_spend,
+      :total_support_eligible_usage_spend,
+      :total_support_eligible_reserved_instance_spend,
+      :total_support_eligible_savings_plan_spend,
+      :support_charge_percentage,
+      :support_effective_pricing_plan)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The request structure for GetEnterpriseSupportContractDetails.
+    #
+    # @!attribute [rw] billing_month
+    #   The billing month in YYYY-MM format. This must be a month in the
+    #   past.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/GetEnterpriseSupportContractDetailsRequest AWS API Documentation
+    #
+    class GetEnterpriseSupportContractDetailsRequest < Struct.new(
+      :billing_month)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The response structure for GetEnterpriseSupportContractDetails.
+    #
+    # @!attribute [rw] is_contract_active
+    #   When true, the Enterprise Support contract is active. When false,
+    #   the Enterprise Support Contract is inactive.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] support_allocation_method
+    #   The method used to distribute the total Support charge amount across
+    #   each account in the Support profile. Valid values: Proportional,
+    #   Fixed\_Percentage. Proportional means support charges are
+    #   distributed to each account in proportion to its eligible Spend.
+    #   Fixed\_Percentage means support charges are distributed across
+    #   accounts according to pre-configured percentages from the contract.
+    #   @return [String]
+    #
+    # @!attribute [rw] support_reserved_instance_amortization_start_date
+    #   When supportReservedInstanceTreatmentMethod = AmortizedCustom, only
+    #   amortized fees for Reserved Instances purchased on or after this
+    #   date are included in the calculation. This field is Null for all
+    #   other treatment methods.
+    #   @return [Time]
+    #
+    # @!attribute [rw] support_reserved_instance_treatment_method
+    #   The method used to include Reserved Instance (RI) fees in the
+    #   Enterprise Support charge calculation. Valid values: None (RI fees
+    #   excluded from Support-eligible spend), Upfront (full upfront RI fees
+    #   included in month of purchase), Amortized (RI fees spread over
+    #   commitment term for RIs purchased on or after Support subscription
+    #   start date), AmortizedCustom (same as Amortized but only for RIs
+    #   purchased on or after a specified custom start date), AmortizedAll
+    #   (RI fees amortized for all active RIs including those purchased
+    #   before Support subscription started).
+    #   @return [String]
+    #
+    # @!attribute [rw] support_savings_plans_amortization_start_date
+    #   This is applicable when supportSavingsPlansTreatmentMethod =
+    #   Amortized and is Null for all other methods. It shows the start date
+    #   from which Savings Plan fees are included in Support Eligible Spend.
+    #   @return [Time]
+    #
+    # @!attribute [rw] support_savings_plans_treatment_method
+    #   The method used to include Savings Plans fees in Enterprise Support
+    #   charge calculations. Valid values: None (Savings Plan fees excluded
+    #   from Support-eligible spend), Upfront (full upfront Savings Plan
+    #   fees included in month of purchase), Amortized (Savings Plan fees
+    #   spread over commitment term for Savings Plans purchased on or after
+    #   Support subscription start date), AmortizedCustom (same as Amortized
+    #   but only for Savings Plans purchased on or after a specified custom
+    #   start date), AmortizedAll (Savings Plan fees amortized for all
+    #   active Savings Plans including those purchased before Support
+    #   subscription started).
+    #   @return [String]
+    #
+    # @!attribute [rw] support_prorate_start_date
+    #   The start date for accounts subscribed or unsubscribed to Support
+    #   billing during the billing month.
+    #   @return [Time]
+    #
+    # @!attribute [rw] contract_payer_account_ids
+    #   The list of accounts covered by the Enterprise Support contract.
+    #   @return [Array<Types::ContractAccount>]
+    #
+    # @!attribute [rw] charged_payer_account_ids
+    #   The list of payer accounts and their charge allocation percentages.
+    #   @return [Array<Types::ChargeAccount>]
+    #
+    # @!attribute [rw] additional_support_charge
+    #   Any Additional support charges applied to the contract.
+    #   @return [Array<Types::AdditionalCharge>]
+    #
+    # @!attribute [rw] additional_support_eligible_usage_spend
+    #   Any Additional support-eligible usage spend charges.
+    #   @return [Array<Types::AdditionalCharge>]
+    #
+    # @!attribute [rw] pricing_plans
+    #   The pricing plans associated with this Enterprise Support contract.
+    #   @return [Array<Types::PricingPlan>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/GetEnterpriseSupportContractDetailsResponse AWS API Documentation
+    #
+    class GetEnterpriseSupportContractDetailsResponse < Struct.new(
+      :is_contract_active,
+      :support_allocation_method,
+      :support_reserved_instance_amortization_start_date,
+      :support_reserved_instance_treatment_method,
+      :support_savings_plans_amortization_start_date,
+      :support_savings_plans_treatment_method,
+      :support_prorate_start_date,
+      :contract_payer_account_ids,
+      :charged_payer_account_ids,
+      :additional_support_charge,
+      :additional_support_eligible_usage_spend,
+      :pricing_plans)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -368,6 +1310,78 @@ module Aws::Billing
       include Aws::Structure
     end
 
+    # Enterprise Support charges for a linked account.
+    #
+    # @!attribute [rw] account_id
+    #   The linked account ID.
+    #   @return [String]
+    #
+    # @!attribute [rw] payer_account_id
+    #   The payer account ID that is authorized to view Enterprise Support
+    #   data for all accounts in its Support profile.
+    #   @return [String]
+    #
+    # @!attribute [rw] account_type
+    #   The type of account.
+    #   @return [String]
+    #
+    # @!attribute [rw] billable_seconds
+    #   The number of billable seconds in the billing period based on when
+    #   the account was subscribed to Enterprise Support.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] total_seconds
+    #   The total number of seconds in the billing period.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] total_support_eligible_spend
+    #   The total support-eligible spend for this account.
+    #   @return [String]
+    #
+    # @!attribute [rw] prorated_total_support_eligible_spend
+    #   The prorated total support-eligible spend based on when the account
+    #   was subscribed to Enterprise Support.
+    #   @return [String]
+    #
+    # @!attribute [rw] linked_time_periods
+    #   The time periods during which this account was linked.
+    #   @return [Array<Types::EnterpriseSupportTimePeriod>]
+    #
+    # @!attribute [rw] subscription_time_periods
+    #   The subscription time periods for this account.
+    #   @return [Array<Types::EnterpriseSupportTimePeriod>]
+    #
+    # @!attribute [rw] total_support_eligible_reserved_instance_spend
+    #   The total support-eligible Reserved Instance spend for this account.
+    #   @return [String]
+    #
+    # @!attribute [rw] total_support_eligible_savings_plan_spend
+    #   The total support-eligible Savings Plan spend for this account.
+    #   @return [String]
+    #
+    # @!attribute [rw] support_eligible_spend_by_service
+    #   The support-eligible spend broken down by service.
+    #   @return [Array<Types::ServiceLevelAccountUsage>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/LinkedAccountCharge AWS API Documentation
+    #
+    class LinkedAccountCharge < Struct.new(
+      :account_id,
+      :payer_account_id,
+      :account_type,
+      :billable_seconds,
+      :total_seconds,
+      :total_support_eligible_spend,
+      :prorated_total_support_eligible_spend,
+      :linked_time_periods,
+      :subscription_time_periods,
+      :total_support_eligible_reserved_instance_spend,
+      :total_support_eligible_savings_plan_spend,
+      :support_eligible_spend_by_service)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] active_time_range
     #   The time range for the billing views listed. `PRIMARY` billing view
     #   is always listed. `BILLING_GROUP` billing views are listed for time
@@ -385,8 +1399,19 @@ module Aws::Billing
     #   The type of billing view.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] names
+    #   Filters the list of billing views by name. You can specify search
+    #   criteria to match billing view names based on the search option
+    #   provided.
+    #   @return [Array<Types::StringSearch>]
+    #
     # @!attribute [rw] owner_account_id
     #   The list of owners of the billing view.
+    #   @return [String]
+    #
+    # @!attribute [rw] source_account_id
+    #   Filters the results to include only billing views that use the
+    #   specified account as a source.
     #   @return [String]
     #
     # @!attribute [rw] max_results
@@ -404,7 +1429,9 @@ module Aws::Billing
       :active_time_range,
       :arns,
       :billing_view_types,
+      :names,
       :owner_account_id,
+      :source_account_id,
       :max_results,
       :next_token)
       SENSITIVE = []
@@ -424,6 +1451,56 @@ module Aws::Billing
     #
     class ListBillingViewsResponse < Struct.new(
       :billing_views,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The request structure for ListEnterpriseSupportLinkedAccountCharges.
+    #
+    # @!attribute [rw] billing_month
+    #   The billing month in YYYY-MM format. This must be a month in the
+    #   past.
+    #   @return [String]
+    #
+    # @!attribute [rw] account_id
+    #   An optional linked account ID to filter results to a specific
+    #   account.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per page.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   The pagination token for the next page of results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/ListEnterpriseSupportLinkedAccountChargesRequest AWS API Documentation
+    #
+    class ListEnterpriseSupportLinkedAccountChargesRequest < Struct.new(
+      :billing_month,
+      :account_id,
+      :max_results,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The response structure for ListEnterpriseSupportLinkedAccountCharges.
+    #
+    # @!attribute [rw] linked_account
+    #   The list of Enterprise Support charges per linked account.
+    #   @return [Array<Types::LinkedAccountCharge>]
+    #
+    # @!attribute [rw] next_token
+    #   The pagination token for the next page of results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/ListEnterpriseSupportLinkedAccountChargesResponse AWS API Documentation
+    #
+    class ListEnterpriseSupportLinkedAccountChargesResponse < Struct.new(
+      :linked_account,
       :next_token)
       SENSITIVE = []
       include Aws::Structure
@@ -496,6 +1573,130 @@ module Aws::Billing
       include Aws::Structure
     end
 
+    # A pricing plan for Enterprise Support billing.
+    #
+    # @!attribute [rw] pricing_plan_id
+    #   The unique identifier for the pricing plan.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the pricing plan.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A description of the pricing plan.
+    #   @return [String]
+    #
+    # @!attribute [rw] start_date
+    #   The start date of the pricing plan.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_date
+    #   The end date of the pricing plan.
+    #   @return [Time]
+    #
+    # @!attribute [rw] plan_discount_percent
+    #   The discount percentage applied by this pricing plan.
+    #   @return [String]
+    #
+    # @!attribute [rw] discount_applies_to_minimum_charge
+    #   Whether the discount applies to the minimum Support charge.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] minimum_charge
+    #   The minimum Support charge amount for this pricing plan.
+    #   @return [String]
+    #
+    # @!attribute [rw] tiered
+    #   Whether the pricing plan uses tiered pricing.
+    #   @return [String]
+    #
+    # @!attribute [rw] tiers
+    #   The pricing tiers within this plan.
+    #   @return [Array<Types::PricingPlanTier>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/PricingPlan AWS API Documentation
+    #
+    class PricingPlan < Struct.new(
+      :pricing_plan_id,
+      :name,
+      :description,
+      :start_date,
+      :end_date,
+      :plan_discount_percent,
+      :discount_applies_to_minimum_charge,
+      :minimum_charge,
+      :tiered,
+      :tiers)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A tier within an Enterprise Support pricing plan.
+    #
+    # @!attribute [rw] tier_minimum
+    #   The minimum spend threshold for this tier.
+    #   @return [String]
+    #
+    # @!attribute [rw] tier_maximum
+    #   The maximum spend threshold for this tier.
+    #   @return [String]
+    #
+    # @!attribute [rw] base_charge
+    #   The base charge for this tier.
+    #   @return [String]
+    #
+    # @!attribute [rw] additional_percentage_of_aggregate_charges
+    #   The additional percentage applied to aggregate charges in this tier.
+    #   @return [String]
+    #
+    # @!attribute [rw] aggregate_charges_adjustment
+    #   The adjustment applied to aggregate charges.
+    #   @return [String]
+    #
+    # @!attribute [rw] incremental
+    #   Whether the tier charges are calculated incrementally.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] increment
+    #   The increment amount for incremental tier calculations.
+    #   @return [String]
+    #
+    # @!attribute [rw] increment_charge
+    #   The charge per increment.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/PricingPlanTier AWS API Documentation
+    #
+    class PricingPlanTier < Struct.new(
+      :tier_minimum,
+      :tier_maximum,
+      :base_charge,
+      :additional_percentage_of_aggregate_charges,
+      :aggregate_charges_adjustment,
+      :incremental,
+      :increment,
+      :increment_charge)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] promo_code
+    #   The promotional credit code to redeem.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/RedeemCreditsRequest AWS API Documentation
+    #
+    class RedeemCreditsRequest < Struct.new(
+      :promo_code)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/RedeemCreditsResponse AWS API Documentation
+    #
+    class RedeemCreditsResponse < Aws::EmptyStructure; end
+
     # The specified ARN in the request doesn't exist.
     #
     # @!attribute [rw] message
@@ -538,6 +1739,25 @@ module Aws::Billing
       include Aws::Structure
     end
 
+    # Service-level usage details by account.
+    #
+    # @!attribute [rw] service_code
+    #   The service code for which to return Support-eligible spend data.
+    #   @return [String]
+    #
+    # @!attribute [rw] total_support_eligible_spend
+    #   The total support-eligible spend for the service.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/ServiceLevelAccountUsage AWS API Documentation
+    #
+    class ServiceLevelAccountUsage < Struct.new(
+      :service_code,
+      :total_support_eligible_spend)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # You've reached the limit of resources you can create, or exceeded the
     # size of an individual resource.
     #
@@ -568,6 +1788,28 @@ module Aws::Billing
       :resource_type,
       :service_code,
       :quota_code)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A structure that defines how to search for string values. You can
+    # specify a search option and the value to search for.
+    #
+    # @!attribute [rw] search_option
+    #   The type of search operation to perform on the string value.
+    #   Determines how the search value is matched against the target field.
+    #   @return [String]
+    #
+    # @!attribute [rw] search_value
+    #   The string value to use in the search operation. This value is
+    #   compared against the target field using the specified search option.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/StringSearch AWS API Documentation
+    #
+    class StringSearch < Struct.new(
+      :search_option,
+      :search_value)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -625,6 +1867,25 @@ module Aws::Billing
       include Aws::Structure
     end
 
+    # Specifies a time range with inclusive begin and end dates.
+    #
+    # @!attribute [rw] begin_date_inclusive
+    #   The inclusive start date of the time range.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_date_inclusive
+    #   The inclusive end date of the time range.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/TimeRange AWS API Documentation
+    #
+    class TimeRange < Struct.new(
+      :begin_date_inclusive,
+      :end_date_inclusive)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] resource_arn
     #   The Amazon Resource Name (ARN) of the resource.
     #   @return [String]
@@ -646,6 +1907,34 @@ module Aws::Billing
     #
     class UntagResourceResponse < Aws::EmptyStructure; end
 
+    # @!attribute [rw] feature
+    #   The feature to update. Valid values: `BILLING_ALERTS`, `RI_SHARING`,
+    #   `CREDIT_SHARING`, `CREDIT_LEVEL_SHARING`,
+    #   `CREDIT_PREFERENCE_OPTIONS`. The history features
+    #   (`RI_SHARING_HISTORY` and `CREDIT_SHARING_HISTORY`) are read-only
+    #   and cannot be updated.
+    #   @return [String]
+    #
+    # @!attribute [rw] billing_preferences_per_key
+    #   Key/value pairs to apply. All keys in a single request must be valid
+    #   for the specified `feature` and must not be duplicated. For
+    #   `CREDIT_PREFERENCE_OPTIONS`, all keys must reference the same
+    #   `creditId`.
+    #   @return [Array<Types::BillingPreferenceForKey>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/UpdateBillingPreferencesRequest AWS API Documentation
+    #
+    class UpdateBillingPreferencesRequest < Struct.new(
+      :feature,
+      :billing_preferences_per_key)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/UpdateBillingPreferencesResponse AWS API Documentation
+    #
+    class UpdateBillingPreferencesResponse < Aws::EmptyStructure; end
+
     # @!attribute [rw] arn
     #   The Amazon Resource Name (ARN) that can be used to uniquely identify
     #   the billing view.
@@ -660,12 +1949,12 @@ module Aws::Billing
     #   @return [String]
     #
     # @!attribute [rw] data_filter_expression
-    #   See [Expression][1]. Billing view only supports `LINKED_ACCOUNT` and
-    #   `Tags`.
+    #   See [Expression][1]. Billing view only supports `LINKED_ACCOUNT`,
+    #   `Tags`, and `CostCategories`.
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_Expression.html
+    #   [1]: https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_billing_Expression.html
     #   @return [Types::Expression]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/billing-2023-09-07/UpdateBillingViewRequest AWS API Documentation

@@ -1,6 +1,196 @@
 Unreleased Changes
 ------------------
 
+1.52.0 (2026-07-22)
+------------------
+
+* Feature - AWS PCS Node Lifecycle Actions provides a structured way to run custom scripts at defined points in a compute node's lifecycle directly through the AWS PCS compute node group API.
+
+1.51.0 (2026-07-09)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.50.0 (2026-06-29)
+------------------
+
+* Feature - Add support for in-place Slurm version upgrades on existing clusters by accepting scheduler.version in UpdateCluster.
+
+1.49.0 (2026-05-29)
+------------------
+
+* Feature - Adding new BDD representation of endpoint ruleset
+
+1.48.0 (2026-05-28)
+------------------
+
+* Feature - This release adds support for configuring scaleDownIdleTimeInSeconds at the compute node group level, allowing customers to set different idle timeouts per node group. Previously this setting was only available at the cluster level.
+
+1.47.0 (2026-05-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.46.0 (2026-05-19)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.45.0 (2026-05-13)
+------------------
+
+* Feature - Add support for Amazon EC2 Interruptible-ODCR
+
+1.44.0 (2026-04-23)
+------------------
+
+* Feature - This release adds support for Slurm 25.11 with expedited requeue enabled by default for jobs failing due to node issues, configurable requeue delay, health checks at node startup only, and unauthenticated HTTP endpoints disabled by default for improved security.
+
+1.43.0 (2026-03-24)
+------------------
+
+* Feature - This release adds support for custom slurmdbd and cgroup configuration in AWS PCS. Customers can now specify slurmdbd and cgroup settings to configure database accounting and reporting for their HPC workloads, and control resource allocation and limits for compute jobs.
+
+1.42.0 (2026-03-18)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.41.0 (2026-02-09)
+------------------
+
+* Feature - Introduces RESUMING state for clusters, compute node groups, and queues.
+
+1.40.0 (2026-01-16)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.39.0 (2026-01-08)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.38.0 (2026-01-05)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.37.0 (2025-12-22)
+------------------
+
+* Feature - Change API Reference Documentation for default Mode in Accounting and SlurmRest
+
+1.36.0 (2025-11-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.35.0 (2025-11-17)
+------------------
+
+* Feature - Added support for the managed Slurm REST API endpoint
+
+1.34.0 (2025-10-22)
+------------------
+
+* Feature - Update endpoint ruleset parameters casing
+
+1.33.0 (2025-10-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.32.0 (2025-10-01)
+------------------
+
+* Feature - Added the UpdateCluster API action to modify cluster configurations, and Slurm custom settings for queues.
+
+1.31.0 (2025-09-17)
+------------------
+
+* Feature - Add support for Amazon EC2 Capacity Blocks for ML
+
+1.30.0 (2025-09-05)
+------------------
+
+* Feature - Documentation-only update to add AccountingStorageEnforce to SlurmCustomSetting.
+
+1.29.0 (2025-08-28)
+------------------
+
+* Feature - Remove incorrect endpoint tests
+
+1.28.0 (2025-08-26)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.27.0 (2025-08-14)
+------------------
+
+* Feature - Updated the regex pattern and description of iamInstanceProfileArn in the CreateComputeNodeGroup and UpdateComputeNodeGroup API actions. Name and path requirements apply to the ARN of the IAM role associated with the instance profile and not the ARN of the instance profile.
+
+1.26.0 (2025-08-04)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.25.0 (2025-08-01)
+------------------
+
+* Feature - Add support for IPv6 Networking for Clusters.
+
+1.24.0 (2025-07-31)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.23.0 (2025-07-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.22.0 (2025-06-30)
+------------------
+
+* Feature - Fixed the validation pattern for an instance profile Amazon Resource Name (ARN) in AWS PCS.
+
+1.21.0 (2025-06-12)
+------------------
+
+* Feature - Fixed regex patterns for ARN fields.
+
+1.20.0 (2025-06-02)
+------------------
+
+* Feature - Introduces SUSPENDING and SUSPENDED states for clusters, compute node groups, and queues.
+
+1.19.0 (2025-05-15)
+------------------
+
+* Feature - This release adds support for Slurm accounting. For more information, see the Slurm accounting topic in the AWS PCS User Guide. Slurm accounting is supported for Slurm 24.11 and later. This release also adds 24.11 as a valid value for the version parameter of the Scheduler data type.
+
+1.18.0 (2025-05-12)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.17.0 (2025-05-01)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.16.0 (2025-04-24)
+------------------
+
+* Feature - Documentation-only update: added valid values for the version property of the Scheduler and SchedulerRequest data types.
+
+1.15.0 (2025-04-11)
+------------------
+
+* Feature - Changed the minimum length of clusterIdentifier, computeNodeGroupIdentifier, and queueIdentifier to 3.
+
 1.14.0 (2025-03-24)
 ------------------
 

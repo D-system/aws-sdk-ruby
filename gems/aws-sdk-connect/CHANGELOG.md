@@ -1,6 +1,366 @@
 Unreleased Changes
 ------------------
 
+1.271.0 (2026-08-13)
+------------------
+
+* Feature - Adds the StartAssistantContact API to start chat contacts handled by an AI agent. Adds SegmentAttributes to StartWebRTCContact, and corrects its error response to now receive AccessDeniedException (previously returned as an internal server error due to a missing error declaration).
+
+1.270.0 (2026-08-11)
+------------------
+
+* Feature - Seven new APIs for managing custom metrics, including create, describe, update, and delete. Using Custom Metrics, customers of Amazon Connect Customer can tailor analytics dashboards to their needs by applying custom thresholds, filters, and calculations to one or more out of the box measurements.
+
+1.269.0 (2026-08-10)
+------------------
+
+* Feature - Added Malay language option to use AI to automatically fill evaluation forms in Malay
+
+1.268.0 (2026-08-07)
+------------------
+
+* Feature - Supports updating the task template associated with in-progress task contacts using the new UpdateContactTaskTemplate API. This enables supervisors and developers to dynamically reassign task templates without creating a new task.
+
+1.267.0 (2026-08-04)
+------------------
+
+* Feature - Amazon Connect Customer now supports up to 50 attachments per email, increased from the previous limit of 10. The individual maximum attachment size limit of 20 MB and the total email size limit of 25 MB still hold true.
+
+1.266.0 (2026-07-28)
+------------------
+
+* Feature - Documentation updates for SearchRules, AssociateRoutingProfileQueues, CreateRoutingProfile, AssociateContactWithUser CreateTaskTemplate, and UpdateTaskTemplate
+
+1.265.0 (2026-07-14)
+------------------
+
+* Feature - This release adds SearchRules API which can be used to search for rules within an Amazon Connect instance.
+
+1.264.0 (2026-07-09)
+------------------
+
+* Feature - Amazon Connect - Added DeleteContactData API to support PII deletion of customer endpoint, additional email recipients and email subject.
+
+1.263.0 (2026-07-07)
+------------------
+
+* Feature - Adds support for CreateAuthCode and DeleteSession APIs.
+
+1.262.0 (2026-07-01)
+------------------
+
+* Feature - Adds a new Amazon Connect Service API, SendOutboundWebNotification, that delivers web notifications to end-customer chat widget sessions. Callable only by the Amazon Connect Outbound Campaigns service principal.
+
+1.261.0 (2026-06-30)
+------------------
+
+* Feature - Amazon Connect - Added CreateAttachedFile and StartContactConversationalAnalyticsJob APIs to import call recordings and run conversational analytics.
+
+1.260.0 (2026-06-19)
+------------------
+
+* Feature - This is the release for point based scoring system and the evaluation form validation project
+
+1.259.0 (2026-06-03)
+------------------
+
+* Feature - SearchContacts Connect API now supports filtering contacts by the AI Agents involved in handling them
+
+1.258.0 (2026-05-21)
+------------------
+
+* Feature - Adding new BDD representation of endpoint ruleset
+
+1.257.0 (2026-05-19)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.256.0 (2026-05-18)
+------------------
+
+* Feature - Amazon Connect Cases now supports SLA durations of up to 2 years (1,051,200 minutes), increased from the previous maximum of 90 days (129,600 minutes). This enables you to track long-running service level agreements for cases that require extended resolution timelines.
+
+1.255.0 (2026-05-13)
+------------------
+
+* Feature - This change added three new EventSourceName for schedule notification feature
+
+1.254.0 (2026-04-24)
+------------------
+
+* Feature - Amazon Connect is expanding attachment capabilities to give customers greater flexibility and control. Currently limited to predefined file types, the new feature will allow contact center administrators to customize which file extensions and sizes are supported across chat, email, tasks, and cases.
+
+1.253.0 (2026-04-17)
+------------------
+
+* Feature - Fixes in SDK for customers using TestCase APIs
+
+1.252.0 (2026-04-16)
+------------------
+
+* Feature - This release updates the Amazon Connect Rules CRUD APIs to support a new EventSourceName - OnEmailAnalysisAvailable. Use this event source to trigger rules when conversational analytics results are available for email contacts.
+
+1.251.0 (2026-04-10)
+------------------
+
+* Feature - Conversational Analytics for Email
+
+1.250.0 (2026-04-07)
+------------------
+
+* Feature - The voice enhancement mode used by the agent can now be viewed on the contact record via the DescribeContact api.
+
+1.249.0 (2026-04-02)
+------------------
+
+* Feature - Include CUSTOMER to evaluation target and participant role. Support Korean, Japanese and Simplified Chinese in evaluation forms.
+
+1.248.0 (2026-03-18)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.247.0 (2026-03-13)
+------------------
+
+* Feature - Deprecating PredefinedNotificationID field
+
+1.246.0 (2026-03-06)
+------------------
+
+* Feature - Amazon Connect now supports the ability to programmatically configure and run automated tests for contact center experiences for Chat. Integrate testing into CICD pipelines, run multiple tests at scale, and retrieve results via API to automate validation of chat interactions and workflows.
+
+1.245.0 (2026-03-04)
+------------------
+
+* Feature - Added support for configuring additional email addresses on queues in Amazon Connect. Agents can now select an outbound email address and associate additional email addresses for replying to or initiating emails.
+
+1.244.0 (2026-02-27)
+------------------
+
+* Feature - Deprecate EvaluationReviewMetadata's CreatedBy and CreatedTime, add EvaluationReviewMetadata's RequestedBy and RequestedTime
+
+1.243.0 (2026-02-18)
+------------------
+
+* Feature - Correcting in-app notifications API documentation.
+
+1.242.0 (2026-02-13)
+------------------
+
+* Feature - API release for headerr notifications in the admin website. APIs allow customers to publish brief messages (including URLs) to a specified audience, and a new header icon will indicate when unread messages are available.
+
+1.241.0 (2026-02-10)
+------------------
+
+* Feature - Amazon Connect now supports per-channel auto-accept and After Contact Work (ACW) timeouts. Configure agents with auto-accept and ACW timeout settings for chat, tasks, emails, and callbacks. Use the new UpdateUserConfig API to manage these settings.
+
+1.240.0 (2026-01-30)
+------------------
+
+* Feature - This release adds Estimated Wait Time support to the GetContactMetrics API for Amazon Connect.
+
+1.239.0 (2026-01-28)
+------------------
+
+* Feature - Adds support for filtering search results based on tags assigned to contacts.
+
+1.238.0 (2026-01-27)
+------------------
+
+* Feature - Added support for task attachments. The StartTaskContact API now accepts file attachments, enabling customers to include files (.csv, .doc, .docx, .heic, .jfif, .jpeg, .jpg, .mov, .mp4, .pdf, .png, .ppt, .pptx, .rtf, .txt, etc.) when creating Task contacts. Supports up to 5 attachments per task.
+
+1.237.0 (2026-01-23)
+------------------
+
+* Feature - Amazon Connect now offers public APIs to programmatically configure and run automated tests for contact center experiences. Integrate testing into CICD pipelines, run multiple tests at scale, and retrieve results via API to automate validation of voice interactions and workflows.
+
+1.236.0 (2026-01-16)
+------------------
+
+* Feature - Adds support to allow customers to create form with Dispute configuration
+
+1.235.0 (2026-01-14)
+------------------
+
+* Feature - Amazon Connect makes it easier to manage contact center operating hours by enabling automated scheduling for recurring events like holidays and maintenance windows. Set up recurring patterns (weekly, monthly, etc.) or link to another hours of operation to inherit overrides.
+
+1.234.0 (2026-01-08)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.233.0 (2026-01-05)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.232.0 (2025-12-30)
+------------------
+
+* Feature - Adds support for searching global contacts using the ActiveRegions filter, and pagination support for ListSecurityProfileFlowModules and ListEntitySecurityProfiles.
+
+1.231.0 (2025-12-29)
+------------------
+
+* Feature - Changes for Contact for Global Search
+
+1.230.0 (2025-12-19)
+------------------
+
+* Feature - Adding support for Custom Metrics and Pre-Defined Attributes to GetCurrentMetricData API.
+
+1.229.0 (2025-12-15)
+------------------
+
+* Feature - Amazon Connect now supports outbound WhatsApp contacts via the Send message block or StartOutboundChatContact API. Send proactive messages for surveys, reminders, and updates. Offer customers the option to switch to WhatsApp while in queue, eliminating hold time.
+
+1.228.0 (2025-12-12)
+------------------
+
+* Feature - Amazon Connect now offers automated post-chat surveys triggered when customers end conversations. This captures timely feedback while experience is fresh, using either a no-code form builder or Amazon Lex-powered interactive surveys.
+
+1.227.0 (2025-12-01)
+------------------
+
+* Feature - This is a combined re:Invent release for Amazon Connect.
+
+1.226.0 (2025-11-21)
+------------------
+
+* Feature - New APIs to support aliases and versions for ContactFlowModule. Updated ContactFlowModule APIs to support custom blocks.
+
+1.225.0 (2025-11-20)
+------------------
+
+* Feature - Add optional ability to exclude users from send notification actions for Contact Lens Rules.
+
+1.224.0 (2025-11-18)
+------------------
+
+* Feature - This release added support for ring timer configuration for campaign calls.
+
+1.223.0 (2025-11-12)
+------------------
+
+* Feature - Updated Authentication Profile APIs to add support for automatic logout on user inactivity
+
+1.222.0 (2025-11-06)
+------------------
+
+* Feature - Added support for Conditional Questions in Evaluation Forms. Introduced Auto Evaluation capability for Evaluation Forms and Contact Evaluations. Added new API operations: SearchEvaluationForms and SearchContactEvaluations.
+
+1.221.0 (2025-10-22)
+------------------
+
+* Feature - This release added support for email address alias configuration and outbound campaign preview mode.
+
+1.220.0 (2025-10-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.219.0 (2025-10-14)
+------------------
+
+* Feature - SDK release for TaskTemplateInfo in Contact for DescribeContact response.
+
+1.218.0 (2025-09-26)
+------------------
+
+* Feature - Adds supports for manual contact picking (WorkList) operations on Routing Profiles, Agent Management and SearchContacts APIs.
+
+1.217.0 (2025-09-19)
+------------------
+
+* Feature - This release adds a persistent connection field to UserPhoneConfig that maintains agent's softphone media connection for faster call connections.
+
+1.216.0 (2025-09-09)
+------------------
+
+* Feature - SDK release for user defined predefined attributes.
+
+1.215.0 (2025-08-28)
+------------------
+
+* Feature - AgentStatusDrillDown feature in GetCurrentMetricData API. Adding AGENT_STATUS as filter and grouping in GetCurrentMetricData API
+
+1.214.0 (2025-08-26)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.213.0 (2025-08-21)
+------------------
+
+* Feature - Remove incorrect endpoint tests
+
+1.212.0 (2025-08-18)
+------------------
+
+* Feature - Amazon Connect Service Feature: Add support to enable multi-user in-app, web, and video calling.
+
+1.211.0 (2025-08-11)
+------------------
+
+* Feature - Updating SearchUserHierarchyGroups API
+
+1.210.0 (2025-08-08)
+------------------
+
+* Feature - This release adds a new API GetContactMetrics for Amazon Connect.
+
+1.209.0 (2025-08-04)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.208.0 (2025-07-31)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.207.0 (2025-07-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.206.0 (2025-06-30)
+------------------
+
+* Feature - This release introduces ChatMetrics to the model, providing comprehensive analytics insights for Amazon Connect chat conversations. Users can access these detailed metrics through the AWS Connect API by using the DescribeContact operation with their specific instance and contact IDs
+
+1.205.0 (2025-06-27)
+------------------
+
+* Feature - This release adds the following value to an InitiateAs enum: COMPLETED
+
+1.204.0 (2025-06-02)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.203.0 (2025-05-29)
+------------------
+
+* Feature - Amazon Connect Service Feature: Email Recipient Limit Increase
+
+1.202.0 (2025-05-12)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.201.0 (2025-05-01)
+------------------
+
+* Feature - This release adds the following fields to DescribeContact: DisconnectReason, AgentInitiatedHoldDuration, AfterContactWorkStartTimestamp, AfterContactWorkEndTimestamp, AfterContactWorkDuration, StateTransitions, Recordings, ContactDetails, ContactEvaluations, Attributes
+
+1.200.0 (2025-04-17)
+------------------
+
+* Feature - This release adds following capabilities to Contact Lens Rules APIs 1/ 'ASSIGN_SLA' action and  '$.Case.TemplateId' comparison value for 'OnCaseCreate' and 'OnCaseUpdate' event sources 2/ 'OnSlaBreach' Cases event source which supports '$.RelatedItem.SlaConfiguration.Name' comparison value
+
 1.199.0 (2025-03-10)
 ------------------
 

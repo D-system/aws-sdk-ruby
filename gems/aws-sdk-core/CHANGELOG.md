@@ -2,6 +2,320 @@ Unreleased Changes
 ------------------
 * Issue - Fix method typo in Seahorse::Client::H2::Connection
 
+3.254.1 (2026-08-06)
+------------------
+* Issue - Fix a double space appearing in the frameworks section of the User-Agent header.
+
+3.254.0 (2026-07-09)
+------------------
+
+* Feature - Serialize `BigDecimal` values as JSON numbers in document types for REST-JSON and JSON protocols.
+
+3.253.0 (2026-07-08)
+------------------
+
+* Feature - Updated Aws::Signin::Client with the latest API changes.
+
+* Feature - Adds support for OAuth 2.0 token operations in AWS Sign-In, CreateOAuth2TokenWithIAM (client credentials flow), IntrospectOAuth2TokenWithIAM (token inspection), and RevokeOAuth2TokenWithIAM (token revocation).
+
+3.252.0 (2026-06-10)
+------------------
+
+* Feature - Updated Aws::Signin::Client with the latest API changes.
+
+* Feature - AWS Sign-In now allows customers to control access to the AWS Management Console using resource-based policies. With this release customers can restrict console access based on network perimeters such as VPC IDs, VPC endpoints, and IP addresses.
+
+3.251.0 (2026-06-02)
+------------------
+
+* Feature - Adding new BDD representation of endpoint ruleset
+
+3.250.0 (2026-05-28)
+------------------
+
+* Feature - Adding new BDD representation of endpoint ruleset
+
+* Issue - Prevent unbounded recursion in CBOR decoder that could cause process termination on malformed responses.
+
+3.249.0 (2026-05-22)
+------------------
+
+* Feature - Adding new BDD representation of endpoint ruleset
+
+3.248.0 (2026-05-21)
+------------------
+
+* Feature - Updated Aws::STS::Client with the latest API changes.
+
+* Feature - Updated Aws::SSOOIDC::Client with the latest API changes.
+
+* Feature - Updated Aws::SSO::Client with the latest API changes.
+
+* Feature - Updated Aws::Signin::Client with the latest API changes.
+
+* Feature - Add `AWS_NEW_RETRIES_2026` environment variable to opt-in to updated `standard` retry mode with reduced backoff intervals.
+
+3.247.0 (2026-05-13)
+------------------
+
+* Feature - Add YJIT & ZJIT tracking to user agent.
+
+* Issue - Fix error messaging in SSO OIDC.
+
+3.246.0 (2026-04-23)
+------------------
+
+* Feature - Updated configuration values for `defaults_mode`.
+
+3.245.0 (2026-04-17)
+------------------
+
+* Feature - Updated Aws::STS::Client with the latest API changes.
+
+* Feature - The STS client now supports configuring SigV4a through the auth scheme preference setting. SigV4a uses asymmetric cryptography, enabling customers using long-term IAM credentials to continue making STS API calls even when a region is isolated from the partition leader.
+
+* Issue - Explicitly set 0600 permissions on SSO/login cache files.
+
+3.244.0 (2026-03-18)
+------------------
+
+* Feature - Support waiter error matcher to handle both boolean and boolean-string acceptors.
+
+3.243.0 (2026-03-05)
+------------------
+
+* Feature - Add user agent metrics for S3 Transfer Manager directory operations.
+
+3.242.0 (2026-02-02)
+------------------
+
+* Feature - Include HTTP status code and body in errors whehn retrieving ECS credentials and Instance Profile credentials.
+
+3.241.4 (2026-01-16)
+------------------
+
+* Issue - Rewind IO during initialization for `AwsChunkedTrailerDigestIO`.
+
+3.241.3 (2026-01-08)
+------------------
+
+* Issue - Disable request trailer checksums when using non-HTTPs endpoints.
+
+3.241.2 (2026-01-07)
+------------------
+
+* Issue - Preserve existing Content-Encoding when applying request trailer checksum.
+
+3.241.1 (2026-01-06)
+------------------
+
+* Issue - Fix memory leak in ClockSkew retry plugin by normalizing endpoints to prevent unlimited hash growth.
+
+3.241.0 (2026-01-05)
+------------------
+
+* Feature - Improved memory efficiency when calculating request checksums.
+
+3.240.0 (2025-12-16)
+------------------
+
+* Feature - Updated configuration values for `defaults_mode`.
+
+* Issue - Prioritizes JSON over CBOR when both are supported for stubbed clients.
+
+3.239.2 (2025-11-25)
+------------------
+
+* Issue - Fix `login_credentials` in credentials chain when config is enabled.
+
+3.239.1 (2025-11-21)
+------------------
+
+* Issue - Fixed HTTP/2 connection issues when using custom ports.
+
+3.239.0 (2025-11-20)
+------------------
+
+* Feature - Updated Aws::Signin::Client with the latest API changes.
+
+* Issue - Fix region configuration for LoginCredential's Signin client.
+
+3.238.0 (2025-11-19)
+------------------
+
+* Feature - Updated Aws::Signin::Client with the latest API changes.
+
+* Feature - Updated Aws::STS::Client with the latest API changes.
+
+* Feature - IAM now supports outbound identity federation via the STS GetWebIdentityToken API, enabling AWS workloads to securely authenticate with external services using short-lived JSON Web Tokens.
+
+* Feature - Add `LoginCredentials` which retrieves credentials from AWS Sign-In. Support `aws-sdk-signin` alias gem.
+
+3.237.0 (2025-11-10)
+------------------
+
+* Feature - Updated Aws::STS::Client with the latest API changes.
+
+* Feature - Added GetDelegatedAccessToken API, which is not available for general use at this time.
+
+3.236.0 (2025-10-30)
+------------------
+
+* Feature - Updated Aws::STS::Client with the latest API changes.
+
+* Feature - Updated Aws::SSO::Client with the latest API changes.
+
+* Feature - Update endpoint ruleset parameters casing
+
+3.235.0 (2025-10-24)
+------------------
+
+* Feature - Updated Aws::SSOOIDC::Client with the latest API changes.
+
+* Feature - Update endpoint ruleset parameters casing
+
+3.234.0 (2025-10-21)
+------------------
+
+* Issue - Fix `request_checksum_calculation` `when_required` mode to only calculate checksums when explicitly provided by user.
+
+* Feature - Add `CREDENTIALS_CODE` metric for `static_profile_` prefixed methods in default credential chain.
+
+3.233.0 (2025-09-23)
+------------------
+
+* Feature - Updated Aws::SSOOIDC::Client with the latest API changes.
+
+* Feature - This release includes exception definition and documentation updates.
+
+3.232.0 (2025-08-28)
+------------------
+
+* Feature - Updated Aws::SSO::Client with the latest API changes.
+
+* Feature - Remove incorrect endpoint tests
+
+3.231.0 (2025-08-26)
+------------------
+
+* Feature - Remove incorrect endpoint tests
+
+* Feature - Add support for ENV as credential source for `AssumeRoleCredentials`.
+
+3.230.0 (2025-08-21)
+------------------
+
+* Feature - Remove incorrect endpoint tests
+
+3.229.0 (2025-08-04)
+------------------
+
+* Feature - Updated Aws::STS::Client with the latest API changes.
+
+* Feature - Updated Aws::SSOOIDC::Client with the latest API changes.
+
+* Feature - Updated Aws::SSO::Client with the latest API changes.
+
+3.228.0 (2025-07-31)
+------------------
+
+* Feature - Add `bigdecimal` as a dependency. For systems that are not able to build native extension gems, prefer the locally installed `bigdecimal` with `bundle install --prefer-local`.
+
+3.227.0 (2025-07-21)
+------------------
+
+* Feature - Updated Aws::STS::Client with the latest API changes.
+
+* Feature - Updated Aws::SSOOIDC::Client with the latest API changes.
+
+* Feature - Updated Aws::SSO::Client with the latest API changes.
+
+* Feature - Support an auth scheme signing preference list using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or `auth_scheme_preference` in shared configuration.
+
+* Feature - Support metric tracking for Bedrock Bearer tokens.
+
+3.226.3 (2025-07-17)
+------------------
+
+* Issue - Skip `Aws::InstanceProfileCredentials` instantiation when `ENV['AWS_EC2_METADATA_DISABLED']` is set to `true` in the credential resolution chain.
+
+* Issue - Refactor `InstanceProfileCredentials` to improve code clarity and documentation. 
+
+3.226.2 (2025-07-01)
+------------------
+
+* Issue - Document incorrect behavior in protocol error parsing (specifically around query and query compatible services).
+
+3.226.1 (2025-06-24)
+------------------
+
+* Issue - Fixed spelling in the `Aws::Errors::SignalEventError` error message.
+
+3.226.0 (2025-06-17)
+------------------
+
+* Feature - Updated Aws::STS::Client with the latest API changes.
+
+* Feature - The AWS Security Token Service APIs AssumeRoleWithSAML and AssumeRoleWithWebIdentity can now be invoked without pre-configured AWS credentials in the SDK configuration.
+
+3.225.2 (2025-06-10)
+------------------
+
+* Issue - Only load required `cgi` modules for Ruby 3.5.
+
+3.225.1 (2025-06-05)
+------------------
+
+* Issue - Fix RPCv2 parser to handle flattened list and flattened map members correctly for `AwsQueryCompatible` services.
+
+3.225.0 (2025-06-02)
+------------------
+
+* Feature - AWS SDK for Ruby no longer supports Ruby runtime versions 2.5 and 2.6.
+
+3.224.1 (2025-05-28)
+------------------
+
+* Issue - Signal data in http response listeners prior to writing, so that data can be inspected or verified before potential mutation.
+
+3.224.0 (2025-05-12)
+------------------
+
+* Feature - Updated Aws::STS::Client with the latest API changes.
+
+* Feature - Updated Aws::SSOOIDC::Client with the latest API changes.
+
+* Feature - Updated Aws::SSO::Client with the latest API changes.
+
+* Feature - Support `ENV['AWS_DISABLE_HOST_PREFIX_INJECTION']` and `disable_host_prefix_injection` shared config to disable host prefix injection for all services.
+
+3.223.0 (2025-05-01)
+------------------
+
+* Feature - Updated Aws::STS::Client with the latest API changes.
+
+3.222.3 (2025-04-28)
+------------------
+
+* Issue - Do not dynamically create operation methods from the API. (#3234)
+
+3.222.2 (2025-04-16)
+------------------
+
+* Issue - Additional metrics collection for credentials in the User-Agent plugin.
+
+3.222.1 (2025-03-28)
+------------------
+
+* Issue - Allow explicit modeled headers to override prefixed headers for `rest` protocols. 
+
+3.222.0 (2025-03-27)
+------------------
+
+* Feature - Updated Aws::SSOOIDC::Client with the latest API changes.
+
+* Feature - This release adds AwsAdditionalDetails in the CreateTokenWithIAM API response.
+
 3.221.0 (2025-03-24)
 ------------------
 

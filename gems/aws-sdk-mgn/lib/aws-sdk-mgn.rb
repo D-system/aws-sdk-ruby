@@ -49,12 +49,13 @@ module Aws::Mgn
   end
   autoload :Client, 'aws-sdk-mgn/client'
   autoload :Errors, 'aws-sdk-mgn/errors'
+  autoload :Waiters, 'aws-sdk-mgn/waiters'
   autoload :Resource, 'aws-sdk-mgn/resource'
   autoload :EndpointParameters, 'aws-sdk-mgn/endpoint_parameters'
   autoload :EndpointProvider, 'aws-sdk-mgn/endpoint_provider'
   autoload :Endpoints, 'aws-sdk-mgn/endpoints'
 
-  GEM_VERSION = '1.46.0'
+  GEM_VERSION = '1.73.0'
 
 end
 

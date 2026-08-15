@@ -142,8 +142,9 @@ module Aws::EC2
       data[:virtualization_type]
     end
 
-    # The boot mode of the image. For more information, see [Boot modes][1]
-    # in the *Amazon EC2 User Guide*.
+    # The boot mode of the image. For more information, see [Instance launch
+    # behavior with Amazon EC2 boot modes][1] in the *Amazon EC2 User
+    # Guide*.
     #
     #
     #
@@ -240,36 +241,40 @@ module Aws::EC2
     end
 
     # The ID of the source AMI from which the AMI was created.
-    #
-    # The ID only appears if the AMI was created using CreateImage,
-    # CopyImage, or CreateRestoreImageTask. The ID does not appear if the
-    # AMI was created using any other API. For some older AMIs, the ID might
-    # not be available. For more information, see [Identify the source AMI
-    # used to create a new AMI][1] in the *Amazon EC2 User Guide*.
-    #
-    #
-    #
-    # [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/identify-source-ami-used-to-create-new-ami.html
     # @return [String]
     def source_image_id
       data[:source_image_id]
     end
 
     # The Region of the source AMI.
-    #
-    # The Region only appears if the AMI was created using CreateImage,
-    # CopyImage, or CreateRestoreImageTask. The Region does not appear if
-    # the AMI was created using any other API. For some older AMIs, the
-    # Region might not be available. For more information, see [Identify the
-    # source AMI used to create a new AMI][1] in the *Amazon EC2 User
-    # Guide*.
-    #
-    #
-    #
-    # [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/identify-source-ami-used-to-create-new-ami.html
     # @return [String]
     def source_image_region
       data[:source_image_region]
+    end
+
+    # Indicates whether the image is eligible for Amazon Web Services Free
+    # Tier.
+    #
+    # * If `true`, the AMI is eligible for Free Tier and can be used to
+    #   launch instances under the Free Tier limits.
+    #
+    # * If `false`, the AMI is not eligible for Free Tier.
+    # @return [Boolean]
+    def free_tier_eligible
+      data[:free_tier_eligible]
+    end
+
+    # The name of the public Systems Manager parameter that resolves to this
+    # AMI, under the `aws/service/` namespace.
+    # @return [String]
+    def public_ssm_parameter_name
+      data[:public_ssm_parameter_name]
+    end
+
+    # The watermarks attached to the AMI.
+    # @return [Array<Types::ImageWatermark>]
+    def image_watermarks
+      data[:image_watermarks]
     end
 
     # The location of the AMI.
@@ -605,9 +610,20 @@ module Aws::EC2
     # @example Request syntax with placeholder values
     #
     #   image.deregister({
+    #     delete_associated_snapshots: false,
     #     dry_run: false,
     #   })
     # @param [Hash] options ({})
+    # @option options [Boolean] :delete_associated_snapshots
+    #   Specifies whether to delete the snapshots associated with the AMI
+    #   during deregistration.
+    #
+    #   <note markdown="1"> If a snapshot is associated with multiple AMIs, it is not deleted,
+    #   regardless of this setting.
+    #
+    #    </note>
+    #
+    #   Default: The snapshots are not deleted.
     # @option options [Boolean] :dry_run
     #   Checks whether you have the required permissions for the action,
     #   without actually making the request, and provides an error response.
@@ -634,8 +650,8 @@ module Aws::EC2
     #
     #   **Note**: The `blockDeviceMapping` attribute is deprecated. Using this
     #   attribute returns the `Client.AuthFailure` error. To get information
-    #   about the block device mappings for an AMI, use the DescribeImages
-    #   action.
+    #   about the block device mappings for an AMI, describe the image
+    #   instead.
     # @option options [Boolean] :dry_run
     #   Checks whether you have the required permissions for the action,
     #   without actually making the request, and provides an error response.

@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -116,7 +117,7 @@ module Aws
                                                         email_address: ::String,
                                                         phone_number: ::String?,
                                                         contact_notes: ::String?
-                                                      },
+                                                      }
                                                     ]
                                                   ) -> _AssociateProactiveEngagementDetailsResponseSuccess
                                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _AssociateProactiveEngagementDetailsResponseSuccess
@@ -133,7 +134,7 @@ module Aws
                                  {
                                    key: ::String?,
                                    value: ::String?
-                                 },
+                                 }
                                ]
                              ) -> _CreateProtectionResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateProtectionResponseSuccess
@@ -152,7 +153,7 @@ module Aws
                                        {
                                          key: ::String?,
                                          value: ::String?
-                                       },
+                                       }
                                      ]
                                    ) -> _CreateProtectionGroupResponseSuccess
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateProtectionGroupResponseSuccess
@@ -425,7 +426,7 @@ module Aws
                             {
                               key: ::String?,
                               value: ::String?
-                            },
+                            }
                           ]
                         ) -> _TagResourceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess
@@ -465,7 +466,7 @@ module Aws
                                                    email_address: ::String,
                                                    phone_number: ::String?,
                                                    contact_notes: ::String?
-                                                 },
+                                                 }
                                                ]
                                              ) -> _UpdateEmergencyContactSettingsResponseSuccess
                                            | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateEmergencyContactSettingsResponseSuccess

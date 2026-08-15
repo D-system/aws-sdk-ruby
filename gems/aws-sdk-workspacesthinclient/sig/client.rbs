@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -87,15 +88,7 @@ module Aws
                                 desktop_arn: ::String,
                                 ?desktop_endpoint: ::String,
                                 ?software_set_update_schedule: ("USE_MAINTENANCE_WINDOW" | "APPLY_IMMEDIATELY"),
-                                ?maintenance_window: {
-                                  type: ("SYSTEM" | "CUSTOM"),
-                                  start_time_hour: ::Integer?,
-                                  start_time_minute: ::Integer?,
-                                  end_time_hour: ::Integer?,
-                                  end_time_minute: ::Integer?,
-                                  days_of_the_week: Array[("MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY")]?,
-                                  apply_time_of: ("UTC" | "DEVICE")?
-                                },
+                                ?maintenance_window: Params::maintenance_window,
                                 ?software_set_update_mode: ("USE_LATEST" | "USE_DESIRED"),
                                 ?desired_software_set_id: ::String,
                                 ?kms_key_arn: ::String,
@@ -256,15 +249,7 @@ module Aws
                                 ?desktop_arn: ::String,
                                 ?desktop_endpoint: ::String,
                                 ?software_set_update_schedule: ("USE_MAINTENANCE_WINDOW" | "APPLY_IMMEDIATELY"),
-                                ?maintenance_window: {
-                                  type: ("SYSTEM" | "CUSTOM"),
-                                  start_time_hour: ::Integer?,
-                                  start_time_minute: ::Integer?,
-                                  end_time_hour: ::Integer?,
-                                  end_time_minute: ::Integer?,
-                                  days_of_the_week: Array[("MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY")]?,
-                                  apply_time_of: ("UTC" | "DEVICE")?
-                                },
+                                ?maintenance_window: Params::maintenance_window,
                                 ?software_set_update_mode: ("USE_LATEST" | "USE_DESIRED"),
                                 ?desired_software_set_id: ::String,
                                 ?device_creation_tags: Hash[::String, ::String]

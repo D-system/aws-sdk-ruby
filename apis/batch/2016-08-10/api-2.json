@@ -66,6 +66,19 @@
         {"shape":"ServerException"}
       ]
     },
+    "CreateQuotaShare":{
+      "name":"CreateQuotaShare",
+      "http":{
+        "method":"POST",
+        "requestUri":"/v1/createquotashare"
+      },
+      "input":{"shape":"CreateQuotaShareRequest"},
+      "output":{"shape":"CreateQuotaShareResponse"},
+      "errors":[
+        {"shape":"ClientException"},
+        {"shape":"ServerException"}
+      ]
+    },
     "CreateSchedulingPolicy":{
       "name":"CreateSchedulingPolicy",
       "http":{
@@ -74,6 +87,19 @@
       },
       "input":{"shape":"CreateSchedulingPolicyRequest"},
       "output":{"shape":"CreateSchedulingPolicyResponse"},
+      "errors":[
+        {"shape":"ClientException"},
+        {"shape":"ServerException"}
+      ]
+    },
+    "CreateServiceEnvironment":{
+      "name":"CreateServiceEnvironment",
+      "http":{
+        "method":"POST",
+        "requestUri":"/v1/createserviceenvironment"
+      },
+      "input":{"shape":"CreateServiceEnvironmentRequest"},
+      "output":{"shape":"CreateServiceEnvironmentResponse"},
       "errors":[
         {"shape":"ClientException"},
         {"shape":"ServerException"}
@@ -118,6 +144,19 @@
         {"shape":"ServerException"}
       ]
     },
+    "DeleteQuotaShare":{
+      "name":"DeleteQuotaShare",
+      "http":{
+        "method":"POST",
+        "requestUri":"/v1/deletequotashare"
+      },
+      "input":{"shape":"DeleteQuotaShareRequest"},
+      "output":{"shape":"DeleteQuotaShareResponse"},
+      "errors":[
+        {"shape":"ClientException"},
+        {"shape":"ServerException"}
+      ]
+    },
     "DeleteSchedulingPolicy":{
       "name":"DeleteSchedulingPolicy",
       "http":{
@@ -126,6 +165,19 @@
       },
       "input":{"shape":"DeleteSchedulingPolicyRequest"},
       "output":{"shape":"DeleteSchedulingPolicyResponse"},
+      "errors":[
+        {"shape":"ClientException"},
+        {"shape":"ServerException"}
+      ]
+    },
+    "DeleteServiceEnvironment":{
+      "name":"DeleteServiceEnvironment",
+      "http":{
+        "method":"POST",
+        "requestUri":"/v1/deleteserviceenvironment"
+      },
+      "input":{"shape":"DeleteServiceEnvironmentRequest"},
+      "output":{"shape":"DeleteServiceEnvironmentResponse"},
       "errors":[
         {"shape":"ClientException"},
         {"shape":"ServerException"}
@@ -209,6 +261,19 @@
         {"shape":"ServerException"}
       ]
     },
+    "DescribeQuotaShare":{
+      "name":"DescribeQuotaShare",
+      "http":{
+        "method":"POST",
+        "requestUri":"/v1/describequotashare"
+      },
+      "input":{"shape":"DescribeQuotaShareRequest"},
+      "output":{"shape":"DescribeQuotaShareResponse"},
+      "errors":[
+        {"shape":"ClientException"},
+        {"shape":"ServerException"}
+      ]
+    },
     "DescribeSchedulingPolicies":{
       "name":"DescribeSchedulingPolicies",
       "http":{
@@ -217,6 +282,32 @@
       },
       "input":{"shape":"DescribeSchedulingPoliciesRequest"},
       "output":{"shape":"DescribeSchedulingPoliciesResponse"},
+      "errors":[
+        {"shape":"ClientException"},
+        {"shape":"ServerException"}
+      ]
+    },
+    "DescribeServiceEnvironments":{
+      "name":"DescribeServiceEnvironments",
+      "http":{
+        "method":"POST",
+        "requestUri":"/v1/describeserviceenvironments"
+      },
+      "input":{"shape":"DescribeServiceEnvironmentsRequest"},
+      "output":{"shape":"DescribeServiceEnvironmentsResponse"},
+      "errors":[
+        {"shape":"ClientException"},
+        {"shape":"ServerException"}
+      ]
+    },
+    "DescribeServiceJob":{
+      "name":"DescribeServiceJob",
+      "http":{
+        "method":"POST",
+        "requestUri":"/v1/describeservicejob"
+      },
+      "input":{"shape":"DescribeServiceJobRequest"},
+      "output":{"shape":"DescribeServiceJobResponse"},
       "errors":[
         {"shape":"ClientException"},
         {"shape":"ServerException"}
@@ -274,6 +365,19 @@
         {"shape":"ServerException"}
       ]
     },
+    "ListQuotaShares":{
+      "name":"ListQuotaShares",
+      "http":{
+        "method":"POST",
+        "requestUri":"/v1/listquotashares"
+      },
+      "input":{"shape":"ListQuotaSharesRequest"},
+      "output":{"shape":"ListQuotaSharesResponse"},
+      "errors":[
+        {"shape":"ClientException"},
+        {"shape":"ServerException"}
+      ]
+    },
     "ListSchedulingPolicies":{
       "name":"ListSchedulingPolicies",
       "http":{
@@ -282,6 +386,19 @@
       },
       "input":{"shape":"ListSchedulingPoliciesRequest"},
       "output":{"shape":"ListSchedulingPoliciesResponse"},
+      "errors":[
+        {"shape":"ClientException"},
+        {"shape":"ServerException"}
+      ]
+    },
+    "ListServiceJobs":{
+      "name":"ListServiceJobs",
+      "http":{
+        "method":"POST",
+        "requestUri":"/v1/listservicejobs"
+      },
+      "input":{"shape":"ListServiceJobsRequest"},
+      "output":{"shape":"ListServiceJobsResponse"},
       "errors":[
         {"shape":"ClientException"},
         {"shape":"ServerException"}
@@ -326,6 +443,19 @@
         {"shape":"ServerException"}
       ]
     },
+    "SubmitServiceJob":{
+      "name":"SubmitServiceJob",
+      "http":{
+        "method":"POST",
+        "requestUri":"/v1/submitservicejob"
+      },
+      "input":{"shape":"SubmitServiceJobRequest"},
+      "output":{"shape":"SubmitServiceJobResponse"},
+      "errors":[
+        {"shape":"ClientException"},
+        {"shape":"ServerException"}
+      ]
+    },
     "TagResource":{
       "name":"TagResource",
       "http":{
@@ -347,6 +477,19 @@
       },
       "input":{"shape":"TerminateJobRequest"},
       "output":{"shape":"TerminateJobResponse"},
+      "errors":[
+        {"shape":"ClientException"},
+        {"shape":"ServerException"}
+      ]
+    },
+    "TerminateServiceJob":{
+      "name":"TerminateServiceJob",
+      "http":{
+        "method":"POST",
+        "requestUri":"/v1/terminateservicejob"
+      },
+      "input":{"shape":"TerminateServiceJobRequest"},
+      "output":{"shape":"TerminateServiceJobResponse"},
       "errors":[
         {"shape":"ClientException"},
         {"shape":"ServerException"}
@@ -404,6 +547,19 @@
         {"shape":"ServerException"}
       ]
     },
+    "UpdateQuotaShare":{
+      "name":"UpdateQuotaShare",
+      "http":{
+        "method":"POST",
+        "requestUri":"/v1/updatequotashare"
+      },
+      "input":{"shape":"UpdateQuotaShareRequest"},
+      "output":{"shape":"UpdateQuotaShareResponse"},
+      "errors":[
+        {"shape":"ClientException"},
+        {"shape":"ServerException"}
+      ]
+    },
     "UpdateSchedulingPolicy":{
       "name":"UpdateSchedulingPolicy",
       "http":{
@@ -412,6 +568,32 @@
       },
       "input":{"shape":"UpdateSchedulingPolicyRequest"},
       "output":{"shape":"UpdateSchedulingPolicyResponse"},
+      "errors":[
+        {"shape":"ClientException"},
+        {"shape":"ServerException"}
+      ]
+    },
+    "UpdateServiceEnvironment":{
+      "name":"UpdateServiceEnvironment",
+      "http":{
+        "method":"POST",
+        "requestUri":"/v1/updateserviceenvironment"
+      },
+      "input":{"shape":"UpdateServiceEnvironmentRequest"},
+      "output":{"shape":"UpdateServiceEnvironmentResponse"},
+      "errors":[
+        {"shape":"ClientException"},
+        {"shape":"ServerException"}
+      ]
+    },
+    "UpdateServiceJob":{
+      "name":"UpdateServiceJob",
+      "http":{
+        "method":"POST",
+        "requestUri":"/v1/updateservicejob"
+      },
+      "input":{"shape":"UpdateServiceJobRequest"},
+      "output":{"shape":"UpdateServiceJobResponse"},
       "errors":[
         {"shape":"ClientException"},
         {"shape":"ServerException"}
@@ -441,6 +623,7 @@
       "type":"structure",
       "members":{
         "statusSummary":{"shape":"ArrayJobStatusSummary"},
+        "statusSummaryLastUpdatedAt":{"shape":"Long"},
         "size":{"shape":"Integer"},
         "index":{"shape":"Integer"}
       }
@@ -449,7 +632,9 @@
       "type":"structure",
       "members":{
         "size":{"shape":"Integer"},
-        "index":{"shape":"Integer"}
+        "index":{"shape":"Integer"},
+        "statusSummary":{"shape":"ArrayJobStatusSummary"},
+        "statusSummaryLastUpdatedAt":{"shape":"Long"}
       }
     },
     "AssignPublicIp":{
@@ -533,8 +718,10 @@
       "enum":[
         "BEST_FIT",
         "BEST_FIT_PROGRESSIVE",
+        "BEST_FIT_PROGRESSIVE_ORDERED",
         "SPOT_CAPACITY_OPTIMIZED",
-        "SPOT_PRICE_CAPACITY_OPTIMIZED"
+        "SPOT_PRICE_CAPACITY_OPTIMIZED",
+        "SPOT_CAPACITY_OPTIMIZED_PRIORITIZED"
       ]
     },
     "CRType":{
@@ -550,8 +737,10 @@
       "type":"string",
       "enum":[
         "BEST_FIT_PROGRESSIVE",
+        "BEST_FIT_PROGRESSIVE_ORDERED",
         "SPOT_CAPACITY_OPTIMIZED",
-        "SPOT_PRICE_CAPACITY_OPTIMIZED"
+        "SPOT_PRICE_CAPACITY_OPTIMIZED",
+        "SPOT_CAPACITY_OPTIMIZED_PRIORITIZED"
       ]
     },
     "CancelJobRequest":{
@@ -567,8 +756,18 @@
     },
     "CancelJobResponse":{
       "type":"structure",
+      "members":{}
+    },
+    "CapacityLimit":{
+      "type":"structure",
       "members":{
+        "maxCapacity":{"shape":"Integer"},
+        "capacityUnit":{"shape":"String"}
       }
+    },
+    "CapacityLimits":{
+      "type":"list",
+      "member":{"shape":"CapacityLimit"}
     },
     "ClientException":{
       "type":"structure",
@@ -631,8 +830,7 @@
       "type":"structure",
       "required":[
         "type",
-        "maxvCpus",
-        "subnets"
+        "maxvCpus"
       ],
       "members":{
         "type":{"shape":"CRType"},
@@ -655,7 +853,8 @@
         "bidPercentage":{"shape":"Integer"},
         "spotIamFleetRole":{"shape":"String"},
         "launchTemplate":{"shape":"LaunchTemplateSpecification"},
-        "ec2Configuration":{"shape":"Ec2ConfigurationList"}
+        "ec2Configuration":{"shape":"Ec2ConfigurationList"},
+        "scalingPolicy":{"shape":"ComputeScalingPolicy"}
       }
     },
     "ComputeResourceUpdate":{
@@ -677,7 +876,14 @@
         "ec2Configuration":{"shape":"Ec2ConfigurationList"},
         "updateToLatestImageVersion":{"shape":"Boolean"},
         "type":{"shape":"CRType"},
-        "imageId":{"shape":"String"}
+        "imageId":{"shape":"String"},
+        "scalingPolicy":{"shape":"ComputeScalingPolicy"}
+      }
+    },
+    "ComputeScalingPolicy":{
+      "type":"structure",
+      "members":{
+        "minScaleDownDelayMinutes":{"shape":"Integer"}
       }
     },
     "ConsumableResourceList":{
@@ -746,7 +952,8 @@
         "fargatePlatformConfiguration":{"shape":"FargatePlatformConfiguration"},
         "ephemeralStorage":{"shape":"EphemeralStorage"},
         "runtimePlatform":{"shape":"RuntimePlatform"},
-        "repositoryCredentials":{"shape":"RepositoryCredentials"}
+        "repositoryCredentials":{"shape":"RepositoryCredentials"},
+        "enableExecuteCommand":{"shape":"Boolean"}
       }
     },
     "ContainerOverrides":{
@@ -799,6 +1006,7 @@
         "secrets":{"shape":"SecretList"},
         "networkConfiguration":{"shape":"NetworkConfiguration"},
         "fargatePlatformConfiguration":{"shape":"FargatePlatformConfiguration"},
+        "enableExecuteCommand":{"shape":"Boolean"},
         "ephemeralStorage":{"shape":"EphemeralStorage"},
         "runtimePlatform":{"shape":"RuntimePlatform"},
         "repositoryCredentials":{"shape":"RepositoryCredentials"}
@@ -861,8 +1069,7 @@
       "type":"structure",
       "required":[
         "jobQueueName",
-        "priority",
-        "computeEnvironmentOrder"
+        "priority"
       ],
       "members":{
         "jobQueueName":{"shape":"String"},
@@ -870,6 +1077,8 @@
         "schedulingPolicyArn":{"shape":"String"},
         "priority":{"shape":"Integer"},
         "computeEnvironmentOrder":{"shape":"ComputeEnvironmentOrders"},
+        "serviceEnvironmentOrder":{"shape":"ServiceEnvironmentOrders"},
+        "jobQueueType":{"shape":"JobQueueType"},
         "tags":{"shape":"TagrisTagsMap"},
         "jobStateTimeLimitActions":{"shape":"JobStateTimeLimitActions"}
       }
@@ -885,11 +1094,38 @@
         "jobQueueArn":{"shape":"String"}
       }
     },
+    "CreateQuotaShareRequest":{
+      "type":"structure",
+      "required":[
+        "quotaShareName",
+        "jobQueue",
+        "capacityLimits",
+        "resourceSharingConfiguration",
+        "preemptionConfiguration"
+      ],
+      "members":{
+        "quotaShareName":{"shape":"String"},
+        "jobQueue":{"shape":"String"},
+        "capacityLimits":{"shape":"QuotaShareCapacityLimits"},
+        "resourceSharingConfiguration":{"shape":"QuotaShareResourceSharingConfiguration"},
+        "preemptionConfiguration":{"shape":"QuotaSharePreemptionConfiguration"},
+        "state":{"shape":"QuotaShareState"},
+        "tags":{"shape":"TagrisTagsMap"}
+      }
+    },
+    "CreateQuotaShareResponse":{
+      "type":"structure",
+      "members":{
+        "quotaShareName":{"shape":"String"},
+        "quotaShareArn":{"shape":"String"}
+      }
+    },
     "CreateSchedulingPolicyRequest":{
       "type":"structure",
       "required":["name"],
       "members":{
         "name":{"shape":"String"},
+        "quotaSharePolicy":{"shape":"QuotaSharePolicy"},
         "fairsharePolicy":{"shape":"FairsharePolicy"},
         "tags":{"shape":"TagrisTagsMap"}
       }
@@ -905,6 +1141,32 @@
         "arn":{"shape":"String"}
       }
     },
+    "CreateServiceEnvironmentRequest":{
+      "type":"structure",
+      "required":[
+        "serviceEnvironmentName",
+        "serviceEnvironmentType",
+        "capacityLimits"
+      ],
+      "members":{
+        "serviceEnvironmentName":{"shape":"String"},
+        "serviceEnvironmentType":{"shape":"ServiceEnvironmentType"},
+        "state":{"shape":"ServiceEnvironmentState"},
+        "capacityLimits":{"shape":"CapacityLimits"},
+        "tags":{"shape":"TagrisTagsMap"}
+      }
+    },
+    "CreateServiceEnvironmentResponse":{
+      "type":"structure",
+      "required":[
+        "serviceEnvironmentName",
+        "serviceEnvironmentArn"
+      ],
+      "members":{
+        "serviceEnvironmentName":{"shape":"String"},
+        "serviceEnvironmentArn":{"shape":"String"}
+      }
+    },
     "DeleteComputeEnvironmentRequest":{
       "type":"structure",
       "required":["computeEnvironment"],
@@ -914,8 +1176,7 @@
     },
     "DeleteComputeEnvironmentResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteConsumableResourceRequest":{
       "type":"structure",
@@ -926,8 +1187,7 @@
     },
     "DeleteConsumableResourceResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteJobQueueRequest":{
       "type":"structure",
@@ -938,8 +1198,18 @@
     },
     "DeleteJobQueueResponse":{
       "type":"structure",
+      "members":{}
+    },
+    "DeleteQuotaShareRequest":{
+      "type":"structure",
+      "required":["quotaShareArn"],
       "members":{
+        "quotaShareArn":{"shape":"String"}
       }
+    },
+    "DeleteQuotaShareResponse":{
+      "type":"structure",
+      "members":{}
     },
     "DeleteSchedulingPolicyRequest":{
       "type":"structure",
@@ -950,8 +1220,18 @@
     },
     "DeleteSchedulingPolicyResponse":{
       "type":"structure",
+      "members":{}
+    },
+    "DeleteServiceEnvironmentRequest":{
+      "type":"structure",
+      "required":["serviceEnvironment"],
       "members":{
+        "serviceEnvironment":{"shape":"String"}
       }
+    },
+    "DeleteServiceEnvironmentResponse":{
+      "type":"structure",
+      "members":{}
     },
     "DeregisterJobDefinitionRequest":{
       "type":"structure",
@@ -962,8 +1242,7 @@
     },
     "DeregisterJobDefinitionResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DescribeComputeEnvironmentsRequest":{
       "type":"structure",
@@ -1049,6 +1328,27 @@
         "jobs":{"shape":"JobDetailList"}
       }
     },
+    "DescribeQuotaShareRequest":{
+      "type":"structure",
+      "required":["quotaShareArn"],
+      "members":{
+        "quotaShareArn":{"shape":"String"}
+      }
+    },
+    "DescribeQuotaShareResponse":{
+      "type":"structure",
+      "members":{
+        "quotaShareName":{"shape":"String"},
+        "quotaShareArn":{"shape":"String"},
+        "jobQueueArn":{"shape":"String"},
+        "capacityLimits":{"shape":"QuotaShareCapacityLimits"},
+        "resourceSharingConfiguration":{"shape":"QuotaShareResourceSharingConfiguration"},
+        "preemptionConfiguration":{"shape":"QuotaSharePreemptionConfiguration"},
+        "state":{"shape":"QuotaShareState"},
+        "status":{"shape":"QuotaShareStatus"},
+        "tags":{"shape":"TagrisTagsMap"}
+      }
+    },
     "DescribeSchedulingPoliciesRequest":{
       "type":"structure",
       "required":["arns"],
@@ -1060,6 +1360,65 @@
       "type":"structure",
       "members":{
         "schedulingPolicies":{"shape":"SchedulingPolicyDetailList"}
+      }
+    },
+    "DescribeServiceEnvironmentsRequest":{
+      "type":"structure",
+      "members":{
+        "serviceEnvironments":{"shape":"StringList"},
+        "maxResults":{"shape":"Integer"},
+        "nextToken":{"shape":"String"}
+      }
+    },
+    "DescribeServiceEnvironmentsResponse":{
+      "type":"structure",
+      "members":{
+        "serviceEnvironments":{"shape":"ServiceEnvironmentDetailList"},
+        "nextToken":{"shape":"String"}
+      }
+    },
+    "DescribeServiceJobRequest":{
+      "type":"structure",
+      "required":["jobId"],
+      "members":{
+        "jobId":{"shape":"String"}
+      }
+    },
+    "DescribeServiceJobResponse":{
+      "type":"structure",
+      "required":[
+        "jobId",
+        "jobName",
+        "jobQueue",
+        "serviceJobType",
+        "startedAt",
+        "status"
+      ],
+      "members":{
+        "attempts":{"shape":"ServiceJobAttemptDetails"},
+        "capacityUsage":{"shape":"ServiceJobCapacityUsageDetailList"},
+        "createdAt":{"shape":"Long"},
+        "isTerminated":{"shape":"Boolean"},
+        "jobArn":{"shape":"String"},
+        "jobId":{"shape":"String"},
+        "jobName":{"shape":"String"},
+        "jobQueue":{"shape":"String"},
+        "latestAttempt":{"shape":"LatestServiceJobAttempt"},
+        "retryStrategy":{"shape":"ServiceJobRetryStrategy"},
+        "scheduledAt":{"shape":"Long"},
+        "schedulingPriority":{"shape":"Integer"},
+        "serviceRequestPayload":{"shape":"String"},
+        "serviceJobType":{"shape":"ServiceJobType"},
+        "shareIdentifier":{"shape":"String"},
+        "quotaShareName":{"shape":"String"},
+        "preemptionConfiguration":{"shape":"ServiceJobPreemptionConfiguration"},
+        "preemptionSummary":{"shape":"ServiceJobPreemptionSummary"},
+        "startedAt":{"shape":"Long"},
+        "status":{"shape":"ServiceJobStatus"},
+        "statusReason":{"shape":"String"},
+        "stoppedAt":{"shape":"Long"},
+        "tags":{"shape":"TagrisTagsMap"},
+        "timeoutConfig":{"shape":"ServiceJobTimeout"}
       }
     },
     "Device":{
@@ -1087,6 +1446,7 @@
       "type":"list",
       "member":{"shape":"Device"}
     },
+    "Double":{"type":"double"},
     "EFSAuthorizationConfig":{
       "type":"structure",
       "members":{
@@ -1125,6 +1485,7 @@
       "members":{
         "imageType":{"shape":"ImageType"},
         "imageIdOverride":{"shape":"ImageIdOverride"},
+        "batchImageStatus":{"shape":"String"},
         "imageKubernetesVersion":{"shape":"KubernetesVersion"}
       }
     },
@@ -1165,7 +1526,8 @@
         "pidMode":{"shape":"String"},
         "networkConfiguration":{"shape":"NetworkConfiguration"},
         "runtimePlatform":{"shape":"RuntimePlatform"},
-        "volumes":{"shape":"Volumes"}
+        "volumes":{"shape":"Volumes"},
+        "enableExecuteCommand":{"shape":"Boolean"}
       }
     },
     "EcsTaskProperties":{
@@ -1181,7 +1543,8 @@
         "pidMode":{"shape":"String"},
         "networkConfiguration":{"shape":"NetworkConfiguration"},
         "runtimePlatform":{"shape":"RuntimePlatform"},
-        "volumes":{"shape":"Volumes"}
+        "volumes":{"shape":"Volumes"},
+        "enableExecuteCommand":{"shape":"Boolean"}
       }
     },
     "EksAnnotationsMap":{
@@ -1476,6 +1839,28 @@
       "type":"list",
       "member":{"shape":"EvaluateOnExit"}
     },
+    "FairshareCapacityUsage":{
+      "type":"structure",
+      "members":{
+        "capacityUnit":{"shape":"String"},
+        "quantity":{"shape":"Double"}
+      }
+    },
+    "FairshareCapacityUsageList":{
+      "type":"list",
+      "member":{"shape":"FairshareCapacityUsage"}
+    },
+    "FairshareCapacityUtilization":{
+      "type":"structure",
+      "members":{
+        "shareIdentifier":{"shape":"String"},
+        "capacityUsage":{"shape":"FairshareCapacityUsageList"}
+      }
+    },
+    "FairshareCapacityUtilizationList":{
+      "type":"list",
+      "member":{"shape":"FairshareCapacityUtilization"}
+    },
     "FairsharePolicy":{
       "type":"structure",
       "members":{
@@ -1484,11 +1869,38 @@
         "shareDistribution":{"shape":"ShareAttributesList"}
       }
     },
+    "FairshareUtilizationDetail":{
+      "type":"structure",
+      "members":{
+        "activeShareCount":{"shape":"Long"},
+        "topCapacityUtilization":{"shape":"FairshareCapacityUtilizationList"}
+      }
+    },
     "FargatePlatformConfiguration":{
       "type":"structure",
       "members":{
         "platformVersion":{"shape":"String"}
       }
+    },
+    "FirelensConfiguration":{
+      "type":"structure",
+      "required":["type"],
+      "members":{
+        "type":{"shape":"FirelensConfigurationType"},
+        "options":{"shape":"FirelensConfigurationOptionsMap"}
+      }
+    },
+    "FirelensConfigurationOptionsMap":{
+      "type":"map",
+      "key":{"shape":"String"},
+      "value":{"shape":"String"}
+    },
+    "FirelensConfigurationType":{
+      "type":"string",
+      "enum":[
+        "fluentd",
+        "fluentbit"
+      ]
     },
     "Float":{"type":"float"},
     "FrontOfQueueDetail":{
@@ -1509,6 +1921,29 @@
       "type":"list",
       "member":{"shape":"FrontOfQueueJobSummary"}
     },
+    "FrontOfQuotaShareJobSummary":{
+      "type":"structure",
+      "members":{
+        "jobArn":{"shape":"String"},
+        "earliestTimeAtPosition":{"shape":"Long"}
+      }
+    },
+    "FrontOfQuotaShareJobSummaryList":{
+      "type":"list",
+      "member":{"shape":"FrontOfQuotaShareJobSummary"}
+    },
+    "FrontOfQuotaSharesDetail":{
+      "type":"structure",
+      "members":{
+        "quotaShares":{"shape":"FrontOfQuotaSharesJobSummaryMap"},
+        "lastUpdatedAt":{"shape":"Long"}
+      }
+    },
+    "FrontOfQuotaSharesJobSummaryMap":{
+      "type":"map",
+      "key":{"shape":"String"},
+      "value":{"shape":"FrontOfQuotaShareJobSummaryList"}
+    },
     "GetJobQueueSnapshotRequest":{
       "type":"structure",
       "required":["jobQueue"],
@@ -1519,7 +1954,9 @@
     "GetJobQueueSnapshotResponse":{
       "type":"structure",
       "members":{
-        "frontOfQueue":{"shape":"FrontOfQueueDetail"}
+        "frontOfQueue":{"shape":"FrontOfQueueDetail"},
+        "frontOfQuotaShares":{"shape":"FrontOfQuotaSharesDetail"},
+        "queueUtilization":{"shape":"QueueSnapshotUtilizationDetail"}
       }
     },
     "Host":{
@@ -1567,6 +2004,17 @@
         "VALID",
         "INVALID"
       ]
+    },
+    "JobCapacityUsageSummary":{
+      "type":"structure",
+      "members":{
+        "capacityUnit":{"shape":"String"},
+        "quantity":{"shape":"Double"}
+      }
+    },
+    "JobCapacityUsageSummaryList":{
+      "type":"list",
+      "member":{"shape":"JobCapacityUsageSummary"}
     },
     "JobDefinition":{
       "type":"structure",
@@ -1668,7 +2116,7 @@
     },
     "JobExecutionTimeoutMinutes":{
       "type":"long",
-      "max":360,
+      "max":7200,
       "min":1
     },
     "JobQueueDetail":{
@@ -1689,6 +2137,8 @@
         "statusReason":{"shape":"String"},
         "priority":{"shape":"Integer"},
         "computeEnvironmentOrder":{"shape":"ComputeEnvironmentOrders"},
+        "serviceEnvironmentOrder":{"shape":"ServiceEnvironmentOrders"},
+        "jobQueueType":{"shape":"JobQueueType"},
         "tags":{"shape":"TagrisTagsMap"},
         "jobStateTimeLimitActions":{"shape":"JobStateTimeLimitActions"}
       }
@@ -1696,6 +2146,15 @@
     "JobQueueDetailList":{
       "type":"list",
       "member":{"shape":"JobQueueDetail"}
+    },
+    "JobQueueType":{
+      "type":"string",
+      "enum":[
+        "EKS",
+        "ECS",
+        "ECS_FARGATE",
+        "SAGEMAKER_TRAINING"
+      ]
     },
     "JobStateTimeLimitAction":{
       "type":"structure",
@@ -1718,7 +2177,10 @@
     },
     "JobStateTimeLimitActionsAction":{
       "type":"string",
-      "enum":["CANCEL"]
+      "enum":[
+        "CANCEL",
+        "TERMINATE"
+      ]
     },
     "JobStateTimeLimitActionsState":{
       "type":"string",
@@ -1746,7 +2208,10 @@
         "jobArn":{"shape":"String"},
         "jobId":{"shape":"String"},
         "jobName":{"shape":"String"},
+        "capacityUsage":{"shape":"JobCapacityUsageSummaryList"},
         "createdAt":{"shape":"Long"},
+        "scheduledAt":{"shape":"Long"},
+        "shareIdentifier":{"shape":"String"},
         "status":{"shape":"JobStatus"},
         "statusReason":{"shape":"String"},
         "startedAt":{"shape":"Long"},
@@ -1786,13 +2251,20 @@
       "max":256,
       "min":1
     },
+    "LatestServiceJobAttempt":{
+      "type":"structure",
+      "members":{
+        "serviceResourceId":{"shape":"ServiceResourceId"}
+      }
+    },
     "LaunchTemplateSpecification":{
       "type":"structure",
       "members":{
         "launchTemplateId":{"shape":"String"},
         "launchTemplateName":{"shape":"String"},
         "version":{"shape":"String"},
-        "overrides":{"shape":"LaunchTemplateSpecificationOverrideList"}
+        "overrides":{"shape":"LaunchTemplateSpecificationOverrideList"},
+        "userdataType":{"shape":"UserdataType"}
       }
     },
     "LaunchTemplateSpecificationOverride":{
@@ -1801,7 +2273,8 @@
         "launchTemplateId":{"shape":"String"},
         "launchTemplateName":{"shape":"String"},
         "version":{"shape":"String"},
-        "targetInstanceTypes":{"shape":"StringList"}
+        "targetInstanceTypes":{"shape":"StringList"},
+        "userdataType":{"shape":"UserdataType"}
       }
     },
     "LaunchTemplateSpecificationOverrideList":{
@@ -1930,6 +2403,22 @@
         "nextToken":{"shape":"String"}
       }
     },
+    "ListQuotaSharesRequest":{
+      "type":"structure",
+      "required":["jobQueue"],
+      "members":{
+        "jobQueue":{"shape":"String"},
+        "maxResults":{"shape":"Integer"},
+        "nextToken":{"shape":"String"}
+      }
+    },
+    "ListQuotaSharesResponse":{
+      "type":"structure",
+      "members":{
+        "quotaShares":{"shape":"QuotaShareList"},
+        "nextToken":{"shape":"String"}
+      }
+    },
     "ListSchedulingPoliciesRequest":{
       "type":"structure",
       "members":{
@@ -1941,6 +2430,24 @@
       "type":"structure",
       "members":{
         "schedulingPolicies":{"shape":"SchedulingPolicyListingDetailList"},
+        "nextToken":{"shape":"String"}
+      }
+    },
+    "ListServiceJobsRequest":{
+      "type":"structure",
+      "members":{
+        "jobQueue":{"shape":"String"},
+        "jobStatus":{"shape":"ServiceJobStatus"},
+        "maxResults":{"shape":"Integer"},
+        "nextToken":{"shape":"String"},
+        "filters":{"shape":"ListJobsFilterList"}
+      }
+    },
+    "ListServiceJobsResponse":{
+      "type":"structure",
+      "required":["jobSummaryList"],
+      "members":{
+        "jobSummaryList":{"shape":"ServiceJobSummaryList"},
         "nextToken":{"shape":"String"}
       }
     },
@@ -2000,7 +2507,8 @@
         "gelf",
         "fluentd",
         "awslogs",
-        "splunk"
+        "splunk",
+        "awsfirelens"
       ]
     },
     "Long":{"type":"long"},
@@ -2129,6 +2637,144 @@
       "max":256,
       "min":1
     },
+    "QueueSnapshotCapacityUsage":{
+      "type":"structure",
+      "members":{
+        "capacityUnit":{"shape":"String"},
+        "quantity":{"shape":"Double"}
+      }
+    },
+    "QueueSnapshotCapacityUsageList":{
+      "type":"list",
+      "member":{"shape":"QueueSnapshotCapacityUsage"}
+    },
+    "QueueSnapshotUtilizationDetail":{
+      "type":"structure",
+      "members":{
+        "totalCapacityUsage":{"shape":"QueueSnapshotCapacityUsageList"},
+        "fairshareUtilization":{"shape":"FairshareUtilizationDetail"},
+        "quotaShareUtilization":{"shape":"QuotaShareUtilizationDetail"},
+        "lastUpdatedAt":{"shape":"Long"}
+      }
+    },
+    "QuotaShareCapacityLimit":{
+      "type":"structure",
+      "required":[
+        "maxCapacity",
+        "capacityUnit"
+      ],
+      "members":{
+        "maxCapacity":{"shape":"Integer"},
+        "capacityUnit":{"shape":"String"}
+      }
+    },
+    "QuotaShareCapacityLimits":{
+      "type":"list",
+      "member":{"shape":"QuotaShareCapacityLimit"}
+    },
+    "QuotaShareCapacityUsage":{
+      "type":"structure",
+      "members":{
+        "capacityUnit":{"shape":"String"},
+        "quantity":{"shape":"Double"}
+      }
+    },
+    "QuotaShareCapacityUsageList":{
+      "type":"list",
+      "member":{"shape":"QuotaShareCapacityUsage"}
+    },
+    "QuotaShareCapacityUtilization":{
+      "type":"structure",
+      "members":{
+        "quotaShareName":{"shape":"String"},
+        "capacityUsage":{"shape":"QuotaShareCapacityUsageList"}
+      }
+    },
+    "QuotaShareCapacityUtilizationList":{
+      "type":"list",
+      "member":{"shape":"QuotaShareCapacityUtilization"}
+    },
+    "QuotaShareDetail":{
+      "type":"structure",
+      "members":{
+        "quotaShareName":{"shape":"String"},
+        "quotaShareArn":{"shape":"String"},
+        "jobQueueArn":{"shape":"String"},
+        "capacityLimits":{"shape":"QuotaShareCapacityLimits"},
+        "resourceSharingConfiguration":{"shape":"QuotaShareResourceSharingConfiguration"},
+        "preemptionConfiguration":{"shape":"QuotaSharePreemptionConfiguration"},
+        "state":{"shape":"QuotaShareState"},
+        "status":{"shape":"QuotaShareStatus"}
+      }
+    },
+    "QuotaShareIdleResourceAssignmentStrategy":{
+      "type":"string",
+      "enum":["FIFO"]
+    },
+    "QuotaShareInSharePreemptionState":{
+      "type":"string",
+      "enum":[
+        "ENABLED",
+        "DISABLED"
+      ]
+    },
+    "QuotaShareList":{
+      "type":"list",
+      "member":{"shape":"QuotaShareDetail"}
+    },
+    "QuotaSharePolicy":{
+      "type":"structure",
+      "required":["idleResourceAssignmentStrategy"],
+      "members":{
+        "idleResourceAssignmentStrategy":{"shape":"QuotaShareIdleResourceAssignmentStrategy"}
+      }
+    },
+    "QuotaSharePreemptionConfiguration":{
+      "type":"structure",
+      "required":["inSharePreemption"],
+      "members":{
+        "inSharePreemption":{"shape":"QuotaShareInSharePreemptionState"}
+      }
+    },
+    "QuotaShareResourceSharingConfiguration":{
+      "type":"structure",
+      "required":["strategy"],
+      "members":{
+        "strategy":{"shape":"QuotaShareResourceSharingStrategy"},
+        "borrowLimit":{"shape":"Integer"}
+      }
+    },
+    "QuotaShareResourceSharingStrategy":{
+      "type":"string",
+      "enum":[
+        "RESERVE",
+        "LEND",
+        "LEND_AND_BORROW"
+      ]
+    },
+    "QuotaShareState":{
+      "type":"string",
+      "enum":[
+        "ENABLED",
+        "DISABLED"
+      ]
+    },
+    "QuotaShareStatus":{
+      "type":"string",
+      "enum":[
+        "CREATING",
+        "VALID",
+        "INVALID",
+        "UPDATING",
+        "DELETING"
+      ]
+    },
+    "QuotaShareUtilizationDetail":{
+      "type":"structure",
+      "members":{
+        "topCapacityUtilization":{"shape":"QuotaShareCapacityUtilizationList"}
+      }
+    },
     "RegisterJobDefinitionRequest":{
       "type":"structure",
       "required":[
@@ -2216,6 +2862,16 @@
         "cpuArchitecture":{"shape":"String"}
       }
     },
+    "S3FilesVolumeConfiguration":{
+      "type":"structure",
+      "required":["fileSystemArn"],
+      "members":{
+        "fileSystemArn":{"shape":"String"},
+        "rootDirectory":{"shape":"String"},
+        "transitEncryptionPort":{"shape":"Integer"},
+        "accessPointArn":{"shape":"String"}
+      }
+    },
     "SchedulingPolicyDetail":{
       "type":"structure",
       "required":[
@@ -2225,6 +2881,7 @@
       "members":{
         "name":{"shape":"String"},
         "arn":{"shape":"String"},
+        "quotaSharePolicy":{"shape":"QuotaSharePolicy"},
         "fairsharePolicy":{"shape":"FairsharePolicy"},
         "tags":{"shape":"TagrisTagsMap"}
       }
@@ -2267,6 +2924,218 @@
       "error":{"httpStatusCode":500},
       "exception":true,
       "fault":true
+    },
+    "ServiceEnvironmentDetail":{
+      "type":"structure",
+      "required":[
+        "serviceEnvironmentName",
+        "serviceEnvironmentArn",
+        "serviceEnvironmentType",
+        "capacityLimits"
+      ],
+      "members":{
+        "serviceEnvironmentName":{"shape":"String"},
+        "serviceEnvironmentArn":{"shape":"String"},
+        "serviceEnvironmentType":{"shape":"ServiceEnvironmentType"},
+        "state":{"shape":"ServiceEnvironmentState"},
+        "status":{"shape":"ServiceEnvironmentStatus"},
+        "capacityLimits":{"shape":"CapacityLimits"},
+        "tags":{"shape":"TagrisTagsMap"}
+      }
+    },
+    "ServiceEnvironmentDetailList":{
+      "type":"list",
+      "member":{"shape":"ServiceEnvironmentDetail"}
+    },
+    "ServiceEnvironmentOrder":{
+      "type":"structure",
+      "required":[
+        "order",
+        "serviceEnvironment"
+      ],
+      "members":{
+        "order":{"shape":"Integer"},
+        "serviceEnvironment":{"shape":"String"}
+      }
+    },
+    "ServiceEnvironmentOrders":{
+      "type":"list",
+      "member":{"shape":"ServiceEnvironmentOrder"}
+    },
+    "ServiceEnvironmentState":{
+      "type":"string",
+      "enum":[
+        "ENABLED",
+        "DISABLED"
+      ]
+    },
+    "ServiceEnvironmentStatus":{
+      "type":"string",
+      "enum":[
+        "CREATING",
+        "UPDATING",
+        "DELETING",
+        "DELETED",
+        "VALID",
+        "INVALID"
+      ]
+    },
+    "ServiceEnvironmentType":{
+      "type":"string",
+      "enum":["SAGEMAKER_TRAINING"]
+    },
+    "ServiceJobAttemptDetail":{
+      "type":"structure",
+      "members":{
+        "serviceResourceId":{"shape":"ServiceResourceId"},
+        "startedAt":{"shape":"Long"},
+        "stoppedAt":{"shape":"Long"},
+        "statusReason":{"shape":"String"}
+      }
+    },
+    "ServiceJobAttemptDetails":{
+      "type":"list",
+      "member":{"shape":"ServiceJobAttemptDetail"}
+    },
+    "ServiceJobCapacityUsageDetail":{
+      "type":"structure",
+      "members":{
+        "capacityUnit":{"shape":"String"},
+        "quantity":{"shape":"Double"}
+      }
+    },
+    "ServiceJobCapacityUsageDetailList":{
+      "type":"list",
+      "member":{"shape":"ServiceJobCapacityUsageDetail"}
+    },
+    "ServiceJobCapacityUsageSummary":{
+      "type":"structure",
+      "members":{
+        "capacityUnit":{"shape":"String"},
+        "quantity":{"shape":"Double"}
+      }
+    },
+    "ServiceJobCapacityUsageSummaryList":{
+      "type":"list",
+      "member":{"shape":"ServiceJobCapacityUsageSummary"}
+    },
+    "ServiceJobEvaluateOnExit":{
+      "type":"structure",
+      "members":{
+        "action":{"shape":"ServiceJobRetryAction"},
+        "onStatusReason":{"shape":"String"}
+      }
+    },
+    "ServiceJobEvaluateOnExitList":{
+      "type":"list",
+      "member":{"shape":"ServiceJobEvaluateOnExit"}
+    },
+    "ServiceJobPreemptedAttempt":{
+      "type":"structure",
+      "members":{
+        "serviceResourceId":{"shape":"ServiceResourceId"},
+        "startedAt":{"shape":"Long"},
+        "stoppedAt":{"shape":"Long"},
+        "statusReason":{"shape":"String"}
+      }
+    },
+    "ServiceJobPreemptionConfiguration":{
+      "type":"structure",
+      "members":{
+        "preemptionRetriesBeforeTermination":{"shape":"Integer"}
+      }
+    },
+    "ServiceJobPreemptionSummary":{
+      "type":"structure",
+      "members":{
+        "preemptedAttemptCount":{"shape":"Integer"},
+        "recentPreemptedAttempts":{"shape":"ServiceJobRecentPreemptedAttemptList"}
+      }
+    },
+    "ServiceJobRecentPreemptedAttemptList":{
+      "type":"list",
+      "member":{"shape":"ServiceJobPreemptedAttempt"}
+    },
+    "ServiceJobRetryAction":{
+      "type":"string",
+      "enum":[
+        "RETRY",
+        "EXIT"
+      ]
+    },
+    "ServiceJobRetryStrategy":{
+      "type":"structure",
+      "required":["attempts"],
+      "members":{
+        "attempts":{"shape":"Integer"},
+        "evaluateOnExit":{"shape":"ServiceJobEvaluateOnExitList"}
+      }
+    },
+    "ServiceJobStatus":{
+      "type":"string",
+      "enum":[
+        "SUBMITTED",
+        "PENDING",
+        "RUNNABLE",
+        "SCHEDULED",
+        "STARTING",
+        "RUNNING",
+        "SUCCEEDED",
+        "FAILED"
+      ]
+    },
+    "ServiceJobSummary":{
+      "type":"structure",
+      "required":[
+        "jobId",
+        "jobName",
+        "serviceJobType"
+      ],
+      "members":{
+        "latestAttempt":{"shape":"LatestServiceJobAttempt"},
+        "capacityUsage":{"shape":"ServiceJobCapacityUsageSummaryList"},
+        "createdAt":{"shape":"Long"},
+        "jobArn":{"shape":"String"},
+        "jobId":{"shape":"String"},
+        "jobName":{"shape":"String"},
+        "scheduledAt":{"shape":"Long"},
+        "serviceJobType":{"shape":"ServiceJobType"},
+        "shareIdentifier":{"shape":"String"},
+        "quotaShareName":{"shape":"String"},
+        "status":{"shape":"ServiceJobStatus"},
+        "statusReason":{"shape":"String"},
+        "startedAt":{"shape":"Long"},
+        "stoppedAt":{"shape":"Long"}
+      }
+    },
+    "ServiceJobSummaryList":{
+      "type":"list",
+      "member":{"shape":"ServiceJobSummary"}
+    },
+    "ServiceJobTimeout":{
+      "type":"structure",
+      "members":{
+        "attemptDurationSeconds":{"shape":"Integer"}
+      }
+    },
+    "ServiceJobType":{
+      "type":"string",
+      "enum":["SAGEMAKER_TRAINING"]
+    },
+    "ServiceResourceId":{
+      "type":"structure",
+      "required":[
+        "name",
+        "value"
+      ],
+      "members":{
+        "name":{"shape":"ServiceResourceIdName"},
+        "value":{"shape":"String"}
+      }
+    },
+    "ServiceResourceIdName":{
+      "type":"string",
+      "enum":["TrainingJobArn"]
     },
     "ShareAttributes":{
       "type":"structure",
@@ -2324,6 +3193,44 @@
         "jobId":{"shape":"String"}
       }
     },
+    "SubmitServiceJobRequest":{
+      "type":"structure",
+      "required":[
+        "jobName",
+        "jobQueue",
+        "serviceRequestPayload",
+        "serviceJobType"
+      ],
+      "members":{
+        "jobName":{"shape":"String"},
+        "jobQueue":{"shape":"String"},
+        "retryStrategy":{"shape":"ServiceJobRetryStrategy"},
+        "schedulingPriority":{"shape":"Integer"},
+        "serviceRequestPayload":{"shape":"String"},
+        "serviceJobType":{"shape":"ServiceJobType"},
+        "shareIdentifier":{"shape":"String"},
+        "quotaShareName":{"shape":"String"},
+        "preemptionConfiguration":{"shape":"ServiceJobPreemptionConfiguration"},
+        "timeoutConfig":{"shape":"ServiceJobTimeout"},
+        "tags":{"shape":"TagrisTagsMap"},
+        "clientToken":{
+          "shape":"ClientRequestToken",
+          "idempotencyToken":true
+        }
+      }
+    },
+    "SubmitServiceJobResponse":{
+      "type":"structure",
+      "required":[
+        "jobName",
+        "jobId"
+      ],
+      "members":{
+        "jobArn":{"shape":"String"},
+        "jobName":{"shape":"String"},
+        "jobId":{"shape":"String"}
+      }
+    },
     "TagKey":{
       "type":"string",
       "max":128,
@@ -2352,8 +3259,7 @@
     },
     "TagResourceResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "TagValue":{
       "type":"string",
@@ -2389,6 +3295,7 @@
         "dependsOn":{"shape":"TaskContainerDependencyList"},
         "environment":{"shape":"EnvironmentVariables"},
         "essential":{"shape":"Boolean"},
+        "firelensConfiguration":{"shape":"FirelensConfiguration"},
         "image":{"shape":"String"},
         "linuxParameters":{"shape":"LinuxParameters"},
         "logConfiguration":{"shape":"LogConfiguration"},
@@ -2401,6 +3308,8 @@
         "secrets":{"shape":"SecretList"},
         "ulimits":{"shape":"Ulimits"},
         "user":{"shape":"String"},
+        "startTimeout":{"shape":"Integer"},
+        "stopTimeout":{"shape":"Integer"},
         "exitCode":{"shape":"Integer"},
         "reason":{"shape":"String"},
         "logStreamName":{"shape":"String"},
@@ -2424,6 +3333,7 @@
         "dependsOn":{"shape":"TaskContainerDependencyList"},
         "environment":{"shape":"EnvironmentVariables"},
         "essential":{"shape":"Boolean"},
+        "firelensConfiguration":{"shape":"FirelensConfiguration"},
         "image":{"shape":"String"},
         "linuxParameters":{"shape":"LinuxParameters"},
         "logConfiguration":{"shape":"LogConfiguration"},
@@ -2435,7 +3345,9 @@
         "resourceRequirements":{"shape":"ResourceRequirements"},
         "secrets":{"shape":"SecretList"},
         "ulimits":{"shape":"Ulimits"},
-        "user":{"shape":"String"}
+        "user":{"shape":"String"},
+        "startTimeout":{"shape":"Integer"},
+        "stopTimeout":{"shape":"Integer"}
       }
     },
     "TaskPropertiesOverride":{
@@ -2457,8 +3369,22 @@
     },
     "TerminateJobResponse":{
       "type":"structure",
+      "members":{}
+    },
+    "TerminateServiceJobRequest":{
+      "type":"structure",
+      "required":[
+        "jobId",
+        "reason"
+      ],
       "members":{
+        "jobId":{"shape":"String"},
+        "reason":{"shape":"String"}
       }
+    },
+    "TerminateServiceJobResponse":{
+      "type":"structure",
+      "members":{}
     },
     "Tmpfs":{
       "type":"structure",
@@ -2514,8 +3440,7 @@
     },
     "UntagResourceResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "UpdateComputeEnvironmentRequest":{
       "type":"structure",
@@ -2571,6 +3496,7 @@
         "schedulingPolicyArn":{"shape":"String"},
         "priority":{"shape":"Integer"},
         "computeEnvironmentOrder":{"shape":"ComputeEnvironmentOrders"},
+        "serviceEnvironmentOrder":{"shape":"ServiceEnvironmentOrders"},
         "jobStateTimeLimitActions":{"shape":"JobStateTimeLimitActions"}
       }
     },
@@ -2588,25 +3514,90 @@
         "jobExecutionTimeoutMinutes":{"shape":"JobExecutionTimeoutMinutes"}
       }
     },
+    "UpdateQuotaShareRequest":{
+      "type":"structure",
+      "required":["quotaShareArn"],
+      "members":{
+        "quotaShareArn":{"shape":"String"},
+        "capacityLimits":{"shape":"QuotaShareCapacityLimits"},
+        "resourceSharingConfiguration":{"shape":"QuotaShareResourceSharingConfiguration"},
+        "preemptionConfiguration":{"shape":"QuotaSharePreemptionConfiguration"},
+        "state":{"shape":"QuotaShareState"}
+      }
+    },
+    "UpdateQuotaShareResponse":{
+      "type":"structure",
+      "members":{
+        "quotaShareName":{"shape":"String"},
+        "quotaShareArn":{"shape":"String"}
+      }
+    },
     "UpdateSchedulingPolicyRequest":{
       "type":"structure",
       "required":["arn"],
       "members":{
         "arn":{"shape":"String"},
+        "quotaSharePolicy":{"shape":"QuotaSharePolicy"},
         "fairsharePolicy":{"shape":"FairsharePolicy"}
       }
     },
     "UpdateSchedulingPolicyResponse":{
       "type":"structure",
+      "members":{}
+    },
+    "UpdateServiceEnvironmentRequest":{
+      "type":"structure",
+      "required":["serviceEnvironment"],
       "members":{
+        "serviceEnvironment":{"shape":"String"},
+        "state":{"shape":"ServiceEnvironmentState"},
+        "capacityLimits":{"shape":"CapacityLimits"}
       }
+    },
+    "UpdateServiceEnvironmentResponse":{
+      "type":"structure",
+      "required":[
+        "serviceEnvironmentName",
+        "serviceEnvironmentArn"
+      ],
+      "members":{
+        "serviceEnvironmentName":{"shape":"String"},
+        "serviceEnvironmentArn":{"shape":"String"}
+      }
+    },
+    "UpdateServiceJobRequest":{
+      "type":"structure",
+      "required":[
+        "jobId",
+        "schedulingPriority"
+      ],
+      "members":{
+        "jobId":{"shape":"String"},
+        "schedulingPriority":{"shape":"Integer"}
+      }
+    },
+    "UpdateServiceJobResponse":{
+      "type":"structure",
+      "members":{
+        "jobArn":{"shape":"String"},
+        "jobName":{"shape":"String"},
+        "jobId":{"shape":"String"}
+      }
+    },
+    "UserdataType":{
+      "type":"string",
+      "enum":[
+        "EKS_BOOTSTRAP_SH",
+        "EKS_NODEADM"
+      ]
     },
     "Volume":{
       "type":"structure",
       "members":{
         "host":{"shape":"Host"},
         "name":{"shape":"String"},
-        "efsVolumeConfiguration":{"shape":"EFSVolumeConfiguration"}
+        "efsVolumeConfiguration":{"shape":"EFSVolumeConfiguration"},
+        "s3filesVolumeConfiguration":{"shape":"S3FilesVolumeConfiguration"}
       }
     },
     "Volumes":{

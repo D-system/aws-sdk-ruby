@@ -819,8 +819,7 @@
     },
     "AccessDeniedException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{"httpStatusCode":403},
       "exception":true
     },
@@ -1063,6 +1062,36 @@
       "type":"string",
       "enum":["SCHEDULED_ACTION"]
     },
+    "AutomatedSnapshotPauseOptions":{
+      "type":"structure",
+      "required":["Enabled"],
+      "members":{
+        "Enabled":{"shape":"Boolean"},
+        "StartTime":{"shape":"UpdateTimestamp"},
+        "EndTime":{"shape":"UpdateTimestamp"},
+        "State":{"shape":"PauseState"}
+      }
+    },
+    "AutomatedSnapshotPauseOptionsStatus":{
+      "type":"structure",
+      "required":[
+        "Options",
+        "Status"
+      ],
+      "members":{
+        "Options":{"shape":"AutomatedSnapshotPauseOptions"},
+        "Status":{"shape":"OptionStatus"}
+      }
+    },
+    "AutomatedSnapshotPauseRequestOptions":{
+      "type":"structure",
+      "required":["Enabled"],
+      "members":{
+        "Enabled":{"shape":"Boolean"},
+        "StartTime":{"shape":"UpdateTimestamp"},
+        "EndTime":{"shape":"UpdateTimestamp"}
+      }
+    },
     "BackendRole":{
       "type":"string",
       "max":256,
@@ -1233,8 +1262,7 @@
     },
     "ConflictException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{"httpStatusCode":409},
       "exception":true
     },
@@ -1261,7 +1289,11 @@
         "DomainEndpointOptions":{"shape":"DomainEndpointOptions"},
         "AdvancedSecurityOptions":{"shape":"AdvancedSecurityOptionsInput"},
         "AutoTuneOptions":{"shape":"AutoTuneOptionsInput"},
-        "TagList":{"shape":"TagList"}
+        "TagList":{"shape":"TagList"},
+        "DeploymentStrategyOptions":{"shape":"DeploymentStrategyOptions"},
+        "AutomatedSnapshotPauseOptions":{"shape":"AutomatedSnapshotPauseRequestOptions"},
+        "UseCase":{"shape":"DomainUseCase"},
+        "EngineMode":{"shape":"DomainEngineMode"}
       }
     },
     "CreateElasticsearchDomainResponse":{
@@ -1432,6 +1464,31 @@
         "ELIGIBLE"
       ]
     },
+    "DeploymentStrategy":{
+      "type":"string",
+      "enum":[
+        "Default",
+        "CapacityOptimized"
+      ]
+    },
+    "DeploymentStrategyOptions":{
+      "type":"structure",
+      "required":["DeploymentStrategy"],
+      "members":{
+        "DeploymentStrategy":{"shape":"DeploymentStrategy"}
+      }
+    },
+    "DeploymentStrategyOptionsStatus":{
+      "type":"structure",
+      "required":[
+        "Options",
+        "Status"
+      ],
+      "members":{
+        "Options":{"shape":"DeploymentStrategyOptions"},
+        "Status":{"shape":"OptionStatus"}
+      }
+    },
     "DeploymentType":{
       "type":"string",
       "max":128,
@@ -1446,8 +1503,16 @@
           "location":"uri",
           "locationName":"DomainName"
         },
-        "MaxResults":{"shape":"MaxResults"},
-        "NextToken":{"shape":"NextToken"}
+        "MaxResults":{
+          "shape":"MaxResults",
+          "location":"querystring",
+          "locationName":"maxResults"
+        },
+        "NextToken":{
+          "shape":"NextToken",
+          "location":"querystring",
+          "locationName":"nextToken"
+        }
       }
     },
     "DescribeDomainAutoTunesResponse":{
@@ -1708,8 +1773,7 @@
     "DisableTimestamp":{"type":"timestamp"},
     "DisabledOperationException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{"httpStatusCode":409},
       "exception":true
     },
@@ -1764,6 +1828,13 @@
         "Options":{"shape":"DomainEndpointOptions"},
         "Status":{"shape":"OptionStatus"}
       }
+    },
+    "DomainEngineMode":{
+      "type":"string",
+      "enum":[
+        "GENERAL",
+        "OPTIMIZED"
+      ]
     },
     "DomainId":{
       "type":"string",
@@ -1844,6 +1915,15 @@
         "UpdatingServiceSoftware",
         "Isolated",
         "Deleting"
+      ]
+    },
+    "DomainUseCase":{
+      "type":"string",
+      "enum":[
+        "SEARCH",
+        "VECTOR",
+        "OBSERVABILITY",
+        "MIXED"
       ]
     },
     "Double":{"type":"double"},
@@ -2003,7 +2083,11 @@
         "AdvancedSecurityOptions":{"shape":"AdvancedSecurityOptionsStatus"},
         "AutoTuneOptions":{"shape":"AutoTuneOptionsStatus"},
         "ChangeProgressDetails":{"shape":"ChangeProgressDetails"},
-        "ModifyingProperties":{"shape":"ModifyingPropertiesList"}
+        "ModifyingProperties":{"shape":"ModifyingPropertiesList"},
+        "DeploymentStrategyOptions":{"shape":"DeploymentStrategyOptionsStatus"},
+        "AutomatedSnapshotPauseOptions":{"shape":"AutomatedSnapshotPauseOptionsStatus"},
+        "UseCase":{"shape":"UseCaseStatus"},
+        "EngineMode":{"shape":"EngineModeStatus"}
       }
     },
     "ElasticsearchDomainStatus":{
@@ -2041,7 +2125,11 @@
         "AutoTuneOptions":{"shape":"AutoTuneOptionsOutput"},
         "ChangeProgressDetails":{"shape":"ChangeProgressDetails"},
         "DomainProcessingStatus":{"shape":"DomainProcessingStatusType"},
-        "ModifyingProperties":{"shape":"ModifyingPropertiesList"}
+        "ModifyingProperties":{"shape":"ModifyingPropertiesList"},
+        "DeploymentStrategyOptions":{"shape":"DeploymentStrategyOptions"},
+        "AutomatedSnapshotPauseOptions":{"shape":"AutomatedSnapshotPauseOptions"},
+        "UseCase":{"shape":"DomainUseCase"},
+        "EngineMode":{"shape":"DomainEngineMode"}
       }
     },
     "ElasticsearchDomainStatusList":{
@@ -2097,6 +2185,17 @@
       "type":"map",
       "key":{"shape":"String"},
       "value":{"shape":"ServiceUrl"}
+    },
+    "EngineModeStatus":{
+      "type":"structure",
+      "required":[
+        "Options",
+        "Status"
+      ],
+      "members":{
+        "Options":{"shape":"DomainEngineMode"},
+        "Status":{"shape":"OptionStatus"}
+      }
     },
     "EngineType":{
       "type":"string",
@@ -2291,22 +2390,19 @@
     "IntegerClass":{"type":"integer"},
     "InternalException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{"httpStatusCode":500},
       "exception":true
     },
     "InvalidPaginationTokenException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{"httpStatusCode":400},
       "exception":true
     },
     "InvalidTypeException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{"httpStatusCode":409},
       "exception":true
     },
@@ -2323,8 +2419,7 @@
     "LastUpdated":{"type":"timestamp"},
     "LimitExceededException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{"httpStatusCode":409},
       "exception":true
     },
@@ -2790,6 +2885,15 @@
       "min":8,
       "sensitive":true
     },
+    "PauseState":{
+      "type":"string",
+      "enum":[
+        "Active",
+        "Completed",
+        "Scheduled",
+        "Disabled"
+      ]
+    },
     "PolicyDocument":{"type":"string"},
     "PrincipalType":{
       "type":"string",
@@ -2919,15 +3023,13 @@
     },
     "ResourceAlreadyExistsException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{"httpStatusCode":409},
       "exception":true
     },
     "ResourceNotFoundException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{"httpStatusCode":409},
       "exception":true
     },
@@ -2948,8 +3050,7 @@
     },
     "RevokeVpcEndpointAccessResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "RoleArn":{
       "type":"string",
@@ -3118,7 +3219,8 @@
       "enum":[
         "Policy-Min-TLS-1-0-2019-07",
         "Policy-Min-TLS-1-2-2019-07",
-        "Policy-Min-TLS-1-2-PFS-2023-10"
+        "Policy-Min-TLS-1-2-PFS-2023-10",
+        "Policy-Min-TLS-1-2-RFC9151-FIPS-2024-08"
       ]
     },
     "Tag":{
@@ -3177,7 +3279,11 @@
         "NodeToNodeEncryptionOptions":{"shape":"NodeToNodeEncryptionOptions"},
         "EncryptionAtRestOptions":{"shape":"EncryptionAtRestOptions"},
         "AutoTuneOptions":{"shape":"AutoTuneOptions"},
-        "DryRun":{"shape":"DryRun"}
+        "DryRun":{"shape":"DryRun"},
+        "DeploymentStrategyOptions":{"shape":"DeploymentStrategyOptions"},
+        "AutomatedSnapshotPauseOptions":{"shape":"AutomatedSnapshotPauseRequestOptions"},
+        "UseCase":{"shape":"DomainUseCase"},
+        "EngineMode":{"shape":"DomainEngineMode"}
       }
     },
     "UpdateElasticsearchDomainConfigResponse":{
@@ -3291,6 +3397,17 @@
       "type":"list",
       "member":{"shape":"UpgradeStepItem"}
     },
+    "UseCaseStatus":{
+      "type":"structure",
+      "required":[
+        "Options",
+        "Status"
+      ],
+      "members":{
+        "Options":{"shape":"DomainUseCase"},
+        "Status":{"shape":"OptionStatus"}
+      }
+    },
     "UserPoolId":{
       "type":"string",
       "max":55,
@@ -3331,8 +3448,7 @@
     },
     "ValidationException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{"httpStatusCode":400},
       "exception":true
     },

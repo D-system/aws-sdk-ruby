@@ -4,6 +4,8 @@ module AwsSdkCodeGenerator
   module Views
     module RBS
       class ClientClass < View
+        # Delegated methods on response/output
+        # so would not be included in the rbs
         SKIP_MEMBERS = Set.new(%w[
           context
           data
@@ -21,6 +23,8 @@ module AwsSdkCodeGenerator
           @plugins = PluginList.new(options)
           @codegenerated_plugins = options.fetch(:codegenerated_plugins)
           @waiters = AwsSdkCodeGenerator::RBS::Waiter.build_list(api: @api, waiters:options.fetch(:waiters))
+          @protocol_settings = options.fetch(:protocol_settings, {})
+          @aliased_shapes = options.fetch(:aliased_shapes, Set.new).to_set
         end
 
         # @return [String|nil]
@@ -44,6 +48,8 @@ module AwsSdkCodeGenerator
         def operations
           shapes = @api["shapes"]
           @api["operations"].map do |name, body|
+            next if async_operation?(body)
+
             method_name = Underscore.underscore(name)
             indent = " " * (12 + method_name.length)
             input_shape_name = body.dig("input", "shape")
@@ -55,6 +61,7 @@ module AwsSdkCodeGenerator
                 api: @api,
                 shape: input_shape,
                 newline: true,
+                options: { aliased_shapes: @aliased_shapes }
               )
               arguments = builder.format(indent: indent)
               include_required = input_shape["required"]&.empty?&.!
@@ -69,11 +76,12 @@ module AwsSdkCodeGenerator
             else
               output_shape = nil
               data = "::Aws::EmptyStructure"
-              interface = empty_interface = "::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]"
+              interface = "::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]"
             end
             returns_members = output_shape&.[]("members")&.inject([]) do |a, (member_name, member_ref)|
               member_name_underscore = Underscore.underscore(member_name)
               next a if SKIP_MEMBERS.include?(member_name_underscore)
+
               a << {
                 method_name: member_name_underscore,
                 returns: AwsSdkCodeGenerator::RBS.to_type(member_ref, @api),
@@ -93,7 +101,7 @@ module AwsSdkCodeGenerator
               returns_members: returns_members,
               empty_structure: output_shape.nil?
             }
-          end
+          end.compact
         end
 
         def waiters?
@@ -109,6 +117,13 @@ module AwsSdkCodeGenerator
         end
 
         private
+
+        def async_operation?(operation)
+          # ensure that bidirectional eventstreaming operations are not added to client rbs
+          AwsSdkCodeGenerator::Helper.operation_bidirectional_eventstreaming?(operation, @api) ||
+            (@protocol_settings['h2'] == 'eventstream' &&
+              AwsSdkCodeGenerator::Helper.operation_eventstreaming?(operation, @api))
+        end
 
         def documented_plugin_options(plugins)
           i = 0

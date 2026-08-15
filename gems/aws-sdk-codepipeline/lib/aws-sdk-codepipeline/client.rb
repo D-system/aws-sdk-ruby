@@ -95,8 +95,8 @@ module Aws::CodePipeline
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::CodePipeline
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::CodePipeline
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::CodePipeline
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::CodePipeline
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::CodePipeline
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::CodePipeline
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::CodePipeline
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -765,6 +769,7 @@ module Aws::CodePipeline
     #                 {
     #                   name: "EnvironmentVariableName", # required
     #                   value: "EnvironmentVariableValue", # required
+    #                   type: "PLAINTEXT", # accepts PLAINTEXT, SECRETS_MANAGER
     #                 },
     #               ],
     #             },
@@ -965,6 +970,7 @@ module Aws::CodePipeline
     #   resp.pipeline.stages[0].actions[0].environment_variables #=> Array
     #   resp.pipeline.stages[0].actions[0].environment_variables[0].name #=> String
     #   resp.pipeline.stages[0].actions[0].environment_variables[0].value #=> String
+    #   resp.pipeline.stages[0].actions[0].environment_variables[0].type #=> String, one of "PLAINTEXT", "SECRETS_MANAGER"
     #   resp.pipeline.stages[0].on_failure.result #=> String, one of "ROLLBACK", "FAIL", "RETRY", "SKIP"
     #   resp.pipeline.stages[0].on_failure.retry_configuration.retry_mode #=> String, one of "FAILED_ACTIONS", "ALL_ACTIONS"
     #   resp.pipeline.stages[0].on_failure.conditions #=> Array
@@ -1480,6 +1486,7 @@ module Aws::CodePipeline
     #   resp.pipeline.stages[0].actions[0].environment_variables #=> Array
     #   resp.pipeline.stages[0].actions[0].environment_variables[0].name #=> String
     #   resp.pipeline.stages[0].actions[0].environment_variables[0].value #=> String
+    #   resp.pipeline.stages[0].actions[0].environment_variables[0].type #=> String, one of "PLAINTEXT", "SECRETS_MANAGER"
     #   resp.pipeline.stages[0].on_failure.result #=> String, one of "ROLLBACK", "FAIL", "RETRY", "SKIP"
     #   resp.pipeline.stages[0].on_failure.retry_configuration.retry_mode #=> String, one of "FAILED_ACTIONS", "ALL_ACTIONS"
     #   resp.pipeline.stages[0].on_failure.conditions #=> Array
@@ -2010,6 +2017,75 @@ module Aws::CodePipeline
     # @param [Hash] params ({})
     def list_action_types(params = {}, options = {})
       req = build_request(:list_action_types, params)
+      req.send_request(options)
+    end
+
+    # Lists the targets for the deploy action.
+    #
+    # @option params [String] :pipeline_name
+    #   The name of the pipeline with the deploy action.
+    #
+    # @option params [required, String] :action_execution_id
+    #   The execution ID for the deploy action.
+    #
+    # @option params [Array<Types::TargetFilter>] :filters
+    #   Filters the targets for a specified deploy action.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return in a single call. To retrieve
+    #   the remaining results, make another call with the returned nextToken
+    #   value.
+    #
+    # @option params [String] :next_token
+    #   An identifier that was returned from the previous list action types
+    #   call, which can be used to return the next set of action types in the
+    #   list.
+    #
+    # @return [Types::ListDeployActionExecutionTargetsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListDeployActionExecutionTargetsOutput#targets #targets} => Array&lt;Types::DeployActionExecutionTarget&gt;
+    #   * {Types::ListDeployActionExecutionTargetsOutput#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_deploy_action_execution_targets({
+    #     pipeline_name: "PipelineName",
+    #     action_execution_id: "ActionExecutionId", # required
+    #     filters: [
+    #       {
+    #         name: "TARGET_STATUS", # accepts TARGET_STATUS
+    #         values: ["TargetFilterValue"],
+    #       },
+    #     ],
+    #     max_results: 1,
+    #     next_token: "NextToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.targets #=> Array
+    #   resp.targets[0].target_id #=> String
+    #   resp.targets[0].target_type #=> String
+    #   resp.targets[0].status #=> String
+    #   resp.targets[0].start_time #=> Time
+    #   resp.targets[0].end_time #=> Time
+    #   resp.targets[0].events #=> Array
+    #   resp.targets[0].events[0].name #=> String
+    #   resp.targets[0].events[0].status #=> String
+    #   resp.targets[0].events[0].start_time #=> Time
+    #   resp.targets[0].events[0].end_time #=> Time
+    #   resp.targets[0].events[0].context.ssm_command_id #=> String
+    #   resp.targets[0].events[0].context.message #=> String
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codepipeline-2015-07-09/ListDeployActionExecutionTargets AWS API Documentation
+    #
+    # @overload list_deploy_action_execution_targets(params = {})
+    # @param [Hash] params ({})
+    def list_deploy_action_execution_targets(params = {}, options = {})
+      req = build_request(:list_deploy_action_execution_targets, params)
       req.send_request(options)
     end
 
@@ -3385,6 +3461,7 @@ module Aws::CodePipeline
     #                 {
     #                   name: "EnvironmentVariableName", # required
     #                   value: "EnvironmentVariableValue", # required
+    #                   type: "PLAINTEXT", # accepts PLAINTEXT, SECRETS_MANAGER
     #                 },
     #               ],
     #             },
@@ -3579,6 +3656,7 @@ module Aws::CodePipeline
     #   resp.pipeline.stages[0].actions[0].environment_variables #=> Array
     #   resp.pipeline.stages[0].actions[0].environment_variables[0].name #=> String
     #   resp.pipeline.stages[0].actions[0].environment_variables[0].value #=> String
+    #   resp.pipeline.stages[0].actions[0].environment_variables[0].type #=> String, one of "PLAINTEXT", "SECRETS_MANAGER"
     #   resp.pipeline.stages[0].on_failure.result #=> String, one of "ROLLBACK", "FAIL", "RETRY", "SKIP"
     #   resp.pipeline.stages[0].on_failure.retry_configuration.retry_mode #=> String, one of "FAILED_ACTIONS", "ALL_ACTIONS"
     #   resp.pipeline.stages[0].on_failure.conditions #=> Array
@@ -3694,7 +3772,7 @@ module Aws::CodePipeline
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-codepipeline'
-      context[:gem_version] = '1.96.0'
+      context[:gem_version] = '1.118.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

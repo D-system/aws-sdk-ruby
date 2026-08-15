@@ -37,6 +37,9 @@ module Aws::S3Tables
 
     class CreateTableBucketRequest
       attr_accessor name: ::String
+      attr_accessor encryption_configuration: Types::EncryptionConfiguration
+      attr_accessor storage_class_configuration: Types::StorageClassConfiguration
+      attr_accessor tags: ::Hash[::String, ::String]
       SENSITIVE: []
     end
 
@@ -51,6 +54,9 @@ module Aws::S3Tables
       attr_accessor name: ::String
       attr_accessor format: ("ICEBERG")
       attr_accessor metadata: Types::TableMetadata
+      attr_accessor encryption_configuration: Types::EncryptionConfiguration
+      attr_accessor storage_class_configuration: Types::StorageClassConfiguration
+      attr_accessor tags: ::Hash[::String, ::String]
       SENSITIVE: []
     end
 
@@ -66,8 +72,24 @@ module Aws::S3Tables
       SENSITIVE: []
     end
 
+    class DeleteTableBucketEncryptionRequest
+      attr_accessor table_bucket_arn: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteTableBucketMetricsConfigurationRequest
+      attr_accessor table_bucket_arn: ::String
+      SENSITIVE: []
+    end
+
     class DeleteTableBucketPolicyRequest
       attr_accessor table_bucket_arn: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteTableBucketReplicationRequest
+      attr_accessor table_bucket_arn: ::String
+      attr_accessor version_token: ::String
       SENSITIVE: []
     end
 
@@ -83,11 +105,23 @@ module Aws::S3Tables
       SENSITIVE: []
     end
 
+    class DeleteTableReplicationRequest
+      attr_accessor table_arn: ::String
+      attr_accessor version_token: ::String
+      SENSITIVE: []
+    end
+
     class DeleteTableRequest
       attr_accessor table_bucket_arn: ::String
       attr_accessor namespace: ::String
       attr_accessor name: ::String
       attr_accessor version_token: ::String
+      SENSITIVE: []
+    end
+
+    class EncryptionConfiguration
+      attr_accessor sse_algorithm: ("AES256" | "aws:kms")
+      attr_accessor kms_key_arn: ::String
       SENSITIVE: []
     end
 
@@ -107,6 +141,18 @@ module Aws::S3Tables
       attr_accessor created_at: ::Time
       attr_accessor created_by: ::String
       attr_accessor owner_account_id: ::String
+      attr_accessor namespace_id: ::String
+      attr_accessor table_bucket_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetTableBucketEncryptionRequest
+      attr_accessor table_bucket_arn: ::String
+      SENSITIVE: []
+    end
+
+    class GetTableBucketEncryptionResponse
+      attr_accessor encryption_configuration: Types::EncryptionConfiguration
       SENSITIVE: []
     end
 
@@ -121,6 +167,17 @@ module Aws::S3Tables
       SENSITIVE: []
     end
 
+    class GetTableBucketMetricsConfigurationRequest
+      attr_accessor table_bucket_arn: ::String
+      SENSITIVE: []
+    end
+
+    class GetTableBucketMetricsConfigurationResponse
+      attr_accessor table_bucket_arn: ::String
+      attr_accessor id: ::String
+      SENSITIVE: []
+    end
+
     class GetTableBucketPolicyRequest
       attr_accessor table_bucket_arn: ::String
       SENSITIVE: []
@@ -128,6 +185,17 @@ module Aws::S3Tables
 
     class GetTableBucketPolicyResponse
       attr_accessor resource_policy: ::String
+      SENSITIVE: []
+    end
+
+    class GetTableBucketReplicationRequest
+      attr_accessor table_bucket_arn: ::String
+      SENSITIVE: []
+    end
+
+    class GetTableBucketReplicationResponse
+      attr_accessor version_token: ::String
+      attr_accessor configuration: Types::TableBucketReplicationConfiguration
       SENSITIVE: []
     end
 
@@ -141,6 +209,30 @@ module Aws::S3Tables
       attr_accessor name: ::String
       attr_accessor owner_account_id: ::String
       attr_accessor created_at: ::Time
+      attr_accessor table_bucket_id: ::String
+      attr_accessor type: ("customer" | "aws")
+      SENSITIVE: []
+    end
+
+    class GetTableBucketStorageClassRequest
+      attr_accessor table_bucket_arn: ::String
+      SENSITIVE: []
+    end
+
+    class GetTableBucketStorageClassResponse
+      attr_accessor storage_class_configuration: Types::StorageClassConfiguration
+      SENSITIVE: []
+    end
+
+    class GetTableEncryptionRequest
+      attr_accessor table_bucket_arn: ::String
+      attr_accessor namespace: ::String
+      attr_accessor name: ::String
+      SENSITIVE: []
+    end
+
+    class GetTableEncryptionResponse
+      attr_accessor encryption_configuration: Types::EncryptionConfiguration
       SENSITIVE: []
     end
 
@@ -196,10 +288,56 @@ module Aws::S3Tables
       SENSITIVE: []
     end
 
+    class GetTableRecordExpirationConfigurationRequest
+      attr_accessor table_arn: ::String
+      SENSITIVE: []
+    end
+
+    class GetTableRecordExpirationConfigurationResponse
+      attr_accessor configuration: Types::TableRecordExpirationConfigurationValue
+      SENSITIVE: []
+    end
+
+    class GetTableRecordExpirationJobStatusRequest
+      attr_accessor table_arn: ::String
+      SENSITIVE: []
+    end
+
+    class GetTableRecordExpirationJobStatusResponse
+      attr_accessor status: ("NotYetRun" | "Successful" | "Failed" | "Disabled")
+      attr_accessor last_run_timestamp: ::Time
+      attr_accessor failure_message: ::String
+      attr_accessor metrics: Types::TableRecordExpirationJobMetrics
+      SENSITIVE: []
+    end
+
+    class GetTableReplicationRequest
+      attr_accessor table_arn: ::String
+      SENSITIVE: []
+    end
+
+    class GetTableReplicationResponse
+      attr_accessor version_token: ::String
+      attr_accessor configuration: Types::TableReplicationConfiguration
+      SENSITIVE: []
+    end
+
+    class GetTableReplicationStatusRequest
+      attr_accessor table_arn: ::String
+      SENSITIVE: []
+    end
+
+    class GetTableReplicationStatusResponse
+      attr_accessor source_table_arn: ::String
+      attr_accessor destinations: ::Array[Types::ReplicationDestinationStatusModel]
+      SENSITIVE: []
+    end
+
     class GetTableRequest
       attr_accessor table_bucket_arn: ::String
       attr_accessor namespace: ::String
       attr_accessor name: ::String
+      attr_accessor table_arn: ::String
       SENSITIVE: []
     end
 
@@ -208,6 +346,7 @@ module Aws::S3Tables
       attr_accessor type: ("customer" | "aws")
       attr_accessor table_arn: ::String
       attr_accessor namespace: ::Array[::String]
+      attr_accessor namespace_id: ::String
       attr_accessor version_token: ::String
       attr_accessor metadata_location: ::String
       attr_accessor warehouse_location: ::String
@@ -218,16 +357,49 @@ module Aws::S3Tables
       attr_accessor modified_by: ::String
       attr_accessor owner_account_id: ::String
       attr_accessor format: ("ICEBERG")
+      attr_accessor table_bucket_id: ::String
+      attr_accessor managed_table_information: Types::ManagedTableInformation
+      SENSITIVE: []
+    end
+
+    class GetTableStorageClassRequest
+      attr_accessor table_bucket_arn: ::String
+      attr_accessor namespace: ::String
+      attr_accessor name: ::String
+      SENSITIVE: []
+    end
+
+    class GetTableStorageClassResponse
+      attr_accessor storage_class_configuration: Types::StorageClassConfiguration
       SENSITIVE: []
     end
 
     class IcebergCompactionSettings
       attr_accessor target_file_size_mb: ::Integer
+      attr_accessor strategy: ("auto" | "binpack" | "sort" | "z-order")
       SENSITIVE: []
     end
 
     class IcebergMetadata
       attr_accessor schema: Types::IcebergSchema
+      attr_accessor schema_v2: Types::IcebergSchemaV2
+      attr_accessor partition_spec: Types::IcebergPartitionSpec
+      attr_accessor write_order: Types::IcebergSortOrder
+      attr_accessor properties: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class IcebergPartitionField
+      attr_accessor source_id: ::Integer
+      attr_accessor transform: ::String
+      attr_accessor name: ::String
+      attr_accessor field_id: ::Integer
+      SENSITIVE: []
+    end
+
+    class IcebergPartitionSpec
+      attr_accessor fields: ::Array[Types::IcebergPartitionField]
+      attr_accessor spec_id: ::Integer
       SENSITIVE: []
     end
 
@@ -236,9 +408,31 @@ module Aws::S3Tables
       SENSITIVE: []
     end
 
+    class IcebergSchemaV2
+      attr_accessor type: ("struct")
+      attr_accessor fields: ::Array[Types::SchemaV2Field]
+      attr_accessor schema_id: ::Integer
+      attr_accessor identifier_field_ids: ::Array[::Integer]
+      SENSITIVE: []
+    end
+
     class IcebergSnapshotManagementSettings
       attr_accessor min_snapshots_to_keep: ::Integer
       attr_accessor max_snapshot_age_hours: ::Integer
+      SENSITIVE: []
+    end
+
+    class IcebergSortField
+      attr_accessor source_id: ::Integer
+      attr_accessor transform: ::String
+      attr_accessor direction: ("asc" | "desc")
+      attr_accessor null_order: ("nulls-first" | "nulls-last")
+      SENSITIVE: []
+    end
+
+    class IcebergSortOrder
+      attr_accessor order_id: ::Integer
+      attr_accessor fields: ::Array[Types::IcebergSortField]
       SENSITIVE: []
     end
 
@@ -250,6 +444,12 @@ module Aws::S3Tables
 
     class InternalServerErrorException
       attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class LastSuccessfulReplicatedUpdate
+      attr_accessor metadata_location: ::String
+      attr_accessor timestamp: ::Time
       SENSITIVE: []
     end
 
@@ -271,6 +471,7 @@ module Aws::S3Tables
       attr_accessor prefix: ::String
       attr_accessor continuation_token: ::String
       attr_accessor max_buckets: ::Integer
+      attr_accessor type: ("customer" | "aws")
       SENSITIVE: []
     end
 
@@ -295,16 +496,44 @@ module Aws::S3Tables
       SENSITIVE: []
     end
 
+    class ListTagsForResourceRequest
+      attr_accessor resource_arn: ::String
+      SENSITIVE: []
+    end
+
+    class ListTagsForResourceResponse
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class ManagedTableInformation
+      attr_accessor replication_information: Types::ReplicationInformation
+      SENSITIVE: []
+    end
+
+    class MethodNotAllowedException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
     class NamespaceSummary
       attr_accessor namespace: ::Array[::String]
       attr_accessor created_at: ::Time
       attr_accessor created_by: ::String
       attr_accessor owner_account_id: ::String
+      attr_accessor namespace_id: ::String
+      attr_accessor table_bucket_id: ::String
       SENSITIVE: []
     end
 
     class NotFoundException
       attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class PutTableBucketEncryptionRequest
+      attr_accessor table_bucket_arn: ::String
+      attr_accessor encryption_configuration: Types::EncryptionConfiguration
       SENSITIVE: []
     end
 
@@ -315,9 +544,33 @@ module Aws::S3Tables
       SENSITIVE: []
     end
 
+    class PutTableBucketMetricsConfigurationRequest
+      attr_accessor table_bucket_arn: ::String
+      SENSITIVE: []
+    end
+
     class PutTableBucketPolicyRequest
       attr_accessor table_bucket_arn: ::String
       attr_accessor resource_policy: ::String
+      SENSITIVE: []
+    end
+
+    class PutTableBucketReplicationRequest
+      attr_accessor table_bucket_arn: ::String
+      attr_accessor version_token: ::String
+      attr_accessor configuration: Types::TableBucketReplicationConfiguration
+      SENSITIVE: []
+    end
+
+    class PutTableBucketReplicationResponse
+      attr_accessor version_token: ::String
+      attr_accessor status: ::String
+      SENSITIVE: []
+    end
+
+    class PutTableBucketStorageClassRequest
+      attr_accessor table_bucket_arn: ::String
+      attr_accessor storage_class_configuration: Types::StorageClassConfiguration
       SENSITIVE: []
     end
 
@@ -338,6 +591,25 @@ module Aws::S3Tables
       SENSITIVE: []
     end
 
+    class PutTableRecordExpirationConfigurationRequest
+      attr_accessor table_arn: ::String
+      attr_accessor value: Types::TableRecordExpirationConfigurationValue
+      SENSITIVE: []
+    end
+
+    class PutTableReplicationRequest
+      attr_accessor table_arn: ::String
+      attr_accessor version_token: ::String
+      attr_accessor configuration: Types::TableReplicationConfiguration
+      SENSITIVE: []
+    end
+
+    class PutTableReplicationResponse
+      attr_accessor version_token: ::String
+      attr_accessor status: ::String
+      SENSITIVE: []
+    end
+
     class RenameTableRequest
       attr_accessor table_bucket_arn: ::String
       attr_accessor namespace: ::String
@@ -348,10 +620,44 @@ module Aws::S3Tables
       SENSITIVE: []
     end
 
+    class ReplicationDestination
+      attr_accessor destination_table_bucket_arn: ::String
+      SENSITIVE: []
+    end
+
+    class ReplicationDestinationStatusModel
+      attr_accessor replication_status: ("pending" | "completed" | "failed")
+      attr_accessor destination_table_bucket_arn: ::String
+      attr_accessor destination_table_arn: ::String
+      attr_accessor last_successful_replicated_update: Types::LastSuccessfulReplicatedUpdate
+      attr_accessor failure_message: ::String
+      SENSITIVE: []
+    end
+
+    class ReplicationInformation
+      attr_accessor source_table_arn: ::String
+      SENSITIVE: []
+    end
+
     class SchemaField
+      attr_accessor id: ::Integer
       attr_accessor name: ::String
       attr_accessor type: ::String
       attr_accessor required: bool
+      SENSITIVE: []
+    end
+
+    class SchemaV2Field
+      attr_accessor id: ::Integer
+      attr_accessor name: ::String
+      attr_accessor type: untyped
+      attr_accessor required: bool
+      attr_accessor doc: ::String
+      SENSITIVE: []
+    end
+
+    class StorageClassConfiguration
+      attr_accessor storage_class: ("STANDARD" | "INTELLIGENT_TIERING")
       SENSITIVE: []
     end
 
@@ -372,11 +678,24 @@ module Aws::S3Tables
       end
     end
 
+    class TableBucketReplicationConfiguration
+      attr_accessor role: ::String
+      attr_accessor rules: ::Array[Types::TableBucketReplicationRule]
+      SENSITIVE: []
+    end
+
+    class TableBucketReplicationRule
+      attr_accessor destinations: ::Array[Types::ReplicationDestination]
+      SENSITIVE: []
+    end
+
     class TableBucketSummary
       attr_accessor arn: ::String
       attr_accessor name: ::String
       attr_accessor owner_account_id: ::String
       attr_accessor created_at: ::Time
+      attr_accessor table_bucket_id: ::String
+      attr_accessor type: ("customer" | "aws")
       SENSITIVE: []
     end
 
@@ -418,6 +737,35 @@ module Aws::S3Tables
       end
     end
 
+    class TableRecordExpirationConfigurationValue
+      attr_accessor status: ("enabled" | "disabled")
+      attr_accessor settings: Types::TableRecordExpirationSettings
+      SENSITIVE: []
+    end
+
+    class TableRecordExpirationJobMetrics
+      attr_accessor deleted_data_files: ::Integer
+      attr_accessor deleted_records: ::Integer
+      attr_accessor removed_files_size: ::Integer
+      SENSITIVE: []
+    end
+
+    class TableRecordExpirationSettings
+      attr_accessor days: ::Integer
+      SENSITIVE: []
+    end
+
+    class TableReplicationConfiguration
+      attr_accessor role: ::String
+      attr_accessor rules: ::Array[Types::TableReplicationRule]
+      SENSITIVE: []
+    end
+
+    class TableReplicationRule
+      attr_accessor destinations: ::Array[Types::ReplicationDestination]
+      SENSITIVE: []
+    end
+
     class TableSummary
       attr_accessor namespace: ::Array[::String]
       attr_accessor name: ::String
@@ -425,12 +773,33 @@ module Aws::S3Tables
       attr_accessor table_arn: ::String
       attr_accessor created_at: ::Time
       attr_accessor modified_at: ::Time
+      attr_accessor managed_by_service: ::String
+      attr_accessor namespace_id: ::String
+      attr_accessor table_bucket_id: ::String
       SENSITIVE: []
+    end
+
+    class TagResourceRequest
+      attr_accessor resource_arn: ::String
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class TagResourceResponse < Aws::EmptyStructure
     end
 
     class TooManyRequestsException
       attr_accessor message: ::String
       SENSITIVE: []
+    end
+
+    class UntagResourceRequest
+      attr_accessor resource_arn: ::String
+      attr_accessor tag_keys: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class UntagResourceResponse < Aws::EmptyStructure
     end
 
     class UpdateTableMetadataLocationRequest

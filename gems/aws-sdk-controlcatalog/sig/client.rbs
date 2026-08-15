@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -80,12 +81,18 @@ module Aws
       interface _GetControlResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetControlResponse]
         def arn: () -> ::String
+        def aliases: () -> ::Array[::String]
         def name: () -> ::String
         def description: () -> ::String
         def behavior: () -> ("PREVENTIVE" | "PROACTIVE" | "DETECTIVE")
+        def severity: () -> ("LOW" | "MEDIUM" | "HIGH" | "CRITICAL")
         def region_configuration: () -> Types::RegionConfiguration
         def implementation: () -> Types::ImplementationDetails
+        def parameter_requirement_summary: () -> ("REQUIRED" | "OPTIONAL" | "NONE")
         def parameters: () -> ::Array[Types::ControlParameter]
+        def create_time: () -> ::Time
+        def governed_resources: () -> ::Array[::String]
+        def governed_providers: () -> ::Array[::String]
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ControlCatalog/Client.html#get_control-instance_method
       def get_control: (
@@ -106,11 +113,28 @@ module Aws
                                     objectives: Array[
                                       {
                                         arn: ::String?
-                                      },
+                                      }
                                     ]?
                                   }
                                 ) -> _ListCommonControlsResponseSuccess
                               | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListCommonControlsResponseSuccess
+
+      interface _ListControlMappingsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListControlMappingsResponse]
+        def control_mappings: () -> ::Array[Types::ControlMapping]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ControlCatalog/Client.html#list_control_mappings-instance_method
+      def list_control_mappings: (
+                                   ?next_token: ::String,
+                                   ?max_results: ::Integer,
+                                   ?filter: {
+                                     control_arns: Array[::String]?,
+                                     common_control_arns: Array[::String]?,
+                                     mapping_types: Array[("FRAMEWORK" | "COMMON_CONTROL" | "RELATED_CONTROL")]?
+                                   }
+                                 ) -> _ListControlMappingsResponseSuccess
+                               | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListControlMappingsResponseSuccess
 
       interface _ListControlsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListControlsResponse]
@@ -120,7 +144,14 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ControlCatalog/Client.html#list_controls-instance_method
       def list_controls: (
                            ?next_token: ::String,
-                           ?max_results: ::Integer
+                           ?max_results: ::Integer,
+                           ?filter: {
+                             implementations: {
+                               types: Array[::String]?,
+                               identifiers: Array[::String]?
+                             }?,
+                             governed_providers: Array[::String]?
+                           }
                          ) -> _ListControlsResponseSuccess
                        | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListControlsResponseSuccess
 
@@ -149,7 +180,7 @@ module Aws
                                domains: Array[
                                  {
                                    arn: ::String?
-                                 },
+                                 }
                                ]?
                              }
                            ) -> _ListObjectivesResponseSuccess

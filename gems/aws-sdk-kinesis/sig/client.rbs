@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -85,7 +86,8 @@ module Aws
       def add_tags_to_stream: (
                                 ?stream_name: ::String,
                                 tags: Hash[::String, ::String],
-                                ?stream_arn: ::String
+                                ?stream_arn: ::String,
+                                ?stream_id: ::String
                               ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
@@ -96,7 +98,9 @@ module Aws
                            ?stream_mode_details: {
                              stream_mode: ("PROVISIONED" | "ON_DEMAND")
                            },
-                           ?tags: Hash[::String, ::String]
+                           ?tags: Hash[::String, ::String],
+                           ?warm_throughput_mi_bps: ::Integer,
+                           ?max_record_size_in_ki_b: ::Integer
                          ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
@@ -104,13 +108,15 @@ module Aws
       def decrease_stream_retention_period: (
                                               ?stream_name: ::String,
                                               retention_period_hours: ::Integer,
-                                              ?stream_arn: ::String
+                                              ?stream_arn: ::String,
+                                              ?stream_id: ::String
                                             ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kinesis/Client.html#delete_resource_policy-instance_method
       def delete_resource_policy: (
-                                    resource_arn: ::String
+                                    resource_arn: ::String,
+                                    ?stream_id: ::String
                                   ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
@@ -118,7 +124,8 @@ module Aws
       def delete_stream: (
                            ?stream_name: ::String,
                            ?enforce_consumer_deletion: bool,
-                           ?stream_arn: ::String
+                           ?stream_arn: ::String,
+                           ?stream_id: ::String
                          ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                        | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
@@ -126,9 +133,19 @@ module Aws
       def deregister_stream_consumer: (
                                         ?stream_arn: ::String,
                                         ?consumer_name: ::String,
-                                        ?consumer_arn: ::String
+                                        ?consumer_arn: ::String,
+                                        ?stream_id: ::String
                                       ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                     | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+
+      interface _DescribeAccountSettingsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DescribeAccountSettingsOutput]
+        def minimum_throughput_billing_commitment: () -> Types::MinimumThroughputBillingCommitmentOutput
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kinesis/Client.html#describe_account_settings-instance_method
+      def describe_account_settings: (
+                                     ) -> _DescribeAccountSettingsResponseSuccess
+                                   | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeAccountSettingsResponseSuccess
 
       interface _DescribeLimitsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DescribeLimitsOutput]
@@ -151,7 +168,8 @@ module Aws
                              ?stream_name: ::String,
                              ?limit: ::Integer,
                              ?exclusive_start_shard_id: ::String,
-                             ?stream_arn: ::String
+                             ?stream_arn: ::String,
+                             ?stream_id: ::String
                            ) -> _DescribeStreamResponseSuccess
                          | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeStreamResponseSuccess
 
@@ -163,7 +181,8 @@ module Aws
       def describe_stream_consumer: (
                                       ?stream_arn: ::String,
                                       ?consumer_name: ::String,
-                                      ?consumer_arn: ::String
+                                      ?consumer_arn: ::String,
+                                      ?stream_id: ::String
                                     ) -> _DescribeStreamConsumerResponseSuccess
                                   | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeStreamConsumerResponseSuccess
 
@@ -174,7 +193,8 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kinesis/Client.html#describe_stream_summary-instance_method
       def describe_stream_summary: (
                                      ?stream_name: ::String,
-                                     ?stream_arn: ::String
+                                     ?stream_arn: ::String,
+                                     ?stream_id: ::String
                                    ) -> _DescribeStreamSummaryResponseSuccess
                                  | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeStreamSummaryResponseSuccess
 
@@ -189,7 +209,8 @@ module Aws
       def disable_enhanced_monitoring: (
                                          ?stream_name: ::String,
                                          shard_level_metrics: Array[("IncomingBytes" | "IncomingRecords" | "OutgoingBytes" | "OutgoingRecords" | "WriteProvisionedThroughputExceeded" | "ReadProvisionedThroughputExceeded" | "IteratorAgeMilliseconds" | "ALL")],
-                                         ?stream_arn: ::String
+                                         ?stream_arn: ::String,
+                                         ?stream_id: ::String
                                        ) -> _DisableEnhancedMonitoringResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DisableEnhancedMonitoringResponseSuccess
 
@@ -204,7 +225,8 @@ module Aws
       def enable_enhanced_monitoring: (
                                         ?stream_name: ::String,
                                         shard_level_metrics: Array[("IncomingBytes" | "IncomingRecords" | "OutgoingBytes" | "OutgoingRecords" | "WriteProvisionedThroughputExceeded" | "ReadProvisionedThroughputExceeded" | "IteratorAgeMilliseconds" | "ALL")],
-                                        ?stream_arn: ::String
+                                        ?stream_arn: ::String,
+                                        ?stream_id: ::String
                                       ) -> _EnableEnhancedMonitoringResponseSuccess
                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _EnableEnhancedMonitoringResponseSuccess
 
@@ -219,7 +241,8 @@ module Aws
       def get_records: (
                          shard_iterator: ::String,
                          ?limit: ::Integer,
-                         ?stream_arn: ::String
+                         ?stream_arn: ::String,
+                         ?stream_id: ::String
                        ) -> _GetRecordsResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetRecordsResponseSuccess
 
@@ -229,7 +252,8 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kinesis/Client.html#get_resource_policy-instance_method
       def get_resource_policy: (
-                                 resource_arn: ::String
+                                 resource_arn: ::String,
+                                 ?stream_id: ::String
                                ) -> _GetResourcePolicyResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetResourcePolicyResponseSuccess
 
@@ -244,7 +268,8 @@ module Aws
                                 shard_iterator_type: ("AT_SEQUENCE_NUMBER" | "AFTER_SEQUENCE_NUMBER" | "TRIM_HORIZON" | "LATEST" | "AT_TIMESTAMP"),
                                 ?starting_sequence_number: ::String,
                                 ?timestamp: ::Time,
-                                ?stream_arn: ::String
+                                ?stream_arn: ::String,
+                                ?stream_id: ::String
                               ) -> _GetShardIteratorResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetShardIteratorResponseSuccess
 
@@ -252,7 +277,8 @@ module Aws
       def increase_stream_retention_period: (
                                               ?stream_name: ::String,
                                               retention_period_hours: ::Integer,
-                                              ?stream_arn: ::String
+                                              ?stream_arn: ::String,
+                                              ?stream_id: ::String
                                             ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
@@ -273,7 +299,8 @@ module Aws
                            shard_id: ::String?,
                            timestamp: ::Time?
                          },
-                         ?stream_arn: ::String
+                         ?stream_arn: ::String,
+                         ?stream_id: ::String
                        ) -> _ListShardsResponseSuccess
                      | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListShardsResponseSuccess
 
@@ -287,7 +314,8 @@ module Aws
                                    stream_arn: ::String,
                                    ?next_token: ::String,
                                    ?max_results: ::Integer,
-                                   ?stream_creation_timestamp: ::Time
+                                   ?stream_creation_timestamp: ::Time,
+                                   ?stream_id: ::String
                                  ) -> _ListStreamConsumersResponseSuccess
                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListStreamConsumersResponseSuccess
 
@@ -306,6 +334,17 @@ module Aws
                         ) -> _ListStreamsResponseSuccess
                       | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListStreamsResponseSuccess
 
+      interface _ListTagsForResourceResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListTagsForResourceOutput]
+        def tags: () -> ::Array[Types::Tag]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kinesis/Client.html#list_tags_for_resource-instance_method
+      def list_tags_for_resource: (
+                                    resource_arn: ::String,
+                                    ?stream_id: ::String
+                                  ) -> _ListTagsForResourceResponseSuccess
+                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListTagsForResourceResponseSuccess
+
       interface _ListTagsForStreamResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListTagsForStreamOutput]
         def tags: () -> ::Array[Types::Tag]
@@ -316,7 +355,8 @@ module Aws
                                   ?stream_name: ::String,
                                   ?exclusive_start_tag_key: ::String,
                                   ?limit: ::Integer,
-                                  ?stream_arn: ::String
+                                  ?stream_arn: ::String,
+                                  ?stream_id: ::String
                                 ) -> _ListTagsForStreamResponseSuccess
                               | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListTagsForStreamResponseSuccess
 
@@ -325,7 +365,8 @@ module Aws
                           ?stream_name: ::String,
                           shard_to_merge: ::String,
                           adjacent_shard_to_merge: ::String,
-                          ?stream_arn: ::String
+                          ?stream_arn: ::String,
+                          ?stream_id: ::String
                         ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
@@ -342,7 +383,8 @@ module Aws
                         partition_key: ::String,
                         ?explicit_hash_key: ::String,
                         ?sequence_number_for_ordering: ::String,
-                        ?stream_arn: ::String
+                        ?stream_arn: ::String,
+                        ?stream_id: ::String
                       ) -> _PutRecordResponseSuccess
                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutRecordResponseSuccess
 
@@ -359,16 +401,18 @@ module Aws
                              data: ::String,
                              explicit_hash_key: ::String?,
                              partition_key: ::String
-                           },
+                           }
                          ],
                          ?stream_name: ::String,
-                         ?stream_arn: ::String
+                         ?stream_arn: ::String,
+                         ?stream_id: ::String
                        ) -> _PutRecordsResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutRecordsResponseSuccess
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kinesis/Client.html#put_resource_policy-instance_method
       def put_resource_policy: (
                                  resource_arn: ::String,
+                                 ?stream_id: ::String,
                                  policy: ::String
                                ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
@@ -380,7 +424,9 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kinesis/Client.html#register_stream_consumer-instance_method
       def register_stream_consumer: (
                                       stream_arn: ::String,
-                                      consumer_name: ::String
+                                      consumer_name: ::String,
+                                      ?stream_id: ::String,
+                                      ?tags: Hash[::String, ::String]
                                     ) -> _RegisterStreamConsumerResponseSuccess
                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RegisterStreamConsumerResponseSuccess
 
@@ -388,7 +434,8 @@ module Aws
       def remove_tags_from_stream: (
                                      ?stream_name: ::String,
                                      tag_keys: Array[::String],
-                                     ?stream_arn: ::String
+                                     ?stream_arn: ::String,
+                                     ?stream_id: ::String
                                    ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
@@ -397,7 +444,8 @@ module Aws
                          ?stream_name: ::String,
                          shard_to_split: ::String,
                          new_starting_hash_key: ::String,
-                         ?stream_arn: ::String
+                         ?stream_arn: ::String,
+                         ?stream_id: ::String
                        ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
@@ -406,7 +454,8 @@ module Aws
                                      ?stream_name: ::String,
                                      encryption_type: ("NONE" | "KMS"),
                                      key_id: ::String,
-                                     ?stream_arn: ::String
+                                     ?stream_arn: ::String,
+                                     ?stream_id: ::String
                                    ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
@@ -415,25 +464,46 @@ module Aws
                                     ?stream_name: ::String,
                                     encryption_type: ("NONE" | "KMS"),
                                     key_id: ::String,
-                                    ?stream_arn: ::String
+                                    ?stream_arn: ::String,
+                                    ?stream_id: ::String
                                   ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
-      interface _SubscribeToShardResponseSuccess
-        include ::Seahorse::Client::_ResponseSuccess[Types::SubscribeToShardOutput]
-        def event_stream: () -> Types::SubscribeToShardEventStream
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kinesis/Client.html#tag_resource-instance_method
+      def tag_resource: (
+                          tags: Hash[::String, ::String],
+                          resource_arn: ::String,
+                          ?stream_id: ::String
+                        ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kinesis/Client.html#untag_resource-instance_method
+      def untag_resource: (
+                            tag_keys: Array[::String],
+                            resource_arn: ::String,
+                            ?stream_id: ::String
+                          ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+
+      interface _UpdateAccountSettingsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateAccountSettingsOutput]
+        def minimum_throughput_billing_commitment: () -> Types::MinimumThroughputBillingCommitmentOutput
       end
-      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kinesis/Client.html#subscribe_to_shard-instance_method
-      def subscribe_to_shard: (
-                                consumer_arn: ::String,
-                                shard_id: ::String,
-                                starting_position: {
-                                  type: ("AT_SEQUENCE_NUMBER" | "AFTER_SEQUENCE_NUMBER" | "TRIM_HORIZON" | "LATEST" | "AT_TIMESTAMP"),
-                                  sequence_number: ::String?,
-                                  timestamp: ::Time?
-                                }
-                              ) -> _SubscribeToShardResponseSuccess
-                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _SubscribeToShardResponseSuccess
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kinesis/Client.html#update_account_settings-instance_method
+      def update_account_settings: (
+                                     minimum_throughput_billing_commitment: {
+                                       status: ("ENABLED" | "DISABLED")
+                                     }
+                                   ) -> _UpdateAccountSettingsResponseSuccess
+                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateAccountSettingsResponseSuccess
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kinesis/Client.html#update_max_record_size-instance_method
+      def update_max_record_size: (
+                                    ?stream_arn: ::String,
+                                    ?stream_id: ::String,
+                                    max_record_size_in_ki_b: ::Integer
+                                  ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
       interface _UpdateShardCountResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::UpdateShardCountOutput]
@@ -447,32 +517,52 @@ module Aws
                                 ?stream_name: ::String,
                                 target_shard_count: ::Integer,
                                 scaling_type: ("UNIFORM_SCALING"),
-                                ?stream_arn: ::String
+                                ?stream_arn: ::String,
+                                ?stream_id: ::String
                               ) -> _UpdateShardCountResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateShardCountResponseSuccess
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kinesis/Client.html#update_stream_mode-instance_method
       def update_stream_mode: (
                                 stream_arn: ::String,
+                                ?stream_id: ::String,
                                 stream_mode_details: {
                                   stream_mode: ("PROVISIONED" | "ON_DEMAND")
-                                }
+                                },
+                                ?warm_throughput_mi_bps: ::Integer
                               ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+
+      interface _UpdateStreamWarmThroughputResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateStreamWarmThroughputOutput]
+        def stream_arn: () -> ::String
+        def stream_name: () -> ::String
+        def warm_throughput: () -> Types::WarmThroughputObject
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kinesis/Client.html#update_stream_warm_throughput-instance_method
+      def update_stream_warm_throughput: (
+                                           ?stream_arn: ::String,
+                                           ?stream_name: ::String,
+                                           ?stream_id: ::String,
+                                           warm_throughput_mi_bps: ::Integer
+                                         ) -> _UpdateStreamWarmThroughputResponseSuccess
+                                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateStreamWarmThroughputResponseSuccess
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Kinesis/Client.html#wait_until-instance_method
       def wait_until: (:stream_exists waiter_name, 
                     ?stream_name: ::String,
                     ?limit: ::Integer,
                     ?exclusive_start_shard_id: ::String,
-                    ?stream_arn: ::String
+                    ?stream_arn: ::String,
+                    ?stream_id: ::String
                   ) -> Client::_DescribeStreamResponseSuccess
                     | (:stream_exists waiter_name, ?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> Client::_DescribeStreamResponseSuccess
                     | (:stream_not_exists waiter_name, 
                     ?stream_name: ::String,
                     ?limit: ::Integer,
                     ?exclusive_start_shard_id: ::String,
-                    ?stream_arn: ::String
+                    ?stream_arn: ::String,
+                    ?stream_id: ::String
                   ) -> Client::_DescribeStreamResponseSuccess
                     | (:stream_not_exists waiter_name, ?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> Client::_DescribeStreamResponseSuccess
     end

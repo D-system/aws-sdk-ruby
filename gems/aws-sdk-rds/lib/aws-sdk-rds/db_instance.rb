@@ -60,12 +60,6 @@ module Aws::RDS
       data[:db_instance_status]
     end
 
-    # The time when a stopped DB instance is restarted automatically.
-    # @return [Time]
-    def automatic_restart_time
-      data[:automatic_restart_time]
-    end
-
     # The master username for the DB instance.
     # @return [String]
     def master_username
@@ -159,6 +153,20 @@ module Aws::RDS
       data[:preferred_maintenance_window]
     end
 
+    # This data type represents the order in which the instances are
+    # upgraded.
+    #
+    # * \[first\] - Typically used for development or testing environments.
+    #
+    # * \[second\] - Default order for resources not specifically
+    #   configured.
+    #
+    # * \[last\] - Usually reserved for production environments.
+    # @return [String]
+    def upgrade_rollout_order
+      data[:upgrade_rollout_order]
+    end
+
     # Information about pending changes to the DB instance. This information
     # is returned only when there are pending changes. Specific changes are
     # identified by subelements.
@@ -188,6 +196,13 @@ module Aws::RDS
     end
 
     # Indicates whether minor version patches are applied automatically.
+    #
+    # For more information about automatic minor version upgrades, see
+    # [Automatically upgrading the minor engine version][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_UpgradeDBInstance.Upgrading.html#USER_UpgradeDBInstance.Upgrading.AutoMinorVersionUpgrades
     # @return [Boolean]
     def auto_minor_version_upgrade
       data[:auto_minor_version_upgrade]
@@ -220,17 +235,20 @@ module Aws::RDS
       data[:read_replica_db_cluster_identifiers]
     end
 
-    # The open mode of an Oracle read replica. The default is
-    # `open-read-only`. For more information, see [Working with Oracle Read
-    # Replicas for Amazon RDS][1] in the *Amazon RDS User Guide*.
+    # The open mode of a Db2 or an Oracle read replica. The default is
+    # `open-read-only`. For more information, see [Working with replicas for
+    # Amazon RDS for Db2][1] and [Working with read replicas for Amazon RDS
+    # for Oracle][2] in the *Amazon RDS User Guide*.
     #
-    # <note markdown="1"> This attribute is only supported in RDS for Oracle.
+    # <note markdown="1"> This attribute is only supported in RDS for Db2, RDS for Oracle, and
+    # RDS Custom for Oracle.
     #
     #  </note>
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/oracle-read-replicas.html
+    # [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/db2-replication.html
+    # [2]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/oracle-read-replicas.html
     # @return [String]
     def replica_mode
       data[:replica_mode]
@@ -248,6 +266,14 @@ module Aws::RDS
     # @return [Integer]
     def iops
       data[:iops]
+    end
+
+    # The storage throughput for the DB instance.
+    #
+    # This setting applies only to the `gp3` storage type.
+    # @return [Integer]
+    def storage_throughput
+      data[:storage_throughput]
     end
 
     # The list of option group memberships for this DB instance.
@@ -309,6 +335,21 @@ module Aws::RDS
     # @return [String]
     def storage_type
       data[:storage_type]
+    end
+
+    # The type of encryption used to protect data at rest in the DB
+    # instance. Possible values:
+    #
+    # * `none` - The DB instance is not encrypted.
+    #
+    # * `sse-rds` - The DB instance is encrypted using an Amazon Web
+    #   Services owned KMS key.
+    #
+    # * `sse-kms` - The DB instance is encrypted using a customer managed
+    #   KMS key or Amazon Web Services managed KMS key.
+    # @return [String]
+    def storage_encryption_type
+      data[:storage_encryption_type]
     end
 
     # The ARN from the key store with which the instance is associated for
@@ -570,11 +611,21 @@ module Aws::RDS
       data[:tag_list]
     end
 
-    # The list of replicated automated backups associated with the DB
-    # instance.
-    # @return [Array<Types::DBInstanceAutomatedBackupsReplication>]
-    def db_instance_automated_backups_replications
-      data[:db_instance_automated_backups_replications]
+    # The automation mode of the RDS Custom DB instance: `full` or `all
+    # paused`. If `full`, the DB instance automates monitoring and instance
+    # recovery. If `all paused`, the instance pauses automation for the
+    # duration set by `--resume-full-automation-mode-minutes`.
+    # @return [String]
+    def automation_mode
+      data[:automation_mode]
+    end
+
+    # The number of minutes to pause the automation. When the time period
+    # ends, RDS Custom resumes full automation. The minimum value is 60
+    # (default). The maximum value is 1,440.
+    # @return [Time]
+    def resume_full_automation_mode_time
+      data[:resume_full_automation_mode_time]
     end
 
     # Indicates whether a customer-owned IP address (CoIP) is enabled for an
@@ -602,11 +653,25 @@ module Aws::RDS
       data[:customer_owned_ip_enabled]
     end
 
-    # The Amazon Resource Name (ARN) of the recovery point in Amazon Web
-    # Services Backup.
+    # The network type of the DB instance.
+    #
+    # The network type is determined by the `DBSubnetGroup` specified for
+    # the DB instance. A `DBSubnetGroup` can support only the IPv4 protocol
+    # or the IPv4 and the IPv6 protocols (`DUAL`).
+    #
+    # For more information, see [ Working with a DB instance in a VPC][1] in
+    # the *Amazon RDS User Guide* and [ Working with a DB instance in a
+    # VPC][2] in the *Amazon Aurora User Guide.*
+    #
+    # Valid Values: `IPV4 | DUAL`
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html
+    # [2]: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html
     # @return [String]
-    def aws_backup_recovery_point_arn
-      data[:aws_backup_recovery_point_arn]
+    def network_type
+      data[:network_type]
     end
 
     # The status of the database activity stream.
@@ -646,21 +711,32 @@ module Aws::RDS
       data[:activity_stream_engine_native_audit_fields_included]
     end
 
-    # The automation mode of the RDS Custom DB instance: `full` or `all
-    # paused`. If `full`, the DB instance automates monitoring and instance
-    # recovery. If `all paused`, the instance pauses automation for the
-    # duration set by `--resume-full-automation-mode-minutes`.
+    # The Amazon Resource Name (ARN) of the recovery point in Amazon Web
+    # Services Backup.
     # @return [String]
-    def automation_mode
-      data[:automation_mode]
+    def aws_backup_recovery_point_arn
+      data[:aws_backup_recovery_point_arn]
     end
 
-    # The number of minutes to pause the automation. When the time period
-    # ends, RDS Custom resumes full automation. The minimum value is 60
-    # (default). The maximum value is 1,440.
+    # The list of replicated automated backups associated with the DB
+    # instance.
+    # @return [Array<Types::DBInstanceAutomatedBackupsReplication>]
+    def db_instance_automated_backups_replications
+      data[:db_instance_automated_backups_replications]
+    end
+
+    # The location where automated backups and manual snapshots are stored:
+    # Dedicated Local Zones, Amazon Web Services Outposts or the Amazon Web
+    # Services Region.
+    # @return [String]
+    def backup_target
+      data[:backup_target]
+    end
+
+    # The time when a stopped DB instance is restarted automatically.
     # @return [Time]
-    def resume_full_automation_mode_time
-      data[:resume_full_automation_mode_time]
+    def automatic_restart_time
+      data[:automatic_restart_time]
     end
 
     # The instance profile associated with the underlying Amazon EC2
@@ -686,46 +762,16 @@ module Aws::RDS
       data[:custom_iam_instance_profile]
     end
 
-    # The location where automated backups and manual snapshots are stored:
-    # Amazon Web Services Outposts or the Amazon Web Services Region.
-    # @return [String]
-    def backup_target
-      data[:backup_target]
-    end
-
-    # The network type of the DB instance.
-    #
-    # The network type is determined by the `DBSubnetGroup` specified for
-    # the DB instance. A `DBSubnetGroup` can support only the IPv4 protocol
-    # or the IPv4 and the IPv6 protocols (`DUAL`).
-    #
-    # For more information, see [ Working with a DB instance in a VPC][1] in
-    # the *Amazon RDS User Guide* and [ Working with a DB instance in a
-    # VPC][2] in the *Amazon Aurora User Guide.*
-    #
-    # Valid Values: `IPV4 | DUAL`
-    #
-    #
-    #
-    # [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html
-    # [2]: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html
-    # @return [String]
-    def network_type
-      data[:network_type]
-    end
-
     # The status of the policy state of the activity stream.
     # @return [String]
     def activity_stream_policy_status
       data[:activity_stream_policy_status]
     end
 
-    # The storage throughput for the DB instance.
-    #
-    # This setting applies only to the `gp3` storage type.
-    # @return [Integer]
-    def storage_throughput
-      data[:storage_throughput]
+    # The details of the DB instance's server certificate.
+    # @return [Types::CertificateDetails]
+    def certificate_details
+      data[:certificate_details]
     end
 
     # The Oracle system ID (Oracle SID) for a container database (CDB). The
@@ -750,12 +796,6 @@ module Aws::RDS
       data[:master_user_secret]
     end
 
-    # The details of the DB instance's server certificate.
-    # @return [Types::CertificateDetails]
-    def certificate_details
-      data[:certificate_details]
-    end
-
     # The identifier of the source DB cluster if this DB instance is a read
     # replica.
     # @return [String]
@@ -767,6 +807,13 @@ module Aws::RDS
     # @return [String]
     def percent_progress
       data[:percent_progress]
+    end
+
+    # Specifies whether the DB instance is in the multi-tenant configuration
+    # (TRUE) or the single-tenant configuration (FALSE).
+    # @return [Boolean]
+    def multi_tenant
+      data[:multi_tenant]
     end
 
     # Indicates whether the DB instance has a dedicated log volume (DLV)
@@ -790,19 +837,53 @@ module Aws::RDS
       data[:is_storage_config_upgrade_available]
     end
 
-    # Specifies whether the DB instance is in the multi-tenant configuration
-    # (TRUE) or the single-tenant configuration (FALSE).
-    # @return [Boolean]
-    def multi_tenant
-      data[:multi_tenant]
-    end
-
-    # The life cycle type for the DB instance.
+    # The lifecycle type for the DB instance.
     #
     # For more information, see CreateDBInstance.
     # @return [String]
     def engine_lifecycle_support
       data[:engine_lifecycle_support]
+    end
+
+    # The additional storage volumes associated with the DB instance. RDS
+    # supports additional storage volumes for RDS for Oracle and RDS for SQL
+    # Server.
+    # @return [Array<Types::AdditionalStorageVolumeOutput>]
+    def additional_storage_volumes
+      data[:additional_storage_volumes]
+    end
+
+    # The detailed status information for storage volumes associated with
+    # the DB instance. This information helps identify which specific volume
+    # is causing the instance to be in a storage-full state.
+    # @return [String]
+    def storage_volume_status
+      data[:storage_volume_status]
+    end
+
+    # The status of an in-progress storage operation on the DB instance.
+    # This field appears only while a storage operation is in progress. It
+    # isn't present when no storage operation is active. Possible values:
+    #
+    # * `Initializing` - The volume is initializing from a snapshot, such as
+    #   during a snapshot restore, point-in-time restore, read replica
+    #   creation, or blue/green deployment. Performance can be lower than
+    #   provisioned until initialization completes.
+    #
+    # * `Optimizing` - The volume is optimizing following a storage scaling
+    #   or modification operation.
+    # @return [String]
+    def storage_operation_status
+      data[:storage_operation_status]
+    end
+
+    # The percentage of the in-progress storage operation on the DB instance
+    # that has completed, from `0` to `100`. This field appears only while a
+    # storage operation is in progress. It isn't present when no storage
+    # operation is active.
+    # @return [Integer]
+    def storage_operation_percent_progress
+      data[:storage_operation_percent_progress]
     end
 
     # @!endgroup
@@ -951,7 +1032,7 @@ module Aws::RDS
     #     db_instance_class: "String", # required
     #     engine: "String", # required
     #     master_username: "String",
-    #     master_user_password: "String",
+    #     master_user_password: "SensitiveString",
     #     db_security_groups: ["String"],
     #     vpc_security_group_ids: ["String"],
     #     availability_zone: "String",
@@ -966,6 +1047,7 @@ module Aws::RDS
     #     auto_minor_version_upgrade: false,
     #     license_model: "String",
     #     iops: 1,
+    #     storage_throughput: 1,
     #     option_group_name: "String",
     #     character_set_name: "String",
     #     nchar_character_set_name: "String",
@@ -979,7 +1061,7 @@ module Aws::RDS
     #     db_cluster_identifier: "String",
     #     storage_type: "String",
     #     tde_credential_arn: "String",
-    #     tde_credential_password: "String",
+    #     tde_credential_password: "SensitiveString",
     #     storage_encrypted: false,
     #     kms_key_id: "String",
     #     domain: "String",
@@ -1008,17 +1090,38 @@ module Aws::RDS
     #     deletion_protection: false,
     #     max_allocated_storage: 1,
     #     enable_customer_owned_ip: false,
-    #     custom_iam_instance_profile: "String",
-    #     backup_target: "String",
     #     network_type: "String",
-    #     storage_throughput: 1,
+    #     backup_target: "String",
+    #     custom_iam_instance_profile: "String",
+    #     db_system_id: "String",
+    #     ca_certificate_identifier: "String",
     #     manage_master_user_password: false,
     #     master_user_secret_kms_key_id: "String",
-    #     ca_certificate_identifier: "String",
-    #     db_system_id: "String",
-    #     dedicated_log_volume: false,
     #     multi_tenant: false,
+    #     dedicated_log_volume: false,
     #     engine_lifecycle_support: "String",
+    #     additional_storage_volumes: [
+    #       {
+    #         volume_name: "String", # required
+    #         allocated_storage: 1,
+    #         iops: 1,
+    #         max_allocated_storage: 1,
+    #         storage_throughput: 1,
+    #         storage_type: "String",
+    #       },
+    #     ],
+    #     tag_specifications: [
+    #       {
+    #         resource_type: "String",
+    #         tags: [
+    #           {
+    #             key: "String",
+    #             value: "String",
+    #           },
+    #         ],
+    #       },
+    #     ],
+    #     master_user_authentication_type: "password", # accepts password, iam-db-auth
     #   })
     # @param [Hash] options ({})
     # @option options [String] :db_name
@@ -1310,6 +1413,8 @@ module Aws::RDS
     #
     #   * `db2-ae`
     #
+    #   * `db2-ce`
+    #
     #   * `db2-se`
     #
     #   * `mariadb`
@@ -1325,6 +1430,8 @@ module Aws::RDS
     #   * `oracle-se2-cdb`
     #
     #   * `postgres`
+    #
+    #   * `sqlserver-dev-ee`
     #
     #   * `sqlserver-ee`
     #
@@ -1540,12 +1647,8 @@ module Aws::RDS
     #   set the `AvailabilityZone` parameter if the DB instance is a Multi-AZ
     #   deployment.
     #
-    #   This setting doesn't apply to the following DB instances:
-    #
-    #   * Amazon Aurora (DB instance Availability Zones (AZs) are managed by
-    #     the DB cluster.)
-    #
-    #   * RDS Custom
+    #   This setting doesn't apply to Amazon Aurora because the DB instance
+    #   Availability Zones (AZs) are managed by the DB cluster.
     # @option options [String] :engine_version
     #   The version number of the database engine to use.
     #
@@ -1621,11 +1724,18 @@ module Aws::RDS
     #
     #   If you create an RDS Custom DB instance, you must set
     #   `AutoMinorVersionUpgrade` to `false`.
+    #
+    #   For more information about automatic minor version upgrades, see
+    #   [Automatically upgrading the minor engine version][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_UpgradeDBInstance.Upgrading.html#USER_UpgradeDBInstance.Upgrading.AutoMinorVersionUpgrades
     # @option options [String] :license_model
     #   The license model information for this DB instance.
     #
     #   <note markdown="1"> License models for RDS for Db2 require additional configuration. The
-    #   Bring Your Own License (BYOL) model requires a custom parameter group
+    #   bring your own license (BYOL) model requires a custom parameter group
     #   and an Amazon Web Services License Manager self-managed license. The
     #   Db2 license through Amazon Web Services Marketplace model requires an
     #   Amazon Web Services Marketplace subscription. For more information,
@@ -1645,7 +1755,8 @@ module Aws::RDS
     #
     #   * RDS for MariaDB - `general-public-license`
     #
-    #   * RDS for Microsoft SQL Server - `license-included`
+    #   * RDS for Microsoft SQL Server - `license-included |
+    #     bring-your-own-media`
     #
     #   * RDS for MySQL - `general-public-license`
     #
@@ -1677,6 +1788,14 @@ module Aws::RDS
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Storage.html
+    # @option options [Integer] :storage_throughput
+    #   The storage throughput value, in mebibyte per second (MiBps), for the
+    #   DB instance.
+    #
+    #   This setting applies only to the `gp3` storage type.
+    #
+    #   This setting doesn't apply to Amazon Aurora or RDS Custom DB
+    #   instances.
     # @option options [String] :option_group_name
     #   The option group to associate the DB instance with.
     #
@@ -1706,37 +1825,28 @@ module Aws::RDS
     #   Specifies whether the DB instance is publicly accessible.
     #
     #   When the DB instance is publicly accessible and you connect from
-    #   outside of the DB instance's virtual private cloud (VPC), its Domain
-    #   Name System (DNS) endpoint resolves to the public IP address. When you
+    #   outside of the DB instance's virtual private cloud (VPC), its domain
+    #   name system (DNS) endpoint resolves to the public IP address. When you
     #   connect from within the same VPC as the DB instance, the endpoint
     #   resolves to the private IP address. Access to the DB instance is
-    #   ultimately controlled by the security group it uses. That public
-    #   access is not permitted if the security group assigned to the DB
-    #   instance doesn't permit it.
+    #   controlled by its security group settings.
     #
     #   When the DB instance isn't publicly accessible, it is an internal DB
     #   instance with a DNS name that resolves to a private IP address.
     #
-    #   Default: The default behavior varies depending on whether
-    #   `DBSubnetGroupName` is specified.
+    #   The default behavior when `PubliclyAccessible` is not specified
+    #   depends on whether a `DBSubnetGroup` is specified.
     #
-    #   If `DBSubnetGroupName` isn't specified, and `PubliclyAccessible`
-    #   isn't specified, the following applies:
+    #   If `DBSubnetGroup` isn't specified, `PubliclyAccessible` defaults to
+    #   `false` for Aurora instances and `true` for non-Aurora instances.
     #
-    #   * If the default VPC in the target Region doesn’t have an internet
-    #     gateway attached to it, the DB instance is private.
+    #   If `DBSubnetGroup` is specified, `PubliclyAccessible` defaults to
+    #   `false` unless the value of `DBSubnetGroup` is `default`, in which
+    #   case `PubliclyAccessible` defaults to `true`.
     #
-    #   * If the default VPC in the target Region has an internet gateway
-    #     attached to it, the DB instance is public.
-    #
-    #   If `DBSubnetGroupName` is specified, and `PubliclyAccessible` isn't
-    #   specified, the following applies:
-    #
-    #   * If the subnets are part of a VPC that doesn’t have an internet
-    #     gateway attached to it, the DB instance is private.
-    #
-    #   * If the subnets are part of a VPC that has an internet gateway
-    #     attached to it, the DB instance is public.
+    #   If `PubliclyAccessible` is true and the VPC that the `DBSubnetGroup`
+    #   is in doesn't have an internet gateway attached to it, Amazon RDS
+    #   returns an error.
     # @option options [Array<Types::Tag>] :tags
     #   Tags to assign to the DB instance.
     # @option options [String] :db_cluster_identifier
@@ -2080,6 +2190,40 @@ module Aws::RDS
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-on-outposts.html
     #   [2]: https://docs.aws.amazon.com/outposts/latest/userguide/routing.html#ip-addressing
+    # @option options [String] :network_type
+    #   The network type of the DB instance.
+    #
+    #   The network type is determined by the `DBSubnetGroup` specified for
+    #   the DB instance. A `DBSubnetGroup` can support only the IPv4 protocol
+    #   or the IPv4 and the IPv6 protocols (`DUAL`).
+    #
+    #   For more information, see [ Working with a DB instance in a VPC][1] in
+    #   the *Amazon RDS User Guide.*
+    #
+    #   Valid Values: `IPV4 | DUAL`
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html
+    # @option options [String] :backup_target
+    #   The location for storing automated backups and manual snapshots.
+    #
+    #   Valid Values:
+    #
+    #   * `local` (Dedicated Local Zone)
+    #
+    #   * `outposts` (Amazon Web Services Outposts)
+    #
+    #   * `region` (Amazon Web Services Region)
+    #
+    #   Default: `region`
+    #
+    #   For more information, see [Working with Amazon RDS on Amazon Web
+    #   Services Outposts][1] in the *Amazon RDS User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-on-outposts.html
     # @option options [String] :custom_iam_instance_profile
     #   The instance profile associated with the underlying Amazon EC2
     #   instance of an RDS Custom DB instance.
@@ -2102,46 +2246,28 @@ module Aws::RDS
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/custom-setup-orcl.html#custom-setup-orcl.iam-vpc
-    # @option options [String] :backup_target
-    #   The location for storing automated backups and manual snapshots.
+    # @option options [String] :db_system_id
+    #   The Oracle system identifier (SID), which is the name of the Oracle
+    #   database instance that manages your database files. In this context,
+    #   the term "Oracle database instance" refers exclusively to the system
+    #   global area (SGA) and Oracle background processes. If you don't
+    #   specify a SID, the value defaults to `RDSCDB`. The Oracle SID is also
+    #   the name of your CDB.
+    # @option options [String] :ca_certificate_identifier
+    #   The CA certificate identifier to use for the DB instance's server
+    #   certificate.
     #
-    #   Valid Values:
+    #   This setting doesn't apply to RDS Custom DB instances.
     #
-    #   * `outposts` (Amazon Web Services Outposts)
-    #
-    #   * `region` (Amazon Web Services Region)
-    #
-    #   Default: `region`
-    #
-    #   For more information, see [Working with Amazon RDS on Amazon Web
-    #   Services Outposts][1] in the *Amazon RDS User Guide*.
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-on-outposts.html
-    # @option options [String] :network_type
-    #   The network type of the DB instance.
-    #
-    #   The network type is determined by the `DBSubnetGroup` specified for
-    #   the DB instance. A `DBSubnetGroup` can support only the IPv4 protocol
-    #   or the IPv4 and the IPv6 protocols (`DUAL`).
-    #
-    #   For more information, see [ Working with a DB instance in a VPC][1] in
-    #   the *Amazon RDS User Guide.*
-    #
-    #   Valid Values: `IPV4 | DUAL`
+    #   For more information, see [Using SSL/TLS to encrypt a connection to a
+    #   DB instance][1] in the *Amazon RDS User Guide* and [ Using SSL/TLS to
+    #   encrypt a connection to a DB cluster][2] in the *Amazon Aurora User
+    #   Guide*.
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html
-    # @option options [Integer] :storage_throughput
-    #   The storage throughput value, in mebibyte per second (MiBps), for the
-    #   DB instance.
-    #
-    #   This setting applies only to the `gp3` storage type.
-    #
-    #   This setting doesn't apply to Amazon Aurora or RDS Custom DB
-    #   instances.
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html
+    #   [2]: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.SSL.html
     # @option options [Boolean] :manage_master_user_password
     #   Specifies whether to manage the master user password with Amazon Web
     #   Services Secrets Manager.
@@ -2181,31 +2307,6 @@ module Aws::RDS
     #   There is a default KMS key for your Amazon Web Services account. Your
     #   Amazon Web Services account has a different default KMS key for each
     #   Amazon Web Services Region.
-    # @option options [String] :ca_certificate_identifier
-    #   The CA certificate identifier to use for the DB instance's server
-    #   certificate.
-    #
-    #   This setting doesn't apply to RDS Custom DB instances.
-    #
-    #   For more information, see [Using SSL/TLS to encrypt a connection to a
-    #   DB instance][1] in the *Amazon RDS User Guide* and [ Using SSL/TLS to
-    #   encrypt a connection to a DB cluster][2] in the *Amazon Aurora User
-    #   Guide*.
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html
-    #   [2]: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.SSL.html
-    # @option options [String] :db_system_id
-    #   The Oracle system identifier (SID), which is the name of the Oracle
-    #   database instance that manages your database files. In this context,
-    #   the term "Oracle database instance" refers exclusively to the system
-    #   global area (SGA) and Oracle background processes. If you don't
-    #   specify a SID, the value defaults to `RDSCDB`. The Oracle SID is also
-    #   the name of your CDB.
-    # @option options [Boolean] :dedicated_log_volume
-    #   Indicates whether the DB instance has a dedicated log volume (DLV)
-    #   enabled.
     # @option options [Boolean] :multi_tenant
     #   Specifies whether to use the multi-tenant configuration or the
     #   single-tenant configuration (default). This parameter only applies to
@@ -2221,8 +2322,11 @@ module Aws::RDS
     #   * If you specify the multi-tenant configuration when you create your
     #     DB instance, you can't later modify this DB instance to use the
     #     single-tenant configuration.
+    # @option options [Boolean] :dedicated_log_volume
+    #   Indicates whether the DB instance has a dedicated log volume (DLV)
+    #   enabled.
     # @option options [String] :engine_lifecycle_support
-    #   The life cycle type for this DB instance.
+    #   The lifecycle type for this DB instance.
     #
     #   <note markdown="1"> By default, this value is set to `open-source-rds-extended-support`,
     #   which enrolls your DB instance into Amazon RDS Extended Support. At
@@ -2235,14 +2339,14 @@ module Aws::RDS
     #    </note>
     #
     #   This setting applies only to RDS for MySQL and RDS for PostgreSQL. For
-    #   Amazon Aurora DB instances, the life cycle type is managed by the DB
-    #   cluster.
+    #   Amazon Aurora DB instances, the engine lifecycle support is managed by
+    #   the DB cluster.
     #
     #   You can use this setting to enroll your DB instance into Amazon RDS
     #   Extended Support. With RDS Extended Support, you can run the selected
     #   major engine version on your DB instance past the end of standard
-    #   support for that engine version. For more information, see [Using
-    #   Amazon RDS Extended Support][1] in the *Amazon RDS User Guide*.
+    #   support for that engine version. For more information, see [Amazon RDS
+    #   Extended Support with Amazon RDS][1] in the *Amazon RDS User Guide*.
     #
     #   Valid Values: `open-source-rds-extended-support |
     #   open-source-rds-extended-support-disabled`
@@ -2252,6 +2356,33 @@ module Aws::RDS
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/extended-support.html
+    # @option options [Array<Types::AdditionalStorageVolume>] :additional_storage_volumes
+    #   A list of additional storage volumes to create for the DB instance.
+    #   You can create up to three additional storage volumes using the names
+    #   `rdsdbdata2`, `rdsdbdata3`, and `rdsdbdata4`. Additional storage
+    #   volumes are supported for RDS for Oracle and RDS for SQL Server DB
+    #   instances only.
+    # @option options [Array<Types::TagSpecification>] :tag_specifications
+    #   Tags to assign to resources associated with the DB instance.
+    #
+    #   Valid Values:
+    #
+    #   * `auto-backup` - The DB instance's automated backup.
+    #
+    #   ^
+    # @option options [String] :master_user_authentication_type
+    #   Specifies the authentication type for the master user. With IAM master
+    #   user authentication, you can configure the master DB user with IAM
+    #   database authentication when you create a DB instance.
+    #
+    #   You can specify one of the following values:
+    #
+    #   * `password` - Use standard database authentication with a password.
+    #
+    #   * `iam-db-auth` - Use IAM database authentication for the master user.
+    #
+    #   This option is only valid for RDS for PostgreSQL and Aurora PostgreSQL
+    #   engines.
     # @return [DBInstance]
     def create(options = {})
       options = options.merge(db_instance_identifier: @id)
@@ -2275,6 +2406,7 @@ module Aws::RDS
     #     multi_az: false,
     #     auto_minor_version_upgrade: false,
     #     iops: 1,
+    #     storage_throughput: 1,
     #     option_group_name: "String",
     #     db_parameter_group_name: "String",
     #     publicly_accessible: false,
@@ -2291,7 +2423,7 @@ module Aws::RDS
     #     monitoring_interval: 1,
     #     monitoring_role_arn: "String",
     #     kms_key_id: "String",
-    #     pre_signed_url: "String",
+    #     pre_signed_url: "SensitiveString",
     #     enable_iam_database_authentication: false,
     #     database_insights_mode: "standard", # accepts standard, advanced
     #     enable_performance_insights: false,
@@ -2313,16 +2445,37 @@ module Aws::RDS
     #     domain_auth_secret_arn: "String",
     #     domain_dns_ips: ["String"],
     #     replica_mode: "open-read-only", # accepts open-read-only, mounted
-    #     max_allocated_storage: 1,
-    #     custom_iam_instance_profile: "String",
-    #     network_type: "String",
-    #     storage_throughput: 1,
     #     enable_customer_owned_ip: false,
+    #     network_type: "String",
+    #     max_allocated_storage: 1,
+    #     backup_target: "String",
+    #     custom_iam_instance_profile: "String",
     #     allocated_storage: 1,
     #     source_db_cluster_identifier: "String",
     #     dedicated_log_volume: false,
     #     upgrade_storage_config: false,
     #     ca_certificate_identifier: "String",
+    #     additional_storage_volumes: [
+    #       {
+    #         volume_name: "String", # required
+    #         allocated_storage: 1,
+    #         iops: 1,
+    #         max_allocated_storage: 1,
+    #         storage_throughput: 1,
+    #         storage_type: "String",
+    #       },
+    #     ],
+    #     tag_specifications: [
+    #       {
+    #         resource_type: "String",
+    #         tags: [
+    #           {
+    #             key: "String",
+    #             value: "String",
+    #           },
+    #         ],
+    #       },
+    #     ],
     #     source_region: "String",
     #   })
     # @param [Hash] options ({})
@@ -2372,9 +2525,21 @@ module Aws::RDS
     #   This setting doesn't apply to RDS Custom DB instances.
     #
     #   Default: Inherits the value from the source DB instance.
+    #
+    #   For more information about automatic minor version upgrades, see
+    #   [Automatically upgrading the minor engine version][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_UpgradeDBInstance.Upgrading.html#USER_UpgradeDBInstance.Upgrading.AutoMinorVersionUpgrades
     # @option options [Integer] :iops
     #   The amount of Provisioned IOPS (input/output operations per second) to
     #   initially allocate for the DB instance.
+    # @option options [Integer] :storage_throughput
+    #   Specifies the storage throughput value for the read replica.
+    #
+    #   This setting doesn't apply to RDS Custom or Amazon Aurora DB
+    #   instances.
     # @option options [String] :option_group_name
     #   The option group to associate the DB instance with. If not specified,
     #   RDS uses the option group associated with the source DB instance or
@@ -2390,6 +2555,16 @@ module Aws::RDS
     #   The name of the DB parameter group to associate with this read replica
     #   DB instance.
     #
+    #   For the Db2 DB engine, if your source DB instance uses the bring your
+    #   own license (BYOL) model, then a custom parameter group must be
+    #   associated with the replica. For a same Amazon Web Services Region
+    #   replica, if you don't specify a custom parameter group, Amazon RDS
+    #   associates the custom parameter group associated with the source DB
+    #   instance. For a cross-Region replica, you must specify a custom
+    #   parameter group. This custom parameter group must include your IBM
+    #   Site ID and IBM Customer ID. For more information, see [IBM IDs for
+    #   bring your own license (BYOL) for Db2][1].
+    #
     #   For Single-AZ or Multi-AZ DB instance read replica instances, if you
     #   don't specify a value for `DBParameterGroupName`, then Amazon RDS
     #   uses the `DBParameterGroup` of the source DB instance for a same
@@ -2402,9 +2577,9 @@ module Aws::RDS
     #
     #   Specifying a parameter group for this operation is only supported for
     #   MySQL DB instances for cross-Region read replicas, for Multi-AZ DB
-    #   cluster read replica instances, and for Oracle DB instances. It isn't
-    #   supported for MySQL DB instances for same Region read replicas or for
-    #   RDS Custom.
+    #   cluster read replica instances, for Db2 DB instances, and for Oracle
+    #   DB instances. It isn't supported for MySQL DB instances for same
+    #   Region read replicas or for RDS Custom.
     #
     #   Constraints:
     #
@@ -2413,6 +2588,10 @@ module Aws::RDS
     #   * First character must be a letter.
     #
     #   * Can't end with a hyphen or contain two consecutive hyphens.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/db2-licensing.html#db2-prereqs-ibm-info
     # @option options [Boolean] :publicly_accessible
     #   Specifies whether the DB instance is publicly accessible.
     #
@@ -2761,31 +2940,88 @@ module Aws::RDS
     #
     #   Example: `123.124.125.126,234.235.236.237`
     # @option options [String] :replica_mode
-    #   The open mode of the replica database: mounted or read-only.
+    #   The open mode of the replica database.
     #
-    #   <note markdown="1"> This parameter is only supported for Oracle DB instances.
+    #   This parameter is only supported for Db2 DB instances and Oracle DB
+    #   instances.
     #
-    #    </note>
+    #   Db2
     #
-    #   Mounted DB replicas are included in Oracle Database Enterprise
-    #   Edition. The main use case for mounted replicas is cross-Region
-    #   disaster recovery. The primary database doesn't use Active Data Guard
-    #   to transmit information to the mounted replica. Because it doesn't
-    #   accept user connections, a mounted replica can't serve a read-only
-    #   workload.
+    #   : Standby DB replicas are included in Db2 Advanced Edition (AE), Db2
+    #     Community Edition (CE), and Db2 Standard Edition (SE). The main use
+    #     case for standby replicas is cross-Region disaster recovery. Because
+    #     it doesn't accept user connections, a standby replica can't serve
+    #     a read-only workload.
     #
-    #   You can create a combination of mounted and read-only DB replicas for
-    #   the same primary DB instance. For more information, see [Working with
-    #   Oracle Read Replicas for Amazon RDS][1] in the *Amazon RDS User
+    #     You can create a combination of standby and read-only DB replicas
+    #     for the same primary DB instance. For more information, see [Working
+    #     with replicas for Amazon RDS for Db2][1] in the *Amazon RDS User
+    #     Guide*.
+    #
+    #     To create standby DB replicas for RDS for Db2, set this parameter to
+    #     `mounted`.
+    #
+    #   Oracle
+    #
+    #   : Mounted DB replicas are included in Oracle Database Enterprise
+    #     Edition. The main use case for mounted replicas is cross-Region
+    #     disaster recovery. The primary database doesn't use Active Data
+    #     Guard to transmit information to the mounted replica. Because it
+    #     doesn't accept user connections, a mounted replica can't serve a
+    #     read-only workload.
+    #
+    #     You can create a combination of mounted and read-only DB replicas
+    #     for the same primary DB instance. For more information, see [Working
+    #     with read replicas for Amazon RDS for Oracle][2] in the *Amazon RDS
+    #     User Guide*.
+    #
+    #     For RDS Custom, you must specify this parameter and set it to
+    #     `mounted`. The value won't be set by default. After replica
+    #     creation, you can manage the open mode manually.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/db2-replication.html
+    #   [2]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/oracle-read-replicas.html
+    # @option options [Boolean] :enable_customer_owned_ip
+    #   Specifies whether to enable a customer-owned IP address (CoIP) for an
+    #   RDS on Outposts read replica.
+    #
+    #   A *CoIP* provides local or external connectivity to resources in your
+    #   Outpost subnets through your on-premises network. For some use cases,
+    #   a CoIP can provide lower latency for connections to the read replica
+    #   from outside of its virtual private cloud (VPC) on your local network.
+    #
+    #   For more information about RDS on Outposts, see [Working with Amazon
+    #   RDS on Amazon Web Services Outposts][1] in the *Amazon RDS User
     #   Guide*.
     #
-    #   For RDS Custom, you must specify this parameter and set it to
-    #   `mounted`. The value won't be set by default. After replica creation,
-    #   you can manage the open mode manually.
+    #   For more information about CoIPs, see [Customer-owned IP addresses][2]
+    #   in the *Amazon Web Services Outposts User Guide*.
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/oracle-read-replicas.html
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-on-outposts.html
+    #   [2]: https://docs.aws.amazon.com/outposts/latest/userguide/routing.html#ip-addressing
+    # @option options [String] :network_type
+    #   The network type of the DB instance.
+    #
+    #   Valid Values:
+    #
+    #   * `IPV4`
+    #
+    #   * `DUAL`
+    #
+    #   The network type is determined by the `DBSubnetGroup` specified for
+    #   read replica. A `DBSubnetGroup` can support only the IPv4 protocol or
+    #   the IPv4 and the IPv6 protocols (`DUAL`).
+    #
+    #   For more information, see [ Working with a DB instance in a VPC][1] in
+    #   the *Amazon RDS User Guide.*
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html
     # @option options [Integer] :max_allocated_storage
     #   The upper limit in gibibytes (GiB) to which Amazon RDS can
     #   automatically scale the storage of the DB instance.
@@ -2797,6 +3033,14 @@ module Aws::RDS
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_PIOPS.StorageTypes.html#USER_PIOPS.Autoscaling
+    # @option options [String] :backup_target
+    #   The location where RDS stores automated backups and manual snapshots.
+    #
+    #   Valid Values:
+    #
+    #   * `local` for Dedicated Local Zones
+    #
+    #   * `region` for Amazon Web Services Region
     # @option options [String] :custom_iam_instance_profile
     #   The instance profile associated with the underlying Amazon EC2
     #   instance of an RDS Custom DB instance. The instance profile must meet
@@ -2818,50 +3062,6 @@ module Aws::RDS
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/custom-setup-orcl.html#custom-setup-orcl.iam-vpc
-    # @option options [String] :network_type
-    #   The network type of the DB instance.
-    #
-    #   Valid Values:
-    #
-    #   * `IPV4`
-    #
-    #   * `DUAL`
-    #
-    #   The network type is determined by the `DBSubnetGroup` specified for
-    #   read replica. A `DBSubnetGroup` can support only the IPv4 protocol or
-    #   the IPv4 and the IPv6 protocols (`DUAL`).
-    #
-    #   For more information, see [ Working with a DB instance in a VPC][1] in
-    #   the *Amazon RDS User Guide.*
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html
-    # @option options [Integer] :storage_throughput
-    #   Specifies the storage throughput value for the read replica.
-    #
-    #   This setting doesn't apply to RDS Custom or Amazon Aurora DB
-    #   instances.
-    # @option options [Boolean] :enable_customer_owned_ip
-    #   Specifies whether to enable a customer-owned IP address (CoIP) for an
-    #   RDS on Outposts read replica.
-    #
-    #   A *CoIP* provides local or external connectivity to resources in your
-    #   Outpost subnets through your on-premises network. For some use cases,
-    #   a CoIP can provide lower latency for connections to the read replica
-    #   from outside of its virtual private cloud (VPC) on your local network.
-    #
-    #   For more information about RDS on Outposts, see [Working with Amazon
-    #   RDS on Amazon Web Services Outposts][1] in the *Amazon RDS User
-    #   Guide*.
-    #
-    #   For more information about CoIPs, see [Customer-owned IP addresses][2]
-    #   in the *Amazon Web Services Outposts User Guide*.
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-on-outposts.html
-    #   [2]: https://docs.aws.amazon.com/outposts/latest/userguide/routing.html#ip-addressing
     # @option options [Integer] :allocated_storage
     #   The amount of storage (in gibibytes) to allocate initially for the
     #   read replica. Follow the allocation rules specified in
@@ -2912,6 +3112,20 @@ module Aws::RDS
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html
     #   [2]: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.SSL.html
+    # @option options [Array<Types::AdditionalStorageVolume>] :additional_storage_volumes
+    #   A list of additional storage volumes to create for the DB instance.
+    #   You can create up to three additional storage volumes using the names
+    #   `rdsdbdata2`, `rdsdbdata3`, and `rdsdbdata4`. Additional storage
+    #   volumes are supported for RDS for Oracle and RDS for SQL Server DB
+    #   instances only.
+    # @option options [Array<Types::TagSpecification>] :tag_specifications
+    #   Tags to assign to resources associated with the DB instance.
+    #
+    #   Valid Values:
+    #
+    #   * `auto-backup` - The DB instance's automated backup.
+    #
+    #   ^
     # @option options [String] :source_region
     #   The source region of the snapshot. This is only needed when the
     #   shapshot is encrypted and in a different region.
@@ -3054,7 +3268,7 @@ module Aws::RDS
     #     db_security_groups: ["String"],
     #     vpc_security_group_ids: ["String"],
     #     apply_immediately: false,
-    #     master_user_password: "String",
+    #     master_user_password: "SensitiveString",
     #     db_parameter_group_name: "String",
     #     backup_retention_period: 1,
     #     preferred_backup_window: "String",
@@ -3065,24 +3279,25 @@ module Aws::RDS
     #     auto_minor_version_upgrade: false,
     #     license_model: "String",
     #     iops: 1,
+    #     storage_throughput: 1,
     #     option_group_name: "String",
     #     new_db_instance_identifier: "String",
     #     storage_type: "String",
     #     tde_credential_arn: "String",
-    #     tde_credential_password: "String",
+    #     tde_credential_password: "SensitiveString",
     #     ca_certificate_identifier: "String",
     #     domain: "String",
     #     domain_fqdn: "String",
     #     domain_ou: "String",
     #     domain_auth_secret_arn: "String",
     #     domain_dns_ips: ["String"],
+    #     disable_domain: false,
     #     copy_tags_to_snapshot: false,
     #     monitoring_interval: 1,
     #     db_port_number: 1,
     #     publicly_accessible: false,
     #     monitoring_role_arn: "String",
     #     domain_iam_role_name: "String",
-    #     disable_domain: false,
     #     promotion_tier: 1,
     #     enable_iam_database_authentication: false,
     #     database_insights_mode: "standard", # accepts standard, advanced
@@ -3104,18 +3319,41 @@ module Aws::RDS
     #     max_allocated_storage: 1,
     #     certificate_rotation_restart: false,
     #     replica_mode: "open-read-only", # accepts open-read-only, mounted
-    #     enable_customer_owned_ip: false,
-    #     aws_backup_recovery_point_arn: "AwsBackupRecoveryPointArn",
     #     automation_mode: "full", # accepts full, all-paused
     #     resume_full_automation_mode_minutes: 1,
+    #     enable_customer_owned_ip: false,
     #     network_type: "String",
-    #     storage_throughput: 1,
+    #     aws_backup_recovery_point_arn: "AwsBackupRecoveryPointArn",
     #     manage_master_user_password: false,
     #     rotate_master_user_password: false,
     #     master_user_secret_kms_key_id: "String",
-    #     engine: "String",
-    #     dedicated_log_volume: false,
     #     multi_tenant: false,
+    #     dedicated_log_volume: false,
+    #     engine: "String",
+    #     additional_storage_volumes: [
+    #       {
+    #         volume_name: "String", # required
+    #         allocated_storage: 1,
+    #         iops: 1,
+    #         max_allocated_storage: 1,
+    #         storage_throughput: 1,
+    #         storage_type: "String",
+    #         set_for_delete: false,
+    #       },
+    #     ],
+    #     tag_specifications: [
+    #       {
+    #         resource_type: "String",
+    #         tags: [
+    #           {
+    #             key: "String",
+    #             value: "String",
+    #           },
+    #         ],
+    #       },
+    #     ],
+    #     master_user_authentication_type: "password", # accepts password, iam-db-auth
+    #     engine_lifecycle_support: "String",
     #   })
     # @param [Hash] options ({})
     # @option options [Integer] :allocated_storage
@@ -3260,10 +3498,16 @@ module Aws::RDS
     #
     #   This setting doesn't apply to the following DB instances:
     #
-    #   * Amazon Aurora (The password for the master user is managed by the DB
-    #     cluster. For more information, see `ModifyDBCluster`.)
+    #   * Amazon Aurora
+    #
+    #     The password for the master user is managed by the DB cluster. For
+    #     more information, see `ModifyDBCluster`.
     #
     #   * RDS Custom
+    #
+    #   * RDS for Oracle CDBs in the multi-tenant configuration
+    #
+    #     Specify the master password in `ModifyTenantDatabase` instead.
     #
     #   Default: Uses existing setting
     #
@@ -3466,6 +3710,13 @@ module Aws::RDS
     #
     #   For an RDS Custom DB instance, don't enable this setting. Otherwise,
     #   the operation returns an error.
+    #
+    #   For more information about automatic minor version upgrades, see
+    #   [Automatically upgrading the minor engine version][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_UpgradeDBInstance.Upgrading.html#USER_UpgradeDBInstance.Upgrading.AutoMinorVersionUpgrades
     # @option options [String] :license_model
     #   The license model for the DB instance.
     #
@@ -3478,7 +3729,8 @@ module Aws::RDS
     #
     #   * RDS for MariaDB - `general-public-license`
     #
-    #   * RDS for Microsoft SQL Server - `license-included`
+    #   * RDS for Microsoft SQL Server - `license-included |
+    #     bring-your-own-media`
     #
     #   * RDS for MySQL - `general-public-license`
     #
@@ -3526,6 +3778,13 @@ module Aws::RDS
     #     `AllocatedStorage`.
     #
     #   Default: Uses existing setting
+    # @option options [Integer] :storage_throughput
+    #   The storage throughput value for the DB instance.
+    #
+    #   This setting applies only to the `gp3` storage type.
+    #
+    #   This setting doesn't apply to Amazon Aurora or RDS Custom DB
+    #   instances.
     # @option options [String] :option_group_name
     #   The option group to associate the DB instance with.
     #
@@ -3644,7 +3903,7 @@ module Aws::RDS
     #
     #   * Must be in the distinguished name format.
     #
-    #   * Can't be longer than 64 characters.
+    #   ^
     #
     #   Example:
     #   `OU=mymanagedADtestOU,DC=mymanagedADtest,DC=mymanagedAD,DC=mydomain`
@@ -3667,6 +3926,9 @@ module Aws::RDS
     #   ^
     #
     #   Example: `123.124.125.126,234.235.236.237`
+    # @option options [Boolean] :disable_domain
+    #   Specifies whether to remove the DB instance from the Active Directory
+    #   domain.
     # @option options [Boolean] :copy_tags_to_snapshot
     #   Specifies whether to copy all tags from the DB instance to snapshots
     #   of the DB instance. By default, tags aren't copied.
@@ -3765,9 +4027,6 @@ module Aws::RDS
     #   Service.
     #
     #   This setting doesn't apply to RDS Custom DB instances.
-    # @option options [Boolean] :disable_domain
-    #   Specifies whether to remove the DB instance from the Active Directory
-    #   domain.
     # @option options [Integer] :promotion_tier
     #   The order of priority in which an Aurora Replica is promoted to the
     #   primary instance after a failure of the existing primary instance. For
@@ -3952,26 +4211,65 @@ module Aws::RDS
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL-certificate-rotation.html
     #   [2]: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.SSL-certificate-rotation.html
     # @option options [String] :replica_mode
-    #   A value that sets the open mode of a replica database to either
-    #   mounted or read-only.
+    #   The open mode of a replica database.
     #
-    #   <note markdown="1"> Currently, this parameter is only supported for Oracle DB instances.
+    #   This parameter is only supported for Db2 DB instances and Oracle DB
+    #   instances.
     #
-    #    </note>
+    #   Db2
     #
-    #   Mounted DB replicas are included in Oracle Enterprise Edition. The
-    #   main use case for mounted replicas is cross-Region disaster recovery.
-    #   The primary database doesn't use Active Data Guard to transmit
-    #   information to the mounted replica. Because it doesn't accept user
-    #   connections, a mounted replica can't serve a read-only workload. For
-    #   more information, see [Working with Oracle Read Replicas for Amazon
-    #   RDS][1] in the *Amazon RDS User Guide*.
+    #   : Standby DB replicas are included in Db2 Advanced Edition (AE), Db2
+    #     Community Edition (CE), and Db2 Standard Edition (SE). The main use
+    #     case for standby replicas is cross-Region disaster recovery. Because
+    #     it doesn't accept user connections, a standby replica can't serve
+    #     a read-only workload.
     #
-    #   This setting doesn't apply to RDS Custom DB instances.
+    #     You can create a combination of standby and read-only DB replicas
+    #     for the same primary DB instance. For more information, see [Working
+    #     with replicas for Amazon RDS for Db2][1] in the *Amazon RDS User
+    #     Guide*.
+    #
+    #     To create standby DB replicas for RDS for Db2, set this parameter to
+    #     `mounted`.
+    #
+    #   Oracle
+    #
+    #   : Mounted DB replicas are included in Oracle Database Enterprise
+    #     Edition. The main use case for mounted replicas is cross-Region
+    #     disaster recovery. The primary database doesn't use Active Data
+    #     Guard to transmit information to the mounted replica. Because it
+    #     doesn't accept user connections, a mounted replica can't serve a
+    #     read-only workload.
+    #
+    #     You can create a combination of mounted and read-only DB replicas
+    #     for the same primary DB instance. For more information, see [Working
+    #     with read replicas for Amazon RDS for Oracle][2] in the *Amazon RDS
+    #     User Guide*.
+    #
+    #     For RDS Custom, you must specify this parameter and set it to
+    #     `mounted`. The value won't be set by default. After replica
+    #     creation, you can manage the open mode manually.
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/oracle-read-replicas.html
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/db2-replication.html
+    #   [2]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/oracle-read-replicas.html
+    # @option options [String] :automation_mode
+    #   The automation mode of the RDS Custom DB instance. If `full`, the DB
+    #   instance automates monitoring and instance recovery. If `all paused`,
+    #   the instance pauses automation for the duration set by
+    #   `ResumeFullAutomationModeMinutes`.
+    # @option options [Integer] :resume_full_automation_mode_minutes
+    #   The number of minutes to pause the automation. When the time period
+    #   ends, RDS Custom resumes full automation.
+    #
+    #   Default: `60`
+    #
+    #   Constraints:
+    #
+    #   * Must be at least 60.
+    #
+    #   * Must be no more than 1,440.
     # @option options [Boolean] :enable_customer_owned_ip
     #   Specifies whether to enable a customer-owned IP address (CoIP) for an
     #   RDS on Outposts DB instance.
@@ -3992,27 +4290,6 @@ module Aws::RDS
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-on-outposts.html
     #   [2]: https://docs.aws.amazon.com/outposts/latest/userguide/routing.html#ip-addressing
-    # @option options [String] :aws_backup_recovery_point_arn
-    #   The Amazon Resource Name (ARN) of the recovery point in Amazon Web
-    #   Services Backup.
-    #
-    #   This setting doesn't apply to RDS Custom DB instances.
-    # @option options [String] :automation_mode
-    #   The automation mode of the RDS Custom DB instance. If `full`, the DB
-    #   instance automates monitoring and instance recovery. If `all paused`,
-    #   the instance pauses automation for the duration set by
-    #   `ResumeFullAutomationModeMinutes`.
-    # @option options [Integer] :resume_full_automation_mode_minutes
-    #   The number of minutes to pause the automation. When the time period
-    #   ends, RDS Custom resumes full automation.
-    #
-    #   Default: `60`
-    #
-    #   Constraints:
-    #
-    #   * Must be at least 60.
-    #
-    #   * Must be no more than 1,440.
     # @option options [String] :network_type
     #   The network type of the DB instance.
     #
@@ -4028,13 +4305,11 @@ module Aws::RDS
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html
-    # @option options [Integer] :storage_throughput
-    #   The storage throughput value for the DB instance.
+    # @option options [String] :aws_backup_recovery_point_arn
+    #   The Amazon Resource Name (ARN) of the recovery point in Amazon Web
+    #   Services Backup.
     #
-    #   This setting applies only to the `gp3` storage type.
-    #
-    #   This setting doesn't apply to Amazon Aurora or RDS Custom DB
-    #   instances.
+    #   This setting doesn't apply to RDS Custom DB instances.
     # @option options [Boolean] :manage_master_user_password
     #   Specifies whether to manage the master user password with Amazon Web
     #   Services Secrets Manager.
@@ -4058,7 +4333,11 @@ module Aws::RDS
     #   * Can't manage the master user password with Amazon Web Services
     #     Secrets Manager if `MasterUserPassword` is specified.
     #
-    #   ^
+    #   * Can't specify for RDS for Oracle CDB instances in the multi-tenant
+    #     configuration. Use `ModifyTenantDatabase` instead.
+    #
+    #   * Can't specify the parameters `ManageMasterUserPassword` and
+    #     `MultiTenant` in the same operation.
     #
     #
     #
@@ -4068,7 +4347,7 @@ module Aws::RDS
     #   Secrets Manager for the master user password.
     #
     #   This setting is valid only if the master user password is managed by
-    #   RDS in Amazon Web Services Secrets Manager for the DB cluster. The
+    #   RDS in Amazon Web Services Secrets Manager for the DB instance. The
     #   secret value contains the updated password.
     #
     #   For more information, see [Password management with Amazon Web
@@ -4117,6 +4396,25 @@ module Aws::RDS
     #   There is a default KMS key for your Amazon Web Services account. Your
     #   Amazon Web Services account has a different default KMS key for each
     #   Amazon Web Services Region.
+    # @option options [Boolean] :multi_tenant
+    #   Specifies whether the to convert your DB instance from the
+    #   single-tenant conﬁguration to the multi-tenant conﬁguration. This
+    #   parameter is supported only for RDS for Oracle CDB instances.
+    #
+    #   During the conversion, RDS creates an initial tenant database and
+    #   associates the DB name, master user name, character set, and national
+    #   character set metadata with this database. The tags associated with
+    #   the instance also propagate to the initial tenant database. You can
+    #   add more tenant databases to your DB instance by using the
+    #   `CreateTenantDatabase` operation.
+    #
+    #   The conversion to the multi-tenant configuration is permanent and
+    #   irreversible, so you can't later convert back to the single-tenant
+    #   configuration. When you specify this parameter, you must also specify
+    #   `ApplyImmediately`.
+    # @option options [Boolean] :dedicated_log_volume
+    #   Indicates whether the DB instance has a dedicated log volume (DLV)
+    #   enabled.
     # @option options [String] :engine
     #   The target Oracle DB engine when you convert a non-CDB to a CDB. This
     #   intermediate step is necessary to upgrade an Oracle Database 19c
@@ -4144,25 +4442,54 @@ module Aws::RDS
     #     parameter group. To avoid reverting to the default, specify a new
     #     parameter group with `--db-parameter-group-name` and a new option
     #     group with `--option-group-name`.
-    # @option options [Boolean] :dedicated_log_volume
-    #   Indicates whether the DB instance has a dedicated log volume (DLV)
-    #   enabled.
-    # @option options [Boolean] :multi_tenant
-    #   Specifies whether the to convert your DB instance from the
-    #   single-tenant conﬁguration to the multi-tenant conﬁguration. This
-    #   parameter is supported only for RDS for Oracle CDB instances.
+    # @option options [Array<Types::ModifyAdditionalStorageVolume>] :additional_storage_volumes
+    #   A list of additional storage volumes to modify or delete for the DB
+    #   instance. You can create up to 3 additional storage volumes.
+    #   Additional storage volumes are supported for RDS for Oracle and RDS
+    #   for SQL Server DB instances only.
+    # @option options [Array<Types::TagSpecification>] :tag_specifications
+    #   Tags to assign to resources associated with the DB instance.
     #
-    #   During the conversion, RDS creates an initial tenant database and
-    #   associates the DB name, master user name, character set, and national
-    #   character set metadata with this database. The tags associated with
-    #   the instance also propagate to the initial tenant database. You can
-    #   add more tenant databases to your DB instance by using the
-    #   `CreateTenantDatabase` operation.
+    #   Valid Values:
     #
-    #   The conversion to the multi-tenant configuration is permanent and
-    #   irreversible, so you can't later convert back to the single-tenant
-    #   configuration. When you specify this parameter, you must also specify
-    #   `ApplyImmediately`.
+    #   * `auto-backup` - The DB instance's automated backup.
+    #
+    #   ^
+    # @option options [String] :master_user_authentication_type
+    #   Specifies the authentication type for the master user. With IAM master
+    #   user authentication, you can change the master DB user to use IAM
+    #   database authentication.
+    #
+    #   You can specify one of the following values:
+    #
+    #   * `password` - Use standard database authentication with a password.
+    #
+    #   * `iam-db-auth` - Use IAM database authentication for the master user.
+    #
+    #   This option is only valid for RDS for PostgreSQL and Aurora PostgreSQL
+    #   engines.
+    # @option options [String] :engine_lifecycle_support
+    #   The lifecycle type for this DB instance.
+    #
+    #   This setting applies only to RDS for MySQL and RDS for PostgreSQL. For
+    #   Amazon Aurora DB instances, the engine lifecycle support is managed by
+    #   the DB cluster.
+    #
+    #   You can use this setting to enroll your DB instance into Amazon RDS
+    #   Extended Support or to opt out. With RDS Extended Support, you can run
+    #   the selected major engine version on your DB instance past the end of
+    #   standard support for that engine version. For more information, see
+    #   [Amazon RDS Extended Support with Amazon RDS][1] in the *Amazon RDS
+    #   User Guide*.
+    #
+    #   Valid Values: `open-source-rds-extended-support |
+    #   open-source-rds-extended-support-disabled`
+    #
+    #   This setting doesn't apply to RDS Custom DB instances.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/extended-support.html
     # @return [DBInstance]
     def modify(options = {})
       options = options.merge(db_instance_identifier: @id)
@@ -4181,6 +4508,17 @@ module Aws::RDS
     #   dbinstance = db_instance.promote({
     #     backup_retention_period: 1,
     #     preferred_backup_window: "String",
+    #     tag_specifications: [
+    #       {
+    #         resource_type: "String",
+    #         tags: [
+    #           {
+    #             key: "String",
+    #             value: "String",
+    #           },
+    #         ],
+    #       },
+    #     ],
     #   })
     # @param [Hash] options ({})
     # @option options [Integer] :backup_retention_period
@@ -4218,6 +4556,14 @@ module Aws::RDS
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/AdjustingTheMaintenanceWindow.html
+    # @option options [Array<Types::TagSpecification>] :tag_specifications
+    #   Tags to assign to resources associated with the DB instance.
+    #
+    #   Valid Values:
+    #
+    #   * `auto-backup` - The DB instance's automated backup.
+    #
+    #   ^
     # @return [DBInstance]
     def promote(options = {})
       options = options.merge(db_instance_identifier: @id)
@@ -4272,6 +4618,7 @@ module Aws::RDS
     #     db_name: "String",
     #     engine: "String",
     #     iops: 1,
+    #     storage_throughput: 1,
     #     option_group_name: "String",
     #     copy_tags_to_snapshot: false,
     #     tags: [
@@ -4282,7 +4629,7 @@ module Aws::RDS
     #     ],
     #     storage_type: "String",
     #     tde_credential_arn: "String",
-    #     tde_credential_password: "String",
+    #     tde_credential_password: "SensitiveString",
     #     vpc_security_group_ids: ["String"],
     #     domain: "String",
     #     domain_iam_role_name: "String",
@@ -4303,16 +4650,40 @@ module Aws::RDS
     #     deletion_protection: false,
     #     source_dbi_resource_id: "String",
     #     max_allocated_storage: 1,
-    #     source_db_instance_automated_backups_arn: "String",
     #     enable_customer_owned_ip: false,
-    #     custom_iam_instance_profile: "String",
-    #     backup_target: "String",
     #     network_type: "String",
-    #     storage_throughput: 1,
+    #     source_db_instance_automated_backups_arn: "String",
+    #     backup_target: "String",
+    #     custom_iam_instance_profile: "String",
     #     allocated_storage: 1,
+    #     backup_retention_period: 1,
+    #     preferred_backup_window: "String",
     #     dedicated_log_volume: false,
     #     ca_certificate_identifier: "String",
     #     engine_lifecycle_support: "String",
+    #     additional_storage_volumes: [
+    #       {
+    #         volume_name: "String", # required
+    #         allocated_storage: 1,
+    #         iops: 1,
+    #         max_allocated_storage: 1,
+    #         storage_throughput: 1,
+    #         storage_type: "String",
+    #       },
+    #     ],
+    #     tag_specifications: [
+    #       {
+    #         resource_type: "String",
+    #         tags: [
+    #           {
+    #             key: "String",
+    #             value: "String",
+    #           },
+    #         ],
+    #       },
+    #     ],
+    #     manage_master_user_password: false,
+    #     master_user_secret_kms_key_id: "String",
     #   })
     # @param [Hash] options ({})
     # @option options [required, String] :target_db_instance_identifier
@@ -4424,11 +4795,18 @@ module Aws::RDS
     #   the DB instance during the maintenance window.
     #
     #   This setting doesn't apply to RDS Custom.
+    #
+    #   For more information about automatic minor version upgrades, see
+    #   [Automatically upgrading the minor engine version][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_UpgradeDBInstance.Upgrading.html#USER_UpgradeDBInstance.Upgrading.AutoMinorVersionUpgrades
     # @option options [String] :license_model
     #   The license model information for the restored DB instance.
     #
     #   <note markdown="1"> License models for RDS for Db2 require additional configuration. The
-    #   Bring Your Own License (BYOL) model requires a custom parameter group
+    #   bring your own license (BYOL) model requires a custom parameter group
     #   and an Amazon Web Services License Manager self-managed license. The
     #   Db2 license through Amazon Web Services Marketplace model requires an
     #   Amazon Web Services Marketplace subscription. For more information,
@@ -4446,7 +4824,8 @@ module Aws::RDS
     #
     #   * RDS for MariaDB - `general-public-license`
     #
-    #   * RDS for Microsoft SQL Server - `license-included`
+    #   * RDS for Microsoft SQL Server - `license-included |
+    #     bring-your-own-media`
     #
     #   * RDS for MySQL - `general-public-license`
     #
@@ -4479,6 +4858,8 @@ module Aws::RDS
     #   Valid Values:
     #
     #   * `db2-ae`
+    #
+    #   * `db2-ce`
     #
     #   * `db2-se`
     #
@@ -4522,6 +4903,10 @@ module Aws::RDS
     #   * Must be an integer greater than 1000.
     #
     #   ^
+    # @option options [Integer] :storage_throughput
+    #   The storage throughput value for the DB instance.
+    #
+    #   This setting doesn't apply to RDS Custom or Amazon Aurora.
     # @option options [String] :option_group_name
     #   The name of the option group to use for the restored DB instance.
     #
@@ -4715,12 +5100,6 @@ module Aws::RDS
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_PIOPS.StorageTypes.html#USER_PIOPS.Autoscaling
-    # @option options [String] :source_db_instance_automated_backups_arn
-    #   The Amazon Resource Name (ARN) of the replicated automated backups
-    #   from which to restore, for example,
-    #   `arn:aws:rds:us-east-1:123456789012:auto-backup:ab-L2IJCEXJP7XQ7HOJ4SIEXAMPLE`.
-    #
-    #   This setting doesn't apply to RDS Custom.
     # @option options [Boolean] :enable_customer_owned_ip
     #   Specifies whether to enable a customer-owned IP address (CoIP) for an
     #   RDS on Outposts DB instance.
@@ -4743,6 +5122,51 @@ module Aws::RDS
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-on-outposts.html
     #   [2]: https://docs.aws.amazon.com/outposts/latest/userguide/routing.html#ip-addressing
+    # @option options [String] :network_type
+    #   The network type of the DB instance.
+    #
+    #   The network type is determined by the `DBSubnetGroup` specified for
+    #   the DB instance. A `DBSubnetGroup` can support only the IPv4 protocol
+    #   or the IPv4 and the IPv6 protocols (`DUAL`).
+    #
+    #   For more information, see [ Working with a DB instance in a VPC][1] in
+    #   the *Amazon RDS User Guide.*
+    #
+    #   Valid Values:
+    #
+    #   * `IPV4`
+    #
+    #   * `DUAL`
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html
+    # @option options [String] :source_db_instance_automated_backups_arn
+    #   The Amazon Resource Name (ARN) of the replicated automated backups
+    #   from which to restore, for example,
+    #   `arn:aws:rds:us-east-1:123456789012:auto-backup:ab-L2IJCEXJP7XQ7HOJ4SIEXAMPLE`.
+    #
+    #   This setting doesn't apply to RDS Custom.
+    # @option options [String] :backup_target
+    #   The location for storing automated backups and manual snapshots for
+    #   the restored DB instance.
+    #
+    #   Valid Values:
+    #
+    #   * `local` (Dedicated Local Zone)
+    #
+    #   * `outposts` (Amazon Web Services Outposts)
+    #
+    #   * `region` (Amazon Web Services Region)
+    #
+    #   Default: `region`
+    #
+    #   For more information, see [Working with Amazon RDS on Amazon Web
+    #   Services Outposts][1] in the *Amazon RDS User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-on-outposts.html
     # @option options [String] :custom_iam_instance_profile
     #   The instance profile associated with the underlying Amazon EC2
     #   instance of an RDS Custom DB instance. The instance profile must meet
@@ -4764,47 +5188,6 @@ module Aws::RDS
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/custom-setup-orcl.html#custom-setup-orcl.iam-vpc
-    # @option options [String] :backup_target
-    #   The location for storing automated backups and manual snapshots for
-    #   the restored DB instance.
-    #
-    #   Valid Values:
-    #
-    #   * `outposts` (Amazon Web Services Outposts)
-    #
-    #   * `region` (Amazon Web Services Region)
-    #
-    #   Default: `region`
-    #
-    #   For more information, see [Working with Amazon RDS on Amazon Web
-    #   Services Outposts][1] in the *Amazon RDS User Guide*.
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-on-outposts.html
-    # @option options [String] :network_type
-    #   The network type of the DB instance.
-    #
-    #   The network type is determined by the `DBSubnetGroup` specified for
-    #   the DB instance. A `DBSubnetGroup` can support only the IPv4 protocol
-    #   or the IPv4 and the IPv6 protocols (`DUAL`).
-    #
-    #   For more information, see [ Working with a DB instance in a VPC][1] in
-    #   the *Amazon RDS User Guide.*
-    #
-    #   Valid Values:
-    #
-    #   * `IPV4`
-    #
-    #   * `DUAL`
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html
-    # @option options [Integer] :storage_throughput
-    #   The storage throughput value for the DB instance.
-    #
-    #   This setting doesn't apply to RDS Custom or Amazon Aurora.
     # @option options [Integer] :allocated_storage
     #   The amount of storage (in gibibytes) to allocate initially for the DB
     #   instance. Follow the allocation rules specified in `CreateDBInstance`.
@@ -4816,6 +5199,56 @@ module Aws::RDS
     #   storage for future growth.
     #
     #    </note>
+    # @option options [Integer] :backup_retention_period
+    #   The number of days to retain automated backups. Setting this parameter
+    #   to a positive number enables backups. Setting this parameter to 0
+    #   disables automated backups.
+    #
+    #   <note markdown="1"> Enabling and disabling backups can result in a brief I/O suspension
+    #   that lasts from a few seconds to a few minutes, depending on the size
+    #   and class of your DB instance.
+    #
+    #    </note>
+    #
+    #   This setting doesn't apply to Amazon Aurora DB instances. The
+    #   retention period for automated backups is managed by the DB cluster.
+    #   For more information, see `ModifyDBCluster`.
+    #
+    #   Default: Uses existing setting
+    #
+    #   Constraints:
+    #
+    #   * Must be a value from 0 to 35.
+    #
+    #   * Can't be set to 0 if the DB instance is a source to read replicas.
+    #
+    #   * Can't be set to 0 for an RDS Custom for Oracle DB instance.
+    # @option options [String] :preferred_backup_window
+    #   The daily time range during which automated backups are created if
+    #   automated backups are enabled, as determined by the
+    #   `BackupRetentionPeriod` parameter. Changing this parameter doesn't
+    #   result in an outage and the change is asynchronously applied as soon
+    #   as possible. The default is a 30-minute window selected at random from
+    #   an 8-hour block of time for each Amazon Web Services Region. For more
+    #   information, see [Backup window][1] in the *Amazon RDS User Guide*.
+    #
+    #   This setting doesn't apply to Amazon Aurora DB instances. The daily
+    #   time range for creating automated backups is managed by the DB
+    #   cluster. For more information, see `ModifyDBCluster`.
+    #
+    #   Constraints:
+    #
+    #   * Must be in the format `hh24:mi-hh24:mi`.
+    #
+    #   * Must be in Universal Coordinated Time (UTC).
+    #
+    #   * Must not conflict with the preferred maintenance window.
+    #
+    #   * Must be at least 30 minutes.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithAutomatedBackups.html#USER_WorkingWithAutomatedBackups.BackupWindow
     # @option options [Boolean] :dedicated_log_volume
     #   Specifies whether to enable a dedicated log volume (DLV) for the DB
     #   instance.
@@ -4835,7 +5268,7 @@ module Aws::RDS
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html
     #   [2]: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.SSL.html
     # @option options [String] :engine_lifecycle_support
-    #   The life cycle type for this DB instance.
+    #   The lifecycle type for this DB instance.
     #
     #   <note markdown="1"> By default, this value is set to `open-source-rds-extended-support`,
     #   which enrolls your DB instance into Amazon RDS Extended Support. At
@@ -4851,12 +5284,12 @@ module Aws::RDS
     #   You can use this setting to enroll your DB instance into Amazon RDS
     #   Extended Support. With RDS Extended Support, you can run the selected
     #   major engine version on your DB instance past the end of standard
-    #   support for that engine version. For more information, see [Using
-    #   Amazon RDS Extended Support][1] in the *Amazon RDS User Guide*.
+    #   support for that engine version. For more information, see [Amazon RDS
+    #   Extended Support with Amazon RDS][1] in the *Amazon RDS User Guide*.
     #
     #   This setting applies only to RDS for MySQL and RDS for PostgreSQL. For
-    #   Amazon Aurora DB instances, the life cycle type is managed by the DB
-    #   cluster.
+    #   Amazon Aurora DB instances, the engine lifecycle support is managed by
+    #   the DB cluster.
     #
     #   Valid Values: `open-source-rds-extended-support |
     #   open-source-rds-extended-support-disabled`
@@ -4866,6 +5299,58 @@ module Aws::RDS
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/extended-support.html
+    # @option options [Array<Types::AdditionalStorageVolume>] :additional_storage_volumes
+    #   A list of additional storage volumes to restore to the DB instance.
+    #   You can restore up to three additional storage volumes using the names
+    #   `rdsdbdata2`, `rdsdbdata3`, and `rdsdbdata4`. Additional storage
+    #   volumes are supported for RDS for Oracle and RDS for SQL Server DB
+    #   instances only.
+    # @option options [Array<Types::TagSpecification>] :tag_specifications
+    #   Tags to assign to resources associated with the DB instance.
+    #
+    #   Valid Values:
+    #
+    #   * `auto-backup` - The DB instance's automated backup.
+    #
+    #   ^
+    # @option options [Boolean] :manage_master_user_password
+    #   Specifies whether to manage the master user password with Amazon Web
+    #   Services Secrets Manager in the restored DB instance.
+    #
+    #   For more information, see [Password management with Amazon Web
+    #   Services Secrets Manager][1] in the *Amazon RDS User Guide*.
+    #
+    #   Constraints:
+    #
+    #   * Applies to RDS for Oracle only.
+    #
+    #   ^
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-secrets-manager.html
+    # @option options [String] :master_user_secret_kms_key_id
+    #   The Amazon Web Services KMS key identifier to encrypt a secret that is
+    #   automatically generated and managed in Amazon Web Services Secrets
+    #   Manager.
+    #
+    #   This setting is valid only if the master user password is managed by
+    #   RDS in Amazon Web Services Secrets Manager for the DB instance.
+    #
+    #   The Amazon Web Services KMS key identifier is the key ARN, key ID,
+    #   alias ARN, or alias name for the KMS key. To use a KMS key in a
+    #   different Amazon Web Services account, specify the key ARN or alias
+    #   ARN.
+    #
+    #   If you don't specify `MasterUserSecretKmsKeyId`, then the
+    #   `aws/secretsmanager` KMS key is used to encrypt the secret. If the
+    #   secret is in a different Amazon Web Services account, then you can't
+    #   use the `aws/secretsmanager` KMS key to encrypt the secret, and you
+    #   must use a customer managed KMS key.
+    #
+    #   There is a default KMS key for your Amazon Web Services account. Your
+    #   Amazon Web Services account has a different default KMS key for each
+    #   Amazon Web Services Region.
     # @return [DBInstance]
     def restore(options = {})
       options = options.merge(source_db_instance_identifier: @id)

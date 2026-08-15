@@ -35,10 +35,23 @@ module Aws::EC2
     end
     alias :volume_id :id
 
+    # The ID of the Availability Zone for the volume.
+    # @return [String]
+    def availability_zone_id
+      data[:availability_zone_id]
+    end
+
     # The Amazon Resource Name (ARN) of the Outpost.
     # @return [String]
     def outpost_arn
       data[:outpost_arn]
+    end
+
+    # The ID of the source volume from which the volume copy was created.
+    # Only for volume copies.
+    # @return [String]
+    def source_volume_id
+      data[:source_volume_id]
     end
 
     # The number of I/O operations per second (IOPS). For `gp3`, `io1`, and
@@ -99,6 +112,15 @@ module Aws::EC2
     # @return [Types::OperatorResponse]
     def operator
       data[:operator]
+    end
+
+    # The Amazon EBS Provisioned Rate for Volume Initialization (volume
+    # initialization rate) specified for the volume during creation, in
+    # MiB/s. If no volume initialization rate was specified, the value is
+    # `null`.
+    # @return [Integer]
+    def volume_initialization_rate
+      data[:volume_initialization_rate]
     end
 
     # The size of the volume, in GiBs.
@@ -297,6 +319,7 @@ module Aws::EC2
     #   volume.attach_to_instance({
     #     device: "String", # required
     #     instance_id: "InstanceId", # required
+    #     ebs_card_index: 1,
     #     dry_run: false,
     #   })
     # @param [Hash] options ({})
@@ -304,6 +327,9 @@ module Aws::EC2
     #   The device name (for example, `/dev/sdh` or `xvdh`).
     # @option options [required, String] :instance_id
     #   The ID of the instance.
+    # @option options [Integer] :ebs_card_index
+    #   The index of the EBS card. Some instance types support multiple EBS
+    #   cards. The default EBS card index is 0.
     # @option options [Boolean] :dry_run
     #   Checks whether you have the required permissions for the action,
     #   without actually making the request, and provides an error response.
@@ -325,7 +351,7 @@ module Aws::EC2
     #     outpost_arn: "String",
     #     tag_specifications: [
     #       {
-    #         resource_type: "capacity-reservation", # accepts capacity-reservation, client-vpn-endpoint, customer-gateway, carrier-gateway, coip-pool, declarative-policies-report, dedicated-host, dhcp-options, egress-only-internet-gateway, elastic-ip, elastic-gpu, export-image-task, export-instance-task, fleet, fpga-image, host-reservation, image, import-image-task, import-snapshot-task, instance, instance-event-window, internet-gateway, ipam, ipam-pool, ipam-scope, ipv4pool-ec2, ipv6pool-ec2, key-pair, launch-template, local-gateway, local-gateway-route-table, local-gateway-virtual-interface, local-gateway-virtual-interface-group, local-gateway-route-table-vpc-association, local-gateway-route-table-virtual-interface-group-association, natgateway, network-acl, network-interface, network-insights-analysis, network-insights-path, network-insights-access-scope, network-insights-access-scope-analysis, placement-group, prefix-list, replace-root-volume-task, reserved-instances, route-table, security-group, security-group-rule, snapshot, spot-fleet-request, spot-instances-request, subnet, subnet-cidr-reservation, traffic-mirror-filter, traffic-mirror-session, traffic-mirror-target, transit-gateway, transit-gateway-attachment, transit-gateway-connect-peer, transit-gateway-multicast-domain, transit-gateway-policy-table, transit-gateway-route-table, transit-gateway-route-table-announcement, volume, vpc, vpc-endpoint, vpc-endpoint-connection, vpc-endpoint-service, vpc-endpoint-service-permission, vpc-peering-connection, vpn-connection, vpn-gateway, vpc-flow-log, capacity-reservation-fleet, traffic-mirror-filter-rule, vpc-endpoint-connection-device-type, verified-access-instance, verified-access-group, verified-access-endpoint, verified-access-policy, verified-access-trust-provider, vpn-connection-device-type, vpc-block-public-access-exclusion, ipam-resource-discovery, ipam-resource-discovery-association, instance-connect-endpoint, verified-access-endpoint-target, ipam-external-resource-verification-token
+    #         resource_type: "capacity-reservation", # accepts capacity-reservation, client-vpn-endpoint, customer-gateway, carrier-gateway, coip-pool, declarative-policies-report, dedicated-host, dhcp-options, egress-only-internet-gateway, elastic-ip, elastic-gpu, export-image-task, export-instance-task, fleet, fpga-image, host-reservation, image, image-usage-report, import-image-task, import-snapshot-task, instance, instance-event-window, internet-gateway, ipam, ipam-pool, ipam-scope, ipv4pool-ec2, ipv6pool-ec2, key-pair, launch-template, local-gateway, local-gateway-route-table, local-gateway-virtual-interface, local-gateway-virtual-interface-group, local-gateway-route-table-vpc-association, local-gateway-route-table-virtual-interface-group-association, natgateway, network-acl, network-interface, network-insights-analysis, network-insights-path, network-insights-access-scope, network-insights-access-scope-analysis, outpost-lag, placement-group, prefix-list, replace-root-volume-task, reserved-instances, route-table, security-group, security-group-rule, service-link-virtual-interface, snapshot, spot-fleet-request, spot-instances-request, subnet, subnet-cidr-reservation, traffic-mirror-filter, traffic-mirror-session, traffic-mirror-target, transit-gateway, transit-gateway-attachment, transit-gateway-connect-peer, transit-gateway-multicast-domain, transit-gateway-policy-table, transit-gateway-metering-policy, transit-gateway-route-table, transit-gateway-route-table-announcement, volume, vpc, vpc-endpoint, vpc-endpoint-connection, vpc-endpoint-service, vpc-endpoint-service-permission, vpc-peering-connection, vpn-connection, vpn-gateway, vpc-flow-log, capacity-reservation-fleet, traffic-mirror-filter-rule, vpc-endpoint-connection-device-type, verified-access-instance, verified-access-group, verified-access-endpoint, verified-access-policy, verified-access-trust-provider, vpn-connection-device-type, vpc-block-public-access-exclusion, vpc-encryption-control, route-server, route-server-endpoint, route-server-peer, ipam-resource-discovery, ipam-resource-discovery-association, instance-connect-endpoint, verified-access-endpoint-target, ipam-external-resource-verification-token, capacity-block, mac-modification-task, ipam-prefix-list-resolver, ipam-policy, ipam-prefix-list-resolver-target, ipam-internet-registry-association, secondary-interface, secondary-network, secondary-subnet, capacity-manager-data-export, vpn-concentrator, ipam-pool-allocation, capacity-reservation-cancellation-quote, application-status-check
     #         tags: [
     #           {
     #             key: "String",
@@ -526,6 +552,7 @@ module Aws::EC2
     #   volume.describe_status({
     #     max_results: 1,
     #     next_token: "String",
+    #     include_managed_resources: false,
     #     dry_run: false,
     #     filters: [
     #       {
@@ -546,6 +573,11 @@ module Aws::EC2
     # @option options [String] :next_token
     #   The token returned from a previous paginated request. Pagination
     #   continues from the end of the items returned by the previous request.
+    # @option options [Boolean] :include_managed_resources
+    #   Indicates whether to include managed resources in the output. If this
+    #   parameter is set to `true`, the output includes resources that are
+    #   managed by Amazon Web Services services, even if managed resource
+    #   visibility is set to hidden.
     # @option options [Boolean] :dry_run
     #   Checks whether you have the required permissions for the action,
     #   without actually making the request, and provides an error response.

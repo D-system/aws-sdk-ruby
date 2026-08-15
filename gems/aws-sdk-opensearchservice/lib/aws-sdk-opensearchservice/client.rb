@@ -95,8 +95,8 @@ module Aws::OpenSearchService
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::OpenSearchService
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::OpenSearchService
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::OpenSearchService
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::OpenSearchService
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::OpenSearchService
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::OpenSearchService
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::OpenSearchService
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -579,9 +583,16 @@ module Aws::OpenSearchService
     #   An optional text field for providing additional context and details
     #   about the data source.
     #
-    # @option params [required, Array<String>] :open_search_arns
-    #   A list of Amazon Resource Names (ARNs) for the OpenSearch collections
-    #   that are associated with the direct query data source.
+    # @option params [Array<String>] :open_search_arns
+    #   An optional list of Amazon Resource Names (ARNs) for the OpenSearch
+    #   collections that are associated with the direct query data source.
+    #   This field is required for CloudWatchLogs and SecurityLake datasource
+    #   types.
+    #
+    # @option params [String] :data_source_access_policy
+    #   An optional IAM access policy document that defines the permissions
+    #   for accessing the data source. The policy document must be in valid
+    #   JSON format and follow IAM policy syntax.
     #
     # @option params [Array<Types::Tag>] :tag_list
     #   A list of tags attached to a domain.
@@ -601,9 +612,14 @@ module Aws::OpenSearchService
     #       security_lake: {
     #         role_arn: "DirectQueryDataSourceRoleArn", # required
     #       },
+    #       prometheus: {
+    #         role_arn: "DirectQueryDataSourceRoleArn", # required
+    #         workspace_arn: "AMPWorkspaceArn", # required
+    #       },
     #     },
     #     description: "DirectQueryDataSourceDescription",
-    #     open_search_arns: ["ARN"], # required
+    #     open_search_arns: ["ARN"],
+    #     data_source_access_policy: "PolicyDocument",
     #     tag_list: [
     #       {
     #         key: "TagKey", # required
@@ -794,6 +810,85 @@ module Aws::OpenSearchService
       req.send_request(options)
     end
 
+    # Attaches a data source to an OpenSearch application. The data source
+    # can be an Amazon OpenSearch Service domain or an Amazon OpenSearch
+    # Serverless collection. If both the application and data source are in
+    # the `ACTIVE` state, the attachment completes immediately and returns a
+    # status of `ATTACHED`. If either resource is not yet active, the
+    # operation stores the request and returns a status of `PENDING`. A
+    # background process then completes the attachment when both resources
+    # become active. Pending attachments that are not completed within 24
+    # hours are marked as `FAILED`. This operation is idempotent. If a data
+    # source is already attached or pending for the same application, the
+    # existing attachment is returned.
+    #
+    # @option params [required, String] :id
+    #   The unique identifier or name of the OpenSearch application to attach
+    #   the data source to. This is the same identifier used with
+    #   `UpdateApplication`, `GetApplication`, and `DeleteApplication`.
+    #
+    # @option params [required, String] :data_source_arn
+    #   The Amazon Resource Name (ARN) of the domain. See [Identifiers for IAM
+    #   Entities ][1] in *Using Amazon Web Services Identity and Access
+    #   Management* for more information.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/index.html
+    #
+    # @option params [String] :workspace_id
+    #   The identifier of an existing workspace to update with the new data
+    #   source. Mutually exclusive with `workspaceConfiguration`.
+    #
+    # @option params [Types::WorkspaceConfigurationInput] :workspace_configuration
+    #   Configuration for creating a new workspace during the attachment. If
+    #   specified, a workspace is created and linked to the data source after
+    #   the attachment completes. Mutually exclusive with `workspaceId`.
+    #
+    # @option params [String] :client_token
+    #   A unique, case-sensitive identifier to ensure idempotency of the
+    #   request. If you retry a request with the same client token and the
+    #   same parameters, the retry succeeds without performing any further
+    #   actions.
+    #
+    # @return [Types::AttachDataSourceResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::AttachDataSourceResponse#attachment_id #attachment_id} => String
+    #   * {Types::AttachDataSourceResponse#id #id} => String
+    #   * {Types::AttachDataSourceResponse#arn #arn} => String
+    #   * {Types::AttachDataSourceResponse#data_source_arn #data_source_arn} => String
+    #   * {Types::AttachDataSourceResponse#status #status} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.attach_data_source({
+    #     id: "Id", # required
+    #     data_source_arn: "ARN", # required
+    #     workspace_id: "String",
+    #     workspace_configuration: {
+    #       name: "String", # required
+    #       workspace_type: "String", # required
+    #     },
+    #     client_token: "ClientToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.attachment_id #=> String
+    #   resp.id #=> String
+    #   resp.arn #=> String
+    #   resp.data_source_arn #=> String
+    #   resp.status #=> String, one of "PENDING", "ATTACHED", "FAILED"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/AttachDataSource AWS API Documentation
+    #
+    # @overload attach_data_source(params = {})
+    # @param [Hash] params ({})
+    def attach_data_source(params = {}, options = {})
+      req = build_request(:attach_data_source, params)
+      req.send_request(options)
+    end
+
     # Provides access to an Amazon OpenSearch Service domain through the use
     # of an interface VPC endpoint.
     #
@@ -806,6 +901,10 @@ module Aws::OpenSearchService
     # @option params [String] :service
     #   The Amazon Web Services service SP to grant access to.
     #
+    # @option params [Types::ServiceOptions] :service_options
+    #   The options for the service, including the supported Regions for the
+    #   endpoint access.
+    #
     # @return [Types::AuthorizeVpcEndpointAccessResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::AuthorizeVpcEndpointAccessResponse#authorized_principal #authorized_principal} => Types::AuthorizedPrincipal
@@ -816,12 +915,17 @@ module Aws::OpenSearchService
     #     domain_name: "DomainName", # required
     #     account: "AWSAccount",
     #     service: "application.opensearchservice.amazonaws.com", # accepts application.opensearchservice.amazonaws.com
+    #     service_options: {
+    #       supported_regions: ["Region"],
+    #     },
     #   })
     #
     # @example Response structure
     #
     #   resp.authorized_principal.principal_type #=> String, one of "AWS_ACCOUNT", "AWS_SERVICE"
     #   resp.authorized_principal.principal #=> String
+    #   resp.authorized_principal.service_options.supported_regions #=> Array
+    #   resp.authorized_principal.service_options.supported_regions[0] #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/AuthorizeVpcEndpointAccess AWS API Documentation
     #
@@ -920,32 +1024,44 @@ module Aws::OpenSearchService
       req.send_request(options)
     end
 
-    # Creates an OpenSearch Application.
+    # Creates an OpenSearch UI application. For more information, see [Using
+    # the OpenSearch user interface in Amazon OpenSearch Service][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/opensearch-service/latest/developerguide/application.html
     #
     # @option params [String] :client_token
-    #   A unique client idempotency token. It will be auto generated if not
-    #   provided.
+    #   Unique, case-sensitive identifier to ensure idempotency of the
+    #   request.
     #
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.**
     #
     # @option params [required, String] :name
-    #   Name of the OpenSearch Appication to create. Application names are
-    #   unique across the applications owned by an account within an Amazon
-    #   Web Services Region.
+    #   The unique name of the OpenSearch application. Names must be unique
+    #   within an Amazon Web Services Region for each account.
     #
     # @option params [Array<Types::DataSource>] :data_sources
-    #   Data sources to be associated with the OpenSearch Application.
+    #   The data sources to link to the OpenSearch application.
     #
     # @option params [Types::IamIdentityCenterOptionsInput] :iam_identity_center_options
-    #   Settings of IAM Identity Center for the OpenSearch Application.
+    #   Configuration settings for integrating Amazon Web Services IAM
+    #   Identity Center with the OpenSearch application.
     #
     # @option params [Array<Types::AppConfig>] :app_configs
-    #   Configurations of the OpenSearch Application, inlcuding admin
-    #   configuration.
+    #   Configuration settings for the OpenSearch application, including
+    #   administrative options.
     #
     # @option params [Array<Types::Tag>] :tag_list
     #   A list of tags attached to a domain.
+    #
+    # @option params [String] :kms_key_arn
+    #   The Amazon Resource Name (ARN) of the KMS key used to encrypt the
+    #   application's data at rest. If provided, the application uses your
+    #   customer-managed key for encryption. If omitted, the application uses
+    #   an AWS-managed key. The KMS key must be in the same region as the
+    #   application.
     #
     # @return [Types::CreateApplicationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -957,6 +1073,7 @@ module Aws::OpenSearchService
     #   * {Types::CreateApplicationResponse#app_configs #app_configs} => Array&lt;Types::AppConfig&gt;
     #   * {Types::CreateApplicationResponse#tag_list #tag_list} => Array&lt;Types::Tag&gt;
     #   * {Types::CreateApplicationResponse#created_at #created_at} => Time
+    #   * {Types::CreateApplicationResponse#kms_key_arn #kms_key_arn} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -967,6 +1084,7 @@ module Aws::OpenSearchService
     #       {
     #         data_source_arn: "ARN",
     #         data_source_description: "DataSourceDescription",
+    #         iam_role_for_data_source_arn: "RoleArn",
     #       },
     #     ],
     #     iam_identity_center_options: {
@@ -986,6 +1104,7 @@ module Aws::OpenSearchService
     #         value: "TagValue", # required
     #       },
     #     ],
+    #     kms_key_arn: "KmsKeyArn",
     #   })
     #
     # @example Response structure
@@ -996,6 +1115,7 @@ module Aws::OpenSearchService
     #   resp.data_sources #=> Array
     #   resp.data_sources[0].data_source_arn #=> String
     #   resp.data_sources[0].data_source_description #=> String
+    #   resp.data_sources[0].iam_role_for_data_source_arn #=> String
     #   resp.iam_identity_center_options.enabled #=> Boolean
     #   resp.iam_identity_center_options.iam_identity_center_instance_arn #=> String
     #   resp.iam_identity_center_options.iam_role_for_identity_center_application_arn #=> String
@@ -1007,6 +1127,7 @@ module Aws::OpenSearchService
     #   resp.tag_list[0].key #=> String
     #   resp.tag_list[0].value #=> String
     #   resp.created_at #=> Time
+    #   resp.kms_key_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/CreateApplication AWS API Documentation
     #
@@ -1129,7 +1250,8 @@ module Aws::OpenSearchService
     #   Options for fine-grained access control.
     #
     # @option params [Types::IdentityCenterOptionsInput] :identity_center_options
-    #   Options for IAM Identity Center Option control for the domain.
+    #   Configuration options for enabling and managing IAM Identity Center
+    #   integration within a domain.
     #
     # @option params [Array<Types::Tag>] :tag_list
     #   List of tags to add to the domain upon creation.
@@ -1150,6 +1272,27 @@ module Aws::OpenSearchService
     #
     # @option params [Types::AIMLOptionsInput] :aiml_options
     #   Options for all machine learning features for the specified domain.
+    #
+    # @option params [Types::DeploymentStrategyOptions] :deployment_strategy_options
+    #   Specifies the deployment strategy options for the domain.
+    #
+    # @option params [Types::AutomatedSnapshotPauseRequestOptions] :automated_snapshot_pause_options
+    #   Specifies the automated snapshot pause options for the domain.
+    #
+    #   Suspending snapshots reduces data protection. You cannot restore your
+    #   domain to points in time when snapshots are suspended. Use this
+    #   feature only for short-term operational needs such as migrations or
+    #   maintenance windows.
+    #
+    #   Maximum suspension duration: 3 days.
+    #
+    # @option params [String] :use_case
+    #   The primary use case for the domain. For valid values, see
+    #   `DomainUseCase`.
+    #
+    # @option params [String] :engine_mode
+    #   The engine mode for the domain. For valid values and requirements, see
+    #   `EngineMode`.
     #
     # @return [Types::CreateDomainResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1203,6 +1346,7 @@ module Aws::OpenSearchService
     #     vpc_options: {
     #       subnet_ids: ["String"],
     #       security_group_ids: ["String"],
+    #       egress_enabled: false,
     #     },
     #     cognito_options: {
     #       enabled: false,
@@ -1228,7 +1372,7 @@ module Aws::OpenSearchService
     #     },
     #     domain_endpoint_options: {
     #       enforce_https: false,
-    #       tls_security_policy: "Policy-Min-TLS-1-0-2019-07", # accepts Policy-Min-TLS-1-0-2019-07, Policy-Min-TLS-1-2-2019-07, Policy-Min-TLS-1-2-PFS-2023-10
+    #       tls_security_policy: "Policy-Min-TLS-1-0-2019-07", # accepts Policy-Min-TLS-1-0-2019-07, Policy-Min-TLS-1-2-2019-07, Policy-Min-TLS-1-2-PFS-2023-10, Policy-Min-TLS-1-2-RFC9151-FIPS-2024-08
     #       custom_endpoint_enabled: false,
     #       custom_endpoint: "DomainNameFqdn",
     #       custom_endpoint_certificate_arn: "ARN",
@@ -1257,13 +1401,20 @@ module Aws::OpenSearchService
     #         enabled: false,
     #         subject_key: "SubjectKey",
     #         roles_key: "RolesKey",
+    #         jwks_url: "JwksUrl",
     #         public_key: "String",
+    #       },
+    #       iam_federation_options: {
+    #         enabled: false,
+    #         subject_key: "IAMFederationSubjectKey",
+    #         roles_key: "IAMFederationRolesKey",
     #       },
     #       anonymous_auth_enabled: false,
     #     },
     #     identity_center_options: {
     #       enabled_api_access: false,
     #       identity_center_instance_arn: "IdentityCenterInstanceARN",
+    #       identity_center_instance_region: "Region",
     #       subject_key: "UserName", # accepts UserName, UserId, Email
     #       roles_key: "GroupName", # accepts GroupName, GroupId
     #     },
@@ -1298,12 +1449,29 @@ module Aws::OpenSearchService
     #     },
     #     software_update_options: {
     #       auto_software_update_enabled: false,
+    #       use_latest_service_software_for_blue_green: false,
     #     },
     #     aiml_options: {
     #       natural_language_query_generation_options: {
     #         desired_state: "ENABLED", # accepts ENABLED, DISABLED
     #       },
+    #       s3_vectors_engine: {
+    #         enabled: false,
+    #       },
+    #       serverless_vector_acceleration: {
+    #         enabled: false,
+    #       },
     #     },
+    #     deployment_strategy_options: {
+    #       deployment_strategy: "Default", # required, accepts Default, CapacityOptimized
+    #     },
+    #     automated_snapshot_pause_options: {
+    #       enabled: false, # required
+    #       start_time: Time.now,
+    #       end_time: Time.now,
+    #     },
+    #     use_case: "SEARCH", # accepts SEARCH, VECTOR, OBSERVABILITY, MIXED
+    #     engine_mode: "GENERAL", # accepts GENERAL, OPTIMIZED
     #   })
     #
     # @example Response structure
@@ -1353,6 +1521,7 @@ module Aws::OpenSearchService
     #   resp.domain_status.vpc_options.availability_zones[0] #=> String
     #   resp.domain_status.vpc_options.security_group_ids #=> Array
     #   resp.domain_status.vpc_options.security_group_ids[0] #=> String
+    #   resp.domain_status.vpc_options.egress_enabled #=> Boolean
     #   resp.domain_status.cognito_options.enabled #=> Boolean
     #   resp.domain_status.cognito_options.user_pool_id #=> String
     #   resp.domain_status.cognito_options.identity_pool_id #=> String
@@ -1374,7 +1543,7 @@ module Aws::OpenSearchService
     #   resp.domain_status.service_software_options.automated_update_date #=> Time
     #   resp.domain_status.service_software_options.optional_deployment #=> Boolean
     #   resp.domain_status.domain_endpoint_options.enforce_https #=> Boolean
-    #   resp.domain_status.domain_endpoint_options.tls_security_policy #=> String, one of "Policy-Min-TLS-1-0-2019-07", "Policy-Min-TLS-1-2-2019-07", "Policy-Min-TLS-1-2-PFS-2023-10"
+    #   resp.domain_status.domain_endpoint_options.tls_security_policy #=> String, one of "Policy-Min-TLS-1-0-2019-07", "Policy-Min-TLS-1-2-2019-07", "Policy-Min-TLS-1-2-PFS-2023-10", "Policy-Min-TLS-1-2-RFC9151-FIPS-2024-08"
     #   resp.domain_status.domain_endpoint_options.custom_endpoint_enabled #=> Boolean
     #   resp.domain_status.domain_endpoint_options.custom_endpoint #=> String
     #   resp.domain_status.domain_endpoint_options.custom_endpoint_certificate_arn #=> String
@@ -1389,11 +1558,16 @@ module Aws::OpenSearchService
     #   resp.domain_status.advanced_security_options.jwt_options.enabled #=> Boolean
     #   resp.domain_status.advanced_security_options.jwt_options.subject_key #=> String
     #   resp.domain_status.advanced_security_options.jwt_options.roles_key #=> String
+    #   resp.domain_status.advanced_security_options.jwt_options.jwks_url #=> String
     #   resp.domain_status.advanced_security_options.jwt_options.public_key #=> String
+    #   resp.domain_status.advanced_security_options.iam_federation_options.enabled #=> Boolean
+    #   resp.domain_status.advanced_security_options.iam_federation_options.subject_key #=> String
+    #   resp.domain_status.advanced_security_options.iam_federation_options.roles_key #=> String
     #   resp.domain_status.advanced_security_options.anonymous_auth_disable_date #=> Time
     #   resp.domain_status.advanced_security_options.anonymous_auth_enabled #=> Boolean
     #   resp.domain_status.identity_center_options.enabled_api_access #=> Boolean
     #   resp.domain_status.identity_center_options.identity_center_instance_arn #=> String
+    #   resp.domain_status.identity_center_options.identity_center_instance_region #=> String
     #   resp.domain_status.identity_center_options.subject_key #=> String, one of "UserName", "UserId", "Email"
     #   resp.domain_status.identity_center_options.roles_key #=> String, one of "GroupName", "GroupId"
     #   resp.domain_status.identity_center_options.identity_center_application_arn #=> String
@@ -1411,6 +1585,7 @@ module Aws::OpenSearchService
     #   resp.domain_status.off_peak_window_options.off_peak_window.window_start_time.hours #=> Integer
     #   resp.domain_status.off_peak_window_options.off_peak_window.window_start_time.minutes #=> Integer
     #   resp.domain_status.software_update_options.auto_software_update_enabled #=> Boolean
+    #   resp.domain_status.software_update_options.use_latest_service_software_for_blue_green #=> Boolean
     #   resp.domain_status.domain_processing_status #=> String, one of "Creating", "Active", "Modifying", "UpgradingEngineVersion", "UpdatingServiceSoftware", "Isolated", "Deleting"
     #   resp.domain_status.modifying_properties #=> Array
     #   resp.domain_status.modifying_properties[0].name #=> String
@@ -1419,6 +1594,15 @@ module Aws::OpenSearchService
     #   resp.domain_status.modifying_properties[0].value_type #=> String, one of "PLAIN_TEXT", "STRINGIFIED_JSON"
     #   resp.domain_status.aiml_options.natural_language_query_generation_options.desired_state #=> String, one of "ENABLED", "DISABLED"
     #   resp.domain_status.aiml_options.natural_language_query_generation_options.current_state #=> String, one of "NOT_ENABLED", "ENABLE_COMPLETE", "ENABLE_IN_PROGRESS", "ENABLE_FAILED", "DISABLE_COMPLETE", "DISABLE_IN_PROGRESS", "DISABLE_FAILED"
+    #   resp.domain_status.aiml_options.s3_vectors_engine.enabled #=> Boolean
+    #   resp.domain_status.aiml_options.serverless_vector_acceleration.enabled #=> Boolean
+    #   resp.domain_status.deployment_strategy_options.deployment_strategy #=> String, one of "Default", "CapacityOptimized"
+    #   resp.domain_status.automated_snapshot_pause_options.enabled #=> Boolean
+    #   resp.domain_status.automated_snapshot_pause_options.start_time #=> Time
+    #   resp.domain_status.automated_snapshot_pause_options.end_time #=> Time
+    #   resp.domain_status.automated_snapshot_pause_options.state #=> String, one of "Active", "Completed", "Scheduled", "Disabled"
+    #   resp.domain_status.use_case #=> String, one of "SEARCH", "VECTOR", "OBSERVABILITY", "MIXED"
+    #   resp.domain_status.engine_mode #=> String, one of "GENERAL", "OPTIMIZED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/CreateDomain AWS API Documentation
     #
@@ -1426,6 +1610,66 @@ module Aws::OpenSearchService
     # @param [Hash] params ({})
     def create_domain(params = {}, options = {})
       req = build_request(:create_domain, params)
+      req.send_request(options)
+    end
+
+    # Creates an OpenSearch index with optional automatic semantic
+    # enrichment for specified text fields. Automatic semantic enrichment
+    # enables semantic search capabilities without requiring machine
+    # learning expertise, improving search relevance by up to 20% by
+    # understanding search intent and contextual meaning beyond keyword
+    # matching. The semantic enrichment process has zero impact on search
+    # latency as sparse encodings are stored directly within the index
+    # during indexing. For more information, see [Automatic semantic
+    # enrichment][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/opensearch-service/latest/developerguide/opensearch-semantic-enrichment.html
+    #
+    # @option params [required, String] :domain_name
+    #   The name of an OpenSearch Service domain. Domain names are unique
+    #   across the domains owned by an account within an Amazon Web Services
+    #   Region.
+    #
+    # @option params [required, String] :index_name
+    #   The name of the index to create. Must be between 1 and 255 characters
+    #   and follow OpenSearch naming conventions.
+    #
+    # @option params [required, Hash,Array,String,Numeric,Boolean] :index_schema
+    #   The JSON schema defining index mappings, settings, and semantic
+    #   enrichment configuration. The schema specifies which text fields
+    #   should be automatically enriched for semantic search capabilities and
+    #   includes OpenSearch index configuration parameters.
+    #
+    #   Document type used to carry open content
+    #   (Hash,Array,String,Numeric,Boolean). A document type value is
+    #   serialized using the same format as its surroundings and requires no
+    #   additional encoding or escaping.
+    #
+    # @return [Types::CreateIndexResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateIndexResponse#status #status} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_index({
+    #     domain_name: "DomainName", # required
+    #     index_name: "IndexName", # required
+    #     index_schema: { # required
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.status #=> String, one of "CREATED", "UPDATED", "DELETED"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/CreateIndex AWS API Documentation
+    #
+    # @overload create_index(params = {})
+    # @param [Hash] params ({})
+    def create_index(params = {}, options = {})
+      req = build_request(:create_index, params)
       req.send_request(options)
     end
 
@@ -1642,6 +1886,7 @@ module Aws::OpenSearchService
     #     vpc_options: { # required
     #       subnet_ids: ["String"],
     #       security_group_ids: ["String"],
+    #       egress_enabled: false,
     #     },
     #     client_token: "ClientToken",
     #   })
@@ -1658,6 +1903,7 @@ module Aws::OpenSearchService
     #   resp.vpc_endpoint.vpc_options.availability_zones[0] #=> String
     #   resp.vpc_endpoint.vpc_options.security_group_ids #=> Array
     #   resp.vpc_endpoint.vpc_options.security_group_ids[0] #=> String
+    #   resp.vpc_endpoint.vpc_options.egress_enabled #=> Boolean
     #   resp.vpc_endpoint.status #=> String, one of "CREATING", "CREATE_FAILED", "ACTIVE", "UPDATING", "UPDATE_FAILED", "DELETING", "DELETE_FAILED"
     #   resp.vpc_endpoint.endpoint #=> String
     #
@@ -1670,11 +1916,10 @@ module Aws::OpenSearchService
       req.send_request(options)
     end
 
-    # Deletes an existing OpenSearch Application.
+    # Deletes a specified OpenSearch application.
     #
     # @option params [required, String] :id
-    #   Unique identifier for the OpenSearch Application that you want to
-    #   delete.
+    #   The unique identifier of the OpenSearch application to delete.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
@@ -1817,6 +2062,7 @@ module Aws::OpenSearchService
     #   resp.domain_status.vpc_options.availability_zones[0] #=> String
     #   resp.domain_status.vpc_options.security_group_ids #=> Array
     #   resp.domain_status.vpc_options.security_group_ids[0] #=> String
+    #   resp.domain_status.vpc_options.egress_enabled #=> Boolean
     #   resp.domain_status.cognito_options.enabled #=> Boolean
     #   resp.domain_status.cognito_options.user_pool_id #=> String
     #   resp.domain_status.cognito_options.identity_pool_id #=> String
@@ -1838,7 +2084,7 @@ module Aws::OpenSearchService
     #   resp.domain_status.service_software_options.automated_update_date #=> Time
     #   resp.domain_status.service_software_options.optional_deployment #=> Boolean
     #   resp.domain_status.domain_endpoint_options.enforce_https #=> Boolean
-    #   resp.domain_status.domain_endpoint_options.tls_security_policy #=> String, one of "Policy-Min-TLS-1-0-2019-07", "Policy-Min-TLS-1-2-2019-07", "Policy-Min-TLS-1-2-PFS-2023-10"
+    #   resp.domain_status.domain_endpoint_options.tls_security_policy #=> String, one of "Policy-Min-TLS-1-0-2019-07", "Policy-Min-TLS-1-2-2019-07", "Policy-Min-TLS-1-2-PFS-2023-10", "Policy-Min-TLS-1-2-RFC9151-FIPS-2024-08"
     #   resp.domain_status.domain_endpoint_options.custom_endpoint_enabled #=> Boolean
     #   resp.domain_status.domain_endpoint_options.custom_endpoint #=> String
     #   resp.domain_status.domain_endpoint_options.custom_endpoint_certificate_arn #=> String
@@ -1853,11 +2099,16 @@ module Aws::OpenSearchService
     #   resp.domain_status.advanced_security_options.jwt_options.enabled #=> Boolean
     #   resp.domain_status.advanced_security_options.jwt_options.subject_key #=> String
     #   resp.domain_status.advanced_security_options.jwt_options.roles_key #=> String
+    #   resp.domain_status.advanced_security_options.jwt_options.jwks_url #=> String
     #   resp.domain_status.advanced_security_options.jwt_options.public_key #=> String
+    #   resp.domain_status.advanced_security_options.iam_federation_options.enabled #=> Boolean
+    #   resp.domain_status.advanced_security_options.iam_federation_options.subject_key #=> String
+    #   resp.domain_status.advanced_security_options.iam_federation_options.roles_key #=> String
     #   resp.domain_status.advanced_security_options.anonymous_auth_disable_date #=> Time
     #   resp.domain_status.advanced_security_options.anonymous_auth_enabled #=> Boolean
     #   resp.domain_status.identity_center_options.enabled_api_access #=> Boolean
     #   resp.domain_status.identity_center_options.identity_center_instance_arn #=> String
+    #   resp.domain_status.identity_center_options.identity_center_instance_region #=> String
     #   resp.domain_status.identity_center_options.subject_key #=> String, one of "UserName", "UserId", "Email"
     #   resp.domain_status.identity_center_options.roles_key #=> String, one of "GroupName", "GroupId"
     #   resp.domain_status.identity_center_options.identity_center_application_arn #=> String
@@ -1875,6 +2126,7 @@ module Aws::OpenSearchService
     #   resp.domain_status.off_peak_window_options.off_peak_window.window_start_time.hours #=> Integer
     #   resp.domain_status.off_peak_window_options.off_peak_window.window_start_time.minutes #=> Integer
     #   resp.domain_status.software_update_options.auto_software_update_enabled #=> Boolean
+    #   resp.domain_status.software_update_options.use_latest_service_software_for_blue_green #=> Boolean
     #   resp.domain_status.domain_processing_status #=> String, one of "Creating", "Active", "Modifying", "UpgradingEngineVersion", "UpdatingServiceSoftware", "Isolated", "Deleting"
     #   resp.domain_status.modifying_properties #=> Array
     #   resp.domain_status.modifying_properties[0].name #=> String
@@ -1883,6 +2135,15 @@ module Aws::OpenSearchService
     #   resp.domain_status.modifying_properties[0].value_type #=> String, one of "PLAIN_TEXT", "STRINGIFIED_JSON"
     #   resp.domain_status.aiml_options.natural_language_query_generation_options.desired_state #=> String, one of "ENABLED", "DISABLED"
     #   resp.domain_status.aiml_options.natural_language_query_generation_options.current_state #=> String, one of "NOT_ENABLED", "ENABLE_COMPLETE", "ENABLE_IN_PROGRESS", "ENABLE_FAILED", "DISABLE_COMPLETE", "DISABLE_IN_PROGRESS", "DISABLE_FAILED"
+    #   resp.domain_status.aiml_options.s3_vectors_engine.enabled #=> Boolean
+    #   resp.domain_status.aiml_options.serverless_vector_acceleration.enabled #=> Boolean
+    #   resp.domain_status.deployment_strategy_options.deployment_strategy #=> String, one of "Default", "CapacityOptimized"
+    #   resp.domain_status.automated_snapshot_pause_options.enabled #=> Boolean
+    #   resp.domain_status.automated_snapshot_pause_options.start_time #=> Time
+    #   resp.domain_status.automated_snapshot_pause_options.end_time #=> Time
+    #   resp.domain_status.automated_snapshot_pause_options.state #=> String, one of "Active", "Completed", "Scheduled", "Disabled"
+    #   resp.domain_status.use_case #=> String, one of "SEARCH", "VECTOR", "OBSERVABILITY", "MIXED"
+    #   resp.domain_status.engine_mode #=> String, one of "GENERAL", "OPTIMIZED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/DeleteDomain AWS API Documentation
     #
@@ -1934,6 +2195,41 @@ module Aws::OpenSearchService
     # @param [Hash] params ({})
     def delete_inbound_connection(params = {}, options = {})
       req = build_request(:delete_inbound_connection, params)
+      req.send_request(options)
+    end
+
+    # Deletes an OpenSearch index. This operation permanently removes the
+    # index and cannot be undone.
+    #
+    # @option params [required, String] :domain_name
+    #   The name of an OpenSearch Service domain. Domain names are unique
+    #   across the domains owned by an account within an Amazon Web Services
+    #   Region.
+    #
+    # @option params [required, String] :index_name
+    #   The name of the index to delete.
+    #
+    # @return [Types::DeleteIndexResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DeleteIndexResponse#status #status} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_index({
+    #     domain_name: "DomainName", # required
+    #     index_name: "IndexName", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.status #=> String, one of "CREATED", "UPDATED", "DELETED"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/DeleteIndex AWS API Documentation
+    #
+    # @overload delete_index(params = {})
+    # @param [Hash] params ({})
+    def delete_index(params = {}, options = {})
+      req = build_request(:delete_index, params)
       req.send_request(options)
     end
 
@@ -2074,6 +2370,89 @@ module Aws::OpenSearchService
       req.send_request(options)
     end
 
+    # Deregisters a capability from an OpenSearch UI application. This
+    # operation removes the capability and its associated configuration.
+    #
+    # @option params [required, String] :application_id
+    #   The unique identifier of the OpenSearch UI application to deregister
+    #   the capability from.
+    #
+    # @option params [required, String] :capability_name
+    #   The name of the capability to deregister.
+    #
+    # @return [Types::DeregisterCapabilityResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DeregisterCapabilityResponse#status #status} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.deregister_capability({
+    #     application_id: "ApplicationId", # required
+    #     capability_name: "CapabilityName", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.status #=> String, one of "creating", "create_failed", "active", "updating", "update_failed", "deleting", "delete_failed"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/DeregisterCapability AWS API Documentation
+    #
+    # @overload deregister_capability(params = {})
+    # @param [Hash] params ({})
+    def deregister_capability(params = {}, options = {})
+      req = build_request(:deregister_capability, params)
+      req.send_request(options)
+    end
+
+    # Returns the current status and details of a specific data source
+    # attachment for an OpenSearch application. Throws a
+    # `ResourceNotFoundException` if no attachment record exists for the
+    # specified application and data source combination.
+    #
+    # @option params [required, String] :id
+    #   The unique identifier or name of the OpenSearch application.
+    #
+    # @option params [required, String] :data_source_arn
+    #   The Amazon Resource Name (ARN) of the domain. See [Identifiers for IAM
+    #   Entities ][1] in *Using Amazon Web Services Identity and Access
+    #   Management* for more information.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/index.html
+    #
+    # @return [Types::DescribeDataSourceAttachmentResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DescribeDataSourceAttachmentResponse#attachment_id #attachment_id} => String
+    #   * {Types::DescribeDataSourceAttachmentResponse#id #id} => String
+    #   * {Types::DescribeDataSourceAttachmentResponse#arn #arn} => String
+    #   * {Types::DescribeDataSourceAttachmentResponse#data_source_arn #data_source_arn} => String
+    #   * {Types::DescribeDataSourceAttachmentResponse#status #status} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.describe_data_source_attachment({
+    #     id: "Id", # required
+    #     data_source_arn: "ARN", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.attachment_id #=> String
+    #   resp.id #=> String
+    #   resp.arn #=> String
+    #   resp.data_source_arn #=> String
+    #   resp.status #=> String, one of "PENDING", "ATTACHED", "FAILED"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/DescribeDataSourceAttachment AWS API Documentation
+    #
+    # @overload describe_data_source_attachment(params = {})
+    # @param [Hash] params ({})
+    def describe_data_source_attachment(params = {}, options = {})
+      req = build_request(:describe_data_source_attachment, params)
+      req.send_request(options)
+    end
+
     # Describes the domain configuration for the specified Amazon OpenSearch
     # Service domain, including the domain ID, domain service endpoint, and
     # domain ARN.
@@ -2138,6 +2517,7 @@ module Aws::OpenSearchService
     #   resp.domain_status.vpc_options.availability_zones[0] #=> String
     #   resp.domain_status.vpc_options.security_group_ids #=> Array
     #   resp.domain_status.vpc_options.security_group_ids[0] #=> String
+    #   resp.domain_status.vpc_options.egress_enabled #=> Boolean
     #   resp.domain_status.cognito_options.enabled #=> Boolean
     #   resp.domain_status.cognito_options.user_pool_id #=> String
     #   resp.domain_status.cognito_options.identity_pool_id #=> String
@@ -2159,7 +2539,7 @@ module Aws::OpenSearchService
     #   resp.domain_status.service_software_options.automated_update_date #=> Time
     #   resp.domain_status.service_software_options.optional_deployment #=> Boolean
     #   resp.domain_status.domain_endpoint_options.enforce_https #=> Boolean
-    #   resp.domain_status.domain_endpoint_options.tls_security_policy #=> String, one of "Policy-Min-TLS-1-0-2019-07", "Policy-Min-TLS-1-2-2019-07", "Policy-Min-TLS-1-2-PFS-2023-10"
+    #   resp.domain_status.domain_endpoint_options.tls_security_policy #=> String, one of "Policy-Min-TLS-1-0-2019-07", "Policy-Min-TLS-1-2-2019-07", "Policy-Min-TLS-1-2-PFS-2023-10", "Policy-Min-TLS-1-2-RFC9151-FIPS-2024-08"
     #   resp.domain_status.domain_endpoint_options.custom_endpoint_enabled #=> Boolean
     #   resp.domain_status.domain_endpoint_options.custom_endpoint #=> String
     #   resp.domain_status.domain_endpoint_options.custom_endpoint_certificate_arn #=> String
@@ -2174,11 +2554,16 @@ module Aws::OpenSearchService
     #   resp.domain_status.advanced_security_options.jwt_options.enabled #=> Boolean
     #   resp.domain_status.advanced_security_options.jwt_options.subject_key #=> String
     #   resp.domain_status.advanced_security_options.jwt_options.roles_key #=> String
+    #   resp.domain_status.advanced_security_options.jwt_options.jwks_url #=> String
     #   resp.domain_status.advanced_security_options.jwt_options.public_key #=> String
+    #   resp.domain_status.advanced_security_options.iam_federation_options.enabled #=> Boolean
+    #   resp.domain_status.advanced_security_options.iam_federation_options.subject_key #=> String
+    #   resp.domain_status.advanced_security_options.iam_federation_options.roles_key #=> String
     #   resp.domain_status.advanced_security_options.anonymous_auth_disable_date #=> Time
     #   resp.domain_status.advanced_security_options.anonymous_auth_enabled #=> Boolean
     #   resp.domain_status.identity_center_options.enabled_api_access #=> Boolean
     #   resp.domain_status.identity_center_options.identity_center_instance_arn #=> String
+    #   resp.domain_status.identity_center_options.identity_center_instance_region #=> String
     #   resp.domain_status.identity_center_options.subject_key #=> String, one of "UserName", "UserId", "Email"
     #   resp.domain_status.identity_center_options.roles_key #=> String, one of "GroupName", "GroupId"
     #   resp.domain_status.identity_center_options.identity_center_application_arn #=> String
@@ -2196,6 +2581,7 @@ module Aws::OpenSearchService
     #   resp.domain_status.off_peak_window_options.off_peak_window.window_start_time.hours #=> Integer
     #   resp.domain_status.off_peak_window_options.off_peak_window.window_start_time.minutes #=> Integer
     #   resp.domain_status.software_update_options.auto_software_update_enabled #=> Boolean
+    #   resp.domain_status.software_update_options.use_latest_service_software_for_blue_green #=> Boolean
     #   resp.domain_status.domain_processing_status #=> String, one of "Creating", "Active", "Modifying", "UpgradingEngineVersion", "UpdatingServiceSoftware", "Isolated", "Deleting"
     #   resp.domain_status.modifying_properties #=> Array
     #   resp.domain_status.modifying_properties[0].name #=> String
@@ -2204,6 +2590,15 @@ module Aws::OpenSearchService
     #   resp.domain_status.modifying_properties[0].value_type #=> String, one of "PLAIN_TEXT", "STRINGIFIED_JSON"
     #   resp.domain_status.aiml_options.natural_language_query_generation_options.desired_state #=> String, one of "ENABLED", "DISABLED"
     #   resp.domain_status.aiml_options.natural_language_query_generation_options.current_state #=> String, one of "NOT_ENABLED", "ENABLE_COMPLETE", "ENABLE_IN_PROGRESS", "ENABLE_FAILED", "DISABLE_COMPLETE", "DISABLE_IN_PROGRESS", "DISABLE_FAILED"
+    #   resp.domain_status.aiml_options.s3_vectors_engine.enabled #=> Boolean
+    #   resp.domain_status.aiml_options.serverless_vector_acceleration.enabled #=> Boolean
+    #   resp.domain_status.deployment_strategy_options.deployment_strategy #=> String, one of "Default", "CapacityOptimized"
+    #   resp.domain_status.automated_snapshot_pause_options.enabled #=> Boolean
+    #   resp.domain_status.automated_snapshot_pause_options.start_time #=> Time
+    #   resp.domain_status.automated_snapshot_pause_options.end_time #=> Time
+    #   resp.domain_status.automated_snapshot_pause_options.state #=> String, one of "Active", "Completed", "Scheduled", "Disabled"
+    #   resp.domain_status.use_case #=> String, one of "SEARCH", "VECTOR", "OBSERVABILITY", "MIXED"
+    #   resp.domain_status.engine_mode #=> String, one of "GENERAL", "OPTIMIZED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/DescribeDomain AWS API Documentation
     #
@@ -2405,6 +2800,7 @@ module Aws::OpenSearchService
     #   resp.domain_config.vpc_options.options.availability_zones[0] #=> String
     #   resp.domain_config.vpc_options.options.security_group_ids #=> Array
     #   resp.domain_config.vpc_options.options.security_group_ids[0] #=> String
+    #   resp.domain_config.vpc_options.options.egress_enabled #=> Boolean
     #   resp.domain_config.vpc_options.status.creation_date #=> Time
     #   resp.domain_config.vpc_options.status.update_date #=> Time
     #   resp.domain_config.vpc_options.status.update_version #=> Integer
@@ -2448,7 +2844,7 @@ module Aws::OpenSearchService
     #   resp.domain_config.log_publishing_options.status.state #=> String, one of "RequiresIndexDocuments", "Processing", "Active"
     #   resp.domain_config.log_publishing_options.status.pending_deletion #=> Boolean
     #   resp.domain_config.domain_endpoint_options.options.enforce_https #=> Boolean
-    #   resp.domain_config.domain_endpoint_options.options.tls_security_policy #=> String, one of "Policy-Min-TLS-1-0-2019-07", "Policy-Min-TLS-1-2-2019-07", "Policy-Min-TLS-1-2-PFS-2023-10"
+    #   resp.domain_config.domain_endpoint_options.options.tls_security_policy #=> String, one of "Policy-Min-TLS-1-0-2019-07", "Policy-Min-TLS-1-2-2019-07", "Policy-Min-TLS-1-2-PFS-2023-10", "Policy-Min-TLS-1-2-RFC9151-FIPS-2024-08"
     #   resp.domain_config.domain_endpoint_options.options.custom_endpoint_enabled #=> Boolean
     #   resp.domain_config.domain_endpoint_options.options.custom_endpoint #=> String
     #   resp.domain_config.domain_endpoint_options.options.custom_endpoint_certificate_arn #=> String
@@ -2468,7 +2864,11 @@ module Aws::OpenSearchService
     #   resp.domain_config.advanced_security_options.options.jwt_options.enabled #=> Boolean
     #   resp.domain_config.advanced_security_options.options.jwt_options.subject_key #=> String
     #   resp.domain_config.advanced_security_options.options.jwt_options.roles_key #=> String
+    #   resp.domain_config.advanced_security_options.options.jwt_options.jwks_url #=> String
     #   resp.domain_config.advanced_security_options.options.jwt_options.public_key #=> String
+    #   resp.domain_config.advanced_security_options.options.iam_federation_options.enabled #=> Boolean
+    #   resp.domain_config.advanced_security_options.options.iam_federation_options.subject_key #=> String
+    #   resp.domain_config.advanced_security_options.options.iam_federation_options.roles_key #=> String
     #   resp.domain_config.advanced_security_options.options.anonymous_auth_disable_date #=> Time
     #   resp.domain_config.advanced_security_options.options.anonymous_auth_enabled #=> Boolean
     #   resp.domain_config.advanced_security_options.status.creation_date #=> Time
@@ -2478,6 +2878,7 @@ module Aws::OpenSearchService
     #   resp.domain_config.advanced_security_options.status.pending_deletion #=> Boolean
     #   resp.domain_config.identity_center_options.options.enabled_api_access #=> Boolean
     #   resp.domain_config.identity_center_options.options.identity_center_instance_arn #=> String
+    #   resp.domain_config.identity_center_options.options.identity_center_instance_region #=> String
     #   resp.domain_config.identity_center_options.options.subject_key #=> String, one of "UserName", "UserId", "Email"
     #   resp.domain_config.identity_center_options.options.roles_key #=> String, one of "GroupName", "GroupId"
     #   resp.domain_config.identity_center_options.options.identity_center_application_arn #=> String
@@ -2516,6 +2917,7 @@ module Aws::OpenSearchService
     #   resp.domain_config.off_peak_window_options.status.state #=> String, one of "RequiresIndexDocuments", "Processing", "Active"
     #   resp.domain_config.off_peak_window_options.status.pending_deletion #=> Boolean
     #   resp.domain_config.software_update_options.options.auto_software_update_enabled #=> Boolean
+    #   resp.domain_config.software_update_options.options.use_latest_service_software_for_blue_green #=> Boolean
     #   resp.domain_config.software_update_options.status.creation_date #=> Time
     #   resp.domain_config.software_update_options.status.update_date #=> Time
     #   resp.domain_config.software_update_options.status.update_version #=> Integer
@@ -2528,11 +2930,40 @@ module Aws::OpenSearchService
     #   resp.domain_config.modifying_properties[0].value_type #=> String, one of "PLAIN_TEXT", "STRINGIFIED_JSON"
     #   resp.domain_config.aiml_options.options.natural_language_query_generation_options.desired_state #=> String, one of "ENABLED", "DISABLED"
     #   resp.domain_config.aiml_options.options.natural_language_query_generation_options.current_state #=> String, one of "NOT_ENABLED", "ENABLE_COMPLETE", "ENABLE_IN_PROGRESS", "ENABLE_FAILED", "DISABLE_COMPLETE", "DISABLE_IN_PROGRESS", "DISABLE_FAILED"
+    #   resp.domain_config.aiml_options.options.s3_vectors_engine.enabled #=> Boolean
+    #   resp.domain_config.aiml_options.options.serverless_vector_acceleration.enabled #=> Boolean
     #   resp.domain_config.aiml_options.status.creation_date #=> Time
     #   resp.domain_config.aiml_options.status.update_date #=> Time
     #   resp.domain_config.aiml_options.status.update_version #=> Integer
     #   resp.domain_config.aiml_options.status.state #=> String, one of "RequiresIndexDocuments", "Processing", "Active"
     #   resp.domain_config.aiml_options.status.pending_deletion #=> Boolean
+    #   resp.domain_config.deployment_strategy_options.options.deployment_strategy #=> String, one of "Default", "CapacityOptimized"
+    #   resp.domain_config.deployment_strategy_options.status.creation_date #=> Time
+    #   resp.domain_config.deployment_strategy_options.status.update_date #=> Time
+    #   resp.domain_config.deployment_strategy_options.status.update_version #=> Integer
+    #   resp.domain_config.deployment_strategy_options.status.state #=> String, one of "RequiresIndexDocuments", "Processing", "Active"
+    #   resp.domain_config.deployment_strategy_options.status.pending_deletion #=> Boolean
+    #   resp.domain_config.automated_snapshot_pause_options.options.enabled #=> Boolean
+    #   resp.domain_config.automated_snapshot_pause_options.options.start_time #=> Time
+    #   resp.domain_config.automated_snapshot_pause_options.options.end_time #=> Time
+    #   resp.domain_config.automated_snapshot_pause_options.options.state #=> String, one of "Active", "Completed", "Scheduled", "Disabled"
+    #   resp.domain_config.automated_snapshot_pause_options.status.creation_date #=> Time
+    #   resp.domain_config.automated_snapshot_pause_options.status.update_date #=> Time
+    #   resp.domain_config.automated_snapshot_pause_options.status.update_version #=> Integer
+    #   resp.domain_config.automated_snapshot_pause_options.status.state #=> String, one of "RequiresIndexDocuments", "Processing", "Active"
+    #   resp.domain_config.automated_snapshot_pause_options.status.pending_deletion #=> Boolean
+    #   resp.domain_config.use_case.options #=> String, one of "SEARCH", "VECTOR", "OBSERVABILITY", "MIXED"
+    #   resp.domain_config.use_case.status.creation_date #=> Time
+    #   resp.domain_config.use_case.status.update_date #=> Time
+    #   resp.domain_config.use_case.status.update_version #=> Integer
+    #   resp.domain_config.use_case.status.state #=> String, one of "RequiresIndexDocuments", "Processing", "Active"
+    #   resp.domain_config.use_case.status.pending_deletion #=> Boolean
+    #   resp.domain_config.engine_mode.options #=> String, one of "GENERAL", "OPTIMIZED"
+    #   resp.domain_config.engine_mode.status.creation_date #=> Time
+    #   resp.domain_config.engine_mode.status.update_date #=> Time
+    #   resp.domain_config.engine_mode.status.update_version #=> Integer
+    #   resp.domain_config.engine_mode.status.state #=> String, one of "RequiresIndexDocuments", "Processing", "Active"
+    #   resp.domain_config.engine_mode.status.pending_deletion #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/DescribeDomainConfig AWS API Documentation
     #
@@ -2625,7 +3056,7 @@ module Aws::OpenSearchService
     #
     #   resp.domain_nodes_status_list #=> Array
     #   resp.domain_nodes_status_list[0].node_id #=> String
-    #   resp.domain_nodes_status_list[0].node_type #=> String, one of "Data", "Ultrawarm", "Master"
+    #   resp.domain_nodes_status_list[0].node_type #=> String, one of "Data", "Ultrawarm", "Master", "Warm"
     #   resp.domain_nodes_status_list[0].availability_zone #=> String
     #   resp.domain_nodes_status_list[0].instance_type #=> String, one of "m3.medium.search", "m3.large.search", "m3.xlarge.search", "m3.2xlarge.search", "m4.large.search", "m4.xlarge.search", "m4.2xlarge.search", "m4.4xlarge.search", "m4.10xlarge.search", "m5.large.search", "m5.xlarge.search", "m5.2xlarge.search", "m5.4xlarge.search", "m5.12xlarge.search", "m5.24xlarge.search", "r5.large.search", "r5.xlarge.search", "r5.2xlarge.search", "r5.4xlarge.search", "r5.12xlarge.search", "r5.24xlarge.search", "c5.large.search", "c5.xlarge.search", "c5.2xlarge.search", "c5.4xlarge.search", "c5.9xlarge.search", "c5.18xlarge.search", "t3.nano.search", "t3.micro.search", "t3.small.search", "t3.medium.search", "t3.large.search", "t3.xlarge.search", "t3.2xlarge.search", "or1.medium.search", "or1.large.search", "or1.xlarge.search", "or1.2xlarge.search", "or1.4xlarge.search", "or1.8xlarge.search", "or1.12xlarge.search", "or1.16xlarge.search", "ultrawarm1.medium.search", "ultrawarm1.large.search", "ultrawarm1.xlarge.search", "t2.micro.search", "t2.small.search", "t2.medium.search", "r3.large.search", "r3.xlarge.search", "r3.2xlarge.search", "r3.4xlarge.search", "r3.8xlarge.search", "i2.xlarge.search", "i2.2xlarge.search", "d2.xlarge.search", "d2.2xlarge.search", "d2.4xlarge.search", "d2.8xlarge.search", "c4.large.search", "c4.xlarge.search", "c4.2xlarge.search", "c4.4xlarge.search", "c4.8xlarge.search", "r4.large.search", "r4.xlarge.search", "r4.2xlarge.search", "r4.4xlarge.search", "r4.8xlarge.search", "r4.16xlarge.search", "i3.large.search", "i3.xlarge.search", "i3.2xlarge.search", "i3.4xlarge.search", "i3.8xlarge.search", "i3.16xlarge.search", "r6g.large.search", "r6g.xlarge.search", "r6g.2xlarge.search", "r6g.4xlarge.search", "r6g.8xlarge.search", "r6g.12xlarge.search", "m6g.large.search", "m6g.xlarge.search", "m6g.2xlarge.search", "m6g.4xlarge.search", "m6g.8xlarge.search", "m6g.12xlarge.search", "c6g.large.search", "c6g.xlarge.search", "c6g.2xlarge.search", "c6g.4xlarge.search", "c6g.8xlarge.search", "c6g.12xlarge.search", "r6gd.large.search", "r6gd.xlarge.search", "r6gd.2xlarge.search", "r6gd.4xlarge.search", "r6gd.8xlarge.search", "r6gd.12xlarge.search", "r6gd.16xlarge.search", "t4g.small.search", "t4g.medium.search"
     #   resp.domain_nodes_status_list[0].node_status #=> String, one of "Active", "StandBy", "NotAvailable"
@@ -2707,6 +3138,7 @@ module Aws::OpenSearchService
     #   resp.domain_status_list[0].vpc_options.availability_zones[0] #=> String
     #   resp.domain_status_list[0].vpc_options.security_group_ids #=> Array
     #   resp.domain_status_list[0].vpc_options.security_group_ids[0] #=> String
+    #   resp.domain_status_list[0].vpc_options.egress_enabled #=> Boolean
     #   resp.domain_status_list[0].cognito_options.enabled #=> Boolean
     #   resp.domain_status_list[0].cognito_options.user_pool_id #=> String
     #   resp.domain_status_list[0].cognito_options.identity_pool_id #=> String
@@ -2728,7 +3160,7 @@ module Aws::OpenSearchService
     #   resp.domain_status_list[0].service_software_options.automated_update_date #=> Time
     #   resp.domain_status_list[0].service_software_options.optional_deployment #=> Boolean
     #   resp.domain_status_list[0].domain_endpoint_options.enforce_https #=> Boolean
-    #   resp.domain_status_list[0].domain_endpoint_options.tls_security_policy #=> String, one of "Policy-Min-TLS-1-0-2019-07", "Policy-Min-TLS-1-2-2019-07", "Policy-Min-TLS-1-2-PFS-2023-10"
+    #   resp.domain_status_list[0].domain_endpoint_options.tls_security_policy #=> String, one of "Policy-Min-TLS-1-0-2019-07", "Policy-Min-TLS-1-2-2019-07", "Policy-Min-TLS-1-2-PFS-2023-10", "Policy-Min-TLS-1-2-RFC9151-FIPS-2024-08"
     #   resp.domain_status_list[0].domain_endpoint_options.custom_endpoint_enabled #=> Boolean
     #   resp.domain_status_list[0].domain_endpoint_options.custom_endpoint #=> String
     #   resp.domain_status_list[0].domain_endpoint_options.custom_endpoint_certificate_arn #=> String
@@ -2743,11 +3175,16 @@ module Aws::OpenSearchService
     #   resp.domain_status_list[0].advanced_security_options.jwt_options.enabled #=> Boolean
     #   resp.domain_status_list[0].advanced_security_options.jwt_options.subject_key #=> String
     #   resp.domain_status_list[0].advanced_security_options.jwt_options.roles_key #=> String
+    #   resp.domain_status_list[0].advanced_security_options.jwt_options.jwks_url #=> String
     #   resp.domain_status_list[0].advanced_security_options.jwt_options.public_key #=> String
+    #   resp.domain_status_list[0].advanced_security_options.iam_federation_options.enabled #=> Boolean
+    #   resp.domain_status_list[0].advanced_security_options.iam_federation_options.subject_key #=> String
+    #   resp.domain_status_list[0].advanced_security_options.iam_federation_options.roles_key #=> String
     #   resp.domain_status_list[0].advanced_security_options.anonymous_auth_disable_date #=> Time
     #   resp.domain_status_list[0].advanced_security_options.anonymous_auth_enabled #=> Boolean
     #   resp.domain_status_list[0].identity_center_options.enabled_api_access #=> Boolean
     #   resp.domain_status_list[0].identity_center_options.identity_center_instance_arn #=> String
+    #   resp.domain_status_list[0].identity_center_options.identity_center_instance_region #=> String
     #   resp.domain_status_list[0].identity_center_options.subject_key #=> String, one of "UserName", "UserId", "Email"
     #   resp.domain_status_list[0].identity_center_options.roles_key #=> String, one of "GroupName", "GroupId"
     #   resp.domain_status_list[0].identity_center_options.identity_center_application_arn #=> String
@@ -2765,6 +3202,7 @@ module Aws::OpenSearchService
     #   resp.domain_status_list[0].off_peak_window_options.off_peak_window.window_start_time.hours #=> Integer
     #   resp.domain_status_list[0].off_peak_window_options.off_peak_window.window_start_time.minutes #=> Integer
     #   resp.domain_status_list[0].software_update_options.auto_software_update_enabled #=> Boolean
+    #   resp.domain_status_list[0].software_update_options.use_latest_service_software_for_blue_green #=> Boolean
     #   resp.domain_status_list[0].domain_processing_status #=> String, one of "Creating", "Active", "Modifying", "UpgradingEngineVersion", "UpdatingServiceSoftware", "Isolated", "Deleting"
     #   resp.domain_status_list[0].modifying_properties #=> Array
     #   resp.domain_status_list[0].modifying_properties[0].name #=> String
@@ -2773,6 +3211,15 @@ module Aws::OpenSearchService
     #   resp.domain_status_list[0].modifying_properties[0].value_type #=> String, one of "PLAIN_TEXT", "STRINGIFIED_JSON"
     #   resp.domain_status_list[0].aiml_options.natural_language_query_generation_options.desired_state #=> String, one of "ENABLED", "DISABLED"
     #   resp.domain_status_list[0].aiml_options.natural_language_query_generation_options.current_state #=> String, one of "NOT_ENABLED", "ENABLE_COMPLETE", "ENABLE_IN_PROGRESS", "ENABLE_FAILED", "DISABLE_COMPLETE", "DISABLE_IN_PROGRESS", "DISABLE_FAILED"
+    #   resp.domain_status_list[0].aiml_options.s3_vectors_engine.enabled #=> Boolean
+    #   resp.domain_status_list[0].aiml_options.serverless_vector_acceleration.enabled #=> Boolean
+    #   resp.domain_status_list[0].deployment_strategy_options.deployment_strategy #=> String, one of "Default", "CapacityOptimized"
+    #   resp.domain_status_list[0].automated_snapshot_pause_options.enabled #=> Boolean
+    #   resp.domain_status_list[0].automated_snapshot_pause_options.start_time #=> Time
+    #   resp.domain_status_list[0].automated_snapshot_pause_options.end_time #=> Time
+    #   resp.domain_status_list[0].automated_snapshot_pause_options.state #=> String, one of "Active", "Completed", "Scheduled", "Disabled"
+    #   resp.domain_status_list[0].use_case #=> String, one of "SEARCH", "VECTOR", "OBSERVABILITY", "MIXED"
+    #   resp.domain_status_list[0].engine_mode #=> String, one of "GENERAL", "OPTIMIZED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/DescribeDomains AWS API Documentation
     #
@@ -2870,6 +3317,7 @@ module Aws::OpenSearchService
     #   resp.dry_run_config.vpc_options.availability_zones[0] #=> String
     #   resp.dry_run_config.vpc_options.security_group_ids #=> Array
     #   resp.dry_run_config.vpc_options.security_group_ids[0] #=> String
+    #   resp.dry_run_config.vpc_options.egress_enabled #=> Boolean
     #   resp.dry_run_config.cognito_options.enabled #=> Boolean
     #   resp.dry_run_config.cognito_options.user_pool_id #=> String
     #   resp.dry_run_config.cognito_options.identity_pool_id #=> String
@@ -2891,7 +3339,7 @@ module Aws::OpenSearchService
     #   resp.dry_run_config.service_software_options.automated_update_date #=> Time
     #   resp.dry_run_config.service_software_options.optional_deployment #=> Boolean
     #   resp.dry_run_config.domain_endpoint_options.enforce_https #=> Boolean
-    #   resp.dry_run_config.domain_endpoint_options.tls_security_policy #=> String, one of "Policy-Min-TLS-1-0-2019-07", "Policy-Min-TLS-1-2-2019-07", "Policy-Min-TLS-1-2-PFS-2023-10"
+    #   resp.dry_run_config.domain_endpoint_options.tls_security_policy #=> String, one of "Policy-Min-TLS-1-0-2019-07", "Policy-Min-TLS-1-2-2019-07", "Policy-Min-TLS-1-2-PFS-2023-10", "Policy-Min-TLS-1-2-RFC9151-FIPS-2024-08"
     #   resp.dry_run_config.domain_endpoint_options.custom_endpoint_enabled #=> Boolean
     #   resp.dry_run_config.domain_endpoint_options.custom_endpoint #=> String
     #   resp.dry_run_config.domain_endpoint_options.custom_endpoint_certificate_arn #=> String
@@ -2906,11 +3354,16 @@ module Aws::OpenSearchService
     #   resp.dry_run_config.advanced_security_options.jwt_options.enabled #=> Boolean
     #   resp.dry_run_config.advanced_security_options.jwt_options.subject_key #=> String
     #   resp.dry_run_config.advanced_security_options.jwt_options.roles_key #=> String
+    #   resp.dry_run_config.advanced_security_options.jwt_options.jwks_url #=> String
     #   resp.dry_run_config.advanced_security_options.jwt_options.public_key #=> String
+    #   resp.dry_run_config.advanced_security_options.iam_federation_options.enabled #=> Boolean
+    #   resp.dry_run_config.advanced_security_options.iam_federation_options.subject_key #=> String
+    #   resp.dry_run_config.advanced_security_options.iam_federation_options.roles_key #=> String
     #   resp.dry_run_config.advanced_security_options.anonymous_auth_disable_date #=> Time
     #   resp.dry_run_config.advanced_security_options.anonymous_auth_enabled #=> Boolean
     #   resp.dry_run_config.identity_center_options.enabled_api_access #=> Boolean
     #   resp.dry_run_config.identity_center_options.identity_center_instance_arn #=> String
+    #   resp.dry_run_config.identity_center_options.identity_center_instance_region #=> String
     #   resp.dry_run_config.identity_center_options.subject_key #=> String, one of "UserName", "UserId", "Email"
     #   resp.dry_run_config.identity_center_options.roles_key #=> String, one of "GroupName", "GroupId"
     #   resp.dry_run_config.identity_center_options.identity_center_application_arn #=> String
@@ -2928,6 +3381,7 @@ module Aws::OpenSearchService
     #   resp.dry_run_config.off_peak_window_options.off_peak_window.window_start_time.hours #=> Integer
     #   resp.dry_run_config.off_peak_window_options.off_peak_window.window_start_time.minutes #=> Integer
     #   resp.dry_run_config.software_update_options.auto_software_update_enabled #=> Boolean
+    #   resp.dry_run_config.software_update_options.use_latest_service_software_for_blue_green #=> Boolean
     #   resp.dry_run_config.domain_processing_status #=> String, one of "Creating", "Active", "Modifying", "UpgradingEngineVersion", "UpdatingServiceSoftware", "Isolated", "Deleting"
     #   resp.dry_run_config.modifying_properties #=> Array
     #   resp.dry_run_config.modifying_properties[0].name #=> String
@@ -2936,6 +3390,15 @@ module Aws::OpenSearchService
     #   resp.dry_run_config.modifying_properties[0].value_type #=> String, one of "PLAIN_TEXT", "STRINGIFIED_JSON"
     #   resp.dry_run_config.aiml_options.natural_language_query_generation_options.desired_state #=> String, one of "ENABLED", "DISABLED"
     #   resp.dry_run_config.aiml_options.natural_language_query_generation_options.current_state #=> String, one of "NOT_ENABLED", "ENABLE_COMPLETE", "ENABLE_IN_PROGRESS", "ENABLE_FAILED", "DISABLE_COMPLETE", "DISABLE_IN_PROGRESS", "DISABLE_FAILED"
+    #   resp.dry_run_config.aiml_options.s3_vectors_engine.enabled #=> Boolean
+    #   resp.dry_run_config.aiml_options.serverless_vector_acceleration.enabled #=> Boolean
+    #   resp.dry_run_config.deployment_strategy_options.deployment_strategy #=> String, one of "Default", "CapacityOptimized"
+    #   resp.dry_run_config.automated_snapshot_pause_options.enabled #=> Boolean
+    #   resp.dry_run_config.automated_snapshot_pause_options.start_time #=> Time
+    #   resp.dry_run_config.automated_snapshot_pause_options.end_time #=> Time
+    #   resp.dry_run_config.automated_snapshot_pause_options.state #=> String, one of "Active", "Completed", "Scheduled", "Disabled"
+    #   resp.dry_run_config.use_case #=> String, one of "SEARCH", "VECTOR", "OBSERVABILITY", "MIXED"
+    #   resp.dry_run_config.engine_mode #=> String, one of "GENERAL", "OPTIMIZED"
     #   resp.dry_run_results.deployment_type #=> String
     #   resp.dry_run_results.message #=> String
     #
@@ -3012,6 +3475,53 @@ module Aws::OpenSearchService
     # @param [Hash] params ({})
     def describe_inbound_connections(params = {}, options = {})
       req = build_request(:describe_inbound_connections, params)
+      req.send_request(options)
+    end
+
+    # Describes the details of an existing insight for an Amazon OpenSearch
+    # Service domain. Returns detailed fields associated with the specified
+    # insight, such as text descriptions and metric data.
+    #
+    # @option params [required, Types::InsightEntity] :entity
+    #   The entity for which to retrieve insight details. Specifies the type
+    #   and value of the entity, such as a domain name or Amazon Web Services
+    #   account ID.
+    #
+    # @option params [required, String] :insight_id
+    #   The unique identifier of the insight to describe.
+    #
+    # @option params [Boolean] :show_html_content
+    #   Specifies whether to show response with HTML content in response or
+    #   not.
+    #
+    # @return [Types::DescribeInsightDetailsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DescribeInsightDetailsResponse#fields #fields} => Array&lt;Types::InsightField&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.describe_insight_details({
+    #     entity: { # required
+    #       type: "Account", # required, accepts Account, DomainName
+    #       value: "InsightEntityValue",
+    #     },
+    #     insight_id: "GUID", # required
+    #     show_html_content: false,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.fields #=> Array
+    #   resp.fields[0].name #=> String
+    #   resp.fields[0].type #=> String, one of "text", "metric"
+    #   resp.fields[0].value #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/DescribeInsightDetails AWS API Documentation
+    #
+    # @overload describe_insight_details(params = {})
+    # @param [Hash] params ({})
+    def describe_insight_details(params = {}, options = {})
+      req = build_request(:describe_insight_details, params)
       req.send_request(options)
     end
 
@@ -3377,6 +3887,7 @@ module Aws::OpenSearchService
     #   resp.vpc_endpoints[0].vpc_options.availability_zones[0] #=> String
     #   resp.vpc_endpoints[0].vpc_options.security_group_ids #=> Array
     #   resp.vpc_endpoints[0].vpc_options.security_group_ids[0] #=> String
+    #   resp.vpc_endpoints[0].vpc_options.egress_enabled #=> Boolean
     #   resp.vpc_endpoints[0].status #=> String, one of "CREATING", "CREATE_FAILED", "ACTIVE", "UPDATING", "UPDATE_FAILED", "DELETING", "DELETE_FAILED"
     #   resp.vpc_endpoints[0].endpoint #=> String
     #   resp.vpc_endpoint_errors #=> Array
@@ -3390,6 +3901,54 @@ module Aws::OpenSearchService
     # @param [Hash] params ({})
     def describe_vpc_endpoints(params = {}, options = {})
       req = build_request(:describe_vpc_endpoints, params)
+      req.send_request(options)
+    end
+
+    # Removes a data source from an OpenSearch application. The application
+    # must be in the `ACTIVE` state. This operation removes the data source
+    # saved object from the application and deletes the attachment record.
+    # Throws a `ConflictException` if the specified data source has a
+    # `PENDING` attachment, and a `ResourceNotFoundException` if the data
+    # source is not currently attached to the application.
+    #
+    # @option params [required, String] :id
+    #   The unique identifier or name of the OpenSearch application to detach
+    #   the data source from.
+    #
+    # @option params [required, String] :data_source_arn
+    #   The Amazon Resource Name (ARN) of the domain. See [Identifiers for IAM
+    #   Entities ][1] in *Using Amazon Web Services Identity and Access
+    #   Management* for more information.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/index.html
+    #
+    # @return [Types::DetachDataSourceResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DetachDataSourceResponse#id #id} => String
+    #   * {Types::DetachDataSourceResponse#arn #arn} => String
+    #   * {Types::DetachDataSourceResponse#data_source_arn #data_source_arn} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.detach_data_source({
+    #     id: "Id", # required
+    #     data_source_arn: "ARN", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.id #=> String
+    #   resp.arn #=> String
+    #   resp.data_source_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/DetachDataSource AWS API Documentation
+    #
+    # @overload detach_data_source(params = {})
+    # @param [Hash] params ({})
+    def detach_data_source(params = {}, options = {})
+      req = build_request(:detach_data_source, params)
       req.send_request(options)
     end
 
@@ -3447,7 +4006,7 @@ module Aws::OpenSearchService
       req.send_request(options)
     end
 
-    # Dissociates multiple packages from a domain simulatneously.
+    # Dissociates multiple packages from a domain simultaneously.
     #
     # @option params [required, Array<String>] :package_list
     #   A list of package IDs to be dissociated from a domain.
@@ -3495,11 +4054,11 @@ module Aws::OpenSearchService
       req.send_request(options)
     end
 
-    # Check the configuration and status of an existing OpenSearch
-    # Application.
+    # Retrieves the configuration and status of an existing OpenSearch
+    # application.
     #
     # @option params [required, String] :id
-    #   Unique identifier of the checked OpenSearch Application.
+    #   The unique identifier of the OpenSearch application to retrieve.
     #
     # @return [Types::GetApplicationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -3513,6 +4072,7 @@ module Aws::OpenSearchService
     #   * {Types::GetApplicationResponse#app_configs #app_configs} => Array&lt;Types::AppConfig&gt;
     #   * {Types::GetApplicationResponse#created_at #created_at} => Time
     #   * {Types::GetApplicationResponse#last_updated_at #last_updated_at} => Time
+    #   * {Types::GetApplicationResponse#kms_key_arn #kms_key_arn} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -3534,11 +4094,13 @@ module Aws::OpenSearchService
     #   resp.data_sources #=> Array
     #   resp.data_sources[0].data_source_arn #=> String
     #   resp.data_sources[0].data_source_description #=> String
+    #   resp.data_sources[0].iam_role_for_data_source_arn #=> String
     #   resp.app_configs #=> Array
     #   resp.app_configs[0].key #=> String, one of "opensearchDashboards.dashboardAdmin.users", "opensearchDashboards.dashboardAdmin.groups"
     #   resp.app_configs[0].value #=> String
     #   resp.created_at #=> Time
     #   resp.last_updated_at #=> Time
+    #   resp.kms_key_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/GetApplication AWS API Documentation
     #
@@ -3546,6 +4108,48 @@ module Aws::OpenSearchService
     # @param [Hash] params ({})
     def get_application(params = {}, options = {})
       req = build_request(:get_application, params)
+      req.send_request(options)
+    end
+
+    # Retrieves information about a registered capability for an OpenSearch
+    # UI application, including its configuration and current status.
+    #
+    # @option params [required, String] :application_id
+    #   The unique identifier of the OpenSearch UI application.
+    #
+    # @option params [required, String] :capability_name
+    #   The name of the capability to retrieve information about.
+    #
+    # @return [Types::GetCapabilityResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetCapabilityResponse#capability_name #capability_name} => String
+    #   * {Types::GetCapabilityResponse#application_id #application_id} => String
+    #   * {Types::GetCapabilityResponse#status #status} => String
+    #   * {Types::GetCapabilityResponse#capability_config #capability_config} => Types::CapabilityExtendedResponseConfig
+    #   * {Types::GetCapabilityResponse#failures #failures} => Array&lt;Types::CapabilityFailure&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_capability({
+    #     application_id: "ApplicationId", # required
+    #     capability_name: "CapabilityName", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.capability_name #=> String
+    #   resp.application_id #=> String
+    #   resp.status #=> String, one of "creating", "create_failed", "active", "updating", "update_failed", "deleting", "delete_failed"
+    #   resp.failures #=> Array
+    #   resp.failures[0].reason #=> String, one of "KMS_KEY_INSUFFICIENT_PERMISSION"
+    #   resp.failures[0].details #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/GetCapability AWS API Documentation
+    #
+    # @overload get_capability(params = {})
+    # @param [Hash] params ({})
+    def get_capability(params = {}, options = {})
+      req = build_request(:get_capability, params)
       req.send_request(options)
     end
 
@@ -3620,6 +4224,28 @@ module Aws::OpenSearchService
       req.send_request(options)
     end
 
+    # Gets the ARN of the current default application.
+    #
+    # If the default application isn't set, the operation returns a
+    # resource not found error.
+    #
+    # @return [Types::GetDefaultApplicationSettingResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetDefaultApplicationSettingResponse#application_arn #application_arn} => String
+    #
+    # @example Response structure
+    #
+    #   resp.application_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/GetDefaultApplicationSetting AWS API Documentation
+    #
+    # @overload get_default_application_setting(params = {})
+    # @param [Hash] params ({})
+    def get_default_application_setting(params = {}, options = {})
+      req = build_request(:get_default_application_setting, params)
+      req.send_request(options)
+    end
+
     # Returns detailed configuration information for a specific direct query
     # data source in Amazon OpenSearch Service.
     #
@@ -3633,6 +4259,7 @@ module Aws::OpenSearchService
     #   * {Types::GetDirectQueryDataSourceResponse#data_source_type #data_source_type} => Types::DirectQueryDataSourceType
     #   * {Types::GetDirectQueryDataSourceResponse#description #description} => String
     #   * {Types::GetDirectQueryDataSourceResponse#open_search_arns #open_search_arns} => Array&lt;String&gt;
+    #   * {Types::GetDirectQueryDataSourceResponse#data_source_access_policy #data_source_access_policy} => String
     #   * {Types::GetDirectQueryDataSourceResponse#data_source_arn #data_source_arn} => String
     #
     # @example Request syntax with placeholder values
@@ -3646,9 +4273,12 @@ module Aws::OpenSearchService
     #   resp.data_source_name #=> String
     #   resp.data_source_type.cloud_watch_log.role_arn #=> String
     #   resp.data_source_type.security_lake.role_arn #=> String
+    #   resp.data_source_type.prometheus.role_arn #=> String
+    #   resp.data_source_type.prometheus.workspace_arn #=> String
     #   resp.description #=> String
     #   resp.open_search_arns #=> Array
     #   resp.open_search_arns[0] #=> String
+    #   resp.data_source_access_policy #=> String
     #   resp.data_source_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/GetDirectQueryDataSource AWS API Documentation
@@ -3699,6 +4329,89 @@ module Aws::OpenSearchService
     # @param [Hash] params ({})
     def get_domain_maintenance_status(params = {}, options = {})
       req = build_request(:get_domain_maintenance_status, params)
+      req.send_request(options)
+    end
+
+    # Retrieves information about an OpenSearch index including its schema
+    # and semantic enrichment configuration. Use this operation to view the
+    # current index structure and semantic search settings.
+    #
+    # @option params [required, String] :domain_name
+    #   The name of an OpenSearch Service domain. Domain names are unique
+    #   across the domains owned by an account within an Amazon Web Services
+    #   Region.
+    #
+    # @option params [required, String] :index_name
+    #   The name of the index to retrieve information about.
+    #
+    # @return [Types::GetIndexResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetIndexResponse#index_schema #index_schema} => Hash,Array,String,Numeric,Boolean
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_index({
+    #     domain_name: "DomainName", # required
+    #     index_name: "IndexName", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/GetIndex AWS API Documentation
+    #
+    # @overload get_index(params = {})
+    # @param [Hash] params ({})
+    def get_index(params = {}, options = {})
+      req = build_request(:get_index, params)
+      req.send_request(options)
+    end
+
+    # Retrieves the current status and progress of a migration job,
+    # including the number of exported and imported objects and error
+    # details if the migration failed.
+    #
+    # @option params [required, String] :migration_id
+    #   The unique identifier of the migration job to retrieve.
+    #
+    # @return [Types::GetMigrationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetMigrationResponse#migration_id #migration_id} => String
+    #   * {Types::GetMigrationResponse#status #status} => String
+    #   * {Types::GetMigrationResponse#application_id #application_id} => String
+    #   * {Types::GetMigrationResponse#source #source} => Types::MigrationSource
+    #   * {Types::GetMigrationResponse#exported_count #exported_count} => Integer
+    #   * {Types::GetMigrationResponse#imported_count #imported_count} => Integer
+    #   * {Types::GetMigrationResponse#error #error} => Types::MigrationError
+    #   * {Types::GetMigrationResponse#created_at #created_at} => Time
+    #   * {Types::GetMigrationResponse#updated_at #updated_at} => Time
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_migration({
+    #     migration_id: "String", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.migration_id #=> String
+    #   resp.status #=> String
+    #   resp.application_id #=> String
+    #   resp.source.datasource_arn #=> String
+    #   resp.exported_count #=> Integer
+    #   resp.imported_count #=> Integer
+    #   resp.error.code #=> String
+    #   resp.error.message #=> String
+    #   resp.created_at #=> Time
+    #   resp.updated_at #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/GetMigration AWS API Documentation
+    #
+    # @overload get_migration(params = {})
+    # @param [Hash] params ({})
+    def get_migration(params = {}, options = {})
+      req = build_request(:get_migration, params)
       req.send_request(options)
     end
 
@@ -3854,7 +4567,55 @@ module Aws::OpenSearchService
       req.send_request(options)
     end
 
-    # List all OpenSearch Applications under your account.
+    # Submits feedback for an existing insight in an Amazon OpenSearch
+    # Service domain. Allows users to provide a thumbs up or thumbs down
+    # rating and optional text feedback for a specific insight.
+    #
+    # @option params [required, Types::InsightFeedbackEntity] :entity
+    #   The entity for which to submit insight feedback. Specifies the type
+    #   and value of the entity, such as a domain name.
+    #
+    # @option params [required, String] :insight_id
+    #   The unique identifier of the insight for which to submit feedback.
+    #
+    # @option params [required, String] :thumbs
+    #   The thumbs up or thumbs down feedback for the insight. Possible values
+    #   are `Up` and `Down`.
+    #
+    # @option params [String] :feedback_text
+    #   Optional text feedback providing additional details about the insight.
+    #   Maximum length is 1000 characters.
+    #
+    # @return [Types::InsightFeedbackResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::InsightFeedbackResponse#status #status} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.insight_feedback({
+    #     entity: { # required
+    #       type: "DomainName", # required, accepts DomainName
+    #       value: "InsightEntityValue", # required
+    #     },
+    #     insight_id: "GUID", # required
+    #     thumbs: "Up", # required, accepts Up, Down
+    #     feedback_text: "InsightFeedbackText",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.status #=> String, one of "SUCCESS", "ERROR"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/InsightFeedback AWS API Documentation
+    #
+    # @overload insight_feedback(params = {})
+    # @param [Hash] params ({})
+    def insight_feedback(params = {}, options = {})
+      req = build_request(:insight_feedback, params)
+      req.send_request(options)
+    end
+
+    # Lists all OpenSearch applications under your account.
     #
     # @option params [String] :next_token
     #   When `nextToken` is returned, there are more results available. The
@@ -3862,9 +4623,9 @@ module Aws::OpenSearchService
     #   the request again using the returned token to retrieve the next page.
     #
     # @option params [Array<String>] :statuses
-    #   OpenSearch Application Status can be used as filters for the listing
-    #   request. Possible values are `CREATING`, `UPDATING`, `DELETING`,
-    #   `FAILED`, `ACTIVE`, and `DELETED`.
+    #   Filters the list of OpenSearch applications by status. Possible
+    #   values: `CREATING`, `UPDATING`, `DELETING`, `FAILED`, `ACTIVE`, and
+    #   `DELETED`.
     #
     # @option params [Integer] :max_results
     #   An optional parameter that specifies the maximum number of results to
@@ -3903,6 +4664,51 @@ module Aws::OpenSearchService
     # @param [Hash] params ({})
     def list_applications(params = {}, options = {})
       req = build_request(:list_applications, params)
+      req.send_request(options)
+    end
+
+    # Returns a paginated list of all data source attachments for an
+    # OpenSearch application, including attachments in all states
+    # (`PENDING`, `ATTACHED`, and `FAILED`).
+    #
+    # @option params [required, String] :id
+    #   The unique identifier or name of the OpenSearch application to list
+    #   attachments for.
+    #
+    # @option params [String] :next_token
+    #   The pagination token from a previous call to retrieve the next set of
+    #   results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return per page. The default is 50.
+    #
+    # @return [Types::ListDataSourceAttachmentsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListDataSourceAttachmentsResponse#attachments #attachments} => Array&lt;Types::DataSourceAttachmentSummary&gt;
+    #   * {Types::ListDataSourceAttachmentsResponse#next_token #next_token} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_data_source_attachments({
+    #     id: "Id", # required
+    #     next_token: "String",
+    #     max_results: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.attachments #=> Array
+    #   resp.attachments[0].attachment_id #=> String
+    #   resp.attachments[0].data_source_arn #=> String
+    #   resp.attachments[0].status #=> String, one of "PENDING", "ATTACHED", "FAILED"
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/ListDataSourceAttachments AWS API Documentation
+    #
+    # @overload list_data_source_attachments(params = {})
+    # @param [Hash] params ({})
+    def list_data_source_attachments(params = {}, options = {})
+      req = build_request(:list_data_source_attachments, params)
       req.send_request(options)
     end
 
@@ -3970,6 +4776,8 @@ module Aws::OpenSearchService
     #   resp.direct_query_data_sources[0].data_source_name #=> String
     #   resp.direct_query_data_sources[0].data_source_type.cloud_watch_log.role_arn #=> String
     #   resp.direct_query_data_sources[0].data_source_type.security_lake.role_arn #=> String
+    #   resp.direct_query_data_sources[0].data_source_type.prometheus.role_arn #=> String
+    #   resp.direct_query_data_sources[0].data_source_type.prometheus.workspace_arn #=> String
     #   resp.direct_query_data_sources[0].description #=> String
     #   resp.direct_query_data_sources[0].open_search_arns #=> Array
     #   resp.direct_query_data_sources[0].open_search_arns[0] #=> String
@@ -4143,6 +4951,75 @@ module Aws::OpenSearchService
       req.send_request(options)
     end
 
+    # Lists insights for an Amazon OpenSearch Service domain or Amazon Web
+    # Services account. Returns a paginated list of insights based on the
+    # specified entity, filters, time range, and sort order.
+    #
+    # @option params [required, Types::InsightEntity] :entity
+    #   The entity for which to list insights. Specifies the type and value of
+    #   the entity, such as a domain name or Amazon Web Services account ID.
+    #
+    # @option params [Types::InsightTimeRange] :time_range
+    #   The time range for filtering insights, specified as epoch millisecond
+    #   timestamps.
+    #
+    # @option params [String] :sort_order
+    #   The sort order for the results. Possible values are `ASC` (ascending)
+    #   and `DESC` (descending).
+    #
+    # @option params [Integer] :max_results
+    #   An optional parameter that specifies the maximum number of results to
+    #   return. You can use `NextToken` to get the next page of results. Valid
+    #   values are 1 to 500.
+    #
+    # @option params [String] :next_token
+    #   If your initial `ListInsights` operation returns a `NextToken`,
+    #   include the returned `NextToken` in subsequent `ListInsights`
+    #   operations to retrieve the next page of results.
+    #
+    # @return [Types::ListInsightsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListInsightsResponse#insights #insights} => Array&lt;Types::Insight&gt;
+    #   * {Types::ListInsightsResponse#next_token #next_token} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_insights({
+    #     entity: { # required
+    #       type: "Account", # required, accepts Account, DomainName
+    #       value: "InsightEntityValue",
+    #     },
+    #     time_range: {
+    #       from: 1, # required
+    #       to: 1, # required
+    #     },
+    #     sort_order: "ASC", # accepts ASC, DESC
+    #     max_results: 1,
+    #     next_token: "String",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.insights #=> Array
+    #   resp.insights[0].insight_id #=> String
+    #   resp.insights[0].display_name #=> String
+    #   resp.insights[0].type #=> String, one of "EVENT", "RECOMMENDATION"
+    #   resp.insights[0].priority #=> String, one of "CRITICAL", "HIGH", "MEDIUM", "LOW"
+    #   resp.insights[0].status #=> String, one of "ACTIVE", "RESOLVED", "DISMISSED"
+    #   resp.insights[0].creation_time #=> Time
+    #   resp.insights[0].update_time #=> Time
+    #   resp.insights[0].is_experimental #=> Boolean
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/ListInsights AWS API Documentation
+    #
+    # @overload list_insights(params = {})
+    # @param [Hash] params ({})
+    def list_insights(params = {}, options = {})
+      req = build_request(:list_insights, params)
+      req.send_request(options)
+    end
+
     # Lists all instance types and available features for a given OpenSearch
     # or Elasticsearch version.
     #
@@ -4211,6 +5088,63 @@ module Aws::OpenSearchService
     # @param [Hash] params ({})
     def list_instance_type_details(params = {}, options = {})
       req = build_request(:list_instance_type_details, params)
+      req.send_request(options)
+    end
+
+    # Lists migration jobs for an Amazon OpenSearch Service application. You
+    # can filter results by migration status. Use pagination to ensure that
+    # the operation returns quickly and successfully.
+    #
+    # @option params [required, String] :application_id
+    #   The unique identifier of the OpenSearch application to list migrations
+    #   for.
+    #
+    # @option params [String] :status
+    #   Filters the results by migration status. Valid values are `PENDING`,
+    #   `IN_PROGRESS`, `SUCCEEDED`, and `FAILED`.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return in a single call.
+    #
+    # @option params [String] :next_token
+    #   The pagination token from a previous call to retrieve the next set of
+    #   results.
+    #
+    # @return [Types::ListMigrationsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListMigrationsResponse#migrations #migrations} => Array&lt;Types::MigrationSummary&gt;
+    #   * {Types::ListMigrationsResponse#next_token #next_token} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_migrations({
+    #     application_id: "ApplicationId", # required
+    #     status: "String",
+    #     max_results: 1,
+    #     next_token: "String",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.migrations #=> Array
+    #   resp.migrations[0].migration_id #=> String
+    #   resp.migrations[0].status #=> String
+    #   resp.migrations[0].application_id #=> String
+    #   resp.migrations[0].source.datasource_arn #=> String
+    #   resp.migrations[0].exported_count #=> Integer
+    #   resp.migrations[0].imported_count #=> Integer
+    #   resp.migrations[0].error.code #=> String
+    #   resp.migrations[0].error.message #=> String
+    #   resp.migrations[0].created_at #=> Time
+    #   resp.migrations[0].updated_at #=> Time
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/ListMigrations AWS API Documentation
+    #
+    # @overload list_migrations(params = {})
+    # @param [Hash] params ({})
+    def list_migrations(params = {}, options = {})
+      req = build_request(:list_migrations, params)
       req.send_request(options)
     end
 
@@ -4447,6 +5381,8 @@ module Aws::OpenSearchService
     #   resp.authorized_principal_list #=> Array
     #   resp.authorized_principal_list[0].principal_type #=> String, one of "AWS_ACCOUNT", "AWS_SERVICE"
     #   resp.authorized_principal_list[0].principal #=> String
+    #   resp.authorized_principal_list[0].service_options.supported_regions #=> Array
+    #   resp.authorized_principal_list[0].service_options.supported_regions[0] #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/ListVpcEndpointAccess AWS API Documentation
@@ -4575,6 +5511,108 @@ module Aws::OpenSearchService
       req.send_request(options)
     end
 
+    # Sets the default application to the application with the specified
+    # ARN.
+    #
+    # To remove the default application, use the
+    # `GetDefaultApplicationSetting` operation to get the current default
+    # and then call the `PutDefaultApplicationSetting` with the current
+    # applications ARN and the `setAsDefault` parameter set to `false`.
+    #
+    # @option params [required, String] :application_arn
+    #   The Amazon Resource Name (ARN) of the domain. See [Identifiers for IAM
+    #   Entities ][1] in *Using Amazon Web Services Identity and Access
+    #   Management* for more information.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/index.html
+    #
+    # @option params [required, Boolean] :set_as_default
+    #   Set to true to set the specified ARN as the default application. Set
+    #   to false to clear the default application.
+    #
+    # @return [Types::PutDefaultApplicationSettingResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::PutDefaultApplicationSettingResponse#application_arn #application_arn} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.put_default_application_setting({
+    #     application_arn: "ARN", # required
+    #     set_as_default: false, # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.application_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/PutDefaultApplicationSetting AWS API Documentation
+    #
+    # @overload put_default_application_setting(params = {})
+    # @param [Hash] params ({})
+    def put_default_application_setting(params = {}, options = {})
+      req = build_request(:put_default_application_setting, params)
+      req.send_request(options)
+    end
+
+    # Registers a capability for an OpenSearch UI application. Use this
+    # operation to enable specific capabilities, such as AI features, for a
+    # given application. The capability configuration defines the type and
+    # settings of the capability to register. For more information about the
+    # AI features, see [Agentic AI for OpenSearch UI][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/opensearch-service/latest/developerguide/application-ai-assistant.html
+    #
+    # @option params [required, String] :application_id
+    #   The unique identifier of the OpenSearch UI application to register the
+    #   capability for.
+    #
+    # @option params [required, String] :capability_name
+    #   The name of the capability to register. Must be between 3 and 30
+    #   characters and contain only alphanumeric characters and hyphens. This
+    #   identifies the type of capability being enabled for the application.
+    #   For registering AI Assistant capability, use `ai-capability`
+    #
+    # @option params [required, Types::CapabilityBaseRequestConfig] :capability_config
+    #   The configuration settings for the capability being registered. This
+    #   includes capability-specific settings such as AI configuration.
+    #
+    # @return [Types::RegisterCapabilityResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::RegisterCapabilityResponse#capability_name #capability_name} => String
+    #   * {Types::RegisterCapabilityResponse#application_id #application_id} => String
+    #   * {Types::RegisterCapabilityResponse#status #status} => String
+    #   * {Types::RegisterCapabilityResponse#capability_config #capability_config} => Types::CapabilityBaseResponseConfig
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.register_capability({
+    #     application_id: "ApplicationId", # required
+    #     capability_name: "CapabilityName", # required
+    #     capability_config: { # required
+    #       ai_config: {
+    #       },
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.capability_name #=> String
+    #   resp.application_id #=> String
+    #   resp.status #=> String, one of "creating", "create_failed", "active", "updating", "update_failed", "deleting", "delete_failed"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/RegisterCapability AWS API Documentation
+    #
+    # @overload register_capability(params = {})
+    # @param [Hash] params ({})
+    def register_capability(params = {}, options = {})
+      req = build_request(:register_capability, params)
+      req.send_request(options)
+    end
+
     # Allows the remote Amazon OpenSearch Service domain owner to reject an
     # inbound cross-cluster connection request.
     #
@@ -4659,6 +5697,10 @@ module Aws::OpenSearchService
     # @option params [String] :service
     #   The service SP to revoke access from.
     #
+    # @option params [Types::ServiceOptions] :service_options
+    #   The options for the service, including the supported Regions for the
+    #   endpoint access.
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
@@ -4667,6 +5709,9 @@ module Aws::OpenSearchService
     #     domain_name: "DomainName", # required
     #     account: "AWSAccount",
     #     service: "application.opensearchservice.amazonaws.com", # accepts application.opensearchservice.amazonaws.com
+    #     service_options: {
+    #       supported_regions: ["Region"],
+    #     },
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/RevokeVpcEndpointAccess AWS API Documentation
@@ -4675,6 +5720,43 @@ module Aws::OpenSearchService
     # @param [Hash] params ({})
     def revoke_vpc_endpoint_access(params = {}, options = {})
       req = build_request(:revoke_vpc_endpoint_access, params)
+      req.send_request(options)
+    end
+
+    # Rolls back a service software update for a domain to the previous
+    # version. For more information, see [Service software updates in Amazon
+    # OpenSearch Service][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/opensearch-service/latest/developerguide/service-software.html
+    #
+    # @option params [required, String] :domain_name
+    #   The name of the domain to roll back the service software update on.
+    #
+    # @return [Types::RollbackServiceSoftwareUpdateResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::RollbackServiceSoftwareUpdateResponse#rollback_service_software_options #rollback_service_software_options} => Types::RollbackServiceSoftwareOptions
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.rollback_service_software_update({
+    #     domain_name: "DomainName", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.rollback_service_software_options.current_version #=> String
+    #   resp.rollback_service_software_options.new_version #=> String
+    #   resp.rollback_service_software_options.rollback_available #=> Boolean
+    #   resp.rollback_service_software_options.description #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/RollbackServiceSoftwareUpdate AWS API Documentation
+    #
+    # @overload rollback_service_software_update(params = {})
+    # @param [Hash] params ({})
+    def rollback_service_software_update(params = {}, options = {})
+      req = build_request(:rollback_service_software_update, params)
       req.send_request(options)
     end
 
@@ -4713,6 +5795,76 @@ module Aws::OpenSearchService
     # @param [Hash] params ({})
     def start_domain_maintenance(params = {}, options = {})
       req = build_request(:start_domain_maintenance, params)
+      req.send_request(options)
+    end
+
+    # Initiates a migration job to migrate saved objects from a data source
+    # to an Amazon OpenSearch Service application workspace. Saved objects
+    # include dashboards, visualizations, index patterns, and searches. You
+    # can specify export filters to control the scope of the migration and a
+    # conflict resolution strategy for handling existing objects in the
+    # target workspace.
+    #
+    # @option params [required, String] :application_id
+    #   The unique identifier of the OpenSearch application to migrate saved
+    #   objects into.
+    #
+    # @option params [required, Types::MigrationOptions] :migration_options
+    #   The configuration options for the migration, including the source data
+    #   source, target workspace, export filters, and conflict resolution
+    #   strategy.
+    #
+    # @option params [String] :client_token
+    #   A unique, case-sensitive identifier to ensure that the operation
+    #   completes no more than one time. If this token matches a previous
+    #   request, Amazon OpenSearch Service ignores the request but does not
+    #   return an error.
+    #
+    # @return [Types::StartMigrationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::StartMigrationResponse#migration_id #migration_id} => String
+    #   * {Types::StartMigrationResponse#status #status} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.start_migration({
+    #     application_id: "ApplicationId", # required
+    #     migration_options: { # required
+    #       source: { # required
+    #         datasource_arn: "ARN", # required
+    #       },
+    #       workspace: { # required
+    #         workspace_id: "String",
+    #         create_workspace: false,
+    #         name: "String",
+    #         type: "String",
+    #       },
+    #       export_options: {
+    #         types: ["String"],
+    #         objects: [
+    #           {
+    #             type: "String", # required
+    #             id: "String", # required
+    #           },
+    #         ],
+    #         include_references_deep: false,
+    #       },
+    #       conflict_resolution: "String",
+    #     },
+    #     client_token: "ClientToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.migration_id #=> String
+    #   resp.status #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/StartMigration AWS API Documentation
+    #
+    # @overload start_migration(params = {})
+    # @param [Hash] params ({})
+    def start_migration(params = {}, options = {})
+      req = build_request(:start_migration, params)
       req.send_request(options)
     end
 
@@ -4783,16 +5935,21 @@ module Aws::OpenSearchService
       req.send_request(options)
     end
 
-    # Update the OpenSearch Application.
+    # Updates the configuration and settings of an existing OpenSearch
+    # application.
     #
     # @option params [required, String] :id
-    #   Unique identifier of the OpenSearch Application to be updated.
+    #   The unique identifier for the OpenSearch application to be updated.
     #
     # @option params [Array<Types::DataSource>] :data_sources
-    #   Data sources to be associated with the OpenSearch Application.
+    #   The data sources to associate with the OpenSearch application.
     #
     # @option params [Array<Types::AppConfig>] :app_configs
-    #   Configurations to be changed for the OpenSearch Application.
+    #   The configuration settings to modify for the OpenSearch application.
+    #
+    # @option params [Types::IamIdentityCenterOptionsInput] :iam_identity_center_options
+    #   Configuration settings for integrating IAM Identity Center with the
+    #   OpenSearch application.
     #
     # @return [Types::UpdateApplicationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -4813,6 +5970,7 @@ module Aws::OpenSearchService
     #       {
     #         data_source_arn: "ARN",
     #         data_source_description: "DataSourceDescription",
+    #         iam_role_for_data_source_arn: "RoleArn",
     #       },
     #     ],
     #     app_configs: [
@@ -4821,6 +5979,11 @@ module Aws::OpenSearchService
     #         value: "AppConfigValue",
     #       },
     #     ],
+    #     iam_identity_center_options: {
+    #       enabled: false,
+    #       iam_identity_center_instance_arn: "ARN",
+    #       iam_role_for_identity_center_application_arn: "RoleArn",
+    #     },
     #   })
     #
     # @example Response structure
@@ -4831,6 +5994,7 @@ module Aws::OpenSearchService
     #   resp.data_sources #=> Array
     #   resp.data_sources[0].data_source_arn #=> String
     #   resp.data_sources[0].data_source_description #=> String
+    #   resp.data_sources[0].iam_role_for_data_source_arn #=> String
     #   resp.iam_identity_center_options.enabled #=> Boolean
     #   resp.iam_identity_center_options.iam_identity_center_instance_arn #=> String
     #   resp.iam_identity_center_options.iam_role_for_identity_center_application_arn #=> String
@@ -4919,9 +6083,18 @@ module Aws::OpenSearchService
     #   An optional text field for providing additional context and details
     #   about the data source.
     #
-    # @option params [required, Array<String>] :open_search_arns
-    #   A list of Amazon Resource Names (ARNs) for the OpenSearch collections
-    #   that are associated with the direct query data source.
+    # @option params [Array<String>] :open_search_arns
+    #   An optional list of Amazon Resource Names (ARNs) for the OpenSearch
+    #   collections that are associated with the direct query data source.
+    #   This field is required for CloudWatchLogs and SecurityLake datasource
+    #   types.
+    #
+    # @option params [String] :data_source_access_policy
+    #   An optional IAM access policy document that defines the updated
+    #   permissions for accessing the direct query data source. The policy
+    #   document must be in valid JSON format and follow IAM policy syntax. If
+    #   not specified, the existing access policy if present remains
+    #   unchanged.
     #
     # @return [Types::UpdateDirectQueryDataSourceResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -4938,9 +6111,14 @@ module Aws::OpenSearchService
     #       security_lake: {
     #         role_arn: "DirectQueryDataSourceRoleArn", # required
     #       },
+    #       prometheus: {
+    #         role_arn: "DirectQueryDataSourceRoleArn", # required
+    #         workspace_arn: "AMPWorkspaceArn", # required
+    #       },
     #     },
     #     description: "DirectQueryDataSourceDescription",
-    #     open_search_arns: ["ARN"], # required
+    #     open_search_arns: ["ARN"],
+    #     data_source_access_policy: "PolicyDocument",
     #   })
     #
     # @example Response structure
@@ -5041,7 +6219,7 @@ module Aws::OpenSearchService
     #   Options for fine-grained access control.
     #
     # @option params [Types::IdentityCenterOptionsInput] :identity_center_options
-    #   Container for IAM Identity Center Options settings.
+    #   Configuration settings for enabling and managing IAM Identity Center.
     #
     # @option params [Types::AutoTuneOptions] :auto_tune_options
     #   Options for Auto-Tune.
@@ -5073,6 +6251,27 @@ module Aws::OpenSearchService
     #
     # @option params [Types::AIMLOptionsInput] :aiml_options
     #   Options for all machine learning features for the specified domain.
+    #
+    # @option params [Types::DeploymentStrategyOptions] :deployment_strategy_options
+    #   Specifies the deployment strategy options for the domain.
+    #
+    # @option params [Types::AutomatedSnapshotPauseRequestOptions] :automated_snapshot_pause_options
+    #   Specifies the automated snapshot pause options for the domain.
+    #
+    #   Suspending snapshots reduces data protection. You cannot restore your
+    #   domain to points in time when snapshots are suspended. Use this
+    #   feature only for short-term operational needs such as migrations or
+    #   maintenance windows.
+    #
+    #   Maximum suspension duration: 3 days.
+    #
+    # @option params [String] :use_case
+    #   The primary use case for the domain. For valid values, see
+    #   `DomainUseCase`.
+    #
+    # @option params [String] :engine_mode
+    #   The engine mode for the domain. The engine mode can't be changed
+    #   after the domain is created. For valid values, see `EngineMode`.
     #
     # @return [Types::UpdateDomainConfigResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -5125,6 +6324,7 @@ module Aws::OpenSearchService
     #     vpc_options: {
     #       subnet_ids: ["String"],
     #       security_group_ids: ["String"],
+    #       egress_enabled: false,
     #     },
     #     cognito_options: {
     #       enabled: false,
@@ -5149,7 +6349,7 @@ module Aws::OpenSearchService
     #     },
     #     domain_endpoint_options: {
     #       enforce_https: false,
-    #       tls_security_policy: "Policy-Min-TLS-1-0-2019-07", # accepts Policy-Min-TLS-1-0-2019-07, Policy-Min-TLS-1-2-2019-07, Policy-Min-TLS-1-2-PFS-2023-10
+    #       tls_security_policy: "Policy-Min-TLS-1-0-2019-07", # accepts Policy-Min-TLS-1-0-2019-07, Policy-Min-TLS-1-2-2019-07, Policy-Min-TLS-1-2-PFS-2023-10, Policy-Min-TLS-1-2-RFC9151-FIPS-2024-08
     #       custom_endpoint_enabled: false,
     #       custom_endpoint: "DomainNameFqdn",
     #       custom_endpoint_certificate_arn: "ARN",
@@ -5181,13 +6381,20 @@ module Aws::OpenSearchService
     #         enabled: false,
     #         subject_key: "SubjectKey",
     #         roles_key: "RolesKey",
+    #         jwks_url: "JwksUrl",
     #         public_key: "String",
+    #       },
+    #       iam_federation_options: {
+    #         enabled: false,
+    #         subject_key: "IAMFederationSubjectKey",
+    #         roles_key: "IAMFederationRolesKey",
     #       },
     #       anonymous_auth_enabled: false,
     #     },
     #     identity_center_options: {
     #       enabled_api_access: false,
     #       identity_center_instance_arn: "IdentityCenterInstanceARN",
+    #       identity_center_instance_region: "Region",
     #       subject_key: "UserName", # accepts UserName, UserId, Email
     #       roles_key: "GroupName", # accepts GroupName, GroupId
     #     },
@@ -5219,12 +6426,29 @@ module Aws::OpenSearchService
     #     },
     #     software_update_options: {
     #       auto_software_update_enabled: false,
+    #       use_latest_service_software_for_blue_green: false,
     #     },
     #     aiml_options: {
     #       natural_language_query_generation_options: {
     #         desired_state: "ENABLED", # accepts ENABLED, DISABLED
     #       },
+    #       s3_vectors_engine: {
+    #         enabled: false,
+    #       },
+    #       serverless_vector_acceleration: {
+    #         enabled: false,
+    #       },
     #     },
+    #     deployment_strategy_options: {
+    #       deployment_strategy: "Default", # required, accepts Default, CapacityOptimized
+    #     },
+    #     automated_snapshot_pause_options: {
+    #       enabled: false, # required
+    #       start_time: Time.now,
+    #       end_time: Time.now,
+    #     },
+    #     use_case: "SEARCH", # accepts SEARCH, VECTOR, OBSERVABILITY, MIXED
+    #     engine_mode: "GENERAL", # accepts GENERAL, OPTIMIZED
     #   })
     #
     # @example Response structure
@@ -5292,6 +6516,7 @@ module Aws::OpenSearchService
     #   resp.domain_config.vpc_options.options.availability_zones[0] #=> String
     #   resp.domain_config.vpc_options.options.security_group_ids #=> Array
     #   resp.domain_config.vpc_options.options.security_group_ids[0] #=> String
+    #   resp.domain_config.vpc_options.options.egress_enabled #=> Boolean
     #   resp.domain_config.vpc_options.status.creation_date #=> Time
     #   resp.domain_config.vpc_options.status.update_date #=> Time
     #   resp.domain_config.vpc_options.status.update_version #=> Integer
@@ -5335,7 +6560,7 @@ module Aws::OpenSearchService
     #   resp.domain_config.log_publishing_options.status.state #=> String, one of "RequiresIndexDocuments", "Processing", "Active"
     #   resp.domain_config.log_publishing_options.status.pending_deletion #=> Boolean
     #   resp.domain_config.domain_endpoint_options.options.enforce_https #=> Boolean
-    #   resp.domain_config.domain_endpoint_options.options.tls_security_policy #=> String, one of "Policy-Min-TLS-1-0-2019-07", "Policy-Min-TLS-1-2-2019-07", "Policy-Min-TLS-1-2-PFS-2023-10"
+    #   resp.domain_config.domain_endpoint_options.options.tls_security_policy #=> String, one of "Policy-Min-TLS-1-0-2019-07", "Policy-Min-TLS-1-2-2019-07", "Policy-Min-TLS-1-2-PFS-2023-10", "Policy-Min-TLS-1-2-RFC9151-FIPS-2024-08"
     #   resp.domain_config.domain_endpoint_options.options.custom_endpoint_enabled #=> Boolean
     #   resp.domain_config.domain_endpoint_options.options.custom_endpoint #=> String
     #   resp.domain_config.domain_endpoint_options.options.custom_endpoint_certificate_arn #=> String
@@ -5355,7 +6580,11 @@ module Aws::OpenSearchService
     #   resp.domain_config.advanced_security_options.options.jwt_options.enabled #=> Boolean
     #   resp.domain_config.advanced_security_options.options.jwt_options.subject_key #=> String
     #   resp.domain_config.advanced_security_options.options.jwt_options.roles_key #=> String
+    #   resp.domain_config.advanced_security_options.options.jwt_options.jwks_url #=> String
     #   resp.domain_config.advanced_security_options.options.jwt_options.public_key #=> String
+    #   resp.domain_config.advanced_security_options.options.iam_federation_options.enabled #=> Boolean
+    #   resp.domain_config.advanced_security_options.options.iam_federation_options.subject_key #=> String
+    #   resp.domain_config.advanced_security_options.options.iam_federation_options.roles_key #=> String
     #   resp.domain_config.advanced_security_options.options.anonymous_auth_disable_date #=> Time
     #   resp.domain_config.advanced_security_options.options.anonymous_auth_enabled #=> Boolean
     #   resp.domain_config.advanced_security_options.status.creation_date #=> Time
@@ -5365,6 +6594,7 @@ module Aws::OpenSearchService
     #   resp.domain_config.advanced_security_options.status.pending_deletion #=> Boolean
     #   resp.domain_config.identity_center_options.options.enabled_api_access #=> Boolean
     #   resp.domain_config.identity_center_options.options.identity_center_instance_arn #=> String
+    #   resp.domain_config.identity_center_options.options.identity_center_instance_region #=> String
     #   resp.domain_config.identity_center_options.options.subject_key #=> String, one of "UserName", "UserId", "Email"
     #   resp.domain_config.identity_center_options.options.roles_key #=> String, one of "GroupName", "GroupId"
     #   resp.domain_config.identity_center_options.options.identity_center_application_arn #=> String
@@ -5403,6 +6633,7 @@ module Aws::OpenSearchService
     #   resp.domain_config.off_peak_window_options.status.state #=> String, one of "RequiresIndexDocuments", "Processing", "Active"
     #   resp.domain_config.off_peak_window_options.status.pending_deletion #=> Boolean
     #   resp.domain_config.software_update_options.options.auto_software_update_enabled #=> Boolean
+    #   resp.domain_config.software_update_options.options.use_latest_service_software_for_blue_green #=> Boolean
     #   resp.domain_config.software_update_options.status.creation_date #=> Time
     #   resp.domain_config.software_update_options.status.update_date #=> Time
     #   resp.domain_config.software_update_options.status.update_version #=> Integer
@@ -5415,11 +6646,40 @@ module Aws::OpenSearchService
     #   resp.domain_config.modifying_properties[0].value_type #=> String, one of "PLAIN_TEXT", "STRINGIFIED_JSON"
     #   resp.domain_config.aiml_options.options.natural_language_query_generation_options.desired_state #=> String, one of "ENABLED", "DISABLED"
     #   resp.domain_config.aiml_options.options.natural_language_query_generation_options.current_state #=> String, one of "NOT_ENABLED", "ENABLE_COMPLETE", "ENABLE_IN_PROGRESS", "ENABLE_FAILED", "DISABLE_COMPLETE", "DISABLE_IN_PROGRESS", "DISABLE_FAILED"
+    #   resp.domain_config.aiml_options.options.s3_vectors_engine.enabled #=> Boolean
+    #   resp.domain_config.aiml_options.options.serverless_vector_acceleration.enabled #=> Boolean
     #   resp.domain_config.aiml_options.status.creation_date #=> Time
     #   resp.domain_config.aiml_options.status.update_date #=> Time
     #   resp.domain_config.aiml_options.status.update_version #=> Integer
     #   resp.domain_config.aiml_options.status.state #=> String, one of "RequiresIndexDocuments", "Processing", "Active"
     #   resp.domain_config.aiml_options.status.pending_deletion #=> Boolean
+    #   resp.domain_config.deployment_strategy_options.options.deployment_strategy #=> String, one of "Default", "CapacityOptimized"
+    #   resp.domain_config.deployment_strategy_options.status.creation_date #=> Time
+    #   resp.domain_config.deployment_strategy_options.status.update_date #=> Time
+    #   resp.domain_config.deployment_strategy_options.status.update_version #=> Integer
+    #   resp.domain_config.deployment_strategy_options.status.state #=> String, one of "RequiresIndexDocuments", "Processing", "Active"
+    #   resp.domain_config.deployment_strategy_options.status.pending_deletion #=> Boolean
+    #   resp.domain_config.automated_snapshot_pause_options.options.enabled #=> Boolean
+    #   resp.domain_config.automated_snapshot_pause_options.options.start_time #=> Time
+    #   resp.domain_config.automated_snapshot_pause_options.options.end_time #=> Time
+    #   resp.domain_config.automated_snapshot_pause_options.options.state #=> String, one of "Active", "Completed", "Scheduled", "Disabled"
+    #   resp.domain_config.automated_snapshot_pause_options.status.creation_date #=> Time
+    #   resp.domain_config.automated_snapshot_pause_options.status.update_date #=> Time
+    #   resp.domain_config.automated_snapshot_pause_options.status.update_version #=> Integer
+    #   resp.domain_config.automated_snapshot_pause_options.status.state #=> String, one of "RequiresIndexDocuments", "Processing", "Active"
+    #   resp.domain_config.automated_snapshot_pause_options.status.pending_deletion #=> Boolean
+    #   resp.domain_config.use_case.options #=> String, one of "SEARCH", "VECTOR", "OBSERVABILITY", "MIXED"
+    #   resp.domain_config.use_case.status.creation_date #=> Time
+    #   resp.domain_config.use_case.status.update_date #=> Time
+    #   resp.domain_config.use_case.status.update_version #=> Integer
+    #   resp.domain_config.use_case.status.state #=> String, one of "RequiresIndexDocuments", "Processing", "Active"
+    #   resp.domain_config.use_case.status.pending_deletion #=> Boolean
+    #   resp.domain_config.engine_mode.options #=> String, one of "GENERAL", "OPTIMIZED"
+    #   resp.domain_config.engine_mode.status.creation_date #=> Time
+    #   resp.domain_config.engine_mode.status.update_date #=> Time
+    #   resp.domain_config.engine_mode.status.update_version #=> Integer
+    #   resp.domain_config.engine_mode.status.state #=> String, one of "RequiresIndexDocuments", "Processing", "Active"
+    #   resp.domain_config.engine_mode.status.pending_deletion #=> Boolean
     #   resp.dry_run_results.deployment_type #=> String
     #   resp.dry_run_results.message #=> String
     #   resp.dry_run_progress_status.dry_run_id #=> String
@@ -5436,6 +6696,54 @@ module Aws::OpenSearchService
     # @param [Hash] params ({})
     def update_domain_config(params = {}, options = {})
       req = build_request(:update_domain_config, params)
+      req.send_request(options)
+    end
+
+    # Updates an existing OpenSearch index schema and semantic enrichment
+    # configuration. This operation allows modification of field mappings
+    # and semantic search settings for text fields. Changes to semantic
+    # enrichment configuration will apply to newly ingested documents.
+    #
+    # @option params [required, String] :domain_name
+    #   The name of an OpenSearch Service domain. Domain names are unique
+    #   across the domains owned by an account within an Amazon Web Services
+    #   Region.
+    #
+    # @option params [required, String] :index_name
+    #   The name of the index to update.
+    #
+    # @option params [required, Hash,Array,String,Numeric,Boolean] :index_schema
+    #   The updated JSON schema for the index including any changes to
+    #   mappings, settings, and semantic enrichment configuration.
+    #
+    #   Document type used to carry open content
+    #   (Hash,Array,String,Numeric,Boolean). A document type value is
+    #   serialized using the same format as its surroundings and requires no
+    #   additional encoding or escaping.
+    #
+    # @return [Types::UpdateIndexResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateIndexResponse#status #status} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_index({
+    #     domain_name: "DomainName", # required
+    #     index_name: "IndexName", # required
+    #     index_schema: { # required
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.status #=> String, one of "CREATED", "UPDATED", "DELETED"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/UpdateIndex AWS API Documentation
+    #
+    # @overload update_index(params = {})
+    # @param [Hash] params ({})
+    def update_index(params = {}, options = {})
+      req = build_request(:update_index, params)
       req.send_request(options)
     end
 
@@ -5676,6 +6984,7 @@ module Aws::OpenSearchService
     #     vpc_options: { # required
     #       subnet_ids: ["String"],
     #       security_group_ids: ["String"],
+    #       egress_enabled: false,
     #     },
     #   })
     #
@@ -5691,6 +7000,7 @@ module Aws::OpenSearchService
     #   resp.vpc_endpoint.vpc_options.availability_zones[0] #=> String
     #   resp.vpc_endpoint.vpc_options.security_group_ids #=> Array
     #   resp.vpc_endpoint.vpc_options.security_group_ids[0] #=> String
+    #   resp.vpc_endpoint.vpc_options.egress_enabled #=> Boolean
     #   resp.vpc_endpoint.status #=> String, one of "CREATING", "CREATE_FAILED", "ACTIVE", "UPDATING", "UPDATE_FAILED", "DELETING", "DELETE_FAILED"
     #   resp.vpc_endpoint.endpoint #=> String
     #
@@ -5787,7 +7097,7 @@ module Aws::OpenSearchService
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-opensearchservice'
-      context[:gem_version] = '1.65.0'
+      context[:gem_version] = '1.107.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

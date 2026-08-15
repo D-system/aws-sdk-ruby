@@ -18,6 +18,7 @@ module Aws
                         ?account_id: String,
                         ?active_endpoint_cache: bool,
                         ?adaptive_retry_wait_to_fill: bool,
+                        ?auth_scheme_preference: Array[String],
                         ?client_side_monitoring: bool,
                         ?client_side_monitoring_client_id: String,
                         ?client_side_monitoring_host: String,
@@ -87,7 +88,7 @@ module Aws
       def batch_get_item: (
                             request_items: Hash[::String, {
                                 keys: Array[
-                                  Hash[::String, untyped],
+                                  Hash[::String, untyped]
                                 ],
                                 attributes_to_get: Array[::String]?,
                                 consistent_read: bool?,
@@ -108,7 +109,7 @@ module Aws
                                     delete_request: {
                                       key: Hash[::String, untyped]
                                     }?
-                                  },
+                                  }
                                 ]],
                               ?return_consumed_capacity: ("INDEXES" | "TOTAL" | "NONE"),
                               ?return_item_collection_metrics: ("SIZE" | "NONE")
@@ -117,18 +118,18 @@ module Aws
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DynamoDB/Resource.html#create_table-instance_method
       def create_table: (
-                          attribute_definitions: Array[
+                          ?attribute_definitions: Array[
                             {
                               attribute_name: ::String,
                               attribute_type: ("S" | "N" | "B")
-                            },
+                            }
                           ],
                           table_name: ::String,
-                          key_schema: Array[
+                          ?key_schema: Array[
                             {
                               attribute_name: ::String,
                               key_type: ("HASH" | "RANGE")
-                            },
+                            }
                           ],
                           ?local_secondary_indexes: Array[
                             {
@@ -137,13 +138,13 @@ module Aws
                                 {
                                   attribute_name: ::String,
                                   key_type: ("HASH" | "RANGE")
-                                },
+                                }
                               ],
                               projection: {
                                 projection_type: ("ALL" | "KEYS_ONLY" | "INCLUDE")?,
                                 non_key_attributes: Array[::String]?
                               }
-                            },
+                            }
                           ],
                           ?global_secondary_indexes: Array[
                             {
@@ -152,7 +153,7 @@ module Aws
                                 {
                                   attribute_name: ::String,
                                   key_type: ("HASH" | "RANGE")
-                                },
+                                }
                               ],
                               projection: {
                                 projection_type: ("ALL" | "KEYS_ONLY" | "INCLUDE")?,
@@ -170,7 +171,7 @@ module Aws
                                 read_units_per_second: ::Integer?,
                                 write_units_per_second: ::Integer?
                               }?
-                            },
+                            }
                           ],
                           ?billing_mode: ("PROVISIONED" | "PAY_PER_REQUEST"),
                           ?provisioned_throughput: {
@@ -190,7 +191,7 @@ module Aws
                             {
                               key: ::String,
                               value: ::String
-                            },
+                            }
                           ],
                           ?table_class: ("STANDARD" | "STANDARD_INFREQUENT_ACCESS"),
                           ?deletion_protection_enabled: bool,
@@ -202,7 +203,29 @@ module Aws
                           ?on_demand_throughput: {
                             max_read_request_units: ::Integer?,
                             max_write_request_units: ::Integer?
-                          }
+                          },
+                          ?global_table_source_arn: ::String,
+                          ?global_table_settings_replication_mode: ("ENABLED" | "DISABLED" | "ENABLED_WITH_OVERRIDES"),
+                          ?vector_indexes: Array[
+                            {
+                              index_name: ::String,
+                              vector_attribute: {
+                                attribute_name: ::String
+                              },
+                              search_schema: Array[
+                                {
+                                  attribute_name: ::String,
+                                  search_schema_element_type: ("HASH" | "INLINE_FILTER")
+                                }
+                              ]?,
+                              projection: {
+                                projection_type: ("ALL" | "KEYS_ONLY" | "INCLUDE")?,
+                                non_key_attributes: Array[::String]?
+                              },
+                              dimensions: ::Integer,
+                              distance_function: ("COSINE" | "DOT_PRODUCT" | "EUCLIDEAN")
+                            }
+                          ]
                         ) -> Table
                       | (?Hash[Symbol, untyped]) -> Table
 

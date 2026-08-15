@@ -10,32 +10,44 @@
 begin
   require 'http/2'
 rescue LoadError; end
-require 'aws-sdk-core/plugins/credentials_configuration.rb'
-require 'aws-sdk-core/plugins/logging.rb'
-require 'aws-sdk-core/plugins/param_converter.rb'
-require 'aws-sdk-core/plugins/param_validator.rb'
-require 'aws-sdk-core/plugins/user_agent.rb'
-require 'aws-sdk-core/plugins/helpful_socket_errors.rb'
-require 'aws-sdk-core/plugins/retry_errors.rb'
-require 'aws-sdk-core/plugins/global_configuration.rb'
-require 'aws-sdk-core/plugins/regional_endpoint.rb'
-require 'aws-sdk-core/plugins/stub_responses.rb'
-require 'aws-sdk-core/plugins/idempotency_token.rb'
-require 'aws-sdk-core/plugins/invocation_id.rb'
-require 'aws-sdk-core/plugins/jsonvalue_converter.rb'
-require 'aws-sdk-core/plugins/http_checksum.rb'
-require 'aws-sdk-core/plugins/checksum_algorithm.rb'
-require 'aws-sdk-core/plugins/request_compression.rb'
-require 'aws-sdk-core/plugins/defaults_mode.rb'
-require 'aws-sdk-core/plugins/recursion_detection.rb'
-require 'aws-sdk-core/plugins/telemetry.rb'
-require 'aws-sdk-core/plugins/sign.rb'
-require 'aws-sdk-core/plugins/protocols/json_rpc.rb'
-require 'aws-sdk-core/plugins/event_stream_configuration.rb'
+require 'aws-sdk-core/plugins/credentials_configuration'
+require 'aws-sdk-core/plugins/logging'
+require 'aws-sdk-core/plugins/param_converter'
+require 'aws-sdk-core/plugins/param_validator'
+require 'aws-sdk-core/plugins/user_agent'
+require 'aws-sdk-core/plugins/helpful_socket_errors'
+require 'aws-sdk-core/plugins/retry_errors'
+require 'aws-sdk-core/plugins/global_configuration'
+require 'aws-sdk-core/plugins/regional_endpoint'
+require 'aws-sdk-core/plugins/stub_responses'
+require 'aws-sdk-core/plugins/idempotency_token'
+require 'aws-sdk-core/plugins/invocation_id'
+require 'aws-sdk-core/plugins/jsonvalue_converter'
+require 'aws-sdk-core/plugins/http_checksum'
+require 'aws-sdk-core/plugins/checksum_algorithm'
+require 'aws-sdk-core/plugins/request_compression'
+require 'aws-sdk-core/plugins/defaults_mode'
+require 'aws-sdk-core/plugins/recursion_detection'
+require 'aws-sdk-core/plugins/telemetry'
+require 'aws-sdk-core/plugins/sign'
+require 'aws-sdk-core/plugins/protocols/json_rpc'
+require 'aws-sdk-core/plugins/event_stream_configuration'
 
 Aws::Plugins::GlobalConfiguration.add_identifier(:kinesis)
 
 module Aws::Kinesis
+  # An API async client for Kinesis.  To construct an async client, you need to configure a `:region` and `:credentials`.
+  #
+  #     async_client = Aws::Kinesis::AsyncClient.new(
+  #       region: region_name,
+  #       credentials: credentials,
+  #       # ...
+  #     )
+  #
+  # For details on configuring region and credentials see
+  # the [developer guide](/sdk-for-ruby/v3/developer-guide/setup-config.html).
+  #
+  # See {#initialize} for a full list of supported configuration options.
   class AsyncClient < Seahorse::Client::AsyncBase
 
     include Aws::AsyncClientStubs
@@ -68,9 +80,16 @@ module Aws::Kinesis
     add_plugin(Aws::Plugins::EventStreamConfiguration)
     add_plugin(Aws::Kinesis::Plugins::Endpoints)
 
+    # @overload initialize(options)
+    #   @param [Hash] options
+    #
+    #   @option options [Array<Seahorse::Client::Plugin>] :plugins ([]])
+    #     A list of plugins to apply to the client. Each plugin is either a
+    #     class name or an instance of a plugin class.
+    #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -98,22 +117,24 @@ module Aws::Kinesis
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -137,12 +158,17 @@ module Aws::Kinesis
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :convert_params (true)
     #     When `true`, an attempt is made to coerce request parameters into
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -194,8 +220,8 @@ module Aws::Kinesis
     #     When an EventStream or Proc object is provided, it will be used as callback for each chunk of event stream response received along the way.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -257,17 +283,15 @@ module Aws::Kinesis
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -315,8 +339,8 @@ module Aws::Kinesis
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -431,6 +455,9 @@ module Aws::Kinesis
     #   For this parameter, use the value you obtained when you called
     #   RegisterStreamConsumer.
     #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
     # @option params [required, String] :shard_id
     #   The ID of the shard you want to subscribe to. To see a list of all the
     #   shards for a given stream, use ListShards.
@@ -445,172 +472,179 @@ module Aws::Kinesis
     #
     # @example EventStream Operation Example
     #
-    #   You can process the event once it arrives immediately, or wait until the
-    #   full response is complete and iterate through the eventstream enumerator.
+    #   # You can process the event once it arrives immediately, or wait until the
+    #   # full response is complete and iterate through the eventstream enumerator.
     #
-    #   To interact with event immediately, you need to register #subscribe_to_shard
-    #   with callbacks. Callbacks can be registered for specific events or for all
-    #   events, including error events.
+    #   # To interact with event immediately, you need to register subscribe_to_shard
+    #   # with callbacks. Callbacks can be registered for specific events or for all
+    #   # events, including error events.
     #
-    #   Callbacks can be passed into the `:event_stream_handler` option or within a
-    #   block statement attached to the #subscribe_to_shard call directly. Hybrid
-    #   pattern of both is also supported.
+    #   # Callbacks can be passed into the `:event_stream_handler` option or within a
+    #   # block statement attached to the #subscribe_to_shard call directly. Hybrid
+    #   # pattern of both is also supported.
     #
-    #   `:event_stream_handler` option takes in either a Proc object or
-    #   Aws::Kinesis::EventStreams::SubscribeToShardEventStream object.
+    #   # `:event_stream_handler` option takes in either a Proc object or
+    #   # Aws::Kinesis::EventStreams::SubscribeToShardEventStream object.
     #
-    #   Usage pattern a): Callbacks with a block attached to #subscribe_to_shard
-    #     Example for registering callbacks for all event types and an error event
-    #
-    #     client.subscribe_to_shard( # params input# ) do |stream|
-    #       stream.on_error_event do |event|
-    #         # catch unmodeled error event in the stream
-    #         raise event
-    #         # => Aws::Errors::EventError
-    #         # event.event_type => :error
-    #         # event.error_code => String
-    #         # event.error_message => String
-    #       end
-    #
-    #       stream.on_event do |event|
-    #         # process all events arrive
-    #         puts event.event_type
-    #         ...
-    #       end
-    #
+    #   # Usage pattern a): Callbacks with a block attached to #subscribe_to_shard
+    #   # Example for registering callbacks for all event types and an error event
+    #   client.subscribe_to_shard(
+    #     # params input
+    #   ) do |stream|
+    #     stream.on_error_event do |event|
+    #       # catch unmodeled error event in the stream
+    #       raise event
+    #       # => Aws::Errors::EventError
+    #       # event.event_type => :error
+    #       # event.error_code => String
+    #       # event.error_message => String
     #     end
     #
-    #   Usage pattern b): Pass in `:event_stream_handler` for #subscribe_to_shard
-    #
-    #     1) Create a Aws::Kinesis::EventStreams::SubscribeToShardEventStream object
-    #     Example for registering callbacks with specific events
-    #
-    #       handler = Aws::Kinesis::EventStreams::SubscribeToShardEventStream.new
-    #       handler.on_subscribe_to_shard_event_event do |event|
-    #         event # => Aws::Kinesis::Types::SubscribeToShardEvent
-    #       end
-    #       handler.on_resource_not_found_exception_event do |event|
-    #         event # => Aws::Kinesis::Types::ResourceNotFoundException
-    #       end
-    #       handler.on_resource_in_use_exception_event do |event|
-    #         event # => Aws::Kinesis::Types::ResourceInUseException
-    #       end
-    #       handler.on_kms_disabled_exception_event do |event|
-    #         event # => Aws::Kinesis::Types::KMSDisabledException
-    #       end
-    #       handler.on_kms_invalid_state_exception_event do |event|
-    #         event # => Aws::Kinesis::Types::KMSInvalidStateException
-    #       end
-    #       handler.on_kms_access_denied_exception_event do |event|
-    #         event # => Aws::Kinesis::Types::KMSAccessDeniedException
-    #       end
-    #       handler.on_kms_not_found_exception_event do |event|
-    #         event # => Aws::Kinesis::Types::KMSNotFoundException
-    #       end
-    #       handler.on_kms_opt_in_required_event do |event|
-    #         event # => Aws::Kinesis::Types::KMSOptInRequired
-    #       end
-    #       handler.on_kms_throttling_exception_event do |event|
-    #         event # => Aws::Kinesis::Types::KMSThrottlingException
-    #       end
-    #       handler.on_internal_failure_exception_event do |event|
-    #         event # => Aws::Kinesis::Types::InternalFailureException
-    #       end
-    #
-    #     client.subscribe_to_shard( # params input #, event_stream_handler: handler)
-    #
-    #     2) Use a Ruby Proc object
-    #     Example for registering callbacks with specific events
-    #
-    #     handler = Proc.new do |stream|
-    #       stream.on_subscribe_to_shard_event_event do |event|
-    #         event # => Aws::Kinesis::Types::SubscribeToShardEvent
-    #       end
-    #       stream.on_resource_not_found_exception_event do |event|
-    #         event # => Aws::Kinesis::Types::ResourceNotFoundException
-    #       end
-    #       stream.on_resource_in_use_exception_event do |event|
-    #         event # => Aws::Kinesis::Types::ResourceInUseException
-    #       end
-    #       stream.on_kms_disabled_exception_event do |event|
-    #         event # => Aws::Kinesis::Types::KMSDisabledException
-    #       end
-    #       stream.on_kms_invalid_state_exception_event do |event|
-    #         event # => Aws::Kinesis::Types::KMSInvalidStateException
-    #       end
-    #       stream.on_kms_access_denied_exception_event do |event|
-    #         event # => Aws::Kinesis::Types::KMSAccessDeniedException
-    #       end
-    #       stream.on_kms_not_found_exception_event do |event|
-    #         event # => Aws::Kinesis::Types::KMSNotFoundException
-    #       end
-    #       stream.on_kms_opt_in_required_event do |event|
-    #         event # => Aws::Kinesis::Types::KMSOptInRequired
-    #       end
-    #       stream.on_kms_throttling_exception_event do |event|
-    #         event # => Aws::Kinesis::Types::KMSThrottlingException
-    #       end
-    #       stream.on_internal_failure_exception_event do |event|
-    #         event # => Aws::Kinesis::Types::InternalFailureException
-    #       end
+    #     stream.on_event do |event|
+    #       # process all events arrive
+    #       puts event.event_type
+    #       # ...
     #     end
+    #   end
     #
-    #     client.subscribe_to_shard( # params input #, event_stream_handler: handler)
+    #   # Usage pattern b): Pass in `:event_stream_handler` for #subscribe_to_shard
+    #   #  1) Create a Aws::Kinesis::EventStreams::SubscribeToShardEventStream object
+    #   #  Example for registering callbacks with specific events
     #
-    #   Usage pattern c): Hybrid pattern of a) and b)
+    #   handler = Aws::Kinesis::EventStreams::SubscribeToShardEventStream.new
+    #   handler.on_subscribe_to_shard_event_event do |event|
+    #     event # => Aws::Kinesis::Types::SubscribeToShardEvent
+    #   end
+    #   handler.on_resource_not_found_exception_event do |event|
+    #     event # => Aws::Kinesis::Types::ResourceNotFoundException
+    #   end
+    #   handler.on_resource_in_use_exception_event do |event|
+    #     event # => Aws::Kinesis::Types::ResourceInUseException
+    #   end
+    #   handler.on_kms_disabled_exception_event do |event|
+    #     event # => Aws::Kinesis::Types::KMSDisabledException
+    #   end
+    #   handler.on_kms_invalid_state_exception_event do |event|
+    #     event # => Aws::Kinesis::Types::KMSInvalidStateException
+    #   end
+    #   handler.on_kms_access_denied_exception_event do |event|
+    #     event # => Aws::Kinesis::Types::KMSAccessDeniedException
+    #   end
+    #   handler.on_kms_not_found_exception_event do |event|
+    #     event # => Aws::Kinesis::Types::KMSNotFoundException
+    #   end
+    #   handler.on_kms_opt_in_required_event do |event|
+    #     event # => Aws::Kinesis::Types::KMSOptInRequired
+    #   end
+    #   handler.on_kms_throttling_exception_event do |event|
+    #     event # => Aws::Kinesis::Types::KMSThrottlingException
+    #   end
+    #   handler.on_internal_failure_exception_event do |event|
+    #     event # => Aws::Kinesis::Types::InternalFailureException
+    #   end
     #
-    #       handler = Aws::Kinesis::EventStreams::SubscribeToShardEventStream.new
-    #       handler.on_subscribe_to_shard_event_event do |event|
-    #         event # => Aws::Kinesis::Types::SubscribeToShardEvent
-    #       end
-    #       handler.on_resource_not_found_exception_event do |event|
-    #         event # => Aws::Kinesis::Types::ResourceNotFoundException
-    #       end
-    #       handler.on_resource_in_use_exception_event do |event|
-    #         event # => Aws::Kinesis::Types::ResourceInUseException
-    #       end
-    #       handler.on_kms_disabled_exception_event do |event|
-    #         event # => Aws::Kinesis::Types::KMSDisabledException
-    #       end
-    #       handler.on_kms_invalid_state_exception_event do |event|
-    #         event # => Aws::Kinesis::Types::KMSInvalidStateException
-    #       end
-    #       handler.on_kms_access_denied_exception_event do |event|
-    #         event # => Aws::Kinesis::Types::KMSAccessDeniedException
-    #       end
-    #       handler.on_kms_not_found_exception_event do |event|
-    #         event # => Aws::Kinesis::Types::KMSNotFoundException
-    #       end
-    #       handler.on_kms_opt_in_required_event do |event|
-    #         event # => Aws::Kinesis::Types::KMSOptInRequired
-    #       end
-    #       handler.on_kms_throttling_exception_event do |event|
-    #         event # => Aws::Kinesis::Types::KMSThrottlingException
-    #       end
-    #       handler.on_internal_failure_exception_event do |event|
-    #         event # => Aws::Kinesis::Types::InternalFailureException
-    #       end
+    #   client.subscribe_to_shard(
+    #     # params inputs
+    #     event_stream_handler: handler
+    #   )
     #
-    #     client.subscribe_to_shard( # params input #, event_stream_handler: handler) do |stream|
-    #       stream.on_error_event do |event|
-    #         # catch unmodeled error event in the stream
-    #         raise event
-    #         # => Aws::Errors::EventError
-    #         # event.event_type => :error
-    #         # event.error_code => String
-    #         # event.error_message => String
-    #       end
+    #   #  2) Use a Ruby Proc object
+    #   #  Example for registering callbacks with specific events
+    #   handler = Proc.new do |stream|
+    #     stream.on_subscribe_to_shard_event_event do |event|
+    #       event # => Aws::Kinesis::Types::SubscribeToShardEvent
     #     end
+    #     stream.on_resource_not_found_exception_event do |event|
+    #       event # => Aws::Kinesis::Types::ResourceNotFoundException
+    #     end
+    #     stream.on_resource_in_use_exception_event do |event|
+    #       event # => Aws::Kinesis::Types::ResourceInUseException
+    #     end
+    #     stream.on_kms_disabled_exception_event do |event|
+    #       event # => Aws::Kinesis::Types::KMSDisabledException
+    #     end
+    #     stream.on_kms_invalid_state_exception_event do |event|
+    #       event # => Aws::Kinesis::Types::KMSInvalidStateException
+    #     end
+    #     stream.on_kms_access_denied_exception_event do |event|
+    #       event # => Aws::Kinesis::Types::KMSAccessDeniedException
+    #     end
+    #     stream.on_kms_not_found_exception_event do |event|
+    #       event # => Aws::Kinesis::Types::KMSNotFoundException
+    #     end
+    #     stream.on_kms_opt_in_required_event do |event|
+    #       event # => Aws::Kinesis::Types::KMSOptInRequired
+    #     end
+    #     stream.on_kms_throttling_exception_event do |event|
+    #       event # => Aws::Kinesis::Types::KMSThrottlingException
+    #     end
+    #     stream.on_internal_failure_exception_event do |event|
+    #       event # => Aws::Kinesis::Types::InternalFailureException
+    #     end
+    #   end
     #
-    #   You can also iterate through events after the response complete.
+    #   client.subscribe_to_shard(
+    #     # params inputs
+    #     event_stream_handler: handler
+    #   )
     #
-    #   Events are available at resp.event_stream # => Enumerator
-    #   For parameter input example, please refer to following request syntax
+    #   #  Usage pattern c): Hybrid pattern of a) and b)
+    #   handler = Aws::Kinesis::EventStreams::SubscribeToShardEventStream.new
+    #   handler.on_subscribe_to_shard_event_event do |event|
+    #     event # => Aws::Kinesis::Types::SubscribeToShardEvent
+    #   end
+    #   handler.on_resource_not_found_exception_event do |event|
+    #     event # => Aws::Kinesis::Types::ResourceNotFoundException
+    #   end
+    #   handler.on_resource_in_use_exception_event do |event|
+    #     event # => Aws::Kinesis::Types::ResourceInUseException
+    #   end
+    #   handler.on_kms_disabled_exception_event do |event|
+    #     event # => Aws::Kinesis::Types::KMSDisabledException
+    #   end
+    #   handler.on_kms_invalid_state_exception_event do |event|
+    #     event # => Aws::Kinesis::Types::KMSInvalidStateException
+    #   end
+    #   handler.on_kms_access_denied_exception_event do |event|
+    #     event # => Aws::Kinesis::Types::KMSAccessDeniedException
+    #   end
+    #   handler.on_kms_not_found_exception_event do |event|
+    #     event # => Aws::Kinesis::Types::KMSNotFoundException
+    #   end
+    #   handler.on_kms_opt_in_required_event do |event|
+    #     event # => Aws::Kinesis::Types::KMSOptInRequired
+    #   end
+    #   handler.on_kms_throttling_exception_event do |event|
+    #     event # => Aws::Kinesis::Types::KMSThrottlingException
+    #   end
+    #   handler.on_internal_failure_exception_event do |event|
+    #     event # => Aws::Kinesis::Types::InternalFailureException
+    #   end
+    #
+    #   client.subscribe_to_shard(
+    #     # params input
+    #     event_stream_handler: handler
+    #   ) do |stream|
+    #     stream.on_error_event do |event|
+    #       # catch unmodeled error event in the stream
+    #       raise event
+    #       # => Aws::Errors::EventError
+    #       # event.event_type => :error
+    #       # event.error_code => String
+    #       # event.error_message => String
+    #     end
+    #   end
+    #
+    #   # You can also iterate through events after the response complete.
+    #   # Events are available at
+    #   resp.event_stream # => Enumerator
+    #   # For parameter input example, please refer to following request syntax.
     #
     # @example Request syntax with placeholder values
     #
     #   async_resp = async_client.subscribe_to_shard({
     #     consumer_arn: "ConsumerARN", # required
+    #     stream_id: "StreamId",
     #     shard_id: "ShardId", # required
     #     starting_position: { # required
     #       type: "AT_SEQUENCE_NUMBER", # required, accepts AT_SEQUENCE_NUMBER, AFTER_SEQUENCE_NUMBER, TRIM_HORIZON, LATEST, AT_TIMESTAMP
@@ -625,11 +659,11 @@ module Aws::Kinesis
     #
     # @example Response structure
     #
-    #   All events are available at resp.event_stream:
+    #   # All events are available at resp.event_stream:
     #   resp.event_stream #=> Enumerator
     #   resp.event_stream.event_types #=> [:subscribe_to_shard_event, :resource_not_found_exception, :resource_in_use_exception, :kms_disabled_exception, :kms_invalid_state_exception, :kms_access_denied_exception, :kms_not_found_exception, :kms_opt_in_required, :kms_throttling_exception, :internal_failure_exception]
     #
-    #   For :subscribe_to_shard_event event available at #on_subscribe_to_shard_event_event callback and response eventstream enumerator:
+    #   # For :subscribe_to_shard_event event available at #on_subscribe_to_shard_event_event callback and response eventstream enumerator:
     #   event.records #=> Array
     #   event.records[0].sequence_number #=> String
     #   event.records[0].approximate_arrival_timestamp #=> Time
@@ -645,31 +679,31 @@ module Aws::Kinesis
     #   event.child_shards[0].hash_key_range.starting_hash_key #=> String
     #   event.child_shards[0].hash_key_range.ending_hash_key #=> String
     #
-    #   For :resource_not_found_exception event available at #on_resource_not_found_exception_event callback and response eventstream enumerator:
+    #   # For :resource_not_found_exception event available at #on_resource_not_found_exception_event callback and response eventstream enumerator:
     #   event.message #=> String
     #
-    #   For :resource_in_use_exception event available at #on_resource_in_use_exception_event callback and response eventstream enumerator:
+    #   # For :resource_in_use_exception event available at #on_resource_in_use_exception_event callback and response eventstream enumerator:
     #   event.message #=> String
     #
-    #   For :kms_disabled_exception event available at #on_kms_disabled_exception_event callback and response eventstream enumerator:
+    #   # For :kms_disabled_exception event available at #on_kms_disabled_exception_event callback and response eventstream enumerator:
     #   event.message #=> String
     #
-    #   For :kms_invalid_state_exception event available at #on_kms_invalid_state_exception_event callback and response eventstream enumerator:
+    #   # For :kms_invalid_state_exception event available at #on_kms_invalid_state_exception_event callback and response eventstream enumerator:
     #   event.message #=> String
     #
-    #   For :kms_access_denied_exception event available at #on_kms_access_denied_exception_event callback and response eventstream enumerator:
+    #   # For :kms_access_denied_exception event available at #on_kms_access_denied_exception_event callback and response eventstream enumerator:
     #   event.message #=> String
     #
-    #   For :kms_not_found_exception event available at #on_kms_not_found_exception_event callback and response eventstream enumerator:
+    #   # For :kms_not_found_exception event available at #on_kms_not_found_exception_event callback and response eventstream enumerator:
     #   event.message #=> String
     #
-    #   For :kms_opt_in_required event available at #on_kms_opt_in_required_event callback and response eventstream enumerator:
+    #   # For :kms_opt_in_required event available at #on_kms_opt_in_required_event callback and response eventstream enumerator:
     #   event.message #=> String
     #
-    #   For :kms_throttling_exception event available at #on_kms_throttling_exception_event callback and response eventstream enumerator:
+    #   # For :kms_throttling_exception event available at #on_kms_throttling_exception_event callback and response eventstream enumerator:
     #   event.message #=> String
     #
-    #   For :internal_failure_exception event available at #on_internal_failure_exception_event callback and response eventstream enumerator:
+    #   # For :internal_failure_exception event available at #on_internal_failure_exception_event callback and response eventstream enumerator:
     #   event.message #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/SubscribeToShard AWS API Documentation
@@ -713,7 +747,7 @@ module Aws::Kinesis
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-kinesis'
-      context[:gem_version] = '1.75.0'
+      context[:gem_version] = '1.103.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

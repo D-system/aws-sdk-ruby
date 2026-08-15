@@ -1,0 +1,67 @@
+# WARNING ABOUT GENERATED CODE
+#
+# This file is generated. See the contributing guide for more information:
+# https://github.com/aws/aws-sdk-ruby/blob/version-3/CONTRIBUTING.md
+#
+# WARNING ABOUT GENERATED CODE
+
+module Aws
+  module EKS
+    module Params
+      type vpc_config_request = {
+      subnet_ids: Array[::String]?,
+      security_group_ids: Array[::String]?,
+      endpoint_public_access: bool?,
+      endpoint_private_access: bool?,
+      public_access_cidrs: Array[::String]?,
+      control_plane_egress_mode: ("AWS_MANAGED" | "CUSTOMER_ROUTED" | "CUSTOMER_ISOLATED")?
+    }
+
+      type remote_network_config_request = {
+      remote_node_networks: Array[
+        {
+          cidrs: Array[::String]?
+        }
+      ]?,
+      remote_pod_networks: Array[
+        {
+          cidrs: Array[::String]?
+        }
+      ]?
+    }
+
+      type node_resources_fit_config = {
+      scoring_strategy: {
+        type: ("LeastAllocated" | "MostAllocated")?,
+        resources: Array[
+          {
+            name: ::String?,
+            weight: ::Integer?
+          }
+        ]?
+      }?
+    }
+
+      type kube_scheduler_config_request = {
+      node_resources_fit: Params::node_resources_fit_config?
+    }
+
+      type node_repair_config = {
+      enabled: bool?,
+      max_unhealthy_node_threshold_count: ::Integer?,
+      max_unhealthy_node_threshold_percentage: ::Integer?,
+      max_parallel_nodes_repaired_count: ::Integer?,
+      max_parallel_nodes_repaired_percentage: ::Integer?,
+      node_repair_config_overrides: Array[
+        {
+          node_monitoring_condition: ::String?,
+          node_unhealthy_reason: ::String?,
+          min_repair_wait_time_mins: ::Integer?,
+          repair_action: ("Replace" | "Reboot" | "NoAction")?
+        }
+      ]?
+    }
+
+    end
+  end
+end

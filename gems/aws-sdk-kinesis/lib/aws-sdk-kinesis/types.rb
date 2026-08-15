@@ -31,11 +31,17 @@ module Aws::Kinesis
     #   @return [String]
     #
     # @!attribute [rw] tags
-    #   A set of up to 10 key-value pairs to use to create the tags.
+    #   A set of up to 50 key-value pairs to use to create the tags. A tag
+    #   consists of a required key and an optional value. You can add up to
+    #   50 tags per resource.
     #   @return [Hash<String,String>]
     #
     # @!attribute [rw] stream_arn
     #   The ARN of the stream.
+    #   @return [String]
+    #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/AddTagsToStreamInput AWS API Documentation
@@ -43,7 +49,8 @@ module Aws::Kinesis
     class AddTagsToStreamInput < Struct.new(
       :stream_name,
       :tags,
-      :stream_arn)
+      :stream_arn,
+      :stream_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -178,8 +185,20 @@ module Aws::Kinesis
     #   @return [Types::StreamModeDetails]
     #
     # @!attribute [rw] tags
-    #   A set of up to 10 key-value pairs to use to create the tags.
+    #   A set of up to 50 key-value pairs to use to create the tags. A tag
+    #   consists of a required key and an optional value.
     #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] warm_throughput_mi_bps
+    #   The target warm throughput in MB/s that the stream should be scaled
+    #   to handle. This represents the throughput capacity that will be
+    #   immediately available for write operations.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max_record_size_in_ki_b
+    #   The maximum record size of a single record in kibibyte (KiB) that
+    #   you can write to, and read from a stream.
+    #   @return [Integer]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/CreateStreamInput AWS API Documentation
     #
@@ -187,7 +206,9 @@ module Aws::Kinesis
       :stream_name,
       :shard_count,
       :stream_mode_details,
-      :tags)
+      :tags,
+      :warm_throughput_mi_bps,
+      :max_record_size_in_ki_b)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -207,12 +228,17 @@ module Aws::Kinesis
     #   The ARN of the stream.
     #   @return [String]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/DecreaseStreamRetentionPeriodInput AWS API Documentation
     #
     class DecreaseStreamRetentionPeriodInput < Struct.new(
       :stream_name,
       :retention_period_hours,
-      :stream_arn)
+      :stream_arn,
+      :stream_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -221,10 +247,15 @@ module Aws::Kinesis
     #   The Amazon Resource Name (ARN) of the data stream or consumer.
     #   @return [String]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/DeleteResourcePolicyInput AWS API Documentation
     #
     class DeleteResourcePolicyInput < Struct.new(
-      :resource_arn)
+      :resource_arn,
+      :stream_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -245,12 +276,17 @@ module Aws::Kinesis
     #   The ARN of the stream.
     #   @return [String]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/DeleteStreamInput AWS API Documentation
     #
     class DeleteStreamInput < Struct.new(
       :stream_name,
       :enforce_consumer_deletion,
-      :stream_arn)
+      :stream_arn,
+      :stream_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -278,12 +314,36 @@ module Aws::Kinesis
     #   contains its ARN.
     #   @return [String]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/DeregisterStreamConsumerInput AWS API Documentation
     #
     class DeregisterStreamConsumerInput < Struct.new(
       :stream_arn,
       :consumer_name,
-      :consumer_arn)
+      :consumer_arn,
+      :stream_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @api private
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/DescribeAccountSettingsInput AWS API Documentation
+    #
+    class DescribeAccountSettingsInput < Aws::EmptyStructure; end
+
+    # @!attribute [rw] minimum_throughput_billing_commitment
+    #   The current configuration of the minimum throughput billing
+    #   commitment for your Amazon Web Services account.
+    #   @return [Types::MinimumThroughputBillingCommitmentOutput]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/DescribeAccountSettingsOutput AWS API Documentation
+    #
+    class DescribeAccountSettingsOutput < Struct.new(
+      :minimum_throughput_billing_commitment)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -341,12 +401,17 @@ module Aws::Kinesis
     #   consumer.
     #   @return [String]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/DescribeStreamConsumerInput AWS API Documentation
     #
     class DescribeStreamConsumerInput < Struct.new(
       :stream_arn,
       :consumer_name,
-      :consumer_arn)
+      :consumer_arn,
+      :stream_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -391,13 +456,18 @@ module Aws::Kinesis
     #   The ARN of the stream.
     #   @return [String]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/DescribeStreamInput AWS API Documentation
     #
     class DescribeStreamInput < Struct.new(
       :stream_name,
       :limit,
       :exclusive_start_shard_id,
-      :stream_arn)
+      :stream_arn,
+      :stream_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -426,11 +496,16 @@ module Aws::Kinesis
     #   The ARN of the stream.
     #   @return [String]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/DescribeStreamSummaryInput AWS API Documentation
     #
     class DescribeStreamSummaryInput < Struct.new(
       :stream_name,
-      :stream_arn)
+      :stream_arn,
+      :stream_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -489,12 +564,17 @@ module Aws::Kinesis
     #   The ARN of the stream.
     #   @return [String]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/DisableEnhancedMonitoringInput AWS API Documentation
     #
     class DisableEnhancedMonitoringInput < Struct.new(
       :stream_name,
       :shard_level_metrics,
-      :stream_arn)
+      :stream_arn,
+      :stream_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -540,12 +620,17 @@ module Aws::Kinesis
     #   The ARN of the stream.
     #   @return [String]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/EnableEnhancedMonitoringInput AWS API Documentation
     #
     class EnableEnhancedMonitoringInput < Struct.new(
       :stream_name,
       :shard_level_metrics,
-      :stream_arn)
+      :stream_arn,
+      :stream_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -669,12 +754,17 @@ module Aws::Kinesis
     #   The ARN of the stream.
     #   @return [String]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/GetRecordsInput AWS API Documentation
     #
     class GetRecordsInput < Struct.new(
       :shard_iterator,
       :limit,
-      :stream_arn)
+      :stream_arn,
+      :stream_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -719,10 +809,15 @@ module Aws::Kinesis
     #   The Amazon Resource Name (ARN) of the data stream or consumer.
     #   @return [String]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/GetResourcePolicyInput AWS API Documentation
     #
     class GetResourcePolicyInput < Struct.new(
-      :resource_arn)
+      :resource_arn,
+      :stream_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -795,6 +890,10 @@ module Aws::Kinesis
     #   The ARN of the stream.
     #   @return [String]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/GetShardIteratorInput AWS API Documentation
     #
     class GetShardIteratorInput < Struct.new(
@@ -803,7 +902,8 @@ module Aws::Kinesis
       :shard_iterator_type,
       :starting_sequence_number,
       :timestamp,
-      :stream_arn)
+      :stream_arn,
+      :stream_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -859,12 +959,17 @@ module Aws::Kinesis
     #   The ARN of the stream.
     #   @return [String]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/IncreaseStreamRetentionPeriodInput AWS API Documentation
     #
     class IncreaseStreamRetentionPeriodInput < Struct.new(
       :stream_name,
       :retention_period_hours,
-      :stream_arn)
+      :stream_arn,
+      :stream_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1118,6 +1223,10 @@ module Aws::Kinesis
     #   The ARN of the stream.
     #   @return [String]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/ListShardsInput AWS API Documentation
     #
     class ListShardsInput < Struct.new(
@@ -1127,7 +1236,8 @@ module Aws::Kinesis
       :max_results,
       :stream_creation_timestamp,
       :shard_filter,
-      :stream_arn)
+      :stream_arn,
+      :stream_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1221,13 +1331,18 @@ module Aws::Kinesis
     #   parameter.
     #   @return [Time]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/ListStreamConsumersInput AWS API Documentation
     #
     class ListStreamConsumersInput < Struct.new(
       :stream_arn,
       :next_token,
       :max_results,
-      :stream_creation_timestamp)
+      :stream_creation_timestamp,
+      :stream_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1318,6 +1433,36 @@ module Aws::Kinesis
       include Aws::Structure
     end
 
+    # @!attribute [rw] resource_arn
+    #   The Amazon Resource Name (ARN) of the Kinesis resource for which to
+    #   list tags.
+    #   @return [String]
+    #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/ListTagsForResourceInput AWS API Documentation
+    #
+    class ListTagsForResourceInput < Struct.new(
+      :resource_arn,
+      :stream_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] tags
+    #   An array of tags associated with the specified Kinesis resource.
+    #   @return [Array<Types::Tag>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/ListTagsForResourceOutput AWS API Documentation
+    #
+    class ListTagsForResourceOutput < Struct.new(
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Represents the input for `ListTagsForStream`.
     #
     # @!attribute [rw] stream_name
@@ -1341,13 +1486,18 @@ module Aws::Kinesis
     #   The ARN of the stream.
     #   @return [String]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/ListTagsForStreamInput AWS API Documentation
     #
     class ListTagsForStreamInput < Struct.new(
       :stream_name,
       :exclusive_start_tag_key,
       :limit,
-      :stream_arn)
+      :stream_arn,
+      :stream_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1393,13 +1543,79 @@ module Aws::Kinesis
     #   The ARN of the stream.
     #   @return [String]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/MergeShardsInput AWS API Documentation
     #
     class MergeShardsInput < Struct.new(
       :stream_name,
       :shard_to_merge,
       :adjacent_shard_to_merge,
-      :stream_arn)
+      :stream_arn,
+      :stream_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents the request parameters for configuring minimum throughput
+    # billing commitment.
+    #
+    # <note markdown="1"> * Minimum throughput billing commitments provide cost savings on
+    #   on-demand data streams in exchange for committing to a minimum level
+    #   of throughput usage.
+    #
+    # * Commitments have a minimum duration of 24 hours that must be honored
+    #   before they can be disabled.
+    #
+    # * If you attempt to disable a commitment before the minimum commitment
+    #   period ends, the commitment will be scheduled for automatic disable
+    #   at the earliest allowed end time.
+    #
+    # * You can cancel a pending disable by enabling the commitment again
+    #   before the earliest allowed end time.
+    #
+    #  </note>
+    #
+    # @!attribute [rw] status
+    #   The desired status of the minimum throughput billing commitment.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/MinimumThroughputBillingCommitmentInput AWS API Documentation
+    #
+    class MinimumThroughputBillingCommitmentInput < Struct.new(
+      :status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents the current status of minimum throughput billing commitment
+    # for an account.
+    #
+    # @!attribute [rw] status
+    #   The current status of the minimum throughput billing commitment.
+    #   @return [String]
+    #
+    # @!attribute [rw] started_at
+    #   The timestamp when the commitment was started.
+    #   @return [Time]
+    #
+    # @!attribute [rw] ended_at
+    #   The timestamp when the commitment was ended.
+    #   @return [Time]
+    #
+    # @!attribute [rw] earliest_allowed_end_at
+    #   The earliest timestamp when the commitment can be ended.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/MinimumThroughputBillingCommitmentOutput AWS API Documentation
+    #
+    class MinimumThroughputBillingCommitmentOutput < Struct.new(
+      :status,
+      :started_at,
+      :ended_at,
+      :earliest_allowed_end_at)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1438,7 +1654,7 @@ module Aws::Kinesis
     #   The data blob to put into the record, which is base64-encoded when
     #   the blob is serialized. When the data blob (the payload before
     #   base64-encoding) is added to the partition key size, the total size
-    #   must not exceed the maximum record size (1 MiB).
+    #   must not exceed the maximum record size (10 MiB).
     #   @return [String]
     #
     # @!attribute [rw] partition_key
@@ -1471,6 +1687,10 @@ module Aws::Kinesis
     #   The ARN of the stream.
     #   @return [String]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/PutRecordInput AWS API Documentation
     #
     class PutRecordInput < Struct.new(
@@ -1479,7 +1699,8 @@ module Aws::Kinesis
       :partition_key,
       :explicit_hash_key,
       :sequence_number_for_ordering,
-      :stream_arn)
+      :stream_arn,
+      :stream_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1531,12 +1752,17 @@ module Aws::Kinesis
     #   The ARN of the stream.
     #   @return [String]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/PutRecordsInput AWS API Documentation
     #
     class PutRecordsInput < Struct.new(
       :records,
       :stream_name,
-      :stream_arn)
+      :stream_arn,
+      :stream_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1582,7 +1808,7 @@ module Aws::Kinesis
     #   The data blob to put into the record, which is base64-encoded when
     #   the blob is serialized. When the data blob (the payload before
     #   base64-encoding) is added to the partition key size, the total size
-    #   must not exceed the maximum record size (1 MiB).
+    #   must not exceed the maximum record size (10 MiB).
     #   @return [String]
     #
     # @!attribute [rw] explicit_hash_key
@@ -1655,6 +1881,10 @@ module Aws::Kinesis
     #   The Amazon Resource Name (ARN) of the data stream or consumer.
     #   @return [String]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
     # @!attribute [rw] policy
     #   Details of the resource policy. It must include the identity of the
     #   principal and the actions allowed on this resource. This is
@@ -1665,6 +1895,7 @@ module Aws::Kinesis
     #
     class PutResourcePolicyInput < Struct.new(
       :resource_arn,
+      :stream_id,
       :policy)
       SENSITIVE = []
       include Aws::Structure
@@ -1731,11 +1962,22 @@ module Aws::Kinesis
     #   streams.
     #   @return [String]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   A set of up to 50 key-value pairs. A tag consists of a required key
+    #   and an optional value.
+    #   @return [Hash<String,String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/RegisterStreamConsumerInput AWS API Documentation
     #
     class RegisterStreamConsumerInput < Struct.new(
       :stream_arn,
-      :consumer_name)
+      :consumer_name,
+      :stream_id,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1769,12 +2011,17 @@ module Aws::Kinesis
     #   The ARN of the stream.
     #   @return [String]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/RemoveTagsFromStreamInput AWS API Documentation
     #
     class RemoveTagsFromStreamInput < Struct.new(
       :stream_name,
       :tag_keys,
-      :stream_arn)
+      :stream_arn,
+      :stream_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1949,13 +2196,18 @@ module Aws::Kinesis
     #   The ARN of the stream.
     #   @return [String]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/SplitShardInput AWS API Documentation
     #
     class SplitShardInput < Struct.new(
       :stream_name,
       :shard_to_split,
       :new_starting_hash_key,
-      :stream_arn)
+      :stream_arn,
+      :stream_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1994,13 +2246,18 @@ module Aws::Kinesis
     #   The ARN of the stream.
     #   @return [String]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/StartStreamEncryptionInput AWS API Documentation
     #
     class StartStreamEncryptionInput < Struct.new(
       :stream_name,
       :encryption_type,
       :key_id,
-      :stream_arn)
+      :stream_arn,
+      :stream_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2090,13 +2347,18 @@ module Aws::Kinesis
     #   The ARN of the stream.
     #   @return [String]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/StopStreamEncryptionInput AWS API Documentation
     #
     class StopStreamEncryptionInput < Struct.new(
       :stream_name,
       :encryption_type,
       :key_id,
-      :stream_arn)
+      :stream_arn,
+      :stream_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2219,6 +2481,10 @@ module Aws::Kinesis
     #   The Amazon Resource Name (ARN) for the stream being described.
     #   @return [String]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
     # @!attribute [rw] stream_status
     #   The current status of the stream being described. The stream status
     #   is one of the following states:
@@ -2295,11 +2561,23 @@ module Aws::Kinesis
     #   The number of enhanced fan-out consumers registered with the stream.
     #   @return [Integer]
     #
+    # @!attribute [rw] warm_throughput
+    #   The warm throughput in MB/s for the stream. This represents the
+    #   throughput capacity that will be immediately available for write
+    #   operations.
+    #   @return [Types::WarmThroughputObject]
+    #
+    # @!attribute [rw] max_record_size_in_ki_b
+    #   The maximum record size of a single record in kibibyte (KiB) that
+    #   you can write to, and read from a stream.
+    #   @return [Integer]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/StreamDescriptionSummary AWS API Documentation
     #
     class StreamDescriptionSummary < Struct.new(
       :stream_name,
       :stream_arn,
+      :stream_id,
       :stream_status,
       :stream_mode_details,
       :retention_period_hours,
@@ -2308,7 +2586,9 @@ module Aws::Kinesis
       :encryption_type,
       :key_id,
       :open_shard_count,
-      :consumer_count)
+      :consumer_count,
+      :warm_throughput,
+      :max_record_size_in_ki_b)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2413,6 +2693,10 @@ module Aws::Kinesis
     #   RegisterStreamConsumer.
     #   @return [String]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
     # @!attribute [rw] shard_id
     #   The ID of the shard you want to subscribe to. To see a list of all
     #   the shards for a given stream, use ListShards.
@@ -2427,6 +2711,7 @@ module Aws::Kinesis
     #
     class SubscribeToShardInput < Struct.new(
       :consumer_arn,
+      :stream_id,
       :shard_id,
       :starting_position)
       SENSITIVE = []
@@ -2446,7 +2731,8 @@ module Aws::Kinesis
       include Aws::Structure
     end
 
-    # Metadata assigned to the stream, consisting of a key-value pair.
+    # Metadata assigned to the stream or consumer, consisting of a key-value
+    # pair.
     #
     # @!attribute [rw] key
     #   A unique identifier for the tag. Maximum length: 128 characters.
@@ -2465,6 +2751,111 @@ module Aws::Kinesis
     class Tag < Struct.new(
       :key,
       :value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] tags
+    #   An array of tags to be added to the Kinesis resource. A tag consists
+    #   of a required key and an optional value. You can add up to 50 tags
+    #   per resource.
+    #
+    #   Tags may only contain Unicode letters, digits, white space, or these
+    #   symbols: \_ . : / = + - @.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] resource_arn
+    #   The Amazon Resource Name (ARN) of the Kinesis resource to which to
+    #   add tags.
+    #   @return [String]
+    #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/TagResourceInput AWS API Documentation
+    #
+    class TagResourceInput < Struct.new(
+      :tags,
+      :resource_arn,
+      :stream_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] tag_keys
+    #   A list of tag key-value pairs. Existing tags of the resource whose
+    #   keys are members of this list will be removed from the Kinesis
+    #   resource.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] resource_arn
+    #   The Amazon Resource Name (ARN) of the Kinesis resource from which to
+    #   remove tags.
+    #   @return [String]
+    #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/UntagResourceInput AWS API Documentation
+    #
+    class UntagResourceInput < Struct.new(
+      :tag_keys,
+      :resource_arn,
+      :stream_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] minimum_throughput_billing_commitment
+    #   Specifies the minimum throughput billing commitment configuration
+    #   for your account.
+    #   @return [Types::MinimumThroughputBillingCommitmentInput]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/UpdateAccountSettingsInput AWS API Documentation
+    #
+    class UpdateAccountSettingsInput < Struct.new(
+      :minimum_throughput_billing_commitment)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] minimum_throughput_billing_commitment
+    #   The updated configuration of the minimum throughput billing
+    #   commitment for your account.
+    #   @return [Types::MinimumThroughputBillingCommitmentOutput]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/UpdateAccountSettingsOutput AWS API Documentation
+    #
+    class UpdateAccountSettingsOutput < Struct.new(
+      :minimum_throughput_billing_commitment)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] stream_arn
+    #   The Amazon Resource Name (ARN) of the stream for the `MaxRecordSize`
+    #   update.
+    #   @return [String]
+    #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_record_size_in_ki_b
+    #   The maximum record size of a single record in KiB that you can write
+    #   to, and read from a stream. Specify a value between 1024 and 10240
+    #   KiB (1 to 10 MiB). If you specify a value that is out of this range,
+    #   `UpdateMaxRecordSize` sends back an `ValidationException` message.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/UpdateMaxRecordSizeInput AWS API Documentation
+    #
+    class UpdateMaxRecordSizeInput < Struct.new(
+      :stream_arn,
+      :stream_id,
+      :max_record_size_in_ki_b)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2498,13 +2889,18 @@ module Aws::Kinesis
     #   The ARN of the stream.
     #   @return [String]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/UpdateShardCountInput AWS API Documentation
     #
     class UpdateShardCountInput < Struct.new(
       :stream_name,
       :target_shard_count,
       :scaling_type,
-      :stream_arn)
+      :stream_arn,
+      :stream_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2541,6 +2937,10 @@ module Aws::Kinesis
     #   update.
     #   @return [String]
     #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
     # @!attribute [rw] stream_mode_details
     #   Specifies the capacity mode to which you want to set your data
     #   stream. Currently, in Kinesis Data Streams, you can choose between
@@ -2548,11 +2948,72 @@ module Aws::Kinesis
     #   for your data streams.
     #   @return [Types::StreamModeDetails]
     #
+    # @!attribute [rw] warm_throughput_mi_bps
+    #   The target warm throughput in MB/s that the stream should be scaled
+    #   to handle. This represents the throughput capacity that will be
+    #   immediately available for write operations. This field is only valid
+    #   when the stream mode is being updated to on-demand.
+    #   @return [Integer]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/UpdateStreamModeInput AWS API Documentation
     #
     class UpdateStreamModeInput < Struct.new(
       :stream_arn,
-      :stream_mode_details)
+      :stream_id,
+      :stream_mode_details,
+      :warm_throughput_mi_bps)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] stream_arn
+    #   The ARN of the stream to be updated.
+    #   @return [String]
+    #
+    # @!attribute [rw] stream_name
+    #   The name of the stream to be updated.
+    #   @return [String]
+    #
+    # @!attribute [rw] stream_id
+    #   Not Implemented. Reserved for future use.
+    #   @return [String]
+    #
+    # @!attribute [rw] warm_throughput_mi_bps
+    #   The target warm throughput in MB/s that the stream should be scaled
+    #   to handle. This represents the throughput capacity that will be
+    #   immediately available for write operations.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/UpdateStreamWarmThroughputInput AWS API Documentation
+    #
+    class UpdateStreamWarmThroughputInput < Struct.new(
+      :stream_arn,
+      :stream_name,
+      :stream_id,
+      :warm_throughput_mi_bps)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] stream_arn
+    #   The ARN of the stream that was updated.
+    #   @return [String]
+    #
+    # @!attribute [rw] stream_name
+    #   The name of the stream that was updated.
+    #   @return [String]
+    #
+    # @!attribute [rw] warm_throughput
+    #   Specifies the updated warm throughput configuration for your data
+    #   stream.
+    #   @return [Types::WarmThroughputObject]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/UpdateStreamWarmThroughputOutput AWS API Documentation
+    #
+    class UpdateStreamWarmThroughputOutput < Struct.new(
+      :stream_arn,
+      :stream_name,
+      :warm_throughput)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2568,6 +3029,29 @@ module Aws::Kinesis
     #
     class ValidationException < Struct.new(
       :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents the warm throughput configuration on the stream. This is
+    # only present for On-Demand Kinesis Data Streams in accounts that have
+    # `MinimumThroughputBillingCommitment` enabled.
+    #
+    # @!attribute [rw] target_mi_bps
+    #   The target warm throughput value on the stream. This indicates that
+    #   the stream is currently scaling towards this target value.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] current_mi_bps
+    #   The current warm throughput value on the stream. This is the write
+    #   throughput in MiBps that the stream is currently scaled to handle.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/WarmThroughputObject AWS API Documentation
+    #
+    class WarmThroughputObject < Struct.new(
+      :target_mi_bps,
+      :current_mi_bps)
       SENSITIVE = []
       include Aws::Structure
     end

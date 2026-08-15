@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -106,6 +107,7 @@ module Aws
         def request_id: () -> ::String
         def client_token: () -> ::String
         def component_build_version_arn: () -> ::String
+        def latest_version_references: () -> Types::LatestVersionReferences
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Imagebuilder/Client.html#create_component-instance_method
       def create_component: (
@@ -119,7 +121,8 @@ module Aws
                               ?uri: ::String,
                               ?kms_key_id: ::String,
                               ?tags: Hash[::String, ::String],
-                              client_token: ::String
+                              client_token: ::String,
+                              ?dry_run: bool
                             ) -> _CreateComponentResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateComponentResponseSuccess
 
@@ -128,6 +131,7 @@ module Aws
         def request_id: () -> ::String
         def client_token: () -> ::String
         def container_recipe_arn: () -> ::String
+        def latest_version_references: () -> Types::LatestVersionReferences
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Imagebuilder/Client.html#create_container_recipe-instance_method
       def create_container_recipe: (
@@ -135,35 +139,21 @@ module Aws
                                      name: ::String,
                                      ?description: ::String,
                                      semantic_version: ::String,
-                                     components: Array[
+                                     ?components: Array[
                                        {
                                          component_arn: ::String,
                                          parameters: Array[
                                            {
                                              name: ::String,
                                              value: Array[::String]
-                                           },
+                                           }
                                          ]?
-                                       },
+                                       }
                                      ],
                                      ?instance_configuration: {
                                        image: ::String?,
                                        block_device_mappings: Array[
-                                         {
-                                           device_name: ::String?,
-                                           ebs: {
-                                             encrypted: bool?,
-                                             delete_on_termination: bool?,
-                                             iops: ::Integer?,
-                                             kms_key_id: ::String?,
-                                             snapshot_id: ::String?,
-                                             volume_size: ::Integer?,
-                                             volume_type: ("standard" | "io1" | "io2" | "gp2" | "gp3" | "sc1" | "st1")?,
-                                             throughput: ::Integer?
-                                           }?,
-                                           virtual_name: ::String?,
-                                           no_device: ::String?
-                                         },
+                                         Params::instance_block_device_mapping
                                        ]?
                                      },
                                      ?dockerfile_template_data: ::String,
@@ -193,59 +183,7 @@ module Aws
                                                name: ::String,
                                                ?description: ::String,
                                                distributions: Array[
-                                                 {
-                                                   region: ::String,
-                                                   ami_distribution_configuration: {
-                                                     name: ::String?,
-                                                     description: ::String?,
-                                                     target_account_ids: Array[::String]?,
-                                                     ami_tags: Hash[::String, ::String]?,
-                                                     kms_key_id: ::String?,
-                                                     launch_permission: {
-                                                       user_ids: Array[::String]?,
-                                                       user_groups: Array[::String]?,
-                                                       organization_arns: Array[::String]?,
-                                                       organizational_unit_arns: Array[::String]?
-                                                     }?
-                                                   }?,
-                                                   container_distribution_configuration: {
-                                                     description: ::String?,
-                                                     container_tags: Array[::String]?,
-                                                     target_repository: {
-                                                       service: ("ECR"),
-                                                       repository_name: ::String
-                                                     }
-                                                   }?,
-                                                   license_configuration_arns: Array[::String]?,
-                                                   launch_template_configurations: Array[
-                                                     {
-                                                       launch_template_id: ::String,
-                                                       account_id: ::String?,
-                                                       set_default_version: bool?
-                                                     },
-                                                   ]?,
-                                                   s3_export_configuration: {
-                                                     role_name: ::String,
-                                                     disk_image_format: ("VMDK" | "RAW" | "VHD"),
-                                                     s3_bucket: ::String,
-                                                     s3_prefix: ::String?
-                                                   }?,
-                                                   fast_launch_configurations: Array[
-                                                     {
-                                                       enabled: bool,
-                                                       snapshot_configuration: {
-                                                         target_resource_count: ::Integer?
-                                                       }?,
-                                                       max_parallel_launches: ::Integer?,
-                                                       launch_template: {
-                                                         launch_template_id: ::String?,
-                                                         launch_template_name: ::String?,
-                                                         launch_template_version: ::String?
-                                                       }?,
-                                                       account_id: ::String?
-                                                     },
-                                                   ]?
-                                                 },
+                                                 Params::distribution
                                                ],
                                                ?tags: Hash[::String, ::String],
                                                client_token: ::String
@@ -257,6 +195,7 @@ module Aws
         def request_id: () -> ::String
         def client_token: () -> ::String
         def image_build_version_arn: () -> ::String
+        def latest_version_references: () -> Types::LatestVersionReferences
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Imagebuilder/Client.html#create_image-instance_method
       def create_image: (
@@ -279,19 +218,12 @@ module Aws
                             }?
                           },
                           ?workflows: Array[
-                            {
-                              workflow_arn: ::String,
-                              parameters: Array[
-                                {
-                                  name: ::String,
-                                  value: Array[::String]
-                                },
-                              ]?,
-                              parallel_group: ::String?,
-                              on_failure: ("CONTINUE" | "ABORT")?
-                            },
+                            Params::workflow_configuration
                           ],
-                          ?execution_role: ::String
+                          ?execution_role: ::String,
+                          ?logging_configuration: {
+                            log_group_name: ::String?
+                          }
                         ) -> _CreateImageResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateImageResponseSuccess
 
@@ -314,13 +246,10 @@ module Aws
                                      timeout_minutes: ::Integer?
                                    },
                                    ?enhanced_image_metadata_enabled: bool,
-                                   ?schedule: {
-                                     schedule_expression: ::String?,
-                                     timezone: ::String?,
-                                     pipeline_execution_start_condition: ("EXPRESSION_MATCH_ONLY" | "EXPRESSION_MATCH_AND_DEPENDENCY_UPDATES_AVAILABLE")?
-                                   },
+                                   ?schedule: Params::schedule,
                                    ?status: ("DISABLED" | "ENABLED"),
                                    ?tags: Hash[::String, ::String],
+                                   ?image_tags: Hash[::String, ::String],
                                    client_token: ::String,
                                    ?image_scanning_configuration: {
                                      image_scanning_enabled: bool?,
@@ -330,19 +259,13 @@ module Aws
                                      }?
                                    },
                                    ?workflows: Array[
-                                     {
-                                       workflow_arn: ::String,
-                                       parameters: Array[
-                                         {
-                                           name: ::String,
-                                           value: Array[::String]
-                                         },
-                                       ]?,
-                                       parallel_group: ::String?,
-                                       on_failure: ("CONTINUE" | "ABORT")?
-                                     },
+                                     Params::workflow_configuration
                                    ],
-                                   ?execution_role: ::String
+                                   ?execution_role: ::String,
+                                   ?logging_configuration: {
+                                     image_log_group_name: ::String?,
+                                     pipeline_log_group_name: ::String?
+                                   }
                                  ) -> _CreateImagePipelineResponseSuccess
                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateImagePipelineResponseSuccess
 
@@ -351,40 +274,27 @@ module Aws
         def request_id: () -> ::String
         def client_token: () -> ::String
         def image_recipe_arn: () -> ::String
+        def latest_version_references: () -> Types::LatestVersionReferences
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Imagebuilder/Client.html#create_image_recipe-instance_method
       def create_image_recipe: (
                                  name: ::String,
                                  ?description: ::String,
                                  semantic_version: ::String,
-                                 components: Array[
+                                 ?components: Array[
                                    {
                                      component_arn: ::String,
                                      parameters: Array[
                                        {
                                          name: ::String,
                                          value: Array[::String]
-                                       },
+                                       }
                                      ]?
-                                   },
+                                   }
                                  ],
                                  parent_image: ::String,
                                  ?block_device_mappings: Array[
-                                   {
-                                     device_name: ::String?,
-                                     ebs: {
-                                       encrypted: bool?,
-                                       delete_on_termination: bool?,
-                                       iops: ::Integer?,
-                                       kms_key_id: ::String?,
-                                       snapshot_id: ::String?,
-                                       volume_size: ::Integer?,
-                                       volume_type: ("standard" | "io1" | "io2" | "gp2" | "gp3" | "sc1" | "st1")?,
-                                       throughput: ::Integer?
-                                     }?,
-                                     virtual_name: ::String?,
-                                     no_device: ::String?
-                                   },
+                                   Params::instance_block_device_mapping
                                  ],
                                  ?tags: Hash[::String, ::String],
                                  ?working_directory: ::String,
@@ -394,6 +304,8 @@ module Aws
                                    }?,
                                    user_data_override: ::String?
                                  },
+                                 ?ami_tags: Hash[::String, ::String],
+                                 ?ami_watermarks: Array[::String],
                                  client_token: ::String
                                ) -> _CreateImageRecipeResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateImageRecipeResponseSuccess
@@ -450,42 +362,14 @@ module Aws
                                      execution_role: ::String,
                                      resource_type: ("AMI_IMAGE" | "CONTAINER_IMAGE"),
                                      policy_details: Array[
-                                       {
-                                         action: {
-                                           type: ("DELETE" | "DEPRECATE" | "DISABLE"),
-                                           include_resources: {
-                                             amis: bool?,
-                                             snapshots: bool?,
-                                             containers: bool?
-                                           }?
-                                         },
-                                         filter: {
-                                           type: ("AGE" | "COUNT"),
-                                           value: ::Integer,
-                                           unit: ("DAYS" | "WEEKS" | "MONTHS" | "YEARS")?,
-                                           retain_at_least: ::Integer?
-                                         },
-                                         exclusion_rules: {
-                                           tag_map: Hash[::String, ::String]?,
-                                           amis: {
-                                             is_public: bool?,
-                                             regions: Array[::String]?,
-                                             shared_accounts: Array[::String]?,
-                                             last_launched: {
-                                               value: ::Integer,
-                                               unit: ("DAYS" | "WEEKS" | "MONTHS" | "YEARS")
-                                             }?,
-                                             tag_map: Hash[::String, ::String]?
-                                           }?
-                                         }?
-                                       },
+                                       Params::lifecycle_policy_detail
                                      ],
                                      resource_selection: {
                                        recipes: Array[
                                          {
                                            name: ::String,
                                            semantic_version: ::String
-                                         },
+                                         }
                                        ]?,
                                        tag_map: Hash[::String, ::String]?
                                      },
@@ -498,6 +382,7 @@ module Aws
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateWorkflowResponse]
         def client_token: () -> ::String
         def workflow_build_version_arn: () -> ::String
+        def latest_version_references: () -> Types::LatestVersionReferences
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Imagebuilder/Client.html#create_workflow-instance_method
       def create_workflow: (
@@ -510,7 +395,8 @@ module Aws
                              ?kms_key_id: ::String,
                              ?tags: Hash[::String, ::String],
                              client_token: ::String,
-                             type: ("BUILD" | "TEST" | "DISTRIBUTION")
+                             type: ("BUILD" | "TEST" | "DISTRIBUTION"),
+                             ?dry_run: bool
                            ) -> _CreateWorkflowResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateWorkflowResponseSuccess
 
@@ -611,10 +497,29 @@ module Aws
                            ) -> _DeleteWorkflowResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteWorkflowResponseSuccess
 
+      interface _DistributeImageResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DistributeImageResponse]
+        def client_token: () -> ::String
+        def image_build_version_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Imagebuilder/Client.html#distribute_image-instance_method
+      def distribute_image: (
+                              source_image: ::String,
+                              distribution_configuration_arn: ::String,
+                              execution_role: ::String,
+                              ?tags: Hash[::String, ::String],
+                              client_token: ::String,
+                              ?logging_configuration: {
+                                log_group_name: ::String?
+                              }
+                            ) -> _DistributeImageResponseSuccess
+                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DistributeImageResponseSuccess
+
       interface _GetComponentResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetComponentResponse]
         def request_id: () -> ::String
         def component: () -> Types::Component
+        def latest_version_references: () -> Types::LatestVersionReferences
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Imagebuilder/Client.html#get_component-instance_method
       def get_component: (
@@ -637,6 +542,7 @@ module Aws
         include ::Seahorse::Client::_ResponseSuccess[Types::GetContainerRecipeResponse]
         def request_id: () -> ::String
         def container_recipe: () -> Types::ContainerRecipe
+        def latest_version_references: () -> Types::LatestVersionReferences
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Imagebuilder/Client.html#get_container_recipe-instance_method
       def get_container_recipe: (
@@ -670,6 +576,7 @@ module Aws
         include ::Seahorse::Client::_ResponseSuccess[Types::GetImageResponse]
         def request_id: () -> ::String
         def image: () -> Types::Image
+        def latest_version_references: () -> Types::LatestVersionReferences
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Imagebuilder/Client.html#get_image-instance_method
       def get_image: (
@@ -703,6 +610,7 @@ module Aws
         include ::Seahorse::Client::_ResponseSuccess[Types::GetImageRecipeResponse]
         def request_id: () -> ::String
         def image_recipe: () -> Types::ImageRecipe
+        def latest_version_references: () -> Types::LatestVersionReferences
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Imagebuilder/Client.html#get_image_recipe-instance_method
       def get_image_recipe: (
@@ -768,6 +676,7 @@ module Aws
       interface _GetWorkflowResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetWorkflowResponse]
         def workflow: () -> Types::Workflow
+        def latest_version_references: () -> Types::LatestVersionReferences
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Imagebuilder/Client.html#get_workflow-instance_method
       def get_workflow: (
@@ -862,7 +771,17 @@ module Aws
                                ?execution_role: ::String,
                                infrastructure_configuration_arn: ::String,
                                uri: ::String,
+                               ?logging_configuration: {
+                                 log_group_name: ::String?
+                               },
                                ?tags: Hash[::String, ::String],
+                               ?register_image_options: {
+                                 secure_boot_enabled: bool?,
+                                 uefi_data: ::String?
+                               },
+                               ?windows_configuration: {
+                                 image_index: ::Integer
+                               },
                                client_token: ::String
                              ) -> _ImportDiskImageResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ImportDiskImageResponseSuccess
@@ -881,6 +800,9 @@ module Aws
                              platform: ("Windows" | "Linux" | "macOS"),
                              ?os_version: ::String,
                              vm_import_task_id: ::String,
+                             ?logging_configuration: {
+                               log_group_name: ::String?
+                             },
                              ?tags: Hash[::String, ::String],
                              client_token: ::String
                            ) -> _ImportVmImageResponseSuccess
@@ -894,11 +816,11 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Imagebuilder/Client.html#list_component_build_versions-instance_method
       def list_component_build_versions: (
-                                           component_version_arn: ::String,
+                                           ?component_version_arn: ::String,
                                            ?max_results: ::Integer,
                                            ?next_token: ::String
                                          ) -> _ListComponentBuildVersionsResponseSuccess
-                                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListComponentBuildVersionsResponseSuccess
+                                       | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListComponentBuildVersionsResponseSuccess
 
       interface _ListComponentsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListComponentsResponse]
@@ -913,7 +835,7 @@ module Aws
                                {
                                  name: ::String?,
                                  values: Array[::String]?
-                               },
+                               }
                              ],
                              ?by_name: bool,
                              ?max_results: ::Integer,
@@ -934,7 +856,7 @@ module Aws
                                       {
                                         name: ::String?,
                                         values: Array[::String]?
-                                      },
+                                      }
                                     ],
                                     ?max_results: ::Integer,
                                     ?next_token: ::String
@@ -953,7 +875,7 @@ module Aws
                                                 {
                                                   name: ::String?,
                                                   values: Array[::String]?
-                                                },
+                                                }
                                               ],
                                               ?max_results: ::Integer,
                                               ?next_token: ::String
@@ -968,17 +890,17 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Imagebuilder/Client.html#list_image_build_versions-instance_method
       def list_image_build_versions: (
-                                       image_version_arn: ::String,
+                                       ?image_version_arn: ::String,
                                        ?filters: Array[
                                          {
                                            name: ::String?,
                                            values: Array[::String]?
-                                         },
+                                         }
                                        ],
                                        ?max_results: ::Integer,
                                        ?next_token: ::String
                                      ) -> _ListImageBuildVersionsResponseSuccess
-                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListImageBuildVersionsResponseSuccess
+                                   | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListImageBuildVersionsResponseSuccess
 
       interface _ListImagePackagesResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListImagePackagesResponse]
@@ -1007,7 +929,7 @@ module Aws
                                           {
                                             name: ::String?,
                                             values: Array[::String]?
-                                          },
+                                          }
                                         ],
                                         ?max_results: ::Integer,
                                         ?next_token: ::String
@@ -1026,7 +948,7 @@ module Aws
                                     {
                                       name: ::String?,
                                       values: Array[::String]?
-                                    },
+                                    }
                                   ],
                                   ?max_results: ::Integer,
                                   ?next_token: ::String
@@ -1046,7 +968,7 @@ module Aws
                                   {
                                     name: ::String?,
                                     values: Array[::String]?
-                                  },
+                                  }
                                 ],
                                 ?max_results: ::Integer,
                                 ?next_token: ::String
@@ -1082,7 +1004,7 @@ module Aws
                                         {
                                           name: ::String?,
                                           values: Array[::String]?
-                                        },
+                                        }
                                       ],
                                       ?max_results: ::Integer,
                                       ?next_token: ::String
@@ -1102,7 +1024,7 @@ module Aws
                            {
                              name: ::String?,
                              values: Array[::String]?
-                           },
+                           }
                          ],
                          ?by_name: bool,
                          ?max_results: ::Integer,
@@ -1123,7 +1045,7 @@ module Aws
                                                   {
                                                     name: ::String?,
                                                     values: Array[::String]?
-                                                  },
+                                                  }
                                                 ],
                                                 ?max_results: ::Integer,
                                                 ?next_token: ::String
@@ -1170,7 +1092,7 @@ module Aws
                                        {
                                          name: ::String?,
                                          values: Array[::String]?
-                                       },
+                                       }
                                      ],
                                      ?max_results: ::Integer,
                                      ?next_token: ::String
@@ -1206,11 +1128,11 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Imagebuilder/Client.html#list_workflow_build_versions-instance_method
       def list_workflow_build_versions: (
-                                          workflow_version_arn: ::String,
+                                          ?workflow_version_arn: ::String,
                                           ?max_results: ::Integer,
                                           ?next_token: ::String
                                         ) -> _ListWorkflowBuildVersionsResponseSuccess
-                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListWorkflowBuildVersionsResponseSuccess
+                                      | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListWorkflowBuildVersionsResponseSuccess
 
       interface _ListWorkflowExecutionsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListWorkflowExecutionsResponse]
@@ -1258,7 +1180,7 @@ module Aws
                               {
                                 name: ::String?,
                                 values: Array[::String]?
-                              },
+                              }
                             ],
                             ?by_name: bool,
                             ?max_results: ::Integer,
@@ -1314,6 +1236,18 @@ module Aws
                                    ) -> _PutImageRecipePolicyResponseSuccess
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutImageRecipePolicyResponseSuccess
 
+      interface _RetryImageResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::RetryImageResponse]
+        def client_token: () -> ::String
+        def image_build_version_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Imagebuilder/Client.html#retry_image-instance_method
+      def retry_image: (
+                         image_build_version_arn: ::String,
+                         client_token: ::String
+                       ) -> _RetryImageResponseSuccess
+                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RetryImageResponseSuccess
+
       interface _SendWorkflowStepActionResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::SendWorkflowStepActionResponse]
         def step_execution_id: () -> ::String
@@ -1339,7 +1273,8 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Imagebuilder/Client.html#start_image_pipeline_execution-instance_method
       def start_image_pipeline_execution: (
                                             image_pipeline_arn: ::String,
-                                            client_token: ::String
+                                            client_token: ::String,
+                                            ?tags: Hash[::String, ::String]
                                           ) -> _StartImagePipelineExecutionResponseSuccess
                                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartImagePipelineExecutionResponseSuccess
 
@@ -1361,16 +1296,7 @@ module Aws
                                            containers: bool?
                                          },
                                          ?exclusion_rules: {
-                                           amis: {
-                                             is_public: bool?,
-                                             regions: Array[::String]?,
-                                             shared_accounts: Array[::String]?,
-                                             last_launched: {
-                                               value: ::Integer,
-                                               unit: ("DAYS" | "WEEKS" | "MONTHS" | "YEARS")
-                                             }?,
-                                             tag_map: Hash[::String, ::String]?
-                                           }?
+                                           amis: Params::lifecycle_policy_detail_exclusion_rules_amis?
                                          },
                                          ?update_at: ::Time,
                                          client_token: ::String
@@ -1408,59 +1334,7 @@ module Aws
                                                distribution_configuration_arn: ::String,
                                                ?description: ::String,
                                                distributions: Array[
-                                                 {
-                                                   region: ::String,
-                                                   ami_distribution_configuration: {
-                                                     name: ::String?,
-                                                     description: ::String?,
-                                                     target_account_ids: Array[::String]?,
-                                                     ami_tags: Hash[::String, ::String]?,
-                                                     kms_key_id: ::String?,
-                                                     launch_permission: {
-                                                       user_ids: Array[::String]?,
-                                                       user_groups: Array[::String]?,
-                                                       organization_arns: Array[::String]?,
-                                                       organizational_unit_arns: Array[::String]?
-                                                     }?
-                                                   }?,
-                                                   container_distribution_configuration: {
-                                                     description: ::String?,
-                                                     container_tags: Array[::String]?,
-                                                     target_repository: {
-                                                       service: ("ECR"),
-                                                       repository_name: ::String
-                                                     }
-                                                   }?,
-                                                   license_configuration_arns: Array[::String]?,
-                                                   launch_template_configurations: Array[
-                                                     {
-                                                       launch_template_id: ::String,
-                                                       account_id: ::String?,
-                                                       set_default_version: bool?
-                                                     },
-                                                   ]?,
-                                                   s3_export_configuration: {
-                                                     role_name: ::String,
-                                                     disk_image_format: ("VMDK" | "RAW" | "VHD"),
-                                                     s3_bucket: ::String,
-                                                     s3_prefix: ::String?
-                                                   }?,
-                                                   fast_launch_configurations: Array[
-                                                     {
-                                                       enabled: bool,
-                                                       snapshot_configuration: {
-                                                         target_resource_count: ::Integer?
-                                                       }?,
-                                                       max_parallel_launches: ::Integer?,
-                                                       launch_template: {
-                                                         launch_template_id: ::String?,
-                                                         launch_template_name: ::String?,
-                                                         launch_template_version: ::String?
-                                                       }?,
-                                                       account_id: ::String?
-                                                     },
-                                                   ]?
-                                                 },
+                                                 Params::distribution
                                                ],
                                                client_token: ::String
                                              ) -> _UpdateDistributionConfigurationResponseSuccess
@@ -1485,11 +1359,7 @@ module Aws
                                      timeout_minutes: ::Integer?
                                    },
                                    ?enhanced_image_metadata_enabled: bool,
-                                   ?schedule: {
-                                     schedule_expression: ::String?,
-                                     timezone: ::String?,
-                                     pipeline_execution_start_condition: ("EXPRESSION_MATCH_ONLY" | "EXPRESSION_MATCH_AND_DEPENDENCY_UPDATES_AVAILABLE")?
-                                   },
+                                   ?schedule: Params::schedule,
                                    ?status: ("DISABLED" | "ENABLED"),
                                    client_token: ::String,
                                    ?image_scanning_configuration: {
@@ -1500,19 +1370,14 @@ module Aws
                                      }?
                                    },
                                    ?workflows: Array[
-                                     {
-                                       workflow_arn: ::String,
-                                       parameters: Array[
-                                         {
-                                           name: ::String,
-                                           value: Array[::String]
-                                         },
-                                       ]?,
-                                       parallel_group: ::String?,
-                                       on_failure: ("CONTINUE" | "ABORT")?
-                                     },
+                                     Params::workflow_configuration
                                    ],
-                                   ?execution_role: ::String
+                                   ?logging_configuration: {
+                                     image_log_group_name: ::String?,
+                                     pipeline_log_group_name: ::String?
+                                   },
+                                   ?execution_role: ::String,
+                                   ?image_tags: Hash[::String, ::String]
                                  ) -> _UpdateImagePipelineResponseSuccess
                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateImagePipelineResponseSuccess
 
@@ -1566,42 +1431,14 @@ module Aws
                                      execution_role: ::String,
                                      resource_type: ("AMI_IMAGE" | "CONTAINER_IMAGE"),
                                      policy_details: Array[
-                                       {
-                                         action: {
-                                           type: ("DELETE" | "DEPRECATE" | "DISABLE"),
-                                           include_resources: {
-                                             amis: bool?,
-                                             snapshots: bool?,
-                                             containers: bool?
-                                           }?
-                                         },
-                                         filter: {
-                                           type: ("AGE" | "COUNT"),
-                                           value: ::Integer,
-                                           unit: ("DAYS" | "WEEKS" | "MONTHS" | "YEARS")?,
-                                           retain_at_least: ::Integer?
-                                         },
-                                         exclusion_rules: {
-                                           tag_map: Hash[::String, ::String]?,
-                                           amis: {
-                                             is_public: bool?,
-                                             regions: Array[::String]?,
-                                             shared_accounts: Array[::String]?,
-                                             last_launched: {
-                                               value: ::Integer,
-                                               unit: ("DAYS" | "WEEKS" | "MONTHS" | "YEARS")
-                                             }?,
-                                             tag_map: Hash[::String, ::String]?
-                                           }?
-                                         }?
-                                       },
+                                       Params::lifecycle_policy_detail
                                      ],
                                      resource_selection: {
                                        recipes: Array[
                                          {
                                            name: ::String,
                                            semantic_version: ::String
-                                         },
+                                         }
                                        ]?,
                                        tag_map: Hash[::String, ::String]?
                                      },

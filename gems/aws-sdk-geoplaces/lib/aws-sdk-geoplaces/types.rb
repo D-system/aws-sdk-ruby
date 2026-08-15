@@ -27,14 +27,33 @@ module Aws::GeoPlaces
     # a vehicle.
     #
     # @!attribute [rw] position
-    #   The position, in longitude and latitude.
+    #   The position in World Geodetic System (WGS 84) format: \[longitude,
+    #   latitude\].
     #   @return [Array<Float>]
+    #
+    # @!attribute [rw] type
+    #   The type of access point, indicating its intended use. Only applies
+    #   to results of type place.
+    #   @return [String]
+    #
+    # @!attribute [rw] primary
+    #   Set to `true` for the primary access position when the place has
+    #   more than one access point.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] label
+    #   A short textual description of the access point, such as `"North
+    #   Entrance"`.
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/AccessPoint AWS API Documentation
     #
     class AccessPoint < Struct.new(
-      :position)
-      SENSITIVE = [:position]
+      :position,
+      :type,
+      :primary,
+      :label)
+      SENSITIVE = [:position, :primary, :label]
       include Aws::Structure
     end
 
@@ -55,7 +74,7 @@ module Aws::GeoPlaces
     class AccessRestriction < Struct.new(
       :restricted,
       :categories)
-      SENSITIVE = []
+      SENSITIVE = [:restricted]
       include Aws::Structure
     end
 
@@ -82,7 +101,7 @@ module Aws::GeoPlaces
     #   @return [Types::SubRegion]
     #
     # @!attribute [rw] locality
-    #   The locality or city of the address.
+    #   The city or locality of the address.
     #
     #   Example: `Vancouver`.
     #   @return [String]
@@ -100,25 +119,41 @@ module Aws::GeoPlaces
     # @!attribute [rw] postal_code
     #   An alphanumeric string included in a postal address to facilitate
     #   mail sorting, such as post code, postcode, or ZIP code, for which
-    #   the result should posses.
+    #   the result should possess.
     #   @return [String]
     #
     # @!attribute [rw] block
-    #   Name of the block.
+    #   Name of the block. Not available in `ap-southeast-1` and
+    #   `ap-southeast-5` regions for [GrabMaps][1] customers.
     #
     #   Example: `Sunny Mansion 203 block: 2 Chome`
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [String]
     #
     # @!attribute [rw] sub_block
-    #   Name of sub-block.
+    #   Name of sub-block. Not available in `ap-southeast-1` and
+    #   `ap-southeast-5` regions for [GrabMaps][1] customers.
     #
     #   Example: `Sunny Mansion 203 sub-block: 4`
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [String]
     #
     # @!attribute [rw] intersection
-    #   Name of the streets in the intersection.
+    #   Name of the streets in the intersection. Not available in
+    #   `ap-southeast-1` and `ap-southeast-5` regions for [GrabMaps][1]
+    #   customers.
     #
     #   Example: `["Friedrichstraße","Unter den Linden"]`
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Array<String>]
     #
     # @!attribute [rw] street
@@ -126,9 +161,14 @@ module Aws::GeoPlaces
     #   @return [String]
     #
     # @!attribute [rw] street_components
-    #   Components of the street.
+    #   Components of the street. Not available in `ap-southeast-1` and
+    #   `ap-southeast-5` regions for [GrabMaps][1] customers.
     #
-    #   Example: Younge from the "Younge street".
+    #   Example: Yonge from "Yonge street".
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Array<Types::StreetComponents>]
     #
     # @!attribute [rw] address_number
@@ -136,8 +176,32 @@ module Aws::GeoPlaces
     #   @return [String]
     #
     # @!attribute [rw] building
-    #   The name of the building at the address.
+    #   The name of the building at the address. Not available in
+    #   `ap-southeast-1` and `ap-southeast-5` regions for [GrabMaps][1]
+    #   customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [String]
+    #
+    # @!attribute [rw] secondary_address_components
+    #   Components that correspond to secondary identifiers on an Address.
+    #   Secondary address components include information such as Suite or
+    #   Unit Number, Building, or Floor. Not available in `ap-southeast-1`
+    #   and `ap-southeast-5` regions for [GrabMaps][1] customers.
+    #
+    #   <note markdown="1"> Coverage for `Address.SecondaryAddressComponents` is available in
+    #   the following countries:
+    #
+    #    AUS, CAN, NZL, USA, PRI
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
+    #   @return [Array<Types::SecondaryAddressComponent>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/Address AWS API Documentation
     #
@@ -156,8 +220,9 @@ module Aws::GeoPlaces
       :street,
       :street_components,
       :address_number,
-      :building)
-      SENSITIVE = []
+      :building,
+      :secondary_address_components)
+      SENSITIVE = [:label, :locality, :district, :sub_district, :postal_code, :block, :sub_block, :street, :address_number, :building]
       include Aws::Structure
     end
 
@@ -198,7 +263,7 @@ module Aws::GeoPlaces
     # @!attribute [rw] postal_code
     #   An alphanumeric string included in a postal address to facilitate
     #   mail sorting, such as post code, postcode, or ZIP code, for which
-    #   the result should posses.
+    #   the result should possess.
     #   @return [Float]
     #
     # @!attribute [rw] block
@@ -227,6 +292,16 @@ module Aws::GeoPlaces
     #   The name of the building at the address.
     #   @return [Float]
     #
+    # @!attribute [rw] secondary_address_components
+    #   Match scores for the secondary address components in the result.
+    #
+    #   <note markdown="1"> Coverage for this functionality is available in the following
+    #   countries: AUS, AUT, BRA, CAN, ESP, FRA, GBR, IDN, IND, NZL, TUR,
+    #   TWN, USA.
+    #
+    #    </note>
+    #   @return [Array<Types::SecondaryAddressComponentMatchScore>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/AddressComponentMatchScores AWS API Documentation
     #
     class AddressComponentMatchScores < Struct.new(
@@ -241,7 +316,8 @@ module Aws::GeoPlaces
       :sub_block,
       :intersection,
       :address_number,
-      :building)
+      :building,
+      :secondary_address_components)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -308,6 +384,29 @@ module Aws::GeoPlaces
       include Aws::Structure
     end
 
+    # The official administrative names for an address component, returned
+    # when `AddressNamesMode` is set to `Administrative`.
+    #
+    # @!attribute [rw] names
+    #   A list of translation names for the administrative address
+    #   component, including name variants and translations in available
+    #   languages.
+    #   @return [Array<Types::TranslationName>]
+    #
+    # @!attribute [rw] preference
+    #   Indicates the preference level of the administrative name. Valid
+    #   values are `Primary` and `Alternative`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/AdminNames AWS API Documentation
+    #
+    class AdminNames < Struct.new(
+      :names,
+      :preference)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Describes how the parts of the response element matched the input
     # query by returning the sections of the response which matched to input
     # query terms.
@@ -354,11 +453,15 @@ module Aws::GeoPlaces
     #   @return [Array<Types::Highlight>]
     #
     # @!attribute [rw] block
-    #   Name of the block. Example: Sunny Mansion 203 block: 2 Chome
+    #   Name of the block.
+    #
+    #   Example: `Sunny Mansion 203 block: 2 Chome`
     #   @return [Array<Types::Highlight>]
     #
     # @!attribute [rw] sub_block
-    #   Name of sub-block. Example Sunny Mansion 203 sub-block: 4
+    #   Name of sub-block.
+    #
+    #   Example: `Sunny Mansion 203 sub-block: 4`
     #   @return [Array<Types::Highlight>]
     #
     # @!attribute [rw] intersection
@@ -369,7 +472,7 @@ module Aws::GeoPlaces
     # @!attribute [rw] postal_code
     #   An alphanumeric string included in a postal address to facilitate
     #   mail sorting, such as post code, postcode, or ZIP code for which the
-    #   result should posses.
+    #   result should possess.
     #   @return [Array<Types::Highlight>]
     #
     # @!attribute [rw] address_number
@@ -402,7 +505,7 @@ module Aws::GeoPlaces
     end
 
     # Autocomplete structure which contains a set of inclusion/exclusion
-    # properties that results must posses in order to be returned as a
+    # properties that results must possess in order to be returned as a
     # result.
     #
     # @!attribute [rw] bounding_box
@@ -433,7 +536,7 @@ module Aws::GeoPlaces
       :circle,
       :include_countries,
       :include_place_types)
-      SENSITIVE = [:bounding_box, :circle]
+      SENSITIVE = [:bounding_box, :circle, :include_countries]
       include Aws::Structure
     end
 
@@ -463,18 +566,24 @@ module Aws::GeoPlaces
     #   The free-form text query to match addresses against. This is usually
     #   a partially typed address from an end user in an address box or
     #   form.
+    #
+    #   <note markdown="1"> The fields `QueryText`, and `QueryID` are mutually exclusive.
+    #
+    #    </note>
     #   @return [String]
     #
     # @!attribute [rw] max_results
     #   An optional limit for the number of results returned in a single
     #   call.
+    #
+    #   Default value: 5
     #   @return [Integer]
     #
     # @!attribute [rw] bias_position
     #   The position in longitude and latitude that the results should be
     #   close to. Typically, place results returned are ranked higher the
     #   closer they are to this position. Stored in `[lng, lat]` and in the
-    #   WSG84 format.
+    #   WGS 84 format.
     #
     #   <note markdown="1"> The fields `BiasPosition`, `FilterBoundingBox`, and `FilterCircle`
     #   are mutually exclusive.
@@ -484,7 +593,7 @@ module Aws::GeoPlaces
     #
     # @!attribute [rw] filter
     #   A structure which contains a set of inclusion/exclusion properties
-    #   that results must posses in order to be returned as a result.
+    #   that results must possess in order to be returned as a result.
     #   @return [Types::AutocompleteFilter]
     #
     # @!attribute [rw] postal_code_mode
@@ -492,7 +601,10 @@ module Aws::GeoPlaces
     #   If a postal code spans multiple localities and this value is empty,
     #   partial district or locality information may be returned under a
     #   single postal code result entry. If it's populated with the value
-    #   `cityLookup`, all cities in that postal code are returned.
+    #   `EnumerateSpannedLocalities`, all cities in that postal code are
+    #   returned. If it's populated with the value
+    #   `EnumerateSpannedDistricts`, all combinations of the postal code
+    #   with the corresponding district and city names are returned.
     #   @return [String]
     #
     # @!attribute [rw] additional_features
@@ -508,7 +620,7 @@ module Aws::GeoPlaces
     #
     #
     #
-    #   [1]: https://en.wikipedia.org/wiki/IETF_language_tag
+    #   [1]: https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
     #   @return [String]
     #
     # @!attribute [rw] political_view
@@ -516,11 +628,45 @@ module Aws::GeoPlaces
     #   country. The political view applies to the results of the request to
     #   represent unresolved territorial claims through the point of view of
     #   the specified country.
+    #
+    #   The following political views are currently supported:
+    #
+    #   * `ARG`: Argentina's view on the Southern Patagonian Ice Field and
+    #     Tierra Del Fuego, including the Falkland Islands, South Georgia,
+    #     and South Sandwich Islands
+    #
+    #   * `EGY`: Egypt's view on Bir Tawil
+    #
+    #   * `IND`: India's view on Gilgit-Baltistan
+    #
+    #   * `KEN`: Kenya's view on the Ilemi Triangle
+    #
+    #   * `MAR`: Morocco's view on Western Sahara
+    #
+    #   * `RUS`: Russia's view on Crimea
+    #
+    #   * `SDN`: Sudan's view on the Halaib Triangle
+    #
+    #   * `SRB`: Serbia's view on Kosovo, Vukovar, and Sarengrad Islands
+    #
+    #   * `SUR`: Suriname's view on the Courantyne Headwaters and Lawa
+    #     Headwaters
+    #
+    #   * `SYR`: Syria's view on the Golan Heights
+    #
+    #   * `TUR`: Turkey's view on Cyprus and Northern Cyprus
+    #
+    #   * `TZA`: Tanzania's view on Lake Malawi
+    #
+    #   * `URY`: Uruguay's view on Rincon de Artigas
+    #
+    #   * `VNM`: Vietnam's view on the Paracel Islands and Spratly Islands
     #   @return [String]
     #
     # @!attribute [rw] intended_use
-    #   Indicates if the results will be stored. Defaults to `SingleUse`, if
-    #   left empty.
+    #   Indicates if the query results will be persisted in customer
+    #   infrastructure. Defaults to `SingleUse` (not stored). Currently,
+    #   `Autocomplete` does not support storage of results.
     #   @return [String]
     #
     # @!attribute [rw] key
@@ -541,14 +687,14 @@ module Aws::GeoPlaces
       :political_view,
       :intended_use,
       :key)
-      SENSITIVE = [:query_text, :bias_position, :key]
+      SENSITIVE = [:query_text, :bias_position, :political_view, :key]
       include Aws::Structure
     end
 
     # @!attribute [rw] pricing_bucket
     #   The pricing bucket for which the query is charged at.
     #
-    #   For more inforamtion on pricing, please visit [Amazon Location
+    #   For more information on pricing, please visit [Amazon Location
     #   Service Pricing][1].
     #
     #
@@ -603,7 +749,7 @@ module Aws::GeoPlaces
     #
     #
     #
-    #   [1]: https://en.wikipedia.org/wiki/IETF_language_tag
+    #   [1]: https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
     #   @return [String]
     #
     # @!attribute [rw] political_view
@@ -618,6 +764,11 @@ module Aws::GeoPlaces
     #   query that match the found title.
     #   @return [Types::AutocompleteHighlights]
     #
+    # @!attribute [rw] estimated_point_address
+    #   If `true`, indicates that the coordinates of the position and access
+    #   points of the point address are estimated.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/AutocompleteResultItem AWS API Documentation
     #
     class AutocompleteResultItem < Struct.new(
@@ -628,8 +779,9 @@ module Aws::GeoPlaces
       :distance,
       :language,
       :political_view,
-      :highlights)
-      SENSITIVE = []
+      :highlights,
+      :estimated_point_address)
+      SENSITIVE = [:place_id, :place_type, :title, :distance, :political_view, :estimated_point_address]
       include Aws::Structure
     end
 
@@ -649,7 +801,7 @@ module Aws::GeoPlaces
     class BusinessChain < Struct.new(
       :name,
       :id)
-      SENSITIVE = []
+      SENSITIVE = [:name, :id]
       include Aws::Structure
     end
 
@@ -679,17 +831,18 @@ module Aws::GeoPlaces
       :name,
       :localized_name,
       :primary)
-      SENSITIVE = []
+      SENSITIVE = [:id, :name, :localized_name, :primary]
       include Aws::Structure
     end
 
-    # Indicates how well the input matches the returned element. It is equal
-    # to 1 if all input tokens are recognized and matched to the title in
-    # the result.
+    # Indicates how well the returned title and address components matches
+    # the input TextQuery. For each component a score is provied with 1
+    # indicating all tokens were matched and 0 indicating no tokens were
+    # matched.
     #
     # @!attribute [rw] title
-    #   Indicates the starting and ending index of the title in the text
-    #   query that match the found title.
+    #   Indicates the match score of the title in the text query that match
+    #   the found title.
     #   @return [Float]
     #
     # @!attribute [rw] address
@@ -725,7 +878,7 @@ module Aws::GeoPlaces
       :label,
       :value,
       :categories)
-      SENSITIVE = []
+      SENSITIVE = [:label, :value]
       include Aws::Structure
     end
 
@@ -779,7 +932,7 @@ module Aws::GeoPlaces
       :code_2,
       :code_3,
       :name)
-      SENSITIVE = []
+      SENSITIVE = [:code_2, :code_3, :name]
       include Aws::Structure
     end
 
@@ -805,15 +958,48 @@ module Aws::GeoPlaces
       include Aws::Structure
     end
 
+    # A reference to a third-party supplier's identifier for a place,
+    # enabling correlation of places across external systems.
+    #
+    # @!attribute [rw] source
+    #   The name of the third-party data supplier (for example, `Yelp` or
+    #   `TripAdvisor`).
+    #   @return [String]
+    #
+    # @!attribute [rw] source_place_id
+    #   The place identifier assigned by the third-party supplier.
+    #   @return [String]
+    #
+    # @!attribute [rw] source_categories
+    #   The list of place category identifiers this supplier reference
+    #   relates to.
+    #   @return [Array<Types::Category>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/CrossReference AWS API Documentation
+    #
+    class CrossReference < Struct.new(
+      :source,
+      :source_place_id,
+      :source_categories)
+      SENSITIVE = [:source, :source_place_id]
+      include Aws::Structure
+    end
+
     # The `Circle` that all results must be in.
     #
     # @!attribute [rw] center
-    #   The center position, in longitude and latitude, of the
-    #   `FilterCircle`.
+    #   The center position in World Geodetic System (WGS 84) format:
+    #   \[longitude, latitude\].
     #   @return [Array<Float>]
     #
     # @!attribute [rw] radius
-    #   The radius, in meters, of the `FilterCircle`.
+    #   The radius, in meters, of the `FilterCircle`. For [GrabMaps][1]
+    #   customers,`ap-southeast-1` and `ap-southeast-5` regions support only
+    #   up to a maximum value of 300,000.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Integer]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/FilterCircle AWS API Documentation
@@ -821,7 +1007,7 @@ module Aws::GeoPlaces
     class FilterCircle < Struct.new(
       :center,
       :radius)
-      SENSITIVE = [:center]
+      SENSITIVE = [:center, :radius]
       include Aws::Structure
     end
 
@@ -847,12 +1033,12 @@ module Aws::GeoPlaces
       :localized_name,
       :id,
       :primary)
-      SENSITIVE = []
+      SENSITIVE = [:localized_name, :id, :primary]
       include Aws::Structure
     end
 
     # Geocode structure which contains a set of inclusion/exclusion
-    # properties that results must posses in order to be returned as a
+    # properties that results must possess in order to be returned as a
     # result.
     #
     # @!attribute [rw] include_countries
@@ -869,6 +1055,126 @@ module Aws::GeoPlaces
     class GeocodeFilter < Struct.new(
       :include_countries,
       :include_place_types)
+      SENSITIVE = [:include_countries, :include_place_types]
+      include Aws::Structure
+    end
+
+    # Parsed components in the provided QueryText.
+    #
+    # @!attribute [rw] title
+    #   The localized display name of this result item based on request
+    #   parameter `language`.
+    #   @return [Array<Types::ParsedQueryComponent>]
+    #
+    # @!attribute [rw] address
+    #   The place address.
+    #   @return [Types::GeocodeParsedQueryAddressComponents]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/GeocodeParsedQuery AWS API Documentation
+    #
+    class GeocodeParsedQuery < Struct.new(
+      :title,
+      :address)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Parsed address components in the provided QueryText.
+    #
+    # @!attribute [rw] country
+    #   The alpha-2 or alpha-3 character code for the country that the
+    #   results will be present in.
+    #   @return [Array<Types::ParsedQueryComponent>]
+    #
+    # @!attribute [rw] region
+    #   The region or state results should be present in.
+    #
+    #   Example: `North Rhine-Westphalia`.
+    #   @return [Array<Types::ParsedQueryComponent>]
+    #
+    # @!attribute [rw] sub_region
+    #   The sub-region or county for which results should be present in.
+    #   @return [Array<Types::ParsedQueryComponent>]
+    #
+    # @!attribute [rw] locality
+    #   The city or locality of the address.
+    #
+    #   Example: `Vancouver`.
+    #   @return [Array<Types::ParsedQueryComponent>]
+    #
+    # @!attribute [rw] district
+    #   The district or division of a city the results should be present in.
+    #   @return [Array<Types::ParsedQueryComponent>]
+    #
+    # @!attribute [rw] sub_district
+    #   A subdivision of a district.
+    #
+    #   Example: `Minden-Lübbecke`.
+    #   @return [Array<Types::ParsedQueryComponent>]
+    #
+    # @!attribute [rw] postal_code
+    #   An alphanumeric string included in a postal address to facilitate
+    #   mail sorting, such as post code, postcode, or ZIP code, for which
+    #   the result should possess.
+    #   @return [Array<Types::ParsedQueryComponent>]
+    #
+    # @!attribute [rw] block
+    #   Name of the block.
+    #
+    #   Example: `Sunny Mansion 203 block: 2 Chome`
+    #   @return [Array<Types::ParsedQueryComponent>]
+    #
+    # @!attribute [rw] sub_block
+    #   Name of sub-block.
+    #
+    #   Example: `Sunny Mansion 203 sub-block: 4`
+    #   @return [Array<Types::ParsedQueryComponent>]
+    #
+    # @!attribute [rw] street
+    #   The name of the street results should be present in.
+    #   @return [Array<Types::ParsedQueryComponent>]
+    #
+    # @!attribute [rw] address_number
+    #   The number that identifies an address within a street.
+    #   @return [Array<Types::ParsedQueryComponent>]
+    #
+    # @!attribute [rw] building
+    #   The name of the building at the address.
+    #   @return [Array<Types::ParsedQueryComponent>]
+    #
+    # @!attribute [rw] secondary_address_components
+    #   Parsed secondary address components from the provided query text.
+    #
+    #   <note markdown="1"> Coverage for `ParsedQuery.Address.SecondaryAddressComponents` is
+    #   available in the following countries:
+    #
+    #    AUS, AUT, BRA, CAN, ESP, FRA, GBR, HKG, IDN, IND, NZL, TUR, TWN, USA
+    #
+    #    </note>
+    #   @return [Array<Types::ParsedQuerySecondaryAddressComponent>]
+    #
+    # @!attribute [rw] other_components
+    #   Additional information extracted from the query that does not
+    #   correspond to standard address components.
+    #   @return [Array<Types::ParsedQueryComponent>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/GeocodeParsedQueryAddressComponents AWS API Documentation
+    #
+    class GeocodeParsedQueryAddressComponents < Struct.new(
+      :country,
+      :region,
+      :sub_region,
+      :locality,
+      :district,
+      :sub_district,
+      :postal_code,
+      :block,
+      :sub_block,
+      :street,
+      :address_number,
+      :building,
+      :secondary_address_components,
+      :other_components)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -892,7 +1198,7 @@ module Aws::GeoPlaces
     #   @return [String]
     #
     # @!attribute [rw] locality
-    #   City or locality results should be present in.
+    #   The city or locality results should be present in.
     #
     #   Example: `Vancouver`.
     #   @return [String]
@@ -912,7 +1218,7 @@ module Aws::GeoPlaces
     # @!attribute [rw] postal_code
     #   An alphanumeric string included in a postal address to facilitate
     #   mail sorting, such as post code, postcode, or ZIP code for which the
-    #   result should posses.
+    #   result should possess.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/GeocodeQueryComponents AWS API Documentation
@@ -944,23 +1250,20 @@ module Aws::GeoPlaces
     # @!attribute [rw] max_results
     #   An optional limit for the number of results returned in a single
     #   call.
+    #
+    #   Default value: 20
     #   @return [Integer]
     #
     # @!attribute [rw] bias_position
     #   The position, in longitude and latitude, that the results should be
     #   close to. Typically, place results returned are ranked higher the
     #   closer they are to this position. Stored in `[lng, lat]` and in the
-    #   WSG84 format.
-    #
-    #   <note markdown="1"> The fields `BiasPosition`, `FilterBoundingBox`, and `FilterCircle`
-    #   are mutually exclusive.
-    #
-    #    </note>
+    #   WGS 84 format.
     #   @return [Array<Float>]
     #
     # @!attribute [rw] filter
     #   A structure which contains a set of inclusion/exclusion properties
-    #   that results must posses in order to be returned as a result.
+    #   that results must possess in order to be returned as a result.
     #   @return [Types::GeocodeFilter]
     #
     # @!attribute [rw] additional_features
@@ -976,7 +1279,7 @@ module Aws::GeoPlaces
     #
     #
     #
-    #   [1]: https://en.wikipedia.org/wiki/IETF_language_tag
+    #   [1]: https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
     #   @return [String]
     #
     # @!attribute [rw] political_view
@@ -987,13 +1290,57 @@ module Aws::GeoPlaces
     #   @return [String]
     #
     # @!attribute [rw] intended_use
-    #   Indicates if the results will be stored. Defaults to `SingleUse`, if
-    #   left empty.
+    #   Indicates if the query results will be persisted in customer
+    #   infrastructure. Defaults to `SingleUse` (not stored). Not supported
+    #   in `ap-southeast-1` and `ap-southeast-5` regions for [GrabMaps][1]
+    #   customers.
+    #
+    #   <note markdown="1"> When storing `Geocode` responses, you *must* set this field to
+    #   `Storage` to comply with the terms of service. These requests will
+    #   be charged at a higher rate. Please review the [user agreement][2]
+    #   and [service pricing structure][3] to determine the correct setting
+    #   for your use case.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
+    #   [2]: https://aws.amazon.com/location/sla/
+    #   [3]: https://aws.amazon.com/location/pricing/
     #   @return [String]
     #
     # @!attribute [rw] key
     #   Optional: The API key to be used for authorization. Either an API
     #   key or valid SigV4 signature must be provided when making a request.
+    #   @return [String]
+    #
+    # @!attribute [rw] postal_code_mode
+    #   The `PostalCodeMode` affects how postal code results are returned.
+    #   If a postal code spans multiple localities and this value is empty,
+    #   partial district or locality information may be returned under a
+    #   single postal code result entry. If it's populated with the value
+    #   `EnumerateSpannedLocalities`, all cities in that postal code are
+    #   returned. If it's populated with the value
+    #   `EnumerateSpannedDistricts`, all combinations of the postal code
+    #   with the corresponding district and city names are returned.
+    #   @return [String]
+    #
+    # @!attribute [rw] address_translations
+    #   Specifies which address components to include translations for.
+    #   Translations include all name variants and alternative names for the
+    #   requested fields in all available languages. Valid values are
+    #   `District`, `Locality`, `Region`, and `SubRegion`.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] address_names_mode
+    #   Specifies how address names are returned. If not set, the service
+    #   returns normalized (official) names by default. When set to
+    #   `Matched`, address names in the response are based on the input
+    #   query rather than official names. When set to `Administrative`, the
+    #   service returns the official administrative names for address
+    #   components. `Administrative` currently applies only to addresses in
+    #   the United States.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/GeocodeRequest AWS API Documentation
@@ -1008,15 +1355,19 @@ module Aws::GeoPlaces
       :language,
       :political_view,
       :intended_use,
-      :key)
-      SENSITIVE = [:query_text, :bias_position, :key]
+      :key,
+      :postal_code_mode,
+      :address_translations,
+      :address_names_mode)
+      SENSITIVE = [:query_text, :bias_position, :political_view, :key]
       include Aws::Structure
     end
 
     # @!attribute [rw] pricing_bucket
-    #   The pricing bucket for which the query is charged at.
+    #   The pricing bucket for which the query is charged at, or the maximum
+    #   pricing bucket when the query is charged per item within the query.
     #
-    #   For more inforamtion on pricing, please visit [Amazon Location
+    #   For more information on pricing, please visit [Amazon Location
     #   Service Pricing][1].
     #
     #
@@ -1040,7 +1391,7 @@ module Aws::GeoPlaces
     # The Geocoded result.
     #
     # @!attribute [rw] place_id
-    #   The `PlaceId` of the place you wish to receive the information for.
+    #   The `PlaceId` of the place result.
     #   @return [String]
     #
     # @!attribute [rw] place_type
@@ -1065,7 +1416,8 @@ module Aws::GeoPlaces
     #   @return [Array<Types::PostalCodeDetails>]
     #
     # @!attribute [rw] position
-    #   The position in longitude and latitude.
+    #   The position in World Geodetic System (WGS 84) format: \[longitude,
+    #   latitude\].
     #   @return [Array<Float>]
     #
     # @!attribute [rw] distance
@@ -1089,7 +1441,8 @@ module Aws::GeoPlaces
     #   @return [Array<Types::FoodType>]
     #
     # @!attribute [rw] access_points
-    #   Position of the access point represent by longitude and latitude.
+    #   Position of the access point in World Geodetic System (WGS 84)
+    #   format: \[longitude, latitude\].
     #   @return [Array<Types::AccessPoint>]
     #
     # @!attribute [rw] time_zone
@@ -1108,6 +1461,39 @@ module Aws::GeoPlaces
     #   equal to 1 if all input tokens are recognized and matched.
     #   @return [Types::MatchScoreDetails]
     #
+    # @!attribute [rw] parsed_query
+    #   Free-form text query.
+    #   @return [Types::GeocodeParsedQuery]
+    #
+    # @!attribute [rw] intersections
+    #   All Intersections that are near the provided address.
+    #   @return [Array<Types::Intersection>]
+    #
+    # @!attribute [rw] main_address
+    #   The main address corresponding to a place of type Secondary Address.
+    #   @return [Types::RelatedPlace]
+    #
+    # @!attribute [rw] secondary_addresses
+    #   All secondary addresses that are associated with a main address. A
+    #   secondary address is one that includes secondary designators, such
+    #   as a Suite or Unit Number, Building, or Floor information.
+    #
+    #   <note markdown="1"> Coverage for this functionality is available in the following
+    #   countries: AUS, CAN, NZL, USA, PRI.
+    #
+    #    </note>
+    #   @return [Array<Types::RelatedPlace>]
+    #
+    # @!attribute [rw] translations
+    #   All name translations and alternative names for the requested
+    #   address fields in all available languages.
+    #   @return [Types::TranslationDetails]
+    #
+    # @!attribute [rw] estimated_point_address
+    #   If `true`, indicates that the coordinates of the position and access
+    #   points of the point address are estimated.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/GeocodeResultItem AWS API Documentation
     #
     class GeocodeResultItem < Struct.new(
@@ -1125,8 +1511,14 @@ module Aws::GeoPlaces
       :access_points,
       :time_zone,
       :political_view,
-      :match_scores)
-      SENSITIVE = [:position, :map_view]
+      :match_scores,
+      :parsed_query,
+      :intersections,
+      :main_address,
+      :secondary_addresses,
+      :translations,
+      :estimated_point_address)
+      SENSITIVE = [:place_id, :place_type, :title, :address_number_corrected, :position, :distance, :map_view, :political_view, :estimated_point_address]
       include Aws::Structure
     end
 
@@ -1136,35 +1528,72 @@ module Aws::GeoPlaces
     #
     # @!attribute [rw] additional_features
     #   A list of optional additional parameters such as time zone that can
-    #   be requested for each result.
+    #   be requested for each result. For [GrabMaps][1] customers,
+    #   `ap-southeast-1` and `ap-southeast-5` regions support only the
+    #   `TimeZone` value.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Array<String>]
     #
     # @!attribute [rw] language
     #   A list of [BCP 47][1] compliant language codes for the results to be
     #   rendered in. If there is no data for the result in the requested
     #   language, data will be returned in the default language for the
-    #   entry.
+    #   entry. For [GrabMaps][2] customers, `ap-southeast-1` and
+    #   `ap-southeast-5` regions support only the following codes: `en, id,
+    #   km, lo, ms, my, pt, th, tl, vi, zh`
     #
     #
     #
-    #   [1]: https://en.wikipedia.org/wiki/IETF_language_tag
+    #   [1]: https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
+    #   [2]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [String]
     #
     # @!attribute [rw] political_view
     #   The alpha-2 or alpha-3 character code for the political view of a
     #   country. The political view applies to the results of the request to
     #   represent unresolved territorial claims through the point of view of
-    #   the specified country.
+    #   the specified country. Not supported in `ap-southeast-1` and
+    #   `ap-southeast-5` regions for [GrabMaps][1] customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [String]
     #
     # @!attribute [rw] intended_use
-    #   Indicates if the results will be stored. Defaults to `SingleUse`, if
-    #   left empty.
+    #   Indicates if the query results will be persisted in customer
+    #   infrastructure. Defaults to `SingleUse` (not stored). Not supported
+    #   in `ap-southeast-1` and `ap-southeast-5` regions for [GrabMaps][1]
+    #   customers.
+    #
+    #   <note markdown="1"> When storing `GetPlace` responses, you *must* set this field to
+    #   `Storage` to comply with the terms of service. These requests will
+    #   be charged at a higher rate. Please review the [user agreement][2]
+    #   and [service pricing structure][3] to determine the correct setting
+    #   for your use case.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
+    #   [2]: https://aws.amazon.com/location/sla/
+    #   [3]: https://aws.amazon.com/location/pricing/
     #   @return [String]
     #
     # @!attribute [rw] key
     #   Optional: The API key to be used for authorization. Either an API
     #   key or valid SigV4 signature must be provided when making a request.
+    #   @return [String]
+    #
+    # @!attribute [rw] address_names_mode
+    #   Specifies how address names are returned. When set to
+    #   `Administrative`, the service returns the official administrative
+    #   names for address components. `Administrative` currently applies
+    #   only to addresses in the United States.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/GetPlaceRequest AWS API Documentation
@@ -1175,8 +1604,9 @@ module Aws::GeoPlaces
       :language,
       :political_view,
       :intended_use,
-      :key)
-      SENSITIVE = [:place_id, :key]
+      :key,
+      :address_names_mode)
+      SENSITIVE = [:place_id, :political_view, :key]
       include Aws::Structure
     end
 
@@ -1196,7 +1626,7 @@ module Aws::GeoPlaces
     # @!attribute [rw] pricing_bucket
     #   The pricing bucket for which the query is charged at.
     #
-    #   For more inforamtion on pricing, please visit [Amazon Location
+    #   For more information on pricing, please visit [Amazon Location
     #   Service Pricing][1].
     #
     #
@@ -1209,15 +1639,28 @@ module Aws::GeoPlaces
     #   @return [Types::Address]
     #
     # @!attribute [rw] address_number_corrected
-    #   Boolean indicating if the address provided has been corrected.
+    #   Boolean indicating if the address provided has been corrected. Not
+    #   available in `ap-southeast-1` and `ap-southeast-5` regions for
+    #   [GrabMaps][1] customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Boolean]
     #
     # @!attribute [rw] postal_code_details
-    #   Contains details about the postal code of the place/result.
+    #   Contains details about the postal code of the place/result. Not
+    #   available in `ap-southeast-1` and `ap-southeast-5` regions for
+    #   [GrabMaps][1] customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Array<Types::PostalCodeDetails>]
     #
     # @!attribute [rw] position
-    #   The position, in longitude and latitude.
+    #   The position in World Geodetic System (WGS 84) format: \[longitude,
+    #   latitude\].
     #   @return [Array<Float>]
     #
     # @!attribute [rw] map_view
@@ -1233,7 +1676,13 @@ module Aws::GeoPlaces
     #   @return [Array<Types::Category>]
     #
     # @!attribute [rw] food_types
-    #   List of food types offered by this result.
+    #   List of food types offered by this result. Not available in
+    #   `ap-southeast-1` and `ap-southeast-5` regions for [GrabMaps][1]
+    #   customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Array<Types::FoodType>]
     #
     # @!attribute [rw] business_chains
@@ -1241,21 +1690,44 @@ module Aws::GeoPlaces
     #   @return [Array<Types::BusinessChain>]
     #
     # @!attribute [rw] contacts
-    #   List of potential contact methods for the result/place.
+    #   List of potential contact methods for the result/place. Not
+    #   available in `ap-southeast-1` and `ap-southeast-5` regions for
+    #   [GrabMaps][1] customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Types::Contacts]
     #
     # @!attribute [rw] opening_hours
-    #   List of opening hours objects.
+    #   List of opening hours objects. Not available in `ap-southeast-1` and
+    #   `ap-southeast-5` regions for [GrabMaps][1] customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Array<Types::OpeningHours>]
     #
     # @!attribute [rw] access_points
-    #   Position of the access point in `(lng,lat)`.
+    #   Position of the access point in World Geodetic System (WGS 84)
+    #   format: \[longitude, latitude\]. Not available in `ap-southeast-1`
+    #   and `ap-southeast-5` regions for [GrabMaps][1] customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Array<Types::AccessPoint>]
     #
     # @!attribute [rw] access_restrictions
     #   Indicates known access restrictions on a vehicle access point. The
     #   index correlates to an access point and indicates if access through
-    #   this point has some form of restriction.
+    #   this point has some form of restriction. Not available in
+    #   `ap-southeast-1` and `ap-southeast-5` regions for [GrabMaps][1]
+    #   customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Array<Types::AccessRestriction>]
     #
     # @!attribute [rw] time_zone
@@ -1266,13 +1738,65 @@ module Aws::GeoPlaces
     #   The alpha-2 or alpha-3 character code for the political view of a
     #   country. The political view applies to the results of the request to
     #   represent unresolved territorial claims through the point of view of
-    #   the specified country.
+    #   the specified country. Not available in `ap-southeast-1` and
+    #   `ap-southeast-5` regions for [GrabMaps][1] customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [String]
     #
     # @!attribute [rw] phonemes
     #   How the various components of the result's address are pronounced
-    #   in various languages.
+    #   in various languages. Not available in `ap-southeast-1` and
+    #   `ap-southeast-5` regions for [GrabMaps][1] customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Types::PhonemeDetails]
+    #
+    # @!attribute [rw] main_address
+    #   The main address corresponding to a place of type Secondary Address.
+    #   Not available in `ap-southeast-1` and `ap-southeast-5` regions for
+    #   [GrabMaps][1] customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
+    #   @return [Types::RelatedPlace]
+    #
+    # @!attribute [rw] secondary_addresses
+    #   All secondary addresses that are associated with a main address. A
+    #   secondary address is one that includes secondary designators, such
+    #   as a Suite or Unit Number, Building, or Floor information. Not
+    #   available in `ap-southeast-1` and `ap-southeast-5` regions for
+    #   [GrabMaps][1] customers.
+    #
+    #   <note markdown="1"> Coverage for this functionality is available in the following
+    #   countries: AUS, CAN, NZL, USA, PRI.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
+    #   @return [Array<Types::RelatedPlace>]
+    #
+    # @!attribute [rw] place_attributes
+    #   A list of place attributes for the result, such as whether the
+    #   business offers drive-through service.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] estimated_point_address
+    #   If `true`, indicates that the coordinates of the position and access
+    #   points of the point address are estimated.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] cross_references
+    #   The list of supplier references available for this place. Requires
+    #   the `CrossReferences` additional feature to be enabled.
+    #   @return [Array<Types::CrossReference>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/GetPlaceResponse AWS API Documentation
     #
@@ -1295,12 +1819,18 @@ module Aws::GeoPlaces
       :access_restrictions,
       :time_zone,
       :political_view,
-      :phonemes)
-      SENSITIVE = [:position, :map_view]
+      :phonemes,
+      :main_address,
+      :secondary_addresses,
+      :place_attributes,
+      :estimated_point_address,
+      :cross_references)
+      SENSITIVE = [:place_id, :place_type, :title, :address_number_corrected, :position, :map_view, :political_view, :place_attributes, :estimated_point_address]
       include Aws::Structure
     end
 
-    # Describes how parts of the result response match the input query.
+    # Indicates the starting and ending index of the text query that match
+    # the found title.
     #
     # @!attribute [rw] start_index
     #   Start index of the highlight.
@@ -1320,7 +1850,7 @@ module Aws::GeoPlaces
       :start_index,
       :end_index,
       :value)
-      SENSITIVE = []
+      SENSITIVE = [:value]
       include Aws::Structure
     end
 
@@ -1335,6 +1865,63 @@ module Aws::GeoPlaces
     class InternalServerException < Struct.new(
       :message)
       SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # All Intersections that are near the provided address.
+    #
+    # @!attribute [rw] place_id
+    #   The `PlaceId` of the place result.
+    #   @return [String]
+    #
+    # @!attribute [rw] title
+    #   The localized display name of this result item based on request
+    #   parameter `language`.
+    #   @return [String]
+    #
+    # @!attribute [rw] address
+    #   The place address.
+    #   @return [Types::Address]
+    #
+    # @!attribute [rw] position
+    #   The position in World Geodetic System (WGS 84) format: \[longitude,
+    #   latitude\].
+    #   @return [Array<Float>]
+    #
+    # @!attribute [rw] distance
+    #   The distance in meters from the QueryPosition.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] route_distance
+    #   The distance from the routing position of the nearby address to the
+    #   street result.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] map_view
+    #   The bounding box enclosing the geometric shape (area or line) that
+    #   an individual result covers.
+    #
+    #   The bounding box formed is defined as a set of four coordinates:
+    #   `[{westward lng}, {southern lat}, {eastward lng}, {northern lat}]`
+    #   @return [Array<Float>]
+    #
+    # @!attribute [rw] access_points
+    #   Position of the access point in World Geodetic System (WGS 84)
+    #   format: \[longitude, latitude\].
+    #   @return [Array<Types::AccessPoint>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/Intersection AWS API Documentation
+    #
+    class Intersection < Struct.new(
+      :place_id,
+      :title,
+      :address,
+      :position,
+      :distance,
+      :route_distance,
+      :map_view,
+      :access_points)
+      SENSITIVE = [:place_id, :title, :position, :distance, :route_distance, :map_view]
       include Aws::Structure
     end
 
@@ -1386,7 +1973,7 @@ module Aws::GeoPlaces
       :open_now,
       :components,
       :categories)
-      SENSITIVE = []
+      SENSITIVE = [:display, :open_now]
       include Aws::Structure
     end
 
@@ -1413,7 +2000,74 @@ module Aws::GeoPlaces
       :open_time,
       :open_duration,
       :recurrence)
-      SENSITIVE = []
+      SENSITIVE = [:open_time, :open_duration, :recurrence]
+      include Aws::Structure
+    end
+
+    # Parsed components in the provided QueryText.
+    #
+    # @!attribute [rw] start_index
+    #   Start index of the parsed query component.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] end_index
+    #   End index of the parsed query component.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] value
+    #   Value of the parsed query component.
+    #   @return [String]
+    #
+    # @!attribute [rw] query_component
+    #   The address component that the parsed query component corresponds
+    #   to.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/ParsedQueryComponent AWS API Documentation
+    #
+    class ParsedQueryComponent < Struct.new(
+      :start_index,
+      :end_index,
+      :value,
+      :query_component)
+      SENSITIVE = [:value, :query_component]
+      include Aws::Structure
+    end
+
+    # Information about a secondary address component parsed from the query
+    # text.
+    #
+    # @!attribute [rw] start_index
+    #   Start index of the parsed secondary address component in the query
+    #   text.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] end_index
+    #   End index of the parsed secondary address component in the query
+    #   text.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] value
+    #   Value of the parsed secondary address component.
+    #   @return [String]
+    #
+    # @!attribute [rw] number
+    #   Secondary address number provided in the query.
+    #   @return [String]
+    #
+    # @!attribute [rw] designator
+    #   Secondary address designator provided in the query.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/ParsedQuerySecondaryAddressComponent AWS API Documentation
+    #
+    class ParsedQuerySecondaryAddressComponent < Struct.new(
+      :start_index,
+      :end_index,
+      :value,
+      :number,
+      :designator)
+      SENSITIVE = [:value, :number, :designator]
       include Aws::Structure
     end
 
@@ -1451,7 +2105,7 @@ module Aws::GeoPlaces
     #
     #
     #
-    #   [1]: https://en.wikipedia.org/wiki/IETF_language_tag
+    #   [1]: https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
     #   @return [String]
     #
     # @!attribute [rw] preferred
@@ -1464,7 +2118,7 @@ module Aws::GeoPlaces
       :value,
       :language,
       :preferred)
-      SENSITIVE = []
+      SENSITIVE = [:value, :preferred]
       include Aws::Structure
     end
 
@@ -1473,7 +2127,7 @@ module Aws::GeoPlaces
     # @!attribute [rw] postal_code
     #   An alphanumeric string included in a postal address to facilitate
     #   mail sorting, such as post code, postcode, or ZIP code for which the
-    #   result should posses.
+    #   result should possess.
     #   @return [String]
     #
     # @!attribute [rw] postal_authority
@@ -1502,7 +2156,7 @@ module Aws::GeoPlaces
       :postal_code_type,
       :usps_zip,
       :usps_zip_plus_4)
-      SENSITIVE = []
+      SENSITIVE = [:postal_code, :postal_authority, :postal_code_type]
       include Aws::Structure
     end
 
@@ -1534,7 +2188,7 @@ module Aws::GeoPlaces
       :original_term,
       :start_index,
       :end_index)
-      SENSITIVE = []
+      SENSITIVE = [:refined_term, :original_term]
       include Aws::Structure
     end
 
@@ -1544,8 +2198,14 @@ module Aws::GeoPlaces
     #
     # @!attribute [rw] code
     #   Abbreviated code for a the state, province or region of the country.
+    #   Not available in `ap-southeast-1` and `ap-southeast-5` regions for
+    #   [GrabMaps][1] customers.
     #
     #   Example: `BC`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [String]
     #
     # @!attribute [rw] name
@@ -1559,7 +2219,7 @@ module Aws::GeoPlaces
     class Region < Struct.new(
       :code,
       :name)
-      SENSITIVE = []
+      SENSITIVE = [:code, :name]
       include Aws::Structure
     end
 
@@ -1585,10 +2245,58 @@ module Aws::GeoPlaces
       include Aws::Structure
     end
 
+    # Place that is related to the result item.
+    #
+    # @!attribute [rw] place_id
+    #   The `PlaceId` of the place result.
+    #   @return [String]
+    #
+    # @!attribute [rw] place_type
+    #   A `PlaceType` is a category that the result place must belong to.
+    #   @return [String]
+    #
+    # @!attribute [rw] title
+    #   The localized display name of this result item based on request
+    #   parameter `language`.
+    #   @return [String]
+    #
+    # @!attribute [rw] address
+    #   The place address.
+    #   @return [Types::Address]
+    #
+    # @!attribute [rw] position
+    #   The position in World Geodetic System (WGS 84) format: \[longitude,
+    #   latitude\].
+    #   @return [Array<Float>]
+    #
+    # @!attribute [rw] access_points
+    #   Position of the access point in World Geodetic System (WGS 84)
+    #   format: \[longitude, latitude\].
+    #   @return [Array<Types::AccessPoint>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/RelatedPlace AWS API Documentation
+    #
+    class RelatedPlace < Struct.new(
+      :place_id,
+      :place_type,
+      :title,
+      :address,
+      :position,
+      :access_points)
+      SENSITIVE = [:place_id, :place_type, :title, :position]
+      include Aws::Structure
+    end
+
     # The included place types.
     #
     # @!attribute [rw] include_place_types
-    #   The included place types.
+    #   The included place types. For [GrabMaps][1] customers,
+    #   `ap-southeast-1` and `ap-southeast-5` regions support only `Street`
+    #   and `PointAddress` values.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Array<String>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/ReverseGeocodeFilter AWS API Documentation
@@ -1600,57 +2308,108 @@ module Aws::GeoPlaces
     end
 
     # @!attribute [rw] query_position
-    #   The position, in `[lng, lat]` for which you are querying nearby
-    #   resultsfor. Results closer to the position will be ranked higher
-    #   then results further away from the position
+    #   The position in World Geodetic System (WGS 84) format: \[longitude,
+    #   latitude\] for which you are querying nearby results for. Results
+    #   closer to the position will be ranked higher then results further
+    #   away from the position
     #   @return [Array<Float>]
     #
     # @!attribute [rw] query_radius
     #   The maximum distance in meters from the QueryPosition from which a
-    #   result will be returned.
+    #   result will be returned. For [GrabMaps][1] customers,
+    #   `ap-southeast-1` and `ap-southeast-5` regions support only up to a
+    #   maximum value of 100,000.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Integer]
     #
     # @!attribute [rw] max_results
     #   An optional limit for the number of results returned in a single
     #   call.
+    #
+    #   Default value: 1
     #   @return [Integer]
     #
     # @!attribute [rw] filter
     #   A structure which contains a set of inclusion/exclusion properties
-    #   that results must posses in order to be returned as a result.
+    #   that results must possess in order to be returned as a result.
     #   @return [Types::ReverseGeocodeFilter]
     #
     # @!attribute [rw] additional_features
     #   A list of optional additional parameters, such as time zone that can
-    #   be requested for each result.
+    #   be requested for each result. For [GrabMaps][1] customers,
+    #   `ap-southeast-1` and `ap-southeast-5` regions support only the
+    #   `TimeZone` value.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Array<String>]
     #
     # @!attribute [rw] language
     #   A list of [BCP 47][1] compliant language codes for the results to be
     #   rendered in. If there is no data for the result in the requested
     #   language, data will be returned in the default language for the
-    #   entry.
+    #   entry. For [GrabMaps][2] customers, `ap-southeast-1` and
+    #   `ap-southeast-5` regions support only the following codes: `en, id,
+    #   km, lo, ms, my, pt, th, tl, vi, zh`
     #
     #
     #
-    #   [1]: https://en.wikipedia.org/wiki/IETF_language_tag
+    #   [1]: https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
+    #   [2]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [String]
     #
     # @!attribute [rw] political_view
     #   The alpha-2 or alpha-3 character code for the political view of a
     #   country. The political view applies to the results of the request to
     #   represent unresolved territorial claims through the point of view of
-    #   the specified country.
+    #   the specified country. Not supported in `ap-southeast-1` and
+    #   `ap-southeast-5` regions for [GrabMaps][1] customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [String]
     #
     # @!attribute [rw] intended_use
-    #   Indicates if the results will be stored. Defaults to `SingleUse`, if
-    #   left empty.
+    #   Indicates if the query results will be persisted in customer
+    #   infrastructure. Defaults to `SingleUse` (not stored).
+    #
+    #   <note markdown="1"> When storing `ReverseGeocode` responses, you *must* set this field
+    #   to `Storage` to comply with the terms of service. These requests
+    #   will be charged at a higher rate. Please review the [user
+    #   agreement][1] and [service pricing structure][2] to determine the
+    #   correct setting for your use case.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://aws.amazon.com/location/sla/
+    #   [2]: https://aws.amazon.com/location/pricing/
     #   @return [String]
     #
     # @!attribute [rw] key
     #   Optional: The API key to be used for authorization. Either an API
     #   key or valid SigV4 signature must be provided when making a request.
+    #   @return [String]
+    #
+    # @!attribute [rw] heading
+    #   The heading in degrees from true north in a navigation context. The
+    #   heading is measured as the angle clockwise from the North direction.
+    #
+    #   Example: North is `0` degrees, East is `90` degrees, South is `180`
+    #   degrees, and West is `270` degrees.
+    #   @return [Float]
+    #
+    # @!attribute [rw] address_names_mode
+    #   Specifies how address names are returned. When set to
+    #   `Administrative`, the service returns the official administrative
+    #   names for address components. `Administrative` currently applies
+    #   only to addresses in the United States.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/ReverseGeocodeRequest AWS API Documentation
@@ -1664,15 +2423,17 @@ module Aws::GeoPlaces
       :language,
       :political_view,
       :intended_use,
-      :key)
-      SENSITIVE = [:query_position, :key]
+      :key,
+      :heading,
+      :address_names_mode)
+      SENSITIVE = [:query_position, :query_radius, :political_view, :key, :heading]
       include Aws::Structure
     end
 
     # @!attribute [rw] pricing_bucket
     #   The pricing bucket for which the query is charged at.
     #
-    #   For more inforamtion on pricing, please visit [Amazon Location
+    #   For more information on pricing, please visit [Amazon Location
     #   Service Pricing][1].
     #
     #
@@ -1713,15 +2474,28 @@ module Aws::GeoPlaces
     #   @return [Types::Address]
     #
     # @!attribute [rw] address_number_corrected
-    #   Boolean indicating if the address provided has been corrected.
+    #   Boolean indicating if the address provided has been corrected. Not
+    #   available in `ap-southeast-1` and `ap-southeast-5` regions for
+    #   [GrabMaps][1] customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Boolean]
     #
     # @!attribute [rw] postal_code_details
-    #   Contains details about the postal code of the place/result.
+    #   Contains details about the postal code of the place/result. Not
+    #   available in `ap-southeast-1` and `ap-southeast-5` regions for
+    #   [GrabMaps][1] customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Array<Types::PostalCodeDetails>]
     #
     # @!attribute [rw] position
-    #   The position in longitude and latitude.
+    #   The position in World Geodetic System (WGS 84) format: \[longitude,
+    #   latitude\].
     #   @return [Array<Float>]
     #
     # @!attribute [rw] distance
@@ -1741,11 +2515,23 @@ module Aws::GeoPlaces
     #   @return [Array<Types::Category>]
     #
     # @!attribute [rw] food_types
-    #   List of food types offered by this result.
+    #   List of food types offered by this result. Not available in
+    #   `ap-southeast-1` and `ap-southeast-5` regions for [GrabMaps][1]
+    #   customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Array<Types::FoodType>]
     #
     # @!attribute [rw] access_points
-    #   Position of the access point represent by longitude and latitude.
+    #   Position of the access point in World Geodetic System (WGS 84)
+    #   format: \[longitude, latitude\]. Not available in `ap-southeast-1`
+    #   and `ap-southeast-5` regions for [GrabMaps][1] customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Array<Types::AccessPoint>]
     #
     # @!attribute [rw] time_zone
@@ -1756,8 +2542,32 @@ module Aws::GeoPlaces
     #   The alpha-2 or alpha-3 character code for the political view of a
     #   country. The political view applies to the results of the request to
     #   represent unresolved territorial claims through the point of view of
-    #   the specified country.
+    #   the specified country. Not available in `ap-southeast-1` and
+    #   `ap-southeast-5` regions for [GrabMaps][1] customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [String]
+    #
+    # @!attribute [rw] intersections
+    #   All Intersections that are near the provided address. Not available
+    #   in `ap-southeast-1` and `ap-southeast-5` regions for [GrabMaps][1]
+    #   customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
+    #   @return [Array<Types::Intersection>]
+    #
+    # @!attribute [rw] main_address
+    #   The main address corresponding to a place of type Secondary Address.
+    #   @return [Types::RelatedPlace]
+    #
+    # @!attribute [rw] estimated_point_address
+    #   If `true`, indicates that the coordinates of the position and access
+    #   points of the point address are estimated.
+    #   @return [Boolean]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/ReverseGeocodeResultItem AWS API Documentation
     #
@@ -1775,13 +2585,16 @@ module Aws::GeoPlaces
       :food_types,
       :access_points,
       :time_zone,
-      :political_view)
-      SENSITIVE = [:position, :map_view]
+      :political_view,
+      :intersections,
+      :main_address,
+      :estimated_point_address)
+      SENSITIVE = [:place_id, :place_type, :title, :address_number_corrected, :position, :distance, :map_view, :political_view, :estimated_point_address]
       include Aws::Structure
     end
 
     # SearchNearby structure which contains a set of inclusion/exclusion
-    # properties that results must posses in order to be returned as a
+    # properties that results must possess in order to be returned as a
     # result.
     #
     # @!attribute [rw] bounding_box
@@ -1832,29 +2645,36 @@ module Aws::GeoPlaces
       :exclude_business_chains,
       :include_food_types,
       :exclude_food_types)
-      SENSITIVE = [:bounding_box]
+      SENSITIVE = [:bounding_box, :include_countries, :include_categories, :exclude_categories, :include_business_chains, :exclude_business_chains, :include_food_types, :exclude_food_types]
       include Aws::Structure
     end
 
     # @!attribute [rw] query_position
-    #   The position, in `[lng, lat]` for which you are querying nearby
-    #   resultsfor. Results closer to the position will be ranked higher
-    #   then results further away from the position
+    #   The position in World Geodetic System (WGS 84) format: \[longitude,
+    #   latitude\] for which you are querying nearby results for. Results
+    #   closer to the position will be ranked higher then results further
+    #   away from the position
     #   @return [Array<Float>]
     #
     # @!attribute [rw] query_radius
     #   The maximum distance in meters from the QueryPosition from which a
     #   result will be returned.
+    #
+    #   <note markdown="1"> The fields `QueryText`, and `QueryID` are mutually exclusive.
+    #
+    #    </note>
     #   @return [Integer]
     #
     # @!attribute [rw] max_results
     #   An optional limit for the number of results returned in a single
     #   call.
+    #
+    #   Default value: 20
     #   @return [Integer]
     #
     # @!attribute [rw] filter
     #   A structure which contains a set of inclusion/exclusion properties
-    #   that results must posses in order to be returned as a result.
+    #   that results must possess in order to be returned as a result.
     #   @return [Types::SearchNearbyFilter]
     #
     # @!attribute [rw] additional_features
@@ -1870,7 +2690,7 @@ module Aws::GeoPlaces
     #
     #
     #
-    #   [1]: https://en.wikipedia.org/wiki/IETF_language_tag
+    #   [1]: https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
     #   @return [String]
     #
     # @!attribute [rw] political_view
@@ -1881,8 +2701,24 @@ module Aws::GeoPlaces
     #   @return [String]
     #
     # @!attribute [rw] intended_use
-    #   Indicates if the results will be stored. Defaults to `SingleUse`, if
-    #   left empty.
+    #   Indicates if the query results will be persisted in customer
+    #   infrastructure. Defaults to `SingleUse` (not stored). Not supported
+    #   in `ap-southeast-1` and `ap-southeast-5` regions for [GrabMaps][1]
+    #   customers.
+    #
+    #   <note markdown="1"> When storing `SearchNearby` responses, you *must* set this field to
+    #   `Storage` to comply with the terms of service. These requests will
+    #   be charged at a higher rate. Please review the [user agreement][2]
+    #   and [service pricing structure][3] to determine the correct setting
+    #   for your use case.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
+    #   [2]: https://aws.amazon.com/location/sla/
+    #   [3]: https://aws.amazon.com/location/pricing/
     #   @return [String]
     #
     # @!attribute [rw] next_token
@@ -1908,14 +2744,14 @@ module Aws::GeoPlaces
       :intended_use,
       :next_token,
       :key)
-      SENSITIVE = [:query_position, :key]
+      SENSITIVE = [:query_position, :query_radius, :political_view, :key]
       include Aws::Structure
     end
 
     # @!attribute [rw] pricing_bucket
     #   The pricing bucket for which the query is charged at.
     #
-    #   For more inforamtion on pricing, please visit [Amazon Location
+    #   For more information on pricing, please visit [Amazon Location
     #   Service Pricing][1].
     #
     #
@@ -1965,7 +2801,8 @@ module Aws::GeoPlaces
     #   @return [Boolean]
     #
     # @!attribute [rw] position
-    #   The position in longitude and latitude.
+    #   The position in World Geodetic System (WGS 84) format: \[longitude,
+    #   latitude\].
     #   @return [Array<Float>]
     #
     # @!attribute [rw] distance
@@ -2001,7 +2838,8 @@ module Aws::GeoPlaces
     #   @return [Array<Types::OpeningHours>]
     #
     # @!attribute [rw] access_points
-    #   Position of the access point represent by longitude and latitude.
+    #   Position of the access point in World Geodetic System (WGS 84)
+    #   format: \[longitude, latitude\].
     #   @return [Array<Types::AccessPoint>]
     #
     # @!attribute [rw] access_restrictions
@@ -2026,6 +2864,16 @@ module Aws::GeoPlaces
     #   in various languages.
     #   @return [Types::PhonemeDetails]
     #
+    # @!attribute [rw] place_attributes
+    #   A list of place attributes for the result, such as whether the
+    #   business offers drive-through service.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] cross_references
+    #   The list of supplier references available for this place. Requires
+    #   the `CrossReferences` additional feature to be enabled.
+    #   @return [Array<Types::CrossReference>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/SearchNearbyResultItem AWS API Documentation
     #
     class SearchNearbyResultItem < Struct.new(
@@ -2046,13 +2894,15 @@ module Aws::GeoPlaces
       :access_restrictions,
       :time_zone,
       :political_view,
-      :phonemes)
-      SENSITIVE = [:position, :map_view]
+      :phonemes,
+      :place_attributes,
+      :cross_references)
+      SENSITIVE = [:place_id, :place_type, :title, :address_number_corrected, :position, :distance, :map_view, :political_view, :place_attributes]
       include Aws::Structure
     end
 
     # SearchText structure which contains a set of inclusion/exclusion
-    # properties that results must posses in order to be returned as a
+    # properties that results must possess in order to be returned as a
     # result.
     #
     # @!attribute [rw] bounding_box
@@ -2078,7 +2928,7 @@ module Aws::GeoPlaces
       :bounding_box,
       :circle,
       :include_countries)
-      SENSITIVE = [:bounding_box, :circle]
+      SENSITIVE = [:bounding_box, :circle, :include_countries]
       include Aws::Structure
     end
 
@@ -2086,65 +2936,118 @@ module Aws::GeoPlaces
     #   The free-form text query to match addresses against. This is usually
     #   a partially typed address from an end user in an address box or
     #   form.
+    #
+    #   <note markdown="1"> Exactly one of the following fields must be set: `QueryText` or
+    #   `QueryId`.
+    #
+    #    </note>
     #   @return [String]
     #
     # @!attribute [rw] query_id
-    #   The query Id.
+    #   The query Id returned by the suggest API. If passed in the request,
+    #   the SearchText API will preform a SearchText query with the improved
+    #   query terms for the original query made to the suggest API. Not
+    #   available in `ap-southeast-1` and `ap-southeast-5` regions for
+    #   [GrabMaps][1] customers.
+    #
+    #   <note markdown="1"> Exactly one of the following fields must be set: `QueryText` or
+    #   `QueryId`.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [String]
     #
     # @!attribute [rw] max_results
     #   An optional limit for the number of results returned in a single
     #   call.
+    #
+    #   Default value: 20
     #   @return [Integer]
     #
     # @!attribute [rw] bias_position
     #   The position, in longitude and latitude, that the results should be
     #   close to. Typically, place results returned are ranked higher the
     #   closer they are to this position. Stored in `[lng, lat]` and in the
-    #   WSG84 format.
+    #   WGS 84 format.
     #
-    #   <note markdown="1"> The fields `BiasPosition`, `FilterBoundingBox`, and `FilterCircle`
-    #   are mutually exclusive.
+    #   <note markdown="1"> Exactly one of the following fields must be set: `BiasPosition`,
+    #   `Filter.BoundingBox`, or `Filter.Circle`.
     #
     #    </note>
     #   @return [Array<Float>]
     #
     # @!attribute [rw] filter
     #   A structure which contains a set of inclusion/exclusion properties
-    #   that results must posses in order to be returned as a result.
+    #   that results must possess in order to be returned as a result.
     #   @return [Types::SearchTextFilter]
     #
     # @!attribute [rw] additional_features
     #   A list of optional additional parameters, such as time zone, that
-    #   can be requested for each result.
+    #   can be requested for each result. For [GrabMaps][1] customers,
+    #   `ap-southeast-1` and `ap-southeast-5` regions support only the
+    #   `TimeZone` value.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Array<String>]
     #
     # @!attribute [rw] language
     #   A list of [BCP 47][1] compliant language codes for the results to be
     #   rendered in. If there is no data for the result in the requested
     #   language, data will be returned in the default language for the
-    #   entry.
+    #   entry. For [GrabMaps][2] customers, `ap-southeast-1` and
+    #   `ap-southeast-5` regions support only the following codes: `en, id,
+    #   km, lo, ms, my, pt, th, tl, vi, zh`
     #
     #
     #
-    #   [1]: https://en.wikipedia.org/wiki/IETF_language_tag
+    #   [1]: https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
+    #   [2]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [String]
     #
     # @!attribute [rw] political_view
     #   The alpha-2 or alpha-3 character code for the political view of a
     #   country. The political view applies to the results of the request to
     #   represent unresolved territorial claims through the point of view of
-    #   the specified country.
+    #   the specified country. Not available in `ap-southeast-1` and
+    #   `ap-southeast-5` regions for [GrabMaps][1] customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [String]
     #
     # @!attribute [rw] intended_use
-    #   Indicates if the results will be stored. Defaults to `SingleUse`, if
-    #   left empty.
+    #   Indicates if the query results will be persisted in customer
+    #   infrastructure. Defaults to `SingleUse` (not stored).
+    #
+    #   <note markdown="1"> When storing `SearchText` responses, you *must* set this field to
+    #   `Storage` to comply with the terms of service. These requests will
+    #   be charged at a higher rate. Please review the [user agreement][1]
+    #   and [service pricing structure][2] to determine the correct setting
+    #   for your use case.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://aws.amazon.com/location/sla/
+    #   [2]: https://aws.amazon.com/location/pricing/
     #   @return [String]
     #
     # @!attribute [rw] next_token
     #   If `nextToken` is returned, there are more results available. The
     #   value of `nextToken` is a unique pagination token for each page.
+    #   @return [String]
+    #
+    # @!attribute [rw] travel_mode
+    #   Indicates the mode of mobility used by the end user. This is used to
+    #   improve the relevance of search results. Valid values are `Car`,
+    #   `Scooter`, and `Truck`.
     #   @return [String]
     #
     # @!attribute [rw] key
@@ -2165,15 +3068,16 @@ module Aws::GeoPlaces
       :political_view,
       :intended_use,
       :next_token,
+      :travel_mode,
       :key)
-      SENSITIVE = [:query_text, :query_id, :bias_position, :key]
+      SENSITIVE = [:query_text, :query_id, :bias_position, :political_view, :key]
       include Aws::Structure
     end
 
     # @!attribute [rw] pricing_bucket
     #   The pricing bucket for which the query is charged at.
     #
-    #   For more inforamtion on pricing, please visit [Amazon Location
+    #   For more information on pricing, please visit [Amazon Location
     #   Service Pricing][1].
     #
     #
@@ -2223,7 +3127,8 @@ module Aws::GeoPlaces
     #   @return [Boolean]
     #
     # @!attribute [rw] position
-    #   The position, in longitude and latitude.
+    #   The position in World Geodetic System (WGS 84) format: \[longitude,
+    #   latitude\].
     #   @return [Array<Float>]
     #
     # @!attribute [rw] distance
@@ -2255,11 +3160,17 @@ module Aws::GeoPlaces
     #   @return [Types::Contacts]
     #
     # @!attribute [rw] opening_hours
-    #   List of opening hours objects.
+    #   List of opening hours objects. Not available in `ap-southeast-1` and
+    #   `ap-southeast-5` regions for [GrabMaps][1] customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Array<Types::OpeningHours>]
     #
     # @!attribute [rw] access_points
-    #   Position of the access point represent by longitude and latitude.
+    #   Position of the access point in World Geodetic System (WGS 84)
+    #   format: \[longitude, latitude\].
     #   @return [Array<Types::AccessPoint>]
     #
     # @!attribute [rw] access_restrictions
@@ -2284,6 +3195,16 @@ module Aws::GeoPlaces
     #   in various languages.
     #   @return [Types::PhonemeDetails]
     #
+    # @!attribute [rw] place_attributes
+    #   A list of place attributes for the result, such as whether the
+    #   business offers drive-through service.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] cross_references
+    #   The list of supplier references available for this place. Requires
+    #   the `CrossReferences` additional feature to be enabled.
+    #   @return [Array<Types::CrossReference>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/SearchTextResultItem AWS API Documentation
     #
     class SearchTextResultItem < Struct.new(
@@ -2304,8 +3225,46 @@ module Aws::GeoPlaces
       :access_restrictions,
       :time_zone,
       :political_view,
-      :phonemes)
-      SENSITIVE = [:position, :map_view]
+      :phonemes,
+      :place_attributes,
+      :cross_references)
+      SENSITIVE = [:place_id, :place_type, :title, :address_number_corrected, :position, :distance, :map_view, :political_view, :place_attributes]
+      include Aws::Structure
+    end
+
+    # Components that correspond to secondary identifiers on an address. The
+    # only component type supported currently is Unit.
+    #
+    # @!attribute [rw] number
+    #   Number that uniquely identifies a secondary address.
+    #   @return [String]
+    #
+    # @!attribute [rw] designator
+    #   The designator of the secondary address component.
+    #
+    #   Example: `Apt`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/SecondaryAddressComponent AWS API Documentation
+    #
+    class SecondaryAddressComponent < Struct.new(
+      :number,
+      :designator)
+      SENSITIVE = [:number, :designator]
+      include Aws::Structure
+    end
+
+    # Match score for a secondary address component in the result.
+    #
+    # @!attribute [rw] number
+    #   Match score for the secondary address number.
+    #   @return [Float]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/SecondaryAddressComponentMatchScore AWS API Documentation
+    #
+    class SecondaryAddressComponentMatchScore < Struct.new(
+      :number)
+      SENSITIVE = []
       include Aws::Structure
     end
 
@@ -2314,13 +3273,13 @@ module Aws::GeoPlaces
     # @!attribute [rw] base_name
     #   Base name part of the street name.
     #
-    #   Example: Younge from the “Younge street".
+    #   Example: Younge from the "Younge street".
     #   @return [String]
     #
     # @!attribute [rw] type
     #   Street type part of the street name.
     #
-    #   Example: `“avenue"`.
+    #   Example: `"avenue"`.
     #   @return [String]
     #
     # @!attribute [rw] type_placement
@@ -2328,7 +3287,8 @@ module Aws::GeoPlaces
     #   @return [String]
     #
     # @!attribute [rw] type_separator
-    #   What character(s) separates the string from its type.
+    #   Defines a separator character such as `""` or `" "` between the base
+    #   name and type.
     #   @return [String]
     #
     # @!attribute [rw] prefix
@@ -2357,7 +3317,7 @@ module Aws::GeoPlaces
     #
     #
     #
-    #   [1]: https://en.wikipedia.org/wiki/IETF_language_tag
+    #   [1]: https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/StreetComponents AWS API Documentation
@@ -2371,14 +3331,20 @@ module Aws::GeoPlaces
       :suffix,
       :direction,
       :language)
-      SENSITIVE = []
+      SENSITIVE = [:base_name, :type, :prefix, :suffix, :direction]
       include Aws::Structure
     end
 
     # The sub-region.
     #
     # @!attribute [rw] code
-    #   Abbreviated code for the county or sub-region.
+    #   Abbreviated code for the county or sub-region. Not available in
+    #   `ap-southeast-1` and `ap-southeast-5` regions for [GrabMaps][1]
+    #   customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [String]
     #
     # @!attribute [rw] name
@@ -2390,7 +3356,7 @@ module Aws::GeoPlaces
     class SubRegion < Struct.new(
       :code,
       :name)
-      SENSITIVE = []
+      SENSITIVE = [:code, :name]
       include Aws::Structure
     end
 
@@ -2437,7 +3403,7 @@ module Aws::GeoPlaces
     end
 
     # SuggestFilter structure which contains a set of inclusion/exclusion
-    # properties that results must posses in order to be returned as a
+    # properties that results must possess in order to be returned as a
     # result.
     #
     # @!attribute [rw] bounding_box
@@ -2463,7 +3429,7 @@ module Aws::GeoPlaces
       :bounding_box,
       :circle,
       :include_countries)
-      SENSITIVE = [:bounding_box, :circle]
+      SENSITIVE = [:bounding_box, :circle, :include_countries]
       include Aws::Structure
     end
 
@@ -2504,7 +3470,8 @@ module Aws::GeoPlaces
     #   @return [Types::Address]
     #
     # @!attribute [rw] position
-    #   The position, in longitude and latitude.
+    #   The position in World Geodetic System (WGS 84) format: \[longitude,
+    #   latitude\].
     #   @return [Array<Float>]
     #
     # @!attribute [rw] distance
@@ -2524,21 +3491,45 @@ module Aws::GeoPlaces
     #   @return [Array<Types::Category>]
     #
     # @!attribute [rw] food_types
-    #   List of food types offered by this result.
+    #   List of food types offered by this result. Not available in
+    #   `ap-southeast-1` and `ap-southeast-5` regions for [GrabMaps][1]
+    #   customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Array<Types::FoodType>]
     #
     # @!attribute [rw] business_chains
-    #   The Business Chains associated with the place.
+    #   The Business Chains associated with the place. Not available in
+    #   `ap-southeast-1` and `ap-southeast-5` regions for [GrabMaps][1]
+    #   customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Array<Types::BusinessChain>]
     #
     # @!attribute [rw] access_points
-    #   Position of the access point represent by longitude and latitude.
+    #   Position of the access point in World Geodetic System (WGS 84)
+    #   format: \[longitude, latitude\]. Not available in `ap-southeast-1`
+    #   and `ap-southeast-5` regions for [GrabMaps][1] customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Array<Types::AccessPoint>]
     #
     # @!attribute [rw] access_restrictions
     #   Indicates known access restrictions on a vehicle access point. The
     #   index correlates to an access point and indicates if access through
-    #   this point has some form of restriction.
+    #   this point has some form of restriction. Not available in
+    #   `ap-southeast-1` and `ap-southeast-5` regions for [GrabMaps][1]
+    #   customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Array<Types::AccessRestriction>]
     #
     # @!attribute [rw] time_zone
@@ -2549,13 +3540,33 @@ module Aws::GeoPlaces
     #   The alpha-2 or alpha-3 character code for the political view of a
     #   country. The political view applies to the results of the request to
     #   represent unresolved territorial claims through the point of view of
-    #   the specified country.
+    #   the specified country. Not available in `ap-southeast-1` and
+    #   `ap-southeast-5` regions for [GrabMaps][1] customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [String]
     #
     # @!attribute [rw] phonemes
     #   How the various components of the result's address are pronounced
-    #   in various languages.
+    #   in various languages. Not available in `ap-southeast-1` and
+    #   `ap-southeast-5` regions for [GrabMaps][1] customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Types::PhonemeDetails]
+    #
+    # @!attribute [rw] place_attributes
+    #   A list of place attributes for the result, such as whether the
+    #   business offers drive-through service.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] cross_references
+    #   The list of supplier references available for this place. Requires
+    #   the `CrossReferences` additional feature to be enabled.
+    #   @return [Array<Types::CrossReference>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/SuggestPlaceResult AWS API Documentation
     #
@@ -2573,8 +3584,10 @@ module Aws::GeoPlaces
       :access_restrictions,
       :time_zone,
       :political_view,
-      :phonemes)
-      SENSITIVE = [:position, :map_view]
+      :phonemes,
+      :place_attributes,
+      :cross_references)
+      SENSITIVE = [:place_id, :place_type, :position, :distance, :map_view, :political_view, :place_attributes]
       include Aws::Structure
     end
 
@@ -2585,17 +3598,29 @@ module Aws::GeoPlaces
     #   SearchText API. The QueryId retains context from the original
     #   Suggest request such as filters, political view and language. See
     #   the SearchText API documentation for more details [SearchText API
-    #   docs][1].
+    #   docs][1]. Not supported in `ap-southeast-1` and `ap-southeast-5`
+    #   regions for [GrabMaps][2] customers.
+    #
+    #   <note markdown="1"> The fields `QueryText`, and `QueryID` are mutually exclusive.
+    #
+    #    </note>
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/latest/APIReference/API_geoplaces_SearchText.html
+    #   [1]: https://docs.aws.amazon.com/location/latest/APIReference/API_geoplaces_SearchText.html
+    #   [2]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [String]
     #
     # @!attribute [rw] query_type
-    #   The query type. Category qeuries will search for places which have
+    #   The query type. Category queries will search for places which have
     #   an entry matching the given category, for example "doctor office".
     #   BusinessChain queries will search for instances of a given business.
+    #   Not supported in `ap-southeast-1` and `ap-southeast-5` regions for
+    #   [GrabMaps][1] customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/SuggestQueryResult AWS API Documentation
@@ -2603,7 +3628,7 @@ module Aws::GeoPlaces
     class SuggestQueryResult < Struct.new(
       :query_id,
       :query_type)
-      SENSITIVE = []
+      SENSITIVE = [:query_id]
       include Aws::Structure
     end
 
@@ -2611,23 +3636,34 @@ module Aws::GeoPlaces
     #   The free-form text query to match addresses against. This is usually
     #   a partially typed address from an end user in an address box or
     #   form.
+    #
+    #   <note markdown="1"> The fields `QueryText` and `QueryID` are mutually exclusive.
+    #
+    #    </note>
     #   @return [String]
     #
     # @!attribute [rw] max_results
     #   An optional limit for the number of results returned in a single
     #   call.
+    #
+    #   Default value: 20
     #   @return [Integer]
     #
     # @!attribute [rw] max_query_refinements
     #   Maximum number of query terms to be returned for use with a search
-    #   text query.
+    #   text query. Not supported in `ap-southeast-1` and `ap-southeast-5`
+    #   regions for [GrabMaps][1] customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Integer]
     #
     # @!attribute [rw] bias_position
     #   The position, in longitude and latitude, that the results should be
     #   close to. Typically, place results returned are ranked higher the
     #   closer they are to this position. Stored in `[lng, lat]` and in the
-    #   WSG84 format.
+    #   WGS 84 format.
     #
     #   <note markdown="1"> The fields `BiasPosition`, `FilterBoundingBox`, and `FilterCircle`
     #   are mutually exclusive.
@@ -2637,35 +3673,56 @@ module Aws::GeoPlaces
     #
     # @!attribute [rw] filter
     #   A structure which contains a set of inclusion/exclusion properties
-    #   that results must posses in order to be returned as a result.
+    #   that results must possess in order to be returned as a result.
     #   @return [Types::SuggestFilter]
     #
     # @!attribute [rw] additional_features
     #   A list of optional additional parameters, such as time zone, that
-    #   can be requested for each result.
+    #   can be requested for each result. For [GrabMaps][1] customers,
+    #   `ap-southeast-1` and `ap-southeast-5` regions support only the
+    #   `Core` and `TimeZone` values.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Array<String>]
     #
     # @!attribute [rw] language
     #   A list of [BCP 47][1] compliant language codes for the results to be
     #   rendered in. If there is no data for the result in the requested
     #   language, data will be returned in the default language for the
-    #   entry.
+    #   entry. For [GrabMaps][2] customers, `ap-southeast-1` and
+    #   `ap-southeast-5` regions support only the following codes: `en, id,
+    #   km, lo, ms, my, pt, th, tl, vi, zh`
     #
     #
     #
-    #   [1]: https://en.wikipedia.org/wiki/IETF_language_tag
+    #   [1]: https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
+    #   [2]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [String]
     #
     # @!attribute [rw] political_view
     #   The alpha-2 or alpha-3 character code for the political view of a
     #   country. The political view applies to the results of the request to
     #   represent unresolved territorial claims through the point of view of
-    #   the specified country.
+    #   the specified country. Not supported in `ap-southeast-1` and
+    #   `ap-southeast-5` regions for [GrabMaps][1] customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [String]
     #
     # @!attribute [rw] intended_use
-    #   Indicates if the results will be stored. Defaults to `SingleUse`, if
-    #   left empty.
+    #   Indicates if the query results will be persisted in customer
+    #   infrastructure. Defaults to `SingleUse` (not stored). Currently,
+    #   `Suggest` does not support storage of results.
+    #   @return [String]
+    #
+    # @!attribute [rw] travel_mode
+    #   Indicates the mode of mobility used by the end user. This is used to
+    #   improve the relevance of search results. Valid values are `Car`,
+    #   `Scooter`, and `Truck`.
     #   @return [String]
     #
     # @!attribute [rw] key
@@ -2685,15 +3742,16 @@ module Aws::GeoPlaces
       :language,
       :political_view,
       :intended_use,
+      :travel_mode,
       :key)
-      SENSITIVE = [:query_text, :bias_position, :key]
+      SENSITIVE = [:query_text, :bias_position, :political_view, :key]
       include Aws::Structure
     end
 
     # @!attribute [rw] pricing_bucket
     #   The pricing bucket for which the query is charged at.
     #
-    #   For more inforamtion on pricing, please visit [Amazon Location
+    #   For more information on pricing, please visit [Amazon Location
     #   Service Pricing][1].
     #
     #
@@ -2707,7 +3765,12 @@ module Aws::GeoPlaces
     #
     # @!attribute [rw] query_refinements
     #   Maximum number of query terms to be returned for use with a search
-    #   text query.
+    #   text query. Not available in `ap-southeast-1` and `ap-southeast-5`
+    #   regions for [GrabMaps][1] customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [Array<Types::QueryRefinement>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/SuggestResponse AWS API Documentation
@@ -2755,7 +3818,7 @@ module Aws::GeoPlaces
       :place,
       :query,
       :highlights)
-      SENSITIVE = []
+      SENSITIVE = [:title]
       include Aws::Structure
     end
 
@@ -2792,7 +3855,82 @@ module Aws::GeoPlaces
       :name,
       :offset,
       :offset_seconds)
+      SENSITIVE = [:name, :offset, :offset_seconds]
+      include Aws::Structure
+    end
+
+    # Translation details for the address, including alternative names and
+    # translations in available languages.
+    #
+    # @!attribute [rw] locality
+    #   A list of administrative names and translations for the locality
+    #   address component.
+    #   @return [Array<Types::AdminNames>]
+    #
+    # @!attribute [rw] region
+    #   A list of administrative names and translations for the region
+    #   address component.
+    #   @return [Array<Types::AdminNames>]
+    #
+    # @!attribute [rw] district
+    #   A list of administrative names and translations for the district
+    #   address component.
+    #   @return [Array<Types::AdminNames>]
+    #
+    # @!attribute [rw] sub_region
+    #   A list of administrative names and translations for the sub-region
+    #   address component.
+    #   @return [Array<Types::AdminNames>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/TranslationDetails AWS API Documentation
+    #
+    class TranslationDetails < Struct.new(
+      :locality,
+      :region,
+      :district,
+      :sub_region)
       SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A translation or alternative name for an address component.
+    #
+    # @!attribute [rw] value
+    #   The translated or alternative name value.
+    #   @return [String]
+    #
+    # @!attribute [rw] language
+    #   A [BCP 47][1] compliant language code for the translation name.
+    #
+    #
+    #
+    #   [1]: https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The type of translation name. Valid values are `Abbreviation`,
+    #   `AreaCode`, `BaseName`, `Exonym`, `Shortened`, and `Synonym`.
+    #   @return [String]
+    #
+    # @!attribute [rw] primary
+    #   If `true`, indicates this is the primary name variant for the given
+    #   language.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] transliterated
+    #   If `true`, indicates this name is a transliterated version rather
+    #   than a native script translation.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/geo-places-2020-11-19/TranslationName AWS API Documentation
+    #
+    class TranslationName < Struct.new(
+      :value,
+      :language,
+      :type,
+      :primary,
+      :transliterated)
+      SENSITIVE = [:value, :primary, :transliterated]
       include Aws::Structure
     end
 
@@ -2807,7 +3945,7 @@ module Aws::GeoPlaces
     #
     class UspsZip < Struct.new(
       :zip_classification_code)
-      SENSITIVE = []
+      SENSITIVE = [:zip_classification_code]
       include Aws::Structure
     end
 
@@ -2821,7 +3959,7 @@ module Aws::GeoPlaces
     #
     class UspsZipPlus4 < Struct.new(
       :record_type_code)
-      SENSITIVE = []
+      SENSITIVE = [:record_type_code]
       include Aws::Structure
     end
 

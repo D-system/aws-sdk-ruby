@@ -23,6 +23,7 @@ module Aws::APIGateway
     ApiKeys = Shapes::StructureShape.new(name: 'ApiKeys')
     ApiKeysFormat = Shapes::StringShape.new(name: 'ApiKeysFormat')
     ApiStage = Shapes::StructureShape.new(name: 'ApiStage')
+    ApiStatus = Shapes::StringShape.new(name: 'ApiStatus')
     Authorizer = Shapes::StructureShape.new(name: 'Authorizer')
     AuthorizerType = Shapes::StringShape.new(name: 'AuthorizerType')
     Authorizers = Shapes::StructureShape.new(name: 'Authorizers')
@@ -94,6 +95,7 @@ module Aws::APIGateway
     DomainNameStatus = Shapes::StringShape.new(name: 'DomainNameStatus')
     DomainNames = Shapes::StructureShape.new(name: 'DomainNames')
     Double = Shapes::FloatShape.new(name: 'Double')
+    EndpointAccessMode = Shapes::StringShape.new(name: 'EndpointAccessMode')
     EndpointConfiguration = Shapes::StructureShape.new(name: 'EndpointConfiguration')
     EndpointType = Shapes::StringShape.new(name: 'EndpointType')
     ExportResponse = Shapes::StructureShape.new(name: 'ExportResponse')
@@ -157,6 +159,7 @@ module Aws::APIGateway
     Integration = Shapes::StructureShape.new(name: 'Integration')
     IntegrationResponse = Shapes::StructureShape.new(name: 'IntegrationResponse')
     IntegrationType = Shapes::StringShape.new(name: 'IntegrationType')
+    IpAddressType = Shapes::StringShape.new(name: 'IpAddressType')
     LimitExceededException = Shapes::StructureShape.new(name: 'LimitExceededException')
     ListOfARNs = Shapes::ListShape.new(name: 'ListOfARNs')
     ListOfApiKey = Shapes::ListShape.new(name: 'ListOfApiKey')
@@ -228,8 +231,10 @@ module Aws::APIGateway
     Resource = Shapes::StructureShape.new(name: 'Resource')
     ResourceOwner = Shapes::StringShape.new(name: 'ResourceOwner')
     Resources = Shapes::StructureShape.new(name: 'Resources')
+    ResponseTransferMode = Shapes::StringShape.new(name: 'ResponseTransferMode')
     RestApi = Shapes::StructureShape.new(name: 'RestApi')
     RestApis = Shapes::StructureShape.new(name: 'RestApis')
+    RoutingMode = Shapes::StringShape.new(name: 'RoutingMode')
     SdkConfigurationProperty = Shapes::StructureShape.new(name: 'SdkConfigurationProperty')
     SdkResponse = Shapes::StructureShape.new(name: 'SdkResponse')
     SdkType = Shapes::StructureShape.new(name: 'SdkType')
@@ -439,9 +444,11 @@ module Aws::APIGateway
     CreateDomainNameRequest.add_member(:endpoint_configuration, Shapes::ShapeRef.new(shape: EndpointConfiguration, location_name: "endpointConfiguration"))
     CreateDomainNameRequest.add_member(:tags, Shapes::ShapeRef.new(shape: MapOfStringToString, location_name: "tags"))
     CreateDomainNameRequest.add_member(:security_policy, Shapes::ShapeRef.new(shape: SecurityPolicy, location_name: "securityPolicy"))
+    CreateDomainNameRequest.add_member(:endpoint_access_mode, Shapes::ShapeRef.new(shape: EndpointAccessMode, location_name: "endpointAccessMode"))
     CreateDomainNameRequest.add_member(:mutual_tls_authentication, Shapes::ShapeRef.new(shape: MutualTlsAuthenticationInput, location_name: "mutualTlsAuthentication"))
     CreateDomainNameRequest.add_member(:ownership_verification_certificate_arn, Shapes::ShapeRef.new(shape: String, location_name: "ownershipVerificationCertificateArn"))
     CreateDomainNameRequest.add_member(:policy, Shapes::ShapeRef.new(shape: String, location_name: "policy"))
+    CreateDomainNameRequest.add_member(:routing_mode, Shapes::ShapeRef.new(shape: RoutingMode, location_name: "routingMode"))
     CreateDomainNameRequest.struct_class = Types::CreateDomainNameRequest
 
     CreateModelRequest.add_member(:rest_api_id, Shapes::ShapeRef.new(shape: String, required: true, location: "uri", location_name: "restapi_id"))
@@ -473,6 +480,8 @@ module Aws::APIGateway
     CreateRestApiRequest.add_member(:policy, Shapes::ShapeRef.new(shape: String, location_name: "policy"))
     CreateRestApiRequest.add_member(:tags, Shapes::ShapeRef.new(shape: MapOfStringToString, location_name: "tags"))
     CreateRestApiRequest.add_member(:disable_execute_api_endpoint, Shapes::ShapeRef.new(shape: Boolean, location_name: "disableExecuteApiEndpoint"))
+    CreateRestApiRequest.add_member(:security_policy, Shapes::ShapeRef.new(shape: SecurityPolicy, location_name: "securityPolicy"))
+    CreateRestApiRequest.add_member(:endpoint_access_mode, Shapes::ShapeRef.new(shape: EndpointAccessMode, location_name: "endpointAccessMode"))
     CreateRestApiRequest.struct_class = Types::CreateRestApiRequest
 
     CreateStageRequest.add_member(:rest_api_id, Shapes::ShapeRef.new(shape: String, required: true, location: "uri", location_name: "restapi_id"))
@@ -656,11 +665,13 @@ module Aws::APIGateway
     DomainName.add_member(:domain_name_status, Shapes::ShapeRef.new(shape: DomainNameStatus, location_name: "domainNameStatus"))
     DomainName.add_member(:domain_name_status_message, Shapes::ShapeRef.new(shape: String, location_name: "domainNameStatusMessage"))
     DomainName.add_member(:security_policy, Shapes::ShapeRef.new(shape: SecurityPolicy, location_name: "securityPolicy"))
+    DomainName.add_member(:endpoint_access_mode, Shapes::ShapeRef.new(shape: EndpointAccessMode, location_name: "endpointAccessMode"))
     DomainName.add_member(:tags, Shapes::ShapeRef.new(shape: MapOfStringToString, location_name: "tags"))
     DomainName.add_member(:mutual_tls_authentication, Shapes::ShapeRef.new(shape: MutualTlsAuthentication, location_name: "mutualTlsAuthentication"))
     DomainName.add_member(:ownership_verification_certificate_arn, Shapes::ShapeRef.new(shape: String, location_name: "ownershipVerificationCertificateArn"))
     DomainName.add_member(:management_policy, Shapes::ShapeRef.new(shape: String, location_name: "managementPolicy"))
     DomainName.add_member(:policy, Shapes::ShapeRef.new(shape: String, location_name: "policy"))
+    DomainName.add_member(:routing_mode, Shapes::ShapeRef.new(shape: RoutingMode, location_name: "routingMode"))
     DomainName.struct_class = Types::DomainName
 
     DomainNameAccessAssociation.add_member(:domain_name_access_association_arn, Shapes::ShapeRef.new(shape: String, location_name: "domainNameAccessAssociationArn"))
@@ -679,6 +690,7 @@ module Aws::APIGateway
     DomainNames.struct_class = Types::DomainNames
 
     EndpointConfiguration.add_member(:types, Shapes::ShapeRef.new(shape: ListOfEndpointType, location_name: "types"))
+    EndpointConfiguration.add_member(:ip_address_type, Shapes::ShapeRef.new(shape: IpAddressType, location_name: "ipAddressType"))
     EndpointConfiguration.add_member(:vpc_endpoint_ids, Shapes::ShapeRef.new(shape: ListOfString, location_name: "vpcEndpointIds"))
     EndpointConfiguration.struct_class = Types::EndpointConfiguration
 
@@ -973,6 +985,8 @@ module Aws::APIGateway
     Integration.add_member(:cache_key_parameters, Shapes::ShapeRef.new(shape: ListOfString, location_name: "cacheKeyParameters"))
     Integration.add_member(:integration_responses, Shapes::ShapeRef.new(shape: MapOfIntegrationResponse, location_name: "integrationResponses"))
     Integration.add_member(:tls_config, Shapes::ShapeRef.new(shape: TlsConfig, location_name: "tlsConfig"))
+    Integration.add_member(:response_transfer_mode, Shapes::ShapeRef.new(shape: ResponseTransferMode, location_name: "responseTransferMode"))
+    Integration.add_member(:integration_target, Shapes::ShapeRef.new(shape: String, location_name: "integrationTarget"))
     Integration.struct_class = Types::Integration
 
     IntegrationResponse.add_member(:status_code, Shapes::ShapeRef.new(shape: StatusCode, location_name: "statusCode"))
@@ -1162,6 +1176,8 @@ module Aws::APIGateway
     PutIntegrationRequest.add_member(:content_handling, Shapes::ShapeRef.new(shape: ContentHandlingStrategy, location_name: "contentHandling"))
     PutIntegrationRequest.add_member(:timeout_in_millis, Shapes::ShapeRef.new(shape: NullableInteger, location_name: "timeoutInMillis"))
     PutIntegrationRequest.add_member(:tls_config, Shapes::ShapeRef.new(shape: TlsConfig, location_name: "tlsConfig"))
+    PutIntegrationRequest.add_member(:response_transfer_mode, Shapes::ShapeRef.new(shape: ResponseTransferMode, location_name: "responseTransferMode"))
+    PutIntegrationRequest.add_member(:integration_target, Shapes::ShapeRef.new(shape: String, location_name: "integrationTarget"))
     PutIntegrationRequest.struct_class = Types::PutIntegrationRequest
 
     PutIntegrationResponseRequest.add_member(:rest_api_id, Shapes::ShapeRef.new(shape: String, required: true, location: "uri", location_name: "restapi_id"))
@@ -1248,6 +1264,10 @@ module Aws::APIGateway
     RestApi.add_member(:tags, Shapes::ShapeRef.new(shape: MapOfStringToString, location_name: "tags"))
     RestApi.add_member(:disable_execute_api_endpoint, Shapes::ShapeRef.new(shape: Boolean, location_name: "disableExecuteApiEndpoint"))
     RestApi.add_member(:root_resource_id, Shapes::ShapeRef.new(shape: String, location_name: "rootResourceId"))
+    RestApi.add_member(:security_policy, Shapes::ShapeRef.new(shape: SecurityPolicy, location_name: "securityPolicy"))
+    RestApi.add_member(:endpoint_access_mode, Shapes::ShapeRef.new(shape: EndpointAccessMode, location_name: "endpointAccessMode"))
+    RestApi.add_member(:api_status, Shapes::ShapeRef.new(shape: ApiStatus, location_name: "apiStatus"))
+    RestApi.add_member(:api_status_message, Shapes::ShapeRef.new(shape: String, location_name: "apiStatusMessage"))
     RestApi.struct_class = Types::RestApi
 
     RestApis.add_member(:position, Shapes::ShapeRef.new(shape: String, location_name: "position"))

@@ -95,8 +95,8 @@ module Aws::MarketplaceCatalog
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::MarketplaceCatalog
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::MarketplaceCatalog
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::MarketplaceCatalog
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::MarketplaceCatalog
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::MarketplaceCatalog
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::MarketplaceCatalog
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::MarketplaceCatalog
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -791,8 +795,8 @@ module Aws::MarketplaceCatalog
     # @option params [required, String] :entity_type
     #   The type of entities to retrieve. Valid values are: `AmiProduct`,
     #   `ContainerProduct`, `DataProduct`, `SaaSProduct`, `ProcurementPolicy`,
-    #   `Experience`, `Audience`, `BrandingSettings`, `Offer`, `Seller`,
-    #   `ResaleAuthorization`.
+    #   `Experience`, `Audience`, `BrandingSettings`, `Offer`, `OfferSet`,
+    #   `Seller`, `ResaleAuthorization`, `Solution`.
     #
     # @option params [Array<Types::Filter>] :filter_list
     #   An array of filter objects. Each filter object contains two
@@ -948,6 +952,18 @@ module Aws::MarketplaceCatalog
     #             before_value: "DateTimeISO8601",
     #           },
     #         },
+    #         offer_set_id: {
+    #           value_list: ["OfferSetIdString"],
+    #         },
+    #         target_agreement_id: {
+    #           value_list: ["OfferTargetAgreementIdString"],
+    #         },
+    #         target_agreement_intent: {
+    #           value_list: ["Renew"], # accepts Renew
+    #         },
+    #         created_by_source: {
+    #           value_list: ["Seller"], # accepts Seller, AwsMarketplace
+    #         },
     #       },
     #       container_product_filters: {
     #         entity_id: {
@@ -1025,6 +1041,56 @@ module Aws::MarketplaceCatalog
     #             before_value: "DateTimeISO8601",
     #           },
     #         },
+    #         reseller_role: {
+    #           value_list: ["ChannelPartner"], # accepts ChannelPartner, Distributor
+    #         },
+    #       },
+    #       machine_learning_product_filters: {
+    #         entity_id: {
+    #           value_list: ["MachineLearningProductEntityIdString"],
+    #         },
+    #         last_modified_date: {
+    #           date_range: {
+    #             after_value: "DateTimeISO8601",
+    #             before_value: "DateTimeISO8601",
+    #           },
+    #         },
+    #         product_title: {
+    #           value_list: ["MachineLearningProductTitleString"],
+    #           wild_card_value: "MachineLearningProductTitleString",
+    #         },
+    #         visibility: {
+    #           value_list: ["Limited"], # accepts Limited, Public, Restricted, Draft
+    #         },
+    #       },
+    #       offer_set_filters: {
+    #         entity_id: {
+    #           value_list: ["OfferSetEntityIdString"],
+    #         },
+    #         name: {
+    #           value_list: ["OfferSetNameString"],
+    #         },
+    #         state: {
+    #           value_list: ["Draft"], # accepts Draft, Released
+    #         },
+    #         release_date: {
+    #           date_range: {
+    #             after_value: "DateTimeISO8601",
+    #             before_value: "DateTimeISO8601",
+    #           },
+    #         },
+    #         associated_offer_ids: {
+    #           value_list: ["OfferSetAssociatedOfferIdsString"],
+    #         },
+    #         solution_id: {
+    #           value_list: ["OfferSetSolutionIdString"],
+    #         },
+    #         last_modified_date: {
+    #           date_range: {
+    #             after_value: "DateTimeISO8601",
+    #             before_value: "DateTimeISO8601",
+    #           },
+    #         },
     #       },
     #     },
     #     entity_type_sort: {
@@ -1033,7 +1099,7 @@ module Aws::MarketplaceCatalog
     #         sort_order: "ASCENDING", # accepts ASCENDING, DESCENDING
     #       },
     #       saa_s_product_sort: {
-    #         sort_by: "EntityId", # accepts EntityId, ProductTitle, Visibility, LastModifiedDate
+    #         sort_by: "EntityId", # accepts EntityId, ProductTitle, Visibility, LastModifiedDate, DeliveryOptionTypes
     #         sort_order: "ASCENDING", # accepts ASCENDING, DESCENDING
     #       },
     #       ami_product_sort: {
@@ -1041,15 +1107,23 @@ module Aws::MarketplaceCatalog
     #         sort_order: "ASCENDING", # accepts ASCENDING, DESCENDING
     #       },
     #       offer_sort: {
-    #         sort_by: "EntityId", # accepts EntityId, Name, ProductId, ResaleAuthorizationId, ReleaseDate, AvailabilityEndDate, BuyerAccounts, State, Targeting, LastModifiedDate
+    #         sort_by: "EntityId", # accepts EntityId, Name, ProductId, ResaleAuthorizationId, ReleaseDate, AvailabilityEndDate, BuyerAccounts, State, Targeting, LastModifiedDate, OfferSetId, TargetAgreementId, TargetAgreementIntent, CreatedBySource
     #         sort_order: "ASCENDING", # accepts ASCENDING, DESCENDING
     #       },
     #       container_product_sort: {
-    #         sort_by: "EntityId", # accepts EntityId, LastModifiedDate, ProductTitle, Visibility
+    #         sort_by: "EntityId", # accepts EntityId, LastModifiedDate, ProductTitle, Visibility, CompatibleAWSServices
     #         sort_order: "ASCENDING", # accepts ASCENDING, DESCENDING
     #       },
     #       resale_authorization_sort: {
     #         sort_by: "EntityId", # accepts EntityId, Name, ProductId, ProductName, ManufacturerAccountId, ManufacturerLegalName, ResellerAccountID, ResellerLegalName, Status, OfferExtendedStatus, CreatedDate, AvailabilityEndDate, LastModifiedDate
+    #         sort_order: "ASCENDING", # accepts ASCENDING, DESCENDING
+    #       },
+    #       machine_learning_product_sort: {
+    #         sort_by: "EntityId", # accepts EntityId, LastModifiedDate, ProductTitle, Visibility
+    #         sort_order: "ASCENDING", # accepts ASCENDING, DESCENDING
+    #       },
+    #       offer_set_sort: {
+    #         sort_by: "Name", # accepts Name, State, ReleaseDate, SolutionId, EntityId, LastModifiedDate
     #         sort_order: "ASCENDING", # accepts ASCENDING, DESCENDING
     #       },
     #     },
@@ -1082,6 +1156,10 @@ module Aws::MarketplaceCatalog
     #   resp.entity_summary_list[0].offer_summary.state #=> String, one of "Draft", "Released"
     #   resp.entity_summary_list[0].offer_summary.targeting #=> Array
     #   resp.entity_summary_list[0].offer_summary.targeting[0] #=> String, one of "BuyerAccounts", "ParticipatingPrograms", "CountryCodes", "None"
+    #   resp.entity_summary_list[0].offer_summary.offer_set_id #=> String
+    #   resp.entity_summary_list[0].offer_summary.target_agreement_id #=> String
+    #   resp.entity_summary_list[0].offer_summary.target_agreement_intent #=> String, one of "Renew"
+    #   resp.entity_summary_list[0].offer_summary.created_by_source #=> String, one of "Seller", "AwsMarketplace"
     #   resp.entity_summary_list[0].resale_authorization_summary.name #=> String
     #   resp.entity_summary_list[0].resale_authorization_summary.product_id #=> String
     #   resp.entity_summary_list[0].resale_authorization_summary.product_name #=> String
@@ -1093,6 +1171,15 @@ module Aws::MarketplaceCatalog
     #   resp.entity_summary_list[0].resale_authorization_summary.offer_extended_status #=> String
     #   resp.entity_summary_list[0].resale_authorization_summary.created_date #=> String
     #   resp.entity_summary_list[0].resale_authorization_summary.availability_end_date #=> String
+    #   resp.entity_summary_list[0].resale_authorization_summary.reseller_role #=> String, one of "ChannelPartner", "Distributor"
+    #   resp.entity_summary_list[0].machine_learning_product_summary.product_title #=> String
+    #   resp.entity_summary_list[0].machine_learning_product_summary.visibility #=> String, one of "Limited", "Public", "Restricted", "Draft"
+    #   resp.entity_summary_list[0].offer_set_summary.name #=> String
+    #   resp.entity_summary_list[0].offer_set_summary.state #=> String, one of "Draft", "Released"
+    #   resp.entity_summary_list[0].offer_set_summary.release_date #=> String
+    #   resp.entity_summary_list[0].offer_set_summary.associated_offer_ids #=> Array
+    #   resp.entity_summary_list[0].offer_set_summary.associated_offer_ids[0] #=> String
+    #   resp.entity_summary_list[0].offer_set_summary.solution_id #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/marketplace-catalog-2018-09-17/ListEntities AWS API Documentation
@@ -1191,12 +1278,17 @@ module Aws::MarketplaceCatalog
     # for more information about change types available for container-based
     # products, see [Working with container products][4].
     #
+    # To download "DetailsDocument" shapes, see [Python][5] and [Java][6]
+    # shapes on GitHub.
+    #
     #
     #
     # [1]: https://docs.aws.amazon.com/marketplace-catalog/latest/api-reference/API_StartChangeSet.html#API_StartChangeSet_Examples
     # [2]: https://docs.aws.amazon.com/marketplace-catalog/latest/api-reference/welcome.html#working-with-change-sets
     # [3]: https://docs.aws.amazon.com/marketplace-catalog/latest/api-reference/ami-products.html#working-with-single-AMI-products
     # [4]: https://docs.aws.amazon.com/marketplace-catalog/latest/api-reference/container-products.html#working-with-container-products
+    # [5]: https://github.com/awslabs/aws-marketplace-catalog-api-shapes-for-python
+    # [6]: https://github.com/awslabs/aws-marketplace-catalog-api-shapes-for-java/tree/main
     #
     # @option params [required, String] :catalog
     #   The catalog related to the request. Fixed value: `AWSMarketplace`
@@ -1371,7 +1463,7 @@ module Aws::MarketplaceCatalog
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-marketplacecatalog'
-      context[:gem_version] = '1.57.0'
+      context[:gem_version] = '1.83.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

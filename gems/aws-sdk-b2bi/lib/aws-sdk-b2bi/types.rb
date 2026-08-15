@@ -23,6 +23,22 @@ module Aws::B2bi
       include Aws::Structure
     end
 
+    # A structure that contains advanced options for EDI processing.
+    # Currently, only X12 advanced options are supported.
+    #
+    # @!attribute [rw] x12
+    #   A structure that contains X12-specific advanced options, such as
+    #   split options for processing X12 EDI files.
+    #   @return [Types::X12AdvancedOptions]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/b2bi-2022-06-23/AdvancedOptions AWS API Documentation
+    #
+    class AdvancedOptions < Struct.new(
+      :x12)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # A capability object. Currently, only EDI (electronic data interchange)
     # capabilities are supported. A trading capability contains the
     # information required to transform incoming EDI documents into JSON or
@@ -55,10 +71,16 @@ module Aws::B2bi
     #   A structure that contains the outbound EDI options.
     #   @return [Types::OutboundEdiOptions]
     #
+    # @!attribute [rw] inbound_edi
+    #   A structure that contains the inbound EDI options for the
+    #   capability.
+    #   @return [Types::InboundEdiOptions]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/b2bi-2022-06-23/CapabilityOptions AWS API Documentation
     #
     class CapabilityOptions < Struct.new(
-      :outbound_edi)
+      :outbound_edi,
+      :inbound_edi)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -153,12 +175,18 @@ module Aws::B2bi
     #   the file syntax
     #   @return [Types::OutputSampleFileSource]
     #
+    # @!attribute [rw] advanced_options
+    #   A structure that contains advanced options for EDI processing.
+    #   Currently, only X12 advanced options are supported.
+    #   @return [Types::AdvancedOptions]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/b2bi-2022-06-23/ConversionTarget AWS API Documentation
     #
     class ConversionTarget < Struct.new(
       :file_format,
       :format_details,
-      :output_sample_file)
+      :output_sample_file,
+      :advanced_options)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -866,14 +894,13 @@ module Aws::B2bi
     end
 
     # @!attribute [rw] input_file_content
-    #   Provide the contents of a sample X12 EDI file (for inbound EDI) or
-    #   JSON/XML file (for outbound EDI) to use as a starting point for the
-    #   mapping.
+    #   Provide the contents of a sample X12 EDI file, either in JSON or XML
+    #   format, to use as a starting point for the mapping.
     #   @return [String]
     #
     # @!attribute [rw] output_file_content
-    #   Provide the contents of a sample X12 EDI file (for outbound EDI) or
-    #   JSON/XML file (for inbound EDI) to use as a target for the mapping.
+    #   Provide the contents of a sample X12 EDI file, either in JSON or XML
+    #   format, to use as a target for the mapping.
     #   @return [String]
     #
     # @!attribute [rw] mapping_type
@@ -1270,6 +1297,22 @@ module Aws::B2bi
       include Aws::Structure
     end
 
+    # Contains options for processing inbound EDI files. These options allow
+    # for customizing how incoming EDI documents are processed.
+    #
+    # @!attribute [rw] x12
+    #   A structure that contains X12-specific options for processing
+    #   inbound X12 EDI files.
+    #   @return [Types::X12InboundEdiOptions]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/b2bi-2022-06-23/InboundEdiOptions AWS API Documentation
+    #
+    class InboundEdiOptions < Struct.new(
+      :x12)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains the input formatting options for an inbound transformer
     # (takes an X12-formatted EDI document as input and converts it to JSON
     # or XML.
@@ -1284,11 +1327,18 @@ module Aws::B2bi
     #   transformer.
     #   @return [Types::FormatOptions]
     #
+    # @!attribute [rw] advanced_options
+    #   Specifies advanced options for the input conversion process. These
+    #   options provide additional control over how EDI files are processed
+    #   during transformation.
+    #   @return [Types::AdvancedOptions]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/b2bi-2022-06-23/InputConversion AWS API Documentation
     #
     class InputConversion < Struct.new(
       :from_format,
-      :format_options)
+      :format_options,
+      :advanced_options)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1593,11 +1643,17 @@ module Aws::B2bi
     #   the transformer output.
     #   @return [Types::FormatOptions]
     #
+    # @!attribute [rw] advanced_options
+    #   A structure that contains advanced options for EDI processing.
+    #   Currently, only X12 advanced options are supported.
+    #   @return [Types::AdvancedOptions]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/b2bi-2022-06-23/OutputConversion AWS API Documentation
     #
     class OutputConversion < Struct.new(
       :to_format,
-      :format_options)
+      :format_options,
+      :advanced_options)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1990,8 +2046,13 @@ module Aws::B2bi
     #   @return [String]
     #
     # @!attribute [rw] validation_messages
-    #   Returns an array of strings, each containing a message that Amazon
-    #   Web Services B2B Data Interchange generates during the conversion.
+    #   Returns an array of validation messages that Amazon Web Services B2B
+    #   Data Interchange generates during the conversion process. These
+    #   messages include both standard EDI validation results and custom
+    #   validation messages when custom validation rules are configured.
+    #   Custom validation messages provide detailed feedback on element
+    #   length constraints, code list validations, and element requirement
+    #   checks applied during the outbound EDI generation process.
     #   @return [Array<String>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/b2bi-2022-06-23/TestConversionResponse AWS API Documentation
@@ -2067,12 +2128,19 @@ module Aws::B2bi
     #   documents.
     #   @return [Types::EdiType]
     #
+    # @!attribute [rw] advanced_options
+    #   Specifies advanced options for parsing the input EDI file. These
+    #   options allow for more granular control over the parsing process,
+    #   including split options for X12 files.
+    #   @return [Types::AdvancedOptions]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/b2bi-2022-06-23/TestParsingRequest AWS API Documentation
     #
     class TestParsingRequest < Struct.new(
       :input_file,
       :file_format,
-      :edi_type)
+      :edi_type,
+      :advanced_options)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2082,10 +2150,27 @@ module Aws::B2bi
     #   according to the specified EDI (electronic data interchange) type.
     #   @return [String]
     #
+    # @!attribute [rw] parsed_split_file_contents
+    #   Returns an array of parsed file contents when the input file is
+    #   split according to the specified split options. Each element in the
+    #   array represents a separate split file's parsed content.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] validation_messages
+    #   Returns an array of validation messages generated during EDI
+    #   validation. These messages provide detailed information about
+    #   validation errors, warnings, or confirmations based on the
+    #   configured X12 validation rules such as element length constraints,
+    #   code list validations, and element requirement checks. This field is
+    #   populated when the `TestParsing` API validates EDI documents.
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/b2bi-2022-06-23/TestParsingResponse AWS API Documentation
     #
     class TestParsingResponse < Struct.new(
-      :parsed_file_content)
+      :parsed_file_content,
+      :parsed_split_file_contents,
+      :validation_messages)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2669,7 +2754,11 @@ module Aws::B2bi
     end
 
     # Occurs when a B2BI object cannot be validated against a request from
-    # another object.
+    # another object. This exception can be thrown during standard EDI
+    # validation or when custom validation rules fail, such as when element
+    # length constraints are violated, invalid codes are used in code list
+    # validations, or required elements are missing based on configured
+    # element requirement rules.
     #
     # @!attribute [rw] message
     #   @return [String]
@@ -2678,6 +2767,181 @@ module Aws::B2bi
     #
     class ValidationException < Struct.new(
       :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains options for wrapping (line folding) in X12 EDI files.
+    # Wrapping controls how long lines are handled in the EDI output.
+    #
+    # @!attribute [rw] wrap_by
+    #   Specifies the method used for wrapping lines in the EDI output.
+    #   Valid values:
+    #
+    #   * `SEGMENT`: Wraps by segment.
+    #
+    #   * `ONE_LINE`: Indicates that the entire content is on a single line.
+    #
+    #     <note markdown="1"> When you specify `ONE_LINE`, do not provide either the line length
+    #     nor the line terminator value.
+    #
+    #      </note>
+    #
+    #   * `LINE_LENGTH`: Wraps by character count, as specified by
+    #     `lineLength` value.
+    #   @return [String]
+    #
+    # @!attribute [rw] line_terminator
+    #   Specifies the character sequence used to terminate lines when
+    #   wrapping. Valid values:
+    #
+    #   * `CRLF`: carriage return and line feed
+    #
+    #   * `LF`: line feed)
+    #
+    #   * `CR`: carriage return
+    #   @return [String]
+    #
+    # @!attribute [rw] line_length
+    #   Specifies the maximum length of a line before wrapping occurs. This
+    #   value is used when `wrapBy` is set to `LINE_LENGTH`.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/b2bi-2022-06-23/WrapOptions AWS API Documentation
+    #
+    class WrapOptions < Struct.new(
+      :wrap_by,
+      :line_terminator,
+      :line_length)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains options for configuring X12 acknowledgments. These options
+    # control how functional and technical acknowledgments are handled.
+    #
+    # @!attribute [rw] functional_acknowledgment
+    #   Specifies whether functional acknowledgments (997/999) should be
+    #   generated for incoming X12 transactions. Valid values are
+    #   `DO_NOT_GENERATE`, `GENERATE_ALL_SEGMENTS` and
+    #   `GENERATE_WITHOUT_TRANSACTION_SET_RESPONSE_LOOP`.
+    #
+    #   If you choose `GENERATE_WITHOUT_TRANSACTION_SET_RESPONSE_LOOP`,
+    #   Amazon Web Services B2B Data Interchange skips the AK2\_Loop when
+    #   generating an acknowledgment document.
+    #   @return [String]
+    #
+    # @!attribute [rw] technical_acknowledgment
+    #   Specifies whether technical acknowledgments (TA1) should be
+    #   generated for incoming X12 interchanges. Valid values are
+    #   `DO_NOT_GENERATE` and `GENERATE_ALL_SEGMENTS` and.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/b2bi-2022-06-23/X12AcknowledgmentOptions AWS API Documentation
+    #
+    class X12AcknowledgmentOptions < Struct.new(
+      :functional_acknowledgment,
+      :technical_acknowledgment)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains advanced options specific to X12 EDI processing, such as
+    # splitting large X12 files into smaller units.
+    #
+    # @!attribute [rw] split_options
+    #   Specifies options for splitting X12 EDI files. These options control
+    #   how large X12 files are divided into smaller, more manageable units.
+    #   @return [Types::X12SplitOptions]
+    #
+    # @!attribute [rw] validation_options
+    #   Specifies validation options for X12 EDI processing. These options
+    #   control how validation rules are applied during EDI document
+    #   processing, including custom validation rules for element length
+    #   constraints, code list validations, and element requirement checks.
+    #   @return [Types::X12ValidationOptions]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/b2bi-2022-06-23/X12AdvancedOptions AWS API Documentation
+    #
+    class X12AdvancedOptions < Struct.new(
+      :split_options,
+      :validation_options)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines a validation rule that modifies the allowed code values for a
+    # specific X12 element. This rule allows you to add or remove valid
+    # codes from an element's standard code list, providing flexibility to
+    # accommodate trading partner-specific requirements or industry
+    # variations. You can specify codes to add to expand the allowed values
+    # beyond the X12 standard, or codes to remove to restrict the allowed
+    # values for stricter validation.
+    #
+    # @!attribute [rw] element_id
+    #   Specifies the four-digit element ID to which the code list
+    #   modifications apply. This identifies which X12 element will have its
+    #   allowed code values modified.
+    #   @return [String]
+    #
+    # @!attribute [rw] codes_to_add
+    #   Specifies a list of code values to add to the element's allowed
+    #   values. These codes will be considered valid for the specified
+    #   element in addition to the standard codes defined by the X12
+    #   specification.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] codes_to_remove
+    #   Specifies a list of code values to remove from the element's
+    #   allowed values. These codes will be considered invalid for the
+    #   specified element, even if they are part of the standard codes
+    #   defined by the X12 specification.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/b2bi-2022-06-23/X12CodeListValidationRule AWS API Documentation
+    #
+    class X12CodeListValidationRule < Struct.new(
+      :element_id,
+      :codes_to_add,
+      :codes_to_remove)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains configuration for X12 control numbers used in X12 EDI
+    # generation. Control numbers are used to uniquely identify
+    # interchanges, functional groups, and transaction sets.
+    #
+    # @!attribute [rw] starting_interchange_control_number
+    #   Specifies the starting interchange control number (ISA13) to use for
+    #   X12 EDI generation. This number is incremented for each new
+    #   interchange. For the ISA (interchange) envelope, Amazon Web Services
+    #   B2B Data Interchange generates an interchange control number that is
+    #   unique for the ISA05 and ISA06 (sender) &amp; ISA07 and ISA08
+    #   (receiver) combination.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] starting_functional_group_control_number
+    #   Specifies the starting functional group control number (GS06) to use
+    #   for X12 EDI generation. This number is incremented for each new
+    #   functional group. For the GS (functional group) envelope, Amazon Web
+    #   Services B2B Data Interchange generates a functional group control
+    #   number that is unique to the sender ID, receiver ID, and functional
+    #   identifier code combination.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] starting_transaction_set_control_number
+    #   Specifies the starting transaction set control number (ST02) to use
+    #   for X12 EDI generation. This number is incremented for each new
+    #   transaction set.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/b2bi-2022-06-23/X12ControlNumbers AWS API Documentation
+    #
+    class X12ControlNumbers < Struct.new(
+      :starting_interchange_control_number,
+      :starting_functional_group_control_number,
+      :starting_transaction_set_control_number)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2739,6 +3003,71 @@ module Aws::B2bi
       include Aws::Structure
     end
 
+    # Defines a validation rule that specifies custom length constraints for
+    # a specific X12 element. This rule allows you to override the standard
+    # minimum and maximum length requirements for an element, enabling
+    # validation of trading partner-specific length requirements that may
+    # differ from the X12 specification. Both minimum and maximum length
+    # values must be specified and must be between 1 and 200 characters.
+    #
+    # @!attribute [rw] element_id
+    #   Specifies the four-digit element ID to which the length constraints
+    #   will be applied. This identifies which X12 element will have its
+    #   length requirements modified.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_length
+    #   Specifies the maximum allowed length for the identified element.
+    #   This value must be between 1 and 200 characters and defines the
+    #   upper limit for the element's content length.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] min_length
+    #   Specifies the minimum required length for the identified element.
+    #   This value must be between 1 and 200 characters and defines the
+    #   lower limit for the element's content length.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/b2bi-2022-06-23/X12ElementLengthValidationRule AWS API Documentation
+    #
+    class X12ElementLengthValidationRule < Struct.new(
+      :element_id,
+      :max_length,
+      :min_length)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines a validation rule that modifies the requirement status of a
+    # specific X12 element within a segment. This rule allows you to make
+    # optional elements mandatory or mandatory elements optional, providing
+    # flexibility to accommodate different trading partner requirements and
+    # business rules. The rule targets a specific element position within a
+    # segment and sets its requirement status to either OPTIONAL or
+    # MANDATORY.
+    #
+    # @!attribute [rw] element_position
+    #   Specifies the position of the element within an X12 segment for
+    #   which the requirement status will be modified. The format follows
+    #   the pattern of segment identifier followed by element position
+    #   (e.g., "ST-01" for the first element of the ST segment).
+    #   @return [String]
+    #
+    # @!attribute [rw] requirement
+    #   Specifies the requirement status for the element at the specified
+    #   position. Valid values are OPTIONAL (the element may be omitted) or
+    #   MANDATORY (the element must be present).
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/b2bi-2022-06-23/X12ElementRequirementValidationRule AWS API Documentation
+    #
+    class X12ElementRequirementValidationRule < Struct.new(
+      :element_position,
+      :requirement)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # A wrapper structure for an X12 definition object.
     #
     # the X12 envelope ensures the integrity of the data and the efficiency
@@ -2755,10 +3084,16 @@ module Aws::B2bi
     #   A container for the X12 outbound EDI headers.
     #   @return [Types::X12OutboundEdiHeaders]
     #
+    # @!attribute [rw] wrap_options
+    #   Contains options for wrapping (line folding) in X12 EDI files.
+    #   Wrapping controls how long lines are handled in the EDI output.
+    #   @return [Types::WrapOptions]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/b2bi-2022-06-23/X12Envelope AWS API Documentation
     #
     class X12Envelope < Struct.new(
-      :common)
+      :common,
+      :wrap_options)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2787,6 +3122,22 @@ module Aws::B2bi
       :application_sender_code,
       :application_receiver_code,
       :responsible_agency_code)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains options specific to processing inbound X12 EDI files.
+    #
+    # @!attribute [rw] acknowledgment_options
+    #   Specifies acknowledgment options for inbound X12 EDI files. These
+    #   options control how functional and technical acknowledgments are
+    #   handled.
+    #   @return [Types::X12AcknowledgmentOptions]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/b2bi-2022-06-23/X12InboundEdiOptions AWS API Documentation
+    #
+    class X12InboundEdiOptions < Struct.new(
+      :acknowledgment_options)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2887,8 +3238,40 @@ module Aws::B2bi
     #
     # @!attribute [rw] validate_edi
     #   Specifies whether or not to validate the EDI for this X12 object:
-    #   `TRUE` or `FALSE`.
+    #   `TRUE` or `FALSE`. When enabled, this performs both standard EDI
+    #   validation and applies any configured custom validation rules
+    #   including element length constraints, code list validations, and
+    #   element requirement checks. Validation results are returned in the
+    #   response validation messages.
     #   @return [Boolean]
+    #
+    # @!attribute [rw] control_numbers
+    #   Specifies control number configuration for outbound X12 EDI headers.
+    #   These settings determine the starting values for interchange,
+    #   functional group, and transaction set control numbers.
+    #   @return [Types::X12ControlNumbers]
+    #
+    # @!attribute [rw] gs05_time_format
+    #   Specifies the time format in the GS05 element (time) of the
+    #   functional group header. The following formats use 24-hour clock
+    #   time:
+    #
+    #   * `HHMM` - Hours and minutes
+    #
+    #   * `HHMMSS` - Hours, minutes, and seconds
+    #
+    #   * `HHMMSSDD` - Hours, minutes, seconds, and decimal seconds
+    #
+    #   Where:
+    #
+    #   * `HH` - Hours (00-23)
+    #
+    #   * `MM` - Minutes (00-59)
+    #
+    #   * `SS` - Seconds (00-59)
+    #
+    #   * `DD` - Hundredths of seconds (00-99)
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/b2bi-2022-06-23/X12OutboundEdiHeaders AWS API Documentation
     #
@@ -2896,9 +3279,102 @@ module Aws::B2bi
       :interchange_control_headers,
       :functional_group_headers,
       :delimiters,
-      :validate_edi)
+      :validate_edi,
+      :control_numbers,
+      :gs05_time_format)
       SENSITIVE = []
       include Aws::Structure
+    end
+
+    # Contains options for splitting X12 EDI files into smaller units. This
+    # is useful for processing large EDI files more efficiently.
+    #
+    # @!attribute [rw] split_by
+    #   Specifies the method used to split X12 EDI files. Valid values
+    #   include `TRANSACTION` (split by individual transaction sets), or
+    #   `NONE` (no splitting).
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/b2bi-2022-06-23/X12SplitOptions AWS API Documentation
+    #
+    class X12SplitOptions < Struct.new(
+      :split_by)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains configuration options for X12 EDI validation. This structure
+    # allows you to specify custom validation rules that will be applied
+    # during EDI document processing, including element length constraints,
+    # code list modifications, and element requirement changes. These
+    # validation options provide flexibility to accommodate trading
+    # partner-specific requirements while maintaining EDI compliance. The
+    # validation rules are applied in addition to standard X12 validation to
+    # ensure documents meet both standard and custom requirements.
+    #
+    # @!attribute [rw] validation_rules
+    #   Specifies a list of validation rules to apply during EDI document
+    #   processing. These rules can include code list modifications, element
+    #   length constraints, and element requirement changes.
+    #   @return [Array<Types::X12ValidationRule>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/b2bi-2022-06-23/X12ValidationOptions AWS API Documentation
+    #
+    class X12ValidationOptions < Struct.new(
+      :validation_rules)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents a single validation rule that can be applied during X12 EDI
+    # processing. This is a union type that can contain one of several
+    # specific validation rule types: code list validation rules for
+    # modifying allowed element codes, element length validation rules for
+    # enforcing custom length constraints, or element requirement validation
+    # rules for changing mandatory/optional status. Each validation rule
+    # targets specific aspects of EDI document validation to ensure
+    # compliance with trading partner requirements and business rules.
+    #
+    # @note X12ValidationRule is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note X12ValidationRule is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of X12ValidationRule corresponding to the set member.
+    #
+    # @!attribute [rw] code_list_validation_rule
+    #   Specifies a code list validation rule that modifies the allowed code
+    #   values for a specific X12 element. This rule enables you to
+    #   customize which codes are considered valid for an element, allowing
+    #   for trading partner-specific code requirements.
+    #   @return [Types::X12CodeListValidationRule]
+    #
+    # @!attribute [rw] element_length_validation_rule
+    #   Specifies an element length validation rule that defines custom
+    #   length constraints for a specific X12 element. This rule allows you
+    #   to enforce minimum and maximum length requirements that may differ
+    #   from the standard X12 specification.
+    #   @return [Types::X12ElementLengthValidationRule]
+    #
+    # @!attribute [rw] element_requirement_validation_rule
+    #   Specifies an element requirement validation rule that modifies
+    #   whether a specific X12 element is required or optional within a
+    #   segment. This rule provides flexibility to accommodate different
+    #   trading partner requirements for element presence.
+    #   @return [Types::X12ElementRequirementValidationRule]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/b2bi-2022-06-23/X12ValidationRule AWS API Documentation
+    #
+    class X12ValidationRule < Struct.new(
+      :code_list_validation_rule,
+      :element_length_validation_rule,
+      :element_requirement_validation_rule,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class CodeListValidationRule < X12ValidationRule; end
+      class ElementLengthValidationRule < X12ValidationRule; end
+      class ElementRequirementValidationRule < X12ValidationRule; end
+      class Unknown < X12ValidationRule; end
     end
 
   end

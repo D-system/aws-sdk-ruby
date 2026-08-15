@@ -95,8 +95,8 @@ module Aws::DirectConnect
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::DirectConnect
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::DirectConnect
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::DirectConnect
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::DirectConnect
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::DirectConnect
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::DirectConnect
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::DirectConnect
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -605,6 +609,8 @@ module Aws::DirectConnect
     #   * {Types::Connection#port_encryption_status #port_encryption_status} => String
     #   * {Types::Connection#encryption_mode #encryption_mode} => String
     #   * {Types::Connection#mac_sec_keys #mac_sec_keys} => Array&lt;Types::MacSecKey&gt;
+    #   * {Types::Connection#rate_limiter_status #rate_limiter_status} => Types::RateLimiterStatus
+    #   * {Types::Connection#partner_interconnect_mac_sec_capable #partner_interconnect_mac_sec_capable} => Boolean
     #
     # @example Request syntax with placeholder values
     #
@@ -646,6 +652,11 @@ module Aws::DirectConnect
     #   resp.mac_sec_keys[0].ckn #=> String
     #   resp.mac_sec_keys[0].state #=> String
     #   resp.mac_sec_keys[0].start_on #=> String
+    #   resp.rate_limiter_status.max_allowed #=> Integer
+    #   resp.rate_limiter_status.in_use #=> Integer
+    #   resp.rate_limiter_status.remaining #=> Integer
+    #   resp.rate_limiter_status.total_bandwidth #=> String
+    #   resp.partner_interconnect_mac_sec_capable #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/AllocateConnectionOnInterconnect AWS API Documentation
     #
@@ -716,6 +727,8 @@ module Aws::DirectConnect
     #   * {Types::Connection#port_encryption_status #port_encryption_status} => String
     #   * {Types::Connection#encryption_mode #encryption_mode} => String
     #   * {Types::Connection#mac_sec_keys #mac_sec_keys} => Array&lt;Types::MacSecKey&gt;
+    #   * {Types::Connection#rate_limiter_status #rate_limiter_status} => Types::RateLimiterStatus
+    #   * {Types::Connection#partner_interconnect_mac_sec_capable #partner_interconnect_mac_sec_capable} => Boolean
     #
     # @example Request syntax with placeholder values
     #
@@ -763,6 +776,11 @@ module Aws::DirectConnect
     #   resp.mac_sec_keys[0].ckn #=> String
     #   resp.mac_sec_keys[0].state #=> String
     #   resp.mac_sec_keys[0].start_on #=> String
+    #   resp.rate_limiter_status.max_allowed #=> Integer
+    #   resp.rate_limiter_status.in_use #=> Integer
+    #   resp.rate_limiter_status.remaining #=> Integer
+    #   resp.rate_limiter_status.total_bandwidth #=> String
+    #   resp.partner_interconnect_mac_sec_capable #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/AllocateHostedConnection AWS API Documentation
     #
@@ -802,6 +820,7 @@ module Aws::DirectConnect
     #   * {Types::VirtualInterface#virtual_interface_name #virtual_interface_name} => String
     #   * {Types::VirtualInterface#vlan #vlan} => Integer
     #   * {Types::VirtualInterface#asn #asn} => Integer
+    #   * {Types::VirtualInterface#asn_long #asn_long} => Integer
     #   * {Types::VirtualInterface#amazon_side_asn #amazon_side_asn} => Integer
     #   * {Types::VirtualInterface#auth_key #auth_key} => String
     #   * {Types::VirtualInterface#amazon_address #amazon_address} => String
@@ -820,6 +839,7 @@ module Aws::DirectConnect
     #   * {Types::VirtualInterface#aws_logical_device_id #aws_logical_device_id} => String
     #   * {Types::VirtualInterface#tags #tags} => Array&lt;Types::Tag&gt;
     #   * {Types::VirtualInterface#site_link_enabled #site_link_enabled} => Boolean
+    #   * {Types::VirtualInterface#rate_limit #rate_limit} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -829,7 +849,8 @@ module Aws::DirectConnect
     #     new_private_virtual_interface_allocation: { # required
     #       virtual_interface_name: "VirtualInterfaceName", # required
     #       vlan: 1, # required
-    #       asn: 1, # required
+    #       asn: 1,
+    #       asn_long: 1,
     #       mtu: 1,
     #       auth_key: "BGPAuthKey",
     #       amazon_address: "AmazonAddress",
@@ -841,6 +862,7 @@ module Aws::DirectConnect
     #           value: "TagValue",
     #         },
     #       ],
+    #       rate_limit: "RateLimit",
     #     },
     #   })
     #
@@ -854,12 +876,13 @@ module Aws::DirectConnect
     #   resp.virtual_interface_name #=> String
     #   resp.vlan #=> Integer
     #   resp.asn #=> Integer
+    #   resp.asn_long #=> Integer
     #   resp.amazon_side_asn #=> Integer
     #   resp.auth_key #=> String
     #   resp.amazon_address #=> String
     #   resp.customer_address #=> String
     #   resp.address_family #=> String, one of "ipv4", "ipv6"
-    #   resp.virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "deleting", "deleted", "rejected", "unknown"
+    #   resp.virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "testing", "deleting", "deleted", "rejected", "unknown"
     #   resp.customer_router_config #=> String
     #   resp.mtu #=> Integer
     #   resp.jumbo_frame_capable #=> Boolean
@@ -870,6 +893,7 @@ module Aws::DirectConnect
     #   resp.bgp_peers #=> Array
     #   resp.bgp_peers[0].bgp_peer_id #=> String
     #   resp.bgp_peers[0].asn #=> Integer
+    #   resp.bgp_peers[0].asn_long #=> Integer
     #   resp.bgp_peers[0].auth_key #=> String
     #   resp.bgp_peers[0].address_family #=> String, one of "ipv4", "ipv6"
     #   resp.bgp_peers[0].amazon_address #=> String
@@ -885,6 +909,7 @@ module Aws::DirectConnect
     #   resp.tags[0].key #=> String
     #   resp.tags[0].value #=> String
     #   resp.site_link_enabled #=> Boolean
+    #   resp.rate_limit #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/AllocatePrivateVirtualInterface AWS API Documentation
     #
@@ -933,6 +958,7 @@ module Aws::DirectConnect
     #   * {Types::VirtualInterface#virtual_interface_name #virtual_interface_name} => String
     #   * {Types::VirtualInterface#vlan #vlan} => Integer
     #   * {Types::VirtualInterface#asn #asn} => Integer
+    #   * {Types::VirtualInterface#asn_long #asn_long} => Integer
     #   * {Types::VirtualInterface#amazon_side_asn #amazon_side_asn} => Integer
     #   * {Types::VirtualInterface#auth_key #auth_key} => String
     #   * {Types::VirtualInterface#amazon_address #amazon_address} => String
@@ -951,6 +977,7 @@ module Aws::DirectConnect
     #   * {Types::VirtualInterface#aws_logical_device_id #aws_logical_device_id} => String
     #   * {Types::VirtualInterface#tags #tags} => Array&lt;Types::Tag&gt;
     #   * {Types::VirtualInterface#site_link_enabled #site_link_enabled} => Boolean
+    #   * {Types::VirtualInterface#rate_limit #rate_limit} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -960,7 +987,8 @@ module Aws::DirectConnect
     #     new_public_virtual_interface_allocation: { # required
     #       virtual_interface_name: "VirtualInterfaceName", # required
     #       vlan: 1, # required
-    #       asn: 1, # required
+    #       asn: 1,
+    #       asn_long: 1,
     #       auth_key: "BGPAuthKey",
     #       amazon_address: "AmazonAddress",
     #       customer_address: "CustomerAddress",
@@ -976,6 +1004,7 @@ module Aws::DirectConnect
     #           value: "TagValue",
     #         },
     #       ],
+    #       rate_limit: "RateLimit",
     #     },
     #   })
     #
@@ -989,12 +1018,13 @@ module Aws::DirectConnect
     #   resp.virtual_interface_name #=> String
     #   resp.vlan #=> Integer
     #   resp.asn #=> Integer
+    #   resp.asn_long #=> Integer
     #   resp.amazon_side_asn #=> Integer
     #   resp.auth_key #=> String
     #   resp.amazon_address #=> String
     #   resp.customer_address #=> String
     #   resp.address_family #=> String, one of "ipv4", "ipv6"
-    #   resp.virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "deleting", "deleted", "rejected", "unknown"
+    #   resp.virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "testing", "deleting", "deleted", "rejected", "unknown"
     #   resp.customer_router_config #=> String
     #   resp.mtu #=> Integer
     #   resp.jumbo_frame_capable #=> Boolean
@@ -1005,6 +1035,7 @@ module Aws::DirectConnect
     #   resp.bgp_peers #=> Array
     #   resp.bgp_peers[0].bgp_peer_id #=> String
     #   resp.bgp_peers[0].asn #=> Integer
+    #   resp.bgp_peers[0].asn_long #=> Integer
     #   resp.bgp_peers[0].auth_key #=> String
     #   resp.bgp_peers[0].address_family #=> String, one of "ipv4", "ipv6"
     #   resp.bgp_peers[0].amazon_address #=> String
@@ -1020,6 +1051,7 @@ module Aws::DirectConnect
     #   resp.tags[0].key #=> String
     #   resp.tags[0].value #=> String
     #   resp.site_link_enabled #=> Boolean
+    #   resp.rate_limit #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/AllocatePublicVirtualInterface AWS API Documentation
     #
@@ -1066,6 +1098,7 @@ module Aws::DirectConnect
     #       virtual_interface_name: "VirtualInterfaceName",
     #       vlan: 1,
     #       asn: 1,
+    #       asn_long: 1,
     #       mtu: 1,
     #       auth_key: "BGPAuthKey",
     #       amazon_address: "AmazonAddress",
@@ -1077,6 +1110,7 @@ module Aws::DirectConnect
     #           value: "TagValue",
     #         },
     #       ],
+    #       rate_limit: "RateLimit",
     #     },
     #   })
     #
@@ -1090,12 +1124,13 @@ module Aws::DirectConnect
     #   resp.virtual_interface.virtual_interface_name #=> String
     #   resp.virtual_interface.vlan #=> Integer
     #   resp.virtual_interface.asn #=> Integer
+    #   resp.virtual_interface.asn_long #=> Integer
     #   resp.virtual_interface.amazon_side_asn #=> Integer
     #   resp.virtual_interface.auth_key #=> String
     #   resp.virtual_interface.amazon_address #=> String
     #   resp.virtual_interface.customer_address #=> String
     #   resp.virtual_interface.address_family #=> String, one of "ipv4", "ipv6"
-    #   resp.virtual_interface.virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "deleting", "deleted", "rejected", "unknown"
+    #   resp.virtual_interface.virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "testing", "deleting", "deleted", "rejected", "unknown"
     #   resp.virtual_interface.customer_router_config #=> String
     #   resp.virtual_interface.mtu #=> Integer
     #   resp.virtual_interface.jumbo_frame_capable #=> Boolean
@@ -1106,6 +1141,7 @@ module Aws::DirectConnect
     #   resp.virtual_interface.bgp_peers #=> Array
     #   resp.virtual_interface.bgp_peers[0].bgp_peer_id #=> String
     #   resp.virtual_interface.bgp_peers[0].asn #=> Integer
+    #   resp.virtual_interface.bgp_peers[0].asn_long #=> Integer
     #   resp.virtual_interface.bgp_peers[0].auth_key #=> String
     #   resp.virtual_interface.bgp_peers[0].address_family #=> String, one of "ipv4", "ipv6"
     #   resp.virtual_interface.bgp_peers[0].amazon_address #=> String
@@ -1121,6 +1157,7 @@ module Aws::DirectConnect
     #   resp.virtual_interface.tags[0].key #=> String
     #   resp.virtual_interface.tags[0].value #=> String
     #   resp.virtual_interface.site_link_enabled #=> Boolean
+    #   resp.virtual_interface.rate_limit #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/AllocateTransitVirtualInterface AWS API Documentation
     #
@@ -1181,6 +1218,8 @@ module Aws::DirectConnect
     #   * {Types::Connection#port_encryption_status #port_encryption_status} => String
     #   * {Types::Connection#encryption_mode #encryption_mode} => String
     #   * {Types::Connection#mac_sec_keys #mac_sec_keys} => Array&lt;Types::MacSecKey&gt;
+    #   * {Types::Connection#rate_limiter_status #rate_limiter_status} => Types::RateLimiterStatus
+    #   * {Types::Connection#partner_interconnect_mac_sec_capable #partner_interconnect_mac_sec_capable} => Boolean
     #
     # @example Request syntax with placeholder values
     #
@@ -1219,6 +1258,11 @@ module Aws::DirectConnect
     #   resp.mac_sec_keys[0].ckn #=> String
     #   resp.mac_sec_keys[0].state #=> String
     #   resp.mac_sec_keys[0].start_on #=> String
+    #   resp.rate_limiter_status.max_allowed #=> Integer
+    #   resp.rate_limiter_status.in_use #=> Integer
+    #   resp.rate_limiter_status.remaining #=> Integer
+    #   resp.rate_limiter_status.total_bandwidth #=> String
+    #   resp.partner_interconnect_mac_sec_capable #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/AssociateConnectionWithLag AWS API Documentation
     #
@@ -1270,6 +1314,8 @@ module Aws::DirectConnect
     #   * {Types::Connection#port_encryption_status #port_encryption_status} => String
     #   * {Types::Connection#encryption_mode #encryption_mode} => String
     #   * {Types::Connection#mac_sec_keys #mac_sec_keys} => Array&lt;Types::MacSecKey&gt;
+    #   * {Types::Connection#rate_limiter_status #rate_limiter_status} => Types::RateLimiterStatus
+    #   * {Types::Connection#partner_interconnect_mac_sec_capable #partner_interconnect_mac_sec_capable} => Boolean
     #
     # @example Request syntax with placeholder values
     #
@@ -1308,6 +1354,11 @@ module Aws::DirectConnect
     #   resp.mac_sec_keys[0].ckn #=> String
     #   resp.mac_sec_keys[0].state #=> String
     #   resp.mac_sec_keys[0].start_on #=> String
+    #   resp.rate_limiter_status.max_allowed #=> Integer
+    #   resp.rate_limiter_status.in_use #=> Integer
+    #   resp.rate_limiter_status.remaining #=> Integer
+    #   resp.rate_limiter_status.total_bandwidth #=> String
+    #   resp.partner_interconnect_mac_sec_capable #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/AssociateHostedConnection AWS API Documentation
     #
@@ -1319,8 +1370,8 @@ module Aws::DirectConnect
     end
 
     # Associates a MAC Security (MACsec) Connection Key Name (CKN)/
-    # Connectivity Association Key (CAK) pair with an Direct Connect
-    # dedicated connection.
+    # Connectivity Association Key (CAK) pair with a Direct Connect
+    # connection.
     #
     # You must supply either the `secretARN,` or the CKN/CAK (`ckn` and
     # `cak`) pair in the request.
@@ -1334,15 +1385,15 @@ module Aws::DirectConnect
     # [1]: https://docs.aws.amazon.com/directconnect/latest/UserGuide/direct-connect-mac-sec-getting-started.html#mac-sec-key-consideration
     #
     # @option params [required, String] :connection_id
-    #   The ID of the dedicated connection (dxcon-xxxx), or the ID of the LAG
-    #   (dxlag-xxxx).
+    #   The ID of the dedicated connection (dxcon-xxxx), interconnect
+    #   (dxcon-xxxx), or LAG (dxlag-xxxx).
     #
-    #   You can use DescribeConnections or DescribeLags to retrieve connection
-    #   ID.
+    #   You can use DescribeConnections, DescribeInterconnects, or
+    #   DescribeLags to retrieve connection ID.
     #
     # @option params [String] :secret_arn
     #   The Amazon Resource Name (ARN) of the MAC Security (MACsec) secret key
-    #   to associate with the dedicated connection.
+    #   to associate with the connection.
     #
     #   You can use DescribeConnections or DescribeLags to retrieve the MAC
     #   Security (MACsec) secret key.
@@ -1351,8 +1402,7 @@ module Aws::DirectConnect
     #   request parameters.
     #
     # @option params [String] :ckn
-    #   The MAC Security (MACsec) CKN to associate with the dedicated
-    #   connection.
+    #   The MAC Security (MACsec) CKN to associate with the connection.
     #
     #   You can create the CKN/CAK pair using an industry standard tool.
     #
@@ -1362,8 +1412,7 @@ module Aws::DirectConnect
     #   parameter and not use the `secretARN` request parameter.
     #
     # @option params [String] :cak
-    #   The MAC Security (MACsec) CAK to associate with the dedicated
-    #   connection.
+    #   The MAC Security (MACsec) CAK to associate with the connection.
     #
     #   You can create the CKN/CAK pair using an industry standard tool.
     #
@@ -1437,6 +1486,7 @@ module Aws::DirectConnect
     #   * {Types::VirtualInterface#virtual_interface_name #virtual_interface_name} => String
     #   * {Types::VirtualInterface#vlan #vlan} => Integer
     #   * {Types::VirtualInterface#asn #asn} => Integer
+    #   * {Types::VirtualInterface#asn_long #asn_long} => Integer
     #   * {Types::VirtualInterface#amazon_side_asn #amazon_side_asn} => Integer
     #   * {Types::VirtualInterface#auth_key #auth_key} => String
     #   * {Types::VirtualInterface#amazon_address #amazon_address} => String
@@ -1455,6 +1505,7 @@ module Aws::DirectConnect
     #   * {Types::VirtualInterface#aws_logical_device_id #aws_logical_device_id} => String
     #   * {Types::VirtualInterface#tags #tags} => Array&lt;Types::Tag&gt;
     #   * {Types::VirtualInterface#site_link_enabled #site_link_enabled} => Boolean
+    #   * {Types::VirtualInterface#rate_limit #rate_limit} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -1473,12 +1524,13 @@ module Aws::DirectConnect
     #   resp.virtual_interface_name #=> String
     #   resp.vlan #=> Integer
     #   resp.asn #=> Integer
+    #   resp.asn_long #=> Integer
     #   resp.amazon_side_asn #=> Integer
     #   resp.auth_key #=> String
     #   resp.amazon_address #=> String
     #   resp.customer_address #=> String
     #   resp.address_family #=> String, one of "ipv4", "ipv6"
-    #   resp.virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "deleting", "deleted", "rejected", "unknown"
+    #   resp.virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "testing", "deleting", "deleted", "rejected", "unknown"
     #   resp.customer_router_config #=> String
     #   resp.mtu #=> Integer
     #   resp.jumbo_frame_capable #=> Boolean
@@ -1489,6 +1541,7 @@ module Aws::DirectConnect
     #   resp.bgp_peers #=> Array
     #   resp.bgp_peers[0].bgp_peer_id #=> String
     #   resp.bgp_peers[0].asn #=> Integer
+    #   resp.bgp_peers[0].asn_long #=> Integer
     #   resp.bgp_peers[0].auth_key #=> String
     #   resp.bgp_peers[0].address_family #=> String, one of "ipv4", "ipv6"
     #   resp.bgp_peers[0].amazon_address #=> String
@@ -1504,6 +1557,7 @@ module Aws::DirectConnect
     #   resp.tags[0].key #=> String
     #   resp.tags[0].value #=> String
     #   resp.site_link_enabled #=> Boolean
+    #   resp.rate_limit #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/AssociateVirtualInterface AWS API Documentation
     #
@@ -1607,7 +1661,7 @@ module Aws::DirectConnect
     #
     # @example Response structure
     #
-    #   resp.virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "deleting", "deleted", "rejected", "unknown"
+    #   resp.virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "testing", "deleting", "deleted", "rejected", "unknown"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/ConfirmPrivateVirtualInterface AWS API Documentation
     #
@@ -1639,7 +1693,7 @@ module Aws::DirectConnect
     #
     # @example Response structure
     #
-    #   resp.virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "deleting", "deleted", "rejected", "unknown"
+    #   resp.virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "testing", "deleting", "deleted", "rejected", "unknown"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/ConfirmPublicVirtualInterface AWS API Documentation
     #
@@ -1676,7 +1730,7 @@ module Aws::DirectConnect
     #
     # @example Response structure
     #
-    #   resp.virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "deleting", "deleted", "rejected", "unknown"
+    #   resp.virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "testing", "deleting", "deleted", "rejected", "unknown"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/ConfirmTransitVirtualInterface AWS API Documentation
     #
@@ -1733,6 +1787,7 @@ module Aws::DirectConnect
     #     virtual_interface_id: "VirtualInterfaceId",
     #     new_bgp_peer: {
     #       asn: 1,
+    #       asn_long: 1,
     #       auth_key: "BGPAuthKey",
     #       address_family: "ipv4", # accepts ipv4, ipv6
     #       amazon_address: "AmazonAddress",
@@ -1750,12 +1805,13 @@ module Aws::DirectConnect
     #   resp.virtual_interface.virtual_interface_name #=> String
     #   resp.virtual_interface.vlan #=> Integer
     #   resp.virtual_interface.asn #=> Integer
+    #   resp.virtual_interface.asn_long #=> Integer
     #   resp.virtual_interface.amazon_side_asn #=> Integer
     #   resp.virtual_interface.auth_key #=> String
     #   resp.virtual_interface.amazon_address #=> String
     #   resp.virtual_interface.customer_address #=> String
     #   resp.virtual_interface.address_family #=> String, one of "ipv4", "ipv6"
-    #   resp.virtual_interface.virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "deleting", "deleted", "rejected", "unknown"
+    #   resp.virtual_interface.virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "testing", "deleting", "deleted", "rejected", "unknown"
     #   resp.virtual_interface.customer_router_config #=> String
     #   resp.virtual_interface.mtu #=> Integer
     #   resp.virtual_interface.jumbo_frame_capable #=> Boolean
@@ -1766,6 +1822,7 @@ module Aws::DirectConnect
     #   resp.virtual_interface.bgp_peers #=> Array
     #   resp.virtual_interface.bgp_peers[0].bgp_peer_id #=> String
     #   resp.virtual_interface.bgp_peers[0].asn #=> Integer
+    #   resp.virtual_interface.bgp_peers[0].asn_long #=> Integer
     #   resp.virtual_interface.bgp_peers[0].auth_key #=> String
     #   resp.virtual_interface.bgp_peers[0].address_family #=> String, one of "ipv4", "ipv6"
     #   resp.virtual_interface.bgp_peers[0].amazon_address #=> String
@@ -1781,6 +1838,7 @@ module Aws::DirectConnect
     #   resp.virtual_interface.tags[0].key #=> String
     #   resp.virtual_interface.tags[0].value #=> String
     #   resp.virtual_interface.site_link_enabled #=> Boolean
+    #   resp.virtual_interface.rate_limit #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/CreateBGPPeer AWS API Documentation
     #
@@ -1829,13 +1887,13 @@ module Aws::DirectConnect
     #   Indicates whether you want the connection to support MAC Security
     #   (MACsec).
     #
-    #   MAC Security (MACsec) is only available on dedicated connections. For
-    #   information about MAC Security (MACsec) prerequisties, see [MACsec
-    #   prerequisties][1] in the *Direct Connect User Guide*.
+    #   MAC Security (MACsec) is unavailable on hosted connections. For
+    #   information about MAC Security (MACsec) prerequisites, see [MAC
+    #   Security in Direct Connect][1] in the *Direct Connect User Guide*.
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/directconnect/latest/UserGuide/direct-connect-mac-sec-getting-started.html#mac-sec-prerequisites
+    #   [1]: https://docs.aws.amazon.com/directconnect/latest/UserGuide/MACSec.html
     #
     # @return [Types::Connection] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1861,6 +1919,8 @@ module Aws::DirectConnect
     #   * {Types::Connection#port_encryption_status #port_encryption_status} => String
     #   * {Types::Connection#encryption_mode #encryption_mode} => String
     #   * {Types::Connection#mac_sec_keys #mac_sec_keys} => Array&lt;Types::MacSecKey&gt;
+    #   * {Types::Connection#rate_limiter_status #rate_limiter_status} => Types::RateLimiterStatus
+    #   * {Types::Connection#partner_interconnect_mac_sec_capable #partner_interconnect_mac_sec_capable} => Boolean
     #
     # @example Request syntax with placeholder values
     #
@@ -1909,6 +1969,11 @@ module Aws::DirectConnect
     #   resp.mac_sec_keys[0].ckn #=> String
     #   resp.mac_sec_keys[0].state #=> String
     #   resp.mac_sec_keys[0].start_on #=> String
+    #   resp.rate_limiter_status.max_allowed #=> Integer
+    #   resp.rate_limiter_status.in_use #=> Integer
+    #   resp.rate_limiter_status.remaining #=> Integer
+    #   resp.rate_limiter_status.total_bandwidth #=> String
+    #   resp.partner_interconnect_mac_sec_capable #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/CreateConnection AWS API Documentation
     #
@@ -1932,6 +1997,9 @@ module Aws::DirectConnect
     # @option params [required, String] :direct_connect_gateway_name
     #   The name of the Direct Connect gateway.
     #
+    # @option params [Array<Types::Tag>] :tags
+    #   The key-value pair tags associated with the request.
+    #
     # @option params [Integer] :amazon_side_asn
     #   The autonomous system number (ASN) for Border Gateway Protocol (BGP)
     #   to be configured on the Amazon side of the connection. The ASN must be
@@ -1946,6 +2014,12 @@ module Aws::DirectConnect
     #
     #   resp = client.create_direct_connect_gateway({
     #     direct_connect_gateway_name: "DirectConnectGatewayName", # required
+    #     tags: [
+    #       {
+    #         key: "TagKey", # required
+    #         value: "TagValue",
+    #       },
+    #     ],
     #     amazon_side_asn: 1,
     #   })
     #
@@ -1957,6 +2031,9 @@ module Aws::DirectConnect
     #   resp.direct_connect_gateway.owner_account #=> String
     #   resp.direct_connect_gateway.direct_connect_gateway_state #=> String, one of "pending", "available", "deleting", "deleted"
     #   resp.direct_connect_gateway.state_change_error #=> String
+    #   resp.direct_connect_gateway.tags #=> Array
+    #   resp.direct_connect_gateway.tags[0].key #=> String
+    #   resp.direct_connect_gateway.tags[0].value #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/CreateDirectConnectGateway AWS API Documentation
     #
@@ -2153,6 +2230,10 @@ module Aws::DirectConnect
     # @option params [String] :provider_name
     #   The name of the service provider associated with the interconnect.
     #
+    # @option params [Boolean] :request_mac_sec
+    #   Indicates whether you want the interconnect to support MAC Security
+    #   (MACsec).
+    #
     # @return [Types::Interconnect] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::Interconnect#interconnect_id #interconnect_id} => String
@@ -2170,6 +2251,10 @@ module Aws::DirectConnect
     #   * {Types::Interconnect#has_logical_redundancy #has_logical_redundancy} => String
     #   * {Types::Interconnect#tags #tags} => Array&lt;Types::Tag&gt;
     #   * {Types::Interconnect#provider_name #provider_name} => String
+    #   * {Types::Interconnect#mac_sec_capable #mac_sec_capable} => Boolean
+    #   * {Types::Interconnect#port_encryption_status #port_encryption_status} => String
+    #   * {Types::Interconnect#encryption_mode #encryption_mode} => String
+    #   * {Types::Interconnect#mac_sec_keys #mac_sec_keys} => Array&lt;Types::MacSecKey&gt;
     #
     # @example Request syntax with placeholder values
     #
@@ -2185,6 +2270,7 @@ module Aws::DirectConnect
     #       },
     #     ],
     #     provider_name: "ProviderName",
+    #     request_mac_sec: false,
     #   })
     #
     # @example Response structure
@@ -2206,6 +2292,14 @@ module Aws::DirectConnect
     #   resp.tags[0].key #=> String
     #   resp.tags[0].value #=> String
     #   resp.provider_name #=> String
+    #   resp.mac_sec_capable #=> Boolean
+    #   resp.port_encryption_status #=> String
+    #   resp.encryption_mode #=> String
+    #   resp.mac_sec_keys #=> Array
+    #   resp.mac_sec_keys[0].secret_arn #=> String
+    #   resp.mac_sec_keys[0].ckn #=> String
+    #   resp.mac_sec_keys[0].state #=> String
+    #   resp.mac_sec_keys[0].start_on #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/CreateInterconnect AWS API Documentation
     #
@@ -2309,6 +2403,7 @@ module Aws::DirectConnect
     #   * {Types::Lag#mac_sec_capable #mac_sec_capable} => Boolean
     #   * {Types::Lag#encryption_mode #encryption_mode} => String
     #   * {Types::Lag#mac_sec_keys #mac_sec_keys} => Array&lt;Types::MacSecKey&gt;
+    #   * {Types::Lag#rate_limiter_status #rate_limiter_status} => Types::RateLimiterStatus
     #
     # @example Request syntax with placeholder values
     #
@@ -2377,6 +2472,11 @@ module Aws::DirectConnect
     #   resp.connections[0].mac_sec_keys[0].ckn #=> String
     #   resp.connections[0].mac_sec_keys[0].state #=> String
     #   resp.connections[0].mac_sec_keys[0].start_on #=> String
+    #   resp.connections[0].rate_limiter_status.max_allowed #=> Integer
+    #   resp.connections[0].rate_limiter_status.in_use #=> Integer
+    #   resp.connections[0].rate_limiter_status.remaining #=> Integer
+    #   resp.connections[0].rate_limiter_status.total_bandwidth #=> String
+    #   resp.connections[0].partner_interconnect_mac_sec_capable #=> Boolean
     #   resp.allows_hosted_connections #=> Boolean
     #   resp.jumbo_frame_capable #=> Boolean
     #   resp.has_logical_redundancy #=> String, one of "unknown", "yes", "no"
@@ -2391,6 +2491,10 @@ module Aws::DirectConnect
     #   resp.mac_sec_keys[0].ckn #=> String
     #   resp.mac_sec_keys[0].state #=> String
     #   resp.mac_sec_keys[0].start_on #=> String
+    #   resp.rate_limiter_status.max_allowed #=> Integer
+    #   resp.rate_limiter_status.in_use #=> Integer
+    #   resp.rate_limiter_status.remaining #=> Integer
+    #   resp.rate_limiter_status.total_bandwidth #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/CreateLag AWS API Documentation
     #
@@ -2435,6 +2539,7 @@ module Aws::DirectConnect
     #   * {Types::VirtualInterface#virtual_interface_name #virtual_interface_name} => String
     #   * {Types::VirtualInterface#vlan #vlan} => Integer
     #   * {Types::VirtualInterface#asn #asn} => Integer
+    #   * {Types::VirtualInterface#asn_long #asn_long} => Integer
     #   * {Types::VirtualInterface#amazon_side_asn #amazon_side_asn} => Integer
     #   * {Types::VirtualInterface#auth_key #auth_key} => String
     #   * {Types::VirtualInterface#amazon_address #amazon_address} => String
@@ -2453,6 +2558,7 @@ module Aws::DirectConnect
     #   * {Types::VirtualInterface#aws_logical_device_id #aws_logical_device_id} => String
     #   * {Types::VirtualInterface#tags #tags} => Array&lt;Types::Tag&gt;
     #   * {Types::VirtualInterface#site_link_enabled #site_link_enabled} => Boolean
+    #   * {Types::VirtualInterface#rate_limit #rate_limit} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -2461,7 +2567,8 @@ module Aws::DirectConnect
     #     new_private_virtual_interface: { # required
     #       virtual_interface_name: "VirtualInterfaceName", # required
     #       vlan: 1, # required
-    #       asn: 1, # required
+    #       asn: 1,
+    #       asn_long: 1,
     #       mtu: 1,
     #       auth_key: "BGPAuthKey",
     #       amazon_address: "AmazonAddress",
@@ -2476,6 +2583,7 @@ module Aws::DirectConnect
     #         },
     #       ],
     #       enable_site_link: false,
+    #       rate_limit: "RateLimit",
     #     },
     #   })
     #
@@ -2489,12 +2597,13 @@ module Aws::DirectConnect
     #   resp.virtual_interface_name #=> String
     #   resp.vlan #=> Integer
     #   resp.asn #=> Integer
+    #   resp.asn_long #=> Integer
     #   resp.amazon_side_asn #=> Integer
     #   resp.auth_key #=> String
     #   resp.amazon_address #=> String
     #   resp.customer_address #=> String
     #   resp.address_family #=> String, one of "ipv4", "ipv6"
-    #   resp.virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "deleting", "deleted", "rejected", "unknown"
+    #   resp.virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "testing", "deleting", "deleted", "rejected", "unknown"
     #   resp.customer_router_config #=> String
     #   resp.mtu #=> Integer
     #   resp.jumbo_frame_capable #=> Boolean
@@ -2505,6 +2614,7 @@ module Aws::DirectConnect
     #   resp.bgp_peers #=> Array
     #   resp.bgp_peers[0].bgp_peer_id #=> String
     #   resp.bgp_peers[0].asn #=> Integer
+    #   resp.bgp_peers[0].asn_long #=> Integer
     #   resp.bgp_peers[0].auth_key #=> String
     #   resp.bgp_peers[0].address_family #=> String, one of "ipv4", "ipv6"
     #   resp.bgp_peers[0].amazon_address #=> String
@@ -2520,6 +2630,7 @@ module Aws::DirectConnect
     #   resp.tags[0].key #=> String
     #   resp.tags[0].value #=> String
     #   resp.site_link_enabled #=> Boolean
+    #   resp.rate_limit #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/CreatePrivateVirtualInterface AWS API Documentation
     #
@@ -2555,6 +2666,7 @@ module Aws::DirectConnect
     #   * {Types::VirtualInterface#virtual_interface_name #virtual_interface_name} => String
     #   * {Types::VirtualInterface#vlan #vlan} => Integer
     #   * {Types::VirtualInterface#asn #asn} => Integer
+    #   * {Types::VirtualInterface#asn_long #asn_long} => Integer
     #   * {Types::VirtualInterface#amazon_side_asn #amazon_side_asn} => Integer
     #   * {Types::VirtualInterface#auth_key #auth_key} => String
     #   * {Types::VirtualInterface#amazon_address #amazon_address} => String
@@ -2573,6 +2685,7 @@ module Aws::DirectConnect
     #   * {Types::VirtualInterface#aws_logical_device_id #aws_logical_device_id} => String
     #   * {Types::VirtualInterface#tags #tags} => Array&lt;Types::Tag&gt;
     #   * {Types::VirtualInterface#site_link_enabled #site_link_enabled} => Boolean
+    #   * {Types::VirtualInterface#rate_limit #rate_limit} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -2581,7 +2694,8 @@ module Aws::DirectConnect
     #     new_public_virtual_interface: { # required
     #       virtual_interface_name: "VirtualInterfaceName", # required
     #       vlan: 1, # required
-    #       asn: 1, # required
+    #       asn: 1,
+    #       asn_long: 1,
     #       auth_key: "BGPAuthKey",
     #       amazon_address: "AmazonAddress",
     #       customer_address: "CustomerAddress",
@@ -2597,6 +2711,7 @@ module Aws::DirectConnect
     #           value: "TagValue",
     #         },
     #       ],
+    #       rate_limit: "RateLimit",
     #     },
     #   })
     #
@@ -2610,12 +2725,13 @@ module Aws::DirectConnect
     #   resp.virtual_interface_name #=> String
     #   resp.vlan #=> Integer
     #   resp.asn #=> Integer
+    #   resp.asn_long #=> Integer
     #   resp.amazon_side_asn #=> Integer
     #   resp.auth_key #=> String
     #   resp.amazon_address #=> String
     #   resp.customer_address #=> String
     #   resp.address_family #=> String, one of "ipv4", "ipv6"
-    #   resp.virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "deleting", "deleted", "rejected", "unknown"
+    #   resp.virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "testing", "deleting", "deleted", "rejected", "unknown"
     #   resp.customer_router_config #=> String
     #   resp.mtu #=> Integer
     #   resp.jumbo_frame_capable #=> Boolean
@@ -2626,6 +2742,7 @@ module Aws::DirectConnect
     #   resp.bgp_peers #=> Array
     #   resp.bgp_peers[0].bgp_peer_id #=> String
     #   resp.bgp_peers[0].asn #=> Integer
+    #   resp.bgp_peers[0].asn_long #=> Integer
     #   resp.bgp_peers[0].auth_key #=> String
     #   resp.bgp_peers[0].address_family #=> String, one of "ipv4", "ipv6"
     #   resp.bgp_peers[0].amazon_address #=> String
@@ -2641,6 +2758,7 @@ module Aws::DirectConnect
     #   resp.tags[0].key #=> String
     #   resp.tags[0].value #=> String
     #   resp.site_link_enabled #=> Boolean
+    #   resp.rate_limit #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/CreatePublicVirtualInterface AWS API Documentation
     #
@@ -2691,6 +2809,7 @@ module Aws::DirectConnect
     #       virtual_interface_name: "VirtualInterfaceName",
     #       vlan: 1,
     #       asn: 1,
+    #       asn_long: 1,
     #       mtu: 1,
     #       auth_key: "BGPAuthKey",
     #       amazon_address: "AmazonAddress",
@@ -2704,6 +2823,7 @@ module Aws::DirectConnect
     #         },
     #       ],
     #       enable_site_link: false,
+    #       rate_limit: "RateLimit",
     #     },
     #   })
     #
@@ -2717,12 +2837,13 @@ module Aws::DirectConnect
     #   resp.virtual_interface.virtual_interface_name #=> String
     #   resp.virtual_interface.vlan #=> Integer
     #   resp.virtual_interface.asn #=> Integer
+    #   resp.virtual_interface.asn_long #=> Integer
     #   resp.virtual_interface.amazon_side_asn #=> Integer
     #   resp.virtual_interface.auth_key #=> String
     #   resp.virtual_interface.amazon_address #=> String
     #   resp.virtual_interface.customer_address #=> String
     #   resp.virtual_interface.address_family #=> String, one of "ipv4", "ipv6"
-    #   resp.virtual_interface.virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "deleting", "deleted", "rejected", "unknown"
+    #   resp.virtual_interface.virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "testing", "deleting", "deleted", "rejected", "unknown"
     #   resp.virtual_interface.customer_router_config #=> String
     #   resp.virtual_interface.mtu #=> Integer
     #   resp.virtual_interface.jumbo_frame_capable #=> Boolean
@@ -2733,6 +2854,7 @@ module Aws::DirectConnect
     #   resp.virtual_interface.bgp_peers #=> Array
     #   resp.virtual_interface.bgp_peers[0].bgp_peer_id #=> String
     #   resp.virtual_interface.bgp_peers[0].asn #=> Integer
+    #   resp.virtual_interface.bgp_peers[0].asn_long #=> Integer
     #   resp.virtual_interface.bgp_peers[0].auth_key #=> String
     #   resp.virtual_interface.bgp_peers[0].address_family #=> String, one of "ipv4", "ipv6"
     #   resp.virtual_interface.bgp_peers[0].amazon_address #=> String
@@ -2748,6 +2870,7 @@ module Aws::DirectConnect
     #   resp.virtual_interface.tags[0].key #=> String
     #   resp.virtual_interface.tags[0].value #=> String
     #   resp.virtual_interface.site_link_enabled #=> Boolean
+    #   resp.virtual_interface.rate_limit #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/CreateTransitVirtualInterface AWS API Documentation
     #
@@ -2767,8 +2890,45 @@ module Aws::DirectConnect
     #   The ID of the virtual interface.
     #
     # @option params [Integer] :asn
-    #   The autonomous system (AS) number for Border Gateway Protocol (BGP)
+    #   The autonomous system number (ASN). The valid range is from 1 to
+    #   2147483646 for Border Gateway Protocol (BGP) configuration. If you
+    #   provide a number greater than the maximum, an error is returned. Use
+    #   `asnLong` instead.
+    #
+    #   * You can use `asnLong` or `asn`, but not both. We recommend using
+    #     `asnLong` as it supports a greater pool of numbers.
+    #
+    #   * If you provide a value in the same API call for both `asn` and
+    #     `asnLong`, the API will only accept the value for `asnLong`.
+    #
+    #   * If you enter a 4-byte ASN for the `asn` parameter, the API returns
+    #     an error.
+    #
+    #   * If you are using a 2-byte ASN, the API response will include the
+    #     2-byte value for both the `asn` and `asnLong` fields.
+    #
+    # @option params [Integer] :asn_long
+    #   The long ASN for the BGP peer to be deleted from a Direct Connect
+    #   virtual interface. The valid range is from 1 to 4294967294 for BGP
     #   configuration.
+    #
+    #   Note the following limitations when using `asnLong`:
+    #
+    #   * You can use `asnLong` or `asn`, but not both. We recommend using
+    #     `asnLong` as it supports a greater pool of numbers.
+    #
+    #   * `asnLong` accepts any valid ASN value, regardless if it's 2-byte or
+    #     4-byte.
+    #
+    #   * When using a 4-byte `asnLong`, the API response returns `0` for the
+    #     legacy `asn` attribute since 4-byte ASN values exceed the maximum
+    #     supported value of 2,147,483,647.
+    #
+    #   * If you are using a 2-byte ASN, the API response will include the
+    #     2-byte value for both the `asn` and `asnLong` fields.
+    #
+    #   * If you provide a value in the same API call for both `asn` and
+    #     `asnLong`, the API will only accept the value for `asnLong`.
     #
     # @option params [String] :customer_address
     #   The IP address assigned to the customer interface.
@@ -2785,6 +2945,7 @@ module Aws::DirectConnect
     #   resp = client.delete_bgp_peer({
     #     virtual_interface_id: "VirtualInterfaceId",
     #     asn: 1,
+    #     asn_long: 1,
     #     customer_address: "CustomerAddress",
     #     bgp_peer_id: "BGPPeerId",
     #   })
@@ -2799,12 +2960,13 @@ module Aws::DirectConnect
     #   resp.virtual_interface.virtual_interface_name #=> String
     #   resp.virtual_interface.vlan #=> Integer
     #   resp.virtual_interface.asn #=> Integer
+    #   resp.virtual_interface.asn_long #=> Integer
     #   resp.virtual_interface.amazon_side_asn #=> Integer
     #   resp.virtual_interface.auth_key #=> String
     #   resp.virtual_interface.amazon_address #=> String
     #   resp.virtual_interface.customer_address #=> String
     #   resp.virtual_interface.address_family #=> String, one of "ipv4", "ipv6"
-    #   resp.virtual_interface.virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "deleting", "deleted", "rejected", "unknown"
+    #   resp.virtual_interface.virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "testing", "deleting", "deleted", "rejected", "unknown"
     #   resp.virtual_interface.customer_router_config #=> String
     #   resp.virtual_interface.mtu #=> Integer
     #   resp.virtual_interface.jumbo_frame_capable #=> Boolean
@@ -2815,6 +2977,7 @@ module Aws::DirectConnect
     #   resp.virtual_interface.bgp_peers #=> Array
     #   resp.virtual_interface.bgp_peers[0].bgp_peer_id #=> String
     #   resp.virtual_interface.bgp_peers[0].asn #=> Integer
+    #   resp.virtual_interface.bgp_peers[0].asn_long #=> Integer
     #   resp.virtual_interface.bgp_peers[0].auth_key #=> String
     #   resp.virtual_interface.bgp_peers[0].address_family #=> String, one of "ipv4", "ipv6"
     #   resp.virtual_interface.bgp_peers[0].amazon_address #=> String
@@ -2830,6 +2993,7 @@ module Aws::DirectConnect
     #   resp.virtual_interface.tags[0].key #=> String
     #   resp.virtual_interface.tags[0].value #=> String
     #   resp.virtual_interface.site_link_enabled #=> Boolean
+    #   resp.virtual_interface.rate_limit #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/DeleteBGPPeer AWS API Documentation
     #
@@ -2874,6 +3038,8 @@ module Aws::DirectConnect
     #   * {Types::Connection#port_encryption_status #port_encryption_status} => String
     #   * {Types::Connection#encryption_mode #encryption_mode} => String
     #   * {Types::Connection#mac_sec_keys #mac_sec_keys} => Array&lt;Types::MacSecKey&gt;
+    #   * {Types::Connection#rate_limiter_status #rate_limiter_status} => Types::RateLimiterStatus
+    #   * {Types::Connection#partner_interconnect_mac_sec_capable #partner_interconnect_mac_sec_capable} => Boolean
     #
     # @example Request syntax with placeholder values
     #
@@ -2911,6 +3077,11 @@ module Aws::DirectConnect
     #   resp.mac_sec_keys[0].ckn #=> String
     #   resp.mac_sec_keys[0].state #=> String
     #   resp.mac_sec_keys[0].start_on #=> String
+    #   resp.rate_limiter_status.max_allowed #=> Integer
+    #   resp.rate_limiter_status.in_use #=> Integer
+    #   resp.rate_limiter_status.remaining #=> Integer
+    #   resp.rate_limiter_status.total_bandwidth #=> String
+    #   resp.partner_interconnect_mac_sec_capable #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/DeleteConnection AWS API Documentation
     #
@@ -2947,6 +3118,9 @@ module Aws::DirectConnect
     #   resp.direct_connect_gateway.owner_account #=> String
     #   resp.direct_connect_gateway.direct_connect_gateway_state #=> String, one of "pending", "available", "deleting", "deleted"
     #   resp.direct_connect_gateway.state_change_error #=> String
+    #   resp.direct_connect_gateway.tags #=> Array
+    #   resp.direct_connect_gateway.tags[0].key #=> String
+    #   resp.direct_connect_gateway.tags[0].value #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/DeleteDirectConnectGateway AWS API Documentation
     #
@@ -3116,6 +3290,7 @@ module Aws::DirectConnect
     #   * {Types::Lag#mac_sec_capable #mac_sec_capable} => Boolean
     #   * {Types::Lag#encryption_mode #encryption_mode} => String
     #   * {Types::Lag#mac_sec_keys #mac_sec_keys} => Array&lt;Types::MacSecKey&gt;
+    #   * {Types::Lag#rate_limiter_status #rate_limiter_status} => Types::RateLimiterStatus
     #
     # @example Request syntax with placeholder values
     #
@@ -3166,6 +3341,11 @@ module Aws::DirectConnect
     #   resp.connections[0].mac_sec_keys[0].ckn #=> String
     #   resp.connections[0].mac_sec_keys[0].state #=> String
     #   resp.connections[0].mac_sec_keys[0].start_on #=> String
+    #   resp.connections[0].rate_limiter_status.max_allowed #=> Integer
+    #   resp.connections[0].rate_limiter_status.in_use #=> Integer
+    #   resp.connections[0].rate_limiter_status.remaining #=> Integer
+    #   resp.connections[0].rate_limiter_status.total_bandwidth #=> String
+    #   resp.connections[0].partner_interconnect_mac_sec_capable #=> Boolean
     #   resp.allows_hosted_connections #=> Boolean
     #   resp.jumbo_frame_capable #=> Boolean
     #   resp.has_logical_redundancy #=> String, one of "unknown", "yes", "no"
@@ -3180,6 +3360,10 @@ module Aws::DirectConnect
     #   resp.mac_sec_keys[0].ckn #=> String
     #   resp.mac_sec_keys[0].state #=> String
     #   resp.mac_sec_keys[0].start_on #=> String
+    #   resp.rate_limiter_status.max_allowed #=> Integer
+    #   resp.rate_limiter_status.in_use #=> Integer
+    #   resp.rate_limiter_status.remaining #=> Integer
+    #   resp.rate_limiter_status.total_bandwidth #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/DeleteLag AWS API Documentation
     #
@@ -3207,7 +3391,7 @@ module Aws::DirectConnect
     #
     # @example Response structure
     #
-    #   resp.virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "deleting", "deleted", "rejected", "unknown"
+    #   resp.virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "testing", "deleting", "deleted", "rejected", "unknown"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/DeleteVirtualInterface AWS API Documentation
     #
@@ -3279,14 +3463,28 @@ module Aws::DirectConnect
     # @option params [String] :connection_id
     #   The ID of the connection.
     #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return with a single call. To
+    #   retrieve the remaining results, make another call with the returned
+    #   `nextToken` value.
+    #
+    #   If `MaxResults` is given a value larger than 100, only 100 results are
+    #   returned.
+    #
+    # @option params [String] :next_token
+    #   The token for the next page of results.
+    #
     # @return [Types::Connections] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::Connections#connections #connections} => Array&lt;Types::Connection&gt;
+    #   * {Types::Connections#next_token #next_token} => String
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.describe_connections({
     #     connection_id: "ConnectionId",
+    #     max_results: 1,
+    #     next_token: "PaginationToken",
     #   })
     #
     # @example Response structure
@@ -3320,6 +3518,12 @@ module Aws::DirectConnect
     #   resp.connections[0].mac_sec_keys[0].ckn #=> String
     #   resp.connections[0].mac_sec_keys[0].state #=> String
     #   resp.connections[0].mac_sec_keys[0].start_on #=> String
+    #   resp.connections[0].rate_limiter_status.max_allowed #=> Integer
+    #   resp.connections[0].rate_limiter_status.in_use #=> Integer
+    #   resp.connections[0].rate_limiter_status.remaining #=> Integer
+    #   resp.connections[0].rate_limiter_status.total_bandwidth #=> String
+    #   resp.connections[0].partner_interconnect_mac_sec_capable #=> Boolean
+    #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/DescribeConnections AWS API Documentation
     #
@@ -3347,6 +3551,7 @@ module Aws::DirectConnect
     # @return [Types::Connections] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::Connections#connections #connections} => Array&lt;Types::Connection&gt;
+    #   * {Types::Connections#next_token #next_token} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -3385,6 +3590,12 @@ module Aws::DirectConnect
     #   resp.connections[0].mac_sec_keys[0].ckn #=> String
     #   resp.connections[0].mac_sec_keys[0].state #=> String
     #   resp.connections[0].mac_sec_keys[0].start_on #=> String
+    #   resp.connections[0].rate_limiter_status.max_allowed #=> Integer
+    #   resp.connections[0].rate_limiter_status.in_use #=> Integer
+    #   resp.connections[0].rate_limiter_status.remaining #=> Integer
+    #   resp.connections[0].rate_limiter_status.total_bandwidth #=> String
+    #   resp.connections[0].partner_interconnect_mac_sec_capable #=> Boolean
+    #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/DescribeConnectionsOnInterconnect AWS API Documentation
     #
@@ -3511,6 +3722,16 @@ module Aws::DirectConnect
     #
     #   The response contains the association between the Direct Connect
     #   gateway and transit gateway.
+    #
+    # * A Direct Connect gateway and a virtual private gateway
+    #
+    #   The response contains the association between the Direct Connect
+    #   gateway and virtual private gateway.
+    #
+    # * A Direct Connect gateway association to a Cloud WAN core network
+    #
+    #   The response contains the Cloud WAN core network ID that the Direct
+    #   Connect gateway is associated to.
     #
     # @option params [String] :association_id
     #   The ID of the Direct Connect gateway association.
@@ -3682,6 +3903,9 @@ module Aws::DirectConnect
     #   resp.direct_connect_gateways[0].owner_account #=> String
     #   resp.direct_connect_gateways[0].direct_connect_gateway_state #=> String, one of "pending", "available", "deleting", "deleted"
     #   resp.direct_connect_gateways[0].state_change_error #=> String
+    #   resp.direct_connect_gateways[0].tags #=> Array
+    #   resp.direct_connect_gateways[0].tags[0].key #=> String
+    #   resp.direct_connect_gateways[0].tags[0].value #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/DescribeDirectConnectGateways AWS API Documentation
@@ -3703,14 +3927,28 @@ module Aws::DirectConnect
     # @option params [required, String] :connection_id
     #   The ID of the interconnect or LAG.
     #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return with a single call. To
+    #   retrieve the remaining results, make another call with the returned
+    #   `nextToken` value.
+    #
+    #   If `MaxResults` is given a value larger than 100, only 100 results are
+    #   returned.
+    #
+    # @option params [String] :next_token
+    #   The token for the next page of results.
+    #
     # @return [Types::Connections] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::Connections#connections #connections} => Array&lt;Types::Connection&gt;
+    #   * {Types::Connections#next_token #next_token} => String
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.describe_hosted_connections({
     #     connection_id: "ConnectionId", # required
+    #     max_results: 1,
+    #     next_token: "PaginationToken",
     #   })
     #
     # @example Response structure
@@ -3744,6 +3982,12 @@ module Aws::DirectConnect
     #   resp.connections[0].mac_sec_keys[0].ckn #=> String
     #   resp.connections[0].mac_sec_keys[0].state #=> String
     #   resp.connections[0].mac_sec_keys[0].start_on #=> String
+    #   resp.connections[0].rate_limiter_status.max_allowed #=> Integer
+    #   resp.connections[0].rate_limiter_status.in_use #=> Integer
+    #   resp.connections[0].rate_limiter_status.remaining #=> Integer
+    #   resp.connections[0].rate_limiter_status.total_bandwidth #=> String
+    #   resp.connections[0].partner_interconnect_mac_sec_capable #=> Boolean
+    #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/DescribeHostedConnections AWS API Documentation
     #
@@ -3815,14 +4059,28 @@ module Aws::DirectConnect
     # @option params [String] :interconnect_id
     #   The ID of the interconnect.
     #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return with a single call. To
+    #   retrieve the remaining results, make another call with the returned
+    #   `nextToken` value.
+    #
+    #   If `MaxResults` is given a value larger than 100, only 100 results are
+    #   returned.
+    #
+    # @option params [String] :next_token
+    #   The token for the next page of results.
+    #
     # @return [Types::Interconnects] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::Interconnects#interconnects #interconnects} => Array&lt;Types::Interconnect&gt;
+    #   * {Types::Interconnects#next_token #next_token} => String
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.describe_interconnects({
     #     interconnect_id: "InterconnectId",
+    #     max_results: 1,
+    #     next_token: "PaginationToken",
     #   })
     #
     # @example Response structure
@@ -3845,6 +4103,15 @@ module Aws::DirectConnect
     #   resp.interconnects[0].tags[0].key #=> String
     #   resp.interconnects[0].tags[0].value #=> String
     #   resp.interconnects[0].provider_name #=> String
+    #   resp.interconnects[0].mac_sec_capable #=> Boolean
+    #   resp.interconnects[0].port_encryption_status #=> String
+    #   resp.interconnects[0].encryption_mode #=> String
+    #   resp.interconnects[0].mac_sec_keys #=> Array
+    #   resp.interconnects[0].mac_sec_keys[0].secret_arn #=> String
+    #   resp.interconnects[0].mac_sec_keys[0].ckn #=> String
+    #   resp.interconnects[0].mac_sec_keys[0].state #=> String
+    #   resp.interconnects[0].mac_sec_keys[0].start_on #=> String
+    #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/DescribeInterconnects AWS API Documentation
     #
@@ -3860,14 +4127,28 @@ module Aws::DirectConnect
     # @option params [String] :lag_id
     #   The ID of the LAG.
     #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return with a single call. To
+    #   retrieve the remaining results, make another call with the returned
+    #   `nextToken` value.
+    #
+    #   If `MaxResults` is given a value larger than 100, only 100 results are
+    #   returned.
+    #
+    # @option params [String] :next_token
+    #   The token for the next page of results.
+    #
     # @return [Types::Lags] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::Lags#lags #lags} => Array&lt;Types::Lag&gt;
+    #   * {Types::Lags#next_token #next_token} => String
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.describe_lags({
     #     lag_id: "LagId",
+    #     max_results: 1,
+    #     next_token: "PaginationToken",
     #   })
     #
     # @example Response structure
@@ -3914,6 +4195,11 @@ module Aws::DirectConnect
     #   resp.lags[0].connections[0].mac_sec_keys[0].ckn #=> String
     #   resp.lags[0].connections[0].mac_sec_keys[0].state #=> String
     #   resp.lags[0].connections[0].mac_sec_keys[0].start_on #=> String
+    #   resp.lags[0].connections[0].rate_limiter_status.max_allowed #=> Integer
+    #   resp.lags[0].connections[0].rate_limiter_status.in_use #=> Integer
+    #   resp.lags[0].connections[0].rate_limiter_status.remaining #=> Integer
+    #   resp.lags[0].connections[0].rate_limiter_status.total_bandwidth #=> String
+    #   resp.lags[0].connections[0].partner_interconnect_mac_sec_capable #=> Boolean
     #   resp.lags[0].allows_hosted_connections #=> Boolean
     #   resp.lags[0].jumbo_frame_capable #=> Boolean
     #   resp.lags[0].has_logical_redundancy #=> String, one of "unknown", "yes", "no"
@@ -3928,6 +4214,11 @@ module Aws::DirectConnect
     #   resp.lags[0].mac_sec_keys[0].ckn #=> String
     #   resp.lags[0].mac_sec_keys[0].state #=> String
     #   resp.lags[0].mac_sec_keys[0].start_on #=> String
+    #   resp.lags[0].rate_limiter_status.max_allowed #=> Integer
+    #   resp.lags[0].rate_limiter_status.in_use #=> Integer
+    #   resp.lags[0].rate_limiter_status.remaining #=> Integer
+    #   resp.lags[0].rate_limiter_status.total_bandwidth #=> String
+    #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/DescribeLags AWS API Documentation
     #
@@ -4144,21 +4435,42 @@ module Aws::DirectConnect
     # A virtual interface (VLAN) transmits the traffic between the Direct
     # Connect location and the customer network.
     #
+    # * If you're using an `asn`, the response includes the ASN value in
+    #   both the `asn` and `asnLong` fields.
+    #
+    # * If you're using `asnLong`, the response returns a value of `0`
+    #   (zero) for the `asn` attribute because it exceeds the highest ASN
+    #   value of 2,147,483,647 that it can support
+    #
     # @option params [String] :connection_id
     #   The ID of the connection.
     #
     # @option params [String] :virtual_interface_id
     #   The ID of the virtual interface.
     #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return with a single call. To
+    #   retrieve the remaining results, make another call with the returned
+    #   `nextToken` value.
+    #
+    #   If `MaxResults` is given a value larger than 100, only 100 results are
+    #   returned.
+    #
+    # @option params [String] :next_token
+    #   The token for the next page of results.
+    #
     # @return [Types::VirtualInterfaces] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::VirtualInterfaces#virtual_interfaces #virtual_interfaces} => Array&lt;Types::VirtualInterface&gt;
+    #   * {Types::VirtualInterfaces#next_token #next_token} => String
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.describe_virtual_interfaces({
     #     connection_id: "ConnectionId",
     #     virtual_interface_id: "VirtualInterfaceId",
+    #     max_results: 1,
+    #     next_token: "PaginationToken",
     #   })
     #
     # @example Response structure
@@ -4172,12 +4484,13 @@ module Aws::DirectConnect
     #   resp.virtual_interfaces[0].virtual_interface_name #=> String
     #   resp.virtual_interfaces[0].vlan #=> Integer
     #   resp.virtual_interfaces[0].asn #=> Integer
+    #   resp.virtual_interfaces[0].asn_long #=> Integer
     #   resp.virtual_interfaces[0].amazon_side_asn #=> Integer
     #   resp.virtual_interfaces[0].auth_key #=> String
     #   resp.virtual_interfaces[0].amazon_address #=> String
     #   resp.virtual_interfaces[0].customer_address #=> String
     #   resp.virtual_interfaces[0].address_family #=> String, one of "ipv4", "ipv6"
-    #   resp.virtual_interfaces[0].virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "deleting", "deleted", "rejected", "unknown"
+    #   resp.virtual_interfaces[0].virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "testing", "deleting", "deleted", "rejected", "unknown"
     #   resp.virtual_interfaces[0].customer_router_config #=> String
     #   resp.virtual_interfaces[0].mtu #=> Integer
     #   resp.virtual_interfaces[0].jumbo_frame_capable #=> Boolean
@@ -4188,6 +4501,7 @@ module Aws::DirectConnect
     #   resp.virtual_interfaces[0].bgp_peers #=> Array
     #   resp.virtual_interfaces[0].bgp_peers[0].bgp_peer_id #=> String
     #   resp.virtual_interfaces[0].bgp_peers[0].asn #=> Integer
+    #   resp.virtual_interfaces[0].bgp_peers[0].asn_long #=> Integer
     #   resp.virtual_interfaces[0].bgp_peers[0].auth_key #=> String
     #   resp.virtual_interfaces[0].bgp_peers[0].address_family #=> String, one of "ipv4", "ipv6"
     #   resp.virtual_interfaces[0].bgp_peers[0].amazon_address #=> String
@@ -4203,6 +4517,8 @@ module Aws::DirectConnect
     #   resp.virtual_interfaces[0].tags[0].key #=> String
     #   resp.virtual_interfaces[0].tags[0].value #=> String
     #   resp.virtual_interfaces[0].site_link_enabled #=> Boolean
+    #   resp.virtual_interfaces[0].rate_limit #=> String
+    #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/DescribeVirtualInterfaces AWS API Documentation
     #
@@ -4257,6 +4573,8 @@ module Aws::DirectConnect
     #   * {Types::Connection#port_encryption_status #port_encryption_status} => String
     #   * {Types::Connection#encryption_mode #encryption_mode} => String
     #   * {Types::Connection#mac_sec_keys #mac_sec_keys} => Array&lt;Types::MacSecKey&gt;
+    #   * {Types::Connection#rate_limiter_status #rate_limiter_status} => Types::RateLimiterStatus
+    #   * {Types::Connection#partner_interconnect_mac_sec_capable #partner_interconnect_mac_sec_capable} => Boolean
     #
     # @example Request syntax with placeholder values
     #
@@ -4295,6 +4613,11 @@ module Aws::DirectConnect
     #   resp.mac_sec_keys[0].ckn #=> String
     #   resp.mac_sec_keys[0].state #=> String
     #   resp.mac_sec_keys[0].start_on #=> String
+    #   resp.rate_limiter_status.max_allowed #=> Integer
+    #   resp.rate_limiter_status.in_use #=> Integer
+    #   resp.rate_limiter_status.remaining #=> Integer
+    #   resp.rate_limiter_status.total_bandwidth #=> String
+    #   resp.partner_interconnect_mac_sec_capable #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/DisassociateConnectionFromLag AWS API Documentation
     #
@@ -4306,14 +4629,14 @@ module Aws::DirectConnect
     end
 
     # Removes the association between a MAC Security (MACsec) security key
-    # and an Direct Connect dedicated connection.
+    # and a Direct Connect connection.
     #
     # @option params [required, String] :connection_id
-    #   The ID of the dedicated connection (dxcon-xxxx), or the ID of the LAG
-    #   (dxlag-xxxx).
+    #   The ID of the dedicated connection (dxcon-xxxx), interconnect
+    #   (dxcon-xxxx), or LAG (dxlag-xxxx).
     #
-    #   You can use DescribeConnections or DescribeLags to retrieve connection
-    #   ID.
+    #   You can use DescribeConnections, DescribeInterconnects, or
+    #   DescribeLags to retrieve connection ID.
     #
     # @option params [required, String] :secret_arn
     #   The Amazon Resource Name (ARN) of the MAC Security (MACsec) secret
@@ -4349,6 +4672,80 @@ module Aws::DirectConnect
     # @param [Hash] params ({})
     def disassociate_mac_sec_key(params = {}, options = {})
       req = build_request(:disassociate_mac_sec_key, params)
+      req.send_request(options)
+    end
+
+    # Lists the routes for the specified virtual interface.
+    #
+    # Use the `routeDirection` filter to control which routes are returned:
+    #
+    # * `accepted`: routes received from the customer network over the
+    #   virtual interface.
+    #
+    # * `advertised`: routes advertised to the customer network over the
+    #   virtual interface.
+    #
+    # @option params [String] :virtual_interface_id
+    #   The ID of the virtual interface.
+    #
+    # @option params [Types::RouteFilters] :filters
+    #   The filters to apply to the routes returned.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return with a single call. To
+    #   retrieve the remaining results, make another call with the returned
+    #   `nextToken` value.
+    #
+    #   If `MaxResults` is given a value larger than 100, only 100 results are
+    #   returned.
+    #
+    # @option params [String] :next_token
+    #   The token for the next page of results.
+    #
+    # @return [Types::ListVirtualInterfaceRoutesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListVirtualInterfaceRoutesResponse#virtual_interface_id #virtual_interface_id} => String
+    #   * {Types::ListVirtualInterfaceRoutesResponse#routes #routes} => Array&lt;Types::Route&gt;
+    #   * {Types::ListVirtualInterfaceRoutesResponse#next_token #next_token} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_virtual_interface_routes({
+    #     virtual_interface_id: "VirtualInterfaceId",
+    #     filters: {
+    #       route_direction: "accepted", # accepts accepted, advertised
+    #       address_family: "ipv4", # accepts ipv4, ipv6
+    #       cidrs: ["RouteFilterCidrString"],
+    #       as_path: [1],
+    #       communities: ["CommunityEntry"],
+    #     },
+    #     max_results: 1,
+    #     next_token: "PaginationToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.virtual_interface_id #=> String
+    #   resp.routes #=> Array
+    #   resp.routes[0].cidr #=> String
+    #   resp.routes[0].route_direction #=> String, one of "accepted", "advertised"
+    #   resp.routes[0].address_family #=> String, one of "ipv4", "ipv6"
+    #   resp.routes[0].as_path #=> Array
+    #   resp.routes[0].as_path[0].path_type #=> String, one of "seq", "set"
+    #   resp.routes[0].as_path[0].path #=> Array
+    #   resp.routes[0].as_path[0].path[0] #=> Integer
+    #   resp.routes[0].communities #=> Array
+    #   resp.routes[0].communities[0] #=> String
+    #   resp.routes[0].aws_logical_device_id #=> String
+    #   resp.routes[0].route_installed_at #=> Time
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/ListVirtualInterfaceRoutes AWS API Documentation
+    #
+    # @overload list_virtual_interface_routes(params = {})
+    # @param [Hash] params ({})
+    def list_virtual_interface_routes(params = {}, options = {})
+      req = build_request(:list_virtual_interface_routes, params)
       req.send_request(options)
     end
 
@@ -4581,7 +4978,7 @@ module Aws::DirectConnect
       req.send_request(options)
     end
 
-    # Updates the Direct Connect dedicated connection configuration.
+    # Updates the Direct Connect connection configuration.
     #
     # You can update the following parameters for a connection:
     #
@@ -4590,7 +4987,7 @@ module Aws::DirectConnect
     # * The connection's MAC Security (MACsec) encryption mode.
     #
     # @option params [required, String] :connection_id
-    #   The ID of the dedicated connection.
+    #   The ID of the connection.
     #
     #   You can use DescribeConnections to retrieve the connection ID.
     #
@@ -4627,6 +5024,8 @@ module Aws::DirectConnect
     #   * {Types::Connection#port_encryption_status #port_encryption_status} => String
     #   * {Types::Connection#encryption_mode #encryption_mode} => String
     #   * {Types::Connection#mac_sec_keys #mac_sec_keys} => Array&lt;Types::MacSecKey&gt;
+    #   * {Types::Connection#rate_limiter_status #rate_limiter_status} => Types::RateLimiterStatus
+    #   * {Types::Connection#partner_interconnect_mac_sec_capable #partner_interconnect_mac_sec_capable} => Boolean
     #
     # @example Request syntax with placeholder values
     #
@@ -4666,6 +5065,11 @@ module Aws::DirectConnect
     #   resp.mac_sec_keys[0].ckn #=> String
     #   resp.mac_sec_keys[0].state #=> String
     #   resp.mac_sec_keys[0].start_on #=> String
+    #   resp.rate_limiter_status.max_allowed #=> Integer
+    #   resp.rate_limiter_status.in_use #=> Integer
+    #   resp.rate_limiter_status.remaining #=> Integer
+    #   resp.rate_limiter_status.total_bandwidth #=> String
+    #   resp.partner_interconnect_mac_sec_capable #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/UpdateConnection AWS API Documentation
     #
@@ -4703,6 +5107,9 @@ module Aws::DirectConnect
     #   resp.direct_connect_gateway.owner_account #=> String
     #   resp.direct_connect_gateway.direct_connect_gateway_state #=> String, one of "pending", "available", "deleting", "deleted"
     #   resp.direct_connect_gateway.state_change_error #=> String
+    #   resp.direct_connect_gateway.tags #=> Array
+    #   resp.direct_connect_gateway.tags[0].key #=> String
+    #   resp.direct_connect_gateway.tags[0].value #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/UpdateDirectConnectGateway AWS API Documentation
     #
@@ -4838,6 +5245,7 @@ module Aws::DirectConnect
     #   * {Types::Lag#mac_sec_capable #mac_sec_capable} => Boolean
     #   * {Types::Lag#encryption_mode #encryption_mode} => String
     #   * {Types::Lag#mac_sec_keys #mac_sec_keys} => Array&lt;Types::MacSecKey&gt;
+    #   * {Types::Lag#rate_limiter_status #rate_limiter_status} => Types::RateLimiterStatus
     #
     # @example Request syntax with placeholder values
     #
@@ -4891,6 +5299,11 @@ module Aws::DirectConnect
     #   resp.connections[0].mac_sec_keys[0].ckn #=> String
     #   resp.connections[0].mac_sec_keys[0].state #=> String
     #   resp.connections[0].mac_sec_keys[0].start_on #=> String
+    #   resp.connections[0].rate_limiter_status.max_allowed #=> Integer
+    #   resp.connections[0].rate_limiter_status.in_use #=> Integer
+    #   resp.connections[0].rate_limiter_status.remaining #=> Integer
+    #   resp.connections[0].rate_limiter_status.total_bandwidth #=> String
+    #   resp.connections[0].partner_interconnect_mac_sec_capable #=> Boolean
     #   resp.allows_hosted_connections #=> Boolean
     #   resp.jumbo_frame_capable #=> Boolean
     #   resp.has_logical_redundancy #=> String, one of "unknown", "yes", "no"
@@ -4905,6 +5318,10 @@ module Aws::DirectConnect
     #   resp.mac_sec_keys[0].ckn #=> String
     #   resp.mac_sec_keys[0].state #=> String
     #   resp.mac_sec_keys[0].start_on #=> String
+    #   resp.rate_limiter_status.max_allowed #=> Integer
+    #   resp.rate_limiter_status.in_use #=> Integer
+    #   resp.rate_limiter_status.remaining #=> Integer
+    #   resp.rate_limiter_status.total_bandwidth #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/UpdateLag AWS API Documentation
     #
@@ -4940,6 +5357,11 @@ module Aws::DirectConnect
     # @option params [String] :virtual_interface_name
     #   The name of the virtual private interface.
     #
+    # @option params [String] :rate_limit
+    #   The rate limit (bandwidth allocation) to apply to the virtual
+    #   interface. Use this to update the bandwidth allocation on an existing
+    #   virtual interface.
+    #
     # @return [Types::VirtualInterface] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::VirtualInterface#owner_account #owner_account} => String
@@ -4950,6 +5372,7 @@ module Aws::DirectConnect
     #   * {Types::VirtualInterface#virtual_interface_name #virtual_interface_name} => String
     #   * {Types::VirtualInterface#vlan #vlan} => Integer
     #   * {Types::VirtualInterface#asn #asn} => Integer
+    #   * {Types::VirtualInterface#asn_long #asn_long} => Integer
     #   * {Types::VirtualInterface#amazon_side_asn #amazon_side_asn} => Integer
     #   * {Types::VirtualInterface#auth_key #auth_key} => String
     #   * {Types::VirtualInterface#amazon_address #amazon_address} => String
@@ -4968,6 +5391,7 @@ module Aws::DirectConnect
     #   * {Types::VirtualInterface#aws_logical_device_id #aws_logical_device_id} => String
     #   * {Types::VirtualInterface#tags #tags} => Array&lt;Types::Tag&gt;
     #   * {Types::VirtualInterface#site_link_enabled #site_link_enabled} => Boolean
+    #   * {Types::VirtualInterface#rate_limit #rate_limit} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -4976,6 +5400,7 @@ module Aws::DirectConnect
     #     mtu: 1,
     #     enable_site_link: false,
     #     virtual_interface_name: "VirtualInterfaceName",
+    #     rate_limit: "RateLimit",
     #   })
     #
     # @example Response structure
@@ -4988,12 +5413,13 @@ module Aws::DirectConnect
     #   resp.virtual_interface_name #=> String
     #   resp.vlan #=> Integer
     #   resp.asn #=> Integer
+    #   resp.asn_long #=> Integer
     #   resp.amazon_side_asn #=> Integer
     #   resp.auth_key #=> String
     #   resp.amazon_address #=> String
     #   resp.customer_address #=> String
     #   resp.address_family #=> String, one of "ipv4", "ipv6"
-    #   resp.virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "deleting", "deleted", "rejected", "unknown"
+    #   resp.virtual_interface_state #=> String, one of "confirming", "verifying", "pending", "available", "down", "testing", "deleting", "deleted", "rejected", "unknown"
     #   resp.customer_router_config #=> String
     #   resp.mtu #=> Integer
     #   resp.jumbo_frame_capable #=> Boolean
@@ -5004,6 +5430,7 @@ module Aws::DirectConnect
     #   resp.bgp_peers #=> Array
     #   resp.bgp_peers[0].bgp_peer_id #=> String
     #   resp.bgp_peers[0].asn #=> Integer
+    #   resp.bgp_peers[0].asn_long #=> Integer
     #   resp.bgp_peers[0].auth_key #=> String
     #   resp.bgp_peers[0].address_family #=> String, one of "ipv4", "ipv6"
     #   resp.bgp_peers[0].amazon_address #=> String
@@ -5019,6 +5446,7 @@ module Aws::DirectConnect
     #   resp.tags[0].key #=> String
     #   resp.tags[0].value #=> String
     #   resp.site_link_enabled #=> Boolean
+    #   resp.rate_limit #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/UpdateVirtualInterfaceAttributes AWS API Documentation
     #
@@ -5047,7 +5475,7 @@ module Aws::DirectConnect
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-directconnect'
-      context[:gem_version] = '1.88.0'
+      context[:gem_version] = '1.114.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

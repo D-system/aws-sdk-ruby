@@ -34,7 +34,32 @@ module Aws
           "FLEXIBLE_CHECKSUMS_REQ_WHEN_SUPPORTED" : "Z",
           "FLEXIBLE_CHECKSUMS_REQ_WHEN_REQUIRED" : "a",
           "FLEXIBLE_CHECKSUMS_RES_WHEN_SUPPORTED" : "b",
-          "FLEXIBLE_CHECKSUMS_RES_WHEN_REQUIRED" : "c"
+          "FLEXIBLE_CHECKSUMS_RES_WHEN_REQUIRED" : "c",
+          "DDB_MAPPER": "d",
+          "CREDENTIALS_CODE" : "e",
+          "CREDENTIALS_ENV_VARS" : "g",
+          "CREDENTIALS_ENV_VARS_STS_WEB_ID_TOKEN" : "h",
+          "CREDENTIALS_STS_ASSUME_ROLE" : "i",
+          "CREDENTIALS_STS_ASSUME_ROLE_WEB_ID" : "k",
+          "CREDENTIALS_PROFILE" : "n",
+          "CREDENTIALS_PROFILE_SOURCE_PROFILE" : "o",
+          "CREDENTIALS_PROFILE_NAMED_PROVIDER" : "p",
+          "CREDENTIALS_PROFILE_STS_WEB_ID_TOKEN" : "q",
+          "CREDENTIALS_PROFILE_SSO" : "r",
+          "CREDENTIALS_SSO" : "s",
+          "CREDENTIALS_PROFILE_SSO_LEGACY" : "t",
+          "CREDENTIALS_SSO_LEGACY" : "u",
+          "CREDENTIALS_PROFILE_PROCESS" : "v",
+          "CREDENTIALS_PROCESS" : "w",
+          "CREDENTIALS_HTTP" : "z",
+          "CREDENTIALS_IMDS" : "0",
+          "SSO_LOGIN_DEVICE" : "1",
+          "SSO_LOGIN_AUTH" : "2",
+          "BEARER_SERVICE_ENV_VARS": "3",
+          "CREDENTIALS_PROFILE_LOGIN": "AC",
+          "CREDENTIALS_LOGIN": "AD",
+          "S3_TRANSFER_UPLOAD_DIRECTORY": "9",
+          "S3_TRANSFER_DOWNLOAD_DIRECTORY": "+"
         }
       METRICS
 
@@ -146,7 +171,16 @@ variable AWS_SDK_UA_APP_ID or the shared config profile attribute sdk_ua_app_id.
 
           # Used to be RUBY_ENGINE/RUBY_VERSION
           def language_metadata
-            "lang/#{RUBY_ENGINE}##{RUBY_ENGINE_VERSION} md/#{RUBY_VERSION}"
+            metadata = "lang/#{RUBY_ENGINE}##{RUBY_ENGINE_VERSION} md/#{RUBY_VERSION}"
+            return metadata unless RUBY_ENGINE == 'ruby'
+
+            %i[YJIT ZJIT].each do |jit|
+              next unless RubyVM.const_defined?(jit)
+
+              mode = RubyVM.const_get(jit)
+              metadata += " md/#{jit.to_s.downcase}" if mode.respond_to?(:enabled?) && mode.enabled?
+            end
+            metadata
           end
 
           def env_metadata
@@ -177,7 +211,7 @@ variable AWS_SDK_UA_APP_ID or the shared config profile attribute sdk_ua_app_id.
 
               frameworks[match[:name]] = match[:version]
             end
-            frameworks.map { |n, v| "lib/#{n}##{v}" }.join(' ')
+            frameworks.map { |n, v| "lib/#{n}##{v}" }.join(' ') unless frameworks.empty?
           end
 
           def metric_metadata
@@ -196,7 +230,8 @@ variable AWS_SDK_UA_APP_ID or the shared config profile attribute sdk_ua_app_id.
         end
       end
 
-      handler(Handler, step: :sign, priority: 97)
+      # Priority set to 5 in order to add user agent as late as possible after signing
+      handler(Handler, step: :sign, priority: 5)
     end
   end
 end

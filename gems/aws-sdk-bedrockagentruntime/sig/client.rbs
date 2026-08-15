@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -79,6 +80,84 @@ module Aws
                     ) -> instance
                   | (?Hash[Symbol, untyped]) -> instance
 
+
+      interface _AgenticRetrieveStreamResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::AgenticRetrieveStreamResponse]
+        def stream: () -> Types::AgenticRetrieveStreamResponseOutput
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/BedrockAgentRuntime/Client.html#agentic_retrieve_stream-instance_method
+      def agentic_retrieve_stream: (
+                                     agentic_retrieve_configuration: {
+                                       foundation_model_configuration: {
+                                         bedrock_foundation_model_configuration: {
+                                           model_configuration: {
+                                             model_arn: ::String
+                                           }
+                                         }?,
+                                         type: ("BEDROCK_FOUNDATION_MODEL")
+                                       }?,
+                                       foundation_model_type: ("CUSTOM" | "MANAGED")?,
+                                       max_agent_iteration: ::Integer?,
+                                       reranking_configuration: {
+                                         bedrock_reranking_configuration: {
+                                           model_configuration: {
+                                             model_arn: ::String
+                                           }
+                                         }?,
+                                         type: ("BEDROCK_RERANKING_MODEL")
+                                       }?,
+                                       reranking_model_type: ("CUSTOM" | "MANAGED" | "NONE")?
+                                     },
+                                     ?generate_response: bool,
+                                     messages: Array[
+                                       {
+                                         content: {
+                                           text: ::String?
+                                         },
+                                         role: ("user" | "assistant")
+                                       }
+                                     ],
+                                     ?next_token: ::String,
+                                     ?policy_configuration: {
+                                       bedrock_guardrail_configuration: {
+                                         guardrail_id: ::String,
+                                         guardrail_version: ::String
+                                       }?
+                                     },
+                                     retrievers: Array[
+                                       {
+                                         configuration: {
+                                           knowledge_base: {
+                                             knowledge_base_id: ::String,
+                                             retrieval_overrides: {
+                                               filter: Params::retrieval_filter?,
+                                               max_number_of_results: ::Integer?
+                                             }?
+                                           }?
+                                         },
+                                         description: ::String?
+                                       }
+                                     ],
+                                     ?user_context: {
+                                       user_id: ::String
+                                     }
+                                   ) ?{ (*untyped) -> void } -> _AgenticRetrieveStreamResponseSuccess
+                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) ?{ (*untyped) -> void } -> _AgenticRetrieveStreamResponseSuccess
+
+      interface _CheckIngestedDocumentAclResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CheckIngestedDocumentAclResponse]
+        def has_access: () -> bool
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/BedrockAgentRuntime/Client.html#check_ingested_document_acl-instance_method
+      def check_ingested_document_acl: (
+                                         data_source_id: ::String,
+                                         document_id: ::String,
+                                         knowledge_base_id: ::String,
+                                         user_context: {
+                                           user_id: ::String
+                                         }
+                                       ) -> _CheckIngestedDocumentAclResponseSuccess
+                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CheckIngestedDocumentAclResponseSuccess
 
       interface _CreateInvocationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateInvocationResponse]
@@ -180,6 +259,72 @@ module Aws
                             ) -> _GetAgentMemoryResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetAgentMemoryResponseSuccess
 
+      interface _GetDocumentContentResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetDocumentContentResponse]
+        def document_content_length: () -> ::Integer
+        def mime_type: () -> ::String
+        def presigned_url: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/BedrockAgentRuntime/Client.html#get_document_content-instance_method
+      def get_document_content: (
+                                  data_source_id: ::String,
+                                  document_id: ::String,
+                                  knowledge_base_id: ::String,
+                                  ?output_format: ("RAW" | "EXTRACTED"),
+                                  ?user_context: {
+                                    user_id: ::String
+                                  }
+                                ) -> _GetDocumentContentResponseSuccess
+                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetDocumentContentResponseSuccess
+
+      interface _GetExecutionFlowSnapshotResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetExecutionFlowSnapshotResponse]
+        def customer_encryption_key_arn: () -> ::String
+        def definition: () -> ::String
+        def execution_role_arn: () -> ::String
+        def flow_alias_identifier: () -> ::String
+        def flow_identifier: () -> ::String
+        def flow_version: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/BedrockAgentRuntime/Client.html#get_execution_flow_snapshot-instance_method
+      def get_execution_flow_snapshot: (
+                                         execution_identifier: ::String,
+                                         flow_alias_identifier: ::String,
+                                         flow_identifier: ::String
+                                       ) -> _GetExecutionFlowSnapshotResponseSuccess
+                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetExecutionFlowSnapshotResponseSuccess
+
+      interface _GetFlowExecutionResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetFlowExecutionResponse]
+        def ended_at: () -> ::Time
+        def errors: () -> ::Array[Types::FlowExecutionError]
+        def execution_arn: () -> ::String
+        def flow_alias_identifier: () -> ::String
+        def flow_identifier: () -> ::String
+        def flow_version: () -> ::String
+        def started_at: () -> ::Time
+        def status: () -> ("Running" | "Succeeded" | "Failed" | "TimedOut" | "Aborted")
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/BedrockAgentRuntime/Client.html#get_flow_execution-instance_method
+      def get_flow_execution: (
+                                execution_identifier: ::String,
+                                flow_alias_identifier: ::String,
+                                flow_identifier: ::String
+                              ) -> _GetFlowExecutionResponseSuccess
+                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetFlowExecutionResponseSuccess
+
+      interface _GetIngestedDocumentAclResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetIngestedDocumentAclResponse]
+        def document_acl: () -> Types::DocumentAcl
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/BedrockAgentRuntime/Client.html#get_ingested_document_acl-instance_method
+      def get_ingested_document_acl: (
+                                       data_source_id: ::String,
+                                       document_id: ::String,
+                                       knowledge_base_id: ::String
+                                     ) -> _GetIngestedDocumentAclResponseSuccess
+                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetIngestedDocumentAclResponseSuccess
+
       interface _GetInvocationStepResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetInvocationStepResponse]
         def invocation_step: () -> Types::InvocationStep
@@ -228,189 +373,26 @@ module Aws
                           ?end_session: bool,
                           ?input_text: ::String,
                           ?memory_id: ::String,
+                          ?prompt_creation_configurations: {
+                            exclude_previous_thinking_steps: bool?,
+                            previous_conversation_turns_to_include: ::Integer?
+                          },
                           session_id: ::String,
                           ?session_state: {
-                            conversation_history: {
-                              messages: Array[
-                                {
-                                  content: Array[
-                                    {
-                                      text: ::String?
-                                    },
-                                  ],
-                                  role: ("user" | "assistant")
-                                },
-                              ]?
-                            }?,
+                            conversation_history: Params::conversation_history?,
                             files: Array[
-                              {
-                                name: ::String,
-                                source: {
-                                  byte_content: {
-                                    data: ::String,
-                                    media_type: ::String
-                                  }?,
-                                  s3_location: {
-                                    uri: ::String
-                                  }?,
-                                  source_type: ("S3" | "BYTE_CONTENT")
-                                },
-                                use_case: ("CODE_INTERPRETER" | "CHAT")
-                              },
+                              Params::input_file
                             ]?,
                             invocation_id: ::String?,
                             knowledge_base_configurations: Array[
                               {
                                 knowledge_base_id: ::String,
-                                retrieval_configuration: {
-                                  vector_search_configuration: {
-                                    filter: {
-                                      and_all: Array[
-                                        untyped,
-                                      ]?,
-                                      equals: {
-                                        key: ::String,
-                                        value: {
-                                        }
-                                      }?,
-                                      greater_than: {
-                                        key: ::String,
-                                        value: {
-                                        }
-                                      }?,
-                                      greater_than_or_equals: {
-                                        key: ::String,
-                                        value: {
-                                        }
-                                      }?,
-                                      in: {
-                                        key: ::String,
-                                        value: {
-                                        }
-                                      }?,
-                                      less_than: {
-                                        key: ::String,
-                                        value: {
-                                        }
-                                      }?,
-                                      less_than_or_equals: {
-                                        key: ::String,
-                                        value: {
-                                        }
-                                      }?,
-                                      list_contains: {
-                                        key: ::String,
-                                        value: {
-                                        }
-                                      }?,
-                                      not_equals: {
-                                        key: ::String,
-                                        value: {
-                                        }
-                                      }?,
-                                      not_in: {
-                                        key: ::String,
-                                        value: {
-                                        }
-                                      }?,
-                                      or_all: Array[
-                                        untyped,
-                                      ]?,
-                                      starts_with: {
-                                        key: ::String,
-                                        value: {
-                                        }
-                                      }?,
-                                      string_contains: {
-                                        key: ::String,
-                                        value: {
-                                        }
-                                      }?
-                                    }?,
-                                    implicit_filter_configuration: {
-                                      metadata_attributes: Array[
-                                        {
-                                          description: ::String,
-                                          key: ::String,
-                                          type: ("STRING" | "NUMBER" | "BOOLEAN" | "STRING_LIST")
-                                        },
-                                      ],
-                                      model_arn: ::String
-                                    }?,
-                                    number_of_results: ::Integer?,
-                                    override_search_type: ("HYBRID" | "SEMANTIC")?,
-                                    reranking_configuration: {
-                                      bedrock_reranking_configuration: {
-                                        metadata_configuration: {
-                                          selection_mode: ("SELECTIVE" | "ALL"),
-                                          selective_mode_configuration: {
-                                            fields_to_exclude: Array[
-                                              {
-                                                field_name: ::String
-                                              },
-                                            ]?,
-                                            fields_to_include: Array[
-                                              {
-                                                field_name: ::String
-                                              },
-                                            ]?
-                                          }?
-                                        }?,
-                                        model_configuration: {
-                                          additional_model_request_fields: Hash[::String, {
-                                            }]?,
-                                          model_arn: ::String
-                                        },
-                                        number_of_reranked_results: ::Integer?
-                                      }?,
-                                      type: ("BEDROCK_RERANKING_MODEL")
-                                    }?
-                                  }
-                                }
-                              },
+                                retrieval_configuration: Params::knowledge_base_retrieval_configuration
+                              }
                             ]?,
                             prompt_session_attributes: Hash[::String, ::String]?,
                             return_control_invocation_results: Array[
-                              {
-                                api_result: {
-                                  action_group: ::String,
-                                  agent_id: ::String?,
-                                  api_path: ::String?,
-                                  confirmation_state: ("CONFIRM" | "DENY")?,
-                                  http_method: ::String?,
-                                  http_status_code: ::Integer?,
-                                  response_body: Hash[::String, {
-                                      body: ::String?,
-                                      images: Array[
-                                        {
-                                          format: ("png" | "jpeg" | "gif" | "webp"),
-                                          source: {
-                                            bytes: ::String?
-                                          }
-                                        },
-                                      ]?
-                                    }]?,
-                                  response_state: ("FAILURE" | "REPROMPT")?
-                                }?,
-                                function_result: {
-                                  action_group: ::String,
-                                  agent_id: ::String?,
-                                  confirmation_state: ("CONFIRM" | "DENY")?,
-                                  function: ::String?,
-                                  response_body: Hash[::String, {
-                                      body: ::String?,
-                                      images: Array[
-                                        {
-                                          format: ("png" | "jpeg" | "gif" | "webp"),
-                                          source: {
-                                            bytes: ::String?
-                                          }
-                                        },
-                                      ]?
-                                    }]?,
-                                  response_state: ("FAILURE" | "REPROMPT")?
-                                }?
-                              },
+                              Params::invocation_result_member
                             ]?,
                             session_attributes: Hash[::String, ::String]?
                           },
@@ -434,15 +416,7 @@ module Aws
                          flow_alias_identifier: ::String,
                          flow_identifier: ::String,
                          inputs: Array[
-                           {
-                             content: {
-                               document: {
-                               }?
-                             },
-                             node_input_name: ::String?,
-                             node_name: ::String,
-                             node_output_name: ::String?
-                           },
+                           Params::flow_input
                          ],
                          ?model_performance_configuration: {
                            performance_config: {
@@ -461,39 +435,10 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/BedrockAgentRuntime/Client.html#invoke_inline_agent-instance_method
       def invoke_inline_agent: (
                                  ?action_groups: Array[
-                                   {
-                                     action_group_executor: {
-                                       custom_control: ("RETURN_CONTROL")?,
-                                       lambda: ::String?
-                                     }?,
-                                     action_group_name: ::String,
-                                     api_schema: {
-                                       payload: ::String?,
-                                       s3: {
-                                         s3_bucket_name: ::String?,
-                                         s3_object_key: ::String?
-                                       }?
-                                     }?,
-                                     description: ::String?,
-                                     function_schema: {
-                                       functions: Array[
-                                         {
-                                           description: ::String?,
-                                           name: ::String,
-                                           parameters: Hash[::String, {
-                                               description: ::String?,
-                                               required: bool?,
-                                               type: ("string" | "number" | "integer" | "boolean" | "array")
-                                             }]?,
-                                           require_confirmation: ("ENABLED" | "DISABLED")?
-                                         },
-                                       ]?
-                                     }?,
-                                     parent_action_group_signature: ("AMAZON.UserInput" | "AMAZON.CodeInterpreter" | "ANTHROPIC.Computer" | "ANTHROPIC.Bash" | "ANTHROPIC.TextEditor")?,
-                                     parent_action_group_signature_params: Hash[::String, ::String]?
-                                   },
+                                   Params::agent_action_group
                                  ],
                                  ?agent_collaboration: ("SUPERVISOR" | "SUPERVISOR_ROUTER" | "DISABLED"),
+                                 ?agent_name: ::String,
                                  ?bedrock_model_configurations: {
                                    performance_config: {
                                      latency: ("standard" | "optimized")?
@@ -505,42 +450,12 @@ module Aws
                                      collaborator_instruction: ::String,
                                      collaborator_name: ::String,
                                      relay_conversation_history: ("TO_COLLABORATOR" | "DISABLED")?
-                                   },
+                                   }
                                  ],
                                  ?collaborators: Array[
                                    {
                                      action_groups: Array[
-                                       {
-                                         action_group_executor: {
-                                           custom_control: ("RETURN_CONTROL")?,
-                                           lambda: ::String?
-                                         }?,
-                                         action_group_name: ::String,
-                                         api_schema: {
-                                           payload: ::String?,
-                                           s3: {
-                                             s3_bucket_name: ::String?,
-                                             s3_object_key: ::String?
-                                           }?
-                                         }?,
-                                         description: ::String?,
-                                         function_schema: {
-                                           functions: Array[
-                                             {
-                                               description: ::String?,
-                                               name: ::String,
-                                               parameters: Hash[::String, {
-                                                   description: ::String?,
-                                                   required: bool?,
-                                                   type: ("string" | "number" | "integer" | "boolean" | "array")
-                                                 }]?,
-                                               require_confirmation: ("ENABLED" | "DISABLED")?
-                                             },
-                                           ]?
-                                         }?,
-                                         parent_action_group_signature: ("AMAZON.UserInput" | "AMAZON.CodeInterpreter" | "ANTHROPIC.Computer" | "ANTHROPIC.Bash" | "ANTHROPIC.TextEditor")?,
-                                         parent_action_group_signature_params: Hash[::String, ::String]?
-                                       },
+                                       Params::agent_action_group
                                      ]?,
                                      agent_collaboration: ("SUPERVISOR" | "SUPERVISOR_ROUTER" | "DISABLED")?,
                                      agent_name: ::String?,
@@ -550,7 +465,7 @@ module Aws
                                          collaborator_instruction: ::String,
                                          collaborator_name: ::String,
                                          relay_conversation_history: ("TO_COLLABORATOR" | "DISABLED")?
-                                       },
+                                       }
                                      ]?,
                                      customer_encryption_key_arn: ::String?,
                                      foundation_model: ::String,
@@ -561,140 +476,16 @@ module Aws
                                      idle_session_ttl_in_seconds: ::Integer?,
                                      instruction: ::String,
                                      knowledge_bases: Array[
-                                       {
-                                         description: ::String,
-                                         knowledge_base_id: ::String,
-                                         retrieval_configuration: {
-                                           vector_search_configuration: {
-                                             filter: {
-                                               and_all: Array[
-                                                 untyped,
-                                               ]?,
-                                               equals: {
-                                                 key: ::String,
-                                                 value: {
-                                                 }
-                                               }?,
-                                               greater_than: {
-                                                 key: ::String,
-                                                 value: {
-                                                 }
-                                               }?,
-                                               greater_than_or_equals: {
-                                                 key: ::String,
-                                                 value: {
-                                                 }
-                                               }?,
-                                               in: {
-                                                 key: ::String,
-                                                 value: {
-                                                 }
-                                               }?,
-                                               less_than: {
-                                                 key: ::String,
-                                                 value: {
-                                                 }
-                                               }?,
-                                               less_than_or_equals: {
-                                                 key: ::String,
-                                                 value: {
-                                                 }
-                                               }?,
-                                               list_contains: {
-                                                 key: ::String,
-                                                 value: {
-                                                 }
-                                               }?,
-                                               not_equals: {
-                                                 key: ::String,
-                                                 value: {
-                                                 }
-                                               }?,
-                                               not_in: {
-                                                 key: ::String,
-                                                 value: {
-                                                 }
-                                               }?,
-                                               or_all: Array[
-                                                 untyped,
-                                               ]?,
-                                               starts_with: {
-                                                 key: ::String,
-                                                 value: {
-                                                 }
-                                               }?,
-                                               string_contains: {
-                                                 key: ::String,
-                                                 value: {
-                                                 }
-                                               }?
-                                             }?,
-                                             implicit_filter_configuration: {
-                                               metadata_attributes: Array[
-                                                 {
-                                                   description: ::String,
-                                                   key: ::String,
-                                                   type: ("STRING" | "NUMBER" | "BOOLEAN" | "STRING_LIST")
-                                                 },
-                                               ],
-                                               model_arn: ::String
-                                             }?,
-                                             number_of_results: ::Integer?,
-                                             override_search_type: ("HYBRID" | "SEMANTIC")?,
-                                             reranking_configuration: {
-                                               bedrock_reranking_configuration: {
-                                                 metadata_configuration: {
-                                                   selection_mode: ("SELECTIVE" | "ALL"),
-                                                   selective_mode_configuration: {
-                                                     fields_to_exclude: Array[
-                                                       {
-                                                         field_name: ::String
-                                                       },
-                                                     ]?,
-                                                     fields_to_include: Array[
-                                                       {
-                                                         field_name: ::String
-                                                       },
-                                                     ]?
-                                                   }?
-                                                 }?,
-                                                 model_configuration: {
-                                                   additional_model_request_fields: Hash[::String, {
-                                                     }]?,
-                                                   model_arn: ::String
-                                                 },
-                                                 number_of_reranked_results: ::Integer?
-                                               }?,
-                                               type: ("BEDROCK_RERANKING_MODEL")
-                                             }?
-                                           }
-                                         }?
-                                       },
+                                       Params::knowledge_base
                                      ]?,
-                                     prompt_override_configuration: {
-                                       override_lambda: ::String?,
-                                       prompt_configurations: Array[
-                                         {
-                                           additional_model_request_fields: {
-                                           }?,
-                                           base_prompt_template: ::String?,
-                                           foundation_model: ::String?,
-                                           inference_configuration: {
-                                             maximum_length: ::Integer?,
-                                             stop_sequences: Array[::String]?,
-                                             temperature: ::Float?,
-                                             top_k: ::Integer?,
-                                             top_p: ::Float?
-                                           }?,
-                                           parser_mode: ("DEFAULT" | "OVERRIDDEN")?,
-                                           prompt_creation_mode: ("DEFAULT" | "OVERRIDDEN")?,
-                                           prompt_state: ("ENABLED" | "DISABLED")?,
-                                           prompt_type: ("PRE_PROCESSING" | "ORCHESTRATION" | "KNOWLEDGE_BASE_RESPONSE_GENERATION" | "POST_PROCESSING" | "ROUTING_CLASSIFIER")?
-                                         },
-                                       ]
-                                     }?
-                                   },
+                                     prompt_override_configuration: Params::prompt_override_configuration?
+                                   }
                                  ],
+                                 ?custom_orchestration: {
+                                   executor: {
+                                     lambda: ::String?
+                                   }?
+                                 },
                                  ?customer_encryption_key_arn: ::String,
                                  ?enable_trace: bool,
                                  ?end_session: bool,
@@ -705,215 +496,28 @@ module Aws
                                  },
                                  ?idle_session_ttl_in_seconds: ::Integer,
                                  ?inline_session_state: {
-                                   conversation_history: {
-                                     messages: Array[
-                                       {
-                                         content: Array[
-                                           {
-                                             text: ::String?
-                                           },
-                                         ],
-                                         role: ("user" | "assistant")
-                                       },
-                                     ]?
-                                   }?,
+                                   conversation_history: Params::conversation_history?,
                                    files: Array[
-                                     {
-                                       name: ::String,
-                                       source: {
-                                         byte_content: {
-                                           data: ::String,
-                                           media_type: ::String
-                                         }?,
-                                         s3_location: {
-                                           uri: ::String
-                                         }?,
-                                         source_type: ("S3" | "BYTE_CONTENT")
-                                       },
-                                       use_case: ("CODE_INTERPRETER" | "CHAT")
-                                     },
+                                     Params::input_file
                                    ]?,
                                    invocation_id: ::String?,
                                    prompt_session_attributes: Hash[::String, ::String]?,
                                    return_control_invocation_results: Array[
-                                     {
-                                       api_result: {
-                                         action_group: ::String,
-                                         agent_id: ::String?,
-                                         api_path: ::String?,
-                                         confirmation_state: ("CONFIRM" | "DENY")?,
-                                         http_method: ::String?,
-                                         http_status_code: ::Integer?,
-                                         response_body: Hash[::String, {
-                                             body: ::String?,
-                                             images: Array[
-                                               {
-                                                 format: ("png" | "jpeg" | "gif" | "webp"),
-                                                 source: {
-                                                   bytes: ::String?
-                                                 }
-                                               },
-                                             ]?
-                                           }]?,
-                                         response_state: ("FAILURE" | "REPROMPT")?
-                                       }?,
-                                       function_result: {
-                                         action_group: ::String,
-                                         agent_id: ::String?,
-                                         confirmation_state: ("CONFIRM" | "DENY")?,
-                                         function: ::String?,
-                                         response_body: Hash[::String, {
-                                             body: ::String?,
-                                             images: Array[
-                                               {
-                                                 format: ("png" | "jpeg" | "gif" | "webp"),
-                                                 source: {
-                                                   bytes: ::String?
-                                                 }
-                                               },
-                                             ]?
-                                           }]?,
-                                         response_state: ("FAILURE" | "REPROMPT")?
-                                       }?
-                                     },
+                                     Params::invocation_result_member
                                    ]?,
                                    session_attributes: Hash[::String, ::String]?
                                  },
                                  ?input_text: ::String,
                                  instruction: ::String,
                                  ?knowledge_bases: Array[
-                                   {
-                                     description: ::String,
-                                     knowledge_base_id: ::String,
-                                     retrieval_configuration: {
-                                       vector_search_configuration: {
-                                         filter: {
-                                           and_all: Array[
-                                             untyped,
-                                           ]?,
-                                           equals: {
-                                             key: ::String,
-                                             value: {
-                                             }
-                                           }?,
-                                           greater_than: {
-                                             key: ::String,
-                                             value: {
-                                             }
-                                           }?,
-                                           greater_than_or_equals: {
-                                             key: ::String,
-                                             value: {
-                                             }
-                                           }?,
-                                           in: {
-                                             key: ::String,
-                                             value: {
-                                             }
-                                           }?,
-                                           less_than: {
-                                             key: ::String,
-                                             value: {
-                                             }
-                                           }?,
-                                           less_than_or_equals: {
-                                             key: ::String,
-                                             value: {
-                                             }
-                                           }?,
-                                           list_contains: {
-                                             key: ::String,
-                                             value: {
-                                             }
-                                           }?,
-                                           not_equals: {
-                                             key: ::String,
-                                             value: {
-                                             }
-                                           }?,
-                                           not_in: {
-                                             key: ::String,
-                                             value: {
-                                             }
-                                           }?,
-                                           or_all: Array[
-                                             untyped,
-                                           ]?,
-                                           starts_with: {
-                                             key: ::String,
-                                             value: {
-                                             }
-                                           }?,
-                                           string_contains: {
-                                             key: ::String,
-                                             value: {
-                                             }
-                                           }?
-                                         }?,
-                                         implicit_filter_configuration: {
-                                           metadata_attributes: Array[
-                                             {
-                                               description: ::String,
-                                               key: ::String,
-                                               type: ("STRING" | "NUMBER" | "BOOLEAN" | "STRING_LIST")
-                                             },
-                                           ],
-                                           model_arn: ::String
-                                         }?,
-                                         number_of_results: ::Integer?,
-                                         override_search_type: ("HYBRID" | "SEMANTIC")?,
-                                         reranking_configuration: {
-                                           bedrock_reranking_configuration: {
-                                             metadata_configuration: {
-                                               selection_mode: ("SELECTIVE" | "ALL"),
-                                               selective_mode_configuration: {
-                                                 fields_to_exclude: Array[
-                                                   {
-                                                     field_name: ::String
-                                                   },
-                                                 ]?,
-                                                 fields_to_include: Array[
-                                                   {
-                                                     field_name: ::String
-                                                   },
-                                                 ]?
-                                               }?
-                                             }?,
-                                             model_configuration: {
-                                               additional_model_request_fields: Hash[::String, {
-                                                 }]?,
-                                               model_arn: ::String
-                                             },
-                                             number_of_reranked_results: ::Integer?
-                                           }?,
-                                           type: ("BEDROCK_RERANKING_MODEL")
-                                         }?
-                                       }
-                                     }?
-                                   },
+                                   Params::knowledge_base
                                  ],
-                                 ?prompt_override_configuration: {
-                                   override_lambda: ::String?,
-                                   prompt_configurations: Array[
-                                     {
-                                       additional_model_request_fields: {
-                                       }?,
-                                       base_prompt_template: ::String?,
-                                       foundation_model: ::String?,
-                                       inference_configuration: {
-                                         maximum_length: ::Integer?,
-                                         stop_sequences: Array[::String]?,
-                                         temperature: ::Float?,
-                                         top_k: ::Integer?,
-                                         top_p: ::Float?
-                                       }?,
-                                       parser_mode: ("DEFAULT" | "OVERRIDDEN")?,
-                                       prompt_creation_mode: ("DEFAULT" | "OVERRIDDEN")?,
-                                       prompt_state: ("ENABLED" | "DISABLED")?,
-                                       prompt_type: ("PRE_PROCESSING" | "ORCHESTRATION" | "KNOWLEDGE_BASE_RESPONSE_GENERATION" | "POST_PROCESSING" | "ROUTING_CLASSIFIER")?
-                                     },
-                                   ]
+                                 ?orchestration_type: ("DEFAULT" | "CUSTOM_ORCHESTRATION"),
+                                 ?prompt_creation_configurations: {
+                                   exclude_previous_thinking_steps: bool?,
+                                   previous_conversation_turns_to_include: ::Integer?
                                  },
+                                 ?prompt_override_configuration: Params::prompt_override_configuration,
                                  session_id: ::String,
                                  ?streaming_configurations: {
                                    apply_guardrail_interval: ::Integer?,
@@ -921,6 +525,36 @@ module Aws
                                  }
                                ) ?{ (*untyped) -> void } -> _InvokeInlineAgentResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) ?{ (*untyped) -> void } -> _InvokeInlineAgentResponseSuccess
+
+      interface _ListFlowExecutionEventsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListFlowExecutionEventsResponse]
+        def flow_execution_events: () -> ::Array[Types::FlowExecutionEvent]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/BedrockAgentRuntime/Client.html#list_flow_execution_events-instance_method
+      def list_flow_execution_events: (
+                                        event_type: ("Node" | "Flow"),
+                                        execution_identifier: ::String,
+                                        flow_alias_identifier: ::String,
+                                        flow_identifier: ::String,
+                                        ?max_results: ::Integer,
+                                        ?next_token: ::String
+                                      ) -> _ListFlowExecutionEventsResponseSuccess
+                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListFlowExecutionEventsResponseSuccess
+
+      interface _ListFlowExecutionsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListFlowExecutionsResponse]
+        def flow_execution_summaries: () -> ::Array[Types::FlowExecutionSummary]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/BedrockAgentRuntime/Client.html#list_flow_executions-instance_method
+      def list_flow_executions: (
+                                  ?flow_alias_identifier: ::String,
+                                  flow_identifier: ::String,
+                                  ?max_results: ::Integer,
+                                  ?next_token: ::String
+                                ) -> _ListFlowExecutionsResponseSuccess
+                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListFlowExecutionsResponseSuccess
 
       interface _ListInvocationStepsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListInvocationStepsResponse]
@@ -1008,7 +642,7 @@ module Aws
                                          }
                                        }?,
                                        text: ::String?
-                                     },
+                                     }
                                    ]?
                                  },
                                  session_identifier: ::String
@@ -1029,7 +663,7 @@ module Aws
                           text: ::String?
                         },
                         type: ("TEXT")
-                      },
+                      }
                     ],
                     reranking_configuration: {
                       bedrock_reranking_configuration: {
@@ -1053,7 +687,7 @@ module Aws
                           type: ("TEXT" | "JSON")
                         },
                         type: ("INLINE")
-                      },
+                      }
                     ]
                   ) -> _RerankResponseSuccess
                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RerankResponseSuccess
@@ -1072,113 +706,17 @@ module Aws
                       },
                       knowledge_base_id: ::String,
                       ?next_token: ::String,
-                      ?retrieval_configuration: {
-                        vector_search_configuration: {
-                          filter: {
-                            and_all: Array[
-                              untyped,
-                            ]?,
-                            equals: {
-                              key: ::String,
-                              value: {
-                              }
-                            }?,
-                            greater_than: {
-                              key: ::String,
-                              value: {
-                              }
-                            }?,
-                            greater_than_or_equals: {
-                              key: ::String,
-                              value: {
-                              }
-                            }?,
-                            in: {
-                              key: ::String,
-                              value: {
-                              }
-                            }?,
-                            less_than: {
-                              key: ::String,
-                              value: {
-                              }
-                            }?,
-                            less_than_or_equals: {
-                              key: ::String,
-                              value: {
-                              }
-                            }?,
-                            list_contains: {
-                              key: ::String,
-                              value: {
-                              }
-                            }?,
-                            not_equals: {
-                              key: ::String,
-                              value: {
-                              }
-                            }?,
-                            not_in: {
-                              key: ::String,
-                              value: {
-                              }
-                            }?,
-                            or_all: Array[
-                              untyped,
-                            ]?,
-                            starts_with: {
-                              key: ::String,
-                              value: {
-                              }
-                            }?,
-                            string_contains: {
-                              key: ::String,
-                              value: {
-                              }
-                            }?
-                          }?,
-                          implicit_filter_configuration: {
-                            metadata_attributes: Array[
-                              {
-                                description: ::String,
-                                key: ::String,
-                                type: ("STRING" | "NUMBER" | "BOOLEAN" | "STRING_LIST")
-                              },
-                            ],
-                            model_arn: ::String
-                          }?,
-                          number_of_results: ::Integer?,
-                          override_search_type: ("HYBRID" | "SEMANTIC")?,
-                          reranking_configuration: {
-                            bedrock_reranking_configuration: {
-                              metadata_configuration: {
-                                selection_mode: ("SELECTIVE" | "ALL"),
-                                selective_mode_configuration: {
-                                  fields_to_exclude: Array[
-                                    {
-                                      field_name: ::String
-                                    },
-                                  ]?,
-                                  fields_to_include: Array[
-                                    {
-                                      field_name: ::String
-                                    },
-                                  ]?
-                                }?
-                              }?,
-                              model_configuration: {
-                                additional_model_request_fields: Hash[::String, {
-                                  }]?,
-                                model_arn: ::String
-                              },
-                              number_of_reranked_results: ::Integer?
-                            }?,
-                            type: ("BEDROCK_RERANKING_MODEL")
-                          }?
-                        }
-                      },
+                      ?retrieval_configuration: Params::knowledge_base_retrieval_configuration,
                       retrieval_query: {
-                        text: ::String
+                        image: {
+                          format: ("png" | "jpeg" | "gif" | "webp"),
+                          inline_content: ::String
+                        }?,
+                        text: ::String?,
+                        type: ("TEXT" | "IMAGE")?
+                      },
+                      ?user_context: {
+                        user_id: ::String
                       }
                     ) -> _RetrieveResponseSuccess
                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RetrieveResponseSuccess
@@ -1195,203 +733,14 @@ module Aws
                                    input: {
                                      text: ::String
                                    },
-                                   ?retrieve_and_generate_configuration: {
-                                     external_sources_configuration: {
-                                       generation_configuration: {
-                                         additional_model_request_fields: Hash[::String, {
-                                           }]?,
-                                         guardrail_configuration: {
-                                           guardrail_id: ::String,
-                                           guardrail_version: ::String
-                                         }?,
-                                         inference_config: {
-                                           text_inference_config: {
-                                             max_tokens: ::Integer?,
-                                             stop_sequences: Array[::String]?,
-                                             temperature: ::Float?,
-                                             top_p: ::Float?
-                                           }?
-                                         }?,
-                                         performance_config: {
-                                           latency: ("standard" | "optimized")?
-                                         }?,
-                                         prompt_template: {
-                                           text_prompt_template: ::String?
-                                         }?
-                                       }?,
-                                       model_arn: ::String,
-                                       sources: Array[
-                                         {
-                                           byte_content: {
-                                             content_type: ::String,
-                                             data: ::String,
-                                             identifier: ::String
-                                           }?,
-                                           s3_location: {
-                                             uri: ::String
-                                           }?,
-                                           source_type: ("S3" | "BYTE_CONTENT")
-                                         },
-                                       ]
-                                     }?,
-                                     knowledge_base_configuration: {
-                                       generation_configuration: {
-                                         additional_model_request_fields: Hash[::String, {
-                                           }]?,
-                                         guardrail_configuration: {
-                                           guardrail_id: ::String,
-                                           guardrail_version: ::String
-                                         }?,
-                                         inference_config: {
-                                           text_inference_config: {
-                                             max_tokens: ::Integer?,
-                                             stop_sequences: Array[::String]?,
-                                             temperature: ::Float?,
-                                             top_p: ::Float?
-                                           }?
-                                         }?,
-                                         performance_config: {
-                                           latency: ("standard" | "optimized")?
-                                         }?,
-                                         prompt_template: {
-                                           text_prompt_template: ::String?
-                                         }?
-                                       }?,
-                                       knowledge_base_id: ::String,
-                                       model_arn: ::String,
-                                       orchestration_configuration: {
-                                         additional_model_request_fields: Hash[::String, {
-                                           }]?,
-                                         inference_config: {
-                                           text_inference_config: {
-                                             max_tokens: ::Integer?,
-                                             stop_sequences: Array[::String]?,
-                                             temperature: ::Float?,
-                                             top_p: ::Float?
-                                           }?
-                                         }?,
-                                         performance_config: {
-                                           latency: ("standard" | "optimized")?
-                                         }?,
-                                         prompt_template: {
-                                           text_prompt_template: ::String?
-                                         }?,
-                                         query_transformation_configuration: {
-                                           type: ("QUERY_DECOMPOSITION")
-                                         }?
-                                       }?,
-                                       retrieval_configuration: {
-                                         vector_search_configuration: {
-                                           filter: {
-                                             and_all: Array[
-                                               untyped,
-                                             ]?,
-                                             equals: {
-                                               key: ::String,
-                                               value: {
-                                               }
-                                             }?,
-                                             greater_than: {
-                                               key: ::String,
-                                               value: {
-                                               }
-                                             }?,
-                                             greater_than_or_equals: {
-                                               key: ::String,
-                                               value: {
-                                               }
-                                             }?,
-                                             in: {
-                                               key: ::String,
-                                               value: {
-                                               }
-                                             }?,
-                                             less_than: {
-                                               key: ::String,
-                                               value: {
-                                               }
-                                             }?,
-                                             less_than_or_equals: {
-                                               key: ::String,
-                                               value: {
-                                               }
-                                             }?,
-                                             list_contains: {
-                                               key: ::String,
-                                               value: {
-                                               }
-                                             }?,
-                                             not_equals: {
-                                               key: ::String,
-                                               value: {
-                                               }
-                                             }?,
-                                             not_in: {
-                                               key: ::String,
-                                               value: {
-                                               }
-                                             }?,
-                                             or_all: Array[
-                                               untyped,
-                                             ]?,
-                                             starts_with: {
-                                               key: ::String,
-                                               value: {
-                                               }
-                                             }?,
-                                             string_contains: {
-                                               key: ::String,
-                                               value: {
-                                               }
-                                             }?
-                                           }?,
-                                           implicit_filter_configuration: {
-                                             metadata_attributes: Array[
-                                               {
-                                                 description: ::String,
-                                                 key: ::String,
-                                                 type: ("STRING" | "NUMBER" | "BOOLEAN" | "STRING_LIST")
-                                               },
-                                             ],
-                                             model_arn: ::String
-                                           }?,
-                                           number_of_results: ::Integer?,
-                                           override_search_type: ("HYBRID" | "SEMANTIC")?,
-                                           reranking_configuration: {
-                                             bedrock_reranking_configuration: {
-                                               metadata_configuration: {
-                                                 selection_mode: ("SELECTIVE" | "ALL"),
-                                                 selective_mode_configuration: {
-                                                   fields_to_exclude: Array[
-                                                     {
-                                                       field_name: ::String
-                                                     },
-                                                   ]?,
-                                                   fields_to_include: Array[
-                                                     {
-                                                       field_name: ::String
-                                                     },
-                                                   ]?
-                                                 }?
-                                               }?,
-                                               model_configuration: {
-                                                 additional_model_request_fields: Hash[::String, {
-                                                   }]?,
-                                                 model_arn: ::String
-                                               },
-                                               number_of_reranked_results: ::Integer?
-                                             }?,
-                                             type: ("BEDROCK_RERANKING_MODEL")
-                                           }?
-                                         }
-                                       }?
-                                     }?,
-                                     type: ("KNOWLEDGE_BASE" | "EXTERNAL_SOURCES")
-                                   },
+                                   ?retrieve_and_generate_configuration: Params::retrieve_and_generate_configuration,
                                    ?session_configuration: {
                                      kms_key_arn: ::String
                                    },
-                                   ?session_id: ::String
+                                   ?session_id: ::String,
+                                   ?user_context: {
+                                     user_id: ::String
+                                   }
                                  ) -> _RetrieveAndGenerateResponseSuccess
                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RetrieveAndGenerateResponseSuccess
 
@@ -1405,205 +754,49 @@ module Aws
                                           input: {
                                             text: ::String
                                           },
-                                          ?retrieve_and_generate_configuration: {
-                                            external_sources_configuration: {
-                                              generation_configuration: {
-                                                additional_model_request_fields: Hash[::String, {
-                                                  }]?,
-                                                guardrail_configuration: {
-                                                  guardrail_id: ::String,
-                                                  guardrail_version: ::String
-                                                }?,
-                                                inference_config: {
-                                                  text_inference_config: {
-                                                    max_tokens: ::Integer?,
-                                                    stop_sequences: Array[::String]?,
-                                                    temperature: ::Float?,
-                                                    top_p: ::Float?
-                                                  }?
-                                                }?,
-                                                performance_config: {
-                                                  latency: ("standard" | "optimized")?
-                                                }?,
-                                                prompt_template: {
-                                                  text_prompt_template: ::String?
-                                                }?
-                                              }?,
-                                              model_arn: ::String,
-                                              sources: Array[
-                                                {
-                                                  byte_content: {
-                                                    content_type: ::String,
-                                                    data: ::String,
-                                                    identifier: ::String
-                                                  }?,
-                                                  s3_location: {
-                                                    uri: ::String
-                                                  }?,
-                                                  source_type: ("S3" | "BYTE_CONTENT")
-                                                },
-                                              ]
-                                            }?,
-                                            knowledge_base_configuration: {
-                                              generation_configuration: {
-                                                additional_model_request_fields: Hash[::String, {
-                                                  }]?,
-                                                guardrail_configuration: {
-                                                  guardrail_id: ::String,
-                                                  guardrail_version: ::String
-                                                }?,
-                                                inference_config: {
-                                                  text_inference_config: {
-                                                    max_tokens: ::Integer?,
-                                                    stop_sequences: Array[::String]?,
-                                                    temperature: ::Float?,
-                                                    top_p: ::Float?
-                                                  }?
-                                                }?,
-                                                performance_config: {
-                                                  latency: ("standard" | "optimized")?
-                                                }?,
-                                                prompt_template: {
-                                                  text_prompt_template: ::String?
-                                                }?
-                                              }?,
-                                              knowledge_base_id: ::String,
-                                              model_arn: ::String,
-                                              orchestration_configuration: {
-                                                additional_model_request_fields: Hash[::String, {
-                                                  }]?,
-                                                inference_config: {
-                                                  text_inference_config: {
-                                                    max_tokens: ::Integer?,
-                                                    stop_sequences: Array[::String]?,
-                                                    temperature: ::Float?,
-                                                    top_p: ::Float?
-                                                  }?
-                                                }?,
-                                                performance_config: {
-                                                  latency: ("standard" | "optimized")?
-                                                }?,
-                                                prompt_template: {
-                                                  text_prompt_template: ::String?
-                                                }?,
-                                                query_transformation_configuration: {
-                                                  type: ("QUERY_DECOMPOSITION")
-                                                }?
-                                              }?,
-                                              retrieval_configuration: {
-                                                vector_search_configuration: {
-                                                  filter: {
-                                                    and_all: Array[
-                                                      untyped,
-                                                    ]?,
-                                                    equals: {
-                                                      key: ::String,
-                                                      value: {
-                                                      }
-                                                    }?,
-                                                    greater_than: {
-                                                      key: ::String,
-                                                      value: {
-                                                      }
-                                                    }?,
-                                                    greater_than_or_equals: {
-                                                      key: ::String,
-                                                      value: {
-                                                      }
-                                                    }?,
-                                                    in: {
-                                                      key: ::String,
-                                                      value: {
-                                                      }
-                                                    }?,
-                                                    less_than: {
-                                                      key: ::String,
-                                                      value: {
-                                                      }
-                                                    }?,
-                                                    less_than_or_equals: {
-                                                      key: ::String,
-                                                      value: {
-                                                      }
-                                                    }?,
-                                                    list_contains: {
-                                                      key: ::String,
-                                                      value: {
-                                                      }
-                                                    }?,
-                                                    not_equals: {
-                                                      key: ::String,
-                                                      value: {
-                                                      }
-                                                    }?,
-                                                    not_in: {
-                                                      key: ::String,
-                                                      value: {
-                                                      }
-                                                    }?,
-                                                    or_all: Array[
-                                                      untyped,
-                                                    ]?,
-                                                    starts_with: {
-                                                      key: ::String,
-                                                      value: {
-                                                      }
-                                                    }?,
-                                                    string_contains: {
-                                                      key: ::String,
-                                                      value: {
-                                                      }
-                                                    }?
-                                                  }?,
-                                                  implicit_filter_configuration: {
-                                                    metadata_attributes: Array[
-                                                      {
-                                                        description: ::String,
-                                                        key: ::String,
-                                                        type: ("STRING" | "NUMBER" | "BOOLEAN" | "STRING_LIST")
-                                                      },
-                                                    ],
-                                                    model_arn: ::String
-                                                  }?,
-                                                  number_of_results: ::Integer?,
-                                                  override_search_type: ("HYBRID" | "SEMANTIC")?,
-                                                  reranking_configuration: {
-                                                    bedrock_reranking_configuration: {
-                                                      metadata_configuration: {
-                                                        selection_mode: ("SELECTIVE" | "ALL"),
-                                                        selective_mode_configuration: {
-                                                          fields_to_exclude: Array[
-                                                            {
-                                                              field_name: ::String
-                                                            },
-                                                          ]?,
-                                                          fields_to_include: Array[
-                                                            {
-                                                              field_name: ::String
-                                                            },
-                                                          ]?
-                                                        }?
-                                                      }?,
-                                                      model_configuration: {
-                                                        additional_model_request_fields: Hash[::String, {
-                                                          }]?,
-                                                        model_arn: ::String
-                                                      },
-                                                      number_of_reranked_results: ::Integer?
-                                                    }?,
-                                                    type: ("BEDROCK_RERANKING_MODEL")
-                                                  }?
-                                                }
-                                              }?
-                                            }?,
-                                            type: ("KNOWLEDGE_BASE" | "EXTERNAL_SOURCES")
-                                          },
+                                          ?retrieve_and_generate_configuration: Params::retrieve_and_generate_configuration,
                                           ?session_configuration: {
                                             kms_key_arn: ::String
                                           },
-                                          ?session_id: ::String
+                                          ?session_id: ::String,
+                                          ?user_context: {
+                                            user_id: ::String
+                                          }
                                         ) ?{ (*untyped) -> void } -> _RetrieveAndGenerateStreamResponseSuccess
                                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) ?{ (*untyped) -> void } -> _RetrieveAndGenerateStreamResponseSuccess
+
+      interface _StartFlowExecutionResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StartFlowExecutionResponse]
+        def execution_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/BedrockAgentRuntime/Client.html#start_flow_execution-instance_method
+      def start_flow_execution: (
+                                  flow_alias_identifier: ::String,
+                                  ?flow_execution_name: ::String,
+                                  flow_identifier: ::String,
+                                  inputs: Array[
+                                    Params::flow_input
+                                  ],
+                                  ?model_performance_configuration: {
+                                    performance_config: {
+                                      latency: ("standard" | "optimized")?
+                                    }?
+                                  }
+                                ) -> _StartFlowExecutionResponseSuccess
+                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartFlowExecutionResponseSuccess
+
+      interface _StopFlowExecutionResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StopFlowExecutionResponse]
+        def execution_arn: () -> ::String
+        def status: () -> ("Running" | "Succeeded" | "Failed" | "TimedOut" | "Aborted")
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/BedrockAgentRuntime/Client.html#stop_flow_execution-instance_method
+      def stop_flow_execution: (
+                                 execution_identifier: ::String,
+                                 flow_alias_identifier: ::String,
+                                 flow_identifier: ::String
+                               ) -> _StopFlowExecutionResponseSuccess
+                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StopFlowExecutionResponseSuccess
 
       interface _TagResourceResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::TagResourceResponse]

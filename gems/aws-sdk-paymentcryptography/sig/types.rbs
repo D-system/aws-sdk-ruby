@@ -13,9 +13,43 @@ module Aws::PaymentCryptography
       SENSITIVE: []
     end
 
+    class AddKeyReplicationRegionsInput
+      attr_accessor key_identifier: ::String
+      attr_accessor replication_regions: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class AddKeyReplicationRegionsOutput
+      attr_accessor key: Types::Key
+      SENSITIVE: []
+    end
+
     class Alias
       attr_accessor alias_name: ::String
       attr_accessor key_arn: ::String
+      SENSITIVE: []
+    end
+
+    class AssociateMpaTeamInput
+      attr_accessor action: ("IMPORT_ROOT_PUBLIC_KEY_CERTIFICATE")
+      attr_accessor mpa_team_arn: ::String
+      attr_accessor requester_comment: ::String
+      SENSITIVE: [:requester_comment]
+    end
+
+    class AssociateMpaTeamOutput
+      attr_accessor mpa_team_association: Types::MpaTeamAssociation
+      SENSITIVE: []
+    end
+
+    class CertificateSubjectType
+      attr_accessor common_name: ::String
+      attr_accessor organization_unit: ::String
+      attr_accessor organization: ::String
+      attr_accessor city: ::String
+      attr_accessor country: ::String
+      attr_accessor state_or_province: ::String
+      attr_accessor email_address: ::String
       SENSITIVE: []
     end
 
@@ -37,10 +71,12 @@ module Aws::PaymentCryptography
 
     class CreateKeyInput
       attr_accessor key_attributes: Types::KeyAttributes
-      attr_accessor key_check_value_algorithm: ("CMAC" | "ANSI_X9_24")
+      attr_accessor key_check_value_algorithm: ("CMAC" | "ANSI_X9_24" | "HMAC" | "SHA_1")
       attr_accessor exportable: bool
       attr_accessor enabled: bool
       attr_accessor tags: ::Array[Types::Tag]
+      attr_accessor derive_key_usage: ("TR31_B0_BASE_DERIVATION_KEY" | "TR31_C0_CARD_VERIFICATION_KEY" | "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY" | "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS" | "TR31_E1_EMV_MKEY_CONFIDENTIALITY" | "TR31_E2_EMV_MKEY_INTEGRITY" | "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS" | "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION" | "TR31_E6_EMV_MKEY_OTHER" | "TR31_K0_KEY_ENCRYPTION_KEY" | "TR31_K1_KEY_BLOCK_PROTECTION_KEY" | "TR31_M3_ISO_9797_3_MAC_KEY" | "TR31_M1_ISO_9797_1_MAC_KEY" | "TR31_M6_ISO_9797_5_CMAC_KEY" | "TR31_M7_HMAC_KEY" | "TR31_P0_PIN_ENCRYPTION_KEY" | "TR31_P1_PIN_GENERATION_KEY" | "TR31_V1_IBM3624_PIN_VERIFICATION_KEY" | "TR31_V2_VISA_PIN_VERIFICATION_KEY")
+      attr_accessor replication_regions: ::Array[::String]
       SENSITIVE: []
     end
 
@@ -68,9 +104,77 @@ module Aws::PaymentCryptography
       SENSITIVE: []
     end
 
+    class DeleteResourcePolicyInput
+      attr_accessor resource_arn: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteResourcePolicyOutput < Aws::EmptyStructure
+    end
+
+    class DiffieHellmanDerivationData
+      attr_accessor shared_information: ::String
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class SharedInformation < DiffieHellmanDerivationData
+      end
+      class Unknown < DiffieHellmanDerivationData
+      end
+    end
+
+    class DisableDefaultKeyReplicationRegionsInput
+      attr_accessor replication_regions: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class DisableDefaultKeyReplicationRegionsOutput
+      attr_accessor enabled_replication_regions: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class DisassociateMpaTeamInput
+      attr_accessor action: ("IMPORT_ROOT_PUBLIC_KEY_CERTIFICATE")
+      attr_accessor requester_comment: ::String
+      SENSITIVE: [:requester_comment]
+    end
+
+    class DisassociateMpaTeamOutput
+      attr_accessor mpa_team_association: Types::MpaTeamAssociation
+      SENSITIVE: []
+    end
+
+    class EnableDefaultKeyReplicationRegionsInput
+      attr_accessor replication_regions: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class EnableDefaultKeyReplicationRegionsOutput
+      attr_accessor enabled_replication_regions: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class ExportAs2805KeyCryptogram
+      attr_accessor wrapping_key_identifier: ::String
+      attr_accessor as_2805_key_variant: ("TERMINAL_MAJOR_KEY_VARIANT_00" | "PIN_ENCRYPTION_KEY_VARIANT_28" | "MESSAGE_AUTHENTICATION_KEY_VARIANT_24" | "DATA_ENCRYPTION_KEY_VARIANT_22")
+      SENSITIVE: []
+    end
+
     class ExportAttributes
       attr_accessor export_dukpt_initial_key: Types::ExportDukptInitialKey
-      attr_accessor key_check_value_algorithm: ("CMAC" | "ANSI_X9_24")
+      attr_accessor key_check_value_algorithm: ("CMAC" | "ANSI_X9_24" | "HMAC" | "SHA_1")
+      SENSITIVE: []
+    end
+
+    class ExportDiffieHellmanTr31KeyBlock
+      attr_accessor private_key_identifier: ::String
+      attr_accessor certificate_authority_public_key_identifier: ::String
+      attr_accessor public_key_certificate: ::String
+      attr_accessor derive_key_algorithm: ("TDES_2KEY" | "TDES_3KEY" | "AES_128" | "AES_192" | "AES_256" | "HMAC_SHA256" | "HMAC_SHA384" | "HMAC_SHA512" | "HMAC_SHA224")
+      attr_accessor key_derivation_function: ("NIST_SP800" | "ANSI_X963")
+      attr_accessor key_derivation_hash_algorithm: ("SHA_256" | "SHA_384" | "SHA_512")
+      attr_accessor derivation_data: Types::DiffieHellmanDerivationData
+      attr_accessor key_block_headers: Types::KeyBlockHeaders
       SENSITIVE: []
     end
 
@@ -83,7 +187,7 @@ module Aws::PaymentCryptography
       attr_accessor certificate_authority_public_key_identifier: ::String
       attr_accessor wrapping_key_certificate: ::String
       attr_accessor wrapping_spec: ("RSA_OAEP_SHA_256" | "RSA_OAEP_SHA_512")
-      SENSITIVE: [:wrapping_key_certificate]
+      SENSITIVE: []
     end
 
     class ExportKeyInput
@@ -97,6 +201,8 @@ module Aws::PaymentCryptography
       attr_accessor tr_31_key_block: Types::ExportTr31KeyBlock
       attr_accessor tr_34_key_block: Types::ExportTr34KeyBlock
       attr_accessor key_cryptogram: Types::ExportKeyCryptogram
+      attr_accessor diffie_hellman_tr_31_key_block: Types::ExportDiffieHellmanTr31KeyBlock
+      attr_accessor as_2805_key_cryptogram: Types::ExportAs2805KeyCryptogram
       attr_accessor unknown: untyped
       SENSITIVE: []
 
@@ -105,6 +211,10 @@ module Aws::PaymentCryptography
       class Tr34KeyBlock < ExportKeyMaterial
       end
       class KeyCryptogram < ExportKeyMaterial
+      end
+      class DiffieHellmanTr31KeyBlock < ExportKeyMaterial
+      end
+      class As2805KeyCryptogram < ExportKeyMaterial
       end
       class Unknown < ExportKeyMaterial
       end
@@ -125,10 +235,12 @@ module Aws::PaymentCryptography
       attr_accessor certificate_authority_public_key_identifier: ::String
       attr_accessor wrapping_key_certificate: ::String
       attr_accessor export_token: ::String
+      attr_accessor signing_key_identifier: ::String
+      attr_accessor signing_key_certificate: ::String
       attr_accessor key_block_format: ("X9_TR34_2012")
       attr_accessor random_nonce: ::String
       attr_accessor key_block_headers: Types::KeyBlockHeaders
-      SENSITIVE: [:wrapping_key_certificate]
+      SENSITIVE: []
     end
 
     class GetAliasInput
@@ -138,6 +250,26 @@ module Aws::PaymentCryptography
 
     class GetAliasOutput
       attr_accessor alias: Types::Alias
+      SENSITIVE: []
+    end
+
+    class GetCertificateSigningRequestInput
+      attr_accessor key_identifier: ::String
+      attr_accessor signing_algorithm: ("SHA224" | "SHA256" | "SHA384" | "SHA512")
+      attr_accessor certificate_subject: Types::CertificateSubjectType
+      SENSITIVE: []
+    end
+
+    class GetCertificateSigningRequestOutput
+      attr_accessor certificate_signing_request: ::String
+      SENSITIVE: [:certificate_signing_request]
+    end
+
+    class GetDefaultKeyReplicationRegionsInput < Aws::EmptyStructure
+    end
+
+    class GetDefaultKeyReplicationRegionsOutput
+      attr_accessor enabled_replication_regions: ::Array[::String]
       SENSITIVE: []
     end
 
@@ -151,34 +283,46 @@ module Aws::PaymentCryptography
       SENSITIVE: []
     end
 
+    class GetMpaTeamAssociationInput
+      attr_accessor action: ("IMPORT_ROOT_PUBLIC_KEY_CERTIFICATE")
+      SENSITIVE: []
+    end
+
+    class GetMpaTeamAssociationOutput
+      attr_accessor mpa_team_association: Types::MpaTeamAssociation
+      SENSITIVE: []
+    end
+
     class GetParametersForExportInput
       attr_accessor key_material_type: ("TR34_KEY_BLOCK" | "TR31_KEY_BLOCK" | "ROOT_PUBLIC_KEY_CERTIFICATE" | "TRUSTED_PUBLIC_KEY_CERTIFICATE" | "KEY_CRYPTOGRAM")
-      attr_accessor signing_key_algorithm: ("TDES_2KEY" | "TDES_3KEY" | "AES_128" | "AES_192" | "AES_256" | "RSA_2048" | "RSA_3072" | "RSA_4096" | "ECC_NIST_P256" | "ECC_NIST_P384")
+      attr_accessor signing_key_algorithm: ("TDES_2KEY" | "TDES_3KEY" | "AES_128" | "AES_192" | "AES_256" | "HMAC_SHA256" | "HMAC_SHA384" | "HMAC_SHA512" | "HMAC_SHA224" | "RSA_2048" | "RSA_3072" | "RSA_4096" | "ECC_NIST_P256" | "ECC_NIST_P384" | "ECC_NIST_P521")
+      attr_accessor reuse_last_generated_token: bool
       SENSITIVE: []
     end
 
     class GetParametersForExportOutput
       attr_accessor signing_key_certificate: ::String
       attr_accessor signing_key_certificate_chain: ::String
-      attr_accessor signing_key_algorithm: ("TDES_2KEY" | "TDES_3KEY" | "AES_128" | "AES_192" | "AES_256" | "RSA_2048" | "RSA_3072" | "RSA_4096" | "ECC_NIST_P256" | "ECC_NIST_P384")
+      attr_accessor signing_key_algorithm: ("TDES_2KEY" | "TDES_3KEY" | "AES_128" | "AES_192" | "AES_256" | "HMAC_SHA256" | "HMAC_SHA384" | "HMAC_SHA512" | "HMAC_SHA224" | "RSA_2048" | "RSA_3072" | "RSA_4096" | "ECC_NIST_P256" | "ECC_NIST_P384" | "ECC_NIST_P521")
       attr_accessor export_token: ::String
       attr_accessor parameters_valid_until_timestamp: ::Time
-      SENSITIVE: [:signing_key_certificate, :signing_key_certificate_chain]
+      SENSITIVE: []
     end
 
     class GetParametersForImportInput
       attr_accessor key_material_type: ("TR34_KEY_BLOCK" | "TR31_KEY_BLOCK" | "ROOT_PUBLIC_KEY_CERTIFICATE" | "TRUSTED_PUBLIC_KEY_CERTIFICATE" | "KEY_CRYPTOGRAM")
-      attr_accessor wrapping_key_algorithm: ("TDES_2KEY" | "TDES_3KEY" | "AES_128" | "AES_192" | "AES_256" | "RSA_2048" | "RSA_3072" | "RSA_4096" | "ECC_NIST_P256" | "ECC_NIST_P384")
+      attr_accessor wrapping_key_algorithm: ("TDES_2KEY" | "TDES_3KEY" | "AES_128" | "AES_192" | "AES_256" | "HMAC_SHA256" | "HMAC_SHA384" | "HMAC_SHA512" | "HMAC_SHA224" | "RSA_2048" | "RSA_3072" | "RSA_4096" | "ECC_NIST_P256" | "ECC_NIST_P384" | "ECC_NIST_P521")
+      attr_accessor reuse_last_generated_token: bool
       SENSITIVE: []
     end
 
     class GetParametersForImportOutput
       attr_accessor wrapping_key_certificate: ::String
       attr_accessor wrapping_key_certificate_chain: ::String
-      attr_accessor wrapping_key_algorithm: ("TDES_2KEY" | "TDES_3KEY" | "AES_128" | "AES_192" | "AES_256" | "RSA_2048" | "RSA_3072" | "RSA_4096" | "ECC_NIST_P256" | "ECC_NIST_P384")
+      attr_accessor wrapping_key_algorithm: ("TDES_2KEY" | "TDES_3KEY" | "AES_128" | "AES_192" | "AES_256" | "HMAC_SHA256" | "HMAC_SHA384" | "HMAC_SHA512" | "HMAC_SHA224" | "RSA_2048" | "RSA_3072" | "RSA_4096" | "ECC_NIST_P256" | "ECC_NIST_P384" | "ECC_NIST_P521")
       attr_accessor import_token: ::String
       attr_accessor parameters_valid_until_timestamp: ::Time
-      SENSITIVE: [:wrapping_key_certificate, :wrapping_key_certificate_chain]
+      SENSITIVE: []
     end
 
     class GetPublicKeyCertificateInput
@@ -189,7 +333,40 @@ module Aws::PaymentCryptography
     class GetPublicKeyCertificateOutput
       attr_accessor key_certificate: ::String
       attr_accessor key_certificate_chain: ::String
-      SENSITIVE: [:key_certificate, :key_certificate_chain]
+      SENSITIVE: []
+    end
+
+    class GetResourcePolicyInput
+      attr_accessor resource_arn: ::String
+      SENSITIVE: []
+    end
+
+    class GetResourcePolicyOutput
+      attr_accessor resource_arn: ::String
+      attr_accessor policy: ::String
+      SENSITIVE: []
+    end
+
+    class ImportAs2805KeyCryptogram
+      attr_accessor as_2805_key_variant: ("TERMINAL_MAJOR_KEY_VARIANT_00" | "PIN_ENCRYPTION_KEY_VARIANT_28" | "MESSAGE_AUTHENTICATION_KEY_VARIANT_24" | "DATA_ENCRYPTION_KEY_VARIANT_22")
+      attr_accessor key_modes_of_use: Types::KeyModesOfUse
+      attr_accessor key_algorithm: ("TDES_2KEY" | "TDES_3KEY" | "AES_128" | "AES_192" | "AES_256" | "HMAC_SHA256" | "HMAC_SHA384" | "HMAC_SHA512" | "HMAC_SHA224" | "RSA_2048" | "RSA_3072" | "RSA_4096" | "ECC_NIST_P256" | "ECC_NIST_P384" | "ECC_NIST_P521")
+      attr_accessor exportable: bool
+      attr_accessor wrapping_key_identifier: ::String
+      attr_accessor wrapped_key_cryptogram: ::String
+      SENSITIVE: [:wrapped_key_cryptogram]
+    end
+
+    class ImportDiffieHellmanTr31KeyBlock
+      attr_accessor private_key_identifier: ::String
+      attr_accessor certificate_authority_public_key_identifier: ::String
+      attr_accessor public_key_certificate: ::String
+      attr_accessor derive_key_algorithm: ("TDES_2KEY" | "TDES_3KEY" | "AES_128" | "AES_192" | "AES_256" | "HMAC_SHA256" | "HMAC_SHA384" | "HMAC_SHA512" | "HMAC_SHA224")
+      attr_accessor key_derivation_function: ("NIST_SP800" | "ANSI_X963")
+      attr_accessor key_derivation_hash_algorithm: ("SHA_256" | "SHA_384" | "SHA_512")
+      attr_accessor derivation_data: Types::DiffieHellmanDerivationData
+      attr_accessor wrapped_key_block: ::String
+      SENSITIVE: [:wrapped_key_block]
     end
 
     class ImportKeyCryptogram
@@ -203,10 +380,12 @@ module Aws::PaymentCryptography
 
     class ImportKeyInput
       attr_accessor key_material: Types::ImportKeyMaterial
-      attr_accessor key_check_value_algorithm: ("CMAC" | "ANSI_X9_24")
+      attr_accessor key_check_value_algorithm: ("CMAC" | "ANSI_X9_24" | "HMAC" | "SHA_1")
       attr_accessor enabled: bool
       attr_accessor tags: ::Array[Types::Tag]
-      SENSITIVE: []
+      attr_accessor replication_regions: ::Array[::String]
+      attr_accessor requester_comment: ::String
+      SENSITIVE: [:requester_comment]
     end
 
     class ImportKeyMaterial
@@ -215,6 +394,8 @@ module Aws::PaymentCryptography
       attr_accessor tr_31_key_block: Types::ImportTr31KeyBlock
       attr_accessor tr_34_key_block: Types::ImportTr34KeyBlock
       attr_accessor key_cryptogram: Types::ImportKeyCryptogram
+      attr_accessor diffie_hellman_tr_31_key_block: Types::ImportDiffieHellmanTr31KeyBlock
+      attr_accessor as_2805_key_cryptogram: Types::ImportAs2805KeyCryptogram
       attr_accessor unknown: untyped
       SENSITIVE: []
 
@@ -227,6 +408,10 @@ module Aws::PaymentCryptography
       class Tr34KeyBlock < ImportKeyMaterial
       end
       class KeyCryptogram < ImportKeyMaterial
+      end
+      class DiffieHellmanTr31KeyBlock < ImportKeyMaterial
+      end
+      class As2805KeyCryptogram < ImportKeyMaterial
       end
       class Unknown < ImportKeyMaterial
       end
@@ -247,10 +432,12 @@ module Aws::PaymentCryptography
       attr_accessor certificate_authority_public_key_identifier: ::String
       attr_accessor signing_key_certificate: ::String
       attr_accessor import_token: ::String
+      attr_accessor wrapping_key_identifier: ::String
+      attr_accessor wrapping_key_certificate: ::String
       attr_accessor wrapped_key_block: ::String
       attr_accessor key_block_format: ("X9_TR34_2012")
       attr_accessor random_nonce: ::String
-      SENSITIVE: [:signing_key_certificate, :wrapped_key_block]
+      SENSITIVE: [:wrapped_key_block]
     end
 
     class InternalServerException
@@ -262,7 +449,7 @@ module Aws::PaymentCryptography
       attr_accessor key_arn: ::String
       attr_accessor key_attributes: Types::KeyAttributes
       attr_accessor key_check_value: ::String
-      attr_accessor key_check_value_algorithm: ("CMAC" | "ANSI_X9_24")
+      attr_accessor key_check_value_algorithm: ("CMAC" | "ANSI_X9_24" | "HMAC" | "SHA_1")
       attr_accessor enabled: bool
       attr_accessor exportable: bool
       attr_accessor key_state: ("CREATE_IN_PROGRESS" | "CREATE_COMPLETE" | "DELETE_PENDING" | "DELETE_COMPLETE")
@@ -272,13 +459,19 @@ module Aws::PaymentCryptography
       attr_accessor usage_stop_timestamp: ::Time
       attr_accessor delete_pending_timestamp: ::Time
       attr_accessor delete_timestamp: ::Time
+      attr_accessor derive_key_usage: ("TR31_B0_BASE_DERIVATION_KEY" | "TR31_C0_CARD_VERIFICATION_KEY" | "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY" | "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS" | "TR31_E1_EMV_MKEY_CONFIDENTIALITY" | "TR31_E2_EMV_MKEY_INTEGRITY" | "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS" | "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION" | "TR31_E6_EMV_MKEY_OTHER" | "TR31_K0_KEY_ENCRYPTION_KEY" | "TR31_K1_KEY_BLOCK_PROTECTION_KEY" | "TR31_M3_ISO_9797_3_MAC_KEY" | "TR31_M1_ISO_9797_1_MAC_KEY" | "TR31_M6_ISO_9797_5_CMAC_KEY" | "TR31_M7_HMAC_KEY" | "TR31_P0_PIN_ENCRYPTION_KEY" | "TR31_P1_PIN_GENERATION_KEY" | "TR31_V1_IBM3624_PIN_VERIFICATION_KEY" | "TR31_V2_VISA_PIN_VERIFICATION_KEY")
+      attr_accessor multi_region_key_type: ("PRIMARY" | "REPLICA")
+      attr_accessor primary_region: ::String
+      attr_accessor replication_status: ::Hash[::String, Types::ReplicationStatusType]
+      attr_accessor using_default_replication_regions: bool
+      attr_accessor mpa_status: Types::MpaStatus
       SENSITIVE: []
     end
 
     class KeyAttributes
-      attr_accessor key_usage: ("TR31_B0_BASE_DERIVATION_KEY" | "TR31_C0_CARD_VERIFICATION_KEY" | "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY" | "TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION" | "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS" | "TR31_E1_EMV_MKEY_CONFIDENTIALITY" | "TR31_E2_EMV_MKEY_INTEGRITY" | "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS" | "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION" | "TR31_E6_EMV_MKEY_OTHER" | "TR31_K0_KEY_ENCRYPTION_KEY" | "TR31_K1_KEY_BLOCK_PROTECTION_KEY" | "TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT" | "TR31_M3_ISO_9797_3_MAC_KEY" | "TR31_M1_ISO_9797_1_MAC_KEY" | "TR31_M6_ISO_9797_5_CMAC_KEY" | "TR31_M7_HMAC_KEY" | "TR31_P0_PIN_ENCRYPTION_KEY" | "TR31_P1_PIN_GENERATION_KEY" | "TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE" | "TR31_V1_IBM3624_PIN_VERIFICATION_KEY" | "TR31_V2_VISA_PIN_VERIFICATION_KEY" | "TR31_K2_TR34_ASYMMETRIC_KEY")
+      attr_accessor key_usage: ("TR31_B0_BASE_DERIVATION_KEY" | "TR31_C0_CARD_VERIFICATION_KEY" | "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY" | "TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION" | "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS" | "TR31_E1_EMV_MKEY_CONFIDENTIALITY" | "TR31_E2_EMV_MKEY_INTEGRITY" | "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS" | "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION" | "TR31_E6_EMV_MKEY_OTHER" | "TR31_K0_KEY_ENCRYPTION_KEY" | "TR31_K1_KEY_BLOCK_PROTECTION_KEY" | "TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT" | "TR31_M0_ISO_16609_MAC_KEY" | "TR31_M3_ISO_9797_3_MAC_KEY" | "TR31_M1_ISO_9797_1_MAC_KEY" | "TR31_M6_ISO_9797_5_CMAC_KEY" | "TR31_M7_HMAC_KEY" | "TR31_P0_PIN_ENCRYPTION_KEY" | "TR31_P1_PIN_GENERATION_KEY" | "TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE" | "TR31_V1_IBM3624_PIN_VERIFICATION_KEY" | "TR31_V2_VISA_PIN_VERIFICATION_KEY" | "TR31_K2_TR34_ASYMMETRIC_KEY")
       attr_accessor key_class: ("SYMMETRIC_KEY" | "ASYMMETRIC_KEY_PAIR" | "PRIVATE_KEY" | "PUBLIC_KEY")
-      attr_accessor key_algorithm: ("TDES_2KEY" | "TDES_3KEY" | "AES_128" | "AES_192" | "AES_256" | "RSA_2048" | "RSA_3072" | "RSA_4096" | "ECC_NIST_P256" | "ECC_NIST_P384")
+      attr_accessor key_algorithm: ("TDES_2KEY" | "TDES_3KEY" | "AES_128" | "AES_192" | "AES_256" | "HMAC_SHA256" | "HMAC_SHA384" | "HMAC_SHA512" | "HMAC_SHA224" | "RSA_2048" | "RSA_3072" | "RSA_4096" | "ECC_NIST_P256" | "ECC_NIST_P384" | "ECC_NIST_P521")
       attr_accessor key_modes_of_use: Types::KeyModesOfUse
       SENSITIVE: []
     end
@@ -311,6 +504,8 @@ module Aws::PaymentCryptography
       attr_accessor key_check_value: ::String
       attr_accessor exportable: bool
       attr_accessor enabled: bool
+      attr_accessor multi_region_key_type: ("PRIMARY" | "REPLICA")
+      attr_accessor primary_region: ::String
       SENSITIVE: []
     end
 
@@ -353,6 +548,56 @@ module Aws::PaymentCryptography
       SENSITIVE: []
     end
 
+    class MpaStatus
+      attr_accessor mpa_session_arn: ::String
+      attr_accessor status: ("PENDING" | "APPROVED" | "FAILED" | "CANCELLED")
+      attr_accessor initiation_date: ::Time
+      attr_accessor status_message: ::String
+      SENSITIVE: []
+    end
+
+    class MpaTeamAssociation
+      attr_accessor action: ("IMPORT_ROOT_PUBLIC_KEY_CERTIFICATE")
+      attr_accessor mpa_team_arn: ::String
+      attr_accessor association_state: ("ACTIVE" | "UPDATE_PENDING" | "DELETE_PENDING")
+      attr_accessor mpa_status: Types::MpaStatus
+      SENSITIVE: []
+    end
+
+    class PublicPolicyException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class PutResourcePolicyInput
+      attr_accessor resource_arn: ::String
+      attr_accessor policy: ::String
+      SENSITIVE: []
+    end
+
+    class PutResourcePolicyOutput
+      attr_accessor resource_arn: ::String
+      attr_accessor policy: ::String
+      SENSITIVE: []
+    end
+
+    class RemoveKeyReplicationRegionsInput
+      attr_accessor key_identifier: ::String
+      attr_accessor replication_regions: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class RemoveKeyReplicationRegionsOutput
+      attr_accessor key: Types::Key
+      SENSITIVE: []
+    end
+
+    class ReplicationStatusType
+      attr_accessor status: ("IN_PROGRESS" | "DELETE_IN_PROGRESS" | "FAILED" | "SYNCHRONIZED")
+      attr_accessor status_message: ::String
+      SENSITIVE: []
+    end
+
     class ResourceNotFoundException
       attr_accessor resource_id: ::String
       SENSITIVE: []
@@ -371,7 +616,7 @@ module Aws::PaymentCryptography
     class RootCertificatePublicKey
       attr_accessor key_attributes: Types::KeyAttributes
       attr_accessor public_key_certificate: ::String
-      SENSITIVE: [:public_key_certificate]
+      SENSITIVE: []
     end
 
     class ServiceQuotaExceededException
@@ -428,7 +673,7 @@ module Aws::PaymentCryptography
       attr_accessor key_attributes: Types::KeyAttributes
       attr_accessor public_key_certificate: ::String
       attr_accessor certificate_authority_public_key_identifier: ::String
-      SENSITIVE: [:public_key_certificate]
+      SENSITIVE: []
     end
 
     class UntagResourceInput
@@ -461,7 +706,7 @@ module Aws::PaymentCryptography
       attr_accessor wrapped_key_material_format: ("KEY_CRYPTOGRAM" | "TR31_KEY_BLOCK" | "TR34_KEY_BLOCK")
       attr_accessor key_material: ::String
       attr_accessor key_check_value: ::String
-      attr_accessor key_check_value_algorithm: ("CMAC" | "ANSI_X9_24")
+      attr_accessor key_check_value_algorithm: ("CMAC" | "ANSI_X9_24" | "HMAC" | "SHA_1")
       SENSITIVE: [:key_material]
     end
   end

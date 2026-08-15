@@ -13,17 +13,49 @@ module Aws::Deadline
     # Provides information about the GPU accelerators used for jobs
     # processed by a fleet.
     #
+    # Accelerator capabilities cannot be used with wait-and-save fleets. If
+    # you specify accelerator capabilities, you must use either spot or
+    # on-demand instance market options.
+    #
+    # <note markdown="1"> Each accelerator type maps to specific EC2 instance families:
+    #
+    #  * `t4`: Uses G4dn instance family
+    #
+    # * `a10g`: Uses G5 instance family
+    #
+    # * `l4`: Uses G6 and Gr6 instance families
+    #
+    # * `l40s`: Uses G6e instance family
+    #
+    # * `rtx-pro-server-6000`: Uses G7e instance family
+    #
+    #  </note>
+    #
     # @!attribute [rw] selections
     #   A list of accelerator capabilities requested for this fleet. Only
     #   Amazon Elastic Compute Cloud instances that provide these
     #   capabilities will be used. For example, if you specify both L4 and
-    #   T4 chips, Deadline Cloud will use Amazon EC2 instances that have
-    #   either the L4 or the T4 chip installed.
+    #   T4 chips, Amazon Web Services Deadline Cloud will use Amazon EC2
+    #   instances that have either the L4 or the T4 chip installed.
+    #
+    #   * You must specify at least one accelerator selection.
+    #
+    #   * You cannot specify the same accelerator name multiple times in the
+    #     selections list.
+    #
+    #   * All accelerators in the selections must use the same runtime
+    #     version.
     #   @return [Array<Types::AcceleratorSelection>]
     #
     # @!attribute [rw] count
     #   The number of GPU accelerators specified for worker hosts in this
     #   fleet.
+    #
+    #   You must specify either `acceleratorCapabilities.count.max` or
+    #   `allowedInstanceTypes` when using accelerator capabilities. If you
+    #   don't specify a maximum count, Amazon Web Services Deadline Cloud
+    #   uses the instance types you specify in `allowedInstanceTypes` to
+    #   determine the maximum number of accelerators.
     #   @return [Types::AcceleratorCountRange]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/AcceleratorCapabilities AWS API Documentation
@@ -61,23 +93,23 @@ module Aws::Deadline
     # @!attribute [rw] name
     #   The name of the chip used by the GPU accelerator.
     #
-    #   If you specify `l4` as the name of the accelerator, you must specify
-    #   `latest` or `grid:r550` as the runtime.
-    #
     #   The available GPU accelerators are:
     #
-    #   * `t4` - NVIDIA T4 Tensor Core GPU
+    #   * `t4` - NVIDIA T4 Tensor Core GPU (16 GiB memory)
     #
-    #   * `a10g` - NVIDIA A10G Tensor Core GPU
+    #   * `a10g` - NVIDIA A10G Tensor Core GPU (24 GiB memory)
     #
-    #   * `l4` - NVIDIA L4 Tensor Core GPU
+    #   * `l4` - NVIDIA L4 Tensor Core GPU (24 GiB memory)
     #
-    #   * `l40s` - NVIDIA L40S Tensor Core GPU
+    #   * `l40s` - NVIDIA L40S Tensor Core GPU (48 GiB memory)
+    #
+    #   * `rtx-pro-server-6000` - NVIDIA RTX PRO Server 6000 GPU (96 GiB
+    #     memory)
     #   @return [String]
     #
     # @!attribute [rw] runtime
     #   Specifies the runtime driver to use for the GPU accelerator. You
-    #   must use the same runtime for all GPUs.
+    #   must use the same runtime for all GPUs in a fleet.
     #
     #   You can choose from the following runtimes:
     #
@@ -85,19 +117,39 @@ module Aws::Deadline
     #     specify `latest` and a new version of the runtime is released, the
     #     new version of the runtime is used.
     #
-    #   * `grid:r550` - [NVIDIA vGPU software 17][1]
+    #   * `grid:r580` - [NVIDIA vGPU software 19][1]
     #
-    #   * `grid:r535` - [NVIDIA vGPU software 16][2]
+    #   * `grid:r570` - [NVIDIA vGPU software 18][2]
     #
-    #   If you don't specify a runtime, Deadline Cloud uses `latest` as the
-    #   default. However, if you have multiple accelerators and specify
-    #   `latest` for some and leave others blank, Deadline Cloud raises an
-    #   exception.
+    #   * `grid:r535` - [NVIDIA vGPU software 16][3]
+    #
+    #   If you don't specify a runtime, Amazon Web Services Deadline Cloud
+    #   uses `latest` as the default. However, if you have multiple
+    #   accelerators and specify `latest` for some and leave others blank,
+    #   Amazon Web Services Deadline Cloud raises an exception.
+    #
+    #   Not all runtimes are compatible with all accelerator types:
+    #
+    #    * `t4` and `a10g`: Support all runtimes (`grid:r580`, `grid:r570`,
+    #     `grid:r535`)
+    #
+    #   * `l4` and `l40s`: Only support `grid:r570` and newer
+    #
+    #   * `rtx-pro-server-6000`: Only supports `grid:r580`
+    #
+    #    All accelerators in a fleet must use the same runtime version. You
+    #   cannot mix different runtime versions within a single fleet.
+    #
+    #   <note markdown="1"> When you specify `latest`, it resolves to `grid:r580` for all
+    #   currently supported accelerators.
+    #
+    #    </note>
     #
     #
     #
-    #   [1]: https://docs.nvidia.com/vgpu/17.0/index.html
-    #   [2]: https://docs.nvidia.com/vgpu/16.0/index.html
+    #   [1]: https://docs.nvidia.com/vgpu/19.0/index.html
+    #   [2]: https://docs.nvidia.com/vgpu/18.0/index.html
+    #   [3]: https://docs.nvidia.com/vgpu/16.0/index.html
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/AcceleratorSelection AWS API Documentation
@@ -264,7 +316,7 @@ module Aws::Deadline
     #   @return [Types::AssignedTaskRunSessionActionDefinition]
     #
     # @!attribute [rw] sync_input_job_attachments
-    #   The job attachment to sync with an assigned session action.
+    #   The job attachments to sync for the assigned session action.
     #   @return [Types::AssignedSyncInputJobAttachmentsSessionActionDefinition]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/AssignedSessionActionDefinition AWS API Documentation
@@ -286,11 +338,12 @@ module Aws::Deadline
       class Unknown < AssignedSessionActionDefinition; end
     end
 
-    # The details for an assigned session action as it relates to a job
-    # attachment.
+    # The assigned session action definition for syncing input job
+    # attachments.
     #
     # @!attribute [rw] step_id
-    #   The step ID.
+    #   The step ID for the assigned sync input job attachments session
+    #   action.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/AssignedSyncInputJobAttachmentsSessionActionDefinition AWS API Documentation
@@ -325,12 +378,12 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared member fields for Associate inputs and \{Resource}Member
+    # response structures. principalId is excluded because it has @httpLabel
+    # on inputs but not on responses.
+    #
     # @!attribute [rw] farm_id
     #   The ID of the farm to associate with the member.
-    #   @return [String]
-    #
-    # @!attribute [rw] principal_id
-    #   The member's principal ID to associate with the farm.
     #   @return [String]
     #
     # @!attribute [rw] principal_type
@@ -345,14 +398,24 @@ module Aws::Deadline
     #   The principal's membership level for the associated farm.
     #   @return [String]
     #
+    # @!attribute [rw] principal_id
+    #   The member's principal ID to associate with the farm.
+    #   @return [String]
+    #
+    # @!attribute [rw] identity_center_region
+    #   The Region of the IAM Identity Center instance. If not provided, the
+    #   service defaults to the Region of the farm.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/AssociateMemberToFarmRequest AWS API Documentation
     #
     class AssociateMemberToFarmRequest < Struct.new(
       :farm_id,
-      :principal_id,
       :principal_type,
       :identity_store_id,
-      :membership_level)
+      :membership_level,
+      :principal_id,
+      :identity_center_region)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -361,16 +424,16 @@ module Aws::Deadline
     #
     class AssociateMemberToFarmResponse < Aws::EmptyStructure; end
 
+    # Shared member fields for Associate inputs and \{Resource}Member
+    # response structures. principalId is excluded because it has @httpLabel
+    # on inputs but not on responses.
+    #
     # @!attribute [rw] farm_id
     #   The farm ID of the fleet to associate with the member.
     #   @return [String]
     #
     # @!attribute [rw] fleet_id
     #   The ID of the fleet to associate with a member.
-    #   @return [String]
-    #
-    # @!attribute [rw] principal_id
-    #   The member's principal ID to associate with a fleet.
     #   @return [String]
     #
     # @!attribute [rw] principal_type
@@ -385,15 +448,25 @@ module Aws::Deadline
     #   The principal's membership level for the associated fleet.
     #   @return [String]
     #
+    # @!attribute [rw] principal_id
+    #   The member's principal ID to associate with a fleet.
+    #   @return [String]
+    #
+    # @!attribute [rw] identity_center_region
+    #   The Region of the IAM Identity Center instance. If not provided, the
+    #   service defaults to the Region of the farm.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/AssociateMemberToFleetRequest AWS API Documentation
     #
     class AssociateMemberToFleetRequest < Struct.new(
       :farm_id,
       :fleet_id,
-      :principal_id,
       :principal_type,
       :identity_store_id,
-      :membership_level)
+      :membership_level,
+      :principal_id,
+      :identity_center_region)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -402,6 +475,10 @@ module Aws::Deadline
     #
     class AssociateMemberToFleetResponse < Aws::EmptyStructure; end
 
+    # Shared member fields for Associate inputs and \{Resource}Member
+    # response structures. principalId is excluded because it has @httpLabel
+    # on inputs but not on responses.
+    #
     # @!attribute [rw] farm_id
     #   The farm ID of the job to associate with the member.
     #   @return [String]
@@ -412,10 +489,6 @@ module Aws::Deadline
     #
     # @!attribute [rw] job_id
     #   The job ID to associate with the member.
-    #   @return [String]
-    #
-    # @!attribute [rw] principal_id
-    #   The member's principal ID to associate with the job.
     #   @return [String]
     #
     # @!attribute [rw] principal_type
@@ -430,16 +503,26 @@ module Aws::Deadline
     #   The principal's membership level for the associated job.
     #   @return [String]
     #
+    # @!attribute [rw] principal_id
+    #   The member's principal ID to associate with the job.
+    #   @return [String]
+    #
+    # @!attribute [rw] identity_center_region
+    #   The Region of the IAM Identity Center instance. If not provided, the
+    #   service defaults to the Region of the farm.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/AssociateMemberToJobRequest AWS API Documentation
     #
     class AssociateMemberToJobRequest < Struct.new(
       :farm_id,
       :queue_id,
       :job_id,
-      :principal_id,
       :principal_type,
       :identity_store_id,
-      :membership_level)
+      :membership_level,
+      :principal_id,
+      :identity_center_region)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -448,16 +531,16 @@ module Aws::Deadline
     #
     class AssociateMemberToJobResponse < Aws::EmptyStructure; end
 
+    # Shared member fields for Associate inputs and \{Resource}Member
+    # response structures. principalId is excluded because it has @httpLabel
+    # on inputs but not on responses.
+    #
     # @!attribute [rw] farm_id
     #   The farm ID of the queue to associate with the member.
     #   @return [String]
     #
     # @!attribute [rw] queue_id
     #   The ID of the queue to associate to the member.
-    #   @return [String]
-    #
-    # @!attribute [rw] principal_id
-    #   The member's principal ID to associate with the queue.
     #   @return [String]
     #
     # @!attribute [rw] principal_type
@@ -472,15 +555,25 @@ module Aws::Deadline
     #   The principal's membership level for the associated queue.
     #   @return [String]
     #
+    # @!attribute [rw] principal_id
+    #   The member's principal ID to associate with the queue.
+    #   @return [String]
+    #
+    # @!attribute [rw] identity_center_region
+    #   The Region of the IAM Identity Center instance. If not provided, the
+    #   service defaults to the Region of the farm.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/AssociateMemberToQueueRequest AWS API Documentation
     #
     class AssociateMemberToQueueRequest < Struct.new(
       :farm_id,
       :queue_id,
-      :principal_id,
       :principal_type,
       :identity_store_id,
-      :membership_level)
+      :membership_level,
+      :principal_id,
+      :identity_center_region)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -506,6 +599,11 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared response body for AssumeRole operations where credentials are
+    # required. AssumeQueueRoleForWorkerResponse is excluded because
+    # credentials is optional there because Queue.roleArn is optional, so
+    # the mixin's @required trait would be incorrect.
+    #
     # @!attribute [rw] credentials
     #   The credentials for the fleet role.
     #   @return [Types::AwsCredentials]
@@ -540,6 +638,11 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared response body for AssumeRole operations where credentials are
+    # required. AssumeQueueRoleForWorkerResponse is excluded because
+    # credentials is optional there because Queue.roleArn is optional, so
+    # the mixin's @required trait would be incorrect.
+    #
     # @!attribute [rw] credentials
     #   The credentials for the worker.
     #   @return [Types::AwsCredentials]
@@ -569,6 +672,11 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared response body for AssumeRole operations where credentials are
+    # required. AssumeQueueRoleForWorkerResponse is excluded because
+    # credentials is optional there because Queue.roleArn is optional, so
+    # the mixin's @required trait would be incorrect.
+    #
     # @!attribute [rw] credentials
     #   The credentials for the queue role.
     #   @return [Types::AwsCredentials]
@@ -598,6 +706,11 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared response body for AssumeRole operations where credentials are
+    # required. AssumeQueueRoleForWorkerResponse is excluded because
+    # credentials is optional there because Queue.roleArn is optional, so
+    # the mixin's @required trait would be incorrect.
+    #
     # @!attribute [rw] credentials
     #   The credentials for the queue role that a user has access to.
     #   @return [Types::AwsCredentials]
@@ -650,14 +763,14 @@ module Aws::Deadline
       include Aws::Structure
     end
 
-    # The attachments for jobs.
+    # The job attachments.
     #
     # @!attribute [rw] manifests
-    #   A list of manifests which describe job attachment configurations.
+    #   The manifest properties for the attachments.
     #   @return [Array<Types::ManifestProperties>]
     #
     # @!attribute [rw] file_system
-    #   The file system.
+    #   The file system location for the attachments.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/Attachments AWS API Documentation
@@ -739,6 +852,1414 @@ module Aws::Deadline
     #
     class BatchGetJobEntityResponse < Struct.new(
       :entities,
+      :errors)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The error details for a job that could not be retrieved in a batch get
+    # operation.
+    #
+    # @!attribute [rw] farm_id
+    #   The farm ID of the job that could not be retrieved.
+    #   @return [String]
+    #
+    # @!attribute [rw] queue_id
+    #   The queue ID of the job that could not be retrieved.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_id
+    #   The job ID of the job that could not be retrieved.
+    #   @return [String]
+    #
+    # @!attribute [rw] code
+    #   The error code.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   The error message.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetJobError AWS API Documentation
+    #
+    class BatchGetJobError < Struct.new(
+      :farm_id,
+      :queue_id,
+      :job_id,
+      :code,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The identifiers for a job.
+    #
+    # @!attribute [rw] farm_id
+    #   The farm ID of the job.
+    #   @return [String]
+    #
+    # @!attribute [rw] queue_id
+    #   The queue ID of the job.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_id
+    #   The job ID.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetJobIdentifier AWS API Documentation
+    #
+    class BatchGetJobIdentifier < Struct.new(
+      :farm_id,
+      :queue_id,
+      :job_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The details of a job returned in a batch get operation.
+    #
+    # @!attribute [rw] farm_id
+    #   The farm ID of the job.
+    #   @return [String]
+    #
+    # @!attribute [rw] queue_id
+    #   The queue ID of the job.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_id
+    #   The job ID.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the job.
+    #   @return [String]
+    #
+    # @!attribute [rw] lifecycle_status
+    #   The life cycle status of the job.
+    #   @return [String]
+    #
+    # @!attribute [rw] lifecycle_status_message
+    #   A message that communicates the status of the life cycle.
+    #   @return [String]
+    #
+    # @!attribute [rw] priority
+    #   The job priority.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] created_at
+    #   The date and time the resource was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] created_by
+    #   The user or system that created this resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] updated_at
+    #   The date and time the resource was updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_by
+    #   The user or system that updated this resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] started_at
+    #   The date and time the resource started running.
+    #   @return [Time]
+    #
+    # @!attribute [rw] ended_at
+    #   The date and time the resource ended running.
+    #   @return [Time]
+    #
+    # @!attribute [rw] task_run_status
+    #   The task run status for the job.
+    #   @return [String]
+    #
+    # @!attribute [rw] target_task_run_status
+    #   The task status to start with on the job.
+    #   @return [String]
+    #
+    # @!attribute [rw] task_run_status_counts
+    #   The number of tasks for each run status for the job.
+    #   @return [Hash<String,Integer>]
+    #
+    # @!attribute [rw] task_failure_retry_count
+    #   The number of times that tasks failed and were retried.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] storage_profile_id
+    #   The storage profile ID associated with the job.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_failed_tasks_count
+    #   The number of task failures before the job stops running and is
+    #   marked as `FAILED`.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max_retries_per_task
+    #   The maximum number of retries per failed tasks.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] parameters
+    #   The parameters for the job.
+    #   @return [Hash<String,Types::JobParameter>]
+    #
+    # @!attribute [rw] attachments
+    #   The attachments for the job.
+    #   @return [Types::Attachments]
+    #
+    # @!attribute [rw] description
+    #   The description of the job.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_worker_count
+    #   The maximum number of worker hosts that can concurrently process a
+    #   job.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] source_job_id
+    #   The job ID for the source job.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetJobItem AWS API Documentation
+    #
+    class BatchGetJobItem < Struct.new(
+      :farm_id,
+      :queue_id,
+      :job_id,
+      :name,
+      :lifecycle_status,
+      :lifecycle_status_message,
+      :priority,
+      :created_at,
+      :created_by,
+      :updated_at,
+      :updated_by,
+      :started_at,
+      :ended_at,
+      :task_run_status,
+      :target_task_run_status,
+      :task_run_status_counts,
+      :task_failure_retry_count,
+      :storage_profile_id,
+      :max_failed_tasks_count,
+      :max_retries_per_task,
+      :parameters,
+      :attachments,
+      :description,
+      :max_worker_count,
+      :source_job_id)
+      SENSITIVE = [:parameters, :description]
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] identifiers
+    #   The list of job identifiers to retrieve. You can specify up to 100
+    #   identifiers per request.
+    #   @return [Array<Types::BatchGetJobIdentifier>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetJobRequest AWS API Documentation
+    #
+    class BatchGetJobRequest < Struct.new(
+      :identifiers)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] jobs
+    #   A list of jobs that were successfully retrieved.
+    #   @return [Array<Types::BatchGetJobItem>]
+    #
+    # @!attribute [rw] errors
+    #   A list of errors for jobs that could not be retrieved.
+    #   @return [Array<Types::BatchGetJobError>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetJobResponse AWS API Documentation
+    #
+    class BatchGetJobResponse < Struct.new(
+      :jobs,
+      :errors)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The error details for a session action that could not be retrieved in
+    # a batch get operation.
+    #
+    # @!attribute [rw] farm_id
+    #   The farm ID of the session action that could not be retrieved.
+    #   @return [String]
+    #
+    # @!attribute [rw] queue_id
+    #   The queue ID of the session action that could not be retrieved.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_id
+    #   The job ID of the session action that could not be retrieved.
+    #   @return [String]
+    #
+    # @!attribute [rw] session_action_id
+    #   The session action ID of the session action that could not be
+    #   retrieved.
+    #   @return [String]
+    #
+    # @!attribute [rw] code
+    #   The error code.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   The error message.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetSessionActionError AWS API Documentation
+    #
+    class BatchGetSessionActionError < Struct.new(
+      :farm_id,
+      :queue_id,
+      :job_id,
+      :session_action_id,
+      :code,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The identifiers for a session action.
+    #
+    # @!attribute [rw] farm_id
+    #   The farm ID of the session action.
+    #   @return [String]
+    #
+    # @!attribute [rw] queue_id
+    #   The queue ID of the session action.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_id
+    #   The job ID of the session action.
+    #   @return [String]
+    #
+    # @!attribute [rw] session_action_id
+    #   The session action ID.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetSessionActionIdentifier AWS API Documentation
+    #
+    class BatchGetSessionActionIdentifier < Struct.new(
+      :farm_id,
+      :queue_id,
+      :job_id,
+      :session_action_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The details of a session action returned in a batch get operation.
+    #
+    # @!attribute [rw] farm_id
+    #   The farm ID of the session action.
+    #   @return [String]
+    #
+    # @!attribute [rw] queue_id
+    #   The queue ID of the session action.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_id
+    #   The job ID of the session action.
+    #   @return [String]
+    #
+    # @!attribute [rw] session_action_id
+    #   The session action ID.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the session action.
+    #   @return [String]
+    #
+    # @!attribute [rw] started_at
+    #   The date and time the resource started running.
+    #   @return [Time]
+    #
+    # @!attribute [rw] ended_at
+    #   The date and time the resource ended running.
+    #   @return [Time]
+    #
+    # @!attribute [rw] worker_updated_at
+    #   The date and time the resource was updated by a worker.
+    #   @return [Time]
+    #
+    # @!attribute [rw] progress_percent
+    #   The completion percentage for the session action.
+    #   @return [Float]
+    #
+    # @!attribute [rw] manifests
+    #   The manifests for the session action.
+    #   @return [Array<Types::TaskRunManifestPropertiesResponse>]
+    #
+    # @!attribute [rw] session_id
+    #   The session ID for the session action.
+    #   @return [String]
+    #
+    # @!attribute [rw] process_exit_code
+    #   The exit code to apply to the session action.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] progress_message
+    #   The message that communicates the progress of the session action.
+    #   @return [String]
+    #
+    # @!attribute [rw] acquired_limits
+    #   The limits that were acquired for the session action.
+    #   @return [Array<Types::AcquiredLimit>]
+    #
+    # @!attribute [rw] definition
+    #   The session action definition.
+    #   @return [Types::SessionActionDefinition]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetSessionActionItem AWS API Documentation
+    #
+    class BatchGetSessionActionItem < Struct.new(
+      :farm_id,
+      :queue_id,
+      :job_id,
+      :session_action_id,
+      :status,
+      :started_at,
+      :ended_at,
+      :worker_updated_at,
+      :progress_percent,
+      :manifests,
+      :session_id,
+      :process_exit_code,
+      :progress_message,
+      :acquired_limits,
+      :definition)
+      SENSITIVE = [:progress_message]
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] identifiers
+    #   The list of session action identifiers to retrieve. You can specify
+    #   up to 100 identifiers per request.
+    #   @return [Array<Types::BatchGetSessionActionIdentifier>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetSessionActionRequest AWS API Documentation
+    #
+    class BatchGetSessionActionRequest < Struct.new(
+      :identifiers)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] session_actions
+    #   A list of session actions that were successfully retrieved.
+    #   @return [Array<Types::BatchGetSessionActionItem>]
+    #
+    # @!attribute [rw] errors
+    #   A list of errors for session actions that could not be retrieved.
+    #   @return [Array<Types::BatchGetSessionActionError>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetSessionActionResponse AWS API Documentation
+    #
+    class BatchGetSessionActionResponse < Struct.new(
+      :session_actions,
+      :errors)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The error details for a session that could not be retrieved in a batch
+    # get operation.
+    #
+    # @!attribute [rw] farm_id
+    #   The farm ID of the session that could not be retrieved.
+    #   @return [String]
+    #
+    # @!attribute [rw] queue_id
+    #   The queue ID of the session that could not be retrieved.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_id
+    #   The job ID of the session that could not be retrieved.
+    #   @return [String]
+    #
+    # @!attribute [rw] session_id
+    #   The session ID of the session that could not be retrieved.
+    #   @return [String]
+    #
+    # @!attribute [rw] code
+    #   The error code.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   The error message.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetSessionError AWS API Documentation
+    #
+    class BatchGetSessionError < Struct.new(
+      :farm_id,
+      :queue_id,
+      :job_id,
+      :session_id,
+      :code,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The identifiers for a session.
+    #
+    # @!attribute [rw] farm_id
+    #   The farm ID of the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] queue_id
+    #   The queue ID of the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_id
+    #   The job ID of the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] session_id
+    #   The session ID.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetSessionIdentifier AWS API Documentation
+    #
+    class BatchGetSessionIdentifier < Struct.new(
+      :farm_id,
+      :queue_id,
+      :job_id,
+      :session_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The details of a session returned in a batch get operation.
+    #
+    # @!attribute [rw] farm_id
+    #   The farm ID of the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] queue_id
+    #   The queue ID of the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_id
+    #   The job ID of the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] session_id
+    #   The session ID.
+    #   @return [String]
+    #
+    # @!attribute [rw] fleet_id
+    #   The fleet ID of the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] worker_id
+    #   The worker ID of the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] started_at
+    #   The date and time the resource started running.
+    #   @return [Time]
+    #
+    # @!attribute [rw] lifecycle_status
+    #   The life cycle status of the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] ended_at
+    #   The date and time the resource ended running.
+    #   @return [Time]
+    #
+    # @!attribute [rw] target_lifecycle_status
+    #   The target life cycle status for the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] updated_at
+    #   The date and time the resource was updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_by
+    #   The user or system that updated this resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] log
+    #   The session log.
+    #   @return [Types::LogConfiguration]
+    #
+    # @!attribute [rw] host_properties
+    #   The host properties for the session.
+    #   @return [Types::HostPropertiesResponse]
+    #
+    # @!attribute [rw] worker_log
+    #   The worker log for the session.
+    #   @return [Types::LogConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetSessionItem AWS API Documentation
+    #
+    class BatchGetSessionItem < Struct.new(
+      :farm_id,
+      :queue_id,
+      :job_id,
+      :session_id,
+      :fleet_id,
+      :worker_id,
+      :started_at,
+      :lifecycle_status,
+      :ended_at,
+      :target_lifecycle_status,
+      :updated_at,
+      :updated_by,
+      :log,
+      :host_properties,
+      :worker_log)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] identifiers
+    #   The list of session identifiers to retrieve. You can specify up to
+    #   100 identifiers per request.
+    #   @return [Array<Types::BatchGetSessionIdentifier>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetSessionRequest AWS API Documentation
+    #
+    class BatchGetSessionRequest < Struct.new(
+      :identifiers)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] sessions
+    #   A list of sessions that were successfully retrieved.
+    #   @return [Array<Types::BatchGetSessionItem>]
+    #
+    # @!attribute [rw] errors
+    #   A list of errors for sessions that could not be retrieved.
+    #   @return [Array<Types::BatchGetSessionError>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetSessionResponse AWS API Documentation
+    #
+    class BatchGetSessionResponse < Struct.new(
+      :sessions,
+      :errors)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The error details for a step that could not be retrieved in a batch
+    # get operation.
+    #
+    # @!attribute [rw] farm_id
+    #   The farm ID of the step that could not be retrieved.
+    #   @return [String]
+    #
+    # @!attribute [rw] queue_id
+    #   The queue ID of the step that could not be retrieved.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_id
+    #   The job ID of the step that could not be retrieved.
+    #   @return [String]
+    #
+    # @!attribute [rw] step_id
+    #   The step ID of the step that could not be retrieved.
+    #   @return [String]
+    #
+    # @!attribute [rw] code
+    #   The error code.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   The error message.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetStepError AWS API Documentation
+    #
+    class BatchGetStepError < Struct.new(
+      :farm_id,
+      :queue_id,
+      :job_id,
+      :step_id,
+      :code,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The identifiers for a step.
+    #
+    # @!attribute [rw] farm_id
+    #   The farm ID of the step.
+    #   @return [String]
+    #
+    # @!attribute [rw] queue_id
+    #   The queue ID of the step.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_id
+    #   The job ID of the step.
+    #   @return [String]
+    #
+    # @!attribute [rw] step_id
+    #   The step ID.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetStepIdentifier AWS API Documentation
+    #
+    class BatchGetStepIdentifier < Struct.new(
+      :farm_id,
+      :queue_id,
+      :job_id,
+      :step_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The details of a step returned in a batch get operation.
+    #
+    # @!attribute [rw] farm_id
+    #   The farm ID of the step.
+    #   @return [String]
+    #
+    # @!attribute [rw] queue_id
+    #   The queue ID of the step.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_id
+    #   The job ID of the step.
+    #   @return [String]
+    #
+    # @!attribute [rw] step_id
+    #   The step ID.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the step.
+    #   @return [String]
+    #
+    # @!attribute [rw] lifecycle_status
+    #   The life cycle status of the step.
+    #   @return [String]
+    #
+    # @!attribute [rw] lifecycle_status_message
+    #   A message that communicates the status of the life cycle.
+    #   @return [String]
+    #
+    # @!attribute [rw] task_run_status
+    #   The task run status for the step.
+    #   @return [String]
+    #
+    # @!attribute [rw] task_run_status_counts
+    #   The number of tasks for each run status for the step.
+    #   @return [Hash<String,Integer>]
+    #
+    # @!attribute [rw] task_failure_retry_count
+    #   The number of times that tasks failed and were retried.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] target_task_run_status
+    #   The task status to start with on the step.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_at
+    #   The date and time the resource was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] created_by
+    #   The user or system that created this resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] updated_at
+    #   The date and time the resource was updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_by
+    #   The user or system that updated this resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] started_at
+    #   The date and time the resource started running.
+    #   @return [Time]
+    #
+    # @!attribute [rw] ended_at
+    #   The date and time the resource ended running.
+    #   @return [Time]
+    #
+    # @!attribute [rw] dependency_counts
+    #   The number of dependencies for the step.
+    #   @return [Types::DependencyCounts]
+    #
+    # @!attribute [rw] required_capabilities
+    #   The required capabilities for the step.
+    #   @return [Types::StepRequiredCapabilities]
+    #
+    # @!attribute [rw] parameter_space
+    #   The parameter space for the step.
+    #   @return [Types::ParameterSpace]
+    #
+    # @!attribute [rw] description
+    #   The description of the step.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetStepItem AWS API Documentation
+    #
+    class BatchGetStepItem < Struct.new(
+      :farm_id,
+      :queue_id,
+      :job_id,
+      :step_id,
+      :name,
+      :lifecycle_status,
+      :lifecycle_status_message,
+      :task_run_status,
+      :task_run_status_counts,
+      :task_failure_retry_count,
+      :target_task_run_status,
+      :created_at,
+      :created_by,
+      :updated_at,
+      :updated_by,
+      :started_at,
+      :ended_at,
+      :dependency_counts,
+      :required_capabilities,
+      :parameter_space,
+      :description)
+      SENSITIVE = [:description]
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] identifiers
+    #   The list of step identifiers to retrieve. You can specify up to 100
+    #   identifiers per request.
+    #   @return [Array<Types::BatchGetStepIdentifier>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetStepRequest AWS API Documentation
+    #
+    class BatchGetStepRequest < Struct.new(
+      :identifiers)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] steps
+    #   A list of steps that were successfully retrieved.
+    #   @return [Array<Types::BatchGetStepItem>]
+    #
+    # @!attribute [rw] errors
+    #   A list of errors for steps that could not be retrieved.
+    #   @return [Array<Types::BatchGetStepError>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetStepResponse AWS API Documentation
+    #
+    class BatchGetStepResponse < Struct.new(
+      :steps,
+      :errors)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The error details for a task that could not be retrieved in a batch
+    # get operation.
+    #
+    # @!attribute [rw] farm_id
+    #   The farm ID of the task that could not be retrieved.
+    #   @return [String]
+    #
+    # @!attribute [rw] queue_id
+    #   The queue ID of the task that could not be retrieved.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_id
+    #   The job ID of the task that could not be retrieved.
+    #   @return [String]
+    #
+    # @!attribute [rw] step_id
+    #   The step ID of the task that could not be retrieved.
+    #   @return [String]
+    #
+    # @!attribute [rw] task_id
+    #   The task ID of the task that could not be retrieved.
+    #   @return [String]
+    #
+    # @!attribute [rw] code
+    #   The error code.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   The error message.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetTaskError AWS API Documentation
+    #
+    class BatchGetTaskError < Struct.new(
+      :farm_id,
+      :queue_id,
+      :job_id,
+      :step_id,
+      :task_id,
+      :code,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The identifiers for a task.
+    #
+    # @!attribute [rw] farm_id
+    #   The farm ID of the task.
+    #   @return [String]
+    #
+    # @!attribute [rw] queue_id
+    #   The queue ID of the task.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_id
+    #   The job ID of the task.
+    #   @return [String]
+    #
+    # @!attribute [rw] step_id
+    #   The step ID of the task.
+    #   @return [String]
+    #
+    # @!attribute [rw] task_id
+    #   The task ID.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetTaskIdentifier AWS API Documentation
+    #
+    class BatchGetTaskIdentifier < Struct.new(
+      :farm_id,
+      :queue_id,
+      :job_id,
+      :step_id,
+      :task_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The details of a task returned in a batch get operation.
+    #
+    # @!attribute [rw] farm_id
+    #   The farm ID of the task.
+    #   @return [String]
+    #
+    # @!attribute [rw] queue_id
+    #   The queue ID of the task.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_id
+    #   The job ID of the task.
+    #   @return [String]
+    #
+    # @!attribute [rw] step_id
+    #   The step ID of the task.
+    #   @return [String]
+    #
+    # @!attribute [rw] task_id
+    #   The task ID.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_at
+    #   The date and time the resource was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] created_by
+    #   The user or system that created this resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] run_status
+    #   The run status of the task.
+    #   @return [String]
+    #
+    # @!attribute [rw] target_run_status
+    #   The run status with which to start the task.
+    #   @return [String]
+    #
+    # @!attribute [rw] failure_retry_count
+    #   The number of times the task failed and was retried.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] started_at
+    #   The date and time the resource started running.
+    #   @return [Time]
+    #
+    # @!attribute [rw] ended_at
+    #   The date and time the resource ended running.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_at
+    #   The date and time the resource was updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_by
+    #   The user or system that updated this resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] latest_session_action_id
+    #   The latest session action for the task.
+    #   @return [String]
+    #
+    # @!attribute [rw] parameters
+    #   The parameters for the task.
+    #   @return [Hash<String,Types::TaskParameterValue>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetTaskItem AWS API Documentation
+    #
+    class BatchGetTaskItem < Struct.new(
+      :farm_id,
+      :queue_id,
+      :job_id,
+      :step_id,
+      :task_id,
+      :created_at,
+      :created_by,
+      :run_status,
+      :target_run_status,
+      :failure_retry_count,
+      :started_at,
+      :ended_at,
+      :updated_at,
+      :updated_by,
+      :latest_session_action_id,
+      :parameters)
+      SENSITIVE = [:parameters]
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] identifiers
+    #   The list of task identifiers to retrieve. You can specify up to 100
+    #   identifiers per request.
+    #   @return [Array<Types::BatchGetTaskIdentifier>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetTaskRequest AWS API Documentation
+    #
+    class BatchGetTaskRequest < Struct.new(
+      :identifiers)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] tasks
+    #   A list of tasks that were successfully retrieved.
+    #   @return [Array<Types::BatchGetTaskItem>]
+    #
+    # @!attribute [rw] errors
+    #   A list of errors for tasks that could not be retrieved.
+    #   @return [Array<Types::BatchGetTaskError>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetTaskResponse AWS API Documentation
+    #
+    class BatchGetTaskResponse < Struct.new(
+      :tasks,
+      :errors)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The error details for a worker that could not be retrieved in a batch
+    # get operation.
+    #
+    # @!attribute [rw] farm_id
+    #   The farm ID of the worker that could not be retrieved.
+    #   @return [String]
+    #
+    # @!attribute [rw] fleet_id
+    #   The fleet ID of the worker that could not be retrieved.
+    #   @return [String]
+    #
+    # @!attribute [rw] worker_id
+    #   The worker ID of the worker that could not be retrieved.
+    #   @return [String]
+    #
+    # @!attribute [rw] code
+    #   The error code.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   The error message.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetWorkerError AWS API Documentation
+    #
+    class BatchGetWorkerError < Struct.new(
+      :farm_id,
+      :fleet_id,
+      :worker_id,
+      :code,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The identifiers for a worker.
+    #
+    # @!attribute [rw] farm_id
+    #   The farm ID of the worker.
+    #   @return [String]
+    #
+    # @!attribute [rw] fleet_id
+    #   The fleet ID of the worker.
+    #   @return [String]
+    #
+    # @!attribute [rw] worker_id
+    #   The worker ID.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetWorkerIdentifier AWS API Documentation
+    #
+    class BatchGetWorkerIdentifier < Struct.new(
+      :farm_id,
+      :fleet_id,
+      :worker_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The details of a worker returned in a batch get operation.
+    #
+    # @!attribute [rw] farm_id
+    #   The farm ID of the worker.
+    #   @return [String]
+    #
+    # @!attribute [rw] fleet_id
+    #   The fleet ID of the worker.
+    #   @return [String]
+    #
+    # @!attribute [rw] worker_id
+    #   The worker ID.
+    #   @return [String]
+    #
+    # @!attribute [rw] host_properties
+    #   The host properties for the worker.
+    #   @return [Types::HostPropertiesResponse]
+    #
+    # @!attribute [rw] status
+    #   The status of the worker.
+    #   @return [String]
+    #
+    # @!attribute [rw] log
+    #   The log configuration for the worker.
+    #   @return [Types::LogConfiguration]
+    #
+    # @!attribute [rw] created_at
+    #   The date and time the resource was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] created_by
+    #   The user or system that created this resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] updated_at
+    #   The date and time the resource was updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_by
+    #   The user or system that updated this resource.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetWorkerItem AWS API Documentation
+    #
+    class BatchGetWorkerItem < Struct.new(
+      :farm_id,
+      :fleet_id,
+      :worker_id,
+      :host_properties,
+      :status,
+      :log,
+      :created_at,
+      :created_by,
+      :updated_at,
+      :updated_by)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] identifiers
+    #   The list of worker identifiers to retrieve. You can specify up to
+    #   100 identifiers per request.
+    #   @return [Array<Types::BatchGetWorkerIdentifier>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetWorkerRequest AWS API Documentation
+    #
+    class BatchGetWorkerRequest < Struct.new(
+      :identifiers)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] workers
+    #   A list of workers that were successfully retrieved.
+    #   @return [Array<Types::BatchGetWorkerItem>]
+    #
+    # @!attribute [rw] errors
+    #   A list of errors for workers that could not be retrieved.
+    #   @return [Array<Types::BatchGetWorkerError>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchGetWorkerResponse AWS API Documentation
+    #
+    class BatchGetWorkerResponse < Struct.new(
+      :workers,
+      :errors)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The error details for a job that could not be updated in a batch
+    # update operation.
+    #
+    # @!attribute [rw] farm_id
+    #   The farm ID of the job that could not be updated.
+    #   @return [String]
+    #
+    # @!attribute [rw] queue_id
+    #   The queue ID of the job that could not be updated.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_id
+    #   The job ID of the job that could not be updated.
+    #   @return [String]
+    #
+    # @!attribute [rw] code
+    #   The error code.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   The error message.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchUpdateJobError AWS API Documentation
+    #
+    class BatchUpdateJobError < Struct.new(
+      :farm_id,
+      :queue_id,
+      :job_id,
+      :code,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The details of a job to update in a batch update operation.
+    #
+    # @!attribute [rw] farm_id
+    #   The farm ID of the job to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] queue_id
+    #   The queue ID of the job to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_id
+    #   The job ID of the job to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] target_task_run_status
+    #   The task status to update the job's tasks to.
+    #   @return [String]
+    #
+    # @!attribute [rw] priority
+    #   The job priority to update.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max_failed_tasks_count
+    #   The number of task failures before the job stops running and is
+    #   marked as `FAILED`.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max_retries_per_task
+    #   The maximum number of retries per failed tasks.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] lifecycle_status
+    #   The status of a job in its lifecycle. When you change the status of
+    #   the job to `ARCHIVED`, the job can't be scheduled or archived.
+    #
+    #   An archived job and its steps and tasks are deleted after 120 days.
+    #   The job can't be recovered.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_worker_count
+    #   The maximum number of worker hosts that can concurrently process a
+    #   job.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] name
+    #   The name of the job to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   The description of the job to update.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchUpdateJobItem AWS API Documentation
+    #
+    class BatchUpdateJobItem < Struct.new(
+      :farm_id,
+      :queue_id,
+      :job_id,
+      :target_task_run_status,
+      :priority,
+      :max_failed_tasks_count,
+      :max_retries_per_task,
+      :lifecycle_status,
+      :max_worker_count,
+      :name,
+      :description)
+      SENSITIVE = [:description]
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] client_token
+    #   The unique token which the server uses to recognize retries of the
+    #   same request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @!attribute [rw] jobs
+    #   The list of jobs to update. You can specify up to 100 jobs per
+    #   request.
+    #   @return [Array<Types::BatchUpdateJobItem>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchUpdateJobRequest AWS API Documentation
+    #
+    class BatchUpdateJobRequest < Struct.new(
+      :client_token,
+      :jobs)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] errors
+    #   A list of errors for jobs that could not be updated.
+    #   @return [Array<Types::BatchUpdateJobError>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchUpdateJobResponse AWS API Documentation
+    #
+    class BatchUpdateJobResponse < Struct.new(
+      :errors)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The error details for a task that could not be updated in a batch
+    # update operation.
+    #
+    # @!attribute [rw] farm_id
+    #   The farm ID of the task that could not be updated.
+    #   @return [String]
+    #
+    # @!attribute [rw] queue_id
+    #   The queue ID of the task that could not be updated.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_id
+    #   The job ID of the task that could not be updated.
+    #   @return [String]
+    #
+    # @!attribute [rw] step_id
+    #   The step ID of the task that could not be updated.
+    #   @return [String]
+    #
+    # @!attribute [rw] task_id
+    #   The task ID of the task that could not be updated.
+    #   @return [String]
+    #
+    # @!attribute [rw] code
+    #   The error code.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   The error message.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchUpdateTaskError AWS API Documentation
+    #
+    class BatchUpdateTaskError < Struct.new(
+      :farm_id,
+      :queue_id,
+      :job_id,
+      :step_id,
+      :task_id,
+      :code,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The details of a task to update in a batch update operation.
+    #
+    # @!attribute [rw] farm_id
+    #   The farm ID of the task to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] queue_id
+    #   The queue ID of the task to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_id
+    #   The job ID of the task to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] step_id
+    #   The step ID of the task to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] task_id
+    #   The task ID of the task to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] target_run_status
+    #   The run status with which to start the task.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchUpdateTaskItem AWS API Documentation
+    #
+    class BatchUpdateTaskItem < Struct.new(
+      :farm_id,
+      :queue_id,
+      :job_id,
+      :step_id,
+      :task_id,
+      :target_run_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] client_token
+    #   The unique token which the server uses to recognize retries of the
+    #   same request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @!attribute [rw] tasks
+    #   The list of tasks to update. You can specify up to 100 tasks per
+    #   request.
+    #   @return [Array<Types::BatchUpdateTaskItem>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchUpdateTaskRequest AWS API Documentation
+    #
+    class BatchUpdateTaskRequest < Struct.new(
+      :client_token,
+      :tasks)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] errors
+    #   A list of errors for tasks that could not be updated.
+    #   @return [Array<Types::BatchUpdateTaskError>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BatchUpdateTaskResponse AWS API Documentation
+    #
+    class BatchUpdateTaskResponse < Struct.new(
       :errors)
       SENSITIVE = []
       include Aws::Structure
@@ -841,14 +2362,6 @@ module Aws::Deadline
     #   interpret the content of this field.
     #   @return [String]
     #
-    # @!attribute [rw] description
-    #   The description of the budget summary.
-    #
-    #   This field can store any content. Escape or encode this content
-    #   before displaying it on a webpage or any other system that might
-    #   interpret the content of this field.
-    #   @return [String]
-    #
     # @!attribute [rw] approximate_dollar_limit
     #   The approximate dollar limit of the budget.
     #   @return [Float]
@@ -873,6 +2386,14 @@ module Aws::Deadline
     #   The date and time the resource was updated.
     #   @return [Time]
     #
+    # @!attribute [rw] description
+    #   The description of the budget summary.
+    #
+    #   This field can store any content. Escape or encode this content
+    #   before displaying it on a webpage or any other system that might
+    #   interpret the content of this field.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/BudgetSummary AWS API Documentation
     #
     class BudgetSummary < Struct.new(
@@ -880,13 +2401,13 @@ module Aws::Deadline
       :usage_tracking_resource,
       :status,
       :display_name,
-      :description,
       :approximate_dollar_limit,
       :usages,
       :created_by,
       :created_at,
       :updated_by,
-      :updated_at)
+      :updated_at,
+      :description)
       SENSITIVE = [:description]
       include Aws::Structure
     end
@@ -945,12 +2466,12 @@ module Aws::Deadline
     #   The farm ID to copy.
     #   @return [String]
     #
-    # @!attribute [rw] job_id
-    #   The job ID to copy.
-    #   @return [String]
-    #
     # @!attribute [rw] queue_id
     #   The queue ID to copy.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_id
+    #   The job ID to copy.
     #   @return [String]
     #
     # @!attribute [rw] target_s3_location
@@ -962,8 +2483,8 @@ module Aws::Deadline
     #
     class CopyJobTemplateRequest < Struct.new(
       :farm_id,
-      :job_id,
       :queue_id,
+      :job_id,
       :target_s3_location)
       SENSITIVE = []
       include Aws::Structure
@@ -981,21 +2502,13 @@ module Aws::Deadline
       include Aws::Structure
     end
 
-    # @!attribute [rw] client_token
-    #   The unique token which the server uses to recognize retries of the
-    #   same request.
-    #
-    #   **A suitable default value is auto-generated.** You should normally
-    #   not need to pass this option.
-    #   @return [String]
+    # Shared displayName + description for Create operations where both are
+    # present. displayName is @required here - this mixin is Create-only by
+    # design (Update has optional displayName).
     #
     # @!attribute [rw] farm_id
     #   The farm ID to include in this budget.
     #   @return [String]
-    #
-    # @!attribute [rw] usage_tracking_resource
-    #   The queue ID provided to this budget to track usage.
-    #   @return [Types::UsageTrackingResource]
     #
     # @!attribute [rw] display_name
     #   The display name of the budget.
@@ -1013,6 +2526,18 @@ module Aws::Deadline
     #   interpret the content of this field.
     #   @return [String]
     #
+    # @!attribute [rw] client_token
+    #   The unique token which the server uses to recognize retries of the
+    #   same request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @!attribute [rw] usage_tracking_resource
+    #   The queue ID provided to this budget to track usage.
+    #   @return [Types::UsageTrackingResource]
+    #
     # @!attribute [rw] approximate_dollar_limit
     #   The dollar limit based on consumed usage.
     #   @return [Float]
@@ -1025,21 +2550,31 @@ module Aws::Deadline
     #   The schedule to associate with this budget.
     #   @return [Types::BudgetSchedule]
     #
+    # @!attribute [rw] tags
+    #   Each tag consists of a tag key and a tag value. Tag keys and values
+    #   are both required, but tag values can be empty strings.
+    #   @return [Hash<String,String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/CreateBudgetRequest AWS API Documentation
     #
     class CreateBudgetRequest < Struct.new(
-      :client_token,
       :farm_id,
-      :usage_tracking_resource,
       :display_name,
       :description,
+      :client_token,
+      :usage_tracking_resource,
       :approximate_dollar_limit,
       :actions,
-      :schedule)
+      :schedule,
+      :tags)
       SENSITIVE = [:description]
       include Aws::Structure
     end
 
+    # Mixin that adds an optional ARN field to response structures. Apply to
+    # SummaryMixins (flows into Get, Summary, and BatchGet) and Create
+    # outputs.
+    #
     # @!attribute [rw] budget_id
     #   The budget ID.
     #   @return [String]
@@ -1052,6 +2587,10 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared displayName + description for Create operations where both are
+    # present. displayName is @required here - this mixin is Create-only by
+    # design (Update has optional displayName).
+    #
     # @!attribute [rw] client_token
     #   The unique token which the server uses to recognize retries of the
     #   same request.
@@ -1080,6 +2619,13 @@ module Aws::Deadline
     #   The ARN of the KMS key to use on the farm.
     #   @return [String]
     #
+    # @!attribute [rw] cost_scale_factor
+    #   A multiplier applied to the farm's calculated costs for usage data
+    #   and budget tracking. A value less than 1 represents a discount, a
+    #   value greater than 1 represents a premium, and a value of 1
+    #   represents no adjustment. The default value is 1.
+    #   @return [Float]
+    #
     # @!attribute [rw] tags
     #   The tags to add to your farm. Each tag consists of a tag key and a
     #   tag value. Tag keys and values are both required, but tag values can
@@ -1093,11 +2639,16 @@ module Aws::Deadline
       :display_name,
       :description,
       :kms_key_arn,
+      :cost_scale_factor,
       :tags)
       SENSITIVE = [:description]
       include Aws::Structure
     end
 
+    # Mixin that adds an optional ARN field to response structures. Apply to
+    # SummaryMixins (flows into Get, Summary, and BatchGet) and Create
+    # outputs.
+    #
     # @!attribute [rw] farm_id
     #   The farm ID.
     #   @return [String]
@@ -1110,16 +2661,20 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared displayName + description for Create operations where both are
+    # present. displayName is @required here - this mixin is Create-only by
+    # design (Update has optional displayName).
+    #
+    # @!attribute [rw] farm_id
+    #   The farm ID of the farm to connect to the fleet.
+    #   @return [String]
+    #
     # @!attribute [rw] client_token
     #   The unique token which the server uses to recognize retries of the
     #   same request.
     #
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.
-    #   @return [String]
-    #
-    # @!attribute [rw] farm_id
-    #   The farm ID of the farm to connect to the fleet.
     #   @return [String]
     #
     # @!attribute [rw] display_name
@@ -1148,6 +2703,15 @@ module Aws::Deadline
     #
     # @!attribute [rw] max_worker_count
     #   The maximum number of workers for the fleet.
+    #
+    #   Deadline Cloud limits the number of workers to less than or equal to
+    #   the fleet's maximum worker count. The service maintains eventual
+    #   consistency for the worker count. If you make multiple rapid calls
+    #   to `CreateWorker` before the field updates, you might exceed your
+    #   fleet's maximum worker count. For example, if your `maxWorkerCount`
+    #   is 10 and you currently have 9 workers, making two quick
+    #   `CreateWorker` calls might successfully create 2 workers instead of
+    #   1, resulting in 11 total workers.
     #   @return [Integer]
     #
     # @!attribute [rw] configuration
@@ -1161,22 +2725,32 @@ module Aws::Deadline
     #   are both required, but tag values can be empty strings.
     #   @return [Hash<String,String>]
     #
+    # @!attribute [rw] host_configuration
+    #   Provides a script that runs as a worker is starting up that you can
+    #   use to provide additional configuration for workers in your fleet.
+    #   @return [Types::HostConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/CreateFleetRequest AWS API Documentation
     #
     class CreateFleetRequest < Struct.new(
-      :client_token,
       :farm_id,
+      :client_token,
       :display_name,
       :description,
       :role_arn,
       :min_worker_count,
       :max_worker_count,
       :configuration,
-      :tags)
+      :tags,
+      :host_configuration)
       SENSITIVE = [:description]
       include Aws::Structure
     end
 
+    # Mixin that adds an optional ARN field to response structures. Apply to
+    # SummaryMixins (flows into Get, Summary, and BatchGet) and Create
+    # outputs.
+    #
     # @!attribute [rw] fleet_id
     #   The fleet ID.
     #   @return [String]
@@ -1214,9 +2788,9 @@ module Aws::Deadline
     #   @return [String]
     #
     # @!attribute [rw] priority
-    #   The priority of the job on a scale of 0 to 100. The highest priority
-    #   (first scheduled) is 100. When two jobs have the same priority, the
-    #   oldest job is scheduled first.
+    #   The priority of the job. The highest priority (first scheduled) is
+    #   100. When two jobs have the same priority, the oldest job is
+    #   scheduled first.
     #   @return [Integer]
     #
     # @!attribute [rw] parameters
@@ -1264,6 +2838,22 @@ module Aws::Deadline
     #   The job ID for the source job.
     #   @return [String]
     #
+    # @!attribute [rw] name_override
+    #   A custom name to override the job name derived from the job
+    #   template.
+    #   @return [String]
+    #
+    # @!attribute [rw] description_override
+    #   A custom description to override the job description derived from
+    #   the job template.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   The tags to add to your job. Each tag consists of a tag key and a
+    #   tag value. Tag keys and values are both required, but tag values can
+    #   be empty strings.
+    #   @return [Hash<String,String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/CreateJobRequest AWS API Documentation
     #
     class CreateJobRequest < Struct.new(
@@ -1280,11 +2870,18 @@ module Aws::Deadline
       :max_failed_tasks_count,
       :max_retries_per_task,
       :max_worker_count,
-      :source_job_id)
-      SENSITIVE = [:template, :parameters]
+      :source_job_id,
+      :name_override,
+      :description_override,
+      :tags)
+      SENSITIVE = [:template, :parameters, :description_override]
       include Aws::Structure
     end
 
+    # Mixin that adds an optional ARN field to response structures. Apply to
+    # SummaryMixins (flows into Get, Summary, and BatchGet) and Create
+    # outputs.
+    #
     # @!attribute [rw] job_id
     #   The job ID.
     #   @return [String]
@@ -1334,6 +2931,10 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Mixin that adds an optional ARN field to response structures. Apply to
+    # SummaryMixins (flows into Get, Summary, and BatchGet) and Create
+    # outputs.
+    #
     # @!attribute [rw] license_endpoint_id
     #   The license endpoint ID.
     #   @return [String]
@@ -1346,6 +2947,10 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # @!attribute [rw] farm_id
+    #   The farm ID of the farm that contains the limit.
+    #   @return [String]
+    #
     # @!attribute [rw] client_token
     #   The unique token which the server uses to recognize retries of the
     #   same request.
@@ -1378,10 +2983,6 @@ module Aws::Deadline
     #   limit.
     #   @return [Integer]
     #
-    # @!attribute [rw] farm_id
-    #   The farm ID of the farm that contains the limit.
-    #   @return [String]
-    #
     # @!attribute [rw] description
     #   A description of the limit. A description helps you identify the
     #   purpose of the limit.
@@ -1394,11 +2995,11 @@ module Aws::Deadline
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/CreateLimitRequest AWS API Documentation
     #
     class CreateLimitRequest < Struct.new(
+      :farm_id,
       :client_token,
       :display_name,
       :amount_requirement_name,
       :max_count,
-      :farm_id,
       :description)
       SENSITIVE = [:description]
       include Aws::Structure
@@ -1435,8 +3036,13 @@ module Aws::Deadline
     #   @return [String]
     #
     # @!attribute [rw] identity_center_instance_arn
-    #   The Amazon Resource Name (ARN) of the IAM Identity Center instance
-    #   that authenticates monitor users.
+    #   The Amazon Resource Name of the IAM Identity Center instance that
+    #   authenticates monitor users.
+    #   @return [String]
+    #
+    # @!attribute [rw] identity_center_region
+    #   The Region where IAM Identity Center is enabled. Required when IAM
+    #   Identity Center is in a different Region than the monitor.
     #   @return [String]
     #
     # @!attribute [rw] subdomain
@@ -1445,11 +3051,17 @@ module Aws::Deadline
     #   @return [String]
     #
     # @!attribute [rw] role_arn
-    #   The Amazon Resource Name (ARN) of the IAM role that the monitor uses
-    #   to connect to Deadline Cloud. Every user that signs in to the
-    #   monitor using IAM Identity Center uses this role to access Deadline
-    #   Cloud resources.
+    #   The Amazon Resource Name of the IAM role that the monitor uses to
+    #   connect to Deadline Cloud. Every user that signs in to the monitor
+    #   using IAM Identity Center uses this role to access Deadline Cloud
+    #   resources.
     #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   The tags to add to your monitor. Each tag consists of a tag key and
+    #   a tag value. Tag keys and values are both required, but tag values
+    #   can be empty strings.
+    #   @return [Hash<String,String>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/CreateMonitorRequest AWS API Documentation
     #
@@ -1457,19 +3069,25 @@ module Aws::Deadline
       :client_token,
       :display_name,
       :identity_center_instance_arn,
+      :identity_center_region,
       :subdomain,
-      :role_arn)
+      :role_arn,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # Mixin that adds an optional ARN field to response structures. Apply to
+    # SummaryMixins (flows into Get, Summary, and BatchGet) and Create
+    # outputs.
+    #
     # @!attribute [rw] monitor_id
     #   The unique identifier of the monitor.
     #   @return [String]
     #
     # @!attribute [rw] identity_center_application_arn
-    #   The Amazon Resource Name (ARN) that IAM Identity Center assigns to
-    #   the monitor.
+    #   The Amazon Resource Name that IAM Identity Center assigns to the
+    #   monitor.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/CreateMonitorResponse AWS API Documentation
@@ -1481,14 +3099,6 @@ module Aws::Deadline
       include Aws::Structure
     end
 
-    # @!attribute [rw] client_token
-    #   The unique token which the server uses to recognize retries of the
-    #   same request.
-    #
-    #   **A suitable default value is auto-generated.** You should normally
-    #   not need to pass this option.
-    #   @return [String]
-    #
     # @!attribute [rw] farm_id
     #   The farm ID of the farm to connect to the environment.
     #   @return [String]
@@ -1497,10 +3107,19 @@ module Aws::Deadline
     #   The queue ID to connect the queue and environment.
     #   @return [String]
     #
+    # @!attribute [rw] client_token
+    #   The unique token which the server uses to recognize retries of the
+    #   same request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
     # @!attribute [rw] priority
     #   Sets the priority of the environments in the queue from 0 to 10,000,
-    #   where 0 is the highest priority. If two environments share the same
-    #   priority value, the environment created first takes higher priority.
+    #   where 0 is the highest priority (activated first and deactivated
+    #   last). If two environments share the same priority value, the
+    #   environment created first takes higher priority.
     #   @return [Integer]
     #
     # @!attribute [rw] template_type
@@ -1514,9 +3133,9 @@ module Aws::Deadline
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/CreateQueueEnvironmentRequest AWS API Documentation
     #
     class CreateQueueEnvironmentRequest < Struct.new(
-      :client_token,
       :farm_id,
       :queue_id,
+      :client_token,
       :priority,
       :template_type,
       :template)
@@ -1589,16 +3208,20 @@ module Aws::Deadline
     #
     class CreateQueueLimitAssociationResponse < Aws::EmptyStructure; end
 
+    # Shared displayName + description for Create operations where both are
+    # present. displayName is @required here - this mixin is Create-only by
+    # design (Update has optional displayName).
+    #
+    # @!attribute [rw] farm_id
+    #   The farm ID of the farm to connect to the queue.
+    #   @return [String]
+    #
     # @!attribute [rw] client_token
     #   The unique token which the server uses to recognize retries of the
     #   same request.
     #
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.
-    #   @return [String]
-    #
-    # @!attribute [rw] farm_id
-    #   The farm ID of the farm to connect to the queue.
     #   @return [String]
     #
     # @!attribute [rw] display_name
@@ -1648,11 +3271,19 @@ module Aws::Deadline
     #   are both required, but tag values can be empty strings.
     #   @return [Hash<String,String>]
     #
+    # @!attribute [rw] scheduling_configuration
+    #   The scheduling configuration for the queue. This configuration
+    #   determines how workers are assigned to jobs in the queue.
+    #
+    #   If not specified, the queue defaults to the `priorityFifo`
+    #   scheduling configuration.
+    #   @return [Types::SchedulingConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/CreateQueueRequest AWS API Documentation
     #
     class CreateQueueRequest < Struct.new(
-      :client_token,
       :farm_id,
+      :client_token,
       :display_name,
       :description,
       :default_budget_action,
@@ -1661,11 +3292,16 @@ module Aws::Deadline
       :job_run_as_user,
       :required_file_system_location_names,
       :allowed_storage_profile_ids,
-      :tags)
-      SENSITIVE = [:description, :required_file_system_location_names]
+      :tags,
+      :scheduling_configuration)
+      SENSITIVE = [:description]
       include Aws::Structure
     end
 
+    # Mixin that adds an optional ARN field to response structures. Apply to
+    # SummaryMixins (flows into Get, Summary, and BatchGet) and Create
+    # outputs.
+    #
     # @!attribute [rw] queue_id
     #   The queue ID.
     #   @return [String]
@@ -1678,16 +3314,16 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # @!attribute [rw] farm_id
+    #   The farm ID of the farm to connect to the storage profile.
+    #   @return [String]
+    #
     # @!attribute [rw] client_token
     #   The unique token which the server uses to recognize retries of the
     #   same request.
     #
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.
-    #   @return [String]
-    #
-    # @!attribute [rw] farm_id
-    #   The farm ID of the farm to connect to the storage profile.
     #   @return [String]
     #
     # @!attribute [rw] display_name
@@ -1709,8 +3345,8 @@ module Aws::Deadline
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/CreateStorageProfileRequest AWS API Documentation
     #
     class CreateStorageProfileRequest < Struct.new(
-      :client_token,
       :farm_id,
+      :client_token,
       :display_name,
       :os_family,
       :file_system_locations)
@@ -1750,17 +3386,27 @@ module Aws::Deadline
     #   not need to pass this option.
     #   @return [String]
     #
+    # @!attribute [rw] tags
+    #   Each tag consists of a tag key and a tag value. Tag keys and values
+    #   are both required, but tag values can be empty strings.
+    #   @return [Hash<String,String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/CreateWorkerRequest AWS API Documentation
     #
     class CreateWorkerRequest < Struct.new(
       :farm_id,
       :fleet_id,
       :host_properties,
-      :client_token)
+      :client_token,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # Mixin that adds an optional ARN field to response structures. Apply to
+    # SummaryMixins (flows into Get, Summary, and BatchGet) and Create
+    # outputs.
+    #
     # @!attribute [rw] worker_id
     #   The worker ID.
     #   @return [String]
@@ -1773,26 +3419,64 @@ module Aws::Deadline
       include Aws::Structure
     end
 
-    # The details of a customer managed fleet configuration.
+    # The auto scaling configuration settings for a customer managed fleet.
+    #
+    # @!attribute [rw] standby_worker_count
+    #   The number of idle workers maintained and ready to process incoming
+    #   tasks. The default is 0.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] worker_idle_duration_seconds
+    #   The number of seconds that a worker can remain idle before it is
+    #   shut down. The default is 300 seconds (5 minutes).
+    #   @return [Integer]
+    #
+    # @!attribute [rw] scale_out_workers_per_minute
+    #   The number of workers that can be added per minute to the fleet. The
+    #   default is 10 workers per minute.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/CustomerManagedAutoScalingConfiguration AWS API Documentation
+    #
+    class CustomerManagedAutoScalingConfiguration < Struct.new(
+      :standby_worker_count,
+      :worker_idle_duration_seconds,
+      :scale_out_workers_per_minute)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration details for a customer managed fleet.
     #
     # @!attribute [rw] mode
-    #   The Auto Scaling mode for the customer managed fleet configuration.
+    #   The Auto Scaling mode for the customer managed fleet.
     #   @return [String]
     #
+    # @!attribute [rw] auto_scaling_configuration
+    #   The auto scaling configuration settings for the customer managed
+    #   fleet.
+    #   @return [Types::CustomerManagedAutoScalingConfiguration]
+    #
     # @!attribute [rw] worker_capabilities
-    #   The worker capabilities for a customer managed fleet configuration.
+    #   The worker capabilities for the customer managed fleet.
     #   @return [Types::CustomerManagedWorkerCapabilities]
     #
     # @!attribute [rw] storage_profile_id
-    #   The storage profile ID.
+    #   The storage profile ID for the customer managed fleet.
+    #   @return [String]
+    #
+    # @!attribute [rw] tag_propagation_mode
+    #   The tag propagation mode for the customer managed fleet.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/CustomerManagedFleetConfiguration AWS API Documentation
     #
     class CustomerManagedFleetConfiguration < Struct.new(
       :mode,
+      :auto_scaling_configuration,
       :worker_capabilities,
-      :storage_profile_id)
+      :storage_profile_id,
+      :tag_propagation_mode)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1913,14 +3597,6 @@ module Aws::Deadline
     #
     class DeleteFarmResponse < Aws::EmptyStructure; end
 
-    # @!attribute [rw] client_token
-    #   The unique token which the server uses to recognize retries of the
-    #   same request.
-    #
-    #   **A suitable default value is auto-generated.** You should normally
-    #   not need to pass this option.
-    #   @return [String]
-    #
     # @!attribute [rw] farm_id
     #   The farm ID of the farm to remove from the fleet.
     #   @return [String]
@@ -1929,12 +3605,20 @@ module Aws::Deadline
     #   The fleet ID of the fleet to delete.
     #   @return [String]
     #
+    # @!attribute [rw] client_token
+    #   The unique token which the server uses to recognize retries of the
+    #   same request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/DeleteFleetRequest AWS API Documentation
     #
     class DeleteFleetRequest < Struct.new(
-      :client_token,
       :farm_id,
-      :fleet_id)
+      :fleet_id,
+      :client_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2046,6 +3730,9 @@ module Aws::Deadline
     #
     class DeleteQueueEnvironmentResponse < Aws::EmptyStructure; end
 
+    # Identifier mixin for queue-fleet association operations. Composes
+    # QueueIdentifierMixin (farmId + queueId) and adds fleetId.
+    #
     # @!attribute [rw] farm_id
     #   The farm ID of the farm that holds the queue-fleet association.
     #   @return [String]
@@ -2140,6 +3827,32 @@ module Aws::Deadline
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/DeleteStorageProfileResponse AWS API Documentation
     #
     class DeleteStorageProfileResponse < Aws::EmptyStructure; end
+
+    # @!attribute [rw] farm_id
+    #   The farm ID of the farm that contains the fleet.
+    #   @return [String]
+    #
+    # @!attribute [rw] fleet_id
+    #   The fleet ID of the fleet that contains the volume.
+    #   @return [String]
+    #
+    # @!attribute [rw] volume_id
+    #   The volume ID of the volume to delete.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/DeleteVolumeRequest AWS API Documentation
+    #
+    class DeleteVolumeRequest < Struct.new(
+      :farm_id,
+      :fleet_id,
+      :volume_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/DeleteVolumeResponse AWS API Documentation
+    #
+    class DeleteVolumeResponse < Aws::EmptyStructure; end
 
     # @!attribute [rw] farm_id
     #   The farm ID of the worker to delete.
@@ -2581,7 +4294,7 @@ module Aws::Deadline
       :name,
       :path,
       :type)
-      SENSITIVE = [:name]
+      SENSITIVE = []
       include Aws::Structure
     end
 
@@ -2756,6 +4469,10 @@ module Aws::Deadline
     #   The status of the fleet.
     #   @return [String]
     #
+    # @!attribute [rw] status_message
+    #   A message that communicates a suspended status of the fleet.
+    #   @return [String]
+    #
     # @!attribute [rw] auto_scaling_status
     #   The Auto Scaling status of a fleet.
     #   @return [String]
@@ -2803,6 +4520,7 @@ module Aws::Deadline
       :farm_id,
       :display_name,
       :status,
+      :status_message,
       :auto_scaling_status,
       :target_worker_count,
       :worker_count,
@@ -2834,6 +4552,10 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Mixin that adds an optional ARN field to response structures. Apply to
+    # SummaryMixins (flows into Get, Summary, and BatchGet) and Create
+    # outputs.
+    #
     # @!attribute [rw] budget_id
     #   The budget ID.
     #   @return [String]
@@ -2859,14 +4581,6 @@ module Aws::Deadline
     #   interpret the content of this field.
     #   @return [String]
     #
-    # @!attribute [rw] description
-    #   The description of the budget.
-    #
-    #   This field can store any content. Escape or encode this content
-    #   before displaying it on a webpage or any other system that might
-    #   interpret the content of this field.
-    #   @return [String]
-    #
     # @!attribute [rw] approximate_dollar_limit
     #   The consumed usage limit for the budget.
     #   @return [Float]
@@ -2874,14 +4588,6 @@ module Aws::Deadline
     # @!attribute [rw] usages
     #   The usages of the budget.
     #   @return [Types::ConsumedUsages]
-    #
-    # @!attribute [rw] actions
-    #   The budget actions for the budget.
-    #   @return [Array<Types::ResponseBudgetAction>]
-    #
-    # @!attribute [rw] schedule
-    #   The budget schedule.
-    #   @return [Types::BudgetSchedule]
     #
     # @!attribute [rw] created_by
     #   The user or system that created this resource.
@@ -2899,6 +4605,22 @@ module Aws::Deadline
     #   The date and time the resource was updated.
     #   @return [Time]
     #
+    # @!attribute [rw] description
+    #   The description of the budget.
+    #
+    #   This field can store any content. Escape or encode this content
+    #   before displaying it on a webpage or any other system that might
+    #   interpret the content of this field.
+    #   @return [String]
+    #
+    # @!attribute [rw] actions
+    #   The budget actions for the budget.
+    #   @return [Array<Types::ResponseBudgetAction>]
+    #
+    # @!attribute [rw] schedule
+    #   The budget schedule.
+    #   @return [Types::BudgetSchedule]
+    #
     # @!attribute [rw] queue_stopped_at
     #   The date and time the queue stopped.
     #   @return [Time]
@@ -2910,15 +4632,15 @@ module Aws::Deadline
       :usage_tracking_resource,
       :status,
       :display_name,
-      :description,
       :approximate_dollar_limit,
       :usages,
-      :actions,
-      :schedule,
       :created_by,
       :created_at,
       :updated_by,
       :updated_at,
+      :description,
+      :actions,
+      :schedule,
       :queue_stopped_at)
       SENSITIVE = [:description]
       include Aws::Structure
@@ -2936,20 +4658,16 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Mixin that adds an optional ARN field to response structures. Apply to
+    # SummaryMixins (flows into Get, Summary, and BatchGet) and Create
+    # outputs.
+    #
     # @!attribute [rw] farm_id
     #   The farm ID of the farm to get.
     #   @return [String]
     #
     # @!attribute [rw] display_name
     #   The display name of the farm.
-    #
-    #   This field can store any content. Escape or encode this content
-    #   before displaying it on a webpage or any other system that might
-    #   interpret the content of this field.
-    #   @return [String]
-    #
-    # @!attribute [rw] description
-    #   The description of the farm.
     #
     #   This field can store any content. Escape or encode this content
     #   before displaying it on a webpage or any other system that might
@@ -2976,17 +4694,33 @@ module Aws::Deadline
     #   The user or system that updated this resource.
     #   @return [String]
     #
+    # @!attribute [rw] description
+    #   The description of the farm.
+    #
+    #   This field can store any content. Escape or encode this content
+    #   before displaying it on a webpage or any other system that might
+    #   interpret the content of this field.
+    #   @return [String]
+    #
+    # @!attribute [rw] cost_scale_factor
+    #   A multiplier applied to the farm's calculated costs for usage data
+    #   and budget tracking. A value less than 1 represents a discount, a
+    #   value greater than 1 represents a premium, and a value of 1
+    #   represents no adjustment.
+    #   @return [Float]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/GetFarmResponse AWS API Documentation
     #
     class GetFarmResponse < Struct.new(
       :farm_id,
       :display_name,
-      :description,
       :kms_key_arn,
       :created_at,
       :created_by,
       :updated_at,
-      :updated_by)
+      :updated_by,
+      :description,
+      :cost_scale_factor)
       SENSITIVE = [:description]
       include Aws::Structure
     end
@@ -3008,6 +4742,10 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Mixin that adds an optional ARN field to response structures. Apply to
+    # SummaryMixins (flows into Get, Summary, and BatchGet) and Create
+    # outputs.
+    #
     # @!attribute [rw] fleet_id
     #   The fleet ID.
     #   @return [String]
@@ -3024,16 +4762,12 @@ module Aws::Deadline
     #   interpret the content of this field.
     #   @return [String]
     #
-    # @!attribute [rw] description
-    #   The description of the fleet.
-    #
-    #   This field can store any content. Escape or encode this content
-    #   before displaying it on a webpage or any other system that might
-    #   interpret the content of this field.
+    # @!attribute [rw] status
+    #   The status of the fleet.
     #   @return [String]
     #
-    # @!attribute [rw] status
-    #   The Auto Scaling status of the fleet.
+    # @!attribute [rw] status_message
+    #   A message that communicates a suspended status of the fleet.
     #   @return [String]
     #
     # @!attribute [rw] auto_scaling_status
@@ -3061,15 +4795,6 @@ module Aws::Deadline
     #   The configuration setting for the fleet.
     #   @return [Types::FleetConfiguration]
     #
-    # @!attribute [rw] capabilities
-    #   Outlines what the fleet is capable of for minimums, maximums, and
-    #   naming, in addition to attribute names and values.
-    #   @return [Types::FleetCapabilities]
-    #
-    # @!attribute [rw] role_arn
-    #   The IAM role ARN.
-    #   @return [String]
-    #
     # @!attribute [rw] created_at
     #   The date and time the resource was created.
     #   @return [Time]
@@ -3086,26 +4811,50 @@ module Aws::Deadline
     #   The user or system that updated this resource.
     #   @return [String]
     #
+    # @!attribute [rw] description
+    #   The description of the fleet.
+    #
+    #   This field can store any content. Escape or encode this content
+    #   before displaying it on a webpage or any other system that might
+    #   interpret the content of this field.
+    #   @return [String]
+    #
+    # @!attribute [rw] host_configuration
+    #   The script that runs as a worker is starting up that you can use to
+    #   provide additional configuration for workers in your fleet.
+    #   @return [Types::HostConfiguration]
+    #
+    # @!attribute [rw] capabilities
+    #   Outlines what the fleet is capable of for minimums, maximums, and
+    #   naming, in addition to attribute names and values.
+    #   @return [Types::FleetCapabilities]
+    #
+    # @!attribute [rw] role_arn
+    #   The IAM role ARN.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/GetFleetResponse AWS API Documentation
     #
     class GetFleetResponse < Struct.new(
       :fleet_id,
       :farm_id,
       :display_name,
-      :description,
       :status,
+      :status_message,
       :auto_scaling_status,
       :target_worker_count,
       :worker_count,
       :min_worker_count,
       :max_worker_count,
       :configuration,
-      :capabilities,
-      :role_arn,
       :created_at,
       :created_by,
       :updated_at,
-      :updated_by)
+      :updated_by,
+      :description,
+      :host_configuration,
+      :capabilities,
+      :role_arn)
       SENSITIVE = [:description]
       include Aws::Structure
     end
@@ -3171,6 +4920,10 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Mixin that adds an optional ARN field to response structures. Apply to
+    # SummaryMixins (flows into Get, Summary, and BatchGet) and Create
+    # outputs.
+    #
     # @!attribute [rw] job_id
     #   The job ID.
     #   @return [String]
@@ -3227,6 +4980,11 @@ module Aws::Deadline
     # @!attribute [rw] task_run_status_counts
     #   The number of tasks running on the job.
     #   @return [Hash<String,Integer>]
+    #
+    # @!attribute [rw] task_failure_retry_count
+    #   The total number of times tasks from the job failed and were
+    #   retried.
+    #   @return [Integer]
     #
     # @!attribute [rw] storage_profile_id
     #   The storage profile ID associated with the job.
@@ -3288,6 +5046,7 @@ module Aws::Deadline
       :task_run_status,
       :target_task_run_status,
       :task_run_status_counts,
+      :task_failure_retry_count,
       :storage_profile_id,
       :max_failed_tasks_count,
       :max_retries_per_task,
@@ -3312,6 +5071,10 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Mixin that adds an optional ARN field to response structures. Apply to
+    # SummaryMixins (flows into Get, Summary, and BatchGet) and Create
+    # outputs.
+    #
     # @!attribute [rw] license_endpoint_id
     #   The license endpoint ID.
     #   @return [String]
@@ -3325,7 +5088,7 @@ module Aws::Deadline
     #   @return [String]
     #
     # @!attribute [rw] vpc_id
-    #   The VCP(virtual private cloud) ID associated with the license
+    #   The VPC (virtual private cloud) ID associated with the license
     #   endpoint.
     #   @return [String]
     #
@@ -3372,6 +5135,40 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Domain fields for Limit summary/response shapes, ordered before
+    # timestamps.
+    #
+    # @!attribute [rw] farm_id
+    #   The unique identifier of the farm that contains the limit.
+    #   @return [String]
+    #
+    # @!attribute [rw] limit_id
+    #   The unique identifier of the limit.
+    #   @return [String]
+    #
+    # @!attribute [rw] current_count
+    #   The number of resources from the limit that are being used by jobs.
+    #   The result is delayed and may not be the count at the time that you
+    #   called the operation.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] created_at
+    #   The Unix timestamp of the date and time that the limit was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] created_by
+    #   The user identifier of the person that created the limit.
+    #   @return [String]
+    #
+    # @!attribute [rw] updated_at
+    #   The Unix timestamp of the date and time that the limit was last
+    #   updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_by
+    #   The user identifier of the person that last updated the limit.
+    #   @return [String]
+    #
     # @!attribute [rw] display_name
     #   The display name of the limit.
     #
@@ -3396,37 +5193,6 @@ module Aws::Deadline
     #   limit.
     #   @return [Integer]
     #
-    # @!attribute [rw] created_at
-    #   The Unix timestamp of the date and time that the limit was created.
-    #   @return [Time]
-    #
-    # @!attribute [rw] created_by
-    #   The user identifier of the person that created the limit.
-    #   @return [String]
-    #
-    # @!attribute [rw] updated_at
-    #   The Unix timestamp of the date and time that the limit was last
-    #   updated.
-    #   @return [Time]
-    #
-    # @!attribute [rw] updated_by
-    #   The user identifier of the person that last updated the limit.
-    #   @return [String]
-    #
-    # @!attribute [rw] farm_id
-    #   The unique identifier of the farm that contains the limit.
-    #   @return [String]
-    #
-    # @!attribute [rw] limit_id
-    #   The unique identifier of the limit.
-    #   @return [String]
-    #
-    # @!attribute [rw] current_count
-    #   The number of resources from the limit that are being used by jobs.
-    #   The result is delayed and may not be the count at the time that you
-    #   called the operation.
-    #   @return [Integer]
-    #
     # @!attribute [rw] description
     #   The description of the limit that helps identify what the limit is
     #   used for.
@@ -3439,16 +5205,16 @@ module Aws::Deadline
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/GetLimitResponse AWS API Documentation
     #
     class GetLimitResponse < Struct.new(
-      :display_name,
-      :amount_requirement_name,
-      :max_count,
+      :farm_id,
+      :limit_id,
+      :current_count,
       :created_at,
       :created_by,
       :updated_at,
       :updated_by,
-      :farm_id,
-      :limit_id,
-      :current_count,
+      :display_name,
+      :amount_requirement_name,
+      :max_count,
       :description)
       SENSITIVE = [:description]
       include Aws::Structure
@@ -3467,6 +5233,10 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Mixin that adds an optional ARN field to response structures. Apply to
+    # SummaryMixins (flows into Get, Summary, and BatchGet) and Create
+    # outputs.
+    #
     # @!attribute [rw] monitor_id
     #   The unique identifier for the monitor.
     #   @return [String]
@@ -3490,19 +5260,22 @@ module Aws::Deadline
     #   @return [String]
     #
     # @!attribute [rw] role_arn
-    #   The Amazon Resource Name (ARN) of the IAM role for the monitor.
-    #   Users of the monitor use this role to access Deadline Cloud
-    #   resources.
+    #   The Amazon Resource Name of the IAM role for the monitor. Users of
+    #   the monitor use this role to access Deadline Cloud resources.
     #   @return [String]
     #
     # @!attribute [rw] identity_center_instance_arn
-    #   The Amazon Resource Name (ARN) of the IAM Identity Center instance
+    #   The Amazon Resource Name of the IAM Identity Center instance
     #   responsible for authenticating monitor users.
     #   @return [String]
     #
+    # @!attribute [rw] identity_center_region
+    #   The Region where IAM Identity Center is enabled.
+    #   @return [String]
+    #
     # @!attribute [rw] identity_center_application_arn
-    #   The Amazon Resource Name (ARN) that the IAM Identity Center assigned
-    #   to the monitor when it was created.
+    #   The Amazon Resource Name that the IAM Identity Center assigned to
+    #   the monitor when it was created.
     #   @return [String]
     #
     # @!attribute [rw] created_at
@@ -3532,11 +5305,38 @@ module Aws::Deadline
       :url,
       :role_arn,
       :identity_center_instance_arn,
+      :identity_center_region,
       :identity_center_application_arn,
       :created_at,
       :created_by,
       :updated_at,
       :updated_by)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] monitor_id
+    #   The unique identifier of the monitor. This ID is returned by the
+    #   `CreateMonitor` operation, and is included in the response to the
+    #   `ListMonitors` operation.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/GetMonitorSettingsRequest AWS API Documentation
+    #
+    class GetMonitorSettingsRequest < Struct.new(
+      :monitor_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] settings
+    #   The monitor settings as key-value pairs.
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/GetMonitorSettingsResponse AWS API Documentation
+    #
+    class GetMonitorSettingsResponse < Struct.new(
+      :settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3615,6 +5415,9 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Identifier mixin for queue-fleet association operations. Composes
+    # QueueIdentifierMixin (farmId + queueId) and adds fleetId.
+    #
     # @!attribute [rw] farm_id
     #   The farm ID of the farm that contains the queue-fleet association.
     #   @return [String]
@@ -3637,6 +5440,9 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Domain fields for QueueFleetAssociation summary/response shapes,
+    # ordered before timestamps.
+    #
     # @!attribute [rw] queue_id
     #   The queue ID for the queue-fleet association.
     #   @return [String]
@@ -3702,6 +5508,21 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Domain fields for QueueLimitAssociation summary/response shapes,
+    # ordered before timestamps.
+    #
+    # @!attribute [rw] queue_id
+    #   The unique identifier of the queue associated with the limit.
+    #   @return [String]
+    #
+    # @!attribute [rw] limit_id
+    #   The unique identifier of the limit associated with the queue.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the limit.
+    #   @return [String]
+    #
     # @!attribute [rw] created_at
     #   The Unix timestamp of the date and time that the association was
     #   created.
@@ -3720,28 +5541,16 @@ module Aws::Deadline
     #   The user identifier of the person that last updated the association.
     #   @return [String]
     #
-    # @!attribute [rw] queue_id
-    #   The unique identifier of the queue associated with the limit.
-    #   @return [String]
-    #
-    # @!attribute [rw] limit_id
-    #   The unique identifier of the limit associated with the queue.
-    #   @return [String]
-    #
-    # @!attribute [rw] status
-    #   The current status of the limit.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/GetQueueLimitAssociationResponse AWS API Documentation
     #
     class GetQueueLimitAssociationResponse < Struct.new(
+      :queue_id,
+      :limit_id,
+      :status,
       :created_at,
       :created_by,
       :updated_at,
-      :updated_by,
-      :queue_id,
-      :limit_id,
-      :status)
+      :updated_by)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3763,6 +5572,14 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Mixin that adds an optional ARN field to response structures. Apply to
+    # SummaryMixins (flows into Get, Summary, and BatchGet) and Create
+    # outputs.
+    #
+    # @!attribute [rw] farm_id
+    #   The farm ID for the queue.
+    #   @return [String]
+    #
     # @!attribute [rw] queue_id
     #   The queue ID.
     #   @return [String]
@@ -3773,18 +5590,6 @@ module Aws::Deadline
     #   This field can store any content. Escape or encode this content
     #   before displaying it on a webpage or any other system that might
     #   interpret the content of this field.
-    #   @return [String]
-    #
-    # @!attribute [rw] description
-    #   The description of the queue.
-    #
-    #   This field can store any content. Escape or encode this content
-    #   before displaying it on a webpage or any other system that might
-    #   interpret the content of this field.
-    #   @return [String]
-    #
-    # @!attribute [rw] farm_id
-    #   The farm ID for the queue.
     #   @return [String]
     #
     # @!attribute [rw] status
@@ -3804,6 +5609,30 @@ module Aws::Deadline
     #
     # @!attribute [rw] blocked_reason
     #   The reason the queue was blocked.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_at
+    #   The date and time the resource was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] created_by
+    #   The user or system that created this resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] updated_at
+    #   The date and time the resource was updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_by
+    #   The user or system that updated this resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   The description of the queue.
+    #
+    #   This field can store any content. Escape or encode this content
+    #   before displaying it on a webpage or any other system that might
+    #   interpret the content of this field.
     #   @return [String]
     #
     # @!attribute [rw] job_attachment_settings
@@ -3826,42 +5655,32 @@ module Aws::Deadline
     #   The jobs in the queue ran as this specified POSIX user.
     #   @return [Types::JobRunAsUser]
     #
-    # @!attribute [rw] created_at
-    #   The date and time the resource was created.
-    #   @return [Time]
-    #
-    # @!attribute [rw] created_by
-    #   The user or system that created this resource.
-    #   @return [String]
-    #
-    # @!attribute [rw] updated_at
-    #   The date and time the resource was updated.
-    #   @return [Time]
-    #
-    # @!attribute [rw] updated_by
-    #   The user or system that updated this resource.
-    #   @return [String]
+    # @!attribute [rw] scheduling_configuration
+    #   The scheduling configuration for the queue. This configuration
+    #   determines how workers are assigned to jobs in the queue.
+    #   @return [Types::SchedulingConfiguration]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/GetQueueResponse AWS API Documentation
     #
     class GetQueueResponse < Struct.new(
+      :farm_id,
       :queue_id,
       :display_name,
-      :description,
-      :farm_id,
       :status,
       :default_budget_action,
       :blocked_reason,
+      :created_at,
+      :created_by,
+      :updated_at,
+      :updated_by,
+      :description,
       :job_attachment_settings,
       :role_arn,
       :required_file_system_location_names,
       :allowed_storage_profile_ids,
       :job_run_as_user,
-      :created_at,
-      :created_by,
-      :updated_at,
-      :updated_by)
-      SENSITIVE = [:description, :required_file_system_location_names]
+      :scheduling_configuration)
+      SENSITIVE = [:description]
       include Aws::Structure
     end
 
@@ -3917,26 +5736,32 @@ module Aws::Deadline
     #   The percentage completed for a session action.
     #   @return [Float]
     #
+    # @!attribute [rw] manifests
+    #   The list of manifest properties that describe file attachments for
+    #   the task run.
+    #   @return [Array<Types::TaskRunManifestPropertiesResponse>]
+    #
     # @!attribute [rw] session_id
     #   The session ID for the session action.
     #   @return [String]
     #
     # @!attribute [rw] process_exit_code
-    #   The exit code to exit the session.
+    #   The process exit code. The default Deadline Cloud worker agent
+    #   converts unsigned 32-bit exit codes to signed 32-bit exit codes.
     #   @return [Integer]
     #
     # @!attribute [rw] progress_message
     #   The message that communicates the progress of the session action.
     #   @return [String]
     #
-    # @!attribute [rw] definition
-    #   The session action definition.
-    #   @return [Types::SessionActionDefinition]
-    #
     # @!attribute [rw] acquired_limits
     #   The limits and their amounts acquired during a session action. If no
     #   limits were acquired during the session, this field isn't returned.
     #   @return [Array<Types::AcquiredLimit>]
+    #
+    # @!attribute [rw] definition
+    #   The session action definition.
+    #   @return [Types::SessionActionDefinition]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/GetSessionActionResponse AWS API Documentation
     #
@@ -3947,11 +5772,12 @@ module Aws::Deadline
       :ended_at,
       :worker_updated_at,
       :progress_percent,
+      :manifests,
       :session_id,
       :process_exit_code,
       :progress_message,
-      :definition,
-      :acquired_limits)
+      :acquired_limits,
+      :definition)
       SENSITIVE = [:progress_message]
       include Aws::Structure
     end
@@ -3983,6 +5809,8 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Session lifecycle/status fields, ordered after IDs in session shapes.
+    #
     # @!attribute [rw] session_id
     #   The session ID.
     #   @return [String]
@@ -3999,10 +5827,6 @@ module Aws::Deadline
     #   The date and time the resource started running.
     #   @return [Time]
     #
-    # @!attribute [rw] log
-    #   The session log.
-    #   @return [Types::LogConfiguration]
-    #
     # @!attribute [rw] lifecycle_status
     #   The life cycle status of the session.
     #   @return [String]
@@ -4010,6 +5834,10 @@ module Aws::Deadline
     # @!attribute [rw] ended_at
     #   The date and time the resource ended running.
     #   @return [Time]
+    #
+    # @!attribute [rw] target_lifecycle_status
+    #   The life cycle status with which the session started.
+    #   @return [String]
     #
     # @!attribute [rw] updated_at
     #   The date and time the resource was updated.
@@ -4019,9 +5847,9 @@ module Aws::Deadline
     #   The user or system that updated this resource.
     #   @return [String]
     #
-    # @!attribute [rw] target_lifecycle_status
-    #   The life cycle status with which the session started.
-    #   @return [String]
+    # @!attribute [rw] log
+    #   The session log.
+    #   @return [Types::LogConfiguration]
     #
     # @!attribute [rw] host_properties
     #   Provides the Amazon EC2 properties of the host.
@@ -4038,27 +5866,30 @@ module Aws::Deadline
       :fleet_id,
       :worker_id,
       :started_at,
-      :log,
       :lifecycle_status,
       :ended_at,
+      :target_lifecycle_status,
       :updated_at,
       :updated_by,
-      :target_lifecycle_status,
+      :log,
       :host_properties,
       :worker_log)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # Shared pagination fields for List operation inputs (nextToken +
+    # maxResults).
+    #
     # @!attribute [rw] farm_id
     #   The identifier of the farm to include in the statistics. This should
     #   be the same as the farm ID used in the call to the
     #   `StartSessionsStatisticsAggregation` operation.
     #   @return [String]
     #
-    # @!attribute [rw] aggregation_id
-    #   The identifier returned by the `StartSessionsStatisticsAggregation`
-    #   operation that identifies the aggregated statistics.
+    # @!attribute [rw] next_token
+    #   The token for the next set of results, or `null` to start from the
+    #   beginning.
     #   @return [String]
     #
     # @!attribute [rw] max_results
@@ -4066,35 +5897,27 @@ module Aws::Deadline
     #   `NextToken` to get results as a set of sequential pages.
     #   @return [Integer]
     #
-    # @!attribute [rw] next_token
-    #   The token for the next set of results, or `null` to start from the
-    #   beginning.
+    # @!attribute [rw] aggregation_id
+    #   The identifier returned by the `StartSessionsStatisticsAggregation`
+    #   operation that identifies the aggregated statistics.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/GetSessionsStatisticsAggregationRequest AWS API Documentation
     #
     class GetSessionsStatisticsAggregationRequest < Struct.new(
       :farm_id,
-      :aggregation_id,
+      :next_token,
       :max_results,
-      :next_token)
+      :aggregation_id)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
     # @!attribute [rw] statistics
     #   The statistics for the specified fleets or queues.
     #   @return [Array<Types::Statistics>]
-    #
-    # @!attribute [rw] next_token
-    #   If Deadline Cloud returns `nextToken`, then there are more results
-    #   available. The value of `nextToken` is a unique pagination token for
-    #   each page. To retrieve the next page, call the operation again using
-    #   the returned token. Keep all other arguments unchanged. If no
-    #   results remain, then `nextToken` is set to `null`. Each pagination
-    #   token expires after 24 hours. If you provide a token that isn't
-    #   valid, then you receive an HTTP 400 `ValidationException` error.
-    #   @return [String]
     #
     # @!attribute [rw] status
     #   The status of the aggregated results. An aggregation may fail or
@@ -4112,13 +5935,23 @@ module Aws::Deadline
     #   A message that describes the status.
     #   @return [String]
     #
+    # @!attribute [rw] next_token
+    #   If Deadline Cloud returns `nextToken`, then there are more results
+    #   available. The value of `nextToken` is a unique pagination token for
+    #   each page. To retrieve the next page, call the operation again using
+    #   the returned token. Keep all other arguments unchanged. If no
+    #   results remain, then `nextToken` is set to `null`. Each pagination
+    #   token expires after 24 hours. If you provide a token that isn't
+    #   valid, then you receive an HTTP 400 `ValidationException` error.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/GetSessionsStatisticsAggregationResponse AWS API Documentation
     #
     class GetSessionsStatisticsAggregationResponse < Struct.new(
       :statistics,
-      :next_token,
       :status,
-      :status_message)
+      :status_message,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4173,6 +6006,11 @@ module Aws::Deadline
     # @!attribute [rw] task_run_status_counts
     #   The number of tasks running on the job.
     #   @return [Hash<String,Integer>]
+    #
+    # @!attribute [rw] task_failure_retry_count
+    #   The total number of times tasks from the step failed and were
+    #   retried.
+    #   @return [Integer]
     #
     # @!attribute [rw] target_task_run_status
     #   The task status with which the job started.
@@ -4232,6 +6070,7 @@ module Aws::Deadline
       :lifecycle_status_message,
       :task_run_status,
       :task_run_status_counts,
+      :task_failure_retry_count,
       :target_task_run_status,
       :created_at,
       :created_by,
@@ -4424,10 +6263,6 @@ module Aws::Deadline
     #   The number of times that the task failed and was retried.
     #   @return [Integer]
     #
-    # @!attribute [rw] parameters
-    #   The parameters for the task.
-    #   @return [Hash<String,Types::TaskParameterValue>]
-    #
     # @!attribute [rw] started_at
     #   The date and time the resource started running.
     #   @return [Time]
@@ -4445,8 +6280,12 @@ module Aws::Deadline
     #   @return [String]
     #
     # @!attribute [rw] latest_session_action_id
-    #   The latest session ID for the task.
+    #   The latest session action ID for the task.
     #   @return [String]
+    #
+    # @!attribute [rw] parameters
+    #   The parameters for the task.
+    #   @return [Hash<String,Types::TaskParameterValue>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/GetTaskResponse AWS API Documentation
     #
@@ -4457,13 +6296,116 @@ module Aws::Deadline
       :run_status,
       :target_run_status,
       :failure_retry_count,
-      :parameters,
       :started_at,
       :ended_at,
       :updated_at,
       :updated_by,
-      :latest_session_action_id)
+      :latest_session_action_id,
+      :parameters)
       SENSITIVE = [:parameters]
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] farm_id
+    #   The farm ID of the farm that contains the fleet.
+    #   @return [String]
+    #
+    # @!attribute [rw] fleet_id
+    #   The fleet ID of the fleet that contains the volume.
+    #   @return [String]
+    #
+    # @!attribute [rw] volume_id
+    #   The volume ID of the volume to retrieve.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/GetVolumeRequest AWS API Documentation
+    #
+    class GetVolumeRequest < Struct.new(
+      :farm_id,
+      :fleet_id,
+      :volume_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Mixin that adds an optional ARN field to response structures. Apply to
+    # SummaryMixins (flows into Get, Summary, and BatchGet) and Create
+    # outputs.
+    #
+    # @!attribute [rw] volume_id
+    #   The volume ID.
+    #   @return [String]
+    #
+    # @!attribute [rw] farm_id
+    #   The farm ID of the farm that contains the fleet.
+    #   @return [String]
+    #
+    # @!attribute [rw] fleet_id
+    #   The fleet ID of the fleet that contains the volume.
+    #   @return [String]
+    #
+    # @!attribute [rw] state
+    #   The state of the volume.
+    #   @return [String]
+    #
+    # @!attribute [rw] size_gi_b
+    #   The volume size in GiB.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] availability_zone_id
+    #   The Availability Zone ID of the volume.
+    #   @return [String]
+    #
+    # @!attribute [rw] attached_worker_id
+    #   The worker ID of the worker the volume is attached to.
+    #   @return [String]
+    #
+    # @!attribute [rw] volume_type
+    #   The EBS volume type.
+    #   @return [String]
+    #
+    # @!attribute [rw] iops
+    #   The IOPS of the volume.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] throughput_mi_b
+    #   The throughput of the volume in MiB.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] created_at
+    #   The date and time the resource was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] last_assigned_at
+    #   The date and time the volume was last assigned to a worker.
+    #   @return [Time]
+    #
+    # @!attribute [rw] last_released_at
+    #   The date and time the volume was last released from a worker.
+    #   @return [Time]
+    #
+    # @!attribute [rw] expires_at
+    #   The date and time the volume expires and will be deleted.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/GetVolumeResponse AWS API Documentation
+    #
+    class GetVolumeResponse < Struct.new(
+      :volume_id,
+      :farm_id,
+      :fleet_id,
+      :state,
+      :size_gi_b,
+      :availability_zone_id,
+      :attached_worker_id,
+      :volume_type,
+      :iops,
+      :throughput_mi_b,
+      :created_at,
+      :last_assigned_at,
+      :last_released_at,
+      :expires_at)
+      SENSITIVE = []
       include Aws::Structure
     end
 
@@ -4489,6 +6431,10 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Mixin that adds an optional ARN field to response structures. Apply to
+    # SummaryMixins (flows into Get, Summary, and BatchGet) and Create
+    # outputs.
+    #
     # @!attribute [rw] farm_id
     #   The farm ID.
     #   @return [String]
@@ -4543,6 +6489,59 @@ module Aws::Deadline
       :updated_at,
       :updated_by)
       SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Provides a script that runs as a worker is starting up that you can
+    # use to provide additional configuration for workers in your fleet.
+    #
+    # To remove a script from a fleet, use the [UpdateFleet][1] operation
+    # with the `hostConfiguration` `scriptBody` parameter set to an empty
+    # string ("").
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/deadline-cloud/latest/APIReference/API_UpdateFleet.html
+    #
+    # @!attribute [rw] script_body
+    #   The text of the script that runs as a worker is starting up that you
+    #   can use to provide additional configuration for workers in your
+    #   fleet. The script runs after a worker enters the `STARTING` state
+    #   and before the worker processes tasks.
+    #
+    #   For more information about using the script, see [Run scripts as an
+    #   administrator to configure workers][1] in the *Deadline Cloud
+    #   Developer Guide*.
+    #
+    #   The script runs as an administrative user (`sudo root` on Linux, as
+    #   an Administrator on Windows).
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/deadline-cloud/latest/developerguide/smf-admin.html
+    #   @return [String]
+    #
+    # @!attribute [rw] script_timeout_seconds
+    #   The maximum time that the host configuration can run. If the timeout
+    #   expires, the worker enters the `NOT RESPONDING` state and shuts
+    #   down. You are charged for the time that the worker is running the
+    #   host configuration script.
+    #
+    #   <note markdown="1"> You should configure your fleet for a maximum of one worker while
+    #   testing your host configuration script to avoid starting additional
+    #   workers.
+    #
+    #    </note>
+    #
+    #   The default is 300 seconds (5 minutes).
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/HostConfiguration AWS API Documentation
+    #
+    class HostConfiguration < Struct.new(
+      :script_body,
+      :script_timeout_seconds)
+      SENSITIVE = [:script_body]
       include Aws::Structure
     end
 
@@ -4717,7 +6716,7 @@ module Aws::Deadline
     #
     # @!attribute [rw] job_attachment_settings
     #   The job attachment settings.
-    #   @return [Types::JobAttachmentSettings]
+    #   @return [Types::JobDetailsJobAttachmentSettings]
     #
     # @!attribute [rw] job_run_as_user
     #   The user name and group that the job uses when run.
@@ -4792,6 +6791,26 @@ module Aws::Deadline
     #
     class JobDetailsIdentifiers < Struct.new(
       :job_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The job attachment settings returned to workers for a job. These are
+    # the Amazon S3 bucket name and the Amazon S3 prefix.
+    #
+    # @!attribute [rw] s3_bucket_name
+    #   The Amazon S3 bucket name.
+    #   @return [String]
+    #
+    # @!attribute [rw] root_prefix
+    #   The root prefix.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/JobDetailsJobAttachmentSettings AWS API Documentation
+    #
+    class JobDetailsJobAttachmentSettings < Struct.new(
+      :s3_bucket_name,
+      :root_prefix)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5032,12 +7051,17 @@ module Aws::Deadline
     #   @return [String]
     #
     # @!attribute [rw] target_task_run_status
-    #   The task status to start with on the job.
+    #   The task status to update the job's tasks to.
     #   @return [String]
     #
     # @!attribute [rw] task_run_status_counts
     #   The number of tasks running on the job.
     #   @return [Hash<String,Integer>]
+    #
+    # @!attribute [rw] task_failure_retry_count
+    #   The total number of times tasks from the job failed and were
+    #   retried.
+    #   @return [Integer]
     #
     # @!attribute [rw] priority
     #   The job priority.
@@ -5067,6 +7091,14 @@ module Aws::Deadline
     # @!attribute [rw] started_at
     #   The date and time the resource started running.
     #   @return [Time]
+    #
+    # @!attribute [rw] updated_at
+    #   The date and time the resource was updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_by
+    #   The user or system that updated this resource.
+    #   @return [String]
     #
     # @!attribute [rw] job_parameters
     #   The job parameters.
@@ -5099,6 +7131,7 @@ module Aws::Deadline
       :task_run_status,
       :target_task_run_status,
       :task_run_status_counts,
+      :task_failure_retry_count,
       :priority,
       :max_failed_tasks_count,
       :max_retries_per_task,
@@ -5106,6 +7139,8 @@ module Aws::Deadline
       :created_at,
       :ended_at,
       :started_at,
+      :updated_at,
+      :updated_by,
       :job_parameters,
       :max_worker_count,
       :source_job_id)
@@ -5184,12 +7219,17 @@ module Aws::Deadline
     #   @return [String]
     #
     # @!attribute [rw] target_task_run_status
-    #   The task status to start with on the job.
+    #   The task status to update the job's tasks to.
     #   @return [String]
     #
     # @!attribute [rw] task_run_status_counts
     #   The number of tasks running on the job.
     #   @return [Hash<String,Integer>]
+    #
+    # @!attribute [rw] task_failure_retry_count
+    #   The total number of times tasks from the job failed and were
+    #   retried.
+    #   @return [Integer]
     #
     # @!attribute [rw] max_failed_tasks_count
     #   The number of task failures before the job stops running and is
@@ -5233,6 +7273,7 @@ module Aws::Deadline
       :task_run_status,
       :target_task_run_status,
       :task_run_status_counts,
+      :task_failure_retry_count,
       :max_failed_tasks_count,
       :max_retries_per_task,
       :max_worker_count,
@@ -5256,7 +7297,7 @@ module Aws::Deadline
     #   @return [String]
     #
     # @!attribute [rw] vpc_id
-    #   The VCP(virtual private cloud) ID associated with the license
+    #   The VPC (virtual private cloud) ID associated with the license
     #   endpoint.
     #   @return [String]
     #
@@ -5272,6 +7313,37 @@ module Aws::Deadline
     end
 
     # Provides information about a specific limit.
+    #
+    # @!attribute [rw] farm_id
+    #   The unique identifier of the farm that contains the limit.
+    #   @return [String]
+    #
+    # @!attribute [rw] limit_id
+    #   The unique identifier of the limit.
+    #   @return [String]
+    #
+    # @!attribute [rw] current_count
+    #   The number of resources from the limit that are being used by jobs.
+    #   The result is delayed and may not be the count at the time that you
+    #   called the operation.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] created_at
+    #   The Unix timestamp of the date and time that the limit was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] created_by
+    #   The user identifier of the person that created the limit.
+    #   @return [String]
+    #
+    # @!attribute [rw] updated_at
+    #   The Unix timestamp of the date and time that the limit was last
+    #   updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_by
+    #   The user identifier of the person that last updated the limit.
+    #   @return [String]
     #
     # @!attribute [rw] display_name
     #   The name of the limit used in lists to identify the limit.
@@ -5297,54 +7369,26 @@ module Aws::Deadline
     #   limit.
     #   @return [Integer]
     #
-    # @!attribute [rw] created_at
-    #   The Unix timestamp of the date and time that the limit was created.
-    #   @return [Time]
-    #
-    # @!attribute [rw] created_by
-    #   The user identifier of the person that created the limit.
-    #   @return [String]
-    #
-    # @!attribute [rw] updated_at
-    #   The Unix timestamp of the date and time that the limit was last
-    #   updated.
-    #   @return [Time]
-    #
-    # @!attribute [rw] updated_by
-    #   The user identifier of the person that last updated the limit.
-    #   @return [String]
-    #
-    # @!attribute [rw] farm_id
-    #   The unique identifier of the farm that contains the limit.
-    #   @return [String]
-    #
-    # @!attribute [rw] limit_id
-    #   The unique identifier of the limit.
-    #   @return [String]
-    #
-    # @!attribute [rw] current_count
-    #   The number of resources from the limit that are being used by jobs.
-    #   The result is delayed and may not be the count at the time that you
-    #   called the operation.
-    #   @return [Integer]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/LimitSummary AWS API Documentation
     #
     class LimitSummary < Struct.new(
-      :display_name,
-      :amount_requirement_name,
-      :max_count,
+      :farm_id,
+      :limit_id,
+      :current_count,
       :created_at,
       :created_by,
       :updated_at,
       :updated_by,
-      :farm_id,
-      :limit_id,
-      :current_count)
+      :display_name,
+      :amount_requirement_name,
+      :max_count)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # Shared pagination fields for List operation inputs (nextToken +
+    # maxResults).
+    #
     # @!attribute [rw] next_token
     #   The token for the next set of results, or `null` to start from the
     #   beginning.
@@ -5364,6 +7408,8 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
     # @!attribute [rw] metered_products
     #   The metered products.
     #   @return [Array<Types::MeteredProductSummary>]
@@ -5387,13 +7433,16 @@ module Aws::Deadline
       include Aws::Structure
     end
 
-    # @!attribute [rw] next_token
-    #   The token for the next set of results, or `null` to start from the
-    #   beginning.
-    #   @return [String]
+    # Shared pagination fields for List operation inputs (nextToken +
+    # maxResults).
     #
     # @!attribute [rw] farm_id
     #   The farm ID associated with the budgets.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   The token for the next set of results, or `null` to start from the
+    #   beginning.
     #   @return [String]
     #
     # @!attribute [rw] max_results
@@ -5408,14 +7457,20 @@ module Aws::Deadline
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/ListBudgetsRequest AWS API Documentation
     #
     class ListBudgetsRequest < Struct.new(
-      :next_token,
       :farm_id,
+      :next_token,
       :max_results,
       :status)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
+    # @!attribute [rw] budgets
+    #   The budgets to include on the list.
+    #   @return [Array<Types::BudgetSummary>]
+    #
     # @!attribute [rw] next_token
     #   If Deadline Cloud returns `nextToken`, then there are more results
     #   available. The value of `nextToken` is a unique pagination token for
@@ -5426,19 +7481,18 @@ module Aws::Deadline
     #   valid, then you receive an HTTP 400 `ValidationException` error.
     #   @return [String]
     #
-    # @!attribute [rw] budgets
-    #   The budgets to include on the list.
-    #   @return [Array<Types::BudgetSummary>]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/ListBudgetsResponse AWS API Documentation
     #
     class ListBudgetsResponse < Struct.new(
-      :next_token,
-      :budgets)
+      :budgets,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # Shared pagination fields for List operation inputs (nextToken +
+    # maxResults).
+    #
     # @!attribute [rw] farm_id
     #   The farm ID.
     #   @return [String]
@@ -5463,6 +7517,8 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
     # @!attribute [rw] members
     #   The members on the list.
     #   @return [Array<Types::FarmMember>]
@@ -5486,13 +7542,12 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination fields for List operation inputs (nextToken +
+    # maxResults).
+    #
     # @!attribute [rw] next_token
     #   The token for the next set of results, or `null` to start from the
     #   beginning.
-    #   @return [String]
-    #
-    # @!attribute [rw] principal_id
-    #   The principal ID of the member to list on the farm.
     #   @return [String]
     #
     # @!attribute [rw] max_results
@@ -5500,16 +7555,26 @@ module Aws::Deadline
     #   `NextToken` to get results as a set of sequential pages.
     #   @return [Integer]
     #
+    # @!attribute [rw] principal_id
+    #   The principal ID of the member to list on the farm.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/ListFarmsRequest AWS API Documentation
     #
     class ListFarmsRequest < Struct.new(
       :next_token,
-      :principal_id,
-      :max_results)
+      :max_results,
+      :principal_id)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
+    # @!attribute [rw] farms
+    #   Farms on the list.
+    #   @return [Array<Types::FarmSummary>]
+    #
     # @!attribute [rw] next_token
     #   If Deadline Cloud returns `nextToken`, then there are more results
     #   available. The value of `nextToken` is a unique pagination token for
@@ -5520,19 +7585,18 @@ module Aws::Deadline
     #   valid, then you receive an HTTP 400 `ValidationException` error.
     #   @return [String]
     #
-    # @!attribute [rw] farms
-    #   Farms on the list.
-    #   @return [Array<Types::FarmSummary>]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/ListFarmsResponse AWS API Documentation
     #
     class ListFarmsResponse < Struct.new(
-      :next_token,
-      :farms)
+      :farms,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # Shared pagination fields for List operation inputs (nextToken +
+    # maxResults).
+    #
     # @!attribute [rw] farm_id
     #   The farm ID of the fleet.
     #   @return [String]
@@ -5562,6 +7626,8 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
     # @!attribute [rw] members
     #   The members on the list.
     #   @return [Array<Types::FleetMember>]
@@ -5585,9 +7651,22 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination fields for List operation inputs (nextToken +
+    # maxResults).
+    #
     # @!attribute [rw] farm_id
     #   The farm ID of the fleets.
     #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   The token for the next set of results, or `null` to start from the
+    #   beginning.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return. Use this parameter with
+    #   `NextToken` to get results as a set of sequential pages.
+    #   @return [Integer]
     #
     # @!attribute [rw] principal_id
     #   The principal ID of the members to include in the fleet.
@@ -5605,29 +7684,21 @@ module Aws::Deadline
     #   The status of the fleet.
     #   @return [String]
     #
-    # @!attribute [rw] next_token
-    #   The token for the next set of results, or `null` to start from the
-    #   beginning.
-    #   @return [String]
-    #
-    # @!attribute [rw] max_results
-    #   The maximum number of results to return. Use this parameter with
-    #   `NextToken` to get results as a set of sequential pages.
-    #   @return [Integer]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/ListFleetsRequest AWS API Documentation
     #
     class ListFleetsRequest < Struct.new(
       :farm_id,
+      :next_token,
+      :max_results,
       :principal_id,
       :display_name,
-      :status,
-      :next_token,
-      :max_results)
+      :status)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
     # @!attribute [rw] fleets
     #   The fleets on the list.
     #   @return [Array<Types::FleetSummary>]
@@ -5651,6 +7722,9 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination fields for List operation inputs (nextToken +
+    # maxResults).
+    #
     # @!attribute [rw] farm_id
     #   The farm ID of the job to list.
     #   @return [String]
@@ -5685,6 +7759,8 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
     # @!attribute [rw] members
     #   The members on the list.
     #   @return [Array<Types::JobMember>]
@@ -5708,16 +7784,19 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination fields for List operation inputs (nextToken +
+    # maxResults).
+    #
     # @!attribute [rw] farm_id
     #   The farm ID of the job to list.
     #   @return [String]
     #
-    # @!attribute [rw] job_id
-    #   The job ID to include on the list.
-    #   @return [String]
-    #
     # @!attribute [rw] queue_id
     #   The queue ID to include on the list.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_id
+    #   The job ID to include on the list.
     #   @return [String]
     #
     # @!attribute [rw] next_token
@@ -5734,14 +7813,16 @@ module Aws::Deadline
     #
     class ListJobParameterDefinitionsRequest < Struct.new(
       :farm_id,
-      :job_id,
       :queue_id,
+      :job_id,
       :next_token,
       :max_results)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
     # @!attribute [rw] job_parameter_definitions
     #   Lists parameter definitions of a job.
     #   @return [Array<Hash,Array,String,Numeric,Boolean>]
@@ -5765,12 +7846,11 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination fields for List operation inputs (nextToken +
+    # maxResults).
+    #
     # @!attribute [rw] farm_id
     #   The farm ID for the jobs.
-    #   @return [String]
-    #
-    # @!attribute [rw] principal_id
-    #   The principal ID of the members on the jobs.
     #   @return [String]
     #
     # @!attribute [rw] queue_id
@@ -5787,18 +7867,24 @@ module Aws::Deadline
     #   `NextToken` to get results as a set of sequential pages.
     #   @return [Integer]
     #
+    # @!attribute [rw] principal_id
+    #   The principal ID of the members on the jobs.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/ListJobsRequest AWS API Documentation
     #
     class ListJobsRequest < Struct.new(
       :farm_id,
-      :principal_id,
       :queue_id,
       :next_token,
-      :max_results)
+      :max_results,
+      :principal_id)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
     # @!attribute [rw] jobs
     #   The jobs on the list.
     #   @return [Array<Types::JobSummary>]
@@ -5822,6 +7908,9 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination fields for List operation inputs (nextToken +
+    # maxResults).
+    #
     # @!attribute [rw] next_token
     #   The token for the next set of results, or `null` to start from the
     #   beginning.
@@ -5841,6 +7930,8 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
     # @!attribute [rw] license_endpoints
     #   The license endpoints.
     #   @return [Array<Types::LicenseEndpointSummary>]
@@ -5864,6 +7955,9 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination fields for List operation inputs (nextToken +
+    # maxResults).
+    #
     # @!attribute [rw] farm_id
     #   The unique identifier of the farm that contains the limits.
     #   @return [String]
@@ -5887,6 +7981,8 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
     # @!attribute [rw] limits
     #   A list of limits that the farm contains.
     #   @return [Array<Types::LimitSummary>]
@@ -5910,6 +8006,9 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination fields for List operation inputs (nextToken +
+    # maxResults).
+    #
     # @!attribute [rw] license_endpoint_id
     #   The license endpoint ID to include on the list of metered products.
     #   @return [String]
@@ -5934,6 +8033,8 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
     # @!attribute [rw] metered_products
     #   The metered products to list.
     #   @return [Array<Types::MeteredProductSummary>]
@@ -5957,6 +8058,9 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination fields for List operation inputs (nextToken +
+    # maxResults).
+    #
     # @!attribute [rw] next_token
     #   The token for the next set of results, or `null` to start from the
     #   beginning.
@@ -5976,6 +8080,13 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
+    # @!attribute [rw] monitors
+    #   A list of `MonitorSummary` objects that describe your monitors in
+    #   the Deadline Cloud.
+    #   @return [Array<Types::MonitorSummary>]
+    #
     # @!attribute [rw] next_token
     #   If Deadline Cloud returns `nextToken`, then there are more results
     #   available. The value of `nextToken` is a unique pagination token for
@@ -5986,20 +8097,18 @@ module Aws::Deadline
     #   valid, then you receive an HTTP 400 `ValidationException` error.
     #   @return [String]
     #
-    # @!attribute [rw] monitors
-    #   A list of `MonitorSummary` objects that describe your monitors in
-    #   the Deadline Cloud.
-    #   @return [Array<Types::MonitorSummary>]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/ListMonitorsResponse AWS API Documentation
     #
     class ListMonitorsResponse < Struct.new(
-      :next_token,
-      :monitors)
+      :monitors,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # Shared pagination fields for List operation inputs (nextToken +
+    # maxResults).
+    #
     # @!attribute [rw] farm_id
     #   The farm ID for the queue environment list.
     #   @return [String]
@@ -6029,6 +8138,8 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
     # @!attribute [rw] environments
     #   The environments to include in the queue environments list.
     #   @return [Array<Types::QueueEnvironmentSummary>]
@@ -6052,16 +8163,11 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination fields for List operation inputs (nextToken +
+    # maxResults).
+    #
     # @!attribute [rw] farm_id
     #   The farm ID for the queue-fleet association list.
-    #   @return [String]
-    #
-    # @!attribute [rw] queue_id
-    #   The queue ID for the queue-fleet association list.
-    #   @return [String]
-    #
-    # @!attribute [rw] fleet_id
-    #   The fleet ID for the queue-fleet association list.
     #   @return [String]
     #
     # @!attribute [rw] next_token
@@ -6074,18 +8180,28 @@ module Aws::Deadline
     #   `NextToken` to get results as a set of sequential pages.
     #   @return [Integer]
     #
+    # @!attribute [rw] queue_id
+    #   The queue ID for the queue-fleet association list.
+    #   @return [String]
+    #
+    # @!attribute [rw] fleet_id
+    #   The fleet ID for the queue-fleet association list.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/ListQueueFleetAssociationsRequest AWS API Documentation
     #
     class ListQueueFleetAssociationsRequest < Struct.new(
       :farm_id,
-      :queue_id,
-      :fleet_id,
       :next_token,
-      :max_results)
+      :max_results,
+      :queue_id,
+      :fleet_id)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
     # @!attribute [rw] queue_fleet_associations
     #   The queue-fleet associations on the list.
     #   @return [Array<Types::QueueFleetAssociationSummary>]
@@ -6109,10 +8225,23 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination fields for List operation inputs (nextToken +
+    # maxResults).
+    #
     # @!attribute [rw] farm_id
     #   The unique identifier of the farm that contains the limits and
     #   associations.
     #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   The token for the next set of results, or `null` to start from the
+    #   beginning.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of associations to return in each page of
+    #   results.
+    #   @return [Integer]
     #
     # @!attribute [rw] queue_id
     #   Specifies that the operation should return only the queue limit
@@ -6128,28 +8257,20 @@ module Aws::Deadline
     #   it exists.
     #   @return [String]
     #
-    # @!attribute [rw] next_token
-    #   The token for the next set of results, or `null` to start from the
-    #   beginning.
-    #   @return [String]
-    #
-    # @!attribute [rw] max_results
-    #   The maximum number of associations to return in each page of
-    #   results.
-    #   @return [Integer]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/ListQueueLimitAssociationsRequest AWS API Documentation
     #
     class ListQueueLimitAssociationsRequest < Struct.new(
       :farm_id,
-      :queue_id,
-      :limit_id,
       :next_token,
-      :max_results)
+      :max_results,
+      :queue_id,
+      :limit_id)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
     # @!attribute [rw] queue_limit_associations
     #   A list of associations between limits and queues in the farm
     #   specified in the request.
@@ -6174,6 +8295,9 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination fields for List operation inputs (nextToken +
+    # maxResults).
+    #
     # @!attribute [rw] farm_id
     #   The farm ID for the queue.
     #   @return [String]
@@ -6203,6 +8327,8 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
     # @!attribute [rw] members
     #   The members on the list.
     #   @return [Array<Types::QueueMember>]
@@ -6226,9 +8352,22 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination fields for List operation inputs (nextToken +
+    # maxResults).
+    #
     # @!attribute [rw] farm_id
     #   The farm ID of the queue.
     #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   The token for the next set of results, or `null` to start from the
+    #   beginning.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return. Use this parameter with
+    #   `NextToken` to get results as a set of sequential pages.
+    #   @return [Integer]
     #
     # @!attribute [rw] principal_id
     #   The principal IDs to include in the list of queues.
@@ -6245,28 +8384,20 @@ module Aws::Deadline
     #     queues.
     #   @return [String]
     #
-    # @!attribute [rw] next_token
-    #   The token for the next set of results, or `null` to start from the
-    #   beginning.
-    #   @return [String]
-    #
-    # @!attribute [rw] max_results
-    #   The maximum number of results to return. Use this parameter with
-    #   `NextToken` to get results as a set of sequential pages.
-    #   @return [Integer]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/ListQueuesRequest AWS API Documentation
     #
     class ListQueuesRequest < Struct.new(
       :farm_id,
-      :principal_id,
-      :status,
       :next_token,
-      :max_results)
+      :max_results,
+      :principal_id,
+      :status)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
     # @!attribute [rw] queues
     #   The queues on the list.
     #   @return [Array<Types::QueueSummary>]
@@ -6290,6 +8421,9 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination fields for List operation inputs (nextToken +
+    # maxResults).
+    #
     # @!attribute [rw] farm_id
     #   The farm ID for the session actions list.
     #   @return [String]
@@ -6302,14 +8436,6 @@ module Aws::Deadline
     #   The job ID for the session actions list.
     #   @return [String]
     #
-    # @!attribute [rw] session_id
-    #   The session ID to include on the sessions action list.
-    #   @return [String]
-    #
-    # @!attribute [rw] task_id
-    #   The task ID for the session actions list.
-    #   @return [String]
-    #
     # @!attribute [rw] next_token
     #   The token for the next set of results, or `null` to start from the
     #   beginning.
@@ -6320,20 +8446,30 @@ module Aws::Deadline
     #   `NextToken` to get results as a set of sequential pages.
     #   @return [Integer]
     #
+    # @!attribute [rw] session_id
+    #   The session ID to include on the sessions action list.
+    #   @return [String]
+    #
+    # @!attribute [rw] task_id
+    #   The task ID for the session actions list.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/ListSessionActionsRequest AWS API Documentation
     #
     class ListSessionActionsRequest < Struct.new(
       :farm_id,
       :queue_id,
       :job_id,
-      :session_id,
-      :task_id,
       :next_token,
-      :max_results)
+      :max_results,
+      :session_id,
+      :task_id)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
     # @!attribute [rw] session_actions
     #   The session actions.
     #   @return [Array<Types::SessionActionSummary>]
@@ -6357,6 +8493,9 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination fields for List operation inputs (nextToken +
+    # maxResults).
+    #
     # @!attribute [rw] farm_id
     #   The farm ID for the session.
     #   @return [String]
@@ -6391,6 +8530,8 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
     # @!attribute [rw] sessions
     #   The sessions in the response.
     #   @return [Array<Types::WorkerSessionSummary>]
@@ -6409,6 +8550,9 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination fields for List operation inputs (nextToken +
+    # maxResults).
+    #
     # @!attribute [rw] farm_id
     #   The farm ID for the list of sessions.
     #   @return [String]
@@ -6443,6 +8587,8 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
     # @!attribute [rw] sessions
     #   The sessions on the list.
     #   @return [Array<Types::SessionSummary>]
@@ -6505,6 +8651,8 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
     # @!attribute [rw] consumers
     #   The consumers on the list.
     #   @return [Array<Types::StepConsumer>]
@@ -6567,6 +8715,8 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
     # @!attribute [rw] dependencies
     #   The dependencies on the list.
     #   @return [Array<Types::StepDependency>]
@@ -6590,6 +8740,9 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination fields for List operation inputs (nextToken +
+    # maxResults).
+    #
     # @!attribute [rw] farm_id
     #   The farm ID to include on the list of steps.
     #   @return [String]
@@ -6624,6 +8777,8 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
     # @!attribute [rw] steps
     #   The steps on the list.
     #   @return [Array<Types::StepSummary>]
@@ -6647,6 +8802,9 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination fields for List operation inputs (nextToken +
+    # maxResults).
+    #
     # @!attribute [rw] farm_id
     #   The farm ID of the queue's storage profile.
     #   @return [String]
@@ -6676,6 +8834,8 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
     # @!attribute [rw] storage_profiles
     #   The storage profiles in the queue.
     #   @return [Array<Types::StorageProfileSummary>]
@@ -6699,6 +8859,9 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination fields for List operation inputs (nextToken +
+    # maxResults).
+    #
     # @!attribute [rw] farm_id
     #   The farm ID of the storage profile.
     #   @return [String]
@@ -6723,6 +8886,8 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
     # @!attribute [rw] storage_profiles
     #   The storage profiles.
     #   @return [Array<Types::StorageProfileSummary>]
@@ -6771,6 +8936,9 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination fields for List operation inputs (nextToken +
+    # maxResults).
+    #
     # @!attribute [rw] farm_id
     #   The farm ID connected to the tasks.
     #   @return [String]
@@ -6810,6 +8978,8 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
     # @!attribute [rw] tasks
     #   Tasks for the job.
     #   @return [Array<Types::TaskSummary>]
@@ -6833,6 +9003,66 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination fields for List operation inputs (nextToken +
+    # maxResults).
+    #
+    # @!attribute [rw] farm_id
+    #   The farm ID of the farm that contains the fleet.
+    #   @return [String]
+    #
+    # @!attribute [rw] fleet_id
+    #   The fleet ID of the fleet that contains the volumes.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   The token for the next set of results, or `null` to start from the
+    #   beginning.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return. Use this parameter with
+    #   `NextToken` to get results as a set of sequential pages.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/ListVolumesRequest AWS API Documentation
+    #
+    class ListVolumesRequest < Struct.new(
+      :farm_id,
+      :fleet_id,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Shared pagination field for List operation outputs (nextToken).
+    #
+    # @!attribute [rw] volumes
+    #   The volumes on the list.
+    #   @return [Array<Types::VolumeSummary>]
+    #
+    # @!attribute [rw] next_token
+    #   If Deadline Cloud returns `nextToken`, then there are more results
+    #   available. The value of `nextToken` is a unique pagination token for
+    #   each page. To retrieve the next page, call the operation again using
+    #   the returned token. Keep all other arguments unchanged. If no
+    #   results remain, then `nextToken` is set to `null`. Each pagination
+    #   token expires after 24 hours. If you provide a token that isn't
+    #   valid, then you receive an HTTP 400 `ValidationException` error.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/ListVolumesResponse AWS API Documentation
+    #
+    class ListVolumesResponse < Struct.new(
+      :volumes,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Shared pagination fields for List operation inputs (nextToken +
+    # maxResults).
+    #
     # @!attribute [rw] farm_id
     #   The farm ID connected to the workers.
     #   @return [String]
@@ -6862,6 +9092,12 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared pagination field for List operation outputs (nextToken).
+    #
+    # @!attribute [rw] workers
+    #   The workers on the list.
+    #   @return [Array<Types::WorkerSummary>]
+    #
     # @!attribute [rw] next_token
     #   If Deadline Cloud returns `nextToken`, then there are more results
     #   available. The value of `nextToken` is a unique pagination token for
@@ -6872,15 +9108,11 @@ module Aws::Deadline
     #   valid, then you receive an HTTP 400 `ValidationException` error.
     #   @return [String]
     #
-    # @!attribute [rw] workers
-    #   The workers on the list.
-    #   @return [Array<Types::WorkerSummary>]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/ListWorkersResponse AWS API Documentation
     #
     class ListWorkersResponse < Struct.new(
-      :next_token,
-      :workers)
+      :workers,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6949,7 +9181,7 @@ module Aws::Deadline
       :output_relative_directories,
       :input_manifest_path,
       :input_manifest_hash)
-      SENSITIVE = [:file_system_location_name]
+      SENSITIVE = []
       include Aws::Structure
     end
 
@@ -7026,19 +9258,22 @@ module Aws::Deadline
     #   @return [String]
     #
     # @!attribute [rw] role_arn
-    #   The Amazon Resource Name (ARN) of the IAM role for the monitor.
-    #   Users of the monitor use this role to access Deadline Cloud
-    #   resources.
+    #   The Amazon Resource Name of the IAM role for the monitor. Users of
+    #   the monitor use this role to access Deadline Cloud resources.
     #   @return [String]
     #
     # @!attribute [rw] identity_center_instance_arn
-    #   The Amazon Resource Name (ARN) of the IAM Identity Center instance
+    #   The Amazon Resource Name of the IAM Identity Center instance
     #   responsible for authenticating monitor users.
     #   @return [String]
     #
+    # @!attribute [rw] identity_center_region
+    #   The Region where IAM Identity Center is enabled.
+    #   @return [String]
+    #
     # @!attribute [rw] identity_center_application_arn
-    #   The Amazon Resource Name (ARN) that the IAM Identity Center assigned
-    #   to the monitor when it was created.
+    #   The Amazon Resource Name that the IAM Identity Center assigned to
+    #   the monitor when it was created.
     #   @return [String]
     #
     # @!attribute [rw] created_at
@@ -7068,6 +9303,7 @@ module Aws::Deadline
       :url,
       :role_arn,
       :identity_center_instance_arn,
+      :identity_center_region,
       :identity_center_application_arn,
       :created_at,
       :created_by,
@@ -7163,6 +9399,43 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Specifies the persistent EBS volume configuration for workers in a
+    # service managed fleet.
+    #
+    # @!attribute [rw] size_gi_b
+    #   The persistent volume size in GiB. The default is 250.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] iops
+    #   The IOPS per persistent volume. The default is 3000.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] throughput_mi_b
+    #   The throughput per persistent volume in MiB. The default is 125.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] mount_path
+    #   The file system path where the persistent volume is mounted on the
+    #   worker instance.
+    #   @return [String]
+    #
+    # @!attribute [rw] last_used_ttl_hours
+    #   The number of hours a persistent volume can remain unused before it
+    #   is deleted. The default is 168 (7 days).
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/PersistentVolumeConfiguration AWS API Documentation
+    #
+    class PersistentVolumeConfiguration < Struct.new(
+      :size_gi_b,
+      :iops,
+      :throughput_mi_b,
+      :mount_path,
+      :last_used_ttl_hours)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The POSIX user.
     #
     # @!attribute [rw] user
@@ -7181,6 +9454,36 @@ module Aws::Deadline
       SENSITIVE = []
       include Aws::Structure
     end
+
+    # Configuration for priority balanced scheduling. Workers are
+    # distributed evenly across all jobs at the highest priority level.
+    #
+    # @!attribute [rw] rendering_task_buffer
+    #   The rendering task buffer controls worker stickiness. A worker only
+    #   switches from its current job to another job at the same priority if
+    #   the other job has fewer rendering tasks by more than this buffer
+    #   value. Higher values make workers stickier to their current jobs.
+    #   The default value is `1`.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/PriorityBalancedSchedulingConfiguration AWS API Documentation
+    #
+    class PriorityBalancedSchedulingConfiguration < Struct.new(
+      :rendering_task_buffer)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration for priority first-in, first-out (FIFO) scheduling.
+    # Workers are assigned to the highest-priority job first. When multiple
+    # jobs share the same priority, the job submitted earliest receives
+    # workers first.
+    #
+    # @api private
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/PriorityFifoSchedulingConfiguration AWS API Documentation
+    #
+    class PriorityFifoSchedulingConfiguration < Aws::EmptyStructure; end
 
     # @!attribute [rw] license_endpoint_id
     #   The license endpoint ID to add to the metered product.
@@ -7284,24 +9587,6 @@ module Aws::Deadline
     # Provides information about the association between a queue and a
     # limit.
     #
-    # @!attribute [rw] created_at
-    #   The Unix timestamp of the date and time that the association was
-    #   created.
-    #   @return [Time]
-    #
-    # @!attribute [rw] created_by
-    #   The user identifier of the person that created the association.
-    #   @return [String]
-    #
-    # @!attribute [rw] updated_at
-    #   The Unix timestamp of the date and time that the association was
-    #   last updated.
-    #   @return [Time]
-    #
-    # @!attribute [rw] updated_by
-    #   The user identifier of the person that updated the association.
-    #   @return [String]
-    #
     # @!attribute [rw] queue_id
     #   The unique identifier of the queue in the association.
     #   @return [String]
@@ -7324,16 +9609,34 @@ module Aws::Deadline
     #   * `STOPPED` - Association has been stopped.
     #   @return [String]
     #
+    # @!attribute [rw] created_at
+    #   The Unix timestamp of the date and time that the association was
+    #   created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] created_by
+    #   The user identifier of the person that created the association.
+    #   @return [String]
+    #
+    # @!attribute [rw] updated_at
+    #   The Unix timestamp of the date and time that the association was
+    #   last updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_by
+    #   The user identifier of the person that updated the association.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/QueueLimitAssociationSummary AWS API Documentation
     #
     class QueueLimitAssociationSummary < Struct.new(
+      :queue_id,
+      :limit_id,
+      :status,
       :created_at,
       :created_by,
       :updated_at,
-      :updated_by,
-      :queue_id,
-      :limit_id,
-      :status)
+      :updated_by)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7518,6 +9821,124 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # The scheduling configuration for a queue. Defines the strategy used to
+    # assign workers to jobs.
+    #
+    # @note SchedulingConfiguration is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note SchedulingConfiguration is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of SchedulingConfiguration corresponding to the set member.
+    #
+    # @!attribute [rw] priority_fifo
+    #   Workers are assigned to the highest-priority job first. When
+    #   multiple jobs share the same priority, the job submitted earliest
+    #   receives workers first. This is the default scheduling configuration
+    #   for new queues.
+    #   @return [Types::PriorityFifoSchedulingConfiguration]
+    #
+    # @!attribute [rw] priority_balanced
+    #   Workers are distributed evenly across all jobs at the highest
+    #   priority level. When workers cannot be evenly divided, the extra
+    #   workers are assigned to the jobs submitted earliest. If a job has
+    #   fewer remaining tasks than its share of workers, the surplus workers
+    #   are redistributed to other jobs at the same priority level.
+    #   @return [Types::PriorityBalancedSchedulingConfiguration]
+    #
+    # @!attribute [rw] weighted_balanced
+    #   Workers are assigned to jobs based on a weighted formula that
+    #   considers job priority, error count, submission time, and the number
+    #   of tasks currently rendering. Each factor has a configurable weight
+    #   that determines its influence on scheduling decisions.
+    #   @return [Types::WeightedBalancedSchedulingConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/SchedulingConfiguration AWS API Documentation
+    #
+    class SchedulingConfiguration < Struct.new(
+      :priority_fifo,
+      :priority_balanced,
+      :weighted_balanced,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class PriorityFifo < SchedulingConfiguration; end
+      class PriorityBalanced < SchedulingConfiguration; end
+      class WeightedBalanced < SchedulingConfiguration; end
+      class Unknown < SchedulingConfiguration; end
+    end
+
+    # Defines the override behavior for jobs at the maximum priority (100)
+    # in weighted balanced scheduling.
+    #
+    # @note SchedulingMaxPriorityOverride is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note SchedulingMaxPriorityOverride is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of SchedulingMaxPriorityOverride corresponding to the set member.
+    #
+    # @!attribute [rw] always_schedule_first
+    #   Jobs at the maximum priority (100) are always scheduled before other
+    #   jobs, regardless of the weighted scheduling formula. If multiple
+    #   jobs have priority 100, ties are broken using the standard weighted
+    #   formula.
+    #   @return [Types::SchedulingMaxPriorityOverrideAlwaysScheduleFirst]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/SchedulingMaxPriorityOverride AWS API Documentation
+    #
+    class SchedulingMaxPriorityOverride < Struct.new(
+      :always_schedule_first,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class AlwaysScheduleFirst < SchedulingMaxPriorityOverride; end
+      class Unknown < SchedulingMaxPriorityOverride; end
+    end
+
+    # Specifies that jobs at the maximum priority (100) are always scheduled
+    # first.
+    #
+    # @api private
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/SchedulingMaxPriorityOverrideAlwaysScheduleFirst AWS API Documentation
+    #
+    class SchedulingMaxPriorityOverrideAlwaysScheduleFirst < Aws::EmptyStructure; end
+
+    # Defines the override behavior for jobs at the minimum priority (0) in
+    # weighted balanced scheduling.
+    #
+    # @note SchedulingMinPriorityOverride is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note SchedulingMinPriorityOverride is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of SchedulingMinPriorityOverride corresponding to the set member.
+    #
+    # @!attribute [rw] always_schedule_last
+    #   Jobs at the minimum priority (0) are always scheduled after all
+    #   other jobs, regardless of the weighted scheduling formula. If
+    #   multiple jobs have priority 0, ties are broken using the standard
+    #   weighted formula.
+    #   @return [Types::SchedulingMinPriorityOverrideAlwaysScheduleLast]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/SchedulingMinPriorityOverride AWS API Documentation
+    #
+    class SchedulingMinPriorityOverride < Struct.new(
+      :always_schedule_last,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class AlwaysScheduleLast < SchedulingMinPriorityOverride; end
+      class Unknown < SchedulingMinPriorityOverride; end
+    end
+
+    # Specifies that jobs at the minimum priority (0) are always scheduled
+    # last.
+    #
+    # @api private
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/SchedulingMinPriorityOverrideAlwaysScheduleLast AWS API Documentation
+    #
+    class SchedulingMinPriorityOverrideAlwaysScheduleLast < Aws::EmptyStructure; end
+
     # The type of search filter to apply.
     #
     # @note SearchFilterExpression is a union - when making an API calls you must set exactly one of the members.
@@ -7538,6 +9959,10 @@ module Aws::Deadline
     #   Filters by a string.
     #   @return [Types::StringFilterExpression]
     #
+    # @!attribute [rw] string_list_filter
+    #   Filters by a list of strings.
+    #   @return [Types::StringListFilterExpression]
+    #
     # @!attribute [rw] group_filter
     #   Filters by group.
     #   @return [Types::SearchGroupedFilterExpressions]
@@ -7549,6 +9974,7 @@ module Aws::Deadline
       :parameter_filter,
       :search_term_filter,
       :string_filter,
+      :string_list_filter,
       :group_filter,
       :unknown)
       SENSITIVE = []
@@ -7559,13 +9985,12 @@ module Aws::Deadline
       class ParameterFilter < SearchFilterExpression; end
       class SearchTermFilter < SearchFilterExpression; end
       class StringFilter < SearchFilterExpression; end
+      class StringListFilter < SearchFilterExpression; end
       class GroupFilter < SearchFilterExpression; end
       class Unknown < SearchFilterExpression; end
     end
 
-    # The filter expression, `AND` or `OR`, to use when searching among a
-    # group of search strings in a resource. You can use two groupings per
-    # search each within parenthesis `()`.
+    # The search terms for a resource.
     #
     # @!attribute [rw] filters
     #   The filters to use for the search.
@@ -7584,18 +10009,15 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared input fields for all Search operations (filterExpressions,
+    # sortExpressions, itemOffset, pageSize).
+    #
     # @!attribute [rw] farm_id
     #   The farm ID of the job.
     #   @return [String]
     #
-    # @!attribute [rw] queue_ids
-    #   The queue ID to use in the job search.
-    #   @return [Array<String>]
-    #
     # @!attribute [rw] filter_expressions
-    #   The filter expression, `AND` or `OR`, to use when searching among a
-    #   group of search strings in a resource. You can use two groupings per
-    #   search each within parenthesis `()`.
+    #   The search terms for a resource.
     #   @return [Types::SearchGroupedFilterExpressions]
     #
     # @!attribute [rw] sort_expressions
@@ -7603,33 +10025,39 @@ module Aws::Deadline
     #   @return [Array<Types::SearchSortExpression>]
     #
     # @!attribute [rw] item_offset
-    #   Defines how far into the scrollable list to start the return of
-    #   results.
+    #   The offset for the search results.
     #   @return [Integer]
     #
     # @!attribute [rw] page_size
-    #   Specifies the number of items per page for the resource.
+    #   Specifies the number of results to return.
     #   @return [Integer]
+    #
+    # @!attribute [rw] queue_ids
+    #   The queue ID to use in the job search.
+    #   @return [Array<String>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/SearchJobsRequest AWS API Documentation
     #
     class SearchJobsRequest < Struct.new(
       :farm_id,
-      :queue_ids,
       :filter_expressions,
       :sort_expressions,
       :item_offset,
-      :page_size)
+      :page_size,
+      :queue_ids)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # Shared output fields for all Search operations (nextItemOffset,
+    # totalResults).
+    #
     # @!attribute [rw] jobs
     #   The jobs in the search.
     #   @return [Array<Types::JobSearchSummary>]
     #
     # @!attribute [rw] next_item_offset
-    #   The next incremental starting point after the defined `itemOffset`.
+    #   The next item offset for the search results.
     #   @return [Integer]
     #
     # @!attribute [rw] total_results
@@ -7679,9 +10107,28 @@ module Aws::Deadline
       class Unknown < SearchSortExpression; end
     end
 
+    # Shared input fields for all Search operations (filterExpressions,
+    # sortExpressions, itemOffset, pageSize).
+    #
     # @!attribute [rw] farm_id
     #   The farm ID to use for the step search.
     #   @return [String]
+    #
+    # @!attribute [rw] filter_expressions
+    #   The search terms for a resource.
+    #   @return [Types::SearchGroupedFilterExpressions]
+    #
+    # @!attribute [rw] sort_expressions
+    #   The search terms for a resource.
+    #   @return [Array<Types::SearchSortExpression>]
+    #
+    # @!attribute [rw] item_offset
+    #   The offset for the search results.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] page_size
+    #   Specifies the number of results to return.
+    #   @return [Integer]
     #
     # @!attribute [rw] queue_ids
     #   The queue IDs in the step search.
@@ -7691,45 +10138,29 @@ module Aws::Deadline
     #   The job ID to use in the step search.
     #   @return [String]
     #
-    # @!attribute [rw] filter_expressions
-    #   The filter expression, `AND` or `OR`, to use when searching among a
-    #   group of search strings in a resource. You can use two groupings per
-    #   search each within parenthesis `()`.
-    #   @return [Types::SearchGroupedFilterExpressions]
-    #
-    # @!attribute [rw] sort_expressions
-    #   The search terms for a resource.
-    #   @return [Array<Types::SearchSortExpression>]
-    #
-    # @!attribute [rw] item_offset
-    #   Defines how far into the scrollable list to start the return of
-    #   results.
-    #   @return [Integer]
-    #
-    # @!attribute [rw] page_size
-    #   Specifies the number of items per page for the resource.
-    #   @return [Integer]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/SearchStepsRequest AWS API Documentation
     #
     class SearchStepsRequest < Struct.new(
       :farm_id,
-      :queue_ids,
-      :job_id,
       :filter_expressions,
       :sort_expressions,
       :item_offset,
-      :page_size)
+      :page_size,
+      :queue_ids,
+      :job_id)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # Shared output fields for all Search operations (nextItemOffset,
+    # totalResults).
+    #
     # @!attribute [rw] steps
     #   The steps in the search.
     #   @return [Array<Types::StepSearchSummary>]
     #
     # @!attribute [rw] next_item_offset
-    #   The next incremental starting point after the defined `itemOffset`.
+    #   The next item offset for the search results.
     #   @return [Integer]
     #
     # @!attribute [rw] total_results
@@ -7746,9 +10177,28 @@ module Aws::Deadline
       include Aws::Structure
     end
 
+    # Shared input fields for all Search operations (filterExpressions,
+    # sortExpressions, itemOffset, pageSize).
+    #
     # @!attribute [rw] farm_id
     #   The farm ID of the task.
     #   @return [String]
+    #
+    # @!attribute [rw] filter_expressions
+    #   The search terms for a resource.
+    #   @return [Types::SearchGroupedFilterExpressions]
+    #
+    # @!attribute [rw] sort_expressions
+    #   The search terms for a resource.
+    #   @return [Array<Types::SearchSortExpression>]
+    #
+    # @!attribute [rw] item_offset
+    #   The offset for the search results.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] page_size
+    #   Specifies the number of results to return.
+    #   @return [Integer]
     #
     # @!attribute [rw] queue_ids
     #   The queue IDs to include in the search.
@@ -7758,45 +10208,29 @@ module Aws::Deadline
     #   The job ID for the task search.
     #   @return [String]
     #
-    # @!attribute [rw] filter_expressions
-    #   The filter expression, `AND` or `OR`, to use when searching among a
-    #   group of search strings in a resource. You can use two groupings per
-    #   search each within parenthesis `()`.
-    #   @return [Types::SearchGroupedFilterExpressions]
-    #
-    # @!attribute [rw] sort_expressions
-    #   The search terms for a resource.
-    #   @return [Array<Types::SearchSortExpression>]
-    #
-    # @!attribute [rw] item_offset
-    #   Defines how far into the scrollable list to start the return of
-    #   results.
-    #   @return [Integer]
-    #
-    # @!attribute [rw] page_size
-    #   Specifies the number of items per page for the resource.
-    #   @return [Integer]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/SearchTasksRequest AWS API Documentation
     #
     class SearchTasksRequest < Struct.new(
       :farm_id,
-      :queue_ids,
-      :job_id,
       :filter_expressions,
       :sort_expressions,
       :item_offset,
-      :page_size)
+      :page_size,
+      :queue_ids,
+      :job_id)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # Shared output fields for all Search operations (nextItemOffset,
+    # totalResults).
+    #
     # @!attribute [rw] tasks
     #   Tasks in the search.
     #   @return [Array<Types::TaskSearchSummary>]
     #
     # @!attribute [rw] next_item_offset
-    #   The next incremental starting point after the defined `itemOffset`.
+    #   The next item offset for the search results.
     #   @return [Integer]
     #
     # @!attribute [rw] total_results
@@ -7819,26 +10253,36 @@ module Aws::Deadline
     #   The term to search for.
     #   @return [String]
     #
+    # @!attribute [rw] match_type
+    #   Specifies how Deadline Cloud matches your search term in the
+    #   results. If you don't specify a `matchType` the default is
+    #   `FUZZY_MATCH`.
+    #
+    #   * `FUZZY_MATCH` - Matches if a portion of the search term is found
+    #     in the result.
+    #
+    #   * `CONTAINS` - Matches if the exact search term is contained in the
+    #     result.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/SearchTermFilterExpression AWS API Documentation
     #
     class SearchTermFilterExpression < Struct.new(
-      :search_term)
+      :search_term,
+      :match_type)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # Shared input fields for all Search operations (filterExpressions,
+    # sortExpressions, itemOffset, pageSize).
+    #
     # @!attribute [rw] farm_id
     #   The farm ID in the workers search.
     #   @return [String]
     #
-    # @!attribute [rw] fleet_ids
-    #   The fleet ID of the workers to search for.
-    #   @return [Array<String>]
-    #
     # @!attribute [rw] filter_expressions
-    #   The filter expression, `AND` or `OR`, to use when searching among a
-    #   group of search strings in a resource. You can use two groupings per
-    #   search each within parenthesis `()`.
+    #   The search terms for a resource.
     #   @return [Types::SearchGroupedFilterExpressions]
     #
     # @!attribute [rw] sort_expressions
@@ -7846,33 +10290,39 @@ module Aws::Deadline
     #   @return [Array<Types::SearchSortExpression>]
     #
     # @!attribute [rw] item_offset
-    #   Defines how far into the scrollable list to start the return of
-    #   results.
+    #   The offset for the search results.
     #   @return [Integer]
     #
     # @!attribute [rw] page_size
-    #   Specifies the number of items per page for the resource.
+    #   Specifies the number of results to return.
     #   @return [Integer]
+    #
+    # @!attribute [rw] fleet_ids
+    #   The fleet ID of the workers to search for.
+    #   @return [Array<String>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/SearchWorkersRequest AWS API Documentation
     #
     class SearchWorkersRequest < Struct.new(
       :farm_id,
-      :fleet_ids,
       :filter_expressions,
       :sort_expressions,
       :item_offset,
-      :page_size)
+      :page_size,
+      :fleet_ids)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # Shared output fields for all Search operations (nextItemOffset,
+    # totalResults).
+    #
     # @!attribute [rw] workers
     #   The workers for the search.
     #   @return [Array<Types::WorkerSearchSummary>]
     #
     # @!attribute [rw] next_item_offset
-    #   The next incremental starting point after the defined `itemOffset`.
+    #   The next item offset for the search results.
     #   @return [Integer]
     #
     # @!attribute [rw] total_results
@@ -7889,21 +10339,71 @@ module Aws::Deadline
       include Aws::Structure
     end
 
-    # The configuration details for a service managed Amazon EC2 fleet.
+    # The auto scaling configuration settings for a service managed EC2
+    # fleet.
+    #
+    # @!attribute [rw] standby_worker_count
+    #   The number of idle workers maintained and ready to process incoming
+    #   tasks. The default is 0.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] worker_idle_duration_seconds
+    #   The number of seconds that a worker can remain idle before it is
+    #   shut down. The default is 300 seconds (5 minutes).
+    #   @return [Integer]
+    #
+    # @!attribute [rw] scale_out_workers_per_minute
+    #   The number of workers that can be added per minute to the fleet. The
+    #   default is 10 workers per minute.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/ServiceManagedEc2AutoScalingConfiguration AWS API Documentation
+    #
+    class ServiceManagedEc2AutoScalingConfiguration < Struct.new(
+      :standby_worker_count,
+      :worker_idle_duration_seconds,
+      :scale_out_workers_per_minute)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration details for a service managed EC2 fleet.
     #
     # @!attribute [rw] instance_capabilities
-    #   The Amazon EC2 instance capabilities.
+    #   The instance capabilities for the service managed EC2 fleet.
     #   @return [Types::ServiceManagedEc2InstanceCapabilities]
     #
     # @!attribute [rw] instance_market_options
-    #   The Amazon EC2 market type.
+    #   The instance market options for the service managed EC2 fleet.
     #   @return [Types::ServiceManagedEc2InstanceMarketOptions]
+    #
+    # @!attribute [rw] vpc_configuration
+    #   The VPC configuration for the service managed EC2 fleet.
+    #   @return [Types::VpcConfiguration]
+    #
+    # @!attribute [rw] storage_profile_id
+    #   The storage profile ID for the service managed EC2 fleet.
+    #   @return [String]
+    #
+    # @!attribute [rw] persistent_volume_configuration
+    #   The persistent volume configuration for the service managed EC2
+    #   fleet.
+    #   @return [Types::PersistentVolumeConfiguration]
+    #
+    # @!attribute [rw] auto_scaling_configuration
+    #   The auto scaling configuration settings for the service managed EC2
+    #   fleet.
+    #   @return [Types::ServiceManagedEc2AutoScalingConfiguration]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/ServiceManagedEc2FleetConfiguration AWS API Documentation
     #
     class ServiceManagedEc2FleetConfiguration < Struct.new(
       :instance_capabilities,
-      :instance_market_options)
+      :instance_market_options,
+      :vpc_configuration,
+      :storage_profile_id,
+      :persistent_volume_configuration,
+      :auto_scaling_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -8048,7 +10548,7 @@ module Aws::Deadline
     #   @return [Types::TaskRunSessionActionDefinition]
     #
     # @!attribute [rw] sync_input_job_attachments
-    #   The job attachments to sync with a session action.
+    #   The session action definition for syncing input job attachments.
     #   @return [Types::SyncInputJobAttachmentsSessionActionDefinition]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/SessionActionDefinition AWS API Documentation
@@ -8087,7 +10587,8 @@ module Aws::Deadline
     #   @return [Types::TaskRunSessionActionDefinitionSummary]
     #
     # @!attribute [rw] sync_input_job_attachments
-    #   The job attachments to sync with the session action definition.
+    #   The session action definition summary for syncing input job
+    #   attachments.
     #   @return [Types::SyncInputJobAttachmentsSessionActionDefinitionSummary]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/SessionActionDefinitionSummary AWS API Documentation
@@ -8136,6 +10637,11 @@ module Aws::Deadline
     #   The completion percentage for the session action.
     #   @return [Float]
     #
+    # @!attribute [rw] manifests
+    #   The list of manifest properties that describe file attachments for
+    #   the task run.
+    #   @return [Array<Types::TaskRunManifestPropertiesResponse>]
+    #
     # @!attribute [rw] definition
     #   The session action definition.
     #   @return [Types::SessionActionDefinitionSummary]
@@ -8149,6 +10655,7 @@ module Aws::Deadline
       :ended_at,
       :worker_updated_at,
       :progress_percent,
+      :manifests,
       :definition)
       SENSITIVE = []
       include Aws::Structure
@@ -8180,16 +10687,16 @@ module Aws::Deadline
     #   The date and time the resource ended running.
     #   @return [Time]
     #
+    # @!attribute [rw] target_lifecycle_status
+    #   The target life cycle status for the session.
+    #   @return [String]
+    #
     # @!attribute [rw] updated_at
     #   The date and time the resource was updated.
     #   @return [Time]
     #
     # @!attribute [rw] updated_by
     #   The user or system that updated this resource.
-    #   @return [String]
-    #
-    # @!attribute [rw] target_lifecycle_status
-    #   The target life cycle status for the session.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/SessionSummary AWS API Documentation
@@ -8201,9 +10708,9 @@ module Aws::Deadline
       :started_at,
       :lifecycle_status,
       :ended_at,
+      :target_lifecycle_status,
       :updated_at,
-      :updated_by,
-      :target_lifecycle_status)
+      :updated_by)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -8590,11 +11097,41 @@ module Aws::Deadline
     #   The data type of the parameter.
     #   @return [String]
     #
+    # @!attribute [rw] chunks
+    #   The configuration for task chunking.
+    #   @return [Types::StepParameterChunks]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/StepParameter AWS API Documentation
     #
     class StepParameter < Struct.new(
       :name,
-      :type)
+      :type,
+      :chunks)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines how a step parameter range should be divided into chunks.
+    #
+    # @!attribute [rw] default_task_count
+    #   The number of tasks to combine into a single chunk by default.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] target_runtime_seconds
+    #   The number of seconds to aim for when forming chunks.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] range_constraint
+    #   Specifies whether the chunked ranges must be contiguous or can have
+    #   gaps between them.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/StepParameterChunks AWS API Documentation
+    #
+    class StepParameterChunks < Struct.new(
+      :default_task_count,
+      :target_runtime_seconds,
+      :range_constraint)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -8669,16 +11206,25 @@ module Aws::Deadline
     #   @return [String]
     #
     # @!attribute [rw] target_task_run_status
-    #   The task status to start with on the job.
+    #   The task status to update the job's tasks to.
     #   @return [String]
     #
     # @!attribute [rw] task_run_status_counts
     #   The number of tasks running on the job.
     #   @return [Hash<String,Integer>]
     #
+    # @!attribute [rw] task_failure_retry_count
+    #   The total number of times tasks from the step failed and were
+    #   retried.
+    #   @return [Integer]
+    #
     # @!attribute [rw] created_at
     #   The date and time the resource was created.
     #   @return [Time]
+    #
+    # @!attribute [rw] created_by
+    #   The user or system that created this resource.
+    #   @return [String]
     #
     # @!attribute [rw] started_at
     #   The date and time the resource started running.
@@ -8687,6 +11233,14 @@ module Aws::Deadline
     # @!attribute [rw] ended_at
     #   The date and time the resource ended running.
     #   @return [Time]
+    #
+    # @!attribute [rw] updated_at
+    #   The date and time the resource was updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_by
+    #   The user or system that updated this resource.
+    #   @return [String]
     #
     # @!attribute [rw] parameter_space
     #   The parameters and combination expressions for the search.
@@ -8704,9 +11258,13 @@ module Aws::Deadline
       :task_run_status,
       :target_task_run_status,
       :task_run_status_counts,
+      :task_failure_retry_count,
       :created_at,
+      :created_by,
       :started_at,
       :ended_at,
+      :updated_at,
+      :updated_by,
       :parameter_space)
       SENSITIVE = []
       include Aws::Structure
@@ -8758,8 +11316,13 @@ module Aws::Deadline
     #   The number of tasks running on the job.
     #   @return [Hash<String,Integer>]
     #
+    # @!attribute [rw] task_failure_retry_count
+    #   The total number of times tasks from the step failed and were
+    #   retried.
+    #   @return [Integer]
+    #
     # @!attribute [rw] target_task_run_status
-    #   The task status to start with on the job.
+    #   The task status to update the job's tasks to.
     #   @return [String]
     #
     # @!attribute [rw] created_at
@@ -8799,6 +11362,7 @@ module Aws::Deadline
       :lifecycle_status_message,
       :task_run_status,
       :task_run_status_counts,
+      :task_failure_retry_count,
       :target_task_run_status,
       :created_at,
       :created_by,
@@ -8863,10 +11427,34 @@ module Aws::Deadline
       include Aws::Structure
     end
 
-    # The job attachment in a session action to sync.
+    # Searches for a particular list of strings.
+    #
+    # @!attribute [rw] name
+    #   The field name to search.
+    #   @return [String]
+    #
+    # @!attribute [rw] operator
+    #   The type of comparison to use for this search.
+    #   @return [String]
+    #
+    # @!attribute [rw] values
+    #   The list of string values to search for.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/StringListFilterExpression AWS API Documentation
+    #
+    class StringListFilterExpression < Struct.new(
+      :name,
+      :operator,
+      :values)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The session action definition for syncing input job attachments.
     #
     # @!attribute [rw] step_id
-    #   The step ID for the step in the job attachment.
+    #   The step ID for the sync input job attachments session action.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/SyncInputJobAttachmentsSessionActionDefinition AWS API Documentation
@@ -8877,10 +11465,12 @@ module Aws::Deadline
       include Aws::Structure
     end
 
-    # The details of a synced job attachment.
+    # The summary of the session action definition for syncing input job
+    # attachments.
     #
     # @!attribute [rw] step_id
-    #   The step ID of the step in the job attachment.
+    #   The step ID for the sync input job attachments session action
+    #   summary.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/SyncInputJobAttachmentsSessionActionDefinitionSummary AWS API Documentation
@@ -8934,6 +11524,11 @@ module Aws::Deadline
     #   A file system path represented as a string.
     #   @return [String]
     #
+    # @!attribute [rw] chunk_int
+    #   A range (for example 1-10) or selection of specific (for example
+    #   1,3,7,8,10) integers represented as a string.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/TaskParameterValue AWS API Documentation
     #
     class TaskParameterValue < Struct.new(
@@ -8941,6 +11536,7 @@ module Aws::Deadline
       :float,
       :string,
       :path,
+      :chunk_int,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
@@ -8950,7 +11546,48 @@ module Aws::Deadline
       class Float < TaskParameterValue; end
       class String < TaskParameterValue; end
       class Path < TaskParameterValue; end
+      class ChunkInt < TaskParameterValue; end
       class Unknown < TaskParameterValue; end
+    end
+
+    # The output manifest properties reported by the worker agent for a
+    # completed task run.
+    #
+    # @!attribute [rw] output_manifest_path
+    #   The manifest file path.
+    #   @return [String]
+    #
+    # @!attribute [rw] output_manifest_hash
+    #   The hash value of the file.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/TaskRunManifestPropertiesRequest AWS API Documentation
+    #
+    class TaskRunManifestPropertiesRequest < Struct.new(
+      :output_manifest_path,
+      :output_manifest_hash)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The manifest properties for a task run, corresponding to the manifest
+    # properties in the job.
+    #
+    # @!attribute [rw] output_manifest_path
+    #   The manifest file path.
+    #   @return [String]
+    #
+    # @!attribute [rw] output_manifest_hash
+    #   The hash value of the file.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/TaskRunManifestPropertiesResponse AWS API Documentation
+    #
+    class TaskRunManifestPropertiesResponse < Struct.new(
+      :output_manifest_path,
+      :output_manifest_hash)
+      SENSITIVE = []
+      include Aws::Structure
     end
 
     # The task, step, and parameters for the task run in the session action.
@@ -8987,12 +11624,17 @@ module Aws::Deadline
     #   The step ID.
     #   @return [String]
     #
+    # @!attribute [rw] parameters
+    #   The parameters of a task run in a session action.
+    #   @return [Hash<String,Types::TaskParameterValue>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/TaskRunSessionActionDefinitionSummary AWS API Documentation
     #
     class TaskRunSessionActionDefinitionSummary < Struct.new(
       :task_id,
-      :step_id)
-      SENSITIVE = []
+      :step_id,
+      :parameters)
+      SENSITIVE = [:parameters]
       include Aws::Structure
     end
 
@@ -9038,6 +11680,18 @@ module Aws::Deadline
     #   The date and time the resource ended running.
     #   @return [Time]
     #
+    # @!attribute [rw] updated_at
+    #   The date and time the resource was updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_by
+    #   The user or system that updated this resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] latest_session_action_id
+    #   The latest session action ID for the task.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/TaskSearchSummary AWS API Documentation
     #
     class TaskSearchSummary < Struct.new(
@@ -9050,7 +11704,10 @@ module Aws::Deadline
       :parameters,
       :failure_retry_count,
       :started_at,
-      :ended_at)
+      :ended_at,
+      :updated_at,
+      :updated_by,
+      :latest_session_action_id)
       SENSITIVE = [:parameters]
       include Aws::Structure
     end
@@ -9081,10 +11738,6 @@ module Aws::Deadline
     #   The number of times that the task failed and was retried.
     #   @return [Integer]
     #
-    # @!attribute [rw] parameters
-    #   The task parameters.
-    #   @return [Hash<String,Types::TaskParameterValue>]
-    #
     # @!attribute [rw] started_at
     #   The date and time the resource started running.
     #   @return [Time]
@@ -9102,8 +11755,12 @@ module Aws::Deadline
     #   @return [String]
     #
     # @!attribute [rw] latest_session_action_id
-    #   The latest session action for the task.
+    #   The latest session action ID for the task.
     #   @return [String]
+    #
+    # @!attribute [rw] parameters
+    #   The task parameters.
+    #   @return [Hash<String,Types::TaskParameterValue>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/TaskSummary AWS API Documentation
     #
@@ -9114,12 +11771,12 @@ module Aws::Deadline
       :run_status,
       :target_run_status,
       :failure_retry_count,
-      :parameters,
       :started_at,
       :ended_at,
       :updated_at,
       :updated_by,
-      :latest_session_action_id)
+      :latest_session_action_id,
+      :parameters)
       SENSITIVE = [:parameters]
       include Aws::Structure
     end
@@ -9180,20 +11837,20 @@ module Aws::Deadline
     #
     class UntagResourceResponse < Aws::EmptyStructure; end
 
-    # @!attribute [rw] client_token
-    #   The unique token which the server uses to recognize retries of the
-    #   same request.
-    #
-    #   **A suitable default value is auto-generated.** You should normally
-    #   not need to pass this option.
-    #   @return [String]
-    #
     # @!attribute [rw] farm_id
     #   The farm ID of the budget to update.
     #   @return [String]
     #
     # @!attribute [rw] budget_id
     #   The budget ID to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] client_token
+    #   The unique token which the server uses to recognize retries of the
+    #   same request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
     #   @return [String]
     #
     # @!attribute [rw] display_name
@@ -9241,9 +11898,9 @@ module Aws::Deadline
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/UpdateBudgetRequest AWS API Documentation
     #
     class UpdateBudgetRequest < Struct.new(
-      :client_token,
       :farm_id,
       :budget_id,
+      :client_token,
       :display_name,
       :description,
       :status,
@@ -9279,12 +11936,20 @@ module Aws::Deadline
     #   interpret the content of this field.
     #   @return [String]
     #
+    # @!attribute [rw] cost_scale_factor
+    #   A multiplier applied to the farm's calculated costs for usage data
+    #   and budget tracking. A value less than 1 represents a discount, a
+    #   value greater than 1 represents a premium, and a value of 1
+    #   represents no adjustment.
+    #   @return [Float]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/UpdateFarmRequest AWS API Documentation
     #
     class UpdateFarmRequest < Struct.new(
       :farm_id,
       :display_name,
-      :description)
+      :description,
+      :cost_scale_factor)
       SENSITIVE = [:description]
       include Aws::Structure
     end
@@ -9293,20 +11958,20 @@ module Aws::Deadline
     #
     class UpdateFarmResponse < Aws::EmptyStructure; end
 
-    # @!attribute [rw] client_token
-    #   The unique token which the server uses to recognize retries of the
-    #   same request.
-    #
-    #   **A suitable default value is auto-generated.** You should normally
-    #   not need to pass this option.
-    #   @return [String]
-    #
     # @!attribute [rw] farm_id
     #   The farm ID to update.
     #   @return [String]
     #
     # @!attribute [rw] fleet_id
     #   The fleet ID to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] client_token
+    #   The unique token which the server uses to recognize retries of the
+    #   same request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
     #   @return [String]
     #
     # @!attribute [rw] display_name
@@ -9336,24 +12001,39 @@ module Aws::Deadline
     #
     # @!attribute [rw] max_worker_count
     #   The maximum number of workers in the fleet.
+    #
+    #   Deadline Cloud limits the number of workers to less than or equal to
+    #   the fleet's maximum worker count. The service maintains eventual
+    #   consistency for the worker count. If you make multiple rapid calls
+    #   to `CreateWorker` before the field updates, you might exceed your
+    #   fleet's maximum worker count. For example, if your `maxWorkerCount`
+    #   is 10 and you currently have 9 workers, making two quick
+    #   `CreateWorker` calls might successfully create 2 workers instead of
+    #   1, resulting in 11 total workers.
     #   @return [Integer]
     #
     # @!attribute [rw] configuration
     #   The fleet configuration to update.
     #   @return [Types::FleetConfiguration]
     #
+    # @!attribute [rw] host_configuration
+    #   Provides a script that runs as a worker is starting up that you can
+    #   use to provide additional configuration for workers in your fleet.
+    #   @return [Types::HostConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/UpdateFleetRequest AWS API Documentation
     #
     class UpdateFleetRequest < Struct.new(
-      :client_token,
       :farm_id,
       :fleet_id,
+      :client_token,
       :display_name,
       :description,
       :role_arn,
       :min_worker_count,
       :max_worker_count,
-      :configuration)
+      :configuration,
+      :host_configuration)
       SENSITIVE = [:description]
       include Aws::Structure
     end
@@ -9362,6 +12042,18 @@ module Aws::Deadline
     #
     class UpdateFleetResponse < Aws::EmptyStructure; end
 
+    # @!attribute [rw] farm_id
+    #   The farm ID of the job to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] queue_id
+    #   The queue ID of the job to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] job_id
+    #   The job ID to update.
+    #   @return [String]
+    #
     # @!attribute [rw] client_token
     #   The unique token which the server uses to recognize retries of the
     #   same request.
@@ -9375,7 +12067,7 @@ module Aws::Deadline
     #   @return [String]
     #
     # @!attribute [rw] priority
-    #   The job priority to update.
+    #   The updated job priority.
     #   @return [Integer]
     #
     # @!attribute [rw] max_failed_tasks_count
@@ -9409,21 +12101,20 @@ module Aws::Deadline
     #   The maximum number of workers that can process tasks in the job.
     #   @return [Integer]
     #
-    # @!attribute [rw] farm_id
-    #   The farm ID of the job to update.
+    # @!attribute [rw] name
+    #   The updated job name.
     #   @return [String]
     #
-    # @!attribute [rw] queue_id
-    #   The queue ID of the job to update.
-    #   @return [String]
-    #
-    # @!attribute [rw] job_id
-    #   The job ID to update.
+    # @!attribute [rw] description
+    #   The updated job description.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/UpdateJobRequest AWS API Documentation
     #
     class UpdateJobRequest < Struct.new(
+      :farm_id,
+      :queue_id,
+      :job_id,
       :client_token,
       :target_task_run_status,
       :priority,
@@ -9431,10 +12122,9 @@ module Aws::Deadline
       :max_retries_per_task,
       :lifecycle_status,
       :max_worker_count,
-      :farm_id,
-      :queue_id,
-      :job_id)
-      SENSITIVE = []
+      :name,
+      :description)
+      SENSITIVE = [:description]
       include Aws::Structure
     end
 
@@ -9513,7 +12203,7 @@ module Aws::Deadline
     #   @return [String]
     #
     # @!attribute [rw] role_arn
-    #   The Amazon Resource Name (ARN) of the new IAM role to use with the
+    #   The Amazon Resource Name of the new IAM role to use with the
     #   monitor.
     #   @return [String]
     #
@@ -9532,14 +12222,29 @@ module Aws::Deadline
     #
     class UpdateMonitorResponse < Aws::EmptyStructure; end
 
-    # @!attribute [rw] client_token
-    #   The unique token which the server uses to recognize retries of the
-    #   same request.
-    #
-    #   **A suitable default value is auto-generated.** You should normally
-    #   not need to pass this option.
+    # @!attribute [rw] monitor_id
+    #   The unique identifier of the monitor to update settings for.
     #   @return [String]
     #
+    # @!attribute [rw] settings
+    #   The monitor settings to update as key-value pairs. Keys present in
+    #   the request are upserted; keys absent are left unchanged. Send an
+    #   empty string value to delete a key.
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/UpdateMonitorSettingsRequest AWS API Documentation
+    #
+    class UpdateMonitorSettingsRequest < Struct.new(
+      :monitor_id,
+      :settings)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/UpdateMonitorSettingsResponse AWS API Documentation
+    #
+    class UpdateMonitorSettingsResponse < Aws::EmptyStructure; end
+
     # @!attribute [rw] farm_id
     #   The farm ID of the queue environment to update.
     #   @return [String]
@@ -9550,6 +12255,14 @@ module Aws::Deadline
     #
     # @!attribute [rw] queue_environment_id
     #   The queue environment ID to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] client_token
+    #   The unique token which the server uses to recognize retries of the
+    #   same request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
     #   @return [String]
     #
     # @!attribute [rw] priority
@@ -9567,10 +12280,10 @@ module Aws::Deadline
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/UpdateQueueEnvironmentRequest AWS API Documentation
     #
     class UpdateQueueEnvironmentRequest < Struct.new(
-      :client_token,
       :farm_id,
       :queue_id,
       :queue_environment_id,
+      :client_token,
       :priority,
       :template_type,
       :template)
@@ -9582,6 +12295,9 @@ module Aws::Deadline
     #
     class UpdateQueueEnvironmentResponse < Aws::EmptyStructure; end
 
+    # Identifier mixin for queue-fleet association operations. Composes
+    # QueueIdentifierMixin (farmId + queueId) and adds fleetId.
+    #
     # @!attribute [rw] farm_id
     #   The farm ID to update.
     #   @return [String]
@@ -9647,19 +12363,19 @@ module Aws::Deadline
     #
     class UpdateQueueLimitAssociationResponse < Aws::EmptyStructure; end
 
-    # @!attribute [rw] client_token
-    #   The idempotency token to update in the queue.
-    #
-    #   **A suitable default value is auto-generated.** You should normally
-    #   not need to pass this option.
-    #   @return [String]
-    #
     # @!attribute [rw] farm_id
     #   The farm ID to update in the queue.
     #   @return [String]
     #
     # @!attribute [rw] queue_id
     #   The queue ID to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] client_token
+    #   The idempotency token to update in the queue.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
     #   @return [String]
     #
     # @!attribute [rw] display_name
@@ -9711,12 +12427,23 @@ module Aws::Deadline
     #   The storage profile ID to remove.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] scheduling_configuration
+    #   The scheduling configuration for the queue. This configuration
+    #   determines how workers are assigned to jobs in the queue.
+    #
+    #   When updating the scheduling configuration, the entire configuration
+    #   is replaced.
+    #
+    #   In-progress tasks run to completion before the new scheduling
+    #   configuration takes effect.
+    #   @return [Types::SchedulingConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/UpdateQueueRequest AWS API Documentation
     #
     class UpdateQueueRequest < Struct.new(
-      :client_token,
       :farm_id,
       :queue_id,
+      :client_token,
       :display_name,
       :description,
       :default_budget_action,
@@ -9726,8 +12453,9 @@ module Aws::Deadline
       :required_file_system_location_names_to_add,
       :required_file_system_location_names_to_remove,
       :allowed_storage_profile_ids_to_add,
-      :allowed_storage_profile_ids_to_remove)
-      SENSITIVE = [:description, :required_file_system_location_names_to_add, :required_file_system_location_names_to_remove]
+      :allowed_storage_profile_ids_to_remove,
+      :scheduling_configuration)
+      SENSITIVE = [:description]
       include Aws::Structure
     end
 
@@ -9735,18 +12463,6 @@ module Aws::Deadline
     #
     class UpdateQueueResponse < Aws::EmptyStructure; end
 
-    # @!attribute [rw] client_token
-    #   The unique token which the server uses to recognize retries of the
-    #   same request.
-    #
-    #   **A suitable default value is auto-generated.** You should normally
-    #   not need to pass this option.
-    #   @return [String]
-    #
-    # @!attribute [rw] target_lifecycle_status
-    #   The life cycle status to update in the session.
-    #   @return [String]
-    #
     # @!attribute [rw] farm_id
     #   The farm ID to update in the session.
     #   @return [String]
@@ -9763,27 +12479,6 @@ module Aws::Deadline
     #   The session ID to update.
     #   @return [String]
     #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/UpdateSessionRequest AWS API Documentation
-    #
-    class UpdateSessionRequest < Struct.new(
-      :client_token,
-      :target_lifecycle_status,
-      :farm_id,
-      :queue_id,
-      :job_id,
-      :session_id)
-      SENSITIVE = []
-      include Aws::Structure
-    end
-
-    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/UpdateSessionResponse AWS API Documentation
-    #
-    class UpdateSessionResponse < Aws::EmptyStructure; end
-
-    # @!attribute [rw] target_task_run_status
-    #   The task status to update the step's tasks to.
-    #   @return [String]
-    #
     # @!attribute [rw] client_token
     #   The unique token which the server uses to recognize retries of the
     #   same request.
@@ -9792,6 +12487,27 @@ module Aws::Deadline
     #   not need to pass this option.
     #   @return [String]
     #
+    # @!attribute [rw] target_lifecycle_status
+    #   The life cycle status to update in the session.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/UpdateSessionRequest AWS API Documentation
+    #
+    class UpdateSessionRequest < Struct.new(
+      :farm_id,
+      :queue_id,
+      :job_id,
+      :session_id,
+      :client_token,
+      :target_lifecycle_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/UpdateSessionResponse AWS API Documentation
+    #
+    class UpdateSessionResponse < Aws::EmptyStructure; end
+
     # @!attribute [rw] farm_id
     #   The farm ID to update.
     #   @return [String]
@@ -9808,23 +12524,6 @@ module Aws::Deadline
     #   The step ID to update.
     #   @return [String]
     #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/UpdateStepRequest AWS API Documentation
-    #
-    class UpdateStepRequest < Struct.new(
-      :target_task_run_status,
-      :client_token,
-      :farm_id,
-      :queue_id,
-      :job_id,
-      :step_id)
-      SENSITIVE = []
-      include Aws::Structure
-    end
-
-    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/UpdateStepResponse AWS API Documentation
-    #
-    class UpdateStepResponse < Aws::EmptyStructure; end
-
     # @!attribute [rw] client_token
     #   The unique token which the server uses to recognize retries of the
     #   same request.
@@ -9833,12 +12532,41 @@ module Aws::Deadline
     #   not need to pass this option.
     #   @return [String]
     #
+    # @!attribute [rw] target_task_run_status
+    #   The task status to update the step's tasks to.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/UpdateStepRequest AWS API Documentation
+    #
+    class UpdateStepRequest < Struct.new(
+      :farm_id,
+      :queue_id,
+      :job_id,
+      :step_id,
+      :client_token,
+      :target_task_run_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/UpdateStepResponse AWS API Documentation
+    #
+    class UpdateStepResponse < Aws::EmptyStructure; end
+
     # @!attribute [rw] farm_id
     #   The farm ID to update.
     #   @return [String]
     #
     # @!attribute [rw] storage_profile_id
     #   The storage profile ID to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] client_token
+    #   The unique token which the server uses to recognize retries of the
+    #   same request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
     #   @return [String]
     #
     # @!attribute [rw] display_name
@@ -9864,9 +12592,9 @@ module Aws::Deadline
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/UpdateStorageProfileRequest AWS API Documentation
     #
     class UpdateStorageProfileRequest < Struct.new(
-      :client_token,
       :farm_id,
       :storage_profile_id,
+      :client_token,
       :display_name,
       :os_family,
       :file_system_locations_to_add,
@@ -9879,18 +12607,6 @@ module Aws::Deadline
     #
     class UpdateStorageProfileResponse < Aws::EmptyStructure; end
 
-    # @!attribute [rw] client_token
-    #   The unique token which the server uses to recognize retries of the
-    #   same request.
-    #
-    #   **A suitable default value is auto-generated.** You should normally
-    #   not need to pass this option.
-    #   @return [String]
-    #
-    # @!attribute [rw] target_run_status
-    #   The run status with which to start the task.
-    #   @return [String]
-    #
     # @!attribute [rw] farm_id
     #   The farm ID to update.
     #   @return [String]
@@ -9911,16 +12627,28 @@ module Aws::Deadline
     #   The task ID to update.
     #   @return [String]
     #
+    # @!attribute [rw] client_token
+    #   The unique token which the server uses to recognize retries of the
+    #   same request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @!attribute [rw] target_run_status
+    #   The run status with which to start the task.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/UpdateTaskRequest AWS API Documentation
     #
     class UpdateTaskRequest < Struct.new(
-      :client_token,
-      :target_run_status,
       :farm_id,
       :queue_id,
       :job_id,
       :step_id,
-      :task_id)
+      :task_id,
+      :client_token,
+      :target_run_status)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -9970,10 +12698,16 @@ module Aws::Deadline
     #   The worker log to update.
     #   @return [Types::LogConfiguration]
     #
+    # @!attribute [rw] host_configuration
+    #   The script that runs as a worker is starting up that you can use to
+    #   provide additional configuration for workers in your fleet.
+    #   @return [Types::HostConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/UpdateWorkerResponse AWS API Documentation
     #
     class UpdateWorkerResponse < Struct.new(
-      :log)
+      :log,
+      :host_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -10040,7 +12774,8 @@ module Aws::Deadline
     #   @return [String]
     #
     # @!attribute [rw] process_exit_code
-    #   The process exit code.
+    #   The process exit code. The default Deadline Cloud worker agent
+    #   converts unsigned 32-bit exit codes to signed 32-bit exit codes.
     #   @return [Integer]
     #
     # @!attribute [rw] progress_message
@@ -10063,6 +12798,11 @@ module Aws::Deadline
     #   The percentage completed.
     #   @return [Float]
     #
+    # @!attribute [rw] manifests
+    #   A list of output manifest properties reported by the worker agent,
+    #   with each entry corresponding to a manifest property in the job.
+    #   @return [Array<Types::TaskRunManifestPropertiesRequest>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/UpdatedSessionActionInfo AWS API Documentation
     #
     class UpdatedSessionActionInfo < Struct.new(
@@ -10072,7 +12812,8 @@ module Aws::Deadline
       :started_at,
       :ended_at,
       :updated_at,
-      :progress_percent)
+      :progress_percent,
+      :manifests)
       SENSITIVE = [:progress_message]
       include Aws::Structure
     end
@@ -10178,6 +12919,137 @@ module Aws::Deadline
     class ValidationExceptionField < Struct.new(
       :name,
       :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The summary of a persistent volume.
+    #
+    # @!attribute [rw] volume_id
+    #   The volume ID.
+    #   @return [String]
+    #
+    # @!attribute [rw] farm_id
+    #   The farm ID of the farm that contains the fleet.
+    #   @return [String]
+    #
+    # @!attribute [rw] fleet_id
+    #   The fleet ID of the fleet that contains the volume.
+    #   @return [String]
+    #
+    # @!attribute [rw] state
+    #   The state of the volume.
+    #   @return [String]
+    #
+    # @!attribute [rw] size_gi_b
+    #   The volume size in GiB.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] availability_zone_id
+    #   The Availability Zone ID of the volume.
+    #   @return [String]
+    #
+    # @!attribute [rw] attached_worker_id
+    #   The worker ID of the worker the volume is attached to.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/VolumeSummary AWS API Documentation
+    #
+    class VolumeSummary < Struct.new(
+      :volume_id,
+      :farm_id,
+      :fleet_id,
+      :state,
+      :size_gi_b,
+      :availability_zone_id,
+      :attached_worker_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration options for a service managed fleet's VPC.
+    #
+    # @!attribute [rw] resource_configuration_arns
+    #   The ARNs of the VPC Lattice resource configurations attached to the
+    #   fleet.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/VpcConfiguration AWS API Documentation
+    #
+    class VpcConfiguration < Struct.new(
+      :resource_configuration_arns)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration for weighted balanced scheduling. Workers are assigned
+    # to jobs based on a weighted formula:
+    #
+    # `weight = (priority * priorityWeight) + (errors * errorWeight) +
+    # ((currentTime - submissionTime) * submissionTimeWeight) +
+    # ((renderingTasks - renderingTaskBuffer) * renderingTaskWeight)`
+    #
+    # The job with the highest calculated weight is scheduled first. Workers
+    # are distributed evenly amongst jobs with the same weight.
+    #
+    # @!attribute [rw] priority_weight
+    #   The weight applied to job priority in the scheduling formula. Higher
+    #   values give more influence to job priority. A value of `0` means
+    #   priority is ignored. The default value is `100.0`.
+    #   @return [Float]
+    #
+    # @!attribute [rw] error_weight
+    #   The weight applied to the number of errors on a job. A negative
+    #   value means jobs without errors are scheduled first. A value of `0`
+    #   means errors are ignored. The default value is `-10.0`.
+    #   @return [Float]
+    #
+    # @!attribute [rw] submission_time_weight
+    #   The weight applied to job submission time. A positive value means
+    #   earlier jobs are scheduled first. A value of `0` means submission
+    #   time is ignored. The default value is `3.0`.
+    #   @return [Float]
+    #
+    # @!attribute [rw] rendering_task_weight
+    #   The weight applied to the number of tasks currently rendering on a
+    #   job. A negative value means jobs that are not already rendering are
+    #   scheduled next. A value of `0` means the rendering state is ignored.
+    #   The default value is `-100.0`.
+    #   @return [Float]
+    #
+    # @!attribute [rw] rendering_task_buffer
+    #   The rendering task buffer is subtracted from the number of rendering
+    #   tasks before applying the rendering task weight. This creates a
+    #   stickiness effect where workers prefer to stay with their current
+    #   job. Higher values make workers stickier. The default value is `1`.
+    #   The buffer is only applied in the weight calculation for a job if
+    #   the worker is currently assigned to that job.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max_priority_override
+    #   Overrides the weighted scheduling formula for jobs at the maximum
+    #   priority (100). When set, jobs with priority 100 are always
+    #   scheduled first regardless of their calculated weight. When absent,
+    #   maximum priority jobs use the standard weighted formula.
+    #   @return [Types::SchedulingMaxPriorityOverride]
+    #
+    # @!attribute [rw] min_priority_override
+    #   Overrides the weighted scheduling formula for jobs at the minimum
+    #   priority (0). When set, jobs with priority 0 are always scheduled
+    #   last regardless of their calculated weight. When absent, minimum
+    #   priority jobs use the standard weighted formula.
+    #   @return [Types::SchedulingMinPriorityOverride]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/WeightedBalancedSchedulingConfiguration AWS API Documentation
+    #
+    class WeightedBalancedSchedulingConfiguration < Struct.new(
+      :priority_weight,
+      :error_weight,
+      :submission_time_weight,
+      :rendering_task_weight,
+      :rendering_task_buffer,
+      :max_priority_override,
+      :min_priority_override)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -10354,10 +13226,6 @@ module Aws::Deadline
 
     # The summary of details for a worker.
     #
-    # @!attribute [rw] worker_id
-    #   The worker ID.
-    #   @return [String]
-    #
     # @!attribute [rw] farm_id
     #   The farm ID.
     #   @return [String]
@@ -10366,13 +13234,17 @@ module Aws::Deadline
     #   The fleet ID.
     #   @return [String]
     #
-    # @!attribute [rw] status
-    #   The status of the worker.
+    # @!attribute [rw] worker_id
+    #   The worker ID.
     #   @return [String]
     #
     # @!attribute [rw] host_properties
     #   The host properties of the worker.
     #   @return [Types::HostPropertiesResponse]
+    #
+    # @!attribute [rw] status
+    #   The status of the worker.
+    #   @return [String]
     #
     # @!attribute [rw] log
     #   The log configuration for the worker.
@@ -10397,11 +13269,11 @@ module Aws::Deadline
     # @see http://docs.aws.amazon.com/goto/WebAPI/deadline-2023-10-12/WorkerSummary AWS API Documentation
     #
     class WorkerSummary < Struct.new(
-      :worker_id,
       :farm_id,
       :fleet_id,
-      :status,
+      :worker_id,
       :host_properties,
+      :status,
       :log,
       :created_at,
       :created_by,

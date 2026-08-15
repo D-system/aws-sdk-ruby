@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -88,7 +89,7 @@ module Aws
                         {
                           key: ::String,
                           value: ::String?
-                        },
+                        }
                       ]
                     ) -> _AddTagsResponseSuccess
                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _AddTagsResponseSuccess
@@ -123,13 +124,13 @@ module Aws
                               {
                                 type: ("EVENT_DATA_STORE" | "AWS_SERVICE"),
                                 location: ::String
-                              },
+                              }
                             ],
                             ?tags: Array[
                               {
                                 key: ::String,
                                 value: ::String?
-                              },
+                              }
                             ]
                           ) -> _CreateChannelResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateChannelResponseSuccess
@@ -147,19 +148,12 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudTrail/Client.html#create_dashboard-instance_method
       def create_dashboard: (
                               name: ::String,
-                              ?refresh_schedule: {
-                                frequency: {
-                                  unit: ("HOURS" | "DAYS")?,
-                                  value: ::Integer?
-                                }?,
-                                status: ("ENABLED" | "DISABLED")?,
-                                time_of_day: ::String?
-                              },
+                              ?refresh_schedule: Params::refresh_schedule,
                               ?tags_list: Array[
                                 {
                                   key: ::String,
                                   value: ::String?
-                                },
+                                }
                               ],
                               ?termination_protection_enabled: bool,
                               ?widgets: Array[
@@ -167,7 +161,7 @@ module Aws
                                   query_statement: ::String,
                                   query_parameters: Array[::String]?,
                                   view_properties: Hash[::String, ::String]
-                                },
+                                }
                               ]
                             ) -> _CreateDashboardResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateDashboardResponseSuccess
@@ -192,20 +186,7 @@ module Aws
       def create_event_data_store: (
                                      name: ::String,
                                      ?advanced_event_selectors: Array[
-                                       {
-                                         name: ::String?,
-                                         field_selectors: Array[
-                                           {
-                                             field: ::String,
-                                             equals: Array[::String]?,
-                                             starts_with: Array[::String]?,
-                                             ends_with: Array[::String]?,
-                                             not_equals: Array[::String]?,
-                                             not_starts_with: Array[::String]?,
-                                             not_ends_with: Array[::String]?
-                                           },
-                                         ]
-                                       },
+                                       Params::advanced_event_selector
                                      ],
                                      ?multi_region_enabled: bool,
                                      ?organization_enabled: bool,
@@ -215,7 +196,7 @@ module Aws
                                        {
                                          key: ::String,
                                          value: ::String?
-                                       },
+                                       }
                                      ],
                                      ?kms_key_id: ::String,
                                      ?start_ingestion: bool,
@@ -256,7 +237,7 @@ module Aws
                             {
                               key: ::String,
                               value: ::String?
-                            },
+                            }
                           ]
                         ) -> _CreateTrailResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateTrailResponseSuccess
@@ -418,6 +399,21 @@ module Aws
                            dashboard_id: ::String
                          ) -> _GetDashboardResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetDashboardResponseSuccess
+
+      interface _GetEventConfigurationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetEventConfigurationResponse]
+        def trail_arn: () -> ::String
+        def event_data_store_arn: () -> ::String
+        def max_event_size: () -> ("Standard" | "Large")
+        def context_key_selectors: () -> ::Array[Types::ContextKeySelector]
+        def aggregation_configurations: () -> ::Array[Types::AggregationConfiguration]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudTrail/Client.html#get_event_configuration-instance_method
+      def get_event_configuration: (
+                                     ?trail_name: ::String,
+                                     ?event_data_store: ::String
+                                   ) -> _GetEventConfigurationResponseSuccess
+                                 | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetEventConfigurationResponseSuccess
 
       interface _GetEventDataStoreResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetEventDataStoreResponse]
@@ -618,8 +614,26 @@ module Aws
                         ) -> _ListImportsResponseSuccess
                       | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListImportsResponseSuccess
 
+      interface _ListInsightsDataResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListInsightsDataResponse]
+        def events: () -> ::Array[Types::Event]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudTrail/Client.html#list_insights_data-instance_method
+      def list_insights_data: (
+                                insight_source: ::String,
+                                data_type: ("InsightsEvents"),
+                                ?dimensions: Hash[("EventId" | "EventName" | "EventSource"), ::String],
+                                ?start_time: ::Time,
+                                ?end_time: ::Time,
+                                ?max_results: ::Integer,
+                                ?next_token: ::String
+                              ) -> _ListInsightsDataResponseSuccess
+                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListInsightsDataResponseSuccess
+
       interface _ListInsightsMetricDataResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListInsightsMetricDataResponse]
+        def trail_arn: () -> ::String
         def event_source: () -> ::String
         def event_name: () -> ::String
         def insight_type: () -> ("ApiCallRateInsight" | "ApiErrorRateInsight")
@@ -630,6 +644,7 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudTrail/Client.html#list_insights_metric_data-instance_method
       def list_insights_metric_data: (
+                                       ?trail_name: ::String,
                                        event_source: ::String,
                                        event_name: ::String,
                                        insight_type: ("ApiCallRateInsight" | "ApiErrorRateInsight"),
@@ -706,7 +721,7 @@ module Aws
                              {
                                attribute_key: ("EventId" | "EventName" | "ReadOnly" | "Username" | "ResourceType" | "ResourceName" | "EventSource" | "AccessKeyId"),
                                attribute_value: ::String
-                             },
+                             }
                            ],
                            ?start_time: ::Time,
                            ?end_time: ::Time,
@@ -715,6 +730,34 @@ module Aws
                            ?next_token: ::String
                          ) -> _LookupEventsResponseSuccess
                        | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _LookupEventsResponseSuccess
+
+      interface _PutEventConfigurationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::PutEventConfigurationResponse]
+        def trail_arn: () -> ::String
+        def event_data_store_arn: () -> ::String
+        def max_event_size: () -> ("Standard" | "Large")
+        def context_key_selectors: () -> ::Array[Types::ContextKeySelector]
+        def aggregation_configurations: () -> ::Array[Types::AggregationConfiguration]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudTrail/Client.html#put_event_configuration-instance_method
+      def put_event_configuration: (
+                                     ?trail_name: ::String,
+                                     ?event_data_store: ::String,
+                                     ?max_event_size: ("Standard" | "Large"),
+                                     ?context_key_selectors: Array[
+                                       {
+                                         type: ("TagContext" | "RequestContext"),
+                                         equals: Array[::String]
+                                       }
+                                     ],
+                                     ?aggregation_configurations: Array[
+                                       {
+                                         templates: Array[("API_ACTIVITY" | "RESOURCE_ACCESS" | "USER_ACTIONS")],
+                                         event_category: ("Data")
+                                       }
+                                     ]
+                                   ) -> _PutEventConfigurationResponseSuccess
+                                 | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutEventConfigurationResponseSuccess
 
       interface _PutEventSelectorsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::PutEventSelectorsResponse]
@@ -733,26 +776,13 @@ module Aws
                                        {
                                          type: ::String?,
                                          values: Array[::String]?
-                                       },
+                                       }
                                      ]?,
                                      exclude_management_event_sources: Array[::String]?
-                                   },
+                                   }
                                  ],
                                  ?advanced_event_selectors: Array[
-                                   {
-                                     name: ::String?,
-                                     field_selectors: Array[
-                                       {
-                                         field: ::String,
-                                         equals: Array[::String]?,
-                                         starts_with: Array[::String]?,
-                                         ends_with: Array[::String]?,
-                                         not_equals: Array[::String]?,
-                                         not_starts_with: Array[::String]?,
-                                         not_ends_with: Array[::String]?
-                                       },
-                                     ]
-                                   },
+                                   Params::advanced_event_selector
                                  ]
                                ) -> _PutEventSelectorsResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutEventSelectorsResponseSuccess
@@ -769,8 +799,9 @@ module Aws
                                    ?trail_name: ::String,
                                    insight_selectors: Array[
                                      {
-                                       insight_type: ("ApiCallRateInsight" | "ApiErrorRateInsight")?
-                                     },
+                                       insight_type: ("ApiCallRateInsight" | "ApiErrorRateInsight")?,
+                                       event_categories: Array[("Management" | "Data")]?
+                                     }
                                    ],
                                    ?event_data_store: ::String,
                                    ?insights_destination: ::String
@@ -809,7 +840,7 @@ module Aws
                            {
                              key: ::String,
                              value: ::String?
-                           },
+                           }
                          ]
                        ) -> _RemoveTagsResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RemoveTagsResponseSuccess
@@ -969,7 +1000,7 @@ module Aws
                               {
                                 type: ("EVENT_DATA_STORE" | "AWS_SERVICE"),
                                 location: ::String
-                              },
+                              }
                             ],
                             ?name: ::String
                           ) -> _UpdateChannelResponseSuccess
@@ -994,16 +1025,9 @@ module Aws
                                   query_statement: ::String,
                                   query_parameters: Array[::String]?,
                                   view_properties: Hash[::String, ::String]
-                                },
+                                }
                               ],
-                              ?refresh_schedule: {
-                                frequency: {
-                                  unit: ("HOURS" | "DAYS")?,
-                                  value: ::Integer?
-                                }?,
-                                status: ("ENABLED" | "DISABLED")?,
-                                time_of_day: ::String?
-                              },
+                              ?refresh_schedule: Params::refresh_schedule,
                               ?termination_protection_enabled: bool
                             ) -> _UpdateDashboardResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateDashboardResponseSuccess
@@ -1030,20 +1054,7 @@ module Aws
                                      event_data_store: ::String,
                                      ?name: ::String,
                                      ?advanced_event_selectors: Array[
-                                       {
-                                         name: ::String?,
-                                         field_selectors: Array[
-                                           {
-                                             field: ::String,
-                                             equals: Array[::String]?,
-                                             starts_with: Array[::String]?,
-                                             ends_with: Array[::String]?,
-                                             not_equals: Array[::String]?,
-                                             not_starts_with: Array[::String]?,
-                                             not_ends_with: Array[::String]?
-                                           },
-                                         ]
-                                       },
+                                       Params::advanced_event_selector
                                      ],
                                      ?multi_region_enabled: bool,
                                      ?organization_enabled: bool,

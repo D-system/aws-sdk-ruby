@@ -1,6 +1,161 @@
 Unreleased Changes
 ------------------
 
+1.130.0 (2026-07-09)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.129.0 (2026-06-01)
+------------------
+
+* Feature - Adding new BDD representation of endpoint ruleset
+
+1.128.0 (2026-05-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.127.0 (2026-05-20)
+------------------
+
+* Feature - AWS KMS now supports creating grants for AWS service principals using new GranteeServicePrincipal and RetiringServicePrincipal parameters. This release adds SourceArn grant constraint and three condition keys for controlling CreateGrant access. For more information, see Grants in AWS KMS.
+
+1.126.0 (2026-05-19)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.125.0 (2026-05-13)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.124.0 (2026-04-27)
+------------------
+
+* Feature - KMS GetKeyLastUsage API provides information on the last successful cryptographic operation performed on KMS keys. This new API provides KMS customers with the last timestamp, CloudTrail eventId, and the cryptographic operation that was performed on the key.
+
+1.123.0 (2026-03-18)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.122.0 (2026-02-16)
+------------------
+
+* Feature - Added support for Decrypt and ReEncrypt API's to use dry run feature without ciphertext for authorization validation
+
+1.121.0 (2026-01-16)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.120.0 (2026-01-08)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.119.0 (2026-01-05)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.118.0 (2025-11-21)
+------------------
+
+* Feature - Support for on-demand rotation of AWS KMS Multi-Region keys with imported key material
+
+1.117.0 (2025-11-07)
+------------------
+
+* Feature - Added support for new ECC_NIST_EDWARDS25519 AWS KMS key spec
+
+1.116.0 (2025-10-30)
+------------------
+
+* Feature - Add cross account VPC endpoint service connectivity support to CustomKeyStore.
+
+1.115.0 (2025-10-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.114.0 (2025-10-16)
+------------------
+
+* Feature - Update endpoint ruleset parameters casing
+
+1.113.0 (2025-09-24)
+------------------
+
+* Feature - Documentation only updates for KMS.
+
+1.112.0 (2025-08-27)
+------------------
+
+* Feature - Remove incorrect endpoint tests
+
+1.111.0 (2025-08-26)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.110.0 (2025-08-04)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.109.0 (2025-07-31)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.108.0 (2025-07-25)
+------------------
+
+* Feature - Doc only update: fixed grammatical errors.
+
+1.107.0 (2025-07-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.106.0 (2025-06-26)
+------------------
+
+* Feature - This release updates AWS CLI examples for KMS APIs.
+
+1.105.0 (2025-06-12)
+------------------
+
+* Feature - AWS KMS announces the support of ML-DSA key pairs that creates post-quantum safe digital signatures.
+
+1.104.0 (2025-06-06)
+------------------
+
+* Feature - Remove unpopulated KeyMaterialId from Encrypt Response
+
+1.103.0 (2025-06-05)
+------------------
+
+* Feature - AWS KMS announces the support for on-demand rotation of symmetric-encryption KMS keys with imported key material (EXTERNAL origin).
+
+1.102.0 (2025-06-02)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.101.0 (2025-05-12)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.100.0 (2025-05-01)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
 1.99.0 (2025-02-18)
 ------------------
 

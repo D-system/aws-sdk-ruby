@@ -4,11 +4,12 @@ module AwsSdkCodeGenerator
   class Service
     # Ordered priority list of supported protocols
     # api-gateway is a special case and is always first.
+    # Prioritize JSON over CBOR due to better performance.
     SUPPORTED_PROTOCOLS = %w[
       api-gateway
-      smithy-rpc-v2-cbor
       json_1.0
       json_1.1
+      smithy-rpc-v2-cbor
       rest-json
       rest-xml
       query
@@ -111,7 +112,7 @@ module AwsSdkCodeGenerator
 
     # @return Boolean True if the service is inlined in core (ie not a stand alone gem)
     def included_in_core?
-      %w[STS SSO SSOOIDC].include?(name)
+      %w[STS SSO SSOOIDC Signin].include?(name)
     end
 
     # @return [Hash, nil] The service endpoint rules.
@@ -195,6 +196,14 @@ module AwsSdkCodeGenerator
     # @api private
     def inspect
       "#<#{self.class.name}>"
+    end
+
+    def h2_setting?
+      @protocol_settings['h2']
+    end
+
+    def h2_required_setting?
+      @protocol_settings['h2'] == 'required'
     end
 
     private

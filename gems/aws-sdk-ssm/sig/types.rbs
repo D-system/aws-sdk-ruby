@@ -8,6 +8,11 @@
 module Aws::SSM
   module Types
 
+    class AccessDeniedException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
     class AccountSharingInfo
       attr_accessor account_id: ::String
       attr_accessor shared_document_version: ::String
@@ -29,7 +34,7 @@ module Aws::SSM
     end
 
     class AddTagsToResourceRequest
-      attr_accessor resource_type: ("Document" | "ManagedInstance" | "MaintenanceWindow" | "Parameter" | "PatchBaseline" | "OpsItem" | "OpsMetadata" | "Automation" | "Association")
+      attr_accessor resource_type: ("Document" | "ManagedInstance" | "MaintenanceWindow" | "Parameter" | "PatchBaseline" | "OpsItem" | "OpsMetadata" | "Automation" | "Association" | "CloudConnector")
       attr_accessor resource_id: ::String
       attr_accessor tags: ::Array[Types::Tag]
       SENSITIVE: []
@@ -126,6 +131,7 @@ module Aws::SSM
       attr_accessor target_maps: ::Array[::Hash[::String, ::Array[::String]]]
       attr_accessor alarm_configuration: Types::AlarmConfiguration
       attr_accessor triggered_alarms: ::Array[Types::AlarmStateInformation]
+      attr_accessor association_dispatch_assume_role: ::String
       SENSITIVE: [:parameters]
     end
 
@@ -180,7 +186,7 @@ module Aws::SSM
     end
 
     class AssociationFilter
-      attr_accessor key: ("InstanceId" | "Name" | "AssociationId" | "AssociationStatusName" | "LastExecutedBefore" | "LastExecutedAfter" | "AssociationName" | "ResourceGroupName")
+      attr_accessor key: ("InstanceId" | "Name" | "AssociationId" | "AssociationStatusName" | "LastExecutedBefore" | "LastExecutedAfter" | "AssociationName" | "ResourceGroupName" | "CloudConnectorId")
       attr_accessor value: ::String
       SENSITIVE: []
     end
@@ -224,6 +230,7 @@ module Aws::SSM
       attr_accessor schedule_offset: ::Integer
       attr_accessor duration: ::Integer
       attr_accessor target_maps: ::Array[::Hash[::String, ::Array[::String]]]
+      attr_accessor association_dispatch_assume_role: ::String
       SENSITIVE: [:parameters]
     end
 
@@ -280,6 +287,7 @@ module Aws::SSM
       attr_accessor parameters: ::Hash[::String, ::Array[::String]]
       attr_accessor outputs: ::Hash[::String, ::Array[::String]]
       attr_accessor failure_message: ::String
+      attr_accessor warning_message: ::String
       attr_accessor mode: ("Auto" | "Interactive")
       attr_accessor parent_automation_execution_id: ::String
       attr_accessor executed_by: ::String
@@ -297,7 +305,7 @@ module Aws::SSM
       attr_accessor alarm_configuration: Types::AlarmConfiguration
       attr_accessor triggered_alarms: ::Array[Types::AlarmStateInformation]
       attr_accessor target_locations_url: ::String
-      attr_accessor automation_subtype: ("ChangeRequest")
+      attr_accessor automation_subtype: ("ChangeRequest" | "AccessRequest")
       attr_accessor scheduled_time: ::Time
       attr_accessor runbooks: ::Array[Types::Runbook]
       attr_accessor ops_item_id: ::String
@@ -343,6 +351,7 @@ module Aws::SSM
       attr_accessor current_step_name: ::String
       attr_accessor current_action: ::String
       attr_accessor failure_message: ::String
+      attr_accessor warning_message: ::String
       attr_accessor target_parameter_name: ::String
       attr_accessor targets: ::Array[Types::Target]
       attr_accessor target_maps: ::Array[::Hash[::String, ::Array[::String]]]
@@ -354,7 +363,7 @@ module Aws::SSM
       attr_accessor alarm_configuration: Types::AlarmConfiguration
       attr_accessor triggered_alarms: ::Array[Types::AlarmStateInformation]
       attr_accessor target_locations_url: ::String
-      attr_accessor automation_subtype: ("ChangeRequest")
+      attr_accessor automation_subtype: ("ChangeRequest" | "AccessRequest")
       attr_accessor scheduled_time: ::Time
       attr_accessor runbooks: ::Array[Types::Runbook]
       attr_accessor ops_item_id: ::String
@@ -378,6 +387,21 @@ module Aws::SSM
 
     class AutomationStepNotFoundException
       attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class AzureConfiguration
+      attr_accessor tenant_id: ::String
+      attr_accessor tenant_display_name: ::String
+      attr_accessor application_id: ::String
+      attr_accessor application_display_name: ::String
+      attr_accessor targets: Types::ConfigurationTargets
+      SENSITIVE: []
+    end
+
+    class AzureSubscription
+      attr_accessor id: ::String
+      attr_accessor display_name: ::String
       SENSITIVE: []
     end
 
@@ -411,6 +435,33 @@ module Aws::SSM
 
     class CancelMaintenanceWindowExecutionResult
       attr_accessor window_execution_id: ::String
+      SENSITIVE: []
+    end
+
+    class CloudConnectorConfiguration
+      attr_accessor azure_configuration: Types::AzureConfiguration
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class AzureConfiguration < CloudConnectorConfiguration
+      end
+      class Unknown < CloudConnectorConfiguration
+      end
+    end
+
+    class CloudConnectorFilter
+      attr_accessor filter_key: ("SubscriptionId" | "TenantId")
+      attr_accessor filter_values: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class CloudConnectorSummary
+      attr_accessor cloud_connector_id: ::String
+      attr_accessor display_name: ::String
+      attr_accessor description: ::String
+      attr_accessor role_arn: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
       SENSITIVE: []
     end
 
@@ -546,6 +597,22 @@ module Aws::SSM
       SENSITIVE: []
     end
 
+    class ConfigurationTargets
+      attr_accessor subscriptions: ::Array[Types::AzureSubscription]
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class Subscriptions < ConfigurationTargets
+      end
+      class Unknown < ConfigurationTargets
+      end
+    end
+
+    class ConflictException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
     class CreateActivationRequest
       attr_accessor description: ::String
       attr_accessor default_instance_name: ::String
@@ -565,6 +632,7 @@ module Aws::SSM
 
     class CreateAssociationBatchRequest
       attr_accessor entries: ::Array[Types::CreateAssociationBatchRequestEntry]
+      attr_accessor association_dispatch_assume_role: ::String
       SENSITIVE: []
     end
 
@@ -620,11 +688,27 @@ module Aws::SSM
       attr_accessor target_maps: ::Array[::Hash[::String, ::Array[::String]]]
       attr_accessor tags: ::Array[Types::Tag]
       attr_accessor alarm_configuration: Types::AlarmConfiguration
+      attr_accessor association_dispatch_assume_role: ::String
       SENSITIVE: [:parameters]
     end
 
     class CreateAssociationResult
       attr_accessor association_description: Types::AssociationDescription
+      SENSITIVE: []
+    end
+
+    class CreateCloudConnectorRequest
+      attr_accessor display_name: ::String
+      attr_accessor role_arn: ::String
+      attr_accessor description: ::String
+      attr_accessor configuration: Types::CloudConnectorConfiguration
+      attr_accessor config_connector_arn: ::String
+      attr_accessor tags: ::Array[Types::Tag]
+      SENSITIVE: []
+    end
+
+    class CreateCloudConnectorResult
+      attr_accessor cloud_connector_id: ::String
       SENSITIVE: []
     end
 
@@ -635,7 +719,7 @@ module Aws::SSM
       attr_accessor name: ::String
       attr_accessor display_name: ::String
       attr_accessor version_name: ::String
-      attr_accessor document_type: ("Command" | "Policy" | "Automation" | "Session" | "Package" | "ApplicationConfiguration" | "ApplicationConfigurationSchema" | "DeploymentStrategy" | "ChangeCalendar" | "Automation.ChangeTemplate" | "ProblemAnalysis" | "ProblemAnalysisTemplate" | "CloudFormation" | "ConformancePackTemplate" | "QuickSetup")
+      attr_accessor document_type: ("Command" | "Policy" | "Automation" | "Session" | "Package" | "ApplicationConfiguration" | "ApplicationConfigurationSchema" | "DeploymentStrategy" | "ChangeCalendar" | "Automation.ChangeTemplate" | "ProblemAnalysis" | "ProblemAnalysisTemplate" | "CloudFormation" | "ConformancePackTemplate" | "QuickSetup" | "ManualApprovalPolicy" | "AutoApprovalPolicy")
       attr_accessor document_format: ("YAML" | "JSON" | "TEXT")
       attr_accessor target_type: ::String
       attr_accessor tags: ::Array[Types::Tag]
@@ -740,6 +824,14 @@ module Aws::SSM
     class CreateResourceDataSyncResult < Aws::EmptyStructure
     end
 
+    class Credentials
+      attr_accessor access_key_id: ::String
+      attr_accessor secret_access_key: ::String
+      attr_accessor session_token: ::String
+      attr_accessor expiration_time: ::Time
+      SENSITIVE: [:secret_access_key, :session_token]
+    end
+
     class CustomSchemaCountLimitExceededException
       attr_accessor message: ::String
       SENSITIVE: []
@@ -761,6 +853,16 @@ module Aws::SSM
     end
 
     class DeleteAssociationResult < Aws::EmptyStructure
+    end
+
+    class DeleteCloudConnectorRequest
+      attr_accessor cloud_connector_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteCloudConnectorResult
+      attr_accessor cloud_connector_id: ::String
+      SENSITIVE: []
     end
 
     class DeleteDocumentRequest
@@ -1413,7 +1515,7 @@ module Aws::SSM
       attr_accessor description: ::String
       attr_accessor parameters: ::Array[Types::DocumentParameter]
       attr_accessor platform_types: ::Array[("Windows" | "Linux" | "MacOS")]
-      attr_accessor document_type: ("Command" | "Policy" | "Automation" | "Session" | "Package" | "ApplicationConfiguration" | "ApplicationConfigurationSchema" | "DeploymentStrategy" | "ChangeCalendar" | "Automation.ChangeTemplate" | "ProblemAnalysis" | "ProblemAnalysisTemplate" | "CloudFormation" | "ConformancePackTemplate" | "QuickSetup")
+      attr_accessor document_type: ("Command" | "Policy" | "Automation" | "Session" | "Package" | "ApplicationConfiguration" | "ApplicationConfigurationSchema" | "DeploymentStrategy" | "ChangeCalendar" | "Automation.ChangeTemplate" | "ProblemAnalysis" | "ProblemAnalysisTemplate" | "CloudFormation" | "ConformancePackTemplate" | "QuickSetup" | "ManualApprovalPolicy" | "AutoApprovalPolicy")
       attr_accessor schema_version: ::String
       attr_accessor latest_version: ::String
       attr_accessor default_version: ::String
@@ -1446,7 +1548,7 @@ module Aws::SSM
       attr_accessor version_name: ::String
       attr_accessor platform_types: ::Array[("Windows" | "Linux" | "MacOS")]
       attr_accessor document_version: ::String
-      attr_accessor document_type: ("Command" | "Policy" | "Automation" | "Session" | "Package" | "ApplicationConfiguration" | "ApplicationConfigurationSchema" | "DeploymentStrategy" | "ChangeCalendar" | "Automation.ChangeTemplate" | "ProblemAnalysis" | "ProblemAnalysisTemplate" | "CloudFormation" | "ConformancePackTemplate" | "QuickSetup")
+      attr_accessor document_type: ("Command" | "Policy" | "Automation" | "Session" | "Package" | "ApplicationConfiguration" | "ApplicationConfigurationSchema" | "DeploymentStrategy" | "ChangeCalendar" | "Automation.ChangeTemplate" | "ProblemAnalysis" | "ProblemAnalysisTemplate" | "CloudFormation" | "ConformancePackTemplate" | "QuickSetup" | "ManualApprovalPolicy" | "AutoApprovalPolicy")
       attr_accessor schema_version: ::String
       attr_accessor document_format: ("YAML" | "JSON" | "TEXT")
       attr_accessor target_type: ::String
@@ -1599,6 +1701,17 @@ module Aws::SSM
       SENSITIVE: []
     end
 
+    class GetAccessTokenRequest
+      attr_accessor access_request_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetAccessTokenResponse
+      attr_accessor credentials: Types::Credentials
+      attr_accessor access_request_status: ("Approved" | "Rejected" | "Revoked" | "Expired" | "Pending")
+      SENSITIVE: []
+    end
+
     class GetAutomationExecutionRequest
       attr_accessor automation_execution_id: ::String
       SENSITIVE: []
@@ -1619,6 +1732,23 @@ module Aws::SSM
       attr_accessor state: ("OPEN" | "CLOSED")
       attr_accessor at_time: ::String
       attr_accessor next_transition_time: ::String
+      SENSITIVE: []
+    end
+
+    class GetCloudConnectorRequest
+      attr_accessor cloud_connector_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetCloudConnectorResult
+      attr_accessor cloud_connector_arn: ::String
+      attr_accessor display_name: ::String
+      attr_accessor description: ::String
+      attr_accessor role_arn: ::String
+      attr_accessor configuration: Types::CloudConnectorConfiguration
+      attr_accessor config_connector_arn: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
       SENSITIVE: []
     end
 
@@ -1676,6 +1806,7 @@ module Aws::SSM
       attr_accessor instance_id: ::String
       attr_accessor snapshot_id: ::String
       attr_accessor baseline_override: Types::BaselineOverride
+      attr_accessor use_s3_dual_stack_endpoint: bool
       SENSITIVE: []
     end
 
@@ -1704,7 +1835,7 @@ module Aws::SSM
       attr_accessor status: ("Creating" | "Active" | "Updating" | "Deleting" | "Failed")
       attr_accessor status_information: ::String
       attr_accessor content: ::String
-      attr_accessor document_type: ("Command" | "Policy" | "Automation" | "Session" | "Package" | "ApplicationConfiguration" | "ApplicationConfigurationSchema" | "DeploymentStrategy" | "ChangeCalendar" | "Automation.ChangeTemplate" | "ProblemAnalysis" | "ProblemAnalysisTemplate" | "CloudFormation" | "ConformancePackTemplate" | "QuickSetup")
+      attr_accessor document_type: ("Command" | "Policy" | "Automation" | "Session" | "Package" | "ApplicationConfiguration" | "ApplicationConfigurationSchema" | "DeploymentStrategy" | "ChangeCalendar" | "Automation.ChangeTemplate" | "ProblemAnalysis" | "ProblemAnalysisTemplate" | "CloudFormation" | "ConformancePackTemplate" | "QuickSetup" | "ManualApprovalPolicy" | "AutoApprovalPolicy")
       attr_accessor document_format: ("YAML" | "JSON" | "TEXT")
       attr_accessor requires: ::Array[Types::DocumentRequires]
       attr_accessor attachments_content: ::Array[Types::AttachmentContent]
@@ -2098,10 +2229,16 @@ module Aws::SSM
       attr_accessor instance_status: ::String
       attr_accessor ip_address: ::String
       attr_accessor managed_status: ("All" | "Managed" | "Unmanaged")
+      attr_accessor name: ::String
       attr_accessor platform_type: ("Windows" | "Linux" | "MacOS")
       attr_accessor platform_name: ::String
       attr_accessor platform_version: ::String
       attr_accessor resource_type: ("ManagedInstance" | "EC2Instance")
+      attr_accessor source_type: ("AWS::EC2::Instance" | "AWS::IoT::Thing" | "AWS::SSM::ManagedInstance" | "Microsoft.Compute/virtualMachines")
+      attr_accessor source_id: ::String
+      attr_accessor source_location: ::String
+      attr_accessor availability_zone: ::String
+      attr_accessor availability_zone_id: ::String
       SENSITIVE: [:ip_address]
     end
 
@@ -2126,7 +2263,8 @@ module Aws::SSM
       attr_accessor last_successful_association_execution_date: ::Time
       attr_accessor association_overview: Types::InstanceAggregatedAssociationOverview
       attr_accessor source_id: ::String
-      attr_accessor source_type: ("AWS::EC2::Instance" | "AWS::IoT::Thing" | "AWS::SSM::ManagedInstance")
+      attr_accessor source_type: ("AWS::EC2::Instance" | "AWS::IoT::Thing" | "AWS::SSM::ManagedInstance" | "Microsoft.Compute/virtualMachines")
+      attr_accessor source_location: ::String
       SENSITIVE: [:ip_address]
     end
 
@@ -2202,7 +2340,9 @@ module Aws::SSM
       attr_accessor last_successful_association_execution_date: ::Time
       attr_accessor association_overview: Types::InstanceAggregatedAssociationOverview
       attr_accessor source_id: ::String
-      attr_accessor source_type: ("AWS::EC2::Instance" | "AWS::IoT::Thing" | "AWS::SSM::ManagedInstance")
+      attr_accessor source_type: ("AWS::EC2::Instance" | "AWS::IoT::Thing" | "AWS::SSM::ManagedInstance" | "Microsoft.Compute/virtualMachines")
+      attr_accessor source_location: ::String
+      attr_accessor availability_zone: ::String
       SENSITIVE: [:ip_address]
     end
 
@@ -2599,6 +2739,19 @@ module Aws::SSM
       SENSITIVE: []
     end
 
+    class ListCloudConnectorsRequest
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      attr_accessor filters: ::Array[Types::CloudConnectorFilter]
+      SENSITIVE: []
+    end
+
+    class ListCloudConnectorsResult
+      attr_accessor cloud_connectors: ::Array[Types::CloudConnectorSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
     class ListCommandInvocationsRequest
       attr_accessor command_id: ::String
       attr_accessor instance_id: ::String
@@ -2818,7 +2971,7 @@ module Aws::SSM
     end
 
     class ListTagsForResourceRequest
-      attr_accessor resource_type: ("Document" | "ManagedInstance" | "MaintenanceWindow" | "Parameter" | "PatchBaseline" | "OpsItem" | "OpsMetadata" | "Automation" | "Association")
+      attr_accessor resource_type: ("Document" | "ManagedInstance" | "MaintenanceWindow" | "Parameter" | "PatchBaseline" | "OpsItem" | "OpsMetadata" | "Automation" | "Association" | "CloudConnector")
       attr_accessor resource_id: ::String
       SENSITIVE: []
     end
@@ -3007,6 +3160,11 @@ module Aws::SSM
     class ModifyDocumentPermissionResponse < Aws::EmptyStructure
     end
 
+    class NoLongerSupportedException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
     class Node
       attr_accessor capture_time: ::Time
       attr_accessor id: ::String
@@ -3019,13 +3177,13 @@ module Aws::SSM
     class NodeAggregator
       attr_accessor aggregator_type: ("Count")
       attr_accessor type_name: ("Instance")
-      attr_accessor attribute_name: ("AgentVersion" | "PlatformName" | "PlatformType" | "PlatformVersion" | "Region" | "ResourceType")
+      attr_accessor attribute_name: ("AgentVersion" | "PlatformName" | "PlatformType" | "PlatformVersion" | "Region" | "ResourceType" | "SourceType" | "AvailabilityZone")
       attr_accessor aggregators: ::Array[Types::NodeAggregator]
       SENSITIVE: []
     end
 
     class NodeFilter
-      attr_accessor key: ("AgentType" | "AgentVersion" | "ComputerName" | "InstanceId" | "InstanceStatus" | "IpAddress" | "ManagedStatus" | "PlatformName" | "PlatformType" | "PlatformVersion" | "ResourceType" | "OrganizationalUnitId" | "OrganizationalUnitPath" | "Region" | "AccountId")
+      attr_accessor key: ("AgentType" | "AgentVersion" | "ComputerName" | "InstanceId" | "InstanceStatus" | "IpAddress" | "ManagedStatus" | "PlatformName" | "PlatformType" | "PlatformVersion" | "ResourceType" | "OrganizationalUnitId" | "OrganizationalUnitPath" | "Region" | "AccountId" | "SourceType" | "SourceId" | "SourceLocation" | "AvailabilityZone" | "AvailabilityZoneId")
       attr_accessor values: ::Array[::String]
       attr_accessor type: ("Equal" | "NotEqual" | "BeginWith")
       SENSITIVE: []
@@ -3101,7 +3259,7 @@ module Aws::SSM
       attr_accessor notifications: ::Array[Types::OpsItemNotification]
       attr_accessor priority: ::Integer
       attr_accessor related_ops_items: ::Array[Types::RelatedOpsItem]
-      attr_accessor status: ("Open" | "InProgress" | "Resolved" | "Pending" | "TimedOut" | "Cancelling" | "Cancelled" | "Failed" | "CompletedWithSuccess" | "CompletedWithFailure" | "Scheduled" | "RunbookInProgress" | "PendingChangeCalendarOverride" | "ChangeCalendarOverrideApproved" | "ChangeCalendarOverrideRejected" | "PendingApproval" | "Approved" | "Rejected" | "Closed")
+      attr_accessor status: ("Open" | "InProgress" | "Resolved" | "Pending" | "TimedOut" | "Cancelling" | "Cancelled" | "Failed" | "CompletedWithSuccess" | "CompletedWithFailure" | "Scheduled" | "RunbookInProgress" | "PendingChangeCalendarOverride" | "ChangeCalendarOverrideApproved" | "ChangeCalendarOverrideRejected" | "PendingApproval" | "Approved" | "Revoked" | "Rejected" | "Closed")
       attr_accessor ops_item_id: ::String
       attr_accessor version: ::String
       attr_accessor title: ::String
@@ -3158,7 +3316,7 @@ module Aws::SSM
     end
 
     class OpsItemFilter
-      attr_accessor key: ("Status" | "CreatedBy" | "Source" | "Priority" | "Title" | "OpsItemId" | "CreatedTime" | "LastModifiedTime" | "ActualStartTime" | "ActualEndTime" | "PlannedStartTime" | "PlannedEndTime" | "OperationalData" | "OperationalDataKey" | "OperationalDataValue" | "ResourceId" | "AutomationId" | "Category" | "Severity" | "OpsItemType" | "ChangeRequestByRequesterArn" | "ChangeRequestByRequesterName" | "ChangeRequestByApproverArn" | "ChangeRequestByApproverName" | "ChangeRequestByTemplate" | "ChangeRequestByTargetsResourceGroup" | "InsightByType" | "AccountId")
+      attr_accessor key: ("Status" | "CreatedBy" | "Source" | "Priority" | "Title" | "OpsItemId" | "CreatedTime" | "LastModifiedTime" | "ActualStartTime" | "ActualEndTime" | "PlannedStartTime" | "PlannedEndTime" | "OperationalData" | "OperationalDataKey" | "OperationalDataValue" | "ResourceId" | "AutomationId" | "Category" | "Severity" | "OpsItemType" | "AccessRequestByRequesterArn" | "AccessRequestByRequesterId" | "AccessRequestByApproverArn" | "AccessRequestByApproverId" | "AccessRequestBySourceAccountId" | "AccessRequestBySourceOpsItemId" | "AccessRequestBySourceRegion" | "AccessRequestByIsReplica" | "AccessRequestByTargetResourceId" | "ChangeRequestByRequesterArn" | "ChangeRequestByRequesterName" | "ChangeRequestByApproverArn" | "ChangeRequestByApproverName" | "ChangeRequestByTemplate" | "ChangeRequestByTargetsResourceGroup" | "InsightByType" | "AccountId")
       attr_accessor values: ::Array[::String]
       attr_accessor operator: ("Equal" | "Contains" | "GreaterThan" | "LessThan")
       SENSITIVE: []
@@ -3232,7 +3390,7 @@ module Aws::SSM
       attr_accessor last_modified_time: ::Time
       attr_accessor priority: ::Integer
       attr_accessor source: ::String
-      attr_accessor status: ("Open" | "InProgress" | "Resolved" | "Pending" | "TimedOut" | "Cancelling" | "Cancelled" | "Failed" | "CompletedWithSuccess" | "CompletedWithFailure" | "Scheduled" | "RunbookInProgress" | "PendingChangeCalendarOverride" | "ChangeCalendarOverrideApproved" | "ChangeCalendarOverrideRejected" | "PendingApproval" | "Approved" | "Rejected" | "Closed")
+      attr_accessor status: ("Open" | "InProgress" | "Resolved" | "Pending" | "TimedOut" | "Cancelling" | "Cancelled" | "Failed" | "CompletedWithSuccess" | "CompletedWithFailure" | "Scheduled" | "RunbookInProgress" | "PendingChangeCalendarOverride" | "ChangeCalendarOverrideApproved" | "ChangeCalendarOverrideRejected" | "PendingApproval" | "Approved" | "Revoked" | "Rejected" | "Closed")
       attr_accessor ops_item_id: ::String
       attr_accessor title: ::String
       attr_accessor operational_data: ::Hash[::String, Types::OpsItemDataValue]
@@ -3659,7 +3817,7 @@ module Aws::SSM
     end
 
     class RemoveTagsFromResourceRequest
-      attr_accessor resource_type: ("Document" | "ManagedInstance" | "MaintenanceWindow" | "Parameter" | "PatchBaseline" | "OpsItem" | "OpsMetadata" | "Automation" | "Association")
+      attr_accessor resource_type: ("Document" | "ManagedInstance" | "MaintenanceWindow" | "Parameter" | "PatchBaseline" | "OpsItem" | "OpsMetadata" | "Automation" | "Association" | "CloudConnector")
       attr_accessor resource_id: ::String
       attr_accessor tag_keys: ::Array[::String]
       SENSITIVE: []
@@ -3878,7 +4036,7 @@ module Aws::SSM
 
     class SendAutomationSignalRequest
       attr_accessor automation_execution_id: ::String
-      attr_accessor signal_type: ("Approve" | "Reject" | "StartStep" | "StopStep" | "Resume")
+      attr_accessor signal_type: ("Approve" | "Reject" | "StartStep" | "StopStep" | "Resume" | "Revoke")
       attr_accessor payload: ::Hash[::String, ::Array[::String]]
       SENSITIVE: []
     end
@@ -3913,6 +4071,15 @@ module Aws::SSM
       SENSITIVE: []
     end
 
+    class ServiceQuotaExceededException
+      attr_accessor message: ::String
+      attr_accessor resource_id: ::String
+      attr_accessor resource_type: ::String
+      attr_accessor quota_code: ::String
+      attr_accessor service_code: ::String
+      SENSITIVE: []
+    end
+
     class ServiceSetting
       attr_accessor setting_id: ::String
       attr_accessor setting_value: ::String
@@ -3940,11 +4107,12 @@ module Aws::SSM
       attr_accessor details: ::String
       attr_accessor output_url: Types::SessionManagerOutputUrl
       attr_accessor max_session_duration: ::String
+      attr_accessor access_type: ("Standard" | "JustInTime")
       SENSITIVE: []
     end
 
     class SessionFilter
-      attr_accessor key: ("InvokedAfter" | "InvokedBefore" | "Target" | "Owner" | "Status" | "SessionId")
+      attr_accessor key: ("InvokedAfter" | "InvokedBefore" | "Target" | "Owner" | "Status" | "SessionId" | "AccessType")
       attr_accessor value: ::String
       SENSITIVE: []
     end
@@ -3962,6 +4130,18 @@ module Aws::SSM
       attr_accessor low_count: ::Integer
       attr_accessor informational_count: ::Integer
       attr_accessor unspecified_count: ::Integer
+      SENSITIVE: []
+    end
+
+    class StartAccessRequestRequest
+      attr_accessor reason: ::String
+      attr_accessor targets: ::Array[Types::Target]
+      attr_accessor tags: ::Array[Types::Tag]
+      SENSITIVE: []
+    end
+
+    class StartAccessRequestResponse
+      attr_accessor access_request_id: ::String
       SENSITIVE: []
     end
 
@@ -4060,6 +4240,7 @@ module Aws::SSM
       attr_accessor outputs: ::Hash[::String, ::Array[::String]]
       attr_accessor response: ::String
       attr_accessor failure_message: ::String
+      attr_accessor warning_message: ::String
       attr_accessor failure_details: Types::FailureDetails
       attr_accessor step_execution_id: ::String
       attr_accessor overridden_parameters: ::Hash[::String, ::Array[::String]]
@@ -4144,6 +4325,13 @@ module Aws::SSM
 
     class TerminateSessionResponse
       attr_accessor session_id: ::String
+      SENSITIVE: []
+    end
+
+    class ThrottlingException
+      attr_accessor message: ::String
+      attr_accessor quota_code: ::String
+      attr_accessor service_code: ::String
       SENSITIVE: []
     end
 
@@ -4236,6 +4424,7 @@ module Aws::SSM
       attr_accessor duration: ::Integer
       attr_accessor target_maps: ::Array[::Hash[::String, ::Array[::String]]]
       attr_accessor alarm_configuration: Types::AlarmConfiguration
+      attr_accessor association_dispatch_assume_role: ::String
       SENSITIVE: [:parameters]
     end
 
@@ -4253,6 +4442,19 @@ module Aws::SSM
 
     class UpdateAssociationStatusResult
       attr_accessor association_description: Types::AssociationDescription
+      SENSITIVE: []
+    end
+
+    class UpdateCloudConnectorRequest
+      attr_accessor cloud_connector_id: ::String
+      attr_accessor display_name: ::String
+      attr_accessor configuration: Types::CloudConnectorConfiguration
+      attr_accessor description: ::String
+      SENSITIVE: []
+    end
+
+    class UpdateCloudConnectorResult
+      attr_accessor cloud_connector_id: ::String
       SENSITIVE: []
     end
 
@@ -4403,7 +4605,7 @@ module Aws::SSM
       attr_accessor notifications: ::Array[Types::OpsItemNotification]
       attr_accessor priority: ::Integer
       attr_accessor related_ops_items: ::Array[Types::RelatedOpsItem]
-      attr_accessor status: ("Open" | "InProgress" | "Resolved" | "Pending" | "TimedOut" | "Cancelling" | "Cancelled" | "Failed" | "CompletedWithSuccess" | "CompletedWithFailure" | "Scheduled" | "RunbookInProgress" | "PendingChangeCalendarOverride" | "ChangeCalendarOverrideApproved" | "ChangeCalendarOverrideRejected" | "PendingApproval" | "Approved" | "Rejected" | "Closed")
+      attr_accessor status: ("Open" | "InProgress" | "Resolved" | "Pending" | "TimedOut" | "Cancelling" | "Cancelled" | "Failed" | "CompletedWithSuccess" | "CompletedWithFailure" | "Scheduled" | "RunbookInProgress" | "PendingChangeCalendarOverride" | "ChangeCalendarOverrideApproved" | "ChangeCalendarOverrideRejected" | "PendingApproval" | "Approved" | "Revoked" | "Rejected" | "Closed")
       attr_accessor ops_item_id: ::String
       attr_accessor title: ::String
       attr_accessor category: ::String
@@ -4486,9 +4688,37 @@ module Aws::SSM
     class UpdateServiceSettingResult < Aws::EmptyStructure
     end
 
+    class ValidateCloudConnectorRequest
+      attr_accessor cloud_connector_id: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ValidateCloudConnectorResult
+      attr_accessor validation_findings: ::Array[Types::ValidationFinding]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
     class ValidationException
       attr_accessor message: ::String
       attr_accessor reason_code: ::String
+      SENSITIVE: []
+    end
+
+    class ValidationFinding
+      attr_accessor type: ("INFO" | "WARN" | "ERROR")
+      attr_accessor code: ("TargetInaccessible" | "TargetUnusable" | "TargetStateWarning" | "AwsRoleAssumptionFailed" | "WebIdentityTokenFailed" | "OutboundWebIdentityFederationDisabled" | "ProviderCredentialCreationFailed" | "TenantSummary" | "SubscriptionAccessible")
+      attr_accessor message: ::String
+      attr_accessor provider_message: ::String
+      attr_accessor scope: Types::ValidationFindingScope
+      SENSITIVE: []
+    end
+
+    class ValidationFindingScope
+      attr_accessor type: ("azure:tenant" | "azure:subscription")
+      attr_accessor id: ::String
       SENSITIVE: []
     end
   end

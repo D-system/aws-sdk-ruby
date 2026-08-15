@@ -20,6 +20,11 @@ module Aws::AppIntegrationsService
       SENSITIVE: []
     end
 
+    class ApplicationConfig
+      attr_accessor contact_handling: Types::ContactHandling
+      SENSITIVE: []
+    end
+
     class ApplicationSourceConfig
       attr_accessor external_url_config: Types::ExternalUrlConfig
       SENSITIVE: []
@@ -32,6 +37,13 @@ module Aws::AppIntegrationsService
       attr_accessor namespace: ::String
       attr_accessor created_time: ::Time
       attr_accessor last_modified_time: ::Time
+      attr_accessor is_service: bool
+      attr_accessor application_type: ("STANDARD" | "SERVICE" | "MCP_SERVER")
+      SENSITIVE: []
+    end
+
+    class ContactHandling
+      attr_accessor scope: ("CROSS_CONTACTS" | "PER_CONTACT")
       SENSITIVE: []
     end
 
@@ -45,6 +57,11 @@ module Aws::AppIntegrationsService
       attr_accessor client_token: ::String
       attr_accessor tags: ::Hash[::String, ::String]
       attr_accessor permissions: ::Array[::String]
+      attr_accessor is_service: bool
+      attr_accessor initialization_timeout: ::Integer
+      attr_accessor application_config: Types::ApplicationConfig
+      attr_accessor iframe_config: Types::IframeConfig
+      attr_accessor application_type: ("STANDARD" | "SERVICE" | "MCP_SERVER")
       SENSITIVE: []
     end
 
@@ -222,6 +239,11 @@ module Aws::AppIntegrationsService
       attr_accessor last_modified_time: ::Time
       attr_accessor tags: ::Hash[::String, ::String]
       attr_accessor permissions: ::Array[::String]
+      attr_accessor is_service: bool
+      attr_accessor initialization_timeout: ::Integer
+      attr_accessor application_config: Types::ApplicationConfig
+      attr_accessor iframe_config: Types::IframeConfig
+      attr_accessor application_type: ("STANDARD" | "SERVICE" | "MCP_SERVER")
       SENSITIVE: []
     end
 
@@ -259,6 +281,12 @@ module Aws::AppIntegrationsService
       SENSITIVE: []
     end
 
+    class IframeConfig
+      attr_accessor allow: ::Array[::String]
+      attr_accessor sandbox: ::Array[::String]
+      SENSITIVE: []
+    end
+
     class InternalServiceError
       attr_accessor message: ::String
       SENSITIVE: []
@@ -291,6 +319,7 @@ module Aws::AppIntegrationsService
     class ListApplicationsRequest
       attr_accessor next_token: ::String
       attr_accessor max_results: ::Integer
+      attr_accessor application_type: ("STANDARD" | "SERVICE" | "MCP_SERVER")
       SENSITIVE: []
     end
 
@@ -432,6 +461,11 @@ module Aws::AppIntegrationsService
       attr_accessor subscriptions: ::Array[Types::Subscription]
       attr_accessor publications: ::Array[Types::Publication]
       attr_accessor permissions: ::Array[::String]
+      attr_accessor is_service: bool
+      attr_accessor initialization_timeout: ::Integer
+      attr_accessor application_config: Types::ApplicationConfig
+      attr_accessor iframe_config: Types::IframeConfig
+      attr_accessor application_type: ("STANDARD" | "SERVICE" | "MCP_SERVER")
       SENSITIVE: []
     end
 

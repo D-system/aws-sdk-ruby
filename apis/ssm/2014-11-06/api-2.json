@@ -136,6 +136,20 @@
         {"shape":"InvalidTargetMaps"}
       ]
     },
+    "CreateCloudConnector":{
+      "name":"CreateCloudConnector",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"CreateCloudConnectorRequest"},
+      "output":{"shape":"CreateCloudConnectorResult"},
+      "errors":[
+        {"shape":"InternalServerError"},
+        {"shape":"ServiceQuotaExceededException"},
+        {"shape":"ConflictException"}
+      ]
+    },
     "CreateDocument":{
       "name":"CreateDocument",
       "http":{
@@ -150,7 +164,9 @@
         {"shape":"InternalServerError"},
         {"shape":"InvalidDocumentContent"},
         {"shape":"DocumentLimitExceeded"},
-        {"shape":"InvalidDocumentSchemaVersion"}
+        {"shape":"InvalidDocumentSchemaVersion"},
+        {"shape":"TooManyUpdates"},
+        {"shape":"NoLongerSupportedException"}
       ]
     },
     "CreateMaintenanceWindow":{
@@ -259,6 +275,20 @@
         {"shape":"TooManyUpdates"}
       ]
     },
+    "DeleteCloudConnector":{
+      "name":"DeleteCloudConnector",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DeleteCloudConnectorRequest"},
+      "output":{"shape":"DeleteCloudConnectorResult"},
+      "errors":[
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ConflictException"}
+      ]
+    },
     "DeleteDocument":{
       "name":"DeleteDocument",
       "http":{
@@ -271,7 +301,8 @@
         {"shape":"InternalServerError"},
         {"shape":"InvalidDocument"},
         {"shape":"InvalidDocumentOperation"},
-        {"shape":"AssociatedInstances"}
+        {"shape":"AssociatedInstances"},
+        {"shape":"TooManyUpdates"}
       ]
     },
     "DeleteInventory":{
@@ -924,6 +955,22 @@
         {"shape":"OpsItemConflictException"}
       ]
     },
+    "GetAccessToken":{
+      "name":"GetAccessToken",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"GetAccessTokenRequest"},
+      "output":{"shape":"GetAccessTokenResponse"},
+      "errors":[
+        {"shape":"InternalServerError"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"ValidationException"}
+      ]
+    },
     "GetAutomationExecution":{
       "name":"GetAutomationExecution",
       "http":{
@@ -951,6 +998,20 @@
         {"shape":"InvalidDocumentType"},
         {"shape":"UnsupportedCalendarException"}
       ]
+    },
+    "GetCloudConnector":{
+      "name":"GetCloudConnector",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"GetCloudConnectorRequest"},
+      "output":{"shape":"GetCloudConnectorResult"},
+      "errors":[
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"}
+      ],
+      "readonly":true
     },
     "GetCommandInvocation":{
       "name":"GetCommandInvocation",
@@ -1330,6 +1391,19 @@
         {"shape":"InternalServerError"},
         {"shape":"InvalidNextToken"}
       ]
+    },
+    "ListCloudConnectors":{
+      "name":"ListCloudConnectors",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ListCloudConnectorsRequest"},
+      "output":{"shape":"ListCloudConnectorsResult"},
+      "errors":[
+        {"shape":"InternalServerError"}
+      ],
+      "readonly":true
     },
     "ListCommandInvocations":{
       "name":"ListCommandInvocations",
@@ -1809,6 +1883,23 @@
         {"shape":"InvalidNotificationConfig"}
       ]
     },
+    "StartAccessRequest":{
+      "name":"StartAccessRequest",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"StartAccessRequestRequest"},
+      "output":{"shape":"StartAccessRequestResponse"},
+      "errors":[
+        {"shape":"InternalServerError"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ServiceQuotaExceededException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"ValidationException"}
+      ]
+    },
     "StartAssociationsOnce":{
       "name":"StartAssociationsOnce",
       "http":{
@@ -1855,7 +1946,8 @@
         {"shape":"AutomationDefinitionVersionNotFoundException"},
         {"shape":"IdempotentParameterMismatch"},
         {"shape":"InternalServerError"},
-        {"shape":"AutomationDefinitionNotApprovedException"}
+        {"shape":"AutomationDefinitionNotApprovedException"},
+        {"shape":"NoLongerSupportedException"}
       ]
     },
     "StartExecutionPreview":{
@@ -1967,6 +2059,20 @@
         {"shape":"TooManyUpdates"}
       ]
     },
+    "UpdateCloudConnector":{
+      "name":"UpdateCloudConnector",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"UpdateCloudConnectorRequest"},
+      "output":{"shape":"UpdateCloudConnectorResult"},
+      "errors":[
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ConflictException"}
+      ]
+    },
     "UpdateDocument":{
       "name":"UpdateDocument",
       "http":{
@@ -2015,7 +2121,8 @@
         {"shape":"InternalServerError"},
         {"shape":"InvalidDocument"},
         {"shape":"InvalidDocumentOperation"},
-        {"shape":"InvalidDocumentVersion"}
+        {"shape":"InvalidDocumentVersion"},
+        {"shape":"TooManyUpdates"}
       ]
     },
     "UpdateMaintenanceWindow":{
@@ -2145,9 +2252,60 @@
         {"shape":"ServiceSettingNotFound"},
         {"shape":"TooManyUpdates"}
       ]
+    },
+    "ValidateCloudConnector":{
+      "name":"ValidateCloudConnector",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ValidateCloudConnectorRequest"},
+      "output":{"shape":"ValidateCloudConnectorResult"},
+      "errors":[
+        {"shape":"InternalServerError"},
+        {"shape":"ResourceNotFoundException"}
+      ],
+      "readonly":true
     }
   },
   "shapes":{
+    "AccessDeniedException":{
+      "type":"structure",
+      "required":["Message"],
+      "members":{
+        "Message":{"shape":"String"}
+      },
+      "exception":true
+    },
+    "AccessKeyIdType":{
+      "type":"string",
+      "pattern":"\\w{16,128}"
+    },
+    "AccessKeySecretType":{
+      "type":"string",
+      "sensitive":true
+    },
+    "AccessRequestId":{
+      "type":"string",
+      "pattern":"^(oi)-[0-9a-f]{12}$"
+    },
+    "AccessRequestStatus":{
+      "type":"string",
+      "enum":[
+        "Approved",
+        "Rejected",
+        "Revoked",
+        "Expired",
+        "Pending"
+      ]
+    },
+    "AccessType":{
+      "type":"string",
+      "enum":[
+        "Standard",
+        "JustInTime"
+      ]
+    },
     "Account":{"type":"string"},
     "AccountId":{
       "type":"string",
@@ -2223,8 +2381,7 @@
     },
     "AddTagsToResourceResult":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "AgentErrorCode":{
       "type":"string",
@@ -2329,8 +2486,7 @@
     },
     "AssociatedInstances":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "Association":{
@@ -2362,8 +2518,7 @@
     },
     "AssociationAlreadyExists":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "AssociationComplianceSeverity":{
@@ -2416,12 +2571,22 @@
           "box":true
         },
         "AlarmConfiguration":{"shape":"AlarmConfiguration"},
-        "TriggeredAlarms":{"shape":"AlarmStateInformationList"}
+        "TriggeredAlarms":{"shape":"AlarmStateInformationList"},
+        "AssociationDispatchAssumeRole":{
+          "shape":"AssociationDispatchAssumeRoleArn",
+          "box":true
+        }
       }
     },
     "AssociationDescriptionList":{
       "type":"list",
       "member":{"shape":"AssociationDescription"}
+    },
+    "AssociationDispatchAssumeRoleArn":{
+      "type":"string",
+      "max":512,
+      "min":1,
+      "pattern":"arn:aws(-[^:]+)?:iam::[0-9]{12}:role/.+"
     },
     "AssociationDoesNotExist":{
       "type":"structure",
@@ -2557,7 +2722,8 @@
         "LastExecutedBefore",
         "LastExecutedAfter",
         "AssociationName",
-        "ResourceGroupName"
+        "ResourceGroupName",
+        "CloudConnectorId"
       ]
     },
     "AssociationFilterList":{
@@ -2589,8 +2755,7 @@
     },
     "AssociationLimitExceeded":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "AssociationList":{
@@ -2687,6 +2852,10 @@
         },
         "TargetMaps":{
           "shape":"TargetMaps",
+          "box":true
+        },
+        "AssociationDispatchAssumeRole":{
+          "shape":"AssociationDispatchAssumeRoleArn",
           "box":true
         }
       }
@@ -2826,6 +2995,7 @@
         "Parameters":{"shape":"AutomationParameterMap"},
         "Outputs":{"shape":"AutomationParameterMap"},
         "FailureMessage":{"shape":"String"},
+        "WarningMessage":{"shape":"String"},
         "Mode":{"shape":"ExecutionMode"},
         "ParentAutomationExecutionId":{"shape":"AutomationExecutionId"},
         "ExecutedBy":{"shape":"String"},
@@ -2910,7 +3080,7 @@
       "members":{
         "Parameters":{"shape":"AutomationParameterMap"},
         "TargetParameterName":{"shape":"AutomationParameterKey"},
-        "Targets":{"shape":"Targets"},
+        "Targets":{"shape":"AutomationTargets"},
         "TargetMaps":{"shape":"TargetMaps"},
         "TargetLocations":{"shape":"TargetLocations"},
         "TargetLocationsURL":{"shape":"TargetLocationsURL"}
@@ -2940,6 +3110,7 @@
         "CurrentStepName":{"shape":"String"},
         "CurrentAction":{"shape":"String"},
         "FailureMessage":{"shape":"String"},
+        "WarningMessage":{"shape":"String"},
         "TargetParameterName":{"shape":"AutomationParameterKey"},
         "Targets":{"shape":"Targets"},
         "TargetMaps":{"shape":"TargetMaps"},
@@ -3035,12 +3206,21 @@
     },
     "AutomationSubtype":{
       "type":"string",
-      "enum":["ChangeRequest"]
+      "enum":[
+        "ChangeRequest",
+        "AccessRequest"
+      ]
     },
     "AutomationTargetParameterName":{
       "type":"string",
       "max":50,
       "min":1
+    },
+    "AutomationTargets":{
+      "type":"list",
+      "member":{"shape":"Target"},
+      "max":1,
+      "min":0
     },
     "AutomationType":{
       "type":"string",
@@ -3048,6 +3228,78 @@
         "CrossAccount",
         "Local"
       ]
+    },
+    "AvailabilityZone":{
+      "type":"string",
+      "max":120
+    },
+    "AvailabilityZoneId":{
+      "type":"string",
+      "max":50
+    },
+    "AzureApplicationDisplayName":{
+      "type":"string",
+      "max":256,
+      "min":0,
+      "pattern":"^([\\p{L}\\p{Z}\\p{N}\\p{P}\\p{M}]*)$"
+    },
+    "AzureApplicationId":{
+      "type":"string",
+      "max":256,
+      "min":1,
+      "pattern":"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+    },
+    "AzureConfiguration":{
+      "type":"structure",
+      "required":[
+        "TenantId",
+        "ApplicationId"
+      ],
+      "members":{
+        "TenantId":{"shape":"AzureTenantId"},
+        "TenantDisplayName":{"shape":"AzureTenantDisplayName"},
+        "ApplicationId":{"shape":"AzureApplicationId"},
+        "ApplicationDisplayName":{"shape":"AzureApplicationDisplayName"},
+        "Targets":{"shape":"ConfigurationTargets"}
+      }
+    },
+    "AzureSubscription":{
+      "type":"structure",
+      "required":["Id"],
+      "members":{
+        "Id":{"shape":"AzureSubscriptionId"},
+        "DisplayName":{"shape":"AzureSubscriptionDisplayName"}
+      }
+    },
+    "AzureSubscriptionDisplayName":{
+      "type":"string",
+      "max":128,
+      "min":0,
+      "pattern":"^([\\p{L}\\p{Z}\\p{N}\\p{P}\\p{M}]*)$"
+    },
+    "AzureSubscriptionId":{
+      "type":"string",
+      "max":256,
+      "min":1,
+      "pattern":"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+    },
+    "AzureSubscriptionList":{
+      "type":"list",
+      "member":{"shape":"AzureSubscription"},
+      "max":75,
+      "min":1
+    },
+    "AzureTenantDisplayName":{
+      "type":"string",
+      "max":256,
+      "min":0,
+      "pattern":"^([\\p{L}\\p{Z}\\p{N}\\p{P}\\p{M}]*)$"
+    },
+    "AzureTenantId":{
+      "type":"string",
+      "max":256,
+      "min":1,
+      "pattern":"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
     },
     "BaselineDescription":{
       "type":"string",
@@ -3105,8 +3357,7 @@
     },
     "CancelCommandResult":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "CancelMaintenanceWindowExecutionRequest":{
       "type":"structure",
@@ -3151,6 +3402,88 @@
       "type":"string",
       "max":64,
       "min":1
+    },
+    "CloudConnectorArn":{
+      "type":"string",
+      "max":2048,
+      "min":20,
+      "pattern":"^arn:aws(-cn|-us-gov)?:ssm:([^:]+):\\d{12}:cloud-connector/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "CloudConnectorConfiguration":{
+      "type":"structure",
+      "members":{
+        "AzureConfiguration":{"shape":"AzureConfiguration"}
+      },
+      "union":true
+    },
+    "CloudConnectorDescription":{
+      "type":"string",
+      "max":1024,
+      "min":0,
+      "pattern":"^([\\p{L}\\p{Z}\\p{N}\\p{P}\\p{M}]*)$"
+    },
+    "CloudConnectorFilter":{
+      "type":"structure",
+      "members":{
+        "FilterKey":{"shape":"CloudConnectorFilterKey"},
+        "FilterValues":{"shape":"CloudConnectorFilterValues"}
+      }
+    },
+    "CloudConnectorFilterKey":{
+      "type":"string",
+      "enum":[
+        "SubscriptionId",
+        "TenantId"
+      ]
+    },
+    "CloudConnectorFilterList":{
+      "type":"list",
+      "member":{"shape":"CloudConnectorFilter"},
+      "max":2,
+      "min":1
+    },
+    "CloudConnectorFilterValue":{
+      "type":"string",
+      "max":256,
+      "min":1
+    },
+    "CloudConnectorFilterValues":{
+      "type":"list",
+      "member":{"shape":"CloudConnectorFilterValue"},
+      "max":1,
+      "min":1
+    },
+    "CloudConnectorIamRoleArn":{
+      "type":"string",
+      "max":2048,
+      "min":20,
+      "pattern":"^arn:aws[a-z0-9-]*:iam::\\d{12}:role\\/[\\w-\\/.@+=,]{1,1017}$"
+    },
+    "CloudConnectorId":{
+      "type":"string",
+      "max":36,
+      "min":36,
+      "pattern":"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "CloudConnectorMaxResults":{
+      "type":"integer",
+      "max":10,
+      "min":0
+    },
+    "CloudConnectorSummary":{
+      "type":"structure",
+      "members":{
+        "CloudConnectorId":{"shape":"CloudConnectorId"},
+        "DisplayName":{"shape":"DisplayName"},
+        "Description":{"shape":"CloudConnectorDescription"},
+        "RoleArn":{"shape":"CloudConnectorIamRoleArn"},
+        "CreatedAt":{"shape":"DateTime"},
+        "UpdatedAt":{"shape":"DateTime"}
+      }
+    },
+    "CloudConnectorSummaryList":{
+      "type":"list",
+      "member":{"shape":"CloudConnectorSummary"}
     },
     "CloudWatchLogGroupName":{
       "type":"string",
@@ -3523,6 +3856,26 @@
       "max":255,
       "min":1
     },
+    "ConfigConnectorArn":{
+      "type":"string",
+      "max":512,
+      "min":1,
+      "pattern":"^arn:aws(-cn|-us-gov)?:config:([^:]+):\\d{12}:connector/.+$"
+    },
+    "ConfigurationTargets":{
+      "type":"structure",
+      "members":{
+        "Subscriptions":{"shape":"AzureSubscriptionList"}
+      },
+      "union":true
+    },
+    "ConflictException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"String"}
+      },
+      "exception":true
+    },
     "ConnectionStatus":{
       "type":"string",
       "enum":[
@@ -3558,7 +3911,11 @@
       "type":"structure",
       "required":["Entries"],
       "members":{
-        "Entries":{"shape":"CreateAssociationBatchRequestEntries"}
+        "Entries":{"shape":"CreateAssociationBatchRequestEntries"},
+        "AssociationDispatchAssumeRole":{
+          "shape":"AssociationDispatchAssumeRoleArn",
+          "box":true
+        }
       }
     },
     "CreateAssociationBatchRequestEntries":{
@@ -3644,13 +4001,40 @@
           "shape":"TagList",
           "box":true
         },
-        "AlarmConfiguration":{"shape":"AlarmConfiguration"}
+        "AlarmConfiguration":{"shape":"AlarmConfiguration"},
+        "AssociationDispatchAssumeRole":{
+          "shape":"AssociationDispatchAssumeRoleArn",
+          "box":true
+        }
       }
     },
     "CreateAssociationResult":{
       "type":"structure",
       "members":{
         "AssociationDescription":{"shape":"AssociationDescription"}
+      }
+    },
+    "CreateCloudConnectorRequest":{
+      "type":"structure",
+      "required":[
+        "DisplayName",
+        "RoleArn",
+        "Configuration",
+        "ConfigConnectorArn"
+      ],
+      "members":{
+        "DisplayName":{"shape":"DisplayName"},
+        "RoleArn":{"shape":"CloudConnectorIamRoleArn"},
+        "Description":{"shape":"CloudConnectorDescription"},
+        "Configuration":{"shape":"CloudConnectorConfiguration"},
+        "ConfigConnectorArn":{"shape":"ConfigConnectorArn"},
+        "Tags":{"shape":"TagList"}
+      }
+    },
+    "CreateCloudConnectorResult":{
+      "type":"structure",
+      "members":{
+        "CloudConnectorId":{"shape":"CloudConnectorId"}
       }
     },
     "CreateDocumentRequest":{
@@ -3806,10 +4190,24 @@
     },
     "CreateResourceDataSyncResult":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "CreatedDate":{"type":"timestamp"},
+    "Credentials":{
+      "type":"structure",
+      "required":[
+        "AccessKeyId",
+        "SecretAccessKey",
+        "SessionToken",
+        "ExpirationTime"
+      ],
+      "members":{
+        "AccessKeyId":{"shape":"AccessKeyIdType"},
+        "SecretAccessKey":{"shape":"AccessKeySecretType"},
+        "SessionToken":{"shape":"SessionTokenType"},
+        "ExpirationTime":{"shape":"DateTime"}
+      }
+    },
     "CustomSchemaCountLimitExceededException":{
       "type":"structure",
       "members":{
@@ -3834,8 +4232,7 @@
     },
     "DeleteActivationResult":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteAssociationRequest":{
       "type":"structure",
@@ -3847,7 +4244,19 @@
     },
     "DeleteAssociationResult":{
       "type":"structure",
+      "members":{}
+    },
+    "DeleteCloudConnectorRequest":{
+      "type":"structure",
+      "required":["CloudConnectorId"],
       "members":{
+        "CloudConnectorId":{"shape":"CloudConnectorId"}
+      }
+    },
+    "DeleteCloudConnectorResult":{
+      "type":"structure",
+      "members":{
+        "CloudConnectorId":{"shape":"CloudConnectorId"}
       }
     },
     "DeleteDocumentRequest":{
@@ -3862,8 +4271,7 @@
     },
     "DeleteDocumentResult":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteInventoryRequest":{
       "type":"structure",
@@ -3908,8 +4316,7 @@
     },
     "DeleteOpsItemResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteOpsMetadataRequest":{
       "type":"structure",
@@ -3920,8 +4327,7 @@
     },
     "DeleteOpsMetadataResult":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteParameterRequest":{
       "type":"structure",
@@ -3932,8 +4338,7 @@
     },
     "DeleteParameterResult":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteParametersRequest":{
       "type":"structure",
@@ -3972,8 +4377,7 @@
     },
     "DeleteResourceDataSyncResult":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteResourcePolicyRequest":{
       "type":"structure",
@@ -3990,8 +4394,7 @@
     },
     "DeleteResourcePolicyResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeliveryTimedOutCount":{"type":"integer"},
     "DeregisterManagedInstanceRequest":{
@@ -4003,8 +4406,7 @@
     },
     "DeregisterManagedInstanceResult":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeregisterPatchBaselineForPatchGroupRequest":{
       "type":"structure",
@@ -4781,8 +5183,13 @@
     },
     "DisassociateOpsItemRelatedItemResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
+    },
+    "DisplayName":{
+      "type":"string",
+      "max":256,
+      "min":1,
+      "pattern":"^([\\p{L}\\p{Z}\\p{N}\\p{P}\\p{M}]*)$"
     },
     "DocumentARN":{
       "type":"string",
@@ -5110,7 +5517,9 @@
         "ProblemAnalysisTemplate",
         "CloudFormation",
         "ConformancePackTemplate",
-        "QuickSetup"
+        "QuickSetup",
+        "ManualApprovalPolicy",
+        "AutoApprovalPolicy"
       ]
     },
     "DocumentVersion":{
@@ -5176,8 +5585,7 @@
     },
     "DuplicateInstanceId":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "Duration":{
@@ -5300,6 +5708,20 @@
       },
       "exception":true
     },
+    "GetAccessTokenRequest":{
+      "type":"structure",
+      "required":["AccessRequestId"],
+      "members":{
+        "AccessRequestId":{"shape":"AccessRequestId"}
+      }
+    },
+    "GetAccessTokenResponse":{
+      "type":"structure",
+      "members":{
+        "Credentials":{"shape":"Credentials"},
+        "AccessRequestStatus":{"shape":"AccessRequestStatus"}
+      }
+    },
     "GetAutomationExecutionRequest":{
       "type":"structure",
       "required":["AutomationExecutionId"],
@@ -5327,6 +5749,26 @@
         "State":{"shape":"CalendarState"},
         "AtTime":{"shape":"ISO8601String"},
         "NextTransitionTime":{"shape":"ISO8601String"}
+      }
+    },
+    "GetCloudConnectorRequest":{
+      "type":"structure",
+      "required":["CloudConnectorId"],
+      "members":{
+        "CloudConnectorId":{"shape":"CloudConnectorId"}
+      }
+    },
+    "GetCloudConnectorResult":{
+      "type":"structure",
+      "members":{
+        "CloudConnectorArn":{"shape":"CloudConnectorArn"},
+        "DisplayName":{"shape":"DisplayName"},
+        "Description":{"shape":"CloudConnectorDescription"},
+        "RoleArn":{"shape":"CloudConnectorIamRoleArn"},
+        "Configuration":{"shape":"CloudConnectorConfiguration"},
+        "ConfigConnectorArn":{"shape":"ConfigConnectorArn"},
+        "CreatedAt":{"shape":"DateTime"},
+        "UpdatedAt":{"shape":"DateTime"}
       }
     },
     "GetCommandInvocationRequest":{
@@ -5399,7 +5841,8 @@
       "members":{
         "InstanceId":{"shape":"InstanceId"},
         "SnapshotId":{"shape":"SnapshotId"},
-        "BaselineOverride":{"shape":"BaselineOverride"}
+        "BaselineOverride":{"shape":"BaselineOverride"},
+        "UseS3DualStackEndpoint":{"shape":"Boolean"}
       }
     },
     "GetDeployablePatchSnapshotForInstanceResult":{
@@ -6029,10 +6472,16 @@
         "InstanceStatus":{"shape":"InstanceStatus"},
         "IpAddress":{"shape":"IpAddress"},
         "ManagedStatus":{"shape":"ManagedStatus"},
+        "Name":{"shape":"NodeName"},
         "PlatformType":{"shape":"PlatformType"},
         "PlatformName":{"shape":"PlatformName"},
         "PlatformVersion":{"shape":"PlatformVersion"},
-        "ResourceType":{"shape":"ResourceType"}
+        "ResourceType":{"shape":"ResourceType"},
+        "SourceType":{"shape":"SourceType"},
+        "SourceId":{"shape":"SourceId"},
+        "SourceLocation":{"shape":"SourceLocation"},
+        "AvailabilityZone":{"shape":"AvailabilityZone"},
+        "AvailabilityZoneId":{"shape":"AvailabilityZoneId"}
       }
     },
     "InstanceInformation":{
@@ -6067,7 +6516,8 @@
         "LastSuccessfulAssociationExecutionDate":{"shape":"DateTime"},
         "AssociationOverview":{"shape":"InstanceAggregatedAssociationOverview"},
         "SourceId":{"shape":"SourceId"},
-        "SourceType":{"shape":"SourceType"}
+        "SourceType":{"shape":"SourceType"},
+        "SourceLocation":{"shape":"SourceLocation"}
       }
     },
     "InstanceInformationFilter":{
@@ -6276,7 +6726,9 @@
         "LastSuccessfulAssociationExecutionDate":{"shape":"DateTime"},
         "AssociationOverview":{"shape":"InstanceAggregatedAssociationOverview"},
         "SourceId":{"shape":"SourceId"},
-        "SourceType":{"shape":"SourceType"}
+        "SourceType":{"shape":"SourceType"},
+        "SourceLocation":{"shape":"SourceLocation"},
+        "AvailabilityZone":{"shape":"AvailabilityZone"}
       }
     },
     "InstancePropertyFilter":{
@@ -6452,8 +6904,7 @@
     },
     "InvalidCommandId":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "InvalidDeleteInventoryParametersException":{
@@ -6521,8 +6972,7 @@
     },
     "InvalidFilterKey":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "InvalidFilterOption":{
@@ -6619,14 +7069,12 @@
     },
     "InvalidOutputFolder":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "InvalidOutputLocation":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "InvalidParameters":{
@@ -6645,8 +7093,7 @@
     },
     "InvalidPluginName":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "InvalidPolicyAttributeException":{
@@ -6665,14 +7112,12 @@
     },
     "InvalidResourceId":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "InvalidResourceType":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "InvalidResultAttributeException":{
@@ -7009,8 +7454,7 @@
     "InventoryTypeDisplayName":{"type":"string"},
     "InvocationDoesNotExist":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "InvocationTraceOutput":{
@@ -7115,6 +7559,24 @@
       "type":"structure",
       "members":{
         "Associations":{"shape":"AssociationList"},
+        "NextToken":{"shape":"NextToken"}
+      }
+    },
+    "ListCloudConnectorsRequest":{
+      "type":"structure",
+      "members":{
+        "MaxResults":{
+          "shape":"CloudConnectorMaxResults",
+          "box":true
+        },
+        "NextToken":{"shape":"NextToken"},
+        "Filters":{"shape":"CloudConnectorFilterList"}
+      }
+    },
+    "ListCloudConnectorsResult":{
+      "type":"structure",
+      "members":{
+        "CloudConnectors":{"shape":"CloudConnectorSummaryList"},
         "NextToken":{"shape":"NextToken"}
       }
     },
@@ -7965,10 +8427,16 @@
     },
     "ModifyDocumentPermissionResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "NextToken":{"type":"string"},
+    "NoLongerSupportedException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"String"}
+      },
+      "exception":true
+    },
     "Node":{
       "type":"structure",
       "members":{
@@ -8015,7 +8483,9 @@
         "PlatformType",
         "PlatformVersion",
         "Region",
-        "ResourceType"
+        "ResourceType",
+        "SourceType",
+        "AvailabilityZone"
       ]
     },
     "NodeCaptureTime":{"type":"timestamp"},
@@ -8048,7 +8518,12 @@
         "OrganizationalUnitId",
         "OrganizationalUnitPath",
         "Region",
-        "AccountId"
+        "AccountId",
+        "SourceType",
+        "SourceId",
+        "SourceLocation",
+        "AvailabilityZone",
+        "AvailabilityZoneId"
       ]
     },
     "NodeFilterList":{
@@ -8086,6 +8561,12 @@
       "member":{"shape":"Node"},
       "max":50,
       "min":0
+    },
+    "NodeName":{
+      "type":"string",
+      "max":256,
+      "min":0,
+      "pattern":"^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$"
     },
     "NodeOrganizationalUnitId":{
       "type":"string",
@@ -8523,6 +9004,15 @@
         "Category",
         "Severity",
         "OpsItemType",
+        "AccessRequestByRequesterArn",
+        "AccessRequestByRequesterId",
+        "AccessRequestByApproverArn",
+        "AccessRequestByApproverId",
+        "AccessRequestBySourceAccountId",
+        "AccessRequestBySourceOpsItemId",
+        "AccessRequestBySourceRegion",
+        "AccessRequestByIsReplica",
+        "AccessRequestByTargetResourceId",
         "ChangeRequestByRequesterArn",
         "ChangeRequestByRequesterName",
         "ChangeRequestByApproverArn",
@@ -8728,6 +9218,7 @@
         "ChangeCalendarOverrideRejected",
         "PendingApproval",
         "Approved",
+        "Revoked",
         "Rejected",
         "Closed"
       ]
@@ -9672,8 +10163,7 @@
     },
     "PutComplianceItemsResult":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "PutInventoryMessage":{"type":"string"},
     "PutInventoryRequest":{
@@ -9934,8 +10424,7 @@
     },
     "RemoveTagsFromResourceResult":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "RequireType":{
       "type":"string",
@@ -10263,7 +10752,8 @@
         "OpsItem",
         "OpsMetadata",
         "Automation",
-        "Association"
+        "Association",
+        "CloudConnector"
       ]
     },
     "ResponseCode":{"type":"integer"},
@@ -10413,8 +10903,7 @@
     },
     "SendAutomationSignalResult":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "SendCommandRequest":{
       "type":"structure",
@@ -10448,6 +10937,22 @@
       "members":{
         "Command":{"shape":"Command"}
       }
+    },
+    "ServiceQuotaExceededException":{
+      "type":"structure",
+      "required":[
+        "Message",
+        "QuotaCode",
+        "ServiceCode"
+      ],
+      "members":{
+        "Message":{"shape":"String"},
+        "ResourceId":{"shape":"String"},
+        "ResourceType":{"shape":"String"},
+        "QuotaCode":{"shape":"String"},
+        "ServiceCode":{"shape":"String"}
+      },
+      "exception":true
     },
     "ServiceRole":{"type":"string"},
     "ServiceSetting":{
@@ -10491,7 +10996,8 @@
         "Reason":{"shape":"SessionReason"},
         "Details":{"shape":"SessionDetails"},
         "OutputUrl":{"shape":"SessionManagerOutputUrl"},
-        "MaxSessionDuration":{"shape":"MaxSessionDuration"}
+        "MaxSessionDuration":{"shape":"MaxSessionDuration"},
+        "AccessType":{"shape":"AccessType"}
       }
     },
     "SessionDetails":{
@@ -10518,7 +11024,8 @@
         "Target",
         "Owner",
         "Status",
-        "SessionId"
+        "SessionId",
+        "AccessType"
       ]
     },
     "SessionFilterList":{
@@ -10616,6 +11123,10 @@
       "max":400,
       "min":1
     },
+    "SessionTokenType":{
+      "type":"string",
+      "sensitive":true
+    },
     "SeveritySummary":{
       "type":"structure",
       "members":{
@@ -10639,7 +11150,8 @@
         "Reject",
         "StartStep",
         "StopStep",
-        "Resume"
+        "Resume",
+        "Revoke"
       ]
     },
     "SnapshotDownloadUrl":{"type":"string"},
@@ -10655,12 +11167,19 @@
       "min":0,
       "pattern":"^[a-zA-Z0-9:_-]*$"
     },
+    "SourceLocation":{
+      "type":"string",
+      "max":128,
+      "min":1,
+      "pattern":"^.{1,128}$"
+    },
     "SourceType":{
       "type":"string",
       "enum":[
         "AWS::EC2::Instance",
         "AWS::IoT::Thing",
-        "AWS::SSM::ManagedInstance"
+        "AWS::SSM::ManagedInstance",
+        "Microsoft.Compute/virtualMachines"
       ]
     },
     "StandardErrorContent":{
@@ -10671,6 +11190,24 @@
       "type":"string",
       "max":24000
     },
+    "StartAccessRequestRequest":{
+      "type":"structure",
+      "required":[
+        "Reason",
+        "Targets"
+      ],
+      "members":{
+        "Reason":{"shape":"String1to256"},
+        "Targets":{"shape":"Targets"},
+        "Tags":{"shape":"TagList"}
+      }
+    },
+    "StartAccessRequestResponse":{
+      "type":"structure",
+      "members":{
+        "AccessRequestId":{"shape":"AccessRequestId"}
+      }
+    },
     "StartAssociationsOnceRequest":{
       "type":"structure",
       "required":["AssociationIds"],
@@ -10680,8 +11217,7 @@
     },
     "StartAssociationsOnceResult":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "StartAutomationExecutionRequest":{
       "type":"structure",
@@ -10696,7 +11232,7 @@
         "ClientToken":{"shape":"IdempotencyToken"},
         "Mode":{"shape":"ExecutionMode"},
         "TargetParameterName":{"shape":"AutomationParameterKey"},
-        "Targets":{"shape":"Targets"},
+        "Targets":{"shape":"AutomationTargets"},
         "TargetMaps":{"shape":"TargetMaps"},
         "MaxConcurrency":{"shape":"MaxConcurrency"},
         "MaxErrors":{"shape":"MaxErrors"},
@@ -10794,8 +11330,7 @@
     "StatusName":{"type":"string"},
     "StatusUnchanged":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "StepExecution":{
@@ -10820,6 +11355,7 @@
         "Outputs":{"shape":"AutomationParameterMap"},
         "Response":{"shape":"String"},
         "FailureMessage":{"shape":"String"},
+        "WarningMessage":{"shape":"String"},
         "FailureDetails":{"shape":"FailureDetails"},
         "StepExecutionId":{"shape":"String"},
         "OverriddenParameters":{"shape":"AutomationParameterMap"},
@@ -10909,8 +11445,7 @@
     },
     "StopAutomationExecutionResult":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "StopType":{
       "type":"string",
@@ -10921,6 +11456,11 @@
     },
     "StreamUrl":{"type":"string"},
     "String":{"type":"string"},
+    "String1to256":{
+      "type":"string",
+      "max":256,
+      "min":1
+    },
     "StringDateTime":{
       "type":"string",
       "pattern":"^([\\-]?\\d{4}(?!\\d{2}\\b))((-?)((0[1-9]|1[0-2])(\\3([12]\\d|0[1-9]|3[01]))?|W([0-4]\\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\\d|[12]\\d{2}|3([0-5]\\d|6[1-6])))([T\\s]((([01]\\d|2[0-3])((:?)[0-5]\\d)?|24\\:?00)([\\.,]\\d(?!:))?)?(\\17[0-5]\\d([\\.,]\\d)?)?([zZ]|([\\-])([01]\\d|2[0-3]):?([0-5]\\d)?)?)?)?$"
@@ -11008,7 +11548,7 @@
         },
         "IncludeChildOrganizationUnits":{"shape":"Boolean"},
         "ExcludeAccounts":{"shape":"ExcludeAccounts"},
-        "Targets":{"shape":"Targets"},
+        "Targets":{"shape":"AutomationTargets"},
         "TargetsMaxConcurrency":{"shape":"MaxConcurrency"},
         "TargetsMaxErrors":{"shape":"MaxErrors"}
       }
@@ -11107,6 +11647,16 @@
         "SessionId":{"shape":"SessionId"}
       }
     },
+    "ThrottlingException":{
+      "type":"structure",
+      "required":["Message"],
+      "members":{
+        "Message":{"shape":"String"},
+        "QuotaCode":{"shape":"String"},
+        "ServiceCode":{"shape":"String"}
+      },
+      "exception":true
+    },
     "TimeoutSeconds":{
       "type":"integer",
       "max":2592000,
@@ -11119,8 +11669,7 @@
     },
     "TooManyTagsError":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "exception":true
     },
     "TooManyUpdates":{
@@ -11255,7 +11804,11 @@
           "shape":"TargetMaps",
           "box":true
         },
-        "AlarmConfiguration":{"shape":"AlarmConfiguration"}
+        "AlarmConfiguration":{"shape":"AlarmConfiguration"},
+        "AssociationDispatchAssumeRole":{
+          "shape":"AssociationDispatchAssumeRoleArn",
+          "box":true
+        }
       }
     },
     "UpdateAssociationResult":{
@@ -11281,6 +11834,22 @@
       "type":"structure",
       "members":{
         "AssociationDescription":{"shape":"AssociationDescription"}
+      }
+    },
+    "UpdateCloudConnectorRequest":{
+      "type":"structure",
+      "required":["CloudConnectorId"],
+      "members":{
+        "CloudConnectorId":{"shape":"CloudConnectorId"},
+        "DisplayName":{"shape":"DisplayName"},
+        "Configuration":{"shape":"CloudConnectorConfiguration"},
+        "Description":{"shape":"CloudConnectorDescription"}
+      }
+    },
+    "UpdateCloudConnectorResult":{
+      "type":"structure",
+      "members":{
+        "CloudConnectorId":{"shape":"CloudConnectorId"}
       }
     },
     "UpdateDocumentDefaultVersionRequest":{
@@ -11314,8 +11883,7 @@
     },
     "UpdateDocumentMetadataResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "UpdateDocumentRequest":{
       "type":"structure",
@@ -11497,8 +12065,7 @@
     },
     "UpdateManagedInstanceRoleResult":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "UpdateOpsItemRequest":{
       "type":"structure",
@@ -11524,8 +12091,7 @@
     },
     "UpdateOpsItemResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "UpdateOpsMetadataRequest":{
       "type":"structure",
@@ -11605,8 +12171,7 @@
     },
     "UpdateResourceDataSyncResult":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "UpdateServiceSettingRequest":{
       "type":"structure",
@@ -11621,8 +12186,7 @@
     },
     "UpdateServiceSettingResult":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "Url":{"type":"string"},
     "ValidNextStep":{
@@ -11634,6 +12198,30 @@
       "type":"list",
       "member":{"shape":"ValidNextStep"}
     },
+    "ValidateCloudConnectorMaxResults":{
+      "type":"integer",
+      "max":75,
+      "min":0
+    },
+    "ValidateCloudConnectorRequest":{
+      "type":"structure",
+      "required":["CloudConnectorId"],
+      "members":{
+        "CloudConnectorId":{"shape":"CloudConnectorId"},
+        "MaxResults":{
+          "shape":"ValidateCloudConnectorMaxResults",
+          "box":true
+        },
+        "NextToken":{"shape":"NextToken"}
+      }
+    },
+    "ValidateCloudConnectorResult":{
+      "type":"structure",
+      "members":{
+        "ValidationFindings":{"shape":"ValidationFindingList"},
+        "NextToken":{"shape":"NextToken"}
+      }
+    },
     "ValidationException":{
       "type":"structure",
       "members":{
@@ -11641,6 +12229,56 @@
         "ReasonCode":{"shape":"String"}
       },
       "exception":true
+    },
+    "ValidationFinding":{
+      "type":"structure",
+      "members":{
+        "Type":{"shape":"ValidationFindingType"},
+        "Code":{"shape":"ValidationFindingCode"},
+        "Message":{"shape":"String"},
+        "ProviderMessage":{"shape":"String"},
+        "Scope":{"shape":"ValidationFindingScope"}
+      }
+    },
+    "ValidationFindingCode":{
+      "type":"string",
+      "enum":[
+        "TargetInaccessible",
+        "TargetUnusable",
+        "TargetStateWarning",
+        "AwsRoleAssumptionFailed",
+        "WebIdentityTokenFailed",
+        "OutboundWebIdentityFederationDisabled",
+        "ProviderCredentialCreationFailed",
+        "TenantSummary",
+        "SubscriptionAccessible"
+      ]
+    },
+    "ValidationFindingList":{
+      "type":"list",
+      "member":{"shape":"ValidationFinding"}
+    },
+    "ValidationFindingScope":{
+      "type":"structure",
+      "members":{
+        "Type":{"shape":"ValidationFindingScopeType"},
+        "Id":{"shape":"String"}
+      }
+    },
+    "ValidationFindingScopeType":{
+      "type":"string",
+      "enum":[
+        "azure:tenant",
+        "azure:subscription"
+      ]
+    },
+    "ValidationFindingType":{
+      "type":"string",
+      "enum":[
+        "INFO",
+        "WARN",
+        "ERROR"
+      ]
     },
     "Version":{
       "type":"string",

@@ -11,19 +11,33 @@ module Aws
       class ServiceError < ::Aws::Errors::ServiceError
       end
 
+      class AccessDenied < ::Aws::Errors::ServiceError
+      end
+      class AnnotationLimitExceeded < ::Aws::Errors::ServiceError
+      end
+      class AnnotationNameTooLong < ::Aws::Errors::ServiceError
+      end
       class BucketAlreadyExists < ::Aws::Errors::ServiceError
       end
       class BucketAlreadyOwnedByYou < ::Aws::Errors::ServiceError
       end
       class EncryptionTypeMismatch < ::Aws::Errors::ServiceError
       end
+      class IdempotencyParameterMismatch < ::Aws::Errors::ServiceError
+      end
+      class InvalidAnnotationName < ::Aws::Errors::ServiceError
+      end
       class InvalidObjectState < ::Aws::Errors::ServiceError
         def storage_class: () -> ::String
         def access_tier: () -> ::String
       end
+      class InvalidPrefix < ::Aws::Errors::ServiceError
+      end
       class InvalidRequest < ::Aws::Errors::ServiceError
       end
       class InvalidWriteOffset < ::Aws::Errors::ServiceError
+      end
+      class NoSuchAnnotation < ::Aws::Errors::ServiceError
       end
       class NoSuchBucket < ::Aws::Errors::ServiceError
       end
@@ -36,6 +50,8 @@ module Aws
       class ObjectNotInActiveTierError < ::Aws::Errors::ServiceError
       end
       class TooManyParts < ::Aws::Errors::ServiceError
+      end
+      class UnsupportedMediaType < ::Aws::Errors::ServiceError
       end
     end
   end

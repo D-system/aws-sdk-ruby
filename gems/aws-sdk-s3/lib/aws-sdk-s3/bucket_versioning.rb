@@ -191,7 +191,7 @@ module Aws::S3
     #
     #   bucket_versioning.enable({
     #     content_md5: "ContentMD5",
-    #     checksum_algorithm: "CRC32", # accepts CRC32, CRC32C, SHA1, SHA256, CRC64NVME
+    #     checksum_algorithm: "CRC32", # accepts CRC32, CRC32C, SHA1, SHA256, CRC64NVME, SHA512, MD5, XXHASH64, XXHASH3, XXHASH128
     #     mfa: "MFA",
     #     expected_bucket_owner: "AccountId",
     #   })
@@ -227,6 +227,17 @@ module Aws::S3
     # @option options [String] :mfa
     #   The concatenation of the authentication device's serial number, a
     #   space, and the value that is displayed on your authentication device.
+    #   The serial number is the number that uniquely identifies the MFA
+    #   device. For physical MFA devices, this is the unique serial number
+    #   that's provided with the device. For virtual MFA devices, the serial
+    #   number is the device ARN. For more information, see [Enabling
+    #   versioning on buckets][1] and [Configuring MFA delete][2] in the
+    #   *Amazon Simple Storage Service User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/manage-versioning-examples.html
+    #   [2]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/MultiFactorAuthenticationDelete.html
     # @option options [String] :expected_bucket_owner
     #   The account ID of the expected bucket owner. If the account ID that
     #   you provide does not match the actual owner of the bucket, the request
@@ -249,7 +260,7 @@ module Aws::S3
     #
     #   bucket_versioning.put({
     #     content_md5: "ContentMD5",
-    #     checksum_algorithm: "CRC32", # accepts CRC32, CRC32C, SHA1, SHA256, CRC64NVME
+    #     checksum_algorithm: "CRC32", # accepts CRC32, CRC32C, SHA1, SHA256, CRC64NVME, SHA512, MD5, XXHASH64, XXHASH3, XXHASH128
     #     mfa: "MFA",
     #     versioning_configuration: { # required
     #       mfa_delete: "Enabled", # accepts Enabled, Disabled
@@ -289,6 +300,17 @@ module Aws::S3
     # @option options [String] :mfa
     #   The concatenation of the authentication device's serial number, a
     #   space, and the value that is displayed on your authentication device.
+    #   The serial number is the number that uniquely identifies the MFA
+    #   device. For physical MFA devices, this is the unique serial number
+    #   that's provided with the device. For virtual MFA devices, the serial
+    #   number is the device ARN. For more information, see [Enabling
+    #   versioning on buckets][1] and [Configuring MFA delete][2] in the
+    #   *Amazon Simple Storage Service User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/manage-versioning-examples.html
+    #   [2]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/MultiFactorAuthenticationDelete.html
     # @option options [required, Types::VersioningConfiguration] :versioning_configuration
     #   Container for setting the versioning state.
     # @option options [String] :expected_bucket_owner
@@ -308,7 +330,7 @@ module Aws::S3
     #
     #   bucket_versioning.suspend({
     #     content_md5: "ContentMD5",
-    #     checksum_algorithm: "CRC32", # accepts CRC32, CRC32C, SHA1, SHA256, CRC64NVME
+    #     checksum_algorithm: "CRC32", # accepts CRC32, CRC32C, SHA1, SHA256, CRC64NVME, SHA512, MD5, XXHASH64, XXHASH3, XXHASH128
     #     mfa: "MFA",
     #     expected_bucket_owner: "AccountId",
     #   })
@@ -344,6 +366,17 @@ module Aws::S3
     # @option options [String] :mfa
     #   The concatenation of the authentication device's serial number, a
     #   space, and the value that is displayed on your authentication device.
+    #   The serial number is the number that uniquely identifies the MFA
+    #   device. For physical MFA devices, this is the unique serial number
+    #   that's provided with the device. For virtual MFA devices, the serial
+    #   number is the device ARN. For more information, see [Enabling
+    #   versioning on buckets][1] and [Configuring MFA delete][2] in the
+    #   *Amazon Simple Storage Service User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/manage-versioning-examples.html
+    #   [2]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/MultiFactorAuthenticationDelete.html
     # @option options [String] :expected_bucket_owner
     #   The account ID of the expected bucket owner. If the account ID that
     #   you provide does not match the actual owner of the bucket, the request

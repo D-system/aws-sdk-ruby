@@ -7,7 +7,7 @@ module Aws
   # {Aws::SSOTokenProvider} will be used to refresh the token if possible.
   # This class does NOT implement the SSO login token flow - tokens
   # must generated separately by running `aws login` from the
-  # AWS CLI with the correct profile. The `SSOCredentials` will
+  # AWS CLI with the correct profile. The {SSOCredentials} will
   # auto-refresh the AWS credentials from SSO.
   #
   #     # You must first run aws sso login --profile your-sso-profile
@@ -91,6 +91,7 @@ module Aws
           client_opts[:credentials] = nil
           @client = Aws::SSO::Client.new(client_opts)
         end
+        @metrics = ['CREDENTIALS_SSO']
       else # legacy behavior
         missing_keys = LEGACY_REQUIRED_OPTS.select { |k| options[k].nil? }
         unless missing_keys.empty?
@@ -111,6 +112,7 @@ module Aws
         client_opts[:credentials] = nil
 
         @client = options[:client] || Aws::SSO::Client.new(client_opts)
+        @metrics = ['CREDENTIALS_SSO_LEGACY']
       end
 
       @async_refresh = true

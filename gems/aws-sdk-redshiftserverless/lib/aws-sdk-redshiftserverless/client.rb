@@ -95,8 +95,8 @@ module Aws::RedshiftServerless
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::RedshiftServerless
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::RedshiftServerless
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::RedshiftServerless
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::RedshiftServerless
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::RedshiftServerless
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::RedshiftServerless
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::RedshiftServerless
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -483,7 +487,7 @@ module Aws::RedshiftServerless
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/redshift/latest/mgmt/serverless-snapshots-recovery.html
+    # [1]: https://docs.aws.amazon.com/redshift/latest/mgmt/serverless-snapshots-recovery-points.html
     #
     # @option params [required, String] :recovery_point_id
     #   The unique identifier of the recovery point.
@@ -750,12 +754,14 @@ module Aws::RedshiftServerless
     #   resp.namespace.admin_password_secret_arn #=> String
     #   resp.namespace.admin_password_secret_kms_key_id #=> String
     #   resp.namespace.admin_username #=> String
+    #   resp.namespace.catalog_arn #=> String
     #   resp.namespace.creation_date #=> Time
     #   resp.namespace.db_name #=> String
     #   resp.namespace.default_iam_role_arn #=> String
     #   resp.namespace.iam_roles #=> Array
     #   resp.namespace.iam_roles[0] #=> String
     #   resp.namespace.kms_key_id #=> String
+    #   resp.namespace.lakehouse_registration_status #=> String
     #   resp.namespace.log_exports #=> Array
     #   resp.namespace.log_exports[0] #=> String, one of "useractivitylog", "userlog", "connectionlog"
     #   resp.namespace.namespace_arn #=> String
@@ -769,6 +775,67 @@ module Aws::RedshiftServerless
     # @param [Hash] params ({})
     def create_namespace(params = {}, options = {})
       req = build_request(:create_namespace, params)
+      req.send_request(options)
+    end
+
+    # Creates an Amazon Redshift Serverless reservation, which gives you the
+    # option to commit to a specified number of Redshift Processing Units
+    # (RPUs) for a year at a discount from Serverless on-demand (OD) rates.
+    #
+    # @option params [required, Integer] :capacity
+    #   The number of Redshift Processing Units (RPUs) to reserve.
+    #
+    # @option params [String] :client_token
+    #   A unique, case-sensitive identifier that you provide to ensure the
+    #   idempotency of the request. If not provided, the Amazon Web Services
+    #   SDK populates this field. This token must be a valid UUIDv4 value. For
+    #   more information about idempotency, see [ Making retries safe with
+    #   idempotent APIs ][1].
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    #
+    #
+    #   [1]: https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
+    #
+    # @option params [required, String] :offering_id
+    #   The ID of the offering associated with the reservation. The offering
+    #   determines the payment schedule for the reservation.
+    #
+    # @return [Types::CreateReservationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateReservationResponse#reservation #reservation} => Types::Reservation
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_reservation({
+    #     capacity: 1, # required
+    #     client_token: "String",
+    #     offering_id: "CreateReservationRequestOfferingIdString", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.reservation.capacity #=> Integer
+    #   resp.reservation.end_date #=> Time
+    #   resp.reservation.offering.currency_code #=> String
+    #   resp.reservation.offering.duration #=> Integer
+    #   resp.reservation.offering.hourly_charge #=> Float
+    #   resp.reservation.offering.offering_id #=> String
+    #   resp.reservation.offering.offering_type #=> String, one of "ALL_UPFRONT", "NO_UPFRONT"
+    #   resp.reservation.offering.upfront_charge #=> Float
+    #   resp.reservation.reservation_arn #=> String
+    #   resp.reservation.reservation_id #=> String
+    #   resp.reservation.start_date #=> Time
+    #   resp.reservation.status #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-serverless-2021-04-21/CreateReservation AWS API Documentation
+    #
+    # @overload create_reservation(params = {})
+    # @param [Hash] params ({})
+    def create_reservation(params = {}, options = {})
+      req = build_request(:create_reservation, params)
       req.send_request(options)
     end
 
@@ -910,7 +977,7 @@ module Aws::RedshiftServerless
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/redshift/latest/mgmt/serverless-snapshots-recovery.html
+    # [1]: https://docs.aws.amazon.com/redshift/latest/mgmt/serverless-snapshots-recovery-points.html
     #
     # @option params [required, String] :namespace_name
     #   The namespace to create a snapshot for.
@@ -1120,10 +1187,16 @@ module Aws::RedshiftServerless
     #   An array of parameters to set for advanced control over a database.
     #   The options are `auto_mv`, `datestyle`,
     #   `enable_case_sensitive_identifier`, `enable_user_activity_logging`,
-    #   `query_group`, `search_path`, `require_ssl`, `use_fips_ssl`, and query
-    #   monitoring metrics that let you define performance boundaries. For
-    #   more information about query monitoring rules and available metrics,
-    #   see [ Query monitoring metrics for Amazon Redshift Serverless][1].
+    #   `query_group`, `search_path`, `require_ssl`, `use_fips_ssl`, and
+    #   either `wlm_json_configuration` or query monitoring metrics that let
+    #   you define performance boundaries. You can either specify individual
+    #   query monitoring metrics (such as `max_scan_row_count`,
+    #   `max_query_execution_time`) or use `wlm_json_configuration` to define
+    #   query queues with rules, but not both. If you're using
+    #   `wlm_json_configuration`, the maximum size of `parameterValue` is 8000
+    #   characters. For more information about query monitoring rules and
+    #   available metrics, see [ Query monitoring metrics for Amazon Redshift
+    #   Serverless][1].
     #
     #
     #
@@ -1133,6 +1206,12 @@ module Aws::RedshiftServerless
     #   The value that specifies whether to turn on enhanced virtual private
     #   cloud (VPC) routing, which forces Amazon Redshift Serverless to route
     #   traffic through your VPC instead of over the internet.
+    #
+    # @option params [Boolean] :extra_compute_for_automatic_optimization
+    #   If `true`, allocates additional compute resources for running
+    #   automatic optimization operations.
+    #
+    #   Default: false
     #
     # @option params [String] :ip_address_type
     #   The IP address type that the workgroup supports. Possible values are
@@ -1189,6 +1268,7 @@ module Aws::RedshiftServerless
     #       },
     #     ],
     #     enhanced_vpc_routing: false,
+    #     extra_compute_for_automatic_optimization: false,
     #     ip_address_type: "IpAddressType",
     #     max_capacity: 1,
     #     namespace_name: "NamespaceName", # required
@@ -1234,6 +1314,7 @@ module Aws::RedshiftServerless
     #   resp.workgroup.endpoint.vpc_endpoints[0].vpc_endpoint_id #=> String
     #   resp.workgroup.endpoint.vpc_endpoints[0].vpc_id #=> String
     #   resp.workgroup.enhanced_vpc_routing #=> Boolean
+    #   resp.workgroup.extra_compute_for_automatic_optimization #=> Boolean
     #   resp.workgroup.ip_address_type #=> String
     #   resp.workgroup.max_capacity #=> Integer
     #   resp.workgroup.namespace_name #=> String
@@ -1367,12 +1448,14 @@ module Aws::RedshiftServerless
     #   resp.namespace.admin_password_secret_arn #=> String
     #   resp.namespace.admin_password_secret_kms_key_id #=> String
     #   resp.namespace.admin_username #=> String
+    #   resp.namespace.catalog_arn #=> String
     #   resp.namespace.creation_date #=> Time
     #   resp.namespace.db_name #=> String
     #   resp.namespace.default_iam_role_arn #=> String
     #   resp.namespace.iam_roles #=> Array
     #   resp.namespace.iam_roles[0] #=> String
     #   resp.namespace.kms_key_id #=> String
+    #   resp.namespace.lakehouse_registration_status #=> String
     #   resp.namespace.log_exports #=> Array
     #   resp.namespace.log_exports[0] #=> String, one of "useractivitylog", "userlog", "connectionlog"
     #   resp.namespace.namespace_arn #=> String
@@ -1613,6 +1696,7 @@ module Aws::RedshiftServerless
     #   resp.workgroup.endpoint.vpc_endpoints[0].vpc_endpoint_id #=> String
     #   resp.workgroup.endpoint.vpc_endpoints[0].vpc_id #=> String
     #   resp.workgroup.enhanced_vpc_routing #=> Boolean
+    #   resp.workgroup.extra_compute_for_automatic_optimization #=> Boolean
     #   resp.workgroup.ip_address_type #=> String
     #   resp.workgroup.max_capacity #=> Integer
     #   resp.workgroup.namespace_name #=> String
@@ -1805,6 +1889,58 @@ module Aws::RedshiftServerless
       req.send_request(options)
     end
 
+    # Returns an Identity Center authentication token for accessing Amazon
+    # Redshift Serverless workgroups.
+    #
+    # The token provides secure access to data within the specified
+    # workgroups using Identity Center identity propagation. The token
+    # expires after a specified duration and must be refreshed for continued
+    # access.
+    #
+    # The Identity and Access Management (IAM) user or role that runs
+    # GetIdentityCenterAuthToken must have appropriate permissions to access
+    # the specified workgroups and Identity Center integration must be
+    # configured for the workgroups.
+    #
+    # @option params [required, Array<String>] :workgroup_names
+    #   A list of workgroup names for which to generate the Identity Center
+    #   authentication token.
+    #
+    #   Constraints:
+    #
+    #   * Must contain between 1 and 20 workgroup names.
+    #
+    #   * Each workgroup name must be a valid Amazon Redshift Serverless
+    #     workgroup identifier.
+    #
+    #   * All specified workgroups must have Identity Center integration
+    #     enabled.
+    #
+    # @return [Types::GetIdentityCenterAuthTokenResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetIdentityCenterAuthTokenResponse#expiration_time #expiration_time} => Time
+    #   * {Types::GetIdentityCenterAuthTokenResponse#token #token} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_identity_center_auth_token({
+    #     workgroup_names: ["WorkgroupName"], # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.expiration_time #=> Time
+    #   resp.token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-serverless-2021-04-21/GetIdentityCenterAuthToken AWS API Documentation
+    #
+    # @overload get_identity_center_auth_token(params = {})
+    # @param [Hash] params ({})
+    def get_identity_center_auth_token(params = {}, options = {})
+      req = build_request(:get_identity_center_auth_token, params)
+      req.send_request(options)
+    end
+
     # Returns information about a namespace in Amazon Redshift Serverless.
     #
     # @option params [required, String] :namespace_name
@@ -1825,12 +1961,14 @@ module Aws::RedshiftServerless
     #   resp.namespace.admin_password_secret_arn #=> String
     #   resp.namespace.admin_password_secret_kms_key_id #=> String
     #   resp.namespace.admin_username #=> String
+    #   resp.namespace.catalog_arn #=> String
     #   resp.namespace.creation_date #=> Time
     #   resp.namespace.db_name #=> String
     #   resp.namespace.default_iam_role_arn #=> String
     #   resp.namespace.iam_roles #=> Array
     #   resp.namespace.iam_roles[0] #=> String
     #   resp.namespace.kms_key_id #=> String
+    #   resp.namespace.lakehouse_registration_status #=> String
     #   resp.namespace.log_exports #=> Array
     #   resp.namespace.log_exports[0] #=> String, one of "useractivitylog", "userlog", "connectionlog"
     #   resp.namespace.namespace_arn #=> String
@@ -1877,6 +2015,82 @@ module Aws::RedshiftServerless
     # @param [Hash] params ({})
     def get_recovery_point(params = {}, options = {})
       req = build_request(:get_recovery_point, params)
+      req.send_request(options)
+    end
+
+    # Gets an Amazon Redshift Serverless reservation. A reservation gives
+    # you the option to commit to a specified number of Redshift Processing
+    # Units (RPUs) for a year at a discount from Serverless on-demand (OD)
+    # rates.
+    #
+    # @option params [required, String] :reservation_id
+    #   The ID of the reservation to retrieve.
+    #
+    # @return [Types::GetReservationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetReservationResponse#reservation #reservation} => Types::Reservation
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_reservation({
+    #     reservation_id: "GetReservationRequestReservationIdString", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.reservation.capacity #=> Integer
+    #   resp.reservation.end_date #=> Time
+    #   resp.reservation.offering.currency_code #=> String
+    #   resp.reservation.offering.duration #=> Integer
+    #   resp.reservation.offering.hourly_charge #=> Float
+    #   resp.reservation.offering.offering_id #=> String
+    #   resp.reservation.offering.offering_type #=> String, one of "ALL_UPFRONT", "NO_UPFRONT"
+    #   resp.reservation.offering.upfront_charge #=> Float
+    #   resp.reservation.reservation_arn #=> String
+    #   resp.reservation.reservation_id #=> String
+    #   resp.reservation.start_date #=> Time
+    #   resp.reservation.status #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-serverless-2021-04-21/GetReservation AWS API Documentation
+    #
+    # @overload get_reservation(params = {})
+    # @param [Hash] params ({})
+    def get_reservation(params = {}, options = {})
+      req = build_request(:get_reservation, params)
+      req.send_request(options)
+    end
+
+    # Returns the reservation offering. The offering determines the payment
+    # schedule for the reservation.
+    #
+    # @option params [required, String] :offering_id
+    #   The identifier for the offering..
+    #
+    # @return [Types::GetReservationOfferingResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetReservationOfferingResponse#reservation_offering #reservation_offering} => Types::ReservationOffering
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_reservation_offering({
+    #     offering_id: "GetReservationOfferingRequestOfferingIdString", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.reservation_offering.currency_code #=> String
+    #   resp.reservation_offering.duration #=> Integer
+    #   resp.reservation_offering.hourly_charge #=> Float
+    #   resp.reservation_offering.offering_id #=> String
+    #   resp.reservation_offering.offering_type #=> String, one of "ALL_UPFRONT", "NO_UPFRONT"
+    #   resp.reservation_offering.upfront_charge #=> Float
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-serverless-2021-04-21/GetReservationOffering AWS API Documentation
+    #
+    # @overload get_reservation_offering(params = {})
+    # @param [Hash] params ({})
+    def get_reservation_offering(params = {}, options = {})
+      req = build_request(:get_reservation_offering, params)
       req.send_request(options)
     end
 
@@ -2162,6 +2376,7 @@ module Aws::RedshiftServerless
     #   resp.workgroup.endpoint.vpc_endpoints[0].vpc_endpoint_id #=> String
     #   resp.workgroup.endpoint.vpc_endpoints[0].vpc_id #=> String
     #   resp.workgroup.enhanced_vpc_routing #=> Boolean
+    #   resp.workgroup.extra_compute_for_automatic_optimization #=> Boolean
     #   resp.workgroup.ip_address_type #=> String
     #   resp.workgroup.max_capacity #=> Integer
     #   resp.workgroup.namespace_name #=> String
@@ -2330,8 +2545,8 @@ module Aws::RedshiftServerless
     #   page.
     #
     # @option params [String] :source_arn
-    #   The Amazon Resource Name (ARN) for the managed workgroup in the AWS
-    #   Glue Data Catalog.
+    #   The Amazon Resource Name (ARN) for the managed workgroup in the Glue
+    #   Data Catalog.
     #
     # @return [Types::ListManagedWorkgroupsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -2398,12 +2613,14 @@ module Aws::RedshiftServerless
     #   resp.namespaces[0].admin_password_secret_arn #=> String
     #   resp.namespaces[0].admin_password_secret_kms_key_id #=> String
     #   resp.namespaces[0].admin_username #=> String
+    #   resp.namespaces[0].catalog_arn #=> String
     #   resp.namespaces[0].creation_date #=> Time
     #   resp.namespaces[0].db_name #=> String
     #   resp.namespaces[0].default_iam_role_arn #=> String
     #   resp.namespaces[0].iam_roles #=> Array
     #   resp.namespaces[0].iam_roles[0] #=> String
     #   resp.namespaces[0].kms_key_id #=> String
+    #   resp.namespaces[0].lakehouse_registration_status #=> String
     #   resp.namespaces[0].log_exports #=> Array
     #   resp.namespaces[0].log_exports[0] #=> String, one of "useractivitylog", "userlog", "connectionlog"
     #   resp.namespaces[0].namespace_arn #=> String
@@ -2481,6 +2698,102 @@ module Aws::RedshiftServerless
     # @param [Hash] params ({})
     def list_recovery_points(params = {}, options = {})
       req = build_request(:list_recovery_points, params)
+      req.send_request(options)
+    end
+
+    # Returns the current reservation offerings in your account.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of items to return for this call. The call also
+    #   returns a token that you can specify in a subsequent call to get the
+    #   next set of results.
+    #
+    # @option params [String] :next_token
+    #   The token for the next set of items to return. (You received this
+    #   token from a previous call.)
+    #
+    # @return [Types::ListReservationOfferingsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListReservationOfferingsResponse#next_token #next_token} => String
+    #   * {Types::ListReservationOfferingsResponse#reservation_offerings_list #reservation_offerings_list} => Array&lt;Types::ReservationOffering&gt;
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_reservation_offerings({
+    #     max_results: 1,
+    #     next_token: "PaginationToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.next_token #=> String
+    #   resp.reservation_offerings_list #=> Array
+    #   resp.reservation_offerings_list[0].currency_code #=> String
+    #   resp.reservation_offerings_list[0].duration #=> Integer
+    #   resp.reservation_offerings_list[0].hourly_charge #=> Float
+    #   resp.reservation_offerings_list[0].offering_id #=> String
+    #   resp.reservation_offerings_list[0].offering_type #=> String, one of "ALL_UPFRONT", "NO_UPFRONT"
+    #   resp.reservation_offerings_list[0].upfront_charge #=> Float
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-serverless-2021-04-21/ListReservationOfferings AWS API Documentation
+    #
+    # @overload list_reservation_offerings(params = {})
+    # @param [Hash] params ({})
+    def list_reservation_offerings(params = {}, options = {})
+      req = build_request(:list_reservation_offerings, params)
+      req.send_request(options)
+    end
+
+    # Returns a list of Reservation objects.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of items to return for this call. The call also
+    #   returns a token that you can specify in a subsequent call to get the
+    #   next set of results.
+    #
+    # @option params [String] :next_token
+    #   The token for the next set of items to return. (You received this
+    #   token from a previous call.)
+    #
+    # @return [Types::ListReservationsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListReservationsResponse#next_token #next_token} => String
+    #   * {Types::ListReservationsResponse#reservations_list #reservations_list} => Array&lt;Types::Reservation&gt;
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_reservations({
+    #     max_results: 1,
+    #     next_token: "PaginationToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.next_token #=> String
+    #   resp.reservations_list #=> Array
+    #   resp.reservations_list[0].capacity #=> Integer
+    #   resp.reservations_list[0].end_date #=> Time
+    #   resp.reservations_list[0].offering.currency_code #=> String
+    #   resp.reservations_list[0].offering.duration #=> Integer
+    #   resp.reservations_list[0].offering.hourly_charge #=> Float
+    #   resp.reservations_list[0].offering.offering_id #=> String
+    #   resp.reservations_list[0].offering.offering_type #=> String, one of "ALL_UPFRONT", "NO_UPFRONT"
+    #   resp.reservations_list[0].offering.upfront_charge #=> Float
+    #   resp.reservations_list[0].reservation_arn #=> String
+    #   resp.reservations_list[0].reservation_id #=> String
+    #   resp.reservations_list[0].start_date #=> Time
+    #   resp.reservations_list[0].status #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-serverless-2021-04-21/ListReservations AWS API Documentation
+    #
+    # @overload list_reservations(params = {})
+    # @param [Hash] params ({})
+    def list_reservations(params = {}, options = {})
+      req = build_request(:list_reservations, params)
       req.send_request(options)
     end
 
@@ -2920,6 +3233,7 @@ module Aws::RedshiftServerless
     #   resp.workgroups[0].endpoint.vpc_endpoints[0].vpc_endpoint_id #=> String
     #   resp.workgroups[0].endpoint.vpc_endpoints[0].vpc_id #=> String
     #   resp.workgroups[0].enhanced_vpc_routing #=> Boolean
+    #   resp.workgroups[0].extra_compute_for_automatic_optimization #=> Boolean
     #   resp.workgroups[0].ip_address_type #=> String
     #   resp.workgroups[0].max_capacity #=> Integer
     #   resp.workgroups[0].namespace_name #=> String
@@ -2993,6 +3307,14 @@ module Aws::RedshiftServerless
 
     # Restore the data from a recovery point.
     #
+    # @option params [Boolean] :maintain_integration
+    #   If `true`, maintain existing data sharing, zero-ETL and S3 event
+    #   integrations when restoring. Otherwise, integrations will not be
+    #   maintained after the restore operation. Integrations are only
+    #   maintained when restored to the same serverless namespace.
+    #
+    #   Default: true
+    #
     # @option params [required, String] :namespace_name
     #   The name of the namespace to restore data into.
     #
@@ -3010,6 +3332,7 @@ module Aws::RedshiftServerless
     # @example Request syntax with placeholder values
     #
     #   resp = client.restore_from_recovery_point({
+    #     maintain_integration: false,
     #     namespace_name: "NamespaceName", # required
     #     recovery_point_id: "String", # required
     #     workgroup_name: "WorkgroupName", # required
@@ -3020,12 +3343,14 @@ module Aws::RedshiftServerless
     #   resp.namespace.admin_password_secret_arn #=> String
     #   resp.namespace.admin_password_secret_kms_key_id #=> String
     #   resp.namespace.admin_username #=> String
+    #   resp.namespace.catalog_arn #=> String
     #   resp.namespace.creation_date #=> Time
     #   resp.namespace.db_name #=> String
     #   resp.namespace.default_iam_role_arn #=> String
     #   resp.namespace.iam_roles #=> Array
     #   resp.namespace.iam_roles[0] #=> String
     #   resp.namespace.kms_key_id #=> String
+    #   resp.namespace.lakehouse_registration_status #=> String
     #   resp.namespace.log_exports #=> Array
     #   resp.namespace.log_exports[0] #=> String, one of "useractivitylog", "userlog", "connectionlog"
     #   resp.namespace.namespace_arn #=> String
@@ -3049,6 +3374,14 @@ module Aws::RedshiftServerless
     #   The ID of the Key Management Service (KMS) key used to encrypt and
     #   store the namespace's admin credentials secret.
     #
+    # @option params [Boolean] :maintain_integration
+    #   If `true`, maintain existing data sharing, zero-ETL and S3 event
+    #   integrations when restoring. Otherwise, integrations will not be
+    #   maintained after the restore operation. Integrations are only
+    #   maintained when restored to the same serverless namespace.
+    #
+    #   Default: true
+    #
     # @option params [Boolean] :manage_admin_password
     #   If `true`, Amazon Redshift uses Secrets Manager to manage the restored
     #   snapshot's admin credentials. If `MmanageAdminPassword` is false or
@@ -3063,8 +3396,8 @@ module Aws::RedshiftServerless
     #
     # @option params [String] :snapshot_arn
     #   The Amazon Resource Name (ARN) of the snapshot to restore from.
-    #   Required if restoring from Amazon Redshift Serverless to a provisioned
-    #   cluster. Must not be specified at the same time as `snapshotName`.
+    #   Required if restoring from a provisioned cluster to Amazon Redshift
+    #   Serverless. Must not be specified at the same time as `snapshotName`.
     #
     #   The format of the ARN is
     #   arn:aws:redshift:&lt;region&gt;:&lt;account\_id&gt;:snapshot:&lt;cluster\_identifier&gt;/&lt;snapshot\_identifier&gt;.
@@ -3086,6 +3419,7 @@ module Aws::RedshiftServerless
     #
     #   resp = client.restore_from_snapshot({
     #     admin_password_secret_kms_key_id: "KmsKeyId",
+    #     maintain_integration: false,
     #     manage_admin_password: false,
     #     namespace_name: "NamespaceName", # required
     #     owner_account: "String",
@@ -3099,12 +3433,14 @@ module Aws::RedshiftServerless
     #   resp.namespace.admin_password_secret_arn #=> String
     #   resp.namespace.admin_password_secret_kms_key_id #=> String
     #   resp.namespace.admin_username #=> String
+    #   resp.namespace.catalog_arn #=> String
     #   resp.namespace.creation_date #=> Time
     #   resp.namespace.db_name #=> String
     #   resp.namespace.default_iam_role_arn #=> String
     #   resp.namespace.iam_roles #=> Array
     #   resp.namespace.iam_roles[0] #=> String
     #   resp.namespace.kms_key_id #=> String
+    #   resp.namespace.lakehouse_registration_status #=> String
     #   resp.namespace.log_exports #=> Array
     #   resp.namespace.log_exports[0] #=> String, one of "useractivitylog", "userlog", "connectionlog"
     #   resp.namespace.namespace_arn #=> String
@@ -3448,6 +3784,75 @@ module Aws::RedshiftServerless
       req.send_request(options)
     end
 
+    # Modifies the lakehouse configuration for a namespace. This operation
+    # allows you to manage Amazon Redshift federated permissions and Amazon
+    # Web Services IAM Identity Center trusted identity propagation.
+    #
+    # @option params [String] :catalog_name
+    #   The name of the Glue Data Catalog that will be associated with the
+    #   namespace enabled with Amazon Redshift federated permissions.
+    #
+    #   Pattern: `^[a-z0-9_-]*[a-z]+[a-z0-9_-]*$`
+    #
+    # @option params [Boolean] :dry_run
+    #   A boolean value that, if `true`, validates the request without
+    #   actually updating the lakehouse configuration. Use this to check for
+    #   errors before making changes.
+    #
+    # @option params [String] :lakehouse_idc_application_arn
+    #   The Amazon Resource Name (ARN) of the IAM Identity Center application
+    #   used for enabling Amazon Web Services IAM Identity Center trusted
+    #   identity propagation on a namespace enabled with Amazon Redshift
+    #   federated permissions.
+    #
+    # @option params [String] :lakehouse_idc_registration
+    #   Modifies the Amazon Web Services IAM Identity Center trusted identity
+    #   propagation on a namespace enabled with Amazon Redshift federated
+    #   permissions. Valid values are `Associate` or `Disassociate`.
+    #
+    # @option params [String] :lakehouse_registration
+    #   Specifies whether to register or deregister the namespace with Amazon
+    #   Redshift federated permissions. Valid values are `Register` or
+    #   `Deregister`.
+    #
+    # @option params [required, String] :namespace_name
+    #   The name of the namespace whose lakehouse configuration you want to
+    #   modify.
+    #
+    # @return [Types::UpdateLakehouseConfigurationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateLakehouseConfigurationResponse#catalog_arn #catalog_arn} => String
+    #   * {Types::UpdateLakehouseConfigurationResponse#lakehouse_idc_application_arn #lakehouse_idc_application_arn} => String
+    #   * {Types::UpdateLakehouseConfigurationResponse#lakehouse_registration_status #lakehouse_registration_status} => String
+    #   * {Types::UpdateLakehouseConfigurationResponse#namespace_name #namespace_name} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_lakehouse_configuration({
+    #     catalog_name: "CatalogNameString",
+    #     dry_run: false,
+    #     lakehouse_idc_application_arn: "String",
+    #     lakehouse_idc_registration: "Associate", # accepts Associate, Disassociate
+    #     lakehouse_registration: "Register", # accepts Register, Deregister
+    #     namespace_name: "NamespaceName", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.catalog_arn #=> String
+    #   resp.lakehouse_idc_application_arn #=> String
+    #   resp.lakehouse_registration_status #=> String
+    #   resp.namespace_name #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-serverless-2021-04-21/UpdateLakehouseConfiguration AWS API Documentation
+    #
+    # @overload update_lakehouse_configuration(params = {})
+    # @param [Hash] params ({})
+    def update_lakehouse_configuration(params = {}, options = {})
+      req = build_request(:update_lakehouse_configuration, params)
+      req.send_request(options)
+    end
+
     # Updates a namespace with the specified settings. Unless required, you
     # can't update multiple parameters in one request. For example, you
     # must specify both `adminUsername` and `adminUserPassword` to update
@@ -3465,6 +3870,10 @@ module Aws::RedshiftServerless
     #   `adminUsername`.
     #
     #   You can't use `adminUserPassword` if `manageAdminPassword` is true.
+    #
+    #   If your admin user account is locked, this operation also unlocks your
+    #   account and resets the failed-login counter. This option is available
+    #   only when account lockout security is enabled for the namespace.
     #
     # @option params [String] :admin_username
     #   The username of the administrator for the first database created in
@@ -3522,12 +3931,14 @@ module Aws::RedshiftServerless
     #   resp.namespace.admin_password_secret_arn #=> String
     #   resp.namespace.admin_password_secret_kms_key_id #=> String
     #   resp.namespace.admin_username #=> String
+    #   resp.namespace.catalog_arn #=> String
     #   resp.namespace.creation_date #=> Time
     #   resp.namespace.db_name #=> String
     #   resp.namespace.default_iam_role_arn #=> String
     #   resp.namespace.iam_roles #=> Array
     #   resp.namespace.iam_roles[0] #=> String
     #   resp.namespace.kms_key_id #=> String
+    #   resp.namespace.lakehouse_registration_status #=> String
     #   resp.namespace.log_exports #=> Array
     #   resp.namespace.log_exports[0] #=> String, one of "useractivitylog", "userlog", "connectionlog"
     #   resp.namespace.namespace_arn #=> String
@@ -3835,10 +4246,16 @@ module Aws::RedshiftServerless
     #   An array of parameters to set for advanced control over a database.
     #   The options are `auto_mv`, `datestyle`,
     #   `enable_case_sensitive_identifier`, `enable_user_activity_logging`,
-    #   `query_group`, `search_path`, `require_ssl`, `use_fips_ssl`, and query
-    #   monitoring metrics that let you define performance boundaries. For
-    #   more information about query monitoring rules and available metrics,
-    #   see [ Query monitoring metrics for Amazon Redshift Serverless][1].
+    #   `query_group`, `search_path`, `require_ssl`, `use_fips_ssl`, and
+    #   either `wlm_json_configuration` or query monitoring metrics that let
+    #   you define performance boundaries. You can either specify individual
+    #   query monitoring metrics (such as `max_scan_row_count`,
+    #   `max_query_execution_time`) or use `wlm_json_configuration` to define
+    #   query queues with rules, but not both. If you're using
+    #   `wlm_json_configuration`, the maximum size of `parameterValue` is 8000
+    #   characters. For more information about query monitoring rules and
+    #   available metrics, see [ Query monitoring metrics for Amazon Redshift
+    #   Serverless][1].
     #
     #
     #
@@ -3848,6 +4265,12 @@ module Aws::RedshiftServerless
     #   The value that specifies whether to turn on enhanced virtual private
     #   cloud (VPC) routing, which forces Amazon Redshift Serverless to route
     #   traffic through your VPC.
+    #
+    # @option params [Boolean] :extra_compute_for_automatic_optimization
+    #   If `true`, allocates additional compute resources for running
+    #   automatic optimization operations.
+    #
+    #   Default: false
     #
     # @option params [String] :ip_address_type
     #   The IP address type that the workgroup supports. Possible values are
@@ -3899,6 +4322,7 @@ module Aws::RedshiftServerless
     #       },
     #     ],
     #     enhanced_vpc_routing: false,
+    #     extra_compute_for_automatic_optimization: false,
     #     ip_address_type: "IpAddressType",
     #     max_capacity: 1,
     #     port: 1,
@@ -3937,6 +4361,7 @@ module Aws::RedshiftServerless
     #   resp.workgroup.endpoint.vpc_endpoints[0].vpc_endpoint_id #=> String
     #   resp.workgroup.endpoint.vpc_endpoints[0].vpc_id #=> String
     #   resp.workgroup.enhanced_vpc_routing #=> Boolean
+    #   resp.workgroup.extra_compute_for_automatic_optimization #=> Boolean
     #   resp.workgroup.ip_address_type #=> String
     #   resp.workgroup.max_capacity #=> Integer
     #   resp.workgroup.namespace_name #=> String
@@ -3984,7 +4409,7 @@ module Aws::RedshiftServerless
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-redshiftserverless'
-      context[:gem_version] = '1.47.0'
+      context[:gem_version] = '1.72.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

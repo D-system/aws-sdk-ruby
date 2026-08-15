@@ -27,7 +27,80 @@ module Aws::SocialMessaging
     class AssociateWhatsAppBusinessAccountOutput
       attr_accessor signup_callback_result: Types::WhatsAppSignupCallbackResult
       attr_accessor status_code: ::Integer
+      attr_accessor linked_whats_app_business_account_id: ::String
       SENSITIVE: []
+    end
+
+    class CreateWhatsAppDatasetInput
+      attr_accessor id: ::String
+      SENSITIVE: []
+    end
+
+    class CreateWhatsAppDatasetOutput
+      attr_accessor dataset_id: ::String
+      SENSITIVE: []
+    end
+
+    class CreateWhatsAppFlowInput
+      attr_accessor id: ::String
+      attr_accessor flow_name: ::String
+      attr_accessor categories: ::Array[("SIGN_UP" | "SIGN_IN" | "APPOINTMENT_BOOKING" | "LEAD_GENERATION" | "SHOPPING" | "CONTACT_US" | "CUSTOMER_SUPPORT" | "SURVEY" | "OTHER")]
+      attr_accessor flow_json: ::String
+      attr_accessor publish: bool
+      attr_accessor clone_flow_id: ::String
+      SENSITIVE: []
+    end
+
+    class CreateWhatsAppFlowOutput
+      attr_accessor flow_id: ::String
+      attr_accessor validation_errors: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class CreateWhatsAppMessageTemplateFromLibraryInput
+      attr_accessor meta_library_template: Types::MetaLibraryTemplate
+      attr_accessor id: ::String
+      SENSITIVE: []
+    end
+
+    class CreateWhatsAppMessageTemplateFromLibraryOutput
+      attr_accessor meta_template_id: ::String
+      attr_accessor template_status: ::String
+      attr_accessor category: ::String
+      SENSITIVE: []
+    end
+
+    class CreateWhatsAppMessageTemplateInput
+      attr_accessor template_definition: ::String
+      attr_accessor id: ::String
+      SENSITIVE: []
+    end
+
+    class CreateWhatsAppMessageTemplateMediaInput
+      attr_accessor id: ::String
+      attr_accessor source_s3_file: Types::S3File
+      SENSITIVE: [:source_s3_file]
+    end
+
+    class CreateWhatsAppMessageTemplateMediaOutput
+      attr_accessor meta_header_handle: ::String
+      SENSITIVE: []
+    end
+
+    class CreateWhatsAppMessageTemplateOutput
+      attr_accessor meta_template_id: ::String
+      attr_accessor template_status: ::String
+      attr_accessor category: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteWhatsAppFlowInput
+      attr_accessor id: ::String
+      attr_accessor flow_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteWhatsAppFlowOutput < Aws::EmptyStructure
     end
 
     class DeleteWhatsAppMessageMediaInput
@@ -41,9 +114,29 @@ module Aws::SocialMessaging
       SENSITIVE: []
     end
 
+    class DeleteWhatsAppMessageTemplateInput
+      attr_accessor meta_template_id: ::String
+      attr_accessor delete_all_languages: bool
+      attr_accessor id: ::String
+      attr_accessor template_name: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteWhatsAppMessageTemplateOutput < Aws::EmptyStructure
+    end
+
     class DependencyException
       attr_accessor message: ::String
       SENSITIVE: []
+    end
+
+    class DeprecateWhatsAppFlowInput
+      attr_accessor id: ::String
+      attr_accessor flow_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeprecateWhatsAppFlowOutput < Aws::EmptyStructure
     end
 
     class DisassociateWhatsAppBusinessAccountInput
@@ -75,6 +168,41 @@ module Aws::SocialMessaging
       SENSITIVE: []
     end
 
+    class GetWhatsAppFlowInput
+      attr_accessor id: ::String
+      attr_accessor flow_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetWhatsAppFlowOutput
+      attr_accessor flow_id: ::String
+      attr_accessor flow_name: ::String
+      attr_accessor flow_status: ::String
+      attr_accessor categories: ::Array[("SIGN_UP" | "SIGN_IN" | "APPOINTMENT_BOOKING" | "LEAD_GENERATION" | "SHOPPING" | "CONTACT_US" | "CUSTOMER_SUPPORT" | "SURVEY" | "OTHER")]
+      attr_accessor validation_errors: ::Array[::String]
+      attr_accessor json_version: ::String
+      attr_accessor data_api_version: ::String
+      attr_accessor endpoint_uri: ::String
+      attr_accessor preview: Types::MetaFlowPreviewInfo
+      attr_accessor whats_app_business_account: Types::MetaFlowWhatsAppBusinessAccountInfo
+      attr_accessor application: Types::MetaFlowApplicationInfo
+      attr_accessor health_status: Types::MetaFlowHealthStatus
+      SENSITIVE: []
+    end
+
+    class GetWhatsAppFlowPreviewInput
+      attr_accessor id: ::String
+      attr_accessor flow_id: ::String
+      attr_accessor invalidate: bool
+      SENSITIVE: []
+    end
+
+    class GetWhatsAppFlowPreviewOutput
+      attr_accessor flow_id: ::String
+      attr_accessor preview: Types::MetaFlowPreviewInfo
+      SENSITIVE: []
+    end
+
     class GetWhatsAppMessageMediaInput
       attr_accessor media_id: ::String
       attr_accessor origination_phone_number_id: ::String
@@ -90,12 +218,60 @@ module Aws::SocialMessaging
       SENSITIVE: []
     end
 
+    class GetWhatsAppMessageTemplateInput
+      attr_accessor meta_template_id: ::String
+      attr_accessor id: ::String
+      attr_accessor template_name: ::String
+      attr_accessor template_language_code: ::String
+      SENSITIVE: []
+    end
+
+    class GetWhatsAppMessageTemplateOutput
+      attr_accessor template: ::String
+      SENSITIVE: []
+    end
+
     class InternalServiceException
       attr_accessor message: ::String
       SENSITIVE: []
     end
 
     class InvalidParametersException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class LibraryTemplateBodyInputs
+      attr_accessor add_contact_number: bool
+      attr_accessor add_learn_more_link: bool
+      attr_accessor add_security_recommendation: bool
+      attr_accessor add_track_package_link: bool
+      attr_accessor code_expiration_minutes: ::Integer
+      SENSITIVE: []
+    end
+
+    class LibraryTemplateButtonInput
+      attr_accessor type: ::String
+      attr_accessor phone_number: ::String
+      attr_accessor url: ::Hash[::String, ::String]
+      attr_accessor otp_type: ::String
+      attr_accessor zero_tap_terms_accepted: bool
+      attr_accessor supported_apps: ::Array[::Hash[::String, ::String]]
+      SENSITIVE: []
+    end
+
+    class LibraryTemplateButtonList
+      attr_accessor type: ::String
+      attr_accessor text: ::String
+      attr_accessor phone_number: ::String
+      attr_accessor url: ::String
+      attr_accessor otp_type: ::String
+      attr_accessor zero_tap_terms_accepted: bool
+      attr_accessor supported_apps: ::Array[::Hash[::String, ::String]]
+      SENSITIVE: []
+    end
+
+    class LimitExceededException
       attr_accessor message: ::String
       SENSITIVE: []
     end
@@ -108,6 +284,8 @@ module Aws::SocialMessaging
       attr_accessor link_date: ::Time
       attr_accessor waba_name: ::String
       attr_accessor event_destinations: ::Array[Types::WhatsAppBusinessAccountEventDestination]
+      attr_accessor marketing_messages_onboarding_status: ::String
+      attr_accessor dataset_id: ::String
       attr_accessor phone_numbers: ::Array[Types::WhatsAppPhoneNumberSummary]
       SENSITIVE: []
     end
@@ -128,6 +306,8 @@ module Aws::SocialMessaging
       attr_accessor link_date: ::Time
       attr_accessor waba_name: ::String
       attr_accessor event_destinations: ::Array[Types::WhatsAppBusinessAccountEventDestination]
+      attr_accessor marketing_messages_onboarding_status: ::String
+      attr_accessor dataset_id: ::String
       SENSITIVE: []
     end
 
@@ -154,6 +334,136 @@ module Aws::SocialMessaging
       SENSITIVE: []
     end
 
+    class ListWhatsAppFlowAssetsInput
+      attr_accessor id: ::String
+      attr_accessor flow_id: ::String
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListWhatsAppFlowAssetsOutput
+      attr_accessor flow_assets: ::Array[Types::MetaFlowAsset]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListWhatsAppFlowsInput
+      attr_accessor id: ::String
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListWhatsAppFlowsOutput
+      attr_accessor flows: ::Array[Types::MetaFlowSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListWhatsAppMessageTemplatesInput
+      attr_accessor id: ::String
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListWhatsAppMessageTemplatesOutput
+      attr_accessor templates: ::Array[Types::TemplateSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListWhatsAppTemplateLibraryInput
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor id: ::String
+      attr_accessor filters: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class ListWhatsAppTemplateLibraryOutput
+      attr_accessor meta_library_templates: ::Array[Types::MetaLibraryTemplateDefinition]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class MetaFlowApplicationInfo
+      attr_accessor link: ::String
+      attr_accessor name: ::String
+      attr_accessor id: ::String
+      SENSITIVE: []
+    end
+
+    class MetaFlowAsset
+      attr_accessor name: ::String
+      attr_accessor asset_type: ::String
+      attr_accessor download_url: ::String
+      SENSITIVE: []
+    end
+
+    class MetaFlowHealthEntity
+      attr_accessor entity_type: ::String
+      attr_accessor id: ::String
+      attr_accessor can_send_message: ::String
+      SENSITIVE: []
+    end
+
+    class MetaFlowHealthStatus
+      attr_accessor can_send_message: ::String
+      attr_accessor entities: ::Array[Types::MetaFlowHealthEntity]
+      SENSITIVE: []
+    end
+
+    class MetaFlowPreviewInfo
+      attr_accessor preview_url: ::String
+      attr_accessor expires_at: ::String
+      SENSITIVE: []
+    end
+
+    class MetaFlowSummary
+      attr_accessor flow_id: ::String
+      attr_accessor flow_name: ::String
+      attr_accessor flow_status: ::String
+      attr_accessor flow_categories: ::Array[("SIGN_UP" | "SIGN_IN" | "APPOINTMENT_BOOKING" | "LEAD_GENERATION" | "SHOPPING" | "CONTACT_US" | "CUSTOMER_SUPPORT" | "SURVEY" | "OTHER")]
+      attr_accessor validation_errors: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class MetaFlowWhatsAppBusinessAccountInfo
+      attr_accessor id: ::String
+      attr_accessor name: ::String
+      attr_accessor currency: ::String
+      attr_accessor timezone_id: ::String
+      attr_accessor message_template_namespace: ::String
+      SENSITIVE: []
+    end
+
+    class MetaLibraryTemplate
+      attr_accessor template_name: ::String
+      attr_accessor library_template_name: ::String
+      attr_accessor template_category: ::String
+      attr_accessor template_language: ::String
+      attr_accessor library_template_button_inputs: ::Array[Types::LibraryTemplateButtonInput]
+      attr_accessor library_template_body_inputs: Types::LibraryTemplateBodyInputs
+      SENSITIVE: []
+    end
+
+    class MetaLibraryTemplateDefinition
+      attr_accessor template_name: ::String
+      attr_accessor template_language: ::String
+      attr_accessor template_category: ::String
+      attr_accessor template_topic: ::String
+      attr_accessor template_use_case: ::String
+      attr_accessor template_industry: ::Array[::String]
+      attr_accessor template_header: ::String
+      attr_accessor template_body: ::String
+      attr_accessor template_buttons: ::Array[Types::LibraryTemplateButtonList]
+      attr_accessor template_id: ::String
+      attr_accessor template_body_example_params: ::Array[::String]
+      SENSITIVE: []
+    end
+
     class PostWhatsAppMessageMediaInput
       attr_accessor origination_phone_number_id: ::String
       attr_accessor source_s3_presigned_url: Types::S3PresignedUrl
@@ -164,6 +474,15 @@ module Aws::SocialMessaging
     class PostWhatsAppMessageMediaOutput
       attr_accessor media_id: ::String
       SENSITIVE: []
+    end
+
+    class PublishWhatsAppFlowInput
+      attr_accessor id: ::String
+      attr_accessor flow_id: ::String
+      SENSITIVE: []
+    end
+
+    class PublishWhatsAppFlowOutput < Aws::EmptyStructure
     end
 
     class PutWhatsAppBusinessAccountEventDestinationsInput
@@ -189,6 +508,18 @@ module Aws::SocialMessaging
     class S3PresignedUrl
       attr_accessor url: ::String
       attr_accessor headers: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class SendWhatsAppConversionEventInput
+      attr_accessor id: ::String
+      attr_accessor dataset_id: ::String
+      attr_accessor event_data: ::String
+      SENSITIVE: [:event_data]
+    end
+
+    class SendWhatsAppConversionEventOutput
+      attr_accessor request_id: ::String
       SENSITIVE: []
     end
 
@@ -221,6 +552,16 @@ module Aws::SocialMessaging
       SENSITIVE: []
     end
 
+    class TemplateSummary
+      attr_accessor template_name: ::String
+      attr_accessor meta_template_id: ::String
+      attr_accessor template_status: ::String
+      attr_accessor template_quality_score: ::String
+      attr_accessor template_language: ::String
+      attr_accessor template_category: ::String
+      SENSITIVE: []
+    end
+
     class ThrottledRequestException
       attr_accessor message: ::String
       SENSITIVE: []
@@ -235,6 +576,44 @@ module Aws::SocialMessaging
     class UntagResourceOutput
       attr_accessor status_code: ::Integer
       SENSITIVE: []
+    end
+
+    class UpdateWhatsAppFlowAssetsInput
+      attr_accessor id: ::String
+      attr_accessor flow_id: ::String
+      attr_accessor flow_json: ::String
+      SENSITIVE: []
+    end
+
+    class UpdateWhatsAppFlowAssetsOutput
+      attr_accessor validation_errors: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class UpdateWhatsAppFlowInput
+      attr_accessor id: ::String
+      attr_accessor flow_id: ::String
+      attr_accessor flow_name: ::String
+      attr_accessor categories: ::Array[("SIGN_UP" | "SIGN_IN" | "APPOINTMENT_BOOKING" | "LEAD_GENERATION" | "SHOPPING" | "CONTACT_US" | "CUSTOMER_SUPPORT" | "SURVEY" | "OTHER")]
+      SENSITIVE: []
+    end
+
+    class UpdateWhatsAppFlowOutput < Aws::EmptyStructure
+    end
+
+    class UpdateWhatsAppMessageTemplateInput
+      attr_accessor id: ::String
+      attr_accessor meta_template_id: ::String
+      attr_accessor template_name: ::String
+      attr_accessor template_language_code: ::String
+      attr_accessor parameter_format: ::String
+      attr_accessor template_category: ::String
+      attr_accessor template_components: ::String
+      attr_accessor cta_url_link_tracking_opted_out: bool
+      SENSITIVE: []
+    end
+
+    class UpdateWhatsAppMessageTemplateOutput < Aws::EmptyStructure
     end
 
     class ValidationException
@@ -271,6 +650,7 @@ module Aws::SocialMessaging
       attr_accessor display_phone_number_name: ::String
       attr_accessor display_phone_number: ::String
       attr_accessor quality_rating: ::String
+      attr_accessor data_localization_region: ::String
       SENSITIVE: []
     end
 
@@ -282,6 +662,7 @@ module Aws::SocialMessaging
       attr_accessor display_phone_number_name: ::String
       attr_accessor display_phone_number: ::String
       attr_accessor quality_rating: ::String
+      attr_accessor data_localization_region: ::String
       SENSITIVE: []
     end
 
@@ -295,6 +676,7 @@ module Aws::SocialMessaging
 
     class WhatsAppSignupCallback
       attr_accessor access_token: ::String
+      attr_accessor callback_url: ::String
       SENSITIVE: []
     end
 

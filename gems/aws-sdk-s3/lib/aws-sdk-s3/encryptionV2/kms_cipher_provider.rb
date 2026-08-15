@@ -33,6 +33,8 @@ module Aws
           end
           cipher = Utils.aes_encryption_cipher(:GCM)
           cipher.key = key_data.plaintext
+          ##= ../specification/s3-encryption/data-format/content-metadata.md#algorithm-suite-and-message-format-version-compatibility
+          ##% Objects encrypted with ALG_AES_256_GCM_IV12_TAG16_NO_KDF MUST use the V2 message format version only.
           envelope = {
             'x-amz-key-v2' => encode64(key_data.ciphertext_blob),
             'x-amz-iv' => encode64(cipher.iv = cipher.random_iv),
@@ -48,14 +50,20 @@ module Aws
         # @return [Cipher] Given an encryption envelope, returns a
         #   decryption cipher.
         def decryption_cipher(envelope, options = {})
-          encryption_context = Json.load(envelope['x-amz-matdesc'])
+          encryption_context = extract_encryption_context(envelope['x-amz-matdesc'])
           cek_alg = envelope['x-amz-cek-alg']
 
           case envelope['x-amz-wrap-alg']
           when 'kms'
+            ##= ../specification/s3-encryption/client.md#enable-legacy-wrapping-algorithms
+            ##% The S3EC MUST support the option to enable or disable legacy wrapping algorithms.
             unless options[:security_profile] == :v2_and_legacy
+              ##= ../specification/s3-encryption/client.md#enable-legacy-wrapping-algorithms
+              ##% When disabled, the S3EC MUST NOT decrypt objects encrypted using legacy wrapping algorithms; it MUST throw an exception when attempting to decrypt an object encrypted with a legacy wrapping algorithm.
               raise Errors::LegacyDecryptionError
             end
+            ##= ../specification/s3-encryption/client.md#enable-legacy-wrapping-algorithms
+            ##% When enabled, the S3EC MUST be able to decrypt objects encrypted with all supported wrapping algorithms (both legacy and fully supported).
           when 'kms+context'
             if cek_alg != encryption_context['aws:x-amz-cek-alg']
               raise Errors::CEKAlgMismatchError
@@ -106,6 +114,19 @@ module Aws
         end
 
         private
+
+        # Raise a decryption error for a malformed material description. A
+        # material description must be a JSON object.
+        def extract_encryption_context(matdesc)
+          context = Json.load(matdesc) if matdesc.is_a?(String)
+          unless context.is_a?(Hash)
+            raise Errors::DecryptionError, 'Malformed material description'
+          end
+
+          context
+        rescue Aws::Json::ParseError, EncodingError
+          raise Errors::DecryptionError, 'Malformed material description'
+        end
 
         def validate_key_wrap(key_wrap_schema)
           case key_wrap_schema

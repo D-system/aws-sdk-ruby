@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -92,7 +93,8 @@ module Aws
                             size: ("SMALL" | "MEDIUM" | "LARGE"),
                             networking: {
                               subnet_ids: Array[::String]?,
-                              security_group_ids: Array[::String]?
+                              security_group_ids: Array[::String]?,
+                              network_type: ("IPV4" | "IPV6")?
                             },
                             ?slurm_configuration: {
                               scale_down_idle_time_in_seconds: ::Integer?,
@@ -100,8 +102,27 @@ module Aws
                                 {
                                   parameter_name: ::String,
                                   parameter_value: ::String
-                                },
-                              ]?
+                                }
+                              ]?,
+                              slurmdbd_custom_settings: Array[
+                                {
+                                  parameter_name: ::String,
+                                  parameter_value: ::String
+                                }
+                              ]?,
+                              cgroup_custom_settings: Array[
+                                {
+                                  parameter_name: ::String,
+                                  parameter_value: ::String
+                                }
+                              ]?,
+                              accounting: {
+                                default_purge_time_in_days: ::Integer?,
+                                mode: ("STANDARD" | "NONE")
+                              }?,
+                              slurm_rest: {
+                                mode: ("STANDARD" | "NONE")
+                              }?
                             },
                             ?client_token: ::String,
                             ?tags: Hash[::String, ::String]
@@ -118,7 +139,7 @@ module Aws
                                        compute_node_group_name: ::String,
                                        ?ami_id: ::String,
                                        subnet_ids: Array[::String],
-                                       ?purchase_option: ("ONDEMAND" | "SPOT"),
+                                       ?purchase_option: ("ONDEMAND" | "SPOT" | "CAPACITY_BLOCK" | "INTERRUPTIBLE_CAPACITY_RESERVATION"),
                                        custom_launch_template: {
                                          id: ::String,
                                          version: ::String
@@ -131,18 +152,23 @@ module Aws
                                        instance_configs: Array[
                                          {
                                            instance_type: ::String?
-                                         },
+                                         }
                                        ],
                                        ?spot_options: {
                                          allocation_strategy: ("lowest-price" | "capacity-optimized" | "price-capacity-optimized")?
                                        },
                                        ?slurm_configuration: {
+                                         scale_down_idle_time_in_seconds: ::Integer?,
                                          slurm_custom_settings: Array[
                                            {
                                              parameter_name: ::String,
                                              parameter_value: ::String
-                                           },
+                                           }
                                          ]?
+                                       },
+                                       ?node_lifecycle_actions: {
+                                         stages: Params::node_lifecycle_stages,
+                                         script_caching_policy: ("CACHE_ONCE" | "REFRESH_ON_REBOOT")?
                                        },
                                        ?client_token: ::String,
                                        ?tags: Hash[::String, ::String]
@@ -160,8 +186,16 @@ module Aws
                           ?compute_node_group_configurations: Array[
                             {
                               compute_node_group_id: ::String?
-                            },
+                            }
                           ],
+                          ?slurm_configuration: {
+                            slurm_custom_settings: Array[
+                              {
+                                parameter_name: ::String,
+                                parameter_value: ::String
+                              }
+                            ]?
+                          },
                           ?client_token: ::String,
                           ?tags: Hash[::String, ::String]
                         ) -> _CreateQueueResponseSuccess
@@ -284,6 +318,10 @@ module Aws
         def node_id: () -> ::String
         def shared_secret: () -> ::String
         def endpoints: () -> ::Array[Types::Endpoint]
+        def cluster_name: () -> ::String
+        def compute_node_group_id: () -> ::String
+        def compute_node_group_name: () -> ::String
+        def node_lifecycle_actions: () -> Types::NodeLifecycleActions
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/PCS/Client.html#register_compute_node_group_instance-instance_method
       def register_compute_node_group_instance: (
@@ -292,19 +330,67 @@ module Aws
                                                 ) -> _RegisterComputeNodeGroupInstanceResponseSuccess
                                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RegisterComputeNodeGroupInstanceResponseSuccess
 
+      interface _TagResourceResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::TagResourceResponse]
+      end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/PCS/Client.html#tag_resource-instance_method
       def tag_resource: (
                           resource_arn: ::String,
                           tags: Hash[::String, ::String]
-                        ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
-                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+                        ) -> _TagResourceResponseSuccess
+                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess
 
+      interface _UntagResourceResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UntagResourceResponse]
+      end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/PCS/Client.html#untag_resource-instance_method
       def untag_resource: (
                             resource_arn: ::String,
                             tag_keys: Array[::String]
-                          ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
-                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+                          ) -> _UntagResourceResponseSuccess
+                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UntagResourceResponseSuccess
+
+      interface _UpdateClusterResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateClusterResponse]
+        def cluster: () -> Types::Cluster
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/PCS/Client.html#update_cluster-instance_method
+      def update_cluster: (
+                            cluster_identifier: ::String,
+                            ?client_token: ::String,
+                            ?slurm_configuration: {
+                              scale_down_idle_time_in_seconds: ::Integer?,
+                              slurm_custom_settings: Array[
+                                {
+                                  parameter_name: ::String,
+                                  parameter_value: ::String
+                                }
+                              ]?,
+                              slurmdbd_custom_settings: Array[
+                                {
+                                  parameter_name: ::String,
+                                  parameter_value: ::String
+                                }
+                              ]?,
+                              cgroup_custom_settings: Array[
+                                {
+                                  parameter_name: ::String,
+                                  parameter_value: ::String
+                                }
+                              ]?,
+                              accounting: {
+                                default_purge_time_in_days: ::Integer?,
+                                mode: ("STANDARD" | "NONE")?
+                              }?,
+                              slurm_rest: {
+                                mode: ("STANDARD" | "NONE")?
+                              }?
+                            },
+                            ?scheduler: {
+                              version: ::String
+                            }
+                          ) -> _UpdateClusterResponseSuccess
+                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateClusterResponseSuccess
 
       interface _UpdateComputeNodeGroupResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::UpdateComputeNodeGroupResponse]
@@ -320,7 +406,7 @@ module Aws
                                          id: ::String,
                                          version: ::String
                                        },
-                                       ?purchase_option: ("ONDEMAND" | "SPOT"),
+                                       ?purchase_option: ("ONDEMAND" | "SPOT" | "CAPACITY_BLOCK" | "INTERRUPTIBLE_CAPACITY_RESERVATION"),
                                        ?spot_options: {
                                          allocation_strategy: ("lowest-price" | "capacity-optimized" | "price-capacity-optimized")?
                                        },
@@ -330,12 +416,17 @@ module Aws
                                        },
                                        ?iam_instance_profile_arn: ::String,
                                        ?slurm_configuration: {
+                                         scale_down_idle_time_in_seconds: ::Integer?,
                                          slurm_custom_settings: Array[
                                            {
                                              parameter_name: ::String,
                                              parameter_value: ::String
-                                           },
+                                           }
                                          ]?
+                                       },
+                                       ?node_lifecycle_actions: {
+                                         stages: Params::node_lifecycle_stages,
+                                         script_caching_policy: ("CACHE_ONCE" | "REFRESH_ON_REBOOT")?
                                        },
                                        ?client_token: ::String
                                      ) -> _UpdateComputeNodeGroupResponseSuccess
@@ -352,8 +443,16 @@ module Aws
                           ?compute_node_group_configurations: Array[
                             {
                               compute_node_group_id: ::String?
-                            },
+                            }
                           ],
+                          ?slurm_configuration: {
+                            slurm_custom_settings: Array[
+                              {
+                                parameter_name: ::String,
+                                parameter_value: ::String
+                              }
+                            ]?
+                          },
                           ?client_token: ::String
                         ) -> _UpdateQueueResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateQueueResponseSuccess

@@ -95,8 +95,8 @@ module Aws::BillingConductor
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::BillingConductor
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::BillingConductor
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::BillingConductor
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::BillingConductor
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::BillingConductor
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::BillingConductor
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::BillingConductor
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -642,8 +646,11 @@ module Aws::BillingConductor
     # plan computation.
     #
     # @option params [String] :client_token
-    #   The token that is needed to support idempotency. Idempotency isn't
-    #   currently supported, but will be implemented in a future update.
+    #   A unique, case-sensitive identifier that you specify to ensure
+    #   idempotency of the request. Idempotency ensures that an API request
+    #   completes no more than one time. With an idempotent request, if the
+    #   original request completes successfully, any subsequent retries
+    #   complete successfully without performing any further actions.
     #
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.**
@@ -680,8 +687,9 @@ module Aws::BillingConductor
     #     client_token: "ClientToken",
     #     name: "BillingGroupName", # required
     #     account_grouping: { # required
-    #       linked_account_ids: ["AccountId"], # required
+    #       linked_account_ids: ["AccountId"],
     #       auto_associate: false,
+    #       responsibility_transfer_arn: "ResponsibilityTransferArn",
     #     },
     #     computation_preference: { # required
     #       pricing_plan_arn: "PricingPlanFullArn", # required
@@ -712,8 +720,11 @@ module Aws::BillingConductor
     # or discount.
     #
     # @option params [String] :client_token
-    #   The token that is needed to support idempotency. Idempotency isn't
-    #   currently supported, but will be implemented in a future update.
+    #   A unique, case-sensitive identifier that you specify to ensure
+    #   idempotency of the request. Idempotency ensures that an API request
+    #   completes no more than one time. With an idempotent request, if the
+    #   original request completes successfully, any subsequent retries
+    #   complete successfully without performing any further actions.
     #
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.**
@@ -744,6 +755,14 @@ module Aws::BillingConductor
     #   The Amazon Web Services account in which this custom line item will be
     #   applied to.
     #
+    # @option params [String] :computation_rule
+    #   Specifies how the custom line item charges are computed.
+    #
+    # @option params [Types::PresentationObject] :presentation_details
+    #   Details controlling how the custom line item charges are presented in
+    #   the bill. Contains specifications for which service the charges will
+    #   be shown under.
+    #
     # @return [Types::CreateCustomLineItemOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateCustomLineItemOutput#arn #arn} => String
@@ -773,13 +792,18 @@ module Aws::BillingConductor
     #       type: "CREDIT", # required, accepts CREDIT, FEE
     #       line_item_filters: [
     #         {
-    #           attribute: "LINE_ITEM_TYPE", # required, accepts LINE_ITEM_TYPE
-    #           match_option: "NOT_EQUAL", # required, accepts NOT_EQUAL
-    #           values: ["SAVINGS_PLAN_NEGATION"], # required, accepts SAVINGS_PLAN_NEGATION
+    #           attribute: "LINE_ITEM_TYPE", # required, accepts LINE_ITEM_TYPE, SERVICE
+    #           match_option: "NOT_EQUAL", # required, accepts NOT_EQUAL, EQUAL
+    #           values: ["SAVINGS_PLAN_NEGATION"], # accepts SAVINGS_PLAN_NEGATION
+    #           attribute_values: ["AttributeValue"],
     #         },
     #       ],
     #     },
     #     account_id: "AccountId",
+    #     computation_rule: "ITEMIZED", # accepts ITEMIZED, CONSOLIDATED
+    #     presentation_details: {
+    #       service: "Service", # required
+    #     },
     #   })
     #
     # @example Response structure
@@ -799,8 +823,11 @@ module Aws::BillingConductor
     # charges for billing groups.
     #
     # @option params [String] :client_token
-    #   The token that is needed to support idempotency. Idempotency isn't
-    #   currently supported, but will be implemented in a future update.
+    #   A unique, case-sensitive identifier that you specify to ensure
+    #   idempotency of the request. Idempotency ensures that an API request
+    #   completes no more than one time. With an idempotent request, if the
+    #   original request completes successfully, any subsequent retries
+    #   complete successfully without performing any further actions.
     #
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.**
@@ -853,8 +880,11 @@ module Aws::BillingConductor
     # of pricing plans.
     #
     # @option params [String] :client_token
-    #   The token that's needed to support idempotency. Idempotency isn't
-    #   currently supported, but will be implemented in a future update.
+    #   A unique, case-sensitive identifier that you specify to ensure
+    #   idempotency of the request. Idempotency ensures that an API request
+    #   completes no more than one time. With an idempotent request, if the
+    #   original request completes successfully, any subsequent retries
+    #   complete successfully without performing any further actions.
     #
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.**
@@ -874,6 +904,7 @@ module Aws::BillingConductor
     #
     # @option params [Float] :modifier_percentage
     #   A percentage modifier that's applied on the public pricing rates.
+    #   Your entry will be rounded to the nearest 2 decimal places.
     #
     # @option params [String] :service
     #   If the `Scope` attribute is set to `SERVICE` or `SKU`, the attribute
@@ -898,7 +929,7 @@ module Aws::BillingConductor
     #   If the `Scope` attribute is set to `SKU`, this attribute indicates
     #   which usage type the `PricingRule` is modifying. For example,
     #   `USW2-BoxUsage:m2.2xlarge` describes an` M2 High Memory Double Extra
-    #   Large` instance in the US West (Oregon) Region.     </p>
+    #   Large` instance in the US West (Oregon) Region.
     #
     # @option params [String] :operation
     #   Operation is the specific Amazon Web Services action covered by this
@@ -1145,7 +1176,7 @@ module Aws::BillingConductor
 
     # Retrieves the margin summary report, which includes the Amazon Web
     # Services cost and charged amount (pro forma cost) by Amazon Web
-    # Service for a specific billing group.
+    # Services service for a specific billing group.
     #
     # @option params [required, String] :arn
     #   The Amazon Resource Number (ARN) that uniquely identifies the billing
@@ -1158,8 +1189,8 @@ module Aws::BillingConductor
     # @option params [Array<String>] :group_by
     #   A list of strings that specify the attributes that are used to break
     #   down costs in the margin summary reports for the billing group. For
-    #   example, you can view your costs by the Amazon Web Service name or the
-    #   billing period.
+    #   example, you can view your costs by the Amazon Web Services service
+    #   name or the billing period.
     #
     # @option params [Integer] :max_results
     #   The maximum number of margin summary reports to retrieve.
@@ -1359,8 +1390,17 @@ module Aws::BillingConductor
     #     filters: {
     #       arns: ["BillingGroupArn"],
     #       pricing_plan: "PricingPlanFullArn",
-    #       statuses: ["ACTIVE"], # accepts ACTIVE, PRIMARY_ACCOUNT_MISSING
+    #       statuses: ["ACTIVE"], # accepts ACTIVE, PRIMARY_ACCOUNT_MISSING, PENDING
     #       auto_associate: false,
+    #       primary_account_ids: ["AccountId"],
+    #       billing_group_types: ["STANDARD"], # accepts STANDARD, TRANSFER_BILLING
+    #       names: [
+    #         {
+    #           search_option: "STARTS_WITH", # required, accepts STARTS_WITH
+    #           search_value: "SearchValue", # required
+    #         },
+    #       ],
+    #       responsibility_transfer_arns: ["ResponsibilityTransferArn"],
     #     },
     #   })
     #
@@ -1375,9 +1415,11 @@ module Aws::BillingConductor
     #   resp.billing_groups[0].size #=> Integer
     #   resp.billing_groups[0].creation_time #=> Integer
     #   resp.billing_groups[0].last_modified_time #=> Integer
-    #   resp.billing_groups[0].status #=> String, one of "ACTIVE", "PRIMARY_ACCOUNT_MISSING"
+    #   resp.billing_groups[0].status #=> String, one of "ACTIVE", "PRIMARY_ACCOUNT_MISSING", "PENDING"
     #   resp.billing_groups[0].status_reason #=> String
     #   resp.billing_groups[0].account_grouping.auto_associate #=> Boolean
+    #   resp.billing_groups[0].account_grouping.responsibility_transfer_arn #=> String
+    #   resp.billing_groups[0].billing_group_type #=> String, one of "STANDARD", "TRANSFER_BILLING"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/billingconductor-2021-07-30/ListBillingGroups AWS API Documentation
@@ -1434,10 +1476,12 @@ module Aws::BillingConductor
     #   resp.custom_line_item_versions[0].charge_details.percentage.percentage_value #=> Float
     #   resp.custom_line_item_versions[0].charge_details.type #=> String, one of "CREDIT", "FEE"
     #   resp.custom_line_item_versions[0].charge_details.line_item_filters #=> Array
-    #   resp.custom_line_item_versions[0].charge_details.line_item_filters[0].attribute #=> String, one of "LINE_ITEM_TYPE"
-    #   resp.custom_line_item_versions[0].charge_details.line_item_filters[0].match_option #=> String, one of "NOT_EQUAL"
+    #   resp.custom_line_item_versions[0].charge_details.line_item_filters[0].attribute #=> String, one of "LINE_ITEM_TYPE", "SERVICE"
+    #   resp.custom_line_item_versions[0].charge_details.line_item_filters[0].match_option #=> String, one of "NOT_EQUAL", "EQUAL"
     #   resp.custom_line_item_versions[0].charge_details.line_item_filters[0].values #=> Array
     #   resp.custom_line_item_versions[0].charge_details.line_item_filters[0].values[0] #=> String, one of "SAVINGS_PLAN_NEGATION"
+    #   resp.custom_line_item_versions[0].charge_details.line_item_filters[0].attribute_values #=> Array
+    #   resp.custom_line_item_versions[0].charge_details.line_item_filters[0].attribute_values[0] #=> <Hash,Array,String,Numeric,Boolean,IO,Set,nil>
     #   resp.custom_line_item_versions[0].currency_code #=> String, one of "USD", "CNY"
     #   resp.custom_line_item_versions[0].description #=> String
     #   resp.custom_line_item_versions[0].product_code #=> String
@@ -1450,6 +1494,8 @@ module Aws::BillingConductor
     #   resp.custom_line_item_versions[0].arn #=> String
     #   resp.custom_line_item_versions[0].start_time #=> Integer
     #   resp.custom_line_item_versions[0].account_id #=> String
+    #   resp.custom_line_item_versions[0].computation_rule #=> String, one of "ITEMIZED", "CONSOLIDATED"
+    #   resp.custom_line_item_versions[0].presentation_details.service #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/billingconductor-2021-07-30/ListCustomLineItemVersions AWS API Documentation
@@ -1510,10 +1556,12 @@ module Aws::BillingConductor
     #   resp.custom_line_items[0].charge_details.percentage.percentage_value #=> Float
     #   resp.custom_line_items[0].charge_details.type #=> String, one of "CREDIT", "FEE"
     #   resp.custom_line_items[0].charge_details.line_item_filters #=> Array
-    #   resp.custom_line_items[0].charge_details.line_item_filters[0].attribute #=> String, one of "LINE_ITEM_TYPE"
-    #   resp.custom_line_items[0].charge_details.line_item_filters[0].match_option #=> String, one of "NOT_EQUAL"
+    #   resp.custom_line_items[0].charge_details.line_item_filters[0].attribute #=> String, one of "LINE_ITEM_TYPE", "SERVICE"
+    #   resp.custom_line_items[0].charge_details.line_item_filters[0].match_option #=> String, one of "NOT_EQUAL", "EQUAL"
     #   resp.custom_line_items[0].charge_details.line_item_filters[0].values #=> Array
     #   resp.custom_line_items[0].charge_details.line_item_filters[0].values[0] #=> String, one of "SAVINGS_PLAN_NEGATION"
+    #   resp.custom_line_items[0].charge_details.line_item_filters[0].attribute_values #=> Array
+    #   resp.custom_line_items[0].charge_details.line_item_filters[0].attribute_values[0] #=> <Hash,Array,String,Numeric,Boolean,IO,Set,nil>
     #   resp.custom_line_items[0].currency_code #=> String, one of "USD", "CNY"
     #   resp.custom_line_items[0].description #=> String
     #   resp.custom_line_items[0].product_code #=> String
@@ -1522,6 +1570,8 @@ module Aws::BillingConductor
     #   resp.custom_line_items[0].last_modified_time #=> Integer
     #   resp.custom_line_items[0].association_size #=> Integer
     #   resp.custom_line_items[0].account_id #=> String
+    #   resp.custom_line_items[0].computation_rule #=> String, one of "ITEMIZED", "CONSOLIDATED"
+    #   resp.custom_line_items[0].presentation_details.service #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/billingconductor-2021-07-30/ListCustomLineItems AWS API Documentation
@@ -1945,13 +1995,14 @@ module Aws::BillingConductor
     #   resp = client.update_billing_group({
     #     arn: "BillingGroupArn", # required
     #     name: "BillingGroupName",
-    #     status: "ACTIVE", # accepts ACTIVE, PRIMARY_ACCOUNT_MISSING
+    #     status: "ACTIVE", # accepts ACTIVE, PRIMARY_ACCOUNT_MISSING, PENDING
     #     computation_preference: {
     #       pricing_plan_arn: "PricingPlanFullArn", # required
     #     },
     #     description: "BillingGroupDescription",
     #     account_grouping: {
     #       auto_associate: false,
+    #       responsibility_transfer_arn: "ResponsibilityTransferArn",
     #     },
     #   })
     #
@@ -1964,9 +2015,10 @@ module Aws::BillingConductor
     #   resp.pricing_plan_arn #=> String
     #   resp.size #=> Integer
     #   resp.last_modified_time #=> Integer
-    #   resp.status #=> String, one of "ACTIVE", "PRIMARY_ACCOUNT_MISSING"
+    #   resp.status #=> String, one of "ACTIVE", "PRIMARY_ACCOUNT_MISSING", "PENDING"
     #   resp.status_reason #=> String
     #   resp.account_grouping.auto_associate #=> Boolean
+    #   resp.account_grouping.responsibility_transfer_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/billingconductor-2021-07-30/UpdateBillingGroup AWS API Documentation
     #
@@ -2022,9 +2074,10 @@ module Aws::BillingConductor
     #       },
     #       line_item_filters: [
     #         {
-    #           attribute: "LINE_ITEM_TYPE", # required, accepts LINE_ITEM_TYPE
-    #           match_option: "NOT_EQUAL", # required, accepts NOT_EQUAL
-    #           values: ["SAVINGS_PLAN_NEGATION"], # required, accepts SAVINGS_PLAN_NEGATION
+    #           attribute: "LINE_ITEM_TYPE", # required, accepts LINE_ITEM_TYPE, SERVICE
+    #           match_option: "NOT_EQUAL", # required, accepts NOT_EQUAL, EQUAL
+    #           values: ["SAVINGS_PLAN_NEGATION"], # accepts SAVINGS_PLAN_NEGATION
+    #           attribute_values: ["AttributeValue"],
     #         },
     #       ],
     #     },
@@ -2044,10 +2097,12 @@ module Aws::BillingConductor
     #   resp.charge_details.percentage.percentage_value #=> Float
     #   resp.charge_details.type #=> String, one of "CREDIT", "FEE"
     #   resp.charge_details.line_item_filters #=> Array
-    #   resp.charge_details.line_item_filters[0].attribute #=> String, one of "LINE_ITEM_TYPE"
-    #   resp.charge_details.line_item_filters[0].match_option #=> String, one of "NOT_EQUAL"
+    #   resp.charge_details.line_item_filters[0].attribute #=> String, one of "LINE_ITEM_TYPE", "SERVICE"
+    #   resp.charge_details.line_item_filters[0].match_option #=> String, one of "NOT_EQUAL", "EQUAL"
     #   resp.charge_details.line_item_filters[0].values #=> Array
     #   resp.charge_details.line_item_filters[0].values[0] #=> String, one of "SAVINGS_PLAN_NEGATION"
+    #   resp.charge_details.line_item_filters[0].attribute_values #=> Array
+    #   resp.charge_details.line_item_filters[0].attribute_values[0] #=> <Hash,Array,String,Numeric,Boolean,IO,Set,nil>
     #   resp.last_modified_time #=> Integer
     #   resp.association_size #=> Integer
     #
@@ -2122,7 +2177,8 @@ module Aws::BillingConductor
     #   The new pricing rule type.
     #
     # @option params [Float] :modifier_percentage
-    #   The new modifier to show pricing plan rates as a percentage.
+    #   The new modifier to show pricing plan rates as a percentage. Your
+    #   entry will be rounded to the nearest 2 decimal places.
     #
     # @option params [Types::UpdateTieringInput] :tiering
     #   The set of tiering configurations for the pricing rule.
@@ -2201,7 +2257,7 @@ module Aws::BillingConductor
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-billingconductor'
-      context[:gem_version] = '1.37.0'
+      context[:gem_version] = '1.60.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

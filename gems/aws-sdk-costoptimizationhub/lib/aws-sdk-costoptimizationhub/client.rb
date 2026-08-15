@@ -95,8 +95,8 @@ module Aws::CostOptimizationHub
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::CostOptimizationHub
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::CostOptimizationHub
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::CostOptimizationHub
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::CostOptimizationHub
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::CostOptimizationHub
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::CostOptimizationHub
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::CostOptimizationHub
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -487,11 +491,14 @@ module Aws::CostOptimizationHub
     #
     #   * {Types::GetPreferencesResponse#savings_estimation_mode #savings_estimation_mode} => String
     #   * {Types::GetPreferencesResponse#member_account_discount_visibility #member_account_discount_visibility} => String
+    #   * {Types::GetPreferencesResponse#preferred_commitment #preferred_commitment} => Types::PreferredCommitment
     #
     # @example Response structure
     #
     #   resp.savings_estimation_mode #=> String, one of "BeforeDiscounts", "AfterDiscounts"
     #   resp.member_account_discount_visibility #=> String, one of "All", "None"
+    #   resp.preferred_commitment.term #=> String, one of "OneYear", "ThreeYears"
+    #   resp.preferred_commitment.payment_option #=> String, one of "AllUpfront", "PartialUpfront", "NoUpfront"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cost-optimization-hub-2022-07-26/GetPreferences AWS API Documentation
     #
@@ -555,8 +562,8 @@ module Aws::CostOptimizationHub
     #   resp.cost_calculation_lookback_period_in_days #=> Integer
     #   resp.estimated_savings_percentage #=> Float
     #   resp.estimated_savings_over_cost_calculation_lookback_period #=> Float
-    #   resp.current_resource_type #=> String, one of "Ec2Instance", "LambdaFunction", "EbsVolume", "EcsService", "Ec2AutoScalingGroup", "Ec2InstanceSavingsPlans", "ComputeSavingsPlans", "SageMakerSavingsPlans", "Ec2ReservedInstances", "RdsReservedInstances", "OpenSearchReservedInstances", "RedshiftReservedInstances", "ElastiCacheReservedInstances", "RdsDbInstanceStorage", "RdsDbInstance"
-    #   resp.recommended_resource_type #=> String, one of "Ec2Instance", "LambdaFunction", "EbsVolume", "EcsService", "Ec2AutoScalingGroup", "Ec2InstanceSavingsPlans", "ComputeSavingsPlans", "SageMakerSavingsPlans", "Ec2ReservedInstances", "RdsReservedInstances", "OpenSearchReservedInstances", "RedshiftReservedInstances", "ElastiCacheReservedInstances", "RdsDbInstanceStorage", "RdsDbInstance"
+    #   resp.current_resource_type #=> String, one of "Ec2Instance", "LambdaFunction", "EbsVolume", "EcsService", "Ec2AutoScalingGroup", "Ec2InstanceSavingsPlans", "ComputeSavingsPlans", "SageMakerSavingsPlans", "Ec2ReservedInstances", "RdsReservedInstances", "OpenSearchReservedInstances", "RedshiftReservedInstances", "ElastiCacheReservedInstances", "RdsDbInstanceStorage", "RdsDbInstance", "AuroraDbClusterStorage", "DynamoDbReservedCapacity", "MemoryDbReservedInstances", "NatGateway", "DynamoDBTable", "ElastiCacheCluster", "MemoryDBCluster", "DocumentDBCluster", "WorkSpaces", "SageMakerEndpoint"
+    #   resp.recommended_resource_type #=> String, one of "Ec2Instance", "LambdaFunction", "EbsVolume", "EcsService", "Ec2AutoScalingGroup", "Ec2InstanceSavingsPlans", "ComputeSavingsPlans", "SageMakerSavingsPlans", "Ec2ReservedInstances", "RdsReservedInstances", "OpenSearchReservedInstances", "RedshiftReservedInstances", "ElastiCacheReservedInstances", "RdsDbInstanceStorage", "RdsDbInstance", "AuroraDbClusterStorage", "DynamoDbReservedCapacity", "MemoryDbReservedInstances", "NatGateway", "DynamoDBTable", "ElastiCacheCluster", "MemoryDBCluster", "DocumentDBCluster", "WorkSpaces", "SageMakerEndpoint"
     #   resp.region #=> String
     #   resp.source #=> String, one of "ComputeOptimizer", "CostExplorer"
     #   resp.last_refresh_timestamp #=> Time
@@ -647,37 +654,37 @@ module Aws::CostOptimizationHub
     #   resp.current_resource_details.ec2_auto_scaling_group.cost_calculation.pricing.estimated_cost_after_discounts #=> Float
     #   resp.current_resource_details.ec2_reserved_instances.configuration.account_scope #=> String
     #   resp.current_resource_details.ec2_reserved_instances.configuration.service #=> String
-    #   resp.current_resource_details.ec2_reserved_instances.configuration.normalized_units_to_purchase #=> String
     #   resp.current_resource_details.ec2_reserved_instances.configuration.term #=> String
     #   resp.current_resource_details.ec2_reserved_instances.configuration.payment_option #=> String
+    #   resp.current_resource_details.ec2_reserved_instances.configuration.reserved_instances_region #=> String
+    #   resp.current_resource_details.ec2_reserved_instances.configuration.upfront_cost #=> String
+    #   resp.current_resource_details.ec2_reserved_instances.configuration.monthly_recurring_cost #=> String
+    #   resp.current_resource_details.ec2_reserved_instances.configuration.normalized_units_to_purchase #=> String
     #   resp.current_resource_details.ec2_reserved_instances.configuration.number_of_instances_to_purchase #=> String
     #   resp.current_resource_details.ec2_reserved_instances.configuration.offering_class #=> String
     #   resp.current_resource_details.ec2_reserved_instances.configuration.instance_family #=> String
     #   resp.current_resource_details.ec2_reserved_instances.configuration.instance_type #=> String
-    #   resp.current_resource_details.ec2_reserved_instances.configuration.reserved_instances_region #=> String
     #   resp.current_resource_details.ec2_reserved_instances.configuration.current_generation #=> String
     #   resp.current_resource_details.ec2_reserved_instances.configuration.platform #=> String
     #   resp.current_resource_details.ec2_reserved_instances.configuration.tenancy #=> String
     #   resp.current_resource_details.ec2_reserved_instances.configuration.size_flex_eligible #=> Boolean
-    #   resp.current_resource_details.ec2_reserved_instances.configuration.upfront_cost #=> String
-    #   resp.current_resource_details.ec2_reserved_instances.configuration.monthly_recurring_cost #=> String
     #   resp.current_resource_details.ec2_reserved_instances.cost_calculation.pricing.estimated_on_demand_cost #=> Float
     #   resp.current_resource_details.ec2_reserved_instances.cost_calculation.pricing.monthly_reservation_eligible_cost #=> Float
     #   resp.current_resource_details.ec2_reserved_instances.cost_calculation.pricing.savings_percentage #=> Float
     #   resp.current_resource_details.ec2_reserved_instances.cost_calculation.pricing.estimated_monthly_amortized_reservation_cost #=> Float
     #   resp.current_resource_details.rds_reserved_instances.configuration.account_scope #=> String
     #   resp.current_resource_details.rds_reserved_instances.configuration.service #=> String
-    #   resp.current_resource_details.rds_reserved_instances.configuration.normalized_units_to_purchase #=> String
     #   resp.current_resource_details.rds_reserved_instances.configuration.term #=> String
     #   resp.current_resource_details.rds_reserved_instances.configuration.payment_option #=> String
+    #   resp.current_resource_details.rds_reserved_instances.configuration.reserved_instances_region #=> String
+    #   resp.current_resource_details.rds_reserved_instances.configuration.upfront_cost #=> String
+    #   resp.current_resource_details.rds_reserved_instances.configuration.monthly_recurring_cost #=> String
+    #   resp.current_resource_details.rds_reserved_instances.configuration.normalized_units_to_purchase #=> String
     #   resp.current_resource_details.rds_reserved_instances.configuration.number_of_instances_to_purchase #=> String
     #   resp.current_resource_details.rds_reserved_instances.configuration.instance_family #=> String
     #   resp.current_resource_details.rds_reserved_instances.configuration.instance_type #=> String
-    #   resp.current_resource_details.rds_reserved_instances.configuration.reserved_instances_region #=> String
     #   resp.current_resource_details.rds_reserved_instances.configuration.size_flex_eligible #=> Boolean
     #   resp.current_resource_details.rds_reserved_instances.configuration.current_generation #=> String
-    #   resp.current_resource_details.rds_reserved_instances.configuration.upfront_cost #=> String
-    #   resp.current_resource_details.rds_reserved_instances.configuration.monthly_recurring_cost #=> String
     #   resp.current_resource_details.rds_reserved_instances.configuration.license_model #=> String
     #   resp.current_resource_details.rds_reserved_instances.configuration.database_edition #=> String
     #   resp.current_resource_details.rds_reserved_instances.configuration.database_engine #=> String
@@ -688,50 +695,50 @@ module Aws::CostOptimizationHub
     #   resp.current_resource_details.rds_reserved_instances.cost_calculation.pricing.estimated_monthly_amortized_reservation_cost #=> Float
     #   resp.current_resource_details.elasti_cache_reserved_instances.configuration.account_scope #=> String
     #   resp.current_resource_details.elasti_cache_reserved_instances.configuration.service #=> String
-    #   resp.current_resource_details.elasti_cache_reserved_instances.configuration.normalized_units_to_purchase #=> String
     #   resp.current_resource_details.elasti_cache_reserved_instances.configuration.term #=> String
     #   resp.current_resource_details.elasti_cache_reserved_instances.configuration.payment_option #=> String
+    #   resp.current_resource_details.elasti_cache_reserved_instances.configuration.reserved_instances_region #=> String
+    #   resp.current_resource_details.elasti_cache_reserved_instances.configuration.upfront_cost #=> String
+    #   resp.current_resource_details.elasti_cache_reserved_instances.configuration.monthly_recurring_cost #=> String
+    #   resp.current_resource_details.elasti_cache_reserved_instances.configuration.normalized_units_to_purchase #=> String
     #   resp.current_resource_details.elasti_cache_reserved_instances.configuration.number_of_instances_to_purchase #=> String
     #   resp.current_resource_details.elasti_cache_reserved_instances.configuration.instance_family #=> String
     #   resp.current_resource_details.elasti_cache_reserved_instances.configuration.instance_type #=> String
-    #   resp.current_resource_details.elasti_cache_reserved_instances.configuration.reserved_instances_region #=> String
     #   resp.current_resource_details.elasti_cache_reserved_instances.configuration.current_generation #=> String
     #   resp.current_resource_details.elasti_cache_reserved_instances.configuration.size_flex_eligible #=> Boolean
-    #   resp.current_resource_details.elasti_cache_reserved_instances.configuration.upfront_cost #=> String
-    #   resp.current_resource_details.elasti_cache_reserved_instances.configuration.monthly_recurring_cost #=> String
     #   resp.current_resource_details.elasti_cache_reserved_instances.cost_calculation.pricing.estimated_on_demand_cost #=> Float
     #   resp.current_resource_details.elasti_cache_reserved_instances.cost_calculation.pricing.monthly_reservation_eligible_cost #=> Float
     #   resp.current_resource_details.elasti_cache_reserved_instances.cost_calculation.pricing.savings_percentage #=> Float
     #   resp.current_resource_details.elasti_cache_reserved_instances.cost_calculation.pricing.estimated_monthly_amortized_reservation_cost #=> Float
     #   resp.current_resource_details.open_search_reserved_instances.configuration.account_scope #=> String
     #   resp.current_resource_details.open_search_reserved_instances.configuration.service #=> String
-    #   resp.current_resource_details.open_search_reserved_instances.configuration.normalized_units_to_purchase #=> String
     #   resp.current_resource_details.open_search_reserved_instances.configuration.term #=> String
     #   resp.current_resource_details.open_search_reserved_instances.configuration.payment_option #=> String
-    #   resp.current_resource_details.open_search_reserved_instances.configuration.number_of_instances_to_purchase #=> String
-    #   resp.current_resource_details.open_search_reserved_instances.configuration.instance_type #=> String
     #   resp.current_resource_details.open_search_reserved_instances.configuration.reserved_instances_region #=> String
-    #   resp.current_resource_details.open_search_reserved_instances.configuration.current_generation #=> String
-    #   resp.current_resource_details.open_search_reserved_instances.configuration.size_flex_eligible #=> Boolean
     #   resp.current_resource_details.open_search_reserved_instances.configuration.upfront_cost #=> String
     #   resp.current_resource_details.open_search_reserved_instances.configuration.monthly_recurring_cost #=> String
+    #   resp.current_resource_details.open_search_reserved_instances.configuration.normalized_units_to_purchase #=> String
+    #   resp.current_resource_details.open_search_reserved_instances.configuration.number_of_instances_to_purchase #=> String
+    #   resp.current_resource_details.open_search_reserved_instances.configuration.instance_type #=> String
+    #   resp.current_resource_details.open_search_reserved_instances.configuration.current_generation #=> String
+    #   resp.current_resource_details.open_search_reserved_instances.configuration.size_flex_eligible #=> Boolean
     #   resp.current_resource_details.open_search_reserved_instances.cost_calculation.pricing.estimated_on_demand_cost #=> Float
     #   resp.current_resource_details.open_search_reserved_instances.cost_calculation.pricing.monthly_reservation_eligible_cost #=> Float
     #   resp.current_resource_details.open_search_reserved_instances.cost_calculation.pricing.savings_percentage #=> Float
     #   resp.current_resource_details.open_search_reserved_instances.cost_calculation.pricing.estimated_monthly_amortized_reservation_cost #=> Float
     #   resp.current_resource_details.redshift_reserved_instances.configuration.account_scope #=> String
     #   resp.current_resource_details.redshift_reserved_instances.configuration.service #=> String
-    #   resp.current_resource_details.redshift_reserved_instances.configuration.normalized_units_to_purchase #=> String
     #   resp.current_resource_details.redshift_reserved_instances.configuration.term #=> String
     #   resp.current_resource_details.redshift_reserved_instances.configuration.payment_option #=> String
+    #   resp.current_resource_details.redshift_reserved_instances.configuration.reserved_instances_region #=> String
+    #   resp.current_resource_details.redshift_reserved_instances.configuration.upfront_cost #=> String
+    #   resp.current_resource_details.redshift_reserved_instances.configuration.monthly_recurring_cost #=> String
+    #   resp.current_resource_details.redshift_reserved_instances.configuration.normalized_units_to_purchase #=> String
     #   resp.current_resource_details.redshift_reserved_instances.configuration.number_of_instances_to_purchase #=> String
     #   resp.current_resource_details.redshift_reserved_instances.configuration.instance_family #=> String
     #   resp.current_resource_details.redshift_reserved_instances.configuration.instance_type #=> String
-    #   resp.current_resource_details.redshift_reserved_instances.configuration.reserved_instances_region #=> String
     #   resp.current_resource_details.redshift_reserved_instances.configuration.size_flex_eligible #=> Boolean
     #   resp.current_resource_details.redshift_reserved_instances.configuration.current_generation #=> String
-    #   resp.current_resource_details.redshift_reserved_instances.configuration.upfront_cost #=> String
-    #   resp.current_resource_details.redshift_reserved_instances.configuration.monthly_recurring_cost #=> String
     #   resp.current_resource_details.redshift_reserved_instances.cost_calculation.pricing.estimated_on_demand_cost #=> Float
     #   resp.current_resource_details.redshift_reserved_instances.cost_calculation.pricing.monthly_reservation_eligible_cost #=> Float
     #   resp.current_resource_details.redshift_reserved_instances.cost_calculation.pricing.savings_percentage #=> Float
@@ -791,6 +798,136 @@ module Aws::CostOptimizationHub
     #   resp.current_resource_details.rds_db_instance_storage.cost_calculation.pricing.estimated_discounts.reserved_instances_discount #=> Float
     #   resp.current_resource_details.rds_db_instance_storage.cost_calculation.pricing.estimated_discounts.other_discount #=> Float
     #   resp.current_resource_details.rds_db_instance_storage.cost_calculation.pricing.estimated_cost_after_discounts #=> Float
+    #   resp.current_resource_details.aurora_db_cluster_storage.configuration.storage_type #=> String
+    #   resp.current_resource_details.aurora_db_cluster_storage.cost_calculation.usages #=> Array
+    #   resp.current_resource_details.aurora_db_cluster_storage.cost_calculation.usages[0].usage_type #=> String
+    #   resp.current_resource_details.aurora_db_cluster_storage.cost_calculation.usages[0].usage_amount #=> Float
+    #   resp.current_resource_details.aurora_db_cluster_storage.cost_calculation.usages[0].operation #=> String
+    #   resp.current_resource_details.aurora_db_cluster_storage.cost_calculation.usages[0].product_code #=> String
+    #   resp.current_resource_details.aurora_db_cluster_storage.cost_calculation.usages[0].unit #=> String
+    #   resp.current_resource_details.aurora_db_cluster_storage.cost_calculation.pricing.estimated_cost_before_discounts #=> Float
+    #   resp.current_resource_details.aurora_db_cluster_storage.cost_calculation.pricing.estimated_net_unused_amortized_commitments #=> Float
+    #   resp.current_resource_details.aurora_db_cluster_storage.cost_calculation.pricing.estimated_discounts.savings_plans_discount #=> Float
+    #   resp.current_resource_details.aurora_db_cluster_storage.cost_calculation.pricing.estimated_discounts.reserved_instances_discount #=> Float
+    #   resp.current_resource_details.aurora_db_cluster_storage.cost_calculation.pricing.estimated_discounts.other_discount #=> Float
+    #   resp.current_resource_details.aurora_db_cluster_storage.cost_calculation.pricing.estimated_cost_after_discounts #=> Float
+    #   resp.current_resource_details.dynamo_db_reserved_capacity.configuration.account_scope #=> String
+    #   resp.current_resource_details.dynamo_db_reserved_capacity.configuration.service #=> String
+    #   resp.current_resource_details.dynamo_db_reserved_capacity.configuration.term #=> String
+    #   resp.current_resource_details.dynamo_db_reserved_capacity.configuration.payment_option #=> String
+    #   resp.current_resource_details.dynamo_db_reserved_capacity.configuration.reserved_instances_region #=> String
+    #   resp.current_resource_details.dynamo_db_reserved_capacity.configuration.upfront_cost #=> String
+    #   resp.current_resource_details.dynamo_db_reserved_capacity.configuration.monthly_recurring_cost #=> String
+    #   resp.current_resource_details.dynamo_db_reserved_capacity.configuration.number_of_capacity_units_to_purchase #=> String
+    #   resp.current_resource_details.dynamo_db_reserved_capacity.configuration.capacity_units #=> String
+    #   resp.current_resource_details.dynamo_db_reserved_capacity.cost_calculation.pricing.estimated_on_demand_cost #=> Float
+    #   resp.current_resource_details.dynamo_db_reserved_capacity.cost_calculation.pricing.monthly_reservation_eligible_cost #=> Float
+    #   resp.current_resource_details.dynamo_db_reserved_capacity.cost_calculation.pricing.savings_percentage #=> Float
+    #   resp.current_resource_details.dynamo_db_reserved_capacity.cost_calculation.pricing.estimated_monthly_amortized_reservation_cost #=> Float
+    #   resp.current_resource_details.memory_db_reserved_instances.configuration.account_scope #=> String
+    #   resp.current_resource_details.memory_db_reserved_instances.configuration.service #=> String
+    #   resp.current_resource_details.memory_db_reserved_instances.configuration.term #=> String
+    #   resp.current_resource_details.memory_db_reserved_instances.configuration.payment_option #=> String
+    #   resp.current_resource_details.memory_db_reserved_instances.configuration.reserved_instances_region #=> String
+    #   resp.current_resource_details.memory_db_reserved_instances.configuration.upfront_cost #=> String
+    #   resp.current_resource_details.memory_db_reserved_instances.configuration.monthly_recurring_cost #=> String
+    #   resp.current_resource_details.memory_db_reserved_instances.configuration.normalized_units_to_purchase #=> String
+    #   resp.current_resource_details.memory_db_reserved_instances.configuration.number_of_instances_to_purchase #=> String
+    #   resp.current_resource_details.memory_db_reserved_instances.configuration.instance_type #=> String
+    #   resp.current_resource_details.memory_db_reserved_instances.configuration.instance_family #=> String
+    #   resp.current_resource_details.memory_db_reserved_instances.configuration.size_flex_eligible #=> Boolean
+    #   resp.current_resource_details.memory_db_reserved_instances.configuration.current_generation #=> String
+    #   resp.current_resource_details.memory_db_reserved_instances.cost_calculation.pricing.estimated_on_demand_cost #=> Float
+    #   resp.current_resource_details.memory_db_reserved_instances.cost_calculation.pricing.monthly_reservation_eligible_cost #=> Float
+    #   resp.current_resource_details.memory_db_reserved_instances.cost_calculation.pricing.savings_percentage #=> Float
+    #   resp.current_resource_details.memory_db_reserved_instances.cost_calculation.pricing.estimated_monthly_amortized_reservation_cost #=> Float
+    #   resp.current_resource_details.nat_gateway.configuration.active_connection_count #=> Integer
+    #   resp.current_resource_details.nat_gateway.configuration.packets_in_from_source #=> Integer
+    #   resp.current_resource_details.nat_gateway.configuration.packets_in_from_destination #=> Integer
+    #   resp.current_resource_details.nat_gateway.cost_calculation.usages #=> Array
+    #   resp.current_resource_details.nat_gateway.cost_calculation.usages[0].usage_type #=> String
+    #   resp.current_resource_details.nat_gateway.cost_calculation.usages[0].usage_amount #=> Float
+    #   resp.current_resource_details.nat_gateway.cost_calculation.usages[0].operation #=> String
+    #   resp.current_resource_details.nat_gateway.cost_calculation.usages[0].product_code #=> String
+    #   resp.current_resource_details.nat_gateway.cost_calculation.usages[0].unit #=> String
+    #   resp.current_resource_details.nat_gateway.cost_calculation.pricing.estimated_cost_before_discounts #=> Float
+    #   resp.current_resource_details.nat_gateway.cost_calculation.pricing.estimated_net_unused_amortized_commitments #=> Float
+    #   resp.current_resource_details.nat_gateway.cost_calculation.pricing.estimated_discounts.savings_plans_discount #=> Float
+    #   resp.current_resource_details.nat_gateway.cost_calculation.pricing.estimated_discounts.reserved_instances_discount #=> Float
+    #   resp.current_resource_details.nat_gateway.cost_calculation.pricing.estimated_discounts.other_discount #=> Float
+    #   resp.current_resource_details.nat_gateway.cost_calculation.pricing.estimated_cost_after_discounts #=> Float
+    #   resp.current_resource_details.dynamo_db_table.cost_calculation.usages #=> Array
+    #   resp.current_resource_details.dynamo_db_table.cost_calculation.usages[0].usage_type #=> String
+    #   resp.current_resource_details.dynamo_db_table.cost_calculation.usages[0].usage_amount #=> Float
+    #   resp.current_resource_details.dynamo_db_table.cost_calculation.usages[0].operation #=> String
+    #   resp.current_resource_details.dynamo_db_table.cost_calculation.usages[0].product_code #=> String
+    #   resp.current_resource_details.dynamo_db_table.cost_calculation.usages[0].unit #=> String
+    #   resp.current_resource_details.dynamo_db_table.cost_calculation.pricing.estimated_cost_before_discounts #=> Float
+    #   resp.current_resource_details.dynamo_db_table.cost_calculation.pricing.estimated_net_unused_amortized_commitments #=> Float
+    #   resp.current_resource_details.dynamo_db_table.cost_calculation.pricing.estimated_discounts.savings_plans_discount #=> Float
+    #   resp.current_resource_details.dynamo_db_table.cost_calculation.pricing.estimated_discounts.reserved_instances_discount #=> Float
+    #   resp.current_resource_details.dynamo_db_table.cost_calculation.pricing.estimated_discounts.other_discount #=> Float
+    #   resp.current_resource_details.dynamo_db_table.cost_calculation.pricing.estimated_cost_after_discounts #=> Float
+    #   resp.current_resource_details.elasti_cache_cluster.cost_calculation.usages #=> Array
+    #   resp.current_resource_details.elasti_cache_cluster.cost_calculation.usages[0].usage_type #=> String
+    #   resp.current_resource_details.elasti_cache_cluster.cost_calculation.usages[0].usage_amount #=> Float
+    #   resp.current_resource_details.elasti_cache_cluster.cost_calculation.usages[0].operation #=> String
+    #   resp.current_resource_details.elasti_cache_cluster.cost_calculation.usages[0].product_code #=> String
+    #   resp.current_resource_details.elasti_cache_cluster.cost_calculation.usages[0].unit #=> String
+    #   resp.current_resource_details.elasti_cache_cluster.cost_calculation.pricing.estimated_cost_before_discounts #=> Float
+    #   resp.current_resource_details.elasti_cache_cluster.cost_calculation.pricing.estimated_net_unused_amortized_commitments #=> Float
+    #   resp.current_resource_details.elasti_cache_cluster.cost_calculation.pricing.estimated_discounts.savings_plans_discount #=> Float
+    #   resp.current_resource_details.elasti_cache_cluster.cost_calculation.pricing.estimated_discounts.reserved_instances_discount #=> Float
+    #   resp.current_resource_details.elasti_cache_cluster.cost_calculation.pricing.estimated_discounts.other_discount #=> Float
+    #   resp.current_resource_details.elasti_cache_cluster.cost_calculation.pricing.estimated_cost_after_discounts #=> Float
+    #   resp.current_resource_details.memory_db_cluster.cost_calculation.usages #=> Array
+    #   resp.current_resource_details.memory_db_cluster.cost_calculation.usages[0].usage_type #=> String
+    #   resp.current_resource_details.memory_db_cluster.cost_calculation.usages[0].usage_amount #=> Float
+    #   resp.current_resource_details.memory_db_cluster.cost_calculation.usages[0].operation #=> String
+    #   resp.current_resource_details.memory_db_cluster.cost_calculation.usages[0].product_code #=> String
+    #   resp.current_resource_details.memory_db_cluster.cost_calculation.usages[0].unit #=> String
+    #   resp.current_resource_details.memory_db_cluster.cost_calculation.pricing.estimated_cost_before_discounts #=> Float
+    #   resp.current_resource_details.memory_db_cluster.cost_calculation.pricing.estimated_net_unused_amortized_commitments #=> Float
+    #   resp.current_resource_details.memory_db_cluster.cost_calculation.pricing.estimated_discounts.savings_plans_discount #=> Float
+    #   resp.current_resource_details.memory_db_cluster.cost_calculation.pricing.estimated_discounts.reserved_instances_discount #=> Float
+    #   resp.current_resource_details.memory_db_cluster.cost_calculation.pricing.estimated_discounts.other_discount #=> Float
+    #   resp.current_resource_details.memory_db_cluster.cost_calculation.pricing.estimated_cost_after_discounts #=> Float
+    #   resp.current_resource_details.document_db_cluster.cost_calculation.usages #=> Array
+    #   resp.current_resource_details.document_db_cluster.cost_calculation.usages[0].usage_type #=> String
+    #   resp.current_resource_details.document_db_cluster.cost_calculation.usages[0].usage_amount #=> Float
+    #   resp.current_resource_details.document_db_cluster.cost_calculation.usages[0].operation #=> String
+    #   resp.current_resource_details.document_db_cluster.cost_calculation.usages[0].product_code #=> String
+    #   resp.current_resource_details.document_db_cluster.cost_calculation.usages[0].unit #=> String
+    #   resp.current_resource_details.document_db_cluster.cost_calculation.pricing.estimated_cost_before_discounts #=> Float
+    #   resp.current_resource_details.document_db_cluster.cost_calculation.pricing.estimated_net_unused_amortized_commitments #=> Float
+    #   resp.current_resource_details.document_db_cluster.cost_calculation.pricing.estimated_discounts.savings_plans_discount #=> Float
+    #   resp.current_resource_details.document_db_cluster.cost_calculation.pricing.estimated_discounts.reserved_instances_discount #=> Float
+    #   resp.current_resource_details.document_db_cluster.cost_calculation.pricing.estimated_discounts.other_discount #=> Float
+    #   resp.current_resource_details.document_db_cluster.cost_calculation.pricing.estimated_cost_after_discounts #=> Float
+    #   resp.current_resource_details.work_spaces.cost_calculation.usages #=> Array
+    #   resp.current_resource_details.work_spaces.cost_calculation.usages[0].usage_type #=> String
+    #   resp.current_resource_details.work_spaces.cost_calculation.usages[0].usage_amount #=> Float
+    #   resp.current_resource_details.work_spaces.cost_calculation.usages[0].operation #=> String
+    #   resp.current_resource_details.work_spaces.cost_calculation.usages[0].product_code #=> String
+    #   resp.current_resource_details.work_spaces.cost_calculation.usages[0].unit #=> String
+    #   resp.current_resource_details.work_spaces.cost_calculation.pricing.estimated_cost_before_discounts #=> Float
+    #   resp.current_resource_details.work_spaces.cost_calculation.pricing.estimated_net_unused_amortized_commitments #=> Float
+    #   resp.current_resource_details.work_spaces.cost_calculation.pricing.estimated_discounts.savings_plans_discount #=> Float
+    #   resp.current_resource_details.work_spaces.cost_calculation.pricing.estimated_discounts.reserved_instances_discount #=> Float
+    #   resp.current_resource_details.work_spaces.cost_calculation.pricing.estimated_discounts.other_discount #=> Float
+    #   resp.current_resource_details.work_spaces.cost_calculation.pricing.estimated_cost_after_discounts #=> Float
+    #   resp.current_resource_details.sage_maker_endpoint.cost_calculation.usages #=> Array
+    #   resp.current_resource_details.sage_maker_endpoint.cost_calculation.usages[0].usage_type #=> String
+    #   resp.current_resource_details.sage_maker_endpoint.cost_calculation.usages[0].usage_amount #=> Float
+    #   resp.current_resource_details.sage_maker_endpoint.cost_calculation.usages[0].operation #=> String
+    #   resp.current_resource_details.sage_maker_endpoint.cost_calculation.usages[0].product_code #=> String
+    #   resp.current_resource_details.sage_maker_endpoint.cost_calculation.usages[0].unit #=> String
+    #   resp.current_resource_details.sage_maker_endpoint.cost_calculation.pricing.estimated_cost_before_discounts #=> Float
+    #   resp.current_resource_details.sage_maker_endpoint.cost_calculation.pricing.estimated_net_unused_amortized_commitments #=> Float
+    #   resp.current_resource_details.sage_maker_endpoint.cost_calculation.pricing.estimated_discounts.savings_plans_discount #=> Float
+    #   resp.current_resource_details.sage_maker_endpoint.cost_calculation.pricing.estimated_discounts.reserved_instances_discount #=> Float
+    #   resp.current_resource_details.sage_maker_endpoint.cost_calculation.pricing.estimated_discounts.other_discount #=> Float
+    #   resp.current_resource_details.sage_maker_endpoint.cost_calculation.pricing.estimated_cost_after_discounts #=> Float
     #   resp.recommended_resource_details.lambda_function.configuration.compute.v_cpu #=> Float
     #   resp.recommended_resource_details.lambda_function.configuration.compute.memory_size_in_mb #=> Integer
     #   resp.recommended_resource_details.lambda_function.configuration.compute.architecture #=> String
@@ -872,37 +1009,37 @@ module Aws::CostOptimizationHub
     #   resp.recommended_resource_details.ec2_auto_scaling_group.cost_calculation.pricing.estimated_cost_after_discounts #=> Float
     #   resp.recommended_resource_details.ec2_reserved_instances.configuration.account_scope #=> String
     #   resp.recommended_resource_details.ec2_reserved_instances.configuration.service #=> String
-    #   resp.recommended_resource_details.ec2_reserved_instances.configuration.normalized_units_to_purchase #=> String
     #   resp.recommended_resource_details.ec2_reserved_instances.configuration.term #=> String
     #   resp.recommended_resource_details.ec2_reserved_instances.configuration.payment_option #=> String
+    #   resp.recommended_resource_details.ec2_reserved_instances.configuration.reserved_instances_region #=> String
+    #   resp.recommended_resource_details.ec2_reserved_instances.configuration.upfront_cost #=> String
+    #   resp.recommended_resource_details.ec2_reserved_instances.configuration.monthly_recurring_cost #=> String
+    #   resp.recommended_resource_details.ec2_reserved_instances.configuration.normalized_units_to_purchase #=> String
     #   resp.recommended_resource_details.ec2_reserved_instances.configuration.number_of_instances_to_purchase #=> String
     #   resp.recommended_resource_details.ec2_reserved_instances.configuration.offering_class #=> String
     #   resp.recommended_resource_details.ec2_reserved_instances.configuration.instance_family #=> String
     #   resp.recommended_resource_details.ec2_reserved_instances.configuration.instance_type #=> String
-    #   resp.recommended_resource_details.ec2_reserved_instances.configuration.reserved_instances_region #=> String
     #   resp.recommended_resource_details.ec2_reserved_instances.configuration.current_generation #=> String
     #   resp.recommended_resource_details.ec2_reserved_instances.configuration.platform #=> String
     #   resp.recommended_resource_details.ec2_reserved_instances.configuration.tenancy #=> String
     #   resp.recommended_resource_details.ec2_reserved_instances.configuration.size_flex_eligible #=> Boolean
-    #   resp.recommended_resource_details.ec2_reserved_instances.configuration.upfront_cost #=> String
-    #   resp.recommended_resource_details.ec2_reserved_instances.configuration.monthly_recurring_cost #=> String
     #   resp.recommended_resource_details.ec2_reserved_instances.cost_calculation.pricing.estimated_on_demand_cost #=> Float
     #   resp.recommended_resource_details.ec2_reserved_instances.cost_calculation.pricing.monthly_reservation_eligible_cost #=> Float
     #   resp.recommended_resource_details.ec2_reserved_instances.cost_calculation.pricing.savings_percentage #=> Float
     #   resp.recommended_resource_details.ec2_reserved_instances.cost_calculation.pricing.estimated_monthly_amortized_reservation_cost #=> Float
     #   resp.recommended_resource_details.rds_reserved_instances.configuration.account_scope #=> String
     #   resp.recommended_resource_details.rds_reserved_instances.configuration.service #=> String
-    #   resp.recommended_resource_details.rds_reserved_instances.configuration.normalized_units_to_purchase #=> String
     #   resp.recommended_resource_details.rds_reserved_instances.configuration.term #=> String
     #   resp.recommended_resource_details.rds_reserved_instances.configuration.payment_option #=> String
+    #   resp.recommended_resource_details.rds_reserved_instances.configuration.reserved_instances_region #=> String
+    #   resp.recommended_resource_details.rds_reserved_instances.configuration.upfront_cost #=> String
+    #   resp.recommended_resource_details.rds_reserved_instances.configuration.monthly_recurring_cost #=> String
+    #   resp.recommended_resource_details.rds_reserved_instances.configuration.normalized_units_to_purchase #=> String
     #   resp.recommended_resource_details.rds_reserved_instances.configuration.number_of_instances_to_purchase #=> String
     #   resp.recommended_resource_details.rds_reserved_instances.configuration.instance_family #=> String
     #   resp.recommended_resource_details.rds_reserved_instances.configuration.instance_type #=> String
-    #   resp.recommended_resource_details.rds_reserved_instances.configuration.reserved_instances_region #=> String
     #   resp.recommended_resource_details.rds_reserved_instances.configuration.size_flex_eligible #=> Boolean
     #   resp.recommended_resource_details.rds_reserved_instances.configuration.current_generation #=> String
-    #   resp.recommended_resource_details.rds_reserved_instances.configuration.upfront_cost #=> String
-    #   resp.recommended_resource_details.rds_reserved_instances.configuration.monthly_recurring_cost #=> String
     #   resp.recommended_resource_details.rds_reserved_instances.configuration.license_model #=> String
     #   resp.recommended_resource_details.rds_reserved_instances.configuration.database_edition #=> String
     #   resp.recommended_resource_details.rds_reserved_instances.configuration.database_engine #=> String
@@ -913,50 +1050,50 @@ module Aws::CostOptimizationHub
     #   resp.recommended_resource_details.rds_reserved_instances.cost_calculation.pricing.estimated_monthly_amortized_reservation_cost #=> Float
     #   resp.recommended_resource_details.elasti_cache_reserved_instances.configuration.account_scope #=> String
     #   resp.recommended_resource_details.elasti_cache_reserved_instances.configuration.service #=> String
-    #   resp.recommended_resource_details.elasti_cache_reserved_instances.configuration.normalized_units_to_purchase #=> String
     #   resp.recommended_resource_details.elasti_cache_reserved_instances.configuration.term #=> String
     #   resp.recommended_resource_details.elasti_cache_reserved_instances.configuration.payment_option #=> String
+    #   resp.recommended_resource_details.elasti_cache_reserved_instances.configuration.reserved_instances_region #=> String
+    #   resp.recommended_resource_details.elasti_cache_reserved_instances.configuration.upfront_cost #=> String
+    #   resp.recommended_resource_details.elasti_cache_reserved_instances.configuration.monthly_recurring_cost #=> String
+    #   resp.recommended_resource_details.elasti_cache_reserved_instances.configuration.normalized_units_to_purchase #=> String
     #   resp.recommended_resource_details.elasti_cache_reserved_instances.configuration.number_of_instances_to_purchase #=> String
     #   resp.recommended_resource_details.elasti_cache_reserved_instances.configuration.instance_family #=> String
     #   resp.recommended_resource_details.elasti_cache_reserved_instances.configuration.instance_type #=> String
-    #   resp.recommended_resource_details.elasti_cache_reserved_instances.configuration.reserved_instances_region #=> String
     #   resp.recommended_resource_details.elasti_cache_reserved_instances.configuration.current_generation #=> String
     #   resp.recommended_resource_details.elasti_cache_reserved_instances.configuration.size_flex_eligible #=> Boolean
-    #   resp.recommended_resource_details.elasti_cache_reserved_instances.configuration.upfront_cost #=> String
-    #   resp.recommended_resource_details.elasti_cache_reserved_instances.configuration.monthly_recurring_cost #=> String
     #   resp.recommended_resource_details.elasti_cache_reserved_instances.cost_calculation.pricing.estimated_on_demand_cost #=> Float
     #   resp.recommended_resource_details.elasti_cache_reserved_instances.cost_calculation.pricing.monthly_reservation_eligible_cost #=> Float
     #   resp.recommended_resource_details.elasti_cache_reserved_instances.cost_calculation.pricing.savings_percentage #=> Float
     #   resp.recommended_resource_details.elasti_cache_reserved_instances.cost_calculation.pricing.estimated_monthly_amortized_reservation_cost #=> Float
     #   resp.recommended_resource_details.open_search_reserved_instances.configuration.account_scope #=> String
     #   resp.recommended_resource_details.open_search_reserved_instances.configuration.service #=> String
-    #   resp.recommended_resource_details.open_search_reserved_instances.configuration.normalized_units_to_purchase #=> String
     #   resp.recommended_resource_details.open_search_reserved_instances.configuration.term #=> String
     #   resp.recommended_resource_details.open_search_reserved_instances.configuration.payment_option #=> String
-    #   resp.recommended_resource_details.open_search_reserved_instances.configuration.number_of_instances_to_purchase #=> String
-    #   resp.recommended_resource_details.open_search_reserved_instances.configuration.instance_type #=> String
     #   resp.recommended_resource_details.open_search_reserved_instances.configuration.reserved_instances_region #=> String
-    #   resp.recommended_resource_details.open_search_reserved_instances.configuration.current_generation #=> String
-    #   resp.recommended_resource_details.open_search_reserved_instances.configuration.size_flex_eligible #=> Boolean
     #   resp.recommended_resource_details.open_search_reserved_instances.configuration.upfront_cost #=> String
     #   resp.recommended_resource_details.open_search_reserved_instances.configuration.monthly_recurring_cost #=> String
+    #   resp.recommended_resource_details.open_search_reserved_instances.configuration.normalized_units_to_purchase #=> String
+    #   resp.recommended_resource_details.open_search_reserved_instances.configuration.number_of_instances_to_purchase #=> String
+    #   resp.recommended_resource_details.open_search_reserved_instances.configuration.instance_type #=> String
+    #   resp.recommended_resource_details.open_search_reserved_instances.configuration.current_generation #=> String
+    #   resp.recommended_resource_details.open_search_reserved_instances.configuration.size_flex_eligible #=> Boolean
     #   resp.recommended_resource_details.open_search_reserved_instances.cost_calculation.pricing.estimated_on_demand_cost #=> Float
     #   resp.recommended_resource_details.open_search_reserved_instances.cost_calculation.pricing.monthly_reservation_eligible_cost #=> Float
     #   resp.recommended_resource_details.open_search_reserved_instances.cost_calculation.pricing.savings_percentage #=> Float
     #   resp.recommended_resource_details.open_search_reserved_instances.cost_calculation.pricing.estimated_monthly_amortized_reservation_cost #=> Float
     #   resp.recommended_resource_details.redshift_reserved_instances.configuration.account_scope #=> String
     #   resp.recommended_resource_details.redshift_reserved_instances.configuration.service #=> String
-    #   resp.recommended_resource_details.redshift_reserved_instances.configuration.normalized_units_to_purchase #=> String
     #   resp.recommended_resource_details.redshift_reserved_instances.configuration.term #=> String
     #   resp.recommended_resource_details.redshift_reserved_instances.configuration.payment_option #=> String
+    #   resp.recommended_resource_details.redshift_reserved_instances.configuration.reserved_instances_region #=> String
+    #   resp.recommended_resource_details.redshift_reserved_instances.configuration.upfront_cost #=> String
+    #   resp.recommended_resource_details.redshift_reserved_instances.configuration.monthly_recurring_cost #=> String
+    #   resp.recommended_resource_details.redshift_reserved_instances.configuration.normalized_units_to_purchase #=> String
     #   resp.recommended_resource_details.redshift_reserved_instances.configuration.number_of_instances_to_purchase #=> String
     #   resp.recommended_resource_details.redshift_reserved_instances.configuration.instance_family #=> String
     #   resp.recommended_resource_details.redshift_reserved_instances.configuration.instance_type #=> String
-    #   resp.recommended_resource_details.redshift_reserved_instances.configuration.reserved_instances_region #=> String
     #   resp.recommended_resource_details.redshift_reserved_instances.configuration.size_flex_eligible #=> Boolean
     #   resp.recommended_resource_details.redshift_reserved_instances.configuration.current_generation #=> String
-    #   resp.recommended_resource_details.redshift_reserved_instances.configuration.upfront_cost #=> String
-    #   resp.recommended_resource_details.redshift_reserved_instances.configuration.monthly_recurring_cost #=> String
     #   resp.recommended_resource_details.redshift_reserved_instances.cost_calculation.pricing.estimated_on_demand_cost #=> Float
     #   resp.recommended_resource_details.redshift_reserved_instances.cost_calculation.pricing.monthly_reservation_eligible_cost #=> Float
     #   resp.recommended_resource_details.redshift_reserved_instances.cost_calculation.pricing.savings_percentage #=> Float
@@ -1016,6 +1153,136 @@ module Aws::CostOptimizationHub
     #   resp.recommended_resource_details.rds_db_instance_storage.cost_calculation.pricing.estimated_discounts.reserved_instances_discount #=> Float
     #   resp.recommended_resource_details.rds_db_instance_storage.cost_calculation.pricing.estimated_discounts.other_discount #=> Float
     #   resp.recommended_resource_details.rds_db_instance_storage.cost_calculation.pricing.estimated_cost_after_discounts #=> Float
+    #   resp.recommended_resource_details.aurora_db_cluster_storage.configuration.storage_type #=> String
+    #   resp.recommended_resource_details.aurora_db_cluster_storage.cost_calculation.usages #=> Array
+    #   resp.recommended_resource_details.aurora_db_cluster_storage.cost_calculation.usages[0].usage_type #=> String
+    #   resp.recommended_resource_details.aurora_db_cluster_storage.cost_calculation.usages[0].usage_amount #=> Float
+    #   resp.recommended_resource_details.aurora_db_cluster_storage.cost_calculation.usages[0].operation #=> String
+    #   resp.recommended_resource_details.aurora_db_cluster_storage.cost_calculation.usages[0].product_code #=> String
+    #   resp.recommended_resource_details.aurora_db_cluster_storage.cost_calculation.usages[0].unit #=> String
+    #   resp.recommended_resource_details.aurora_db_cluster_storage.cost_calculation.pricing.estimated_cost_before_discounts #=> Float
+    #   resp.recommended_resource_details.aurora_db_cluster_storage.cost_calculation.pricing.estimated_net_unused_amortized_commitments #=> Float
+    #   resp.recommended_resource_details.aurora_db_cluster_storage.cost_calculation.pricing.estimated_discounts.savings_plans_discount #=> Float
+    #   resp.recommended_resource_details.aurora_db_cluster_storage.cost_calculation.pricing.estimated_discounts.reserved_instances_discount #=> Float
+    #   resp.recommended_resource_details.aurora_db_cluster_storage.cost_calculation.pricing.estimated_discounts.other_discount #=> Float
+    #   resp.recommended_resource_details.aurora_db_cluster_storage.cost_calculation.pricing.estimated_cost_after_discounts #=> Float
+    #   resp.recommended_resource_details.dynamo_db_reserved_capacity.configuration.account_scope #=> String
+    #   resp.recommended_resource_details.dynamo_db_reserved_capacity.configuration.service #=> String
+    #   resp.recommended_resource_details.dynamo_db_reserved_capacity.configuration.term #=> String
+    #   resp.recommended_resource_details.dynamo_db_reserved_capacity.configuration.payment_option #=> String
+    #   resp.recommended_resource_details.dynamo_db_reserved_capacity.configuration.reserved_instances_region #=> String
+    #   resp.recommended_resource_details.dynamo_db_reserved_capacity.configuration.upfront_cost #=> String
+    #   resp.recommended_resource_details.dynamo_db_reserved_capacity.configuration.monthly_recurring_cost #=> String
+    #   resp.recommended_resource_details.dynamo_db_reserved_capacity.configuration.number_of_capacity_units_to_purchase #=> String
+    #   resp.recommended_resource_details.dynamo_db_reserved_capacity.configuration.capacity_units #=> String
+    #   resp.recommended_resource_details.dynamo_db_reserved_capacity.cost_calculation.pricing.estimated_on_demand_cost #=> Float
+    #   resp.recommended_resource_details.dynamo_db_reserved_capacity.cost_calculation.pricing.monthly_reservation_eligible_cost #=> Float
+    #   resp.recommended_resource_details.dynamo_db_reserved_capacity.cost_calculation.pricing.savings_percentage #=> Float
+    #   resp.recommended_resource_details.dynamo_db_reserved_capacity.cost_calculation.pricing.estimated_monthly_amortized_reservation_cost #=> Float
+    #   resp.recommended_resource_details.memory_db_reserved_instances.configuration.account_scope #=> String
+    #   resp.recommended_resource_details.memory_db_reserved_instances.configuration.service #=> String
+    #   resp.recommended_resource_details.memory_db_reserved_instances.configuration.term #=> String
+    #   resp.recommended_resource_details.memory_db_reserved_instances.configuration.payment_option #=> String
+    #   resp.recommended_resource_details.memory_db_reserved_instances.configuration.reserved_instances_region #=> String
+    #   resp.recommended_resource_details.memory_db_reserved_instances.configuration.upfront_cost #=> String
+    #   resp.recommended_resource_details.memory_db_reserved_instances.configuration.monthly_recurring_cost #=> String
+    #   resp.recommended_resource_details.memory_db_reserved_instances.configuration.normalized_units_to_purchase #=> String
+    #   resp.recommended_resource_details.memory_db_reserved_instances.configuration.number_of_instances_to_purchase #=> String
+    #   resp.recommended_resource_details.memory_db_reserved_instances.configuration.instance_type #=> String
+    #   resp.recommended_resource_details.memory_db_reserved_instances.configuration.instance_family #=> String
+    #   resp.recommended_resource_details.memory_db_reserved_instances.configuration.size_flex_eligible #=> Boolean
+    #   resp.recommended_resource_details.memory_db_reserved_instances.configuration.current_generation #=> String
+    #   resp.recommended_resource_details.memory_db_reserved_instances.cost_calculation.pricing.estimated_on_demand_cost #=> Float
+    #   resp.recommended_resource_details.memory_db_reserved_instances.cost_calculation.pricing.monthly_reservation_eligible_cost #=> Float
+    #   resp.recommended_resource_details.memory_db_reserved_instances.cost_calculation.pricing.savings_percentage #=> Float
+    #   resp.recommended_resource_details.memory_db_reserved_instances.cost_calculation.pricing.estimated_monthly_amortized_reservation_cost #=> Float
+    #   resp.recommended_resource_details.nat_gateway.configuration.active_connection_count #=> Integer
+    #   resp.recommended_resource_details.nat_gateway.configuration.packets_in_from_source #=> Integer
+    #   resp.recommended_resource_details.nat_gateway.configuration.packets_in_from_destination #=> Integer
+    #   resp.recommended_resource_details.nat_gateway.cost_calculation.usages #=> Array
+    #   resp.recommended_resource_details.nat_gateway.cost_calculation.usages[0].usage_type #=> String
+    #   resp.recommended_resource_details.nat_gateway.cost_calculation.usages[0].usage_amount #=> Float
+    #   resp.recommended_resource_details.nat_gateway.cost_calculation.usages[0].operation #=> String
+    #   resp.recommended_resource_details.nat_gateway.cost_calculation.usages[0].product_code #=> String
+    #   resp.recommended_resource_details.nat_gateway.cost_calculation.usages[0].unit #=> String
+    #   resp.recommended_resource_details.nat_gateway.cost_calculation.pricing.estimated_cost_before_discounts #=> Float
+    #   resp.recommended_resource_details.nat_gateway.cost_calculation.pricing.estimated_net_unused_amortized_commitments #=> Float
+    #   resp.recommended_resource_details.nat_gateway.cost_calculation.pricing.estimated_discounts.savings_plans_discount #=> Float
+    #   resp.recommended_resource_details.nat_gateway.cost_calculation.pricing.estimated_discounts.reserved_instances_discount #=> Float
+    #   resp.recommended_resource_details.nat_gateway.cost_calculation.pricing.estimated_discounts.other_discount #=> Float
+    #   resp.recommended_resource_details.nat_gateway.cost_calculation.pricing.estimated_cost_after_discounts #=> Float
+    #   resp.recommended_resource_details.dynamo_db_table.cost_calculation.usages #=> Array
+    #   resp.recommended_resource_details.dynamo_db_table.cost_calculation.usages[0].usage_type #=> String
+    #   resp.recommended_resource_details.dynamo_db_table.cost_calculation.usages[0].usage_amount #=> Float
+    #   resp.recommended_resource_details.dynamo_db_table.cost_calculation.usages[0].operation #=> String
+    #   resp.recommended_resource_details.dynamo_db_table.cost_calculation.usages[0].product_code #=> String
+    #   resp.recommended_resource_details.dynamo_db_table.cost_calculation.usages[0].unit #=> String
+    #   resp.recommended_resource_details.dynamo_db_table.cost_calculation.pricing.estimated_cost_before_discounts #=> Float
+    #   resp.recommended_resource_details.dynamo_db_table.cost_calculation.pricing.estimated_net_unused_amortized_commitments #=> Float
+    #   resp.recommended_resource_details.dynamo_db_table.cost_calculation.pricing.estimated_discounts.savings_plans_discount #=> Float
+    #   resp.recommended_resource_details.dynamo_db_table.cost_calculation.pricing.estimated_discounts.reserved_instances_discount #=> Float
+    #   resp.recommended_resource_details.dynamo_db_table.cost_calculation.pricing.estimated_discounts.other_discount #=> Float
+    #   resp.recommended_resource_details.dynamo_db_table.cost_calculation.pricing.estimated_cost_after_discounts #=> Float
+    #   resp.recommended_resource_details.elasti_cache_cluster.cost_calculation.usages #=> Array
+    #   resp.recommended_resource_details.elasti_cache_cluster.cost_calculation.usages[0].usage_type #=> String
+    #   resp.recommended_resource_details.elasti_cache_cluster.cost_calculation.usages[0].usage_amount #=> Float
+    #   resp.recommended_resource_details.elasti_cache_cluster.cost_calculation.usages[0].operation #=> String
+    #   resp.recommended_resource_details.elasti_cache_cluster.cost_calculation.usages[0].product_code #=> String
+    #   resp.recommended_resource_details.elasti_cache_cluster.cost_calculation.usages[0].unit #=> String
+    #   resp.recommended_resource_details.elasti_cache_cluster.cost_calculation.pricing.estimated_cost_before_discounts #=> Float
+    #   resp.recommended_resource_details.elasti_cache_cluster.cost_calculation.pricing.estimated_net_unused_amortized_commitments #=> Float
+    #   resp.recommended_resource_details.elasti_cache_cluster.cost_calculation.pricing.estimated_discounts.savings_plans_discount #=> Float
+    #   resp.recommended_resource_details.elasti_cache_cluster.cost_calculation.pricing.estimated_discounts.reserved_instances_discount #=> Float
+    #   resp.recommended_resource_details.elasti_cache_cluster.cost_calculation.pricing.estimated_discounts.other_discount #=> Float
+    #   resp.recommended_resource_details.elasti_cache_cluster.cost_calculation.pricing.estimated_cost_after_discounts #=> Float
+    #   resp.recommended_resource_details.memory_db_cluster.cost_calculation.usages #=> Array
+    #   resp.recommended_resource_details.memory_db_cluster.cost_calculation.usages[0].usage_type #=> String
+    #   resp.recommended_resource_details.memory_db_cluster.cost_calculation.usages[0].usage_amount #=> Float
+    #   resp.recommended_resource_details.memory_db_cluster.cost_calculation.usages[0].operation #=> String
+    #   resp.recommended_resource_details.memory_db_cluster.cost_calculation.usages[0].product_code #=> String
+    #   resp.recommended_resource_details.memory_db_cluster.cost_calculation.usages[0].unit #=> String
+    #   resp.recommended_resource_details.memory_db_cluster.cost_calculation.pricing.estimated_cost_before_discounts #=> Float
+    #   resp.recommended_resource_details.memory_db_cluster.cost_calculation.pricing.estimated_net_unused_amortized_commitments #=> Float
+    #   resp.recommended_resource_details.memory_db_cluster.cost_calculation.pricing.estimated_discounts.savings_plans_discount #=> Float
+    #   resp.recommended_resource_details.memory_db_cluster.cost_calculation.pricing.estimated_discounts.reserved_instances_discount #=> Float
+    #   resp.recommended_resource_details.memory_db_cluster.cost_calculation.pricing.estimated_discounts.other_discount #=> Float
+    #   resp.recommended_resource_details.memory_db_cluster.cost_calculation.pricing.estimated_cost_after_discounts #=> Float
+    #   resp.recommended_resource_details.document_db_cluster.cost_calculation.usages #=> Array
+    #   resp.recommended_resource_details.document_db_cluster.cost_calculation.usages[0].usage_type #=> String
+    #   resp.recommended_resource_details.document_db_cluster.cost_calculation.usages[0].usage_amount #=> Float
+    #   resp.recommended_resource_details.document_db_cluster.cost_calculation.usages[0].operation #=> String
+    #   resp.recommended_resource_details.document_db_cluster.cost_calculation.usages[0].product_code #=> String
+    #   resp.recommended_resource_details.document_db_cluster.cost_calculation.usages[0].unit #=> String
+    #   resp.recommended_resource_details.document_db_cluster.cost_calculation.pricing.estimated_cost_before_discounts #=> Float
+    #   resp.recommended_resource_details.document_db_cluster.cost_calculation.pricing.estimated_net_unused_amortized_commitments #=> Float
+    #   resp.recommended_resource_details.document_db_cluster.cost_calculation.pricing.estimated_discounts.savings_plans_discount #=> Float
+    #   resp.recommended_resource_details.document_db_cluster.cost_calculation.pricing.estimated_discounts.reserved_instances_discount #=> Float
+    #   resp.recommended_resource_details.document_db_cluster.cost_calculation.pricing.estimated_discounts.other_discount #=> Float
+    #   resp.recommended_resource_details.document_db_cluster.cost_calculation.pricing.estimated_cost_after_discounts #=> Float
+    #   resp.recommended_resource_details.work_spaces.cost_calculation.usages #=> Array
+    #   resp.recommended_resource_details.work_spaces.cost_calculation.usages[0].usage_type #=> String
+    #   resp.recommended_resource_details.work_spaces.cost_calculation.usages[0].usage_amount #=> Float
+    #   resp.recommended_resource_details.work_spaces.cost_calculation.usages[0].operation #=> String
+    #   resp.recommended_resource_details.work_spaces.cost_calculation.usages[0].product_code #=> String
+    #   resp.recommended_resource_details.work_spaces.cost_calculation.usages[0].unit #=> String
+    #   resp.recommended_resource_details.work_spaces.cost_calculation.pricing.estimated_cost_before_discounts #=> Float
+    #   resp.recommended_resource_details.work_spaces.cost_calculation.pricing.estimated_net_unused_amortized_commitments #=> Float
+    #   resp.recommended_resource_details.work_spaces.cost_calculation.pricing.estimated_discounts.savings_plans_discount #=> Float
+    #   resp.recommended_resource_details.work_spaces.cost_calculation.pricing.estimated_discounts.reserved_instances_discount #=> Float
+    #   resp.recommended_resource_details.work_spaces.cost_calculation.pricing.estimated_discounts.other_discount #=> Float
+    #   resp.recommended_resource_details.work_spaces.cost_calculation.pricing.estimated_cost_after_discounts #=> Float
+    #   resp.recommended_resource_details.sage_maker_endpoint.cost_calculation.usages #=> Array
+    #   resp.recommended_resource_details.sage_maker_endpoint.cost_calculation.usages[0].usage_type #=> String
+    #   resp.recommended_resource_details.sage_maker_endpoint.cost_calculation.usages[0].usage_amount #=> Float
+    #   resp.recommended_resource_details.sage_maker_endpoint.cost_calculation.usages[0].operation #=> String
+    #   resp.recommended_resource_details.sage_maker_endpoint.cost_calculation.usages[0].product_code #=> String
+    #   resp.recommended_resource_details.sage_maker_endpoint.cost_calculation.usages[0].unit #=> String
+    #   resp.recommended_resource_details.sage_maker_endpoint.cost_calculation.pricing.estimated_cost_before_discounts #=> Float
+    #   resp.recommended_resource_details.sage_maker_endpoint.cost_calculation.pricing.estimated_net_unused_amortized_commitments #=> Float
+    #   resp.recommended_resource_details.sage_maker_endpoint.cost_calculation.pricing.estimated_discounts.savings_plans_discount #=> Float
+    #   resp.recommended_resource_details.sage_maker_endpoint.cost_calculation.pricing.estimated_discounts.reserved_instances_discount #=> Float
+    #   resp.recommended_resource_details.sage_maker_endpoint.cost_calculation.pricing.estimated_discounts.other_discount #=> Float
+    #   resp.recommended_resource_details.sage_maker_endpoint.cost_calculation.pricing.estimated_cost_after_discounts #=> Float
     #   resp.tags #=> Array
     #   resp.tags[0].key #=> String
     #   resp.tags[0].value #=> String
@@ -1026,6 +1293,94 @@ module Aws::CostOptimizationHub
     # @param [Hash] params ({})
     def get_recommendation(params = {}, options = {})
       req = build_request(:get_recommendation, params)
+      req.send_request(options)
+    end
+
+    # Returns cost efficiency metrics aggregated over time and optionally
+    # grouped by a specified dimension. The metrics provide insights into
+    # your cost optimization progress by tracking estimated savings,
+    # spending, and measures how effectively you're optimizing your Cloud
+    # resources.
+    #
+    # The operation supports both daily and monthly time granularities and
+    # allows grouping results by account ID, Amazon Web Services Region.
+    # Results are returned as time-series data, enabling you to analyze
+    # trends in your cost optimization performance over the specified time
+    # period.
+    #
+    # @option params [String] :group_by
+    #   The dimension by which to group the cost efficiency metrics. Valid
+    #   values include account ID, Amazon Web Services Region. When no
+    #   grouping is specified, metrics are aggregated across all resources in
+    #   the specified time period.
+    #
+    # @option params [required, String] :granularity
+    #   The time granularity for the cost efficiency metrics. Specify `Daily`
+    #   for metrics aggregated by day, or `Monthly` for metrics aggregated by
+    #   month.
+    #
+    # @option params [required, Types::TimePeriod] :time_period
+    #   The time period for which to retrieve the cost efficiency metrics. The
+    #   start date is inclusive and the end date is exclusive. Dates can be
+    #   specified in either YYYY-MM-DD format or YYYY-MM format depending on
+    #   the desired granularity.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of groups to return in the response. Valid values
+    #   range from 0 to 1000. Use in conjunction with `nextToken` to paginate
+    #   through results when the total number of groups exceeds this limit.
+    #
+    # @option params [Types::OrderBy] :order_by
+    #   The ordering specification for the results. Defines which dimension to
+    #   sort by and whether to sort in ascending or descending order.
+    #
+    # @option params [String] :next_token
+    #   The token to retrieve the next page of results. This value is returned
+    #   in the response when the number of groups exceeds the specified
+    #   `maxResults` value.
+    #
+    # @return [Types::ListEfficiencyMetricsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListEfficiencyMetricsResponse#efficiency_metrics_by_group #efficiency_metrics_by_group} => Array&lt;Types::EfficiencyMetricsByGroup&gt;
+    #   * {Types::ListEfficiencyMetricsResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_efficiency_metrics({
+    #     group_by: "String",
+    #     granularity: "Daily", # required, accepts Daily, Monthly
+    #     time_period: { # required
+    #       start: "String", # required
+    #       end: "String", # required
+    #     },
+    #     max_results: 1,
+    #     order_by: {
+    #       dimension: "String",
+    #       order: "Asc", # accepts Asc, Desc
+    #     },
+    #     next_token: "String",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.efficiency_metrics_by_group #=> Array
+    #   resp.efficiency_metrics_by_group[0].metrics_by_time #=> Array
+    #   resp.efficiency_metrics_by_group[0].metrics_by_time[0].score #=> Float
+    #   resp.efficiency_metrics_by_group[0].metrics_by_time[0].savings #=> Float
+    #   resp.efficiency_metrics_by_group[0].metrics_by_time[0].spend #=> Float
+    #   resp.efficiency_metrics_by_group[0].metrics_by_time[0].timestamp #=> String
+    #   resp.efficiency_metrics_by_group[0].group #=> String
+    #   resp.efficiency_metrics_by_group[0].message #=> String
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cost-optimization-hub-2022-07-26/ListEfficiencyMetrics AWS API Documentation
+    #
+    # @overload list_efficiency_metrics(params = {})
+    # @param [Hash] params ({})
+    def list_efficiency_metrics(params = {}, options = {})
+      req = build_request(:list_efficiency_metrics, params)
       req.send_request(options)
     end
 
@@ -1127,7 +1482,7 @@ module Aws::CostOptimizationHub
     #       implementation_efforts: ["VeryLow"], # accepts VeryLow, Low, Medium, High, VeryHigh
     #       account_ids: ["AccountId"],
     #       regions: ["String"],
-    #       resource_types: ["Ec2Instance"], # accepts Ec2Instance, LambdaFunction, EbsVolume, EcsService, Ec2AutoScalingGroup, Ec2InstanceSavingsPlans, ComputeSavingsPlans, SageMakerSavingsPlans, Ec2ReservedInstances, RdsReservedInstances, OpenSearchReservedInstances, RedshiftReservedInstances, ElastiCacheReservedInstances, RdsDbInstanceStorage, RdsDbInstance
+    #       resource_types: ["Ec2Instance"], # accepts Ec2Instance, LambdaFunction, EbsVolume, EcsService, Ec2AutoScalingGroup, Ec2InstanceSavingsPlans, ComputeSavingsPlans, SageMakerSavingsPlans, Ec2ReservedInstances, RdsReservedInstances, OpenSearchReservedInstances, RedshiftReservedInstances, ElastiCacheReservedInstances, RdsDbInstanceStorage, RdsDbInstance, AuroraDbClusterStorage, DynamoDbReservedCapacity, MemoryDbReservedInstances, NatGateway, DynamoDBTable, ElastiCacheCluster, MemoryDBCluster, DocumentDBCluster, WorkSpaces, SageMakerEndpoint
     #       action_types: ["Rightsize"], # accepts Rightsize, Stop, Upgrade, PurchaseSavingsPlans, PurchaseReservedInstances, MigrateToGraviton, Delete, ScaleIn
     #       tags: [
     #         {
@@ -1201,7 +1556,7 @@ module Aws::CostOptimizationHub
     #       implementation_efforts: ["VeryLow"], # accepts VeryLow, Low, Medium, High, VeryHigh
     #       account_ids: ["AccountId"],
     #       regions: ["String"],
-    #       resource_types: ["Ec2Instance"], # accepts Ec2Instance, LambdaFunction, EbsVolume, EcsService, Ec2AutoScalingGroup, Ec2InstanceSavingsPlans, ComputeSavingsPlans, SageMakerSavingsPlans, Ec2ReservedInstances, RdsReservedInstances, OpenSearchReservedInstances, RedshiftReservedInstances, ElastiCacheReservedInstances, RdsDbInstanceStorage, RdsDbInstance
+    #       resource_types: ["Ec2Instance"], # accepts Ec2Instance, LambdaFunction, EbsVolume, EcsService, Ec2AutoScalingGroup, Ec2InstanceSavingsPlans, ComputeSavingsPlans, SageMakerSavingsPlans, Ec2ReservedInstances, RdsReservedInstances, OpenSearchReservedInstances, RedshiftReservedInstances, ElastiCacheReservedInstances, RdsDbInstanceStorage, RdsDbInstance, AuroraDbClusterStorage, DynamoDbReservedCapacity, MemoryDbReservedInstances, NatGateway, DynamoDBTable, ElastiCacheCluster, MemoryDBCluster, DocumentDBCluster, WorkSpaces, SageMakerEndpoint
     #       action_types: ["Rightsize"], # accepts Rightsize, Stop, Upgrade, PurchaseSavingsPlans, PurchaseReservedInstances, MigrateToGraviton, Delete, ScaleIn
     #       tags: [
     #         {
@@ -1262,9 +1617,8 @@ module Aws::CostOptimizationHub
     # Updates the enrollment (opt in and opt out) status of an account to
     # the Cost Optimization Hub service.
     #
-    # If the account is a management account or delegated administrator of
-    # an organization, this action can also be used to enroll member
-    # accounts of the organization.
+    # If the account is a management account of an organization, this action
+    # can also be used to enroll member accounts of the organization.
     #
     # You must have the appropriate permissions to opt in to Cost
     # Optimization Hub and to view its recommendations. When you opt in,
@@ -1312,22 +1666,34 @@ module Aws::CostOptimizationHub
     # @option params [String] :member_account_discount_visibility
     #   Sets the "member account discount visibility" preference.
     #
+    # @option params [Types::PreferredCommitment] :preferred_commitment
+    #   Sets the preferences for how Reserved Instances and Savings Plans
+    #   cost-saving opportunities are prioritized in terms of payment option
+    #   and term length.
+    #
     # @return [Types::UpdatePreferencesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::UpdatePreferencesResponse#savings_estimation_mode #savings_estimation_mode} => String
     #   * {Types::UpdatePreferencesResponse#member_account_discount_visibility #member_account_discount_visibility} => String
+    #   * {Types::UpdatePreferencesResponse#preferred_commitment #preferred_commitment} => Types::PreferredCommitment
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_preferences({
     #     savings_estimation_mode: "BeforeDiscounts", # accepts BeforeDiscounts, AfterDiscounts
     #     member_account_discount_visibility: "All", # accepts All, None
+    #     preferred_commitment: {
+    #       term: "OneYear", # accepts OneYear, ThreeYears
+    #       payment_option: "AllUpfront", # accepts AllUpfront, PartialUpfront, NoUpfront
+    #     },
     #   })
     #
     # @example Response structure
     #
     #   resp.savings_estimation_mode #=> String, one of "BeforeDiscounts", "AfterDiscounts"
     #   resp.member_account_discount_visibility #=> String, one of "All", "None"
+    #   resp.preferred_commitment.term #=> String, one of "OneYear", "ThreeYears"
+    #   resp.preferred_commitment.payment_option #=> String, one of "AllUpfront", "PartialUpfront", "NoUpfront"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cost-optimization-hub-2022-07-26/UpdatePreferences AWS API Documentation
     #
@@ -1356,7 +1722,7 @@ module Aws::CostOptimizationHub
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-costoptimizationhub'
-      context[:gem_version] = '1.22.0'
+      context[:gem_version] = '1.47.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

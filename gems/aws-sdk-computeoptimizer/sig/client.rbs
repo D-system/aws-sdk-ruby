@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -83,7 +84,7 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ComputeOptimizer/Client.html#delete_recommendation_preferences-instance_method
       def delete_recommendation_preferences: (
-                                               resource_type: ("Ec2Instance" | "AutoScalingGroup" | "EbsVolume" | "LambdaFunction" | "NotApplicable" | "EcsService" | "License" | "RdsDBInstance" | "Idle"),
+                                               resource_type: ("Ec2Instance" | "AutoScalingGroup" | "EbsVolume" | "LambdaFunction" | "NotApplicable" | "EcsService" | "License" | "RdsDBInstance" | "AuroraDBClusterStorage" | "Idle"),
                                                ?scope: {
                                                  name: ("Organization" | "AccountId" | "ResourceArn")?,
                                                  value: ::String?
@@ -104,7 +105,7 @@ module Aws
                                                    {
                                                      name: ("ResourceType" | "JobStatus")?,
                                                      values: Array[::String]?
-                                                   },
+                                                   }
                                                  ],
                                                  ?next_token: ::String,
                                                  ?max_results: ::Integer
@@ -123,7 +124,7 @@ module Aws
                                                          {
                                                            name: ("Finding" | "FindingReasonCodes" | "RecommendationSourceType" | "InferredWorkloadTypes")?,
                                                            values: Array[::String]?
-                                                         },
+                                                         }
                                                        ],
                                                        ?fields_to_export: Array[("AccountId" | "AutoScalingGroupArn" | "AutoScalingGroupName" | "Finding" | "UtilizationMetricsCpuMaximum" | "UtilizationMetricsMemoryMaximum" | "UtilizationMetricsEbsReadOpsPerSecondMaximum" | "UtilizationMetricsEbsWriteOpsPerSecondMaximum" | "UtilizationMetricsEbsReadBytesPerSecondMaximum" | "UtilizationMetricsEbsWriteBytesPerSecondMaximum" | "UtilizationMetricsDiskReadOpsPerSecondMaximum" | "UtilizationMetricsDiskWriteOpsPerSecondMaximum" | "UtilizationMetricsDiskReadBytesPerSecondMaximum" | "UtilizationMetricsDiskWriteBytesPerSecondMaximum" | "UtilizationMetricsNetworkInBytesPerSecondMaximum" | "UtilizationMetricsNetworkOutBytesPerSecondMaximum" | "UtilizationMetricsNetworkPacketsInPerSecondMaximum" | "UtilizationMetricsNetworkPacketsOutPerSecondMaximum" | "LookbackPeriodInDays" | "CurrentConfigurationInstanceType" | "CurrentConfigurationDesiredCapacity" | "CurrentConfigurationMinSize" | "CurrentConfigurationMaxSize" | "CurrentConfigurationAllocationStrategy" | "CurrentConfigurationMixedInstanceTypes" | "CurrentConfigurationType" | "CurrentOnDemandPrice" | "CurrentStandardOneYearNoUpfrontReservedPrice" | "CurrentStandardThreeYearNoUpfrontReservedPrice" | "CurrentVCpus" | "CurrentMemory" | "CurrentStorage" | "CurrentNetwork" | "RecommendationOptionsConfigurationInstanceType" | "RecommendationOptionsConfigurationDesiredCapacity" | "RecommendationOptionsConfigurationMinSize" | "RecommendationOptionsConfigurationMaxSize" | "RecommendationOptionsConfigurationEstimatedInstanceHourReductionPercentage" | "RecommendationOptionsConfigurationAllocationStrategy" | "RecommendationOptionsConfigurationMixedInstanceTypes" | "RecommendationOptionsConfigurationType" | "RecommendationOptionsProjectedUtilizationMetricsCpuMaximum" | "RecommendationOptionsProjectedUtilizationMetricsMemoryMaximum" | "RecommendationOptionsPerformanceRisk" | "RecommendationOptionsOnDemandPrice" | "RecommendationOptionsStandardOneYearNoUpfrontReservedPrice" | "RecommendationOptionsStandardThreeYearNoUpfrontReservedPrice" | "RecommendationOptionsVcpus" | "RecommendationOptionsMemory" | "RecommendationOptionsStorage" | "RecommendationOptionsNetwork" | "LastRefreshTimestamp" | "CurrentPerformanceRisk" | "RecommendationOptionsSavingsOpportunityPercentage" | "RecommendationOptionsEstimatedMonthlySavingsCurrency" | "RecommendationOptionsEstimatedMonthlySavingsValue" | "EffectiveRecommendationPreferencesCpuVendorArchitectures" | "EffectiveRecommendationPreferencesEnhancedInfrastructureMetrics" | "EffectiveRecommendationPreferencesInferredWorkloadTypes" | "EffectiveRecommendationPreferencesPreferredResources" | "EffectiveRecommendationPreferencesLookBackPeriod" | "InferredWorkloadTypes" | "RecommendationOptionsMigrationEffort" | "CurrentInstanceGpuInfo" | "RecommendationOptionsInstanceGpuInfo" | "UtilizationMetricsGpuPercentageMaximum" | "UtilizationMetricsGpuMemoryPercentageMaximum" | "RecommendationOptionsProjectedUtilizationMetricsGpuPercentageMaximum" | "RecommendationOptionsProjectedUtilizationMetricsGpuMemoryPercentageMaximum" | "EffectiveRecommendationPreferencesSavingsEstimationMode" | "RecommendationOptionsSavingsOpportunityAfterDiscountsPercentage" | "RecommendationOptionsEstimatedMonthlySavingsCurrencyAfterDiscounts" | "RecommendationOptionsEstimatedMonthlySavingsValueAfterDiscounts")],
                                                        s3_destination_config: {
@@ -150,9 +151,9 @@ module Aws
                                                  {
                                                    name: ("Finding")?,
                                                    values: Array[::String]?
-                                                 },
+                                                 }
                                                ],
-                                               ?fields_to_export: Array[("AccountId" | "VolumeArn" | "Finding" | "UtilizationMetricsVolumeReadOpsPerSecondMaximum" | "UtilizationMetricsVolumeWriteOpsPerSecondMaximum" | "UtilizationMetricsVolumeReadBytesPerSecondMaximum" | "UtilizationMetricsVolumeWriteBytesPerSecondMaximum" | "LookbackPeriodInDays" | "CurrentConfigurationVolumeType" | "CurrentConfigurationVolumeBaselineIOPS" | "CurrentConfigurationVolumeBaselineThroughput" | "CurrentConfigurationVolumeBurstIOPS" | "CurrentConfigurationVolumeBurstThroughput" | "CurrentConfigurationVolumeSize" | "CurrentMonthlyPrice" | "RecommendationOptionsConfigurationVolumeType" | "RecommendationOptionsConfigurationVolumeBaselineIOPS" | "RecommendationOptionsConfigurationVolumeBaselineThroughput" | "RecommendationOptionsConfigurationVolumeBurstIOPS" | "RecommendationOptionsConfigurationVolumeBurstThroughput" | "RecommendationOptionsConfigurationVolumeSize" | "RecommendationOptionsMonthlyPrice" | "RecommendationOptionsPerformanceRisk" | "LastRefreshTimestamp" | "CurrentPerformanceRisk" | "RecommendationOptionsSavingsOpportunityPercentage" | "RecommendationOptionsEstimatedMonthlySavingsCurrency" | "RecommendationOptionsEstimatedMonthlySavingsValue" | "Tags" | "RootVolume" | "CurrentConfigurationRootVolume" | "EffectiveRecommendationPreferencesSavingsEstimationMode" | "RecommendationOptionsSavingsOpportunityAfterDiscountsPercentage" | "RecommendationOptionsEstimatedMonthlySavingsCurrencyAfterDiscounts" | "RecommendationOptionsEstimatedMonthlySavingsValueAfterDiscounts")],
+                                               ?fields_to_export: Array[("AccountId" | "VolumeArn" | "Finding" | "UtilizationMetricsVolumeReadOpsPerSecondMaximum" | "UtilizationMetricsVolumeWriteOpsPerSecondMaximum" | "UtilizationMetricsVolumeReadBytesPerSecondMaximum" | "UtilizationMetricsVolumeWriteBytesPerSecondMaximum" | "UtilizationMetricsVolumeIOPSExceededMaximum" | "UtilizationMetricsVolumeThroughputExceededMaximum" | "LookbackPeriodInDays" | "CurrentConfigurationVolumeType" | "CurrentConfigurationVolumeBaselineIOPS" | "CurrentConfigurationVolumeBaselineThroughput" | "CurrentConfigurationVolumeBurstIOPS" | "CurrentConfigurationVolumeBurstThroughput" | "CurrentConfigurationVolumeSize" | "CurrentMonthlyPrice" | "RecommendationOptionsConfigurationVolumeType" | "RecommendationOptionsConfigurationVolumeBaselineIOPS" | "RecommendationOptionsConfigurationVolumeBaselineThroughput" | "RecommendationOptionsConfigurationVolumeBurstIOPS" | "RecommendationOptionsConfigurationVolumeBurstThroughput" | "RecommendationOptionsConfigurationVolumeSize" | "RecommendationOptionsMonthlyPrice" | "RecommendationOptionsPerformanceRisk" | "LastRefreshTimestamp" | "CurrentPerformanceRisk" | "RecommendationOptionsSavingsOpportunityPercentage" | "RecommendationOptionsEstimatedMonthlySavingsCurrency" | "RecommendationOptionsEstimatedMonthlySavingsValue" | "Tags" | "RootVolume" | "CurrentConfigurationRootVolume" | "EffectiveRecommendationPreferencesSavingsEstimationMode" | "RecommendationOptionsSavingsOpportunityAfterDiscountsPercentage" | "RecommendationOptionsEstimatedMonthlySavingsCurrencyAfterDiscounts" | "RecommendationOptionsEstimatedMonthlySavingsValueAfterDiscounts" | "EffectiveRecommendationPreferencesLookBackPeriod")],
                                                s3_destination_config: {
                                                  bucket: ::String?,
                                                  key_prefix: ::String?
@@ -174,7 +175,7 @@ module Aws
                                                    {
                                                      name: ("Finding" | "FindingReasonCodes" | "RecommendationSourceType" | "InferredWorkloadTypes")?,
                                                      values: Array[::String]?
-                                                   },
+                                                   }
                                                  ],
                                                  ?fields_to_export: Array[("AccountId" | "InstanceArn" | "InstanceName" | "Finding" | "FindingReasonCodes" | "LookbackPeriodInDays" | "CurrentInstanceType" | "UtilizationMetricsCpuMaximum" | "UtilizationMetricsMemoryMaximum" | "UtilizationMetricsEbsReadOpsPerSecondMaximum" | "UtilizationMetricsEbsWriteOpsPerSecondMaximum" | "UtilizationMetricsEbsReadBytesPerSecondMaximum" | "UtilizationMetricsEbsWriteBytesPerSecondMaximum" | "UtilizationMetricsDiskReadOpsPerSecondMaximum" | "UtilizationMetricsDiskWriteOpsPerSecondMaximum" | "UtilizationMetricsDiskReadBytesPerSecondMaximum" | "UtilizationMetricsDiskWriteBytesPerSecondMaximum" | "UtilizationMetricsNetworkInBytesPerSecondMaximum" | "UtilizationMetricsNetworkOutBytesPerSecondMaximum" | "UtilizationMetricsNetworkPacketsInPerSecondMaximum" | "UtilizationMetricsNetworkPacketsOutPerSecondMaximum" | "CurrentOnDemandPrice" | "CurrentStandardOneYearNoUpfrontReservedPrice" | "CurrentStandardThreeYearNoUpfrontReservedPrice" | "CurrentVCpus" | "CurrentMemory" | "CurrentStorage" | "CurrentNetwork" | "RecommendationOptionsInstanceType" | "RecommendationOptionsProjectedUtilizationMetricsCpuMaximum" | "RecommendationOptionsProjectedUtilizationMetricsMemoryMaximum" | "RecommendationOptionsPlatformDifferences" | "RecommendationOptionsPerformanceRisk" | "RecommendationOptionsVcpus" | "RecommendationOptionsMemory" | "RecommendationOptionsStorage" | "RecommendationOptionsNetwork" | "RecommendationOptionsOnDemandPrice" | "RecommendationOptionsStandardOneYearNoUpfrontReservedPrice" | "RecommendationOptionsStandardThreeYearNoUpfrontReservedPrice" | "RecommendationsSourcesRecommendationSourceArn" | "RecommendationsSourcesRecommendationSourceType" | "LastRefreshTimestamp" | "CurrentPerformanceRisk" | "RecommendationOptionsSavingsOpportunityPercentage" | "RecommendationOptionsEstimatedMonthlySavingsCurrency" | "RecommendationOptionsEstimatedMonthlySavingsValue" | "EffectiveRecommendationPreferencesCpuVendorArchitectures" | "EffectiveRecommendationPreferencesEnhancedInfrastructureMetrics" | "EffectiveRecommendationPreferencesInferredWorkloadTypes" | "InferredWorkloadTypes" | "RecommendationOptionsMigrationEffort" | "EffectiveRecommendationPreferencesExternalMetricsSource" | "Tags" | "InstanceState" | "ExternalMetricStatusCode" | "ExternalMetricStatusReason" | "CurrentInstanceGpuInfo" | "RecommendationOptionsInstanceGpuInfo" | "UtilizationMetricsGpuPercentageMaximum" | "UtilizationMetricsGpuMemoryPercentageMaximum" | "RecommendationOptionsProjectedUtilizationMetricsGpuPercentageMaximum" | "RecommendationOptionsProjectedUtilizationMetricsGpuMemoryPercentageMaximum" | "Idle" | "EffectiveRecommendationPreferencesPreferredResources" | "EffectiveRecommendationPreferencesLookBackPeriod" | "EffectiveRecommendationPreferencesUtilizationPreferences" | "EffectiveRecommendationPreferencesSavingsEstimationMode" | "RecommendationOptionsSavingsOpportunityAfterDiscountsPercentage" | "RecommendationOptionsEstimatedMonthlySavingsCurrencyAfterDiscounts" | "RecommendationOptionsEstimatedMonthlySavingsValueAfterDiscounts")],
                                                  s3_destination_config: {
@@ -201,9 +202,9 @@ module Aws
                                                   {
                                                     name: ("Finding" | "FindingReasonCode")?,
                                                     values: Array[::String]?
-                                                  },
+                                                  }
                                                 ],
-                                                ?fields_to_export: Array[("AccountId" | "ServiceArn" | "LookbackPeriodInDays" | "LastRefreshTimestamp" | "LaunchType" | "CurrentPerformanceRisk" | "CurrentServiceConfigurationMemory" | "CurrentServiceConfigurationCpu" | "CurrentServiceConfigurationTaskDefinitionArn" | "CurrentServiceConfigurationAutoScalingConfiguration" | "CurrentServiceContainerConfigurations" | "UtilizationMetricsCpuMaximum" | "UtilizationMetricsMemoryMaximum" | "Finding" | "FindingReasonCodes" | "RecommendationOptionsMemory" | "RecommendationOptionsCpu" | "RecommendationOptionsSavingsOpportunityPercentage" | "RecommendationOptionsEstimatedMonthlySavingsCurrency" | "RecommendationOptionsEstimatedMonthlySavingsValue" | "RecommendationOptionsContainerRecommendations" | "RecommendationOptionsProjectedUtilizationMetricsCpuMaximum" | "RecommendationOptionsProjectedUtilizationMetricsMemoryMaximum" | "Tags" | "EffectiveRecommendationPreferencesSavingsEstimationMode" | "RecommendationOptionsSavingsOpportunityAfterDiscountsPercentage" | "RecommendationOptionsEstimatedMonthlySavingsCurrencyAfterDiscounts" | "RecommendationOptionsEstimatedMonthlySavingsValueAfterDiscounts")],
+                                                ?fields_to_export: Array[("AccountId" | "ServiceArn" | "LookbackPeriodInDays" | "LastRefreshTimestamp" | "LaunchType" | "CurrentPerformanceRisk" | "CurrentServiceConfigurationMemory" | "CurrentServiceConfigurationCpu" | "CurrentServiceConfigurationTaskDefinitionArn" | "CurrentServiceConfigurationAutoScalingConfiguration" | "CurrentServiceContainerConfigurations" | "UtilizationMetricsCpuMaximum" | "UtilizationMetricsMemoryMaximum" | "Finding" | "FindingReasonCodes" | "RecommendationOptionsMemory" | "RecommendationOptionsCpu" | "RecommendationOptionsSavingsOpportunityPercentage" | "RecommendationOptionsEstimatedMonthlySavingsCurrency" | "RecommendationOptionsEstimatedMonthlySavingsValue" | "RecommendationOptionsContainerRecommendations" | "RecommendationOptionsProjectedUtilizationMetricsCpuMaximum" | "RecommendationOptionsProjectedUtilizationMetricsMemoryMaximum" | "Tags" | "EffectiveRecommendationPreferencesSavingsEstimationMode" | "RecommendationOptionsSavingsOpportunityAfterDiscountsPercentage" | "RecommendationOptionsEstimatedMonthlySavingsCurrencyAfterDiscounts" | "RecommendationOptionsEstimatedMonthlySavingsValueAfterDiscounts" | "EffectiveRecommendationPreferencesLookBackPeriod")],
                                                 s3_destination_config: {
                                                   bucket: ::String?,
                                                   key_prefix: ::String?
@@ -225,9 +226,9 @@ module Aws
                                            {
                                              name: ("Finding" | "ResourceType")?,
                                              values: Array[::String]?
-                                           },
+                                           }
                                          ],
-                                         ?fields_to_export: Array[("AccountId" | "ResourceArn" | "ResourceId" | "ResourceType" | "LastRefreshTimestamp" | "LookbackPeriodInDays" | "SavingsOpportunity" | "SavingsOpportunityAfterDiscount" | "UtilizationMetricsCpuMaximum" | "UtilizationMetricsMemoryMaximum" | "UtilizationMetricsNetworkOutBytesPerSecondMaximum" | "UtilizationMetricsNetworkInBytesPerSecondMaximum" | "UtilizationMetricsDatabaseConnectionsMaximum" | "UtilizationMetricsEBSVolumeReadIOPSMaximum" | "UtilizationMetricsEBSVolumeWriteIOPSMaximum" | "UtilizationMetricsVolumeReadOpsPerSecondMaximum" | "UtilizationMetricsVolumeWriteOpsPerSecondMaximum" | "Finding" | "FindingDescription" | "Tags")],
+                                         ?fields_to_export: Array[("AccountId" | "ResourceArn" | "ResourceId" | "ResourceType" | "LastRefreshTimestamp" | "LookbackPeriodInDays" | "SavingsOpportunity" | "SavingsOpportunityAfterDiscount" | "UtilizationMetricsCpuMaximum" | "UtilizationMetricsMemoryMaximum" | "UtilizationMetricsNetworkOutBytesPerSecondMaximum" | "UtilizationMetricsNetworkInBytesPerSecondMaximum" | "UtilizationMetricsDatabaseConnectionsMaximum" | "UtilizationMetricsEBSVolumeReadIOPSMaximum" | "UtilizationMetricsEBSVolumeWriteIOPSMaximum" | "UtilizationMetricsVolumeReadOpsPerSecondMaximum" | "UtilizationMetricsVolumeWriteOpsPerSecondMaximum" | "UtilizationMetricsActiveConnectionCountMaximum" | "UtilizationMetricsPacketsInFromSourceMaximum" | "UtilizationMetricsPacketsInFromDestinationMaximum" | "UtilizationMetricsConsumedReadCapacityUnitsSum" | "UtilizationMetricsConsumedWriteCapacityUnitsSum" | "UtilizationMetricsNewConnectionsSum" | "UtilizationMetricsEngineCPUUtilizationMaximum" | "UtilizationMetricsCacheHitsSum" | "UtilizationMetricsCacheMissesSum" | "UtilizationMetricsKeyspaceHitsSum" | "UtilizationMetricsKeyspaceMissesSum" | "UtilizationMetricsIsIdleMinimum" | "UtilizationMetricsUserConnectedSum" | "UtilizationMetricsInvocationsSum" | "UtilizationMetricsGetTypeCmdsSum" | "UtilizationMetricsSetTypeCmdsSum" | "UtilizationMetricsElastiCacheProcessingUnitsSum" | "UtilizationMetricsCurrConnectionsSum" | "UtilizationMetricsDatabaseConnectionsSum" | "Finding" | "FindingDescription" | "Tags")],
                                          s3_destination_config: {
                                            bucket: ::String?,
                                            key_prefix: ::String?
@@ -249,7 +250,7 @@ module Aws
                                                       {
                                                         name: ("Finding" | "FindingReasonCode")?,
                                                         values: Array[::String]?
-                                                      },
+                                                      }
                                                     ],
                                                     ?fields_to_export: Array[("AccountId" | "FunctionArn" | "FunctionVersion" | "Finding" | "FindingReasonCodes" | "NumberOfInvocations" | "UtilizationMetricsDurationMaximum" | "UtilizationMetricsDurationAverage" | "UtilizationMetricsMemoryMaximum" | "UtilizationMetricsMemoryAverage" | "LookbackPeriodInDays" | "CurrentConfigurationMemorySize" | "CurrentConfigurationTimeout" | "CurrentCostTotal" | "CurrentCostAverage" | "RecommendationOptionsConfigurationMemorySize" | "RecommendationOptionsCostLow" | "RecommendationOptionsCostHigh" | "RecommendationOptionsProjectedUtilizationMetricsDurationLowerBound" | "RecommendationOptionsProjectedUtilizationMetricsDurationUpperBound" | "RecommendationOptionsProjectedUtilizationMetricsDurationExpected" | "LastRefreshTimestamp" | "CurrentPerformanceRisk" | "RecommendationOptionsSavingsOpportunityPercentage" | "RecommendationOptionsEstimatedMonthlySavingsCurrency" | "RecommendationOptionsEstimatedMonthlySavingsValue" | "Tags" | "EffectiveRecommendationPreferencesSavingsEstimationMode" | "RecommendationOptionsSavingsOpportunityAfterDiscountsPercentage" | "RecommendationOptionsEstimatedMonthlySavingsCurrencyAfterDiscounts" | "RecommendationOptionsEstimatedMonthlySavingsValueAfterDiscounts")],
                                                     s3_destination_config: {
@@ -273,7 +274,7 @@ module Aws
                                               {
                                                 name: ("Finding" | "FindingReasonCode" | "LicenseName")?,
                                                 values: Array[::String]?
-                                              },
+                                              }
                                             ],
                                             ?fields_to_export: Array[("AccountId" | "ResourceArn" | "LookbackPeriodInDays" | "LastRefreshTimestamp" | "Finding" | "FindingReasonCodes" | "CurrentLicenseConfigurationNumberOfCores" | "CurrentLicenseConfigurationInstanceType" | "CurrentLicenseConfigurationOperatingSystem" | "CurrentLicenseConfigurationLicenseName" | "CurrentLicenseConfigurationLicenseEdition" | "CurrentLicenseConfigurationLicenseModel" | "CurrentLicenseConfigurationLicenseVersion" | "CurrentLicenseConfigurationMetricsSource" | "RecommendationOptionsOperatingSystem" | "RecommendationOptionsLicenseEdition" | "RecommendationOptionsLicenseModel" | "RecommendationOptionsSavingsOpportunityPercentage" | "RecommendationOptionsEstimatedMonthlySavingsCurrency" | "RecommendationOptionsEstimatedMonthlySavingsValue" | "Tags")],
                                             s3_destination_config: {
@@ -297,9 +298,9 @@ module Aws
                                                    {
                                                      name: ("InstanceFinding" | "InstanceFindingReasonCode" | "StorageFinding" | "StorageFindingReasonCode" | "Idle")?,
                                                      values: Array[::String]?
-                                                   },
+                                                   }
                                                  ],
-                                                 ?fields_to_export: Array[("ResourceArn" | "AccountId" | "Engine" | "EngineVersion" | "Idle" | "MultiAZDBInstance" | "CurrentDBInstanceClass" | "CurrentStorageConfigurationStorageType" | "CurrentStorageConfigurationAllocatedStorage" | "CurrentStorageConfigurationMaxAllocatedStorage" | "CurrentStorageConfigurationIOPS" | "CurrentStorageConfigurationStorageThroughput" | "CurrentInstanceOnDemandHourlyPrice" | "CurrentStorageOnDemandMonthlyPrice" | "LookbackPeriodInDays" | "CurrentInstancePerformanceRisk" | "UtilizationMetricsCpuMaximum" | "UtilizationMetricsMemoryMaximum" | "UtilizationMetricsEBSVolumeStorageSpaceUtilizationMaximum" | "UtilizationMetricsNetworkReceiveThroughputMaximum" | "UtilizationMetricsNetworkTransmitThroughputMaximum" | "UtilizationMetricsEBSVolumeReadIOPSMaximum" | "UtilizationMetricsEBSVolumeWriteIOPSMaximum" | "UtilizationMetricsEBSVolumeReadThroughputMaximum" | "UtilizationMetricsEBSVolumeWriteThroughputMaximum" | "UtilizationMetricsDatabaseConnectionsMaximum" | "UtilizationMetricsStorageNetworkReceiveThroughputMaximum" | "UtilizationMetricsStorageNetworkTransmitThroughputMaximum" | "UtilizationMetricsAuroraMemoryHealthStateMaximum" | "UtilizationMetricsAuroraMemoryNumDeclinedSqlTotalMaximum" | "UtilizationMetricsAuroraMemoryNumKillConnTotalMaximum" | "UtilizationMetricsAuroraMemoryNumKillQueryTotalMaximum" | "UtilizationMetricsReadIOPSEphemeralStorageMaximum" | "UtilizationMetricsWriteIOPSEphemeralStorageMaximum" | "InstanceFinding" | "InstanceFindingReasonCodes" | "StorageFinding" | "StorageFindingReasonCodes" | "InstanceRecommendationOptionsDBInstanceClass" | "InstanceRecommendationOptionsRank" | "InstanceRecommendationOptionsPerformanceRisk" | "InstanceRecommendationOptionsProjectedUtilizationMetricsCpuMaximum" | "StorageRecommendationOptionsStorageType" | "StorageRecommendationOptionsAllocatedStorage" | "StorageRecommendationOptionsMaxAllocatedStorage" | "StorageRecommendationOptionsIOPS" | "StorageRecommendationOptionsStorageThroughput" | "StorageRecommendationOptionsRank" | "InstanceRecommendationOptionsInstanceOnDemandHourlyPrice" | "InstanceRecommendationOptionsSavingsOpportunityPercentage" | "InstanceRecommendationOptionsEstimatedMonthlySavingsCurrency" | "InstanceRecommendationOptionsEstimatedMonthlySavingsValue" | "InstanceRecommendationOptionsSavingsOpportunityAfterDiscountsPercentage" | "InstanceRecommendationOptionsEstimatedMonthlySavingsCurrencyAfterDiscounts" | "InstanceRecommendationOptionsEstimatedMonthlySavingsValueAfterDiscounts" | "StorageRecommendationOptionsOnDemandMonthlyPrice" | "StorageRecommendationOptionsSavingsOpportunityPercentage" | "StorageRecommendationOptionsEstimatedMonthlySavingsCurrency" | "StorageRecommendationOptionsEstimatedMonthlySavingsValue" | "StorageRecommendationOptionsSavingsOpportunityAfterDiscountsPercentage" | "StorageRecommendationOptionsEstimatedMonthlySavingsCurrencyAfterDiscounts" | "StorageRecommendationOptionsEstimatedMonthlySavingsValueAfterDiscounts" | "EffectiveRecommendationPreferencesCpuVendorArchitectures" | "EffectiveRecommendationPreferencesEnhancedInfrastructureMetrics" | "EffectiveRecommendationPreferencesLookBackPeriod" | "EffectiveRecommendationPreferencesSavingsEstimationMode" | "LastRefreshTimestamp" | "Tags" | "DBClusterIdentifier" | "PromotionTier")],
+                                                 ?fields_to_export: Array[("ResourceArn" | "AccountId" | "Engine" | "EngineVersion" | "Idle" | "MultiAZDBInstance" | "ClusterWriter" | "CurrentDBInstanceClass" | "CurrentStorageConfigurationStorageType" | "CurrentStorageConfigurationAllocatedStorage" | "CurrentStorageConfigurationMaxAllocatedStorage" | "CurrentStorageConfigurationIOPS" | "CurrentStorageConfigurationStorageThroughput" | "CurrentStorageEstimatedMonthlyVolumeIOPsCostVariation" | "CurrentInstanceOnDemandHourlyPrice" | "CurrentStorageOnDemandMonthlyPrice" | "LookbackPeriodInDays" | "CurrentStorageEstimatedClusterInstanceOnDemandMonthlyCost" | "CurrentStorageEstimatedClusterStorageOnDemandMonthlyCost" | "CurrentStorageEstimatedClusterStorageIOOnDemandMonthlyCost" | "CurrentInstancePerformanceRisk" | "UtilizationMetricsCpuMaximum" | "UtilizationMetricsMemoryMaximum" | "UtilizationMetricsEBSVolumeStorageSpaceUtilizationMaximum" | "UtilizationMetricsNetworkReceiveThroughputMaximum" | "UtilizationMetricsNetworkTransmitThroughputMaximum" | "UtilizationMetricsEBSVolumeReadIOPSMaximum" | "UtilizationMetricsEBSVolumeWriteIOPSMaximum" | "UtilizationMetricsEBSVolumeReadThroughputMaximum" | "UtilizationMetricsEBSVolumeWriteThroughputMaximum" | "UtilizationMetricsDatabaseConnectionsMaximum" | "UtilizationMetricsStorageNetworkReceiveThroughputMaximum" | "UtilizationMetricsStorageNetworkTransmitThroughputMaximum" | "UtilizationMetricsAuroraMemoryHealthStateMaximum" | "UtilizationMetricsAuroraMemoryNumDeclinedSqlTotalMaximum" | "UtilizationMetricsAuroraMemoryNumKillConnTotalMaximum" | "UtilizationMetricsAuroraMemoryNumKillQueryTotalMaximum" | "UtilizationMetricsReadIOPSEphemeralStorageMaximum" | "UtilizationMetricsWriteIOPSEphemeralStorageMaximum" | "UtilizationMetricsVolumeBytesUsedAverage" | "UtilizationMetricsVolumeReadIOPsAverage" | "UtilizationMetricsVolumeWriteIOPsAverage" | "InstanceFinding" | "InstanceFindingReasonCodes" | "StorageFinding" | "StorageFindingReasonCodes" | "InstanceRecommendationOptionsDBInstanceClass" | "InstanceRecommendationOptionsRank" | "InstanceRecommendationOptionsPerformanceRisk" | "InstanceRecommendationOptionsProjectedUtilizationMetricsCpuMaximum" | "StorageRecommendationOptionsStorageType" | "StorageRecommendationOptionsAllocatedStorage" | "StorageRecommendationOptionsMaxAllocatedStorage" | "StorageRecommendationOptionsIOPS" | "StorageRecommendationOptionsStorageThroughput" | "StorageRecommendationOptionsRank" | "StorageRecommendationOptionsEstimatedMonthlyVolumeIOPsCostVariation" | "InstanceRecommendationOptionsInstanceOnDemandHourlyPrice" | "InstanceRecommendationOptionsSavingsOpportunityPercentage" | "InstanceRecommendationOptionsEstimatedMonthlySavingsCurrency" | "InstanceRecommendationOptionsEstimatedMonthlySavingsValue" | "InstanceRecommendationOptionsSavingsOpportunityAfterDiscountsPercentage" | "InstanceRecommendationOptionsEstimatedMonthlySavingsCurrencyAfterDiscounts" | "InstanceRecommendationOptionsEstimatedMonthlySavingsValueAfterDiscounts" | "StorageRecommendationOptionsOnDemandMonthlyPrice" | "StorageRecommendationOptionsEstimatedClusterInstanceOnDemandMonthlyCost" | "StorageRecommendationOptionsEstimatedClusterStorageOnDemandMonthlyCost" | "StorageRecommendationOptionsEstimatedClusterStorageIOOnDemandMonthlyCost" | "StorageRecommendationOptionsSavingsOpportunityPercentage" | "StorageRecommendationOptionsEstimatedMonthlySavingsCurrency" | "StorageRecommendationOptionsEstimatedMonthlySavingsValue" | "StorageRecommendationOptionsSavingsOpportunityAfterDiscountsPercentage" | "StorageRecommendationOptionsEstimatedMonthlySavingsCurrencyAfterDiscounts" | "StorageRecommendationOptionsEstimatedMonthlySavingsValueAfterDiscounts" | "EffectiveRecommendationPreferencesCpuVendorArchitectures" | "EffectiveRecommendationPreferencesEnhancedInfrastructureMetrics" | "EffectiveRecommendationPreferencesLookBackPeriod" | "EffectiveRecommendationPreferencesSavingsEstimationMode" | "LastRefreshTimestamp" | "Tags" | "DBClusterIdentifier" | "PromotionTier")],
                                                  s3_destination_config: {
                                                    bucket: ::String?,
                                                    key_prefix: ::String?
@@ -328,7 +329,7 @@ module Aws
                                                       {
                                                         name: ("Finding" | "FindingReasonCodes" | "RecommendationSourceType" | "InferredWorkloadTypes")?,
                                                         values: Array[::String]?
-                                                      },
+                                                      }
                                                     ],
                                                     ?recommendation_preferences: {
                                                       cpu_vendor_architectures: Array[("AWS_ARM64" | "CURRENT")]?
@@ -351,7 +352,7 @@ module Aws
                                               {
                                                 name: ("Finding")?,
                                                 values: Array[::String]?
-                                              },
+                                              }
                                             ],
                                             ?account_ids: Array[::String]
                                           ) -> _GetEBSVolumeRecommendationsResponseSuccess
@@ -372,7 +373,7 @@ module Aws
                                                 {
                                                   name: ("Finding" | "FindingReasonCodes" | "RecommendationSourceType" | "InferredWorkloadTypes")?,
                                                   values: Array[::String]?
-                                                },
+                                                }
                                               ],
                                               ?account_ids: Array[::String],
                                               ?recommendation_preferences: {
@@ -427,7 +428,7 @@ module Aws
                                                {
                                                  name: ("Finding" | "FindingReasonCode")?,
                                                  values: Array[::String]?
-                                               },
+                                               }
                                              ],
                                              ?account_ids: Array[::String]
                                            ) -> _GetECSServiceRecommendationsResponseSuccess
@@ -471,7 +472,7 @@ module Aws
                                                         {
                                                           name: ("Status")?,
                                                           values: Array[::String]?
-                                                        },
+                                                        }
                                                       ],
                                                       ?next_token: ::String,
                                                       ?max_results: ::Integer
@@ -493,7 +494,7 @@ module Aws
                                         {
                                           name: ("Finding" | "ResourceType")?,
                                           values: Array[::String]?
-                                        },
+                                        }
                                       ],
                                       ?account_ids: Array[::String],
                                       ?order_by: {
@@ -516,7 +517,7 @@ module Aws
                                                    {
                                                      name: ("Finding" | "FindingReasonCode")?,
                                                      values: Array[::String]?
-                                                   },
+                                                   }
                                                  ],
                                                  ?next_token: ::String,
                                                  ?max_results: ::Integer
@@ -538,7 +539,7 @@ module Aws
                                            {
                                              name: ("Finding" | "FindingReasonCode" | "LicenseName")?,
                                              values: Array[::String]?
-                                           },
+                                           }
                                          ],
                                          ?account_ids: Array[::String]
                                        ) -> _GetLicenseRecommendationsResponseSuccess
@@ -576,7 +577,7 @@ module Aws
                                                 {
                                                   name: ("InstanceFinding" | "InstanceFindingReasonCode" | "StorageFinding" | "StorageFindingReasonCode" | "Idle")?,
                                                   values: Array[::String]?
-                                                },
+                                                }
                                               ],
                                               ?account_ids: Array[::String],
                                               ?recommendation_preferences: {
@@ -592,7 +593,7 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ComputeOptimizer/Client.html#get_recommendation_preferences-instance_method
       def get_recommendation_preferences: (
-                                            resource_type: ("Ec2Instance" | "AutoScalingGroup" | "EbsVolume" | "LambdaFunction" | "NotApplicable" | "EcsService" | "License" | "RdsDBInstance" | "Idle"),
+                                            resource_type: ("Ec2Instance" | "AutoScalingGroup" | "EbsVolume" | "LambdaFunction" | "NotApplicable" | "EcsService" | "License" | "RdsDBInstance" | "AuroraDBClusterStorage" | "Idle"),
                                             ?scope: {
                                               name: ("Organization" | "AccountId" | "ResourceArn")?,
                                               value: ::String?
@@ -620,7 +621,7 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ComputeOptimizer/Client.html#put_recommendation_preferences-instance_method
       def put_recommendation_preferences: (
-                                            resource_type: ("Ec2Instance" | "AutoScalingGroup" | "EbsVolume" | "LambdaFunction" | "NotApplicable" | "EcsService" | "License" | "RdsDBInstance" | "Idle"),
+                                            resource_type: ("Ec2Instance" | "AutoScalingGroup" | "EbsVolume" | "LambdaFunction" | "NotApplicable" | "EcsService" | "License" | "RdsDBInstance" | "AuroraDBClusterStorage" | "Idle"),
                                             ?scope: {
                                               name: ("Organization" | "AccountId" | "ResourceArn")?,
                                               value: ::String?
@@ -638,14 +639,14 @@ module Aws
                                                   threshold: ("P90" | "P95" | "P99_5")?,
                                                   headroom: ("PERCENT_30" | "PERCENT_20" | "PERCENT_10" | "PERCENT_0")?
                                                 }?
-                                              },
+                                              }
                                             ],
                                             ?preferred_resources: Array[
                                               {
                                                 name: ("Ec2InstanceTypes")?,
                                                 include_list: Array[::String]?,
                                                 exclude_list: Array[::String]?
-                                              },
+                                              }
                                             ],
                                             ?savings_estimation_mode: ("AfterDiscounts" | "BeforeDiscounts")
                                           ) -> _PutRecommendationPreferencesResponseSuccess

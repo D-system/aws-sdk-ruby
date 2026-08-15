@@ -95,8 +95,8 @@ module Aws::GeoMaps
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::GeoMaps
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::GeoMaps
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::GeoMaps
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::GeoMaps
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::GeoMaps
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::GeoMaps
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::GeoMaps
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -471,6 +475,13 @@ module Aws::GeoMaps
     # @!group API Operations
 
     # `GetGlyphs` returns the map's glyphs.
+    #
+    # For more information, see [Style labels with glyphs][1] in the *Amazon
+    # Location Service Developer Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/location/latest/developerguide/styling-labels-with-glyphs.html
     #
     # @option params [required, String] :font_stack
     #   Name of the `FontStack` to retrieve.
@@ -644,7 +655,7 @@ module Aws::GeoMaps
     #   A Unicode range of characters to download glyphs for. This must be
     #   aligned to multiples of 256.
     #
-    #   Example: `0-255.pdf`
+    #   Example: `0-255.pbf`
     #
     # @return [Types::GetGlyphsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -678,6 +689,13 @@ module Aws::GeoMaps
 
     # `GetSprites` returns the map's sprites.
     #
+    # For more information, see [Style iconography with sprites][1] in the
+    # *Amazon Location Service Developer Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/location/latest/developerguide/styling-iconography-with-sprites.html
+    #
     # @option params [required, String] :file_name
     #   `Sprites` API: The name of the sprite ﬁle to retrieve, following
     #   pattern `sprites(@2x)?\.(png|json)`.
@@ -688,9 +706,7 @@ module Aws::GeoMaps
     #   Style specifies the desired map style for the `Sprites` APIs.
     #
     # @option params [required, String] :color_scheme
-    #   Sets color tone for map such as dark and light for specific map
-    #   styles. It applies to only vector map styles such as Standard and
-    #   Monochrome.
+    #   Sets the color tone for the map sprites, such as dark and light.
     #
     #   Example: `Light`
     #
@@ -742,22 +758,47 @@ module Aws::GeoMaps
       req.send_request(options, &block)
     end
 
-    # `GetStaticMap` provides high-quality static map images with
+    # <note markdown="1"> This operation is not supported in
+    # `ap-southeast-1` and
+    # `ap-southeast-5` regions for [GrabMaps][1] customers.
+    #
+    #  </note>
+    #
+    #  `GetStaticMap` provides high-quality static map images with
     # customizable options. You can modify the map's appearance and overlay
     # additional information. It's an ideal solution for applications
     # requiring tailored static map snapshots.
     #
+    #  For more information, see the following topics in the *Amazon
+    # Location
+    # Service Developer Guide*:
+    #
+    #  * [Static maps][2]
+    #
+    # * [Customize static maps][3]
+    #
+    # * [Overlay on the static map][4]
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
+    # [2]: https://docs.aws.amazon.com/location/latest/developerguide/static-maps.html
+    # [3]: https://docs.aws.amazon.com/location/latest/developerguide/customizing-static-maps.html
+    # [4]: https://docs.aws.amazon.com/location/latest/developerguide/overlaying-static-map.html
+    #
     # @option params [String] :bounding_box
-    #   Takes in two pairs of coordinates, \[Lon, Lat\], denoting
-    #   south-westerly and north-easterly edges of the image. The underlying
-    #   area becomes the view of the image.
+    #   Takes in two pairs of coordinates in World Geodetic System (WGS 84)
+    #   format: \[longitude, latitude\], denoting south-westerly and
+    #   north-easterly edges of the image. The underlying area becomes the
+    #   view of the image.
     #
     #   Example: -123.17075,49.26959,-123.08125,49.31429
     #
     # @option params [String] :bounded_positions
-    #   Takes in two or more pair of coordinates, \[Lon, Lat\], with each
-    #   coordinate separated by a comma. The API will generate an image to
-    #   encompass all of the provided coordinates.
+    #   Takes in two or more pair of coordinates in World Geodetic System (WGS
+    #   84) format: \[longitude, latitude\], with each coordinate separated by
+    #   a comma. The API will generate an image to encompass all of the
+    #   provided coordinates.
     #
     #   <note markdown="1"> Cannot be used with `Zoom` and or `Radius`
     #
@@ -766,9 +807,9 @@ module Aws::GeoMaps
     #   Example: 97.170451,78.039098,99.045536,27.176178
     #
     # @option params [String] :center
-    #   Takes in a pair of coordinates, \[Lon, Lat\], which becomes the center
-    #   point of the image. This parameter requires that either zoom or radius
-    #   is set.
+    #   Takes in a pair of coordinates in World Geodetic System (WGS 84)
+    #   format: \[longitude, latitude\], which becomes the center point of the
+    #   image. This parameter requires that either zoom or radius is set.
     #
     #   <note markdown="1"> Cannot be used with `Zoom` and or `Radius`
     #
@@ -777,8 +818,7 @@ module Aws::GeoMaps
     #   Example: 49.295,-123.108
     #
     # @option params [String] :color_scheme
-    #   Sets color tone for map, such as dark and light for specific map
-    #   styles. It only applies to vector map styles, such as Standard.
+    #   Sets the color tone for the map, such as dark and light.
     #
     #   Example: `Light`
     #
@@ -1072,8 +1112,8 @@ module Aws::GeoMaps
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_static_map({
-    #     bounding_box: "PositionListString",
-    #     bounded_positions: "PositionListString",
+    #     bounding_box: "GetStaticMapRequestBoundingBoxString",
+    #     bounded_positions: "GetStaticMapRequestBoundedPositionsString",
     #     center: "PositionString",
     #     color_scheme: "Light", # accepts Light, Dark
     #     compact_overlay: "CompactOverlay",
@@ -1113,13 +1153,24 @@ module Aws::GeoMaps
 
     # `GetStyleDescriptor` returns information about the style.
     #
+    # For more information, see [Style dynamic maps][1] in the *Amazon
+    # Location Service Developer Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/location/latest/developerguide/styling-dynamic-maps.html
+    #
     # @option params [required, String] :style
-    #   Style specifies the desired map style.
+    #   Style specifies the desired map style. For [GrabMaps][1] customers,
+    #   `ap-southeast-1` and `ap-southeast-5` regions support only the
+    #   `Standard` and `Monochrome` values.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #
     # @option params [String] :color_scheme
-    #   Sets color tone for map such as dark and light for specific map
-    #   styles. It applies to only vector map styles such as Standard and
-    #   Monochrome.
+    #   Sets the color tone for the map, such as dark and light.
     #
     #   Example: `Light`
     #
@@ -1131,7 +1182,8 @@ module Aws::GeoMaps
     #
     # @option params [String] :political_view
     #   Specifies the political view using ISO 3166-2 or ISO 3166-3 country
-    #   code format.
+    #   code format. Not supported in `ap-southeast-1` and `ap-southeast-5`
+    #   regions for [GrabMaps][1] customers.
     #
     #   The following political views are currently supported:
     #
@@ -1166,6 +1218,80 @@ module Aws::GeoMaps
     #
     #   * `VNM`: Vietnam's view on the Paracel Islands and Spratly Islands
     #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
+    #
+    # @option params [String] :terrain
+    #   Adjusts how physical terrain details are rendered on the map. Not
+    #   supported in `ap-southeast-1` and `ap-southeast-5` regions for
+    #   [GrabMaps][1] customers.
+    #
+    #   The following terrain styles are currently supported:
+    #
+    #   * `Hillshade`: Displays the physical terrain details through shading
+    #     and highlighting of elevation change and geographic features.
+    #
+    #   * `Terrain3D`: Displays physical terrain details and elevations as a
+    #     three-dimensional model.
+    #
+    #   `Hillshade` is valid only for the `Standard` and `Monochrome` map
+    #   styles.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
+    #
+    # @option params [String] :contour_density
+    #   Displays the shape and steepness of terrain features using elevation
+    #   lines. The density value controls how densely the available contour
+    #   line information is rendered on the map. Not supported in
+    #   `ap-southeast-1` and `ap-southeast-5` regions for [GrabMaps][1]
+    #   customers.
+    #
+    #   This parameter is valid for all map styles except `Satellite`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
+    #
+    # @option params [String] :traffic
+    #   Displays real-time traffic information overlay on map, such as
+    #   incident events and flow events. Not supported in `ap-southeast-1` and
+    #   `ap-southeast-5` regions for [GrabMaps][1] customers.
+    #
+    #   This parameter is valid for all map styles except `Satellite`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
+    #
+    # @option params [Array<String>] :travel_modes
+    #   Renders additional map information relevant to selected travel modes.
+    #   Information for multiple travel modes can be displayed simultaneously,
+    #   although this increases the overall information density rendered on
+    #   the map. Not supported in `ap-southeast-1` and `ap-southeast-5`
+    #   regions for [GrabMaps][1] customers.
+    #
+    #   This parameter is valid for all map styles except `Satellite`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
+    #
+    # @option params [String] :buildings
+    #   Adjusts how building details are rendered on the map.
+    #
+    #   The following building styles are currently supported:
+    #
+    #   * `Buildings3D`: Displays buildings as three-dimensional extrusions on
+    #     the map.
+    #
+    #   ^
+    #
+    #   `Buildings3D` is valid only for the `Standard` and `Monochrome` map
+    #   styles.
+    #
     # @option params [String] :key
     #   Optional: The API key to be used for authorization. Either an API key
     #   or valid SigV4 signature must be provided when making a request.
@@ -1183,6 +1309,11 @@ module Aws::GeoMaps
     #     style: "Standard", # required, accepts Standard, Monochrome, Hybrid, Satellite
     #     color_scheme: "Light", # accepts Light, Dark
     #     political_view: "CountryCode",
+    #     terrain: "Hillshade", # accepts Hillshade, Terrain3D
+    #     contour_density: "Low", # accepts Low, Medium, High
+    #     traffic: "All", # accepts All, Congestion
+    #     travel_modes: ["Transit"], # accepts Transit, Truck
+    #     buildings: "Buildings3D", # accepts Buildings3D
     #     key: "ApiKey",
     #   })
     #
@@ -1203,19 +1334,42 @@ module Aws::GeoMaps
     end
 
     # `GetTile` returns a tile. Map tiles are used by clients to render a
-    # map. they're addressed using a grid arrangement with an X coordinate,
+    # map. They're addressed using a grid arrangement with an X coordinate,
     # Y coordinate, and Z (zoom) level.
     #
-    # @option params [required, String] :tileset
-    #   Specifies the desired tile set.
+    # For more information, see [Tiles][1] in the *Amazon Location Service
+    # Developer Guide*.
     #
-    #   Valid Values: `raster.satellite | vector.basemap`
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/location/latest/developerguide/tiles.html
+    #
+    # @option params [Array<String>] :additional_features
+    #   A list of optional additional parameters such as map styles that can
+    #   be requested for each result. Not supported in `ap-southeast-1` and
+    #   `ap-southeast-5` regions for [GrabMaps][1] customers.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
+    #
+    # @option params [required, String] :tileset
+    #   Specifies the desired tile set. For [GrabMaps][1] customers,
+    #   `ap-southeast-1` and `ap-southeast-5` regions support only the
+    #   `vector.basemap` value.
+    #
+    #   Valid Values: `raster.satellite | vector.basemap | vector.traffic |
+    #   raster.dem`
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #
     # @option params [required, String] :z
     #   The zoom value for the map tile.
     #
     # @option params [required, String] :x
-    #   The X axis value for the map tile. Must be between 0 and 19.
+    #   The X axis value for the map tile.
     #
     # @option params [required, String] :y
     #   The Y axis value for the map tile.
@@ -1235,6 +1389,7 @@ module Aws::GeoMaps
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_tile({
+    #     additional_features: ["ContourLines"], # accepts ContourLines, Hillshade, Logistics, Transit
     #     tileset: "Tileset", # required
     #     z: "GetTileRequestZString", # required
     #     x: "GetTileRequestXString", # required
@@ -1277,7 +1432,7 @@ module Aws::GeoMaps
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-geomaps'
-      context[:gem_version] = '1.5.0'
+      context[:gem_version] = '1.28.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

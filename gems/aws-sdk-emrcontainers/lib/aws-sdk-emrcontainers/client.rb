@@ -95,8 +95,8 @@ module Aws::EMRContainers
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::EMRContainers
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::EMRContainers
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::EMRContainers
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::EMRContainers
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::EMRContainers
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::EMRContainers
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::EMRContainers
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -646,6 +650,10 @@ module Aws::EMRContainers
     # @option params [Hash<String,String>] :tags
     #   The tags of the managed endpoint.
     #
+    # @option params [Integer] :session_idle_timeout_in_minutes
+    #   The number of idle minutes before the managed endpoint session times
+    #   out.
+    #
     # @return [Types::CreateManagedEndpointResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateManagedEndpointResponse#id #id} => String
@@ -686,6 +694,7 @@ module Aws::EMRContainers
     #         },
     #         s3_monitoring_configuration: {
     #           log_uri: "UriString", # required
+    #           encryption_key_arn: "KmsKeyArn",
     #         },
     #         container_log_rotation_configuration: {
     #           rotation_size: "RotationSize", # required
@@ -697,6 +706,7 @@ module Aws::EMRContainers
     #     tags: {
     #       "String128" => "StringEmpty256",
     #     },
+    #     session_idle_timeout_in_minutes: 1,
     #   })
     #
     # @example Response structure
@@ -731,6 +741,9 @@ module Aws::EMRContainers
     # @option params [required, String] :name
     #   The name of the security configuration.
     #
+    # @option params [Types::ContainerProvider] :container_provider
+    #   The container provider associated with the security configuration.
+    #
     # @option params [required, Types::SecurityConfigurationData] :security_configuration_data
     #   Security configuration input for the request.
     #
@@ -748,6 +761,16 @@ module Aws::EMRContainers
     #   resp = client.create_security_configuration({
     #     client_token: "ClientToken", # required
     #     name: "ResourceNameString", # required
+    #     container_provider: {
+    #       type: "EKS", # required, accepts EKS
+    #       id: "ClusterId", # required
+    #       info: {
+    #         eks_info: {
+    #           namespace: "KubernetesNamespace",
+    #           node_label: "NodeLabelString",
+    #         },
+    #       },
+    #     },
     #     security_configuration_data: { # required
     #       authorization_configuration: {
     #         lake_formation_configuration: {
@@ -766,6 +789,17 @@ module Aws::EMRContainers
     #               private_certificate_secret_arn: "SecretsManagerArn",
     #             },
     #           },
+    #         },
+    #       },
+    #       authentication_configuration: {
+    #         identity_center_configuration: {
+    #           enable_identity_center: false,
+    #           identity_center_application_assignment_required: false,
+    #           identity_center_instance_arn: "IdentityCenterInstanceARN",
+    #           emr_identity_center_application_arn: "EmrIdentityCenterApplicationARN",
+    #         },
+    #         iam_configuration: {
+    #           system_role: "IAMRoleArn",
     #         },
     #       },
     #     },
@@ -790,11 +824,11 @@ module Aws::EMRContainers
     end
 
     # Creates a virtual cluster. Virtual cluster is a managed entity on
-    # Amazon EMR on EKS. You can create, describe, list and delete virtual
-    # clusters. They do not consume any additional resource in your system.
-    # A single virtual cluster maps to a single Kubernetes namespace. Given
-    # this relationship, you can model virtual clusters the same way you
-    # model Kubernetes namespaces to meet your requirements.
+    # Amazon EMR on EKS. You can create, update, describe, list and delete
+    # virtual clusters. They do not consume any additional resource in your
+    # system. A single virtual cluster maps to a single Kubernetes
+    # namespace. Given this relationship, you can model virtual clusters the
+    # same way you model Kubernetes namespaces to meet your requirements.
     #
     # @option params [required, String] :name
     #   The specified name of the virtual cluster.
@@ -814,6 +848,14 @@ module Aws::EMRContainers
     # @option params [String] :security_configuration_id
     #   The ID of the security configuration.
     #
+    # @option params [Boolean] :session_enabled
+    #   Indicates whether the virtual cluster has session support enabled.
+    #
+    # @option params [Types::SchedulerConfiguration] :scheduler_configuration
+    #   The scheduler configuration (concurrency and queue limits) to apply to
+    #   the virtual cluster at creation time. When omitted, no limits are
+    #   applied.
+    #
     # @return [Types::CreateVirtualClusterResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateVirtualClusterResponse#id #id} => String
@@ -830,6 +872,7 @@ module Aws::EMRContainers
     #       info: {
     #         eks_info: {
     #           namespace: "KubernetesNamespace",
+    #           node_label: "NodeLabelString",
     #         },
     #       },
     #     },
@@ -838,6 +881,11 @@ module Aws::EMRContainers
     #       "String128" => "StringEmpty256",
     #     },
     #     security_configuration_id: "ResourceIdString",
+    #     session_enabled: false,
+    #     scheduler_configuration: {
+    #       max_in_queue_job_runs: 1,
+    #       max_concurrent_job_runs: 1,
+    #     },
     #   })
     #
     # @example Response structure
@@ -922,12 +970,40 @@ module Aws::EMRContainers
       req.send_request(options)
     end
 
+    # Deletes a security configuration.
+    #
+    # @option params [required, String] :id
+    #   The ID of the security configuration to delete.
+    #
+    # @return [Types::DeleteSecurityConfigurationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DeleteSecurityConfigurationResponse#id #id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_security_configuration({
+    #     id: "ResourceIdString", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.id #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/emr-containers-2020-10-01/DeleteSecurityConfiguration AWS API Documentation
+    #
+    # @overload delete_security_configuration(params = {})
+    # @param [Hash] params ({})
+    def delete_security_configuration(params = {}, options = {})
+      req = build_request(:delete_security_configuration, params)
+      req.send_request(options)
+    end
+
     # Deletes a virtual cluster. Virtual cluster is a managed entity on
-    # Amazon EMR on EKS. You can create, describe, list and delete virtual
-    # clusters. They do not consume any additional resource in your system.
-    # A single virtual cluster maps to a single Kubernetes namespace. Given
-    # this relationship, you can model virtual clusters the same way you
-    # model Kubernetes namespaces to meet your requirements.
+    # Amazon EMR on EKS. You can create, update, describe, list and delete
+    # virtual clusters. They do not consume any additional resource in your
+    # system. A single virtual cluster maps to a single Kubernetes
+    # namespace. Given this relationship, you can model virtual clusters the
+    # same way you model Kubernetes namespaces to meet your requirements.
     #
     # @option params [required, String] :id
     #   The ID of the virtual cluster that will be deleted.
@@ -997,6 +1073,7 @@ module Aws::EMRContainers
     #   resp.job_run.configuration_overrides.monitoring_configuration.cloud_watch_monitoring_configuration.log_group_name #=> String
     #   resp.job_run.configuration_overrides.monitoring_configuration.cloud_watch_monitoring_configuration.log_stream_name_prefix #=> String
     #   resp.job_run.configuration_overrides.monitoring_configuration.s3_monitoring_configuration.log_uri #=> String
+    #   resp.job_run.configuration_overrides.monitoring_configuration.s3_monitoring_configuration.encryption_key_arn #=> String
     #   resp.job_run.configuration_overrides.monitoring_configuration.container_log_rotation_configuration.rotation_size #=> String
     #   resp.job_run.configuration_overrides.monitoring_configuration.container_log_rotation_configuration.max_files_to_keep #=> Integer
     #   resp.job_run.job_driver.spark_submit_job_driver.entry_point #=> String
@@ -1132,9 +1209,11 @@ module Aws::EMRContainers
     #   resp.endpoint.configuration_overrides.monitoring_configuration.cloud_watch_monitoring_configuration.log_group_name #=> String
     #   resp.endpoint.configuration_overrides.monitoring_configuration.cloud_watch_monitoring_configuration.log_stream_name_prefix #=> String
     #   resp.endpoint.configuration_overrides.monitoring_configuration.s3_monitoring_configuration.log_uri #=> String
+    #   resp.endpoint.configuration_overrides.monitoring_configuration.s3_monitoring_configuration.encryption_key_arn #=> String
     #   resp.endpoint.configuration_overrides.monitoring_configuration.container_log_rotation_configuration.rotation_size #=> String
     #   resp.endpoint.configuration_overrides.monitoring_configuration.container_log_rotation_configuration.max_files_to_keep #=> Integer
     #   resp.endpoint.server_url #=> String
+    #   resp.endpoint.auth_proxy_url #=> String
     #   resp.endpoint.created_at #=> Time
     #   resp.endpoint.security_group #=> String
     #   resp.endpoint.subnet_ids #=> Array
@@ -1187,6 +1266,11 @@ module Aws::EMRContainers
     #   resp.security_configuration.security_configuration_data.authorization_configuration.encryption_configuration.in_transit_encryption_configuration.tls_certificate_configuration.certificate_provider_type #=> String, one of "PEM"
     #   resp.security_configuration.security_configuration_data.authorization_configuration.encryption_configuration.in_transit_encryption_configuration.tls_certificate_configuration.public_certificate_secret_arn #=> String
     #   resp.security_configuration.security_configuration_data.authorization_configuration.encryption_configuration.in_transit_encryption_configuration.tls_certificate_configuration.private_certificate_secret_arn #=> String
+    #   resp.security_configuration.security_configuration_data.authentication_configuration.identity_center_configuration.enable_identity_center #=> Boolean
+    #   resp.security_configuration.security_configuration_data.authentication_configuration.identity_center_configuration.identity_center_application_assignment_required #=> Boolean
+    #   resp.security_configuration.security_configuration_data.authentication_configuration.identity_center_configuration.identity_center_instance_arn #=> String
+    #   resp.security_configuration.security_configuration_data.authentication_configuration.identity_center_configuration.emr_identity_center_application_arn #=> String
+    #   resp.security_configuration.security_configuration_data.authentication_configuration.iam_configuration.system_role #=> String
     #   resp.security_configuration.tags #=> Hash
     #   resp.security_configuration.tags["String128"] #=> String
     #
@@ -1201,8 +1285,8 @@ module Aws::EMRContainers
 
     # Displays detailed information about a specified virtual cluster.
     # Virtual cluster is a managed entity on Amazon EMR on EKS. You can
-    # create, describe, list and delete virtual clusters. They do not
-    # consume any additional resource in your system. A single virtual
+    # create, update, describe, list and delete virtual clusters. They do
+    # not consume any additional resource in your system. A single virtual
     # cluster maps to a single Kubernetes namespace. Given this
     # relationship, you can model virtual clusters the same way you model
     # Kubernetes namespaces to meet your requirements.
@@ -1229,10 +1313,16 @@ module Aws::EMRContainers
     #   resp.virtual_cluster.container_provider.type #=> String, one of "EKS"
     #   resp.virtual_cluster.container_provider.id #=> String
     #   resp.virtual_cluster.container_provider.info.eks_info.namespace #=> String
+    #   resp.virtual_cluster.container_provider.info.eks_info.node_label #=> String
     #   resp.virtual_cluster.created_at #=> Time
     #   resp.virtual_cluster.tags #=> Hash
     #   resp.virtual_cluster.tags["String128"] #=> String
     #   resp.virtual_cluster.security_configuration_id #=> String
+    #   resp.virtual_cluster.session_enabled #=> Boolean
+    #   resp.virtual_cluster.scheduler_configuration.max_in_queue_job_runs #=> Integer
+    #   resp.virtual_cluster.scheduler_configuration.max_concurrent_job_runs #=> Integer
+    #   resp.virtual_cluster.scheduler_status.current_in_queue_job_runs #=> Integer
+    #   resp.virtual_cluster.scheduler_status.current_concurrent_job_runs #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/emr-containers-2020-10-01/DescribeVirtualCluster AWS API Documentation
     #
@@ -1276,6 +1366,7 @@ module Aws::EMRContainers
     #
     #   * {Types::GetManagedEndpointSessionCredentialsResponse#id #id} => String
     #   * {Types::GetManagedEndpointSessionCredentialsResponse#credentials #credentials} => Types::Credentials
+    #   * {Types::GetManagedEndpointSessionCredentialsResponse#endpoint_credentials #endpoint_credentials} => Types::Credentials
     #   * {Types::GetManagedEndpointSessionCredentialsResponse#expires_at #expires_at} => Time
     #
     # @example Request syntax with placeholder values
@@ -1294,6 +1385,7 @@ module Aws::EMRContainers
     #
     #   resp.id #=> String
     #   resp.credentials.token #=> String
+    #   resp.endpoint_credentials.token #=> String
     #   resp.expires_at #=> Time
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/emr-containers-2020-10-01/GetManagedEndpointSessionCredentials AWS API Documentation
@@ -1371,6 +1463,7 @@ module Aws::EMRContainers
     #   resp.job_runs[0].configuration_overrides.monitoring_configuration.cloud_watch_monitoring_configuration.log_group_name #=> String
     #   resp.job_runs[0].configuration_overrides.monitoring_configuration.cloud_watch_monitoring_configuration.log_stream_name_prefix #=> String
     #   resp.job_runs[0].configuration_overrides.monitoring_configuration.s3_monitoring_configuration.log_uri #=> String
+    #   resp.job_runs[0].configuration_overrides.monitoring_configuration.s3_monitoring_configuration.encryption_key_arn #=> String
     #   resp.job_runs[0].configuration_overrides.monitoring_configuration.container_log_rotation_configuration.rotation_size #=> String
     #   resp.job_runs[0].configuration_overrides.monitoring_configuration.container_log_rotation_configuration.max_files_to_keep #=> Integer
     #   resp.job_runs[0].job_driver.spark_submit_job_driver.entry_point #=> String
@@ -1548,9 +1641,11 @@ module Aws::EMRContainers
     #   resp.endpoints[0].configuration_overrides.monitoring_configuration.cloud_watch_monitoring_configuration.log_group_name #=> String
     #   resp.endpoints[0].configuration_overrides.monitoring_configuration.cloud_watch_monitoring_configuration.log_stream_name_prefix #=> String
     #   resp.endpoints[0].configuration_overrides.monitoring_configuration.s3_monitoring_configuration.log_uri #=> String
+    #   resp.endpoints[0].configuration_overrides.monitoring_configuration.s3_monitoring_configuration.encryption_key_arn #=> String
     #   resp.endpoints[0].configuration_overrides.monitoring_configuration.container_log_rotation_configuration.rotation_size #=> String
     #   resp.endpoints[0].configuration_overrides.monitoring_configuration.container_log_rotation_configuration.max_files_to_keep #=> Integer
     #   resp.endpoints[0].server_url #=> String
+    #   resp.endpoints[0].auth_proxy_url #=> String
     #   resp.endpoints[0].created_at #=> Time
     #   resp.endpoints[0].security_group #=> String
     #   resp.endpoints[0].subnet_ids #=> Array
@@ -1620,6 +1715,11 @@ module Aws::EMRContainers
     #   resp.security_configurations[0].security_configuration_data.authorization_configuration.encryption_configuration.in_transit_encryption_configuration.tls_certificate_configuration.certificate_provider_type #=> String, one of "PEM"
     #   resp.security_configurations[0].security_configuration_data.authorization_configuration.encryption_configuration.in_transit_encryption_configuration.tls_certificate_configuration.public_certificate_secret_arn #=> String
     #   resp.security_configurations[0].security_configuration_data.authorization_configuration.encryption_configuration.in_transit_encryption_configuration.tls_certificate_configuration.private_certificate_secret_arn #=> String
+    #   resp.security_configurations[0].security_configuration_data.authentication_configuration.identity_center_configuration.enable_identity_center #=> Boolean
+    #   resp.security_configurations[0].security_configuration_data.authentication_configuration.identity_center_configuration.identity_center_application_assignment_required #=> Boolean
+    #   resp.security_configurations[0].security_configuration_data.authentication_configuration.identity_center_configuration.identity_center_instance_arn #=> String
+    #   resp.security_configurations[0].security_configuration_data.authentication_configuration.identity_center_configuration.emr_identity_center_application_arn #=> String
+    #   resp.security_configurations[0].security_configuration_data.authentication_configuration.iam_configuration.system_role #=> String
     #   resp.security_configurations[0].tags #=> Hash
     #   resp.security_configurations[0].tags["String128"] #=> String
     #   resp.next_token #=> String
@@ -1663,12 +1763,12 @@ module Aws::EMRContainers
     end
 
     # Lists information about the specified virtual cluster. Virtual cluster
-    # is a managed entity on Amazon EMR on EKS. You can create, describe,
-    # list and delete virtual clusters. They do not consume any additional
-    # resource in your system. A single virtual cluster maps to a single
-    # Kubernetes namespace. Given this relationship, you can model virtual
-    # clusters the same way you model Kubernetes namespaces to meet your
-    # requirements.
+    # is a managed entity on Amazon EMR on EKS. You can create, update,
+    # describe, list and delete virtual clusters. They do not consume any
+    # additional resource in your system. A single virtual cluster maps to a
+    # single Kubernetes namespace. Given this relationship, you can model
+    # virtual clusters the same way you model Kubernetes namespaces to meet
+    # your requirements.
     #
     # @option params [String] :container_provider_id
     #   The container provider ID of the virtual cluster.
@@ -1728,10 +1828,16 @@ module Aws::EMRContainers
     #   resp.virtual_clusters[0].container_provider.type #=> String, one of "EKS"
     #   resp.virtual_clusters[0].container_provider.id #=> String
     #   resp.virtual_clusters[0].container_provider.info.eks_info.namespace #=> String
+    #   resp.virtual_clusters[0].container_provider.info.eks_info.node_label #=> String
     #   resp.virtual_clusters[0].created_at #=> Time
     #   resp.virtual_clusters[0].tags #=> Hash
     #   resp.virtual_clusters[0].tags["String128"] #=> String
     #   resp.virtual_clusters[0].security_configuration_id #=> String
+    #   resp.virtual_clusters[0].session_enabled #=> Boolean
+    #   resp.virtual_clusters[0].scheduler_configuration.max_in_queue_job_runs #=> Integer
+    #   resp.virtual_clusters[0].scheduler_configuration.max_concurrent_job_runs #=> Integer
+    #   resp.virtual_clusters[0].scheduler_status.current_in_queue_job_runs #=> Integer
+    #   resp.virtual_clusters[0].scheduler_status.current_concurrent_job_runs #=> Integer
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/emr-containers-2020-10-01/ListVirtualClusters AWS API Documentation
@@ -1833,6 +1939,7 @@ module Aws::EMRContainers
     #         },
     #         s3_monitoring_configuration: {
     #           log_uri: "UriString", # required
+    #           encryption_key_arn: "KmsKeyArn",
     #         },
     #         container_log_rotation_configuration: {
     #           rotation_size: "RotationSize", # required
@@ -1932,6 +2039,74 @@ module Aws::EMRContainers
       req.send_request(options)
     end
 
+    # Updates a virtual cluster. Virtual cluster is a managed entity on
+    # Amazon EMR on EKS. You can create, update, describe, list and delete
+    # virtual clusters. They do not consume any additional resource in your
+    # system. A single virtual cluster maps to a single Kubernetes
+    # namespace. Given this relationship, you can model virtual clusters the
+    # same way you model Kubernetes namespaces to meet your requirements.
+    #
+    # @option params [required, String] :id
+    #   The ID of the virtual cluster to update.
+    #
+    # @option params [Types::SchedulerConfiguration] :scheduler_configuration
+    #   The scheduler configuration to apply to the virtual cluster. The new
+    #   configuration fully replaces the existing one. If you omit a field,
+    #   the corresponding limit is removed.
+    #
+    # @option params [required, String] :client_token
+    #   A unique, case-sensitive identifier that you provide to ensure that
+    #   the operation completes no more than one time. If this token matches a
+    #   previous request, the service ignores the request, but does not return
+    #   an error.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @return [Types::UpdateVirtualClusterResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateVirtualClusterResponse#virtual_cluster #virtual_cluster} => Types::VirtualCluster
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_virtual_cluster({
+    #     id: "ResourceIdString", # required
+    #     scheduler_configuration: {
+    #       max_in_queue_job_runs: 1,
+    #       max_concurrent_job_runs: 1,
+    #     },
+    #     client_token: "ClientToken", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.virtual_cluster.id #=> String
+    #   resp.virtual_cluster.name #=> String
+    #   resp.virtual_cluster.arn #=> String
+    #   resp.virtual_cluster.state #=> String, one of "RUNNING", "TERMINATING", "TERMINATED", "ARRESTED"
+    #   resp.virtual_cluster.container_provider.type #=> String, one of "EKS"
+    #   resp.virtual_cluster.container_provider.id #=> String
+    #   resp.virtual_cluster.container_provider.info.eks_info.namespace #=> String
+    #   resp.virtual_cluster.container_provider.info.eks_info.node_label #=> String
+    #   resp.virtual_cluster.created_at #=> Time
+    #   resp.virtual_cluster.tags #=> Hash
+    #   resp.virtual_cluster.tags["String128"] #=> String
+    #   resp.virtual_cluster.security_configuration_id #=> String
+    #   resp.virtual_cluster.session_enabled #=> Boolean
+    #   resp.virtual_cluster.scheduler_configuration.max_in_queue_job_runs #=> Integer
+    #   resp.virtual_cluster.scheduler_configuration.max_concurrent_job_runs #=> Integer
+    #   resp.virtual_cluster.scheduler_status.current_in_queue_job_runs #=> Integer
+    #   resp.virtual_cluster.scheduler_status.current_concurrent_job_runs #=> Integer
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/emr-containers-2020-10-01/UpdateVirtualCluster AWS API Documentation
+    #
+    # @overload update_virtual_cluster(params = {})
+    # @param [Hash] params ({})
+    def update_virtual_cluster(params = {}, options = {})
+      req = build_request(:update_virtual_cluster, params)
+      req.send_request(options)
+    end
+
     # @!endgroup
 
     # @param params ({})
@@ -1950,7 +2125,7 @@ module Aws::EMRContainers
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-emrcontainers'
-      context[:gem_version] = '1.52.0'
+      context[:gem_version] = '1.76.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

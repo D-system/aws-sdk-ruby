@@ -63,10 +63,15 @@ module Aws::RedshiftServerless
     #   The key of the parameter. The options are `auto_mv`, `datestyle`,
     #   `enable_case_sensitive_identifier`, `enable_user_activity_logging`,
     #   `query_group`, `search_path`, `require_ssl`, `use_fips_ssl`, and
-    #   query monitoring metrics that let you define performance boundaries.
-    #   For more information about query monitoring rules and available
-    #   metrics, see [Query monitoring metrics for Amazon Redshift
-    #   Serverless][1].
+    #   either `wlm_json_configuration` or query monitoring metrics that let
+    #   you define performance boundaries. You can either specify individual
+    #   query monitoring metrics (such as `max_scan_row_count`,
+    #   `max_query_execution_time`) or use `wlm_json_configuration` to
+    #   define query queues with rules, but not both. If you're using
+    #   `wlm_json_configuration`, the maximum size of `parameterValue` is
+    #   8000 characters. For more information about query monitoring rules
+    #   and available metrics, see [Query monitoring metrics for Amazon
+    #   Redshift Serverless][1].
     #
     #
     #
@@ -331,6 +336,52 @@ module Aws::RedshiftServerless
     #
     class CreateNamespaceResponse < Struct.new(
       :namespace)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] capacity
+    #   The number of Redshift Processing Units (RPUs) to reserve.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] client_token
+    #   A unique, case-sensitive identifier that you provide to ensure the
+    #   idempotency of the request. If not provided, the Amazon Web Services
+    #   SDK populates this field. This token must be a valid UUIDv4 value.
+    #   For more information about idempotency, see [ Making retries safe
+    #   with idempotent APIs ][1].
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #
+    #
+    #
+    #   [1]: https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
+    #   @return [String]
+    #
+    # @!attribute [rw] offering_id
+    #   The ID of the offering associated with the reservation. The offering
+    #   determines the payment schedule for the reservation.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-serverless-2021-04-21/CreateReservationRequest AWS API Documentation
+    #
+    class CreateReservationRequest < Struct.new(
+      :capacity,
+      :client_token,
+      :offering_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] reservation
+    #   The reservation object that the `CreateReservation` action created.
+    #   @return [Types::Reservation]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-serverless-2021-04-21/CreateReservationResponse AWS API Documentation
+    #
+    class CreateReservationResponse < Struct.new(
+      :reservation)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -629,10 +680,15 @@ module Aws::RedshiftServerless
     #   The options are `auto_mv`, `datestyle`,
     #   `enable_case_sensitive_identifier`, `enable_user_activity_logging`,
     #   `query_group`, `search_path`, `require_ssl`, `use_fips_ssl`, and
-    #   query monitoring metrics that let you define performance boundaries.
-    #   For more information about query monitoring rules and available
-    #   metrics, see [ Query monitoring metrics for Amazon Redshift
-    #   Serverless][1].
+    #   either `wlm_json_configuration` or query monitoring metrics that let
+    #   you define performance boundaries. You can either specify individual
+    #   query monitoring metrics (such as `max_scan_row_count`,
+    #   `max_query_execution_time`) or use `wlm_json_configuration` to
+    #   define query queues with rules, but not both. If you're using
+    #   `wlm_json_configuration`, the maximum size of `parameterValue` is
+    #   8000 characters. For more information about query monitoring rules
+    #   and available metrics, see [ Query monitoring metrics for Amazon
+    #   Redshift Serverless][1].
     #
     #
     #
@@ -643,6 +699,13 @@ module Aws::RedshiftServerless
     #   The value that specifies whether to turn on enhanced virtual private
     #   cloud (VPC) routing, which forces Amazon Redshift Serverless to
     #   route traffic through your VPC instead of over the internet.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] extra_compute_for_automatic_optimization
+    #   If `true`, allocates additional compute resources for running
+    #   automatic optimization operations.
+    #
+    #   Default: false
     #   @return [Boolean]
     #
     # @!attribute [rw] ip_address_type
@@ -702,6 +765,7 @@ module Aws::RedshiftServerless
       :base_capacity,
       :config_parameters,
       :enhanced_vpc_routing,
+      :extra_compute_for_automatic_optimization,
       :ip_address_type,
       :max_capacity,
       :namespace_name,
@@ -945,6 +1009,20 @@ module Aws::RedshiftServerless
       include Aws::Structure
     end
 
+    # This exception is thrown when the request was successful, but dry run
+    # was enabled so no action was taken.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-serverless-2021-04-21/DryRunException AWS API Documentation
+    #
+    class DryRunException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The VPC endpoint object.
     #
     # @!attribute [rw] address
@@ -1181,6 +1259,53 @@ module Aws::RedshiftServerless
       include Aws::Structure
     end
 
+    # @!attribute [rw] workgroup_names
+    #   A list of workgroup names for which to generate the Identity Center
+    #   authentication token.
+    #
+    #   Constraints:
+    #
+    #   * Must contain between 1 and 20 workgroup names.
+    #
+    #   * Each workgroup name must be a valid Amazon Redshift Serverless
+    #     workgroup identifier.
+    #
+    #   * All specified workgroups must have Identity Center integration
+    #     enabled.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-serverless-2021-04-21/GetIdentityCenterAuthTokenRequest AWS API Documentation
+    #
+    class GetIdentityCenterAuthTokenRequest < Struct.new(
+      :workgroup_names)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] expiration_time
+    #   The date and time when the Identity Center authentication token
+    #   expires.
+    #
+    #   After this time, a new token must be requested for continued access.
+    #   @return [Time]
+    #
+    # @!attribute [rw] token
+    #   The Identity Center authentication token that can be used to access
+    #   data in the specified workgroups.
+    #
+    #   This token contains the Identity Center identity information and is
+    #   encrypted for secure transmission.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-serverless-2021-04-21/GetIdentityCenterAuthTokenResponse AWS API Documentation
+    #
+    class GetIdentityCenterAuthTokenResponse < Struct.new(
+      :expiration_time,
+      :token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] namespace_name
     #   The name of the namespace to retrieve information for.
     #   @return [String]
@@ -1226,6 +1351,55 @@ module Aws::RedshiftServerless
     #
     class GetRecoveryPointResponse < Struct.new(
       :recovery_point)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] offering_id
+    #   The identifier for the offering..
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-serverless-2021-04-21/GetReservationOfferingRequest AWS API Documentation
+    #
+    class GetReservationOfferingRequest < Struct.new(
+      :offering_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] reservation_offering
+    #   The returned reservation offering. The offering determines the
+    #   payment schedule for the reservation.
+    #   @return [Types::ReservationOffering]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-serverless-2021-04-21/GetReservationOfferingResponse AWS API Documentation
+    #
+    class GetReservationOfferingResponse < Struct.new(
+      :reservation_offering)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] reservation_id
+    #   The ID of the reservation to retrieve.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-serverless-2021-04-21/GetReservationRequest AWS API Documentation
+    #
+    class GetReservationRequest < Struct.new(
+      :reservation_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] reservation
+    #   The returned reservation object.
+    #   @return [Types::Reservation]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-serverless-2021-04-21/GetReservationResponse AWS API Documentation
+    #
+    class GetReservationResponse < Struct.new(
+      :reservation)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1592,8 +1766,8 @@ module Aws::RedshiftServerless
     #   @return [String]
     #
     # @!attribute [rw] source_arn
-    #   The Amazon Resource Name (ARN) for the managed workgroup in the AWS
-    #   Glue Data Catalog.
+    #   The Amazon Resource Name (ARN) for the managed workgroup in the Glue
+    #   Data Catalog.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-serverless-2021-04-21/ListManagedWorkgroupsRequest AWS API Documentation
@@ -1726,6 +1900,80 @@ module Aws::RedshiftServerless
     class ListRecoveryPointsResponse < Struct.new(
       :next_token,
       :recovery_points)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] max_results
+    #   The maximum number of items to return for this call. The call also
+    #   returns a token that you can specify in a subsequent call to get the
+    #   next set of results.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   The token for the next set of items to return. (You received this
+    #   token from a previous call.)
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-serverless-2021-04-21/ListReservationOfferingsRequest AWS API Documentation
+    #
+    class ListReservationOfferingsRequest < Struct.new(
+      :max_results,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   The token to use when requesting the next set of items.
+    #   @return [String]
+    #
+    # @!attribute [rw] reservation_offerings_list
+    #   The returned list of reservation offerings.
+    #   @return [Array<Types::ReservationOffering>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-serverless-2021-04-21/ListReservationOfferingsResponse AWS API Documentation
+    #
+    class ListReservationOfferingsResponse < Struct.new(
+      :next_token,
+      :reservation_offerings_list)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] max_results
+    #   The maximum number of items to return for this call. The call also
+    #   returns a token that you can specify in a subsequent call to get the
+    #   next set of results.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   The token for the next set of items to return. (You received this
+    #   token from a previous call.)
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-serverless-2021-04-21/ListReservationsRequest AWS API Documentation
+    #
+    class ListReservationsRequest < Struct.new(
+      :max_results,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   The token to use when requesting the next set of items.
+    #   @return [String]
+    #
+    # @!attribute [rw] reservations_list
+    #   The serverless reservations returned by the request.
+    #   @return [Array<Types::Reservation>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-serverless-2021-04-21/ListReservationsResponse AWS API Documentation
+    #
+    class ListReservationsResponse < Struct.new(
+      :next_token,
+      :reservations_list)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2113,7 +2361,7 @@ module Aws::RedshiftServerless
       include Aws::Structure
     end
 
-    # A collection of Amazon Redshift compute resources managed by AWS Glue.
+    # A collection of Amazon Redshift compute resources managed by Glue.
     #
     # @!attribute [rw] creation_date
     #   The creation date of the managed workgroup.
@@ -2128,8 +2376,8 @@ module Aws::RedshiftServerless
     #   @return [String]
     #
     # @!attribute [rw] source_arn
-    #   The Amazon Resource Name (ARN) for the managed workgroup in the AWS
-    #   Glue Data Catalog.
+    #   The Amazon Resource Name (ARN) for the managed workgroup in the Glue
+    #   Data Catalog.
     #   @return [String]
     #
     # @!attribute [rw] status
@@ -2165,6 +2413,12 @@ module Aws::RedshiftServerless
     #   the namespace.
     #   @return [String]
     #
+    # @!attribute [rw] catalog_arn
+    #   The Amazon Resource Name (ARN) of the Glue Data Catalog associated
+    #   with the namespace enabled with Amazon Redshift federated
+    #   permissions.
+    #   @return [String]
+    #
     # @!attribute [rw] creation_date
     #   The date of when the namespace was created.
     #   @return [Time]
@@ -2185,6 +2439,12 @@ module Aws::RedshiftServerless
     # @!attribute [rw] kms_key_id
     #   The ID of the Amazon Web Services Key Management Service key used to
     #   encrypt your data.
+    #   @return [String]
+    #
+    # @!attribute [rw] lakehouse_registration_status
+    #   The status of the lakehouse registration for the namespace.
+    #   Indicates whether the namespace is successfully registered with
+    #   Amazon Redshift federated permissions.
     #   @return [String]
     #
     # @!attribute [rw] log_exports
@@ -2221,11 +2481,13 @@ module Aws::RedshiftServerless
       :admin_password_secret_arn,
       :admin_password_secret_kms_key_id,
       :admin_username,
+      :catalog_arn,
       :creation_date,
       :db_name,
       :default_iam_role_arn,
       :iam_roles,
       :kms_key_id,
+      :lakehouse_registration_status,
       :log_exports,
       :namespace_arn,
       :namespace_id,
@@ -2371,6 +2633,107 @@ module Aws::RedshiftServerless
       include Aws::Structure
     end
 
+    # Represents an Amazon Redshift Serverless reservation, which gives you
+    # the option to commit to a specified number of Redshift Processing
+    # Units (RPUs) for a year at a discount from Serverless on-demand (OD)
+    # rates.
+    #
+    # @!attribute [rw] capacity
+    #   The number of Redshift Processing Units (RPUs) to reserve.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] end_date
+    #   The end date for the serverless reservation. This date is one year
+    #   after the start date that you specify.
+    #   @return [Time]
+    #
+    # @!attribute [rw] offering
+    #   The type of offering for the reservation. The offering class
+    #   determines the payment schedule for the reservation.
+    #   @return [Types::ReservationOffering]
+    #
+    # @!attribute [rw] reservation_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the
+    #   serverless reservation.
+    #   @return [String]
+    #
+    # @!attribute [rw] reservation_id
+    #   The identifier that uniquely identifies the serverless reservation.
+    #   @return [String]
+    #
+    # @!attribute [rw] start_date
+    #   The start date for the serverless reservation. This is the date you
+    #   created the reservation.
+    #   @return [Time]
+    #
+    # @!attribute [rw] status
+    #   The status of the reservation. Possible values include the
+    #   following:
+    #
+    #   * `payment-pending`
+    #
+    #   * `active`
+    #
+    #   * `payment-failed`
+    #
+    #   * `retired`
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-serverless-2021-04-21/Reservation AWS API Documentation
+    #
+    class Reservation < Struct.new(
+      :capacity,
+      :end_date,
+      :offering,
+      :reservation_arn,
+      :reservation_id,
+      :start_date,
+      :status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The class of offering for the reservation. The offering class
+    # determines the payment schedule for the reservation.
+    #
+    # @!attribute [rw] currency_code
+    #   The currency code for the offering.
+    #   @return [String]
+    #
+    # @!attribute [rw] duration
+    #   The duration, in seconds, for which the reservation reserves the
+    #   RPUs.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] hourly_charge
+    #   The rate you are charged for each hour the reservation is active.
+    #   @return [Float]
+    #
+    # @!attribute [rw] offering_id
+    #   The offering identifier.
+    #   @return [String]
+    #
+    # @!attribute [rw] offering_type
+    #   Determines the payment schedule for the reservation.
+    #   @return [String]
+    #
+    # @!attribute [rw] upfront_charge
+    #   The up-front price you are charged for the reservation.
+    #   @return [Float]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-serverless-2021-04-21/ReservationOffering AWS API Documentation
+    #
+    class ReservationOffering < Struct.new(
+      :currency_code,
+      :duration,
+      :hourly_charge,
+      :offering_id,
+      :offering_type,
+      :upfront_charge)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The resource could not be found.
     #
     # @!attribute [rw] message
@@ -2409,6 +2772,15 @@ module Aws::RedshiftServerless
       include Aws::Structure
     end
 
+    # @!attribute [rw] maintain_integration
+    #   If `true`, maintain existing data sharing, zero-ETL and S3 event
+    #   integrations when restoring. Otherwise, integrations will not be
+    #   maintained after the restore operation. Integrations are only
+    #   maintained when restored to the same serverless namespace.
+    #
+    #   Default: true
+    #   @return [Boolean]
+    #
     # @!attribute [rw] namespace_name
     #   The name of the namespace to restore data into.
     #   @return [String]
@@ -2424,6 +2796,7 @@ module Aws::RedshiftServerless
     # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-serverless-2021-04-21/RestoreFromRecoveryPointRequest AWS API Documentation
     #
     class RestoreFromRecoveryPointRequest < Struct.new(
+      :maintain_integration,
       :namespace_name,
       :recovery_point_id,
       :workgroup_name)
@@ -2453,6 +2826,15 @@ module Aws::RedshiftServerless
     #   store the namespace's admin credentials secret.
     #   @return [String]
     #
+    # @!attribute [rw] maintain_integration
+    #   If `true`, maintain existing data sharing, zero-ETL and S3 event
+    #   integrations when restoring. Otherwise, integrations will not be
+    #   maintained after the restore operation. Integrations are only
+    #   maintained when restored to the same serverless namespace.
+    #
+    #   Default: true
+    #   @return [Boolean]
+    #
     # @!attribute [rw] manage_admin_password
     #   If `true`, Amazon Redshift uses Secrets Manager to manage the
     #   restored snapshot's admin credentials. If `MmanageAdminPassword` is
@@ -2470,8 +2852,8 @@ module Aws::RedshiftServerless
     #
     # @!attribute [rw] snapshot_arn
     #   The Amazon Resource Name (ARN) of the snapshot to restore from.
-    #   Required if restoring from Amazon Redshift Serverless to a
-    #   provisioned cluster. Must not be specified at the same time as
+    #   Required if restoring from a provisioned cluster to Amazon Redshift
+    #   Serverless. Must not be specified at the same time as
     #   `snapshotName`.
     #
     #   The format of the ARN is
@@ -2491,6 +2873,7 @@ module Aws::RedshiftServerless
     #
     class RestoreFromSnapshotRequest < Struct.new(
       :admin_password_secret_kms_key_id,
+      :maintain_integration,
       :manage_admin_password,
       :namespace_name,
       :owner_account,
@@ -3349,6 +3732,89 @@ module Aws::RedshiftServerless
       include Aws::Structure
     end
 
+    # @!attribute [rw] catalog_name
+    #   The name of the Glue Data Catalog that will be associated with the
+    #   namespace enabled with Amazon Redshift federated permissions.
+    #
+    #   Pattern: `^[a-z0-9_-]*[a-z]+[a-z0-9_-]*$`
+    #   @return [String]
+    #
+    # @!attribute [rw] dry_run
+    #   A boolean value that, if `true`, validates the request without
+    #   actually updating the lakehouse configuration. Use this to check for
+    #   errors before making changes.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] lakehouse_idc_application_arn
+    #   The Amazon Resource Name (ARN) of the IAM Identity Center
+    #   application used for enabling Amazon Web Services IAM Identity
+    #   Center trusted identity propagation on a namespace enabled with
+    #   Amazon Redshift federated permissions.
+    #   @return [String]
+    #
+    # @!attribute [rw] lakehouse_idc_registration
+    #   Modifies the Amazon Web Services IAM Identity Center trusted
+    #   identity propagation on a namespace enabled with Amazon Redshift
+    #   federated permissions. Valid values are `Associate` or
+    #   `Disassociate`.
+    #   @return [String]
+    #
+    # @!attribute [rw] lakehouse_registration
+    #   Specifies whether to register or deregister the namespace with
+    #   Amazon Redshift federated permissions. Valid values are `Register`
+    #   or `Deregister`.
+    #   @return [String]
+    #
+    # @!attribute [rw] namespace_name
+    #   The name of the namespace whose lakehouse configuration you want to
+    #   modify.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-serverless-2021-04-21/UpdateLakehouseConfigurationRequest AWS API Documentation
+    #
+    class UpdateLakehouseConfigurationRequest < Struct.new(
+      :catalog_name,
+      :dry_run,
+      :lakehouse_idc_application_arn,
+      :lakehouse_idc_registration,
+      :lakehouse_registration,
+      :namespace_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] catalog_arn
+    #   The Amazon Resource Name (ARN) of the Glue Data Catalog associated
+    #   with the lakehouse configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] lakehouse_idc_application_arn
+    #   The Amazon Resource Name (ARN) of the IAM Identity Center
+    #   application used for enabling Amazon Web Services IAM Identity
+    #   Center trusted identity propagation.
+    #   @return [String]
+    #
+    # @!attribute [rw] lakehouse_registration_status
+    #   The current status of the lakehouse registration. Indicates whether
+    #   the namespace is successfully registered with Amazon Redshift
+    #   federated permissions.
+    #   @return [String]
+    #
+    # @!attribute [rw] namespace_name
+    #   The name of the namespace.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-serverless-2021-04-21/UpdateLakehouseConfigurationResponse AWS API Documentation
+    #
+    class UpdateLakehouseConfigurationResponse < Struct.new(
+      :catalog_arn,
+      :lakehouse_idc_application_arn,
+      :lakehouse_registration_status,
+      :namespace_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] admin_password_secret_kms_key_id
     #   The ID of the Key Management Service (KMS) key used to encrypt and
     #   store the namespace's admin credentials secret. You can only use
@@ -3361,6 +3827,11 @@ module Aws::RedshiftServerless
     #   `adminUsername`.
     #
     #   You can't use `adminUserPassword` if `manageAdminPassword` is true.
+    #
+    #   If your admin user account is locked, this operation also unlocks
+    #   your account and resets the failed-login counter. This option is
+    #   available only when account lockout security is enabled for the
+    #   namespace.
     #   @return [String]
     #
     # @!attribute [rw] admin_username
@@ -3647,10 +4118,15 @@ module Aws::RedshiftServerless
     #   The options are `auto_mv`, `datestyle`,
     #   `enable_case_sensitive_identifier`, `enable_user_activity_logging`,
     #   `query_group`, `search_path`, `require_ssl`, `use_fips_ssl`, and
-    #   query monitoring metrics that let you define performance boundaries.
-    #   For more information about query monitoring rules and available
-    #   metrics, see [ Query monitoring metrics for Amazon Redshift
-    #   Serverless][1].
+    #   either `wlm_json_configuration` or query monitoring metrics that let
+    #   you define performance boundaries. You can either specify individual
+    #   query monitoring metrics (such as `max_scan_row_count`,
+    #   `max_query_execution_time`) or use `wlm_json_configuration` to
+    #   define query queues with rules, but not both. If you're using
+    #   `wlm_json_configuration`, the maximum size of `parameterValue` is
+    #   8000 characters. For more information about query monitoring rules
+    #   and available metrics, see [ Query monitoring metrics for Amazon
+    #   Redshift Serverless][1].
     #
     #
     #
@@ -3661,6 +4137,13 @@ module Aws::RedshiftServerless
     #   The value that specifies whether to turn on enhanced virtual private
     #   cloud (VPC) routing, which forces Amazon Redshift Serverless to
     #   route traffic through your VPC.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] extra_compute_for_automatic_optimization
+    #   If `true`, allocates additional compute resources for running
+    #   automatic optimization operations.
+    #
+    #   Default: false
     #   @return [Boolean]
     #
     # @!attribute [rw] ip_address_type
@@ -3713,6 +4196,7 @@ module Aws::RedshiftServerless
       :base_capacity,
       :config_parameters,
       :enhanced_vpc_routing,
+      :extra_compute_for_automatic_optimization,
       :ip_address_type,
       :max_capacity,
       :port,
@@ -3788,8 +4272,8 @@ module Aws::RedshiftServerless
       include Aws::Structure
     end
 
-    # The input failed to satisfy the constraints specified by an AWS
-    # service.
+    # The input failed to satisfy the constraints specified by an Amazon Web
+    # Services service.
     #
     # @!attribute [rw] message
     #   @return [String]
@@ -3861,10 +4345,15 @@ module Aws::RedshiftServerless
     #   The options are `auto_mv`, `datestyle`,
     #   `enable_case_sensitive_identifier`, `enable_user_activity_logging`,
     #   `query_group`, `search_path`, `require_ssl`, `use_fips_ssl`, and
-    #   query monitoring metrics that let you define performance boundaries.
-    #   For more information about query monitoring rules and available
-    #   metrics, see [ Query monitoring metrics for Amazon Redshift
-    #   Serverless][1].
+    #   either `wlm_json_configuration` or query monitoring metrics that let
+    #   you define performance boundaries. You can either specify individual
+    #   query monitoring metrics (such as `max_scan_row_count`,
+    #   `max_query_execution_time`) or use `wlm_json_configuration` to
+    #   define query queues with rules, but not both. If you're using
+    #   `wlm_json_configuration`, the maximum size of `parameterValue` is
+    #   8000 characters. For more information about query monitoring rules
+    #   and available metrics, see [ Query monitoring metrics for Amazon
+    #   Redshift Serverless][1].
     #
     #
     #
@@ -3901,6 +4390,14 @@ module Aws::RedshiftServerless
     #   The value that specifies whether to enable enhanced virtual private
     #   cloud (VPC) routing, which forces Amazon Redshift Serverless to
     #   route traffic through your VPC.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] extra_compute_for_automatic_optimization
+    #   A boolean value that, if `true`, indicates that the workgroup
+    #   allocates additional compute resources to run automatic optimization
+    #   operations.
+    #
+    #   Default: false
     #   @return [Boolean]
     #
     # @!attribute [rw] ip_address_type
@@ -3999,6 +4496,7 @@ module Aws::RedshiftServerless
       :custom_domain_name,
       :endpoint,
       :enhanced_vpc_routing,
+      :extra_compute_for_automatic_optimization,
       :ip_address_type,
       :max_capacity,
       :namespace_name,

@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -77,6 +78,17 @@ module Aws
                   | (?Hash[Symbol, untyped]) -> instance
 
 
+      interface _BatchDeleteAdvancedPromptOptimizationJobResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::BatchDeleteAdvancedPromptOptimizationJobResponse]
+        def errors: () -> ::Array[Types::BatchDeleteAdvancedPromptOptimizationJobError]
+        def advanced_prompt_optimization_jobs: () -> ::Array[Types::BatchDeleteAdvancedPromptOptimizationJobItem]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#batch_delete_advanced_prompt_optimization_job-instance_method
+      def batch_delete_advanced_prompt_optimization_job: (
+                                                           job_identifiers: Array[::String]
+                                                         ) -> _BatchDeleteAdvancedPromptOptimizationJobResponseSuccess
+                                                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchDeleteAdvancedPromptOptimizationJobResponseSuccess
+
       interface _BatchDeleteEvaluationJobResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::BatchDeleteEvaluationJobResponse]
         def errors: () -> ::Array[Types::BatchDeleteEvaluationJobError]
@@ -87,6 +99,167 @@ module Aws
                                          job_identifiers: Array[::String]
                                        ) -> _BatchDeleteEvaluationJobResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchDeleteEvaluationJobResponseSuccess
+
+      interface _CancelAutomatedReasoningPolicyBuildWorkflowResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CancelAutomatedReasoningPolicyBuildWorkflowResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#cancel_automated_reasoning_policy_build_workflow-instance_method
+      def cancel_automated_reasoning_policy_build_workflow: (
+                                                              policy_arn: ::String,
+                                                              build_workflow_id: ::String
+                                                            ) -> _CancelAutomatedReasoningPolicyBuildWorkflowResponseSuccess
+                                                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CancelAutomatedReasoningPolicyBuildWorkflowResponseSuccess
+
+      interface _CreateAdvancedPromptOptimizationJobResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateAdvancedPromptOptimizationJobResponse]
+        def job_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#create_advanced_prompt_optimization_job-instance_method
+      def create_advanced_prompt_optimization_job: (
+                                                     job_name: ::String,
+                                                     ?job_description: ::String,
+                                                     ?client_token: ::String,
+                                                     input_config: {
+                                                       s3_uri: ::String
+                                                     },
+                                                     output_config: {
+                                                       s3_uri: ::String
+                                                     },
+                                                     ?encryption_key_arn: ::String,
+                                                     ?tags: Array[
+                                                       {
+                                                         key: ::String,
+                                                         value: ::String
+                                                       }
+                                                     ],
+                                                     model_configurations: Array[
+                                                       {
+                                                         model_id: ::String,
+                                                         inference_config: {
+                                                           max_tokens: ::Integer?,
+                                                           temperature: ::Float?,
+                                                           top_p: ::Float?,
+                                                           stop_sequences: Array[::String]?
+                                                         }?,
+                                                         additional_model_request_fields: Hash[::String, {
+                                                           }]?
+                                                       }
+                                                     ]
+                                                   ) -> _CreateAdvancedPromptOptimizationJobResponseSuccess
+                                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateAdvancedPromptOptimizationJobResponseSuccess
+
+      interface _CreateAutomatedReasoningPolicyResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateAutomatedReasoningPolicyResponse]
+        def policy_arn: () -> ::String
+        def version: () -> ::String
+        def name: () -> ::String
+        def description: () -> ::String
+        def definition_hash: () -> ::String
+        def created_at: () -> ::Time
+        def updated_at: () -> ::Time
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#create_automated_reasoning_policy-instance_method
+      def create_automated_reasoning_policy: (
+                                               name: ::String,
+                                               ?description: ::String,
+                                               ?client_request_token: ::String,
+                                               ?policy_definition: Params::automated_reasoning_policy_definition,
+                                               ?kms_key_id: ::String,
+                                               ?tags: Array[
+                                                 {
+                                                   key: ::String,
+                                                   value: ::String
+                                                 }
+                                               ]
+                                             ) -> _CreateAutomatedReasoningPolicyResponseSuccess
+                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateAutomatedReasoningPolicyResponseSuccess
+
+      interface _CreateAutomatedReasoningPolicyTestCaseResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateAutomatedReasoningPolicyTestCaseResponse]
+        def policy_arn: () -> ::String
+        def test_case_id: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#create_automated_reasoning_policy_test_case-instance_method
+      def create_automated_reasoning_policy_test_case: (
+                                                         policy_arn: ::String,
+                                                         guard_content: ::String,
+                                                         ?query_content: ::String,
+                                                         expected_aggregated_findings_result: ("VALID" | "INVALID" | "SATISFIABLE" | "IMPOSSIBLE" | "TRANSLATION_AMBIGUOUS" | "TOO_COMPLEX" | "NO_TRANSLATION"),
+                                                         ?client_request_token: ::String,
+                                                         ?confidence_threshold: ::Float
+                                                       ) -> _CreateAutomatedReasoningPolicyTestCaseResponseSuccess
+                                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateAutomatedReasoningPolicyTestCaseResponseSuccess
+
+      interface _CreateAutomatedReasoningPolicyVersionResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateAutomatedReasoningPolicyVersionResponse]
+        def policy_arn: () -> ::String
+        def version: () -> ::String
+        def name: () -> ::String
+        def description: () -> ::String
+        def definition_hash: () -> ::String
+        def created_at: () -> ::Time
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#create_automated_reasoning_policy_version-instance_method
+      def create_automated_reasoning_policy_version: (
+                                                       policy_arn: ::String,
+                                                       ?client_request_token: ::String,
+                                                       last_updated_definition_hash: ::String,
+                                                       ?tags: Array[
+                                                         {
+                                                           key: ::String,
+                                                           value: ::String
+                                                         }
+                                                       ]
+                                                     ) -> _CreateAutomatedReasoningPolicyVersionResponseSuccess
+                                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateAutomatedReasoningPolicyVersionResponseSuccess
+
+      interface _CreateCustomModelResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateCustomModelResponse]
+        def model_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#create_custom_model-instance_method
+      def create_custom_model: (
+                                 model_name: ::String,
+                                 ?model_source_config: {
+                                   s3_data_source: {
+                                     s3_uri: ::String
+                                   }?
+                                 },
+                                 ?custom_model_data_source: {
+                                   model_package_arn_data_source: {
+                                     model_package_arn: ::String
+                                   }?
+                                 },
+                                 ?model_kms_key_arn: ::String,
+                                 ?role_arn: ::String,
+                                 ?model_tags: Array[
+                                   {
+                                     key: ::String,
+                                     value: ::String
+                                   }
+                                 ],
+                                 ?client_request_token: ::String
+                               ) -> _CreateCustomModelResponseSuccess
+                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateCustomModelResponseSuccess
+
+      interface _CreateCustomModelDeploymentResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateCustomModelDeploymentResponse]
+        def custom_model_deployment_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#create_custom_model_deployment-instance_method
+      def create_custom_model_deployment: (
+                                            model_deployment_name: ::String,
+                                            model_arn: ::String,
+                                            ?description: ::String,
+                                            ?tags: Array[
+                                              {
+                                                key: ::String,
+                                                value: ::String
+                                              }
+                                            ],
+                                            ?client_request_token: ::String
+                                          ) -> _CreateCustomModelDeploymentResponseSuccess
+                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateCustomModelDeploymentResponseSuccess
 
       interface _CreateEvaluationJobResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateEvaluationJobResponse]
@@ -103,29 +276,46 @@ module Aws
                                      {
                                        key: ::String,
                                        value: ::String
-                                     },
+                                     }
                                    ],
                                    ?application_type: ("ModelEvaluation" | "RagEvaluation"),
                                    evaluation_config: {
                                      automated: {
                                        dataset_metric_configs: Array[
-                                         {
-                                           task_type: ("Summarization" | "Classification" | "QuestionAndAnswer" | "Generation" | "Custom"),
-                                           dataset: {
-                                             name: ::String,
-                                             dataset_location: {
-                                               s3_uri: ::String?
-                                             }?
-                                           },
-                                           metric_names: Array[::String]
-                                         },
+                                         Params::evaluation_dataset_metric_config
                                        ],
                                        evaluator_model_config: {
                                          bedrock_evaluator_models: Array[
                                            {
                                              model_identifier: ::String
-                                           },
+                                           }
                                          ]?
+                                       }?,
+                                       custom_metric_config: {
+                                         custom_metrics: Array[
+                                           {
+                                             custom_metric_definition: {
+                                               name: ::String,
+                                               instructions: ::String,
+                                               rating_scale: Array[
+                                                 {
+                                                   definition: ::String,
+                                                   value: {
+                                                     string_value: ::String?,
+                                                     float_value: ::Float?
+                                                   }
+                                                 }
+                                               ]?
+                                             }?
+                                           }
+                                         ],
+                                         evaluator_model_config: {
+                                           bedrock_evaluator_models: Array[
+                                             {
+                                               model_identifier: ::String
+                                             }
+                                           ]
+                                         }
                                        }?
                                      }?,
                                      human: {
@@ -138,19 +328,10 @@ module Aws
                                            name: ::String,
                                            description: ::String?,
                                            rating_method: ::String
-                                         },
+                                         }
                                        ]?,
                                        dataset_metric_configs: Array[
-                                         {
-                                           task_type: ("Summarization" | "Classification" | "QuestionAndAnswer" | "Generation" | "Custom"),
-                                           dataset: {
-                                             name: ::String,
-                                             dataset_location: {
-                                               s3_uri: ::String?
-                                             }?
-                                           },
-                                           metric_names: Array[::String]
-                                         },
+                                         Params::evaluation_dataset_metric_config
                                        ]
                                      }?
                                    },
@@ -167,157 +348,21 @@ module Aws
                                          precomputed_inference_source: {
                                            inference_source_identifier: ::String
                                          }?
-                                       },
+                                       }
                                      ]?,
                                      rag_configs: Array[
                                        {
                                          knowledge_base_config: {
                                            retrieve_config: {
                                              knowledge_base_id: ::String,
-                                             knowledge_base_retrieval_configuration: {
-                                               vector_search_configuration: {
-                                                 number_of_results: ::Integer?,
-                                                 override_search_type: ("HYBRID" | "SEMANTIC")?,
-                                                 filter: {
-                                                   equals: {
-                                                     key: ::String,
-                                                     value: {
-                                                     }
-                                                   }?,
-                                                   not_equals: {
-                                                     key: ::String,
-                                                     value: {
-                                                     }
-                                                   }?,
-                                                   greater_than: {
-                                                     key: ::String,
-                                                     value: {
-                                                     }
-                                                   }?,
-                                                   greater_than_or_equals: {
-                                                     key: ::String,
-                                                     value: {
-                                                     }
-                                                   }?,
-                                                   less_than: {
-                                                     key: ::String,
-                                                     value: {
-                                                     }
-                                                   }?,
-                                                   less_than_or_equals: {
-                                                     key: ::String,
-                                                     value: {
-                                                     }
-                                                   }?,
-                                                   in: {
-                                                     key: ::String,
-                                                     value: {
-                                                     }
-                                                   }?,
-                                                   not_in: {
-                                                     key: ::String,
-                                                     value: {
-                                                     }
-                                                   }?,
-                                                   starts_with: {
-                                                     key: ::String,
-                                                     value: {
-                                                     }
-                                                   }?,
-                                                   list_contains: {
-                                                     key: ::String,
-                                                     value: {
-                                                     }
-                                                   }?,
-                                                   string_contains: {
-                                                     key: ::String,
-                                                     value: {
-                                                     }
-                                                   }?,
-                                                   and_all: Array[
-                                                     untyped,
-                                                   ]?,
-                                                   or_all: Array[
-                                                     untyped,
-                                                   ]?
-                                                 }?
-                                               }
-                                             }
+                                             knowledge_base_retrieval_configuration: Params::knowledge_base_retrieval_configuration
                                            }?,
                                            retrieve_and_generate_config: {
                                              type: ("KNOWLEDGE_BASE" | "EXTERNAL_SOURCES"),
                                              knowledge_base_configuration: {
                                                knowledge_base_id: ::String,
                                                model_arn: ::String,
-                                               retrieval_configuration: {
-                                                 vector_search_configuration: {
-                                                   number_of_results: ::Integer?,
-                                                   override_search_type: ("HYBRID" | "SEMANTIC")?,
-                                                   filter: {
-                                                     equals: {
-                                                       key: ::String,
-                                                       value: {
-                                                       }
-                                                     }?,
-                                                     not_equals: {
-                                                       key: ::String,
-                                                       value: {
-                                                       }
-                                                     }?,
-                                                     greater_than: {
-                                                       key: ::String,
-                                                       value: {
-                                                       }
-                                                     }?,
-                                                     greater_than_or_equals: {
-                                                       key: ::String,
-                                                       value: {
-                                                       }
-                                                     }?,
-                                                     less_than: {
-                                                       key: ::String,
-                                                       value: {
-                                                       }
-                                                     }?,
-                                                     less_than_or_equals: {
-                                                       key: ::String,
-                                                       value: {
-                                                       }
-                                                     }?,
-                                                     in: {
-                                                       key: ::String,
-                                                       value: {
-                                                       }
-                                                     }?,
-                                                     not_in: {
-                                                       key: ::String,
-                                                       value: {
-                                                       }
-                                                     }?,
-                                                     starts_with: {
-                                                       key: ::String,
-                                                       value: {
-                                                       }
-                                                     }?,
-                                                     list_contains: {
-                                                       key: ::String,
-                                                       value: {
-                                                       }
-                                                     }?,
-                                                     string_contains: {
-                                                       key: ::String,
-                                                       value: {
-                                                       }
-                                                     }?,
-                                                     and_all: Array[
-                                                       untyped,
-                                                     ]?,
-                                                     or_all: Array[
-                                                       untyped,
-                                                     ]?
-                                                   }?
-                                                 }
-                                               }?,
+                                               retrieval_configuration: Params::knowledge_base_retrieval_configuration?,
                                                generation_configuration: {
                                                  prompt_template: {
                                                    text_prompt_template: ::String?
@@ -326,14 +371,7 @@ module Aws
                                                    guardrail_id: ::String,
                                                    guardrail_version: ::String
                                                  }?,
-                                                 kb_inference_config: {
-                                                   text_inference_config: {
-                                                     temperature: ::Float?,
-                                                     top_p: ::Float?,
-                                                     max_tokens: ::Integer?,
-                                                     stop_sequences: Array[::String]?
-                                                   }?
-                                                 }?,
+                                                 kb_inference_config: Params::kb_inference_config?,
                                                  additional_model_request_fields: Hash[::String, {
                                                    }]?
                                                }?,
@@ -356,7 +394,7 @@ module Aws
                                                      content_type: ::String,
                                                      data: ::String
                                                    }?
-                                                 },
+                                                 }
                                                ],
                                                generation_configuration: {
                                                  prompt_template: {
@@ -366,14 +404,7 @@ module Aws
                                                    guardrail_id: ::String,
                                                    guardrail_version: ::String
                                                  }?,
-                                                 kb_inference_config: {
-                                                   text_inference_config: {
-                                                     temperature: ::Float?,
-                                                     top_p: ::Float?,
-                                                     max_tokens: ::Integer?,
-                                                     stop_sequences: Array[::String]?
-                                                   }?
-                                                 }?,
+                                                 kb_inference_config: Params::kb_inference_config?,
                                                  additional_model_request_fields: Hash[::String, {
                                                    }]?
                                                }?
@@ -388,7 +419,7 @@ module Aws
                                              rag_source_identifier: ::String
                                            }?
                                          }?
-                                       },
+                                       }
                                      ]?
                                    },
                                    output_data_config: {
@@ -396,6 +427,17 @@ module Aws
                                    }
                                  ) -> _CreateEvaluationJobResponseSuccess
                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateEvaluationJobResponseSuccess
+
+      interface _CreateFoundationModelAgreementResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateFoundationModelAgreementResponse]
+        def model_id: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#create_foundation_model_agreement-instance_method
+      def create_foundation_model_agreement: (
+                                               offer_token: ::String,
+                                               model_id: ::String
+                                             ) -> _CreateFoundationModelAgreementResponseSuccess
+                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateFoundationModelAgreementResponseSuccess
 
       interface _CreateGuardrailResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateGuardrailResponse]
@@ -408,62 +450,17 @@ module Aws
       def create_guardrail: (
                               name: ::String,
                               ?description: ::String,
-                              ?topic_policy_config: {
-                                topics_config: Array[
-                                  {
-                                    name: ::String,
-                                    definition: ::String,
-                                    examples: Array[::String]?,
-                                    type: ("DENY")
-                                  },
-                                ]
+                              ?topic_policy_config: Params::guardrail_topic_policy_config,
+                              ?content_policy_config: Params::guardrail_content_policy_config,
+                              ?word_policy_config: Params::guardrail_word_policy_config,
+                              ?sensitive_information_policy_config: Params::guardrail_sensitive_information_policy_config,
+                              ?contextual_grounding_policy_config: Params::guardrail_contextual_grounding_policy_config,
+                              ?automated_reasoning_policy_config: {
+                                policies: Array[::String],
+                                confidence_threshold: ::Float?
                               },
-                              ?content_policy_config: {
-                                filters_config: Array[
-                                  {
-                                    type: ("SEXUAL" | "VIOLENCE" | "HATE" | "INSULTS" | "MISCONDUCT" | "PROMPT_ATTACK"),
-                                    input_strength: ("NONE" | "LOW" | "MEDIUM" | "HIGH"),
-                                    output_strength: ("NONE" | "LOW" | "MEDIUM" | "HIGH"),
-                                    input_modalities: Array[("TEXT" | "IMAGE")]?,
-                                    output_modalities: Array[("TEXT" | "IMAGE")]?
-                                  },
-                                ]
-                              },
-                              ?word_policy_config: {
-                                words_config: Array[
-                                  {
-                                    text: ::String
-                                  },
-                                ]?,
-                                managed_word_lists_config: Array[
-                                  {
-                                    type: ("PROFANITY")
-                                  },
-                                ]?
-                              },
-                              ?sensitive_information_policy_config: {
-                                pii_entities_config: Array[
-                                  {
-                                    type: ("ADDRESS" | "AGE" | "AWS_ACCESS_KEY" | "AWS_SECRET_KEY" | "CA_HEALTH_NUMBER" | "CA_SOCIAL_INSURANCE_NUMBER" | "CREDIT_DEBIT_CARD_CVV" | "CREDIT_DEBIT_CARD_EXPIRY" | "CREDIT_DEBIT_CARD_NUMBER" | "DRIVER_ID" | "EMAIL" | "INTERNATIONAL_BANK_ACCOUNT_NUMBER" | "IP_ADDRESS" | "LICENSE_PLATE" | "MAC_ADDRESS" | "NAME" | "PASSWORD" | "PHONE" | "PIN" | "SWIFT_CODE" | "UK_NATIONAL_HEALTH_SERVICE_NUMBER" | "UK_NATIONAL_INSURANCE_NUMBER" | "UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER" | "URL" | "USERNAME" | "US_BANK_ACCOUNT_NUMBER" | "US_BANK_ROUTING_NUMBER" | "US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER" | "US_PASSPORT_NUMBER" | "US_SOCIAL_SECURITY_NUMBER" | "VEHICLE_IDENTIFICATION_NUMBER"),
-                                    action: ("BLOCK" | "ANONYMIZE")
-                                  },
-                                ]?,
-                                regexes_config: Array[
-                                  {
-                                    name: ::String,
-                                    description: ::String?,
-                                    pattern: ::String,
-                                    action: ("BLOCK" | "ANONYMIZE")
-                                  },
-                                ]?
-                              },
-                              ?contextual_grounding_policy_config: {
-                                filters_config: Array[
-                                  {
-                                    type: ("GROUNDING" | "RELEVANCE"),
-                                    threshold: ::Float
-                                  },
-                                ]
+                              ?cross_region_config: {
+                                guardrail_profile_identifier: ::String
                               },
                               blocked_input_messaging: ::String,
                               blocked_outputs_messaging: ::String,
@@ -472,7 +469,7 @@ module Aws
                                 {
                                   key: ::String,
                                   value: ::String
-                                },
+                                }
                               ],
                               ?client_request_token: ::String
                             ) -> _CreateGuardrailResponseSuccess
@@ -508,7 +505,7 @@ module Aws
                                         {
                                           key: ::String,
                                           value: ::String
-                                        },
+                                        }
                                       ]
                                     ) -> _CreateInferenceProfileResponseSuccess
                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateInferenceProfileResponseSuccess
@@ -520,18 +517,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#create_marketplace_model_endpoint-instance_method
       def create_marketplace_model_endpoint: (
                                                model_source_identifier: ::String,
-                                               endpoint_config: {
-                                                 sage_maker: {
-                                                   initial_instance_count: ::Integer,
-                                                   instance_type: ::String,
-                                                   execution_role: ::String,
-                                                   kms_encryption_key: ::String?,
-                                                   vpc: {
-                                                     subnet_ids: Array[::String],
-                                                     security_group_ids: Array[::String]
-                                                   }?
-                                                 }?
-                                               },
+                                               endpoint_config: Params::endpoint_config,
                                                ?accept_eula: bool,
                                                endpoint_name: ::String,
                                                ?client_request_token: ::String,
@@ -539,7 +525,7 @@ module Aws
                                                  {
                                                    key: ::String,
                                                    value: ::String
-                                                 },
+                                                 }
                                                ]
                                              ) -> _CreateMarketplaceModelEndpointResponseSuccess
                                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateMarketplaceModelEndpointResponseSuccess
@@ -557,7 +543,7 @@ module Aws
                                      {
                                        key: ::String,
                                        value: ::String
-                                     },
+                                     }
                                    ],
                                    ?client_request_token: ::String
                                  ) -> _CreateModelCopyJobResponseSuccess
@@ -574,19 +560,19 @@ module Aws
                                             role_arn: ::String,
                                             ?client_request_token: ::String,
                                             base_model_identifier: ::String,
-                                            ?customization_type: ("FINE_TUNING" | "CONTINUED_PRE_TRAINING" | "DISTILLATION"),
+                                            ?customization_type: ("FINE_TUNING" | "CONTINUED_PRE_TRAINING" | "DISTILLATION" | "REINFORCEMENT_FINE_TUNING" | "IMPORTED"),
                                             ?custom_model_kms_key_id: ::String,
                                             ?job_tags: Array[
                                               {
                                                 key: ::String,
                                                 value: ::String
-                                              },
+                                              }
                                             ],
                                             ?custom_model_tags: Array[
                                               {
                                                 key: ::String,
                                                 value: ::String
-                                              },
+                                              }
                                             ],
                                             training_data_config: {
                                               s3_uri: ::String?,
@@ -602,13 +588,13 @@ module Aws
                                                     {
                                                       equals: Hash[::String, ::String]?,
                                                       not_equals: Hash[::String, ::String]?
-                                                    },
+                                                    }
                                                   ]?,
                                                   or_all: Array[
                                                     {
                                                       equals: Hash[::String, ::String]?,
                                                       not_equals: Hash[::String, ::String]?
-                                                    },
+                                                    }
                                                   ]?
                                                 }?
                                               }?
@@ -617,7 +603,7 @@ module Aws
                                               validators: Array[
                                                 {
                                                   s3_uri: ::String
-                                                },
+                                                }
                                               ]
                                             },
                                             output_data_config: {
@@ -634,6 +620,23 @@ module Aws
                                                   teacher_model_identifier: ::String,
                                                   max_response_length_for_inference: ::Integer?
                                                 }
+                                              }?,
+                                              rft_config: {
+                                                grader_config: {
+                                                  lambda_grader: {
+                                                    lambda_arn: ::String
+                                                  }?
+                                                }?,
+                                                hyper_parameters: {
+                                                  epoch_count: ::Integer?,
+                                                  batch_size: ::Integer?,
+                                                  learning_rate: ::Float?,
+                                                  max_prompt_length: ::Integer?,
+                                                  training_sample_per_prompt: ::Integer?,
+                                                  inference_max_tokens: ::Integer?,
+                                                  reasoning_effort: ("low" | "medium" | "high")?,
+                                                  eval_interval: ::Integer?
+                                                }?
                                               }?
                                             }
                                           ) -> _CreateModelCustomizationJobResponseSuccess
@@ -657,13 +660,13 @@ module Aws
                                        {
                                          key: ::String,
                                          value: ::String
-                                       },
+                                       }
                                      ],
                                      ?imported_model_tags: Array[
                                        {
                                          key: ::String,
                                          value: ::String
-                                       },
+                                       }
                                      ],
                                      ?client_request_token: ::String,
                                      ?vpc_config: {
@@ -707,8 +710,9 @@ module Aws
                                            {
                                              key: ::String,
                                              value: ::String
-                                           },
-                                         ]
+                                           }
+                                         ],
+                                         ?model_invocation_type: ("InvokeModel" | "Converse")
                                        ) -> _CreateModelInvocationJobResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateModelInvocationJobResponseSuccess
 
@@ -723,7 +727,7 @@ module Aws
                                   models: Array[
                                     {
                                       model_arn: ::String
-                                    },
+                                    }
                                   ],
                                   ?description: ::String,
                                   routing_criteria: {
@@ -736,7 +740,7 @@ module Aws
                                     {
                                       key: ::String,
                                       value: ::String
-                                    },
+                                    }
                                   ]
                                 ) -> _CreatePromptRouterResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreatePromptRouterResponseSuccess
@@ -756,10 +760,42 @@ module Aws
                                                    {
                                                      key: ::String,
                                                      value: ::String
-                                                   },
+                                                   }
                                                  ]
                                                ) -> _CreateProvisionedModelThroughputResponseSuccess
                                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateProvisionedModelThroughputResponseSuccess
+
+      interface _DeleteAutomatedReasoningPolicyResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteAutomatedReasoningPolicyResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#delete_automated_reasoning_policy-instance_method
+      def delete_automated_reasoning_policy: (
+                                               policy_arn: ::String,
+                                               ?force: bool
+                                             ) -> _DeleteAutomatedReasoningPolicyResponseSuccess
+                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteAutomatedReasoningPolicyResponseSuccess
+
+      interface _DeleteAutomatedReasoningPolicyBuildWorkflowResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteAutomatedReasoningPolicyBuildWorkflowResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#delete_automated_reasoning_policy_build_workflow-instance_method
+      def delete_automated_reasoning_policy_build_workflow: (
+                                                              policy_arn: ::String,
+                                                              build_workflow_id: ::String,
+                                                              last_updated_at: ::Time
+                                                            ) -> _DeleteAutomatedReasoningPolicyBuildWorkflowResponseSuccess
+                                                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteAutomatedReasoningPolicyBuildWorkflowResponseSuccess
+
+      interface _DeleteAutomatedReasoningPolicyTestCaseResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteAutomatedReasoningPolicyTestCaseResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#delete_automated_reasoning_policy_test_case-instance_method
+      def delete_automated_reasoning_policy_test_case: (
+                                                         policy_arn: ::String,
+                                                         test_case_id: ::String,
+                                                         last_updated_at: ::Time
+                                                       ) -> _DeleteAutomatedReasoningPolicyTestCaseResponseSuccess
+                                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteAutomatedReasoningPolicyTestCaseResponseSuccess
 
       interface _DeleteCustomModelResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DeleteCustomModelResponse]
@@ -769,6 +805,33 @@ module Aws
                                  model_identifier: ::String
                                ) -> _DeleteCustomModelResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteCustomModelResponseSuccess
+
+      interface _DeleteCustomModelDeploymentResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteCustomModelDeploymentResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#delete_custom_model_deployment-instance_method
+      def delete_custom_model_deployment: (
+                                            custom_model_deployment_identifier: ::String
+                                          ) -> _DeleteCustomModelDeploymentResponseSuccess
+                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteCustomModelDeploymentResponseSuccess
+
+      interface _DeleteEnforcedGuardrailConfigurationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteEnforcedGuardrailConfigurationResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#delete_enforced_guardrail_configuration-instance_method
+      def delete_enforced_guardrail_configuration: (
+                                                     config_id: ::String
+                                                   ) -> _DeleteEnforcedGuardrailConfigurationResponseSuccess
+                                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteEnforcedGuardrailConfigurationResponseSuccess
+
+      interface _DeleteFoundationModelAgreementResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteFoundationModelAgreementResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#delete_foundation_model_agreement-instance_method
+      def delete_foundation_model_agreement: (
+                                               model_id: ::String
+                                             ) -> _DeleteFoundationModelAgreementResponseSuccess
+                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteFoundationModelAgreementResponseSuccess
 
       interface _DeleteGuardrailResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DeleteGuardrailResponse]
@@ -833,6 +896,15 @@ module Aws
                                                ) -> _DeleteProvisionedModelThroughputResponseSuccess
                                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteProvisionedModelThroughputResponseSuccess
 
+      interface _DeleteResourcePolicyResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteResourcePolicyResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#delete_resource_policy-instance_method
+      def delete_resource_policy: (
+                                    resource_arn: ::String
+                                  ) -> _DeleteResourcePolicyResponseSuccess
+                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteResourcePolicyResponseSuccess
+
       interface _DeregisterMarketplaceModelEndpointResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DeregisterMarketplaceModelEndpointResponse]
       end
@@ -842,6 +914,150 @@ module Aws
                                                  ) -> _DeregisterMarketplaceModelEndpointResponseSuccess
                                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeregisterMarketplaceModelEndpointResponseSuccess
 
+      interface _ExportAutomatedReasoningPolicyVersionResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ExportAutomatedReasoningPolicyVersionResponse]
+        def policy_definition: () -> Types::AutomatedReasoningPolicyDefinition
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#export_automated_reasoning_policy_version-instance_method
+      def export_automated_reasoning_policy_version: (
+                                                       policy_arn: ::String
+                                                     ) -> _ExportAutomatedReasoningPolicyVersionResponseSuccess
+                                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ExportAutomatedReasoningPolicyVersionResponseSuccess
+
+      interface _GetAccountDataRetentionResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetAccountDataRetentionResponse]
+        def mode: () -> ("default" | "none" | "provider_data_share" | "inherit")
+        def updated_at: () -> ::Time
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#get_account_data_retention-instance_method
+      def get_account_data_retention: (
+                                      ) -> _GetAccountDataRetentionResponseSuccess
+                                    | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetAccountDataRetentionResponseSuccess
+
+      interface _GetAdvancedPromptOptimizationJobResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetAdvancedPromptOptimizationJobResponse]
+        def job_arn: () -> ::String
+        def job_name: () -> ::String
+        def job_description: () -> ::String
+        def job_status: () -> ("InProgress" | "Completed" | "Failed" | "PartiallyCompleted" | "Stopping" | "Stopped" | "Deleting")
+        def input_config: () -> Types::AdvancedPromptOptimizationInputConfig
+        def output_config: () -> Types::AdvancedPromptOptimizationOutputConfig
+        def encryption_key_arn: () -> ::String
+        def creation_time: () -> ::Time
+        def last_modified_time: () -> ::Time
+        def failure_message: () -> ::String
+        def model_configurations: () -> ::Array[Types::ModelConfiguration]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#get_advanced_prompt_optimization_job-instance_method
+      def get_advanced_prompt_optimization_job: (
+                                                  job_identifier: ::String
+                                                ) -> _GetAdvancedPromptOptimizationJobResponseSuccess
+                                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetAdvancedPromptOptimizationJobResponseSuccess
+
+      interface _GetAutomatedReasoningPolicyResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetAutomatedReasoningPolicyResponse]
+        def policy_arn: () -> ::String
+        def name: () -> ::String
+        def version: () -> ::String
+        def policy_id: () -> ::String
+        def description: () -> ::String
+        def definition_hash: () -> ::String
+        def kms_key_arn: () -> ::String
+        def created_at: () -> ::Time
+        def updated_at: () -> ::Time
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#get_automated_reasoning_policy-instance_method
+      def get_automated_reasoning_policy: (
+                                            policy_arn: ::String
+                                          ) -> _GetAutomatedReasoningPolicyResponseSuccess
+                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetAutomatedReasoningPolicyResponseSuccess
+
+      interface _GetAutomatedReasoningPolicyAnnotationsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetAutomatedReasoningPolicyAnnotationsResponse]
+        def policy_arn: () -> ::String
+        def name: () -> ::String
+        def build_workflow_id: () -> ::String
+        def annotations: () -> ::Array[Types::AutomatedReasoningPolicyAnnotation]
+        def annotation_set_hash: () -> ::String
+        def updated_at: () -> ::Time
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#get_automated_reasoning_policy_annotations-instance_method
+      def get_automated_reasoning_policy_annotations: (
+                                                        policy_arn: ::String,
+                                                        build_workflow_id: ::String
+                                                      ) -> _GetAutomatedReasoningPolicyAnnotationsResponseSuccess
+                                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetAutomatedReasoningPolicyAnnotationsResponseSuccess
+
+      interface _GetAutomatedReasoningPolicyBuildWorkflowResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetAutomatedReasoningPolicyBuildWorkflowResponse]
+        def policy_arn: () -> ::String
+        def build_workflow_id: () -> ::String
+        def status: () -> ("SCHEDULED" | "CANCEL_REQUESTED" | "PREPROCESSING" | "BUILDING" | "TESTING" | "COMPLETED" | "FAILED" | "CANCELLED")
+        def build_workflow_type: () -> ("INGEST_CONTENT" | "REFINE_POLICY" | "IMPORT_POLICY" | "GENERATE_FIDELITY_REPORT" | "GENERATE_POLICY_SCENARIOS" | "RESOLVE_POLICY_AMBIGUITIES" | "ITERATIVELY_REFINE_POLICY")
+        def document_name: () -> ::String
+        def document_content_type: () -> ("pdf" | "txt")
+        def document_description: () -> ::String
+        def created_at: () -> ::Time
+        def updated_at: () -> ::Time
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#get_automated_reasoning_policy_build_workflow-instance_method
+      def get_automated_reasoning_policy_build_workflow: (
+                                                           policy_arn: ::String,
+                                                           build_workflow_id: ::String
+                                                         ) -> _GetAutomatedReasoningPolicyBuildWorkflowResponseSuccess
+                                                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetAutomatedReasoningPolicyBuildWorkflowResponseSuccess
+
+      interface _GetAutomatedReasoningPolicyBuildWorkflowResultAssetsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetAutomatedReasoningPolicyBuildWorkflowResultAssetsResponse]
+        def policy_arn: () -> ::String
+        def build_workflow_id: () -> ::String
+        def build_workflow_assets: () -> Types::AutomatedReasoningPolicyBuildResultAssets
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#get_automated_reasoning_policy_build_workflow_result_assets-instance_method
+      def get_automated_reasoning_policy_build_workflow_result_assets: (
+                                                                         policy_arn: ::String,
+                                                                         build_workflow_id: ::String,
+                                                                         asset_type: ("BUILD_LOG" | "QUALITY_REPORT" | "POLICY_DEFINITION" | "GENERATED_TEST_CASES" | "POLICY_SCENARIOS" | "FIDELITY_REPORT" | "ASSET_MANIFEST" | "SOURCE_DOCUMENT"),
+                                                                         ?asset_id: ::String
+                                                                       ) -> _GetAutomatedReasoningPolicyBuildWorkflowResultAssetsResponseSuccess
+                                                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetAutomatedReasoningPolicyBuildWorkflowResultAssetsResponseSuccess
+
+      interface _GetAutomatedReasoningPolicyNextScenarioResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetAutomatedReasoningPolicyNextScenarioResponse]
+        def policy_arn: () -> ::String
+        def scenario: () -> Types::AutomatedReasoningPolicyScenario
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#get_automated_reasoning_policy_next_scenario-instance_method
+      def get_automated_reasoning_policy_next_scenario: (
+                                                          policy_arn: ::String,
+                                                          build_workflow_id: ::String
+                                                        ) -> _GetAutomatedReasoningPolicyNextScenarioResponseSuccess
+                                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetAutomatedReasoningPolicyNextScenarioResponseSuccess
+
+      interface _GetAutomatedReasoningPolicyTestCaseResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetAutomatedReasoningPolicyTestCaseResponse]
+        def policy_arn: () -> ::String
+        def test_case: () -> Types::AutomatedReasoningPolicyTestCase
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#get_automated_reasoning_policy_test_case-instance_method
+      def get_automated_reasoning_policy_test_case: (
+                                                      policy_arn: ::String,
+                                                      test_case_id: ::String
+                                                    ) -> _GetAutomatedReasoningPolicyTestCaseResponseSuccess
+                                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetAutomatedReasoningPolicyTestCaseResponseSuccess
+
+      interface _GetAutomatedReasoningPolicyTestResultResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetAutomatedReasoningPolicyTestResultResponse]
+        def test_result: () -> Types::AutomatedReasoningPolicyTestResult
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#get_automated_reasoning_policy_test_result-instance_method
+      def get_automated_reasoning_policy_test_result: (
+                                                        policy_arn: ::String,
+                                                        build_workflow_id: ::String,
+                                                        test_case_id: ::String
+                                                      ) -> _GetAutomatedReasoningPolicyTestResultResponseSuccess
+                                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetAutomatedReasoningPolicyTestResultResponseSuccess
+
       interface _GetCustomModelResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetCustomModelResponse]
         def model_arn: () -> ::String
@@ -849,7 +1065,7 @@ module Aws
         def job_name: () -> ::String
         def job_arn: () -> ::String
         def base_model_arn: () -> ::String
-        def customization_type: () -> ("FINE_TUNING" | "CONTINUED_PRE_TRAINING" | "DISTILLATION")
+        def customization_type: () -> ("FINE_TUNING" | "CONTINUED_PRE_TRAINING" | "DISTILLATION" | "REINFORCEMENT_FINE_TUNING" | "IMPORTED")
         def model_kms_key_arn: () -> ::String
         def hyper_parameters: () -> ::Hash[::String, ::String]
         def training_data_config: () -> Types::TrainingDataConfig
@@ -859,12 +1075,32 @@ module Aws
         def validation_metrics: () -> ::Array[Types::ValidatorMetric]
         def creation_time: () -> ::Time
         def customization_config: () -> Types::CustomizationConfig
+        def model_status: () -> ("Active" | "Creating" | "Failed")
+        def failure_message: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#get_custom_model-instance_method
       def get_custom_model: (
                               model_identifier: ::String
                             ) -> _GetCustomModelResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetCustomModelResponseSuccess
+
+      interface _GetCustomModelDeploymentResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetCustomModelDeploymentResponse]
+        def custom_model_deployment_arn: () -> ::String
+        def model_deployment_name: () -> ::String
+        def model_arn: () -> ::String
+        def created_at: () -> ::Time
+        def status: () -> ("Creating" | "Active" | "Failed")
+        def description: () -> ::String
+        def update_details: () -> Types::CustomModelDeploymentUpdateDetails
+        def failure_message: () -> ::String
+        def last_updated_at: () -> ::Time
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#get_custom_model_deployment-instance_method
+      def get_custom_model_deployment: (
+                                         custom_model_deployment_identifier: ::String
+                                       ) -> _GetCustomModelDeploymentResponseSuccess
+                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetCustomModelDeploymentResponseSuccess
 
       interface _GetEvaluationJobResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetEvaluationJobResponse]
@@ -899,6 +1135,20 @@ module Aws
                                 ) -> _GetFoundationModelResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetFoundationModelResponseSuccess
 
+      interface _GetFoundationModelAvailabilityResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetFoundationModelAvailabilityResponse]
+        def model_id: () -> ::String
+        def agreement_availability: () -> Types::AgreementAvailability
+        def authorization_status: () -> ("AUTHORIZED" | "NOT_AUTHORIZED")
+        def entitlement_availability: () -> ("AVAILABLE" | "NOT_AVAILABLE")
+        def region_availability: () -> ("AVAILABLE" | "NOT_AVAILABLE")
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#get_foundation_model_availability-instance_method
+      def get_foundation_model_availability: (
+                                               model_id: ::String
+                                             ) -> _GetFoundationModelAvailabilityResponseSuccess
+                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetFoundationModelAvailabilityResponseSuccess
+
       interface _GetGuardrailResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetGuardrailResponse]
         def name: () -> ::String
@@ -912,6 +1162,8 @@ module Aws
         def word_policy: () -> Types::GuardrailWordPolicy
         def sensitive_information_policy: () -> Types::GuardrailSensitiveInformationPolicy
         def contextual_grounding_policy: () -> Types::GuardrailContextualGroundingPolicy
+        def automated_reasoning_policy: () -> Types::GuardrailAutomatedReasoningPolicy
+        def cross_region_details: () -> Types::GuardrailCrossRegionDetails
         def created_at: () -> ::Time
         def updated_at: () -> ::Time
         def status_reasons: () -> ::Array[::String]
@@ -1003,6 +1255,7 @@ module Aws
         def client_request_token: () -> ::String
         def role_arn: () -> ::String
         def status: () -> ("InProgress" | "Completed" | "Failed" | "Stopping" | "Stopped")
+        def status_details: () -> Types::StatusDetails
         def failure_message: () -> ::String
         def creation_time: () -> ::Time
         def last_modified_time: () -> ::Time
@@ -1012,7 +1265,7 @@ module Aws
         def training_data_config: () -> Types::TrainingDataConfig
         def validation_data_config: () -> Types::ValidationDataConfig
         def output_data_config: () -> Types::OutputDataConfig
-        def customization_type: () -> ("FINE_TUNING" | "CONTINUED_PRE_TRAINING" | "DISTILLATION")
+        def customization_type: () -> ("FINE_TUNING" | "CONTINUED_PRE_TRAINING" | "DISTILLATION" | "REINFORCEMENT_FINE_TUNING" | "IMPORTED")
         def output_model_kms_key_arn: () -> ::String
         def training_metrics: () -> Types::TrainingMetrics
         def validation_metrics: () -> ::Array[Types::ValidatorMetric]
@@ -1064,6 +1317,11 @@ module Aws
         def vpc_config: () -> Types::VpcConfig
         def timeout_duration_in_hours: () -> ::Integer
         def job_expiration_time: () -> ::Time
+        def model_invocation_type: () -> ("InvokeModel" | "Converse")
+        def total_record_count: () -> ::Integer
+        def processed_record_count: () -> ::Integer
+        def success_record_count: () -> ::Integer
+        def error_record_count: () -> ::Integer
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#get_model_invocation_job-instance_method
       def get_model_invocation_job: (
@@ -1121,6 +1379,111 @@ module Aws
                                             ) -> _GetProvisionedModelThroughputResponseSuccess
                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetProvisionedModelThroughputResponseSuccess
 
+      interface _GetResourcePolicyResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetResourcePolicyResponse]
+        def resource_policy: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#get_resource_policy-instance_method
+      def get_resource_policy: (
+                                 resource_arn: ::String
+                               ) -> _GetResourcePolicyResponseSuccess
+                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetResourcePolicyResponseSuccess
+
+      interface _GetUseCaseForModelAccessResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetUseCaseForModelAccessResponse]
+        def form_data: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#get_use_case_for_model_access-instance_method
+      def get_use_case_for_model_access: (
+                                         ) -> _GetUseCaseForModelAccessResponseSuccess
+                                       | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetUseCaseForModelAccessResponseSuccess
+
+      interface _ListAdvancedPromptOptimizationJobsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListAdvancedPromptOptimizationJobsResponse]
+        def job_summaries: () -> ::Array[Types::AdvancedPromptOptimizationJobSummary]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#list_advanced_prompt_optimization_jobs-instance_method
+      def list_advanced_prompt_optimization_jobs: (
+                                                    ?max_results: ::Integer,
+                                                    ?next_token: ::String,
+                                                    ?sort_by: ("CreationTime"),
+                                                    ?sort_order: ("Ascending" | "Descending")
+                                                  ) -> _ListAdvancedPromptOptimizationJobsResponseSuccess
+                                                | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListAdvancedPromptOptimizationJobsResponseSuccess
+
+      interface _ListAutomatedReasoningPoliciesResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListAutomatedReasoningPoliciesResponse]
+        def automated_reasoning_policy_summaries: () -> ::Array[Types::AutomatedReasoningPolicySummary]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#list_automated_reasoning_policies-instance_method
+      def list_automated_reasoning_policies: (
+                                               ?policy_arn: ::String,
+                                               ?next_token: ::String,
+                                               ?max_results: ::Integer
+                                             ) -> _ListAutomatedReasoningPoliciesResponseSuccess
+                                           | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListAutomatedReasoningPoliciesResponseSuccess
+
+      interface _ListAutomatedReasoningPolicyBuildWorkflowsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListAutomatedReasoningPolicyBuildWorkflowsResponse]
+        def automated_reasoning_policy_build_workflow_summaries: () -> ::Array[Types::AutomatedReasoningPolicyBuildWorkflowSummary]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#list_automated_reasoning_policy_build_workflows-instance_method
+      def list_automated_reasoning_policy_build_workflows: (
+                                                             policy_arn: ::String,
+                                                             ?next_token: ::String,
+                                                             ?max_results: ::Integer
+                                                           ) -> _ListAutomatedReasoningPolicyBuildWorkflowsResponseSuccess
+                                                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListAutomatedReasoningPolicyBuildWorkflowsResponseSuccess
+
+      interface _ListAutomatedReasoningPolicyTestCasesResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListAutomatedReasoningPolicyTestCasesResponse]
+        def test_cases: () -> ::Array[Types::AutomatedReasoningPolicyTestCase]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#list_automated_reasoning_policy_test_cases-instance_method
+      def list_automated_reasoning_policy_test_cases: (
+                                                        policy_arn: ::String,
+                                                        ?next_token: ::String,
+                                                        ?max_results: ::Integer
+                                                      ) -> _ListAutomatedReasoningPolicyTestCasesResponseSuccess
+                                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListAutomatedReasoningPolicyTestCasesResponseSuccess
+
+      interface _ListAutomatedReasoningPolicyTestResultsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListAutomatedReasoningPolicyTestResultsResponse]
+        def test_results: () -> ::Array[Types::AutomatedReasoningPolicyTestResult]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#list_automated_reasoning_policy_test_results-instance_method
+      def list_automated_reasoning_policy_test_results: (
+                                                          policy_arn: ::String,
+                                                          build_workflow_id: ::String,
+                                                          ?next_token: ::String,
+                                                          ?max_results: ::Integer
+                                                        ) -> _ListAutomatedReasoningPolicyTestResultsResponseSuccess
+                                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListAutomatedReasoningPolicyTestResultsResponseSuccess
+
+      interface _ListCustomModelDeploymentsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListCustomModelDeploymentsResponse]
+        def next_token: () -> ::String
+        def model_deployment_summaries: () -> ::Array[Types::CustomModelDeploymentSummary]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#list_custom_model_deployments-instance_method
+      def list_custom_model_deployments: (
+                                           ?created_before: ::Time,
+                                           ?created_after: ::Time,
+                                           ?name_contains: ::String,
+                                           ?max_results: ::Integer,
+                                           ?next_token: ::String,
+                                           ?sort_by: ("CreationTime"),
+                                           ?sort_order: ("Ascending" | "Descending"),
+                                           ?status_equals: ("Creating" | "Active" | "Failed"),
+                                           ?model_arn_equals: ::String
+                                         ) -> _ListCustomModelDeploymentsResponseSuccess
+                                       | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListCustomModelDeploymentsResponseSuccess
+
       interface _ListCustomModelsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListCustomModelsResponse]
         def next_token: () -> ::String
@@ -1137,9 +1500,21 @@ module Aws
                                 ?next_token: ::String,
                                 ?sort_by: ("CreationTime"),
                                 ?sort_order: ("Ascending" | "Descending"),
-                                ?is_owned: bool
+                                ?is_owned: bool,
+                                ?model_status: ("Active" | "Creating" | "Failed")
                               ) -> _ListCustomModelsResponseSuccess
                             | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListCustomModelsResponseSuccess
+
+      interface _ListEnforcedGuardrailsConfigurationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListEnforcedGuardrailsConfigurationResponse]
+        def guardrails_config: () -> ::Array[Types::AccountEnforcedGuardrailOutputConfiguration]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#list_enforced_guardrails_configuration-instance_method
+      def list_enforced_guardrails_configuration: (
+                                                    ?next_token: ::String
+                                                  ) -> _ListEnforcedGuardrailsConfigurationResponseSuccess
+                                                | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListEnforcedGuardrailsConfigurationResponseSuccess
 
       interface _ListEvaluationJobsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListEvaluationJobsResponse]
@@ -1159,6 +1534,18 @@ module Aws
                                   ?sort_order: ("Ascending" | "Descending")
                                 ) -> _ListEvaluationJobsResponseSuccess
                               | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListEvaluationJobsResponseSuccess
+
+      interface _ListFoundationModelAgreementOffersResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListFoundationModelAgreementOffersResponse]
+        def model_id: () -> ::String
+        def offers: () -> ::Array[Types::Offer]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#list_foundation_model_agreement_offers-instance_method
+      def list_foundation_model_agreement_offers: (
+                                                    model_id: ::String,
+                                                    ?offer_type: ("ALL" | "PUBLIC")
+                                                  ) -> _ListFoundationModelAgreementOffersResponseSuccess
+                                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListFoundationModelAgreementOffersResponseSuccess
 
       interface _ListFoundationModelsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListFoundationModelsResponse]
@@ -1345,6 +1732,41 @@ module Aws
                                   ) -> _ListTagsForResourceResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListTagsForResourceResponseSuccess
 
+      interface _PutAccountDataRetentionResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::PutAccountDataRetentionResponse]
+        def mode: () -> ("default" | "none" | "provider_data_share" | "inherit")
+        def updated_at: () -> ::Time
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#put_account_data_retention-instance_method
+      def put_account_data_retention: (
+                                        mode: ("default" | "none" | "provider_data_share" | "inherit")
+                                      ) -> _PutAccountDataRetentionResponseSuccess
+                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutAccountDataRetentionResponseSuccess
+
+      interface _PutEnforcedGuardrailConfigurationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::PutEnforcedGuardrailConfigurationResponse]
+        def config_id: () -> ::String
+        def updated_at: () -> ::Time
+        def updated_by: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#put_enforced_guardrail_configuration-instance_method
+      def put_enforced_guardrail_configuration: (
+                                                  ?config_id: ::String,
+                                                  guardrail_inference_config: {
+                                                    guardrail_identifier: ::String,
+                                                    guardrail_version: ::String,
+                                                    selective_content_guarding: {
+                                                      system: ("SELECTIVE" | "COMPREHENSIVE")?,
+                                                      messages: ("SELECTIVE" | "COMPREHENSIVE")?
+                                                    }?,
+                                                    model_enforcement: {
+                                                      included_models: Array[::String],
+                                                      excluded_models: Array[::String]
+                                                    }?
+                                                  }
+                                                ) -> _PutEnforcedGuardrailConfigurationResponseSuccess
+                                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutEnforcedGuardrailConfigurationResponseSuccess
+
       interface _PutModelInvocationLoggingConfigurationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::PutModelInvocationLoggingConfigurationResponse]
       end
@@ -1366,10 +1788,31 @@ module Aws
                                                           text_data_delivery_enabled: bool?,
                                                           image_data_delivery_enabled: bool?,
                                                           embedding_data_delivery_enabled: bool?,
-                                                          video_data_delivery_enabled: bool?
+                                                          video_data_delivery_enabled: bool?,
+                                                          audio_data_delivery_enabled: bool?
                                                         }
                                                       ) -> _PutModelInvocationLoggingConfigurationResponseSuccess
                                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutModelInvocationLoggingConfigurationResponseSuccess
+
+      interface _PutResourcePolicyResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::PutResourcePolicyResponse]
+        def resource_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#put_resource_policy-instance_method
+      def put_resource_policy: (
+                                 resource_arn: ::String,
+                                 resource_policy: ::String
+                               ) -> _PutResourcePolicyResponseSuccess
+                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutResourcePolicyResponseSuccess
+
+      interface _PutUseCaseForModelAccessResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::PutUseCaseForModelAccessResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#put_use_case_for_model_access-instance_method
+      def put_use_case_for_model_access: (
+                                           form_data: ::String
+                                         ) -> _PutUseCaseForModelAccessResponseSuccess
+                                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutUseCaseForModelAccessResponseSuccess
 
       interface _RegisterMarketplaceModelEndpointResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::RegisterMarketplaceModelEndpointResponse]
@@ -1381,6 +1824,80 @@ module Aws
                                                  model_source_identifier: ::String
                                                ) -> _RegisterMarketplaceModelEndpointResponseSuccess
                                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RegisterMarketplaceModelEndpointResponseSuccess
+
+      interface _StartAutomatedReasoningPolicyBuildWorkflowResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StartAutomatedReasoningPolicyBuildWorkflowResponse]
+        def policy_arn: () -> ::String
+        def build_workflow_id: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#start_automated_reasoning_policy_build_workflow-instance_method
+      def start_automated_reasoning_policy_build_workflow: (
+                                                             policy_arn: ::String,
+                                                             build_workflow_type: ("INGEST_CONTENT" | "REFINE_POLICY" | "IMPORT_POLICY" | "GENERATE_FIDELITY_REPORT" | "GENERATE_POLICY_SCENARIOS" | "RESOLVE_POLICY_AMBIGUITIES" | "ITERATIVELY_REFINE_POLICY"),
+                                                             ?client_request_token: ::String,
+                                                             source_content: {
+                                                               policy_definition: Params::automated_reasoning_policy_definition?,
+                                                               workflow_content: {
+                                                                 documents: Array[
+                                                                   {
+                                                                     document: ::String,
+                                                                     document_content_type: ("pdf" | "txt"),
+                                                                     document_name: ::String,
+                                                                     document_description: ::String?
+                                                                   }
+                                                                 ]?,
+                                                                 policy_repair_assets: {
+                                                                   annotations: Array[
+                                                                     Params::automated_reasoning_policy_annotation
+                                                                   ]
+                                                                 }?,
+                                                                 generate_fidelity_report_content: {
+                                                                   documents: Array[
+                                                                     {
+                                                                       document: ::String,
+                                                                       document_content_type: ("pdf" | "txt"),
+                                                                       document_name: ::String,
+                                                                       document_description: ::String?
+                                                                     }
+                                                                   ]?
+                                                                 }?,
+                                                                 iterative_refinement_content: {
+                                                                   documents: Array[
+                                                                     {
+                                                                       document: ::String,
+                                                                       document_content_type: ("pdf" | "txt"),
+                                                                       document_name: ::String,
+                                                                       document_description: ::String?
+                                                                     }
+                                                                   ],
+                                                                   feedback: ::String?
+                                                                 }?
+                                                               }?
+                                                             }
+                                                           ) -> _StartAutomatedReasoningPolicyBuildWorkflowResponseSuccess
+                                                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartAutomatedReasoningPolicyBuildWorkflowResponseSuccess
+
+      interface _StartAutomatedReasoningPolicyTestWorkflowResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StartAutomatedReasoningPolicyTestWorkflowResponse]
+        def policy_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#start_automated_reasoning_policy_test_workflow-instance_method
+      def start_automated_reasoning_policy_test_workflow: (
+                                                            policy_arn: ::String,
+                                                            build_workflow_id: ::String,
+                                                            ?test_case_ids: Array[::String],
+                                                            ?client_request_token: ::String
+                                                          ) -> _StartAutomatedReasoningPolicyTestWorkflowResponseSuccess
+                                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartAutomatedReasoningPolicyTestWorkflowResponseSuccess
+
+      interface _StopAdvancedPromptOptimizationJobResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StopAdvancedPromptOptimizationJobResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#stop_advanced_prompt_optimization_job-instance_method
+      def stop_advanced_prompt_optimization_job: (
+                                                   job_identifier: ::String
+                                                 ) -> _StopAdvancedPromptOptimizationJobResponseSuccess
+                                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StopAdvancedPromptOptimizationJobResponseSuccess
 
       interface _StopEvaluationJobResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::StopEvaluationJobResponse]
@@ -1419,7 +1936,7 @@ module Aws
                             {
                               key: ::String,
                               value: ::String
-                            },
+                            }
                           ]
                         ) -> _TagResourceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess
@@ -1434,6 +1951,69 @@ module Aws
                           ) -> _UntagResourceResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UntagResourceResponseSuccess
 
+      interface _UpdateAutomatedReasoningPolicyResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateAutomatedReasoningPolicyResponse]
+        def policy_arn: () -> ::String
+        def name: () -> ::String
+        def definition_hash: () -> ::String
+        def updated_at: () -> ::Time
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#update_automated_reasoning_policy-instance_method
+      def update_automated_reasoning_policy: (
+                                               policy_arn: ::String,
+                                               policy_definition: Params::automated_reasoning_policy_definition,
+                                               ?name: ::String,
+                                               ?description: ::String
+                                             ) -> _UpdateAutomatedReasoningPolicyResponseSuccess
+                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateAutomatedReasoningPolicyResponseSuccess
+
+      interface _UpdateAutomatedReasoningPolicyAnnotationsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateAutomatedReasoningPolicyAnnotationsResponse]
+        def policy_arn: () -> ::String
+        def build_workflow_id: () -> ::String
+        def annotation_set_hash: () -> ::String
+        def updated_at: () -> ::Time
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#update_automated_reasoning_policy_annotations-instance_method
+      def update_automated_reasoning_policy_annotations: (
+                                                           policy_arn: ::String,
+                                                           build_workflow_id: ::String,
+                                                           annotations: Array[
+                                                             Params::automated_reasoning_policy_annotation
+                                                           ],
+                                                           last_updated_annotation_set_hash: ::String
+                                                         ) -> _UpdateAutomatedReasoningPolicyAnnotationsResponseSuccess
+                                                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateAutomatedReasoningPolicyAnnotationsResponseSuccess
+
+      interface _UpdateAutomatedReasoningPolicyTestCaseResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateAutomatedReasoningPolicyTestCaseResponse]
+        def policy_arn: () -> ::String
+        def test_case_id: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#update_automated_reasoning_policy_test_case-instance_method
+      def update_automated_reasoning_policy_test_case: (
+                                                         policy_arn: ::String,
+                                                         test_case_id: ::String,
+                                                         guard_content: ::String,
+                                                         ?query_content: ::String,
+                                                         last_updated_at: ::Time,
+                                                         expected_aggregated_findings_result: ("VALID" | "INVALID" | "SATISFIABLE" | "IMPOSSIBLE" | "TRANSLATION_AMBIGUOUS" | "TOO_COMPLEX" | "NO_TRANSLATION"),
+                                                         ?confidence_threshold: ::Float,
+                                                         ?client_request_token: ::String
+                                                       ) -> _UpdateAutomatedReasoningPolicyTestCaseResponseSuccess
+                                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateAutomatedReasoningPolicyTestCaseResponseSuccess
+
+      interface _UpdateCustomModelDeploymentResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateCustomModelDeploymentResponse]
+        def custom_model_deployment_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#update_custom_model_deployment-instance_method
+      def update_custom_model_deployment: (
+                                            model_arn: ::String,
+                                            custom_model_deployment_identifier: ::String
+                                          ) -> _UpdateCustomModelDeploymentResponseSuccess
+                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateCustomModelDeploymentResponseSuccess
+
       interface _UpdateGuardrailResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::UpdateGuardrailResponse]
         def guardrail_id: () -> ::String
@@ -1446,62 +2026,17 @@ module Aws
                               guardrail_identifier: ::String,
                               name: ::String,
                               ?description: ::String,
-                              ?topic_policy_config: {
-                                topics_config: Array[
-                                  {
-                                    name: ::String,
-                                    definition: ::String,
-                                    examples: Array[::String]?,
-                                    type: ("DENY")
-                                  },
-                                ]
+                              ?topic_policy_config: Params::guardrail_topic_policy_config,
+                              ?content_policy_config: Params::guardrail_content_policy_config,
+                              ?word_policy_config: Params::guardrail_word_policy_config,
+                              ?sensitive_information_policy_config: Params::guardrail_sensitive_information_policy_config,
+                              ?contextual_grounding_policy_config: Params::guardrail_contextual_grounding_policy_config,
+                              ?automated_reasoning_policy_config: {
+                                policies: Array[::String],
+                                confidence_threshold: ::Float?
                               },
-                              ?content_policy_config: {
-                                filters_config: Array[
-                                  {
-                                    type: ("SEXUAL" | "VIOLENCE" | "HATE" | "INSULTS" | "MISCONDUCT" | "PROMPT_ATTACK"),
-                                    input_strength: ("NONE" | "LOW" | "MEDIUM" | "HIGH"),
-                                    output_strength: ("NONE" | "LOW" | "MEDIUM" | "HIGH"),
-                                    input_modalities: Array[("TEXT" | "IMAGE")]?,
-                                    output_modalities: Array[("TEXT" | "IMAGE")]?
-                                  },
-                                ]
-                              },
-                              ?word_policy_config: {
-                                words_config: Array[
-                                  {
-                                    text: ::String
-                                  },
-                                ]?,
-                                managed_word_lists_config: Array[
-                                  {
-                                    type: ("PROFANITY")
-                                  },
-                                ]?
-                              },
-                              ?sensitive_information_policy_config: {
-                                pii_entities_config: Array[
-                                  {
-                                    type: ("ADDRESS" | "AGE" | "AWS_ACCESS_KEY" | "AWS_SECRET_KEY" | "CA_HEALTH_NUMBER" | "CA_SOCIAL_INSURANCE_NUMBER" | "CREDIT_DEBIT_CARD_CVV" | "CREDIT_DEBIT_CARD_EXPIRY" | "CREDIT_DEBIT_CARD_NUMBER" | "DRIVER_ID" | "EMAIL" | "INTERNATIONAL_BANK_ACCOUNT_NUMBER" | "IP_ADDRESS" | "LICENSE_PLATE" | "MAC_ADDRESS" | "NAME" | "PASSWORD" | "PHONE" | "PIN" | "SWIFT_CODE" | "UK_NATIONAL_HEALTH_SERVICE_NUMBER" | "UK_NATIONAL_INSURANCE_NUMBER" | "UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER" | "URL" | "USERNAME" | "US_BANK_ACCOUNT_NUMBER" | "US_BANK_ROUTING_NUMBER" | "US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER" | "US_PASSPORT_NUMBER" | "US_SOCIAL_SECURITY_NUMBER" | "VEHICLE_IDENTIFICATION_NUMBER"),
-                                    action: ("BLOCK" | "ANONYMIZE")
-                                  },
-                                ]?,
-                                regexes_config: Array[
-                                  {
-                                    name: ::String,
-                                    description: ::String?,
-                                    pattern: ::String,
-                                    action: ("BLOCK" | "ANONYMIZE")
-                                  },
-                                ]?
-                              },
-                              ?contextual_grounding_policy_config: {
-                                filters_config: Array[
-                                  {
-                                    type: ("GROUNDING" | "RELEVANCE"),
-                                    threshold: ::Float
-                                  },
-                                ]
+                              ?cross_region_config: {
+                                guardrail_profile_identifier: ::String
                               },
                               blocked_input_messaging: ::String,
                               blocked_outputs_messaging: ::String,
@@ -1516,18 +2051,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Bedrock/Client.html#update_marketplace_model_endpoint-instance_method
       def update_marketplace_model_endpoint: (
                                                endpoint_arn: ::String,
-                                               endpoint_config: {
-                                                 sage_maker: {
-                                                   initial_instance_count: ::Integer,
-                                                   instance_type: ::String,
-                                                   execution_role: ::String,
-                                                   kms_encryption_key: ::String?,
-                                                   vpc: {
-                                                     subnet_ids: Array[::String],
-                                                     security_group_ids: Array[::String]
-                                                   }?
-                                                 }?
-                                               },
+                                               endpoint_config: Params::endpoint_config,
                                                ?client_request_token: ::String
                                              ) -> _UpdateMarketplaceModelEndpointResponseSuccess
                                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateMarketplaceModelEndpointResponseSuccess

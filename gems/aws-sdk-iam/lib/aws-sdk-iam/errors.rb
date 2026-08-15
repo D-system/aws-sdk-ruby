@@ -47,6 +47,10 @@ module Aws::IAM
   #    * This error class is not used. `EntityAlreadyExists` is used during parsing instead.
   # * {EntityTemporarilyUnmodifiableException}
   #    * This error class is not used. `EntityTemporarilyUnmodifiable` is used during parsing instead.
+  # * {FeatureDisabledException}
+  #    * This error class is not used. `FeatureDisabled` is used during parsing instead.
+  # * {FeatureEnabledException}
+  #    * This error class is not used. `FeatureEnabled` is used during parsing instead.
   # * {InvalidAuthenticationCodeException}
   #    * This error class is not used. `InvalidAuthenticationCode` is used during parsing instead.
   # * {InvalidCertificateException}
@@ -65,6 +69,8 @@ module Aws::IAM
   #    * This error class is not used. `MalformedCertificate` is used during parsing instead.
   # * {MalformedPolicyDocumentException}
   #    * This error class is not used. `MalformedPolicyDocument` is used during parsing instead.
+  # * {NameConflictException}
+  #    * This error class is not used. `NameConflict` is used during parsing instead.
   # * {NoSuchEntityException}
   #    * This error class is not used. `NoSuchEntity` is used during parsing instead.
   # * {OpenIdIdpCommunicationErrorException}
@@ -79,6 +85,10 @@ module Aws::IAM
   #    * This error class is not used. `PolicyNotAttachable` is used during parsing instead.
   # * {ReportGenerationLimitExceededException}
   #    * This error class is not used. `ReportGenerationLimitExceeded` is used during parsing instead.
+  # * {RoleModifiedException}
+  #    * This error class is not used. `RoleModified` is used during parsing instead.
+  # * {RoleTemplateDisabledException}
+  #    * This error class is not used. `RoleTemplateDisabled` is used during parsing instead.
   # * {ServiceAccessNotEnabledException}
   # * {ServiceFailureException}
   #    * This error class is not used. `ServiceFailure` is used during parsing instead.
@@ -91,7 +101,6 @@ module Aws::IAM
   #
   # Additionally, error classes are dynamically generated for service errors based on the error code
   # if they are not defined above.
-  # Some existing error classes may use a different class name than the one documented.
   module Errors
 
     extend Aws::Errors::DynamicErrors
@@ -270,6 +279,40 @@ module Aws::IAM
     end
 
     # @deprecated This error class is not used during parsing.
+    #   Please use `FeatureDisabled` instead.
+    class FeatureDisabledException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::IAM::Types::FeatureDisabledException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+    end
+
+    # @deprecated This error class is not used during parsing.
+    #   Please use `FeatureEnabled` instead.
+    class FeatureEnabledException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::IAM::Types::FeatureEnabledException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+    end
+
+    # @deprecated This error class is not used during parsing.
     #   Please use `InvalidAuthenticationCode` instead.
     class InvalidAuthenticationCodeException < ServiceError
 
@@ -423,6 +466,23 @@ module Aws::IAM
     end
 
     # @deprecated This error class is not used during parsing.
+    #   Please use `NameConflict` instead.
+    class NameConflictException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::IAM::Types::NameConflictException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+    end
+
+    # @deprecated This error class is not used during parsing.
     #   Please use `NoSuchEntity` instead.
     class NoSuchEntityException < ServiceError
 
@@ -534,6 +594,40 @@ module Aws::IAM
       # @param [Seahorse::Client::RequestContext] context
       # @param [String] message
       # @param [Aws::IAM::Types::ReportGenerationLimitExceededException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+    end
+
+    # @deprecated This error class is not used during parsing.
+    #   Please use `RoleModified` instead.
+    class RoleModifiedException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::IAM::Types::RoleModifiedException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+    end
+
+    # @deprecated This error class is not used during parsing.
+    #   Please use `RoleTemplateDisabled` instead.
+    class RoleTemplateDisabledException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::IAM::Types::RoleTemplateDisabledException] data
       def initialize(context, message, data = Aws::EmptyStructure.new)
         super(context, message, data)
       end

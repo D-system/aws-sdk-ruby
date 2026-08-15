@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -88,7 +89,7 @@ module Aws
                                        {
                                          catalog: ::String,
                                          entity_id: ::String
-                                       },
+                                       }
                                      ]
                                    ) -> _BatchDescribeEntitiesResponseSuccess
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchDescribeEntitiesResponseSuccess
@@ -172,7 +173,7 @@ module Aws
                                 {
                                   name: ::String?,
                                   value_list: Array[::String]?
-                                },
+                                }
                               ],
                               ?sort: {
                                 sort_by: ::String?,
@@ -196,7 +197,7 @@ module Aws
                              {
                                name: ::String?,
                                value_list: Array[::String]?
-                             },
+                             }
                            ],
                            ?sort: {
                              sort_by: ::String?,
@@ -300,6 +301,18 @@ module Aws
                                    after_value: ::String?,
                                    before_value: ::String?
                                  }?
+                               }?,
+                               offer_set_id: {
+                                 value_list: Array[::String]?
+                               }?,
+                               target_agreement_id: {
+                                 value_list: Array[::String]?
+                               }?,
+                               target_agreement_intent: {
+                                 value_list: Array[("Renew")]?
+                               }?,
+                               created_by_source: {
+                                 value_list: Array[("Seller" | "AwsMarketplace")]?
                                }?
                              }?,
                              container_product_filters: {
@@ -377,6 +390,56 @@ module Aws
                                    after_value: ::String?,
                                    before_value: ::String?
                                  }?
+                               }?,
+                               reseller_role: {
+                                 value_list: Array[("ChannelPartner" | "Distributor")]?
+                               }?
+                             }?,
+                             machine_learning_product_filters: {
+                               entity_id: {
+                                 value_list: Array[::String]?
+                               }?,
+                               last_modified_date: {
+                                 date_range: {
+                                   after_value: ::String?,
+                                   before_value: ::String?
+                                 }?
+                               }?,
+                               product_title: {
+                                 value_list: Array[::String]?,
+                                 wild_card_value: ::String?
+                               }?,
+                               visibility: {
+                                 value_list: Array[("Limited" | "Public" | "Restricted" | "Draft")]?
+                               }?
+                             }?,
+                             offer_set_filters: {
+                               entity_id: {
+                                 value_list: Array[::String]?
+                               }?,
+                               name: {
+                                 value_list: Array[::String]?
+                               }?,
+                               state: {
+                                 value_list: Array[("Draft" | "Released")]?
+                               }?,
+                               release_date: {
+                                 date_range: {
+                                   after_value: ::String?,
+                                   before_value: ::String?
+                                 }?
+                               }?,
+                               associated_offer_ids: {
+                                 value_list: Array[::String]?
+                               }?,
+                               solution_id: {
+                                 value_list: Array[::String]?
+                               }?,
+                               last_modified_date: {
+                                 date_range: {
+                                   after_value: ::String?,
+                                   before_value: ::String?
+                                 }?
                                }?
                              }?
                            },
@@ -386,7 +449,7 @@ module Aws
                                sort_order: ("ASCENDING" | "DESCENDING")?
                              }?,
                              saa_s_product_sort: {
-                               sort_by: ("EntityId" | "ProductTitle" | "Visibility" | "LastModifiedDate")?,
+                               sort_by: ("EntityId" | "ProductTitle" | "Visibility" | "LastModifiedDate" | "DeliveryOptionTypes")?,
                                sort_order: ("ASCENDING" | "DESCENDING")?
                              }?,
                              ami_product_sort: {
@@ -394,15 +457,23 @@ module Aws
                                sort_order: ("ASCENDING" | "DESCENDING")?
                              }?,
                              offer_sort: {
-                               sort_by: ("EntityId" | "Name" | "ProductId" | "ResaleAuthorizationId" | "ReleaseDate" | "AvailabilityEndDate" | "BuyerAccounts" | "State" | "Targeting" | "LastModifiedDate")?,
+                               sort_by: ("EntityId" | "Name" | "ProductId" | "ResaleAuthorizationId" | "ReleaseDate" | "AvailabilityEndDate" | "BuyerAccounts" | "State" | "Targeting" | "LastModifiedDate" | "OfferSetId" | "TargetAgreementId" | "TargetAgreementIntent" | "CreatedBySource")?,
                                sort_order: ("ASCENDING" | "DESCENDING")?
                              }?,
                              container_product_sort: {
-                               sort_by: ("EntityId" | "LastModifiedDate" | "ProductTitle" | "Visibility")?,
+                               sort_by: ("EntityId" | "LastModifiedDate" | "ProductTitle" | "Visibility" | "CompatibleAWSServices")?,
                                sort_order: ("ASCENDING" | "DESCENDING")?
                              }?,
                              resale_authorization_sort: {
                                sort_by: ("EntityId" | "Name" | "ProductId" | "ProductName" | "ManufacturerAccountId" | "ManufacturerLegalName" | "ResellerAccountID" | "ResellerLegalName" | "Status" | "OfferExtendedStatus" | "CreatedDate" | "AvailabilityEndDate" | "LastModifiedDate")?,
+                               sort_order: ("ASCENDING" | "DESCENDING")?
+                             }?,
+                             machine_learning_product_sort: {
+                               sort_by: ("EntityId" | "LastModifiedDate" | "ProductTitle" | "Visibility")?,
+                               sort_order: ("ASCENDING" | "DESCENDING")?
+                             }?,
+                             offer_set_sort: {
+                               sort_by: ("Name" | "State" | "ReleaseDate" | "SolutionId" | "EntityId" | "LastModifiedDate")?,
                                sort_order: ("ASCENDING" | "DESCENDING")?
                              }?
                            }
@@ -449,13 +520,13 @@ module Aws
                                     {
                                       key: ::String,
                                       value: ::String
-                                    },
+                                    }
                                   ]?,
                                   details: ::String?,
                                   details_document: {
                                   }?,
                                   change_name: ::String?
-                                },
+                                }
                               ],
                               ?change_set_name: ::String,
                               ?client_request_token: ::String,
@@ -463,7 +534,7 @@ module Aws
                                 {
                                   key: ::String,
                                   value: ::String
-                                },
+                                }
                               ],
                               ?intent: ("VALIDATE" | "APPLY")
                             ) -> _StartChangeSetResponseSuccess
@@ -479,7 +550,7 @@ module Aws
                             {
                               key: ::String,
                               value: ::String
-                            },
+                            }
                           ]
                         ) -> _TagResourceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess

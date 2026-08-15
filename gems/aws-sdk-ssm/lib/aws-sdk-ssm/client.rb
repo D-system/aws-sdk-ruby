@@ -95,8 +95,8 @@ module Aws::SSM
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::SSM
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::SSM
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::SSM
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::SSM
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::SSM
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::SSM
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::SSM
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -567,7 +571,7 @@ module Aws::SSM
     # @example Request syntax with placeholder values
     #
     #   resp = client.add_tags_to_resource({
-    #     resource_type: "Document", # required, accepts Document, ManagedInstance, MaintenanceWindow, Parameter, PatchBaseline, OpsItem, OpsMetadata, Automation, Association
+    #     resource_type: "Document", # required, accepts Document, ManagedInstance, MaintenanceWindow, Parameter, PatchBaseline, OpsItem, OpsMetadata, Automation, Association, CloudConnector
     #     resource_id: "ResourceId", # required
     #     tags: [ # required
     #       {
@@ -1010,6 +1014,11 @@ module Aws::SSM
     #   action to create an association in multiple Regions and multiple
     #   accounts.
     #
+    #   <note markdown="1"> The `TargetLocationAlarmConfiguration` parameter is not supported by
+    #   State Manager.
+    #
+    #    </note>
+    #
     # @option params [Integer] :schedule_offset
     #   Number of days to wait after the scheduled day to run an association.
     #   For example, if you specified a cron schedule of `cron(0 0 ? * THU#2
@@ -1061,6 +1070,26 @@ module Aws::SSM
     # @option params [Types::AlarmConfiguration] :alarm_configuration
     #   The details for the CloudWatch alarm you want to apply to an
     #   automation or command.
+    #
+    # @option params [String] :association_dispatch_assume_role
+    #   A role used by association to take actions on your behalf. State
+    #   Manager will assume this role and call required APIs when dispatching
+    #   configurations to nodes. If not specified, [ service-linked role for
+    #   Systems Manager][1] will be used by default.
+    #
+    #   <note markdown="1"> It is recommended that you define a custom IAM role so that you have
+    #   full control of the permissions that State Manager has when taking
+    #   actions on your behalf.
+    #
+    #    Service-linked role support in State Manager is being phased out.
+    #   Associations relying on service-linked role may require updates in the
+    #   future to continue functioning properly.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/systems-manager/latest/userguide/using-service-linked-roles.html
     #
     # @return [Types::CreateAssociationResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1145,6 +1174,7 @@ module Aws::SSM
     #         },
     #       ],
     #     },
+    #     association_dispatch_assume_role: "AssociationDispatchAssumeRoleArn",
     #   })
     #
     # @example Response structure
@@ -1218,6 +1248,7 @@ module Aws::SSM
     #   resp.association_description.triggered_alarms #=> Array
     #   resp.association_description.triggered_alarms[0].name #=> String
     #   resp.association_description.triggered_alarms[0].state #=> String, one of "UNKNOWN", "ALARM"
+    #   resp.association_description.association_dispatch_assume_role #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/CreateAssociation AWS API Documentation
     #
@@ -1242,6 +1273,26 @@ module Aws::SSM
     #
     # @option params [required, Array<Types::CreateAssociationBatchRequestEntry>] :entries
     #   One or more associations.
+    #
+    # @option params [String] :association_dispatch_assume_role
+    #   A role used by association to take actions on your behalf. State
+    #   Manager will assume this role and call required APIs when dispatching
+    #   configurations to nodes. If not specified, [ service-linked role for
+    #   Systems Manager][1] will be used by default.
+    #
+    #   <note markdown="1"> It is recommended that you define a custom IAM role so that you have
+    #   full control of the permissions that State Manager has when taking
+    #   actions on your behalf.
+    #
+    #    Service-linked role support in State Manager is being phased out.
+    #   Associations relying on service-linked role may require updates in the
+    #   future to continue functioning properly.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/systems-manager/latest/userguide/using-service-linked-roles.html
     #
     # @return [Types::CreateAssociationBatchResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1325,6 +1376,7 @@ module Aws::SSM
     #         },
     #       },
     #     ],
+    #     association_dispatch_assume_role: "AssociationDispatchAssumeRoleArn",
     #   })
     #
     # @example Response structure
@@ -1399,6 +1451,7 @@ module Aws::SSM
     #   resp.successful[0].triggered_alarms #=> Array
     #   resp.successful[0].triggered_alarms[0].name #=> String
     #   resp.successful[0].triggered_alarms[0].state #=> String, one of "UNKNOWN", "ALARM"
+    #   resp.successful[0].association_dispatch_assume_role #=> String
     #   resp.failed #=> Array
     #   resp.failed[0].entry.name #=> String
     #   resp.failed[0].entry.instance_id #=> String
@@ -1461,6 +1514,80 @@ module Aws::SSM
     # @param [Hash] params ({})
     def create_association_batch(params = {}, options = {})
       req = build_request(:create_association_batch, params)
+      req.send_request(options)
+    end
+
+    # Creates a cloud connector that establishes a connection between
+    # Systems Manager and a third-party cloud environment.
+    #
+    # @option params [required, String] :display_name
+    #   A friendly name for the cloud connector.
+    #
+    # @option params [required, String] :role_arn
+    #   The Amazon Resource Name (ARN) of the IAM role that the cloud
+    #   connector uses to communicate with the third-party cloud environment.
+    #
+    # @option params [String] :description
+    #   A description for the cloud connector.
+    #
+    # @option params [required, Types::CloudConnectorConfiguration] :configuration
+    #   The configuration details for connecting to the third-party cloud
+    #   environment.
+    #
+    # @option params [required, String] :config_connector_arn
+    #   The ARN of the Amazon Web Services Config connector associated with
+    #   this cloud connector.
+    #
+    # @option params [Array<Types::Tag>] :tags
+    #   Optional metadata that you assign to a resource. Tags enable you to
+    #   categorize a resource in different ways, such as by purpose, owner, or
+    #   environment.
+    #
+    # @return [Types::CreateCloudConnectorResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateCloudConnectorResult#cloud_connector_id #cloud_connector_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_cloud_connector({
+    #     display_name: "DisplayName", # required
+    #     role_arn: "CloudConnectorIamRoleArn", # required
+    #     description: "CloudConnectorDescription",
+    #     configuration: { # required
+    #       azure_configuration: {
+    #         tenant_id: "AzureTenantId", # required
+    #         tenant_display_name: "AzureTenantDisplayName",
+    #         application_id: "AzureApplicationId", # required
+    #         application_display_name: "AzureApplicationDisplayName",
+    #         targets: {
+    #           subscriptions: [
+    #             {
+    #               id: "AzureSubscriptionId", # required
+    #               display_name: "AzureSubscriptionDisplayName",
+    #             },
+    #           ],
+    #         },
+    #       },
+    #     },
+    #     config_connector_arn: "ConfigConnectorArn", # required
+    #     tags: [
+    #       {
+    #         key: "TagKey", # required
+    #         value: "TagValue", # required
+    #       },
+    #     ],
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.cloud_connector_id #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/CreateCloudConnector AWS API Documentation
+    #
+    # @overload create_cloud_connector(params = {})
+    # @param [Hash] params ({})
+    def create_cloud_connector(params = {}, options = {})
+      req = build_request(:create_cloud_connector, params)
       req.send_request(options)
     end
 
@@ -1611,7 +1738,7 @@ module Aws::SSM
     #     name: "DocumentName", # required
     #     display_name: "DocumentDisplayName",
     #     version_name: "DocumentVersionName",
-    #     document_type: "Command", # accepts Command, Policy, Automation, Session, Package, ApplicationConfiguration, ApplicationConfigurationSchema, DeploymentStrategy, ChangeCalendar, Automation.ChangeTemplate, ProblemAnalysis, ProblemAnalysisTemplate, CloudFormation, ConformancePackTemplate, QuickSetup
+    #     document_type: "Command", # accepts Command, Policy, Automation, Session, Package, ApplicationConfiguration, ApplicationConfigurationSchema, DeploymentStrategy, ChangeCalendar, Automation.ChangeTemplate, ProblemAnalysis, ProblemAnalysisTemplate, CloudFormation, ConformancePackTemplate, QuickSetup, ManualApprovalPolicy, AutoApprovalPolicy
     #     document_format: "YAML", # accepts YAML, JSON, TEXT
     #     target_type: "TargetType",
     #     tags: [
@@ -1643,7 +1770,7 @@ module Aws::SSM
     #   resp.document_description.parameters[0].default_value #=> String
     #   resp.document_description.platform_types #=> Array
     #   resp.document_description.platform_types[0] #=> String, one of "Windows", "Linux", "MacOS"
-    #   resp.document_description.document_type #=> String, one of "Command", "Policy", "Automation", "Session", "Package", "ApplicationConfiguration", "ApplicationConfigurationSchema", "DeploymentStrategy", "ChangeCalendar", "Automation.ChangeTemplate", "ProblemAnalysis", "ProblemAnalysisTemplate", "CloudFormation", "ConformancePackTemplate", "QuickSetup"
+    #   resp.document_description.document_type #=> String, one of "Command", "Policy", "Automation", "Session", "Package", "ApplicationConfiguration", "ApplicationConfigurationSchema", "DeploymentStrategy", "ChangeCalendar", "Automation.ChangeTemplate", "ProblemAnalysis", "ProblemAnalysisTemplate", "CloudFormation", "ConformancePackTemplate", "QuickSetup", "ManualApprovalPolicy", "AutoApprovalPolicy"
     #   resp.document_description.schema_version #=> String
     #   resp.document_description.latest_version #=> String
     #   resp.document_description.default_version #=> String
@@ -1860,15 +1987,24 @@ module Aws::SSM
     #     This type of OpsItem is used for default OpsItems created by
     #     OpsCenter.
     #
+    #   * `/aws/insight`
+    #
+    #     This type of OpsItem is used by OpsCenter for aggregating and
+    #     reporting on duplicate OpsItems.
+    #
     #   * `/aws/changerequest`
     #
     #     This type of OpsItem is used by Change Manager for reviewing and
     #     approving or rejecting change requests.
     #
-    #   * `/aws/insight`
+    #     Amazon Web Services Systems Manager Change Manager is no longer open
+    #     to new customers. Existing customers can continue to use the service
+    #     as normal. For more information, see [Amazon Web Services Systems
+    #     Manager Change Manager availability change][1].
     #
-    #     This type of OpsItem is used by OpsCenter for aggregating and
-    #     reporting on duplicate OpsItems.
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/systems-manager/latest/userguide/change-manager-availability-change.html
     #
     # @option params [Hash<String,Types::OpsItemDataValue>] :operational_data
     #   Operational data is custom data that provides useful reference details
@@ -2164,10 +2300,20 @@ module Aws::SSM
     #
     #   : **All OSs**: Packages in the rejected patches list, and packages
     #     that include them as dependencies, aren't installed by Patch
-    #     Manager under any circumstances. If a package was installed before
-    #     it was added to the rejected patches list, or is installed outside
-    #     of Patch Manager afterward, it's considered noncompliant with the
-    #     patch baseline and its status is reported as `INSTALLED_REJECTED`.
+    #     Manager under any circumstances.
+    #
+    #     State value assignment for patch compliance:
+    #
+    #     * If a package was installed before it was added to the rejected
+    #       patches list, or is installed outside of Patch Manager afterward,
+    #       it's considered noncompliant with the patch baseline and its
+    #       status is reported as `INSTALLED_REJECTED`.
+    #
+    #     * If an update attempts to install a dependency package that is now
+    #       rejected by the baseline, when previous versions of the package
+    #       were not rejected, the package being updated is reported as
+    #       `MISSING` for `SCAN` operations and as `FAILED` for `INSTALL`
+    #       operations.
     #
     # @option params [String] :description
     #   A description of the patch baseline.
@@ -2458,6 +2604,34 @@ module Aws::SSM
     # @param [Hash] params ({})
     def delete_association(params = {}, options = {})
       req = build_request(:delete_association, params)
+      req.send_request(options)
+    end
+
+    # Deletes a cloud connector.
+    #
+    # @option params [required, String] :cloud_connector_id
+    #   The ID of the cloud connector to delete.
+    #
+    # @return [Types::DeleteCloudConnectorResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DeleteCloudConnectorResult#cloud_connector_id #cloud_connector_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_cloud_connector({
+    #     cloud_connector_id: "CloudConnectorId", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.cloud_connector_id #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/DeleteCloudConnector AWS API Documentation
+    #
+    # @overload delete_cloud_connector(params = {})
+    # @param [Hash] params ({})
+    def delete_cloud_connector(params = {}, options = {})
+      req = build_request(:delete_cloud_connector, params)
       req.send_request(options)
     end
 
@@ -3160,6 +3334,7 @@ module Aws::SSM
     #   resp.association_description.triggered_alarms #=> Array
     #   resp.association_description.triggered_alarms[0].name #=> String
     #   resp.association_description.triggered_alarms[0].state #=> String, one of "UNKNOWN", "ALARM"
+    #   resp.association_description.association_dispatch_assume_role #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/DescribeAssociation AWS API Documentation
     #
@@ -3374,6 +3549,7 @@ module Aws::SSM
     #   resp.automation_execution_metadata_list[0].current_step_name #=> String
     #   resp.automation_execution_metadata_list[0].current_action #=> String
     #   resp.automation_execution_metadata_list[0].failure_message #=> String
+    #   resp.automation_execution_metadata_list[0].warning_message #=> String
     #   resp.automation_execution_metadata_list[0].target_parameter_name #=> String
     #   resp.automation_execution_metadata_list[0].targets #=> Array
     #   resp.automation_execution_metadata_list[0].targets[0].key #=> String
@@ -3397,7 +3573,7 @@ module Aws::SSM
     #   resp.automation_execution_metadata_list[0].triggered_alarms[0].name #=> String
     #   resp.automation_execution_metadata_list[0].triggered_alarms[0].state #=> String, one of "UNKNOWN", "ALARM"
     #   resp.automation_execution_metadata_list[0].target_locations_url #=> String
-    #   resp.automation_execution_metadata_list[0].automation_subtype #=> String, one of "ChangeRequest"
+    #   resp.automation_execution_metadata_list[0].automation_subtype #=> String, one of "ChangeRequest", "AccessRequest"
     #   resp.automation_execution_metadata_list[0].scheduled_time #=> Time
     #   resp.automation_execution_metadata_list[0].runbooks #=> Array
     #   resp.automation_execution_metadata_list[0].runbooks[0].document_name #=> String
@@ -3515,6 +3691,7 @@ module Aws::SSM
     #   resp.step_executions[0].outputs["AutomationParameterKey"][0] #=> String
     #   resp.step_executions[0].response #=> String
     #   resp.step_executions[0].failure_message #=> String
+    #   resp.step_executions[0].warning_message #=> String
     #   resp.step_executions[0].failure_details.failure_stage #=> String
     #   resp.step_executions[0].failure_details.failure_type #=> String
     #   resp.step_executions[0].failure_details.details #=> Hash
@@ -3745,6 +3922,12 @@ module Aws::SSM
     # @option params [required, String] :name
     #   The name of the SSM document.
     #
+    #   <note markdown="1"> If you're calling a shared SSM document from a different Amazon Web
+    #   Services account, `Name` is the full Amazon Resource Name (ARN) of the
+    #   document.
+    #
+    #    </note>
+    #
     # @option params [String] :document_version
     #   The document version for which you want information. Can be a specific
     #   version or the default version.
@@ -3787,7 +3970,7 @@ module Aws::SSM
     #   resp.document.parameters[0].default_value #=> String
     #   resp.document.platform_types #=> Array
     #   resp.document.platform_types[0] #=> String, one of "Windows", "Linux", "MacOS"
-    #   resp.document.document_type #=> String, one of "Command", "Policy", "Automation", "Session", "Package", "ApplicationConfiguration", "ApplicationConfigurationSchema", "DeploymentStrategy", "ChangeCalendar", "Automation.ChangeTemplate", "ProblemAnalysis", "ProblemAnalysisTemplate", "CloudFormation", "ConformancePackTemplate", "QuickSetup"
+    #   resp.document.document_type #=> String, one of "Command", "Policy", "Automation", "Session", "Package", "ApplicationConfiguration", "ApplicationConfigurationSchema", "DeploymentStrategy", "ChangeCalendar", "Automation.ChangeTemplate", "ProblemAnalysis", "ProblemAnalysisTemplate", "CloudFormation", "ConformancePackTemplate", "QuickSetup", "ManualApprovalPolicy", "AutoApprovalPolicy"
     #   resp.document.schema_version #=> String
     #   resp.document.latest_version #=> String
     #   resp.document.default_version #=> String
@@ -4149,7 +4332,8 @@ module Aws::SSM
     #   resp.instance_information_list[0].association_overview.instance_association_status_aggregated_count #=> Hash
     #   resp.instance_information_list[0].association_overview.instance_association_status_aggregated_count["StatusName"] #=> Integer
     #   resp.instance_information_list[0].source_id #=> String
-    #   resp.instance_information_list[0].source_type #=> String, one of "AWS::EC2::Instance", "AWS::IoT::Thing", "AWS::SSM::ManagedInstance"
+    #   resp.instance_information_list[0].source_type #=> String, one of "AWS::EC2::Instance", "AWS::IoT::Thing", "AWS::SSM::ManagedInstance", "Microsoft.Compute/virtualMachines"
+    #   resp.instance_information_list[0].source_location #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/DescribeInstanceInformation AWS API Documentation
@@ -4469,7 +4653,9 @@ module Aws::SSM
     #   resp.instance_properties[0].association_overview.instance_association_status_aggregated_count #=> Hash
     #   resp.instance_properties[0].association_overview.instance_association_status_aggregated_count["StatusName"] #=> Integer
     #   resp.instance_properties[0].source_id #=> String
-    #   resp.instance_properties[0].source_type #=> String, one of "AWS::EC2::Instance", "AWS::IoT::Thing", "AWS::SSM::ManagedInstance"
+    #   resp.instance_properties[0].source_type #=> String, one of "AWS::EC2::Instance", "AWS::IoT::Thing", "AWS::SSM::ManagedInstance", "Microsoft.Compute/virtualMachines"
+    #   resp.instance_properties[0].source_location #=> String
+    #   resp.instance_properties[0].availability_zone #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/DescribeInstanceProperties AWS API Documentation
@@ -5194,7 +5380,7 @@ module Aws::SSM
     #   resp = client.describe_ops_items({
     #     ops_item_filters: [
     #       {
-    #         key: "Status", # required, accepts Status, CreatedBy, Source, Priority, Title, OpsItemId, CreatedTime, LastModifiedTime, ActualStartTime, ActualEndTime, PlannedStartTime, PlannedEndTime, OperationalData, OperationalDataKey, OperationalDataValue, ResourceId, AutomationId, Category, Severity, OpsItemType, ChangeRequestByRequesterArn, ChangeRequestByRequesterName, ChangeRequestByApproverArn, ChangeRequestByApproverName, ChangeRequestByTemplate, ChangeRequestByTargetsResourceGroup, InsightByType, AccountId
+    #         key: "Status", # required, accepts Status, CreatedBy, Source, Priority, Title, OpsItemId, CreatedTime, LastModifiedTime, ActualStartTime, ActualEndTime, PlannedStartTime, PlannedEndTime, OperationalData, OperationalDataKey, OperationalDataValue, ResourceId, AutomationId, Category, Severity, OpsItemType, AccessRequestByRequesterArn, AccessRequestByRequesterId, AccessRequestByApproverArn, AccessRequestByApproverId, AccessRequestBySourceAccountId, AccessRequestBySourceOpsItemId, AccessRequestBySourceRegion, AccessRequestByIsReplica, AccessRequestByTargetResourceId, ChangeRequestByRequesterArn, ChangeRequestByRequesterName, ChangeRequestByApproverArn, ChangeRequestByApproverName, ChangeRequestByTemplate, ChangeRequestByTargetsResourceGroup, InsightByType, AccountId
     #         values: ["OpsItemFilterValue"], # required
     #         operator: "Equal", # required, accepts Equal, Contains, GreaterThan, LessThan
     #       },
@@ -5213,7 +5399,7 @@ module Aws::SSM
     #   resp.ops_item_summaries[0].last_modified_time #=> Time
     #   resp.ops_item_summaries[0].priority #=> Integer
     #   resp.ops_item_summaries[0].source #=> String
-    #   resp.ops_item_summaries[0].status #=> String, one of "Open", "InProgress", "Resolved", "Pending", "TimedOut", "Cancelling", "Cancelled", "Failed", "CompletedWithSuccess", "CompletedWithFailure", "Scheduled", "RunbookInProgress", "PendingChangeCalendarOverride", "ChangeCalendarOverrideApproved", "ChangeCalendarOverrideRejected", "PendingApproval", "Approved", "Rejected", "Closed"
+    #   resp.ops_item_summaries[0].status #=> String, one of "Open", "InProgress", "Resolved", "Pending", "TimedOut", "Cancelling", "Cancelled", "Failed", "CompletedWithSuccess", "CompletedWithFailure", "Scheduled", "RunbookInProgress", "PendingChangeCalendarOverride", "ChangeCalendarOverrideApproved", "ChangeCalendarOverrideRejected", "PendingApproval", "Approved", "Revoked", "Rejected", "Closed"
     #   resp.ops_item_summaries[0].ops_item_id #=> String
     #   resp.ops_item_summaries[0].title #=> String
     #   resp.ops_item_summaries[0].operational_data #=> Hash
@@ -5247,6 +5433,11 @@ module Aws::SSM
     # and returns the matching values up to that point and a `NextToken`.
     # You can specify the `NextToken` in a subsequent call to get the next
     # set of results.
+    #
+    # Parameter names can't contain spaces. The service removes any spaces
+    # specified for the beginning or end of a parameter name. If the
+    # specified name for a parameter contains spaces between characters, the
+    # request fails with a `ValidationException` error.
     #
     # If you change the KMS key alias for the KMS key used to encrypt a
     # parameter, then you must also update the key alias the parameter uses
@@ -5674,7 +5865,7 @@ module Aws::SSM
     #     next_token: "NextToken",
     #     filters: [
     #       {
-    #         key: "InvokedAfter", # required, accepts InvokedAfter, InvokedBefore, Target, Owner, Status, SessionId
+    #         key: "InvokedAfter", # required, accepts InvokedAfter, InvokedBefore, Target, Owner, Status, SessionId, AccessType
     #         value: "SessionFilterValue", # required
     #       },
     #     ],
@@ -5695,6 +5886,7 @@ module Aws::SSM
     #   resp.sessions[0].output_url.s3_output_url #=> String
     #   resp.sessions[0].output_url.cloud_watch_output_url #=> String
     #   resp.sessions[0].max_session_duration #=> String
+    #   resp.sessions[0].access_type #=> String, one of "Standard", "JustInTime"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/DescribeSessions AWS API Documentation
@@ -5734,6 +5926,39 @@ module Aws::SSM
     # @param [Hash] params ({})
     def disassociate_ops_item_related_item(params = {}, options = {})
       req = build_request(:disassociate_ops_item_related_item, params)
+      req.send_request(options)
+    end
+
+    # Returns a credentials set to be used with just-in-time node access.
+    #
+    # @option params [required, String] :access_request_id
+    #   The ID of a just-in-time node access request.
+    #
+    # @return [Types::GetAccessTokenResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetAccessTokenResponse#credentials #credentials} => Types::Credentials
+    #   * {Types::GetAccessTokenResponse#access_request_status #access_request_status} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_access_token({
+    #     access_request_id: "AccessRequestId", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.credentials.access_key_id #=> String
+    #   resp.credentials.secret_access_key #=> String
+    #   resp.credentials.session_token #=> String
+    #   resp.credentials.expiration_time #=> Time
+    #   resp.access_request_status #=> String, one of "Approved", "Rejected", "Revoked", "Expired", "Pending"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/GetAccessToken AWS API Documentation
+    #
+    # @overload get_access_token(params = {})
+    # @param [Hash] params ({})
+    def get_access_token(params = {}, options = {})
+      req = build_request(:get_access_token, params)
       req.send_request(options)
     end
 
@@ -5779,6 +6004,7 @@ module Aws::SSM
     #   resp.automation_execution.step_executions[0].outputs["AutomationParameterKey"][0] #=> String
     #   resp.automation_execution.step_executions[0].response #=> String
     #   resp.automation_execution.step_executions[0].failure_message #=> String
+    #   resp.automation_execution.step_executions[0].warning_message #=> String
     #   resp.automation_execution.step_executions[0].failure_details.failure_stage #=> String
     #   resp.automation_execution.step_executions[0].failure_details.failure_type #=> String
     #   resp.automation_execution.step_executions[0].failure_details.details #=> Hash
@@ -5832,6 +6058,7 @@ module Aws::SSM
     #   resp.automation_execution.outputs["AutomationParameterKey"] #=> Array
     #   resp.automation_execution.outputs["AutomationParameterKey"][0] #=> String
     #   resp.automation_execution.failure_message #=> String
+    #   resp.automation_execution.warning_message #=> String
     #   resp.automation_execution.mode #=> String, one of "Auto", "Interactive"
     #   resp.automation_execution.parent_automation_execution_id #=> String
     #   resp.automation_execution.executed_by #=> String
@@ -5884,7 +6111,7 @@ module Aws::SSM
     #   resp.automation_execution.triggered_alarms[0].name #=> String
     #   resp.automation_execution.triggered_alarms[0].state #=> String, one of "UNKNOWN", "ALARM"
     #   resp.automation_execution.target_locations_url #=> String
-    #   resp.automation_execution.automation_subtype #=> String, one of "ChangeRequest"
+    #   resp.automation_execution.automation_subtype #=> String, one of "ChangeRequest", "AccessRequest"
     #   resp.automation_execution.scheduled_time #=> Time
     #   resp.automation_execution.runbooks #=> Array
     #   resp.automation_execution.runbooks[0].document_name #=> String
@@ -6000,6 +6227,54 @@ module Aws::SSM
     # @param [Hash] params ({})
     def get_calendar_state(params = {}, options = {})
       req = build_request(:get_calendar_state, params)
+      req.send_request(options)
+    end
+
+    # Returns detailed information about a cloud connector.
+    #
+    # @option params [required, String] :cloud_connector_id
+    #   The ID of the cloud connector to retrieve information about.
+    #
+    # @return [Types::GetCloudConnectorResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetCloudConnectorResult#cloud_connector_arn #cloud_connector_arn} => String
+    #   * {Types::GetCloudConnectorResult#display_name #display_name} => String
+    #   * {Types::GetCloudConnectorResult#description #description} => String
+    #   * {Types::GetCloudConnectorResult#role_arn #role_arn} => String
+    #   * {Types::GetCloudConnectorResult#configuration #configuration} => Types::CloudConnectorConfiguration
+    #   * {Types::GetCloudConnectorResult#config_connector_arn #config_connector_arn} => String
+    #   * {Types::GetCloudConnectorResult#created_at #created_at} => Time
+    #   * {Types::GetCloudConnectorResult#updated_at #updated_at} => Time
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_cloud_connector({
+    #     cloud_connector_id: "CloudConnectorId", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.cloud_connector_arn #=> String
+    #   resp.display_name #=> String
+    #   resp.description #=> String
+    #   resp.role_arn #=> String
+    #   resp.configuration.azure_configuration.tenant_id #=> String
+    #   resp.configuration.azure_configuration.tenant_display_name #=> String
+    #   resp.configuration.azure_configuration.application_id #=> String
+    #   resp.configuration.azure_configuration.application_display_name #=> String
+    #   resp.configuration.azure_configuration.targets.subscriptions #=> Array
+    #   resp.configuration.azure_configuration.targets.subscriptions[0].id #=> String
+    #   resp.configuration.azure_configuration.targets.subscriptions[0].display_name #=> String
+    #   resp.config_connector_arn #=> String
+    #   resp.created_at #=> Time
+    #   resp.updated_at #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/GetCloudConnector AWS API Documentation
+    #
+    # @overload get_cloud_connector(params = {})
+    # @param [Hash] params ({})
+    def get_cloud_connector(params = {}, options = {})
+      req = build_request(:get_cloud_connector, params)
       req.send_request(options)
     end
 
@@ -6198,6 +6473,13 @@ module Aws::SSM
     # @option params [Types::BaselineOverride] :baseline_override
     #   Defines the basic information about a patch baseline override.
     #
+    # @option params [Boolean] :use_s3_dual_stack_endpoint
+    #   Specifies whether to use S3 dualstack endpoints for the patch snapshot
+    #   download URL. Set to `true` to receive a presigned URL that supports
+    #   both IPv4 and IPv6 connectivity. Set to `false` to use standard
+    #   IPv4-only endpoints. Default is `false`. This parameter is required
+    #   for managed nodes in IPv6-only environments.
+    #
     # @return [Types::GetDeployablePatchSnapshotForInstanceResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::GetDeployablePatchSnapshotForInstanceResult#instance_id #instance_id} => String
@@ -6252,6 +6534,7 @@ module Aws::SSM
     #       ],
     #       available_security_updates_compliance_status: "COMPLIANT", # accepts COMPLIANT, NON_COMPLIANT
     #     },
+    #     use_s3_dual_stack_endpoint: false,
     #   })
     #
     # @example Response structure
@@ -6323,7 +6606,7 @@ module Aws::SSM
     #   resp.status #=> String, one of "Creating", "Active", "Updating", "Deleting", "Failed"
     #   resp.status_information #=> String
     #   resp.content #=> String
-    #   resp.document_type #=> String, one of "Command", "Policy", "Automation", "Session", "Package", "ApplicationConfiguration", "ApplicationConfigurationSchema", "DeploymentStrategy", "ChangeCalendar", "Automation.ChangeTemplate", "ProblemAnalysis", "ProblemAnalysisTemplate", "CloudFormation", "ConformancePackTemplate", "QuickSetup"
+    #   resp.document_type #=> String, one of "Command", "Policy", "Automation", "Session", "Package", "ApplicationConfiguration", "ApplicationConfigurationSchema", "DeploymentStrategy", "ChangeCalendar", "Automation.ChangeTemplate", "ProblemAnalysis", "ProblemAnalysisTemplate", "CloudFormation", "ConformancePackTemplate", "QuickSetup", "ManualApprovalPolicy", "AutoApprovalPolicy"
     #   resp.document_format #=> String, one of "YAML", "JSON", "TEXT"
     #   resp.requires #=> Array
     #   resp.requires[0].name #=> String
@@ -6955,7 +7238,7 @@ module Aws::SSM
     #   resp.ops_item.priority #=> Integer
     #   resp.ops_item.related_ops_items #=> Array
     #   resp.ops_item.related_ops_items[0].ops_item_id #=> String
-    #   resp.ops_item.status #=> String, one of "Open", "InProgress", "Resolved", "Pending", "TimedOut", "Cancelling", "Cancelled", "Failed", "CompletedWithSuccess", "CompletedWithFailure", "Scheduled", "RunbookInProgress", "PendingChangeCalendarOverride", "ChangeCalendarOverrideApproved", "ChangeCalendarOverrideRejected", "PendingApproval", "Approved", "Rejected", "Closed"
+    #   resp.ops_item.status #=> String, one of "Open", "InProgress", "Resolved", "Pending", "TimedOut", "Cancelling", "Cancelled", "Failed", "CompletedWithSuccess", "CompletedWithFailure", "Scheduled", "RunbookInProgress", "PendingChangeCalendarOverride", "ChangeCalendarOverrideApproved", "ChangeCalendarOverrideRejected", "PendingApproval", "Approved", "Revoked", "Rejected", "Closed"
     #   resp.ops_item.ops_item_id #=> String
     #   resp.ops_item.version #=> String
     #   resp.ops_item.title #=> String
@@ -7124,10 +7407,38 @@ module Aws::SSM
     # Get information about a single parameter by specifying the parameter
     # name.
     #
+    # Parameter names can't contain spaces. The service removes any spaces
+    # specified for the beginning or end of a parameter name. If the
+    # specified name for a parameter contains spaces between characters, the
+    # request fails with a `ValidationException` error.
+    #
     # <note markdown="1"> To get information about more than one parameter at a time, use the
     # GetParameters operation.
     #
     #  </note>
+    #
+    # <note markdown="1"> Parameter Store throughput defines the number of API transactions per
+    # second (TPS) that Systems Manager can process. This applies to
+    # `GetParameter`, `GetParameters`, and `PutParameter` API calls for your
+    # Amazon Web Services account and Amazon Web Services Region. By
+    # default, Parameter Store is configured with a standard throughput
+    # quota suitable for low- to moderate-volume workloads. Applications
+    # that retrieve configuration data infrequently or operate at smaller
+    # scale can use this default setting without additional cost.
+    #
+    #  For higher-volume workloads, you can enable higher throughput. This
+    # increases the maximum number of supported transactions per second for
+    # your account and Region. Increased throughput supports applications
+    # and workloads that need concurrent access to multiple parameters. If
+    # you experience `ThrottlingException: Rate exceeded` errors, enable
+    # higher throughput. For more information, see [Changing Parameter Store
+    # throughput][1].
+    #
+    #  </note>
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/systems-manager/latest/userguide/parameter-store-throughput.html
     #
     # @option params [required, String] :name
     #   The name or Amazon Resource Name (ARN) of the parameter that you want
@@ -7182,6 +7493,11 @@ module Aws::SSM
     end
 
     # Retrieves the history of all changes to a parameter.
+    #
+    # Parameter names can't contain spaces. The service removes any spaces
+    # specified for the beginning or end of a parameter name. If the
+    # specified name for a parameter contains spaces between characters, the
+    # request fails with a `ValidationException` error.
     #
     # If you change the KMS key alias for the KMS key used to encrypt a
     # parameter, then you must also update the key alias the parameter uses
@@ -7261,6 +7577,34 @@ module Aws::SSM
     #
     #  </note>
     #
+    # Parameter names can't contain spaces. The service removes any spaces
+    # specified for the beginning or end of a parameter name. If the
+    # specified name for a parameter contains spaces between characters, the
+    # request fails with a `ValidationException` error.
+    #
+    # <note markdown="1"> Parameter Store throughput defines the number of API transactions per
+    # second (TPS) that Systems Manager can process. This applies to
+    # `GetParameter`, `GetParameters`, and `PutParameter` API calls for your
+    # Amazon Web Services account and Amazon Web Services Region. By
+    # default, Parameter Store is configured with a standard throughput
+    # quota suitable for low- to moderate-volume workloads. Applications
+    # that retrieve configuration data infrequently or operate at smaller
+    # scale can use this default setting without additional cost.
+    #
+    #  For higher-volume workloads, you can enable higher throughput. This
+    # increases the maximum number of supported transactions per second for
+    # your account and Region. Increased throughput supports applications
+    # and workloads that need concurrent access to multiple parameters. If
+    # you experience `ThrottlingException: Rate exceeded` errors, enable
+    # higher throughput. For more information, see [Changing Parameter Store
+    # throughput][1].
+    #
+    #  </note>
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/systems-manager/latest/userguide/parameter-store-throughput.html
+    #
     # @option params [required, Array<String>] :names
     #   The names or Amazon Resource Names (ARNs) of the parameters that you
     #   want to query. For parameters shared with you from another account,
@@ -7334,6 +7678,11 @@ module Aws::SSM
     # and returns the matching values up to that point and a `NextToken`.
     # You can specify the `NextToken` in a subsequent call to get the next
     # set of results.
+    #
+    # Parameter names can't contain spaces. The service removes any spaces
+    # specified for the beginning or end of a parameter name. If the
+    # specified name for a parameter contains spaces between characters, the
+    # request fails with a `ValidationException` error.
     #
     # @option params [required, String] :path
     #   The hierarchy for the parameter. Hierarchies start with a forward
@@ -7516,7 +7865,7 @@ module Aws::SSM
     #
     # @option params [String] :operating_system
     #   Returns the operating system rule specified for patch groups using the
-    #   patch baseline.
+    #   patch baseline. The default value is `WINDOWS`.
     #
     # @return [Types::GetPatchBaselineForPatchGroupResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -7697,6 +8046,11 @@ module Aws::SSM
     #   label isn't associated with a parameter and the system displays it
     #   in the list of InvalidLabels.
     #
+    # * Parameter names can't contain spaces. The service removes any
+    #   spaces specified for the beginning or end of a parameter name. If
+    #   the specified name for a parameter contains spaces between
+    #   characters, the request fails with a `ValidationException` error.
+    #
     # @option params [required, String] :name
     #   The parameter name on which you want to attach one or more labels.
     #
@@ -7824,6 +8178,7 @@ module Aws::SSM
     #   resp.association_versions[0].target_maps[0] #=> Hash
     #   resp.association_versions[0].target_maps[0]["TargetMapKey"] #=> Array
     #   resp.association_versions[0].target_maps[0]["TargetMapKey"][0] #=> String
+    #   resp.association_versions[0].association_dispatch_assume_role #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/ListAssociationVersions AWS API Documentation
@@ -7873,7 +8228,7 @@ module Aws::SSM
     #   resp = client.list_associations({
     #     association_filter_list: [
     #       {
-    #         key: "InstanceId", # required, accepts InstanceId, Name, AssociationId, AssociationStatusName, LastExecutedBefore, LastExecutedAfter, AssociationName, ResourceGroupName
+    #         key: "InstanceId", # required, accepts InstanceId, Name, AssociationId, AssociationStatusName, LastExecutedBefore, LastExecutedAfter, AssociationName, ResourceGroupName, CloudConnectorId
     #         value: "AssociationFilterValue", # required
     #       },
     #     ],
@@ -7914,6 +8269,60 @@ module Aws::SSM
     # @param [Hash] params ({})
     def list_associations(params = {}, options = {})
       req = build_request(:list_associations, params)
+      req.send_request(options)
+    end
+
+    # Returns a list of cloud connectors in the current Amazon Web Services
+    # account and Amazon Web Services Region.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of items to return for this call.
+    #
+    # @option params [String] :next_token
+    #   The token for the next set of items to return. (You received this
+    #   token from a previous call.)
+    #
+    # @option params [Array<Types::CloudConnectorFilter>] :filters
+    #   One or more filters to limit the cloud connectors returned in the
+    #   response.
+    #
+    # @return [Types::ListCloudConnectorsResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListCloudConnectorsResult#cloud_connectors #cloud_connectors} => Array&lt;Types::CloudConnectorSummary&gt;
+    #   * {Types::ListCloudConnectorsResult#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_cloud_connectors({
+    #     max_results: 1,
+    #     next_token: "NextToken",
+    #     filters: [
+    #       {
+    #         filter_key: "SubscriptionId", # accepts SubscriptionId, TenantId
+    #         filter_values: ["CloudConnectorFilterValue"],
+    #       },
+    #     ],
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.cloud_connectors #=> Array
+    #   resp.cloud_connectors[0].cloud_connector_id #=> String
+    #   resp.cloud_connectors[0].display_name #=> String
+    #   resp.cloud_connectors[0].description #=> String
+    #   resp.cloud_connectors[0].role_arn #=> String
+    #   resp.cloud_connectors[0].created_at #=> Time
+    #   resp.cloud_connectors[0].updated_at #=> Time
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/ListCloudConnectors AWS API Documentation
+    #
+    # @overload list_cloud_connectors(params = {})
+    # @param [Hash] params ({})
+    def list_cloud_connectors(params = {}, options = {})
+      req = build_request(:list_cloud_connectors, params)
       req.send_request(options)
     end
 
@@ -8264,8 +8673,17 @@ module Aws::SSM
       req.send_request(options)
     end
 
+    # Amazon Web Services Systems Manager Change Manager is no longer open
+    # to new customers. Existing customers can continue to use the service
+    # as normal. For more information, see [Amazon Web Services Systems
+    # Manager Change Manager availability change][1].
+    #
     # Information about approval reviews for a version of a change template
     # in Change Manager.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/systems-manager/latest/userguide/change-manager-availability-change.html
     #
     # @option params [required, String] :name
     #   The name of the change template.
@@ -8450,7 +8868,7 @@ module Aws::SSM
     #   resp.document_identifiers[0].platform_types #=> Array
     #   resp.document_identifiers[0].platform_types[0] #=> String, one of "Windows", "Linux", "MacOS"
     #   resp.document_identifiers[0].document_version #=> String
-    #   resp.document_identifiers[0].document_type #=> String, one of "Command", "Policy", "Automation", "Session", "Package", "ApplicationConfiguration", "ApplicationConfigurationSchema", "DeploymentStrategy", "ChangeCalendar", "Automation.ChangeTemplate", "ProblemAnalysis", "ProblemAnalysisTemplate", "CloudFormation", "ConformancePackTemplate", "QuickSetup"
+    #   resp.document_identifiers[0].document_type #=> String, one of "Command", "Policy", "Automation", "Session", "Package", "ApplicationConfiguration", "ApplicationConfigurationSchema", "DeploymentStrategy", "ChangeCalendar", "Automation.ChangeTemplate", "ProblemAnalysis", "ProblemAnalysisTemplate", "CloudFormation", "ConformancePackTemplate", "QuickSetup", "ManualApprovalPolicy", "AutoApprovalPolicy"
     #   resp.document_identifiers[0].schema_version #=> String
     #   resp.document_identifiers[0].document_format #=> String, one of "YAML", "JSON", "TEXT"
     #   resp.document_identifiers[0].target_type #=> String
@@ -8631,7 +9049,7 @@ module Aws::SSM
     #     sync_name: "ResourceDataSyncName",
     #     filters: [
     #       {
-    #         key: "AgentType", # required, accepts AgentType, AgentVersion, ComputerName, InstanceId, InstanceStatus, IpAddress, ManagedStatus, PlatformName, PlatformType, PlatformVersion, ResourceType, OrganizationalUnitId, OrganizationalUnitPath, Region, AccountId
+    #         key: "AgentType", # required, accepts AgentType, AgentVersion, ComputerName, InstanceId, InstanceStatus, IpAddress, ManagedStatus, PlatformName, PlatformType, PlatformVersion, ResourceType, OrganizationalUnitId, OrganizationalUnitPath, Region, AccountId, SourceType, SourceId, SourceLocation, AvailabilityZone, AvailabilityZoneId
     #         values: ["NodeFilterValue"], # required
     #         type: "Equal", # accepts Equal, NotEqual, BeginWith
     #       },
@@ -8655,10 +9073,16 @@ module Aws::SSM
     #   resp.nodes[0].node_type.instance.instance_status #=> String
     #   resp.nodes[0].node_type.instance.ip_address #=> String
     #   resp.nodes[0].node_type.instance.managed_status #=> String, one of "All", "Managed", "Unmanaged"
+    #   resp.nodes[0].node_type.instance.name #=> String
     #   resp.nodes[0].node_type.instance.platform_type #=> String, one of "Windows", "Linux", "MacOS"
     #   resp.nodes[0].node_type.instance.platform_name #=> String
     #   resp.nodes[0].node_type.instance.platform_version #=> String
     #   resp.nodes[0].node_type.instance.resource_type #=> String, one of "ManagedInstance", "EC2Instance"
+    #   resp.nodes[0].node_type.instance.source_type #=> String, one of "AWS::EC2::Instance", "AWS::IoT::Thing", "AWS::SSM::ManagedInstance", "Microsoft.Compute/virtualMachines"
+    #   resp.nodes[0].node_type.instance.source_id #=> String
+    #   resp.nodes[0].node_type.instance.source_location #=> String
+    #   resp.nodes[0].node_type.instance.availability_zone #=> String
+    #   resp.nodes[0].node_type.instance.availability_zone_id #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/ListNodes AWS API Documentation
@@ -8758,7 +9182,7 @@ module Aws::SSM
     #     sync_name: "ResourceDataSyncName",
     #     filters: [
     #       {
-    #         key: "AgentType", # required, accepts AgentType, AgentVersion, ComputerName, InstanceId, InstanceStatus, IpAddress, ManagedStatus, PlatformName, PlatformType, PlatformVersion, ResourceType, OrganizationalUnitId, OrganizationalUnitPath, Region, AccountId
+    #         key: "AgentType", # required, accepts AgentType, AgentVersion, ComputerName, InstanceId, InstanceStatus, IpAddress, ManagedStatus, PlatformName, PlatformType, PlatformVersion, ResourceType, OrganizationalUnitId, OrganizationalUnitPath, Region, AccountId, SourceType, SourceId, SourceLocation, AvailabilityZone, AvailabilityZoneId
     #         values: ["NodeFilterValue"], # required
     #         type: "Equal", # accepts Equal, NotEqual, BeginWith
     #       },
@@ -8767,7 +9191,7 @@ module Aws::SSM
     #       {
     #         aggregator_type: "Count", # required, accepts Count
     #         type_name: "Instance", # required, accepts Instance
-    #         attribute_name: "AgentVersion", # required, accepts AgentVersion, PlatformName, PlatformType, PlatformVersion, Region, ResourceType
+    #         attribute_name: "AgentVersion", # required, accepts AgentVersion, PlatformName, PlatformType, PlatformVersion, Region, ResourceType, SourceType, AvailabilityZone
     #         aggregators: {
     #           # recursive NodeAggregatorList
     #         },
@@ -9147,7 +9571,7 @@ module Aws::SSM
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_tags_for_resource({
-    #     resource_type: "Document", # required, accepts Document, ManagedInstance, MaintenanceWindow, Parameter, PatchBaseline, OpsItem, OpsMetadata, Automation, Association
+    #     resource_type: "Document", # required, accepts Document, ManagedInstance, MaintenanceWindow, Parameter, PatchBaseline, OpsItem, OpsMetadata, Automation, Association, CloudConnector
     #     resource_id: "ResourceId", # required
     #   })
     #
@@ -9233,6 +9657,14 @@ module Aws::SSM
     #
     # * ExecutionTime. The time the patch, association, or custom compliance
     #   item was applied to the managed node.
+    #
+    #   For State Manager associations, this represents the time when
+    #   compliance status was captured by the Systems Manager service during
+    #   its internal compliance aggregation workflow, not necessarily when
+    #   the association was executed on the managed node. State Manager
+    #   updates compliance information for all associations on an instance
+    #   whenever any association executes, which may result in multiple
+    #   associations showing the same execution time.
     #
     # * Id: The patch, association, or custom compliance ID.
     #
@@ -9395,6 +9827,29 @@ module Aws::SSM
 
     # Create or update a parameter in Parameter Store.
     #
+    # <note markdown="1"> Parameter Store throughput defines the number of API transactions per
+    # second (TPS) that Systems Manager can process. This applies to
+    # `GetParameter`, `GetParameters`, and `PutParameter` API calls for your
+    # Amazon Web Services account and Amazon Web Services Region. By
+    # default, Parameter Store is configured with a standard throughput
+    # quota suitable for low- to moderate-volume workloads. Applications
+    # that retrieve configuration data infrequently or operate at smaller
+    # scale can use this default setting without additional cost.
+    #
+    #  For higher-volume workloads, you can enable higher throughput. This
+    # increases the maximum number of supported transactions per second for
+    # your account and Region. Increased throughput supports applications
+    # and workloads that need concurrent access to multiple parameters. If
+    # you experience `ThrottlingException: Rate exceeded` errors, enable
+    # higher throughput. For more information, see [Changing Parameter Store
+    # throughput][1].
+    #
+    #  </note>
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/systems-manager/latest/userguide/parameter-store-throughput.html
+    #
     # @option params [required, String] :name
     #   The fully qualified name of the parameter that you want to create or
     #   update.
@@ -9425,7 +9880,10 @@ module Aws::SSM
     #     hierarchies in parameter names. For example:
     #     `/Dev/Production/East/Project-ABC/MyParameter`
     #
-    #   * A parameter name can't include spaces.
+    #   * Parameter names can't contain spaces. The service removes any
+    #     spaces specified for the beginning or end of a parameter name. If
+    #     the specified name for a parameter contains spaces between
+    #     characters, the request fails with a `ValidationException` error.
     #
     #   * Parameter hierarchies are limited to a maximum depth of fifteen
     #     levels.
@@ -10286,7 +10744,7 @@ module Aws::SSM
     # @example Request syntax with placeholder values
     #
     #   resp = client.remove_tags_from_resource({
-    #     resource_type: "Document", # required, accepts Document, ManagedInstance, MaintenanceWindow, Parameter, PatchBaseline, OpsItem, OpsMetadata, Automation, Association
+    #     resource_type: "Document", # required, accepts Document, ManagedInstance, MaintenanceWindow, Parameter, PatchBaseline, OpsItem, OpsMetadata, Automation, Association, CloudConnector
     #     resource_id: "ResourceId", # required
     #     tag_keys: ["TagKey"], # required
     #   })
@@ -10447,7 +10905,7 @@ module Aws::SSM
     #
     #   resp = client.send_automation_signal({
     #     automation_execution_id: "AutomationExecutionId", # required
-    #     signal_type: "Approve", # required, accepts Approve, Reject, StartStep, StopStep, Resume
+    #     signal_type: "Approve", # required, accepts Approve, Reject, StartStep, StopStep, Resume, Revoke
     #     payload: {
     #       "AutomationParameterKey" => ["AutomationParameterValue"],
     #     },
@@ -10721,6 +11179,53 @@ module Aws::SSM
       req.send_request(options)
     end
 
+    # Starts the workflow for just-in-time node access sessions.
+    #
+    # @option params [required, String] :reason
+    #   A brief description explaining why you are requesting access to the
+    #   node.
+    #
+    # @option params [required, Array<Types::Target>] :targets
+    #   The node you are requesting access to.
+    #
+    # @option params [Array<Types::Tag>] :tags
+    #   Key-value pairs of metadata you want to assign to the access request.
+    #
+    # @return [Types::StartAccessRequestResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::StartAccessRequestResponse#access_request_id #access_request_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.start_access_request({
+    #     reason: "String1to256", # required
+    #     targets: [ # required
+    #       {
+    #         key: "TargetKey",
+    #         values: ["TargetValue"],
+    #       },
+    #     ],
+    #     tags: [
+    #       {
+    #         key: "TagKey", # required
+    #         value: "TagValue", # required
+    #       },
+    #     ],
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.access_request_id #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/StartAccessRequest AWS API Documentation
+    #
+    # @overload start_access_request(params = {})
+    # @param [Hash] params ({})
+    def start_access_request(params = {}, options = {})
+      req = build_request(:start_access_request, params)
+      req.send_request(options)
+    end
+
     # Runs an association immediately and only one time. This operation can
     # be helpful when troubleshooting associations.
     #
@@ -10943,9 +11448,18 @@ module Aws::SSM
       req.send_request(options)
     end
 
+    # Amazon Web Services Systems Manager Change Manager is no longer open
+    # to new customers. Existing customers can continue to use the service
+    # as normal. For more information, see [Amazon Web Services Systems
+    # Manager Change Manager availability change][1].
+    #
     # Creates a change request for Change Manager. The Automation runbooks
     # specified in the change request run only after all required approvals
     # for the change request have been received.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/systems-manager/latest/userguide/change-manager-availability-change.html
     #
     # @option params [Time,DateTime,Date,Integer,String] :scheduled_time
     #   The date and time specified in the change request to run the
@@ -11365,6 +11879,11 @@ module Aws::SSM
 
     # Remove a label or labels from a parameter.
     #
+    # Parameter names can't contain spaces. The service removes any spaces
+    # specified for the beginning or end of a parameter name. If the
+    # specified name for a parameter contains spaces between characters, the
+    # request fails with a `ValidationException` error.
+    #
     # @option params [required, String] :name
     #   The name of the parameter from which you want to delete one or more
     #   labels.
@@ -11600,6 +12119,11 @@ module Aws::SSM
     #   action to update an association in multiple Regions and multiple
     #   accounts.
     #
+    #   <note markdown="1"> The `TargetLocationAlarmConfiguration` parameter is not supported by
+    #   State Manager.
+    #
+    #    </note>
+    #
     # @option params [Integer] :schedule_offset
     #   Number of days to wait after the scheduled day to run an association.
     #   For example, if you specified a cron schedule of `cron(0 0 ? * THU#2
@@ -11644,6 +12168,26 @@ module Aws::SSM
     # @option params [Types::AlarmConfiguration] :alarm_configuration
     #   The details for the CloudWatch alarm you want to apply to an
     #   automation or command.
+    #
+    # @option params [String] :association_dispatch_assume_role
+    #   A role used by association to take actions on your behalf. State
+    #   Manager will assume this role and call required APIs when dispatching
+    #   configurations to nodes. If not specified, [ service-linked role for
+    #   Systems Manager][1] will be used by default.
+    #
+    #   <note markdown="1"> It is recommended that you define a custom IAM role so that you have
+    #   full control of the permissions that State Manager has when taking
+    #   actions on your behalf.
+    #
+    #    Service-linked role support in State Manager is being phased out.
+    #   Associations relying on service-linked role may require updates in the
+    #   future to continue functioning properly.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/systems-manager/latest/userguide/using-service-linked-roles.html
     #
     # @return [Types::UpdateAssociationResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -11723,6 +12267,7 @@ module Aws::SSM
     #         },
     #       ],
     #     },
+    #     association_dispatch_assume_role: "AssociationDispatchAssumeRoleArn",
     #   })
     #
     # @example Response structure
@@ -11796,6 +12341,7 @@ module Aws::SSM
     #   resp.association_description.triggered_alarms #=> Array
     #   resp.association_description.triggered_alarms[0].name #=> String
     #   resp.association_description.triggered_alarms[0].state #=> String, one of "UNKNOWN", "ALARM"
+    #   resp.association_description.association_dispatch_assume_role #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/UpdateAssociation AWS API Documentation
     #
@@ -11911,6 +12457,7 @@ module Aws::SSM
     #   resp.association_description.triggered_alarms #=> Array
     #   resp.association_description.triggered_alarms[0].name #=> String
     #   resp.association_description.triggered_alarms[0].state #=> String, one of "UNKNOWN", "ALARM"
+    #   resp.association_description.association_dispatch_assume_role #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/UpdateAssociationStatus AWS API Documentation
     #
@@ -11918,6 +12465,62 @@ module Aws::SSM
     # @param [Hash] params ({})
     def update_association_status(params = {}, options = {})
       req = build_request(:update_association_status, params)
+      req.send_request(options)
+    end
+
+    # Updates an existing cloud connector with new configuration details.
+    #
+    # @option params [required, String] :cloud_connector_id
+    #   The ID of the cloud connector to update.
+    #
+    # @option params [String] :display_name
+    #   A new friendly name for the cloud connector.
+    #
+    # @option params [Types::CloudConnectorConfiguration] :configuration
+    #   The updated configuration details for connecting to the third-party
+    #   cloud environment.
+    #
+    # @option params [String] :description
+    #   A new description for the cloud connector.
+    #
+    # @return [Types::UpdateCloudConnectorResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateCloudConnectorResult#cloud_connector_id #cloud_connector_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_cloud_connector({
+    #     cloud_connector_id: "CloudConnectorId", # required
+    #     display_name: "DisplayName",
+    #     configuration: {
+    #       azure_configuration: {
+    #         tenant_id: "AzureTenantId", # required
+    #         tenant_display_name: "AzureTenantDisplayName",
+    #         application_id: "AzureApplicationId", # required
+    #         application_display_name: "AzureApplicationDisplayName",
+    #         targets: {
+    #           subscriptions: [
+    #             {
+    #               id: "AzureSubscriptionId", # required
+    #               display_name: "AzureSubscriptionDisplayName",
+    #             },
+    #           ],
+    #         },
+    #       },
+    #     },
+    #     description: "CloudConnectorDescription",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.cloud_connector_id #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/UpdateCloudConnector AWS API Documentation
+    #
+    # @overload update_cloud_connector(params = {})
+    # @param [Hash] params ({})
+    def update_cloud_connector(params = {}, options = {})
+      req = build_request(:update_cloud_connector, params)
       req.send_request(options)
     end
 
@@ -12007,7 +12610,7 @@ module Aws::SSM
     #   resp.document_description.parameters[0].default_value #=> String
     #   resp.document_description.platform_types #=> Array
     #   resp.document_description.platform_types[0] #=> String, one of "Windows", "Linux", "MacOS"
-    #   resp.document_description.document_type #=> String, one of "Command", "Policy", "Automation", "Session", "Package", "ApplicationConfiguration", "ApplicationConfigurationSchema", "DeploymentStrategy", "ChangeCalendar", "Automation.ChangeTemplate", "ProblemAnalysis", "ProblemAnalysisTemplate", "CloudFormation", "ConformancePackTemplate", "QuickSetup"
+    #   resp.document_description.document_type #=> String, one of "Command", "Policy", "Automation", "Session", "Package", "ApplicationConfiguration", "ApplicationConfigurationSchema", "DeploymentStrategy", "ChangeCalendar", "Automation.ChangeTemplate", "ProblemAnalysis", "ProblemAnalysisTemplate", "CloudFormation", "ConformancePackTemplate", "QuickSetup", "ManualApprovalPolicy", "AutoApprovalPolicy"
     #   resp.document_description.schema_version #=> String
     #   resp.document_description.latest_version #=> String
     #   resp.document_description.default_version #=> String
@@ -12087,8 +12690,17 @@ module Aws::SSM
       req.send_request(options)
     end
 
+    # Amazon Web Services Systems Manager Change Manager is no longer open
+    # to new customers. Existing customers can continue to use the service
+    # as normal. For more information, see [Amazon Web Services Systems
+    # Manager Change Manager availability change][1].
+    #
     # Updates information related to approval reviews for a specific version
     # of a change template in Change Manager.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/systems-manager/latest/userguide/change-manager-availability-change.html
     #
     # @option params [required, String] :name
     #   The name of the change template for which a version's metadata is to
@@ -12916,7 +13528,7 @@ module Aws::SSM
     #         ops_item_id: "String", # required
     #       },
     #     ],
-    #     status: "Open", # accepts Open, InProgress, Resolved, Pending, TimedOut, Cancelling, Cancelled, Failed, CompletedWithSuccess, CompletedWithFailure, Scheduled, RunbookInProgress, PendingChangeCalendarOverride, ChangeCalendarOverrideApproved, ChangeCalendarOverrideRejected, PendingApproval, Approved, Rejected, Closed
+    #     status: "Open", # accepts Open, InProgress, Resolved, Pending, TimedOut, Cancelling, Cancelled, Failed, CompletedWithSuccess, CompletedWithFailure, Scheduled, RunbookInProgress, PendingChangeCalendarOverride, ChangeCalendarOverrideApproved, ChangeCalendarOverrideRejected, PendingApproval, Approved, Revoked, Rejected, Closed
     #     ops_item_id: "OpsItemId", # required
     #     title: "OpsItemTitle",
     #     category: "OpsItemCategory",
@@ -13056,10 +13668,20 @@ module Aws::SSM
     #
     #   : **All OSs**: Packages in the rejected patches list, and packages
     #     that include them as dependencies, aren't installed by Patch
-    #     Manager under any circumstances. If a package was installed before
-    #     it was added to the rejected patches list, or is installed outside
-    #     of Patch Manager afterward, it's considered noncompliant with the
-    #     patch baseline and its status is reported as `INSTALLED_REJECTED`.
+    #     Manager under any circumstances.
+    #
+    #     State value assignment for patch compliance:
+    #
+    #     * If a package was installed before it was added to the rejected
+    #       patches list, or is installed outside of Patch Manager afterward,
+    #       it's considered noncompliant with the patch baseline and its
+    #       status is reported as `INSTALLED_REJECTED`.
+    #
+    #     * If an update attempts to install a dependency package that is now
+    #       rejected by the baseline, when previous versions of the package
+    #       were not rejected, the package being updated is reported as
+    #       `MISSING` for `SCAN` operations and as `FAILED` for `INSTALL`
+    #       operations.
     #
     # @option params [String] :description
     #   A description of the patch baseline.
@@ -13353,6 +13975,53 @@ module Aws::SSM
       req.send_request(options)
     end
 
+    # Validates the configuration and connectivity of a cloud connector.
+    #
+    # @option params [required, String] :cloud_connector_id
+    #   The ID of the cloud connector to validate.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of validation findings to return.
+    #
+    # @option params [String] :next_token
+    #   The token for the next set of items to return. (You received this
+    #   token from a previous call.)
+    #
+    # @return [Types::ValidateCloudConnectorResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ValidateCloudConnectorResult#validation_findings #validation_findings} => Array&lt;Types::ValidationFinding&gt;
+    #   * {Types::ValidateCloudConnectorResult#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.validate_cloud_connector({
+    #     cloud_connector_id: "CloudConnectorId", # required
+    #     max_results: 1,
+    #     next_token: "NextToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.validation_findings #=> Array
+    #   resp.validation_findings[0].type #=> String, one of "INFO", "WARN", "ERROR"
+    #   resp.validation_findings[0].code #=> String, one of "TargetInaccessible", "TargetUnusable", "TargetStateWarning", "AwsRoleAssumptionFailed", "WebIdentityTokenFailed", "OutboundWebIdentityFederationDisabled", "ProviderCredentialCreationFailed", "TenantSummary", "SubscriptionAccessible"
+    #   resp.validation_findings[0].message #=> String
+    #   resp.validation_findings[0].provider_message #=> String
+    #   resp.validation_findings[0].scope.type #=> String, one of "azure:tenant", "azure:subscription"
+    #   resp.validation_findings[0].scope.id #=> String
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/ValidateCloudConnector AWS API Documentation
+    #
+    # @overload validate_cloud_connector(params = {})
+    # @param [Hash] params ({})
+    def validate_cloud_connector(params = {}, options = {})
+      req = build_request(:validate_cloud_connector, params)
+      req.send_request(options)
+    end
+
     # @!endgroup
 
     # @param params ({})
@@ -13371,7 +14040,7 @@ module Aws::SSM
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-ssm'
-      context[:gem_version] = '1.192.0'
+      context[:gem_version] = '1.220.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

@@ -14,11 +14,13 @@ module Aws::SageMakerRuntime
 
     include Seahorse::Model
 
+    AsyncBodyBlob = Shapes::BlobShape.new(name: 'AsyncBodyBlob')
     BodyBlob = Shapes::BlobShape.new(name: 'BodyBlob')
     CustomAttributesHeader = Shapes::StringShape.new(name: 'CustomAttributesHeader')
     EnableExplanationsHeader = Shapes::StringShape.new(name: 'EnableExplanationsHeader')
     EndpointName = Shapes::StringShape.new(name: 'EndpointName')
     ErrorCode = Shapes::StringShape.new(name: 'ErrorCode')
+    FilenameHeader = Shapes::StringShape.new(name: 'FilenameHeader')
     Header = Shapes::StringShape.new(name: 'Header')
     InferenceComponentHeader = Shapes::StringShape.new(name: 'InferenceComponentHeader')
     InferenceId = Shapes::StringShape.new(name: 'InferenceId')
@@ -41,8 +43,10 @@ module Aws::SageMakerRuntime
     NewSessionResponseHeader = Shapes::StringShape.new(name: 'NewSessionResponseHeader')
     PartBlob = Shapes::BlobShape.new(name: 'PartBlob')
     PayloadPart = Shapes::StructureShape.new(name: 'PayloadPart')
+    PrefixAwareIdHeader = Shapes::StringShape.new(name: 'PrefixAwareIdHeader')
     RequestTTLSecondsHeader = Shapes::IntegerShape.new(name: 'RequestTTLSecondsHeader')
     ResponseStream = Shapes::StructureShape.new(name: 'ResponseStream')
+    S3OutputPathExtensionHeader = Shapes::StringShape.new(name: 'S3OutputPathExtensionHeader')
     ServiceUnavailable = Shapes::StructureShape.new(name: 'ServiceUnavailable')
     SessionIdHeader = Shapes::StringShape.new(name: 'SessionIdHeader')
     SessionIdOrNewSessionConstantHeader = Shapes::StringShape.new(name: 'SessionIdOrNewSessionConstantHeader')
@@ -66,10 +70,15 @@ module Aws::SageMakerRuntime
     InvokeEndpointAsyncInput.add_member(:accept, Shapes::ShapeRef.new(shape: Header, location: "header", location_name: "X-Amzn-SageMaker-Accept"))
     InvokeEndpointAsyncInput.add_member(:custom_attributes, Shapes::ShapeRef.new(shape: CustomAttributesHeader, location: "header", location_name: "X-Amzn-SageMaker-Custom-Attributes"))
     InvokeEndpointAsyncInput.add_member(:inference_id, Shapes::ShapeRef.new(shape: InferenceId, location: "header", location_name: "X-Amzn-SageMaker-Inference-Id"))
-    InvokeEndpointAsyncInput.add_member(:input_location, Shapes::ShapeRef.new(shape: InputLocationHeader, required: true, location: "header", location_name: "X-Amzn-SageMaker-InputLocation"))
+    InvokeEndpointAsyncInput.add_member(:input_location, Shapes::ShapeRef.new(shape: InputLocationHeader, location: "header", location_name: "X-Amzn-SageMaker-InputLocation"))
+    InvokeEndpointAsyncInput.add_member(:s3_output_path_extension, Shapes::ShapeRef.new(shape: S3OutputPathExtensionHeader, location: "header", location_name: "X-Amzn-SageMaker-S3OutputPathExtension"))
+    InvokeEndpointAsyncInput.add_member(:filename, Shapes::ShapeRef.new(shape: FilenameHeader, location: "header", location_name: "X-Amzn-SageMaker-Filename"))
     InvokeEndpointAsyncInput.add_member(:request_ttl_seconds, Shapes::ShapeRef.new(shape: RequestTTLSecondsHeader, location: "header", location_name: "X-Amzn-SageMaker-RequestTTLSeconds"))
     InvokeEndpointAsyncInput.add_member(:invocation_timeout_seconds, Shapes::ShapeRef.new(shape: InvocationTimeoutSecondsHeader, location: "header", location_name: "X-Amzn-SageMaker-InvocationTimeoutSeconds"))
+    InvokeEndpointAsyncInput.add_member(:body, Shapes::ShapeRef.new(shape: AsyncBodyBlob, location_name: "Body"))
     InvokeEndpointAsyncInput.struct_class = Types::InvokeEndpointAsyncInput
+    InvokeEndpointAsyncInput[:payload] = :body
+    InvokeEndpointAsyncInput[:payload_member] = InvokeEndpointAsyncInput.member(:body)
 
     InvokeEndpointAsyncOutput.add_member(:inference_id, Shapes::ShapeRef.new(shape: Header, location_name: "InferenceId"))
     InvokeEndpointAsyncOutput.add_member(:output_location, Shapes::ShapeRef.new(shape: Header, location: "header", location_name: "X-Amzn-SageMaker-OutputLocation"))
@@ -88,6 +97,7 @@ module Aws::SageMakerRuntime
     InvokeEndpointInput.add_member(:enable_explanations, Shapes::ShapeRef.new(shape: EnableExplanationsHeader, location: "header", location_name: "X-Amzn-SageMaker-Enable-Explanations"))
     InvokeEndpointInput.add_member(:inference_component_name, Shapes::ShapeRef.new(shape: InferenceComponentHeader, location: "header", location_name: "X-Amzn-SageMaker-Inference-Component"))
     InvokeEndpointInput.add_member(:session_id, Shapes::ShapeRef.new(shape: SessionIdOrNewSessionConstantHeader, location: "header", location_name: "X-Amzn-SageMaker-Session-Id"))
+    InvokeEndpointInput.add_member(:prefix_aware_id, Shapes::ShapeRef.new(shape: PrefixAwareIdHeader, location: "header", location_name: "X-Amzn-SageMaker-Prefix-Aware-Id"))
     InvokeEndpointInput.struct_class = Types::InvokeEndpointInput
     InvokeEndpointInput[:payload] = :body
     InvokeEndpointInput[:payload_member] = InvokeEndpointInput.member(:body)
@@ -112,6 +122,7 @@ module Aws::SageMakerRuntime
     InvokeEndpointWithResponseStreamInput.add_member(:inference_id, Shapes::ShapeRef.new(shape: InferenceId, location: "header", location_name: "X-Amzn-SageMaker-Inference-Id"))
     InvokeEndpointWithResponseStreamInput.add_member(:inference_component_name, Shapes::ShapeRef.new(shape: InferenceComponentHeader, location: "header", location_name: "X-Amzn-SageMaker-Inference-Component"))
     InvokeEndpointWithResponseStreamInput.add_member(:session_id, Shapes::ShapeRef.new(shape: SessionIdHeader, location: "header", location_name: "X-Amzn-SageMaker-Session-Id"))
+    InvokeEndpointWithResponseStreamInput.add_member(:prefix_aware_id, Shapes::ShapeRef.new(shape: PrefixAwareIdHeader, location: "header", location_name: "X-Amzn-SageMaker-Prefix-Aware-Id"))
     InvokeEndpointWithResponseStreamInput.struct_class = Types::InvokeEndpointWithResponseStreamInput
     InvokeEndpointWithResponseStreamInput[:payload] = :body
     InvokeEndpointWithResponseStreamInput[:payload_member] = InvokeEndpointWithResponseStreamInput.member(:body)
@@ -137,7 +148,7 @@ module Aws::SageMakerRuntime
     ModelStreamError.add_member(:error_code, Shapes::ShapeRef.new(shape: ErrorCode, location_name: "ErrorCode"))
     ModelStreamError.struct_class = Types::ModelStreamError
 
-    PayloadPart.add_member(:bytes, Shapes::ShapeRef.new(shape: PartBlob, eventpayload: true, eventpayload_type: 'blob', location_name: "Bytes", metadata: {"eventpayload"=>true}))
+    PayloadPart.add_member(:bytes, Shapes::ShapeRef.new(shape: PartBlob, eventpayload: true, eventpayload_type: 'blob', location_name: "Bytes", metadata: {"eventpayload" => true}))
     PayloadPart.struct_class = Types::PayloadPart
 
     ResponseStream.add_member(:payload_part, Shapes::ShapeRef.new(shape: PayloadPart, event: true, location_name: "PayloadPart"))

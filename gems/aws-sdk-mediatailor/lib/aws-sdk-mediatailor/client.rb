@@ -95,8 +95,8 @@ module Aws::MediaTailor
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::MediaTailor
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::MediaTailor
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::MediaTailor
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::MediaTailor
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::MediaTailor
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::MediaTailor
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::MediaTailor
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -542,11 +546,21 @@ module Aws::MediaTailor
     #
     #   [1]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AWS-logs-and-resource-policy.html#AWS-vended-logs-permissions-V2
     #
+    # @option params [Types::AdsInteractionLog] :ads_interaction_log
+    #   The event types that MediaTailor emits in logs for interactions with
+    #   the ADS.
+    #
+    # @option params [Types::ManifestServiceInteractionLog] :manifest_service_interaction_log
+    #   The event types that MediaTailor emits in logs for interactions with
+    #   the origin server.
+    #
     # @return [Types::ConfigureLogsForPlaybackConfigurationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::ConfigureLogsForPlaybackConfigurationResponse#percent_enabled #percent_enabled} => Integer
     #   * {Types::ConfigureLogsForPlaybackConfigurationResponse#playback_configuration_name #playback_configuration_name} => String
     #   * {Types::ConfigureLogsForPlaybackConfigurationResponse#enabled_logging_strategies #enabled_logging_strategies} => Array&lt;String&gt;
+    #   * {Types::ConfigureLogsForPlaybackConfigurationResponse#ads_interaction_log #ads_interaction_log} => Types::AdsInteractionLog
+    #   * {Types::ConfigureLogsForPlaybackConfigurationResponse#manifest_service_interaction_log #manifest_service_interaction_log} => Types::ManifestServiceInteractionLog
     #
     # @example Request syntax with placeholder values
     #
@@ -554,6 +568,14 @@ module Aws::MediaTailor
     #     percent_enabled: 1, # required
     #     playback_configuration_name: "__string", # required
     #     enabled_logging_strategies: ["VENDED_LOGS"], # accepts VENDED_LOGS, LEGACY_CLOUDWATCH
+    #     ads_interaction_log: {
+    #       publish_opt_in_event_types: ["RAW_ADS_RESPONSE"], # accepts RAW_ADS_RESPONSE, RAW_ADS_REQUEST, PRE_ADS_REQUEST_HOOK_SUMMARY, PRE_ADS_REQUEST_FUNCTION_COMPLETED
+    #       exclude_event_types: ["AD_MARKER_FOUND"], # accepts AD_MARKER_FOUND, NON_AD_MARKER_FOUND, MAKING_ADS_REQUEST, MODIFIED_TARGET_URL, VAST_REDIRECT, EMPTY_VAST_RESPONSE, EMPTY_VMAP_RESPONSE, VAST_RESPONSE, REDIRECTED_VAST_RESPONSE, FILLED_AVAIL, FILLED_OVERLAY_AVAIL, BEACON_FIRED, WARNING_NO_ADVERTISEMENTS, WARNING_VPAID_AD_DROPPED, WARNING_URL_VARIABLE_SUBSTITUTION_FAILED, ERROR_UNKNOWN, ERROR_UNKNOWN_HOST, ERROR_DISALLOWED_HOST, ERROR_ADS_IO, ERROR_ADS_TIMEOUT, ERROR_ADS_RESPONSE_PARSE, ERROR_ADS_RESPONSE_UNKNOWN_ROOT_ELEMENT, ERROR_ADS_INVALID_RESPONSE, ERROR_VAST_REDIRECT_EMPTY_RESPONSE, ERROR_VAST_REDIRECT_MULTIPLE_VAST, ERROR_VAST_REDIRECT_FAILED, ERROR_VAST_MISSING_MEDIAFILES, ERROR_VAST_MISSING_CREATIVES, ERROR_VAST_MISSING_OVERLAYS, ERROR_VAST_MISSING_IMPRESSION, ERROR_VAST_INVALID_VAST_AD_TAG_URI, ERROR_VAST_MULTIPLE_TRACKING_EVENTS, ERROR_VAST_MULTIPLE_LINEAR, ERROR_VAST_INVALID_MEDIA_FILE, ERROR_FIRING_BEACON_FAILED, ERROR_PERSONALIZATION_DISABLED, VOD_TIME_BASED_AVAIL_PLAN_VAST_RESPONSE_FOR_OFFSET, VOD_TIME_BASED_AVAIL_PLAN_SUCCESS, VOD_TIME_BASED_AVAIL_PLAN_WARNING_NO_ADVERTISEMENTS, INTERSTITIAL_VOD_SUCCESS, INTERSTITIAL_VOD_FAILURE, PRE_ADS_REQUEST_HOOK_ERROR, PRE_ADS_REQUEST_FUNCTION_ERROR
+    #     },
+    #     manifest_service_interaction_log: {
+    #       publish_opt_in_event_types: ["PRE_SESSION_INIT_HOOK_SUMMARY"], # accepts PRE_SESSION_INIT_HOOK_SUMMARY, PRE_SESSION_INIT_FUNCTION_COMPLETED
+    #       exclude_event_types: ["GENERATED_MANIFEST"], # accepts GENERATED_MANIFEST, ORIGIN_MANIFEST, SESSION_INITIALIZED, TRACKING_RESPONSE, CONFIG_SYNTAX_ERROR, CONFIG_SECURITY_ERROR, UNKNOWN_HOST, TIMEOUT_ERROR, CONNECTION_ERROR, IO_ERROR, UNKNOWN_ERROR, HOST_DISALLOWED, PARSING_ERROR, MANIFEST_ERROR, NO_MASTER_OR_MEDIA_PLAYLIST, NO_MASTER_PLAYLIST, NO_MEDIA_PLAYLIST, INCOMPATIBLE_HLS_VERSION, SCTE35_PARSING_ERROR, INVALID_SINGLE_PERIOD_DASH_MANIFEST, UNSUPPORTED_SINGLE_PERIOD_DASH_MANIFEST, LAST_PERIOD_MISSING_AUDIO, LAST_PERIOD_MISSING_AUDIO_WARNING, ERROR_ORIGIN_PREFIX_INTERPOLATION, ERROR_ADS_INTERPOLATION, ERROR_LIVE_PRE_ROLL_ADS_INTERPOLATION, ERROR_CDN_AD_SEGMENT_INTERPOLATION, ERROR_CDN_CONTENT_SEGMENT_INTERPOLATION, ERROR_SLATE_AD_URL_INTERPOLATION, ERROR_PROFILE_NAME_INTERPOLATION, ERROR_BUMPER_START_INTERPOLATION, ERROR_BUMPER_END_INTERPOLATION, PRE_SESSION_INIT_HOOK_ERROR, PRE_SESSION_INIT_FUNCTION_ERROR
+    #     },
     #   })
     #
     # @example Response structure
@@ -562,6 +584,14 @@ module Aws::MediaTailor
     #   resp.playback_configuration_name #=> String
     #   resp.enabled_logging_strategies #=> Array
     #   resp.enabled_logging_strategies[0] #=> String, one of "VENDED_LOGS", "LEGACY_CLOUDWATCH"
+    #   resp.ads_interaction_log.publish_opt_in_event_types #=> Array
+    #   resp.ads_interaction_log.publish_opt_in_event_types[0] #=> String, one of "RAW_ADS_RESPONSE", "RAW_ADS_REQUEST", "PRE_ADS_REQUEST_HOOK_SUMMARY", "PRE_ADS_REQUEST_FUNCTION_COMPLETED"
+    #   resp.ads_interaction_log.exclude_event_types #=> Array
+    #   resp.ads_interaction_log.exclude_event_types[0] #=> String, one of "AD_MARKER_FOUND", "NON_AD_MARKER_FOUND", "MAKING_ADS_REQUEST", "MODIFIED_TARGET_URL", "VAST_REDIRECT", "EMPTY_VAST_RESPONSE", "EMPTY_VMAP_RESPONSE", "VAST_RESPONSE", "REDIRECTED_VAST_RESPONSE", "FILLED_AVAIL", "FILLED_OVERLAY_AVAIL", "BEACON_FIRED", "WARNING_NO_ADVERTISEMENTS", "WARNING_VPAID_AD_DROPPED", "WARNING_URL_VARIABLE_SUBSTITUTION_FAILED", "ERROR_UNKNOWN", "ERROR_UNKNOWN_HOST", "ERROR_DISALLOWED_HOST", "ERROR_ADS_IO", "ERROR_ADS_TIMEOUT", "ERROR_ADS_RESPONSE_PARSE", "ERROR_ADS_RESPONSE_UNKNOWN_ROOT_ELEMENT", "ERROR_ADS_INVALID_RESPONSE", "ERROR_VAST_REDIRECT_EMPTY_RESPONSE", "ERROR_VAST_REDIRECT_MULTIPLE_VAST", "ERROR_VAST_REDIRECT_FAILED", "ERROR_VAST_MISSING_MEDIAFILES", "ERROR_VAST_MISSING_CREATIVES", "ERROR_VAST_MISSING_OVERLAYS", "ERROR_VAST_MISSING_IMPRESSION", "ERROR_VAST_INVALID_VAST_AD_TAG_URI", "ERROR_VAST_MULTIPLE_TRACKING_EVENTS", "ERROR_VAST_MULTIPLE_LINEAR", "ERROR_VAST_INVALID_MEDIA_FILE", "ERROR_FIRING_BEACON_FAILED", "ERROR_PERSONALIZATION_DISABLED", "VOD_TIME_BASED_AVAIL_PLAN_VAST_RESPONSE_FOR_OFFSET", "VOD_TIME_BASED_AVAIL_PLAN_SUCCESS", "VOD_TIME_BASED_AVAIL_PLAN_WARNING_NO_ADVERTISEMENTS", "INTERSTITIAL_VOD_SUCCESS", "INTERSTITIAL_VOD_FAILURE", "PRE_ADS_REQUEST_HOOK_ERROR", "PRE_ADS_REQUEST_FUNCTION_ERROR"
+    #   resp.manifest_service_interaction_log.publish_opt_in_event_types #=> Array
+    #   resp.manifest_service_interaction_log.publish_opt_in_event_types[0] #=> String, one of "PRE_SESSION_INIT_HOOK_SUMMARY", "PRE_SESSION_INIT_FUNCTION_COMPLETED"
+    #   resp.manifest_service_interaction_log.exclude_event_types #=> Array
+    #   resp.manifest_service_interaction_log.exclude_event_types[0] #=> String, one of "GENERATED_MANIFEST", "ORIGIN_MANIFEST", "SESSION_INITIALIZED", "TRACKING_RESPONSE", "CONFIG_SYNTAX_ERROR", "CONFIG_SECURITY_ERROR", "UNKNOWN_HOST", "TIMEOUT_ERROR", "CONNECTION_ERROR", "IO_ERROR", "UNKNOWN_ERROR", "HOST_DISALLOWED", "PARSING_ERROR", "MANIFEST_ERROR", "NO_MASTER_OR_MEDIA_PLAYLIST", "NO_MASTER_PLAYLIST", "NO_MEDIA_PLAYLIST", "INCOMPATIBLE_HLS_VERSION", "SCTE35_PARSING_ERROR", "INVALID_SINGLE_PERIOD_DASH_MANIFEST", "UNSUPPORTED_SINGLE_PERIOD_DASH_MANIFEST", "LAST_PERIOD_MISSING_AUDIO", "LAST_PERIOD_MISSING_AUDIO_WARNING", "ERROR_ORIGIN_PREFIX_INTERPOLATION", "ERROR_ADS_INTERPOLATION", "ERROR_LIVE_PRE_ROLL_ADS_INTERPOLATION", "ERROR_CDN_AD_SEGMENT_INTERPOLATION", "ERROR_CDN_CONTENT_SEGMENT_INTERPOLATION", "ERROR_SLATE_AD_URL_INTERPOLATION", "ERROR_PROFILE_NAME_INTERPOLATION", "ERROR_BUMPER_START_INTERPOLATION", "ERROR_BUMPER_END_INTERPOLATION", "PRE_SESSION_INIT_HOOK_ERROR", "PRE_SESSION_INIT_FUNCTION_ERROR"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/ConfigureLogsForPlaybackConfiguration AWS API Documentation
     #
@@ -690,6 +720,7 @@ module Aws::MediaTailor
     #   resp.outputs[0].hls_playlist_settings.ad_markup_type[0] #=> String, one of "DATERANGE", "SCTE35_ENHANCED"
     #   resp.outputs[0].manifest_name #=> String
     #   resp.outputs[0].playback_url #=> String
+    #   resp.outputs[0].dual_stack_playback_url #=> String
     #   resp.outputs[0].source_group #=> String
     #   resp.playback_mode #=> String
     #   resp.tags #=> Hash
@@ -789,12 +820,13 @@ module Aws::MediaTailor
     #
     # [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/prefetching-ads.html
     #
-    # @option params [required, Types::PrefetchConsumption] :consumption
-    #   The configuration settings for MediaTailor's *consumption* of the
-    #   prefetched ads from the ad decision server. Each consumption
-    #   configuration contains an end time and an optional start time that
-    #   define the *consumption window*. Prefetch schedules automatically
-    #   expire no earlier than seven days after the end time.
+    # @option params [Types::PrefetchConsumption] :consumption
+    #   The configuration settings for how and when MediaTailor consumes
+    #   prefetched ads from the ad decision server for single prefetch
+    #   schedules. Each consumption configuration contains an end time and an
+    #   optional start time that define the *consumption window*. Prefetch
+    #   schedules automatically expire no earlier than seven days after the
+    #   end time.
     #
     # @option params [required, String] :name
     #   The name to assign to the schedule request.
@@ -802,10 +834,27 @@ module Aws::MediaTailor
     # @option params [required, String] :playback_configuration_name
     #   The name to assign to the playback configuration.
     #
-    # @option params [required, Types::PrefetchRetrieval] :retrieval
+    # @option params [Types::PrefetchRetrieval] :retrieval
     #   The configuration settings for retrieval of prefetched ads from the ad
     #   decision server. Only one set of prefetched ads will be retrieved and
     #   subsequently consumed for each ad break.
+    #
+    # @option params [Types::RecurringPrefetchConfiguration] :recurring_prefetch_configuration
+    #   The configuration that defines how and when MediaTailor performs ad
+    #   prefetching in a live event.
+    #
+    # @option params [String] :schedule_type
+    #   The frequency that MediaTailor creates prefetch schedules. `SINGLE`
+    #   indicates that this schedule applies to one ad break. `RECURRING`
+    #   indicates that MediaTailor automatically creates a schedule for each
+    #   ad avail in a live event.
+    #
+    #   For more information about the prefetch types and when you might use
+    #   each, see [Prefetching ads in Elemental MediaTailor.][1]
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/prefetching-ads.html
     #
     # @option params [String] :stream_id
     #   An optional stream identifier that MediaTailor uses to prefetch ads
@@ -815,6 +864,16 @@ module Aws::MediaTailor
     #   MediaTailor returns all of the prefetch schedules for the playback
     #   configuration, regardless of `StreamId`.
     #
+    # @option params [Hash<String,String>] :tags
+    #   The tags to assign to the prefetch schedule. Tags are key-value pairs
+    #   that you can associate with Amazon resources to help with
+    #   organization, access control, and cost tracking. For more information,
+    #   see [Tagging AWS Elemental MediaTailor Resources][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/tagging.html
+    #
     # @return [Types::CreatePrefetchScheduleResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreatePrefetchScheduleResponse#arn #arn} => String
@@ -822,12 +881,15 @@ module Aws::MediaTailor
     #   * {Types::CreatePrefetchScheduleResponse#name #name} => String
     #   * {Types::CreatePrefetchScheduleResponse#playback_configuration_name #playback_configuration_name} => String
     #   * {Types::CreatePrefetchScheduleResponse#retrieval #retrieval} => Types::PrefetchRetrieval
+    #   * {Types::CreatePrefetchScheduleResponse#recurring_prefetch_configuration #recurring_prefetch_configuration} => Types::RecurringPrefetchConfiguration
+    #   * {Types::CreatePrefetchScheduleResponse#schedule_type #schedule_type} => String
     #   * {Types::CreatePrefetchScheduleResponse#stream_id #stream_id} => String
+    #   * {Types::CreatePrefetchScheduleResponse#tags #tags} => Hash&lt;String,String&gt;
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_prefetch_schedule({
-    #     consumption: { # required
+    #     consumption: {
     #       avail_matching_criteria: [
     #         {
     #           dynamic_variable: "__string", # required
@@ -839,14 +901,53 @@ module Aws::MediaTailor
     #     },
     #     name: "__string", # required
     #     playback_configuration_name: "__string", # required
-    #     retrieval: { # required
+    #     retrieval: {
     #       dynamic_variables: {
     #         "__string" => "__string",
     #       },
     #       end_time: Time.now, # required
     #       start_time: Time.now,
+    #       traffic_shaping_type: "RETRIEVAL_WINDOW", # accepts RETRIEVAL_WINDOW, TPS
+    #       traffic_shaping_retrieval_window: {
+    #         retrieval_window_duration_seconds: 1,
+    #       },
+    #       traffic_shaping_tps_configuration: {
+    #         peak_tps: 1,
+    #         peak_concurrent_users: 1,
+    #       },
     #     },
+    #     recurring_prefetch_configuration: {
+    #       start_time: Time.now,
+    #       end_time: Time.now, # required
+    #       recurring_consumption: { # required
+    #         retrieved_ad_expiration_seconds: 1,
+    #         avail_matching_criteria: [
+    #           {
+    #             dynamic_variable: "__string", # required
+    #             operator: "EQUALS", # required, accepts EQUALS
+    #           },
+    #         ],
+    #       },
+    #       recurring_retrieval: { # required
+    #         dynamic_variables: {
+    #           "__string" => "__string",
+    #         },
+    #         delay_after_avail_end_seconds: 1,
+    #         traffic_shaping_type: "RETRIEVAL_WINDOW", # accepts RETRIEVAL_WINDOW, TPS
+    #         traffic_shaping_retrieval_window: {
+    #           retrieval_window_duration_seconds: 1,
+    #         },
+    #         traffic_shaping_tps_configuration: {
+    #           peak_tps: 1,
+    #           peak_concurrent_users: 1,
+    #         },
+    #       },
+    #     },
+    #     schedule_type: "SINGLE", # accepts SINGLE, RECURRING
     #     stream_id: "__string",
+    #     tags: {
+    #       "__string" => "__string",
+    #     },
     #   })
     #
     # @example Response structure
@@ -863,7 +964,27 @@ module Aws::MediaTailor
     #   resp.retrieval.dynamic_variables["__string"] #=> String
     #   resp.retrieval.end_time #=> Time
     #   resp.retrieval.start_time #=> Time
+    #   resp.retrieval.traffic_shaping_type #=> String, one of "RETRIEVAL_WINDOW", "TPS"
+    #   resp.retrieval.traffic_shaping_retrieval_window.retrieval_window_duration_seconds #=> Integer
+    #   resp.retrieval.traffic_shaping_tps_configuration.peak_tps #=> Integer
+    #   resp.retrieval.traffic_shaping_tps_configuration.peak_concurrent_users #=> Integer
+    #   resp.recurring_prefetch_configuration.start_time #=> Time
+    #   resp.recurring_prefetch_configuration.end_time #=> Time
+    #   resp.recurring_prefetch_configuration.recurring_consumption.retrieved_ad_expiration_seconds #=> Integer
+    #   resp.recurring_prefetch_configuration.recurring_consumption.avail_matching_criteria #=> Array
+    #   resp.recurring_prefetch_configuration.recurring_consumption.avail_matching_criteria[0].dynamic_variable #=> String
+    #   resp.recurring_prefetch_configuration.recurring_consumption.avail_matching_criteria[0].operator #=> String, one of "EQUALS"
+    #   resp.recurring_prefetch_configuration.recurring_retrieval.dynamic_variables #=> Hash
+    #   resp.recurring_prefetch_configuration.recurring_retrieval.dynamic_variables["__string"] #=> String
+    #   resp.recurring_prefetch_configuration.recurring_retrieval.delay_after_avail_end_seconds #=> Integer
+    #   resp.recurring_prefetch_configuration.recurring_retrieval.traffic_shaping_type #=> String, one of "RETRIEVAL_WINDOW", "TPS"
+    #   resp.recurring_prefetch_configuration.recurring_retrieval.traffic_shaping_retrieval_window.retrieval_window_duration_seconds #=> Integer
+    #   resp.recurring_prefetch_configuration.recurring_retrieval.traffic_shaping_tps_configuration.peak_tps #=> Integer
+    #   resp.recurring_prefetch_configuration.recurring_retrieval.traffic_shaping_tps_configuration.peak_concurrent_users #=> Integer
+    #   resp.schedule_type #=> String, one of "SINGLE", "RECURRING"
     #   resp.stream_id #=> String
+    #   resp.tags #=> Hash
+    #   resp.tags["__string"] #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/CreatePrefetchSchedule AWS API Documentation
     #
@@ -905,6 +1026,16 @@ module Aws::MediaTailor
     # @option params [Array<Types::AudienceMedia>] :audience_media
     #   The list of AudienceMedia defined in program.
     #
+    # @option params [Hash<String,String>] :tags
+    #   The tags to assign to the program. Tags are key-value pairs that you
+    #   can associate with Amazon resources to help with organization, access
+    #   control, and cost tracking. For more information, see [Tagging AWS
+    #   Elemental MediaTailor Resources][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/tagging.html
+    #
     # @return [Types::CreateProgramResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateProgramResponse#ad_breaks #ad_breaks} => Array&lt;Types::AdBreak&gt;
@@ -919,6 +1050,7 @@ module Aws::MediaTailor
     #   * {Types::CreateProgramResponse#clip_range #clip_range} => Types::ClipRange
     #   * {Types::CreateProgramResponse#duration_millis #duration_millis} => Integer
     #   * {Types::CreateProgramResponse#audience_media #audience_media} => Array&lt;Types::AudienceMedia&gt;
+    #   * {Types::CreateProgramResponse#tags #tags} => Hash&lt;String,String&gt;
     #
     # @example Request syntax with placeholder values
     #
@@ -1031,6 +1163,9 @@ module Aws::MediaTailor
     #         ],
     #       },
     #     ],
+    #     tags: {
+    #       "__string" => "__string",
+    #     },
     #   })
     #
     # @example Response structure
@@ -1098,6 +1233,8 @@ module Aws::MediaTailor
     #   resp.audience_media[0].alternate_media[0].ad_breaks[0].ad_break_metadata[0].key #=> String
     #   resp.audience_media[0].alternate_media[0].ad_breaks[0].ad_break_metadata[0].value #=> String
     #   resp.audience_media[0].alternate_media[0].duration_millis #=> Integer
+    #   resp.tags #=> Hash
+    #   resp.tags["__string"] #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/CreateProgram AWS API Documentation
     #
@@ -1331,6 +1468,36 @@ module Aws::MediaTailor
       req.send_request(options)
     end
 
+    # Deletes a function. MediaTailor prevents deletion of a function that
+    # is still referenced by a playback configuration or by another
+    # function. Remove all references before deleting. For more information
+    # about functions, see [Working with functions][1] in the *MediaTailor
+    # User Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/monetization-functions.html
+    #
+    # @option params [required, String] :function_id
+    #   The identifier of the function to delete.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_function({
+    #     function_id: "__string", # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/DeleteFunction AWS API Documentation
+    #
+    # @overload delete_function(params = {})
+    # @param [Hash] params ({})
+    def delete_function(params = {}, options = {})
+      req = build_request(:delete_function, params)
+      req.send_request(options)
+    end
+
     # The live source to delete.
     #
     # @option params [required, String] :live_source_name
@@ -1556,6 +1723,7 @@ module Aws::MediaTailor
     #   resp.outputs[0].hls_playlist_settings.ad_markup_type[0] #=> String, one of "DATERANGE", "SCTE35_ENHANCED"
     #   resp.outputs[0].manifest_name #=> String
     #   resp.outputs[0].playback_url #=> String
+    #   resp.outputs[0].dual_stack_playback_url #=> String
     #   resp.outputs[0].source_group #=> String
     #   resp.playback_mode #=> String
     #   resp.tags #=> Hash
@@ -1651,6 +1819,7 @@ module Aws::MediaTailor
     #   * {Types::DescribeProgramResponse#clip_range #clip_range} => Types::ClipRange
     #   * {Types::DescribeProgramResponse#duration_millis #duration_millis} => Integer
     #   * {Types::DescribeProgramResponse#audience_media #audience_media} => Array&lt;Types::AudienceMedia&gt;
+    #   * {Types::DescribeProgramResponse#tags #tags} => Hash&lt;String,String&gt;
     #
     # @example Request syntax with placeholder values
     #
@@ -1724,6 +1893,8 @@ module Aws::MediaTailor
     #   resp.audience_media[0].alternate_media[0].ad_breaks[0].ad_break_metadata[0].key #=> String
     #   resp.audience_media[0].alternate_media[0].ad_breaks[0].ad_break_metadata[0].value #=> String
     #   resp.audience_media[0].alternate_media[0].duration_millis #=> Integer
+    #   resp.tags #=> Hash
+    #   resp.tags["__string"] #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/DescribeProgram AWS API Documentation
     #
@@ -1949,6 +2120,82 @@ module Aws::MediaTailor
       req.send_request(options)
     end
 
+    # Retrieves the configuration and metadata for a function. For more
+    # information about functions, see [Working with functions][1] in the
+    # *MediaTailor User Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/monetization-functions.html
+    #
+    # @option params [required, String] :function_id
+    #   The identifier of the function.
+    #
+    # @return [Types::GetFunctionResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetFunctionResponse#function_id #function_id} => String
+    #   * {Types::GetFunctionResponse#function_type #function_type} => String
+    #   * {Types::GetFunctionResponse#description #description} => String
+    #   * {Types::GetFunctionResponse#http_request_configuration #http_request_configuration} => Types::HttpRequestConfiguration
+    #   * {Types::GetFunctionResponse#custom_output_configuration #custom_output_configuration} => Types::CustomOutputConfiguration
+    #   * {Types::GetFunctionResponse#concurrent_executor_configuration #concurrent_executor_configuration} => Types::ConcurrentExecutorConfiguration
+    #   * {Types::GetFunctionResponse#sequential_executor_configuration #sequential_executor_configuration} => Types::SequentialExecutorConfiguration
+    #   * {Types::GetFunctionResponse#tags #tags} => Hash&lt;String,String&gt;
+    #   * {Types::GetFunctionResponse#arn #arn} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_function({
+    #     function_id: "__string", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.function_id #=> String
+    #   resp.function_type #=> String, one of "HTTP_REQUEST", "CUSTOM_OUTPUT", "CONCURRENT_EXECUTOR", "SEQUENTIAL_EXECUTOR"
+    #   resp.description #=> String
+    #   resp.http_request_configuration.runtime #=> String, one of "JSONATA"
+    #   resp.http_request_configuration.output #=> Hash
+    #   resp.http_request_configuration.output["__string"] #=> String
+    #   resp.http_request_configuration.method_type #=> String, one of "GET", "POST"
+    #   resp.http_request_configuration.request_timeout_milliseconds #=> Integer
+    #   resp.http_request_configuration.url #=> String
+    #   resp.http_request_configuration.body #=> String
+    #   resp.http_request_configuration.headers #=> Hash
+    #   resp.http_request_configuration.headers["__string"] #=> String
+    #   resp.custom_output_configuration.runtime #=> String, one of "JSONATA"
+    #   resp.custom_output_configuration.output #=> Hash
+    #   resp.custom_output_configuration.output["__string"] #=> String
+    #   resp.concurrent_executor_configuration.runtime #=> String, one of "JSONATA"
+    #   resp.concurrent_executor_configuration.output #=> Hash
+    #   resp.concurrent_executor_configuration.output["__string"] #=> String
+    #   resp.concurrent_executor_configuration.function_list #=> Array
+    #   resp.concurrent_executor_configuration.function_list[0].run_condition #=> String
+    #   resp.concurrent_executor_configuration.function_list[0].function_id #=> String
+    #   resp.concurrent_executor_configuration.function_list[0].alias #=> String
+    #   resp.concurrent_executor_configuration.timeout_milliseconds #=> Integer
+    #   resp.concurrent_executor_configuration.max_concurrency #=> Integer
+    #   resp.sequential_executor_configuration.runtime #=> String, one of "JSONATA"
+    #   resp.sequential_executor_configuration.output #=> Hash
+    #   resp.sequential_executor_configuration.output["__string"] #=> String
+    #   resp.sequential_executor_configuration.function_list #=> Array
+    #   resp.sequential_executor_configuration.function_list[0].run_condition #=> String
+    #   resp.sequential_executor_configuration.function_list[0].function_id #=> String
+    #   resp.sequential_executor_configuration.function_list[0].alias #=> String
+    #   resp.sequential_executor_configuration.timeout_milliseconds #=> Integer
+    #   resp.tags #=> Hash
+    #   resp.tags["__string"] #=> String
+    #   resp.arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/GetFunction AWS API Documentation
+    #
+    # @overload get_function(params = {})
+    # @param [Hash] params ({})
+    def get_function(params = {}, options = {})
+      req = build_request(:get_function, params)
+      req.send_request(options)
+    end
+
     # Retrieves a playback configuration. For information about MediaTailor
     # configurations, see [Working with configurations in AWS Elemental
     # MediaTailor][1].
@@ -1977,12 +2224,18 @@ module Aws::MediaTailor
     #   * {Types::GetPlaybackConfigurationResponse#personalization_threshold_seconds #personalization_threshold_seconds} => Integer
     #   * {Types::GetPlaybackConfigurationResponse#playback_configuration_arn #playback_configuration_arn} => String
     #   * {Types::GetPlaybackConfigurationResponse#playback_endpoint_prefix #playback_endpoint_prefix} => String
+    #   * {Types::GetPlaybackConfigurationResponse#dual_stack_playback_endpoint_prefix #dual_stack_playback_endpoint_prefix} => String
     #   * {Types::GetPlaybackConfigurationResponse#session_initialization_endpoint_prefix #session_initialization_endpoint_prefix} => String
+    #   * {Types::GetPlaybackConfigurationResponse#dual_stack_session_initialization_endpoint_prefix #dual_stack_session_initialization_endpoint_prefix} => String
     #   * {Types::GetPlaybackConfigurationResponse#slate_ad_url #slate_ad_url} => String
     #   * {Types::GetPlaybackConfigurationResponse#tags #tags} => Hash&lt;String,String&gt;
     #   * {Types::GetPlaybackConfigurationResponse#transcode_profile_name #transcode_profile_name} => String
     #   * {Types::GetPlaybackConfigurationResponse#video_content_source_url #video_content_source_url} => String
     #   * {Types::GetPlaybackConfigurationResponse#ad_conditioning_configuration #ad_conditioning_configuration} => Types::AdConditioningConfiguration
+    #   * {Types::GetPlaybackConfigurationResponse#ad_decision_server_configuration #ad_decision_server_configuration} => Types::AdDecisionServerConfiguration
+    #   * {Types::GetPlaybackConfigurationResponse#function_mapping #function_mapping} => Hash&lt;String,String&gt;
+    #   * {Types::GetPlaybackConfigurationResponse#ads_personalization_timeouts #ads_personalization_timeouts} => Types::AdsPersonalizationTimeouts
+    #   * {Types::GetPlaybackConfigurationResponse#ads_personalization_concurrency #ads_personalization_concurrency} => Types::AdsPersonalizationConcurrency
     #
     # @example Request syntax with placeholder values
     #
@@ -2004,27 +2257,55 @@ module Aws::MediaTailor
     #   resp.configuration_aliases["__string"] #=> Hash
     #   resp.configuration_aliases["__string"]["__string"] #=> String
     #   resp.dash_configuration.manifest_endpoint_prefix #=> String
+    #   resp.dash_configuration.dual_stack_manifest_endpoint_prefix #=> String
     #   resp.dash_configuration.mpd_location #=> String
     #   resp.dash_configuration.origin_manifest_type #=> String, one of "SINGLE_PERIOD", "MULTI_PERIOD"
     #   resp.hls_configuration.manifest_endpoint_prefix #=> String
+    #   resp.hls_configuration.dual_stack_manifest_endpoint_prefix #=> String
     #   resp.insertion_mode #=> String, one of "STITCHED_ONLY", "PLAYER_SELECT"
     #   resp.live_pre_roll_configuration.ad_decision_server_url #=> String
     #   resp.live_pre_roll_configuration.max_duration_seconds #=> Integer
+    #   resp.live_pre_roll_configuration.ad_decision_server_configuration.vast_response.ad_sequencing_mode #=> String, one of "FOLLOW_AD_SEQUENCE", "IGNORE_AD_SEQUENCE"
     #   resp.log_configuration.percent_enabled #=> Integer
     #   resp.log_configuration.enabled_logging_strategies #=> Array
     #   resp.log_configuration.enabled_logging_strategies[0] #=> String, one of "VENDED_LOGS", "LEGACY_CLOUDWATCH"
+    #   resp.log_configuration.ads_interaction_log.publish_opt_in_event_types #=> Array
+    #   resp.log_configuration.ads_interaction_log.publish_opt_in_event_types[0] #=> String, one of "RAW_ADS_RESPONSE", "RAW_ADS_REQUEST", "PRE_ADS_REQUEST_HOOK_SUMMARY", "PRE_ADS_REQUEST_FUNCTION_COMPLETED"
+    #   resp.log_configuration.ads_interaction_log.exclude_event_types #=> Array
+    #   resp.log_configuration.ads_interaction_log.exclude_event_types[0] #=> String, one of "AD_MARKER_FOUND", "NON_AD_MARKER_FOUND", "MAKING_ADS_REQUEST", "MODIFIED_TARGET_URL", "VAST_REDIRECT", "EMPTY_VAST_RESPONSE", "EMPTY_VMAP_RESPONSE", "VAST_RESPONSE", "REDIRECTED_VAST_RESPONSE", "FILLED_AVAIL", "FILLED_OVERLAY_AVAIL", "BEACON_FIRED", "WARNING_NO_ADVERTISEMENTS", "WARNING_VPAID_AD_DROPPED", "WARNING_URL_VARIABLE_SUBSTITUTION_FAILED", "ERROR_UNKNOWN", "ERROR_UNKNOWN_HOST", "ERROR_DISALLOWED_HOST", "ERROR_ADS_IO", "ERROR_ADS_TIMEOUT", "ERROR_ADS_RESPONSE_PARSE", "ERROR_ADS_RESPONSE_UNKNOWN_ROOT_ELEMENT", "ERROR_ADS_INVALID_RESPONSE", "ERROR_VAST_REDIRECT_EMPTY_RESPONSE", "ERROR_VAST_REDIRECT_MULTIPLE_VAST", "ERROR_VAST_REDIRECT_FAILED", "ERROR_VAST_MISSING_MEDIAFILES", "ERROR_VAST_MISSING_CREATIVES", "ERROR_VAST_MISSING_OVERLAYS", "ERROR_VAST_MISSING_IMPRESSION", "ERROR_VAST_INVALID_VAST_AD_TAG_URI", "ERROR_VAST_MULTIPLE_TRACKING_EVENTS", "ERROR_VAST_MULTIPLE_LINEAR", "ERROR_VAST_INVALID_MEDIA_FILE", "ERROR_FIRING_BEACON_FAILED", "ERROR_PERSONALIZATION_DISABLED", "VOD_TIME_BASED_AVAIL_PLAN_VAST_RESPONSE_FOR_OFFSET", "VOD_TIME_BASED_AVAIL_PLAN_SUCCESS", "VOD_TIME_BASED_AVAIL_PLAN_WARNING_NO_ADVERTISEMENTS", "INTERSTITIAL_VOD_SUCCESS", "INTERSTITIAL_VOD_FAILURE", "PRE_ADS_REQUEST_HOOK_ERROR", "PRE_ADS_REQUEST_FUNCTION_ERROR"
+    #   resp.log_configuration.manifest_service_interaction_log.publish_opt_in_event_types #=> Array
+    #   resp.log_configuration.manifest_service_interaction_log.publish_opt_in_event_types[0] #=> String, one of "PRE_SESSION_INIT_HOOK_SUMMARY", "PRE_SESSION_INIT_FUNCTION_COMPLETED"
+    #   resp.log_configuration.manifest_service_interaction_log.exclude_event_types #=> Array
+    #   resp.log_configuration.manifest_service_interaction_log.exclude_event_types[0] #=> String, one of "GENERATED_MANIFEST", "ORIGIN_MANIFEST", "SESSION_INITIALIZED", "TRACKING_RESPONSE", "CONFIG_SYNTAX_ERROR", "CONFIG_SECURITY_ERROR", "UNKNOWN_HOST", "TIMEOUT_ERROR", "CONNECTION_ERROR", "IO_ERROR", "UNKNOWN_ERROR", "HOST_DISALLOWED", "PARSING_ERROR", "MANIFEST_ERROR", "NO_MASTER_OR_MEDIA_PLAYLIST", "NO_MASTER_PLAYLIST", "NO_MEDIA_PLAYLIST", "INCOMPATIBLE_HLS_VERSION", "SCTE35_PARSING_ERROR", "INVALID_SINGLE_PERIOD_DASH_MANIFEST", "UNSUPPORTED_SINGLE_PERIOD_DASH_MANIFEST", "LAST_PERIOD_MISSING_AUDIO", "LAST_PERIOD_MISSING_AUDIO_WARNING", "ERROR_ORIGIN_PREFIX_INTERPOLATION", "ERROR_ADS_INTERPOLATION", "ERROR_LIVE_PRE_ROLL_ADS_INTERPOLATION", "ERROR_CDN_AD_SEGMENT_INTERPOLATION", "ERROR_CDN_CONTENT_SEGMENT_INTERPOLATION", "ERROR_SLATE_AD_URL_INTERPOLATION", "ERROR_PROFILE_NAME_INTERPOLATION", "ERROR_BUMPER_START_INTERPOLATION", "ERROR_BUMPER_END_INTERPOLATION", "PRE_SESSION_INIT_HOOK_ERROR", "PRE_SESSION_INIT_FUNCTION_ERROR"
     #   resp.manifest_processing_rules.ad_marker_passthrough.enabled #=> Boolean
     #   resp.name #=> String
     #   resp.personalization_threshold_seconds #=> Integer
     #   resp.playback_configuration_arn #=> String
     #   resp.playback_endpoint_prefix #=> String
+    #   resp.dual_stack_playback_endpoint_prefix #=> String
     #   resp.session_initialization_endpoint_prefix #=> String
+    #   resp.dual_stack_session_initialization_endpoint_prefix #=> String
     #   resp.slate_ad_url #=> String
     #   resp.tags #=> Hash
     #   resp.tags["__string"] #=> String
     #   resp.transcode_profile_name #=> String
     #   resp.video_content_source_url #=> String
     #   resp.ad_conditioning_configuration.streaming_media_file_conditioning #=> String, one of "TRANSCODE", "NONE"
+    #   resp.ad_decision_server_configuration.http_request.method #=> String, one of "GET", "POST"
+    #   resp.ad_decision_server_configuration.http_request.body #=> String
+    #   resp.ad_decision_server_configuration.http_request.headers #=> Hash
+    #   resp.ad_decision_server_configuration.http_request.headers["__string"] #=> String
+    #   resp.ad_decision_server_configuration.http_request.compress_request #=> String, one of "NONE", "GZIP"
+    #   resp.ad_decision_server_configuration.vast_response.ad_sequencing_mode #=> String, one of "FOLLOW_AD_SEQUENCE", "IGNORE_AD_SEQUENCE", "FOLLOW_AD_SEQUENCE_ONLY_LIVE", "FOLLOW_AD_SEQUENCE_ONLY_VOD"
+    #   resp.function_mapping #=> Hash
+    #   resp.function_mapping["EventName"] #=> String
+    #   resp.ads_personalization_timeouts.ads_request_timeout_milliseconds #=> Integer
+    #   resp.ads_personalization_timeouts.live_maximum_ads_personalization_time_milliseconds #=> Integer
+    #   resp.ads_personalization_timeouts.vod_maximum_ads_personalization_time_milliseconds #=> Integer
+    #   resp.ads_personalization_timeouts.prefetch_ads_request_timeout_milliseconds #=> Integer
+    #   resp.ads_personalization_timeouts.prefetch_maximum_ads_personalization_time_milliseconds #=> Integer
+    #   resp.ads_personalization_concurrency.max_concurrent_ads_requests #=> Integer
+    #   resp.ads_personalization_concurrency.enable_vod_vast_parallelization #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/GetPlaybackConfiguration AWS API Documentation
     #
@@ -2063,7 +2344,10 @@ module Aws::MediaTailor
     #   * {Types::GetPrefetchScheduleResponse#name #name} => String
     #   * {Types::GetPrefetchScheduleResponse#playback_configuration_name #playback_configuration_name} => String
     #   * {Types::GetPrefetchScheduleResponse#retrieval #retrieval} => Types::PrefetchRetrieval
+    #   * {Types::GetPrefetchScheduleResponse#schedule_type #schedule_type} => String
+    #   * {Types::GetPrefetchScheduleResponse#recurring_prefetch_configuration #recurring_prefetch_configuration} => Types::RecurringPrefetchConfiguration
     #   * {Types::GetPrefetchScheduleResponse#stream_id #stream_id} => String
+    #   * {Types::GetPrefetchScheduleResponse#tags #tags} => Hash&lt;String,String&gt;
     #
     # @example Request syntax with placeholder values
     #
@@ -2086,7 +2370,27 @@ module Aws::MediaTailor
     #   resp.retrieval.dynamic_variables["__string"] #=> String
     #   resp.retrieval.end_time #=> Time
     #   resp.retrieval.start_time #=> Time
+    #   resp.retrieval.traffic_shaping_type #=> String, one of "RETRIEVAL_WINDOW", "TPS"
+    #   resp.retrieval.traffic_shaping_retrieval_window.retrieval_window_duration_seconds #=> Integer
+    #   resp.retrieval.traffic_shaping_tps_configuration.peak_tps #=> Integer
+    #   resp.retrieval.traffic_shaping_tps_configuration.peak_concurrent_users #=> Integer
+    #   resp.schedule_type #=> String, one of "SINGLE", "RECURRING"
+    #   resp.recurring_prefetch_configuration.start_time #=> Time
+    #   resp.recurring_prefetch_configuration.end_time #=> Time
+    #   resp.recurring_prefetch_configuration.recurring_consumption.retrieved_ad_expiration_seconds #=> Integer
+    #   resp.recurring_prefetch_configuration.recurring_consumption.avail_matching_criteria #=> Array
+    #   resp.recurring_prefetch_configuration.recurring_consumption.avail_matching_criteria[0].dynamic_variable #=> String
+    #   resp.recurring_prefetch_configuration.recurring_consumption.avail_matching_criteria[0].operator #=> String, one of "EQUALS"
+    #   resp.recurring_prefetch_configuration.recurring_retrieval.dynamic_variables #=> Hash
+    #   resp.recurring_prefetch_configuration.recurring_retrieval.dynamic_variables["__string"] #=> String
+    #   resp.recurring_prefetch_configuration.recurring_retrieval.delay_after_avail_end_seconds #=> Integer
+    #   resp.recurring_prefetch_configuration.recurring_retrieval.traffic_shaping_type #=> String, one of "RETRIEVAL_WINDOW", "TPS"
+    #   resp.recurring_prefetch_configuration.recurring_retrieval.traffic_shaping_retrieval_window.retrieval_window_duration_seconds #=> Integer
+    #   resp.recurring_prefetch_configuration.recurring_retrieval.traffic_shaping_tps_configuration.peak_tps #=> Integer
+    #   resp.recurring_prefetch_configuration.recurring_retrieval.traffic_shaping_tps_configuration.peak_concurrent_users #=> Integer
     #   resp.stream_id #=> String
+    #   resp.tags #=> Hash
+    #   resp.tags["__string"] #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/GetPrefetchSchedule AWS API Documentation
     #
@@ -2106,9 +2410,22 @@ module Aws::MediaTailor
     #   alerts, use the value of `NextToken` in the response to get the next
     #   page of results.
     #
+    #   The default value is 100. MediaTailor uses DynamoDB-based pagination,
+    #   which means that a response might contain fewer than `MaxResults`
+    #   items, including 0 items, even when more results are available. To
+    #   retrieve all results, you must continue making requests using the
+    #   `NextToken` value from each response until the response no longer
+    #   includes a `NextToken` value.
+    #
     # @option params [String] :next_token
     #   Pagination token returned by the list request when results exceed the
     #   maximum allowed. Use the token to fetch the next page of results.
+    #
+    #   For the first `ListAlerts` request, omit this value. For subsequent
+    #   requests, get the value of `NextToken` from the previous response and
+    #   specify that value for `NextToken` in the request. Continue making
+    #   requests until the response no longer includes a `NextToken` value,
+    #   which indicates that all results have been retrieved.
     #
     # @option params [required, String] :resource_arn
     #   The Amazon Resource Name (ARN) of the resource.
@@ -2158,9 +2475,22 @@ module Aws::MediaTailor
     #   channels, use the value of `NextToken` in the response to get the next
     #   page of results.
     #
+    #   The default value is 100. MediaTailor uses DynamoDB-based pagination,
+    #   which means that a response might contain fewer than `MaxResults`
+    #   items, including 0 items, even when more results are available. To
+    #   retrieve all results, you must continue making requests using the
+    #   `NextToken` value from each response until the response no longer
+    #   includes a `NextToken` value.
+    #
     # @option params [String] :next_token
     #   Pagination token returned by the list request when results exceed the
     #   maximum allowed. Use the token to fetch the next page of results.
+    #
+    #   For the first `ListChannels` request, omit this value. For subsequent
+    #   requests, get the value of `NextToken` from the previous response and
+    #   specify that value for `NextToken` in the request. Continue making
+    #   requests until the response no longer includes a `NextToken` value,
+    #   which indicates that all results have been retrieved.
     #
     # @return [Types::ListChannelsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -2196,6 +2526,7 @@ module Aws::MediaTailor
     #   resp.items[0].outputs[0].hls_playlist_settings.ad_markup_type[0] #=> String, one of "DATERANGE", "SCTE35_ENHANCED"
     #   resp.items[0].outputs[0].manifest_name #=> String
     #   resp.items[0].outputs[0].playback_url #=> String
+    #   resp.items[0].outputs[0].dual_stack_playback_url #=> String
     #   resp.items[0].outputs[0].source_group #=> String
     #   resp.items[0].playback_mode #=> String
     #   resp.items[0].tags #=> Hash
@@ -2216,6 +2547,100 @@ module Aws::MediaTailor
       req.send_request(options)
     end
 
+    # Retrieves all functions associated with your AWS account in the
+    # current Region. For more information about functions, see [Working
+    # with functions][1] in the *MediaTailor User Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/monetization-functions.html
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of functions that you want MediaTailor to return in
+    #   response to the current request. If there are more than `MaxResults`
+    #   functions, use the value of `NextToken` in the response to get the
+    #   next page of results.
+    #
+    #   The default value is 100. MediaTailor uses token-based pagination,
+    #   which means that a response might contain fewer than `MaxResults`
+    #   items, including 0 items, even when more results are available. To
+    #   retrieve all results, you must continue making requests using the
+    #   `NextToken` value from each response until the response no longer
+    #   includes a `NextToken` value.
+    #
+    # @option params [String] :next_token
+    #   Pagination token returned by the list request when results exceed the
+    #   maximum allowed. Use the token to fetch the next page of results.
+    #
+    #   For the first `ListFunctions` request, omit this value. For subsequent
+    #   requests, get the value of `NextToken` from the previous response and
+    #   specify that value for `NextToken` in the request. Continue making
+    #   requests until the response no longer includes a `NextToken` value,
+    #   which indicates that all results have been retrieved.
+    #
+    # @return [Types::ListFunctionsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListFunctionsResponse#items #items} => Array&lt;Types::Function&gt;
+    #   * {Types::ListFunctionsResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_functions({
+    #     max_results: 1,
+    #     next_token: "__string",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.items #=> Array
+    #   resp.items[0].function_id #=> String
+    #   resp.items[0].function_type #=> String, one of "HTTP_REQUEST", "CUSTOM_OUTPUT", "CONCURRENT_EXECUTOR", "SEQUENTIAL_EXECUTOR"
+    #   resp.items[0].description #=> String
+    #   resp.items[0].http_request_configuration.runtime #=> String, one of "JSONATA"
+    #   resp.items[0].http_request_configuration.output #=> Hash
+    #   resp.items[0].http_request_configuration.output["__string"] #=> String
+    #   resp.items[0].http_request_configuration.method_type #=> String, one of "GET", "POST"
+    #   resp.items[0].http_request_configuration.request_timeout_milliseconds #=> Integer
+    #   resp.items[0].http_request_configuration.url #=> String
+    #   resp.items[0].http_request_configuration.body #=> String
+    #   resp.items[0].http_request_configuration.headers #=> Hash
+    #   resp.items[0].http_request_configuration.headers["__string"] #=> String
+    #   resp.items[0].custom_output_configuration.runtime #=> String, one of "JSONATA"
+    #   resp.items[0].custom_output_configuration.output #=> Hash
+    #   resp.items[0].custom_output_configuration.output["__string"] #=> String
+    #   resp.items[0].concurrent_executor_configuration.runtime #=> String, one of "JSONATA"
+    #   resp.items[0].concurrent_executor_configuration.output #=> Hash
+    #   resp.items[0].concurrent_executor_configuration.output["__string"] #=> String
+    #   resp.items[0].concurrent_executor_configuration.function_list #=> Array
+    #   resp.items[0].concurrent_executor_configuration.function_list[0].run_condition #=> String
+    #   resp.items[0].concurrent_executor_configuration.function_list[0].function_id #=> String
+    #   resp.items[0].concurrent_executor_configuration.function_list[0].alias #=> String
+    #   resp.items[0].concurrent_executor_configuration.timeout_milliseconds #=> Integer
+    #   resp.items[0].concurrent_executor_configuration.max_concurrency #=> Integer
+    #   resp.items[0].sequential_executor_configuration.runtime #=> String, one of "JSONATA"
+    #   resp.items[0].sequential_executor_configuration.output #=> Hash
+    #   resp.items[0].sequential_executor_configuration.output["__string"] #=> String
+    #   resp.items[0].sequential_executor_configuration.function_list #=> Array
+    #   resp.items[0].sequential_executor_configuration.function_list[0].run_condition #=> String
+    #   resp.items[0].sequential_executor_configuration.function_list[0].function_id #=> String
+    #   resp.items[0].sequential_executor_configuration.function_list[0].alias #=> String
+    #   resp.items[0].sequential_executor_configuration.timeout_milliseconds #=> Integer
+    #   resp.items[0].tags #=> Hash
+    #   resp.items[0].tags["__string"] #=> String
+    #   resp.items[0].arn #=> String
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/ListFunctions AWS API Documentation
+    #
+    # @overload list_functions(params = {})
+    # @param [Hash] params ({})
+    def list_functions(params = {}, options = {})
+      req = build_request(:list_functions, params)
+      req.send_request(options)
+    end
+
     # Lists the live sources contained in a source location. A source
     # represents a piece of content.
     #
@@ -2225,9 +2650,23 @@ module Aws::MediaTailor
     #   `MaxResults` live sources, use the value of `NextToken` in the
     #   response to get the next page of results.
     #
+    #   The default value is 100. MediaTailor uses DynamoDB-based pagination,
+    #   which means that a response might contain fewer than `MaxResults`
+    #   items, including 0 items, even when more results are available. To
+    #   retrieve all results, you must continue making requests using the
+    #   `NextToken` value from each response until the response no longer
+    #   includes a `NextToken` value.
+    #
     # @option params [String] :next_token
     #   Pagination token returned by the list request when results exceed the
     #   maximum allowed. Use the token to fetch the next page of results.
+    #
+    #   For the first `ListLiveSources` request, omit this value. For
+    #   subsequent requests, get the value of `NextToken` from the previous
+    #   response and specify that value for `NextToken` in the request.
+    #   Continue making requests until the response no longer includes a
+    #   `NextToken` value, which indicates that all results have been
+    #   retrieved.
     #
     # @option params [required, String] :source_location_name
     #   The name of the source location associated with this Live Sources
@@ -2287,9 +2726,23 @@ module Aws::MediaTailor
     #   more than `MaxResults` playback configurations, use the value of
     #   `NextToken` in the response to get the next page of results.
     #
+    #   The default value is 100. MediaTailor uses DynamoDB-based pagination,
+    #   which means that a response might contain fewer than `MaxResults`
+    #   items, including 0 items, even when more results are available. To
+    #   retrieve all results, you must continue making requests using the
+    #   `NextToken` value from each response until the response no longer
+    #   includes a `NextToken` value.
+    #
     # @option params [String] :next_token
     #   Pagination token returned by the list request when results exceed the
     #   maximum allowed. Use the token to fetch the next page of results.
+    #
+    #   For the first `ListPlaybackConfigurations` request, omit this value.
+    #   For subsequent requests, get the value of `NextToken` from the
+    #   previous response and specify that value for `NextToken` in the
+    #   request. Continue making requests until the response no longer
+    #   includes a `NextToken` value, which indicates that all results have
+    #   been retrieved.
     #
     # @return [Types::ListPlaybackConfigurationsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -2320,27 +2773,55 @@ module Aws::MediaTailor
     #   resp.items[0].configuration_aliases["__string"] #=> Hash
     #   resp.items[0].configuration_aliases["__string"]["__string"] #=> String
     #   resp.items[0].dash_configuration.manifest_endpoint_prefix #=> String
+    #   resp.items[0].dash_configuration.dual_stack_manifest_endpoint_prefix #=> String
     #   resp.items[0].dash_configuration.mpd_location #=> String
     #   resp.items[0].dash_configuration.origin_manifest_type #=> String, one of "SINGLE_PERIOD", "MULTI_PERIOD"
     #   resp.items[0].hls_configuration.manifest_endpoint_prefix #=> String
+    #   resp.items[0].hls_configuration.dual_stack_manifest_endpoint_prefix #=> String
     #   resp.items[0].insertion_mode #=> String, one of "STITCHED_ONLY", "PLAYER_SELECT"
     #   resp.items[0].live_pre_roll_configuration.ad_decision_server_url #=> String
     #   resp.items[0].live_pre_roll_configuration.max_duration_seconds #=> Integer
+    #   resp.items[0].live_pre_roll_configuration.ad_decision_server_configuration.vast_response.ad_sequencing_mode #=> String, one of "FOLLOW_AD_SEQUENCE", "IGNORE_AD_SEQUENCE"
     #   resp.items[0].log_configuration.percent_enabled #=> Integer
     #   resp.items[0].log_configuration.enabled_logging_strategies #=> Array
     #   resp.items[0].log_configuration.enabled_logging_strategies[0] #=> String, one of "VENDED_LOGS", "LEGACY_CLOUDWATCH"
+    #   resp.items[0].log_configuration.ads_interaction_log.publish_opt_in_event_types #=> Array
+    #   resp.items[0].log_configuration.ads_interaction_log.publish_opt_in_event_types[0] #=> String, one of "RAW_ADS_RESPONSE", "RAW_ADS_REQUEST", "PRE_ADS_REQUEST_HOOK_SUMMARY", "PRE_ADS_REQUEST_FUNCTION_COMPLETED"
+    #   resp.items[0].log_configuration.ads_interaction_log.exclude_event_types #=> Array
+    #   resp.items[0].log_configuration.ads_interaction_log.exclude_event_types[0] #=> String, one of "AD_MARKER_FOUND", "NON_AD_MARKER_FOUND", "MAKING_ADS_REQUEST", "MODIFIED_TARGET_URL", "VAST_REDIRECT", "EMPTY_VAST_RESPONSE", "EMPTY_VMAP_RESPONSE", "VAST_RESPONSE", "REDIRECTED_VAST_RESPONSE", "FILLED_AVAIL", "FILLED_OVERLAY_AVAIL", "BEACON_FIRED", "WARNING_NO_ADVERTISEMENTS", "WARNING_VPAID_AD_DROPPED", "WARNING_URL_VARIABLE_SUBSTITUTION_FAILED", "ERROR_UNKNOWN", "ERROR_UNKNOWN_HOST", "ERROR_DISALLOWED_HOST", "ERROR_ADS_IO", "ERROR_ADS_TIMEOUT", "ERROR_ADS_RESPONSE_PARSE", "ERROR_ADS_RESPONSE_UNKNOWN_ROOT_ELEMENT", "ERROR_ADS_INVALID_RESPONSE", "ERROR_VAST_REDIRECT_EMPTY_RESPONSE", "ERROR_VAST_REDIRECT_MULTIPLE_VAST", "ERROR_VAST_REDIRECT_FAILED", "ERROR_VAST_MISSING_MEDIAFILES", "ERROR_VAST_MISSING_CREATIVES", "ERROR_VAST_MISSING_OVERLAYS", "ERROR_VAST_MISSING_IMPRESSION", "ERROR_VAST_INVALID_VAST_AD_TAG_URI", "ERROR_VAST_MULTIPLE_TRACKING_EVENTS", "ERROR_VAST_MULTIPLE_LINEAR", "ERROR_VAST_INVALID_MEDIA_FILE", "ERROR_FIRING_BEACON_FAILED", "ERROR_PERSONALIZATION_DISABLED", "VOD_TIME_BASED_AVAIL_PLAN_VAST_RESPONSE_FOR_OFFSET", "VOD_TIME_BASED_AVAIL_PLAN_SUCCESS", "VOD_TIME_BASED_AVAIL_PLAN_WARNING_NO_ADVERTISEMENTS", "INTERSTITIAL_VOD_SUCCESS", "INTERSTITIAL_VOD_FAILURE", "PRE_ADS_REQUEST_HOOK_ERROR", "PRE_ADS_REQUEST_FUNCTION_ERROR"
+    #   resp.items[0].log_configuration.manifest_service_interaction_log.publish_opt_in_event_types #=> Array
+    #   resp.items[0].log_configuration.manifest_service_interaction_log.publish_opt_in_event_types[0] #=> String, one of "PRE_SESSION_INIT_HOOK_SUMMARY", "PRE_SESSION_INIT_FUNCTION_COMPLETED"
+    #   resp.items[0].log_configuration.manifest_service_interaction_log.exclude_event_types #=> Array
+    #   resp.items[0].log_configuration.manifest_service_interaction_log.exclude_event_types[0] #=> String, one of "GENERATED_MANIFEST", "ORIGIN_MANIFEST", "SESSION_INITIALIZED", "TRACKING_RESPONSE", "CONFIG_SYNTAX_ERROR", "CONFIG_SECURITY_ERROR", "UNKNOWN_HOST", "TIMEOUT_ERROR", "CONNECTION_ERROR", "IO_ERROR", "UNKNOWN_ERROR", "HOST_DISALLOWED", "PARSING_ERROR", "MANIFEST_ERROR", "NO_MASTER_OR_MEDIA_PLAYLIST", "NO_MASTER_PLAYLIST", "NO_MEDIA_PLAYLIST", "INCOMPATIBLE_HLS_VERSION", "SCTE35_PARSING_ERROR", "INVALID_SINGLE_PERIOD_DASH_MANIFEST", "UNSUPPORTED_SINGLE_PERIOD_DASH_MANIFEST", "LAST_PERIOD_MISSING_AUDIO", "LAST_PERIOD_MISSING_AUDIO_WARNING", "ERROR_ORIGIN_PREFIX_INTERPOLATION", "ERROR_ADS_INTERPOLATION", "ERROR_LIVE_PRE_ROLL_ADS_INTERPOLATION", "ERROR_CDN_AD_SEGMENT_INTERPOLATION", "ERROR_CDN_CONTENT_SEGMENT_INTERPOLATION", "ERROR_SLATE_AD_URL_INTERPOLATION", "ERROR_PROFILE_NAME_INTERPOLATION", "ERROR_BUMPER_START_INTERPOLATION", "ERROR_BUMPER_END_INTERPOLATION", "PRE_SESSION_INIT_HOOK_ERROR", "PRE_SESSION_INIT_FUNCTION_ERROR"
     #   resp.items[0].manifest_processing_rules.ad_marker_passthrough.enabled #=> Boolean
     #   resp.items[0].name #=> String
     #   resp.items[0].personalization_threshold_seconds #=> Integer
     #   resp.items[0].playback_configuration_arn #=> String
     #   resp.items[0].playback_endpoint_prefix #=> String
+    #   resp.items[0].dual_stack_playback_endpoint_prefix #=> String
     #   resp.items[0].session_initialization_endpoint_prefix #=> String
+    #   resp.items[0].dual_stack_session_initialization_endpoint_prefix #=> String
     #   resp.items[0].slate_ad_url #=> String
     #   resp.items[0].tags #=> Hash
     #   resp.items[0].tags["__string"] #=> String
     #   resp.items[0].transcode_profile_name #=> String
     #   resp.items[0].video_content_source_url #=> String
     #   resp.items[0].ad_conditioning_configuration.streaming_media_file_conditioning #=> String, one of "TRANSCODE", "NONE"
+    #   resp.items[0].ad_decision_server_configuration.http_request.method #=> String, one of "GET", "POST"
+    #   resp.items[0].ad_decision_server_configuration.http_request.body #=> String
+    #   resp.items[0].ad_decision_server_configuration.http_request.headers #=> Hash
+    #   resp.items[0].ad_decision_server_configuration.http_request.headers["__string"] #=> String
+    #   resp.items[0].ad_decision_server_configuration.http_request.compress_request #=> String, one of "NONE", "GZIP"
+    #   resp.items[0].ad_decision_server_configuration.vast_response.ad_sequencing_mode #=> String, one of "FOLLOW_AD_SEQUENCE", "IGNORE_AD_SEQUENCE", "FOLLOW_AD_SEQUENCE_ONLY_LIVE", "FOLLOW_AD_SEQUENCE_ONLY_VOD"
+    #   resp.items[0].function_mapping #=> Hash
+    #   resp.items[0].function_mapping["EventName"] #=> String
+    #   resp.items[0].ads_personalization_timeouts.ads_request_timeout_milliseconds #=> Integer
+    #   resp.items[0].ads_personalization_timeouts.live_maximum_ads_personalization_time_milliseconds #=> Integer
+    #   resp.items[0].ads_personalization_timeouts.vod_maximum_ads_personalization_time_milliseconds #=> Integer
+    #   resp.items[0].ads_personalization_timeouts.prefetch_ads_request_timeout_milliseconds #=> Integer
+    #   resp.items[0].ads_personalization_timeouts.prefetch_maximum_ads_personalization_time_milliseconds #=> Integer
+    #   resp.items[0].ads_personalization_concurrency.max_concurrent_ads_requests #=> Integer
+    #   resp.items[0].ads_personalization_concurrency.enable_vod_vast_parallelization #=> Boolean
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/ListPlaybackConfigurations AWS API Documentation
@@ -2360,23 +2841,34 @@ module Aws::MediaTailor
     #   `MaxResults` prefetch schedules, use the value of `NextToken` in the
     #   response to get the next page of results.
     #
+    #   The default value is 100. MediaTailor uses DynamoDB-based pagination,
+    #   which means that a response might contain fewer than `MaxResults`
+    #   items, including 0 items, even when more results are available. To
+    #   retrieve all results, you must continue making requests using the
+    #   `NextToken` value from each response until the response no longer
+    #   includes a `NextToken` value.
+    #
     # @option params [String] :next_token
-    #   (Optional) If the playback configuration has more than `MaxResults`
-    #   prefetch schedules, use `NextToken` to get the second and subsequent
-    #   pages of results.
+    #   Pagination token returned by the list request when results exceed the
+    #   maximum allowed. Use the token to fetch the next page of results.
     #
-    #   For the first `ListPrefetchSchedulesRequest` request, omit this value.
-    #
-    #   For the second and subsequent requests, get the value of `NextToken`
-    #   from the previous response and specify that value for `NextToken` in
-    #   the request.
-    #
-    #   If the previous response didn't include a `NextToken` element, there
-    #   are no more prefetch schedules to get.
+    #   For the first `ListPrefetchSchedules` request, omit this value. For
+    #   subsequent requests, get the value of `NextToken` from the previous
+    #   response and specify that value for `NextToken` in the request.
+    #   Continue making requests until the response no longer includes a
+    #   `NextToken` value, which indicates that all results have been
+    #   retrieved.
     #
     # @option params [required, String] :playback_configuration_name
     #   Retrieves the prefetch schedule(s) for a specific playback
     #   configuration.
+    #
+    # @option params [String] :schedule_type
+    #   The type of prefetch schedules that you want to list. `SINGLE`
+    #   indicates that you want to list the configured single prefetch
+    #   schedules. `RECURRING` indicates that you want to list the configured
+    #   recurring prefetch schedules. `ALL` indicates that you want to list
+    #   all configured prefetch schedules.
     #
     # @option params [String] :stream_id
     #   An optional filtering parameter whereby MediaTailor filters the
@@ -2395,6 +2887,7 @@ module Aws::MediaTailor
     #     max_results: 1,
     #     next_token: "__string",
     #     playback_configuration_name: "__string", # required
+    #     schedule_type: "SINGLE", # accepts SINGLE, RECURRING, ALL
     #     stream_id: "__string",
     #   })
     #
@@ -2413,7 +2906,27 @@ module Aws::MediaTailor
     #   resp.items[0].retrieval.dynamic_variables["__string"] #=> String
     #   resp.items[0].retrieval.end_time #=> Time
     #   resp.items[0].retrieval.start_time #=> Time
+    #   resp.items[0].retrieval.traffic_shaping_type #=> String, one of "RETRIEVAL_WINDOW", "TPS"
+    #   resp.items[0].retrieval.traffic_shaping_retrieval_window.retrieval_window_duration_seconds #=> Integer
+    #   resp.items[0].retrieval.traffic_shaping_tps_configuration.peak_tps #=> Integer
+    #   resp.items[0].retrieval.traffic_shaping_tps_configuration.peak_concurrent_users #=> Integer
+    #   resp.items[0].schedule_type #=> String, one of "SINGLE", "RECURRING"
+    #   resp.items[0].recurring_prefetch_configuration.start_time #=> Time
+    #   resp.items[0].recurring_prefetch_configuration.end_time #=> Time
+    #   resp.items[0].recurring_prefetch_configuration.recurring_consumption.retrieved_ad_expiration_seconds #=> Integer
+    #   resp.items[0].recurring_prefetch_configuration.recurring_consumption.avail_matching_criteria #=> Array
+    #   resp.items[0].recurring_prefetch_configuration.recurring_consumption.avail_matching_criteria[0].dynamic_variable #=> String
+    #   resp.items[0].recurring_prefetch_configuration.recurring_consumption.avail_matching_criteria[0].operator #=> String, one of "EQUALS"
+    #   resp.items[0].recurring_prefetch_configuration.recurring_retrieval.dynamic_variables #=> Hash
+    #   resp.items[0].recurring_prefetch_configuration.recurring_retrieval.dynamic_variables["__string"] #=> String
+    #   resp.items[0].recurring_prefetch_configuration.recurring_retrieval.delay_after_avail_end_seconds #=> Integer
+    #   resp.items[0].recurring_prefetch_configuration.recurring_retrieval.traffic_shaping_type #=> String, one of "RETRIEVAL_WINDOW", "TPS"
+    #   resp.items[0].recurring_prefetch_configuration.recurring_retrieval.traffic_shaping_retrieval_window.retrieval_window_duration_seconds #=> Integer
+    #   resp.items[0].recurring_prefetch_configuration.recurring_retrieval.traffic_shaping_tps_configuration.peak_tps #=> Integer
+    #   resp.items[0].recurring_prefetch_configuration.recurring_retrieval.traffic_shaping_tps_configuration.peak_concurrent_users #=> Integer
     #   resp.items[0].stream_id #=> String
+    #   resp.items[0].tags #=> Hash
+    #   resp.items[0].tags["__string"] #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/ListPrefetchSchedules AWS API Documentation
@@ -2434,9 +2947,23 @@ module Aws::MediaTailor
     #   `MaxResults` source locations, use the value of `NextToken` in the
     #   response to get the next page of results.
     #
+    #   The default value is 100. MediaTailor uses DynamoDB-based pagination,
+    #   which means that a response might contain fewer than `MaxResults`
+    #   items, including 0 items, even when more results are available. To
+    #   retrieve all results, you must continue making requests using the
+    #   `NextToken` value from each response until the response no longer
+    #   includes a `NextToken` value.
+    #
     # @option params [String] :next_token
     #   Pagination token returned by the list request when results exceed the
     #   maximum allowed. Use the token to fetch the next page of results.
+    #
+    #   For the first `ListSourceLocations` request, omit this value. For
+    #   subsequent requests, get the value of `NextToken` from the previous
+    #   response and specify that value for `NextToken` in the request.
+    #   Continue making requests until the response no longer includes a
+    #   `NextToken` value, which indicates that all results have been
+    #   retrieved.
     #
     # @return [Types::ListSourceLocationsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -2526,9 +3053,23 @@ module Aws::MediaTailor
     #   `MaxResults` VOD sources, use the value of `NextToken` in the response
     #   to get the next page of results.
     #
+    #   The default value is 100. MediaTailor uses DynamoDB-based pagination,
+    #   which means that a response might contain fewer than `MaxResults`
+    #   items, including 0 items, even when more results are available. To
+    #   retrieve all results, you must continue making requests using the
+    #   `NextToken` value from each response until the response no longer
+    #   includes a `NextToken` value.
+    #
     # @option params [String] :next_token
     #   Pagination token returned by the list request when results exceed the
     #   maximum allowed. Use the token to fetch the next page of results.
+    #
+    #   For the first `ListVodSources` request, omit this value. For
+    #   subsequent requests, get the value of `NextToken` from the previous
+    #   response and specify that value for `NextToken` in the request.
+    #   Continue making requests until the response no longer includes a
+    #   `NextToken` value, which indicates that all results have been
+    #   retrieved.
     #
     # @option params [required, String] :source_location_name
     #   The name of the source location associated with this VOD Source list.
@@ -2597,6 +3138,186 @@ module Aws::MediaTailor
     # @param [Hash] params ({})
     def put_channel_policy(params = {}, options = {})
       req = build_request(:put_channel_policy, params)
+      req.send_request(options)
+    end
+
+    # Creates or updates a function. A function defines reusable logic that
+    # MediaTailor executes at lifecycle hooks during ad insertion. For more
+    # information about functions, see [Working with functions][1] in the
+    # *MediaTailor User Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/monetization-functions.html
+    #
+    # @option params [required, String] :function_id
+    #   The identifier of the function. The identifier must be unique within
+    #   your account.
+    #
+    # @option params [required, String] :function_type
+    #   The type of the function. The function type determines what the
+    #   function can do at runtime. Valid values: `CUSTOM_OUTPUT` evaluates
+    #   expressions and produces output bindings with no external calls.
+    #   `HTTP_REQUEST` makes an HTTP call to an external service and evaluates
+    #   output expressions that can reference the response.
+    #   `SEQUENTIAL_EXECUTOR` runs a sequence of child functions in order,
+    #   passing data between steps through temporary data. For more
+    #   information, see [Function types and composition][1] in the
+    #   *MediaTailor User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/monetization-functions-types.html
+    #
+    # @option params [String] :description
+    #   A description of the function.
+    #
+    # @option params [Types::HttpRequestConfiguration] :http_request_configuration
+    #   The configuration for an `HTTP_REQUEST` function. Specifies the HTTP
+    #   method, URL, headers, body, timeout, and output expressions. Required
+    #   when `FunctionType` is `HTTP_REQUEST`.
+    #
+    # @option params [Types::CustomOutputConfiguration] :custom_output_configuration
+    #   The configuration for a `CUSTOM_OUTPUT` function. Specifies the
+    #   runtime and output expressions. Required when `FunctionType` is
+    #   `CUSTOM_OUTPUT`.
+    #
+    # @option params [Types::ConcurrentExecutorConfiguration] :concurrent_executor_configuration
+    #   The configuration for a `CONCURRENT_EXECUTOR` function. Specifies the
+    #   list of child functions to run in parallel, the maximum concurrency,
+    #   an optional output block, and a timeout. Required when `FunctionType`
+    #   is `CONCURRENT_EXECUTOR`.
+    #
+    # @option params [Types::SequentialExecutorConfiguration] :sequential_executor_configuration
+    #   The configuration for a `SEQUENTIAL_EXECUTOR` function. Specifies the
+    #   ordered list of child functions to execute, an optional output block,
+    #   and a timeout. Required when `FunctionType` is `SEQUENTIAL_EXECUTOR`.
+    #
+    # @option params [Hash<String,String>] :tags
+    #   The tags to assign to the function. Tags are key-value pairs that you
+    #   can associate with Amazon resources to help with organization, access
+    #   control, and cost tracking. For more information, see [Tagging AWS
+    #   Elemental MediaTailor Resources][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/tagging.html
+    #
+    # @return [Types::PutFunctionResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::PutFunctionResponse#function_id #function_id} => String
+    #   * {Types::PutFunctionResponse#function_type #function_type} => String
+    #   * {Types::PutFunctionResponse#description #description} => String
+    #   * {Types::PutFunctionResponse#http_request_configuration #http_request_configuration} => Types::HttpRequestConfiguration
+    #   * {Types::PutFunctionResponse#custom_output_configuration #custom_output_configuration} => Types::CustomOutputConfiguration
+    #   * {Types::PutFunctionResponse#concurrent_executor_configuration #concurrent_executor_configuration} => Types::ConcurrentExecutorConfiguration
+    #   * {Types::PutFunctionResponse#sequential_executor_configuration #sequential_executor_configuration} => Types::SequentialExecutorConfiguration
+    #   * {Types::PutFunctionResponse#tags #tags} => Hash&lt;String,String&gt;
+    #   * {Types::PutFunctionResponse#arn #arn} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.put_function({
+    #     function_id: "__string", # required
+    #     function_type: "HTTP_REQUEST", # required, accepts HTTP_REQUEST, CUSTOM_OUTPUT, CONCURRENT_EXECUTOR, SEQUENTIAL_EXECUTOR
+    #     description: "__string",
+    #     http_request_configuration: {
+    #       runtime: "JSONATA", # required, accepts JSONATA
+    #       output: {
+    #         "__string" => "__string",
+    #       },
+    #       method_type: "GET", # required, accepts GET, POST
+    #       request_timeout_milliseconds: 1, # required
+    #       url: "__string", # required
+    #       body: "__string",
+    #       headers: {
+    #         "__string" => "__string",
+    #       },
+    #     },
+    #     custom_output_configuration: {
+    #       runtime: "JSONATA", # required, accepts JSONATA
+    #       output: {
+    #         "__string" => "__string",
+    #       },
+    #     },
+    #     concurrent_executor_configuration: {
+    #       runtime: "JSONATA", # required, accepts JSONATA
+    #       output: { # required
+    #         "__string" => "__string",
+    #       },
+    #       function_list: [ # required
+    #         {
+    #           run_condition: "__string",
+    #           function_id: "__string",
+    #           alias: "__string",
+    #         },
+    #       ],
+    #       timeout_milliseconds: 1, # required
+    #       max_concurrency: 1, # required
+    #     },
+    #     sequential_executor_configuration: {
+    #       runtime: "JSONATA", # required, accepts JSONATA
+    #       output: {
+    #         "__string" => "__string",
+    #       },
+    #       function_list: [ # required
+    #         {
+    #           run_condition: "__string",
+    #           function_id: "__string",
+    #           alias: "__string",
+    #         },
+    #       ],
+    #       timeout_milliseconds: 1, # required
+    #     },
+    #     tags: {
+    #       "__string" => "__string",
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.function_id #=> String
+    #   resp.function_type #=> String, one of "HTTP_REQUEST", "CUSTOM_OUTPUT", "CONCURRENT_EXECUTOR", "SEQUENTIAL_EXECUTOR"
+    #   resp.description #=> String
+    #   resp.http_request_configuration.runtime #=> String, one of "JSONATA"
+    #   resp.http_request_configuration.output #=> Hash
+    #   resp.http_request_configuration.output["__string"] #=> String
+    #   resp.http_request_configuration.method_type #=> String, one of "GET", "POST"
+    #   resp.http_request_configuration.request_timeout_milliseconds #=> Integer
+    #   resp.http_request_configuration.url #=> String
+    #   resp.http_request_configuration.body #=> String
+    #   resp.http_request_configuration.headers #=> Hash
+    #   resp.http_request_configuration.headers["__string"] #=> String
+    #   resp.custom_output_configuration.runtime #=> String, one of "JSONATA"
+    #   resp.custom_output_configuration.output #=> Hash
+    #   resp.custom_output_configuration.output["__string"] #=> String
+    #   resp.concurrent_executor_configuration.runtime #=> String, one of "JSONATA"
+    #   resp.concurrent_executor_configuration.output #=> Hash
+    #   resp.concurrent_executor_configuration.output["__string"] #=> String
+    #   resp.concurrent_executor_configuration.function_list #=> Array
+    #   resp.concurrent_executor_configuration.function_list[0].run_condition #=> String
+    #   resp.concurrent_executor_configuration.function_list[0].function_id #=> String
+    #   resp.concurrent_executor_configuration.function_list[0].alias #=> String
+    #   resp.concurrent_executor_configuration.timeout_milliseconds #=> Integer
+    #   resp.concurrent_executor_configuration.max_concurrency #=> Integer
+    #   resp.sequential_executor_configuration.runtime #=> String, one of "JSONATA"
+    #   resp.sequential_executor_configuration.output #=> Hash
+    #   resp.sequential_executor_configuration.output["__string"] #=> String
+    #   resp.sequential_executor_configuration.function_list #=> Array
+    #   resp.sequential_executor_configuration.function_list[0].run_condition #=> String
+    #   resp.sequential_executor_configuration.function_list[0].function_id #=> String
+    #   resp.sequential_executor_configuration.function_list[0].alias #=> String
+    #   resp.sequential_executor_configuration.timeout_milliseconds #=> Integer
+    #   resp.tags #=> Hash
+    #   resp.tags["__string"] #=> String
+    #   resp.arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/PutFunction AWS API Documentation
+    #
+    # @overload put_function(params = {})
+    # @param [Hash] params ({})
+    def put_function(params = {}, options = {})
+      req = build_request(:put_function, params)
       req.send_request(options)
     end
 
@@ -2716,6 +3437,34 @@ module Aws::MediaTailor
     #   on ads that the ad decision server (ADS) returns, and what priority
     #   MediaTailor uses when inserting ads.
     #
+    # @option params [Types::AdDecisionServerConfiguration] :ad_decision_server_configuration
+    #   The configuration for customizing HTTP requests to the ad decision
+    #   server (ADS). This includes settings for request method, headers, body
+    #   content, and compression options.
+    #
+    # @option params [Hash<String,String>] :function_mapping
+    #   A map of lifecycle hook event names to function identifiers. The
+    #   function mapping specifies which function MediaTailor executes at each
+    #   lifecycle hook during ad insertion. Valid keys are
+    #   `PRE_SESSION_INITIALIZATION` and `PRE_ADS_REQUEST`. For more
+    #   information, see [Functions lifecycle hooks][1] in the *MediaTailor
+    #   User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/monetization-functions-hooks.html
+    #
+    # @option params [Types::AdsPersonalizationTimeouts] :ads_personalization_timeouts
+    #   The timeout settings for ad decision server interactions. These
+    #   settings control how long MediaTailor waits for ADS responses and the
+    #   total time budget for ad personalization across live, VOD, and
+    #   prefetch workflows.
+    #
+    # @option params [Types::AdsPersonalizationConcurrency] :ads_personalization_concurrency
+    #   The concurrency settings for ad decision server interactions. These
+    #   settings control how many simultaneous ADS requests MediaTailor makes
+    #   per manifest request.
+    #
     # @return [Types::PutPlaybackConfigurationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::PutPlaybackConfigurationResponse#ad_decision_server_url #ad_decision_server_url} => String
@@ -2733,12 +3482,18 @@ module Aws::MediaTailor
     #   * {Types::PutPlaybackConfigurationResponse#personalization_threshold_seconds #personalization_threshold_seconds} => Integer
     #   * {Types::PutPlaybackConfigurationResponse#playback_configuration_arn #playback_configuration_arn} => String
     #   * {Types::PutPlaybackConfigurationResponse#playback_endpoint_prefix #playback_endpoint_prefix} => String
+    #   * {Types::PutPlaybackConfigurationResponse#dual_stack_playback_endpoint_prefix #dual_stack_playback_endpoint_prefix} => String
     #   * {Types::PutPlaybackConfigurationResponse#session_initialization_endpoint_prefix #session_initialization_endpoint_prefix} => String
+    #   * {Types::PutPlaybackConfigurationResponse#dual_stack_session_initialization_endpoint_prefix #dual_stack_session_initialization_endpoint_prefix} => String
     #   * {Types::PutPlaybackConfigurationResponse#slate_ad_url #slate_ad_url} => String
     #   * {Types::PutPlaybackConfigurationResponse#tags #tags} => Hash&lt;String,String&gt;
     #   * {Types::PutPlaybackConfigurationResponse#transcode_profile_name #transcode_profile_name} => String
     #   * {Types::PutPlaybackConfigurationResponse#video_content_source_url #video_content_source_url} => String
     #   * {Types::PutPlaybackConfigurationResponse#ad_conditioning_configuration #ad_conditioning_configuration} => Types::AdConditioningConfiguration
+    #   * {Types::PutPlaybackConfigurationResponse#ad_decision_server_configuration #ad_decision_server_configuration} => Types::AdDecisionServerConfiguration
+    #   * {Types::PutPlaybackConfigurationResponse#function_mapping #function_mapping} => Hash&lt;String,String&gt;
+    #   * {Types::PutPlaybackConfigurationResponse#ads_personalization_timeouts #ads_personalization_timeouts} => Types::AdsPersonalizationTimeouts
+    #   * {Types::PutPlaybackConfigurationResponse#ads_personalization_concurrency #ads_personalization_concurrency} => Types::AdsPersonalizationConcurrency
     #
     # @example Request syntax with placeholder values
     #
@@ -2770,6 +3525,11 @@ module Aws::MediaTailor
     #     live_pre_roll_configuration: {
     #       ad_decision_server_url: "__string",
     #       max_duration_seconds: 1,
+    #       ad_decision_server_configuration: {
+    #         vast_response: {
+    #           ad_sequencing_mode: "FOLLOW_AD_SEQUENCE", # accepts FOLLOW_AD_SEQUENCE, IGNORE_AD_SEQUENCE
+    #         },
+    #       },
     #     },
     #     manifest_processing_rules: {
     #       ad_marker_passthrough: {
@@ -2787,6 +3547,33 @@ module Aws::MediaTailor
     #     ad_conditioning_configuration: {
     #       streaming_media_file_conditioning: "TRANSCODE", # required, accepts TRANSCODE, NONE
     #     },
+    #     ad_decision_server_configuration: {
+    #       http_request: {
+    #         method: "GET", # accepts GET, POST
+    #         body: "__string",
+    #         headers: {
+    #           "__string" => "__string",
+    #         },
+    #         compress_request: "NONE", # accepts NONE, GZIP
+    #       },
+    #       vast_response: {
+    #         ad_sequencing_mode: "FOLLOW_AD_SEQUENCE", # accepts FOLLOW_AD_SEQUENCE, IGNORE_AD_SEQUENCE, FOLLOW_AD_SEQUENCE_ONLY_LIVE, FOLLOW_AD_SEQUENCE_ONLY_VOD
+    #       },
+    #     },
+    #     function_mapping: {
+    #       "PRE_SESSION_INITIALIZATION" => "__string",
+    #     },
+    #     ads_personalization_timeouts: {
+    #       ads_request_timeout_milliseconds: 1,
+    #       live_maximum_ads_personalization_time_milliseconds: 1,
+    #       vod_maximum_ads_personalization_time_milliseconds: 1,
+    #       prefetch_ads_request_timeout_milliseconds: 1,
+    #       prefetch_maximum_ads_personalization_time_milliseconds: 1,
+    #     },
+    #     ads_personalization_concurrency: {
+    #       max_concurrent_ads_requests: 1,
+    #       enable_vod_vast_parallelization: false,
+    #     },
     #   })
     #
     # @example Response structure
@@ -2803,27 +3590,55 @@ module Aws::MediaTailor
     #   resp.configuration_aliases["__string"] #=> Hash
     #   resp.configuration_aliases["__string"]["__string"] #=> String
     #   resp.dash_configuration.manifest_endpoint_prefix #=> String
+    #   resp.dash_configuration.dual_stack_manifest_endpoint_prefix #=> String
     #   resp.dash_configuration.mpd_location #=> String
     #   resp.dash_configuration.origin_manifest_type #=> String, one of "SINGLE_PERIOD", "MULTI_PERIOD"
     #   resp.hls_configuration.manifest_endpoint_prefix #=> String
+    #   resp.hls_configuration.dual_stack_manifest_endpoint_prefix #=> String
     #   resp.insertion_mode #=> String, one of "STITCHED_ONLY", "PLAYER_SELECT"
     #   resp.live_pre_roll_configuration.ad_decision_server_url #=> String
     #   resp.live_pre_roll_configuration.max_duration_seconds #=> Integer
+    #   resp.live_pre_roll_configuration.ad_decision_server_configuration.vast_response.ad_sequencing_mode #=> String, one of "FOLLOW_AD_SEQUENCE", "IGNORE_AD_SEQUENCE"
     #   resp.log_configuration.percent_enabled #=> Integer
     #   resp.log_configuration.enabled_logging_strategies #=> Array
     #   resp.log_configuration.enabled_logging_strategies[0] #=> String, one of "VENDED_LOGS", "LEGACY_CLOUDWATCH"
+    #   resp.log_configuration.ads_interaction_log.publish_opt_in_event_types #=> Array
+    #   resp.log_configuration.ads_interaction_log.publish_opt_in_event_types[0] #=> String, one of "RAW_ADS_RESPONSE", "RAW_ADS_REQUEST", "PRE_ADS_REQUEST_HOOK_SUMMARY", "PRE_ADS_REQUEST_FUNCTION_COMPLETED"
+    #   resp.log_configuration.ads_interaction_log.exclude_event_types #=> Array
+    #   resp.log_configuration.ads_interaction_log.exclude_event_types[0] #=> String, one of "AD_MARKER_FOUND", "NON_AD_MARKER_FOUND", "MAKING_ADS_REQUEST", "MODIFIED_TARGET_URL", "VAST_REDIRECT", "EMPTY_VAST_RESPONSE", "EMPTY_VMAP_RESPONSE", "VAST_RESPONSE", "REDIRECTED_VAST_RESPONSE", "FILLED_AVAIL", "FILLED_OVERLAY_AVAIL", "BEACON_FIRED", "WARNING_NO_ADVERTISEMENTS", "WARNING_VPAID_AD_DROPPED", "WARNING_URL_VARIABLE_SUBSTITUTION_FAILED", "ERROR_UNKNOWN", "ERROR_UNKNOWN_HOST", "ERROR_DISALLOWED_HOST", "ERROR_ADS_IO", "ERROR_ADS_TIMEOUT", "ERROR_ADS_RESPONSE_PARSE", "ERROR_ADS_RESPONSE_UNKNOWN_ROOT_ELEMENT", "ERROR_ADS_INVALID_RESPONSE", "ERROR_VAST_REDIRECT_EMPTY_RESPONSE", "ERROR_VAST_REDIRECT_MULTIPLE_VAST", "ERROR_VAST_REDIRECT_FAILED", "ERROR_VAST_MISSING_MEDIAFILES", "ERROR_VAST_MISSING_CREATIVES", "ERROR_VAST_MISSING_OVERLAYS", "ERROR_VAST_MISSING_IMPRESSION", "ERROR_VAST_INVALID_VAST_AD_TAG_URI", "ERROR_VAST_MULTIPLE_TRACKING_EVENTS", "ERROR_VAST_MULTIPLE_LINEAR", "ERROR_VAST_INVALID_MEDIA_FILE", "ERROR_FIRING_BEACON_FAILED", "ERROR_PERSONALIZATION_DISABLED", "VOD_TIME_BASED_AVAIL_PLAN_VAST_RESPONSE_FOR_OFFSET", "VOD_TIME_BASED_AVAIL_PLAN_SUCCESS", "VOD_TIME_BASED_AVAIL_PLAN_WARNING_NO_ADVERTISEMENTS", "INTERSTITIAL_VOD_SUCCESS", "INTERSTITIAL_VOD_FAILURE", "PRE_ADS_REQUEST_HOOK_ERROR", "PRE_ADS_REQUEST_FUNCTION_ERROR"
+    #   resp.log_configuration.manifest_service_interaction_log.publish_opt_in_event_types #=> Array
+    #   resp.log_configuration.manifest_service_interaction_log.publish_opt_in_event_types[0] #=> String, one of "PRE_SESSION_INIT_HOOK_SUMMARY", "PRE_SESSION_INIT_FUNCTION_COMPLETED"
+    #   resp.log_configuration.manifest_service_interaction_log.exclude_event_types #=> Array
+    #   resp.log_configuration.manifest_service_interaction_log.exclude_event_types[0] #=> String, one of "GENERATED_MANIFEST", "ORIGIN_MANIFEST", "SESSION_INITIALIZED", "TRACKING_RESPONSE", "CONFIG_SYNTAX_ERROR", "CONFIG_SECURITY_ERROR", "UNKNOWN_HOST", "TIMEOUT_ERROR", "CONNECTION_ERROR", "IO_ERROR", "UNKNOWN_ERROR", "HOST_DISALLOWED", "PARSING_ERROR", "MANIFEST_ERROR", "NO_MASTER_OR_MEDIA_PLAYLIST", "NO_MASTER_PLAYLIST", "NO_MEDIA_PLAYLIST", "INCOMPATIBLE_HLS_VERSION", "SCTE35_PARSING_ERROR", "INVALID_SINGLE_PERIOD_DASH_MANIFEST", "UNSUPPORTED_SINGLE_PERIOD_DASH_MANIFEST", "LAST_PERIOD_MISSING_AUDIO", "LAST_PERIOD_MISSING_AUDIO_WARNING", "ERROR_ORIGIN_PREFIX_INTERPOLATION", "ERROR_ADS_INTERPOLATION", "ERROR_LIVE_PRE_ROLL_ADS_INTERPOLATION", "ERROR_CDN_AD_SEGMENT_INTERPOLATION", "ERROR_CDN_CONTENT_SEGMENT_INTERPOLATION", "ERROR_SLATE_AD_URL_INTERPOLATION", "ERROR_PROFILE_NAME_INTERPOLATION", "ERROR_BUMPER_START_INTERPOLATION", "ERROR_BUMPER_END_INTERPOLATION", "PRE_SESSION_INIT_HOOK_ERROR", "PRE_SESSION_INIT_FUNCTION_ERROR"
     #   resp.manifest_processing_rules.ad_marker_passthrough.enabled #=> Boolean
     #   resp.name #=> String
     #   resp.personalization_threshold_seconds #=> Integer
     #   resp.playback_configuration_arn #=> String
     #   resp.playback_endpoint_prefix #=> String
+    #   resp.dual_stack_playback_endpoint_prefix #=> String
     #   resp.session_initialization_endpoint_prefix #=> String
+    #   resp.dual_stack_session_initialization_endpoint_prefix #=> String
     #   resp.slate_ad_url #=> String
     #   resp.tags #=> Hash
     #   resp.tags["__string"] #=> String
     #   resp.transcode_profile_name #=> String
     #   resp.video_content_source_url #=> String
     #   resp.ad_conditioning_configuration.streaming_media_file_conditioning #=> String, one of "TRANSCODE", "NONE"
+    #   resp.ad_decision_server_configuration.http_request.method #=> String, one of "GET", "POST"
+    #   resp.ad_decision_server_configuration.http_request.body #=> String
+    #   resp.ad_decision_server_configuration.http_request.headers #=> Hash
+    #   resp.ad_decision_server_configuration.http_request.headers["__string"] #=> String
+    #   resp.ad_decision_server_configuration.http_request.compress_request #=> String, one of "NONE", "GZIP"
+    #   resp.ad_decision_server_configuration.vast_response.ad_sequencing_mode #=> String, one of "FOLLOW_AD_SEQUENCE", "IGNORE_AD_SEQUENCE", "FOLLOW_AD_SEQUENCE_ONLY_LIVE", "FOLLOW_AD_SEQUENCE_ONLY_VOD"
+    #   resp.function_mapping #=> Hash
+    #   resp.function_mapping["EventName"] #=> String
+    #   resp.ads_personalization_timeouts.ads_request_timeout_milliseconds #=> Integer
+    #   resp.ads_personalization_timeouts.live_maximum_ads_personalization_time_milliseconds #=> Integer
+    #   resp.ads_personalization_timeouts.vod_maximum_ads_personalization_time_milliseconds #=> Integer
+    #   resp.ads_personalization_timeouts.prefetch_ads_request_timeout_milliseconds #=> Integer
+    #   resp.ads_personalization_timeouts.prefetch_maximum_ads_personalization_time_milliseconds #=> Integer
+    #   resp.ads_personalization_concurrency.max_concurrent_ads_requests #=> Integer
+    #   resp.ads_personalization_concurrency.enable_vod_vast_parallelization #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/PutPlaybackConfiguration AWS API Documentation
     #
@@ -3046,6 +3861,7 @@ module Aws::MediaTailor
     #   resp.outputs[0].hls_playlist_settings.ad_markup_type[0] #=> String, one of "DATERANGE", "SCTE35_ENHANCED"
     #   resp.outputs[0].manifest_name #=> String
     #   resp.outputs[0].playback_url #=> String
+    #   resp.outputs[0].dual_stack_playback_url #=> String
     #   resp.outputs[0].source_group #=> String
     #   resp.playback_mode #=> String
     #   resp.tags #=> Hash
@@ -3154,6 +3970,7 @@ module Aws::MediaTailor
     #   * {Types::UpdateProgramResponse#duration_millis #duration_millis} => Integer
     #   * {Types::UpdateProgramResponse#scheduled_start_time #scheduled_start_time} => Time
     #   * {Types::UpdateProgramResponse#audience_media #audience_media} => Array&lt;Types::AudienceMedia&gt;
+    #   * {Types::UpdateProgramResponse#tags #tags} => Hash&lt;String,String&gt;
     #
     # @example Request syntax with placeholder values
     #
@@ -3327,6 +4144,8 @@ module Aws::MediaTailor
     #   resp.audience_media[0].alternate_media[0].ad_breaks[0].ad_break_metadata[0].key #=> String
     #   resp.audience_media[0].alternate_media[0].ad_breaks[0].ad_break_metadata[0].value #=> String
     #   resp.audience_media[0].alternate_media[0].duration_millis #=> Integer
+    #   resp.tags #=> Hash
+    #   resp.tags["__string"] #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/UpdateProgram AWS API Documentation
     #
@@ -3504,7 +4323,7 @@ module Aws::MediaTailor
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-mediatailor'
-      context[:gem_version] = '1.96.0'
+      context[:gem_version] = '1.126.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

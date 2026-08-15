@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -85,13 +86,13 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CodeConnections/Client.html#create_connection-instance_method
       def create_connection: (
-                               ?provider_type: ("Bitbucket" | "GitHub" | "GitHubEnterpriseServer" | "GitLab" | "GitLabSelfManaged"),
+                               ?provider_type: ("Bitbucket" | "GitHub" | "GitHubEnterpriseServer" | "GitLab" | "GitLabSelfManaged" | "AzureDevOps"),
                                connection_name: ::String,
                                ?tags: Array[
                                  {
                                    key: ::String,
                                    value: ::String
-                                 },
+                                 }
                                ],
                                ?host_arn: ::String
                              ) -> _CreateConnectionResponseSuccess
@@ -105,7 +106,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CodeConnections/Client.html#create_host-instance_method
       def create_host: (
                          name: ::String,
-                         provider_type: ("Bitbucket" | "GitHub" | "GitHubEnterpriseServer" | "GitLab" | "GitLabSelfManaged"),
+                         provider_type: ("Bitbucket" | "GitHub" | "GitHubEnterpriseServer" | "GitLab" | "GitLabSelfManaged" | "AzureDevOps"),
                          provider_endpoint: ::String,
                          ?vpc_configuration: {
                            vpc_id: ::String,
@@ -117,7 +118,7 @@ module Aws
                            {
                              key: ::String,
                              value: ::String
-                           },
+                           }
                          ]
                        ) -> _CreateHostResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateHostResponseSuccess
@@ -136,7 +137,7 @@ module Aws
                                       {
                                         key: ::String,
                                         value: ::String
-                                      },
+                                      }
                                     ]
                                   ) -> _CreateRepositoryLinkResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateRepositoryLinkResponseSuccess
@@ -210,7 +211,7 @@ module Aws
         include ::Seahorse::Client::_ResponseSuccess[Types::GetHostOutput]
         def name: () -> ::String
         def status: () -> ::String
-        def provider_type: () -> ("Bitbucket" | "GitHub" | "GitHubEnterpriseServer" | "GitLab" | "GitLabSelfManaged")
+        def provider_type: () -> ("Bitbucket" | "GitHub" | "GitHubEnterpriseServer" | "GitLab" | "GitLabSelfManaged" | "AzureDevOps")
         def provider_endpoint: () -> ::String
         def vpc_configuration: () -> Types::VpcConfiguration
       end
@@ -284,7 +285,7 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CodeConnections/Client.html#list_connections-instance_method
       def list_connections: (
-                              ?provider_type_filter: ("Bitbucket" | "GitHub" | "GitHubEnterpriseServer" | "GitLab" | "GitLabSelfManaged"),
+                              ?provider_type_filter: ("Bitbucket" | "GitHub" | "GitHubEnterpriseServer" | "GitLab" | "GitLabSelfManaged" | "AzureDevOps"),
                               ?host_arn_filter: ::String,
                               ?max_results: ::Integer,
                               ?next_token: ::String
@@ -361,7 +362,7 @@ module Aws
                             {
                               key: ::String,
                               value: ::String
-                            },
+                            }
                           ]
                         ) -> _TagResourceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess

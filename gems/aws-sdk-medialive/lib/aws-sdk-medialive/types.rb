@@ -258,7 +258,8 @@ module Aws::MediaLive
     # Archive Output Settings
     #
     # @!attribute [rw] container_settings
-    #   Settings specific to the container type of the file.
+    #   Container for this output. Can be auto-detected from extension
+    #   field.
     #   @return [Types::ArchiveContainerSettings]
     #
     # @!attribute [rw] extension
@@ -542,8 +543,17 @@ module Aws::MediaLive
     # Audio Normalization Settings
     #
     # @!attribute [rw] algorithm
-    #   Audio normalization algorithm to use. itu17701 conforms to the CALM
-    #   Act specification, itu17702 conforms to the EBU R-128 specification.
+    #   Choose one of the following audio normalization algorithms: ITU-R
+    #   BS.1770-1: Ungated loudness. A measurement of ungated average
+    #   loudness for an entire piece of content, suitable for measurement of
+    #   short-form content under ATSC recommendation A/85. Supports up to
+    #   5.1 audio channels. ITU-R BS.1770-2: Gated loudness. A measurement
+    #   of gated average loudness compliant with the requirements of
+    #   EBU-R128. Supports up to 5.1 audio channels. ITU-R BS.1770-3:
+    #   Modified peak. The same loudness measurement algorithm as 1770-2,
+    #   with an updated true peak measurement. ITU-R BS.1770-4: Higher
+    #   channel count. Allows for more audio channels than the other
+    #   algorithms, including configurations such as 7.1.
     #   @return [String]
     #
     # @!attribute [rw] algorithm_control
@@ -555,8 +565,22 @@ module Aws::MediaLive
     # @!attribute [rw] target_lkfs
     #   Target LKFS(loudness) to adjust volume to. If no value is entered, a
     #   default value will be used according to the chosen algorithm. The
-    #   CALM Act (1770-1) recommends a target of -24 LKFS. The EBU R-128
-    #   specification (1770-2) recommends a target of -23 LKFS.
+    #   CALM Act recommends a target of -24 LKFS. The EBU R-128
+    #   specification recommends a target of -23 LKFS.
+    #   @return [Float]
+    #
+    # @!attribute [rw] peak_calculation
+    #   If set to TRUE\_PEAK, calculate the TruePeak for each output's
+    #   audio track loudness.
+    #   @return [String]
+    #
+    # @!attribute [rw] peak_limiter_threshold
+    #   Peak limiter threshold in decibels relative to true peak (dBTP) if
+    #   TRUE\_PEAK is enabled. If TRUE\_PEAK is not enabled a full scale
+    #   (dbFS) value is used. The peak inter-audio sample loudness in your
+    #   output will be limited to the value that you specify, without
+    #   affecting the overall target LKFS. Leave blank to use the default
+    #   value 0.
     #   @return [Float]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/AudioNormalizationSettings AWS API Documentation
@@ -564,7 +588,9 @@ module Aws::MediaLive
     class AudioNormalizationSettings < Struct.new(
       :algorithm,
       :algorithm_control,
-      :target_lkfs)
+      :target_lkfs,
+      :peak_calculation,
+      :peak_limiter_threshold)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -619,10 +645,16 @@ module Aws::MediaLive
     #   Selects a specific PID from within a source.
     #   @return [Integer]
     #
+    # @!attribute [rw] pids
+    #   Selects one or more unique PIDs from within a source. When using
+    #   'pids', you can specify per-PID audio pre-mixer settings.
+    #   @return [Array<Types::AudioPid>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/AudioPidSelection AWS API Documentation
     #
     class AudioPidSelection < Struct.new(
-      :pid)
+      :pid,
+      :pids)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -698,16 +730,24 @@ module Aws::MediaLive
       include Aws::Structure
     end
 
-    # Audio Track
+    # Represents a single audio track for selection with optional pre-mixer
+    # settings
     #
     # @!attribute [rw] track
     #   1-based integer value that maps to a specific audio track
     #   @return [Integer]
     #
+    # @!attribute [rw] premix_settings
+    #   Optional audio pre-mixer settings for this track. When specified,
+    #   allows per-track audio processing including channel remixing, gain
+    #   adjustment, and loudness normalization before interleaving.
+    #   @return [Types::AudioPreMixerSettings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/AudioTrack AWS API Documentation
     #
     class AudioTrack < Struct.new(
-      :track)
+      :track,
+      :premix_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1444,6 +1484,17 @@ module Aws::MediaLive
     #   match.
     #   @return [Integer]
     #
+    # @!attribute [rw] subtitle_rows
+    #   Applies only when the input captions are Teletext and the output
+    #   captions are DVB-Sub or Burn-In. Choose the number of lines for the
+    #   captions bitmap. The captions bitmap is 700 wide × 576 high and will
+    #   be laid over the video. For example, a value of 16 divides the
+    #   bitmap into 16 lines, with each line 36 pixels high (16 × 36 = 576).
+    #   The default is 24 (24 pixels high). Enter the same number in every
+    #   encode in every output that converts the same Teletext source to
+    #   DVB-Sub or Burn-in.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/BurnInDestinationSettings AWS API Documentation
     #
     class BurnInDestinationSettings < Struct.new(
@@ -1463,7 +1514,8 @@ module Aws::MediaLive
       :shadow_y_offset,
       :teletext_grid_control,
       :x_position,
-      :y_position)
+      :y_position,
+      :subtitle_rows)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1762,6 +1814,10 @@ module Aws::MediaLive
     #   Teletext Source Settings
     #   @return [Types::TeletextSourceSettings]
     #
+    # @!attribute [rw] smart_subtitle_source_settings
+    #   Smart Subtitle Source Settings
+    #   @return [Types::SmartSubtitleSourceSettings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/CaptionSelectorSettings AWS API Documentation
     #
     class CaptionSelectorSettings < Struct.new(
@@ -1771,7 +1827,8 @@ module Aws::MediaLive
       :embedded_source_settings,
       :scte_20_source_settings,
       :scte_27_source_settings,
-      :teletext_source_settings)
+      :teletext_source_settings,
+      :smart_subtitle_source_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1871,6 +1928,20 @@ module Aws::MediaLive
     #   Requested engine version for this channel.
     #   @return [Types::ChannelEngineVersionResponse]
     #
+    # @!attribute [rw] linked_channel_settings
+    #   Linked Channel Settings for this channel.
+    #   @return [Types::DescribeLinkedChannelSettings]
+    #
+    # @!attribute [rw] channel_security_groups
+    #   A list of IDs for all the Input Security Groups attached to the
+    #   channel.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] inference_settings
+    #   Include this setting to include Elemental Inference features in this
+    #   channel.
+    #   @return [Types::DescribeInferenceSettings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/Channel AWS API Documentation
     #
     class Channel < Struct.new(
@@ -1893,7 +1964,10 @@ module Aws::MediaLive
       :tags,
       :vpc,
       :anywhere_settings,
-      :channel_engine_version)
+      :channel_engine_version,
+      :linked_channel_settings,
+      :channel_security_groups,
+      :inference_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2005,6 +2079,20 @@ module Aws::MediaLive
     #   The engine version that the running pipelines are using.
     #   @return [Array<Types::ChannelEngineVersionResponse>]
     #
+    # @!attribute [rw] linked_channel_settings
+    #   Linked Channel Settings for this channel.
+    #   @return [Types::DescribeLinkedChannelSettings]
+    #
+    # @!attribute [rw] channel_security_groups
+    #   A list of IDs for all the Input Security Groups attached to the
+    #   channel.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] inference_settings
+    #   Include this setting to include Elemental Inference features in this
+    #   channel.
+    #   @return [Types::DescribeInferenceSettings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/ChannelSummary AWS API Documentation
     #
     class ChannelSummary < Struct.new(
@@ -2026,7 +2114,10 @@ module Aws::MediaLive
       :vpc,
       :anywhere_settings,
       :channel_engine_version,
-      :used_channel_engine_versions)
+      :used_channel_engine_versions,
+      :linked_channel_settings,
+      :channel_security_groups,
+      :inference_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2187,6 +2278,20 @@ module Aws::MediaLive
     # @!attribute [rw] dry_run
     #   @return [Boolean]
     #
+    # @!attribute [rw] linked_channel_settings
+    #   The linked channel settings for the channel.
+    #   @return [Types::LinkedChannelSettings]
+    #
+    # @!attribute [rw] channel_security_groups
+    #   A list of IDs for all the Input Security Groups attached to the
+    #   channel.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] inference_settings
+    #   Include this setting to include Elemental Inference features in this
+    #   channel.
+    #   @return [Types::InferenceSettings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/CreateChannel AWS API Documentation
     #
     class CreateChannel < Struct.new(
@@ -2206,7 +2311,10 @@ module Aws::MediaLive
       :vpc,
       :anywhere_settings,
       :channel_engine_version,
-      :dry_run)
+      :dry_run,
+      :linked_channel_settings,
+      :channel_security_groups,
+      :inference_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2272,6 +2380,17 @@ module Aws::MediaLive
     # @!attribute [rw] dry_run
     #   @return [Boolean]
     #
+    # @!attribute [rw] linked_channel_settings
+    #   Configuration for linked channel relationships
+    #   @return [Types::LinkedChannelSettings]
+    #
+    # @!attribute [rw] channel_security_groups
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] inference_settings
+    #   Configures Elemental Inference features in a channel.
+    #   @return [Types::InferenceSettings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/CreateChannelRequest AWS API Documentation
     #
     class CreateChannelRequest < Struct.new(
@@ -2291,7 +2410,10 @@ module Aws::MediaLive
       :vpc,
       :anywhere_settings,
       :channel_engine_version,
-      :dry_run)
+      :dry_run,
+      :linked_channel_settings,
+      :channel_security_groups,
+      :inference_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2387,6 +2509,20 @@ module Aws::MediaLive
     #   Multicast Input settings.
     #   @return [Types::MulticastSettingsCreateRequest]
     #
+    # @!attribute [rw] smpte_2110_receiver_group_settings
+    #   Include this parameter if the input is a SMPTE 2110 input, to
+    #   identify the stream sources for this input.
+    #   @return [Types::Smpte2110ReceiverGroupSettings]
+    #
+    # @!attribute [rw] sdi_sources
+    #   SDI Sources for this Input.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] router_settings
+    #   This is the collection of settings that are used during the creation
+    #   of a MediaConnect router input.
+    #   @return [Types::RouterSettings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/CreateInput AWS API Documentation
     #
     class CreateInput < Struct.new(
@@ -2403,7 +2539,10 @@ module Aws::MediaLive
       :vpc,
       :srt_settings,
       :input_network_location,
-      :multicast_settings)
+      :multicast_settings,
+      :smpte_2110_receiver_group_settings,
+      :sdi_sources,
+      :router_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2450,9 +2589,9 @@ module Aws::MediaLive
     #   @return [Types::InputVpcRequest]
     #
     # @!attribute [rw] srt_settings
-    #   Configures the sources for this SRT input. For a single-pipeline
-    #   input, include one srtCallerSource in the array. For a
-    #   standard-pipeline input, include two srtCallerSource.
+    #   Configures the settings for SRT inputs. Provide either
+    #   srtCallerSources (for SRT\_CALLER type) OR srtListenerSettings (for
+    #   SRT\_LISTENER type), not both.
     #   @return [Types::SrtSettingsRequest]
     #
     # @!attribute [rw] input_network_location
@@ -2465,6 +2604,19 @@ module Aws::MediaLive
     #   Settings for a Multicast input. Contains a list of multicast Urls
     #   and optional source ip addresses.
     #   @return [Types::MulticastSettingsCreateRequest]
+    #
+    # @!attribute [rw] smpte_2110_receiver_group_settings
+    #   Configures the sources for the SMPTE 2110 Receiver Group input.
+    #   @return [Types::Smpte2110ReceiverGroupSettings]
+    #
+    # @!attribute [rw] sdi_sources
+    #   SDI Sources for this Input.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] router_settings
+    #   This is the collection of settings that are used during the creation
+    #   of a MediaConnect router input.
+    #   @return [Types::RouterSettings]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/CreateInputRequest AWS API Documentation
     #
@@ -2482,7 +2634,10 @@ module Aws::MediaLive
       :vpc,
       :srt_settings,
       :input_network_location,
-      :multicast_settings)
+      :multicast_settings,
+      :smpte_2110_receiver_group_settings,
+      :sdi_sources,
+      :router_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2862,6 +3017,17 @@ module Aws::MediaLive
     # @!attribute [rw] channel_engine_version
     #   @return [Types::ChannelEngineVersionResponse]
     #
+    # @!attribute [rw] linked_channel_settings
+    #   Linked channel configuration details
+    #   @return [Types::DescribeLinkedChannelSettings]
+    #
+    # @!attribute [rw] channel_security_groups
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] inference_settings
+    #   Configures Elemental Inference features in a channel.
+    #   @return [Types::DescribeInferenceSettings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/DeleteChannelResponse AWS API Documentation
     #
     class DeleteChannelResponse < Struct.new(
@@ -2884,7 +3050,10 @@ module Aws::MediaLive
       :tags,
       :vpc,
       :anywhere_settings,
-      :channel_engine_version)
+      :channel_engine_version,
+      :linked_channel_settings,
+      :channel_security_groups,
+      :inference_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3259,6 +3428,17 @@ module Aws::MediaLive
     # @!attribute [rw] channel_engine_version
     #   @return [Types::ChannelEngineVersionResponse]
     #
+    # @!attribute [rw] linked_channel_settings
+    #   Linked channel configuration details
+    #   @return [Types::DescribeLinkedChannelSettings]
+    #
+    # @!attribute [rw] channel_security_groups
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] inference_settings
+    #   Configures Elemental Inference features in a channel.
+    #   @return [Types::DescribeInferenceSettings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/DescribeChannelResponse AWS API Documentation
     #
     class DescribeChannelResponse < Struct.new(
@@ -3281,7 +3461,10 @@ module Aws::MediaLive
       :tags,
       :vpc,
       :anywhere_settings,
-      :channel_engine_version)
+      :channel_engine_version,
+      :linked_channel_settings,
+      :channel_security_groups,
+      :inference_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3500,7 +3683,7 @@ module Aws::MediaLive
     #   @return [String]
     #
     # @!attribute [rw] srt_settings
-    #   The configured sources for this SRT input.
+    #   The configured settings for SRT inputs (caller and listener).
     #   @return [Types::SrtSettings]
     #
     # @!attribute [rw] input_network_location
@@ -3513,6 +3696,18 @@ module Aws::MediaLive
     #   Settings for a Multicast input. Contains a list of multicast Urls
     #   and optional source ip addresses.
     #   @return [Types::MulticastSettings]
+    #
+    # @!attribute [rw] smpte_2110_receiver_group_settings
+    #   Configures the sources for the SMPTE 2110 Receiver Group input.
+    #   @return [Types::Smpte2110ReceiverGroupSettings]
+    #
+    # @!attribute [rw] sdi_sources
+    #   SDI Sources for this Input.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] router_settings
+    #   The settings for a MediaConnect Router Input.
+    #   @return [Types::RouterInputSettings]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/DescribeInputResponse AWS API Documentation
     #
@@ -3535,7 +3730,10 @@ module Aws::MediaLive
       :type,
       :srt_settings,
       :input_network_location,
-      :multicast_settings)
+      :multicast_settings,
+      :smpte_2110_receiver_group_settings,
+      :sdi_sources,
+      :router_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3569,6 +3767,9 @@ module Aws::MediaLive
     # @!attribute [rw] whitelist_rules
     #   @return [Array<Types::InputWhitelistRule>]
     #
+    # @!attribute [rw] channels
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/DescribeInputSecurityGroupResponse AWS API Documentation
     #
     class DescribeInputSecurityGroupResponse < Struct.new(
@@ -3577,7 +3778,8 @@ module Aws::MediaLive
       :inputs,
       :state,
       :tags,
-      :whitelist_rules)
+      :whitelist_rules,
+      :channels)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4127,6 +4329,17 @@ module Aws::MediaLive
     #   font settings must match.
     #   @return [Integer]
     #
+    # @!attribute [rw] subtitle_rows
+    #   Applies only when the input captions are Teletext and the output
+    #   captions are DVB-Sub or Burn-In. Choose the number of lines for the
+    #   captions bitmap. The captions bitmap is 700 wide × 576 high and will
+    #   be laid over the video. For example, a value of 16 divides the
+    #   bitmap into 16 lines, with each line 36 pixels high (16 × 36 = 576).
+    #   The default is 24 (24 pixels high). Enter the same number in every
+    #   encode in every output that converts the same Teletext source to
+    #   DVB-Sub or Burn-in.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/DvbSubDestinationSettings AWS API Documentation
     #
     class DvbSubDestinationSettings < Struct.new(
@@ -4146,7 +4359,8 @@ module Aws::MediaLive
       :shadow_y_offset,
       :teletext_grid_control,
       :x_position,
-      :y_position)
+      :y_position,
+      :subtitle_rows)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5048,16 +5262,13 @@ module Aws::MediaLive
     # H264 Settings
     #
     # @!attribute [rw] adaptive_quantization
-    #   Enables or disables adaptive quantization, which is a technique
+    #   Enables or disables adaptive quantization (AQ), which is a technique
     #   MediaLive can apply to video on a frame-by-frame basis to produce
     #   more compression without losing quality. There are three types of
-    #   adaptive quantization: flicker, spatial, and temporal. Set the field
-    #   in one of these ways: Set to Auto. Recommended. For each type of AQ,
-    #   MediaLive will determine if AQ is needed, and if so, the appropriate
-    #   strength. Set a strength (a value other than Auto or Disable). This
-    #   strength will apply to any of the AQ fields that you choose to
-    #   enable. Set to Disabled to disable all types of adaptive
-    #   quantization.
+    #   adaptive quantization: spatial, temporal, and flicker. We recommend
+    #   that you set the field to Auto. For more information about all the
+    #   options, see the topic about video adaptive quantization in the
+    #   MediaLive user guide.
     #   @return [String]
     #
     # @!attribute [rw] afd_signaling
@@ -5089,7 +5300,9 @@ module Aws::MediaLive
     #   @return [String]
     #
     # @!attribute [rw] color_space_settings
-    #   Color Space settings
+    #   Specify the type of color space to apply or choose to pass through.
+    #   The default is to pass through the color space that is in the
+    #   source.
     #   @return [Types::H264ColorSpaceSettings]
     #
     # @!attribute [rw] entropy_encoding
@@ -5118,15 +5331,9 @@ module Aws::MediaLive
     # @!attribute [rw] flicker_aq
     #   Flicker AQ makes adjustments within each frame to reduce flicker or
     #   'pop' on I-frames. The value to enter in this field depends on the
-    #   value in the Adaptive quantization field: If you have set the
-    #   Adaptive quantization field to Auto, MediaLive ignores any value in
-    #   this field. MediaLive will determine if flicker AQ is appropriate
-    #   and will apply the appropriate strength. If you have set the
-    #   Adaptive quantization field to a strength, you can set this field to
-    #   Enabled or Disabled. Enabled: MediaLive will apply flicker AQ using
-    #   the specified strength. Disabled: MediaLive won't apply flicker AQ.
-    #   If you have set the Adaptive quantization to Disabled, MediaLive
-    #   ignores any value in this field and doesn't apply flicker AQ.
+    #   value in the Adaptive quantization field. For more information, see
+    #   the topic about video adaptive quantization in the MediaLive user
+    #   guide.
     #   @return [String]
     #
     # @!attribute [rw] force_field_pictures
@@ -5307,16 +5514,9 @@ module Aws::MediaLive
     # @!attribute [rw] spatial_aq
     #   Spatial AQ makes adjustments within each frame based on spatial
     #   variation of content complexity. The value to enter in this field
-    #   depends on the value in the Adaptive quantization field: If you have
-    #   set the Adaptive quantization field to Auto, MediaLive ignores any
-    #   value in this field. MediaLive will determine if spatial AQ is
-    #   appropriate and will apply the appropriate strength. If you have set
-    #   the Adaptive quantization field to a strength, you can set this
-    #   field to Enabled or Disabled. Enabled: MediaLive will apply spatial
-    #   AQ using the specified strength. Disabled: MediaLive won't apply
-    #   spatial AQ. If you have set the Adaptive quantization to Disabled,
-    #   MediaLive ignores any value in this field and doesn't apply spatial
-    #   AQ.
+    #   depends on the value in the Adaptive quantization field. For more
+    #   information, see the topic about video adaptive quantization in the
+    #   MediaLive user guide.
     #   @return [String]
     #
     # @!attribute [rw] subgop_length
@@ -5330,18 +5530,11 @@ module Aws::MediaLive
     #   @return [String]
     #
     # @!attribute [rw] temporal_aq
-    #   Temporal makes adjustments within each frame based on temporal
-    #   variation of content complexity. The value to enter in this field
-    #   depends on the value in the Adaptive quantization field: If you have
-    #   set the Adaptive quantization field to Auto, MediaLive ignores any
-    #   value in this field. MediaLive will determine if temporal AQ is
-    #   appropriate and will apply the appropriate strength. If you have set
-    #   the Adaptive quantization field to a strength, you can set this
-    #   field to Enabled or Disabled. Enabled: MediaLive will apply temporal
-    #   AQ using the specified strength. Disabled: MediaLive won't apply
-    #   temporal AQ. If you have set the Adaptive quantization to Disabled,
-    #   MediaLive ignores any value in this field and doesn't apply
-    #   temporal AQ.
+    #   Temporal makes adjustments within each frame based on variations in
+    #   content complexity over time. The value to enter in this field
+    #   depends on the value in the Adaptive quantization field. For more
+    #   information, see the topic about video adaptive quantization in the
+    #   MediaLive user guide.
     #   @return [String]
     #
     # @!attribute [rw] timecode_insertion
@@ -5359,6 +5552,13 @@ module Aws::MediaLive
     #   Sets the minimum QP. If you aren't familiar with quantization
     #   adjustment, leave the field empty. MediaLive will apply an
     #   appropriate value.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] min_bitrate
+    #   Used for QVBR rate control mode only. Optional. Enter a minimum
+    #   bitrate if you want to keep the output bitrate about a threshold, in
+    #   order to prevent the downstream system from de-allocating network
+    #   bandwidth for this output.
     #   @return [Integer]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/H264Settings AWS API Documentation
@@ -5406,7 +5606,8 @@ module Aws::MediaLive
       :temporal_aq,
       :timecode_insertion,
       :timecode_burnin_settings,
-      :min_qp)
+      :min_qp,
+      :min_bitrate)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5433,6 +5634,10 @@ module Aws::MediaLive
     #   Rec709 Settings
     #   @return [Types::Rec709Settings]
     #
+    # @!attribute [rw] hlg_2020_settings
+    #   Hlg2020 Settings
+    #   @return [Types::Hlg2020Settings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/H265ColorSpaceSettings AWS API Documentation
     #
     class H265ColorSpaceSettings < Struct.new(
@@ -5440,7 +5645,8 @@ module Aws::MediaLive
       :dolby_vision_81_settings,
       :hdr_10_settings,
       :rec_601_settings,
-      :rec_709_settings)
+      :rec_709_settings,
+      :hlg_2020_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5467,8 +5673,13 @@ module Aws::MediaLive
     # H265 Settings
     #
     # @!attribute [rw] adaptive_quantization
-    #   Adaptive quantization. Allows intra-frame quantizers to vary to
-    #   improve visual quality.
+    #   Enables or disables adaptive quantization (AQ), which is a technique
+    #   MediaLive can apply to video on a frame-by-frame basis to produce
+    #   more compression without losing quality. There are three types of
+    #   adaptive quantization: spatial, temporal, and flicker. Flicker is
+    #   the only type that you can customize. We recommend that you set the
+    #   field to Auto. For more information about all the options, see the
+    #   topic about video adaptive quantization in the MediaLive user guide.
     #   @return [String]
     #
     # @!attribute [rw] afd_signaling
@@ -5501,7 +5712,9 @@ module Aws::MediaLive
     #   @return [String]
     #
     # @!attribute [rw] color_space_settings
-    #   Color Space settings
+    #   Specify the type of color space to apply or choose to pass through.
+    #   The default is to pass through the color space that is in the
+    #   source.
     #   @return [Types::H265ColorSpaceSettings]
     #
     # @!attribute [rw] filter_settings
@@ -5523,8 +5736,11 @@ module Aws::MediaLive
     #   @return [String]
     #
     # @!attribute [rw] flicker_aq
-    #   If set to enabled, adjust quantization within each frame to reduce
-    #   flicker or 'pop' on I-frames.
+    #   Flicker AQ makes adjustments within each frame to reduce flicker or
+    #   'pop' on I-frames. The value to enter in this field depends on the
+    #   value in the Adaptive quantization field. For more information, see
+    #   the topic about video adaptive quantization in the MediaLive user
+    #   guide.
     #   @return [String]
     #
     # @!attribute [rw] framerate_denominator
@@ -5700,6 +5916,32 @@ module Aws::MediaLive
     #   edges might appear in the output, especially at lower bitrates.
     #   @return [String]
     #
+    # @!attribute [rw] gop_b_reference
+    #   Allows the encoder to use a B-Frame as a reference frame as well.
+    #   ENABLED: B-frames will also serve as reference frames. DISABLED:
+    #   B-frames won't be reference frames. Must be DISABLED if resolution
+    #   is greater than 1080p or when using tiled hevc encoding.
+    #   @return [String]
+    #
+    # @!attribute [rw] gop_num_b_frames
+    #   Sets the number of B-frames between reference frames. Set to 2 if
+    #   resolution is greater than 1080p or when using tiled hevc encoding.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] min_bitrate
+    #   Used for QVBR rate control mode only. Optional. Enter a minimum
+    #   bitrate if you want to keep the output bitrate about a threshold, in
+    #   order to prevent the downstream system from de-allocating network
+    #   bandwidth for this output.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] subgop_length
+    #   Sets the number of B-frames in each sub-GOP. FIXED: Use the value in
+    #   Num B-frames. DYNAMIC: Optimizes the number of B-frames in each
+    #   sub-GOP to improve visual quality. Must be FIXED if resolution is
+    #   greater than 1080p or when using tiled hevc encoding.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/H265Settings AWS API Documentation
     #
     class H265Settings < Struct.new(
@@ -5740,7 +5982,11 @@ module Aws::MediaLive
       :tile_width,
       :treeblock_size,
       :min_qp,
-      :deblocking)
+      :deblocking,
+      :gop_b_reference,
+      :gop_num_b_frames,
+      :min_bitrate,
+      :subgop_length)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6578,6 +6824,20 @@ module Aws::MediaLive
     #   Multicast Input settings.
     #   @return [Types::MulticastSettings]
     #
+    # @!attribute [rw] smpte_2110_receiver_group_settings
+    #   Include this parameter if the input is a SMPTE 2110 input, to
+    #   identify the stream sources for this input.
+    #   @return [Types::Smpte2110ReceiverGroupSettings]
+    #
+    # @!attribute [rw] sdi_sources
+    #   SDI Sources for this Input.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] router_settings
+    #   Information about any MediaConnect router association with this
+    #   input.
+    #   @return [Types::RouterInputSettings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/Input AWS API Documentation
     #
     class Input < Struct.new(
@@ -6599,7 +6859,10 @@ module Aws::MediaLive
       :type,
       :srt_settings,
       :input_network_location,
-      :multicast_settings)
+      :multicast_settings,
+      :smpte_2110_receiver_group_settings,
+      :sdi_sources,
+      :router_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6918,6 +7181,13 @@ module Aws::MediaLive
     #   channel configuration.
     #   @return [Array<Types::InputDeviceConfigurableAudioChannelPairConfig>]
     #
+    # @!attribute [rw] input_resolution
+    #   Choose the resolution of the Link device's source (HD or UHD). Make
+    #   sure the resolution matches the current source from the device. This
+    #   value determines MediaLive resource allocation and billing for this
+    #   input. Only UHD devices can specify this parameter.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/InputDeviceConfigurableSettings AWS API Documentation
     #
     class InputDeviceConfigurableSettings < Struct.new(
@@ -6926,7 +7196,8 @@ module Aws::MediaLive
       :latency_ms,
       :codec,
       :mediaconnect_settings,
-      :audio_channel_pairs)
+      :audio_channel_pairs,
+      :input_resolution)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7291,6 +7562,11 @@ module Aws::MediaLive
     #   a MediaConnect flow.
     #   @return [Array<Types::InputDeviceUhdAudioChannelPairConfig>]
     #
+    # @!attribute [rw] input_resolution
+    #   The resolution of the Link device's source (HD or UHD). This value
+    #   determines MediaLive resource allocation and billing for this input.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/InputDeviceUhdSettings AWS API Documentation
     #
     class InputDeviceUhdSettings < Struct.new(
@@ -7305,7 +7581,8 @@ module Aws::MediaLive
       :latency_ms,
       :codec,
       :mediaconnect_settings,
-      :audio_channel_pairs)
+      :audio_channel_pairs,
+      :input_resolution)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7457,6 +7734,11 @@ module Aws::MediaLive
     #   Whitelist rules and their sync status
     #   @return [Array<Types::InputWhitelistRule>]
     #
+    # @!attribute [rw] channels
+    #   The list of channels currently using this Input Security Group as
+    #   their channel security group.
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/InputSecurityGroup AWS API Documentation
     #
     class InputSecurityGroup < Struct.new(
@@ -7465,7 +7747,8 @@ module Aws::MediaLive
       :inputs,
       :state,
       :tags,
-      :whitelist_rules)
+      :whitelist_rules,
+      :channels)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -8917,10 +9200,18 @@ module Aws::MediaLive
     #   MediaPackage channel destination.
     #   @return [Types::OutputLocationRef]
     #
+    # @!attribute [rw] mediapackage_v2_group_settings
+    #   Parameters that apply only if the destination parameter (for the
+    #   output group) specifies a channelGroup and channelName. Use of these
+    #   two paramters indicates that the output group is for MediaPackage V2
+    #   (CMAF Ingest).
+    #   @return [Types::MediaPackageV2GroupSettings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/MediaPackageGroupSettings AWS API Documentation
     #
     class MediaPackageGroupSettings < Struct.new(
-      :destination)
+      :destination,
+      :mediapackage_v2_group_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -8947,23 +9238,44 @@ module Aws::MediaLive
     #   channel that uses MediaPackage v2.
     #   @return [String]
     #
+    # @!attribute [rw] channel_endpoint_id
+    #   Endpoint 1 or 2 of the channel in MediaPackageV2. Only use if you
+    #   are sending CMAF Ingest output to a CMAF ingest endpoint on a
+    #   MediaPackage channel that uses MediaPackage v2.
+    #   @return [String]
+    #
+    # @!attribute [rw] media_package_region_name
+    #   Region the channel group and channel are located in for
+    #   MediaPackageV2. Only use if you are sending CMAF Ingest output to a
+    #   CMAF ingest endpoint on a MediaPackage channel that uses
+    #   MediaPackage v2.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/MediaPackageOutputDestinationSettings AWS API Documentation
     #
     class MediaPackageOutputDestinationSettings < Struct.new(
       :channel_id,
       :channel_group,
-      :channel_name)
+      :channel_name,
+      :channel_endpoint_id,
+      :media_package_region_name)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # Media Package Output Settings
     #
-    # @api private
+    # @!attribute [rw] media_package_v2_destination_settings
+    #   Optional settings for MediaPackage V2 destinations
+    #   @return [Types::MediaPackageV2DestinationSettings]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/MediaPackageOutputSettings AWS API Documentation
     #
-    class MediaPackageOutputSettings < Aws::EmptyStructure; end
+    class MediaPackageOutputSettings < Struct.new(
+      :media_package_v2_destination_settings)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # Settings to specify the rendering of motion graphics into the video
     # stream.
@@ -10155,6 +10467,16 @@ module Aws::MediaLive
     #   encoder.
     #   @return [Array<Types::SrtOutputDestinationSettings>]
     #
+    # @!attribute [rw] logical_interface_names
+    #   Optional assignment of an output to a logical interface on the Node.
+    #   Only applies to on premises channels.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] media_connect_router_settings
+    #   Destination settings for a MediaConnect Router output; one
+    #   destination for each redundant encoder.
+    #   @return [Array<Types::MediaConnectRouterOutputDestinationSettings>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/OutputDestination AWS API Documentation
     #
     class OutputDestination < Struct.new(
@@ -10162,7 +10484,9 @@ module Aws::MediaLive
       :media_package_settings,
       :multiplex_settings,
       :settings,
-      :srt_settings)
+      :srt_settings,
+      :logical_interface_names,
+      :media_connect_router_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -10183,13 +10507,18 @@ module Aws::MediaLive
     #   username for destination
     #   @return [String]
     #
+    # @!attribute [rw] virtual_source_address
+    #   Specifies the source IP address for outbound multicast packets.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/OutputDestinationSettings AWS API Documentation
     #
     class OutputDestinationSettings < Struct.new(
       :password_param,
       :stream_name,
       :url,
-      :username)
+      :username,
+      :virtual_source_address)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -10260,6 +10589,10 @@ module Aws::MediaLive
     #   Srt Group Settings
     #   @return [Types::SrtGroupSettings]
     #
+    # @!attribute [rw] media_connect_router_group_settings
+    #   Media Connect Router Group Settings
+    #   @return [Types::MediaConnectRouterGroupSettings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/OutputGroupSettings AWS API Documentation
     #
     class OutputGroupSettings < Struct.new(
@@ -10272,7 +10605,8 @@ module Aws::MediaLive
       :rtmp_group_settings,
       :udp_group_settings,
       :cmaf_ingest_group_settings,
-      :srt_group_settings)
+      :srt_group_settings,
+      :media_connect_router_group_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -10300,11 +10634,16 @@ module Aws::MediaLive
     #   Pipeline Locking Settings
     #   @return [Types::PipelineLockingSettings]
     #
+    # @!attribute [rw] disabled_locking_settings
+    #   Disabled Locking Settings
+    #   @return [Types::DisabledLockingSettings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/OutputLockingSettings AWS API Documentation
     #
     class OutputLockingSettings < Struct.new(
       :epoch_locking_settings,
-      :pipeline_locking_settings)
+      :pipeline_locking_settings,
+      :disabled_locking_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -10351,6 +10690,10 @@ module Aws::MediaLive
     #   Srt Output Settings
     #   @return [Types::SrtOutputSettings]
     #
+    # @!attribute [rw] media_connect_router_output_settings
+    #   Media Connect Router Output Settings
+    #   @return [Types::MediaConnectRouterOutputSettings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/OutputSettings AWS API Documentation
     #
     class OutputSettings < Struct.new(
@@ -10363,7 +10706,8 @@ module Aws::MediaLive
       :rtmp_output_settings,
       :udp_output_settings,
       :cmaf_ingest_output_settings,
-      :srt_output_settings)
+      :srt_output_settings,
+      :media_connect_router_output_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -10421,6 +10765,12 @@ module Aws::MediaLive
     #   Current engine version of the encoder for this pipeline.
     #   @return [Types::ChannelEngineVersionResponse]
     #
+    # @!attribute [rw] media_connect_router_output_connection_map
+    #   A map of output names to the MediaConnect Router connection for this
+    #   pipeline. Only present for channels with MediaConnect Router
+    #   outputs.
+    #   @return [Hash<String,Types::MediaConnectRouterOutputConnection>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/PipelineDetail AWS API Documentation
     #
     class PipelineDetail < Struct.new(
@@ -10429,18 +10779,39 @@ module Aws::MediaLive
       :active_motion_graphics_action_name,
       :active_motion_graphics_uri,
       :pipeline_id,
-      :channel_engine_version)
+      :channel_engine_version,
+      :media_connect_router_output_connection_map)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # Pipeline Locking Settings
     #
-    # @api private
+    # @!attribute [rw] pipeline_locking_method
+    #   The method to use to lock the video frames in the pipelines.
+    #   sourceTimecode (default): Use the timecode in the source.
+    #   videoAlignment: Lock frames that the encoder identifies as having
+    #   matching content. If videoAlignment is selected, existing timecodes
+    #   will not be used for any locking decisions.
+    #   @return [String]
+    #
+    # @!attribute [rw] custom_epoch
+    #   Optional. Only applies to CMAF Ingest Output Group and MediaPackage
+    #   V2 Output Group Only. Enter a value here to use a custom epoch,
+    #   instead of the standard epoch (which started at 1970-01-01T00:00:00
+    #   UTC). Specify the start time of the custom epoch, in
+    #   YYYY-MM-DDTHH:MM:SS in UTC. The time must be 2000-01-01T00:00:00 or
+    #   later. Always set the MM:SS portion to 00:00.
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/PipelineLockingSettings AWS API Documentation
     #
-    class PipelineLockingSettings < Aws::EmptyStructure; end
+    class PipelineLockingSettings < Struct.new(
+      :pipeline_locking_method,
+      :custom_epoch)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # Settings for pausing a pipeline.
     #
@@ -11609,6 +11980,17 @@ module Aws::MediaLive
     # @!attribute [rw] channel_engine_version
     #   @return [Types::ChannelEngineVersionResponse]
     #
+    # @!attribute [rw] linked_channel_settings
+    #   Linked channel configuration details
+    #   @return [Types::DescribeLinkedChannelSettings]
+    #
+    # @!attribute [rw] channel_security_groups
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] inference_settings
+    #   Configures Elemental Inference features in a channel.
+    #   @return [Types::DescribeInferenceSettings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/StartChannelResponse AWS API Documentation
     #
     class StartChannelResponse < Struct.new(
@@ -11631,7 +12013,10 @@ module Aws::MediaLive
       :tags,
       :vpc,
       :anywhere_settings,
-      :channel_engine_version)
+      :channel_engine_version,
+      :linked_channel_settings,
+      :channel_security_groups,
+      :inference_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -12056,6 +12441,17 @@ module Aws::MediaLive
     # @!attribute [rw] channel_engine_version
     #   @return [Types::ChannelEngineVersionResponse]
     #
+    # @!attribute [rw] linked_channel_settings
+    #   Linked channel configuration details
+    #   @return [Types::DescribeLinkedChannelSettings]
+    #
+    # @!attribute [rw] channel_security_groups
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] inference_settings
+    #   Configures Elemental Inference features in a channel.
+    #   @return [Types::DescribeInferenceSettings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/StopChannelResponse AWS API Documentation
     #
     class StopChannelResponse < Struct.new(
@@ -12078,7 +12474,10 @@ module Aws::MediaLive
       :tags,
       :vpc,
       :anywhere_settings,
-      :channel_engine_version)
+      :channel_engine_version,
+      :linked_channel_settings,
+      :channel_security_groups,
+      :inference_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -12680,6 +13079,32 @@ module Aws::MediaLive
     # @!attribute [rw] dry_run
     #   @return [Boolean]
     #
+    # @!attribute [rw] anywhere_settings
+    #   The Elemental Anywhere settings for this channel.
+    #   @return [Types::AnywhereSettings]
+    #
+    # @!attribute [rw] linked_channel_settings
+    #   The linked channel settings for the channel.
+    #   @return [Types::LinkedChannelSettings]
+    #
+    # @!attribute [rw] channel_security_groups
+    #   A list of IDs for all the Input Security Groups attached to the
+    #   channel.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] inference_settings
+    #   Include this setting to include Elemental Inference features in this
+    #   channel.
+    #   @return [Types::InferenceSettings]
+    #
+    # @!attribute [rw] special_router_settings
+    #   When using MediaConnect Router as the source of a MediaLive input
+    #   there's a special handoff that occurs when a router output is
+    #   created. This group of settings is set on your behalf by the
+    #   MediaConnect Router service using this set of settings. This setting
+    #   object can only by used by that service.
+    #   @return [Types::SpecialRouterSettings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/UpdateChannel AWS API Documentation
     #
     class UpdateChannel < Struct.new(
@@ -12693,7 +13118,12 @@ module Aws::MediaLive
       :name,
       :role_arn,
       :channel_engine_version,
-      :dry_run)
+      :dry_run,
+      :anywhere_settings,
+      :linked_channel_settings,
+      :channel_security_groups,
+      :inference_settings,
+      :special_router_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -12785,6 +13215,29 @@ module Aws::MediaLive
     # @!attribute [rw] dry_run
     #   @return [Boolean]
     #
+    # @!attribute [rw] anywhere_settings
+    #   Elemental anywhere settings
+    #   @return [Types::AnywhereSettings]
+    #
+    # @!attribute [rw] linked_channel_settings
+    #   Configuration for linked channel relationships
+    #   @return [Types::LinkedChannelSettings]
+    #
+    # @!attribute [rw] channel_security_groups
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] inference_settings
+    #   Configures Elemental Inference features in a channel.
+    #   @return [Types::InferenceSettings]
+    #
+    # @!attribute [rw] special_router_settings
+    #   When using MediaConnect Router as the source of a MediaLive input
+    #   there's a special handoff that occurs when a router output is
+    #   created. This group of settings is set on your behalf by the
+    #   MediaConnect Router service using this set of settings. This setting
+    #   object can only by used by that service.
+    #   @return [Types::SpecialRouterSettings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/UpdateChannelRequest AWS API Documentation
     #
     class UpdateChannelRequest < Struct.new(
@@ -12799,7 +13252,12 @@ module Aws::MediaLive
       :name,
       :role_arn,
       :channel_engine_version,
-      :dry_run)
+      :dry_run,
+      :anywhere_settings,
+      :linked_channel_settings,
+      :channel_security_groups,
+      :inference_settings,
+      :special_router_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -12871,6 +13329,23 @@ module Aws::MediaLive
     #   Multicast Input settings.
     #   @return [Types::MulticastSettingsUpdateRequest]
     #
+    # @!attribute [rw] smpte_2110_receiver_group_settings
+    #   Include this parameter if the input is a SMPTE 2110 input, to
+    #   identify the stream sources for this input.
+    #   @return [Types::Smpte2110ReceiverGroupSettings]
+    #
+    # @!attribute [rw] sdi_sources
+    #   SDI Sources for this Input.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] special_router_settings
+    #   When using MediaConnect Router as the source of a MediaLive input
+    #   there's a special handoff that occurs when a router output is
+    #   created. This group of settings is set on your behalf by the
+    #   MediaConnect Router service using this set of settings. This setting
+    #   object can only by used by that service.
+    #   @return [Types::SpecialRouterSettings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/UpdateInput AWS API Documentation
     #
     class UpdateInput < Struct.new(
@@ -12882,7 +13357,10 @@ module Aws::MediaLive
       :role_arn,
       :sources,
       :srt_settings,
-      :multicast_settings)
+      :multicast_settings,
+      :smpte_2110_receiver_group_settings,
+      :sdi_sources,
+      :special_router_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -13057,15 +13535,31 @@ module Aws::MediaLive
     #   @return [Array<Types::InputSourceRequest>]
     #
     # @!attribute [rw] srt_settings
-    #   Configures the sources for this SRT input. For a single-pipeline
-    #   input, include one srtCallerSource in the array. For a
-    #   standard-pipeline input, include two srtCallerSource.
+    #   Configures the settings for SRT inputs. Provide either
+    #   srtCallerSources (for SRT\_CALLER type) OR srtListenerSettings (for
+    #   SRT\_LISTENER type), not both.
     #   @return [Types::SrtSettingsRequest]
     #
     # @!attribute [rw] multicast_settings
     #   Settings for a Multicast input. Contains a list of multicast Urls
     #   and optional source ip addresses.
     #   @return [Types::MulticastSettingsUpdateRequest]
+    #
+    # @!attribute [rw] smpte_2110_receiver_group_settings
+    #   Configures the sources for the SMPTE 2110 Receiver Group input.
+    #   @return [Types::Smpte2110ReceiverGroupSettings]
+    #
+    # @!attribute [rw] sdi_sources
+    #   SDI Sources for this Input.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] special_router_settings
+    #   When using MediaConnect Router as the source of a MediaLive input
+    #   there's a special handoff that occurs when a router output is
+    #   created. This group of settings is set on your behalf by the
+    #   MediaConnect Router service using this set of settings. This setting
+    #   object can only by used by that service.
+    #   @return [Types::SpecialRouterSettings]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/UpdateInputRequest AWS API Documentation
     #
@@ -13079,7 +13573,10 @@ module Aws::MediaLive
       :role_arn,
       :sources,
       :srt_settings,
-      :multicast_settings)
+      :multicast_settings,
+      :smpte_2110_receiver_group_settings,
+      :sdi_sources,
+      :special_router_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -13453,11 +13950,14 @@ module Aws::MediaLive
     #   @return [String]
     #
     # @!attribute [rw] scaling_behavior
-    #   STRETCH\_TO\_OUTPUT configures the output position to stretch the
-    #   video to the specified output resolution (height and width). This
-    #   option will override any position value. DEFAULT may insert black
-    #   boxes (pillar boxes or letter boxes) around the video to provide the
-    #   specified output resolution.
+    #   Configures how MediaLive transforms the video picture to match the
+    #   output frame. Use STRETCH\_TO\_OUTPUT to stretch the video to fill
+    #   the output frame. The video might get distorted. Use DEFAULT to
+    #   insert pillar boxes or letter boxes around the video to fill the
+    #   output frame. The video won't get distorted. Use SMART\_CROP to
+    #   enable the smart crop feature that uses the Elemental Inference
+    #   service to crop the frame using AI - see the MediaLive User Guide
+    #   for more information.
     #   @return [String]
     #
     # @!attribute [rw] sharpness
@@ -13492,14 +13992,19 @@ module Aws::MediaLive
     # may have only a single video selector.
     #
     # @!attribute [rw] color_space
-    #   Specifies the color space of an input. This setting works in tandem
-    #   with colorSpaceUsage and a video description's
-    #   colorSpaceSettingsChoice to determine if any conversion will be
-    #   performed.
+    #   Controls how MediaLive will use the color space metadata from the
+    #   source. Typically, choose FOLLOW, which means to use the color space
+    #   metadata without changing it. Or choose another value (a standard).
+    #   In this case, the handling is controlled by the colorspaceUsage
+    #   property.
     #   @return [String]
     #
     # @!attribute [rw] color_space_settings
-    #   Color space settings
+    #   Choose HDR10 only if the following situation applies. Firstly, you
+    #   specified HDR10 in ColorSpace. Secondly, the attached input is for
+    #   AWS Elemental Link. Thirdly, you plan to convert the content to
+    #   another color space. You need to specify the color space metadata
+    #   that is missing from the source sent from AWS Elemental Link.
     #   @return [Types::VideoSelectorColorSpaceSettings]
     #
     # @!attribute [rw] color_space_usage
@@ -13835,6 +14340,17 @@ module Aws::MediaLive
     # @!attribute [rw] channel_engine_version
     #   @return [Types::ChannelEngineVersionResponse]
     #
+    # @!attribute [rw] linked_channel_settings
+    #   Linked channel configuration details
+    #   @return [Types::DescribeLinkedChannelSettings]
+    #
+    # @!attribute [rw] channel_security_groups
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] inference_settings
+    #   Configures Elemental Inference features in a channel.
+    #   @return [Types::DescribeInferenceSettings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/RestartChannelPipelinesResponse AWS API Documentation
     #
     class RestartChannelPipelinesResponse < Struct.new(
@@ -13858,7 +14374,10 @@ module Aws::MediaLive
       :tags,
       :vpc,
       :anywhere_settings,
-      :channel_engine_version)
+      :channel_engine_version,
+      :linked_channel_settings,
+      :channel_security_groups,
+      :inference_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -13942,6 +14461,30 @@ module Aws::MediaLive
     #   and period (.) and has a maximum length of 100 characters.
     #   @return [String]
     #
+    # @!attribute [rw] caption_language_mappings
+    #   An array that identifies the languages in the four caption channels
+    #   in the embedded captions.
+    #   @return [Array<Types::CmafIngestCaptionLanguageMapping>]
+    #
+    # @!attribute [rw] timed_metadata_id_3_frame
+    #   Set to none if you don't want to insert a timecode in the output.
+    #   Otherwise choose the frame type for the timecode.
+    #   @return [String]
+    #
+    # @!attribute [rw] timed_metadata_id_3_period
+    #   If you set up to insert a timecode in the output, specify the
+    #   frequency for the frame, in seconds.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] timed_metadata_passthrough
+    #   Set to enabled to pass through ID3 metadata from the input sources.
+    #   @return [String]
+    #
+    # @!attribute [rw] additional_destinations
+    #   Optional an array of additional destinational HTTP destinations for
+    #   the OutputGroup outputs
+    #   @return [Array<Types::AdditionalDestinations>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/CmafIngestGroupSettings AWS API Documentation
     #
     class CmafIngestGroupSettings < Struct.new(
@@ -13956,7 +14499,12 @@ module Aws::MediaLive
       :nielsen_id_3_name_modifier,
       :scte_35_name_modifier,
       :id_3_behavior,
-      :id_3_name_modifier)
+      :id_3_name_modifier,
+      :caption_language_mappings,
+      :timed_metadata_id_3_frame,
+      :timed_metadata_id_3_period,
+      :timed_metadata_passthrough,
+      :additional_destinations)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -18035,30 +18583,42 @@ module Aws::MediaLive
       include Aws::Structure
     end
 
-    # The configured sources for this SRT input.
+    # The configured settings for SRT inputs (caller and listener).
     #
     # @!attribute [rw] srt_caller_sources
     #   @return [Array<Types::SrtCallerSource>]
     #
+    # @!attribute [rw] srt_listener_settings
+    #   Settings for SRT Listener input.
+    #   @return [Types::SrtListenerSettings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/SrtSettings AWS API Documentation
     #
     class SrtSettings < Struct.new(
-      :srt_caller_sources)
+      :srt_caller_sources,
+      :srt_listener_settings)
       SENSITIVE = []
       include Aws::Structure
     end
 
-    # Configures the sources for this SRT input. For a single-pipeline
-    # input, include one srtCallerSource in the array. For a
-    # standard-pipeline input, include two srtCallerSource.
+    # Configures the settings for SRT inputs. Provide either
+    # srtCallerSources (for SRT\_CALLER type) OR srtListenerSettings (for
+    # SRT\_LISTENER type), not both.
     #
     # @!attribute [rw] srt_caller_sources
     #   @return [Array<Types::SrtCallerSourceRequest>]
     #
+    # @!attribute [rw] srt_listener_settings
+    #   Configuration for SRT Listener input. Encryption is REQUIRED for all
+    #   SRT Listener inputs for security reasons. You must provide
+    #   decryption settings including algorithm and passphrase secret ARN.
+    #   @return [Types::SrtListenerSettingsRequest]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/SrtSettingsRequest AWS API Documentation
     #
     class SrtSettingsRequest < Struct.new(
-      :srt_caller_sources)
+      :srt_caller_sources,
+      :srt_listener_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -18100,13 +18660,18 @@ module Aws::MediaLive
     #   Rec709 Settings
     #   @return [Types::Rec709Settings]
     #
+    # @!attribute [rw] hlg_2020_settings
+    #   Hlg2020 Settings
+    #   @return [Types::Hlg2020Settings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/Av1ColorSpaceSettings AWS API Documentation
     #
     class Av1ColorSpaceSettings < Struct.new(
       :color_space_passthrough_settings,
       :hdr_10_settings,
       :rec_601_settings,
-      :rec_709_settings)
+      :rec_709_settings,
+      :hlg_2020_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -18126,7 +18691,9 @@ module Aws::MediaLive
     #   @return [Integer]
     #
     # @!attribute [rw] color_space_settings
-    #   Color Space settings
+    #   Specify the type of color space to apply or choose to pass through.
+    #   The default is to pass through the color space that is in the
+    #   source.
     #   @return [Types::Av1ColorSpaceSettings]
     #
     # @!attribute [rw] fixed_afd
@@ -18223,6 +18790,58 @@ module Aws::MediaLive
     #   the timecode will become part of the video.
     #   @return [Types::TimecodeBurninSettings]
     #
+    # @!attribute [rw] bitrate
+    #   Average bitrate in bits/second. Required when the rate control mode
+    #   is CBR. Not used for QVBR.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] rate_control_mode
+    #   Rate control mode. QVBR: Quality will match the specified quality
+    #   level except when it is constrained by the maximum bitrate.
+    #   Recommended if you or your viewers pay for bandwidth. CBR: Quality
+    #   varies, depending on the video complexity. Recommended only if you
+    #   distribute your assets to devices that cannot handle variable
+    #   bitrates.
+    #   @return [String]
+    #
+    # @!attribute [rw] min_bitrate
+    #   Used for QVBR rate control mode only. Optional. Enter a minimum
+    #   bitrate if you want to keep the output bitrate about a threshold, in
+    #   order to prevent the downstream system from de-allocating network
+    #   bandwidth for this output.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] spatial_aq
+    #   Spatial AQ makes adjustments within each frame based on spatial
+    #   variation of content complexity. Enabled: MediaLive will determine
+    #   the appropriate level of spatial AQ to apply. Disabled: No spatial
+    #   AQ. For more information, see the topic about video adaptive
+    #   quantization in the MediaLive user guide.
+    #   @return [String]
+    #
+    # @!attribute [rw] temporal_aq
+    #   Temporal AQ makes adjustments within each frame based on variations
+    #   in content complexity over time. Enabled: MediaLive will determine
+    #   the appropriate level of temporal AQ to apply. Disabled: No temporal
+    #   AQ. For more information, see the topic about video adaptive
+    #   quantization in the MediaLive user guide.
+    #   @return [String]
+    #
+    # @!attribute [rw] timecode_insertion
+    #   Controls how MediaLive inserts timecodes into the video output
+    #   encode. DISABLED: Do not insert timecodes. METADATA\_OBU: Include
+    #   timecodes. MediaLive inserts timecode metadata based on the timecode
+    #   from the source specified in the Timecode Config property. The
+    #   timecode metadata is a metadata OBU (Open Bitstream Unit) of type
+    #   METADATA\_TYPE\_TIMECODE, in accordance with
+    #   https://aomediacodec.github.io/av1-spec/#metadata-timecode-syntax.
+    #   @return [String]
+    #
+    # @!attribute [rw] bit_depth
+    #   Specifies the bit depth for the output encode. Choose a value. Or
+    #   leave the field empty to use the default, which is 8 bit.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/Av1Settings AWS API Documentation
     #
     class Av1Settings < Struct.new(
@@ -18242,7 +18861,14 @@ module Aws::MediaLive
       :par_numerator,
       :qvbr_quality_level,
       :scene_change_detect,
-      :timecode_burnin_settings)
+      :timecode_burnin_settings,
+      :bitrate,
+      :rate_control_mode,
+      :min_bitrate,
+      :spatial_aq,
+      :temporal_aq,
+      :timecode_insertion,
+      :bit_depth)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -18751,6 +19377,10 @@ module Aws::MediaLive
     #   Used in DescribeNodeSummary.
     #   @return [String]
     #
+    # @!attribute [rw] sdi_source_mappings
+    #   Used in SdiSourceMappings.
+    #   @return [Array<Types::SdiSourceMapping>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/CreateNodeResponse AWS API Documentation
     #
     class CreateNodeResponse < Struct.new(
@@ -18763,7 +19393,8 @@ module Aws::MediaLive
       :name,
       :node_interface_mappings,
       :role,
-      :state)
+      :state,
+      :sdi_source_mappings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -18972,6 +19603,10 @@ module Aws::MediaLive
     #   Used in DescribeNodeSummary.
     #   @return [String]
     #
+    # @!attribute [rw] sdi_source_mappings
+    #   Used in SdiSourceMappings.
+    #   @return [Array<Types::SdiSourceMapping>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/DeleteNodeResponse AWS API Documentation
     #
     class DeleteNodeResponse < Struct.new(
@@ -18984,7 +19619,8 @@ module Aws::MediaLive
       :name,
       :node_interface_mappings,
       :role,
-      :state)
+      :state,
+      :sdi_source_mappings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -19524,6 +20160,10 @@ module Aws::MediaLive
     #   Used in DescribeNodeSummary.
     #   @return [String]
     #
+    # @!attribute [rw] sdi_source_mappings
+    #   Used in SdiSourceMappings.
+    #   @return [Array<Types::SdiSourceMapping>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/DescribeNodeResponse AWS API Documentation
     #
     class DescribeNodeResponse < Struct.new(
@@ -19536,7 +20176,8 @@ module Aws::MediaLive
       :name,
       :node_interface_mappings,
       :role,
-      :state)
+      :state,
+      :sdi_source_mappings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -19595,6 +20236,12 @@ module Aws::MediaLive
     #   The current state of the Node.
     #   @return [String]
     #
+    # @!attribute [rw] sdi_source_mappings
+    #   An array of SDI source mappings. Each mapping connects one logical
+    #   SdiSource to the physical SDI card and port that the physical SDI
+    #   source uses.
+    #   @return [Array<Types::SdiSourceMapping>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/DescribeNodeResult AWS API Documentation
     #
     class DescribeNodeResult < Struct.new(
@@ -19607,7 +20254,8 @@ module Aws::MediaLive
       :name,
       :node_interface_mappings,
       :role,
-      :state)
+      :state,
+      :sdi_source_mappings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -19668,6 +20316,12 @@ module Aws::MediaLive
     #   The current state of the Node.
     #   @return [String]
     #
+    # @!attribute [rw] sdi_source_mappings
+    #   An array of SDI source mappings. Each mapping connects one logical
+    #   SdiSource to the physical SDI card and port that the physical SDI
+    #   source uses.
+    #   @return [Array<Types::SdiSourceMapping>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/DescribeNodeSummary AWS API Documentation
     #
     class DescribeNodeSummary < Struct.new(
@@ -19681,7 +20335,8 @@ module Aws::MediaLive
       :name,
       :node_interface_mappings,
       :role,
-      :state)
+      :state,
+      :sdi_source_mappings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -20202,12 +20857,18 @@ module Aws::MediaLive
     #   running Elemental anywhere.
     #   @return [String]
     #
+    # @!attribute [rw] physical_interface_ip_addresses
+    #   The IP addresses associated with the physical interface on the node
+    #   hardware.
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/NodeInterfaceMapping AWS API Documentation
     #
     class NodeInterfaceMapping < Struct.new(
       :logical_interface_name,
       :network_interface_mode,
-      :physical_interface_name)
+      :physical_interface_name,
+      :physical_interface_ip_addresses)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -20330,12 +20991,26 @@ module Aws::MediaLive
     #   A URL specifying a destination
     #   @return [String]
     #
+    # @!attribute [rw] connection_mode
+    #   Specifies the mode the output should use for connection
+    #   establishment. CALLER mode requires URL, LISTENER mode requires
+    #   port.
+    #   @return [String]
+    #
+    # @!attribute [rw] listener_port
+    #   Port number for listener mode connections (required when
+    #   connectionMode is LISTENER, must not be provided when connectionMode
+    #   is CALLER).
+    #   @return [Integer]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/SrtOutputDestinationSettings AWS API Documentation
     #
     class SrtOutputDestinationSettings < Struct.new(
       :encryption_passphrase_secret_arn,
       :stream_id,
-      :url)
+      :url,
+      :connection_mode,
+      :listener_port)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -20716,13 +21391,18 @@ module Aws::MediaLive
     #   and might get used if an ACTIVE Node fails.
     #   @return [String]
     #
+    # @!attribute [rw] sdi_source_mappings
+    #   The mappings of a SDI capture card port to a logical SDI data stream
+    #   @return [Array<Types::SdiSourceMappingUpdateRequest>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/UpdateNodeRequest AWS API Documentation
     #
     class UpdateNodeRequest < Struct.new(
       :cluster_id,
       :name,
       :node_id,
-      :role)
+      :role,
+      :sdi_source_mappings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -20761,6 +21441,10 @@ module Aws::MediaLive
     #   Used in DescribeNodeSummary.
     #   @return [String]
     #
+    # @!attribute [rw] sdi_source_mappings
+    #   Used in SdiSourceMappings.
+    #   @return [Array<Types::SdiSourceMapping>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/UpdateNodeResponse AWS API Documentation
     #
     class UpdateNodeResponse < Struct.new(
@@ -20773,7 +21457,8 @@ module Aws::MediaLive
       :name,
       :node_interface_mappings,
       :role,
-      :state)
+      :state,
+      :sdi_source_mappings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -20839,6 +21524,10 @@ module Aws::MediaLive
     #   Used in DescribeNodeSummary.
     #   @return [String]
     #
+    # @!attribute [rw] sdi_source_mappings
+    #   Used in SdiSourceMappings.
+    #   @return [Array<Types::SdiSourceMapping>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/UpdateNodeStateResponse AWS API Documentation
     #
     class UpdateNodeStateResponse < Struct.new(
@@ -20851,7 +21540,8 @@ module Aws::MediaLive
       :name,
       :node_interface_mappings,
       :role,
-      :state)
+      :state,
+      :sdi_source_mappings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -21082,6 +21772,1519 @@ module Aws::MediaLive
     #
     class TimedMetadataScheduleActionSettings < Struct.new(
       :id_3)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The location of the SDP file for one of the SMPTE 2110 streams in a
+    # receiver group.
+    #
+    # @!attribute [rw] media_index
+    #   The index of the media stream in the SDP file for one SMPTE 2110
+    #   stream.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] sdp_url
+    #   The URL of the SDP file for one SMPTE 2110 stream.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/InputSdpLocation AWS API Documentation
+    #
+    class InputSdpLocation < Struct.new(
+      :media_index,
+      :sdp_url)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A receiver group is a collection of video, audio, and ancillary
+    # streams that you want to group together and attach to one input.
+    #
+    # @!attribute [rw] sdp_settings
+    #   The single Smpte2110ReceiverGroupSdpSettings that identify the
+    #   video, audio, and ancillary streams for this receiver group.
+    #   @return [Types::Smpte2110ReceiverGroupSdpSettings]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/Smpte2110ReceiverGroup AWS API Documentation
+    #
+    class Smpte2110ReceiverGroup < Struct.new(
+      :sdp_settings)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Information about the SDP files that describe the SMPTE 2110 streams
+    # that go into one SMPTE 2110 receiver group.
+    #
+    # @!attribute [rw] ancillary_sdps
+    #   A list of InputSdpLocations. Each item in the list specifies the SDP
+    #   file and index for one ancillary SMPTE 2110 stream. Each stream
+    #   encapsulates one captions stream (out of any number you can include)
+    #   or the single SCTE 35 stream that you can include.
+    #   @return [Array<Types::InputSdpLocation>]
+    #
+    # @!attribute [rw] audio_sdps
+    #   A list of InputSdpLocations. Each item in the list specifies the SDP
+    #   file and index for one audio SMPTE 2110 stream.
+    #   @return [Array<Types::InputSdpLocation>]
+    #
+    # @!attribute [rw] video_sdp
+    #   The InputSdpLocation that specifies the SDP file and index for the
+    #   single video SMPTE 2110 stream for this 2110 input.
+    #   @return [Types::InputSdpLocation]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/Smpte2110ReceiverGroupSdpSettings AWS API Documentation
+    #
+    class Smpte2110ReceiverGroupSdpSettings < Struct.new(
+      :ancillary_sdps,
+      :audio_sdps,
+      :video_sdp)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configures the sources for the SMPTE 2110 Receiver Group input.
+    #
+    # @!attribute [rw] smpte_2110_receiver_groups
+    #   @return [Array<Types::Smpte2110ReceiverGroup>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/Smpte2110ReceiverGroupSettings AWS API Documentation
+    #
+    class Smpte2110ReceiverGroupSettings < Struct.new(
+      :smpte_2110_receiver_groups)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Used in the CreateSdiSource operation.
+    #
+    # @!attribute [rw] mode
+    #   Applies only if the type is QUAD. Specify the mode for handling the
+    #   quad-link signal: QUADRANT or INTERLEAVE.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   Specify a name that is unique in the AWS account. We recommend you
+    #   assign a name that describes the source, for example
+    #   curling-cameraA. Names are case-sensitive.
+    #   @return [String]
+    #
+    # @!attribute [rw] request_id
+    #   An ID that you assign to a create request. This ID ensures idempotency when creating resources.**A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   A collection of key-value pairs.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] type
+    #   Specify the type of the SDI source: SINGLE: The source is a
+    #   single-link source. QUAD: The source is one part of a quad-link
+    #   source.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/CreateSdiSourceRequest AWS API Documentation
+    #
+    class CreateSdiSourceRequest < Struct.new(
+      :mode,
+      :name,
+      :request_id,
+      :tags,
+      :type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Used in CreateSdiSourceResponse.
+    #
+    # @!attribute [rw] sdi_source
+    #   Settings for the SDI source.
+    #   @return [Types::SdiSource]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/CreateSdiSourceResponse AWS API Documentation
+    #
+    class CreateSdiSourceResponse < Struct.new(
+      :sdi_source)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] sdi_source_id
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/DeleteSdiSourceRequest AWS API Documentation
+    #
+    class DeleteSdiSourceRequest < Struct.new(
+      :sdi_source_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Used in DeleteSdiSourceResponse.
+    #
+    # @!attribute [rw] sdi_source
+    #   Settings for the SDI source.
+    #   @return [Types::SdiSource]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/DeleteSdiSourceResponse AWS API Documentation
+    #
+    class DeleteSdiSourceResponse < Struct.new(
+      :sdi_source)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] sdi_source_id
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/DescribeSdiSourceRequest AWS API Documentation
+    #
+    class DescribeSdiSourceRequest < Struct.new(
+      :sdi_source_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Used in DescribeSdiSourceResponse.
+    #
+    # @!attribute [rw] sdi_source
+    #   Settings for the SDI source.
+    #   @return [Types::SdiSource]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/DescribeSdiSourceResponse AWS API Documentation
+    #
+    class DescribeSdiSourceResponse < Struct.new(
+      :sdi_source)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] max_results
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/ListSdiSourcesRequest AWS API Documentation
+    #
+    class ListSdiSourcesRequest < Struct.new(
+      :max_results,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Response for the ListSdiSources operation.
+    #
+    # @!attribute [rw] next_token
+    #   @return [String]
+    #
+    # @!attribute [rw] sdi_sources
+    #   @return [Array<Types::SdiSourceSummary>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/ListSdiSourcesResponse AWS API Documentation
+    #
+    class ListSdiSourcesResponse < Struct.new(
+      :next_token,
+      :sdi_sources)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Used in CreateSdiSourceResponse, DeleteSdiSourceResponse,
+    # DescribeSdiSourceResponse, ListSdiSourcesResponse,
+    # UpdateSdiSourceResponse
+    #
+    # @!attribute [rw] arn
+    #   The ARN of this SdiSource. It is automatically assigned when the
+    #   SdiSource is created.
+    #   @return [String]
+    #
+    # @!attribute [rw] id
+    #   The ID of the SdiSource. Unique in the AWS account.The ID is the
+    #   resource-id portion of the ARN.
+    #   @return [String]
+    #
+    # @!attribute [rw] inputs
+    #   The list of inputs that are currently using this SDI source. This
+    #   list will be empty if the SdiSource has just been deleted.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] mode
+    #   Applies only if the type is QUAD. The mode for handling the
+    #   quad-link signal QUADRANT or INTERLEAVE.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the SdiSource.
+    #   @return [String]
+    #
+    # @!attribute [rw] state
+    #   Specifies whether the SDI source is attached to an SDI input
+    #   (IN\_USE) or not (IDLE).
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   Used in SdiSource, CreateSdiSourceRequest, UpdateSdiSourceRequest.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/SdiSource AWS API Documentation
+    #
+    class SdiSource < Struct.new(
+      :arn,
+      :id,
+      :inputs,
+      :mode,
+      :name,
+      :state,
+      :type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Used in DescribeNodeSummary, DescribeNodeResult.
+    #
+    # @!attribute [rw] card_number
+    #   A number that uniquely identifies the SDI card on the node hardware.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] channel_number
+    #   A number that uniquely identifies a port on the SDI card.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] sdi_source
+    #   The ID of the SdiSource to associate with this port on this card.
+    #   You can use the ListSdiSources operation to discover all the IDs.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/SdiSourceMapping AWS API Documentation
+    #
+    class SdiSourceMapping < Struct.new(
+      :card_number,
+      :channel_number,
+      :sdi_source)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Used in SdiSourceMappingsUpdateRequest. One SDI source mapping. It
+    # connects one logical SdiSource to the physical SDI card and port that
+    # the physical SDI source uses. You must specify all three parameters in
+    # this object.
+    #
+    # @!attribute [rw] card_number
+    #   A number that uniquely identifies the SDI card on the node hardware.
+    #   For information about how physical cards are identified on your node
+    #   hardware, see the documentation for your node hardware. The
+    #   numbering always starts at 1.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] channel_number
+    #   A number that uniquely identifies a port on the card. This must be
+    #   an SDI port (not a timecode port, for example). For information
+    #   about how ports are identified on physical cards, see the
+    #   documentation for your node hardware.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] sdi_source
+    #   The ID of a SDI source streaming on the given SDI capture card port.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/SdiSourceMappingUpdateRequest AWS API Documentation
+    #
+    class SdiSourceMappingUpdateRequest < Struct.new(
+      :card_number,
+      :channel_number,
+      :sdi_source)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Used in CreateSdiSourceResponse, DeleteSdiSourceResponse,
+    # DescribeSdiSourceResponse, ListSdiSourcesResponse,
+    # UpdateSdiSourceResponse
+    #
+    # @!attribute [rw] arn
+    #   The ARN of this SdiSource. It is automatically assigned when the
+    #   SdiSource is created.
+    #   @return [String]
+    #
+    # @!attribute [rw] id
+    #   The ID of the SdiSource. Unique in the AWS account.The ID is the
+    #   resource-id portion of the ARN.
+    #   @return [String]
+    #
+    # @!attribute [rw] inputs
+    #   The list of inputs that are currently using this SDI source. This
+    #   list will be empty if the SdiSource has just been deleted.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] mode
+    #   Applies only if the type is QUAD. The mode for handling the
+    #   quad-link signal QUADRANT or INTERLEAVE.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the SdiSource.
+    #   @return [String]
+    #
+    # @!attribute [rw] state
+    #   Specifies whether the SDI source is attached to an SDI input
+    #   (IN\_USE) or not (IDLE).
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   Used in SdiSource, CreateSdiSourceRequest, UpdateSdiSourceRequest.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/SdiSourceSummary AWS API Documentation
+    #
+    class SdiSourceSummary < Struct.new(
+      :arn,
+      :id,
+      :inputs,
+      :mode,
+      :name,
+      :state,
+      :type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Used in UpdateSdiSourceRequest.
+    #
+    # @!attribute [rw] mode
+    #   Include this parameter only if you want to change the name of the
+    #   SdiSource. Specify a name that is unique in the AWS account. We
+    #   recommend you assign a name that describes the source, for example
+    #   curling-cameraA. Names are case-sensitive.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   Include this parameter only if you want to change the name of the
+    #   SdiSource. Specify a name that is unique in the AWS account. We
+    #   recommend you assign a name that describes the source, for example
+    #   curling-cameraA. Names are case-sensitive.
+    #   @return [String]
+    #
+    # @!attribute [rw] sdi_source_id
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   Include this parameter only if you want to change the mode. Specify
+    #   the type of the SDI source: SINGLE: The source is a single-link
+    #   source. QUAD: The source is one part of a quad-link source.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/UpdateSdiSourceRequest AWS API Documentation
+    #
+    class UpdateSdiSourceRequest < Struct.new(
+      :mode,
+      :name,
+      :sdi_source_id,
+      :type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Used in UpdateSdiSourceResponse.
+    #
+    # @!attribute [rw] sdi_source
+    #   Settings for the SDI source.
+    #   @return [Types::SdiSource]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/UpdateSdiSourceResponse AWS API Documentation
+    #
+    class UpdateSdiSourceResponse < Struct.new(
+      :sdi_source)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Add an array item for each language. Follow the order of the caption
+    # descriptions. For example, if the first caption description is for
+    # German, then the first array item must be for German, and its caption
+    # channel must be set to 1. The second array item must be 2, and so on.
+    #
+    # @!attribute [rw] caption_channel
+    #   A number for the channel for this caption, 1 to 4.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] language_code
+    #   Language code for the language of the caption in this channel. For
+    #   example, ger/deu. See http://www.loc.gov/standards/iso639-2
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/CmafIngestCaptionLanguageMapping AWS API Documentation
+    #
+    class CmafIngestCaptionLanguageMapping < Struct.new(
+      :caption_channel,
+      :language_code)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Additional output destinations for a CMAF Ingest output group
+    #
+    # @!attribute [rw] destination
+    #   The destination location
+    #   @return [Types::OutputLocationRef]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/AdditionalDestinations AWS API Documentation
+    #
+    class AdditionalDestinations < Struct.new(
+      :destination)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Media Package V2 Destination Settings
+    #
+    # @!attribute [rw] audio_group_id
+    #   Applies only to an output that contains audio. If you want to put
+    #   several audio encodes into one audio rendition group, decide on a
+    #   name (ID) for the group. Then in every audio output that you want to
+    #   belong to that group, enter that ID in this field. Note that this
+    #   information is part of the HLS specification (not the CMAF
+    #   specification), but if you include it then MediaPackage will include
+    #   it in the manifest it creates for the video player.
+    #   @return [String]
+    #
+    # @!attribute [rw] audio_rendition_sets
+    #   Applies only to an output that contains video, and only if you want
+    #   to associate one or more audio groups to this video. In this field
+    #   you assign the groups that you create (in the Group ID fields in the
+    #   various audio outputs). Enter one group ID, or enter a
+    #   comma-separated list of group IDs. Note that this information is
+    #   part of the HLS specification (not the CMAF specification), but if
+    #   you include it then MediaPackage will include it in the manifest it
+    #   creates for the video player.
+    #   @return [String]
+    #
+    # @!attribute [rw] hls_auto_select
+    #   Specifies whether MediaPackage should set this output as the
+    #   auto-select rendition in the HLS manifest. YES means this must be
+    #   the auto-select. NO means this should never be the auto-select. OMIT
+    #   means MediaPackage decides what to set on this rendition. When you
+    #   consider all the renditions, follow these guidelines. You can set
+    #   zero or one renditions to YES. You can set zero or more renditions
+    #   to NO, but you can't set all renditions to NO. You can set zero,
+    #   some, or all to OMIT.
+    #   @return [String]
+    #
+    # @!attribute [rw] hls_default
+    #   Specifies whether MediaPackage should set this output as the default
+    #   rendition in the HLS manifest. YES means this must be the default.
+    #   NO means this should never be the default. OMIT means MediaPackage
+    #   decides what to set on this rendition. When you consider all the
+    #   renditions, follow these guidelines. You can set zero or one
+    #   renditions to YES. You can set zero or more renditions to NO, but
+    #   you can't set all renditions to NO. You can set zero, some, or all
+    #   to OMIT.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/MediaPackageV2DestinationSettings AWS API Documentation
+    #
+    class MediaPackageV2DestinationSettings < Struct.new(
+      :audio_group_id,
+      :audio_rendition_sets,
+      :hls_auto_select,
+      :hls_default)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Media Package V2 Group Settings
+    #
+    # @!attribute [rw] caption_language_mappings
+    #   Mapping of up to 4 caption channels to caption languages.
+    #   @return [Array<Types::CaptionLanguageMapping>]
+    #
+    # @!attribute [rw] id_3_behavior
+    #   Set to ENABLED to enable ID3 metadata insertion. To include
+    #   metadata, you configure other parameters in the output group, or you
+    #   add an ID3 action to the channel schedule.
+    #   @return [String]
+    #
+    # @!attribute [rw] klv_behavior
+    #   If set to passthrough, passes any KLV data from the input source to
+    #   this output.
+    #   @return [String]
+    #
+    # @!attribute [rw] nielsen_id_3_behavior
+    #   If set to passthrough, Nielsen inaudible tones for media tracking
+    #   will be detected in the input audio and an equivalent ID3 tag will
+    #   be inserted in the output.
+    #   @return [String]
+    #
+    # @!attribute [rw] scte_35_type
+    #   Type of scte35 track to add. none or scte35WithoutSegmentation
+    #   @return [String]
+    #
+    # @!attribute [rw] segment_length
+    #   The nominal duration of segments. The units are specified in
+    #   SegmentLengthUnits. The segments will end on the next keyframe after
+    #   the specified duration, so the actual segment length might be
+    #   longer, and it might be a fraction of the units.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] segment_length_units
+    #   Time unit for segment length parameter.
+    #   @return [String]
+    #
+    # @!attribute [rw] timed_metadata_id_3_frame
+    #   Set to none if you don't want to insert a timecode in the output.
+    #   Otherwise choose the frame type for the timecode.
+    #   @return [String]
+    #
+    # @!attribute [rw] timed_metadata_id_3_period
+    #   If you set up to insert a timecode in the output, specify the
+    #   frequency for the frame, in seconds.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] timed_metadata_passthrough
+    #   Set to enabled to pass through ID3 metadata from the input sources.
+    #   @return [String]
+    #
+    # @!attribute [rw] additional_destinations
+    #   Optional an array of additional destinational HTTP destinations for
+    #   the OutputGroup outputs
+    #   @return [Array<Types::MediaPackageAdditionalDestinations>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/MediaPackageV2GroupSettings AWS API Documentation
+    #
+    class MediaPackageV2GroupSettings < Struct.new(
+      :caption_language_mappings,
+      :id_3_behavior,
+      :klv_behavior,
+      :nielsen_id_3_behavior,
+      :scte_35_type,
+      :segment_length,
+      :segment_length_units,
+      :timed_metadata_id_3_frame,
+      :timed_metadata_id_3_period,
+      :timed_metadata_passthrough,
+      :additional_destinations)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # An alert on a channel
+    #
+    # @!attribute [rw] alert_type
+    #   The type of the alert
+    #   @return [String]
+    #
+    # @!attribute [rw] cleared_timestamp
+    #   @return [Time]
+    #
+    # @!attribute [rw] id
+    #   The unique ID for this alert instance
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   The user facing alert message which can have more context
+    #   @return [String]
+    #
+    # @!attribute [rw] pipeline_id
+    #   The ID of the pipeline this alert is associated with
+    #   @return [String]
+    #
+    # @!attribute [rw] set_timestamp
+    #   @return [Time]
+    #
+    # @!attribute [rw] state
+    #   The state of the alert
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/ChannelAlert AWS API Documentation
+    #
+    class ChannelAlert < Struct.new(
+      :alert_type,
+      :cleared_timestamp,
+      :id,
+      :message,
+      :pipeline_id,
+      :set_timestamp,
+      :state)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # An alert on a cluster
+    #
+    # @!attribute [rw] alert_type
+    #   The type of the alert
+    #   @return [String]
+    #
+    # @!attribute [rw] channel_id
+    #   The ID of the channel this alert is associated with
+    #   @return [String]
+    #
+    # @!attribute [rw] cleared_timestamp
+    #   @return [Time]
+    #
+    # @!attribute [rw] id
+    #   The further subtype of this alert
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   The user facing alert message which can have more context
+    #   @return [String]
+    #
+    # @!attribute [rw] node_id
+    #   The ID of the node this alert is associated with
+    #   @return [String]
+    #
+    # @!attribute [rw] set_timestamp
+    #   @return [Time]
+    #
+    # @!attribute [rw] state
+    #   The state of the alert
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/ClusterAlert AWS API Documentation
+    #
+    class ClusterAlert < Struct.new(
+      :alert_type,
+      :channel_id,
+      :cleared_timestamp,
+      :id,
+      :message,
+      :node_id,
+      :set_timestamp,
+      :state)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] channel_id
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   @return [String]
+    #
+    # @!attribute [rw] state_filter
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/ListAlertsRequest AWS API Documentation
+    #
+    class ListAlertsRequest < Struct.new(
+      :channel_id,
+      :max_results,
+      :next_token,
+      :state_filter)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] alerts
+    #   @return [Array<Types::ChannelAlert>]
+    #
+    # @!attribute [rw] next_token
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/ListAlertsResponse AWS API Documentation
+    #
+    class ListAlertsResponse < Struct.new(
+      :alerts,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The result of a successful ListAlerts request
+    #
+    # @!attribute [rw] alerts
+    #   The alerts found for this channel
+    #   @return [Array<Types::ChannelAlert>]
+    #
+    # @!attribute [rw] next_token
+    #   The token to use to retrieve the next page of results
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/ListAlertsResultModel AWS API Documentation
+    #
+    class ListAlertsResultModel < Struct.new(
+      :alerts,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] cluster_id
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   @return [String]
+    #
+    # @!attribute [rw] state_filter
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/ListClusterAlertsRequest AWS API Documentation
+    #
+    class ListClusterAlertsRequest < Struct.new(
+      :cluster_id,
+      :max_results,
+      :next_token,
+      :state_filter)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] alerts
+    #   @return [Array<Types::ClusterAlert>]
+    #
+    # @!attribute [rw] next_token
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/ListClusterAlertsResponse AWS API Documentation
+    #
+    class ListClusterAlertsResponse < Struct.new(
+      :alerts,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The result of a successful ListClusterAlerts request
+    #
+    # @!attribute [rw] alerts
+    #   The alerts found for this cluster
+    #   @return [Array<Types::ClusterAlert>]
+    #
+    # @!attribute [rw] next_token
+    #   The token to use to retrieve the next page of results
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/ListClusterAlertsResultModel AWS API Documentation
+    #
+    class ListClusterAlertsResultModel < Struct.new(
+      :alerts,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] max_results
+    #   @return [Integer]
+    #
+    # @!attribute [rw] multiplex_id
+    #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   @return [String]
+    #
+    # @!attribute [rw] state_filter
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/ListMultiplexAlertsRequest AWS API Documentation
+    #
+    class ListMultiplexAlertsRequest < Struct.new(
+      :max_results,
+      :multiplex_id,
+      :next_token,
+      :state_filter)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] alerts
+    #   @return [Array<Types::MultiplexAlert>]
+    #
+    # @!attribute [rw] next_token
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/ListMultiplexAlertsResponse AWS API Documentation
+    #
+    class ListMultiplexAlertsResponse < Struct.new(
+      :alerts,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The result of a successful ListMultiplexAlerts request.
+    #
+    # @!attribute [rw] alerts
+    #   The alerts found for this multiplex
+    #   @return [Array<Types::MultiplexAlert>]
+    #
+    # @!attribute [rw] next_token
+    #   The token to use to retrieve the next page of results
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/ListMultiplexAlertsResultModel AWS API Documentation
+    #
+    class ListMultiplexAlertsResultModel < Struct.new(
+      :alerts,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # An alert on a multiplex
+    #
+    # @!attribute [rw] alert_type
+    #   The type of the alert
+    #   @return [String]
+    #
+    # @!attribute [rw] cleared_timestamp
+    #   @return [Time]
+    #
+    # @!attribute [rw] id
+    #   The unique ID for this alert instance
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   The user facing alert message which can have more context
+    #   @return [String]
+    #
+    # @!attribute [rw] pipeline_id
+    #   The ID of the pipeline this alert is associated with
+    #   @return [String]
+    #
+    # @!attribute [rw] set_timestamp
+    #   @return [Time]
+    #
+    # @!attribute [rw] state
+    #   The state of the alert
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/MultiplexAlert AWS API Documentation
+    #
+    class MultiplexAlert < Struct.new(
+      :alert_type,
+      :cleared_timestamp,
+      :id,
+      :message,
+      :pipeline_id,
+      :set_timestamp,
+      :state)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Hlg2020 Settings
+    #
+    # @api private
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/Hlg2020Settings AWS API Documentation
+    #
+    class Hlg2020Settings < Aws::EmptyStructure; end
+
+    # @!attribute [rw] availability_zone_name
+    #   The Availability Zone (AZ) names of the AZs this destination is
+    #   created in.
+    #   @return [String]
+    #
+    # @!attribute [rw] router_output_arn
+    #   ARN of the output from MediaConnect Router currently connected to
+    #   this input.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/RouterDestination AWS API Documentation
+    #
+    class RouterDestination < Struct.new(
+      :availability_zone_name,
+      :router_output_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] availability_zone_name
+    #   Availability Zone for this MediaConnect Router destination.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/RouterDestinationSettings AWS API Documentation
+    #
+    class RouterDestinationSettings < Struct.new(
+      :availability_zone_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The settings for a MediaConnect Router Input.
+    #
+    # @!attribute [rw] destinations
+    #   MediaConnect Router destinations associated with the MediaLive
+    #   Input.
+    #   @return [Array<Types::RouterDestination>]
+    #
+    # @!attribute [rw] encryption_type
+    #   Encryption configuration for MediaConnect router. When using
+    #   SECRETS\_MANAGER encryption, you must provide the ARN of the secret
+    #   used to encrypt data in transit. When using AUTOMATIC encryption, a
+    #   service-managed secret will be used instead.
+    #   @return [String]
+    #
+    # @!attribute [rw] secret_arn
+    #   ARN of the secret used to encrypt this input.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/RouterInputSettings AWS API Documentation
+    #
+    class RouterInputSettings < Struct.new(
+      :destinations,
+      :encryption_type,
+      :secret_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # This is the collection of settings that are used during the creation
+    # of a MediaConnect router input.
+    #
+    # @!attribute [rw] destinations
+    #   Destinations for the input from MediaConnect Router. Provide one for
+    #   a single-pipeline input and two for a standard input.
+    #   @return [Array<Types::RouterDestinationSettings>]
+    #
+    # @!attribute [rw] encryption_type
+    #   Encryption configuration for MediaConnect router. When using
+    #   SECRETS\_MANAGER encryption, you must provide the ARN of the secret
+    #   used to encrypt data in transit. When using AUTOMATIC encryption, a
+    #   service-managed secret will be used instead.
+    #   @return [String]
+    #
+    # @!attribute [rw] secret_arn
+    #   ARN of the secret used to encrypt this input.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/RouterSettings AWS API Documentation
+    #
+    class RouterSettings < Struct.new(
+      :destinations,
+      :encryption_type,
+      :secret_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # When using MediaConnect Router as the source of a MediaLive input
+    # there's a special handoff that occurs when a router output is
+    # created. This group of settings is set on your behalf by the
+    # MediaConnect Router service using this set of settings. This setting
+    # object can only by used by that service.
+    #
+    # @!attribute [rw] router_arn
+    #   This is the arn of the MediaConnect Router resource being associated
+    #   with the MediaLive Input.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/SpecialRouterSettings AWS API Documentation
+    #
+    class SpecialRouterSettings < Struct.new(
+      :router_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details of a follower channel in a linked pair
+    #
+    # @!attribute [rw] linked_channel_type
+    #   Specifies this as a follower channel
+    #   @return [String]
+    #
+    # @!attribute [rw] primary_channel_arn
+    #   The ARN of the primary channel this channel follows
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/DescribeFollowerChannelSettings AWS API Documentation
+    #
+    class DescribeFollowerChannelSettings < Struct.new(
+      :linked_channel_type,
+      :primary_channel_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Linked channel configuration details
+    #
+    # @!attribute [rw] follower_channel_settings
+    #   Details of a follower channel in a linked pair
+    #   @return [Types::DescribeFollowerChannelSettings]
+    #
+    # @!attribute [rw] primary_channel_settings
+    #   Details of a primary (leader) channel in a linked pair
+    #   @return [Types::DescribePrimaryChannelSettings]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/DescribeLinkedChannelSettings AWS API Documentation
+    #
+    class DescribeLinkedChannelSettings < Struct.new(
+      :follower_channel_settings,
+      :primary_channel_settings)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details of a primary (leader) channel in a linked pair
+    #
+    # @!attribute [rw] following_channel_arns
+    #   The ARNs of the following channels for this primary channel
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] linked_channel_type
+    #   Specifies this as a primary channel
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/DescribePrimaryChannelSettings AWS API Documentation
+    #
+    class DescribePrimaryChannelSettings < Struct.new(
+      :following_channel_arns,
+      :linked_channel_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Settings for a follower channel in a linked pair
+    #
+    # @!attribute [rw] linked_channel_type
+    #   Specifies this as a follower channel
+    #   @return [String]
+    #
+    # @!attribute [rw] primary_channel_arn
+    #   The ARN of the primary channel to follow
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/FollowerChannelSettings AWS API Documentation
+    #
+    class FollowerChannelSettings < Struct.new(
+      :linked_channel_type,
+      :primary_channel_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration for linked channel relationships
+    #
+    # @!attribute [rw] follower_channel_settings
+    #   Settings for a follower channel in a linked pair
+    #   @return [Types::FollowerChannelSettings]
+    #
+    # @!attribute [rw] primary_channel_settings
+    #   Settings for a primary (leader) channel in a linked pair
+    #   @return [Types::PrimaryChannelSettings]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/LinkedChannelSettings AWS API Documentation
+    #
+    class LinkedChannelSettings < Struct.new(
+      :follower_channel_settings,
+      :primary_channel_settings)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Settings for a primary (leader) channel in a linked pair
+    #
+    # @!attribute [rw] linked_channel_type
+    #   Specifies this as a primary channel
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/PrimaryChannelSettings AWS API Documentation
+    #
+    class PrimaryChannelSettings < Struct.new(
+      :linked_channel_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Additional output destinations for a CMAF Ingest output group
+    #
+    # @!attribute [rw] destination
+    #   The destination location
+    #   @return [Types::OutputLocationRef]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/MediaPackageAdditionalDestinations AWS API Documentation
+    #
+    class MediaPackageAdditionalDestinations < Struct.new(
+      :destination)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Disabled Locking Settings
+    #
+    # @!attribute [rw] custom_epoch
+    #   Optional. Only applies to CMAF Ingest Output Group and MediaPackage
+    #   V2 Output Group. Enter a value here to use a custom epoch, instead
+    #   of the standard epoch (which started at 1970-01-01T00:00:00 UTC).
+    #   Specify the start time of the custom epoch, in YYYY-MM-DDTHH:MM:SS
+    #   in UTC. The time must be 2000-01-01T00:00:00 or later. Always set
+    #   the MM:SS portion to 00:00.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/DisabledLockingSettings AWS API Documentation
+    #
+    class DisabledLockingSettings < Struct.new(
+      :custom_epoch)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Decryption settings for SRT listener. If present, both algorithm and
+    # passphraseSecretArn are required.
+    #
+    # @!attribute [rw] algorithm
+    #   The algorithm used to decrypt content.
+    #   @return [String]
+    #
+    # @!attribute [rw] passphrase_secret_arn
+    #   The ARN for the secret in Secrets Manager that holds the passphrase
+    #   for decryption.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/SrtListenerDecryption AWS API Documentation
+    #
+    class SrtListenerDecryption < Struct.new(
+      :algorithm,
+      :passphrase_secret_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Decryption settings. If specified, both algorithm and
+    # passphraseSecretArn are required.
+    #
+    # @!attribute [rw] algorithm
+    #   Required. The decryption algorithm.
+    #   @return [String]
+    #
+    # @!attribute [rw] passphrase_secret_arn
+    #   Required. The ARN for the secret in Secrets Manager that holds the
+    #   passphrase.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/SrtListenerDecryptionRequest AWS API Documentation
+    #
+    class SrtListenerDecryptionRequest < Struct.new(
+      :algorithm,
+      :passphrase_secret_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Settings for SRT Listener input.
+    #
+    # @!attribute [rw] decryption
+    #   Decryption settings for SRT listener. If present, both algorithm and
+    #   passphraseSecretArn are required.
+    #   @return [Types::SrtListenerDecryption]
+    #
+    # @!attribute [rw] minimum_latency
+    #   The preferred latency (in milliseconds) for implementing packet loss
+    #   and recovery. Range 120-15000.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] stream_id
+    #   The stream ID, if the upstream system uses this identifier.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/SrtListenerSettings AWS API Documentation
+    #
+    class SrtListenerSettings < Struct.new(
+      :decryption,
+      :minimum_latency,
+      :stream_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration for SRT Listener input. Encryption is REQUIRED for all
+    # SRT Listener inputs for security reasons. You must provide decryption
+    # settings including algorithm and passphrase secret ARN.
+    #
+    # @!attribute [rw] decryption
+    #   Decryption settings. If specified, both algorithm and
+    #   passphraseSecretArn are required.
+    #   @return [Types::SrtListenerDecryptionRequest]
+    #
+    # @!attribute [rw] minimum_latency
+    #   Required. The preferred latency in milliseconds for packet loss and
+    #   recovery. Range 120-15000.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] stream_id
+    #   Optional. The stream ID if the upstream system uses this identifier.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/SrtListenerSettingsRequest AWS API Documentation
+    #
+    class SrtListenerSettingsRequest < Struct.new(
+      :decryption,
+      :minimum_latency,
+      :stream_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configures Elemental Inference features in a channel.
+    #
+    # @!attribute [rw] feed_arn
+    #   The ARN of the feed resource that is associated with this channel.
+    #   The feed is a resource in the Elemental Inference service.
+    #   @return [String]
+    #
+    # @!attribute [rw] audio_feed_inputs
+    #   A list of audio feed inputs that map audio selectors in the channel
+    #   to feed inputs on the associated Elemental Inference feed.
+    #   @return [Array<Types::AudioFeedInput>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/DescribeInferenceSettings AWS API Documentation
+    #
+    class DescribeInferenceSettings < Struct.new(
+      :feed_arn,
+      :audio_feed_inputs)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configures Elemental Inference features in a channel.
+    #
+    # @!attribute [rw] feed_arn
+    #   The ARN of the feed resource that is associated with this channel.
+    #   The feed is a resource in the Elemental Inference service.
+    #   @return [String]
+    #
+    # @!attribute [rw] audio_feed_inputs
+    #   A list of audio feed inputs that map audio selectors in the channel
+    #   to feed inputs on the associated Elemental Inference feed.
+    #   @return [Array<Types::AudioFeedInput>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/InferenceSettings AWS API Documentation
+    #
+    class InferenceSettings < Struct.new(
+      :feed_arn,
+      :audio_feed_inputs)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Media Connect Router Container Settings
+    #
+    # @!attribute [rw] m2ts_settings
+    #   M2ts Settings
+    #   @return [Types::M2tsSettings]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/MediaConnectRouterContainerSettings AWS API Documentation
+    #
+    class MediaConnectRouterContainerSettings < Struct.new(
+      :m2ts_settings)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Media Connect Router Group Settings
+    #
+    # @!attribute [rw] availability_zones
+    #   The names of the Availability Zones in which to write output to
+    #   MediaConnect Router.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/MediaConnectRouterGroupSettings AWS API Documentation
+    #
+    class MediaConnectRouterGroupSettings < Struct.new(
+      :availability_zones)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Map of MediaLive pipeline IDs to the ARNs of the MediaConnect Router
+    # Inputs to which this Output is connected.
+    #
+    # @!attribute [rw] pipeline_0
+    #   The ARN of the MediaConnect Router Input connected to pipeline 0.
+    #   @return [String]
+    #
+    # @!attribute [rw] pipeline_1
+    #   The ARN of the MediaConnect Router Input connected to pipeline 1.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/MediaConnectRouterOutputConnectionMap AWS API Documentation
+    #
+    class MediaConnectRouterOutputConnectionMap < Struct.new(
+      :pipeline_0,
+      :pipeline_1)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # MediaConnect Router Output Destination Settings
+    #
+    # @!attribute [rw] encryption_type
+    #   Encryption configuration for MediaConnect router. When using
+    #   SECRETS\_MANAGER encryption, you must provide the ARN of the secret
+    #   used to encrypt data in transit. When using AUTOMATIC encryption, a
+    #   service-managed secret will be used instead.
+    #   @return [String]
+    #
+    # @!attribute [rw] secret_arn
+    #   ARN of the secret used to encrypt this input. Used only with the
+    #   SECRETS\_MANAGER encryption type.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/MediaConnectRouterOutputDestinationSettings AWS API Documentation
+    #
+    class MediaConnectRouterOutputDestinationSettings < Struct.new(
+      :encryption_type,
+      :secret_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Media Connect Router Output Settings
+    #
+    # @!attribute [rw] connected_router_inputs
+    #   This parameter is deprecated and unused.
+    #   @return [Types::MediaConnectRouterOutputConnectionMap]
+    #
+    # @!attribute [rw] container_settings
+    #   Media Connect Router Container Settings
+    #   @return [Types::MediaConnectRouterContainerSettings]
+    #
+    # @!attribute [rw] destination
+    #   Destination for this MediaConnect Router Output. The referenced
+    #   OutputDestination must have MediaConnect Router settings configured.
+    #   @return [Types::OutputLocationRef]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/MediaConnectRouterOutputSettings AWS API Documentation
+    #
+    class MediaConnectRouterOutputSettings < Struct.new(
+      :connected_router_inputs,
+      :container_settings,
+      :destination)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Connection details for a single pipeline of a MediaConnect Router
+    # output.
+    #
+    # @!attribute [rw] router_input_arn
+    #   The ARN of the MediaConnect Router Input connected to this pipeline.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/MediaConnectRouterOutputConnection AWS API Documentation
+    #
+    class MediaConnectRouterOutputConnection < Struct.new(
+      :router_input_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Maps an audio selector in the channel to a feed input on the
+    # associated Elemental Inference feed.
+    #
+    # @!attribute [rw] audio_selector_name
+    #   The name of the audio selector in the channel that will be sent to
+    #   the Elemental Inference feed input.
+    #   @return [String]
+    #
+    # @!attribute [rw] feed_input
+    #   The name of the feed input on the Elemental Inference feed that will
+    #   receive the audio from the specified audio selector.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/AudioFeedInput AWS API Documentation
+    #
+    class AudioFeedInput < Struct.new(
+      :audio_selector_name,
+      :feed_input)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Smart Subtitle Source Settings
+    #
+    # @!attribute [rw] caption_synchronization_mode
+    #   Controls whether MediaLive delays video to synchronize captions with
+    #   audio and video output.
+    #   @return [String]
+    #
+    # @!attribute [rw] inference_feed_output
+    #   The name of the Elemental Inference feed output that supplies
+    #   subtitle input into this caption selector.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/SmartSubtitleSourceSettings AWS API Documentation
+    #
+    class SmartSubtitleSourceSettings < Struct.new(
+      :caption_synchronization_mode,
+      :inference_feed_output)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents a single PID value for audio selection with optional
+    # pre-mixer settings
+    #
+    # @!attribute [rw] dolby_e_decode
+    #   Configure decoding options for Dolby E streams - these should be
+    #   Dolby E frames carried in PCM streams tagged with SMPTE-337. When
+    #   using the 'pids' array, if this field is not specified and Dolby E
+    #   content is present, the decoder will extract the specified program.
+    #   To maintain legacy behavior (allPrograms), explicitly set
+    #   programSelection to "allChannels".
+    #   @return [Types::AudioDolbyEDecode]
+    #
+    # @!attribute [rw] pid
+    #   PID value from within a source.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] premix_settings
+    #   Optional audio pre-mixer settings for this PID. When specified,
+    #   allows per-PID audio processing including channel remixing, gain
+    #   adjustment, and loudness normalization before interleaving.
+    #   @return [Types::AudioPreMixerSettings]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/AudioPid AWS API Documentation
+    #
+    class AudioPid < Struct.new(
+      :dolby_e_decode,
+      :pid,
+      :premix_settings)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Audio pre-mixer settings for normalizing audio before interleaving.
+    # These settings can be applied to individual PIDs or tracks before they
+    # are combined.
+    #
+    # @!attribute [rw] audio_normalization_settings
+    #   Audio normalization settings for loudness control. When specified,
+    #   audio loudness will be normalized according to the chosen algorithm.
+    #   @return [Types::AudioNormalizationSettings]
+    #
+    # @!attribute [rw] channels
+    #   Number of audio channels. If specified, the audio will be remixed to
+    #   match this channel count. Ignored if remixSettings is specified.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] gain_db
+    #   Gain adjustment in dB to apply. Range: -60 to +60 dB
+    #   @return [Float]
+    #
+    # @!attribute [rw] remix_settings
+    #   Settings that control how input audio channels are remixed. When
+    #   specified, allows fine-grained control over channel mapping and gain
+    #   levels. Takes precedence over the 'channels' setting.
+    #   @return [Types::RemixSettings]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medialive-2017-10-14/AudioPreMixerSettings AWS API Documentation
+    #
+    class AudioPreMixerSettings < Struct.new(
+      :audio_normalization_settings,
+      :channels,
+      :gain_db,
+      :remix_settings)
       SENSITIVE = []
       include Aws::Structure
     end

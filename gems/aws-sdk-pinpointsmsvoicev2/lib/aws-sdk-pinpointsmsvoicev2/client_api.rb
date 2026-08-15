@@ -32,6 +32,12 @@ module Aws::PinpointSMSVoiceV2
     AttachmentUploadErrorReason = Shapes::StringShape.new(name: 'AttachmentUploadErrorReason')
     AttachmentUrl = Shapes::StringShape.new(name: 'AttachmentUrl')
     Boolean = Shapes::BooleanShape.new(name: 'Boolean')
+    CarrierLookupInputPhoneNumberType = Shapes::StringShape.new(name: 'CarrierLookupInputPhoneNumberType')
+    CarrierLookupRequest = Shapes::StructureShape.new(name: 'CarrierLookupRequest')
+    CarrierLookupResult = Shapes::StructureShape.new(name: 'CarrierLookupResult')
+    CarrierStatus = Shapes::StringShape.new(name: 'CarrierStatus')
+    CarrierStatusInformation = Shapes::StructureShape.new(name: 'CarrierStatusInformation')
+    CarrierStatusInformationList = Shapes::ListShape.new(name: 'CarrierStatusInformationList')
     ClientToken = Shapes::StringShape.new(name: 'ClientToken')
     CloudWatchLogsDestination = Shapes::StructureShape.new(name: 'CloudWatchLogsDestination')
     ConfigurationSetFilter = Shapes::StructureShape.new(name: 'ConfigurationSetFilter')
@@ -47,16 +53,26 @@ module Aws::PinpointSMSVoiceV2
     ContextKey = Shapes::StringShape.new(name: 'ContextKey')
     ContextMap = Shapes::MapShape.new(name: 'ContextMap')
     ContextValue = Shapes::StringShape.new(name: 'ContextValue')
+    CountryLaunchStatus = Shapes::StringShape.new(name: 'CountryLaunchStatus')
+    CountryLaunchStatusFilter = Shapes::StructureShape.new(name: 'CountryLaunchStatusFilter')
+    CountryLaunchStatusFilterList = Shapes::ListShape.new(name: 'CountryLaunchStatusFilterList')
+    CountryLaunchStatusFilterName = Shapes::StringShape.new(name: 'CountryLaunchStatusFilterName')
+    CountryLaunchStatusInformation = Shapes::StructureShape.new(name: 'CountryLaunchStatusInformation')
+    CountryLaunchStatusInformationList = Shapes::ListShape.new(name: 'CountryLaunchStatusInformationList')
     CreateConfigurationSetRequest = Shapes::StructureShape.new(name: 'CreateConfigurationSetRequest')
     CreateConfigurationSetResult = Shapes::StructureShape.new(name: 'CreateConfigurationSetResult')
     CreateEventDestinationRequest = Shapes::StructureShape.new(name: 'CreateEventDestinationRequest')
     CreateEventDestinationResult = Shapes::StructureShape.new(name: 'CreateEventDestinationResult')
+    CreateNotifyConfigurationRequest = Shapes::StructureShape.new(name: 'CreateNotifyConfigurationRequest')
+    CreateNotifyConfigurationResult = Shapes::StructureShape.new(name: 'CreateNotifyConfigurationResult')
     CreateOptOutListRequest = Shapes::StructureShape.new(name: 'CreateOptOutListRequest')
     CreateOptOutListResult = Shapes::StructureShape.new(name: 'CreateOptOutListResult')
     CreatePoolRequest = Shapes::StructureShape.new(name: 'CreatePoolRequest')
     CreatePoolResult = Shapes::StructureShape.new(name: 'CreatePoolResult')
     CreateProtectConfigurationRequest = Shapes::StructureShape.new(name: 'CreateProtectConfigurationRequest')
     CreateProtectConfigurationResult = Shapes::StructureShape.new(name: 'CreateProtectConfigurationResult')
+    CreateRcsAgentRequest = Shapes::StructureShape.new(name: 'CreateRcsAgentRequest')
+    CreateRcsAgentResult = Shapes::StructureShape.new(name: 'CreateRcsAgentResult')
     CreateRegistrationAssociationRequest = Shapes::StructureShape.new(name: 'CreateRegistrationAssociationRequest')
     CreateRegistrationAssociationResult = Shapes::StructureShape.new(name: 'CreateRegistrationAssociationResult')
     CreateRegistrationAttachmentRequest = Shapes::StructureShape.new(name: 'CreateRegistrationAttachmentRequest')
@@ -81,6 +97,10 @@ module Aws::PinpointSMSVoiceV2
     DeleteKeywordResult = Shapes::StructureShape.new(name: 'DeleteKeywordResult')
     DeleteMediaMessageSpendLimitOverrideRequest = Shapes::StructureShape.new(name: 'DeleteMediaMessageSpendLimitOverrideRequest')
     DeleteMediaMessageSpendLimitOverrideResult = Shapes::StructureShape.new(name: 'DeleteMediaMessageSpendLimitOverrideResult')
+    DeleteNotifyConfigurationRequest = Shapes::StructureShape.new(name: 'DeleteNotifyConfigurationRequest')
+    DeleteNotifyConfigurationResult = Shapes::StructureShape.new(name: 'DeleteNotifyConfigurationResult')
+    DeleteNotifyMessageSpendLimitOverrideRequest = Shapes::StructureShape.new(name: 'DeleteNotifyMessageSpendLimitOverrideRequest')
+    DeleteNotifyMessageSpendLimitOverrideResult = Shapes::StructureShape.new(name: 'DeleteNotifyMessageSpendLimitOverrideResult')
     DeleteOptOutListRequest = Shapes::StructureShape.new(name: 'DeleteOptOutListRequest')
     DeleteOptOutListResult = Shapes::StructureShape.new(name: 'DeleteOptOutListResult')
     DeleteOptedOutNumberRequest = Shapes::StructureShape.new(name: 'DeleteOptedOutNumberRequest')
@@ -91,6 +111,10 @@ module Aws::PinpointSMSVoiceV2
     DeleteProtectConfigurationResult = Shapes::StructureShape.new(name: 'DeleteProtectConfigurationResult')
     DeleteProtectConfigurationRuleSetNumberOverrideRequest = Shapes::StructureShape.new(name: 'DeleteProtectConfigurationRuleSetNumberOverrideRequest')
     DeleteProtectConfigurationRuleSetNumberOverrideResult = Shapes::StructureShape.new(name: 'DeleteProtectConfigurationRuleSetNumberOverrideResult')
+    DeleteRcsAgentRequest = Shapes::StructureShape.new(name: 'DeleteRcsAgentRequest')
+    DeleteRcsAgentResult = Shapes::StructureShape.new(name: 'DeleteRcsAgentResult')
+    DeleteRcsMessageSpendLimitOverrideRequest = Shapes::StructureShape.new(name: 'DeleteRcsMessageSpendLimitOverrideRequest')
+    DeleteRcsMessageSpendLimitOverrideResult = Shapes::StructureShape.new(name: 'DeleteRcsMessageSpendLimitOverrideResult')
     DeleteRegistrationAttachmentRequest = Shapes::StructureShape.new(name: 'DeleteRegistrationAttachmentRequest')
     DeleteRegistrationAttachmentResult = Shapes::StructureShape.new(name: 'DeleteRegistrationAttachmentResult')
     DeleteRegistrationFieldValueRequest = Shapes::StructureShape.new(name: 'DeleteRegistrationFieldValueRequest')
@@ -114,6 +138,10 @@ module Aws::PinpointSMSVoiceV2
     DescribeConfigurationSetsResult = Shapes::StructureShape.new(name: 'DescribeConfigurationSetsResult')
     DescribeKeywordsRequest = Shapes::StructureShape.new(name: 'DescribeKeywordsRequest')
     DescribeKeywordsResult = Shapes::StructureShape.new(name: 'DescribeKeywordsResult')
+    DescribeNotifyConfigurationsRequest = Shapes::StructureShape.new(name: 'DescribeNotifyConfigurationsRequest')
+    DescribeNotifyConfigurationsResult = Shapes::StructureShape.new(name: 'DescribeNotifyConfigurationsResult')
+    DescribeNotifyTemplatesRequest = Shapes::StructureShape.new(name: 'DescribeNotifyTemplatesRequest')
+    DescribeNotifyTemplatesResult = Shapes::StructureShape.new(name: 'DescribeNotifyTemplatesResult')
     DescribeOptOutListsRequest = Shapes::StructureShape.new(name: 'DescribeOptOutListsRequest')
     DescribeOptOutListsResult = Shapes::StructureShape.new(name: 'DescribeOptOutListsResult')
     DescribeOptedOutNumbersRequest = Shapes::StructureShape.new(name: 'DescribeOptedOutNumbersRequest')
@@ -124,6 +152,10 @@ module Aws::PinpointSMSVoiceV2
     DescribePoolsResult = Shapes::StructureShape.new(name: 'DescribePoolsResult')
     DescribeProtectConfigurationsRequest = Shapes::StructureShape.new(name: 'DescribeProtectConfigurationsRequest')
     DescribeProtectConfigurationsResult = Shapes::StructureShape.new(name: 'DescribeProtectConfigurationsResult')
+    DescribeRcsAgentCountryLaunchStatusRequest = Shapes::StructureShape.new(name: 'DescribeRcsAgentCountryLaunchStatusRequest')
+    DescribeRcsAgentCountryLaunchStatusResult = Shapes::StructureShape.new(name: 'DescribeRcsAgentCountryLaunchStatusResult')
+    DescribeRcsAgentsRequest = Shapes::StructureShape.new(name: 'DescribeRcsAgentsRequest')
+    DescribeRcsAgentsResult = Shapes::StructureShape.new(name: 'DescribeRcsAgentsResult')
     DescribeRegistrationAttachmentsRequest = Shapes::StructureShape.new(name: 'DescribeRegistrationAttachmentsRequest')
     DescribeRegistrationAttachmentsResult = Shapes::StructureShape.new(name: 'DescribeRegistrationAttachmentsResult')
     DescribeRegistrationFieldDefinitionsRequest = Shapes::StructureShape.new(name: 'DescribeRegistrationFieldDefinitionsRequest')
@@ -148,12 +180,14 @@ module Aws::PinpointSMSVoiceV2
     DestinationCountryParameterValue = Shapes::StringShape.new(name: 'DestinationCountryParameterValue')
     DestinationCountryParameters = Shapes::MapShape.new(name: 'DestinationCountryParameters')
     DestinationPhoneNumberList = Shapes::ListShape.new(name: 'DestinationPhoneNumberList')
+    DialingCountryCodeType = Shapes::StringShape.new(name: 'DialingCountryCodeType')
     DisassociateOriginationIdentityRequest = Shapes::StructureShape.new(name: 'DisassociateOriginationIdentityRequest')
     DisassociateOriginationIdentityResult = Shapes::StructureShape.new(name: 'DisassociateOriginationIdentityResult')
     DisassociateProtectConfigurationRequest = Shapes::StructureShape.new(name: 'DisassociateProtectConfigurationRequest')
     DisassociateProtectConfigurationResult = Shapes::StructureShape.new(name: 'DisassociateProtectConfigurationResult')
     DiscardRegistrationVersionRequest = Shapes::StructureShape.new(name: 'DiscardRegistrationVersionRequest')
     DiscardRegistrationVersionResult = Shapes::StructureShape.new(name: 'DiscardRegistrationVersionResult')
+    E164PhoneNumberType = Shapes::StringShape.new(name: 'E164PhoneNumberType')
     EventDestination = Shapes::StructureShape.new(name: 'EventDestination')
     EventDestinationList = Shapes::ListShape.new(name: 'EventDestinationList')
     EventDestinationName = Shapes::StringShape.new(name: 'EventDestinationName')
@@ -170,9 +204,11 @@ module Aws::PinpointSMSVoiceV2
     GetResourcePolicyRequest = Shapes::StructureShape.new(name: 'GetResourcePolicyRequest')
     GetResourcePolicyResult = Shapes::StructureShape.new(name: 'GetResourcePolicyResult')
     IamRoleArn = Shapes::StringShape.new(name: 'IamRoleArn')
+    IamRoleArnOrUnset = Shapes::StringShape.new(name: 'IamRoleArnOrUnset')
     Integer = Shapes::IntegerShape.new(name: 'Integer')
     InternalServerException = Shapes::StructureShape.new(name: 'InternalServerException')
     IsoCountryCode = Shapes::StringShape.new(name: 'IsoCountryCode')
+    IsoCountryCodeList = Shapes::ListShape.new(name: 'IsoCountryCodeList')
     Keyword = Shapes::StringShape.new(name: 'Keyword')
     KeywordAction = Shapes::StringShape.new(name: 'KeywordAction')
     KeywordFilter = Shapes::StructureShape.new(name: 'KeywordFilter')
@@ -184,6 +220,8 @@ module Aws::PinpointSMSVoiceV2
     KeywordMessage = Shapes::StringShape.new(name: 'KeywordMessage')
     KinesisFirehoseDestination = Shapes::StructureShape.new(name: 'KinesisFirehoseDestination')
     LanguageCode = Shapes::StringShape.new(name: 'LanguageCode')
+    ListNotifyCountriesRequest = Shapes::StructureShape.new(name: 'ListNotifyCountriesRequest')
+    ListNotifyCountriesResult = Shapes::StructureShape.new(name: 'ListNotifyCountriesResult')
     ListPoolOriginationIdentitiesRequest = Shapes::StructureShape.new(name: 'ListPoolOriginationIdentitiesRequest')
     ListPoolOriginationIdentitiesResult = Shapes::StructureShape.new(name: 'ListPoolOriginationIdentitiesResult')
     ListProtectConfigurationRuleSetNumberOverrideFilter = Shapes::ListShape.new(name: 'ListProtectConfigurationRuleSetNumberOverrideFilter')
@@ -194,6 +232,8 @@ module Aws::PinpointSMSVoiceV2
     ListTagsForResourceRequest = Shapes::StructureShape.new(name: 'ListTagsForResourceRequest')
     ListTagsForResourceResult = Shapes::StructureShape.new(name: 'ListTagsForResourceResult')
     LogGroupArn = Shapes::StringShape.new(name: 'LogGroupArn')
+    MCCType = Shapes::StringShape.new(name: 'MCCType')
+    MNCType = Shapes::StringShape.new(name: 'MNCType')
     MaxPrice = Shapes::StringShape.new(name: 'MaxPrice')
     MaxResults = Shapes::IntegerShape.new(name: 'MaxResults')
     MediaMessageOriginationIdentity = Shapes::StringShape.new(name: 'MediaMessageOriginationIdentity')
@@ -206,6 +246,37 @@ module Aws::PinpointSMSVoiceV2
     MonthlyLimit = Shapes::IntegerShape.new(name: 'MonthlyLimit')
     NextToken = Shapes::StringShape.new(name: 'NextToken')
     NonEmptyTagList = Shapes::ListShape.new(name: 'NonEmptyTagList')
+    NotifyConfigurationArn = Shapes::StringShape.new(name: 'NotifyConfigurationArn')
+    NotifyConfigurationDisplayName = Shapes::StringShape.new(name: 'NotifyConfigurationDisplayName')
+    NotifyConfigurationFilter = Shapes::StructureShape.new(name: 'NotifyConfigurationFilter')
+    NotifyConfigurationFilterList = Shapes::ListShape.new(name: 'NotifyConfigurationFilterList')
+    NotifyConfigurationFilterName = Shapes::StringShape.new(name: 'NotifyConfigurationFilterName')
+    NotifyConfigurationId = Shapes::StringShape.new(name: 'NotifyConfigurationId')
+    NotifyConfigurationIdList = Shapes::ListShape.new(name: 'NotifyConfigurationIdList')
+    NotifyConfigurationIdOrArn = Shapes::StringShape.new(name: 'NotifyConfigurationIdOrArn')
+    NotifyConfigurationInformation = Shapes::StructureShape.new(name: 'NotifyConfigurationInformation')
+    NotifyConfigurationInformationList = Shapes::ListShape.new(name: 'NotifyConfigurationInformationList')
+    NotifyConfigurationStatus = Shapes::StringShape.new(name: 'NotifyConfigurationStatus')
+    NotifyConfigurationTier = Shapes::StringShape.new(name: 'NotifyConfigurationTier')
+    NotifyConfigurationTierList = Shapes::ListShape.new(name: 'NotifyConfigurationTierList')
+    NotifyConfigurationUseCase = Shapes::StringShape.new(name: 'NotifyConfigurationUseCase')
+    NotifyCountryInformation = Shapes::StructureShape.new(name: 'NotifyCountryInformation')
+    NotifyCountryInformationList = Shapes::ListShape.new(name: 'NotifyCountryInformationList')
+    NotifyEnabledChannelsList = Shapes::ListShape.new(name: 'NotifyEnabledChannelsList')
+    NotifyLanguageCode = Shapes::StringShape.new(name: 'NotifyLanguageCode')
+    NotifyPoolIdOrUnset = Shapes::StringShape.new(name: 'NotifyPoolIdOrUnset')
+    NotifyTemplateFilter = Shapes::StructureShape.new(name: 'NotifyTemplateFilter')
+    NotifyTemplateFilterList = Shapes::ListShape.new(name: 'NotifyTemplateFilterList')
+    NotifyTemplateFilterName = Shapes::StringShape.new(name: 'NotifyTemplateFilterName')
+    NotifyTemplateId = Shapes::StringShape.new(name: 'NotifyTemplateId')
+    NotifyTemplateIdList = Shapes::ListShape.new(name: 'NotifyTemplateIdList')
+    NotifyTemplateInformation = Shapes::StructureShape.new(name: 'NotifyTemplateInformation')
+    NotifyTemplateInformationList = Shapes::ListShape.new(name: 'NotifyTemplateInformationList')
+    NotifyTemplateStatus = Shapes::StringShape.new(name: 'NotifyTemplateStatus')
+    NotifyTemplateType = Shapes::StringShape.new(name: 'NotifyTemplateType')
+    NotifyTemplateVersion = Shapes::IntegerShape.new(name: 'NotifyTemplateVersion')
+    NotifyTierList = Shapes::ListShape.new(name: 'NotifyTierList')
+    NotifyUseCaseList = Shapes::ListShape.new(name: 'NotifyUseCaseList')
     NumberCapability = Shapes::StringShape.new(name: 'NumberCapability')
     NumberCapabilityList = Shapes::ListShape.new(name: 'NumberCapabilityList')
     NumberStatus = Shapes::StringShape.new(name: 'NumberStatus')
@@ -232,6 +303,7 @@ module Aws::PinpointSMSVoiceV2
     PhoneNumberIdOrArn = Shapes::StringShape.new(name: 'PhoneNumberIdOrArn')
     PhoneNumberInformation = Shapes::StructureShape.new(name: 'PhoneNumberInformation')
     PhoneNumberInformationList = Shapes::ListShape.new(name: 'PhoneNumberInformationList')
+    PhoneNumberType = Shapes::StringShape.new(name: 'PhoneNumberType')
     PhoneOrPoolIdOrArn = Shapes::StringShape.new(name: 'PhoneOrPoolIdOrArn')
     PhoneOrSenderIdOrArn = Shapes::StringShape.new(name: 'PhoneOrSenderIdOrArn')
     PoolFilter = Shapes::StructureShape.new(name: 'PoolFilter')
@@ -276,6 +348,62 @@ module Aws::PinpointSMSVoiceV2
     PutRegistrationFieldValueResult = Shapes::StructureShape.new(name: 'PutRegistrationFieldValueResult')
     PutResourcePolicyRequest = Shapes::StructureShape.new(name: 'PutResourcePolicyRequest')
     PutResourcePolicyResult = Shapes::StructureShape.new(name: 'PutResourcePolicyResult')
+    RcsAgentFilter = Shapes::StructureShape.new(name: 'RcsAgentFilter')
+    RcsAgentFilterList = Shapes::ListShape.new(name: 'RcsAgentFilterList')
+    RcsAgentFilterName = Shapes::StringShape.new(name: 'RcsAgentFilterName')
+    RcsAgentIdList = Shapes::ListShape.new(name: 'RcsAgentIdList')
+    RcsAgentIdOrArn = Shapes::StringShape.new(name: 'RcsAgentIdOrArn')
+    RcsAgentInformation = Shapes::StructureShape.new(name: 'RcsAgentInformation')
+    RcsAgentInformationList = Shapes::ListShape.new(name: 'RcsAgentInformationList')
+    RcsAgentStatus = Shapes::StringShape.new(name: 'RcsAgentStatus')
+    RcsCalendarEventDescription = Shapes::StringShape.new(name: 'RcsCalendarEventDescription')
+    RcsCalendarEventTitle = Shapes::StringShape.new(name: 'RcsCalendarEventTitle')
+    RcsCardContent = Shapes::StructureShape.new(name: 'RcsCardContent')
+    RcsCardDescription = Shapes::StringShape.new(name: 'RcsCardDescription')
+    RcsCardMedia = Shapes::StructureShape.new(name: 'RcsCardMedia')
+    RcsCardMediaHeightString = Shapes::StringShape.new(name: 'RcsCardMediaHeightString')
+    RcsCardSuggestedActionList = Shapes::ListShape.new(name: 'RcsCardSuggestedActionList')
+    RcsCardTitle = Shapes::StringShape.new(name: 'RcsCardTitle')
+    RcsCarousel = Shapes::StructureShape.new(name: 'RcsCarousel')
+    RcsCarouselCardContent = Shapes::StructureShape.new(name: 'RcsCarouselCardContent')
+    RcsCarouselCardContentList = Shapes::ListShape.new(name: 'RcsCarouselCardContentList')
+    RcsCarouselCardMedia = Shapes::StructureShape.new(name: 'RcsCarouselCardMedia')
+    RcsCarouselCardMediaHeightString = Shapes::StringShape.new(name: 'RcsCarouselCardMediaHeightString')
+    RcsCarouselCardWidthString = Shapes::StringShape.new(name: 'RcsCarouselCardWidthString')
+    RcsContent = Shapes::UnionShape.new(name: 'RcsContent')
+    RcsCreateCalendarEventAction = Shapes::StructureShape.new(name: 'RcsCreateCalendarEventAction')
+    RcsDialPhoneAction = Shapes::StructureShape.new(name: 'RcsDialPhoneAction')
+    RcsEventType = Shapes::StringShape.new(name: 'RcsEventType')
+    RcsEventTypeList = Shapes::ListShape.new(name: 'RcsEventTypeList')
+    RcsFallbackChannel = Shapes::StringShape.new(name: 'RcsFallbackChannel')
+    RcsFallbackConfiguration = Shapes::StructureShape.new(name: 'RcsFallbackConfiguration')
+    RcsFallbackMessageBody = Shapes::StringShape.new(name: 'RcsFallbackMessageBody')
+    RcsFallbackOriginationIdentity = Shapes::StringShape.new(name: 'RcsFallbackOriginationIdentity')
+    RcsFileMessage = Shapes::StructureShape.new(name: 'RcsFileMessage')
+    RcsLocationLabel = Shapes::StringShape.new(name: 'RcsLocationLabel')
+    RcsMediaUrl = Shapes::StringShape.new(name: 'RcsMediaUrl')
+    RcsMessageContent = Shapes::StructureShape.new(name: 'RcsMessageContent')
+    RcsMessageOriginationIdentity = Shapes::StringShape.new(name: 'RcsMessageOriginationIdentity')
+    RcsMessageTrafficType = Shapes::StringShape.new(name: 'RcsMessageTrafficType')
+    RcsOpenUrlAction = Shapes::StructureShape.new(name: 'RcsOpenUrlAction')
+    RcsOpenUrlActionApplicationString = Shapes::StringShape.new(name: 'RcsOpenUrlActionApplicationString')
+    RcsOpenUrlActionWebviewViewModeString = Shapes::StringShape.new(name: 'RcsOpenUrlActionWebviewViewModeString')
+    RcsOpenUrlValue = Shapes::StringShape.new(name: 'RcsOpenUrlValue')
+    RcsPostbackData = Shapes::StringShape.new(name: 'RcsPostbackData')
+    RcsReplyAction = Shapes::StructureShape.new(name: 'RcsReplyAction')
+    RcsRequestLocationAction = Shapes::StructureShape.new(name: 'RcsRequestLocationAction')
+    RcsShowLocationAction = Shapes::StructureShape.new(name: 'RcsShowLocationAction')
+    RcsShowLocationActionLatitudeDouble = Shapes::FloatShape.new(name: 'RcsShowLocationActionLatitudeDouble')
+    RcsShowLocationActionLongitudeDouble = Shapes::FloatShape.new(name: 'RcsShowLocationActionLongitudeDouble')
+    RcsStandaloneCard = Shapes::StructureShape.new(name: 'RcsStandaloneCard')
+    RcsStandaloneCardCardOrientationString = Shapes::StringShape.new(name: 'RcsStandaloneCardCardOrientationString')
+    RcsStandaloneCardThumbnailImageAlignmentString = Shapes::StringShape.new(name: 'RcsStandaloneCardThumbnailImageAlignmentString')
+    RcsSuggestedAction = Shapes::UnionShape.new(name: 'RcsSuggestedAction')
+    RcsSuggestedActionList = Shapes::ListShape.new(name: 'RcsSuggestedActionList')
+    RcsSuggestedActionText = Shapes::StringShape.new(name: 'RcsSuggestedActionText')
+    RcsTextBody = Shapes::StringShape.new(name: 'RcsTextBody')
+    RcsTextMessage = Shapes::StructureShape.new(name: 'RcsTextMessage')
+    RcsTimeToLive = Shapes::IntegerShape.new(name: 'RcsTimeToLive')
     RegistrationAssociationBehavior = Shapes::StringShape.new(name: 'RegistrationAssociationBehavior')
     RegistrationAssociationFilter = Shapes::StructureShape.new(name: 'RegistrationAssociationFilter')
     RegistrationAssociationFilterList = Shapes::ListShape.new(name: 'RegistrationAssociationFilterList')
@@ -349,6 +477,12 @@ module Aws::PinpointSMSVoiceV2
     SendDestinationNumberVerificationCodeResult = Shapes::StructureShape.new(name: 'SendDestinationNumberVerificationCodeResult')
     SendMediaMessageRequest = Shapes::StructureShape.new(name: 'SendMediaMessageRequest')
     SendMediaMessageResult = Shapes::StructureShape.new(name: 'SendMediaMessageResult')
+    SendNotifyTextMessageRequest = Shapes::StructureShape.new(name: 'SendNotifyTextMessageRequest')
+    SendNotifyTextMessageResult = Shapes::StructureShape.new(name: 'SendNotifyTextMessageResult')
+    SendNotifyVoiceMessageRequest = Shapes::StructureShape.new(name: 'SendNotifyVoiceMessageRequest')
+    SendNotifyVoiceMessageResult = Shapes::StructureShape.new(name: 'SendNotifyVoiceMessageResult')
+    SendRcsMessageRequest = Shapes::StructureShape.new(name: 'SendRcsMessageRequest')
+    SendRcsMessageResult = Shapes::StructureShape.new(name: 'SendRcsMessageResult')
     SendTextMessageRequest = Shapes::StructureShape.new(name: 'SendTextMessageRequest')
     SendTextMessageResult = Shapes::StructureShape.new(name: 'SendTextMessageResult')
     SendVoiceMessageRequest = Shapes::StructureShape.new(name: 'SendVoiceMessageRequest')
@@ -374,6 +508,10 @@ module Aws::PinpointSMSVoiceV2
     SetDefaultSenderIdResult = Shapes::StructureShape.new(name: 'SetDefaultSenderIdResult')
     SetMediaMessageSpendLimitOverrideRequest = Shapes::StructureShape.new(name: 'SetMediaMessageSpendLimitOverrideRequest')
     SetMediaMessageSpendLimitOverrideResult = Shapes::StructureShape.new(name: 'SetMediaMessageSpendLimitOverrideResult')
+    SetNotifyMessageSpendLimitOverrideRequest = Shapes::StructureShape.new(name: 'SetNotifyMessageSpendLimitOverrideRequest')
+    SetNotifyMessageSpendLimitOverrideResult = Shapes::StructureShape.new(name: 'SetNotifyMessageSpendLimitOverrideResult')
+    SetRcsMessageSpendLimitOverrideRequest = Shapes::StructureShape.new(name: 'SetRcsMessageSpendLimitOverrideRequest')
+    SetRcsMessageSpendLimitOverrideResult = Shapes::StructureShape.new(name: 'SetRcsMessageSpendLimitOverrideResult')
     SetTextMessageSpendLimitOverrideRequest = Shapes::StructureShape.new(name: 'SetTextMessageSpendLimitOverrideRequest')
     SetTextMessageSpendLimitOverrideResult = Shapes::StructureShape.new(name: 'SetTextMessageSpendLimitOverrideResult')
     SetVoiceMessageSpendLimitOverrideRequest = Shapes::StructureShape.new(name: 'SetVoiceMessageSpendLimitOverrideRequest')
@@ -397,18 +535,34 @@ module Aws::PinpointSMSVoiceV2
     TagResourceRequest = Shapes::StructureShape.new(name: 'TagResourceRequest')
     TagResourceResult = Shapes::StructureShape.new(name: 'TagResourceResult')
     TagValue = Shapes::StringShape.new(name: 'TagValue')
+    TemplateContent = Shapes::StringShape.new(name: 'TemplateContent')
+    TemplateVariableMetadata = Shapes::StructureShape.new(name: 'TemplateVariableMetadata')
+    TemplateVariableName = Shapes::StringShape.new(name: 'TemplateVariableName')
+    TemplateVariableSource = Shapes::StringShape.new(name: 'TemplateVariableSource')
+    TemplateVariableSubstitutionMap = Shapes::MapShape.new(name: 'TemplateVariableSubstitutionMap')
+    TemplateVariableType = Shapes::StringShape.new(name: 'TemplateVariableType')
+    TemplateVariableValue = Shapes::StringShape.new(name: 'TemplateVariableValue')
+    TemplateVariablesMap = Shapes::MapShape.new(name: 'TemplateVariablesMap')
+    TestingAgentInformation = Shapes::StructureShape.new(name: 'TestingAgentInformation')
+    TestingAgentStatus = Shapes::StringShape.new(name: 'TestingAgentStatus')
     TextMessageBody = Shapes::StringShape.new(name: 'TextMessageBody')
     TextMessageOriginationIdentity = Shapes::StringShape.new(name: 'TextMessageOriginationIdentity')
     TextValidation = Shapes::StructureShape.new(name: 'TextValidation')
     TextValue = Shapes::StringShape.new(name: 'TextValue')
     ThrottlingException = Shapes::StructureShape.new(name: 'ThrottlingException')
+    TierUpgradeStatus = Shapes::StringShape.new(name: 'TierUpgradeStatus')
     TimeToLive = Shapes::IntegerShape.new(name: 'TimeToLive')
     Timestamp = Shapes::TimestampShape.new(name: 'Timestamp')
     TwoWayChannelArn = Shapes::StringShape.new(name: 'TwoWayChannelArn')
+    TwoWayMediaS3BucketName = Shapes::StringShape.new(name: 'TwoWayMediaS3BucketName')
+    TwoWayMediaS3BucketNameOrUnset = Shapes::StringShape.new(name: 'TwoWayMediaS3BucketNameOrUnset')
+    TwoWayMediaS3KeyPrefix = Shapes::StringShape.new(name: 'TwoWayMediaS3KeyPrefix')
     UntagResourceRequest = Shapes::StructureShape.new(name: 'UntagResourceRequest')
     UntagResourceResult = Shapes::StructureShape.new(name: 'UntagResourceResult')
     UpdateEventDestinationRequest = Shapes::StructureShape.new(name: 'UpdateEventDestinationRequest')
     UpdateEventDestinationResult = Shapes::StructureShape.new(name: 'UpdateEventDestinationResult')
+    UpdateNotifyConfigurationRequest = Shapes::StructureShape.new(name: 'UpdateNotifyConfigurationRequest')
+    UpdateNotifyConfigurationResult = Shapes::StructureShape.new(name: 'UpdateNotifyConfigurationResult')
     UpdatePhoneNumberRequest = Shapes::StructureShape.new(name: 'UpdatePhoneNumberRequest')
     UpdatePhoneNumberResult = Shapes::StructureShape.new(name: 'UpdatePhoneNumberResult')
     UpdatePoolRequest = Shapes::StructureShape.new(name: 'UpdatePoolRequest')
@@ -417,6 +571,8 @@ module Aws::PinpointSMSVoiceV2
     UpdateProtectConfigurationCountryRuleSetResult = Shapes::StructureShape.new(name: 'UpdateProtectConfigurationCountryRuleSetResult')
     UpdateProtectConfigurationRequest = Shapes::StructureShape.new(name: 'UpdateProtectConfigurationRequest')
     UpdateProtectConfigurationResult = Shapes::StructureShape.new(name: 'UpdateProtectConfigurationResult')
+    UpdateRcsAgentRequest = Shapes::StructureShape.new(name: 'UpdateRcsAgentRequest')
+    UpdateRcsAgentResult = Shapes::StructureShape.new(name: 'UpdateRcsAgentResult')
     UpdateSenderIdRequest = Shapes::StructureShape.new(name: 'UpdateSenderIdRequest')
     UpdateSenderIdResult = Shapes::StructureShape.new(name: 'UpdateSenderIdResult')
     ValidationException = Shapes::StructureShape.new(name: 'ValidationException')
@@ -437,6 +593,7 @@ module Aws::PinpointSMSVoiceV2
     VerifyDestinationNumberRequest = Shapes::StructureShape.new(name: 'VerifyDestinationNumberRequest')
     VerifyDestinationNumberResult = Shapes::StructureShape.new(name: 'VerifyDestinationNumberResult')
     VoiceId = Shapes::StringShape.new(name: 'VoiceId')
+    VoiceIdList = Shapes::ListShape.new(name: 'VoiceIdList')
     VoiceMessageBody = Shapes::StringShape.new(name: 'VoiceMessageBody')
     VoiceMessageBodyTextType = Shapes::StringShape.new(name: 'VoiceMessageBodyTextType')
     VoiceMessageOriginationIdentity = Shapes::StringShape.new(name: 'VoiceMessageOriginationIdentity')
@@ -460,8 +617,8 @@ module Aws::PinpointSMSVoiceV2
 
     AssociateOriginationIdentityRequest.add_member(:pool_id, Shapes::ShapeRef.new(shape: PoolIdOrArn, required: true, location_name: "PoolId"))
     AssociateOriginationIdentityRequest.add_member(:origination_identity, Shapes::ShapeRef.new(shape: PhoneOrSenderIdOrArn, required: true, location_name: "OriginationIdentity"))
-    AssociateOriginationIdentityRequest.add_member(:iso_country_code, Shapes::ShapeRef.new(shape: IsoCountryCode, required: true, location_name: "IsoCountryCode"))
-    AssociateOriginationIdentityRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
+    AssociateOriginationIdentityRequest.add_member(:iso_country_code, Shapes::ShapeRef.new(shape: IsoCountryCode, location_name: "IsoCountryCode"))
+    AssociateOriginationIdentityRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     AssociateOriginationIdentityRequest.struct_class = Types::AssociateOriginationIdentityRequest
 
     AssociateOriginationIdentityResult.add_member(:pool_arn, Shapes::ShapeRef.new(shape: String, location_name: "PoolArn"))
@@ -480,6 +637,25 @@ module Aws::PinpointSMSVoiceV2
     AssociateProtectConfigurationResult.add_member(:protect_configuration_arn, Shapes::ShapeRef.new(shape: ProtectConfigurationArn, required: true, location_name: "ProtectConfigurationArn"))
     AssociateProtectConfigurationResult.add_member(:protect_configuration_id, Shapes::ShapeRef.new(shape: ProtectConfigurationId, required: true, location_name: "ProtectConfigurationId"))
     AssociateProtectConfigurationResult.struct_class = Types::AssociateProtectConfigurationResult
+
+    CarrierLookupRequest.add_member(:phone_number, Shapes::ShapeRef.new(shape: CarrierLookupInputPhoneNumberType, required: true, location_name: "PhoneNumber"))
+    CarrierLookupRequest.struct_class = Types::CarrierLookupRequest
+
+    CarrierLookupResult.add_member(:e164_phone_number, Shapes::ShapeRef.new(shape: E164PhoneNumberType, required: true, location_name: "E164PhoneNumber"))
+    CarrierLookupResult.add_member(:dialing_country_code, Shapes::ShapeRef.new(shape: DialingCountryCodeType, location_name: "DialingCountryCode"))
+    CarrierLookupResult.add_member(:iso_country_code, Shapes::ShapeRef.new(shape: IsoCountryCode, location_name: "IsoCountryCode"))
+    CarrierLookupResult.add_member(:country, Shapes::ShapeRef.new(shape: String, location_name: "Country"))
+    CarrierLookupResult.add_member(:mcc, Shapes::ShapeRef.new(shape: MCCType, location_name: "MCC"))
+    CarrierLookupResult.add_member(:mnc, Shapes::ShapeRef.new(shape: MNCType, location_name: "MNC"))
+    CarrierLookupResult.add_member(:carrier, Shapes::ShapeRef.new(shape: String, location_name: "Carrier"))
+    CarrierLookupResult.add_member(:phone_number_type, Shapes::ShapeRef.new(shape: PhoneNumberType, required: true, location_name: "PhoneNumberType"))
+    CarrierLookupResult.struct_class = Types::CarrierLookupResult
+
+    CarrierStatusInformation.add_member(:carrier_name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "CarrierName"))
+    CarrierStatusInformation.add_member(:status, Shapes::ShapeRef.new(shape: CarrierStatus, required: true, location_name: "Status"))
+    CarrierStatusInformation.struct_class = Types::CarrierStatusInformation
+
+    CarrierStatusInformationList.member = Shapes::ShapeRef.new(shape: CarrierStatusInformation)
 
     CloudWatchLogsDestination.add_member(:iam_role_arn, Shapes::ShapeRef.new(shape: IamRoleArn, required: true, location_name: "IamRoleArn"))
     CloudWatchLogsDestination.add_member(:log_group_arn, Shapes::ShapeRef.new(shape: LogGroupArn, required: true, location_name: "LogGroupArn"))
@@ -514,9 +690,24 @@ module Aws::PinpointSMSVoiceV2
     ContextMap.key = Shapes::ShapeRef.new(shape: ContextKey)
     ContextMap.value = Shapes::ShapeRef.new(shape: ContextValue)
 
+    CountryLaunchStatusFilter.add_member(:name, Shapes::ShapeRef.new(shape: CountryLaunchStatusFilterName, required: true, location_name: "Name"))
+    CountryLaunchStatusFilter.add_member(:values, Shapes::ShapeRef.new(shape: FilterValueList, required: true, location_name: "Values"))
+    CountryLaunchStatusFilter.struct_class = Types::CountryLaunchStatusFilter
+
+    CountryLaunchStatusFilterList.member = Shapes::ShapeRef.new(shape: CountryLaunchStatusFilter)
+
+    CountryLaunchStatusInformation.add_member(:iso_country_code, Shapes::ShapeRef.new(shape: IsoCountryCode, required: true, location_name: "IsoCountryCode"))
+    CountryLaunchStatusInformation.add_member(:status, Shapes::ShapeRef.new(shape: CountryLaunchStatus, required: true, location_name: "Status"))
+    CountryLaunchStatusInformation.add_member(:rcs_platform_id, Shapes::ShapeRef.new(shape: String, location_name: "RcsPlatformId"))
+    CountryLaunchStatusInformation.add_member(:registration_id, Shapes::ShapeRef.new(shape: String, required: true, location_name: "RegistrationId"))
+    CountryLaunchStatusInformation.add_member(:carrier_status, Shapes::ShapeRef.new(shape: CarrierStatusInformationList, required: true, location_name: "CarrierStatus"))
+    CountryLaunchStatusInformation.struct_class = Types::CountryLaunchStatusInformation
+
+    CountryLaunchStatusInformationList.member = Shapes::ShapeRef.new(shape: CountryLaunchStatusInformation)
+
     CreateConfigurationSetRequest.add_member(:configuration_set_name, Shapes::ShapeRef.new(shape: ConfigurationSetName, required: true, location_name: "ConfigurationSetName"))
     CreateConfigurationSetRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
-    CreateConfigurationSetRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
+    CreateConfigurationSetRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     CreateConfigurationSetRequest.struct_class = Types::CreateConfigurationSetRequest
 
     CreateConfigurationSetResult.add_member(:configuration_set_arn, Shapes::ShapeRef.new(shape: String, location_name: "ConfigurationSetArn"))
@@ -531,7 +722,7 @@ module Aws::PinpointSMSVoiceV2
     CreateEventDestinationRequest.add_member(:cloud_watch_logs_destination, Shapes::ShapeRef.new(shape: CloudWatchLogsDestination, location_name: "CloudWatchLogsDestination"))
     CreateEventDestinationRequest.add_member(:kinesis_firehose_destination, Shapes::ShapeRef.new(shape: KinesisFirehoseDestination, location_name: "KinesisFirehoseDestination"))
     CreateEventDestinationRequest.add_member(:sns_destination, Shapes::ShapeRef.new(shape: SnsDestination, location_name: "SnsDestination"))
-    CreateEventDestinationRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
+    CreateEventDestinationRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     CreateEventDestinationRequest.struct_class = Types::CreateEventDestinationRequest
 
     CreateEventDestinationResult.add_member(:configuration_set_arn, Shapes::ShapeRef.new(shape: String, location_name: "ConfigurationSetArn"))
@@ -539,9 +730,37 @@ module Aws::PinpointSMSVoiceV2
     CreateEventDestinationResult.add_member(:event_destination, Shapes::ShapeRef.new(shape: EventDestination, location_name: "EventDestination"))
     CreateEventDestinationResult.struct_class = Types::CreateEventDestinationResult
 
+    CreateNotifyConfigurationRequest.add_member(:display_name, Shapes::ShapeRef.new(shape: NotifyConfigurationDisplayName, required: true, location_name: "DisplayName"))
+    CreateNotifyConfigurationRequest.add_member(:use_case, Shapes::ShapeRef.new(shape: NotifyConfigurationUseCase, required: true, location_name: "UseCase"))
+    CreateNotifyConfigurationRequest.add_member(:default_template_id, Shapes::ShapeRef.new(shape: NotifyTemplateId, location_name: "DefaultTemplateId"))
+    CreateNotifyConfigurationRequest.add_member(:pool_id, Shapes::ShapeRef.new(shape: PoolIdOrArn, location_name: "PoolId"))
+    CreateNotifyConfigurationRequest.add_member(:enabled_countries, Shapes::ShapeRef.new(shape: IsoCountryCodeList, location_name: "EnabledCountries"))
+    CreateNotifyConfigurationRequest.add_member(:enabled_channels, Shapes::ShapeRef.new(shape: NotifyEnabledChannelsList, required: true, location_name: "EnabledChannels"))
+    CreateNotifyConfigurationRequest.add_member(:deletion_protection_enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "DeletionProtectionEnabled"))
+    CreateNotifyConfigurationRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
+    CreateNotifyConfigurationRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
+    CreateNotifyConfigurationRequest.struct_class = Types::CreateNotifyConfigurationRequest
+
+    CreateNotifyConfigurationResult.add_member(:notify_configuration_arn, Shapes::ShapeRef.new(shape: NotifyConfigurationArn, required: true, location_name: "NotifyConfigurationArn"))
+    CreateNotifyConfigurationResult.add_member(:notify_configuration_id, Shapes::ShapeRef.new(shape: NotifyConfigurationId, required: true, location_name: "NotifyConfigurationId"))
+    CreateNotifyConfigurationResult.add_member(:display_name, Shapes::ShapeRef.new(shape: NotifyConfigurationDisplayName, required: true, location_name: "DisplayName"))
+    CreateNotifyConfigurationResult.add_member(:use_case, Shapes::ShapeRef.new(shape: NotifyConfigurationUseCase, required: true, location_name: "UseCase"))
+    CreateNotifyConfigurationResult.add_member(:default_template_id, Shapes::ShapeRef.new(shape: NotifyTemplateId, location_name: "DefaultTemplateId"))
+    CreateNotifyConfigurationResult.add_member(:pool_id, Shapes::ShapeRef.new(shape: String, location_name: "PoolId"))
+    CreateNotifyConfigurationResult.add_member(:enabled_countries, Shapes::ShapeRef.new(shape: IsoCountryCodeList, location_name: "EnabledCountries"))
+    CreateNotifyConfigurationResult.add_member(:enabled_channels, Shapes::ShapeRef.new(shape: NotifyEnabledChannelsList, required: true, location_name: "EnabledChannels"))
+    CreateNotifyConfigurationResult.add_member(:tier, Shapes::ShapeRef.new(shape: NotifyConfigurationTier, required: true, location_name: "Tier"))
+    CreateNotifyConfigurationResult.add_member(:tier_upgrade_status, Shapes::ShapeRef.new(shape: TierUpgradeStatus, required: true, location_name: "TierUpgradeStatus"))
+    CreateNotifyConfigurationResult.add_member(:status, Shapes::ShapeRef.new(shape: NotifyConfigurationStatus, required: true, location_name: "Status"))
+    CreateNotifyConfigurationResult.add_member(:rejection_reason, Shapes::ShapeRef.new(shape: String, location_name: "RejectionReason"))
+    CreateNotifyConfigurationResult.add_member(:deletion_protection_enabled, Shapes::ShapeRef.new(shape: PrimitiveBoolean, required: true, location_name: "DeletionProtectionEnabled"))
+    CreateNotifyConfigurationResult.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
+    CreateNotifyConfigurationResult.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreatedTimestamp"))
+    CreateNotifyConfigurationResult.struct_class = Types::CreateNotifyConfigurationResult
+
     CreateOptOutListRequest.add_member(:opt_out_list_name, Shapes::ShapeRef.new(shape: OptOutListName, required: true, location_name: "OptOutListName"))
     CreateOptOutListRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
-    CreateOptOutListRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
+    CreateOptOutListRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     CreateOptOutListRequest.struct_class = Types::CreateOptOutListRequest
 
     CreateOptOutListResult.add_member(:opt_out_list_arn, Shapes::ShapeRef.new(shape: String, location_name: "OptOutListArn"))
@@ -551,11 +770,11 @@ module Aws::PinpointSMSVoiceV2
     CreateOptOutListResult.struct_class = Types::CreateOptOutListResult
 
     CreatePoolRequest.add_member(:origination_identity, Shapes::ShapeRef.new(shape: PhoneOrSenderIdOrArn, required: true, location_name: "OriginationIdentity"))
-    CreatePoolRequest.add_member(:iso_country_code, Shapes::ShapeRef.new(shape: IsoCountryCode, required: true, location_name: "IsoCountryCode"))
+    CreatePoolRequest.add_member(:iso_country_code, Shapes::ShapeRef.new(shape: IsoCountryCode, location_name: "IsoCountryCode"))
     CreatePoolRequest.add_member(:message_type, Shapes::ShapeRef.new(shape: MessageType, required: true, location_name: "MessageType"))
     CreatePoolRequest.add_member(:deletion_protection_enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "DeletionProtectionEnabled"))
     CreatePoolRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
-    CreatePoolRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
+    CreatePoolRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     CreatePoolRequest.struct_class = Types::CreatePoolRequest
 
     CreatePoolResult.add_member(:pool_arn, Shapes::ShapeRef.new(shape: String, location_name: "PoolArn"))
@@ -573,7 +792,7 @@ module Aws::PinpointSMSVoiceV2
     CreatePoolResult.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "CreatedTimestamp"))
     CreatePoolResult.struct_class = Types::CreatePoolResult
 
-    CreateProtectConfigurationRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
+    CreateProtectConfigurationRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     CreateProtectConfigurationRequest.add_member(:deletion_protection_enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "DeletionProtectionEnabled"))
     CreateProtectConfigurationRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
     CreateProtectConfigurationRequest.struct_class = Types::CreateProtectConfigurationRequest
@@ -585,6 +804,29 @@ module Aws::PinpointSMSVoiceV2
     CreateProtectConfigurationResult.add_member(:deletion_protection_enabled, Shapes::ShapeRef.new(shape: PrimitiveBoolean, required: true, location_name: "DeletionProtectionEnabled"))
     CreateProtectConfigurationResult.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
     CreateProtectConfigurationResult.struct_class = Types::CreateProtectConfigurationResult
+
+    CreateRcsAgentRequest.add_member(:deletion_protection_enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "DeletionProtectionEnabled"))
+    CreateRcsAgentRequest.add_member(:opt_out_list_name, Shapes::ShapeRef.new(shape: OptOutListNameOrArn, location_name: "OptOutListName"))
+    CreateRcsAgentRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
+    CreateRcsAgentRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
+    CreateRcsAgentRequest.struct_class = Types::CreateRcsAgentRequest
+
+    CreateRcsAgentResult.add_member(:rcs_agent_arn, Shapes::ShapeRef.new(shape: String, required: true, location_name: "RcsAgentArn"))
+    CreateRcsAgentResult.add_member(:rcs_agent_id, Shapes::ShapeRef.new(shape: String, required: true, location_name: "RcsAgentId"))
+    CreateRcsAgentResult.add_member(:status, Shapes::ShapeRef.new(shape: RcsAgentStatus, required: true, location_name: "Status"))
+    CreateRcsAgentResult.add_member(:deletion_protection_enabled, Shapes::ShapeRef.new(shape: PrimitiveBoolean, required: true, location_name: "DeletionProtectionEnabled"))
+    CreateRcsAgentResult.add_member(:opt_out_list_name, Shapes::ShapeRef.new(shape: OptOutListName, location_name: "OptOutListName"))
+    CreateRcsAgentResult.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreatedTimestamp"))
+    CreateRcsAgentResult.add_member(:self_managed_opt_outs_enabled, Shapes::ShapeRef.new(shape: PrimitiveBoolean, required: true, location_name: "SelfManagedOptOutsEnabled"))
+    CreateRcsAgentResult.add_member(:two_way_channel_arn, Shapes::ShapeRef.new(shape: TwoWayChannelArn, location_name: "TwoWayChannelArn"))
+    CreateRcsAgentResult.add_member(:two_way_channel_role, Shapes::ShapeRef.new(shape: IamRoleArn, location_name: "TwoWayChannelRole"))
+    CreateRcsAgentResult.add_member(:two_way_enabled, Shapes::ShapeRef.new(shape: PrimitiveBoolean, required: true, location_name: "TwoWayEnabled"))
+    CreateRcsAgentResult.add_member(:two_way_media_s3_bucket_name, Shapes::ShapeRef.new(shape: TwoWayMediaS3BucketName, location_name: "TwoWayMediaS3BucketName"))
+    CreateRcsAgentResult.add_member(:two_way_media_s3_key_prefix, Shapes::ShapeRef.new(shape: TwoWayMediaS3KeyPrefix, location_name: "TwoWayMediaS3KeyPrefix"))
+    CreateRcsAgentResult.add_member(:two_way_media_s3_role, Shapes::ShapeRef.new(shape: IamRoleArn, location_name: "TwoWayMediaS3Role"))
+    CreateRcsAgentResult.add_member(:two_way_rcs_events_enabled, Shapes::ShapeRef.new(shape: RcsEventTypeList, location_name: "TwoWayRcsEventsEnabled"))
+    CreateRcsAgentResult.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
+    CreateRcsAgentResult.struct_class = Types::CreateRcsAgentResult
 
     CreateRegistrationAssociationRequest.add_member(:registration_id, Shapes::ShapeRef.new(shape: RegistrationIdOrArn, required: true, location_name: "RegistrationId"))
     CreateRegistrationAssociationRequest.add_member(:resource_id, Shapes::ShapeRef.new(shape: ResourceIdOrArn, required: true, location_name: "ResourceId"))
@@ -603,7 +845,7 @@ module Aws::PinpointSMSVoiceV2
     CreateRegistrationAttachmentRequest.add_member(:attachment_body, Shapes::ShapeRef.new(shape: AttachmentBody, location_name: "AttachmentBody"))
     CreateRegistrationAttachmentRequest.add_member(:attachment_url, Shapes::ShapeRef.new(shape: AttachmentUrl, location_name: "AttachmentUrl"))
     CreateRegistrationAttachmentRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
-    CreateRegistrationAttachmentRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
+    CreateRegistrationAttachmentRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     CreateRegistrationAttachmentRequest.struct_class = Types::CreateRegistrationAttachmentRequest
 
     CreateRegistrationAttachmentResult.add_member(:registration_attachment_arn, Shapes::ShapeRef.new(shape: String, required: true, location_name: "RegistrationAttachmentArn"))
@@ -615,7 +857,7 @@ module Aws::PinpointSMSVoiceV2
 
     CreateRegistrationRequest.add_member(:registration_type, Shapes::ShapeRef.new(shape: RegistrationType, required: true, location_name: "RegistrationType"))
     CreateRegistrationRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
-    CreateRegistrationRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
+    CreateRegistrationRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     CreateRegistrationRequest.struct_class = Types::CreateRegistrationRequest
 
     CreateRegistrationResult.add_member(:registration_arn, Shapes::ShapeRef.new(shape: String, required: true, location_name: "RegistrationArn"))
@@ -639,14 +881,16 @@ module Aws::PinpointSMSVoiceV2
     CreateRegistrationVersionResult.struct_class = Types::CreateRegistrationVersionResult
 
     CreateVerifiedDestinationNumberRequest.add_member(:destination_phone_number, Shapes::ShapeRef.new(shape: PhoneNumber, required: true, location_name: "DestinationPhoneNumber"))
+    CreateVerifiedDestinationNumberRequest.add_member(:rcs_agent_id, Shapes::ShapeRef.new(shape: RcsAgentIdOrArn, location_name: "RcsAgentId"))
     CreateVerifiedDestinationNumberRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
-    CreateVerifiedDestinationNumberRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
+    CreateVerifiedDestinationNumberRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     CreateVerifiedDestinationNumberRequest.struct_class = Types::CreateVerifiedDestinationNumberRequest
 
     CreateVerifiedDestinationNumberResult.add_member(:verified_destination_number_arn, Shapes::ShapeRef.new(shape: String, required: true, location_name: "VerifiedDestinationNumberArn"))
     CreateVerifiedDestinationNumberResult.add_member(:verified_destination_number_id, Shapes::ShapeRef.new(shape: String, required: true, location_name: "VerifiedDestinationNumberId"))
     CreateVerifiedDestinationNumberResult.add_member(:destination_phone_number, Shapes::ShapeRef.new(shape: PhoneNumber, required: true, location_name: "DestinationPhoneNumber"))
     CreateVerifiedDestinationNumberResult.add_member(:status, Shapes::ShapeRef.new(shape: VerificationStatus, required: true, location_name: "Status"))
+    CreateVerifiedDestinationNumberResult.add_member(:rcs_agent_id, Shapes::ShapeRef.new(shape: String, location_name: "RcsAgentId"))
     CreateVerifiedDestinationNumberResult.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
     CreateVerifiedDestinationNumberResult.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreatedTimestamp"))
     CreateVerifiedDestinationNumberResult.struct_class = Types::CreateVerifiedDestinationNumberResult
@@ -710,6 +954,30 @@ module Aws::PinpointSMSVoiceV2
     DeleteMediaMessageSpendLimitOverrideResult.add_member(:monthly_limit, Shapes::ShapeRef.new(shape: MonthlyLimit, location_name: "MonthlyLimit"))
     DeleteMediaMessageSpendLimitOverrideResult.struct_class = Types::DeleteMediaMessageSpendLimitOverrideResult
 
+    DeleteNotifyConfigurationRequest.add_member(:notify_configuration_id, Shapes::ShapeRef.new(shape: NotifyConfigurationIdOrArn, required: true, location_name: "NotifyConfigurationId"))
+    DeleteNotifyConfigurationRequest.struct_class = Types::DeleteNotifyConfigurationRequest
+
+    DeleteNotifyConfigurationResult.add_member(:notify_configuration_arn, Shapes::ShapeRef.new(shape: NotifyConfigurationArn, required: true, location_name: "NotifyConfigurationArn"))
+    DeleteNotifyConfigurationResult.add_member(:notify_configuration_id, Shapes::ShapeRef.new(shape: NotifyConfigurationId, required: true, location_name: "NotifyConfigurationId"))
+    DeleteNotifyConfigurationResult.add_member(:display_name, Shapes::ShapeRef.new(shape: NotifyConfigurationDisplayName, required: true, location_name: "DisplayName"))
+    DeleteNotifyConfigurationResult.add_member(:use_case, Shapes::ShapeRef.new(shape: NotifyConfigurationUseCase, required: true, location_name: "UseCase"))
+    DeleteNotifyConfigurationResult.add_member(:default_template_id, Shapes::ShapeRef.new(shape: NotifyTemplateId, location_name: "DefaultTemplateId"))
+    DeleteNotifyConfigurationResult.add_member(:pool_id, Shapes::ShapeRef.new(shape: String, location_name: "PoolId"))
+    DeleteNotifyConfigurationResult.add_member(:enabled_countries, Shapes::ShapeRef.new(shape: IsoCountryCodeList, location_name: "EnabledCountries"))
+    DeleteNotifyConfigurationResult.add_member(:enabled_channels, Shapes::ShapeRef.new(shape: NotifyEnabledChannelsList, required: true, location_name: "EnabledChannels"))
+    DeleteNotifyConfigurationResult.add_member(:tier, Shapes::ShapeRef.new(shape: NotifyConfigurationTier, required: true, location_name: "Tier"))
+    DeleteNotifyConfigurationResult.add_member(:tier_upgrade_status, Shapes::ShapeRef.new(shape: TierUpgradeStatus, required: true, location_name: "TierUpgradeStatus"))
+    DeleteNotifyConfigurationResult.add_member(:status, Shapes::ShapeRef.new(shape: NotifyConfigurationStatus, required: true, location_name: "Status"))
+    DeleteNotifyConfigurationResult.add_member(:rejection_reason, Shapes::ShapeRef.new(shape: String, location_name: "RejectionReason"))
+    DeleteNotifyConfigurationResult.add_member(:deletion_protection_enabled, Shapes::ShapeRef.new(shape: PrimitiveBoolean, required: true, location_name: "DeletionProtectionEnabled"))
+    DeleteNotifyConfigurationResult.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreatedTimestamp"))
+    DeleteNotifyConfigurationResult.struct_class = Types::DeleteNotifyConfigurationResult
+
+    DeleteNotifyMessageSpendLimitOverrideRequest.struct_class = Types::DeleteNotifyMessageSpendLimitOverrideRequest
+
+    DeleteNotifyMessageSpendLimitOverrideResult.add_member(:monthly_limit, Shapes::ShapeRef.new(shape: MonthlyLimit, location_name: "MonthlyLimit"))
+    DeleteNotifyMessageSpendLimitOverrideResult.struct_class = Types::DeleteNotifyMessageSpendLimitOverrideResult
+
     DeleteOptOutListRequest.add_member(:opt_out_list_name, Shapes::ShapeRef.new(shape: OptOutListNameOrArn, required: true, location_name: "OptOutListName"))
     DeleteOptOutListRequest.struct_class = Types::DeleteOptOutListRequest
 
@@ -767,6 +1035,27 @@ module Aws::PinpointSMSVoiceV2
     DeleteProtectConfigurationRuleSetNumberOverrideResult.add_member(:iso_country_code, Shapes::ShapeRef.new(shape: IsoCountryCode, location_name: "IsoCountryCode"))
     DeleteProtectConfigurationRuleSetNumberOverrideResult.add_member(:expiration_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "ExpirationTimestamp"))
     DeleteProtectConfigurationRuleSetNumberOverrideResult.struct_class = Types::DeleteProtectConfigurationRuleSetNumberOverrideResult
+
+    DeleteRcsAgentRequest.add_member(:rcs_agent_id, Shapes::ShapeRef.new(shape: RcsAgentIdOrArn, required: true, location_name: "RcsAgentId"))
+    DeleteRcsAgentRequest.struct_class = Types::DeleteRcsAgentRequest
+
+    DeleteRcsAgentResult.add_member(:rcs_agent_arn, Shapes::ShapeRef.new(shape: String, required: true, location_name: "RcsAgentArn"))
+    DeleteRcsAgentResult.add_member(:rcs_agent_id, Shapes::ShapeRef.new(shape: String, required: true, location_name: "RcsAgentId"))
+    DeleteRcsAgentResult.add_member(:status, Shapes::ShapeRef.new(shape: RcsAgentStatus, required: true, location_name: "Status"))
+    DeleteRcsAgentResult.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreatedTimestamp"))
+    DeleteRcsAgentResult.add_member(:deletion_protection_enabled, Shapes::ShapeRef.new(shape: PrimitiveBoolean, required: true, location_name: "DeletionProtectionEnabled"))
+    DeleteRcsAgentResult.add_member(:opt_out_list_name, Shapes::ShapeRef.new(shape: OptOutListName, location_name: "OptOutListName"))
+    DeleteRcsAgentResult.add_member(:self_managed_opt_outs_enabled, Shapes::ShapeRef.new(shape: PrimitiveBoolean, required: true, location_name: "SelfManagedOptOutsEnabled"))
+    DeleteRcsAgentResult.add_member(:two_way_channel_arn, Shapes::ShapeRef.new(shape: TwoWayChannelArn, location_name: "TwoWayChannelArn"))
+    DeleteRcsAgentResult.add_member(:two_way_channel_role, Shapes::ShapeRef.new(shape: IamRoleArn, location_name: "TwoWayChannelRole"))
+    DeleteRcsAgentResult.add_member(:two_way_enabled, Shapes::ShapeRef.new(shape: PrimitiveBoolean, required: true, location_name: "TwoWayEnabled"))
+    DeleteRcsAgentResult.add_member(:two_way_rcs_events_enabled, Shapes::ShapeRef.new(shape: RcsEventTypeList, location_name: "TwoWayRcsEventsEnabled"))
+    DeleteRcsAgentResult.struct_class = Types::DeleteRcsAgentResult
+
+    DeleteRcsMessageSpendLimitOverrideRequest.struct_class = Types::DeleteRcsMessageSpendLimitOverrideRequest
+
+    DeleteRcsMessageSpendLimitOverrideResult.add_member(:monthly_limit, Shapes::ShapeRef.new(shape: MonthlyLimit, location_name: "MonthlyLimit"))
+    DeleteRcsMessageSpendLimitOverrideResult.struct_class = Types::DeleteRcsMessageSpendLimitOverrideResult
 
     DeleteRegistrationAttachmentRequest.add_member(:registration_attachment_id, Shapes::ShapeRef.new(shape: RegistrationAttachmentIdOrArn, required: true, location_name: "RegistrationAttachmentId"))
     DeleteRegistrationAttachmentRequest.struct_class = Types::DeleteRegistrationAttachmentRequest
@@ -871,6 +1160,26 @@ module Aws::PinpointSMSVoiceV2
     DescribeKeywordsResult.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "NextToken"))
     DescribeKeywordsResult.struct_class = Types::DescribeKeywordsResult
 
+    DescribeNotifyConfigurationsRequest.add_member(:notify_configuration_ids, Shapes::ShapeRef.new(shape: NotifyConfigurationIdList, location_name: "NotifyConfigurationIds"))
+    DescribeNotifyConfigurationsRequest.add_member(:filters, Shapes::ShapeRef.new(shape: NotifyConfigurationFilterList, location_name: "Filters"))
+    DescribeNotifyConfigurationsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "NextToken"))
+    DescribeNotifyConfigurationsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location_name: "MaxResults"))
+    DescribeNotifyConfigurationsRequest.struct_class = Types::DescribeNotifyConfigurationsRequest
+
+    DescribeNotifyConfigurationsResult.add_member(:notify_configurations, Shapes::ShapeRef.new(shape: NotifyConfigurationInformationList, location_name: "NotifyConfigurations"))
+    DescribeNotifyConfigurationsResult.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "NextToken"))
+    DescribeNotifyConfigurationsResult.struct_class = Types::DescribeNotifyConfigurationsResult
+
+    DescribeNotifyTemplatesRequest.add_member(:template_ids, Shapes::ShapeRef.new(shape: NotifyTemplateIdList, location_name: "TemplateIds"))
+    DescribeNotifyTemplatesRequest.add_member(:filters, Shapes::ShapeRef.new(shape: NotifyTemplateFilterList, location_name: "Filters"))
+    DescribeNotifyTemplatesRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "NextToken"))
+    DescribeNotifyTemplatesRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location_name: "MaxResults"))
+    DescribeNotifyTemplatesRequest.struct_class = Types::DescribeNotifyTemplatesRequest
+
+    DescribeNotifyTemplatesResult.add_member(:notify_templates, Shapes::ShapeRef.new(shape: NotifyTemplateInformationList, location_name: "NotifyTemplates"))
+    DescribeNotifyTemplatesResult.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "NextToken"))
+    DescribeNotifyTemplatesResult.struct_class = Types::DescribeNotifyTemplatesResult
+
     DescribeOptOutListsRequest.add_member(:opt_out_list_names, Shapes::ShapeRef.new(shape: OptOutListNameList, location_name: "OptOutListNames"))
     DescribeOptOutListsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "NextToken"))
     DescribeOptOutListsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location_name: "MaxResults"))
@@ -925,6 +1234,30 @@ module Aws::PinpointSMSVoiceV2
     DescribeProtectConfigurationsResult.add_member(:protect_configurations, Shapes::ShapeRef.new(shape: ProtectConfigurationInformationList, location_name: "ProtectConfigurations"))
     DescribeProtectConfigurationsResult.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "NextToken"))
     DescribeProtectConfigurationsResult.struct_class = Types::DescribeProtectConfigurationsResult
+
+    DescribeRcsAgentCountryLaunchStatusRequest.add_member(:rcs_agent_id, Shapes::ShapeRef.new(shape: RcsAgentIdOrArn, required: true, location_name: "RcsAgentId"))
+    DescribeRcsAgentCountryLaunchStatusRequest.add_member(:iso_country_codes, Shapes::ShapeRef.new(shape: IsoCountryCodeList, location_name: "IsoCountryCodes"))
+    DescribeRcsAgentCountryLaunchStatusRequest.add_member(:filters, Shapes::ShapeRef.new(shape: CountryLaunchStatusFilterList, location_name: "Filters"))
+    DescribeRcsAgentCountryLaunchStatusRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location_name: "MaxResults"))
+    DescribeRcsAgentCountryLaunchStatusRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "NextToken"))
+    DescribeRcsAgentCountryLaunchStatusRequest.struct_class = Types::DescribeRcsAgentCountryLaunchStatusRequest
+
+    DescribeRcsAgentCountryLaunchStatusResult.add_member(:rcs_agent_id, Shapes::ShapeRef.new(shape: String, required: true, location_name: "RcsAgentId"))
+    DescribeRcsAgentCountryLaunchStatusResult.add_member(:rcs_agent_arn, Shapes::ShapeRef.new(shape: String, required: true, location_name: "RcsAgentArn"))
+    DescribeRcsAgentCountryLaunchStatusResult.add_member(:country_launch_status, Shapes::ShapeRef.new(shape: CountryLaunchStatusInformationList, location_name: "CountryLaunchStatus"))
+    DescribeRcsAgentCountryLaunchStatusResult.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "NextToken"))
+    DescribeRcsAgentCountryLaunchStatusResult.struct_class = Types::DescribeRcsAgentCountryLaunchStatusResult
+
+    DescribeRcsAgentsRequest.add_member(:rcs_agent_ids, Shapes::ShapeRef.new(shape: RcsAgentIdList, location_name: "RcsAgentIds"))
+    DescribeRcsAgentsRequest.add_member(:owner, Shapes::ShapeRef.new(shape: Owner, location_name: "Owner"))
+    DescribeRcsAgentsRequest.add_member(:filters, Shapes::ShapeRef.new(shape: RcsAgentFilterList, location_name: "Filters"))
+    DescribeRcsAgentsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "NextToken"))
+    DescribeRcsAgentsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location_name: "MaxResults"))
+    DescribeRcsAgentsRequest.struct_class = Types::DescribeRcsAgentsRequest
+
+    DescribeRcsAgentsResult.add_member(:rcs_agents, Shapes::ShapeRef.new(shape: RcsAgentInformationList, location_name: "RcsAgents"))
+    DescribeRcsAgentsResult.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "NextToken"))
+    DescribeRcsAgentsResult.struct_class = Types::DescribeRcsAgentsResult
 
     DescribeRegistrationAttachmentsRequest.add_member(:registration_attachment_ids, Shapes::ShapeRef.new(shape: RegistrationAttachmentIdList, location_name: "RegistrationAttachmentIds"))
     DescribeRegistrationAttachmentsRequest.add_member(:filters, Shapes::ShapeRef.new(shape: RegistrationAttachmentFilterList, location_name: "Filters"))
@@ -1044,8 +1377,8 @@ module Aws::PinpointSMSVoiceV2
 
     DisassociateOriginationIdentityRequest.add_member(:pool_id, Shapes::ShapeRef.new(shape: PoolIdOrArn, required: true, location_name: "PoolId"))
     DisassociateOriginationIdentityRequest.add_member(:origination_identity, Shapes::ShapeRef.new(shape: PhoneOrSenderIdOrArn, required: true, location_name: "OriginationIdentity"))
-    DisassociateOriginationIdentityRequest.add_member(:iso_country_code, Shapes::ShapeRef.new(shape: IsoCountryCode, required: true, location_name: "IsoCountryCode"))
-    DisassociateOriginationIdentityRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
+    DisassociateOriginationIdentityRequest.add_member(:iso_country_code, Shapes::ShapeRef.new(shape: IsoCountryCode, location_name: "IsoCountryCode"))
+    DisassociateOriginationIdentityRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     DisassociateOriginationIdentityRequest.struct_class = Types::DisassociateOriginationIdentityRequest
 
     DisassociateOriginationIdentityResult.add_member(:pool_arn, Shapes::ShapeRef.new(shape: String, location_name: "PoolArn"))
@@ -1113,6 +1446,8 @@ module Aws::PinpointSMSVoiceV2
     InternalServerException.add_member(:request_id, Shapes::ShapeRef.new(shape: String, location_name: "RequestId"))
     InternalServerException.struct_class = Types::InternalServerException
 
+    IsoCountryCodeList.member = Shapes::ShapeRef.new(shape: IsoCountryCode)
+
     KeywordFilter.add_member(:name, Shapes::ShapeRef.new(shape: KeywordFilterName, required: true, location_name: "Name"))
     KeywordFilter.add_member(:values, Shapes::ShapeRef.new(shape: FilterValueList, required: true, location_name: "Values"))
     KeywordFilter.struct_class = Types::KeywordFilter
@@ -1131,6 +1466,17 @@ module Aws::PinpointSMSVoiceV2
     KinesisFirehoseDestination.add_member(:iam_role_arn, Shapes::ShapeRef.new(shape: IamRoleArn, required: true, location_name: "IamRoleArn"))
     KinesisFirehoseDestination.add_member(:delivery_stream_arn, Shapes::ShapeRef.new(shape: DeliveryStreamArn, required: true, location_name: "DeliveryStreamArn"))
     KinesisFirehoseDestination.struct_class = Types::KinesisFirehoseDestination
+
+    ListNotifyCountriesRequest.add_member(:channels, Shapes::ShapeRef.new(shape: NotifyEnabledChannelsList, location_name: "Channels"))
+    ListNotifyCountriesRequest.add_member(:use_cases, Shapes::ShapeRef.new(shape: NotifyUseCaseList, location_name: "UseCases"))
+    ListNotifyCountriesRequest.add_member(:tier, Shapes::ShapeRef.new(shape: NotifyConfigurationTier, location_name: "Tier"))
+    ListNotifyCountriesRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "NextToken"))
+    ListNotifyCountriesRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location_name: "MaxResults"))
+    ListNotifyCountriesRequest.struct_class = Types::ListNotifyCountriesRequest
+
+    ListNotifyCountriesResult.add_member(:notify_countries, Shapes::ShapeRef.new(shape: NotifyCountryInformationList, location_name: "NotifyCountries"))
+    ListNotifyCountriesResult.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "NextToken"))
+    ListNotifyCountriesResult.struct_class = Types::ListNotifyCountriesResult
 
     ListPoolOriginationIdentitiesRequest.add_member(:pool_id, Shapes::ShapeRef.new(shape: PoolIdOrArn, required: true, location_name: "PoolId"))
     ListPoolOriginationIdentitiesRequest.add_member(:filters, Shapes::ShapeRef.new(shape: PoolOriginationIdentitiesFilterList, location_name: "Filters"))
@@ -1183,6 +1529,74 @@ module Aws::PinpointSMSVoiceV2
     MessageTypeList.member = Shapes::ShapeRef.new(shape: MessageType)
 
     NonEmptyTagList.member = Shapes::ShapeRef.new(shape: Tag)
+
+    NotifyConfigurationFilter.add_member(:name, Shapes::ShapeRef.new(shape: NotifyConfigurationFilterName, required: true, location_name: "Name"))
+    NotifyConfigurationFilter.add_member(:values, Shapes::ShapeRef.new(shape: FilterValueList, required: true, location_name: "Values"))
+    NotifyConfigurationFilter.struct_class = Types::NotifyConfigurationFilter
+
+    NotifyConfigurationFilterList.member = Shapes::ShapeRef.new(shape: NotifyConfigurationFilter)
+
+    NotifyConfigurationIdList.member = Shapes::ShapeRef.new(shape: NotifyConfigurationIdOrArn)
+
+    NotifyConfigurationInformation.add_member(:notify_configuration_arn, Shapes::ShapeRef.new(shape: NotifyConfigurationArn, required: true, location_name: "NotifyConfigurationArn"))
+    NotifyConfigurationInformation.add_member(:notify_configuration_id, Shapes::ShapeRef.new(shape: NotifyConfigurationId, required: true, location_name: "NotifyConfigurationId"))
+    NotifyConfigurationInformation.add_member(:display_name, Shapes::ShapeRef.new(shape: NotifyConfigurationDisplayName, required: true, location_name: "DisplayName"))
+    NotifyConfigurationInformation.add_member(:use_case, Shapes::ShapeRef.new(shape: NotifyConfigurationUseCase, required: true, location_name: "UseCase"))
+    NotifyConfigurationInformation.add_member(:default_template_id, Shapes::ShapeRef.new(shape: NotifyTemplateId, location_name: "DefaultTemplateId"))
+    NotifyConfigurationInformation.add_member(:pool_id, Shapes::ShapeRef.new(shape: String, location_name: "PoolId"))
+    NotifyConfigurationInformation.add_member(:enabled_countries, Shapes::ShapeRef.new(shape: IsoCountryCodeList, location_name: "EnabledCountries"))
+    NotifyConfigurationInformation.add_member(:enabled_channels, Shapes::ShapeRef.new(shape: NotifyEnabledChannelsList, required: true, location_name: "EnabledChannels"))
+    NotifyConfigurationInformation.add_member(:tier, Shapes::ShapeRef.new(shape: NotifyConfigurationTier, required: true, location_name: "Tier"))
+    NotifyConfigurationInformation.add_member(:tier_upgrade_status, Shapes::ShapeRef.new(shape: TierUpgradeStatus, required: true, location_name: "TierUpgradeStatus"))
+    NotifyConfigurationInformation.add_member(:status, Shapes::ShapeRef.new(shape: NotifyConfigurationStatus, required: true, location_name: "Status"))
+    NotifyConfigurationInformation.add_member(:rejection_reason, Shapes::ShapeRef.new(shape: String, location_name: "RejectionReason"))
+    NotifyConfigurationInformation.add_member(:deletion_protection_enabled, Shapes::ShapeRef.new(shape: PrimitiveBoolean, required: true, location_name: "DeletionProtectionEnabled"))
+    NotifyConfigurationInformation.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreatedTimestamp"))
+    NotifyConfigurationInformation.struct_class = Types::NotifyConfigurationInformation
+
+    NotifyConfigurationInformationList.member = Shapes::ShapeRef.new(shape: NotifyConfigurationInformation)
+
+    NotifyConfigurationTierList.member = Shapes::ShapeRef.new(shape: NotifyConfigurationTier)
+
+    NotifyCountryInformation.add_member(:iso_country_code, Shapes::ShapeRef.new(shape: IsoCountryCode, required: true, location_name: "IsoCountryCode"))
+    NotifyCountryInformation.add_member(:country_name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "CountryName"))
+    NotifyCountryInformation.add_member(:supported_channels, Shapes::ShapeRef.new(shape: NotifyEnabledChannelsList, required: true, location_name: "SupportedChannels"))
+    NotifyCountryInformation.add_member(:supported_use_cases, Shapes::ShapeRef.new(shape: NotifyUseCaseList, required: true, location_name: "SupportedUseCases"))
+    NotifyCountryInformation.add_member(:supported_tiers, Shapes::ShapeRef.new(shape: NotifyTierList, required: true, location_name: "SupportedTiers"))
+    NotifyCountryInformation.add_member(:customer_owned_identity_required, Shapes::ShapeRef.new(shape: PrimitiveBoolean, required: true, location_name: "CustomerOwnedIdentityRequired"))
+    NotifyCountryInformation.struct_class = Types::NotifyCountryInformation
+
+    NotifyCountryInformationList.member = Shapes::ShapeRef.new(shape: NotifyCountryInformation)
+
+    NotifyEnabledChannelsList.member = Shapes::ShapeRef.new(shape: NumberCapability)
+
+    NotifyTemplateFilter.add_member(:name, Shapes::ShapeRef.new(shape: NotifyTemplateFilterName, required: true, location_name: "Name"))
+    NotifyTemplateFilter.add_member(:values, Shapes::ShapeRef.new(shape: FilterValueList, required: true, location_name: "Values"))
+    NotifyTemplateFilter.struct_class = Types::NotifyTemplateFilter
+
+    NotifyTemplateFilterList.member = Shapes::ShapeRef.new(shape: NotifyTemplateFilter)
+
+    NotifyTemplateIdList.member = Shapes::ShapeRef.new(shape: NotifyTemplateId)
+
+    NotifyTemplateInformation.add_member(:template_id, Shapes::ShapeRef.new(shape: NotifyTemplateId, required: true, location_name: "TemplateId"))
+    NotifyTemplateInformation.add_member(:version, Shapes::ShapeRef.new(shape: NotifyTemplateVersion, required: true, location_name: "Version"))
+    NotifyTemplateInformation.add_member(:template_type, Shapes::ShapeRef.new(shape: NotifyTemplateType, required: true, location_name: "TemplateType"))
+    NotifyTemplateInformation.add_member(:channels, Shapes::ShapeRef.new(shape: NumberCapabilityList, required: true, location_name: "Channels"))
+    NotifyTemplateInformation.add_member(:tier_access, Shapes::ShapeRef.new(shape: NotifyConfigurationTierList, location_name: "TierAccess"))
+    NotifyTemplateInformation.add_member(:status, Shapes::ShapeRef.new(shape: NotifyTemplateStatus, location_name: "Status"))
+    NotifyTemplateInformation.add_member(:supported_countries, Shapes::ShapeRef.new(shape: IsoCountryCodeList, location_name: "SupportedCountries"))
+    NotifyTemplateInformation.add_member(:language_code, Shapes::ShapeRef.new(shape: NotifyLanguageCode, location_name: "LanguageCode"))
+    NotifyTemplateInformation.add_member(:content, Shapes::ShapeRef.new(shape: TemplateContent, location_name: "Content"))
+    NotifyTemplateInformation.add_member(:variables, Shapes::ShapeRef.new(shape: TemplateVariablesMap, location_name: "Variables"))
+    NotifyTemplateInformation.add_member(:supported_voice_ids, Shapes::ShapeRef.new(shape: VoiceIdList, location_name: "SupportedVoiceIds"))
+    NotifyTemplateInformation.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreatedTimestamp"))
+    NotifyTemplateInformation.struct_class = Types::NotifyTemplateInformation
+
+    NotifyTemplateInformationList.member = Shapes::ShapeRef.new(shape: NotifyTemplateInformation)
+
+    NotifyTierList.member = Shapes::ShapeRef.new(shape: NotifyConfigurationTier)
+
+    NotifyUseCaseList.member = Shapes::ShapeRef.new(shape: NotifyConfigurationUseCase)
 
     NumberCapabilityList.member = Shapes::ShapeRef.new(shape: NumberCapability)
 
@@ -1241,6 +1655,7 @@ module Aws::PinpointSMSVoiceV2
     PhoneNumberInformation.add_member(:two_way_channel_role, Shapes::ShapeRef.new(shape: IamRoleArn, location_name: "TwoWayChannelRole"))
     PhoneNumberInformation.add_member(:self_managed_opt_outs_enabled, Shapes::ShapeRef.new(shape: PrimitiveBoolean, required: true, location_name: "SelfManagedOptOutsEnabled"))
     PhoneNumberInformation.add_member(:opt_out_list_name, Shapes::ShapeRef.new(shape: OptOutListName, required: true, location_name: "OptOutListName"))
+    PhoneNumberInformation.add_member(:international_sending_enabled, Shapes::ShapeRef.new(shape: PrimitiveBoolean, location_name: "InternationalSendingEnabled"))
     PhoneNumberInformation.add_member(:deletion_protection_enabled, Shapes::ShapeRef.new(shape: PrimitiveBoolean, required: true, location_name: "DeletionProtectionEnabled"))
     PhoneNumberInformation.add_member(:pool_id, Shapes::ShapeRef.new(shape: String, location_name: "PoolId"))
     PhoneNumberInformation.add_member(:registration_id, Shapes::ShapeRef.new(shape: String, location_name: "RegistrationId"))
@@ -1347,7 +1762,7 @@ module Aws::PinpointSMSVoiceV2
     PutOptedOutNumberResult.add_member(:end_user_opted_out, Shapes::ShapeRef.new(shape: PrimitiveBoolean, location_name: "EndUserOptedOut"))
     PutOptedOutNumberResult.struct_class = Types::PutOptedOutNumberResult
 
-    PutProtectConfigurationRuleSetNumberOverrideRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
+    PutProtectConfigurationRuleSetNumberOverrideRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     PutProtectConfigurationRuleSetNumberOverrideRequest.add_member(:protect_configuration_id, Shapes::ShapeRef.new(shape: ProtectConfigurationIdOrArn, required: true, location_name: "ProtectConfigurationId"))
     PutProtectConfigurationRuleSetNumberOverrideRequest.add_member(:destination_phone_number, Shapes::ShapeRef.new(shape: PhoneNumber, required: true, location_name: "DestinationPhoneNumber"))
     PutProtectConfigurationRuleSetNumberOverrideRequest.add_member(:action, Shapes::ShapeRef.new(shape: ProtectConfigurationRuleOverrideAction, required: true, location_name: "Action"))
@@ -1388,6 +1803,153 @@ module Aws::PinpointSMSVoiceV2
     PutResourcePolicyResult.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "CreatedTimestamp"))
     PutResourcePolicyResult.struct_class = Types::PutResourcePolicyResult
 
+    RcsAgentFilter.add_member(:name, Shapes::ShapeRef.new(shape: RcsAgentFilterName, required: true, location_name: "Name"))
+    RcsAgentFilter.add_member(:values, Shapes::ShapeRef.new(shape: FilterValueList, required: true, location_name: "Values"))
+    RcsAgentFilter.struct_class = Types::RcsAgentFilter
+
+    RcsAgentFilterList.member = Shapes::ShapeRef.new(shape: RcsAgentFilter)
+
+    RcsAgentIdList.member = Shapes::ShapeRef.new(shape: RcsAgentIdOrArn)
+
+    RcsAgentInformation.add_member(:rcs_agent_arn, Shapes::ShapeRef.new(shape: String, required: true, location_name: "RcsAgentArn"))
+    RcsAgentInformation.add_member(:rcs_agent_id, Shapes::ShapeRef.new(shape: String, required: true, location_name: "RcsAgentId"))
+    RcsAgentInformation.add_member(:status, Shapes::ShapeRef.new(shape: RcsAgentStatus, required: true, location_name: "Status"))
+    RcsAgentInformation.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreatedTimestamp"))
+    RcsAgentInformation.add_member(:deletion_protection_enabled, Shapes::ShapeRef.new(shape: PrimitiveBoolean, required: true, location_name: "DeletionProtectionEnabled"))
+    RcsAgentInformation.add_member(:opt_out_list_name, Shapes::ShapeRef.new(shape: OptOutListName, location_name: "OptOutListName"))
+    RcsAgentInformation.add_member(:self_managed_opt_outs_enabled, Shapes::ShapeRef.new(shape: PrimitiveBoolean, required: true, location_name: "SelfManagedOptOutsEnabled"))
+    RcsAgentInformation.add_member(:two_way_channel_arn, Shapes::ShapeRef.new(shape: TwoWayChannelArn, location_name: "TwoWayChannelArn"))
+    RcsAgentInformation.add_member(:two_way_channel_role, Shapes::ShapeRef.new(shape: IamRoleArn, location_name: "TwoWayChannelRole"))
+    RcsAgentInformation.add_member(:two_way_enabled, Shapes::ShapeRef.new(shape: PrimitiveBoolean, required: true, location_name: "TwoWayEnabled"))
+    RcsAgentInformation.add_member(:pool_id, Shapes::ShapeRef.new(shape: String, location_name: "PoolId"))
+    RcsAgentInformation.add_member(:two_way_media_s3_bucket_name, Shapes::ShapeRef.new(shape: TwoWayMediaS3BucketName, location_name: "TwoWayMediaS3BucketName"))
+    RcsAgentInformation.add_member(:two_way_media_s3_key_prefix, Shapes::ShapeRef.new(shape: TwoWayMediaS3KeyPrefix, location_name: "TwoWayMediaS3KeyPrefix"))
+    RcsAgentInformation.add_member(:two_way_media_s3_role, Shapes::ShapeRef.new(shape: IamRoleArn, location_name: "TwoWayMediaS3Role"))
+    RcsAgentInformation.add_member(:two_way_rcs_events_enabled, Shapes::ShapeRef.new(shape: RcsEventTypeList, location_name: "TwoWayRcsEventsEnabled"))
+    RcsAgentInformation.add_member(:testing_agent, Shapes::ShapeRef.new(shape: TestingAgentInformation, location_name: "TestingAgent"))
+    RcsAgentInformation.struct_class = Types::RcsAgentInformation
+
+    RcsAgentInformationList.member = Shapes::ShapeRef.new(shape: RcsAgentInformation)
+
+    RcsCardContent.add_member(:title, Shapes::ShapeRef.new(shape: RcsCardTitle, location_name: "Title"))
+    RcsCardContent.add_member(:description, Shapes::ShapeRef.new(shape: RcsCardDescription, location_name: "Description"))
+    RcsCardContent.add_member(:media, Shapes::ShapeRef.new(shape: RcsCardMedia, location_name: "Media"))
+    RcsCardContent.add_member(:suggestions, Shapes::ShapeRef.new(shape: RcsCardSuggestedActionList, location_name: "Suggestions"))
+    RcsCardContent.struct_class = Types::RcsCardContent
+
+    RcsCardMedia.add_member(:file_url, Shapes::ShapeRef.new(shape: RcsMediaUrl, required: true, location_name: "FileUrl"))
+    RcsCardMedia.add_member(:thumbnail_url, Shapes::ShapeRef.new(shape: RcsMediaUrl, location_name: "ThumbnailUrl"))
+    RcsCardMedia.add_member(:height, Shapes::ShapeRef.new(shape: RcsCardMediaHeightString, location_name: "Height"))
+    RcsCardMedia.struct_class = Types::RcsCardMedia
+
+    RcsCardSuggestedActionList.member = Shapes::ShapeRef.new(shape: RcsSuggestedAction)
+
+    RcsCarousel.add_member(:card_width, Shapes::ShapeRef.new(shape: RcsCarouselCardWidthString, required: true, location_name: "CardWidth"))
+    RcsCarousel.add_member(:card_contents, Shapes::ShapeRef.new(shape: RcsCarouselCardContentList, required: true, location_name: "CardContents"))
+    RcsCarousel.struct_class = Types::RcsCarousel
+
+    RcsCarouselCardContent.add_member(:title, Shapes::ShapeRef.new(shape: RcsCardTitle, location_name: "Title"))
+    RcsCarouselCardContent.add_member(:description, Shapes::ShapeRef.new(shape: RcsCardDescription, location_name: "Description"))
+    RcsCarouselCardContent.add_member(:media, Shapes::ShapeRef.new(shape: RcsCarouselCardMedia, location_name: "Media"))
+    RcsCarouselCardContent.add_member(:suggestions, Shapes::ShapeRef.new(shape: RcsCardSuggestedActionList, location_name: "Suggestions"))
+    RcsCarouselCardContent.struct_class = Types::RcsCarouselCardContent
+
+    RcsCarouselCardContentList.member = Shapes::ShapeRef.new(shape: RcsCarouselCardContent)
+
+    RcsCarouselCardMedia.add_member(:file_url, Shapes::ShapeRef.new(shape: RcsMediaUrl, required: true, location_name: "FileUrl"))
+    RcsCarouselCardMedia.add_member(:thumbnail_url, Shapes::ShapeRef.new(shape: RcsMediaUrl, location_name: "ThumbnailUrl"))
+    RcsCarouselCardMedia.add_member(:height, Shapes::ShapeRef.new(shape: RcsCarouselCardMediaHeightString, location_name: "Height"))
+    RcsCarouselCardMedia.struct_class = Types::RcsCarouselCardMedia
+
+    RcsContent.add_member(:text_message, Shapes::ShapeRef.new(shape: RcsTextMessage, location_name: "TextMessage"))
+    RcsContent.add_member(:file_message, Shapes::ShapeRef.new(shape: RcsFileMessage, location_name: "FileMessage"))
+    RcsContent.add_member(:rich_card, Shapes::ShapeRef.new(shape: RcsStandaloneCard, location_name: "RichCard"))
+    RcsContent.add_member(:carousel, Shapes::ShapeRef.new(shape: RcsCarousel, location_name: "Carousel"))
+    RcsContent.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    RcsContent.add_member_subclass(:text_message, Types::RcsContent::TextMessage)
+    RcsContent.add_member_subclass(:file_message, Types::RcsContent::FileMessage)
+    RcsContent.add_member_subclass(:rich_card, Types::RcsContent::RichCard)
+    RcsContent.add_member_subclass(:carousel, Types::RcsContent::Carousel)
+    RcsContent.add_member_subclass(:unknown, Types::RcsContent::Unknown)
+    RcsContent.struct_class = Types::RcsContent
+
+    RcsCreateCalendarEventAction.add_member(:text, Shapes::ShapeRef.new(shape: RcsSuggestedActionText, required: true, location_name: "Text"))
+    RcsCreateCalendarEventAction.add_member(:postback_data, Shapes::ShapeRef.new(shape: RcsPostbackData, required: true, location_name: "PostbackData"))
+    RcsCreateCalendarEventAction.add_member(:title, Shapes::ShapeRef.new(shape: RcsCalendarEventTitle, required: true, location_name: "Title"))
+    RcsCreateCalendarEventAction.add_member(:start_time, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "StartTime"))
+    RcsCreateCalendarEventAction.add_member(:end_time, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "EndTime"))
+    RcsCreateCalendarEventAction.add_member(:description, Shapes::ShapeRef.new(shape: RcsCalendarEventDescription, location_name: "Description"))
+    RcsCreateCalendarEventAction.struct_class = Types::RcsCreateCalendarEventAction
+
+    RcsDialPhoneAction.add_member(:text, Shapes::ShapeRef.new(shape: RcsSuggestedActionText, required: true, location_name: "Text"))
+    RcsDialPhoneAction.add_member(:postback_data, Shapes::ShapeRef.new(shape: RcsPostbackData, required: true, location_name: "PostbackData"))
+    RcsDialPhoneAction.add_member(:phone_number, Shapes::ShapeRef.new(shape: PhoneNumber, required: true, location_name: "PhoneNumber"))
+    RcsDialPhoneAction.struct_class = Types::RcsDialPhoneAction
+
+    RcsEventTypeList.member = Shapes::ShapeRef.new(shape: RcsEventType)
+
+    RcsFallbackConfiguration.add_member(:channel, Shapes::ShapeRef.new(shape: RcsFallbackChannel, required: true, location_name: "Channel"))
+    RcsFallbackConfiguration.add_member(:message_body, Shapes::ShapeRef.new(shape: RcsFallbackMessageBody, location_name: "MessageBody"))
+    RcsFallbackConfiguration.add_member(:media_urls, Shapes::ShapeRef.new(shape: MediaUrlList, location_name: "MediaUrls"))
+    RcsFallbackConfiguration.add_member(:origination_identity, Shapes::ShapeRef.new(shape: RcsFallbackOriginationIdentity, location_name: "OriginationIdentity"))
+    RcsFallbackConfiguration.struct_class = Types::RcsFallbackConfiguration
+
+    RcsFileMessage.add_member(:file_url, Shapes::ShapeRef.new(shape: RcsMediaUrl, required: true, location_name: "FileUrl"))
+    RcsFileMessage.add_member(:thumbnail_url, Shapes::ShapeRef.new(shape: RcsMediaUrl, location_name: "ThumbnailUrl"))
+    RcsFileMessage.struct_class = Types::RcsFileMessage
+
+    RcsMessageContent.add_member(:content, Shapes::ShapeRef.new(shape: RcsContent, required: true, location_name: "Content"))
+    RcsMessageContent.add_member(:suggestions, Shapes::ShapeRef.new(shape: RcsSuggestedActionList, location_name: "Suggestions"))
+    RcsMessageContent.struct_class = Types::RcsMessageContent
+
+    RcsOpenUrlAction.add_member(:text, Shapes::ShapeRef.new(shape: RcsSuggestedActionText, required: true, location_name: "Text"))
+    RcsOpenUrlAction.add_member(:postback_data, Shapes::ShapeRef.new(shape: RcsPostbackData, required: true, location_name: "PostbackData"))
+    RcsOpenUrlAction.add_member(:url, Shapes::ShapeRef.new(shape: RcsOpenUrlValue, required: true, location_name: "Url"))
+    RcsOpenUrlAction.add_member(:application, Shapes::ShapeRef.new(shape: RcsOpenUrlActionApplicationString, location_name: "Application"))
+    RcsOpenUrlAction.add_member(:webview_view_mode, Shapes::ShapeRef.new(shape: RcsOpenUrlActionWebviewViewModeString, location_name: "WebviewViewMode"))
+    RcsOpenUrlAction.struct_class = Types::RcsOpenUrlAction
+
+    RcsReplyAction.add_member(:text, Shapes::ShapeRef.new(shape: RcsSuggestedActionText, required: true, location_name: "Text"))
+    RcsReplyAction.add_member(:postback_data, Shapes::ShapeRef.new(shape: RcsPostbackData, required: true, location_name: "PostbackData"))
+    RcsReplyAction.struct_class = Types::RcsReplyAction
+
+    RcsRequestLocationAction.add_member(:text, Shapes::ShapeRef.new(shape: RcsSuggestedActionText, required: true, location_name: "Text"))
+    RcsRequestLocationAction.add_member(:postback_data, Shapes::ShapeRef.new(shape: RcsPostbackData, required: true, location_name: "PostbackData"))
+    RcsRequestLocationAction.struct_class = Types::RcsRequestLocationAction
+
+    RcsShowLocationAction.add_member(:text, Shapes::ShapeRef.new(shape: RcsSuggestedActionText, required: true, location_name: "Text"))
+    RcsShowLocationAction.add_member(:postback_data, Shapes::ShapeRef.new(shape: RcsPostbackData, required: true, location_name: "PostbackData"))
+    RcsShowLocationAction.add_member(:latitude, Shapes::ShapeRef.new(shape: RcsShowLocationActionLatitudeDouble, required: true, location_name: "Latitude"))
+    RcsShowLocationAction.add_member(:longitude, Shapes::ShapeRef.new(shape: RcsShowLocationActionLongitudeDouble, required: true, location_name: "Longitude"))
+    RcsShowLocationAction.add_member(:label, Shapes::ShapeRef.new(shape: RcsLocationLabel, location_name: "Label"))
+    RcsShowLocationAction.struct_class = Types::RcsShowLocationAction
+
+    RcsStandaloneCard.add_member(:card_orientation, Shapes::ShapeRef.new(shape: RcsStandaloneCardCardOrientationString, required: true, location_name: "CardOrientation"))
+    RcsStandaloneCard.add_member(:thumbnail_image_alignment, Shapes::ShapeRef.new(shape: RcsStandaloneCardThumbnailImageAlignmentString, location_name: "ThumbnailImageAlignment"))
+    RcsStandaloneCard.add_member(:card_content, Shapes::ShapeRef.new(shape: RcsCardContent, required: true, location_name: "CardContent"))
+    RcsStandaloneCard.struct_class = Types::RcsStandaloneCard
+
+    RcsSuggestedAction.add_member(:reply, Shapes::ShapeRef.new(shape: RcsReplyAction, location_name: "Reply"))
+    RcsSuggestedAction.add_member(:open_url, Shapes::ShapeRef.new(shape: RcsOpenUrlAction, location_name: "OpenUrl"))
+    RcsSuggestedAction.add_member(:dial_phone, Shapes::ShapeRef.new(shape: RcsDialPhoneAction, location_name: "DialPhone"))
+    RcsSuggestedAction.add_member(:show_location, Shapes::ShapeRef.new(shape: RcsShowLocationAction, location_name: "ShowLocation"))
+    RcsSuggestedAction.add_member(:request_location, Shapes::ShapeRef.new(shape: RcsRequestLocationAction, location_name: "RequestLocation"))
+    RcsSuggestedAction.add_member(:create_calendar_event, Shapes::ShapeRef.new(shape: RcsCreateCalendarEventAction, location_name: "CreateCalendarEvent"))
+    RcsSuggestedAction.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    RcsSuggestedAction.add_member_subclass(:reply, Types::RcsSuggestedAction::Reply)
+    RcsSuggestedAction.add_member_subclass(:open_url, Types::RcsSuggestedAction::OpenUrl)
+    RcsSuggestedAction.add_member_subclass(:dial_phone, Types::RcsSuggestedAction::DialPhone)
+    RcsSuggestedAction.add_member_subclass(:show_location, Types::RcsSuggestedAction::ShowLocation)
+    RcsSuggestedAction.add_member_subclass(:request_location, Types::RcsSuggestedAction::RequestLocation)
+    RcsSuggestedAction.add_member_subclass(:create_calendar_event, Types::RcsSuggestedAction::CreateCalendarEvent)
+    RcsSuggestedAction.add_member_subclass(:unknown, Types::RcsSuggestedAction::Unknown)
+    RcsSuggestedAction.struct_class = Types::RcsSuggestedAction
+
+    RcsSuggestedActionList.member = Shapes::ShapeRef.new(shape: RcsSuggestedAction)
+
+    RcsTextMessage.add_member(:body, Shapes::ShapeRef.new(shape: RcsTextBody, required: true, location_name: "Body"))
+    RcsTextMessage.struct_class = Types::RcsTextMessage
+
     RegistrationAssociationFilter.add_member(:name, Shapes::ShapeRef.new(shape: RegistrationAssociationFilterName, required: true, location_name: "Name"))
     RegistrationAssociationFilter.add_member(:values, Shapes::ShapeRef.new(shape: FilterValueList, required: true, location_name: "Values"))
     RegistrationAssociationFilter.struct_class = Types::RegistrationAssociationFilter
@@ -1416,6 +1978,7 @@ module Aws::PinpointSMSVoiceV2
     RegistrationAttachmentsInformation.add_member(:attachment_status, Shapes::ShapeRef.new(shape: AttachmentStatus, required: true, location_name: "AttachmentStatus"))
     RegistrationAttachmentsInformation.add_member(:attachment_upload_error_reason, Shapes::ShapeRef.new(shape: AttachmentUploadErrorReason, location_name: "AttachmentUploadErrorReason"))
     RegistrationAttachmentsInformation.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreatedTimestamp"))
+    RegistrationAttachmentsInformation.add_member(:attachment_url, Shapes::ShapeRef.new(shape: String, location_name: "AttachmentUrl"))
     RegistrationAttachmentsInformation.struct_class = Types::RegistrationAttachmentsInformation
 
     RegistrationAttachmentsInformationList.member = Shapes::ShapeRef.new(shape: RegistrationAttachmentsInformation)
@@ -1455,6 +2018,7 @@ module Aws::PinpointSMSVoiceV2
     RegistrationFieldValueInformation.add_member(:text_value, Shapes::ShapeRef.new(shape: TextValue, location_name: "TextValue"))
     RegistrationFieldValueInformation.add_member(:registration_attachment_id, Shapes::ShapeRef.new(shape: RegistrationAttachmentIdOrArn, location_name: "RegistrationAttachmentId"))
     RegistrationFieldValueInformation.add_member(:denied_reason, Shapes::ShapeRef.new(shape: String, location_name: "DeniedReason"))
+    RegistrationFieldValueInformation.add_member(:feedback, Shapes::ShapeRef.new(shape: String, location_name: "Feedback"))
     RegistrationFieldValueInformation.struct_class = Types::RegistrationFieldValueInformation
 
     RegistrationFieldValueInformationList.member = Shapes::ShapeRef.new(shape: RegistrationFieldValueInformation)
@@ -1525,6 +2089,7 @@ module Aws::PinpointSMSVoiceV2
     RegistrationVersionInformation.add_member(:registration_version_status, Shapes::ShapeRef.new(shape: RegistrationVersionStatus, required: true, location_name: "RegistrationVersionStatus"))
     RegistrationVersionInformation.add_member(:registration_version_status_history, Shapes::ShapeRef.new(shape: RegistrationVersionStatusHistory, required: true, location_name: "RegistrationVersionStatusHistory"))
     RegistrationVersionInformation.add_member(:denied_reasons, Shapes::ShapeRef.new(shape: RegistrationDeniedReasonInformationList, location_name: "DeniedReasons"))
+    RegistrationVersionInformation.add_member(:feedback, Shapes::ShapeRef.new(shape: String, location_name: "Feedback"))
     RegistrationVersionInformation.struct_class = Types::RegistrationVersionInformation
 
     RegistrationVersionInformationList.member = Shapes::ShapeRef.new(shape: RegistrationVersionInformation)
@@ -1533,6 +2098,7 @@ module Aws::PinpointSMSVoiceV2
 
     RegistrationVersionStatusHistory.add_member(:draft_timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "DraftTimestamp"))
     RegistrationVersionStatusHistory.add_member(:submitted_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "SubmittedTimestamp"))
+    RegistrationVersionStatusHistory.add_member(:aws_reviewing_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "AwsReviewingTimestamp"))
     RegistrationVersionStatusHistory.add_member(:reviewing_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "ReviewingTimestamp"))
     RegistrationVersionStatusHistory.add_member(:requires_authentication_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "RequiresAuthenticationTimestamp"))
     RegistrationVersionStatusHistory.add_member(:approved_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "ApprovedTimestamp"))
@@ -1583,9 +2149,10 @@ module Aws::PinpointSMSVoiceV2
     RequestPhoneNumberRequest.add_member(:opt_out_list_name, Shapes::ShapeRef.new(shape: OptOutListNameOrArn, location_name: "OptOutListName"))
     RequestPhoneNumberRequest.add_member(:pool_id, Shapes::ShapeRef.new(shape: PoolIdOrArn, location_name: "PoolId"))
     RequestPhoneNumberRequest.add_member(:registration_id, Shapes::ShapeRef.new(shape: RegistrationIdOrArn, location_name: "RegistrationId"))
+    RequestPhoneNumberRequest.add_member(:international_sending_enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "InternationalSendingEnabled"))
     RequestPhoneNumberRequest.add_member(:deletion_protection_enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "DeletionProtectionEnabled"))
     RequestPhoneNumberRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
-    RequestPhoneNumberRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
+    RequestPhoneNumberRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     RequestPhoneNumberRequest.struct_class = Types::RequestPhoneNumberRequest
 
     RequestPhoneNumberResult.add_member(:phone_number_arn, Shapes::ShapeRef.new(shape: String, location_name: "PhoneNumberArn"))
@@ -1602,6 +2169,7 @@ module Aws::PinpointSMSVoiceV2
     RequestPhoneNumberResult.add_member(:two_way_channel_role, Shapes::ShapeRef.new(shape: IamRoleArn, location_name: "TwoWayChannelRole"))
     RequestPhoneNumberResult.add_member(:self_managed_opt_outs_enabled, Shapes::ShapeRef.new(shape: PrimitiveBoolean, location_name: "SelfManagedOptOutsEnabled"))
     RequestPhoneNumberResult.add_member(:opt_out_list_name, Shapes::ShapeRef.new(shape: OptOutListName, location_name: "OptOutListName"))
+    RequestPhoneNumberResult.add_member(:international_sending_enabled, Shapes::ShapeRef.new(shape: PrimitiveBoolean, location_name: "InternationalSendingEnabled"))
     RequestPhoneNumberResult.add_member(:deletion_protection_enabled, Shapes::ShapeRef.new(shape: PrimitiveBoolean, location_name: "DeletionProtectionEnabled"))
     RequestPhoneNumberResult.add_member(:pool_id, Shapes::ShapeRef.new(shape: String, location_name: "PoolId"))
     RequestPhoneNumberResult.add_member(:registration_id, Shapes::ShapeRef.new(shape: String, location_name: "RegistrationId"))
@@ -1614,7 +2182,7 @@ module Aws::PinpointSMSVoiceV2
     RequestSenderIdRequest.add_member(:message_types, Shapes::ShapeRef.new(shape: MessageTypeList, location_name: "MessageTypes"))
     RequestSenderIdRequest.add_member(:deletion_protection_enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "DeletionProtectionEnabled"))
     RequestSenderIdRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
-    RequestSenderIdRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
+    RequestSenderIdRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     RequestSenderIdRequest.struct_class = Types::RequestSenderIdRequest
 
     RequestSenderIdResult.add_member(:sender_id_arn, Shapes::ShapeRef.new(shape: String, required: true, location_name: "SenderIdArn"))
@@ -1675,6 +2243,56 @@ module Aws::PinpointSMSVoiceV2
 
     SendMediaMessageResult.add_member(:message_id, Shapes::ShapeRef.new(shape: String, location_name: "MessageId"))
     SendMediaMessageResult.struct_class = Types::SendMediaMessageResult
+
+    SendNotifyTextMessageRequest.add_member(:notify_configuration_id, Shapes::ShapeRef.new(shape: NotifyConfigurationIdOrArn, required: true, location_name: "NotifyConfigurationId"))
+    SendNotifyTextMessageRequest.add_member(:destination_phone_number, Shapes::ShapeRef.new(shape: PhoneNumber, required: true, location_name: "DestinationPhoneNumber"))
+    SendNotifyTextMessageRequest.add_member(:template_id, Shapes::ShapeRef.new(shape: NotifyTemplateId, location_name: "TemplateId"))
+    SendNotifyTextMessageRequest.add_member(:template_variables, Shapes::ShapeRef.new(shape: TemplateVariableSubstitutionMap, required: true, location_name: "TemplateVariables"))
+    SendNotifyTextMessageRequest.add_member(:time_to_live, Shapes::ShapeRef.new(shape: TimeToLive, location_name: "TimeToLive"))
+    SendNotifyTextMessageRequest.add_member(:context, Shapes::ShapeRef.new(shape: ContextMap, location_name: "Context"))
+    SendNotifyTextMessageRequest.add_member(:configuration_set_name, Shapes::ShapeRef.new(shape: ConfigurationSetNameOrArn, location_name: "ConfigurationSetName"))
+    SendNotifyTextMessageRequest.add_member(:dry_run, Shapes::ShapeRef.new(shape: PrimitiveBoolean, location_name: "DryRun"))
+    SendNotifyTextMessageRequest.add_member(:message_feedback_enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "MessageFeedbackEnabled"))
+    SendNotifyTextMessageRequest.struct_class = Types::SendNotifyTextMessageRequest
+
+    SendNotifyTextMessageResult.add_member(:message_id, Shapes::ShapeRef.new(shape: String, location_name: "MessageId"))
+    SendNotifyTextMessageResult.add_member(:template_id, Shapes::ShapeRef.new(shape: NotifyTemplateId, location_name: "TemplateId"))
+    SendNotifyTextMessageResult.add_member(:resolved_message_body, Shapes::ShapeRef.new(shape: String, location_name: "ResolvedMessageBody"))
+    SendNotifyTextMessageResult.struct_class = Types::SendNotifyTextMessageResult
+
+    SendNotifyVoiceMessageRequest.add_member(:notify_configuration_id, Shapes::ShapeRef.new(shape: NotifyConfigurationIdOrArn, required: true, location_name: "NotifyConfigurationId"))
+    SendNotifyVoiceMessageRequest.add_member(:destination_phone_number, Shapes::ShapeRef.new(shape: PhoneNumber, required: true, location_name: "DestinationPhoneNumber"))
+    SendNotifyVoiceMessageRequest.add_member(:template_id, Shapes::ShapeRef.new(shape: NotifyTemplateId, location_name: "TemplateId"))
+    SendNotifyVoiceMessageRequest.add_member(:template_variables, Shapes::ShapeRef.new(shape: TemplateVariableSubstitutionMap, required: true, location_name: "TemplateVariables"))
+    SendNotifyVoiceMessageRequest.add_member(:voice_id, Shapes::ShapeRef.new(shape: VoiceId, location_name: "VoiceId"))
+    SendNotifyVoiceMessageRequest.add_member(:time_to_live, Shapes::ShapeRef.new(shape: TimeToLive, location_name: "TimeToLive"))
+    SendNotifyVoiceMessageRequest.add_member(:context, Shapes::ShapeRef.new(shape: ContextMap, location_name: "Context"))
+    SendNotifyVoiceMessageRequest.add_member(:configuration_set_name, Shapes::ShapeRef.new(shape: ConfigurationSetNameOrArn, location_name: "ConfigurationSetName"))
+    SendNotifyVoiceMessageRequest.add_member(:dry_run, Shapes::ShapeRef.new(shape: PrimitiveBoolean, location_name: "DryRun"))
+    SendNotifyVoiceMessageRequest.add_member(:message_feedback_enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "MessageFeedbackEnabled"))
+    SendNotifyVoiceMessageRequest.struct_class = Types::SendNotifyVoiceMessageRequest
+
+    SendNotifyVoiceMessageResult.add_member(:message_id, Shapes::ShapeRef.new(shape: String, location_name: "MessageId"))
+    SendNotifyVoiceMessageResult.add_member(:template_id, Shapes::ShapeRef.new(shape: NotifyTemplateId, location_name: "TemplateId"))
+    SendNotifyVoiceMessageResult.add_member(:resolved_message_body, Shapes::ShapeRef.new(shape: String, location_name: "ResolvedMessageBody"))
+    SendNotifyVoiceMessageResult.struct_class = Types::SendNotifyVoiceMessageResult
+
+    SendRcsMessageRequest.add_member(:destination_phone_number, Shapes::ShapeRef.new(shape: PhoneNumber, required: true, location_name: "DestinationPhoneNumber"))
+    SendRcsMessageRequest.add_member(:origination_identity, Shapes::ShapeRef.new(shape: RcsMessageOriginationIdentity, required: true, location_name: "OriginationIdentity"))
+    SendRcsMessageRequest.add_member(:rcs_message_content, Shapes::ShapeRef.new(shape: RcsMessageContent, location_name: "RcsMessageContent"))
+    SendRcsMessageRequest.add_member(:time_to_live, Shapes::ShapeRef.new(shape: RcsTimeToLive, location_name: "TimeToLive"))
+    SendRcsMessageRequest.add_member(:message_traffic_type, Shapes::ShapeRef.new(shape: RcsMessageTrafficType, location_name: "MessageTrafficType"))
+    SendRcsMessageRequest.add_member(:fallback_configuration, Shapes::ShapeRef.new(shape: RcsFallbackConfiguration, location_name: "FallbackConfiguration"))
+    SendRcsMessageRequest.add_member(:protect_configuration_id, Shapes::ShapeRef.new(shape: ProtectConfigurationIdOrArn, location_name: "ProtectConfigurationId"))
+    SendRcsMessageRequest.add_member(:configuration_set_name, Shapes::ShapeRef.new(shape: ConfigurationSetNameOrArn, location_name: "ConfigurationSetName"))
+    SendRcsMessageRequest.add_member(:max_price, Shapes::ShapeRef.new(shape: MaxPrice, location_name: "MaxPrice"))
+    SendRcsMessageRequest.add_member(:dry_run, Shapes::ShapeRef.new(shape: PrimitiveBoolean, location_name: "DryRun"))
+    SendRcsMessageRequest.add_member(:context, Shapes::ShapeRef.new(shape: ContextMap, location_name: "Context"))
+    SendRcsMessageRequest.add_member(:message_feedback_enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "MessageFeedbackEnabled"))
+    SendRcsMessageRequest.struct_class = Types::SendRcsMessageRequest
+
+    SendRcsMessageResult.add_member(:message_id, Shapes::ShapeRef.new(shape: String, location_name: "MessageId"))
+    SendRcsMessageResult.struct_class = Types::SendRcsMessageResult
 
     SendTextMessageRequest.add_member(:destination_phone_number, Shapes::ShapeRef.new(shape: PhoneNumber, required: true, location_name: "DestinationPhoneNumber"))
     SendTextMessageRequest.add_member(:origination_identity, Shapes::ShapeRef.new(shape: TextMessageOriginationIdentity, location_name: "OriginationIdentity"))
@@ -1779,6 +2397,18 @@ module Aws::PinpointSMSVoiceV2
     SetMediaMessageSpendLimitOverrideResult.add_member(:monthly_limit, Shapes::ShapeRef.new(shape: MonthlyLimit, location_name: "MonthlyLimit"))
     SetMediaMessageSpendLimitOverrideResult.struct_class = Types::SetMediaMessageSpendLimitOverrideResult
 
+    SetNotifyMessageSpendLimitOverrideRequest.add_member(:monthly_limit, Shapes::ShapeRef.new(shape: MonthlyLimit, required: true, location_name: "MonthlyLimit"))
+    SetNotifyMessageSpendLimitOverrideRequest.struct_class = Types::SetNotifyMessageSpendLimitOverrideRequest
+
+    SetNotifyMessageSpendLimitOverrideResult.add_member(:monthly_limit, Shapes::ShapeRef.new(shape: MonthlyLimit, location_name: "MonthlyLimit"))
+    SetNotifyMessageSpendLimitOverrideResult.struct_class = Types::SetNotifyMessageSpendLimitOverrideResult
+
+    SetRcsMessageSpendLimitOverrideRequest.add_member(:monthly_limit, Shapes::ShapeRef.new(shape: MonthlyLimit, required: true, location_name: "MonthlyLimit"))
+    SetRcsMessageSpendLimitOverrideRequest.struct_class = Types::SetRcsMessageSpendLimitOverrideRequest
+
+    SetRcsMessageSpendLimitOverrideResult.add_member(:monthly_limit, Shapes::ShapeRef.new(shape: MonthlyLimit, location_name: "MonthlyLimit"))
+    SetRcsMessageSpendLimitOverrideResult.struct_class = Types::SetRcsMessageSpendLimitOverrideResult
+
     SetTextMessageSpendLimitOverrideRequest.add_member(:monthly_limit, Shapes::ShapeRef.new(shape: MonthlyLimit, required: true, location_name: "MonthlyLimit"))
     SetTextMessageSpendLimitOverrideRequest.struct_class = Types::SetTextMessageSpendLimitOverrideRequest
 
@@ -1808,6 +2438,7 @@ module Aws::PinpointSMSVoiceV2
     StringMap.value = Shapes::ShapeRef.new(shape: String)
 
     SubmitRegistrationVersionRequest.add_member(:registration_id, Shapes::ShapeRef.new(shape: RegistrationIdOrArn, required: true, location_name: "RegistrationId"))
+    SubmitRegistrationVersionRequest.add_member(:aws_review, Shapes::ShapeRef.new(shape: PrimitiveBoolean, location_name: "AwsReview"))
     SubmitRegistrationVersionRequest.struct_class = Types::SubmitRegistrationVersionRequest
 
     SubmitRegistrationVersionResult.add_member(:registration_arn, Shapes::ShapeRef.new(shape: String, required: true, location_name: "RegistrationArn"))
@@ -1815,6 +2446,7 @@ module Aws::PinpointSMSVoiceV2
     SubmitRegistrationVersionResult.add_member(:version_number, Shapes::ShapeRef.new(shape: RegistrationVersionNumber, required: true, location_name: "VersionNumber"))
     SubmitRegistrationVersionResult.add_member(:registration_version_status, Shapes::ShapeRef.new(shape: RegistrationVersionStatus, required: true, location_name: "RegistrationVersionStatus"))
     SubmitRegistrationVersionResult.add_member(:registration_version_status_history, Shapes::ShapeRef.new(shape: RegistrationVersionStatusHistory, required: true, location_name: "RegistrationVersionStatusHistory"))
+    SubmitRegistrationVersionResult.add_member(:aws_review, Shapes::ShapeRef.new(shape: PrimitiveBoolean, required: true, location_name: "AwsReview"))
     SubmitRegistrationVersionResult.struct_class = Types::SubmitRegistrationVersionResult
 
     SupportedAssociation.add_member(:resource_type, Shapes::ShapeRef.new(shape: String, required: true, location_name: "ResourceType"))
@@ -1838,6 +2470,29 @@ module Aws::PinpointSMSVoiceV2
     TagResourceRequest.struct_class = Types::TagResourceRequest
 
     TagResourceResult.struct_class = Types::TagResourceResult
+
+    TemplateVariableMetadata.add_member(:type, Shapes::ShapeRef.new(shape: TemplateVariableType, required: true, location_name: "Type"))
+    TemplateVariableMetadata.add_member(:required, Shapes::ShapeRef.new(shape: PrimitiveBoolean, required: true, location_name: "Required"))
+    TemplateVariableMetadata.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "Description"))
+    TemplateVariableMetadata.add_member(:max_length, Shapes::ShapeRef.new(shape: Integer, location_name: "MaxLength"))
+    TemplateVariableMetadata.add_member(:min_value, Shapes::ShapeRef.new(shape: Integer, location_name: "MinValue"))
+    TemplateVariableMetadata.add_member(:max_value, Shapes::ShapeRef.new(shape: Integer, location_name: "MaxValue"))
+    TemplateVariableMetadata.add_member(:default_value, Shapes::ShapeRef.new(shape: String, location_name: "DefaultValue"))
+    TemplateVariableMetadata.add_member(:pattern, Shapes::ShapeRef.new(shape: String, location_name: "Pattern"))
+    TemplateVariableMetadata.add_member(:sample, Shapes::ShapeRef.new(shape: String, location_name: "Sample"))
+    TemplateVariableMetadata.add_member(:source, Shapes::ShapeRef.new(shape: TemplateVariableSource, location_name: "Source"))
+    TemplateVariableMetadata.struct_class = Types::TemplateVariableMetadata
+
+    TemplateVariableSubstitutionMap.key = Shapes::ShapeRef.new(shape: TemplateVariableName)
+    TemplateVariableSubstitutionMap.value = Shapes::ShapeRef.new(shape: TemplateVariableValue)
+
+    TemplateVariablesMap.key = Shapes::ShapeRef.new(shape: String)
+    TemplateVariablesMap.value = Shapes::ShapeRef.new(shape: TemplateVariableMetadata)
+
+    TestingAgentInformation.add_member(:status, Shapes::ShapeRef.new(shape: TestingAgentStatus, required: true, location_name: "Status"))
+    TestingAgentInformation.add_member(:testing_agent_id, Shapes::ShapeRef.new(shape: String, location_name: "TestingAgentId"))
+    TestingAgentInformation.add_member(:registration_id, Shapes::ShapeRef.new(shape: String, required: true, location_name: "RegistrationId"))
+    TestingAgentInformation.struct_class = Types::TestingAgentInformation
 
     TextValidation.add_member(:min_length, Shapes::ShapeRef.new(shape: Integer, required: true, location_name: "MinLength"))
     TextValidation.add_member(:max_length, Shapes::ShapeRef.new(shape: Integer, required: true, location_name: "MaxLength"))
@@ -1867,12 +2522,37 @@ module Aws::PinpointSMSVoiceV2
     UpdateEventDestinationResult.add_member(:event_destination, Shapes::ShapeRef.new(shape: EventDestination, location_name: "EventDestination"))
     UpdateEventDestinationResult.struct_class = Types::UpdateEventDestinationResult
 
+    UpdateNotifyConfigurationRequest.add_member(:notify_configuration_id, Shapes::ShapeRef.new(shape: NotifyConfigurationIdOrArn, required: true, location_name: "NotifyConfigurationId"))
+    UpdateNotifyConfigurationRequest.add_member(:default_template_id, Shapes::ShapeRef.new(shape: NotifyTemplateId, location_name: "DefaultTemplateId"))
+    UpdateNotifyConfigurationRequest.add_member(:pool_id, Shapes::ShapeRef.new(shape: NotifyPoolIdOrUnset, location_name: "PoolId"))
+    UpdateNotifyConfigurationRequest.add_member(:enabled_countries, Shapes::ShapeRef.new(shape: IsoCountryCodeList, location_name: "EnabledCountries"))
+    UpdateNotifyConfigurationRequest.add_member(:enabled_channels, Shapes::ShapeRef.new(shape: NotifyEnabledChannelsList, location_name: "EnabledChannels"))
+    UpdateNotifyConfigurationRequest.add_member(:deletion_protection_enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "DeletionProtectionEnabled"))
+    UpdateNotifyConfigurationRequest.struct_class = Types::UpdateNotifyConfigurationRequest
+
+    UpdateNotifyConfigurationResult.add_member(:notify_configuration_arn, Shapes::ShapeRef.new(shape: NotifyConfigurationArn, required: true, location_name: "NotifyConfigurationArn"))
+    UpdateNotifyConfigurationResult.add_member(:notify_configuration_id, Shapes::ShapeRef.new(shape: NotifyConfigurationId, required: true, location_name: "NotifyConfigurationId"))
+    UpdateNotifyConfigurationResult.add_member(:display_name, Shapes::ShapeRef.new(shape: NotifyConfigurationDisplayName, required: true, location_name: "DisplayName"))
+    UpdateNotifyConfigurationResult.add_member(:use_case, Shapes::ShapeRef.new(shape: NotifyConfigurationUseCase, required: true, location_name: "UseCase"))
+    UpdateNotifyConfigurationResult.add_member(:default_template_id, Shapes::ShapeRef.new(shape: NotifyTemplateId, location_name: "DefaultTemplateId"))
+    UpdateNotifyConfigurationResult.add_member(:pool_id, Shapes::ShapeRef.new(shape: String, location_name: "PoolId"))
+    UpdateNotifyConfigurationResult.add_member(:enabled_countries, Shapes::ShapeRef.new(shape: IsoCountryCodeList, location_name: "EnabledCountries"))
+    UpdateNotifyConfigurationResult.add_member(:enabled_channels, Shapes::ShapeRef.new(shape: NotifyEnabledChannelsList, required: true, location_name: "EnabledChannels"))
+    UpdateNotifyConfigurationResult.add_member(:tier, Shapes::ShapeRef.new(shape: NotifyConfigurationTier, required: true, location_name: "Tier"))
+    UpdateNotifyConfigurationResult.add_member(:tier_upgrade_status, Shapes::ShapeRef.new(shape: TierUpgradeStatus, required: true, location_name: "TierUpgradeStatus"))
+    UpdateNotifyConfigurationResult.add_member(:status, Shapes::ShapeRef.new(shape: NotifyConfigurationStatus, required: true, location_name: "Status"))
+    UpdateNotifyConfigurationResult.add_member(:rejection_reason, Shapes::ShapeRef.new(shape: String, location_name: "RejectionReason"))
+    UpdateNotifyConfigurationResult.add_member(:deletion_protection_enabled, Shapes::ShapeRef.new(shape: PrimitiveBoolean, required: true, location_name: "DeletionProtectionEnabled"))
+    UpdateNotifyConfigurationResult.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreatedTimestamp"))
+    UpdateNotifyConfigurationResult.struct_class = Types::UpdateNotifyConfigurationResult
+
     UpdatePhoneNumberRequest.add_member(:phone_number_id, Shapes::ShapeRef.new(shape: PhoneNumberIdOrArn, required: true, location_name: "PhoneNumberId"))
     UpdatePhoneNumberRequest.add_member(:two_way_enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "TwoWayEnabled"))
     UpdatePhoneNumberRequest.add_member(:two_way_channel_arn, Shapes::ShapeRef.new(shape: TwoWayChannelArn, location_name: "TwoWayChannelArn"))
     UpdatePhoneNumberRequest.add_member(:two_way_channel_role, Shapes::ShapeRef.new(shape: IamRoleArn, location_name: "TwoWayChannelRole"))
     UpdatePhoneNumberRequest.add_member(:self_managed_opt_outs_enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "SelfManagedOptOutsEnabled"))
     UpdatePhoneNumberRequest.add_member(:opt_out_list_name, Shapes::ShapeRef.new(shape: OptOutListNameOrArn, location_name: "OptOutListName"))
+    UpdatePhoneNumberRequest.add_member(:international_sending_enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "InternationalSendingEnabled"))
     UpdatePhoneNumberRequest.add_member(:deletion_protection_enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "DeletionProtectionEnabled"))
     UpdatePhoneNumberRequest.struct_class = Types::UpdatePhoneNumberRequest
 
@@ -1890,6 +2570,7 @@ module Aws::PinpointSMSVoiceV2
     UpdatePhoneNumberResult.add_member(:two_way_channel_role, Shapes::ShapeRef.new(shape: IamRoleArn, location_name: "TwoWayChannelRole"))
     UpdatePhoneNumberResult.add_member(:self_managed_opt_outs_enabled, Shapes::ShapeRef.new(shape: PrimitiveBoolean, location_name: "SelfManagedOptOutsEnabled"))
     UpdatePhoneNumberResult.add_member(:opt_out_list_name, Shapes::ShapeRef.new(shape: OptOutListName, location_name: "OptOutListName"))
+    UpdatePhoneNumberResult.add_member(:international_sending_enabled, Shapes::ShapeRef.new(shape: PrimitiveBoolean, location_name: "InternationalSendingEnabled"))
     UpdatePhoneNumberResult.add_member(:deletion_protection_enabled, Shapes::ShapeRef.new(shape: PrimitiveBoolean, location_name: "DeletionProtectionEnabled"))
     UpdatePhoneNumberResult.add_member(:registration_id, Shapes::ShapeRef.new(shape: String, location_name: "RegistrationId"))
     UpdatePhoneNumberResult.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "CreatedTimestamp"))
@@ -1941,6 +2622,35 @@ module Aws::PinpointSMSVoiceV2
     UpdateProtectConfigurationResult.add_member(:deletion_protection_enabled, Shapes::ShapeRef.new(shape: PrimitiveBoolean, required: true, location_name: "DeletionProtectionEnabled"))
     UpdateProtectConfigurationResult.struct_class = Types::UpdateProtectConfigurationResult
 
+    UpdateRcsAgentRequest.add_member(:rcs_agent_id, Shapes::ShapeRef.new(shape: RcsAgentIdOrArn, required: true, location_name: "RcsAgentId"))
+    UpdateRcsAgentRequest.add_member(:deletion_protection_enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "DeletionProtectionEnabled"))
+    UpdateRcsAgentRequest.add_member(:opt_out_list_name, Shapes::ShapeRef.new(shape: OptOutListNameOrArn, location_name: "OptOutListName"))
+    UpdateRcsAgentRequest.add_member(:self_managed_opt_outs_enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "SelfManagedOptOutsEnabled"))
+    UpdateRcsAgentRequest.add_member(:two_way_channel_arn, Shapes::ShapeRef.new(shape: TwoWayChannelArn, location_name: "TwoWayChannelArn"))
+    UpdateRcsAgentRequest.add_member(:two_way_channel_role, Shapes::ShapeRef.new(shape: IamRoleArn, location_name: "TwoWayChannelRole"))
+    UpdateRcsAgentRequest.add_member(:two_way_enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "TwoWayEnabled"))
+    UpdateRcsAgentRequest.add_member(:two_way_media_s3_bucket_name, Shapes::ShapeRef.new(shape: TwoWayMediaS3BucketNameOrUnset, location_name: "TwoWayMediaS3BucketName"))
+    UpdateRcsAgentRequest.add_member(:two_way_media_s3_key_prefix, Shapes::ShapeRef.new(shape: TwoWayMediaS3KeyPrefix, location_name: "TwoWayMediaS3KeyPrefix"))
+    UpdateRcsAgentRequest.add_member(:two_way_media_s3_role, Shapes::ShapeRef.new(shape: IamRoleArnOrUnset, location_name: "TwoWayMediaS3Role"))
+    UpdateRcsAgentRequest.add_member(:two_way_rcs_events_enabled, Shapes::ShapeRef.new(shape: RcsEventTypeList, location_name: "TwoWayRcsEventsEnabled"))
+    UpdateRcsAgentRequest.struct_class = Types::UpdateRcsAgentRequest
+
+    UpdateRcsAgentResult.add_member(:rcs_agent_arn, Shapes::ShapeRef.new(shape: String, required: true, location_name: "RcsAgentArn"))
+    UpdateRcsAgentResult.add_member(:rcs_agent_id, Shapes::ShapeRef.new(shape: String, required: true, location_name: "RcsAgentId"))
+    UpdateRcsAgentResult.add_member(:status, Shapes::ShapeRef.new(shape: RcsAgentStatus, required: true, location_name: "Status"))
+    UpdateRcsAgentResult.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreatedTimestamp"))
+    UpdateRcsAgentResult.add_member(:deletion_protection_enabled, Shapes::ShapeRef.new(shape: PrimitiveBoolean, required: true, location_name: "DeletionProtectionEnabled"))
+    UpdateRcsAgentResult.add_member(:opt_out_list_name, Shapes::ShapeRef.new(shape: OptOutListName, location_name: "OptOutListName"))
+    UpdateRcsAgentResult.add_member(:self_managed_opt_outs_enabled, Shapes::ShapeRef.new(shape: PrimitiveBoolean, required: true, location_name: "SelfManagedOptOutsEnabled"))
+    UpdateRcsAgentResult.add_member(:two_way_channel_arn, Shapes::ShapeRef.new(shape: TwoWayChannelArn, location_name: "TwoWayChannelArn"))
+    UpdateRcsAgentResult.add_member(:two_way_channel_role, Shapes::ShapeRef.new(shape: IamRoleArn, location_name: "TwoWayChannelRole"))
+    UpdateRcsAgentResult.add_member(:two_way_enabled, Shapes::ShapeRef.new(shape: PrimitiveBoolean, required: true, location_name: "TwoWayEnabled"))
+    UpdateRcsAgentResult.add_member(:two_way_media_s3_bucket_name, Shapes::ShapeRef.new(shape: TwoWayMediaS3BucketName, location_name: "TwoWayMediaS3BucketName"))
+    UpdateRcsAgentResult.add_member(:two_way_media_s3_key_prefix, Shapes::ShapeRef.new(shape: TwoWayMediaS3KeyPrefix, location_name: "TwoWayMediaS3KeyPrefix"))
+    UpdateRcsAgentResult.add_member(:two_way_media_s3_role, Shapes::ShapeRef.new(shape: IamRoleArn, location_name: "TwoWayMediaS3Role"))
+    UpdateRcsAgentResult.add_member(:two_way_rcs_events_enabled, Shapes::ShapeRef.new(shape: RcsEventTypeList, location_name: "TwoWayRcsEventsEnabled"))
+    UpdateRcsAgentResult.struct_class = Types::UpdateRcsAgentResult
+
     UpdateSenderIdRequest.add_member(:sender_id, Shapes::ShapeRef.new(shape: SenderIdOrArn, required: true, location_name: "SenderId"))
     UpdateSenderIdRequest.add_member(:iso_country_code, Shapes::ShapeRef.new(shape: IsoCountryCode, required: true, location_name: "IsoCountryCode"))
     UpdateSenderIdRequest.add_member(:deletion_protection_enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "DeletionProtectionEnabled"))
@@ -1979,6 +2689,7 @@ module Aws::PinpointSMSVoiceV2
     VerifiedDestinationNumberInformation.add_member(:verified_destination_number_id, Shapes::ShapeRef.new(shape: String, required: true, location_name: "VerifiedDestinationNumberId"))
     VerifiedDestinationNumberInformation.add_member(:destination_phone_number, Shapes::ShapeRef.new(shape: PhoneNumber, required: true, location_name: "DestinationPhoneNumber"))
     VerifiedDestinationNumberInformation.add_member(:status, Shapes::ShapeRef.new(shape: VerificationStatus, required: true, location_name: "Status"))
+    VerifiedDestinationNumberInformation.add_member(:rcs_agent_id, Shapes::ShapeRef.new(shape: String, location_name: "RcsAgentId"))
     VerifiedDestinationNumberInformation.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreatedTimestamp"))
     VerifiedDestinationNumberInformation.struct_class = Types::VerifiedDestinationNumberInformation
 
@@ -1994,6 +2705,8 @@ module Aws::PinpointSMSVoiceV2
     VerifyDestinationNumberResult.add_member(:status, Shapes::ShapeRef.new(shape: VerificationStatus, required: true, location_name: "Status"))
     VerifyDestinationNumberResult.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreatedTimestamp"))
     VerifyDestinationNumberResult.struct_class = Types::VerifyDestinationNumberResult
+
+    VoiceIdList.member = Shapes::ShapeRef.new(shape: VoiceId)
 
 
     # @api private
@@ -2040,8 +2753,21 @@ module Aws::PinpointSMSVoiceV2
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
-        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+      end)
+
+      api.add_operation(:carrier_lookup, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CarrierLookup"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: CarrierLookupRequest)
+        o.output = Shapes::ShapeRef.new(shape: CarrierLookupResult)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
       end)
 
@@ -2071,6 +2797,21 @@ module Aws::PinpointSMSVoiceV2
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+      end)
+
+      api.add_operation(:create_notify_configuration, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CreateNotifyConfiguration"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: CreateNotifyConfigurationRequest)
+        o.output = Shapes::ShapeRef.new(shape: CreateNotifyConfigurationResult)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
       end)
 
@@ -2113,6 +2854,22 @@ module Aws::PinpointSMSVoiceV2
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+      end)
+
+      api.add_operation(:create_rcs_agent, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CreateRcsAgent"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: CreateRcsAgentRequest)
+        o.output = Shapes::ShapeRef.new(shape: CreateRcsAgentResult)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
       end)
 
@@ -2183,6 +2940,7 @@ module Aws::PinpointSMSVoiceV2
         o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
@@ -2279,6 +3037,32 @@ module Aws::PinpointSMSVoiceV2
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
       end)
 
+      api.add_operation(:delete_notify_configuration, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeleteNotifyConfiguration"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: DeleteNotifyConfigurationRequest)
+        o.output = Shapes::ShapeRef.new(shape: DeleteNotifyConfigurationResult)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+      end)
+
+      api.add_operation(:delete_notify_message_spend_limit_override, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeleteNotifyMessageSpendLimitOverride"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: DeleteNotifyMessageSpendLimitOverrideRequest)
+        o.output = Shapes::ShapeRef.new(shape: DeleteNotifyMessageSpendLimitOverrideResult)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+      end)
+
       api.add_operation(:delete_opt_out_list, Seahorse::Model::Operation.new.tap do |o|
         o.name = "DeleteOptOutList"
         o.http_method = "POST"
@@ -2330,8 +3114,8 @@ module Aws::PinpointSMSVoiceV2
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
-        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
       end)
 
@@ -2344,6 +3128,32 @@ module Aws::PinpointSMSVoiceV2
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+      end)
+
+      api.add_operation(:delete_rcs_agent, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeleteRcsAgent"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: DeleteRcsAgentRequest)
+        o.output = Shapes::ShapeRef.new(shape: DeleteRcsAgentResult)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+      end)
+
+      api.add_operation(:delete_rcs_message_spend_limit_override, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeleteRcsMessageSpendLimitOverride"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: DeleteRcsMessageSpendLimitOverrideRequest)
+        o.output = Shapes::ShapeRef.new(shape: DeleteRcsMessageSpendLimitOverrideResult)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
       end)
@@ -2515,6 +3325,44 @@ module Aws::PinpointSMSVoiceV2
         )
       end)
 
+      api.add_operation(:describe_notify_configurations, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DescribeNotifyConfigurations"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: DescribeNotifyConfigurationsRequest)
+        o.output = Shapes::ShapeRef.new(shape: DescribeNotifyConfigurationsResult)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:describe_notify_templates, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DescribeNotifyTemplates"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: DescribeNotifyTemplatesRequest)
+        o.output = Shapes::ShapeRef.new(shape: DescribeNotifyTemplatesResult)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
       api.add_operation(:describe_opt_out_lists, Seahorse::Model::Operation.new.tap do |o|
         o.name = "DescribeOptOutLists"
         o.http_method = "POST"
@@ -2597,6 +3445,44 @@ module Aws::PinpointSMSVoiceV2
         o.http_request_uri = "/"
         o.input = Shapes::ShapeRef.new(shape: DescribeProtectConfigurationsRequest)
         o.output = Shapes::ShapeRef.new(shape: DescribeProtectConfigurationsResult)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:describe_rcs_agent_country_launch_status, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DescribeRcsAgentCountryLaunchStatus"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: DescribeRcsAgentCountryLaunchStatusRequest)
+        o.output = Shapes::ShapeRef.new(shape: DescribeRcsAgentCountryLaunchStatusResult)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:describe_rcs_agents, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DescribeRcsAgents"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: DescribeRcsAgentsRequest)
+        o.output = Shapes::ShapeRef.new(shape: DescribeRcsAgentsResult)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
@@ -2819,8 +3705,8 @@ module Aws::PinpointSMSVoiceV2
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
-        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
       end)
 
@@ -2862,6 +3748,24 @@ module Aws::PinpointSMSVoiceV2
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+      end)
+
+      api.add_operation(:list_notify_countries, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListNotifyCountries"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: ListNotifyCountriesRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListNotifyCountriesResult)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
       end)
 
       api.add_operation(:list_pool_origination_identities, Seahorse::Model::Operation.new.tap do |o|
@@ -2984,6 +3888,7 @@ module Aws::PinpointSMSVoiceV2
         o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
@@ -3103,6 +4008,51 @@ module Aws::PinpointSMSVoiceV2
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
       end)
 
+      api.add_operation(:send_notify_text_message, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "SendNotifyTextMessage"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: SendNotifyTextMessageRequest)
+        o.output = Shapes::ShapeRef.new(shape: SendNotifyTextMessageResult)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+      end)
+
+      api.add_operation(:send_notify_voice_message, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "SendNotifyVoiceMessage"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: SendNotifyVoiceMessageRequest)
+        o.output = Shapes::ShapeRef.new(shape: SendNotifyVoiceMessageResult)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+      end)
+
+      api.add_operation(:send_rcs_message, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "SendRcsMessage"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: SendRcsMessageRequest)
+        o.output = Shapes::ShapeRef.new(shape: SendRcsMessageResult)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+      end)
+
       api.add_operation(:send_text_message, Seahorse::Model::Operation.new.tap do |o|
         o.name = "SendTextMessage"
         o.http_method = "POST"
@@ -3197,6 +4147,30 @@ module Aws::PinpointSMSVoiceV2
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
       end)
 
+      api.add_operation(:set_notify_message_spend_limit_override, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "SetNotifyMessageSpendLimitOverride"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: SetNotifyMessageSpendLimitOverrideRequest)
+        o.output = Shapes::ShapeRef.new(shape: SetNotifyMessageSpendLimitOverrideResult)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+      end)
+
+      api.add_operation(:set_rcs_message_spend_limit_override, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "SetRcsMessageSpendLimitOverride"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: SetRcsMessageSpendLimitOverrideRequest)
+        o.output = Shapes::ShapeRef.new(shape: SetRcsMessageSpendLimitOverrideResult)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+      end)
+
       api.add_operation(:set_text_message_spend_limit_override, Seahorse::Model::Operation.new.tap do |o|
         o.name = "SetTextMessageSpendLimitOverride"
         o.http_method = "POST"
@@ -3276,6 +4250,20 @@ module Aws::PinpointSMSVoiceV2
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
       end)
 
+      api.add_operation(:update_notify_configuration, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "UpdateNotifyConfiguration"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: UpdateNotifyConfigurationRequest)
+        o.output = Shapes::ShapeRef.new(shape: UpdateNotifyConfigurationResult)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+      end)
+
       api.add_operation(:update_phone_number, Seahorse::Model::Operation.new.tap do |o|
         o.name = "UpdatePhoneNumber"
         o.http_method = "POST"
@@ -3327,6 +4315,20 @@ module Aws::PinpointSMSVoiceV2
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+      end)
+
+      api.add_operation(:update_rcs_agent, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "UpdateRcsAgent"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: UpdateRcsAgentRequest)
+        o.output = Shapes::ShapeRef.new(shape: UpdateRcsAgentResult)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
       end)
 

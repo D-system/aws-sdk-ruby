@@ -17,6 +17,7 @@ module Aws::MedicalImaging
     AccessDeniedException = Shapes::StructureShape.new(name: 'AccessDeniedException')
     Arn = Shapes::StringShape.new(name: 'Arn')
     AwsAccountId = Shapes::StringShape.new(name: 'AwsAccountId')
+    BadRequestException = Shapes::StructureShape.new(name: 'BadRequestException')
     Boolean = Shapes::BooleanShape.new(name: 'Boolean')
     ClientToken = Shapes::StringShape.new(name: 'ClientToken')
     ConflictException = Shapes::StructureShape.new(name: 'ConflictException')
@@ -64,6 +65,9 @@ module Aws::MedicalImaging
     DeleteDatastoreResponse = Shapes::StructureShape.new(name: 'DeleteDatastoreResponse')
     DeleteImageSetRequest = Shapes::StructureShape.new(name: 'DeleteImageSetRequest')
     DeleteImageSetResponse = Shapes::StructureShape.new(name: 'DeleteImageSetResponse')
+    DicomJsonMetadataImportConfiguration = Shapes::StructureShape.new(name: 'DicomJsonMetadataImportConfiguration')
+    DicomMetadataMapping = Shapes::StructureShape.new(name: 'DicomMetadataMapping')
+    DicomMetadataMappings = Shapes::ListShape.new(name: 'DicomMetadataMappings')
     GetDICOMImportJobRequest = Shapes::StructureShape.new(name: 'GetDICOMImportJobRequest')
     GetDICOMImportJobResponse = Shapes::StructureShape.new(name: 'GetDICOMImportJobResponse')
     GetDatastoreRequest = Shapes::StructureShape.new(name: 'GetDatastoreRequest')
@@ -85,12 +89,14 @@ module Aws::MedicalImaging
     ImageSetWorkflowStatus = Shapes::StringShape.new(name: 'ImageSetWorkflowStatus')
     ImageSetsMetadataSummaries = Shapes::ListShape.new(name: 'ImageSetsMetadataSummaries')
     ImageSetsMetadataSummary = Shapes::StructureShape.new(name: 'ImageSetsMetadataSummary')
+    ImportConfiguration = Shapes::UnionShape.new(name: 'ImportConfiguration')
     Integer = Shapes::IntegerShape.new(name: 'Integer')
     InternalServerException = Shapes::StructureShape.new(name: 'InternalServerException')
     JobId = Shapes::StringShape.new(name: 'JobId')
     JobName = Shapes::StringShape.new(name: 'JobName')
     JobStatus = Shapes::StringShape.new(name: 'JobStatus')
     KmsKeyArn = Shapes::StringShape.new(name: 'KmsKeyArn')
+    LambdaArn = Shapes::StringShape.new(name: 'LambdaArn')
     ListDICOMImportJobsRequest = Shapes::StructureShape.new(name: 'ListDICOMImportJobsRequest')
     ListDICOMImportJobsRequestMaxResultsInteger = Shapes::IntegerShape.new(name: 'ListDICOMImportJobsRequestMaxResultsInteger')
     ListDICOMImportJobsResponse = Shapes::StructureShape.new(name: 'ListDICOMImportJobsResponse')
@@ -102,10 +108,13 @@ module Aws::MedicalImaging
     ListImageSetVersionsResponse = Shapes::StructureShape.new(name: 'ListImageSetVersionsResponse')
     ListTagsForResourceRequest = Shapes::StructureShape.new(name: 'ListTagsForResourceRequest')
     ListTagsForResourceResponse = Shapes::StructureShape.new(name: 'ListTagsForResourceResponse')
+    LosslessStorageFormat = Shapes::StringShape.new(name: 'LosslessStorageFormat')
     Message = Shapes::StringShape.new(name: 'Message')
     MetadataCopies = Shapes::StructureShape.new(name: 'MetadataCopies')
+    MetadataFilePath = Shapes::StringShape.new(name: 'MetadataFilePath')
     MetadataUpdates = Shapes::UnionShape.new(name: 'MetadataUpdates')
     NextToken = Shapes::StringShape.new(name: 'NextToken')
+    NotAcceptableException = Shapes::StructureShape.new(name: 'NotAcceptableException')
     Operator = Shapes::StringShape.new(name: 'Operator')
     Overrides = Shapes::StructureShape.new(name: 'Overrides')
     PayloadBlob = Shapes::BlobShape.new(name: 'PayloadBlob', streaming: true)
@@ -126,6 +135,7 @@ module Aws::MedicalImaging
     SortOrder = Shapes::StringShape.new(name: 'SortOrder')
     StartDICOMImportJobRequest = Shapes::StructureShape.new(name: 'StartDICOMImportJobRequest')
     StartDICOMImportJobResponse = Shapes::StructureShape.new(name: 'StartDICOMImportJobResponse')
+    StorageTier = Shapes::StringShape.new(name: 'StorageTier')
     String = Shapes::StringShape.new(name: 'String')
     TagKey = Shapes::StringShape.new(name: 'TagKey')
     TagKeyList = Shapes::ListShape.new(name: 'TagKeyList')
@@ -142,6 +152,9 @@ module Aws::MedicalImaging
 
     AccessDeniedException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
     AccessDeniedException.struct_class = Types::AccessDeniedException
+
+    BadRequestException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
+    BadRequestException.struct_class = Types::BadRequestException
 
     ConflictException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
     ConflictException.struct_class = Types::ConflictException
@@ -167,6 +180,7 @@ module Aws::MedicalImaging
     CopyImageSetRequest.add_member(:source_image_set_id, Shapes::ShapeRef.new(shape: ImageSetId, required: true, location: "uri", location_name: "sourceImageSetId"))
     CopyImageSetRequest.add_member(:copy_image_set_information, Shapes::ShapeRef.new(shape: CopyImageSetInformation, required: true, location_name: "copyImageSetInformation"))
     CopyImageSetRequest.add_member(:force, Shapes::ShapeRef.new(shape: Boolean, location: "querystring", location_name: "force"))
+    CopyImageSetRequest.add_member(:promote_to_primary, Shapes::ShapeRef.new(shape: Boolean, location: "querystring", location_name: "promoteToPrimary"))
     CopyImageSetRequest.struct_class = Types::CopyImageSetRequest
     CopyImageSetRequest[:payload] = :copy_image_set_information
     CopyImageSetRequest[:payload_member] = CopyImageSetRequest.member(:copy_image_set_information)
@@ -190,9 +204,11 @@ module Aws::MedicalImaging
     CopySourceImageSetProperties.struct_class = Types::CopySourceImageSetProperties
 
     CreateDatastoreRequest.add_member(:datastore_name, Shapes::ShapeRef.new(shape: DatastoreName, location_name: "datastoreName"))
-    CreateDatastoreRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, required: true, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateDatastoreRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, required: true, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateDatastoreRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
     CreateDatastoreRequest.add_member(:kms_key_arn, Shapes::ShapeRef.new(shape: KmsKeyArn, location_name: "kmsKeyArn"))
+    CreateDatastoreRequest.add_member(:lambda_authorizer_arn, Shapes::ShapeRef.new(shape: LambdaArn, location_name: "lambdaAuthorizerArn"))
+    CreateDatastoreRequest.add_member(:lossless_storage_format, Shapes::ShapeRef.new(shape: LosslessStorageFormat, location_name: "losslessStorageFormat"))
     CreateDatastoreRequest.struct_class = Types::CreateDatastoreRequest
 
     CreateDatastoreResponse.add_member(:datastore_id, Shapes::ShapeRef.new(shape: DatastoreId, required: true, location_name: "datastoreId"))
@@ -209,6 +225,7 @@ module Aws::MedicalImaging
     DICOMImportJobProperties.add_member(:input_s3_uri, Shapes::ShapeRef.new(shape: S3Uri, required: true, location_name: "inputS3Uri"))
     DICOMImportJobProperties.add_member(:output_s3_uri, Shapes::ShapeRef.new(shape: S3Uri, required: true, location_name: "outputS3Uri"))
     DICOMImportJobProperties.add_member(:message, Shapes::ShapeRef.new(shape: Message, location_name: "message"))
+    DICOMImportJobProperties.add_member(:import_configuration, Shapes::ShapeRef.new(shape: ImportConfiguration, location_name: "importConfiguration"))
     DICOMImportJobProperties.struct_class = Types::DICOMImportJobProperties
 
     DICOMImportJobSummaries.member = Shapes::ShapeRef.new(shape: DICOMImportJobSummary)
@@ -253,6 +270,8 @@ module Aws::MedicalImaging
     DatastoreProperties.add_member(:datastore_name, Shapes::ShapeRef.new(shape: DatastoreName, required: true, location_name: "datastoreName"))
     DatastoreProperties.add_member(:datastore_status, Shapes::ShapeRef.new(shape: DatastoreStatus, required: true, location_name: "datastoreStatus"))
     DatastoreProperties.add_member(:kms_key_arn, Shapes::ShapeRef.new(shape: KmsKeyArn, location_name: "kmsKeyArn"))
+    DatastoreProperties.add_member(:lambda_authorizer_arn, Shapes::ShapeRef.new(shape: LambdaArn, location_name: "lambdaAuthorizerArn"))
+    DatastoreProperties.add_member(:lossless_storage_format, Shapes::ShapeRef.new(shape: LosslessStorageFormat, location_name: "losslessStorageFormat"))
     DatastoreProperties.add_member(:datastore_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "datastoreArn"))
     DatastoreProperties.add_member(:created_at, Shapes::ShapeRef.new(shape: Date, location_name: "createdAt"))
     DatastoreProperties.add_member(:updated_at, Shapes::ShapeRef.new(shape: Date, location_name: "updatedAt"))
@@ -284,6 +303,16 @@ module Aws::MedicalImaging
     DeleteImageSetResponse.add_member(:image_set_state, Shapes::ShapeRef.new(shape: ImageSetState, required: true, location_name: "imageSetState"))
     DeleteImageSetResponse.add_member(:image_set_workflow_status, Shapes::ShapeRef.new(shape: ImageSetWorkflowStatus, required: true, location_name: "imageSetWorkflowStatus"))
     DeleteImageSetResponse.struct_class = Types::DeleteImageSetResponse
+
+    DicomJsonMetadataImportConfiguration.add_member(:dicom_metadata_mappings, Shapes::ShapeRef.new(shape: DicomMetadataMappings, required: true, location_name: "dicomMetadataMappings"))
+    DicomJsonMetadataImportConfiguration.struct_class = Types::DicomJsonMetadataImportConfiguration
+
+    DicomMetadataMapping.add_member(:study_instance_uid, Shapes::ShapeRef.new(shape: DICOMStudyInstanceUID, required: true, location_name: "studyInstanceUID"))
+    DicomMetadataMapping.add_member(:series_instance_uid, Shapes::ShapeRef.new(shape: DICOMSeriesInstanceUID, location_name: "seriesInstanceUID"))
+    DicomMetadataMapping.add_member(:metadata_file_path, Shapes::ShapeRef.new(shape: MetadataFilePath, required: true, location_name: "metadataFilePath"))
+    DicomMetadataMapping.struct_class = Types::DicomMetadataMapping
+
+    DicomMetadataMappings.member = Shapes::ShapeRef.new(shape: DicomMetadataMapping)
 
     GetDICOMImportJobRequest.add_member(:datastore_id, Shapes::ShapeRef.new(shape: DatastoreId, required: true, location: "uri", location_name: "datastoreId"))
     GetDICOMImportJobRequest.add_member(:job_id, Shapes::ShapeRef.new(shape: JobId, required: true, location: "uri", location_name: "jobId"))
@@ -339,6 +368,9 @@ module Aws::MedicalImaging
     GetImageSetResponse.add_member(:message, Shapes::ShapeRef.new(shape: Message, location_name: "message"))
     GetImageSetResponse.add_member(:image_set_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "imageSetArn"))
     GetImageSetResponse.add_member(:overrides, Shapes::ShapeRef.new(shape: Overrides, location_name: "overrides"))
+    GetImageSetResponse.add_member(:is_primary, Shapes::ShapeRef.new(shape: Boolean, location_name: "isPrimary"))
+    GetImageSetResponse.add_member(:last_accessed_at, Shapes::ShapeRef.new(shape: Date, location_name: "lastAccessedAt"))
+    GetImageSetResponse.add_member(:storage_tier, Shapes::ShapeRef.new(shape: StorageTier, location_name: "storageTier"))
     GetImageSetResponse.struct_class = Types::GetImageSetResponse
 
     ImageFrameInformation.add_member(:image_frame_id, Shapes::ShapeRef.new(shape: ImageFrameId, required: true, location_name: "imageFrameId"))
@@ -353,6 +385,7 @@ module Aws::MedicalImaging
     ImageSetProperties.add_member(:deleted_at, Shapes::ShapeRef.new(shape: Date, location_name: "deletedAt"))
     ImageSetProperties.add_member(:message, Shapes::ShapeRef.new(shape: Message, location_name: "message"))
     ImageSetProperties.add_member(:overrides, Shapes::ShapeRef.new(shape: Overrides, location_name: "overrides"))
+    ImageSetProperties.add_member(:is_primary, Shapes::ShapeRef.new(shape: Boolean, location_name: "isPrimary"))
     ImageSetProperties.struct_class = Types::ImageSetProperties
 
     ImageSetPropertiesList.member = Shapes::ShapeRef.new(shape: ImageSetProperties)
@@ -363,8 +396,17 @@ module Aws::MedicalImaging
     ImageSetsMetadataSummary.add_member(:version, Shapes::ShapeRef.new(shape: Integer, location_name: "version"))
     ImageSetsMetadataSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: Date, location_name: "createdAt"))
     ImageSetsMetadataSummary.add_member(:updated_at, Shapes::ShapeRef.new(shape: Date, location_name: "updatedAt"))
+    ImageSetsMetadataSummary.add_member(:last_accessed_at, Shapes::ShapeRef.new(shape: Date, location_name: "lastAccessedAt"))
+    ImageSetsMetadataSummary.add_member(:storage_tier, Shapes::ShapeRef.new(shape: StorageTier, location_name: "storageTier"))
     ImageSetsMetadataSummary.add_member(:dicom_tags, Shapes::ShapeRef.new(shape: DICOMTags, location_name: "DICOMTags"))
+    ImageSetsMetadataSummary.add_member(:is_primary, Shapes::ShapeRef.new(shape: Boolean, location_name: "isPrimary"))
     ImageSetsMetadataSummary.struct_class = Types::ImageSetsMetadataSummary
+
+    ImportConfiguration.add_member(:dicom_json_metadata_import_configuration, Shapes::ShapeRef.new(shape: DicomJsonMetadataImportConfiguration, location_name: "dicomJsonMetadataImportConfiguration"))
+    ImportConfiguration.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    ImportConfiguration.add_member_subclass(:dicom_json_metadata_import_configuration, Types::ImportConfiguration::DicomJsonMetadataImportConfiguration)
+    ImportConfiguration.add_member_subclass(:unknown, Types::ImportConfiguration::Unknown)
+    ImportConfiguration.struct_class = Types::ImportConfiguration
 
     InternalServerException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
     InternalServerException.struct_class = Types::InternalServerException
@@ -415,6 +457,9 @@ module Aws::MedicalImaging
     MetadataUpdates.add_member_subclass(:unknown, Types::MetadataUpdates::Unknown)
     MetadataUpdates.struct_class = Types::MetadataUpdates
 
+    NotAcceptableException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
+    NotAcceptableException.struct_class = Types::NotAcceptableException
+
     Overrides.add_member(:forced, Shapes::ShapeRef.new(shape: Boolean, location_name: "forced"))
     Overrides.struct_class = Types::Overrides
 
@@ -429,6 +474,7 @@ module Aws::MedicalImaging
     SearchByAttributeValue.add_member(:created_at, Shapes::ShapeRef.new(shape: Date, location_name: "createdAt"))
     SearchByAttributeValue.add_member(:updated_at, Shapes::ShapeRef.new(shape: Date, location_name: "updatedAt"))
     SearchByAttributeValue.add_member(:dicom_study_date_and_time, Shapes::ShapeRef.new(shape: DICOMStudyDateAndTime, location_name: "DICOMStudyDateAndTime"))
+    SearchByAttributeValue.add_member(:is_primary, Shapes::ShapeRef.new(shape: Boolean, location_name: "isPrimary"))
     SearchByAttributeValue.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
     SearchByAttributeValue.add_member_subclass(:dicom_patient_id, Types::SearchByAttributeValue::DicomPatientId)
     SearchByAttributeValue.add_member_subclass(:dicom_accession_number, Types::SearchByAttributeValue::DicomAccessionNumber)
@@ -438,6 +484,7 @@ module Aws::MedicalImaging
     SearchByAttributeValue.add_member_subclass(:created_at, Types::SearchByAttributeValue::CreatedAt)
     SearchByAttributeValue.add_member_subclass(:updated_at, Types::SearchByAttributeValue::UpdatedAt)
     SearchByAttributeValue.add_member_subclass(:dicom_study_date_and_time, Types::SearchByAttributeValue::DicomStudyDateAndTime)
+    SearchByAttributeValue.add_member_subclass(:is_primary, Types::SearchByAttributeValue::IsPrimary)
     SearchByAttributeValue.add_member_subclass(:unknown, Types::SearchByAttributeValue::Unknown)
     SearchByAttributeValue.struct_class = Types::SearchByAttributeValue
 
@@ -475,11 +522,12 @@ module Aws::MedicalImaging
 
     StartDICOMImportJobRequest.add_member(:job_name, Shapes::ShapeRef.new(shape: JobName, location_name: "jobName"))
     StartDICOMImportJobRequest.add_member(:data_access_role_arn, Shapes::ShapeRef.new(shape: RoleArn, required: true, location_name: "dataAccessRoleArn"))
-    StartDICOMImportJobRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, required: true, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    StartDICOMImportJobRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, required: true, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     StartDICOMImportJobRequest.add_member(:datastore_id, Shapes::ShapeRef.new(shape: DatastoreId, required: true, location: "uri", location_name: "datastoreId"))
     StartDICOMImportJobRequest.add_member(:input_s3_uri, Shapes::ShapeRef.new(shape: S3Uri, required: true, location_name: "inputS3Uri"))
     StartDICOMImportJobRequest.add_member(:output_s3_uri, Shapes::ShapeRef.new(shape: S3Uri, required: true, location_name: "outputS3Uri"))
     StartDICOMImportJobRequest.add_member(:input_owner_account_id, Shapes::ShapeRef.new(shape: AwsAccountId, location_name: "inputOwnerAccountId"))
+    StartDICOMImportJobRequest.add_member(:import_configuration, Shapes::ShapeRef.new(shape: ImportConfiguration, location_name: "importConfiguration"))
     StartDICOMImportJobRequest.struct_class = Types::StartDICOMImportJobRequest
 
     StartDICOMImportJobResponse.add_member(:datastore_id, Shapes::ShapeRef.new(shape: DatastoreId, required: true, location_name: "datastoreId"))
@@ -512,6 +560,7 @@ module Aws::MedicalImaging
     UpdateImageSetMetadataRequest.add_member(:image_set_id, Shapes::ShapeRef.new(shape: ImageSetId, required: true, location: "uri", location_name: "imageSetId"))
     UpdateImageSetMetadataRequest.add_member(:latest_version_id, Shapes::ShapeRef.new(shape: ImageSetExternalVersionId, required: true, location: "querystring", location_name: "latestVersion"))
     UpdateImageSetMetadataRequest.add_member(:force, Shapes::ShapeRef.new(shape: Boolean, location: "querystring", location_name: "force"))
+    UpdateImageSetMetadataRequest.add_member(:include_study_image_sets, Shapes::ShapeRef.new(shape: Boolean, location: "querystring", location_name: "includeStudyImageSets"))
     UpdateImageSetMetadataRequest.add_member(:update_image_set_metadata_updates, Shapes::ShapeRef.new(shape: MetadataUpdates, required: true, location_name: "updateImageSetMetadataUpdates"))
     UpdateImageSetMetadataRequest.struct_class = Types::UpdateImageSetMetadataRequest
     UpdateImageSetMetadataRequest[:payload] = :update_image_set_metadata_updates
@@ -578,6 +627,7 @@ module Aws::MedicalImaging
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
       end)
 
@@ -654,6 +704,8 @@ module Aws::MedicalImaging
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: NotAcceptableException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
       end)
 
       api.add_operation(:get_image_set, Seahorse::Model::Operation.new.tap do |o|

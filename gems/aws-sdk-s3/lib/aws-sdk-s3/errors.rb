@@ -27,24 +27,62 @@ module Aws::S3
   # See {Seahorse::Client::RequestContext} for more information.
   #
   # ## Error Classes
+  # * {AccessDenied}
+  # * {AnnotationLimitExceeded}
+  # * {AnnotationNameTooLong}
   # * {BucketAlreadyExists}
   # * {BucketAlreadyOwnedByYou}
   # * {EncryptionTypeMismatch}
+  # * {IdempotencyParameterMismatch}
+  # * {InvalidAnnotationName}
   # * {InvalidObjectState}
+  # * {InvalidPrefix}
   # * {InvalidRequest}
   # * {InvalidWriteOffset}
+  # * {NoSuchAnnotation}
   # * {NoSuchBucket}
   # * {NoSuchKey}
   # * {NoSuchUpload}
   # * {ObjectAlreadyInActiveTierError}
   # * {ObjectNotInActiveTierError}
   # * {TooManyParts}
+  # * {UnsupportedMediaType}
   #
   # Additionally, error classes are dynamically generated for service errors based on the error code
   # if they are not defined above.
   module Errors
 
     extend Aws::Errors::DynamicErrors
+
+    class AccessDenied < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::S3::Types::AccessDenied] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+    end
+
+    class AnnotationLimitExceeded < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::S3::Types::AnnotationLimitExceeded] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+    end
+
+    class AnnotationNameTooLong < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::S3::Types::AnnotationNameTooLong] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+    end
 
     class BucketAlreadyExists < ServiceError
 
@@ -76,6 +114,26 @@ module Aws::S3
       end
     end
 
+    class IdempotencyParameterMismatch < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::S3::Types::IdempotencyParameterMismatch] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+    end
+
+    class InvalidAnnotationName < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::S3::Types::InvalidAnnotationName] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+    end
+
     class InvalidObjectState < ServiceError
 
       # @param [Seahorse::Client::RequestContext] context
@@ -96,6 +154,16 @@ module Aws::S3
       end
     end
 
+    class InvalidPrefix < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::S3::Types::InvalidPrefix] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+    end
+
     class InvalidRequest < ServiceError
 
       # @param [Seahorse::Client::RequestContext] context
@@ -111,6 +179,16 @@ module Aws::S3
       # @param [Seahorse::Client::RequestContext] context
       # @param [String] message
       # @param [Aws::S3::Types::InvalidWriteOffset] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+    end
+
+    class NoSuchAnnotation < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::S3::Types::NoSuchAnnotation] data
       def initialize(context, message, data = Aws::EmptyStructure.new)
         super(context, message, data)
       end
@@ -171,6 +249,16 @@ module Aws::S3
       # @param [Seahorse::Client::RequestContext] context
       # @param [String] message
       # @param [Aws::S3::Types::TooManyParts] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+    end
+
+    class UnsupportedMediaType < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::S3::Types::UnsupportedMediaType] data
       def initialize(context, message, data = Aws::EmptyStructure.new)
         super(context, message, data)
       end

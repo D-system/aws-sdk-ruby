@@ -15,6 +15,7 @@ module Aws::Batch
 
     class ArrayPropertiesDetail
       attr_accessor status_summary: ::Hash[::String, ::Integer]
+      attr_accessor status_summary_last_updated_at: ::Integer
       attr_accessor size: ::Integer
       attr_accessor index: ::Integer
       SENSITIVE: []
@@ -23,6 +24,8 @@ module Aws::Batch
     class ArrayPropertiesSummary
       attr_accessor size: ::Integer
       attr_accessor index: ::Integer
+      attr_accessor status_summary: ::Hash[::String, ::Integer]
+      attr_accessor status_summary_last_updated_at: ::Integer
       SENSITIVE: []
     end
 
@@ -70,6 +73,12 @@ module Aws::Batch
     class CancelJobResponse < Aws::EmptyStructure
     end
 
+    class CapacityLimit
+      attr_accessor max_capacity: ::Integer
+      attr_accessor capacity_unit: ::String
+      SENSITIVE: []
+    end
+
     class ClientException
       attr_accessor message: ::String
       SENSITIVE: []
@@ -103,7 +112,7 @@ module Aws::Batch
 
     class ComputeResource
       attr_accessor type: ("EC2" | "SPOT" | "FARGATE" | "FARGATE_SPOT")
-      attr_accessor allocation_strategy: ("BEST_FIT" | "BEST_FIT_PROGRESSIVE" | "SPOT_CAPACITY_OPTIMIZED" | "SPOT_PRICE_CAPACITY_OPTIMIZED")
+      attr_accessor allocation_strategy: ("BEST_FIT" | "BEST_FIT_PROGRESSIVE" | "BEST_FIT_PROGRESSIVE_ORDERED" | "SPOT_CAPACITY_OPTIMIZED" | "SPOT_PRICE_CAPACITY_OPTIMIZED" | "SPOT_CAPACITY_OPTIMIZED_PRIORITIZED")
       attr_accessor minv_cpus: ::Integer
       attr_accessor maxv_cpus: ::Integer
       attr_accessor desiredv_cpus: ::Integer
@@ -119,6 +128,7 @@ module Aws::Batch
       attr_accessor spot_iam_fleet_role: ::String
       attr_accessor launch_template: Types::LaunchTemplateSpecification
       attr_accessor ec2_configuration: ::Array[Types::Ec2Configuration]
+      attr_accessor scaling_policy: Types::ComputeScalingPolicy
       SENSITIVE: []
     end
 
@@ -128,7 +138,7 @@ module Aws::Batch
       attr_accessor desiredv_cpus: ::Integer
       attr_accessor subnets: ::Array[::String]
       attr_accessor security_group_ids: ::Array[::String]
-      attr_accessor allocation_strategy: ("BEST_FIT_PROGRESSIVE" | "SPOT_CAPACITY_OPTIMIZED" | "SPOT_PRICE_CAPACITY_OPTIMIZED")
+      attr_accessor allocation_strategy: ("BEST_FIT_PROGRESSIVE" | "BEST_FIT_PROGRESSIVE_ORDERED" | "SPOT_CAPACITY_OPTIMIZED" | "SPOT_PRICE_CAPACITY_OPTIMIZED" | "SPOT_CAPACITY_OPTIMIZED_PRIORITIZED")
       attr_accessor instance_types: ::Array[::String]
       attr_accessor ec2_key_pair: ::String
       attr_accessor instance_role: ::String
@@ -140,6 +150,12 @@ module Aws::Batch
       attr_accessor update_to_latest_image_version: bool
       attr_accessor type: ("EC2" | "SPOT" | "FARGATE" | "FARGATE_SPOT")
       attr_accessor image_id: ::String
+      attr_accessor scaling_policy: Types::ComputeScalingPolicy
+      SENSITIVE: []
+    end
+
+    class ComputeScalingPolicy
+      attr_accessor min_scale_down_delay_minutes: ::Integer
       SENSITIVE: []
     end
 
@@ -193,6 +209,7 @@ module Aws::Batch
       attr_accessor ephemeral_storage: Types::EphemeralStorage
       attr_accessor runtime_platform: Types::RuntimePlatform
       attr_accessor repository_credentials: Types::RepositoryCredentials
+      attr_accessor enable_execute_command: bool
       SENSITIVE: []
     end
 
@@ -227,6 +244,7 @@ module Aws::Batch
       attr_accessor secrets: ::Array[Types::Secret]
       attr_accessor network_configuration: Types::NetworkConfiguration
       attr_accessor fargate_platform_configuration: Types::FargatePlatformConfiguration
+      attr_accessor enable_execute_command: bool
       attr_accessor ephemeral_storage: Types::EphemeralStorage
       attr_accessor runtime_platform: Types::RuntimePlatform
       attr_accessor repository_credentials: Types::RepositoryCredentials
@@ -278,6 +296,8 @@ module Aws::Batch
       attr_accessor scheduling_policy_arn: ::String
       attr_accessor priority: ::Integer
       attr_accessor compute_environment_order: ::Array[Types::ComputeEnvironmentOrder]
+      attr_accessor service_environment_order: ::Array[Types::ServiceEnvironmentOrder]
+      attr_accessor job_queue_type: ("EKS" | "ECS" | "ECS_FARGATE" | "SAGEMAKER_TRAINING")
       attr_accessor tags: ::Hash[::String, ::String]
       attr_accessor job_state_time_limit_actions: ::Array[Types::JobStateTimeLimitAction]
       SENSITIVE: []
@@ -289,8 +309,26 @@ module Aws::Batch
       SENSITIVE: []
     end
 
+    class CreateQuotaShareRequest
+      attr_accessor quota_share_name: ::String
+      attr_accessor job_queue: ::String
+      attr_accessor capacity_limits: ::Array[Types::QuotaShareCapacityLimit]
+      attr_accessor resource_sharing_configuration: Types::QuotaShareResourceSharingConfiguration
+      attr_accessor preemption_configuration: Types::QuotaSharePreemptionConfiguration
+      attr_accessor state: ("ENABLED" | "DISABLED")
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class CreateQuotaShareResponse
+      attr_accessor quota_share_name: ::String
+      attr_accessor quota_share_arn: ::String
+      SENSITIVE: []
+    end
+
     class CreateSchedulingPolicyRequest
       attr_accessor name: ::String
+      attr_accessor quota_share_policy: Types::QuotaSharePolicy
       attr_accessor fairshare_policy: Types::FairsharePolicy
       attr_accessor tags: ::Hash[::String, ::String]
       SENSITIVE: []
@@ -299,6 +337,21 @@ module Aws::Batch
     class CreateSchedulingPolicyResponse
       attr_accessor name: ::String
       attr_accessor arn: ::String
+      SENSITIVE: []
+    end
+
+    class CreateServiceEnvironmentRequest
+      attr_accessor service_environment_name: ::String
+      attr_accessor service_environment_type: ("SAGEMAKER_TRAINING")
+      attr_accessor state: ("ENABLED" | "DISABLED")
+      attr_accessor capacity_limits: ::Array[Types::CapacityLimit]
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class CreateServiceEnvironmentResponse
+      attr_accessor service_environment_name: ::String
+      attr_accessor service_environment_arn: ::String
       SENSITIVE: []
     end
 
@@ -326,12 +379,28 @@ module Aws::Batch
     class DeleteJobQueueResponse < Aws::EmptyStructure
     end
 
+    class DeleteQuotaShareRequest
+      attr_accessor quota_share_arn: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteQuotaShareResponse < Aws::EmptyStructure
+    end
+
     class DeleteSchedulingPolicyRequest
       attr_accessor arn: ::String
       SENSITIVE: []
     end
 
     class DeleteSchedulingPolicyResponse < Aws::EmptyStructure
+    end
+
+    class DeleteServiceEnvironmentRequest
+      attr_accessor service_environment: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteServiceEnvironmentResponse < Aws::EmptyStructure
     end
 
     class DeregisterJobDefinitionRequest
@@ -410,6 +479,24 @@ module Aws::Batch
       SENSITIVE: []
     end
 
+    class DescribeQuotaShareRequest
+      attr_accessor quota_share_arn: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeQuotaShareResponse
+      attr_accessor quota_share_name: ::String
+      attr_accessor quota_share_arn: ::String
+      attr_accessor job_queue_arn: ::String
+      attr_accessor capacity_limits: ::Array[Types::QuotaShareCapacityLimit]
+      attr_accessor resource_sharing_configuration: Types::QuotaShareResourceSharingConfiguration
+      attr_accessor preemption_configuration: Types::QuotaSharePreemptionConfiguration
+      attr_accessor state: ("ENABLED" | "DISABLED")
+      attr_accessor status: ("CREATING" | "VALID" | "INVALID" | "UPDATING" | "DELETING")
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
     class DescribeSchedulingPoliciesRequest
       attr_accessor arns: ::Array[::String]
       SENSITIVE: []
@@ -417,6 +504,52 @@ module Aws::Batch
 
     class DescribeSchedulingPoliciesResponse
       attr_accessor scheduling_policies: ::Array[Types::SchedulingPolicyDetail]
+      SENSITIVE: []
+    end
+
+    class DescribeServiceEnvironmentsRequest
+      attr_accessor service_environments: ::Array[::String]
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeServiceEnvironmentsResponse
+      attr_accessor service_environments: ::Array[Types::ServiceEnvironmentDetail]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeServiceJobRequest
+      attr_accessor job_id: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeServiceJobResponse
+      attr_accessor attempts: ::Array[Types::ServiceJobAttemptDetail]
+      attr_accessor capacity_usage: ::Array[Types::ServiceJobCapacityUsageDetail]
+      attr_accessor created_at: ::Integer
+      attr_accessor is_terminated: bool
+      attr_accessor job_arn: ::String
+      attr_accessor job_id: ::String
+      attr_accessor job_name: ::String
+      attr_accessor job_queue: ::String
+      attr_accessor latest_attempt: Types::LatestServiceJobAttempt
+      attr_accessor retry_strategy: Types::ServiceJobRetryStrategy
+      attr_accessor scheduled_at: ::Integer
+      attr_accessor scheduling_priority: ::Integer
+      attr_accessor service_request_payload: ::String
+      attr_accessor service_job_type: ("SAGEMAKER_TRAINING")
+      attr_accessor share_identifier: ::String
+      attr_accessor quota_share_name: ::String
+      attr_accessor preemption_configuration: Types::ServiceJobPreemptionConfiguration
+      attr_accessor preemption_summary: Types::ServiceJobPreemptionSummary
+      attr_accessor started_at: ::Integer
+      attr_accessor status: ("SUBMITTED" | "PENDING" | "RUNNABLE" | "SCHEDULED" | "STARTING" | "RUNNING" | "SUCCEEDED" | "FAILED")
+      attr_accessor status_reason: ::String
+      attr_accessor stopped_at: ::Integer
+      attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor timeout_config: Types::ServiceJobTimeout
       SENSITIVE: []
     end
 
@@ -445,6 +578,7 @@ module Aws::Batch
     class Ec2Configuration
       attr_accessor image_type: ::String
       attr_accessor image_id_override: ::String
+      attr_accessor batch_image_status: ::String
       attr_accessor image_kubernetes_version: ::String
       SENSITIVE: []
     end
@@ -477,6 +611,7 @@ module Aws::Batch
       attr_accessor network_configuration: Types::NetworkConfiguration
       attr_accessor runtime_platform: Types::RuntimePlatform
       attr_accessor volumes: ::Array[Types::Volume]
+      attr_accessor enable_execute_command: bool
       SENSITIVE: []
     end
 
@@ -491,6 +626,7 @@ module Aws::Batch
       attr_accessor network_configuration: Types::NetworkConfiguration
       attr_accessor runtime_platform: Types::RuntimePlatform
       attr_accessor volumes: ::Array[Types::Volume]
+      attr_accessor enable_execute_command: bool
       SENSITIVE: []
     end
 
@@ -691,6 +827,18 @@ module Aws::Batch
       SENSITIVE: []
     end
 
+    class FairshareCapacityUsage
+      attr_accessor capacity_unit: ::String
+      attr_accessor quantity: ::Float
+      SENSITIVE: []
+    end
+
+    class FairshareCapacityUtilization
+      attr_accessor share_identifier: ::String
+      attr_accessor capacity_usage: ::Array[Types::FairshareCapacityUsage]
+      SENSITIVE: []
+    end
+
     class FairsharePolicy
       attr_accessor share_decay_seconds: ::Integer
       attr_accessor compute_reservation: ::Integer
@@ -698,8 +846,20 @@ module Aws::Batch
       SENSITIVE: []
     end
 
+    class FairshareUtilizationDetail
+      attr_accessor active_share_count: ::Integer
+      attr_accessor top_capacity_utilization: ::Array[Types::FairshareCapacityUtilization]
+      SENSITIVE: []
+    end
+
     class FargatePlatformConfiguration
       attr_accessor platform_version: ::String
+      SENSITIVE: []
+    end
+
+    class FirelensConfiguration
+      attr_accessor type: ("fluentd" | "fluentbit")
+      attr_accessor options: ::Hash[::String, ::String]
       SENSITIVE: []
     end
 
@@ -715,6 +875,18 @@ module Aws::Batch
       SENSITIVE: []
     end
 
+    class FrontOfQuotaShareJobSummary
+      attr_accessor job_arn: ::String
+      attr_accessor earliest_time_at_position: ::Integer
+      SENSITIVE: []
+    end
+
+    class FrontOfQuotaSharesDetail
+      attr_accessor quota_shares: ::Hash[::String, ::Array[Types::FrontOfQuotaShareJobSummary]]
+      attr_accessor last_updated_at: ::Integer
+      SENSITIVE: []
+    end
+
     class GetJobQueueSnapshotRequest
       attr_accessor job_queue: ::String
       SENSITIVE: []
@@ -722,6 +894,8 @@ module Aws::Batch
 
     class GetJobQueueSnapshotResponse
       attr_accessor front_of_queue: Types::FrontOfQueueDetail
+      attr_accessor front_of_quota_shares: Types::FrontOfQuotaSharesDetail
+      attr_accessor queue_utilization: Types::QueueSnapshotUtilizationDetail
       SENSITIVE: []
     end
 
@@ -732,6 +906,12 @@ module Aws::Batch
 
     class ImagePullSecret
       attr_accessor name: ::String
+      SENSITIVE: []
+    end
+
+    class JobCapacityUsageSummary
+      attr_accessor capacity_unit: ::String
+      attr_accessor quantity: ::Float
       SENSITIVE: []
     end
 
@@ -806,6 +986,8 @@ module Aws::Batch
       attr_accessor status_reason: ::String
       attr_accessor priority: ::Integer
       attr_accessor compute_environment_order: ::Array[Types::ComputeEnvironmentOrder]
+      attr_accessor service_environment_order: ::Array[Types::ServiceEnvironmentOrder]
+      attr_accessor job_queue_type: ("EKS" | "ECS" | "ECS_FARGATE" | "SAGEMAKER_TRAINING")
       attr_accessor tags: ::Hash[::String, ::String]
       attr_accessor job_state_time_limit_actions: ::Array[Types::JobStateTimeLimitAction]
       SENSITIVE: []
@@ -815,7 +997,7 @@ module Aws::Batch
       attr_accessor reason: ::String
       attr_accessor state: ("RUNNABLE")
       attr_accessor max_time_seconds: ::Integer
-      attr_accessor action: ("CANCEL")
+      attr_accessor action: ("CANCEL" | "TERMINATE")
       SENSITIVE: []
     end
 
@@ -823,7 +1005,10 @@ module Aws::Batch
       attr_accessor job_arn: ::String
       attr_accessor job_id: ::String
       attr_accessor job_name: ::String
+      attr_accessor capacity_usage: ::Array[Types::JobCapacityUsageSummary]
       attr_accessor created_at: ::Integer
+      attr_accessor scheduled_at: ::Integer
+      attr_accessor share_identifier: ::String
       attr_accessor status: ("SUBMITTED" | "PENDING" | "RUNNABLE" | "STARTING" | "RUNNING" | "SUCCEEDED" | "FAILED")
       attr_accessor status_reason: ::String
       attr_accessor started_at: ::Integer
@@ -852,11 +1037,17 @@ module Aws::Batch
       SENSITIVE: []
     end
 
+    class LatestServiceJobAttempt
+      attr_accessor service_resource_id: Types::ServiceResourceId
+      SENSITIVE: []
+    end
+
     class LaunchTemplateSpecification
       attr_accessor launch_template_id: ::String
       attr_accessor launch_template_name: ::String
       attr_accessor version: ::String
       attr_accessor overrides: ::Array[Types::LaunchTemplateSpecificationOverride]
+      attr_accessor userdata_type: ("EKS_BOOTSTRAP_SH" | "EKS_NODEADM")
       SENSITIVE: []
     end
 
@@ -865,6 +1056,7 @@ module Aws::Batch
       attr_accessor launch_template_name: ::String
       attr_accessor version: ::String
       attr_accessor target_instance_types: ::Array[::String]
+      attr_accessor userdata_type: ("EKS_BOOTSTRAP_SH" | "EKS_NODEADM")
       SENSITIVE: []
     end
 
@@ -937,6 +1129,19 @@ module Aws::Batch
       SENSITIVE: []
     end
 
+    class ListQuotaSharesRequest
+      attr_accessor job_queue: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListQuotaSharesResponse
+      attr_accessor quota_shares: ::Array[Types::QuotaShareDetail]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
     class ListSchedulingPoliciesRequest
       attr_accessor max_results: ::Integer
       attr_accessor next_token: ::String
@@ -945,6 +1150,21 @@ module Aws::Batch
 
     class ListSchedulingPoliciesResponse
       attr_accessor scheduling_policies: ::Array[Types::SchedulingPolicyListingDetail]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListServiceJobsRequest
+      attr_accessor job_queue: ::String
+      attr_accessor job_status: ("SUBMITTED" | "PENDING" | "RUNNABLE" | "SCHEDULED" | "STARTING" | "RUNNING" | "SUCCEEDED" | "FAILED")
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      attr_accessor filters: ::Array[Types::KeyValuesPair]
+      SENSITIVE: []
+    end
+
+    class ListServiceJobsResponse
+      attr_accessor job_summary_list: ::Array[Types::ServiceJobSummary]
       attr_accessor next_token: ::String
       SENSITIVE: []
     end
@@ -960,7 +1180,7 @@ module Aws::Batch
     end
 
     class LogConfiguration
-      attr_accessor log_driver: ("json-file" | "syslog" | "journald" | "gelf" | "fluentd" | "awslogs" | "splunk")
+      attr_accessor log_driver: ("json-file" | "syslog" | "journald" | "gelf" | "fluentd" | "awslogs" | "splunk" | "awsfirelens")
       attr_accessor options: ::Hash[::String, ::String]
       attr_accessor secret_options: ::Array[Types::Secret]
       SENSITIVE: []
@@ -1031,6 +1251,71 @@ module Aws::Batch
       SENSITIVE: []
     end
 
+    class QueueSnapshotCapacityUsage
+      attr_accessor capacity_unit: ::String
+      attr_accessor quantity: ::Float
+      SENSITIVE: []
+    end
+
+    class QueueSnapshotUtilizationDetail
+      attr_accessor total_capacity_usage: ::Array[Types::QueueSnapshotCapacityUsage]
+      attr_accessor fairshare_utilization: Types::FairshareUtilizationDetail
+      attr_accessor quota_share_utilization: Types::QuotaShareUtilizationDetail
+      attr_accessor last_updated_at: ::Integer
+      SENSITIVE: []
+    end
+
+    class QuotaShareCapacityLimit
+      attr_accessor max_capacity: ::Integer
+      attr_accessor capacity_unit: ::String
+      SENSITIVE: []
+    end
+
+    class QuotaShareCapacityUsage
+      attr_accessor capacity_unit: ::String
+      attr_accessor quantity: ::Float
+      SENSITIVE: []
+    end
+
+    class QuotaShareCapacityUtilization
+      attr_accessor quota_share_name: ::String
+      attr_accessor capacity_usage: ::Array[Types::QuotaShareCapacityUsage]
+      SENSITIVE: []
+    end
+
+    class QuotaShareDetail
+      attr_accessor quota_share_name: ::String
+      attr_accessor quota_share_arn: ::String
+      attr_accessor job_queue_arn: ::String
+      attr_accessor capacity_limits: ::Array[Types::QuotaShareCapacityLimit]
+      attr_accessor resource_sharing_configuration: Types::QuotaShareResourceSharingConfiguration
+      attr_accessor preemption_configuration: Types::QuotaSharePreemptionConfiguration
+      attr_accessor state: ("ENABLED" | "DISABLED")
+      attr_accessor status: ("CREATING" | "VALID" | "INVALID" | "UPDATING" | "DELETING")
+      SENSITIVE: []
+    end
+
+    class QuotaSharePolicy
+      attr_accessor idle_resource_assignment_strategy: ("FIFO")
+      SENSITIVE: []
+    end
+
+    class QuotaSharePreemptionConfiguration
+      attr_accessor in_share_preemption: ("ENABLED" | "DISABLED")
+      SENSITIVE: []
+    end
+
+    class QuotaShareResourceSharingConfiguration
+      attr_accessor strategy: ("RESERVE" | "LEND" | "LEND_AND_BORROW")
+      attr_accessor borrow_limit: ::Integer
+      SENSITIVE: []
+    end
+
+    class QuotaShareUtilizationDetail
+      attr_accessor top_capacity_utilization: ::Array[Types::QuotaShareCapacityUtilization]
+      SENSITIVE: []
+    end
+
     class RegisterJobDefinitionRequest
       attr_accessor job_definition_name: ::String
       attr_accessor type: ("container" | "multinode")
@@ -1079,9 +1364,18 @@ module Aws::Batch
       SENSITIVE: []
     end
 
+    class S3FilesVolumeConfiguration
+      attr_accessor file_system_arn: ::String
+      attr_accessor root_directory: ::String
+      attr_accessor transit_encryption_port: ::Integer
+      attr_accessor access_point_arn: ::String
+      SENSITIVE: []
+    end
+
     class SchedulingPolicyDetail
       attr_accessor name: ::String
       attr_accessor arn: ::String
+      attr_accessor quota_share_policy: Types::QuotaSharePolicy
       attr_accessor fairshare_policy: Types::FairsharePolicy
       attr_accessor tags: ::Hash[::String, ::String]
       SENSITIVE: []
@@ -1100,6 +1394,103 @@ module Aws::Batch
 
     class ServerException
       attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class ServiceEnvironmentDetail
+      attr_accessor service_environment_name: ::String
+      attr_accessor service_environment_arn: ::String
+      attr_accessor service_environment_type: ("SAGEMAKER_TRAINING")
+      attr_accessor state: ("ENABLED" | "DISABLED")
+      attr_accessor status: ("CREATING" | "UPDATING" | "DELETING" | "DELETED" | "VALID" | "INVALID")
+      attr_accessor capacity_limits: ::Array[Types::CapacityLimit]
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class ServiceEnvironmentOrder
+      attr_accessor order: ::Integer
+      attr_accessor service_environment: ::String
+      SENSITIVE: []
+    end
+
+    class ServiceJobAttemptDetail
+      attr_accessor service_resource_id: Types::ServiceResourceId
+      attr_accessor started_at: ::Integer
+      attr_accessor stopped_at: ::Integer
+      attr_accessor status_reason: ::String
+      SENSITIVE: []
+    end
+
+    class ServiceJobCapacityUsageDetail
+      attr_accessor capacity_unit: ::String
+      attr_accessor quantity: ::Float
+      SENSITIVE: []
+    end
+
+    class ServiceJobCapacityUsageSummary
+      attr_accessor capacity_unit: ::String
+      attr_accessor quantity: ::Float
+      SENSITIVE: []
+    end
+
+    class ServiceJobEvaluateOnExit
+      attr_accessor action: ("RETRY" | "EXIT")
+      attr_accessor on_status_reason: ::String
+      SENSITIVE: []
+    end
+
+    class ServiceJobPreemptedAttempt
+      attr_accessor service_resource_id: Types::ServiceResourceId
+      attr_accessor started_at: ::Integer
+      attr_accessor stopped_at: ::Integer
+      attr_accessor status_reason: ::String
+      SENSITIVE: []
+    end
+
+    class ServiceJobPreemptionConfiguration
+      attr_accessor preemption_retries_before_termination: ::Integer
+      SENSITIVE: []
+    end
+
+    class ServiceJobPreemptionSummary
+      attr_accessor preempted_attempt_count: ::Integer
+      attr_accessor recent_preempted_attempts: ::Array[Types::ServiceJobPreemptedAttempt]
+      SENSITIVE: []
+    end
+
+    class ServiceJobRetryStrategy
+      attr_accessor attempts: ::Integer
+      attr_accessor evaluate_on_exit: ::Array[Types::ServiceJobEvaluateOnExit]
+      SENSITIVE: []
+    end
+
+    class ServiceJobSummary
+      attr_accessor latest_attempt: Types::LatestServiceJobAttempt
+      attr_accessor capacity_usage: ::Array[Types::ServiceJobCapacityUsageSummary]
+      attr_accessor created_at: ::Integer
+      attr_accessor job_arn: ::String
+      attr_accessor job_id: ::String
+      attr_accessor job_name: ::String
+      attr_accessor scheduled_at: ::Integer
+      attr_accessor service_job_type: ("SAGEMAKER_TRAINING")
+      attr_accessor share_identifier: ::String
+      attr_accessor quota_share_name: ::String
+      attr_accessor status: ("SUBMITTED" | "PENDING" | "RUNNABLE" | "SCHEDULED" | "STARTING" | "RUNNING" | "SUCCEEDED" | "FAILED")
+      attr_accessor status_reason: ::String
+      attr_accessor started_at: ::Integer
+      attr_accessor stopped_at: ::Integer
+      SENSITIVE: []
+    end
+
+    class ServiceJobTimeout
+      attr_accessor attempt_duration_seconds: ::Integer
+      SENSITIVE: []
+    end
+
+    class ServiceResourceId
+      attr_accessor name: ("TrainingJobArn")
+      attr_accessor value: ::String
       SENSITIVE: []
     end
 
@@ -1137,6 +1528,29 @@ module Aws::Batch
       SENSITIVE: []
     end
 
+    class SubmitServiceJobRequest
+      attr_accessor job_name: ::String
+      attr_accessor job_queue: ::String
+      attr_accessor retry_strategy: Types::ServiceJobRetryStrategy
+      attr_accessor scheduling_priority: ::Integer
+      attr_accessor service_request_payload: ::String
+      attr_accessor service_job_type: ("SAGEMAKER_TRAINING")
+      attr_accessor share_identifier: ::String
+      attr_accessor quota_share_name: ::String
+      attr_accessor preemption_configuration: Types::ServiceJobPreemptionConfiguration
+      attr_accessor timeout_config: Types::ServiceJobTimeout
+      attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class SubmitServiceJobResponse
+      attr_accessor job_arn: ::String
+      attr_accessor job_name: ::String
+      attr_accessor job_id: ::String
+      SENSITIVE: []
+    end
+
     class TagResourceRequest
       attr_accessor resource_arn: ::String
       attr_accessor tags: ::Hash[::String, ::String]
@@ -1157,6 +1571,7 @@ module Aws::Batch
       attr_accessor depends_on: ::Array[Types::TaskContainerDependency]
       attr_accessor environment: ::Array[Types::KeyValuePair]
       attr_accessor essential: bool
+      attr_accessor firelens_configuration: Types::FirelensConfiguration
       attr_accessor image: ::String
       attr_accessor linux_parameters: Types::LinuxParameters
       attr_accessor log_configuration: Types::LogConfiguration
@@ -1169,6 +1584,8 @@ module Aws::Batch
       attr_accessor secrets: ::Array[Types::Secret]
       attr_accessor ulimits: ::Array[Types::Ulimit]
       attr_accessor user: ::String
+      attr_accessor start_timeout: ::Integer
+      attr_accessor stop_timeout: ::Integer
       attr_accessor exit_code: ::Integer
       attr_accessor reason: ::String
       attr_accessor log_stream_name: ::String
@@ -1189,6 +1606,7 @@ module Aws::Batch
       attr_accessor depends_on: ::Array[Types::TaskContainerDependency]
       attr_accessor environment: ::Array[Types::KeyValuePair]
       attr_accessor essential: bool
+      attr_accessor firelens_configuration: Types::FirelensConfiguration
       attr_accessor image: ::String
       attr_accessor linux_parameters: Types::LinuxParameters
       attr_accessor log_configuration: Types::LogConfiguration
@@ -1201,6 +1619,8 @@ module Aws::Batch
       attr_accessor secrets: ::Array[Types::Secret]
       attr_accessor ulimits: ::Array[Types::Ulimit]
       attr_accessor user: ::String
+      attr_accessor start_timeout: ::Integer
+      attr_accessor stop_timeout: ::Integer
       SENSITIVE: []
     end
 
@@ -1216,6 +1636,15 @@ module Aws::Batch
     end
 
     class TerminateJobResponse < Aws::EmptyStructure
+    end
+
+    class TerminateServiceJobRequest
+      attr_accessor job_id: ::String
+      attr_accessor reason: ::String
+      SENSITIVE: []
+    end
+
+    class TerminateServiceJobResponse < Aws::EmptyStructure
     end
 
     class Tmpfs
@@ -1279,6 +1708,7 @@ module Aws::Batch
       attr_accessor scheduling_policy_arn: ::String
       attr_accessor priority: ::Integer
       attr_accessor compute_environment_order: ::Array[Types::ComputeEnvironmentOrder]
+      attr_accessor service_environment_order: ::Array[Types::ServiceEnvironmentOrder]
       attr_accessor job_state_time_limit_actions: ::Array[Types::JobStateTimeLimitAction]
       SENSITIVE: []
     end
@@ -1295,8 +1725,24 @@ module Aws::Batch
       SENSITIVE: []
     end
 
+    class UpdateQuotaShareRequest
+      attr_accessor quota_share_arn: ::String
+      attr_accessor capacity_limits: ::Array[Types::QuotaShareCapacityLimit]
+      attr_accessor resource_sharing_configuration: Types::QuotaShareResourceSharingConfiguration
+      attr_accessor preemption_configuration: Types::QuotaSharePreemptionConfiguration
+      attr_accessor state: ("ENABLED" | "DISABLED")
+      SENSITIVE: []
+    end
+
+    class UpdateQuotaShareResponse
+      attr_accessor quota_share_name: ::String
+      attr_accessor quota_share_arn: ::String
+      SENSITIVE: []
+    end
+
     class UpdateSchedulingPolicyRequest
       attr_accessor arn: ::String
+      attr_accessor quota_share_policy: Types::QuotaSharePolicy
       attr_accessor fairshare_policy: Types::FairsharePolicy
       SENSITIVE: []
     end
@@ -1304,10 +1750,37 @@ module Aws::Batch
     class UpdateSchedulingPolicyResponse < Aws::EmptyStructure
     end
 
+    class UpdateServiceEnvironmentRequest
+      attr_accessor service_environment: ::String
+      attr_accessor state: ("ENABLED" | "DISABLED")
+      attr_accessor capacity_limits: ::Array[Types::CapacityLimit]
+      SENSITIVE: []
+    end
+
+    class UpdateServiceEnvironmentResponse
+      attr_accessor service_environment_name: ::String
+      attr_accessor service_environment_arn: ::String
+      SENSITIVE: []
+    end
+
+    class UpdateServiceJobRequest
+      attr_accessor job_id: ::String
+      attr_accessor scheduling_priority: ::Integer
+      SENSITIVE: []
+    end
+
+    class UpdateServiceJobResponse
+      attr_accessor job_arn: ::String
+      attr_accessor job_name: ::String
+      attr_accessor job_id: ::String
+      SENSITIVE: []
+    end
+
     class Volume
       attr_accessor host: Types::Host
       attr_accessor name: ::String
       attr_accessor efs_volume_configuration: Types::EFSVolumeConfiguration
+      attr_accessor s3files_volume_configuration: Types::S3FilesVolumeConfiguration
       SENSITIVE: []
     end
   end

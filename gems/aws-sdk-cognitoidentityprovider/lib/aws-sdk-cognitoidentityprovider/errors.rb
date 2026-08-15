@@ -27,6 +27,7 @@ module Aws::CognitoIdentityProvider
   # See {Seahorse::Client::RequestContext} for more information.
   #
   # ## Error Classes
+  # * {AccessDeniedException}
   # * {AliasExistsException}
   # * {CodeDeliveryFailureException}
   # * {CodeMismatchException}
@@ -39,6 +40,7 @@ module Aws::CognitoIdentityProvider
   # * {ForbiddenException}
   # * {GroupExistsException}
   # * {InternalErrorException}
+  # * {InternalServerException}
   # * {InvalidEmailRoleAccessPolicyException}
   # * {InvalidLambdaResponseException}
   # * {InvalidOAuthFlowException}
@@ -51,12 +53,16 @@ module Aws::CognitoIdentityProvider
   # * {MFAMethodNotFoundException}
   # * {ManagedLoginBrandingExistsException}
   # * {NotAuthorizedException}
+  # * {OperationNotEnabledException}
   # * {PasswordHistoryPolicyViolationException}
   # * {PasswordResetRequiredException}
   # * {PreconditionNotMetException}
+  # * {RefreshTokenReuseException}
   # * {ResourceNotFoundException}
   # * {ScopeDoesNotExistException}
+  # * {ServiceQuotaExceededException}
   # * {SoftwareTokenMFANotFoundException}
+  # * {TermsExistsException}
   # * {TierChangeNotAllowedException}
   # * {TooManyFailedAttemptsException}
   # * {TooManyRequestsException}
@@ -86,6 +92,21 @@ module Aws::CognitoIdentityProvider
   module Errors
 
     extend Aws::Errors::DynamicErrors
+
+    class AccessDeniedException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::CognitoIdentityProvider::Types::AccessDeniedException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+    end
 
     class AliasExistsException < ServiceError
 
@@ -257,6 +278,21 @@ module Aws::CognitoIdentityProvider
       # @param [Seahorse::Client::RequestContext] context
       # @param [String] message
       # @param [Aws::CognitoIdentityProvider::Types::InternalErrorException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+    end
+
+    class InternalServerException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::CognitoIdentityProvider::Types::InternalServerException] data
       def initialize(context, message, data = Aws::EmptyStructure.new)
         super(context, message, data)
       end
@@ -452,6 +488,21 @@ module Aws::CognitoIdentityProvider
       end
     end
 
+    class OperationNotEnabledException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::CognitoIdentityProvider::Types::OperationNotEnabledException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+    end
+
     class PasswordHistoryPolicyViolationException < ServiceError
 
       # @param [Seahorse::Client::RequestContext] context
@@ -497,6 +548,21 @@ module Aws::CognitoIdentityProvider
       end
     end
 
+    class RefreshTokenReuseException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::CognitoIdentityProvider::Types::RefreshTokenReuseException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+    end
+
     class ResourceNotFoundException < ServiceError
 
       # @param [Seahorse::Client::RequestContext] context
@@ -527,11 +593,41 @@ module Aws::CognitoIdentityProvider
       end
     end
 
+    class ServiceQuotaExceededException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::CognitoIdentityProvider::Types::ServiceQuotaExceededException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+    end
+
     class SoftwareTokenMFANotFoundException < ServiceError
 
       # @param [Seahorse::Client::RequestContext] context
       # @param [String] message
       # @param [Aws::CognitoIdentityProvider::Types::SoftwareTokenMFANotFoundException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+    end
+
+    class TermsExistsException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::CognitoIdentityProvider::Types::TermsExistsException] data
       def initialize(context, message, data = Aws::EmptyStructure.new)
         super(context, message, data)
       end

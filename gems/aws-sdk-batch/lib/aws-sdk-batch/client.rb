@@ -95,8 +95,8 @@ module Aws::Batch
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::Batch
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::Batch
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::Batch
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::Batch
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::Batch
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::Batch
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::Batch
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -546,10 +550,6 @@ module Aws::Batch
     # price so that Spot Instances only launch when the Spot Instance price
     # is less than a specified percentage of the On-Demand price.
     #
-    # <note markdown="1"> Multi-node parallel jobs aren't supported on Spot Instances.
-    #
-    #  </note>
-    #
     # In an unmanaged compute environment, you can manage your own EC2
     # compute resources and have flexibility with how you configure your
     # compute resources. For example, you can use custom AMIs. However, you
@@ -563,69 +563,10 @@ module Aws::Batch
     # [Launching an Amazon ECS container instance][3] in the *Amazon Elastic
     # Container Service Developer Guide*.
     #
-    # <note markdown="1"> To create a compute environment that uses EKS resources, the caller
-    # must have permissions to call `eks:DescribeCluster`.
-    #
-    #  </note>
-    #
     # <note markdown="1"> Batch doesn't automatically upgrade the AMIs in a compute environment
-    # after it's created. For example, it also doesn't update the AMIs in
-    # your compute environment when a newer version of the Amazon ECS
-    # optimized AMI is available. You're responsible for the management of
-    # the guest operating system. This includes any updates and security
-    # patches. You're also responsible for any additional application
-    # software or utilities that you install on the compute resources. There
-    # are two ways to use a new AMI for your Batch jobs. The original method
-    # is to complete these steps:
-    #
-    #  1.  Create a new compute environment with the new AMI.
-    #
-    # 2.  Add the compute environment to an existing job queue.
-    #
-    # 3.  Remove the earlier compute environment from your job queue.
-    #
-    # 4.  Delete the earlier compute environment.
-    #
-    #  In April 2022, Batch added enhanced support for updating compute
-    # environments. For more information, see [Updating compute
-    # environments][4]. To use the enhanced updating of compute environments
-    # to update AMIs, follow these rules:
-    #
-    #  * Either don't set the service role (`serviceRole`) parameter or set
-    #   it to the **AWSBatchServiceRole** service-linked role.
-    #
-    # * Set the allocation strategy (`allocationStrategy`) parameter to
-    #   `BEST_FIT_PROGRESSIVE`, `SPOT_CAPACITY_OPTIMIZED`, or
-    #   `SPOT_PRICE_CAPACITY_OPTIMIZED`.
-    #
-    # * Set the update to latest image version
-    #   (`updateToLatestImageVersion`) parameter to `true`. The
-    #   `updateToLatestImageVersion` parameter is used when you update a
-    #   compute environment. This parameter is ignored when you create a
-    #   compute environment.
-    #
-    # * Don't specify an AMI ID in `imageId`, `imageIdOverride` (in [
-    #   `ec2Configuration` ][5]), or in the launch template
-    #   (`launchTemplate`). In that case, Batch selects the latest Amazon
-    #   ECS optimized AMI that's supported by Batch at the time the
-    #   infrastructure update is initiated. Alternatively, you can specify
-    #   the AMI ID in the `imageId` or `imageIdOverride` parameters, or the
-    #   launch template identified by the `LaunchTemplate` properties.
-    #   Changing any of these properties starts an infrastructure update. If
-    #   the AMI ID is specified in the launch template, it can't be
-    #   replaced by specifying an AMI ID in either the `imageId` or
-    #   `imageIdOverride` parameters. It can only be replaced by specifying
-    #   a different launch template, or if the launch template version is
-    #   set to `$Default` or `$Latest`, by setting either a new default
-    #   version for the launch template (if `$Default`) or by adding a new
-    #   version to the launch template (if `$Latest`).
-    #
-    #  If these rules are followed, any update that starts an infrastructure
-    # update causes the AMI ID to be re-selected. If the `version` setting
-    # in the launch template (`launchTemplate`) is set to `$Latest` or
-    # `$Default`, the latest or default version of the launch template is
-    # evaluated up at the time of the infrastructure update, even if the
-    # `launchTemplate` wasn't updated.
+    # after it's created. For more information on how to update a compute
+    # environment's AMI, see [Updating compute environments][4] in the
+    # *Batch User Guide*.
     #
     #  </note>
     #
@@ -635,7 +576,6 @@ module Aws::Batch
     # [2]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/container_instance_AMIs.html
     # [3]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/launch_container_instance.html
     # [4]: https://docs.aws.amazon.com/batch/latest/userguide/updating-compute-environments.html
-    # [5]: https://docs.aws.amazon.com/batch/latest/APIReference/API_Ec2Configuration.html
     #
     # @option params [required, String] :compute_environment_name
     #   The name for your compute environment. It can be up to 128 characters
@@ -652,9 +592,11 @@ module Aws::Batch
     #   [1]: https://docs.aws.amazon.com/batch/latest/userguide/compute_environments.html
     #
     # @option params [String] :state
-    #   The state of the compute environment. If the state is `ENABLED`, then
-    #   the compute environment accepts jobs from a queue and can scale out
-    #   automatically based on queues.
+    #   The state of the compute environment. A compute environment must be
+    #   created in the `ENABLED` state.
+    #
+    #   If the state is `ENABLED`, then the compute environment accepts jobs
+    #   from a queue and can scale out automatically based on queues.
     #
     #   If the state is `ENABLED`, then the Batch scheduler can attempt to
     #   place jobs from an associated job queue on the compute resources
@@ -668,9 +610,10 @@ module Aws::Batch
     #   environments in the `DISABLED` state don't scale out.
     #
     #   <note markdown="1"> Compute environments in a `DISABLED` state may continue to incur
-    #   billing charges. To prevent additional charges, turn off and then
-    #   delete the compute environment. For more information, see [State][1]
-    #   in the *Batch User Guide*.
+    #   billing charges, for example, if they have running instances due to
+    #   jobs that are still executing or a non-zero `minvCpus` setting. To
+    #   prevent additional charges, disable and delete the compute
+    #   environment.
     #
     #    </note>
     #
@@ -680,15 +623,11 @@ module Aws::Batch
     #   `desiredvCpus` value of `36`. This instance doesn't scale down to a
     #   `c5.large` instance.
     #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/batch/latest/userguide/compute_environment_parameters.html#compute_environment_state
-    #
     # @option params [Integer] :unmanagedv_cpus
     #   The maximum number of vCPUs for an unmanaged compute environment. This
-    #   parameter is only used for fair share scheduling to reserve vCPU
+    #   parameter is only used for fair-share scheduling to reserve vCPU
     #   capacity for new share identifiers. If this parameter isn't provided
-    #   for a fair share job queue, no vCPU capacity is reserved.
+    #   for a fair-share job queue, no vCPU capacity is reserved.
     #
     #   <note markdown="1"> This parameter is only supported when the `type` parameter is set to
     #   `UNMANAGED`.
@@ -717,6 +656,10 @@ module Aws::Batch
     #   doesn't exist in your account, and no role is specified here, the
     #   service attempts to create the Batch service-linked role in your
     #   account.
+    #
+    #    This automatic service-linked role creation only applies to `MANAGED`
+    #   compute environments. For `UNMANAGED` compute environments, you must
+    #   explicitly specify a `serviceRole`.
     #
     #   If your specified role has a path other than `/`, then you must
     #   specify either the full role ARN (recommended) or prefix the role name
@@ -757,6 +700,11 @@ module Aws::Batch
     # @option params [Types::EksConfiguration] :eks_configuration
     #   The details for the Amazon EKS cluster that supports the compute
     #   environment.
+    #
+    #   <note markdown="1"> To create a compute environment that uses EKS resources, the caller
+    #   must have permissions to call `eks:DescribeCluster`.
+    #
+    #    </note>
     #
     # @option params [String] :context
     #   Reserved.
@@ -862,13 +810,13 @@ module Aws::Batch
     #     unmanagedv_cpus: 1,
     #     compute_resources: {
     #       type: "EC2", # required, accepts EC2, SPOT, FARGATE, FARGATE_SPOT
-    #       allocation_strategy: "BEST_FIT", # accepts BEST_FIT, BEST_FIT_PROGRESSIVE, SPOT_CAPACITY_OPTIMIZED, SPOT_PRICE_CAPACITY_OPTIMIZED
+    #       allocation_strategy: "BEST_FIT", # accepts BEST_FIT, BEST_FIT_PROGRESSIVE, BEST_FIT_PROGRESSIVE_ORDERED, SPOT_CAPACITY_OPTIMIZED, SPOT_PRICE_CAPACITY_OPTIMIZED, SPOT_CAPACITY_OPTIMIZED_PRIORITIZED
     #       minv_cpus: 1,
     #       maxv_cpus: 1, # required
     #       desiredv_cpus: 1,
     #       instance_types: ["String"],
     #       image_id: "String",
-    #       subnets: ["String"], # required
+    #       subnets: ["String"],
     #       security_group_ids: ["String"],
     #       ec2_key_pair: "String",
     #       instance_role: "String",
@@ -888,16 +836,22 @@ module Aws::Batch
     #             launch_template_name: "String",
     #             version: "String",
     #             target_instance_types: ["String"],
+    #             userdata_type: "EKS_BOOTSTRAP_SH", # accepts EKS_BOOTSTRAP_SH, EKS_NODEADM
     #           },
     #         ],
+    #         userdata_type: "EKS_BOOTSTRAP_SH", # accepts EKS_BOOTSTRAP_SH, EKS_NODEADM
     #       },
     #       ec2_configuration: [
     #         {
     #           image_type: "ImageType", # required
     #           image_id_override: "ImageIdOverride",
+    #           batch_image_status: "String",
     #           image_kubernetes_version: "KubernetesVersion",
     #         },
     #       ],
+    #       scaling_policy: {
+    #         min_scale_down_delay_minutes: 1,
+    #       },
     #     },
     #     service_role: "String",
     #     tags: {
@@ -1024,10 +978,11 @@ module Aws::Batch
     #   finish.
     #
     # @option params [String] :scheduling_policy_arn
-    #   The Amazon Resource Name (ARN) of the fair share scheduling policy.
-    #   Job queues that don't have a scheduling policy are scheduled in a
-    #   first-in, first-out (FIFO) model. After a job queue has a scheduling
-    #   policy, it can be replaced but can't be removed.
+    #   The Amazon Resource Name (ARN) of the fair-share scheduling policy.
+    #   Job queues that don't have a fair-share scheduling policy are
+    #   scheduled in a first-in, first-out (FIFO) model. After a job queue has
+    #   a fair-share scheduling policy, it can be replaced but can't be
+    #   removed.
     #
     #   The format is
     #   `aws:Partition:batch:Region:Account:scheduling-policy/Name `.
@@ -1035,11 +990,11 @@ module Aws::Batch
     #   An example is
     #   `aws:aws:batch:us-west-2:123456789012:scheduling-policy/MySchedulingPolicy`.
     #
-    #   A job queue without a scheduling policy is scheduled as a FIFO job
-    #   queue and can't have a scheduling policy added. Jobs queues with a
-    #   scheduling policy can have a maximum of 500 active fair share
-    #   identifiers. When the limit has been reached, submissions of any jobs
-    #   that add a new fair share identifier fail.
+    #   A job queue without a fair-share scheduling policy is scheduled as a
+    #   FIFO job queue and can't have a fair-share scheduling policy added.
+    #   Jobs queues with a fair-share scheduling policy can have a maximum of
+    #   500 active share identifiers. When the limit has been reached,
+    #   submissions of any jobs that add a new share identifier fail.
     #
     # @option params [required, Integer] :priority
     #   The priority of the job queue. Job queues with a higher priority (or a
@@ -1051,7 +1006,7 @@ module Aws::Batch
     #   either EC2 (`EC2` or `SPOT`) or Fargate (`FARGATE` or `FARGATE_SPOT`);
     #   EC2 and Fargate compute environments can't be mixed.
     #
-    # @option params [required, Array<Types::ComputeEnvironmentOrder>] :compute_environment_order
+    # @option params [Array<Types::ComputeEnvironmentOrder>] :compute_environment_order
     #   The set of compute environments mapped to a job queue and their order
     #   relative to each other. The job scheduler uses this parameter to
     #   determine which compute environment runs a specific job. Compute
@@ -1066,6 +1021,18 @@ module Aws::Batch
     #   environment architecture types in a single job queue.
     #
     #    </note>
+    #
+    # @option params [Array<Types::ServiceEnvironmentOrder>] :service_environment_order
+    #   A list of service environments that this job queue can use to allocate
+    #   jobs. All serviceEnvironments must have the same type. A job queue
+    #   can't have both a serviceEnvironmentOrder and a
+    #   computeEnvironmentOrder field.
+    #
+    # @option params [String] :job_queue_type
+    #   The type of job queue. For service jobs that run on SageMaker
+    #   Training, this value is `SAGEMAKER_TRAINING`. For regular container
+    #   jobs, this value is `EKS`, `ECS`, or `ECS_FARGATE` depending on the
+    #   compute environment.
     #
     # @option params [Hash<String,String>] :tags
     #   The tags that you apply to the job queue to help you categorize and
@@ -1146,12 +1113,19 @@ module Aws::Batch
     #     state: "ENABLED", # accepts ENABLED, DISABLED
     #     scheduling_policy_arn: "String",
     #     priority: 1, # required
-    #     compute_environment_order: [ # required
+    #     compute_environment_order: [
     #       {
     #         order: 1, # required
     #         compute_environment: "String", # required
     #       },
     #     ],
+    #     service_environment_order: [
+    #       {
+    #         order: 1, # required
+    #         service_environment: "String", # required
+    #       },
+    #     ],
+    #     job_queue_type: "EKS", # accepts EKS, ECS, ECS_FARGATE, SAGEMAKER_TRAINING
     #     tags: {
     #       "TagKey" => "TagValue",
     #     },
@@ -1160,7 +1134,7 @@ module Aws::Batch
     #         reason: "String", # required
     #         state: "RUNNABLE", # required, accepts RUNNABLE
     #         max_time_seconds: 1, # required
-    #         action: "CANCEL", # required, accepts CANCEL
+    #         action: "CANCEL", # required, accepts CANCEL, TERMINATE
     #       },
     #     ],
     #   })
@@ -1179,15 +1153,106 @@ module Aws::Batch
       req.send_request(options)
     end
 
+    # Creates an Batch quota share. Each quota share operates as a virtual
+    # queue with a configured compute capacity, resource sharing strategy,
+    # and borrow limits.
+    #
+    # @option params [required, String] :quota_share_name
+    #   The name of the quota share. It can be up to 128 characters long. It
+    #   can contain uppercase and lowercase letters, numbers, hyphens (-), and
+    #   underscores (\_).
+    #
+    # @option params [required, String] :job_queue
+    #   The Batch job queue associated with the quota share. This can be the
+    #   job queue name or ARN. A job queue must be in the `VALID` state before
+    #   you can associate it with a quota share.
+    #
+    # @option params [required, Array<Types::QuotaShareCapacityLimit>] :capacity_limits
+    #   A list that specifies the quantity and type of compute capacity
+    #   allocated to the quota share.
+    #
+    # @option params [required, Types::QuotaShareResourceSharingConfiguration] :resource_sharing_configuration
+    #   Specifies whether a quota share reserves, lends, or both lends and
+    #   borrows idle compute capacity.
+    #
+    # @option params [required, Types::QuotaSharePreemptionConfiguration] :preemption_configuration
+    #   Specifies the preemption behavior for jobs in a quota share.
+    #
+    # @option params [String] :state
+    #   The state of the quota share. If the quota share is `ENABLED`, it is
+    #   able to accept jobs. If the quota share is `DISABLED`, new jobs won't
+    #   be accepted but jobs already submitted can finish. The default state
+    #   is `ENABLED`.
+    #
+    # @option params [Hash<String,String>] :tags
+    #   The tags that you apply to the quota share to help you categorize and
+    #   organize your resources. Each tag consists of a key and an optional
+    #   value. For more information, see [Tagging your Batch resources][1] in
+    #   *Batch User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/batch/latest/userguide/using-tags.html
+    #
+    # @return [Types::CreateQuotaShareResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateQuotaShareResponse#quota_share_name #quota_share_name} => String
+    #   * {Types::CreateQuotaShareResponse#quota_share_arn #quota_share_arn} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_quota_share({
+    #     quota_share_name: "String", # required
+    #     job_queue: "String", # required
+    #     capacity_limits: [ # required
+    #       {
+    #         max_capacity: 1, # required
+    #         capacity_unit: "String", # required
+    #       },
+    #     ],
+    #     resource_sharing_configuration: { # required
+    #       strategy: "RESERVE", # required, accepts RESERVE, LEND, LEND_AND_BORROW
+    #       borrow_limit: 1,
+    #     },
+    #     preemption_configuration: { # required
+    #       in_share_preemption: "ENABLED", # required, accepts ENABLED, DISABLED
+    #     },
+    #     state: "ENABLED", # accepts ENABLED, DISABLED
+    #     tags: {
+    #       "TagKey" => "TagValue",
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.quota_share_name #=> String
+    #   resp.quota_share_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/batch-2016-08-10/CreateQuotaShare AWS API Documentation
+    #
+    # @overload create_quota_share(params = {})
+    # @param [Hash] params ({})
+    def create_quota_share(params = {}, options = {})
+      req = build_request(:create_quota_share, params)
+      req.send_request(options)
+    end
+
     # Creates an Batch scheduling policy.
     #
     # @option params [required, String] :name
-    #   The name of the scheduling policy. It can be up to 128 letters long.
-    #   It can contain uppercase and lowercase letters, numbers, hyphens (-),
-    #   and underscores (\_).
+    #   The name of the fair-share scheduling policy. It can be up to 128
+    #   letters long. It can contain uppercase and lowercase letters, numbers,
+    #   hyphens (-), and underscores (\_).
+    #
+    # @option params [Types::QuotaSharePolicy] :quota_share_policy
+    #   The quota share scheduling policy details. Only one of fairsharePolicy
+    #   or quotaSharePolicy can be set. Once set, this policy type cannot be
+    #   removed or changed to a fairSharePolicy.
     #
     # @option params [Types::FairsharePolicy] :fairshare_policy
-    #   The fair share policy of the scheduling policy.
+    #   The fair-share scheduling policy details. Only one of fairsharePolicy
+    #   or quotaSharePolicy can be set. Once set, this policy type cannot be
+    #   removed or changed to a quotaSharePolicy.
     #
     # @option params [Hash<String,String>] :tags
     #   The tags that you apply to the scheduling policy to help you
@@ -1213,6 +1278,9 @@ module Aws::Batch
     #
     #   resp = client.create_scheduling_policy({
     #     name: "String", # required
+    #     quota_share_policy: {
+    #       idle_resource_assignment_strategy: "FIFO", # required, accepts FIFO
+    #     },
     #     fairshare_policy: {
     #       share_decay_seconds: 1,
     #       compute_reservation: 1,
@@ -1239,6 +1307,74 @@ module Aws::Batch
     # @param [Hash] params ({})
     def create_scheduling_policy(params = {}, options = {})
       req = build_request(:create_scheduling_policy, params)
+      req.send_request(options)
+    end
+
+    # Creates a service environment for running service jobs. Service
+    # environments define capacity limits for specific service types such as
+    # SageMaker Training jobs.
+    #
+    # @option params [required, String] :service_environment_name
+    #   The name for the service environment. It can be up to 128 characters
+    #   long and can contain letters, numbers, hyphens (-), and underscores
+    #   (\_).
+    #
+    # @option params [required, String] :service_environment_type
+    #   The type of service environment. For SageMaker Training jobs, specify
+    #   `SAGEMAKER_TRAINING`.
+    #
+    # @option params [String] :state
+    #   The state of the service environment. Valid values are `ENABLED` and
+    #   `DISABLED`. The default value is `ENABLED`.
+    #
+    # @option params [required, Array<Types::CapacityLimit>] :capacity_limits
+    #   The capacity limits for the service environment. The number of
+    #   instances a job consumes is the total number of instances requested in
+    #   the submit training job request resource configuration.
+    #
+    # @option params [Hash<String,String>] :tags
+    #   The tags that you apply to the service environment to help you
+    #   categorize and organize your resources. Each tag consists of a key and
+    #   an optional value. For more information, see [Tagging your Batch
+    #   resources][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/batch/latest/userguide/using-tags.html
+    #
+    # @return [Types::CreateServiceEnvironmentResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateServiceEnvironmentResponse#service_environment_name #service_environment_name} => String
+    #   * {Types::CreateServiceEnvironmentResponse#service_environment_arn #service_environment_arn} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_service_environment({
+    #     service_environment_name: "String", # required
+    #     service_environment_type: "SAGEMAKER_TRAINING", # required, accepts SAGEMAKER_TRAINING
+    #     state: "ENABLED", # accepts ENABLED, DISABLED
+    #     capacity_limits: [ # required
+    #       {
+    #         max_capacity: 1,
+    #         capacity_unit: "String",
+    #       },
+    #     ],
+    #     tags: {
+    #       "TagKey" => "TagValue",
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.service_environment_name #=> String
+    #   resp.service_environment_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/batch-2016-08-10/CreateServiceEnvironment AWS API Documentation
+    #
+    # @overload create_service_environment(params = {})
+    # @param [Hash] params ({})
+    def create_service_environment(params = {}, options = {})
+      req = build_request(:create_service_environment, params)
       req.send_request(options)
     end
 
@@ -1323,8 +1459,7 @@ module Aws::Batch
 
     # Deletes the specified job queue. You must first disable submissions
     # for a queue with the UpdateJobQueue operation. All jobs in the queue
-    # are eventually terminated when you delete a job queue. The jobs are
-    # terminated at a rate of about 16 jobs each second.
+    # are eventually terminated when you delete a job queue.
     #
     # It's not necessary to disassociate compute environments from a queue
     # before submitting a `DeleteJobQueue` request.
@@ -1363,6 +1498,31 @@ module Aws::Batch
       req.send_request(options)
     end
 
+    # Deletes the specified quota share. You must first disable submissions
+    # for the share by updating the state to `DISABLED` using the
+    # UpdateQuotaShare operation. All jobs in the share are eventually
+    # terminated when you delete a quota share.
+    #
+    # @option params [required, String] :quota_share_arn
+    #   The Amazon Resource Name (ARN) of the quota share.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_quota_share({
+    #     quota_share_arn: "String", # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/batch-2016-08-10/DeleteQuotaShare AWS API Documentation
+    #
+    # @overload delete_quota_share(params = {})
+    # @param [Hash] params ({})
+    def delete_quota_share(params = {}, options = {})
+      req = build_request(:delete_quota_share, params)
+      req.send_request(options)
+    end
+
     # Deletes the specified scheduling policy.
     #
     # You can't delete a scheduling policy that's used in any job queues.
@@ -1384,6 +1544,31 @@ module Aws::Batch
     # @param [Hash] params ({})
     def delete_scheduling_policy(params = {}, options = {})
       req = build_request(:delete_scheduling_policy, params)
+      req.send_request(options)
+    end
+
+    # Deletes a Service environment. Before you can delete a service
+    # environment, you must first set its state to `DISABLED` with the
+    # `UpdateServiceEnvironment` API operation and disassociate it from any
+    # job queues with the `UpdateJobQueue` API operation.
+    #
+    # @option params [required, String] :service_environment
+    #   The name or ARN of the service environment to delete.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_service_environment({
+    #     service_environment: "String", # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/batch-2016-08-10/DeleteServiceEnvironment AWS API Documentation
+    #
+    # @overload delete_service_environment(params = {})
+    # @param [Hash] params ({})
+    def delete_service_environment(params = {}, options = {})
+      req = build_request(:delete_service_environment, params)
       req.send_request(options)
     end
 
@@ -1536,7 +1721,7 @@ module Aws::Batch
     #   resp.compute_environments[0].status #=> String, one of "CREATING", "UPDATING", "DELETING", "DELETED", "VALID", "INVALID"
     #   resp.compute_environments[0].status_reason #=> String
     #   resp.compute_environments[0].compute_resources.type #=> String, one of "EC2", "SPOT", "FARGATE", "FARGATE_SPOT"
-    #   resp.compute_environments[0].compute_resources.allocation_strategy #=> String, one of "BEST_FIT", "BEST_FIT_PROGRESSIVE", "SPOT_CAPACITY_OPTIMIZED", "SPOT_PRICE_CAPACITY_OPTIMIZED"
+    #   resp.compute_environments[0].compute_resources.allocation_strategy #=> String, one of "BEST_FIT", "BEST_FIT_PROGRESSIVE", "BEST_FIT_PROGRESSIVE_ORDERED", "SPOT_CAPACITY_OPTIMIZED", "SPOT_PRICE_CAPACITY_OPTIMIZED", "SPOT_CAPACITY_OPTIMIZED_PRIORITIZED"
     #   resp.compute_environments[0].compute_resources.minv_cpus #=> Integer
     #   resp.compute_environments[0].compute_resources.maxv_cpus #=> Integer
     #   resp.compute_environments[0].compute_resources.desiredv_cpus #=> Integer
@@ -1563,10 +1748,14 @@ module Aws::Batch
     #   resp.compute_environments[0].compute_resources.launch_template.overrides[0].version #=> String
     #   resp.compute_environments[0].compute_resources.launch_template.overrides[0].target_instance_types #=> Array
     #   resp.compute_environments[0].compute_resources.launch_template.overrides[0].target_instance_types[0] #=> String
+    #   resp.compute_environments[0].compute_resources.launch_template.overrides[0].userdata_type #=> String, one of "EKS_BOOTSTRAP_SH", "EKS_NODEADM"
+    #   resp.compute_environments[0].compute_resources.launch_template.userdata_type #=> String, one of "EKS_BOOTSTRAP_SH", "EKS_NODEADM"
     #   resp.compute_environments[0].compute_resources.ec2_configuration #=> Array
     #   resp.compute_environments[0].compute_resources.ec2_configuration[0].image_type #=> String
     #   resp.compute_environments[0].compute_resources.ec2_configuration[0].image_id_override #=> String
+    #   resp.compute_environments[0].compute_resources.ec2_configuration[0].batch_image_status #=> String
     #   resp.compute_environments[0].compute_resources.ec2_configuration[0].image_kubernetes_version #=> String
+    #   resp.compute_environments[0].compute_resources.scaling_policy.min_scale_down_delay_minutes #=> Integer
     #   resp.compute_environments[0].service_role #=> String
     #   resp.compute_environments[0].update_policy.terminate_jobs_on_update #=> Boolean
     #   resp.compute_environments[0].update_policy.job_execution_timeout_minutes #=> Integer
@@ -1790,6 +1979,10 @@ module Aws::Batch
     #   resp.job_definitions[0].container_properties.volumes[0].efs_volume_configuration.transit_encryption_port #=> Integer
     #   resp.job_definitions[0].container_properties.volumes[0].efs_volume_configuration.authorization_config.access_point_id #=> String
     #   resp.job_definitions[0].container_properties.volumes[0].efs_volume_configuration.authorization_config.iam #=> String, one of "ENABLED", "DISABLED"
+    #   resp.job_definitions[0].container_properties.volumes[0].s3files_volume_configuration.file_system_arn #=> String
+    #   resp.job_definitions[0].container_properties.volumes[0].s3files_volume_configuration.root_directory #=> String
+    #   resp.job_definitions[0].container_properties.volumes[0].s3files_volume_configuration.transit_encryption_port #=> Integer
+    #   resp.job_definitions[0].container_properties.volumes[0].s3files_volume_configuration.access_point_arn #=> String
     #   resp.job_definitions[0].container_properties.environment #=> Array
     #   resp.job_definitions[0].container_properties.environment[0].name #=> String
     #   resp.job_definitions[0].container_properties.environment[0].value #=> String
@@ -1822,7 +2015,7 @@ module Aws::Batch
     #   resp.job_definitions[0].container_properties.linux_parameters.tmpfs[0].mount_options[0] #=> String
     #   resp.job_definitions[0].container_properties.linux_parameters.max_swap #=> Integer
     #   resp.job_definitions[0].container_properties.linux_parameters.swappiness #=> Integer
-    #   resp.job_definitions[0].container_properties.log_configuration.log_driver #=> String, one of "json-file", "syslog", "journald", "gelf", "fluentd", "awslogs", "splunk"
+    #   resp.job_definitions[0].container_properties.log_configuration.log_driver #=> String, one of "json-file", "syslog", "journald", "gelf", "fluentd", "awslogs", "splunk", "awsfirelens"
     #   resp.job_definitions[0].container_properties.log_configuration.options #=> Hash
     #   resp.job_definitions[0].container_properties.log_configuration.options["String"] #=> String
     #   resp.job_definitions[0].container_properties.log_configuration.secret_options #=> Array
@@ -1833,6 +2026,7 @@ module Aws::Batch
     #   resp.job_definitions[0].container_properties.secrets[0].value_from #=> String
     #   resp.job_definitions[0].container_properties.network_configuration.assign_public_ip #=> String, one of "ENABLED", "DISABLED"
     #   resp.job_definitions[0].container_properties.fargate_platform_configuration.platform_version #=> String
+    #   resp.job_definitions[0].container_properties.enable_execute_command #=> Boolean
     #   resp.job_definitions[0].container_properties.ephemeral_storage.size_in_gi_b #=> Integer
     #   resp.job_definitions[0].container_properties.runtime_platform.operating_system_family #=> String
     #   resp.job_definitions[0].container_properties.runtime_platform.cpu_architecture #=> String
@@ -1858,6 +2052,10 @@ module Aws::Batch
     #   resp.job_definitions[0].node_properties.node_range_properties[0].container.volumes[0].efs_volume_configuration.transit_encryption_port #=> Integer
     #   resp.job_definitions[0].node_properties.node_range_properties[0].container.volumes[0].efs_volume_configuration.authorization_config.access_point_id #=> String
     #   resp.job_definitions[0].node_properties.node_range_properties[0].container.volumes[0].efs_volume_configuration.authorization_config.iam #=> String, one of "ENABLED", "DISABLED"
+    #   resp.job_definitions[0].node_properties.node_range_properties[0].container.volumes[0].s3files_volume_configuration.file_system_arn #=> String
+    #   resp.job_definitions[0].node_properties.node_range_properties[0].container.volumes[0].s3files_volume_configuration.root_directory #=> String
+    #   resp.job_definitions[0].node_properties.node_range_properties[0].container.volumes[0].s3files_volume_configuration.transit_encryption_port #=> Integer
+    #   resp.job_definitions[0].node_properties.node_range_properties[0].container.volumes[0].s3files_volume_configuration.access_point_arn #=> String
     #   resp.job_definitions[0].node_properties.node_range_properties[0].container.environment #=> Array
     #   resp.job_definitions[0].node_properties.node_range_properties[0].container.environment[0].name #=> String
     #   resp.job_definitions[0].node_properties.node_range_properties[0].container.environment[0].value #=> String
@@ -1890,7 +2088,7 @@ module Aws::Batch
     #   resp.job_definitions[0].node_properties.node_range_properties[0].container.linux_parameters.tmpfs[0].mount_options[0] #=> String
     #   resp.job_definitions[0].node_properties.node_range_properties[0].container.linux_parameters.max_swap #=> Integer
     #   resp.job_definitions[0].node_properties.node_range_properties[0].container.linux_parameters.swappiness #=> Integer
-    #   resp.job_definitions[0].node_properties.node_range_properties[0].container.log_configuration.log_driver #=> String, one of "json-file", "syslog", "journald", "gelf", "fluentd", "awslogs", "splunk"
+    #   resp.job_definitions[0].node_properties.node_range_properties[0].container.log_configuration.log_driver #=> String, one of "json-file", "syslog", "journald", "gelf", "fluentd", "awslogs", "splunk", "awsfirelens"
     #   resp.job_definitions[0].node_properties.node_range_properties[0].container.log_configuration.options #=> Hash
     #   resp.job_definitions[0].node_properties.node_range_properties[0].container.log_configuration.options["String"] #=> String
     #   resp.job_definitions[0].node_properties.node_range_properties[0].container.log_configuration.secret_options #=> Array
@@ -1901,6 +2099,7 @@ module Aws::Batch
     #   resp.job_definitions[0].node_properties.node_range_properties[0].container.secrets[0].value_from #=> String
     #   resp.job_definitions[0].node_properties.node_range_properties[0].container.network_configuration.assign_public_ip #=> String, one of "ENABLED", "DISABLED"
     #   resp.job_definitions[0].node_properties.node_range_properties[0].container.fargate_platform_configuration.platform_version #=> String
+    #   resp.job_definitions[0].node_properties.node_range_properties[0].container.enable_execute_command #=> Boolean
     #   resp.job_definitions[0].node_properties.node_range_properties[0].container.ephemeral_storage.size_in_gi_b #=> Integer
     #   resp.job_definitions[0].node_properties.node_range_properties[0].container.runtime_platform.operating_system_family #=> String
     #   resp.job_definitions[0].node_properties.node_range_properties[0].container.runtime_platform.cpu_architecture #=> String
@@ -1918,6 +2117,9 @@ module Aws::Batch
     #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].environment[0].name #=> String
     #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].environment[0].value #=> String
     #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].essential #=> Boolean
+    #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].firelens_configuration.type #=> String, one of "fluentd", "fluentbit"
+    #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].firelens_configuration.options #=> Hash
+    #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].firelens_configuration.options["String"] #=> String
     #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].image #=> String
     #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].linux_parameters.devices #=> Array
     #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].linux_parameters.devices[0].host_path #=> String
@@ -1933,7 +2135,7 @@ module Aws::Batch
     #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].linux_parameters.tmpfs[0].mount_options[0] #=> String
     #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].linux_parameters.max_swap #=> Integer
     #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].linux_parameters.swappiness #=> Integer
-    #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].log_configuration.log_driver #=> String, one of "json-file", "syslog", "journald", "gelf", "fluentd", "awslogs", "splunk"
+    #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].log_configuration.log_driver #=> String, one of "json-file", "syslog", "journald", "gelf", "fluentd", "awslogs", "splunk", "awsfirelens"
     #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].log_configuration.options #=> Hash
     #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].log_configuration.options["String"] #=> String
     #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].log_configuration.secret_options #=> Array
@@ -1958,6 +2160,8 @@ module Aws::Batch
     #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].ulimits[0].name #=> String
     #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].ulimits[0].soft_limit #=> Integer
     #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].user #=> String
+    #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].start_timeout #=> Integer
+    #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].stop_timeout #=> Integer
     #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].ephemeral_storage.size_in_gi_b #=> Integer
     #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].execution_role_arn #=> String
     #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].platform_version #=> String
@@ -1976,6 +2180,11 @@ module Aws::Batch
     #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].volumes[0].efs_volume_configuration.transit_encryption_port #=> Integer
     #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].volumes[0].efs_volume_configuration.authorization_config.access_point_id #=> String
     #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].volumes[0].efs_volume_configuration.authorization_config.iam #=> String, one of "ENABLED", "DISABLED"
+    #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].volumes[0].s3files_volume_configuration.file_system_arn #=> String
+    #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].volumes[0].s3files_volume_configuration.root_directory #=> String
+    #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].volumes[0].s3files_volume_configuration.transit_encryption_port #=> Integer
+    #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].volumes[0].s3files_volume_configuration.access_point_arn #=> String
+    #   resp.job_definitions[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].enable_execute_command #=> Boolean
     #   resp.job_definitions[0].node_properties.node_range_properties[0].eks_properties.pod_properties.service_account_name #=> String
     #   resp.job_definitions[0].node_properties.node_range_properties[0].eks_properties.pod_properties.host_network #=> Boolean
     #   resp.job_definitions[0].node_properties.node_range_properties[0].eks_properties.pod_properties.dns_policy #=> String
@@ -2067,6 +2276,9 @@ module Aws::Batch
     #   resp.job_definitions[0].ecs_properties.task_properties[0].containers[0].environment[0].name #=> String
     #   resp.job_definitions[0].ecs_properties.task_properties[0].containers[0].environment[0].value #=> String
     #   resp.job_definitions[0].ecs_properties.task_properties[0].containers[0].essential #=> Boolean
+    #   resp.job_definitions[0].ecs_properties.task_properties[0].containers[0].firelens_configuration.type #=> String, one of "fluentd", "fluentbit"
+    #   resp.job_definitions[0].ecs_properties.task_properties[0].containers[0].firelens_configuration.options #=> Hash
+    #   resp.job_definitions[0].ecs_properties.task_properties[0].containers[0].firelens_configuration.options["String"] #=> String
     #   resp.job_definitions[0].ecs_properties.task_properties[0].containers[0].image #=> String
     #   resp.job_definitions[0].ecs_properties.task_properties[0].containers[0].linux_parameters.devices #=> Array
     #   resp.job_definitions[0].ecs_properties.task_properties[0].containers[0].linux_parameters.devices[0].host_path #=> String
@@ -2082,7 +2294,7 @@ module Aws::Batch
     #   resp.job_definitions[0].ecs_properties.task_properties[0].containers[0].linux_parameters.tmpfs[0].mount_options[0] #=> String
     #   resp.job_definitions[0].ecs_properties.task_properties[0].containers[0].linux_parameters.max_swap #=> Integer
     #   resp.job_definitions[0].ecs_properties.task_properties[0].containers[0].linux_parameters.swappiness #=> Integer
-    #   resp.job_definitions[0].ecs_properties.task_properties[0].containers[0].log_configuration.log_driver #=> String, one of "json-file", "syslog", "journald", "gelf", "fluentd", "awslogs", "splunk"
+    #   resp.job_definitions[0].ecs_properties.task_properties[0].containers[0].log_configuration.log_driver #=> String, one of "json-file", "syslog", "journald", "gelf", "fluentd", "awslogs", "splunk", "awsfirelens"
     #   resp.job_definitions[0].ecs_properties.task_properties[0].containers[0].log_configuration.options #=> Hash
     #   resp.job_definitions[0].ecs_properties.task_properties[0].containers[0].log_configuration.options["String"] #=> String
     #   resp.job_definitions[0].ecs_properties.task_properties[0].containers[0].log_configuration.secret_options #=> Array
@@ -2107,6 +2319,8 @@ module Aws::Batch
     #   resp.job_definitions[0].ecs_properties.task_properties[0].containers[0].ulimits[0].name #=> String
     #   resp.job_definitions[0].ecs_properties.task_properties[0].containers[0].ulimits[0].soft_limit #=> Integer
     #   resp.job_definitions[0].ecs_properties.task_properties[0].containers[0].user #=> String
+    #   resp.job_definitions[0].ecs_properties.task_properties[0].containers[0].start_timeout #=> Integer
+    #   resp.job_definitions[0].ecs_properties.task_properties[0].containers[0].stop_timeout #=> Integer
     #   resp.job_definitions[0].ecs_properties.task_properties[0].ephemeral_storage.size_in_gi_b #=> Integer
     #   resp.job_definitions[0].ecs_properties.task_properties[0].execution_role_arn #=> String
     #   resp.job_definitions[0].ecs_properties.task_properties[0].platform_version #=> String
@@ -2125,6 +2339,11 @@ module Aws::Batch
     #   resp.job_definitions[0].ecs_properties.task_properties[0].volumes[0].efs_volume_configuration.transit_encryption_port #=> Integer
     #   resp.job_definitions[0].ecs_properties.task_properties[0].volumes[0].efs_volume_configuration.authorization_config.access_point_id #=> String
     #   resp.job_definitions[0].ecs_properties.task_properties[0].volumes[0].efs_volume_configuration.authorization_config.iam #=> String, one of "ENABLED", "DISABLED"
+    #   resp.job_definitions[0].ecs_properties.task_properties[0].volumes[0].s3files_volume_configuration.file_system_arn #=> String
+    #   resp.job_definitions[0].ecs_properties.task_properties[0].volumes[0].s3files_volume_configuration.root_directory #=> String
+    #   resp.job_definitions[0].ecs_properties.task_properties[0].volumes[0].s3files_volume_configuration.transit_encryption_port #=> Integer
+    #   resp.job_definitions[0].ecs_properties.task_properties[0].volumes[0].s3files_volume_configuration.access_point_arn #=> String
+    #   resp.job_definitions[0].ecs_properties.task_properties[0].enable_execute_command #=> Boolean
     #   resp.job_definitions[0].eks_properties.pod_properties.service_account_name #=> String
     #   resp.job_definitions[0].eks_properties.pod_properties.host_network #=> Boolean
     #   resp.job_definitions[0].eks_properties.pod_properties.dns_policy #=> String
@@ -2299,13 +2518,17 @@ module Aws::Batch
     #   resp.job_queues[0].compute_environment_order #=> Array
     #   resp.job_queues[0].compute_environment_order[0].order #=> Integer
     #   resp.job_queues[0].compute_environment_order[0].compute_environment #=> String
+    #   resp.job_queues[0].service_environment_order #=> Array
+    #   resp.job_queues[0].service_environment_order[0].order #=> Integer
+    #   resp.job_queues[0].service_environment_order[0].service_environment #=> String
+    #   resp.job_queues[0].job_queue_type #=> String, one of "EKS", "ECS", "ECS_FARGATE", "SAGEMAKER_TRAINING"
     #   resp.job_queues[0].tags #=> Hash
     #   resp.job_queues[0].tags["TagKey"] #=> String
     #   resp.job_queues[0].job_state_time_limit_actions #=> Array
     #   resp.job_queues[0].job_state_time_limit_actions[0].reason #=> String
     #   resp.job_queues[0].job_state_time_limit_actions[0].state #=> String, one of "RUNNABLE"
     #   resp.job_queues[0].job_state_time_limit_actions[0].max_time_seconds #=> Integer
-    #   resp.job_queues[0].job_state_time_limit_actions[0].action #=> String, one of "CANCEL"
+    #   resp.job_queues[0].job_state_time_limit_actions[0].action #=> String, one of "CANCEL", "TERMINATE"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/batch-2016-08-10/DescribeJobQueues AWS API Documentation
@@ -2449,6 +2672,10 @@ module Aws::Batch
     #   resp.jobs[0].container.volumes[0].efs_volume_configuration.transit_encryption_port #=> Integer
     #   resp.jobs[0].container.volumes[0].efs_volume_configuration.authorization_config.access_point_id #=> String
     #   resp.jobs[0].container.volumes[0].efs_volume_configuration.authorization_config.iam #=> String, one of "ENABLED", "DISABLED"
+    #   resp.jobs[0].container.volumes[0].s3files_volume_configuration.file_system_arn #=> String
+    #   resp.jobs[0].container.volumes[0].s3files_volume_configuration.root_directory #=> String
+    #   resp.jobs[0].container.volumes[0].s3files_volume_configuration.transit_encryption_port #=> Integer
+    #   resp.jobs[0].container.volumes[0].s3files_volume_configuration.access_point_arn #=> String
     #   resp.jobs[0].container.environment #=> Array
     #   resp.jobs[0].container.environment[0].name #=> String
     #   resp.jobs[0].container.environment[0].value #=> String
@@ -2490,7 +2717,7 @@ module Aws::Batch
     #   resp.jobs[0].container.linux_parameters.tmpfs[0].mount_options[0] #=> String
     #   resp.jobs[0].container.linux_parameters.max_swap #=> Integer
     #   resp.jobs[0].container.linux_parameters.swappiness #=> Integer
-    #   resp.jobs[0].container.log_configuration.log_driver #=> String, one of "json-file", "syslog", "journald", "gelf", "fluentd", "awslogs", "splunk"
+    #   resp.jobs[0].container.log_configuration.log_driver #=> String, one of "json-file", "syslog", "journald", "gelf", "fluentd", "awslogs", "splunk", "awsfirelens"
     #   resp.jobs[0].container.log_configuration.options #=> Hash
     #   resp.jobs[0].container.log_configuration.options["String"] #=> String
     #   resp.jobs[0].container.log_configuration.secret_options #=> Array
@@ -2505,6 +2732,7 @@ module Aws::Batch
     #   resp.jobs[0].container.runtime_platform.operating_system_family #=> String
     #   resp.jobs[0].container.runtime_platform.cpu_architecture #=> String
     #   resp.jobs[0].container.repository_credentials.credentials_parameter #=> String
+    #   resp.jobs[0].container.enable_execute_command #=> Boolean
     #   resp.jobs[0].node_details.node_index #=> Integer
     #   resp.jobs[0].node_details.is_main_node #=> Boolean
     #   resp.jobs[0].node_properties.num_nodes #=> Integer
@@ -2527,6 +2755,10 @@ module Aws::Batch
     #   resp.jobs[0].node_properties.node_range_properties[0].container.volumes[0].efs_volume_configuration.transit_encryption_port #=> Integer
     #   resp.jobs[0].node_properties.node_range_properties[0].container.volumes[0].efs_volume_configuration.authorization_config.access_point_id #=> String
     #   resp.jobs[0].node_properties.node_range_properties[0].container.volumes[0].efs_volume_configuration.authorization_config.iam #=> String, one of "ENABLED", "DISABLED"
+    #   resp.jobs[0].node_properties.node_range_properties[0].container.volumes[0].s3files_volume_configuration.file_system_arn #=> String
+    #   resp.jobs[0].node_properties.node_range_properties[0].container.volumes[0].s3files_volume_configuration.root_directory #=> String
+    #   resp.jobs[0].node_properties.node_range_properties[0].container.volumes[0].s3files_volume_configuration.transit_encryption_port #=> Integer
+    #   resp.jobs[0].node_properties.node_range_properties[0].container.volumes[0].s3files_volume_configuration.access_point_arn #=> String
     #   resp.jobs[0].node_properties.node_range_properties[0].container.environment #=> Array
     #   resp.jobs[0].node_properties.node_range_properties[0].container.environment[0].name #=> String
     #   resp.jobs[0].node_properties.node_range_properties[0].container.environment[0].value #=> String
@@ -2559,7 +2791,7 @@ module Aws::Batch
     #   resp.jobs[0].node_properties.node_range_properties[0].container.linux_parameters.tmpfs[0].mount_options[0] #=> String
     #   resp.jobs[0].node_properties.node_range_properties[0].container.linux_parameters.max_swap #=> Integer
     #   resp.jobs[0].node_properties.node_range_properties[0].container.linux_parameters.swappiness #=> Integer
-    #   resp.jobs[0].node_properties.node_range_properties[0].container.log_configuration.log_driver #=> String, one of "json-file", "syslog", "journald", "gelf", "fluentd", "awslogs", "splunk"
+    #   resp.jobs[0].node_properties.node_range_properties[0].container.log_configuration.log_driver #=> String, one of "json-file", "syslog", "journald", "gelf", "fluentd", "awslogs", "splunk", "awsfirelens"
     #   resp.jobs[0].node_properties.node_range_properties[0].container.log_configuration.options #=> Hash
     #   resp.jobs[0].node_properties.node_range_properties[0].container.log_configuration.options["String"] #=> String
     #   resp.jobs[0].node_properties.node_range_properties[0].container.log_configuration.secret_options #=> Array
@@ -2570,6 +2802,7 @@ module Aws::Batch
     #   resp.jobs[0].node_properties.node_range_properties[0].container.secrets[0].value_from #=> String
     #   resp.jobs[0].node_properties.node_range_properties[0].container.network_configuration.assign_public_ip #=> String, one of "ENABLED", "DISABLED"
     #   resp.jobs[0].node_properties.node_range_properties[0].container.fargate_platform_configuration.platform_version #=> String
+    #   resp.jobs[0].node_properties.node_range_properties[0].container.enable_execute_command #=> Boolean
     #   resp.jobs[0].node_properties.node_range_properties[0].container.ephemeral_storage.size_in_gi_b #=> Integer
     #   resp.jobs[0].node_properties.node_range_properties[0].container.runtime_platform.operating_system_family #=> String
     #   resp.jobs[0].node_properties.node_range_properties[0].container.runtime_platform.cpu_architecture #=> String
@@ -2587,6 +2820,9 @@ module Aws::Batch
     #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].environment[0].name #=> String
     #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].environment[0].value #=> String
     #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].essential #=> Boolean
+    #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].firelens_configuration.type #=> String, one of "fluentd", "fluentbit"
+    #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].firelens_configuration.options #=> Hash
+    #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].firelens_configuration.options["String"] #=> String
     #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].image #=> String
     #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].linux_parameters.devices #=> Array
     #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].linux_parameters.devices[0].host_path #=> String
@@ -2602,7 +2838,7 @@ module Aws::Batch
     #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].linux_parameters.tmpfs[0].mount_options[0] #=> String
     #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].linux_parameters.max_swap #=> Integer
     #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].linux_parameters.swappiness #=> Integer
-    #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].log_configuration.log_driver #=> String, one of "json-file", "syslog", "journald", "gelf", "fluentd", "awslogs", "splunk"
+    #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].log_configuration.log_driver #=> String, one of "json-file", "syslog", "journald", "gelf", "fluentd", "awslogs", "splunk", "awsfirelens"
     #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].log_configuration.options #=> Hash
     #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].log_configuration.options["String"] #=> String
     #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].log_configuration.secret_options #=> Array
@@ -2627,6 +2863,8 @@ module Aws::Batch
     #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].ulimits[0].name #=> String
     #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].ulimits[0].soft_limit #=> Integer
     #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].user #=> String
+    #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].start_timeout #=> Integer
+    #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].containers[0].stop_timeout #=> Integer
     #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].ephemeral_storage.size_in_gi_b #=> Integer
     #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].execution_role_arn #=> String
     #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].platform_version #=> String
@@ -2645,6 +2883,11 @@ module Aws::Batch
     #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].volumes[0].efs_volume_configuration.transit_encryption_port #=> Integer
     #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].volumes[0].efs_volume_configuration.authorization_config.access_point_id #=> String
     #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].volumes[0].efs_volume_configuration.authorization_config.iam #=> String, one of "ENABLED", "DISABLED"
+    #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].volumes[0].s3files_volume_configuration.file_system_arn #=> String
+    #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].volumes[0].s3files_volume_configuration.root_directory #=> String
+    #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].volumes[0].s3files_volume_configuration.transit_encryption_port #=> Integer
+    #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].volumes[0].s3files_volume_configuration.access_point_arn #=> String
+    #   resp.jobs[0].node_properties.node_range_properties[0].ecs_properties.task_properties[0].enable_execute_command #=> Boolean
     #   resp.jobs[0].node_properties.node_range_properties[0].eks_properties.pod_properties.service_account_name #=> String
     #   resp.jobs[0].node_properties.node_range_properties[0].eks_properties.pod_properties.host_network #=> Boolean
     #   resp.jobs[0].node_properties.node_range_properties[0].eks_properties.pod_properties.dns_policy #=> String
@@ -2722,6 +2965,7 @@ module Aws::Batch
     #   resp.jobs[0].node_properties.node_range_properties[0].consumable_resource_properties.consumable_resource_list[0].quantity #=> Integer
     #   resp.jobs[0].array_properties.status_summary #=> Hash
     #   resp.jobs[0].array_properties.status_summary["String"] #=> Integer
+    #   resp.jobs[0].array_properties.status_summary_last_updated_at #=> Integer
     #   resp.jobs[0].array_properties.size #=> Integer
     #   resp.jobs[0].array_properties.index #=> Integer
     #   resp.jobs[0].timeout.attempt_duration_seconds #=> Integer
@@ -2837,6 +3081,9 @@ module Aws::Batch
     #   resp.jobs[0].ecs_properties.task_properties[0].containers[0].environment[0].name #=> String
     #   resp.jobs[0].ecs_properties.task_properties[0].containers[0].environment[0].value #=> String
     #   resp.jobs[0].ecs_properties.task_properties[0].containers[0].essential #=> Boolean
+    #   resp.jobs[0].ecs_properties.task_properties[0].containers[0].firelens_configuration.type #=> String, one of "fluentd", "fluentbit"
+    #   resp.jobs[0].ecs_properties.task_properties[0].containers[0].firelens_configuration.options #=> Hash
+    #   resp.jobs[0].ecs_properties.task_properties[0].containers[0].firelens_configuration.options["String"] #=> String
     #   resp.jobs[0].ecs_properties.task_properties[0].containers[0].image #=> String
     #   resp.jobs[0].ecs_properties.task_properties[0].containers[0].linux_parameters.devices #=> Array
     #   resp.jobs[0].ecs_properties.task_properties[0].containers[0].linux_parameters.devices[0].host_path #=> String
@@ -2852,7 +3099,7 @@ module Aws::Batch
     #   resp.jobs[0].ecs_properties.task_properties[0].containers[0].linux_parameters.tmpfs[0].mount_options[0] #=> String
     #   resp.jobs[0].ecs_properties.task_properties[0].containers[0].linux_parameters.max_swap #=> Integer
     #   resp.jobs[0].ecs_properties.task_properties[0].containers[0].linux_parameters.swappiness #=> Integer
-    #   resp.jobs[0].ecs_properties.task_properties[0].containers[0].log_configuration.log_driver #=> String, one of "json-file", "syslog", "journald", "gelf", "fluentd", "awslogs", "splunk"
+    #   resp.jobs[0].ecs_properties.task_properties[0].containers[0].log_configuration.log_driver #=> String, one of "json-file", "syslog", "journald", "gelf", "fluentd", "awslogs", "splunk", "awsfirelens"
     #   resp.jobs[0].ecs_properties.task_properties[0].containers[0].log_configuration.options #=> Hash
     #   resp.jobs[0].ecs_properties.task_properties[0].containers[0].log_configuration.options["String"] #=> String
     #   resp.jobs[0].ecs_properties.task_properties[0].containers[0].log_configuration.secret_options #=> Array
@@ -2877,6 +3124,8 @@ module Aws::Batch
     #   resp.jobs[0].ecs_properties.task_properties[0].containers[0].ulimits[0].name #=> String
     #   resp.jobs[0].ecs_properties.task_properties[0].containers[0].ulimits[0].soft_limit #=> Integer
     #   resp.jobs[0].ecs_properties.task_properties[0].containers[0].user #=> String
+    #   resp.jobs[0].ecs_properties.task_properties[0].containers[0].start_timeout #=> Integer
+    #   resp.jobs[0].ecs_properties.task_properties[0].containers[0].stop_timeout #=> Integer
     #   resp.jobs[0].ecs_properties.task_properties[0].containers[0].exit_code #=> Integer
     #   resp.jobs[0].ecs_properties.task_properties[0].containers[0].reason #=> String
     #   resp.jobs[0].ecs_properties.task_properties[0].containers[0].log_stream_name #=> String
@@ -2904,6 +3153,11 @@ module Aws::Batch
     #   resp.jobs[0].ecs_properties.task_properties[0].volumes[0].efs_volume_configuration.transit_encryption_port #=> Integer
     #   resp.jobs[0].ecs_properties.task_properties[0].volumes[0].efs_volume_configuration.authorization_config.access_point_id #=> String
     #   resp.jobs[0].ecs_properties.task_properties[0].volumes[0].efs_volume_configuration.authorization_config.iam #=> String, one of "ENABLED", "DISABLED"
+    #   resp.jobs[0].ecs_properties.task_properties[0].volumes[0].s3files_volume_configuration.file_system_arn #=> String
+    #   resp.jobs[0].ecs_properties.task_properties[0].volumes[0].s3files_volume_configuration.root_directory #=> String
+    #   resp.jobs[0].ecs_properties.task_properties[0].volumes[0].s3files_volume_configuration.transit_encryption_port #=> Integer
+    #   resp.jobs[0].ecs_properties.task_properties[0].volumes[0].s3files_volume_configuration.access_point_arn #=> String
+    #   resp.jobs[0].ecs_properties.task_properties[0].enable_execute_command #=> Boolean
     #   resp.jobs[0].is_cancelled #=> Boolean
     #   resp.jobs[0].is_terminated #=> Boolean
     #   resp.jobs[0].consumable_resource_properties.consumable_resource_list #=> Array
@@ -2916,6 +3170,54 @@ module Aws::Batch
     # @param [Hash] params ({})
     def describe_jobs(params = {}, options = {})
       req = build_request(:describe_jobs, params)
+      req.send_request(options)
+    end
+
+    # Returns a description of the specified quota share.
+    #
+    # @option params [required, String] :quota_share_arn
+    #   The Amazon Resource Name (ARN) of the quota share.
+    #
+    # @return [Types::DescribeQuotaShareResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DescribeQuotaShareResponse#quota_share_name #quota_share_name} => String
+    #   * {Types::DescribeQuotaShareResponse#quota_share_arn #quota_share_arn} => String
+    #   * {Types::DescribeQuotaShareResponse#job_queue_arn #job_queue_arn} => String
+    #   * {Types::DescribeQuotaShareResponse#capacity_limits #capacity_limits} => Array&lt;Types::QuotaShareCapacityLimit&gt;
+    #   * {Types::DescribeQuotaShareResponse#resource_sharing_configuration #resource_sharing_configuration} => Types::QuotaShareResourceSharingConfiguration
+    #   * {Types::DescribeQuotaShareResponse#preemption_configuration #preemption_configuration} => Types::QuotaSharePreemptionConfiguration
+    #   * {Types::DescribeQuotaShareResponse#state #state} => String
+    #   * {Types::DescribeQuotaShareResponse#status #status} => String
+    #   * {Types::DescribeQuotaShareResponse#tags #tags} => Hash&lt;String,String&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.describe_quota_share({
+    #     quota_share_arn: "String", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.quota_share_name #=> String
+    #   resp.quota_share_arn #=> String
+    #   resp.job_queue_arn #=> String
+    #   resp.capacity_limits #=> Array
+    #   resp.capacity_limits[0].max_capacity #=> Integer
+    #   resp.capacity_limits[0].capacity_unit #=> String
+    #   resp.resource_sharing_configuration.strategy #=> String, one of "RESERVE", "LEND", "LEND_AND_BORROW"
+    #   resp.resource_sharing_configuration.borrow_limit #=> Integer
+    #   resp.preemption_configuration.in_share_preemption #=> String, one of "ENABLED", "DISABLED"
+    #   resp.state #=> String, one of "ENABLED", "DISABLED"
+    #   resp.status #=> String, one of "CREATING", "VALID", "INVALID", "UPDATING", "DELETING"
+    #   resp.tags #=> Hash
+    #   resp.tags["TagKey"] #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/batch-2016-08-10/DescribeQuotaShare AWS API Documentation
+    #
+    # @overload describe_quota_share(params = {})
+    # @param [Hash] params ({})
+    def describe_quota_share(params = {}, options = {})
+      req = build_request(:describe_quota_share, params)
       req.send_request(options)
     end
 
@@ -2940,6 +3242,7 @@ module Aws::Batch
     #   resp.scheduling_policies #=> Array
     #   resp.scheduling_policies[0].name #=> String
     #   resp.scheduling_policies[0].arn #=> String
+    #   resp.scheduling_policies[0].quota_share_policy.idle_resource_assignment_strategy #=> String, one of "FIFO"
     #   resp.scheduling_policies[0].fairshare_policy.share_decay_seconds #=> Integer
     #   resp.scheduling_policies[0].fairshare_policy.compute_reservation #=> Integer
     #   resp.scheduling_policies[0].fairshare_policy.share_distribution #=> Array
@@ -2957,8 +3260,173 @@ module Aws::Batch
       req.send_request(options)
     end
 
-    # Provides a list of the first 100 `RUNNABLE` jobs associated to a
-    # single job queue.
+    # Describes one or more of your service environments.
+    #
+    # @option params [Array<String>] :service_environments
+    #   An array of service environment names or ARN entries.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results returned by
+    #   `DescribeServiceEnvironments` in paginated output. When this parameter
+    #   is used, `DescribeServiceEnvironments` only returns `maxResults`
+    #   results in a single page and a `nextToken` response element. The
+    #   remaining results of the initial request can be seen by sending
+    #   another `DescribeServiceEnvironments` request with the returned
+    #   `nextToken` value. This value can be between 1 and 100. If this
+    #   parameter isn't used, then `DescribeServiceEnvironments` returns up
+    #   to 100 results and a `nextToken` value if applicable.
+    #
+    # @option params [String] :next_token
+    #   The `nextToken` value returned from a previous paginated
+    #   `DescribeServiceEnvironments` request where `maxResults` was used and
+    #   the results exceeded the value of that parameter. Pagination continues
+    #   from the end of the previous results that returned the `nextToken`
+    #   value. This value is `null` when there are no more results to return.
+    #
+    #   <note markdown="1"> Treat this token as an opaque identifier that's only used to retrieve
+    #   the next items in a list and not for other programmatic purposes.
+    #
+    #    </note>
+    #
+    # @return [Types::DescribeServiceEnvironmentsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DescribeServiceEnvironmentsResponse#service_environments #service_environments} => Array&lt;Types::ServiceEnvironmentDetail&gt;
+    #   * {Types::DescribeServiceEnvironmentsResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.describe_service_environments({
+    #     service_environments: ["String"],
+    #     max_results: 1,
+    #     next_token: "String",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.service_environments #=> Array
+    #   resp.service_environments[0].service_environment_name #=> String
+    #   resp.service_environments[0].service_environment_arn #=> String
+    #   resp.service_environments[0].service_environment_type #=> String, one of "SAGEMAKER_TRAINING"
+    #   resp.service_environments[0].state #=> String, one of "ENABLED", "DISABLED"
+    #   resp.service_environments[0].status #=> String, one of "CREATING", "UPDATING", "DELETING", "DELETED", "VALID", "INVALID"
+    #   resp.service_environments[0].capacity_limits #=> Array
+    #   resp.service_environments[0].capacity_limits[0].max_capacity #=> Integer
+    #   resp.service_environments[0].capacity_limits[0].capacity_unit #=> String
+    #   resp.service_environments[0].tags #=> Hash
+    #   resp.service_environments[0].tags["TagKey"] #=> String
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/batch-2016-08-10/DescribeServiceEnvironments AWS API Documentation
+    #
+    # @overload describe_service_environments(params = {})
+    # @param [Hash] params ({})
+    def describe_service_environments(params = {}, options = {})
+      req = build_request(:describe_service_environments, params)
+      req.send_request(options)
+    end
+
+    # The details of a service job.
+    #
+    # @option params [required, String] :job_id
+    #   The job ID for the service job to describe.
+    #
+    # @return [Types::DescribeServiceJobResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DescribeServiceJobResponse#attempts #attempts} => Array&lt;Types::ServiceJobAttemptDetail&gt;
+    #   * {Types::DescribeServiceJobResponse#capacity_usage #capacity_usage} => Array&lt;Types::ServiceJobCapacityUsageDetail&gt;
+    #   * {Types::DescribeServiceJobResponse#created_at #created_at} => Integer
+    #   * {Types::DescribeServiceJobResponse#is_terminated #is_terminated} => Boolean
+    #   * {Types::DescribeServiceJobResponse#job_arn #job_arn} => String
+    #   * {Types::DescribeServiceJobResponse#job_id #job_id} => String
+    #   * {Types::DescribeServiceJobResponse#job_name #job_name} => String
+    #   * {Types::DescribeServiceJobResponse#job_queue #job_queue} => String
+    #   * {Types::DescribeServiceJobResponse#latest_attempt #latest_attempt} => Types::LatestServiceJobAttempt
+    #   * {Types::DescribeServiceJobResponse#retry_strategy #retry_strategy} => Types::ServiceJobRetryStrategy
+    #   * {Types::DescribeServiceJobResponse#scheduled_at #scheduled_at} => Integer
+    #   * {Types::DescribeServiceJobResponse#scheduling_priority #scheduling_priority} => Integer
+    #   * {Types::DescribeServiceJobResponse#service_request_payload #service_request_payload} => String
+    #   * {Types::DescribeServiceJobResponse#service_job_type #service_job_type} => String
+    #   * {Types::DescribeServiceJobResponse#share_identifier #share_identifier} => String
+    #   * {Types::DescribeServiceJobResponse#quota_share_name #quota_share_name} => String
+    #   * {Types::DescribeServiceJobResponse#preemption_configuration #preemption_configuration} => Types::ServiceJobPreemptionConfiguration
+    #   * {Types::DescribeServiceJobResponse#preemption_summary #preemption_summary} => Types::ServiceJobPreemptionSummary
+    #   * {Types::DescribeServiceJobResponse#started_at #started_at} => Integer
+    #   * {Types::DescribeServiceJobResponse#status #status} => String
+    #   * {Types::DescribeServiceJobResponse#status_reason #status_reason} => String
+    #   * {Types::DescribeServiceJobResponse#stopped_at #stopped_at} => Integer
+    #   * {Types::DescribeServiceJobResponse#tags #tags} => Hash&lt;String,String&gt;
+    #   * {Types::DescribeServiceJobResponse#timeout_config #timeout_config} => Types::ServiceJobTimeout
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.describe_service_job({
+    #     job_id: "String", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.attempts #=> Array
+    #   resp.attempts[0].service_resource_id.name #=> String, one of "TrainingJobArn"
+    #   resp.attempts[0].service_resource_id.value #=> String
+    #   resp.attempts[0].started_at #=> Integer
+    #   resp.attempts[0].stopped_at #=> Integer
+    #   resp.attempts[0].status_reason #=> String
+    #   resp.capacity_usage #=> Array
+    #   resp.capacity_usage[0].capacity_unit #=> String
+    #   resp.capacity_usage[0].quantity #=> Float
+    #   resp.created_at #=> Integer
+    #   resp.is_terminated #=> Boolean
+    #   resp.job_arn #=> String
+    #   resp.job_id #=> String
+    #   resp.job_name #=> String
+    #   resp.job_queue #=> String
+    #   resp.latest_attempt.service_resource_id.name #=> String, one of "TrainingJobArn"
+    #   resp.latest_attempt.service_resource_id.value #=> String
+    #   resp.retry_strategy.attempts #=> Integer
+    #   resp.retry_strategy.evaluate_on_exit #=> Array
+    #   resp.retry_strategy.evaluate_on_exit[0].action #=> String, one of "RETRY", "EXIT"
+    #   resp.retry_strategy.evaluate_on_exit[0].on_status_reason #=> String
+    #   resp.scheduled_at #=> Integer
+    #   resp.scheduling_priority #=> Integer
+    #   resp.service_request_payload #=> String
+    #   resp.service_job_type #=> String, one of "SAGEMAKER_TRAINING"
+    #   resp.share_identifier #=> String
+    #   resp.quota_share_name #=> String
+    #   resp.preemption_configuration.preemption_retries_before_termination #=> Integer
+    #   resp.preemption_summary.preempted_attempt_count #=> Integer
+    #   resp.preemption_summary.recent_preempted_attempts #=> Array
+    #   resp.preemption_summary.recent_preempted_attempts[0].service_resource_id.name #=> String, one of "TrainingJobArn"
+    #   resp.preemption_summary.recent_preempted_attempts[0].service_resource_id.value #=> String
+    #   resp.preemption_summary.recent_preempted_attempts[0].started_at #=> Integer
+    #   resp.preemption_summary.recent_preempted_attempts[0].stopped_at #=> Integer
+    #   resp.preemption_summary.recent_preempted_attempts[0].status_reason #=> String
+    #   resp.started_at #=> Integer
+    #   resp.status #=> String, one of "SUBMITTED", "PENDING", "RUNNABLE", "SCHEDULED", "STARTING", "RUNNING", "SUCCEEDED", "FAILED"
+    #   resp.status_reason #=> String
+    #   resp.stopped_at #=> Integer
+    #   resp.tags #=> Hash
+    #   resp.tags["TagKey"] #=> String
+    #   resp.timeout_config.attempt_duration_seconds #=> Integer
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/batch-2016-08-10/DescribeServiceJob AWS API Documentation
+    #
+    # @overload describe_service_job(params = {})
+    # @param [Hash] params ({})
+    def describe_service_job(params = {}, options = {})
+      req = build_request(:describe_service_job, params)
+      req.send_request(options)
+    end
+
+    # Provides a snapshot of job queue state, including ordering of
+    # `RUNNABLE` jobs, as well as capacity utilization for already
+    # dispatched jobs. The first 100 `RUNNABLE` jobs in the job queue are
+    # listed in order of dispatch. For job queues with an attached
+    # quota-share policy, the first `RUNNABLE` job in each quota share is
+    # also listed. Capacity utilization for the job queue is provided, as
+    # well as break downs by share for job queues with attached fair-share
+    # or quota-share scheduling policies.
     #
     # @option params [required, String] :job_queue
     #   The job queue’s name or full queue Amazon Resource Name (ARN).
@@ -2966,6 +3434,8 @@ module Aws::Batch
     # @return [Types::GetJobQueueSnapshotResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::GetJobQueueSnapshotResponse#front_of_queue #front_of_queue} => Types::FrontOfQueueDetail
+    #   * {Types::GetJobQueueSnapshotResponse#front_of_quota_shares #front_of_quota_shares} => Types::FrontOfQuotaSharesDetail
+    #   * {Types::GetJobQueueSnapshotResponse#queue_utilization #queue_utilization} => Types::QueueSnapshotUtilizationDetail
     #
     # @example Request syntax with placeholder values
     #
@@ -2979,6 +3449,26 @@ module Aws::Batch
     #   resp.front_of_queue.jobs[0].job_arn #=> String
     #   resp.front_of_queue.jobs[0].earliest_time_at_position #=> Integer
     #   resp.front_of_queue.last_updated_at #=> Integer
+    #   resp.front_of_quota_shares.quota_shares #=> Hash
+    #   resp.front_of_quota_shares.quota_shares["String"] #=> Array
+    #   resp.front_of_quota_shares.quota_shares["String"][0].job_arn #=> String
+    #   resp.front_of_quota_shares.quota_shares["String"][0].earliest_time_at_position #=> Integer
+    #   resp.front_of_quota_shares.last_updated_at #=> Integer
+    #   resp.queue_utilization.total_capacity_usage #=> Array
+    #   resp.queue_utilization.total_capacity_usage[0].capacity_unit #=> String
+    #   resp.queue_utilization.total_capacity_usage[0].quantity #=> Float
+    #   resp.queue_utilization.fairshare_utilization.active_share_count #=> Integer
+    #   resp.queue_utilization.fairshare_utilization.top_capacity_utilization #=> Array
+    #   resp.queue_utilization.fairshare_utilization.top_capacity_utilization[0].share_identifier #=> String
+    #   resp.queue_utilization.fairshare_utilization.top_capacity_utilization[0].capacity_usage #=> Array
+    #   resp.queue_utilization.fairshare_utilization.top_capacity_utilization[0].capacity_usage[0].capacity_unit #=> String
+    #   resp.queue_utilization.fairshare_utilization.top_capacity_utilization[0].capacity_usage[0].quantity #=> Float
+    #   resp.queue_utilization.quota_share_utilization.top_capacity_utilization #=> Array
+    #   resp.queue_utilization.quota_share_utilization.top_capacity_utilization[0].quota_share_name #=> String
+    #   resp.queue_utilization.quota_share_utilization.top_capacity_utilization[0].capacity_usage #=> Array
+    #   resp.queue_utilization.quota_share_utilization.top_capacity_utilization[0].capacity_usage[0].capacity_unit #=> String
+    #   resp.queue_utilization.quota_share_utilization.top_capacity_utilization[0].capacity_usage[0].quantity #=> Float
+    #   resp.queue_utilization.last_updated_at #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/batch-2016-08-10/GetJobQueueSnapshot AWS API Documentation
     #
@@ -3105,10 +3595,6 @@ module Aws::Batch
     #
     # * An array job ID to return a list of the children for that job
     #
-    # You can filter the results by job status with the `jobStatus`
-    # parameter. If you don't specify a status, only `RUNNING` jobs are
-    # returned.
-    #
     # @option params [String] :job_queue
     #   The name or full Amazon Resource Name (ARN) of the job queue used to
     #   list jobs.
@@ -3125,8 +3611,16 @@ module Aws::Batch
     # @option params [String] :job_status
     #   The job status used to filter jobs in the specified queue. If the
     #   `filters` parameter is specified, the `jobStatus` parameter is ignored
-    #   and jobs with any status are returned. If you don't specify a status,
-    #   only `RUNNING` jobs are returned.
+    #   and jobs with any status are returned. The exception is the
+    #   `SHARE_IDENTIFIER` filter and `jobStatus` can be used together. If you
+    #   don't specify a status, only `RUNNING` jobs are returned.
+    #
+    #   <note markdown="1"> Array job parents are updated to `PENDING` when any child job is
+    #   updated to `RUNNABLE` and remain in `PENDING` status while child jobs
+    #   are running. To view these jobs, filter by `PENDING` status until all
+    #   child jobs reach a terminal state.
+    #
+    #    </note>
     #
     # @option params [Integer] :max_results
     #   The maximum number of results returned by `ListJobs` in a paginated
@@ -3162,10 +3656,16 @@ module Aws::Batch
     #
     # @option params [Array<Types::KeyValuesPair>] :filters
     #   The filter to apply to the query. Only one filter can be used at a
-    #   time. When the filter is used, `jobStatus` is ignored. The filter
-    #   doesn't apply to child jobs in an array or multi-node parallel (MNP)
-    #   jobs. The results are sorted by the `createdAt` field, with the most
-    #   recent jobs being first.
+    #   time. When the filter is used, `jobStatus` is ignored with the
+    #   exception that `SHARE_IDENTIFIER` and `jobStatus` can be used
+    #   together. The filter doesn't apply to child jobs in an array or
+    #   multi-node parallel (MNP) jobs. The results are sorted by the
+    #   `createdAt` field, with the most recent jobs being first.
+    #
+    #   <note markdown="1"> The `SHARE_IDENTIFIER` filter and the `jobStatus` field can be used
+    #   together to filter results.
+    #
+    #    </note>
     #
     #   JOB\_NAME
     #
@@ -3207,6 +3707,11 @@ module Aws::Batch
     #     created. This corresponds to the `createdAt` value. The value is a
     #     string representation of the number of milliseconds since 00:00:00
     #     UTC (midnight) on January 1, 1970.
+    #
+    #   SHARE\_IDENTIFIER
+    #
+    #   : The value for the filter is the fairshare scheduling share
+    #     identifier.
     #
     # @return [Types::ListJobsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -3276,7 +3781,12 @@ module Aws::Batch
     #   resp.job_summary_list[0].job_arn #=> String
     #   resp.job_summary_list[0].job_id #=> String
     #   resp.job_summary_list[0].job_name #=> String
+    #   resp.job_summary_list[0].capacity_usage #=> Array
+    #   resp.job_summary_list[0].capacity_usage[0].capacity_unit #=> String
+    #   resp.job_summary_list[0].capacity_usage[0].quantity #=> Float
     #   resp.job_summary_list[0].created_at #=> Integer
+    #   resp.job_summary_list[0].scheduled_at #=> Integer
+    #   resp.job_summary_list[0].share_identifier #=> String
     #   resp.job_summary_list[0].status #=> String, one of "SUBMITTED", "PENDING", "RUNNABLE", "STARTING", "RUNNING", "SUCCEEDED", "FAILED"
     #   resp.job_summary_list[0].status_reason #=> String
     #   resp.job_summary_list[0].started_at #=> Integer
@@ -3285,6 +3795,9 @@ module Aws::Batch
     #   resp.job_summary_list[0].container.reason #=> String
     #   resp.job_summary_list[0].array_properties.size #=> Integer
     #   resp.job_summary_list[0].array_properties.index #=> Integer
+    #   resp.job_summary_list[0].array_properties.status_summary #=> Hash
+    #   resp.job_summary_list[0].array_properties.status_summary["String"] #=> Integer
+    #   resp.job_summary_list[0].array_properties.status_summary_last_updated_at #=> Integer
     #   resp.job_summary_list[0].node_properties.is_main_node #=> Boolean
     #   resp.job_summary_list[0].node_properties.num_nodes #=> Integer
     #   resp.job_summary_list[0].node_properties.node_index #=> Integer
@@ -3435,6 +3948,74 @@ module Aws::Batch
       req.send_request(options)
     end
 
+    # Returns a list of Batch quota shares associated with a job queue.
+    #
+    # @option params [required, String] :job_queue
+    #   The name or full Amazon Resource Name (ARN) of the job queue used to
+    #   list quota shares.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results returned by `ListQuotaShares` in
+    #   paginated output. When this parameter is used, `ListQuotaShares` only
+    #   returns `maxResults` results in a single page and a `nextToken`
+    #   response element. You can see the remaining results of the initial
+    #   request by sending another `ListQuotaShares` request with the returned
+    #   `nextToken` value. This value can be between 1 and 100. If this
+    #   parameter isn't used, `ListQuotaShares` returns up to 100 results and
+    #   a `nextToken` value if applicable.
+    #
+    # @option params [String] :next_token
+    #   The `nextToken` value that's returned from a previous paginated
+    #   `ListQuotaShares` request where `maxResults` was used and the results
+    #   exceeded the value of that parameter. Pagination continues from the
+    #   end of the previous results that returned the `nextToken` value. This
+    #   value is `null` when there are no more results to return.
+    #
+    #   <note markdown="1"> Treat this token as an opaque identifier that's only used to retrieve
+    #   the next items in a list and not for other programmatic purposes.
+    #
+    #    </note>
+    #
+    # @return [Types::ListQuotaSharesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListQuotaSharesResponse#quota_shares #quota_shares} => Array&lt;Types::QuotaShareDetail&gt;
+    #   * {Types::ListQuotaSharesResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_quota_shares({
+    #     job_queue: "String", # required
+    #     max_results: 1,
+    #     next_token: "String",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.quota_shares #=> Array
+    #   resp.quota_shares[0].quota_share_name #=> String
+    #   resp.quota_shares[0].quota_share_arn #=> String
+    #   resp.quota_shares[0].job_queue_arn #=> String
+    #   resp.quota_shares[0].capacity_limits #=> Array
+    #   resp.quota_shares[0].capacity_limits[0].max_capacity #=> Integer
+    #   resp.quota_shares[0].capacity_limits[0].capacity_unit #=> String
+    #   resp.quota_shares[0].resource_sharing_configuration.strategy #=> String, one of "RESERVE", "LEND", "LEND_AND_BORROW"
+    #   resp.quota_shares[0].resource_sharing_configuration.borrow_limit #=> Integer
+    #   resp.quota_shares[0].preemption_configuration.in_share_preemption #=> String, one of "ENABLED", "DISABLED"
+    #   resp.quota_shares[0].state #=> String, one of "ENABLED", "DISABLED"
+    #   resp.quota_shares[0].status #=> String, one of "CREATING", "VALID", "INVALID", "UPDATING", "DELETING"
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/batch-2016-08-10/ListQuotaShares AWS API Documentation
+    #
+    # @overload list_quota_shares(params = {})
+    # @param [Hash] params ({})
+    def list_quota_shares(params = {}, options = {})
+      req = build_request(:list_quota_shares, params)
+      req.send_request(options)
+    end
+
     # Returns a list of Batch scheduling policies.
     #
     # @option params [Integer] :max_results
@@ -3486,6 +4067,144 @@ module Aws::Batch
     # @param [Hash] params ({})
     def list_scheduling_policies(params = {}, options = {})
       req = build_request(:list_scheduling_policies, params)
+      req.send_request(options)
+    end
+
+    # Returns a list of service jobs for a specified job queue.
+    #
+    # @option params [String] :job_queue
+    #   The name or ARN of the job queue with which to list service jobs.
+    #
+    # @option params [String] :job_status
+    #   The job status used to filter service jobs in the specified queue. If
+    #   the `filters` parameter is specified, the `jobStatus` parameter is
+    #   ignored and jobs with any status are returned. The exceptions are the
+    #   `SHARE_IDENTIFIER` filter and `QUOTA_SHARE_NAME` filter, which can be
+    #   used with `jobStatus`. If you don't specify a status, only `RUNNING`
+    #   jobs are returned.
+    #
+    #   <note markdown="1"> The `SHARE_IDENTIFIER` filter or `QUOTA_SHARE_NAME` filter can be used
+    #   with the `jobStatus` field to filter results.
+    #
+    #    </note>
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results returned by `ListServiceJobs` in
+    #   paginated output. When this parameter is used, `ListServiceJobs` only
+    #   returns `maxResults` results in a single page and a `nextToken`
+    #   response element. The remaining results of the initial request can be
+    #   seen by sending another `ListServiceJobs` request with the returned
+    #   `nextToken` value. This value can be between 1 and 100. If this
+    #   parameter isn't used, then `ListServiceJobs` returns up to 100
+    #   results and a `nextToken` value if applicable.
+    #
+    # @option params [String] :next_token
+    #   The `nextToken` value returned from a previous paginated
+    #   `ListServiceJobs` request where `maxResults` was used and the results
+    #   exceeded the value of that parameter. Pagination continues from the
+    #   end of the previous results that returned the `nextToken` value. This
+    #   value is `null` when there are no more results to return.
+    #
+    #   <note markdown="1"> Treat this token as an opaque identifier that's only used to retrieve
+    #   the next items in a list and not for other programmatic purposes.
+    #
+    #    </note>
+    #
+    # @option params [Array<Types::KeyValuesPair>] :filters
+    #   The filter to apply to the query. Only one filter can be used at a
+    #   time. When the filter is used, `jobStatus` is ignored with the
+    #   exception that `SHARE_IDENTIFIER` or `QUOTA_SHARE_NAME` and
+    #   `jobStatus` can be used together. The results are sorted by the
+    #   `createdAt` field, with the most recent jobs being first.
+    #
+    #   <note markdown="1"> The `SHARE_IDENTIFIER` or `QUOTA_SHARE_NAME` filter and the
+    #   `jobStatus` field can be used together to filter results.
+    #
+    #    </note>
+    #
+    #   JOB\_NAME
+    #
+    #   : The value of the filter is a case-insensitive match for the job
+    #     name. If the value ends with an asterisk (*), the filter matches
+    #     any job name that begins with the string before the '*'. This
+    #     corresponds to the `jobName` value. For example, `test1` matches
+    #     both `Test1` and `test1`, and `test1*` matches both `test1` and
+    #     `Test10`. When the `JOB_NAME` filter is used, the results are
+    #     grouped by the job name and version.
+    #
+    #   BEFORE\_CREATED\_AT
+    #
+    #   : The value for the filter is the time that's before the job was
+    #     created. This corresponds to the `createdAt` value. The value is a
+    #     string representation of the number of milliseconds since 00:00:00
+    #     UTC (midnight) on January 1, 1970.
+    #
+    #   AFTER\_CREATED\_AT
+    #
+    #   : The value for the filter is the time that's after the job was
+    #     created. This corresponds to the `createdAt` value. The value is a
+    #     string representation of the number of milliseconds since 00:00:00
+    #     UTC (midnight) on January 1, 1970.
+    #
+    #   SHARE\_IDENTIFIER
+    #
+    #   : The value for the filter is the fairshare scheduling share
+    #     identifier.
+    #
+    #   QUOTA\_SHARE\_NAME
+    #
+    #   : The value for the filter is the quota management share name.
+    #
+    # @return [Types::ListServiceJobsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListServiceJobsResponse#job_summary_list #job_summary_list} => Array&lt;Types::ServiceJobSummary&gt;
+    #   * {Types::ListServiceJobsResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_service_jobs({
+    #     job_queue: "String",
+    #     job_status: "SUBMITTED", # accepts SUBMITTED, PENDING, RUNNABLE, SCHEDULED, STARTING, RUNNING, SUCCEEDED, FAILED
+    #     max_results: 1,
+    #     next_token: "String",
+    #     filters: [
+    #       {
+    #         name: "String",
+    #         values: ["String"],
+    #       },
+    #     ],
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.job_summary_list #=> Array
+    #   resp.job_summary_list[0].latest_attempt.service_resource_id.name #=> String, one of "TrainingJobArn"
+    #   resp.job_summary_list[0].latest_attempt.service_resource_id.value #=> String
+    #   resp.job_summary_list[0].capacity_usage #=> Array
+    #   resp.job_summary_list[0].capacity_usage[0].capacity_unit #=> String
+    #   resp.job_summary_list[0].capacity_usage[0].quantity #=> Float
+    #   resp.job_summary_list[0].created_at #=> Integer
+    #   resp.job_summary_list[0].job_arn #=> String
+    #   resp.job_summary_list[0].job_id #=> String
+    #   resp.job_summary_list[0].job_name #=> String
+    #   resp.job_summary_list[0].scheduled_at #=> Integer
+    #   resp.job_summary_list[0].service_job_type #=> String, one of "SAGEMAKER_TRAINING"
+    #   resp.job_summary_list[0].share_identifier #=> String
+    #   resp.job_summary_list[0].quota_share_name #=> String
+    #   resp.job_summary_list[0].status #=> String, one of "SUBMITTED", "PENDING", "RUNNABLE", "SCHEDULED", "STARTING", "RUNNING", "SUCCEEDED", "FAILED"
+    #   resp.job_summary_list[0].status_reason #=> String
+    #   resp.job_summary_list[0].started_at #=> Integer
+    #   resp.job_summary_list[0].stopped_at #=> Integer
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/batch-2016-08-10/ListServiceJobs AWS API Documentation
+    #
+    # @overload list_service_jobs(params = {})
+    # @param [Hash] params ({})
+    def list_service_jobs(params = {}, options = {})
+      req = build_request(:list_service_jobs, params)
       req.send_request(options)
     end
 
@@ -3577,7 +4296,7 @@ module Aws::Batch
     #
     # @option params [Integer] :scheduling_priority
     #   The scheduling priority for jobs that are submitted with this job
-    #   definition. This only affects jobs in job queues with a fair share
+    #   definition. This only affects jobs in job queues with a fair-share
     #   policy. Jobs with a higher scheduling priority are scheduled before
     #   jobs with a lower scheduling priority.
     #
@@ -3789,6 +4508,12 @@ module Aws::Batch
     #               iam: "ENABLED", # accepts ENABLED, DISABLED
     #             },
     #           },
+    #           s3files_volume_configuration: {
+    #             file_system_arn: "String", # required
+    #             root_directory: "String",
+    #             transit_encryption_port: 1,
+    #             access_point_arn: "String",
+    #           },
     #         },
     #       ],
     #       environment: [
@@ -3842,7 +4567,7 @@ module Aws::Batch
     #         swappiness: 1,
     #       },
     #       log_configuration: {
-    #         log_driver: "json-file", # required, accepts json-file, syslog, journald, gelf, fluentd, awslogs, splunk
+    #         log_driver: "json-file", # required, accepts json-file, syslog, journald, gelf, fluentd, awslogs, splunk, awsfirelens
     #         options: {
     #           "String" => "String",
     #         },
@@ -3865,6 +4590,7 @@ module Aws::Batch
     #       fargate_platform_configuration: {
     #         platform_version: "String",
     #       },
+    #       enable_execute_command: false,
     #       ephemeral_storage: {
     #         size_in_gi_b: 1, # required
     #       },
@@ -3904,6 +4630,12 @@ module Aws::Batch
     #                     access_point_id: "String",
     #                     iam: "ENABLED", # accepts ENABLED, DISABLED
     #                   },
+    #                 },
+    #                 s3files_volume_configuration: {
+    #                   file_system_arn: "String", # required
+    #                   root_directory: "String",
+    #                   transit_encryption_port: 1,
+    #                   access_point_arn: "String",
     #                 },
     #               },
     #             ],
@@ -3958,7 +4690,7 @@ module Aws::Batch
     #               swappiness: 1,
     #             },
     #             log_configuration: {
-    #               log_driver: "json-file", # required, accepts json-file, syslog, journald, gelf, fluentd, awslogs, splunk
+    #               log_driver: "json-file", # required, accepts json-file, syslog, journald, gelf, fluentd, awslogs, splunk, awsfirelens
     #               options: {
     #                 "String" => "String",
     #               },
@@ -3981,6 +4713,7 @@ module Aws::Batch
     #             fargate_platform_configuration: {
     #               platform_version: "String",
     #             },
+    #             enable_execute_command: false,
     #             ephemeral_storage: {
     #               size_in_gi_b: 1, # required
     #             },
@@ -4012,6 +4745,12 @@ module Aws::Batch
     #                       },
     #                     ],
     #                     essential: false,
+    #                     firelens_configuration: {
+    #                       type: "fluentd", # required, accepts fluentd, fluentbit
+    #                       options: {
+    #                         "String" => "String",
+    #                       },
+    #                     },
     #                     image: "String", # required
     #                     linux_parameters: {
     #                       devices: [
@@ -4034,7 +4773,7 @@ module Aws::Batch
     #                       swappiness: 1,
     #                     },
     #                     log_configuration: {
-    #                       log_driver: "json-file", # required, accepts json-file, syslog, journald, gelf, fluentd, awslogs, splunk
+    #                       log_driver: "json-file", # required, accepts json-file, syslog, journald, gelf, fluentd, awslogs, splunk, awsfirelens
     #                       options: {
     #                         "String" => "String",
     #                       },
@@ -4078,6 +4817,8 @@ module Aws::Batch
     #                       },
     #                     ],
     #                     user: "String",
+    #                     start_timeout: 1,
+    #                     stop_timeout: 1,
     #                   },
     #                 ],
     #                 ephemeral_storage: {
@@ -4111,8 +4852,15 @@ module Aws::Batch
     #                         iam: "ENABLED", # accepts ENABLED, DISABLED
     #                       },
     #                     },
+    #                     s3files_volume_configuration: {
+    #                       file_system_arn: "String", # required
+    #                       root_directory: "String",
+    #                       transit_encryption_port: 1,
+    #                       access_point_arn: "String",
+    #                     },
     #                   },
     #                 ],
+    #                 enable_execute_command: false,
     #               },
     #             ],
     #           },
@@ -4405,6 +5153,12 @@ module Aws::Batch
     #                 },
     #               ],
     #               essential: false,
+    #               firelens_configuration: {
+    #                 type: "fluentd", # required, accepts fluentd, fluentbit
+    #                 options: {
+    #                   "String" => "String",
+    #                 },
+    #               },
     #               image: "String", # required
     #               linux_parameters: {
     #                 devices: [
@@ -4427,7 +5181,7 @@ module Aws::Batch
     #                 swappiness: 1,
     #               },
     #               log_configuration: {
-    #                 log_driver: "json-file", # required, accepts json-file, syslog, journald, gelf, fluentd, awslogs, splunk
+    #                 log_driver: "json-file", # required, accepts json-file, syslog, journald, gelf, fluentd, awslogs, splunk, awsfirelens
     #                 options: {
     #                   "String" => "String",
     #                 },
@@ -4471,6 +5225,8 @@ module Aws::Batch
     #                 },
     #               ],
     #               user: "String",
+    #               start_timeout: 1,
+    #               stop_timeout: 1,
     #             },
     #           ],
     #           ephemeral_storage: {
@@ -4504,8 +5260,15 @@ module Aws::Batch
     #                   iam: "ENABLED", # accepts ENABLED, DISABLED
     #                 },
     #               },
+    #               s3files_volume_configuration: {
+    #                 file_system_arn: "String", # required
+    #                 root_directory: "String",
+    #                 transit_encryption_port: 1,
+    #                 access_point_arn: "String",
+    #               },
     #             },
     #           ],
+    #           enable_execute_command: false,
     #         },
     #       ],
     #     },
@@ -4543,8 +5306,8 @@ module Aws::Batch
     # parameters in a `resourceRequirements` object that's included in the
     # `containerOverrides` parameter.
     #
-    # <note markdown="1"> Job queues with a scheduling policy are limited to 500 active fair
-    # share identifiers at a time.
+    # <note markdown="1"> Job queues with a scheduling policy are limited to 500 active share
+    # identifiers at a time.
     #
     #  </note>
     #
@@ -4563,15 +5326,16 @@ module Aws::Batch
     #
     # @option params [String] :share_identifier
     #   The share identifier for the job. Don't specify this parameter if the
-    #   job queue doesn't have a scheduling policy. If the job queue has a
-    #   scheduling policy, then this parameter must be specified.
+    #   job queue doesn't have a fair-share scheduling policy. If the job
+    #   queue has a fair-share scheduling policy, then this parameter must be
+    #   specified.
     #
     #   This string is limited to 255 alphanumeric characters, and can be
     #   followed by an asterisk (*).
     #
     # @option params [Integer] :scheduling_priority_override
     #   The scheduling priority for the job. This only affects jobs in job
-    #   queues with a fair share policy. Jobs with a higher scheduling
+    #   queues with a fair-share policy. Jobs with a higher scheduling
     #   priority are scheduled before jobs with a lower scheduling priority.
     #   This overrides any scheduling priority in the job definition and works
     #   only within a single share identifier.
@@ -4988,6 +5752,127 @@ module Aws::Batch
       req.send_request(options)
     end
 
+    # Submits a service job to a specified job queue to run on SageMaker AI.
+    # A service job is a unit of work that you submit to Batch for execution
+    # on SageMaker AI.
+    #
+    # @option params [required, String] :job_name
+    #   The name of the service job. It can be up to 128 characters long. It
+    #   can contain uppercase and lowercase letters, numbers, hyphens (-), and
+    #   underscores (\_).
+    #
+    # @option params [required, String] :job_queue
+    #   The job queue into which the service job is submitted. You can specify
+    #   either the name or the ARN of the queue. The job queue must have the
+    #   type `SAGEMAKER_TRAINING`.
+    #
+    # @option params [Types::ServiceJobRetryStrategy] :retry_strategy
+    #   The retry strategy to use for failed service jobs that are submitted
+    #   with this service job request.
+    #
+    # @option params [Integer] :scheduling_priority
+    #   The scheduling priority of the service job. Valid values are integers
+    #   between 0 and 9999.
+    #
+    # @option params [required, String] :service_request_payload
+    #   The request, in JSON, for the service that the SubmitServiceJob
+    #   operation is queueing.
+    #
+    # @option params [required, String] :service_job_type
+    #   The type of service job. For SageMaker Training jobs, specify
+    #   `SAGEMAKER_TRAINING`.
+    #
+    # @option params [String] :share_identifier
+    #   The share identifier for the service job. Don't specify this
+    #   parameter if the job queue doesn't have a fair-share scheduling
+    #   policy. If the job queue has a fair-share scheduling policy, then this
+    #   parameter must be specified.
+    #
+    # @option params [String] :quota_share_name
+    #   The quota share for the service job. Don't specify this parameter if
+    #   the job queue doesn't have a quota share scheduling policy. If the
+    #   job queue has a quota share scheduling policy, then this parameter
+    #   must be specified.
+    #
+    # @option params [Types::ServiceJobPreemptionConfiguration] :preemption_configuration
+    #   Specifies the service job behavior when preempted.
+    #
+    # @option params [Types::ServiceJobTimeout] :timeout_config
+    #   The timeout configuration for the service job. If none is specified,
+    #   Batch defers to the default timeout of the underlying service handling
+    #   the job.
+    #
+    # @option params [Hash<String,String>] :tags
+    #   The tags that you apply to the service job request. Each tag consists
+    #   of a key and an optional value. For more information, see [Tagging
+    #   your Batch resources][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/batch/latest/userguide/using-tags.html
+    #
+    # @option params [String] :client_token
+    #   A unique identifier for the request. This token is used to ensure
+    #   idempotency of requests. If this parameter is specified and two submit
+    #   requests with identical payloads and `clientToken`s are received,
+    #   these requests are considered the same request and the second request
+    #   is rejected.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @return [Types::SubmitServiceJobResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::SubmitServiceJobResponse#job_arn #job_arn} => String
+    #   * {Types::SubmitServiceJobResponse#job_name #job_name} => String
+    #   * {Types::SubmitServiceJobResponse#job_id #job_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.submit_service_job({
+    #     job_name: "String", # required
+    #     job_queue: "String", # required
+    #     retry_strategy: {
+    #       attempts: 1, # required
+    #       evaluate_on_exit: [
+    #         {
+    #           action: "RETRY", # accepts RETRY, EXIT
+    #           on_status_reason: "String",
+    #         },
+    #       ],
+    #     },
+    #     scheduling_priority: 1,
+    #     service_request_payload: "String", # required
+    #     service_job_type: "SAGEMAKER_TRAINING", # required, accepts SAGEMAKER_TRAINING
+    #     share_identifier: "String",
+    #     quota_share_name: "String",
+    #     preemption_configuration: {
+    #       preemption_retries_before_termination: 1,
+    #     },
+    #     timeout_config: {
+    #       attempt_duration_seconds: 1,
+    #     },
+    #     tags: {
+    #       "TagKey" => "TagValue",
+    #     },
+    #     client_token: "ClientRequestToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.job_arn #=> String
+    #   resp.job_name #=> String
+    #   resp.job_id #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/batch-2016-08-10/SubmitServiceJob AWS API Documentation
+    #
+    # @overload submit_service_job(params = {})
+    # @param [Hash] params ({})
+    def submit_service_job(params = {}, options = {})
+      req = build_request(:submit_service_job, params)
+      req.send_request(options)
+    end
+
     # Associates the specified tags to a resource with the specified
     # `resourceArn`. If existing tags on a resource aren't specified in the
     # request parameters, they aren't changed. When a resource is deleted,
@@ -5095,6 +5980,34 @@ module Aws::Batch
       req.send_request(options)
     end
 
+    # Terminates a service job in a job queue.
+    #
+    # @option params [required, String] :job_id
+    #   The service job ID of the service job to terminate.
+    #
+    # @option params [required, String] :reason
+    #   A message to attach to the service job that explains the reason for
+    #   canceling it. This message is returned by `DescribeServiceJob`
+    #   operations on the service job.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.terminate_service_job({
+    #     job_id: "String", # required
+    #     reason: "String", # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/batch-2016-08-10/TerminateServiceJob AWS API Documentation
+    #
+    # @overload terminate_service_job(params = {})
+    # @param [Hash] params ({})
+    def terminate_service_job(params = {}, options = {})
+      req = build_request(:terminate_service_job, params)
+      req.send_request(options)
+    end
+
     # Deletes specified tags from an Batch resource.
     #
     # @option params [required, String] :resource_arn
@@ -5164,9 +6077,10 @@ module Aws::Batch
     #   environments in the `DISABLED` state don't scale out.
     #
     #   <note markdown="1"> Compute environments in a `DISABLED` state may continue to incur
-    #   billing charges. To prevent additional charges, turn off and then
-    #   delete the compute environment. For more information, see [State][1]
-    #   in the *Batch User Guide*.
+    #   billing charges, for example, if they have running instances due to
+    #   jobs that are still executing or a non-zero `minvCpus` setting. To
+    #   prevent additional charges, disable and delete the compute
+    #   environment.
     #
     #    </note>
     #
@@ -5176,16 +6090,12 @@ module Aws::Batch
     #   `desiredvCpus` value of `36`. This instance doesn't scale down to a
     #   `c5.large` instance.
     #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/batch/latest/userguide/compute_environment_parameters.html#compute_environment_state
-    #
     # @option params [Integer] :unmanagedv_cpus
     #   The maximum number of vCPUs expected to be used for an unmanaged
     #   compute environment. Don't specify this parameter for a managed
-    #   compute environment. This parameter is only used for fair share
+    #   compute environment. This parameter is only used for fair-share
     #   scheduling to reserve vCPU capacity for new share identifiers. If this
-    #   parameter isn't provided for a fair share job queue, no vCPU capacity
+    #   parameter isn't provided for a fair-share job queue, no vCPU capacity
     #   is reserved.
     #
     # @option params [Types::ComputeResourceUpdate] :compute_resources
@@ -5275,7 +6185,7 @@ module Aws::Batch
     #       desiredv_cpus: 1,
     #       subnets: ["String"],
     #       security_group_ids: ["String"],
-    #       allocation_strategy: "BEST_FIT_PROGRESSIVE", # accepts BEST_FIT_PROGRESSIVE, SPOT_CAPACITY_OPTIMIZED, SPOT_PRICE_CAPACITY_OPTIMIZED
+    #       allocation_strategy: "BEST_FIT_PROGRESSIVE", # accepts BEST_FIT_PROGRESSIVE, BEST_FIT_PROGRESSIVE_ORDERED, SPOT_CAPACITY_OPTIMIZED, SPOT_PRICE_CAPACITY_OPTIMIZED, SPOT_CAPACITY_OPTIMIZED_PRIORITIZED
     #       instance_types: ["String"],
     #       ec2_key_pair: "String",
     #       instance_role: "String",
@@ -5294,19 +6204,25 @@ module Aws::Batch
     #             launch_template_name: "String",
     #             version: "String",
     #             target_instance_types: ["String"],
+    #             userdata_type: "EKS_BOOTSTRAP_SH", # accepts EKS_BOOTSTRAP_SH, EKS_NODEADM
     #           },
     #         ],
+    #         userdata_type: "EKS_BOOTSTRAP_SH", # accepts EKS_BOOTSTRAP_SH, EKS_NODEADM
     #       },
     #       ec2_configuration: [
     #         {
     #           image_type: "ImageType", # required
     #           image_id_override: "ImageIdOverride",
+    #           batch_image_status: "String",
     #           image_kubernetes_version: "KubernetesVersion",
     #         },
     #       ],
     #       update_to_latest_image_version: false,
     #       type: "EC2", # accepts EC2, SPOT, FARGATE, FARGATE_SPOT
     #       image_id: "String",
+    #       scaling_policy: {
+    #         min_scale_down_delay_minutes: 1,
+    #       },
     #     },
     #     service_role: "String",
     #     update_policy: {
@@ -5363,9 +6279,8 @@ module Aws::Batch
     # @option params [String] :client_token
     #   If this parameter is specified and two update requests with identical
     #   payloads and `clientToken`s are received, these requests are
-    #   considered the same request and the second request is rejected. A
-    #   `clientToken` is valid for 8 hours or until one hour after the
-    #   consumable resource is deleted, whichever is less.
+    #   considered the same request. Both requests will succeed, but the
+    #   update will only happen once. A `clientToken` is valid for 8 hours.
     #
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.**
@@ -5430,8 +6345,8 @@ module Aws::Batch
     #   the queue can finish.
     #
     # @option params [String] :scheduling_policy_arn
-    #   Amazon Resource Name (ARN) of the fair share scheduling policy. Once a
-    #   job queue is created, the fair share scheduling policy can be replaced
+    #   Amazon Resource Name (ARN) of the fair-share scheduling policy. Once a
+    #   job queue is created, the fair-share scheduling policy can be replaced
     #   but not removed. The format is
     #   `aws:Partition:batch:Region:Account:scheduling-policy/Name `. For
     #   example,
@@ -5462,6 +6377,11 @@ module Aws::Batch
     #   environment architecture types in a single job queue.
     #
     #    </note>
+    #
+    # @option params [Array<Types::ServiceEnvironmentOrder>] :service_environment_order
+    #   The order of the service environment associated with the job queue.
+    #   Job queues with a higher priority are evaluated first when associated
+    #   with the same service environment.
     #
     # @option params [Array<Types::JobStateTimeLimitAction>] :job_state_time_limit_actions
     #   The set of actions that Batch perform on jobs that remain at the head
@@ -5504,12 +6424,18 @@ module Aws::Batch
     #         compute_environment: "String", # required
     #       },
     #     ],
+    #     service_environment_order: [
+    #       {
+    #         order: 1, # required
+    #         service_environment: "String", # required
+    #       },
+    #     ],
     #     job_state_time_limit_actions: [
     #       {
     #         reason: "String", # required
     #         state: "RUNNABLE", # required, accepts RUNNABLE
     #         max_time_seconds: 1, # required
-    #         action: "CANCEL", # required, accepts CANCEL
+    #         action: "CANCEL", # required, accepts CANCEL, TERMINATE
     #       },
     #     ],
     #   })
@@ -5528,13 +6454,78 @@ module Aws::Batch
       req.send_request(options)
     end
 
+    # Updates a quota share.
+    #
+    # @option params [required, String] :quota_share_arn
+    #   The Amazon Resource Name (ARN) of the quota share to update.
+    #
+    # @option params [Array<Types::QuotaShareCapacityLimit>] :capacity_limits
+    #   A list that specifies the quantity and type of compute capacity
+    #   allocated to the quota share.
+    #
+    # @option params [Types::QuotaShareResourceSharingConfiguration] :resource_sharing_configuration
+    #   Specifies whether a quota share reserves, lends, or both lends and
+    #   borrows idle compute capacity.
+    #
+    # @option params [Types::QuotaSharePreemptionConfiguration] :preemption_configuration
+    #   Specifies the preemption behavior for jobs in a quota share.
+    #
+    # @option params [String] :state
+    #   The state of the quota share. If the quota share is `ENABLED`, it is
+    #   able to accept jobs. If the quota share is `DISABLED`, new jobs won't
+    #   be accepted but jobs already submitted can finish.
+    #
+    # @return [Types::UpdateQuotaShareResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateQuotaShareResponse#quota_share_name #quota_share_name} => String
+    #   * {Types::UpdateQuotaShareResponse#quota_share_arn #quota_share_arn} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_quota_share({
+    #     quota_share_arn: "String", # required
+    #     capacity_limits: [
+    #       {
+    #         max_capacity: 1, # required
+    #         capacity_unit: "String", # required
+    #       },
+    #     ],
+    #     resource_sharing_configuration: {
+    #       strategy: "RESERVE", # required, accepts RESERVE, LEND, LEND_AND_BORROW
+    #       borrow_limit: 1,
+    #     },
+    #     preemption_configuration: {
+    #       in_share_preemption: "ENABLED", # required, accepts ENABLED, DISABLED
+    #     },
+    #     state: "ENABLED", # accepts ENABLED, DISABLED
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.quota_share_name #=> String
+    #   resp.quota_share_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/batch-2016-08-10/UpdateQuotaShare AWS API Documentation
+    #
+    # @overload update_quota_share(params = {})
+    # @param [Hash] params ({})
+    def update_quota_share(params = {}, options = {})
+      req = build_request(:update_quota_share, params)
+      req.send_request(options)
+    end
+
     # Updates a scheduling policy.
     #
     # @option params [required, String] :arn
     #   The Amazon Resource Name (ARN) of the scheduling policy to update.
     #
+    # @option params [Types::QuotaSharePolicy] :quota_share_policy
+    #   The quota share scheduling policy details. Once set during creation, a
+    #   quotaSharePolicy cannot be removed or changed to a fairsharePolicy.
+    #
     # @option params [Types::FairsharePolicy] :fairshare_policy
-    #   The fair share policy.
+    #   The fair-share policy scheduling details. Once set during creation, a
+    #   fairsharePolicy cannot be removed or changed to a quotaSharePolicy.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
@@ -5542,6 +6533,9 @@ module Aws::Batch
     #
     #   resp = client.update_scheduling_policy({
     #     arn: "String", # required
+    #     quota_share_policy: {
+    #       idle_resource_assignment_strategy: "FIFO", # required, accepts FIFO
+    #     },
     #     fairshare_policy: {
     #       share_decay_seconds: 1,
     #       compute_reservation: 1,
@@ -5563,6 +6557,95 @@ module Aws::Batch
       req.send_request(options)
     end
 
+    # Updates a service environment. You can update the state of a service
+    # environment from `ENABLED` to `DISABLED` to prevent new service jobs
+    # from being placed in the service environment.
+    #
+    # @option params [required, String] :service_environment
+    #   The name or ARN of the service environment to update.
+    #
+    # @option params [String] :state
+    #   The state of the service environment.
+    #
+    # @option params [Array<Types::CapacityLimit>] :capacity_limits
+    #   The capacity limits for the service environment. This defines the
+    #   maximum resources that can be used by service jobs in this
+    #   environment.
+    #
+    # @return [Types::UpdateServiceEnvironmentResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateServiceEnvironmentResponse#service_environment_name #service_environment_name} => String
+    #   * {Types::UpdateServiceEnvironmentResponse#service_environment_arn #service_environment_arn} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_service_environment({
+    #     service_environment: "String", # required
+    #     state: "ENABLED", # accepts ENABLED, DISABLED
+    #     capacity_limits: [
+    #       {
+    #         max_capacity: 1,
+    #         capacity_unit: "String",
+    #       },
+    #     ],
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.service_environment_name #=> String
+    #   resp.service_environment_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/batch-2016-08-10/UpdateServiceEnvironment AWS API Documentation
+    #
+    # @overload update_service_environment(params = {})
+    # @param [Hash] params ({})
+    def update_service_environment(params = {}, options = {})
+      req = build_request(:update_service_environment, params)
+      req.send_request(options)
+    end
+
+    # Updates the priority of a specified service job in an Batch job queue.
+    #
+    # @option params [required, String] :job_id
+    #   The Batch job ID of the job to update.
+    #
+    # @option params [required, Integer] :scheduling_priority
+    #   The scheduling priority for the job. This only affects jobs in job
+    #   queues with a quota-share or fair-share scheduling policy. Jobs with a
+    #   higher scheduling priority are scheduled before jobs with a lower
+    #   scheduling priority within a share.
+    #
+    #   The minimum supported value is 0 and the maximum supported value is
+    #   9999.
+    #
+    # @return [Types::UpdateServiceJobResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateServiceJobResponse#job_arn #job_arn} => String
+    #   * {Types::UpdateServiceJobResponse#job_name #job_name} => String
+    #   * {Types::UpdateServiceJobResponse#job_id #job_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_service_job({
+    #     job_id: "String", # required
+    #     scheduling_priority: 1, # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.job_arn #=> String
+    #   resp.job_name #=> String
+    #   resp.job_id #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/batch-2016-08-10/UpdateServiceJob AWS API Documentation
+    #
+    # @overload update_service_job(params = {})
+    # @param [Hash] params ({})
+    def update_service_job(params = {}, options = {})
+      req = build_request(:update_service_job, params)
+      req.send_request(options)
+    end
+
     # @!endgroup
 
     # @param params ({})
@@ -5581,7 +6664,7 @@ module Aws::Batch
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-batch'
-      context[:gem_version] = '1.111.0'
+      context[:gem_version] = '1.147.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

@@ -33,6 +33,14 @@ module Aws::IoTSiteWise
     Aggregates = Shapes::StructureShape.new(name: 'Aggregates')
     Alarms = Shapes::StructureShape.new(name: 'Alarms')
     AmazonResourceName = Shapes::StringShape.new(name: 'AmazonResourceName')
+    Annotation = Shapes::StructureShape.new(name: 'Annotation')
+    ApplicationDescription = Shapes::StringShape.new(name: 'ApplicationDescription')
+    ApplicationId = Shapes::StringShape.new(name: 'ApplicationId')
+    ApplicationList = Shapes::ListShape.new(name: 'ApplicationList')
+    ApplicationName = Shapes::StringShape.new(name: 'ApplicationName')
+    ApplicationStatus = Shapes::StringShape.new(name: 'ApplicationStatus')
+    ApplicationSummary = Shapes::StructureShape.new(name: 'ApplicationSummary')
+    AssetBindingValueFilter = Shapes::StructureShape.new(name: 'AssetBindingValueFilter')
     AssetCompositeModel = Shapes::StructureShape.new(name: 'AssetCompositeModel')
     AssetCompositeModelPath = Shapes::ListShape.new(name: 'AssetCompositeModelPath')
     AssetCompositeModelPathSegment = Shapes::StructureShape.new(name: 'AssetCompositeModelPathSegment')
@@ -46,6 +54,7 @@ module Aws::IoTSiteWise
     AssetHierarchy = Shapes::StructureShape.new(name: 'AssetHierarchy')
     AssetHierarchyInfo = Shapes::StructureShape.new(name: 'AssetHierarchyInfo')
     AssetIDs = Shapes::ListShape.new(name: 'AssetIDs')
+    AssetModelBindingValueFilter = Shapes::StructureShape.new(name: 'AssetModelBindingValueFilter')
     AssetModelCompositeModel = Shapes::StructureShape.new(name: 'AssetModelCompositeModel')
     AssetModelCompositeModelDefinition = Shapes::StructureShape.new(name: 'AssetModelCompositeModelDefinition')
     AssetModelCompositeModelDefinitions = Shapes::ListShape.new(name: 'AssetModelCompositeModelDefinitions')
@@ -60,6 +69,8 @@ module Aws::IoTSiteWise
     AssetModelHierarchyDefinitions = Shapes::ListShape.new(name: 'AssetModelHierarchyDefinitions')
     AssetModelProperties = Shapes::ListShape.new(name: 'AssetModelProperties')
     AssetModelProperty = Shapes::StructureShape.new(name: 'AssetModelProperty')
+    AssetModelPropertyBindingValue = Shapes::StructureShape.new(name: 'AssetModelPropertyBindingValue')
+    AssetModelPropertyBindingValueFilter = Shapes::StructureShape.new(name: 'AssetModelPropertyBindingValueFilter')
     AssetModelPropertyDefinition = Shapes::StructureShape.new(name: 'AssetModelPropertyDefinition')
     AssetModelPropertyDefinitions = Shapes::ListShape.new(name: 'AssetModelPropertyDefinitions')
     AssetModelPropertyPath = Shapes::ListShape.new(name: 'AssetModelPropertyPath')
@@ -76,6 +87,8 @@ module Aws::IoTSiteWise
     AssetProperties = Shapes::ListShape.new(name: 'AssetProperties')
     AssetProperty = Shapes::StructureShape.new(name: 'AssetProperty')
     AssetPropertyAlias = Shapes::StringShape.new(name: 'AssetPropertyAlias')
+    AssetPropertyBindingValue = Shapes::StructureShape.new(name: 'AssetPropertyBindingValue')
+    AssetPropertyBindingValueFilter = Shapes::StructureShape.new(name: 'AssetPropertyBindingValueFilter')
     AssetPropertyPath = Shapes::ListShape.new(name: 'AssetPropertyPath')
     AssetPropertyPathSegment = Shapes::StructureShape.new(name: 'AssetPropertyPathSegment')
     AssetPropertySummaries = Shapes::ListShape.new(name: 'AssetPropertySummaries')
@@ -91,14 +104,22 @@ module Aws::IoTSiteWise
     AssetSummaries = Shapes::ListShape.new(name: 'AssetSummaries')
     AssetSummary = Shapes::StructureShape.new(name: 'AssetSummary')
     AssociateAssetsRequest = Shapes::StructureShape.new(name: 'AssociateAssetsRequest')
+    AssociateDataSegmentEntries = Shapes::ListShape.new(name: 'AssociateDataSegmentEntries')
+    AssociateDataSegmentEntry = Shapes::StructureShape.new(name: 'AssociateDataSegmentEntry')
     AssociateTimeSeriesToAssetPropertyRequest = Shapes::StructureShape.new(name: 'AssociateTimeSeriesToAssetPropertyRequest')
     AssociatedAssetsSummaries = Shapes::ListShape.new(name: 'AssociatedAssetsSummaries')
     AssociatedAssetsSummary = Shapes::StructureShape.new(name: 'AssociatedAssetsSummary')
     Attribute = Shapes::StructureShape.new(name: 'Attribute')
     AuthMode = Shapes::StringShape.new(name: 'AuthMode')
+    BatchAssociateDataSegmentsToDatasetRequest = Shapes::StructureShape.new(name: 'BatchAssociateDataSegmentsToDatasetRequest')
+    BatchAssociateDataSegmentsToDatasetResponse = Shapes::StructureShape.new(name: 'BatchAssociateDataSegmentsToDatasetResponse')
     BatchAssociateProjectAssetsErrors = Shapes::ListShape.new(name: 'BatchAssociateProjectAssetsErrors')
     BatchAssociateProjectAssetsRequest = Shapes::StructureShape.new(name: 'BatchAssociateProjectAssetsRequest')
     BatchAssociateProjectAssetsResponse = Shapes::StructureShape.new(name: 'BatchAssociateProjectAssetsResponse')
+    BatchDeleteDatasetDataSegmentsRequest = Shapes::StructureShape.new(name: 'BatchDeleteDatasetDataSegmentsRequest')
+    BatchDeleteDatasetDataSegmentsResponse = Shapes::StructureShape.new(name: 'BatchDeleteDatasetDataSegmentsResponse')
+    BatchDisassociateDataSegmentsFromDatasetRequest = Shapes::StructureShape.new(name: 'BatchDisassociateDataSegmentsFromDatasetRequest')
+    BatchDisassociateDataSegmentsFromDatasetResponse = Shapes::StructureShape.new(name: 'BatchDisassociateDataSegmentsFromDatasetResponse')
     BatchDisassociateProjectAssetsErrors = Shapes::ListShape.new(name: 'BatchDisassociateProjectAssetsErrors')
     BatchDisassociateProjectAssetsRequest = Shapes::StructureShape.new(name: 'BatchDisassociateProjectAssetsRequest')
     BatchDisassociateProjectAssetsResponse = Shapes::StructureShape.new(name: 'BatchDisassociateProjectAssetsResponse')
@@ -148,36 +169,84 @@ module Aws::IoTSiteWise
     BatchPutAssetPropertyValueErrorCode = Shapes::StringShape.new(name: 'BatchPutAssetPropertyValueErrorCode')
     BatchPutAssetPropertyValueRequest = Shapes::StructureShape.new(name: 'BatchPutAssetPropertyValueRequest')
     BatchPutAssetPropertyValueResponse = Shapes::StructureShape.new(name: 'BatchPutAssetPropertyValueResponse')
+    BindingValueList = Shapes::ListShape.new(name: 'BindingValueList')
     BooleanValue = Shapes::BooleanShape.new(name: 'BooleanValue')
     Bucket = Shapes::StringShape.new(name: 'Bucket')
+    BulkImportJobName = Shapes::StringShape.new(name: 'BulkImportJobName')
+    CancelEnrichmentJobRequest = Shapes::StructureShape.new(name: 'CancelEnrichmentJobRequest')
+    CancelEnrichmentJobResponse = Shapes::StructureShape.new(name: 'CancelEnrichmentJobResponse')
+    CancelPipelineExecutionRequest = Shapes::StructureShape.new(name: 'CancelPipelineExecutionRequest')
+    CancelPipelineExecutionRequestReasonString = Shapes::StringShape.new(name: 'CancelPipelineExecutionRequestReasonString')
+    CancelPipelineExecutionResponse = Shapes::StructureShape.new(name: 'CancelPipelineExecutionResponse')
+    CancelQueryRequest = Shapes::StructureShape.new(name: 'CancelQueryRequest')
+    CancelQueryResponse = Shapes::StructureShape.new(name: 'CancelQueryResponse')
     CapabilityConfiguration = Shapes::StringShape.new(name: 'CapabilityConfiguration')
     CapabilityNamespace = Shapes::StringShape.new(name: 'CapabilityNamespace')
     CapabilitySyncStatus = Shapes::StringShape.new(name: 'CapabilitySyncStatus')
+    CaptureBlob = Shapes::BlobShape.new(name: 'CaptureBlob')
     Citation = Shapes::StructureShape.new(name: 'Citation')
     Citations = Shapes::ListShape.new(name: 'Citations')
     ClientToken = Shapes::StringShape.new(name: 'ClientToken')
+    ColumnDataType = Shapes::StringShape.new(name: 'ColumnDataType')
     ColumnInfo = Shapes::StructureShape.new(name: 'ColumnInfo')
+    ColumnInformation = Shapes::StructureShape.new(name: 'ColumnInformation')
+    ColumnInformationList = Shapes::ListShape.new(name: 'ColumnInformationList')
+    ColumnLabel = Shapes::StringShape.new(name: 'ColumnLabel')
     ColumnName = Shapes::StringShape.new(name: 'ColumnName')
     ColumnNames = Shapes::ListShape.new(name: 'ColumnNames')
     ColumnType = Shapes::StructureShape.new(name: 'ColumnType')
+    ColumnValue = Shapes::StringShape.new(name: 'ColumnValue')
     ColumnsList = Shapes::ListShape.new(name: 'ColumnsList')
+    CommandList = Shapes::ListShape.new(name: 'CommandList')
     CompositeModelProperty = Shapes::StructureShape.new(name: 'CompositeModelProperty')
     CompositionDetails = Shapes::StructureShape.new(name: 'CompositionDetails')
     CompositionRelationship = Shapes::ListShape.new(name: 'CompositionRelationship')
     CompositionRelationshipItem = Shapes::StructureShape.new(name: 'CompositionRelationshipItem')
     CompositionRelationshipSummaries = Shapes::ListShape.new(name: 'CompositionRelationshipSummaries')
     CompositionRelationshipSummary = Shapes::StructureShape.new(name: 'CompositionRelationshipSummary')
+    ComputationModelAnomalyDetectionConfiguration = Shapes::StructureShape.new(name: 'ComputationModelAnomalyDetectionConfiguration')
+    ComputationModelConfiguration = Shapes::StructureShape.new(name: 'ComputationModelConfiguration')
+    ComputationModelDataBinding = Shapes::MapShape.new(name: 'ComputationModelDataBinding')
+    ComputationModelDataBindingUsageSummaries = Shapes::ListShape.new(name: 'ComputationModelDataBindingUsageSummaries')
+    ComputationModelDataBindingUsageSummary = Shapes::StructureShape.new(name: 'ComputationModelDataBindingUsageSummary')
+    ComputationModelDataBindingValue = Shapes::StructureShape.new(name: 'ComputationModelDataBindingValue')
+    ComputationModelDataBindingVariable = Shapes::StringShape.new(name: 'ComputationModelDataBindingVariable')
+    ComputationModelExecutionSummary = Shapes::MapShape.new(name: 'ComputationModelExecutionSummary')
+    ComputationModelExecutionSummaryKey = Shapes::StringShape.new(name: 'ComputationModelExecutionSummaryKey')
+    ComputationModelExecutionSummaryValue = Shapes::StringShape.new(name: 'ComputationModelExecutionSummaryValue')
+    ComputationModelIdList = Shapes::ListShape.new(name: 'ComputationModelIdList')
+    ComputationModelResolveToResourceSummaries = Shapes::ListShape.new(name: 'ComputationModelResolveToResourceSummaries')
+    ComputationModelResolveToResourceSummary = Shapes::StructureShape.new(name: 'ComputationModelResolveToResourceSummary')
+    ComputationModelState = Shapes::StringShape.new(name: 'ComputationModelState')
+    ComputationModelStatus = Shapes::StructureShape.new(name: 'ComputationModelStatus')
+    ComputationModelSummaries = Shapes::ListShape.new(name: 'ComputationModelSummaries')
+    ComputationModelSummary = Shapes::StructureShape.new(name: 'ComputationModelSummary')
+    ComputationModelType = Shapes::StringShape.new(name: 'ComputationModelType')
+    ComputationModelVersionFilter = Shapes::StringShape.new(name: 'ComputationModelVersionFilter')
     ComputeLocation = Shapes::StringShape.new(name: 'ComputeLocation')
+    ComputeNode = Shapes::StructureShape.new(name: 'ComputeNode')
+    ComputeNodeEnvironmentVariablesMap = Shapes::MapShape.new(name: 'ComputeNodeEnvironmentVariablesMap')
+    ComputeNodeErrorCode = Shapes::StringShape.new(name: 'ComputeNodeErrorCode')
+    ComputeNodeExecutionDetails = Shapes::StructureShape.new(name: 'ComputeNodeExecutionDetails')
+    ComputeNodeExecutionDetailsList = Shapes::ListShape.new(name: 'ComputeNodeExecutionDetailsList')
+    ComputeNodeExecutionState = Shapes::StringShape.new(name: 'ComputeNodeExecutionState')
+    ComputeNodeExecutionStateDetails = Shapes::StructureShape.new(name: 'ComputeNodeExecutionStateDetails')
+    ComputeNodeExecutionStatus = Shapes::StructureShape.new(name: 'ComputeNodeExecutionStatus')
+    ComputeNodeList = Shapes::ListShape.new(name: 'ComputeNodeList')
+    ComputeNodeNameList = Shapes::ListShape.new(name: 'ComputeNodeNameList')
     ConfigurationErrorDetails = Shapes::StructureShape.new(name: 'ConfigurationErrorDetails')
     ConfigurationState = Shapes::StringShape.new(name: 'ConfigurationState')
     ConfigurationStatus = Shapes::StructureShape.new(name: 'ConfigurationStatus')
     ConflictingOperationException = Shapes::StructureShape.new(name: 'ConflictingOperationException')
+    ContainerTaskConfiguration = Shapes::StructureShape.new(name: 'ContainerTaskConfiguration')
     Content = Shapes::StructureShape.new(name: 'Content')
     ConversationId = Shapes::StringShape.new(name: 'ConversationId')
     CoreDeviceOperatingSystem = Shapes::StringShape.new(name: 'CoreDeviceOperatingSystem')
     CoreDeviceThingName = Shapes::StringShape.new(name: 'CoreDeviceThingName')
     CreateAccessPolicyRequest = Shapes::StructureShape.new(name: 'CreateAccessPolicyRequest')
     CreateAccessPolicyResponse = Shapes::StructureShape.new(name: 'CreateAccessPolicyResponse')
+    CreateApplicationRequest = Shapes::StructureShape.new(name: 'CreateApplicationRequest')
+    CreateApplicationResponse = Shapes::StructureShape.new(name: 'CreateApplicationResponse')
     CreateAssetModelCompositeModelRequest = Shapes::StructureShape.new(name: 'CreateAssetModelCompositeModelRequest')
     CreateAssetModelCompositeModelResponse = Shapes::StructureShape.new(name: 'CreateAssetModelCompositeModelResponse')
     CreateAssetModelRequest = Shapes::StructureShape.new(name: 'CreateAssetModelRequest')
@@ -186,23 +255,55 @@ module Aws::IoTSiteWise
     CreateAssetResponse = Shapes::StructureShape.new(name: 'CreateAssetResponse')
     CreateBulkImportJobRequest = Shapes::StructureShape.new(name: 'CreateBulkImportJobRequest')
     CreateBulkImportJobResponse = Shapes::StructureShape.new(name: 'CreateBulkImportJobResponse')
+    CreateComputationModelRequest = Shapes::StructureShape.new(name: 'CreateComputationModelRequest')
+    CreateComputationModelResponse = Shapes::StructureShape.new(name: 'CreateComputationModelResponse')
     CreateDashboardRequest = Shapes::StructureShape.new(name: 'CreateDashboardRequest')
     CreateDashboardResponse = Shapes::StructureShape.new(name: 'CreateDashboardResponse')
+    CreateDatasetExportJobRequest = Shapes::StructureShape.new(name: 'CreateDatasetExportJobRequest')
+    CreateDatasetExportJobResponse = Shapes::StructureShape.new(name: 'CreateDatasetExportJobResponse')
     CreateDatasetRequest = Shapes::StructureShape.new(name: 'CreateDatasetRequest')
     CreateDatasetResponse = Shapes::StructureShape.new(name: 'CreateDatasetResponse')
+    CreateEnrichmentJobRequest = Shapes::StructureShape.new(name: 'CreateEnrichmentJobRequest')
+    CreateEnrichmentJobResponse = Shapes::StructureShape.new(name: 'CreateEnrichmentJobResponse')
     CreateGatewayRequest = Shapes::StructureShape.new(name: 'CreateGatewayRequest')
     CreateGatewayResponse = Shapes::StructureShape.new(name: 'CreateGatewayResponse')
+    CreateMissingProperty = Shapes::BooleanShape.new(name: 'CreateMissingProperty')
+    CreatePipelineRequest = Shapes::StructureShape.new(name: 'CreatePipelineRequest')
+    CreatePipelineResponse = Shapes::StructureShape.new(name: 'CreatePipelineResponse')
     CreatePortalRequest = Shapes::StructureShape.new(name: 'CreatePortalRequest')
     CreatePortalResponse = Shapes::StructureShape.new(name: 'CreatePortalResponse')
     CreateProjectRequest = Shapes::StructureShape.new(name: 'CreateProjectRequest')
     CreateProjectResponse = Shapes::StructureShape.new(name: 'CreateProjectResponse')
+    CreateTaskRequest = Shapes::StructureShape.new(name: 'CreateTaskRequest')
+    CreateTaskResponse = Shapes::StructureShape.new(name: 'CreateTaskResponse')
+    CreateWorkspaceRequest = Shapes::StructureShape.new(name: 'CreateWorkspaceRequest')
+    CreateWorkspaceResponse = Shapes::StructureShape.new(name: 'CreateWorkspaceResponse')
     Csv = Shapes::StructureShape.new(name: 'Csv')
     CustomID = Shapes::StringShape.new(name: 'CustomID')
     CustomerManagedS3Storage = Shapes::StructureShape.new(name: 'CustomerManagedS3Storage')
     DashboardDefinition = Shapes::StringShape.new(name: 'DashboardDefinition')
     DashboardSummaries = Shapes::ListShape.new(name: 'DashboardSummaries')
     DashboardSummary = Shapes::StructureShape.new(name: 'DashboardSummary')
+    DataBindingValue = Shapes::StructureShape.new(name: 'DataBindingValue')
+    DataBindingValueFilter = Shapes::StructureShape.new(name: 'DataBindingValueFilter')
+    DataSegmentEnrichment = Shapes::StructureShape.new(name: 'DataSegmentEnrichment')
+    DataSegmentErrorCode = Shapes::StringShape.new(name: 'DataSegmentErrorCode')
+    DataSegmentErrorMessage = Shapes::StringShape.new(name: 'DataSegmentErrorMessage')
+    DataSegmentRelationshipSummaries = Shapes::ListShape.new(name: 'DataSegmentRelationshipSummaries')
+    DataSegmentRelationshipSummary = Shapes::StructureShape.new(name: 'DataSegmentRelationshipSummary')
+    DataSegmentSummaries = Shapes::ListShape.new(name: 'DataSegmentSummaries')
+    DataSegmentSummary = Shapes::StructureShape.new(name: 'DataSegmentSummary')
+    DataSetIdList = Shapes::ListShape.new(name: 'DataSetIdList')
     DataSetReference = Shapes::StructureShape.new(name: 'DataSetReference')
+    DatasetConfig = Shapes::StructureShape.new(name: 'DatasetConfig')
+    DatasetEnrichment = Shapes::StructureShape.new(name: 'DatasetEnrichment')
+    DatasetEnrichmentEntry = Shapes::StructureShape.new(name: 'DatasetEnrichmentEntry')
+    DatasetEnrichmentStatus = Shapes::StringShape.new(name: 'DatasetEnrichmentStatus')
+    DatasetExportJobFilter = Shapes::StringShape.new(name: 'DatasetExportJobFilter')
+    DatasetExportJobId = Shapes::StringShape.new(name: 'DatasetExportJobId')
+    DatasetExportJobStatus = Shapes::StringShape.new(name: 'DatasetExportJobStatus')
+    DatasetId = Shapes::StringShape.new(name: 'DatasetId')
+    DatasetItem = Shapes::StructureShape.new(name: 'DatasetItem')
     DatasetSource = Shapes::StructureShape.new(name: 'DatasetSource')
     DatasetSourceFormat = Shapes::StringShape.new(name: 'DatasetSourceFormat')
     DatasetSourceType = Shapes::StringShape.new(name: 'DatasetSourceType')
@@ -210,36 +311,55 @@ module Aws::IoTSiteWise
     DatasetStatus = Shapes::StructureShape.new(name: 'DatasetStatus')
     DatasetSummaries = Shapes::ListShape.new(name: 'DatasetSummaries')
     DatasetSummary = Shapes::StructureShape.new(name: 'DatasetSummary')
+    DatasetTypeEnum = Shapes::StringShape.new(name: 'DatasetTypeEnum')
     Datum = Shapes::StructureShape.new(name: 'Datum')
     DatumList = Shapes::ListShape.new(name: 'DatumList')
     DefaultValue = Shapes::StringShape.new(name: 'DefaultValue')
     DeleteAccessPolicyRequest = Shapes::StructureShape.new(name: 'DeleteAccessPolicyRequest')
     DeleteAccessPolicyResponse = Shapes::StructureShape.new(name: 'DeleteAccessPolicyResponse')
+    DeleteApplicationRequest = Shapes::StructureShape.new(name: 'DeleteApplicationRequest')
+    DeleteApplicationResponse = Shapes::StructureShape.new(name: 'DeleteApplicationResponse')
     DeleteAssetModelCompositeModelRequest = Shapes::StructureShape.new(name: 'DeleteAssetModelCompositeModelRequest')
     DeleteAssetModelCompositeModelResponse = Shapes::StructureShape.new(name: 'DeleteAssetModelCompositeModelResponse')
+    DeleteAssetModelInterfaceRelationshipRequest = Shapes::StructureShape.new(name: 'DeleteAssetModelInterfaceRelationshipRequest')
+    DeleteAssetModelInterfaceRelationshipResponse = Shapes::StructureShape.new(name: 'DeleteAssetModelInterfaceRelationshipResponse')
     DeleteAssetModelRequest = Shapes::StructureShape.new(name: 'DeleteAssetModelRequest')
     DeleteAssetModelResponse = Shapes::StructureShape.new(name: 'DeleteAssetModelResponse')
     DeleteAssetRequest = Shapes::StructureShape.new(name: 'DeleteAssetRequest')
     DeleteAssetResponse = Shapes::StructureShape.new(name: 'DeleteAssetResponse')
+    DeleteComputationModelRequest = Shapes::StructureShape.new(name: 'DeleteComputationModelRequest')
+    DeleteComputationModelResponse = Shapes::StructureShape.new(name: 'DeleteComputationModelResponse')
     DeleteDashboardRequest = Shapes::StructureShape.new(name: 'DeleteDashboardRequest')
     DeleteDashboardResponse = Shapes::StructureShape.new(name: 'DeleteDashboardResponse')
+    DeleteDataSegmentEntries = Shapes::ListShape.new(name: 'DeleteDataSegmentEntries')
+    DeleteDataSegmentEntry = Shapes::StructureShape.new(name: 'DeleteDataSegmentEntry')
     DeleteDatasetRequest = Shapes::StructureShape.new(name: 'DeleteDatasetRequest')
     DeleteDatasetResponse = Shapes::StructureShape.new(name: 'DeleteDatasetResponse')
     DeleteFilesAfterImport = Shapes::BooleanShape.new(name: 'DeleteFilesAfterImport')
     DeleteGatewayRequest = Shapes::StructureShape.new(name: 'DeleteGatewayRequest')
+    DeletePipelineRequest = Shapes::StructureShape.new(name: 'DeletePipelineRequest')
+    DeletePipelineResponse = Shapes::StructureShape.new(name: 'DeletePipelineResponse')
     DeletePortalRequest = Shapes::StructureShape.new(name: 'DeletePortalRequest')
     DeletePortalResponse = Shapes::StructureShape.new(name: 'DeletePortalResponse')
     DeleteProjectRequest = Shapes::StructureShape.new(name: 'DeleteProjectRequest')
     DeleteProjectResponse = Shapes::StructureShape.new(name: 'DeleteProjectResponse')
+    DeleteTaskRequest = Shapes::StructureShape.new(name: 'DeleteTaskRequest')
+    DeleteTaskResponse = Shapes::StructureShape.new(name: 'DeleteTaskResponse')
     DeleteTimeSeriesRequest = Shapes::StructureShape.new(name: 'DeleteTimeSeriesRequest')
+    DeleteWorkspaceRequest = Shapes::StructureShape.new(name: 'DeleteWorkspaceRequest')
+    DeleteWorkspaceResponse = Shapes::StructureShape.new(name: 'DeleteWorkspaceResponse')
     DescribeAccessPolicyRequest = Shapes::StructureShape.new(name: 'DescribeAccessPolicyRequest')
     DescribeAccessPolicyResponse = Shapes::StructureShape.new(name: 'DescribeAccessPolicyResponse')
     DescribeActionRequest = Shapes::StructureShape.new(name: 'DescribeActionRequest')
     DescribeActionResponse = Shapes::StructureShape.new(name: 'DescribeActionResponse')
+    DescribeApplicationRequest = Shapes::StructureShape.new(name: 'DescribeApplicationRequest')
+    DescribeApplicationResponse = Shapes::StructureShape.new(name: 'DescribeApplicationResponse')
     DescribeAssetCompositeModelRequest = Shapes::StructureShape.new(name: 'DescribeAssetCompositeModelRequest')
     DescribeAssetCompositeModelResponse = Shapes::StructureShape.new(name: 'DescribeAssetCompositeModelResponse')
     DescribeAssetModelCompositeModelRequest = Shapes::StructureShape.new(name: 'DescribeAssetModelCompositeModelRequest')
     DescribeAssetModelCompositeModelResponse = Shapes::StructureShape.new(name: 'DescribeAssetModelCompositeModelResponse')
+    DescribeAssetModelInterfaceRelationshipRequest = Shapes::StructureShape.new(name: 'DescribeAssetModelInterfaceRelationshipRequest')
+    DescribeAssetModelInterfaceRelationshipResponse = Shapes::StructureShape.new(name: 'DescribeAssetModelInterfaceRelationshipResponse')
     DescribeAssetModelRequest = Shapes::StructureShape.new(name: 'DescribeAssetModelRequest')
     DescribeAssetModelResponse = Shapes::StructureShape.new(name: 'DescribeAssetModelResponse')
     DescribeAssetPropertyRequest = Shapes::StructureShape.new(name: 'DescribeAssetPropertyRequest')
@@ -248,43 +368,83 @@ module Aws::IoTSiteWise
     DescribeAssetResponse = Shapes::StructureShape.new(name: 'DescribeAssetResponse')
     DescribeBulkImportJobRequest = Shapes::StructureShape.new(name: 'DescribeBulkImportJobRequest')
     DescribeBulkImportJobResponse = Shapes::StructureShape.new(name: 'DescribeBulkImportJobResponse')
+    DescribeComputationModelExecutionSummaryRequest = Shapes::StructureShape.new(name: 'DescribeComputationModelExecutionSummaryRequest')
+    DescribeComputationModelExecutionSummaryResponse = Shapes::StructureShape.new(name: 'DescribeComputationModelExecutionSummaryResponse')
+    DescribeComputationModelRequest = Shapes::StructureShape.new(name: 'DescribeComputationModelRequest')
+    DescribeComputationModelResponse = Shapes::StructureShape.new(name: 'DescribeComputationModelResponse')
     DescribeDashboardRequest = Shapes::StructureShape.new(name: 'DescribeDashboardRequest')
     DescribeDashboardResponse = Shapes::StructureShape.new(name: 'DescribeDashboardResponse')
+    DescribeDatasetExportJobRequest = Shapes::StructureShape.new(name: 'DescribeDatasetExportJobRequest')
+    DescribeDatasetExportJobResponse = Shapes::StructureShape.new(name: 'DescribeDatasetExportJobResponse')
     DescribeDatasetRequest = Shapes::StructureShape.new(name: 'DescribeDatasetRequest')
     DescribeDatasetResponse = Shapes::StructureShape.new(name: 'DescribeDatasetResponse')
     DescribeDefaultEncryptionConfigurationRequest = Shapes::StructureShape.new(name: 'DescribeDefaultEncryptionConfigurationRequest')
     DescribeDefaultEncryptionConfigurationResponse = Shapes::StructureShape.new(name: 'DescribeDefaultEncryptionConfigurationResponse')
+    DescribeEnrichmentJobRequest = Shapes::StructureShape.new(name: 'DescribeEnrichmentJobRequest')
+    DescribeEnrichmentJobResponse = Shapes::StructureShape.new(name: 'DescribeEnrichmentJobResponse')
+    DescribeExecutionRequest = Shapes::StructureShape.new(name: 'DescribeExecutionRequest')
+    DescribeExecutionResponse = Shapes::StructureShape.new(name: 'DescribeExecutionResponse')
     DescribeGatewayCapabilityConfigurationRequest = Shapes::StructureShape.new(name: 'DescribeGatewayCapabilityConfigurationRequest')
     DescribeGatewayCapabilityConfigurationResponse = Shapes::StructureShape.new(name: 'DescribeGatewayCapabilityConfigurationResponse')
     DescribeGatewayRequest = Shapes::StructureShape.new(name: 'DescribeGatewayRequest')
     DescribeGatewayResponse = Shapes::StructureShape.new(name: 'DescribeGatewayResponse')
     DescribeLoggingOptionsRequest = Shapes::StructureShape.new(name: 'DescribeLoggingOptionsRequest')
     DescribeLoggingOptionsResponse = Shapes::StructureShape.new(name: 'DescribeLoggingOptionsResponse')
+    DescribePipelineExecutionRequest = Shapes::StructureShape.new(name: 'DescribePipelineExecutionRequest')
+    DescribePipelineExecutionRequestMaxResultsInteger = Shapes::IntegerShape.new(name: 'DescribePipelineExecutionRequestMaxResultsInteger')
+    DescribePipelineExecutionResponse = Shapes::StructureShape.new(name: 'DescribePipelineExecutionResponse')
+    DescribePipelineRequest = Shapes::StructureShape.new(name: 'DescribePipelineRequest')
+    DescribePipelineResponse = Shapes::StructureShape.new(name: 'DescribePipelineResponse')
     DescribePortalRequest = Shapes::StructureShape.new(name: 'DescribePortalRequest')
     DescribePortalResponse = Shapes::StructureShape.new(name: 'DescribePortalResponse')
     DescribeProjectRequest = Shapes::StructureShape.new(name: 'DescribeProjectRequest')
     DescribeProjectResponse = Shapes::StructureShape.new(name: 'DescribeProjectResponse')
+    DescribeQueryRequest = Shapes::StructureShape.new(name: 'DescribeQueryRequest')
+    DescribeQueryResponse = Shapes::StructureShape.new(name: 'DescribeQueryResponse')
+    DescribeSearchRequest = Shapes::StructureShape.new(name: 'DescribeSearchRequest')
+    DescribeSearchResponse = Shapes::StructureShape.new(name: 'DescribeSearchResponse')
     DescribeStorageConfigurationRequest = Shapes::StructureShape.new(name: 'DescribeStorageConfigurationRequest')
     DescribeStorageConfigurationResponse = Shapes::StructureShape.new(name: 'DescribeStorageConfigurationResponse')
+    DescribeTaskRequest = Shapes::StructureShape.new(name: 'DescribeTaskRequest')
+    DescribeTaskResponse = Shapes::StructureShape.new(name: 'DescribeTaskResponse')
     DescribeTimeSeriesRequest = Shapes::StructureShape.new(name: 'DescribeTimeSeriesRequest')
     DescribeTimeSeriesResponse = Shapes::StructureShape.new(name: 'DescribeTimeSeriesResponse')
+    DescribeWorkspaceRequest = Shapes::StructureShape.new(name: 'DescribeWorkspaceRequest')
+    DescribeWorkspaceResponse = Shapes::StructureShape.new(name: 'DescribeWorkspaceResponse')
     Description = Shapes::StringShape.new(name: 'Description')
     DetailedError = Shapes::StructureShape.new(name: 'DetailedError')
     DetailedErrorCode = Shapes::StringShape.new(name: 'DetailedErrorCode')
+    DetailedErrorList = Shapes::ListShape.new(name: 'DetailedErrorList')
     DetailedErrorMessage = Shapes::StringShape.new(name: 'DetailedErrorMessage')
     DetailedErrors = Shapes::ListShape.new(name: 'DetailedErrors')
+    DetailedPipelineError = Shapes::StructureShape.new(name: 'DetailedPipelineError')
+    DetailedPipelineErrorCode = Shapes::StringShape.new(name: 'DetailedPipelineErrorCode')
     DisallowIngestNullNaN = Shapes::BooleanShape.new(name: 'DisallowIngestNullNaN')
     DisassociateAssetsRequest = Shapes::StructureShape.new(name: 'DisassociateAssetsRequest')
+    DisassociateDataSegmentEntries = Shapes::ListShape.new(name: 'DisassociateDataSegmentEntries')
+    DisassociateDataSegmentEntry = Shapes::StructureShape.new(name: 'DisassociateDataSegmentEntry')
     DisassociateTimeSeriesFromAssetPropertyRequest = Shapes::StructureShape.new(name: 'DisassociateTimeSeriesFromAssetPropertyRequest')
     DisassociatedDataStorageState = Shapes::StringShape.new(name: 'DisassociatedDataStorageState')
+    DnsSubdomain = Shapes::StringShape.new(name: 'DnsSubdomain')
     ETag = Shapes::StringShape.new(name: 'ETag')
+    EcrUri = Shapes::StringShape.new(name: 'EcrUri')
     Email = Shapes::StringShape.new(name: 'Email')
     EncryptionType = Shapes::StringShape.new(name: 'EncryptionType')
+    EnrichmentJobConfiguration = Shapes::UnionShape.new(name: 'EnrichmentJobConfiguration')
+    EnrichmentJobStatus = Shapes::StringShape.new(name: 'EnrichmentJobStatus')
+    EnrichmentJobSummaries = Shapes::ListShape.new(name: 'EnrichmentJobSummaries')
+    EnrichmentJobSummary = Shapes::StructureShape.new(name: 'EnrichmentJobSummary')
+    EnrichmentStatus = Shapes::StringShape.new(name: 'EnrichmentStatus')
+    EnrichmentTrimSettings = Shapes::StructureShape.new(name: 'EnrichmentTrimSettings')
     EntryId = Shapes::StringShape.new(name: 'EntryId')
+    EnvironmentVariableName = Shapes::StringShape.new(name: 'EnvironmentVariableName')
+    EnvironmentVariableValue = Shapes::StringShape.new(name: 'EnvironmentVariableValue')
+    EnvironmentVariablesMap = Shapes::MapShape.new(name: 'EnvironmentVariablesMap')
     ErrorCode = Shapes::StringShape.new(name: 'ErrorCode')
     ErrorDetails = Shapes::StructureShape.new(name: 'ErrorDetails')
     ErrorMessage = Shapes::StringShape.new(name: 'ErrorMessage')
     ErrorReportLocation = Shapes::StructureShape.new(name: 'ErrorReportLocation')
+    EventDetection = Shapes::StructureShape.new(name: 'EventDetection')
     ExceptionMessage = Shapes::StringShape.new(name: 'ExceptionMessage')
     ExcludeProperties = Shapes::BooleanShape.new(name: 'ExcludeProperties')
     ExecuteActionRequest = Shapes::StructureShape.new(name: 'ExecuteActionRequest')
@@ -293,13 +453,41 @@ module Aws::IoTSiteWise
     ExecuteQueryNextToken = Shapes::StringShape.new(name: 'ExecuteQueryNextToken')
     ExecuteQueryRequest = Shapes::StructureShape.new(name: 'ExecuteQueryRequest')
     ExecuteQueryResponse = Shapes::StructureShape.new(name: 'ExecuteQueryResponse')
+    ExecutionDetails = Shapes::MapShape.new(name: 'ExecutionDetails')
+    ExecutionDetailsKey = Shapes::StringShape.new(name: 'ExecutionDetailsKey')
+    ExecutionDetailsValue = Shapes::StringShape.new(name: 'ExecutionDetailsValue')
+    ExecutionEnvironmentVariables = Shapes::StructureShape.new(name: 'ExecutionEnvironmentVariables')
+    ExecutionEnvironmentVariablesMap = Shapes::MapShape.new(name: 'ExecutionEnvironmentVariablesMap')
+    ExecutionEnvironmentVariablesMapKeyString = Shapes::StringShape.new(name: 'ExecutionEnvironmentVariablesMapKeyString')
+    ExecutionEnvironmentVariablesMapValueString = Shapes::StringShape.new(name: 'ExecutionEnvironmentVariablesMapValueString')
+    ExecutionPriority = Shapes::IntegerShape.new(name: 'ExecutionPriority')
+    ExecutionResult = Shapes::MapShape.new(name: 'ExecutionResult')
+    ExecutionResultKey = Shapes::StringShape.new(name: 'ExecutionResultKey')
+    ExecutionResultValue = Shapes::StringShape.new(name: 'ExecutionResultValue')
+    ExecutionState = Shapes::StringShape.new(name: 'ExecutionState')
+    ExecutionStatus = Shapes::StructureShape.new(name: 'ExecutionStatus')
+    ExecutionSummaries = Shapes::ListShape.new(name: 'ExecutionSummaries')
+    ExecutionSummary = Shapes::StructureShape.new(name: 'ExecutionSummary')
+    ExportDataType = Shapes::StringShape.new(name: 'ExportDataType')
+    ExportDataTypeList = Shapes::ListShape.new(name: 'ExportDataTypeList')
+    ExportErrorReportLocation = Shapes::StructureShape.new(name: 'ExportErrorReportLocation')
+    ExportJobSummary = Shapes::StructureShape.new(name: 'ExportJobSummary')
+    ExportJobSummaryList = Shapes::ListShape.new(name: 'ExportJobSummaryList')
     Expression = Shapes::StringShape.new(name: 'Expression')
     ExpressionVariable = Shapes::StructureShape.new(name: 'ExpressionVariable')
     ExpressionVariables = Shapes::ListShape.new(name: 'ExpressionVariables')
     ExternalId = Shapes::StringShape.new(name: 'ExternalId')
+    FailedDataSegmentAssociation = Shapes::StructureShape.new(name: 'FailedDataSegmentAssociation')
+    FailedDataSegmentAssociations = Shapes::ListShape.new(name: 'FailedDataSegmentAssociations')
+    FailedDataSegmentDeletion = Shapes::StructureShape.new(name: 'FailedDataSegmentDeletion')
+    FailedDataSegmentDeletions = Shapes::ListShape.new(name: 'FailedDataSegmentDeletions')
+    FailedDataSegmentDisassociation = Shapes::StructureShape.new(name: 'FailedDataSegmentDisassociation')
+    FailedDataSegmentDisassociations = Shapes::ListShape.new(name: 'FailedDataSegmentDisassociations')
     File = Shapes::StructureShape.new(name: 'File')
     FileFormat = Shapes::StructureShape.new(name: 'FileFormat')
     Files = Shapes::ListShape.new(name: 'Files')
+    Float = Shapes::FloatShape.new(name: 'Float')
+    FormatSettings = Shapes::StructureShape.new(name: 'FormatSettings')
     ForwardingConfig = Shapes::StructureShape.new(name: 'ForwardingConfig')
     ForwardingConfigState = Shapes::StringShape.new(name: 'ForwardingConfigState')
     GatewayCapabilitySummaries = Shapes::ListShape.new(name: 'GatewayCapabilitySummaries')
@@ -317,16 +505,29 @@ module Aws::IoTSiteWise
     GetAssetPropertyValueHistoryResponse = Shapes::StructureShape.new(name: 'GetAssetPropertyValueHistoryResponse')
     GetAssetPropertyValueRequest = Shapes::StructureShape.new(name: 'GetAssetPropertyValueRequest')
     GetAssetPropertyValueResponse = Shapes::StructureShape.new(name: 'GetAssetPropertyValueResponse')
+    GetCaptureDataNextToken = Shapes::StringShape.new(name: 'GetCaptureDataNextToken')
+    GetCaptureDataRequest = Shapes::StructureShape.new(name: 'GetCaptureDataRequest')
+    GetCaptureDataResponse = Shapes::StructureShape.new(name: 'GetCaptureDataResponse')
     GetInterpolatedAssetPropertyValuesRequest = Shapes::StructureShape.new(name: 'GetInterpolatedAssetPropertyValuesRequest')
     GetInterpolatedAssetPropertyValuesResponse = Shapes::StructureShape.new(name: 'GetInterpolatedAssetPropertyValuesResponse')
+    GetQueryResultsRequest = Shapes::StructureShape.new(name: 'GetQueryResultsRequest')
+    GetQueryResultsResponse = Shapes::StructureShape.new(name: 'GetQueryResultsResponse')
+    GetSearchResultsRequest = Shapes::StructureShape.new(name: 'GetSearchResultsRequest')
+    GetSearchResultsRequestMaxResultsInteger = Shapes::IntegerShape.new(name: 'GetSearchResultsRequestMaxResultsInteger')
+    GetSearchResultsResponse = Shapes::StructureShape.new(name: 'GetSearchResultsResponse')
     Greengrass = Shapes::StructureShape.new(name: 'Greengrass')
     GreengrassV2 = Shapes::StructureShape.new(name: 'GreengrassV2')
+    GroupId = Shapes::StringShape.new(name: 'GroupId')
+    GroupIdFilterList = Shapes::ListShape.new(name: 'GroupIdFilterList')
     GroupIdentity = Shapes::StructureShape.new(name: 'GroupIdentity')
+    HierarchyMapping = Shapes::StructureShape.new(name: 'HierarchyMapping')
+    HierarchyMappings = Shapes::ListShape.new(name: 'HierarchyMappings')
     IAMRoleIdentity = Shapes::StructureShape.new(name: 'IAMRoleIdentity')
     IAMUserIdentity = Shapes::StructureShape.new(name: 'IAMUserIdentity')
     ID = Shapes::StringShape.new(name: 'ID')
     IDs = Shapes::ListShape.new(name: 'IDs')
     IamArn = Shapes::StringShape.new(name: 'IamArn')
+    IamRoleArn = Shapes::StringShape.new(name: 'IamRoleArn')
     Identity = Shapes::StructureShape.new(name: 'Identity')
     IdentityId = Shapes::StringShape.new(name: 'IdentityId')
     IdentityType = Shapes::StringShape.new(name: 'IdentityType')
@@ -335,6 +536,13 @@ module Aws::IoTSiteWise
     ImageFileData = Shapes::BlobShape.new(name: 'ImageFileData')
     ImageFileType = Shapes::StringShape.new(name: 'ImageFileType')
     ImageLocation = Shapes::StructureShape.new(name: 'ImageLocation')
+    InputProperties = Shapes::StringShape.new(name: 'InputProperties')
+    InterfaceDetails = Shapes::ListShape.new(name: 'InterfaceDetails')
+    InterfaceRelationship = Shapes::StructureShape.new(name: 'InterfaceRelationship')
+    InterfaceRelationshipSummaries = Shapes::ListShape.new(name: 'InterfaceRelationshipSummaries')
+    InterfaceRelationshipSummary = Shapes::StructureShape.new(name: 'InterfaceRelationshipSummary')
+    InterfaceSummaries = Shapes::ListShape.new(name: 'InterfaceSummaries')
+    InterfaceSummary = Shapes::StructureShape.new(name: 'InterfaceSummary')
     InternalFailureException = Shapes::StructureShape.new(name: 'InternalFailureException')
     InterpolatedAssetPropertyValue = Shapes::StructureShape.new(name: 'InterpolatedAssetPropertyValue')
     InterpolatedAssetPropertyValues = Shapes::ListShape.new(name: 'InterpolatedAssetPropertyValues')
@@ -351,6 +559,7 @@ module Aws::IoTSiteWise
     JobStatus = Shapes::StringShape.new(name: 'JobStatus')
     JobSummaries = Shapes::ListShape.new(name: 'JobSummaries')
     JobSummary = Shapes::StructureShape.new(name: 'JobSummary')
+    JobType = Shapes::StringShape.new(name: 'JobType')
     KendraSourceDetail = Shapes::StructureShape.new(name: 'KendraSourceDetail')
     KmsKeyId = Shapes::StringShape.new(name: 'KmsKeyId')
     LimitExceededException = Shapes::StructureShape.new(name: 'LimitExceededException')
@@ -358,6 +567,8 @@ module Aws::IoTSiteWise
     ListAccessPoliciesResponse = Shapes::StructureShape.new(name: 'ListAccessPoliciesResponse')
     ListActionsRequest = Shapes::StructureShape.new(name: 'ListActionsRequest')
     ListActionsResponse = Shapes::StructureShape.new(name: 'ListActionsResponse')
+    ListApplicationsRequest = Shapes::StructureShape.new(name: 'ListApplicationsRequest')
+    ListApplicationsResponse = Shapes::StructureShape.new(name: 'ListApplicationsResponse')
     ListAssetModelCompositeModelsRequest = Shapes::StructureShape.new(name: 'ListAssetModelCompositeModelsRequest')
     ListAssetModelCompositeModelsResponse = Shapes::StructureShape.new(name: 'ListAssetModelCompositeModelsResponse')
     ListAssetModelPropertiesFilter = Shapes::StringShape.new(name: 'ListAssetModelPropertiesFilter')
@@ -381,38 +592,82 @@ module Aws::IoTSiteWise
     ListBulkImportJobsResponse = Shapes::StructureShape.new(name: 'ListBulkImportJobsResponse')
     ListCompositionRelationshipsRequest = Shapes::StructureShape.new(name: 'ListCompositionRelationshipsRequest')
     ListCompositionRelationshipsResponse = Shapes::StructureShape.new(name: 'ListCompositionRelationshipsResponse')
+    ListComputationModelDataBindingUsagesRequest = Shapes::StructureShape.new(name: 'ListComputationModelDataBindingUsagesRequest')
+    ListComputationModelDataBindingUsagesResponse = Shapes::StructureShape.new(name: 'ListComputationModelDataBindingUsagesResponse')
+    ListComputationModelResolveToResourcesRequest = Shapes::StructureShape.new(name: 'ListComputationModelResolveToResourcesRequest')
+    ListComputationModelResolveToResourcesResponse = Shapes::StructureShape.new(name: 'ListComputationModelResolveToResourcesResponse')
+    ListComputationModelsRequest = Shapes::StructureShape.new(name: 'ListComputationModelsRequest')
+    ListComputationModelsResponse = Shapes::StructureShape.new(name: 'ListComputationModelsResponse')
     ListDashboardsRequest = Shapes::StructureShape.new(name: 'ListDashboardsRequest')
     ListDashboardsResponse = Shapes::StructureShape.new(name: 'ListDashboardsResponse')
+    ListDatasetDataSegmentRelationshipsRequest = Shapes::StructureShape.new(name: 'ListDatasetDataSegmentRelationshipsRequest')
+    ListDatasetDataSegmentRelationshipsResponse = Shapes::StructureShape.new(name: 'ListDatasetDataSegmentRelationshipsResponse')
+    ListDatasetDataSegmentsRequest = Shapes::StructureShape.new(name: 'ListDatasetDataSegmentsRequest')
+    ListDatasetDataSegmentsResponse = Shapes::StructureShape.new(name: 'ListDatasetDataSegmentsResponse')
+    ListDatasetExportJobsRequest = Shapes::StructureShape.new(name: 'ListDatasetExportJobsRequest')
+    ListDatasetExportJobsResponse = Shapes::StructureShape.new(name: 'ListDatasetExportJobsResponse')
     ListDatasetsRequest = Shapes::StructureShape.new(name: 'ListDatasetsRequest')
     ListDatasetsResponse = Shapes::StructureShape.new(name: 'ListDatasetsResponse')
+    ListEnrichmentJobsRequest = Shapes::StructureShape.new(name: 'ListEnrichmentJobsRequest')
+    ListEnrichmentJobsResponse = Shapes::StructureShape.new(name: 'ListEnrichmentJobsResponse')
+    ListExecutionsRequest = Shapes::StructureShape.new(name: 'ListExecutionsRequest')
+    ListExecutionsResponse = Shapes::StructureShape.new(name: 'ListExecutionsResponse')
+    ListExportJobsMaxResults = Shapes::IntegerShape.new(name: 'ListExportJobsMaxResults')
+    ListExportJobsNextToken = Shapes::StringShape.new(name: 'ListExportJobsNextToken')
     ListGatewaysRequest = Shapes::StructureShape.new(name: 'ListGatewaysRequest')
     ListGatewaysResponse = Shapes::StructureShape.new(name: 'ListGatewaysResponse')
+    ListInterfaceRelationshipsRequest = Shapes::StructureShape.new(name: 'ListInterfaceRelationshipsRequest')
+    ListInterfaceRelationshipsResponse = Shapes::StructureShape.new(name: 'ListInterfaceRelationshipsResponse')
+    ListPipelineExecutionsRequest = Shapes::StructureShape.new(name: 'ListPipelineExecutionsRequest')
+    ListPipelineExecutionsRequestMaxResultsInteger = Shapes::IntegerShape.new(name: 'ListPipelineExecutionsRequestMaxResultsInteger')
+    ListPipelineExecutionsResponse = Shapes::StructureShape.new(name: 'ListPipelineExecutionsResponse')
+    ListPipelinesRequest = Shapes::StructureShape.new(name: 'ListPipelinesRequest')
+    ListPipelinesRequestMaxResultsInteger = Shapes::IntegerShape.new(name: 'ListPipelinesRequestMaxResultsInteger')
+    ListPipelinesResponse = Shapes::StructureShape.new(name: 'ListPipelinesResponse')
     ListPortalsRequest = Shapes::StructureShape.new(name: 'ListPortalsRequest')
     ListPortalsResponse = Shapes::StructureShape.new(name: 'ListPortalsResponse')
     ListProjectAssetsRequest = Shapes::StructureShape.new(name: 'ListProjectAssetsRequest')
     ListProjectAssetsResponse = Shapes::StructureShape.new(name: 'ListProjectAssetsResponse')
     ListProjectsRequest = Shapes::StructureShape.new(name: 'ListProjectsRequest')
     ListProjectsResponse = Shapes::StructureShape.new(name: 'ListProjectsResponse')
+    ListQueriesRequest = Shapes::StructureShape.new(name: 'ListQueriesRequest')
+    ListQueriesResponse = Shapes::StructureShape.new(name: 'ListQueriesResponse')
+    ListSearchesFilters = Shapes::StructureShape.new(name: 'ListSearchesFilters')
+    ListSearchesRequest = Shapes::StructureShape.new(name: 'ListSearchesRequest')
+    ListSearchesRequestMaxResultsInteger = Shapes::IntegerShape.new(name: 'ListSearchesRequestMaxResultsInteger')
+    ListSearchesResponse = Shapes::StructureShape.new(name: 'ListSearchesResponse')
     ListTagsForResourceRequest = Shapes::StructureShape.new(name: 'ListTagsForResourceRequest')
     ListTagsForResourceResponse = Shapes::StructureShape.new(name: 'ListTagsForResourceResponse')
+    ListTasksRequest = Shapes::StructureShape.new(name: 'ListTasksRequest')
+    ListTasksRequestMaxResultsInteger = Shapes::IntegerShape.new(name: 'ListTasksRequestMaxResultsInteger')
+    ListTasksResponse = Shapes::StructureShape.new(name: 'ListTasksResponse')
     ListTimeSeriesRequest = Shapes::StructureShape.new(name: 'ListTimeSeriesRequest')
     ListTimeSeriesResponse = Shapes::StructureShape.new(name: 'ListTimeSeriesResponse')
     ListTimeSeriesType = Shapes::StringShape.new(name: 'ListTimeSeriesType')
+    ListWorkspacesRequest = Shapes::StructureShape.new(name: 'ListWorkspacesRequest')
+    ListWorkspacesResponse = Shapes::StructureShape.new(name: 'ListWorkspacesResponse')
     Location = Shapes::StructureShape.new(name: 'Location')
     LoggingLevel = Shapes::StringShape.new(name: 'LoggingLevel')
     LoggingOptions = Shapes::StructureShape.new(name: 'LoggingOptions')
+    Long = Shapes::IntegerShape.new(name: 'Long')
     Macro = Shapes::StringShape.new(name: 'Macro')
+    MatchByPropertyName = Shapes::BooleanShape.new(name: 'MatchByPropertyName')
+    MatchedDataBinding = Shapes::StructureShape.new(name: 'MatchedDataBinding')
     MaxInterpolatedResults = Shapes::IntegerShape.new(name: 'MaxInterpolatedResults')
     MaxResults = Shapes::IntegerShape.new(name: 'MaxResults')
     Measurement = Shapes::StructureShape.new(name: 'Measurement')
     MeasurementProcessingConfig = Shapes::StructureShape.new(name: 'MeasurementProcessingConfig')
     MessageInput = Shapes::StringShape.new(name: 'MessageInput')
+    Metadata = Shapes::MapShape.new(name: 'Metadata')
+    MetadataKey = Shapes::StringShape.new(name: 'MetadataKey')
+    MetadataValue = Shapes::StringShape.new(name: 'MetadataValue')
     Metric = Shapes::StructureShape.new(name: 'Metric')
     MetricProcessingConfig = Shapes::StructureShape.new(name: 'MetricProcessingConfig')
     MetricWindow = Shapes::StructureShape.new(name: 'MetricWindow')
     MonitorErrorCode = Shapes::StringShape.new(name: 'MonitorErrorCode')
     MonitorErrorDetails = Shapes::StructureShape.new(name: 'MonitorErrorDetails')
     MonitorErrorMessage = Shapes::StringShape.new(name: 'MonitorErrorMessage')
+    Mp4 = Shapes::StructureShape.new(name: 'Mp4')
     MultiLayerStorage = Shapes::StructureShape.new(name: 'MultiLayerStorage')
     Name = Shapes::StringShape.new(name: 'Name')
     NextToken = Shapes::StringShape.new(name: 'NextToken')
@@ -420,8 +675,17 @@ module Aws::IoTSiteWise
     NumberOfDays = Shapes::IntegerShape.new(name: 'NumberOfDays')
     Offset = Shapes::StringShape.new(name: 'Offset')
     OffsetInNanos = Shapes::IntegerShape.new(name: 'OffsetInNanos')
+    PaginationToken = Shapes::StringShape.new(name: 'PaginationToken')
     Parquet = Shapes::StructureShape.new(name: 'Parquet')
     Permission = Shapes::StringShape.new(name: 'Permission')
+    PipelineErrorCode = Shapes::StringShape.new(name: 'PipelineErrorCode')
+    PipelineExecutionState = Shapes::StringShape.new(name: 'PipelineExecutionState')
+    PipelineExecutionStateDetails = Shapes::StructureShape.new(name: 'PipelineExecutionStateDetails')
+    PipelineExecutionStatus = Shapes::StructureShape.new(name: 'PipelineExecutionStatus')
+    PipelineExecutionSummary = Shapes::StructureShape.new(name: 'PipelineExecutionSummary')
+    PipelineExecutionSummaryList = Shapes::ListShape.new(name: 'PipelineExecutionSummaryList')
+    PipelineSummaries = Shapes::ListShape.new(name: 'PipelineSummaries')
+    PipelineSummary = Shapes::StructureShape.new(name: 'PipelineSummary')
     PortalClientId = Shapes::StringShape.new(name: 'PortalClientId')
     PortalResource = Shapes::StructureShape.new(name: 'PortalResource')
     PortalState = Shapes::StringShape.new(name: 'PortalState')
@@ -433,14 +697,21 @@ module Aws::IoTSiteWise
     PortalTypeConfiguration = Shapes::MapShape.new(name: 'PortalTypeConfiguration')
     PortalTypeEntry = Shapes::StructureShape.new(name: 'PortalTypeEntry')
     PortalTypeKey = Shapes::StringShape.new(name: 'PortalTypeKey')
+    PositiveInteger = Shapes::IntegerShape.new(name: 'PositiveInteger')
     PreconditionFailedException = Shapes::StructureShape.new(name: 'PreconditionFailedException')
     PrimitiveBoolean = Shapes::BooleanShape.new(name: 'PrimitiveBoolean')
+    ProcessingInput = Shapes::UnionShape.new(name: 'ProcessingInput')
+    ProcessingType = Shapes::StringShape.new(name: 'ProcessingType')
+    ProcessingUnit = Shapes::StringShape.new(name: 'ProcessingUnit')
     ProjectResource = Shapes::StructureShape.new(name: 'ProjectResource')
     ProjectSummaries = Shapes::ListShape.new(name: 'ProjectSummaries')
     ProjectSummary = Shapes::StructureShape.new(name: 'ProjectSummary')
     Property = Shapes::StructureShape.new(name: 'Property')
     PropertyAlias = Shapes::StringShape.new(name: 'PropertyAlias')
     PropertyDataType = Shapes::StringShape.new(name: 'PropertyDataType')
+    PropertyMapping = Shapes::StructureShape.new(name: 'PropertyMapping')
+    PropertyMappingConfiguration = Shapes::StructureShape.new(name: 'PropertyMappingConfiguration')
+    PropertyMappings = Shapes::ListShape.new(name: 'PropertyMappings')
     PropertyNotification = Shapes::StructureShape.new(name: 'PropertyNotification')
     PropertyNotificationState = Shapes::StringShape.new(name: 'PropertyNotificationState')
     PropertyNotificationTopic = Shapes::StringShape.new(name: 'PropertyNotificationTopic')
@@ -451,6 +722,8 @@ module Aws::IoTSiteWise
     PropertyValueIntegerValue = Shapes::IntegerShape.new(name: 'PropertyValueIntegerValue')
     PropertyValueNullValue = Shapes::StructureShape.new(name: 'PropertyValueNullValue')
     PropertyValueStringValue = Shapes::StringShape.new(name: 'PropertyValueStringValue')
+    PutAssetModelInterfaceRelationshipRequest = Shapes::StructureShape.new(name: 'PutAssetModelInterfaceRelationshipRequest')
+    PutAssetModelInterfaceRelationshipResponse = Shapes::StructureShape.new(name: 'PutAssetModelInterfaceRelationshipResponse')
     PutAssetPropertyValueEntries = Shapes::ListShape.new(name: 'PutAssetPropertyValueEntries')
     PutAssetPropertyValueEntry = Shapes::StructureShape.new(name: 'PutAssetPropertyValueEntry')
     PutDefaultEncryptionConfigurationRequest = Shapes::StructureShape.new(name: 'PutDefaultEncryptionConfigurationRequest')
@@ -461,31 +734,71 @@ module Aws::IoTSiteWise
     PutStorageConfigurationResponse = Shapes::StructureShape.new(name: 'PutStorageConfigurationResponse')
     Qualities = Shapes::ListShape.new(name: 'Qualities')
     Quality = Shapes::StringShape.new(name: 'Quality')
+    QueryErrorMessage = Shapes::StringShape.new(name: 'QueryErrorMessage')
+    QueryFilter = Shapes::StringShape.new(name: 'QueryFilter')
+    QueryId = Shapes::StringShape.new(name: 'QueryId')
+    QueryListNextToken = Shapes::StringShape.new(name: 'QueryListNextToken')
+    QueryMaxResults = Shapes::IntegerShape.new(name: 'QueryMaxResults')
+    QueryNextToken = Shapes::StringShape.new(name: 'QueryNextToken')
     QueryStatement = Shapes::StringShape.new(name: 'QueryStatement')
+    QueryStatistics = Shapes::StructureShape.new(name: 'QueryStatistics')
+    QueryStatus = Shapes::StringShape.new(name: 'QueryStatus')
+    QueryString = Shapes::StringShape.new(name: 'QueryString')
+    QuerySummary = Shapes::StructureShape.new(name: 'QuerySummary')
+    QuerySummaryList = Shapes::ListShape.new(name: 'QuerySummaryList')
     QueryTimeoutException = Shapes::StructureShape.new(name: 'QueryTimeoutException')
     RawValueType = Shapes::StringShape.new(name: 'RawValueType')
     Reference = Shapes::StructureShape.new(name: 'Reference')
     Resolution = Shapes::StringShape.new(name: 'Resolution')
+    ResolveTo = Shapes::StructureShape.new(name: 'ResolveTo')
+    ResolveToResourceType = Shapes::StringShape.new(name: 'ResolveToResourceType')
     Resource = Shapes::StructureShape.new(name: 'Resource')
     ResourceAlreadyExistsException = Shapes::StructureShape.new(name: 'ResourceAlreadyExistsException')
     ResourceArn = Shapes::StringShape.new(name: 'ResourceArn')
+    ResourceError = Shapes::StructureShape.new(name: 'ResourceError')
+    ResourceErrorCode = Shapes::StringShape.new(name: 'ResourceErrorCode')
     ResourceId = Shapes::StringShape.new(name: 'ResourceId')
+    ResourceName = Shapes::StringShape.new(name: 'ResourceName')
     ResourceNotFoundException = Shapes::StructureShape.new(name: 'ResourceNotFoundException')
+    ResourceState = Shapes::StringShape.new(name: 'ResourceState')
+    ResourceStatus = Shapes::StructureShape.new(name: 'ResourceStatus')
     ResourceType = Shapes::StringShape.new(name: 'ResourceType')
     ResponseStream = Shapes::StructureShape.new(name: 'ResponseStream')
     RestrictedDescription = Shapes::StringShape.new(name: 'RestrictedDescription')
     RestrictedName = Shapes::StringShape.new(name: 'RestrictedName')
+    Result = Shapes::ListShape.new(name: 'Result')
+    ResultProperty = Shapes::StringShape.new(name: 'ResultProperty')
     RetentionPeriod = Shapes::StructureShape.new(name: 'RetentionPeriod')
     Row = Shapes::StructureShape.new(name: 'Row')
+    RowList = Shapes::ListShape.new(name: 'RowList')
     Rows = Shapes::ListShape.new(name: 'Rows')
+    S3Uri = Shapes::StringShape.new(name: 'S3Uri')
     SSOApplicationId = Shapes::StringShape.new(name: 'SSOApplicationId')
     ScalarType = Shapes::StringShape.new(name: 'ScalarType')
     ScalarValue = Shapes::StringShape.new(name: 'ScalarValue')
+    SearchFilters = Shapes::StructureShape.new(name: 'SearchFilters')
+    SearchId = Shapes::StringShape.new(name: 'SearchId')
+    SearchQueryStatement = Shapes::StringShape.new(name: 'SearchQueryStatement')
+    SearchResult = Shapes::StructureShape.new(name: 'SearchResult')
+    SearchResultList = Shapes::ListShape.new(name: 'SearchResultList')
+    SearchStatus = Shapes::StringShape.new(name: 'SearchStatus')
+    SearchStatusFilterList = Shapes::ListShape.new(name: 'SearchStatusFilterList')
+    SearchSummaries = Shapes::ListShape.new(name: 'SearchSummaries')
+    SearchSummary = Shapes::StructureShape.new(name: 'SearchSummary')
+    SearchType = Shapes::StringShape.new(name: 'SearchType')
+    SearchTypeFilterList = Shapes::ListShape.new(name: 'SearchTypeFilterList')
     SelectAll = Shapes::StringShape.new(name: 'SelectAll')
     ServiceUnavailableException = Shapes::StructureShape.new(name: 'ServiceUnavailableException')
+    SessionConfig = Shapes::StructureShape.new(name: 'SessionConfig')
     SiemensIE = Shapes::StructureShape.new(name: 'SiemensIE')
     Source = Shapes::StructureShape.new(name: 'Source')
     SourceDetail = Shapes::StructureShape.new(name: 'SourceDetail')
+    StartPipelineExecutionRequest = Shapes::StructureShape.new(name: 'StartPipelineExecutionRequest')
+    StartPipelineExecutionResponse = Shapes::StructureShape.new(name: 'StartPipelineExecutionResponse')
+    StartQueryRequest = Shapes::StructureShape.new(name: 'StartQueryRequest')
+    StartQueryResponse = Shapes::StructureShape.new(name: 'StartQueryResponse')
+    StartSearchRequest = Shapes::StructureShape.new(name: 'StartSearchRequest')
+    StartSearchResponse = Shapes::StructureShape.new(name: 'StartSearchResponse')
     StorageType = Shapes::StringShape.new(name: 'StorageType')
     String = Shapes::StringShape.new(name: 'String')
     TagKey = Shapes::StringShape.new(name: 'TagKey')
@@ -496,13 +809,22 @@ module Aws::IoTSiteWise
     TagValue = Shapes::StringShape.new(name: 'TagValue')
     TargetResource = Shapes::StructureShape.new(name: 'TargetResource')
     TargetResourceType = Shapes::StringShape.new(name: 'TargetResourceType')
+    TaskConfiguration = Shapes::UnionShape.new(name: 'TaskConfiguration')
+    TaskSummaries = Shapes::ListShape.new(name: 'TaskSummaries')
+    TaskSummary = Shapes::StructureShape.new(name: 'TaskSummary')
     ThrottlingException = Shapes::StructureShape.new(name: 'ThrottlingException')
     TimeInNanos = Shapes::StructureShape.new(name: 'TimeInNanos')
     TimeInSeconds = Shapes::IntegerShape.new(name: 'TimeInSeconds')
+    TimeInterval = Shapes::StructureShape.new(name: 'TimeInterval')
+    TimeIntervalList = Shapes::ListShape.new(name: 'TimeIntervalList')
     TimeOrdering = Shapes::StringShape.new(name: 'TimeOrdering')
     TimeSeriesId = Shapes::StringShape.new(name: 'TimeSeriesId')
+    TimeSeriesIdList = Shapes::ListShape.new(name: 'TimeSeriesIdList')
     TimeSeriesSummaries = Shapes::ListShape.new(name: 'TimeSeriesSummaries')
     TimeSeriesSummary = Shapes::StructureShape.new(name: 'TimeSeriesSummary')
+    TimeoutSeconds = Shapes::IntegerShape.new(name: 'TimeoutSeconds')
+    TimeseriesItem = Shapes::StructureShape.new(name: 'TimeseriesItem')
+    TimeseriesList = Shapes::ListShape.new(name: 'TimeseriesList')
     Timestamp = Shapes::TimestampShape.new(name: 'Timestamp')
     Timestamps = Shapes::ListShape.new(name: 'Timestamps')
     TooManyTagsException = Shapes::StructureShape.new(name: 'TooManyTagsException')
@@ -511,6 +833,7 @@ module Aws::IoTSiteWise
     TransformProcessingConfig = Shapes::StructureShape.new(name: 'TransformProcessingConfig')
     TraversalDirection = Shapes::StringShape.new(name: 'TraversalDirection')
     TraversalType = Shapes::StringShape.new(name: 'TraversalType')
+    TrimSettings = Shapes::StructureShape.new(name: 'TrimSettings')
     TumblingWindow = Shapes::StructureShape.new(name: 'TumblingWindow')
     UnauthorizedException = Shapes::StructureShape.new(name: 'UnauthorizedException')
     Unlimited = Shapes::BooleanShape.new(name: 'Unlimited')
@@ -525,6 +848,8 @@ module Aws::IoTSiteWise
     UpdateAssetPropertyRequest = Shapes::StructureShape.new(name: 'UpdateAssetPropertyRequest')
     UpdateAssetRequest = Shapes::StructureShape.new(name: 'UpdateAssetRequest')
     UpdateAssetResponse = Shapes::StructureShape.new(name: 'UpdateAssetResponse')
+    UpdateComputationModelRequest = Shapes::StructureShape.new(name: 'UpdateComputationModelRequest')
+    UpdateComputationModelResponse = Shapes::StructureShape.new(name: 'UpdateComputationModelResponse')
     UpdateDashboardRequest = Shapes::StructureShape.new(name: 'UpdateDashboardRequest')
     UpdateDashboardResponse = Shapes::StructureShape.new(name: 'UpdateDashboardResponse')
     UpdateDatasetRequest = Shapes::StructureShape.new(name: 'UpdateDatasetRequest')
@@ -532,10 +857,16 @@ module Aws::IoTSiteWise
     UpdateGatewayCapabilityConfigurationRequest = Shapes::StructureShape.new(name: 'UpdateGatewayCapabilityConfigurationRequest')
     UpdateGatewayCapabilityConfigurationResponse = Shapes::StructureShape.new(name: 'UpdateGatewayCapabilityConfigurationResponse')
     UpdateGatewayRequest = Shapes::StructureShape.new(name: 'UpdateGatewayRequest')
+    UpdatePipelineRequest = Shapes::StructureShape.new(name: 'UpdatePipelineRequest')
+    UpdatePipelineResponse = Shapes::StructureShape.new(name: 'UpdatePipelineResponse')
     UpdatePortalRequest = Shapes::StructureShape.new(name: 'UpdatePortalRequest')
     UpdatePortalResponse = Shapes::StructureShape.new(name: 'UpdatePortalResponse')
     UpdateProjectRequest = Shapes::StructureShape.new(name: 'UpdateProjectRequest')
     UpdateProjectResponse = Shapes::StructureShape.new(name: 'UpdateProjectResponse')
+    UpdateTaskRequest = Shapes::StructureShape.new(name: 'UpdateTaskRequest')
+    UpdateTaskResponse = Shapes::StructureShape.new(name: 'UpdateTaskResponse')
+    UpdateWorkspaceRequest = Shapes::StructureShape.new(name: 'UpdateWorkspaceRequest')
+    UpdateWorkspaceResponse = Shapes::StructureShape.new(name: 'UpdateWorkspaceResponse')
     Url = Shapes::StringShape.new(name: 'Url')
     UserIdentity = Shapes::StructureShape.new(name: 'UserIdentity')
     ValidationException = Shapes::StructureShape.new(name: 'ValidationException')
@@ -543,8 +874,17 @@ module Aws::IoTSiteWise
     VariableValue = Shapes::StructureShape.new(name: 'VariableValue')
     Variant = Shapes::StructureShape.new(name: 'Variant')
     Version = Shapes::StringShape.new(name: 'Version')
+    VideoDataType = Shapes::StringShape.new(name: 'VideoDataType')
     WarmTierRetentionPeriod = Shapes::StructureShape.new(name: 'WarmTierRetentionPeriod')
     WarmTierState = Shapes::StringShape.new(name: 'WarmTierState')
+    WorkspaceEncryptionConfiguration = Shapes::StructureShape.new(name: 'WorkspaceEncryptionConfiguration')
+    WorkspaceEncryptionConfigurationInfo = Shapes::StructureShape.new(name: 'WorkspaceEncryptionConfigurationInfo')
+    WorkspaceErrorDetails = Shapes::StructureShape.new(name: 'WorkspaceErrorDetails')
+    WorkspaceName = Shapes::StringShape.new(name: 'WorkspaceName')
+    WorkspaceState = Shapes::StringShape.new(name: 'WorkspaceState')
+    WorkspaceStatus = Shapes::StructureShape.new(name: 'WorkspaceStatus')
+    WorkspaceSummaries = Shapes::ListShape.new(name: 'WorkspaceSummaries')
+    WorkspaceSummary = Shapes::StructureShape.new(name: 'WorkspaceSummary')
 
     AccessDeniedException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, location_name: "message"))
     AccessDeniedException.struct_class = Types::AccessDeniedException
@@ -574,6 +914,7 @@ module Aws::IoTSiteWise
     ActionSummary.add_member(:action_id, Shapes::ShapeRef.new(shape: ID, location_name: "actionId"))
     ActionSummary.add_member(:action_definition_id, Shapes::ShapeRef.new(shape: ID, location_name: "actionDefinitionId"))
     ActionSummary.add_member(:target_resource, Shapes::ShapeRef.new(shape: TargetResource, location_name: "targetResource"))
+    ActionSummary.add_member(:resolve_to, Shapes::ShapeRef.new(shape: ResolveTo, location_name: "resolveTo"))
     ActionSummary.struct_class = Types::ActionSummary
 
     AggregateTypes.member = Shapes::ShapeRef.new(shape: AggregateType)
@@ -596,6 +937,21 @@ module Aws::IoTSiteWise
     Alarms.add_member(:alarm_role_arn, Shapes::ShapeRef.new(shape: IamArn, required: true, location_name: "alarmRoleArn"))
     Alarms.add_member(:notification_lambda_arn, Shapes::ShapeRef.new(shape: ARN, location_name: "notificationLambdaArn"))
     Alarms.struct_class = Types::Alarms
+
+    Annotation.struct_class = Types::Annotation
+
+    ApplicationList.member = Shapes::ShapeRef.new(shape: ApplicationSummary)
+
+    ApplicationSummary.add_member(:arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "arn"))
+    ApplicationSummary.add_member(:id, Shapes::ShapeRef.new(shape: ApplicationId, required: true, location_name: "id"))
+    ApplicationSummary.add_member(:name, Shapes::ShapeRef.new(shape: ApplicationName, required: true, location_name: "name"))
+    ApplicationSummary.add_member(:status, Shapes::ShapeRef.new(shape: ApplicationStatus, required: true, location_name: "status"))
+    ApplicationSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "createdAt"))
+    ApplicationSummary.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location_name: "workspaceName"))
+    ApplicationSummary.struct_class = Types::ApplicationSummary
+
+    AssetBindingValueFilter.add_member(:asset_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "assetId"))
+    AssetBindingValueFilter.struct_class = Types::AssetBindingValueFilter
 
     AssetCompositeModel.add_member(:name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "name"))
     AssetCompositeModel.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
@@ -631,8 +987,8 @@ module Aws::IoTSiteWise
     AssetHierarchies.member = Shapes::ShapeRef.new(shape: AssetHierarchy)
 
     AssetHierarchy.add_member(:id, Shapes::ShapeRef.new(shape: ID, location_name: "id"))
-    AssetHierarchy.add_member(:name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "name"))
     AssetHierarchy.add_member(:external_id, Shapes::ShapeRef.new(shape: ExternalId, location_name: "externalId"))
+    AssetHierarchy.add_member(:name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "name"))
     AssetHierarchy.struct_class = Types::AssetHierarchy
 
     AssetHierarchyInfo.add_member(:parent_asset_id, Shapes::ShapeRef.new(shape: ID, location_name: "parentAssetId"))
@@ -640,6 +996,9 @@ module Aws::IoTSiteWise
     AssetHierarchyInfo.struct_class = Types::AssetHierarchyInfo
 
     AssetIDs.member = Shapes::ShapeRef.new(shape: ID)
+
+    AssetModelBindingValueFilter.add_member(:asset_model_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "assetModelId"))
+    AssetModelBindingValueFilter.struct_class = Types::AssetModelBindingValueFilter
 
     AssetModelCompositeModel.add_member(:name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "name"))
     AssetModelCompositeModel.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
@@ -705,6 +1064,14 @@ module Aws::IoTSiteWise
     AssetModelProperty.add_member(:path, Shapes::ShapeRef.new(shape: AssetModelPropertyPath, location_name: "path"))
     AssetModelProperty.struct_class = Types::AssetModelProperty
 
+    AssetModelPropertyBindingValue.add_member(:asset_model_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "assetModelId"))
+    AssetModelPropertyBindingValue.add_member(:property_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "propertyId"))
+    AssetModelPropertyBindingValue.struct_class = Types::AssetModelPropertyBindingValue
+
+    AssetModelPropertyBindingValueFilter.add_member(:asset_model_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "assetModelId"))
+    AssetModelPropertyBindingValueFilter.add_member(:property_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "propertyId"))
+    AssetModelPropertyBindingValueFilter.struct_class = Types::AssetModelPropertyBindingValueFilter
+
     AssetModelPropertyDefinition.add_member(:id, Shapes::ShapeRef.new(shape: ID, location_name: "id"))
     AssetModelPropertyDefinition.add_member(:external_id, Shapes::ShapeRef.new(shape: ExternalId, location_name: "externalId"))
     AssetModelPropertyDefinition.add_member(:name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "name"))
@@ -733,6 +1100,7 @@ module Aws::IoTSiteWise
     AssetModelPropertySummary.add_member(:type, Shapes::ShapeRef.new(shape: PropertyType, required: true, location_name: "type"))
     AssetModelPropertySummary.add_member(:asset_model_composite_model_id, Shapes::ShapeRef.new(shape: ID, location_name: "assetModelCompositeModelId"))
     AssetModelPropertySummary.add_member(:path, Shapes::ShapeRef.new(shape: AssetModelPropertyPath, location_name: "path"))
+    AssetModelPropertySummary.add_member(:interface_summaries, Shapes::ShapeRef.new(shape: InterfaceSummaries, location_name: "interfaceSummaries"))
     AssetModelPropertySummary.struct_class = Types::AssetModelPropertySummary
 
     AssetModelStatus.add_member(:state, Shapes::ShapeRef.new(shape: AssetModelState, required: true, location_name: "state"))
@@ -756,6 +1124,7 @@ module Aws::IoTSiteWise
     AssetProperties.member = Shapes::ShapeRef.new(shape: AssetProperty)
 
     AssetProperty.add_member(:id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "id"))
+    AssetProperty.add_member(:external_id, Shapes::ShapeRef.new(shape: ExternalId, location_name: "externalId"))
     AssetProperty.add_member(:name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "name"))
     AssetProperty.add_member(:alias, Shapes::ShapeRef.new(shape: PropertyAlias, location_name: "alias"))
     AssetProperty.add_member(:notification, Shapes::ShapeRef.new(shape: PropertyNotification, location_name: "notification"))
@@ -763,8 +1132,15 @@ module Aws::IoTSiteWise
     AssetProperty.add_member(:data_type_spec, Shapes::ShapeRef.new(shape: Name, location_name: "dataTypeSpec"))
     AssetProperty.add_member(:unit, Shapes::ShapeRef.new(shape: PropertyUnit, location_name: "unit"))
     AssetProperty.add_member(:path, Shapes::ShapeRef.new(shape: AssetPropertyPath, location_name: "path"))
-    AssetProperty.add_member(:external_id, Shapes::ShapeRef.new(shape: ExternalId, location_name: "externalId"))
     AssetProperty.struct_class = Types::AssetProperty
+
+    AssetPropertyBindingValue.add_member(:asset_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "assetId"))
+    AssetPropertyBindingValue.add_member(:property_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "propertyId"))
+    AssetPropertyBindingValue.struct_class = Types::AssetPropertyBindingValue
+
+    AssetPropertyBindingValueFilter.add_member(:asset_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "assetId"))
+    AssetPropertyBindingValueFilter.add_member(:property_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "propertyId"))
+    AssetPropertyBindingValueFilter.struct_class = Types::AssetPropertyBindingValueFilter
 
     AssetPropertyPath.member = Shapes::ShapeRef.new(shape: AssetPropertyPathSegment)
 
@@ -775,12 +1151,12 @@ module Aws::IoTSiteWise
     AssetPropertySummaries.member = Shapes::ShapeRef.new(shape: AssetPropertySummary)
 
     AssetPropertySummary.add_member(:id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "id"))
+    AssetPropertySummary.add_member(:external_id, Shapes::ShapeRef.new(shape: ExternalId, location_name: "externalId"))
     AssetPropertySummary.add_member(:alias, Shapes::ShapeRef.new(shape: PropertyAlias, location_name: "alias"))
     AssetPropertySummary.add_member(:unit, Shapes::ShapeRef.new(shape: PropertyUnit, location_name: "unit"))
     AssetPropertySummary.add_member(:notification, Shapes::ShapeRef.new(shape: PropertyNotification, location_name: "notification"))
     AssetPropertySummary.add_member(:asset_composite_model_id, Shapes::ShapeRef.new(shape: ID, location_name: "assetCompositeModelId"))
     AssetPropertySummary.add_member(:path, Shapes::ShapeRef.new(shape: AssetPropertyPath, location_name: "path"))
-    AssetPropertySummary.add_member(:external_id, Shapes::ShapeRef.new(shape: ExternalId, location_name: "externalId"))
     AssetPropertySummary.struct_class = Types::AssetPropertySummary
 
     AssetPropertyValue.add_member(:value, Shapes::ShapeRef.new(shape: Variant, required: true, location_name: "value"))
@@ -805,6 +1181,7 @@ module Aws::IoTSiteWise
     AssetSummaries.member = Shapes::ShapeRef.new(shape: AssetSummary)
 
     AssetSummary.add_member(:id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "id"))
+    AssetSummary.add_member(:external_id, Shapes::ShapeRef.new(shape: ExternalId, location_name: "externalId"))
     AssetSummary.add_member(:arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "arn"))
     AssetSummary.add_member(:name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "name"))
     AssetSummary.add_member(:asset_model_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "assetModelId"))
@@ -813,24 +1190,32 @@ module Aws::IoTSiteWise
     AssetSummary.add_member(:status, Shapes::ShapeRef.new(shape: AssetStatus, required: true, location_name: "status"))
     AssetSummary.add_member(:hierarchies, Shapes::ShapeRef.new(shape: AssetHierarchies, required: true, location_name: "hierarchies"))
     AssetSummary.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    AssetSummary.add_member(:external_id, Shapes::ShapeRef.new(shape: ExternalId, location_name: "externalId"))
     AssetSummary.struct_class = Types::AssetSummary
 
     AssociateAssetsRequest.add_member(:asset_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "uri", location_name: "assetId"))
     AssociateAssetsRequest.add_member(:hierarchy_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location_name: "hierarchyId"))
     AssociateAssetsRequest.add_member(:child_asset_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location_name: "childAssetId"))
-    AssociateAssetsRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    AssociateAssetsRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     AssociateAssetsRequest.struct_class = Types::AssociateAssetsRequest
+
+    AssociateDataSegmentEntries.member = Shapes::ShapeRef.new(shape: AssociateDataSegmentEntry)
+
+    AssociateDataSegmentEntry.add_member(:source_dataset_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "sourceDatasetId"))
+    AssociateDataSegmentEntry.add_member(:time_series_id, Shapes::ShapeRef.new(shape: TimeSeriesId, required: true, location_name: "timeSeriesId"))
+    AssociateDataSegmentEntry.add_member(:start_timestamp, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "startTimestamp"))
+    AssociateDataSegmentEntry.add_member(:end_timestamp, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "endTimestamp"))
+    AssociateDataSegmentEntry.struct_class = Types::AssociateDataSegmentEntry
 
     AssociateTimeSeriesToAssetPropertyRequest.add_member(:alias, Shapes::ShapeRef.new(shape: PropertyAlias, required: true, location: "querystring", location_name: "alias"))
     AssociateTimeSeriesToAssetPropertyRequest.add_member(:asset_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "querystring", location_name: "assetId"))
     AssociateTimeSeriesToAssetPropertyRequest.add_member(:property_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "querystring", location_name: "propertyId"))
-    AssociateTimeSeriesToAssetPropertyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    AssociateTimeSeriesToAssetPropertyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     AssociateTimeSeriesToAssetPropertyRequest.struct_class = Types::AssociateTimeSeriesToAssetPropertyRequest
 
     AssociatedAssetsSummaries.member = Shapes::ShapeRef.new(shape: AssociatedAssetsSummary)
 
     AssociatedAssetsSummary.add_member(:id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "id"))
+    AssociatedAssetsSummary.add_member(:external_id, Shapes::ShapeRef.new(shape: ExternalId, location_name: "externalId"))
     AssociatedAssetsSummary.add_member(:arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "arn"))
     AssociatedAssetsSummary.add_member(:name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "name"))
     AssociatedAssetsSummary.add_member(:asset_model_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "assetModelId"))
@@ -839,27 +1224,59 @@ module Aws::IoTSiteWise
     AssociatedAssetsSummary.add_member(:status, Shapes::ShapeRef.new(shape: AssetStatus, required: true, location_name: "status"))
     AssociatedAssetsSummary.add_member(:hierarchies, Shapes::ShapeRef.new(shape: AssetHierarchies, required: true, location_name: "hierarchies"))
     AssociatedAssetsSummary.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    AssociatedAssetsSummary.add_member(:external_id, Shapes::ShapeRef.new(shape: ExternalId, location_name: "externalId"))
     AssociatedAssetsSummary.struct_class = Types::AssociatedAssetsSummary
 
     Attribute.add_member(:default_value, Shapes::ShapeRef.new(shape: DefaultValue, location_name: "defaultValue"))
     Attribute.struct_class = Types::Attribute
 
+    BatchAssociateDataSegmentsToDatasetRequest.add_member(:dataset_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "datasetId"))
+    BatchAssociateDataSegmentsToDatasetRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location_name: "workspaceName"))
+    BatchAssociateDataSegmentsToDatasetRequest.add_member(:associate_data_segment_entries, Shapes::ShapeRef.new(shape: AssociateDataSegmentEntries, required: true, location_name: "associateDataSegmentEntries"))
+    BatchAssociateDataSegmentsToDatasetRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    BatchAssociateDataSegmentsToDatasetRequest.struct_class = Types::BatchAssociateDataSegmentsToDatasetRequest
+
+    BatchAssociateDataSegmentsToDatasetResponse.add_member(:dataset_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "datasetId"))
+    BatchAssociateDataSegmentsToDatasetResponse.add_member(:dataset_version, Shapes::ShapeRef.new(shape: Version, required: true, location_name: "datasetVersion"))
+    BatchAssociateDataSegmentsToDatasetResponse.add_member(:failed_associations, Shapes::ShapeRef.new(shape: FailedDataSegmentAssociations, required: true, location_name: "failedAssociations"))
+    BatchAssociateDataSegmentsToDatasetResponse.struct_class = Types::BatchAssociateDataSegmentsToDatasetResponse
+
     BatchAssociateProjectAssetsErrors.member = Shapes::ShapeRef.new(shape: AssetErrorDetails)
 
     BatchAssociateProjectAssetsRequest.add_member(:project_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "projectId"))
     BatchAssociateProjectAssetsRequest.add_member(:asset_ids, Shapes::ShapeRef.new(shape: IDs, required: true, location_name: "assetIds"))
-    BatchAssociateProjectAssetsRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    BatchAssociateProjectAssetsRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     BatchAssociateProjectAssetsRequest.struct_class = Types::BatchAssociateProjectAssetsRequest
 
     BatchAssociateProjectAssetsResponse.add_member(:errors, Shapes::ShapeRef.new(shape: BatchAssociateProjectAssetsErrors, location_name: "errors"))
     BatchAssociateProjectAssetsResponse.struct_class = Types::BatchAssociateProjectAssetsResponse
 
+    BatchDeleteDatasetDataSegmentsRequest.add_member(:dataset_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "datasetId"))
+    BatchDeleteDatasetDataSegmentsRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location_name: "workspaceName"))
+    BatchDeleteDatasetDataSegmentsRequest.add_member(:delete_data_segment_entries, Shapes::ShapeRef.new(shape: DeleteDataSegmentEntries, required: true, location_name: "deleteDataSegmentEntries"))
+    BatchDeleteDatasetDataSegmentsRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    BatchDeleteDatasetDataSegmentsRequest.struct_class = Types::BatchDeleteDatasetDataSegmentsRequest
+
+    BatchDeleteDatasetDataSegmentsResponse.add_member(:dataset_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "datasetId"))
+    BatchDeleteDatasetDataSegmentsResponse.add_member(:dataset_version, Shapes::ShapeRef.new(shape: Version, required: true, location_name: "datasetVersion"))
+    BatchDeleteDatasetDataSegmentsResponse.add_member(:errors, Shapes::ShapeRef.new(shape: FailedDataSegmentDeletions, required: true, location_name: "errors"))
+    BatchDeleteDatasetDataSegmentsResponse.struct_class = Types::BatchDeleteDatasetDataSegmentsResponse
+
+    BatchDisassociateDataSegmentsFromDatasetRequest.add_member(:dataset_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "datasetId"))
+    BatchDisassociateDataSegmentsFromDatasetRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location_name: "workspaceName"))
+    BatchDisassociateDataSegmentsFromDatasetRequest.add_member(:disassociate_data_segment_entries, Shapes::ShapeRef.new(shape: DisassociateDataSegmentEntries, required: true, location_name: "disassociateDataSegmentEntries"))
+    BatchDisassociateDataSegmentsFromDatasetRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    BatchDisassociateDataSegmentsFromDatasetRequest.struct_class = Types::BatchDisassociateDataSegmentsFromDatasetRequest
+
+    BatchDisassociateDataSegmentsFromDatasetResponse.add_member(:dataset_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "datasetId"))
+    BatchDisassociateDataSegmentsFromDatasetResponse.add_member(:dataset_version, Shapes::ShapeRef.new(shape: Version, required: true, location_name: "datasetVersion"))
+    BatchDisassociateDataSegmentsFromDatasetResponse.add_member(:failed_disassociations, Shapes::ShapeRef.new(shape: FailedDataSegmentDisassociations, required: true, location_name: "failedDisassociations"))
+    BatchDisassociateDataSegmentsFromDatasetResponse.struct_class = Types::BatchDisassociateDataSegmentsFromDatasetResponse
+
     BatchDisassociateProjectAssetsErrors.member = Shapes::ShapeRef.new(shape: AssetErrorDetails)
 
     BatchDisassociateProjectAssetsRequest.add_member(:project_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "projectId"))
     BatchDisassociateProjectAssetsRequest.add_member(:asset_ids, Shapes::ShapeRef.new(shape: IDs, required: true, location_name: "assetIds"))
-    BatchDisassociateProjectAssetsRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    BatchDisassociateProjectAssetsRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     BatchDisassociateProjectAssetsRequest.struct_class = Types::BatchDisassociateProjectAssetsRequest
 
     BatchDisassociateProjectAssetsResponse.add_member(:errors, Shapes::ShapeRef.new(shape: BatchDisassociateProjectAssetsErrors, location_name: "errors"))
@@ -1023,6 +1440,33 @@ module Aws::IoTSiteWise
     BatchPutAssetPropertyValueResponse.add_member(:error_entries, Shapes::ShapeRef.new(shape: BatchPutAssetPropertyErrorEntries, required: true, location_name: "errorEntries"))
     BatchPutAssetPropertyValueResponse.struct_class = Types::BatchPutAssetPropertyValueResponse
 
+    BindingValueList.member = Shapes::ShapeRef.new(shape: ComputationModelDataBindingValue)
+
+    CancelEnrichmentJobRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    CancelEnrichmentJobRequest.add_member(:job_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "jobId"))
+    CancelEnrichmentJobRequest.struct_class = Types::CancelEnrichmentJobRequest
+
+    CancelEnrichmentJobResponse.add_member(:job_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "jobId"))
+    CancelEnrichmentJobResponse.add_member(:status, Shapes::ShapeRef.new(shape: EnrichmentJobStatus, required: true, location_name: "status"))
+    CancelEnrichmentJobResponse.struct_class = Types::CancelEnrichmentJobResponse
+
+    CancelPipelineExecutionRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    CancelPipelineExecutionRequest.add_member(:pipeline_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location: "uri", location_name: "pipelineName"))
+    CancelPipelineExecutionRequest.add_member(:pipeline_execution_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "pipelineExecutionId"))
+    CancelPipelineExecutionRequest.add_member(:reason, Shapes::ShapeRef.new(shape: CancelPipelineExecutionRequestReasonString, location_name: "reason"))
+    CancelPipelineExecutionRequest.struct_class = Types::CancelPipelineExecutionRequest
+
+    CancelPipelineExecutionResponse.add_member(:state, Shapes::ShapeRef.new(shape: PipelineExecutionState, required: true, location_name: "state"))
+    CancelPipelineExecutionResponse.struct_class = Types::CancelPipelineExecutionResponse
+
+    CancelQueryRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    CancelQueryRequest.add_member(:query_id, Shapes::ShapeRef.new(shape: QueryId, required: true, location: "uri", location_name: "queryId"))
+    CancelQueryRequest.struct_class = Types::CancelQueryRequest
+
+    CancelQueryResponse.add_member(:query_id, Shapes::ShapeRef.new(shape: QueryId, required: true, location_name: "queryId"))
+    CancelQueryResponse.add_member(:status, Shapes::ShapeRef.new(shape: QueryStatus, required: true, location_name: "status"))
+    CancelQueryResponse.struct_class = Types::CancelQueryResponse
+
     Citation.add_member(:reference, Shapes::ShapeRef.new(shape: Reference, location_name: "reference"))
     Citation.add_member(:content, Shapes::ShapeRef.new(shape: Content, location_name: "content"))
     Citation.struct_class = Types::Citation
@@ -1033,12 +1477,20 @@ module Aws::IoTSiteWise
     ColumnInfo.add_member(:type, Shapes::ShapeRef.new(shape: ColumnType, location_name: "type"))
     ColumnInfo.struct_class = Types::ColumnInfo
 
+    ColumnInformation.add_member(:name, Shapes::ShapeRef.new(shape: ColumnLabel, required: true, location_name: "name"))
+    ColumnInformation.add_member(:type, Shapes::ShapeRef.new(shape: ColumnDataType, required: true, location_name: "type"))
+    ColumnInformation.struct_class = Types::ColumnInformation
+
+    ColumnInformationList.member = Shapes::ShapeRef.new(shape: ColumnInformation)
+
     ColumnNames.member = Shapes::ShapeRef.new(shape: ColumnName)
 
     ColumnType.add_member(:scalar_type, Shapes::ShapeRef.new(shape: ScalarType, location_name: "scalarType"))
     ColumnType.struct_class = Types::ColumnType
 
     ColumnsList.member = Shapes::ShapeRef.new(shape: ColumnInfo)
+
+    CommandList.member = Shapes::ShapeRef.new(shape: String)
 
     CompositeModelProperty.add_member(:name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "name"))
     CompositeModelProperty.add_member(:type, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "type"))
@@ -1062,6 +1514,89 @@ module Aws::IoTSiteWise
     CompositionRelationshipSummary.add_member(:asset_model_composite_model_type, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "assetModelCompositeModelType"))
     CompositionRelationshipSummary.struct_class = Types::CompositionRelationshipSummary
 
+    ComputationModelAnomalyDetectionConfiguration.add_member(:input_properties, Shapes::ShapeRef.new(shape: InputProperties, required: true, location_name: "inputProperties"))
+    ComputationModelAnomalyDetectionConfiguration.add_member(:result_property, Shapes::ShapeRef.new(shape: ResultProperty, required: true, location_name: "resultProperty"))
+    ComputationModelAnomalyDetectionConfiguration.struct_class = Types::ComputationModelAnomalyDetectionConfiguration
+
+    ComputationModelConfiguration.add_member(:anomaly_detection, Shapes::ShapeRef.new(shape: ComputationModelAnomalyDetectionConfiguration, location_name: "anomalyDetection"))
+    ComputationModelConfiguration.struct_class = Types::ComputationModelConfiguration
+
+    ComputationModelDataBinding.key = Shapes::ShapeRef.new(shape: ComputationModelDataBindingVariable)
+    ComputationModelDataBinding.value = Shapes::ShapeRef.new(shape: ComputationModelDataBindingValue)
+
+    ComputationModelDataBindingUsageSummaries.member = Shapes::ShapeRef.new(shape: ComputationModelDataBindingUsageSummary)
+
+    ComputationModelDataBindingUsageSummary.add_member(:computation_model_ids, Shapes::ShapeRef.new(shape: ComputationModelIdList, required: true, location_name: "computationModelIds"))
+    ComputationModelDataBindingUsageSummary.add_member(:matched_data_binding, Shapes::ShapeRef.new(shape: MatchedDataBinding, required: true, location_name: "matchedDataBinding"))
+    ComputationModelDataBindingUsageSummary.struct_class = Types::ComputationModelDataBindingUsageSummary
+
+    ComputationModelDataBindingValue.add_member(:asset_model_property, Shapes::ShapeRef.new(shape: AssetModelPropertyBindingValue, location_name: "assetModelProperty"))
+    ComputationModelDataBindingValue.add_member(:asset_property, Shapes::ShapeRef.new(shape: AssetPropertyBindingValue, location_name: "assetProperty"))
+    ComputationModelDataBindingValue.add_member(:list, Shapes::ShapeRef.new(shape: BindingValueList, location_name: "list"))
+    ComputationModelDataBindingValue.struct_class = Types::ComputationModelDataBindingValue
+
+    ComputationModelExecutionSummary.key = Shapes::ShapeRef.new(shape: ComputationModelExecutionSummaryKey)
+    ComputationModelExecutionSummary.value = Shapes::ShapeRef.new(shape: ComputationModelExecutionSummaryValue)
+
+    ComputationModelIdList.member = Shapes::ShapeRef.new(shape: ID)
+
+    ComputationModelResolveToResourceSummaries.member = Shapes::ShapeRef.new(shape: ComputationModelResolveToResourceSummary)
+
+    ComputationModelResolveToResourceSummary.add_member(:resolve_to, Shapes::ShapeRef.new(shape: ResolveTo, location_name: "resolveTo"))
+    ComputationModelResolveToResourceSummary.struct_class = Types::ComputationModelResolveToResourceSummary
+
+    ComputationModelStatus.add_member(:state, Shapes::ShapeRef.new(shape: ComputationModelState, required: true, location_name: "state"))
+    ComputationModelStatus.add_member(:error, Shapes::ShapeRef.new(shape: ErrorDetails, location_name: "error"))
+    ComputationModelStatus.struct_class = Types::ComputationModelStatus
+
+    ComputationModelSummaries.member = Shapes::ShapeRef.new(shape: ComputationModelSummary)
+
+    ComputationModelSummary.add_member(:id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "id"))
+    ComputationModelSummary.add_member(:arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "arn"))
+    ComputationModelSummary.add_member(:name, Shapes::ShapeRef.new(shape: RestrictedName, required: true, location_name: "name"))
+    ComputationModelSummary.add_member(:description, Shapes::ShapeRef.new(shape: RestrictedDescription, location_name: "description"))
+    ComputationModelSummary.add_member(:type, Shapes::ShapeRef.new(shape: ComputationModelType, required: true, location_name: "type"))
+    ComputationModelSummary.add_member(:creation_date, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "creationDate"))
+    ComputationModelSummary.add_member(:last_update_date, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "lastUpdateDate"))
+    ComputationModelSummary.add_member(:status, Shapes::ShapeRef.new(shape: ComputationModelStatus, required: true, location_name: "status"))
+    ComputationModelSummary.add_member(:version, Shapes::ShapeRef.new(shape: Version, required: true, location_name: "version"))
+    ComputationModelSummary.struct_class = Types::ComputationModelSummary
+
+    ComputeNode.add_member(:compute_node_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location_name: "computeNodeName"))
+    ComputeNode.add_member(:task_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location_name: "taskName"))
+    ComputeNode.add_member(:environment_variables, Shapes::ShapeRef.new(shape: EnvironmentVariablesMap, location_name: "environmentVariables"))
+    ComputeNode.add_member(:depends_on, Shapes::ShapeRef.new(shape: ComputeNodeNameList, location_name: "dependsOn"))
+    ComputeNode.struct_class = Types::ComputeNode
+
+    ComputeNodeEnvironmentVariablesMap.key = Shapes::ShapeRef.new(shape: ResourceName)
+    ComputeNodeEnvironmentVariablesMap.value = Shapes::ShapeRef.new(shape: EnvironmentVariablesMap)
+
+    ComputeNodeExecutionDetails.add_member(:compute_node_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location_name: "computeNodeName"))
+    ComputeNodeExecutionDetails.add_member(:task_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location_name: "taskName"))
+    ComputeNodeExecutionDetails.add_member(:task_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "taskArn"))
+    ComputeNodeExecutionDetails.add_member(:task_version, Shapes::ShapeRef.new(shape: Version, required: true, location_name: "taskVersion"))
+    ComputeNodeExecutionDetails.add_member(:depends_on, Shapes::ShapeRef.new(shape: ComputeNodeNameList, required: true, location_name: "dependsOn"))
+    ComputeNodeExecutionDetails.add_member(:status, Shapes::ShapeRef.new(shape: ComputeNodeExecutionStatus, required: true, location_name: "status"))
+    ComputeNodeExecutionDetails.add_member(:start_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "startTime"))
+    ComputeNodeExecutionDetails.add_member(:end_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "endTime"))
+    ComputeNodeExecutionDetails.add_member(:execution_environment_variables, Shapes::ShapeRef.new(shape: ExecutionEnvironmentVariablesMap, location_name: "executionEnvironmentVariables"))
+    ComputeNodeExecutionDetails.struct_class = Types::ComputeNodeExecutionDetails
+
+    ComputeNodeExecutionDetailsList.member = Shapes::ShapeRef.new(shape: ComputeNodeExecutionDetails)
+
+    ComputeNodeExecutionStateDetails.add_member(:code, Shapes::ShapeRef.new(shape: ComputeNodeErrorCode, required: true, location_name: "code"))
+    ComputeNodeExecutionStateDetails.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
+    ComputeNodeExecutionStateDetails.add_member(:details, Shapes::ShapeRef.new(shape: DetailedErrorList, location_name: "details"))
+    ComputeNodeExecutionStateDetails.struct_class = Types::ComputeNodeExecutionStateDetails
+
+    ComputeNodeExecutionStatus.add_member(:state, Shapes::ShapeRef.new(shape: ComputeNodeExecutionState, required: true, location_name: "state"))
+    ComputeNodeExecutionStatus.add_member(:state_details, Shapes::ShapeRef.new(shape: ComputeNodeExecutionStateDetails, location_name: "stateDetails"))
+    ComputeNodeExecutionStatus.struct_class = Types::ComputeNodeExecutionStatus
+
+    ComputeNodeList.member = Shapes::ShapeRef.new(shape: ComputeNode)
+
+    ComputeNodeNameList.member = Shapes::ShapeRef.new(shape: ResourceName)
+
     ConfigurationErrorDetails.add_member(:code, Shapes::ShapeRef.new(shape: ErrorCode, required: true, location_name: "code"))
     ConfigurationErrorDetails.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, required: true, location_name: "message"))
     ConfigurationErrorDetails.struct_class = Types::ConfigurationErrorDetails
@@ -1075,19 +1610,43 @@ module Aws::IoTSiteWise
     ConflictingOperationException.add_member(:resource_arn, Shapes::ShapeRef.new(shape: ResourceArn, required: true, location_name: "resourceArn"))
     ConflictingOperationException.struct_class = Types::ConflictingOperationException
 
+    ContainerTaskConfiguration.add_member(:ecr_uri, Shapes::ShapeRef.new(shape: EcrUri, required: true, location_name: "ecrUri"))
+    ContainerTaskConfiguration.add_member(:task_execution_role, Shapes::ShapeRef.new(shape: IamRoleArn, required: true, location_name: "taskExecutionRole"))
+    ContainerTaskConfiguration.add_member(:processing_type, Shapes::ShapeRef.new(shape: ProcessingType, required: true, location_name: "processingType"))
+    ContainerTaskConfiguration.add_member(:processing_unit, Shapes::ShapeRef.new(shape: ProcessingUnit, required: true, location_name: "processingUnit"))
+    ContainerTaskConfiguration.add_member(:command, Shapes::ShapeRef.new(shape: CommandList, location_name: "command"))
+    ContainerTaskConfiguration.add_member(:timeout_seconds, Shapes::ShapeRef.new(shape: TimeoutSeconds, location_name: "timeoutSeconds"))
+    ContainerTaskConfiguration.add_member(:environment_variables, Shapes::ShapeRef.new(shape: EnvironmentVariablesMap, location_name: "environmentVariables"))
+    ContainerTaskConfiguration.struct_class = Types::ContainerTaskConfiguration
+
     Content.add_member(:text, Shapes::ShapeRef.new(shape: String, location_name: "text"))
     Content.struct_class = Types::Content
 
     CreateAccessPolicyRequest.add_member(:access_policy_identity, Shapes::ShapeRef.new(shape: Identity, required: true, location_name: "accessPolicyIdentity"))
     CreateAccessPolicyRequest.add_member(:access_policy_resource, Shapes::ShapeRef.new(shape: Resource, required: true, location_name: "accessPolicyResource"))
     CreateAccessPolicyRequest.add_member(:access_policy_permission, Shapes::ShapeRef.new(shape: Permission, required: true, location_name: "accessPolicyPermission"))
-    CreateAccessPolicyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateAccessPolicyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateAccessPolicyRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
     CreateAccessPolicyRequest.struct_class = Types::CreateAccessPolicyRequest
 
     CreateAccessPolicyResponse.add_member(:access_policy_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "accessPolicyId"))
     CreateAccessPolicyResponse.add_member(:access_policy_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "accessPolicyArn"))
     CreateAccessPolicyResponse.struct_class = Types::CreateAccessPolicyResponse
+
+    CreateApplicationRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    CreateApplicationRequest.add_member(:idc_instance_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "idcInstanceArn"))
+    CreateApplicationRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location_name: "workspaceName"))
+    CreateApplicationRequest.add_member(:name, Shapes::ShapeRef.new(shape: ApplicationName, required: true, location_name: "name"))
+    CreateApplicationRequest.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    CreateApplicationRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
+    CreateApplicationRequest.struct_class = Types::CreateApplicationRequest
+
+    CreateApplicationResponse.add_member(:arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "arn"))
+    CreateApplicationResponse.add_member(:id, Shapes::ShapeRef.new(shape: ApplicationId, required: true, location_name: "id"))
+    CreateApplicationResponse.add_member(:dns_subdomain, Shapes::ShapeRef.new(shape: DnsSubdomain, required: true, location_name: "dnsSubdomain"))
+    CreateApplicationResponse.add_member(:name, Shapes::ShapeRef.new(shape: ApplicationName, required: true, location_name: "name"))
+    CreateApplicationResponse.add_member(:status, Shapes::ShapeRef.new(shape: ApplicationStatus, required: true, location_name: "status"))
+    CreateApplicationResponse.struct_class = Types::CreateApplicationResponse
 
     CreateAssetModelCompositeModelRequest.add_member(:asset_model_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "uri", location_name: "assetModelId"))
     CreateAssetModelCompositeModelRequest.add_member(:asset_model_composite_model_external_id, Shapes::ShapeRef.new(shape: ExternalId, location_name: "assetModelCompositeModelExternalId"))
@@ -1096,7 +1655,7 @@ module Aws::IoTSiteWise
     CreateAssetModelCompositeModelRequest.add_member(:asset_model_composite_model_description, Shapes::ShapeRef.new(shape: Description, location_name: "assetModelCompositeModelDescription"))
     CreateAssetModelCompositeModelRequest.add_member(:asset_model_composite_model_name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "assetModelCompositeModelName"))
     CreateAssetModelCompositeModelRequest.add_member(:asset_model_composite_model_type, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "assetModelCompositeModelType"))
-    CreateAssetModelCompositeModelRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateAssetModelCompositeModelRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateAssetModelCompositeModelRequest.add_member(:composed_asset_model_id, Shapes::ShapeRef.new(shape: CustomID, location_name: "composedAssetModelId"))
     CreateAssetModelCompositeModelRequest.add_member(:asset_model_composite_model_properties, Shapes::ShapeRef.new(shape: AssetModelPropertyDefinitions, location_name: "assetModelCompositeModelProperties"))
     CreateAssetModelCompositeModelRequest.add_member(:if_match, Shapes::ShapeRef.new(shape: ETag, location: "header", location_name: "If-Match"))
@@ -1107,6 +1666,7 @@ module Aws::IoTSiteWise
     CreateAssetModelCompositeModelResponse.add_member(:asset_model_composite_model_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "assetModelCompositeModelId"))
     CreateAssetModelCompositeModelResponse.add_member(:asset_model_composite_model_path, Shapes::ShapeRef.new(shape: AssetModelCompositeModelPath, required: true, location_name: "assetModelCompositeModelPath"))
     CreateAssetModelCompositeModelResponse.add_member(:asset_model_status, Shapes::ShapeRef.new(shape: AssetModelStatus, required: true, location_name: "assetModelStatus"))
+    CreateAssetModelCompositeModelResponse.add_member(:asset_model_id, Shapes::ShapeRef.new(shape: ID, location_name: "assetModelId"))
     CreateAssetModelCompositeModelResponse.struct_class = Types::CreateAssetModelCompositeModelResponse
 
     CreateAssetModelRequest.add_member(:asset_model_name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "assetModelName"))
@@ -1117,7 +1677,7 @@ module Aws::IoTSiteWise
     CreateAssetModelRequest.add_member(:asset_model_properties, Shapes::ShapeRef.new(shape: AssetModelPropertyDefinitions, location_name: "assetModelProperties"))
     CreateAssetModelRequest.add_member(:asset_model_hierarchies, Shapes::ShapeRef.new(shape: AssetModelHierarchyDefinitions, location_name: "assetModelHierarchies"))
     CreateAssetModelRequest.add_member(:asset_model_composite_models, Shapes::ShapeRef.new(shape: AssetModelCompositeModelDefinitions, location_name: "assetModelCompositeModels"))
-    CreateAssetModelRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateAssetModelRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateAssetModelRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
     CreateAssetModelRequest.struct_class = Types::CreateAssetModelRequest
 
@@ -1128,11 +1688,11 @@ module Aws::IoTSiteWise
 
     CreateAssetRequest.add_member(:asset_name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "assetName"))
     CreateAssetRequest.add_member(:asset_model_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location_name: "assetModelId"))
-    CreateAssetRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
-    CreateAssetRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
-    CreateAssetRequest.add_member(:asset_description, Shapes::ShapeRef.new(shape: Description, location_name: "assetDescription"))
     CreateAssetRequest.add_member(:asset_id, Shapes::ShapeRef.new(shape: ID, location_name: "assetId"))
     CreateAssetRequest.add_member(:asset_external_id, Shapes::ShapeRef.new(shape: ExternalId, location_name: "assetExternalId"))
+    CreateAssetRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    CreateAssetRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
+    CreateAssetRequest.add_member(:asset_description, Shapes::ShapeRef.new(shape: Description, location_name: "assetDescription"))
     CreateAssetRequest.struct_class = Types::CreateAssetRequest
 
     CreateAssetResponse.add_member(:asset_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "assetId"))
@@ -1140,25 +1700,40 @@ module Aws::IoTSiteWise
     CreateAssetResponse.add_member(:asset_status, Shapes::ShapeRef.new(shape: AssetStatus, required: true, location_name: "assetStatus"))
     CreateAssetResponse.struct_class = Types::CreateAssetResponse
 
-    CreateBulkImportJobRequest.add_member(:job_name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "jobName"))
+    CreateBulkImportJobRequest.add_member(:job_name, Shapes::ShapeRef.new(shape: BulkImportJobName, required: true, location_name: "jobName"))
     CreateBulkImportJobRequest.add_member(:job_role_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "jobRoleArn"))
     CreateBulkImportJobRequest.add_member(:files, Shapes::ShapeRef.new(shape: Files, required: true, location_name: "files"))
     CreateBulkImportJobRequest.add_member(:error_report_location, Shapes::ShapeRef.new(shape: ErrorReportLocation, required: true, location_name: "errorReportLocation"))
-    CreateBulkImportJobRequest.add_member(:job_configuration, Shapes::ShapeRef.new(shape: JobConfiguration, required: true, location_name: "jobConfiguration"))
+    CreateBulkImportJobRequest.add_member(:job_configuration, Shapes::ShapeRef.new(shape: JobConfiguration, location_name: "jobConfiguration"))
     CreateBulkImportJobRequest.add_member(:adaptive_ingestion, Shapes::ShapeRef.new(shape: AdaptiveIngestion, location_name: "adaptiveIngestion"))
     CreateBulkImportJobRequest.add_member(:delete_files_after_import, Shapes::ShapeRef.new(shape: DeleteFilesAfterImport, location_name: "deleteFilesAfterImport"))
+    CreateBulkImportJobRequest.add_member(:dataset_id, Shapes::ShapeRef.new(shape: ID, location_name: "datasetId"))
+    CreateBulkImportJobRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, location_name: "workspaceName"))
     CreateBulkImportJobRequest.struct_class = Types::CreateBulkImportJobRequest
 
     CreateBulkImportJobResponse.add_member(:job_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "jobId"))
-    CreateBulkImportJobResponse.add_member(:job_name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "jobName"))
+    CreateBulkImportJobResponse.add_member(:job_name, Shapes::ShapeRef.new(shape: BulkImportJobName, required: true, location_name: "jobName"))
     CreateBulkImportJobResponse.add_member(:job_status, Shapes::ShapeRef.new(shape: JobStatus, required: true, location_name: "jobStatus"))
     CreateBulkImportJobResponse.struct_class = Types::CreateBulkImportJobResponse
+
+    CreateComputationModelRequest.add_member(:computation_model_name, Shapes::ShapeRef.new(shape: RestrictedName, required: true, location_name: "computationModelName"))
+    CreateComputationModelRequest.add_member(:computation_model_description, Shapes::ShapeRef.new(shape: RestrictedDescription, location_name: "computationModelDescription"))
+    CreateComputationModelRequest.add_member(:computation_model_configuration, Shapes::ShapeRef.new(shape: ComputationModelConfiguration, required: true, location_name: "computationModelConfiguration"))
+    CreateComputationModelRequest.add_member(:computation_model_data_binding, Shapes::ShapeRef.new(shape: ComputationModelDataBinding, required: true, location_name: "computationModelDataBinding"))
+    CreateComputationModelRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    CreateComputationModelRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
+    CreateComputationModelRequest.struct_class = Types::CreateComputationModelRequest
+
+    CreateComputationModelResponse.add_member(:computation_model_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "computationModelId"))
+    CreateComputationModelResponse.add_member(:computation_model_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "computationModelArn"))
+    CreateComputationModelResponse.add_member(:computation_model_status, Shapes::ShapeRef.new(shape: ComputationModelStatus, required: true, location_name: "computationModelStatus"))
+    CreateComputationModelResponse.struct_class = Types::CreateComputationModelResponse
 
     CreateDashboardRequest.add_member(:project_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "projectId"))
     CreateDashboardRequest.add_member(:dashboard_name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "dashboardName"))
     CreateDashboardRequest.add_member(:dashboard_description, Shapes::ShapeRef.new(shape: Description, location_name: "dashboardDescription"))
     CreateDashboardRequest.add_member(:dashboard_definition, Shapes::ShapeRef.new(shape: DashboardDefinition, required: true, location_name: "dashboardDefinition"))
-    CreateDashboardRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateDashboardRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateDashboardRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
     CreateDashboardRequest.struct_class = Types::CreateDashboardRequest
 
@@ -1166,11 +1741,26 @@ module Aws::IoTSiteWise
     CreateDashboardResponse.add_member(:dashboard_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "dashboardArn"))
     CreateDashboardResponse.struct_class = Types::CreateDashboardResponse
 
+    CreateDatasetExportJobRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    CreateDatasetExportJobRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    CreateDatasetExportJobRequest.add_member(:destination_s3_uri, Shapes::ShapeRef.new(shape: S3Uri, required: true, location_name: "destinationS3Uri"))
+    CreateDatasetExportJobRequest.add_member(:input, Shapes::ShapeRef.new(shape: ProcessingInput, required: true, location_name: "input"))
+    CreateDatasetExportJobRequest.add_member(:error_report_location, Shapes::ShapeRef.new(shape: ExportErrorReportLocation, required: true, location_name: "errorReportLocation"))
+    CreateDatasetExportJobRequest.struct_class = Types::CreateDatasetExportJobRequest
+
+    CreateDatasetExportJobResponse.add_member(:job_id, Shapes::ShapeRef.new(shape: DatasetExportJobId, required: true, location_name: "jobId"))
+    CreateDatasetExportJobResponse.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location_name: "workspaceName"))
+    CreateDatasetExportJobResponse.struct_class = Types::CreateDatasetExportJobResponse
+
     CreateDatasetRequest.add_member(:dataset_id, Shapes::ShapeRef.new(shape: ID, location_name: "datasetId"))
     CreateDatasetRequest.add_member(:dataset_name, Shapes::ShapeRef.new(shape: RestrictedName, required: true, location_name: "datasetName"))
-    CreateDatasetRequest.add_member(:dataset_description, Shapes::ShapeRef.new(shape: RestrictedDescription, location_name: "datasetDescription"))
+    CreateDatasetRequest.add_member(:dataset_description, Shapes::ShapeRef.new(shape: Description, location_name: "datasetDescription"))
+    CreateDatasetRequest.add_member(:dataset_type, Shapes::ShapeRef.new(shape: DatasetTypeEnum, location_name: "datasetType"))
+    CreateDatasetRequest.add_member(:dataset_config, Shapes::ShapeRef.new(shape: DatasetConfig, location_name: "datasetConfig"))
+    CreateDatasetRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, location_name: "workspaceName"))
+    CreateDatasetRequest.add_member(:metadata, Shapes::ShapeRef.new(shape: Metadata, location_name: "metadata"))
     CreateDatasetRequest.add_member(:dataset_source, Shapes::ShapeRef.new(shape: DatasetSource, required: true, location_name: "datasetSource"))
-    CreateDatasetRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateDatasetRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateDatasetRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
     CreateDatasetRequest.struct_class = Types::CreateDatasetRequest
 
@@ -1178,6 +1768,16 @@ module Aws::IoTSiteWise
     CreateDatasetResponse.add_member(:dataset_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "datasetArn"))
     CreateDatasetResponse.add_member(:dataset_status, Shapes::ShapeRef.new(shape: DatasetStatus, required: true, location_name: "datasetStatus"))
     CreateDatasetResponse.struct_class = Types::CreateDatasetResponse
+
+    CreateEnrichmentJobRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    CreateEnrichmentJobRequest.add_member(:job_configuration, Shapes::ShapeRef.new(shape: EnrichmentJobConfiguration, required: true, location_name: "jobConfiguration"))
+    CreateEnrichmentJobRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    CreateEnrichmentJobRequest.struct_class = Types::CreateEnrichmentJobRequest
+
+    CreateEnrichmentJobResponse.add_member(:job_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "jobId"))
+    CreateEnrichmentJobResponse.add_member(:status, Shapes::ShapeRef.new(shape: EnrichmentJobStatus, required: true, location_name: "status"))
+    CreateEnrichmentJobResponse.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "createdAt"))
+    CreateEnrichmentJobResponse.struct_class = Types::CreateEnrichmentJobResponse
 
     CreateGatewayRequest.add_member(:gateway_name, Shapes::ShapeRef.new(shape: GatewayName, required: true, location_name: "gatewayName"))
     CreateGatewayRequest.add_member(:gateway_platform, Shapes::ShapeRef.new(shape: GatewayPlatform, required: true, location_name: "gatewayPlatform"))
@@ -1189,10 +1789,25 @@ module Aws::IoTSiteWise
     CreateGatewayResponse.add_member(:gateway_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "gatewayArn"))
     CreateGatewayResponse.struct_class = Types::CreateGatewayResponse
 
+    CreatePipelineRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    CreatePipelineRequest.add_member(:pipeline_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location_name: "pipelineName"))
+    CreatePipelineRequest.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    CreatePipelineRequest.add_member(:environment_variables, Shapes::ShapeRef.new(shape: EnvironmentVariablesMap, location_name: "environmentVariables"))
+    CreatePipelineRequest.add_member(:computations, Shapes::ShapeRef.new(shape: ComputeNodeList, required: true, location_name: "computations"))
+    CreatePipelineRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
+    CreatePipelineRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    CreatePipelineRequest.struct_class = Types::CreatePipelineRequest
+
+    CreatePipelineResponse.add_member(:pipeline_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location_name: "pipelineName"))
+    CreatePipelineResponse.add_member(:pipeline_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "pipelineArn"))
+    CreatePipelineResponse.add_member(:version, Shapes::ShapeRef.new(shape: Version, required: true, location_name: "version"))
+    CreatePipelineResponse.add_member(:status, Shapes::ShapeRef.new(shape: ResourceStatus, required: true, location_name: "status"))
+    CreatePipelineResponse.struct_class = Types::CreatePipelineResponse
+
     CreatePortalRequest.add_member(:portal_name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "portalName"))
     CreatePortalRequest.add_member(:portal_description, Shapes::ShapeRef.new(shape: Description, location_name: "portalDescription"))
     CreatePortalRequest.add_member(:portal_contact_email, Shapes::ShapeRef.new(shape: Email, required: true, location_name: "portalContactEmail"))
-    CreatePortalRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreatePortalRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreatePortalRequest.add_member(:portal_logo_image_file, Shapes::ShapeRef.new(shape: ImageFile, location_name: "portalLogoImageFile"))
     CreatePortalRequest.add_member(:role_arn, Shapes::ShapeRef.new(shape: IamArn, required: true, location_name: "roleArn"))
     CreatePortalRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
@@ -1213,13 +1828,39 @@ module Aws::IoTSiteWise
     CreateProjectRequest.add_member(:portal_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "portalId"))
     CreateProjectRequest.add_member(:project_name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "projectName"))
     CreateProjectRequest.add_member(:project_description, Shapes::ShapeRef.new(shape: Description, location_name: "projectDescription"))
-    CreateProjectRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateProjectRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateProjectRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
     CreateProjectRequest.struct_class = Types::CreateProjectRequest
 
     CreateProjectResponse.add_member(:project_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "projectId"))
     CreateProjectResponse.add_member(:project_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "projectArn"))
     CreateProjectResponse.struct_class = Types::CreateProjectResponse
+
+    CreateTaskRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    CreateTaskRequest.add_member(:task_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location_name: "taskName"))
+    CreateTaskRequest.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    CreateTaskRequest.add_member(:task_configuration, Shapes::ShapeRef.new(shape: TaskConfiguration, required: true, location_name: "taskConfiguration"))
+    CreateTaskRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
+    CreateTaskRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    CreateTaskRequest.struct_class = Types::CreateTaskRequest
+
+    CreateTaskResponse.add_member(:task_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location_name: "taskName"))
+    CreateTaskResponse.add_member(:task_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "taskArn"))
+    CreateTaskResponse.add_member(:version, Shapes::ShapeRef.new(shape: Version, required: true, location_name: "version"))
+    CreateTaskResponse.add_member(:status, Shapes::ShapeRef.new(shape: ResourceStatus, required: true, location_name: "status"))
+    CreateTaskResponse.struct_class = Types::CreateTaskResponse
+
+    CreateWorkspaceRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location_name: "workspaceName"))
+    CreateWorkspaceRequest.add_member(:workspace_description, Shapes::ShapeRef.new(shape: Description, location_name: "workspaceDescription"))
+    CreateWorkspaceRequest.add_member(:encryption_configuration, Shapes::ShapeRef.new(shape: WorkspaceEncryptionConfiguration, required: true, location_name: "encryptionConfiguration"))
+    CreateWorkspaceRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
+    CreateWorkspaceRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    CreateWorkspaceRequest.struct_class = Types::CreateWorkspaceRequest
+
+    CreateWorkspaceResponse.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location_name: "workspaceName"))
+    CreateWorkspaceResponse.add_member(:workspace_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "workspaceArn"))
+    CreateWorkspaceResponse.add_member(:workspace_status, Shapes::ShapeRef.new(shape: WorkspaceStatus, required: true, location_name: "workspaceStatus"))
+    CreateWorkspaceResponse.struct_class = Types::CreateWorkspaceResponse
 
     Csv.add_member(:column_names, Shapes::ShapeRef.new(shape: ColumnNames, required: true, location_name: "columnNames"))
     Csv.struct_class = Types::Csv
@@ -1237,9 +1878,60 @@ module Aws::IoTSiteWise
     DashboardSummary.add_member(:last_update_date, Shapes::ShapeRef.new(shape: Timestamp, location_name: "lastUpdateDate"))
     DashboardSummary.struct_class = Types::DashboardSummary
 
+    DataBindingValue.add_member(:asset_model_property, Shapes::ShapeRef.new(shape: AssetModelPropertyBindingValue, location_name: "assetModelProperty"))
+    DataBindingValue.add_member(:asset_property, Shapes::ShapeRef.new(shape: AssetPropertyBindingValue, location_name: "assetProperty"))
+    DataBindingValue.struct_class = Types::DataBindingValue
+
+    DataBindingValueFilter.add_member(:asset, Shapes::ShapeRef.new(shape: AssetBindingValueFilter, location_name: "asset"))
+    DataBindingValueFilter.add_member(:asset_model, Shapes::ShapeRef.new(shape: AssetModelBindingValueFilter, location_name: "assetModel"))
+    DataBindingValueFilter.add_member(:asset_property, Shapes::ShapeRef.new(shape: AssetPropertyBindingValueFilter, location_name: "assetProperty"))
+    DataBindingValueFilter.add_member(:asset_model_property, Shapes::ShapeRef.new(shape: AssetModelPropertyBindingValueFilter, location_name: "assetModelProperty"))
+    DataBindingValueFilter.struct_class = Types::DataBindingValueFilter
+
+    DataSegmentEnrichment.add_member(:status, Shapes::ShapeRef.new(shape: EnrichmentStatus, required: true, location_name: "status"))
+    DataSegmentEnrichment.add_member(:last_enriched_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "lastEnrichedAt"))
+    DataSegmentEnrichment.struct_class = Types::DataSegmentEnrichment
+
+    DataSegmentRelationshipSummaries.member = Shapes::ShapeRef.new(shape: DataSegmentRelationshipSummary)
+
+    DataSegmentRelationshipSummary.add_member(:target_dataset_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "targetDatasetId"))
+    DataSegmentRelationshipSummary.add_member(:source_dataset_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "sourceDatasetId"))
+    DataSegmentRelationshipSummary.add_member(:time_series_id, Shapes::ShapeRef.new(shape: TimeSeriesId, required: true, location_name: "timeSeriesId"))
+    DataSegmentRelationshipSummary.add_member(:start_timestamp, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "startTimestamp"))
+    DataSegmentRelationshipSummary.add_member(:end_timestamp, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "endTimestamp"))
+    DataSegmentRelationshipSummary.struct_class = Types::DataSegmentRelationshipSummary
+
+    DataSegmentSummaries.member = Shapes::ShapeRef.new(shape: DataSegmentSummary)
+
+    DataSegmentSummary.add_member(:source_dataset_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "sourceDatasetId"))
+    DataSegmentSummary.add_member(:time_series_id, Shapes::ShapeRef.new(shape: TimeSeriesId, required: true, location_name: "timeSeriesId"))
+    DataSegmentSummary.add_member(:start_timestamp, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "startTimestamp"))
+    DataSegmentSummary.add_member(:end_timestamp, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "endTimestamp"))
+    DataSegmentSummary.add_member(:alias, Shapes::ShapeRef.new(shape: PropertyAlias, required: true, location_name: "alias"))
+    DataSegmentSummary.add_member(:data_type, Shapes::ShapeRef.new(shape: PropertyDataType, required: true, location_name: "dataType"))
+    DataSegmentSummary.add_member(:enrichment, Shapes::ShapeRef.new(shape: DataSegmentEnrichment, location_name: "enrichment"))
+    DataSegmentSummary.struct_class = Types::DataSegmentSummary
+
+    DataSetIdList.member = Shapes::ShapeRef.new(shape: DatasetId)
+
     DataSetReference.add_member(:dataset_arn, Shapes::ShapeRef.new(shape: String, location_name: "datasetArn"))
     DataSetReference.add_member(:source, Shapes::ShapeRef.new(shape: Source, location_name: "source"))
     DataSetReference.struct_class = Types::DataSetReference
+
+    DatasetConfig.add_member(:session, Shapes::ShapeRef.new(shape: SessionConfig, location_name: "session"))
+    DatasetConfig.struct_class = Types::DatasetConfig
+
+    DatasetEnrichment.add_member(:video, Shapes::ShapeRef.new(shape: DatasetEnrichmentEntry, location_name: "video"))
+    DatasetEnrichment.struct_class = Types::DatasetEnrichment
+
+    DatasetEnrichmentEntry.add_member(:status, Shapes::ShapeRef.new(shape: DatasetEnrichmentStatus, required: true, location_name: "status"))
+    DatasetEnrichmentEntry.add_member(:last_enriched_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "lastEnrichedAt"))
+    DatasetEnrichmentEntry.struct_class = Types::DatasetEnrichmentEntry
+
+    DatasetItem.add_member(:dataset_id, Shapes::ShapeRef.new(shape: DatasetId, required: true, location_name: "datasetId"))
+    DatasetItem.add_member(:trim_settings, Shapes::ShapeRef.new(shape: TrimSettings, location_name: "trimSettings"))
+    DatasetItem.add_member(:export_data_types, Shapes::ShapeRef.new(shape: ExportDataTypeList, location_name: "exportDataTypes"))
+    DatasetItem.struct_class = Types::DatasetItem
 
     DatasetSource.add_member(:source_type, Shapes::ShapeRef.new(shape: DatasetSourceType, required: true, location_name: "sourceType"))
     DatasetSource.add_member(:source_format, Shapes::ShapeRef.new(shape: DatasetSourceFormat, required: true, location_name: "sourceFormat"))
@@ -1255,10 +1947,13 @@ module Aws::IoTSiteWise
     DatasetSummary.add_member(:id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "id"))
     DatasetSummary.add_member(:arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "arn"))
     DatasetSummary.add_member(:name, Shapes::ShapeRef.new(shape: RestrictedName, required: true, location_name: "name"))
-    DatasetSummary.add_member(:description, Shapes::ShapeRef.new(shape: RestrictedDescription, required: true, location_name: "description"))
+    DatasetSummary.add_member(:description, Shapes::ShapeRef.new(shape: Description, required: true, location_name: "description"))
+    DatasetSummary.add_member(:source_type, Shapes::ShapeRef.new(shape: DatasetSourceType, location_name: "sourceType"))
+    DatasetSummary.add_member(:dataset_type, Shapes::ShapeRef.new(shape: DatasetTypeEnum, location_name: "datasetType"))
     DatasetSummary.add_member(:creation_date, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "creationDate"))
     DatasetSummary.add_member(:last_update_date, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "lastUpdateDate"))
     DatasetSummary.add_member(:status, Shapes::ShapeRef.new(shape: DatasetStatus, required: true, location_name: "status"))
+    DatasetSummary.add_member(:enrichment_status, Shapes::ShapeRef.new(shape: DatasetEnrichment, location_name: "enrichmentStatus"))
     DatasetSummary.struct_class = Types::DatasetSummary
 
     Datum.add_member(:scalar_value, Shapes::ShapeRef.new(shape: ScalarValue, location_name: "scalarValue"))
@@ -1270,47 +1965,82 @@ module Aws::IoTSiteWise
     DatumList.member = Shapes::ShapeRef.new(shape: Datum)
 
     DeleteAccessPolicyRequest.add_member(:access_policy_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "accessPolicyId"))
-    DeleteAccessPolicyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    DeleteAccessPolicyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     DeleteAccessPolicyRequest.struct_class = Types::DeleteAccessPolicyRequest
 
     DeleteAccessPolicyResponse.struct_class = Types::DeleteAccessPolicyResponse
 
+    DeleteApplicationRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    DeleteApplicationRequest.add_member(:id, Shapes::ShapeRef.new(shape: ApplicationId, required: true, location: "uri", location_name: "id"))
+    DeleteApplicationRequest.struct_class = Types::DeleteApplicationRequest
+
+    DeleteApplicationResponse.struct_class = Types::DeleteApplicationResponse
+
     DeleteAssetModelCompositeModelRequest.add_member(:asset_model_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "uri", location_name: "assetModelId"))
     DeleteAssetModelCompositeModelRequest.add_member(:asset_model_composite_model_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "uri", location_name: "assetModelCompositeModelId"))
-    DeleteAssetModelCompositeModelRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    DeleteAssetModelCompositeModelRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     DeleteAssetModelCompositeModelRequest.add_member(:if_match, Shapes::ShapeRef.new(shape: ETag, location: "header", location_name: "If-Match"))
     DeleteAssetModelCompositeModelRequest.add_member(:if_none_match, Shapes::ShapeRef.new(shape: SelectAll, location: "header", location_name: "If-None-Match"))
     DeleteAssetModelCompositeModelRequest.add_member(:match_for_version_type, Shapes::ShapeRef.new(shape: AssetModelVersionType, location: "header", location_name: "Match-For-Version-Type"))
     DeleteAssetModelCompositeModelRequest.struct_class = Types::DeleteAssetModelCompositeModelRequest
 
     DeleteAssetModelCompositeModelResponse.add_member(:asset_model_status, Shapes::ShapeRef.new(shape: AssetModelStatus, required: true, location_name: "assetModelStatus"))
+    DeleteAssetModelCompositeModelResponse.add_member(:asset_model_id, Shapes::ShapeRef.new(shape: ID, location_name: "assetModelId"))
     DeleteAssetModelCompositeModelResponse.struct_class = Types::DeleteAssetModelCompositeModelResponse
 
+    DeleteAssetModelInterfaceRelationshipRequest.add_member(:asset_model_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "uri", location_name: "assetModelId"))
+    DeleteAssetModelInterfaceRelationshipRequest.add_member(:interface_asset_model_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "uri", location_name: "interfaceAssetModelId"))
+    DeleteAssetModelInterfaceRelationshipRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    DeleteAssetModelInterfaceRelationshipRequest.struct_class = Types::DeleteAssetModelInterfaceRelationshipRequest
+
+    DeleteAssetModelInterfaceRelationshipResponse.add_member(:asset_model_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "assetModelId"))
+    DeleteAssetModelInterfaceRelationshipResponse.add_member(:interface_asset_model_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "interfaceAssetModelId"))
+    DeleteAssetModelInterfaceRelationshipResponse.add_member(:asset_model_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "assetModelArn"))
+    DeleteAssetModelInterfaceRelationshipResponse.add_member(:asset_model_status, Shapes::ShapeRef.new(shape: AssetModelStatus, required: true, location_name: "assetModelStatus"))
+    DeleteAssetModelInterfaceRelationshipResponse.struct_class = Types::DeleteAssetModelInterfaceRelationshipResponse
+
     DeleteAssetModelRequest.add_member(:asset_model_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "uri", location_name: "assetModelId"))
-    DeleteAssetModelRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    DeleteAssetModelRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     DeleteAssetModelRequest.add_member(:if_match, Shapes::ShapeRef.new(shape: ETag, location: "header", location_name: "If-Match"))
     DeleteAssetModelRequest.add_member(:if_none_match, Shapes::ShapeRef.new(shape: SelectAll, location: "header", location_name: "If-None-Match"))
     DeleteAssetModelRequest.add_member(:match_for_version_type, Shapes::ShapeRef.new(shape: AssetModelVersionType, location: "header", location_name: "Match-For-Version-Type"))
     DeleteAssetModelRequest.struct_class = Types::DeleteAssetModelRequest
 
+    DeleteAssetModelResponse.add_member(:asset_model_id, Shapes::ShapeRef.new(shape: ID, location_name: "assetModelId"))
     DeleteAssetModelResponse.add_member(:asset_model_status, Shapes::ShapeRef.new(shape: AssetModelStatus, required: true, location_name: "assetModelStatus"))
     DeleteAssetModelResponse.struct_class = Types::DeleteAssetModelResponse
 
     DeleteAssetRequest.add_member(:asset_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "uri", location_name: "assetId"))
-    DeleteAssetRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    DeleteAssetRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     DeleteAssetRequest.struct_class = Types::DeleteAssetRequest
 
+    DeleteAssetResponse.add_member(:asset_id, Shapes::ShapeRef.new(shape: ID, location_name: "assetId"))
     DeleteAssetResponse.add_member(:asset_status, Shapes::ShapeRef.new(shape: AssetStatus, required: true, location_name: "assetStatus"))
     DeleteAssetResponse.struct_class = Types::DeleteAssetResponse
 
+    DeleteComputationModelRequest.add_member(:computation_model_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "computationModelId"))
+    DeleteComputationModelRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    DeleteComputationModelRequest.struct_class = Types::DeleteComputationModelRequest
+
+    DeleteComputationModelResponse.add_member(:computation_model_status, Shapes::ShapeRef.new(shape: ComputationModelStatus, required: true, location_name: "computationModelStatus"))
+    DeleteComputationModelResponse.struct_class = Types::DeleteComputationModelResponse
+
     DeleteDashboardRequest.add_member(:dashboard_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "dashboardId"))
-    DeleteDashboardRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    DeleteDashboardRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     DeleteDashboardRequest.struct_class = Types::DeleteDashboardRequest
 
     DeleteDashboardResponse.struct_class = Types::DeleteDashboardResponse
 
-    DeleteDatasetRequest.add_member(:dataset_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "uri", location_name: "datasetId"))
-    DeleteDatasetRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    DeleteDataSegmentEntries.member = Shapes::ShapeRef.new(shape: DeleteDataSegmentEntry)
+
+    DeleteDataSegmentEntry.add_member(:time_series_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "timeSeriesId"))
+    DeleteDataSegmentEntry.add_member(:start_timestamp, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "startTimestamp"))
+    DeleteDataSegmentEntry.add_member(:end_timestamp, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "endTimestamp"))
+    DeleteDataSegmentEntry.struct_class = Types::DeleteDataSegmentEntry
+
+    DeleteDatasetRequest.add_member(:dataset_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "datasetId"))
+    DeleteDatasetRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, location: "querystring", location_name: "workspaceName"))
+    DeleteDatasetRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     DeleteDatasetRequest.struct_class = Types::DeleteDatasetRequest
 
     DeleteDatasetResponse.add_member(:dataset_status, Shapes::ShapeRef.new(shape: DatasetStatus, required: true, location_name: "datasetStatus"))
@@ -1319,24 +2049,46 @@ module Aws::IoTSiteWise
     DeleteGatewayRequest.add_member(:gateway_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "gatewayId"))
     DeleteGatewayRequest.struct_class = Types::DeleteGatewayRequest
 
+    DeletePipelineRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    DeletePipelineRequest.add_member(:pipeline_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location: "uri", location_name: "pipelineName"))
+    DeletePipelineRequest.struct_class = Types::DeletePipelineRequest
+
+    DeletePipelineResponse.add_member(:status, Shapes::ShapeRef.new(shape: ResourceStatus, required: true, location_name: "status"))
+    DeletePipelineResponse.struct_class = Types::DeletePipelineResponse
+
     DeletePortalRequest.add_member(:portal_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "portalId"))
-    DeletePortalRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    DeletePortalRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     DeletePortalRequest.struct_class = Types::DeletePortalRequest
 
     DeletePortalResponse.add_member(:portal_status, Shapes::ShapeRef.new(shape: PortalStatus, required: true, location_name: "portalStatus"))
     DeletePortalResponse.struct_class = Types::DeletePortalResponse
 
     DeleteProjectRequest.add_member(:project_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "projectId"))
-    DeleteProjectRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    DeleteProjectRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     DeleteProjectRequest.struct_class = Types::DeleteProjectRequest
 
     DeleteProjectResponse.struct_class = Types::DeleteProjectResponse
 
+    DeleteTaskRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    DeleteTaskRequest.add_member(:task_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location: "uri", location_name: "taskName"))
+    DeleteTaskRequest.struct_class = Types::DeleteTaskRequest
+
+    DeleteTaskResponse.add_member(:status, Shapes::ShapeRef.new(shape: ResourceStatus, required: true, location_name: "status"))
+    DeleteTaskResponse.struct_class = Types::DeleteTaskResponse
+
     DeleteTimeSeriesRequest.add_member(:alias, Shapes::ShapeRef.new(shape: PropertyAlias, location: "querystring", location_name: "alias"))
     DeleteTimeSeriesRequest.add_member(:asset_id, Shapes::ShapeRef.new(shape: CustomID, location: "querystring", location_name: "assetId"))
     DeleteTimeSeriesRequest.add_member(:property_id, Shapes::ShapeRef.new(shape: CustomID, location: "querystring", location_name: "propertyId"))
-    DeleteTimeSeriesRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    DeleteTimeSeriesRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    DeleteTimeSeriesRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, location: "querystring", location_name: "workspaceName"))
     DeleteTimeSeriesRequest.struct_class = Types::DeleteTimeSeriesRequest
+
+    DeleteWorkspaceRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    DeleteWorkspaceRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    DeleteWorkspaceRequest.struct_class = Types::DeleteWorkspaceRequest
+
+    DeleteWorkspaceResponse.add_member(:workspace_status, Shapes::ShapeRef.new(shape: WorkspaceStatus, required: true, location_name: "workspaceStatus"))
+    DeleteWorkspaceResponse.struct_class = Types::DeleteWorkspaceResponse
 
     DescribeAccessPolicyRequest.add_member(:access_policy_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "accessPolicyId"))
     DescribeAccessPolicyRequest.struct_class = Types::DescribeAccessPolicyRequest
@@ -1358,7 +2110,24 @@ module Aws::IoTSiteWise
     DescribeActionResponse.add_member(:action_definition_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "actionDefinitionId"))
     DescribeActionResponse.add_member(:action_payload, Shapes::ShapeRef.new(shape: ActionPayload, required: true, location_name: "actionPayload"))
     DescribeActionResponse.add_member(:execution_time, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "executionTime"))
+    DescribeActionResponse.add_member(:resolve_to, Shapes::ShapeRef.new(shape: ResolveTo, location_name: "resolveTo"))
     DescribeActionResponse.struct_class = Types::DescribeActionResponse
+
+    DescribeApplicationRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    DescribeApplicationRequest.add_member(:id, Shapes::ShapeRef.new(shape: ApplicationId, required: true, location: "uri", location_name: "id"))
+    DescribeApplicationRequest.struct_class = Types::DescribeApplicationRequest
+
+    DescribeApplicationResponse.add_member(:arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "arn"))
+    DescribeApplicationResponse.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "createdAt"))
+    DescribeApplicationResponse.add_member(:dns_subdomain, Shapes::ShapeRef.new(shape: DnsSubdomain, required: true, location_name: "dnsSubdomain"))
+    DescribeApplicationResponse.add_member(:description, Shapes::ShapeRef.new(shape: ApplicationDescription, location_name: "description"))
+    DescribeApplicationResponse.add_member(:id, Shapes::ShapeRef.new(shape: ApplicationId, required: true, location_name: "id"))
+    DescribeApplicationResponse.add_member(:idc_application_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "idcApplicationArn"))
+    DescribeApplicationResponse.add_member(:name, Shapes::ShapeRef.new(shape: ApplicationName, required: true, location_name: "name"))
+    DescribeApplicationResponse.add_member(:status, Shapes::ShapeRef.new(shape: ApplicationStatus, required: true, location_name: "status"))
+    DescribeApplicationResponse.add_member(:updated_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "updatedAt"))
+    DescribeApplicationResponse.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location_name: "workspaceName"))
+    DescribeApplicationResponse.struct_class = Types::DescribeApplicationResponse
 
     DescribeAssetCompositeModelRequest.add_member(:asset_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "uri", location_name: "assetId"))
     DescribeAssetCompositeModelRequest.add_member(:asset_composite_model_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "uri", location_name: "assetCompositeModelId"))
@@ -1394,6 +2163,16 @@ module Aws::IoTSiteWise
     DescribeAssetModelCompositeModelResponse.add_member(:action_definitions, Shapes::ShapeRef.new(shape: ActionDefinitions, location_name: "actionDefinitions"))
     DescribeAssetModelCompositeModelResponse.struct_class = Types::DescribeAssetModelCompositeModelResponse
 
+    DescribeAssetModelInterfaceRelationshipRequest.add_member(:asset_model_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "uri", location_name: "assetModelId"))
+    DescribeAssetModelInterfaceRelationshipRequest.add_member(:interface_asset_model_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "uri", location_name: "interfaceAssetModelId"))
+    DescribeAssetModelInterfaceRelationshipRequest.struct_class = Types::DescribeAssetModelInterfaceRelationshipRequest
+
+    DescribeAssetModelInterfaceRelationshipResponse.add_member(:asset_model_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "assetModelId"))
+    DescribeAssetModelInterfaceRelationshipResponse.add_member(:interface_asset_model_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "interfaceAssetModelId"))
+    DescribeAssetModelInterfaceRelationshipResponse.add_member(:property_mappings, Shapes::ShapeRef.new(shape: PropertyMappings, required: true, location_name: "propertyMappings"))
+    DescribeAssetModelInterfaceRelationshipResponse.add_member(:hierarchy_mappings, Shapes::ShapeRef.new(shape: HierarchyMappings, required: true, location_name: "hierarchyMappings"))
+    DescribeAssetModelInterfaceRelationshipResponse.struct_class = Types::DescribeAssetModelInterfaceRelationshipResponse
+
     DescribeAssetModelRequest.add_member(:asset_model_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "uri", location_name: "assetModelId"))
     DescribeAssetModelRequest.add_member(:exclude_properties, Shapes::ShapeRef.new(shape: ExcludeProperties, location: "querystring", location_name: "excludeProperties"))
     DescribeAssetModelRequest.add_member(:asset_model_version, Shapes::ShapeRef.new(shape: AssetModelVersionFilter, location: "querystring", location_name: "assetModelVersion"))
@@ -1413,6 +2192,7 @@ module Aws::IoTSiteWise
     DescribeAssetModelResponse.add_member(:asset_model_last_update_date, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "assetModelLastUpdateDate"))
     DescribeAssetModelResponse.add_member(:asset_model_status, Shapes::ShapeRef.new(shape: AssetModelStatus, required: true, location_name: "assetModelStatus"))
     DescribeAssetModelResponse.add_member(:asset_model_version, Shapes::ShapeRef.new(shape: Version, location_name: "assetModelVersion"))
+    DescribeAssetModelResponse.add_member(:interface_details, Shapes::ShapeRef.new(shape: InterfaceDetails, location_name: "interfaceDetails"))
     DescribeAssetModelResponse.add_member(:e_tag, Shapes::ShapeRef.new(shape: ETag, location: "header", location_name: "ETag"))
     DescribeAssetModelResponse.struct_class = Types::DescribeAssetModelResponse
 
@@ -1421,11 +2201,11 @@ module Aws::IoTSiteWise
     DescribeAssetPropertyRequest.struct_class = Types::DescribeAssetPropertyRequest
 
     DescribeAssetPropertyResponse.add_member(:asset_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "assetId"))
+    DescribeAssetPropertyResponse.add_member(:asset_external_id, Shapes::ShapeRef.new(shape: ExternalId, location_name: "assetExternalId"))
     DescribeAssetPropertyResponse.add_member(:asset_name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "assetName"))
     DescribeAssetPropertyResponse.add_member(:asset_model_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "assetModelId"))
     DescribeAssetPropertyResponse.add_member(:asset_property, Shapes::ShapeRef.new(shape: Property, location_name: "assetProperty"))
     DescribeAssetPropertyResponse.add_member(:composite_model, Shapes::ShapeRef.new(shape: CompositeModelProperty, location_name: "compositeModel"))
-    DescribeAssetPropertyResponse.add_member(:asset_external_id, Shapes::ShapeRef.new(shape: ExternalId, location_name: "assetExternalId"))
     DescribeAssetPropertyResponse.struct_class = Types::DescribeAssetPropertyResponse
 
     DescribeAssetRequest.add_member(:asset_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "uri", location_name: "assetId"))
@@ -1433,6 +2213,7 @@ module Aws::IoTSiteWise
     DescribeAssetRequest.struct_class = Types::DescribeAssetRequest
 
     DescribeAssetResponse.add_member(:asset_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "assetId"))
+    DescribeAssetResponse.add_member(:asset_external_id, Shapes::ShapeRef.new(shape: ExternalId, location_name: "assetExternalId"))
     DescribeAssetResponse.add_member(:asset_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "assetArn"))
     DescribeAssetResponse.add_member(:asset_name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "assetName"))
     DescribeAssetResponse.add_member(:asset_model_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "assetModelId"))
@@ -1444,10 +2225,10 @@ module Aws::IoTSiteWise
     DescribeAssetResponse.add_member(:asset_status, Shapes::ShapeRef.new(shape: AssetStatus, required: true, location_name: "assetStatus"))
     DescribeAssetResponse.add_member(:asset_description, Shapes::ShapeRef.new(shape: Description, location_name: "assetDescription"))
     DescribeAssetResponse.add_member(:asset_composite_model_summaries, Shapes::ShapeRef.new(shape: AssetCompositeModelSummaries, location_name: "assetCompositeModelSummaries"))
-    DescribeAssetResponse.add_member(:asset_external_id, Shapes::ShapeRef.new(shape: ExternalId, location_name: "assetExternalId"))
     DescribeAssetResponse.struct_class = Types::DescribeAssetResponse
 
     DescribeBulkImportJobRequest.add_member(:job_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "jobId"))
+    DescribeBulkImportJobRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, location: "querystring", location_name: "workspaceName"))
     DescribeBulkImportJobRequest.struct_class = Types::DescribeBulkImportJobRequest
 
     DescribeBulkImportJobResponse.add_member(:job_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "jobId"))
@@ -1456,12 +2237,41 @@ module Aws::IoTSiteWise
     DescribeBulkImportJobResponse.add_member(:job_role_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "jobRoleArn"))
     DescribeBulkImportJobResponse.add_member(:files, Shapes::ShapeRef.new(shape: Files, required: true, location_name: "files"))
     DescribeBulkImportJobResponse.add_member(:error_report_location, Shapes::ShapeRef.new(shape: ErrorReportLocation, required: true, location_name: "errorReportLocation"))
-    DescribeBulkImportJobResponse.add_member(:job_configuration, Shapes::ShapeRef.new(shape: JobConfiguration, required: true, location_name: "jobConfiguration"))
+    DescribeBulkImportJobResponse.add_member(:job_configuration, Shapes::ShapeRef.new(shape: JobConfiguration, location_name: "jobConfiguration"))
     DescribeBulkImportJobResponse.add_member(:job_creation_date, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "jobCreationDate"))
     DescribeBulkImportJobResponse.add_member(:job_last_update_date, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "jobLastUpdateDate"))
     DescribeBulkImportJobResponse.add_member(:adaptive_ingestion, Shapes::ShapeRef.new(shape: AdaptiveIngestion, location_name: "adaptiveIngestion"))
     DescribeBulkImportJobResponse.add_member(:delete_files_after_import, Shapes::ShapeRef.new(shape: DeleteFilesAfterImport, location_name: "deleteFilesAfterImport"))
+    DescribeBulkImportJobResponse.add_member(:dataset_id, Shapes::ShapeRef.new(shape: ID, location_name: "datasetId"))
+    DescribeBulkImportJobResponse.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, location_name: "workspaceName"))
     DescribeBulkImportJobResponse.struct_class = Types::DescribeBulkImportJobResponse
+
+    DescribeComputationModelExecutionSummaryRequest.add_member(:computation_model_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "computationModelId"))
+    DescribeComputationModelExecutionSummaryRequest.add_member(:resolve_to_resource_type, Shapes::ShapeRef.new(shape: ResolveToResourceType, location: "querystring", location_name: "resolveToResourceType"))
+    DescribeComputationModelExecutionSummaryRequest.add_member(:resolve_to_resource_id, Shapes::ShapeRef.new(shape: ID, location: "querystring", location_name: "resolveToResourceId"))
+    DescribeComputationModelExecutionSummaryRequest.struct_class = Types::DescribeComputationModelExecutionSummaryRequest
+
+    DescribeComputationModelExecutionSummaryResponse.add_member(:computation_model_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "computationModelId"))
+    DescribeComputationModelExecutionSummaryResponse.add_member(:resolve_to, Shapes::ShapeRef.new(shape: ResolveTo, location_name: "resolveTo"))
+    DescribeComputationModelExecutionSummaryResponse.add_member(:computation_model_execution_summary, Shapes::ShapeRef.new(shape: ComputationModelExecutionSummary, required: true, location_name: "computationModelExecutionSummary"))
+    DescribeComputationModelExecutionSummaryResponse.struct_class = Types::DescribeComputationModelExecutionSummaryResponse
+
+    DescribeComputationModelRequest.add_member(:computation_model_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "computationModelId"))
+    DescribeComputationModelRequest.add_member(:computation_model_version, Shapes::ShapeRef.new(shape: ComputationModelVersionFilter, location: "querystring", location_name: "computationModelVersion"))
+    DescribeComputationModelRequest.struct_class = Types::DescribeComputationModelRequest
+
+    DescribeComputationModelResponse.add_member(:computation_model_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "computationModelId"))
+    DescribeComputationModelResponse.add_member(:computation_model_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "computationModelArn"))
+    DescribeComputationModelResponse.add_member(:computation_model_name, Shapes::ShapeRef.new(shape: RestrictedName, required: true, location_name: "computationModelName"))
+    DescribeComputationModelResponse.add_member(:computation_model_description, Shapes::ShapeRef.new(shape: RestrictedDescription, location_name: "computationModelDescription"))
+    DescribeComputationModelResponse.add_member(:computation_model_configuration, Shapes::ShapeRef.new(shape: ComputationModelConfiguration, required: true, location_name: "computationModelConfiguration"))
+    DescribeComputationModelResponse.add_member(:computation_model_data_binding, Shapes::ShapeRef.new(shape: ComputationModelDataBinding, required: true, location_name: "computationModelDataBinding"))
+    DescribeComputationModelResponse.add_member(:computation_model_creation_date, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "computationModelCreationDate"))
+    DescribeComputationModelResponse.add_member(:computation_model_last_update_date, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "computationModelLastUpdateDate"))
+    DescribeComputationModelResponse.add_member(:computation_model_status, Shapes::ShapeRef.new(shape: ComputationModelStatus, required: true, location_name: "computationModelStatus"))
+    DescribeComputationModelResponse.add_member(:computation_model_version, Shapes::ShapeRef.new(shape: Version, required: true, location_name: "computationModelVersion"))
+    DescribeComputationModelResponse.add_member(:action_definitions, Shapes::ShapeRef.new(shape: ActionDefinitions, required: true, location_name: "actionDefinitions"))
+    DescribeComputationModelResponse.struct_class = Types::DescribeComputationModelResponse
 
     DescribeDashboardRequest.add_member(:dashboard_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "dashboardId"))
     DescribeDashboardRequest.struct_class = Types::DescribeDashboardRequest
@@ -1476,18 +2286,39 @@ module Aws::IoTSiteWise
     DescribeDashboardResponse.add_member(:dashboard_last_update_date, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "dashboardLastUpdateDate"))
     DescribeDashboardResponse.struct_class = Types::DescribeDashboardResponse
 
-    DescribeDatasetRequest.add_member(:dataset_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "uri", location_name: "datasetId"))
+    DescribeDatasetExportJobRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    DescribeDatasetExportJobRequest.add_member(:job_id, Shapes::ShapeRef.new(shape: DatasetExportJobId, required: true, location: "uri", location_name: "jobId"))
+    DescribeDatasetExportJobRequest.struct_class = Types::DescribeDatasetExportJobRequest
+
+    DescribeDatasetExportJobResponse.add_member(:job_id, Shapes::ShapeRef.new(shape: DatasetExportJobId, required: true, location_name: "jobId"))
+    DescribeDatasetExportJobResponse.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location_name: "workspaceName"))
+    DescribeDatasetExportJobResponse.add_member(:status, Shapes::ShapeRef.new(shape: DatasetExportJobStatus, required: true, location_name: "status"))
+    DescribeDatasetExportJobResponse.add_member(:started_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "startedAt"))
+    DescribeDatasetExportJobResponse.add_member(:completed_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "completedAt"))
+    DescribeDatasetExportJobResponse.add_member(:destination_s3_uri, Shapes::ShapeRef.new(shape: S3Uri, required: true, location_name: "destinationS3Uri"))
+    DescribeDatasetExportJobResponse.add_member(:error_report_location, Shapes::ShapeRef.new(shape: ExportErrorReportLocation, required: true, location_name: "errorReportLocation"))
+    DescribeDatasetExportJobResponse.add_member(:input, Shapes::ShapeRef.new(shape: ProcessingInput, required: true, location_name: "input"))
+    DescribeDatasetExportJobResponse.struct_class = Types::DescribeDatasetExportJobResponse
+
+    DescribeDatasetRequest.add_member(:dataset_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "datasetId"))
+    DescribeDatasetRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, location: "querystring", location_name: "workspaceName"))
+    DescribeDatasetRequest.add_member(:dataset_version, Shapes::ShapeRef.new(shape: Version, location: "querystring", location_name: "datasetVersion"))
     DescribeDatasetRequest.struct_class = Types::DescribeDatasetRequest
 
     DescribeDatasetResponse.add_member(:dataset_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "datasetId"))
     DescribeDatasetResponse.add_member(:dataset_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "datasetArn"))
     DescribeDatasetResponse.add_member(:dataset_name, Shapes::ShapeRef.new(shape: RestrictedName, required: true, location_name: "datasetName"))
-    DescribeDatasetResponse.add_member(:dataset_description, Shapes::ShapeRef.new(shape: RestrictedDescription, required: true, location_name: "datasetDescription"))
+    DescribeDatasetResponse.add_member(:dataset_description, Shapes::ShapeRef.new(shape: Description, required: true, location_name: "datasetDescription"))
+    DescribeDatasetResponse.add_member(:dataset_type, Shapes::ShapeRef.new(shape: DatasetTypeEnum, location_name: "datasetType"))
+    DescribeDatasetResponse.add_member(:dataset_config, Shapes::ShapeRef.new(shape: DatasetConfig, location_name: "datasetConfig"))
+    DescribeDatasetResponse.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, location_name: "workspaceName"))
+    DescribeDatasetResponse.add_member(:metadata, Shapes::ShapeRef.new(shape: Metadata, location_name: "metadata"))
     DescribeDatasetResponse.add_member(:dataset_source, Shapes::ShapeRef.new(shape: DatasetSource, required: true, location_name: "datasetSource"))
     DescribeDatasetResponse.add_member(:dataset_status, Shapes::ShapeRef.new(shape: DatasetStatus, required: true, location_name: "datasetStatus"))
     DescribeDatasetResponse.add_member(:dataset_creation_date, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "datasetCreationDate"))
     DescribeDatasetResponse.add_member(:dataset_last_update_date, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "datasetLastUpdateDate"))
     DescribeDatasetResponse.add_member(:dataset_version, Shapes::ShapeRef.new(shape: Version, location_name: "datasetVersion"))
+    DescribeDatasetResponse.add_member(:enrichment_status, Shapes::ShapeRef.new(shape: DatasetEnrichment, location_name: "enrichmentStatus"))
     DescribeDatasetResponse.struct_class = Types::DescribeDatasetResponse
 
     DescribeDefaultEncryptionConfigurationRequest.struct_class = Types::DescribeDefaultEncryptionConfigurationRequest
@@ -1496,6 +2327,38 @@ module Aws::IoTSiteWise
     DescribeDefaultEncryptionConfigurationResponse.add_member(:kms_key_arn, Shapes::ShapeRef.new(shape: ARN, location_name: "kmsKeyArn"))
     DescribeDefaultEncryptionConfigurationResponse.add_member(:configuration_status, Shapes::ShapeRef.new(shape: ConfigurationStatus, required: true, location_name: "configurationStatus"))
     DescribeDefaultEncryptionConfigurationResponse.struct_class = Types::DescribeDefaultEncryptionConfigurationResponse
+
+    DescribeEnrichmentJobRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    DescribeEnrichmentJobRequest.add_member(:job_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "jobId"))
+    DescribeEnrichmentJobRequest.struct_class = Types::DescribeEnrichmentJobRequest
+
+    DescribeEnrichmentJobResponse.add_member(:job_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "jobId"))
+    DescribeEnrichmentJobResponse.add_member(:status, Shapes::ShapeRef.new(shape: EnrichmentJobStatus, required: true, location_name: "status"))
+    DescribeEnrichmentJobResponse.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location_name: "workspaceName"))
+    DescribeEnrichmentJobResponse.add_member(:job_type, Shapes::ShapeRef.new(shape: JobType, required: true, location_name: "jobType"))
+    DescribeEnrichmentJobResponse.add_member(:job_configuration, Shapes::ShapeRef.new(shape: EnrichmentJobConfiguration, required: true, location_name: "jobConfiguration"))
+    DescribeEnrichmentJobResponse.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "createdAt"))
+    DescribeEnrichmentJobResponse.add_member(:updated_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "updatedAt"))
+    DescribeEnrichmentJobResponse.add_member(:completed_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "completedAt"))
+    DescribeEnrichmentJobResponse.add_member(:cancelled_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "cancelledAt"))
+    DescribeEnrichmentJobResponse.add_member(:failure_message, Shapes::ShapeRef.new(shape: String, location_name: "failureMessage"))
+    DescribeEnrichmentJobResponse.struct_class = Types::DescribeEnrichmentJobResponse
+
+    DescribeExecutionRequest.add_member(:execution_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "executionId"))
+    DescribeExecutionRequest.struct_class = Types::DescribeExecutionRequest
+
+    DescribeExecutionResponse.add_member(:execution_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "executionId"))
+    DescribeExecutionResponse.add_member(:action_type, Shapes::ShapeRef.new(shape: Name, location_name: "actionType"))
+    DescribeExecutionResponse.add_member(:target_resource, Shapes::ShapeRef.new(shape: TargetResource, required: true, location_name: "targetResource"))
+    DescribeExecutionResponse.add_member(:target_resource_version, Shapes::ShapeRef.new(shape: Version, required: true, location_name: "targetResourceVersion"))
+    DescribeExecutionResponse.add_member(:resolve_to, Shapes::ShapeRef.new(shape: ResolveTo, location_name: "resolveTo"))
+    DescribeExecutionResponse.add_member(:execution_start_time, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "executionStartTime"))
+    DescribeExecutionResponse.add_member(:execution_end_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "executionEndTime"))
+    DescribeExecutionResponse.add_member(:execution_status, Shapes::ShapeRef.new(shape: ExecutionStatus, required: true, location_name: "executionStatus"))
+    DescribeExecutionResponse.add_member(:execution_result, Shapes::ShapeRef.new(shape: ExecutionResult, location_name: "executionResult"))
+    DescribeExecutionResponse.add_member(:execution_details, Shapes::ShapeRef.new(shape: ExecutionDetails, location_name: "executionDetails"))
+    DescribeExecutionResponse.add_member(:execution_entity_version, Shapes::ShapeRef.new(shape: Version, location_name: "executionEntityVersion"))
+    DescribeExecutionResponse.struct_class = Types::DescribeExecutionResponse
 
     DescribeGatewayCapabilityConfigurationRequest.add_member(:gateway_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "gatewayId"))
     DescribeGatewayCapabilityConfigurationRequest.add_member(:capability_namespace, Shapes::ShapeRef.new(shape: CapabilityNamespace, required: true, location: "uri", location_name: "capabilityNamespace"))
@@ -1520,10 +2383,48 @@ module Aws::IoTSiteWise
     DescribeGatewayResponse.add_member(:last_update_date, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "lastUpdateDate"))
     DescribeGatewayResponse.struct_class = Types::DescribeGatewayResponse
 
+    DescribeLoggingOptionsRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, location: "querystring", location_name: "workspaceName"))
     DescribeLoggingOptionsRequest.struct_class = Types::DescribeLoggingOptionsRequest
 
     DescribeLoggingOptionsResponse.add_member(:logging_options, Shapes::ShapeRef.new(shape: LoggingOptions, required: true, location_name: "loggingOptions"))
     DescribeLoggingOptionsResponse.struct_class = Types::DescribeLoggingOptionsResponse
+
+    DescribePipelineExecutionRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    DescribePipelineExecutionRequest.add_member(:pipeline_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location: "uri", location_name: "pipelineName"))
+    DescribePipelineExecutionRequest.add_member(:pipeline_execution_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "pipelineExecutionId"))
+    DescribePipelineExecutionRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
+    DescribePipelineExecutionRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: DescribePipelineExecutionRequestMaxResultsInteger, location: "querystring", location_name: "maxResults"))
+    DescribePipelineExecutionRequest.struct_class = Types::DescribePipelineExecutionRequest
+
+    DescribePipelineExecutionResponse.add_member(:pipeline_execution_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "pipelineExecutionId"))
+    DescribePipelineExecutionResponse.add_member(:pipeline_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location_name: "pipelineName"))
+    DescribePipelineExecutionResponse.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location_name: "workspaceName"))
+    DescribePipelineExecutionResponse.add_member(:pipeline_version, Shapes::ShapeRef.new(shape: Version, required: true, location_name: "pipelineVersion"))
+    DescribePipelineExecutionResponse.add_member(:status, Shapes::ShapeRef.new(shape: PipelineExecutionStatus, required: true, location_name: "status"))
+    DescribePipelineExecutionResponse.add_member(:start_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "startTime"))
+    DescribePipelineExecutionResponse.add_member(:end_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "endTime"))
+    DescribePipelineExecutionResponse.add_member(:request_environment_variables, Shapes::ShapeRef.new(shape: ExecutionEnvironmentVariables, required: true, location_name: "requestEnvironmentVariables"))
+    DescribePipelineExecutionResponse.add_member(:execution_priority, Shapes::ShapeRef.new(shape: ExecutionPriority, location_name: "executionPriority"))
+    DescribePipelineExecutionResponse.add_member(:compute_node_execution_details, Shapes::ShapeRef.new(shape: ComputeNodeExecutionDetailsList, required: true, location_name: "computeNodeExecutionDetails"))
+    DescribePipelineExecutionResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
+    DescribePipelineExecutionResponse.struct_class = Types::DescribePipelineExecutionResponse
+
+    DescribePipelineRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    DescribePipelineRequest.add_member(:pipeline_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location: "uri", location_name: "pipelineName"))
+    DescribePipelineRequest.add_member(:pipeline_version, Shapes::ShapeRef.new(shape: Version, location: "querystring", location_name: "version"))
+    DescribePipelineRequest.struct_class = Types::DescribePipelineRequest
+
+    DescribePipelineResponse.add_member(:pipeline_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location_name: "pipelineName"))
+    DescribePipelineResponse.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location_name: "workspaceName"))
+    DescribePipelineResponse.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    DescribePipelineResponse.add_member(:pipeline_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "pipelineArn"))
+    DescribePipelineResponse.add_member(:version, Shapes::ShapeRef.new(shape: Version, required: true, location_name: "version"))
+    DescribePipelineResponse.add_member(:environment_variables, Shapes::ShapeRef.new(shape: EnvironmentVariablesMap, location_name: "environmentVariables"))
+    DescribePipelineResponse.add_member(:computations, Shapes::ShapeRef.new(shape: ComputeNodeList, required: true, location_name: "computations"))
+    DescribePipelineResponse.add_member(:status, Shapes::ShapeRef.new(shape: ResourceStatus, required: true, location_name: "status"))
+    DescribePipelineResponse.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "createdAt"))
+    DescribePipelineResponse.add_member(:updated_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "updatedAt"))
+    DescribePipelineResponse.struct_class = Types::DescribePipelineResponse
 
     DescribePortalRequest.add_member(:portal_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "portalId"))
     DescribePortalRequest.struct_class = Types::DescribePortalRequest
@@ -1559,6 +2460,32 @@ module Aws::IoTSiteWise
     DescribeProjectResponse.add_member(:project_last_update_date, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "projectLastUpdateDate"))
     DescribeProjectResponse.struct_class = Types::DescribeProjectResponse
 
+    DescribeQueryRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    DescribeQueryRequest.add_member(:query_id, Shapes::ShapeRef.new(shape: QueryId, required: true, location: "uri", location_name: "queryId"))
+    DescribeQueryRequest.struct_class = Types::DescribeQueryRequest
+
+    DescribeQueryResponse.add_member(:query_id, Shapes::ShapeRef.new(shape: QueryId, required: true, location_name: "queryId"))
+    DescribeQueryResponse.add_member(:status, Shapes::ShapeRef.new(shape: QueryStatus, required: true, location_name: "status"))
+    DescribeQueryResponse.add_member(:submitted_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "submittedAt"))
+    DescribeQueryResponse.add_member(:completed_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "completedAt"))
+    DescribeQueryResponse.add_member(:statistics, Shapes::ShapeRef.new(shape: QueryStatistics, location_name: "statistics"))
+    DescribeQueryResponse.add_member(:error_message, Shapes::ShapeRef.new(shape: QueryErrorMessage, location_name: "errorMessage"))
+    DescribeQueryResponse.struct_class = Types::DescribeQueryResponse
+
+    DescribeSearchRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    DescribeSearchRequest.add_member(:search_id, Shapes::ShapeRef.new(shape: SearchId, required: true, location: "uri", location_name: "searchId"))
+    DescribeSearchRequest.struct_class = Types::DescribeSearchRequest
+
+    DescribeSearchResponse.add_member(:search_id, Shapes::ShapeRef.new(shape: SearchId, required: true, location_name: "searchId"))
+    DescribeSearchResponse.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location_name: "workspaceName"))
+    DescribeSearchResponse.add_member(:status, Shapes::ShapeRef.new(shape: SearchStatus, required: true, location_name: "status"))
+    DescribeSearchResponse.add_member(:query_statement, Shapes::ShapeRef.new(shape: SearchQueryStatement, required: true, location_name: "queryStatement"))
+    DescribeSearchResponse.add_member(:search_type, Shapes::ShapeRef.new(shape: SearchType, required: true, location_name: "searchType"))
+    DescribeSearchResponse.add_member(:status_reason, Shapes::ShapeRef.new(shape: String, location_name: "statusReason"))
+    DescribeSearchResponse.add_member(:started_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "startedAt"))
+    DescribeSearchResponse.add_member(:group_id, Shapes::ShapeRef.new(shape: GroupId, location_name: "groupId"))
+    DescribeSearchResponse.struct_class = Types::DescribeSearchResponse
+
     DescribeStorageConfigurationRequest.struct_class = Types::DescribeStorageConfigurationRequest
 
     DescribeStorageConfigurationResponse.add_member(:storage_type, Shapes::ShapeRef.new(shape: StorageType, required: true, location_name: "storageType"))
@@ -1572,9 +2499,26 @@ module Aws::IoTSiteWise
     DescribeStorageConfigurationResponse.add_member(:disallow_ingest_null_na_n, Shapes::ShapeRef.new(shape: DisallowIngestNullNaN, location_name: "disallowIngestNullNaN"))
     DescribeStorageConfigurationResponse.struct_class = Types::DescribeStorageConfigurationResponse
 
+    DescribeTaskRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    DescribeTaskRequest.add_member(:task_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location: "uri", location_name: "taskName"))
+    DescribeTaskRequest.add_member(:task_version, Shapes::ShapeRef.new(shape: Version, location: "querystring", location_name: "version"))
+    DescribeTaskRequest.struct_class = Types::DescribeTaskRequest
+
+    DescribeTaskResponse.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location_name: "workspaceName"))
+    DescribeTaskResponse.add_member(:task_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location_name: "taskName"))
+    DescribeTaskResponse.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    DescribeTaskResponse.add_member(:task_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "taskArn"))
+    DescribeTaskResponse.add_member(:version, Shapes::ShapeRef.new(shape: Version, required: true, location_name: "version"))
+    DescribeTaskResponse.add_member(:task_configuration, Shapes::ShapeRef.new(shape: TaskConfiguration, required: true, location_name: "taskConfiguration"))
+    DescribeTaskResponse.add_member(:status, Shapes::ShapeRef.new(shape: ResourceStatus, required: true, location_name: "status"))
+    DescribeTaskResponse.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "createdAt"))
+    DescribeTaskResponse.add_member(:updated_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "updatedAt"))
+    DescribeTaskResponse.struct_class = Types::DescribeTaskResponse
+
     DescribeTimeSeriesRequest.add_member(:alias, Shapes::ShapeRef.new(shape: PropertyAlias, location: "querystring", location_name: "alias"))
     DescribeTimeSeriesRequest.add_member(:asset_id, Shapes::ShapeRef.new(shape: CustomID, location: "querystring", location_name: "assetId"))
     DescribeTimeSeriesRequest.add_member(:property_id, Shapes::ShapeRef.new(shape: CustomID, location: "querystring", location_name: "propertyId"))
+    DescribeTimeSeriesRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, location: "querystring", location_name: "workspaceName"))
     DescribeTimeSeriesRequest.struct_class = Types::DescribeTimeSeriesRequest
 
     DescribeTimeSeriesResponse.add_member(:asset_id, Shapes::ShapeRef.new(shape: ID, location_name: "assetId"))
@@ -1586,25 +2530,78 @@ module Aws::IoTSiteWise
     DescribeTimeSeriesResponse.add_member(:time_series_creation_date, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "timeSeriesCreationDate"))
     DescribeTimeSeriesResponse.add_member(:time_series_last_update_date, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "timeSeriesLastUpdateDate"))
     DescribeTimeSeriesResponse.add_member(:time_series_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "timeSeriesArn"))
+    DescribeTimeSeriesResponse.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, location_name: "workspaceName"))
     DescribeTimeSeriesResponse.struct_class = Types::DescribeTimeSeriesResponse
+
+    DescribeWorkspaceRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    DescribeWorkspaceRequest.struct_class = Types::DescribeWorkspaceRequest
+
+    DescribeWorkspaceResponse.add_member(:workspace_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "workspaceArn"))
+    DescribeWorkspaceResponse.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location_name: "workspaceName"))
+    DescribeWorkspaceResponse.add_member(:workspace_description, Shapes::ShapeRef.new(shape: Description, location_name: "workspaceDescription"))
+    DescribeWorkspaceResponse.add_member(:workspace_status, Shapes::ShapeRef.new(shape: WorkspaceStatus, required: true, location_name: "workspaceStatus"))
+    DescribeWorkspaceResponse.add_member(:encryption_configuration, Shapes::ShapeRef.new(shape: WorkspaceEncryptionConfigurationInfo, location_name: "encryptionConfiguration"))
+    DescribeWorkspaceResponse.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "createdAt"))
+    DescribeWorkspaceResponse.add_member(:updated_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "updatedAt"))
+    DescribeWorkspaceResponse.struct_class = Types::DescribeWorkspaceResponse
 
     DetailedError.add_member(:code, Shapes::ShapeRef.new(shape: DetailedErrorCode, required: true, location_name: "code"))
     DetailedError.add_member(:message, Shapes::ShapeRef.new(shape: DetailedErrorMessage, required: true, location_name: "message"))
     DetailedError.struct_class = Types::DetailedError
 
+    DetailedErrorList.member = Shapes::ShapeRef.new(shape: DetailedPipelineError)
+
     DetailedErrors.member = Shapes::ShapeRef.new(shape: DetailedError)
+
+    DetailedPipelineError.add_member(:code, Shapes::ShapeRef.new(shape: DetailedPipelineErrorCode, required: true, location_name: "code"))
+    DetailedPipelineError.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
+    DetailedPipelineError.struct_class = Types::DetailedPipelineError
 
     DisassociateAssetsRequest.add_member(:asset_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "uri", location_name: "assetId"))
     DisassociateAssetsRequest.add_member(:hierarchy_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location_name: "hierarchyId"))
     DisassociateAssetsRequest.add_member(:child_asset_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location_name: "childAssetId"))
-    DisassociateAssetsRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    DisassociateAssetsRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     DisassociateAssetsRequest.struct_class = Types::DisassociateAssetsRequest
+
+    DisassociateDataSegmentEntries.member = Shapes::ShapeRef.new(shape: DisassociateDataSegmentEntry)
+
+    DisassociateDataSegmentEntry.add_member(:source_dataset_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "sourceDatasetId"))
+    DisassociateDataSegmentEntry.add_member(:time_series_id, Shapes::ShapeRef.new(shape: TimeSeriesId, required: true, location_name: "timeSeriesId"))
+    DisassociateDataSegmentEntry.add_member(:start_timestamp, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "startTimestamp"))
+    DisassociateDataSegmentEntry.add_member(:end_timestamp, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "endTimestamp"))
+    DisassociateDataSegmentEntry.struct_class = Types::DisassociateDataSegmentEntry
 
     DisassociateTimeSeriesFromAssetPropertyRequest.add_member(:alias, Shapes::ShapeRef.new(shape: PropertyAlias, required: true, location: "querystring", location_name: "alias"))
     DisassociateTimeSeriesFromAssetPropertyRequest.add_member(:asset_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "querystring", location_name: "assetId"))
     DisassociateTimeSeriesFromAssetPropertyRequest.add_member(:property_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "querystring", location_name: "propertyId"))
-    DisassociateTimeSeriesFromAssetPropertyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    DisassociateTimeSeriesFromAssetPropertyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     DisassociateTimeSeriesFromAssetPropertyRequest.struct_class = Types::DisassociateTimeSeriesFromAssetPropertyRequest
+
+    EnrichmentJobConfiguration.add_member(:event_detection, Shapes::ShapeRef.new(shape: EventDetection, location_name: "eventDetection"))
+    EnrichmentJobConfiguration.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    EnrichmentJobConfiguration.add_member_subclass(:event_detection, Types::EnrichmentJobConfiguration::EventDetection)
+    EnrichmentJobConfiguration.add_member_subclass(:unknown, Types::EnrichmentJobConfiguration::Unknown)
+    EnrichmentJobConfiguration.struct_class = Types::EnrichmentJobConfiguration
+
+    EnrichmentJobSummaries.member = Shapes::ShapeRef.new(shape: EnrichmentJobSummary)
+
+    EnrichmentJobSummary.add_member(:job_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "jobId"))
+    EnrichmentJobSummary.add_member(:status, Shapes::ShapeRef.new(shape: EnrichmentJobStatus, required: true, location_name: "status"))
+    EnrichmentJobSummary.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location_name: "workspaceName"))
+    EnrichmentJobSummary.add_member(:job_type, Shapes::ShapeRef.new(shape: JobType, required: true, location_name: "jobType"))
+    EnrichmentJobSummary.add_member(:dataset_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "datasetId"))
+    EnrichmentJobSummary.add_member(:property_alias, Shapes::ShapeRef.new(shape: AssetPropertyAlias, location_name: "propertyAlias"))
+    EnrichmentJobSummary.add_member(:time_series_id, Shapes::ShapeRef.new(shape: TimeSeriesId, location_name: "timeSeriesId"))
+    EnrichmentJobSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "createdAt"))
+    EnrichmentJobSummary.add_member(:updated_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "updatedAt"))
+    EnrichmentJobSummary.struct_class = Types::EnrichmentJobSummary
+
+    EnrichmentTrimSettings.add_member(:start_time, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "startTime"))
+    EnrichmentTrimSettings.add_member(:end_time, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "endTime"))
+    EnrichmentTrimSettings.struct_class = Types::EnrichmentTrimSettings
+
+    EnvironmentVariablesMap.key = Shapes::ShapeRef.new(shape: EnvironmentVariableName)
+    EnvironmentVariablesMap.value = Shapes::ShapeRef.new(shape: EnvironmentVariableValue)
 
     ErrorDetails.add_member(:code, Shapes::ShapeRef.new(shape: ErrorCode, required: true, location_name: "code"))
     ErrorDetails.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, required: true, location_name: "message"))
@@ -1615,10 +2612,17 @@ module Aws::IoTSiteWise
     ErrorReportLocation.add_member(:prefix, Shapes::ShapeRef.new(shape: String, required: true, location_name: "prefix"))
     ErrorReportLocation.struct_class = Types::ErrorReportLocation
 
+    EventDetection.add_member(:dataset_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "datasetId"))
+    EventDetection.add_member(:time_series_id, Shapes::ShapeRef.new(shape: TimeSeriesId, location_name: "timeSeriesId"))
+    EventDetection.add_member(:property_alias, Shapes::ShapeRef.new(shape: AssetPropertyAlias, location_name: "propertyAlias"))
+    EventDetection.add_member(:trim_settings, Shapes::ShapeRef.new(shape: EnrichmentTrimSettings, required: true, location_name: "trimSettings"))
+    EventDetection.struct_class = Types::EventDetection
+
     ExecuteActionRequest.add_member(:target_resource, Shapes::ShapeRef.new(shape: TargetResource, required: true, location_name: "targetResource"))
     ExecuteActionRequest.add_member(:action_definition_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "actionDefinitionId"))
     ExecuteActionRequest.add_member(:action_payload, Shapes::ShapeRef.new(shape: ActionPayload, required: true, location_name: "actionPayload"))
     ExecuteActionRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken"))
+    ExecuteActionRequest.add_member(:resolve_to, Shapes::ShapeRef.new(shape: ResolveTo, location_name: "resolveTo"))
     ExecuteActionRequest.struct_class = Types::ExecuteActionRequest
 
     ExecuteActionResponse.add_member(:action_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "actionId"))
@@ -1627,7 +2631,7 @@ module Aws::IoTSiteWise
     ExecuteQueryRequest.add_member(:query_statement, Shapes::ShapeRef.new(shape: QueryStatement, required: true, location_name: "queryStatement"))
     ExecuteQueryRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: ExecuteQueryNextToken, location_name: "nextToken"))
     ExecuteQueryRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: ExecuteQueryMaxResults, location_name: "maxResults"))
-    ExecuteQueryRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    ExecuteQueryRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     ExecuteQueryRequest.struct_class = Types::ExecuteQueryRequest
 
     ExecuteQueryResponse.add_member(:columns, Shapes::ShapeRef.new(shape: ColumnsList, location_name: "columns"))
@@ -1635,22 +2639,104 @@ module Aws::IoTSiteWise
     ExecuteQueryResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: ExecuteQueryNextToken, location_name: "nextToken"))
     ExecuteQueryResponse.struct_class = Types::ExecuteQueryResponse
 
+    ExecutionDetails.key = Shapes::ShapeRef.new(shape: ExecutionDetailsKey)
+    ExecutionDetails.value = Shapes::ShapeRef.new(shape: ExecutionDetailsValue)
+
+    ExecutionEnvironmentVariables.add_member(:global, Shapes::ShapeRef.new(shape: EnvironmentVariablesMap, location_name: "global"))
+    ExecutionEnvironmentVariables.add_member(:compute_nodes, Shapes::ShapeRef.new(shape: ComputeNodeEnvironmentVariablesMap, location_name: "computeNodes"))
+    ExecutionEnvironmentVariables.struct_class = Types::ExecutionEnvironmentVariables
+
+    ExecutionEnvironmentVariablesMap.key = Shapes::ShapeRef.new(shape: ExecutionEnvironmentVariablesMapKeyString)
+    ExecutionEnvironmentVariablesMap.value = Shapes::ShapeRef.new(shape: ExecutionEnvironmentVariablesMapValueString)
+
+    ExecutionResult.key = Shapes::ShapeRef.new(shape: ExecutionResultKey)
+    ExecutionResult.value = Shapes::ShapeRef.new(shape: ExecutionResultValue)
+
+    ExecutionStatus.add_member(:state, Shapes::ShapeRef.new(shape: ExecutionState, required: true, location_name: "state"))
+    ExecutionStatus.struct_class = Types::ExecutionStatus
+
+    ExecutionSummaries.member = Shapes::ShapeRef.new(shape: ExecutionSummary)
+
+    ExecutionSummary.add_member(:execution_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "executionId"))
+    ExecutionSummary.add_member(:action_type, Shapes::ShapeRef.new(shape: Name, location_name: "actionType"))
+    ExecutionSummary.add_member(:target_resource, Shapes::ShapeRef.new(shape: TargetResource, required: true, location_name: "targetResource"))
+    ExecutionSummary.add_member(:target_resource_version, Shapes::ShapeRef.new(shape: Version, required: true, location_name: "targetResourceVersion"))
+    ExecutionSummary.add_member(:resolve_to, Shapes::ShapeRef.new(shape: ResolveTo, location_name: "resolveTo"))
+    ExecutionSummary.add_member(:execution_start_time, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "executionStartTime"))
+    ExecutionSummary.add_member(:execution_end_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "executionEndTime"))
+    ExecutionSummary.add_member(:execution_status, Shapes::ShapeRef.new(shape: ExecutionStatus, required: true, location_name: "executionStatus"))
+    ExecutionSummary.add_member(:execution_entity_version, Shapes::ShapeRef.new(shape: Version, location_name: "executionEntityVersion"))
+    ExecutionSummary.struct_class = Types::ExecutionSummary
+
+    ExportDataTypeList.member = Shapes::ShapeRef.new(shape: ExportDataType)
+
+    ExportErrorReportLocation.add_member(:s3_uri, Shapes::ShapeRef.new(shape: S3Uri, required: true, location_name: "s3Uri"))
+    ExportErrorReportLocation.struct_class = Types::ExportErrorReportLocation
+
+    ExportJobSummary.add_member(:job_id, Shapes::ShapeRef.new(shape: DatasetExportJobId, required: true, location_name: "jobId"))
+    ExportJobSummary.add_member(:status, Shapes::ShapeRef.new(shape: DatasetExportJobStatus, required: true, location_name: "status"))
+    ExportJobSummary.add_member(:started_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "startedAt"))
+    ExportJobSummary.add_member(:completed_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "completedAt"))
+    ExportJobSummary.add_member(:destination_s3_uri, Shapes::ShapeRef.new(shape: S3Uri, required: true, location_name: "destinationS3Uri"))
+    ExportJobSummary.struct_class = Types::ExportJobSummary
+
+    ExportJobSummaryList.member = Shapes::ShapeRef.new(shape: ExportJobSummary)
+
     ExpressionVariable.add_member(:name, Shapes::ShapeRef.new(shape: VariableName, required: true, location_name: "name"))
     ExpressionVariable.add_member(:value, Shapes::ShapeRef.new(shape: VariableValue, required: true, location_name: "value"))
     ExpressionVariable.struct_class = Types::ExpressionVariable
 
     ExpressionVariables.member = Shapes::ShapeRef.new(shape: ExpressionVariable)
 
+    FailedDataSegmentAssociation.add_member(:source_dataset_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "sourceDatasetId"))
+    FailedDataSegmentAssociation.add_member(:time_series_id, Shapes::ShapeRef.new(shape: TimeSeriesId, required: true, location_name: "timeSeriesId"))
+    FailedDataSegmentAssociation.add_member(:start_timestamp, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "startTimestamp"))
+    FailedDataSegmentAssociation.add_member(:end_timestamp, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "endTimestamp"))
+    FailedDataSegmentAssociation.add_member(:error_code, Shapes::ShapeRef.new(shape: DataSegmentErrorCode, required: true, location_name: "errorCode"))
+    FailedDataSegmentAssociation.add_member(:error_message, Shapes::ShapeRef.new(shape: DataSegmentErrorMessage, required: true, location_name: "errorMessage"))
+    FailedDataSegmentAssociation.struct_class = Types::FailedDataSegmentAssociation
+
+    FailedDataSegmentAssociations.member = Shapes::ShapeRef.new(shape: FailedDataSegmentAssociation)
+
+    FailedDataSegmentDeletion.add_member(:time_series_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "timeSeriesId"))
+    FailedDataSegmentDeletion.add_member(:start_timestamp, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "startTimestamp"))
+    FailedDataSegmentDeletion.add_member(:end_timestamp, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "endTimestamp"))
+    FailedDataSegmentDeletion.add_member(:error_code, Shapes::ShapeRef.new(shape: DataSegmentErrorCode, required: true, location_name: "errorCode"))
+    FailedDataSegmentDeletion.add_member(:error_message, Shapes::ShapeRef.new(shape: DataSegmentErrorMessage, required: true, location_name: "errorMessage"))
+    FailedDataSegmentDeletion.struct_class = Types::FailedDataSegmentDeletion
+
+    FailedDataSegmentDeletions.member = Shapes::ShapeRef.new(shape: FailedDataSegmentDeletion)
+
+    FailedDataSegmentDisassociation.add_member(:source_dataset_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "sourceDatasetId"))
+    FailedDataSegmentDisassociation.add_member(:time_series_id, Shapes::ShapeRef.new(shape: TimeSeriesId, required: true, location_name: "timeSeriesId"))
+    FailedDataSegmentDisassociation.add_member(:start_timestamp, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "startTimestamp"))
+    FailedDataSegmentDisassociation.add_member(:end_timestamp, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "endTimestamp"))
+    FailedDataSegmentDisassociation.add_member(:error_code, Shapes::ShapeRef.new(shape: DataSegmentErrorCode, required: true, location_name: "errorCode"))
+    FailedDataSegmentDisassociation.add_member(:error_message, Shapes::ShapeRef.new(shape: DataSegmentErrorMessage, required: true, location_name: "errorMessage"))
+    FailedDataSegmentDisassociation.struct_class = Types::FailedDataSegmentDisassociation
+
+    FailedDataSegmentDisassociations.member = Shapes::ShapeRef.new(shape: FailedDataSegmentDisassociation)
+
     File.add_member(:bucket, Shapes::ShapeRef.new(shape: Bucket, required: true, location_name: "bucket"))
     File.add_member(:key, Shapes::ShapeRef.new(shape: String, required: true, location_name: "key"))
     File.add_member(:version_id, Shapes::ShapeRef.new(shape: String, location_name: "versionId"))
+    File.add_member(:alias, Shapes::ShapeRef.new(shape: AssetPropertyAlias, location_name: "alias"))
+    File.add_member(:start_time, Shapes::ShapeRef.new(shape: TimeInNanos, location_name: "startTime"))
+    File.add_member(:file_format, Shapes::ShapeRef.new(shape: FileFormat, location_name: "fileFormat"))
     File.struct_class = Types::File
 
     FileFormat.add_member(:csv, Shapes::ShapeRef.new(shape: Csv, location_name: "csv"))
     FileFormat.add_member(:parquet, Shapes::ShapeRef.new(shape: Parquet, location_name: "parquet"))
+    FileFormat.add_member(:mp4, Shapes::ShapeRef.new(shape: Mp4, location_name: "mp4"))
+    FileFormat.add_member(:annotation, Shapes::ShapeRef.new(shape: Annotation, location_name: "annotation"))
     FileFormat.struct_class = Types::FileFormat
 
     Files.member = Shapes::ShapeRef.new(shape: File)
+
+    FormatSettings.add_member(:frames_per_second, Shapes::ShapeRef.new(shape: PositiveInteger, location_name: "framesPerSecond"))
+    FormatSettings.add_member(:width_in_pixels, Shapes::ShapeRef.new(shape: PositiveInteger, location_name: "widthInPixels"))
+    FormatSettings.add_member(:height_in_pixels, Shapes::ShapeRef.new(shape: PositiveInteger, location_name: "heightInPixels"))
+    FormatSettings.struct_class = Types::FormatSettings
 
     ForwardingConfig.add_member(:state, Shapes::ShapeRef.new(shape: ForwardingConfigState, required: true, location_name: "state"))
     ForwardingConfig.struct_class = Types::ForwardingConfig
@@ -1717,6 +2803,22 @@ module Aws::IoTSiteWise
     GetAssetPropertyValueResponse.add_member(:property_value, Shapes::ShapeRef.new(shape: AssetPropertyValue, location_name: "propertyValue"))
     GetAssetPropertyValueResponse.struct_class = Types::GetAssetPropertyValueResponse
 
+    GetCaptureDataRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    GetCaptureDataRequest.add_member(:start_time, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "startTime"))
+    GetCaptureDataRequest.add_member(:end_time, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "endTime"))
+    GetCaptureDataRequest.add_member(:time_series_id, Shapes::ShapeRef.new(shape: TimeSeriesId, location_name: "timeSeriesId"))
+    GetCaptureDataRequest.add_member(:property_alias, Shapes::ShapeRef.new(shape: AssetPropertyAlias, location_name: "propertyAlias"))
+    GetCaptureDataRequest.add_member(:format_settings, Shapes::ShapeRef.new(shape: FormatSettings, location_name: "formatSettings"))
+    GetCaptureDataRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: GetCaptureDataNextToken, location_name: "nextToken"))
+    GetCaptureDataRequest.struct_class = Types::GetCaptureDataRequest
+
+    GetCaptureDataResponse.add_member(:data, Shapes::ShapeRef.new(shape: CaptureBlob, required: true, location_name: "data"))
+    GetCaptureDataResponse.add_member(:start_time, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "startTime"))
+    GetCaptureDataResponse.add_member(:end_time, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "endTime"))
+    GetCaptureDataResponse.add_member(:data_type, Shapes::ShapeRef.new(shape: VideoDataType, required: true, location_name: "dataType"))
+    GetCaptureDataResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: GetCaptureDataNextToken, location_name: "nextToken"))
+    GetCaptureDataResponse.struct_class = Types::GetCaptureDataResponse
+
     GetInterpolatedAssetPropertyValuesRequest.add_member(:asset_id, Shapes::ShapeRef.new(shape: ID, location: "querystring", location_name: "assetId"))
     GetInterpolatedAssetPropertyValuesRequest.add_member(:property_id, Shapes::ShapeRef.new(shape: ID, location: "querystring", location_name: "propertyId"))
     GetInterpolatedAssetPropertyValuesRequest.add_member(:property_alias, Shapes::ShapeRef.new(shape: AssetPropertyAlias, location: "querystring", location_name: "propertyAlias"))
@@ -1736,6 +2838,27 @@ module Aws::IoTSiteWise
     GetInterpolatedAssetPropertyValuesResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
     GetInterpolatedAssetPropertyValuesResponse.struct_class = Types::GetInterpolatedAssetPropertyValuesResponse
 
+    GetQueryResultsRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    GetQueryResultsRequest.add_member(:query_id, Shapes::ShapeRef.new(shape: QueryId, required: true, location: "uri", location_name: "queryId"))
+    GetQueryResultsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: QueryMaxResults, location: "querystring", location_name: "maxResults"))
+    GetQueryResultsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: QueryNextToken, location: "querystring", location_name: "nextToken"))
+    GetQueryResultsRequest.struct_class = Types::GetQueryResultsRequest
+
+    GetQueryResultsResponse.add_member(:column_info, Shapes::ShapeRef.new(shape: ColumnInformationList, location_name: "columnInfo"))
+    GetQueryResultsResponse.add_member(:rows, Shapes::ShapeRef.new(shape: RowList, location_name: "rows"))
+    GetQueryResultsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: QueryNextToken, location_name: "nextToken"))
+    GetQueryResultsResponse.struct_class = Types::GetQueryResultsResponse
+
+    GetSearchResultsRequest.add_member(:search_id, Shapes::ShapeRef.new(shape: SearchId, required: true, location: "uri", location_name: "searchId"))
+    GetSearchResultsRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    GetSearchResultsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: GetSearchResultsRequestMaxResultsInteger, location: "querystring", location_name: "maxResults"))
+    GetSearchResultsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location: "querystring", location_name: "nextToken"))
+    GetSearchResultsRequest.struct_class = Types::GetSearchResultsRequest
+
+    GetSearchResultsResponse.add_member(:search_results, Shapes::ShapeRef.new(shape: SearchResultList, required: true, location_name: "searchResults"))
+    GetSearchResultsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    GetSearchResultsResponse.struct_class = Types::GetSearchResultsResponse
+
     Greengrass.add_member(:group_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "groupArn"))
     Greengrass.struct_class = Types::Greengrass
 
@@ -1743,8 +2866,16 @@ module Aws::IoTSiteWise
     GreengrassV2.add_member(:core_device_operating_system, Shapes::ShapeRef.new(shape: CoreDeviceOperatingSystem, location_name: "coreDeviceOperatingSystem"))
     GreengrassV2.struct_class = Types::GreengrassV2
 
+    GroupIdFilterList.member = Shapes::ShapeRef.new(shape: GroupId)
+
     GroupIdentity.add_member(:id, Shapes::ShapeRef.new(shape: IdentityId, required: true, location_name: "id"))
     GroupIdentity.struct_class = Types::GroupIdentity
+
+    HierarchyMapping.add_member(:asset_model_hierarchy_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "assetModelHierarchyId"))
+    HierarchyMapping.add_member(:interface_asset_model_hierarchy_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "interfaceAssetModelHierarchyId"))
+    HierarchyMapping.struct_class = Types::HierarchyMapping
+
+    HierarchyMappings.member = Shapes::ShapeRef.new(shape: HierarchyMapping)
 
     IAMRoleIdentity.add_member(:arn, Shapes::ShapeRef.new(shape: IamArn, required: true, location_name: "arn"))
     IAMRoleIdentity.struct_class = Types::IAMRoleIdentity
@@ -1771,6 +2902,22 @@ module Aws::IoTSiteWise
     ImageLocation.add_member(:id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "id"))
     ImageLocation.add_member(:url, Shapes::ShapeRef.new(shape: Url, required: true, location_name: "url"))
     ImageLocation.struct_class = Types::ImageLocation
+
+    InterfaceDetails.member = Shapes::ShapeRef.new(shape: InterfaceRelationship)
+
+    InterfaceRelationship.add_member(:id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "id"))
+    InterfaceRelationship.struct_class = Types::InterfaceRelationship
+
+    InterfaceRelationshipSummaries.member = Shapes::ShapeRef.new(shape: InterfaceRelationshipSummary)
+
+    InterfaceRelationshipSummary.add_member(:id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "id"))
+    InterfaceRelationshipSummary.struct_class = Types::InterfaceRelationshipSummary
+
+    InterfaceSummaries.member = Shapes::ShapeRef.new(shape: InterfaceSummary)
+
+    InterfaceSummary.add_member(:interface_asset_model_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "interfaceAssetModelId"))
+    InterfaceSummary.add_member(:interface_asset_model_property_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "interfaceAssetModelPropertyId"))
+    InterfaceSummary.struct_class = Types::InterfaceSummary
 
     InternalFailureException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, required: true, location_name: "message"))
     InternalFailureException.struct_class = Types::InternalFailureException
@@ -1799,7 +2946,7 @@ module Aws::IoTSiteWise
     InvokeAssistantResponse[:payload] = :body
     InvokeAssistantResponse[:payload_member] = InvokeAssistantResponse.member(:body)
 
-    JobConfiguration.add_member(:file_format, Shapes::ShapeRef.new(shape: FileFormat, required: true, location_name: "fileFormat"))
+    JobConfiguration.add_member(:file_format, Shapes::ShapeRef.new(shape: FileFormat, location_name: "fileFormat"))
     JobConfiguration.struct_class = Types::JobConfiguration
 
     JobSummaries.member = Shapes::ShapeRef.new(shape: JobSummary)
@@ -1830,14 +2977,24 @@ module Aws::IoTSiteWise
     ListAccessPoliciesResponse.struct_class = Types::ListAccessPoliciesResponse
 
     ListActionsRequest.add_member(:target_resource_type, Shapes::ShapeRef.new(shape: TargetResourceType, required: true, location: "querystring", location_name: "targetResourceType"))
-    ListActionsRequest.add_member(:target_resource_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "querystring", location_name: "targetResourceId"))
+    ListActionsRequest.add_member(:target_resource_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "querystring", location_name: "targetResourceId"))
     ListActionsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location: "querystring", location_name: "nextToken"))
     ListActionsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListActionsRequest.add_member(:resolve_to_resource_type, Shapes::ShapeRef.new(shape: ResolveToResourceType, location: "querystring", location_name: "resolveToResourceType"))
+    ListActionsRequest.add_member(:resolve_to_resource_id, Shapes::ShapeRef.new(shape: ID, location: "querystring", location_name: "resolveToResourceId"))
     ListActionsRequest.struct_class = Types::ListActionsRequest
 
     ListActionsResponse.add_member(:action_summaries, Shapes::ShapeRef.new(shape: ActionSummaries, required: true, location_name: "actionSummaries"))
     ListActionsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, required: true, location_name: "nextToken"))
     ListActionsResponse.struct_class = Types::ListActionsResponse
+
+    ListApplicationsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListApplicationsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location: "querystring", location_name: "nextToken"))
+    ListApplicationsRequest.struct_class = Types::ListApplicationsRequest
+
+    ListApplicationsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    ListApplicationsResponse.add_member(:applications, Shapes::ShapeRef.new(shape: ApplicationList, required: true, location_name: "applications"))
+    ListApplicationsResponse.struct_class = Types::ListApplicationsResponse
 
     ListAssetModelCompositeModelsRequest.add_member(:asset_model_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "uri", location_name: "assetModelId"))
     ListAssetModelCompositeModelsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location: "querystring", location_name: "nextToken"))
@@ -1916,6 +3073,7 @@ module Aws::IoTSiteWise
     ListBulkImportJobsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location: "querystring", location_name: "nextToken"))
     ListBulkImportJobsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
     ListBulkImportJobsRequest.add_member(:filter, Shapes::ShapeRef.new(shape: ListBulkImportJobsFilter, location: "querystring", location_name: "filter"))
+    ListBulkImportJobsRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, location: "querystring", location_name: "workspaceName"))
     ListBulkImportJobsRequest.struct_class = Types::ListBulkImportJobsRequest
 
     ListBulkImportJobsResponse.add_member(:job_summaries, Shapes::ShapeRef.new(shape: JobSummaries, required: true, location_name: "jobSummaries"))
@@ -1931,6 +3089,33 @@ module Aws::IoTSiteWise
     ListCompositionRelationshipsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
     ListCompositionRelationshipsResponse.struct_class = Types::ListCompositionRelationshipsResponse
 
+    ListComputationModelDataBindingUsagesRequest.add_member(:data_binding_value_filter, Shapes::ShapeRef.new(shape: DataBindingValueFilter, required: true, location_name: "dataBindingValueFilter"))
+    ListComputationModelDataBindingUsagesRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    ListComputationModelDataBindingUsagesRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location_name: "maxResults"))
+    ListComputationModelDataBindingUsagesRequest.struct_class = Types::ListComputationModelDataBindingUsagesRequest
+
+    ListComputationModelDataBindingUsagesResponse.add_member(:data_binding_usage_summaries, Shapes::ShapeRef.new(shape: ComputationModelDataBindingUsageSummaries, required: true, location_name: "dataBindingUsageSummaries"))
+    ListComputationModelDataBindingUsagesResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    ListComputationModelDataBindingUsagesResponse.struct_class = Types::ListComputationModelDataBindingUsagesResponse
+
+    ListComputationModelResolveToResourcesRequest.add_member(:computation_model_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "computationModelId"))
+    ListComputationModelResolveToResourcesRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location: "querystring", location_name: "nextToken"))
+    ListComputationModelResolveToResourcesRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListComputationModelResolveToResourcesRequest.struct_class = Types::ListComputationModelResolveToResourcesRequest
+
+    ListComputationModelResolveToResourcesResponse.add_member(:computation_model_resolve_to_resource_summaries, Shapes::ShapeRef.new(shape: ComputationModelResolveToResourceSummaries, required: true, location_name: "computationModelResolveToResourceSummaries"))
+    ListComputationModelResolveToResourcesResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    ListComputationModelResolveToResourcesResponse.struct_class = Types::ListComputationModelResolveToResourcesResponse
+
+    ListComputationModelsRequest.add_member(:computation_model_type, Shapes::ShapeRef.new(shape: ComputationModelType, location: "querystring", location_name: "computationModelType"))
+    ListComputationModelsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location: "querystring", location_name: "nextToken"))
+    ListComputationModelsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListComputationModelsRequest.struct_class = Types::ListComputationModelsRequest
+
+    ListComputationModelsResponse.add_member(:computation_model_summaries, Shapes::ShapeRef.new(shape: ComputationModelSummaries, required: true, location_name: "computationModelSummaries"))
+    ListComputationModelsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    ListComputationModelsResponse.struct_class = Types::ListComputationModelsResponse
+
     ListDashboardsRequest.add_member(:project_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "querystring", location_name: "projectId"))
     ListDashboardsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location: "querystring", location_name: "nextToken"))
     ListDashboardsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
@@ -1940,14 +3125,77 @@ module Aws::IoTSiteWise
     ListDashboardsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
     ListDashboardsResponse.struct_class = Types::ListDashboardsResponse
 
+    ListDatasetDataSegmentRelationshipsRequest.add_member(:dataset_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "datasetId"))
+    ListDatasetDataSegmentRelationshipsRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "querystring", location_name: "workspaceName"))
+    ListDatasetDataSegmentRelationshipsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListDatasetDataSegmentRelationshipsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location: "querystring", location_name: "nextToken"))
+    ListDatasetDataSegmentRelationshipsRequest.struct_class = Types::ListDatasetDataSegmentRelationshipsRequest
+
+    ListDatasetDataSegmentRelationshipsResponse.add_member(:data_segment_relationship_summaries, Shapes::ShapeRef.new(shape: DataSegmentRelationshipSummaries, required: true, location_name: "dataSegmentRelationshipSummaries"))
+    ListDatasetDataSegmentRelationshipsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    ListDatasetDataSegmentRelationshipsResponse.struct_class = Types::ListDatasetDataSegmentRelationshipsResponse
+
+    ListDatasetDataSegmentsRequest.add_member(:dataset_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "datasetId"))
+    ListDatasetDataSegmentsRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "querystring", location_name: "workspaceName"))
+    ListDatasetDataSegmentsRequest.add_member(:dataset_version, Shapes::ShapeRef.new(shape: Version, location: "querystring", location_name: "datasetVersion"))
+    ListDatasetDataSegmentsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListDatasetDataSegmentsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location: "querystring", location_name: "nextToken"))
+    ListDatasetDataSegmentsRequest.struct_class = Types::ListDatasetDataSegmentsRequest
+
+    ListDatasetDataSegmentsResponse.add_member(:data_segments, Shapes::ShapeRef.new(shape: DataSegmentSummaries, required: true, location_name: "dataSegments"))
+    ListDatasetDataSegmentsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    ListDatasetDataSegmentsResponse.struct_class = Types::ListDatasetDataSegmentsResponse
+
+    ListDatasetExportJobsRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    ListDatasetExportJobsRequest.add_member(:filter, Shapes::ShapeRef.new(shape: DatasetExportJobFilter, location: "querystring", location_name: "filter"))
+    ListDatasetExportJobsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: ListExportJobsMaxResults, location: "querystring", location_name: "maxResults"))
+    ListDatasetExportJobsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: ListExportJobsNextToken, location: "querystring", location_name: "nextToken"))
+    ListDatasetExportJobsRequest.struct_class = Types::ListDatasetExportJobsRequest
+
+    ListDatasetExportJobsResponse.add_member(:jobs, Shapes::ShapeRef.new(shape: ExportJobSummaryList, required: true, location_name: "jobs"))
+    ListDatasetExportJobsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: ListExportJobsNextToken, location_name: "nextToken"))
+    ListDatasetExportJobsResponse.struct_class = Types::ListDatasetExportJobsResponse
+
     ListDatasetsRequest.add_member(:source_type, Shapes::ShapeRef.new(shape: DatasetSourceType, required: true, location: "querystring", location_name: "sourceType"))
+    ListDatasetsRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, location: "querystring", location_name: "workspaceName"))
+    ListDatasetsRequest.add_member(:dataset_type, Shapes::ShapeRef.new(shape: DatasetTypeEnum, location: "querystring", location_name: "datasetType"))
     ListDatasetsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location: "querystring", location_name: "nextToken"))
     ListDatasetsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
     ListDatasetsRequest.struct_class = Types::ListDatasetsRequest
 
     ListDatasetsResponse.add_member(:dataset_summaries, Shapes::ShapeRef.new(shape: DatasetSummaries, required: true, location_name: "datasetSummaries"))
     ListDatasetsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    ListDatasetsResponse.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, location_name: "workspaceName"))
     ListDatasetsResponse.struct_class = Types::ListDatasetsResponse
+
+    ListEnrichmentJobsRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    ListEnrichmentJobsRequest.add_member(:dataset_id, Shapes::ShapeRef.new(shape: ID, location: "querystring", location_name: "datasetId"))
+    ListEnrichmentJobsRequest.add_member(:property_alias, Shapes::ShapeRef.new(shape: AssetPropertyAlias, location: "querystring", location_name: "propertyAlias"))
+    ListEnrichmentJobsRequest.add_member(:time_series_id, Shapes::ShapeRef.new(shape: TimeSeriesId, location: "querystring", location_name: "timeSeriesId"))
+    ListEnrichmentJobsRequest.add_member(:status, Shapes::ShapeRef.new(shape: EnrichmentJobStatus, location: "querystring", location_name: "status"))
+    ListEnrichmentJobsRequest.add_member(:job_type, Shapes::ShapeRef.new(shape: JobType, location: "querystring", location_name: "jobType"))
+    ListEnrichmentJobsRequest.add_member(:start_date, Shapes::ShapeRef.new(shape: Timestamp, location: "querystring", location_name: "startDate"))
+    ListEnrichmentJobsRequest.add_member(:end_date, Shapes::ShapeRef.new(shape: Timestamp, location: "querystring", location_name: "endDate"))
+    ListEnrichmentJobsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListEnrichmentJobsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location: "querystring", location_name: "nextToken"))
+    ListEnrichmentJobsRequest.struct_class = Types::ListEnrichmentJobsRequest
+
+    ListEnrichmentJobsResponse.add_member(:jobs, Shapes::ShapeRef.new(shape: EnrichmentJobSummaries, required: true, location_name: "jobs"))
+    ListEnrichmentJobsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    ListEnrichmentJobsResponse.struct_class = Types::ListEnrichmentJobsResponse
+
+    ListExecutionsRequest.add_member(:target_resource_type, Shapes::ShapeRef.new(shape: TargetResourceType, required: true, location: "querystring", location_name: "targetResourceType"))
+    ListExecutionsRequest.add_member(:target_resource_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "querystring", location_name: "targetResourceId"))
+    ListExecutionsRequest.add_member(:resolve_to_resource_type, Shapes::ShapeRef.new(shape: ResolveToResourceType, location: "querystring", location_name: "resolveToResourceType"))
+    ListExecutionsRequest.add_member(:resolve_to_resource_id, Shapes::ShapeRef.new(shape: ID, location: "querystring", location_name: "resolveToResourceId"))
+    ListExecutionsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location: "querystring", location_name: "nextToken"))
+    ListExecutionsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListExecutionsRequest.add_member(:action_type, Shapes::ShapeRef.new(shape: Name, location: "querystring", location_name: "actionType"))
+    ListExecutionsRequest.struct_class = Types::ListExecutionsRequest
+
+    ListExecutionsResponse.add_member(:execution_summaries, Shapes::ShapeRef.new(shape: ExecutionSummaries, required: true, location_name: "executionSummaries"))
+    ListExecutionsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    ListExecutionsResponse.struct_class = Types::ListExecutionsResponse
 
     ListGatewaysRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location: "querystring", location_name: "nextToken"))
     ListGatewaysRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
@@ -1956,6 +3204,39 @@ module Aws::IoTSiteWise
     ListGatewaysResponse.add_member(:gateway_summaries, Shapes::ShapeRef.new(shape: GatewaySummaries, required: true, location_name: "gatewaySummaries"))
     ListGatewaysResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
     ListGatewaysResponse.struct_class = Types::ListGatewaysResponse
+
+    ListInterfaceRelationshipsRequest.add_member(:interface_asset_model_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "uri", location_name: "interfaceAssetModelId"))
+    ListInterfaceRelationshipsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location: "querystring", location_name: "nextToken"))
+    ListInterfaceRelationshipsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListInterfaceRelationshipsRequest.struct_class = Types::ListInterfaceRelationshipsRequest
+
+    ListInterfaceRelationshipsResponse.add_member(:interface_relationship_summaries, Shapes::ShapeRef.new(shape: InterfaceRelationshipSummaries, required: true, location_name: "interfaceRelationshipSummaries"))
+    ListInterfaceRelationshipsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    ListInterfaceRelationshipsResponse.struct_class = Types::ListInterfaceRelationshipsResponse
+
+    ListPipelineExecutionsRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    ListPipelineExecutionsRequest.add_member(:pipeline_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location: "uri", location_name: "pipelineName"))
+    ListPipelineExecutionsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
+    ListPipelineExecutionsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: ListPipelineExecutionsRequestMaxResultsInteger, location: "querystring", location_name: "maxResults"))
+    ListPipelineExecutionsRequest.add_member(:state, Shapes::ShapeRef.new(shape: PipelineExecutionState, location: "querystring", location_name: "state"))
+    ListPipelineExecutionsRequest.add_member(:start_time_after, Shapes::ShapeRef.new(shape: Timestamp, location: "querystring", location_name: "startTimeAfter"))
+    ListPipelineExecutionsRequest.add_member(:start_time_before, Shapes::ShapeRef.new(shape: Timestamp, location: "querystring", location_name: "startTimeBefore"))
+    ListPipelineExecutionsRequest.add_member(:end_time_after, Shapes::ShapeRef.new(shape: Timestamp, location: "querystring", location_name: "endTimeAfter"))
+    ListPipelineExecutionsRequest.add_member(:end_time_before, Shapes::ShapeRef.new(shape: Timestamp, location: "querystring", location_name: "endTimeBefore"))
+    ListPipelineExecutionsRequest.struct_class = Types::ListPipelineExecutionsRequest
+
+    ListPipelineExecutionsResponse.add_member(:pipeline_execution_summaries, Shapes::ShapeRef.new(shape: PipelineExecutionSummaryList, required: true, location_name: "pipelineExecutionSummaries"))
+    ListPipelineExecutionsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
+    ListPipelineExecutionsResponse.struct_class = Types::ListPipelineExecutionsResponse
+
+    ListPipelinesRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    ListPipelinesRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
+    ListPipelinesRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: ListPipelinesRequestMaxResultsInteger, location: "querystring", location_name: "maxResults"))
+    ListPipelinesRequest.struct_class = Types::ListPipelinesRequest
+
+    ListPipelinesResponse.add_member(:pipeline_summaries, Shapes::ShapeRef.new(shape: PipelineSummaries, required: true, location_name: "pipelineSummaries"))
+    ListPipelinesResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
+    ListPipelinesResponse.struct_class = Types::ListPipelinesResponse
 
     ListPortalsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location: "querystring", location_name: "nextToken"))
     ListPortalsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
@@ -1983,22 +3264,68 @@ module Aws::IoTSiteWise
     ListProjectsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
     ListProjectsResponse.struct_class = Types::ListProjectsResponse
 
+    ListQueriesRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    ListQueriesRequest.add_member(:filter, Shapes::ShapeRef.new(shape: QueryFilter, location: "querystring", location_name: "filter"))
+    ListQueriesRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: QueryMaxResults, location: "querystring", location_name: "maxResults"))
+    ListQueriesRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: QueryListNextToken, location: "querystring", location_name: "nextToken"))
+    ListQueriesRequest.struct_class = Types::ListQueriesRequest
+
+    ListQueriesResponse.add_member(:queries, Shapes::ShapeRef.new(shape: QuerySummaryList, required: true, location_name: "queries"))
+    ListQueriesResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: QueryListNextToken, location_name: "nextToken"))
+    ListQueriesResponse.struct_class = Types::ListQueriesResponse
+
+    ListSearchesFilters.add_member(:status_filter, Shapes::ShapeRef.new(shape: SearchStatusFilterList, location_name: "statusFilter"))
+    ListSearchesFilters.add_member(:started_after, Shapes::ShapeRef.new(shape: Timestamp, location_name: "startedAfter"))
+    ListSearchesFilters.add_member(:started_before, Shapes::ShapeRef.new(shape: Timestamp, location_name: "startedBefore"))
+    ListSearchesFilters.add_member(:group_id_filter, Shapes::ShapeRef.new(shape: GroupIdFilterList, location_name: "groupIdFilter"))
+    ListSearchesFilters.add_member(:search_type_filter, Shapes::ShapeRef.new(shape: SearchTypeFilterList, location_name: "searchTypeFilter"))
+    ListSearchesFilters.struct_class = Types::ListSearchesFilters
+
+    ListSearchesRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    ListSearchesRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: ListSearchesRequestMaxResultsInteger, location_name: "maxResults"))
+    ListSearchesRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    ListSearchesRequest.add_member(:list_searches_filters, Shapes::ShapeRef.new(shape: ListSearchesFilters, location_name: "listSearchesFilters"))
+    ListSearchesRequest.struct_class = Types::ListSearchesRequest
+
+    ListSearchesResponse.add_member(:search_summaries, Shapes::ShapeRef.new(shape: SearchSummaries, required: true, location_name: "searchSummaries"))
+    ListSearchesResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    ListSearchesResponse.struct_class = Types::ListSearchesResponse
+
     ListTagsForResourceRequest.add_member(:resource_arn, Shapes::ShapeRef.new(shape: AmazonResourceName, required: true, location: "querystring", location_name: "resourceArn"))
     ListTagsForResourceRequest.struct_class = Types::ListTagsForResourceRequest
 
     ListTagsForResourceResponse.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
     ListTagsForResourceResponse.struct_class = Types::ListTagsForResourceResponse
 
+    ListTasksRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    ListTasksRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
+    ListTasksRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: ListTasksRequestMaxResultsInteger, location: "querystring", location_name: "maxResults"))
+    ListTasksRequest.struct_class = Types::ListTasksRequest
+
+    ListTasksResponse.add_member(:task_summaries, Shapes::ShapeRef.new(shape: TaskSummaries, required: true, location_name: "taskSummaries"))
+    ListTasksResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
+    ListTasksResponse.struct_class = Types::ListTasksResponse
+
     ListTimeSeriesRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location: "querystring", location_name: "nextToken"))
     ListTimeSeriesRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
     ListTimeSeriesRequest.add_member(:asset_id, Shapes::ShapeRef.new(shape: CustomID, location: "querystring", location_name: "assetId"))
     ListTimeSeriesRequest.add_member(:alias_prefix, Shapes::ShapeRef.new(shape: PropertyAlias, location: "querystring", location_name: "aliasPrefix"))
     ListTimeSeriesRequest.add_member(:time_series_type, Shapes::ShapeRef.new(shape: ListTimeSeriesType, location: "querystring", location_name: "timeSeriesType"))
+    ListTimeSeriesRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, location: "querystring", location_name: "workspaceName"))
     ListTimeSeriesRequest.struct_class = Types::ListTimeSeriesRequest
 
     ListTimeSeriesResponse.add_member(:time_series_summaries, Shapes::ShapeRef.new(shape: TimeSeriesSummaries, required: true, location_name: "TimeSeriesSummaries"))
     ListTimeSeriesResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    ListTimeSeriesResponse.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, location_name: "workspaceName"))
     ListTimeSeriesResponse.struct_class = Types::ListTimeSeriesResponse
+
+    ListWorkspacesRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location: "querystring", location_name: "nextToken"))
+    ListWorkspacesRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListWorkspacesRequest.struct_class = Types::ListWorkspacesRequest
+
+    ListWorkspacesResponse.add_member(:workspace_summaries, Shapes::ShapeRef.new(shape: WorkspaceSummaries, required: true, location_name: "workspaceSummaries"))
+    ListWorkspacesResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    ListWorkspacesResponse.struct_class = Types::ListWorkspacesResponse
 
     Location.add_member(:uri, Shapes::ShapeRef.new(shape: String, location_name: "uri"))
     Location.struct_class = Types::Location
@@ -2006,14 +3333,20 @@ module Aws::IoTSiteWise
     LoggingOptions.add_member(:level, Shapes::ShapeRef.new(shape: LoggingLevel, required: true, location_name: "level"))
     LoggingOptions.struct_class = Types::LoggingOptions
 
+    MatchedDataBinding.add_member(:value, Shapes::ShapeRef.new(shape: DataBindingValue, required: true, location_name: "value"))
+    MatchedDataBinding.struct_class = Types::MatchedDataBinding
+
     Measurement.add_member(:processing_config, Shapes::ShapeRef.new(shape: MeasurementProcessingConfig, location_name: "processingConfig"))
     Measurement.struct_class = Types::Measurement
 
     MeasurementProcessingConfig.add_member(:forwarding_config, Shapes::ShapeRef.new(shape: ForwardingConfig, required: true, location_name: "forwardingConfig"))
     MeasurementProcessingConfig.struct_class = Types::MeasurementProcessingConfig
 
-    Metric.add_member(:expression, Shapes::ShapeRef.new(shape: Expression, required: true, location_name: "expression"))
-    Metric.add_member(:variables, Shapes::ShapeRef.new(shape: ExpressionVariables, required: true, location_name: "variables"))
+    Metadata.key = Shapes::ShapeRef.new(shape: MetadataKey)
+    Metadata.value = Shapes::ShapeRef.new(shape: MetadataValue)
+
+    Metric.add_member(:expression, Shapes::ShapeRef.new(shape: Expression, location_name: "expression"))
+    Metric.add_member(:variables, Shapes::ShapeRef.new(shape: ExpressionVariables, location_name: "variables"))
     Metric.add_member(:window, Shapes::ShapeRef.new(shape: MetricWindow, required: true, location_name: "window"))
     Metric.add_member(:processing_config, Shapes::ShapeRef.new(shape: MetricProcessingConfig, location_name: "processingConfig"))
     Metric.struct_class = Types::Metric
@@ -2028,10 +3361,42 @@ module Aws::IoTSiteWise
     MonitorErrorDetails.add_member(:message, Shapes::ShapeRef.new(shape: MonitorErrorMessage, location_name: "message"))
     MonitorErrorDetails.struct_class = Types::MonitorErrorDetails
 
+    Mp4.struct_class = Types::Mp4
+
     MultiLayerStorage.add_member(:customer_managed_s3_storage, Shapes::ShapeRef.new(shape: CustomerManagedS3Storage, required: true, location_name: "customerManagedS3Storage"))
     MultiLayerStorage.struct_class = Types::MultiLayerStorage
 
     Parquet.struct_class = Types::Parquet
+
+    PipelineExecutionStateDetails.add_member(:code, Shapes::ShapeRef.new(shape: PipelineErrorCode, location_name: "code"))
+    PipelineExecutionStateDetails.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
+    PipelineExecutionStateDetails.add_member(:details, Shapes::ShapeRef.new(shape: DetailedErrorList, location_name: "details"))
+    PipelineExecutionStateDetails.struct_class = Types::PipelineExecutionStateDetails
+
+    PipelineExecutionStatus.add_member(:state, Shapes::ShapeRef.new(shape: PipelineExecutionState, required: true, location_name: "state"))
+    PipelineExecutionStatus.add_member(:state_details, Shapes::ShapeRef.new(shape: PipelineExecutionStateDetails, location_name: "stateDetails"))
+    PipelineExecutionStatus.struct_class = Types::PipelineExecutionStatus
+
+    PipelineExecutionSummary.add_member(:pipeline_execution_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "pipelineExecutionId"))
+    PipelineExecutionSummary.add_member(:pipeline_version, Shapes::ShapeRef.new(shape: Version, required: true, location_name: "pipelineVersion"))
+    PipelineExecutionSummary.add_member(:status, Shapes::ShapeRef.new(shape: PipelineExecutionStatus, required: true, location_name: "status"))
+    PipelineExecutionSummary.add_member(:execution_priority, Shapes::ShapeRef.new(shape: ExecutionPriority, location_name: "executionPriority"))
+    PipelineExecutionSummary.add_member(:start_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "startTime"))
+    PipelineExecutionSummary.add_member(:end_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "endTime"))
+    PipelineExecutionSummary.struct_class = Types::PipelineExecutionSummary
+
+    PipelineExecutionSummaryList.member = Shapes::ShapeRef.new(shape: PipelineExecutionSummary)
+
+    PipelineSummaries.member = Shapes::ShapeRef.new(shape: PipelineSummary)
+
+    PipelineSummary.add_member(:pipeline_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location_name: "pipelineName"))
+    PipelineSummary.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    PipelineSummary.add_member(:pipeline_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "pipelineArn"))
+    PipelineSummary.add_member(:version, Shapes::ShapeRef.new(shape: Version, required: true, location_name: "version"))
+    PipelineSummary.add_member(:status, Shapes::ShapeRef.new(shape: ResourceStatus, required: true, location_name: "status"))
+    PipelineSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "createdAt"))
+    PipelineSummary.add_member(:updated_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "updatedAt"))
+    PipelineSummary.struct_class = Types::PipelineSummary
 
     PortalResource.add_member(:id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "id"))
     PortalResource.struct_class = Types::PortalResource
@@ -2066,6 +3431,14 @@ module Aws::IoTSiteWise
     PreconditionFailedException.add_member(:resource_arn, Shapes::ShapeRef.new(shape: ResourceArn, required: true, location_name: "resourceArn"))
     PreconditionFailedException.struct_class = Types::PreconditionFailedException
 
+    ProcessingInput.add_member(:timeseries, Shapes::ShapeRef.new(shape: TimeseriesList, location_name: "timeseries"))
+    ProcessingInput.add_member(:dataset, Shapes::ShapeRef.new(shape: DatasetItem, location_name: "dataset"))
+    ProcessingInput.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    ProcessingInput.add_member_subclass(:timeseries, Types::ProcessingInput::Timeseries)
+    ProcessingInput.add_member_subclass(:dataset, Types::ProcessingInput::Dataset)
+    ProcessingInput.add_member_subclass(:unknown, Types::ProcessingInput::Unknown)
+    ProcessingInput.struct_class = Types::ProcessingInput
+
     ProjectResource.add_member(:id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "id"))
     ProjectResource.struct_class = Types::ProjectResource
 
@@ -2079,6 +3452,7 @@ module Aws::IoTSiteWise
     ProjectSummary.struct_class = Types::ProjectSummary
 
     Property.add_member(:id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "id"))
+    Property.add_member(:external_id, Shapes::ShapeRef.new(shape: ExternalId, location_name: "externalId"))
     Property.add_member(:name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "name"))
     Property.add_member(:alias, Shapes::ShapeRef.new(shape: PropertyAlias, location_name: "alias"))
     Property.add_member(:notification, Shapes::ShapeRef.new(shape: PropertyNotification, location_name: "notification"))
@@ -2086,8 +3460,18 @@ module Aws::IoTSiteWise
     Property.add_member(:unit, Shapes::ShapeRef.new(shape: PropertyUnit, location_name: "unit"))
     Property.add_member(:type, Shapes::ShapeRef.new(shape: PropertyType, location_name: "type"))
     Property.add_member(:path, Shapes::ShapeRef.new(shape: AssetPropertyPath, location_name: "path"))
-    Property.add_member(:external_id, Shapes::ShapeRef.new(shape: ExternalId, location_name: "externalId"))
     Property.struct_class = Types::Property
+
+    PropertyMapping.add_member(:asset_model_property_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location_name: "assetModelPropertyId"))
+    PropertyMapping.add_member(:interface_asset_model_property_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location_name: "interfaceAssetModelPropertyId"))
+    PropertyMapping.struct_class = Types::PropertyMapping
+
+    PropertyMappingConfiguration.add_member(:match_by_property_name, Shapes::ShapeRef.new(shape: MatchByPropertyName, location_name: "matchByPropertyName"))
+    PropertyMappingConfiguration.add_member(:create_missing_property, Shapes::ShapeRef.new(shape: CreateMissingProperty, location_name: "createMissingProperty"))
+    PropertyMappingConfiguration.add_member(:overrides, Shapes::ShapeRef.new(shape: PropertyMappings, location_name: "overrides"))
+    PropertyMappingConfiguration.struct_class = Types::PropertyMappingConfiguration
+
+    PropertyMappings.member = Shapes::ShapeRef.new(shape: PropertyMapping)
 
     PropertyNotification.add_member(:topic, Shapes::ShapeRef.new(shape: PropertyNotificationTopic, required: true, location_name: "topic"))
     PropertyNotification.add_member(:state, Shapes::ShapeRef.new(shape: PropertyNotificationState, required: true, location_name: "state"))
@@ -2101,6 +3485,18 @@ module Aws::IoTSiteWise
 
     PropertyValueNullValue.add_member(:value_type, Shapes::ShapeRef.new(shape: RawValueType, required: true, location_name: "valueType"))
     PropertyValueNullValue.struct_class = Types::PropertyValueNullValue
+
+    PutAssetModelInterfaceRelationshipRequest.add_member(:asset_model_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "uri", location_name: "assetModelId"))
+    PutAssetModelInterfaceRelationshipRequest.add_member(:interface_asset_model_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "uri", location_name: "interfaceAssetModelId"))
+    PutAssetModelInterfaceRelationshipRequest.add_member(:property_mapping_configuration, Shapes::ShapeRef.new(shape: PropertyMappingConfiguration, required: true, location_name: "propertyMappingConfiguration"))
+    PutAssetModelInterfaceRelationshipRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    PutAssetModelInterfaceRelationshipRequest.struct_class = Types::PutAssetModelInterfaceRelationshipRequest
+
+    PutAssetModelInterfaceRelationshipResponse.add_member(:asset_model_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "assetModelId"))
+    PutAssetModelInterfaceRelationshipResponse.add_member(:interface_asset_model_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "interfaceAssetModelId"))
+    PutAssetModelInterfaceRelationshipResponse.add_member(:asset_model_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "assetModelArn"))
+    PutAssetModelInterfaceRelationshipResponse.add_member(:asset_model_status, Shapes::ShapeRef.new(shape: AssetModelStatus, required: true, location_name: "assetModelStatus"))
+    PutAssetModelInterfaceRelationshipResponse.struct_class = Types::PutAssetModelInterfaceRelationshipResponse
 
     PutAssetPropertyValueEntries.member = Shapes::ShapeRef.new(shape: PutAssetPropertyValueEntry)
 
@@ -2121,6 +3517,7 @@ module Aws::IoTSiteWise
     PutDefaultEncryptionConfigurationResponse.struct_class = Types::PutDefaultEncryptionConfigurationResponse
 
     PutLoggingOptionsRequest.add_member(:logging_options, Shapes::ShapeRef.new(shape: LoggingOptions, required: true, location_name: "loggingOptions"))
+    PutLoggingOptionsRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, location_name: "workspaceName"))
     PutLoggingOptionsRequest.struct_class = Types::PutLoggingOptionsRequest
 
     PutLoggingOptionsResponse.struct_class = Types::PutLoggingOptionsResponse
@@ -2146,11 +3543,27 @@ module Aws::IoTSiteWise
 
     Qualities.member = Shapes::ShapeRef.new(shape: Quality)
 
+    QueryStatistics.add_member(:row_count, Shapes::ShapeRef.new(shape: Long, required: true, location_name: "rowCount"))
+    QueryStatistics.add_member(:bytes_scanned, Shapes::ShapeRef.new(shape: Long, required: true, location_name: "bytesScanned"))
+    QueryStatistics.add_member(:execution_time_in_millis, Shapes::ShapeRef.new(shape: Long, required: true, location_name: "executionTimeInMillis"))
+    QueryStatistics.struct_class = Types::QueryStatistics
+
+    QuerySummary.add_member(:query_id, Shapes::ShapeRef.new(shape: QueryId, required: true, location_name: "queryId"))
+    QuerySummary.add_member(:status, Shapes::ShapeRef.new(shape: QueryStatus, required: true, location_name: "status"))
+    QuerySummary.add_member(:submitted_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "submittedAt"))
+    QuerySummary.add_member(:completed_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "completedAt"))
+    QuerySummary.struct_class = Types::QuerySummary
+
+    QuerySummaryList.member = Shapes::ShapeRef.new(shape: QuerySummary)
+
     QueryTimeoutException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, location_name: "message"))
     QueryTimeoutException.struct_class = Types::QueryTimeoutException
 
     Reference.add_member(:dataset, Shapes::ShapeRef.new(shape: DataSetReference, location_name: "dataset"))
     Reference.struct_class = Types::Reference
+
+    ResolveTo.add_member(:asset_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "assetId"))
+    ResolveTo.struct_class = Types::ResolveTo
 
     Resource.add_member(:portal, Shapes::ShapeRef.new(shape: PortalResource, location_name: "portal"))
     Resource.add_member(:project, Shapes::ShapeRef.new(shape: ProjectResource, location_name: "project"))
@@ -2161,8 +3574,16 @@ module Aws::IoTSiteWise
     ResourceAlreadyExistsException.add_member(:resource_arn, Shapes::ShapeRef.new(shape: ResourceArn, required: true, location_name: "resourceArn"))
     ResourceAlreadyExistsException.struct_class = Types::ResourceAlreadyExistsException
 
+    ResourceError.add_member(:code, Shapes::ShapeRef.new(shape: ResourceErrorCode, location_name: "code"))
+    ResourceError.add_member(:message, Shapes::ShapeRef.new(shape: String, location_name: "message"))
+    ResourceError.struct_class = Types::ResourceError
+
     ResourceNotFoundException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, required: true, location_name: "message"))
     ResourceNotFoundException.struct_class = Types::ResourceNotFoundException
+
+    ResourceStatus.add_member(:error, Shapes::ShapeRef.new(shape: ResourceError, location_name: "error"))
+    ResourceStatus.add_member(:state, Shapes::ShapeRef.new(shape: ResourceState, location_name: "state"))
+    ResourceStatus.struct_class = Types::ResourceStatus
 
     ResponseStream.add_member(:trace, Shapes::ShapeRef.new(shape: Trace, event: true, location_name: "trace"))
     ResponseStream.add_member(:output, Shapes::ShapeRef.new(shape: InvocationOutput, event: true, location_name: "output"))
@@ -2175,6 +3596,8 @@ module Aws::IoTSiteWise
     ResponseStream.add_member(:throttling_exception, Shapes::ShapeRef.new(shape: ThrottlingException, location_name: "throttlingException"))
     ResponseStream.struct_class = Types::ResponseStream
 
+    Result.member = Shapes::ShapeRef.new(shape: ColumnValue)
+
     RetentionPeriod.add_member(:number_of_days, Shapes::ShapeRef.new(shape: NumberOfDays, location_name: "numberOfDays"))
     RetentionPeriod.add_member(:unlimited, Shapes::ShapeRef.new(shape: Unlimited, location_name: "unlimited"))
     RetentionPeriod.struct_class = Types::RetentionPeriod
@@ -2182,10 +3605,49 @@ module Aws::IoTSiteWise
     Row.add_member(:data, Shapes::ShapeRef.new(shape: DatumList, required: true, location_name: "data"))
     Row.struct_class = Types::Row
 
+    RowList.member = Shapes::ShapeRef.new(shape: Result)
+
     Rows.member = Shapes::ShapeRef.new(shape: Row)
+
+    SearchFilters.add_member(:time_series_ids, Shapes::ShapeRef.new(shape: TimeSeriesIdList, location_name: "timeSeriesIds"))
+    SearchFilters.add_member(:dataset_ids, Shapes::ShapeRef.new(shape: DataSetIdList, location_name: "datasetIds"))
+    SearchFilters.add_member(:time_intervals, Shapes::ShapeRef.new(shape: TimeIntervalList, location_name: "timeIntervals"))
+    SearchFilters.struct_class = Types::SearchFilters
+
+    SearchResult.add_member(:search_id, Shapes::ShapeRef.new(shape: SearchId, required: true, location_name: "searchId"))
+    SearchResult.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location_name: "workspaceName"))
+    SearchResult.add_member(:dataset_id, Shapes::ShapeRef.new(shape: DatasetId, required: true, location_name: "datasetId"))
+    SearchResult.add_member(:time_series_id, Shapes::ShapeRef.new(shape: TimeSeriesId, required: true, location_name: "timeSeriesId"))
+    SearchResult.add_member(:start_timestamp, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "startTimestamp"))
+    SearchResult.add_member(:end_timestamp, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "endTimestamp"))
+    SearchResult.add_member(:top_timestamp, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "topTimestamp"))
+    SearchResult.add_member(:score, Shapes::ShapeRef.new(shape: Float, required: true, location_name: "score"))
+    SearchResult.struct_class = Types::SearchResult
+
+    SearchResultList.member = Shapes::ShapeRef.new(shape: SearchResult)
+
+    SearchStatusFilterList.member = Shapes::ShapeRef.new(shape: SearchStatus)
+
+    SearchSummaries.member = Shapes::ShapeRef.new(shape: SearchSummary)
+
+    SearchSummary.add_member(:search_id, Shapes::ShapeRef.new(shape: SearchId, required: true, location_name: "searchId"))
+    SearchSummary.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location_name: "workspaceName"))
+    SearchSummary.add_member(:status, Shapes::ShapeRef.new(shape: SearchStatus, required: true, location_name: "status"))
+    SearchSummary.add_member(:query_statement, Shapes::ShapeRef.new(shape: SearchQueryStatement, required: true, location_name: "queryStatement"))
+    SearchSummary.add_member(:search_type, Shapes::ShapeRef.new(shape: SearchType, required: true, location_name: "searchType"))
+    SearchSummary.add_member(:status_reason, Shapes::ShapeRef.new(shape: String, location_name: "statusReason"))
+    SearchSummary.add_member(:started_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "startedAt"))
+    SearchSummary.add_member(:group_id, Shapes::ShapeRef.new(shape: GroupId, location_name: "groupId"))
+    SearchSummary.struct_class = Types::SearchSummary
+
+    SearchTypeFilterList.member = Shapes::ShapeRef.new(shape: SearchType)
 
     ServiceUnavailableException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, required: true, location_name: "message"))
     ServiceUnavailableException.struct_class = Types::ServiceUnavailableException
+
+    SessionConfig.add_member(:session_start_timestamp, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "sessionStartTimestamp"))
+    SessionConfig.add_member(:session_end_timestamp, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "sessionEndTimestamp"))
+    SessionConfig.struct_class = Types::SessionConfig
 
     SiemensIE.add_member(:iot_core_thing_name, Shapes::ShapeRef.new(shape: IotCoreThingName, required: true, location_name: "iotCoreThingName"))
     SiemensIE.struct_class = Types::SiemensIE
@@ -2196,6 +3658,39 @@ module Aws::IoTSiteWise
 
     SourceDetail.add_member(:kendra, Shapes::ShapeRef.new(shape: KendraSourceDetail, location_name: "kendra"))
     SourceDetail.struct_class = Types::SourceDetail
+
+    StartPipelineExecutionRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    StartPipelineExecutionRequest.add_member(:pipeline_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location: "uri", location_name: "pipelineName"))
+    StartPipelineExecutionRequest.add_member(:execution_environment_variable_overrides, Shapes::ShapeRef.new(shape: ExecutionEnvironmentVariables, location_name: "executionEnvironmentVariableOverrides"))
+    StartPipelineExecutionRequest.add_member(:execution_priority, Shapes::ShapeRef.new(shape: ExecutionPriority, location_name: "executionPriority"))
+    StartPipelineExecutionRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    StartPipelineExecutionRequest.struct_class = Types::StartPipelineExecutionRequest
+
+    StartPipelineExecutionResponse.add_member(:pipeline_execution_id, Shapes::ShapeRef.new(shape: ID, required: true, location_name: "pipelineExecutionId"))
+    StartPipelineExecutionResponse.struct_class = Types::StartPipelineExecutionResponse
+
+    StartQueryRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    StartQueryRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    StartQueryRequest.add_member(:query_statement, Shapes::ShapeRef.new(shape: QueryString, required: true, location_name: "queryStatement"))
+    StartQueryRequest.struct_class = Types::StartQueryRequest
+
+    StartQueryResponse.add_member(:query_id, Shapes::ShapeRef.new(shape: QueryId, required: true, location_name: "queryId"))
+    StartQueryResponse.add_member(:status, Shapes::ShapeRef.new(shape: QueryStatus, required: true, location_name: "status"))
+    StartQueryResponse.struct_class = Types::StartQueryResponse
+
+    StartSearchRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    StartSearchRequest.add_member(:query_statement, Shapes::ShapeRef.new(shape: SearchQueryStatement, required: true, location_name: "queryStatement"))
+    StartSearchRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    StartSearchRequest.add_member(:search_type, Shapes::ShapeRef.new(shape: SearchType, location_name: "searchType"))
+    StartSearchRequest.add_member(:search_filters, Shapes::ShapeRef.new(shape: SearchFilters, location_name: "searchFilters"))
+    StartSearchRequest.add_member(:group_id, Shapes::ShapeRef.new(shape: GroupId, location_name: "groupId"))
+    StartSearchRequest.struct_class = Types::StartSearchRequest
+
+    StartSearchResponse.add_member(:search_id, Shapes::ShapeRef.new(shape: SearchId, required: true, location_name: "searchId"))
+    StartSearchResponse.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location_name: "workspaceName"))
+    StartSearchResponse.add_member(:status, Shapes::ShapeRef.new(shape: SearchStatus, required: true, location_name: "status"))
+    StartSearchResponse.add_member(:group_id, Shapes::ShapeRef.new(shape: GroupId, location_name: "groupId"))
+    StartSearchResponse.struct_class = Types::StartSearchResponse
 
     TagKeyList.member = Shapes::ShapeRef.new(shape: TagKey)
 
@@ -2208,8 +3703,26 @@ module Aws::IoTSiteWise
 
     TagResourceResponse.struct_class = Types::TagResourceResponse
 
-    TargetResource.add_member(:asset_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location_name: "assetId"))
+    TargetResource.add_member(:asset_id, Shapes::ShapeRef.new(shape: ID, location_name: "assetId"))
+    TargetResource.add_member(:computation_model_id, Shapes::ShapeRef.new(shape: ID, location_name: "computationModelId"))
     TargetResource.struct_class = Types::TargetResource
+
+    TaskConfiguration.add_member(:container_task_configuration, Shapes::ShapeRef.new(shape: ContainerTaskConfiguration, location_name: "containerTaskConfiguration"))
+    TaskConfiguration.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    TaskConfiguration.add_member_subclass(:container_task_configuration, Types::TaskConfiguration::ContainerTaskConfiguration)
+    TaskConfiguration.add_member_subclass(:unknown, Types::TaskConfiguration::Unknown)
+    TaskConfiguration.struct_class = Types::TaskConfiguration
+
+    TaskSummaries.member = Shapes::ShapeRef.new(shape: TaskSummary)
+
+    TaskSummary.add_member(:task_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location_name: "taskName"))
+    TaskSummary.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    TaskSummary.add_member(:task_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "taskArn"))
+    TaskSummary.add_member(:version, Shapes::ShapeRef.new(shape: Version, required: true, location_name: "version"))
+    TaskSummary.add_member(:status, Shapes::ShapeRef.new(shape: ResourceStatus, required: true, location_name: "status"))
+    TaskSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "createdAt"))
+    TaskSummary.add_member(:updated_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "updatedAt"))
+    TaskSummary.struct_class = Types::TaskSummary
 
     ThrottlingException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, required: true, location_name: "message"))
     ThrottlingException.struct_class = Types::ThrottlingException
@@ -2217,6 +3730,14 @@ module Aws::IoTSiteWise
     TimeInNanos.add_member(:time_in_seconds, Shapes::ShapeRef.new(shape: TimeInSeconds, required: true, location_name: "timeInSeconds"))
     TimeInNanos.add_member(:offset_in_nanos, Shapes::ShapeRef.new(shape: OffsetInNanos, location_name: "offsetInNanos"))
     TimeInNanos.struct_class = Types::TimeInNanos
+
+    TimeInterval.add_member(:start_time, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "startTime"))
+    TimeInterval.add_member(:end_time, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "endTime"))
+    TimeInterval.struct_class = Types::TimeInterval
+
+    TimeIntervalList.member = Shapes::ShapeRef.new(shape: TimeInterval)
+
+    TimeSeriesIdList.member = Shapes::ShapeRef.new(shape: TimeSeriesId)
 
     TimeSeriesSummaries.member = Shapes::ShapeRef.new(shape: TimeSeriesSummary)
 
@@ -2230,6 +3751,14 @@ module Aws::IoTSiteWise
     TimeSeriesSummary.add_member(:time_series_last_update_date, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "timeSeriesLastUpdateDate"))
     TimeSeriesSummary.add_member(:time_series_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "timeSeriesArn"))
     TimeSeriesSummary.struct_class = Types::TimeSeriesSummary
+
+    TimeseriesItem.add_member(:time_series_id, Shapes::ShapeRef.new(shape: TimeSeriesId, location_name: "timeSeriesId"))
+    TimeseriesItem.add_member(:property_alias, Shapes::ShapeRef.new(shape: AssetPropertyAlias, location_name: "propertyAlias"))
+    TimeseriesItem.add_member(:trim_settings, Shapes::ShapeRef.new(shape: TrimSettings, location_name: "trimSettings"))
+    TimeseriesItem.add_member(:format_settings, Shapes::ShapeRef.new(shape: FormatSettings, location_name: "formatSettings"))
+    TimeseriesItem.struct_class = Types::TimeseriesItem
+
+    TimeseriesList.member = Shapes::ShapeRef.new(shape: TimeseriesItem)
 
     Timestamps.member = Shapes::ShapeRef.new(shape: TimeInNanos)
 
@@ -2249,6 +3778,10 @@ module Aws::IoTSiteWise
     TransformProcessingConfig.add_member(:forwarding_config, Shapes::ShapeRef.new(shape: ForwardingConfig, location_name: "forwardingConfig"))
     TransformProcessingConfig.struct_class = Types::TransformProcessingConfig
 
+    TrimSettings.add_member(:start_time, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "startTime"))
+    TrimSettings.add_member(:end_time, Shapes::ShapeRef.new(shape: TimeInNanos, required: true, location_name: "endTime"))
+    TrimSettings.struct_class = Types::TrimSettings
+
     TumblingWindow.add_member(:interval, Shapes::ShapeRef.new(shape: Interval, required: true, location_name: "interval"))
     TumblingWindow.add_member(:offset, Shapes::ShapeRef.new(shape: Offset, location_name: "offset"))
     TumblingWindow.struct_class = Types::TumblingWindow
@@ -2266,7 +3799,7 @@ module Aws::IoTSiteWise
     UpdateAccessPolicyRequest.add_member(:access_policy_identity, Shapes::ShapeRef.new(shape: Identity, required: true, location_name: "accessPolicyIdentity"))
     UpdateAccessPolicyRequest.add_member(:access_policy_resource, Shapes::ShapeRef.new(shape: Resource, required: true, location_name: "accessPolicyResource"))
     UpdateAccessPolicyRequest.add_member(:access_policy_permission, Shapes::ShapeRef.new(shape: Permission, required: true, location_name: "accessPolicyPermission"))
-    UpdateAccessPolicyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    UpdateAccessPolicyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     UpdateAccessPolicyRequest.struct_class = Types::UpdateAccessPolicyRequest
 
     UpdateAccessPolicyResponse.struct_class = Types::UpdateAccessPolicyResponse
@@ -2276,7 +3809,7 @@ module Aws::IoTSiteWise
     UpdateAssetModelCompositeModelRequest.add_member(:asset_model_composite_model_external_id, Shapes::ShapeRef.new(shape: ExternalId, location_name: "assetModelCompositeModelExternalId"))
     UpdateAssetModelCompositeModelRequest.add_member(:asset_model_composite_model_description, Shapes::ShapeRef.new(shape: Description, location_name: "assetModelCompositeModelDescription"))
     UpdateAssetModelCompositeModelRequest.add_member(:asset_model_composite_model_name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "assetModelCompositeModelName"))
-    UpdateAssetModelCompositeModelRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    UpdateAssetModelCompositeModelRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     UpdateAssetModelCompositeModelRequest.add_member(:asset_model_composite_model_properties, Shapes::ShapeRef.new(shape: AssetModelProperties, location_name: "assetModelCompositeModelProperties"))
     UpdateAssetModelCompositeModelRequest.add_member(:if_match, Shapes::ShapeRef.new(shape: ETag, location: "header", location_name: "If-Match"))
     UpdateAssetModelCompositeModelRequest.add_member(:if_none_match, Shapes::ShapeRef.new(shape: SelectAll, location: "header", location_name: "If-None-Match"))
@@ -2285,6 +3818,7 @@ module Aws::IoTSiteWise
 
     UpdateAssetModelCompositeModelResponse.add_member(:asset_model_composite_model_path, Shapes::ShapeRef.new(shape: AssetModelCompositeModelPath, required: true, location_name: "assetModelCompositeModelPath"))
     UpdateAssetModelCompositeModelResponse.add_member(:asset_model_status, Shapes::ShapeRef.new(shape: AssetModelStatus, required: true, location_name: "assetModelStatus"))
+    UpdateAssetModelCompositeModelResponse.add_member(:asset_model_id, Shapes::ShapeRef.new(shape: ID, location_name: "assetModelId"))
     UpdateAssetModelCompositeModelResponse.struct_class = Types::UpdateAssetModelCompositeModelResponse
 
     UpdateAssetModelRequest.add_member(:asset_model_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "uri", location_name: "assetModelId"))
@@ -2294,12 +3828,13 @@ module Aws::IoTSiteWise
     UpdateAssetModelRequest.add_member(:asset_model_properties, Shapes::ShapeRef.new(shape: AssetModelProperties, location_name: "assetModelProperties"))
     UpdateAssetModelRequest.add_member(:asset_model_hierarchies, Shapes::ShapeRef.new(shape: AssetModelHierarchies, location_name: "assetModelHierarchies"))
     UpdateAssetModelRequest.add_member(:asset_model_composite_models, Shapes::ShapeRef.new(shape: AssetModelCompositeModels, location_name: "assetModelCompositeModels"))
-    UpdateAssetModelRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    UpdateAssetModelRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     UpdateAssetModelRequest.add_member(:if_match, Shapes::ShapeRef.new(shape: ETag, location: "header", location_name: "If-Match"))
     UpdateAssetModelRequest.add_member(:if_none_match, Shapes::ShapeRef.new(shape: SelectAll, location: "header", location_name: "If-None-Match"))
     UpdateAssetModelRequest.add_member(:match_for_version_type, Shapes::ShapeRef.new(shape: AssetModelVersionType, location: "header", location_name: "Match-For-Version-Type"))
     UpdateAssetModelRequest.struct_class = Types::UpdateAssetModelRequest
 
+    UpdateAssetModelResponse.add_member(:asset_model_id, Shapes::ShapeRef.new(shape: ID, location_name: "assetModelId"))
     UpdateAssetModelResponse.add_member(:asset_model_status, Shapes::ShapeRef.new(shape: AssetModelStatus, required: true, location_name: "assetModelStatus"))
     UpdateAssetModelResponse.struct_class = Types::UpdateAssetModelResponse
 
@@ -2307,37 +3842,52 @@ module Aws::IoTSiteWise
     UpdateAssetPropertyRequest.add_member(:property_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "uri", location_name: "propertyId"))
     UpdateAssetPropertyRequest.add_member(:property_alias, Shapes::ShapeRef.new(shape: PropertyAlias, location_name: "propertyAlias"))
     UpdateAssetPropertyRequest.add_member(:property_notification_state, Shapes::ShapeRef.new(shape: PropertyNotificationState, location_name: "propertyNotificationState"))
-    UpdateAssetPropertyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    UpdateAssetPropertyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     UpdateAssetPropertyRequest.add_member(:property_unit, Shapes::ShapeRef.new(shape: PropertyUnit, location_name: "propertyUnit"))
     UpdateAssetPropertyRequest.struct_class = Types::UpdateAssetPropertyRequest
 
     UpdateAssetRequest.add_member(:asset_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "uri", location_name: "assetId"))
-    UpdateAssetRequest.add_member(:asset_name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "assetName"))
-    UpdateAssetRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
-    UpdateAssetRequest.add_member(:asset_description, Shapes::ShapeRef.new(shape: Description, location_name: "assetDescription"))
     UpdateAssetRequest.add_member(:asset_external_id, Shapes::ShapeRef.new(shape: ExternalId, location_name: "assetExternalId"))
+    UpdateAssetRequest.add_member(:asset_name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "assetName"))
+    UpdateAssetRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    UpdateAssetRequest.add_member(:asset_description, Shapes::ShapeRef.new(shape: Description, location_name: "assetDescription"))
     UpdateAssetRequest.struct_class = Types::UpdateAssetRequest
 
+    UpdateAssetResponse.add_member(:asset_id, Shapes::ShapeRef.new(shape: ID, location_name: "assetId"))
     UpdateAssetResponse.add_member(:asset_status, Shapes::ShapeRef.new(shape: AssetStatus, required: true, location_name: "assetStatus"))
     UpdateAssetResponse.struct_class = Types::UpdateAssetResponse
+
+    UpdateComputationModelRequest.add_member(:computation_model_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "computationModelId"))
+    UpdateComputationModelRequest.add_member(:computation_model_name, Shapes::ShapeRef.new(shape: RestrictedName, required: true, location_name: "computationModelName"))
+    UpdateComputationModelRequest.add_member(:computation_model_description, Shapes::ShapeRef.new(shape: RestrictedDescription, location_name: "computationModelDescription"))
+    UpdateComputationModelRequest.add_member(:computation_model_configuration, Shapes::ShapeRef.new(shape: ComputationModelConfiguration, required: true, location_name: "computationModelConfiguration"))
+    UpdateComputationModelRequest.add_member(:computation_model_data_binding, Shapes::ShapeRef.new(shape: ComputationModelDataBinding, required: true, location_name: "computationModelDataBinding"))
+    UpdateComputationModelRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    UpdateComputationModelRequest.struct_class = Types::UpdateComputationModelRequest
+
+    UpdateComputationModelResponse.add_member(:computation_model_status, Shapes::ShapeRef.new(shape: ComputationModelStatus, required: true, location_name: "computationModelStatus"))
+    UpdateComputationModelResponse.struct_class = Types::UpdateComputationModelResponse
 
     UpdateDashboardRequest.add_member(:dashboard_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "dashboardId"))
     UpdateDashboardRequest.add_member(:dashboard_name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "dashboardName"))
     UpdateDashboardRequest.add_member(:dashboard_description, Shapes::ShapeRef.new(shape: Description, location_name: "dashboardDescription"))
     UpdateDashboardRequest.add_member(:dashboard_definition, Shapes::ShapeRef.new(shape: DashboardDefinition, required: true, location_name: "dashboardDefinition"))
-    UpdateDashboardRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    UpdateDashboardRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     UpdateDashboardRequest.struct_class = Types::UpdateDashboardRequest
 
     UpdateDashboardResponse.struct_class = Types::UpdateDashboardResponse
 
-    UpdateDatasetRequest.add_member(:dataset_id, Shapes::ShapeRef.new(shape: CustomID, required: true, location: "uri", location_name: "datasetId"))
+    UpdateDatasetRequest.add_member(:dataset_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "datasetId"))
+    UpdateDatasetRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, location_name: "workspaceName"))
     UpdateDatasetRequest.add_member(:dataset_name, Shapes::ShapeRef.new(shape: RestrictedName, required: true, location_name: "datasetName"))
-    UpdateDatasetRequest.add_member(:dataset_description, Shapes::ShapeRef.new(shape: RestrictedDescription, location_name: "datasetDescription"))
+    UpdateDatasetRequest.add_member(:dataset_description, Shapes::ShapeRef.new(shape: Description, location_name: "datasetDescription"))
+    UpdateDatasetRequest.add_member(:dataset_config, Shapes::ShapeRef.new(shape: DatasetConfig, location_name: "datasetConfig"))
+    UpdateDatasetRequest.add_member(:metadata, Shapes::ShapeRef.new(shape: Metadata, location_name: "metadata"))
     UpdateDatasetRequest.add_member(:dataset_source, Shapes::ShapeRef.new(shape: DatasetSource, required: true, location_name: "datasetSource"))
-    UpdateDatasetRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    UpdateDatasetRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     UpdateDatasetRequest.struct_class = Types::UpdateDatasetRequest
 
-    UpdateDatasetResponse.add_member(:dataset_id, Shapes::ShapeRef.new(shape: CustomID, location_name: "datasetId"))
+    UpdateDatasetResponse.add_member(:dataset_id, Shapes::ShapeRef.new(shape: ID, location_name: "datasetId"))
     UpdateDatasetResponse.add_member(:dataset_arn, Shapes::ShapeRef.new(shape: ARN, location_name: "datasetArn"))
     UpdateDatasetResponse.add_member(:dataset_status, Shapes::ShapeRef.new(shape: DatasetStatus, location_name: "datasetStatus"))
     UpdateDatasetResponse.struct_class = Types::UpdateDatasetResponse
@@ -2355,13 +3905,24 @@ module Aws::IoTSiteWise
     UpdateGatewayRequest.add_member(:gateway_name, Shapes::ShapeRef.new(shape: GatewayName, required: true, location_name: "gatewayName"))
     UpdateGatewayRequest.struct_class = Types::UpdateGatewayRequest
 
+    UpdatePipelineRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    UpdatePipelineRequest.add_member(:pipeline_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location: "uri", location_name: "pipelineName"))
+    UpdatePipelineRequest.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    UpdatePipelineRequest.add_member(:environment_variables, Shapes::ShapeRef.new(shape: EnvironmentVariablesMap, location_name: "environmentVariables"))
+    UpdatePipelineRequest.add_member(:computations, Shapes::ShapeRef.new(shape: ComputeNodeList, location_name: "computations"))
+    UpdatePipelineRequest.struct_class = Types::UpdatePipelineRequest
+
+    UpdatePipelineResponse.add_member(:version, Shapes::ShapeRef.new(shape: Version, required: true, location_name: "version"))
+    UpdatePipelineResponse.add_member(:status, Shapes::ShapeRef.new(shape: ResourceStatus, required: true, location_name: "status"))
+    UpdatePipelineResponse.struct_class = Types::UpdatePipelineResponse
+
     UpdatePortalRequest.add_member(:portal_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "portalId"))
     UpdatePortalRequest.add_member(:portal_name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "portalName"))
     UpdatePortalRequest.add_member(:portal_description, Shapes::ShapeRef.new(shape: Description, location_name: "portalDescription"))
     UpdatePortalRequest.add_member(:portal_contact_email, Shapes::ShapeRef.new(shape: Email, required: true, location_name: "portalContactEmail"))
     UpdatePortalRequest.add_member(:portal_logo_image, Shapes::ShapeRef.new(shape: Image, location_name: "portalLogoImage"))
     UpdatePortalRequest.add_member(:role_arn, Shapes::ShapeRef.new(shape: IamArn, required: true, location_name: "roleArn"))
-    UpdatePortalRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    UpdatePortalRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     UpdatePortalRequest.add_member(:notification_sender_email, Shapes::ShapeRef.new(shape: Email, location_name: "notificationSenderEmail"))
     UpdatePortalRequest.add_member(:alarms, Shapes::ShapeRef.new(shape: Alarms, location_name: "alarms"))
     UpdatePortalRequest.add_member(:portal_type, Shapes::ShapeRef.new(shape: PortalType, location_name: "portalType"))
@@ -2374,10 +3935,29 @@ module Aws::IoTSiteWise
     UpdateProjectRequest.add_member(:project_id, Shapes::ShapeRef.new(shape: ID, required: true, location: "uri", location_name: "projectId"))
     UpdateProjectRequest.add_member(:project_name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "projectName"))
     UpdateProjectRequest.add_member(:project_description, Shapes::ShapeRef.new(shape: Description, location_name: "projectDescription"))
-    UpdateProjectRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    UpdateProjectRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     UpdateProjectRequest.struct_class = Types::UpdateProjectRequest
 
     UpdateProjectResponse.struct_class = Types::UpdateProjectResponse
+
+    UpdateTaskRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    UpdateTaskRequest.add_member(:task_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location: "uri", location_name: "taskName"))
+    UpdateTaskRequest.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    UpdateTaskRequest.add_member(:task_configuration, Shapes::ShapeRef.new(shape: TaskConfiguration, location_name: "taskConfiguration"))
+    UpdateTaskRequest.struct_class = Types::UpdateTaskRequest
+
+    UpdateTaskResponse.add_member(:version, Shapes::ShapeRef.new(shape: Version, required: true, location_name: "version"))
+    UpdateTaskResponse.add_member(:status, Shapes::ShapeRef.new(shape: ResourceStatus, required: true, location_name: "status"))
+    UpdateTaskResponse.struct_class = Types::UpdateTaskResponse
+
+    UpdateWorkspaceRequest.add_member(:workspace_name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location: "uri", location_name: "workspaceName"))
+    UpdateWorkspaceRequest.add_member(:workspace_description, Shapes::ShapeRef.new(shape: Description, location_name: "workspaceDescription"))
+    UpdateWorkspaceRequest.add_member(:encryption_configuration, Shapes::ShapeRef.new(shape: WorkspaceEncryptionConfiguration, location_name: "encryptionConfiguration"))
+    UpdateWorkspaceRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    UpdateWorkspaceRequest.struct_class = Types::UpdateWorkspaceRequest
+
+    UpdateWorkspaceResponse.add_member(:workspace_status, Shapes::ShapeRef.new(shape: WorkspaceStatus, required: true, location_name: "workspaceStatus"))
+    UpdateWorkspaceResponse.struct_class = Types::UpdateWorkspaceResponse
 
     UserIdentity.add_member(:id, Shapes::ShapeRef.new(shape: IdentityId, required: true, location_name: "id"))
     UserIdentity.struct_class = Types::UserIdentity
@@ -2400,6 +3980,31 @@ module Aws::IoTSiteWise
     WarmTierRetentionPeriod.add_member(:number_of_days, Shapes::ShapeRef.new(shape: NumberOfDays, location_name: "numberOfDays"))
     WarmTierRetentionPeriod.add_member(:unlimited, Shapes::ShapeRef.new(shape: Unlimited, location_name: "unlimited"))
     WarmTierRetentionPeriod.struct_class = Types::WarmTierRetentionPeriod
+
+    WorkspaceEncryptionConfiguration.add_member(:encryption_type, Shapes::ShapeRef.new(shape: EncryptionType, required: true, location_name: "encryptionType"))
+    WorkspaceEncryptionConfiguration.add_member(:kms_key_id, Shapes::ShapeRef.new(shape: KmsKeyId, location_name: "kmsKeyId"))
+    WorkspaceEncryptionConfiguration.struct_class = Types::WorkspaceEncryptionConfiguration
+
+    WorkspaceEncryptionConfigurationInfo.add_member(:encryption_type, Shapes::ShapeRef.new(shape: EncryptionType, required: true, location_name: "encryptionType"))
+    WorkspaceEncryptionConfigurationInfo.add_member(:kms_key_arn, Shapes::ShapeRef.new(shape: ARN, location_name: "kmsKeyArn"))
+    WorkspaceEncryptionConfigurationInfo.struct_class = Types::WorkspaceEncryptionConfigurationInfo
+
+    WorkspaceErrorDetails.add_member(:code, Shapes::ShapeRef.new(shape: ErrorCode, required: true, location_name: "code"))
+    WorkspaceErrorDetails.add_member(:message, Shapes::ShapeRef.new(shape: Description, required: true, location_name: "message"))
+    WorkspaceErrorDetails.struct_class = Types::WorkspaceErrorDetails
+
+    WorkspaceStatus.add_member(:state, Shapes::ShapeRef.new(shape: WorkspaceState, required: true, location_name: "state"))
+    WorkspaceStatus.add_member(:error, Shapes::ShapeRef.new(shape: WorkspaceErrorDetails, location_name: "error"))
+    WorkspaceStatus.struct_class = Types::WorkspaceStatus
+
+    WorkspaceSummaries.member = Shapes::ShapeRef.new(shape: WorkspaceSummary)
+
+    WorkspaceSummary.add_member(:name, Shapes::ShapeRef.new(shape: WorkspaceName, required: true, location_name: "name"))
+    WorkspaceSummary.add_member(:arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "arn"))
+    WorkspaceSummary.add_member(:status, Shapes::ShapeRef.new(shape: WorkspaceStatus, required: true, location_name: "status"))
+    WorkspaceSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "createdAt"))
+    WorkspaceSummary.add_member(:updated_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "updatedAt"))
+    WorkspaceSummary.struct_class = Types::WorkspaceSummary
 
 
     # @api private
@@ -2455,6 +4060,23 @@ module Aws::IoTSiteWise
         o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
       end)
 
+      api.add_operation(:batch_associate_data_segments_to_dataset, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "BatchAssociateDataSegmentsToDataset"
+        o.http_method = "POST"
+        o.http_request_uri = "/datasets/{datasetId}/data-segments/associate"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: BatchAssociateDataSegmentsToDatasetRequest)
+        o.output = Shapes::ShapeRef.new(shape: BatchAssociateDataSegmentsToDatasetResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
+      end)
+
       api.add_operation(:batch_associate_project_assets, Seahorse::Model::Operation.new.tap do |o|
         o.name = "BatchAssociateProjectAssets"
         o.http_method = "POST"
@@ -2469,6 +4091,38 @@ module Aws::IoTSiteWise
         o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
+      end)
+
+      api.add_operation(:batch_delete_dataset_data_segments, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "BatchDeleteDatasetDataSegments"
+        o.http_method = "POST"
+        o.http_request_uri = "/datasets/{datasetId}/data-segments/batch-delete"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: BatchDeleteDatasetDataSegmentsRequest)
+        o.output = Shapes::ShapeRef.new(shape: BatchDeleteDatasetDataSegmentsResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+      end)
+
+      api.add_operation(:batch_disassociate_data_segments_from_dataset, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "BatchDisassociateDataSegmentsFromDataset"
+        o.http_method = "POST"
+        o.http_request_uri = "/datasets/{datasetId}/data-segments/disassociate"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: BatchDisassociateDataSegmentsFromDatasetRequest)
+        o.output = Shapes::ShapeRef.new(shape: BatchDisassociateDataSegmentsFromDatasetResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
       end)
 
       api.add_operation(:batch_disassociate_project_assets, Seahorse::Model::Operation.new.tap do |o|
@@ -2566,6 +4220,58 @@ module Aws::IoTSiteWise
         o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
       end)
 
+      api.add_operation(:cancel_enrichment_job, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CancelEnrichmentJob"
+        o.http_method = "POST"
+        o.http_request_uri = "/workspaces/{workspaceName}/enrichment-jobs/{jobId}/cancel"
+        o.endpoint_pattern = {
+          "hostPrefix" => "data.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: CancelEnrichmentJobRequest)
+        o.output = Shapes::ShapeRef.new(shape: CancelEnrichmentJobResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
+      end)
+
+      api.add_operation(:cancel_pipeline_execution, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CancelPipelineExecution"
+        o.http_method = "POST"
+        o.http_request_uri = "/workspaces/{workspaceName}/pipelines/{pipelineName}/executions/{pipelineExecutionId}/cancel"
+        o.endpoint_pattern = {
+          "hostPrefix" => "data.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: CancelPipelineExecutionRequest)
+        o.output = Shapes::ShapeRef.new(shape: CancelPipelineExecutionResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
+      end)
+
+      api.add_operation(:cancel_query, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CancelQuery"
+        o.http_method = "POST"
+        o.http_request_uri = "/workspaces/{workspaceName}/queries/{queryId}/cancel"
+        o.endpoint_pattern = {
+          "hostPrefix" => "data.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: CancelQueryRequest)
+        o.output = Shapes::ShapeRef.new(shape: CancelQueryResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
+      end)
+
       api.add_operation(:create_access_policy, Seahorse::Model::Operation.new.tap do |o|
         o.name = "CreateAccessPolicy"
         o.http_method = "POST"
@@ -2580,6 +4286,24 @@ module Aws::IoTSiteWise
         o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
+      end)
+
+      api.add_operation(:create_application, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CreateApplication"
+        o.http_method = "POST"
+        o.http_request_uri = "/applications"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: CreateApplicationRequest)
+        o.output = Shapes::ShapeRef.new(shape: CreateApplicationResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
       end)
 
       api.add_operation(:create_asset, Seahorse::Model::Operation.new.tap do |o|
@@ -2655,6 +4379,24 @@ module Aws::IoTSiteWise
         o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
       end)
 
+      api.add_operation(:create_computation_model, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CreateComputationModel"
+        o.http_method = "POST"
+        o.http_request_uri = "/computation-models"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: CreateComputationModelRequest)
+        o.output = Shapes::ShapeRef.new(shape: CreateComputationModelResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceAlreadyExistsException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
+      end)
+
       api.add_operation(:create_dashboard, Seahorse::Model::Operation.new.tap do |o|
         o.name = "CreateDashboard"
         o.http_method = "POST"
@@ -2689,6 +4431,41 @@ module Aws::IoTSiteWise
         o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
       end)
 
+      api.add_operation(:create_dataset_export_job, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CreateDatasetExportJob"
+        o.http_method = "POST"
+        o.http_request_uri = "/workspaces/{workspaceName}/dataset-export-jobs"
+        o.endpoint_pattern = {
+          "hostPrefix" => "data.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: CreateDatasetExportJobRequest)
+        o.output = Shapes::ShapeRef.new(shape: CreateDatasetExportJobResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
+      end)
+
+      api.add_operation(:create_enrichment_job, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CreateEnrichmentJob"
+        o.http_method = "POST"
+        o.http_request_uri = "/workspaces/{workspaceName}/enrichment-jobs"
+        o.endpoint_pattern = {
+          "hostPrefix" => "data.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: CreateEnrichmentJobRequest)
+        o.output = Shapes::ShapeRef.new(shape: CreateEnrichmentJobResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
+      end)
+
       api.add_operation(:create_gateway, Seahorse::Model::Operation.new.tap do |o|
         o.name = "CreateGateway"
         o.http_method = "POST"
@@ -2703,6 +4480,24 @@ module Aws::IoTSiteWise
         o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
+      end)
+
+      api.add_operation(:create_pipeline, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CreatePipeline"
+        o.http_method = "POST"
+        o.http_request_uri = "/workspaces/{workspaceName}/pipelines"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: CreatePipelineRequest)
+        o.output = Shapes::ShapeRef.new(shape: CreatePipelineResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
       end)
 
       api.add_operation(:create_portal, Seahorse::Model::Operation.new.tap do |o|
@@ -2737,6 +4532,41 @@ module Aws::IoTSiteWise
         o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
       end)
 
+      api.add_operation(:create_task, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CreateTask"
+        o.http_method = "POST"
+        o.http_request_uri = "/workspaces/{workspaceName}/tasks"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: CreateTaskRequest)
+        o.output = Shapes::ShapeRef.new(shape: CreateTaskResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
+      end)
+
+      api.add_operation(:create_workspace, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CreateWorkspace"
+        o.http_method = "POST"
+        o.http_request_uri = "/workspaces"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: CreateWorkspaceRequest)
+        o.output = Shapes::ShapeRef.new(shape: CreateWorkspaceResponse)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
+        o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+      end)
+
       api.add_operation(:delete_access_policy, Seahorse::Model::Operation.new.tap do |o|
         o.name = "DeleteAccessPolicy"
         o.http_method = "DELETE"
@@ -2750,6 +4580,23 @@ module Aws::IoTSiteWise
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+      end)
+
+      api.add_operation(:delete_application, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeleteApplication"
+        o.http_method = "DELETE"
+        o.http_request_uri = "/workspaces/{workspaceName}/applications/{id}"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: DeleteApplicationRequest)
+        o.output = Shapes::ShapeRef.new(shape: DeleteApplicationResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
       end)
 
       api.add_operation(:delete_asset, Seahorse::Model::Operation.new.tap do |o|
@@ -2802,6 +4649,38 @@ module Aws::IoTSiteWise
         o.errors << Shapes::ShapeRef.new(shape: PreconditionFailedException)
       end)
 
+      api.add_operation(:delete_asset_model_interface_relationship, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeleteAssetModelInterfaceRelationship"
+        o.http_method = "DELETE"
+        o.http_request_uri = "/asset-models/{assetModelId}/interface/{interfaceAssetModelId}/asset-model-interface-relationship"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: DeleteAssetModelInterfaceRelationshipRequest)
+        o.output = Shapes::ShapeRef.new(shape: DeleteAssetModelInterfaceRelationshipResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
+      end)
+
+      api.add_operation(:delete_computation_model, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeleteComputationModel"
+        o.http_method = "DELETE"
+        o.http_request_uri = "/computation-models/{computationModelId}"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: DeleteComputationModelRequest)
+        o.output = Shapes::ShapeRef.new(shape: DeleteComputationModelResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
+      end)
+
       api.add_operation(:delete_dashboard, Seahorse::Model::Operation.new.tap do |o|
         o.name = "DeleteDashboard"
         o.http_method = "DELETE"
@@ -2849,6 +4728,23 @@ module Aws::IoTSiteWise
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
+      api.add_operation(:delete_pipeline, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeletePipeline"
+        o.http_method = "DELETE"
+        o.http_request_uri = "/workspaces/{workspaceName}/pipelines/{pipelineName}"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: DeletePipelineRequest)
+        o.output = Shapes::ShapeRef.new(shape: DeletePipelineResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
+      end)
+
       api.add_operation(:delete_portal, Seahorse::Model::Operation.new.tap do |o|
         o.name = "DeletePortal"
         o.http_method = "DELETE"
@@ -2880,6 +4776,23 @@ module Aws::IoTSiteWise
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
+      api.add_operation(:delete_task, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeleteTask"
+        o.http_method = "DELETE"
+        o.http_request_uri = "/workspaces/{workspaceName}/tasks/{taskName}"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: DeleteTaskRequest)
+        o.output = Shapes::ShapeRef.new(shape: DeleteTaskResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
+      end)
+
       api.add_operation(:delete_time_series, Seahorse::Model::Operation.new.tap do |o|
         o.name = "DeleteTimeSeries"
         o.http_method = "POST"
@@ -2894,6 +4807,23 @@ module Aws::IoTSiteWise
         o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
+      end)
+
+      api.add_operation(:delete_workspace, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeleteWorkspace"
+        o.http_method = "DELETE"
+        o.http_request_uri = "/workspaces/{workspaceName}"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: DeleteWorkspaceRequest)
+        o.output = Shapes::ShapeRef.new(shape: DeleteWorkspaceResponse)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
       end)
 
       api.add_operation(:describe_access_policy, Seahorse::Model::Operation.new.tap do |o|
@@ -2924,6 +4854,22 @@ module Aws::IoTSiteWise
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+      end)
+
+      api.add_operation(:describe_application, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DescribeApplication"
+        o.http_method = "GET"
+        o.http_request_uri = "/workspaces/{workspaceName}/applications/{id}"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: DescribeApplicationRequest)
+        o.output = Shapes::ShapeRef.new(shape: DescribeApplicationResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
       end)
 
       api.add_operation(:describe_asset, Seahorse::Model::Operation.new.tap do |o|
@@ -2986,6 +4932,21 @@ module Aws::IoTSiteWise
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
+      api.add_operation(:describe_asset_model_interface_relationship, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DescribeAssetModelInterfaceRelationship"
+        o.http_method = "GET"
+        o.http_request_uri = "/asset-models/{assetModelId}/interface/{interfaceAssetModelId}/asset-model-interface-relationship"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: DescribeAssetModelInterfaceRelationshipRequest)
+        o.output = Shapes::ShapeRef.new(shape: DescribeAssetModelInterfaceRelationshipResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+      end)
+
       api.add_operation(:describe_asset_property, Seahorse::Model::Operation.new.tap do |o|
         o.name = "DescribeAssetProperty"
         o.http_method = "GET"
@@ -3010,6 +4971,36 @@ module Aws::IoTSiteWise
         }
         o.input = Shapes::ShapeRef.new(shape: DescribeBulkImportJobRequest)
         o.output = Shapes::ShapeRef.new(shape: DescribeBulkImportJobResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+      end)
+
+      api.add_operation(:describe_computation_model, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DescribeComputationModel"
+        o.http_method = "GET"
+        o.http_request_uri = "/computation-models/{computationModelId}"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: DescribeComputationModelRequest)
+        o.output = Shapes::ShapeRef.new(shape: DescribeComputationModelResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+      end)
+
+      api.add_operation(:describe_computation_model_execution_summary, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DescribeComputationModelExecutionSummary"
+        o.http_method = "GET"
+        o.http_request_uri = "/computation-models/{computationModelId}/execution-summary"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: DescribeComputationModelExecutionSummaryRequest)
+        o.output = Shapes::ShapeRef.new(shape: DescribeComputationModelExecutionSummaryResponse)
         o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
@@ -3046,6 +5037,22 @@ module Aws::IoTSiteWise
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
+      api.add_operation(:describe_dataset_export_job, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DescribeDatasetExportJob"
+        o.http_method = "GET"
+        o.http_request_uri = "/workspaces/{workspaceName}/dataset-export-jobs/{jobId}"
+        o.endpoint_pattern = {
+          "hostPrefix" => "data.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: DescribeDatasetExportJobRequest)
+        o.output = Shapes::ShapeRef.new(shape: DescribeDatasetExportJobResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+      end)
+
       api.add_operation(:describe_default_encryption_configuration, Seahorse::Model::Operation.new.tap do |o|
         o.name = "DescribeDefaultEncryptionConfiguration"
         o.http_method = "GET"
@@ -3056,6 +5063,40 @@ module Aws::IoTSiteWise
         o.input = Shapes::ShapeRef.new(shape: DescribeDefaultEncryptionConfigurationRequest)
         o.output = Shapes::ShapeRef.new(shape: DescribeDefaultEncryptionConfigurationResponse)
         o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+      end)
+
+      api.add_operation(:describe_enrichment_job, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DescribeEnrichmentJob"
+        o.http_method = "GET"
+        o.http_request_uri = "/workspaces/{workspaceName}/enrichment-jobs/{jobId}"
+        o.endpoint_pattern = {
+          "hostPrefix" => "data.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: DescribeEnrichmentJobRequest)
+        o.output = Shapes::ShapeRef.new(shape: DescribeEnrichmentJobResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
+      end)
+
+      api.add_operation(:describe_execution, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DescribeExecution"
+        o.http_method = "GET"
+        o.http_request_uri = "/executions/{executionId}"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: DescribeExecutionRequest)
+        o.output = Shapes::ShapeRef.new(shape: DescribeExecutionResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
@@ -3105,6 +5146,44 @@ module Aws::IoTSiteWise
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
       end)
 
+      api.add_operation(:describe_pipeline, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DescribePipeline"
+        o.http_method = "GET"
+        o.http_request_uri = "/workspaces/{workspaceName}/pipelines/{pipelineName}"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: DescribePipelineRequest)
+        o.output = Shapes::ShapeRef.new(shape: DescribePipelineResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+      end)
+
+      api.add_operation(:describe_pipeline_execution, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DescribePipelineExecution"
+        o.http_method = "GET"
+        o.http_request_uri = "/workspaces/{workspaceName}/pipelines/{pipelineName}/executions/{pipelineExecutionId}"
+        o.endpoint_pattern = {
+          "hostPrefix" => "data.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: DescribePipelineExecutionRequest)
+        o.output = Shapes::ShapeRef.new(shape: DescribePipelineExecutionResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
       api.add_operation(:describe_portal, Seahorse::Model::Operation.new.tap do |o|
         o.name = "DescribePortal"
         o.http_method = "GET"
@@ -3135,6 +5214,38 @@ module Aws::IoTSiteWise
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
+      api.add_operation(:describe_query, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DescribeQuery"
+        o.http_method = "GET"
+        o.http_request_uri = "/workspaces/{workspaceName}/queries/{queryId}"
+        o.endpoint_pattern = {
+          "hostPrefix" => "data.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: DescribeQueryRequest)
+        o.output = Shapes::ShapeRef.new(shape: DescribeQueryResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+      end)
+
+      api.add_operation(:describe_search, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DescribeSearch"
+        o.http_method = "GET"
+        o.http_request_uri = "/workspaces/{workspaceName}/searches/{searchId}"
+        o.endpoint_pattern = {
+          "hostPrefix" => "data.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: DescribeSearchRequest)
+        o.output = Shapes::ShapeRef.new(shape: DescribeSearchResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+      end)
+
       api.add_operation(:describe_storage_configuration, Seahorse::Model::Operation.new.tap do |o|
         o.name = "DescribeStorageConfiguration"
         o.http_method = "GET"
@@ -3152,6 +5263,22 @@ module Aws::IoTSiteWise
         o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
       end)
 
+      api.add_operation(:describe_task, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DescribeTask"
+        o.http_method = "GET"
+        o.http_request_uri = "/workspaces/{workspaceName}/tasks/{taskName}"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: DescribeTaskRequest)
+        o.output = Shapes::ShapeRef.new(shape: DescribeTaskResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+      end)
+
       api.add_operation(:describe_time_series, Seahorse::Model::Operation.new.tap do |o|
         o.name = "DescribeTimeSeries"
         o.http_method = "GET"
@@ -3165,6 +5292,22 @@ module Aws::IoTSiteWise
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+      end)
+
+      api.add_operation(:describe_workspace, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DescribeWorkspace"
+        o.http_method = "GET"
+        o.http_request_uri = "/workspaces/{workspaceName}"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: DescribeWorkspaceRequest)
+        o.output = Shapes::ShapeRef.new(shape: DescribeWorkspaceResponse)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
       end)
 
       api.add_operation(:disassociate_assets, Seahorse::Model::Operation.new.tap do |o|
@@ -3300,6 +5443,22 @@ module Aws::IoTSiteWise
         )
       end)
 
+      api.add_operation(:get_capture_data, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetCaptureData"
+        o.http_method = "POST"
+        o.http_request_uri = "/workspaces/{workspaceName}/get-capture-data"
+        o.endpoint_pattern = {
+          "hostPrefix" => "data.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: GetCaptureDataRequest)
+        o.output = Shapes::ShapeRef.new(shape: GetCaptureDataResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+      end)
+
       api.add_operation(:get_interpolated_asset_property_values, Seahorse::Model::Operation.new.tap do |o|
         o.name = "GetInterpolatedAssetPropertyValues"
         o.http_method = "GET"
@@ -3322,6 +5481,50 @@ module Aws::IoTSiteWise
         )
       end)
 
+      api.add_operation(:get_query_results, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetQueryResults"
+        o.http_method = "GET"
+        o.http_request_uri = "/workspaces/{workspaceName}/queries/{queryId}/results"
+        o.endpoint_pattern = {
+          "hostPrefix" => "data.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: GetQueryResultsRequest)
+        o.output = Shapes::ShapeRef.new(shape: GetQueryResultsResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:get_search_results, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetSearchResults"
+        o.http_method = "GET"
+        o.http_request_uri = "/workspaces/{workspaceName}/searches/{searchId}/results"
+        o.endpoint_pattern = {
+          "hostPrefix" => "data.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: GetSearchResultsRequest)
+        o.output = Shapes::ShapeRef.new(shape: GetSearchResultsResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
       api.add_operation(:invoke_assistant, Seahorse::Model::Operation.new.tap do |o|
         o.name = "InvokeAssistant"
         o.http_method = "POST"
@@ -3333,10 +5536,10 @@ module Aws::IoTSiteWise
         o.output = Shapes::ShapeRef.new(shape: InvokeAssistantResponse)
         o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
-        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
         o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
       end)
 
@@ -3371,6 +5574,28 @@ module Aws::IoTSiteWise
         o.output = Shapes::ShapeRef.new(shape: ListActionsResponse)
         o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
         o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:list_applications, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListApplications"
+        o.http_method = "GET"
+        o.http_request_uri = "/applications"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: ListApplicationsRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListApplicationsResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o[:pager] = Aws::Pager.new(
@@ -3433,6 +5658,7 @@ module Aws::IoTSiteWise
         o.input = Shapes::ShapeRef.new(shape: ListAssetModelsRequest)
         o.output = Shapes::ShapeRef.new(shape: ListAssetModelsResponse)
         o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o[:pager] = Aws::Pager.new(
@@ -3569,6 +5795,67 @@ module Aws::IoTSiteWise
         )
       end)
 
+      api.add_operation(:list_computation_model_data_binding_usages, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListComputationModelDataBindingUsages"
+        o.http_method = "POST"
+        o.http_request_uri = "/computation-models/data-binding-usages"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: ListComputationModelDataBindingUsagesRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListComputationModelDataBindingUsagesResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:list_computation_model_resolve_to_resources, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListComputationModelResolveToResources"
+        o.http_method = "GET"
+        o.http_request_uri = "/computation-models/{computationModelId}/resolve-to-resources"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: ListComputationModelResolveToResourcesRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListComputationModelResolveToResourcesResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:list_computation_models, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListComputationModels"
+        o.http_method = "GET"
+        o.http_request_uri = "/computation-models"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: ListComputationModelsRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListComputationModelsResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
       api.add_operation(:list_dashboards, Seahorse::Model::Operation.new.tap do |o|
         o.name = "ListDashboards"
         o.http_method = "GET"
@@ -3589,6 +5876,70 @@ module Aws::IoTSiteWise
         )
       end)
 
+      api.add_operation(:list_dataset_data_segment_relationships, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListDatasetDataSegmentRelationships"
+        o.http_method = "GET"
+        o.http_request_uri = "/datasets/{datasetId}/data-segment-relationships"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: ListDatasetDataSegmentRelationshipsRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListDatasetDataSegmentRelationshipsResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:list_dataset_data_segments, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListDatasetDataSegments"
+        o.http_method = "GET"
+        o.http_request_uri = "/datasets/{datasetId}/data-segments"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: ListDatasetDataSegmentsRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListDatasetDataSegmentsResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:list_dataset_export_jobs, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListDatasetExportJobs"
+        o.http_method = "GET"
+        o.http_request_uri = "/workspaces/{workspaceName}/dataset-export-jobs"
+        o.endpoint_pattern = {
+          "hostPrefix" => "data.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: ListDatasetExportJobsRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListDatasetExportJobsResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
       api.add_operation(:list_datasets, Seahorse::Model::Operation.new.tap do |o|
         o.name = "ListDatasets"
         o.http_method = "GET"
@@ -3599,7 +5950,53 @@ module Aws::IoTSiteWise
         o.input = Shapes::ShapeRef.new(shape: ListDatasetsRequest)
         o.output = Shapes::ShapeRef.new(shape: ListDatasetsResponse)
         o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:list_enrichment_jobs, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListEnrichmentJobs"
+        o.http_method = "GET"
+        o.http_request_uri = "/workspaces/{workspaceName}/enrichment-jobs"
+        o.endpoint_pattern = {
+          "hostPrefix" => "data.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: ListEnrichmentJobsRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListEnrichmentJobsResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:list_executions, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListExecutions"
+        o.http_method = "GET"
+        o.http_request_uri = "/executions"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: ListExecutionsRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListExecutionsResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o[:pager] = Aws::Pager.new(
           limit_key: "max_results",
@@ -3620,6 +6017,71 @@ module Aws::IoTSiteWise
         o.output = Shapes::ShapeRef.new(shape: ListGatewaysResponse)
         o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
         o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:list_interface_relationships, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListInterfaceRelationships"
+        o.http_method = "GET"
+        o.http_request_uri = "/interface/{interfaceAssetModelId}/asset-models"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: ListInterfaceRelationshipsRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListInterfaceRelationshipsResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:list_pipeline_executions, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListPipelineExecutions"
+        o.http_method = "GET"
+        o.http_request_uri = "/workspaces/{workspaceName}/pipelines/{pipelineName}/executions"
+        o.endpoint_pattern = {
+          "hostPrefix" => "data.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: ListPipelineExecutionsRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListPipelineExecutionsResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:list_pipelines, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListPipelines"
+        o.http_method = "GET"
+        o.http_request_uri = "/workspaces/{workspaceName}/pipelines"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: ListPipelinesRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListPipelinesResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o[:pager] = Aws::Pager.new(
           limit_key: "max_results",
@@ -3689,6 +6151,50 @@ module Aws::IoTSiteWise
         )
       end)
 
+      api.add_operation(:list_queries, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListQueries"
+        o.http_method = "GET"
+        o.http_request_uri = "/workspaces/{workspaceName}/queries"
+        o.endpoint_pattern = {
+          "hostPrefix" => "data.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: ListQueriesRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListQueriesResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:list_searches, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListSearches"
+        o.http_method = "POST"
+        o.http_request_uri = "/workspaces/{workspaceName}/searches/list"
+        o.endpoint_pattern = {
+          "hostPrefix" => "data.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: ListSearchesRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListSearchesResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
       api.add_operation(:list_tags_for_resource, Seahorse::Model::Operation.new.tap do |o|
         o.name = "ListTagsForResource"
         o.http_method = "GET"
@@ -3705,6 +6211,28 @@ module Aws::IoTSiteWise
         o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
         o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
         o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
+      api.add_operation(:list_tasks, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListTasks"
+        o.http_method = "GET"
+        o.http_request_uri = "/workspaces/{workspaceName}/tasks"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: ListTasksRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListTasksResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
       end)
 
       api.add_operation(:list_time_series, Seahorse::Model::Operation.new.tap do |o|
@@ -3728,6 +6256,44 @@ module Aws::IoTSiteWise
         )
       end)
 
+      api.add_operation(:list_workspaces, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListWorkspaces"
+        o.http_method = "GET"
+        o.http_request_uri = "/workspaces"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: ListWorkspacesRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListWorkspacesResponse)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:put_asset_model_interface_relationship, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "PutAssetModelInterfaceRelationship"
+        o.http_method = "PUT"
+        o.http_request_uri = "/asset-models/{assetModelId}/interface/{interfaceAssetModelId}/asset-model-interface-relationship"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: PutAssetModelInterfaceRelationshipRequest)
+        o.output = Shapes::ShapeRef.new(shape: PutAssetModelInterfaceRelationshipResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
+      end)
+
       api.add_operation(:put_default_encryption_configuration, Seahorse::Model::Operation.new.tap do |o|
         o.name = "PutDefaultEncryptionConfiguration"
         o.http_method = "POST"
@@ -3738,6 +6304,7 @@ module Aws::IoTSiteWise
         o.input = Shapes::ShapeRef.new(shape: PutDefaultEncryptionConfigurationRequest)
         o.output = Shapes::ShapeRef.new(shape: PutDefaultEncryptionConfigurationResponse)
         o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
@@ -3775,6 +6342,59 @@ module Aws::IoTSiteWise
         o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
+      end)
+
+      api.add_operation(:start_pipeline_execution, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "StartPipelineExecution"
+        o.http_method = "POST"
+        o.http_request_uri = "/workspaces/{workspaceName}/pipelines/{pipelineName}/executions"
+        o.endpoint_pattern = {
+          "hostPrefix" => "data.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: StartPipelineExecutionRequest)
+        o.output = Shapes::ShapeRef.new(shape: StartPipelineExecutionResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
+      end)
+
+      api.add_operation(:start_query, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "StartQuery"
+        o.http_method = "POST"
+        o.http_request_uri = "/workspaces/{workspaceName}/queries"
+        o.endpoint_pattern = {
+          "hostPrefix" => "data.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: StartQueryRequest)
+        o.output = Shapes::ShapeRef.new(shape: StartQueryResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
+      end)
+
+      api.add_operation(:start_search, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "StartSearch"
+        o.http_method = "POST"
+        o.http_request_uri = "/workspaces/{workspaceName}/searches"
+        o.endpoint_pattern = {
+          "hostPrefix" => "data.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: StartSearchRequest)
+        o.output = Shapes::ShapeRef.new(shape: StartSearchResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
       end)
 
@@ -3901,6 +6521,24 @@ module Aws::IoTSiteWise
         o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
       end)
 
+      api.add_operation(:update_computation_model, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "UpdateComputationModel"
+        o.http_method = "POST"
+        o.http_request_uri = "/computation-models/{computationModelId}"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: UpdateComputationModelRequest)
+        o.output = Shapes::ShapeRef.new(shape: UpdateComputationModelResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceAlreadyExistsException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
+      end)
+
       api.add_operation(:update_dashboard, Seahorse::Model::Operation.new.tap do |o|
         o.name = "UpdateDashboard"
         o.http_method = "PUT"
@@ -3926,6 +6564,7 @@ module Aws::IoTSiteWise
         o.input = Shapes::ShapeRef.new(shape: UpdateDatasetRequest)
         o.output = Shapes::ShapeRef.new(shape: UpdateDatasetResponse)
         o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceAlreadyExistsException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
         o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
@@ -3966,6 +6605,24 @@ module Aws::IoTSiteWise
         o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
       end)
 
+      api.add_operation(:update_pipeline, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "UpdatePipeline"
+        o.http_method = "PUT"
+        o.http_request_uri = "/workspaces/{workspaceName}/pipelines/{pipelineName}"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: UpdatePipelineRequest)
+        o.output = Shapes::ShapeRef.new(shape: UpdatePipelineResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
+      end)
+
       api.add_operation(:update_portal, Seahorse::Model::Operation.new.tap do |o|
         o.name = "UpdatePortal"
         o.http_method = "PUT"
@@ -3995,6 +6652,40 @@ module Aws::IoTSiteWise
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+      end)
+
+      api.add_operation(:update_task, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "UpdateTask"
+        o.http_method = "PUT"
+        o.http_request_uri = "/workspaces/{workspaceName}/tasks/{taskName}"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: UpdateTaskRequest)
+        o.output = Shapes::ShapeRef.new(shape: UpdateTaskResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
+      end)
+
+      api.add_operation(:update_workspace, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "UpdateWorkspace"
+        o.http_method = "PUT"
+        o.http_request_uri = "/workspaces/{workspaceName}"
+        o.endpoint_pattern = {
+          "hostPrefix" => "api.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: UpdateWorkspaceRequest)
+        o.output = Shapes::ShapeRef.new(shape: UpdateWorkspaceResponse)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictingOperationException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
       end)
     end
 

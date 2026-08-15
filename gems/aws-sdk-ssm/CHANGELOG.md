@@ -1,6 +1,146 @@
 Unreleased Changes
 ------------------
 
+1.220.0 (2026-07-21)
+------------------
+
+* Feature - Added a WarningMessage field to Automation along with corresponding public documentation.
+
+1.219.0 (2026-07-14)
+------------------
+
+* Feature - Update AWS Systems Manager Automation Targets to be correct max value.
+
+1.218.0 (2026-07-09)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.217.0 (2026-07-07)
+------------------
+
+* Feature - Adding SSM Cloud Connector to support Azure Virtual Machines onboarding to AWS Systems Manager
+
+1.216.0 (2026-06-02)
+------------------
+
+* Feature - Adding new BDD representation of endpoint ruleset
+
+1.215.0 (2026-05-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.214.0 (2026-05-19)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.213.0 (2026-05-13)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.212.0 (2026-03-18)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.211.0 (2026-02-20)
+------------------
+
+* Feature - Add support for AssociationDispatchAssumeRole in AWS SSM State Manager.
+
+1.210.0 (2026-01-16)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.209.0 (2026-01-08)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.208.0 (2026-01-05)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.207.0 (2025-11-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.206.0 (2025-11-06)
+------------------
+
+* Feature - Provides NoLongerSupportedException error message
+
+1.205.0 (2025-10-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.204.0 (2025-10-16)
+------------------
+
+* Feature - Update endpoint ruleset parameters casing
+
+1.203.0 (2025-09-23)
+------------------
+
+* Feature - Added Dualstack support to GetDeployablePatchSnapshotForInstance
+
+1.202.0 (2025-08-26)
+------------------
+
+* Feature - Remove incorrect endpoint tests
+
+1.201.0 (2025-08-04)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.200.0 (2025-07-31)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.199.0 (2025-07-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.198.0 (2025-07-18)
+------------------
+
+* Feature - July 2025 doc-only updates for Systems Manager.
+
+1.197.0 (2025-06-30)
+------------------
+
+* Feature - Introduces AccessType, a new filter value for the DescribeSessions API.
+
+1.196.0 (2025-06-02)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.195.0 (2025-05-12)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.194.0 (2025-05-01)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.193.0 (2025-04-29)
+------------------
+
+* Feature - This release adds support for just-In-time node access in AWS Systems Manager. Just-in-time node access enables customers to move towards zero standing privileges by requiring operators to request access and obtain approval before remotely connecting to nodes managed by the SSM Agent.
+
 1.192.0 (2025-03-24)
 ------------------
 

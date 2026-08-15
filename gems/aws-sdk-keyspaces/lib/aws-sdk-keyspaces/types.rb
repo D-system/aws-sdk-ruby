@@ -13,7 +13,8 @@ module Aws::Keyspaces
     # You don't have sufficient access permissions to perform this action.
     #
     # @!attribute [rw] message
-    #   Description of the error.
+    #   You don't have the required permissions to perform this operation.
+    #   Verify your IAM permissions and try again.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/keyspaces-2022-02-10/AccessDeniedException AWS API Documentation
@@ -270,6 +271,96 @@ module Aws::Keyspaces
       include Aws::Structure
     end
 
+    # The settings for the CDC stream of a table. For more information about
+    # CDC streams, see [Working with change data capture (CDC) streams in
+    # Amazon Keyspaces][1] in the *Amazon Keyspaces Developer Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/keyspaces/latest/devguide/cdc.html
+    #
+    # @!attribute [rw] status
+    #   The status of the CDC stream. You can enable or disable a stream for
+    #   a table.
+    #   @return [String]
+    #
+    # @!attribute [rw] view_type
+    #   The view type specifies the changes Amazon Keyspaces records for
+    #   each changed row in the stream. After you create the stream, you
+    #   can't make changes to this selection.
+    #
+    #   The options are:
+    #
+    #   * `NEW_AND_OLD_IMAGES` - both versions of the row, before and after
+    #     the change. This is the default.
+    #
+    #   * `NEW_IMAGE` - the version of the row after the change.
+    #
+    #   * `OLD_IMAGE` - the version of the row before the change.
+    #
+    #   * `KEYS_ONLY` - the partition and clustering keys of the row that
+    #     was changed.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   The tags (key-value pairs) that you want to apply to the stream.
+    #   @return [Array<Types::Tag>]
+    #
+    # @!attribute [rw] propagate_tags
+    #   Specifies that the stream inherits the tags from the table.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/keyspaces-2022-02-10/CdcSpecification AWS API Documentation
+    #
+    class CdcSpecification < Struct.new(
+      :status,
+      :view_type,
+      :tags,
+      :propagate_tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The settings of the CDC stream of the table. For more information
+    # about CDC streams, see [Working with change data capture (CDC) streams
+    # in Amazon Keyspaces][1] in the *Amazon Keyspaces Developer Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/keyspaces/latest/devguide/cdc.html
+    #
+    # @!attribute [rw] status
+    #   The status of the CDC stream. Specifies if the table has a CDC
+    #   stream.
+    #   @return [String]
+    #
+    # @!attribute [rw] view_type
+    #   The view type specifies the changes Amazon Keyspaces records for
+    #   each changed row in the stream. This setting can't be changed,
+    #   after the stream has been created.
+    #
+    #   The options are:
+    #
+    #   * `NEW_AND_OLD_IMAGES` - both versions of the row, before and after
+    #     the change. This is the default.
+    #
+    #   * `NEW_IMAGE` - the version of the row after the change.
+    #
+    #   * `OLD_IMAGE` - the version of the row before the change.
+    #
+    #   * `KEYS_ONLY` - the partition and clustering keys of the row that
+    #     was changed.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/keyspaces-2022-02-10/CdcSpecificationSummary AWS API Documentation
+    #
+    class CdcSpecificationSummary < Struct.new(
+      :status,
+      :view_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The client-side timestamp setting of the table.
     #
     # For more information, see [How it works: Amazon Keyspaces client-side
@@ -356,7 +447,8 @@ module Aws::Keyspaces
     # already exists.
     #
     # @!attribute [rw] message
-    #   Description of the error.
+    #   The requested operation conflicts with the current state of the
+    #   resource or another concurrent operation.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/keyspaces-2022-02-10/ConflictException AWS API Documentation
@@ -391,8 +483,7 @@ module Aws::Keyspaces
     #   * `regionList` - if the `replicationStrategy` is `MULTI_REGION`, the
     #     `regionList` requires the current Region and at least one
     #     additional Amazon Web Services Region where the keyspace is going
-    #     to be replicated in. The maximum number of supported replication
-    #     Regions including the current Region is six.
+    #     to be replicated in.
     #   @return [Types::ReplicationSpecification]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/keyspaces-2022-02-10/CreateKeyspaceRequest AWS API Documentation
@@ -623,6 +714,25 @@ module Aws::Keyspaces
     #     for the table. (Optional)
     #   @return [Array<Types::ReplicaSpecification>]
     #
+    # @!attribute [rw] cdc_specification
+    #   The CDC stream settings of the table.
+    #   @return [Types::CdcSpecification]
+    #
+    # @!attribute [rw] warm_throughput_specification
+    #   Specifies the warm throughput settings for the table. Pre-warming a
+    #   table helps you avoid capacity exceeded exceptions by
+    #   pre-provisioning read and write capacity units to reduce cold start
+    #   latency when your table receives traffic.
+    #
+    #   For more information about pre-warming in Amazon Keyspaces, see
+    #   [Pre-warm a table in Amazon Keyspaces][1] in the *Amazon Keyspaces
+    #   Developer Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/keyspaces/latest/devguide/warm-throughput.html
+    #   @return [Types::WarmThroughputSpecification]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/keyspaces-2022-02-10/CreateTableRequest AWS API Documentation
     #
     class CreateTableRequest < Struct.new(
@@ -638,7 +748,9 @@ module Aws::Keyspaces
       :tags,
       :client_side_timestamps,
       :auto_scaling_specification,
-      :replica_specifications)
+      :replica_specifications,
+      :cdc_specification,
+      :warm_throughput_specification)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1045,6 +1157,19 @@ module Aws::Keyspaces
     #   Regions a multi-Region table is replicated in.
     #   @return [Array<Types::ReplicaSpecificationSummary>]
     #
+    # @!attribute [rw] latest_stream_arn
+    #   The Amazon Resource Name (ARN) of the stream.
+    #   @return [String]
+    #
+    # @!attribute [rw] cdc_specification
+    #   The CDC stream settings of the table.
+    #   @return [Types::CdcSpecificationSummary]
+    #
+    # @!attribute [rw] warm_throughput_specification
+    #   The warm throughput settings for the table, including the current
+    #   status and configured read and write capacity units.
+    #   @return [Types::WarmThroughputSpecificationSummary]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/keyspaces-2022-02-10/GetTableResponse AWS API Documentation
     #
     class GetTableResponse < Struct.new(
@@ -1061,7 +1186,10 @@ module Aws::Keyspaces
       :default_time_to_live,
       :comment,
       :client_side_timestamps,
-      :replica_specifications)
+      :replica_specifications,
+      :latest_stream_arn,
+      :cdc_specification,
+      :warm_throughput_specification)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1143,7 +1271,8 @@ module Aws::Keyspaces
     # an internal server error.
     #
     # @!attribute [rw] message
-    #   Description of the error.
+    #   An internal service error occurred. Retry your request. If the
+    #   problem persists, contact Amazon Web Services Support.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/keyspaces-2022-02-10/InternalServerException AWS API Documentation
@@ -1518,12 +1647,18 @@ module Aws::Keyspaces
     #   [1]: https://docs.aws.amazon.com/keyspaces/latest/devguide/ReadWriteCapacityMode.html
     #   @return [Types::CapacitySpecificationSummary]
     #
+    # @!attribute [rw] warm_throughput_specification
+    #   The warm throughput settings for this replica, including the current
+    #   status and configured read and write capacity units.
+    #   @return [Types::WarmThroughputSpecificationSummary]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/keyspaces-2022-02-10/ReplicaSpecificationSummary AWS API Documentation
     #
     class ReplicaSpecificationSummary < Struct.new(
       :region,
       :status,
-      :capacity_specification)
+      :capacity_specification,
+      :warm_throughput_specification)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1558,8 +1693,8 @@ module Aws::Keyspaces
 
     # The replication specification of the keyspace includes:
     #
-    # * `regionList` - up to six Amazon Web Services Regions where the
-    #   keyspace is replicated in.
+    # * `regionList` - the Amazon Web Services Regions where the keyspace is
+    #   replicated in.
     #
     # * `replicationStrategy` - the required value is `SINGLE_REGION` or
     #   `MULTI_REGION`.
@@ -1570,8 +1705,8 @@ module Aws::Keyspaces
     #   @return [String]
     #
     # @!attribute [rw] region_list
-    #   The `regionList` can contain up to six Amazon Web Services Regions
-    #   where the keyspace is replicated in.
+    #   The `regionList` contains the Amazon Web Services Regions where the
+    #   keyspace is replicated in.
     #   @return [Array<String>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/keyspaces-2022-02-10/ReplicationSpecification AWS API Documentation
@@ -1588,12 +1723,13 @@ module Aws::Keyspaces
     # might not be `ACTIVE`.
     #
     # @!attribute [rw] message
-    #   Description of the error.
+    #   The specified resource was not found. Verify the resource identifier
+    #   and ensure the resource exists and is in an ACTIVE state.
     #   @return [String]
     #
     # @!attribute [rw] resource_arn
     #   The unique identifier in the format of Amazon Resource Name (ARN)
-    #   for the resource couldn’t be found.
+    #   for the resource couldn't be found.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/keyspaces-2022-02-10/ResourceNotFoundException AWS API Documentation
@@ -1785,7 +1921,9 @@ module Aws::Keyspaces
     # [1]: https://docs.aws.amazon.com/keyspaces/latest/devguide/quotas.html
     #
     # @!attribute [rw] message
-    #   Description of the error.
+    #   The requested operation would exceed the service quota for this
+    #   resource. Review the service quotas and adjust your request
+    #   accordingly.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/keyspaces-2022-02-10/ServiceQuotaExceededException AWS API Documentation
@@ -1997,8 +2135,8 @@ module Aws::Keyspaces
     # @!attribute [rw] replication_specification
     #   The replication specification of the keyspace includes:
     #
-    #   * `regionList` - up to six Amazon Web Services Regions where the
-    #     keyspace is replicated in.
+    #   * `regionList` - the Amazon Web Services Regions where the keyspace
+    #     is replicated in.
     #
     #   * `replicationStrategy` - the required value is `SINGLE_REGION` or
     #     `MULTI_REGION`.
@@ -2187,6 +2325,16 @@ module Aws::Keyspaces
     #   The Region specific settings of a multi-Regional table.
     #   @return [Array<Types::ReplicaSpecification>]
     #
+    # @!attribute [rw] cdc_specification
+    #   The CDC stream settings of the table.
+    #   @return [Types::CdcSpecification]
+    #
+    # @!attribute [rw] warm_throughput_specification
+    #   Modifies the warm throughput settings for the table. You can update
+    #   the read and write capacity units to adjust the pre-provisioned
+    #   throughput.
+    #   @return [Types::WarmThroughputSpecification]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/keyspaces-2022-02-10/UpdateTableRequest AWS API Documentation
     #
     class UpdateTableRequest < Struct.new(
@@ -2200,7 +2348,9 @@ module Aws::Keyspaces
       :default_time_to_live,
       :client_side_timestamps,
       :auto_scaling_specification,
-      :replica_specifications)
+      :replica_specifications,
+      :cdc_specification,
+      :warm_throughput_specification)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2220,13 +2370,76 @@ module Aws::Keyspaces
     # The operation failed due to an invalid or malformed request.
     #
     # @!attribute [rw] message
-    #   Description of the error.
+    #   The request parameters are invalid or malformed. Review the API
+    #   documentation and correct the request format.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/keyspaces-2022-02-10/ValidationException AWS API Documentation
     #
     class ValidationException < Struct.new(
       :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Specifies the warm throughput settings for a table. Pre-warming a
+    # table by specifying warm throughput pre-provisions read and write
+    # capacity units to help avoid capacity exceeded exceptions and reduce
+    # latency when your table starts receiving traffic.
+    #
+    # For more information about pre-warming in Amazon Keyspaces, see
+    # [Pre-warm a table in Amazon Keyspaces][1] in the *Amazon Keyspaces
+    # Developer Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/keyspaces/latest/devguide/warm-throughput.html
+    #
+    # @!attribute [rw] read_units_per_second
+    #   The number of read capacity units per second to pre-warm the table
+    #   for read capacity throughput. The minimum value is 1.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] write_units_per_second
+    #   The number of write capacity units per second to pre-warm the table
+    #   for write capacity throughput. The minimum value is 1.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/keyspaces-2022-02-10/WarmThroughputSpecification AWS API Documentation
+    #
+    class WarmThroughputSpecification < Struct.new(
+      :read_units_per_second,
+      :write_units_per_second)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains the current warm throughput settings for a table, including
+    # the configured capacity units and the current status of the warm
+    # throughput configuration.
+    #
+    # @!attribute [rw] read_units_per_second
+    #   The number of read capacity units per second currently configured
+    #   for warm throughput.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] write_units_per_second
+    #   The number of write capacity units per second currently configured
+    #   for warm throughput.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] status
+    #   The current status of the warm throughput configuration. Valid
+    #   values are `AVAILABLE` when the configuration is active, and
+    #   `UPDATING` when changes are being applied.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/keyspaces-2022-02-10/WarmThroughputSpecificationSummary AWS API Documentation
+    #
+    class WarmThroughputSpecificationSummary < Struct.new(
+      :read_units_per_second,
+      :write_units_per_second,
+      :status)
       SENSITIVE = []
       include Aws::Structure
     end

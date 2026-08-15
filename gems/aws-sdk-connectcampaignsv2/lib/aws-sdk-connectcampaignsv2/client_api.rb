@@ -14,7 +14,11 @@ module Aws::ConnectCampaignsV2
 
     include Seahorse::Model
 
+    AbandonmentRatePacingConfig = Shapes::StructureShape.new(name: 'AbandonmentRatePacingConfig')
+    AbandonmentRatePacingConfigConnectionThresholdSecondsInteger = Shapes::IntegerShape.new(name: 'AbandonmentRatePacingConfigConnectionThresholdSecondsInteger')
     AccessDeniedException = Shapes::StructureShape.new(name: 'AccessDeniedException')
+    AgentAction = Shapes::StringShape.new(name: 'AgentAction')
+    AgentActions = Shapes::ListShape.new(name: 'AgentActions')
     AgentlessConfig = Shapes::StructureShape.new(name: 'AgentlessConfig')
     AnswerMachineDetectionConfig = Shapes::StructureShape.new(name: 'AnswerMachineDetectionConfig')
     Arn = Shapes::StringShape.new(name: 'Arn')
@@ -23,6 +27,7 @@ module Aws::ConnectCampaignsV2
     Attributes = Shapes::MapShape.new(name: 'Attributes')
     BandwidthAllocation = Shapes::FloatShape.new(name: 'BandwidthAllocation')
     Boolean = Shapes::BooleanShape.new(name: 'Boolean')
+    BrowserId = Shapes::StringShape.new(name: 'BrowserId')
     Campaign = Shapes::StructureShape.new(name: 'Campaign')
     CampaignArn = Shapes::StringShape.new(name: 'CampaignArn')
     CampaignDeletionPolicy = Shapes::StringShape.new(name: 'CampaignDeletionPolicy')
@@ -33,6 +38,7 @@ module Aws::ConnectCampaignsV2
     CampaignSummary = Shapes::StructureShape.new(name: 'CampaignSummary')
     CampaignSummaryList = Shapes::ListShape.new(name: 'CampaignSummaryList')
     Capacity = Shapes::FloatShape.new(name: 'Capacity')
+    ChannelContext = Shapes::StructureShape.new(name: 'ChannelContext')
     ChannelSubtype = Shapes::StringShape.new(name: 'ChannelSubtype')
     ChannelSubtypeConfig = Shapes::StructureShape.new(name: 'ChannelSubtypeConfig')
     ChannelSubtypeList = Shapes::ListShape.new(name: 'ChannelSubtypeList')
@@ -49,6 +55,7 @@ module Aws::ConnectCampaignsV2
     CommunicationTimeConfig = Shapes::StructureShape.new(name: 'CommunicationTimeConfig')
     CommunicationTimeConfigType = Shapes::StringShape.new(name: 'CommunicationTimeConfigType')
     ConflictException = Shapes::StructureShape.new(name: 'ConflictException')
+    ConnectionStartPoint = Shapes::StringShape.new(name: 'ConnectionStartPoint')
     ContactFlowId = Shapes::StringShape.new(name: 'ContactFlowId')
     CreateCampaignRequest = Shapes::StructureShape.new(name: 'CreateCampaignRequest')
     CreateCampaignResponse = Shapes::StructureShape.new(name: 'CreateCampaignResponse')
@@ -60,6 +67,7 @@ module Aws::ConnectCampaignsV2
     DeleteCampaignChannelSubtypeConfigRequest = Shapes::StructureShape.new(name: 'DeleteCampaignChannelSubtypeConfigRequest')
     DeleteCampaignCommunicationLimitsRequest = Shapes::StructureShape.new(name: 'DeleteCampaignCommunicationLimitsRequest')
     DeleteCampaignCommunicationTimeRequest = Shapes::StructureShape.new(name: 'DeleteCampaignCommunicationTimeRequest')
+    DeleteCampaignEntryLimitsRequest = Shapes::StructureShape.new(name: 'DeleteCampaignEntryLimitsRequest')
     DeleteCampaignRequest = Shapes::StructureShape.new(name: 'DeleteCampaignRequest')
     DeleteConnectInstanceConfigRequest = Shapes::StructureShape.new(name: 'DeleteConnectInstanceConfigRequest')
     DeleteConnectInstanceIntegrationRequest = Shapes::StructureShape.new(name: 'DeleteConnectInstanceIntegrationRequest')
@@ -78,8 +86,13 @@ module Aws::ConnectCampaignsV2
     EncryptionConfig = Shapes::StructureShape.new(name: 'EncryptionConfig')
     EncryptionKey = Shapes::StringShape.new(name: 'EncryptionKey')
     EncryptionType = Shapes::StringShape.new(name: 'EncryptionType')
+    EntryLimitsConfig = Shapes::StructureShape.new(name: 'EntryLimitsConfig')
+    EntryLimitsConfigMaxEntryCountInteger = Shapes::IntegerShape.new(name: 'EntryLimitsConfigMaxEntryCountInteger')
+    EvaluationWindow = Shapes::StringShape.new(name: 'EvaluationWindow')
     EventTrigger = Shapes::StructureShape.new(name: 'EventTrigger')
+    EventTriggerContext = Shapes::StructureShape.new(name: 'EventTriggerContext')
     EventType = Shapes::StringShape.new(name: 'EventType')
+    ExternalCampaignType = Shapes::StringShape.new(name: 'ExternalCampaignType')
     FailedCampaignStateResponse = Shapes::StructureShape.new(name: 'FailedCampaignStateResponse')
     FailedCampaignStateResponseList = Shapes::ListShape.new(name: 'FailedCampaignStateResponseList')
     FailedProfileOutboundRequest = Shapes::StructureShape.new(name: 'FailedProfileOutboundRequest')
@@ -95,12 +108,16 @@ module Aws::ConnectCampaignsV2
     GetCampaignStateResponse = Shapes::StructureShape.new(name: 'GetCampaignStateResponse')
     GetConnectInstanceConfigRequest = Shapes::StructureShape.new(name: 'GetConnectInstanceConfigRequest')
     GetConnectInstanceConfigResponse = Shapes::StructureShape.new(name: 'GetConnectInstanceConfigResponse')
+    GetInstanceCommunicationLimitsRequest = Shapes::StructureShape.new(name: 'GetInstanceCommunicationLimitsRequest')
+    GetInstanceCommunicationLimitsResponse = Shapes::StructureShape.new(name: 'GetInstanceCommunicationLimitsResponse')
     GetInstanceOnboardingJobStatusRequest = Shapes::StructureShape.new(name: 'GetInstanceOnboardingJobStatusRequest')
     GetInstanceOnboardingJobStatusResponse = Shapes::StructureShape.new(name: 'GetInstanceOnboardingJobStatusResponse')
+    InstanceCommunicationLimitsConfig = Shapes::StructureShape.new(name: 'InstanceCommunicationLimitsConfig')
     InstanceConfig = Shapes::StructureShape.new(name: 'InstanceConfig')
     InstanceId = Shapes::StringShape.new(name: 'InstanceId')
     InstanceIdFilter = Shapes::StructureShape.new(name: 'InstanceIdFilter')
     InstanceIdFilterOperator = Shapes::StringShape.new(name: 'InstanceIdFilterOperator')
+    InstanceLimitsHandling = Shapes::StringShape.new(name: 'InstanceLimitsHandling')
     InstanceOnboardingJobFailureCode = Shapes::StringShape.new(name: 'InstanceOnboardingJobFailureCode')
     InstanceOnboardingJobStatus = Shapes::StructureShape.new(name: 'InstanceOnboardingJobStatus')
     InstanceOnboardingJobStatusCode = Shapes::StringShape.new(name: 'InstanceOnboardingJobStatusCode')
@@ -114,6 +131,10 @@ module Aws::ConnectCampaignsV2
     Iso8601Date = Shapes::StringShape.new(name: 'Iso8601Date')
     Iso8601Duration = Shapes::StringShape.new(name: 'Iso8601Duration')
     Iso8601Time = Shapes::StringShape.new(name: 'Iso8601Time')
+    LambdaArn = Shapes::StringShape.new(name: 'LambdaArn')
+    LambdaIntegrationConfig = Shapes::StructureShape.new(name: 'LambdaIntegrationConfig')
+    LambdaIntegrationIdentifier = Shapes::StructureShape.new(name: 'LambdaIntegrationIdentifier')
+    LambdaIntegrationSummary = Shapes::StructureShape.new(name: 'LambdaIntegrationSummary')
     ListCampaignsRequest = Shapes::StructureShape.new(name: 'ListCampaignsRequest')
     ListCampaignsResponse = Shapes::StructureShape.new(name: 'ListCampaignsResponse')
     ListConnectInstanceIntegrationsRequest = Shapes::StructureShape.new(name: 'ListConnectInstanceIntegrationsRequest')
@@ -122,6 +143,7 @@ module Aws::ConnectCampaignsV2
     ListTagsForResourceResponse = Shapes::StructureShape.new(name: 'ListTagsForResourceResponse')
     LocalTimeZoneConfig = Shapes::StructureShape.new(name: 'LocalTimeZoneConfig')
     LocalTimeZoneDetection = Shapes::ListShape.new(name: 'LocalTimeZoneDetection')
+    LocalTimeZoneDetectionScope = Shapes::StringShape.new(name: 'LocalTimeZoneDetectionScope')
     LocalTimeZoneDetectionType = Shapes::StringShape.new(name: 'LocalTimeZoneDetectionType')
     MaxResults = Shapes::IntegerShape.new(name: 'MaxResults')
     NextToken = Shapes::StringShape.new(name: 'NextToken')
@@ -130,8 +152,11 @@ module Aws::ConnectCampaignsV2
     OpenHours = Shapes::UnionShape.new(name: 'OpenHours')
     OutboundRequest = Shapes::StructureShape.new(name: 'OutboundRequest')
     OutboundRequestList = Shapes::ListShape.new(name: 'OutboundRequestList')
+    PacingStrategy = Shapes::UnionShape.new(name: 'PacingStrategy')
+    PacingStrategyList = Shapes::ListShape.new(name: 'PacingStrategyList')
     PauseCampaignRequest = Shapes::StructureShape.new(name: 'PauseCampaignRequest')
     PredictiveConfig = Shapes::StructureShape.new(name: 'PredictiveConfig')
+    PreviewConfig = Shapes::StructureShape.new(name: 'PreviewConfig')
     ProfileId = Shapes::StringShape.new(name: 'ProfileId')
     ProfileOutboundRequest = Shapes::StructureShape.new(name: 'ProfileOutboundRequest')
     ProfileOutboundRequestFailureCode = Shapes::StringShape.new(name: 'ProfileOutboundRequestFailureCode')
@@ -139,6 +164,7 @@ module Aws::ConnectCampaignsV2
     ProfileOutboundRequestList = Shapes::ListShape.new(name: 'ProfileOutboundRequestList')
     ProgressiveConfig = Shapes::StructureShape.new(name: 'ProgressiveConfig')
     PutConnectInstanceIntegrationRequest = Shapes::StructureShape.new(name: 'PutConnectInstanceIntegrationRequest')
+    PutInstanceCommunicationLimitsRequest = Shapes::StructureShape.new(name: 'PutInstanceCommunicationLimitsRequest')
     PutOutboundRequestBatchRequest = Shapes::StructureShape.new(name: 'PutOutboundRequestBatchRequest')
     PutOutboundRequestBatchResponse = Shapes::StructureShape.new(name: 'PutOutboundRequestBatchResponse')
     PutProfileOutboundRequestBatchRequest = Shapes::StructureShape.new(name: 'PutProfileOutboundRequestBatchRequest')
@@ -153,14 +179,17 @@ module Aws::ConnectCampaignsV2
     RestrictedPeriodName = Shapes::StringShape.new(name: 'RestrictedPeriodName')
     RestrictedPeriods = Shapes::UnionShape.new(name: 'RestrictedPeriods')
     ResumeCampaignRequest = Shapes::StructureShape.new(name: 'ResumeCampaignRequest')
+    RingTimeout = Shapes::IntegerShape.new(name: 'RingTimeout')
     Schedule = Shapes::StructureShape.new(name: 'Schedule')
     ServiceLinkedRoleArn = Shapes::StringShape.new(name: 'ServiceLinkedRoleArn')
     ServiceQuotaExceededException = Shapes::StructureShape.new(name: 'ServiceQuotaExceededException')
+    SessionId = Shapes::StringShape.new(name: 'SessionId')
     SmsChannelSubtypeConfig = Shapes::StructureShape.new(name: 'SmsChannelSubtypeConfig')
     SmsChannelSubtypeParameters = Shapes::StructureShape.new(name: 'SmsChannelSubtypeParameters')
     SmsOutboundConfig = Shapes::StructureShape.new(name: 'SmsOutboundConfig')
     SmsOutboundMode = Shapes::UnionShape.new(name: 'SmsOutboundMode')
     Source = Shapes::UnionShape.new(name: 'Source')
+    SourceEvent = Shapes::StringShape.new(name: 'SourceEvent')
     SourcePhoneNumber = Shapes::StringShape.new(name: 'SourcePhoneNumber')
     StartCampaignRequest = Shapes::StructureShape.new(name: 'StartCampaignRequest')
     StartInstanceOnboardingJobRequest = Shapes::StructureShape.new(name: 'StartInstanceOnboardingJobRequest')
@@ -178,6 +207,7 @@ module Aws::ConnectCampaignsV2
     TagMap = Shapes::MapShape.new(name: 'TagMap')
     TagResourceRequest = Shapes::StructureShape.new(name: 'TagResourceRequest')
     TagValue = Shapes::StringShape.new(name: 'TagValue')
+    TargetRate = Shapes::FloatShape.new(name: 'TargetRate')
     TelephonyChannelSubtypeConfig = Shapes::StructureShape.new(name: 'TelephonyChannelSubtypeConfig')
     TelephonyChannelSubtypeParameters = Shapes::StructureShape.new(name: 'TelephonyChannelSubtypeParameters')
     TelephonyOutboundConfig = Shapes::StructureShape.new(name: 'TelephonyOutboundConfig')
@@ -188,20 +218,36 @@ module Aws::ConnectCampaignsV2
     TimeStamp = Shapes::TimestampShape.new(name: 'TimeStamp', timestampFormat: "iso8601")
     TimeWindow = Shapes::StructureShape.new(name: 'TimeWindow')
     TimeZone = Shapes::StringShape.new(name: 'TimeZone')
+    TimeoutConfig = Shapes::StructureShape.new(name: 'TimeoutConfig')
+    TimeoutDuration = Shapes::IntegerShape.new(name: 'TimeoutDuration')
     UntagResourceRequest = Shapes::StructureShape.new(name: 'UntagResourceRequest')
     UpdateCampaignChannelSubtypeConfigRequest = Shapes::StructureShape.new(name: 'UpdateCampaignChannelSubtypeConfigRequest')
     UpdateCampaignCommunicationLimitsRequest = Shapes::StructureShape.new(name: 'UpdateCampaignCommunicationLimitsRequest')
     UpdateCampaignCommunicationTimeRequest = Shapes::StructureShape.new(name: 'UpdateCampaignCommunicationTimeRequest')
+    UpdateCampaignEntryLimitsRequest = Shapes::StructureShape.new(name: 'UpdateCampaignEntryLimitsRequest')
     UpdateCampaignFlowAssociationRequest = Shapes::StructureShape.new(name: 'UpdateCampaignFlowAssociationRequest')
     UpdateCampaignNameRequest = Shapes::StructureShape.new(name: 'UpdateCampaignNameRequest')
     UpdateCampaignScheduleRequest = Shapes::StructureShape.new(name: 'UpdateCampaignScheduleRequest')
     UpdateCampaignSourceRequest = Shapes::StructureShape.new(name: 'UpdateCampaignSourceRequest')
     ValidationException = Shapes::StructureShape.new(name: 'ValidationException')
+    WebNotificationContext = Shapes::StructureShape.new(name: 'WebNotificationContext')
+    WhatsAppChannelSubtypeConfig = Shapes::StructureShape.new(name: 'WhatsAppChannelSubtypeConfig')
+    WhatsAppChannelSubtypeParameters = Shapes::StructureShape.new(name: 'WhatsAppChannelSubtypeParameters')
+    WhatsAppOutboundConfig = Shapes::StructureShape.new(name: 'WhatsAppOutboundConfig')
+    WhatsAppOutboundMode = Shapes::UnionShape.new(name: 'WhatsAppOutboundMode')
     XAmazonErrorType = Shapes::StringShape.new(name: 'XAmazonErrorType')
+
+    AbandonmentRatePacingConfig.add_member(:target_rate, Shapes::ShapeRef.new(shape: TargetRate, required: true, location_name: "targetRate"))
+    AbandonmentRatePacingConfig.add_member(:connection_start_point, Shapes::ShapeRef.new(shape: ConnectionStartPoint, required: true, location_name: "connectionStartPoint"))
+    AbandonmentRatePacingConfig.add_member(:connection_threshold_seconds, Shapes::ShapeRef.new(shape: AbandonmentRatePacingConfigConnectionThresholdSecondsInteger, required: true, location_name: "connectionThresholdSeconds"))
+    AbandonmentRatePacingConfig.add_member(:evaluation_window, Shapes::ShapeRef.new(shape: EvaluationWindow, required: true, location_name: "evaluationWindow"))
+    AbandonmentRatePacingConfig.struct_class = Types::AbandonmentRatePacingConfig
 
     AccessDeniedException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
     AccessDeniedException.add_member(:x_amz_error_type, Shapes::ShapeRef.new(shape: XAmazonErrorType, location: "header", location_name: "x-amzn-ErrorType"))
     AccessDeniedException.struct_class = Types::AccessDeniedException
+
+    AgentActions.member = Shapes::ShapeRef.new(shape: AgentAction)
 
     AgentlessConfig.struct_class = Types::AgentlessConfig
 
@@ -216,10 +262,12 @@ module Aws::ConnectCampaignsV2
     Campaign.add_member(:arn, Shapes::ShapeRef.new(shape: CampaignArn, required: true, location_name: "arn"))
     Campaign.add_member(:name, Shapes::ShapeRef.new(shape: CampaignName, required: true, location_name: "name"))
     Campaign.add_member(:connect_instance_id, Shapes::ShapeRef.new(shape: InstanceId, required: true, location_name: "connectInstanceId"))
-    Campaign.add_member(:channel_subtype_config, Shapes::ShapeRef.new(shape: ChannelSubtypeConfig, required: true, location_name: "channelSubtypeConfig"))
+    Campaign.add_member(:channel_subtype_config, Shapes::ShapeRef.new(shape: ChannelSubtypeConfig, location_name: "channelSubtypeConfig"))
+    Campaign.add_member(:type, Shapes::ShapeRef.new(shape: ExternalCampaignType, location_name: "type"))
     Campaign.add_member(:source, Shapes::ShapeRef.new(shape: Source, location_name: "source"))
     Campaign.add_member(:connect_campaign_flow_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "connectCampaignFlowArn"))
     Campaign.add_member(:schedule, Shapes::ShapeRef.new(shape: Schedule, location_name: "schedule"))
+    Campaign.add_member(:entry_limits_config, Shapes::ShapeRef.new(shape: EntryLimitsConfig, location_name: "entryLimitsConfig"))
     Campaign.add_member(:communication_time_config, Shapes::ShapeRef.new(shape: CommunicationTimeConfig, location_name: "communicationTimeConfig"))
     Campaign.add_member(:communication_limits_override, Shapes::ShapeRef.new(shape: CommunicationLimitsConfig, location_name: "communicationLimitsOverride"))
     Campaign.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
@@ -233,15 +281,21 @@ module Aws::ConnectCampaignsV2
     CampaignSummary.add_member(:name, Shapes::ShapeRef.new(shape: CampaignName, required: true, location_name: "name"))
     CampaignSummary.add_member(:connect_instance_id, Shapes::ShapeRef.new(shape: InstanceId, required: true, location_name: "connectInstanceId"))
     CampaignSummary.add_member(:channel_subtypes, Shapes::ShapeRef.new(shape: ChannelSubtypeList, required: true, location_name: "channelSubtypes"))
+    CampaignSummary.add_member(:type, Shapes::ShapeRef.new(shape: ExternalCampaignType, location_name: "type"))
     CampaignSummary.add_member(:schedule, Shapes::ShapeRef.new(shape: Schedule, location_name: "schedule"))
+    CampaignSummary.add_member(:entry_limits_config, Shapes::ShapeRef.new(shape: EntryLimitsConfig, location_name: "entryLimitsConfig"))
     CampaignSummary.add_member(:connect_campaign_flow_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "connectCampaignFlowArn"))
     CampaignSummary.struct_class = Types::CampaignSummary
 
     CampaignSummaryList.member = Shapes::ShapeRef.new(shape: CampaignSummary)
 
+    ChannelContext.add_member(:web_notification_context, Shapes::ShapeRef.new(shape: WebNotificationContext, location_name: "webNotificationContext"))
+    ChannelContext.struct_class = Types::ChannelContext
+
     ChannelSubtypeConfig.add_member(:telephony, Shapes::ShapeRef.new(shape: TelephonyChannelSubtypeConfig, location_name: "telephony"))
     ChannelSubtypeConfig.add_member(:sms, Shapes::ShapeRef.new(shape: SmsChannelSubtypeConfig, location_name: "sms"))
     ChannelSubtypeConfig.add_member(:email, Shapes::ShapeRef.new(shape: EmailChannelSubtypeConfig, location_name: "email"))
+    ChannelSubtypeConfig.add_member(:whats_app, Shapes::ShapeRef.new(shape: WhatsAppChannelSubtypeConfig, location_name: "whatsApp"))
     ChannelSubtypeConfig.struct_class = Types::ChannelSubtypeConfig
 
     ChannelSubtypeList.member = Shapes::ShapeRef.new(shape: ChannelSubtype)
@@ -249,10 +303,12 @@ module Aws::ConnectCampaignsV2
     ChannelSubtypeParameters.add_member(:telephony, Shapes::ShapeRef.new(shape: TelephonyChannelSubtypeParameters, location_name: "telephony"))
     ChannelSubtypeParameters.add_member(:sms, Shapes::ShapeRef.new(shape: SmsChannelSubtypeParameters, location_name: "sms"))
     ChannelSubtypeParameters.add_member(:email, Shapes::ShapeRef.new(shape: EmailChannelSubtypeParameters, location_name: "email"))
+    ChannelSubtypeParameters.add_member(:whats_app, Shapes::ShapeRef.new(shape: WhatsAppChannelSubtypeParameters, location_name: "whatsApp"))
     ChannelSubtypeParameters.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
     ChannelSubtypeParameters.add_member_subclass(:telephony, Types::ChannelSubtypeParameters::Telephony)
     ChannelSubtypeParameters.add_member_subclass(:sms, Types::ChannelSubtypeParameters::Sms)
     ChannelSubtypeParameters.add_member_subclass(:email, Types::ChannelSubtypeParameters::Email)
+    ChannelSubtypeParameters.add_member_subclass(:whats_app, Types::ChannelSubtypeParameters::WhatsApp)
     ChannelSubtypeParameters.add_member_subclass(:unknown, Types::ChannelSubtypeParameters::Unknown)
     ChannelSubtypeParameters.struct_class = Types::ChannelSubtypeParameters
 
@@ -270,12 +326,14 @@ module Aws::ConnectCampaignsV2
     CommunicationLimits.struct_class = Types::CommunicationLimits
 
     CommunicationLimitsConfig.add_member(:all_channel_subtypes, Shapes::ShapeRef.new(shape: CommunicationLimits, location_name: "allChannelSubtypes"))
+    CommunicationLimitsConfig.add_member(:instance_limits_handling, Shapes::ShapeRef.new(shape: InstanceLimitsHandling, location_name: "instanceLimitsHandling"))
     CommunicationLimitsConfig.struct_class = Types::CommunicationLimitsConfig
 
     CommunicationTimeConfig.add_member(:local_time_zone_config, Shapes::ShapeRef.new(shape: LocalTimeZoneConfig, required: true, location_name: "localTimeZoneConfig"))
     CommunicationTimeConfig.add_member(:telephony, Shapes::ShapeRef.new(shape: TimeWindow, location_name: "telephony"))
     CommunicationTimeConfig.add_member(:sms, Shapes::ShapeRef.new(shape: TimeWindow, location_name: "sms"))
     CommunicationTimeConfig.add_member(:email, Shapes::ShapeRef.new(shape: TimeWindow, location_name: "email"))
+    CommunicationTimeConfig.add_member(:whats_app, Shapes::ShapeRef.new(shape: TimeWindow, location_name: "whatsApp"))
     CommunicationTimeConfig.struct_class = Types::CommunicationTimeConfig
 
     ConflictException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
@@ -284,10 +342,12 @@ module Aws::ConnectCampaignsV2
 
     CreateCampaignRequest.add_member(:name, Shapes::ShapeRef.new(shape: CampaignName, required: true, location_name: "name"))
     CreateCampaignRequest.add_member(:connect_instance_id, Shapes::ShapeRef.new(shape: InstanceId, required: true, location_name: "connectInstanceId"))
-    CreateCampaignRequest.add_member(:channel_subtype_config, Shapes::ShapeRef.new(shape: ChannelSubtypeConfig, required: true, location_name: "channelSubtypeConfig"))
+    CreateCampaignRequest.add_member(:channel_subtype_config, Shapes::ShapeRef.new(shape: ChannelSubtypeConfig, location_name: "channelSubtypeConfig"))
+    CreateCampaignRequest.add_member(:type, Shapes::ShapeRef.new(shape: ExternalCampaignType, location_name: "type"))
     CreateCampaignRequest.add_member(:source, Shapes::ShapeRef.new(shape: Source, location_name: "source"))
     CreateCampaignRequest.add_member(:connect_campaign_flow_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "connectCampaignFlowArn"))
     CreateCampaignRequest.add_member(:schedule, Shapes::ShapeRef.new(shape: Schedule, location_name: "schedule"))
+    CreateCampaignRequest.add_member(:entry_limits_config, Shapes::ShapeRef.new(shape: EntryLimitsConfig, location_name: "entryLimitsConfig"))
     CreateCampaignRequest.add_member(:communication_time_config, Shapes::ShapeRef.new(shape: CommunicationTimeConfig, location_name: "communicationTimeConfig"))
     CreateCampaignRequest.add_member(:communication_limits_override, Shapes::ShapeRef.new(shape: CommunicationLimitsConfig, location_name: "communicationLimitsOverride"))
     CreateCampaignRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
@@ -323,6 +383,9 @@ module Aws::ConnectCampaignsV2
     DeleteCampaignCommunicationTimeRequest.add_member(:id, Shapes::ShapeRef.new(shape: CampaignId, required: true, location: "uri", location_name: "id"))
     DeleteCampaignCommunicationTimeRequest.add_member(:config, Shapes::ShapeRef.new(shape: CommunicationTimeConfigType, required: true, location: "querystring", location_name: "config"))
     DeleteCampaignCommunicationTimeRequest.struct_class = Types::DeleteCampaignCommunicationTimeRequest
+
+    DeleteCampaignEntryLimitsRequest.add_member(:id, Shapes::ShapeRef.new(shape: CampaignId, required: true, location: "uri", location_name: "id"))
+    DeleteCampaignEntryLimitsRequest.struct_class = Types::DeleteCampaignEntryLimitsRequest
 
     DeleteCampaignRequest.add_member(:id, Shapes::ShapeRef.new(shape: CampaignId, required: true, location: "uri", location_name: "id"))
     DeleteCampaignRequest.struct_class = Types::DeleteCampaignRequest
@@ -371,8 +434,16 @@ module Aws::ConnectCampaignsV2
     EncryptionConfig.add_member(:key_arn, Shapes::ShapeRef.new(shape: EncryptionKey, location_name: "keyArn"))
     EncryptionConfig.struct_class = Types::EncryptionConfig
 
+    EntryLimitsConfig.add_member(:max_entry_count, Shapes::ShapeRef.new(shape: EntryLimitsConfigMaxEntryCountInteger, required: true, location_name: "maxEntryCount"))
+    EntryLimitsConfig.add_member(:min_entry_interval, Shapes::ShapeRef.new(shape: Iso8601Duration, required: true, location_name: "minEntryInterval"))
+    EntryLimitsConfig.struct_class = Types::EntryLimitsConfig
+
     EventTrigger.add_member(:customer_profiles_domain_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "customerProfilesDomainArn"))
     EventTrigger.struct_class = Types::EventTrigger
+
+    EventTriggerContext.add_member(:source_event, Shapes::ShapeRef.new(shape: SourceEvent, location_name: "sourceEvent"))
+    EventTriggerContext.add_member(:channel_context, Shapes::ShapeRef.new(shape: ChannelContext, location_name: "channelContext"))
+    EventTriggerContext.struct_class = Types::EventTriggerContext
 
     FailedCampaignStateResponse.add_member(:campaign_id, Shapes::ShapeRef.new(shape: CampaignId, location_name: "campaignId"))
     FailedCampaignStateResponse.add_member(:failure_code, Shapes::ShapeRef.new(shape: GetCampaignStateBatchFailureCode, location_name: "failureCode"))
@@ -415,11 +486,20 @@ module Aws::ConnectCampaignsV2
     GetConnectInstanceConfigResponse.add_member(:connect_instance_config, Shapes::ShapeRef.new(shape: InstanceConfig, location_name: "connectInstanceConfig"))
     GetConnectInstanceConfigResponse.struct_class = Types::GetConnectInstanceConfigResponse
 
+    GetInstanceCommunicationLimitsRequest.add_member(:connect_instance_id, Shapes::ShapeRef.new(shape: InstanceId, required: true, location: "uri", location_name: "connectInstanceId"))
+    GetInstanceCommunicationLimitsRequest.struct_class = Types::GetInstanceCommunicationLimitsRequest
+
+    GetInstanceCommunicationLimitsResponse.add_member(:communication_limits_config, Shapes::ShapeRef.new(shape: InstanceCommunicationLimitsConfig, location_name: "communicationLimitsConfig"))
+    GetInstanceCommunicationLimitsResponse.struct_class = Types::GetInstanceCommunicationLimitsResponse
+
     GetInstanceOnboardingJobStatusRequest.add_member(:connect_instance_id, Shapes::ShapeRef.new(shape: InstanceId, required: true, location: "uri", location_name: "connectInstanceId"))
     GetInstanceOnboardingJobStatusRequest.struct_class = Types::GetInstanceOnboardingJobStatusRequest
 
     GetInstanceOnboardingJobStatusResponse.add_member(:connect_instance_onboarding_job_status, Shapes::ShapeRef.new(shape: InstanceOnboardingJobStatus, location_name: "connectInstanceOnboardingJobStatus"))
     GetInstanceOnboardingJobStatusResponse.struct_class = Types::GetInstanceOnboardingJobStatusResponse
+
+    InstanceCommunicationLimitsConfig.add_member(:all_channel_subtypes, Shapes::ShapeRef.new(shape: CommunicationLimits, location_name: "allChannelSubtypes"))
+    InstanceCommunicationLimitsConfig.struct_class = Types::InstanceCommunicationLimitsConfig
 
     InstanceConfig.add_member(:connect_instance_id, Shapes::ShapeRef.new(shape: InstanceId, required: true, location_name: "connectInstanceId"))
     InstanceConfig.add_member(:service_linked_role_arn, Shapes::ShapeRef.new(shape: ServiceLinkedRoleArn, required: true, location_name: "serviceLinkedRoleArn"))
@@ -437,25 +517,31 @@ module Aws::ConnectCampaignsV2
 
     IntegrationConfig.add_member(:customer_profiles, Shapes::ShapeRef.new(shape: CustomerProfilesIntegrationConfig, location_name: "customerProfiles"))
     IntegrationConfig.add_member(:q_connect, Shapes::ShapeRef.new(shape: QConnectIntegrationConfig, location_name: "qConnect"))
+    IntegrationConfig.add_member(:lambda, Shapes::ShapeRef.new(shape: LambdaIntegrationConfig, location_name: "lambda"))
     IntegrationConfig.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
     IntegrationConfig.add_member_subclass(:customer_profiles, Types::IntegrationConfig::CustomerProfiles)
     IntegrationConfig.add_member_subclass(:q_connect, Types::IntegrationConfig::QConnect)
+    IntegrationConfig.add_member_subclass(:lambda, Types::IntegrationConfig::Lambda)
     IntegrationConfig.add_member_subclass(:unknown, Types::IntegrationConfig::Unknown)
     IntegrationConfig.struct_class = Types::IntegrationConfig
 
     IntegrationIdentifier.add_member(:customer_profiles, Shapes::ShapeRef.new(shape: CustomerProfilesIntegrationIdentifier, location_name: "customerProfiles"))
     IntegrationIdentifier.add_member(:q_connect, Shapes::ShapeRef.new(shape: QConnectIntegrationIdentifier, location_name: "qConnect"))
+    IntegrationIdentifier.add_member(:lambda, Shapes::ShapeRef.new(shape: LambdaIntegrationIdentifier, location_name: "lambda"))
     IntegrationIdentifier.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
     IntegrationIdentifier.add_member_subclass(:customer_profiles, Types::IntegrationIdentifier::CustomerProfiles)
     IntegrationIdentifier.add_member_subclass(:q_connect, Types::IntegrationIdentifier::QConnect)
+    IntegrationIdentifier.add_member_subclass(:lambda, Types::IntegrationIdentifier::Lambda)
     IntegrationIdentifier.add_member_subclass(:unknown, Types::IntegrationIdentifier::Unknown)
     IntegrationIdentifier.struct_class = Types::IntegrationIdentifier
 
     IntegrationSummary.add_member(:customer_profiles, Shapes::ShapeRef.new(shape: CustomerProfilesIntegrationSummary, location_name: "customerProfiles"))
     IntegrationSummary.add_member(:q_connect, Shapes::ShapeRef.new(shape: QConnectIntegrationSummary, location_name: "qConnect"))
+    IntegrationSummary.add_member(:lambda, Shapes::ShapeRef.new(shape: LambdaIntegrationSummary, location_name: "lambda"))
     IntegrationSummary.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
     IntegrationSummary.add_member_subclass(:customer_profiles, Types::IntegrationSummary::CustomerProfiles)
     IntegrationSummary.add_member_subclass(:q_connect, Types::IntegrationSummary::QConnect)
+    IntegrationSummary.add_member_subclass(:lambda, Types::IntegrationSummary::Lambda)
     IntegrationSummary.add_member_subclass(:unknown, Types::IntegrationSummary::Unknown)
     IntegrationSummary.struct_class = Types::IntegrationSummary
 
@@ -473,6 +559,15 @@ module Aws::ConnectCampaignsV2
     InvalidStateException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
     InvalidStateException.add_member(:x_amz_error_type, Shapes::ShapeRef.new(shape: XAmazonErrorType, location: "header", location_name: "x-amzn-ErrorType"))
     InvalidStateException.struct_class = Types::InvalidStateException
+
+    LambdaIntegrationConfig.add_member(:function_arn, Shapes::ShapeRef.new(shape: LambdaArn, required: true, location_name: "functionArn"))
+    LambdaIntegrationConfig.struct_class = Types::LambdaIntegrationConfig
+
+    LambdaIntegrationIdentifier.add_member(:function_arn, Shapes::ShapeRef.new(shape: LambdaArn, required: true, location_name: "functionArn"))
+    LambdaIntegrationIdentifier.struct_class = Types::LambdaIntegrationIdentifier
+
+    LambdaIntegrationSummary.add_member(:function_arn, Shapes::ShapeRef.new(shape: LambdaArn, required: true, location_name: "functionArn"))
+    LambdaIntegrationSummary.struct_class = Types::LambdaIntegrationSummary
 
     ListCampaignsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location_name: "maxResults"))
     ListCampaignsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
@@ -500,6 +595,7 @@ module Aws::ConnectCampaignsV2
 
     LocalTimeZoneConfig.add_member(:default_time_zone, Shapes::ShapeRef.new(shape: TimeZone, location_name: "defaultTimeZone"))
     LocalTimeZoneConfig.add_member(:local_time_zone_detection, Shapes::ShapeRef.new(shape: LocalTimeZoneDetection, location_name: "localTimeZoneDetection"))
+    LocalTimeZoneConfig.add_member(:local_time_zone_detection_scope, Shapes::ShapeRef.new(shape: LocalTimeZoneDetectionScope, location_name: "localTimeZoneDetectionScope"))
     LocalTimeZoneConfig.struct_class = Types::LocalTimeZoneConfig
 
     LocalTimeZoneDetection.member = Shapes::ShapeRef.new(shape: LocalTimeZoneDetectionType)
@@ -520,15 +616,30 @@ module Aws::ConnectCampaignsV2
 
     OutboundRequestList.member = Shapes::ShapeRef.new(shape: OutboundRequest)
 
+    PacingStrategy.add_member(:abandonment_rate, Shapes::ShapeRef.new(shape: AbandonmentRatePacingConfig, location_name: "abandonmentRate"))
+    PacingStrategy.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    PacingStrategy.add_member_subclass(:abandonment_rate, Types::PacingStrategy::AbandonmentRate)
+    PacingStrategy.add_member_subclass(:unknown, Types::PacingStrategy::Unknown)
+    PacingStrategy.struct_class = Types::PacingStrategy
+
+    PacingStrategyList.member = Shapes::ShapeRef.new(shape: PacingStrategy)
+
     PauseCampaignRequest.add_member(:id, Shapes::ShapeRef.new(shape: CampaignId, required: true, location: "uri", location_name: "id"))
     PauseCampaignRequest.struct_class = Types::PauseCampaignRequest
 
     PredictiveConfig.add_member(:bandwidth_allocation, Shapes::ShapeRef.new(shape: BandwidthAllocation, required: true, location_name: "bandwidthAllocation"))
+    PredictiveConfig.add_member(:pacing_strategies, Shapes::ShapeRef.new(shape: PacingStrategyList, location_name: "pacingStrategies"))
     PredictiveConfig.struct_class = Types::PredictiveConfig
+
+    PreviewConfig.add_member(:bandwidth_allocation, Shapes::ShapeRef.new(shape: BandwidthAllocation, required: true, location_name: "bandwidthAllocation"))
+    PreviewConfig.add_member(:timeout_config, Shapes::ShapeRef.new(shape: TimeoutConfig, required: true, location_name: "timeoutConfig"))
+    PreviewConfig.add_member(:agent_actions, Shapes::ShapeRef.new(shape: AgentActions, location_name: "agentActions"))
+    PreviewConfig.struct_class = Types::PreviewConfig
 
     ProfileOutboundRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, required: true, location_name: "clientToken"))
     ProfileOutboundRequest.add_member(:profile_id, Shapes::ShapeRef.new(shape: ProfileId, required: true, location_name: "profileId"))
     ProfileOutboundRequest.add_member(:expiration_time, Shapes::ShapeRef.new(shape: TimeStamp, location_name: "expirationTime"))
+    ProfileOutboundRequest.add_member(:event_trigger_context, Shapes::ShapeRef.new(shape: EventTriggerContext, location_name: "eventTriggerContext"))
     ProfileOutboundRequest.struct_class = Types::ProfileOutboundRequest
 
     ProfileOutboundRequestList.member = Shapes::ShapeRef.new(shape: ProfileOutboundRequest)
@@ -539,6 +650,10 @@ module Aws::ConnectCampaignsV2
     PutConnectInstanceIntegrationRequest.add_member(:connect_instance_id, Shapes::ShapeRef.new(shape: InstanceId, required: true, location: "uri", location_name: "connectInstanceId"))
     PutConnectInstanceIntegrationRequest.add_member(:integration_config, Shapes::ShapeRef.new(shape: IntegrationConfig, required: true, location_name: "integrationConfig"))
     PutConnectInstanceIntegrationRequest.struct_class = Types::PutConnectInstanceIntegrationRequest
+
+    PutInstanceCommunicationLimitsRequest.add_member(:connect_instance_id, Shapes::ShapeRef.new(shape: InstanceId, required: true, location: "uri", location_name: "connectInstanceId"))
+    PutInstanceCommunicationLimitsRequest.add_member(:communication_limits_config, Shapes::ShapeRef.new(shape: InstanceCommunicationLimitsConfig, required: true, location_name: "communicationLimitsConfig"))
+    PutInstanceCommunicationLimitsRequest.struct_class = Types::PutInstanceCommunicationLimitsRequest
 
     PutOutboundRequestBatchRequest.add_member(:id, Shapes::ShapeRef.new(shape: CampaignId, required: true, location: "uri", location_name: "id"))
     PutOutboundRequestBatchRequest.add_member(:outbound_requests, Shapes::ShapeRef.new(shape: OutboundRequestList, required: true, location_name: "outboundRequests"))
@@ -673,20 +788,24 @@ module Aws::ConnectCampaignsV2
     TelephonyChannelSubtypeParameters.add_member(:attributes, Shapes::ShapeRef.new(shape: Attributes, required: true, location_name: "attributes"))
     TelephonyChannelSubtypeParameters.add_member(:connect_source_phone_number, Shapes::ShapeRef.new(shape: SourcePhoneNumber, location_name: "connectSourcePhoneNumber"))
     TelephonyChannelSubtypeParameters.add_member(:answer_machine_detection_config, Shapes::ShapeRef.new(shape: AnswerMachineDetectionConfig, location_name: "answerMachineDetectionConfig"))
+    TelephonyChannelSubtypeParameters.add_member(:ring_timeout, Shapes::ShapeRef.new(shape: RingTimeout, location_name: "ringTimeout"))
     TelephonyChannelSubtypeParameters.struct_class = Types::TelephonyChannelSubtypeParameters
 
     TelephonyOutboundConfig.add_member(:connect_contact_flow_id, Shapes::ShapeRef.new(shape: ContactFlowId, required: true, location_name: "connectContactFlowId"))
     TelephonyOutboundConfig.add_member(:connect_source_phone_number, Shapes::ShapeRef.new(shape: SourcePhoneNumber, location_name: "connectSourcePhoneNumber"))
     TelephonyOutboundConfig.add_member(:answer_machine_detection_config, Shapes::ShapeRef.new(shape: AnswerMachineDetectionConfig, location_name: "answerMachineDetectionConfig"))
+    TelephonyOutboundConfig.add_member(:ring_timeout, Shapes::ShapeRef.new(shape: RingTimeout, location_name: "ringTimeout"))
     TelephonyOutboundConfig.struct_class = Types::TelephonyOutboundConfig
 
     TelephonyOutboundMode.add_member(:progressive, Shapes::ShapeRef.new(shape: ProgressiveConfig, location_name: "progressive"))
     TelephonyOutboundMode.add_member(:predictive, Shapes::ShapeRef.new(shape: PredictiveConfig, location_name: "predictive"))
     TelephonyOutboundMode.add_member(:agentless, Shapes::ShapeRef.new(shape: AgentlessConfig, location_name: "agentless"))
+    TelephonyOutboundMode.add_member(:preview, Shapes::ShapeRef.new(shape: PreviewConfig, location_name: "preview"))
     TelephonyOutboundMode.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
     TelephonyOutboundMode.add_member_subclass(:progressive, Types::TelephonyOutboundMode::Progressive)
     TelephonyOutboundMode.add_member_subclass(:predictive, Types::TelephonyOutboundMode::Predictive)
     TelephonyOutboundMode.add_member_subclass(:agentless, Types::TelephonyOutboundMode::Agentless)
+    TelephonyOutboundMode.add_member_subclass(:preview, Types::TelephonyOutboundMode::Preview)
     TelephonyOutboundMode.add_member_subclass(:unknown, Types::TelephonyOutboundMode::Unknown)
     TelephonyOutboundMode.struct_class = Types::TelephonyOutboundMode
 
@@ -704,6 +823,9 @@ module Aws::ConnectCampaignsV2
     TimeWindow.add_member(:restricted_periods, Shapes::ShapeRef.new(shape: RestrictedPeriods, location_name: "restrictedPeriods"))
     TimeWindow.struct_class = Types::TimeWindow
 
+    TimeoutConfig.add_member(:duration_in_seconds, Shapes::ShapeRef.new(shape: TimeoutDuration, required: true, location_name: "durationInSeconds"))
+    TimeoutConfig.struct_class = Types::TimeoutConfig
+
     UntagResourceRequest.add_member(:arn, Shapes::ShapeRef.new(shape: Arn, required: true, location: "uri", location_name: "arn"))
     UntagResourceRequest.add_member(:tag_keys, Shapes::ShapeRef.new(shape: TagKeyList, required: true, location: "querystring", location_name: "tagKeys"))
     UntagResourceRequest.struct_class = Types::UntagResourceRequest
@@ -719,6 +841,10 @@ module Aws::ConnectCampaignsV2
     UpdateCampaignCommunicationTimeRequest.add_member(:id, Shapes::ShapeRef.new(shape: CampaignId, required: true, location: "uri", location_name: "id"))
     UpdateCampaignCommunicationTimeRequest.add_member(:communication_time_config, Shapes::ShapeRef.new(shape: CommunicationTimeConfig, required: true, location_name: "communicationTimeConfig"))
     UpdateCampaignCommunicationTimeRequest.struct_class = Types::UpdateCampaignCommunicationTimeRequest
+
+    UpdateCampaignEntryLimitsRequest.add_member(:id, Shapes::ShapeRef.new(shape: CampaignId, required: true, location: "uri", location_name: "id"))
+    UpdateCampaignEntryLimitsRequest.add_member(:entry_limits_config, Shapes::ShapeRef.new(shape: EntryLimitsConfig, required: true, location_name: "entryLimitsConfig"))
+    UpdateCampaignEntryLimitsRequest.struct_class = Types::UpdateCampaignEntryLimitsRequest
 
     UpdateCampaignFlowAssociationRequest.add_member(:id, Shapes::ShapeRef.new(shape: CampaignId, required: true, location: "uri", location_name: "id"))
     UpdateCampaignFlowAssociationRequest.add_member(:connect_campaign_flow_arn, Shapes::ShapeRef.new(shape: Arn, required: true, location_name: "connectCampaignFlowArn"))
@@ -739,6 +865,31 @@ module Aws::ConnectCampaignsV2
     ValidationException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
     ValidationException.add_member(:x_amz_error_type, Shapes::ShapeRef.new(shape: XAmazonErrorType, location: "header", location_name: "x-amzn-ErrorType"))
     ValidationException.struct_class = Types::ValidationException
+
+    WebNotificationContext.add_member(:session_id, Shapes::ShapeRef.new(shape: SessionId, location_name: "sessionId"))
+    WebNotificationContext.add_member(:browser_id, Shapes::ShapeRef.new(shape: BrowserId, location_name: "browserId"))
+    WebNotificationContext.struct_class = Types::WebNotificationContext
+
+    WhatsAppChannelSubtypeConfig.add_member(:capacity, Shapes::ShapeRef.new(shape: Capacity, location_name: "capacity"))
+    WhatsAppChannelSubtypeConfig.add_member(:outbound_mode, Shapes::ShapeRef.new(shape: WhatsAppOutboundMode, required: true, location_name: "outboundMode"))
+    WhatsAppChannelSubtypeConfig.add_member(:default_outbound_config, Shapes::ShapeRef.new(shape: WhatsAppOutboundConfig, required: true, location_name: "defaultOutboundConfig"))
+    WhatsAppChannelSubtypeConfig.struct_class = Types::WhatsAppChannelSubtypeConfig
+
+    WhatsAppChannelSubtypeParameters.add_member(:destination_phone_number, Shapes::ShapeRef.new(shape: DestinationPhoneNumber, required: true, location_name: "destinationPhoneNumber"))
+    WhatsAppChannelSubtypeParameters.add_member(:connect_source_phone_number_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "connectSourcePhoneNumberArn"))
+    WhatsAppChannelSubtypeParameters.add_member(:template_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "templateArn"))
+    WhatsAppChannelSubtypeParameters.add_member(:template_parameters, Shapes::ShapeRef.new(shape: Attributes, required: true, location_name: "templateParameters"))
+    WhatsAppChannelSubtypeParameters.struct_class = Types::WhatsAppChannelSubtypeParameters
+
+    WhatsAppOutboundConfig.add_member(:connect_source_phone_number_arn, Shapes::ShapeRef.new(shape: Arn, required: true, location_name: "connectSourcePhoneNumberArn"))
+    WhatsAppOutboundConfig.add_member(:wisdom_template_arn, Shapes::ShapeRef.new(shape: Arn, required: true, location_name: "wisdomTemplateArn"))
+    WhatsAppOutboundConfig.struct_class = Types::WhatsAppOutboundConfig
+
+    WhatsAppOutboundMode.add_member(:agentless, Shapes::ShapeRef.new(shape: AgentlessConfig, location_name: "agentless"))
+    WhatsAppOutboundMode.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    WhatsAppOutboundMode.add_member_subclass(:agentless, Types::WhatsAppOutboundMode::Agentless)
+    WhatsAppOutboundMode.add_member_subclass(:unknown, Types::WhatsAppOutboundMode::Unknown)
+    WhatsAppOutboundMode.struct_class = Types::WhatsAppOutboundMode
 
 
     # @api private
@@ -819,6 +970,20 @@ module Aws::ConnectCampaignsV2
         o.http_method = "DELETE"
         o.http_request_uri = "/v2/campaigns/{id}/communication-time"
         o.input = Shapes::ShapeRef.new(shape: DeleteCampaignCommunicationTimeRequest)
+        o.output = Shapes::ShapeRef.new(shape: Shapes::StructureShape.new(struct_class: Aws::EmptyStructure))
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidCampaignStateException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
+      api.add_operation(:delete_campaign_entry_limits, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeleteCampaignEntryLimits"
+        o.http_method = "DELETE"
+        o.http_request_uri = "/v2/campaigns/{id}/entry-limits"
+        o.input = Shapes::ShapeRef.new(shape: DeleteCampaignEntryLimitsRequest)
         o.output = Shapes::ShapeRef.new(shape: Shapes::StructureShape.new(struct_class: Aws::EmptyStructure))
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
@@ -917,6 +1082,18 @@ module Aws::ConnectCampaignsV2
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
       end)
 
+      api.add_operation(:get_instance_communication_limits, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetInstanceCommunicationLimits"
+        o.http_method = "GET"
+        o.http_request_uri = "/v2/connect-instance/{connectInstanceId}/communication-limits"
+        o.input = Shapes::ShapeRef.new(shape: GetInstanceCommunicationLimitsRequest)
+        o.output = Shapes::ShapeRef.new(shape: GetInstanceCommunicationLimitsResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
       api.add_operation(:get_instance_onboarding_job_status, Seahorse::Model::Operation.new.tap do |o|
         o.name = "GetInstanceOnboardingJobStatus"
         o.http_method = "GET"
@@ -1005,6 +1182,19 @@ module Aws::ConnectCampaignsV2
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+      end)
+
+      api.add_operation(:put_instance_communication_limits, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "PutInstanceCommunicationLimits"
+        o.http_method = "PUT"
+        o.http_request_uri = "/v2/connect-instance/{connectInstanceId}/communication-limits"
+        o.input = Shapes::ShapeRef.new(shape: PutInstanceCommunicationLimitsRequest)
+        o.output = Shapes::ShapeRef.new(shape: Shapes::StructureShape.new(struct_class: Aws::EmptyStructure))
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
       end)
 
       api.add_operation(:put_outbound_request_batch, Seahorse::Model::Operation.new.tap do |o|
@@ -1154,6 +1344,20 @@ module Aws::ConnectCampaignsV2
         o.http_method = "POST"
         o.http_request_uri = "/v2/campaigns/{id}/communication-time"
         o.input = Shapes::ShapeRef.new(shape: UpdateCampaignCommunicationTimeRequest)
+        o.output = Shapes::ShapeRef.new(shape: Shapes::StructureShape.new(struct_class: Aws::EmptyStructure))
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidCampaignStateException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
+      api.add_operation(:update_campaign_entry_limits, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "UpdateCampaignEntryLimits"
+        o.http_method = "POST"
+        o.http_request_uri = "/v2/campaigns/{id}/entry-limits"
+        o.input = Shapes::ShapeRef.new(shape: UpdateCampaignEntryLimitsRequest)
         o.output = Shapes::ShapeRef.new(shape: Shapes::StructureShape.new(struct_class: Aws::EmptyStructure))
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)

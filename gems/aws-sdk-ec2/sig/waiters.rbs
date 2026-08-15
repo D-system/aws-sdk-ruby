@@ -20,7 +20,7 @@ module Aws
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ]
                   ) -> Client::_DescribeBundleTasksResponseSuccess
                 | (?Hash[Symbol, untyped]) -> Client::_DescribeBundleTasksResponseSuccess
@@ -69,7 +69,7 @@ module Aws
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ],
                     ?dry_run: bool
                   ) -> Client::_DescribeCustomerGatewaysResponseSuccess
@@ -85,7 +85,7 @@ module Aws
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ],
                     ?export_task_ids: Array[::String]
                   ) -> Client::_DescribeExportTasksResponseSuccess
@@ -101,7 +101,7 @@ module Aws
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ],
                     ?export_task_ids: Array[::String]
                   ) -> Client::_DescribeExportTasksResponseSuccess
@@ -125,7 +125,7 @@ module Aws
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ]
                   ) -> Client::_DescribeImagesResponseSuccess
                 | (?Hash[Symbol, untyped]) -> Client::_DescribeImagesResponseSuccess
@@ -148,10 +148,30 @@ module Aws
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ]
                   ) -> Client::_DescribeImagesResponseSuccess
                 | (?Hash[Symbol, untyped]) -> Client::_DescribeImagesResponseSuccess
+      end
+
+      class ImageUsageReportAvailable
+        def initialize: (?client: Client, ?max_attempts: Integer, ?delay: Integer, ?before_attempt: Proc, ?before_wait: Proc) -> void
+                      | (?Hash[Symbol, untyped]) -> void
+
+        def wait: (
+                    ?image_ids: Array[::String],
+                    ?report_ids: Array[::String],
+                    ?next_token: ::String,
+                    ?filters: Array[
+                      {
+                        name: ::String?,
+                        values: Array[::String]?
+                      }
+                    ],
+                    ?dry_run: bool,
+                    ?max_results: ::Integer
+                  ) -> Client::_DescribeImageUsageReportsResponseSuccess
+                | (?Hash[Symbol, untyped]) -> Client::_DescribeImageUsageReportsResponseSuccess
       end
 
       class InstanceExists
@@ -160,12 +180,13 @@ module Aws
 
         def wait: (
                     ?instance_ids: Array[::String],
+                    ?include_managed_resources: bool,
                     ?dry_run: bool,
                     ?filters: Array[
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ],
                     ?next_token: ::String,
                     ?max_results: ::Integer
@@ -179,12 +200,13 @@ module Aws
 
         def wait: (
                     ?instance_ids: Array[::String],
+                    ?include_managed_resources: bool,
                     ?dry_run: bool,
                     ?filters: Array[
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ],
                     ?next_token: ::String,
                     ?max_results: ::Integer
@@ -200,12 +222,13 @@ module Aws
                     ?instance_ids: Array[::String],
                     ?max_results: ::Integer,
                     ?next_token: ::String,
+                    ?include_managed_resources: bool,
                     ?dry_run: bool,
                     ?filters: Array[
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ],
                     ?include_all_instances: bool
                   ) -> Client::_DescribeInstanceStatusResponseSuccess
@@ -218,12 +241,13 @@ module Aws
 
         def wait: (
                     ?instance_ids: Array[::String],
+                    ?include_managed_resources: bool,
                     ?dry_run: bool,
                     ?filters: Array[
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ],
                     ?next_token: ::String,
                     ?max_results: ::Integer
@@ -237,12 +261,13 @@ module Aws
 
         def wait: (
                     ?instance_ids: Array[::String],
+                    ?include_managed_resources: bool,
                     ?dry_run: bool,
                     ?filters: Array[
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ],
                     ?next_token: ::String,
                     ?max_results: ::Integer
@@ -263,7 +288,7 @@ module Aws
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ]
                   ) -> Client::_DescribeInternetGatewaysResponseSuccess
                 | (?Hash[Symbol, untyped]) -> Client::_DescribeInternetGatewaysResponseSuccess
@@ -282,7 +307,7 @@ module Aws
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ]
                   ) -> Client::_DescribeKeyPairsResponseSuccess
                 | (?Hash[Symbol, untyped]) -> Client::_DescribeKeyPairsResponseSuccess
@@ -298,7 +323,7 @@ module Aws
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ],
                     ?max_results: ::Integer,
                     ?nat_gateway_ids: Array[::String],
@@ -317,7 +342,7 @@ module Aws
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ],
                     ?max_results: ::Integer,
                     ?nat_gateway_ids: Array[::String],
@@ -333,13 +358,14 @@ module Aws
         def wait: (
                     ?next_token: ::String,
                     ?max_results: ::Integer,
+                    ?include_managed_resources: bool,
                     ?dry_run: bool,
                     ?network_interface_ids: Array[::String],
                     ?filters: Array[
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ]
                   ) -> Client::_DescribeNetworkInterfacesResponseSuccess
                 | (?Hash[Symbol, untyped]) -> Client::_DescribeNetworkInterfacesResponseSuccess
@@ -356,6 +382,82 @@ module Aws
                 | (Hash[Symbol, untyped]) -> Client::_GetPasswordDataResponseSuccess
       end
 
+      class SecondaryNetworkCreateComplete
+        def initialize: (?client: Client, ?max_attempts: Integer, ?delay: Integer, ?before_attempt: Proc, ?before_wait: Proc) -> void
+                      | (?Hash[Symbol, untyped]) -> void
+
+        def wait: (
+                    ?dry_run: bool,
+                    ?filters: Array[
+                      {
+                        name: ::String?,
+                        values: Array[::String]?
+                      }
+                    ],
+                    ?max_results: ::Integer,
+                    ?next_token: ::String,
+                    ?secondary_network_ids: Array[::String]
+                  ) -> Client::_DescribeSecondaryNetworksResponseSuccess
+                | (?Hash[Symbol, untyped]) -> Client::_DescribeSecondaryNetworksResponseSuccess
+      end
+
+      class SecondaryNetworkDeleteComplete
+        def initialize: (?client: Client, ?max_attempts: Integer, ?delay: Integer, ?before_attempt: Proc, ?before_wait: Proc) -> void
+                      | (?Hash[Symbol, untyped]) -> void
+
+        def wait: (
+                    ?dry_run: bool,
+                    ?filters: Array[
+                      {
+                        name: ::String?,
+                        values: Array[::String]?
+                      }
+                    ],
+                    ?max_results: ::Integer,
+                    ?next_token: ::String,
+                    ?secondary_network_ids: Array[::String]
+                  ) -> Client::_DescribeSecondaryNetworksResponseSuccess
+                | (?Hash[Symbol, untyped]) -> Client::_DescribeSecondaryNetworksResponseSuccess
+      end
+
+      class SecondarySubnetCreateComplete
+        def initialize: (?client: Client, ?max_attempts: Integer, ?delay: Integer, ?before_attempt: Proc, ?before_wait: Proc) -> void
+                      | (?Hash[Symbol, untyped]) -> void
+
+        def wait: (
+                    ?dry_run: bool,
+                    ?filters: Array[
+                      {
+                        name: ::String?,
+                        values: Array[::String]?
+                      }
+                    ],
+                    ?max_results: ::Integer,
+                    ?next_token: ::String,
+                    ?secondary_subnet_ids: Array[::String]
+                  ) -> Client::_DescribeSecondarySubnetsResponseSuccess
+                | (?Hash[Symbol, untyped]) -> Client::_DescribeSecondarySubnetsResponseSuccess
+      end
+
+      class SecondarySubnetDeleteComplete
+        def initialize: (?client: Client, ?max_attempts: Integer, ?delay: Integer, ?before_attempt: Proc, ?before_wait: Proc) -> void
+                      | (?Hash[Symbol, untyped]) -> void
+
+        def wait: (
+                    ?dry_run: bool,
+                    ?filters: Array[
+                      {
+                        name: ::String?,
+                        values: Array[::String]?
+                      }
+                    ],
+                    ?max_results: ::Integer,
+                    ?next_token: ::String,
+                    ?secondary_subnet_ids: Array[::String]
+                  ) -> Client::_DescribeSecondarySubnetsResponseSuccess
+                | (?Hash[Symbol, untyped]) -> Client::_DescribeSecondarySubnetsResponseSuccess
+      end
+
       class SecurityGroupExists
         def initialize: (?client: Client, ?max_attempts: Integer, ?delay: Integer, ?before_attempt: Proc, ?before_wait: Proc) -> void
                       | (?Hash[Symbol, untyped]) -> void
@@ -370,10 +472,46 @@ module Aws
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ]
                   ) -> Client::_DescribeSecurityGroupsResponseSuccess
                 | (?Hash[Symbol, untyped]) -> Client::_DescribeSecurityGroupsResponseSuccess
+      end
+
+      class SecurityGroupVpcAssociationAssociated
+        def initialize: (?client: Client, ?max_attempts: Integer, ?delay: Integer, ?before_attempt: Proc, ?before_wait: Proc) -> void
+                      | (?Hash[Symbol, untyped]) -> void
+
+        def wait: (
+                    ?filters: Array[
+                      {
+                        name: ::String?,
+                        values: Array[::String]?
+                      }
+                    ],
+                    ?next_token: ::String,
+                    ?max_results: ::Integer,
+                    ?dry_run: bool
+                  ) -> Client::_DescribeSecurityGroupVpcAssociationsResponseSuccess
+                | (?Hash[Symbol, untyped]) -> Client::_DescribeSecurityGroupVpcAssociationsResponseSuccess
+      end
+
+      class SecurityGroupVpcAssociationDisassociated
+        def initialize: (?client: Client, ?max_attempts: Integer, ?delay: Integer, ?before_attempt: Proc, ?before_wait: Proc) -> void
+                      | (?Hash[Symbol, untyped]) -> void
+
+        def wait: (
+                    ?filters: Array[
+                      {
+                        name: ::String?,
+                        values: Array[::String]?
+                      }
+                    ],
+                    ?next_token: ::String,
+                    ?max_results: ::Integer,
+                    ?dry_run: bool
+                  ) -> Client::_DescribeSecurityGroupVpcAssociationsResponseSuccess
+                | (?Hash[Symbol, untyped]) -> Client::_DescribeSecurityGroupVpcAssociationsResponseSuccess
       end
 
       class SnapshotCompleted
@@ -391,7 +529,7 @@ module Aws
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ]
                   ) -> Client::_DescribeSnapshotsResponseSuccess
                 | (?Hash[Symbol, untyped]) -> Client::_DescribeSnapshotsResponseSuccess
@@ -407,7 +545,7 @@ module Aws
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ],
                     ?import_task_ids: Array[::String],
                     ?max_results: ::Integer,
@@ -429,7 +567,7 @@ module Aws
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ]
                   ) -> Client::_DescribeSpotInstanceRequestsResponseSuccess
                 | (?Hash[Symbol, untyped]) -> Client::_DescribeSpotInstanceRequestsResponseSuccess
@@ -446,7 +584,7 @@ module Aws
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ],
                     ?next_token: ::String,
                     ?max_results: ::Integer
@@ -463,7 +601,7 @@ module Aws
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ],
                     ?subnet_ids: Array[::String],
                     ?next_token: ::String,
@@ -481,12 +619,13 @@ module Aws
                     ?instance_ids: Array[::String],
                     ?max_results: ::Integer,
                     ?next_token: ::String,
+                    ?include_managed_resources: bool,
                     ?dry_run: bool,
                     ?filters: Array[
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ],
                     ?include_all_instances: bool
                   ) -> Client::_DescribeInstanceStatusResponseSuccess
@@ -499,12 +638,13 @@ module Aws
 
         def wait: (
                     ?volume_ids: Array[::String],
+                    ?include_managed_resources: bool,
                     ?dry_run: bool,
                     ?filters: Array[
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ],
                     ?next_token: ::String,
                     ?max_results: ::Integer
@@ -518,12 +658,13 @@ module Aws
 
         def wait: (
                     ?volume_ids: Array[::String],
+                    ?include_managed_resources: bool,
                     ?dry_run: bool,
                     ?filters: Array[
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ],
                     ?next_token: ::String,
                     ?max_results: ::Integer
@@ -537,12 +678,13 @@ module Aws
 
         def wait: (
                     ?volume_ids: Array[::String],
+                    ?include_managed_resources: bool,
                     ?dry_run: bool,
                     ?filters: Array[
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ],
                     ?next_token: ::String,
                     ?max_results: ::Integer
@@ -559,7 +701,7 @@ module Aws
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ],
                     ?vpc_ids: Array[::String],
                     ?next_token: ::String,
@@ -578,7 +720,7 @@ module Aws
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ],
                     ?vpc_ids: Array[::String],
                     ?next_token: ::String,
@@ -601,7 +743,7 @@ module Aws
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ]
                   ) -> Client::_DescribeVpcPeeringConnectionsResponseSuccess
                 | (?Hash[Symbol, untyped]) -> Client::_DescribeVpcPeeringConnectionsResponseSuccess
@@ -620,7 +762,7 @@ module Aws
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ]
                   ) -> Client::_DescribeVpcPeeringConnectionsResponseSuccess
                 | (?Hash[Symbol, untyped]) -> Client::_DescribeVpcPeeringConnectionsResponseSuccess
@@ -635,7 +777,7 @@ module Aws
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ],
                     ?vpn_connection_ids: Array[::String],
                     ?dry_run: bool
@@ -652,7 +794,7 @@ module Aws
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ],
                     ?vpn_connection_ids: Array[::String],
                     ?dry_run: bool

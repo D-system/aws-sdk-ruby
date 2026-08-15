@@ -201,9 +201,15 @@ module Aws::AppSync
     GraphQLSchemaException = Shapes::StructureShape.new(name: 'GraphQLSchemaException')
     GraphqlApi = Shapes::StructureShape.new(name: 'GraphqlApi')
     GraphqlApis = Shapes::ListShape.new(name: 'GraphqlApis')
+    HandlerBehavior = Shapes::StringShape.new(name: 'HandlerBehavior')
+    HandlerConfig = Shapes::StructureShape.new(name: 'HandlerConfig')
+    HandlerConfigs = Shapes::StructureShape.new(name: 'HandlerConfigs')
     HttpDataSourceConfig = Shapes::StructureShape.new(name: 'HttpDataSourceConfig')
+    Integration = Shapes::StructureShape.new(name: 'Integration')
     InternalFailureException = Shapes::StructureShape.new(name: 'InternalFailureException')
+    InvokeType = Shapes::StringShape.new(name: 'InvokeType')
     LambdaAuthorizerConfig = Shapes::StructureShape.new(name: 'LambdaAuthorizerConfig')
+    LambdaConfig = Shapes::StructureShape.new(name: 'LambdaConfig')
     LambdaConflictHandlerConfig = Shapes::StructureShape.new(name: 'LambdaConflictHandlerConfig')
     LambdaDataSourceConfig = Shapes::StructureShape.new(name: 'LambdaDataSourceConfig')
     LimitExceededException = Shapes::StructureShape.new(name: 'LimitExceededException')
@@ -456,6 +462,7 @@ module Aws::AppSync
     ChannelNamespace.add_member(:channel_namespace_arn, Shapes::ShapeRef.new(shape: String, location_name: "channelNamespaceArn"))
     ChannelNamespace.add_member(:created, Shapes::ShapeRef.new(shape: Timestamp, location_name: "created"))
     ChannelNamespace.add_member(:last_modified, Shapes::ShapeRef.new(shape: Timestamp, location_name: "lastModified"))
+    ChannelNamespace.add_member(:handler_configs, Shapes::ShapeRef.new(shape: HandlerConfigs, location_name: "handlerConfigs"))
     ChannelNamespace.struct_class = Types::ChannelNamespace
 
     ChannelNamespaces.member = Shapes::ShapeRef.new(shape: ChannelNamespace)
@@ -490,8 +497,8 @@ module Aws::AppSync
 
     CreateApiCacheRequest.add_member(:api_id, Shapes::ShapeRef.new(shape: String, required: true, location: "uri", location_name: "apiId"))
     CreateApiCacheRequest.add_member(:ttl, Shapes::ShapeRef.new(shape: Long, required: true, location_name: "ttl"))
-    CreateApiCacheRequest.add_member(:transit_encryption_enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "transitEncryptionEnabled"))
-    CreateApiCacheRequest.add_member(:at_rest_encryption_enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "atRestEncryptionEnabled"))
+    CreateApiCacheRequest.add_member(:transit_encryption_enabled, Shapes::ShapeRef.new(shape: Boolean, deprecated: true, location_name: "transitEncryptionEnabled", metadata: {"deprecatedMessage" => "transitEncryptionEnabled attribute is deprecated. Encryption in transit is always enabled.", "deprecatedSince" => "5/15/2025"}))
+    CreateApiCacheRequest.add_member(:at_rest_encryption_enabled, Shapes::ShapeRef.new(shape: Boolean, deprecated: true, location_name: "atRestEncryptionEnabled", metadata: {"deprecatedMessage" => "atRestEncryptionEnabled attribute is deprecated. Encryption at rest is always enabled.", "deprecatedSince" => "5/15/2025"}))
     CreateApiCacheRequest.add_member(:api_caching_behavior, Shapes::ShapeRef.new(shape: ApiCachingBehavior, required: true, location_name: "apiCachingBehavior"))
     CreateApiCacheRequest.add_member(:type, Shapes::ShapeRef.new(shape: ApiCacheType, required: true, location_name: "type"))
     CreateApiCacheRequest.add_member(:health_metrics_config, Shapes::ShapeRef.new(shape: CacheHealthMetricsConfig, location_name: "healthMetricsConfig"))
@@ -511,7 +518,7 @@ module Aws::AppSync
     CreateApiRequest.add_member(:name, Shapes::ShapeRef.new(shape: ApiName, required: true, location_name: "name"))
     CreateApiRequest.add_member(:owner_contact, Shapes::ShapeRef.new(shape: String, location_name: "ownerContact"))
     CreateApiRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
-    CreateApiRequest.add_member(:event_config, Shapes::ShapeRef.new(shape: EventConfig, location_name: "eventConfig"))
+    CreateApiRequest.add_member(:event_config, Shapes::ShapeRef.new(shape: EventConfig, required: true, location_name: "eventConfig"))
     CreateApiRequest.struct_class = Types::CreateApiRequest
 
     CreateApiResponse.add_member(:api, Shapes::ShapeRef.new(shape: Api, location_name: "api"))
@@ -523,6 +530,7 @@ module Aws::AppSync
     CreateChannelNamespaceRequest.add_member(:publish_auth_modes, Shapes::ShapeRef.new(shape: AuthModes, location_name: "publishAuthModes"))
     CreateChannelNamespaceRequest.add_member(:code_handlers, Shapes::ShapeRef.new(shape: Code, location_name: "codeHandlers"))
     CreateChannelNamespaceRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
+    CreateChannelNamespaceRequest.add_member(:handler_configs, Shapes::ShapeRef.new(shape: HandlerConfigs, location_name: "handlerConfigs"))
     CreateChannelNamespaceRequest.struct_class = Types::CreateChannelNamespaceRequest
 
     CreateChannelNamespaceResponse.add_member(:channel_namespace, Shapes::ShapeRef.new(shape: ChannelNamespace, location_name: "channelNamespace"))
@@ -991,9 +999,21 @@ module Aws::AppSync
 
     GraphqlApis.member = Shapes::ShapeRef.new(shape: GraphqlApi)
 
+    HandlerConfig.add_member(:behavior, Shapes::ShapeRef.new(shape: HandlerBehavior, required: true, location_name: "behavior"))
+    HandlerConfig.add_member(:integration, Shapes::ShapeRef.new(shape: Integration, required: true, location_name: "integration"))
+    HandlerConfig.struct_class = Types::HandlerConfig
+
+    HandlerConfigs.add_member(:on_publish, Shapes::ShapeRef.new(shape: HandlerConfig, location_name: "onPublish"))
+    HandlerConfigs.add_member(:on_subscribe, Shapes::ShapeRef.new(shape: HandlerConfig, location_name: "onSubscribe"))
+    HandlerConfigs.struct_class = Types::HandlerConfigs
+
     HttpDataSourceConfig.add_member(:endpoint, Shapes::ShapeRef.new(shape: String, location_name: "endpoint"))
     HttpDataSourceConfig.add_member(:authorization_config, Shapes::ShapeRef.new(shape: AuthorizationConfig, location_name: "authorizationConfig"))
     HttpDataSourceConfig.struct_class = Types::HttpDataSourceConfig
+
+    Integration.add_member(:data_source_name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "dataSourceName"))
+    Integration.add_member(:lambda_config, Shapes::ShapeRef.new(shape: LambdaConfig, location_name: "lambdaConfig"))
+    Integration.struct_class = Types::Integration
 
     InternalFailureException.add_member(:message, Shapes::ShapeRef.new(shape: String, location_name: "message"))
     InternalFailureException.struct_class = Types::InternalFailureException
@@ -1002,6 +1022,9 @@ module Aws::AppSync
     LambdaAuthorizerConfig.add_member(:authorizer_uri, Shapes::ShapeRef.new(shape: String, required: true, location_name: "authorizerUri"))
     LambdaAuthorizerConfig.add_member(:identity_validation_expression, Shapes::ShapeRef.new(shape: String, location_name: "identityValidationExpression"))
     LambdaAuthorizerConfig.struct_class = Types::LambdaAuthorizerConfig
+
+    LambdaConfig.add_member(:invoke_type, Shapes::ShapeRef.new(shape: InvokeType, location_name: "invokeType"))
+    LambdaConfig.struct_class = Types::LambdaConfig
 
     LambdaConflictHandlerConfig.add_member(:lambda_conflict_handler_arn, Shapes::ShapeRef.new(shape: String, location_name: "lambdaConflictHandlerArn"))
     LambdaConflictHandlerConfig.struct_class = Types::LambdaConflictHandlerConfig
@@ -1305,7 +1328,7 @@ module Aws::AppSync
     UpdateApiRequest.add_member(:api_id, Shapes::ShapeRef.new(shape: String, required: true, location: "uri", location_name: "apiId"))
     UpdateApiRequest.add_member(:name, Shapes::ShapeRef.new(shape: ApiName, required: true, location_name: "name"))
     UpdateApiRequest.add_member(:owner_contact, Shapes::ShapeRef.new(shape: String, location_name: "ownerContact"))
-    UpdateApiRequest.add_member(:event_config, Shapes::ShapeRef.new(shape: EventConfig, location_name: "eventConfig"))
+    UpdateApiRequest.add_member(:event_config, Shapes::ShapeRef.new(shape: EventConfig, required: true, location_name: "eventConfig"))
     UpdateApiRequest.struct_class = Types::UpdateApiRequest
 
     UpdateApiResponse.add_member(:api, Shapes::ShapeRef.new(shape: Api, location_name: "api"))
@@ -1316,6 +1339,7 @@ module Aws::AppSync
     UpdateChannelNamespaceRequest.add_member(:subscribe_auth_modes, Shapes::ShapeRef.new(shape: AuthModes, location_name: "subscribeAuthModes"))
     UpdateChannelNamespaceRequest.add_member(:publish_auth_modes, Shapes::ShapeRef.new(shape: AuthModes, location_name: "publishAuthModes"))
     UpdateChannelNamespaceRequest.add_member(:code_handlers, Shapes::ShapeRef.new(shape: Code, location_name: "codeHandlers"))
+    UpdateChannelNamespaceRequest.add_member(:handler_configs, Shapes::ShapeRef.new(shape: HandlerConfigs, location_name: "handlerConfigs"))
     UpdateChannelNamespaceRequest.struct_class = Types::UpdateChannelNamespaceRequest
 
     UpdateChannelNamespaceResponse.add_member(:channel_namespace, Shapes::ShapeRef.new(shape: ChannelNamespace, location_name: "channelNamespace"))

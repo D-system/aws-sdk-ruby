@@ -23,6 +23,9 @@ module Aws::ConnectParticipant
     AttachmentName = Shapes::StringShape.new(name: 'AttachmentName')
     AttachmentSizeInBytes = Shapes::IntegerShape.new(name: 'AttachmentSizeInBytes')
     Attachments = Shapes::ListShape.new(name: 'Attachments')
+    Attendee = Shapes::StructureShape.new(name: 'Attendee')
+    AttendeeId = Shapes::StringShape.new(name: 'AttendeeId')
+    AudioFeatures = Shapes::StructureShape.new(name: 'AudioFeatures')
     AuthenticationUrl = Shapes::StringShape.new(name: 'AuthenticationUrl')
     Bool = Shapes::BooleanShape.new(name: 'Bool')
     CancelParticipantAuthenticationRequest = Shapes::StructureShape.new(name: 'CancelParticipantAuthenticationRequest')
@@ -53,13 +56,19 @@ module Aws::ConnectParticipant
     GetAuthenticationUrlResponse = Shapes::StructureShape.new(name: 'GetAuthenticationUrlResponse')
     GetTranscriptRequest = Shapes::StructureShape.new(name: 'GetTranscriptRequest')
     GetTranscriptResponse = Shapes::StructureShape.new(name: 'GetTranscriptResponse')
+    GuidString = Shapes::StringShape.new(name: 'GuidString')
     ISO8601Datetime = Shapes::StringShape.new(name: 'ISO8601Datetime')
     Instant = Shapes::StringShape.new(name: 'Instant')
     InternalServerException = Shapes::StructureShape.new(name: 'InternalServerException')
     Item = Shapes::StructureShape.new(name: 'Item')
+    JoinToken = Shapes::StringShape.new(name: 'JoinToken')
     MaxResults = Shapes::IntegerShape.new(name: 'MaxResults')
+    MeetingFeatureStatus = Shapes::StringShape.new(name: 'MeetingFeatureStatus')
+    MeetingFeaturesConfiguration = Shapes::StructureShape.new(name: 'MeetingFeaturesConfiguration')
     Message = Shapes::StringShape.new(name: 'Message')
     MessageMetadata = Shapes::StructureShape.new(name: 'MessageMetadata')
+    MessageProcessingMetadata = Shapes::StructureShape.new(name: 'MessageProcessingMetadata')
+    MessageProcessingStatus = Shapes::StringShape.new(name: 'MessageProcessingStatus')
     MostRecent = Shapes::IntegerShape.new(name: 'MostRecent')
     NextToken = Shapes::StringShape.new(name: 'NextToken')
     NonEmptyClientToken = Shapes::StringShape.new(name: 'NonEmptyClientToken')
@@ -88,6 +97,7 @@ module Aws::ConnectParticipant
     StartPosition = Shapes::StructureShape.new(name: 'StartPosition')
     ThrottlingException = Shapes::StructureShape.new(name: 'ThrottlingException')
     Transcript = Shapes::ListShape.new(name: 'Transcript')
+    URI = Shapes::StringShape.new(name: 'URI')
     URLExpiryInSeconds = Shapes::IntegerShape.new(name: 'URLExpiryInSeconds')
     UploadMetadata = Shapes::StructureShape.new(name: 'UploadMetadata')
     UploadMetadataSignedHeaders = Shapes::MapShape.new(name: 'UploadMetadataSignedHeaders')
@@ -105,6 +115,9 @@ module Aws::ConnectParticipant
     ViewTemplate = Shapes::StringShape.new(name: 'ViewTemplate')
     ViewToken = Shapes::StringShape.new(name: 'ViewToken')
     ViewVersion = Shapes::IntegerShape.new(name: 'ViewVersion')
+    WebRTCConnection = Shapes::StructureShape.new(name: 'WebRTCConnection')
+    WebRTCMediaPlacement = Shapes::StructureShape.new(name: 'WebRTCMediaPlacement')
+    WebRTCMeeting = Shapes::StructureShape.new(name: 'WebRTCMeeting')
     Websocket = Shapes::StructureShape.new(name: 'Websocket')
 
     AccessDeniedException.add_member(:message, Shapes::ShapeRef.new(shape: Message, required: true, location_name: "Message"))
@@ -120,6 +133,13 @@ module Aws::ConnectParticipant
 
     Attachments.member = Shapes::ShapeRef.new(shape: AttachmentItem)
 
+    Attendee.add_member(:attendee_id, Shapes::ShapeRef.new(shape: AttendeeId, location_name: "AttendeeId"))
+    Attendee.add_member(:join_token, Shapes::ShapeRef.new(shape: JoinToken, location_name: "JoinToken"))
+    Attendee.struct_class = Types::Attendee
+
+    AudioFeatures.add_member(:echo_reduction, Shapes::ShapeRef.new(shape: MeetingFeatureStatus, location_name: "EchoReduction"))
+    AudioFeatures.struct_class = Types::AudioFeatures
+
     CancelParticipantAuthenticationRequest.add_member(:session_id, Shapes::ShapeRef.new(shape: SessionId, required: true, location_name: "SessionId"))
     CancelParticipantAuthenticationRequest.add_member(:connection_token, Shapes::ShapeRef.new(shape: ParticipantToken, required: true, location: "header", location_name: "X-Amz-Bearer"))
     CancelParticipantAuthenticationRequest.struct_class = Types::CancelParticipantAuthenticationRequest
@@ -127,7 +147,7 @@ module Aws::ConnectParticipant
     CancelParticipantAuthenticationResponse.struct_class = Types::CancelParticipantAuthenticationResponse
 
     CompleteAttachmentUploadRequest.add_member(:attachment_ids, Shapes::ShapeRef.new(shape: AttachmentIdList, required: true, location_name: "AttachmentIds"))
-    CompleteAttachmentUploadRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: NonEmptyClientToken, required: true, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
+    CompleteAttachmentUploadRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: NonEmptyClientToken, required: true, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     CompleteAttachmentUploadRequest.add_member(:connection_token, Shapes::ShapeRef.new(shape: ParticipantToken, required: true, location: "header", location_name: "X-Amz-Bearer"))
     CompleteAttachmentUploadRequest.struct_class = Types::CompleteAttachmentUploadRequest
 
@@ -149,6 +169,7 @@ module Aws::ConnectParticipant
 
     CreateParticipantConnectionResponse.add_member(:websocket, Shapes::ShapeRef.new(shape: Websocket, location_name: "Websocket"))
     CreateParticipantConnectionResponse.add_member(:connection_credentials, Shapes::ShapeRef.new(shape: ConnectionCredentials, location_name: "ConnectionCredentials"))
+    CreateParticipantConnectionResponse.add_member(:web_rtc_connection, Shapes::ShapeRef.new(shape: WebRTCConnection, location_name: "WebRTCConnection"))
     CreateParticipantConnectionResponse.struct_class = Types::CreateParticipantConnectionResponse
 
     DescribeViewRequest.add_member(:view_token, Shapes::ShapeRef.new(shape: ViewToken, required: true, location: "uri", location_name: "ViewToken"))
@@ -158,7 +179,7 @@ module Aws::ConnectParticipant
     DescribeViewResponse.add_member(:view, Shapes::ShapeRef.new(shape: View, location_name: "View"))
     DescribeViewResponse.struct_class = Types::DescribeViewResponse
 
-    DisconnectParticipantRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
+    DisconnectParticipantRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     DisconnectParticipantRequest.add_member(:connection_token, Shapes::ShapeRef.new(shape: ParticipantToken, required: true, location: "header", location_name: "X-Amz-Bearer"))
     DisconnectParticipantRequest.struct_class = Types::DisconnectParticipantRequest
 
@@ -171,7 +192,7 @@ module Aws::ConnectParticipant
 
     GetAttachmentResponse.add_member(:url, Shapes::ShapeRef.new(shape: PreSignedAttachmentUrl, location_name: "Url"))
     GetAttachmentResponse.add_member(:url_expiry, Shapes::ShapeRef.new(shape: ISO8601Datetime, location_name: "UrlExpiry"))
-    GetAttachmentResponse.add_member(:attachment_size_in_bytes, Shapes::ShapeRef.new(shape: AttachmentSizeInBytes, required: true, location_name: "AttachmentSizeInBytes", metadata: {"box"=>true}))
+    GetAttachmentResponse.add_member(:attachment_size_in_bytes, Shapes::ShapeRef.new(shape: AttachmentSizeInBytes, required: true, location_name: "AttachmentSizeInBytes", metadata: {"box" => true}))
     GetAttachmentResponse.struct_class = Types::GetAttachmentResponse
 
     GetAuthenticationUrlRequest.add_member(:session_id, Shapes::ShapeRef.new(shape: SessionId, required: true, location_name: "SessionId"))
@@ -183,7 +204,7 @@ module Aws::ConnectParticipant
     GetAuthenticationUrlResponse.struct_class = Types::GetAuthenticationUrlResponse
 
     GetTranscriptRequest.add_member(:contact_id, Shapes::ShapeRef.new(shape: ContactId, location_name: "ContactId"))
-    GetTranscriptRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location_name: "MaxResults", metadata: {"box"=>true}))
+    GetTranscriptRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location_name: "MaxResults", metadata: {"box" => true}))
     GetTranscriptRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "NextToken"))
     GetTranscriptRequest.add_member(:scan_direction, Shapes::ShapeRef.new(shape: ScanDirection, location_name: "ScanDirection"))
     GetTranscriptRequest.add_member(:sort_order, Shapes::ShapeRef.new(shape: SortKey, location_name: "SortOrder"))
@@ -213,9 +234,16 @@ module Aws::ConnectParticipant
     Item.add_member(:contact_id, Shapes::ShapeRef.new(shape: ContactId, location_name: "ContactId"))
     Item.struct_class = Types::Item
 
+    MeetingFeaturesConfiguration.add_member(:audio, Shapes::ShapeRef.new(shape: AudioFeatures, location_name: "Audio"))
+    MeetingFeaturesConfiguration.struct_class = Types::MeetingFeaturesConfiguration
+
     MessageMetadata.add_member(:message_id, Shapes::ShapeRef.new(shape: ChatItemId, location_name: "MessageId"))
     MessageMetadata.add_member(:receipts, Shapes::ShapeRef.new(shape: Receipts, location_name: "Receipts"))
+    MessageMetadata.add_member(:message_processing_status, Shapes::ShapeRef.new(shape: MessageProcessingStatus, location_name: "MessageProcessingStatus"))
     MessageMetadata.struct_class = Types::MessageMetadata
+
+    MessageProcessingMetadata.add_member(:message_processing_status, Shapes::ShapeRef.new(shape: MessageProcessingStatus, location_name: "MessageProcessingStatus"))
+    MessageProcessingMetadata.struct_class = Types::MessageProcessingMetadata
 
     Receipt.add_member(:delivered_timestamp, Shapes::ShapeRef.new(shape: Instant, location_name: "DeliveredTimestamp"))
     Receipt.add_member(:read_timestamp, Shapes::ShapeRef.new(shape: Instant, location_name: "ReadTimestamp"))
@@ -231,7 +259,7 @@ module Aws::ConnectParticipant
 
     SendEventRequest.add_member(:content_type, Shapes::ShapeRef.new(shape: ChatContentType, required: true, location_name: "ContentType"))
     SendEventRequest.add_member(:content, Shapes::ShapeRef.new(shape: ChatContent, location_name: "Content"))
-    SendEventRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
+    SendEventRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     SendEventRequest.add_member(:connection_token, Shapes::ShapeRef.new(shape: ParticipantToken, required: true, location: "header", location_name: "X-Amz-Bearer"))
     SendEventRequest.struct_class = Types::SendEventRequest
 
@@ -241,12 +269,13 @@ module Aws::ConnectParticipant
 
     SendMessageRequest.add_member(:content_type, Shapes::ShapeRef.new(shape: ChatContentType, required: true, location_name: "ContentType"))
     SendMessageRequest.add_member(:content, Shapes::ShapeRef.new(shape: ChatContent, required: true, location_name: "Content"))
-    SendMessageRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
+    SendMessageRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     SendMessageRequest.add_member(:connection_token, Shapes::ShapeRef.new(shape: ParticipantToken, required: true, location: "header", location_name: "X-Amz-Bearer"))
     SendMessageRequest.struct_class = Types::SendMessageRequest
 
     SendMessageResponse.add_member(:id, Shapes::ShapeRef.new(shape: ChatItemId, location_name: "Id"))
     SendMessageResponse.add_member(:absolute_time, Shapes::ShapeRef.new(shape: Instant, location_name: "AbsoluteTime"))
+    SendMessageResponse.add_member(:message_metadata, Shapes::ShapeRef.new(shape: MessageProcessingMetadata, location_name: "MessageMetadata"))
     SendMessageResponse.struct_class = Types::SendMessageResponse
 
     ServiceQuotaExceededException.add_member(:message, Shapes::ShapeRef.new(shape: Message, required: true, location_name: "Message"))
@@ -255,7 +284,7 @@ module Aws::ConnectParticipant
     StartAttachmentUploadRequest.add_member(:content_type, Shapes::ShapeRef.new(shape: ContentType, required: true, location_name: "ContentType"))
     StartAttachmentUploadRequest.add_member(:attachment_size_in_bytes, Shapes::ShapeRef.new(shape: AttachmentSizeInBytes, required: true, location_name: "AttachmentSizeInBytes"))
     StartAttachmentUploadRequest.add_member(:attachment_name, Shapes::ShapeRef.new(shape: AttachmentName, required: true, location_name: "AttachmentName"))
-    StartAttachmentUploadRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: NonEmptyClientToken, required: true, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
+    StartAttachmentUploadRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: NonEmptyClientToken, required: true, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     StartAttachmentUploadRequest.add_member(:connection_token, Shapes::ShapeRef.new(shape: ParticipantToken, required: true, location: "header", location_name: "X-Amz-Bearer"))
     StartAttachmentUploadRequest.struct_class = Types::StartAttachmentUploadRequest
 
@@ -297,6 +326,21 @@ module Aws::ConnectParticipant
     ViewContent.add_member(:template, Shapes::ShapeRef.new(shape: ViewTemplate, location_name: "Template"))
     ViewContent.add_member(:actions, Shapes::ShapeRef.new(shape: ViewActions, location_name: "Actions"))
     ViewContent.struct_class = Types::ViewContent
+
+    WebRTCConnection.add_member(:attendee, Shapes::ShapeRef.new(shape: Attendee, location_name: "Attendee"))
+    WebRTCConnection.add_member(:meeting, Shapes::ShapeRef.new(shape: WebRTCMeeting, location_name: "Meeting"))
+    WebRTCConnection.struct_class = Types::WebRTCConnection
+
+    WebRTCMediaPlacement.add_member(:audio_host_url, Shapes::ShapeRef.new(shape: URI, location_name: "AudioHostUrl"))
+    WebRTCMediaPlacement.add_member(:audio_fallback_url, Shapes::ShapeRef.new(shape: URI, location_name: "AudioFallbackUrl"))
+    WebRTCMediaPlacement.add_member(:signaling_url, Shapes::ShapeRef.new(shape: URI, location_name: "SignalingUrl"))
+    WebRTCMediaPlacement.add_member(:event_ingestion_url, Shapes::ShapeRef.new(shape: URI, location_name: "EventIngestionUrl"))
+    WebRTCMediaPlacement.struct_class = Types::WebRTCMediaPlacement
+
+    WebRTCMeeting.add_member(:media_placement, Shapes::ShapeRef.new(shape: WebRTCMediaPlacement, location_name: "MediaPlacement"))
+    WebRTCMeeting.add_member(:meeting_features, Shapes::ShapeRef.new(shape: MeetingFeaturesConfiguration, location_name: "MeetingFeatures"))
+    WebRTCMeeting.add_member(:meeting_id, Shapes::ShapeRef.new(shape: GuidString, location_name: "MeetingId"))
+    WebRTCMeeting.struct_class = Types::WebRTCMeeting
 
     Websocket.add_member(:url, Shapes::ShapeRef.new(shape: PreSignedConnectionUrl, location_name: "Url"))
     Websocket.add_member(:connection_expiry, Shapes::ShapeRef.new(shape: ISO8601Datetime, location_name: "ConnectionExpiry"))

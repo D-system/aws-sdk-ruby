@@ -95,8 +95,8 @@ module Aws::ElasticsearchService
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::ElasticsearchService
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::ElasticsearchService
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::ElasticsearchService
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::ElasticsearchService
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::ElasticsearchService
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::ElasticsearchService
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::ElasticsearchService
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -780,6 +784,27 @@ module Aws::ElasticsearchService
     # @option params [Array<Types::Tag>] :tag_list
     #   A list of `Tag` added during domain creation.
     #
+    # @option params [Types::DeploymentStrategyOptions] :deployment_strategy_options
+    #   Specifies the deployment strategy options.
+    #
+    # @option params [Types::AutomatedSnapshotPauseRequestOptions] :automated_snapshot_pause_options
+    #   Specifies the automated snapshot pause options for the domain.
+    #
+    #   Suspending snapshots reduces data protection. You cannot restore your
+    #   domain to points in time when snapshots are suspended. Use this
+    #   feature only for short-term operational needs such as migrations or
+    #   maintenance windows.
+    #
+    #   Maximum suspension duration: 3 days.
+    #
+    # @option params [String] :use_case
+    #   The primary use case for the domain. For valid values, see
+    #   `DomainUseCase`.
+    #
+    # @option params [String] :engine_mode
+    #   The engine mode for the domain. For valid values and requirements, see
+    #   `DomainEngineMode`.
+    #
     # @return [Types::CreateElasticsearchDomainResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateElasticsearchDomainResponse#domain_status #domain_status} => Types::ElasticsearchDomainStatus
@@ -845,7 +870,7 @@ module Aws::ElasticsearchService
     #     },
     #     domain_endpoint_options: {
     #       enforce_https: false,
-    #       tls_security_policy: "Policy-Min-TLS-1-0-2019-07", # accepts Policy-Min-TLS-1-0-2019-07, Policy-Min-TLS-1-2-2019-07, Policy-Min-TLS-1-2-PFS-2023-10
+    #       tls_security_policy: "Policy-Min-TLS-1-0-2019-07", # accepts Policy-Min-TLS-1-0-2019-07, Policy-Min-TLS-1-2-2019-07, Policy-Min-TLS-1-2-PFS-2023-10, Policy-Min-TLS-1-2-RFC9151-FIPS-2024-08
     #       custom_endpoint_enabled: false,
     #       custom_endpoint: "DomainNameFqdn",
     #       custom_endpoint_certificate_arn: "ARN",
@@ -891,6 +916,16 @@ module Aws::ElasticsearchService
     #         value: "TagValue", # required
     #       },
     #     ],
+    #     deployment_strategy_options: {
+    #       deployment_strategy: "Default", # required, accepts Default, CapacityOptimized
+    #     },
+    #     automated_snapshot_pause_options: {
+    #       enabled: false, # required
+    #       start_time: Time.now,
+    #       end_time: Time.now,
+    #     },
+    #     use_case: "SEARCH", # accepts SEARCH, VECTOR, OBSERVABILITY, MIXED
+    #     engine_mode: "GENERAL", # accepts GENERAL, OPTIMIZED
     #   })
     #
     # @example Response structure
@@ -952,7 +987,7 @@ module Aws::ElasticsearchService
     #   resp.domain_status.service_software_options.automated_update_date #=> Time
     #   resp.domain_status.service_software_options.optional_deployment #=> Boolean
     #   resp.domain_status.domain_endpoint_options.enforce_https #=> Boolean
-    #   resp.domain_status.domain_endpoint_options.tls_security_policy #=> String, one of "Policy-Min-TLS-1-0-2019-07", "Policy-Min-TLS-1-2-2019-07", "Policy-Min-TLS-1-2-PFS-2023-10"
+    #   resp.domain_status.domain_endpoint_options.tls_security_policy #=> String, one of "Policy-Min-TLS-1-0-2019-07", "Policy-Min-TLS-1-2-2019-07", "Policy-Min-TLS-1-2-PFS-2023-10", "Policy-Min-TLS-1-2-RFC9151-FIPS-2024-08"
     #   resp.domain_status.domain_endpoint_options.custom_endpoint_enabled #=> Boolean
     #   resp.domain_status.domain_endpoint_options.custom_endpoint #=> String
     #   resp.domain_status.domain_endpoint_options.custom_endpoint_certificate_arn #=> String
@@ -980,6 +1015,13 @@ module Aws::ElasticsearchService
     #   resp.domain_status.modifying_properties[0].active_value #=> String
     #   resp.domain_status.modifying_properties[0].pending_value #=> String
     #   resp.domain_status.modifying_properties[0].value_type #=> String, one of "PLAIN_TEXT", "STRINGIFIED_JSON"
+    #   resp.domain_status.deployment_strategy_options.deployment_strategy #=> String, one of "Default", "CapacityOptimized"
+    #   resp.domain_status.automated_snapshot_pause_options.enabled #=> Boolean
+    #   resp.domain_status.automated_snapshot_pause_options.start_time #=> Time
+    #   resp.domain_status.automated_snapshot_pause_options.end_time #=> Time
+    #   resp.domain_status.automated_snapshot_pause_options.state #=> String, one of "Active", "Completed", "Scheduled", "Disabled"
+    #   resp.domain_status.use_case #=> String, one of "SEARCH", "VECTOR", "OBSERVABILITY", "MIXED"
+    #   resp.domain_status.engine_mode #=> String, one of "GENERAL", "OPTIMIZED"
     #
     # @overload create_elasticsearch_domain(params = {})
     # @param [Hash] params ({})
@@ -1221,7 +1263,7 @@ module Aws::ElasticsearchService
     #   resp.domain_status.service_software_options.automated_update_date #=> Time
     #   resp.domain_status.service_software_options.optional_deployment #=> Boolean
     #   resp.domain_status.domain_endpoint_options.enforce_https #=> Boolean
-    #   resp.domain_status.domain_endpoint_options.tls_security_policy #=> String, one of "Policy-Min-TLS-1-0-2019-07", "Policy-Min-TLS-1-2-2019-07", "Policy-Min-TLS-1-2-PFS-2023-10"
+    #   resp.domain_status.domain_endpoint_options.tls_security_policy #=> String, one of "Policy-Min-TLS-1-0-2019-07", "Policy-Min-TLS-1-2-2019-07", "Policy-Min-TLS-1-2-PFS-2023-10", "Policy-Min-TLS-1-2-RFC9151-FIPS-2024-08"
     #   resp.domain_status.domain_endpoint_options.custom_endpoint_enabled #=> Boolean
     #   resp.domain_status.domain_endpoint_options.custom_endpoint #=> String
     #   resp.domain_status.domain_endpoint_options.custom_endpoint_certificate_arn #=> String
@@ -1249,6 +1291,13 @@ module Aws::ElasticsearchService
     #   resp.domain_status.modifying_properties[0].active_value #=> String
     #   resp.domain_status.modifying_properties[0].pending_value #=> String
     #   resp.domain_status.modifying_properties[0].value_type #=> String, one of "PLAIN_TEXT", "STRINGIFIED_JSON"
+    #   resp.domain_status.deployment_strategy_options.deployment_strategy #=> String, one of "Default", "CapacityOptimized"
+    #   resp.domain_status.automated_snapshot_pause_options.enabled #=> Boolean
+    #   resp.domain_status.automated_snapshot_pause_options.start_time #=> Time
+    #   resp.domain_status.automated_snapshot_pause_options.end_time #=> Time
+    #   resp.domain_status.automated_snapshot_pause_options.state #=> String, one of "Active", "Completed", "Scheduled", "Disabled"
+    #   resp.domain_status.use_case #=> String, one of "SEARCH", "VECTOR", "OBSERVABILITY", "MIXED"
+    #   resp.domain_status.engine_mode #=> String, one of "GENERAL", "OPTIMIZED"
     #
     # @overload delete_elasticsearch_domain(params = {})
     # @param [Hash] params ({})
@@ -1584,7 +1633,7 @@ module Aws::ElasticsearchService
     #   resp.domain_status.service_software_options.automated_update_date #=> Time
     #   resp.domain_status.service_software_options.optional_deployment #=> Boolean
     #   resp.domain_status.domain_endpoint_options.enforce_https #=> Boolean
-    #   resp.domain_status.domain_endpoint_options.tls_security_policy #=> String, one of "Policy-Min-TLS-1-0-2019-07", "Policy-Min-TLS-1-2-2019-07", "Policy-Min-TLS-1-2-PFS-2023-10"
+    #   resp.domain_status.domain_endpoint_options.tls_security_policy #=> String, one of "Policy-Min-TLS-1-0-2019-07", "Policy-Min-TLS-1-2-2019-07", "Policy-Min-TLS-1-2-PFS-2023-10", "Policy-Min-TLS-1-2-RFC9151-FIPS-2024-08"
     #   resp.domain_status.domain_endpoint_options.custom_endpoint_enabled #=> Boolean
     #   resp.domain_status.domain_endpoint_options.custom_endpoint #=> String
     #   resp.domain_status.domain_endpoint_options.custom_endpoint_certificate_arn #=> String
@@ -1612,6 +1661,13 @@ module Aws::ElasticsearchService
     #   resp.domain_status.modifying_properties[0].active_value #=> String
     #   resp.domain_status.modifying_properties[0].pending_value #=> String
     #   resp.domain_status.modifying_properties[0].value_type #=> String, one of "PLAIN_TEXT", "STRINGIFIED_JSON"
+    #   resp.domain_status.deployment_strategy_options.deployment_strategy #=> String, one of "Default", "CapacityOptimized"
+    #   resp.domain_status.automated_snapshot_pause_options.enabled #=> Boolean
+    #   resp.domain_status.automated_snapshot_pause_options.start_time #=> Time
+    #   resp.domain_status.automated_snapshot_pause_options.end_time #=> Time
+    #   resp.domain_status.automated_snapshot_pause_options.state #=> String, one of "Active", "Completed", "Scheduled", "Disabled"
+    #   resp.domain_status.use_case #=> String, one of "SEARCH", "VECTOR", "OBSERVABILITY", "MIXED"
+    #   resp.domain_status.engine_mode #=> String, one of "GENERAL", "OPTIMIZED"
     #
     # @overload describe_elasticsearch_domain(params = {})
     # @param [Hash] params ({})
@@ -1733,7 +1789,7 @@ module Aws::ElasticsearchService
     #   resp.domain_config.log_publishing_options.status.state #=> String, one of "RequiresIndexDocuments", "Processing", "Active"
     #   resp.domain_config.log_publishing_options.status.pending_deletion #=> Boolean
     #   resp.domain_config.domain_endpoint_options.options.enforce_https #=> Boolean
-    #   resp.domain_config.domain_endpoint_options.options.tls_security_policy #=> String, one of "Policy-Min-TLS-1-0-2019-07", "Policy-Min-TLS-1-2-2019-07", "Policy-Min-TLS-1-2-PFS-2023-10"
+    #   resp.domain_config.domain_endpoint_options.options.tls_security_policy #=> String, one of "Policy-Min-TLS-1-0-2019-07", "Policy-Min-TLS-1-2-2019-07", "Policy-Min-TLS-1-2-PFS-2023-10", "Policy-Min-TLS-1-2-RFC9151-FIPS-2024-08"
     #   resp.domain_config.domain_endpoint_options.options.custom_endpoint_enabled #=> Boolean
     #   resp.domain_config.domain_endpoint_options.options.custom_endpoint #=> String
     #   resp.domain_config.domain_endpoint_options.options.custom_endpoint_certificate_arn #=> String
@@ -1781,6 +1837,33 @@ module Aws::ElasticsearchService
     #   resp.domain_config.modifying_properties[0].active_value #=> String
     #   resp.domain_config.modifying_properties[0].pending_value #=> String
     #   resp.domain_config.modifying_properties[0].value_type #=> String, one of "PLAIN_TEXT", "STRINGIFIED_JSON"
+    #   resp.domain_config.deployment_strategy_options.options.deployment_strategy #=> String, one of "Default", "CapacityOptimized"
+    #   resp.domain_config.deployment_strategy_options.status.creation_date #=> Time
+    #   resp.domain_config.deployment_strategy_options.status.update_date #=> Time
+    #   resp.domain_config.deployment_strategy_options.status.update_version #=> Integer
+    #   resp.domain_config.deployment_strategy_options.status.state #=> String, one of "RequiresIndexDocuments", "Processing", "Active"
+    #   resp.domain_config.deployment_strategy_options.status.pending_deletion #=> Boolean
+    #   resp.domain_config.automated_snapshot_pause_options.options.enabled #=> Boolean
+    #   resp.domain_config.automated_snapshot_pause_options.options.start_time #=> Time
+    #   resp.domain_config.automated_snapshot_pause_options.options.end_time #=> Time
+    #   resp.domain_config.automated_snapshot_pause_options.options.state #=> String, one of "Active", "Completed", "Scheduled", "Disabled"
+    #   resp.domain_config.automated_snapshot_pause_options.status.creation_date #=> Time
+    #   resp.domain_config.automated_snapshot_pause_options.status.update_date #=> Time
+    #   resp.domain_config.automated_snapshot_pause_options.status.update_version #=> Integer
+    #   resp.domain_config.automated_snapshot_pause_options.status.state #=> String, one of "RequiresIndexDocuments", "Processing", "Active"
+    #   resp.domain_config.automated_snapshot_pause_options.status.pending_deletion #=> Boolean
+    #   resp.domain_config.use_case.options #=> String, one of "SEARCH", "VECTOR", "OBSERVABILITY", "MIXED"
+    #   resp.domain_config.use_case.status.creation_date #=> Time
+    #   resp.domain_config.use_case.status.update_date #=> Time
+    #   resp.domain_config.use_case.status.update_version #=> Integer
+    #   resp.domain_config.use_case.status.state #=> String, one of "RequiresIndexDocuments", "Processing", "Active"
+    #   resp.domain_config.use_case.status.pending_deletion #=> Boolean
+    #   resp.domain_config.engine_mode.options #=> String, one of "GENERAL", "OPTIMIZED"
+    #   resp.domain_config.engine_mode.status.creation_date #=> Time
+    #   resp.domain_config.engine_mode.status.update_date #=> Time
+    #   resp.domain_config.engine_mode.status.update_version #=> Integer
+    #   resp.domain_config.engine_mode.status.state #=> String, one of "RequiresIndexDocuments", "Processing", "Active"
+    #   resp.domain_config.engine_mode.status.pending_deletion #=> Boolean
     #
     # @overload describe_elasticsearch_domain_config(params = {})
     # @param [Hash] params ({})
@@ -1866,7 +1949,7 @@ module Aws::ElasticsearchService
     #   resp.domain_status_list[0].service_software_options.automated_update_date #=> Time
     #   resp.domain_status_list[0].service_software_options.optional_deployment #=> Boolean
     #   resp.domain_status_list[0].domain_endpoint_options.enforce_https #=> Boolean
-    #   resp.domain_status_list[0].domain_endpoint_options.tls_security_policy #=> String, one of "Policy-Min-TLS-1-0-2019-07", "Policy-Min-TLS-1-2-2019-07", "Policy-Min-TLS-1-2-PFS-2023-10"
+    #   resp.domain_status_list[0].domain_endpoint_options.tls_security_policy #=> String, one of "Policy-Min-TLS-1-0-2019-07", "Policy-Min-TLS-1-2-2019-07", "Policy-Min-TLS-1-2-PFS-2023-10", "Policy-Min-TLS-1-2-RFC9151-FIPS-2024-08"
     #   resp.domain_status_list[0].domain_endpoint_options.custom_endpoint_enabled #=> Boolean
     #   resp.domain_status_list[0].domain_endpoint_options.custom_endpoint #=> String
     #   resp.domain_status_list[0].domain_endpoint_options.custom_endpoint_certificate_arn #=> String
@@ -1894,6 +1977,13 @@ module Aws::ElasticsearchService
     #   resp.domain_status_list[0].modifying_properties[0].active_value #=> String
     #   resp.domain_status_list[0].modifying_properties[0].pending_value #=> String
     #   resp.domain_status_list[0].modifying_properties[0].value_type #=> String, one of "PLAIN_TEXT", "STRINGIFIED_JSON"
+    #   resp.domain_status_list[0].deployment_strategy_options.deployment_strategy #=> String, one of "Default", "CapacityOptimized"
+    #   resp.domain_status_list[0].automated_snapshot_pause_options.enabled #=> Boolean
+    #   resp.domain_status_list[0].automated_snapshot_pause_options.start_time #=> Time
+    #   resp.domain_status_list[0].automated_snapshot_pause_options.end_time #=> Time
+    #   resp.domain_status_list[0].automated_snapshot_pause_options.state #=> String, one of "Active", "Completed", "Scheduled", "Disabled"
+    #   resp.domain_status_list[0].use_case #=> String, one of "SEARCH", "VECTOR", "OBSERVABILITY", "MIXED"
+    #   resp.domain_status_list[0].engine_mode #=> String, one of "GENERAL", "OPTIMIZED"
     #
     # @overload describe_elasticsearch_domains(params = {})
     # @param [Hash] params ({})
@@ -3081,6 +3171,27 @@ module Aws::ElasticsearchService
     #   update shall be applied on the domain. This will not actually perform
     #   the Update.
     #
+    # @option params [Types::DeploymentStrategyOptions] :deployment_strategy_options
+    #   Specifies the deployment strategy options.
+    #
+    # @option params [Types::AutomatedSnapshotPauseRequestOptions] :automated_snapshot_pause_options
+    #   Specifies the automated snapshot pause options for the domain.
+    #
+    #   Suspending snapshots reduces data protection. You cannot restore your
+    #   domain to points in time when snapshots are suspended. Use this
+    #   feature only for short-term operational needs such as migrations or
+    #   maintenance windows.
+    #
+    #   Maximum suspension duration: 3 days.
+    #
+    # @option params [String] :use_case
+    #   The primary use case for the domain. For valid values, see
+    #   `DomainUseCase`.
+    #
+    # @option params [String] :engine_mode
+    #   The engine mode for the domain. For valid values and requirements, see
+    #   `DomainEngineMode`.
+    #
     # @return [Types::UpdateElasticsearchDomainConfigResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::UpdateElasticsearchDomainConfigResponse#domain_config #domain_config} => Types::ElasticsearchDomainConfig
@@ -3139,7 +3250,7 @@ module Aws::ElasticsearchService
     #     },
     #     domain_endpoint_options: {
     #       enforce_https: false,
-    #       tls_security_policy: "Policy-Min-TLS-1-0-2019-07", # accepts Policy-Min-TLS-1-0-2019-07, Policy-Min-TLS-1-2-2019-07, Policy-Min-TLS-1-2-PFS-2023-10
+    #       tls_security_policy: "Policy-Min-TLS-1-0-2019-07", # accepts Policy-Min-TLS-1-0-2019-07, Policy-Min-TLS-1-2-2019-07, Policy-Min-TLS-1-2-PFS-2023-10, Policy-Min-TLS-1-2-RFC9151-FIPS-2024-08
     #       custom_endpoint_enabled: false,
     #       custom_endpoint: "DomainNameFqdn",
     #       custom_endpoint_certificate_arn: "ARN",
@@ -3188,6 +3299,16 @@ module Aws::ElasticsearchService
     #       ],
     #     },
     #     dry_run: false,
+    #     deployment_strategy_options: {
+    #       deployment_strategy: "Default", # required, accepts Default, CapacityOptimized
+    #     },
+    #     automated_snapshot_pause_options: {
+    #       enabled: false, # required
+    #       start_time: Time.now,
+    #       end_time: Time.now,
+    #     },
+    #     use_case: "SEARCH", # accepts SEARCH, VECTOR, OBSERVABILITY, MIXED
+    #     engine_mode: "GENERAL", # accepts GENERAL, OPTIMIZED
     #   })
     #
     # @example Response structure
@@ -3286,7 +3407,7 @@ module Aws::ElasticsearchService
     #   resp.domain_config.log_publishing_options.status.state #=> String, one of "RequiresIndexDocuments", "Processing", "Active"
     #   resp.domain_config.log_publishing_options.status.pending_deletion #=> Boolean
     #   resp.domain_config.domain_endpoint_options.options.enforce_https #=> Boolean
-    #   resp.domain_config.domain_endpoint_options.options.tls_security_policy #=> String, one of "Policy-Min-TLS-1-0-2019-07", "Policy-Min-TLS-1-2-2019-07", "Policy-Min-TLS-1-2-PFS-2023-10"
+    #   resp.domain_config.domain_endpoint_options.options.tls_security_policy #=> String, one of "Policy-Min-TLS-1-0-2019-07", "Policy-Min-TLS-1-2-2019-07", "Policy-Min-TLS-1-2-PFS-2023-10", "Policy-Min-TLS-1-2-RFC9151-FIPS-2024-08"
     #   resp.domain_config.domain_endpoint_options.options.custom_endpoint_enabled #=> Boolean
     #   resp.domain_config.domain_endpoint_options.options.custom_endpoint #=> String
     #   resp.domain_config.domain_endpoint_options.options.custom_endpoint_certificate_arn #=> String
@@ -3334,6 +3455,33 @@ module Aws::ElasticsearchService
     #   resp.domain_config.modifying_properties[0].active_value #=> String
     #   resp.domain_config.modifying_properties[0].pending_value #=> String
     #   resp.domain_config.modifying_properties[0].value_type #=> String, one of "PLAIN_TEXT", "STRINGIFIED_JSON"
+    #   resp.domain_config.deployment_strategy_options.options.deployment_strategy #=> String, one of "Default", "CapacityOptimized"
+    #   resp.domain_config.deployment_strategy_options.status.creation_date #=> Time
+    #   resp.domain_config.deployment_strategy_options.status.update_date #=> Time
+    #   resp.domain_config.deployment_strategy_options.status.update_version #=> Integer
+    #   resp.domain_config.deployment_strategy_options.status.state #=> String, one of "RequiresIndexDocuments", "Processing", "Active"
+    #   resp.domain_config.deployment_strategy_options.status.pending_deletion #=> Boolean
+    #   resp.domain_config.automated_snapshot_pause_options.options.enabled #=> Boolean
+    #   resp.domain_config.automated_snapshot_pause_options.options.start_time #=> Time
+    #   resp.domain_config.automated_snapshot_pause_options.options.end_time #=> Time
+    #   resp.domain_config.automated_snapshot_pause_options.options.state #=> String, one of "Active", "Completed", "Scheduled", "Disabled"
+    #   resp.domain_config.automated_snapshot_pause_options.status.creation_date #=> Time
+    #   resp.domain_config.automated_snapshot_pause_options.status.update_date #=> Time
+    #   resp.domain_config.automated_snapshot_pause_options.status.update_version #=> Integer
+    #   resp.domain_config.automated_snapshot_pause_options.status.state #=> String, one of "RequiresIndexDocuments", "Processing", "Active"
+    #   resp.domain_config.automated_snapshot_pause_options.status.pending_deletion #=> Boolean
+    #   resp.domain_config.use_case.options #=> String, one of "SEARCH", "VECTOR", "OBSERVABILITY", "MIXED"
+    #   resp.domain_config.use_case.status.creation_date #=> Time
+    #   resp.domain_config.use_case.status.update_date #=> Time
+    #   resp.domain_config.use_case.status.update_version #=> Integer
+    #   resp.domain_config.use_case.status.state #=> String, one of "RequiresIndexDocuments", "Processing", "Active"
+    #   resp.domain_config.use_case.status.pending_deletion #=> Boolean
+    #   resp.domain_config.engine_mode.options #=> String, one of "GENERAL", "OPTIMIZED"
+    #   resp.domain_config.engine_mode.status.creation_date #=> Time
+    #   resp.domain_config.engine_mode.status.update_date #=> Time
+    #   resp.domain_config.engine_mode.status.update_version #=> Integer
+    #   resp.domain_config.engine_mode.status.state #=> String, one of "RequiresIndexDocuments", "Processing", "Active"
+    #   resp.domain_config.engine_mode.status.pending_deletion #=> Boolean
     #   resp.dry_run_results.deployment_type #=> String
     #   resp.dry_run_results.message #=> String
     #
@@ -3509,7 +3657,7 @@ module Aws::ElasticsearchService
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-elasticsearchservice'
-      context[:gem_version] = '1.100.0'
+      context[:gem_version] = '1.124.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

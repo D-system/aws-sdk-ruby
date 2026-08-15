@@ -975,8 +975,7 @@
     },
     "DeleteCallAnalyticsCategoryResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteCallAnalyticsJobRequest":{
       "type":"structure",
@@ -987,8 +986,7 @@
     },
     "DeleteCallAnalyticsJobResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteLanguageModelRequest":{
       "type":"structure",
@@ -1235,6 +1233,8 @@
         "af-ZA",
         "ar-AE",
         "ar-SA",
+        "am-ET",
+        "cy-GB",
         "da-DK",
         "de-CH",
         "de-DE",
@@ -1246,16 +1246,24 @@
         "en-US",
         "en-WL",
         "es-ES",
+        "es-MX",
         "es-US",
+        "fa-AF",
         "fa-IR",
         "fr-CA",
         "fr-FR",
+        "ga-IE",
+        "gd-GB",
         "he-IL",
         "hi-IN",
+        "ht-HT",
         "id-ID",
         "it-IT",
         "ja-JP",
+        "jv-ID",
+        "km-KH",
         "ko-KR",
+        "my-MM",
         "ms-MY",
         "nl-NL",
         "pt-BR",
@@ -1285,6 +1293,7 @@
         "cs-CZ",
         "cy-WL",
         "el-GR",
+        "et-EE",
         "et-ET",
         "eu-ES",
         "fi-FI",
@@ -1311,6 +1320,7 @@
         "mr-IN",
         "mt-MT",
         "no-NO",
+        "ne-NP",
         "or-IN",
         "pa-IN",
         "pl-PL",
@@ -1321,6 +1331,7 @@
         "sk-SK",
         "sl-SI",
         "so-SO",
+        "sq-AL",
         "sr-RS",
         "su-ID",
         "sw-BI",
@@ -1334,6 +1345,7 @@
         "uk-UA",
         "uz-UZ",
         "wo-SN",
+        "zh-HK",
         "zu-ZA"
       ]
     },
@@ -1621,6 +1633,12 @@
       "max":1,
       "min":0
     },
+    "MedicalScribeContext":{
+      "type":"structure",
+      "members":{
+        "PatientContext":{"shape":"MedicalScribePatientContext"}
+      }
+    },
     "MedicalScribeJob":{
       "type":"structure",
       "members":{
@@ -1636,6 +1654,7 @@
         "Settings":{"shape":"MedicalScribeSettings"},
         "DataAccessRoleArn":{"shape":"DataAccessRoleArn"},
         "ChannelDefinitions":{"shape":"MedicalScribeChannelDefinitions"},
+        "MedicalScribeContextProvided":{"shape":"Boolean"},
         "Tags":{"shape":"TagList"}
       }
     },
@@ -1672,7 +1691,12 @@
       "type":"string",
       "enum":[
         "HISTORY_AND_PHYSICAL",
-        "GIRPP"
+        "GIRPP",
+        "BIRP",
+        "SIRP",
+        "DAP",
+        "BEHAVIORAL_SOAP",
+        "PHYSICAL_SOAP"
       ]
     },
     "MedicalScribeOutput":{
@@ -1692,6 +1716,12 @@
         "PATIENT",
         "CLINICIAN"
       ]
+    },
+    "MedicalScribePatientContext":{
+      "type":"structure",
+      "members":{
+        "Pronouns":{"shape":"Pronouns"}
+      }
     },
     "MedicalScribeSettings":{
       "type":"structure",
@@ -1877,6 +1907,15 @@
       "max":11,
       "min":0
     },
+    "Pronouns":{
+      "type":"string",
+      "enum":[
+        "HE_HIM",
+        "SHE_HER",
+        "THEY_THEM"
+      ],
+      "sensitive":true
+    },
     "RedactionOutput":{
       "type":"string",
       "enum":[
@@ -1997,7 +2036,8 @@
         "DataAccessRoleArn":{"shape":"DataAccessRoleArn"},
         "Settings":{"shape":"MedicalScribeSettings"},
         "ChannelDefinitions":{"shape":"MedicalScribeChannelDefinitions"},
-        "Tags":{"shape":"TagList"}
+        "Tags":{"shape":"TagList"},
+        "MedicalScribeContext":{"shape":"MedicalScribeContext"}
       }
     },
     "StartMedicalScribeJobResponse":{
@@ -2163,8 +2203,7 @@
     },
     "TagResourceResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "TagValue":{
       "type":"string",
@@ -2319,8 +2358,7 @@
     },
     "UntagResourceResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "UpdateCallAnalyticsCategoryRequest":{
       "type":"structure",

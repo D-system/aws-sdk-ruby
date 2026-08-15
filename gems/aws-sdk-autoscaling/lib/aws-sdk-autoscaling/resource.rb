@@ -70,7 +70,7 @@ module Aws::AutoScaling
     #                 min: 1, # required
     #                 max: 1,
     #               },
-    #               cpu_manufacturers: ["intel"], # accepts intel, amd, amazon-web-services
+    #               cpu_manufacturers: ["intel"], # accepts intel, amd, amazon-web-services, apple
     #               memory_gi_b_per_v_cpu: {
     #                 min: 1.0,
     #                 max: 1.0,
@@ -123,6 +123,7 @@ module Aws::AutoScaling
     #                 },
     #               },
     #             },
+    #             image_id: "ImageId",
     #           },
     #         ],
     #       },
@@ -141,6 +142,7 @@ module Aws::AutoScaling
     #     desired_capacity: 1,
     #     default_cooldown: 1,
     #     availability_zones: ["XmlStringMaxLen255"],
+    #     availability_zone_ids: ["XmlStringMaxLen255"],
     #     load_balancer_names: ["XmlStringMaxLen255"],
     #     target_group_arns: ["XmlStringMaxLen511"],
     #     health_check_type: "XmlStringMaxLen32",
@@ -161,6 +163,7 @@ module Aws::AutoScaling
     #         role_arn: "XmlStringMaxLen255",
     #       },
     #     ],
+    #     deletion_protection: "none", # accepts none, prevent-force-deletion, prevent-all-deletion
     #     tags: [
     #       {
     #         resource_id: "XmlString",
@@ -186,7 +189,7 @@ module Aws::AutoScaling
     #       max_healthy_percentage: 1,
     #     },
     #     availability_zone_distribution: {
-    #       capacity_distribution_strategy: "balanced-only", # accepts balanced-only, balanced-best-effort
+    #       capacity_distribution_strategy: "balanced-only", # accepts balanced-only, balanced-best-effort, reservations-then-balanced
     #     },
     #     availability_zone_impairment_policy: {
     #       zonal_shift_enabled: false,
@@ -199,6 +202,14 @@ module Aws::AutoScaling
     #         capacity_reservation_ids: ["AsciiStringMaxLen255"],
     #         capacity_reservation_resource_group_arns: ["ResourceName"],
     #       },
+    #     },
+    #     instance_lifecycle_policy: {
+    #       retention_triggers: {
+    #         terminate_hook_abandon: "retain", # accepts retain, terminate
+    #       },
+    #     },
+    #     operator: {
+    #       principal: "ManagerIdentifier", # required
     #     },
     #   })
     # @param [Hash] options ({})
@@ -297,6 +308,10 @@ module Aws::AutoScaling
     #   Availability Zone when not using the `VPCZoneIdentifier` property, or
     #   for attaching a network interface when an existing network interface
     #   ID is specified in a launch template.
+    # @option options [Array<String>] :availability_zone_ids
+    #   A list of Availability Zone IDs where the Auto Scaling group can
+    #   launch instances. You cannot specify both AvailabilityZones and
+    #   AvailabilityZoneIds in the same request.
     # @option options [Array<String>] :load_balancer_names
     #   A list of Classic Load Balancers associated with this Auto Scaling
     #   group. For Application Load Balancers, Network Load Balancers, and
@@ -344,7 +359,7 @@ module Aws::AutoScaling
     # @option options [String] :placement_group
     #   The name of the placement group into which to launch your instances.
     #   For more information, see [Placement groups][1] in the *Amazon EC2
-    #   User Guide for Linux Instances*.
+    #   User Guide*.
     #
     #   <note markdown="1"> A *cluster* placement group is a logical grouping of instances within
     #   a single Availability Zone. You cannot specify multiple Availability
@@ -401,6 +416,26 @@ module Aws::AutoScaling
     # @option options [Array<Types::LifecycleHookSpecification>] :lifecycle_hook_specification_list
     #   One or more lifecycle hooks to add to the Auto Scaling group before
     #   instances are launched.
+    # @option options [String] :deletion_protection
+    #   The deletion protection setting for the Auto Scaling group. This
+    #   setting helps safeguard your Auto Scaling group and its instances by
+    #   controlling whether the `DeleteAutoScalingGroup` operation is allowed.
+    #   When deletion protection is enabled, users cannot delete the Auto
+    #   Scaling group according to the specified protection level until the
+    #   setting is changed back to a less restrictive level.
+    #
+    #   The valid values are `none`, `prevent-force-deletion`, and
+    #   `prevent-all-deletion`.
+    #
+    #   Default: `none`
+    #
+    #   For more information, see [ Configure deletion protection for your
+    #   Amazon EC2 Auto Scaling resources][1] in the *Amazon EC2 Auto Scaling
+    #   User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/autoscaling/ec2/userguide/resource-deletion-protection.html
     # @option options [Array<Types::Tag>] :tags
     #   One or more tags. You can tag your Auto Scaling group and propagate
     #   the tags to the Amazon EC2 instances it launches. Tags are not
@@ -508,6 +543,30 @@ module Aws::AutoScaling
     #   [1]: https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-zonal-shift.html
     # @option options [Types::CapacityReservationSpecification] :capacity_reservation_specification
     #   The capacity reservation specification for the Auto Scaling group.
+    # @option options [Types::InstanceLifecyclePolicy] :instance_lifecycle_policy
+    #   The instance lifecycle policy for the Auto Scaling group. This policy
+    #   controls instance behavior when an instance transitions through its
+    #   lifecycle states. Configure retention triggers to specify when
+    #   instances should move to a `Retained` state instead of automatic
+    #   termination.
+    #
+    #   For more information, see [ Control instance retention with instance
+    #   lifecycle policies][1] in the *Amazon EC2 Auto Scaling User Guide*.
+    #
+    #   <note markdown="1"> Instances in a Retained state will continue to incur standard EC2
+    #   charges until terminated.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/autoscaling/ec2/userguide/instance-lifecycle-policy.html
+    # @option options [Types::Operator] :operator
+    #   The entity that manages the Auto Scaling group. If you specify this
+    #   parameter, Amazon EC2 Auto Scaling passes the operator identity to EC2
+    #   for instance launches and only allows the designated operator to make
+    #   changes to the Auto Scaling group. All mutating API calls from
+    #   non-operator callers are rejected with an `AccessDenied` exception.
     # @return [AutoScalingGroup]
     def create_group(options = {})
       Aws::Plugins::UserAgent.metric('RESOURCE_MODEL') do
@@ -570,7 +629,7 @@ module Aws::AutoScaling
     # @option options [String] :image_id
     #   The ID of the Amazon Machine Image (AMI) that was assigned during
     #   registration. For more information, see [Find a Linux AMI][1] in the
-    #   *Amazon EC2 User Guide for Linux Instances*.
+    #   *Amazon EC2 User Guide*.
     #
     #   If you specify `InstanceId`, an `ImageId` is not required.
     #
@@ -579,8 +638,7 @@ module Aws::AutoScaling
     #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html
     # @option options [String] :key_name
     #   The name of the key pair. For more information, see [Amazon EC2 key
-    #   pairs and Amazon EC2 instances][1] in the *Amazon EC2 User Guide for
-    #   Linux Instances*.
+    #   pairs and Amazon EC2 instances][1] in the *Amazon EC2 User Guide*.
     #
     #
     #
@@ -628,7 +686,7 @@ module Aws::AutoScaling
     # @option options [String] :instance_type
     #   Specifies the instance type of the EC2 instance. For information about
     #   available instance types, see [Available instance types][1] in the
-    #   *Amazon EC2 User Guide for Linux Instances*.
+    #   *Amazon EC2 User Guide*.
     #
     #   If you specify `InstanceId`, an `InstanceType` is not required.
     #
@@ -640,7 +698,7 @@ module Aws::AutoScaling
     #
     #   <note markdown="1"> We recommend that you use PV-GRUB instead of kernels and RAM disks.
     #   For more information, see [User provided kernels][1] in the *Amazon
-    #   EC2 User Guide for Linux Instances*.
+    #   EC2 User Guide*.
     #
     #    </note>
     #
@@ -652,7 +710,7 @@ module Aws::AutoScaling
     #
     #   <note markdown="1"> We recommend that you use PV-GRUB instead of kernels and RAM disks.
     #   For more information, see [User provided kernels][1] in the *Amazon
-    #   EC2 User Guide for Linux Instances*.
+    #   EC2 User Guide*.
     #
     #    </note>
     #
@@ -664,7 +722,7 @@ module Aws::AutoScaling
     #   attach to the instances at launch. By default, the block devices
     #   specified in the block device mapping for the AMI are used. For more
     #   information, see [Block device mappings][1] in the *Amazon EC2 User
-    #   Guide for Linux Instances*.
+    #   Guide*.
     #
     #
     #
@@ -721,7 +779,7 @@ module Aws::AutoScaling
     #   with all instance types. Additional fees are incurred when you enable
     #   EBS optimization for an instance type that is not EBS-optimized by
     #   default. For more information, see [Amazon EBS-optimized instances][1]
-    #   in the *Amazon EC2 User Guide for Linux Instances*.
+    #   in the *Amazon EC2 User Guide*.
     #
     #   The default value is `false`.
     #
@@ -787,21 +845,63 @@ module Aws::AutoScaling
     #     activity_ids: ["XmlString"],
     #     auto_scaling_group_name: "XmlStringMaxLen255",
     #     include_deleted_groups: false,
+    #     filters: [
+    #       {
+    #         name: "XmlString",
+    #         values: ["XmlString"],
+    #       },
+    #     ],
     #   })
     # @param [Hash] options ({})
     # @option options [Array<String>] :activity_ids
-    #   The activity IDs of the desired scaling activities. If you omit this
-    #   property, all activities for the past six weeks are described. If
-    #   unknown activities are requested, they are ignored with no error. If
-    #   you specify an Auto Scaling group, the results are limited to that
-    #   group.
+    #   The activity IDs of the desired scaling activities. If unknown
+    #   activity IDs are requested, they are ignored with no error. Only
+    #   activities started within the last six weeks can be returned
+    #   regardless of the activity IDs specified. If other filters are
+    #   specified with the request, only results matching all filter criteria
+    #   can be returned.
     #
     #   Array Members: Maximum number of 50 IDs.
     # @option options [String] :auto_scaling_group_name
     #   The name of the Auto Scaling group.
+    #
+    #   Omitting this property performs an account-wide operation, which can
+    #   result in slower or timed-out requests.
     # @option options [Boolean] :include_deleted_groups
     #   Indicates whether to include scaling activity from deleted Auto
     #   Scaling groups.
+    # @option options [Array<Types::Filter>] :filters
+    #   One or more filters to limit the results based on specific criteria.
+    #   The following filters are supported:
+    #
+    #   * `StartTimeLowerBound` - The earliest scaling activities to return
+    #     based on the activity start time. Scaling activities with a start
+    #     time earlier than this value are not included in the results. Only
+    #     activities started within the last six weeks can be returned
+    #     regardless of the value specified.
+    #
+    #   * `StartTimeUpperBound` - The latest scaling activities to return
+    #     based on the activity start time. Scaling activities with a start
+    #     time later than this value are not included in the results. Only
+    #     activities started within the last six weeks can be returned
+    #     regardless of the value specified.
+    #
+    #   * `Status` - The `StatusCode` value of the scaling activity. This
+    #     filter can only be used in combination with the
+    #     `AutoScalingGroupName` parameter. For valid `StatusCode` values, see
+    #     [Activity][1] in the *Amazon EC2 Auto Scaling API Reference*.
+    #
+    #   `StartTimeLowerBound` and `StartTimeUpperBound` accept ISO 8601
+    #   formatted timestamps. Timestamps without a timezone offset are assumed
+    #   to be UTC.
+    #
+    #   * `2000-01-18T08:15:00Z`
+    #
+    #   * `2000-01-18T16:15:00+08:00`
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_Activity.html
     # @return [Activity::Collection]
     def activities(options = {})
       batches = Enumerator.new do |y|
@@ -845,6 +945,7 @@ module Aws::AutoScaling
     #
     #   groups = auto_scaling.groups({
     #     auto_scaling_group_names: ["XmlStringMaxLen255"],
+    #     include_instances: false,
     #     filters: [
     #       {
     #         name: "XmlString",
@@ -859,6 +960,10 @@ module Aws::AutoScaling
     #   `MaxRecords` property.
     #
     #   If you omit this property, all Auto Scaling groups are described.
+    # @option options [Boolean] :include_instances
+    #   Specifies whether to include information about Amazon EC2 instances in
+    #   the response. When set to `true` (default), the response includes
+    #   instance details.
     # @option options [Array<Types::Filter>] :filters
     #   One or more filters to limit the results based on specific tags.
     # @return [AutoScalingGroup::Collection]

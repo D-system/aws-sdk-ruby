@@ -95,8 +95,8 @@ module Aws::Budgets
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::Budgets
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::Budgets
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::Budgets
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::Budgets
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::Budgets
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::Budgets
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::Budgets
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -480,9 +484,17 @@ module Aws::Budgets
     # Creates a budget and, if included, notifications and subscribers.
     #
     # Only one of `BudgetLimit` or `PlannedBudgetLimits` can be present in
-    # the syntax at one time. Use the syntax that matches your case. The
+    # the syntax at one time. Use the syntax that matches your use case. The
     # Request Syntax section shows the `BudgetLimit` syntax. For
     # `PlannedBudgetLimits`, see the [Examples][1] section.
+    #
+    #  Similarly, only one set of filter and metric selections can be
+    # present
+    # in the syntax at one time. Either `FilterExpression` and `Metrics` or
+    # `CostFilters` and `CostTypes`, not both or a different combination. We
+    # recommend using `FilterExpression` and `Metrics` as they provide more
+    # flexible and powerful filtering capabilities. The Request Syntax
+    # section shows the `FilterExpression`/`Metrics` syntax.
     #
     #
     #
@@ -540,7 +552,7 @@ module Aws::Budgets
     #         include_discount: false,
     #         use_amortized: false,
     #       },
-    #       time_unit: "DAILY", # required, accepts DAILY, MONTHLY, QUARTERLY, ANNUALLY
+    #       time_unit: "DAILY", # required, accepts DAILY, MONTHLY, QUARTERLY, ANNUALLY, CUSTOM
     #       time_period: {
     #         start: Time.now,
     #         end: Time.now,
@@ -564,6 +576,43 @@ module Aws::Budgets
     #           look_back_available_periods: 1,
     #         },
     #         last_auto_adjust_time: Time.now,
+    #       },
+    #       filter_expression: {
+    #         or: [
+    #           {
+    #             # recursive Expression
+    #           },
+    #         ],
+    #         and: [
+    #           {
+    #             # recursive Expression
+    #           },
+    #         ],
+    #         not: {
+    #           # recursive Expression
+    #         },
+    #         dimensions: {
+    #           key: "AZ", # required, accepts AZ, INSTANCE_TYPE, LINKED_ACCOUNT, LINKED_ACCOUNT_NAME, OPERATION, PURCHASE_TYPE, REGION, SERVICE, SERVICE_CODE, USAGE_TYPE, USAGE_TYPE_GROUP, RECORD_TYPE, OPERATING_SYSTEM, TENANCY, SCOPE, PLATFORM, SUBSCRIPTION_ID, LEGAL_ENTITY_NAME, INVOICING_ENTITY, DEPLOYMENT_OPTION, DATABASE_ENGINE, CACHE_ENGINE, INSTANCE_TYPE_FAMILY, BILLING_ENTITY, RESERVATION_ID, RESOURCE_ID, RIGHTSIZING_TYPE, SAVINGS_PLANS_TYPE, SAVINGS_PLAN_ARN, PAYMENT_OPTION, RESERVATION_MODIFIED, TAG_KEY, COST_CATEGORY_NAME
+    #           values: ["Value"], # required
+    #           match_options: ["EQUALS"], # accepts EQUALS, ABSENT, STARTS_WITH, ENDS_WITH, CONTAINS, GREATER_THAN_OR_EQUAL, CASE_SENSITIVE, CASE_INSENSITIVE
+    #         },
+    #         tags: {
+    #           key: "TagKey",
+    #           values: ["Value"],
+    #           match_options: ["EQUALS"], # accepts EQUALS, ABSENT, STARTS_WITH, ENDS_WITH, CONTAINS, GREATER_THAN_OR_EQUAL, CASE_SENSITIVE, CASE_INSENSITIVE
+    #         },
+    #         cost_categories: {
+    #           key: "CostCategoryName",
+    #           values: ["Value"],
+    #           match_options: ["EQUALS"], # accepts EQUALS, ABSENT, STARTS_WITH, ENDS_WITH, CONTAINS, GREATER_THAN_OR_EQUAL, CASE_SENSITIVE, CASE_INSENSITIVE
+    #         },
+    #       },
+    #       metrics: ["BlendedCost"], # accepts BlendedCost, UnblendedCost, AmortizedCost, NetUnblendedCost, NetAmortizedCost, UsageQuantity, NormalizedUsageAmount, Hours
+    #       billing_view_arn: "BillingViewArn",
+    #       health_status: {
+    #         status: "HEALTHY", # accepts HEALTHY, UNHEALTHY
+    #         status_reason: "BILLING_VIEW_NO_ACCESS", # accepts BILLING_VIEW_NO_ACCESS, BILLING_VIEW_UNHEALTHY, FILTER_INVALID, MULTI_YEAR_HISTORICAL_DATA_DISABLED
+    #         last_updated_time: Time.now,
     #       },
     #     },
     #     notifications_with_subscribers: [
@@ -606,6 +655,10 @@ module Aws::Budgets
     # @option params [required, String] :budget_name
     #   A string that represents the budget name. The ":" and "\\"
     #   characters, and the "/action/" substring, aren't allowed.
+    #
+    #   Budget names are validated for content. Names that contain phone
+    #   numbers, URLs, or email addresses combined with certain terms may be
+    #   rejected.
     #
     # @option params [required, String] :notification_type
     #   The type of a notification. It must be ACTUAL or FORECASTED.
@@ -828,6 +881,10 @@ module Aws::Budgets
     #   A string that represents the budget name. The ":" and "\\"
     #   characters, and the "/action/" substring, aren't allowed.
     #
+    #   Budget names are validated for content. Names that contain phone
+    #   numbers, URLs, or email addresses combined with certain terms may be
+    #   rejected.
+    #
     # @option params [required, String] :action_id
     #   A system-generated universally unique identifier (UUID) for the
     #   action.
@@ -983,6 +1040,12 @@ module Aws::Budgets
     # @option params [required, String] :budget_name
     #   The name of the budget that you want a description of.
     #
+    # @option params [Boolean] :show_filter_expression
+    #   Specifies whether the response includes the filter expression
+    #   associated with the budget. By showing the filter expression, you can
+    #   see detailed filtering logic applied to the budget, such as Amazon Web
+    #   Services services or tags that are being tracked.
+    #
     # @return [Types::DescribeBudgetResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::DescribeBudgetResponse#budget #budget} => Types::Budget
@@ -992,6 +1055,7 @@ module Aws::Budgets
     #   resp = client.describe_budget({
     #     account_id: "AccountId", # required
     #     budget_name: "BudgetName", # required
+    #     show_filter_expression: false,
     #   })
     #
     # @example Response structure
@@ -1016,7 +1080,7 @@ module Aws::Budgets
     #   resp.budget.cost_types.include_support #=> Boolean
     #   resp.budget.cost_types.include_discount #=> Boolean
     #   resp.budget.cost_types.use_amortized #=> Boolean
-    #   resp.budget.time_unit #=> String, one of "DAILY", "MONTHLY", "QUARTERLY", "ANNUALLY"
+    #   resp.budget.time_unit #=> String, one of "DAILY", "MONTHLY", "QUARTERLY", "ANNUALLY", "CUSTOM"
     #   resp.budget.time_period.start #=> Time
     #   resp.budget.time_period.end #=> Time
     #   resp.budget.calculated_spend.actual_spend.amount #=> String
@@ -1029,6 +1093,32 @@ module Aws::Budgets
     #   resp.budget.auto_adjust_data.historical_options.budget_adjustment_period #=> Integer
     #   resp.budget.auto_adjust_data.historical_options.look_back_available_periods #=> Integer
     #   resp.budget.auto_adjust_data.last_auto_adjust_time #=> Time
+    #   resp.budget.filter_expression.or #=> Array
+    #   resp.budget.filter_expression.or[0] #=> Types::Expression
+    #   resp.budget.filter_expression.and #=> Array
+    #   resp.budget.filter_expression.and[0] #=> Types::Expression
+    #   resp.budget.filter_expression.not #=> Types::Expression
+    #   resp.budget.filter_expression.dimensions.key #=> String, one of "AZ", "INSTANCE_TYPE", "LINKED_ACCOUNT", "LINKED_ACCOUNT_NAME", "OPERATION", "PURCHASE_TYPE", "REGION", "SERVICE", "SERVICE_CODE", "USAGE_TYPE", "USAGE_TYPE_GROUP", "RECORD_TYPE", "OPERATING_SYSTEM", "TENANCY", "SCOPE", "PLATFORM", "SUBSCRIPTION_ID", "LEGAL_ENTITY_NAME", "INVOICING_ENTITY", "DEPLOYMENT_OPTION", "DATABASE_ENGINE", "CACHE_ENGINE", "INSTANCE_TYPE_FAMILY", "BILLING_ENTITY", "RESERVATION_ID", "RESOURCE_ID", "RIGHTSIZING_TYPE", "SAVINGS_PLANS_TYPE", "SAVINGS_PLAN_ARN", "PAYMENT_OPTION", "RESERVATION_MODIFIED", "TAG_KEY", "COST_CATEGORY_NAME"
+    #   resp.budget.filter_expression.dimensions.values #=> Array
+    #   resp.budget.filter_expression.dimensions.values[0] #=> String
+    #   resp.budget.filter_expression.dimensions.match_options #=> Array
+    #   resp.budget.filter_expression.dimensions.match_options[0] #=> String, one of "EQUALS", "ABSENT", "STARTS_WITH", "ENDS_WITH", "CONTAINS", "GREATER_THAN_OR_EQUAL", "CASE_SENSITIVE", "CASE_INSENSITIVE"
+    #   resp.budget.filter_expression.tags.key #=> String
+    #   resp.budget.filter_expression.tags.values #=> Array
+    #   resp.budget.filter_expression.tags.values[0] #=> String
+    #   resp.budget.filter_expression.tags.match_options #=> Array
+    #   resp.budget.filter_expression.tags.match_options[0] #=> String, one of "EQUALS", "ABSENT", "STARTS_WITH", "ENDS_WITH", "CONTAINS", "GREATER_THAN_OR_EQUAL", "CASE_SENSITIVE", "CASE_INSENSITIVE"
+    #   resp.budget.filter_expression.cost_categories.key #=> String
+    #   resp.budget.filter_expression.cost_categories.values #=> Array
+    #   resp.budget.filter_expression.cost_categories.values[0] #=> String
+    #   resp.budget.filter_expression.cost_categories.match_options #=> Array
+    #   resp.budget.filter_expression.cost_categories.match_options[0] #=> String, one of "EQUALS", "ABSENT", "STARTS_WITH", "ENDS_WITH", "CONTAINS", "GREATER_THAN_OR_EQUAL", "CASE_SENSITIVE", "CASE_INSENSITIVE"
+    #   resp.budget.metrics #=> Array
+    #   resp.budget.metrics[0] #=> String, one of "BlendedCost", "UnblendedCost", "AmortizedCost", "NetUnblendedCost", "NetAmortizedCost", "UsageQuantity", "NormalizedUsageAmount", "Hours"
+    #   resp.budget.billing_view_arn #=> String
+    #   resp.budget.health_status.status #=> String, one of "HEALTHY", "UNHEALTHY"
+    #   resp.budget.health_status.status_reason #=> String, one of "BILLING_VIEW_NO_ACCESS", "BILLING_VIEW_UNHEALTHY", "FILTER_INVALID", "MULTI_YEAR_HISTORICAL_DATA_DISABLED"
+    #   resp.budget.health_status.last_updated_time #=> Time
     #
     # @overload describe_budget(params = {})
     # @param [Hash] params ({})
@@ -1045,6 +1135,10 @@ module Aws::Budgets
     # @option params [required, String] :budget_name
     #   A string that represents the budget name. The ":" and "\\"
     #   characters, and the "/action/" substring, aren't allowed.
+    #
+    #   Budget names are validated for content. Names that contain phone
+    #   numbers, URLs, or email addresses combined with certain terms may be
+    #   rejected.
     #
     # @option params [required, String] :action_id
     #   A system-generated universally unique identifier (UUID) for the
@@ -1110,6 +1204,10 @@ module Aws::Budgets
     # @option params [required, String] :budget_name
     #   A string that represents the budget name. The ":" and "\\"
     #   characters, and the "/action/" substring, aren't allowed.
+    #
+    #   Budget names are validated for content. Names that contain phone
+    #   numbers, URLs, or email addresses combined with certain terms may be
+    #   rejected.
     #
     # @option params [required, String] :action_id
     #   A system-generated universally unique identifier (UUID) for the
@@ -1264,6 +1362,10 @@ module Aws::Budgets
     #   A string that represents the budget name. The ":" and "\\"
     #   characters, and the "/action/" substring, aren't allowed.
     #
+    #   Budget names are validated for content. Names that contain phone
+    #   numbers, URLs, or email addresses combined with certain terms may be
+    #   rejected.
+    #
     # @option params [Integer] :max_results
     #   An integer that represents how many entries a paginated response
     #   contains. The maximum is 100.
@@ -1382,6 +1484,10 @@ module Aws::Budgets
     #   A string that represents the budget name. The ":" and "\\"
     #   characters, and the "/action/" substring, aren't allowed.
     #
+    #   Budget names are validated for content. Names that contain phone
+    #   numbers, URLs, or email addresses combined with certain terms may be
+    #   rejected.
+    #
     # @option params [Types::TimePeriod] :time_period
     #   Retrieves how often the budget went into an `ALARM` state for the
     #   specified time period.
@@ -1431,7 +1537,8 @@ module Aws::Budgets
     #   resp.budget_performance_history.cost_types.include_support #=> Boolean
     #   resp.budget_performance_history.cost_types.include_discount #=> Boolean
     #   resp.budget_performance_history.cost_types.use_amortized #=> Boolean
-    #   resp.budget_performance_history.time_unit #=> String, one of "DAILY", "MONTHLY", "QUARTERLY", "ANNUALLY"
+    #   resp.budget_performance_history.time_unit #=> String, one of "DAILY", "MONTHLY", "QUARTERLY", "ANNUALLY", "CUSTOM"
+    #   resp.budget_performance_history.billing_view_arn #=> String
     #   resp.budget_performance_history.budgeted_and_actual_amounts_list #=> Array
     #   resp.budget_performance_history.budgeted_and_actual_amounts_list[0].budgeted_amount.amount #=> String
     #   resp.budget_performance_history.budgeted_and_actual_amounts_list[0].budgeted_amount.unit #=> String
@@ -1439,6 +1546,28 @@ module Aws::Budgets
     #   resp.budget_performance_history.budgeted_and_actual_amounts_list[0].actual_amount.unit #=> String
     #   resp.budget_performance_history.budgeted_and_actual_amounts_list[0].time_period.start #=> Time
     #   resp.budget_performance_history.budgeted_and_actual_amounts_list[0].time_period.end #=> Time
+    #   resp.budget_performance_history.filter_expression.or #=> Array
+    #   resp.budget_performance_history.filter_expression.or[0] #=> Types::Expression
+    #   resp.budget_performance_history.filter_expression.and #=> Array
+    #   resp.budget_performance_history.filter_expression.and[0] #=> Types::Expression
+    #   resp.budget_performance_history.filter_expression.not #=> Types::Expression
+    #   resp.budget_performance_history.filter_expression.dimensions.key #=> String, one of "AZ", "INSTANCE_TYPE", "LINKED_ACCOUNT", "LINKED_ACCOUNT_NAME", "OPERATION", "PURCHASE_TYPE", "REGION", "SERVICE", "SERVICE_CODE", "USAGE_TYPE", "USAGE_TYPE_GROUP", "RECORD_TYPE", "OPERATING_SYSTEM", "TENANCY", "SCOPE", "PLATFORM", "SUBSCRIPTION_ID", "LEGAL_ENTITY_NAME", "INVOICING_ENTITY", "DEPLOYMENT_OPTION", "DATABASE_ENGINE", "CACHE_ENGINE", "INSTANCE_TYPE_FAMILY", "BILLING_ENTITY", "RESERVATION_ID", "RESOURCE_ID", "RIGHTSIZING_TYPE", "SAVINGS_PLANS_TYPE", "SAVINGS_PLAN_ARN", "PAYMENT_OPTION", "RESERVATION_MODIFIED", "TAG_KEY", "COST_CATEGORY_NAME"
+    #   resp.budget_performance_history.filter_expression.dimensions.values #=> Array
+    #   resp.budget_performance_history.filter_expression.dimensions.values[0] #=> String
+    #   resp.budget_performance_history.filter_expression.dimensions.match_options #=> Array
+    #   resp.budget_performance_history.filter_expression.dimensions.match_options[0] #=> String, one of "EQUALS", "ABSENT", "STARTS_WITH", "ENDS_WITH", "CONTAINS", "GREATER_THAN_OR_EQUAL", "CASE_SENSITIVE", "CASE_INSENSITIVE"
+    #   resp.budget_performance_history.filter_expression.tags.key #=> String
+    #   resp.budget_performance_history.filter_expression.tags.values #=> Array
+    #   resp.budget_performance_history.filter_expression.tags.values[0] #=> String
+    #   resp.budget_performance_history.filter_expression.tags.match_options #=> Array
+    #   resp.budget_performance_history.filter_expression.tags.match_options[0] #=> String, one of "EQUALS", "ABSENT", "STARTS_WITH", "ENDS_WITH", "CONTAINS", "GREATER_THAN_OR_EQUAL", "CASE_SENSITIVE", "CASE_INSENSITIVE"
+    #   resp.budget_performance_history.filter_expression.cost_categories.key #=> String
+    #   resp.budget_performance_history.filter_expression.cost_categories.values #=> Array
+    #   resp.budget_performance_history.filter_expression.cost_categories.values[0] #=> String
+    #   resp.budget_performance_history.filter_expression.cost_categories.match_options #=> Array
+    #   resp.budget_performance_history.filter_expression.cost_categories.match_options[0] #=> String, one of "EQUALS", "ABSENT", "STARTS_WITH", "ENDS_WITH", "CONTAINS", "GREATER_THAN_OR_EQUAL", "CASE_SENSITIVE", "CASE_INSENSITIVE"
+    #   resp.budget_performance_history.metrics #=> Array
+    #   resp.budget_performance_history.metrics[0] #=> String, one of "BlendedCost", "UnblendedCost", "AmortizedCost", "NetUnblendedCost", "NetAmortizedCost", "UsageQuantity", "NormalizedUsageAmount", "Hours"
     #   resp.next_token #=> String
     #
     # @overload describe_budget_performance_history(params = {})
@@ -1469,6 +1598,12 @@ module Aws::Budgets
     #   The pagination token that you include in your request to indicate the
     #   next set of results that you want to retrieve.
     #
+    # @option params [Boolean] :show_filter_expression
+    #   Specifies whether the response includes the filter expression
+    #   associated with the budgets. By showing the filter expression, you can
+    #   see detailed filtering logic applied to the budgets, such as Amazon
+    #   Web Services services or tags that are being tracked.
+    #
     # @return [Types::DescribeBudgetsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::DescribeBudgetsResponse#budgets #budgets} => Array&lt;Types::Budget&gt;
@@ -1482,6 +1617,7 @@ module Aws::Budgets
     #     account_id: "AccountId", # required
     #     max_results: 1,
     #     next_token: "GenericString",
+    #     show_filter_expression: false,
     #   })
     #
     # @example Response structure
@@ -1507,7 +1643,7 @@ module Aws::Budgets
     #   resp.budgets[0].cost_types.include_support #=> Boolean
     #   resp.budgets[0].cost_types.include_discount #=> Boolean
     #   resp.budgets[0].cost_types.use_amortized #=> Boolean
-    #   resp.budgets[0].time_unit #=> String, one of "DAILY", "MONTHLY", "QUARTERLY", "ANNUALLY"
+    #   resp.budgets[0].time_unit #=> String, one of "DAILY", "MONTHLY", "QUARTERLY", "ANNUALLY", "CUSTOM"
     #   resp.budgets[0].time_period.start #=> Time
     #   resp.budgets[0].time_period.end #=> Time
     #   resp.budgets[0].calculated_spend.actual_spend.amount #=> String
@@ -1520,6 +1656,32 @@ module Aws::Budgets
     #   resp.budgets[0].auto_adjust_data.historical_options.budget_adjustment_period #=> Integer
     #   resp.budgets[0].auto_adjust_data.historical_options.look_back_available_periods #=> Integer
     #   resp.budgets[0].auto_adjust_data.last_auto_adjust_time #=> Time
+    #   resp.budgets[0].filter_expression.or #=> Array
+    #   resp.budgets[0].filter_expression.or[0] #=> Types::Expression
+    #   resp.budgets[0].filter_expression.and #=> Array
+    #   resp.budgets[0].filter_expression.and[0] #=> Types::Expression
+    #   resp.budgets[0].filter_expression.not #=> Types::Expression
+    #   resp.budgets[0].filter_expression.dimensions.key #=> String, one of "AZ", "INSTANCE_TYPE", "LINKED_ACCOUNT", "LINKED_ACCOUNT_NAME", "OPERATION", "PURCHASE_TYPE", "REGION", "SERVICE", "SERVICE_CODE", "USAGE_TYPE", "USAGE_TYPE_GROUP", "RECORD_TYPE", "OPERATING_SYSTEM", "TENANCY", "SCOPE", "PLATFORM", "SUBSCRIPTION_ID", "LEGAL_ENTITY_NAME", "INVOICING_ENTITY", "DEPLOYMENT_OPTION", "DATABASE_ENGINE", "CACHE_ENGINE", "INSTANCE_TYPE_FAMILY", "BILLING_ENTITY", "RESERVATION_ID", "RESOURCE_ID", "RIGHTSIZING_TYPE", "SAVINGS_PLANS_TYPE", "SAVINGS_PLAN_ARN", "PAYMENT_OPTION", "RESERVATION_MODIFIED", "TAG_KEY", "COST_CATEGORY_NAME"
+    #   resp.budgets[0].filter_expression.dimensions.values #=> Array
+    #   resp.budgets[0].filter_expression.dimensions.values[0] #=> String
+    #   resp.budgets[0].filter_expression.dimensions.match_options #=> Array
+    #   resp.budgets[0].filter_expression.dimensions.match_options[0] #=> String, one of "EQUALS", "ABSENT", "STARTS_WITH", "ENDS_WITH", "CONTAINS", "GREATER_THAN_OR_EQUAL", "CASE_SENSITIVE", "CASE_INSENSITIVE"
+    #   resp.budgets[0].filter_expression.tags.key #=> String
+    #   resp.budgets[0].filter_expression.tags.values #=> Array
+    #   resp.budgets[0].filter_expression.tags.values[0] #=> String
+    #   resp.budgets[0].filter_expression.tags.match_options #=> Array
+    #   resp.budgets[0].filter_expression.tags.match_options[0] #=> String, one of "EQUALS", "ABSENT", "STARTS_WITH", "ENDS_WITH", "CONTAINS", "GREATER_THAN_OR_EQUAL", "CASE_SENSITIVE", "CASE_INSENSITIVE"
+    #   resp.budgets[0].filter_expression.cost_categories.key #=> String
+    #   resp.budgets[0].filter_expression.cost_categories.values #=> Array
+    #   resp.budgets[0].filter_expression.cost_categories.values[0] #=> String
+    #   resp.budgets[0].filter_expression.cost_categories.match_options #=> Array
+    #   resp.budgets[0].filter_expression.cost_categories.match_options[0] #=> String, one of "EQUALS", "ABSENT", "STARTS_WITH", "ENDS_WITH", "CONTAINS", "GREATER_THAN_OR_EQUAL", "CASE_SENSITIVE", "CASE_INSENSITIVE"
+    #   resp.budgets[0].metrics #=> Array
+    #   resp.budgets[0].metrics[0] #=> String, one of "BlendedCost", "UnblendedCost", "AmortizedCost", "NetUnblendedCost", "NetAmortizedCost", "UsageQuantity", "NormalizedUsageAmount", "Hours"
+    #   resp.budgets[0].billing_view_arn #=> String
+    #   resp.budgets[0].health_status.status #=> String, one of "HEALTHY", "UNHEALTHY"
+    #   resp.budgets[0].health_status.status_reason #=> String, one of "BILLING_VIEW_NO_ACCESS", "BILLING_VIEW_UNHEALTHY", "FILTER_INVALID", "MULTI_YEAR_HISTORICAL_DATA_DISABLED"
+    #   resp.budgets[0].health_status.last_updated_time #=> Time
     #   resp.next_token #=> String
     #
     # @overload describe_budgets(params = {})
@@ -1644,6 +1806,10 @@ module Aws::Budgets
     # @option params [required, String] :budget_name
     #   A string that represents the budget name. The ":" and "\\"
     #   characters, and the "/action/" substring, aren't allowed.
+    #
+    #   Budget names are validated for content. Names that contain phone
+    #   numbers, URLs, or email addresses combined with certain terms may be
+    #   rejected.
     #
     # @option params [required, String] :action_id
     #   A system-generated universally unique identifier (UUID) for the
@@ -1773,6 +1939,14 @@ module Aws::Budgets
     # Request Syntax section shows the `BudgetLimit` syntax. For
     # `PlannedBudgetLimits`, see the [Examples][1] section.
     #
+    #  Similarly, only one set of filter and metric selections can be
+    # present
+    # in the syntax at one time. Either `FilterExpression` and `Metrics` or
+    # `CostFilters` and `CostTypes`, not both or a different combination. We
+    # recommend using `FilterExpression` and `Metrics` as they provide more
+    # flexible and powerful filtering capabilities. The Request Syntax
+    # section shows the `FilterExpression`/`Metrics` syntax.
+    #
     #
     #
     # [1]: https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_UpdateBudget.html#API_UpdateBudget_Examples
@@ -1818,7 +1992,7 @@ module Aws::Budgets
     #         include_discount: false,
     #         use_amortized: false,
     #       },
-    #       time_unit: "DAILY", # required, accepts DAILY, MONTHLY, QUARTERLY, ANNUALLY
+    #       time_unit: "DAILY", # required, accepts DAILY, MONTHLY, QUARTERLY, ANNUALLY, CUSTOM
     #       time_period: {
     #         start: Time.now,
     #         end: Time.now,
@@ -1843,6 +2017,43 @@ module Aws::Budgets
     #         },
     #         last_auto_adjust_time: Time.now,
     #       },
+    #       filter_expression: {
+    #         or: [
+    #           {
+    #             # recursive Expression
+    #           },
+    #         ],
+    #         and: [
+    #           {
+    #             # recursive Expression
+    #           },
+    #         ],
+    #         not: {
+    #           # recursive Expression
+    #         },
+    #         dimensions: {
+    #           key: "AZ", # required, accepts AZ, INSTANCE_TYPE, LINKED_ACCOUNT, LINKED_ACCOUNT_NAME, OPERATION, PURCHASE_TYPE, REGION, SERVICE, SERVICE_CODE, USAGE_TYPE, USAGE_TYPE_GROUP, RECORD_TYPE, OPERATING_SYSTEM, TENANCY, SCOPE, PLATFORM, SUBSCRIPTION_ID, LEGAL_ENTITY_NAME, INVOICING_ENTITY, DEPLOYMENT_OPTION, DATABASE_ENGINE, CACHE_ENGINE, INSTANCE_TYPE_FAMILY, BILLING_ENTITY, RESERVATION_ID, RESOURCE_ID, RIGHTSIZING_TYPE, SAVINGS_PLANS_TYPE, SAVINGS_PLAN_ARN, PAYMENT_OPTION, RESERVATION_MODIFIED, TAG_KEY, COST_CATEGORY_NAME
+    #           values: ["Value"], # required
+    #           match_options: ["EQUALS"], # accepts EQUALS, ABSENT, STARTS_WITH, ENDS_WITH, CONTAINS, GREATER_THAN_OR_EQUAL, CASE_SENSITIVE, CASE_INSENSITIVE
+    #         },
+    #         tags: {
+    #           key: "TagKey",
+    #           values: ["Value"],
+    #           match_options: ["EQUALS"], # accepts EQUALS, ABSENT, STARTS_WITH, ENDS_WITH, CONTAINS, GREATER_THAN_OR_EQUAL, CASE_SENSITIVE, CASE_INSENSITIVE
+    #         },
+    #         cost_categories: {
+    #           key: "CostCategoryName",
+    #           values: ["Value"],
+    #           match_options: ["EQUALS"], # accepts EQUALS, ABSENT, STARTS_WITH, ENDS_WITH, CONTAINS, GREATER_THAN_OR_EQUAL, CASE_SENSITIVE, CASE_INSENSITIVE
+    #         },
+    #       },
+    #       metrics: ["BlendedCost"], # accepts BlendedCost, UnblendedCost, AmortizedCost, NetUnblendedCost, NetAmortizedCost, UsageQuantity, NormalizedUsageAmount, Hours
+    #       billing_view_arn: "BillingViewArn",
+    #       health_status: {
+    #         status: "HEALTHY", # accepts HEALTHY, UNHEALTHY
+    #         status_reason: "BILLING_VIEW_NO_ACCESS", # accepts BILLING_VIEW_NO_ACCESS, BILLING_VIEW_UNHEALTHY, FILTER_INVALID, MULTI_YEAR_HISTORICAL_DATA_DISABLED
+    #         last_updated_time: Time.now,
+    #       },
     #     },
     #   })
     #
@@ -1861,6 +2072,10 @@ module Aws::Budgets
     # @option params [required, String] :budget_name
     #   A string that represents the budget name. The ":" and "\\"
     #   characters, and the "/action/" substring, aren't allowed.
+    #
+    #   Budget names are validated for content. Names that contain phone
+    #   numbers, URLs, or email addresses combined with certain terms may be
+    #   rejected.
     #
     # @option params [required, String] :action_id
     #   A system-generated universally unique identifier (UUID) for the
@@ -2106,7 +2321,7 @@ module Aws::Budgets
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-budgets'
-      context[:gem_version] = '1.82.0'
+      context[:gem_version] = '1.111.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

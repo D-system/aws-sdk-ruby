@@ -43,7 +43,7 @@ module Aws
                               {
                                 name: ::String,
                                 value: ::String
-                              },
+                              }
                             ],
                             start_time: ::Time,
                             end_time: ::Time,
@@ -68,14 +68,14 @@ module Aws
                          {
                            name: ::String,
                            value: ::String
-                         },
+                         }
                        ],
                        ?period: ::Integer,
                        ?unit: ("Seconds" | "Microseconds" | "Milliseconds" | "Bytes" | "Kilobytes" | "Megabytes" | "Gigabytes" | "Terabytes" | "Bits" | "Kilobits" | "Megabits" | "Gigabits" | "Terabits" | "Percent" | "Count" | "Bytes/Second" | "Kilobytes/Second" | "Megabytes/Second" | "Gigabytes/Second" | "Terabytes/Second" | "Bits/Second" | "Kilobits/Second" | "Megabits/Second" | "Gigabits/Second" | "Terabits/Second" | "Count/Second" | "None"),
-                       evaluation_periods: ::Integer,
+                       ?evaluation_periods: ::Integer,
                        ?datapoints_to_alarm: ::Integer,
                        ?threshold: ::Float,
-                       comparison_operator: ("GreaterThanOrEqualToThreshold" | "GreaterThanThreshold" | "LessThanThreshold" | "LessThanOrEqualToThreshold" | "LessThanLowerOrGreaterThanUpperThreshold" | "LessThanLowerThreshold" | "GreaterThanUpperThreshold"),
+                       ?comparison_operator: ("GreaterThanOrEqualToThreshold" | "GreaterThanThreshold" | "LessThanThreshold" | "LessThanOrEqualToThreshold" | "LessThanLowerOrGreaterThanUpperThreshold" | "LessThanLowerThreshold" | "GreaterThanUpperThreshold"),
                        ?treat_missing_data: ::String,
                        ?evaluate_low_sample_count_percentile: ::String,
                        ?metrics: Array[
@@ -89,7 +89,7 @@ module Aws
                                  {
                                    name: ::String,
                                    value: ::String
-                                 },
+                                 }
                                ]?
                              },
                              period: ::Integer,
@@ -101,15 +101,30 @@ module Aws
                            return_data: bool?,
                            period: ::Integer?,
                            account_id: ::String?
-                         },
+                         }
                        ],
                        ?tags: Array[
                          {
                            key: ::String,
                            value: ::String
-                         },
+                         }
                        ],
-                       ?threshold_metric_id: ::String
+                       ?threshold_metric_id: ::String,
+                       ?evaluation_window: {
+                         wall_clock_window: {
+                           timezone: ::String?
+                         }?,
+                         sliding_window: {
+                         }?
+                       },
+                       ?evaluation_criteria: {
+                         prom_ql_criteria: {
+                           query: ::String,
+                           pending_period: ::Integer?,
+                           recovery_period: ::Integer?
+                         }?
+                       },
+                       ?evaluation_interval: ::Integer
                      ) -> Alarm
                    | (?Hash[Symbol, untyped]) -> Alarm
 
@@ -122,7 +137,7 @@ module Aws
                             {
                               name: ::String,
                               value: ::String
-                            },
+                            }
                           ]?,
                           timestamp: ::Time?,
                           value: ::Float?,
@@ -136,7 +151,7 @@ module Aws
                           counts: Array[::Float]?,
                           unit: ("Seconds" | "Microseconds" | "Milliseconds" | "Bytes" | "Kilobytes" | "Megabytes" | "Gigabytes" | "Terabytes" | "Bits" | "Kilobits" | "Megabits" | "Gigabits" | "Terabits" | "Percent" | "Count" | "Bytes/Second" | "Kilobytes/Second" | "Megabytes/Second" | "Gigabytes/Second" | "Terabytes/Second" | "Bits/Second" | "Kilobits/Second" | "Megabits/Second" | "Gigabits/Second" | "Terabits/Second" | "Count/Second" | "None")?,
                           storage_resolution: ::Integer?
-                        },
+                        }
                       ],
                       ?entity_metric_data: Array[
                         {
@@ -151,7 +166,7 @@ module Aws
                                 {
                                   name: ::String,
                                   value: ::String
-                                },
+                                }
                               ]?,
                               timestamp: ::Time?,
                               value: ::Float?,
@@ -165,9 +180,9 @@ module Aws
                               counts: Array[::Float]?,
                               unit: ("Seconds" | "Microseconds" | "Milliseconds" | "Bytes" | "Kilobytes" | "Megabytes" | "Gigabytes" | "Terabytes" | "Bits" | "Kilobits" | "Megabits" | "Gigabits" | "Terabits" | "Percent" | "Count" | "Bytes/Second" | "Kilobytes/Second" | "Megabytes/Second" | "Gigabytes/Second" | "Terabytes/Second" | "Bits/Second" | "Kilobits/Second" | "Megabits/Second" | "Gigabits/Second" | "Terabits/Second" | "Count/Second" | "None")?,
                               storage_resolution: ::Integer?
-                            },
+                            }
                           ]?
-                        },
+                        }
                       ],
                       ?strict_entity_validation: bool
                     ) -> ::Aws::EmptyStructure
@@ -181,7 +196,7 @@ module Aws
                       {
                         name: ::String,
                         value: ::String
-                      },
+                      }
                     ],
                     ?period: ::Integer,
                     ?unit: ("Seconds" | "Microseconds" | "Milliseconds" | "Bytes" | "Kilobytes" | "Megabytes" | "Gigabytes" | "Terabytes" | "Bits" | "Kilobits" | "Megabits" | "Gigabits" | "Terabits" | "Percent" | "Count" | "Bytes/Second" | "Kilobytes/Second" | "Megabytes/Second" | "Gigabytes/Second" | "Terabytes/Second" | "Bits/Second" | "Kilobits/Second" | "Megabits/Second" | "Gigabits/Second" | "Terabits/Second" | "Count/Second" | "None")

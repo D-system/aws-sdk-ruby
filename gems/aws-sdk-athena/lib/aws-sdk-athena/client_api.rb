@@ -54,7 +54,10 @@ module Aws::Athena
     CapacityReservationStatus = Shapes::StringShape.new(name: 'CapacityReservationStatus')
     CapacityReservationsList = Shapes::ListShape.new(name: 'CapacityReservationsList')
     CatalogNameString = Shapes::StringShape.new(name: 'CatalogNameString')
+    Classification = Shapes::StructureShape.new(name: 'Classification')
+    ClassificationList = Shapes::ListShape.new(name: 'ClassificationList')
     ClientRequestToken = Shapes::StringShape.new(name: 'ClientRequestToken')
+    CloudWatchLoggingConfiguration = Shapes::StructureShape.new(name: 'CloudWatchLoggingConfiguration')
     CodeBlock = Shapes::StringShape.new(name: 'CodeBlock')
     Column = Shapes::StructureShape.new(name: 'Column')
     ColumnInfo = Shapes::StructureShape.new(name: 'ColumnInfo')
@@ -103,6 +106,7 @@ module Aws::Athena
     DeleteWorkGroupInput = Shapes::StructureShape.new(name: 'DeleteWorkGroupInput')
     DeleteWorkGroupOutput = Shapes::StructureShape.new(name: 'DeleteWorkGroupOutput')
     DescriptionString = Shapes::StringShape.new(name: 'DescriptionString')
+    DpuCount = Shapes::FloatShape.new(name: 'DpuCount')
     EncryptionConfiguration = Shapes::StructureShape.new(name: 'EncryptionConfiguration')
     EncryptionOption = Shapes::StringShape.new(name: 'EncryptionOption')
     EngineConfiguration = Shapes::StructureShape.new(name: 'EngineConfiguration')
@@ -149,6 +153,10 @@ module Aws::Athena
     GetQueryResultsOutput = Shapes::StructureShape.new(name: 'GetQueryResultsOutput')
     GetQueryRuntimeStatisticsInput = Shapes::StructureShape.new(name: 'GetQueryRuntimeStatisticsInput')
     GetQueryRuntimeStatisticsOutput = Shapes::StructureShape.new(name: 'GetQueryRuntimeStatisticsOutput')
+    GetResourceDashboardRequest = Shapes::StructureShape.new(name: 'GetResourceDashboardRequest')
+    GetResourceDashboardResponse = Shapes::StructureShape.new(name: 'GetResourceDashboardResponse')
+    GetSessionEndpointRequest = Shapes::StructureShape.new(name: 'GetSessionEndpointRequest')
+    GetSessionEndpointResponse = Shapes::StructureShape.new(name: 'GetSessionEndpointResponse')
     GetSessionRequest = Shapes::StructureShape.new(name: 'GetSessionRequest')
     GetSessionResponse = Shapes::StructureShape.new(name: 'GetSessionResponse')
     GetSessionStatusRequest = Shapes::StructureShape.new(name: 'GetSessionStatusRequest')
@@ -200,7 +208,17 @@ module Aws::Athena
     ListTagsForResourceOutput = Shapes::StructureShape.new(name: 'ListTagsForResourceOutput')
     ListWorkGroupsInput = Shapes::StructureShape.new(name: 'ListWorkGroupsInput')
     ListWorkGroupsOutput = Shapes::StructureShape.new(name: 'ListWorkGroupsOutput')
+    LogGroupName = Shapes::StringShape.new(name: 'LogGroupName')
+    LogStreamNamePrefix = Shapes::StringShape.new(name: 'LogStreamNamePrefix')
+    LogTypeKey = Shapes::StringShape.new(name: 'LogTypeKey')
+    LogTypeValue = Shapes::StringShape.new(name: 'LogTypeValue')
+    LogTypeValuesList = Shapes::ListShape.new(name: 'LogTypeValuesList')
+    LogTypesMap = Shapes::MapShape.new(name: 'LogTypesMap')
     Long = Shapes::IntegerShape.new(name: 'Long')
+    ManagedLoggingConfiguration = Shapes::StructureShape.new(name: 'ManagedLoggingConfiguration')
+    ManagedQueryResultsConfiguration = Shapes::StructureShape.new(name: 'ManagedQueryResultsConfiguration')
+    ManagedQueryResultsConfigurationUpdates = Shapes::StructureShape.new(name: 'ManagedQueryResultsConfigurationUpdates')
+    ManagedQueryResultsEncryptionConfiguration = Shapes::StructureShape.new(name: 'ManagedQueryResultsEncryptionConfiguration')
     MaxApplicationDPUSizesCount = Shapes::IntegerShape.new(name: 'MaxApplicationDPUSizesCount')
     MaxCalculationsCount = Shapes::IntegerShape.new(name: 'MaxCalculationsCount')
     MaxCapacityReservationsCount = Shapes::IntegerShape.new(name: 'MaxCapacityReservationsCount')
@@ -219,6 +237,7 @@ module Aws::Athena
     MaxTagsCount = Shapes::IntegerShape.new(name: 'MaxTagsCount')
     MaxWorkGroupsCount = Shapes::IntegerShape.new(name: 'MaxWorkGroupsCount')
     MetadataException = Shapes::StructureShape.new(name: 'MetadataException')
+    MonitoringConfiguration = Shapes::StructureShape.new(name: 'MonitoringConfiguration')
     NameString = Shapes::StringShape.new(name: 'NameString')
     NamedQuery = Shapes::StructureShape.new(name: 'NamedQuery')
     NamedQueryDescriptionString = Shapes::StringShape.new(name: 'NamedQueryDescriptionString')
@@ -250,6 +269,7 @@ module Aws::Athena
     QueryExecutionState = Shapes::StringShape.new(name: 'QueryExecutionState')
     QueryExecutionStatistics = Shapes::StructureShape.new(name: 'QueryExecutionStatistics')
     QueryExecutionStatus = Shapes::StructureShape.new(name: 'QueryExecutionStatus')
+    QueryResultType = Shapes::StringShape.new(name: 'QueryResultType')
     QueryResultsS3AccessGrantsConfiguration = Shapes::StructureShape.new(name: 'QueryResultsS3AccessGrantsConfiguration')
     QueryRuntimeStatistics = Shapes::StructureShape.new(name: 'QueryRuntimeStatistics')
     QueryRuntimeStatisticsRows = Shapes::StructureShape.new(name: 'QueryRuntimeStatisticsRows')
@@ -272,6 +292,8 @@ module Aws::Athena
     Row = Shapes::StructureShape.new(name: 'Row')
     RowList = Shapes::ListShape.new(name: 'RowList')
     S3AclOption = Shapes::StringShape.new(name: 'S3AclOption')
+    S3LoggingConfiguration = Shapes::StructureShape.new(name: 'S3LoggingConfiguration')
+    S3OutputLocation = Shapes::StringShape.new(name: 'S3OutputLocation')
     S3Uri = Shapes::StringShape.new(name: 'S3Uri')
     SessionAlreadyExistsException = Shapes::StructureShape.new(name: 'SessionAlreadyExistsException')
     SessionConfiguration = Shapes::StructureShape.new(name: 'SessionConfiguration')
@@ -444,6 +466,18 @@ module Aws::Athena
 
     CapacityReservationsList.member = Shapes::ShapeRef.new(shape: CapacityReservation)
 
+    Classification.add_member(:name, Shapes::ShapeRef.new(shape: NameString, location_name: "Name"))
+    Classification.add_member(:properties, Shapes::ShapeRef.new(shape: ParametersMap, location_name: "Properties"))
+    Classification.struct_class = Types::Classification
+
+    ClassificationList.member = Shapes::ShapeRef.new(shape: Classification)
+
+    CloudWatchLoggingConfiguration.add_member(:enabled, Shapes::ShapeRef.new(shape: BoxedBoolean, required: true, location_name: "Enabled"))
+    CloudWatchLoggingConfiguration.add_member(:log_group, Shapes::ShapeRef.new(shape: LogGroupName, location_name: "LogGroup"))
+    CloudWatchLoggingConfiguration.add_member(:log_stream_name_prefix, Shapes::ShapeRef.new(shape: LogStreamNamePrefix, location_name: "LogStreamNamePrefix"))
+    CloudWatchLoggingConfiguration.add_member(:log_types, Shapes::ShapeRef.new(shape: LogTypesMap, location_name: "LogTypes"))
+    CloudWatchLoggingConfiguration.struct_class = Types::CloudWatchLoggingConfiguration
+
     Column.add_member(:name, Shapes::ShapeRef.new(shape: NameString, required: true, location_name: "Name"))
     Column.add_member(:type, Shapes::ShapeRef.new(shape: TypeString, location_name: "Type"))
     Column.add_member(:comment, Shapes::ShapeRef.new(shape: CommentString, location_name: "Comment"))
@@ -486,7 +520,7 @@ module Aws::Athena
     CreateNamedQueryInput.add_member(:description, Shapes::ShapeRef.new(shape: DescriptionString, location_name: "Description"))
     CreateNamedQueryInput.add_member(:database, Shapes::ShapeRef.new(shape: DatabaseString, required: true, location_name: "Database"))
     CreateNamedQueryInput.add_member(:query_string, Shapes::ShapeRef.new(shape: QueryString, required: true, location_name: "QueryString"))
-    CreateNamedQueryInput.add_member(:client_request_token, Shapes::ShapeRef.new(shape: IdempotencyToken, location_name: "ClientRequestToken", metadata: {"idempotencyToken"=>true}))
+    CreateNamedQueryInput.add_member(:client_request_token, Shapes::ShapeRef.new(shape: IdempotencyToken, location_name: "ClientRequestToken", metadata: {"idempotencyToken" => true}))
     CreateNamedQueryInput.add_member(:work_group, Shapes::ShapeRef.new(shape: WorkGroupName, location_name: "WorkGroup"))
     CreateNamedQueryInput.struct_class = Types::CreateNamedQueryInput
 
@@ -568,7 +602,7 @@ module Aws::Athena
     DeleteDataCatalogOutput.add_member(:data_catalog, Shapes::ShapeRef.new(shape: DataCatalog, location_name: "DataCatalog"))
     DeleteDataCatalogOutput.struct_class = Types::DeleteDataCatalogOutput
 
-    DeleteNamedQueryInput.add_member(:named_query_id, Shapes::ShapeRef.new(shape: NamedQueryId, required: true, location_name: "NamedQueryId", metadata: {"idempotencyToken"=>true}))
+    DeleteNamedQueryInput.add_member(:named_query_id, Shapes::ShapeRef.new(shape: NamedQueryId, required: true, location_name: "NamedQueryId", metadata: {"idempotencyToken" => true}))
     DeleteNamedQueryInput.struct_class = Types::DeleteNamedQueryInput
 
     DeleteNamedQueryOutput.struct_class = Types::DeleteNamedQueryOutput
@@ -595,10 +629,11 @@ module Aws::Athena
     EncryptionConfiguration.struct_class = Types::EncryptionConfiguration
 
     EngineConfiguration.add_member(:coordinator_dpu_size, Shapes::ShapeRef.new(shape: CoordinatorDpuSize, location_name: "CoordinatorDpuSize"))
-    EngineConfiguration.add_member(:max_concurrent_dpus, Shapes::ShapeRef.new(shape: MaxConcurrentDpus, required: true, location_name: "MaxConcurrentDpus"))
+    EngineConfiguration.add_member(:max_concurrent_dpus, Shapes::ShapeRef.new(shape: MaxConcurrentDpus, location_name: "MaxConcurrentDpus"))
     EngineConfiguration.add_member(:default_executor_dpu_size, Shapes::ShapeRef.new(shape: DefaultExecutorDpuSize, location_name: "DefaultExecutorDpuSize"))
     EngineConfiguration.add_member(:additional_configs, Shapes::ShapeRef.new(shape: ParametersMap, location_name: "AdditionalConfigs"))
     EngineConfiguration.add_member(:spark_properties, Shapes::ShapeRef.new(shape: ParametersMap, location_name: "SparkProperties"))
+    EngineConfiguration.add_member(:classifications, Shapes::ShapeRef.new(shape: ClassificationList, location_name: "Classifications"))
     EngineConfiguration.struct_class = Types::EngineConfiguration
 
     EngineVersion.add_member(:selected_engine_version, Shapes::ShapeRef.new(shape: NameString, location_name: "SelectedEngineVersion"))
@@ -709,6 +744,7 @@ module Aws::Athena
     GetQueryResultsInput.add_member(:query_execution_id, Shapes::ShapeRef.new(shape: QueryExecutionId, required: true, location_name: "QueryExecutionId"))
     GetQueryResultsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: Token, location_name: "NextToken"))
     GetQueryResultsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxQueryResults, location_name: "MaxResults"))
+    GetQueryResultsInput.add_member(:query_result_type, Shapes::ShapeRef.new(shape: QueryResultType, location_name: "QueryResultType"))
     GetQueryResultsInput.struct_class = Types::GetQueryResultsInput
 
     GetQueryResultsOutput.add_member(:update_count, Shapes::ShapeRef.new(shape: Long, location_name: "UpdateCount"))
@@ -722,6 +758,20 @@ module Aws::Athena
     GetQueryRuntimeStatisticsOutput.add_member(:query_runtime_statistics, Shapes::ShapeRef.new(shape: QueryRuntimeStatistics, location_name: "QueryRuntimeStatistics"))
     GetQueryRuntimeStatisticsOutput.struct_class = Types::GetQueryRuntimeStatisticsOutput
 
+    GetResourceDashboardRequest.add_member(:resource_arn, Shapes::ShapeRef.new(shape: AmazonResourceName, required: true, location_name: "ResourceARN"))
+    GetResourceDashboardRequest.struct_class = Types::GetResourceDashboardRequest
+
+    GetResourceDashboardResponse.add_member(:url, Shapes::ShapeRef.new(shape: String, required: true, location_name: "Url"))
+    GetResourceDashboardResponse.struct_class = Types::GetResourceDashboardResponse
+
+    GetSessionEndpointRequest.add_member(:session_id, Shapes::ShapeRef.new(shape: SessionId, required: true, location_name: "SessionId"))
+    GetSessionEndpointRequest.struct_class = Types::GetSessionEndpointRequest
+
+    GetSessionEndpointResponse.add_member(:endpoint_url, Shapes::ShapeRef.new(shape: String, required: true, location_name: "EndpointUrl"))
+    GetSessionEndpointResponse.add_member(:auth_token, Shapes::ShapeRef.new(shape: String, required: true, location_name: "AuthToken"))
+    GetSessionEndpointResponse.add_member(:auth_token_expiration_time, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "AuthTokenExpirationTime"))
+    GetSessionEndpointResponse.struct_class = Types::GetSessionEndpointResponse
+
     GetSessionRequest.add_member(:session_id, Shapes::ShapeRef.new(shape: SessionId, required: true, location_name: "SessionId"))
     GetSessionRequest.struct_class = Types::GetSessionRequest
 
@@ -731,6 +781,7 @@ module Aws::Athena
     GetSessionResponse.add_member(:engine_version, Shapes::ShapeRef.new(shape: NameString, location_name: "EngineVersion"))
     GetSessionResponse.add_member(:engine_configuration, Shapes::ShapeRef.new(shape: EngineConfiguration, location_name: "EngineConfiguration"))
     GetSessionResponse.add_member(:notebook_version, Shapes::ShapeRef.new(shape: NameString, location_name: "NotebookVersion"))
+    GetSessionResponse.add_member(:monitoring_configuration, Shapes::ShapeRef.new(shape: MonitoringConfiguration, location_name: "MonitoringConfiguration"))
     GetSessionResponse.add_member(:session_configuration, Shapes::ShapeRef.new(shape: SessionConfiguration, location_name: "SessionConfiguration"))
     GetSessionResponse.add_member(:status, Shapes::ShapeRef.new(shape: SessionStatus, location_name: "Status"))
     GetSessionResponse.add_member(:statistics, Shapes::ShapeRef.new(shape: SessionStatistics, location_name: "Statistics"))
@@ -929,8 +980,34 @@ module Aws::Athena
     ListWorkGroupsOutput.add_member(:next_token, Shapes::ShapeRef.new(shape: Token, location_name: "NextToken"))
     ListWorkGroupsOutput.struct_class = Types::ListWorkGroupsOutput
 
+    LogTypeValuesList.member = Shapes::ShapeRef.new(shape: LogTypeValue)
+
+    LogTypesMap.key = Shapes::ShapeRef.new(shape: LogTypeKey)
+    LogTypesMap.value = Shapes::ShapeRef.new(shape: LogTypeValuesList)
+
+    ManagedLoggingConfiguration.add_member(:enabled, Shapes::ShapeRef.new(shape: BoxedBoolean, required: true, location_name: "Enabled"))
+    ManagedLoggingConfiguration.add_member(:kms_key, Shapes::ShapeRef.new(shape: KmsKey, location_name: "KmsKey"))
+    ManagedLoggingConfiguration.struct_class = Types::ManagedLoggingConfiguration
+
+    ManagedQueryResultsConfiguration.add_member(:enabled, Shapes::ShapeRef.new(shape: Boolean, required: true, location_name: "Enabled"))
+    ManagedQueryResultsConfiguration.add_member(:encryption_configuration, Shapes::ShapeRef.new(shape: ManagedQueryResultsEncryptionConfiguration, location_name: "EncryptionConfiguration"))
+    ManagedQueryResultsConfiguration.struct_class = Types::ManagedQueryResultsConfiguration
+
+    ManagedQueryResultsConfigurationUpdates.add_member(:enabled, Shapes::ShapeRef.new(shape: BoxedBoolean, location_name: "Enabled"))
+    ManagedQueryResultsConfigurationUpdates.add_member(:encryption_configuration, Shapes::ShapeRef.new(shape: ManagedQueryResultsEncryptionConfiguration, location_name: "EncryptionConfiguration"))
+    ManagedQueryResultsConfigurationUpdates.add_member(:remove_encryption_configuration, Shapes::ShapeRef.new(shape: BoxedBoolean, location_name: "RemoveEncryptionConfiguration"))
+    ManagedQueryResultsConfigurationUpdates.struct_class = Types::ManagedQueryResultsConfigurationUpdates
+
+    ManagedQueryResultsEncryptionConfiguration.add_member(:kms_key, Shapes::ShapeRef.new(shape: KmsKey, required: true, location_name: "KmsKey"))
+    ManagedQueryResultsEncryptionConfiguration.struct_class = Types::ManagedQueryResultsEncryptionConfiguration
+
     MetadataException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, location_name: "Message"))
     MetadataException.struct_class = Types::MetadataException
+
+    MonitoringConfiguration.add_member(:cloud_watch_logging_configuration, Shapes::ShapeRef.new(shape: CloudWatchLoggingConfiguration, location_name: "CloudWatchLoggingConfiguration"))
+    MonitoringConfiguration.add_member(:managed_logging_configuration, Shapes::ShapeRef.new(shape: ManagedLoggingConfiguration, location_name: "ManagedLoggingConfiguration"))
+    MonitoringConfiguration.add_member(:s3_logging_configuration, Shapes::ShapeRef.new(shape: S3LoggingConfiguration, location_name: "S3LoggingConfiguration"))
+    MonitoringConfiguration.struct_class = Types::MonitoringConfiguration
 
     NamedQuery.add_member(:name, Shapes::ShapeRef.new(shape: NameString, required: true, location_name: "Name"))
     NamedQuery.add_member(:description, Shapes::ShapeRef.new(shape: DescriptionString, location_name: "Description"))
@@ -989,6 +1066,7 @@ module Aws::Athena
     QueryExecution.add_member(:query_execution_id, Shapes::ShapeRef.new(shape: QueryExecutionId, location_name: "QueryExecutionId"))
     QueryExecution.add_member(:query, Shapes::ShapeRef.new(shape: QueryString, location_name: "Query"))
     QueryExecution.add_member(:statement_type, Shapes::ShapeRef.new(shape: StatementType, location_name: "StatementType"))
+    QueryExecution.add_member(:managed_query_results_configuration, Shapes::ShapeRef.new(shape: ManagedQueryResultsConfiguration, location_name: "ManagedQueryResultsConfiguration"))
     QueryExecution.add_member(:result_configuration, Shapes::ShapeRef.new(shape: ResultConfiguration, location_name: "ResultConfiguration"))
     QueryExecution.add_member(:result_reuse_configuration, Shapes::ShapeRef.new(shape: ResultReuseConfiguration, location_name: "ResultReuseConfiguration"))
     QueryExecution.add_member(:query_execution_context, Shapes::ShapeRef.new(shape: QueryExecutionContext, location_name: "QueryExecutionContext"))
@@ -1018,6 +1096,7 @@ module Aws::Athena
     QueryExecutionStatistics.add_member(:query_planning_time_in_millis, Shapes::ShapeRef.new(shape: Long, location_name: "QueryPlanningTimeInMillis"))
     QueryExecutionStatistics.add_member(:service_processing_time_in_millis, Shapes::ShapeRef.new(shape: Long, location_name: "ServiceProcessingTimeInMillis"))
     QueryExecutionStatistics.add_member(:result_reuse_information, Shapes::ShapeRef.new(shape: ResultReuseInformation, location_name: "ResultReuseInformation"))
+    QueryExecutionStatistics.add_member(:dpu_count, Shapes::ShapeRef.new(shape: DpuCount, location_name: "DpuCount"))
     QueryExecutionStatistics.struct_class = Types::QueryExecutionStatistics
 
     QueryExecutionStatus.add_member(:state, Shapes::ShapeRef.new(shape: QueryExecutionState, location_name: "State"))
@@ -1114,12 +1193,18 @@ module Aws::Athena
 
     RowList.member = Shapes::ShapeRef.new(shape: Row)
 
+    S3LoggingConfiguration.add_member(:enabled, Shapes::ShapeRef.new(shape: BoxedBoolean, required: true, location_name: "Enabled"))
+    S3LoggingConfiguration.add_member(:kms_key, Shapes::ShapeRef.new(shape: KmsKey, location_name: "KmsKey"))
+    S3LoggingConfiguration.add_member(:log_location, Shapes::ShapeRef.new(shape: S3OutputLocation, location_name: "LogLocation"))
+    S3LoggingConfiguration.struct_class = Types::S3LoggingConfiguration
+
     SessionAlreadyExistsException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, location_name: "Message"))
     SessionAlreadyExistsException.struct_class = Types::SessionAlreadyExistsException
 
     SessionConfiguration.add_member(:execution_role, Shapes::ShapeRef.new(shape: RoleArn, location_name: "ExecutionRole"))
     SessionConfiguration.add_member(:working_directory, Shapes::ShapeRef.new(shape: ResultOutputLocation, location_name: "WorkingDirectory"))
     SessionConfiguration.add_member(:idle_timeout_seconds, Shapes::ShapeRef.new(shape: Long, location_name: "IdleTimeoutSeconds"))
+    SessionConfiguration.add_member(:session_idle_timeout_in_minutes, Shapes::ShapeRef.new(shape: SessionIdleTimeoutInMinutes, location_name: "SessionIdleTimeoutInMinutes"))
     SessionConfiguration.add_member(:encryption_configuration, Shapes::ShapeRef.new(shape: EncryptionConfiguration, location_name: "EncryptionConfiguration"))
     SessionConfiguration.struct_class = Types::SessionConfiguration
 
@@ -1145,7 +1230,7 @@ module Aws::Athena
 
     StartCalculationExecutionRequest.add_member(:session_id, Shapes::ShapeRef.new(shape: SessionId, required: true, location_name: "SessionId"))
     StartCalculationExecutionRequest.add_member(:description, Shapes::ShapeRef.new(shape: DescriptionString, location_name: "Description"))
-    StartCalculationExecutionRequest.add_member(:calculation_configuration, Shapes::ShapeRef.new(shape: CalculationConfiguration, deprecated: true, location_name: "CalculationConfiguration", metadata: {"deprecatedMessage"=>"Kepler Post GA Tasks : https://sim.amazon.com/issues/ATHENA-39828"}))
+    StartCalculationExecutionRequest.add_member(:calculation_configuration, Shapes::ShapeRef.new(shape: CalculationConfiguration, deprecated: true, location_name: "CalculationConfiguration", metadata: {"deprecatedMessage" => "Structure is deprecated."}))
     StartCalculationExecutionRequest.add_member(:code_block, Shapes::ShapeRef.new(shape: CodeBlock, location_name: "CodeBlock"))
     StartCalculationExecutionRequest.add_member(:client_request_token, Shapes::ShapeRef.new(shape: IdempotencyToken, location_name: "ClientRequestToken"))
     StartCalculationExecutionRequest.struct_class = Types::StartCalculationExecutionRequest
@@ -1155,12 +1240,13 @@ module Aws::Athena
     StartCalculationExecutionResponse.struct_class = Types::StartCalculationExecutionResponse
 
     StartQueryExecutionInput.add_member(:query_string, Shapes::ShapeRef.new(shape: QueryString, required: true, location_name: "QueryString"))
-    StartQueryExecutionInput.add_member(:client_request_token, Shapes::ShapeRef.new(shape: IdempotencyToken, location_name: "ClientRequestToken", metadata: {"idempotencyToken"=>true}))
+    StartQueryExecutionInput.add_member(:client_request_token, Shapes::ShapeRef.new(shape: IdempotencyToken, location_name: "ClientRequestToken", metadata: {"idempotencyToken" => true}))
     StartQueryExecutionInput.add_member(:query_execution_context, Shapes::ShapeRef.new(shape: QueryExecutionContext, location_name: "QueryExecutionContext"))
     StartQueryExecutionInput.add_member(:result_configuration, Shapes::ShapeRef.new(shape: ResultConfiguration, location_name: "ResultConfiguration"))
     StartQueryExecutionInput.add_member(:work_group, Shapes::ShapeRef.new(shape: WorkGroupName, location_name: "WorkGroup"))
     StartQueryExecutionInput.add_member(:execution_parameters, Shapes::ShapeRef.new(shape: ExecutionParameters, location_name: "ExecutionParameters"))
     StartQueryExecutionInput.add_member(:result_reuse_configuration, Shapes::ShapeRef.new(shape: ResultReuseConfiguration, location_name: "ResultReuseConfiguration"))
+    StartQueryExecutionInput.add_member(:engine_configuration, Shapes::ShapeRef.new(shape: EngineConfiguration, location_name: "EngineConfiguration"))
     StartQueryExecutionInput.struct_class = Types::StartQueryExecutionInput
 
     StartQueryExecutionOutput.add_member(:query_execution_id, Shapes::ShapeRef.new(shape: QueryExecutionId, location_name: "QueryExecutionId"))
@@ -1169,9 +1255,13 @@ module Aws::Athena
     StartSessionRequest.add_member(:description, Shapes::ShapeRef.new(shape: DescriptionString, location_name: "Description"))
     StartSessionRequest.add_member(:work_group, Shapes::ShapeRef.new(shape: WorkGroupName, required: true, location_name: "WorkGroup"))
     StartSessionRequest.add_member(:engine_configuration, Shapes::ShapeRef.new(shape: EngineConfiguration, required: true, location_name: "EngineConfiguration"))
+    StartSessionRequest.add_member(:execution_role, Shapes::ShapeRef.new(shape: RoleArn, location_name: "ExecutionRole"))
+    StartSessionRequest.add_member(:monitoring_configuration, Shapes::ShapeRef.new(shape: MonitoringConfiguration, location_name: "MonitoringConfiguration"))
     StartSessionRequest.add_member(:notebook_version, Shapes::ShapeRef.new(shape: NameString, location_name: "NotebookVersion"))
     StartSessionRequest.add_member(:session_idle_timeout_in_minutes, Shapes::ShapeRef.new(shape: SessionIdleTimeoutInMinutes, location_name: "SessionIdleTimeoutInMinutes"))
     StartSessionRequest.add_member(:client_request_token, Shapes::ShapeRef.new(shape: IdempotencyToken, location_name: "ClientRequestToken"))
+    StartSessionRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
+    StartSessionRequest.add_member(:copy_work_group_tags, Shapes::ShapeRef.new(shape: BoxedBoolean, location_name: "CopyWorkGroupTags"))
     StartSessionRequest.struct_class = Types::StartSessionRequest
 
     StartSessionResponse.add_member(:session_id, Shapes::ShapeRef.new(shape: SessionId, location_name: "SessionId"))
@@ -1184,7 +1274,7 @@ module Aws::Athena
     StopCalculationExecutionResponse.add_member(:state, Shapes::ShapeRef.new(shape: CalculationExecutionState, location_name: "State"))
     StopCalculationExecutionResponse.struct_class = Types::StopCalculationExecutionResponse
 
-    StopQueryExecutionInput.add_member(:query_execution_id, Shapes::ShapeRef.new(shape: QueryExecutionId, required: true, location_name: "QueryExecutionId", metadata: {"idempotencyToken"=>true}))
+    StopQueryExecutionInput.add_member(:query_execution_id, Shapes::ShapeRef.new(shape: QueryExecutionId, required: true, location_name: "QueryExecutionId", metadata: {"idempotencyToken" => true}))
     StopQueryExecutionInput.struct_class = Types::StopQueryExecutionInput
 
     StopQueryExecutionOutput.struct_class = Types::StopQueryExecutionOutput
@@ -1318,6 +1408,7 @@ module Aws::Athena
     WorkGroup.struct_class = Types::WorkGroup
 
     WorkGroupConfiguration.add_member(:result_configuration, Shapes::ShapeRef.new(shape: ResultConfiguration, location_name: "ResultConfiguration"))
+    WorkGroupConfiguration.add_member(:managed_query_results_configuration, Shapes::ShapeRef.new(shape: ManagedQueryResultsConfiguration, location_name: "ManagedQueryResultsConfiguration"))
     WorkGroupConfiguration.add_member(:enforce_work_group_configuration, Shapes::ShapeRef.new(shape: BoxedBoolean, location_name: "EnforceWorkGroupConfiguration"))
     WorkGroupConfiguration.add_member(:publish_cloud_watch_metrics_enabled, Shapes::ShapeRef.new(shape: BoxedBoolean, location_name: "PublishCloudWatchMetricsEnabled"))
     WorkGroupConfiguration.add_member(:bytes_scanned_cutoff_per_query, Shapes::ShapeRef.new(shape: BytesScannedCutoffValue, location_name: "BytesScannedCutoffPerQuery"))
@@ -1325,6 +1416,8 @@ module Aws::Athena
     WorkGroupConfiguration.add_member(:engine_version, Shapes::ShapeRef.new(shape: EngineVersion, location_name: "EngineVersion"))
     WorkGroupConfiguration.add_member(:additional_configuration, Shapes::ShapeRef.new(shape: NameString, location_name: "AdditionalConfiguration"))
     WorkGroupConfiguration.add_member(:execution_role, Shapes::ShapeRef.new(shape: RoleArn, location_name: "ExecutionRole"))
+    WorkGroupConfiguration.add_member(:monitoring_configuration, Shapes::ShapeRef.new(shape: MonitoringConfiguration, location_name: "MonitoringConfiguration"))
+    WorkGroupConfiguration.add_member(:engine_configuration, Shapes::ShapeRef.new(shape: EngineConfiguration, location_name: "EngineConfiguration"))
     WorkGroupConfiguration.add_member(:customer_content_encryption_configuration, Shapes::ShapeRef.new(shape: CustomerContentEncryptionConfiguration, location_name: "CustomerContentEncryptionConfiguration"))
     WorkGroupConfiguration.add_member(:enable_minimum_encryption_configuration, Shapes::ShapeRef.new(shape: BoxedBoolean, location_name: "EnableMinimumEncryptionConfiguration"))
     WorkGroupConfiguration.add_member(:identity_center_configuration, Shapes::ShapeRef.new(shape: IdentityCenterConfiguration, location_name: "IdentityCenterConfiguration"))
@@ -1333,6 +1426,7 @@ module Aws::Athena
 
     WorkGroupConfigurationUpdates.add_member(:enforce_work_group_configuration, Shapes::ShapeRef.new(shape: BoxedBoolean, location_name: "EnforceWorkGroupConfiguration"))
     WorkGroupConfigurationUpdates.add_member(:result_configuration_updates, Shapes::ShapeRef.new(shape: ResultConfigurationUpdates, location_name: "ResultConfigurationUpdates"))
+    WorkGroupConfigurationUpdates.add_member(:managed_query_results_configuration_updates, Shapes::ShapeRef.new(shape: ManagedQueryResultsConfigurationUpdates, location_name: "ManagedQueryResultsConfigurationUpdates"))
     WorkGroupConfigurationUpdates.add_member(:publish_cloud_watch_metrics_enabled, Shapes::ShapeRef.new(shape: BoxedBoolean, location_name: "PublishCloudWatchMetricsEnabled"))
     WorkGroupConfigurationUpdates.add_member(:bytes_scanned_cutoff_per_query, Shapes::ShapeRef.new(shape: BytesScannedCutoffValue, location_name: "BytesScannedCutoffPerQuery"))
     WorkGroupConfigurationUpdates.add_member(:remove_bytes_scanned_cutoff_per_query, Shapes::ShapeRef.new(shape: BoxedBoolean, location_name: "RemoveBytesScannedCutoffPerQuery"))
@@ -1344,6 +1438,8 @@ module Aws::Athena
     WorkGroupConfigurationUpdates.add_member(:customer_content_encryption_configuration, Shapes::ShapeRef.new(shape: CustomerContentEncryptionConfiguration, location_name: "CustomerContentEncryptionConfiguration"))
     WorkGroupConfigurationUpdates.add_member(:enable_minimum_encryption_configuration, Shapes::ShapeRef.new(shape: BoxedBoolean, location_name: "EnableMinimumEncryptionConfiguration"))
     WorkGroupConfigurationUpdates.add_member(:query_results_s3_access_grants_configuration, Shapes::ShapeRef.new(shape: QueryResultsS3AccessGrantsConfiguration, location_name: "QueryResultsS3AccessGrantsConfiguration"))
+    WorkGroupConfigurationUpdates.add_member(:monitoring_configuration, Shapes::ShapeRef.new(shape: MonitoringConfiguration, location_name: "MonitoringConfiguration"))
+    WorkGroupConfigurationUpdates.add_member(:engine_configuration, Shapes::ShapeRef.new(shape: EngineConfiguration, location_name: "EngineConfiguration"))
     WorkGroupConfigurationUpdates.struct_class = Types::WorkGroupConfigurationUpdates
 
     WorkGroupNamesList.member = Shapes::ShapeRef.new(shape: WorkGroupName)
@@ -1708,12 +1804,34 @@ module Aws::Athena
         o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
       end)
 
+      api.add_operation(:get_resource_dashboard, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetResourceDashboard"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: GetResourceDashboardRequest)
+        o.output = Shapes::ShapeRef.new(shape: GetResourceDashboardResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+      end)
+
       api.add_operation(:get_session, Seahorse::Model::Operation.new.tap do |o|
         o.name = "GetSession"
         o.http_method = "POST"
         o.http_request_uri = "/"
         o.input = Shapes::ShapeRef.new(shape: GetSessionRequest)
         o.output = Shapes::ShapeRef.new(shape: GetSessionResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+      end)
+
+      api.add_operation(:get_session_endpoint, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetSessionEndpoint"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: GetSessionEndpointRequest)
+        o.output = Shapes::ShapeRef.new(shape: GetSessionEndpointResponse)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o.errors << Shapes::ShapeRef.new(shape: InvalidRequestException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)

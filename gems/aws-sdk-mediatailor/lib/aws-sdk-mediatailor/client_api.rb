@@ -21,8 +21,15 @@ module Aws::MediaTailor
     AdBreakOpportunities = Shapes::ListShape.new(name: 'AdBreakOpportunities')
     AdBreakOpportunity = Shapes::StructureShape.new(name: 'AdBreakOpportunity')
     AdConditioningConfiguration = Shapes::StructureShape.new(name: 'AdConditioningConfiguration')
+    AdDecisionServerConfiguration = Shapes::StructureShape.new(name: 'AdDecisionServerConfiguration')
     AdMarkerPassthrough = Shapes::StructureShape.new(name: 'AdMarkerPassthrough')
     AdMarkupType = Shapes::StringShape.new(name: 'AdMarkupType')
+    AdSequencingMode = Shapes::StringShape.new(name: 'AdSequencingMode')
+    AdsInteractionExcludeEventType = Shapes::StringShape.new(name: 'AdsInteractionExcludeEventType')
+    AdsInteractionLog = Shapes::StructureShape.new(name: 'AdsInteractionLog')
+    AdsInteractionPublishOptInEventType = Shapes::StringShape.new(name: 'AdsInteractionPublishOptInEventType')
+    AdsPersonalizationConcurrency = Shapes::StructureShape.new(name: 'AdsPersonalizationConcurrency')
+    AdsPersonalizationTimeouts = Shapes::StructureShape.new(name: 'AdsPersonalizationTimeouts')
     Alert = Shapes::StructureShape.new(name: 'Alert')
     AlertCategory = Shapes::StringShape.new(name: 'AlertCategory')
     AlternateMedia = Shapes::StructureShape.new(name: 'AlternateMedia')
@@ -36,6 +43,8 @@ module Aws::MediaTailor
     Channel = Shapes::StructureShape.new(name: 'Channel')
     ChannelState = Shapes::StringShape.new(name: 'ChannelState')
     ClipRange = Shapes::StructureShape.new(name: 'ClipRange')
+    CompressionMethod = Shapes::StringShape.new(name: 'CompressionMethod')
+    ConcurrentExecutorConfiguration = Shapes::StructureShape.new(name: 'ConcurrentExecutorConfiguration')
     ConfigurationAliasesRequest = Shapes::MapShape.new(name: 'ConfigurationAliasesRequest')
     ConfigurationAliasesResponse = Shapes::MapShape.new(name: 'ConfigurationAliasesResponse')
     ConfigureLogsForChannelRequest = Shapes::StructureShape.new(name: 'ConfigureLogsForChannelRequest')
@@ -54,6 +63,7 @@ module Aws::MediaTailor
     CreateSourceLocationResponse = Shapes::StructureShape.new(name: 'CreateSourceLocationResponse')
     CreateVodSourceRequest = Shapes::StructureShape.new(name: 'CreateVodSourceRequest')
     CreateVodSourceResponse = Shapes::StructureShape.new(name: 'CreateVodSourceResponse')
+    CustomOutputConfiguration = Shapes::StructureShape.new(name: 'CustomOutputConfiguration')
     DashConfiguration = Shapes::StructureShape.new(name: 'DashConfiguration')
     DashConfigurationForPut = Shapes::StructureShape.new(name: 'DashConfigurationForPut')
     DashPlaylistSettings = Shapes::StructureShape.new(name: 'DashPlaylistSettings')
@@ -62,6 +72,8 @@ module Aws::MediaTailor
     DeleteChannelPolicyResponse = Shapes::StructureShape.new(name: 'DeleteChannelPolicyResponse')
     DeleteChannelRequest = Shapes::StructureShape.new(name: 'DeleteChannelRequest')
     DeleteChannelResponse = Shapes::StructureShape.new(name: 'DeleteChannelResponse')
+    DeleteFunctionRequest = Shapes::StructureShape.new(name: 'DeleteFunctionRequest')
+    DeleteFunctionResponse = Shapes::StructureShape.new(name: 'DeleteFunctionResponse')
     DeleteLiveSourceRequest = Shapes::StructureShape.new(name: 'DeleteLiveSourceRequest')
     DeleteLiveSourceResponse = Shapes::StructureShape.new(name: 'DeleteLiveSourceResponse')
     DeletePlaybackConfigurationRequest = Shapes::StructureShape.new(name: 'DeletePlaybackConfigurationRequest')
@@ -84,11 +96,18 @@ module Aws::MediaTailor
     DescribeSourceLocationResponse = Shapes::StructureShape.new(name: 'DescribeSourceLocationResponse')
     DescribeVodSourceRequest = Shapes::StructureShape.new(name: 'DescribeVodSourceRequest')
     DescribeVodSourceResponse = Shapes::StructureShape.new(name: 'DescribeVodSourceResponse')
+    EventName = Shapes::StringShape.new(name: 'EventName')
     FillPolicy = Shapes::StringShape.new(name: 'FillPolicy')
+    Function = Shapes::StructureShape.new(name: 'Function')
+    FunctionMapping = Shapes::MapShape.new(name: 'FunctionMapping')
+    FunctionRef = Shapes::StructureShape.new(name: 'FunctionRef')
+    FunctionType = Shapes::StringShape.new(name: 'FunctionType')
     GetChannelPolicyRequest = Shapes::StructureShape.new(name: 'GetChannelPolicyRequest')
     GetChannelPolicyResponse = Shapes::StructureShape.new(name: 'GetChannelPolicyResponse')
     GetChannelScheduleRequest = Shapes::StructureShape.new(name: 'GetChannelScheduleRequest')
     GetChannelScheduleResponse = Shapes::StructureShape.new(name: 'GetChannelScheduleResponse')
+    GetFunctionRequest = Shapes::StructureShape.new(name: 'GetFunctionRequest')
+    GetFunctionResponse = Shapes::StructureShape.new(name: 'GetFunctionResponse')
     GetPlaybackConfigurationRequest = Shapes::StructureShape.new(name: 'GetPlaybackConfigurationRequest')
     GetPlaybackConfigurationResponse = Shapes::StructureShape.new(name: 'GetPlaybackConfigurationResponse')
     GetPrefetchScheduleRequest = Shapes::StructureShape.new(name: 'GetPrefetchScheduleRequest')
@@ -98,6 +117,8 @@ module Aws::MediaTailor
     HttpConfiguration = Shapes::StructureShape.new(name: 'HttpConfiguration')
     HttpPackageConfiguration = Shapes::StructureShape.new(name: 'HttpPackageConfiguration')
     HttpPackageConfigurations = Shapes::ListShape.new(name: 'HttpPackageConfigurations')
+    HttpRequest = Shapes::StructureShape.new(name: 'HttpRequest')
+    HttpRequestConfiguration = Shapes::StructureShape.new(name: 'HttpRequestConfiguration')
     InsertionMode = Shapes::StringShape.new(name: 'InsertionMode')
     Integer = Shapes::IntegerShape.new(name: 'Integer')
     KeyValuePair = Shapes::StructureShape.new(name: 'KeyValuePair')
@@ -105,10 +126,13 @@ module Aws::MediaTailor
     ListAlertsResponse = Shapes::StructureShape.new(name: 'ListAlertsResponse')
     ListChannelsRequest = Shapes::StructureShape.new(name: 'ListChannelsRequest')
     ListChannelsResponse = Shapes::StructureShape.new(name: 'ListChannelsResponse')
+    ListFunctionsRequest = Shapes::StructureShape.new(name: 'ListFunctionsRequest')
+    ListFunctionsResponse = Shapes::StructureShape.new(name: 'ListFunctionsResponse')
     ListLiveSourcesRequest = Shapes::StructureShape.new(name: 'ListLiveSourcesRequest')
     ListLiveSourcesResponse = Shapes::StructureShape.new(name: 'ListLiveSourcesResponse')
     ListPlaybackConfigurationsRequest = Shapes::StructureShape.new(name: 'ListPlaybackConfigurationsRequest')
     ListPlaybackConfigurationsResponse = Shapes::StructureShape.new(name: 'ListPlaybackConfigurationsResponse')
+    ListPrefetchScheduleType = Shapes::StringShape.new(name: 'ListPrefetchScheduleType')
     ListPrefetchSchedulesRequest = Shapes::StructureShape.new(name: 'ListPrefetchSchedulesRequest')
     ListPrefetchSchedulesResponse = Shapes::StructureShape.new(name: 'ListPrefetchSchedulesResponse')
     ListSourceLocationsRequest = Shapes::StructureShape.new(name: 'ListSourceLocationsRequest')
@@ -126,25 +150,40 @@ module Aws::MediaTailor
     LoggingStrategy = Shapes::StringShape.new(name: 'LoggingStrategy')
     Long = Shapes::IntegerShape.new(name: 'Long')
     ManifestProcessingRules = Shapes::StructureShape.new(name: 'ManifestProcessingRules')
+    ManifestServiceExcludeEventType = Shapes::StringShape.new(name: 'ManifestServiceExcludeEventType')
+    ManifestServiceInteractionLog = Shapes::StructureShape.new(name: 'ManifestServiceInteractionLog')
+    ManifestServicePublishOptInEventType = Shapes::StringShape.new(name: 'ManifestServicePublishOptInEventType')
     MaxResults = Shapes::IntegerShape.new(name: 'MaxResults')
     MessageType = Shapes::StringShape.new(name: 'MessageType')
+    Method = Shapes::StringShape.new(name: 'Method')
+    MethodType = Shapes::StringShape.new(name: 'MethodType')
     Mode = Shapes::StringShape.new(name: 'Mode')
     Operator = Shapes::StringShape.new(name: 'Operator')
     OriginManifestType = Shapes::StringShape.new(name: 'OriginManifestType')
     PlaybackConfiguration = Shapes::StructureShape.new(name: 'PlaybackConfiguration')
     PlaybackMode = Shapes::StringShape.new(name: 'PlaybackMode')
+    PreRollAdDecisionServerConfiguration = Shapes::StructureShape.new(name: 'PreRollAdDecisionServerConfiguration')
+    PreRollAdSequencingMode = Shapes::StringShape.new(name: 'PreRollAdSequencingMode')
+    PreRollVastResponse = Shapes::StructureShape.new(name: 'PreRollVastResponse')
     PrefetchConsumption = Shapes::StructureShape.new(name: 'PrefetchConsumption')
     PrefetchRetrieval = Shapes::StructureShape.new(name: 'PrefetchRetrieval')
     PrefetchSchedule = Shapes::StructureShape.new(name: 'PrefetchSchedule')
+    PrefetchScheduleType = Shapes::StringShape.new(name: 'PrefetchScheduleType')
     PutChannelPolicyRequest = Shapes::StructureShape.new(name: 'PutChannelPolicyRequest')
     PutChannelPolicyResponse = Shapes::StructureShape.new(name: 'PutChannelPolicyResponse')
+    PutFunctionRequest = Shapes::StructureShape.new(name: 'PutFunctionRequest')
+    PutFunctionResponse = Shapes::StructureShape.new(name: 'PutFunctionResponse')
     PutPlaybackConfigurationRequest = Shapes::StructureShape.new(name: 'PutPlaybackConfigurationRequest')
     PutPlaybackConfigurationResponse = Shapes::StructureShape.new(name: 'PutPlaybackConfigurationResponse')
+    RecurringConsumption = Shapes::StructureShape.new(name: 'RecurringConsumption')
+    RecurringPrefetchConfiguration = Shapes::StructureShape.new(name: 'RecurringPrefetchConfiguration')
+    RecurringRetrieval = Shapes::StructureShape.new(name: 'RecurringRetrieval')
     RelativePosition = Shapes::StringShape.new(name: 'RelativePosition')
     RequestOutputItem = Shapes::StructureShape.new(name: 'RequestOutputItem')
     RequestOutputs = Shapes::ListShape.new(name: 'RequestOutputs')
     ResponseOutputItem = Shapes::StructureShape.new(name: 'ResponseOutputItem')
     ResponseOutputs = Shapes::ListShape.new(name: 'ResponseOutputs')
+    RuntimeType = Shapes::StringShape.new(name: 'RuntimeType')
     ScheduleAdBreak = Shapes::StructureShape.new(name: 'ScheduleAdBreak')
     ScheduleConfiguration = Shapes::StructureShape.new(name: 'ScheduleConfiguration')
     ScheduleEntry = Shapes::StructureShape.new(name: 'ScheduleEntry')
@@ -153,6 +192,7 @@ module Aws::MediaTailor
     SegmentDeliveryConfiguration = Shapes::StructureShape.new(name: 'SegmentDeliveryConfiguration')
     SegmentationDescriptor = Shapes::StructureShape.new(name: 'SegmentationDescriptor')
     SegmentationDescriptorList = Shapes::ListShape.new(name: 'SegmentationDescriptorList')
+    SequentialExecutorConfiguration = Shapes::StructureShape.new(name: 'SequentialExecutorConfiguration')
     SlateSource = Shapes::StructureShape.new(name: 'SlateSource')
     SourceLocation = Shapes::StructureShape.new(name: 'SourceLocation')
     SpliceInsertMessage = Shapes::StructureShape.new(name: 'SpliceInsertMessage')
@@ -162,10 +202,14 @@ module Aws::MediaTailor
     StopChannelResponse = Shapes::StructureShape.new(name: 'StopChannelResponse')
     StreamingMediaFileConditioning = Shapes::StringShape.new(name: 'StreamingMediaFileConditioning')
     String = Shapes::StringShape.new(name: 'String')
+    StringMap = Shapes::MapShape.new(name: 'StringMap')
     TagResourceRequest = Shapes::StructureShape.new(name: 'TagResourceRequest')
     Tier = Shapes::StringShape.new(name: 'Tier')
     TimeShiftConfiguration = Shapes::StructureShape.new(name: 'TimeShiftConfiguration')
     TimeSignalMessage = Shapes::StructureShape.new(name: 'TimeSignalMessage')
+    TrafficShapingRetrievalWindow = Shapes::StructureShape.new(name: 'TrafficShapingRetrievalWindow')
+    TrafficShapingTpsConfiguration = Shapes::StructureShape.new(name: 'TrafficShapingTpsConfiguration')
+    TrafficShapingType = Shapes::StringShape.new(name: 'TrafficShapingType')
     Transition = Shapes::StructureShape.new(name: 'Transition')
     Type = Shapes::StringShape.new(name: 'Type')
     UntagResourceRequest = Shapes::StructureShape.new(name: 'UntagResourceRequest')
@@ -181,7 +225,10 @@ module Aws::MediaTailor
     UpdateSourceLocationResponse = Shapes::StructureShape.new(name: 'UpdateSourceLocationResponse')
     UpdateVodSourceRequest = Shapes::StructureShape.new(name: 'UpdateVodSourceRequest')
     UpdateVodSourceResponse = Shapes::StructureShape.new(name: 'UpdateVodSourceResponse')
+    VastResponse = Shapes::StructureShape.new(name: 'VastResponse')
     VodSource = Shapes::StructureShape.new(name: 'VodSource')
+    __adsInteractionExcludeEventTypesList = Shapes::ListShape.new(name: '__adsInteractionExcludeEventTypesList')
+    __adsInteractionPublishOptInEventTypesList = Shapes::ListShape.new(name: '__adsInteractionPublishOptInEventTypesList')
     __boolean = Shapes::BooleanShape.new(name: '__boolean')
     __integer = Shapes::IntegerShape.new(name: '__integer')
     __integerMin1 = Shapes::IntegerShape.new(name: '__integerMin1')
@@ -192,6 +239,8 @@ module Aws::MediaTailor
     __listOfAudienceMedia = Shapes::ListShape.new(name: '__listOfAudienceMedia')
     __listOfAvailMatchingCriteria = Shapes::ListShape.new(name: '__listOfAvailMatchingCriteria')
     __listOfChannel = Shapes::ListShape.new(name: '__listOfChannel')
+    __listOfFunctionsRef = Shapes::ListShape.new(name: '__listOfFunctionsRef')
+    __listOfFunctionsResponse = Shapes::ListShape.new(name: '__listOfFunctionsResponse')
     __listOfLiveSource = Shapes::ListShape.new(name: '__listOfLiveSource')
     __listOfLoggingStrategies = Shapes::ListShape.new(name: '__listOfLoggingStrategies')
     __listOfPlaybackConfiguration = Shapes::ListShape.new(name: '__listOfPlaybackConfiguration')
@@ -203,6 +252,8 @@ module Aws::MediaTailor
     __listOfVodSource = Shapes::ListShape.new(name: '__listOfVodSource')
     __listOf__string = Shapes::ListShape.new(name: '__listOf__string')
     __long = Shapes::IntegerShape.new(name: '__long')
+    __manifestServiceExcludeEventTypesList = Shapes::ListShape.new(name: '__manifestServiceExcludeEventTypesList')
+    __manifestServicePublishOptInEventTypesList = Shapes::ListShape.new(name: '__manifestServicePublishOptInEventTypesList')
     __mapOf__string = Shapes::MapShape.new(name: '__mapOf__string')
     __string = Shapes::StringShape.new(name: '__string')
     __timestampUnix = Shapes::TimestampShape.new(name: '__timestampUnix', timestampFormat: "unixTimestamp")
@@ -230,8 +281,27 @@ module Aws::MediaTailor
     AdConditioningConfiguration.add_member(:streaming_media_file_conditioning, Shapes::ShapeRef.new(shape: StreamingMediaFileConditioning, required: true, location_name: "StreamingMediaFileConditioning"))
     AdConditioningConfiguration.struct_class = Types::AdConditioningConfiguration
 
+    AdDecisionServerConfiguration.add_member(:http_request, Shapes::ShapeRef.new(shape: HttpRequest, location_name: "HttpRequest"))
+    AdDecisionServerConfiguration.add_member(:vast_response, Shapes::ShapeRef.new(shape: VastResponse, location_name: "VastResponse"))
+    AdDecisionServerConfiguration.struct_class = Types::AdDecisionServerConfiguration
+
     AdMarkerPassthrough.add_member(:enabled, Shapes::ShapeRef.new(shape: __boolean, location_name: "Enabled"))
     AdMarkerPassthrough.struct_class = Types::AdMarkerPassthrough
+
+    AdsInteractionLog.add_member(:publish_opt_in_event_types, Shapes::ShapeRef.new(shape: __adsInteractionPublishOptInEventTypesList, location_name: "PublishOptInEventTypes"))
+    AdsInteractionLog.add_member(:exclude_event_types, Shapes::ShapeRef.new(shape: __adsInteractionExcludeEventTypesList, location_name: "ExcludeEventTypes"))
+    AdsInteractionLog.struct_class = Types::AdsInteractionLog
+
+    AdsPersonalizationConcurrency.add_member(:max_concurrent_ads_requests, Shapes::ShapeRef.new(shape: __integer, location_name: "MaxConcurrentAdsRequests"))
+    AdsPersonalizationConcurrency.add_member(:enable_vod_vast_parallelization, Shapes::ShapeRef.new(shape: __boolean, location_name: "EnableVodVastParallelization"))
+    AdsPersonalizationConcurrency.struct_class = Types::AdsPersonalizationConcurrency
+
+    AdsPersonalizationTimeouts.add_member(:ads_request_timeout_milliseconds, Shapes::ShapeRef.new(shape: __integer, location_name: "AdsRequestTimeoutMilliseconds"))
+    AdsPersonalizationTimeouts.add_member(:live_maximum_ads_personalization_time_milliseconds, Shapes::ShapeRef.new(shape: __integer, location_name: "LiveMaximumAdsPersonalizationTimeMilliseconds"))
+    AdsPersonalizationTimeouts.add_member(:vod_maximum_ads_personalization_time_milliseconds, Shapes::ShapeRef.new(shape: __integer, location_name: "VodMaximumAdsPersonalizationTimeMilliseconds"))
+    AdsPersonalizationTimeouts.add_member(:prefetch_ads_request_timeout_milliseconds, Shapes::ShapeRef.new(shape: __integer, location_name: "PrefetchAdsRequestTimeoutMilliseconds"))
+    AdsPersonalizationTimeouts.add_member(:prefetch_maximum_ads_personalization_time_milliseconds, Shapes::ShapeRef.new(shape: __integer, location_name: "PrefetchMaximumAdsPersonalizationTimeMilliseconds"))
+    AdsPersonalizationTimeouts.struct_class = Types::AdsPersonalizationTimeouts
 
     Alert.add_member(:alert_code, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "AlertCode"))
     Alert.add_member(:alert_message, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "AlertMessage"))
@@ -290,9 +360,16 @@ module Aws::MediaTailor
     Channel.add_member(:audiences, Shapes::ShapeRef.new(shape: Audiences, location_name: "Audiences"))
     Channel.struct_class = Types::Channel
 
-    ClipRange.add_member(:end_offset_millis, Shapes::ShapeRef.new(shape: __long, location_name: "EndOffsetMillis", metadata: {"box"=>true}))
+    ClipRange.add_member(:end_offset_millis, Shapes::ShapeRef.new(shape: __long, location_name: "EndOffsetMillis", metadata: {"box" => true}))
     ClipRange.add_member(:start_offset_millis, Shapes::ShapeRef.new(shape: __long, location_name: "StartOffsetMillis"))
     ClipRange.struct_class = Types::ClipRange
+
+    ConcurrentExecutorConfiguration.add_member(:runtime, Shapes::ShapeRef.new(shape: RuntimeType, required: true, location_name: "Runtime"))
+    ConcurrentExecutorConfiguration.add_member(:output, Shapes::ShapeRef.new(shape: __mapOf__string, required: true, location_name: "Output"))
+    ConcurrentExecutorConfiguration.add_member(:function_list, Shapes::ShapeRef.new(shape: __listOfFunctionsRef, required: true, location_name: "FunctionList"))
+    ConcurrentExecutorConfiguration.add_member(:timeout_milliseconds, Shapes::ShapeRef.new(shape: __integer, required: true, location_name: "TimeoutMilliseconds"))
+    ConcurrentExecutorConfiguration.add_member(:max_concurrency, Shapes::ShapeRef.new(shape: __integer, required: true, location_name: "MaxConcurrency"))
+    ConcurrentExecutorConfiguration.struct_class = Types::ConcurrentExecutorConfiguration
 
     ConfigurationAliasesRequest.key = Shapes::ShapeRef.new(shape: __string)
     ConfigurationAliasesRequest.value = Shapes::ShapeRef.new(shape: __mapOf__string)
@@ -311,11 +388,15 @@ module Aws::MediaTailor
     ConfigureLogsForPlaybackConfigurationRequest.add_member(:percent_enabled, Shapes::ShapeRef.new(shape: __integer, required: true, location_name: "PercentEnabled"))
     ConfigureLogsForPlaybackConfigurationRequest.add_member(:playback_configuration_name, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "PlaybackConfigurationName"))
     ConfigureLogsForPlaybackConfigurationRequest.add_member(:enabled_logging_strategies, Shapes::ShapeRef.new(shape: __listOfLoggingStrategies, location_name: "EnabledLoggingStrategies"))
+    ConfigureLogsForPlaybackConfigurationRequest.add_member(:ads_interaction_log, Shapes::ShapeRef.new(shape: AdsInteractionLog, location_name: "AdsInteractionLog"))
+    ConfigureLogsForPlaybackConfigurationRequest.add_member(:manifest_service_interaction_log, Shapes::ShapeRef.new(shape: ManifestServiceInteractionLog, location_name: "ManifestServiceInteractionLog"))
     ConfigureLogsForPlaybackConfigurationRequest.struct_class = Types::ConfigureLogsForPlaybackConfigurationRequest
 
     ConfigureLogsForPlaybackConfigurationResponse.add_member(:percent_enabled, Shapes::ShapeRef.new(shape: __integer, required: true, location_name: "PercentEnabled"))
     ConfigureLogsForPlaybackConfigurationResponse.add_member(:playback_configuration_name, Shapes::ShapeRef.new(shape: __string, location_name: "PlaybackConfigurationName"))
     ConfigureLogsForPlaybackConfigurationResponse.add_member(:enabled_logging_strategies, Shapes::ShapeRef.new(shape: __listOfLoggingStrategies, location_name: "EnabledLoggingStrategies"))
+    ConfigureLogsForPlaybackConfigurationResponse.add_member(:ads_interaction_log, Shapes::ShapeRef.new(shape: AdsInteractionLog, location_name: "AdsInteractionLog"))
+    ConfigureLogsForPlaybackConfigurationResponse.add_member(:manifest_service_interaction_log, Shapes::ShapeRef.new(shape: ManifestServiceInteractionLog, location_name: "ManifestServiceInteractionLog"))
     ConfigureLogsForPlaybackConfigurationResponse.struct_class = Types::ConfigureLogsForPlaybackConfigurationResponse
 
     CreateChannelRequest.add_member(:channel_name, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "ChannelName"))
@@ -357,11 +438,14 @@ module Aws::MediaTailor
     CreateLiveSourceResponse.add_member(:tags, Shapes::ShapeRef.new(shape: __mapOf__string, location_name: "tags"))
     CreateLiveSourceResponse.struct_class = Types::CreateLiveSourceResponse
 
-    CreatePrefetchScheduleRequest.add_member(:consumption, Shapes::ShapeRef.new(shape: PrefetchConsumption, required: true, location_name: "Consumption"))
+    CreatePrefetchScheduleRequest.add_member(:consumption, Shapes::ShapeRef.new(shape: PrefetchConsumption, location_name: "Consumption"))
     CreatePrefetchScheduleRequest.add_member(:name, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "Name"))
     CreatePrefetchScheduleRequest.add_member(:playback_configuration_name, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "PlaybackConfigurationName"))
-    CreatePrefetchScheduleRequest.add_member(:retrieval, Shapes::ShapeRef.new(shape: PrefetchRetrieval, required: true, location_name: "Retrieval"))
+    CreatePrefetchScheduleRequest.add_member(:retrieval, Shapes::ShapeRef.new(shape: PrefetchRetrieval, location_name: "Retrieval"))
+    CreatePrefetchScheduleRequest.add_member(:recurring_prefetch_configuration, Shapes::ShapeRef.new(shape: RecurringPrefetchConfiguration, location_name: "RecurringPrefetchConfiguration"))
+    CreatePrefetchScheduleRequest.add_member(:schedule_type, Shapes::ShapeRef.new(shape: PrefetchScheduleType, location_name: "ScheduleType"))
     CreatePrefetchScheduleRequest.add_member(:stream_id, Shapes::ShapeRef.new(shape: __string, location_name: "StreamId"))
+    CreatePrefetchScheduleRequest.add_member(:tags, Shapes::ShapeRef.new(shape: __mapOf__string, location_name: "tags"))
     CreatePrefetchScheduleRequest.struct_class = Types::CreatePrefetchScheduleRequest
 
     CreatePrefetchScheduleResponse.add_member(:arn, Shapes::ShapeRef.new(shape: __string, location_name: "Arn"))
@@ -369,7 +453,10 @@ module Aws::MediaTailor
     CreatePrefetchScheduleResponse.add_member(:name, Shapes::ShapeRef.new(shape: __string, location_name: "Name"))
     CreatePrefetchScheduleResponse.add_member(:playback_configuration_name, Shapes::ShapeRef.new(shape: __string, location_name: "PlaybackConfigurationName"))
     CreatePrefetchScheduleResponse.add_member(:retrieval, Shapes::ShapeRef.new(shape: PrefetchRetrieval, location_name: "Retrieval"))
+    CreatePrefetchScheduleResponse.add_member(:recurring_prefetch_configuration, Shapes::ShapeRef.new(shape: RecurringPrefetchConfiguration, location_name: "RecurringPrefetchConfiguration"))
+    CreatePrefetchScheduleResponse.add_member(:schedule_type, Shapes::ShapeRef.new(shape: PrefetchScheduleType, location_name: "ScheduleType"))
     CreatePrefetchScheduleResponse.add_member(:stream_id, Shapes::ShapeRef.new(shape: __string, location_name: "StreamId"))
+    CreatePrefetchScheduleResponse.add_member(:tags, Shapes::ShapeRef.new(shape: __mapOf__string, location_name: "tags"))
     CreatePrefetchScheduleResponse.struct_class = Types::CreatePrefetchScheduleResponse
 
     CreateProgramRequest.add_member(:ad_breaks, Shapes::ShapeRef.new(shape: __listOfAdBreak, location_name: "AdBreaks"))
@@ -380,6 +467,7 @@ module Aws::MediaTailor
     CreateProgramRequest.add_member(:source_location_name, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "SourceLocationName"))
     CreateProgramRequest.add_member(:vod_source_name, Shapes::ShapeRef.new(shape: __string, location_name: "VodSourceName"))
     CreateProgramRequest.add_member(:audience_media, Shapes::ShapeRef.new(shape: __listOfAudienceMedia, location_name: "AudienceMedia"))
+    CreateProgramRequest.add_member(:tags, Shapes::ShapeRef.new(shape: __mapOf__string, location_name: "tags"))
     CreateProgramRequest.struct_class = Types::CreateProgramRequest
 
     CreateProgramResponse.add_member(:ad_breaks, Shapes::ShapeRef.new(shape: __listOfAdBreak, location_name: "AdBreaks"))
@@ -394,6 +482,7 @@ module Aws::MediaTailor
     CreateProgramResponse.add_member(:clip_range, Shapes::ShapeRef.new(shape: ClipRange, location_name: "ClipRange"))
     CreateProgramResponse.add_member(:duration_millis, Shapes::ShapeRef.new(shape: __long, location_name: "DurationMillis"))
     CreateProgramResponse.add_member(:audience_media, Shapes::ShapeRef.new(shape: __listOfAudienceMedia, location_name: "AudienceMedia"))
+    CreateProgramResponse.add_member(:tags, Shapes::ShapeRef.new(shape: __mapOf__string, location_name: "tags"))
     CreateProgramResponse.struct_class = Types::CreateProgramResponse
 
     CreateSourceLocationRequest.add_member(:access_configuration, Shapes::ShapeRef.new(shape: AccessConfiguration, location_name: "AccessConfiguration"))
@@ -430,7 +519,12 @@ module Aws::MediaTailor
     CreateVodSourceResponse.add_member(:vod_source_name, Shapes::ShapeRef.new(shape: __string, location_name: "VodSourceName"))
     CreateVodSourceResponse.struct_class = Types::CreateVodSourceResponse
 
+    CustomOutputConfiguration.add_member(:runtime, Shapes::ShapeRef.new(shape: RuntimeType, required: true, location_name: "Runtime"))
+    CustomOutputConfiguration.add_member(:output, Shapes::ShapeRef.new(shape: __mapOf__string, location_name: "Output"))
+    CustomOutputConfiguration.struct_class = Types::CustomOutputConfiguration
+
     DashConfiguration.add_member(:manifest_endpoint_prefix, Shapes::ShapeRef.new(shape: __string, location_name: "ManifestEndpointPrefix"))
+    DashConfiguration.add_member(:dual_stack_manifest_endpoint_prefix, Shapes::ShapeRef.new(shape: __string, location_name: "DualStackManifestEndpointPrefix"))
     DashConfiguration.add_member(:mpd_location, Shapes::ShapeRef.new(shape: __string, location_name: "MpdLocation"))
     DashConfiguration.add_member(:origin_manifest_type, Shapes::ShapeRef.new(shape: OriginManifestType, location_name: "OriginManifestType"))
     DashConfiguration.struct_class = Types::DashConfiguration
@@ -457,6 +551,11 @@ module Aws::MediaTailor
     DeleteChannelRequest.struct_class = Types::DeleteChannelRequest
 
     DeleteChannelResponse.struct_class = Types::DeleteChannelResponse
+
+    DeleteFunctionRequest.add_member(:function_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "FunctionId"))
+    DeleteFunctionRequest.struct_class = Types::DeleteFunctionRequest
+
+    DeleteFunctionResponse.struct_class = Types::DeleteFunctionResponse
 
     DeleteLiveSourceRequest.add_member(:live_source_name, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "LiveSourceName"))
     DeleteLiveSourceRequest.add_member(:source_location_name, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "SourceLocationName"))
@@ -539,6 +638,7 @@ module Aws::MediaTailor
     DescribeProgramResponse.add_member(:clip_range, Shapes::ShapeRef.new(shape: ClipRange, location_name: "ClipRange"))
     DescribeProgramResponse.add_member(:duration_millis, Shapes::ShapeRef.new(shape: Long, location_name: "DurationMillis"))
     DescribeProgramResponse.add_member(:audience_media, Shapes::ShapeRef.new(shape: __listOfAudienceMedia, location_name: "AudienceMedia"))
+    DescribeProgramResponse.add_member(:tags, Shapes::ShapeRef.new(shape: __mapOf__string, location_name: "tags"))
     DescribeProgramResponse.struct_class = Types::DescribeProgramResponse
 
     DescribeSourceLocationRequest.add_member(:source_location_name, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "SourceLocationName"))
@@ -569,6 +669,25 @@ module Aws::MediaTailor
     DescribeVodSourceResponse.add_member(:vod_source_name, Shapes::ShapeRef.new(shape: __string, location_name: "VodSourceName"))
     DescribeVodSourceResponse.struct_class = Types::DescribeVodSourceResponse
 
+    Function.add_member(:function_id, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "FunctionId"))
+    Function.add_member(:function_type, Shapes::ShapeRef.new(shape: FunctionType, required: true, location_name: "FunctionType"))
+    Function.add_member(:description, Shapes::ShapeRef.new(shape: __string, location_name: "Description"))
+    Function.add_member(:http_request_configuration, Shapes::ShapeRef.new(shape: HttpRequestConfiguration, location_name: "HttpRequestConfiguration"))
+    Function.add_member(:custom_output_configuration, Shapes::ShapeRef.new(shape: CustomOutputConfiguration, location_name: "CustomOutputConfiguration"))
+    Function.add_member(:concurrent_executor_configuration, Shapes::ShapeRef.new(shape: ConcurrentExecutorConfiguration, location_name: "ConcurrentExecutorConfiguration"))
+    Function.add_member(:sequential_executor_configuration, Shapes::ShapeRef.new(shape: SequentialExecutorConfiguration, location_name: "SequentialExecutorConfiguration"))
+    Function.add_member(:tags, Shapes::ShapeRef.new(shape: __mapOf__string, location_name: "tags"))
+    Function.add_member(:arn, Shapes::ShapeRef.new(shape: __string, location_name: "Arn"))
+    Function.struct_class = Types::Function
+
+    FunctionMapping.key = Shapes::ShapeRef.new(shape: EventName)
+    FunctionMapping.value = Shapes::ShapeRef.new(shape: __string)
+
+    FunctionRef.add_member(:run_condition, Shapes::ShapeRef.new(shape: __string, location_name: "RunCondition"))
+    FunctionRef.add_member(:function_id, Shapes::ShapeRef.new(shape: __string, location_name: "FunctionId"))
+    FunctionRef.add_member(:alias, Shapes::ShapeRef.new(shape: __string, location_name: "Alias"))
+    FunctionRef.struct_class = Types::FunctionRef
+
     GetChannelPolicyRequest.add_member(:channel_name, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "ChannelName"))
     GetChannelPolicyRequest.struct_class = Types::GetChannelPolicyRequest
 
@@ -585,6 +704,20 @@ module Aws::MediaTailor
     GetChannelScheduleResponse.add_member(:items, Shapes::ShapeRef.new(shape: __listOfScheduleEntry, location_name: "Items"))
     GetChannelScheduleResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location_name: "NextToken"))
     GetChannelScheduleResponse.struct_class = Types::GetChannelScheduleResponse
+
+    GetFunctionRequest.add_member(:function_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "FunctionId"))
+    GetFunctionRequest.struct_class = Types::GetFunctionRequest
+
+    GetFunctionResponse.add_member(:function_id, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "FunctionId"))
+    GetFunctionResponse.add_member(:function_type, Shapes::ShapeRef.new(shape: FunctionType, required: true, location_name: "FunctionType"))
+    GetFunctionResponse.add_member(:description, Shapes::ShapeRef.new(shape: __string, location_name: "Description"))
+    GetFunctionResponse.add_member(:http_request_configuration, Shapes::ShapeRef.new(shape: HttpRequestConfiguration, location_name: "HttpRequestConfiguration"))
+    GetFunctionResponse.add_member(:custom_output_configuration, Shapes::ShapeRef.new(shape: CustomOutputConfiguration, location_name: "CustomOutputConfiguration"))
+    GetFunctionResponse.add_member(:concurrent_executor_configuration, Shapes::ShapeRef.new(shape: ConcurrentExecutorConfiguration, location_name: "ConcurrentExecutorConfiguration"))
+    GetFunctionResponse.add_member(:sequential_executor_configuration, Shapes::ShapeRef.new(shape: SequentialExecutorConfiguration, location_name: "SequentialExecutorConfiguration"))
+    GetFunctionResponse.add_member(:tags, Shapes::ShapeRef.new(shape: __mapOf__string, location_name: "tags"))
+    GetFunctionResponse.add_member(:arn, Shapes::ShapeRef.new(shape: __string, location_name: "Arn"))
+    GetFunctionResponse.struct_class = Types::GetFunctionResponse
 
     GetPlaybackConfigurationRequest.add_member(:name, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "Name"))
     GetPlaybackConfigurationRequest.struct_class = Types::GetPlaybackConfigurationRequest
@@ -604,12 +737,18 @@ module Aws::MediaTailor
     GetPlaybackConfigurationResponse.add_member(:personalization_threshold_seconds, Shapes::ShapeRef.new(shape: __integerMin1, location_name: "PersonalizationThresholdSeconds"))
     GetPlaybackConfigurationResponse.add_member(:playback_configuration_arn, Shapes::ShapeRef.new(shape: __string, location_name: "PlaybackConfigurationArn"))
     GetPlaybackConfigurationResponse.add_member(:playback_endpoint_prefix, Shapes::ShapeRef.new(shape: __string, location_name: "PlaybackEndpointPrefix"))
+    GetPlaybackConfigurationResponse.add_member(:dual_stack_playback_endpoint_prefix, Shapes::ShapeRef.new(shape: __string, location_name: "DualStackPlaybackEndpointPrefix"))
     GetPlaybackConfigurationResponse.add_member(:session_initialization_endpoint_prefix, Shapes::ShapeRef.new(shape: __string, location_name: "SessionInitializationEndpointPrefix"))
+    GetPlaybackConfigurationResponse.add_member(:dual_stack_session_initialization_endpoint_prefix, Shapes::ShapeRef.new(shape: __string, location_name: "DualStackSessionInitializationEndpointPrefix"))
     GetPlaybackConfigurationResponse.add_member(:slate_ad_url, Shapes::ShapeRef.new(shape: __string, location_name: "SlateAdUrl"))
     GetPlaybackConfigurationResponse.add_member(:tags, Shapes::ShapeRef.new(shape: __mapOf__string, location_name: "tags"))
     GetPlaybackConfigurationResponse.add_member(:transcode_profile_name, Shapes::ShapeRef.new(shape: __string, location_name: "TranscodeProfileName"))
     GetPlaybackConfigurationResponse.add_member(:video_content_source_url, Shapes::ShapeRef.new(shape: __string, location_name: "VideoContentSourceUrl"))
     GetPlaybackConfigurationResponse.add_member(:ad_conditioning_configuration, Shapes::ShapeRef.new(shape: AdConditioningConfiguration, location_name: "AdConditioningConfiguration"))
+    GetPlaybackConfigurationResponse.add_member(:ad_decision_server_configuration, Shapes::ShapeRef.new(shape: AdDecisionServerConfiguration, location_name: "AdDecisionServerConfiguration"))
+    GetPlaybackConfigurationResponse.add_member(:function_mapping, Shapes::ShapeRef.new(shape: FunctionMapping, location_name: "FunctionMapping"))
+    GetPlaybackConfigurationResponse.add_member(:ads_personalization_timeouts, Shapes::ShapeRef.new(shape: AdsPersonalizationTimeouts, location_name: "AdsPersonalizationTimeouts"))
+    GetPlaybackConfigurationResponse.add_member(:ads_personalization_concurrency, Shapes::ShapeRef.new(shape: AdsPersonalizationConcurrency, location_name: "AdsPersonalizationConcurrency"))
     GetPlaybackConfigurationResponse.struct_class = Types::GetPlaybackConfigurationResponse
 
     GetPrefetchScheduleRequest.add_member(:name, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "Name"))
@@ -621,10 +760,14 @@ module Aws::MediaTailor
     GetPrefetchScheduleResponse.add_member(:name, Shapes::ShapeRef.new(shape: __string, location_name: "Name"))
     GetPrefetchScheduleResponse.add_member(:playback_configuration_name, Shapes::ShapeRef.new(shape: __string, location_name: "PlaybackConfigurationName"))
     GetPrefetchScheduleResponse.add_member(:retrieval, Shapes::ShapeRef.new(shape: PrefetchRetrieval, location_name: "Retrieval"))
+    GetPrefetchScheduleResponse.add_member(:schedule_type, Shapes::ShapeRef.new(shape: PrefetchScheduleType, location_name: "ScheduleType"))
+    GetPrefetchScheduleResponse.add_member(:recurring_prefetch_configuration, Shapes::ShapeRef.new(shape: RecurringPrefetchConfiguration, location_name: "RecurringPrefetchConfiguration"))
     GetPrefetchScheduleResponse.add_member(:stream_id, Shapes::ShapeRef.new(shape: __string, location_name: "StreamId"))
+    GetPrefetchScheduleResponse.add_member(:tags, Shapes::ShapeRef.new(shape: __mapOf__string, location_name: "tags"))
     GetPrefetchScheduleResponse.struct_class = Types::GetPrefetchScheduleResponse
 
     HlsConfiguration.add_member(:manifest_endpoint_prefix, Shapes::ShapeRef.new(shape: __string, location_name: "ManifestEndpointPrefix"))
+    HlsConfiguration.add_member(:dual_stack_manifest_endpoint_prefix, Shapes::ShapeRef.new(shape: __string, location_name: "DualStackManifestEndpointPrefix"))
     HlsConfiguration.struct_class = Types::HlsConfiguration
 
     HlsPlaylistSettings.add_member(:manifest_window_seconds, Shapes::ShapeRef.new(shape: __integer, location_name: "ManifestWindowSeconds"))
@@ -640,6 +783,21 @@ module Aws::MediaTailor
     HttpPackageConfiguration.struct_class = Types::HttpPackageConfiguration
 
     HttpPackageConfigurations.member = Shapes::ShapeRef.new(shape: HttpPackageConfiguration)
+
+    HttpRequest.add_member(:method, Shapes::ShapeRef.new(shape: Method, location_name: "Method"))
+    HttpRequest.add_member(:body, Shapes::ShapeRef.new(shape: __string, location_name: "Body"))
+    HttpRequest.add_member(:headers, Shapes::ShapeRef.new(shape: StringMap, location_name: "Headers"))
+    HttpRequest.add_member(:compress_request, Shapes::ShapeRef.new(shape: CompressionMethod, location_name: "CompressRequest"))
+    HttpRequest.struct_class = Types::HttpRequest
+
+    HttpRequestConfiguration.add_member(:runtime, Shapes::ShapeRef.new(shape: RuntimeType, required: true, location_name: "Runtime"))
+    HttpRequestConfiguration.add_member(:output, Shapes::ShapeRef.new(shape: __mapOf__string, location_name: "Output"))
+    HttpRequestConfiguration.add_member(:method_type, Shapes::ShapeRef.new(shape: MethodType, required: true, location_name: "MethodType"))
+    HttpRequestConfiguration.add_member(:request_timeout_milliseconds, Shapes::ShapeRef.new(shape: __integer, required: true, location_name: "RequestTimeoutMilliseconds"))
+    HttpRequestConfiguration.add_member(:url, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "Url"))
+    HttpRequestConfiguration.add_member(:body, Shapes::ShapeRef.new(shape: __string, location_name: "Body"))
+    HttpRequestConfiguration.add_member(:headers, Shapes::ShapeRef.new(shape: __mapOf__string, location_name: "Headers"))
+    HttpRequestConfiguration.struct_class = Types::HttpRequestConfiguration
 
     KeyValuePair.add_member(:key, Shapes::ShapeRef.new(shape: String, required: true, location_name: "Key"))
     KeyValuePair.add_member(:value, Shapes::ShapeRef.new(shape: String, required: true, location_name: "Value"))
@@ -662,6 +820,14 @@ module Aws::MediaTailor
     ListChannelsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location_name: "NextToken"))
     ListChannelsResponse.struct_class = Types::ListChannelsResponse
 
+    ListFunctionsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "MaxResults"))
+    ListFunctionsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "NextToken"))
+    ListFunctionsRequest.struct_class = Types::ListFunctionsRequest
+
+    ListFunctionsResponse.add_member(:items, Shapes::ShapeRef.new(shape: __listOfFunctionsResponse, location_name: "Items"))
+    ListFunctionsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location_name: "NextToken"))
+    ListFunctionsResponse.struct_class = Types::ListFunctionsResponse
+
     ListLiveSourcesRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
     ListLiveSourcesRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "nextToken"))
     ListLiveSourcesRequest.add_member(:source_location_name, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "SourceLocationName"))
@@ -682,6 +848,7 @@ module Aws::MediaTailor
     ListPrefetchSchedulesRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: __integerMin1Max100, location_name: "MaxResults"))
     ListPrefetchSchedulesRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location_name: "NextToken"))
     ListPrefetchSchedulesRequest.add_member(:playback_configuration_name, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "PlaybackConfigurationName"))
+    ListPrefetchSchedulesRequest.add_member(:schedule_type, Shapes::ShapeRef.new(shape: ListPrefetchScheduleType, location_name: "ScheduleType"))
     ListPrefetchSchedulesRequest.add_member(:stream_id, Shapes::ShapeRef.new(shape: __string, location_name: "StreamId"))
     ListPrefetchSchedulesRequest.struct_class = Types::ListPrefetchSchedulesRequest
 
@@ -714,6 +881,7 @@ module Aws::MediaTailor
 
     LivePreRollConfiguration.add_member(:ad_decision_server_url, Shapes::ShapeRef.new(shape: __string, location_name: "AdDecisionServerUrl"))
     LivePreRollConfiguration.add_member(:max_duration_seconds, Shapes::ShapeRef.new(shape: __integer, location_name: "MaxDurationSeconds"))
+    LivePreRollConfiguration.add_member(:ad_decision_server_configuration, Shapes::ShapeRef.new(shape: PreRollAdDecisionServerConfiguration, location_name: "AdDecisionServerConfiguration"))
     LivePreRollConfiguration.struct_class = Types::LivePreRollConfiguration
 
     LiveSource.add_member(:arn, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "Arn"))
@@ -726,7 +894,9 @@ module Aws::MediaTailor
     LiveSource.struct_class = Types::LiveSource
 
     LogConfiguration.add_member(:percent_enabled, Shapes::ShapeRef.new(shape: __integer, required: true, location_name: "PercentEnabled"))
-    LogConfiguration.add_member(:enabled_logging_strategies, Shapes::ShapeRef.new(shape: __listOfLoggingStrategies, location_name: "EnabledLoggingStrategies"))
+    LogConfiguration.add_member(:enabled_logging_strategies, Shapes::ShapeRef.new(shape: __listOfLoggingStrategies, required: true, location_name: "EnabledLoggingStrategies"))
+    LogConfiguration.add_member(:ads_interaction_log, Shapes::ShapeRef.new(shape: AdsInteractionLog, location_name: "AdsInteractionLog"))
+    LogConfiguration.add_member(:manifest_service_interaction_log, Shapes::ShapeRef.new(shape: ManifestServiceInteractionLog, location_name: "ManifestServiceInteractionLog"))
     LogConfiguration.struct_class = Types::LogConfiguration
 
     LogConfigurationForChannel.add_member(:log_types, Shapes::ShapeRef.new(shape: LogTypes, location_name: "LogTypes"))
@@ -736,6 +906,10 @@ module Aws::MediaTailor
 
     ManifestProcessingRules.add_member(:ad_marker_passthrough, Shapes::ShapeRef.new(shape: AdMarkerPassthrough, location_name: "AdMarkerPassthrough"))
     ManifestProcessingRules.struct_class = Types::ManifestProcessingRules
+
+    ManifestServiceInteractionLog.add_member(:publish_opt_in_event_types, Shapes::ShapeRef.new(shape: __manifestServicePublishOptInEventTypesList, location_name: "PublishOptInEventTypes"))
+    ManifestServiceInteractionLog.add_member(:exclude_event_types, Shapes::ShapeRef.new(shape: __manifestServiceExcludeEventTypesList, location_name: "ExcludeEventTypes"))
+    ManifestServiceInteractionLog.struct_class = Types::ManifestServiceInteractionLog
 
     PlaybackConfiguration.add_member(:ad_decision_server_url, Shapes::ShapeRef.new(shape: __string, location_name: "AdDecisionServerUrl"))
     PlaybackConfiguration.add_member(:avail_suppression, Shapes::ShapeRef.new(shape: AvailSuppression, location_name: "AvailSuppression"))
@@ -752,13 +926,25 @@ module Aws::MediaTailor
     PlaybackConfiguration.add_member(:personalization_threshold_seconds, Shapes::ShapeRef.new(shape: __integerMin1, location_name: "PersonalizationThresholdSeconds"))
     PlaybackConfiguration.add_member(:playback_configuration_arn, Shapes::ShapeRef.new(shape: __string, location_name: "PlaybackConfigurationArn"))
     PlaybackConfiguration.add_member(:playback_endpoint_prefix, Shapes::ShapeRef.new(shape: __string, location_name: "PlaybackEndpointPrefix"))
+    PlaybackConfiguration.add_member(:dual_stack_playback_endpoint_prefix, Shapes::ShapeRef.new(shape: __string, location_name: "DualStackPlaybackEndpointPrefix"))
     PlaybackConfiguration.add_member(:session_initialization_endpoint_prefix, Shapes::ShapeRef.new(shape: __string, location_name: "SessionInitializationEndpointPrefix"))
+    PlaybackConfiguration.add_member(:dual_stack_session_initialization_endpoint_prefix, Shapes::ShapeRef.new(shape: __string, location_name: "DualStackSessionInitializationEndpointPrefix"))
     PlaybackConfiguration.add_member(:slate_ad_url, Shapes::ShapeRef.new(shape: __string, location_name: "SlateAdUrl"))
     PlaybackConfiguration.add_member(:tags, Shapes::ShapeRef.new(shape: __mapOf__string, location_name: "tags"))
     PlaybackConfiguration.add_member(:transcode_profile_name, Shapes::ShapeRef.new(shape: __string, location_name: "TranscodeProfileName"))
     PlaybackConfiguration.add_member(:video_content_source_url, Shapes::ShapeRef.new(shape: __string, location_name: "VideoContentSourceUrl"))
     PlaybackConfiguration.add_member(:ad_conditioning_configuration, Shapes::ShapeRef.new(shape: AdConditioningConfiguration, location_name: "AdConditioningConfiguration"))
+    PlaybackConfiguration.add_member(:ad_decision_server_configuration, Shapes::ShapeRef.new(shape: AdDecisionServerConfiguration, location_name: "AdDecisionServerConfiguration"))
+    PlaybackConfiguration.add_member(:function_mapping, Shapes::ShapeRef.new(shape: FunctionMapping, location_name: "FunctionMapping"))
+    PlaybackConfiguration.add_member(:ads_personalization_timeouts, Shapes::ShapeRef.new(shape: AdsPersonalizationTimeouts, location_name: "AdsPersonalizationTimeouts"))
+    PlaybackConfiguration.add_member(:ads_personalization_concurrency, Shapes::ShapeRef.new(shape: AdsPersonalizationConcurrency, location_name: "AdsPersonalizationConcurrency"))
     PlaybackConfiguration.struct_class = Types::PlaybackConfiguration
+
+    PreRollAdDecisionServerConfiguration.add_member(:vast_response, Shapes::ShapeRef.new(shape: PreRollVastResponse, location_name: "VastResponse"))
+    PreRollAdDecisionServerConfiguration.struct_class = Types::PreRollAdDecisionServerConfiguration
+
+    PreRollVastResponse.add_member(:ad_sequencing_mode, Shapes::ShapeRef.new(shape: PreRollAdSequencingMode, location_name: "AdSequencingMode"))
+    PreRollVastResponse.struct_class = Types::PreRollVastResponse
 
     PrefetchConsumption.add_member(:avail_matching_criteria, Shapes::ShapeRef.new(shape: __listOfAvailMatchingCriteria, location_name: "AvailMatchingCriteria"))
     PrefetchConsumption.add_member(:end_time, Shapes::ShapeRef.new(shape: __timestampUnix, required: true, location_name: "EndTime"))
@@ -768,14 +954,20 @@ module Aws::MediaTailor
     PrefetchRetrieval.add_member(:dynamic_variables, Shapes::ShapeRef.new(shape: __mapOf__string, location_name: "DynamicVariables"))
     PrefetchRetrieval.add_member(:end_time, Shapes::ShapeRef.new(shape: __timestampUnix, required: true, location_name: "EndTime"))
     PrefetchRetrieval.add_member(:start_time, Shapes::ShapeRef.new(shape: __timestampUnix, location_name: "StartTime"))
+    PrefetchRetrieval.add_member(:traffic_shaping_type, Shapes::ShapeRef.new(shape: TrafficShapingType, location_name: "TrafficShapingType"))
+    PrefetchRetrieval.add_member(:traffic_shaping_retrieval_window, Shapes::ShapeRef.new(shape: TrafficShapingRetrievalWindow, location_name: "TrafficShapingRetrievalWindow"))
+    PrefetchRetrieval.add_member(:traffic_shaping_tps_configuration, Shapes::ShapeRef.new(shape: TrafficShapingTpsConfiguration, location_name: "TrafficShapingTpsConfiguration"))
     PrefetchRetrieval.struct_class = Types::PrefetchRetrieval
 
     PrefetchSchedule.add_member(:arn, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "Arn"))
-    PrefetchSchedule.add_member(:consumption, Shapes::ShapeRef.new(shape: PrefetchConsumption, required: true, location_name: "Consumption"))
+    PrefetchSchedule.add_member(:consumption, Shapes::ShapeRef.new(shape: PrefetchConsumption, location_name: "Consumption"))
     PrefetchSchedule.add_member(:name, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "Name"))
     PrefetchSchedule.add_member(:playback_configuration_name, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "PlaybackConfigurationName"))
-    PrefetchSchedule.add_member(:retrieval, Shapes::ShapeRef.new(shape: PrefetchRetrieval, required: true, location_name: "Retrieval"))
+    PrefetchSchedule.add_member(:retrieval, Shapes::ShapeRef.new(shape: PrefetchRetrieval, location_name: "Retrieval"))
+    PrefetchSchedule.add_member(:schedule_type, Shapes::ShapeRef.new(shape: PrefetchScheduleType, location_name: "ScheduleType"))
+    PrefetchSchedule.add_member(:recurring_prefetch_configuration, Shapes::ShapeRef.new(shape: RecurringPrefetchConfiguration, location_name: "RecurringPrefetchConfiguration"))
     PrefetchSchedule.add_member(:stream_id, Shapes::ShapeRef.new(shape: __string, location_name: "StreamId"))
+    PrefetchSchedule.add_member(:tags, Shapes::ShapeRef.new(shape: __mapOf__string, location_name: "tags"))
     PrefetchSchedule.struct_class = Types::PrefetchSchedule
 
     PutChannelPolicyRequest.add_member(:channel_name, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "ChannelName"))
@@ -783,6 +975,27 @@ module Aws::MediaTailor
     PutChannelPolicyRequest.struct_class = Types::PutChannelPolicyRequest
 
     PutChannelPolicyResponse.struct_class = Types::PutChannelPolicyResponse
+
+    PutFunctionRequest.add_member(:function_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "FunctionId"))
+    PutFunctionRequest.add_member(:function_type, Shapes::ShapeRef.new(shape: FunctionType, required: true, location_name: "FunctionType"))
+    PutFunctionRequest.add_member(:description, Shapes::ShapeRef.new(shape: __string, location_name: "Description"))
+    PutFunctionRequest.add_member(:http_request_configuration, Shapes::ShapeRef.new(shape: HttpRequestConfiguration, location_name: "HttpRequestConfiguration"))
+    PutFunctionRequest.add_member(:custom_output_configuration, Shapes::ShapeRef.new(shape: CustomOutputConfiguration, location_name: "CustomOutputConfiguration"))
+    PutFunctionRequest.add_member(:concurrent_executor_configuration, Shapes::ShapeRef.new(shape: ConcurrentExecutorConfiguration, location_name: "ConcurrentExecutorConfiguration"))
+    PutFunctionRequest.add_member(:sequential_executor_configuration, Shapes::ShapeRef.new(shape: SequentialExecutorConfiguration, location_name: "SequentialExecutorConfiguration"))
+    PutFunctionRequest.add_member(:tags, Shapes::ShapeRef.new(shape: __mapOf__string, location_name: "tags"))
+    PutFunctionRequest.struct_class = Types::PutFunctionRequest
+
+    PutFunctionResponse.add_member(:function_id, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "FunctionId"))
+    PutFunctionResponse.add_member(:function_type, Shapes::ShapeRef.new(shape: FunctionType, required: true, location_name: "FunctionType"))
+    PutFunctionResponse.add_member(:description, Shapes::ShapeRef.new(shape: __string, location_name: "Description"))
+    PutFunctionResponse.add_member(:http_request_configuration, Shapes::ShapeRef.new(shape: HttpRequestConfiguration, location_name: "HttpRequestConfiguration"))
+    PutFunctionResponse.add_member(:custom_output_configuration, Shapes::ShapeRef.new(shape: CustomOutputConfiguration, location_name: "CustomOutputConfiguration"))
+    PutFunctionResponse.add_member(:concurrent_executor_configuration, Shapes::ShapeRef.new(shape: ConcurrentExecutorConfiguration, location_name: "ConcurrentExecutorConfiguration"))
+    PutFunctionResponse.add_member(:sequential_executor_configuration, Shapes::ShapeRef.new(shape: SequentialExecutorConfiguration, location_name: "SequentialExecutorConfiguration"))
+    PutFunctionResponse.add_member(:tags, Shapes::ShapeRef.new(shape: __mapOf__string, location_name: "tags"))
+    PutFunctionResponse.add_member(:arn, Shapes::ShapeRef.new(shape: __string, location_name: "Arn"))
+    PutFunctionResponse.struct_class = Types::PutFunctionResponse
 
     PutPlaybackConfigurationRequest.add_member(:ad_decision_server_url, Shapes::ShapeRef.new(shape: __string, location_name: "AdDecisionServerUrl"))
     PutPlaybackConfigurationRequest.add_member(:avail_suppression, Shapes::ShapeRef.new(shape: AvailSuppression, location_name: "AvailSuppression"))
@@ -800,6 +1013,10 @@ module Aws::MediaTailor
     PutPlaybackConfigurationRequest.add_member(:transcode_profile_name, Shapes::ShapeRef.new(shape: __string, location_name: "TranscodeProfileName"))
     PutPlaybackConfigurationRequest.add_member(:video_content_source_url, Shapes::ShapeRef.new(shape: __string, location_name: "VideoContentSourceUrl"))
     PutPlaybackConfigurationRequest.add_member(:ad_conditioning_configuration, Shapes::ShapeRef.new(shape: AdConditioningConfiguration, location_name: "AdConditioningConfiguration"))
+    PutPlaybackConfigurationRequest.add_member(:ad_decision_server_configuration, Shapes::ShapeRef.new(shape: AdDecisionServerConfiguration, location_name: "AdDecisionServerConfiguration"))
+    PutPlaybackConfigurationRequest.add_member(:function_mapping, Shapes::ShapeRef.new(shape: FunctionMapping, location_name: "FunctionMapping"))
+    PutPlaybackConfigurationRequest.add_member(:ads_personalization_timeouts, Shapes::ShapeRef.new(shape: AdsPersonalizationTimeouts, location_name: "AdsPersonalizationTimeouts"))
+    PutPlaybackConfigurationRequest.add_member(:ads_personalization_concurrency, Shapes::ShapeRef.new(shape: AdsPersonalizationConcurrency, location_name: "AdsPersonalizationConcurrency"))
     PutPlaybackConfigurationRequest.struct_class = Types::PutPlaybackConfigurationRequest
 
     PutPlaybackConfigurationResponse.add_member(:ad_decision_server_url, Shapes::ShapeRef.new(shape: __string, location_name: "AdDecisionServerUrl"))
@@ -817,13 +1034,36 @@ module Aws::MediaTailor
     PutPlaybackConfigurationResponse.add_member(:personalization_threshold_seconds, Shapes::ShapeRef.new(shape: __integerMin1, location_name: "PersonalizationThresholdSeconds"))
     PutPlaybackConfigurationResponse.add_member(:playback_configuration_arn, Shapes::ShapeRef.new(shape: __string, location_name: "PlaybackConfigurationArn"))
     PutPlaybackConfigurationResponse.add_member(:playback_endpoint_prefix, Shapes::ShapeRef.new(shape: __string, location_name: "PlaybackEndpointPrefix"))
+    PutPlaybackConfigurationResponse.add_member(:dual_stack_playback_endpoint_prefix, Shapes::ShapeRef.new(shape: __string, location_name: "DualStackPlaybackEndpointPrefix"))
     PutPlaybackConfigurationResponse.add_member(:session_initialization_endpoint_prefix, Shapes::ShapeRef.new(shape: __string, location_name: "SessionInitializationEndpointPrefix"))
+    PutPlaybackConfigurationResponse.add_member(:dual_stack_session_initialization_endpoint_prefix, Shapes::ShapeRef.new(shape: __string, location_name: "DualStackSessionInitializationEndpointPrefix"))
     PutPlaybackConfigurationResponse.add_member(:slate_ad_url, Shapes::ShapeRef.new(shape: __string, location_name: "SlateAdUrl"))
     PutPlaybackConfigurationResponse.add_member(:tags, Shapes::ShapeRef.new(shape: __mapOf__string, location_name: "tags"))
     PutPlaybackConfigurationResponse.add_member(:transcode_profile_name, Shapes::ShapeRef.new(shape: __string, location_name: "TranscodeProfileName"))
     PutPlaybackConfigurationResponse.add_member(:video_content_source_url, Shapes::ShapeRef.new(shape: __string, location_name: "VideoContentSourceUrl"))
     PutPlaybackConfigurationResponse.add_member(:ad_conditioning_configuration, Shapes::ShapeRef.new(shape: AdConditioningConfiguration, location_name: "AdConditioningConfiguration"))
+    PutPlaybackConfigurationResponse.add_member(:ad_decision_server_configuration, Shapes::ShapeRef.new(shape: AdDecisionServerConfiguration, location_name: "AdDecisionServerConfiguration"))
+    PutPlaybackConfigurationResponse.add_member(:function_mapping, Shapes::ShapeRef.new(shape: FunctionMapping, location_name: "FunctionMapping"))
+    PutPlaybackConfigurationResponse.add_member(:ads_personalization_timeouts, Shapes::ShapeRef.new(shape: AdsPersonalizationTimeouts, location_name: "AdsPersonalizationTimeouts"))
+    PutPlaybackConfigurationResponse.add_member(:ads_personalization_concurrency, Shapes::ShapeRef.new(shape: AdsPersonalizationConcurrency, location_name: "AdsPersonalizationConcurrency"))
     PutPlaybackConfigurationResponse.struct_class = Types::PutPlaybackConfigurationResponse
+
+    RecurringConsumption.add_member(:retrieved_ad_expiration_seconds, Shapes::ShapeRef.new(shape: __integer, location_name: "RetrievedAdExpirationSeconds"))
+    RecurringConsumption.add_member(:avail_matching_criteria, Shapes::ShapeRef.new(shape: __listOfAvailMatchingCriteria, location_name: "AvailMatchingCriteria"))
+    RecurringConsumption.struct_class = Types::RecurringConsumption
+
+    RecurringPrefetchConfiguration.add_member(:start_time, Shapes::ShapeRef.new(shape: __timestampUnix, location_name: "StartTime"))
+    RecurringPrefetchConfiguration.add_member(:end_time, Shapes::ShapeRef.new(shape: __timestampUnix, required: true, location_name: "EndTime"))
+    RecurringPrefetchConfiguration.add_member(:recurring_consumption, Shapes::ShapeRef.new(shape: RecurringConsumption, required: true, location_name: "RecurringConsumption"))
+    RecurringPrefetchConfiguration.add_member(:recurring_retrieval, Shapes::ShapeRef.new(shape: RecurringRetrieval, required: true, location_name: "RecurringRetrieval"))
+    RecurringPrefetchConfiguration.struct_class = Types::RecurringPrefetchConfiguration
+
+    RecurringRetrieval.add_member(:dynamic_variables, Shapes::ShapeRef.new(shape: __mapOf__string, location_name: "DynamicVariables"))
+    RecurringRetrieval.add_member(:delay_after_avail_end_seconds, Shapes::ShapeRef.new(shape: __integer, location_name: "DelayAfterAvailEndSeconds"))
+    RecurringRetrieval.add_member(:traffic_shaping_type, Shapes::ShapeRef.new(shape: TrafficShapingType, location_name: "TrafficShapingType"))
+    RecurringRetrieval.add_member(:traffic_shaping_retrieval_window, Shapes::ShapeRef.new(shape: TrafficShapingRetrievalWindow, location_name: "TrafficShapingRetrievalWindow"))
+    RecurringRetrieval.add_member(:traffic_shaping_tps_configuration, Shapes::ShapeRef.new(shape: TrafficShapingTpsConfiguration, location_name: "TrafficShapingTpsConfiguration"))
+    RecurringRetrieval.struct_class = Types::RecurringRetrieval
 
     RequestOutputItem.add_member(:dash_playlist_settings, Shapes::ShapeRef.new(shape: DashPlaylistSettings, location_name: "DashPlaylistSettings"))
     RequestOutputItem.add_member(:hls_playlist_settings, Shapes::ShapeRef.new(shape: HlsPlaylistSettings, location_name: "HlsPlaylistSettings"))
@@ -837,6 +1077,7 @@ module Aws::MediaTailor
     ResponseOutputItem.add_member(:hls_playlist_settings, Shapes::ShapeRef.new(shape: HlsPlaylistSettings, location_name: "HlsPlaylistSettings"))
     ResponseOutputItem.add_member(:manifest_name, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "ManifestName"))
     ResponseOutputItem.add_member(:playback_url, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "PlaybackUrl"))
+    ResponseOutputItem.add_member(:dual_stack_playback_url, Shapes::ShapeRef.new(shape: __string, location_name: "DualStackPlaybackUrl"))
     ResponseOutputItem.add_member(:source_group, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "SourceGroup"))
     ResponseOutputItem.struct_class = Types::ResponseOutputItem
 
@@ -886,6 +1127,12 @@ module Aws::MediaTailor
 
     SegmentationDescriptorList.member = Shapes::ShapeRef.new(shape: SegmentationDescriptor)
 
+    SequentialExecutorConfiguration.add_member(:runtime, Shapes::ShapeRef.new(shape: RuntimeType, required: true, location_name: "Runtime"))
+    SequentialExecutorConfiguration.add_member(:output, Shapes::ShapeRef.new(shape: __mapOf__string, location_name: "Output"))
+    SequentialExecutorConfiguration.add_member(:function_list, Shapes::ShapeRef.new(shape: __listOfFunctionsRef, required: true, location_name: "FunctionList"))
+    SequentialExecutorConfiguration.add_member(:timeout_milliseconds, Shapes::ShapeRef.new(shape: __integer, required: true, location_name: "TimeoutMilliseconds"))
+    SequentialExecutorConfiguration.struct_class = Types::SequentialExecutorConfiguration
+
     SlateSource.add_member(:source_location_name, Shapes::ShapeRef.new(shape: __string, location_name: "SourceLocationName"))
     SlateSource.add_member(:vod_source_name, Shapes::ShapeRef.new(shape: __string, location_name: "VodSourceName"))
     SlateSource.struct_class = Types::SlateSource
@@ -917,6 +1164,9 @@ module Aws::MediaTailor
 
     StopChannelResponse.struct_class = Types::StopChannelResponse
 
+    StringMap.key = Shapes::ShapeRef.new(shape: __string)
+    StringMap.value = Shapes::ShapeRef.new(shape: __string)
+
     TagResourceRequest.add_member(:resource_arn, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "ResourceArn"))
     TagResourceRequest.add_member(:tags, Shapes::ShapeRef.new(shape: __mapOf__string, required: true, location_name: "tags"))
     TagResourceRequest.struct_class = Types::TagResourceRequest
@@ -926,6 +1176,13 @@ module Aws::MediaTailor
 
     TimeSignalMessage.add_member(:segmentation_descriptors, Shapes::ShapeRef.new(shape: SegmentationDescriptorList, location_name: "SegmentationDescriptors"))
     TimeSignalMessage.struct_class = Types::TimeSignalMessage
+
+    TrafficShapingRetrievalWindow.add_member(:retrieval_window_duration_seconds, Shapes::ShapeRef.new(shape: __integer, location_name: "RetrievalWindowDurationSeconds"))
+    TrafficShapingRetrievalWindow.struct_class = Types::TrafficShapingRetrievalWindow
+
+    TrafficShapingTpsConfiguration.add_member(:peak_tps, Shapes::ShapeRef.new(shape: __integer, location_name: "PeakTps"))
+    TrafficShapingTpsConfiguration.add_member(:peak_concurrent_users, Shapes::ShapeRef.new(shape: __integer, location_name: "PeakConcurrentUsers"))
+    TrafficShapingTpsConfiguration.struct_class = Types::TrafficShapingTpsConfiguration
 
     Transition.add_member(:duration_millis, Shapes::ShapeRef.new(shape: __long, location_name: "DurationMillis"))
     Transition.add_member(:relative_position, Shapes::ShapeRef.new(shape: RelativePosition, required: true, location_name: "RelativePosition"))
@@ -992,6 +1249,7 @@ module Aws::MediaTailor
     UpdateProgramResponse.add_member(:duration_millis, Shapes::ShapeRef.new(shape: __long, location_name: "DurationMillis"))
     UpdateProgramResponse.add_member(:scheduled_start_time, Shapes::ShapeRef.new(shape: __timestampUnix, location_name: "ScheduledStartTime"))
     UpdateProgramResponse.add_member(:audience_media, Shapes::ShapeRef.new(shape: __listOfAudienceMedia, location_name: "AudienceMedia"))
+    UpdateProgramResponse.add_member(:tags, Shapes::ShapeRef.new(shape: __mapOf__string, location_name: "tags"))
     UpdateProgramResponse.struct_class = Types::UpdateProgramResponse
 
     UpdateProgramScheduleConfiguration.add_member(:transition, Shapes::ShapeRef.new(shape: UpdateProgramTransition, location_name: "Transition"))
@@ -1034,6 +1292,9 @@ module Aws::MediaTailor
     UpdateVodSourceResponse.add_member(:vod_source_name, Shapes::ShapeRef.new(shape: __string, location_name: "VodSourceName"))
     UpdateVodSourceResponse.struct_class = Types::UpdateVodSourceResponse
 
+    VastResponse.add_member(:ad_sequencing_mode, Shapes::ShapeRef.new(shape: AdSequencingMode, location_name: "AdSequencingMode"))
+    VastResponse.struct_class = Types::VastResponse
+
     VodSource.add_member(:arn, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "Arn"))
     VodSource.add_member(:creation_time, Shapes::ShapeRef.new(shape: __timestampUnix, location_name: "CreationTime"))
     VodSource.add_member(:http_package_configurations, Shapes::ShapeRef.new(shape: HttpPackageConfigurations, required: true, location_name: "HttpPackageConfigurations"))
@@ -1042,6 +1303,10 @@ module Aws::MediaTailor
     VodSource.add_member(:tags, Shapes::ShapeRef.new(shape: __mapOf__string, location_name: "tags"))
     VodSource.add_member(:vod_source_name, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "VodSourceName"))
     VodSource.struct_class = Types::VodSource
+
+    __adsInteractionExcludeEventTypesList.member = Shapes::ShapeRef.new(shape: AdsInteractionExcludeEventType)
+
+    __adsInteractionPublishOptInEventTypesList.member = Shapes::ShapeRef.new(shape: AdsInteractionPublishOptInEventType)
 
     __listOfAdBreak.member = Shapes::ShapeRef.new(shape: AdBreak)
 
@@ -1054,6 +1319,10 @@ module Aws::MediaTailor
     __listOfAvailMatchingCriteria.member = Shapes::ShapeRef.new(shape: AvailMatchingCriteria)
 
     __listOfChannel.member = Shapes::ShapeRef.new(shape: Channel)
+
+    __listOfFunctionsRef.member = Shapes::ShapeRef.new(shape: FunctionRef)
+
+    __listOfFunctionsResponse.member = Shapes::ShapeRef.new(shape: Function)
 
     __listOfLiveSource.member = Shapes::ShapeRef.new(shape: LiveSource)
 
@@ -1074,6 +1343,10 @@ module Aws::MediaTailor
     __listOfVodSource.member = Shapes::ShapeRef.new(shape: VodSource)
 
     __listOf__string.member = Shapes::ShapeRef.new(shape: __string)
+
+    __manifestServiceExcludeEventTypesList.member = Shapes::ShapeRef.new(shape: ManifestServiceExcludeEventType)
+
+    __manifestServicePublishOptInEventTypesList.member = Shapes::ShapeRef.new(shape: ManifestServicePublishOptInEventType)
 
     __mapOf__string.key = Shapes::ShapeRef.new(shape: __string)
     __mapOf__string.value = Shapes::ShapeRef.new(shape: __string)
@@ -1178,6 +1451,14 @@ module Aws::MediaTailor
         o.http_request_uri = "/channel/{ChannelName}/policy"
         o.input = Shapes::ShapeRef.new(shape: DeleteChannelPolicyRequest)
         o.output = Shapes::ShapeRef.new(shape: DeleteChannelPolicyResponse)
+      end)
+
+      api.add_operation(:delete_function, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeleteFunction"
+        o.http_method = "DELETE"
+        o.http_request_uri = "/function/{FunctionId}"
+        o.input = Shapes::ShapeRef.new(shape: DeleteFunctionRequest)
+        o.output = Shapes::ShapeRef.new(shape: DeleteFunctionResponse)
       end)
 
       api.add_operation(:delete_live_source, Seahorse::Model::Operation.new.tap do |o|
@@ -1290,6 +1571,14 @@ module Aws::MediaTailor
         )
       end)
 
+      api.add_operation(:get_function, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetFunction"
+        o.http_method = "GET"
+        o.http_request_uri = "/function/{FunctionId}"
+        o.input = Shapes::ShapeRef.new(shape: GetFunctionRequest)
+        o.output = Shapes::ShapeRef.new(shape: GetFunctionResponse)
+      end)
+
       api.add_operation(:get_playback_configuration, Seahorse::Model::Operation.new.tap do |o|
         o.name = "GetPlaybackConfiguration"
         o.http_method = "GET"
@@ -1326,6 +1615,20 @@ module Aws::MediaTailor
         o.http_request_uri = "/channels"
         o.input = Shapes::ShapeRef.new(shape: ListChannelsRequest)
         o.output = Shapes::ShapeRef.new(shape: ListChannelsResponse)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:list_functions, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListFunctions"
+        o.http_method = "GET"
+        o.http_request_uri = "/functions"
+        o.input = Shapes::ShapeRef.new(shape: ListFunctionsRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListFunctionsResponse)
         o[:pager] = Aws::Pager.new(
           limit_key: "max_results",
           tokens: {
@@ -1419,6 +1722,14 @@ module Aws::MediaTailor
         o.http_request_uri = "/channel/{ChannelName}/policy"
         o.input = Shapes::ShapeRef.new(shape: PutChannelPolicyRequest)
         o.output = Shapes::ShapeRef.new(shape: PutChannelPolicyResponse)
+      end)
+
+      api.add_operation(:put_function, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "PutFunction"
+        o.http_method = "PUT"
+        o.http_request_uri = "/function/{FunctionId}"
+        o.input = Shapes::ShapeRef.new(shape: PutFunctionRequest)
+        o.output = Shapes::ShapeRef.new(shape: PutFunctionResponse)
       end)
 
       api.add_operation(:put_playback_configuration, Seahorse::Model::Operation.new.tap do |o|

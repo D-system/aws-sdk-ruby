@@ -95,8 +95,8 @@ module Aws::EMRServerless
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::EMRServerless
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::EMRServerless
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::EMRServerless
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::EMRServerless
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::EMRServerless
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::EMRServerless
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::EMRServerless
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -478,6 +482,10 @@ module Aws::EMRServerless
     # @option params [required, String] :job_run_id
     #   The ID of the job run to cancel.
     #
+    # @option params [Integer] :shutdown_grace_period_in_seconds
+    #   The duration in seconds to wait before forcefully terminating the job
+    #   after cancellation is requested.
+    #
     # @return [Types::CancelJobRunResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CancelJobRunResponse#application_id #application_id} => String
@@ -488,6 +496,7 @@ module Aws::EMRServerless
     #   resp = client.cancel_job_run({
     #     application_id: "ApplicationId", # required
     #     job_run_id: "JobRunId", # required
+    #     shutdown_grace_period_in_seconds: 1,
     #   })
     #
     # @example Response structure
@@ -575,6 +584,9 @@ module Aws::EMRServerless
     # @option params [Types::MonitoringConfiguration] :monitoring_configuration
     #   The configuration setting for monitoring.
     #
+    # @option params [Types::DiskEncryptionConfiguration] :disk_encryption_configuration
+    #   The configuration object that allows encrypting local disks.
+    #
     # @option params [Types::InteractiveConfiguration] :interactive_configuration
     #   The interactive configuration object that enables the interactive use
     #   cases to use when running an application.
@@ -582,6 +594,15 @@ module Aws::EMRServerless
     # @option params [Types::SchedulerConfiguration] :scheduler_configuration
     #   The scheduler configuration for batch and streaming jobs running on
     #   this application. Supported with release labels emr-7.0.0 and above.
+    #
+    # @option params [Types::IdentityCenterConfigurationInput] :identity_center_configuration
+    #   The IAM Identity Center Configuration accepts the Identity Center
+    #   instance parameter required to enable trusted identity propagation.
+    #   This configuration allows identity propagation between integrated
+    #   services and the Identity Center instance.
+    #
+    # @option params [Types::JobLevelCostAllocationConfiguration] :job_level_cost_allocation_configuration
+    #   The configuration object that enables job level cost allocation.
     #
     # @return [Types::CreateApplicationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -629,11 +650,13 @@ module Aws::EMRServerless
     #     architecture: "ARM64", # accepts ARM64, X86_64
     #     image_configuration: {
     #       image_uri: "ImageUri",
+    #       application_level_digest_resolution: false,
     #     },
     #     worker_type_specifications: {
     #       "WorkerTypeString" => {
     #         image_configuration: {
     #           image_uri: "ImageUri",
+    #           application_level_digest_resolution: false,
     #         },
     #       },
     #     },
@@ -670,13 +693,27 @@ module Aws::EMRServerless
     #         remote_write_url: "PrometheusUrlString",
     #       },
     #     },
+    #     disk_encryption_configuration: {
+    #       encryption_context: {
+    #         "EncryptionContextKey" => "EncryptionContextValue",
+    #       },
+    #       encryption_key_arn: "EncryptionKeyArn",
+    #     },
     #     interactive_configuration: {
     #       studio_enabled: false,
     #       livy_endpoint_enabled: false,
+    #       session_enabled: false,
     #     },
     #     scheduler_configuration: {
     #       queue_timeout_minutes: 1,
     #       max_concurrent_runs: 1,
+    #     },
+    #     identity_center_configuration: {
+    #       identity_center_instance_arn: "IdentityCenterInstanceArn",
+    #       user_background_sessions_enabled: false,
+    #     },
+    #     job_level_cost_allocation_configuration: {
+    #       enabled: false,
     #     },
     #   })
     #
@@ -765,9 +802,11 @@ module Aws::EMRServerless
     #   resp.application.architecture #=> String, one of "ARM64", "X86_64"
     #   resp.application.image_configuration.image_uri #=> String
     #   resp.application.image_configuration.resolved_image_digest #=> String
+    #   resp.application.image_configuration.application_level_digest_resolution #=> Boolean
     #   resp.application.worker_type_specifications #=> Hash
     #   resp.application.worker_type_specifications["WorkerTypeString"].image_configuration.image_uri #=> String
     #   resp.application.worker_type_specifications["WorkerTypeString"].image_configuration.resolved_image_digest #=> String
+    #   resp.application.worker_type_specifications["WorkerTypeString"].image_configuration.application_level_digest_resolution #=> Boolean
     #   resp.application.runtime_configuration #=> Array
     #   resp.application.runtime_configuration[0].classification #=> String
     #   resp.application.runtime_configuration[0].properties #=> Hash
@@ -785,10 +824,18 @@ module Aws::EMRServerless
     #   resp.application.monitoring_configuration.cloud_watch_logging_configuration.log_types["WorkerTypeString"] #=> Array
     #   resp.application.monitoring_configuration.cloud_watch_logging_configuration.log_types["WorkerTypeString"][0] #=> String
     #   resp.application.monitoring_configuration.prometheus_monitoring_configuration.remote_write_url #=> String
+    #   resp.application.disk_encryption_configuration.encryption_context #=> Hash
+    #   resp.application.disk_encryption_configuration.encryption_context["EncryptionContextKey"] #=> String
+    #   resp.application.disk_encryption_configuration.encryption_key_arn #=> String
     #   resp.application.interactive_configuration.studio_enabled #=> Boolean
     #   resp.application.interactive_configuration.livy_endpoint_enabled #=> Boolean
+    #   resp.application.interactive_configuration.session_enabled #=> Boolean
     #   resp.application.scheduler_configuration.queue_timeout_minutes #=> Integer
     #   resp.application.scheduler_configuration.max_concurrent_runs #=> Integer
+    #   resp.application.identity_center_configuration.identity_center_instance_arn #=> String
+    #   resp.application.identity_center_configuration.identity_center_application_arn #=> String
+    #   resp.application.identity_center_configuration.user_background_sessions_enabled #=> Boolean
+    #   resp.application.job_level_cost_allocation_configuration.enabled #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/GetApplication AWS API Documentation
     #
@@ -889,6 +936,9 @@ module Aws::EMRServerless
     #   resp.job_run.created_at #=> Time
     #   resp.job_run.updated_at #=> Time
     #   resp.job_run.execution_role #=> String
+    #   resp.job_run.execution_iam_policy.policy #=> String
+    #   resp.job_run.execution_iam_policy.policy_arns #=> Array
+    #   resp.job_run.execution_iam_policy.policy_arns[0] #=> String
     #   resp.job_run.state #=> String, one of "SUBMITTED", "PENDING", "SCHEDULED", "RUNNING", "SUCCESS", "FAILED", "CANCELLING", "CANCELLED", "QUEUED"
     #   resp.job_run.state_details #=> String
     #   resp.job_run.release_label #=> String
@@ -909,6 +959,9 @@ module Aws::EMRServerless
     #   resp.job_run.configuration_overrides.monitoring_configuration.cloud_watch_logging_configuration.log_types["WorkerTypeString"] #=> Array
     #   resp.job_run.configuration_overrides.monitoring_configuration.cloud_watch_logging_configuration.log_types["WorkerTypeString"][0] #=> String
     #   resp.job_run.configuration_overrides.monitoring_configuration.prometheus_monitoring_configuration.remote_write_url #=> String
+    #   resp.job_run.configuration_overrides.disk_encryption_configuration.encryption_context #=> Hash
+    #   resp.job_run.configuration_overrides.disk_encryption_configuration.encryption_context["EncryptionContextKey"] #=> String
+    #   resp.job_run.configuration_overrides.disk_encryption_configuration.encryption_key_arn #=> String
     #   resp.job_run.job_driver.spark_submit.entry_point #=> String
     #   resp.job_run.job_driver.spark_submit.entry_point_arguments #=> Array
     #   resp.job_run.job_driver.spark_submit.entry_point_arguments[0] #=> String
@@ -939,6 +992,13 @@ module Aws::EMRServerless
     #   resp.job_run.started_at #=> Time
     #   resp.job_run.ended_at #=> Time
     #   resp.job_run.queued_duration_milliseconds #=> Integer
+    #   resp.job_run.image_configuration.image_uri #=> String
+    #   resp.job_run.image_configuration.resolved_image_digest #=> String
+    #   resp.job_run.image_configuration.application_level_digest_resolution #=> Boolean
+    #   resp.job_run.worker_type_specifications #=> Hash
+    #   resp.job_run.worker_type_specifications["WorkerTypeString"].image_configuration.image_uri #=> String
+    #   resp.job_run.worker_type_specifications["WorkerTypeString"].image_configuration.resolved_image_digest #=> String
+    #   resp.job_run.worker_type_specifications["WorkerTypeString"].image_configuration.application_level_digest_resolution #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/GetJobRun AWS API Documentation
     #
@@ -946,6 +1006,162 @@ module Aws::EMRServerless
     # @param [Hash] params ({})
     def get_job_run(params = {}, options = {})
       req = build_request(:get_job_run, params)
+      req.send_request(options)
+    end
+
+    # Returns a URL that you can use to access the application UIs for a
+    # specified resource, such as a session.
+    #
+    # For resources in a running state, the application UI is a live user
+    # interface such as the Spark web UI. For terminated resources, the
+    # application UI is a persistent application user interface such as the
+    # Spark History Server.
+    #
+    # <note markdown="1"> The URL is valid for one hour after you generate it. To access the
+    # application UI after that hour elapses, you must invoke the API again
+    # to generate a new URL.
+    #
+    #  </note>
+    #
+    # @option params [required, String] :application_id
+    #   The ID of the application that the resource belongs to.
+    #
+    # @option params [required, String] :resource_id
+    #   The ID of the resource.
+    #
+    # @option params [required, String] :resource_type
+    #   The type of resource to access the dashboard for. Currently, only
+    #   `Session` is supported.
+    #
+    # @return [Types::GetResourceDashboardResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetResourceDashboardResponse#url #url} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_resource_dashboard({
+    #     application_id: "ApplicationId", # required
+    #     resource_id: "ResourceId", # required
+    #     resource_type: "SESSION", # required, accepts SESSION
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.url #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/GetResourceDashboard AWS API Documentation
+    #
+    # @overload get_resource_dashboard(params = {})
+    # @param [Hash] params ({})
+    def get_resource_dashboard(params = {}, options = {})
+      req = build_request(:get_resource_dashboard, params)
+      req.send_request(options)
+    end
+
+    # Displays detailed information about a session.
+    #
+    # @option params [required, String] :application_id
+    #   The ID of the application that the session belongs to.
+    #
+    # @option params [required, String] :session_id
+    #   The ID of the session.
+    #
+    # @return [Types::GetSessionResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetSessionResponse#session #session} => Types::Session
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_session({
+    #     application_id: "ApplicationId", # required
+    #     session_id: "SessionId", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.session.application_id #=> String
+    #   resp.session.session_id #=> String
+    #   resp.session.arn #=> String
+    #   resp.session.name #=> String
+    #   resp.session.state #=> String, one of "SUBMITTED", "STARTING", "STARTED", "IDLE", "BUSY", "FAILED", "TERMINATING", "TERMINATED"
+    #   resp.session.state_details #=> String
+    #   resp.session.release_label #=> String
+    #   resp.session.execution_role_arn #=> String
+    #   resp.session.created_by #=> String
+    #   resp.session.created_at #=> Time
+    #   resp.session.updated_at #=> Time
+    #   resp.session.started_at #=> Time
+    #   resp.session.ended_at #=> Time
+    #   resp.session.idle_since #=> Time
+    #   resp.session.configuration_overrides.runtime_configuration #=> Array
+    #   resp.session.configuration_overrides.runtime_configuration[0].classification #=> String
+    #   resp.session.configuration_overrides.runtime_configuration[0].properties #=> Hash
+    #   resp.session.configuration_overrides.runtime_configuration[0].properties["ConfigurationPropertyKey"] #=> String
+    #   resp.session.configuration_overrides.runtime_configuration[0].configurations #=> Types::ConfigurationList
+    #   resp.session.network_configuration.subnet_ids #=> Array
+    #   resp.session.network_configuration.subnet_ids[0] #=> String
+    #   resp.session.network_configuration.security_group_ids #=> Array
+    #   resp.session.network_configuration.security_group_ids[0] #=> String
+    #   resp.session.idle_timeout_minutes #=> Integer
+    #   resp.session.tags #=> Hash
+    #   resp.session.tags["TagKey"] #=> String
+    #   resp.session.total_resource_utilization.v_cpu_hour #=> Float
+    #   resp.session.total_resource_utilization.memory_gb_hour #=> Float
+    #   resp.session.total_resource_utilization.storage_gb_hour #=> Float
+    #   resp.session.billed_resource_utilization.v_cpu_hour #=> Float
+    #   resp.session.billed_resource_utilization.memory_gb_hour #=> Float
+    #   resp.session.billed_resource_utilization.storage_gb_hour #=> Float
+    #   resp.session.total_execution_duration_seconds #=> Integer
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/GetSession AWS API Documentation
+    #
+    # @overload get_session(params = {})
+    # @param [Hash] params ({})
+    def get_session(params = {}, options = {})
+      req = build_request(:get_session, params)
+      req.send_request(options)
+    end
+
+    # Returns the session endpoint URL and a time-limited authentication
+    # token for the specified session. Use the endpoint and token to connect
+    # a client to the session. Call this operation again when the
+    # authentication token expires to obtain a new token.
+    #
+    # @option params [required, String] :application_id
+    #   The ID of the application that the session belongs to.
+    #
+    # @option params [required, String] :session_id
+    #   The ID of the session.
+    #
+    # @return [Types::GetSessionEndpointResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetSessionEndpointResponse#application_id #application_id} => String
+    #   * {Types::GetSessionEndpointResponse#session_id #session_id} => String
+    #   * {Types::GetSessionEndpointResponse#endpoint #endpoint} => String
+    #   * {Types::GetSessionEndpointResponse#auth_token #auth_token} => String
+    #   * {Types::GetSessionEndpointResponse#auth_token_expires_at #auth_token_expires_at} => Time
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_session_endpoint({
+    #     application_id: "ApplicationId", # required
+    #     session_id: "SessionId", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.application_id #=> String
+    #   resp.session_id #=> String
+    #   resp.endpoint #=> String
+    #   resp.auth_token #=> String
+    #   resp.auth_token_expires_at #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/GetSessionEndpoint AWS API Documentation
+    #
+    # @overload get_session_endpoint(params = {})
+    # @param [Hash] params ({})
+    def get_session_endpoint(params = {}, options = {})
+      req = build_request(:get_session_endpoint, params)
       req.send_request(options)
     end
 
@@ -1134,6 +1350,72 @@ module Aws::EMRServerless
       req.send_request(options)
     end
 
+    # Lists sessions for the specified application. You can filter sessions
+    # by state and creation time.
+    #
+    # @option params [required, String] :application_id
+    #   The ID of the application to list sessions for.
+    #
+    # @option params [String] :next_token
+    #   The token for the next set of session results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of sessions to return in each page of results.
+    #
+    # @option params [Array<String>] :states
+    #   An optional filter for session states. Note that if this filter
+    #   contains multiple states, the resulting list will be grouped by the
+    #   state.
+    #
+    # @option params [Time,DateTime,Date,Integer,String] :created_at_after
+    #   The lower bound of the option to filter by creation date and time.
+    #
+    # @option params [Time,DateTime,Date,Integer,String] :created_at_before
+    #   The upper bound of the option to filter by creation date and time.
+    #
+    # @return [Types::ListSessionsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListSessionsResponse#sessions #sessions} => Array&lt;Types::SessionSummary&gt;
+    #   * {Types::ListSessionsResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_sessions({
+    #     application_id: "ApplicationId", # required
+    #     next_token: "NextToken",
+    #     max_results: 1,
+    #     states: ["SUBMITTED"], # accepts SUBMITTED, STARTING, STARTED, IDLE, BUSY, FAILED, TERMINATING, TERMINATED
+    #     created_at_after: Time.now,
+    #     created_at_before: Time.now,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.sessions #=> Array
+    #   resp.sessions[0].application_id #=> String
+    #   resp.sessions[0].session_id #=> String
+    #   resp.sessions[0].arn #=> String
+    #   resp.sessions[0].name #=> String
+    #   resp.sessions[0].state #=> String, one of "SUBMITTED", "STARTING", "STARTED", "IDLE", "BUSY", "FAILED", "TERMINATING", "TERMINATED"
+    #   resp.sessions[0].state_details #=> String
+    #   resp.sessions[0].release_label #=> String
+    #   resp.sessions[0].execution_role_arn #=> String
+    #   resp.sessions[0].created_by #=> String
+    #   resp.sessions[0].created_at #=> Time
+    #   resp.sessions[0].updated_at #=> Time
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/ListSessions AWS API Documentation
+    #
+    # @overload list_sessions(params = {})
+    # @param [Hash] params ({})
+    def list_sessions(params = {}, options = {})
+      req = build_request(:list_sessions, params)
+      req.send_request(options)
+    end
+
     # Lists the tags assigned to the resources.
     #
     # @option params [required, String] :resource_arn
@@ -1203,6 +1485,11 @@ module Aws::EMRServerless
     # @option params [required, String] :execution_role_arn
     #   The execution role ARN for the job run.
     #
+    # @option params [Types::JobRunExecutionIamPolicy] :execution_iam_policy
+    #   You can pass an optional IAM policy. The resulting job IAM role
+    #   permissions will be an intersection of this policy and the policy
+    #   associated with your job execution role.
+    #
     # @option params [Types::JobDriver] :job_driver
     #   The job driver for the job run.
     #
@@ -1237,6 +1524,10 @@ module Aws::EMRServerless
     #     application_id: "ApplicationId", # required
     #     client_token: "ClientToken", # required
     #     execution_role_arn: "IAMRoleArn", # required
+    #     execution_iam_policy: {
+    #       policy: "PolicyDocument",
+    #       policy_arns: ["Arn"],
+    #     },
     #     job_driver: {
     #       spark_submit: {
     #         entry_point: "EntryPointPath", # required
@@ -1283,6 +1574,12 @@ module Aws::EMRServerless
     #           remote_write_url: "PrometheusUrlString",
     #         },
     #       },
+    #       disk_encryption_configuration: {
+    #         encryption_context: {
+    #           "EncryptionContextKey" => "EncryptionContextValue",
+    #         },
+    #         encryption_key_arn: "EncryptionKeyArn",
+    #       },
     #     },
     #     tags: {
     #       "TagKey" => "TagValue",
@@ -1308,6 +1605,90 @@ module Aws::EMRServerless
     # @param [Hash] params ({})
     def start_job_run(params = {}, options = {})
       req = build_request(:start_job_run, params)
+      req.send_request(options)
+    end
+
+    # Creates and starts a new session on the specified application. The
+    # application must be in the `STARTED` state or have `AutoStart`
+    # enabled, and have interactive sessions enabled. This operation is
+    # supported for EMR release 7.13.0 and later.
+    #
+    # @option params [required, String] :application_id
+    #   The ID of the application on which to start the session.
+    #
+    # @option params [required, String] :client_token
+    #   A unique, case-sensitive identifier that you provide to ensure the
+    #   idempotency of the request. If you retry a request that completed
+    #   successfully using the same client token, the server returns the
+    #   successful response without performing the operation again.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @option params [required, String] :execution_role_arn
+    #   The execution role ARN for the session. Amazon EMR Serverless uses
+    #   this role to access Amazon Web Services resources on your behalf
+    #   during session execution.
+    #
+    # @option params [Types::SessionConfigurationOverrides] :configuration_overrides
+    #   The configuration overrides for the session. Only runtime
+    #   configuration overrides are supported.
+    #
+    # @option params [Hash<String,String>] :tags
+    #   The tags to assign to the session.
+    #
+    # @option params [Integer] :idle_timeout_minutes
+    #   The idle timeout in minutes for the session. After the session remains
+    #   idle for this duration, Amazon EMR Serverless automatically terminates
+    #   it.
+    #
+    # @option params [String] :name
+    #   The optional name for the session.
+    #
+    # @return [Types::StartSessionResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::StartSessionResponse#application_id #application_id} => String
+    #   * {Types::StartSessionResponse#session_id #session_id} => String
+    #   * {Types::StartSessionResponse#arn #arn} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.start_session({
+    #     application_id: "ApplicationId", # required
+    #     client_token: "ClientToken", # required
+    #     execution_role_arn: "IAMRoleArn", # required
+    #     configuration_overrides: {
+    #       runtime_configuration: [
+    #         {
+    #           classification: "String1024", # required
+    #           properties: {
+    #             "ConfigurationPropertyKey" => "ConfigurationPropertyValue",
+    #           },
+    #           configurations: {
+    #             # recursive ConfigurationList
+    #           },
+    #         },
+    #       ],
+    #     },
+    #     tags: {
+    #       "TagKey" => "TagValue",
+    #     },
+    #     idle_timeout_minutes: 1,
+    #     name: "String256",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.application_id #=> String
+    #   resp.session_id #=> String
+    #   resp.arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/StartSession AWS API Documentation
+    #
+    # @overload start_session(params = {})
+    # @param [Hash] params ({})
+    def start_session(params = {}, options = {})
+      req = build_request(:start_session, params)
       req.send_request(options)
     end
 
@@ -1368,6 +1749,43 @@ module Aws::EMRServerless
     # @param [Hash] params ({})
     def tag_resource(params = {}, options = {})
       req = build_request(:tag_resource, params)
+      req.send_request(options)
+    end
+
+    # Terminates the specified session. After you terminate a session, it
+    # enters the `TERMINATING` state and then the `TERMINATED` state. You
+    # can still access the Spark History Server for a terminated session
+    # through the `GetResourceDashboard` operation.
+    #
+    # @option params [required, String] :application_id
+    #   The ID of the application that the session belongs to.
+    #
+    # @option params [required, String] :session_id
+    #   The ID of the session to terminate.
+    #
+    # @return [Types::TerminateSessionResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::TerminateSessionResponse#application_id #application_id} => String
+    #   * {Types::TerminateSessionResponse#session_id #session_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.terminate_session({
+    #     application_id: "ApplicationId", # required
+    #     session_id: "SessionId", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.application_id #=> String
+    #   resp.session_id #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/TerminateSession AWS API Documentation
+    #
+    # @overload terminate_session(params = {})
+    # @param [Hash] params ({})
+    def terminate_session(params = {}, options = {})
+      req = build_request(:terminate_session, params)
       req.send_request(options)
     end
 
@@ -1470,9 +1888,21 @@ module Aws::EMRServerless
     # @option params [Types::MonitoringConfiguration] :monitoring_configuration
     #   The configuration setting for monitoring.
     #
+    # @option params [Types::DiskEncryptionConfiguration] :disk_encryption_configuration
+    #   The configuration object that allows encrypting local disks.
+    #
     # @option params [Types::SchedulerConfiguration] :scheduler_configuration
     #   The scheduler configuration for batch and streaming jobs running on
     #   this application. Supported with release labels emr-7.0.0 and above.
+    #
+    # @option params [Types::IdentityCenterConfigurationInput] :identity_center_configuration
+    #   Specifies the IAM Identity Center configuration used to enable or
+    #   disable trusted identity propagation. When provided, this
+    #   configuration determines how the application interacts with IAM
+    #   Identity Center for user authentication and access control.
+    #
+    # @option params [Types::JobLevelCostAllocationConfiguration] :job_level_cost_allocation_configuration
+    #   The configuration object that enables job level cost allocation.
     #
     # @return [Types::UpdateApplicationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1513,17 +1943,20 @@ module Aws::EMRServerless
     #     architecture: "ARM64", # accepts ARM64, X86_64
     #     image_configuration: {
     #       image_uri: "ImageUri",
+    #       application_level_digest_resolution: false,
     #     },
     #     worker_type_specifications: {
     #       "WorkerTypeString" => {
     #         image_configuration: {
     #           image_uri: "ImageUri",
+    #           application_level_digest_resolution: false,
     #         },
     #       },
     #     },
     #     interactive_configuration: {
     #       studio_enabled: false,
     #       livy_endpoint_enabled: false,
+    #       session_enabled: false,
     #     },
     #     release_label: "ReleaseLabel",
     #     runtime_configuration: [
@@ -1559,9 +1992,22 @@ module Aws::EMRServerless
     #         remote_write_url: "PrometheusUrlString",
     #       },
     #     },
+    #     disk_encryption_configuration: {
+    #       encryption_context: {
+    #         "EncryptionContextKey" => "EncryptionContextValue",
+    #       },
+    #       encryption_key_arn: "EncryptionKeyArn",
+    #     },
     #     scheduler_configuration: {
     #       queue_timeout_minutes: 1,
     #       max_concurrent_runs: 1,
+    #     },
+    #     identity_center_configuration: {
+    #       identity_center_instance_arn: "IdentityCenterInstanceArn",
+    #       user_background_sessions_enabled: false,
+    #     },
+    #     job_level_cost_allocation_configuration: {
+    #       enabled: false,
     #     },
     #   })
     #
@@ -1597,9 +2043,11 @@ module Aws::EMRServerless
     #   resp.application.architecture #=> String, one of "ARM64", "X86_64"
     #   resp.application.image_configuration.image_uri #=> String
     #   resp.application.image_configuration.resolved_image_digest #=> String
+    #   resp.application.image_configuration.application_level_digest_resolution #=> Boolean
     #   resp.application.worker_type_specifications #=> Hash
     #   resp.application.worker_type_specifications["WorkerTypeString"].image_configuration.image_uri #=> String
     #   resp.application.worker_type_specifications["WorkerTypeString"].image_configuration.resolved_image_digest #=> String
+    #   resp.application.worker_type_specifications["WorkerTypeString"].image_configuration.application_level_digest_resolution #=> Boolean
     #   resp.application.runtime_configuration #=> Array
     #   resp.application.runtime_configuration[0].classification #=> String
     #   resp.application.runtime_configuration[0].properties #=> Hash
@@ -1617,10 +2065,18 @@ module Aws::EMRServerless
     #   resp.application.monitoring_configuration.cloud_watch_logging_configuration.log_types["WorkerTypeString"] #=> Array
     #   resp.application.monitoring_configuration.cloud_watch_logging_configuration.log_types["WorkerTypeString"][0] #=> String
     #   resp.application.monitoring_configuration.prometheus_monitoring_configuration.remote_write_url #=> String
+    #   resp.application.disk_encryption_configuration.encryption_context #=> Hash
+    #   resp.application.disk_encryption_configuration.encryption_context["EncryptionContextKey"] #=> String
+    #   resp.application.disk_encryption_configuration.encryption_key_arn #=> String
     #   resp.application.interactive_configuration.studio_enabled #=> Boolean
     #   resp.application.interactive_configuration.livy_endpoint_enabled #=> Boolean
+    #   resp.application.interactive_configuration.session_enabled #=> Boolean
     #   resp.application.scheduler_configuration.queue_timeout_minutes #=> Integer
     #   resp.application.scheduler_configuration.max_concurrent_runs #=> Integer
+    #   resp.application.identity_center_configuration.identity_center_instance_arn #=> String
+    #   resp.application.identity_center_configuration.identity_center_application_arn #=> String
+    #   resp.application.identity_center_configuration.user_background_sessions_enabled #=> Boolean
+    #   resp.application.job_level_cost_allocation_configuration.enabled #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/UpdateApplication AWS API Documentation
     #
@@ -1649,7 +2105,7 @@ module Aws::EMRServerless
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-emrserverless'
-      context[:gem_version] = '1.42.0'
+      context[:gem_version] = '1.70.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

@@ -95,8 +95,8 @@ module Aws::ControlTower
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::ControlTower
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::ControlTower
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::ControlTower
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::ControlTower
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::ControlTower
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::ControlTower
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::ControlTower
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -474,7 +478,18 @@ module Aws::ControlTower
     # operation that creates and configures a landing zone, based on the
     # parameters specified in the manifest JSON file.
     #
-    # @option params [required, Hash,Array,String,Numeric,Boolean] :manifest
+    # @option params [required, String] :version
+    #   The landing zone version, for example, 3.0.
+    #
+    # @option params [Array<String>] :remediation_types
+    #   Specifies the types of remediation actions to apply when creating the
+    #   landing zone, such as automatic drift correction or compliance
+    #   enforcement.
+    #
+    # @option params [Hash<String,String>] :tags
+    #   Tags to be applied to the landing zone.
+    #
+    # @option params [Hash,Array,String,Numeric,Boolean] :manifest
     #   The manifest JSON file is a text file that describes your Amazon Web
     #   Services resources. For examples, review [Launch your landing
     #   zone][1].
@@ -488,12 +503,6 @@ module Aws::ControlTower
     #
     #   [1]: https://docs.aws.amazon.com/controltower/latest/userguide/lz-api-launch
     #
-    # @option params [Hash<String,String>] :tags
-    #   Tags to be applied to the landing zone.
-    #
-    # @option params [required, String] :version
-    #   The landing zone version, for example, 3.0.
-    #
     # @return [Types::CreateLandingZoneOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateLandingZoneOutput#arn #arn} => String
@@ -502,12 +511,13 @@ module Aws::ControlTower
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_landing_zone({
-    #     manifest: { # required
-    #     },
+    #     version: "LandingZoneVersion", # required
+    #     remediation_types: ["INHERITANCE_DRIFT"], # accepts INHERITANCE_DRIFT
     #     tags: {
     #       "TagKey" => "TagValue",
     #     },
-    #     version: "LandingZoneVersion", # required
+    #     manifest: {
+    #     },
     #   })
     #
     # @example Response structure
@@ -527,6 +537,11 @@ module Aws::ControlTower
     # Decommissions a landing zone. This API call starts an asynchronous
     # operation that deletes Amazon Web Services Control Tower resources
     # deployed in accounts managed by Amazon Web Services Control Tower.
+    #
+    # Decommissioning a landing zone is a process with significant
+    # consequences, and it cannot be undone. We strongly recommend that you
+    # perform this decommissioning process only if you intend to stop using
+    # your landing zone.
     #
     # @option params [required, String] :landing_zone_identifier
     #   The unique identifier of the landing zone.
@@ -601,7 +616,7 @@ module Aws::ControlTower
     #
     # [1]: https://docs.aws.amazon.com/controltower/latest/controlreference/control-api-examples-short.html
     #
-    # @option params [required, String] :control_identifier
+    # @option params [String] :control_identifier
     #   The ARN of the control. Only **Strongly recommended** and **Elective**
     #   controls are permitted, with the exception of the **Region deny**
     #   control. For information on how to find the `controlIdentifier`, see
@@ -611,13 +626,17 @@ module Aws::ControlTower
     #
     #   [1]: https://docs.aws.amazon.com/controltower/latest/APIReference/Welcome.html
     #
-    # @option params [required, String] :target_identifier
+    # @option params [String] :target_identifier
     #   The ARN of the organizational unit. For information on how to find the
     #   `targetIdentifier`, see [the overview page][1].
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/controltower/latest/APIReference/Welcome.html
+    #
+    # @option params [String] :enabled_control_identifier
+    #   The ARN of the enabled control to be disabled, which uniquely
+    #   identifies the control instance on the target organizational unit.
     #
     # @return [Types::DisableControlOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -626,8 +645,9 @@ module Aws::ControlTower
     # @example Request syntax with placeholder values
     #
     #   resp = client.disable_control({
-    #     control_identifier: "ControlIdentifier", # required
-    #     target_identifier: "TargetIdentifier", # required
+    #     control_identifier: "ControlIdentifier",
+    #     target_identifier: "TargetIdentifier",
+    #     enabled_control_identifier: "Arn",
     #   })
     #
     # @example Response structure
@@ -652,9 +672,6 @@ module Aws::ControlTower
     #
     # [1]: https://docs.aws.amazon.com/controltower/latest/userguide/baseline-api-examples.html
     #
-    # @option params [required, String] :baseline_identifier
-    #   The ARN of the baseline to be enabled.
-    #
     # @option params [required, String] :baseline_version
     #   The specific version to be enabled of the specified baseline.
     #
@@ -662,22 +679,24 @@ module Aws::ControlTower
     #   A list of `key-value` objects that specify enablement parameters,
     #   where `key` is a string and `value` is a document of any type.
     #
-    # @option params [Hash<String,String>] :tags
-    #   Tags associated with input to `EnableBaseline`.
+    # @option params [required, String] :baseline_identifier
+    #   The ARN of the baseline to be enabled.
     #
     # @option params [required, String] :target_identifier
     #   The ARN of the target on which the baseline will be enabled. Only OUs
     #   are supported as targets.
     #
+    # @option params [Hash<String,String>] :tags
+    #   Tags associated with input to `EnableBaseline`.
+    #
     # @return [Types::EnableBaselineOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::EnableBaselineOutput#arn #arn} => String
     #   * {Types::EnableBaselineOutput#operation_identifier #operation_identifier} => String
+    #   * {Types::EnableBaselineOutput#arn #arn} => String
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.enable_baseline({
-    #     baseline_identifier: "Arn", # required
     #     baseline_version: "BaselineVersion", # required
     #     parameters: [
     #       {
@@ -686,16 +705,17 @@ module Aws::ControlTower
     #         },
     #       },
     #     ],
+    #     baseline_identifier: "Arn", # required
+    #     target_identifier: "Arn", # required
     #     tags: {
     #       "TagKey" => "TagValue",
     #     },
-    #     target_identifier: "Arn", # required
     #   })
     #
     # @example Response structure
     #
-    #   resp.arn #=> String
     #   resp.operation_identifier #=> String
+    #   resp.arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/controltower-2018-05-10/EnableBaseline AWS API Documentation
     #
@@ -726,13 +746,6 @@ module Aws::ControlTower
     #
     #   [1]: https://docs.aws.amazon.com/controltower/latest/APIReference/Welcome.html
     #
-    # @option params [Array<Types::EnabledControlParameter>] :parameters
-    #   A list of input parameter values, which are specified to configure the
-    #   control when you enable it.
-    #
-    # @option params [Hash<String,String>] :tags
-    #   Tags to be applied to the `EnabledControl` resource.
-    #
     # @option params [required, String] :target_identifier
     #   The ARN of the organizational unit. For information on how to find the
     #   `targetIdentifier`, see [the overview page][1].
@@ -741,15 +754,26 @@ module Aws::ControlTower
     #
     #   [1]: https://docs.aws.amazon.com/controltower/latest/APIReference/Welcome.html
     #
+    # @option params [Hash<String,String>] :tags
+    #   Tags to be applied to the `EnabledControl` resource.
+    #
+    # @option params [Array<Types::EnabledControlParameter>] :parameters
+    #   A list of input parameter values, which are specified to configure the
+    #   control when you enable it.
+    #
     # @return [Types::EnableControlOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::EnableControlOutput#arn #arn} => String
     #   * {Types::EnableControlOutput#operation_identifier #operation_identifier} => String
+    #   * {Types::EnableControlOutput#arn #arn} => String
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.enable_control({
     #     control_identifier: "ControlIdentifier", # required
+    #     target_identifier: "TargetIdentifier", # required
+    #     tags: {
+    #       "TagKey" => "TagValue",
+    #     },
     #     parameters: [
     #       {
     #         key: "String", # required
@@ -757,16 +781,12 @@ module Aws::ControlTower
     #         },
     #       },
     #     ],
-    #     tags: {
-    #       "TagKey" => "TagValue",
-    #     },
-    #     target_identifier: "TargetIdentifier", # required
     #   })
     #
     # @example Response structure
     #
-    #   resp.arn #=> String
     #   resp.operation_identifier #=> String
+    #   resp.arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/controltower-2018-05-10/EnableControl AWS API Documentation
     #
@@ -791,8 +811,8 @@ module Aws::ControlTower
     # @return [Types::GetBaselineOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::GetBaselineOutput#arn #arn} => String
-    #   * {Types::GetBaselineOutput#description #description} => String
     #   * {Types::GetBaselineOutput#name #name} => String
+    #   * {Types::GetBaselineOutput#description #description} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -803,8 +823,8 @@ module Aws::ControlTower
     # @example Response structure
     #
     #   resp.arn #=> String
-    #   resp.description #=> String
     #   resp.name #=> String
+    #   resp.description #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/controltower-2018-05-10/GetBaseline AWS API Documentation
     #
@@ -841,11 +861,11 @@ module Aws::ControlTower
     #
     # @example Response structure
     #
-    #   resp.baseline_operation.end_time #=> Time
     #   resp.baseline_operation.operation_identifier #=> String
     #   resp.baseline_operation.operation_type #=> String, one of "ENABLE_BASELINE", "DISABLE_BASELINE", "UPDATE_ENABLED_BASELINE", "RESET_ENABLED_BASELINE"
-    #   resp.baseline_operation.start_time #=> Time
     #   resp.baseline_operation.status #=> String, one of "SUCCEEDED", "FAILED", "IN_PROGRESS"
+    #   resp.baseline_operation.start_time #=> Time
+    #   resp.baseline_operation.end_time #=> Time
     #   resp.baseline_operation.status_message #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/controltower-2018-05-10/GetBaselineOperation AWS API Documentation
@@ -882,15 +902,15 @@ module Aws::ControlTower
     #
     # @example Response structure
     #
-    #   resp.control_operation.control_identifier #=> String
-    #   resp.control_operation.enabled_control_identifier #=> String
-    #   resp.control_operation.end_time #=> Time
-    #   resp.control_operation.operation_identifier #=> String
     #   resp.control_operation.operation_type #=> String, one of "ENABLE_CONTROL", "DISABLE_CONTROL", "UPDATE_ENABLED_CONTROL", "RESET_ENABLED_CONTROL"
     #   resp.control_operation.start_time #=> Time
+    #   resp.control_operation.end_time #=> Time
     #   resp.control_operation.status #=> String, one of "SUCCEEDED", "FAILED", "IN_PROGRESS"
     #   resp.control_operation.status_message #=> String
+    #   resp.control_operation.operation_identifier #=> String
+    #   resp.control_operation.control_identifier #=> String
     #   resp.control_operation.target_identifier #=> String
+    #   resp.control_operation.enabled_control_identifier #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/controltower-2018-05-10/GetControlOperation AWS API Documentation
     #
@@ -923,12 +943,13 @@ module Aws::ControlTower
     #   resp.enabled_baseline_details.arn #=> String
     #   resp.enabled_baseline_details.baseline_identifier #=> String
     #   resp.enabled_baseline_details.baseline_version #=> String
+    #   resp.enabled_baseline_details.drift_status_summary.types.inheritance.status #=> String, one of "IN_SYNC", "DRIFTED"
+    #   resp.enabled_baseline_details.target_identifier #=> String
+    #   resp.enabled_baseline_details.parent_identifier #=> String
+    #   resp.enabled_baseline_details.status_summary.status #=> String, one of "SUCCEEDED", "FAILED", "UNDER_CHANGE"
+    #   resp.enabled_baseline_details.status_summary.last_operation_identifier #=> String
     #   resp.enabled_baseline_details.parameters #=> Array
     #   resp.enabled_baseline_details.parameters[0].key #=> String
-    #   resp.enabled_baseline_details.parent_identifier #=> String
-    #   resp.enabled_baseline_details.status_summary.last_operation_identifier #=> String
-    #   resp.enabled_baseline_details.status_summary.status #=> String, one of "SUCCEEDED", "FAILED", "UNDER_CHANGE"
-    #   resp.enabled_baseline_details.target_identifier #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/controltower-2018-05-10/GetEnabledBaseline AWS API Documentation
     #
@@ -963,14 +984,17 @@ module Aws::ControlTower
     #
     #   resp.enabled_control_details.arn #=> String
     #   resp.enabled_control_details.control_identifier #=> String
-    #   resp.enabled_control_details.drift_status_summary.drift_status #=> String, one of "DRIFTED", "IN_SYNC", "NOT_CHECKING", "UNKNOWN"
-    #   resp.enabled_control_details.parameters #=> Array
-    #   resp.enabled_control_details.parameters[0].key #=> String
-    #   resp.enabled_control_details.status_summary.last_operation_identifier #=> String
-    #   resp.enabled_control_details.status_summary.status #=> String, one of "SUCCEEDED", "FAILED", "UNDER_CHANGE"
     #   resp.enabled_control_details.target_identifier #=> String
+    #   resp.enabled_control_details.status_summary.status #=> String, one of "SUCCEEDED", "FAILED", "UNDER_CHANGE"
+    #   resp.enabled_control_details.status_summary.last_operation_identifier #=> String
+    #   resp.enabled_control_details.drift_status_summary.drift_status #=> String, one of "DRIFTED", "IN_SYNC", "NOT_CHECKING", "UNKNOWN"
+    #   resp.enabled_control_details.drift_status_summary.types.inheritance.status #=> String, one of "DRIFTED", "IN_SYNC", "NOT_CHECKING", "UNKNOWN"
+    #   resp.enabled_control_details.drift_status_summary.types.resource.status #=> String, one of "DRIFTED", "IN_SYNC", "NOT_CHECKING", "UNKNOWN"
+    #   resp.enabled_control_details.parent_identifier #=> String
     #   resp.enabled_control_details.target_regions #=> Array
     #   resp.enabled_control_details.target_regions[0].name #=> String
+    #   resp.enabled_control_details.parameters #=> Array
+    #   resp.enabled_control_details.parameters[0].key #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/controltower-2018-05-10/GetEnabledControl AWS API Documentation
     #
@@ -999,11 +1023,13 @@ module Aws::ControlTower
     #
     # @example Response structure
     #
-    #   resp.landing_zone.arn #=> String
-    #   resp.landing_zone.drift_status.status #=> String, one of "DRIFTED", "IN_SYNC"
-    #   resp.landing_zone.latest_available_version #=> String
-    #   resp.landing_zone.status #=> String, one of "ACTIVE", "PROCESSING", "FAILED"
     #   resp.landing_zone.version #=> String
+    #   resp.landing_zone.remediation_types #=> Array
+    #   resp.landing_zone.remediation_types[0] #=> String, one of "INHERITANCE_DRIFT"
+    #   resp.landing_zone.arn #=> String
+    #   resp.landing_zone.status #=> String, one of "ACTIVE", "PROCESSING", "FAILED"
+    #   resp.landing_zone.latest_available_version #=> String
+    #   resp.landing_zone.drift_status.status #=> String, one of "DRIFTED", "IN_SYNC"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/controltower-2018-05-10/GetLandingZone AWS API Documentation
     #
@@ -1032,11 +1058,11 @@ module Aws::ControlTower
     #
     # @example Response structure
     #
-    #   resp.operation_details.end_time #=> Time
-    #   resp.operation_details.operation_identifier #=> String
     #   resp.operation_details.operation_type #=> String, one of "DELETE", "CREATE", "UPDATE", "RESET"
-    #   resp.operation_details.start_time #=> Time
+    #   resp.operation_details.operation_identifier #=> String
     #   resp.operation_details.status #=> String, one of "SUCCEEDED", "FAILED", "IN_PROGRESS"
+    #   resp.operation_details.start_time #=> Time
+    #   resp.operation_details.end_time #=> Time
     #   resp.operation_details.status_message #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/controltower-2018-05-10/GetLandingZoneOperation AWS API Documentation
@@ -1055,11 +1081,11 @@ module Aws::ControlTower
     #
     # [1]: https://docs.aws.amazon.com/controltower/latest/userguide/baseline-api-examples.html
     #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to be shown.
-    #
     # @option params [String] :next_token
     #   A pagination token.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to be shown.
     #
     # @return [Types::ListBaselinesOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1071,16 +1097,16 @@ module Aws::ControlTower
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_baselines({
-    #     max_results: 1,
     #     next_token: "String",
+    #     max_results: 1,
     #   })
     #
     # @example Response structure
     #
     #   resp.baselines #=> Array
     #   resp.baselines[0].arn #=> String
-    #   resp.baselines[0].description #=> String
     #   resp.baselines[0].name #=> String
+    #   resp.baselines[0].description #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/controltower-2018-05-10/ListBaselines AWS API Documentation
@@ -1103,11 +1129,11 @@ module Aws::ControlTower
     #   An input filter for the `ListControlOperations` API that lets you
     #   select the types of control operations to view.
     #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to be shown.
-    #
     # @option params [String] :next_token
     #   A pagination token.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to be shown.
     #
     # @return [Types::ListControlOperationsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1121,27 +1147,27 @@ module Aws::ControlTower
     #   resp = client.list_control_operations({
     #     filter: {
     #       control_identifiers: ["ControlIdentifier"],
-    #       control_operation_types: ["ENABLE_CONTROL"], # accepts ENABLE_CONTROL, DISABLE_CONTROL, UPDATE_ENABLED_CONTROL, RESET_ENABLED_CONTROL
+    #       target_identifiers: ["TargetIdentifier"],
     #       enabled_control_identifiers: ["Arn"],
     #       statuses: ["SUCCEEDED"], # accepts SUCCEEDED, FAILED, IN_PROGRESS
-    #       target_identifiers: ["TargetIdentifier"],
+    #       control_operation_types: ["ENABLE_CONTROL"], # accepts ENABLE_CONTROL, DISABLE_CONTROL, UPDATE_ENABLED_CONTROL, RESET_ENABLED_CONTROL
     #     },
-    #     max_results: 1,
     #     next_token: "ListControlOperationsNextToken",
+    #     max_results: 1,
     #   })
     #
     # @example Response structure
     #
     #   resp.control_operations #=> Array
-    #   resp.control_operations[0].control_identifier #=> String
-    #   resp.control_operations[0].enabled_control_identifier #=> String
-    #   resp.control_operations[0].end_time #=> Time
-    #   resp.control_operations[0].operation_identifier #=> String
     #   resp.control_operations[0].operation_type #=> String, one of "ENABLE_CONTROL", "DISABLE_CONTROL", "UPDATE_ENABLED_CONTROL", "RESET_ENABLED_CONTROL"
     #   resp.control_operations[0].start_time #=> Time
+    #   resp.control_operations[0].end_time #=> Time
     #   resp.control_operations[0].status #=> String, one of "SUCCEEDED", "FAILED", "IN_PROGRESS"
     #   resp.control_operations[0].status_message #=> String
+    #   resp.control_operations[0].operation_identifier #=> String
+    #   resp.control_operations[0].control_identifier #=> String
     #   resp.control_operations[0].target_identifier #=> String
+    #   resp.control_operations[0].enabled_control_identifier #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/controltower-2018-05-10/ListControlOperations AWS API Documentation
@@ -1167,15 +1193,15 @@ module Aws::ControlTower
     #   filters are `baselineIdentifiers` and `targetIdentifiers`. The filter
     #   can be applied for either, or both.
     #
-    # @option params [Boolean] :include_children
-    #   A value that can be set to include the child enabled baselines in
-    #   responses. The default value is false.
+    # @option params [String] :next_token
+    #   A pagination token.
     #
     # @option params [Integer] :max_results
     #   The maximum number of results to be shown.
     #
-    # @option params [String] :next_token
-    #   A pagination token.
+    # @option params [Boolean] :include_children
+    #   A value that can be set to include the child enabled baselines in
+    #   responses. The default value is false.
     #
     # @return [Types::ListEnabledBaselinesOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1188,13 +1214,15 @@ module Aws::ControlTower
     #
     #   resp = client.list_enabled_baselines({
     #     filter: {
+    #       target_identifiers: ["Arn"],
     #       baseline_identifiers: ["Arn"],
     #       parent_identifiers: ["Arn"],
-    #       target_identifiers: ["Arn"],
+    #       statuses: ["SUCCEEDED"], # accepts SUCCEEDED, FAILED, UNDER_CHANGE
+    #       inheritance_drift_statuses: ["IN_SYNC"], # accepts IN_SYNC, DRIFTED
     #     },
-    #     include_children: false,
-    #     max_results: 1,
     #     next_token: "ListEnabledBaselinesNextToken",
+    #     max_results: 1,
+    #     include_children: false,
     #   })
     #
     # @example Response structure
@@ -1203,10 +1231,11 @@ module Aws::ControlTower
     #   resp.enabled_baselines[0].arn #=> String
     #   resp.enabled_baselines[0].baseline_identifier #=> String
     #   resp.enabled_baselines[0].baseline_version #=> String
-    #   resp.enabled_baselines[0].parent_identifier #=> String
-    #   resp.enabled_baselines[0].status_summary.last_operation_identifier #=> String
-    #   resp.enabled_baselines[0].status_summary.status #=> String, one of "SUCCEEDED", "FAILED", "UNDER_CHANGE"
+    #   resp.enabled_baselines[0].drift_status_summary.types.inheritance.status #=> String, one of "IN_SYNC", "DRIFTED"
     #   resp.enabled_baselines[0].target_identifier #=> String
+    #   resp.enabled_baselines[0].parent_identifier #=> String
+    #   resp.enabled_baselines[0].status_summary.status #=> String, one of "SUCCEEDED", "FAILED", "UNDER_CHANGE"
+    #   resp.enabled_baselines[0].status_summary.last_operation_identifier #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/controltower-2018-05-10/ListEnabledBaselines AWS API Documentation
@@ -1226,17 +1255,6 @@ module Aws::ControlTower
     #
     # [1]: https://docs.aws.amazon.com/controltower/latest/controlreference/control-api-examples-short.html
     #
-    # @option params [Types::EnabledControlFilter] :filter
-    #   An input filter for the `ListEnabledControls` API that lets you select
-    #   the types of control operations to view.
-    #
-    # @option params [Integer] :max_results
-    #   How many results to return per API call.
-    #
-    # @option params [String] :next_token
-    #   The token to continue the list from a previous API call with the same
-    #   parameters.
-    #
     # @option params [String] :target_identifier
     #   The ARN of the organizational unit. For information on how to find the
     #   `targetIdentifier`, see [the overview page][1].
@@ -1244,6 +1262,21 @@ module Aws::ControlTower
     #
     #
     #   [1]: https://docs.aws.amazon.com/controltower/latest/APIReference/Welcome.html
+    #
+    # @option params [String] :next_token
+    #   The token to continue the list from a previous API call with the same
+    #   parameters.
+    #
+    # @option params [Integer] :max_results
+    #   How many results to return per API call.
+    #
+    # @option params [Types::EnabledControlFilter] :filter
+    #   An input filter for the `ListEnabledControls` API that lets you select
+    #   the types of control operations to view.
+    #
+    # @option params [Boolean] :include_children
+    #   A boolean value that determines whether to include enabled controls
+    #   from child organizational units in the response.
     #
     # @return [Types::ListEnabledControlsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1255,14 +1288,18 @@ module Aws::ControlTower
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_enabled_controls({
+    #     target_identifier: "TargetIdentifier",
+    #     next_token: "String",
+    #     max_results: 1,
     #     filter: {
     #       control_identifiers: ["ControlIdentifier"],
-    #       drift_statuses: ["DRIFTED"], # accepts DRIFTED, IN_SYNC, NOT_CHECKING, UNKNOWN
     #       statuses: ["SUCCEEDED"], # accepts SUCCEEDED, FAILED, UNDER_CHANGE
+    #       drift_statuses: ["DRIFTED"], # accepts DRIFTED, IN_SYNC, NOT_CHECKING, UNKNOWN
+    #       parent_identifiers: ["ParentIdentifier"],
+    #       inheritance_drift_statuses: ["DRIFTED"], # accepts DRIFTED, IN_SYNC, NOT_CHECKING, UNKNOWN
+    #       resource_drift_statuses: ["DRIFTED"], # accepts DRIFTED, IN_SYNC, NOT_CHECKING, UNKNOWN
     #     },
-    #     max_results: 1,
-    #     next_token: "String",
-    #     target_identifier: "TargetIdentifier",
+    #     include_children: false,
     #   })
     #
     # @example Response structure
@@ -1270,10 +1307,13 @@ module Aws::ControlTower
     #   resp.enabled_controls #=> Array
     #   resp.enabled_controls[0].arn #=> String
     #   resp.enabled_controls[0].control_identifier #=> String
-    #   resp.enabled_controls[0].drift_status_summary.drift_status #=> String, one of "DRIFTED", "IN_SYNC", "NOT_CHECKING", "UNKNOWN"
-    #   resp.enabled_controls[0].status_summary.last_operation_identifier #=> String
-    #   resp.enabled_controls[0].status_summary.status #=> String, one of "SUCCEEDED", "FAILED", "UNDER_CHANGE"
     #   resp.enabled_controls[0].target_identifier #=> String
+    #   resp.enabled_controls[0].status_summary.status #=> String, one of "SUCCEEDED", "FAILED", "UNDER_CHANGE"
+    #   resp.enabled_controls[0].status_summary.last_operation_identifier #=> String
+    #   resp.enabled_controls[0].drift_status_summary.drift_status #=> String, one of "DRIFTED", "IN_SYNC", "NOT_CHECKING", "UNKNOWN"
+    #   resp.enabled_controls[0].drift_status_summary.types.inheritance.status #=> String, one of "DRIFTED", "IN_SYNC", "NOT_CHECKING", "UNKNOWN"
+    #   resp.enabled_controls[0].drift_status_summary.types.resource.status #=> String, one of "DRIFTED", "IN_SYNC", "NOT_CHECKING", "UNKNOWN"
+    #   resp.enabled_controls[0].parent_identifier #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/controltower-2018-05-10/ListEnabledControls AWS API Documentation
@@ -1292,12 +1332,12 @@ module Aws::ControlTower
     #   An input filter for the `ListLandingZoneOperations` API that lets you
     #   select the types of landing zone operations to view.
     #
-    # @option params [Integer] :max_results
-    #   How many results to return per API call.
-    #
     # @option params [String] :next_token
     #   The token to continue the list from a previous API call with the same
     #   parameters.
+    #
+    # @option params [Integer] :max_results
+    #   How many results to return per API call.
     #
     # @return [Types::ListLandingZoneOperationsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1310,18 +1350,18 @@ module Aws::ControlTower
     #
     #   resp = client.list_landing_zone_operations({
     #     filter: {
-    #       statuses: ["SUCCEEDED"], # accepts SUCCEEDED, FAILED, IN_PROGRESS
     #       types: ["DELETE"], # accepts DELETE, CREATE, UPDATE, RESET
+    #       statuses: ["SUCCEEDED"], # accepts SUCCEEDED, FAILED, IN_PROGRESS
     #     },
-    #     max_results: 1,
     #     next_token: "String",
+    #     max_results: 1,
     #   })
     #
     # @example Response structure
     #
     #   resp.landing_zone_operations #=> Array
-    #   resp.landing_zone_operations[0].operation_identifier #=> String
     #   resp.landing_zone_operations[0].operation_type #=> String, one of "DELETE", "CREATE", "UPDATE", "RESET"
+    #   resp.landing_zone_operations[0].operation_identifier #=> String
     #   resp.landing_zone_operations[0].status #=> String, one of "SUCCEEDED", "FAILED", "IN_PROGRESS"
     #   resp.next_token #=> String
     #
@@ -1340,12 +1380,12 @@ module Aws::ControlTower
     #
     # Returns one landing zone ARN.
     #
-    # @option params [Integer] :max_results
-    #   The maximum number of returned landing zone ARNs, which is one.
-    #
     # @option params [String] :next_token
     #   The token to continue the list from a previous API call with the same
     #   parameters.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of returned landing zone ARNs, which is one.
     #
     # @return [Types::ListLandingZonesOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1357,8 +1397,8 @@ module Aws::ControlTower
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_landing_zones({
-    #     max_results: 1,
     #     next_token: "String",
+    #     max_results: 1,
     #   })
     #
     # @example Response structure
@@ -1446,7 +1486,8 @@ module Aws::ControlTower
       req.send_request(options)
     end
 
-    # Resets an enabled control.
+    # Resets an enabled control. Does not work for controls implemented with
+    # SCPs.
     #
     # @option params [required, String] :enabled_control_identifier
     #   The ARN of the enabled control to be reset.
@@ -1584,11 +1625,11 @@ module Aws::ControlTower
     #   Specifies the new `Baseline` version, to which the `EnabledBaseline`
     #   should be updated.
     #
-    # @option params [required, String] :enabled_baseline_identifier
-    #   Specifies the `EnabledBaseline` resource to be updated.
-    #
     # @option params [Array<Types::EnabledBaselineParameter>] :parameters
     #   Parameters to apply when making an update.
+    #
+    # @option params [required, String] :enabled_baseline_identifier
+    #   Specifies the `EnabledBaseline` resource to be updated.
     #
     # @return [Types::UpdateEnabledBaselineOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1598,7 +1639,6 @@ module Aws::ControlTower
     #
     #   resp = client.update_enabled_baseline({
     #     baseline_version: "BaselineVersion", # required
-    #     enabled_baseline_identifier: "Arn", # required
     #     parameters: [
     #       {
     #         key: "String", # required
@@ -1606,6 +1646,7 @@ module Aws::ControlTower
     #         },
     #       },
     #     ],
+    #     enabled_baseline_identifier: "Arn", # required
     #   })
     #
     # @example Response structure
@@ -1643,12 +1684,12 @@ module Aws::ControlTower
     #
     # [1]: https://docs.aws.amazon.com/controltower/latest/controlreference/control-api-examples-short.html
     #
-    # @option params [required, String] :enabled_control_identifier
-    #   The ARN of the enabled control that will be updated.
-    #
     # @option params [required, Array<Types::EnabledControlParameter>] :parameters
     #   A key/value pair, where `Key` is of type `String` and `Value` is of
     #   type `Document`.
+    #
+    # @option params [required, String] :enabled_control_identifier
+    #   The ARN of the enabled control that will be updated.
     #
     # @return [Types::UpdateEnabledControlOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1657,7 +1698,6 @@ module Aws::ControlTower
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_enabled_control({
-    #     enabled_control_identifier: "Arn", # required
     #     parameters: [ # required
     #       {
     #         key: "String", # required
@@ -1665,6 +1705,7 @@ module Aws::ControlTower
     #         },
     #       },
     #     ],
+    #     enabled_control_identifier: "Arn", # required
     #   })
     #
     # @example Response structure
@@ -1685,10 +1726,17 @@ module Aws::ControlTower
     # version, or on the changed parameters specified in the updated
     # manifest file.
     #
+    # @option params [required, String] :version
+    #   The landing zone version, for example, 3.2.
+    #
+    # @option params [Array<String>] :remediation_types
+    #   Specifies the types of remediation actions to apply when updating the
+    #   landing zone configuration.
+    #
     # @option params [required, String] :landing_zone_identifier
     #   The unique identifier of the landing zone.
     #
-    # @option params [required, Hash,Array,String,Numeric,Boolean] :manifest
+    # @option params [Hash,Array,String,Numeric,Boolean] :manifest
     #   The manifest file (JSON) is a text file that describes your Amazon Web
     #   Services resources. For an example, review [Launch your landing
     #   zone][1]. The example manifest file contains each of the available
@@ -1704,9 +1752,6 @@ module Aws::ControlTower
     #
     #   [1]: https://docs.aws.amazon.com/controltower/latest/userguide/lz-api-launch
     #
-    # @option params [required, String] :version
-    #   The landing zone version, for example, 3.2.
-    #
     # @return [Types::UpdateLandingZoneOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::UpdateLandingZoneOutput#operation_identifier #operation_identifier} => String
@@ -1714,10 +1759,11 @@ module Aws::ControlTower
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_landing_zone({
-    #     landing_zone_identifier: "String", # required
-    #     manifest: { # required
-    #     },
     #     version: "LandingZoneVersion", # required
+    #     remediation_types: ["INHERITANCE_DRIFT"], # accepts INHERITANCE_DRIFT
+    #     landing_zone_identifier: "String", # required
+    #     manifest: {
+    #     },
     #   })
     #
     # @example Response structure
@@ -1751,7 +1797,7 @@ module Aws::ControlTower
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-controltower'
-      context[:gem_version] = '1.39.0'
+      context[:gem_version] = '1.62.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -94,24 +95,22 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Synthetics/Client.html#create_canary-instance_method
       def create_canary: (
                            name: ::String,
-                           code: {
-                             s3_bucket: ::String?,
-                             s3_key: ::String?,
-                             s3_version: ::String?,
-                             zip_file: ::String?,
-                             handler: ::String
-                           },
+                           code: Params::canary_code_input,
                            artifact_s3_location: ::String,
                            execution_role_arn: ::String,
                            schedule: {
                              expression: ::String,
-                             duration_in_seconds: ::Integer?
+                             duration_in_seconds: ::Integer?,
+                             retry_config: {
+                               max_retries: ::Integer
+                             }?
                            },
                            ?run_config: {
                              timeout_in_seconds: ::Integer?,
                              memory_in_mb: ::Integer?,
                              active_tracing: bool?,
-                             environment_variables: Hash[::String, ::String]?
+                             environment_variables: Hash[::String, ::String]?,
+                             ephemeral_storage: ::Integer?
                            },
                            ?success_retention_period_in_days: ::Integer,
                            ?failure_retention_period_in_days: ::Integer,
@@ -123,13 +122,22 @@ module Aws
                            },
                            ?resources_to_replicate_tags: Array[("lambda-function")],
                            ?provisioned_resource_cleanup: ("AUTOMATIC" | "OFF"),
+                           ?browser_configs: Array[
+                             {
+                               browser_type: ("CHROME" | "FIREFOX")?
+                             }
+                           ],
+                           ?add_replica_locations: Array[
+                             Params::add_replica_location_input
+                           ],
                            ?tags: Hash[::String, ::String],
                            ?artifact_config: {
                              s3_encryption: {
                                encryption_mode: ("SSE_S3" | "SSE_KMS")?,
                                kms_key_arn: ::String?
                              }?
-                           }
+                           },
+                           ?kms_key_arn: ::String
                          ) -> _CreateCanaryResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateCanaryResponseSuccess
 
@@ -185,7 +193,8 @@ module Aws
       def describe_canaries_last_run: (
                                         ?next_token: ::String,
                                         ?max_results: ::Integer,
-                                        ?names: Array[::String]
+                                        ?names: Array[::String],
+                                        ?browser_type: ("CHROME" | "FIREFOX")
                                       ) -> _DescribeCanariesLastRunResponseSuccess
                                     | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeCanariesLastRunResponseSuccess
 
@@ -217,7 +226,8 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Synthetics/Client.html#get_canary-instance_method
       def get_canary: (
-                        name: ::String
+                        name: ::String,
+                        ?dry_run_id: ::String
                       ) -> _GetCanaryResponseSuccess
                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetCanaryResponseSuccess
 
@@ -230,7 +240,9 @@ module Aws
       def get_canary_runs: (
                              name: ::String,
                              ?next_token: ::String,
-                             ?max_results: ::Integer
+                             ?max_results: ::Integer,
+                             ?dry_run_id: ::String,
+                             ?run_type: ("CANARY_RUN" | "DRY_RUN")
                            ) -> _GetCanaryRunsResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetCanaryRunsResponseSuccess
 
@@ -301,6 +313,50 @@ module Aws
                         ) -> _StartCanaryResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartCanaryResponseSuccess
 
+      interface _StartCanaryDryRunResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StartCanaryDryRunResponse]
+        def dry_run_config: () -> Types::DryRunConfigOutput
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Synthetics/Client.html#start_canary_dry_run-instance_method
+      def start_canary_dry_run: (
+                                  name: ::String,
+                                  ?code: Params::canary_code_input,
+                                  ?runtime_version: ::String,
+                                  ?run_config: {
+                                    timeout_in_seconds: ::Integer?,
+                                    memory_in_mb: ::Integer?,
+                                    active_tracing: bool?,
+                                    environment_variables: Hash[::String, ::String]?,
+                                    ephemeral_storage: ::Integer?
+                                  },
+                                  ?vpc_config: {
+                                    subnet_ids: Array[::String]?,
+                                    security_group_ids: Array[::String]?,
+                                    ipv_6_allowed_for_dual_stack: bool?
+                                  },
+                                  ?execution_role_arn: ::String,
+                                  ?success_retention_period_in_days: ::Integer,
+                                  ?failure_retention_period_in_days: ::Integer,
+                                  ?visual_reference: Params::visual_reference_input,
+                                  ?artifact_s3_location: ::String,
+                                  ?artifact_config: {
+                                    s3_encryption: {
+                                      encryption_mode: ("SSE_S3" | "SSE_KMS")?,
+                                      kms_key_arn: ::String?
+                                    }?
+                                  },
+                                  ?provisioned_resource_cleanup: ("AUTOMATIC" | "OFF"),
+                                  ?browser_configs: Array[
+                                    {
+                                      browser_type: ("CHROME" | "FIREFOX")?
+                                    }
+                                  ],
+                                  ?visual_references: Array[
+                                    Params::visual_reference_input
+                                  ]
+                                ) -> _StartCanaryDryRunResponseSuccess
+                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartCanaryDryRunResponseSuccess
+
       interface _StopCanaryResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::StopCanaryResponse]
       end
@@ -336,24 +392,22 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Synthetics/Client.html#update_canary-instance_method
       def update_canary: (
                            name: ::String,
-                           ?code: {
-                             s3_bucket: ::String?,
-                             s3_key: ::String?,
-                             s3_version: ::String?,
-                             zip_file: ::String?,
-                             handler: ::String
-                           },
+                           ?code: Params::canary_code_input,
                            ?execution_role_arn: ::String,
                            ?runtime_version: ::String,
                            ?schedule: {
                              expression: ::String,
-                             duration_in_seconds: ::Integer?
+                             duration_in_seconds: ::Integer?,
+                             retry_config: {
+                               max_retries: ::Integer
+                             }?
                            },
                            ?run_config: {
                              timeout_in_seconds: ::Integer?,
                              memory_in_mb: ::Integer?,
                              active_tracing: bool?,
-                             environment_variables: Hash[::String, ::String]?
+                             environment_variables: Hash[::String, ::String]?,
+                             ephemeral_storage: ::Integer?
                            },
                            ?success_retention_period_in_days: ::Integer,
                            ?failure_retention_period_in_days: ::Integer,
@@ -362,15 +416,7 @@ module Aws
                              security_group_ids: Array[::String]?,
                              ipv_6_allowed_for_dual_stack: bool?
                            },
-                           ?visual_reference: {
-                             base_screenshots: Array[
-                               {
-                                 screenshot_name: ::String,
-                                 ignore_coordinates: Array[::String]?
-                               },
-                             ]?,
-                             base_canary_run_id: ::String
-                           },
+                           ?visual_reference: Params::visual_reference_input,
                            ?artifact_s3_location: ::String,
                            ?artifact_config: {
                              s3_encryption: {
@@ -378,7 +424,21 @@ module Aws
                                kms_key_arn: ::String?
                              }?
                            },
-                           ?provisioned_resource_cleanup: ("AUTOMATIC" | "OFF")
+                           ?provisioned_resource_cleanup: ("AUTOMATIC" | "OFF"),
+                           ?dry_run_id: ::String,
+                           ?visual_references: Array[
+                             Params::visual_reference_input
+                           ],
+                           ?browser_configs: Array[
+                             {
+                               browser_type: ("CHROME" | "FIREFOX")?
+                             }
+                           ],
+                           ?add_replica_locations: Array[
+                             Params::add_replica_location_input
+                           ],
+                           ?remove_replica_locations: Array[::String],
+                           ?kms_key_arn: ::String
                          ) -> _UpdateCanaryResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateCanaryResponseSuccess
     end

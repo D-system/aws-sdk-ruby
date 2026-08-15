@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -103,11 +104,13 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Outposts/Client.html#create_order-instance_method
       def create_order: (
                           outpost_identifier: ::String,
-                          line_items: Array[
+                          ?quote_identifier: ::String,
+                          ?quote_option_identifier: ::String,
+                          ?line_items: Array[
                             {
                               catalog_item_id: ::String?,
                               quantity: ::Integer?
-                            },
+                            }
                           ],
                           payment_option: ("ALL_UPFRONT" | "NO_UPFRONT" | "PARTIAL_UPFRONT"),
                           ?payment_term: ("THREE_YEARS" | "ONE_YEAR" | "FIVE_YEARS")
@@ -130,6 +133,51 @@ module Aws
                           ) -> _CreateOutpostResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateOutpostResponseSuccess
 
+      interface _CreateQuoteResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateQuoteOutput]
+        def quote: () -> Types::Quote
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Outposts/Client.html#create_quote-instance_method
+      def create_quote: (
+                          ?outpost_identifier: ::String,
+                          country_code: ::String,
+                          requested_capacities: Array[
+                            {
+                              quote_capacity_type: ("EC2" | "EBS" | "S3")?,
+                              unit: ::String?,
+                              quantity: ::Float?
+                            }
+                          ],
+                          ?requested_constraints: Array[
+                            {
+                              quote_constraint_type: ("RACK_MAXIMUM" | "RACK_MAX_POWER_KVA" | "RACK_MAX_WEIGHT_LBS")?,
+                              value: ::String?
+                            }
+                          ],
+                          ?requested_payment_options: Array[("ALL_UPFRONT" | "NO_UPFRONT" | "PARTIAL_UPFRONT")],
+                          ?requested_payment_terms: Array[("THREE_YEARS" | "ONE_YEAR" | "FIVE_YEARS")],
+                          ?description: ::String
+                        ) -> _CreateQuoteResponseSuccess
+                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateQuoteResponseSuccess
+
+      interface _CreateRenewalResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateRenewalOutput]
+        def payment_option: () -> ("ALL_UPFRONT" | "NO_UPFRONT" | "PARTIAL_UPFRONT")
+        def payment_term: () -> ("THREE_YEARS" | "ONE_YEAR" | "FIVE_YEARS")
+        def outpost_id: () -> ::String
+        def upfront_price: () -> ::Float
+        def monthly_recurring_price: () -> ::Float
+        def currency: () -> ("USD")
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Outposts/Client.html#create_renewal-instance_method
+      def create_renewal: (
+                            payment_option: ("ALL_UPFRONT" | "NO_UPFRONT" | "PARTIAL_UPFRONT"),
+                            payment_term: ("THREE_YEARS" | "ONE_YEAR" | "FIVE_YEARS"),
+                            outpost_identifier: ::String,
+                            ?client_token: ::String
+                          ) -> _CreateRenewalResponseSuccess
+                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateRenewalResponseSuccess
+
       interface _CreateSiteResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateSiteOutput]
         def site: () -> Types::Site
@@ -140,32 +188,8 @@ module Aws
                          ?description: ::String,
                          ?notes: ::String,
                          ?tags: Hash[::String, ::String],
-                         ?operating_address: {
-                           contact_name: ::String?,
-                           contact_phone_number: ::String?,
-                           address_line_1: ::String,
-                           address_line_2: ::String?,
-                           address_line_3: ::String?,
-                           city: ::String,
-                           state_or_region: ::String,
-                           district_or_county: ::String?,
-                           postal_code: ::String,
-                           country_code: ::String,
-                           municipality: ::String?
-                         },
-                         ?shipping_address: {
-                           contact_name: ::String?,
-                           contact_phone_number: ::String?,
-                           address_line_1: ::String,
-                           address_line_2: ::String?,
-                           address_line_3: ::String?,
-                           city: ::String,
-                           state_or_region: ::String,
-                           district_or_county: ::String?,
-                           postal_code: ::String,
-                           country_code: ::String,
-                           municipality: ::String?
-                         },
+                         ?operating_address: Params::address,
+                         ?shipping_address: Params::address,
                          ?rack_physical_properties: {
                            power_draw_kva: ("POWER_5_KVA" | "POWER_10_KVA" | "POWER_15_KVA" | "POWER_30_KVA")?,
                            power_phase: ("SINGLE_PHASE" | "THREE_PHASE")?,
@@ -189,6 +213,15 @@ module Aws
                           ) -> _DeleteOutpostResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteOutpostResponseSuccess
 
+      interface _DeleteQuoteResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteQuoteOutput]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Outposts/Client.html#delete_quote-instance_method
+      def delete_quote: (
+                          quote_identifier: ::String
+                        ) -> _DeleteQuoteResponseSuccess
+                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteQuoteResponseSuccess
+
       interface _DeleteSiteResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DeleteSiteOutput]
       end
@@ -203,6 +236,7 @@ module Aws
         def capacity_task_id: () -> ::String
         def outpost_id: () -> ::String
         def order_id: () -> ::String
+        def asset_id: () -> ::String
         def requested_instance_pools: () -> ::Array[Types::InstanceTypeCapacity]
         def instances_to_exclude: () -> Types::InstancesToExclude
         def dry_run: () -> bool
@@ -261,6 +295,22 @@ module Aws
                        ) -> _GetOutpostResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetOutpostResponseSuccess
 
+      interface _GetOutpostBillingInformationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetOutpostBillingInformationOutput]
+        def next_token: () -> ::String
+        def subscriptions: () -> ::Array[Types::Subscription]
+        def contract_end_date: () -> ::String
+        def payment_term: () -> ("THREE_YEARS" | "ONE_YEAR" | "FIVE_YEARS")
+        def payment_option: () -> ("ALL_UPFRONT" | "NO_UPFRONT" | "PARTIAL_UPFRONT")
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Outposts/Client.html#get_outpost_billing_information-instance_method
+      def get_outpost_billing_information: (
+                                             ?next_token: ::String,
+                                             ?max_results: ::Integer,
+                                             outpost_identifier: ::String
+                                           ) -> _GetOutpostBillingInformationResponseSuccess
+                                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetOutpostBillingInformationResponseSuccess
+
       interface _GetOutpostInstanceTypesResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetOutpostInstanceTypesOutput]
         def instance_types: () -> ::Array[Types::InstanceTypeItem]
@@ -285,10 +335,32 @@ module Aws
       def get_outpost_supported_instance_types: (
                                                   outpost_identifier: ::String,
                                                   ?order_id: ::String,
+                                                  ?asset_id: ::String,
                                                   ?max_results: ::Integer,
                                                   ?next_token: ::String
                                                 ) -> _GetOutpostSupportedInstanceTypesResponseSuccess
                                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetOutpostSupportedInstanceTypesResponseSuccess
+
+      interface _GetQuoteResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetQuoteOutput]
+        def quote: () -> Types::Quote
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Outposts/Client.html#get_quote-instance_method
+      def get_quote: (
+                       quote_identifier: ::String
+                     ) -> _GetQuoteResponseSuccess
+                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetQuoteResponseSuccess
+
+      interface _GetRenewalPricingResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetRenewalPricingOutput]
+        def pricing_result: () -> ("PRICED" | "UNABLE_TO_PRICE")
+        def pricing_options: () -> ::Array[Types::PricingOption]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Outposts/Client.html#get_renewal_pricing-instance_method
+      def get_renewal_pricing: (
+                                 outpost_identifier: ::String
+                               ) -> _GetRenewalPricingResponseSuccess
+                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetRenewalPricingResponseSuccess
 
       interface _GetSiteResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetSiteOutput]
@@ -324,7 +396,7 @@ module Aws
                                   ?asset_id_filter: Array[::String],
                                   ?instance_type_filter: Array[::String],
                                   ?account_id_filter: Array[::String],
-                                  ?aws_service_filter: Array[("AWS" | "EC2" | "ELASTICACHE" | "ELB" | "RDS" | "ROUTE53")],
+                                  ?aws_service_filter: Array[("AWS" | "EC2" | "EKS" | "ELASTICACHE" | "ELB" | "RDS" | "ROUTE53")],
                                   ?max_results: ::Integer,
                                   ?next_token: ::String
                                 ) -> _ListAssetInstancesResponseSuccess
@@ -341,7 +413,8 @@ module Aws
                          ?host_id_filter: Array[::String],
                          ?max_results: ::Integer,
                          ?next_token: ::String,
-                         ?status_filter: Array[("ACTIVE" | "RETIRING" | "ISOLATED")]
+                         ?status_filter: Array[("ACTIVE" | "RETIRING" | "ISOLATED" | "INSTALLING")],
+                         ?asset_type_filter: Array[("COMPUTE" | "STORAGE" | "POWERSHELF" | "SWITCH" | "NETWORKING")]
                        ) -> _ListAssetsResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListAssetsResponseSuccess
 
@@ -388,6 +461,19 @@ module Aws
                               ) -> _ListCatalogItemsResponseSuccess
                             | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListCatalogItemsResponseSuccess
 
+      interface _ListOrderableInstanceTypesResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListOrderableInstanceTypesOutput]
+        def instance_types: () -> ::Array[Types::DetailedInstanceTypeItem]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Outposts/Client.html#list_orderable_instance_types-instance_method
+      def list_orderable_instance_types: (
+                                           ?outpost_generation_filter: ("GENERATION_2" | "GENERATION_1"),
+                                           ?max_results: ::Integer,
+                                           ?next_token: ::String
+                                         ) -> _ListOrderableInstanceTypesResponseSuccess
+                                       | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListOrderableInstanceTypesResponseSuccess
+
       interface _ListOrdersResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListOrdersOutput]
         def orders: () -> ::Array[Types::OrderSummary]
@@ -415,6 +501,18 @@ module Aws
                            ?availability_zone_id_filter: Array[::String]
                          ) -> _ListOutpostsResponseSuccess
                        | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListOutpostsResponseSuccess
+
+      interface _ListQuotesResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListQuotesOutput]
+        def quotes: () -> ::Array[Types::QuoteSummary]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Outposts/Client.html#list_quotes-instance_method
+      def list_quotes: (
+                         ?next_token: ::String,
+                         ?max_results: ::Integer
+                       ) -> _ListQuotesResponseSuccess
+                     | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListQuotesResponseSuccess
 
       interface _ListSitesResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListSitesOutput]
@@ -446,6 +544,7 @@ module Aws
         def capacity_task_id: () -> ::String
         def outpost_id: () -> ::String
         def order_id: () -> ::String
+        def asset_id: () -> ::String
         def requested_instance_pools: () -> ::Array[Types::InstanceTypeCapacity]
         def instances_to_exclude: () -> Types::InstancesToExclude
         def dry_run: () -> bool
@@ -460,16 +559,17 @@ module Aws
       def start_capacity_task: (
                                  outpost_identifier: ::String,
                                  ?order_id: ::String,
+                                 ?asset_id: ::String,
                                  instance_pools: Array[
                                    {
                                      instance_type: ::String,
                                      count: ::Integer
-                                   },
+                                   }
                                  ],
                                  ?instances_to_exclude: {
                                    instances: Array[::String]?,
                                    account_ids: Array[::String]?,
-                                   services: Array[("AWS" | "EC2" | "ELASTICACHE" | "ELB" | "RDS" | "ROUTE53")]?
+                                   services: Array[("AWS" | "EC2" | "EKS" | "ELASTICACHE" | "ELB" | "RDS" | "ROUTE53")]?
                                  },
                                  ?dry_run: bool,
                                  ?task_action_on_blocking_instances: ("WAIT_FOR_EVACUATION" | "FAIL_TASK")
@@ -489,6 +589,18 @@ module Aws
                               network_interface_device_index: ::Integer
                             ) -> _StartConnectionResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartConnectionResponseSuccess
+
+      interface _StartOutpostDecommissionResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StartOutpostDecommissionOutput]
+        def status: () -> ("SKIPPED" | "BLOCKED" | "REQUESTED")
+        def blocking_resource_types: () -> ::Array[("EC2_INSTANCE" | "OUTPOST_RAM_SHARE" | "LGW_ROUTING_DOMAIN" | "LGW_ROUTE_TABLE" | "LGW_VIRTUAL_INTERFACE_GROUP" | "OUTPOST_ORDER_CANCELLABLE" | "OUTPOST_ORDER_INTERVENTION_REQUIRED")]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Outposts/Client.html#start_outpost_decommission-instance_method
+      def start_outpost_decommission: (
+                                        outpost_identifier: ::String,
+                                        ?validate_only: bool
+                                      ) -> _StartOutpostDecommissionResponseSuccess
+                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartOutpostDecommissionResponseSuccess
 
       interface _TagResourceResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::TagResourceResponse]
@@ -523,6 +635,34 @@ module Aws
                           ) -> _UpdateOutpostResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateOutpostResponseSuccess
 
+      interface _UpdateQuoteResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateQuoteOutput]
+        def quote: () -> Types::Quote
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Outposts/Client.html#update_quote-instance_method
+      def update_quote: (
+                          quote_identifier: ::String,
+                          ?outpost_identifier: ::String,
+                          ?country_code: ::String,
+                          ?requested_capacities: Array[
+                            {
+                              quote_capacity_type: ("EC2" | "EBS" | "S3")?,
+                              unit: ::String?,
+                              quantity: ::Float?
+                            }
+                          ],
+                          ?requested_constraints: Array[
+                            {
+                              quote_constraint_type: ("RACK_MAXIMUM" | "RACK_MAX_POWER_KVA" | "RACK_MAX_WEIGHT_LBS")?,
+                              value: ::String?
+                            }
+                          ],
+                          ?requested_payment_options: Array[("ALL_UPFRONT" | "NO_UPFRONT" | "PARTIAL_UPFRONT")],
+                          ?requested_payment_terms: Array[("THREE_YEARS" | "ONE_YEAR" | "FIVE_YEARS")],
+                          ?description: ::String
+                        ) -> _UpdateQuoteResponseSuccess
+                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateQuoteResponseSuccess
+
       interface _UpdateSiteResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::UpdateSiteOutput]
         def site: () -> Types::Site
@@ -545,19 +685,7 @@ module Aws
       def update_site_address: (
                                  site_id: ::String,
                                  address_type: ("SHIPPING_ADDRESS" | "OPERATING_ADDRESS"),
-                                 address: {
-                                   contact_name: ::String?,
-                                   contact_phone_number: ::String?,
-                                   address_line_1: ::String,
-                                   address_line_2: ::String?,
-                                   address_line_3: ::String?,
-                                   city: ::String,
-                                   state_or_region: ::String,
-                                   district_or_county: ::String?,
-                                   postal_code: ::String,
-                                   country_code: ::String,
-                                   municipality: ::String?
-                                 }
+                                 address: Params::address
                                ) -> _UpdateSiteAddressResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateSiteAddressResponseSuccess
 

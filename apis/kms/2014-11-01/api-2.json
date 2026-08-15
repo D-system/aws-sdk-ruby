@@ -194,6 +194,7 @@
         "requestUri":"/"
       },
       "input":{"shape":"DeleteImportedKeyMaterialRequest"},
+      "output":{"shape":"DeleteImportedKeyMaterialResponse"},
       "errors":[
         {"shape":"InvalidArnException"},
         {"shape":"UnsupportedOperationException"},
@@ -466,6 +467,21 @@
         {"shape":"UnsupportedOperationException"},
         {"shape":"CustomKeyStoreNotFoundException"},
         {"shape":"CustomKeyStoreInvalidStateException"}
+      ]
+    },
+    "GetKeyLastUsage":{
+      "name":"GetKeyLastUsage",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"GetKeyLastUsageRequest"},
+      "output":{"shape":"GetKeyLastUsageResponse"},
+      "errors":[
+        {"shape":"NotFoundException"},
+        {"shape":"InvalidArnException"},
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"KMSInternalException"}
       ]
     },
     "GetKeyPolicy":{
@@ -973,6 +989,12 @@
   },
   "shapes":{
     "AWSAccountIdType":{"type":"string"},
+    "AccountIdType":{
+      "type":"string",
+      "max":12,
+      "min":12,
+      "pattern":"[0-9]{12}"
+    },
     "AlgorithmSpec":{
       "type":"string",
       "enum":[
@@ -1020,6 +1042,18 @@
       "type":"blob",
       "max":262144,
       "min":1
+    },
+    "BackingKeyIdResponseType":{
+      "type":"string",
+      "max":64,
+      "min":0,
+      "pattern":"^[a-f0-9]+$"
+    },
+    "BackingKeyIdType":{
+      "type":"string",
+      "max":64,
+      "min":64,
+      "pattern":"^[a-f0-9]+$"
     },
     "BooleanType":{"type":"boolean"},
     "CancelKeyDeletionRequest":{
@@ -1081,6 +1115,7 @@
       },
       "exception":true
     },
+    "CloudTrailEventIdType":{"type":"string"},
     "ConflictException":{
       "type":"structure",
       "members":{
@@ -1097,8 +1132,7 @@
     },
     "ConnectCustomKeyStoreResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "ConnectionErrorCodeType":{
       "type":"string",
@@ -1156,6 +1190,7 @@
         "XksProxyUriEndpoint":{"shape":"XksProxyUriEndpointType"},
         "XksProxyUriPath":{"shape":"XksProxyUriPathType"},
         "XksProxyVpcEndpointServiceName":{"shape":"XksProxyVpcEndpointServiceNameType"},
+        "XksProxyVpcEndpointServiceOwner":{"shape":"AccountIdType"},
         "XksProxyAuthenticationCredential":{"shape":"XksProxyAuthenticationCredentialType"},
         "XksProxyConnectivity":{"shape":"XksProxyConnectivityType"}
       }
@@ -1170,7 +1205,6 @@
       "type":"structure",
       "required":[
         "KeyId",
-        "GranteePrincipal",
         "Operations"
       ],
       "members":{
@@ -1181,7 +1215,9 @@
         "Constraints":{"shape":"GrantConstraints"},
         "GrantTokens":{"shape":"GrantTokenList"},
         "Name":{"shape":"GrantNameType"},
-        "DryRun":{"shape":"NullableBooleanType"}
+        "DryRun":{"shape":"NullableBooleanType"},
+        "GranteeServicePrincipal":{"shape":"ServicePrincipalType"},
+        "RetiringServicePrincipal":{"shape":"ServicePrincipalType"}
       }
     },
     "CreateGrantResponse":{
@@ -1310,7 +1346,8 @@
         "ECC_NIST_P384",
         "ECC_NIST_P521",
         "ECC_SECG_P256K1",
-        "SM2"
+        "SM2",
+        "ECC_NIST_EDWARDS25519"
       ]
     },
     "DataKeySpec":{
@@ -1323,7 +1360,6 @@
     "DateType":{"type":"timestamp"},
     "DecryptRequest":{
       "type":"structure",
-      "required":["CiphertextBlob"],
       "members":{
         "CiphertextBlob":{"shape":"CiphertextType"},
         "EncryptionContext":{"shape":"EncryptionContextType"},
@@ -1331,7 +1367,8 @@
         "KeyId":{"shape":"KeyIdType"},
         "EncryptionAlgorithm":{"shape":"EncryptionAlgorithmSpec"},
         "Recipient":{"shape":"RecipientInfo"},
-        "DryRun":{"shape":"NullableBooleanType"}
+        "DryRun":{"shape":"NullableBooleanType"},
+        "DryRunModifiers":{"shape":"DryRunModifierList"}
       }
     },
     "DecryptResponse":{
@@ -1340,7 +1377,8 @@
         "KeyId":{"shape":"KeyIdType"},
         "Plaintext":{"shape":"PlaintextType"},
         "EncryptionAlgorithm":{"shape":"EncryptionAlgorithmSpec"},
-        "CiphertextForRecipient":{"shape":"CiphertextType"}
+        "CiphertextForRecipient":{"shape":"CiphertextType"},
+        "KeyMaterialId":{"shape":"BackingKeyIdType"}
       }
     },
     "DeleteAliasRequest":{
@@ -1359,14 +1397,21 @@
     },
     "DeleteCustomKeyStoreResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteImportedKeyMaterialRequest":{
       "type":"structure",
       "required":["KeyId"],
       "members":{
-        "KeyId":{"shape":"KeyIdType"}
+        "KeyId":{"shape":"KeyIdType"},
+        "KeyMaterialId":{"shape":"BackingKeyIdType"}
+      }
+    },
+    "DeleteImportedKeyMaterialResponse":{
+      "type":"structure",
+      "members":{
+        "KeyId":{"shape":"KeyIdType"},
+        "KeyMaterialId":{"shape":"BackingKeyIdResponseType"}
       }
     },
     "DependencyTimeoutException":{
@@ -1469,8 +1514,15 @@
     },
     "DisconnectCustomKeyStoreResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
+    },
+    "DryRunModifierList":{
+      "type":"list",
+      "member":{"shape":"DryRunModifierType"}
+    },
+    "DryRunModifierType":{
+      "type":"string",
+      "enum":["IGNORE_CIPHERTEXT"]
     },
     "DryRunOperationException":{
       "type":"structure",
@@ -1575,7 +1627,8 @@
         "PublicKey":{"shape":"PublicKeyType"},
         "KeyId":{"shape":"KeyIdType"},
         "KeyPairSpec":{"shape":"DataKeyPairSpec"},
-        "CiphertextForRecipient":{"shape":"CiphertextType"}
+        "CiphertextForRecipient":{"shape":"CiphertextType"},
+        "KeyMaterialId":{"shape":"BackingKeyIdType"}
       }
     },
     "GenerateDataKeyPairWithoutPlaintextRequest":{
@@ -1598,7 +1651,8 @@
         "PrivateKeyCiphertextBlob":{"shape":"CiphertextType"},
         "PublicKey":{"shape":"PublicKeyType"},
         "KeyId":{"shape":"KeyIdType"},
-        "KeyPairSpec":{"shape":"DataKeyPairSpec"}
+        "KeyPairSpec":{"shape":"DataKeyPairSpec"},
+        "KeyMaterialId":{"shape":"BackingKeyIdType"}
       }
     },
     "GenerateDataKeyRequest":{
@@ -1620,7 +1674,8 @@
         "CiphertextBlob":{"shape":"CiphertextType"},
         "Plaintext":{"shape":"PlaintextType"},
         "KeyId":{"shape":"KeyIdType"},
-        "CiphertextForRecipient":{"shape":"CiphertextType"}
+        "CiphertextForRecipient":{"shape":"CiphertextType"},
+        "KeyMaterialId":{"shape":"BackingKeyIdType"}
       }
     },
     "GenerateDataKeyWithoutPlaintextRequest":{
@@ -1639,7 +1694,8 @@
       "type":"structure",
       "members":{
         "CiphertextBlob":{"shape":"CiphertextType"},
-        "KeyId":{"shape":"KeyIdType"}
+        "KeyId":{"shape":"KeyIdType"},
+        "KeyMaterialId":{"shape":"BackingKeyIdType"}
       }
     },
     "GenerateMacRequest":{
@@ -1678,6 +1734,22 @@
       "members":{
         "Plaintext":{"shape":"PlaintextType"},
         "CiphertextForRecipient":{"shape":"CiphertextType"}
+      }
+    },
+    "GetKeyLastUsageRequest":{
+      "type":"structure",
+      "required":["KeyId"],
+      "members":{
+        "KeyId":{"shape":"KeyIdType"}
+      }
+    },
+    "GetKeyLastUsageResponse":{
+      "type":"structure",
+      "members":{
+        "KeyId":{"shape":"KeyIdType"},
+        "KeyLastUsage":{"shape":"KeyLastUsageData"},
+        "TrackingStartDate":{"shape":"DateType"},
+        "KeyCreationDate":{"shape":"DateType"}
       }
     },
     "GetKeyPolicyRequest":{
@@ -1759,11 +1831,18 @@
         "KeyAgreementAlgorithms":{"shape":"KeyAgreementAlgorithmSpecList"}
       }
     },
+    "GrantConstraintSourceArnType":{
+      "type":"string",
+      "max":512,
+      "min":20,
+      "pattern":"^arn:aws[a-z0-9-]*:[a-z0-9-]+:[a-z0-9-]*:[0-9]{12}:.+$"
+    },
     "GrantConstraints":{
       "type":"structure",
       "members":{
         "EncryptionContextSubset":{"shape":"EncryptionContextType"},
-        "EncryptionContextEquals":{"shape":"EncryptionContextType"}
+        "EncryptionContextEquals":{"shape":"EncryptionContextType"},
+        "SourceArn":{"shape":"GrantConstraintSourceArnType"}
       }
     },
     "GrantIdType":{
@@ -1786,7 +1865,9 @@
         "RetiringPrincipal":{"shape":"PrincipalIdType"},
         "IssuingAccount":{"shape":"PrincipalIdType"},
         "Operations":{"shape":"GrantOperationList"},
-        "Constraints":{"shape":"GrantConstraints"}
+        "Constraints":{"shape":"GrantConstraints"},
+        "GranteeServicePrincipal":{"shape":"ServicePrincipalType"},
+        "RetiringServicePrincipal":{"shape":"ServicePrincipalType"}
       }
     },
     "GrantNameType":{
@@ -1844,13 +1925,39 @@
         "ImportToken":{"shape":"CiphertextType"},
         "EncryptedKeyMaterial":{"shape":"CiphertextType"},
         "ValidTo":{"shape":"DateType"},
-        "ExpirationModel":{"shape":"ExpirationModelType"}
+        "ExpirationModel":{"shape":"ExpirationModelType"},
+        "ImportType":{"shape":"ImportType"},
+        "KeyMaterialDescription":{"shape":"KeyMaterialDescriptionType"},
+        "KeyMaterialId":{"shape":"BackingKeyIdType"}
       }
     },
     "ImportKeyMaterialResponse":{
       "type":"structure",
       "members":{
+        "KeyId":{"shape":"KeyIdType"},
+        "KeyMaterialId":{"shape":"BackingKeyIdType"}
       }
+    },
+    "ImportState":{
+      "type":"string",
+      "enum":[
+        "IMPORTED",
+        "PENDING_IMPORT"
+      ]
+    },
+    "ImportType":{
+      "type":"string",
+      "enum":[
+        "NEW_KEY_MATERIAL",
+        "EXISTING_KEY_MATERIAL"
+      ]
+    },
+    "IncludeKeyMaterial":{
+      "type":"string",
+      "enum":[
+        "ALL_KEY_MATERIAL",
+        "ROTATIONS_ONLY"
+      ]
     },
     "IncorrectKeyException":{
       "type":"structure",
@@ -1975,6 +2082,32 @@
       "max":2048,
       "min":1
     },
+    "KeyLastUsageData":{
+      "type":"structure",
+      "members":{
+        "Operation":{"shape":"KeyLastUsageTrackingOperation"},
+        "Timestamp":{"shape":"DateType"},
+        "CloudTrailEventId":{"shape":"CloudTrailEventIdType"},
+        "KmsRequestId":{"shape":"KmsRequestIdType"}
+      }
+    },
+    "KeyLastUsageTrackingOperation":{
+      "type":"string",
+      "enum":[
+        "Decrypt",
+        "DeriveSharedSecret",
+        "Encrypt",
+        "GenerateDataKey",
+        "GenerateDataKeyPair",
+        "GenerateDataKeyPairWithoutPlaintext",
+        "GenerateDataKeyWithoutPlaintext",
+        "GenerateMac",
+        "ReEncrypt",
+        "Sign",
+        "Verify",
+        "VerifyMac"
+      ]
+    },
     "KeyList":{
       "type":"list",
       "member":{"shape":"KeyListEntry"}
@@ -1991,6 +2124,21 @@
       "enum":[
         "AWS",
         "CUSTOMER"
+      ]
+    },
+    "KeyMaterialDescriptionType":{
+      "type":"string",
+      "max":256,
+      "min":0,
+      "pattern":"^[a-zA-Z0-9:/_\\s.-]+$"
+    },
+    "KeyMaterialState":{
+      "type":"string",
+      "enum":[
+        "NON_CURRENT",
+        "CURRENT",
+        "PENDING_ROTATION",
+        "PENDING_MULTI_REGION_IMPORT_AND_ROTATION"
       ]
     },
     "KeyMetadata":{
@@ -2025,7 +2173,8 @@
         "MultiRegionConfiguration":{"shape":"MultiRegionConfiguration"},
         "PendingDeletionWindowInDays":{"shape":"PendingWindowInDaysType"},
         "MacAlgorithms":{"shape":"MacAlgorithmSpecList"},
-        "XksKeyConfiguration":{"shape":"XksKeyConfigurationType"}
+        "XksKeyConfiguration":{"shape":"XksKeyConfigurationType"},
+        "CurrentKeyMaterialId":{"shape":"BackingKeyIdType"}
       }
     },
     "KeySpec":{
@@ -2043,7 +2192,11 @@
         "HMAC_256",
         "HMAC_384",
         "HMAC_512",
-        "SM2"
+        "SM2",
+        "ML_DSA_44",
+        "ML_DSA_65",
+        "ML_DSA_87",
+        "ECC_NIST_EDWARDS25519"
       ]
     },
     "KeyState":{
@@ -2082,6 +2235,7 @@
         "KEY_AGREEMENT"
       ]
     },
+    "KmsRequestIdType":{"type":"string"},
     "LimitExceededException":{
       "type":"structure",
       "members":{
@@ -2118,7 +2272,8 @@
         "Marker":{"shape":"MarkerType"},
         "KeyId":{"shape":"KeyIdType"},
         "GrantId":{"shape":"GrantIdType"},
-        "GranteePrincipal":{"shape":"PrincipalIdType"}
+        "GranteePrincipal":{"shape":"PrincipalIdType"},
+        "GranteeServicePrincipal":{"shape":"ServicePrincipalType"}
       }
     },
     "ListGrantsResponse":{
@@ -2151,6 +2306,7 @@
       "required":["KeyId"],
       "members":{
         "KeyId":{"shape":"KeyIdType"},
+        "IncludeKeyMaterial":{"shape":"IncludeKeyMaterial"},
         "Limit":{"shape":"LimitType"},
         "Marker":{"shape":"MarkerType"}
       }
@@ -2197,11 +2353,11 @@
     },
     "ListRetirableGrantsRequest":{
       "type":"structure",
-      "required":["RetiringPrincipal"],
       "members":{
         "Limit":{"shape":"LimitType"},
         "Marker":{"shape":"MarkerType"},
-        "RetiringPrincipal":{"shape":"PrincipalIdType"}
+        "RetiringPrincipal":{"shape":"PrincipalIdType"},
+        "RetiringServicePrincipal":{"shape":"ServicePrincipalType"}
       }
     },
     "MacAlgorithmSpec":{
@@ -2234,7 +2390,8 @@
       "type":"string",
       "enum":[
         "RAW",
-        "DIGEST"
+        "DIGEST",
+        "EXTERNAL_MU"
       ]
     },
     "MultiRegionConfiguration":{
@@ -2338,10 +2495,7 @@
     },
     "ReEncryptRequest":{
       "type":"structure",
-      "required":[
-        "CiphertextBlob",
-        "DestinationKeyId"
-      ],
+      "required":["DestinationKeyId"],
       "members":{
         "CiphertextBlob":{"shape":"CiphertextType"},
         "SourceEncryptionContext":{"shape":"EncryptionContextType"},
@@ -2351,7 +2505,8 @@
         "SourceEncryptionAlgorithm":{"shape":"EncryptionAlgorithmSpec"},
         "DestinationEncryptionAlgorithm":{"shape":"EncryptionAlgorithmSpec"},
         "GrantTokens":{"shape":"GrantTokenList"},
-        "DryRun":{"shape":"NullableBooleanType"}
+        "DryRun":{"shape":"NullableBooleanType"},
+        "DryRunModifiers":{"shape":"DryRunModifierList"}
       }
     },
     "ReEncryptResponse":{
@@ -2361,7 +2516,9 @@
         "SourceKeyId":{"shape":"KeyIdType"},
         "KeyId":{"shape":"KeyIdType"},
         "SourceEncryptionAlgorithm":{"shape":"EncryptionAlgorithmSpec"},
-        "DestinationEncryptionAlgorithm":{"shape":"EncryptionAlgorithmSpec"}
+        "DestinationEncryptionAlgorithm":{"shape":"EncryptionAlgorithmSpec"},
+        "SourceKeyMaterialId":{"shape":"BackingKeyIdType"},
+        "DestinationKeyMaterialId":{"shape":"BackingKeyIdType"}
       }
     },
     "RecipientInfo":{
@@ -2454,6 +2611,12 @@
       "type":"structure",
       "members":{
         "KeyId":{"shape":"KeyIdType"},
+        "KeyMaterialId":{"shape":"BackingKeyIdType"},
+        "KeyMaterialDescription":{"shape":"KeyMaterialDescriptionType"},
+        "ImportState":{"shape":"ImportState"},
+        "KeyMaterialState":{"shape":"KeyMaterialState"},
+        "ExpirationModel":{"shape":"ExpirationModelType"},
+        "ValidTo":{"shape":"DateType"},
         "RotationDate":{"shape":"DateType"},
         "RotationType":{"shape":"RotationType"}
       }
@@ -2474,6 +2637,12 @@
         "KeyState":{"shape":"KeyState"},
         "PendingWindowInDays":{"shape":"PendingWindowInDaysType"}
       }
+    },
+    "ServicePrincipalType":{
+      "type":"string",
+      "max":128,
+      "min":1,
+      "pattern":"^([A-Za-z0-9\\-]+)\\.([A-Za-z0-9\\-]+)(\\.[A-Za-z0-9\\-]+)+$"
     },
     "SignRequest":{
       "type":"structure",
@@ -2511,7 +2680,10 @@
         "ECDSA_SHA_256",
         "ECDSA_SHA_384",
         "ECDSA_SHA_512",
-        "SM2DSA"
+        "SM2DSA",
+        "ML_DSA_SHAKE_256",
+        "ED25519_SHA_512",
+        "ED25519_PH_SHA_512"
       ]
     },
     "SigningAlgorithmSpecList":{
@@ -2610,14 +2782,14 @@
         "XksProxyUriEndpoint":{"shape":"XksProxyUriEndpointType"},
         "XksProxyUriPath":{"shape":"XksProxyUriPathType"},
         "XksProxyVpcEndpointServiceName":{"shape":"XksProxyVpcEndpointServiceNameType"},
+        "XksProxyVpcEndpointServiceOwner":{"shape":"AccountIdType"},
         "XksProxyAuthenticationCredential":{"shape":"XksProxyAuthenticationCredentialType"},
         "XksProxyConnectivity":{"shape":"XksProxyConnectivityType"}
       }
     },
     "UpdateCustomKeyStoreResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "UpdateKeyDescriptionRequest":{
       "type":"structure",
@@ -2766,7 +2938,8 @@
         "AccessKeyId":{"shape":"XksProxyAuthenticationAccessKeyIdType"},
         "UriEndpoint":{"shape":"XksProxyUriEndpointType"},
         "UriPath":{"shape":"XksProxyUriPathType"},
-        "VpcEndpointServiceName":{"shape":"XksProxyVpcEndpointServiceNameType"}
+        "VpcEndpointServiceName":{"shape":"XksProxyVpcEndpointServiceNameType"},
+        "VpcEndpointServiceOwner":{"shape":"AccountIdType"}
       }
     },
     "XksProxyConnectivityType":{
@@ -2848,7 +3021,7 @@
       "type":"string",
       "max":64,
       "min":20,
-      "pattern":"^com\\.amazonaws\\.vpce\\.([a-z]+-){2,3}\\d+\\.vpce-svc-[0-9a-z]+$"
+      "pattern":"^(com|eu)\\.amazonaws\\.vpce\\.([a-z]+-){2,3}\\d+\\.vpce-svc-[0-9a-z]+$"
     },
     "XksProxyVpcEndpointServiceNotFoundException":{
       "type":"structure",

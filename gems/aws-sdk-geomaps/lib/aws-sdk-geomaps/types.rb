@@ -197,7 +197,7 @@ module Aws::GeoMaps
     #   A Unicode range of characters to download glyphs for. This must be
     #   aligned to multiples of 256.
     #
-    #   Example: `0-255.pdf`
+    #   Example: `0-255.pbf`
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/geo-maps-2020-11-19/GetGlyphsRequest AWS API Documentation
@@ -249,9 +249,7 @@ module Aws::GeoMaps
     #   @return [String]
     #
     # @!attribute [rw] color_scheme
-    #   Sets color tone for map such as dark and light for specific map
-    #   styles. It applies to only vector map styles such as Standard and
-    #   Monochrome.
+    #   Sets the color tone for the map sprites, such as dark and light.
     #
     #   Example: `Light`
     #
@@ -314,17 +312,19 @@ module Aws::GeoMaps
     end
 
     # @!attribute [rw] bounding_box
-    #   Takes in two pairs of coordinates, \[Lon, Lat\], denoting
-    #   south-westerly and north-easterly edges of the image. The underlying
-    #   area becomes the view of the image.
+    #   Takes in two pairs of coordinates in World Geodetic System (WGS 84)
+    #   format: \[longitude, latitude\], denoting south-westerly and
+    #   north-easterly edges of the image. The underlying area becomes the
+    #   view of the image.
     #
     #   Example: -123.17075,49.26959,-123.08125,49.31429
     #   @return [String]
     #
     # @!attribute [rw] bounded_positions
-    #   Takes in two or more pair of coordinates, \[Lon, Lat\], with each
-    #   coordinate separated by a comma. The API will generate an image to
-    #   encompass all of the provided coordinates.
+    #   Takes in two or more pair of coordinates in World Geodetic System
+    #   (WGS 84) format: \[longitude, latitude\], with each coordinate
+    #   separated by a comma. The API will generate an image to encompass
+    #   all of the provided coordinates.
     #
     #   <note markdown="1"> Cannot be used with `Zoom` and or `Radius`
     #
@@ -334,9 +334,10 @@ module Aws::GeoMaps
     #   @return [String]
     #
     # @!attribute [rw] center
-    #   Takes in a pair of coordinates, \[Lon, Lat\], which becomes the
-    #   center point of the image. This parameter requires that either zoom
-    #   or radius is set.
+    #   Takes in a pair of coordinates in World Geodetic System (WGS 84)
+    #   format: \[longitude, latitude\], which becomes the center point of
+    #   the image. This parameter requires that either zoom or radius is
+    #   set.
     #
     #   <note markdown="1"> Cannot be used with `Zoom` and or `Radius`
     #
@@ -346,8 +347,7 @@ module Aws::GeoMaps
     #   @return [String]
     #
     # @!attribute [rw] color_scheme
-    #   Sets color tone for map, such as dark and light for specific map
-    #   styles. It only applies to vector map styles, such as Standard.
+    #   Sets the color tone for the map, such as dark and light.
     #
     #   Example: `Light`
     #
@@ -671,7 +671,7 @@ module Aws::GeoMaps
       :style,
       :width,
       :zoom)
-      SENSITIVE = [:key]
+      SENSITIVE = [:bounding_box, :bounded_positions, :center, :compact_overlay, :geo_json_overlay, :height, :key, :padding, :political_view, :radius, :width, :zoom]
       include Aws::Structure
     end
 
@@ -710,13 +710,17 @@ module Aws::GeoMaps
     end
 
     # @!attribute [rw] style
-    #   Style specifies the desired map style.
+    #   Style specifies the desired map style. For [GrabMaps][1] customers,
+    #   `ap-southeast-1` and `ap-southeast-5` regions support only the
+    #   `Standard` and `Monochrome` values.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [String]
     #
     # @!attribute [rw] color_scheme
-    #   Sets color tone for map such as dark and light for specific map
-    #   styles. It applies to only vector map styles such as Standard and
-    #   Monochrome.
+    #   Sets the color tone for the map, such as dark and light.
     #
     #   Example: `Light`
     #
@@ -729,7 +733,8 @@ module Aws::GeoMaps
     #
     # @!attribute [rw] political_view
     #   Specifies the political view using ISO 3166-2 or ISO 3166-3 country
-    #   code format.
+    #   code format. Not supported in `ap-southeast-1` and `ap-southeast-5`
+    #   regions for [GrabMaps][1] customers.
     #
     #   The following political views are currently supported:
     #
@@ -763,6 +768,85 @@ module Aws::GeoMaps
     #   * `URY`: Uruguay's view on Rincon de Artigas
     #
     #   * `VNM`: Vietnam's view on the Paracel Islands and Spratly Islands
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
+    #   @return [String]
+    #
+    # @!attribute [rw] terrain
+    #   Adjusts how physical terrain details are rendered on the map. Not
+    #   supported in `ap-southeast-1` and `ap-southeast-5` regions for
+    #   [GrabMaps][1] customers.
+    #
+    #   The following terrain styles are currently supported:
+    #
+    #   * `Hillshade`: Displays the physical terrain details through shading
+    #     and highlighting of elevation change and geographic features.
+    #
+    #   * `Terrain3D`: Displays physical terrain details and elevations as a
+    #     three-dimensional model.
+    #
+    #   `Hillshade` is valid only for the `Standard` and `Monochrome` map
+    #   styles.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
+    #   @return [String]
+    #
+    # @!attribute [rw] contour_density
+    #   Displays the shape and steepness of terrain features using elevation
+    #   lines. The density value controls how densely the available contour
+    #   line information is rendered on the map. Not supported in
+    #   `ap-southeast-1` and `ap-southeast-5` regions for [GrabMaps][1]
+    #   customers.
+    #
+    #   This parameter is valid for all map styles except `Satellite`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
+    #   @return [String]
+    #
+    # @!attribute [rw] traffic
+    #   Displays real-time traffic information overlay on map, such as
+    #   incident events and flow events. Not supported in `ap-southeast-1`
+    #   and `ap-southeast-5` regions for [GrabMaps][1] customers.
+    #
+    #   This parameter is valid for all map styles except `Satellite`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
+    #   @return [String]
+    #
+    # @!attribute [rw] travel_modes
+    #   Renders additional map information relevant to selected travel
+    #   modes. Information for multiple travel modes can be displayed
+    #   simultaneously, although this increases the overall information
+    #   density rendered on the map. Not supported in `ap-southeast-1` and
+    #   `ap-southeast-5` regions for [GrabMaps][1] customers.
+    #
+    #   This parameter is valid for all map styles except `Satellite`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] buildings
+    #   Adjusts how building details are rendered on the map.
+    #
+    #   The following building styles are currently supported:
+    #
+    #   * `Buildings3D`: Displays buildings as three-dimensional extrusions
+    #     on the map.
+    #
+    #   ^
+    #
+    #   `Buildings3D` is valid only for the `Standard` and `Monochrome` map
+    #   styles.
     #   @return [String]
     #
     # @!attribute [rw] key
@@ -776,8 +860,13 @@ module Aws::GeoMaps
       :style,
       :color_scheme,
       :political_view,
+      :terrain,
+      :contour_density,
+      :traffic,
+      :travel_modes,
+      :buildings,
       :key)
-      SENSITIVE = [:key]
+      SENSITIVE = [:political_view, :key]
       include Aws::Structure
     end
 
@@ -810,10 +899,27 @@ module Aws::GeoMaps
       include Aws::Structure
     end
 
-    # @!attribute [rw] tileset
-    #   Specifies the desired tile set.
+    # @!attribute [rw] additional_features
+    #   A list of optional additional parameters such as map styles that can
+    #   be requested for each result. Not supported in `ap-southeast-1` and
+    #   `ap-southeast-5` regions for [GrabMaps][1] customers.
     #
-    #   Valid Values: `raster.satellite | vector.basemap`
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] tileset
+    #   Specifies the desired tile set. For [GrabMaps][1] customers,
+    #   `ap-southeast-1` and `ap-southeast-5` regions support only the
+    #   `vector.basemap` value.
+    #
+    #   Valid Values: `raster.satellite | vector.basemap | vector.traffic |
+    #   raster.dem`
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/GrabMaps.html
     #   @return [String]
     #
     # @!attribute [rw] z
@@ -821,7 +927,7 @@ module Aws::GeoMaps
     #   @return [String]
     #
     # @!attribute [rw] x
-    #   The X axis value for the map tile. Must be between 0 and 19.
+    #   The X axis value for the map tile.
     #   @return [String]
     #
     # @!attribute [rw] y
@@ -836,12 +942,13 @@ module Aws::GeoMaps
     # @see http://docs.aws.amazon.com/goto/WebAPI/geo-maps-2020-11-19/GetTileRequest AWS API Documentation
     #
     class GetTileRequest < Struct.new(
+      :additional_features,
       :tileset,
       :z,
       :x,
       :y,
       :key)
-      SENSITIVE = [:key]
+      SENSITIVE = [:z, :x, :y, :key]
       include Aws::Structure
     end
 
@@ -888,6 +995,19 @@ module Aws::GeoMaps
     # @see http://docs.aws.amazon.com/goto/WebAPI/geo-maps-2020-11-19/InternalServerException AWS API Documentation
     #
     class InternalServerException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Exception thrown when the associated resource could not be found.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/geo-maps-2020-11-19/ResourceNotFoundException AWS API Documentation
+    #
+    class ResourceNotFoundException < Struct.new(
       :message)
       SENSITIVE = []
       include Aws::Structure

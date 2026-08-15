@@ -63,6 +63,18 @@ module Aws::S3
       end
     end
 
+    class CreateBucketMetadataConfiguration
+      def self.build(context)
+        Aws::S3::EndpointParameters.create(
+          context.config,
+          bucket: context.params[:bucket],
+          use_dual_stack: context[:use_dualstack_endpoint],
+          accelerate: context[:use_accelerate_endpoint],
+          use_s3_express_control_endpoint: true,
+        )
+      end
+    end
+
     class CreateBucketMetadataTableConfiguration
       def self.build(context)
         Aws::S3::EndpointParameters.create(
@@ -183,6 +195,18 @@ module Aws::S3
       end
     end
 
+    class DeleteBucketMetadataConfiguration
+      def self.build(context)
+        Aws::S3::EndpointParameters.create(
+          context.config,
+          bucket: context.params[:bucket],
+          use_dual_stack: context[:use_dualstack_endpoint],
+          accelerate: context[:use_accelerate_endpoint],
+          use_s3_express_control_endpoint: true,
+        )
+      end
+    end
+
     class DeleteBucketMetadataTableConfiguration
       def self.build(context)
         Aws::S3::EndpointParameters.create(
@@ -279,6 +303,17 @@ module Aws::S3
       end
     end
 
+    class DeleteObjectAnnotation
+      def self.build(context)
+        Aws::S3::EndpointParameters.create(
+          context.config,
+          bucket: context.params[:bucket],
+          use_dual_stack: context[:use_dualstack_endpoint],
+          accelerate: context[:use_accelerate_endpoint],
+        )
+      end
+    end
+
     class DeleteObjectTagging
       def self.build(context)
         Aws::S3::EndpointParameters.create(
@@ -309,6 +344,17 @@ module Aws::S3
           use_dual_stack: context[:use_dualstack_endpoint],
           accelerate: context[:use_accelerate_endpoint],
           use_s3_express_control_endpoint: true,
+        )
+      end
+    end
+
+    class GetBucketAbac
+      def self.build(context)
+        Aws::S3::EndpointParameters.create(
+          context.config,
+          bucket: context.params[:bucket],
+          use_dual_stack: context[:use_dualstack_endpoint],
+          accelerate: context[:use_accelerate_endpoint],
         )
       end
     end
@@ -434,6 +480,18 @@ module Aws::S3
     end
 
     class GetBucketLogging
+      def self.build(context)
+        Aws::S3::EndpointParameters.create(
+          context.config,
+          bucket: context.params[:bucket],
+          use_dual_stack: context[:use_dualstack_endpoint],
+          accelerate: context[:use_accelerate_endpoint],
+          use_s3_express_control_endpoint: true,
+        )
+      end
+    end
+
+    class GetBucketMetadataConfiguration
       def self.build(context)
         Aws::S3::EndpointParameters.create(
           context.config,
@@ -613,6 +671,18 @@ module Aws::S3
       end
     end
 
+    class GetObjectAnnotation
+      def self.build(context)
+        Aws::S3::EndpointParameters.create(
+          context.config,
+          bucket: context.params[:bucket],
+          use_dual_stack: context[:use_dualstack_endpoint],
+          accelerate: context[:use_accelerate_endpoint],
+          key: context.params[:key],
+        )
+      end
+    end
+
     class GetObjectAttributes
       def self.build(context)
         Aws::S3::EndpointParameters.create(
@@ -757,6 +827,7 @@ module Aws::S3
           bucket: context.params[:bucket],
           use_dual_stack: context[:use_dualstack_endpoint],
           accelerate: context[:use_accelerate_endpoint],
+          use_s3_express_control_endpoint: true,
         )
       end
     end
@@ -790,6 +861,17 @@ module Aws::S3
           use_dual_stack: context[:use_dualstack_endpoint],
           accelerate: context[:use_accelerate_endpoint],
           prefix: context.params[:prefix],
+        )
+      end
+    end
+
+    class ListObjectAnnotations
+      def self.build(context)
+        Aws::S3::EndpointParameters.create(
+          context.config,
+          bucket: context.params[:bucket],
+          use_dual_stack: context[:use_dualstack_endpoint],
+          accelerate: context[:use_accelerate_endpoint],
         )
       end
     end
@@ -838,6 +920,17 @@ module Aws::S3
           use_dual_stack: context[:use_dualstack_endpoint],
           accelerate: context[:use_accelerate_endpoint],
           key: context.params[:key],
+        )
+      end
+    end
+
+    class PutBucketAbac
+      def self.build(context)
+        Aws::S3::EndpointParameters.create(
+          context.config,
+          bucket: context.params[:bucket],
+          use_dual_stack: context[:use_dualstack_endpoint],
+          accelerate: context[:use_accelerate_endpoint],
         )
       end
     end
@@ -1106,6 +1199,18 @@ module Aws::S3
       end
     end
 
+    class PutObjectAnnotation
+      def self.build(context)
+        Aws::S3::EndpointParameters.create(
+          context.config,
+          bucket: context.params[:bucket],
+          use_dual_stack: context[:use_dualstack_endpoint],
+          accelerate: context[:use_accelerate_endpoint],
+          key: context.params[:key],
+        )
+      end
+    end
+
     class PutObjectLegalHold
       def self.build(context)
         Aws::S3::EndpointParameters.create(
@@ -1162,6 +1267,18 @@ module Aws::S3
       end
     end
 
+    class RenameObject
+      def self.build(context)
+        Aws::S3::EndpointParameters.create(
+          context.config,
+          bucket: context.params[:bucket],
+          use_dual_stack: context[:use_dualstack_endpoint],
+          accelerate: context[:use_accelerate_endpoint],
+          key: context.params[:key],
+        )
+      end
+    end
+
     class RestoreObject
       def self.build(context)
         Aws::S3::EndpointParameters.create(
@@ -1174,6 +1291,53 @@ module Aws::S3
     end
 
     class SelectObjectContent
+      def self.build(context)
+        Aws::S3::EndpointParameters.create(
+          context.config,
+          bucket: context.params[:bucket],
+          use_dual_stack: context[:use_dualstack_endpoint],
+          accelerate: context[:use_accelerate_endpoint],
+        )
+      end
+    end
+
+    class UpdateBucketMetadataAnnotationTableConfiguration
+      def self.build(context)
+        Aws::S3::EndpointParameters.create(
+          context.config,
+          bucket: context.params[:bucket],
+          use_dual_stack: context[:use_dualstack_endpoint],
+          accelerate: context[:use_accelerate_endpoint],
+          use_s3_express_control_endpoint: true,
+        )
+      end
+    end
+
+    class UpdateBucketMetadataInventoryTableConfiguration
+      def self.build(context)
+        Aws::S3::EndpointParameters.create(
+          context.config,
+          bucket: context.params[:bucket],
+          use_dual_stack: context[:use_dualstack_endpoint],
+          accelerate: context[:use_accelerate_endpoint],
+          use_s3_express_control_endpoint: true,
+        )
+      end
+    end
+
+    class UpdateBucketMetadataJournalTableConfiguration
+      def self.build(context)
+        Aws::S3::EndpointParameters.create(
+          context.config,
+          bucket: context.params[:bucket],
+          use_dual_stack: context[:use_dualstack_endpoint],
+          accelerate: context[:use_accelerate_endpoint],
+          use_s3_express_control_endpoint: true,
+        )
+      end
+    end
+
+    class UpdateObjectEncryption
       def self.build(context)
         Aws::S3::EndpointParameters.create(
           context.config,
@@ -1230,6 +1394,8 @@ module Aws::S3
         CopyObject.build(context)
       when :create_bucket
         CreateBucket.build(context)
+      when :create_bucket_metadata_configuration
+        CreateBucketMetadataConfiguration.build(context)
       when :create_bucket_metadata_table_configuration
         CreateBucketMetadataTableConfiguration.build(context)
       when :create_multipart_upload
@@ -1250,6 +1416,8 @@ module Aws::S3
         DeleteBucketInventoryConfiguration.build(context)
       when :delete_bucket_lifecycle
         DeleteBucketLifecycle.build(context)
+      when :delete_bucket_metadata_configuration
+        DeleteBucketMetadataConfiguration.build(context)
       when :delete_bucket_metadata_table_configuration
         DeleteBucketMetadataTableConfiguration.build(context)
       when :delete_bucket_metrics_configuration
@@ -1266,12 +1434,16 @@ module Aws::S3
         DeleteBucketWebsite.build(context)
       when :delete_object
         DeleteObject.build(context)
+      when :delete_object_annotation
+        DeleteObjectAnnotation.build(context)
       when :delete_object_tagging
         DeleteObjectTagging.build(context)
       when :delete_objects
         DeleteObjects.build(context)
       when :delete_public_access_block
         DeletePublicAccessBlock.build(context)
+      when :get_bucket_abac
+        GetBucketAbac.build(context)
       when :get_bucket_accelerate_configuration
         GetBucketAccelerateConfiguration.build(context)
       when :get_bucket_acl
@@ -1294,6 +1466,8 @@ module Aws::S3
         GetBucketLocation.build(context)
       when :get_bucket_logging
         GetBucketLogging.build(context)
+      when :get_bucket_metadata_configuration
+        GetBucketMetadataConfiguration.build(context)
       when :get_bucket_metadata_table_configuration
         GetBucketMetadataTableConfiguration.build(context)
       when :get_bucket_metrics_configuration
@@ -1322,6 +1496,8 @@ module Aws::S3
         GetObject.build(context)
       when :get_object_acl
         GetObjectAcl.build(context)
+      when :get_object_annotation
+        GetObjectAnnotation.build(context)
       when :get_object_attributes
         GetObjectAttributes.build(context)
       when :get_object_legal_hold
@@ -1354,6 +1530,8 @@ module Aws::S3
         ListDirectoryBuckets.build(context)
       when :list_multipart_uploads
         ListMultipartUploads.build(context)
+      when :list_object_annotations
+        ListObjectAnnotations.build(context)
       when :list_object_versions
         ListObjectVersions.build(context)
       when :list_objects
@@ -1362,6 +1540,8 @@ module Aws::S3
         ListObjectsV2.build(context)
       when :list_parts
         ListParts.build(context)
+      when :put_bucket_abac
+        PutBucketAbac.build(context)
       when :put_bucket_accelerate_configuration
         PutBucketAccelerateConfiguration.build(context)
       when :put_bucket_acl
@@ -1406,6 +1586,8 @@ module Aws::S3
         PutObject.build(context)
       when :put_object_acl
         PutObjectAcl.build(context)
+      when :put_object_annotation
+        PutObjectAnnotation.build(context)
       when :put_object_legal_hold
         PutObjectLegalHold.build(context)
       when :put_object_lock_configuration
@@ -1416,10 +1598,20 @@ module Aws::S3
         PutObjectTagging.build(context)
       when :put_public_access_block
         PutPublicAccessBlock.build(context)
+      when :rename_object
+        RenameObject.build(context)
       when :restore_object
         RestoreObject.build(context)
       when :select_object_content
         SelectObjectContent.build(context)
+      when :update_bucket_metadata_annotation_table_configuration
+        UpdateBucketMetadataAnnotationTableConfiguration.build(context)
+      when :update_bucket_metadata_inventory_table_configuration
+        UpdateBucketMetadataInventoryTableConfiguration.build(context)
+      when :update_bucket_metadata_journal_table_configuration
+        UpdateBucketMetadataJournalTableConfiguration.build(context)
+      when :update_object_encryption
+        UpdateObjectEncryption.build(context)
       when :upload_part
         UploadPart.build(context)
       when :upload_part_copy

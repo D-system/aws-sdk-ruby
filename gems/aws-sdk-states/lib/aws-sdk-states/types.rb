@@ -88,7 +88,11 @@ module Aws::States
     #
     #   * special characters `` " # % \ ^ | ~ ` $ & , ; : / ``
     #
-    #   * control characters (`U+0000-001F`, `U+007F-009F`)
+    #   * control characters (`U+0000-001F`, `U+007F-009F`, `U+FFFE-FFFF`)
+    #
+    #   * surrogates (`U+D800-DFFF`)
+    #
+    #   * invalid characters (` U+10FFFF`)
     #
     #   To enable logging with CloudWatch Logs, the name should only contain
     #   0-9, A-Z, a-z, - and \_.
@@ -332,7 +336,11 @@ module Aws::States
     #
     #   * special characters `` " # % \ ^ | ~ ` $ & , ; : / ``
     #
-    #   * control characters (`U+0000-001F`, `U+007F-009F`)
+    #   * control characters (`U+0000-001F`, `U+007F-009F`, `U+FFFE-FFFF`)
+    #
+    #   * surrogates (`U+D800-DFFF`)
+    #
+    #   * invalid characters (` U+10FFFF`)
     #
     #   To enable logging with CloudWatch Logs, the name should only contain
     #   0-9, A-Z, a-z, - and \_.
@@ -451,7 +459,11 @@ module Aws::States
     #
     #   * special characters `` " # % \ ^ | ~ ` $ & , ; : / ``
     #
-    #   * control characters (`U+0000-001F`, `U+007F-009F`)
+    #   * control characters (`U+0000-001F`, `U+007F-009F`, `U+FFFE-FFFF`)
+    #
+    #   * surrogates (`U+D800-DFFF`)
+    #
+    #   * invalid characters (` U+10FFFF`)
     #
     #   To enable logging with CloudWatch Logs, the name should only contain
     #   0-9, A-Z, a-z, - and \_.
@@ -663,7 +675,11 @@ module Aws::States
     #
     #   * special characters `` " # % \ ^ | ~ ` $ & , ; : / ``
     #
-    #   * control characters (`U+0000-001F`, `U+007F-009F`)
+    #   * control characters (`U+0000-001F`, `U+007F-009F`, `U+FFFE-FFFF`)
+    #
+    #   * surrogates (`U+D800-DFFF`)
+    #
+    #   * invalid characters (` U+10FFFF`)
     #
     #   To enable logging with CloudWatch Logs, the name should only contain
     #   0-9, A-Z, a-z, - and \_.
@@ -730,7 +746,11 @@ module Aws::States
     #
     #   * special characters `` " # % \ ^ | ~ ` $ & , ; : / ``
     #
-    #   * control characters (`U+0000-001F`, `U+007F-009F`)
+    #   * control characters (`U+0000-001F`, `U+007F-009F`, `U+FFFE-FFFF`)
+    #
+    #   * surrogates (`U+D800-DFFF`)
+    #
+    #   * invalid characters (` U+10FFFF`)
     #
     #   To enable logging with CloudWatch Logs, the name should only contain
     #   0-9, A-Z, a-z, - and \_.
@@ -774,6 +794,16 @@ module Aws::States
     #
     # @!attribute [rw] trace_header
     #   The X-Ray trace header that was passed to the execution.
+    #
+    #   <note markdown="1"> For X-Ray traces, all Amazon Web Services services use the
+    #   `X-Amzn-Trace-Id` header from the HTTP request. Using the header is
+    #   the preferred mechanism to identify a trace. `StartExecution` and
+    #   `StartSyncExecution` API operations can also use `traceHeader` from
+    #   the body of the request payload. If **both** sources are provided,
+    #   Step Functions will use the **header value** (preferred) over the
+    #   value in the request body.
+    #
+    #    </note>
     #   @return [String]
     #
     # @!attribute [rw] map_run_arn
@@ -1115,7 +1145,7 @@ module Aws::States
     #
     # @!attribute [rw] label
     #   A user-defined or an auto-generated string that identifies a `Map`
-    #   state. This ﬁeld is returned only if the `executionArn` is a child
+    #   state. This field is returned only if the `executionArn` is a child
     #   workflow execution that was started by a Distributed Map state.
     #   @return [String]
     #
@@ -1215,7 +1245,11 @@ module Aws::States
     #
     #   * special characters `` " # % \ ^ | ~ ` $ & , ; : / ``
     #
-    #   * control characters (`U+0000-001F`, `U+007F-009F`)
+    #   * control characters (`U+0000-001F`, `U+007F-009F`, `U+FFFE-FFFF`)
+    #
+    #   * surrogates (`U+D800-DFFF`)
+    #
+    #   * invalid characters (` U+10FFFF`)
     #
     #   To enable logging with CloudWatch Logs, the name should only contain
     #   0-9, A-Z, a-z, - and \_.
@@ -1504,7 +1538,11 @@ module Aws::States
     #
     #   * special characters `` " # % \ ^ | ~ ` $ & , ; : / ``
     #
-    #   * control characters (`U+0000-001F`, `U+007F-009F`)
+    #   * control characters (`U+0000-001F`, `U+007F-009F`, `U+FFFE-FFFF`)
+    #
+    #   * surrogates (`U+D800-DFFF`)
+    #
+    #   * invalid characters (` U+10FFFF`)
     #
     #   To enable logging with CloudWatch Logs, the name should only contain
     #   0-9, A-Z, a-z, - and \_.
@@ -1805,7 +1843,9 @@ module Aws::States
     # Contains details about the events of an execution.
     #
     # @!attribute [rw] timestamp
-    #   The date and time the event occurred.
+    #   The date and time the event occurred, expressed in seconds and
+    #   fractional milliseconds since the Unix epoch, which is defined as
+    #   January 1, 1970, at 00:00:00 Coordinated Universal Time (UTC).
     #   @return [Time]
     #
     # @!attribute [rw] type
@@ -2121,6 +2161,45 @@ module Aws::States
     #   the state and variables set up as test state input.
     #   @return [String]
     #
+    # @!attribute [rw] error_details
+    #   An object containing data about a handled exception in the tested
+    #   state.
+    #   @return [Types::InspectionErrorDetails]
+    #
+    # @!attribute [rw] after_items_path
+    #   The effective input after the ItemsPath filter is applied. Not
+    #   populated when the QueryLanguage is JSONata.
+    #   @return [String]
+    #
+    # @!attribute [rw] after_item_selector
+    #   An array containing the inputs for each Map iteration, transformed
+    #   by the ItemSelector specified in a Map state.
+    #   @return [String]
+    #
+    # @!attribute [rw] after_item_batcher
+    #   The effective input after the ItemBatcher filter is applied in a Map
+    #   state.
+    #   @return [String]
+    #
+    # @!attribute [rw] after_items_pointer
+    #   The effective input after the ItemsPointer filter is applied in a
+    #   Map state.
+    #   @return [String]
+    #
+    # @!attribute [rw] tolerated_failure_count
+    #   The tolerated failure threshold for a Map state as defined in number
+    #   of Map state iterations.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] tolerated_failure_percentage
+    #   The tolerated failure threshold for a Map state as defined in
+    #   percentage of Map state iterations.
+    #   @return [Float]
+    #
+    # @!attribute [rw] max_concurrency
+    #   The max concurrency of the Map state.
+    #   @return [Integer]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/states-2016-11-23/InspectionData AWS API Documentation
     #
     class InspectionData < Struct.new(
@@ -2133,8 +2212,16 @@ module Aws::States
       :after_result_path,
       :request,
       :response,
-      :variables)
-      SENSITIVE = [:input, :after_arguments, :after_input_path, :after_parameters, :result, :after_result_selector, :after_result_path, :variables]
+      :variables,
+      :error_details,
+      :after_items_path,
+      :after_item_selector,
+      :after_item_batcher,
+      :after_items_pointer,
+      :tolerated_failure_count,
+      :tolerated_failure_percentage,
+      :max_concurrency)
+      SENSITIVE = [:input, :after_arguments, :after_input_path, :after_parameters, :result, :after_result_selector, :after_result_path, :variables, :after_items_path, :after_item_selector, :after_item_batcher, :after_items_pointer, :tolerated_failure_count, :tolerated_failure_percentage, :max_concurrency]
       include Aws::Structure
     end
 
@@ -2208,6 +2295,32 @@ module Aws::States
       :headers,
       :body)
       SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # An object containing data about a handled exception in the tested
+    # state.
+    #
+    # @!attribute [rw] catch_index
+    #   The array index of the Catch which handled the exception.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] retry_index
+    #   The array index of the Retry which handled the exception.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] retry_backoff_interval_seconds
+    #   The duration in seconds of the backoff for a retry on a failed state
+    #   invocation.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/states-2016-11-23/InspectionErrorDetails AWS API Documentation
+    #
+    class InspectionErrorDetails < Struct.new(
+      :catch_index,
+      :retry_index,
+      :retry_backoff_interval_seconds)
+      SENSITIVE = [:catch_index, :retry_index, :retry_backoff_interval_seconds]
       include Aws::Structure
     end
 
@@ -2588,6 +2701,17 @@ module Aws::States
     # @!attribute [rw] status_filter
     #   If specified, only list the executions whose current execution
     #   status matches the given filter.
+    #
+    #   If you provide a `PENDING_REDRIVE` statusFilter, you must specify
+    #   `mapRunArn`. For more information, see [Child workflow execution
+    #   redrive behaviour][1] in the *Step Functions Developer Guide*.
+    #
+    #   If you provide a stateMachineArn and a `PENDING_REDRIVE`
+    #   statusFilter, the API returns a validation exception.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/step-functions/latest/dg/redrive-map-run.html#redrive-child-workflow-behavior
     #   @return [String]
     #
     # @!attribute [rw] max_results
@@ -3262,6 +3386,64 @@ module Aws::States
       include Aws::Structure
     end
 
+    # A JSON object that contains a mocked error.
+    #
+    # @!attribute [rw] error
+    #   A string denoting the error code of the exception thrown when
+    #   invoking the tested state. This field is required if
+    #   `mock.errorOutput` is specified.
+    #   @return [String]
+    #
+    # @!attribute [rw] cause
+    #   A string containing the cause of the exception thrown when executing
+    #   the state's logic.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/states-2016-11-23/MockErrorOutput AWS API Documentation
+    #
+    class MockErrorOutput < Struct.new(
+      :error,
+      :cause)
+      SENSITIVE = [:error, :cause]
+      include Aws::Structure
+    end
+
+    # A JSON object that contains a mocked `result` or `errorOutput`.
+    #
+    # @!attribute [rw] result
+    #   A JSON string containing the mocked result of the state invocation.
+    #   @return [String]
+    #
+    # @!attribute [rw] error_output
+    #   The mocked error output when calling TestState. When specified, the
+    #   mocked response is returned as a JSON object that contains an
+    #   `error` and `cause` field.
+    #   @return [Types::MockErrorOutput]
+    #
+    # @!attribute [rw] field_validation_mode
+    #   Determines the level of strictness when validating mocked results
+    #   against their respective API models. Values include:
+    #
+    #   * `STRICT`: All required fields must be present, and all present
+    #     fields must conform to the API's schema.
+    #
+    #   * `PRESENT`: All present fields must conform to the API's schema.
+    #
+    #   * `NONE`: No validation is performed.
+    #
+    #   If no value is specified, the default value is `STRICT`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/states-2016-11-23/MockInput AWS API Documentation
+    #
+    class MockInput < Struct.new(
+      :result,
+      :error_output,
+      :field_validation_mode)
+      SENSITIVE = [:result]
+      include Aws::Structure
+    end
+
     # @!attribute [rw] state_machine_arn
     #   The Amazon Resource Name (ARN) of the state machine.
     #   @return [String]
@@ -3557,7 +3739,11 @@ module Aws::States
     #
     #   * special characters `` " # % \ ^ | ~ ` $ & , ; : / ``
     #
-    #   * control characters (`U+0000-001F`, `U+007F-009F`)
+    #   * control characters (`U+0000-001F`, `U+007F-009F`, `U+FFFE-FFFF`)
+    #
+    #   * surrogates (`U+D800-DFFF`)
+    #
+    #   * invalid characters (` U+10FFFF`)
     #
     #   To enable logging with CloudWatch Logs, the name should only contain
     #   0-9, A-Z, a-z, - and \_.
@@ -3571,10 +3757,10 @@ module Aws::States
     #   The string that contains the JSON input data for the execution, for
     #   example:
     #
-    #   `"input": "{"first_name" : "test"}"`
+    #   `"{"first_name" : "Alejandro"}"`
     #
     #   <note markdown="1"> If you don't include any JSON input data, you still must include
-    #   the two braces, for example: `"input": "{}"`
+    #   the two braces, for example: `"{}"`
     #
     #    </note>
     #
@@ -3585,6 +3771,16 @@ module Aws::States
     # @!attribute [rw] trace_header
     #   Passes the X-Ray trace header. The trace header can also be passed
     #   in the request payload.
+    #
+    #   <note markdown="1"> For X-Ray traces, all Amazon Web Services services use the
+    #   `X-Amzn-Trace-Id` header from the HTTP request. Using the header is
+    #   the preferred mechanism to identify a trace. `StartExecution` and
+    #   `StartSyncExecution` API operations can also use `traceHeader` from
+    #   the body of the request payload. If **both** sources are provided,
+    #   Step Functions will use the **header value** (preferred) over the
+    #   value in the request body.
+    #
+    #    </note>
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/states-2016-11-23/StartExecutionInput AWS API Documentation
@@ -3627,10 +3823,10 @@ module Aws::States
     #   The string that contains the JSON input data for the execution, for
     #   example:
     #
-    #   `"input": "{"first_name" : "test"}"`
+    #   `"{"first_name" : "Alejandro"}"`
     #
     #   <note markdown="1"> If you don't include any JSON input data, you still must include
-    #   the two braces, for example: `"input": "{}"`
+    #   the two braces, for example: `"{}"`
     #
     #    </note>
     #
@@ -3641,6 +3837,16 @@ module Aws::States
     # @!attribute [rw] trace_header
     #   Passes the X-Ray trace header. The trace header can also be passed
     #   in the request payload.
+    #
+    #   <note markdown="1"> For X-Ray traces, all Amazon Web Services services use the
+    #   `X-Amzn-Trace-Id` header from the HTTP request. Using the header is
+    #   the preferred mechanism to identify a trace. `StartExecution` and
+    #   `StartSyncExecution` API operations can also use `traceHeader` from
+    #   the body of the request payload. If **both** sources are provided,
+    #   Step Functions will use the **header value** (preferred) over the
+    #   value in the request body.
+    #
+    #    </note>
     #   @return [String]
     #
     # @!attribute [rw] included_data
@@ -3721,6 +3927,16 @@ module Aws::States
     #
     # @!attribute [rw] trace_header
     #   The X-Ray trace header that was passed to the execution.
+    #
+    #   <note markdown="1"> For X-Ray traces, all Amazon Web Services services use the
+    #   `X-Amzn-Trace-Id` header from the HTTP request. Using the header is
+    #   the preferred mechanism to identify a trace. `StartExecution` and
+    #   `StartSyncExecution` API operations can also use `traceHeader` from
+    #   the body of the request payload. If **both** sources are provided,
+    #   Step Functions will use the **header value** (preferred) over the
+    #   value in the request body.
+    #
+    #    </note>
     #   @return [String]
     #
     # @!attribute [rw] billing_details
@@ -3790,7 +4006,11 @@ module Aws::States
     #
     #   * special characters `` " # % \ ^ | ~ ` $ & , ; : / ``
     #
-    #   * control characters (`U+0000-001F`, `U+007F-009F`)
+    #   * control characters (`U+0000-001F`, `U+007F-009F`, `U+FFFE-FFFF`)
+    #
+    #   * surrogates (`U+D800-DFFF`)
+    #
+    #   * invalid characters (` U+10FFFF`)
     #
     #   To enable logging with CloudWatch Logs, the name should only contain
     #   0-9, A-Z, a-z, - and \_.
@@ -3921,7 +4141,11 @@ module Aws::States
     #
     #   * special characters `` " # % \ ^ | ~ ` $ & , ; : / ``
     #
-    #   * control characters (`U+0000-001F`, `U+007F-009F`)
+    #   * control characters (`U+0000-001F`, `U+007F-009F`, `U+FFFE-FFFF`)
+    #
+    #   * surrogates (`U+D800-DFFF`)
+    #
+    #   * invalid characters (` U+10FFFF`)
     #
     #   To enable logging with CloudWatch Logs, the name should only contain
     #   0-9, A-Z, a-z, - and \_.
@@ -4361,8 +4585,42 @@ module Aws::States
       include Aws::Structure
     end
 
+    # Contains configurations for the tested state.
+    #
+    # @!attribute [rw] retrier_retry_count
+    #   The number of retry attempts that have occurred for the state's
+    #   Retry that applies to the mocked error.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] error_caused_by_state
+    #   The name of the state from which an error originates when an error
+    #   is mocked for a Map or Parallel state.
+    #   @return [String]
+    #
+    # @!attribute [rw] map_iteration_failure_count
+    #   The number of Map state iterations that failed during the Map state
+    #   invocation.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] map_item_reader_data
+    #   The data read by ItemReader in Distributed Map states as found in
+    #   its original source.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/states-2016-11-23/TestStateConfiguration AWS API Documentation
+    #
+    class TestStateConfiguration < Struct.new(
+      :retrier_retry_count,
+      :error_caused_by_state,
+      :map_iteration_failure_count,
+      :map_item_reader_data)
+      SENSITIVE = [:error_caused_by_state, :map_item_reader_data]
+      include Aws::Structure
+    end
+
     # @!attribute [rw] definition
-    #   The [Amazon States Language][1] (ASL) definition of the state.
+    #   The [Amazon States Language][1] (ASL) definition of the state or
+    #   state machine.
     #
     #
     #
@@ -4423,6 +4681,29 @@ module Aws::States
     #   values.
     #   @return [String]
     #
+    # @!attribute [rw] state_name
+    #   Denotes the particular state within a state machine definition to be
+    #   tested. If this field is specified, the `definition` must contain a
+    #   fully-formed state machine definition.
+    #   @return [String]
+    #
+    # @!attribute [rw] mock
+    #   Defines a mocked result or error for the state under test.
+    #
+    #   A mock can only be specified for Task, Map, or Parallel states. If
+    #   it is specified for another state type, an exception will be thrown.
+    #   @return [Types::MockInput]
+    #
+    # @!attribute [rw] context
+    #   A JSON string representing a valid Context object for the state
+    #   under test. This field may only be specified if a mock is specified
+    #   in the same request.
+    #   @return [String]
+    #
+    # @!attribute [rw] state_configuration
+    #   Contains configurations for the state under test.
+    #   @return [Types::TestStateConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/states-2016-11-23/TestStateInput AWS API Documentation
     #
     class TestStateInput < Struct.new(
@@ -4431,8 +4712,12 @@ module Aws::States
       :input,
       :inspection_level,
       :reveal_secrets,
-      :variables)
-      SENSITIVE = [:definition, :input, :variables]
+      :variables,
+      :state_name,
+      :mock,
+      :context,
+      :state_configuration)
+      SENSITIVE = [:definition, :input, :variables, :state_name, :context]
       include Aws::Structure
     end
 
@@ -4460,7 +4745,7 @@ module Aws::States
     # @!attribute [rw] next_state
     #   The name of the next state to transition to. If you haven't defined
     #   a next state in your definition or if the execution of the state
-    #   fails, this ﬁeld doesn't contain a value.
+    #   fails, this field doesn't contain a value.
     #   @return [String]
     #
     # @!attribute [rw] status

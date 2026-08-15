@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -132,7 +133,7 @@ module Aws
                                            {
                                              key: ::String?,
                                              value: ::String?
-                                           },
+                                           }
                                          ]
                                        ) -> _CreateCapacityReservationResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateCapacityReservationResponseSuccess
@@ -151,7 +152,7 @@ module Aws
                                    {
                                      key: ::String?,
                                      value: ::String?
-                                   },
+                                   }
                                  ]
                                ) -> _CreateDataCatalogResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateDataCatalogResponseSuccess
@@ -214,15 +215,11 @@ module Aws
       def create_work_group: (
                                name: ::String,
                                ?configuration: {
-                                 result_configuration: {
-                                   output_location: ::String?,
+                                 result_configuration: Params::result_configuration?,
+                                 managed_query_results_configuration: {
+                                   enabled: bool,
                                    encryption_configuration: {
-                                     encryption_option: ("SSE_S3" | "SSE_KMS" | "CSE_KMS"),
-                                     kms_key: ::String?
-                                   }?,
-                                   expected_bucket_owner: ::String?,
-                                   acl_configuration: {
-                                     s3_acl_option: ("BUCKET_OWNER_FULL_CONTROL")
+                                     kms_key: ::String
                                    }?
                                  }?,
                                  enforce_work_group_configuration: bool?,
@@ -235,6 +232,8 @@ module Aws
                                  }?,
                                  additional_configuration: ::String?,
                                  execution_role: ::String?,
+                                 monitoring_configuration: Params::monitoring_configuration?,
+                                 engine_configuration: Params::engine_configuration?,
                                  customer_content_encryption_configuration: {
                                    kms_key: ::String
                                  }?,
@@ -254,7 +253,7 @@ module Aws
                                  {
                                    key: ::String?,
                                    value: ::String?
-                                 },
+                                 }
                                ]
                              ) -> _CreateWorkGroupResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateWorkGroupResponseSuccess
@@ -459,7 +458,8 @@ module Aws
       def get_query_results: (
                                query_execution_id: ::String,
                                ?next_token: ::String,
-                               ?max_results: ::Integer
+                               ?max_results: ::Integer,
+                               ?query_result_type: ("DATA_MANIFEST" | "DATA_ROWS")
                              ) -> _GetQueryResultsResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetQueryResultsResponseSuccess
 
@@ -473,6 +473,16 @@ module Aws
                                         ) -> _GetQueryRuntimeStatisticsResponseSuccess
                                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetQueryRuntimeStatisticsResponseSuccess
 
+      interface _GetResourceDashboardResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetResourceDashboardResponse]
+        def url: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Athena/Client.html#get_resource_dashboard-instance_method
+      def get_resource_dashboard: (
+                                    resource_arn: ::String
+                                  ) -> _GetResourceDashboardResponseSuccess
+                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetResourceDashboardResponseSuccess
+
       interface _GetSessionResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetSessionResponse]
         def session_id: () -> ::String
@@ -481,6 +491,7 @@ module Aws
         def engine_version: () -> ::String
         def engine_configuration: () -> Types::EngineConfiguration
         def notebook_version: () -> ::String
+        def monitoring_configuration: () -> Types::MonitoringConfiguration
         def session_configuration: () -> Types::SessionConfiguration
         def status: () -> Types::SessionStatus
         def statistics: () -> Types::SessionStatistics
@@ -490,6 +501,18 @@ module Aws
                          session_id: ::String
                        ) -> _GetSessionResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetSessionResponseSuccess
+
+      interface _GetSessionEndpointResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetSessionEndpointResponse]
+        def endpoint_url: () -> ::String
+        def auth_token: () -> ::String
+        def auth_token_expiration_time: () -> ::Time
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Athena/Client.html#get_session_endpoint-instance_method
+      def get_session_endpoint: (
+                                  session_id: ::String
+                                ) -> _GetSessionEndpointResponseSuccess
+                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetSessionEndpointResponseSuccess
 
       interface _GetSessionStatusResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetSessionStatusResponse]
@@ -764,7 +787,7 @@ module Aws
                                                    capacity_assignments: Array[
                                                      {
                                                        work_group_names: Array[::String]?
-                                                     },
+                                                     }
                                                    ]
                                                  ) -> _PutCapacityAssignmentConfigurationResponseSuccess
                                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutCapacityAssignmentConfigurationResponseSuccess
@@ -798,17 +821,7 @@ module Aws
                                      database: ::String?,
                                      catalog: ::String?
                                    },
-                                   ?result_configuration: {
-                                     output_location: ::String?,
-                                     encryption_configuration: {
-                                       encryption_option: ("SSE_S3" | "SSE_KMS" | "CSE_KMS"),
-                                       kms_key: ::String?
-                                     }?,
-                                     expected_bucket_owner: ::String?,
-                                     acl_configuration: {
-                                       s3_acl_option: ("BUCKET_OWNER_FULL_CONTROL")
-                                     }?
-                                   },
+                                   ?result_configuration: Params::result_configuration,
                                    ?work_group: ::String,
                                    ?execution_parameters: Array[::String],
                                    ?result_reuse_configuration: {
@@ -816,7 +829,8 @@ module Aws
                                        enabled: bool,
                                        max_age_in_minutes: ::Integer?
                                      }?
-                                   }
+                                   },
+                                   ?engine_configuration: Params::engine_configuration
                                  ) -> _StartQueryExecutionResponseSuccess
                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartQueryExecutionResponseSuccess
 
@@ -829,16 +843,19 @@ module Aws
       def start_session: (
                            ?description: ::String,
                            work_group: ::String,
-                           engine_configuration: {
-                             coordinator_dpu_size: ::Integer?,
-                             max_concurrent_dpus: ::Integer,
-                             default_executor_dpu_size: ::Integer?,
-                             additional_configs: Hash[::String, ::String]?,
-                             spark_properties: Hash[::String, ::String]?
-                           },
+                           engine_configuration: Params::engine_configuration,
+                           ?execution_role: ::String,
+                           ?monitoring_configuration: Params::monitoring_configuration,
                            ?notebook_version: ::String,
                            ?session_idle_timeout_in_minutes: ::Integer,
-                           ?client_request_token: ::String
+                           ?client_request_token: ::String,
+                           ?tags: Array[
+                             {
+                               key: ::String?,
+                               value: ::String?
+                             }
+                           ],
+                           ?copy_work_group_tags: bool
                          ) -> _StartSessionResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartSessionResponseSuccess
 
@@ -871,7 +888,7 @@ module Aws
                             {
                               key: ::String?,
                               value: ::String?
-                            },
+                            }
                           ]
                         ) -> _TagResourceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess
@@ -990,6 +1007,13 @@ module Aws
                                    }?,
                                    remove_acl_configuration: bool?
                                  }?,
+                                 managed_query_results_configuration_updates: {
+                                   enabled: bool?,
+                                   encryption_configuration: {
+                                     kms_key: ::String
+                                   }?,
+                                   remove_encryption_configuration: bool?
+                                 }?,
                                  publish_cloud_watch_metrics_enabled: bool?,
                                  bytes_scanned_cutoff_per_query: ::Integer?,
                                  remove_bytes_scanned_cutoff_per_query: bool?,
@@ -1009,7 +1033,9 @@ module Aws
                                    enable_s3_access_grants: bool,
                                    create_user_level_prefix: bool?,
                                    authentication_type: ("DIRECTORY_IDENTITY")
-                                 }?
+                                 }?,
+                                 monitoring_configuration: Params::monitoring_configuration?,
+                                 engine_configuration: Params::engine_configuration?
                                },
                                ?state: ("ENABLED" | "DISABLED")
                              ) -> _UpdateWorkGroupResponseSuccess

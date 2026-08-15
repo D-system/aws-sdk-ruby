@@ -290,7 +290,7 @@ module Aws::Lightsail
     #     *Amazon Lightsail Developer Guide*.
     #
     #   * `Unknown` - The reason that synchronization failed is unknown.
-    #     Contact Amazon Web ServicesSupport for more information.
+    #     Contact Amazon Web Services Support for more information.
     #
     #
     #
@@ -578,6 +578,16 @@ module Aws::Lightsail
     #   Indicates whether the alarm is enabled.
     #   @return [Boolean]
     #
+    # @!attribute [rw] tags
+    #   The tag keys and optional values for the resource. For more
+    #   information about tags in Lightsail, see the [Amazon Lightsail
+    #   Developer Guide][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/lightsail/latest/userguide/amazon-lightsail-tags
+    #   @return [Array<Types::Tag>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lightsail-2016-11-28/Alarm AWS API Documentation
     #
     class Alarm < Struct.new(
@@ -600,7 +610,8 @@ module Aws::Lightsail
       :unit,
       :contact_protocols,
       :notification_triggers,
-      :notification_enabled)
+      :notification_enabled,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1160,6 +1171,19 @@ module Aws::Lightsail
     #   bucket.
     #   @return [Types::BucketAccessLogConfig]
     #
+    # @!attribute [rw] cors
+    #   An array of cross-origin resource sharing (CORS) rules that identify
+    #   origins and the HTTP methods that can be executed on your bucket.
+    #   This field is only included in the response when CORS configuration
+    #   is requested or when updating CORS configuration. For more
+    #   information, see [Configuring cross-origin resource sharing
+    #   (CORS)][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/lightsail/latest/userguide/configure-cors.html
+    #   @return [Types::BucketCorsConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lightsail-2016-11-28/Bucket AWS API Documentation
     #
     class Bucket < Struct.new(
@@ -1178,7 +1202,8 @@ module Aws::Lightsail
       :readonly_access_accounts,
       :resources_receiving_access,
       :state,
-      :access_log_config)
+      :access_log_config,
+      :cors)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1276,6 +1301,106 @@ module Aws::Lightsail
       :storage_per_month_in_gb,
       :transfer_per_month_in_gb,
       :is_active)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Describes the cross-origin resource sharing (CORS) configuration for a
+    # Lightsail bucket. CORS defines a way for client web applications that
+    # are loaded in one domain to interact with resources in a different
+    # domain. For more information, see [Configuring cross-origin resource
+    # sharing (CORS)][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/lightsail/latest/userguide/configure-cors.html
+    #
+    # @!attribute [rw] rules
+    #   A set of origins and methods (cross-origin access that you want to
+    #   allow). You can add up to 20 rules to the configuration. The total
+    #   size is limited to 64 KB.
+    #   @return [Array<Types::BucketCorsRule>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/lightsail-2016-11-28/BucketCorsConfig AWS API Documentation
+    #
+    class BucketCorsConfig < Struct.new(
+      :rules)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Describes a cross-origin resource sharing (CORS) rule for a Lightsail
+    # bucket. CORS rules specify which origins are allowed to access the
+    # bucket, which HTTP methods are allowed, and other access control
+    # information. For more information, see [Configuring cross-origin
+    # resource sharing (CORS)][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/lightsail/latest/userguide/configure-cors.html
+    #
+    # @!attribute [rw] id
+    #   A unique identifier for the CORS rule. The ID value can be up to 255
+    #   characters long. The IDs help you find a rule in the configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] allowed_methods
+    #   The HTTP methods that are allowed when accessing the bucket from the
+    #   specified origin. Each CORS rule must identify at least one origin
+    #   and one method.
+    #
+    #   You can use the following HTTP methods:
+    #
+    #   * `GET` - Retrieves data from the server, such as downloading files
+    #     or viewing content.
+    #
+    #   * `PUT` - Uploads or replaces data on the server, such as uploading
+    #     new files.
+    #
+    #   * `POST` - Sends data to the server for processing, such as
+    #     submitting forms or creating new resources.
+    #
+    #   * `DELETE` - Removes data from the server, such as deleting files or
+    #     resources.
+    #
+    #   * `HEAD` - Retrieves only the headers from the server without the
+    #     actual content, useful for checking if a resource exists.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] allowed_origins
+    #   One or more origins you want customers to be able to access the
+    #   bucket from. Each CORS rule must identify at least one origin and
+    #   one method.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] allowed_headers
+    #   Headers that are specified in the `Access-Control-Request-Headers`
+    #   header. These headers are allowed in a preflight `OPTIONS` request.
+    #   In response to any preflight `OPTIONS` request, Amazon S3 returns
+    #   any requested headers that are allowed.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] expose_headers
+    #   One or more headers in the response that you want customers to be
+    #   able to access from their applications (for example, from a
+    #   JavaScript `XMLHttpRequest` object).
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] max_age_seconds
+    #   The time in seconds that your browser is to cache the preflight
+    #   response for the specified resource. A CORS rule can have only one
+    #   `maxAgeSeconds` element.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/lightsail-2016-11-28/BucketCorsRule AWS API Documentation
+    #
+    class BucketCorsRule < Struct.new(
+      :id,
+      :allowed_methods,
+      :allowed_origins,
+      :allowed_headers,
+      :expose_headers,
+      :max_age_seconds)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2015,6 +2140,16 @@ module Aws::Lightsail
     #   easily.
     #   @return [String]
     #
+    # @!attribute [rw] tags
+    #   The tag keys and optional values for the resource. For more
+    #   information about tags in Lightsail, see the [Amazon Lightsail
+    #   Developer Guide][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/lightsail/latest/userguide/amazon-lightsail-tags
+    #   @return [Array<Types::Tag>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lightsail-2016-11-28/ContactMethod AWS API Documentation
     #
     class ContactMethod < Struct.new(
@@ -2026,7 +2161,8 @@ module Aws::Lightsail
       :created_at,
       :location,
       :resource_type,
-      :support_code)
+      :support_code,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3088,11 +3224,19 @@ module Aws::Lightsail
     #   [1]: https://en.wikipedia.org/wiki/E.164
     #   @return [String]
     #
+    # @!attribute [rw] tags
+    #   The tag keys and optional values to add to the contact method during
+    #   create.
+    #
+    #   Use the `TagResource` action to tag a resource after it's created.
+    #   @return [Array<Types::Tag>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lightsail-2016-11-28/CreateContactMethodRequest AWS API Documentation
     #
     class CreateContactMethodRequest < Struct.new(
       :protocol,
-      :contact_endpoint)
+      :contact_endpoint,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6750,12 +6894,29 @@ module Aws::Lightsail
     #   [1]: https://docs.aws.amazon.com/lightsail/2016-11-28/api-reference/API_SetResourceAccessForBucket.html
     #   @return [Boolean]
     #
+    # @!attribute [rw] include_cors
+    #   A Boolean value that indicates whether to include Lightsail bucket
+    #   CORS configuration in the response. For more information, see
+    #   [Configuring cross-origin resource sharing (CORS)][1].
+    #
+    #   <note markdown="1"> This parameter is only supported when getting a single bucket with
+    #   `bucketName` specified. The default value for this parameter is
+    #   `False`.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/lightsail/latest/userguide/configure-cors.html
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lightsail-2016-11-28/GetBucketsRequest AWS API Documentation
     #
     class GetBucketsRequest < Struct.new(
       :bucket_name,
       :page_token,
-      :include_connected_resources)
+      :include_connected_resources,
+      :include_cors)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -9823,13 +9984,22 @@ module Aws::Lightsail
     #   you don't specify otherwise) is 30 seconds.
     #   @return [Integer]
     #
+    # @!attribute [rw] ip_address_type
+    #   The IP address type that the distribution uses when connecting to
+    #   the origin.
+    #
+    #   The possible values are `ipv4` for IPv4 only, `ipv6` for IPv6 only,
+    #   and `dualstack` for IPv4 and IPv6.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lightsail-2016-11-28/InputOrigin AWS API Documentation
     #
     class InputOrigin < Struct.new(
       :name,
       :region_name,
       :protocol_policy,
-      :response_timeout)
+      :response_timeout,
+      :ip_address_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -12019,6 +12189,14 @@ module Aws::Lightsail
     #   you don't specify otherwise) is 30 seconds.
     #   @return [Integer]
     #
+    # @!attribute [rw] ip_address_type
+    #   The IP address type that the distribution uses when connecting to
+    #   the origin.
+    #
+    #   The possible values are `ipv4` for IPv4 only, `ipv6` for IPv6 only,
+    #   and `dualstack` for IPv4 and IPv6.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lightsail-2016-11-28/Origin AWS API Documentation
     #
     class Origin < Struct.new(
@@ -12026,7 +12204,8 @@ module Aws::Lightsail
       :resource_type,
       :region_name,
       :protocol_policy,
-      :response_timeout)
+      :response_timeout,
+      :ip_address_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -12505,6 +12684,12 @@ module Aws::Lightsail
     #   parameter.
     #   @return [Boolean]
     #
+    # @!attribute [rw] tags
+    #   The tag keys and optional values to add to the alarm during create.
+    #
+    #   Use the `TagResource` action to tag a resource after it's created.
+    #   @return [Array<Types::Tag>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lightsail-2016-11-28/PutAlarmRequest AWS API Documentation
     #
     class PutAlarmRequest < Struct.new(
@@ -12518,7 +12703,8 @@ module Aws::Lightsail
       :treat_missing_data,
       :contact_protocols,
       :notification_triggers,
-      :notification_enabled)
+      :notification_enabled,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -12724,6 +12910,39 @@ module Aws::Lightsail
       :name,
       :availability_zones,
       :relational_database_availability_zones)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Lightsail throws this exception when an operation is performed on
+    # resources in an opt-in Region that is currently being set up.
+    #
+    # @!attribute [rw] code
+    #   @return [String]
+    #
+    # @!attribute [rw] docs
+    #   [Regions and Availability Zones for Lightsail][1]
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/lightsail/latest/userguide/understanding-regions-and-availability-zones-in-amazon-lightsail.html
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @!attribute [rw] tip
+    #   Opt-in Regions typically take a few minutes to finish setting up
+    #   before you can work with them. Wait a few minutes and try again.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/lightsail-2016-11-28/RegionSetupInProgressException AWS API Documentation
+    #
+    class RegionSetupInProgressException < Struct.new(
+      :code,
+      :docs,
+      :message,
+      :tip)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -14464,6 +14683,23 @@ module Aws::Lightsail
     #   bucket.
     #   @return [Types::BucketAccessLogConfig]
     #
+    # @!attribute [rw] cors
+    #   Sets the cross-origin resource sharing (CORS) configuration for your
+    #   bucket. If a CORS configuration exists, it is replaced with the
+    #   specified configuration. For AWS CLI operations, this parameter can
+    #   also be passed as a file. For more information, see [Configuring
+    #   cross-origin resource sharing (CORS)][1].
+    #
+    #   <note markdown="1"> CORS information is only returned in a response when you update the
+    #   CORS policy.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/lightsail/latest/userguide/configure-cors.html
+    #   @return [Types::BucketCorsConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lightsail-2016-11-28/UpdateBucketRequest AWS API Documentation
     #
     class UpdateBucketRequest < Struct.new(
@@ -14471,7 +14707,8 @@ module Aws::Lightsail
       :access_rules,
       :versioning,
       :readonly_access_accounts,
-      :access_log_config)
+      :access_log_config,
+      :cors)
       SENSITIVE = []
       include Aws::Structure
     end

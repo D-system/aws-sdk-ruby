@@ -39,6 +39,18 @@ module Aws::OpenSearchServerless
       SENSITIVE: []
     end
 
+    class BatchGetCollectionGroupRequest
+      attr_accessor ids: ::Array[::String]
+      attr_accessor names: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class BatchGetCollectionGroupResponse
+      attr_accessor collection_group_details: ::Array[Types::CollectionGroupDetail]
+      attr_accessor collection_group_error_details: ::Array[Types::CollectionGroupErrorDetail]
+      SENSITIVE: []
+    end
+
     class BatchGetCollectionRequest
       attr_accessor ids: ::Array[::String]
       attr_accessor names: ::Array[::String]
@@ -84,6 +96,12 @@ module Aws::OpenSearchServerless
       SENSITIVE: []
     end
 
+    class CapacityDetails
+      attr_accessor capacity_in_ocu: ::Float
+      attr_accessor autoscaling_status: ("ACTION_SCALING_UP" | "ACTION_SCALING_DOWN" | "NO_ACTION")
+      SENSITIVE: []
+    end
+
     class CapacityLimits
       attr_accessor max_indexing_capacity_in_ocu: ::Integer
       attr_accessor max_search_capacity_in_ocu: ::Integer
@@ -93,18 +111,22 @@ module Aws::OpenSearchServerless
     class CollectionDetail
       attr_accessor id: ::String
       attr_accessor name: ::String
-      attr_accessor status: ("CREATING" | "DELETING" | "ACTIVE" | "FAILED")
+      attr_accessor status: ("CREATING" | "UPDATING" | "DELETING" | "ACTIVE" | "FAILED" | "UPDATE_FAILED")
       attr_accessor type: ("SEARCH" | "TIMESERIES" | "VECTORSEARCH")
       attr_accessor description: ::String
       attr_accessor arn: ::String
       attr_accessor kms_key_arn: ::String
       attr_accessor standby_replicas: ("ENABLED" | "DISABLED")
+      attr_accessor deletion_protection: ("ENABLED" | "DISABLED")
+      attr_accessor vector_options: Types::VectorOptions
       attr_accessor created_date: ::Integer
       attr_accessor last_modified_date: ::Integer
       attr_accessor collection_endpoint: ::String
       attr_accessor dashboard_endpoint: ::String
+      attr_accessor fips_endpoints: Types::FipsEndpoints
       attr_accessor failure_code: ::String
       attr_accessor failure_message: ::String
+      attr_accessor collection_group_name: ::String
       SENSITIVE: []
     end
 
@@ -118,15 +140,60 @@ module Aws::OpenSearchServerless
 
     class CollectionFilters
       attr_accessor name: ::String
-      attr_accessor status: ("CREATING" | "DELETING" | "ACTIVE" | "FAILED")
+      attr_accessor status: ("CREATING" | "UPDATING" | "DELETING" | "ACTIVE" | "FAILED" | "UPDATE_FAILED")
+      attr_accessor collection_group_name: ::String
+      SENSITIVE: []
+    end
+
+    class CollectionGroupCapacityLimits
+      attr_accessor max_indexing_capacity_in_ocu: ::Float
+      attr_accessor max_search_capacity_in_ocu: ::Float
+      attr_accessor min_indexing_capacity_in_ocu: ::Float
+      attr_accessor min_search_capacity_in_ocu: ::Float
+      SENSITIVE: []
+    end
+
+    class CollectionGroupDetail
+      attr_accessor id: ::String
+      attr_accessor arn: ::String
+      attr_accessor name: ::String
+      attr_accessor standby_replicas: ("ENABLED" | "DISABLED")
+      attr_accessor description: ::String
+      attr_accessor tags: ::Array[Types::Tag]
+      attr_accessor created_date: ::Integer
+      attr_accessor capacity_limits: Types::CollectionGroupCapacityLimits
+      attr_accessor current_capacity: Types::CurrentCapacity
+      attr_accessor number_of_collections: ::Integer
+      attr_accessor generation: ("CLASSIC" | "NEXTGEN")
+      SENSITIVE: []
+    end
+
+    class CollectionGroupErrorDetail
+      attr_accessor id: ::String
+      attr_accessor name: ::String
+      attr_accessor error_message: ::String
+      attr_accessor error_code: ::String
+      SENSITIVE: []
+    end
+
+    class CollectionGroupSummary
+      attr_accessor id: ::String
+      attr_accessor arn: ::String
+      attr_accessor name: ::String
+      attr_accessor number_of_collections: ::Integer
+      attr_accessor created_date: ::Integer
+      attr_accessor capacity_limits: Types::CollectionGroupCapacityLimits
+      attr_accessor generation: ("CLASSIC" | "NEXTGEN")
       SENSITIVE: []
     end
 
     class CollectionSummary
       attr_accessor id: ::String
       attr_accessor name: ::String
-      attr_accessor status: ("CREATING" | "DELETING" | "ACTIVE" | "FAILED")
+      attr_accessor status: ("CREATING" | "UPDATING" | "DELETING" | "ACTIVE" | "FAILED" | "UPDATE_FAILED")
       attr_accessor arn: ::String
+      attr_accessor kms_key_arn: ::String
+      attr_accessor collection_group_name: ::String
       SENSITIVE: []
     end
 
@@ -152,14 +219,46 @@ module Aws::OpenSearchServerless
     class CreateCollectionDetail
       attr_accessor id: ::String
       attr_accessor name: ::String
-      attr_accessor status: ("CREATING" | "DELETING" | "ACTIVE" | "FAILED")
+      attr_accessor status: ("CREATING" | "UPDATING" | "DELETING" | "ACTIVE" | "FAILED" | "UPDATE_FAILED")
       attr_accessor type: ("SEARCH" | "TIMESERIES" | "VECTORSEARCH")
       attr_accessor description: ::String
       attr_accessor arn: ::String
       attr_accessor kms_key_arn: ::String
       attr_accessor standby_replicas: ("ENABLED" | "DISABLED")
+      attr_accessor deletion_protection: ("ENABLED" | "DISABLED")
+      attr_accessor vector_options: Types::VectorOptions
       attr_accessor created_date: ::Integer
       attr_accessor last_modified_date: ::Integer
+      attr_accessor collection_group_name: ::String
+      SENSITIVE: []
+    end
+
+    class CreateCollectionGroupDetail
+      attr_accessor id: ::String
+      attr_accessor arn: ::String
+      attr_accessor name: ::String
+      attr_accessor standby_replicas: ("ENABLED" | "DISABLED")
+      attr_accessor description: ::String
+      attr_accessor tags: ::Array[Types::Tag]
+      attr_accessor created_date: ::Integer
+      attr_accessor capacity_limits: Types::CollectionGroupCapacityLimits
+      attr_accessor generation: ("CLASSIC" | "NEXTGEN")
+      SENSITIVE: []
+    end
+
+    class CreateCollectionGroupRequest
+      attr_accessor name: ::String
+      attr_accessor standby_replicas: ("ENABLED" | "DISABLED")
+      attr_accessor description: ::String
+      attr_accessor tags: ::Array[Types::Tag]
+      attr_accessor capacity_limits: Types::CollectionGroupCapacityLimits
+      attr_accessor generation: ("CLASSIC" | "NEXTGEN")
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class CreateCollectionGroupResponse
+      attr_accessor create_collection_group_detail: Types::CreateCollectionGroupDetail
       SENSITIVE: []
     end
 
@@ -169,6 +268,10 @@ module Aws::OpenSearchServerless
       attr_accessor description: ::String
       attr_accessor tags: ::Array[Types::Tag]
       attr_accessor standby_replicas: ("ENABLED" | "DISABLED")
+      attr_accessor vector_options: Types::VectorOptions
+      attr_accessor collection_group_name: ::String
+      attr_accessor encryption_config: Types::EncryptionConfig
+      attr_accessor deletion_protection: ("ENABLED" | "DISABLED")
       attr_accessor client_token: ::String
       SENSITIVE: []
     end
@@ -183,6 +286,16 @@ module Aws::OpenSearchServerless
       attr_accessor user_attribute: ("UserId" | "UserName" | "Email")
       attr_accessor group_attribute: ("GroupId" | "GroupName")
       SENSITIVE: []
+    end
+
+    class CreateIndexRequest
+      attr_accessor id: ::String
+      attr_accessor index_name: ::String
+      attr_accessor index_schema: untyped
+      SENSITIVE: []
+    end
+
+    class CreateIndexResponse < Aws::EmptyStructure
     end
 
     class CreateLifecyclePolicyRequest
@@ -200,11 +313,12 @@ module Aws::OpenSearchServerless
     end
 
     class CreateSecurityConfigRequest
-      attr_accessor type: ("saml" | "iamidentitycenter")
+      attr_accessor type: ("saml" | "iamidentitycenter" | "iamfederation")
       attr_accessor name: ::String
       attr_accessor description: ::String
       attr_accessor saml_options: Types::SamlConfigOptions
       attr_accessor iam_identity_center_options: Types::CreateIamIdentityCenterConfigOptions
+      attr_accessor iam_federation_options: Types::IamFederationConfigOptions
       attr_accessor client_token: ::String
       SENSITIVE: []
     end
@@ -249,6 +363,12 @@ module Aws::OpenSearchServerless
       SENSITIVE: []
     end
 
+    class CurrentCapacity
+      attr_accessor search: Types::CapacityDetails
+      attr_accessor indexing: Types::CapacityDetails
+      SENSITIVE: []
+    end
+
     class DeleteAccessPolicyRequest
       attr_accessor type: ("data")
       attr_accessor name: ::String
@@ -262,8 +382,18 @@ module Aws::OpenSearchServerless
     class DeleteCollectionDetail
       attr_accessor id: ::String
       attr_accessor name: ::String
-      attr_accessor status: ("CREATING" | "DELETING" | "ACTIVE" | "FAILED")
+      attr_accessor status: ("CREATING" | "UPDATING" | "DELETING" | "ACTIVE" | "FAILED" | "UPDATE_FAILED")
+      attr_accessor deletion_protection: ("ENABLED" | "DISABLED")
       SENSITIVE: []
+    end
+
+    class DeleteCollectionGroupRequest
+      attr_accessor id: ::String
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteCollectionGroupResponse < Aws::EmptyStructure
     end
 
     class DeleteCollectionRequest
@@ -275,6 +405,15 @@ module Aws::OpenSearchServerless
     class DeleteCollectionResponse
       attr_accessor delete_collection_detail: Types::DeleteCollectionDetail
       SENSITIVE: []
+    end
+
+    class DeleteIndexRequest
+      attr_accessor id: ::String
+      attr_accessor index_name: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteIndexResponse < Aws::EmptyStructure
     end
 
     class DeleteLifecyclePolicyRequest
@@ -342,6 +481,18 @@ module Aws::OpenSearchServerless
       SENSITIVE: []
     end
 
+    class EncryptionConfig
+      attr_accessor a_ws_owned_key: bool
+      attr_accessor kms_key_arn: ::String
+      SENSITIVE: []
+    end
+
+    class FipsEndpoints
+      attr_accessor collection_endpoint: ::String
+      attr_accessor dashboard_endpoint: ::String
+      SENSITIVE: []
+    end
+
     class GetAccessPolicyRequest
       attr_accessor type: ("data")
       attr_accessor name: ::String
@@ -358,6 +509,17 @@ module Aws::OpenSearchServerless
 
     class GetAccountSettingsResponse
       attr_accessor account_settings_detail: Types::AccountSettingsDetail
+      SENSITIVE: []
+    end
+
+    class GetIndexRequest
+      attr_accessor id: ::String
+      attr_accessor index_name: ::String
+      SENSITIVE: []
+    end
+
+    class GetIndexResponse
+      attr_accessor index_schema: untyped
       SENSITIVE: []
     end
 
@@ -391,6 +553,12 @@ module Aws::OpenSearchServerless
 
     class GetSecurityPolicyResponse
       attr_accessor security_policy_detail: Types::SecurityPolicyDetail
+      SENSITIVE: []
+    end
+
+    class IamFederationConfigOptions
+      attr_accessor group_attribute: ::String
+      attr_accessor user_attribute: ::String
       SENSITIVE: []
     end
 
@@ -469,6 +637,18 @@ module Aws::OpenSearchServerless
       SENSITIVE: []
     end
 
+    class ListCollectionGroupsRequest
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListCollectionGroupsResponse
+      attr_accessor collection_group_summaries: ::Array[Types::CollectionGroupSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
     class ListCollectionsRequest
       attr_accessor collection_filters: Types::CollectionFilters
       attr_accessor next_token: ::String
@@ -497,7 +677,7 @@ module Aws::OpenSearchServerless
     end
 
     class ListSecurityConfigsRequest
-      attr_accessor type: ("saml" | "iamidentitycenter")
+      attr_accessor type: ("saml" | "iamidentitycenter" | "iamfederation")
       attr_accessor next_token: ::String
       attr_accessor max_results: ::Integer
       SENSITIVE: []
@@ -567,11 +747,12 @@ module Aws::OpenSearchServerless
 
     class SecurityConfigDetail
       attr_accessor id: ::String
-      attr_accessor type: ("saml" | "iamidentitycenter")
+      attr_accessor type: ("saml" | "iamidentitycenter" | "iamfederation")
       attr_accessor config_version: ::String
       attr_accessor description: ::String
       attr_accessor saml_options: Types::SamlConfigOptions
       attr_accessor iam_identity_center_options: Types::IamIdentityCenterConfigOptions
+      attr_accessor iam_federation_options: Types::IamFederationConfigOptions
       attr_accessor created_date: ::Integer
       attr_accessor last_modified_date: ::Integer
       SENSITIVE: []
@@ -584,7 +765,7 @@ module Aws::OpenSearchServerless
 
     class SecurityConfigSummary
       attr_accessor id: ::String
-      attr_accessor type: ("saml" | "iamidentitycenter")
+      attr_accessor type: ("saml" | "iamidentitycenter" | "iamfederation")
       attr_accessor config_version: ::String
       attr_accessor description: ::String
       attr_accessor created_date: ::Integer
@@ -680,18 +861,47 @@ module Aws::OpenSearchServerless
     class UpdateCollectionDetail
       attr_accessor id: ::String
       attr_accessor name: ::String
-      attr_accessor status: ("CREATING" | "DELETING" | "ACTIVE" | "FAILED")
+      attr_accessor status: ("CREATING" | "UPDATING" | "DELETING" | "ACTIVE" | "FAILED" | "UPDATE_FAILED")
       attr_accessor type: ("SEARCH" | "TIMESERIES" | "VECTORSEARCH")
       attr_accessor description: ::String
+      attr_accessor vector_options: Types::VectorOptions
       attr_accessor arn: ::String
       attr_accessor created_date: ::Integer
       attr_accessor last_modified_date: ::Integer
+      attr_accessor deletion_protection: ("ENABLED" | "DISABLED")
+      SENSITIVE: []
+    end
+
+    class UpdateCollectionGroupDetail
+      attr_accessor id: ::String
+      attr_accessor arn: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor capacity_limits: Types::CollectionGroupCapacityLimits
+      attr_accessor created_date: ::Integer
+      attr_accessor last_modified_date: ::Integer
+      attr_accessor generation: ("CLASSIC" | "NEXTGEN")
+      SENSITIVE: []
+    end
+
+    class UpdateCollectionGroupRequest
+      attr_accessor id: ::String
+      attr_accessor description: ::String
+      attr_accessor capacity_limits: Types::CollectionGroupCapacityLimits
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class UpdateCollectionGroupResponse
+      attr_accessor update_collection_group_detail: Types::UpdateCollectionGroupDetail
       SENSITIVE: []
     end
 
     class UpdateCollectionRequest
       attr_accessor id: ::String
       attr_accessor description: ::String
+      attr_accessor vector_options: Types::VectorOptions
+      attr_accessor deletion_protection: ("ENABLED" | "DISABLED")
       attr_accessor client_token: ::String
       SENSITIVE: []
     end
@@ -705,6 +915,16 @@ module Aws::OpenSearchServerless
       attr_accessor user_attribute: ("UserId" | "UserName" | "Email")
       attr_accessor group_attribute: ("GroupId" | "GroupName")
       SENSITIVE: []
+    end
+
+    class UpdateIndexRequest
+      attr_accessor id: ::String
+      attr_accessor index_name: ::String
+      attr_accessor index_schema: untyped
+      SENSITIVE: []
+    end
+
+    class UpdateIndexResponse < Aws::EmptyStructure
     end
 
     class UpdateLifecyclePolicyRequest
@@ -728,6 +948,7 @@ module Aws::OpenSearchServerless
       attr_accessor description: ::String
       attr_accessor saml_options: Types::SamlConfigOptions
       attr_accessor iam_identity_center_options_updates: Types::UpdateIamIdentityCenterConfigOptions
+      attr_accessor iam_federation_options: Types::IamFederationConfigOptions
       attr_accessor client_token: ::String
       SENSITIVE: []
     end
@@ -779,6 +1000,11 @@ module Aws::OpenSearchServerless
 
     class ValidationException
       attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class VectorOptions
+      attr_accessor serverless_vector_acceleration: ("ENABLED" | "DISABLED" | "ALLOWED")
       SENSITIVE: []
     end
 

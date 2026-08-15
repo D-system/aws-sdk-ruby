@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -77,10 +78,154 @@ module Aws
                   | (?Hash[Symbol, untyped]) -> instance
 
 
+      interface _CreateCentralizationRuleForOrganizationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateCentralizationRuleForOrganizationOutput]
+        def rule_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#create_centralization_rule_for_organization-instance_method
+      def create_centralization_rule_for_organization: (
+                                                         rule_name: ::String,
+                                                         rule: Params::centralization_rule,
+                                                         ?tags: Hash[::String, ::String]
+                                                       ) -> _CreateCentralizationRuleForOrganizationResponseSuccess
+                                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateCentralizationRuleForOrganizationResponseSuccess
+
+      interface _CreateS3TableIntegrationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateS3TableIntegrationOutput]
+        def arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#create_s3_table_integration-instance_method
+      def create_s3_table_integration: (
+                                         encryption: {
+                                           sse_algorithm: ("aws:kms" | "AES256"),
+                                           kms_key_arn: ::String?
+                                         },
+                                         role_arn: ::String,
+                                         ?tags: Hash[::String, ::String]
+                                       ) -> _CreateS3TableIntegrationResponseSuccess
+                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateS3TableIntegrationResponseSuccess
+
+      interface _CreateTelemetryPipelineResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateTelemetryPipelineOutput]
+        def arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#create_telemetry_pipeline-instance_method
+      def create_telemetry_pipeline: (
+                                       name: ::String,
+                                       configuration: {
+                                         body: ::String
+                                       },
+                                       ?tags: Hash[::String, ::String]
+                                     ) -> _CreateTelemetryPipelineResponseSuccess
+                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateTelemetryPipelineResponseSuccess
+
+      interface _CreateTelemetryRuleResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateTelemetryRuleOutput]
+        def rule_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#create_telemetry_rule-instance_method
+      def create_telemetry_rule: (
+                                   rule_name: ::String,
+                                   rule: Params::telemetry_rule,
+                                   ?tags: Hash[::String, ::String]
+                                 ) -> _CreateTelemetryRuleResponseSuccess
+                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateTelemetryRuleResponseSuccess
+
+      interface _CreateTelemetryRuleForOrganizationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateTelemetryRuleForOrganizationOutput]
+        def rule_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#create_telemetry_rule_for_organization-instance_method
+      def create_telemetry_rule_for_organization: (
+                                                    rule_name: ::String,
+                                                    rule: Params::telemetry_rule,
+                                                    ?tags: Hash[::String, ::String]
+                                                  ) -> _CreateTelemetryRuleForOrganizationResponseSuccess
+                                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateTelemetryRuleForOrganizationResponseSuccess
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#delete_centralization_rule_for_organization-instance_method
+      def delete_centralization_rule_for_organization: (
+                                                         rule_identifier: ::String
+                                                       ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+                                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#delete_s3_table_integration-instance_method
+      def delete_s3_table_integration: (
+                                         arn: ::String
+                                       ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+
+      interface _DeleteTelemetryPipelineResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteTelemetryPipelineOutput]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#delete_telemetry_pipeline-instance_method
+      def delete_telemetry_pipeline: (
+                                       pipeline_identifier: ::String
+                                     ) -> _DeleteTelemetryPipelineResponseSuccess
+                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteTelemetryPipelineResponseSuccess
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#delete_telemetry_rule-instance_method
+      def delete_telemetry_rule: (
+                                   rule_identifier: ::String
+                                 ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#delete_telemetry_rule_for_organization-instance_method
+      def delete_telemetry_rule_for_organization: (
+                                                    rule_identifier: ::String
+                                                  ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+                                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+
+      interface _GetCentralizationRuleForOrganizationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetCentralizationRuleForOrganizationOutput]
+        def rule_name: () -> ::String
+        def rule_arn: () -> ::String
+        def creator_account_id: () -> ::String
+        def created_time_stamp: () -> ::Integer
+        def created_region: () -> ::String
+        def last_update_time_stamp: () -> ::Integer
+        def rule_health: () -> ("Healthy" | "Unhealthy" | "Provisioning")
+        def failure_reason: () -> ("TRUSTED_ACCESS_NOT_ENABLED" | "DESTINATION_ACCOUNT_NOT_IN_ORGANIZATION" | "INTERNAL_SERVER_ERROR")
+        def tag_propagation_status: () -> ("Healthy" | "Unhealthy")
+        def tag_propagation_failure_reason: () -> ("RoleNotAssumable" | "RoleLacksPermissions")
+        def centralization_rule: () -> Types::CentralizationRule
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#get_centralization_rule_for_organization-instance_method
+      def get_centralization_rule_for_organization: (
+                                                      rule_identifier: ::String
+                                                    ) -> _GetCentralizationRuleForOrganizationResponseSuccess
+                                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetCentralizationRuleForOrganizationResponseSuccess
+
+      interface _GetS3TableIntegrationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetS3TableIntegrationOutput]
+        def arn: () -> ::String
+        def role_arn: () -> ::String
+        def status: () -> ("ACTIVE" | "DELETING")
+        def encryption: () -> Types::Encryption
+        def destination_table_bucket_arn: () -> ::String
+        def created_time_stamp: () -> ::Integer
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#get_s3_table_integration-instance_method
+      def get_s3_table_integration: (
+                                      arn: ::String
+                                    ) -> _GetS3TableIntegrationResponseSuccess
+                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetS3TableIntegrationResponseSuccess
+
+      interface _GetTelemetryEnrichmentStatusResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetTelemetryEnrichmentStatusOutput]
+        def status: () -> ("Running" | "Stopped" | "Impaired")
+        def aws_resource_explorer_managed_view_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#get_telemetry_enrichment_status-instance_method
+      def get_telemetry_enrichment_status: () -> _GetTelemetryEnrichmentStatusResponseSuccess
+                                         | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetTelemetryEnrichmentStatusResponseSuccess
+
       interface _GetTelemetryEvaluationStatusResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetTelemetryEvaluationStatusOutput]
         def status: () -> ("NOT_STARTED" | "STARTING" | "FAILED_START" | "RUNNING" | "STOPPING" | "FAILED_STOP" | "STOPPED")
         def failure_reason: () -> ::String
+        def home_region: () -> ::String
+        def region_statuses: () -> ::Array[Types::RegionStatus]
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#get_telemetry_evaluation_status-instance_method
       def get_telemetry_evaluation_status: () -> _GetTelemetryEvaluationStatusResponseSuccess
@@ -90,10 +235,70 @@ module Aws
         include ::Seahorse::Client::_ResponseSuccess[Types::GetTelemetryEvaluationStatusForOrganizationOutput]
         def status: () -> ("NOT_STARTED" | "STARTING" | "FAILED_START" | "RUNNING" | "STOPPING" | "FAILED_STOP" | "STOPPED")
         def failure_reason: () -> ::String
+        def home_region: () -> ::String
+        def region_statuses: () -> ::Array[Types::RegionStatus]
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#get_telemetry_evaluation_status_for_organization-instance_method
       def get_telemetry_evaluation_status_for_organization: () -> _GetTelemetryEvaluationStatusForOrganizationResponseSuccess
                                                           | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetTelemetryEvaluationStatusForOrganizationResponseSuccess
+
+      interface _GetTelemetryPipelineResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetTelemetryPipelineOutput]
+        def pipeline: () -> Types::TelemetryPipeline
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#get_telemetry_pipeline-instance_method
+      def get_telemetry_pipeline: (
+                                    pipeline_identifier: ::String
+                                  ) -> _GetTelemetryPipelineResponseSuccess
+                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetTelemetryPipelineResponseSuccess
+
+      interface _GetTelemetryRuleResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetTelemetryRuleOutput]
+        def rule_name: () -> ::String
+        def rule_arn: () -> ::String
+        def created_time_stamp: () -> ::Integer
+        def last_update_time_stamp: () -> ::Integer
+        def telemetry_rule: () -> Types::TelemetryRule
+        def home_region: () -> ::String
+        def is_replicated: () -> bool
+        def region_statuses: () -> ::Array[Types::RegionStatus]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#get_telemetry_rule-instance_method
+      def get_telemetry_rule: (
+                                rule_identifier: ::String
+                              ) -> _GetTelemetryRuleResponseSuccess
+                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetTelemetryRuleResponseSuccess
+
+      interface _GetTelemetryRuleForOrganizationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetTelemetryRuleForOrganizationOutput]
+        def rule_name: () -> ::String
+        def rule_arn: () -> ::String
+        def created_time_stamp: () -> ::Integer
+        def last_update_time_stamp: () -> ::Integer
+        def telemetry_rule: () -> Types::TelemetryRule
+        def home_region: () -> ::String
+        def is_replicated: () -> bool
+        def region_statuses: () -> ::Array[Types::RegionStatus]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#get_telemetry_rule_for_organization-instance_method
+      def get_telemetry_rule_for_organization: (
+                                                 rule_identifier: ::String
+                                               ) -> _GetTelemetryRuleForOrganizationResponseSuccess
+                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetTelemetryRuleForOrganizationResponseSuccess
+
+      interface _ListCentralizationRulesForOrganizationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListCentralizationRulesForOrganizationOutput]
+        def centralization_rule_summaries: () -> ::Array[Types::CentralizationRuleSummary]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#list_centralization_rules_for_organization-instance_method
+      def list_centralization_rules_for_organization: (
+                                                        ?rule_name_prefix: ::String,
+                                                        ?all_regions: bool,
+                                                        ?max_results: ::Integer,
+                                                        ?next_token: ::String
+                                                      ) -> _ListCentralizationRulesForOrganizationResponseSuccess
+                                                    | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListCentralizationRulesForOrganizationResponseSuccess
 
       interface _ListResourceTelemetryResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListResourceTelemetryOutput]
@@ -103,7 +308,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#list_resource_telemetry-instance_method
       def list_resource_telemetry: (
                                      ?resource_identifier_prefix: ::String,
-                                     ?resource_types: Array[("AWS::EC2::Instance" | "AWS::EC2::VPC" | "AWS::Lambda::Function")],
+                                     ?resource_types: Array[("AWS::EC2::Instance" | "AWS::EC2::VPC" | "AWS::Lambda::Function" | "AWS::CloudTrail" | "AWS::EKS::Cluster" | "AWS::WAFv2::WebACL" | "AWS::ElasticLoadBalancingV2::LoadBalancer" | "AWS::Route53Resolver::ResolverEndpoint" | "AWS::BedrockAgentCore::Runtime" | "AWS::BedrockAgentCore::Browser" | "AWS::BedrockAgentCore::CodeInterpreter" | "AWS::BedrockAgentCore::Gateway" | "AWS::BedrockAgentCore::Memory" | "AWS::BedrockAgentCore::WorkloadIdentity" | "AWS::SecurityHub::Hub" | "AWS::CloudFront::Distribution" | "AWS::SecurityHub::HubV2" | "AWS::CloudWatch::OTelEnrichment" | "AWS::MSK::Cluster" | "AWS::S3::Bucket" | "AWS::Bedrock::KnowledgeBase")],
                                      ?telemetry_configuration_state: Hash[("Logs" | "Metrics" | "Traces"), ("Enabled" | "Disabled" | "NotApplicable")],
                                      ?resource_tags: Hash[::String, ::String],
                                      ?max_results: ::Integer,
@@ -120,7 +325,7 @@ module Aws
       def list_resource_telemetry_for_organization: (
                                                       ?account_identifiers: Array[::String],
                                                       ?resource_identifier_prefix: ::String,
-                                                      ?resource_types: Array[("AWS::EC2::Instance" | "AWS::EC2::VPC" | "AWS::Lambda::Function")],
+                                                      ?resource_types: Array[("AWS::EC2::Instance" | "AWS::EC2::VPC" | "AWS::Lambda::Function" | "AWS::CloudTrail" | "AWS::EKS::Cluster" | "AWS::WAFv2::WebACL" | "AWS::ElasticLoadBalancingV2::LoadBalancer" | "AWS::Route53Resolver::ResolverEndpoint" | "AWS::BedrockAgentCore::Runtime" | "AWS::BedrockAgentCore::Browser" | "AWS::BedrockAgentCore::CodeInterpreter" | "AWS::BedrockAgentCore::Gateway" | "AWS::BedrockAgentCore::Memory" | "AWS::BedrockAgentCore::WorkloadIdentity" | "AWS::SecurityHub::Hub" | "AWS::CloudFront::Distribution" | "AWS::SecurityHub::HubV2" | "AWS::CloudWatch::OTelEnrichment" | "AWS::MSK::Cluster" | "AWS::S3::Bucket" | "AWS::Bedrock::KnowledgeBase")],
                                                       ?telemetry_configuration_state: Hash[("Logs" | "Metrics" | "Traces"), ("Enabled" | "Disabled" | "NotApplicable")],
                                                       ?resource_tags: Hash[::String, ::String],
                                                       ?max_results: ::Integer,
@@ -128,13 +333,98 @@ module Aws
                                                     ) -> _ListResourceTelemetryForOrganizationResponseSuccess
                                                   | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListResourceTelemetryForOrganizationResponseSuccess
 
+      interface _ListS3TableIntegrationsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListS3TableIntegrationsOutput]
+        def integration_summaries: () -> ::Array[Types::IntegrationSummary]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#list_s3_table_integrations-instance_method
+      def list_s3_table_integrations: (
+                                        ?max_results: ::Integer,
+                                        ?next_token: ::String
+                                      ) -> _ListS3TableIntegrationsResponseSuccess
+                                    | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListS3TableIntegrationsResponseSuccess
+
+      interface _ListTagsForResourceResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListTagsForResourceOutput]
+        def tags: () -> ::Hash[::String, ::String]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#list_tags_for_resource-instance_method
+      def list_tags_for_resource: (
+                                    resource_arn: ::String
+                                  ) -> _ListTagsForResourceResponseSuccess
+                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListTagsForResourceResponseSuccess
+
+      interface _ListTelemetryPipelinesResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListTelemetryPipelinesOutput]
+        def pipeline_summaries: () -> ::Array[Types::TelemetryPipelineSummary]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#list_telemetry_pipelines-instance_method
+      def list_telemetry_pipelines: (
+                                      ?max_results: ::Integer,
+                                      ?next_token: ::String
+                                    ) -> _ListTelemetryPipelinesResponseSuccess
+                                  | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListTelemetryPipelinesResponseSuccess
+
+      interface _ListTelemetryRulesResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListTelemetryRulesOutput]
+        def telemetry_rule_summaries: () -> ::Array[Types::TelemetryRuleSummary]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#list_telemetry_rules-instance_method
+      def list_telemetry_rules: (
+                                  ?rule_name_prefix: ::String,
+                                  ?max_results: ::Integer,
+                                  ?next_token: ::String
+                                ) -> _ListTelemetryRulesResponseSuccess
+                              | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListTelemetryRulesResponseSuccess
+
+      interface _ListTelemetryRulesForOrganizationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListTelemetryRulesForOrganizationOutput]
+        def telemetry_rule_summaries: () -> ::Array[Types::TelemetryRuleSummary]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#list_telemetry_rules_for_organization-instance_method
+      def list_telemetry_rules_for_organization: (
+                                                   ?rule_name_prefix: ::String,
+                                                   ?source_account_ids: Array[::String],
+                                                   ?source_organization_unit_ids: Array[::String],
+                                                   ?max_results: ::Integer,
+                                                   ?next_token: ::String
+                                                 ) -> _ListTelemetryRulesForOrganizationResponseSuccess
+                                               | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListTelemetryRulesForOrganizationResponseSuccess
+
+      interface _StartTelemetryEnrichmentResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StartTelemetryEnrichmentOutput]
+        def status: () -> ("Running" | "Stopped" | "Impaired")
+        def aws_resource_explorer_managed_view_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#start_telemetry_enrichment-instance_method
+      def start_telemetry_enrichment: () -> _StartTelemetryEnrichmentResponseSuccess
+                                    | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartTelemetryEnrichmentResponseSuccess
+
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#start_telemetry_evaluation-instance_method
-      def start_telemetry_evaluation: () -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+      def start_telemetry_evaluation: (
+                                        ?regions: Array[::String],
+                                        ?all_regions: bool
+                                      ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                     | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#start_telemetry_evaluation_for_organization-instance_method
-      def start_telemetry_evaluation_for_organization: () -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+      def start_telemetry_evaluation_for_organization: (
+                                                         ?regions: Array[::String],
+                                                         ?all_regions: bool
+                                                       ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                                      | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+
+      interface _StopTelemetryEnrichmentResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StopTelemetryEnrichmentOutput]
+        def status: () -> ("Running" | "Stopped" | "Impaired")
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#stop_telemetry_enrichment-instance_method
+      def stop_telemetry_enrichment: () -> _StopTelemetryEnrichmentResponseSuccess
+                                   | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StopTelemetryEnrichmentResponseSuccess
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#stop_telemetry_evaluation-instance_method
       def stop_telemetry_evaluation: () -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
@@ -143,6 +433,96 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#stop_telemetry_evaluation_for_organization-instance_method
       def stop_telemetry_evaluation_for_organization: () -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                                     | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#tag_resource-instance_method
+      def tag_resource: (
+                          resource_arn: ::String,
+                          tags: Hash[::String, ::String]
+                        ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+
+      interface _TestTelemetryPipelineResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::TestTelemetryPipelineOutput]
+        def results: () -> ::Array[Types::PipelineOutput]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#test_telemetry_pipeline-instance_method
+      def test_telemetry_pipeline: (
+                                     records: Array[
+                                       {
+                                         data: ::String?,
+                                         type: ("STRING" | "JSON")?
+                                       }
+                                     ],
+                                     configuration: {
+                                       body: ::String
+                                     },
+                                     ?signal_type: ("LOG" | "METRIC")
+                                   ) -> _TestTelemetryPipelineResponseSuccess
+                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TestTelemetryPipelineResponseSuccess
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#untag_resource-instance_method
+      def untag_resource: (
+                            resource_arn: ::String,
+                            tag_keys: Array[::String]
+                          ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+
+      interface _UpdateCentralizationRuleForOrganizationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateCentralizationRuleForOrganizationOutput]
+        def rule_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#update_centralization_rule_for_organization-instance_method
+      def update_centralization_rule_for_organization: (
+                                                         rule_identifier: ::String,
+                                                         rule: Params::centralization_rule
+                                                       ) -> _UpdateCentralizationRuleForOrganizationResponseSuccess
+                                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateCentralizationRuleForOrganizationResponseSuccess
+
+      interface _UpdateTelemetryPipelineResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateTelemetryPipelineOutput]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#update_telemetry_pipeline-instance_method
+      def update_telemetry_pipeline: (
+                                       pipeline_identifier: ::String,
+                                       configuration: {
+                                         body: ::String
+                                       }
+                                     ) -> _UpdateTelemetryPipelineResponseSuccess
+                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateTelemetryPipelineResponseSuccess
+
+      interface _UpdateTelemetryRuleResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateTelemetryRuleOutput]
+        def rule_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#update_telemetry_rule-instance_method
+      def update_telemetry_rule: (
+                                   rule_identifier: ::String,
+                                   rule: Params::telemetry_rule
+                                 ) -> _UpdateTelemetryRuleResponseSuccess
+                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateTelemetryRuleResponseSuccess
+
+      interface _UpdateTelemetryRuleForOrganizationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateTelemetryRuleForOrganizationOutput]
+        def rule_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#update_telemetry_rule_for_organization-instance_method
+      def update_telemetry_rule_for_organization: (
+                                                    rule_identifier: ::String,
+                                                    rule: Params::telemetry_rule
+                                                  ) -> _UpdateTelemetryRuleForOrganizationResponseSuccess
+                                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateTelemetryRuleForOrganizationResponseSuccess
+
+      interface _ValidateTelemetryPipelineConfigurationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ValidateTelemetryPipelineConfigurationOutput]
+        def errors: () -> ::Array[Types::ValidationError]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ObservabilityAdmin/Client.html#validate_telemetry_pipeline_configuration-instance_method
+      def validate_telemetry_pipeline_configuration: (
+                                                       configuration: {
+                                                         body: ::String
+                                                       }
+                                                     ) -> _ValidateTelemetryPipelineConfigurationResponseSuccess
+                                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ValidateTelemetryPipelineConfigurationResponseSuccess
     end
   end
 end

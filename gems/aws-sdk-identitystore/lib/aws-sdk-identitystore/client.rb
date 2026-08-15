@@ -95,8 +95,8 @@ module Aws::IdentityStore
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::IdentityStore
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::IdentityStore
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::IdentityStore
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::IdentityStore
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::IdentityStore
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::IdentityStore
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::IdentityStore
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -576,12 +580,13 @@ module Aws::IdentityStore
     #   reserved names and can't be used for users or groups.
     #
     # @option params [Types::Name] :name
-    #   An object containing the name of the user.
+    #   An object containing the name of the user. When used in IAM Identity
+    #   Center, this parameter is required.
     #
     # @option params [String] :display_name
     #   A string containing the name of the user. This value is typically
     #   formatted for display when the user is referenced. For example, "John
-    #   Doe."
+    #   Doe." When used in IAM Identity Center, this parameter is required.
     #
     # @option params [String] :nick_name
     #   A string containing an alternate name for the user.
@@ -619,10 +624,33 @@ module Aws::IdentityStore
     # @option params [String] :timezone
     #   A string containing the time zone of the user.
     #
+    # @option params [Array<Types::Photo>] :photos
+    #   A list of photos associated with the user. You can add up to 3 photos
+    #   per user. Each photo can include a value, type, display name, and
+    #   primary designation.
+    #
+    # @option params [String] :website
+    #   The user's personal website or blog URL. This field allows users to
+    #   provide a link to their personal or professional website.
+    #
+    # @option params [String] :birthdate
+    #   The user's birthdate in YYYY-MM-DD format. This field supports
+    #   standard date format for storing personal information.
+    #
+    # @option params [Array<Types::Role>] :roles
+    #   A list of `Role` objects containing roles associated with the user.
+    #
+    # @option params [Hash<String,Hash,Array,String,Numeric,Boolean>] :extensions
+    #   A map with additional attribute extensions for the user. Each map key
+    #   corresponds to an extension name, while map values represent extension
+    #   data in `Document` type (not supported by Java V1, Go V1 and older
+    #   versions of the CLI). `aws:identitystore:enterprise` is the only
+    #   supported extension name.
+    #
     # @return [Types::CreateUserResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::CreateUserResponse#user_id #user_id} => String
     #   * {Types::CreateUserResponse#identity_store_id #identity_store_id} => String
+    #   * {Types::CreateUserResponse#user_id #user_id} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -671,12 +699,32 @@ module Aws::IdentityStore
     #     preferred_language: "SensitiveStringType",
     #     locale: "SensitiveStringType",
     #     timezone: "SensitiveStringType",
+    #     photos: [
+    #       {
+    #         value: "SensitiveStringType", # required
+    #         type: "SensitiveStringType",
+    #         display: "SensitiveStringType",
+    #         primary: false,
+    #       },
+    #     ],
+    #     website: "SensitiveStringType",
+    #     birthdate: "SensitiveStringType",
+    #     roles: [
+    #       {
+    #         value: "SensitiveStringType",
+    #         type: "SensitiveStringType",
+    #         primary: false,
+    #       },
+    #     ],
+    #     extensions: {
+    #       "ExtensionName" => "value", # value <Hash,Array,String,Numeric,Boolean,IO,Set,nil>
+    #     },
     #   })
     #
     # @example Response structure
     #
-    #   resp.user_id #=> String
     #   resp.identity_store_id #=> String
+    #   resp.user_id #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/identitystore-2020-06-15/CreateUser AWS API Documentation
     #
@@ -768,15 +816,16 @@ module Aws::IdentityStore
     # Retrieves the group metadata and attributes from `GroupId` in an
     # identity store.
     #
-    # <note markdown="1"> If you have administrator access to a member account, you can use this
-    # API from the member account. Read about [member accounts][1] in the
-    # *Organizations User Guide*.
+    # <note markdown="1"> If you have access to a member account, you can use this API operation
+    # from the member account. For more information, see [Limiting access to
+    # the identity store from member accounts][1] in the <i> IAM Identity
+    # Center User Guide</i>.
     #
     #  </note>
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_access.html
+    # [1]: https://docs.aws.amazon.com/singlesignon/latest/userguide/manage-your-accounts.html#limiting-access-from-member-accounts
     #
     # @option params [required, String] :identity_store_id
     #   The globally unique identifier for the identity store, such as
@@ -794,6 +843,10 @@ module Aws::IdentityStore
     #   * {Types::DescribeGroupResponse#display_name #display_name} => String
     #   * {Types::DescribeGroupResponse#external_ids #external_ids} => Array&lt;Types::ExternalId&gt;
     #   * {Types::DescribeGroupResponse#description #description} => String
+    #   * {Types::DescribeGroupResponse#created_at #created_at} => Time
+    #   * {Types::DescribeGroupResponse#updated_at #updated_at} => Time
+    #   * {Types::DescribeGroupResponse#created_by #created_by} => String
+    #   * {Types::DescribeGroupResponse#updated_by #updated_by} => String
     #   * {Types::DescribeGroupResponse#identity_store_id #identity_store_id} => String
     #
     # @example Request syntax with placeholder values
@@ -811,6 +864,10 @@ module Aws::IdentityStore
     #   resp.external_ids[0].issuer #=> String
     #   resp.external_ids[0].id #=> String
     #   resp.description #=> String
+    #   resp.created_at #=> Time
+    #   resp.updated_at #=> Time
+    #   resp.created_by #=> String
+    #   resp.updated_by #=> String
     #   resp.identity_store_id #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/identitystore-2020-06-15/DescribeGroup AWS API Documentation
@@ -825,15 +882,16 @@ module Aws::IdentityStore
     # Retrieves membership metadata and attributes from `MembershipId` in an
     # identity store.
     #
-    # <note markdown="1"> If you have administrator access to a member account, you can use this
-    # API from the member account. Read about [member accounts][1] in the
-    # *Organizations User Guide*.
+    # <note markdown="1"> If you have access to a member account, you can use this API operation
+    # from the member account. For more information, see [Limiting access to
+    # the identity store from member accounts][1] in the <i> IAM Identity
+    # Center User Guide</i>.
     #
     #  </note>
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_access.html
+    # [1]: https://docs.aws.amazon.com/singlesignon/latest/userguide/manage-your-accounts.html#limiting-access-from-member-accounts
     #
     # @option params [required, String] :identity_store_id
     #   The globally unique identifier for the identity store.
@@ -847,6 +905,10 @@ module Aws::IdentityStore
     #   * {Types::DescribeGroupMembershipResponse#membership_id #membership_id} => String
     #   * {Types::DescribeGroupMembershipResponse#group_id #group_id} => String
     #   * {Types::DescribeGroupMembershipResponse#member_id #member_id} => Types::MemberId
+    #   * {Types::DescribeGroupMembershipResponse#created_at #created_at} => Time
+    #   * {Types::DescribeGroupMembershipResponse#updated_at #updated_at} => Time
+    #   * {Types::DescribeGroupMembershipResponse#created_by #created_by} => String
+    #   * {Types::DescribeGroupMembershipResponse#updated_by #updated_by} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -861,6 +923,10 @@ module Aws::IdentityStore
     #   resp.membership_id #=> String
     #   resp.group_id #=> String
     #   resp.member_id.user_id #=> String
+    #   resp.created_at #=> Time
+    #   resp.updated_at #=> Time
+    #   resp.created_by #=> String
+    #   resp.updated_by #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/identitystore-2020-06-15/DescribeGroupMembership AWS API Documentation
     #
@@ -874,15 +940,16 @@ module Aws::IdentityStore
     # Retrieves the user metadata and attributes from the `UserId` in an
     # identity store.
     #
-    # <note markdown="1"> If you have administrator access to a member account, you can use this
-    # API from the member account. Read about [member accounts][1] in the
-    # *Organizations User Guide*.
+    # <note markdown="1"> If you have access to a member account, you can use this API operation
+    # from the member account. For more information, see [Limiting access to
+    # the identity store from member accounts][1] in the <i> IAM Identity
+    # Center User Guide</i>.
     #
     #  </note>
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_access.html
+    # [1]: https://docs.aws.amazon.com/singlesignon/latest/userguide/manage-your-accounts.html#limiting-access-from-member-accounts
     #
     # @option params [required, String] :identity_store_id
     #   The globally unique identifier for the identity store, such as
@@ -894,10 +961,16 @@ module Aws::IdentityStore
     # @option params [required, String] :user_id
     #   The identifier for a user in the identity store.
     #
+    # @option params [Array<String>] :extensions
+    #   A collection of extension names indicating what extensions the service
+    #   should retrieve alongside other user attributes.
+    #   `aws:identitystore:enterprise` is the only supported extension name.
+    #
     # @return [Types::DescribeUserResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::DescribeUserResponse#user_name #user_name} => String
+    #   * {Types::DescribeUserResponse#identity_store_id #identity_store_id} => String
     #   * {Types::DescribeUserResponse#user_id #user_id} => String
+    #   * {Types::DescribeUserResponse#user_name #user_name} => String
     #   * {Types::DescribeUserResponse#external_ids #external_ids} => Array&lt;Types::ExternalId&gt;
     #   * {Types::DescribeUserResponse#name #name} => Types::Name
     #   * {Types::DescribeUserResponse#display_name #display_name} => String
@@ -911,19 +984,30 @@ module Aws::IdentityStore
     #   * {Types::DescribeUserResponse#preferred_language #preferred_language} => String
     #   * {Types::DescribeUserResponse#locale #locale} => String
     #   * {Types::DescribeUserResponse#timezone #timezone} => String
-    #   * {Types::DescribeUserResponse#identity_store_id #identity_store_id} => String
+    #   * {Types::DescribeUserResponse#user_status #user_status} => String
+    #   * {Types::DescribeUserResponse#photos #photos} => Array&lt;Types::Photo&gt;
+    #   * {Types::DescribeUserResponse#website #website} => String
+    #   * {Types::DescribeUserResponse#birthdate #birthdate} => String
+    #   * {Types::DescribeUserResponse#roles #roles} => Array&lt;Types::Role&gt;
+    #   * {Types::DescribeUserResponse#created_at #created_at} => Time
+    #   * {Types::DescribeUserResponse#created_by #created_by} => String
+    #   * {Types::DescribeUserResponse#updated_at #updated_at} => Time
+    #   * {Types::DescribeUserResponse#updated_by #updated_by} => String
+    #   * {Types::DescribeUserResponse#extensions #extensions} => Hash&lt;String,Hash,Array,String,Numeric,Boolean&gt;
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.describe_user({
     #     identity_store_id: "IdentityStoreId", # required
     #     user_id: "ResourceId", # required
+    #     extensions: ["ExtensionName"],
     #   })
     #
     # @example Response structure
     #
-    #   resp.user_name #=> String
+    #   resp.identity_store_id #=> String
     #   resp.user_id #=> String
+    #   resp.user_name #=> String
     #   resp.external_ids #=> Array
     #   resp.external_ids[0].issuer #=> String
     #   resp.external_ids[0].id #=> String
@@ -958,7 +1042,24 @@ module Aws::IdentityStore
     #   resp.preferred_language #=> String
     #   resp.locale #=> String
     #   resp.timezone #=> String
-    #   resp.identity_store_id #=> String
+    #   resp.user_status #=> String, one of "ENABLED", "DISABLED"
+    #   resp.photos #=> Array
+    #   resp.photos[0].value #=> String
+    #   resp.photos[0].type #=> String
+    #   resp.photos[0].display #=> String
+    #   resp.photos[0].primary #=> Boolean
+    #   resp.website #=> String
+    #   resp.birthdate #=> String
+    #   resp.roles #=> Array
+    #   resp.roles[0].value #=> String
+    #   resp.roles[0].type #=> String
+    #   resp.roles[0].primary #=> Boolean
+    #   resp.created_at #=> Time
+    #   resp.created_by #=> String
+    #   resp.updated_at #=> Time
+    #   resp.updated_by #=> String
+    #   resp.extensions #=> Hash
+    #   resp.extensions["ExtensionName"] #=> <Hash,Array,String,Numeric,Boolean,IO,Set,nil>
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/identitystore-2020-06-15/DescribeUser AWS API Documentation
     #
@@ -971,15 +1072,16 @@ module Aws::IdentityStore
 
     # Retrieves `GroupId` in an identity store.
     #
-    # <note markdown="1"> If you have administrator access to a member account, you can use this
-    # API from the member account. Read about [member accounts][1] in the
-    # *Organizations User Guide*.
+    # <note markdown="1"> If you have access to a member account, you can use this API operation
+    # from the member account. For more information, see [Limiting access to
+    # the identity store from member accounts][1] in the <i> IAM Identity
+    # Center User Guide</i>.
     #
     #  </note>
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_access.html
+    # [1]: https://docs.aws.amazon.com/singlesignon/latest/userguide/manage-your-accounts.html#limiting-access-from-member-accounts
     #
     # @option params [required, String] :identity_store_id
     #   The globally unique identifier for the identity store.
@@ -988,8 +1090,8 @@ module Aws::IdentityStore
     #   A unique identifier for a user or group that is not the primary
     #   identifier. This value can be an identifier from an external identity
     #   provider (IdP) that is associated with the user, the group, or a
-    #   unique attribute. For the unique attribute, the only valid path is
-    #   `displayName`.
+    #   unique attribute. For the unique attribute, the only valid path is `
+    #   displayName`.
     #
     # @return [Types::GetGroupIdResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1028,15 +1130,16 @@ module Aws::IdentityStore
 
     # Retrieves the `MembershipId` in an identity store.
     #
-    # <note markdown="1"> If you have administrator access to a member account, you can use this
-    # API from the member account. Read about [member accounts][1] in the
-    # *Organizations User Guide*.
+    # <note markdown="1"> If you have access to a member account, you can use this API operation
+    # from the member account. For more information, see [Limiting access to
+    # the identity store from member accounts][1] in the <i> IAM Identity
+    # Center User Guide</i>.
     #
     #  </note>
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_access.html
+    # [1]: https://docs.aws.amazon.com/singlesignon/latest/userguide/manage-your-accounts.html#limiting-access-from-member-accounts
     #
     # @option params [required, String] :identity_store_id
     #   The globally unique identifier for the identity store.
@@ -1080,15 +1183,16 @@ module Aws::IdentityStore
 
     # Retrieves the `UserId` in an identity store.
     #
-    # <note markdown="1"> If you have administrator access to a member account, you can use this
-    # API from the member account. Read about [member accounts][1] in the
-    # *Organizations User Guide*.
+    # <note markdown="1"> If you have access to a member account, you can use this API operation
+    # from the member account. For more information, see [Limiting access to
+    # the identity store from member accounts][1] in the <i> IAM Identity
+    # Center User Guide</i>.
     #
     #  </note>
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_access.html
+    # [1]: https://docs.aws.amazon.com/singlesignon/latest/userguide/manage-your-accounts.html#limiting-access-from-member-accounts
     #
     # @option params [required, String] :identity_store_id
     #   The globally unique identifier for the identity store.
@@ -1097,13 +1201,13 @@ module Aws::IdentityStore
     #   A unique identifier for a user or group that is not the primary
     #   identifier. This value can be an identifier from an external identity
     #   provider (IdP) that is associated with the user, the group, or a
-    #   unique attribute. For the unique attribute, the only valid paths are
-    #   `userName` and `emails.value`.
+    #   unique attribute. For the unique attribute, the only valid paths are `
+    #   userName` and `emails.value`.
     #
     # @return [Types::GetUserIdResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::GetUserIdResponse#user_id #user_id} => String
     #   * {Types::GetUserIdResponse#identity_store_id #identity_store_id} => String
+    #   * {Types::GetUserIdResponse#user_id #user_id} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -1123,8 +1227,8 @@ module Aws::IdentityStore
     #
     # @example Response structure
     #
-    #   resp.user_id #=> String
     #   resp.identity_store_id #=> String
+    #   resp.user_id #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/identitystore-2020-06-15/GetUserId AWS API Documentation
     #
@@ -1138,15 +1242,16 @@ module Aws::IdentityStore
     # Checks the user's membership in all requested groups and returns if
     # the member exists in all queried groups.
     #
-    # <note markdown="1"> If you have administrator access to a member account, you can use this
-    # API from the member account. Read about [member accounts][1] in the
-    # *Organizations User Guide*.
+    # <note markdown="1"> If you have access to a member account, you can use this API operation
+    # from the member account. For more information, see [Limiting access to
+    # the identity store from member accounts][1] in the <i> IAM Identity
+    # Center User Guide</i>.
     #
     #  </note>
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_access.html
+    # [1]: https://docs.aws.amazon.com/singlesignon/latest/userguide/manage-your-accounts.html#limiting-access-from-member-accounts
     #
     # @option params [required, String] :identity_store_id
     #   The globally unique identifier for the identity store.
@@ -1188,18 +1293,19 @@ module Aws::IdentityStore
     end
 
     # For the specified group in the specified identity store, returns the
-    # list of all `GroupMembership` objects and returns results in paginated
-    # form.
+    # list of all ` GroupMembership` objects and returns results in
+    # paginated form.
     #
-    # <note markdown="1"> If you have administrator access to a member account, you can use this
-    # API from the member account. Read about [member accounts][1] in the
-    # *Organizations User Guide*.
+    # <note markdown="1"> If you have access to a member account, you can use this API operation
+    # from the member account. For more information, see [Limiting access to
+    # the identity store from member accounts][1] in the <i> IAM Identity
+    # Center User Guide</i>.
     #
     #  </note>
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_access.html
+    # [1]: https://docs.aws.amazon.com/singlesignon/latest/userguide/manage-your-accounts.html#limiting-access-from-member-accounts
     #
     # @option params [required, String] :identity_store_id
     #   The globally unique identifier for the identity store.
@@ -1209,12 +1315,12 @@ module Aws::IdentityStore
     #
     # @option params [Integer] :max_results
     #   The maximum number of results to be returned per request. This
-    #   parameter is used in all `List` requests to specify how many results
+    #   parameter is used in all ` List` requests to specify how many results
     #   to return in one page.
     #
     # @option params [String] :next_token
-    #   The pagination token used for the `ListUsers`, `ListGroups` and
-    #   `ListGroupMemberships` API operations. This value is generated by the
+    #   The pagination token used for the `ListUsers`, `ListGroups` and `
+    #   ListGroupMemberships` API operations. This value is generated by the
     #   identity store service. It is returned in the API response if the
     #   total results are more than the size of one page. This token is also
     #   returned when it is used in the API request to search for the next
@@ -1243,6 +1349,10 @@ module Aws::IdentityStore
     #   resp.group_memberships[0].membership_id #=> String
     #   resp.group_memberships[0].group_id #=> String
     #   resp.group_memberships[0].member_id.user_id #=> String
+    #   resp.group_memberships[0].created_at #=> Time
+    #   resp.group_memberships[0].updated_at #=> Time
+    #   resp.group_memberships[0].created_by #=> String
+    #   resp.group_memberships[0].updated_by #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/identitystore-2020-06-15/ListGroupMemberships AWS API Documentation
@@ -1255,18 +1365,19 @@ module Aws::IdentityStore
     end
 
     # For the specified member in the specified identity store, returns the
-    # list of all `GroupMembership` objects and returns results in paginated
-    # form.
+    # list of all ` GroupMembership` objects and returns results in
+    # paginated form.
     #
-    # <note markdown="1"> If you have administrator access to a member account, you can use this
-    # API from the member account. Read about [member accounts][1] in the
-    # *Organizations User Guide*.
+    # <note markdown="1"> If you have access to a member account, you can use this API operation
+    # from the member account. For more information, see [Limiting access to
+    # the identity store from member accounts][1] in the <i> IAM Identity
+    # Center User Guide</i>.
     #
     #  </note>
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_access.html
+    # [1]: https://docs.aws.amazon.com/singlesignon/latest/userguide/manage-your-accounts.html#limiting-access-from-member-accounts
     #
     # @option params [required, String] :identity_store_id
     #   The globally unique identifier for the identity store.
@@ -1278,13 +1389,13 @@ module Aws::IdentityStore
     #
     # @option params [Integer] :max_results
     #   The maximum number of results to be returned per request. This
-    #   parameter is used in the `ListUsers` and `ListGroups` requests to
+    #   parameter is used in the ` ListUsers` and `ListGroups` requests to
     #   specify how many results to return in one page. The length limit is 50
     #   characters.
     #
     # @option params [String] :next_token
-    #   The pagination token used for the `ListUsers`, `ListGroups`, and
-    #   `ListGroupMemberships` API operations. This value is generated by the
+    #   The pagination token used for the `ListUsers`, `ListGroups`, and `
+    #   ListGroupMemberships` API operations. This value is generated by the
     #   identity store service. It is returned in the API response if the
     #   total results are more than the size of one page. This token is also
     #   returned when it is used in the API request to search for the next
@@ -1315,6 +1426,10 @@ module Aws::IdentityStore
     #   resp.group_memberships[0].membership_id #=> String
     #   resp.group_memberships[0].group_id #=> String
     #   resp.group_memberships[0].member_id.user_id #=> String
+    #   resp.group_memberships[0].created_at #=> Time
+    #   resp.group_memberships[0].updated_at #=> Time
+    #   resp.group_memberships[0].created_by #=> String
+    #   resp.group_memberships[0].updated_by #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/identitystore-2020-06-15/ListGroupMembershipsForMember AWS API Documentation
@@ -1330,15 +1445,16 @@ module Aws::IdentityStore
     # complete `Group` objects. Filtering for a `Group` by the `DisplayName`
     # attribute is deprecated. Instead, use the `GetGroupId` API action.
     #
-    # <note markdown="1"> If you have administrator access to a member account, you can use this
-    # API from the member account. Read about [member accounts][1] in the
-    # *Organizations User Guide*.
+    # <note markdown="1"> If you have access to a member account, you can use this API operation
+    # from the member account. For more information, see [Limiting access to
+    # the identity store from member accounts][1] in the <i> IAM Identity
+    # Center User Guide</i>.
     #
     #  </note>
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_access.html
+    # [1]: https://docs.aws.amazon.com/singlesignon/latest/userguide/manage-your-accounts.html#limiting-access-from-member-accounts
     #
     # @option params [required, String] :identity_store_id
     #   The globally unique identifier for the identity store, such as
@@ -1349,7 +1465,7 @@ module Aws::IdentityStore
     #
     # @option params [Integer] :max_results
     #   The maximum number of results to be returned per request. This
-    #   parameter is used in the `ListUsers` and `ListGroups` requests to
+    #   parameter is used in the ` ListUsers` and `ListGroups` requests to
     #   specify how many results to return in one page. The length limit is 50
     #   characters.
     #
@@ -1361,8 +1477,8 @@ module Aws::IdentityStore
     #   API request to search for the next page.
     #
     # @option params [Array<Types::Filter>] :filters
-    #   A list of `Filter` objects, which is used in the `ListUsers` and
-    #   `ListGroups` requests.
+    #   A list of `Filter` objects, which is used in the `ListUsers` and `
+    #   ListGroups` requests.
     #
     # @return [Types::ListGroupsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1394,6 +1510,10 @@ module Aws::IdentityStore
     #   resp.groups[0].external_ids[0].issuer #=> String
     #   resp.groups[0].external_ids[0].id #=> String
     #   resp.groups[0].description #=> String
+    #   resp.groups[0].created_at #=> Time
+    #   resp.groups[0].updated_at #=> Time
+    #   resp.groups[0].created_by #=> String
+    #   resp.groups[0].updated_by #=> String
     #   resp.groups[0].identity_store_id #=> String
     #   resp.next_token #=> String
     #
@@ -1410,15 +1530,16 @@ module Aws::IdentityStore
     # complete `User` objects. Filtering for a `User` by the `UserName`
     # attribute is deprecated. Instead, use the `GetUserId` API action.
     #
-    # <note markdown="1"> If you have administrator access to a member account, you can use this
-    # API from the member account. Read about [member accounts][1] in the
-    # *Organizations User Guide*.
+    # <note markdown="1"> If you have access to a member account, you can use this API operation
+    # from the member account. For more information, see [Limiting access to
+    # the identity store from member accounts][1] in the <i> IAM Identity
+    # Center User Guide</i>.
     #
     #  </note>
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_access.html
+    # [1]: https://docs.aws.amazon.com/singlesignon/latest/userguide/manage-your-accounts.html#limiting-access-from-member-accounts
     #
     # @option params [required, String] :identity_store_id
     #   The globally unique identifier for the identity store, such as
@@ -1427,9 +1548,14 @@ module Aws::IdentityStore
     #   lower case letters. This value is generated at the time that a new
     #   identity store is created.
     #
+    # @option params [Array<String>] :extensions
+    #   A collection of extension names indicating what extensions the service
+    #   should retrieve alongside other user attributes.
+    #   `aws:identitystore:enterprise` is the only supported extension name.
+    #
     # @option params [Integer] :max_results
     #   The maximum number of results to be returned per request. This
-    #   parameter is used in the `ListUsers` and `ListGroups` requests to
+    #   parameter is used in the ` ListUsers` and `ListGroups` requests to
     #   specify how many results to return in one page. The length limit is 50
     #   characters.
     #
@@ -1441,8 +1567,8 @@ module Aws::IdentityStore
     #   API request to search for the next page.
     #
     # @option params [Array<Types::Filter>] :filters
-    #   A list of `Filter` objects, which is used in the `ListUsers` and
-    #   `ListGroups` requests.
+    #   A list of `Filter` objects, which is used in the `ListUsers` and `
+    #   ListGroups` requests.
     #
     # @return [Types::ListUsersResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1455,6 +1581,7 @@ module Aws::IdentityStore
     #
     #   resp = client.list_users({
     #     identity_store_id: "IdentityStoreId", # required
+    #     extensions: ["ExtensionName"],
     #     max_results: 1,
     #     next_token: "NextToken",
     #     filters: [
@@ -1468,8 +1595,9 @@ module Aws::IdentityStore
     # @example Response structure
     #
     #   resp.users #=> Array
-    #   resp.users[0].user_name #=> String
+    #   resp.users[0].identity_store_id #=> String
     #   resp.users[0].user_id #=> String
+    #   resp.users[0].user_name #=> String
     #   resp.users[0].external_ids #=> Array
     #   resp.users[0].external_ids[0].issuer #=> String
     #   resp.users[0].external_ids[0].id #=> String
@@ -1504,7 +1632,24 @@ module Aws::IdentityStore
     #   resp.users[0].preferred_language #=> String
     #   resp.users[0].locale #=> String
     #   resp.users[0].timezone #=> String
-    #   resp.users[0].identity_store_id #=> String
+    #   resp.users[0].user_status #=> String, one of "ENABLED", "DISABLED"
+    #   resp.users[0].photos #=> Array
+    #   resp.users[0].photos[0].value #=> String
+    #   resp.users[0].photos[0].type #=> String
+    #   resp.users[0].photos[0].display #=> String
+    #   resp.users[0].photos[0].primary #=> Boolean
+    #   resp.users[0].website #=> String
+    #   resp.users[0].birthdate #=> String
+    #   resp.users[0].roles #=> Array
+    #   resp.users[0].roles[0].value #=> String
+    #   resp.users[0].roles[0].type #=> String
+    #   resp.users[0].roles[0].primary #=> Boolean
+    #   resp.users[0].created_at #=> Time
+    #   resp.users[0].created_by #=> String
+    #   resp.users[0].updated_at #=> Time
+    #   resp.users[0].updated_by #=> String
+    #   resp.users[0].extensions #=> Hash
+    #   resp.users[0].extensions["ExtensionName"] #=> <Hash,Array,String,Numeric,Boolean,IO,Set,nil>
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/identitystore-2020-06-15/ListUsers AWS API Documentation
@@ -1516,8 +1661,8 @@ module Aws::IdentityStore
       req.send_request(options)
     end
 
-    # For the specified group in the specified identity store, updates the
-    # group metadata and attributes.
+    # Updates the specified group metadata and attributes in the specified
+    # identity store.
     #
     # @option params [required, String] :identity_store_id
     #   The globally unique identifier for the identity store.
@@ -1528,6 +1673,12 @@ module Aws::IdentityStore
     # @option params [required, Array<Types::AttributeOperation>] :operations
     #   A list of `AttributeOperation` objects to apply to the requested
     #   group. These operations might add, replace, or remove an attribute.
+    #   For more information on the attributes that can be added, replaced, or
+    #   removed, see [Group][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/singlesignon/latest/IdentityStoreAPIReference/API_Group.html
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
@@ -1553,8 +1704,8 @@ module Aws::IdentityStore
       req.send_request(options)
     end
 
-    # For the specified user in the specified identity store, updates the
-    # user metadata and attributes.
+    # Updates the specified user metadata and attributes in the specified
+    # identity store.
     #
     # @option params [required, String] :identity_store_id
     #   The globally unique identifier for the identity store.
@@ -1564,7 +1715,13 @@ module Aws::IdentityStore
     #
     # @option params [required, Array<Types::AttributeOperation>] :operations
     #   A list of `AttributeOperation` objects to apply to the requested user.
-    #   These operations might add, replace, or remove an attribute.
+    #   These operations might add, replace, or remove an attribute. For more
+    #   information on the attributes that can be added, replaced, or removed,
+    #   see [User][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/singlesignon/latest/IdentityStoreAPIReference/API_User.html
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
@@ -1608,7 +1765,7 @@ module Aws::IdentityStore
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-identitystore'
-      context[:gem_version] = '1.50.0'
+      context[:gem_version] = '1.72.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

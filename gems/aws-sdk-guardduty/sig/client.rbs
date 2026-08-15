@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -119,33 +120,10 @@ module Aws
                              enable: bool,
                              ?client_token: ::String,
                              ?finding_publishing_frequency: ("FIFTEEN_MINUTES" | "ONE_HOUR" | "SIX_HOURS"),
-                             ?data_sources: {
-                               s3_logs: {
-                                 enable: bool
-                               }?,
-                               kubernetes: {
-                                 audit_logs: {
-                                   enable: bool
-                                 }
-                               }?,
-                               malware_protection: {
-                                 scan_ec2_instance_with_findings: {
-                                   ebs_volumes: bool?
-                                 }?
-                               }?
-                             },
+                             ?data_sources: Params::data_source_configurations,
                              ?tags: Hash[::String, ::String],
                              ?features: Array[
-                               {
-                                 name: ("S3_DATA_EVENTS" | "EKS_AUDIT_LOGS" | "EBS_MALWARE_PROTECTION" | "RDS_LOGIN_EVENTS" | "EKS_RUNTIME_MONITORING" | "LAMBDA_NETWORK_LOGS" | "RUNTIME_MONITORING")?,
-                                 status: ("ENABLED" | "DISABLED")?,
-                                 additional_configuration: Array[
-                                   {
-                                     name: ("EKS_ADDON_MANAGEMENT" | "ECS_FARGATE_AGENT_MANAGEMENT" | "EC2_AGENT_MANAGEMENT")?,
-                                     status: ("ENABLED" | "DISABLED")?
-                                   },
-                                 ]?
-                               },
+                               Params::detector_feature_configuration
                              ]
                            ) -> _CreateDetectorResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateDetectorResponseSuccess
@@ -161,22 +139,7 @@ module Aws
                            ?description: ::String,
                            ?action: ("NOOP" | "ARCHIVE"),
                            ?rank: ::Integer,
-                           finding_criteria: {
-                             criterion: Hash[::String, {
-                                 eq: Array[::String]?,
-                                 neq: Array[::String]?,
-                                 gt: ::Integer?,
-                                 gte: ::Integer?,
-                                 lt: ::Integer?,
-                                 lte: ::Integer?,
-                                 equals: Array[::String]?,
-                                 not_equals: Array[::String]?,
-                                 greater_than: ::Integer?,
-                                 greater_than_or_equal: ::Integer?,
-                                 less_than: ::Integer?,
-                                 less_than_or_equal: ::Integer?
-                               }]?
-                           },
+                           finding_criteria: Params::finding_criteria,
                            ?client_token: ::String,
                            ?tags: Hash[::String, ::String]
                          ) -> _CreateFilterResponseSuccess
@@ -194,9 +157,22 @@ module Aws
                            location: ::String,
                            activate: bool,
                            ?client_token: ::String,
-                           ?tags: Hash[::String, ::String]
+                           ?tags: Hash[::String, ::String],
+                           ?expected_bucket_owner: ::String
                          ) -> _CreateIPSetResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateIPSetResponseSuccess
+
+      interface _CreateInvestigationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateInvestigationResponse]
+        def investigation_id: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/GuardDuty/Client.html#create_investigation-instance_method
+      def create_investigation: (
+                                  detector_id: ::String,
+                                  trigger_prompt: ::String,
+                                  ?client_token: ::String
+                                ) -> _CreateInvestigationResponseSuccess
+                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateInvestigationResponseSuccess
 
       interface _CreateMalwareProtectionPlanResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateMalwareProtectionPlanResponse]
@@ -232,7 +208,7 @@ module Aws
                               {
                                 account_id: ::String,
                                 email: ::String
-                              },
+                              }
                             ]
                           ) -> _CreateMembersResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateMembersResponseSuccess
@@ -249,7 +225,8 @@ module Aws
                                              destination_arn: ::String?,
                                              kms_key_arn: ::String?
                                            },
-                                           ?client_token: ::String
+                                           ?client_token: ::String,
+                                           ?tags: Hash[::String, ::String]
                                          ) -> _CreatePublishingDestinationResponseSuccess
                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreatePublishingDestinationResponseSuccess
 
@@ -263,6 +240,23 @@ module Aws
                                   ) -> _CreateSampleFindingsResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateSampleFindingsResponseSuccess
 
+      interface _CreateThreatEntitySetResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateThreatEntitySetResponse]
+        def threat_entity_set_id: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/GuardDuty/Client.html#create_threat_entity_set-instance_method
+      def create_threat_entity_set: (
+                                      detector_id: ::String,
+                                      name: ::String,
+                                      format: ("TXT" | "STIX" | "OTX_CSV" | "ALIEN_VAULT" | "PROOF_POINT" | "FIRE_EYE"),
+                                      location: ::String,
+                                      ?expected_bucket_owner: ::String,
+                                      activate: bool,
+                                      ?client_token: ::String,
+                                      ?tags: Hash[::String, ::String]
+                                    ) -> _CreateThreatEntitySetResponseSuccess
+                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateThreatEntitySetResponseSuccess
+
       interface _CreateThreatIntelSetResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateThreatIntelSetResponse]
         def threat_intel_set_id: () -> ::String
@@ -275,9 +269,27 @@ module Aws
                                      location: ::String,
                                      activate: bool,
                                      ?client_token: ::String,
-                                     ?tags: Hash[::String, ::String]
+                                     ?tags: Hash[::String, ::String],
+                                     ?expected_bucket_owner: ::String
                                    ) -> _CreateThreatIntelSetResponseSuccess
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateThreatIntelSetResponseSuccess
+
+      interface _CreateTrustedEntitySetResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateTrustedEntitySetResponse]
+        def trusted_entity_set_id: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/GuardDuty/Client.html#create_trusted_entity_set-instance_method
+      def create_trusted_entity_set: (
+                                       detector_id: ::String,
+                                       name: ::String,
+                                       format: ("TXT" | "STIX" | "OTX_CSV" | "ALIEN_VAULT" | "PROOF_POINT" | "FIRE_EYE"),
+                                       location: ::String,
+                                       ?expected_bucket_owner: ::String,
+                                       activate: bool,
+                                       ?client_token: ::String,
+                                       ?tags: Hash[::String, ::String]
+                                     ) -> _CreateTrustedEntitySetResponseSuccess
+                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateTrustedEntitySetResponseSuccess
 
       interface _DeclineInvitationsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DeclineInvitationsResponse]
@@ -355,6 +367,16 @@ module Aws
                                          ) -> _DeletePublishingDestinationResponseSuccess
                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeletePublishingDestinationResponseSuccess
 
+      interface _DeleteThreatEntitySetResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteThreatEntitySetResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/GuardDuty/Client.html#delete_threat_entity_set-instance_method
+      def delete_threat_entity_set: (
+                                      detector_id: ::String,
+                                      threat_entity_set_id: ::String
+                                    ) -> _DeleteThreatEntitySetResponseSuccess
+                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteThreatEntitySetResponseSuccess
+
       interface _DeleteThreatIntelSetResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DeleteThreatIntelSetResponse]
       end
@@ -364,6 +386,16 @@ module Aws
                                      threat_intel_set_id: ::String
                                    ) -> _DeleteThreatIntelSetResponseSuccess
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteThreatIntelSetResponseSuccess
+
+      interface _DeleteTrustedEntitySetResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteTrustedEntitySetResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/GuardDuty/Client.html#delete_trusted_entity_set-instance_method
+      def delete_trusted_entity_set: (
+                                       detector_id: ::String,
+                                       trusted_entity_set_id: ::String
+                                     ) -> _DeleteTrustedEntitySetResponseSuccess
+                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteTrustedEntitySetResponseSuccess
 
       interface _DescribeMalwareScansResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DescribeMalwareScansResponse]
@@ -384,7 +416,7 @@ module Aws
                                             greater_than: ::Integer?,
                                             less_than: ::Integer?
                                           }?
-                                        },
+                                        }
                                       ]?
                                     },
                                     ?sort_criteria: {
@@ -418,6 +450,7 @@ module Aws
         def status: () -> ("PENDING_VERIFICATION" | "PUBLISHING" | "UNABLE_TO_PUBLISH_FIX_DESTINATION_PROPERTY" | "STOPPED")
         def publishing_failure_start_timestamp: () -> ::Integer
         def destination_properties: () -> Types::DestinationProperties
+        def tags: () -> ::Hash[::String, ::String]
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/GuardDuty/Client.html#describe_publishing_destination-instance_method
       def describe_publishing_destination: (
@@ -490,17 +523,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/GuardDuty/Client.html#get_coverage_statistics-instance_method
       def get_coverage_statistics: (
                                      detector_id: ::String,
-                                     ?filter_criteria: {
-                                       filter_criterion: Array[
-                                         {
-                                           criterion_key: ("ACCOUNT_ID" | "CLUSTER_NAME" | "RESOURCE_TYPE" | "COVERAGE_STATUS" | "ADDON_VERSION" | "MANAGEMENT_TYPE" | "EKS_CLUSTER_NAME" | "ECS_CLUSTER_NAME" | "AGENT_VERSION" | "INSTANCE_ID" | "CLUSTER_ARN")?,
-                                           filter_condition: {
-                                             equals: Array[::String]?,
-                                             not_equals: Array[::String]?
-                                           }?
-                                         },
-                                       ]?
-                                     },
+                                     ?filter_criteria: Params::coverage_filter_criteria,
                                      statistics_type: Array[("COUNT_BY_RESOURCE_TYPE" | "COUNT_BY_COVERAGE_STATUS")]
                                    ) -> _GetCoverageStatisticsResponseSuccess
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetCoverageStatisticsResponseSuccess
@@ -530,6 +553,9 @@ module Aws
         def rank: () -> ::Integer
         def finding_criteria: () -> Types::FindingCriteria
         def tags: () -> ::Hash[::String, ::String]
+        def created_at: () -> ::Time
+        def updated_at: () -> ::Time
+        def version: () -> ::Integer
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/GuardDuty/Client.html#get_filter-instance_method
       def get_filter: (
@@ -562,22 +588,7 @@ module Aws
       def get_findings_statistics: (
                                      detector_id: ::String,
                                      ?finding_statistic_types: Array[("COUNT_BY_SEVERITY")],
-                                     ?finding_criteria: {
-                                       criterion: Hash[::String, {
-                                           eq: Array[::String]?,
-                                           neq: Array[::String]?,
-                                           gt: ::Integer?,
-                                           gte: ::Integer?,
-                                           lt: ::Integer?,
-                                           lte: ::Integer?,
-                                           equals: Array[::String]?,
-                                           not_equals: Array[::String]?,
-                                           greater_than: ::Integer?,
-                                           greater_than_or_equal: ::Integer?,
-                                           less_than: ::Integer?,
-                                           less_than_or_equal: ::Integer?
-                                         }]?
-                                     },
+                                     ?finding_criteria: Params::finding_criteria,
                                      ?group_by: ("ACCOUNT" | "DATE" | "FINDING_TYPE" | "RESOURCE" | "SEVERITY"),
                                      ?order_by: ("ASC" | "DESC"),
                                      ?max_results: ::Integer
@@ -591,6 +602,7 @@ module Aws
         def location: () -> ::String
         def status: () -> ("INACTIVE" | "ACTIVATING" | "ACTIVE" | "DEACTIVATING" | "ERROR" | "DELETE_PENDING" | "DELETED")
         def tags: () -> ::Hash[::String, ::String]
+        def expected_bucket_owner: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/GuardDuty/Client.html#get_ip_set-instance_method
       def get_ip_set: (
@@ -598,6 +610,17 @@ module Aws
                         ip_set_id: ::String
                       ) -> _GetIPSetResponseSuccess
                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetIPSetResponseSuccess
+
+      interface _GetInvestigationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetInvestigationResponse]
+        def investigation: () -> Types::Investigation
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/GuardDuty/Client.html#get_investigation-instance_method
+      def get_investigation: (
+                               detector_id: ::String,
+                               investigation_id: ::String
+                             ) -> _GetInvestigationResponseSuccess
+                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetInvestigationResponseSuccess
 
       interface _GetInvitationsCountResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetInvitationsCountResponse]
@@ -624,6 +647,32 @@ module Aws
                                          malware_protection_plan_id: ::String
                                        ) -> _GetMalwareProtectionPlanResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetMalwareProtectionPlanResponseSuccess
+
+      interface _GetMalwareScanResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetMalwareScanResponse]
+        def scan_id: () -> ::String
+        def detector_id: () -> ::String
+        def admin_detector_id: () -> ::String
+        def resource_arn: () -> ::String
+        def resource_type: () -> ("EBS_RECOVERY_POINT" | "EBS_SNAPSHOT" | "EBS_VOLUME" | "EC2_AMI" | "EC2_INSTANCE" | "EC2_RECOVERY_POINT" | "S3_RECOVERY_POINT" | "S3_BUCKET" | "S3_POINT_IN_TIME_RECOVERY")
+        def scanned_resources_count: () -> ::Integer
+        def skipped_resources_count: () -> ::Integer
+        def failed_resources_count: () -> ::Integer
+        def scanned_resources: () -> ::Array[Types::ScannedResource]
+        def scan_configuration: () -> Types::ScanConfiguration
+        def scan_category: () -> ("FULL_SCAN" | "INCREMENTAL_SCAN")
+        def scan_status: () -> ("RUNNING" | "COMPLETED" | "COMPLETED_WITH_ISSUES" | "FAILED" | "SKIPPED")
+        def scan_status_reason: () -> ("ACCESS_DENIED" | "RESOURCE_NOT_FOUND" | "SNAPSHOT_SIZE_LIMIT_EXCEEDED" | "RESOURCE_UNAVAILABLE" | "INCONSISTENT_SOURCE" | "INCREMENTAL_NO_DIFFERENCE" | "NO_EBS_VOLUMES_FOUND" | "UNSUPPORTED_PRODUCT_CODE_TYPE" | "AMI_SNAPSHOT_LIMIT_EXCEEDED" | "UNRELATED_RESOURCES" | "BASE_RESOURCE_NOT_SCANNED" | "BASE_CREATED_AFTER_TARGET" | "UNSUPPORTED_FOR_INCREMENTAL" | "UNSUPPORTED_AMI" | "UNSUPPORTED_SNAPSHOT" | "UNSUPPORTED_COMPOSITE_RECOVERY_POINT" | "ALL_FILES_SKIPPED_OR_FAILED")
+        def scan_type: () -> ("BACKUP_INITIATED" | "ON_DEMAND" | "GUARDDUTY_INITIATED")
+        def scan_started_at: () -> ::Time
+        def scan_completed_at: () -> ::Time
+        def scan_result_details: () -> Types::GetMalwareScanResultDetails
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/GuardDuty/Client.html#get_malware_scan-instance_method
+      def get_malware_scan: (
+                              scan_id: ::String
+                            ) -> _GetMalwareScanResponseSuccess
+                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetMalwareScanResponseSuccess
 
       interface _GetMalwareScanSettingsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetMalwareScanSettingsResponse]
@@ -686,9 +735,28 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/GuardDuty/Client.html#get_remaining_free_trial_days-instance_method
       def get_remaining_free_trial_days: (
                                            detector_id: ::String,
-                                           ?account_ids: Array[::String]
+                                           account_ids: Array[::String]
                                          ) -> _GetRemainingFreeTrialDaysResponseSuccess
                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetRemainingFreeTrialDaysResponseSuccess
+
+      interface _GetThreatEntitySetResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetThreatEntitySetResponse]
+        def name: () -> ::String
+        def format: () -> ("TXT" | "STIX" | "OTX_CSV" | "ALIEN_VAULT" | "PROOF_POINT" | "FIRE_EYE")
+        def location: () -> ::String
+        def expected_bucket_owner: () -> ::String
+        def status: () -> ("INACTIVE" | "ACTIVATING" | "ACTIVE" | "DEACTIVATING" | "ERROR" | "DELETE_PENDING" | "DELETED")
+        def tags: () -> ::Hash[::String, ::String]
+        def created_at: () -> ::Time
+        def updated_at: () -> ::Time
+        def error_details: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/GuardDuty/Client.html#get_threat_entity_set-instance_method
+      def get_threat_entity_set: (
+                                   detector_id: ::String,
+                                   threat_entity_set_id: ::String
+                                 ) -> _GetThreatEntitySetResponseSuccess
+                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetThreatEntitySetResponseSuccess
 
       interface _GetThreatIntelSetResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetThreatIntelSetResponse]
@@ -697,6 +765,7 @@ module Aws
         def location: () -> ::String
         def status: () -> ("INACTIVE" | "ACTIVATING" | "ACTIVE" | "DEACTIVATING" | "ERROR" | "DELETE_PENDING" | "DELETED")
         def tags: () -> ::Hash[::String, ::String]
+        def expected_bucket_owner: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/GuardDuty/Client.html#get_threat_intel_set-instance_method
       def get_threat_intel_set: (
@@ -704,6 +773,25 @@ module Aws
                                   threat_intel_set_id: ::String
                                 ) -> _GetThreatIntelSetResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetThreatIntelSetResponseSuccess
+
+      interface _GetTrustedEntitySetResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetTrustedEntitySetResponse]
+        def name: () -> ::String
+        def format: () -> ("TXT" | "STIX" | "OTX_CSV" | "ALIEN_VAULT" | "PROOF_POINT" | "FIRE_EYE")
+        def location: () -> ::String
+        def expected_bucket_owner: () -> ::String
+        def status: () -> ("INACTIVE" | "ACTIVATING" | "ACTIVE" | "DEACTIVATING" | "ERROR" | "DELETE_PENDING" | "DELETED")
+        def tags: () -> ::Hash[::String, ::String]
+        def created_at: () -> ::Time
+        def updated_at: () -> ::Time
+        def error_details: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/GuardDuty/Client.html#get_trusted_entity_set-instance_method
+      def get_trusted_entity_set: (
+                                    detector_id: ::String,
+                                    trusted_entity_set_id: ::String
+                                  ) -> _GetTrustedEntitySetResponseSuccess
+                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetTrustedEntitySetResponseSuccess
 
       interface _GetUsageStatisticsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetUsageStatisticsResponse]
@@ -718,7 +806,7 @@ module Aws
                                     account_ids: Array[::String]?,
                                     data_sources: Array[("FLOW_LOGS" | "CLOUD_TRAIL" | "DNS_LOGS" | "S3_LOGS" | "KUBERNETES_AUDIT_LOGS" | "EC2_MALWARE_SCAN")]?,
                                     resources: Array[::String]?,
-                                    features: Array[("FLOW_LOGS" | "CLOUD_TRAIL" | "DNS_LOGS" | "S3_DATA_EVENTS" | "EKS_AUDIT_LOGS" | "EBS_MALWARE_PROTECTION" | "RDS_LOGIN_EVENTS" | "LAMBDA_NETWORK_LOGS" | "EKS_RUNTIME_MONITORING" | "FARGATE_RUNTIME_MONITORING" | "EC2_RUNTIME_MONITORING" | "RDS_DBI_PROTECTION_PROVISIONED" | "RDS_DBI_PROTECTION_SERVERLESS")]?
+                                    features: Array[("FLOW_LOGS" | "CLOUD_TRAIL" | "DNS_LOGS" | "S3_DATA_EVENTS" | "EKS_AUDIT_LOGS" | "EBS_MALWARE_PROTECTION" | "RDS_LOGIN_EVENTS" | "LAMBDA_NETWORK_LOGS" | "EKS_RUNTIME_MONITORING" | "EC2_RUNTIME_MONITORING" | "FARGATE_RUNTIME_MONITORING" | "RDS_DBI_PROTECTION_PROVISIONED" | "RDS_DBI_PROTECTION_SERVERLESS" | "AI_PROTECTION")]?
                                   },
                                   ?unit: ::String,
                                   ?max_results: ::Integer,
@@ -749,19 +837,9 @@ module Aws
                            detector_id: ::String,
                            ?next_token: ::String,
                            ?max_results: ::Integer,
-                           ?filter_criteria: {
-                             filter_criterion: Array[
-                               {
-                                 criterion_key: ("ACCOUNT_ID" | "CLUSTER_NAME" | "RESOURCE_TYPE" | "COVERAGE_STATUS" | "ADDON_VERSION" | "MANAGEMENT_TYPE" | "EKS_CLUSTER_NAME" | "ECS_CLUSTER_NAME" | "AGENT_VERSION" | "INSTANCE_ID" | "CLUSTER_ARN")?,
-                                 filter_condition: {
-                                   equals: Array[::String]?,
-                                   not_equals: Array[::String]?
-                                 }?
-                               },
-                             ]?
-                           },
+                           ?filter_criteria: Params::coverage_filter_criteria,
                            ?sort_criteria: {
-                             attribute_name: ("ACCOUNT_ID" | "CLUSTER_NAME" | "COVERAGE_STATUS" | "ISSUE" | "ADDON_VERSION" | "UPDATED_AT" | "EKS_CLUSTER_NAME" | "ECS_CLUSTER_NAME" | "INSTANCE_ID")?,
+                             attribute_name: ("ACCOUNT_ID" | "COVERAGE_STATUS" | "ISSUE" | "ADDON_VERSION" | "UPDATED_AT" | "CLUSTER_NAME" | "EKS_CLUSTER_NAME" | "ECS_CLUSTER_NAME" | "INSTANCE_ID")?,
                              order_by: ("ASC" | "DESC")?
                            }
                          ) -> _ListCoverageResponseSuccess
@@ -800,22 +878,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/GuardDuty/Client.html#list_findings-instance_method
       def list_findings: (
                            detector_id: ::String,
-                           ?finding_criteria: {
-                             criterion: Hash[::String, {
-                                 eq: Array[::String]?,
-                                 neq: Array[::String]?,
-                                 gt: ::Integer?,
-                                 gte: ::Integer?,
-                                 lt: ::Integer?,
-                                 lte: ::Integer?,
-                                 equals: Array[::String]?,
-                                 not_equals: Array[::String]?,
-                                 greater_than: ::Integer?,
-                                 greater_than_or_equal: ::Integer?,
-                                 less_than: ::Integer?,
-                                 less_than_or_equal: ::Integer?
-                               }]?
-                           },
+                           ?finding_criteria: Params::finding_criteria,
                            ?sort_criteria: {
                              attribute_name: ::String?,
                              order_by: ("ASC" | "DESC")?
@@ -837,6 +900,23 @@ module Aws
                           ?next_token: ::String
                         ) -> _ListIPSetsResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListIPSetsResponseSuccess
+
+      interface _ListInvestigationsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListInvestigationsResponse]
+        def investigations: () -> ::Array[Types::InvestigationSummary]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/GuardDuty/Client.html#list_investigations-instance_method
+      def list_investigations: (
+                                 detector_id: ::String,
+                                 ?sort_criteria: {
+                                   attribute_name: ("START_TIME" | "END_TIME" | "STATUS" | "RISK_LEVEL" | "CONFIDENCE")?,
+                                   order_by: ("ASC" | "DESC")?
+                                 },
+                                 ?max_results: ::Integer,
+                                 ?next_token: ::String
+                               ) -> _ListInvestigationsResponseSuccess
+                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListInvestigationsResponseSuccess
 
       interface _ListInvitationsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListInvitationsResponse]
@@ -860,6 +940,34 @@ module Aws
                                            ?next_token: ::String
                                          ) -> _ListMalwareProtectionPlansResponseSuccess
                                        | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListMalwareProtectionPlansResponseSuccess
+
+      interface _ListMalwareScansResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListMalwareScansResponse]
+        def scans: () -> ::Array[Types::MalwareScan]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/GuardDuty/Client.html#list_malware_scans-instance_method
+      def list_malware_scans: (
+                                ?max_results: ::Integer,
+                                ?next_token: ::String,
+                                ?filter_criteria: {
+                                  list_malware_scans_filter_criterion: Array[
+                                    {
+                                      list_malware_scans_criterion_key: ("RESOURCE_ARN" | "SCAN_ID" | "ACCOUNT_ID" | "GUARDDUTY_FINDING_ID" | "RESOURCE_TYPE" | "SCAN_START_TIME" | "SCAN_STATUS" | "SCAN_TYPE")?,
+                                      filter_condition: {
+                                        equals_value: ::String?,
+                                        greater_than: ::Integer?,
+                                        less_than: ::Integer?
+                                      }?
+                                    }
+                                  ]?
+                                },
+                                ?sort_criteria: {
+                                  attribute_name: ::String?,
+                                  order_by: ("ASC" | "DESC")?
+                                }
+                              ) -> _ListMalwareScansResponseSuccess
+                            | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListMalwareScansResponseSuccess
 
       interface _ListMembersResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListMembersResponse]
@@ -910,6 +1018,19 @@ module Aws
                                   ) -> _ListTagsForResourceResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListTagsForResourceResponseSuccess
 
+      interface _ListThreatEntitySetsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListThreatEntitySetsResponse]
+        def threat_entity_set_ids: () -> ::Array[::String]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/GuardDuty/Client.html#list_threat_entity_sets-instance_method
+      def list_threat_entity_sets: (
+                                     detector_id: ::String,
+                                     ?max_results: ::Integer,
+                                     ?next_token: ::String
+                                   ) -> _ListThreatEntitySetsResponseSuccess
+                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListThreatEntitySetsResponseSuccess
+
       interface _ListThreatIntelSetsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListThreatIntelSetsResponse]
         def threat_intel_set_ids: () -> ::Array[::String]
@@ -923,13 +1044,53 @@ module Aws
                                   ) -> _ListThreatIntelSetsResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListThreatIntelSetsResponseSuccess
 
+      interface _ListTrustedEntitySetsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListTrustedEntitySetsResponse]
+        def trusted_entity_set_ids: () -> ::Array[::String]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/GuardDuty/Client.html#list_trusted_entity_sets-instance_method
+      def list_trusted_entity_sets: (
+                                      detector_id: ::String,
+                                      ?max_results: ::Integer,
+                                      ?next_token: ::String
+                                    ) -> _ListTrustedEntitySetsResponseSuccess
+                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListTrustedEntitySetsResponseSuccess
+
+      interface _SendObjectMalwareScanResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::SendObjectMalwareScanResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/GuardDuty/Client.html#send_object_malware_scan-instance_method
+      def send_object_malware_scan: (
+                                      ?s3_object: {
+                                        bucket: ::String?,
+                                        key: ::String?,
+                                        version_id: ::String?
+                                      }
+                                    ) -> _SendObjectMalwareScanResponseSuccess
+                                  | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _SendObjectMalwareScanResponseSuccess
+
       interface _StartMalwareScanResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::StartMalwareScanResponse]
         def scan_id: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/GuardDuty/Client.html#start_malware_scan-instance_method
       def start_malware_scan: (
-                                resource_arn: ::String
+                                resource_arn: ::String,
+                                ?client_token: ::String,
+                                ?scan_configuration: {
+                                  role: ::String,
+                                  incremental_scan_details: {
+                                    baseline_resource_arn: ::String
+                                  }?,
+                                  recovery_point: {
+                                    backup_vault_name: ::String,
+                                    continuous_scan_details: {
+                                      start_time: ::Time?,
+                                      end_time: ::Time
+                                    }?
+                                  }?
+                                }
                               ) -> _StartMalwareScanResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartMalwareScanResponseSuccess
 
@@ -993,32 +1154,9 @@ module Aws
                              detector_id: ::String,
                              ?enable: bool,
                              ?finding_publishing_frequency: ("FIFTEEN_MINUTES" | "ONE_HOUR" | "SIX_HOURS"),
-                             ?data_sources: {
-                               s3_logs: {
-                                 enable: bool
-                               }?,
-                               kubernetes: {
-                                 audit_logs: {
-                                   enable: bool
-                                 }
-                               }?,
-                               malware_protection: {
-                                 scan_ec2_instance_with_findings: {
-                                   ebs_volumes: bool?
-                                 }?
-                               }?
-                             },
+                             ?data_sources: Params::data_source_configurations,
                              ?features: Array[
-                               {
-                                 name: ("S3_DATA_EVENTS" | "EKS_AUDIT_LOGS" | "EBS_MALWARE_PROTECTION" | "RDS_LOGIN_EVENTS" | "EKS_RUNTIME_MONITORING" | "LAMBDA_NETWORK_LOGS" | "RUNTIME_MONITORING")?,
-                                 status: ("ENABLED" | "DISABLED")?,
-                                 additional_configuration: Array[
-                                   {
-                                     name: ("EKS_ADDON_MANAGEMENT" | "ECS_FARGATE_AGENT_MANAGEMENT" | "EC2_AGENT_MANAGEMENT")?,
-                                     status: ("ENABLED" | "DISABLED")?
-                                   },
-                                 ]?
-                               },
+                               Params::detector_feature_configuration
                              ]
                            ) -> _UpdateDetectorResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateDetectorResponseSuccess
@@ -1034,22 +1172,7 @@ module Aws
                            ?description: ::String,
                            ?action: ("NOOP" | "ARCHIVE"),
                            ?rank: ::Integer,
-                           ?finding_criteria: {
-                             criterion: Hash[::String, {
-                                 eq: Array[::String]?,
-                                 neq: Array[::String]?,
-                                 gt: ::Integer?,
-                                 gte: ::Integer?,
-                                 lt: ::Integer?,
-                                 lte: ::Integer?,
-                                 equals: Array[::String]?,
-                                 not_equals: Array[::String]?,
-                                 greater_than: ::Integer?,
-                                 greater_than_or_equal: ::Integer?,
-                                 less_than: ::Integer?,
-                                 less_than_or_equal: ::Integer?
-                               }]?
-                           }
+                           ?finding_criteria: Params::finding_criteria
                          ) -> _UpdateFilterResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateFilterResponseSuccess
 
@@ -1074,7 +1197,8 @@ module Aws
                            ip_set_id: ::String,
                            ?name: ::String,
                            ?location: ::String,
-                           ?activate: bool
+                           ?activate: bool,
+                           ?expected_bucket_owner: ::String
                          ) -> _UpdateIPSetResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateIPSetResponseSuccess
 
@@ -1107,7 +1231,7 @@ module Aws
                                                   {
                                                     key: ::String,
                                                     value: ::String?
-                                                  },
+                                                  }
                                                 ]
                                               }]?,
                                             exclude: Hash[("EC2_INSTANCE_TAG"), {
@@ -1115,7 +1239,7 @@ module Aws
                                                   {
                                                     key: ::String,
                                                     value: ::String?
-                                                  },
+                                                  }
                                                 ]
                                               }]?
                                           },
@@ -1131,32 +1255,18 @@ module Aws
       def update_member_detectors: (
                                      detector_id: ::String,
                                      account_ids: Array[::String],
-                                     ?data_sources: {
-                                       s3_logs: {
-                                         enable: bool
-                                       }?,
-                                       kubernetes: {
-                                         audit_logs: {
-                                           enable: bool
-                                         }
-                                       }?,
-                                       malware_protection: {
-                                         scan_ec2_instance_with_findings: {
-                                           ebs_volumes: bool?
-                                         }?
-                                       }?
-                                     },
+                                     ?data_sources: Params::data_source_configurations,
                                      ?features: Array[
                                        {
-                                         name: ("S3_DATA_EVENTS" | "EKS_AUDIT_LOGS" | "EBS_MALWARE_PROTECTION" | "RDS_LOGIN_EVENTS" | "EKS_RUNTIME_MONITORING" | "LAMBDA_NETWORK_LOGS" | "RUNTIME_MONITORING")?,
+                                         name: ("S3_DATA_EVENTS" | "EKS_AUDIT_LOGS" | "EBS_MALWARE_PROTECTION" | "RDS_LOGIN_EVENTS" | "LAMBDA_NETWORK_LOGS" | "EKS_RUNTIME_MONITORING" | "RUNTIME_MONITORING" | "AI_PROTECTION")?,
                                          status: ("ENABLED" | "DISABLED")?,
                                          additional_configuration: Array[
                                            {
                                              name: ("EKS_ADDON_MANAGEMENT" | "ECS_FARGATE_AGENT_MANAGEMENT" | "EC2_AGENT_MANAGEMENT")?,
                                              status: ("ENABLED" | "DISABLED")?
-                                           },
+                                           }
                                          ]?
-                                       },
+                                       }
                                      ]
                                    ) -> _UpdateMemberDetectorsResponseSuccess
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateMemberDetectorsResponseSuccess
@@ -1187,15 +1297,15 @@ module Aws
                                                },
                                                ?features: Array[
                                                  {
-                                                   name: ("S3_DATA_EVENTS" | "EKS_AUDIT_LOGS" | "EBS_MALWARE_PROTECTION" | "RDS_LOGIN_EVENTS" | "EKS_RUNTIME_MONITORING" | "LAMBDA_NETWORK_LOGS" | "RUNTIME_MONITORING")?,
+                                                   name: ("S3_DATA_EVENTS" | "EKS_AUDIT_LOGS" | "EBS_MALWARE_PROTECTION" | "RDS_LOGIN_EVENTS" | "LAMBDA_NETWORK_LOGS" | "EKS_RUNTIME_MONITORING" | "RUNTIME_MONITORING" | "AI_PROTECTION")?,
                                                    auto_enable: ("NEW" | "NONE" | "ALL")?,
                                                    additional_configuration: Array[
                                                      {
                                                        name: ("EKS_ADDON_MANAGEMENT" | "ECS_FARGATE_AGENT_MANAGEMENT" | "EC2_AGENT_MANAGEMENT")?,
                                                        auto_enable: ("NEW" | "NONE" | "ALL")?
-                                                     },
+                                                     }
                                                    ]?
-                                                 },
+                                                 }
                                                ],
                                                ?auto_enable_organization_members: ("NEW" | "ALL" | "NONE")
                                              ) -> _UpdateOrganizationConfigurationResponseSuccess
@@ -1215,6 +1325,20 @@ module Aws
                                          ) -> _UpdatePublishingDestinationResponseSuccess
                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdatePublishingDestinationResponseSuccess
 
+      interface _UpdateThreatEntitySetResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateThreatEntitySetResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/GuardDuty/Client.html#update_threat_entity_set-instance_method
+      def update_threat_entity_set: (
+                                      detector_id: ::String,
+                                      threat_entity_set_id: ::String,
+                                      ?name: ::String,
+                                      ?location: ::String,
+                                      ?expected_bucket_owner: ::String,
+                                      ?activate: bool
+                                    ) -> _UpdateThreatEntitySetResponseSuccess
+                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateThreatEntitySetResponseSuccess
+
       interface _UpdateThreatIntelSetResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::UpdateThreatIntelSetResponse]
       end
@@ -1224,9 +1348,24 @@ module Aws
                                      threat_intel_set_id: ::String,
                                      ?name: ::String,
                                      ?location: ::String,
-                                     ?activate: bool
+                                     ?activate: bool,
+                                     ?expected_bucket_owner: ::String
                                    ) -> _UpdateThreatIntelSetResponseSuccess
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateThreatIntelSetResponseSuccess
+
+      interface _UpdateTrustedEntitySetResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateTrustedEntitySetResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/GuardDuty/Client.html#update_trusted_entity_set-instance_method
+      def update_trusted_entity_set: (
+                                       detector_id: ::String,
+                                       trusted_entity_set_id: ::String,
+                                       ?name: ::String,
+                                       ?location: ::String,
+                                       ?expected_bucket_owner: ::String,
+                                       ?activate: bool
+                                     ) -> _UpdateTrustedEntitySetResponseSuccess
+                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateTrustedEntitySetResponseSuccess
     end
   end
 end

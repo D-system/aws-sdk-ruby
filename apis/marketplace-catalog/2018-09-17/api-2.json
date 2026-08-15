@@ -544,7 +544,8 @@
         "EntityId",
         "LastModifiedDate",
         "ProductTitle",
-        "Visibility"
+        "Visibility",
+        "CompatibleAWSServices"
       ]
     },
     "ContainerProductSummary":{
@@ -717,8 +718,7 @@
     },
     "DeleteResourcePolicyResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DescribeChangeSetRequest":{
       "type":"structure",
@@ -850,7 +850,9 @@
         "DataProductSummary":{"shape":"DataProductSummary"},
         "SaaSProductSummary":{"shape":"SaaSProductSummary"},
         "OfferSummary":{"shape":"OfferSummary"},
-        "ResaleAuthorizationSummary":{"shape":"ResaleAuthorizationSummary"}
+        "ResaleAuthorizationSummary":{"shape":"ResaleAuthorizationSummary"},
+        "MachineLearningProductSummary":{"shape":"MachineLearningProductSummary"},
+        "OfferSetSummary":{"shape":"OfferSetSummary"}
       }
     },
     "EntitySummaryList":{
@@ -871,7 +873,9 @@
         "AmiProductFilters":{"shape":"AmiProductFilters"},
         "OfferFilters":{"shape":"OfferFilters"},
         "ContainerProductFilters":{"shape":"ContainerProductFilters"},
-        "ResaleAuthorizationFilters":{"shape":"ResaleAuthorizationFilters"}
+        "ResaleAuthorizationFilters":{"shape":"ResaleAuthorizationFilters"},
+        "MachineLearningProductFilters":{"shape":"MachineLearningProductFilters"},
+        "OfferSetFilters":{"shape":"OfferSetFilters"}
       },
       "union":true
     },
@@ -883,7 +887,9 @@
         "AmiProductSort":{"shape":"AmiProductSort"},
         "OfferSort":{"shape":"OfferSort"},
         "ContainerProductSort":{"shape":"ContainerProductSort"},
-        "ResaleAuthorizationSort":{"shape":"ResaleAuthorizationSort"}
+        "ResaleAuthorizationSort":{"shape":"ResaleAuthorizationSort"},
+        "MachineLearningProductSort":{"shape":"MachineLearningProductSort"},
+        "OfferSetSort":{"shape":"OfferSetSort"}
       },
       "union":true
     },
@@ -994,8 +1000,7 @@
     },
     "JsonDocumentType":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "document":true
     },
     "ListChangeSetsMaxResultInteger":{
@@ -1067,6 +1072,109 @@
         "Tags":{"shape":"TagList"}
       }
     },
+    "MachineLearningProductEntityIdFilter":{
+      "type":"structure",
+      "members":{
+        "ValueList":{"shape":"MachineLearningProductEntityIdFilterValueList"}
+      }
+    },
+    "MachineLearningProductEntityIdFilterValueList":{
+      "type":"list",
+      "member":{"shape":"MachineLearningProductEntityIdString"},
+      "max":10,
+      "min":1
+    },
+    "MachineLearningProductEntityIdString":{
+      "type":"string",
+      "max":255,
+      "min":1,
+      "pattern":"^[a-zA-Z0-9][.a-zA-Z0-9/-]+[a-zA-Z0-9]$"
+    },
+    "MachineLearningProductFilters":{
+      "type":"structure",
+      "members":{
+        "EntityId":{"shape":"MachineLearningProductEntityIdFilter"},
+        "LastModifiedDate":{"shape":"MachineLearningProductLastModifiedDateFilter"},
+        "ProductTitle":{"shape":"MachineLearningProductTitleFilter"},
+        "Visibility":{"shape":"MachineLearningProductVisibilityFilter"}
+      }
+    },
+    "MachineLearningProductLastModifiedDateFilter":{
+      "type":"structure",
+      "members":{
+        "DateRange":{"shape":"MachineLearningProductLastModifiedDateFilterDateRange"}
+      }
+    },
+    "MachineLearningProductLastModifiedDateFilterDateRange":{
+      "type":"structure",
+      "members":{
+        "AfterValue":{"shape":"DateTimeISO8601"},
+        "BeforeValue":{"shape":"DateTimeISO8601"}
+      }
+    },
+    "MachineLearningProductSort":{
+      "type":"structure",
+      "members":{
+        "SortBy":{"shape":"MachineLearningProductSortBy"},
+        "SortOrder":{"shape":"SortOrder"}
+      }
+    },
+    "MachineLearningProductSortBy":{
+      "type":"string",
+      "enum":[
+        "EntityId",
+        "LastModifiedDate",
+        "ProductTitle",
+        "Visibility"
+      ]
+    },
+    "MachineLearningProductSummary":{
+      "type":"structure",
+      "members":{
+        "ProductTitle":{"shape":"MachineLearningProductTitleString"},
+        "Visibility":{"shape":"MachineLearningProductVisibilityString"}
+      }
+    },
+    "MachineLearningProductTitleFilter":{
+      "type":"structure",
+      "members":{
+        "ValueList":{"shape":"MachineLearningProductTitleFilterValueList"},
+        "WildCardValue":{"shape":"MachineLearningProductTitleString"}
+      }
+    },
+    "MachineLearningProductTitleFilterValueList":{
+      "type":"list",
+      "member":{"shape":"MachineLearningProductTitleString"},
+      "max":10,
+      "min":1
+    },
+    "MachineLearningProductTitleString":{
+      "type":"string",
+      "max":255,
+      "min":1,
+      "pattern":"^(.)+$"
+    },
+    "MachineLearningProductVisibilityFilter":{
+      "type":"structure",
+      "members":{
+        "ValueList":{"shape":"MachineLearningProductVisibilityFilterValueList"}
+      }
+    },
+    "MachineLearningProductVisibilityFilterValueList":{
+      "type":"list",
+      "member":{"shape":"MachineLearningProductVisibilityString"},
+      "max":10,
+      "min":1
+    },
+    "MachineLearningProductVisibilityString":{
+      "type":"string",
+      "enum":[
+        "Limited",
+        "Public",
+        "Restricted",
+        "Draft"
+      ]
+    },
     "NextToken":{
       "type":"string",
       "max":2048,
@@ -1110,6 +1218,25 @@
       "min":12,
       "pattern":"^\\d{12}$"
     },
+    "OfferCreatedBySourceFilter":{
+      "type":"structure",
+      "members":{
+        "ValueList":{"shape":"OfferCreatedBySourceFilterValueList"}
+      }
+    },
+    "OfferCreatedBySourceFilterValueList":{
+      "type":"list",
+      "member":{"shape":"OfferCreatedBySourceString"},
+      "max":2,
+      "min":1
+    },
+    "OfferCreatedBySourceString":{
+      "type":"string",
+      "enum":[
+        "Seller",
+        "AwsMarketplace"
+      ]
+    },
     "OfferEntityIdFilter":{
       "type":"structure",
       "members":{
@@ -1140,7 +1267,11 @@
         "BuyerAccounts":{"shape":"OfferBuyerAccountsFilter"},
         "State":{"shape":"OfferStateFilter"},
         "Targeting":{"shape":"OfferTargetingFilter"},
-        "LastModifiedDate":{"shape":"OfferLastModifiedDateFilter"}
+        "LastModifiedDate":{"shape":"OfferLastModifiedDateFilter"},
+        "OfferSetId":{"shape":"OfferSetIdFilter"},
+        "TargetAgreementId":{"shape":"OfferTargetAgreementIdFilter"},
+        "TargetAgreementIntent":{"shape":"OfferTargetAgreementIntentFilter"},
+        "CreatedBySource":{"shape":"OfferCreatedBySourceFilter"}
       }
     },
     "OfferLastModifiedDateFilter":{
@@ -1224,6 +1355,187 @@
       "min":1,
       "pattern":"^[a-zA-Z0-9][.a-zA-Z0-9/-]+[a-zA-Z0-9]$"
     },
+    "OfferSetAssociatedOfferIdsFilter":{
+      "type":"structure",
+      "members":{
+        "ValueList":{"shape":"OfferSetAssociatedOfferIdsFilterValueList"}
+      }
+    },
+    "OfferSetAssociatedOfferIdsFilterValueList":{
+      "type":"list",
+      "member":{"shape":"OfferSetAssociatedOfferIdsString"},
+      "max":10,
+      "min":1
+    },
+    "OfferSetAssociatedOfferIdsList":{
+      "type":"list",
+      "member":{"shape":"OfferSetAssociatedOfferIdsString"},
+      "max":10,
+      "min":0
+    },
+    "OfferSetAssociatedOfferIdsString":{
+      "type":"string",
+      "max":255,
+      "min":1,
+      "pattern":"^[a-zA-Z0-9][.a-zA-Z0-9/-]+[a-zA-Z0-9]$"
+    },
+    "OfferSetEntityIdFilter":{
+      "type":"structure",
+      "members":{
+        "ValueList":{"shape":"OfferSetEntityIdFilterValueList"}
+      }
+    },
+    "OfferSetEntityIdFilterValueList":{
+      "type":"list",
+      "member":{"shape":"OfferSetEntityIdString"},
+      "max":10,
+      "min":1
+    },
+    "OfferSetEntityIdString":{
+      "type":"string",
+      "max":255,
+      "min":1,
+      "pattern":"^offerset-[a-zA-Z0-9][.a-zA-Z0-9/-]+[a-zA-Z0-9]$"
+    },
+    "OfferSetFilters":{
+      "type":"structure",
+      "members":{
+        "EntityId":{"shape":"OfferSetEntityIdFilter"},
+        "Name":{"shape":"OfferSetNameFilter"},
+        "State":{"shape":"OfferSetStateFilter"},
+        "ReleaseDate":{"shape":"OfferSetReleaseDateFilter"},
+        "AssociatedOfferIds":{"shape":"OfferSetAssociatedOfferIdsFilter"},
+        "SolutionId":{"shape":"OfferSetSolutionIdFilter"},
+        "LastModifiedDate":{"shape":"OfferSetLastModifiedDateFilter"}
+      }
+    },
+    "OfferSetIdFilter":{
+      "type":"structure",
+      "members":{
+        "ValueList":{"shape":"OfferSetIdFilterValueList"}
+      }
+    },
+    "OfferSetIdFilterValueList":{
+      "type":"list",
+      "member":{"shape":"OfferSetIdString"},
+      "max":10,
+      "min":1
+    },
+    "OfferSetIdString":{
+      "type":"string",
+      "max":50,
+      "min":1,
+      "pattern":"^offerset-[a-zA-Z0-9][.a-zA-Z0-9/-]+[a-zA-Z0-9]$"
+    },
+    "OfferSetLastModifiedDateFilter":{
+      "type":"structure",
+      "members":{
+        "DateRange":{"shape":"OfferSetLastModifiedDateFilterDateRange"}
+      }
+    },
+    "OfferSetLastModifiedDateFilterDateRange":{
+      "type":"structure",
+      "members":{
+        "AfterValue":{"shape":"DateTimeISO8601"},
+        "BeforeValue":{"shape":"DateTimeISO8601"}
+      }
+    },
+    "OfferSetNameFilter":{
+      "type":"structure",
+      "members":{
+        "ValueList":{"shape":"OfferSetNameFilterValueList"}
+      }
+    },
+    "OfferSetNameFilterValueList":{
+      "type":"list",
+      "member":{"shape":"OfferSetNameString"},
+      "max":10,
+      "min":1
+    },
+    "OfferSetNameString":{
+      "type":"string",
+      "max":150,
+      "min":1,
+      "pattern":"^(.)+$"
+    },
+    "OfferSetReleaseDateFilter":{
+      "type":"structure",
+      "members":{
+        "DateRange":{"shape":"OfferSetReleaseDateFilterDateRange"}
+      }
+    },
+    "OfferSetReleaseDateFilterDateRange":{
+      "type":"structure",
+      "members":{
+        "AfterValue":{"shape":"DateTimeISO8601"},
+        "BeforeValue":{"shape":"DateTimeISO8601"}
+      }
+    },
+    "OfferSetSolutionIdFilter":{
+      "type":"structure",
+      "members":{
+        "ValueList":{"shape":"OfferSetSolutionIdFilterValueList"}
+      }
+    },
+    "OfferSetSolutionIdFilterValueList":{
+      "type":"list",
+      "member":{"shape":"OfferSetSolutionIdString"},
+      "max":10,
+      "min":1
+    },
+    "OfferSetSolutionIdString":{
+      "type":"string",
+      "max":50,
+      "min":1,
+      "pattern":"^[a-zA-Z0-9][.a-zA-Z0-9/-]+[a-zA-Z0-9]$"
+    },
+    "OfferSetSort":{
+      "type":"structure",
+      "members":{
+        "SortBy":{"shape":"OfferSetSortBy"},
+        "SortOrder":{"shape":"SortOrder"}
+      }
+    },
+    "OfferSetSortBy":{
+      "type":"string",
+      "enum":[
+        "Name",
+        "State",
+        "ReleaseDate",
+        "SolutionId",
+        "EntityId",
+        "LastModifiedDate"
+      ]
+    },
+    "OfferSetStateFilter":{
+      "type":"structure",
+      "members":{
+        "ValueList":{"shape":"OfferSetStateFilterValueList"}
+      }
+    },
+    "OfferSetStateFilterValueList":{
+      "type":"list",
+      "member":{"shape":"OfferSetStateString"},
+      "max":2,
+      "min":1
+    },
+    "OfferSetStateString":{
+      "type":"string",
+      "enum":[
+        "Draft",
+        "Released"
+      ]
+    },
+    "OfferSetSummary":{
+      "type":"structure",
+      "members":{
+        "Name":{"shape":"OfferSetNameString"},
+        "State":{"shape":"OfferSetStateString"},
+        "ReleaseDate":{"shape":"DateTimeISO8601"},
+        "AssociatedOfferIds":{"shape":"OfferSetAssociatedOfferIdsList"},
+        "SolutionId":{"shape":"OfferSetSolutionIdString"}
+      }
+    },
     "OfferSort":{
       "type":"structure",
       "members":{
@@ -1243,7 +1555,11 @@
         "BuyerAccounts",
         "State",
         "Targeting",
-        "LastModifiedDate"
+        "LastModifiedDate",
+        "OfferSetId",
+        "TargetAgreementId",
+        "TargetAgreementIntent",
+        "CreatedBySource"
       ]
     },
     "OfferStateFilter":{
@@ -1275,8 +1591,46 @@
         "AvailabilityEndDate":{"shape":"DateTimeISO8601"},
         "BuyerAccounts":{"shape":"OfferBuyerAccountsList"},
         "State":{"shape":"OfferStateString"},
-        "Targeting":{"shape":"OfferTargetingList"}
+        "Targeting":{"shape":"OfferTargetingList"},
+        "OfferSetId":{"shape":"OfferSetIdString"},
+        "TargetAgreementId":{"shape":"OfferTargetAgreementIdString"},
+        "TargetAgreementIntent":{"shape":"OfferTargetAgreementIntentString"},
+        "CreatedBySource":{"shape":"OfferCreatedBySourceString"}
       }
+    },
+    "OfferTargetAgreementIdFilter":{
+      "type":"structure",
+      "members":{
+        "ValueList":{"shape":"OfferTargetAgreementIdFilterValueList"}
+      }
+    },
+    "OfferTargetAgreementIdFilterValueList":{
+      "type":"list",
+      "member":{"shape":"OfferTargetAgreementIdString"},
+      "max":10,
+      "min":1
+    },
+    "OfferTargetAgreementIdString":{
+      "type":"string",
+      "max":64,
+      "min":1,
+      "pattern":"^(.)+$"
+    },
+    "OfferTargetAgreementIntentFilter":{
+      "type":"structure",
+      "members":{
+        "ValueList":{"shape":"OfferTargetAgreementIntentFilterValueList"}
+      }
+    },
+    "OfferTargetAgreementIntentFilterValueList":{
+      "type":"list",
+      "member":{"shape":"OfferTargetAgreementIntentString"},
+      "max":2,
+      "min":1
+    },
+    "OfferTargetAgreementIntentString":{
+      "type":"string",
+      "enum":["Renew"]
     },
     "OfferTargetingFilter":{
       "type":"structure",
@@ -1325,8 +1679,7 @@
     },
     "PutResourcePolicyResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "RequestedChangeList":{
       "type":"list",
@@ -1407,7 +1760,8 @@
         "ResellerLegalName":{"shape":"ResaleAuthorizationResellerLegalNameFilter"},
         "Status":{"shape":"ResaleAuthorizationStatusFilter"},
         "OfferExtendedStatus":{"shape":"ResaleAuthorizationOfferExtendedStatusFilter"},
-        "LastModifiedDate":{"shape":"ResaleAuthorizationLastModifiedDateFilter"}
+        "LastModifiedDate":{"shape":"ResaleAuthorizationLastModifiedDateFilter"},
+        "ResellerRole":{"shape":"ResaleAuthorizationResellerRoleFilter"}
       }
     },
     "ResaleAuthorizationLastModifiedDateFilter":{
@@ -1616,6 +1970,25 @@
       "min":1,
       "pattern":"^(.)+$"
     },
+    "ResaleAuthorizationResellerRoleFilter":{
+      "type":"structure",
+      "members":{
+        "ValueList":{"shape":"ResaleAuthorizationResellerRoleFilterValueList"}
+      }
+    },
+    "ResaleAuthorizationResellerRoleFilterValueList":{
+      "type":"list",
+      "member":{"shape":"ResaleAuthorizationResellerRoleString"},
+      "max":10,
+      "min":1
+    },
+    "ResaleAuthorizationResellerRoleString":{
+      "type":"string",
+      "enum":[
+        "ChannelPartner",
+        "Distributor"
+      ]
+    },
     "ResaleAuthorizationSort":{
       "type":"structure",
       "members":{
@@ -1674,7 +2047,8 @@
         "Status":{"shape":"ResaleAuthorizationStatusString"},
         "OfferExtendedStatus":{"shape":"ResaleAuthorizationOfferExtendedStatusString"},
         "CreatedDate":{"shape":"DateTimeISO8601"},
-        "AvailabilityEndDate":{"shape":"DateTimeISO8601"}
+        "AvailabilityEndDate":{"shape":"DateTimeISO8601"},
+        "ResellerRole":{"shape":"ResaleAuthorizationResellerRoleString"}
       }
     },
     "ResourceARN":{
@@ -1779,7 +2153,8 @@
         "EntityId",
         "ProductTitle",
         "Visibility",
-        "LastModifiedDate"
+        "LastModifiedDate",
+        "DeliveryOptionTypes"
       ]
     },
     "SaaSProductSummary":{
@@ -1925,8 +2300,7 @@
     },
     "TagResourceResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "TagValue":{
       "type":"string",
@@ -1956,8 +2330,7 @@
     },
     "UntagResourceResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "ValidationException":{
       "type":"structure",

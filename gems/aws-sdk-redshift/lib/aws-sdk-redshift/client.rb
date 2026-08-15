@@ -95,8 +95,8 @@ module Aws::Redshift
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::Redshift
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::Redshift
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::Redshift
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::Redshift
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::Redshift
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::Redshift
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::Redshift
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -1353,7 +1357,8 @@ module Aws::Redshift
     #   node types, go to [ Working with Clusters][1] in the *Amazon Redshift
     #   Cluster Management Guide*.
     #
-    #   Valid Values: `dc2.large` \| `dc2.8xlarge` \| `ra3.large` \|
+    #   Valid Values: `dc2.large` \| `dc2.8xlarge` \| `rg.large` \|
+    #   `rg.xlarge` \| `rg.4xlarge` \| `rg.12xlarge` \| `ra3.large` \|
     #   `ra3.xlplus` \| `ra3.4xlarge` \| `ra3.16xlarge`
     #
     #
@@ -1480,8 +1485,8 @@ module Aws::Redshift
     #   are disabled, you can still create manual snapshots when you want with
     #   CreateClusterSnapshot.
     #
-    #   You can't disable automated snapshots for RA3 node types. Set the
-    #   automated retention period from 1-35 days.
+    #   You can't disable automated snapshots for RG or RA3 node types. Set
+    #   the automated retention period from 1-35 days.
     #
     #   Default: `1`
     #
@@ -1505,9 +1510,9 @@ module Aws::Redshift
     #
     #   Valid Values:
     #
-    #   * For clusters with ra3 nodes - Select a port within the ranges
-    #     `5431-5455` or `8191-8215`. (If you have an existing cluster with
-    #     ra3 nodes, it isn't required that you change the port to these
+    #   * For clusters with RG or RA3 nodes - Select a port within the ranges
+    #     `5431-5455` or `8191-8215`. (If you have an existing cluster with RG
+    #     or RA3 nodes, it isn't required that you change the port to these
     #     ranges.)
     #
     #   * For clusters with dc2 nodes - Select a port within the range
@@ -1676,6 +1681,27 @@ module Aws::Redshift
     #   The Amazon resource name (ARN) of the Amazon Redshift IAM Identity
     #   Center application.
     #
+    # @option params [String] :catalog_name
+    #   The name of the Glue data catalog that will be associated with the
+    #   cluster enabled with Amazon Redshift federated permissions.
+    #
+    #   Constraints:
+    #
+    #   * Must contain at least one lowercase letter.
+    #
+    #   * Can only contain lowercase letters (a-z), numbers (0-9), underscores
+    #     (\_), and hyphens (-).
+    #
+    #   Pattern: `^[a-z0-9_-]*[a-z]+[a-z0-9_-]*$`
+    #
+    #   Example: `my-catalog_01`
+    #
+    # @option params [Boolean] :extra_compute_for_automatic_optimization
+    #   If `true`, allocates additional compute resources for running
+    #   automatic optimization operations.
+    #
+    #   Default: false
+    #
     # @return [Types::CreateClusterResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateClusterResult#cluster #cluster} => Types::Cluster
@@ -1727,6 +1753,8 @@ module Aws::Redshift
     #     ip_address_type: "String",
     #     multi_az: false,
     #     redshift_idc_application_arn: "String",
+    #     catalog_name: "CatalogNameString",
+    #     extra_compute_for_automatic_optimization: false,
     #   })
     #
     # @example Response structure
@@ -1862,6 +1890,9 @@ module Aws::Redshift
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].node_role #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].private_ip_address #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].public_ip_address #=> String
+    #   resp.cluster.lakehouse_registration_status #=> String
+    #   resp.cluster.catalog_arn #=> String
+    #   resp.cluster.extra_compute_for_automatic_optimization #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/CreateCluster AWS API Documentation
     #
@@ -2728,6 +2759,65 @@ module Aws::Redshift
       req.send_request(options)
     end
 
+    # Creates an Amazon Redshift Query Editor (QEV2) IAM Identity Center
+    # application.
+    #
+    # @option params [required, String] :idc_instance_arn
+    #   The Amazon Resource Name (ARN) of the IAM Identity Center instance
+    #   used to create the Amazon Redshift Query Editor (QEV2) managed
+    #   application.
+    #
+    # @option params [required, String] :qev_2_idc_application_name
+    #   The name of the Amazon Redshift Query Editor (QEV2) application in IAM
+    #   Identity Center.
+    #
+    # @option params [required, String] :idc_display_name
+    #   The display name for the Amazon Redshift Query Editor (QEV2) IAM
+    #   Identity Center application. It appears in the console.
+    #
+    # @option params [Array<Types::Tag>] :tags
+    #   A list of tags to associate with the application. Tags are key-value
+    #   pairs that you can use to organize and identify your resources.
+    #
+    # @return [Types::CreateQev2IdcApplicationResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateQev2IdcApplicationResult#qev_2_idc_application #qev_2_idc_application} => Types::Qev2IdcApplication
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_qev_2_idc_application({
+    #     idc_instance_arn: "String", # required
+    #     qev_2_idc_application_name: "Qev2IdcApplicationName", # required
+    #     idc_display_name: "IdcDisplayNameString", # required
+    #     tags: [
+    #       {
+    #         key: "String",
+    #         value: "String",
+    #       },
+    #     ],
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.qev_2_idc_application.idc_instance_arn #=> String
+    #   resp.qev_2_idc_application.qev_2_idc_application_name #=> String
+    #   resp.qev_2_idc_application.qev_2_idc_application_arn #=> String
+    #   resp.qev_2_idc_application.idc_managed_application_arn #=> String
+    #   resp.qev_2_idc_application.idc_onboard_status #=> String
+    #   resp.qev_2_idc_application.idc_display_name #=> String
+    #   resp.qev_2_idc_application.tags #=> Array
+    #   resp.qev_2_idc_application.tags[0].key #=> String
+    #   resp.qev_2_idc_application.tags[0].value #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/CreateQev2IdcApplication AWS API Documentation
+    #
+    # @overload create_qev_2_idc_application(params = {})
+    # @param [Hash] params ({})
+    def create_qev_2_idc_application(params = {}, options = {})
+      req = build_request(:create_qev_2_idc_application, params)
+      req.send_request(options)
+    end
+
     # Creates an Amazon Redshift application for use with IAM Identity
     # Center.
     #
@@ -2759,6 +2849,19 @@ module Aws::Redshift
     # @option params [Array<Types::ServiceIntegrationsUnion>] :service_integrations
     #   A collection of service integrations for the Redshift IAM Identity
     #   Center application.
+    #
+    # @option params [String] :application_type
+    #   The type of application being created. Valid values are `None` or
+    #   `Lakehouse`. Use `Lakehouse` to enable Amazon Redshift federated
+    #   permissions on cluster.
+    #
+    # @option params [Array<Types::Tag>] :tags
+    #   A list of tags.
+    #
+    # @option params [Array<String>] :sso_tag_keys
+    #   A list of tags keys that Redshift Identity Center applications copy to
+    #   IAM Identity Center. For each input key, the tag corresponding to the
+    #   key-value pair is propagated.
     #
     # @return [Types::CreateRedshiftIdcApplicationResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -2794,8 +2897,23 @@ module Aws::Redshift
     #             },
     #           },
     #         ],
+    #         redshift: [
+    #           {
+    #             connect: {
+    #               authorization: "Enabled", # required, accepts Enabled, Disabled
+    #             },
+    #           },
+    #         ],
     #       },
     #     ],
+    #     application_type: "None", # accepts None, Lakehouse
+    #     tags: [
+    #       {
+    #         key: "String",
+    #         value: "String",
+    #       },
+    #     ],
+    #     sso_tag_keys: ["String"],
     #   })
     #
     # @example Response structure
@@ -2817,6 +2935,14 @@ module Aws::Redshift
     #   resp.redshift_idc_application.service_integrations[0].lake_formation[0].lake_formation_query.authorization #=> String, one of "Enabled", "Disabled"
     #   resp.redshift_idc_application.service_integrations[0].s3_access_grants #=> Array
     #   resp.redshift_idc_application.service_integrations[0].s3_access_grants[0].read_write_access.authorization #=> String, one of "Enabled", "Disabled"
+    #   resp.redshift_idc_application.service_integrations[0].redshift #=> Array
+    #   resp.redshift_idc_application.service_integrations[0].redshift[0].connect.authorization #=> String, one of "Enabled", "Disabled"
+    #   resp.redshift_idc_application.application_type #=> String, one of "None", "Lakehouse"
+    #   resp.redshift_idc_application.tags #=> Array
+    #   resp.redshift_idc_application.tags[0].key #=> String
+    #   resp.redshift_idc_application.tags[0].value #=> String
+    #   resp.redshift_idc_application.sso_tag_keys #=> Array
+    #   resp.redshift_idc_application.sso_tag_keys[0] #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/CreateRedshiftIdcApplication AWS API Documentation
     #
@@ -3142,7 +3268,9 @@ module Aws::Redshift
     #   `LimitType` must be `data-scanned`. If `FeatureType` is
     #   `concurrency-scaling`, then `LimitType` must be `time`. If
     #   `FeatureType` is `cross-region-datasharing`, then `LimitType` must be
-    #   `data-scanned`.
+    #   `data-scanned`. If `FeatureType` is
+    #   `extra-compute-for-automatic-optimization`, then `LimitType` must be
+    #   `time`.
     #
     # @option params [required, Integer] :amount
     #   The limit amount. If time-based, this amount is in minutes. If
@@ -3176,7 +3304,7 @@ module Aws::Redshift
     #
     #   resp = client.create_usage_limit({
     #     cluster_identifier: "String", # required
-    #     feature_type: "spectrum", # required, accepts spectrum, concurrency-scaling, cross-region-datasharing
+    #     feature_type: "spectrum", # required, accepts spectrum, concurrency-scaling, cross-region-datasharing, extra-compute-for-automatic-optimization
     #     limit_type: "time", # required, accepts time, data-scanned
     #     amount: 1, # required
     #     period: "daily", # accepts daily, weekly, monthly
@@ -3193,7 +3321,7 @@ module Aws::Redshift
     #
     #   resp.usage_limit_id #=> String
     #   resp.cluster_identifier #=> String
-    #   resp.feature_type #=> String, one of "spectrum", "concurrency-scaling", "cross-region-datasharing"
+    #   resp.feature_type #=> String, one of "spectrum", "concurrency-scaling", "cross-region-datasharing", "extra-compute-for-automatic-optimization"
     #   resp.limit_type #=> String, one of "time", "data-scanned"
     #   resp.amount #=> Integer
     #   resp.period #=> String, one of "daily", "weekly", "monthly"
@@ -3508,6 +3636,9 @@ module Aws::Redshift
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].node_role #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].private_ip_address #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].public_ip_address #=> String
+    #   resp.cluster.lakehouse_registration_status #=> String
+    #   resp.cluster.catalog_arn #=> String
+    #   resp.cluster.extra_compute_for_automatic_optimization #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/DeleteCluster AWS API Documentation
     #
@@ -3944,6 +4075,30 @@ module Aws::Redshift
     # @param [Hash] params ({})
     def delete_partner(params = {}, options = {})
       req = build_request(:delete_partner, params)
+      req.send_request(options)
+    end
+
+    # Deletes an Amazon Redshift Query Editor (QEV2) IAM Identity Center
+    # application.
+    #
+    # @option params [required, String] :qev_2_idc_application_arn
+    #   The Amazon Resource Name (ARN) for the Amazon Redshift Query Editor
+    #   (QEV2) IAM Identity Center application to delete.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_qev_2_idc_application({
+    #     qev_2_idc_application_arn: "String", # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/DeleteQev2IdcApplication AWS API Documentation
+    #
+    # @overload delete_qev_2_idc_application(params = {})
+    # @param [Hash] params ({})
+    def delete_qev_2_idc_application(params = {}, options = {})
+      req = build_request(:delete_qev_2_idc_application, params)
       req.send_request(options)
     end
 
@@ -5266,6 +5421,9 @@ module Aws::Redshift
     #   resp.clusters[0].multi_az_secondary.cluster_nodes[0].node_role #=> String
     #   resp.clusters[0].multi_az_secondary.cluster_nodes[0].private_ip_address #=> String
     #   resp.clusters[0].multi_az_secondary.cluster_nodes[0].public_ip_address #=> String
+    #   resp.clusters[0].lakehouse_registration_status #=> String
+    #   resp.clusters[0].catalog_arn #=> String
+    #   resp.clusters[0].extra_compute_for_automatic_optimization #=> String
     #
     #
     # The following waiters are defined for this operation (see {Client#wait_until} for detailed usage):
@@ -6654,6 +6812,67 @@ module Aws::Redshift
       req.send_request(options)
     end
 
+    # Lists the Amazon Redshift Query Editor (QEV2) IAM Identity Center
+    # applications. To retrieve additional results, use the MaxRecords and
+    # Marker parameters.
+    #
+    # @option params [String] :qev_2_idc_application_arn
+    #   The Amazon Resource Name (ARN) for the Amazon Redshift Query Editor
+    #   (QEV2) application that integrates with IAM Identity Center.
+    #
+    # @option params [Integer] :max_records
+    #   The maximum number of response records to return in each call. If the
+    #   number of remaining response records exceeds the specified MaxRecords
+    #   value, a value is returned in a marker field of the response. You can
+    #   retrieve the next set of records by retrying the command with the
+    #   returned marker value.
+    #
+    # @option params [String] :marker
+    #   A value that indicates the starting point for the next set of response
+    #   records in a subsequent request. If a value is returned in a response,
+    #   you can retrieve the next set of records by providing this returned
+    #   marker value in the Marker parameter and retrying the command. If the
+    #   Marker field is empty, all response records have been retrieved for
+    #   the request.
+    #
+    # @return [Types::DescribeQev2IdcApplicationsResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DescribeQev2IdcApplicationsResult#qev_2_idc_applications #qev_2_idc_applications} => Array&lt;Types::Qev2IdcApplication&gt;
+    #   * {Types::DescribeQev2IdcApplicationsResult#marker #marker} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.describe_qev_2_idc_applications({
+    #     qev_2_idc_application_arn: "String",
+    #     max_records: 1,
+    #     marker: "String",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.qev_2_idc_applications #=> Array
+    #   resp.qev_2_idc_applications[0].idc_instance_arn #=> String
+    #   resp.qev_2_idc_applications[0].qev_2_idc_application_name #=> String
+    #   resp.qev_2_idc_applications[0].qev_2_idc_application_arn #=> String
+    #   resp.qev_2_idc_applications[0].idc_managed_application_arn #=> String
+    #   resp.qev_2_idc_applications[0].idc_onboard_status #=> String
+    #   resp.qev_2_idc_applications[0].idc_display_name #=> String
+    #   resp.qev_2_idc_applications[0].tags #=> Array
+    #   resp.qev_2_idc_applications[0].tags[0].key #=> String
+    #   resp.qev_2_idc_applications[0].tags[0].value #=> String
+    #   resp.marker #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/DescribeQev2IdcApplications AWS API Documentation
+    #
+    # @overload describe_qev_2_idc_applications(params = {})
+    # @param [Hash] params ({})
+    def describe_qev_2_idc_applications(params = {}, options = {})
+      req = build_request(:describe_qev_2_idc_applications, params)
+      req.send_request(options)
+    end
+
     # Lists the Amazon Redshift IAM Identity Center applications.
     #
     # @option params [String] :redshift_idc_application_arn
@@ -6710,6 +6929,14 @@ module Aws::Redshift
     #   resp.redshift_idc_applications[0].service_integrations[0].lake_formation[0].lake_formation_query.authorization #=> String, one of "Enabled", "Disabled"
     #   resp.redshift_idc_applications[0].service_integrations[0].s3_access_grants #=> Array
     #   resp.redshift_idc_applications[0].service_integrations[0].s3_access_grants[0].read_write_access.authorization #=> String, one of "Enabled", "Disabled"
+    #   resp.redshift_idc_applications[0].service_integrations[0].redshift #=> Array
+    #   resp.redshift_idc_applications[0].service_integrations[0].redshift[0].connect.authorization #=> String, one of "Enabled", "Disabled"
+    #   resp.redshift_idc_applications[0].application_type #=> String, one of "None", "Lakehouse"
+    #   resp.redshift_idc_applications[0].tags #=> Array
+    #   resp.redshift_idc_applications[0].tags[0].key #=> String
+    #   resp.redshift_idc_applications[0].tags[0].value #=> String
+    #   resp.redshift_idc_applications[0].sso_tag_keys #=> Array
+    #   resp.redshift_idc_applications[0].sso_tag_keys[0] #=> String
     #   resp.marker #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/DescribeRedshiftIdcApplications AWS API Documentation
@@ -7581,7 +7808,7 @@ module Aws::Redshift
     #   resp = client.describe_usage_limits({
     #     usage_limit_id: "String",
     #     cluster_identifier: "String",
-    #     feature_type: "spectrum", # accepts spectrum, concurrency-scaling, cross-region-datasharing
+    #     feature_type: "spectrum", # accepts spectrum, concurrency-scaling, cross-region-datasharing, extra-compute-for-automatic-optimization
     #     max_records: 1,
     #     marker: "String",
     #     tag_keys: ["String"],
@@ -7593,7 +7820,7 @@ module Aws::Redshift
     #   resp.usage_limits #=> Array
     #   resp.usage_limits[0].usage_limit_id #=> String
     #   resp.usage_limits[0].cluster_identifier #=> String
-    #   resp.usage_limits[0].feature_type #=> String, one of "spectrum", "concurrency-scaling", "cross-region-datasharing"
+    #   resp.usage_limits[0].feature_type #=> String, one of "spectrum", "concurrency-scaling", "cross-region-datasharing", "extra-compute-for-automatic-optimization"
     #   resp.usage_limits[0].limit_type #=> String, one of "time", "data-scanned"
     #   resp.usage_limits[0].amount #=> Integer
     #   resp.usage_limits[0].period #=> String, one of "daily", "weekly", "monthly"
@@ -7816,6 +8043,9 @@ module Aws::Redshift
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].node_role #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].private_ip_address #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].public_ip_address #=> String
+    #   resp.cluster.lakehouse_registration_status #=> String
+    #   resp.cluster.catalog_arn #=> String
+    #   resp.cluster.extra_compute_for_automatic_optimization #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/DisableSnapshotCopy AWS API Documentation
     #
@@ -8154,6 +8384,9 @@ module Aws::Redshift
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].node_role #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].private_ip_address #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].public_ip_address #=> String
+    #   resp.cluster.lakehouse_registration_status #=> String
+    #   resp.cluster.catalog_arn #=> String
+    #   resp.cluster.extra_compute_for_automatic_optimization #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/EnableSnapshotCopy AWS API Documentation
     #
@@ -8314,6 +8547,9 @@ module Aws::Redshift
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].node_role #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].private_ip_address #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].public_ip_address #=> String
+    #   resp.cluster.lakehouse_registration_status #=> String
+    #   resp.cluster.catalog_arn #=> String
+    #   resp.cluster.extra_compute_for_automatic_optimization #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/FailoverPrimaryCompute AWS API Documentation
     #
@@ -8553,6 +8789,70 @@ module Aws::Redshift
     # @param [Hash] params ({})
     def get_cluster_credentials_with_iam(params = {}, options = {})
       req = build_request(:get_cluster_credentials_with_iam, params)
+      req.send_request(options)
+    end
+
+    # Generates an encrypted authentication token that propagates the
+    # caller's Amazon Web Services IAM Identity Center identity to Amazon
+    # Redshift clusters. This API extracts the Amazon Web Services IAM
+    # Identity Center identity from enhanced credentials and creates a
+    # secure token that Amazon Redshift drivers can use for authentication.
+    #
+    # The token is encrypted using Key Management Service (KMS) and can only
+    # be decrypted by the specified Amazon Redshift clusters. The token
+    # contains the caller's Amazon Web Services IAM Identity Center
+    # identity information and is valid for a limited time period.
+    #
+    # This API is exclusively for use with Amazon Web Services IAM Identity
+    # Center enhanced credentials. If the caller is not using enhanced
+    # credentials with embedded Amazon Web Services IAM Identity Center
+    # identity, the API will return an error.
+    #
+    # @option params [required, Array<String>] :cluster_ids
+    #   A list of cluster identifiers that the generated token can be used
+    #   with. The token will be scoped to only allow authentication to the
+    #   specified clusters.
+    #
+    #   Constraints:
+    #
+    #   * `ClusterIds` must contain at least 1 cluster identifier.
+    #
+    #   * `ClusterIds` can hold a maximum of 20 cluster identifiers.
+    #
+    #   * Cluster identifiers must be 1 to 63 characters in length.
+    #
+    #   * The characters accepted for cluster identifiers are the following:
+    #
+    #     * Alphanumeric characters
+    #
+    #     * Hyphens
+    #   * Cluster identifiers must start with a letter.
+    #
+    #   * Cluster identifiers can't end with a hyphen or contain two
+    #     consecutive hyphens.
+    #
+    # @return [Types::GetIdentityCenterAuthTokenResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetIdentityCenterAuthTokenResponse#token #token} => String
+    #   * {Types::GetIdentityCenterAuthTokenResponse#expiration_time #expiration_time} => Time
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_identity_center_auth_token({
+    #     cluster_ids: ["String"], # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.token #=> String
+    #   resp.expiration_time #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/GetIdentityCenterAuthToken AWS API Documentation
+    #
+    # @overload get_identity_center_auth_token(params = {})
+    # @param [Hash] params ({})
+    def get_identity_center_auth_token(params = {}, options = {})
+      req = build_request(:get_identity_center_auth_token, params)
       req.send_request(options)
     end
 
@@ -8947,7 +9247,8 @@ module Aws::Redshift
     #   in Amazon Redshift][1] in the *Amazon Redshift Cluster Management
     #   Guide*.
     #
-    #   Valid Values: `dc2.large` \| `dc2.8xlarge` \| `ra3.large` \|
+    #   Valid Values: `dc2.large` \| `dc2.8xlarge` \| `rg.large` \|
+    #   `rg.xlarge` \| `rg.4xlarge` \| `rg.12xlarge` \| `ra3.large` \|
     #   `ra3.xlplus` \| `ra3.4xlarge` \| `ra3.16xlarge`
     #
     #
@@ -8998,6 +9299,10 @@ module Aws::Redshift
     #   You can't use `MasterUserPassword` if `ManageMasterPassword` is
     #   `true`.
     #
+    #   If your admin user account is locked, this operation also unlocks your
+    #   account and resets the failed-login counter. This option is available
+    #   only when account lockout security is enabled for the cluster.
+    #
     #   <note markdown="1"> Operations never return the password, so this operation provides a way
     #   to regain access to the admin user account for a cluster if the
     #   password is lost.
@@ -9039,8 +9344,8 @@ module Aws::Redshift
     #   current value, existing automated snapshots that fall outside of the
     #   new retention period will be immediately deleted.
     #
-    #   You can't disable automated snapshots for RA3 node types. Set the
-    #   automated retention period from 1-35 days.
+    #   You can't disable automated snapshots for RG or RA3 node types. Set
+    #   the automated retention period from 1-35 days.
     #
     #   Default: Uses existing setting.
     #
@@ -9191,9 +9496,9 @@ module Aws::Redshift
     #
     #   Valid Values:
     #
-    #   * For clusters with ra3 nodes - Select a port within the ranges
-    #     `5431-5455` or `8191-8215`. (If you have an existing cluster with
-    #     ra3 nodes, it isn't required that you change the port to these
+    #   * For clusters with RG or RA3 nodes - Select a port within the ranges
+    #     `5431-5455` or `8191-8215`. (If you have an existing cluster with RG
+    #     or RA3 nodes, it isn't required that you change the port to these
     #     ranges.)
     #
     #   * For clusters with dc2 nodes - Select a port within the range
@@ -9219,6 +9524,12 @@ module Aws::Redshift
     #   If true and the cluster is currently only deployed in a single
     #   Availability Zone, the cluster will be modified to be deployed in two
     #   Availability Zones.
+    #
+    # @option params [Boolean] :extra_compute_for_automatic_optimization
+    #   If `true`, allocates additional compute resources for running
+    #   automatic optimization operations.
+    #
+    #   Default: false
     #
     # @return [Types::ModifyClusterResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -9256,6 +9567,7 @@ module Aws::Redshift
     #     master_password_secret_kms_key_id: "String",
     #     ip_address_type: "String",
     #     multi_az: false,
+    #     extra_compute_for_automatic_optimization: false,
     #   })
     #
     # @example Response structure
@@ -9391,6 +9703,9 @@ module Aws::Redshift
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].node_role #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].private_ip_address #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].public_ip_address #=> String
+    #   resp.cluster.lakehouse_registration_status #=> String
+    #   resp.cluster.catalog_arn #=> String
+    #   resp.cluster.extra_compute_for_automatic_optimization #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/ModifyCluster AWS API Documentation
     #
@@ -9558,6 +9873,9 @@ module Aws::Redshift
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].node_role #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].private_ip_address #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].public_ip_address #=> String
+    #   resp.cluster.lakehouse_registration_status #=> String
+    #   resp.cluster.catalog_arn #=> String
+    #   resp.cluster.extra_compute_for_automatic_optimization #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/ModifyClusterDbRevision AWS API Documentation
     #
@@ -9741,6 +10059,9 @@ module Aws::Redshift
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].node_role #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].private_ip_address #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].public_ip_address #=> String
+    #   resp.cluster.lakehouse_registration_status #=> String
+    #   resp.cluster.catalog_arn #=> String
+    #   resp.cluster.extra_compute_for_automatic_optimization #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/ModifyClusterIamRoles AWS API Documentation
     #
@@ -9774,7 +10095,7 @@ module Aws::Redshift
     # @option params [Integer] :defer_maintenance_duration
     #   An integer indicating the duration of the maintenance window in days.
     #   If you specify a duration, you can't specify an end time. The
-    #   duration must be 45 days or less.
+    #   duration must be 60 days or less.
     #
     # @return [Types::ModifyClusterMaintenanceResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -9924,6 +10245,9 @@ module Aws::Redshift
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].node_role #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].private_ip_address #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].public_ip_address #=> String
+    #   resp.cluster.lakehouse_registration_status #=> String
+    #   resp.cluster.catalog_arn #=> String
+    #   resp.cluster.extra_compute_for_automatic_optimization #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/ModifyClusterMaintenance AWS API Documentation
     #
@@ -10449,6 +10773,127 @@ module Aws::Redshift
       req.send_request(options)
     end
 
+    # Modifies the lakehouse configuration for a cluster. This operation
+    # allows you to manage Amazon Redshift federated permissions and Amazon
+    # Web Services IAM Identity Center trusted identity propagation.
+    #
+    # @option params [required, String] :cluster_identifier
+    #   The unique identifier of the cluster whose lakehouse configuration you
+    #   want to modify.
+    #
+    # @option params [String] :lakehouse_registration
+    #   Specifies whether to register or deregister the cluster with Amazon
+    #   Redshift federated permissions. Valid values are `Register` or
+    #   `Deregister`.
+    #
+    # @option params [String] :catalog_name
+    #   The name of the Glue data catalog that will be associated with the
+    #   cluster enabled with Amazon Redshift federated permissions.
+    #
+    #   Constraints:
+    #
+    #   * Must contain at least one lowercase letter.
+    #
+    #   * Can only contain lowercase letters (a-z), numbers (0-9), underscores
+    #     (\_), and hyphens (-).
+    #
+    #   Pattern: `^[a-z0-9_-]*[a-z]+[a-z0-9_-]*$`
+    #
+    #   Example: `my-catalog_01`
+    #
+    # @option params [String] :lakehouse_idc_registration
+    #   Modifies the Amazon Web Services IAM Identity Center trusted identity
+    #   propagation on a cluster enabled with Amazon Redshift federated
+    #   permissions. Valid values are `Associate` or `Disassociate`.
+    #
+    # @option params [String] :lakehouse_idc_application_arn
+    #   The Amazon Resource Name (ARN) of the IAM Identity Center application
+    #   used for enabling Amazon Web Services IAM Identity Center trusted
+    #   identity propagation on a cluster enabled with Amazon Redshift
+    #   federated permissions.
+    #
+    # @option params [Boolean] :dry_run
+    #   A boolean value that, if `true`, validates the request without
+    #   actually modifying the lakehouse configuration. Use this to check for
+    #   errors before making changes.
+    #
+    # @return [Types::LakehouseConfiguration] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::LakehouseConfiguration#cluster_identifier #cluster_identifier} => String
+    #   * {Types::LakehouseConfiguration#lakehouse_idc_application_arn #lakehouse_idc_application_arn} => String
+    #   * {Types::LakehouseConfiguration#lakehouse_registration_status #lakehouse_registration_status} => String
+    #   * {Types::LakehouseConfiguration#catalog_arn #catalog_arn} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.modify_lakehouse_configuration({
+    #     cluster_identifier: "String", # required
+    #     lakehouse_registration: "Register", # accepts Register, Deregister
+    #     catalog_name: "CatalogNameString",
+    #     lakehouse_idc_registration: "Associate", # accepts Associate, Disassociate
+    #     lakehouse_idc_application_arn: "String",
+    #     dry_run: false,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.cluster_identifier #=> String
+    #   resp.lakehouse_idc_application_arn #=> String
+    #   resp.lakehouse_registration_status #=> String
+    #   resp.catalog_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/ModifyLakehouseConfiguration AWS API Documentation
+    #
+    # @overload modify_lakehouse_configuration(params = {})
+    # @param [Hash] params ({})
+    def modify_lakehouse_configuration(params = {}, options = {})
+      req = build_request(:modify_lakehouse_configuration, params)
+      req.send_request(options)
+    end
+
+    # Modifies an Amazon Redshift Query Editor (QEV2) IAM Identity Center
+    # application.
+    #
+    # @option params [required, String] :qev_2_idc_application_arn
+    #   The Amazon Resource Name (ARN) for the Amazon Redshift Query Editor
+    #   (QEV2) application that integrates with IAM Identity Center.
+    #
+    # @option params [String] :idc_display_name
+    #   The display name for the Amazon Redshift Query Editor (QEV2) IAM
+    #   Identity Center application. It appears in the console.
+    #
+    # @return [Types::ModifyQev2IdcApplicationResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ModifyQev2IdcApplicationResult#qev_2_idc_application #qev_2_idc_application} => Types::Qev2IdcApplication
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.modify_qev_2_idc_application({
+    #     qev_2_idc_application_arn: "String", # required
+    #     idc_display_name: "IdcDisplayNameString",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.qev_2_idc_application.idc_instance_arn #=> String
+    #   resp.qev_2_idc_application.qev_2_idc_application_name #=> String
+    #   resp.qev_2_idc_application.qev_2_idc_application_arn #=> String
+    #   resp.qev_2_idc_application.idc_managed_application_arn #=> String
+    #   resp.qev_2_idc_application.idc_onboard_status #=> String
+    #   resp.qev_2_idc_application.idc_display_name #=> String
+    #   resp.qev_2_idc_application.tags #=> Array
+    #   resp.qev_2_idc_application.tags[0].key #=> String
+    #   resp.qev_2_idc_application.tags[0].value #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/ModifyQev2IdcApplication AWS API Documentation
+    #
+    # @overload modify_qev_2_idc_application(params = {})
+    # @param [Hash] params ({})
+    def modify_qev_2_idc_application(params = {}, options = {})
+      req = build_request(:modify_qev_2_idc_application, params)
+      req.send_request(options)
+    end
+
     # Changes an existing Amazon Redshift IAM Identity Center application.
     #
     # @option params [required, String] :redshift_idc_application_arn
@@ -10509,6 +10954,13 @@ module Aws::Redshift
     #             },
     #           },
     #         ],
+    #         redshift: [
+    #           {
+    #             connect: {
+    #               authorization: "Enabled", # required, accepts Enabled, Disabled
+    #             },
+    #           },
+    #         ],
     #       },
     #     ],
     #   })
@@ -10532,6 +10984,14 @@ module Aws::Redshift
     #   resp.redshift_idc_application.service_integrations[0].lake_formation[0].lake_formation_query.authorization #=> String, one of "Enabled", "Disabled"
     #   resp.redshift_idc_application.service_integrations[0].s3_access_grants #=> Array
     #   resp.redshift_idc_application.service_integrations[0].s3_access_grants[0].read_write_access.authorization #=> String, one of "Enabled", "Disabled"
+    #   resp.redshift_idc_application.service_integrations[0].redshift #=> Array
+    #   resp.redshift_idc_application.service_integrations[0].redshift[0].connect.authorization #=> String, one of "Enabled", "Disabled"
+    #   resp.redshift_idc_application.application_type #=> String, one of "None", "Lakehouse"
+    #   resp.redshift_idc_application.tags #=> Array
+    #   resp.redshift_idc_application.tags[0].key #=> String
+    #   resp.redshift_idc_application.tags[0].value #=> String
+    #   resp.redshift_idc_application.sso_tag_keys #=> Array
+    #   resp.redshift_idc_application.sso_tag_keys[0] #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/ModifyRedshiftIdcApplication AWS API Documentation
     #
@@ -10838,6 +11298,9 @@ module Aws::Redshift
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].node_role #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].private_ip_address #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].public_ip_address #=> String
+    #   resp.cluster.lakehouse_registration_status #=> String
+    #   resp.cluster.catalog_arn #=> String
+    #   resp.cluster.extra_compute_for_automatic_optimization #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/ModifySnapshotCopyRetentionPeriod AWS API Documentation
     #
@@ -10938,7 +11401,7 @@ module Aws::Redshift
     #
     #   resp.usage_limit_id #=> String
     #   resp.cluster_identifier #=> String
-    #   resp.feature_type #=> String, one of "spectrum", "concurrency-scaling", "cross-region-datasharing"
+    #   resp.feature_type #=> String, one of "spectrum", "concurrency-scaling", "cross-region-datasharing", "extra-compute-for-automatic-optimization"
     #   resp.limit_type #=> String, one of "time", "data-scanned"
     #   resp.amount #=> Integer
     #   resp.period #=> String, one of "daily", "weekly", "monthly"
@@ -11104,6 +11567,9 @@ module Aws::Redshift
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].node_role #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].private_ip_address #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].public_ip_address #=> String
+    #   resp.cluster.lakehouse_registration_status #=> String
+    #   resp.cluster.catalog_arn #=> String
+    #   resp.cluster.extra_compute_for_automatic_optimization #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/PauseCluster AWS API Documentation
     #
@@ -11367,6 +11833,9 @@ module Aws::Redshift
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].node_role #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].private_ip_address #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].public_ip_address #=> String
+    #   resp.cluster.lakehouse_registration_status #=> String
+    #   resp.cluster.catalog_arn #=> String
+    #   resp.cluster.extra_compute_for_automatic_optimization #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/RebootCluster AWS API Documentation
     #
@@ -11539,6 +12008,14 @@ module Aws::Redshift
     #   * dc2.large
     #
     #   * dc2.8xlarge
+    #
+    #   * rg.large
+    #
+    #   * rg.xlarge
+    #
+    #   * rg.4xlarge
+    #
+    #   * rg.12xlarge
     #
     #   * ra3.large
     #
@@ -11724,6 +12201,9 @@ module Aws::Redshift
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].node_role #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].private_ip_address #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].public_ip_address #=> String
+    #   resp.cluster.lakehouse_registration_status #=> String
+    #   resp.cluster.catalog_arn #=> String
+    #   resp.cluster.extra_compute_for_automatic_optimization #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/ResizeCluster AWS API Documentation
     #
@@ -11815,8 +12295,8 @@ module Aws::Redshift
     #   Default: The same port as the original cluster.
     #
     #   Valid values: For clusters with DC2 nodes, must be within the range
-    #   `1150`-`65535`. For clusters with ra3 nodes, must be within the ranges
-    #   `5431`-`5455` or `8191`-`8215`.
+    #   `1150`-`65535`. For clusters with RG or RA3 nodes, must be within the
+    #   ranges `5431`-`5455` or `8191`-`8215`.
     #
     # @option params [String] :availability_zone
     #   The Amazon EC2 Availability Zone in which to restore the cluster.
@@ -11923,8 +12403,8 @@ module Aws::Redshift
     #   are disabled, you can still create manual snapshots when you want with
     #   CreateClusterSnapshot.
     #
-    #   You can't disable automated snapshots for RA3 node types. Set the
-    #   automated retention period from 1-35 days.
+    #   You can't disable automated snapshots for RG or RA3 node types. Set
+    #   the automated retention period from 1-35 days.
     #
     #   Default: The value selected for the cluster from which the snapshot
     #   was taken.
@@ -12050,6 +12530,27 @@ module Aws::Redshift
     #   If true, the snapshot will be restored to a cluster deployed in two
     #   Availability Zones.
     #
+    # @option params [String] :catalog_name
+    #   The name of the Glue Data Catalog that will be associated with the
+    #   cluster enabled with Amazon Redshift federated permissions.
+    #
+    #   Constraints:
+    #
+    #   * Must contain at least one lowercase letter.
+    #
+    #   * Can only contain lowercase letters (a-z), numbers (0-9), underscores
+    #     (\_), and hyphens (-).
+    #
+    #   Pattern: `^[a-z0-9_-]*[a-z]+[a-z0-9_-]*$`
+    #
+    #   Example: `my-catalog_01`
+    #
+    # @option params [String] :redshift_idc_application_arn
+    #   The Amazon Resource Name (ARN) of the IAM Identity Center application
+    #   used for enabling Amazon Web Services IAM Identity Center trusted
+    #   identity propagation on a cluster enabled with Amazon Redshift
+    #   federated permissions.
+    #
     # @return [Types::RestoreFromClusterSnapshotResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::RestoreFromClusterSnapshotResult#cluster #cluster} => Types::Cluster
@@ -12094,6 +12595,8 @@ module Aws::Redshift
     #     master_password_secret_kms_key_id: "String",
     #     ip_address_type: "String",
     #     multi_az: false,
+    #     catalog_name: "CatalogNameString",
+    #     redshift_idc_application_arn: "String",
     #   })
     #
     # @example Response structure
@@ -12229,6 +12732,9 @@ module Aws::Redshift
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].node_role #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].private_ip_address #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].public_ip_address #=> String
+    #   resp.cluster.lakehouse_registration_status #=> String
+    #   resp.cluster.catalog_arn #=> String
+    #   resp.cluster.extra_compute_for_automatic_optimization #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/RestoreFromClusterSnapshot AWS API Documentation
     #
@@ -12487,6 +12993,9 @@ module Aws::Redshift
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].node_role #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].private_ip_address #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].public_ip_address #=> String
+    #   resp.cluster.lakehouse_registration_status #=> String
+    #   resp.cluster.catalog_arn #=> String
+    #   resp.cluster.extra_compute_for_automatic_optimization #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/ResumeCluster AWS API Documentation
     #
@@ -12882,6 +13391,9 @@ module Aws::Redshift
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].node_role #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].private_ip_address #=> String
     #   resp.cluster.multi_az_secondary.cluster_nodes[0].public_ip_address #=> String
+    #   resp.cluster.lakehouse_registration_status #=> String
+    #   resp.cluster.catalog_arn #=> String
+    #   resp.cluster.extra_compute_for_automatic_optimization #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/RotateEncryptionKey AWS API Documentation
     #
@@ -12962,7 +13474,7 @@ module Aws::Redshift
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-redshift'
-      context[:gem_version] = '1.138.0'
+      context[:gem_version] = '1.165.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

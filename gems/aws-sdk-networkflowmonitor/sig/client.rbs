@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -93,15 +94,15 @@ module Aws
                             monitor_name: ::String,
                             local_resources: Array[
                               {
-                                type: ("AWS::EC2::VPC" | "AWS::AvailabilityZone" | "AWS::EC2::Subnet"),
+                                type: ("AWS::EC2::VPC" | "AWS::AvailabilityZone" | "AWS::EC2::Subnet" | "AWS::Region" | "AWS::EKS::Cluster"),
                                 identifier: ::String
-                              },
+                              }
                             ],
                             ?remote_resources: Array[
                               {
-                                type: ("AWS::EC2::VPC" | "AWS::AvailabilityZone" | "AWS::EC2::Subnet" | "AWS::AWSService"),
+                                type: ("AWS::EC2::VPC" | "AWS::AvailabilityZone" | "AWS::EC2::Subnet" | "AWS::AWSService" | "AWS::Region"),
                                 identifier: ::String
-                              },
+                              }
                             ],
                             scope_arn: ::String,
                             ?client_token: ::String,
@@ -112,22 +113,14 @@ module Aws
       interface _CreateScopeResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateScopeOutput]
         def scope_id: () -> ::String
-        def status: () -> ("SUCCEEDED" | "IN_PROGRESS" | "FAILED")
+        def status: () -> ("SUCCEEDED" | "IN_PROGRESS" | "FAILED" | "DEACTIVATING" | "DEACTIVATED")
         def scope_arn: () -> ::String
         def tags: () -> ::Hash[::String, ::String]
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/NetworkFlowMonitor/Client.html#create_scope-instance_method
       def create_scope: (
                           targets: Array[
-                            {
-                              target_identifier: {
-                                target_id: {
-                                  account_id: ::String?
-                                },
-                                target_type: ("ACCOUNT")
-                              },
-                              region: ::String
-                            },
+                            Params::target_resource
                           ],
                           ?client_token: ::String,
                           ?tags: Hash[::String, ::String]
@@ -249,7 +242,7 @@ module Aws
       interface _GetScopeResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetScopeOutput]
         def scope_id: () -> ::String
-        def status: () -> ("SUCCEEDED" | "IN_PROGRESS" | "FAILED")
+        def status: () -> ("SUCCEEDED" | "IN_PROGRESS" | "FAILED" | "DEACTIVATING" | "DEACTIVATED")
         def scope_arn: () -> ::String
         def targets: () -> ::Array[Types::TargetResource]
         def tags: () -> ::Hash[::String, ::String]
@@ -305,7 +298,7 @@ module Aws
                                                   start_time: ::Time,
                                                   end_time: ::Time,
                                                   metric_name: ("ROUND_TRIP_TIME" | "TIMEOUTS" | "RETRANSMISSIONS" | "DATA_TRANSFERRED"),
-                                                  destination_category: ("INTRA_AZ" | "INTER_AZ" | "INTER_VPC" | "UNCLASSIFIED" | "AMAZON_S3" | "AMAZON_DYNAMODB"),
+                                                  destination_category: ("INTRA_AZ" | "INTER_AZ" | "INTER_VPC" | "UNCLASSIFIED" | "AMAZON_S3" | "AMAZON_DYNAMODB" | "INTER_REGION"),
                                                   ?limit: ::Integer
                                                 ) -> _StartQueryMonitorTopContributorsResponseSuccess
                                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartQueryMonitorTopContributorsResponseSuccess
@@ -320,7 +313,7 @@ module Aws
                                                             start_time: ::Time,
                                                             end_time: ::Time,
                                                             metric_name: ("TIMEOUTS" | "RETRANSMISSIONS" | "DATA_TRANSFERRED"),
-                                                            destination_category: ("INTRA_AZ" | "INTER_AZ" | "INTER_VPC" | "UNCLASSIFIED" | "AMAZON_S3" | "AMAZON_DYNAMODB"),
+                                                            destination_category: ("INTRA_AZ" | "INTER_AZ" | "INTER_VPC" | "UNCLASSIFIED" | "AMAZON_S3" | "AMAZON_DYNAMODB" | "INTER_REGION"),
                                                             ?limit: ::Integer
                                                           ) -> _StartQueryWorkloadInsightsTopContributorsResponseSuccess
                                                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartQueryWorkloadInsightsTopContributorsResponseSuccess
@@ -335,7 +328,7 @@ module Aws
                                                                  start_time: ::Time,
                                                                  end_time: ::Time,
                                                                  metric_name: ("TIMEOUTS" | "RETRANSMISSIONS" | "DATA_TRANSFERRED"),
-                                                                 destination_category: ("INTRA_AZ" | "INTER_AZ" | "INTER_VPC" | "UNCLASSIFIED" | "AMAZON_S3" | "AMAZON_DYNAMODB")
+                                                                 destination_category: ("INTRA_AZ" | "INTER_AZ" | "INTER_VPC" | "UNCLASSIFIED" | "AMAZON_S3" | "AMAZON_DYNAMODB" | "INTER_REGION")
                                                                ) -> _StartQueryWorkloadInsightsTopContributorsDataResponseSuccess
                                                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartQueryWorkloadInsightsTopContributorsDataResponseSuccess
 
@@ -405,27 +398,27 @@ module Aws
                             monitor_name: ::String,
                             ?local_resources_to_add: Array[
                               {
-                                type: ("AWS::EC2::VPC" | "AWS::AvailabilityZone" | "AWS::EC2::Subnet"),
+                                type: ("AWS::EC2::VPC" | "AWS::AvailabilityZone" | "AWS::EC2::Subnet" | "AWS::Region" | "AWS::EKS::Cluster"),
                                 identifier: ::String
-                              },
+                              }
                             ],
                             ?local_resources_to_remove: Array[
                               {
-                                type: ("AWS::EC2::VPC" | "AWS::AvailabilityZone" | "AWS::EC2::Subnet"),
+                                type: ("AWS::EC2::VPC" | "AWS::AvailabilityZone" | "AWS::EC2::Subnet" | "AWS::Region" | "AWS::EKS::Cluster"),
                                 identifier: ::String
-                              },
+                              }
                             ],
                             ?remote_resources_to_add: Array[
                               {
-                                type: ("AWS::EC2::VPC" | "AWS::AvailabilityZone" | "AWS::EC2::Subnet" | "AWS::AWSService"),
+                                type: ("AWS::EC2::VPC" | "AWS::AvailabilityZone" | "AWS::EC2::Subnet" | "AWS::AWSService" | "AWS::Region"),
                                 identifier: ::String
-                              },
+                              }
                             ],
                             ?remote_resources_to_remove: Array[
                               {
-                                type: ("AWS::EC2::VPC" | "AWS::AvailabilityZone" | "AWS::EC2::Subnet" | "AWS::AWSService"),
+                                type: ("AWS::EC2::VPC" | "AWS::AvailabilityZone" | "AWS::EC2::Subnet" | "AWS::AWSService" | "AWS::Region"),
                                 identifier: ::String
-                              },
+                              }
                             ],
                             ?client_token: ::String
                           ) -> _UpdateMonitorResponseSuccess
@@ -434,7 +427,7 @@ module Aws
       interface _UpdateScopeResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::UpdateScopeOutput]
         def scope_id: () -> ::String
-        def status: () -> ("SUCCEEDED" | "IN_PROGRESS" | "FAILED")
+        def status: () -> ("SUCCEEDED" | "IN_PROGRESS" | "FAILED" | "DEACTIVATING" | "DEACTIVATED")
         def scope_arn: () -> ::String
         def tags: () -> ::Hash[::String, ::String]
       end
@@ -442,26 +435,10 @@ module Aws
       def update_scope: (
                           scope_id: ::String,
                           ?resources_to_add: Array[
-                            {
-                              target_identifier: {
-                                target_id: {
-                                  account_id: ::String?
-                                },
-                                target_type: ("ACCOUNT")
-                              },
-                              region: ::String
-                            },
+                            Params::target_resource
                           ],
                           ?resources_to_delete: Array[
-                            {
-                              target_identifier: {
-                                target_id: {
-                                  account_id: ::String?
-                                },
-                                target_type: ("ACCOUNT")
-                              },
-                              region: ::String
-                            },
+                            Params::target_resource
                           ]
                         ) -> _UpdateScopeResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateScopeResponseSuccess

@@ -24,6 +24,14 @@ module Aws::ServiceQuotas
     class AssociateServiceQuotaTemplateResponse < Aws::EmptyStructure
     end
 
+    class CreateSupportCaseRequest
+      attr_accessor request_id: ::String
+      SENSITIVE: []
+    end
+
+    class CreateSupportCaseResponse < Aws::EmptyStructure
+    end
+
     class DeleteServiceQuotaIncreaseRequestFromTemplateRequest
       attr_accessor service_code: ::String
       attr_accessor quota_code: ::String
@@ -67,6 +75,37 @@ module Aws::ServiceQuotas
 
     class GetAssociationForServiceQuotaTemplateResponse
       attr_accessor service_quota_template_association_status: ("ASSOCIATED" | "DISASSOCIATED")
+      SENSITIVE: []
+    end
+
+    class GetAutoManagementConfigurationRequest < Aws::EmptyStructure
+    end
+
+    class GetAutoManagementConfigurationResponse
+      attr_accessor opt_in_level: ("ACCOUNT")
+      attr_accessor opt_in_type: ("NotifyOnly" | "NotifyAndAdjust")
+      attr_accessor notification_arn: ::String
+      attr_accessor opt_in_status: ("ENABLED" | "DISABLED")
+      attr_accessor exclusion_list: ::Hash[::String, ::Array[Types::QuotaInfo]]
+      SENSITIVE: []
+    end
+
+    class GetQuotaUtilizationReportRequest
+      attr_accessor report_id: ::String
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class GetQuotaUtilizationReportResponse
+      attr_accessor report_id: ::String
+      attr_accessor status: ("PENDING" | "IN_PROGRESS" | "COMPLETED" | "FAILED")
+      attr_accessor generated_at: ::Time
+      attr_accessor total_count: ::Integer
+      attr_accessor quotas: ::Array[Types::QuotaUtilizationInfo]
+      attr_accessor next_token: ::String
+      attr_accessor error_code: ::String
+      attr_accessor error_message: ::String
       SENSITIVE: []
     end
 
@@ -262,9 +301,28 @@ module Aws::ServiceQuotas
       SENSITIVE: []
     end
 
+    class QuotaInfo
+      attr_accessor quota_code: ::String
+      attr_accessor quota_name: ::String
+      SENSITIVE: []
+    end
+
     class QuotaPeriod
       attr_accessor period_value: ::Integer
       attr_accessor period_unit: ("MICROSECOND" | "MILLISECOND" | "SECOND" | "MINUTE" | "HOUR" | "DAY" | "WEEK")
+      SENSITIVE: []
+    end
+
+    class QuotaUtilizationInfo
+      attr_accessor quota_code: ::String
+      attr_accessor service_code: ::String
+      attr_accessor quota_name: ::String
+      attr_accessor namespace: ::String
+      attr_accessor utilization: ::Float
+      attr_accessor default_value: ::Float
+      attr_accessor applied_value: ::Float
+      attr_accessor service_name: ::String
+      attr_accessor adjustable: bool
       SENSITIVE: []
     end
 
@@ -273,6 +331,7 @@ module Aws::ServiceQuotas
       attr_accessor quota_code: ::String
       attr_accessor desired_value: ::Float
       attr_accessor context_id: ::String
+      attr_accessor support_case_allowed: bool
       SENSITIVE: []
     end
 
@@ -283,6 +342,7 @@ module Aws::ServiceQuotas
 
     class RequestedServiceQuotaChange
       attr_accessor id: ::String
+      attr_accessor request_type: ("AutomaticManagement")
       attr_accessor case_id: ::String
       attr_accessor service_code: ::String
       attr_accessor service_name: ::String
@@ -332,6 +392,7 @@ module Aws::ServiceQuotas
       attr_accessor error_reason: Types::ErrorReason
       attr_accessor quota_applied_at_level: ("ACCOUNT" | "RESOURCE" | "ALL")
       attr_accessor quota_context: Types::QuotaContextInfo
+      attr_accessor description: ::String
       SENSITIVE: []
     end
 
@@ -350,6 +411,33 @@ module Aws::ServiceQuotas
     class ServiceQuotaTemplateNotInUseException
       attr_accessor message: ::String
       SENSITIVE: []
+    end
+
+    class StartAutoManagementRequest
+      attr_accessor opt_in_level: ("ACCOUNT")
+      attr_accessor opt_in_type: ("NotifyOnly" | "NotifyAndAdjust")
+      attr_accessor notification_arn: ::String
+      attr_accessor exclusion_list: ::Hash[::String, ::Array[::String]]
+      SENSITIVE: []
+    end
+
+    class StartAutoManagementResponse < Aws::EmptyStructure
+    end
+
+    class StartQuotaUtilizationReportRequest < Aws::EmptyStructure
+    end
+
+    class StartQuotaUtilizationReportResponse
+      attr_accessor report_id: ::String
+      attr_accessor status: ("PENDING" | "IN_PROGRESS" | "COMPLETED" | "FAILED")
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class StopAutoManagementRequest < Aws::EmptyStructure
+    end
+
+    class StopAutoManagementResponse < Aws::EmptyStructure
     end
 
     class Tag
@@ -394,6 +482,16 @@ module Aws::ServiceQuotas
     end
 
     class UntagResourceResponse < Aws::EmptyStructure
+    end
+
+    class UpdateAutoManagementRequest
+      attr_accessor opt_in_type: ("NotifyOnly" | "NotifyAndAdjust")
+      attr_accessor notification_arn: ::String
+      attr_accessor exclusion_list: ::Hash[::String, ::Array[::String]]
+      SENSITIVE: []
+    end
+
+    class UpdateAutoManagementResponse < Aws::EmptyStructure
     end
   end
 end

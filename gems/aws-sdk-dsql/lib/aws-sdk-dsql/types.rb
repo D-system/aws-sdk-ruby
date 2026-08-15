@@ -70,6 +70,12 @@ module Aws::DSQL
     #   this property before you can delete your cluster.
     #   @return [Boolean]
     #
+    # @!attribute [rw] kms_encryption_key
+    #   The KMS key that encrypts and protects the data on your cluster. You
+    #   can specify the ARN, ID, or alias of an existing key or have Amazon
+    #   Web Services create a default key for you.
+    #   @return [String]
+    #
     # @!attribute [rw] tags
     #   A map of key and value pairs to use to tag your cluster.
     #   @return [Hash<String,String>]
@@ -89,17 +95,38 @@ module Aws::DSQL
     #   not need to pass this option.
     #   @return [String]
     #
+    # @!attribute [rw] multi_region_properties
+    #   The configuration settings when creating a multi-Region cluster,
+    #   including the witness region and linked cluster properties.
+    #   @return [Types::MultiRegionProperties]
+    #
+    # @!attribute [rw] policy
+    #   An optional resource-based policy document in JSON format that
+    #   defines access permissions for the cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] bypass_policy_lockout_safety_check
+    #   An optional field that controls whether to bypass the lockout
+    #   prevention check. When set to true, this parameter allows you to
+    #   apply a policy that might lock you out of the cluster. Use with
+    #   caution.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/CreateClusterInput AWS API Documentation
     #
     class CreateClusterInput < Struct.new(
       :deletion_protection_enabled,
+      :kms_encryption_key,
       :tags,
-      :client_token)
+      :client_token,
+      :multi_region_properties,
+      :policy,
+      :bypass_policy_lockout_safety_check)
       SENSITIVE = []
       include Aws::Structure
     end
 
-    # Output Mixin
+    # The output of a created cluster.
     #
     # @!attribute [rw] identifier
     #   The ID of the created cluster.
@@ -117,9 +144,24 @@ module Aws::DSQL
     #   The time of when created the cluster.
     #   @return [Time]
     #
+    # @!attribute [rw] multi_region_properties
+    #   The multi-Region cluster configuration details that were set during
+    #   cluster creation
+    #   @return [Types::MultiRegionProperties]
+    #
+    # @!attribute [rw] encryption_details
+    #   The encryption configuration for the cluster that was specified
+    #   during the creation process, including the KMS key identifier and
+    #   encryption state.
+    #   @return [Types::EncryptionDetails]
+    #
     # @!attribute [rw] deletion_protection_enabled
     #   Whether deletion protection is enabled on this cluster.
     #   @return [Boolean]
+    #
+    # @!attribute [rw] endpoint
+    #   The connection endpoint for the created cluster.
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/CreateClusterOutput AWS API Documentation
     #
@@ -128,29 +170,41 @@ module Aws::DSQL
       :arn,
       :status,
       :creation_time,
-      :deletion_protection_enabled)
+      :multi_region_properties,
+      :encryption_details,
+      :deletion_protection_enabled,
+      :endpoint)
       SENSITIVE = []
       include Aws::Structure
     end
 
-    # @!attribute [rw] linked_region_list
-    #   An array of the Regions in which you want to create additional
-    #   clusters.
-    #   @return [Array<String>]
-    #
-    # @!attribute [rw] cluster_properties
-    #   A mapping of properties to use when creating linked clusters.
-    #   @return [Hash<String,Types::LinkedClusterProperties>]
-    #
-    # @!attribute [rw] witness_region
-    #   The witness Region of multi-Region clusters.
+    # @!attribute [rw] cluster_identifier
+    #   The ID of the cluster for which to create the stream.
     #   @return [String]
+    #
+    # @!attribute [rw] target_definition
+    #   The target destination configuration for the stream. Contains
+    #   Kinesis stream configuration including stream ARN and IAM role ARN.
+    #   @return [Types::TargetDefinition]
+    #
+    # @!attribute [rw] ordering
+    #   The ordering mode for the stream. Determines how change events are
+    #   ordered when delivered to the target.
+    #   @return [String]
+    #
+    # @!attribute [rw] format
+    #   The format of the stream records.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   A map of key and value pairs to use to tag your stream.
+    #   @return [Hash<String,String>]
     #
     # @!attribute [rw] client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
     #   idempotency of the request. Idempotency ensures that an API request
     #   completes only once. With an idempotent request, if the original
-    #   request completes successfully. The subsequent retries with the same
+    #   request completes successfully, the subsequent retries with the same
     #   client token return the result from the original successful request
     #   and they have no additional effect.
     #
@@ -161,25 +215,59 @@ module Aws::DSQL
     #   not need to pass this option.
     #   @return [String]
     #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/CreateMultiRegionClustersInput AWS API Documentation
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/CreateStreamInput AWS API Documentation
     #
-    class CreateMultiRegionClustersInput < Struct.new(
-      :linked_region_list,
-      :cluster_properties,
-      :witness_region,
+    class CreateStreamInput < Struct.new(
+      :cluster_identifier,
+      :target_definition,
+      :ordering,
+      :format,
+      :tags,
       :client_token)
       SENSITIVE = []
       include Aws::Structure
     end
 
-    # @!attribute [rw] linked_cluster_arns
-    #   An array that contains the ARNs of all linked clusters.
-    #   @return [Array<String>]
+    # The output of a created stream.
     #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/CreateMultiRegionClustersOutput AWS API Documentation
+    # @!attribute [rw] cluster_identifier
+    #   The ID of the cluster for the created stream.
+    #   @return [String]
     #
-    class CreateMultiRegionClustersOutput < Struct.new(
-      :linked_cluster_arns)
+    # @!attribute [rw] stream_identifier
+    #   The ID of the created stream.
+    #   @return [String]
+    #
+    # @!attribute [rw] arn
+    #   The ARN of the created stream.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the created stream.
+    #   @return [String]
+    #
+    # @!attribute [rw] creation_time
+    #   The time when created the stream.
+    #   @return [Time]
+    #
+    # @!attribute [rw] ordering
+    #   The ordering mode of the created stream.
+    #   @return [String]
+    #
+    # @!attribute [rw] format
+    #   The format of the created stream records.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/CreateStreamOutput AWS API Documentation
+    #
+    class CreateStreamOutput < Struct.new(
+      :cluster_identifier,
+      :stream_identifier,
+      :arn,
+      :status,
+      :creation_time,
+      :ordering,
+      :format)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -212,7 +300,7 @@ module Aws::DSQL
       include Aws::Structure
     end
 
-    # Output Mixin
+    # The output from a deleted cluster.
     #
     # @!attribute [rw] identifier
     #   The ID of the deleted cluster.
@@ -230,32 +318,69 @@ module Aws::DSQL
     #   The time of when the cluster was created.
     #   @return [Time]
     #
-    # @!attribute [rw] deletion_protection_enabled
-    #   Specifies whether deletion protection was enabled on the cluster.
-    #   @return [Boolean]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/DeleteClusterOutput AWS API Documentation
     #
     class DeleteClusterOutput < Struct.new(
       :identifier,
       :arn,
       :status,
-      :creation_time,
-      :deletion_protection_enabled)
+      :creation_time)
       SENSITIVE = []
       include Aws::Structure
     end
 
-    # @!attribute [rw] linked_cluster_arns
-    #   The ARNs of the clusters linked to the cluster you want to delete.
-    #   also deletes these clusters as part of the operation.
-    #   @return [Array<String>]
+    # @!attribute [rw] identifier
+    #   The ID of the cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] expected_policy_version
+    #   The expected version of the policy to delete. This parameter ensures
+    #   that you're deleting the correct version of the policy and helps
+    #   prevent accidental deletions.
+    #   @return [String]
+    #
+    # @!attribute [rw] client_token
+    #   Idempotency token so a request is only processed once.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/DeleteClusterPolicyInput AWS API Documentation
+    #
+    class DeleteClusterPolicyInput < Struct.new(
+      :identifier,
+      :expected_policy_version,
+      :client_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] policy_version
+    #   The version of the policy that was deleted.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/DeleteClusterPolicyOutput AWS API Documentation
+    #
+    class DeleteClusterPolicyOutput < Struct.new(
+      :policy_version)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] cluster_identifier
+    #   The ID of the cluster containing the stream to delete.
+    #   @return [String]
+    #
+    # @!attribute [rw] stream_identifier
+    #   The ID of the stream to delete.
+    #   @return [String]
     #
     # @!attribute [rw] client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
     #   idempotency of the request. Idempotency ensures that an API request
     #   completes only once. With an idempotent request, if the original
-    #   request completes successfully. The subsequent retries with the same
+    #   request completes successfully, the subsequent retries with the same
     #   client token return the result from the original successful request
     #   and they have no additional effect.
     #
@@ -266,11 +391,71 @@ module Aws::DSQL
     #   not need to pass this option.
     #   @return [String]
     #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/DeleteMultiRegionClustersInput AWS API Documentation
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/DeleteStreamInput AWS API Documentation
     #
-    class DeleteMultiRegionClustersInput < Struct.new(
-      :linked_cluster_arns,
+    class DeleteStreamInput < Struct.new(
+      :cluster_identifier,
+      :stream_identifier,
       :client_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The output from a deleted stream.
+    #
+    # @!attribute [rw] cluster_identifier
+    #   The ID of the cluster for the deleted stream.
+    #   @return [String]
+    #
+    # @!attribute [rw] stream_identifier
+    #   The ID of the deleted stream.
+    #   @return [String]
+    #
+    # @!attribute [rw] arn
+    #   The ARN of the deleted stream.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the stream.
+    #   @return [String]
+    #
+    # @!attribute [rw] creation_time
+    #   The time when the stream was created.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/DeleteStreamOutput AWS API Documentation
+    #
+    class DeleteStreamOutput < Struct.new(
+      :cluster_identifier,
+      :stream_identifier,
+      :arn,
+      :status,
+      :creation_time)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration details about encryption for the cluster including the
+    # KMS key ARN, encryption type, and encryption status.
+    #
+    # @!attribute [rw] encryption_type
+    #   The type of encryption that protects the data on your cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] kms_key_arn
+    #   The ARN of the KMS key that encrypts data in the cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] encryption_status
+    #   The status of encryption for the cluster.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/EncryptionDetails AWS API Documentation
+    #
+    class EncryptionDetails < Struct.new(
+      :encryption_type,
+      :kms_key_arn,
+      :encryption_status)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -287,7 +472,7 @@ module Aws::DSQL
       include Aws::Structure
     end
 
-    # Output Mixin
+    # The output of a cluster.
     #
     # @!attribute [rw] identifier
     #   The ID of the retrieved cluster.
@@ -309,14 +494,22 @@ module Aws::DSQL
     #   Whether deletion protection is enabled in this cluster.
     #   @return [Boolean]
     #
-    # @!attribute [rw] witness_region
-    #   The witness Region of the cluster. Applicable only for multi-Region
-    #   clusters.
-    #   @return [String]
+    # @!attribute [rw] multi_region_properties
+    #   Returns the current multi-Region cluster configuration, including
+    #   witness region and linked cluster information.
+    #   @return [Types::MultiRegionProperties]
     #
-    # @!attribute [rw] linked_cluster_arns
-    #   The ARNs of the clusters linked to the retrieved cluster.
-    #   @return [Array<String>]
+    # @!attribute [rw] tags
+    #   Map of tags.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] encryption_details
+    #   The current encryption configuration details for the cluster.
+    #   @return [Types::EncryptionDetails]
+    #
+    # @!attribute [rw] endpoint
+    #   The connection endpoint for the cluster.
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/GetClusterOutput AWS API Documentation
     #
@@ -326,8 +519,146 @@ module Aws::DSQL
       :status,
       :creation_time,
       :deletion_protection_enabled,
-      :witness_region,
-      :linked_cluster_arns)
+      :multi_region_properties,
+      :tags,
+      :encryption_details,
+      :endpoint)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] identifier
+    #   The ID of the cluster to retrieve the policy from.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/GetClusterPolicyInput AWS API Documentation
+    #
+    class GetClusterPolicyInput < Struct.new(
+      :identifier)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] policy
+    #   The resource-based policy document attached to the cluster, returned
+    #   as a JSON string.
+    #   @return [String]
+    #
+    # @!attribute [rw] policy_version
+    #   The version of the policy document. This version number is
+    #   incremented each time the policy is updated.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/GetClusterPolicyOutput AWS API Documentation
+    #
+    class GetClusterPolicyOutput < Struct.new(
+      :policy,
+      :policy_version)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] cluster_identifier
+    #   The ID of the cluster containing the stream to retrieve.
+    #   @return [String]
+    #
+    # @!attribute [rw] stream_identifier
+    #   The ID of the stream to retrieve.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/GetStreamInput AWS API Documentation
+    #
+    class GetStreamInput < Struct.new(
+      :cluster_identifier,
+      :stream_identifier)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The output of a retrieved stream.
+    #
+    # @!attribute [rw] cluster_identifier
+    #   The ID of the cluster for the retrieved stream.
+    #   @return [String]
+    #
+    # @!attribute [rw] stream_identifier
+    #   The ID of the retrieved stream.
+    #   @return [String]
+    #
+    # @!attribute [rw] arn
+    #   The ARN of the retrieved stream.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the retrieved stream.
+    #   @return [String]
+    #
+    # @!attribute [rw] creation_time
+    #   The time when the stream was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] ordering
+    #   The ordering mode of the stream.
+    #   @return [String]
+    #
+    # @!attribute [rw] format
+    #   The format of the stream records.
+    #   @return [String]
+    #
+    # @!attribute [rw] target_definition
+    #   The target definition for the stream destination.
+    #   @return [Types::TargetDefinition]
+    #
+    # @!attribute [rw] status_reason
+    #   Stream status reason with error code and timestamp (if applicable).
+    #   @return [Types::StatusReason]
+    #
+    # @!attribute [rw] tags
+    #   A map of tags associated with the stream.
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/GetStreamOutput AWS API Documentation
+    #
+    class GetStreamOutput < Struct.new(
+      :cluster_identifier,
+      :stream_identifier,
+      :arn,
+      :status,
+      :creation_time,
+      :ordering,
+      :format,
+      :target_definition,
+      :status_reason,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] identifier
+    #   The ID of the cluster to retrieve.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/GetVpcEndpointServiceNameInput AWS API Documentation
+    #
+    class GetVpcEndpointServiceNameInput < Struct.new(
+      :identifier)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] service_name
+    #   The VPC endpoint service name.
+    #   @return [String]
+    #
+    # @!attribute [rw] cluster_vpc_endpoint
+    #   The VPC connection endpoint for the cluster.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/GetVpcEndpointServiceNameOutput AWS API Documentation
+    #
+    class GetVpcEndpointServiceNameOutput < Struct.new(
+      :service_name,
+      :cluster_vpc_endpoint)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -351,21 +682,25 @@ module Aws::DSQL
       include Aws::Structure
     end
 
-    # Properties of linked clusters.
+    # Kinesis stream target configuration.
     #
-    # @!attribute [rw] deletion_protection_enabled
-    #   Whether deletion protection is enabled.
-    #   @return [Boolean]
+    # @!attribute [rw] stream_arn
+    #   The ARN of the Kinesis stream.
+    #   @return [String]
     #
-    # @!attribute [rw] tags
-    #   A map of key and value pairs the linked cluster is tagged with.
-    #   @return [Hash<String,String>]
+    # @!attribute [rw] role_arn
+    #   The ARN of the IAM role that grants permission to write to the
+    #   Kinesis stream. This can be a standard role
+    #   (`arn:aws:iam::account-id:role/role-name`) or a role with a path
+    #   prefix (`arn:aws:iam::account-id:role/service-role/role-name`), such
+    #   as roles auto-created by the console.
+    #   @return [String]
     #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/LinkedClusterProperties AWS API Documentation
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/KinesisTargetDefinition AWS API Documentation
     #
-    class LinkedClusterProperties < Struct.new(
-      :deletion_protection_enabled,
-      :tags)
+    class KinesisTargetDefinition < Struct.new(
+      :stream_arn,
+      :role_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -411,6 +746,52 @@ module Aws::DSQL
       include Aws::Structure
     end
 
+    # @!attribute [rw] cluster_identifier
+    #   The ID of the cluster for which to list streams.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   An optional parameter that specifies the maximum number of results
+    #   to return. You can use nextToken to display the next page of
+    #   results. Default: 10.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   If your initial ListStreams operation returns a nextToken, you can
+    #   include the returned nextToken in following ListStreams operations,
+    #   which returns results in the next page.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/ListStreamsInput AWS API Documentation
+    #
+    class ListStreamsInput < Struct.new(
+      :cluster_identifier,
+      :max_results,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   If nextToken is returned, there are more results available. The
+    #   value of nextToken is a unique pagination token for each page. To
+    #   retrieve the next page, make the call again using the returned
+    #   token.
+    #   @return [String]
+    #
+    # @!attribute [rw] streams
+    #   An array of the returned streams.
+    #   @return [Array<Types::StreamSummary>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/ListStreamsOutput AWS API Documentation
+    #
+    class ListStreamsOutput < Struct.new(
+      :next_token,
+      :streams)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] resource_arn
     #   The ARN of the resource for which you want to list the tags.
     #   @return [String]
@@ -435,17 +816,94 @@ module Aws::DSQL
       include Aws::Structure
     end
 
+    # Defines the structure for multi-Region cluster configurations,
+    # containing the witness region and linked cluster settings.
+    #
+    # @!attribute [rw] witness_region
+    #   The Region that serves as the witness region for a multi-Region
+    #   cluster. The witness Region helps maintain cluster consistency and
+    #   quorum.
+    #   @return [String]
+    #
+    # @!attribute [rw] clusters
+    #   The set of peered clusters that form the multi-Region cluster
+    #   configuration. Each peered cluster represents a database instance in
+    #   a different Region.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/MultiRegionProperties AWS API Documentation
+    #
+    class MultiRegionProperties < Struct.new(
+      :witness_region,
+      :clusters)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] identifier
+    #   The ID of the cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] policy
+    #   The resource-based policy document to attach to the cluster. This
+    #   should be a valid JSON policy document that defines permissions and
+    #   conditions.
+    #   @return [String]
+    #
+    # @!attribute [rw] bypass_policy_lockout_safety_check
+    #   A flag that allows you to bypass the policy lockout safety check.
+    #   When set to true, this parameter allows you to apply a policy that
+    #   might lock you out of the cluster. Use with caution.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] expected_policy_version
+    #   The expected version of the current policy. This parameter ensures
+    #   that you're updating the correct version of the policy and helps
+    #   prevent concurrent modification conflicts.
+    #   @return [String]
+    #
+    # @!attribute [rw] client_token
+    #   Idempotency token so a request is only processed once.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/PutClusterPolicyInput AWS API Documentation
+    #
+    class PutClusterPolicyInput < Struct.new(
+      :identifier,
+      :policy,
+      :bypass_policy_lockout_safety_check,
+      :expected_policy_version,
+      :client_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] policy_version
+    #   The version of the policy after it has been updated or created.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/PutClusterPolicyOutput AWS API Documentation
+    #
+    class PutClusterPolicyOutput < Struct.new(
+      :policy_version)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The resource could not be found.
     #
     # @!attribute [rw] message
     #   @return [String]
     #
     # @!attribute [rw] resource_id
-    #   Hypothetical identifier of the resource which does not exist
+    #   The resource ID could not be found.
     #   @return [String]
     #
     # @!attribute [rw] resource_type
-    #   Hypothetical type of the resource which does not exist
+    #   The resource type could not be found.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/ResourceNotFoundException AWS API Documentation
@@ -461,23 +919,23 @@ module Aws::DSQL
     # The service limit was exceeded.
     #
     # @!attribute [rw] message
-    #   Description of the error
+    #   The service exception for exceeding a quota.
     #   @return [String]
     #
     # @!attribute [rw] resource_id
-    #   Identifier of the resource affected
+    #   The resource ID exceeds a quota.
     #   @return [String]
     #
     # @!attribute [rw] resource_type
-    #   Type of the resource affected
+    #   The resource type exceeds a quota.
     #   @return [String]
     #
     # @!attribute [rw] service_code
-    #   Service Quotas requirement to identify originating service
+    #   The request exceeds a service quota.
     #   @return [String]
     #
     # @!attribute [rw] quota_code
-    #   Service Quotas requirement to identify originating quota
+    #   The service exceeds a quota.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/ServiceQuotaExceededException AWS API Documentation
@@ -488,6 +946,59 @@ module Aws::DSQL
       :resource_type,
       :service_code,
       :quota_code)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Stream status reason with error and timestamp.
+    #
+    # @!attribute [rw] error
+    #   The error code for the stream failure.
+    #   @return [String]
+    #
+    # @!attribute [rw] updated_at
+    #   The timestamp when the status was updated.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/StatusReason AWS API Documentation
+    #
+    class StatusReason < Struct.new(
+      :error,
+      :updated_at)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Summary information about a stream.
+    #
+    # @!attribute [rw] cluster_identifier
+    #   The ID of the cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] stream_identifier
+    #   The ID of the stream.
+    #   @return [String]
+    #
+    # @!attribute [rw] arn
+    #   The ARN of the stream.
+    #   @return [String]
+    #
+    # @!attribute [rw] creation_time
+    #   The timestamp when the stream was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] status
+    #   The current status of the stream.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/StreamSummary AWS API Documentation
+    #
+    class StreamSummary < Struct.new(
+      :cluster_identifier,
+      :stream_identifier,
+      :arn,
+      :creation_time,
+      :status)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -509,22 +1020,45 @@ module Aws::DSQL
       include Aws::Structure
     end
 
+    # Target definition for stream destination.
+    #
+    # @note TargetDefinition is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note TargetDefinition is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of TargetDefinition corresponding to the set member.
+    #
+    # @!attribute [rw] kinesis
+    #   Kinesis stream target configuration.
+    #   @return [Types::KinesisTargetDefinition]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/TargetDefinition AWS API Documentation
+    #
+    class TargetDefinition < Struct.new(
+      :kinesis,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Kinesis < TargetDefinition; end
+      class Unknown < TargetDefinition; end
+    end
+
     # The request was denied due to request throttling.
     #
     # @!attribute [rw] message
-    #   Description of the error
+    #   The message that the request was denied due to request throttling.
     #   @return [String]
     #
     # @!attribute [rw] service_code
-    #   Service Quotas requirement to identify originating service
+    #   The request exceeds a service quota.
     #   @return [String]
     #
     # @!attribute [rw] quota_code
-    #   Service Quotas requirement to identify originating quota
+    #   The request exceeds a request rate quota.
     #   @return [String]
     #
     # @!attribute [rw] retry_after_seconds
-    #   Advice to clients on when the call can be safely retried
+    #   The request exceeds a request rate quota. Retry after seconds.
     #   @return [Integer]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/ThrottlingException AWS API Documentation
@@ -563,6 +1097,15 @@ module Aws::DSQL
     #   Specifies whether to enable deletion protection in your cluster.
     #   @return [Boolean]
     #
+    # @!attribute [rw] kms_encryption_key
+    #   The KMS key that encrypts and protects the data on your cluster. You
+    #   can specify the ARN, ID, or alias of an existing key or have Amazon
+    #   Web Services create a default key for you.
+    #
+    #   To switch to the key owned by Amazon Web Services, specify the
+    #   reserved value `AWS_OWNED_KMS_KEY`.
+    #   @return [String]
+    #
     # @!attribute [rw] client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
     #   idempotency of the request. Idempotency ensures that an API request
@@ -578,17 +1121,24 @@ module Aws::DSQL
     #   not need to pass this option.
     #   @return [String]
     #
+    # @!attribute [rw] multi_region_properties
+    #   The new multi-Region cluster configuration settings to be applied
+    #   during an update operation.
+    #   @return [Types::MultiRegionProperties]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/UpdateClusterInput AWS API Documentation
     #
     class UpdateClusterInput < Struct.new(
       :identifier,
       :deletion_protection_enabled,
-      :client_token)
+      :kms_encryption_key,
+      :client_token,
+      :multi_region_properties)
       SENSITIVE = []
       include Aws::Structure
     end
 
-    # Output Mixin
+    # The details of the cluster after it has been updated.
     #
     # @!attribute [rw] identifier
     #   The ID of the cluster to update.
@@ -606,29 +1156,13 @@ module Aws::DSQL
     #   The time of when the cluster was created.
     #   @return [Time]
     #
-    # @!attribute [rw] deletion_protection_enabled
-    #   Whether deletion protection is enabled for the updated cluster.
-    #   @return [Boolean]
-    #
-    # @!attribute [rw] witness_region
-    #   The Region that receives all data you write to linked clusters.
-    #   @return [String]
-    #
-    # @!attribute [rw] linked_cluster_arns
-    #   The ARNs of the clusters linked to the updated cluster. Applicable
-    #   only for multi-Region clusters.
-    #   @return [Array<String>]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/UpdateClusterOutput AWS API Documentation
     #
     class UpdateClusterOutput < Struct.new(
       :identifier,
       :arn,
       :status,
-      :creation_time,
-      :deletion_protection_enabled,
-      :witness_region,
-      :linked_cluster_arns)
+      :creation_time)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -640,11 +1174,11 @@ module Aws::DSQL
     #   @return [String]
     #
     # @!attribute [rw] reason
-    #   Reason the request failed validation
+    #   The reason for the validation exception.
     #   @return [String]
     #
     # @!attribute [rw] field_list
-    #   List of fields that caused the error
+    #   A list of fields that didn't validate.
     #   @return [Array<Types::ValidationExceptionField>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/ValidationException AWS API Documentation

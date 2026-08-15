@@ -68,14 +68,30 @@ module Aws::ControlCatalog
     #   The objective that's used as filter criteria.
     #
     #   You can use this parameter to specify one objective ARN at a time.
-    #   Passing multiple ARNs in the `CommonControlFilter` isn’t currently
-    #   supported.
+    #   Passing multiple ARNs in the `CommonControlFilter` isn’t supported.
     #   @return [Array<Types::ObjectiveResourceFilter>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/controlcatalog-2018-05-10/CommonControlFilter AWS API Documentation
     #
     class CommonControlFilter < Struct.new(
       :objectives)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A structure that contains details about a common control mapping. In
+    # particular, it returns the Amazon Resource Name (ARN) of the common
+    # control.
+    #
+    # @!attribute [rw] common_control_arn
+    #   The Amazon Resource Name (ARN) that identifies the common control in
+    #   the mapping.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/controlcatalog-2018-05-10/CommonControlMappingDetails AWS API Documentation
+    #
+    class CommonControlMappingDetails < Struct.new(
+      :common_control_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -124,6 +140,90 @@ module Aws::ControlCatalog
       include Aws::Structure
     end
 
+    # A structure that defines filtering criteria for the ListControls
+    # operation. You can use this filter to narrow down the list of controls
+    # based on their implementation details.
+    #
+    # @!attribute [rw] implementations
+    #   A filter that narrows the results to controls with specific
+    #   implementation types or identifiers. This field allows you to find
+    #   controls that are implemented by specific Amazon Web Services
+    #   services or with specific service identifiers.
+    #   @return [Types::ImplementationFilter]
+    #
+    # @!attribute [rw] governed_providers
+    #   A filter that narrows the results to controls that govern a specific
+    #   provider's resources.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/controlcatalog-2018-05-10/ControlFilter AWS API Documentation
+    #
+    class ControlFilter < Struct.new(
+      :implementations,
+      :governed_providers)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A structure that contains information about a control mapping,
+    # including the control ARN, mapping type, and mapping details.
+    #
+    # @!attribute [rw] control_arn
+    #   The Amazon Resource Name (ARN) that identifies the control in the
+    #   mapping.
+    #   @return [String]
+    #
+    # @!attribute [rw] mapping_type
+    #   The type of mapping relationship between the control and other
+    #   entities.
+    #   @return [String]
+    #
+    # @!attribute [rw] mapping
+    #   The details of the mapping relationship, for example, containing
+    #   framework, common control, or related control information.
+    #   @return [Types::Mapping]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/controlcatalog-2018-05-10/ControlMapping AWS API Documentation
+    #
+    class ControlMapping < Struct.new(
+      :control_arn,
+      :mapping_type,
+      :mapping)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A structure that defines filtering criteria for the
+    # ListControlMappings operation. You can use this filter to narrow down
+    # the list of control mappings based on control ARNs, common control
+    # ARNs, or mapping types.
+    #
+    # @!attribute [rw] control_arns
+    #   A list of control ARNs to filter the mappings. When specified, only
+    #   mappings associated with these controls are returned.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] common_control_arns
+    #   A list of common control ARNs to filter the mappings. When
+    #   specified, only mappings associated with these common controls are
+    #   returned.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] mapping_types
+    #   A list of mapping types to filter the mappings. When specified, only
+    #   mappings of these types are returned.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/controlcatalog-2018-05-10/ControlMappingFilter AWS API Documentation
+    #
+    class ControlMappingFilter < Struct.new(
+      :control_arns,
+      :common_control_arns,
+      :mapping_types)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Five types of control parameters are supported.
     #
     # * **AllowedRegions**: List of Amazon Web Services Regions exempted
@@ -142,8 +242,8 @@ module Aws::ControlCatalog
     #
     # * **ExemptedPrincipalArns**: List of Amazon Web Services IAM principal
     #   ARNs exempted from the control. Each string is expected to be an IAM
-    #   principal that follows the pattern
-    #   `^arn:(aws|aws-us-gov):(iam|sts)::.+:.+$`
+    #   principal that follows the format
+    #   `arn:partition:service::account:resource`
     #
     #   Example:
     #   `["arn:aws:iam::*:role/ReadOnly","arn:aws:sts::*:assumed-role/ReadOnly/*"]`
@@ -182,10 +282,16 @@ module Aws::ControlCatalog
     #   [2]: https://docs.aws.amazon.com/controltower/latest/APIReference/API_UpdateEnabledControl.html
     #   @return [String]
     #
+    # @!attribute [rw] requirement
+    #   Indicates whether the parameter is required or optional when you
+    #   enable the control.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/controlcatalog-2018-05-10/ControlParameter AWS API Documentation
     #
     class ControlParameter < Struct.new(
-      :name)
+      :name,
+      :requirement)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -196,6 +302,13 @@ module Aws::ControlCatalog
     #   The Amazon Resource Name (ARN) of the control.
     #   @return [String]
     #
+    # @!attribute [rw] aliases
+    #   A list of alternative identifiers for the control. These are
+    #   human-readable designators, such as `SH.S3.1`. Several aliases can
+    #   refer to the same control across different Amazon Web Services
+    #   services or compliance frameworks.
+    #   @return [Array<String>]
+    #
     # @!attribute [rw] name
     #   The display name of the control.
     #   @return [String]
@@ -205,12 +318,63 @@ module Aws::ControlCatalog
     #   Describes the functionality of the control.
     #   @return [String]
     #
+    # @!attribute [rw] behavior
+    #   An enumerated type, with the following possible values:
+    #   @return [String]
+    #
+    # @!attribute [rw] severity
+    #   An enumerated type, with the following possible values:
+    #   @return [String]
+    #
+    # @!attribute [rw] parameter_requirement_summary
+    #   A summary that indicates whether the control requires parameters,
+    #   accepts optional parameters, or does not support parameters. Use
+    #   this field to determine whether you need to supply parameter values
+    #   when you enable the control.
+    #   @return [String]
+    #
+    # @!attribute [rw] implementation
+    #   An object of type `ImplementationSummary` that describes how the
+    #   control is implemented.
+    #   @return [Types::ImplementationSummary]
+    #
+    # @!attribute [rw] create_time
+    #   A timestamp that notes the time when the control was released (start
+    #   of its life) as a governance capability in Amazon Web Services.
+    #   @return [Time]
+    #
+    # @!attribute [rw] governed_resources
+    #   A list of resource types that are governed by this control. This
+    #   information helps you understand which controls can govern certain
+    #   types of resources, and conversely, which resources are affected
+    #   when the control is implemented. For Amazon Web Services controls,
+    #   the resources are represented as CloudFormation resource types. For
+    #   non-Amazon Web Services controls, the resources are represented in a
+    #   provider-specific format. If `GovernedResources` cannot be
+    #   represented by available resource types, it’s returned as an empty
+    #   list.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] governed_providers
+    #   A list of providers whose resources are governed by this control.
+    #   For example, a value of `AWS` indicates that the control governs
+    #   Amazon Web Services resources.
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/controlcatalog-2018-05-10/ControlSummary AWS API Documentation
     #
     class ControlSummary < Struct.new(
       :arn,
+      :aliases,
       :name,
-      :description)
+      :description,
+      :behavior,
+      :severity,
+      :parameter_requirement_summary,
+      :implementation,
+      :create_time,
+      :governed_resources,
+      :governed_providers)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -263,6 +427,28 @@ module Aws::ControlCatalog
       include Aws::Structure
     end
 
+    # A structure that contains details about a framework mapping, including
+    # the framework name and specific item within the framework that the
+    # control maps to.
+    #
+    # @!attribute [rw] name
+    #   The name of the compliance framework that the control maps to.
+    #   @return [String]
+    #
+    # @!attribute [rw] item
+    #   The specific item or requirement within the framework that the
+    #   control maps to.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/controlcatalog-2018-05-10/FrameworkMappingDetails AWS API Documentation
+    #
+    class FrameworkMappingDetails < Struct.new(
+      :name,
+      :item)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] control_arn
     #   The Amazon Resource Name (ARN) of the control. It has one of the
     #   following formats:
@@ -293,6 +479,13 @@ module Aws::ControlCatalog
     #   The Amazon Resource Name (ARN) of the control.
     #   @return [String]
     #
+    # @!attribute [rw] aliases
+    #   A list of alternative identifiers for the control. These are
+    #   human-readable designators, such as `SH.S3.1`. Several aliases can
+    #   refer to the same control across different Amazon Web Services
+    #   services or compliance frameworks.
+    #   @return [Array<String>]
+    #
     # @!attribute [rw] name
     #   The display name of the control.
     #   @return [String]
@@ -306,10 +499,14 @@ module Aws::ControlCatalog
     #   `Preventive`, `Detective`, `Proactive`
     #   @return [String]
     #
+    # @!attribute [rw] severity
+    #   An enumerated type, with the following possible values:
+    #   @return [String]
+    #
     # @!attribute [rw] region_configuration
     #   Returns information about the control, including the scope of the
-    #   control, if enabled, and the Regions in which the control currently
-    #   is available for deployment. For more information about scope, see
+    #   control, if enabled, and the Regions in which the control is
+    #   available for deployment. For more information about scope, see
     #   [Global services][1].
     #
     #   If you are applying controls through an Amazon Web Services Control
@@ -333,22 +530,58 @@ module Aws::ControlCatalog
     #   object that shows the underlying implementation type for a control.
     #   @return [Types::ImplementationDetails]
     #
+    # @!attribute [rw] parameter_requirement_summary
+    #   A summary that indicates whether the control requires parameters,
+    #   accepts optional parameters, or does not support parameters. Use
+    #   this field to determine whether you need to supply parameter values
+    #   when you enable the control.
+    #   @return [String]
+    #
     # @!attribute [rw] parameters
     #   Returns an array of `ControlParameter` objects that specify the
     #   parameters a control supports. An empty list is returned for
     #   controls that don’t support parameters.
     #   @return [Array<Types::ControlParameter>]
     #
+    # @!attribute [rw] create_time
+    #   A timestamp that notes the time when the control was released (start
+    #   of its life) as a governance capability in Amazon Web Services.
+    #   @return [Time]
+    #
+    # @!attribute [rw] governed_resources
+    #   A list of resource types that are governed by this control. This
+    #   information helps you understand which controls can govern certain
+    #   types of resources, and conversely, which resources are affected
+    #   when the control is implemented. For Amazon Web Services controls,
+    #   the resources are represented as CloudFormation resource types. For
+    #   non-Amazon Web Services controls, the resources are represented in a
+    #   provider-specific format. If `GovernedResources` cannot be
+    #   represented by available resource types, it’s returned as an empty
+    #   list.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] governed_providers
+    #   A list of providers whose resources are governed by this control.
+    #   For example, a value of `AWS` indicates that the control governs
+    #   Amazon Web Services resources.
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/controlcatalog-2018-05-10/GetControlResponse AWS API Documentation
     #
     class GetControlResponse < Struct.new(
       :arn,
+      :aliases,
       :name,
       :description,
       :behavior,
+      :severity,
       :region_configuration,
       :implementation,
-      :parameters)
+      :parameter_requirement_summary,
+      :parameters,
+      :create_time,
+      :governed_resources,
+      :governed_providers)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -384,10 +617,75 @@ module Aws::ControlCatalog
     #   A string that describes a control's implementation type.
     #   @return [String]
     #
+    # @!attribute [rw] identifier
+    #   A service-specific identifier for the control, assigned by the
+    #   service that implemented the control. For example, this identifier
+    #   could be an Amazon Web Services Config Rule ID or a Security Hub
+    #   Control ID.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/controlcatalog-2018-05-10/ImplementationDetails AWS API Documentation
     #
     class ImplementationDetails < Struct.new(
-      :type)
+      :type,
+      :identifier)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A structure that defines filtering criteria for control
+    # implementations. You can use this filter to find controls that are
+    # implemented by specific Amazon Web Services services or with specific
+    # service identifiers.
+    #
+    # @!attribute [rw] types
+    #   A list of implementation types that can serve as filters. For
+    #   example, you can filter for controls implemented as Amazon Web
+    #   Services Config Rules by specifying AWS::Config::ConfigRule as a
+    #   type.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] identifiers
+    #   A list of service-specific identifiers that can serve as filters.
+    #   For example, you can filter for controls with specific Amazon Web
+    #   Services Config Rule IDs or Security Hub Control IDs.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/controlcatalog-2018-05-10/ImplementationFilter AWS API Documentation
+    #
+    class ImplementationFilter < Struct.new(
+      :types,
+      :identifiers)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A summary of how the control is implemented, including the Amazon Web
+    # Services service that enforces the control and its service-specific
+    # identifier. For example, the value of this field could indicate that
+    # the control is implemented as an Amazon Web Services Config Rule or an
+    # Amazon Web Services Security Hub control.
+    #
+    # @!attribute [rw] type
+    #   A string that represents the Amazon Web Services service that
+    #   implements this control. For example, a value of
+    #   `AWS::Config::ConfigRule` indicates that the control is implemented
+    #   by Amazon Web Services Config, and
+    #   `AWS::SecurityHub::SecurityControl` indicates implementation by
+    #   Amazon Web Services Security Hub.
+    #   @return [String]
+    #
+    # @!attribute [rw] identifier
+    #   The identifier originally assigned by the Amazon Web Services
+    #   service that implements the control. For example,
+    #   `CODEPIPELINE_DEPLOYMENT_COUNT_CHECK`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/controlcatalog-2018-05-10/ImplementationSummary AWS API Documentation
+    #
+    class ImplementationSummary < Struct.new(
+      :type,
+      :identifier)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -418,8 +716,7 @@ module Aws::ControlCatalog
     #   An optional filter that narrows the results to a specific objective.
     #
     #   This filter allows you to specify one objective ARN at a time.
-    #   Passing multiple ARNs in the `CommonControlFilter` isn’t currently
-    #   supported.
+    #   Passing multiple ARNs in the `CommonControlFilter` isn’t supported.
     #   @return [Types::CommonControlFilter]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/controlcatalog-2018-05-10/ListCommonControlsRequest AWS API Documentation
@@ -458,11 +755,60 @@ module Aws::ControlCatalog
     #   The maximum number of results on a page or for an API request call.
     #   @return [Integer]
     #
+    # @!attribute [rw] filter
+    #   An optional filter that narrows the results to specific control
+    #   mappings based on control ARNs, common control ARNs, or mapping
+    #   types.
+    #   @return [Types::ControlMappingFilter]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/controlcatalog-2018-05-10/ListControlMappingsRequest AWS API Documentation
+    #
+    class ListControlMappingsRequest < Struct.new(
+      :next_token,
+      :max_results,
+      :filter)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] control_mappings
+    #   The list of control mappings that the ListControlMappings API
+    #   returns.
+    #   @return [Array<Types::ControlMapping>]
+    #
+    # @!attribute [rw] next_token
+    #   The pagination token that's used to fetch the next set of results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/controlcatalog-2018-05-10/ListControlMappingsResponse AWS API Documentation
+    #
+    class ListControlMappingsResponse < Struct.new(
+      :control_mappings,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   The pagination token that's used to fetch the next set of results.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results on a page or for an API request call.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] filter
+    #   An optional filter that narrows the results to controls with
+    #   specific implementation types or identifiers. If you don't provide
+    #   a filter, the operation returns all available controls.
+    #   @return [Types::ControlFilter]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/controlcatalog-2018-05-10/ListControlsRequest AWS API Documentation
     #
     class ListControlsRequest < Struct.new(
       :next_token,
-      :max_results)
+      :max_results,
+      :filter)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -531,7 +877,7 @@ module Aws::ControlCatalog
     #   An optional filter that narrows the results to a specific domain.
     #
     #   This filter allows you to specify one domain ARN at a time. Passing
-    #   multiple ARNs in the `ObjectiveFilter` isn’t currently supported.
+    #   multiple ARNs in the `ObjectiveFilter` isn’t supported.
     #   @return [Types::ObjectiveFilter]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/controlcatalog-2018-05-10/ListObjectivesRequest AWS API Documentation
@@ -561,6 +907,43 @@ module Aws::ControlCatalog
       include Aws::Structure
     end
 
+    # A structure that contains the details of a mapping relationship, which
+    # can be either to a framework or to a common control.
+    #
+    # @note Mapping is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of Mapping corresponding to the set member.
+    #
+    # @!attribute [rw] framework
+    #   The framework mapping details when the mapping type relates to a
+    #   compliance framework.
+    #   @return [Types::FrameworkMappingDetails]
+    #
+    # @!attribute [rw] common_control
+    #   The common control mapping details when the mapping type relates to
+    #   a common control.
+    #   @return [Types::CommonControlMappingDetails]
+    #
+    # @!attribute [rw] related_control
+    #   Returns information about controls that are related to the specified
+    #   control.
+    #   @return [Types::RelatedControlMappingDetails]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/controlcatalog-2018-05-10/Mapping AWS API Documentation
+    #
+    class Mapping < Struct.new(
+      :framework,
+      :common_control,
+      :related_control,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Framework < Mapping; end
+      class CommonControl < Mapping; end
+      class RelatedControl < Mapping; end
+      class Unknown < Mapping; end
+    end
+
     # An optional filter that narrows the list of objectives to a specific
     # domain.
     #
@@ -568,8 +951,7 @@ module Aws::ControlCatalog
     #   The domain that's used as filter criteria.
     #
     #   You can use this parameter to specify one domain ARN at a time.
-    #   Passing multiple ARNs in the `ObjectiveFilter` isn’t currently
-    #   supported.
+    #   Passing multiple ARNs in the `ObjectiveFilter` isn’t supported.
     #   @return [Array<Types::DomainResourceFilter>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/controlcatalog-2018-05-10/ObjectiveFilter AWS API Documentation
@@ -634,9 +1016,9 @@ module Aws::ControlCatalog
     end
 
     # Returns information about the control, including the scope of the
-    # control, if enabled, and the Regions in which the control currently is
-    # available for deployment. For more information about scope, see
-    # [Global services][1].
+    # control, if enabled, and the Regions in which the control is available
+    # for deployment. For more information about scope, see [Global
+    # services][1].
     #
     # If you are applying controls through an Amazon Web Services Control
     # Tower landing zone environment, remember that the values returned in
@@ -674,6 +1056,27 @@ module Aws::ControlCatalog
     class RegionConfiguration < Struct.new(
       :scope,
       :deployable_regions)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A structure that describes a control's relationship status with other
+    # controls.
+    #
+    # @!attribute [rw] control_arn
+    #   The unique identifier of a control.
+    #   @return [String]
+    #
+    # @!attribute [rw] relation_type
+    #   Returns an enumerated value that represents the relationship between
+    #   two or more controls.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/controlcatalog-2018-05-10/RelatedControlMappingDetails AWS API Documentation
+    #
+    class RelatedControlMappingDetails < Struct.new(
+      :control_arn,
+      :relation_type)
       SENSITIVE = []
       include Aws::Structure
     end

@@ -1,0 +1,48 @@
+# WARNING ABOUT GENERATED CODE
+#
+# This file is generated. See the contributing guide for more information:
+# https://github.com/aws/aws-sdk-ruby/blob/version-3/CONTRIBUTING.md
+#
+# WARNING ABOUT GENERATED CODE
+
+module Aws
+  module ElementalInference
+    module Params
+      type subtitling_config = {
+      language: ("eng" | "eng-au" | "eng-gb" | "eng-us" | "fra" | "ita" | "deu" | "spa" | "por"),
+      aspect_ratio: {
+        width: ::Integer,
+        height: ::Integer
+      }?,
+      dictionary: ::String?,
+      profanity_filter: ("DISABLED" | "CENSOR" | "DROP")?
+    }
+
+      type output_config = {
+      cropping: {
+        template_groups: Array[
+          {
+            name: ::String,
+            template_uris: Array[::String]
+          }
+        ]?
+      }?,
+      clipping: {
+        callback_metadata: ::String?,
+        data_source_configuration: {
+          fixture_id: ::String
+        }?
+      }?,
+      subtitling: Params::subtitling_config?
+    }
+
+      type create_output = {
+      name: ::String,
+      output_config: Params::output_config,
+      status: ("ENABLED" | "DISABLED"),
+      description: ::String?
+    }
+
+    end
+  end
+end

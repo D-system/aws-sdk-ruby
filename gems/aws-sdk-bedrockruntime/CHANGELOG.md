@@ -1,6 +1,223 @@
 Unreleased Changes
 ------------------
 
+1.83.0 (2026-07-31)
+------------------
+
+* Feature - Added support for mid-conversation tool changes in the Amazon Bedrock Converse and ConverseStream APIs
+
+1.82.0 (2026-07-09)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.81.0 (2026-06-15)
+------------------
+
+* Feature - InvokeGuardrailChecks API evaluates prompts and responses against safety checks (content filters, prompt attacks, sensitive info) without creating guardrail resources. It's a detect-only API, returning numeric scores so you can build adaptive logic as per your application.
+
+1.80.0 (2026-05-28)
+------------------
+
+* Feature - Support system role in message
+
+1.79.0 (2026-05-21)
+------------------
+
+* Feature - Adding new BDD representation of endpoint ruleset
+
+1.78.0 (2026-05-20)
+------------------
+
+* Feature - Supporting Request Metadata for Invoke Model and Invoke Model with Response Stream
+
+1.77.0 (2026-05-19)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.76.0 (2026-05-13)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.75.0 (2026-04-02)
+------------------
+
+* Feature - Relax ToolUseId pattern to allow dots and colons
+
+1.74.0 (2026-03-18)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.73.0 (2026-02-04)
+------------------
+
+* Feature - Added support for structured outputs to Converse and ConverseStream APIs.
+
+1.72.0 (2026-01-20)
+------------------
+
+* Feature - Added support for extended prompt caching with one hour TTL.
+
+1.71.0 (2026-01-16)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.70.0 (2026-01-08)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.69.0 (2026-01-05)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.68.0 (2025-12-02)
+------------------
+
+* Feature - Adds support for Audio Blocks and Streaming Image Output plus new Stop Reasons of malformed_model_output and malformed_tool_use.
+
+1.67.0 (2025-11-26)
+------------------
+
+* Feature - Bedrock Runtime Reserved Service Support
+
+1.66.0 (2025-11-21)
+------------------
+
+* Feature - Add support to automatically enforce safeguards across accounts within an AWS Organization.
+
+1.65.0 (2025-11-19)
+------------------
+
+* Feature - This release includes support for Search Results.
+
+1.64.0 (2025-11-18)
+------------------
+
+* Feature - Amazon Bedrock Runtime Service Tier Support Launch
+
+1.63.0 (2025-10-29)
+------------------
+
+* Feature - Add support for system tool and web citation response.
+
+1.62.0 (2025-10-28)
+------------------
+
+* Feature - Update endpoint ruleset parameters casing
+
+1.61.0 (2025-10-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.60.0 (2025-09-29)
+------------------
+
+* Feature - New stop reason for Converse and ConverseStream
+
+1.59.0 (2025-08-29)
+------------------
+
+* Feature - Fixed stop sequence limit for converse API.
+
+1.58.0 (2025-08-28)
+------------------
+
+* Feature - Remove incorrect endpoint tests
+
+1.57.0 (2025-08-26)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.56.0 (2025-08-20)
+------------------
+
+* Feature - Launch CountTokens API to allow token counting
+
+1.55.0 (2025-08-05)
+------------------
+
+* Feature - This release adds support for Automated Reasoning checks output models for the Amazon Bedrock Guardrails ApplyGuardrail API.
+
+1.54.0 (2025-08-04)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.53.0 (2025-07-31)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.52.0 (2025-07-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+* Feature - Support `ENV['AWS_BEARER_TOKEN_BEDROCK']` for authentication with Amazon Bedrock APIs.
+
+1.51.0 (2025-07-16)
+------------------
+
+* Feature - document update to support on demand custom model.
+
+1.50.0 (2025-06-30)
+------------------
+
+* Feature - Add API Key and document citations support for Bedrock Runtime APIs
+
+1.49.0 (2025-06-02)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.48.0 (2025-05-12)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.47.0 (2025-05-01)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.46.0 (2025-04-28)
+------------------
+
+* Feature - This release adds native h2 support for the bedrock runtime API, the support is only limited to SDKs that support h2 requests natively.
+
+1.45.0 (2025-04-25)
+------------------
+
+* Feature - You can now reference images and documents stored in Amazon S3 when using InvokeModel and Converse APIs with Amazon Nova Lite and Nova Pro. This enables direct integration of S3-stored multimedia assets in your model requests without manual downloading or base64 encoding.
+
+1.44.0 (2025-04-08)
+------------------
+
+* Feature - This release introduces our latest bedrock runtime API, InvokeModelWithBidirectionalStream. The API supports both input and output streams and is supported by only HTTP2.0.
+
+1.43.0 (2025-04-07)
+------------------
+
+* Feature - New options for how to handle harmful content detected by Amazon Bedrock Guardrails.
+
+1.42.0 (2025-03-31)
+------------------
+
+* Feature - Add Prompt Caching support to Converse and ConverseStream APIs
+
+1.41.0 (2025-03-28)
+------------------
+
+* Feature - Launching Multi-modality Content Filter for Amazon Bedrock Guardrails.
+
 1.40.0 (2025-03-05)
 ------------------
 

@@ -55,8 +55,9 @@ module Aws::BedrockAgentRuntime
     end
 
     class ActionGroupInvocationOutput
+      attr_accessor metadata: Types::Metadata
       attr_accessor text: ::String
-      SENSITIVE: [:text]
+      SENSITIVE: [:metadata, :text]
     end
 
     class AgentActionGroup
@@ -87,8 +88,9 @@ module Aws::BedrockAgentRuntime
     class AgentCollaboratorInvocationOutput
       attr_accessor agent_collaborator_alias_arn: ::String
       attr_accessor agent_collaborator_name: ::String
+      attr_accessor metadata: Types::Metadata
       attr_accessor output: Types::AgentCollaboratorOutputPayload
-      SENSITIVE: []
+      SENSITIVE: [:metadata]
     end
 
     class AgentCollaboratorOutputPayload
@@ -96,6 +98,202 @@ module Aws::BedrockAgentRuntime
       attr_accessor text: ::String
       attr_accessor type: ("TEXT" | "RETURN_CONTROL")
       SENSITIVE: [:return_control_payload, :text]
+    end
+
+    class AgenticRetrieveAction
+      attr_accessor full_document_expansion: Types::AgenticRetrieveFullDocExpansionDetails
+      attr_accessor retrieve: Types::AgenticRetrieveActionDetails
+      SENSITIVE: []
+    end
+
+    class AgenticRetrieveActionDetails
+      attr_accessor input_query: Types::AgenticRetrieveMessageContent
+      attr_accessor source_retrievers: ::Array[Types::AgenticRetrieveSourceRetriever]
+      SENSITIVE: [:input_query]
+    end
+
+    class AgenticRetrieveBedrockGuardrailConfiguration
+      attr_accessor guardrail_id: ::String
+      attr_accessor guardrail_version: ::String
+      SENSITIVE: []
+    end
+
+    class AgenticRetrieveBedrockRerankingConfiguration
+      attr_accessor model_configuration: Types::AgenticRetrieveBedrockRerankingModelConfiguration
+      SENSITIVE: []
+    end
+
+    class AgenticRetrieveBedrockRerankingModelConfiguration
+      attr_accessor model_arn: ::String
+      SENSITIVE: []
+    end
+
+    class AgenticRetrieveCitation
+      attr_accessor end_index: ::Integer
+      attr_accessor references: ::Array[Types::AgenticRetrieveCitationReference]
+      attr_accessor start_index: ::Integer
+      SENSITIVE: []
+    end
+
+    class AgenticRetrieveCitationReference
+      attr_accessor result_index: ::Integer
+      SENSITIVE: []
+    end
+
+    class AgenticRetrieveConfiguration
+      attr_accessor foundation_model_configuration: Types::FoundationModelConfiguration
+      attr_accessor foundation_model_type: ("CUSTOM" | "MANAGED")
+      attr_accessor max_agent_iteration: ::Integer
+      attr_accessor reranking_configuration: Types::AgenticRetrieveRerankingConfiguration
+      attr_accessor reranking_model_type: ("CUSTOM" | "MANAGED" | "NONE")
+      SENSITIVE: []
+    end
+
+    class AgenticRetrieveFailure
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class AgenticRetrieveFullDocExpansionDetails
+      attr_accessor document_id: ::String
+      attr_accessor source_retriever: Types::AgenticRetrieveSourceRetriever
+      SENSITIVE: []
+    end
+
+    class AgenticRetrieveGeneratedResponse
+      attr_accessor answer: ::String
+      attr_accessor citations: ::Array[Types::AgenticRetrieveCitation]
+      SENSITIVE: []
+    end
+
+    class AgenticRetrieveGuardrailWarning
+      attr_accessor action: ("INTERVENED" | "NONE")
+      attr_accessor id: ::String
+      attr_accessor message: ::String
+      attr_accessor version: ::String
+      SENSITIVE: []
+    end
+
+    class AgenticRetrieveMessage
+      attr_accessor content: Types::AgenticRetrieveMessageContent
+      attr_accessor role: ("user" | "assistant")
+      SENSITIVE: [:content]
+    end
+
+    class AgenticRetrieveMessageContent
+      attr_accessor text: ::String
+      SENSITIVE: []
+    end
+
+    class AgenticRetrievePolicyConfiguration
+      attr_accessor bedrock_guardrail_configuration: Types::AgenticRetrieveBedrockGuardrailConfiguration
+      SENSITIVE: []
+    end
+
+    class AgenticRetrieveRerankingConfiguration
+      attr_accessor bedrock_reranking_configuration: Types::AgenticRetrieveBedrockRerankingConfiguration
+      attr_accessor type: ("BEDROCK_RERANKING_MODEL")
+      SENSITIVE: []
+    end
+
+    class AgenticRetrieveResponseEvent
+      attr_accessor text: ::String
+      attr_accessor event_type: untyped
+      SENSITIVE: []
+    end
+
+    class AgenticRetrieveResultEvent
+      attr_accessor generated_response: Types::AgenticRetrieveGeneratedResponse
+      attr_accessor next_token: ::String
+      attr_accessor results: ::Array[Types::AgenticRetrieveResultItem]
+      attr_accessor event_type: untyped
+      SENSITIVE: []
+    end
+
+    class AgenticRetrieveResultItem
+      attr_accessor content: Types::RetrievalContent
+      attr_accessor metadata: ::Hash[::String, untyped]
+      attr_accessor source_retriever: Types::AgenticRetrieveSourceRetriever
+      SENSITIVE: []
+    end
+
+    class AgenticRetrieveSourceMetadata
+      attr_accessor identifier: ::String
+      attr_accessor retrieval_type: ("BedrockKnowledgeBase")
+      SENSITIVE: []
+    end
+
+    class AgenticRetrieveSourceRetriever
+      attr_accessor identifier: ::String
+      SENSITIVE: []
+    end
+
+    class AgenticRetrieveStreamRequest
+      attr_accessor agentic_retrieve_configuration: Types::AgenticRetrieveConfiguration
+      attr_accessor generate_response: bool
+      attr_accessor messages: ::Array[Types::AgenticRetrieveMessage]
+      attr_accessor next_token: ::String
+      attr_accessor policy_configuration: Types::AgenticRetrievePolicyConfiguration
+      attr_accessor retrievers: ::Array[Types::AgenticRetriever]
+      attr_accessor user_context: Types::UserContext
+      SENSITIVE: [:user_context]
+    end
+
+    class AgenticRetrieveStreamResponse
+      attr_accessor stream: Types::AgenticRetrieveStreamResponseOutput
+      SENSITIVE: []
+    end
+
+    class AgenticRetrieveTraceEvent
+      attr_accessor attributes: Types::AgenticRetrieveTraceEventAttributes
+      attr_accessor id: ::String
+      attr_accessor timestamp: ::Integer
+      attr_accessor event_type: untyped
+      SENSITIVE: []
+    end
+
+    class AgenticRetrieveTraceEventAttributes
+      attr_accessor actions: ::Array[Types::AgenticRetrieveAction]
+      attr_accessor failures: ::Array[Types::AgenticRetrieveFailure]
+      attr_accessor message: ::String
+      attr_accessor retrieval_metadata: ::Array[Types::AgenticRetrieveSourceMetadata]
+      attr_accessor retrieval_response: ::Array[Types::AgenticRetrieveTraceResultItem]
+      attr_accessor status: ("IN_PROGRESS" | "SUCCEEDED" | "FAILED")
+      attr_accessor step: ("Planning" | "Retrieval" | "SpeculativeRetrieval" | "FullDocumentExpansion")
+      attr_accessor warnings: ::Array[Types::AgenticRetrieveWarning]
+      SENSITIVE: []
+    end
+
+    class AgenticRetrieveTraceResultItem
+      attr_accessor content: Types::RetrievalContent
+      attr_accessor metadata: ::Hash[::String, untyped]
+      attr_accessor source_retriever: Types::AgenticRetrieveSourceRetriever
+      SENSITIVE: []
+    end
+
+    class AgenticRetrieveWarning
+      attr_accessor guardrail: Types::AgenticRetrieveGuardrailWarning
+      attr_accessor message: Types::AgenticRetrieveWarningMessage
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class Guardrail < AgenticRetrieveWarning
+      end
+      class Message < AgenticRetrieveWarning
+      end
+      class Unknown < AgenticRetrieveWarning
+      end
+    end
+
+    class AgenticRetrieveWarningMessage
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class AgenticRetriever
+      attr_accessor configuration: Types::RetrieverConfiguration
+      attr_accessor description: ::String
+      SENSITIVE: []
     end
 
     class AnalyzePromptEvent
@@ -145,10 +343,26 @@ module Aws::BedrockAgentRuntime
       SENSITIVE: []
     end
 
+    class AudioSegment
+      attr_accessor s3_uri: ::String
+      attr_accessor transcription: ::String
+      SENSITIVE: []
+    end
+
     class BadGatewayException
       attr_accessor message: ::String
       attr_accessor resource_name: ::String
       attr_accessor event_type: untyped
+      SENSITIVE: []
+    end
+
+    class BedrockFoundationModelConfiguration
+      attr_accessor model_configuration: Types::BedrockFoundationModelModelConfiguration
+      SENSITIVE: []
+    end
+
+    class BedrockFoundationModelModelConfiguration
+      attr_accessor model_arn: ::String
       SENSITIVE: []
     end
 
@@ -207,6 +421,19 @@ module Aws::BedrockAgentRuntime
       end
     end
 
+    class CheckIngestedDocumentAclRequest
+      attr_accessor data_source_id: ::String
+      attr_accessor document_id: ::String
+      attr_accessor knowledge_base_id: ::String
+      attr_accessor user_context: Types::UserContext
+      SENSITIVE: [:user_context]
+    end
+
+    class CheckIngestedDocumentAclResponse
+      attr_accessor has_access: bool
+      SENSITIVE: []
+    end
+
     class Citation
       attr_accessor generated_response_part: Types::GeneratedResponsePart
       attr_accessor retrieved_references: ::Array[Types::RetrievedReference]
@@ -232,7 +459,8 @@ module Aws::BedrockAgentRuntime
       attr_accessor execution_output: ::String
       attr_accessor execution_timeout: bool
       attr_accessor files: ::Array[::String]
-      SENSITIVE: []
+      attr_accessor metadata: Types::Metadata
+      SENSITIVE: [:metadata]
     end
 
     class Collaborator
@@ -256,6 +484,13 @@ module Aws::BedrockAgentRuntime
       attr_accessor collaborator_name: ::String
       attr_accessor relay_conversation_history: ("TO_COLLABORATOR" | "DISABLED")
       SENSITIVE: [:collaborator_instruction, :collaborator_name]
+    end
+
+    class ConditionResultEvent
+      attr_accessor node_name: ::String
+      attr_accessor satisfied_conditions: ::Array[Types::SatisfiedCondition]
+      attr_accessor timestamp: ::Time
+      SENSITIVE: []
     end
 
     class ConflictException
@@ -315,6 +550,11 @@ module Aws::BedrockAgentRuntime
       SENSITIVE: []
     end
 
+    class CustomOrchestration
+      attr_accessor executor: Types::OrchestrationExecutor
+      SENSITIVE: []
+    end
+
     class CustomOrchestrationTrace
       attr_accessor event: Types::CustomOrchestrationTraceEvent
       attr_accessor trace_id: ::String
@@ -349,6 +589,37 @@ module Aws::BedrockAgentRuntime
       attr_accessor message: ::String
       attr_accessor resource_name: ::String
       attr_accessor event_type: untyped
+      SENSITIVE: []
+    end
+
+    class DocumentAcl
+      attr_accessor allow_list: Types::DocumentAclMembership
+      attr_accessor deny_list: Types::DocumentAclMembership
+      SENSITIVE: []
+    end
+
+    class DocumentAclCondition
+      attr_accessor condition_operator: ("AND" | "OR")
+      attr_accessor groups: ::Array[Types::DocumentAclGroup]
+      attr_accessor users: ::Array[Types::DocumentAclUser]
+      SENSITIVE: []
+    end
+
+    class DocumentAclGroup
+      attr_accessor id: ::String
+      attr_accessor type: ("KNOWLEDGE_BASE" | "DATA_SOURCE")
+      SENSITIVE: []
+    end
+
+    class DocumentAclMembership
+      attr_accessor conditions: ::Array[Types::DocumentAclCondition]
+      attr_accessor member_relation: ("AND" | "OR")
+      SENSITIVE: []
+    end
+
+    class DocumentAclUser
+      attr_accessor id: ::String
+      attr_accessor type: ("KNOWLEDGE_BASE" | "DATA_SOURCE")
       SENSITIVE: []
     end
 
@@ -388,9 +659,11 @@ module Aws::BedrockAgentRuntime
     end
 
     class FailureTrace
+      attr_accessor failure_code: ::Integer
       attr_accessor failure_reason: ::String
+      attr_accessor metadata: Types::Metadata
       attr_accessor trace_id: ::String
-      SENSITIVE: [:failure_reason]
+      SENSITIVE: [:failure_reason, :metadata]
     end
 
     class FieldForReranking
@@ -418,13 +691,99 @@ module Aws::BedrockAgentRuntime
     end
 
     class FinalResponse
+      attr_accessor metadata: Types::Metadata
       attr_accessor text: ::String
-      SENSITIVE: [:text]
+      SENSITIVE: [:metadata, :text]
     end
 
     class FlowCompletionEvent
       attr_accessor completion_reason: ("SUCCESS" | "INPUT_REQUIRED")
       attr_accessor event_type: untyped
+      SENSITIVE: []
+    end
+
+    class FlowExecutionContent
+      attr_accessor document: untyped
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class Document < FlowExecutionContent
+      end
+      class Unknown < FlowExecutionContent
+      end
+    end
+
+    class FlowExecutionError
+      attr_accessor error: ("ExecutionTimedOut")
+      attr_accessor message: ::String
+      attr_accessor node_name: ::String
+      SENSITIVE: []
+    end
+
+    class FlowExecutionEvent
+      attr_accessor condition_result_event: Types::ConditionResultEvent
+      attr_accessor flow_failure_event: Types::FlowFailureEvent
+      attr_accessor flow_input_event: Types::FlowExecutionInputEvent
+      attr_accessor flow_output_event: Types::FlowExecutionOutputEvent
+      attr_accessor node_action_event: Types::NodeActionEvent
+      attr_accessor node_dependency_event: Types::NodeDependencyEvent
+      attr_accessor node_failure_event: Types::NodeFailureEvent
+      attr_accessor node_input_event: Types::NodeInputEvent
+      attr_accessor node_output_event: Types::NodeOutputEvent
+      attr_accessor unknown: untyped
+      SENSITIVE: [:condition_result_event, :flow_failure_event, :flow_input_event, :flow_output_event, :node_action_event, :node_dependency_event, :node_failure_event, :node_input_event, :node_output_event]
+
+      class ConditionResultEvent < FlowExecutionEvent
+      end
+      class FlowFailureEvent < FlowExecutionEvent
+      end
+      class FlowInputEvent < FlowExecutionEvent
+      end
+      class FlowOutputEvent < FlowExecutionEvent
+      end
+      class NodeActionEvent < FlowExecutionEvent
+      end
+      class NodeDependencyEvent < FlowExecutionEvent
+      end
+      class NodeFailureEvent < FlowExecutionEvent
+      end
+      class NodeInputEvent < FlowExecutionEvent
+      end
+      class NodeOutputEvent < FlowExecutionEvent
+      end
+      class Unknown < FlowExecutionEvent
+      end
+    end
+
+    class FlowExecutionInputEvent
+      attr_accessor fields: ::Array[Types::FlowInputField]
+      attr_accessor node_name: ::String
+      attr_accessor timestamp: ::Time
+      SENSITIVE: []
+    end
+
+    class FlowExecutionOutputEvent
+      attr_accessor fields: ::Array[Types::FlowOutputField]
+      attr_accessor node_name: ::String
+      attr_accessor timestamp: ::Time
+      SENSITIVE: []
+    end
+
+    class FlowExecutionSummary
+      attr_accessor created_at: ::Time
+      attr_accessor ended_at: ::Time
+      attr_accessor execution_arn: ::String
+      attr_accessor flow_alias_identifier: ::String
+      attr_accessor flow_identifier: ::String
+      attr_accessor flow_version: ::String
+      attr_accessor status: ("Running" | "Succeeded" | "Failed" | "TimedOut" | "Aborted")
+      SENSITIVE: []
+    end
+
+    class FlowFailureEvent
+      attr_accessor error_code: ("VALIDATION" | "INTERNAL_SERVER" | "NODE_EXECUTION_FAILED")
+      attr_accessor error_message: ::String
+      attr_accessor timestamp: ::Time
       SENSITIVE: []
     end
 
@@ -445,6 +804,12 @@ module Aws::BedrockAgentRuntime
       end
       class Unknown < FlowInputContent
       end
+    end
+
+    class FlowInputField
+      attr_accessor content: Types::FlowExecutionContent
+      attr_accessor name: ::String
+      SENSITIVE: [:content]
     end
 
     class FlowMultiTurnInputContent
@@ -485,14 +850,26 @@ module Aws::BedrockAgentRuntime
       SENSITIVE: []
     end
 
+    class FlowOutputField
+      attr_accessor content: Types::FlowExecutionContent
+      attr_accessor name: ::String
+      SENSITIVE: [:content]
+    end
+
     class FlowTrace
       attr_accessor condition_node_result_trace: Types::FlowTraceConditionNodeResultEvent
+      attr_accessor node_action_trace: Types::FlowTraceNodeActionEvent
+      attr_accessor node_dependency_trace: Types::FlowTraceDependencyEvent
       attr_accessor node_input_trace: Types::FlowTraceNodeInputEvent
       attr_accessor node_output_trace: Types::FlowTraceNodeOutputEvent
       attr_accessor unknown: untyped
-      SENSITIVE: [:condition_node_result_trace, :node_input_trace, :node_output_trace]
+      SENSITIVE: [:condition_node_result_trace, :node_action_trace, :node_dependency_trace, :node_input_trace, :node_output_trace]
 
       class ConditionNodeResultTrace < FlowTrace
+      end
+      class NodeActionTrace < FlowTrace
+      end
+      class NodeDependencyTrace < FlowTrace
       end
       class NodeInputTrace < FlowTrace
       end
@@ -514,10 +891,28 @@ module Aws::BedrockAgentRuntime
       SENSITIVE: []
     end
 
+    class FlowTraceDependencyEvent
+      attr_accessor node_name: ::String
+      attr_accessor timestamp: ::Time
+      attr_accessor trace_elements: Types::TraceElements
+      SENSITIVE: [:trace_elements]
+    end
+
     class FlowTraceEvent
       attr_accessor trace: Types::FlowTrace
       attr_accessor event_type: untyped
       SENSITIVE: [:trace]
+    end
+
+    class FlowTraceNodeActionEvent
+      attr_accessor node_name: ::String
+      attr_accessor operation_name: ::String
+      attr_accessor operation_request: untyped
+      attr_accessor operation_response: untyped
+      attr_accessor request_id: ::String
+      attr_accessor service_name: ::String
+      attr_accessor timestamp: ::Time
+      SENSITIVE: []
     end
 
     class FlowTraceNodeInputContent
@@ -538,10 +933,28 @@ module Aws::BedrockAgentRuntime
       SENSITIVE: []
     end
 
+    class FlowTraceNodeInputExecutionChainItem
+      attr_accessor index: ::Integer
+      attr_accessor node_name: ::String
+      attr_accessor type: ("Iterator" | "Loop")
+      SENSITIVE: []
+    end
+
     class FlowTraceNodeInputField
+      attr_accessor category: ("LoopCondition" | "ReturnValueToLoopStart" | "ExitLoop")
       attr_accessor content: Types::FlowTraceNodeInputContent
+      attr_accessor execution_chain: ::Array[Types::FlowTraceNodeInputExecutionChainItem]
       attr_accessor node_input_name: ::String
-      SENSITIVE: [:content]
+      attr_accessor source: Types::FlowTraceNodeInputSource
+      attr_accessor type: ("String" | "Number" | "Boolean" | "Object" | "Array")
+      SENSITIVE: [:content, :execution_chain, :source]
+    end
+
+    class FlowTraceNodeInputSource
+      attr_accessor expression: ::String
+      attr_accessor node_name: ::String
+      attr_accessor output_field_name: ::String
+      SENSITIVE: [:expression]
     end
 
     class FlowTraceNodeOutputContent
@@ -564,7 +977,21 @@ module Aws::BedrockAgentRuntime
 
     class FlowTraceNodeOutputField
       attr_accessor content: Types::FlowTraceNodeOutputContent
+      attr_accessor next: ::Array[Types::FlowTraceNodeOutputNext]
       attr_accessor node_output_name: ::String
+      attr_accessor type: ("String" | "Number" | "Boolean" | "Object" | "Array")
+      SENSITIVE: []
+    end
+
+    class FlowTraceNodeOutputNext
+      attr_accessor input_field_name: ::String
+      attr_accessor node_name: ::String
+      SENSITIVE: []
+    end
+
+    class FoundationModelConfiguration
+      attr_accessor bedrock_foundation_model_configuration: Types::BedrockFoundationModelConfiguration
+      attr_accessor type: ("BEDROCK_FOUNDATION_MODEL")
       SENSITIVE: []
     end
 
@@ -659,6 +1086,70 @@ module Aws::BedrockAgentRuntime
       attr_accessor memory_contents: ::Array[Types::Memory]
       attr_accessor next_token: ::String
       SENSITIVE: []
+    end
+
+    class GetDocumentContentRequest
+      attr_accessor data_source_id: ::String
+      attr_accessor document_id: ::String
+      attr_accessor knowledge_base_id: ::String
+      attr_accessor output_format: ("RAW" | "EXTRACTED")
+      attr_accessor user_context: Types::UserContext
+      SENSITIVE: [:user_context]
+    end
+
+    class GetDocumentContentResponse
+      attr_accessor document_content_length: ::Integer
+      attr_accessor mime_type: ::String
+      attr_accessor presigned_url: ::String
+      SENSITIVE: [:presigned_url]
+    end
+
+    class GetExecutionFlowSnapshotRequest
+      attr_accessor execution_identifier: ::String
+      attr_accessor flow_alias_identifier: ::String
+      attr_accessor flow_identifier: ::String
+      SENSITIVE: []
+    end
+
+    class GetExecutionFlowSnapshotResponse
+      attr_accessor customer_encryption_key_arn: ::String
+      attr_accessor definition: ::String
+      attr_accessor execution_role_arn: ::String
+      attr_accessor flow_alias_identifier: ::String
+      attr_accessor flow_identifier: ::String
+      attr_accessor flow_version: ::String
+      SENSITIVE: []
+    end
+
+    class GetFlowExecutionRequest
+      attr_accessor execution_identifier: ::String
+      attr_accessor flow_alias_identifier: ::String
+      attr_accessor flow_identifier: ::String
+      SENSITIVE: []
+    end
+
+    class GetFlowExecutionResponse
+      attr_accessor ended_at: ::Time
+      attr_accessor errors: ::Array[Types::FlowExecutionError]
+      attr_accessor execution_arn: ::String
+      attr_accessor flow_alias_identifier: ::String
+      attr_accessor flow_identifier: ::String
+      attr_accessor flow_version: ::String
+      attr_accessor started_at: ::Time
+      attr_accessor status: ("Running" | "Succeeded" | "Failed" | "TimedOut" | "Aborted")
+      SENSITIVE: []
+    end
+
+    class GetIngestedDocumentAclRequest
+      attr_accessor data_source_id: ::String
+      attr_accessor document_id: ::String
+      attr_accessor knowledge_base_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetIngestedDocumentAclResponse
+      attr_accessor document_acl: Types::DocumentAcl
+      SENSITIVE: [:document_acl]
     end
 
     class GetInvocationStepRequest
@@ -776,9 +1267,10 @@ module Aws::BedrockAgentRuntime
     class GuardrailTrace
       attr_accessor action: ("INTERVENED" | "NONE")
       attr_accessor input_assessments: ::Array[Types::GuardrailAssessment]
+      attr_accessor metadata: Types::Metadata
       attr_accessor output_assessments: ::Array[Types::GuardrailAssessment]
       attr_accessor trace_id: ::String
-      SENSITIVE: []
+      SENSITIVE: [:metadata]
     end
 
     class GuardrailWordPolicyAssessment
@@ -865,10 +1357,13 @@ module Aws::BedrockAgentRuntime
     end
 
     class InlineAgentTracePart
+      attr_accessor caller_chain: ::Array[Types::Caller]
+      attr_accessor collaborator_name: ::String
+      attr_accessor event_time: ::Time
       attr_accessor session_id: ::String
       attr_accessor trace: Types::Trace
       attr_accessor event_type: untyped
-      SENSITIVE: [:trace]
+      SENSITIVE: [:collaborator_name, :trace]
     end
 
     class InlineBedrockModelConfigurations
@@ -891,6 +1386,12 @@ module Aws::BedrockAgentRuntime
       attr_accessor source: Types::FileSource
       attr_accessor use_case: ("CODE_INTERPRETER" | "CHAT")
       SENSITIVE: []
+    end
+
+    class InputImage
+      attr_accessor format: ("png" | "jpeg" | "gif" | "webp")
+      attr_accessor inline_content: ::String
+      SENSITIVE: [:inline_content]
     end
 
     class InputPrompt
@@ -992,6 +1493,7 @@ module Aws::BedrockAgentRuntime
       attr_accessor end_session: bool
       attr_accessor input_text: ::String
       attr_accessor memory_id: ::String
+      attr_accessor prompt_creation_configurations: Types::PromptCreationConfigurations
       attr_accessor session_id: ::String
       attr_accessor session_state: Types::SessionState
       attr_accessor source_arn: ::String
@@ -1026,9 +1528,11 @@ module Aws::BedrockAgentRuntime
     class InvokeInlineAgentRequest
       attr_accessor action_groups: ::Array[Types::AgentActionGroup]
       attr_accessor agent_collaboration: ("SUPERVISOR" | "SUPERVISOR_ROUTER" | "DISABLED")
+      attr_accessor agent_name: ::String
       attr_accessor bedrock_model_configurations: Types::InlineBedrockModelConfigurations
       attr_accessor collaborator_configurations: ::Array[Types::CollaboratorConfiguration]
       attr_accessor collaborators: ::Array[Types::Collaborator]
+      attr_accessor custom_orchestration: Types::CustomOrchestration
       attr_accessor customer_encryption_key_arn: ::String
       attr_accessor enable_trace: bool
       attr_accessor end_session: bool
@@ -1039,10 +1543,12 @@ module Aws::BedrockAgentRuntime
       attr_accessor input_text: ::String
       attr_accessor instruction: ::String
       attr_accessor knowledge_bases: ::Array[Types::KnowledgeBase]
+      attr_accessor orchestration_type: ("DEFAULT" | "CUSTOM_ORCHESTRATION")
+      attr_accessor prompt_creation_configurations: Types::PromptCreationConfigurations
       attr_accessor prompt_override_configuration: Types::PromptOverrideConfiguration
       attr_accessor session_id: ::String
       attr_accessor streaming_configurations: Types::StreamingConfigurations
-      SENSITIVE: [:input_text, :instruction, :prompt_override_configuration]
+      SENSITIVE: [:agent_name, :input_text, :instruction, :prompt_override_configuration]
     end
 
     class InvokeInlineAgentResponse
@@ -1072,22 +1578,27 @@ module Aws::BedrockAgentRuntime
     end
 
     class KnowledgeBaseLookupOutput
+      attr_accessor metadata: Types::Metadata
       attr_accessor retrieved_references: ::Array[Types::RetrievedReference]
-      SENSITIVE: []
+      SENSITIVE: [:metadata]
     end
 
     class KnowledgeBaseQuery
+      attr_accessor image: Types::InputImage
       attr_accessor text: ::String
+      attr_accessor type: ("TEXT" | "IMAGE")
       SENSITIVE: []
     end
 
     class KnowledgeBaseRetrievalConfiguration
+      attr_accessor managed_search_configuration: Types::ManagedSearchConfiguration
       attr_accessor vector_search_configuration: Types::KnowledgeBaseVectorSearchConfiguration
       SENSITIVE: []
     end
 
     class KnowledgeBaseRetrievalResult
       attr_accessor content: Types::RetrievalResultContent
+      attr_accessor document_id: ::String
       attr_accessor location: Types::RetrievalResultLocation
       attr_accessor metadata: ::Hash[::String, untyped]
       attr_accessor score: ::Float
@@ -1103,6 +1614,12 @@ module Aws::BedrockAgentRuntime
       SENSITIVE: []
     end
 
+    class KnowledgeBaseRetrieverConfiguration
+      attr_accessor knowledge_base_id: ::String
+      attr_accessor retrieval_overrides: Types::RetrievalOverrides
+      SENSITIVE: []
+    end
+
     class KnowledgeBaseVectorSearchConfiguration
       attr_accessor filter: Types::RetrievalFilter
       attr_accessor implicit_filter_configuration: Types::ImplicitFilterConfiguration
@@ -1110,6 +1627,36 @@ module Aws::BedrockAgentRuntime
       attr_accessor override_search_type: ("HYBRID" | "SEMANTIC")
       attr_accessor reranking_configuration: Types::VectorSearchRerankingConfiguration
       SENSITIVE: [:filter]
+    end
+
+    class ListFlowExecutionEventsRequest
+      attr_accessor event_type: ("Node" | "Flow")
+      attr_accessor execution_identifier: ::String
+      attr_accessor flow_alias_identifier: ::String
+      attr_accessor flow_identifier: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListFlowExecutionEventsResponse
+      attr_accessor flow_execution_events: ::Array[Types::FlowExecutionEvent]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListFlowExecutionsRequest
+      attr_accessor flow_alias_identifier: ::String
+      attr_accessor flow_identifier: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListFlowExecutionsResponse
+      attr_accessor flow_execution_summaries: ::Array[Types::FlowExecutionSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
     end
 
     class ListInvocationStepsRequest
@@ -1161,6 +1708,33 @@ module Aws::BedrockAgentRuntime
       SENSITIVE: []
     end
 
+    class ManagedSearchBedrockRerankingConfiguration
+      attr_accessor metadata_configuration: Types::MetadataConfigurationForReranking
+      attr_accessor model_configuration: Types::ManagedSearchBedrockRerankingModelConfiguration
+      attr_accessor number_of_reranked_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ManagedSearchBedrockRerankingModelConfiguration
+      attr_accessor additional_model_request_fields: ::Hash[::String, untyped]
+      attr_accessor model_arn: ::String
+      SENSITIVE: []
+    end
+
+    class ManagedSearchConfiguration
+      attr_accessor filter: Types::RetrievalFilter
+      attr_accessor number_of_results: ::Integer
+      attr_accessor reranking_configuration: Types::ManagedSearchRerankingConfiguration
+      attr_accessor reranking_model_type: ("CUSTOM" | "MANAGED" | "NONE")
+      SENSITIVE: [:filter]
+    end
+
+    class ManagedSearchRerankingConfiguration
+      attr_accessor bedrock_reranking_configuration: Types::ManagedSearchBedrockRerankingConfiguration
+      attr_accessor type: ("BEDROCK_RERANKING_MODEL")
+      SENSITIVE: []
+    end
+
     class Memory
       attr_accessor session_summary: Types::MemorySessionSummary
       attr_accessor unknown: untyped
@@ -1188,6 +1762,11 @@ module Aws::BedrockAgentRuntime
     end
 
     class Metadata
+      attr_accessor client_request_id: ::String
+      attr_accessor end_time: ::Time
+      attr_accessor operation_total_time_ms: ::Integer
+      attr_accessor start_time: ::Time
+      attr_accessor total_time_ms: ::Integer
       attr_accessor usage: Types::Usage
       SENSITIVE: [:usage]
     end
@@ -1226,6 +1805,106 @@ module Aws::BedrockAgentRuntime
     class ModelPerformanceConfiguration
       attr_accessor performance_config: Types::PerformanceConfiguration
       SENSITIVE: []
+    end
+
+    class NodeActionEvent
+      attr_accessor node_name: ::String
+      attr_accessor operation_name: ::String
+      attr_accessor operation_request: untyped
+      attr_accessor operation_response: untyped
+      attr_accessor request_id: ::String
+      attr_accessor service_name: ::String
+      attr_accessor timestamp: ::Time
+      SENSITIVE: []
+    end
+
+    class NodeDependencyEvent
+      attr_accessor node_name: ::String
+      attr_accessor timestamp: ::Time
+      attr_accessor trace_elements: Types::NodeTraceElements
+      SENSITIVE: [:trace_elements]
+    end
+
+    class NodeExecutionContent
+      attr_accessor document: untyped
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class Document < NodeExecutionContent
+      end
+      class Unknown < NodeExecutionContent
+      end
+    end
+
+    class NodeFailureEvent
+      attr_accessor error_code: ("VALIDATION" | "DEPENDENCY_FAILED" | "BAD_GATEWAY" | "INTERNAL_SERVER")
+      attr_accessor error_message: ::String
+      attr_accessor node_name: ::String
+      attr_accessor timestamp: ::Time
+      SENSITIVE: []
+    end
+
+    class NodeInputEvent
+      attr_accessor fields: ::Array[Types::NodeInputField]
+      attr_accessor node_name: ::String
+      attr_accessor timestamp: ::Time
+      SENSITIVE: []
+    end
+
+    class NodeInputExecutionChainItem
+      attr_accessor index: ::Integer
+      attr_accessor node_name: ::String
+      attr_accessor type: ("Iterator" | "Loop")
+      SENSITIVE: []
+    end
+
+    class NodeInputField
+      attr_accessor category: ("LoopCondition" | "ReturnValueToLoopStart" | "ExitLoop")
+      attr_accessor content: Types::NodeExecutionContent
+      attr_accessor execution_chain: ::Array[Types::NodeInputExecutionChainItem]
+      attr_accessor name: ::String
+      attr_accessor source: Types::NodeInputSource
+      attr_accessor type: ("String" | "Number" | "Boolean" | "Object" | "Array")
+      SENSITIVE: [:content]
+    end
+
+    class NodeInputSource
+      attr_accessor expression: ::String
+      attr_accessor node_name: ::String
+      attr_accessor output_field_name: ::String
+      SENSITIVE: [:expression]
+    end
+
+    class NodeOutputEvent
+      attr_accessor fields: ::Array[Types::NodeOutputField]
+      attr_accessor node_name: ::String
+      attr_accessor timestamp: ::Time
+      SENSITIVE: []
+    end
+
+    class NodeOutputField
+      attr_accessor content: Types::NodeExecutionContent
+      attr_accessor name: ::String
+      attr_accessor next: ::Array[Types::NodeOutputNext]
+      attr_accessor type: ("String" | "Number" | "Boolean" | "Object" | "Array")
+      SENSITIVE: [:content]
+    end
+
+    class NodeOutputNext
+      attr_accessor input_field_name: ::String
+      attr_accessor node_name: ::String
+      SENSITIVE: []
+    end
+
+    class NodeTraceElements
+      attr_accessor agent_traces: ::Array[Types::TracePart]
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class AgentTraces < NodeTraceElements
+      end
+      class Unknown < NodeTraceElements
+      end
     end
 
     class Observation
@@ -1275,6 +1954,17 @@ module Aws::BedrockAgentRuntime
       attr_accessor prompt_template: Types::PromptTemplate
       attr_accessor query_transformation_configuration: Types::QueryTransformationConfiguration
       SENSITIVE: []
+    end
+
+    class OrchestrationExecutor
+      attr_accessor lambda: ::String
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class Lambda < OrchestrationExecutor
+      end
+      class Unknown < OrchestrationExecutor
+      end
     end
 
     class OrchestrationModelInvocationOutput
@@ -1408,6 +2098,12 @@ module Aws::BedrockAgentRuntime
       attr_accessor prompt_state: ("ENABLED" | "DISABLED")
       attr_accessor prompt_type: ("PRE_PROCESSING" | "ORCHESTRATION" | "KNOWLEDGE_BASE_RESPONSE_GENERATION" | "POST_PROCESSING" | "ROUTING_CLASSIFIER")
       SENSITIVE: [:base_prompt_template]
+    end
+
+    class PromptCreationConfigurations
+      attr_accessor exclude_previous_thinking_steps: bool
+      attr_accessor previous_conversation_turns_to_include: ::Integer
+      SENSITIVE: []
     end
 
     class PromptOverrideConfiguration
@@ -1564,6 +2260,13 @@ module Aws::BedrockAgentRuntime
       SENSITIVE: []
     end
 
+    class RetrievalContent
+      attr_accessor byte_content: ::String
+      attr_accessor mime_type: ::String
+      attr_accessor text: ::String
+      SENSITIVE: []
+    end
+
     class RetrievalFilter
       attr_accessor and_all: ::Array[Types::RetrievalFilter]
       attr_accessor equals: Types::FilterAttribute
@@ -1611,16 +2314,24 @@ module Aws::BedrockAgentRuntime
       end
     end
 
+    class RetrievalOverrides
+      attr_accessor filter: Types::RetrievalFilter
+      attr_accessor max_number_of_results: ::Integer
+      SENSITIVE: [:filter]
+    end
+
     class RetrievalResultConfluenceLocation
       attr_accessor url: ::String
       SENSITIVE: []
     end
 
     class RetrievalResultContent
+      attr_accessor audio: Types::AudioSegment
       attr_accessor byte_content: ::String
       attr_accessor row: ::Array[Types::RetrievalResultContentColumn]
       attr_accessor text: ::String
-      attr_accessor type: ("TEXT" | "IMAGE" | "ROW")
+      attr_accessor type: ("TEXT" | "IMAGE" | "ROW" | "AUDIO" | "VIDEO")
+      attr_accessor video: Types::VideoSegment
       SENSITIVE: [:row]
     end
 
@@ -1636,6 +2347,11 @@ module Aws::BedrockAgentRuntime
       SENSITIVE: []
     end
 
+    class RetrievalResultGoogleDriveLocation
+      attr_accessor url: ::String
+      SENSITIVE: []
+    end
+
     class RetrievalResultKendraDocumentLocation
       attr_accessor uri: ::String
       SENSITIVE: []
@@ -1644,13 +2360,20 @@ module Aws::BedrockAgentRuntime
     class RetrievalResultLocation
       attr_accessor confluence_location: Types::RetrievalResultConfluenceLocation
       attr_accessor custom_document_location: Types::RetrievalResultCustomDocumentLocation
+      attr_accessor google_drive_location: Types::RetrievalResultGoogleDriveLocation
       attr_accessor kendra_document_location: Types::RetrievalResultKendraDocumentLocation
+      attr_accessor one_drive_location: Types::RetrievalResultOneDriveLocation
       attr_accessor s3_location: Types::RetrievalResultS3Location
       attr_accessor salesforce_location: Types::RetrievalResultSalesforceLocation
       attr_accessor share_point_location: Types::RetrievalResultSharePointLocation
       attr_accessor sql_location: Types::RetrievalResultSqlLocation
-      attr_accessor type: ("S3" | "WEB" | "CONFLUENCE" | "SALESFORCE" | "SHAREPOINT" | "CUSTOM" | "KENDRA" | "SQL")
+      attr_accessor type: ("S3" | "WEB" | "CONFLUENCE" | "SALESFORCE" | "SHAREPOINT" | "CUSTOM" | "KENDRA" | "SQL" | "ONEDRIVE" | "GOOGLEDRIVE")
       attr_accessor web_location: Types::RetrievalResultWebLocation
+      SENSITIVE: []
+    end
+
+    class RetrievalResultOneDriveLocation
+      attr_accessor url: ::String
       SENSITIVE: []
     end
 
@@ -1707,7 +2430,8 @@ module Aws::BedrockAgentRuntime
       attr_accessor retrieve_and_generate_configuration: Types::RetrieveAndGenerateConfiguration
       attr_accessor session_configuration: Types::RetrieveAndGenerateSessionConfiguration
       attr_accessor session_id: ::String
-      SENSITIVE: [:input]
+      attr_accessor user_context: Types::UserContext
+      SENSITIVE: [:input, :user_context]
     end
 
     class RetrieveAndGenerateResponse
@@ -1728,7 +2452,8 @@ module Aws::BedrockAgentRuntime
       attr_accessor retrieve_and_generate_configuration: Types::RetrieveAndGenerateConfiguration
       attr_accessor session_configuration: Types::RetrieveAndGenerateSessionConfiguration
       attr_accessor session_id: ::String
-      SENSITIVE: [:input]
+      attr_accessor user_context: Types::UserContext
+      SENSITIVE: [:input, :user_context]
     end
 
     class RetrieveAndGenerateStreamResponse
@@ -1743,7 +2468,8 @@ module Aws::BedrockAgentRuntime
       attr_accessor next_token: ::String
       attr_accessor retrieval_configuration: Types::KnowledgeBaseRetrievalConfiguration
       attr_accessor retrieval_query: Types::KnowledgeBaseQuery
-      SENSITIVE: [:retrieval_query]
+      attr_accessor user_context: Types::UserContext
+      SENSITIVE: [:retrieval_query, :user_context]
     end
 
     class RetrieveResponse
@@ -1758,6 +2484,17 @@ module Aws::BedrockAgentRuntime
       attr_accessor location: Types::RetrievalResultLocation
       attr_accessor metadata: ::Hash[::String, untyped]
       SENSITIVE: [:content, :location, :metadata]
+    end
+
+    class RetrieverConfiguration
+      attr_accessor knowledge_base: Types::KnowledgeBaseRetrieverConfiguration
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class KnowledgeBase < RetrieverConfiguration
+      end
+      class Unknown < RetrieverConfiguration
+      end
     end
 
     class ReturnControlPayload
@@ -1821,6 +2558,11 @@ module Aws::BedrockAgentRuntime
       SENSITIVE: []
     end
 
+    class SatisfiedCondition
+      attr_accessor condition_name: ::String
+      SENSITIVE: []
+    end
+
     class ServiceQuotaExceededException
       attr_accessor message: ::String
       attr_accessor event_type: untyped
@@ -1850,6 +2592,33 @@ module Aws::BedrockAgentRuntime
     class Span
       attr_accessor end: ::Integer
       attr_accessor start: ::Integer
+      SENSITIVE: []
+    end
+
+    class StartFlowExecutionRequest
+      attr_accessor flow_alias_identifier: ::String
+      attr_accessor flow_execution_name: ::String
+      attr_accessor flow_identifier: ::String
+      attr_accessor inputs: ::Array[Types::FlowInput]
+      attr_accessor model_performance_configuration: Types::ModelPerformanceConfiguration
+      SENSITIVE: []
+    end
+
+    class StartFlowExecutionResponse
+      attr_accessor execution_arn: ::String
+      SENSITIVE: []
+    end
+
+    class StopFlowExecutionRequest
+      attr_accessor execution_identifier: ::String
+      attr_accessor flow_alias_identifier: ::String
+      attr_accessor flow_identifier: ::String
+      SENSITIVE: []
+    end
+
+    class StopFlowExecutionResponse
+      attr_accessor execution_arn: ::String
+      attr_accessor status: ("Running" | "Succeeded" | "Failed" | "TimedOut" | "Aborted")
       SENSITIVE: []
     end
 
@@ -1933,6 +2702,17 @@ module Aws::BedrockAgentRuntime
       end
     end
 
+    class TraceElements
+      attr_accessor agent_traces: ::Array[Types::TracePart]
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class AgentTraces < TraceElements
+      end
+      class Unknown < TraceElements
+      end
+    end
+
     class TracePart
       attr_accessor agent_alias_id: ::String
       attr_accessor agent_id: ::String
@@ -1982,6 +2762,11 @@ module Aws::BedrockAgentRuntime
       SENSITIVE: []
     end
 
+    class UserContext
+      attr_accessor user_id: ::String
+      SENSITIVE: []
+    end
+
     class ValidationException
       attr_accessor message: ::String
       attr_accessor event_type: untyped
@@ -2005,6 +2790,16 @@ module Aws::BedrockAgentRuntime
       attr_accessor bedrock_reranking_configuration: Types::VectorSearchBedrockRerankingConfiguration
       attr_accessor type: ("BEDROCK_RERANKING_MODEL")
       SENSITIVE: []
+    end
+
+    class VideoSegment
+      attr_accessor s3_uri: ::String
+      attr_accessor summary: ::String
+      SENSITIVE: []
+    end
+
+    class AgenticRetrieveStreamResponseOutput < Enumerator[untyped, untyped]
+      def event_types: () -> [:access_denied_exception, :bad_gateway_exception, :conflict_exception, :dependency_failed_exception, :internal_server_exception, :resource_not_found_exception, :response_event, :result, :service_quota_exceeded_exception, :throttling_exception, :trace_event, :validation_exception]
     end
 
     class FlowResponseStream < Enumerator[untyped, untyped]

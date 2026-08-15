@@ -31,6 +31,7 @@ module Aws::Account
   # * {ConflictException}
   # * {InternalServerException}
   # * {ResourceNotFoundException}
+  # * {ResourceUnavailableException}
   # * {TooManyRequestsException}
   # * {ValidationException}
   #
@@ -53,6 +54,11 @@ module Aws::Account
       def message
         @message || @data[:message]
       end
+
+      # @return [String]
+      def error_type
+        @data[:error_type]
+      end
     end
 
     class ConflictException < ServiceError
@@ -68,6 +74,11 @@ module Aws::Account
       def message
         @message || @data[:message]
       end
+
+      # @return [String]
+      def error_type
+        @data[:error_type]
+      end
     end
 
     class InternalServerException < ServiceError
@@ -82,6 +93,11 @@ module Aws::Account
       # @return [String]
       def message
         @message || @data[:message]
+      end
+
+      # @return [String]
+      def error_type
+        @data[:error_type]
       end
 
       def retryable?
@@ -102,6 +118,31 @@ module Aws::Account
       def message
         @message || @data[:message]
       end
+
+      # @return [String]
+      def error_type
+        @data[:error_type]
+      end
+    end
+
+    class ResourceUnavailableException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::Account::Types::ResourceUnavailableException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+
+      # @return [String]
+      def error_type
+        @data[:error_type]
+      end
     end
 
     class TooManyRequestsException < ServiceError
@@ -116,6 +157,11 @@ module Aws::Account
       # @return [String]
       def message
         @message || @data[:message]
+      end
+
+      # @return [String]
+      def error_type
+        @data[:error_type]
       end
 
       def retryable?
@@ -137,11 +183,6 @@ module Aws::Account
       end
 
       # @return [String]
-      def field_list
-        @data[:field_list]
-      end
-
-      # @return [String]
       def message
         @message || @data[:message]
       end
@@ -149,6 +190,11 @@ module Aws::Account
       # @return [String]
       def reason
         @data[:reason]
+      end
+
+      # @return [String]
+      def field_list
+        @data[:field_list]
       end
     end
 

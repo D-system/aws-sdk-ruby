@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -107,7 +108,7 @@ module Aws
                                                                         savings_plan_id: ::String?
                                                                       }?
                                                                     }
-                                                                  },
+                                                                  }
                                                                 ],
                                                                 ?client_token: ::String
                                                               ) -> _BatchCreateBillScenarioCommitmentModificationResponseSuccess
@@ -134,44 +135,10 @@ module Aws
                                                                  {
                                                                    start_hour: ::Time,
                                                                    amount: ::Float
-                                                                 },
-                                                               ]?,
-                                                               historical_usage: {
-                                                                 service_code: ::String,
-                                                                 usage_type: ::String,
-                                                                 operation: ::String,
-                                                                 location: ::String?,
-                                                                 usage_account_id: ::String,
-                                                                 bill_interval: {
-                                                                   start: ::Time?,
-                                                                   end: ::Time?
-                                                                 },
-                                                                 filter_expression: {
-                                                                   and: Array[
-                                                                     untyped,
-                                                                   ]?,
-                                                                   or: Array[
-                                                                     untyped,
-                                                                   ]?,
-                                                                   not: untyped?,
-                                                                   cost_categories: {
-                                                                     key: ::String?,
-                                                                     match_options: Array[::String]?,
-                                                                     values: Array[::String]?
-                                                                   }?,
-                                                                   dimensions: {
-                                                                     key: ::String?,
-                                                                     match_options: Array[::String]?,
-                                                                     values: Array[::String]?
-                                                                   }?,
-                                                                   tags: {
-                                                                     key: ::String?,
-                                                                     match_options: Array[::String]?,
-                                                                     values: Array[::String]?
-                                                                   }?
                                                                  }
-                                                               }?
-                                                             },
+                                                               ]?,
+                                                               historical_usage: Params::historical_usage_entity?
+                                                             }
                                                            ],
                                                            ?client_token: ::String
                                                          ) -> _BatchCreateBillScenarioUsageModificationResponseSuccess
@@ -194,42 +161,8 @@ module Aws
                                                       group: ::String?,
                                                       usage_account_id: ::String,
                                                       amount: ::Float,
-                                                      historical_usage: {
-                                                        service_code: ::String,
-                                                        usage_type: ::String,
-                                                        operation: ::String,
-                                                        location: ::String?,
-                                                        usage_account_id: ::String,
-                                                        bill_interval: {
-                                                          start: ::Time?,
-                                                          end: ::Time?
-                                                        },
-                                                        filter_expression: {
-                                                          and: Array[
-                                                            untyped,
-                                                          ]?,
-                                                          or: Array[
-                                                            untyped,
-                                                          ]?,
-                                                          not: untyped?,
-                                                          cost_categories: {
-                                                            key: ::String?,
-                                                            match_options: Array[::String]?,
-                                                            values: Array[::String]?
-                                                          }?,
-                                                          dimensions: {
-                                                            key: ::String?,
-                                                            match_options: Array[::String]?,
-                                                            values: Array[::String]?
-                                                          }?,
-                                                          tags: {
-                                                            key: ::String?,
-                                                            match_options: Array[::String]?,
-                                                            values: Array[::String]?
-                                                          }?
-                                                        }
-                                                      }?
-                                                    },
+                                                      historical_usage: Params::historical_usage_entity?
+                                                    }
                                                   ],
                                                   ?client_token: ::String
                                                 ) -> _BatchCreateWorkloadEstimateUsageResponseSuccess
@@ -280,7 +213,7 @@ module Aws
                                                                   {
                                                                     id: ::String,
                                                                     group: ::String?
-                                                                  },
+                                                                  }
                                                                 ]
                                                               ) -> _BatchUpdateBillScenarioCommitmentModificationResponseSuccess
                                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchUpdateBillScenarioCommitmentModificationResponseSuccess
@@ -301,9 +234,9 @@ module Aws
                                                                  {
                                                                    start_hour: ::Time,
                                                                    amount: ::Float
-                                                                 },
+                                                                 }
                                                                ]?
-                                                             },
+                                                             }
                                                            ]
                                                          ) -> _BatchUpdateBillScenarioUsageModificationResponseSuccess
                                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchUpdateBillScenarioUsageModificationResponseSuccess
@@ -321,7 +254,7 @@ module Aws
                                                       id: ::String,
                                                       group: ::String?,
                                                       amount: ::Float?
-                                                    },
+                                                    }
                                                   ]
                                                 ) -> _BatchUpdateWorkloadEstimateUsageResponseSuccess
                                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchUpdateWorkloadEstimateUsageResponseSuccess
@@ -336,6 +269,9 @@ module Aws
         def cost_summary: () -> Types::BillEstimateCostSummary
         def created_at: () -> ::Time
         def expires_at: () -> ::Time
+        def group_sharing_preference: () -> ("OPEN" | "PRIORITIZED" | "RESTRICTED")
+        def cost_category_group_sharing_preference_arn: () -> ::String
+        def cost_category_group_sharing_preference_effective_date: () -> ::Time
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/BCMPricingCalculator/Client.html#create_bill_estimate-instance_method
       def create_bill_estimate: (
@@ -351,16 +287,20 @@ module Aws
         def id: () -> ::String
         def name: () -> ::String
         def bill_interval: () -> Types::BillInterval
-        def status: () -> ("READY" | "LOCKED" | "FAILED")
+        def status: () -> ("READY" | "LOCKED" | "FAILED" | "STALE")
         def created_at: () -> ::Time
         def expires_at: () -> ::Time
         def failure_message: () -> ::String
+        def group_sharing_preference: () -> ("OPEN" | "PRIORITIZED" | "RESTRICTED")
+        def cost_category_group_sharing_preference_arn: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/BCMPricingCalculator/Client.html#create_bill_scenario-instance_method
       def create_bill_scenario: (
                                   name: ::String,
                                   ?client_token: ::String,
-                                  ?tags: Hash[::String, ::String]
+                                  ?tags: Hash[::String, ::String],
+                                  ?group_sharing_preference: ("OPEN" | "PRIORITIZED" | "RESTRICTED"),
+                                  ?cost_category_group_sharing_preference_arn: ::String
                                 ) -> _CreateBillScenarioResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateBillScenarioResponseSuccess
 
@@ -370,7 +310,7 @@ module Aws
         def name: () -> ::String
         def created_at: () -> ::Time
         def expires_at: () -> ::Time
-        def rate_type: () -> ("BEFORE_DISCOUNTS" | "AFTER_DISCOUNTS")
+        def rate_type: () -> ("BEFORE_DISCOUNTS" | "AFTER_DISCOUNTS" | "AFTER_DISCOUNTS_AND_COMMITMENTS")
         def rate_timestamp: () -> ::Time
         def status: () -> ("UPDATING" | "VALID" | "INVALID" | "ACTION_NEEDED")
         def total_cost: () -> ::Float
@@ -381,7 +321,7 @@ module Aws
       def create_workload_estimate: (
                                       name: ::String,
                                       ?client_token: ::String,
-                                      ?rate_type: ("BEFORE_DISCOUNTS" | "AFTER_DISCOUNTS"),
+                                      ?rate_type: ("BEFORE_DISCOUNTS" | "AFTER_DISCOUNTS" | "AFTER_DISCOUNTS_AND_COMMITMENTS"),
                                       ?tags: Hash[::String, ::String]
                                     ) -> _CreateWorkloadEstimateResponseSuccess
                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateWorkloadEstimateResponseSuccess
@@ -423,6 +363,9 @@ module Aws
         def cost_summary: () -> Types::BillEstimateCostSummary
         def created_at: () -> ::Time
         def expires_at: () -> ::Time
+        def group_sharing_preference: () -> ("OPEN" | "PRIORITIZED" | "RESTRICTED")
+        def cost_category_group_sharing_preference_arn: () -> ::String
+        def cost_category_group_sharing_preference_effective_date: () -> ::Time
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/BCMPricingCalculator/Client.html#get_bill_estimate-instance_method
       def get_bill_estimate: (
@@ -435,10 +378,12 @@ module Aws
         def id: () -> ::String
         def name: () -> ::String
         def bill_interval: () -> Types::BillInterval
-        def status: () -> ("READY" | "LOCKED" | "FAILED")
+        def status: () -> ("READY" | "LOCKED" | "FAILED" | "STALE")
         def created_at: () -> ::Time
         def expires_at: () -> ::Time
         def failure_message: () -> ::String
+        def group_sharing_preference: () -> ("OPEN" | "PRIORITIZED" | "RESTRICTED")
+        def cost_category_group_sharing_preference_arn: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/BCMPricingCalculator/Client.html#get_bill_scenario-instance_method
       def get_bill_scenario: (
@@ -448,8 +393,9 @@ module Aws
 
       interface _GetPreferencesResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetPreferencesResponse]
-        def management_account_rate_type_selections: () -> ::Array[("BEFORE_DISCOUNTS" | "AFTER_DISCOUNTS")]
-        def member_account_rate_type_selections: () -> ::Array[("BEFORE_DISCOUNTS" | "AFTER_DISCOUNTS")]
+        def management_account_rate_type_selections: () -> ::Array[("BEFORE_DISCOUNTS" | "AFTER_DISCOUNTS" | "AFTER_DISCOUNTS_AND_COMMITMENTS")]
+        def member_account_rate_type_selections: () -> ::Array[("BEFORE_DISCOUNTS" | "AFTER_DISCOUNTS" | "AFTER_DISCOUNTS_AND_COMMITMENTS")]
+        def standalone_account_rate_type_selections: () -> ::Array[("BEFORE_DISCOUNTS" | "AFTER_DISCOUNTS" | "AFTER_DISCOUNTS_AND_COMMITMENTS")]
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/BCMPricingCalculator/Client.html#get_preferences-instance_method
       def get_preferences: (
@@ -462,7 +408,7 @@ module Aws
         def name: () -> ::String
         def created_at: () -> ::Time
         def expires_at: () -> ::Time
-        def rate_type: () -> ("BEFORE_DISCOUNTS" | "AFTER_DISCOUNTS")
+        def rate_type: () -> ("BEFORE_DISCOUNTS" | "AFTER_DISCOUNTS" | "AFTER_DISCOUNTS_AND_COMMITMENTS")
         def rate_timestamp: () -> ::Time
         def status: () -> ("UPDATING" | "VALID" | "INVALID" | "ACTION_NEEDED")
         def total_cost: () -> ::Float
@@ -514,7 +460,7 @@ module Aws
                                                               name: ("USAGE_ACCOUNT_ID" | "SERVICE_CODE" | "USAGE_TYPE" | "OPERATION" | "LOCATION" | "USAGE_GROUP" | "HISTORICAL_USAGE_ACCOUNT_ID" | "HISTORICAL_SERVICE_CODE" | "HISTORICAL_USAGE_TYPE" | "HISTORICAL_OPERATION" | "HISTORICAL_LOCATION"),
                                                               values: Array[::String],
                                                               match_option: ("EQUALS" | "STARTS_WITH" | "CONTAINS")?
-                                                            },
+                                                            }
                                                           ],
                                                           ?next_token: ::String,
                                                           ?max_results: ::Integer
@@ -534,7 +480,7 @@ module Aws
                                                name: ("USAGE_ACCOUNT_ID" | "SERVICE_CODE" | "USAGE_TYPE" | "OPERATION" | "LOCATION" | "LINE_ITEM_TYPE"),
                                                values: Array[::String],
                                                match_option: ("EQUALS" | "STARTS_WITH" | "CONTAINS")?
-                                             },
+                                             }
                                            ],
                                            ?next_token: ::String,
                                            ?max_results: ::Integer
@@ -553,7 +499,7 @@ module Aws
                                      name: ("STATUS" | "NAME"),
                                      values: Array[::String],
                                      match_option: ("EQUALS" | "STARTS_WITH" | "CONTAINS")?
-                                   },
+                                   }
                                  ],
                                  ?created_at_filter: {
                                    after_timestamp: ::Time?,
@@ -594,7 +540,7 @@ module Aws
                                                         name: ("USAGE_ACCOUNT_ID" | "SERVICE_CODE" | "USAGE_TYPE" | "OPERATION" | "LOCATION" | "USAGE_GROUP" | "HISTORICAL_USAGE_ACCOUNT_ID" | "HISTORICAL_SERVICE_CODE" | "HISTORICAL_USAGE_TYPE" | "HISTORICAL_OPERATION" | "HISTORICAL_LOCATION"),
                                                         values: Array[::String],
                                                         match_option: ("EQUALS" | "STARTS_WITH" | "CONTAINS")?
-                                                      },
+                                                      }
                                                     ],
                                                     ?next_token: ::String,
                                                     ?max_results: ::Integer
@@ -610,10 +556,10 @@ module Aws
       def list_bill_scenarios: (
                                  ?filters: Array[
                                    {
-                                     name: ("STATUS" | "NAME"),
+                                     name: ("STATUS" | "NAME" | "GROUP_SHARING_PREFERENCE" | "COST_CATEGORY_ARN"),
                                      values: Array[::String],
                                      match_option: ("EQUALS" | "STARTS_WITH" | "CONTAINS")?
-                                   },
+                                   }
                                  ],
                                  ?created_at_filter: {
                                    after_timestamp: ::Time?,
@@ -651,7 +597,7 @@ module Aws
                                               name: ("USAGE_ACCOUNT_ID" | "SERVICE_CODE" | "USAGE_TYPE" | "OPERATION" | "LOCATION" | "USAGE_GROUP" | "HISTORICAL_USAGE_ACCOUNT_ID" | "HISTORICAL_SERVICE_CODE" | "HISTORICAL_USAGE_TYPE" | "HISTORICAL_OPERATION" | "HISTORICAL_LOCATION"),
                                               values: Array[::String],
                                               match_option: ("EQUALS" | "STARTS_WITH" | "CONTAINS")?
-                                            },
+                                            }
                                           ],
                                           ?next_token: ::String,
                                           ?max_results: ::Integer
@@ -678,7 +624,7 @@ module Aws
                                          name: ("STATUS" | "NAME"),
                                          values: Array[::String],
                                          match_option: ("EQUALS" | "STARTS_WITH" | "CONTAINS")?
-                                       },
+                                       }
                                      ],
                                      ?next_token: ::String,
                                      ?max_results: ::Integer
@@ -715,6 +661,9 @@ module Aws
         def cost_summary: () -> Types::BillEstimateCostSummary
         def created_at: () -> ::Time
         def expires_at: () -> ::Time
+        def group_sharing_preference: () -> ("OPEN" | "PRIORITIZED" | "RESTRICTED")
+        def cost_category_group_sharing_preference_arn: () -> ::String
+        def cost_category_group_sharing_preference_effective_date: () -> ::Time
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/BCMPricingCalculator/Client.html#update_bill_estimate-instance_method
       def update_bill_estimate: (
@@ -729,28 +678,34 @@ module Aws
         def id: () -> ::String
         def name: () -> ::String
         def bill_interval: () -> Types::BillInterval
-        def status: () -> ("READY" | "LOCKED" | "FAILED")
+        def status: () -> ("READY" | "LOCKED" | "FAILED" | "STALE")
         def created_at: () -> ::Time
         def expires_at: () -> ::Time
         def failure_message: () -> ::String
+        def group_sharing_preference: () -> ("OPEN" | "PRIORITIZED" | "RESTRICTED")
+        def cost_category_group_sharing_preference_arn: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/BCMPricingCalculator/Client.html#update_bill_scenario-instance_method
       def update_bill_scenario: (
                                   identifier: ::String,
                                   ?name: ::String,
-                                  ?expires_at: ::Time
+                                  ?expires_at: ::Time,
+                                  ?group_sharing_preference: ("OPEN" | "PRIORITIZED" | "RESTRICTED"),
+                                  ?cost_category_group_sharing_preference_arn: ::String
                                 ) -> _UpdateBillScenarioResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateBillScenarioResponseSuccess
 
       interface _UpdatePreferencesResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::UpdatePreferencesResponse]
-        def management_account_rate_type_selections: () -> ::Array[("BEFORE_DISCOUNTS" | "AFTER_DISCOUNTS")]
-        def member_account_rate_type_selections: () -> ::Array[("BEFORE_DISCOUNTS" | "AFTER_DISCOUNTS")]
+        def management_account_rate_type_selections: () -> ::Array[("BEFORE_DISCOUNTS" | "AFTER_DISCOUNTS" | "AFTER_DISCOUNTS_AND_COMMITMENTS")]
+        def member_account_rate_type_selections: () -> ::Array[("BEFORE_DISCOUNTS" | "AFTER_DISCOUNTS" | "AFTER_DISCOUNTS_AND_COMMITMENTS")]
+        def standalone_account_rate_type_selections: () -> ::Array[("BEFORE_DISCOUNTS" | "AFTER_DISCOUNTS" | "AFTER_DISCOUNTS_AND_COMMITMENTS")]
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/BCMPricingCalculator/Client.html#update_preferences-instance_method
       def update_preferences: (
-                                ?management_account_rate_type_selections: Array[("BEFORE_DISCOUNTS" | "AFTER_DISCOUNTS")],
-                                ?member_account_rate_type_selections: Array[("BEFORE_DISCOUNTS" | "AFTER_DISCOUNTS")]
+                                ?management_account_rate_type_selections: Array[("BEFORE_DISCOUNTS" | "AFTER_DISCOUNTS" | "AFTER_DISCOUNTS_AND_COMMITMENTS")],
+                                ?member_account_rate_type_selections: Array[("BEFORE_DISCOUNTS" | "AFTER_DISCOUNTS" | "AFTER_DISCOUNTS_AND_COMMITMENTS")],
+                                ?standalone_account_rate_type_selections: Array[("BEFORE_DISCOUNTS" | "AFTER_DISCOUNTS" | "AFTER_DISCOUNTS_AND_COMMITMENTS")]
                               ) -> _UpdatePreferencesResponseSuccess
                             | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdatePreferencesResponseSuccess
 
@@ -760,7 +715,7 @@ module Aws
         def name: () -> ::String
         def created_at: () -> ::Time
         def expires_at: () -> ::Time
-        def rate_type: () -> ("BEFORE_DISCOUNTS" | "AFTER_DISCOUNTS")
+        def rate_type: () -> ("BEFORE_DISCOUNTS" | "AFTER_DISCOUNTS" | "AFTER_DISCOUNTS_AND_COMMITMENTS")
         def rate_timestamp: () -> ::Time
         def status: () -> ("UPDATING" | "VALID" | "INVALID" | "ACTION_NEEDED")
         def total_cost: () -> ::Float

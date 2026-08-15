@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -104,7 +105,7 @@ module Aws
                                   {
                                     image_digest: ::String?,
                                     image_tag: ::String?
-                                  },
+                                  }
                                 ]
                               ) -> _BatchDeleteImageResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchDeleteImageResponseSuccess
@@ -133,19 +134,12 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ECRPublic/Client.html#create_repository-instance_method
       def create_repository: (
                                repository_name: ::String,
-                               ?catalog_data: {
-                                 description: ::String?,
-                                 architectures: Array[::String]?,
-                                 operating_systems: Array[::String]?,
-                                 logo_image_blob: ::String?,
-                                 about_text: ::String?,
-                                 usage_text: ::String?
-                               },
+                               ?catalog_data: Params::repository_catalog_data_input,
                                ?tags: Array[
                                  {
                                    key: ::String?,
                                    value: ::String?
-                                 },
+                                 }
                                ]
                              ) -> _CreateRepositoryResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateRepositoryResponseSuccess
@@ -202,7 +196,7 @@ module Aws
                                {
                                  image_digest: ::String?,
                                  image_tag: ::String?
-                               },
+                               }
                              ],
                              ?next_token: ::String,
                              ?max_results: ::Integer
@@ -332,14 +326,7 @@ module Aws
       def put_repository_catalog_data: (
                                          ?registry_id: ::String,
                                          repository_name: ::String,
-                                         catalog_data: {
-                                           description: ::String?,
-                                           architectures: Array[::String]?,
-                                           operating_systems: Array[::String]?,
-                                           logo_image_blob: ::String?,
-                                           about_text: ::String?,
-                                           usage_text: ::String?
-                                         }
+                                         catalog_data: Params::repository_catalog_data_input
                                        ) -> _PutRepositoryCatalogDataResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutRepositoryCatalogDataResponseSuccess
 
@@ -368,7 +355,7 @@ module Aws
                             {
                               key: ::String?,
                               value: ::String?
-                            },
+                            }
                           ]
                         ) -> _TagResourceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess

@@ -54,6 +54,11 @@ module Aws::PartnerCentralSelling
       def message
         @message || @data[:message]
       end
+
+      # @return [String]
+      def reason
+        @data[:reason]
+      end
     end
 
     class ConflictException < ServiceError
@@ -141,11 +146,6 @@ module Aws::PartnerCentralSelling
       end
 
       # @return [String]
-      def error_list
-        @data[:error_list]
-      end
-
-      # @return [String]
       def message
         @message || @data[:message]
       end
@@ -153,6 +153,11 @@ module Aws::PartnerCentralSelling
       # @return [String]
       def reason
         @data[:reason]
+      end
+
+      # @return [String]
+      def error_list
+        @data[:error_list]
       end
     end
 

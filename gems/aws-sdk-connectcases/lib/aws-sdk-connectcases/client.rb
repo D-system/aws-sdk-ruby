@@ -95,8 +95,8 @@ module Aws::ConnectCases
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::ConnectCases
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::ConnectCases
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::ConnectCases
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::ConnectCases
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::ConnectCases
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::ConnectCases
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::ConnectCases
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -479,56 +483,81 @@ module Aws::ConnectCases
     #
     # [1]: https://docs.aws.amazon.com/connect/latest/adminguide/case-field-conditions.html
     #
-    # @option params [required, Array<Types::CaseRuleIdentifier>] :case_rules
-    #   List of case rule identifiers.
-    #
     # @option params [required, String] :domain_id
     #   Unique identifier of a Cases domain.
+    #
+    # @option params [required, Array<Types::CaseRuleIdentifier>] :case_rules
+    #   A list of case rule identifiers.
     #
     # @return [Types::BatchGetCaseRuleResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::BatchGetCaseRuleResponse#case_rules #case_rules} => Array&lt;Types::GetCaseRuleResponse&gt;
     #   * {Types::BatchGetCaseRuleResponse#errors #errors} => Array&lt;Types::CaseRuleError&gt;
+    #   * {Types::BatchGetCaseRuleResponse#unprocessed_case_rules #unprocessed_case_rules} => Array&lt;String&gt;
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.batch_get_case_rule({
+    #     domain_id: "DomainId", # required
     #     case_rules: [ # required
     #       {
     #         id: "CaseRuleId", # required
     #       },
     #     ],
-    #     domain_id: "DomainId", # required
     #   })
     #
     # @example Response structure
     #
     #   resp.case_rules #=> Array
-    #   resp.case_rules[0].case_rule_arn #=> String
     #   resp.case_rules[0].case_rule_id #=> String
-    #   resp.case_rules[0].created_time #=> Time
-    #   resp.case_rules[0].deleted #=> Boolean
-    #   resp.case_rules[0].description #=> String
-    #   resp.case_rules[0].last_modified_time #=> Time
     #   resp.case_rules[0].name #=> String
+    #   resp.case_rules[0].case_rule_arn #=> String
+    #   resp.case_rules[0].rule.required.default_value #=> Boolean
     #   resp.case_rules[0].rule.required.conditions #=> Array
     #   resp.case_rules[0].rule.required.conditions[0].equal_to.operand_one.field_id #=> String
+    #   resp.case_rules[0].rule.required.conditions[0].equal_to.operand_two.string_value #=> String
     #   resp.case_rules[0].rule.required.conditions[0].equal_to.operand_two.boolean_value #=> Boolean
     #   resp.case_rules[0].rule.required.conditions[0].equal_to.operand_two.double_value #=> Float
-    #   resp.case_rules[0].rule.required.conditions[0].equal_to.operand_two.string_value #=> String
     #   resp.case_rules[0].rule.required.conditions[0].equal_to.result #=> Boolean
     #   resp.case_rules[0].rule.required.conditions[0].not_equal_to.operand_one.field_id #=> String
+    #   resp.case_rules[0].rule.required.conditions[0].not_equal_to.operand_two.string_value #=> String
     #   resp.case_rules[0].rule.required.conditions[0].not_equal_to.operand_two.boolean_value #=> Boolean
     #   resp.case_rules[0].rule.required.conditions[0].not_equal_to.operand_two.double_value #=> Float
-    #   resp.case_rules[0].rule.required.conditions[0].not_equal_to.operand_two.string_value #=> String
     #   resp.case_rules[0].rule.required.conditions[0].not_equal_to.result #=> Boolean
-    #   resp.case_rules[0].rule.required.default_value #=> Boolean
+    #   resp.case_rules[0].rule.required.conditions[0].and_all.conditions #=> Types::BooleanConditionList
+    #   resp.case_rules[0].rule.required.conditions[0].or_all.conditions #=> Types::BooleanConditionList
+    #   resp.case_rules[0].rule.field_options.parent_field_id #=> String
+    #   resp.case_rules[0].rule.field_options.child_field_id #=> String
+    #   resp.case_rules[0].rule.field_options.parent_child_field_options_mappings #=> Array
+    #   resp.case_rules[0].rule.field_options.parent_child_field_options_mappings[0].parent_field_option_value #=> String
+    #   resp.case_rules[0].rule.field_options.parent_child_field_options_mappings[0].child_field_option_values #=> Array
+    #   resp.case_rules[0].rule.field_options.parent_child_field_options_mappings[0].child_field_option_values[0] #=> String
+    #   resp.case_rules[0].rule.hidden.default_value #=> Boolean
+    #   resp.case_rules[0].rule.hidden.conditions #=> Array
+    #   resp.case_rules[0].rule.hidden.conditions[0].equal_to.operand_one.field_id #=> String
+    #   resp.case_rules[0].rule.hidden.conditions[0].equal_to.operand_two.string_value #=> String
+    #   resp.case_rules[0].rule.hidden.conditions[0].equal_to.operand_two.boolean_value #=> Boolean
+    #   resp.case_rules[0].rule.hidden.conditions[0].equal_to.operand_two.double_value #=> Float
+    #   resp.case_rules[0].rule.hidden.conditions[0].equal_to.result #=> Boolean
+    #   resp.case_rules[0].rule.hidden.conditions[0].not_equal_to.operand_one.field_id #=> String
+    #   resp.case_rules[0].rule.hidden.conditions[0].not_equal_to.operand_two.string_value #=> String
+    #   resp.case_rules[0].rule.hidden.conditions[0].not_equal_to.operand_two.boolean_value #=> Boolean
+    #   resp.case_rules[0].rule.hidden.conditions[0].not_equal_to.operand_two.double_value #=> Float
+    #   resp.case_rules[0].rule.hidden.conditions[0].not_equal_to.result #=> Boolean
+    #   resp.case_rules[0].rule.hidden.conditions[0].and_all.conditions #=> Types::BooleanConditionList
+    #   resp.case_rules[0].rule.hidden.conditions[0].or_all.conditions #=> Types::BooleanConditionList
+    #   resp.case_rules[0].description #=> String
+    #   resp.case_rules[0].deleted #=> Boolean
+    #   resp.case_rules[0].created_time #=> Time
+    #   resp.case_rules[0].last_modified_time #=> Time
     #   resp.case_rules[0].tags #=> Hash
     #   resp.case_rules[0].tags["String"] #=> String
     #   resp.errors #=> Array
-    #   resp.errors[0].error_code #=> String
     #   resp.errors[0].id #=> String
+    #   resp.errors[0].error_code #=> String
     #   resp.errors[0].message #=> String
+    #   resp.unprocessed_case_rules #=> Array
+    #   resp.unprocessed_case_rules[0] #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/BatchGetCaseRule AWS API Documentation
     #
@@ -550,8 +579,8 @@ module Aws::ConnectCases
     #
     # @return [Types::BatchGetFieldResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::BatchGetFieldResponse#errors #errors} => Array&lt;Types::FieldError&gt;
     #   * {Types::BatchGetFieldResponse#fields #fields} => Array&lt;Types::GetFieldResponse&gt;
+    #   * {Types::BatchGetFieldResponse#errors #errors} => Array&lt;Types::FieldError&gt;
     #
     # @example Request syntax with placeholder values
     #
@@ -566,22 +595,23 @@ module Aws::ConnectCases
     #
     # @example Response structure
     #
-    #   resp.errors #=> Array
-    #   resp.errors[0].error_code #=> String
-    #   resp.errors[0].id #=> String
-    #   resp.errors[0].message #=> String
     #   resp.fields #=> Array
-    #   resp.fields[0].created_time #=> Time
-    #   resp.fields[0].deleted #=> Boolean
-    #   resp.fields[0].description #=> String
-    #   resp.fields[0].field_arn #=> String
     #   resp.fields[0].field_id #=> String
-    #   resp.fields[0].last_modified_time #=> Time
     #   resp.fields[0].name #=> String
+    #   resp.fields[0].field_arn #=> String
+    #   resp.fields[0].description #=> String
+    #   resp.fields[0].type #=> String, one of "Text", "Number", "Boolean", "DateTime", "SingleSelect", "Url", "User"
     #   resp.fields[0].namespace #=> String, one of "System", "Custom"
     #   resp.fields[0].tags #=> Hash
     #   resp.fields[0].tags["String"] #=> String
-    #   resp.fields[0].type #=> String, one of "Text", "Number", "Boolean", "DateTime", "SingleSelect", "Url", "User"
+    #   resp.fields[0].deleted #=> Boolean
+    #   resp.fields[0].created_time #=> Time
+    #   resp.fields[0].last_modified_time #=> Time
+    #   resp.fields[0].attributes.text.is_multiline #=> Boolean
+    #   resp.errors #=> Array
+    #   resp.errors[0].id #=> String
+    #   resp.errors[0].error_code #=> String
+    #   resp.errors[0].message #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/BatchGetField AWS API Documentation
     #
@@ -615,9 +645,9 @@ module Aws::ConnectCases
     #     field_id: "FieldId", # required
     #     options: [ # required
     #       {
-    #         active: false, # required
     #         name: "FieldOptionName", # required
     #         value: "FieldOptionValue", # required
+    #         active: false, # required
     #       },
     #     ],
     #   })
@@ -625,8 +655,8 @@ module Aws::ConnectCases
     # @example Response structure
     #
     #   resp.errors #=> Array
-    #   resp.errors[0].error_code #=> String
     #   resp.errors[0].message #=> String
+    #   resp.errors[0].error_code #=> String
     #   resp.errors[0].value #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/BatchPutFieldOptions AWS API Documentation
@@ -638,23 +668,42 @@ module Aws::ConnectCases
       req.send_request(options)
     end
 
-    # <note markdown="1"> If you provide a value for `PerformedBy.UserArn` you must also have
+    # <note markdown="1"> If you provide a value for `PerformedBy.UserArn`
+    # you must also have
     # [connect:DescribeUser][1] permission on the User ARN resource that you
     # provide
     #
     #  </note>
     #
-    # Creates a case in the specified Cases domain. Case system and custom
+    #  Creates a case in the specified Cases domain. Case system and custom
     # fields are taken as an array id/value pairs with a declared data
     # types.
     #
-    # The following fields are required when creating a case:
+    #  When creating a case from a template that has tag propagation
+    # configurations, the specified tags are automatically applied to the
+    # case.
     #
-    #      <ul> <li> <p> <code>customer_id</code> - You must provide the full customer profile ARN in this format: <code>arn:aws:profile:your_AWS_Region:your_AWS_account ID:domains/your_profiles_domain_name/profiles/profile_ID</code> </p> </li> <li> <p> <code>title</code> </p> </li> </ul>
+    #  The following fields are required when creating a case:
+    #
+    #  * `customer_id` - You must provide the full customer profile ARN in
+    #   this format: `arn:aws:profile:your_AWS_Region:your_AWS_account
+    #   ID:domains/your_profiles_domain_name/profiles/profile_ID`
+    #
+    # * `title`
     #
     #
     #
     # [1]: https://docs.aws.amazon.com/connect/latest/APIReference/API_DescribeUser.html
+    #
+    # @option params [required, String] :domain_id
+    #   The unique identifier of the Cases domain.
+    #
+    # @option params [required, String] :template_id
+    #   A unique identifier of a template.
+    #
+    # @option params [required, Array<Types::FieldValue>] :fields
+    #   An array of objects with field ID (matching ListFields/DescribeField)
+    #   and value union data.
     #
     # @option params [String] :client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
@@ -669,52 +718,50 @@ module Aws::ConnectCases
     #
     #   [1]: https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #
-    # @option params [required, String] :domain_id
-    #   The unique identifier of the Cases domain.
-    #
-    # @option params [required, Array<Types::FieldValue>] :fields
-    #   An array of objects with field ID (matching ListFields/DescribeField)
-    #   and value union data.
-    #
     # @option params [Types::UserUnion] :performed_by
-    #   Represents the identity of the person who performed the action.
+    #   Represents the entity that performed the action.
     #
-    # @option params [required, String] :template_id
-    #   A unique identifier of a template.
+    # @option params [Hash<String,String>] :tags
+    #   A map of of key-value pairs that represent tags on a resource. Tags
+    #   are used to organize, track, or control access for this resource.
     #
     # @return [Types::CreateCaseResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::CreateCaseResponse#case_arn #case_arn} => String
     #   * {Types::CreateCaseResponse#case_id #case_id} => String
+    #   * {Types::CreateCaseResponse#case_arn #case_arn} => String
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_case({
-    #     client_token: "CreateCaseRequestClientTokenString",
     #     domain_id: "DomainId", # required
+    #     template_id: "TemplateId", # required
     #     fields: [ # required
     #       {
     #         id: "FieldId", # required
     #         value: { # required
-    #           boolean_value: false,
+    #           string_value: "FieldValueUnionStringValueString",
     #           double_value: 1.0,
+    #           boolean_value: false,
     #           empty_value: {
     #           },
-    #           string_value: "FieldValueUnionStringValueString",
     #           user_arn_value: "String",
     #         },
     #       },
     #     ],
+    #     client_token: "CreateCaseRequestClientTokenString",
     #     performed_by: {
     #       user_arn: "UserArn",
+    #       custom_entity: "CustomEntity",
     #     },
-    #     template_id: "TemplateId", # required
+    #     tags: {
+    #       "MutableTagKey" => "TagValueString",
+    #     },
     #   })
     #
     # @example Response structure
     #
-    #   resp.case_arn #=> String
     #   resp.case_id #=> String
+    #   resp.case_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/CreateCase AWS API Documentation
     #
@@ -734,31 +781,32 @@ module Aws::ConnectCases
     #
     # [1]: https://docs.aws.amazon.com/connect/latest/adminguide/case-field-conditions.html
     #
-    # @option params [String] :description
-    #   The description of a case rule.
-    #
     # @option params [required, String] :domain_id
     #   Unique identifier of a Cases domain.
     #
     # @option params [required, String] :name
     #   Name of the case rule.
     #
+    # @option params [String] :description
+    #   The description of a case rule.
+    #
     # @option params [required, Types::CaseRuleDetails] :rule
     #   Represents what rule type should take place, under what conditions.
     #
     # @return [Types::CreateCaseRuleResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::CreateCaseRuleResponse#case_rule_arn #case_rule_arn} => String
     #   * {Types::CreateCaseRuleResponse#case_rule_id #case_rule_id} => String
+    #   * {Types::CreateCaseRuleResponse#case_rule_arn #case_rule_arn} => String
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_case_rule({
-    #     description: "CaseRuleDescription",
     #     domain_id: "DomainId", # required
     #     name: "CaseRuleName", # required
+    #     description: "CaseRuleDescription",
     #     rule: { # required
     #       required: {
+    #         default_value: false, # required
     #         conditions: [ # required
     #           {
     #             equal_to: {
@@ -766,11 +814,11 @@ module Aws::ConnectCases
     #                 field_id: "FieldId",
     #               },
     #               operand_two: { # required
+    #                 string_value: "OperandTwoStringValueString",
     #                 boolean_value: false,
     #                 double_value: 1.0,
     #                 empty_value: {
     #                 },
-    #                 string_value: "OperandTwoStringValueString",
     #               },
     #               result: false, # required
     #             },
@@ -779,25 +827,87 @@ module Aws::ConnectCases
     #                 field_id: "FieldId",
     #               },
     #               operand_two: { # required
+    #                 string_value: "OperandTwoStringValueString",
     #                 boolean_value: false,
     #                 double_value: 1.0,
     #                 empty_value: {
     #                 },
-    #                 string_value: "OperandTwoStringValueString",
     #               },
     #               result: false, # required
     #             },
+    #             and_all: {
+    #               conditions: { # required
+    #                 # recursive BooleanConditionList
+    #               },
+    #             },
+    #             or_all: {
+    #               conditions: { # required
+    #                 # recursive BooleanConditionList
+    #               },
+    #             },
     #           },
     #         ],
+    #       },
+    #       field_options: {
+    #         parent_field_id: "FieldId",
+    #         child_field_id: "FieldId",
+    #         parent_child_field_options_mappings: [ # required
+    #           {
+    #             parent_field_option_value: "ParentChildFieldOptionValue", # required
+    #             child_field_option_values: ["ParentChildFieldOptionValue"], # required
+    #           },
+    #         ],
+    #       },
+    #       hidden: {
     #         default_value: false, # required
+    #         conditions: [ # required
+    #           {
+    #             equal_to: {
+    #               operand_one: { # required
+    #                 field_id: "FieldId",
+    #               },
+    #               operand_two: { # required
+    #                 string_value: "OperandTwoStringValueString",
+    #                 boolean_value: false,
+    #                 double_value: 1.0,
+    #                 empty_value: {
+    #                 },
+    #               },
+    #               result: false, # required
+    #             },
+    #             not_equal_to: {
+    #               operand_one: { # required
+    #                 field_id: "FieldId",
+    #               },
+    #               operand_two: { # required
+    #                 string_value: "OperandTwoStringValueString",
+    #                 boolean_value: false,
+    #                 double_value: 1.0,
+    #                 empty_value: {
+    #                 },
+    #               },
+    #               result: false, # required
+    #             },
+    #             and_all: {
+    #               conditions: { # required
+    #                 # recursive BooleanConditionList
+    #               },
+    #             },
+    #             or_all: {
+    #               conditions: { # required
+    #                 # recursive BooleanConditionList
+    #               },
+    #             },
+    #           },
+    #         ],
     #       },
     #     },
     #   })
     #
     # @example Response structure
     #
-    #   resp.case_rule_arn #=> String
     #   resp.case_rule_id #=> String
+    #   resp.case_rule_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/CreateCaseRule AWS API Documentation
     #
@@ -812,14 +922,10 @@ module Aws::ConnectCases
     # cases, fields, templates and layouts. Each Amazon Connect instance can
     # be associated with only one Cases domain.
     #
-    # <important markdown="1"> This will not associate your connect instance to Cases domain.
+    # This will not associate your connect instance to Cases domain.
     # Instead, use the Amazon Connect [CreateIntegrationAssociation][1] API.
     # You need specific IAM permissions to successfully associate the Cases
     # domain. For more information, see [Onboard to Cases][2].
-    #
-    #       </important>
-    #
-    #  </important>
     #
     #
     #
@@ -832,8 +938,8 @@ module Aws::ConnectCases
     #
     # @return [Types::CreateDomainResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::CreateDomainResponse#domain_arn #domain_arn} => String
     #   * {Types::CreateDomainResponse#domain_id #domain_id} => String
+    #   * {Types::CreateDomainResponse#domain_arn #domain_arn} => String
     #   * {Types::CreateDomainResponse#domain_status #domain_status} => String
     #
     # @example Request syntax with placeholder values
@@ -844,8 +950,8 @@ module Aws::ConnectCases
     #
     # @example Response structure
     #
-    #   resp.domain_arn #=> String
     #   resp.domain_id #=> String
+    #   resp.domain_arn #=> String
     #   resp.domain_status #=> String, one of "Active", "CreationInProgress", "CreationFailed"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/CreateDomain AWS API Documentation
@@ -861,9 +967,6 @@ module Aws::ConnectCases
     # case object model (that is, defines what data can be captured on
     # cases) in a Cases domain.
     #
-    # @option params [String] :description
-    #   The description of the field.
-    #
     # @option params [required, String] :domain_id
     #   The unique identifier of the Cases domain.
     #
@@ -874,24 +977,35 @@ module Aws::ConnectCases
     #   Defines the data type, some system constraints, and default display of
     #   the field.
     #
+    # @option params [String] :description
+    #   The description of the field.
+    #
+    # @option params [Types::FieldAttributes] :attributes
+    #   Union of field attributes.
+    #
     # @return [Types::CreateFieldResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::CreateFieldResponse#field_arn #field_arn} => String
     #   * {Types::CreateFieldResponse#field_id #field_id} => String
+    #   * {Types::CreateFieldResponse#field_arn #field_arn} => String
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_field({
-    #     description: "FieldDescription",
     #     domain_id: "DomainId", # required
     #     name: "FieldName", # required
     #     type: "Text", # required, accepts Text, Number, Boolean, DateTime, SingleSelect, Url, User
+    #     description: "FieldDescription",
+    #     attributes: {
+    #       text: {
+    #         is_multiline: false, # required
+    #       },
+    #     },
     #   })
     #
     # @example Response structure
     #
-    #   resp.field_arn #=> String
     #   resp.field_id #=> String
+    #   resp.field_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/CreateField AWS API Documentation
     #
@@ -915,64 +1029,64 @@ module Aws::ConnectCases
     #
     #  </note>
     #
-    # @option params [required, Types::LayoutContent] :content
-    #   Information about which fields will be present in the layout, and
-    #   information about the order of the fields.
-    #
     # @option params [required, String] :domain_id
     #   The unique identifier of the Cases domain.
     #
     # @option params [required, String] :name
     #   The name of the layout. It must be unique for the Cases domain.
     #
+    # @option params [required, Types::LayoutContent] :content
+    #   Information about which fields will be present in the layout, and
+    #   information about the order of the fields.
+    #
     # @return [Types::CreateLayoutResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::CreateLayoutResponse#layout_arn #layout_arn} => String
     #   * {Types::CreateLayoutResponse#layout_id #layout_id} => String
+    #   * {Types::CreateLayoutResponse#layout_arn #layout_arn} => String
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_layout({
+    #     domain_id: "DomainId", # required
+    #     name: "LayoutName", # required
     #     content: { # required
     #       basic: {
-    #         more_info: {
-    #           sections: [
-    #             {
-    #               field_group: {
-    #                 fields: [ # required
-    #                   {
-    #                     id: "FieldId", # required
-    #                   },
-    #                 ],
-    #                 name: "FieldGroupNameString",
-    #               },
-    #             },
-    #           ],
-    #         },
     #         top_panel: {
     #           sections: [
     #             {
     #               field_group: {
+    #                 name: "FieldGroupNameString",
     #                 fields: [ # required
     #                   {
     #                     id: "FieldId", # required
     #                   },
     #                 ],
+    #               },
+    #             },
+    #           ],
+    #         },
+    #         more_info: {
+    #           sections: [
+    #             {
+    #               field_group: {
     #                 name: "FieldGroupNameString",
+    #                 fields: [ # required
+    #                   {
+    #                     id: "FieldId", # required
+    #                   },
+    #                 ],
     #               },
     #             },
     #           ],
     #         },
     #       },
     #     },
-    #     domain_id: "DomainId", # required
-    #     name: "LayoutName", # required
     #   })
     #
     # @example Response structure
     #
-    #   resp.layout_arn #=> String
     #   resp.layout_id #=> String
+    #   resp.layout_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/CreateLayout AWS API Documentation
     #
@@ -986,71 +1100,139 @@ module Aws::ConnectCases
     # Creates a related item (comments, tasks, and contacts) and associates
     # it with a case.
     #
-    # <note markdown="1"> * A Related Item is a resource that is associated with a case. It may
+    # There's a quota for the number of fields allowed in a Custom type
+    # related item. See [Amazon Connect Cases quotas][1].
+    #
+    # **Use cases**
+    #
+    # Following are examples of related items that you may want to associate
+    # with a case:
+    #
+    # * Related contacts, such as calls, chats, emails tasks
+    #
+    # * Comments, for agent notes
+    #
+    # * SLAs, to capture target resolution goals
+    #
+    # * Cases, to capture related Amazon Connect Cases
+    #
+    # * Files, such as policy documentation or customer-provided attachments
+    #
+    # * Custom related items, which provide flexibility for you to define
+    #   related items that such as bookings, orders, products, notices, and
+    #   more
+    #
+    # **Important things to know**
+    #
+    # * If you are associating a contact to a case by passing in `Contact`
+    #   for a `type`, you must have [DescribeContact][2] permission on the
+    #   ARN of the contact that you provide in `content.contact.contactArn`.
+    #
+    # * A Related Item is a resource that is associated with a case. It may
     #   or may not have an external identifier linking it to an external
     #   resource (for example, a `contactArn`). All Related Items have their
     #   own internal identifier, the `relatedItemArn`. Examples of related
     #   items include `comments` and `contacts`.
     #
     # * If you provide a value for `performedBy.userArn` you must also have
-    #   [DescribeUser][1] permission on the ARN of the user that you
+    #   [DescribeUser][3] permission on the ARN of the user that you
     #   provide.
     #
     # * The `type` field is reserved for internal use only.
     #
-    #  </note>
+    # **Endpoints**: See [Amazon Connect endpoints and quotas][4].
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/connect/latest/APIReference/API_DescribeUser.html
-    #
-    # @option params [required, String] :case_id
-    #   A unique identifier of the case.
-    #
-    # @option params [required, Types::RelatedItemInputContent] :content
-    #   The content of a related item to be created.
+    # [1]: https://docs.aws.amazon.com/connect/latest/adminguide/amazon-connect-service-limits.html#cases-quotas
+    # [2]: https://docs.aws.amazon.com/connect/latest/APIReference/API_DescribeContact.html
+    # [3]: https://docs.aws.amazon.com/connect/latest/APIReference/API_DescribeUser.html
+    # [4]: https://docs.aws.amazon.com/general/latest/gr/connect_region.html
     #
     # @option params [required, String] :domain_id
     #   The unique identifier of the Cases domain.
     #
-    # @option params [Types::UserUnion] :performed_by
-    #   Represents the creator of the related item.
+    # @option params [required, String] :case_id
+    #   A unique identifier of the case.
     #
     # @option params [required, String] :type
     #   The type of a related item.
     #
+    # @option params [required, Types::RelatedItemInputContent] :content
+    #   The content of a related item to be created.
+    #
+    # @option params [Types::UserUnion] :performed_by
+    #   Represents the creator of the related item.
+    #
     # @return [Types::CreateRelatedItemResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::CreateRelatedItemResponse#related_item_arn #related_item_arn} => String
     #   * {Types::CreateRelatedItemResponse#related_item_id #related_item_id} => String
+    #   * {Types::CreateRelatedItemResponse#related_item_arn #related_item_arn} => String
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_related_item({
+    #     domain_id: "DomainId", # required
     #     case_id: "CaseId", # required
+    #     type: "Contact", # required, accepts Contact, Comment, File, Sla, ConnectCase, Custom
     #     content: { # required
+    #       contact: {
+    #         contact_arn: "ContactArn", # required
+    #       },
     #       comment: {
     #         body: "CommentBody", # required
     #         content_type: "Text/Plain", # required, accepts Text/Plain
     #       },
-    #       contact: {
-    #         contact_arn: "ContactArn", # required
-    #       },
     #       file: {
     #         file_arn: "FileArn", # required
     #       },
+    #       sla: {
+    #         sla_input_configuration: {
+    #           name: "SlaName", # required
+    #           type: "CaseField", # required, accepts CaseField
+    #           field_id: "FieldId",
+    #           target_field_values: [
+    #             {
+    #               string_value: "FieldValueUnionStringValueString",
+    #               double_value: 1.0,
+    #               boolean_value: false,
+    #               empty_value: {
+    #               },
+    #               user_arn_value: "String",
+    #             },
+    #           ],
+    #           target_sla_minutes: 1, # required
+    #         },
+    #       },
+    #       connect_case: {
+    #         case_id: "CaseId", # required
+    #       },
+    #       custom: {
+    #         fields: [ # required
+    #           {
+    #             id: "FieldId", # required
+    #             value: { # required
+    #               string_value: "FieldValueUnionStringValueString",
+    #               double_value: 1.0,
+    #               boolean_value: false,
+    #               empty_value: {
+    #               },
+    #               user_arn_value: "String",
+    #             },
+    #           },
+    #         ],
+    #       },
     #     },
-    #     domain_id: "DomainId", # required
     #     performed_by: {
     #       user_arn: "UserArn",
+    #       custom_entity: "CustomEntity",
     #     },
-    #     type: "Contact", # required, accepts Contact, Comment, File
     #   })
     #
     # @example Response structure
     #
-    #   resp.related_item_arn #=> String
     #   resp.related_item_id #=> String
+    #   resp.related_item_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/CreateRelatedItem AWS API Documentation
     #
@@ -1087,21 +1269,24 @@ module Aws::ConnectCases
     # [3]: https://docs.aws.amazon.com/connect/latest/APIReference/API_connect-cases_ListTemplates.html
     # [4]: https://docs.aws.amazon.com/connect/latest/APIReference/API_connect-cases_UpdateTemplate.html
     #
-    # @option params [String] :description
-    #   A brief description of the template.
-    #
     # @option params [required, String] :domain_id
     #   The unique identifier of the Cases domain.
-    #
-    # @option params [Types::LayoutConfiguration] :layout_configuration
-    #   Configuration of layouts associated to the template.
     #
     # @option params [required, String] :name
     #   A name for the template. It must be unique per domain.
     #
+    # @option params [String] :description
+    #   A brief description of the template.
+    #
+    # @option params [Types::LayoutConfiguration] :layout_configuration
+    #   Configuration of layouts associated to the template.
+    #
     # @option params [Array<Types::RequiredField>] :required_fields
     #   A list of fields that must contain a value for a case to be
     #   successfully created with this template.
+    #
+    # @option params [String] :status
+    #   The status of the template.
     #
     # @option params [Array<Types::TemplateRule>] :rules
     #   A list of case rules (also known as [case field conditions][1]) on a
@@ -1111,41 +1296,51 @@ module Aws::ConnectCases
     #
     #   [1]: https://docs.aws.amazon.com/connect/latest/adminguide/case-field-conditions.html
     #
-    # @option params [String] :status
-    #   The status of the template.
+    # @option params [Array<Types::TagPropagationConfiguration>] :tag_propagation_configurations
+    #   Defines tag propagation configuration for resources created within a
+    #   domain. Tags specified here will be automatically applied to resources
+    #   being created for the specified resource type.
     #
     # @return [Types::CreateTemplateResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::CreateTemplateResponse#template_arn #template_arn} => String
     #   * {Types::CreateTemplateResponse#template_id #template_id} => String
+    #   * {Types::CreateTemplateResponse#template_arn #template_arn} => String
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_template({
-    #     description: "TemplateDescription",
     #     domain_id: "DomainId", # required
+    #     name: "TemplateName", # required
+    #     description: "TemplateDescription",
     #     layout_configuration: {
     #       default_layout: "LayoutId",
     #     },
-    #     name: "TemplateName", # required
     #     required_fields: [
     #       {
     #         field_id: "FieldId", # required
     #       },
     #     ],
+    #     status: "Active", # accepts Active, Inactive
     #     rules: [
     #       {
     #         case_rule_id: "CaseRuleId", # required
-    #         field_id: "FieldId", # required
+    #         field_id: "FieldId",
     #       },
     #     ],
-    #     status: "Active", # accepts Active, Inactive
+    #     tag_propagation_configurations: [
+    #       {
+    #         resource_type: "Cases", # required, accepts Cases
+    #         tag_map: { # required
+    #           "MutableTagKey" => "TagValueString",
+    #         },
+    #       },
+    #     ],
     #   })
     #
     # @example Response structure
     #
-    #   resp.template_arn #=> String
     #   resp.template_id #=> String
+    #   resp.template_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/CreateTemplate AWS API Documentation
     #
@@ -1153,6 +1348,43 @@ module Aws::ConnectCases
     # @param [Hash] params ({})
     def create_template(params = {}, options = {})
       req = build_request(:create_template, params)
+      req.send_request(options)
+    end
+
+    # The DeleteCase API permanently deletes a case and all its associated
+    # resources from the cases data store. After a successful deletion, you
+    # cannot:
+    #
+    # * Retrieve related items
+    #
+    # * Access audit history
+    #
+    # * Perform any operations that require the CaseID
+    #
+    # This action is irreversible. After you delete a case, you cannot
+    # recover its data.
+    #
+    # @option params [required, String] :domain_id
+    #   A unique identifier of the Cases domain.
+    #
+    # @option params [required, String] :case_id
+    #   A unique identifier of the case.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_case({
+    #     domain_id: "DomainId", # required
+    #     case_id: "CaseId", # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/DeleteCase AWS API Documentation
+    #
+    # @overload delete_case(params = {})
+    # @param [Hash] params ({})
+    def delete_case(params = {}, options = {})
+      req = build_request(:delete_case, params)
       req.send_request(options)
     end
 
@@ -1165,19 +1397,19 @@ module Aws::ConnectCases
     #
     # [1]: https://docs.aws.amazon.com/connect/latest/adminguide/case-field-conditions.html
     #
-    # @option params [required, String] :case_rule_id
-    #   Unique identifier of a case rule.
-    #
     # @option params [required, String] :domain_id
     #   Unique identifier of a Cases domain.
+    #
+    # @option params [required, String] :case_rule_id
+    #   Unique identifier of a case rule.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_case_rule({
-    #     case_rule_id: "CaseRuleId", # required
     #     domain_id: "DomainId", # required
+    #     case_rule_id: "CaseRuleId", # required
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/DeleteCaseRule AWS API Documentation
@@ -1191,7 +1423,16 @@ module Aws::ConnectCases
 
     # Deletes a Cases domain.
     #
-    #      <note> <p>After deleting your domain you must disassociate the deleted domain from your Amazon Connect instance with another API call before being able to use Cases again with this Amazon Connect instance. See <a href="https://docs.aws.amazon.com/connect/latest/APIReference/API_DeleteIntegrationAssociation.html">DeleteIntegrationAssociation</a>.</p> </note>
+    # <note markdown="1"> After deleting your domain you must disassociate the deleted domain
+    # from your Amazon Connect instance with another API call before being
+    # able to use Cases again with this Amazon Connect instance. See
+    # [DeleteIntegrationAssociation][1].
+    #
+    #  </note>
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/connect/latest/APIReference/API_DeleteIntegrationAssociation.html
     #
     # @option params [required, String] :domain_id
     #   The unique identifier of the Cases domain.
@@ -1213,8 +1454,7 @@ module Aws::ConnectCases
       req.send_request(options)
     end
 
-    # Deletes a field from a cases template. You can delete up to 100 fields
-    # per domain.
+    # Deletes a field from a cases template.
     #
     # After a field is deleted:
     #
@@ -1226,11 +1466,11 @@ module Aws::ConnectCases
     # * Deleted fields are not included in the `ListFields` response.
     #
     # * Calling `CreateCase` with a deleted field throws a
-    #   `ValidationException` denoting which field IDs in the request have
-    #   been deleted.
+    #   `ValidationException` denoting which field identifiers in the
+    #   request have been deleted.
     #
-    # * Calling `GetCase` with a deleted field ID returns the deleted
-    #   field's value if one exists.
+    # * Calling `GetCase` with a deleted field identifier returns the
+    #   deleted field's value if one exists.
     #
     # * Calling `UpdateCase` with a deleted field ID throws a
     #   `ValidationException` if the case does not already contain a value
@@ -1281,7 +1521,14 @@ module Aws::ConnectCases
     # Deletes a layout from a cases template. You can delete up to 100
     # layouts per domain.
     #
-    #      <p>After a layout is deleted:</p> <ul> <li> <p>You can still retrieve the layout by calling <code>GetLayout</code>.</p> </li> <li> <p>You cannot update a deleted layout by calling <code>UpdateLayout</code>; it throws a <code>ValidationException</code>.</p> </li> <li> <p>Deleted layouts are not included in the <code>ListLayouts</code> response.</p> </li> </ul>
+    # After a layout is deleted:
+    #
+    # * You can still retrieve the layout by calling `GetLayout`.
+    #
+    # * You cannot update a deleted layout by calling `UpdateLayout`; it
+    #   throws a `ValidationException`.
+    #
+    # * Deleted layouts are not included in the `ListLayouts` response.
     #
     # @option params [required, String] :domain_id
     #   The unique identifier of the Cases domain.
@@ -1307,10 +1554,57 @@ module Aws::ConnectCases
       req.send_request(options)
     end
 
+    # Deletes the related item resource under a case.
+    #
+    # <note markdown="1"> This API cannot be used on a FILE type related attachment. To delete
+    # this type of file, use the [DeleteAttachedFile][1] API
+    #
+    #  </note>
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/connect/latest/APIReference/API_DeleteAttachedFile.html
+    #
+    # @option params [required, String] :domain_id
+    #   A unique identifier of the Cases domain.
+    #
+    # @option params [required, String] :case_id
+    #   A unique identifier of the case.
+    #
+    # @option params [required, String] :related_item_id
+    #   A unique identifier of a related item.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_related_item({
+    #     domain_id: "DomainId", # required
+    #     case_id: "CaseId", # required
+    #     related_item_id: "RelatedItemId", # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/DeleteRelatedItem AWS API Documentation
+    #
+    # @overload delete_related_item(params = {})
+    # @param [Hash] params ({})
+    def delete_related_item(params = {}, options = {})
+      req = build_request(:delete_related_item, params)
+      req.send_request(options)
+    end
+
     # Deletes a cases template. You can delete up to 100 templates per
     # domain.
     #
-    #      <p>After a cases template is deleted:</p> <ul> <li> <p>You can still retrieve the template by calling <code>GetTemplate</code>.</p> </li> <li> <p>You cannot update the template. </p> </li> <li> <p>You cannot create a case by using the deleted template.</p> </li> <li> <p>Deleted templates are not included in the <code>ListTemplates</code> response.</p> </li> </ul>
+    # After a cases template is deleted:
+    #
+    # * You can still retrieve the template by calling `GetTemplate`.
+    #
+    # * You cannot update the template.
+    #
+    # * You cannot create a case by using the deleted template.
+    #
+    # * Deleted templates are not included in the `ListTemplates` response.
     #
     # @option params [required, String] :domain_id
     #   The unique identifier of the Cases domain.
@@ -1355,9 +1649,9 @@ module Aws::ConnectCases
     # @return [Types::GetCaseResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::GetCaseResponse#fields #fields} => Array&lt;Types::FieldValue&gt;
+    #   * {Types::GetCaseResponse#template_id #template_id} => String
     #   * {Types::GetCaseResponse#next_token #next_token} => String
     #   * {Types::GetCaseResponse#tags #tags} => Hash&lt;String,String&gt;
-    #   * {Types::GetCaseResponse#template_id #template_id} => String
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
     #
@@ -1378,14 +1672,14 @@ module Aws::ConnectCases
     #
     #   resp.fields #=> Array
     #   resp.fields[0].id #=> String
-    #   resp.fields[0].value.boolean_value #=> Boolean
-    #   resp.fields[0].value.double_value #=> Float
     #   resp.fields[0].value.string_value #=> String
+    #   resp.fields[0].value.double_value #=> Float
+    #   resp.fields[0].value.boolean_value #=> Boolean
     #   resp.fields[0].value.user_arn_value #=> String
+    #   resp.template_id #=> String
     #   resp.next_token #=> String
     #   resp.tags #=> Hash
     #   resp.tags["String"] #=> String
-    #   resp.template_id #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/GetCase AWS API Documentation
     #
@@ -1405,9 +1699,8 @@ module Aws::ConnectCases
     #   The unique identifier of the Cases domain.
     #
     # @option params [Integer] :max_results
-    #   The maximum number of audit events to return. The current maximum
-    #   supported value is 25. This is also the default when no other value is
-    #   provided.
+    #   The maximum number of audit events to return. When no value is
+    #   provided, 25 is the default.
     #
     # @option params [String] :next_token
     #   The token for the next set of results. Use the value returned in the
@@ -1416,8 +1709,8 @@ module Aws::ConnectCases
     #
     # @return [Types::GetCaseAuditEventsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::GetCaseAuditEventsResponse#audit_events #audit_events} => Array&lt;Types::AuditEvent&gt;
     #   * {Types::GetCaseAuditEventsResponse#next_token #next_token} => String
+    #   * {Types::GetCaseAuditEventsResponse#audit_events #audit_events} => Array&lt;Types::AuditEvent&gt;
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
     #
@@ -1432,24 +1725,25 @@ module Aws::ConnectCases
     #
     # @example Response structure
     #
+    #   resp.next_token #=> String
     #   resp.audit_events #=> Array
     #   resp.audit_events[0].event_id #=> String
+    #   resp.audit_events[0].type #=> String, one of "Case.Created", "Case.Updated", "RelatedItem.Created", "RelatedItem.Deleted", "RelatedItem.Updated"
+    #   resp.audit_events[0].related_item_type #=> String, one of "Contact", "Comment", "File", "Sla", "ConnectCase", "Custom"
+    #   resp.audit_events[0].performed_time #=> Time
     #   resp.audit_events[0].fields #=> Array
     #   resp.audit_events[0].fields[0].event_field_id #=> String
-    #   resp.audit_events[0].fields[0].new_value.boolean_value #=> Boolean
-    #   resp.audit_events[0].fields[0].new_value.double_value #=> Float
-    #   resp.audit_events[0].fields[0].new_value.string_value #=> String
-    #   resp.audit_events[0].fields[0].new_value.user_arn_value #=> String
-    #   resp.audit_events[0].fields[0].old_value.boolean_value #=> Boolean
-    #   resp.audit_events[0].fields[0].old_value.double_value #=> Float
     #   resp.audit_events[0].fields[0].old_value.string_value #=> String
+    #   resp.audit_events[0].fields[0].old_value.double_value #=> Float
+    #   resp.audit_events[0].fields[0].old_value.boolean_value #=> Boolean
     #   resp.audit_events[0].fields[0].old_value.user_arn_value #=> String
-    #   resp.audit_events[0].performed_by.iam_principal_arn #=> String
+    #   resp.audit_events[0].fields[0].new_value.string_value #=> String
+    #   resp.audit_events[0].fields[0].new_value.double_value #=> Float
+    #   resp.audit_events[0].fields[0].new_value.boolean_value #=> Boolean
+    #   resp.audit_events[0].fields[0].new_value.user_arn_value #=> String
     #   resp.audit_events[0].performed_by.user.user_arn #=> String
-    #   resp.audit_events[0].performed_time #=> Time
-    #   resp.audit_events[0].related_item_type #=> String, one of "Contact", "Comment", "File"
-    #   resp.audit_events[0].type #=> String, one of "Case.Created", "Case.Updated", "RelatedItem.Created"
-    #   resp.next_token #=> String
+    #   resp.audit_events[0].performed_by.user.custom_entity #=> String
+    #   resp.audit_events[0].performed_by.iam_principal_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/GetCaseAuditEvents AWS API Documentation
     #
@@ -1498,11 +1792,11 @@ module Aws::ConnectCases
     #
     # @return [Types::GetDomainResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::GetDomainResponse#created_time #created_time} => Time
-    #   * {Types::GetDomainResponse#domain_arn #domain_arn} => String
     #   * {Types::GetDomainResponse#domain_id #domain_id} => String
-    #   * {Types::GetDomainResponse#domain_status #domain_status} => String
+    #   * {Types::GetDomainResponse#domain_arn #domain_arn} => String
     #   * {Types::GetDomainResponse#name #name} => String
+    #   * {Types::GetDomainResponse#created_time #created_time} => Time
+    #   * {Types::GetDomainResponse#domain_status #domain_status} => String
     #   * {Types::GetDomainResponse#tags #tags} => Hash&lt;String,String&gt;
     #
     # @example Request syntax with placeholder values
@@ -1513,11 +1807,11 @@ module Aws::ConnectCases
     #
     # @example Response structure
     #
-    #   resp.created_time #=> Time
-    #   resp.domain_arn #=> String
     #   resp.domain_id #=> String
-    #   resp.domain_status #=> String, one of "Active", "CreationInProgress", "CreationFailed"
+    #   resp.domain_arn #=> String
     #   resp.name #=> String
+    #   resp.created_time #=> Time
+    #   resp.domain_status #=> String, one of "Active", "CreationInProgress", "CreationFailed"
     #   resp.tags #=> Hash
     #   resp.tags["String"] #=> String
     #
@@ -1540,14 +1834,14 @@ module Aws::ConnectCases
     #
     # @return [Types::GetLayoutResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::GetLayoutResponse#content #content} => Types::LayoutContent
-    #   * {Types::GetLayoutResponse#created_time #created_time} => Time
-    #   * {Types::GetLayoutResponse#deleted #deleted} => Boolean
-    #   * {Types::GetLayoutResponse#last_modified_time #last_modified_time} => Time
-    #   * {Types::GetLayoutResponse#layout_arn #layout_arn} => String
     #   * {Types::GetLayoutResponse#layout_id #layout_id} => String
+    #   * {Types::GetLayoutResponse#layout_arn #layout_arn} => String
     #   * {Types::GetLayoutResponse#name #name} => String
+    #   * {Types::GetLayoutResponse#content #content} => Types::LayoutContent
     #   * {Types::GetLayoutResponse#tags #tags} => Hash&lt;String,String&gt;
+    #   * {Types::GetLayoutResponse#deleted #deleted} => Boolean
+    #   * {Types::GetLayoutResponse#created_time #created_time} => Time
+    #   * {Types::GetLayoutResponse#last_modified_time #last_modified_time} => Time
     #
     # @example Request syntax with placeholder values
     #
@@ -1558,22 +1852,22 @@ module Aws::ConnectCases
     #
     # @example Response structure
     #
-    #   resp.content.basic.more_info.sections #=> Array
-    #   resp.content.basic.more_info.sections[0].field_group.fields #=> Array
-    #   resp.content.basic.more_info.sections[0].field_group.fields[0].id #=> String
-    #   resp.content.basic.more_info.sections[0].field_group.name #=> String
+    #   resp.layout_id #=> String
+    #   resp.layout_arn #=> String
+    #   resp.name #=> String
     #   resp.content.basic.top_panel.sections #=> Array
+    #   resp.content.basic.top_panel.sections[0].field_group.name #=> String
     #   resp.content.basic.top_panel.sections[0].field_group.fields #=> Array
     #   resp.content.basic.top_panel.sections[0].field_group.fields[0].id #=> String
-    #   resp.content.basic.top_panel.sections[0].field_group.name #=> String
-    #   resp.created_time #=> Time
-    #   resp.deleted #=> Boolean
-    #   resp.last_modified_time #=> Time
-    #   resp.layout_arn #=> String
-    #   resp.layout_id #=> String
-    #   resp.name #=> String
+    #   resp.content.basic.more_info.sections #=> Array
+    #   resp.content.basic.more_info.sections[0].field_group.name #=> String
+    #   resp.content.basic.more_info.sections[0].field_group.fields #=> Array
+    #   resp.content.basic.more_info.sections[0].field_group.fields[0].id #=> String
     #   resp.tags #=> Hash
     #   resp.tags["String"] #=> String
+    #   resp.deleted #=> Boolean
+    #   resp.created_time #=> Time
+    #   resp.last_modified_time #=> Time
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/GetLayout AWS API Documentation
     #
@@ -1610,18 +1904,19 @@ module Aws::ConnectCases
     #
     # @return [Types::GetTemplateResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::GetTemplateResponse#created_time #created_time} => Time
-    #   * {Types::GetTemplateResponse#deleted #deleted} => Boolean
-    #   * {Types::GetTemplateResponse#description #description} => String
-    #   * {Types::GetTemplateResponse#last_modified_time #last_modified_time} => Time
-    #   * {Types::GetTemplateResponse#layout_configuration #layout_configuration} => Types::LayoutConfiguration
-    #   * {Types::GetTemplateResponse#name #name} => String
-    #   * {Types::GetTemplateResponse#required_fields #required_fields} => Array&lt;Types::RequiredField&gt;
-    #   * {Types::GetTemplateResponse#rules #rules} => Array&lt;Types::TemplateRule&gt;
-    #   * {Types::GetTemplateResponse#status #status} => String
-    #   * {Types::GetTemplateResponse#tags #tags} => Hash&lt;String,String&gt;
-    #   * {Types::GetTemplateResponse#template_arn #template_arn} => String
     #   * {Types::GetTemplateResponse#template_id #template_id} => String
+    #   * {Types::GetTemplateResponse#template_arn #template_arn} => String
+    #   * {Types::GetTemplateResponse#name #name} => String
+    #   * {Types::GetTemplateResponse#description #description} => String
+    #   * {Types::GetTemplateResponse#layout_configuration #layout_configuration} => Types::LayoutConfiguration
+    #   * {Types::GetTemplateResponse#required_fields #required_fields} => Array&lt;Types::RequiredField&gt;
+    #   * {Types::GetTemplateResponse#tags #tags} => Hash&lt;String,String&gt;
+    #   * {Types::GetTemplateResponse#status #status} => String
+    #   * {Types::GetTemplateResponse#deleted #deleted} => Boolean
+    #   * {Types::GetTemplateResponse#created_time #created_time} => Time
+    #   * {Types::GetTemplateResponse#last_modified_time #last_modified_time} => Time
+    #   * {Types::GetTemplateResponse#rules #rules} => Array&lt;Types::TemplateRule&gt;
+    #   * {Types::GetTemplateResponse#tag_propagation_configurations #tag_propagation_configurations} => Array&lt;Types::TagPropagationConfiguration&gt;
     #
     # @example Request syntax with placeholder values
     #
@@ -1632,22 +1927,26 @@ module Aws::ConnectCases
     #
     # @example Response structure
     #
-    #   resp.created_time #=> Time
-    #   resp.deleted #=> Boolean
-    #   resp.description #=> String
-    #   resp.last_modified_time #=> Time
-    #   resp.layout_configuration.default_layout #=> String
+    #   resp.template_id #=> String
+    #   resp.template_arn #=> String
     #   resp.name #=> String
+    #   resp.description #=> String
+    #   resp.layout_configuration.default_layout #=> String
     #   resp.required_fields #=> Array
     #   resp.required_fields[0].field_id #=> String
+    #   resp.tags #=> Hash
+    #   resp.tags["String"] #=> String
+    #   resp.status #=> String, one of "Active", "Inactive"
+    #   resp.deleted #=> Boolean
+    #   resp.created_time #=> Time
+    #   resp.last_modified_time #=> Time
     #   resp.rules #=> Array
     #   resp.rules[0].case_rule_id #=> String
     #   resp.rules[0].field_id #=> String
-    #   resp.status #=> String, one of "Active", "Inactive"
-    #   resp.tags #=> Hash
-    #   resp.tags["String"] #=> String
-    #   resp.template_arn #=> String
-    #   resp.template_id #=> String
+    #   resp.tag_propagation_configurations #=> Array
+    #   resp.tag_propagation_configurations[0].resource_type #=> String, one of "Cases"
+    #   resp.tag_propagation_configurations[0].tag_map #=> Hash
+    #   resp.tag_propagation_configurations[0].tag_map["MutableTagKey"] #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/GetTemplate AWS API Documentation
     #
@@ -1696,11 +1995,11 @@ module Aws::ConnectCases
     # @example Response structure
     #
     #   resp.case_rules #=> Array
-    #   resp.case_rules[0].case_rule_arn #=> String
     #   resp.case_rules[0].case_rule_id #=> String
-    #   resp.case_rules[0].description #=> String
     #   resp.case_rules[0].name #=> String
-    #   resp.case_rules[0].rule_type #=> String, one of "Required"
+    #   resp.case_rules[0].case_rule_arn #=> String
+    #   resp.case_rules[0].rule_type #=> String, one of "Required", "Hidden", "FieldOptions"
+    #   resp.case_rules[0].description #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/ListCaseRules AWS API Documentation
@@ -1714,11 +2013,11 @@ module Aws::ConnectCases
 
     # Lists cases for a given contact.
     #
-    # @option params [required, String] :contact_arn
-    #   A unique identifier of a contact in Amazon Connect.
-    #
     # @option params [required, String] :domain_id
     #   The unique identifier of the Cases domain.
+    #
+    # @option params [required, String] :contact_arn
+    #   A unique identifier of a contact in Amazon Connect.
     #
     # @option params [Integer] :max_results
     #   The maximum number of results to return per page.
@@ -1738,8 +2037,8 @@ module Aws::ConnectCases
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_cases_for_contact({
-    #     contact_arn: "ContactArn", # required
     #     domain_id: "DomainId", # required
+    #     contact_arn: "ContactArn", # required
     #     max_results: 1,
     #     next_token: "NextToken",
     #   })
@@ -1788,8 +2087,8 @@ module Aws::ConnectCases
     # @example Response structure
     #
     #   resp.domains #=> Array
-    #   resp.domains[0].domain_arn #=> String
     #   resp.domains[0].domain_id #=> String
+    #   resp.domains[0].domain_arn #=> String
     #   resp.domains[0].name #=> String
     #   resp.next_token #=> String
     #
@@ -1823,8 +2122,8 @@ module Aws::ConnectCases
     #
     # @return [Types::ListFieldOptionsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::ListFieldOptionsResponse#next_token #next_token} => String
     #   * {Types::ListFieldOptionsResponse#options #options} => Array&lt;Types::FieldOption&gt;
+    #   * {Types::ListFieldOptionsResponse#next_token #next_token} => String
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
     #
@@ -1840,11 +2139,11 @@ module Aws::ConnectCases
     #
     # @example Response structure
     #
-    #   resp.next_token #=> String
     #   resp.options #=> Array
-    #   resp.options[0].active #=> Boolean
     #   resp.options[0].name #=> String
     #   resp.options[0].value #=> String
+    #   resp.options[0].active #=> Boolean
+    #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/ListFieldOptions AWS API Documentation
     #
@@ -1886,11 +2185,12 @@ module Aws::ConnectCases
     # @example Response structure
     #
     #   resp.fields #=> Array
-    #   resp.fields[0].field_arn #=> String
     #   resp.fields[0].field_id #=> String
+    #   resp.fields[0].field_arn #=> String
     #   resp.fields[0].name #=> String
-    #   resp.fields[0].namespace #=> String, one of "System", "Custom"
     #   resp.fields[0].type #=> String, one of "Text", "Number", "Boolean", "DateTime", "SingleSelect", "Url", "User"
+    #   resp.fields[0].namespace #=> String, one of "System", "Custom"
+    #   resp.fields[0].attributes.text.is_multiline #=> Boolean
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/ListFields AWS API Documentation
@@ -1934,8 +2234,8 @@ module Aws::ConnectCases
     # @example Response structure
     #
     #   resp.layouts #=> Array
-    #   resp.layouts[0].layout_arn #=> String
     #   resp.layouts[0].layout_id #=> String
+    #   resp.layouts[0].layout_arn #=> String
     #   resp.layouts[0].name #=> String
     #   resp.next_token #=> String
     #
@@ -2013,8 +2313,8 @@ module Aws::ConnectCases
     #
     # @return [Types::ListTemplatesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::ListTemplatesResponse#next_token #next_token} => String
     #   * {Types::ListTemplatesResponse#templates #templates} => Array&lt;Types::TemplateSummary&gt;
+    #   * {Types::ListTemplatesResponse#next_token #next_token} => String
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
     #
@@ -2029,12 +2329,16 @@ module Aws::ConnectCases
     #
     # @example Response structure
     #
-    #   resp.next_token #=> String
     #   resp.templates #=> Array
+    #   resp.templates[0].template_id #=> String
+    #   resp.templates[0].template_arn #=> String
     #   resp.templates[0].name #=> String
     #   resp.templates[0].status #=> String, one of "Active", "Inactive"
-    #   resp.templates[0].template_arn #=> String
-    #   resp.templates[0].template_id #=> String
+    #   resp.templates[0].tag_propagation_configurations #=> Array
+    #   resp.templates[0].tag_propagation_configurations[0].resource_type #=> String, one of "Cases"
+    #   resp.templates[0].tag_propagation_configurations[0].tag_map #=> Hash
+    #   resp.templates[0].tag_propagation_configurations[0].tag_map["MutableTagKey"] #=> String
+    #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/ListTemplates AWS API Documentation
     #
@@ -2092,6 +2396,237 @@ module Aws::ConnectCases
       req.send_request(options)
     end
 
+    # Searches for related items across all cases within a domain. This is a
+    # global search operation that returns related items from multiple
+    # cases, unlike the case-specific [SearchRelatedItems][1] API.
+    #
+    # **Use cases**
+    #
+    # Following are common uses cases for this API:
+    #
+    # * Find cases with similar issues across the domain. For example,
+    #   search for all cases containing comments about "product defect" to
+    #   identify patterns and existing solutions.
+    #
+    # * Locate all cases associated with specific contacts or orders. For
+    #   example, find all cases linked to a contactArn to understand the
+    #   complete customer journey.
+    #
+    # * Monitor SLA compliance across cases. For example, search for all
+    #   cases with "Active" SLA status to prioritize remediation efforts.
+    #
+    # **Important things to know**
+    #
+    # * This API returns case identifiers, not complete case objects. To
+    #   retrieve full case details, you must make additional calls to the
+    #   [GetCase][2] API for each returned case ID.
+    #
+    # * This API searches across related items content, not case fields. Use
+    #   the [SearchCases][3] API to search within case field values.
+    #
+    # **Endpoints**: See [Amazon Connect endpoints and quotas][4].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/connect/latest/APIReference/API_connect-cases_SearchRelatedItems.html
+    # [2]: https://docs.aws.amazon.com/connect/latest/APIReference/API_connect-cases_GetCase.html
+    # [3]: https://docs.aws.amazon.com/connect/latest/APIReference/API_connect-cases_SearchCases.html
+    # [4]: https://docs.aws.amazon.com/general/latest/gr/connect_region.html
+    #
+    # @option params [required, String] :domain_id
+    #   The unique identifier of the Cases domain.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return per page.
+    #
+    # @option params [String] :next_token
+    #   The token for the next set of results. Use the value returned in the
+    #   previous response in the next request to retrieve the next set of
+    #   results.
+    #
+    # @option params [Array<Types::RelatedItemTypeFilter>] :filters
+    #   The list of types of related items and their parameters to use for
+    #   filtering. The filters work as an OR condition: caller gets back
+    #   related items that match any of the specified filter types.
+    #
+    # @option params [Array<Types::SearchAllRelatedItemsSort>] :sorts
+    #   A structured set of sort terms to specify the order in which related
+    #   items should be returned. Supports sorting by association time or case
+    #   ID. The sorts work in the order specified: first sort term takes
+    #   precedence over subsequent terms.
+    #
+    # @return [Types::SearchAllRelatedItemsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::SearchAllRelatedItemsResponse#next_token #next_token} => String
+    #   * {Types::SearchAllRelatedItemsResponse#related_items #related_items} => Array&lt;Types::SearchAllRelatedItemsResponseItem&gt;
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.search_all_related_items({
+    #     domain_id: "DomainId", # required
+    #     max_results: 1,
+    #     next_token: "NextToken",
+    #     filters: [
+    #       {
+    #         contact: {
+    #           channel: ["Channel"],
+    #           contact_arn: "ContactArn",
+    #         },
+    #         comment: {
+    #         },
+    #         file: {
+    #           file_arn: "FileArn",
+    #         },
+    #         sla: {
+    #           name: "SlaName",
+    #           status: "Active", # accepts Active, Overdue, Met, NotMet
+    #         },
+    #         connect_case: {
+    #           case_id: "CaseId",
+    #         },
+    #         custom: {
+    #           fields: {
+    #             field: {
+    #               equal_to: {
+    #                 id: "FieldId", # required
+    #                 value: { # required
+    #                   string_value: "FieldValueUnionStringValueString",
+    #                   double_value: 1.0,
+    #                   boolean_value: false,
+    #                   empty_value: {
+    #                   },
+    #                   user_arn_value: "String",
+    #                 },
+    #               },
+    #               contains: {
+    #                 id: "FieldId", # required
+    #                 value: { # required
+    #                   string_value: "FieldValueUnionStringValueString",
+    #                   double_value: 1.0,
+    #                   boolean_value: false,
+    #                   empty_value: {
+    #                   },
+    #                   user_arn_value: "String",
+    #                 },
+    #               },
+    #               greater_than: {
+    #                 id: "FieldId", # required
+    #                 value: { # required
+    #                   string_value: "FieldValueUnionStringValueString",
+    #                   double_value: 1.0,
+    #                   boolean_value: false,
+    #                   empty_value: {
+    #                   },
+    #                   user_arn_value: "String",
+    #                 },
+    #               },
+    #               greater_than_or_equal_to: {
+    #                 id: "FieldId", # required
+    #                 value: { # required
+    #                   string_value: "FieldValueUnionStringValueString",
+    #                   double_value: 1.0,
+    #                   boolean_value: false,
+    #                   empty_value: {
+    #                   },
+    #                   user_arn_value: "String",
+    #                 },
+    #               },
+    #               less_than: {
+    #                 id: "FieldId", # required
+    #                 value: { # required
+    #                   string_value: "FieldValueUnionStringValueString",
+    #                   double_value: 1.0,
+    #                   boolean_value: false,
+    #                   empty_value: {
+    #                   },
+    #                   user_arn_value: "String",
+    #                 },
+    #               },
+    #               less_than_or_equal_to: {
+    #                 id: "FieldId", # required
+    #                 value: { # required
+    #                   string_value: "FieldValueUnionStringValueString",
+    #                   double_value: 1.0,
+    #                   boolean_value: false,
+    #                   empty_value: {
+    #                   },
+    #                   user_arn_value: "String",
+    #                 },
+    #               },
+    #             },
+    #             not: {
+    #               # recursive CustomFieldsFilter
+    #             },
+    #             and_all: [
+    #               {
+    #                 # recursive CustomFieldsFilter
+    #               },
+    #             ],
+    #             or_all: [
+    #               {
+    #                 # recursive CustomFieldsFilter
+    #               },
+    #             ],
+    #           },
+    #         },
+    #       },
+    #     ],
+    #     sorts: [
+    #       {
+    #         sort_property: "AssociationTime", # required, accepts AssociationTime, CaseId
+    #         sort_order: "Asc", # required, accepts Asc, Desc
+    #       },
+    #     ],
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.next_token #=> String
+    #   resp.related_items #=> Array
+    #   resp.related_items[0].related_item_id #=> String
+    #   resp.related_items[0].case_id #=> String
+    #   resp.related_items[0].type #=> String, one of "Contact", "Comment", "File", "Sla", "ConnectCase", "Custom"
+    #   resp.related_items[0].association_time #=> Time
+    #   resp.related_items[0].content.contact.contact_arn #=> String
+    #   resp.related_items[0].content.contact.channel #=> String
+    #   resp.related_items[0].content.contact.connected_to_system_time #=> Time
+    #   resp.related_items[0].content.comment.body #=> String
+    #   resp.related_items[0].content.comment.content_type #=> String, one of "Text/Plain"
+    #   resp.related_items[0].content.file.file_arn #=> String
+    #   resp.related_items[0].content.sla.sla_configuration.name #=> String
+    #   resp.related_items[0].content.sla.sla_configuration.type #=> String, one of "CaseField"
+    #   resp.related_items[0].content.sla.sla_configuration.status #=> String, one of "Active", "Overdue", "Met", "NotMet"
+    #   resp.related_items[0].content.sla.sla_configuration.field_id #=> String
+    #   resp.related_items[0].content.sla.sla_configuration.target_field_values #=> Array
+    #   resp.related_items[0].content.sla.sla_configuration.target_field_values[0].string_value #=> String
+    #   resp.related_items[0].content.sla.sla_configuration.target_field_values[0].double_value #=> Float
+    #   resp.related_items[0].content.sla.sla_configuration.target_field_values[0].boolean_value #=> Boolean
+    #   resp.related_items[0].content.sla.sla_configuration.target_field_values[0].user_arn_value #=> String
+    #   resp.related_items[0].content.sla.sla_configuration.target_time #=> Time
+    #   resp.related_items[0].content.sla.sla_configuration.completion_time #=> Time
+    #   resp.related_items[0].content.connect_case.case_id #=> String
+    #   resp.related_items[0].content.custom.fields #=> Array
+    #   resp.related_items[0].content.custom.fields[0].id #=> String
+    #   resp.related_items[0].content.custom.fields[0].value.string_value #=> String
+    #   resp.related_items[0].content.custom.fields[0].value.double_value #=> Float
+    #   resp.related_items[0].content.custom.fields[0].value.boolean_value #=> Boolean
+    #   resp.related_items[0].content.custom.fields[0].value.user_arn_value #=> String
+    #   resp.related_items[0].performed_by.user_arn #=> String
+    #   resp.related_items[0].performed_by.custom_entity #=> String
+    #   resp.related_items[0].tags #=> Hash
+    #   resp.related_items[0].tags["String"] #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/SearchAllRelatedItems AWS API Documentation
+    #
+    # @overload search_all_related_items(params = {})
+    # @param [Hash] params ({})
+    def search_all_related_items(params = {}, options = {})
+      req = build_request(:search_all_related_items, params)
+      req.send_request(options)
+    end
+
     # Searches for cases within their associated Cases domain. Search
     # results are returned as a paginated list of abridged case documents.
     #
@@ -2104,16 +2639,9 @@ module Aws::ConnectCases
     # @option params [required, String] :domain_id
     #   The unique identifier of the Cases domain.
     #
-    # @option params [Array<Types::FieldIdentifier>] :fields
-    #   The list of field identifiers to be returned as part of the response.
-    #
-    # @option params [Types::CaseFilter] :filter
-    #   A list of filter objects.
-    #
     # @option params [Integer] :max_results
-    #   The maximum number of cases to return. The current maximum supported
-    #   value is 25. This is also the default value when no other value is
-    #   provided.
+    #   The maximum number of cases to return. When no value is provided, 25
+    #   is the default.
     #
     # @option params [String] :next_token
     #   The token for the next set of results. Use the value returned in the
@@ -2123,14 +2651,21 @@ module Aws::ConnectCases
     # @option params [String] :search_term
     #   A word or phrase used to perform a quick search.
     #
+    # @option params [Types::CaseFilter] :filter
+    #   A list of filter objects.
+    #
     # @option params [Array<Types::Sort>] :sorts
     #   A list of sorts where each sort specifies a field and their sort order
     #   to be applied to the results.
     #
+    # @option params [Array<Types::FieldIdentifier>] :fields
+    #   The list of field identifiers to be returned as part of the response.
+    #
     # @return [Types::SearchCasesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::SearchCasesResponse#cases #cases} => Array&lt;Types::SearchCasesResponseItem&gt;
     #   * {Types::SearchCasesResponse#next_token #next_token} => String
+    #   * {Types::SearchCasesResponse#cases #cases} => Array&lt;Types::SearchCasesResponseItem&gt;
+    #   * {Types::SearchCasesResponse#total_count #total_count} => Integer
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
     #
@@ -2138,81 +2673,74 @@ module Aws::ConnectCases
     #
     #   resp = client.search_cases({
     #     domain_id: "DomainId", # required
-    #     fields: [
-    #       {
-    #         id: "FieldId", # required
-    #       },
-    #     ],
+    #     max_results: 1,
+    #     next_token: "NextToken",
+    #     search_term: "SearchCasesRequestSearchTermString",
     #     filter: {
-    #       and_all: [
-    #         {
-    #           # recursive CaseFilter
-    #         },
-    #       ],
     #       field: {
-    #         contains: {
-    #           id: "FieldId", # required
-    #           value: { # required
-    #             boolean_value: false,
-    #             double_value: 1.0,
-    #             empty_value: {
-    #             },
-    #             string_value: "FieldValueUnionStringValueString",
-    #             user_arn_value: "String",
-    #           },
-    #         },
     #         equal_to: {
     #           id: "FieldId", # required
     #           value: { # required
-    #             boolean_value: false,
+    #             string_value: "FieldValueUnionStringValueString",
     #             double_value: 1.0,
+    #             boolean_value: false,
     #             empty_value: {
     #             },
+    #             user_arn_value: "String",
+    #           },
+    #         },
+    #         contains: {
+    #           id: "FieldId", # required
+    #           value: { # required
     #             string_value: "FieldValueUnionStringValueString",
+    #             double_value: 1.0,
+    #             boolean_value: false,
+    #             empty_value: {
+    #             },
     #             user_arn_value: "String",
     #           },
     #         },
     #         greater_than: {
     #           id: "FieldId", # required
     #           value: { # required
-    #             boolean_value: false,
+    #             string_value: "FieldValueUnionStringValueString",
     #             double_value: 1.0,
+    #             boolean_value: false,
     #             empty_value: {
     #             },
-    #             string_value: "FieldValueUnionStringValueString",
     #             user_arn_value: "String",
     #           },
     #         },
     #         greater_than_or_equal_to: {
     #           id: "FieldId", # required
     #           value: { # required
-    #             boolean_value: false,
+    #             string_value: "FieldValueUnionStringValueString",
     #             double_value: 1.0,
+    #             boolean_value: false,
     #             empty_value: {
     #             },
-    #             string_value: "FieldValueUnionStringValueString",
     #             user_arn_value: "String",
     #           },
     #         },
     #         less_than: {
     #           id: "FieldId", # required
     #           value: { # required
-    #             boolean_value: false,
+    #             string_value: "FieldValueUnionStringValueString",
     #             double_value: 1.0,
+    #             boolean_value: false,
     #             empty_value: {
     #             },
-    #             string_value: "FieldValueUnionStringValueString",
     #             user_arn_value: "String",
     #           },
     #         },
     #         less_than_or_equal_to: {
     #           id: "FieldId", # required
     #           value: { # required
-    #             boolean_value: false,
+    #             string_value: "FieldValueUnionStringValueString",
     #             double_value: 1.0,
+    #             boolean_value: false,
     #             empty_value: {
     #             },
-    #             string_value: "FieldValueUnionStringValueString",
     #             user_arn_value: "String",
     #           },
     #         },
@@ -2220,37 +2748,51 @@ module Aws::ConnectCases
     #       not: {
     #         # recursive CaseFilter
     #       },
+    #       tag: {
+    #         equal_to: {
+    #           key: "SearchTagKey",
+    #           value: "TagValueString",
+    #         },
+    #       },
+    #       and_all: [
+    #         {
+    #           # recursive CaseFilter
+    #         },
+    #       ],
     #       or_all: [
     #         {
     #           # recursive CaseFilter
     #         },
     #       ],
     #     },
-    #     max_results: 1,
-    #     next_token: "NextToken",
-    #     search_term: "SearchCasesRequestSearchTermString",
     #     sorts: [
     #       {
     #         field_id: "FieldId", # required
     #         sort_order: "Asc", # required, accepts Asc, Desc
     #       },
     #     ],
+    #     fields: [
+    #       {
+    #         id: "FieldId", # required
+    #       },
+    #     ],
     #   })
     #
     # @example Response structure
     #
+    #   resp.next_token #=> String
     #   resp.cases #=> Array
     #   resp.cases[0].case_id #=> String
+    #   resp.cases[0].template_id #=> String
     #   resp.cases[0].fields #=> Array
     #   resp.cases[0].fields[0].id #=> String
-    #   resp.cases[0].fields[0].value.boolean_value #=> Boolean
-    #   resp.cases[0].fields[0].value.double_value #=> Float
     #   resp.cases[0].fields[0].value.string_value #=> String
+    #   resp.cases[0].fields[0].value.double_value #=> Float
+    #   resp.cases[0].fields[0].value.boolean_value #=> Boolean
     #   resp.cases[0].fields[0].value.user_arn_value #=> String
     #   resp.cases[0].tags #=> Hash
     #   resp.cases[0].tags["String"] #=> String
-    #   resp.cases[0].template_id #=> String
-    #   resp.next_token #=> String
+    #   resp.total_count #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/SearchCases AWS API Documentation
     #
@@ -2268,15 +2810,11 @@ module Aws::ConnectCases
     #
     #  </note>
     #
-    # @option params [required, String] :case_id
-    #   A unique identifier of the case.
-    #
     # @option params [required, String] :domain_id
     #   The unique identifier of the Cases domain.
     #
-    # @option params [Array<Types::RelatedItemTypeFilter>] :filters
-    #   The list of types of related items and their parameters to use for
-    #   filtering.
+    # @option params [required, String] :case_id
+    #   A unique identifier of the case.
     #
     # @option params [Integer] :max_results
     #   The maximum number of results to return per page.
@@ -2285,6 +2823,10 @@ module Aws::ConnectCases
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
+    #
+    # @option params [Array<Types::RelatedItemTypeFilter>] :filters
+    #   The list of types of related items and their parameters to use for
+    #   filtering.
     #
     # @return [Types::SearchRelatedItemsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -2296,41 +2838,152 @@ module Aws::ConnectCases
     # @example Request syntax with placeholder values
     #
     #   resp = client.search_related_items({
-    #     case_id: "CaseId", # required
     #     domain_id: "DomainId", # required
+    #     case_id: "CaseId", # required
+    #     max_results: 1,
+    #     next_token: "NextToken",
     #     filters: [
     #       {
-    #         comment: {
-    #         },
     #         contact: {
     #           channel: ["Channel"],
     #           contact_arn: "ContactArn",
     #         },
+    #         comment: {
+    #         },
     #         file: {
     #           file_arn: "FileArn",
     #         },
+    #         sla: {
+    #           name: "SlaName",
+    #           status: "Active", # accepts Active, Overdue, Met, NotMet
+    #         },
+    #         connect_case: {
+    #           case_id: "CaseId",
+    #         },
+    #         custom: {
+    #           fields: {
+    #             field: {
+    #               equal_to: {
+    #                 id: "FieldId", # required
+    #                 value: { # required
+    #                   string_value: "FieldValueUnionStringValueString",
+    #                   double_value: 1.0,
+    #                   boolean_value: false,
+    #                   empty_value: {
+    #                   },
+    #                   user_arn_value: "String",
+    #                 },
+    #               },
+    #               contains: {
+    #                 id: "FieldId", # required
+    #                 value: { # required
+    #                   string_value: "FieldValueUnionStringValueString",
+    #                   double_value: 1.0,
+    #                   boolean_value: false,
+    #                   empty_value: {
+    #                   },
+    #                   user_arn_value: "String",
+    #                 },
+    #               },
+    #               greater_than: {
+    #                 id: "FieldId", # required
+    #                 value: { # required
+    #                   string_value: "FieldValueUnionStringValueString",
+    #                   double_value: 1.0,
+    #                   boolean_value: false,
+    #                   empty_value: {
+    #                   },
+    #                   user_arn_value: "String",
+    #                 },
+    #               },
+    #               greater_than_or_equal_to: {
+    #                 id: "FieldId", # required
+    #                 value: { # required
+    #                   string_value: "FieldValueUnionStringValueString",
+    #                   double_value: 1.0,
+    #                   boolean_value: false,
+    #                   empty_value: {
+    #                   },
+    #                   user_arn_value: "String",
+    #                 },
+    #               },
+    #               less_than: {
+    #                 id: "FieldId", # required
+    #                 value: { # required
+    #                   string_value: "FieldValueUnionStringValueString",
+    #                   double_value: 1.0,
+    #                   boolean_value: false,
+    #                   empty_value: {
+    #                   },
+    #                   user_arn_value: "String",
+    #                 },
+    #               },
+    #               less_than_or_equal_to: {
+    #                 id: "FieldId", # required
+    #                 value: { # required
+    #                   string_value: "FieldValueUnionStringValueString",
+    #                   double_value: 1.0,
+    #                   boolean_value: false,
+    #                   empty_value: {
+    #                   },
+    #                   user_arn_value: "String",
+    #                 },
+    #               },
+    #             },
+    #             not: {
+    #               # recursive CustomFieldsFilter
+    #             },
+    #             and_all: [
+    #               {
+    #                 # recursive CustomFieldsFilter
+    #               },
+    #             ],
+    #             or_all: [
+    #               {
+    #                 # recursive CustomFieldsFilter
+    #               },
+    #             ],
+    #           },
+    #         },
     #       },
     #     ],
-    #     max_results: 1,
-    #     next_token: "NextToken",
     #   })
     #
     # @example Response structure
     #
     #   resp.next_token #=> String
     #   resp.related_items #=> Array
+    #   resp.related_items[0].related_item_id #=> String
+    #   resp.related_items[0].type #=> String, one of "Contact", "Comment", "File", "Sla", "ConnectCase", "Custom"
     #   resp.related_items[0].association_time #=> Time
-    #   resp.related_items[0].content.comment.body #=> String
-    #   resp.related_items[0].content.comment.content_type #=> String, one of "Text/Plain"
+    #   resp.related_items[0].content.contact.contact_arn #=> String
     #   resp.related_items[0].content.contact.channel #=> String
     #   resp.related_items[0].content.contact.connected_to_system_time #=> Time
-    #   resp.related_items[0].content.contact.contact_arn #=> String
+    #   resp.related_items[0].content.comment.body #=> String
+    #   resp.related_items[0].content.comment.content_type #=> String, one of "Text/Plain"
     #   resp.related_items[0].content.file.file_arn #=> String
-    #   resp.related_items[0].performed_by.user_arn #=> String
-    #   resp.related_items[0].related_item_id #=> String
+    #   resp.related_items[0].content.sla.sla_configuration.name #=> String
+    #   resp.related_items[0].content.sla.sla_configuration.type #=> String, one of "CaseField"
+    #   resp.related_items[0].content.sla.sla_configuration.status #=> String, one of "Active", "Overdue", "Met", "NotMet"
+    #   resp.related_items[0].content.sla.sla_configuration.field_id #=> String
+    #   resp.related_items[0].content.sla.sla_configuration.target_field_values #=> Array
+    #   resp.related_items[0].content.sla.sla_configuration.target_field_values[0].string_value #=> String
+    #   resp.related_items[0].content.sla.sla_configuration.target_field_values[0].double_value #=> Float
+    #   resp.related_items[0].content.sla.sla_configuration.target_field_values[0].boolean_value #=> Boolean
+    #   resp.related_items[0].content.sla.sla_configuration.target_field_values[0].user_arn_value #=> String
+    #   resp.related_items[0].content.sla.sla_configuration.target_time #=> Time
+    #   resp.related_items[0].content.sla.sla_configuration.completion_time #=> Time
+    #   resp.related_items[0].content.connect_case.case_id #=> String
+    #   resp.related_items[0].content.custom.fields #=> Array
+    #   resp.related_items[0].content.custom.fields[0].id #=> String
+    #   resp.related_items[0].content.custom.fields[0].value.string_value #=> String
+    #   resp.related_items[0].content.custom.fields[0].value.double_value #=> Float
+    #   resp.related_items[0].content.custom.fields[0].value.boolean_value #=> Boolean
+    #   resp.related_items[0].content.custom.fields[0].value.user_arn_value #=> String
     #   resp.related_items[0].tags #=> Hash
     #   resp.related_items[0].tags["String"] #=> String
-    #   resp.related_items[0].type #=> String, one of "Contact", "Comment", "File"
+    #   resp.related_items[0].performed_by.user_arn #=> String
+    #   resp.related_items[0].performed_by.custom_entity #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/SearchRelatedItems AWS API Documentation
     #
@@ -2396,58 +3049,60 @@ module Aws::ConnectCases
       req.send_request(options)
     end
 
-    # <note markdown="1"> If you provide a value for `PerformedBy.UserArn` you must also have
+    # <note markdown="1"> If you provide a value for `PerformedBy.UserArn`
+    # you must also have
     # [connect:DescribeUser][1] permission on the User ARN resource that you
     # provide
     #
     #  </note>
     #
-    # Updates the values of fields on a case. Fields to be updated are
+    #  Updates the values of fields on a case. Fields to be updated are
     # received as an array of id/value pairs identical to the `CreateCase`
     # input .
     #
-    # If the action is successful, the service sends back an HTTP 200
+    #  If the action is successful, the service sends back an HTTP 200
     # response with an empty HTTP body.
     #
     #
     #
     # [1]: https://docs.aws.amazon.com/connect/latest/APIReference/API_DescribeUser.html
     #
-    # @option params [required, String] :case_id
-    #   A unique identifier of the case.
-    #
     # @option params [required, String] :domain_id
     #   The unique identifier of the Cases domain.
+    #
+    # @option params [required, String] :case_id
+    #   A unique identifier of the case.
     #
     # @option params [required, Array<Types::FieldValue>] :fields
     #   An array of objects with `fieldId` (matching ListFields/DescribeField)
     #   and value union data, structured identical to `CreateCase`.
     #
     # @option params [Types::UserUnion] :performed_by
-    #   Represents the identity of the person who performed the action.
+    #   Represents the entity that performed the action.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_case({
-    #     case_id: "CaseId", # required
     #     domain_id: "DomainId", # required
+    #     case_id: "CaseId", # required
     #     fields: [ # required
     #       {
     #         id: "FieldId", # required
     #         value: { # required
-    #           boolean_value: false,
+    #           string_value: "FieldValueUnionStringValueString",
     #           double_value: 1.0,
+    #           boolean_value: false,
     #           empty_value: {
     #           },
-    #           string_value: "FieldValueUnionStringValueString",
     #           user_arn_value: "String",
     #         },
     #       },
     #     ],
     #     performed_by: {
     #       user_arn: "UserArn",
+    #       custom_entity: "CustomEntity",
     #     },
     #   })
     #
@@ -2469,17 +3124,17 @@ module Aws::ConnectCases
     #
     # [1]: https://docs.aws.amazon.com/connect/latest/adminguide/case-field-conditions.html
     #
-    # @option params [required, String] :case_rule_id
-    #   Unique identifier of a case rule.
-    #
-    # @option params [String] :description
-    #   Description of a case rule.
-    #
     # @option params [required, String] :domain_id
     #   Unique identifier of a Cases domain.
     #
+    # @option params [required, String] :case_rule_id
+    #   Unique identifier of a case rule.
+    #
     # @option params [String] :name
     #   Name of the case rule.
+    #
+    # @option params [String] :description
+    #   Description of a case rule.
     #
     # @option params [Types::CaseRuleDetails] :rule
     #   Represents what rule type should take place, under what conditions.
@@ -2489,12 +3144,13 @@ module Aws::ConnectCases
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_case_rule({
-    #     case_rule_id: "CaseRuleId", # required
-    #     description: "CaseRuleDescription",
     #     domain_id: "DomainId", # required
+    #     case_rule_id: "CaseRuleId", # required
     #     name: "CaseRuleName",
+    #     description: "CaseRuleDescription",
     #     rule: {
     #       required: {
+    #         default_value: false, # required
     #         conditions: [ # required
     #           {
     #             equal_to: {
@@ -2502,11 +3158,11 @@ module Aws::ConnectCases
     #                 field_id: "FieldId",
     #               },
     #               operand_two: { # required
+    #                 string_value: "OperandTwoStringValueString",
     #                 boolean_value: false,
     #                 double_value: 1.0,
     #                 empty_value: {
     #                 },
-    #                 string_value: "OperandTwoStringValueString",
     #               },
     #               result: false, # required
     #             },
@@ -2515,17 +3171,79 @@ module Aws::ConnectCases
     #                 field_id: "FieldId",
     #               },
     #               operand_two: { # required
+    #                 string_value: "OperandTwoStringValueString",
     #                 boolean_value: false,
     #                 double_value: 1.0,
     #                 empty_value: {
     #                 },
-    #                 string_value: "OperandTwoStringValueString",
     #               },
     #               result: false, # required
     #             },
+    #             and_all: {
+    #               conditions: { # required
+    #                 # recursive BooleanConditionList
+    #               },
+    #             },
+    #             or_all: {
+    #               conditions: { # required
+    #                 # recursive BooleanConditionList
+    #               },
+    #             },
     #           },
     #         ],
+    #       },
+    #       field_options: {
+    #         parent_field_id: "FieldId",
+    #         child_field_id: "FieldId",
+    #         parent_child_field_options_mappings: [ # required
+    #           {
+    #             parent_field_option_value: "ParentChildFieldOptionValue", # required
+    #             child_field_option_values: ["ParentChildFieldOptionValue"], # required
+    #           },
+    #         ],
+    #       },
+    #       hidden: {
     #         default_value: false, # required
+    #         conditions: [ # required
+    #           {
+    #             equal_to: {
+    #               operand_one: { # required
+    #                 field_id: "FieldId",
+    #               },
+    #               operand_two: { # required
+    #                 string_value: "OperandTwoStringValueString",
+    #                 boolean_value: false,
+    #                 double_value: 1.0,
+    #                 empty_value: {
+    #                 },
+    #               },
+    #               result: false, # required
+    #             },
+    #             not_equal_to: {
+    #               operand_one: { # required
+    #                 field_id: "FieldId",
+    #               },
+    #               operand_two: { # required
+    #                 string_value: "OperandTwoStringValueString",
+    #                 boolean_value: false,
+    #                 double_value: 1.0,
+    #                 empty_value: {
+    #                 },
+    #               },
+    #               result: false, # required
+    #             },
+    #             and_all: {
+    #               conditions: { # required
+    #                 # recursive BooleanConditionList
+    #               },
+    #             },
+    #             or_all: {
+    #               conditions: { # required
+    #                 # recursive BooleanConditionList
+    #               },
+    #             },
+    #           },
+    #         ],
     #       },
     #     },
     #   })
@@ -2541,9 +3259,6 @@ module Aws::ConnectCases
 
     # Updates the properties of an existing field.
     #
-    # @option params [String] :description
-    #   The description of a field.
-    #
     # @option params [required, String] :domain_id
     #   The unique identifier of the Cases domain.
     #
@@ -2553,15 +3268,26 @@ module Aws::ConnectCases
     # @option params [String] :name
     #   The name of the field.
     #
+    # @option params [String] :description
+    #   The description of a field.
+    #
+    # @option params [Types::FieldAttributes] :attributes
+    #   Union of field attributes.
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_field({
-    #     description: "FieldDescription",
     #     domain_id: "DomainId", # required
     #     field_id: "FieldId", # required
     #     name: "FieldName",
+    #     description: "FieldDescription",
+    #     attributes: {
+    #       text: {
+    #         is_multiline: false, # required
+    #       },
+    #     },
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/UpdateField AWS API Documentation
@@ -2586,10 +3312,6 @@ module Aws::ConnectCases
     #
     #  </note>
     #
-    # @option params [Types::LayoutContent] :content
-    #   Information about which fields will be present in the layout, the
-    #   order of the fields.
-    #
     # @option params [required, String] :domain_id
     #   The unique identifier of the Cases domain.
     #
@@ -2599,46 +3321,50 @@ module Aws::ConnectCases
     # @option params [String] :name
     #   The name of the layout. It must be unique per domain.
     #
+    # @option params [Types::LayoutContent] :content
+    #   Information about which fields will be present in the layout, the
+    #   order of the fields.
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_layout({
+    #     domain_id: "DomainId", # required
+    #     layout_id: "LayoutId", # required
+    #     name: "LayoutName",
     #     content: {
     #       basic: {
-    #         more_info: {
-    #           sections: [
-    #             {
-    #               field_group: {
-    #                 fields: [ # required
-    #                   {
-    #                     id: "FieldId", # required
-    #                   },
-    #                 ],
-    #                 name: "FieldGroupNameString",
-    #               },
-    #             },
-    #           ],
-    #         },
     #         top_panel: {
     #           sections: [
     #             {
     #               field_group: {
+    #                 name: "FieldGroupNameString",
     #                 fields: [ # required
     #                   {
     #                     id: "FieldId", # required
     #                   },
     #                 ],
+    #               },
+    #             },
+    #           ],
+    #         },
+    #         more_info: {
+    #           sections: [
+    #             {
+    #               field_group: {
     #                 name: "FieldGroupNameString",
+    #                 fields: [ # required
+    #                   {
+    #                     id: "FieldId", # required
+    #                   },
+    #                 ],
     #               },
     #             },
     #           ],
     #         },
     #       },
     #     },
-    #     domain_id: "DomainId", # required
-    #     layout_id: "LayoutId", # required
-    #     name: "LayoutName",
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/UpdateLayout AWS API Documentation
@@ -2647,6 +3373,142 @@ module Aws::ConnectCases
     # @param [Hash] params ({})
     def update_layout(params = {}, options = {})
       req = build_request(:update_layout, params)
+      req.send_request(options)
+    end
+
+    # Updates the content of a related item associated with a case. The
+    # following related item types are supported:
+    #
+    # * **Comment** - Update the text content of an existing comment
+    #
+    # * **Custom** - Update the fields of a custom related item. You can
+    #   add, modify, and remove fields from a custom related item. There's
+    #   a quota for the number of fields allowed in a Custom type related
+    #   item. See [Amazon Connect Cases quotas][1].
+    #
+    # **Important things to know**
+    #
+    # * When updating a Custom related item, all existing and new fields,
+    #   and their associated values should be included in the request.
+    #   Fields not included as part of this request will be removed.
+    #
+    # * If you provide a value for `performedBy.userArn` you must also have
+    #   [DescribeUser][2] permission on the ARN of the user that you
+    #   provide.
+    #
+    # * [System case fields][3] cannot be used in a custom related item.
+    #
+    # **Endpoints**: See [Amazon Connect endpoints and quotas][4].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/connect/latest/adminguide/amazon-connect-service-limits.html#cases-quotas
+    # [2]: https://docs.aws.amazon.com/connect/latest/APIReference/API_DescribeUser.html
+    # [3]: https://docs.aws.amazon.com/connect/latest/adminguide/case-fields.html#system-case-fields
+    # [4]: https://docs.aws.amazon.com/general/latest/gr/connect_region.html
+    #
+    # @option params [required, String] :domain_id
+    #   The unique identifier of the Cases domain.
+    #
+    # @option params [required, String] :case_id
+    #   A unique identifier of the case.
+    #
+    # @option params [required, String] :related_item_id
+    #   Unique identifier of a related item.
+    #
+    # @option params [required, Types::RelatedItemUpdateContent] :content
+    #   The content of a related item to be updated.
+    #
+    # @option params [Types::UserUnion] :performed_by
+    #   Represents the user who performed the update of the related item.
+    #
+    # @return [Types::UpdateRelatedItemResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateRelatedItemResponse#related_item_id #related_item_id} => String
+    #   * {Types::UpdateRelatedItemResponse#related_item_arn #related_item_arn} => String
+    #   * {Types::UpdateRelatedItemResponse#type #type} => String
+    #   * {Types::UpdateRelatedItemResponse#content #content} => Types::RelatedItemContent
+    #   * {Types::UpdateRelatedItemResponse#association_time #association_time} => Time
+    #   * {Types::UpdateRelatedItemResponse#tags #tags} => Hash&lt;String,String&gt;
+    #   * {Types::UpdateRelatedItemResponse#last_updated_user #last_updated_user} => Types::UserUnion
+    #   * {Types::UpdateRelatedItemResponse#created_by #created_by} => Types::UserUnion
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_related_item({
+    #     domain_id: "DomainId", # required
+    #     case_id: "CaseId", # required
+    #     related_item_id: "RelatedItemId", # required
+    #     content: { # required
+    #       comment: {
+    #         body: "CommentBody", # required
+    #         content_type: "Text/Plain", # required, accepts Text/Plain
+    #       },
+    #       custom: {
+    #         fields: [ # required
+    #           {
+    #             id: "FieldId", # required
+    #             value: { # required
+    #               string_value: "FieldValueUnionStringValueString",
+    #               double_value: 1.0,
+    #               boolean_value: false,
+    #               empty_value: {
+    #               },
+    #               user_arn_value: "String",
+    #             },
+    #           },
+    #         ],
+    #       },
+    #     },
+    #     performed_by: {
+    #       user_arn: "UserArn",
+    #       custom_entity: "CustomEntity",
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.related_item_id #=> String
+    #   resp.related_item_arn #=> String
+    #   resp.type #=> String, one of "Contact", "Comment", "File", "Sla", "ConnectCase", "Custom"
+    #   resp.content.contact.contact_arn #=> String
+    #   resp.content.contact.channel #=> String
+    #   resp.content.contact.connected_to_system_time #=> Time
+    #   resp.content.comment.body #=> String
+    #   resp.content.comment.content_type #=> String, one of "Text/Plain"
+    #   resp.content.file.file_arn #=> String
+    #   resp.content.sla.sla_configuration.name #=> String
+    #   resp.content.sla.sla_configuration.type #=> String, one of "CaseField"
+    #   resp.content.sla.sla_configuration.status #=> String, one of "Active", "Overdue", "Met", "NotMet"
+    #   resp.content.sla.sla_configuration.field_id #=> String
+    #   resp.content.sla.sla_configuration.target_field_values #=> Array
+    #   resp.content.sla.sla_configuration.target_field_values[0].string_value #=> String
+    #   resp.content.sla.sla_configuration.target_field_values[0].double_value #=> Float
+    #   resp.content.sla.sla_configuration.target_field_values[0].boolean_value #=> Boolean
+    #   resp.content.sla.sla_configuration.target_field_values[0].user_arn_value #=> String
+    #   resp.content.sla.sla_configuration.target_time #=> Time
+    #   resp.content.sla.sla_configuration.completion_time #=> Time
+    #   resp.content.connect_case.case_id #=> String
+    #   resp.content.custom.fields #=> Array
+    #   resp.content.custom.fields[0].id #=> String
+    #   resp.content.custom.fields[0].value.string_value #=> String
+    #   resp.content.custom.fields[0].value.double_value #=> Float
+    #   resp.content.custom.fields[0].value.boolean_value #=> Boolean
+    #   resp.content.custom.fields[0].value.user_arn_value #=> String
+    #   resp.association_time #=> Time
+    #   resp.tags #=> Hash
+    #   resp.tags["String"] #=> String
+    #   resp.last_updated_user.user_arn #=> String
+    #   resp.last_updated_user.custom_entity #=> String
+    #   resp.created_by.user_arn #=> String
+    #   resp.created_by.custom_entity #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/UpdateRelatedItem AWS API Documentation
+    #
+    # @overload update_related_item(params = {})
+    # @param [Hash] params ({})
+    def update_related_item(params = {}, options = {})
+      req = build_request(:update_related_item, params)
       req.send_request(options)
     end
 
@@ -2674,21 +3536,27 @@ module Aws::ConnectCases
     # [3]: https://docs.aws.amazon.com/connect/latest/APIReference/API_connect-cases_GetTemplate.html
     # [4]: https://docs.aws.amazon.com/connect/latest/APIReference/API_connect-cases_ListTemplates.html
     #
-    # @option params [String] :description
-    #   A brief description of the template.
-    #
     # @option params [required, String] :domain_id
     #   The unique identifier of the Cases domain.
     #
-    # @option params [Types::LayoutConfiguration] :layout_configuration
-    #   Configuration of layouts associated to the template.
+    # @option params [required, String] :template_id
+    #   A unique identifier for the template.
     #
     # @option params [String] :name
     #   The name of the template. It must be unique per domain.
     #
+    # @option params [String] :description
+    #   A brief description of the template.
+    #
+    # @option params [Types::LayoutConfiguration] :layout_configuration
+    #   Configuration of layouts associated to the template.
+    #
     # @option params [Array<Types::RequiredField>] :required_fields
     #   A list of fields that must contain a value for a case to be
     #   successfully created with this template.
+    #
+    # @option params [String] :status
+    #   The status of the template.
     #
     # @option params [Array<Types::TemplateRule>] :rules
     #   A list of case rules (also known as [case field conditions][1]) on a
@@ -2698,36 +3566,43 @@ module Aws::ConnectCases
     #
     #   [1]: https://docs.aws.amazon.com/connect/latest/adminguide/case-field-conditions.html
     #
-    # @option params [String] :status
-    #   The status of the template.
-    #
-    # @option params [required, String] :template_id
-    #   A unique identifier for the template.
+    # @option params [Array<Types::TagPropagationConfiguration>] :tag_propagation_configurations
+    #   Defines tag propagation configuration for resources created within a
+    #   domain. Tags specified here will be automatically applied to resources
+    #   being created for the specified resource type.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_template({
-    #     description: "TemplateDescription",
     #     domain_id: "DomainId", # required
+    #     template_id: "TemplateId", # required
+    #     name: "TemplateName",
+    #     description: "TemplateDescription",
     #     layout_configuration: {
     #       default_layout: "LayoutId",
     #     },
-    #     name: "TemplateName",
     #     required_fields: [
     #       {
     #         field_id: "FieldId", # required
     #       },
     #     ],
+    #     status: "Active", # accepts Active, Inactive
     #     rules: [
     #       {
     #         case_rule_id: "CaseRuleId", # required
-    #         field_id: "FieldId", # required
+    #         field_id: "FieldId",
     #       },
     #     ],
-    #     status: "Active", # accepts Active, Inactive
-    #     template_id: "TemplateId", # required
+    #     tag_propagation_configurations: [
+    #       {
+    #         resource_type: "Cases", # required, accepts Cases
+    #         tag_map: { # required
+    #           "MutableTagKey" => "TagValueString",
+    #         },
+    #       },
+    #     ],
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/UpdateTemplate AWS API Documentation
@@ -2757,7 +3632,7 @@ module Aws::ConnectCases
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-connectcases'
-      context[:gem_version] = '1.39.0'
+      context[:gem_version] = '1.71.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

@@ -95,8 +95,8 @@ module Aws::LocationService
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::LocationService
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::LocationService
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::LocationService
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::LocationService
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::LocationService
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::LocationService
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::LocationService
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -755,6 +759,13 @@ module Aws::LocationService
     #             radius: 1.0, # required
     #           },
     #           geobuf: "data",
+    #           multi_polygon: [
+    #             [
+    #               [
+    #                 [1.0],
+    #               ],
+    #             ],
+    #           ],
     #         },
     #         geofence_properties: {
     #           "PropertyMapKeyString" => "PropertyMapValueString",
@@ -859,21 +870,45 @@ module Aws::LocationService
       req.send_request(options)
     end
 
-    # [Calculates a route][1] given the following required parameters:
+    # This operation is no longer current and may be deprecated in the
+    # future. We recommend you upgrade to [ `CalculateRoutes`
+    # ](/location/latest/APIReference/API_CalculateRoutes.html) or [
+    # `CalculateIsolines`
+    # ](/location/latest/APIReference/API_CalculateIsolines.html) unless you
+    # require Grab data.
+    #
+    #  * `CalculateRoute` is part of a previous Amazon Location Service
+    #   Routes API (version 1) which has been superseded by a more
+    #   intuitive, powerful, and complete API (version 2).
+    #
+    # * The version 2 `CalculateRoutes` operation gives better results for
+    #   point-to-point routing, while the version 2 `CalculateIsolines`
+    #   operation adds support for calculating service areas and travel time
+    #   envelopes.
+    #
+    # * If you are using an Amazon Web Services SDK or the Amazon Web
+    #   Services CLI, note that the Routes API version 2 is found under
+    #   `geo-routes` or `geo_routes`, not under `location`.
+    #
+    # * Since Grab is not yet fully supported in Routes API version 2, we
+    #   recommend you continue using API version 1 when using Grab.
+    #
+    #  [Calculates a route][1] given the following required parameters:
     # `DeparturePosition` and `DestinationPosition`. Requires that you first
     # [create a route calculator resource][2].
     #
-    # By default, a request that doesn't specify a departure time uses the
+    #  By default, a request that doesn't specify a departure time uses the
     # best time of day to travel with the best traffic conditions when
     # calculating the route.
     #
-    # Additional options include:
+    #  Additional options include:
     #
-    # * [Specifying a departure time][3] using either `DepartureTime` or
+    #  * [Specifying a departure time][3] using either `DepartureTime` or
     #   `DepartNow`. This calculates a route based on predictive traffic
     #   data at the given time.
     #
-    #   <note markdown="1"> You can't specify both `DepartureTime` and `DepartNow` in a single
+    #   <note markdown="1"> You can't specify both `DepartureTime` and
+    # `DepartNow` in a single
     #   request. Specifying both parameters returns a validation error.
     #
     #    </note>
@@ -883,17 +918,18 @@ module Aws::LocationService
     #   specify additional route preferences in `CarModeOptions` if
     #   traveling by `Car`, or `TruckModeOptions` if traveling by `Truck`.
     #
-    #   <note markdown="1"> If you specify `walking` for the travel mode and your data provider
+    #   <note markdown="1"> If you specify `walking` for the travel mode and
+    # your data provider
     #   is Esri, the start and destination must be within 40km.
     #
     #    </note>
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/location/latest/developerguide/calculate-route.html
+    # [1]: https://docs.aws.amazon.com/location/previous/developerguide/calculate-route.html
     # [2]: https://docs.aws.amazon.com/location-routes/latest/APIReference/API_CreateRouteCalculator.html
-    # [3]: https://docs.aws.amazon.com/location/latest/developerguide/departure-time.html
-    # [4]: https://docs.aws.amazon.com/location/latest/developerguide/travel-mode.html
+    # [3]: https://docs.aws.amazon.com/location/previous/developerguide/departure-time.html
+    # [4]: https://docs.aws.amazon.com/location/previous/developerguide/travel-mode.html
     #
     # @option params [required, String] :calculator_name
     #   The name of the route calculator resource that you want to use to
@@ -919,7 +955,7 @@ module Aws::LocationService
     #
     #
     #   [1]: https://earth-info.nga.mil/index.php?dir=wgs84&amp;action=wgs84
-    #   [2]: https://docs.aws.amazon.com/location/latest/developerguide/snap-to-nearby-road.html
+    #   [2]: https://docs.aws.amazon.com/location/previous/developerguide/snap-to-nearby-road.html
     #
     # @option params [required, Array<Float>] :destination_position
     #   The finish position for the route. Defined in [World Geodetic System
@@ -939,7 +975,7 @@ module Aws::LocationService
     #
     #
     #   [1]: https://earth-info.nga.mil/index.php?dir=wgs84&amp;action=wgs84
-    #   [2]: https://docs.aws.amazon.com/location/latest/developerguide/snap-to-nearby-road.html
+    #   [2]: https://docs.aws.amazon.com/location/previous/developerguide/snap-to-nearby-road.html
     #
     # @option params [Array<Array>] :waypoint_positions
     #   Specifies an ordered list of up to 23 intermediate positions to
@@ -968,7 +1004,7 @@ module Aws::LocationService
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/snap-to-nearby-road.html
+    #   [1]: https://docs.aws.amazon.com/location/previous/developerguide/snap-to-nearby-road.html
     #
     # @option params [String] :travel_mode
     #   Specifies the mode of transport when calculating a route. Used in
@@ -998,7 +1034,7 @@ module Aws::LocationService
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/grab.html
+    #   [1]: https://docs.aws.amazon.com/location/previous/developerguide/grab.html
     #
     # @option params [Time,DateTime,Date,Integer,String] :departure_time
     #   Specifies the desired time of departure. Uses the given time to
@@ -1066,7 +1102,7 @@ module Aws::LocationService
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/using-apikeys.html
+    #   [1]: https://docs.aws.amazon.com/location/previous/developerguide/using-apikeys.html
     #
     # @return [Types::CalculateRouteResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1146,7 +1182,32 @@ module Aws::LocationService
       req.send_request(options)
     end
 
-    # [ Calculates a route matrix][1] given the following required
+    # This operation is no longer current and may be deprecated in the
+    # future. We recommend you upgrade to the [V2 `CalculateRouteMatrix`
+    # ](/location/latest/APIReference/API_CalculateRouteMatrix.html) unless
+    # you require Grab data.
+    #
+    #  * This version of `CalculateRouteMatrix` is part of a previous Amazon
+    #   Location Service Routes API (version 1) which has been superseded by
+    #   a more intuitive, powerful, and complete API (version 2).
+    #
+    # * The version 2 `CalculateRouteMatrix` operation gives better results
+    #   for matrix routing calculations.
+    #
+    # * If you are using an Amazon Web Services SDK or the Amazon Web
+    #   Services CLI, note that the Routes API version 2 is found under
+    #   `geo-routes` or `geo_routes`, not under `location`.
+    #
+    # * Since Grab is not yet fully supported in Routes API version 2, we
+    #   recommend you continue using API version 1 when using Grab.
+    #
+    # * Start your version 2 API journey with the Routes V2 [API
+    #
+    # Reference](/location/latest/APIReference/API_Operations_Amazon_Location_Service_Routes_V2.html)
+    #   or the [Developer
+    #   Guide](/location/latest/developerguide/routes.html).
+    #
+    #  [ Calculates a route matrix][1] given the following required
     # parameters: `DeparturePositions` and `DestinationPositions`.
     # `CalculateRouteMatrix` calculates routes and returns the travel time
     # and travel distance from each departure position to each destination
@@ -1157,24 +1218,26 @@ module Aws::LocationService
     # calculated) will be the number of `DeparturePositions` times the
     # number of `DestinationPositions`.
     #
-    # <note markdown="1"> Your account is charged for each route calculated, not the number of
+    #  <note markdown="1"> Your account is charged for each route
+    # calculated, not the number of
     # requests.
     #
     #  </note>
     #
-    # Requires that you first [create a route calculator resource][2].
+    #  Requires that you first [create a route calculator resource][2].
     #
-    # By default, a request that doesn't specify a departure time uses the
+    #  By default, a request that doesn't specify a departure time uses the
     # best time of day to travel with the best traffic conditions when
     # calculating routes.
     #
-    # Additional options include:
+    #  Additional options include:
     #
-    # * [ Specifying a departure time][3] using either `DepartureTime` or
+    #  * [ Specifying a departure time][3] using either `DepartureTime` or
     #   `DepartNow`. This calculates routes based on predictive traffic data
     #   at the given time.
     #
-    #   <note markdown="1"> You can't specify both `DepartureTime` and `DepartNow` in a single
+    #   <note markdown="1"> You can't specify both `DepartureTime` and
+    # `DepartNow` in a single
     #   request. Specifying both parameters returns a validation error.
     #
     #    </note>
@@ -1186,10 +1249,10 @@ module Aws::LocationService
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/location/latest/developerguide/calculate-route-matrix.html
+    # [1]: https://docs.aws.amazon.com/location/previous/developerguide/calculate-route-matrix.html
     # [2]: https://docs.aws.amazon.com/location-routes/latest/APIReference/API_CreateRouteCalculator.html
-    # [3]: https://docs.aws.amazon.com/location/latest/developerguide/departure-time.html
-    # [4]: https://docs.aws.amazon.com/location/latest/developerguide/travel-mode.html
+    # [3]: https://docs.aws.amazon.com/location/previous/developerguide/departure-time.html
+    # [4]: https://docs.aws.amazon.com/location/previous/developerguide/travel-mode.html
     #
     # @option params [required, String] :calculator_name
     #   The name of the route calculator resource that you want to use to
@@ -1218,8 +1281,8 @@ module Aws::LocationService
     #
     #
     #   [1]: https://earth-info.nga.mil/GandG/wgs84/index.html
-    #   [2]: https://docs.aws.amazon.com/location/latest/developerguide/calculate-route-matrix.html#matrix-routing-position-limits
-    #   [3]: https://docs.aws.amazon.com/location/latest/developerguide/snap-to-nearby-road.html
+    #   [2]: https://docs.aws.amazon.com/location/previous/developerguide/calculate-route-matrix.html#matrix-routing-position-limits
+    #   [3]: https://docs.aws.amazon.com/location/previous/developerguide/snap-to-nearby-road.html
     #
     # @option params [required, Array<Array>] :destination_positions
     #   The list of destination positions for the route matrix. An array of
@@ -1243,8 +1306,8 @@ module Aws::LocationService
     #
     #
     #   [1]: https://earth-info.nga.mil/GandG/wgs84/index.html
-    #   [2]: https://docs.aws.amazon.com/location/latest/developerguide/calculate-route-matrix.html#matrix-routing-position-limits
-    #   [3]: https://docs.aws.amazon.com/location/latest/developerguide/snap-to-nearby-road.html
+    #   [2]: https://docs.aws.amazon.com/location/previous/developerguide/calculate-route-matrix.html#matrix-routing-position-limits
+    #   [3]: https://docs.aws.amazon.com/location/previous/developerguide/snap-to-nearby-road.html
     #
     # @option params [String] :travel_mode
     #   Specifies the mode of transport when calculating a route. Used in
@@ -1271,7 +1334,7 @@ module Aws::LocationService
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/grab.html
+    #   [1]: https://docs.aws.amazon.com/location/previous/developerguide/grab.html
     #
     # @option params [Time,DateTime,Date,Integer,String] :departure_time
     #   Specifies the desired time of departure. Uses the given time to
@@ -1326,7 +1389,7 @@ module Aws::LocationService
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/using-apikeys.html
+    #   [1]: https://docs.aws.amazon.com/location/previous/developerguide/using-apikeys.html
     #
     # @return [Types::CalculateRouteMatrixResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1395,6 +1458,48 @@ module Aws::LocationService
     # @param [Hash] params ({})
     def calculate_route_matrix(params = {}, options = {})
       req = build_request(:calculate_route_matrix, params)
+      req.send_request(options)
+    end
+
+    # `CancelJob` cancels a job that is currently running or pending. If the
+    # job is already in a terminal state (`Completed`, `Failed`, or
+    # `Cancelled`), the operation returns successfully with the current
+    # status.
+    #
+    # For more information, see [Job concepts][1] in the *Amazon Location
+    # Service Developer Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/location/latest/developerguide/jobs-concepts.html
+    #
+    # @option params [required, String] :job_id
+    #   The unique identifier of the job to cancel.
+    #
+    # @return [Types::CancelJobResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CancelJobResponse#job_arn #job_arn} => String
+    #   * {Types::CancelJobResponse#job_id #job_id} => String
+    #   * {Types::CancelJobResponse#status #status} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.cancel_job({
+    #     job_id: "JobId", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.job_arn #=> String
+    #   resp.job_id #=> String
+    #   resp.status #=> String, one of "Pending", "Running", "Completed", "Failed", "Cancelling", "Cancelled"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/location-2020-11-19/CancelJob AWS API Documentation
+    #
+    # @overload cancel_job(params = {})
+    # @param [Hash] params ({})
+    def cancel_job(params = {}, options = {})
+      req = build_request(:cancel_job, params)
       req.send_request(options)
     end
 
@@ -1490,9 +1595,8 @@ module Aws::LocationService
     # lets you grant actions for Amazon Location resources to the API key
     # bearer.
     #
-    # <note markdown="1"> For more information, see [Using API keys][1].
-    #
-    #  </note>
+    # For more information, see [Use API keys to authenticate][1] in the
+    # *Amazon Location Service Developer Guide*.
     #
     #
     #
@@ -1566,6 +1670,17 @@ module Aws::LocationService
     #       allow_actions: ["ApiKeyAction"], # required
     #       allow_resources: ["GeoArnV2"], # required
     #       allow_referers: ["RefererPattern"],
+    #       allow_android_apps: [
+    #         {
+    #           package: "AndroidPackageName", # required
+    #           certificate_fingerprint: "Sha1CertificateFingerprint", # required
+    #         },
+    #       ],
+    #       allow_apple_apps: [
+    #         {
+    #           bundle_id: "AppleBundleId", # required
+    #         },
+    #       ],
     #     },
     #     description: "ResourceDescription",
     #     expire_time: Time.now,
@@ -1591,20 +1706,44 @@ module Aws::LocationService
       req.send_request(options)
     end
 
-    # Creates a map resource in your Amazon Web Services account, which
+    # This operation is no longer current and may be deprecated in the
+    # future. We recommend upgrading to the Maps API V2 unless you require
+    # `Grab` data.
+    #
+    #  * `CreateMap` is part of a previous Amazon Location Service Maps API
+    #   (version 1) which has been superseded by a more intuitive, powerful,
+    #   and complete API (version 2).
+    #
+    # * The Maps API version 2 has a simplified interface that can be used
+    #   without creating or managing map resources.
+    #
+    # * If you are using an AWS SDK or the AWS CLI, note that the Maps API
+    #   version 2 is found under `geo-maps` or `geo_maps`, not under
+    #   `location`.
+    #
+    # * Since `Grab` is not yet fully supported in Maps API version 2, we
+    #   recommend you continue using API version 1 when using `Grab`.
+    #
+    # * Start your version 2 API journey with the [Maps V2 API Reference][1]
+    #   or the [Developer Guide][2].
+    #
+    #  Creates a map resource in your Amazon Web Services account, which
     # provides map tiles of different styles sourced from global location
     # data providers.
     #
-    # <note markdown="1"> If your application is tracking or routing assets you use in your
+    #  <note markdown="1"> If your application is tracking or routing assets
+    # you use in your
     # business, such as delivery vehicles or employees, you must not use
     # Esri as your geolocation provider. See section 82 of the [Amazon Web
-    # Services service terms][1] for more details.
+    # Services service terms][3] for more details.
     #
     #  </note>
     #
     #
     #
-    # [1]: http://aws.amazon.com/service-terms
+    # [1]: https://docs.aws.amazon.com/location/latest/APIReference/API_Operations_Amazon_Location_Service_Maps_V2.html
+    # [2]: https://docs.aws.amazon.com/location/latest/developerguide/maps.html
+    # [3]: http://aws.amazon.com/service-terms
     #
     # @option params [required, String] :map_name
     #   The name for the map resource.
@@ -1689,14 +1828,39 @@ module Aws::LocationService
       req.send_request(options)
     end
 
-    # Creates a place index resource in your Amazon Web Services account.
+    # This operation is no longer current and may be deprecated in the
+    # future. We recommend you upgrade to the Places API V2 unless you
+    # require Grab data.
+    #
+    #  * `CreatePlaceIndex` is part of a previous Amazon Location Service
+    #   Places API (version 1) which has been superseded by a more
+    #   intuitive, powerful, and complete API (version 2).
+    #
+    # * The Places API version 2 has a simplified interface that can be used
+    #   without creating or managing place index resources.
+    #
+    # * If you are using an Amazon Web Services SDK or the Amazon Web
+    #   Services CLI, note that the Places API version 2 is found under
+    #   `geo-places` or `geo_places`, not under `location`.
+    #
+    # * Since Grab is not yet fully supported in Places API version 2, we
+    #   recommend you continue using API version 1 when using Grab.
+    #
+    # * Start your version 2 API journey with the Places V2 [API
+    #
+    # Reference](/location/latest/APIReference/API_Operations_Amazon_Location_Service_Places_V2.html)
+    #   or the [Developer
+    #   Guide](/location/latest/developerguide/places.html).
+    #
+    #  Creates a place index resource in your Amazon Web Services account.
     # Use a place index resource to geocode addresses and other text queries
     # by using the `SearchPlaceIndexForText` operation, and reverse geocode
     # coordinates by using the `SearchPlaceIndexForPosition` operation, and
     # enable autosuggestions by using the `SearchPlaceIndexForSuggestions`
     # operation.
     #
-    # <note markdown="1"> If your application is tracking or routing assets you use in your
+    #  <note markdown="1"> If your application is tracking or routing assets
+    # you use in your
     # business, such as delivery vehicles or employees, you must not use
     # Esri as your geolocation provider. See section 82 of the [Amazon Web
     # Services service terms][1] for more details.
@@ -1743,23 +1907,23 @@ module Aws::LocationService
     #
     #     If you specify HERE Technologies (`Here`) as the data provider, you
     #     may not [store results][7] for locations in Japan. For more
-    #     information, see the [Amazon Web Services Service Terms][8] for
+    #     information, see the [Amazon Web Services service terms][8] for
     #     Amazon Location Service.
     #
     #   For additional information , see [Data providers][9] on the *Amazon
-    #   Location Service Developer Guide*.
+    #   Location Service developer guide*.
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/esri.html
+    #   [1]: https://docs.aws.amazon.com/location/previous/developerguide/esri.html
     #   [2]: https://developers.arcgis.com/rest/geocode/api-reference/geocode-coverage.htm
-    #   [3]: https://docs.aws.amazon.com/location/latest/developerguide/grab.html
-    #   [4]: https://docs.aws.amazon.com/location/latest/developerguide/grab.html#grab-coverage-area
-    #   [5]: https://docs.aws.amazon.com/location/latest/developerguide/HERE.html
+    #   [3]: https://docs.aws.amazon.com/location/previous/developerguide/grab.html
+    #   [4]: https://docs.aws.amazon.com/location/previous/developerguide/grab.html#grab-coverage-area
+    #   [5]: https://docs.aws.amazon.com/location/previous/developerguide/HERE.html
     #   [6]: https://developer.here.com/documentation/geocoder/dev_guide/topics/coverage-geocoder.html
     #   [7]: https://docs.aws.amazon.com/location-places/latest/APIReference/API_DataSourceConfiguration.html
     #   [8]: http://aws.amazon.com/service-terms/
-    #   [9]: https://docs.aws.amazon.com/location/latest/developerguide/what-is-data-provider.html
+    #   [9]: https://docs.aws.amazon.com/location/previous/developerguide/what-is-data-provider.html
     #
     # @option params [String] :pricing_plan
     #   No longer used. If included, the only allowed value is
@@ -1830,14 +1994,39 @@ module Aws::LocationService
       req.send_request(options)
     end
 
-    # Creates a route calculator resource in your Amazon Web Services
+    # This operation is no longer current and may be deprecated in the
+    # future. We recommend you upgrade to the Routes API V2 unless you
+    # require Grab data.
+    #
+    #  * `CreateRouteCalculator` is part of a previous Amazon Location
+    #   Service Routes API (version 1) which has been superseded by a more
+    #   intuitive, powerful, and complete API (version 2).
+    #
+    # * The Routes API version 2 has a simplified interface that can be used
+    #   without creating or managing route calculator resources.
+    #
+    # * If you are using an Amazon Web Services SDK or the Amazon Web
+    #   Services CLI, note that the Routes API version 2 is found under
+    #   `geo-routes` or `geo_routes`, not under `location`.
+    #
+    # * Since Grab is not yet fully supported in Routes API version 2, we
+    #   recommend you continue using API version 1 when using Grab.
+    #
+    # * Start your version 2 API journey with the Routes V2 [API
+    #
+    # Reference](/location/latest/APIReference/API_Operations_Amazon_Location_Service_Routes_V2.html)
+    #   or the [Developer
+    #   Guide](/location/latest/developerguide/routes.html).
+    #
+    #  Creates a route calculator resource in your Amazon Web Services
     # account.
     #
-    # You can send requests to a route calculator resource to estimate
+    #  You can send requests to a route calculator resource to estimate
     # travel time, distance, and get directions. A route calculator sources
     # traffic and road network data from your chosen data provider.
     #
-    # <note markdown="1"> If your application is tracking or routing assets you use in your
+    #  <note markdown="1"> If your application is tracking or routing assets
+    # you use in your
     # business, such as delivery vehicles or employees, you must not use
     # Esri as your geolocation provider. See section 82 of the [Amazon Web
     # Services service terms][1] for more details.
@@ -1890,14 +2079,14 @@ module Aws::LocationService
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/esri.html
+    #   [1]: https://docs.aws.amazon.com/location/previous/developerguide/esri.html
     #   [2]: https://doc.arcgis.com/en/arcgis-online/reference/network-coverage.htm
-    #   [3]: https://docs.aws.amazon.com/location/latest/developerguide/grab.html
-    #   [4]: https://docs.aws.amazon.com/location/latest/developerguide/grab.html#grab-coverage-area
-    #   [5]: https://docs.aws.amazon.com/location/latest/developerguide/HERE.html
+    #   [3]: https://docs.aws.amazon.com/location/previous/developerguide/grab.html
+    #   [4]: https://docs.aws.amazon.com/location/previous/developerguide/grab.html#grab-coverage-area
+    #   [5]: https://docs.aws.amazon.com/location/previous/developerguide/HERE.html
     #   [6]: https://developer.here.com/documentation/routing-api/dev_guide/topics/coverage/car-routing.html
     #   [7]: https://developer.here.com/documentation/routing-api/dev_guide/topics/coverage/truck-routing.html
-    #   [8]: https://docs.aws.amazon.com/location/latest/developerguide/what-is-data-provider.html
+    #   [8]: https://docs.aws.amazon.com/location/previous/developerguide/what-is-data-provider.html
     #
     # @option params [String] :pricing_plan
     #   No longer used. If included, the only allowed value is
@@ -2153,6 +2342,13 @@ module Aws::LocationService
     # Deletes the specified API key. The API key must have been deactivated
     # more than 90 days previously.
     #
+    # For more information, see [Use API keys to authenticate][1] in the
+    # *Amazon Location Service Developer Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/location/latest/developerguide/using-apikeys.html
+    #
     # @option params [required, String] :key_name
     #   The name of the API key to delete.
     #
@@ -2188,12 +2384,39 @@ module Aws::LocationService
       req.send_request(options)
     end
 
-    # Deletes a map resource from your Amazon Web Services account.
+    # This operation is no longer current and may be deprecated in the
+    # future. We recommend upgrading to the Maps API V2 unless you require
+    # `Grab` data.
     #
-    # <note markdown="1"> This operation deletes the resource permanently. If the map is being
+    #  * `DeleteMap` is part of a previous Amazon Location Service Maps API
+    #   (version 1) which has been superseded by a more intuitive, powerful,
+    #   and complete API (version 2).
+    #
+    # * The Maps API version 2 has a simplified interface that can be used
+    #   without creating or managing map resources.
+    #
+    # * If you are using an AWS SDK or the AWS CLI, note that the Maps API
+    #   version 2 is found under `geo-maps` or `geo_maps`, not under
+    #   `location`.
+    #
+    # * Since `Grab` is not yet fully supported in Maps API version 2, we
+    #   recommend you continue using API version 1 when using `Grab`.
+    #
+    # * Start your version 2 API journey with the [Maps V2 API Reference][1]
+    #   or the [Developer Guide][2].
+    #
+    #  Deletes a map resource from your Amazon Web Services account.
+    #
+    #  <note markdown="1"> This operation deletes the resource permanently.
+    # If the map is being
     # used in an application, the map may not render.
     #
     #  </note>
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/location/latest/APIReference/API_Operations_Amazon_Location_Service_Maps_V2.html
+    # [2]: https://docs.aws.amazon.com/location/latest/developerguide/maps.html
     #
     # @option params [required, String] :map_name
     #   The name of the map resource to be deleted.
@@ -2215,9 +2438,33 @@ module Aws::LocationService
       req.send_request(options)
     end
 
-    # Deletes a place index resource from your Amazon Web Services account.
+    # This operation is no longer current and may be deprecated in the
+    # future. We recommend you upgrade to the Places API V2 unless you
+    # require Grab data.
     #
-    # <note markdown="1"> This operation deletes the resource permanently.
+    #  * `DeletePlaceIndex` is part of a previous Amazon Location Service
+    #   Places API (version 1) which has been superseded by a more
+    #   intuitive, powerful, and complete API (version 2).
+    #
+    # * The Places API version 2 has a simplified interface that can be used
+    #   without creating or managing place index resources.
+    #
+    # * If you are using an Amazon Web Services SDK or the Amazon Web
+    #   Services CLI, note that the Places API version 2 is found under
+    #   `geo-places` or `geo_places`, not under `location`.
+    #
+    # * Since Grab is not yet fully supported in Places API version 2, we
+    #   recommend you continue using API version 1 when using Grab.
+    #
+    # * Start your version 2 API journey with the Places V2 [API
+    #
+    # Reference](/location/latest/APIReference/API_Operations_Amazon_Location_Service_Places_V2.html)
+    #   or the [Developer
+    #   Guide](/location/latest/developerguide/places.html).
+    #
+    #  Deletes a place index resource from your Amazon Web Services account.
+    #
+    #  <note markdown="1"> This operation deletes the resource permanently.
     #
     #  </note>
     #
@@ -2241,10 +2488,34 @@ module Aws::LocationService
       req.send_request(options)
     end
 
-    # Deletes a route calculator resource from your Amazon Web Services
+    # This operation is no longer current and may be deprecated in the
+    # future. We recommend you upgrade to the Routes API V2 unless you
+    # require Grab data.
+    #
+    #  * `DeleteRouteCalculator` is part of a previous Amazon Location
+    #   Service Routes API (version 1) which has been superseded by a more
+    #   intuitive, powerful, and complete API (version 2).
+    #
+    # * The Routes API version 2 has a simplified interface that can be used
+    #   without creating or managing route calculator resources.
+    #
+    # * If you are using an Amazon Web Services SDK or the Amazon Web
+    #   Services CLI, note that the Routes API version 2 is found under
+    #   `geo-routes` or `geo_routes`, not under `location`.
+    #
+    # * Since Grab is not yet fully supported in Routes API version 2, we
+    #   recommend you continue using API version 1 when using Grab.
+    #
+    # * Start your version 2 API journey with the Routes V2 [API
+    #
+    # Reference](/location/latest/APIReference/API_Operations_Amazon_Location_Service_Routes_V2.html)
+    #   or the [Developer
+    #   Guide](/location/latest/developerguide/routes.html).
+    #
+    #  Deletes a route calculator resource from your Amazon Web Services
     # account.
     #
-    # <note markdown="1"> This operation deletes the resource permanently.
+    #  <note markdown="1"> This operation deletes the resource permanently.
     #
     #  </note>
     #
@@ -2345,6 +2616,13 @@ module Aws::LocationService
 
     # Retrieves the API key resource details.
     #
+    # For more information, see [Use API keys to authenticate][1] in the
+    # *Amazon Location Service Developer Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/location/latest/developerguide/using-apikeys.html
+    #
     # @option params [required, String] :key_name
     #   The name of the API key resource.
     #
@@ -2377,6 +2655,11 @@ module Aws::LocationService
     #   resp.restrictions.allow_resources[0] #=> String
     #   resp.restrictions.allow_referers #=> Array
     #   resp.restrictions.allow_referers[0] #=> String
+    #   resp.restrictions.allow_android_apps #=> Array
+    #   resp.restrictions.allow_android_apps[0].package #=> String
+    #   resp.restrictions.allow_android_apps[0].certificate_fingerprint #=> String
+    #   resp.restrictions.allow_apple_apps #=> Array
+    #   resp.restrictions.allow_apple_apps[0].bundle_id #=> String
     #   resp.create_time #=> Time
     #   resp.expire_time #=> Time
     #   resp.update_time #=> Time
@@ -2393,7 +2676,34 @@ module Aws::LocationService
       req.send_request(options)
     end
 
-    # Retrieves the map resource details.
+    # This operation is no longer current and may be deprecated in the
+    # future. We recommend upgrading to the Maps API V2 unless you require
+    # `Grab` data.
+    #
+    #  * `DescribeMap` is part of a previous Amazon Location Service Maps
+    # API
+    #   (version 1) which has been superseded by a more intuitive, powerful,
+    #   and complete API (version 2).
+    #
+    # * The Maps API version 2 has a simplified interface that can be used
+    #   without creating or managing map resources.
+    #
+    # * If you are using an AWS SDK or the AWS CLI, note that the Maps API
+    #   version 2 is found under `geo-maps` or `geo_maps`, not under
+    #   `location`.
+    #
+    # * Since `Grab` is not yet fully supported in Maps API version 2, we
+    #   recommend you continue using API version 1 when using `Grab`.
+    #
+    # * Start your version 2 API journey with the [Maps V2 API Reference][1]
+    #   or the [Developer Guide][2].
+    #
+    #  Retrieves the map resource details.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/location/latest/APIReference/API_Operations_Amazon_Location_Service_Maps_V2.html
+    # [2]: https://docs.aws.amazon.com/location/latest/developerguide/maps.html
     #
     # @option params [required, String] :map_name
     #   The name of the map resource.
@@ -2441,7 +2751,31 @@ module Aws::LocationService
       req.send_request(options)
     end
 
-    # Retrieves the place index resource details.
+    # This operation is no longer current and may be deprecated in the
+    # future. We recommend you upgrade to the Places API V2 unless you
+    # require Grab data.
+    #
+    #  * `DescribePlaceIndex` is part of a previous Amazon Location Service
+    #   Places API (version 1) which has been superseded by a more
+    #   intuitive, powerful, and complete API (version 2).
+    #
+    # * The Places API version 2 has a simplified interface that can be used
+    #   without creating or managing place index resources.
+    #
+    # * If you are using an Amazon Web Services SDK or the Amazon Web
+    #   Services CLI, note that the Places API version 2 is found under
+    #   `geo-places` or `geo_places`, not under `location`.
+    #
+    # * Since Grab is not yet fully supported in Places API version 2, we
+    #   recommend you continue using API version 1 when using Grab.
+    #
+    # * Start your version 2 API journey with the Places V2 [API
+    #
+    # Reference](/location/latest/APIReference/API_Operations_Amazon_Location_Service_Places_V2.html)
+    #   or the [Developer
+    #   Guide](/location/latest/developerguide/places.html).
+    #
+    #  Retrieves the place index resource details.
     #
     # @option params [required, String] :index_name
     #   The name of the place index resource.
@@ -2486,7 +2820,31 @@ module Aws::LocationService
       req.send_request(options)
     end
 
-    # Retrieves the route calculator resource details.
+    # This operation is no longer current and may be deprecated in the
+    # future. We recommend you upgrade to the Routes API V2 unless you
+    # require Grab data.
+    #
+    #  * `DescribeRouteCalculator` is part of a previous Amazon Location
+    #   Service Routes API (version 1) which has been superseded by a more
+    #   intuitive, powerful, and complete API (version 2).
+    #
+    # * The Routes API version 2 has a simplified interface that can be used
+    #   without creating or managing route calculator resources.
+    #
+    # * If you are using an Amazon Web Services SDK or the Amazon Web
+    #   Services CLI, note that the Routes API version 2 is found under
+    #   `geo-routes` or `geo_routes`, not under `location`.
+    #
+    # * Since Grab is not yet fully supported in Routes API version 2, we
+    #   recommend you continue using API version 1 when using Grab.
+    #
+    # * Start your version 2 API journey with the Routes V2 [API
+    #
+    # Reference](/location/latest/APIReference/API_Operations_Amazon_Location_Service_Routes_V2.html)
+    #   or the [Developer
+    #   Guide](/location/latest/developerguide/routes.html).
+    #
+    #  Retrieves the route calculator resource details.
     #
     # @option params [required, String] :calculator_name
     #   The name of the route calculator resource.
@@ -2620,29 +2978,46 @@ module Aws::LocationService
       req.send_request(options)
     end
 
-    # Evaluates device positions against geofence geometries from a given
-    # geofence collection. The event forecasts three states for which a
-    # device can be in relative to a geofence:
+    # This action forecasts future geofence events that are likely to occur
+    # within a specified time horizon if a device continues moving at its
+    # current speed. Each forecasted event is associated with a geofence
+    # from a provided geofence collection. A forecast event can have one of
+    # the following states:
     #
-    # `ENTER`: If a device is outside of a geofence, but would breach the
-    # fence if the device is moving at its current speed within time horizon
-    # window.
+    # `ENTER`: The device position is outside the referenced geofence, but
+    # the device may cross into the geofence during the forecasting time
+    # horizon if it maintains its current speed.
     #
-    # `EXIT`: If a device is inside of a geofence, but would breach the
-    # fence if the device is moving at its current speed within time horizon
-    # window.
+    # `EXIT`: The device position is inside the referenced geofence, but the
+    # device may leave the geofence during the forecasted time horizon if
+    # the device maintains it's current speed.
     #
-    # `IDLE`: If a device is inside of a geofence, and the device is not
-    # moving.
+    # `IDLE`:The device is inside the geofence, and it will remain inside
+    # the geofence through the end of the time horizon if the device
+    # maintains it's current speed.
+    #
+    # <note markdown="1"> Heading direction is not considered in the current version. The API
+    # takes a conservative approach and includes events that can occur for
+    # any heading.
+    #
+    #  </note>
     #
     # @option params [required, String] :collection_name
     #   The name of the geofence collection.
     #
     # @option params [required, Types::ForecastGeofenceEventsDeviceState] :device_state
-    #   The device's state, including current position and speed.
+    #   Represents the device's state, including its current position and
+    #   speed. When speed is omitted, this API performs a *containment check*.
+    #   The *containment check* operation returns `IDLE` events for geofences
+    #   where the device is currently inside of, but no other events.
     #
     # @option params [Float] :time_horizon_minutes
-    #   Specifies the time horizon in minutes for the forecasted events.
+    #   The forward-looking time window for forecasting, specified in minutes.
+    #   The API only returns events that are predicted to occur within this
+    #   time horizon. When no value is specified, this API performs a
+    #   *containment check*. The *containment check* operation returns `IDLE`
+    #   events for geofences where the device is currently inside of, but no
+    #   other events.
     #
     # @option params [String] :distance_unit
     #   The distance unit used for the `NearestDistance` property returned in
@@ -2907,6 +3282,11 @@ module Aws::LocationService
     #   resp.geometry.circle.center[0] #=> Float
     #   resp.geometry.circle.radius #=> Float
     #   resp.geometry.geobuf #=> String
+    #   resp.geometry.multi_polygon #=> Array
+    #   resp.geometry.multi_polygon[0] #=> Array
+    #   resp.geometry.multi_polygon[0][0] #=> Array
+    #   resp.geometry.multi_polygon[0][0][0] #=> Array
+    #   resp.geometry.multi_polygon[0][0][0][0] #=> Float
     #   resp.status #=> String
     #   resp.create_time #=> Time
     #   resp.update_time #=> Time
@@ -2922,7 +3302,108 @@ module Aws::LocationService
       req.send_request(options)
     end
 
-    # Retrieves glyphs used to display labels on a map.
+    # `GetJob` retrieves detailed information about a specific job,
+    # including its current status, configuration, and error information if
+    # the job failed.
+    #
+    # For more information, see [Job concepts][1] in the *Amazon Location
+    # Service Developer Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/location/latest/developerguide/jobs-concepts.html
+    #
+    # @option params [required, String] :job_id
+    #   The unique identifier of the job to retrieve.
+    #
+    # @return [Types::GetJobResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetJobResponse#action #action} => String
+    #   * {Types::GetJobResponse#action_options #action_options} => Types::JobActionOptions
+    #   * {Types::GetJobResponse#created_at #created_at} => Time
+    #   * {Types::GetJobResponse#ended_at #ended_at} => Time
+    #   * {Types::GetJobResponse#error #error} => Types::JobError
+    #   * {Types::GetJobResponse#execution_role_arn #execution_role_arn} => String
+    #   * {Types::GetJobResponse#input_options #input_options} => Types::JobInputOptions
+    #   * {Types::GetJobResponse#job_arn #job_arn} => String
+    #   * {Types::GetJobResponse#job_id #job_id} => String
+    #   * {Types::GetJobResponse#name #name} => String
+    #   * {Types::GetJobResponse#output_options #output_options} => Types::JobOutputOptions
+    #   * {Types::GetJobResponse#status #status} => String
+    #   * {Types::GetJobResponse#updated_at #updated_at} => Time
+    #   * {Types::GetJobResponse#tags #tags} => Hash&lt;String,String&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_job({
+    #     job_id: "JobId", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.action #=> String, one of "ValidateAddress"
+    #   resp.action_options.validate_address.additional_features #=> Array
+    #   resp.action_options.validate_address.additional_features[0] #=> String, one of "Position", "CountrySpecificAttributes"
+    #   resp.created_at #=> Time
+    #   resp.ended_at #=> Time
+    #   resp.error.code #=> String, one of "ValidationError", "InternalServerError"
+    #   resp.error.messages #=> Array
+    #   resp.error.messages[0] #=> String
+    #   resp.execution_role_arn #=> String
+    #   resp.input_options.location #=> String
+    #   resp.input_options.format #=> String, one of "Parquet"
+    #   resp.job_arn #=> String
+    #   resp.job_id #=> String
+    #   resp.name #=> String
+    #   resp.output_options.format #=> String, one of "Parquet"
+    #   resp.output_options.location #=> String
+    #   resp.status #=> String, one of "Pending", "Running", "Completed", "Failed", "Cancelling", "Cancelled"
+    #   resp.updated_at #=> Time
+    #   resp.tags #=> Hash
+    #   resp.tags["TagKey"] #=> String
+    #
+    #
+    # The following waiters are defined for this operation (see {Client#wait_until} for detailed usage):
+    #
+    #   * job_completed
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/location-2020-11-19/GetJob AWS API Documentation
+    #
+    # @overload get_job(params = {})
+    # @param [Hash] params ({})
+    def get_job(params = {}, options = {})
+      req = build_request(:get_job, params)
+      req.send_request(options)
+    end
+
+    # This operation is no longer current and may be deprecated in the
+    # future. We recommend upgrading to [ `GetGlyphs` ][1] unless you
+    # require `Grab` data.
+    #
+    #  * `GetMapGlyphs` is part of a previous Amazon Location Service Maps
+    #   API (version 1) which has been superseded by a more intuitive,
+    #   powerful, and complete API (version 2).
+    #
+    # * The version 2 `GetGlyphs` operation gives a better user experience
+    #   and is compatible with the remainder of the V2 Maps API.
+    #
+    # * If you are using an AWS SDK or the AWS CLI, note that the Maps API
+    #   version 2 is found under `geo-maps` or `geo_maps`, not under
+    #   `location`.
+    #
+    # * Since `Grab` is not yet fully supported in Maps API version 2, we
+    #   recommend you continue using API version 1 when using `Grab`.
+    #
+    # * Start your version 2 API journey with the [Maps V2 API Reference][2]
+    #   or the [Developer Guide][3].
+    #
+    #  Retrieves glyphs used to display labels on a map.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/location/latest/APIReference/API_geomaps_GetGlyphs.html
+    # [2]: https://docs.aws.amazon.com/location/latest/APIReference/API_Operations_Amazon_Location_Service_Maps_V2.html
+    # [3]: https://docs.aws.amazon.com/location/latest/developerguide/maps.html
     #
     # @option params [required, String] :map_name
     #   The map resource associated with the glyph ﬁle.
@@ -2992,10 +3473,10 @@ module Aws::LocationService
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/esri.html
-    #   [2]: https://docs.aws.amazon.com/location/latest/developerguide/HERE.html
-    #   [3]: https://docs.aws.amazon.com/location/latest/developerguide/grab.html
-    #   [4]: https://docs.aws.amazon.com/location/latest/developerguide/open-data.html
+    #   [1]: https://docs.aws.amazon.com/location/previous/developerguide/esri.html
+    #   [2]: https://docs.aws.amazon.com/location/previous/developerguide/HERE.html
+    #   [3]: https://docs.aws.amazon.com/location/previous/developerguide/grab.html
+    #   [4]: https://docs.aws.amazon.com/location/previous/developerguide/open-data.html
     #
     # @option params [required, String] :font_unicode_range
     #   A Unicode range of characters to download glyphs for. Each response
@@ -3008,7 +3489,7 @@ module Aws::LocationService
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/using-apikeys.html
+    #   [1]: https://docs.aws.amazon.com/location/previous/developerguide/using-apikeys.html
     #
     # @return [Types::GetMapGlyphsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -3040,9 +3521,37 @@ module Aws::LocationService
       req.send_request(options, &block)
     end
 
-    # Retrieves the sprite sheet corresponding to a map resource. The sprite
+    # This operation is no longer current and may be deprecated in the
+    # future. We recommend upgrading to [ `GetSprites` ][1] unless you
+    # require `Grab` data.
+    #
+    #  * `GetMapSprites` is part of a previous Amazon Location Service Maps
+    #   API (version 1) which has been superseded by a more intuitive,
+    #   powerful, and complete API (version 2).
+    #
+    # * The version 2 `GetSprites` operation gives a better user experience
+    #   and is compatible with the remainder of the V2 Maps API.
+    #
+    # * If you are using an AWS SDK or the AWS CLI, note that the Maps API
+    #   version 2 is found under `geo-maps` or `geo_maps`, not under
+    #   `location`.
+    #
+    # * Since `Grab` is not yet fully supported in Maps API version 2, we
+    #   recommend you continue using API version 1 when using `Grab`.
+    #
+    # * Start your version 2 API journey with the [Maps V2 API Reference][2]
+    #   or the [Developer Guide][3].
+    #
+    #  Retrieves the sprite sheet corresponding to a map resource. The
+    # sprite
     # sheet is a PNG image paired with a JSON document describing the
     # offsets of individual icons that will be displayed on a rendered map.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/location/latest/APIReference/API_geomaps_GetSprites.html
+    # [2]: https://docs.aws.amazon.com/location/latest/APIReference/API_Operations_Amazon_Location_Service_Maps_V2.html
+    # [3]: https://docs.aws.amazon.com/location/latest/developerguide/maps.html
     #
     # @option params [required, String] :map_name
     #   The map resource associated with the sprite ﬁle.
@@ -3067,7 +3576,7 @@ module Aws::LocationService
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/using-apikeys.html
+    #   [1]: https://docs.aws.amazon.com/location/previous/developerguide/using-apikeys.html
     #
     # @return [Types::GetMapSpritesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -3098,12 +3607,39 @@ module Aws::LocationService
       req.send_request(options, &block)
     end
 
-    # Retrieves the map style descriptor from a map resource.
+    # This operation is no longer current and may be deprecated in the
+    # future. We recommend upgrading to [ `GetStyleDescriptor` ][1] unless
+    # you require `Grab` data.
     #
-    # The style descriptor contains speciﬁcations on how features render on
+    #  * `GetMapStyleDescriptor` is part of a previous Amazon Location
+    #   Service Maps API (version 1) which has been superseded by a more
+    #   intuitive, powerful, and complete API (version 2).
+    #
+    # * The version 2 `GetStyleDescriptor` operation gives a better user
+    #   experience and is compatible with the remainder of the V2 Maps API.
+    #
+    # * If you are using an AWS SDK or the AWS CLI, note that the Maps API
+    #   version 2 is found under `geo-maps` or `geo_maps`, not under
+    #   `location`.
+    #
+    # * Since `Grab` is not yet fully supported in Maps API version 2, we
+    #   recommend you continue using API version 1 when using `Grab`.
+    #
+    # * Start your version 2 API journey with the [Maps V2 API Reference][2]
+    #   or the [Developer Guide][3].
+    #
+    #  Retrieves the map style descriptor from a map resource.
+    #
+    #  The style descriptor contains speciﬁcations on how features render on
     # a map. For example, what data to display, what order to display the
     # data in, and the style for the data. Style descriptors follow the
     # Mapbox Style Specification.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/location/latest/APIReference/API_geomaps_GetStyleDescriptor.html
+    # [2]: https://docs.aws.amazon.com/location/latest/APIReference/API_Operations_Amazon_Location_Service_Maps_V2.html
+    # [3]: https://docs.aws.amazon.com/location/latest/developerguide/maps.html
     #
     # @option params [required, String] :map_name
     #   The map resource to retrieve the style descriptor from.
@@ -3113,7 +3649,7 @@ module Aws::LocationService
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/using-apikeys.html
+    #   [1]: https://docs.aws.amazon.com/location/previous/developerguide/using-apikeys.html
     #
     # @return [Types::GetMapStyleDescriptorResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -3143,14 +3679,42 @@ module Aws::LocationService
       req.send_request(options, &block)
     end
 
-    # Retrieves a vector data tile from the map resource. Map tiles are used
+    # This operation is no longer current and may be deprecated in the
+    # future. We recommend upgrading to [ `GetTile` ][1] unless you require
+    # `Grab` data.
+    #
+    #  * `GetMapTile` is part of a previous Amazon Location Service Maps API
+    #   (version 1) which has been superseded by a more intuitive, powerful,
+    #   and complete API (version 2).
+    #
+    # * The version 2 `GetTile` operation gives a better user experience and
+    #   is compatible with the remainder of the V2 Maps API.
+    #
+    # * If you are using an AWS SDK or the AWS CLI, note that the Maps API
+    #   version 2 is found under `geo-maps` or `geo_maps`, not under
+    #   `location`.
+    #
+    # * Since `Grab` is not yet fully supported in Maps API version 2, we
+    #   recommend you continue using API version 1 when using `Grab`.
+    #
+    # * Start your version 2 API journey with the [Maps V2 API Reference][2]
+    #   or the [Developer Guide][3].
+    #
+    #  Retrieves a vector data tile from the map resource. Map tiles are
+    # used
     # by clients to render a map. they're addressed using a grid
     # arrangement with an X coordinate, Y coordinate, and Z (zoom) level.
     #
-    # The origin (0, 0) is the top left of the map. Increasing the zoom
+    #  The origin (0, 0) is the top left of the map. Increasing the zoom
     # level by 1 doubles both the X and Y dimensions, so a tile containing
     # data for the entire world at (0/0/0) will be split into 4 tiles at
     # zoom 1 (1/0/0, 1/0/1, 1/1/0, 1/1/1).
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/location/latest/APIReference/API_geomaps_GetTile.html
+    # [2]: https://docs.aws.amazon.com/location/latest/APIReference/API_Operations_Amazon_Location_Service_Maps_V2.html
+    # [3]: https://docs.aws.amazon.com/location/latest/developerguide/maps.html
     #
     # @option params [required, String] :map_name
     #   The map resource to retrieve the map tiles from.
@@ -3169,7 +3733,7 @@ module Aws::LocationService
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/using-apikeys.html
+    #   [1]: https://docs.aws.amazon.com/location/previous/developerguide/using-apikeys.html
     #
     # @return [Types::GetMapTileResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -3202,10 +3766,36 @@ module Aws::LocationService
       req.send_request(options, &block)
     end
 
-    # Finds a place by its unique ID. A `PlaceId` is returned by other
+    # This operation is no longer current and may be deprecated in the
+    # future. We recommend you upgrade to the [V2 `GetPlace`
+    # ](/location/latest/APIReference/API_geoplaces_GetPlace.html) operation
+    # unless you require Grab data.
+    #
+    #  * This version of `GetPlace` is part of a previous Amazon Location
+    #   Service Places API (version 1) which has been superseded by a more
+    #   intuitive, powerful, and complete API (version 2).
+    #
+    # * Version 2 of the `GetPlace` operation interoperates with the rest of
+    #   the Places V2 API, while this version does not.
+    #
+    # * If you are using an Amazon Web Services SDK or the Amazon Web
+    #   Services CLI, note that the Places API version 2 is found under
+    #   `geo-places` or `geo_places`, not under `location`.
+    #
+    # * Since Grab is not yet fully supported in Places API version 2, we
+    #   recommend you continue using API version 1 when using Grab.
+    #
+    # * Start your version 2 API journey with the Places V2 [API
+    #
+    # Reference](/location/latest/APIReference/API_Operations_Amazon_Location_Service_Places_V2.html)
+    #   or the [Developer
+    #   Guide](/location/latest/developerguide/places.html).
+    #
+    #  Finds a place by its unique ID. A `PlaceId` is returned by other
     # search operations.
     #
-    # <note markdown="1"> A PlaceId is valid only if all of the following are the same in the
+    #  <note markdown="1"> A PlaceId is valid only if all of the following
+    # are the same in the
     # original search request and the call to `GetPlace`.
     #
     #  * Customer Amazon Web Services account
@@ -3215,6 +3805,18 @@ module Aws::LocationService
     # * Data provider specified in the place index resource
     #
     #  </note>
+    #
+    #  <note markdown="1"> If your Place index resource is configured with
+    # Grab as your
+    # geolocation provider and Storage as Intended use, the GetPlace
+    # operation is unavailable. For more information, see [AWS service
+    # terms][1].
+    #
+    #  </note>
+    #
+    #
+    #
+    # [1]: http://aws.amazon.com/service-terms
     #
     # @option params [required, String] :index_name
     #   The name of the place index resource that you want to use for the
@@ -3252,7 +3854,7 @@ module Aws::LocationService
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/using-apikeys.html
+    #   [1]: https://docs.aws.amazon.com/location/previous/developerguide/using-apikeys.html
     #
     # @return [Types::GetPlaceResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -3454,6 +4056,11 @@ module Aws::LocationService
     #   resp.data.entries[0].geometry.circle.center[0] #=> Float
     #   resp.data.entries[0].geometry.circle.radius #=> Float
     #   resp.data.entries[0].geometry.geobuf #=> String
+    #   resp.data.entries[0].geometry.multi_polygon #=> Array
+    #   resp.data.entries[0].geometry.multi_polygon[0] #=> Array
+    #   resp.data.entries[0].geometry.multi_polygon[0][0] #=> Array
+    #   resp.data.entries[0].geometry.multi_polygon[0][0][0] #=> Array
+    #   resp.data.entries[0].geometry.multi_polygon[0][0][0][0] #=> Float
     #   resp.data.entries[0].status #=> String
     #   resp.data.entries[0].create_time #=> Time
     #   resp.data.entries[0].update_time #=> Time
@@ -3470,7 +4077,84 @@ module Aws::LocationService
       req.send_request(options)
     end
 
+    # `ListJobs` retrieves a list of jobs with optional filtering and
+    # pagination support.
+    #
+    # For more information, see [Job concepts][1] in the *Amazon Location
+    # Service Developer Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/location/latest/developerguide/jobs-concepts.html
+    #
+    # @option params [Types::JobsFilter] :filter
+    #   An optional structure containing criteria by which to filter job
+    #   results.
+    #
+    # @option params [Integer] :max_results
+    #   Maximum number of jobs to return.
+    #
+    # @option params [String] :next_token
+    #   The pagination token specifying which page of results to return in the
+    #   response. If no token is provided, the default page is the first page.
+    #
+    # @return [Types::ListJobsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListJobsResponse#entries #data.entries} => Array&lt;Types::ListJobsResponseEntry&gt; (This method conflicts with a method on Response, call it through the data member)
+    #   * {Types::ListJobsResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_jobs({
+    #     filter: {
+    #       job_status: "Pending", # accepts Pending, Running, Completed, Failed, Cancelling, Cancelled
+    #     },
+    #     max_results: 1,
+    #     next_token: "LargeToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.data.entries #=> Array
+    #   resp.data.entries[0].action #=> String, one of "ValidateAddress"
+    #   resp.data.entries[0].action_options.validate_address.additional_features #=> Array
+    #   resp.data.entries[0].action_options.validate_address.additional_features[0] #=> String, one of "Position", "CountrySpecificAttributes"
+    #   resp.data.entries[0].created_at #=> Time
+    #   resp.data.entries[0].execution_role_arn #=> String
+    #   resp.data.entries[0].ended_at #=> Time
+    #   resp.data.entries[0].error.code #=> String, one of "ValidationError", "InternalServerError"
+    #   resp.data.entries[0].error.messages #=> Array
+    #   resp.data.entries[0].error.messages[0] #=> String
+    #   resp.data.entries[0].input_options.location #=> String
+    #   resp.data.entries[0].input_options.format #=> String, one of "Parquet"
+    #   resp.data.entries[0].job_id #=> String
+    #   resp.data.entries[0].job_arn #=> String
+    #   resp.data.entries[0].name #=> String
+    #   resp.data.entries[0].output_options.format #=> String, one of "Parquet"
+    #   resp.data.entries[0].output_options.location #=> String
+    #   resp.data.entries[0].status #=> String, one of "Pending", "Running", "Completed", "Failed", "Cancelling", "Cancelled"
+    #   resp.data.entries[0].updated_at #=> Time
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/location-2020-11-19/ListJobs AWS API Documentation
+    #
+    # @overload list_jobs(params = {})
+    # @param [Hash] params ({})
+    def list_jobs(params = {}, options = {})
+      req = build_request(:list_jobs, params)
+      req.send_request(options)
+    end
+
     # Lists API key resources in your Amazon Web Services account.
+    #
+    # For more information, see [Use API keys to authenticate][1] in the
+    # *Amazon Location Service Developer Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/location/latest/developerguide/using-apikeys.html
     #
     # @option params [Integer] :max_results
     #   An optional limit for the number of resources returned in a single
@@ -3516,6 +4200,11 @@ module Aws::LocationService
     #   resp.data.entries[0].restrictions.allow_resources[0] #=> String
     #   resp.data.entries[0].restrictions.allow_referers #=> Array
     #   resp.data.entries[0].restrictions.allow_referers[0] #=> String
+    #   resp.data.entries[0].restrictions.allow_android_apps #=> Array
+    #   resp.data.entries[0].restrictions.allow_android_apps[0].package #=> String
+    #   resp.data.entries[0].restrictions.allow_android_apps[0].certificate_fingerprint #=> String
+    #   resp.data.entries[0].restrictions.allow_apple_apps #=> Array
+    #   resp.data.entries[0].restrictions.allow_apple_apps[0].bundle_id #=> String
     #   resp.data.entries[0].create_time #=> Time
     #   resp.data.entries[0].update_time #=> Time
     #   resp.next_token #=> String
@@ -3529,7 +4218,33 @@ module Aws::LocationService
       req.send_request(options)
     end
 
-    # Lists map resources in your Amazon Web Services account.
+    # This operation is no longer current and may be deprecated in the
+    # future. We recommend upgrading to the Maps API V2 unless you require
+    # `Grab` data.
+    #
+    #  * `ListMaps` is part of a previous Amazon Location Service Maps API
+    #   (version 1) which has been superseded by a more intuitive, powerful,
+    #   and complete API (version 2).
+    #
+    # * The Maps API version 2 has a simplified interface that can be used
+    #   without creating or managing map resources.
+    #
+    # * If you are using an AWS SDK or the AWS CLI, note that the Maps API
+    #   version 2 is found under `geo-maps` or `geo_maps`, not under
+    #   `location`.
+    #
+    # * Since `Grab` is not yet fully supported in Maps API version 2, we
+    #   recommend you continue using API version 1 when using `Grab`.
+    #
+    # * Start your version 2 API journey with the [Maps V2 API Reference][1]
+    #   or the [Developer Guide][2].
+    #
+    #  Lists map resources in your Amazon Web Services account.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/location/latest/APIReference/API_Operations_Amazon_Location_Service_Maps_V2.html
+    # [2]: https://docs.aws.amazon.com/location/latest/developerguide/maps.html
     #
     # @option params [Integer] :max_results
     #   An optional limit for the number of resources returned in a single
@@ -3577,7 +4292,31 @@ module Aws::LocationService
       req.send_request(options)
     end
 
-    # Lists place index resources in your Amazon Web Services account.
+    # This operation is no longer current and may be deprecated in the
+    # future. We recommend you upgrade to the Places API V2 unless you
+    # require Grab data.
+    #
+    #  * `ListPlaceIndexes` is part of a previous Amazon Location Service
+    #   Places API (version 1) which has been superseded by a more
+    #   intuitive, powerful, and complete API (version 2).
+    #
+    # * The Places API version 2 has a simplified interface that can be used
+    #   without creating or managing place index resources.
+    #
+    # * If you are using an Amazon Web Services SDK or the Amazon Web
+    #   Services CLI, note that the Places API version 2 is found under
+    #   `geo-places` or `geo_places`, not under `location`.
+    #
+    # * Since Grab is not yet fully supported in Places API version 2, we
+    #   recommend you continue using API version 1 when using Grab.
+    #
+    # * Start your version 2 API journey with the Places V2 [API
+    #
+    # Reference](/location/latest/APIReference/API_Operations_Amazon_Location_Service_Places_V2.html)
+    #   or the [Developer
+    #   Guide](/location/latest/developerguide/places.html).
+    #
+    #  Lists place index resources in your Amazon Web Services account.
     #
     # @option params [Integer] :max_results
     #   An optional limit for the maximum number of results returned in a
@@ -3625,7 +4364,32 @@ module Aws::LocationService
       req.send_request(options)
     end
 
-    # Lists route calculator resources in your Amazon Web Services account.
+    # This operation is no longer current and may be deprecated in the
+    # future. We recommend you upgrade to the Routes API V2 unless you
+    # require Grab data.
+    #
+    #  * `ListRouteCalculators` is part of a previous Amazon Location
+    # Service
+    #   Routes API (version 1) which has been superseded by a more
+    #   intuitive, powerful, and complete API (version 2).
+    #
+    # * The Routes API version 2 has a simplified interface that can be used
+    #   without creating or managing route calculator resources.
+    #
+    # * If you are using an Amazon Web Services SDK or the Amazon Web
+    #   Services CLI, note that the Routes API version 2 is found under
+    #   `geo-routes` or `geo_routes`, not under `location`.
+    #
+    # * Since Grab is not yet fully supported in Routes API version 2, we
+    #   recommend you continue using API version 1 when using Grab.
+    #
+    # * Start your version 2 API journey with the Routes V2 [API
+    #
+    # Reference](/location/latest/APIReference/API_Operations_Amazon_Location_Service_Routes_V2.html)
+    #   or the [Developer
+    #   Guide](/location/latest/developerguide/routes.html).
+    #
+    #  Lists route calculator resources in your Amazon Web Services account.
     #
     # @option params [Integer] :max_results
     #   An optional maximum number of results returned in a single call.
@@ -3817,18 +4581,17 @@ module Aws::LocationService
     #
     # @option params [required, Types::GeofenceGeometry] :geometry
     #   Contains the details to specify the position of the geofence. Can be a
-    #   polygon, a circle or a polygon encoded in Geobuf format. Including
-    #   multiple selections will return a validation error.
+    #   circle, a polygon, or a multipolygon. `Polygon` and `MultiPolygon`
+    #   geometries can be defined using their respective parameters, or
+    #   encoded in Geobuf format using the `Geobuf` parameter. Including
+    #   multiple geometry types in the same request will return a validation
+    #   error.
     #
-    #   <note markdown="1"> The [ geofence polygon][1] format supports a maximum of 1,000
-    #   vertices. The [Geofence Geobuf][1] format supports a maximum of
+    #   <note markdown="1"> The geofence `Polygon` and `MultiPolygon` formats support a maximum of
+    #   1,000 total vertices. The `Geobuf` format supports a maximum of
     #   100,000 vertices.
     #
     #    </note>
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/location-geofences/latest/APIReference/API_GeofenceGeometry.html
     #
     # @option params [Hash<String,String>] :geofence_properties
     #   Associates one of more properties with the geofence. A property is a
@@ -3859,6 +4622,13 @@ module Aws::LocationService
     #         radius: 1.0, # required
     #       },
     #       geobuf: "data",
+    #       multi_polygon: [
+    #         [
+    #           [
+    #             [1.0],
+    #           ],
+    #         ],
+    #       ],
     #     },
     #     geofence_properties: {
     #       "PropertyMapKeyString" => "PropertyMapValueString",
@@ -3880,7 +4650,30 @@ module Aws::LocationService
       req.send_request(options)
     end
 
-    # Reverse geocodes a given coordinate and returns a legible address.
+    # This operation is no longer current and may be deprecated in the
+    # future. We recommend you upgrade to [ `ReverseGeocode`
+    # ](/location/latest/APIReference/API_geoplaces_ReverseGeocode.html) or
+    # [ `SearchNearby`
+    # ](/location/latest/APIReference/API_geoplaces_SearchNearby.html)
+    # unless you require Grab data.
+    #
+    #  * `SearchPlaceIndexForPosition` is part of a previous Amazon Location
+    #   Service Places API (version 1) which has been superseded by a more
+    #   intuitive, powerful, and complete API (version 2).
+    #
+    # * The version 2 `ReverseGeocode` operation gives better results in the
+    #   address reverse-geocoding use case, while the version 2
+    #   `SearchNearby` operation gives better results when searching for
+    #   businesses and points of interest near a specific location.
+    #
+    # * If you are using an Amazon Web Services SDK or the Amazon Web
+    #   Services CLI, note that the Places API version 2 is found under
+    #   `geo-places` or `geo_places`, not under `location`.
+    #
+    # * Since Grab is not yet fully supported in Places API version 2, we
+    #   recommend you continue using API version 1 when using Grab.
+    #
+    #  Reverse geocodes a given coordinate and returns a legible address.
     # Allows you to search for Places or points of interest near a given
     # position.
     #
@@ -3932,7 +4725,7 @@ module Aws::LocationService
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/using-apikeys.html
+    #   [1]: https://docs.aws.amazon.com/location/previous/developerguide/using-apikeys.html
     #
     # @return [Types::SearchPlaceIndexForPositionResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -3990,15 +4783,40 @@ module Aws::LocationService
       req.send_request(options)
     end
 
-    # Generates suggestions for addresses and points of interest based on
+    # This operation is no longer current and may be deprecated in the
+    # future. We recommend you upgrade to [ `Suggest`
+    # ](/location/latest/APIReference/API_geoplaces_Suggest.html) or [
+    # `Autocomplete`
+    # ](/location/latest/APIReference/API_geoplaces_Autocomplete.html)
+    # unless you require Grab data.
+    #
+    #  * `SearchPlaceIndexForSuggestions` is part of a previous Amazon
+    #   Location Service Places API (version 1) which has been superseded by
+    #   a more intuitive, powerful, and complete API (version 2).
+    #
+    # * The version 2 `Suggest` operation gives better results for typeahead
+    #   place search suggestions with fuzzy matching, while the version 2
+    #   `Autocomplete` operation gives better results for address completion
+    #   based on partial input.
+    #
+    # * If you are using an Amazon Web Services SDK or the Amazon Web
+    #   Services CLI, note that the Places API version 2 is found under
+    #   `geo-places` or `geo_places`, not under `location`.
+    #
+    # * Since Grab is not yet fully supported in Places API version 2, we
+    #   recommend you continue using API version 1 when using Grab.
+    #
+    #  Generates suggestions for addresses and points of interest based on
     # partial or misspelled free-form text. This operation is also known as
     # autocomplete, autosuggest, or fuzzy matching.
     #
-    # Optional parameters let you narrow your search results by bounding box
+    #  Optional parameters let you narrow your search results by bounding
+    # box
     # or country, or bias your search toward a specific position on the
     # globe.
     #
-    # <note markdown="1"> You can search for suggested place names near a specified position by
+    #  <note markdown="1"> You can search for suggested place names near a
+    # specified position by
     # using `BiasPosition`, or filter results within a bounding box by using
     # `FilterBBox`. These parameters are mutually exclusive; using both
     # `BiasPosition` and `FilterBBox` in the same command returns an error.
@@ -4097,18 +4915,18 @@ module Aws::LocationService
     #
     #   For more information about using categories, including a list of
     #   Amazon Location categories, see [Categories and filtering][1], in the
-    #   *Amazon Location Service Developer Guide*.
+    #   *Amazon Location Service developer guide*.
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/category-filtering.html
+    #   [1]: https://docs.aws.amazon.com/location/previous/developerguide/category-filtering.html
     #
     # @option params [String] :key
     #   The optional [API key][1] to authorize the request.
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/using-apikeys.html
+    #   [1]: https://docs.aws.amazon.com/location/previous/developerguide/using-apikeys.html
     #
     # @return [Types::SearchPlaceIndexForSuggestionsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -4160,20 +4978,45 @@ module Aws::LocationService
       req.send_request(options)
     end
 
-    # Geocodes free-form text, such as an address, name, city, or region to
+    # This operation is no longer current and may be deprecated in the
+    # future. We recommend you upgrade to [ `Geocode`
+    # ](/location/latest/APIReference/API_geoplaces_Geocode.html) or [
+    # `SearchText`
+    # ](/location/latest/APIReference/API_geoplaces_SearchText.html) unless
+    # you require Grab data.
+    #
+    #  * `SearchPlaceIndexForText` is part of a previous Amazon Location
+    #   Service Places API (version 1) which has been superseded by a more
+    #   intuitive, powerful, and complete API (version 2).
+    #
+    # * The version 2 `Geocode` operation gives better results in the
+    #   address geocoding use case, while the version 2 `SearchText`
+    #   operation gives better results when searching for businesses and
+    #   points of interest.
+    #
+    # * If you are using an Amazon Web Services SDK or the Amazon Web
+    #   Services CLI, note that the Places API version 2 is found under
+    #   `geo-places` or `geo_places`, not under `location`.
+    #
+    # * Since Grab is not yet fully supported in Places API version 2, we
+    #   recommend you continue using API version 1 when using Grab.
+    #
+    #  Geocodes free-form text, such as an address, name, city, or region to
     # allow you to search for Places or points of interest.
     #
-    # Optional parameters let you narrow your search results by bounding box
+    #  Optional parameters let you narrow your search results by bounding
+    # box
     # or country, or bias your search toward a specific position on the
     # globe.
     #
-    # <note markdown="1"> You can search for places near a given position using `BiasPosition`,
+    #  <note markdown="1"> You can search for places near a given position
+    # using `BiasPosition`,
     # or filter results within a bounding box using `FilterBBox`. Providing
     # both parameters simultaneously returns an error.
     #
     #  </note>
     #
-    # Search results are returned in order of highest to lowest relevance.
+    #  Search results are returned in order of highest to lowest relevance.
     #
     # @option params [required, String] :index_name
     #   The name of the place index resource you want to use for the search.
@@ -4268,18 +5111,18 @@ module Aws::LocationService
     #
     #   For more information about using categories, including a list of
     #   Amazon Location categories, see [Categories and filtering][1], in the
-    #   *Amazon Location Service Developer Guide*.
+    #   *Amazon Location Service developer guide*.
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/category-filtering.html
+    #   [1]: https://docs.aws.amazon.com/location/previous/developerguide/category-filtering.html
     #
     # @option params [String] :key
     #   The optional [API key][1] to authorize the request.
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/using-apikeys.html
+    #   [1]: https://docs.aws.amazon.com/location/previous/developerguide/using-apikeys.html
     #
     # @return [Types::SearchPlaceIndexForTextResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -4348,6 +5191,113 @@ module Aws::LocationService
     # @param [Hash] params ({})
     def search_place_index_for_text(params = {}, options = {})
       req = build_request(:search_place_index_for_text, params)
+      req.send_request(options)
+    end
+
+    # `StartJob` starts a new asynchronous bulk processing job. You specify
+    # the input data location in Amazon S3, the action to perform, and the
+    # output location where results are written.
+    #
+    # For more information, see [Job concepts][1] in the *Amazon Location
+    # Service Developer Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/location/latest/developerguide/jobs-concepts.html
+    #
+    # @option params [String] :client_token
+    #   A unique identifier for this request to ensure idempotency.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @option params [required, String] :action
+    #   The action to perform on the input data.
+    #
+    # @option params [Types::JobActionOptions] :action_options
+    #   Additional parameters that can be requested for each result.
+    #
+    # @option params [required, String] :execution_role_arn
+    #   The Amazon Resource Name (ARN) of the IAM role that Amazon Location
+    #   Service assumes during job processing. Amazon Location Service uses
+    #   this role to access the input and output locations specified for the
+    #   job.
+    #
+    #   <note markdown="1"> The IAM role must be created in the same Amazon Web Services account
+    #   where you plan to run your job.
+    #
+    #    </note>
+    #
+    #   For more information about configuring IAM roles for Amazon Location
+    #   jobs, see [Configure IAM permissions][1] in the *Amazon Location
+    #   Service Developer Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/location/latest/developerguide/configure-iam-role-policy-credentials.html
+    #
+    # @option params [required, Types::JobInputOptions] :input_options
+    #   Configuration for input data location and format.
+    #
+    #   <note markdown="1"> Input files have a limitation of 10gb per file, and 1gb per Parquet
+    #   row-group within the file.
+    #
+    #    </note>
+    #
+    # @option params [String] :name
+    #   An optional name for the job resource.
+    #
+    # @option params [required, Types::JobOutputOptions] :output_options
+    #   Configuration for output data location and format.
+    #
+    # @option params [Hash<String,String>] :tags
+    #   Tags and corresponding values to be associated with the job.
+    #
+    # @return [Types::StartJobResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::StartJobResponse#created_at #created_at} => Time
+    #   * {Types::StartJobResponse#job_arn #job_arn} => String
+    #   * {Types::StartJobResponse#job_id #job_id} => String
+    #   * {Types::StartJobResponse#status #status} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.start_job({
+    #     client_token: "ClientToken",
+    #     action: "ValidateAddress", # required, accepts ValidateAddress
+    #     action_options: {
+    #       validate_address: {
+    #         additional_features: ["Position"], # accepts Position, CountrySpecificAttributes
+    #       },
+    #     },
+    #     execution_role_arn: "IamRoleArn", # required
+    #     input_options: { # required
+    #       location: "JobInputLocation", # required
+    #       format: "Parquet", # required, accepts Parquet
+    #     },
+    #     name: "ResourceName",
+    #     output_options: { # required
+    #       format: "Parquet", # required, accepts Parquet
+    #       location: "JobOutputLocation", # required
+    #     },
+    #     tags: {
+    #       "TagKey" => "TagValue",
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.created_at #=> Time
+    #   resp.job_arn #=> String
+    #   resp.job_id #=> String
+    #   resp.status #=> String, one of "Pending", "Running", "Completed", "Failed", "Cancelling", "Cancelled"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/location-2020-11-19/StartJob AWS API Documentation
+    #
+    # @overload start_job(params = {})
+    # @param [Hash] params ({})
+    def start_job(params = {}, options = {})
+      req = build_request(:start_job, params)
       req.send_request(options)
     end
 
@@ -4548,6 +5498,17 @@ module Aws::LocationService
     #       allow_actions: ["ApiKeyAction"], # required
     #       allow_resources: ["GeoArnV2"], # required
     #       allow_referers: ["RefererPattern"],
+    #       allow_android_apps: [
+    #         {
+    #           package: "AndroidPackageName", # required
+    #           certificate_fingerprint: "Sha1CertificateFingerprint", # required
+    #         },
+    #       ],
+    #       allow_apple_apps: [
+    #         {
+    #           bundle_id: "AppleBundleId", # required
+    #         },
+    #       ],
     #     },
     #   })
     #
@@ -4566,7 +5527,33 @@ module Aws::LocationService
       req.send_request(options)
     end
 
-    # Updates the specified properties of a given map resource.
+    # This operation is no longer current and may be deprecated in the
+    # future. We recommend upgrading to the Maps API V2 unless you require
+    # `Grab` data.
+    #
+    #  * `UpdateMap` is part of a previous Amazon Location Service Maps API
+    #   (version 1) which has been superseded by a more intuitive, powerful,
+    #   and complete API (version 2).
+    #
+    # * The Maps API version 2 has a simplified interface that can be used
+    #   without creating or managing map resources.
+    #
+    # * If you are using an AWS SDK or the AWS CLI, note that the Maps API
+    #   version 2 is found under `geo-maps` or `geo_maps`, not under
+    #   `location`.
+    #
+    # * Since `Grab` is not yet fully supported in Maps API version 2, we
+    #   recommend you continue using API version 1 when using `Grab`.
+    #
+    # * Start your version 2 API journey with the [Maps V2 API Reference][1]
+    #   or the [Developer Guide][2].
+    #
+    #  Updates the specified properties of a given map resource.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/location/latest/APIReference/API_Operations_Amazon_Location_Service_Maps_V2.html
+    # [2]: https://docs.aws.amazon.com/location/latest/developerguide/maps.html
     #
     # @option params [required, String] :map_name
     #   The name of the map resource to update.
@@ -4615,7 +5602,31 @@ module Aws::LocationService
       req.send_request(options)
     end
 
-    # Updates the specified properties of a given place index resource.
+    # This operation is no longer current and may be deprecated in the
+    # future. We recommend you upgrade to the Places API V2 unless you
+    # require Grab data.
+    #
+    #  * `UpdatePlaceIndex` is part of a previous Amazon Location Service
+    #   Places API (version 1) which has been superseded by a more
+    #   intuitive, powerful, and complete API (version 2).
+    #
+    # * The Places API version 2 has a simplified interface that can be used
+    #   without creating or managing place index resources.
+    #
+    # * If you are using an Amazon Web Services SDK or the Amazon Web
+    #   Services CLI, note that the Places API version 2 is found under
+    #   `geo-places` or `geo_places`, not under `location`.
+    #
+    # * Since Grab is not yet fully supported in Places API version 2, we
+    #   recommend you continue using API version 1 when using Grab.
+    #
+    # * Start your version 2 API journey with the Places V2 [API
+    #
+    # Reference](/location/latest/APIReference/API_Operations_Amazon_Location_Service_Places_V2.html)
+    #   or the [Developer
+    #   Guide](/location/latest/developerguide/places.html).
+    #
+    #  Updates the specified properties of a given place index resource.
     #
     # @option params [required, String] :index_name
     #   The name of the place index resource to update.
@@ -4662,7 +5673,31 @@ module Aws::LocationService
       req.send_request(options)
     end
 
-    # Updates the specified properties for a given route calculator
+    # This operation is no longer current and may be deprecated in the
+    # future. We recommend you upgrade to the Routes API V2 unless you
+    # require Grab data.
+    #
+    #  * `UpdateRouteCalculator` is part of a previous Amazon Location
+    #   Service Routes API (version 1) which has been superseded by a more
+    #   intuitive, powerful, and complete API (version 2).
+    #
+    # * The Routes API version 2 has a simplified interface that can be used
+    #   without creating or managing route calculator resources.
+    #
+    # * If you are using an Amazon Web Services SDK or the Amazon Web
+    #   Services CLI, note that the Routes API version 2 is found under
+    #   `geo-routes` or `geo_routes`, not under `location`.
+    #
+    # * Since Grab is not yet fully supported in Routes API version 2, we
+    #   recommend you continue using API version 1 when using Grab.
+    #
+    # * Start your version 2 API journey with the Routes V2 [API
+    #
+    # Reference](/location/latest/APIReference/API_Operations_Amazon_Location_Service_Routes_V2.html)
+    #   or the [Developer
+    #   Guide](/location/latest/developerguide/routes.html).
+    #
+    #  Updates the specified properties for a given route calculator
     # resource.
     #
     # @option params [required, String] :calculator_name
@@ -4805,6 +5840,16 @@ module Aws::LocationService
     # was reported behind a proxy, and by comparing it to an inferred
     # position estimated based on the device's state.
     #
+    # <note markdown="1"> The Location Integrity SDK provides enhanced features related to
+    # device verification, and it is available for use by request. To get
+    # access to the SDK, contact [Sales Support][1].
+    #
+    #  </note>
+    #
+    #
+    #
+    # [1]: https://aws.amazon.com/contact-us/sales-support/?pg=locationprice&amp;cta=herobtn
+    #
     # @option params [required, String] :tracker_name
     #   The name of the tracker resource to be associated with verification
     #   request.
@@ -4914,14 +5959,127 @@ module Aws::LocationService
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-locationservice'
-      context[:gem_version] = '1.68.0'
+      context[:gem_version] = '1.90.0'
       Seahorse::Client::Request.new(handlers, context)
+    end
+
+    # Polls an API operation until a resource enters a desired state.
+    #
+    # ## Basic Usage
+    #
+    # A waiter will call an API operation until:
+    #
+    # * It is successful
+    # * It enters a terminal state
+    # * It makes the maximum number of attempts
+    #
+    # In between attempts, the waiter will sleep.
+    #
+    #     # polls in a loop, sleeping between attempts
+    #     client.wait_until(waiter_name, params)
+    #
+    # ## Configuration
+    #
+    # You can configure the maximum number of polling attempts, and the
+    # delay (in seconds) between each polling attempt. You can pass
+    # configuration as the final arguments hash.
+    #
+    #     # poll for ~25 seconds
+    #     client.wait_until(waiter_name, params, {
+    #       max_attempts: 5,
+    #       delay: 5,
+    #     })
+    #
+    # ## Callbacks
+    #
+    # You can be notified before each polling attempt and before each
+    # delay. If you throw `:success` or `:failure` from these callbacks,
+    # it will terminate the waiter.
+    #
+    #     started_at = Time.now
+    #     client.wait_until(waiter_name, params, {
+    #
+    #       # disable max attempts
+    #       max_attempts: nil,
+    #
+    #       # poll for 1 hour, instead of a number of attempts
+    #       before_wait: -> (attempts, response) do
+    #         throw :failure if Time.now - started_at > 3600
+    #       end
+    #     })
+    #
+    # ## Handling Errors
+    #
+    # When a waiter is unsuccessful, it will raise an error.
+    # All of the failure errors extend from
+    # {Aws::Waiters::Errors::WaiterFailed}.
+    #
+    #     begin
+    #       client.wait_until(...)
+    #     rescue Aws::Waiters::Errors::WaiterFailed
+    #       # resource did not enter the desired state in time
+    #     end
+    #
+    # ## Valid Waiters
+    #
+    # The following table lists the valid waiter names, the operations they call,
+    # and the default `:delay` and `:max_attempts` values.
+    #
+    # | waiter_name   | params           | :delay   | :max_attempts |
+    # | ------------- | ---------------- | -------- | ------------- |
+    # | job_completed | {Client#get_job} | 60       | 5             |
+    #
+    # @raise [Errors::FailureStateError] Raised when the waiter terminates
+    #   because the waiter has entered a state that it will not transition
+    #   out of, preventing success.
+    #
+    # @raise [Errors::TooManyAttemptsError] Raised when the configured
+    #   maximum number of attempts have been made, and the waiter is not
+    #   yet successful.
+    #
+    # @raise [Errors::UnexpectedError] Raised when an error is encounted
+    #   while polling for a resource that is not expected.
+    #
+    # @raise [Errors::NoSuchWaiterError] Raised when you request to wait
+    #   for an unknown state.
+    #
+    # @return [Boolean] Returns `true` if the waiter was successful.
+    # @param [Symbol] waiter_name
+    # @param [Hash] params ({})
+    # @param [Hash] options ({})
+    # @option options [Integer] :max_attempts
+    # @option options [Integer] :delay
+    # @option options [Proc] :before_attempt
+    # @option options [Proc] :before_wait
+    def wait_until(waiter_name, params = {}, options = {})
+      w = waiter(waiter_name, options)
+      yield(w.waiter) if block_given? # deprecated
+      w.wait(params)
     end
 
     # @api private
     # @deprecated
     def waiter_names
-      []
+      waiters.keys
+    end
+
+    private
+
+    # @param [Symbol] waiter_name
+    # @param [Hash] options ({})
+    def waiter(waiter_name, options = {})
+      waiter_class = waiters[waiter_name]
+      if waiter_class
+        waiter_class.new(options.merge(client: self))
+      else
+        raise Aws::Waiters::Errors::NoSuchWaiterError.new(waiter_name, waiters.keys)
+      end
+    end
+
+    def waiters
+      {
+        job_completed: Waiters::JobCompleted
+      }
     end
 
     class << self

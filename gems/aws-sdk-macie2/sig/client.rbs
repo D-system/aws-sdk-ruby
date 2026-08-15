@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -109,7 +110,7 @@ module Aws
                                                          {
                                                            account_id: ::String?,
                                                            status: ("ENABLED" | "DISABLED")?
-                                                         },
+                                                         }
                                                        ]
                                                      ) -> _BatchUpdateAutomatedDiscoveryAccountsResponseSuccess
                                                    | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchUpdateAutomatedDiscoveryAccountsResponseSuccess
@@ -153,98 +154,18 @@ module Aws
                                        name: ::String,
                                        s3_job_definition: {
                                          bucket_criteria: {
-                                           excludes: {
-                                             and: Array[
-                                               {
-                                                 simple_criterion: {
-                                                   comparator: ("EQ" | "GT" | "GTE" | "LT" | "LTE" | "NE" | "CONTAINS" | "STARTS_WITH")?,
-                                                   key: ("ACCOUNT_ID" | "S3_BUCKET_NAME" | "S3_BUCKET_EFFECTIVE_PERMISSION" | "S3_BUCKET_SHARED_ACCESS")?,
-                                                   values: Array[::String]?
-                                                 }?,
-                                                 tag_criterion: {
-                                                   comparator: ("EQ" | "GT" | "GTE" | "LT" | "LTE" | "NE" | "CONTAINS" | "STARTS_WITH")?,
-                                                   tag_values: Array[
-                                                     {
-                                                       key: ::String?,
-                                                       value: ::String?
-                                                     },
-                                                   ]?
-                                                 }?
-                                               },
-                                             ]?
-                                           }?,
-                                           includes: {
-                                             and: Array[
-                                               {
-                                                 simple_criterion: {
-                                                   comparator: ("EQ" | "GT" | "GTE" | "LT" | "LTE" | "NE" | "CONTAINS" | "STARTS_WITH")?,
-                                                   key: ("ACCOUNT_ID" | "S3_BUCKET_NAME" | "S3_BUCKET_EFFECTIVE_PERMISSION" | "S3_BUCKET_SHARED_ACCESS")?,
-                                                   values: Array[::String]?
-                                                 }?,
-                                                 tag_criterion: {
-                                                   comparator: ("EQ" | "GT" | "GTE" | "LT" | "LTE" | "NE" | "CONTAINS" | "STARTS_WITH")?,
-                                                   tag_values: Array[
-                                                     {
-                                                       key: ::String?,
-                                                       value: ::String?
-                                                     },
-                                                   ]?
-                                                 }?
-                                               },
-                                             ]?
-                                           }?
+                                           excludes: Params::criteria_block_for_job?,
+                                           includes: Params::criteria_block_for_job?
                                          }?,
                                          bucket_definitions: Array[
                                            {
                                              account_id: ::String,
                                              buckets: Array[::String]
-                                           },
+                                           }
                                          ]?,
                                          scoping: {
-                                           excludes: {
-                                             and: Array[
-                                               {
-                                                 simple_scope_term: {
-                                                   comparator: ("EQ" | "GT" | "GTE" | "LT" | "LTE" | "NE" | "CONTAINS" | "STARTS_WITH")?,
-                                                   key: ("OBJECT_EXTENSION" | "OBJECT_LAST_MODIFIED_DATE" | "OBJECT_SIZE" | "OBJECT_KEY")?,
-                                                   values: Array[::String]?
-                                                 }?,
-                                                 tag_scope_term: {
-                                                   comparator: ("EQ" | "GT" | "GTE" | "LT" | "LTE" | "NE" | "CONTAINS" | "STARTS_WITH")?,
-                                                   key: ::String?,
-                                                   tag_values: Array[
-                                                     {
-                                                       key: ::String?,
-                                                       value: ::String?
-                                                     },
-                                                   ]?,
-                                                   target: ("S3_OBJECT")?
-                                                 }?
-                                               },
-                                             ]?
-                                           }?,
-                                           includes: {
-                                             and: Array[
-                                               {
-                                                 simple_scope_term: {
-                                                   comparator: ("EQ" | "GT" | "GTE" | "LT" | "LTE" | "NE" | "CONTAINS" | "STARTS_WITH")?,
-                                                   key: ("OBJECT_EXTENSION" | "OBJECT_LAST_MODIFIED_DATE" | "OBJECT_SIZE" | "OBJECT_KEY")?,
-                                                   values: Array[::String]?
-                                                 }?,
-                                                 tag_scope_term: {
-                                                   comparator: ("EQ" | "GT" | "GTE" | "LT" | "LTE" | "NE" | "CONTAINS" | "STARTS_WITH")?,
-                                                   key: ::String?,
-                                                   tag_values: Array[
-                                                     {
-                                                       key: ::String?,
-                                                       value: ::String?
-                                                     },
-                                                   ]?,
-                                                   target: ("S3_OBJECT")?
-                                                 }?
-                                               },
-                                             ]?
-                                           }?
+                                           excludes: Params::job_scoping_block?,
+                                           includes: Params::job_scoping_block?
                                          }?
                                        },
                                        ?sampling_percentage: ::Integer,
@@ -279,7 +200,7 @@ module Aws
                                              {
                                                occurrences_threshold: ::Integer,
                                                severity: ("LOW" | "MEDIUM" | "HIGH")
-                                             },
+                                             }
                                            ],
                                            ?tags: Hash[::String, ::String]
                                          ) -> _CreateCustomDataIdentifierResponseSuccess
@@ -295,17 +216,7 @@ module Aws
                                     action: ("ARCHIVE" | "NOOP"),
                                     ?client_token: ::String,
                                     ?description: ::String,
-                                    finding_criteria: {
-                                      criterion: Hash[::String, {
-                                          eq: Array[::String]?,
-                                          eq_exact_match: Array[::String]?,
-                                          gt: ::Integer?,
-                                          gte: ::Integer?,
-                                          lt: ::Integer?,
-                                          lte: ::Integer?,
-                                          neq: Array[::String]?
-                                        }]?
-                                    },
+                                    finding_criteria: Params::finding_criteria,
                                     name: ::String,
                                     ?position: ::Integer,
                                     ?tags: Hash[::String, ::String]
@@ -645,17 +556,7 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Macie2/Client.html#get_finding_statistics-instance_method
       def get_finding_statistics: (
-                                    ?finding_criteria: {
-                                      criterion: Hash[::String, {
-                                          eq: Array[::String]?,
-                                          eq_exact_match: Array[::String]?,
-                                          gt: ::Integer?,
-                                          gte: ::Integer?,
-                                          lt: ::Integer?,
-                                          lte: ::Integer?,
-                                          neq: Array[::String]?
-                                        }]?
-                                    },
+                                    ?finding_criteria: Params::finding_criteria,
                                     group_by: ("resourcesAffected.s3Bucket.name" | "type" | "classificationDetails.jobId" | "severity.description"),
                                     ?size: ::Integer,
                                     ?sort_criteria: {
@@ -826,7 +727,7 @@ module Aws
                                       comparator: ("GT" | "GTE" | "LT" | "LTE" | "EQ" | "NE" | "CONTAINS")?,
                                       key: ("accountId" | "serviceLimit" | "freeTrialStartDate" | "total")?,
                                       values: Array[::String]?
-                                    },
+                                    }
                                   ],
                                   ?max_results: ::Integer,
                                   ?next_token: ::String,
@@ -887,14 +788,14 @@ module Aws
                                             comparator: ("EQ" | "GT" | "GTE" | "LT" | "LTE" | "NE" | "CONTAINS" | "STARTS_WITH")?,
                                             key: ("jobType" | "jobStatus" | "createdAt" | "name")?,
                                             values: Array[::String]?
-                                          },
+                                          }
                                         ]?,
                                         includes: Array[
                                           {
                                             comparator: ("EQ" | "GT" | "GTE" | "LT" | "LTE" | "NE" | "CONTAINS" | "STARTS_WITH")?,
                                             key: ("jobType" | "jobStatus" | "createdAt" | "name")?,
                                             values: Array[::String]?
-                                          },
+                                          }
                                         ]?
                                       },
                                       ?max_results: ::Integer,
@@ -937,17 +838,7 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Macie2/Client.html#list_findings-instance_method
       def list_findings: (
-                           ?finding_criteria: {
-                             criterion: Hash[::String, {
-                                 eq: Array[::String]?,
-                                 eq_exact_match: Array[::String]?,
-                                 gt: ::Integer?,
-                                 gte: ::Integer?,
-                                 lt: ::Integer?,
-                                 lte: ::Integer?,
-                                 neq: Array[::String]?
-                               }]?
-                           },
+                           ?finding_criteria: Params::finding_criteria,
                            ?max_results: ::Integer,
                            ?next_token: ::String,
                            ?sort_criteria: {
@@ -1073,6 +964,7 @@ module Aws
                                                      configuration: {
                                                        s3_destination: {
                                                          bucket_name: ::String,
+                                                         expected_bucket_owner: ::String?,
                                                          key_prefix: ::String?,
                                                          kms_key_arn: ::String
                                                        }?
@@ -1101,46 +993,8 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Macie2/Client.html#search_resources-instance_method
       def search_resources: (
                               ?bucket_criteria: {
-                                excludes: {
-                                  and: Array[
-                                    {
-                                      simple_criterion: {
-                                        comparator: ("EQ" | "NE")?,
-                                        key: ("ACCOUNT_ID" | "S3_BUCKET_NAME" | "S3_BUCKET_EFFECTIVE_PERMISSION" | "S3_BUCKET_SHARED_ACCESS" | "AUTOMATED_DISCOVERY_MONITORING_STATUS")?,
-                                        values: Array[::String]?
-                                      }?,
-                                      tag_criterion: {
-                                        comparator: ("EQ" | "NE")?,
-                                        tag_values: Array[
-                                          {
-                                            key: ::String?,
-                                            value: ::String?
-                                          },
-                                        ]?
-                                      }?
-                                    },
-                                  ]?
-                                }?,
-                                includes: {
-                                  and: Array[
-                                    {
-                                      simple_criterion: {
-                                        comparator: ("EQ" | "NE")?,
-                                        key: ("ACCOUNT_ID" | "S3_BUCKET_NAME" | "S3_BUCKET_EFFECTIVE_PERMISSION" | "S3_BUCKET_SHARED_ACCESS" | "AUTOMATED_DISCOVERY_MONITORING_STATUS")?,
-                                        values: Array[::String]?
-                                      }?,
-                                      tag_criterion: {
-                                        comparator: ("EQ" | "NE")?,
-                                        tag_values: Array[
-                                          {
-                                            key: ::String?,
-                                            value: ::String?
-                                          },
-                                        ]?
-                                      }?
-                                    },
-                                  ]?
-                                }?
+                                excludes: Params::search_resources_criteria_block?,
+                                includes: Params::search_resources_criteria_block?
                               },
                               ?max_results: ::Integer,
                               ?next_token: ::String,
@@ -1250,17 +1104,7 @@ module Aws
                                     ?action: ("ARCHIVE" | "NOOP"),
                                     ?client_token: ::String,
                                     ?description: ::String,
-                                    ?finding_criteria: {
-                                      criterion: Hash[::String, {
-                                          eq: Array[::String]?,
-                                          eq_exact_match: Array[::String]?,
-                                          gt: ::Integer?,
-                                          gte: ::Integer?,
-                                          lt: ::Integer?,
-                                          lte: ::Integer?,
-                                          neq: Array[::String]?
-                                        }]?
-                                    },
+                                    ?finding_criteria: Params::finding_criteria,
                                     id: ::String,
                                     ?name: ::String,
                                     ?position: ::Integer
@@ -1316,7 +1160,7 @@ module Aws
                                                   {
                                                     id: ::String?,
                                                     type: ("CUSTOM" | "MANAGED")?
-                                                  },
+                                                  }
                                                 ]
                                               ) -> _UpdateResourceProfileDetectionsResponseSuccess
                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateResourceProfileDetectionsResponseSuccess

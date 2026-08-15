@@ -1,6 +1,231 @@
 Unreleased Changes
 ------------------
 
+1.158.0 (2026-07-22)
+------------------
+
+* Feature - Amazon GuardDuty now returns filter lifecycle metadata in GetFilter responses. The response includes createdAt and updatedAt timestamps and a version number that increments on each update, giving you visibility into when a filter was created and last modified.
+
+1.157.0 (2026-07-13)
+------------------
+
+* Feature - GuardDuty AI Protection is now publicly available. Findings include Bedrock guardrail details, model details, observation numbers, and continuous scan details. GuardrailArn and GuardrailVersion are deprecated in favor of the guardrails list.
+
+1.156.0 (2026-07-09)
+------------------
+
+* Feature - Adding "AI Analyst" enum value for detector
+
+1.155.0 (2026-06-22)
+------------------
+
+* Feature - Added AI-powered investigations that automatically analyze security findings, correlate related activity, and produce structured summaries with risk assessment, confidence scoring, MITRE technique classification, and actionable next steps.
+
+1.154.0 (2026-06-04)
+------------------
+
+* Feature - Remove unsupported RDS field for filter
+
+1.153.0 (2026-06-02)
+------------------
+
+* Feature - Amazon GuardDuty Runtime Monitoring now supports 3 new SensitiveFileModified finding types (Persistence, PrivilegeEscalation, DefenseEvasion) that detect when security-sensitive system files are modified on EC2 instances or containers, indicating potential compromise through file tampering.
+
+1.152.0 (2026-05-26)
+------------------
+
+* Feature - Add malware scan support for Continuous Backups, also known as Point-In-Time Recovery Points (PITR).
+
+1.151.0 (2026-05-21)
+------------------
+
+* Feature - Adding new BDD representation of endpoint ruleset
+
+1.150.0 (2026-05-19)
+------------------
+
+* Feature - Adding support for exposure and vulnerability context from AWS Security Hub in GuardDuty Extended Threat Detection attack sequence findings.
+
+1.149.0 (2026-05-13)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.148.0 (2026-05-07)
+------------------
+
+* Feature - This is a documentation update
+
+1.147.0 (2026-04-20)
+------------------
+
+* Feature - Expanded support for new suppression rule fields.
+
+1.146.0 (2026-04-06)
+------------------
+
+* Feature - Migrated to Smithy. No functional changes
+
+1.145.0 (2026-03-18)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.144.0 (2026-03-05)
+------------------
+
+* Feature - Added MALICIOUS FILE to IndicatorType enum in MDC Sequence
+
+1.143.0 (2026-01-22)
+------------------
+
+* Feature - Adding new enum value for ScanStatusReason
+
+1.142.0 (2026-01-16)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.141.0 (2026-01-08)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.140.0 (2026-01-05)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.139.0 (2025-12-22)
+------------------
+
+* Feature - Make accountIds a required field in GetRemainingFreeTrialDays API to reflect service behavior.
+
+1.138.0 (2025-12-17)
+------------------
+
+* Feature - Add support for dbiResourceId in finding.
+
+1.137.0 (2025-12-09)
+------------------
+
+* Feature - Adding support for Ec2LaunchTemplate Version field
+
+1.136.0 (2025-12-02)
+------------------
+
+* Feature - Adding support for extended threat detection for Amazon EC2 and Amazon ECS. Adding support for wild card suppression rules.
+
+1.135.0 (2025-11-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.134.0 (2025-11-19)
+------------------
+
+* Feature - Add support for scanning and viewing scan results for backup resource types
+
+1.133.0 (2025-11-17)
+------------------
+
+* Feature - Add S3 On-Demand Object Scanning
+
+1.132.0 (2025-11-10)
+------------------
+
+* Feature - Include tags filed in CreatePublishingDestinationRequest and DescribePublishingDestinationResponse.
+
+1.131.0 (2025-10-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.130.0 (2025-10-15)
+------------------
+
+* Feature - Added default pagination value for ListMalwareProtectionPlans API and updated UpdateFindingsFeedback API
+
+1.129.0 (2025-10-02)
+------------------
+
+* Feature - Updated descriptions for the Location parameter in CreateTrustedEntitySet and CreateThreatEntitySet.
+
+1.128.0 (2025-09-11)
+------------------
+
+* Feature - Updated Java SDK implementation of entity set status in GuardDuty API.
+
+1.127.0 (2025-08-26)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.126.0 (2025-08-21)
+------------------
+
+* Feature - Remove Pattern trait from email field
+
+1.125.0 (2025-08-14)
+------------------
+
+* Feature - Added support for entity lists.
+
+1.124.0 (2025-08-07)
+------------------
+
+* Feature - Added support for VPC owner account ID associated with DNS request in the GuardDuty finding.
+
+1.123.0 (2025-08-04)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.122.0 (2025-07-31)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.121.0 (2025-07-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.120.0 (2025-07-16)
+------------------
+
+* Feature - Add expectedBucketOwner parameter to ThreatIntel and IPSet APIs.
+
+1.119.0 (2025-06-27)
+------------------
+
+* Feature - Update JSON target for Kubernetes workload resource type.
+
+1.118.0 (2025-06-17)
+------------------
+
+* Feature - Adding support for extended threat detection for EKS Audit Logs and EKS Runtime Monitoring.
+
+1.117.0 (2025-06-02)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.116.0 (2025-05-12)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.115.0 (2025-05-08)
+------------------
+
+* Feature - Updated description of a data structure.
+
+1.114.0 (2025-05-01)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
 1.113.0 (2025-02-20)
 ------------------
 

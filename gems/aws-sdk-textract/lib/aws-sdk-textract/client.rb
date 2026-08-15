@@ -95,8 +95,8 @@ module Aws::Textract
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::Textract
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::Textract
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::Textract
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::Textract
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::Textract
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::Textract
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::Textract
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -550,6 +554,20 @@ module Aws::Textract
     #   Sets the configuration for the human in the loop workflow for
     #   analyzing documents.
     #
+    #   <note markdown="1"> Amazon Textract uses Amazon Augmented AI (A2I) to run the human review
+    #   workflows that you specify in `HumanLoopConfig`. A2I entered
+    #   maintenance mode in July 2026 and no longer accepts new customers. If
+    #   your account is not an existing A2I customer, requests fail with an
+    #   `InvalidParameterException`. For more information, see [AWS service
+    #   availability][1]. If you're an existing A2I customer but receive this
+    #   error, contact AWS Support and request assistance from the A2I team.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://aws.amazon.com/about-aws/whats-new/2026/06/aws-service-availability/
+    #
     # @option params [Types::QueriesConfig] :queries_config
     #   Contains Queries and the alias for those Queries, as determined by the
     #   input.
@@ -622,6 +640,7 @@ module Aws::Textract
     #   resp.blocks[0].geometry.polygon #=> Array
     #   resp.blocks[0].geometry.polygon[0].x #=> Float
     #   resp.blocks[0].geometry.polygon[0].y #=> Float
+    #   resp.blocks[0].geometry.rotation_angle #=> Float
     #   resp.blocks[0].id #=> String
     #   resp.blocks[0].relationships #=> Array
     #   resp.blocks[0].relationships[0].type #=> String, one of "VALUE", "CHILD", "COMPLEX_FEATURES", "MERGED_CELL", "TITLE", "ANSWER", "TABLE", "TABLE_TITLE", "TABLE_FOOTER"
@@ -722,6 +741,7 @@ module Aws::Textract
     #   resp.expense_documents[0].summary_fields[0].label_detection.geometry.polygon #=> Array
     #   resp.expense_documents[0].summary_fields[0].label_detection.geometry.polygon[0].x #=> Float
     #   resp.expense_documents[0].summary_fields[0].label_detection.geometry.polygon[0].y #=> Float
+    #   resp.expense_documents[0].summary_fields[0].label_detection.geometry.rotation_angle #=> Float
     #   resp.expense_documents[0].summary_fields[0].label_detection.confidence #=> Float
     #   resp.expense_documents[0].summary_fields[0].value_detection.text #=> String
     #   resp.expense_documents[0].summary_fields[0].value_detection.geometry.bounding_box.width #=> Float
@@ -731,6 +751,7 @@ module Aws::Textract
     #   resp.expense_documents[0].summary_fields[0].value_detection.geometry.polygon #=> Array
     #   resp.expense_documents[0].summary_fields[0].value_detection.geometry.polygon[0].x #=> Float
     #   resp.expense_documents[0].summary_fields[0].value_detection.geometry.polygon[0].y #=> Float
+    #   resp.expense_documents[0].summary_fields[0].value_detection.geometry.rotation_angle #=> Float
     #   resp.expense_documents[0].summary_fields[0].value_detection.confidence #=> Float
     #   resp.expense_documents[0].summary_fields[0].page_number #=> Integer
     #   resp.expense_documents[0].summary_fields[0].currency.code #=> String
@@ -753,6 +774,7 @@ module Aws::Textract
     #   resp.expense_documents[0].line_item_groups[0].line_items[0].line_item_expense_fields[0].label_detection.geometry.polygon #=> Array
     #   resp.expense_documents[0].line_item_groups[0].line_items[0].line_item_expense_fields[0].label_detection.geometry.polygon[0].x #=> Float
     #   resp.expense_documents[0].line_item_groups[0].line_items[0].line_item_expense_fields[0].label_detection.geometry.polygon[0].y #=> Float
+    #   resp.expense_documents[0].line_item_groups[0].line_items[0].line_item_expense_fields[0].label_detection.geometry.rotation_angle #=> Float
     #   resp.expense_documents[0].line_item_groups[0].line_items[0].line_item_expense_fields[0].label_detection.confidence #=> Float
     #   resp.expense_documents[0].line_item_groups[0].line_items[0].line_item_expense_fields[0].value_detection.text #=> String
     #   resp.expense_documents[0].line_item_groups[0].line_items[0].line_item_expense_fields[0].value_detection.geometry.bounding_box.width #=> Float
@@ -762,6 +784,7 @@ module Aws::Textract
     #   resp.expense_documents[0].line_item_groups[0].line_items[0].line_item_expense_fields[0].value_detection.geometry.polygon #=> Array
     #   resp.expense_documents[0].line_item_groups[0].line_items[0].line_item_expense_fields[0].value_detection.geometry.polygon[0].x #=> Float
     #   resp.expense_documents[0].line_item_groups[0].line_items[0].line_item_expense_fields[0].value_detection.geometry.polygon[0].y #=> Float
+    #   resp.expense_documents[0].line_item_groups[0].line_items[0].line_item_expense_fields[0].value_detection.geometry.rotation_angle #=> Float
     #   resp.expense_documents[0].line_item_groups[0].line_items[0].line_item_expense_fields[0].value_detection.confidence #=> Float
     #   resp.expense_documents[0].line_item_groups[0].line_items[0].line_item_expense_fields[0].page_number #=> Integer
     #   resp.expense_documents[0].line_item_groups[0].line_items[0].line_item_expense_fields[0].currency.code #=> String
@@ -786,6 +809,7 @@ module Aws::Textract
     #   resp.expense_documents[0].blocks[0].geometry.polygon #=> Array
     #   resp.expense_documents[0].blocks[0].geometry.polygon[0].x #=> Float
     #   resp.expense_documents[0].blocks[0].geometry.polygon[0].y #=> Float
+    #   resp.expense_documents[0].blocks[0].geometry.rotation_angle #=> Float
     #   resp.expense_documents[0].blocks[0].id #=> String
     #   resp.expense_documents[0].blocks[0].relationships #=> Array
     #   resp.expense_documents[0].blocks[0].relationships[0].type #=> String, one of "VALUE", "CHILD", "COMPLEX_FEATURES", "MERGED_CELL", "TITLE", "ANSWER", "TABLE", "TABLE_TITLE", "TABLE_FOOTER"
@@ -868,6 +892,7 @@ module Aws::Textract
     #   resp.identity_documents[0].blocks[0].geometry.polygon #=> Array
     #   resp.identity_documents[0].blocks[0].geometry.polygon[0].x #=> Float
     #   resp.identity_documents[0].blocks[0].geometry.polygon[0].y #=> Float
+    #   resp.identity_documents[0].blocks[0].geometry.rotation_angle #=> Float
     #   resp.identity_documents[0].blocks[0].id #=> String
     #   resp.identity_documents[0].blocks[0].relationships #=> Array
     #   resp.identity_documents[0].blocks[0].relationships[0].type #=> String, one of "VALUE", "CHILD", "COMPLEX_FEATURES", "MERGED_CELL", "TITLE", "ANSWER", "TABLE", "TABLE_TITLE", "TABLE_FOOTER"
@@ -1176,6 +1201,7 @@ module Aws::Textract
     #   resp.blocks[0].geometry.polygon #=> Array
     #   resp.blocks[0].geometry.polygon[0].x #=> Float
     #   resp.blocks[0].geometry.polygon[0].y #=> Float
+    #   resp.blocks[0].geometry.rotation_angle #=> Float
     #   resp.blocks[0].id #=> String
     #   resp.blocks[0].relationships #=> Array
     #   resp.blocks[0].relationships[0].type #=> String, one of "VALUE", "CHILD", "COMPLEX_FEATURES", "MERGED_CELL", "TITLE", "ANSWER", "TABLE", "TABLE_TITLE", "TABLE_FOOTER"
@@ -1434,6 +1460,7 @@ module Aws::Textract
     #   resp.blocks[0].geometry.polygon #=> Array
     #   resp.blocks[0].geometry.polygon[0].x #=> Float
     #   resp.blocks[0].geometry.polygon[0].y #=> Float
+    #   resp.blocks[0].geometry.rotation_angle #=> Float
     #   resp.blocks[0].id #=> String
     #   resp.blocks[0].relationships #=> Array
     #   resp.blocks[0].relationships[0].type #=> String, one of "VALUE", "CHILD", "COMPLEX_FEATURES", "MERGED_CELL", "TITLE", "ANSWER", "TABLE", "TABLE_TITLE", "TABLE_FOOTER"
@@ -1556,6 +1583,7 @@ module Aws::Textract
     #   resp.blocks[0].geometry.polygon #=> Array
     #   resp.blocks[0].geometry.polygon[0].x #=> Float
     #   resp.blocks[0].geometry.polygon[0].y #=> Float
+    #   resp.blocks[0].geometry.rotation_angle #=> Float
     #   resp.blocks[0].id #=> String
     #   resp.blocks[0].relationships #=> Array
     #   resp.blocks[0].relationships[0].type #=> String, one of "VALUE", "CHILD", "COMPLEX_FEATURES", "MERGED_CELL", "TITLE", "ANSWER", "TABLE", "TABLE_TITLE", "TABLE_FOOTER"
@@ -1667,6 +1695,7 @@ module Aws::Textract
     #   resp.expense_documents[0].summary_fields[0].label_detection.geometry.polygon #=> Array
     #   resp.expense_documents[0].summary_fields[0].label_detection.geometry.polygon[0].x #=> Float
     #   resp.expense_documents[0].summary_fields[0].label_detection.geometry.polygon[0].y #=> Float
+    #   resp.expense_documents[0].summary_fields[0].label_detection.geometry.rotation_angle #=> Float
     #   resp.expense_documents[0].summary_fields[0].label_detection.confidence #=> Float
     #   resp.expense_documents[0].summary_fields[0].value_detection.text #=> String
     #   resp.expense_documents[0].summary_fields[0].value_detection.geometry.bounding_box.width #=> Float
@@ -1676,6 +1705,7 @@ module Aws::Textract
     #   resp.expense_documents[0].summary_fields[0].value_detection.geometry.polygon #=> Array
     #   resp.expense_documents[0].summary_fields[0].value_detection.geometry.polygon[0].x #=> Float
     #   resp.expense_documents[0].summary_fields[0].value_detection.geometry.polygon[0].y #=> Float
+    #   resp.expense_documents[0].summary_fields[0].value_detection.geometry.rotation_angle #=> Float
     #   resp.expense_documents[0].summary_fields[0].value_detection.confidence #=> Float
     #   resp.expense_documents[0].summary_fields[0].page_number #=> Integer
     #   resp.expense_documents[0].summary_fields[0].currency.code #=> String
@@ -1698,6 +1728,7 @@ module Aws::Textract
     #   resp.expense_documents[0].line_item_groups[0].line_items[0].line_item_expense_fields[0].label_detection.geometry.polygon #=> Array
     #   resp.expense_documents[0].line_item_groups[0].line_items[0].line_item_expense_fields[0].label_detection.geometry.polygon[0].x #=> Float
     #   resp.expense_documents[0].line_item_groups[0].line_items[0].line_item_expense_fields[0].label_detection.geometry.polygon[0].y #=> Float
+    #   resp.expense_documents[0].line_item_groups[0].line_items[0].line_item_expense_fields[0].label_detection.geometry.rotation_angle #=> Float
     #   resp.expense_documents[0].line_item_groups[0].line_items[0].line_item_expense_fields[0].label_detection.confidence #=> Float
     #   resp.expense_documents[0].line_item_groups[0].line_items[0].line_item_expense_fields[0].value_detection.text #=> String
     #   resp.expense_documents[0].line_item_groups[0].line_items[0].line_item_expense_fields[0].value_detection.geometry.bounding_box.width #=> Float
@@ -1707,6 +1738,7 @@ module Aws::Textract
     #   resp.expense_documents[0].line_item_groups[0].line_items[0].line_item_expense_fields[0].value_detection.geometry.polygon #=> Array
     #   resp.expense_documents[0].line_item_groups[0].line_items[0].line_item_expense_fields[0].value_detection.geometry.polygon[0].x #=> Float
     #   resp.expense_documents[0].line_item_groups[0].line_items[0].line_item_expense_fields[0].value_detection.geometry.polygon[0].y #=> Float
+    #   resp.expense_documents[0].line_item_groups[0].line_items[0].line_item_expense_fields[0].value_detection.geometry.rotation_angle #=> Float
     #   resp.expense_documents[0].line_item_groups[0].line_items[0].line_item_expense_fields[0].value_detection.confidence #=> Float
     #   resp.expense_documents[0].line_item_groups[0].line_items[0].line_item_expense_fields[0].page_number #=> Integer
     #   resp.expense_documents[0].line_item_groups[0].line_items[0].line_item_expense_fields[0].currency.code #=> String
@@ -1731,6 +1763,7 @@ module Aws::Textract
     #   resp.expense_documents[0].blocks[0].geometry.polygon #=> Array
     #   resp.expense_documents[0].blocks[0].geometry.polygon[0].x #=> Float
     #   resp.expense_documents[0].blocks[0].geometry.polygon[0].y #=> Float
+    #   resp.expense_documents[0].blocks[0].geometry.rotation_angle #=> Float
     #   resp.expense_documents[0].blocks[0].id #=> String
     #   resp.expense_documents[0].blocks[0].relationships #=> Array
     #   resp.expense_documents[0].blocks[0].relationships[0].type #=> String, one of "VALUE", "CHILD", "COMPLEX_FEATURES", "MERGED_CELL", "TITLE", "ANSWER", "TABLE", "TABLE_TITLE", "TABLE_FOOTER"
@@ -1834,6 +1867,7 @@ module Aws::Textract
     #   resp.results[0].extractions[0].lending_document.lending_fields[0].key_detection.geometry.polygon #=> Array
     #   resp.results[0].extractions[0].lending_document.lending_fields[0].key_detection.geometry.polygon[0].x #=> Float
     #   resp.results[0].extractions[0].lending_document.lending_fields[0].key_detection.geometry.polygon[0].y #=> Float
+    #   resp.results[0].extractions[0].lending_document.lending_fields[0].key_detection.geometry.rotation_angle #=> Float
     #   resp.results[0].extractions[0].lending_document.lending_fields[0].key_detection.confidence #=> Float
     #   resp.results[0].extractions[0].lending_document.lending_fields[0].value_detections #=> Array
     #   resp.results[0].extractions[0].lending_document.lending_fields[0].value_detections[0].text #=> String
@@ -1845,6 +1879,7 @@ module Aws::Textract
     #   resp.results[0].extractions[0].lending_document.lending_fields[0].value_detections[0].geometry.polygon #=> Array
     #   resp.results[0].extractions[0].lending_document.lending_fields[0].value_detections[0].geometry.polygon[0].x #=> Float
     #   resp.results[0].extractions[0].lending_document.lending_fields[0].value_detections[0].geometry.polygon[0].y #=> Float
+    #   resp.results[0].extractions[0].lending_document.lending_fields[0].value_detections[0].geometry.rotation_angle #=> Float
     #   resp.results[0].extractions[0].lending_document.lending_fields[0].value_detections[0].confidence #=> Float
     #   resp.results[0].extractions[0].lending_document.signature_detections #=> Array
     #   resp.results[0].extractions[0].lending_document.signature_detections[0].confidence #=> Float
@@ -1855,6 +1890,7 @@ module Aws::Textract
     #   resp.results[0].extractions[0].lending_document.signature_detections[0].geometry.polygon #=> Array
     #   resp.results[0].extractions[0].lending_document.signature_detections[0].geometry.polygon[0].x #=> Float
     #   resp.results[0].extractions[0].lending_document.signature_detections[0].geometry.polygon[0].y #=> Float
+    #   resp.results[0].extractions[0].lending_document.signature_detections[0].geometry.rotation_angle #=> Float
     #   resp.results[0].extractions[0].expense_document.expense_index #=> Integer
     #   resp.results[0].extractions[0].expense_document.summary_fields #=> Array
     #   resp.results[0].extractions[0].expense_document.summary_fields[0].type.text #=> String
@@ -1867,6 +1903,7 @@ module Aws::Textract
     #   resp.results[0].extractions[0].expense_document.summary_fields[0].label_detection.geometry.polygon #=> Array
     #   resp.results[0].extractions[0].expense_document.summary_fields[0].label_detection.geometry.polygon[0].x #=> Float
     #   resp.results[0].extractions[0].expense_document.summary_fields[0].label_detection.geometry.polygon[0].y #=> Float
+    #   resp.results[0].extractions[0].expense_document.summary_fields[0].label_detection.geometry.rotation_angle #=> Float
     #   resp.results[0].extractions[0].expense_document.summary_fields[0].label_detection.confidence #=> Float
     #   resp.results[0].extractions[0].expense_document.summary_fields[0].value_detection.text #=> String
     #   resp.results[0].extractions[0].expense_document.summary_fields[0].value_detection.geometry.bounding_box.width #=> Float
@@ -1876,6 +1913,7 @@ module Aws::Textract
     #   resp.results[0].extractions[0].expense_document.summary_fields[0].value_detection.geometry.polygon #=> Array
     #   resp.results[0].extractions[0].expense_document.summary_fields[0].value_detection.geometry.polygon[0].x #=> Float
     #   resp.results[0].extractions[0].expense_document.summary_fields[0].value_detection.geometry.polygon[0].y #=> Float
+    #   resp.results[0].extractions[0].expense_document.summary_fields[0].value_detection.geometry.rotation_angle #=> Float
     #   resp.results[0].extractions[0].expense_document.summary_fields[0].value_detection.confidence #=> Float
     #   resp.results[0].extractions[0].expense_document.summary_fields[0].page_number #=> Integer
     #   resp.results[0].extractions[0].expense_document.summary_fields[0].currency.code #=> String
@@ -1898,6 +1936,7 @@ module Aws::Textract
     #   resp.results[0].extractions[0].expense_document.line_item_groups[0].line_items[0].line_item_expense_fields[0].label_detection.geometry.polygon #=> Array
     #   resp.results[0].extractions[0].expense_document.line_item_groups[0].line_items[0].line_item_expense_fields[0].label_detection.geometry.polygon[0].x #=> Float
     #   resp.results[0].extractions[0].expense_document.line_item_groups[0].line_items[0].line_item_expense_fields[0].label_detection.geometry.polygon[0].y #=> Float
+    #   resp.results[0].extractions[0].expense_document.line_item_groups[0].line_items[0].line_item_expense_fields[0].label_detection.geometry.rotation_angle #=> Float
     #   resp.results[0].extractions[0].expense_document.line_item_groups[0].line_items[0].line_item_expense_fields[0].label_detection.confidence #=> Float
     #   resp.results[0].extractions[0].expense_document.line_item_groups[0].line_items[0].line_item_expense_fields[0].value_detection.text #=> String
     #   resp.results[0].extractions[0].expense_document.line_item_groups[0].line_items[0].line_item_expense_fields[0].value_detection.geometry.bounding_box.width #=> Float
@@ -1907,6 +1946,7 @@ module Aws::Textract
     #   resp.results[0].extractions[0].expense_document.line_item_groups[0].line_items[0].line_item_expense_fields[0].value_detection.geometry.polygon #=> Array
     #   resp.results[0].extractions[0].expense_document.line_item_groups[0].line_items[0].line_item_expense_fields[0].value_detection.geometry.polygon[0].x #=> Float
     #   resp.results[0].extractions[0].expense_document.line_item_groups[0].line_items[0].line_item_expense_fields[0].value_detection.geometry.polygon[0].y #=> Float
+    #   resp.results[0].extractions[0].expense_document.line_item_groups[0].line_items[0].line_item_expense_fields[0].value_detection.geometry.rotation_angle #=> Float
     #   resp.results[0].extractions[0].expense_document.line_item_groups[0].line_items[0].line_item_expense_fields[0].value_detection.confidence #=> Float
     #   resp.results[0].extractions[0].expense_document.line_item_groups[0].line_items[0].line_item_expense_fields[0].page_number #=> Integer
     #   resp.results[0].extractions[0].expense_document.line_item_groups[0].line_items[0].line_item_expense_fields[0].currency.code #=> String
@@ -1931,6 +1971,7 @@ module Aws::Textract
     #   resp.results[0].extractions[0].expense_document.blocks[0].geometry.polygon #=> Array
     #   resp.results[0].extractions[0].expense_document.blocks[0].geometry.polygon[0].x #=> Float
     #   resp.results[0].extractions[0].expense_document.blocks[0].geometry.polygon[0].y #=> Float
+    #   resp.results[0].extractions[0].expense_document.blocks[0].geometry.rotation_angle #=> Float
     #   resp.results[0].extractions[0].expense_document.blocks[0].id #=> String
     #   resp.results[0].extractions[0].expense_document.blocks[0].relationships #=> Array
     #   resp.results[0].extractions[0].expense_document.blocks[0].relationships[0].type #=> String, one of "VALUE", "CHILD", "COMPLEX_FEATURES", "MERGED_CELL", "TITLE", "ANSWER", "TABLE", "TABLE_TITLE", "TABLE_FOOTER"
@@ -1970,6 +2011,7 @@ module Aws::Textract
     #   resp.results[0].extractions[0].identity_document.blocks[0].geometry.polygon #=> Array
     #   resp.results[0].extractions[0].identity_document.blocks[0].geometry.polygon[0].x #=> Float
     #   resp.results[0].extractions[0].identity_document.blocks[0].geometry.polygon[0].y #=> Float
+    #   resp.results[0].extractions[0].identity_document.blocks[0].geometry.rotation_angle #=> Float
     #   resp.results[0].extractions[0].identity_document.blocks[0].id #=> String
     #   resp.results[0].extractions[0].identity_document.blocks[0].relationships #=> Array
     #   resp.results[0].extractions[0].identity_document.blocks[0].relationships[0].type #=> String, one of "VALUE", "CHILD", "COMPLEX_FEATURES", "MERGED_CELL", "TITLE", "ANSWER", "TABLE", "TABLE_TITLE", "TABLE_FOOTER"
@@ -2357,10 +2399,10 @@ module Aws::Textract
     # S3 bucket. Use DocumentLocation to specify the bucket name and file
     # name of the document.
     #
-    # `StartTextDetection` returns a job identifier (`JobId`) that you use
-    # to get the results of the operation. When text detection is finished,
-    # Amazon Textract publishes a completion status to the Amazon Simple
-    # Notification Service (Amazon SNS) topic that you specify in
+    # `StartDocumentTextDetection` returns a job identifier (`JobId`) that
+    # you use to get the results of the operation. When text detection is
+    # finished, Amazon Textract publishes a completion status to the Amazon
+    # Simple Notification Service (Amazon SNS) topic that you specify in
     # `NotificationChannel`. To get the results of the text detection
     # operation, first check that the status value published to the Amazon
     # SNS topic is `SUCCEEDED`. If so, call GetDocumentTextDetection, and
@@ -2815,7 +2857,7 @@ module Aws::Textract
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-textract'
-      context[:gem_version] = '1.74.0'
+      context[:gem_version] = '1.95.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

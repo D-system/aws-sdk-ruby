@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -104,6 +105,7 @@ module Aws
         def tags: () -> ::Hash[::String, ::String]
         def input_switch_configuration: () -> Types::InputSwitchConfiguration
         def output_header_configuration: () -> Types::OutputHeaderConfiguration
+        def output_locking_mode: () -> ("EPOCH_LOCKED" | "NON_EPOCH_LOCKED")
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/MediaPackageV2/Client.html#create_channel-instance_method
       def create_channel: (
@@ -113,11 +115,13 @@ module Aws
                             ?input_type: ("HLS" | "CMAF"),
                             ?description: ::String,
                             ?input_switch_configuration: {
-                              mqcs_input_switching: bool?
+                              mqcs_input_switching: bool?,
+                              preferred_input: ::Integer?
                             },
                             ?output_header_configuration: {
                               publish_mqcs: bool?
                             },
+                            ?output_locking_mode: ("EPOCH_LOCKED" | "NON_EPOCH_LOCKED"),
                             ?tags: Hash[::String, ::String]
                           ) -> _CreateChannelResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateChannelResponseSuccess
@@ -170,17 +174,17 @@ module Aws
                                   hls_manifests: Array[
                                     {
                                       manifest_name: ::String
-                                    },
+                                    }
                                   ]?,
                                   dash_manifests: Array[
                                     {
                                       manifest_name: ::String
-                                    },
+                                    }
                                   ]?,
                                   low_latency_hls_manifests: Array[
                                     {
                                       manifest_name: ::String
-                                    },
+                                    }
                                   ]?
                                 },
                                 schedule_configuration: {
@@ -205,7 +209,7 @@ module Aws
         def channel_group_name: () -> ::String
         def channel_name: () -> ::String
         def origin_endpoint_name: () -> ::String
-        def container_type: () -> ("TS" | "CMAF")
+        def container_type: () -> ("TS" | "CMAF" | "ISM")
         def segment: () -> Types::Segment
         def created_at: () -> ::Time
         def modified_at: () -> ::Time
@@ -214,7 +218,10 @@ module Aws
         def hls_manifests: () -> ::Array[Types::GetHlsManifestConfiguration]
         def low_latency_hls_manifests: () -> ::Array[Types::GetLowLatencyHlsManifestConfiguration]
         def dash_manifests: () -> ::Array[Types::GetDashManifestConfiguration]
+        def mss_manifests: () -> ::Array[Types::GetMssManifestConfiguration]
         def force_endpoint_error_configuration: () -> Types::ForceEndpointErrorConfiguration
+        def uri_separator: () -> ("UNDERSCORE" | "HYPHEN")
+        def stream_name_output_mode: () -> ("INDEX" | "PASSTHROUGH_NAME")
         def etag: () -> ::String
         def tags: () -> ::Hash[::String, ::String]
       end
@@ -223,113 +230,28 @@ module Aws
                                     channel_group_name: ::String,
                                     channel_name: ::String,
                                     origin_endpoint_name: ::String,
-                                    container_type: ("TS" | "CMAF"),
-                                    ?segment: {
-                                      segment_duration_seconds: ::Integer?,
-                                      segment_name: ::String?,
-                                      ts_use_audio_rendition_group: bool?,
-                                      include_iframe_only_streams: bool?,
-                                      ts_include_dvb_subtitles: bool?,
-                                      scte: {
-                                        scte_filter: Array[("SPLICE_INSERT" | "BREAK" | "PROVIDER_ADVERTISEMENT" | "DISTRIBUTOR_ADVERTISEMENT" | "PROVIDER_PLACEMENT_OPPORTUNITY" | "DISTRIBUTOR_PLACEMENT_OPPORTUNITY" | "PROVIDER_OVERLAY_PLACEMENT_OPPORTUNITY" | "DISTRIBUTOR_OVERLAY_PLACEMENT_OPPORTUNITY" | "PROGRAM")]?
-                                      }?,
-                                      encryption: {
-                                        constant_initialization_vector: ::String?,
-                                        encryption_method: {
-                                          ts_encryption_method: ("AES_128" | "SAMPLE_AES")?,
-                                          cmaf_encryption_method: ("CENC" | "CBCS")?
-                                        },
-                                        key_rotation_interval_seconds: ::Integer?,
-                                        speke_key_provider: {
-                                          encryption_contract_configuration: {
-                                            preset_speke_20_audio: ("PRESET_AUDIO_1" | "PRESET_AUDIO_2" | "PRESET_AUDIO_3" | "SHARED" | "UNENCRYPTED"),
-                                            preset_speke_20_video: ("PRESET_VIDEO_1" | "PRESET_VIDEO_2" | "PRESET_VIDEO_3" | "PRESET_VIDEO_4" | "PRESET_VIDEO_5" | "PRESET_VIDEO_6" | "PRESET_VIDEO_7" | "PRESET_VIDEO_8" | "SHARED" | "UNENCRYPTED")
-                                          },
-                                          resource_id: ::String,
-                                          drm_systems: Array[("CLEAR_KEY_AES_128" | "FAIRPLAY" | "PLAYREADY" | "WIDEVINE" | "IRDETO")],
-                                          role_arn: ::String,
-                                          url: ::String
-                                        }
-                                      }?
-                                    },
+                                    container_type: ("TS" | "CMAF" | "ISM"),
+                                    ?segment: Params::segment,
                                     ?client_token: ::String,
                                     ?description: ::String,
                                     ?startover_window_seconds: ::Integer,
                                     ?hls_manifests: Array[
-                                      {
-                                        manifest_name: ::String,
-                                        child_manifest_name: ::String?,
-                                        scte_hls: {
-                                          ad_marker_hls: ("DATERANGE")?
-                                        }?,
-                                        start_tag: {
-                                          time_offset: ::Float,
-                                          precise: bool?
-                                        }?,
-                                        manifest_window_seconds: ::Integer?,
-                                        program_date_time_interval_seconds: ::Integer?,
-                                        filter_configuration: {
-                                          manifest_filter: ::String?,
-                                          start: ::Time?,
-                                          end: ::Time?,
-                                          time_delay_seconds: ::Integer?,
-                                          clip_start_time: ::Time?
-                                        }?,
-                                        url_encode_child_manifest: bool?
-                                      },
+                                      Params::create_hls_manifest_configuration
                                     ],
                                     ?low_latency_hls_manifests: Array[
-                                      {
-                                        manifest_name: ::String,
-                                        child_manifest_name: ::String?,
-                                        scte_hls: {
-                                          ad_marker_hls: ("DATERANGE")?
-                                        }?,
-                                        start_tag: {
-                                          time_offset: ::Float,
-                                          precise: bool?
-                                        }?,
-                                        manifest_window_seconds: ::Integer?,
-                                        program_date_time_interval_seconds: ::Integer?,
-                                        filter_configuration: {
-                                          manifest_filter: ::String?,
-                                          start: ::Time?,
-                                          end: ::Time?,
-                                          time_delay_seconds: ::Integer?,
-                                          clip_start_time: ::Time?
-                                        }?,
-                                        url_encode_child_manifest: bool?
-                                      },
+                                      Params::create_low_latency_hls_manifest_configuration
                                     ],
                                     ?dash_manifests: Array[
-                                      {
-                                        manifest_name: ::String,
-                                        manifest_window_seconds: ::Integer?,
-                                        filter_configuration: {
-                                          manifest_filter: ::String?,
-                                          start: ::Time?,
-                                          end: ::Time?,
-                                          time_delay_seconds: ::Integer?,
-                                          clip_start_time: ::Time?
-                                        }?,
-                                        min_update_period_seconds: ::Integer?,
-                                        min_buffer_time_seconds: ::Integer?,
-                                        suggested_presentation_delay_seconds: ::Integer?,
-                                        segment_template_format: ("NUMBER_WITH_TIMELINE")?,
-                                        period_triggers: Array[("AVAILS" | "DRM_KEY_ROTATION" | "SOURCE_CHANGES" | "SOURCE_DISRUPTIONS" | "NONE")]?,
-                                        scte_dash: {
-                                          ad_marker_dash: ("BINARY" | "XML")?
-                                        }?,
-                                        drm_signaling: ("INDIVIDUAL" | "REFERENCED")?,
-                                        utc_timing: {
-                                          timing_mode: ("HTTP_HEAD" | "HTTP_ISO" | "HTTP_XSDATE" | "UTC_DIRECT")?,
-                                          timing_source: ::String?
-                                        }?
-                                      },
+                                      Params::create_dash_manifest_configuration
+                                    ],
+                                    ?mss_manifests: Array[
+                                      Params::create_mss_manifest_configuration
                                     ],
                                     ?force_endpoint_error_configuration: {
                                       endpoint_error_conditions: Array[("STALE_MANIFEST" | "INCOMPLETE_MANIFEST" | "MISSING_DRM_KEY" | "SLATE_INPUT")]?
                                     },
+                                    ?uri_separator: ("UNDERSCORE" | "HYPHEN"),
+                                    ?stream_name_output_mode: ("INDEX" | "PASSTHROUGH_NAME"),
                                     ?tags: Hash[::String, ::String]
                                   ) -> _CreateOriginEndpointResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateOriginEndpointResponseSuccess
@@ -400,6 +322,7 @@ module Aws
         def tags: () -> ::Hash[::String, ::String]
         def input_switch_configuration: () -> Types::InputSwitchConfiguration
         def output_header_configuration: () -> Types::OutputHeaderConfiguration
+        def output_locking_mode: () -> ("EPOCH_LOCKED" | "NON_EPOCH_LOCKED")
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/MediaPackageV2/Client.html#get_channel-instance_method
       def get_channel: (
@@ -471,7 +394,7 @@ module Aws
         def channel_group_name: () -> ::String
         def channel_name: () -> ::String
         def origin_endpoint_name: () -> ::String
-        def container_type: () -> ("TS" | "CMAF")
+        def container_type: () -> ("TS" | "CMAF" | "ISM")
         def segment: () -> Types::Segment
         def created_at: () -> ::Time
         def modified_at: () -> ::Time
@@ -481,7 +404,10 @@ module Aws
         def hls_manifests: () -> ::Array[Types::GetHlsManifestConfiguration]
         def low_latency_hls_manifests: () -> ::Array[Types::GetLowLatencyHlsManifestConfiguration]
         def dash_manifests: () -> ::Array[Types::GetDashManifestConfiguration]
+        def mss_manifests: () -> ::Array[Types::GetMssManifestConfiguration]
         def force_endpoint_error_configuration: () -> Types::ForceEndpointErrorConfiguration
+        def uri_separator: () -> ("UNDERSCORE" | "HYPHEN")
+        def stream_name_output_mode: () -> ("INDEX" | "PASSTHROUGH_NAME")
         def etag: () -> ::String
         def tags: () -> ::Hash[::String, ::String]
       end
@@ -499,6 +425,7 @@ module Aws
         def channel_name: () -> ::String
         def origin_endpoint_name: () -> ::String
         def policy: () -> ::String
+        def cdn_auth_configuration: () -> Types::CdnAuthConfiguration
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/MediaPackageV2/Client.html#get_origin_endpoint_policy-instance_method
       def get_origin_endpoint_policy: (
@@ -592,7 +519,11 @@ module Aws
                                         channel_group_name: ::String,
                                         channel_name: ::String,
                                         origin_endpoint_name: ::String,
-                                        policy: ::String
+                                        policy: ::String,
+                                        ?cdn_auth_configuration: {
+                                          cdn_identifier_secret_arns: Array[::String],
+                                          secrets_role_arn: ::String
+                                        }
                                       ) -> _PutOriginEndpointPolicyResponseSuccess
                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutOriginEndpointPolicyResponseSuccess
 
@@ -654,6 +585,7 @@ module Aws
         def tags: () -> ::Hash[::String, ::String]
         def input_switch_configuration: () -> Types::InputSwitchConfiguration
         def output_header_configuration: () -> Types::OutputHeaderConfiguration
+        def output_locking_mode: () -> ("EPOCH_LOCKED" | "NON_EPOCH_LOCKED")
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/MediaPackageV2/Client.html#update_channel-instance_method
       def update_channel: (
@@ -662,7 +594,8 @@ module Aws
                             ?etag: ::String,
                             ?description: ::String,
                             ?input_switch_configuration: {
-                              mqcs_input_switching: bool?
+                              mqcs_input_switching: bool?,
+                              preferred_input: ::Integer?
                             },
                             ?output_header_configuration: {
                               publish_mqcs: bool?
@@ -695,7 +628,7 @@ module Aws
         def channel_group_name: () -> ::String
         def channel_name: () -> ::String
         def origin_endpoint_name: () -> ::String
-        def container_type: () -> ("TS" | "CMAF")
+        def container_type: () -> ("TS" | "CMAF" | "ISM")
         def segment: () -> Types::Segment
         def created_at: () -> ::Time
         def modified_at: () -> ::Time
@@ -703,7 +636,10 @@ module Aws
         def startover_window_seconds: () -> ::Integer
         def hls_manifests: () -> ::Array[Types::GetHlsManifestConfiguration]
         def low_latency_hls_manifests: () -> ::Array[Types::GetLowLatencyHlsManifestConfiguration]
+        def mss_manifests: () -> ::Array[Types::GetMssManifestConfiguration]
         def force_endpoint_error_configuration: () -> Types::ForceEndpointErrorConfiguration
+        def uri_separator: () -> ("UNDERSCORE" | "HYPHEN")
+        def stream_name_output_mode: () -> ("INDEX" | "PASSTHROUGH_NAME")
         def etag: () -> ::String
         def tags: () -> ::Hash[::String, ::String]
         def dash_manifests: () -> ::Array[Types::GetDashManifestConfiguration]
@@ -713,112 +649,27 @@ module Aws
                                     channel_group_name: ::String,
                                     channel_name: ::String,
                                     origin_endpoint_name: ::String,
-                                    container_type: ("TS" | "CMAF"),
-                                    ?segment: {
-                                      segment_duration_seconds: ::Integer?,
-                                      segment_name: ::String?,
-                                      ts_use_audio_rendition_group: bool?,
-                                      include_iframe_only_streams: bool?,
-                                      ts_include_dvb_subtitles: bool?,
-                                      scte: {
-                                        scte_filter: Array[("SPLICE_INSERT" | "BREAK" | "PROVIDER_ADVERTISEMENT" | "DISTRIBUTOR_ADVERTISEMENT" | "PROVIDER_PLACEMENT_OPPORTUNITY" | "DISTRIBUTOR_PLACEMENT_OPPORTUNITY" | "PROVIDER_OVERLAY_PLACEMENT_OPPORTUNITY" | "DISTRIBUTOR_OVERLAY_PLACEMENT_OPPORTUNITY" | "PROGRAM")]?
-                                      }?,
-                                      encryption: {
-                                        constant_initialization_vector: ::String?,
-                                        encryption_method: {
-                                          ts_encryption_method: ("AES_128" | "SAMPLE_AES")?,
-                                          cmaf_encryption_method: ("CENC" | "CBCS")?
-                                        },
-                                        key_rotation_interval_seconds: ::Integer?,
-                                        speke_key_provider: {
-                                          encryption_contract_configuration: {
-                                            preset_speke_20_audio: ("PRESET_AUDIO_1" | "PRESET_AUDIO_2" | "PRESET_AUDIO_3" | "SHARED" | "UNENCRYPTED"),
-                                            preset_speke_20_video: ("PRESET_VIDEO_1" | "PRESET_VIDEO_2" | "PRESET_VIDEO_3" | "PRESET_VIDEO_4" | "PRESET_VIDEO_5" | "PRESET_VIDEO_6" | "PRESET_VIDEO_7" | "PRESET_VIDEO_8" | "SHARED" | "UNENCRYPTED")
-                                          },
-                                          resource_id: ::String,
-                                          drm_systems: Array[("CLEAR_KEY_AES_128" | "FAIRPLAY" | "PLAYREADY" | "WIDEVINE" | "IRDETO")],
-                                          role_arn: ::String,
-                                          url: ::String
-                                        }
-                                      }?
-                                    },
+                                    container_type: ("TS" | "CMAF" | "ISM"),
+                                    ?segment: Params::segment,
                                     ?description: ::String,
                                     ?startover_window_seconds: ::Integer,
                                     ?hls_manifests: Array[
-                                      {
-                                        manifest_name: ::String,
-                                        child_manifest_name: ::String?,
-                                        scte_hls: {
-                                          ad_marker_hls: ("DATERANGE")?
-                                        }?,
-                                        start_tag: {
-                                          time_offset: ::Float,
-                                          precise: bool?
-                                        }?,
-                                        manifest_window_seconds: ::Integer?,
-                                        program_date_time_interval_seconds: ::Integer?,
-                                        filter_configuration: {
-                                          manifest_filter: ::String?,
-                                          start: ::Time?,
-                                          end: ::Time?,
-                                          time_delay_seconds: ::Integer?,
-                                          clip_start_time: ::Time?
-                                        }?,
-                                        url_encode_child_manifest: bool?
-                                      },
+                                      Params::create_hls_manifest_configuration
                                     ],
                                     ?low_latency_hls_manifests: Array[
-                                      {
-                                        manifest_name: ::String,
-                                        child_manifest_name: ::String?,
-                                        scte_hls: {
-                                          ad_marker_hls: ("DATERANGE")?
-                                        }?,
-                                        start_tag: {
-                                          time_offset: ::Float,
-                                          precise: bool?
-                                        }?,
-                                        manifest_window_seconds: ::Integer?,
-                                        program_date_time_interval_seconds: ::Integer?,
-                                        filter_configuration: {
-                                          manifest_filter: ::String?,
-                                          start: ::Time?,
-                                          end: ::Time?,
-                                          time_delay_seconds: ::Integer?,
-                                          clip_start_time: ::Time?
-                                        }?,
-                                        url_encode_child_manifest: bool?
-                                      },
+                                      Params::create_low_latency_hls_manifest_configuration
                                     ],
                                     ?dash_manifests: Array[
-                                      {
-                                        manifest_name: ::String,
-                                        manifest_window_seconds: ::Integer?,
-                                        filter_configuration: {
-                                          manifest_filter: ::String?,
-                                          start: ::Time?,
-                                          end: ::Time?,
-                                          time_delay_seconds: ::Integer?,
-                                          clip_start_time: ::Time?
-                                        }?,
-                                        min_update_period_seconds: ::Integer?,
-                                        min_buffer_time_seconds: ::Integer?,
-                                        suggested_presentation_delay_seconds: ::Integer?,
-                                        segment_template_format: ("NUMBER_WITH_TIMELINE")?,
-                                        period_triggers: Array[("AVAILS" | "DRM_KEY_ROTATION" | "SOURCE_CHANGES" | "SOURCE_DISRUPTIONS" | "NONE")]?,
-                                        scte_dash: {
-                                          ad_marker_dash: ("BINARY" | "XML")?
-                                        }?,
-                                        drm_signaling: ("INDIVIDUAL" | "REFERENCED")?,
-                                        utc_timing: {
-                                          timing_mode: ("HTTP_HEAD" | "HTTP_ISO" | "HTTP_XSDATE" | "UTC_DIRECT")?,
-                                          timing_source: ::String?
-                                        }?
-                                      },
+                                      Params::create_dash_manifest_configuration
+                                    ],
+                                    ?mss_manifests: Array[
+                                      Params::create_mss_manifest_configuration
                                     ],
                                     ?force_endpoint_error_configuration: {
                                       endpoint_error_conditions: Array[("STALE_MANIFEST" | "INCOMPLETE_MANIFEST" | "MISSING_DRM_KEY" | "SLATE_INPUT")]?
                                     },
+                                    ?uri_separator: ("UNDERSCORE" | "HYPHEN"),
+                                    ?stream_name_output_mode: ("INDEX" | "PASSTHROUGH_NAME"),
                                     ?etag: ::String
                                   ) -> _UpdateOriginEndpointResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateOriginEndpointResponseSuccess

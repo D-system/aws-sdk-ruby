@@ -445,6 +445,20 @@ module Aws::LakeFormation
       include Aws::Structure
     end
 
+    # Multiple resources exist with the same Amazon S3 location
+    #
+    # @!attribute [rw] message
+    #   A message describing the problem.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/lakeformation-2017-03-31/ConflictException AWS API Documentation
+    #
+    class ConflictException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] table_data
     #   A `DataCellsFilter` structure containing information about the data
     #   cells filter.
@@ -558,13 +572,19 @@ module Aws::LakeFormation
     #   resource share is created.
     #   @return [Array<Types::DataLakePrincipal>]
     #
+    # @!attribute [rw] service_integrations
+    #   A list of service integrations for enabling trusted identity
+    #   propagation with external services such as Redshift.
+    #   @return [Array<Types::ServiceIntegrationUnion>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lakeformation-2017-03-31/CreateLakeFormationIdentityCenterConfigurationRequest AWS API Documentation
     #
     class CreateLakeFormationIdentityCenterConfigurationRequest < Struct.new(
       :catalog_id,
       :instance_arn,
       :external_filtering,
-      :share_recipients)
+      :share_recipients,
+      :service_integrations)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -774,9 +794,19 @@ module Aws::LakeFormation
     #
     # @!attribute [rw] parameters
     #   A key-value map that provides an additional configuration on your
-    #   data lake. CROSS\_ACCOUNT\_VERSION is the key you can configure in
-    #   the Parameters field. Accepted values for the CrossAccountVersion
-    #   key are 1, 2, 3, and 4.
+    #   data lake. The following key-value pairs are supported:
+    #
+    #   * `CROSS_ACCOUNT_VERSION` - Accepted values are 1, 2, 3, 4, and 5.
+    #
+    #   * `SET_SOURCE_IDENTITY` - Accepted values are `TRUE` and `FALSE`.
+    #     When set to `TRUE`, Lake Formation includes the IAM role
+    #     identifier that was used to query in the S3 data event CloudTrail
+    #     logs for `s3:GetObject` calls. For more information, see [Tracking
+    #     query engine IAM roles in S3 data events][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/lake-formation/latest/dg/cloudtrail-logging.html#source-identity-cloudtrail
     #   @return [Hash<String,String>]
     #
     # @!attribute [rw] trusted_resource_owners
@@ -1139,6 +1169,11 @@ module Aws::LakeFormation
     #   resource share is created.
     #   @return [Array<Types::DataLakePrincipal>]
     #
+    # @!attribute [rw] service_integrations
+    #   A list of service integrations for enabling trusted identity
+    #   propagation with external services such as Redshift.
+    #   @return [Array<Types::ServiceIntegrationUnion>]
+    #
     # @!attribute [rw] resource_share
     #   The Amazon Resource Name (ARN) of the RAM share.
     #   @return [String]
@@ -1151,6 +1186,7 @@ module Aws::LakeFormation
       :application_arn,
       :external_filtering,
       :share_recipients,
+      :service_integrations,
       :resource_share)
       SENSITIVE = []
       include Aws::Structure
@@ -1787,6 +1823,78 @@ module Aws::LakeFormation
     class GetTableObjectsResponse < Struct.new(
       :objects,
       :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] duration_seconds
+    #   The time period, between 900 and 43,200 seconds, for the timeout of
+    #   the temporary credentials.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] audit_context
+    #   A structure used to include auditing information on the privileged
+    #   API.
+    #   @return [Types::AuditContext]
+    #
+    # @!attribute [rw] data_locations
+    #   The Amazon S3 data location that you want to access.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] credentials_scope
+    #   The credential scope is determined by the caller's Lake Formation
+    #   permission on the associated table. Credential scope can be either:
+    #
+    #   * READ - Provides read-only access to the data location.
+    #
+    #   * READ\_WRITE - Provides both read and write access to the data
+    #     location.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/lakeformation-2017-03-31/GetTemporaryDataLocationCredentialsRequest AWS API Documentation
+    #
+    class GetTemporaryDataLocationCredentialsRequest < Struct.new(
+      :duration_seconds,
+      :audit_context,
+      :data_locations,
+      :credentials_scope)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] credentials
+    #   A temporary set of credentials for an Lake Formation user. These
+    #   credentials are scoped down to only access the raw data sources that
+    #   the user has access to.
+    #
+    #   The temporary security credentials consist of an access key and a
+    #   session token. The access key consists of an access key ID and a
+    #   secret key. When the credentials are created, they are associated
+    #   with an IAM access control policy that limits what the user can do
+    #   when using the credentials.
+    #   @return [Types::TemporaryCredentials]
+    #
+    # @!attribute [rw] accessible_data_locations
+    #   Refers to the Amazon S3 locations that can be accessed through the
+    #   `GetTemporaryCredentialsForLocation` API operation.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] credentials_scope
+    #   The credential scope is determined by the caller's Lake Formation
+    #   permission on the associated table. Credential scope can be either:
+    #
+    #   * READ - Provides read-only access to the data location.
+    #
+    #   * READ\_WRITE - Provides both read and write access to the data
+    #     location.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/lakeformation-2017-03-31/GetTemporaryDataLocationCredentialsResponse AWS API Documentation
+    #
+    class GetTemporaryDataLocationCredentialsResponse < Struct.new(
+      :credentials,
+      :accessible_data_locations,
+      :credentials_scope)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2571,8 +2679,12 @@ module Aws::LakeFormation
     #   @return [Integer]
     #
     # @!attribute [rw] include_related
-    #   Indicates that related permissions should be included in the
-    #   results.
+    #   Indicates that related permissions should be included in the results
+    #   when listing permissions on a table resource.
+    #
+    #   Set the field to `TRUE` to show the cell filters on a table
+    #   resource. Default is `FALSE`. The Principal parameter must not be
+    #   specified when requesting cell filter information.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lakeformation-2017-03-31/ListPermissionsRequest AWS API Documentation
@@ -2995,6 +3107,14 @@ module Aws::LakeFormation
     # authorization identifier and information from the request's
     # authorization context.
     #
+    # For more information about how to utilize QuerySessionContext, see
+    # [Lake Formation workflow for application integration API
+    # operations][1] in the developer guide.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/lake-formation/latest/dg/api-overview.html
+    #
     # @!attribute [rw] query_id
     #   A unique identifier generated by the query engine for the query.
     #   @return [String]
@@ -3026,6 +3146,45 @@ module Aws::LakeFormation
       :additional_context)
       SENSITIVE = []
       include Aws::Structure
+    end
+
+    # Configuration for enabling trusted identity propagation with Redshift
+    # Connect.
+    #
+    # @!attribute [rw] authorization
+    #   The authorization status for Redshift Connect. Valid values are
+    #   ENABLED or DISABLED.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/lakeformation-2017-03-31/RedshiftConnect AWS API Documentation
+    #
+    class RedshiftConnect < Struct.new(
+      :authorization)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A union structure representing different Redshift integration scopes.
+    #
+    # @note RedshiftScopeUnion is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note RedshiftScopeUnion is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of RedshiftScopeUnion corresponding to the set member.
+    #
+    # @!attribute [rw] redshift_connect
+    #   Configuration for Redshift Connect integration.
+    #   @return [Types::RedshiftConnect]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/lakeformation-2017-03-31/RedshiftScopeUnion AWS API Documentation
+    #
+    class RedshiftScopeUnion < Struct.new(
+      :redshift_connect,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class RedshiftConnect < RedshiftScopeUnion; end
+      class Unknown < RedshiftScopeUnion; end
     end
 
     # @!attribute [rw] resource_arn
@@ -3066,6 +3225,11 @@ module Aws::LakeFormation
     #   supported Lake Formation operations on the registered data location.
     #   @return [Boolean]
     #
+    # @!attribute [rw] expected_resource_owner_account
+    #   The Amazon Web Services account that owns the Glue tables associated
+    #   with specific Amazon S3 locations.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lakeformation-2017-03-31/RegisterResourceRequest AWS API Documentation
     #
     class RegisterResourceRequest < Struct.new(
@@ -3074,7 +3238,8 @@ module Aws::LakeFormation
       :role_arn,
       :with_federation,
       :hybrid_access_enabled,
-      :with_privileged_access)
+      :with_privileged_access,
+      :expected_resource_owner_account)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3159,7 +3324,7 @@ module Aws::LakeFormation
     #   @return [Types::DataCellsFilterResource]
     #
     # @!attribute [rw] lf_tag
-    #   The LF-tag key and values attached to a resource.
+    #   The LF-Tag key and values attached to a resource.
     #   @return [Types::LFTagKeyResource]
     #
     # @!attribute [rw] lf_tag_policy
@@ -3217,6 +3382,26 @@ module Aws::LakeFormation
     #   supported Lake Formation operations on the registered data location.
     #   @return [Boolean]
     #
+    # @!attribute [rw] verification_status
+    #   Indicates whether the registered role has sufficient permissions to
+    #   access registered Amazon S3 location. Verification Status can be one
+    #   of the following:
+    #
+    #   * VERIFIED - Registered role has sufficient permissions to access
+    #     registered Amazon S3 location.
+    #
+    #   * NOT\_VERIFIED - Registered role does not have sufficient
+    #     permissions to access registered Amazon S3 location.
+    #
+    #   * VERIFICATION\_FAILED - Unable to verify if the registered role can
+    #     access the registered Amazon S3 location.
+    #   @return [String]
+    #
+    # @!attribute [rw] expected_resource_owner_account
+    #   The Amazon Web Services account that owns the Glue tables associated
+    #   with specific Amazon S3 locations.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lakeformation-2017-03-31/ResourceInfo AWS API Documentation
     #
     class ResourceInfo < Struct.new(
@@ -3225,7 +3410,9 @@ module Aws::LakeFormation
       :last_modified,
       :with_federation,
       :hybrid_access_enabled,
-      :with_privileged_access)
+      :with_privileged_access,
+      :verification_status,
+      :expected_resource_owner_account)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3429,6 +3616,29 @@ module Aws::LakeFormation
       :table_list)
       SENSITIVE = []
       include Aws::Structure
+    end
+
+    # A union structure representing different service integration types.
+    #
+    # @note ServiceIntegrationUnion is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note ServiceIntegrationUnion is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of ServiceIntegrationUnion corresponding to the set member.
+    #
+    # @!attribute [rw] redshift
+    #   Redshift service integration configuration.
+    #   @return [Array<Types::RedshiftScopeUnion>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/lakeformation-2017-03-31/ServiceIntegrationUnion AWS API Documentation
+    #
+    class ServiceIntegrationUnion < Struct.new(
+      :redshift,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Redshift < ServiceIntegrationUnion; end
+      class Unknown < ServiceIntegrationUnion; end
     end
 
     # @!attribute [rw] query_planning_context
@@ -3715,6 +3925,43 @@ module Aws::LakeFormation
       include Aws::Structure
     end
 
+    # A temporary set of credentials for an Lake Formation user. These
+    # credentials are scoped down to only access the raw data sources that
+    # the user has access to.
+    #
+    # The temporary security credentials consist of an access key and a
+    # session token. The access key consists of an access key ID and a
+    # secret key. When the credentials are created, they are associated with
+    # an IAM access control policy that limits what the user can do when
+    # using the credentials.
+    #
+    # @!attribute [rw] access_key_id
+    #   The access key ID for the temporary credentials.
+    #   @return [String]
+    #
+    # @!attribute [rw] secret_access_key
+    #   The secret key for the temporary credentials.
+    #   @return [String]
+    #
+    # @!attribute [rw] session_token
+    #   The session token for the temporary credentials.
+    #   @return [String]
+    #
+    # @!attribute [rw] expiration
+    #   The date and time when the temporary credentials expire.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/lakeformation-2017-03-31/TemporaryCredentials AWS API Documentation
+    #
+    class TemporaryCredentials < Struct.new(
+      :access_key_id,
+      :secret_access_key,
+      :session_token,
+      :expiration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains details about an error where the query request was throttled.
     #
     # @!attribute [rw] message
@@ -3911,6 +4158,11 @@ module Aws::LakeFormation
     #   be deleted.
     #   @return [Array<Types::DataLakePrincipal>]
     #
+    # @!attribute [rw] service_integrations
+    #   A list of service integrations for enabling trusted identity
+    #   propagation with external services such as Redshift.
+    #   @return [Array<Types::ServiceIntegrationUnion>]
+    #
     # @!attribute [rw] application_status
     #   Allows to enable or disable the IAM Identity Center connection.
     #   @return [String]
@@ -3926,6 +4178,7 @@ module Aws::LakeFormation
     class UpdateLakeFormationIdentityCenterConfigurationRequest < Struct.new(
       :catalog_id,
       :share_recipients,
+      :service_integrations,
       :application_status,
       :external_filtering)
       SENSITIVE = []
@@ -3955,13 +4208,19 @@ module Aws::LakeFormation
     #   S3 bucket policies.
     #   @return [Boolean]
     #
+    # @!attribute [rw] expected_resource_owner_account
+    #   The Amazon Web Services account that owns the Glue tables associated
+    #   with specific Amazon S3 locations.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lakeformation-2017-03-31/UpdateResourceRequest AWS API Documentation
     #
     class UpdateResourceRequest < Struct.new(
       :role_arn,
       :resource_arn,
       :with_federation,
-      :hybrid_access_enabled)
+      :hybrid_access_enabled,
+      :expected_resource_owner_account)
       SENSITIVE = []
       include Aws::Structure
     end

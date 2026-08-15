@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -103,7 +104,7 @@ module Aws
                                                   {
                                                     tag_key: ::String,
                                                     tag_value: ::String
-                                                  },
+                                                  }
                                                 ]
                                               ) -> _CreateChimeWebhookConfigurationResponseSuccess
                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateChimeWebhookConfigurationResponseSuccess
@@ -119,24 +120,13 @@ module Aws
                                   },
                                   ?alias_name: ::String,
                                   ?attachments: Array[
-                                    {
-                                      notification_type: ::String?,
-                                      button_text: ::String?,
-                                      criteria: Array[
-                                        {
-                                          operator: ("HAS_VALUE" | "EQUALS"),
-                                          variable_name: ::String,
-                                          value: ::String?
-                                        },
-                                      ]?,
-                                      variables: Hash[::String, ::String]?
-                                    },
+                                    Params::custom_action_attachment
                                   ],
                                   ?tags: Array[
                                     {
                                       tag_key: ::String,
                                       tag_value: ::String
-                                    },
+                                    }
                                   ],
                                   ?client_token: ::String,
                                   action_name: ::String
@@ -164,7 +154,7 @@ module Aws
                                                             {
                                                               tag_key: ::String,
                                                               tag_value: ::String
-                                                            },
+                                                            }
                                                           ]
                                                         ) -> _CreateMicrosoftTeamsChannelConfigurationResponseSuccess
                                                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateMicrosoftTeamsChannelConfigurationResponseSuccess
@@ -188,7 +178,7 @@ module Aws
                                                   {
                                                     tag_key: ::String,
                                                     tag_value: ::String
-                                                  },
+                                                  }
                                                 ]
                                               ) -> _CreateSlackChannelConfigurationResponseSuccess
                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateSlackChannelConfigurationResponseSuccess
@@ -441,7 +431,7 @@ module Aws
                             {
                               tag_key: ::String,
                               tag_value: ::String
-                            },
+                            }
                           ]
                         ) -> _TagResourceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess
@@ -494,18 +484,7 @@ module Aws
                                   },
                                   ?alias_name: ::String,
                                   ?attachments: Array[
-                                    {
-                                      notification_type: ::String?,
-                                      button_text: ::String?,
-                                      criteria: Array[
-                                        {
-                                          operator: ("HAS_VALUE" | "EQUALS"),
-                                          variable_name: ::String,
-                                          value: ::String?
-                                        },
-                                      ]?,
-                                      variables: Hash[::String, ::String]?
-                                    },
+                                    Params::custom_action_attachment
                                   ]
                                 ) -> _UpdateCustomActionResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateCustomActionResponseSuccess

@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -90,28 +91,8 @@ module Aws
                                      ?schema: ::String,
                                      ?parameter_sets: Array[
                                        Array[
-                                         {
-                                           name: ::String?,
-                                           value: {
-                                             is_null: bool?,
-                                             boolean_value: bool?,
-                                             long_value: ::Integer?,
-                                             double_value: ::Float?,
-                                             string_value: ::String?,
-                                             blob_value: ::String?,
-                                             array_value: {
-                                               boolean_values: Array[bool]?,
-                                               long_values: Array[::Integer]?,
-                                               double_values: Array[::Float]?,
-                                               string_values: Array[::String]?,
-                                               array_values: Array[
-                                                 untyped,
-                                               ]?
-                                             }?
-                                           }?,
-                                           type_hint: ("JSON" | "UUID" | "TIMESTAMP" | "DATE" | "TIME" | "DECIMAL")?
-                                         },
-                                       ],
+                                         Params::sql_parameter
+                                       ]
                                      ],
                                      ?transaction_id: ::String
                                    ) -> _BatchExecuteStatementResponseSuccess
@@ -172,27 +153,7 @@ module Aws
                                ?database: ::String,
                                ?schema: ::String,
                                ?parameters: Array[
-                                 {
-                                   name: ::String?,
-                                   value: {
-                                     is_null: bool?,
-                                     boolean_value: bool?,
-                                     long_value: ::Integer?,
-                                     double_value: ::Float?,
-                                     string_value: ::String?,
-                                     blob_value: ::String?,
-                                     array_value: {
-                                       boolean_values: Array[bool]?,
-                                       long_values: Array[::Integer]?,
-                                       double_values: Array[::Float]?,
-                                       string_values: Array[::String]?,
-                                       array_values: Array[
-                                         untyped,
-                                       ]?
-                                     }?
-                                   }?,
-                                   type_hint: ("JSON" | "UUID" | "TIMESTAMP" | "DATE" | "TIME" | "DECIMAL")?
-                                 },
+                                 Params::sql_parameter
                                ],
                                ?transaction_id: ::String,
                                ?include_result_metadata: bool,

@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -114,7 +115,7 @@ module Aws
                                            {
                                              name: ("region" | "instanceType" | "productDescription" | "tenancy" | "productType" | "serviceCode" | "usageType" | "operation")?,
                                              values: Array[::String]?
-                                           },
+                                           }
                                          ],
                                          ?next_token: ::String,
                                          ?max_results: ::Integer
@@ -135,9 +136,9 @@ module Aws
                                     ?states: Array[("payment-pending" | "payment-failed" | "active" | "retired" | "queued" | "queued-deleted" | "pending-return" | "returned")],
                                     ?filters: Array[
                                       {
-                                        name: ("region" | "ec2-instance-family" | "commitment" | "upfront" | "term" | "savings-plan-type" | "payment-option" | "start" | "end")?,
+                                        name: ("region" | "ec2-instance-family" | "commitment" | "upfront" | "term" | "savings-plan-type" | "payment-option" | "start" | "end" | "instance-family")?,
                                         values: Array[::String]?
-                                      },
+                                      }
                                     ]
                                   ) -> _DescribeSavingsPlansResponseSuccess
                                 | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeSavingsPlansResponseSuccess
@@ -151,16 +152,16 @@ module Aws
       def describe_savings_plans_offering_rates: (
                                                    ?savings_plan_offering_ids: Array[::String],
                                                    ?savings_plan_payment_options: Array[("All Upfront" | "Partial Upfront" | "No Upfront")],
-                                                   ?savings_plan_types: Array[("Compute" | "EC2Instance" | "SageMaker")],
-                                                   ?products: Array[("EC2" | "Fargate" | "Lambda" | "SageMaker")],
-                                                   ?service_codes: Array[("AmazonEC2" | "AmazonECS" | "AmazonEKS" | "AWSLambda" | "AmazonSageMaker")],
+                                                   ?savings_plan_types: Array[("Compute" | "EC2Instance" | "SageMaker" | "Database")],
+                                                   ?products: Array[("EC2" | "Fargate" | "Lambda" | "SageMaker" | "RDS" | "DSQL" | "DynamoDB" | "ElastiCache" | "DocDB" | "Neptune" | "Timestream" | "Keyspaces" | "DMS" | "OpenSearch")],
+                                                   ?service_codes: Array[("AmazonEC2" | "AmazonECS" | "AmazonEKS" | "AWSLambda" | "AmazonSageMaker" | "AmazonRDS" | "AuroraDSQL" | "AmazonDynamoDB" | "AmazonElastiCache" | "AmazonDocDB" | "AmazonNeptune" | "AmazonTimestream" | "AmazonMCS" | "AWSDatabaseMigrationSvc" | "AmazonES")],
                                                    ?usage_types: Array[::String],
                                                    ?operations: Array[::String],
                                                    ?filters: Array[
                                                      {
                                                        name: ("region" | "instanceFamily" | "instanceType" | "productDescription" | "tenancy" | "productId")?,
                                                        values: Array[::String]?
-                                                     },
+                                                     }
                                                    ],
                                                    ?next_token: ::String,
                                                    ?max_results: ::Integer
@@ -176,10 +177,10 @@ module Aws
       def describe_savings_plans_offerings: (
                                               ?offering_ids: Array[::String],
                                               ?payment_options: Array[("All Upfront" | "Partial Upfront" | "No Upfront")],
-                                              ?product_type: ("EC2" | "Fargate" | "Lambda" | "SageMaker"),
-                                              ?plan_types: Array[("Compute" | "EC2Instance" | "SageMaker")],
+                                              ?product_type: ("EC2" | "Fargate" | "Lambda" | "SageMaker" | "RDS" | "DSQL" | "DynamoDB" | "ElastiCache" | "DocDB" | "Neptune" | "Timestream" | "Keyspaces" | "DMS" | "OpenSearch"),
+                                              ?plan_types: Array[("Compute" | "EC2Instance" | "SageMaker" | "Database")],
                                               ?durations: Array[::Integer],
-                                              ?currencies: Array[("CNY" | "USD")],
+                                              ?currencies: Array[("CNY" | "USD" | "EUR")],
                                               ?descriptions: Array[::String],
                                               ?service_codes: Array[::String],
                                               ?usage_types: Array[::String],
@@ -188,7 +189,7 @@ module Aws
                                                 {
                                                   name: ("region" | "instanceFamily")?,
                                                   values: Array[::String]?
-                                                },
+                                                }
                                               ],
                                               ?next_token: ::String,
                                               ?max_results: ::Integer

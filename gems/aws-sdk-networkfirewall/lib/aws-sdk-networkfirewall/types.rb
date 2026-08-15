@@ -10,6 +10,86 @@
 module Aws::NetworkFirewall
   module Types
 
+    # The status of the firewall endpoint defined by a
+    # `VpcEndpointAssociation`.
+    #
+    # @!attribute [rw] attachment
+    #   The definition and status of the firewall endpoint for a single
+    #   subnet. In each configured subnet, Network Firewall instantiates a
+    #   firewall endpoint to handle network traffic.
+    #
+    #   This data type is used for any firewall endpoint type:
+    #
+    #   * For `Firewall.SubnetMappings`, this `Attachment` is part of the
+    #     `FirewallStatus` sync states information. You define firewall
+    #     subnets using `CreateFirewall` and `AssociateSubnets`.
+    #
+    #   * For `VpcEndpointAssociation`, this `Attachment` is part of the
+    #     `VpcEndpointAssociationStatus` sync states information. You define
+    #     these subnets using `CreateVpcEndpointAssociation`.
+    #   @return [Types::Attachment]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/AZSyncState AWS API Documentation
+    #
+    class AZSyncState < Struct.new(
+      :attachment)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] transit_gateway_attachment_id
+    #   Required. The unique identifier of the transit gateway attachment to
+    #   accept. This ID is returned in the response when creating a transit
+    #   gateway-attached firewall.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/AcceptNetworkFirewallTransitGatewayAttachmentRequest AWS API Documentation
+    #
+    class AcceptNetworkFirewallTransitGatewayAttachmentRequest < Struct.new(
+      :transit_gateway_attachment_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] transit_gateway_attachment_id
+    #   The unique identifier of the transit gateway attachment that was
+    #   accepted.
+    #   @return [String]
+    #
+    # @!attribute [rw] transit_gateway_attachment_status
+    #   The current status of the transit gateway attachment. Valid values
+    #   are:
+    #
+    #   * `CREATING` - The attachment is being created
+    #
+    #   * `DELETING` - The attachment is being deleted
+    #
+    #   * `DELETED` - The attachment has been deleted
+    #
+    #   * `FAILED` - The attachment creation has failed and cannot be
+    #     recovered
+    #
+    #   * `ERROR` - The attachment is in an error state that might be
+    #     recoverable
+    #
+    #   * `READY` - The attachment is active and processing traffic
+    #
+    #   * `PENDING_ACCEPTANCE` - The attachment is waiting to be accepted
+    #
+    #   * `REJECTING` - The attachment is in the process of being rejected
+    #
+    #   * `REJECTED` - The attachment has been rejected
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/AcceptNetworkFirewallTransitGatewayAttachmentResponse AWS API Documentation
+    #
+    class AcceptNetworkFirewallTransitGatewayAttachmentResponse < Struct.new(
+      :transit_gateway_attachment_id,
+      :transit_gateway_attachment_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # A custom action to use in stateless rule actions settings. This is
     # used in CustomAction.
     #
@@ -259,6 +339,101 @@ module Aws::NetworkFirewall
     #   You must specify the ARN or the name, and you can specify both.
     #   @return [String]
     #
+    # @!attribute [rw] availability_zone_mappings
+    #   Required. The Availability Zones where you want to create firewall
+    #   endpoints. You must specify at least one Availability Zone.
+    #   @return [Array<Types::AvailabilityZoneMapping>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/AssociateAvailabilityZonesRequest AWS API Documentation
+    #
+    class AssociateAvailabilityZonesRequest < Struct.new(
+      :update_token,
+      :firewall_arn,
+      :firewall_name,
+      :availability_zone_mappings)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] firewall_arn
+    #   The Amazon Resource Name (ARN) of the firewall.
+    #   @return [String]
+    #
+    # @!attribute [rw] firewall_name
+    #   The descriptive name of the firewall. You can't change the name of
+    #   a firewall after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_zone_mappings
+    #   The Availability Zones where Network Firewall created firewall
+    #   endpoints. Each mapping specifies an Availability Zone where the
+    #   firewall processes traffic.
+    #   @return [Array<Types::AvailabilityZoneMapping>]
+    #
+    # @!attribute [rw] update_token
+    #   An optional token that you can use for optimistic locking. Network
+    #   Firewall returns a token to your requests that access the firewall.
+    #   The token marks the state of the firewall resource at the time of
+    #   the request.
+    #
+    #   To make an unconditional change to the firewall, omit the token in
+    #   your update request. Without the token, Network Firewall performs
+    #   your updates regardless of whether the firewall has changed since
+    #   you last retrieved it.
+    #
+    #   To make a conditional change to the firewall, provide the token in
+    #   your update request. Network Firewall uses the token to ensure that
+    #   the firewall hasn't changed since you last retrieved it. If it has
+    #   changed, the operation fails with an `InvalidTokenException`. If
+    #   this happens, retrieve the firewall again to get a current copy of
+    #   it with a new token. Reapply your changes as needed, then try the
+    #   operation again using the new token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/AssociateAvailabilityZonesResponse AWS API Documentation
+    #
+    class AssociateAvailabilityZonesResponse < Struct.new(
+      :firewall_arn,
+      :firewall_name,
+      :availability_zone_mappings,
+      :update_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] update_token
+    #   An optional token that you can use for optimistic locking. Network
+    #   Firewall returns a token to your requests that access the firewall.
+    #   The token marks the state of the firewall resource at the time of
+    #   the request.
+    #
+    #   To make an unconditional change to the firewall, omit the token in
+    #   your update request. Without the token, Network Firewall performs
+    #   your updates regardless of whether the firewall has changed since
+    #   you last retrieved it.
+    #
+    #   To make a conditional change to the firewall, provide the token in
+    #   your update request. Network Firewall uses the token to ensure that
+    #   the firewall hasn't changed since you last retrieved it. If it has
+    #   changed, the operation fails with an `InvalidTokenException`. If
+    #   this happens, retrieve the firewall again to get a current copy of
+    #   it with a new token. Reapply your changes as needed, then try the
+    #   operation again using the new token.
+    #   @return [String]
+    #
+    # @!attribute [rw] firewall_arn
+    #   The Amazon Resource Name (ARN) of the firewall.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] firewall_name
+    #   The descriptive name of the firewall. You can't change the name of
+    #   a firewall after you create it.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
     # @!attribute [rw] firewall_policy_arn
     #   The Amazon Resource Name (ARN) of the firewall policy.
     #   @return [String]
@@ -410,9 +585,91 @@ module Aws::NetworkFirewall
       include Aws::Structure
     end
 
-    # The configuration and status for a single subnet that you've
-    # specified for use by the Network Firewall firewall. This is part of
-    # the FirewallStatus.
+    # @!attribute [rw] proxy_configuration_name
+    #   The descriptive name of the proxy configuration. You can't change
+    #   the name of a proxy configuration after you create it.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_configuration_arn
+    #   The Amazon Resource Name (ARN) of a proxy configuration.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] rule_groups
+    #   The proxy rule group(s) to attach to the proxy configuration
+    #   @return [Array<Types::ProxyRuleGroupAttachment>]
+    #
+    # @!attribute [rw] update_token
+    #   A token used for optimistic locking. Network Firewall returns a
+    #   token to your requests that access the proxy configuration. The
+    #   token marks the state of the proxy configuration resource at the
+    #   time of the request.
+    #
+    #   To make changes to the proxy configuration, you provide the token in
+    #   your request. Network Firewall uses the token to ensure that the
+    #   proxy configuration hasn't changed since you last retrieved it. If
+    #   it has changed, the operation fails with an `InvalidTokenException`.
+    #   If this happens, retrieve the proxy configuration again to get a
+    #   current copy of it with a current token. Reapply your changes as
+    #   needed, then try the operation again using the new token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/AttachRuleGroupsToProxyConfigurationRequest AWS API Documentation
+    #
+    class AttachRuleGroupsToProxyConfigurationRequest < Struct.new(
+      :proxy_configuration_name,
+      :proxy_configuration_arn,
+      :rule_groups,
+      :update_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_configuration
+    #   The updated proxy configuration resource that reflects the updates
+    #   from the request.
+    #   @return [Types::ProxyConfiguration]
+    #
+    # @!attribute [rw] update_token
+    #   A token used for optimistic locking. Network Firewall returns a
+    #   token to your requests that access the proxy configuration. The
+    #   token marks the state of the proxy configuration resource at the
+    #   time of the request.
+    #
+    #   To make changes to the proxy configuration, you provide the token in
+    #   your request. Network Firewall uses the token to ensure that the
+    #   proxy configuration hasn't changed since you last retrieved it. If
+    #   it has changed, the operation fails with an `InvalidTokenException`.
+    #   If this happens, retrieve the proxy configuration again to get a
+    #   current copy of it with a current token. Reapply your changes as
+    #   needed, then try the operation again using the new token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/AttachRuleGroupsToProxyConfigurationResponse AWS API Documentation
+    #
+    class AttachRuleGroupsToProxyConfigurationResponse < Struct.new(
+      :proxy_configuration,
+      :update_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The definition and status of the firewall endpoint for a single
+    # subnet. In each configured subnet, Network Firewall instantiates a
+    # firewall endpoint to handle network traffic.
+    #
+    # This data type is used for any firewall endpoint type:
+    #
+    # * For `Firewall.SubnetMappings`, this `Attachment` is part of the
+    #   `FirewallStatus` sync states information. You define firewall
+    #   subnets using `CreateFirewall` and `AssociateSubnets`.
+    #
+    # * For `VpcEndpointAssociation`, this `Attachment` is part of the
+    #   `VpcEndpointAssociationStatus` sync states information. You define
+    #   these subnets using `CreateVpcEndpointAssociation`.
     #
     # @!attribute [rw] subnet_id
     #   The unique identifier of the subnet that you've specified to be
@@ -427,12 +684,11 @@ module Aws::NetworkFirewall
     #   @return [String]
     #
     # @!attribute [rw] status
-    #   The current status of the firewall endpoint in the subnet. This
-    #   value reflects both the instantiation of the endpoint in the VPC
-    #   subnet and the sync states that are reported in the `Config`
-    #   settings. When this value is `READY`, the endpoint is available and
-    #   configured properly to handle network traffic. When the endpoint
-    #   isn't available for traffic, this value will reflect its state, for
+    #   The current status of the firewall endpoint instantiation in the
+    #   subnet.
+    #
+    #   When this value is `READY`, the endpoint is available to handle
+    #   network traffic. Otherwise, this value reflects its state, for
     #   example `CREATING` or `DELETING`.
     #   @return [String]
     #
@@ -452,13 +708,59 @@ module Aws::NetworkFirewall
     #   [1]: https://docs.aws.amazon.com/network-firewall/latest/developerguide/firewall-troubleshooting-endpoint-failures.html
     #   @return [String]
     #
+    # @!attribute [rw] dns_name
+    #   The DNS name that resolves to the firewall endpoint in the subnet.
+    #   This is populated for proxy mode firewalls, where clients direct
+    #   traffic to the firewall's proxy using this name.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/Attachment AWS API Documentation
     #
     class Attachment < Struct.new(
       :subnet_id,
       :endpoint_id,
       :status,
-      :status_message)
+      :status_message,
+      :dns_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines the mapping between an Availability Zone and a firewall
+    # endpoint for a transit gateway-attached firewall. Each mapping
+    # represents where the firewall can process traffic. You use these
+    # mappings when calling CreateFirewall, AssociateAvailabilityZones, and
+    # DisassociateAvailabilityZones.
+    #
+    # To retrieve the current Availability Zone mappings for a firewall, use
+    # DescribeFirewall.
+    #
+    # @!attribute [rw] availability_zone
+    #   The ID of the Availability Zone where the firewall endpoint is
+    #   located. For example, `us-east-2a`. The Availability Zone must be in
+    #   the same Region as the transit gateway.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/AvailabilityZoneMapping AWS API Documentation
+    #
+    class AvailabilityZoneMapping < Struct.new(
+      :availability_zone)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # High-level information about an Availability Zone where the firewall
+    # has an endpoint defined.
+    #
+    # @!attribute [rw] ip_address_type
+    #   The IP address type of the Firewall subnet in the Availability Zone.
+    #   You can't change the IP address type after you create the subnet.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/AvailabilityZoneMetadata AWS API Documentation
+    #
+    class AvailabilityZoneMetadata < Struct.new(
+      :ip_address_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -552,6 +854,178 @@ module Aws::NetworkFirewall
     class CheckCertificateRevocationStatusActions < Struct.new(
       :revoked_status_action,
       :unknown_status_action)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The metadata for a container association returned by
+    # `ListContainerAssociations`. Contains the ARN and name that you use to
+    # identify the container association in other operations.
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the container association.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The descriptive name of the container association.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ContainerAssociationSummary AWS API Documentation
+    #
+    class ContainerAssociationSummary < Struct.new(
+      :arn,
+      :name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A key-value filter pair used in container association monitoring
+    # configurations to narrow which containers are tracked.
+    #
+    # @!attribute [rw] key
+    #   The attribute key to filter on.
+    #   @return [String]
+    #
+    # @!attribute [rw] value
+    #   The attribute value to match.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ContainerAttribute AWS API Documentation
+    #
+    class ContainerAttribute < Struct.new(
+      :key,
+      :value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains the monitoring configuration for a single cluster in a
+    # container association. Specifies the cluster ARN and optional
+    # attribute filters to narrow which containers are tracked.
+    #
+    # @!attribute [rw] cluster_arn
+    #   The ARN of the Amazon ECS or Amazon EKS cluster to monitor. The
+    #   cluster must be in the same Region and account as the container
+    #   association.
+    #   @return [String]
+    #
+    # @!attribute [rw] attribute_filters
+    #   Key-value pairs that filter which containers are tracked. For Amazon
+    #   EKS, you can filter by namespace and Kubernetes labels. For Amazon
+    #   ECS, you can filter by container instance attributes (EC2 launch
+    #   type only).
+    #   @return [Array<Types::ContainerAttribute>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ContainerMonitoringConfiguration AWS API Documentation
+    #
+    class ContainerMonitoringConfiguration < Struct.new(
+      :cluster_arn,
+      :attribute_filters)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] container_association_name
+    #   The descriptive name of the container association. You can't change
+    #   the name of a container association after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A description of the container association.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The type of containers to monitor. You can't change the container
+    #   type after creation. Valid values:
+    #
+    #   * `ECS` - Amazon Elastic Container Service
+    #
+    #   * `EKS` - Amazon Elastic Kubernetes Service
+    #   @return [String]
+    #
+    # @!attribute [rw] container_monitoring_configurations
+    #   The monitoring configurations for the container association. Each
+    #   configuration specifies an Amazon ECS or Amazon EKS cluster to
+    #   monitor and optional attribute filters to narrow which containers
+    #   are tracked.
+    #   @return [Array<Types::ContainerMonitoringConfiguration>]
+    #
+    # @!attribute [rw] tags
+    #   The key:value pairs to associate with the resource.
+    #   @return [Array<Types::Tag>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/CreateContainerAssociationRequest AWS API Documentation
+    #
+    class CreateContainerAssociationRequest < Struct.new(
+      :container_association_name,
+      :description,
+      :type,
+      :container_monitoring_configurations,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] container_association_name
+    #   The descriptive name of the container association.
+    #   @return [String]
+    #
+    # @!attribute [rw] container_association_arn
+    #   The Amazon Resource Name (ARN) of the container association.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A description of the container association.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The container type. Valid values:
+    #
+    #   * `ECS` - Amazon Elastic Container Service
+    #
+    #   * `EKS` - Amazon Elastic Kubernetes Service
+    #   @return [String]
+    #
+    # @!attribute [rw] container_monitoring_configurations
+    #   The monitoring configurations for the container association.
+    #   @return [Array<Types::ContainerMonitoringConfiguration>]
+    #
+    # @!attribute [rw] status
+    #   The current status of the container association. For a new container
+    #   association, the status is `CREATING`.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   The key:value pairs to associate with the resource.
+    #   @return [Array<Types::Tag>]
+    #
+    # @!attribute [rw] update_token
+    #   A token used for optimistic locking. Network Firewall returns a
+    #   token to your requests that access the container association. The
+    #   token marks the state of the container association resource at the
+    #   time of the request.
+    #
+    #   To make changes to the container association, you provide the token
+    #   in your request. Network Firewall uses the token to ensure that the
+    #   container association hasn't changed since you last retrieved it.
+    #   If it has changed, the operation fails with an
+    #   `InvalidTokenException`. If this happens, retrieve the container
+    #   association again to get a current copy of it with a current token.
+    #   Reapply your changes as needed, then try the operation again using
+    #   the new token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/CreateContainerAssociationResponse AWS API Documentation
+    #
+    class CreateContainerAssociationResponse < Struct.new(
+      :container_association_name,
+      :container_association_arn,
+      :description,
+      :type,
+      :container_monitoring_configurations,
+      :status,
+      :tags,
+      :update_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -701,6 +1175,89 @@ module Aws::NetworkFirewall
     #   to enable on the firewall.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] transit_gateway_id
+    #   Required when creating a transit gateway-attached firewall. The
+    #   unique identifier of the transit gateway to attach to this firewall.
+    #   You can provide either a transit gateway from your account or one
+    #   that has been shared with you through Resource Access Manager.
+    #
+    #   After creating the firewall, you cannot change the transit gateway
+    #   association. To use a different transit gateway, you must create a
+    #   new firewall.
+    #
+    #   For information about creating firewalls, see CreateFirewall. For
+    #   specific guidance about transit gateway-attached firewalls, see
+    #   [Considerations for transit gateway-attached firewalls][1] in the
+    #   *Network Firewall Developer Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/network-firewall/latest/developerguide/tgw-firewall-considerations.html
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_zone_mappings
+    #   Required. The Availability Zones where you want to create firewall
+    #   endpoints for a transit gateway-attached firewall. You must specify
+    #   at least one Availability Zone. Consider enabling the firewall in
+    #   every Availability Zone where you have workloads to maintain
+    #   Availability Zone isolation.
+    #
+    #   You can modify Availability Zones later using
+    #   AssociateAvailabilityZones or DisassociateAvailabilityZones, but
+    #   this may briefly disrupt traffic. The
+    #   `AvailabilityZoneChangeProtection` setting controls whether you can
+    #   make these modifications.
+    #   @return [Array<Types::AvailabilityZoneMapping>]
+    #
+    # @!attribute [rw] availability_zone_change_protection
+    #   Optional. A setting indicating whether the firewall is protected
+    #   against changes to its Availability Zone configuration. When set to
+    #   `TRUE`, you cannot add or remove Availability Zones without first
+    #   disabling this protection using
+    #   UpdateAvailabilityZoneChangeProtection.
+    #
+    #   Default value: `FALSE`
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] nat_gateway_mappings
+    #   The NAT gateways that the firewall uses to proxy traffic when
+    #   `NoSourcePreservation` is `TRUE`. Network Firewall attaches the
+    #   firewall to each NAT gateway that you specify, so that egress
+    #   traffic is proxied through the NAT gateway.
+    #   @return [Array<Types::NatGatewayMapping>]
+    #
+    # @!attribute [rw] proxy_settings
+    #   The listener configuration for a proxy mode firewall, used when
+    #   `NoSourcePreservation` is `TRUE`. This specifies the ports and
+    #   protocols on which the firewall's proxy listens for traffic.
+    #   @return [Types::ProxySettings]
+    #
+    # @!attribute [rw] no_source_preservation
+    #   Optional. Indicates whether the firewall operates in proxy mode, in
+    #   which the source IP address of the traffic is not preserved. When
+    #   set to `TRUE`, the firewall proxies traffic through a NAT gateway
+    #   and the traffic reaching the destination uses the NAT gateway's IP
+    #   address as the source.
+    #
+    #   When you set this to `TRUE`, you must specify `NatGatewayMappings`
+    #   and `VpcEndpoint` instead of a top-level `VpcId` and
+    #   `SubnetMappings`.
+    #
+    #   You can't change this setting after you create the firewall.
+    #
+    #   Default value: `FALSE`
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] vpc_endpoint
+    #   The VPC and subnets for the firewall endpoint, used when
+    #   `NoSourcePreservation` is `TRUE`. Network Firewall creates the
+    #   firewall endpoint in the subnets that you specify here.
+    #
+    #   For proxy mode firewalls, provide the firewall's VPC and endpoint
+    #   subnets through this parameter instead of the top-level `VpcId` and
+    #   `SubnetMappings`.
+    #   @return [Types::VpcEndpoint]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/CreateFirewallRequest AWS API Documentation
     #
     class CreateFirewallRequest < Struct.new(
@@ -714,7 +1271,14 @@ module Aws::NetworkFirewall
       :description,
       :tags,
       :encryption_configuration,
-      :enabled_analysis_types)
+      :enabled_analysis_types,
+      :transit_gateway_id,
+      :availability_zone_mappings,
+      :availability_zone_change_protection,
+      :nat_gateway_mappings,
+      :proxy_settings,
+      :no_source_preservation,
+      :vpc_endpoint)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -729,6 +1293,12 @@ module Aws::NetworkFirewall
     #   Detailed information about the current status of a Firewall. You can
     #   retrieve this for a firewall by calling DescribeFirewall and
     #   providing the firewall name and ARN.
+    #
+    #   The firewall status indicates a combined status. It indicates
+    #   whether all subnets are up-to-date with the latest firewall
+    #   configurations, which is based on the sync states config values, and
+    #   also whether all subnets have their endpoints fully enabled, based
+    #   on their sync states attachment values.
     #   @return [Types::FirewallStatus]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/CreateFirewallResponse AWS API Documentation
@@ -736,6 +1306,340 @@ module Aws::NetworkFirewall
     class CreateFirewallResponse < Struct.new(
       :firewall,
       :firewall_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_configuration_name
+    #   The descriptive name of the proxy configuration. You can't change
+    #   the name of a proxy configuration after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A description of the proxy configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] rule_group_names
+    #   The proxy rule group name(s) to attach to the proxy configuration.
+    #
+    #   You must specify the ARNs or the names, and you can specify both.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] rule_group_arns
+    #   The proxy rule group arn(s) to attach to the proxy configuration.
+    #
+    #   You must specify the ARNs or the names, and you can specify both.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] default_rule_phase_actions
+    #   Evaluation points in the traffic flow where rules are applied. There
+    #   are three phases in a traffic where the rule match is applied.
+    #   @return [Types::ProxyConfigDefaultRulePhaseActionsRequest]
+    #
+    # @!attribute [rw] tags
+    #   The key:value pairs to associate with the resource.
+    #   @return [Array<Types::Tag>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/CreateProxyConfigurationRequest AWS API Documentation
+    #
+    class CreateProxyConfigurationRequest < Struct.new(
+      :proxy_configuration_name,
+      :description,
+      :rule_group_names,
+      :rule_group_arns,
+      :default_rule_phase_actions,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_configuration
+    #   The properties that define the proxy configuration.
+    #   @return [Types::ProxyConfiguration]
+    #
+    # @!attribute [rw] update_token
+    #   A token used for optimistic locking. Network Firewall returns a
+    #   token to your requests that access the proxy configuration. The
+    #   token marks the state of the proxy configuration resource at the
+    #   time of the request.
+    #
+    #   To make changes to the proxy configuration, you provide the token in
+    #   your request. Network Firewall uses the token to ensure that the
+    #   proxy configuration hasn't changed since you last retrieved it. If
+    #   it has changed, the operation fails with an `InvalidTokenException`.
+    #   If this happens, retrieve the proxy configuration again to get a
+    #   current copy of it with a current token. Reapply your changes as
+    #   needed, then try the operation again using the new token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/CreateProxyConfigurationResponse AWS API Documentation
+    #
+    class CreateProxyConfigurationResponse < Struct.new(
+      :proxy_configuration,
+      :update_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_name
+    #   The descriptive name of the proxy. You can't change the name of a
+    #   proxy after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] nat_gateway_id
+    #   A unique identifier for the NAT gateway to use with proxy resources.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_configuration_name
+    #   The descriptive name of the proxy configuration. You can't change
+    #   the name of a proxy configuration after you create it.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_configuration_arn
+    #   The Amazon Resource Name (ARN) of a proxy configuration.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] listener_properties
+    #   Listener properties for HTTP and HTTPS traffic.
+    #   @return [Array<Types::ListenerPropertyRequest>]
+    #
+    # @!attribute [rw] tls_intercept_properties
+    #   TLS decryption on traffic to filter on attributes in the HTTP
+    #   header.
+    #   @return [Types::TlsInterceptPropertiesRequest]
+    #
+    # @!attribute [rw] tags
+    #   The key:value pairs to associate with the resource.
+    #   @return [Array<Types::Tag>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/CreateProxyRequest AWS API Documentation
+    #
+    class CreateProxyRequest < Struct.new(
+      :proxy_name,
+      :nat_gateway_id,
+      :proxy_configuration_name,
+      :proxy_configuration_arn,
+      :listener_properties,
+      :tls_intercept_properties,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy
+    #   Proxy attached to a NAT gateway.
+    #   @return [Types::Proxy]
+    #
+    # @!attribute [rw] update_token
+    #   A token used for optimistic locking. Network Firewall returns a
+    #   token to your requests that access the proxy. The token marks the
+    #   state of the proxy resource at the time of the request.
+    #
+    #   To make changes to the proxy, you provide the token in your request.
+    #   Network Firewall uses the token to ensure that the proxy hasn't
+    #   changed since you last retrieved it. If it has changed, the
+    #   operation fails with an `InvalidTokenException`. If this happens,
+    #   retrieve the proxy again to get a current copy of it with a current
+    #   token. Reapply your changes as needed, then try the operation again
+    #   using the new token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/CreateProxyResponse AWS API Documentation
+    #
+    class CreateProxyResponse < Struct.new(
+      :proxy,
+      :update_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Individual rules that define match conditions and actions for
+    # application-layer traffic. Rules specify what to inspect (domains,
+    # headers, methods) and what action to take (allow, deny, alert).
+    #
+    # @!attribute [rw] proxy_rule_name
+    #   The descriptive name of the proxy rule. You can't change the name
+    #   of a proxy rule after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A description of the proxy rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] action
+    #   Action to take.
+    #   @return [String]
+    #
+    # @!attribute [rw] conditions
+    #   Match criteria that specify what traffic attributes to examine.
+    #   Conditions include operators (StringEquals, StringLike) and values
+    #   to match against.
+    #   @return [Array<Types::ProxyRuleCondition>]
+    #
+    # @!attribute [rw] insert_position
+    #   Where to insert a proxy rule in a proxy rule group.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/CreateProxyRule AWS API Documentation
+    #
+    class CreateProxyRule < Struct.new(
+      :proxy_rule_name,
+      :description,
+      :action,
+      :conditions,
+      :insert_position)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_rule_group_name
+    #   The descriptive name of the proxy rule group. You can't change the
+    #   name of a proxy rule group after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A description of the proxy rule group.
+    #   @return [String]
+    #
+    # @!attribute [rw] rules
+    #   Individual rules that define match conditions and actions for
+    #   application-layer traffic. Rules specify what to inspect (domains,
+    #   headers, methods) and what action to take (allow, deny, alert).
+    #   @return [Types::ProxyRulesByRequestPhase]
+    #
+    # @!attribute [rw] tags
+    #   The key:value pairs to associate with the resource.
+    #   @return [Array<Types::Tag>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/CreateProxyRuleGroupRequest AWS API Documentation
+    #
+    class CreateProxyRuleGroupRequest < Struct.new(
+      :proxy_rule_group_name,
+      :description,
+      :rules,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_rule_group
+    #   The properties that define the proxy rule group.
+    #   @return [Types::ProxyRuleGroup]
+    #
+    # @!attribute [rw] update_token
+    #   A token used for optimistic locking. Network Firewall returns a
+    #   token to your requests that access the proxy rule group. The token
+    #   marks the state of the proxy rule group resource at the time of the
+    #   request.
+    #
+    #   To make changes to the proxy rule group, you provide the token in
+    #   your request. Network Firewall uses the token to ensure that the
+    #   proxy rule group hasn't changed since you last retrieved it. If it
+    #   has changed, the operation fails with an `InvalidTokenException`. If
+    #   this happens, retrieve the proxy rule group again to get a current
+    #   copy of it with a current token. Reapply your changes as needed,
+    #   then try the operation again using the new token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/CreateProxyRuleGroupResponse AWS API Documentation
+    #
+    class CreateProxyRuleGroupResponse < Struct.new(
+      :proxy_rule_group,
+      :update_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Evaluation points in the traffic flow where rules are applied. There
+    # are three phases in a traffic where the rule match is applied.
+    #
+    # This data type is used specifically for the CreateProxyRules API.
+    #
+    # Pre-DNS - before domain resolution.
+    #
+    # Pre-Request - after DNS, before request.
+    #
+    # Post-Response - after receiving response.
+    #
+    # @!attribute [rw] pre_dns
+    #   Before domain resolution.
+    #   @return [Array<Types::CreateProxyRule>]
+    #
+    # @!attribute [rw] pre_request
+    #   After DNS, before request.
+    #   @return [Array<Types::CreateProxyRule>]
+    #
+    # @!attribute [rw] post_response
+    #   After receiving response.
+    #   @return [Array<Types::CreateProxyRule>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/CreateProxyRulesByRequestPhase AWS API Documentation
+    #
+    class CreateProxyRulesByRequestPhase < Struct.new(
+      :pre_dns,
+      :pre_request,
+      :post_response)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_rule_group_arn
+    #   The Amazon Resource Name (ARN) of a proxy rule group.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_rule_group_name
+    #   The descriptive name of the proxy rule group. You can't change the
+    #   name of a proxy rule group after you create it.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] rules
+    #   Individual rules that define match conditions and actions for
+    #   application-layer traffic. Rules specify what to inspect (domains,
+    #   headers, methods) and what action to take (allow, deny, alert).
+    #   @return [Types::CreateProxyRulesByRequestPhase]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/CreateProxyRulesRequest AWS API Documentation
+    #
+    class CreateProxyRulesRequest < Struct.new(
+      :proxy_rule_group_arn,
+      :proxy_rule_group_name,
+      :rules)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_rule_group
+    #   The properties that define the proxy rule group with the newly
+    #   created proxy rule(s).
+    #   @return [Types::ProxyRuleGroup]
+    #
+    # @!attribute [rw] update_token
+    #   A token used for optimistic locking. Network Firewall returns a
+    #   token to your requests that access the proxy rule. The token marks
+    #   the state of the proxy rule resource at the time of the request.
+    #
+    #   To make changes to the proxy rule, you provide the token in your
+    #   request. Network Firewall uses the token to ensure that the proxy
+    #   rule hasn't changed since you last retrieved it. If it has changed,
+    #   the operation fails with an `InvalidTokenException`. If this
+    #   happens, retrieve the proxy rule again to get a current copy of it
+    #   with a current token. Reapply your changes as needed, then try the
+    #   operation again using the new token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/CreateProxyRulesResponse AWS API Documentation
+    #
+    class CreateProxyRulesResponse < Struct.new(
+      :proxy_rule_group,
+      :update_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -870,6 +1774,18 @@ module Aws::NetworkFirewall
     #   analyzer without creating the rule group, set `DryRun` to `TRUE`.
     #   @return [Boolean]
     #
+    # @!attribute [rw] summary_configuration
+    #   An object that contains a `RuleOptions` array of strings. You use
+    #   `RuleOptions` to determine which of the following RuleSummary values
+    #   are returned in response to `DescribeRuleGroupSummary`.
+    #
+    #   * `Metadata` - returns
+    #
+    #   * `Msg`
+    #
+    #   * `SID`
+    #   @return [Types::SummaryConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/CreateRuleGroupRequest AWS API Documentation
     #
     class CreateRuleGroupRequest < Struct.new(
@@ -883,7 +1799,8 @@ module Aws::NetworkFirewall
       :dry_run,
       :encryption_configuration,
       :source_metadata,
-      :analyze_rule_group)
+      :analyze_rule_group,
+      :summary_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1016,6 +1933,65 @@ module Aws::NetworkFirewall
       include Aws::Structure
     end
 
+    # @!attribute [rw] firewall_arn
+    #   The Amazon Resource Name (ARN) of the firewall.
+    #   @return [String]
+    #
+    # @!attribute [rw] vpc_id
+    #   The unique identifier of the VPC where you want to create a firewall
+    #   endpoint.
+    #   @return [String]
+    #
+    # @!attribute [rw] subnet_mapping
+    #   The ID for a subnet that's used in an association with a firewall.
+    #   This is used in CreateFirewall, AssociateSubnets, and
+    #   CreateVpcEndpointAssociation. Network Firewall creates an instance
+    #   of the associated firewall in each subnet that you specify, to
+    #   filter traffic in the subnet's Availability Zone.
+    #   @return [Types::SubnetMapping]
+    #
+    # @!attribute [rw] description
+    #   A description of the VPC endpoint association.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   The key:value pairs to associate with the resource.
+    #   @return [Array<Types::Tag>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/CreateVpcEndpointAssociationRequest AWS API Documentation
+    #
+    class CreateVpcEndpointAssociationRequest < Struct.new(
+      :firewall_arn,
+      :vpc_id,
+      :subnet_mapping,
+      :description,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] vpc_endpoint_association
+    #   The configuration settings for the VPC endpoint association. These
+    #   settings include the firewall and the VPC and subnet to use for the
+    #   firewall endpoint.
+    #   @return [Types::VpcEndpointAssociation]
+    #
+    # @!attribute [rw] vpc_endpoint_association_status
+    #   Detailed information about the current status of a
+    #   VpcEndpointAssociation. You can retrieve this by calling
+    #   DescribeVpcEndpointAssociation and providing the VPC endpoint
+    #   association ARN.
+    #   @return [Types::VpcEndpointAssociationStatus]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/CreateVpcEndpointAssociationResponse AWS API Documentation
+    #
+    class CreateVpcEndpointAssociationResponse < Struct.new(
+      :vpc_endpoint_association,
+      :vpc_endpoint_association_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # An optional, non-standard action to use for stateless packet handling.
     # You can define this in addition to the standard action that you must
     # specify.
@@ -1051,6 +2027,50 @@ module Aws::NetworkFirewall
     class CustomAction < Struct.new(
       :action_name,
       :action_definition)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] container_association_name
+    #   The descriptive name of the container association.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] container_association_arn
+    #   The Amazon Resource Name (ARN) of the container association.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DeleteContainerAssociationRequest AWS API Documentation
+    #
+    class DeleteContainerAssociationRequest < Struct.new(
+      :container_association_name,
+      :container_association_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] container_association_name
+    #   The descriptive name of the container association.
+    #   @return [String]
+    #
+    # @!attribute [rw] container_association_arn
+    #   The Amazon Resource Name (ARN) of the container association.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the container association. After deletion is
+    #   initiated, the status is `DELETING`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DeleteContainerAssociationResponse AWS API Documentation
+    #
+    class DeleteContainerAssociationResponse < Struct.new(
+      :container_association_name,
+      :container_association_arn,
+      :status)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1113,21 +2133,33 @@ module Aws::NetworkFirewall
     end
 
     # @!attribute [rw] firewall
-    #   The firewall defines the configuration settings for an Network
-    #   Firewall firewall. These settings include the firewall policy, the
-    #   subnets in your VPC to use for the firewall endpoints, and any tags
-    #   that are attached to the firewall Amazon Web Services resource.
+    #   A firewall defines the behavior of a firewall, the main VPC where
+    #   the firewall is used, the Availability Zones where the firewall can
+    #   be used, and one subnet to use for a firewall endpoint within each
+    #   of the Availability Zones. The Availability Zones are defined
+    #   implicitly in the subnet specifications.
+    #
+    #   In addition to the firewall endpoints that you define in this
+    #   `Firewall` specification, you can create firewall endpoints in
+    #   `VpcEndpointAssociation` resources for any VPC, in any Availability
+    #   Zone where the firewall is already in use.
     #
     #   The status of the firewall, for example whether it's ready to
     #   filter network traffic, is provided in the corresponding
-    #   FirewallStatus. You can retrieve both objects by calling
-    #   DescribeFirewall.
+    #   FirewallStatus. You can retrieve both the firewall and firewall
+    #   status by calling DescribeFirewall.
     #   @return [Types::Firewall]
     #
     # @!attribute [rw] firewall_status
     #   Detailed information about the current status of a Firewall. You can
     #   retrieve this for a firewall by calling DescribeFirewall and
     #   providing the firewall name and ARN.
+    #
+    #   The firewall status indicates a combined status. It indicates
+    #   whether all subnets are up-to-date with the latest firewall
+    #   configurations, which is based on the sync states config values, and
+    #   also whether all subnets have their endpoints fully enabled, based
+    #   on their sync states attachment values.
     #   @return [Types::FirewallStatus]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DeleteFirewallResponse AWS API Documentation
@@ -1135,6 +2167,229 @@ module Aws::NetworkFirewall
     class DeleteFirewallResponse < Struct.new(
       :firewall,
       :firewall_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] transit_gateway_attachment_id
+    #   Required. The unique identifier of the transit gateway attachment to
+    #   delete.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DeleteNetworkFirewallTransitGatewayAttachmentRequest AWS API Documentation
+    #
+    class DeleteNetworkFirewallTransitGatewayAttachmentRequest < Struct.new(
+      :transit_gateway_attachment_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] transit_gateway_attachment_id
+    #   The ID of the transit gateway attachment that was deleted.
+    #   @return [String]
+    #
+    # @!attribute [rw] transit_gateway_attachment_status
+    #   The current status of the transit gateway attachment deletion
+    #   process.
+    #
+    #   Valid values are:
+    #
+    #   * `CREATING` - The attachment is being created
+    #
+    #   * `DELETING` - The attachment is being deleted
+    #
+    #   * `DELETED` - The attachment has been deleted
+    #
+    #   * `FAILED` - The attachment creation has failed and cannot be
+    #     recovered
+    #
+    #   * `ERROR` - The attachment is in an error state that might be
+    #     recoverable
+    #
+    #   * `READY` - The attachment is active and processing traffic
+    #
+    #   * `PENDING_ACCEPTANCE` - The attachment is waiting to be accepted
+    #
+    #   * `REJECTING` - The attachment is in the process of being rejected
+    #
+    #   * `REJECTED` - The attachment has been rejected
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DeleteNetworkFirewallTransitGatewayAttachmentResponse AWS API Documentation
+    #
+    class DeleteNetworkFirewallTransitGatewayAttachmentResponse < Struct.new(
+      :transit_gateway_attachment_id,
+      :transit_gateway_attachment_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_configuration_name
+    #   The descriptive name of the proxy configuration. You can't change
+    #   the name of a proxy configuration after you create it.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_configuration_arn
+    #   The Amazon Resource Name (ARN) of a proxy configuration.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DeleteProxyConfigurationRequest AWS API Documentation
+    #
+    class DeleteProxyConfigurationRequest < Struct.new(
+      :proxy_configuration_name,
+      :proxy_configuration_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_configuration_name
+    #   The descriptive name of the proxy configuration. You can't change
+    #   the name of a proxy configuration after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_configuration_arn
+    #   The Amazon Resource Name (ARN) of a proxy configuration.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DeleteProxyConfigurationResponse AWS API Documentation
+    #
+    class DeleteProxyConfigurationResponse < Struct.new(
+      :proxy_configuration_name,
+      :proxy_configuration_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] nat_gateway_id
+    #   The NAT Gateway the proxy is attached to.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_name
+    #   The descriptive name of the proxy. You can't change the name of a
+    #   proxy after you create it.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_arn
+    #   The Amazon Resource Name (ARN) of a proxy.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DeleteProxyRequest AWS API Documentation
+    #
+    class DeleteProxyRequest < Struct.new(
+      :nat_gateway_id,
+      :proxy_name,
+      :proxy_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] nat_gateway_id
+    #   The NAT Gateway the Proxy was attached to.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_name
+    #   The descriptive name of the proxy. You can't change the name of a
+    #   proxy after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_arn
+    #   The Amazon Resource Name (ARN) of a proxy.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DeleteProxyResponse AWS API Documentation
+    #
+    class DeleteProxyResponse < Struct.new(
+      :nat_gateway_id,
+      :proxy_name,
+      :proxy_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_rule_group_name
+    #   The descriptive name of the proxy rule group. You can't change the
+    #   name of a proxy rule group after you create it.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_rule_group_arn
+    #   The Amazon Resource Name (ARN) of a proxy rule group.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DeleteProxyRuleGroupRequest AWS API Documentation
+    #
+    class DeleteProxyRuleGroupRequest < Struct.new(
+      :proxy_rule_group_name,
+      :proxy_rule_group_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_rule_group_name
+    #   The descriptive name of the proxy rule group. You can't change the
+    #   name of a proxy rule group after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_rule_group_arn
+    #   The Amazon Resource Name (ARN) of a proxy rule group.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DeleteProxyRuleGroupResponse AWS API Documentation
+    #
+    class DeleteProxyRuleGroupResponse < Struct.new(
+      :proxy_rule_group_name,
+      :proxy_rule_group_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_rule_group_arn
+    #   The Amazon Resource Name (ARN) of a proxy rule group.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_rule_group_name
+    #   The descriptive name of the proxy rule group. You can't change the
+    #   name of a proxy rule group after you create it.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] rules
+    #   The proxy rule(s) to remove from the existing proxy rule group.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DeleteProxyRulesRequest AWS API Documentation
+    #
+    class DeleteProxyRulesRequest < Struct.new(
+      :proxy_rule_group_arn,
+      :proxy_rule_group_name,
+      :rules)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_rule_group
+    #   The properties that define the proxy rule group with the newly
+    #   created proxy rule(s).
+    #   @return [Types::ProxyRuleGroup]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DeleteProxyRulesResponse AWS API Documentation
+    #
+    class DeleteProxyRulesResponse < Struct.new(
+      :proxy_rule_group)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1238,6 +2493,193 @@ module Aws::NetworkFirewall
     #
     class DeleteTLSInspectionConfigurationResponse < Struct.new(
       :tls_inspection_configuration_response)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] vpc_endpoint_association_arn
+    #   The Amazon Resource Name (ARN) of a VPC endpoint association.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DeleteVpcEndpointAssociationRequest AWS API Documentation
+    #
+    class DeleteVpcEndpointAssociationRequest < Struct.new(
+      :vpc_endpoint_association_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] vpc_endpoint_association
+    #   The configuration settings for the VPC endpoint association. These
+    #   settings include the firewall and the VPC and subnet to use for the
+    #   firewall endpoint.
+    #   @return [Types::VpcEndpointAssociation]
+    #
+    # @!attribute [rw] vpc_endpoint_association_status
+    #   Detailed information about the current status of a
+    #   VpcEndpointAssociation. You can retrieve this by calling
+    #   DescribeVpcEndpointAssociation and providing the VPC endpoint
+    #   association ARN.
+    #   @return [Types::VpcEndpointAssociationStatus]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DeleteVpcEndpointAssociationResponse AWS API Documentation
+    #
+    class DeleteVpcEndpointAssociationResponse < Struct.new(
+      :vpc_endpoint_association,
+      :vpc_endpoint_association_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] container_association_name
+    #   The descriptive name of the container association.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] container_association_arn
+    #   The Amazon Resource Name (ARN) of the container association.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DescribeContainerAssociationRequest AWS API Documentation
+    #
+    class DescribeContainerAssociationRequest < Struct.new(
+      :container_association_name,
+      :container_association_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] container_association_name
+    #   The descriptive name of the container association.
+    #   @return [String]
+    #
+    # @!attribute [rw] container_association_arn
+    #   The Amazon Resource Name (ARN) of the container association.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A description of the container association.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The container type. Valid values:
+    #
+    #   * `ECS` - Amazon Elastic Container Service
+    #
+    #   * `EKS` - Amazon Elastic Kubernetes Service
+    #   @return [String]
+    #
+    # @!attribute [rw] container_monitoring_configurations
+    #   The monitoring configurations for the container association.
+    #   @return [Array<Types::ContainerMonitoringConfiguration>]
+    #
+    # @!attribute [rw] status
+    #   The current status of the container association.
+    #   @return [String]
+    #
+    # @!attribute [rw] resolved_cidr_count
+    #   The number of CIDR blocks resolved from the monitored containers.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] last_updated_time
+    #   The most recent time that Network Firewall updated the container
+    #   association.
+    #   @return [Time]
+    #
+    # @!attribute [rw] tags
+    #   The key:value pairs to associate with the resource.
+    #   @return [Array<Types::Tag>]
+    #
+    # @!attribute [rw] update_token
+    #   A token used for optimistic locking. Network Firewall returns a
+    #   token to your requests that access the container association. The
+    #   token marks the state of the container association resource at the
+    #   time of the request.
+    #
+    #   To make changes to the container association, you provide the token
+    #   in your request. Network Firewall uses the token to ensure that the
+    #   container association hasn't changed since you last retrieved it.
+    #   If it has changed, the operation fails with an
+    #   `InvalidTokenException`. If this happens, retrieve the container
+    #   association again to get a current copy of it with a current token.
+    #   Reapply your changes as needed, then try the operation again using
+    #   the new token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DescribeContainerAssociationResponse AWS API Documentation
+    #
+    class DescribeContainerAssociationResponse < Struct.new(
+      :container_association_name,
+      :container_association_arn,
+      :description,
+      :type,
+      :container_monitoring_configurations,
+      :status,
+      :resolved_cidr_count,
+      :last_updated_time,
+      :tags,
+      :update_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] firewall_arn
+    #   The Amazon Resource Name (ARN) of the firewall.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DescribeFirewallMetadataRequest AWS API Documentation
+    #
+    class DescribeFirewallMetadataRequest < Struct.new(
+      :firewall_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] firewall_arn
+    #   The Amazon Resource Name (ARN) of the firewall.
+    #   @return [String]
+    #
+    # @!attribute [rw] firewall_policy_arn
+    #   The Amazon Resource Name (ARN) of the firewall policy.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A description of the firewall.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The readiness of the configured firewall to handle network traffic
+    #   across all of the Availability Zones where you have it configured.
+    #   This setting is `READY` only when the
+    #   `ConfigurationSyncStateSummary` value is `IN_SYNC` and the
+    #   `Attachment` `Status` values for all of the configured subnets are
+    #   `READY`.
+    #   @return [String]
+    #
+    # @!attribute [rw] supported_availability_zones
+    #   The Availability Zones that the firewall currently supports. This
+    #   includes all Availability Zones for which the firewall has a subnet
+    #   defined.
+    #   @return [Hash<String,Types::AvailabilityZoneMetadata>]
+    #
+    # @!attribute [rw] transit_gateway_attachment_id
+    #   The unique identifier of the transit gateway attachment associated
+    #   with this firewall. This field is only present for transit
+    #   gateway-attached firewalls.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DescribeFirewallMetadataResponse AWS API Documentation
+    #
+    class DescribeFirewallMetadataResponse < Struct.new(
+      :firewall_arn,
+      :firewall_policy_arn,
+      :description,
+      :status,
+      :supported_availability_zones,
+      :transit_gateway_attachment_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1350,6 +2792,12 @@ module Aws::NetworkFirewall
     #   Detailed information about the current status of a Firewall. You can
     #   retrieve this for a firewall by calling DescribeFirewall and
     #   providing the firewall name and ARN.
+    #
+    #   The firewall status indicates a combined status. It indicates
+    #   whether all subnets are up-to-date with the latest firewall
+    #   configurations, which is based on the sync states config values, and
+    #   also whether all subnets have their endpoints fully enabled, based
+    #   on their sync states attachment values.
     #   @return [Types::FirewallStatus]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DescribeFirewallResponse AWS API Documentation
@@ -1374,6 +2822,15 @@ module Aws::NetworkFirewall
     #   configure a single flow operation.
     #   @return [String]
     #
+    # @!attribute [rw] vpc_endpoint_association_arn
+    #   The Amazon Resource Name (ARN) of a VPC endpoint association.
+    #   @return [String]
+    #
+    # @!attribute [rw] vpc_endpoint_id
+    #   A unique identifier for the primary endpoint associated with a
+    #   firewall.
+    #   @return [String]
+    #
     # @!attribute [rw] flow_operation_id
     #   A unique identifier for the flow operation. This ID is returned in
     #   the responses to start and list commands. You provide to describe
@@ -1385,6 +2842,8 @@ module Aws::NetworkFirewall
     class DescribeFlowOperationRequest < Struct.new(
       :firewall_arn,
       :availability_zone,
+      :vpc_endpoint_association_arn,
+      :vpc_endpoint_id,
       :flow_operation_id)
       SENSITIVE = []
       include Aws::Structure
@@ -1400,6 +2859,15 @@ module Aws::NetworkFirewall
     #
     #   Defines the scope a flow operation. You can use up to 20 filters to
     #   configure a single flow operation.
+    #   @return [String]
+    #
+    # @!attribute [rw] vpc_endpoint_association_arn
+    #   The Amazon Resource Name (ARN) of a VPC endpoint association.
+    #   @return [String]
+    #
+    # @!attribute [rw] vpc_endpoint_id
+    #   A unique identifier for the primary endpoint associated with a
+    #   firewall.
     #   @return [String]
     #
     # @!attribute [rw] flow_operation_id
@@ -1443,6 +2911,8 @@ module Aws::NetworkFirewall
     class DescribeFlowOperationResponse < Struct.new(
       :firewall_arn,
       :availability_zone,
+      :vpc_endpoint_association_arn,
+      :vpc_endpoint_id,
       :flow_operation_id,
       :flow_operation_type,
       :flow_operation_status,
@@ -1483,11 +2953,322 @@ module Aws::NetworkFirewall
     #   Defines how Network Firewall performs logging for a Firewall.
     #   @return [Types::LoggingConfiguration]
     #
+    # @!attribute [rw] enable_monitoring_dashboard
+    #   A boolean that reflects whether or not the firewall monitoring
+    #   dashboard is enabled on a firewall.
+    #
+    #   Returns `TRUE` when the firewall monitoring dashboard is enabled on
+    #   the firewall. Returns `FALSE` when the firewall monitoring dashboard
+    #   is not enabled on the firewall.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DescribeLoggingConfigurationResponse AWS API Documentation
     #
     class DescribeLoggingConfigurationResponse < Struct.new(
       :firewall_arn,
-      :logging_configuration)
+      :logging_configuration,
+      :enable_monitoring_dashboard)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_configuration_name
+    #   The descriptive name of the proxy configuration. You can't change
+    #   the name of a proxy configuration after you create it.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_configuration_arn
+    #   The Amazon Resource Name (ARN) of a proxy configuration.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DescribeProxyConfigurationRequest AWS API Documentation
+    #
+    class DescribeProxyConfigurationRequest < Struct.new(
+      :proxy_configuration_name,
+      :proxy_configuration_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_configuration
+    #   The configuration for the specified proxy configuration.
+    #   @return [Types::ProxyConfiguration]
+    #
+    # @!attribute [rw] update_token
+    #   A token used for optimistic locking. Network Firewall returns a
+    #   token to your requests that access the proxy configuration. The
+    #   token marks the state of the proxy configuration resource at the
+    #   time of the request.
+    #
+    #   To make changes to the proxy configuration, you provide the token in
+    #   your request. Network Firewall uses the token to ensure that the
+    #   proxy configuration hasn't changed since you last retrieved it. If
+    #   it has changed, the operation fails with an `InvalidTokenException`.
+    #   If this happens, retrieve the proxy configuration again to get a
+    #   current copy of it with a current token. Reapply your changes as
+    #   needed, then try the operation again using the new token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DescribeProxyConfigurationResponse AWS API Documentation
+    #
+    class DescribeProxyConfigurationResponse < Struct.new(
+      :proxy_configuration,
+      :update_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_name
+    #   The descriptive name of the proxy. You can't change the name of a
+    #   proxy after you create it.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_arn
+    #   The Amazon Resource Name (ARN) of a proxy.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DescribeProxyRequest AWS API Documentation
+    #
+    class DescribeProxyRequest < Struct.new(
+      :proxy_name,
+      :proxy_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Proxy attached to a NAT gateway.
+    #
+    # @!attribute [rw] proxy_name
+    #   The descriptive name of the proxy. You can't change the name of a
+    #   proxy after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_arn
+    #   The Amazon Resource Name (ARN) of a proxy.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_configuration_name
+    #   The descriptive name of the proxy configuration. You can't change
+    #   the name of a proxy configuration after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_configuration_arn
+    #   The Amazon Resource Name (ARN) of a proxy configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] nat_gateway_id
+    #   The NAT Gateway for the proxy.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_state
+    #   Current attachment/detachment status of the Proxy.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_modify_state
+    #   Current modification status of the Proxy.
+    #   @return [String]
+    #
+    # @!attribute [rw] listener_properties
+    #   Listener properties for HTTP and HTTPS traffic.
+    #   @return [Array<Types::ListenerProperty>]
+    #
+    # @!attribute [rw] tls_intercept_properties
+    #   TLS decryption on traffic to filter on attributes in the HTTP
+    #   header.
+    #   @return [Types::TlsInterceptProperties]
+    #
+    # @!attribute [rw] vpc_endpoint_service_name
+    #   The service endpoint created in the VPC.
+    #   @return [String]
+    #
+    # @!attribute [rw] private_dns_name
+    #   The private DNS name of the Proxy.
+    #   @return [String]
+    #
+    # @!attribute [rw] create_time
+    #   Time the Proxy was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] delete_time
+    #   Time the Proxy was deleted.
+    #   @return [Time]
+    #
+    # @!attribute [rw] update_time
+    #   Time the Proxy was updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] failure_code
+    #   Failure code for cases when the Proxy fails to attach or update.
+    #   @return [String]
+    #
+    # @!attribute [rw] failure_message
+    #   Failure message for cases when the Proxy fails to attach or update.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   The key:value pairs to associate with the resource.
+    #   @return [Array<Types::Tag>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DescribeProxyResource AWS API Documentation
+    #
+    class DescribeProxyResource < Struct.new(
+      :proxy_name,
+      :proxy_arn,
+      :proxy_configuration_name,
+      :proxy_configuration_arn,
+      :nat_gateway_id,
+      :proxy_state,
+      :proxy_modify_state,
+      :listener_properties,
+      :tls_intercept_properties,
+      :vpc_endpoint_service_name,
+      :private_dns_name,
+      :create_time,
+      :delete_time,
+      :update_time,
+      :failure_code,
+      :failure_message,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy
+    #   Proxy attached to a NAT gateway.
+    #   @return [Types::DescribeProxyResource]
+    #
+    # @!attribute [rw] update_token
+    #   A token used for optimistic locking. Network Firewall returns a
+    #   token to your requests that access the proxy. The token marks the
+    #   state of the proxy resource at the time of the request.
+    #
+    #   To make changes to the proxy, you provide the token in your request.
+    #   Network Firewall uses the token to ensure that the proxy hasn't
+    #   changed since you last retrieved it. If it has changed, the
+    #   operation fails with an `InvalidTokenException`. If this happens,
+    #   retrieve the proxy again to get a current copy of it with a current
+    #   token. Reapply your changes as needed, then try the operation again
+    #   using the new token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DescribeProxyResponse AWS API Documentation
+    #
+    class DescribeProxyResponse < Struct.new(
+      :proxy,
+      :update_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_rule_group_name
+    #   The descriptive name of the proxy rule group. You can't change the
+    #   name of a proxy rule group after you create it.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_rule_group_arn
+    #   The Amazon Resource Name (ARN) of a proxy rule group.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DescribeProxyRuleGroupRequest AWS API Documentation
+    #
+    class DescribeProxyRuleGroupRequest < Struct.new(
+      :proxy_rule_group_name,
+      :proxy_rule_group_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_rule_group
+    #   The configuration for the specified proxy rule group.
+    #   @return [Types::ProxyRuleGroup]
+    #
+    # @!attribute [rw] update_token
+    #   A token used for optimistic locking. Network Firewall returns a
+    #   token to your requests that access the proxy rule group. The token
+    #   marks the state of the proxy rule group resource at the time of the
+    #   request.
+    #
+    #   To make changes to the proxy rule group, you provide the token in
+    #   your request. Network Firewall uses the token to ensure that the
+    #   proxy rule group hasn't changed since you last retrieved it. If it
+    #   has changed, the operation fails with an `InvalidTokenException`. If
+    #   this happens, retrieve the proxy rule group again to get a current
+    #   copy of it with a current token. Reapply your changes as needed,
+    #   then try the operation again using the new token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DescribeProxyRuleGroupResponse AWS API Documentation
+    #
+    class DescribeProxyRuleGroupResponse < Struct.new(
+      :proxy_rule_group,
+      :update_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_rule_name
+    #   The descriptive name of the proxy rule. You can't change the name
+    #   of a proxy rule after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_rule_group_name
+    #   The descriptive name of the proxy rule group. You can't change the
+    #   name of a proxy rule group after you create it.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_rule_group_arn
+    #   The Amazon Resource Name (ARN) of a proxy rule group.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DescribeProxyRuleRequest AWS API Documentation
+    #
+    class DescribeProxyRuleRequest < Struct.new(
+      :proxy_rule_name,
+      :proxy_rule_group_name,
+      :proxy_rule_group_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_rule
+    #   The configuration for the specified proxy rule.
+    #   @return [Types::ProxyRule]
+    #
+    # @!attribute [rw] update_token
+    #   A token used for optimistic locking. Network Firewall returns a
+    #   token to your requests that access the proxy rule. The token marks
+    #   the state of the proxy rule resource at the time of the request.
+    #
+    #   To make changes to the proxy rule, you provide the token in your
+    #   request. Network Firewall uses the token to ensure that the proxy
+    #   rule hasn't changed since you last retrieved it. If it has changed,
+    #   the operation fails with an `InvalidTokenException`. If this
+    #   happens, retrieve the proxy rule again to get a current copy of it
+    #   with a current token. Reapply your changes as needed, then try the
+    #   operation again using the new token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DescribeProxyRuleResponse AWS API Documentation
+    #
+    class DescribeProxyRuleResponse < Struct.new(
+      :proxy_rule,
+      :update_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1599,8 +3380,22 @@ module Aws::NetworkFirewall
     #   @return [Types::StatefulRuleOptions]
     #
     # @!attribute [rw] last_modified_time
-    #   The last time that the rule group was changed.
+    #   A timestamp indicating when the rule group was last modified.
     #   @return [Time]
+    #
+    # @!attribute [rw] vendor_name
+    #   The name of the Amazon Web Services Marketplace vendor that provides
+    #   this rule group.
+    #   @return [String]
+    #
+    # @!attribute [rw] product_id
+    #   The unique identifier for the product listing associated with this
+    #   rule group.
+    #   @return [String]
+    #
+    # @!attribute [rw] listing_name
+    #   The display name of the product listing for this rule group.
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DescribeRuleGroupMetadataResponse AWS API Documentation
     #
@@ -1611,7 +3406,10 @@ module Aws::NetworkFirewall
       :type,
       :capacity,
       :stateful_rule_options,
-      :last_modified_time)
+      :last_modified_time,
+      :vendor_name,
+      :product_id,
+      :listing_name)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1703,6 +3501,73 @@ module Aws::NetworkFirewall
       include Aws::Structure
     end
 
+    # @!attribute [rw] rule_group_name
+    #   The descriptive name of the rule group. You can't change the name
+    #   of a rule group after you create it.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] rule_group_arn
+    #   Required. The Amazon Resource Name (ARN) of the rule group.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The type of rule group you want a summary for. This is a required
+    #   field.
+    #
+    #   Valid value: `STATEFUL`
+    #
+    #   Note that `STATELESS` exists but is not currently supported. If you
+    #   provide `STATELESS`, an exception is returned.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DescribeRuleGroupSummaryRequest AWS API Documentation
+    #
+    class DescribeRuleGroupSummaryRequest < Struct.new(
+      :rule_group_name,
+      :rule_group_arn,
+      :type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] rule_group_name
+    #   The descriptive name of the rule group. You can't change the name
+    #   of a rule group after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A description of the rule group.
+    #   @return [String]
+    #
+    # @!attribute [rw] summary
+    #   A complex type that contains rule information based on the rule
+    #   group's configured summary settings. The content varies depending
+    #   on the fields that you specified to extract in your
+    #   SummaryConfiguration. When you haven't configured any summary
+    #   settings, this returns an empty array. The response might include:
+    #
+    #   * Rule identifiers
+    #
+    #   * Rule descriptions
+    #
+    #   * Any metadata fields that you specified in your
+    #     SummaryConfiguration
+    #   @return [Types::Summary]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DescribeRuleGroupSummaryResponse AWS API Documentation
+    #
+    class DescribeRuleGroupSummaryResponse < Struct.new(
+      :rule_group_name,
+      :description,
+      :summary)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] tls_inspection_configuration_arn
     #   The Amazon Resource Name (ARN) of the TLS inspection configuration.
     #
@@ -1784,6 +3649,117 @@ module Aws::NetworkFirewall
       include Aws::Structure
     end
 
+    # @!attribute [rw] vpc_endpoint_association_arn
+    #   The Amazon Resource Name (ARN) of a VPC endpoint association.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DescribeVpcEndpointAssociationRequest AWS API Documentation
+    #
+    class DescribeVpcEndpointAssociationRequest < Struct.new(
+      :vpc_endpoint_association_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] vpc_endpoint_association
+    #   The configuration settings for the VPC endpoint association. These
+    #   settings include the firewall and the VPC and subnet to use for the
+    #   firewall endpoint.
+    #   @return [Types::VpcEndpointAssociation]
+    #
+    # @!attribute [rw] vpc_endpoint_association_status
+    #   Detailed information about the current status of a
+    #   VpcEndpointAssociation. You can retrieve this by calling
+    #   DescribeVpcEndpointAssociation and providing the VPC endpoint
+    #   association ARN.
+    #   @return [Types::VpcEndpointAssociationStatus]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DescribeVpcEndpointAssociationResponse AWS API Documentation
+    #
+    class DescribeVpcEndpointAssociationResponse < Struct.new(
+      :vpc_endpoint_association,
+      :vpc_endpoint_association_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_configuration_name
+    #   The descriptive name of the proxy configuration. You can't change
+    #   the name of a proxy configuration after you create it.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_configuration_arn
+    #   The Amazon Resource Name (ARN) of a proxy configuration.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] rule_group_names
+    #   The proxy rule group names to detach from the proxy configuration
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] rule_group_arns
+    #   The proxy rule group arns to detach from the proxy configuration
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] update_token
+    #   A token used for optimistic locking. Network Firewall returns a
+    #   token to your requests that access the proxy configuration. The
+    #   token marks the state of the proxy configuration resource at the
+    #   time of the request.
+    #
+    #   To make changes to the proxy configuration, you provide the token in
+    #   your request. Network Firewall uses the token to ensure that the
+    #   proxy configuration hasn't changed since you last retrieved it. If
+    #   it has changed, the operation fails with an `InvalidTokenException`.
+    #   If this happens, retrieve the proxy configuration again to get a
+    #   current copy of it with a current token. Reapply your changes as
+    #   needed, then try the operation again using the new token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DetachRuleGroupsFromProxyConfigurationRequest AWS API Documentation
+    #
+    class DetachRuleGroupsFromProxyConfigurationRequest < Struct.new(
+      :proxy_configuration_name,
+      :proxy_configuration_arn,
+      :rule_group_names,
+      :rule_group_arns,
+      :update_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_configuration
+    #   The updated proxy configuration resource that reflects the updates
+    #   from the request.
+    #   @return [Types::ProxyConfiguration]
+    #
+    # @!attribute [rw] update_token
+    #   A token used for optimistic locking. Network Firewall returns a
+    #   token to your requests that access the proxy configuration. The
+    #   token marks the state of the proxy configuration resource at the
+    #   time of the request.
+    #
+    #   To make changes to the proxy configuration, you provide the token in
+    #   your request. Network Firewall uses the token to ensure that the
+    #   proxy configuration hasn't changed since you last retrieved it. If
+    #   it has changed, the operation fails with an `InvalidTokenException`.
+    #   If this happens, retrieve the proxy configuration again to get a
+    #   current copy of it with a current token. Reapply your changes as
+    #   needed, then try the operation again using the new token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DetachRuleGroupsFromProxyConfigurationResponse AWS API Documentation
+    #
+    class DetachRuleGroupsFromProxyConfigurationResponse < Struct.new(
+      :proxy_configuration,
+      :update_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The value to use in an Amazon CloudWatch custom metric dimension. This
     # is used in the `PublishMetrics` CustomAction. A CloudWatch custom
     # metric dimension is a name/value pair that's part of the identity of
@@ -1809,6 +3785,100 @@ module Aws::NetworkFirewall
     #
     class Dimension < Struct.new(
       :value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] update_token
+    #   An optional token that you can use for optimistic locking. Network
+    #   Firewall returns a token to your requests that access the firewall.
+    #   The token marks the state of the firewall resource at the time of
+    #   the request.
+    #
+    #   To make an unconditional change to the firewall, omit the token in
+    #   your update request. Without the token, Network Firewall performs
+    #   your updates regardless of whether the firewall has changed since
+    #   you last retrieved it.
+    #
+    #   To make a conditional change to the firewall, provide the token in
+    #   your update request. Network Firewall uses the token to ensure that
+    #   the firewall hasn't changed since you last retrieved it. If it has
+    #   changed, the operation fails with an `InvalidTokenException`. If
+    #   this happens, retrieve the firewall again to get a current copy of
+    #   it with a new token. Reapply your changes as needed, then try the
+    #   operation again using the new token.
+    #   @return [String]
+    #
+    # @!attribute [rw] firewall_arn
+    #   The Amazon Resource Name (ARN) of the firewall.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] firewall_name
+    #   The descriptive name of the firewall. You can't change the name of
+    #   a firewall after you create it.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_zone_mappings
+    #   Required. The Availability Zones to remove from the firewall's
+    #   configuration.
+    #   @return [Array<Types::AvailabilityZoneMapping>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DisassociateAvailabilityZonesRequest AWS API Documentation
+    #
+    class DisassociateAvailabilityZonesRequest < Struct.new(
+      :update_token,
+      :firewall_arn,
+      :firewall_name,
+      :availability_zone_mappings)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] firewall_arn
+    #   The Amazon Resource Name (ARN) of the firewall.
+    #   @return [String]
+    #
+    # @!attribute [rw] firewall_name
+    #   The descriptive name of the firewall. You can't change the name of
+    #   a firewall after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_zone_mappings
+    #   The remaining Availability Zones where the firewall has endpoints
+    #   after the disassociation.
+    #   @return [Array<Types::AvailabilityZoneMapping>]
+    #
+    # @!attribute [rw] update_token
+    #   An optional token that you can use for optimistic locking. Network
+    #   Firewall returns a token to your requests that access the firewall.
+    #   The token marks the state of the firewall resource at the time of
+    #   the request.
+    #
+    #   To make an unconditional change to the firewall, omit the token in
+    #   your update request. Without the token, Network Firewall performs
+    #   your updates regardless of whether the firewall has changed since
+    #   you last retrieved it.
+    #
+    #   To make a conditional change to the firewall, provide the token in
+    #   your update request. Network Firewall uses the token to ensure that
+    #   the firewall hasn't changed since you last retrieved it. If it has
+    #   changed, the operation fails with an `InvalidTokenException`. If
+    #   this happens, retrieve the firewall again to get a current copy of
+    #   it with a new token. Reapply your changes as needed, then try the
+    #   operation again using the new token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/DisassociateAvailabilityZonesResponse AWS API Documentation
+    #
+    class DisassociateAvailabilityZonesResponse < Struct.new(
+      :firewall_arn,
+      :firewall_name,
+      :availability_zone_mappings,
+      :update_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1947,14 +4017,21 @@ module Aws::NetworkFirewall
       include Aws::Structure
     end
 
-    # The firewall defines the configuration settings for an Network
-    # Firewall firewall. These settings include the firewall policy, the
-    # subnets in your VPC to use for the firewall endpoints, and any tags
-    # that are attached to the firewall Amazon Web Services resource.
+    # A firewall defines the behavior of a firewall, the main VPC where the
+    # firewall is used, the Availability Zones where the firewall can be
+    # used, and one subnet to use for a firewall endpoint within each of the
+    # Availability Zones. The Availability Zones are defined implicitly in
+    # the subnet specifications.
+    #
+    # In addition to the firewall endpoints that you define in this
+    # `Firewall` specification, you can create firewall endpoints in
+    # `VpcEndpointAssociation` resources for any VPC, in any Availability
+    # Zone where the firewall is already in use.
     #
     # The status of the firewall, for example whether it's ready to filter
     # network traffic, is provided in the corresponding FirewallStatus. You
-    # can retrieve both objects by calling DescribeFirewall.
+    # can retrieve both the firewall and firewall status by calling
+    # DescribeFirewall.
     #
     # @!attribute [rw] firewall_name
     #   The descriptive name of the firewall. You can't change the name of
@@ -1978,8 +4055,23 @@ module Aws::NetworkFirewall
     #   @return [String]
     #
     # @!attribute [rw] subnet_mappings
-    #   The public subnets that Network Firewall is using for the firewall.
-    #   Each subnet must belong to a different Availability Zone.
+    #   The primary public subnets that Network Firewall is using for the
+    #   firewall. Network Firewall creates a firewall endpoint in each
+    #   subnet. Create a subnet mapping for each Availability Zone where you
+    #   want to use the firewall.
+    #
+    #   These subnets are all defined for a single, primary VPC, and each
+    #   must belong to a different Availability Zone. Each of these subnets
+    #   establishes the availability of the firewall in its Availability
+    #   Zone.
+    #
+    #   In addition to these subnets, you can define other endpoints for the
+    #   firewall in `VpcEndpointAssociation` resources. You can define these
+    #   additional endpoints for any VPC, and for any of the Availability
+    #   Zones where the firewall resource already has a subnet mapping. VPC
+    #   endpoint associations give you the ability to protect multiple VPCs
+    #   using a single firewall, and to define multiple firewall endpoints
+    #   for a VPC in a single Availability Zone.
     #   @return [Array<Types::SubnetMapping>]
     #
     # @!attribute [rw] delete_protection
@@ -2022,10 +4114,64 @@ module Aws::NetworkFirewall
     #   configuration settings for your firewall.
     #   @return [Types::EncryptionConfiguration]
     #
+    # @!attribute [rw] number_of_associations
+    #   The number of `VpcEndpointAssociation` resources that use this
+    #   firewall.
+    #   @return [Integer]
+    #
     # @!attribute [rw] enabled_analysis_types
     #   An optional setting indicating the specific traffic analysis types
     #   to enable on the firewall.
     #   @return [Array<String>]
+    #
+    # @!attribute [rw] transit_gateway_id
+    #   The unique identifier of the transit gateway associated with this
+    #   firewall. This field is only present for transit gateway-attached
+    #   firewalls.
+    #   @return [String]
+    #
+    # @!attribute [rw] transit_gateway_owner_account_id
+    #   The Amazon Web Services account ID that owns the transit gateway.
+    #   This may be different from the firewall owner's account ID when
+    #   using a shared transit gateway.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_zone_mappings
+    #   The Availability Zones where the firewall endpoints are created for
+    #   a transit gateway-attached firewall. Each mapping specifies an
+    #   Availability Zone where the firewall processes traffic.
+    #   @return [Array<Types::AvailabilityZoneMapping>]
+    #
+    # @!attribute [rw] availability_zone_change_protection
+    #   A setting indicating whether the firewall is protected against
+    #   changes to its Availability Zone configuration. When set to `TRUE`,
+    #   you must first disable this protection before adding or removing
+    #   Availability Zones.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] nat_gateway_mappings
+    #   The NAT gateways that the firewall uses to proxy traffic. This is
+    #   set for proxy mode firewalls, where `NoSourcePreservation` is
+    #   `TRUE`.
+    #   @return [Array<Types::NatGatewayMapping>]
+    #
+    # @!attribute [rw] proxy_settings
+    #   The listener configuration for the firewall's proxy. This is set
+    #   for proxy mode firewalls, where `NoSourcePreservation` is `TRUE`.
+    #   @return [Types::ProxySettings]
+    #
+    # @!attribute [rw] no_source_preservation
+    #   Indicates whether the firewall operates in proxy mode, in which the
+    #   source IP address of the traffic is not preserved. When this value
+    #   is `TRUE`, the firewall proxies traffic through a NAT gateway and
+    #   uses the NAT gateway's IP address as the source for traffic
+    #   reaching the destination.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] vpc_endpoint
+    #   The VPC and subnets for the firewall endpoint. This is set for proxy
+    #   mode firewalls, where `NoSourcePreservation` is `TRUE`.
+    #   @return [Types::VpcEndpoint]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/Firewall AWS API Documentation
     #
@@ -2042,7 +4188,16 @@ module Aws::NetworkFirewall
       :firewall_id,
       :tags,
       :encryption_configuration,
-      :enabled_analysis_types)
+      :number_of_associations,
+      :enabled_analysis_types,
+      :transit_gateway_id,
+      :transit_gateway_owner_account_id,
+      :availability_zone_mappings,
+      :availability_zone_change_protection,
+      :nat_gateway_mappings,
+      :proxy_settings,
+      :no_source_preservation,
+      :vpc_endpoint)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2060,11 +4215,18 @@ module Aws::NetworkFirewall
     #   The Amazon Resource Name (ARN) of the firewall.
     #   @return [String]
     #
+    # @!attribute [rw] transit_gateway_attachment_id
+    #   The unique identifier of the transit gateway attachment associated
+    #   with this firewall. This field is only present for transit
+    #   gateway-attached firewalls.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/FirewallMetadata AWS API Documentation
     #
     class FirewallMetadata < Struct.new(
       :firewall_name,
-      :firewall_arn)
+      :firewall_arn,
+      :transit_gateway_attachment_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2143,6 +4305,14 @@ module Aws::NetworkFirewall
     #
     #   * aws:alert\_established
     #
+    #   * aws:drop\_established\_app\_layer
+    #
+    #   * aws:alert\_established\_app\_layer
+    #
+    #   * aws:drop\_established\_app\_layer\_to\_server
+    #
+    #   * aws:alert\_established\_app\_layer\_to\_server
+    #
     #   For more information, see [Strict evaluation order][1] in the
     #   *Network Firewall Developer Guide*.
     #
@@ -2167,6 +4337,12 @@ module Aws::NetworkFirewall
     #   settings in your firewall policy.
     #   @return [Types::PolicyVariables]
     #
+    # @!attribute [rw] enable_tls_session_holding
+    #   When true, prevents TCP and TLS packets from reaching destination
+    #   servers until TLS Inspection has evaluated Server Name Indication
+    #   (SNI) rules. Requires an associated TLS Inspection configuration.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/FirewallPolicy AWS API Documentation
     #
     class FirewallPolicy < Struct.new(
@@ -2178,7 +4354,8 @@ module Aws::NetworkFirewall
       :stateful_default_actions,
       :stateful_engine_options,
       :tls_inspection_configuration_arn,
-      :policy_variables)
+      :policy_variables,
+      :enable_tls_session_holding)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2253,6 +4430,12 @@ module Aws::NetworkFirewall
     #   stateful rules.
     #   @return [Integer]
     #
+    # @!attribute [rw] consumed_stateful_domain_capacity
+    #   The total number of domain name specifications across all domain
+    #   list rule groups in the firewall policy that use the
+    #   `stateful-domain-rulegroup` resource type.
+    #   @return [Integer]
+    #
     # @!attribute [rw] number_of_associations
     #   The number of firewalls that are associated with this firewall
     #   policy.
@@ -2278,6 +4461,7 @@ module Aws::NetworkFirewall
       :tags,
       :consumed_stateless_rule_capacity,
       :consumed_stateful_rule_capacity,
+      :consumed_stateful_domain_capacity,
       :number_of_associations,
       :encryption_configuration,
       :last_modified_time)
@@ -2289,9 +4473,15 @@ module Aws::NetworkFirewall
     # retrieve this for a firewall by calling DescribeFirewall and providing
     # the firewall name and ARN.
     #
+    # The firewall status indicates a combined status. It indicates whether
+    # all subnets are up-to-date with the latest firewall configurations,
+    # which is based on the sync states config values, and also whether all
+    # subnets have their endpoints fully enabled, based on their sync states
+    # attachment values.
+    #
     # @!attribute [rw] status
     #   The readiness of the configured firewall to handle network traffic
-    #   across all of the Availability Zones where you've configured it.
+    #   across all of the Availability Zones where you have it configured.
     #   This setting is `READY` only when the
     #   `ConfigurationSyncStateSummary` value is `IN_SYNC` and the
     #   `Attachment` `Status` values for all of the configured subnets are
@@ -2300,35 +4490,43 @@ module Aws::NetworkFirewall
     #
     # @!attribute [rw] configuration_sync_state_summary
     #   The configuration sync state for the firewall. This summarizes the
-    #   sync states reported in the `Config` settings for all of the
-    #   Availability Zones where you have configured the firewall.
+    #   `Config` settings in the `SyncStates` for this firewall status
+    #   object.
     #
     #   When you create a firewall or update its configuration, for example
     #   by adding a rule group to its firewall policy, Network Firewall
-    #   distributes the configuration changes to all zones where the
-    #   firewall is in use. This summary indicates whether the configuration
-    #   changes have been applied everywhere.
+    #   distributes the configuration changes to all Availability Zones that
+    #   have subnets defined for the firewall. This summary indicates
+    #   whether the configuration changes have been applied everywhere.
     #
     #   This status must be `IN_SYNC` for the firewall to be ready for use,
     #   but it doesn't indicate that the firewall is ready. The `Status`
-    #   setting indicates firewall readiness.
+    #   setting indicates firewall readiness. It's based on this setting
+    #   and the readiness of the firewall endpoints to take traffic.
     #   @return [String]
     #
     # @!attribute [rw] sync_states
-    #   The subnets that you've configured for use by the Network Firewall
-    #   firewall. This contains one array element per Availability Zone
-    #   where you've configured a subnet. These objects provide details of
-    #   the information that is summarized in the
-    #   `ConfigurationSyncStateSummary` and `Status`, broken down by zone
-    #   and configuration object.
+    #   Status for the subnets that you've configured in the firewall. This
+    #   contains one array element per Availability Zone where you've
+    #   configured a subnet in the firewall.
+    #
+    #   These objects provide detailed information for the settings
+    #   `ConfigurationSyncStateSummary` and `Status`.
     #   @return [Hash<String,Types::SyncState>]
     #
     # @!attribute [rw] capacity_usage_summary
     #   Describes the capacity usage of the resources contained in a
-    #   firewall's reference sets. Network Firewall calclulates the
-    #   capacity usage by taking an aggregated count of all of the resources
-    #   used by all of the reference sets in a firewall.
+    #   firewall's reference sets. Network Firewall calculates the capacity
+    #   usage by taking an aggregated count of all of the resources used by
+    #   all of the reference sets in a firewall.
     #   @return [Types::CapacityUsageSummary]
+    #
+    # @!attribute [rw] transit_gateway_attachment_sync_state
+    #   The synchronization state of the transit gateway attachment. This
+    #   indicates whether the firewall's transit gateway configuration is
+    #   properly synchronized and operational. Use this to verify that your
+    #   transit gateway configuration changes have been applied.
+    #   @return [Types::TransitGatewayAttachmentSyncState]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/FirewallStatus AWS API Documentation
     #
@@ -2336,7 +4534,8 @@ module Aws::NetworkFirewall
       :status,
       :configuration_sync_state_summary,
       :sync_states,
-      :capacity_usage_summary)
+      :capacity_usage_summary,
+      :transit_gateway_attachment_sync_state)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2517,9 +4716,8 @@ module Aws::NetworkFirewall
     # Describes the amount of time that can pass without any traffic sent
     # through the firewall before the firewall determines that the
     # connection is idle and Network Firewall removes the flow entry from
-    # its flow table. Existing connections and flows are not impacted when
-    # you update this value. Only new connections after you update this
-    # value are impacted.
+    # its flow table. When you update this value, existing connections will
+    # be treated according to your stream exception policy configuration.
     #
     # @!attribute [rw] tcp_idle_timeout_seconds
     #   The number of seconds that can pass without any TCP traffic sent
@@ -2992,6 +5190,52 @@ module Aws::NetworkFirewall
       include Aws::Structure
     end
 
+    # @!attribute [rw] max_results
+    #   The maximum number of objects that you want Network Firewall to
+    #   return for this request. If more objects are available, in the
+    #   response, Network Firewall provides a `NextToken` value that you can
+    #   use in a subsequent call to get the next batch of objects.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   When you request a list of objects with a `MaxResults` setting, if
+    #   the number of objects that are still available for retrieval exceeds
+    #   the maximum you requested, Network Firewall returns a `NextToken`
+    #   value in the response. To retrieve the next batch of objects, use
+    #   the token returned from the prior request in your next request.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ListContainerAssociationsRequest AWS API Documentation
+    #
+    class ListContainerAssociationsRequest < Struct.new(
+      :max_results,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] container_associations
+    #   The container association metadata objects for the account and
+    #   Region.
+    #   @return [Array<Types::ContainerAssociationSummary>]
+    #
+    # @!attribute [rw] next_token
+    #   When you request a list of objects with a `MaxResults` setting, if
+    #   the number of objects that are still available for retrieval exceeds
+    #   the maximum you requested, Network Firewall returns a `NextToken`
+    #   value in the response. To retrieve the next batch of objects, use
+    #   the token returned from the prior request in your next request.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ListContainerAssociationsResponse AWS API Documentation
+    #
+    class ListContainerAssociationsResponse < Struct.new(
+      :container_associations,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] next_token
     #   When you request a list of objects with a `MaxResults` setting, if
     #   the number of objects that are still available for retrieval exceeds
@@ -3126,6 +5370,15 @@ module Aws::NetworkFirewall
     #   configure a single flow operation.
     #   @return [String]
     #
+    # @!attribute [rw] vpc_endpoint_id
+    #   A unique identifier for the primary endpoint associated with a
+    #   firewall.
+    #   @return [String]
+    #
+    # @!attribute [rw] vpc_endpoint_association_arn
+    #   The Amazon Resource Name (ARN) of a VPC endpoint association.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ListFlowOperationResultsRequest AWS API Documentation
     #
     class ListFlowOperationResultsRequest < Struct.new(
@@ -3133,7 +5386,9 @@ module Aws::NetworkFirewall
       :flow_operation_id,
       :next_token,
       :max_results,
-      :availability_zone)
+      :availability_zone,
+      :vpc_endpoint_id,
+      :vpc_endpoint_association_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3148,6 +5403,12 @@ module Aws::NetworkFirewall
     #
     #   Defines the scope a flow operation. You can use up to 20 filters to
     #   configure a single flow operation.
+    #   @return [String]
+    #
+    # @!attribute [rw] vpc_endpoint_association_arn
+    #   @return [String]
+    #
+    # @!attribute [rw] vpc_endpoint_id
     #   @return [String]
     #
     # @!attribute [rw] flow_operation_id
@@ -3195,6 +5456,8 @@ module Aws::NetworkFirewall
     class ListFlowOperationResultsResponse < Struct.new(
       :firewall_arn,
       :availability_zone,
+      :vpc_endpoint_association_arn,
+      :vpc_endpoint_id,
       :flow_operation_id,
       :flow_operation_status,
       :status_message,
@@ -3215,6 +5478,15 @@ module Aws::NetworkFirewall
     #
     #   Defines the scope a flow operation. You can use up to 20 filters to
     #   configure a single flow operation.
+    #   @return [String]
+    #
+    # @!attribute [rw] vpc_endpoint_association_arn
+    #   The Amazon Resource Name (ARN) of a VPC endpoint association.
+    #   @return [String]
+    #
+    # @!attribute [rw] vpc_endpoint_id
+    #   A unique identifier for the primary endpoint associated with a
+    #   firewall.
     #   @return [String]
     #
     # @!attribute [rw] flow_operation_type
@@ -3242,6 +5514,8 @@ module Aws::NetworkFirewall
     class ListFlowOperationsRequest < Struct.new(
       :firewall_arn,
       :availability_zone,
+      :vpc_endpoint_association_arn,
+      :vpc_endpoint_id,
       :flow_operation_type,
       :next_token,
       :max_results)
@@ -3291,6 +5565,147 @@ module Aws::NetworkFirewall
     #   use in a subsequent call to get the next batch of objects.
     #   @return [Integer]
     #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ListProxiesRequest AWS API Documentation
+    #
+    class ListProxiesRequest < Struct.new(
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxies
+    #   The metadata for the proxies. Depending on your setting for max
+    #   results and the number of proxies that you have, this might not be
+    #   the full list.
+    #   @return [Array<Types::ProxyMetadata>]
+    #
+    # @!attribute [rw] next_token
+    #   When you request a list of objects with a `MaxResults` setting, if
+    #   the number of objects that are still available for retrieval exceeds
+    #   the maximum you requested, Network Firewall returns a `NextToken`
+    #   value in the response. To retrieve the next batch of objects, use
+    #   the token returned from the prior request in your next request.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ListProxiesResponse AWS API Documentation
+    #
+    class ListProxiesResponse < Struct.new(
+      :proxies,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   When you request a list of objects with a `MaxResults` setting, if
+    #   the number of objects that are still available for retrieval exceeds
+    #   the maximum you requested, Network Firewall returns a `NextToken`
+    #   value in the response. To retrieve the next batch of objects, use
+    #   the token returned from the prior request in your next request.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of objects that you want Network Firewall to
+    #   return for this request. If more objects are available, in the
+    #   response, Network Firewall provides a `NextToken` value that you can
+    #   use in a subsequent call to get the next batch of objects.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ListProxyConfigurationsRequest AWS API Documentation
+    #
+    class ListProxyConfigurationsRequest < Struct.new(
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_configurations
+    #   The metadata for the proxy configurations. Depending on your setting
+    #   for max results and the number of proxy configurations that you
+    #   have, this might not be the full list.
+    #   @return [Array<Types::ProxyConfigurationMetadata>]
+    #
+    # @!attribute [rw] next_token
+    #   When you request a list of objects with a `MaxResults` setting, if
+    #   the number of objects that are still available for retrieval exceeds
+    #   the maximum you requested, Network Firewall returns a `NextToken`
+    #   value in the response. To retrieve the next batch of objects, use
+    #   the token returned from the prior request in your next request.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ListProxyConfigurationsResponse AWS API Documentation
+    #
+    class ListProxyConfigurationsResponse < Struct.new(
+      :proxy_configurations,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   When you request a list of objects with a `MaxResults` setting, if
+    #   the number of objects that are still available for retrieval exceeds
+    #   the maximum you requested, Network Firewall returns a `NextToken`
+    #   value in the response. To retrieve the next batch of objects, use
+    #   the token returned from the prior request in your next request.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of objects that you want Network Firewall to
+    #   return for this request. If more objects are available, in the
+    #   response, Network Firewall provides a `NextToken` value that you can
+    #   use in a subsequent call to get the next batch of objects.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ListProxyRuleGroupsRequest AWS API Documentation
+    #
+    class ListProxyRuleGroupsRequest < Struct.new(
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_rule_groups
+    #   The metadata for the proxy rule groups. Depending on your setting
+    #   for max results and the number of proxy rule groups that you have,
+    #   this might not be the full list.
+    #   @return [Array<Types::ProxyRuleGroupMetadata>]
+    #
+    # @!attribute [rw] next_token
+    #   When you request a list of objects with a `MaxResults` setting, if
+    #   the number of objects that are still available for retrieval exceeds
+    #   the maximum you requested, Network Firewall returns a `NextToken`
+    #   value in the response. To retrieve the next batch of objects, use
+    #   the token returned from the prior request in your next request.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ListProxyRuleGroupsResponse AWS API Documentation
+    #
+    class ListProxyRuleGroupsResponse < Struct.new(
+      :proxy_rule_groups,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   When you request a list of objects with a `MaxResults` setting, if
+    #   the number of objects that are still available for retrieval exceeds
+    #   the maximum you requested, Network Firewall returns a `NextToken`
+    #   value in the response. To retrieve the next batch of objects, use
+    #   the token returned from the prior request in your next request.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of objects that you want Network Firewall to
+    #   return for this request. If more objects are available, in the
+    #   response, Network Firewall provides a `NextToken` value that you can
+    #   use in a subsequent call to get the next batch of objects.
+    #   @return [Integer]
+    #
     # @!attribute [rw] scope
     #   The scope of the request. The default setting of `ACCOUNT` or a
     #   setting of `NULL` returns all of the rule groups in your account. A
@@ -3300,6 +5715,12 @@ module Aws::NetworkFirewall
     # @!attribute [rw] managed_type
     #   Indicates the general category of the Amazon Web Services managed
     #   rule group.
+    #   @return [String]
+    #
+    # @!attribute [rw] subscription_status
+    #   Filters the results to show only rule groups with the specified
+    #   subscription status. Use this to find subscribed or unsubscribed
+    #   rule groups.
     #   @return [String]
     #
     # @!attribute [rw] type
@@ -3315,6 +5736,7 @@ module Aws::NetworkFirewall
       :max_results,
       :scope,
       :managed_type,
+      :subscription_status,
       :type)
       SENSITIVE = []
       include Aws::Structure
@@ -3436,6 +5858,105 @@ module Aws::NetworkFirewall
     class ListTagsForResourceResponse < Struct.new(
       :next_token,
       :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   When you request a list of objects with a `MaxResults` setting, if
+    #   the number of objects that are still available for retrieval exceeds
+    #   the maximum you requested, Network Firewall returns a `NextToken`
+    #   value in the response. To retrieve the next batch of objects, use
+    #   the token returned from the prior request in your next request.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of objects that you want Network Firewall to
+    #   return for this request. If more objects are available, in the
+    #   response, Network Firewall provides a `NextToken` value that you can
+    #   use in a subsequent call to get the next batch of objects.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] firewall_arn
+    #   The Amazon Resource Name (ARN) of the firewall.
+    #
+    #   If you don't specify this, Network Firewall retrieves all VPC
+    #   endpoint associations that you have defined.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ListVpcEndpointAssociationsRequest AWS API Documentation
+    #
+    class ListVpcEndpointAssociationsRequest < Struct.new(
+      :next_token,
+      :max_results,
+      :firewall_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   When you request a list of objects with a `MaxResults` setting, if
+    #   the number of objects that are still available for retrieval exceeds
+    #   the maximum you requested, Network Firewall returns a `NextToken`
+    #   value in the response. To retrieve the next batch of objects, use
+    #   the token returned from the prior request in your next request.
+    #   @return [String]
+    #
+    # @!attribute [rw] vpc_endpoint_associations
+    #   The VPC endpoint assocation metadata objects for the firewall that
+    #   you specified. If you didn't specify a firewall, this is all VPC
+    #   endpoint associations that you have defined.
+    #
+    #   Depending on your setting for max results and the number of
+    #   firewalls you have, a single call might not be the full list.
+    #   @return [Array<Types::VpcEndpointAssociationMetadata>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ListVpcEndpointAssociationsResponse AWS API Documentation
+    #
+    class ListVpcEndpointAssociationsResponse < Struct.new(
+      :next_token,
+      :vpc_endpoint_associations)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Open port for taking HTTP or HTTPS traffic.
+    #
+    # @!attribute [rw] port
+    #   Port for processing traffic.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] type
+    #   Selection of HTTP or HTTPS traffic.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ListenerProperty AWS API Documentation
+    #
+    class ListenerProperty < Struct.new(
+      :port,
+      :type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # This data type is used specifically for the CreateProxy and
+    # UpdateProxy APIs.
+    #
+    # Open port for taking HTTP or HTTPS traffic.
+    #
+    # @!attribute [rw] port
+    #   Port for processing traffic.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] type
+    #   Selection of HTTP or HTTPS traffic.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ListenerPropertyRequest AWS API Documentation
+    #
+    class ListenerPropertyRequest < Struct.new(
+      :port,
+      :type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3601,6 +6122,57 @@ module Aws::NetworkFirewall
       include Aws::Structure
     end
 
+    # The definition and status of the attachment between a proxy mode
+    # firewall and a NAT gateway that proxies its traffic.
+    #
+    # @!attribute [rw] nat_gateway_id
+    #   A unique identifier for the NAT gateway to use with proxy resources.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the NAT gateway attachment.
+    #
+    #   When this value is `READY`, the attachment is available to proxy
+    #   traffic. Otherwise, this value reflects its state, for example
+    #   `CREATING` or `DELETING`.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_message
+    #   If Network Firewall encounters an issue with the NAT gateway
+    #   attachment, it populates this with an explanation of the problem.
+    #   @return [String]
+    #
+    # @!attribute [rw] dns_name
+    #   The DNS name that resolves to the firewall's proxy for traffic sent
+    #   through this NAT gateway attachment.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/NatGatewayAttachment AWS API Documentation
+    #
+    class NatGatewayAttachment < Struct.new(
+      :nat_gateway_id,
+      :status,
+      :status_message,
+      :dns_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A NAT gateway that a proxy mode firewall uses to proxy traffic. This
+    # is used in CreateFirewall when `NoSourcePreservation` is `TRUE`.
+    #
+    # @!attribute [rw] nat_gateway_id
+    #   A unique identifier for the NAT gateway to use with proxy resources.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/NatGatewayMapping AWS API Documentation
+    #
+    class NatGatewayMapping < Struct.new(
+      :nat_gateway_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Provides configuration status for a single policy or rule group that
     # is used for a firewall endpoint. Network Firewall provides each
     # endpoint with the rules that are configured in the firewall policy.
@@ -3685,6 +6257,508 @@ module Aws::NetworkFirewall
       include Aws::Structure
     end
 
+    # Proxy attached to a NAT gateway.
+    #
+    # @!attribute [rw] create_time
+    #   Time the Proxy was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] delete_time
+    #   Time the Proxy was deleted.
+    #   @return [Time]
+    #
+    # @!attribute [rw] update_time
+    #   Time the Proxy was updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] failure_code
+    #   Failure code for cases when the Proxy fails to attach or update.
+    #   @return [String]
+    #
+    # @!attribute [rw] failure_message
+    #   Failure message for cases when the Proxy fails to attach or update.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_state
+    #   Current attachment/detachment status of the Proxy.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_modify_state
+    #   Current modification status of the Proxy.
+    #   @return [String]
+    #
+    # @!attribute [rw] nat_gateway_id
+    #   The NAT Gateway for the proxy.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_configuration_name
+    #   The descriptive name of the proxy configuration. You can't change
+    #   the name of a proxy configuration after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_configuration_arn
+    #   The Amazon Resource Name (ARN) of a proxy configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_name
+    #   The descriptive name of the proxy. You can't change the name of a
+    #   proxy after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_arn
+    #   The Amazon Resource Name (ARN) of a proxy.
+    #   @return [String]
+    #
+    # @!attribute [rw] listener_properties
+    #   Listener properties for HTTP and HTTPS traffic.
+    #   @return [Array<Types::ListenerProperty>]
+    #
+    # @!attribute [rw] tls_intercept_properties
+    #   TLS decryption on traffic to filter on attributes in the HTTP
+    #   header.
+    #   @return [Types::TlsInterceptProperties]
+    #
+    # @!attribute [rw] tags
+    #   The key:value pairs to associate with the resource.
+    #   @return [Array<Types::Tag>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/Proxy AWS API Documentation
+    #
+    class Proxy < Struct.new(
+      :create_time,
+      :delete_time,
+      :update_time,
+      :failure_code,
+      :failure_message,
+      :proxy_state,
+      :proxy_modify_state,
+      :nat_gateway_id,
+      :proxy_configuration_name,
+      :proxy_configuration_arn,
+      :proxy_name,
+      :proxy_arn,
+      :listener_properties,
+      :tls_intercept_properties,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Evaluation points in the traffic flow where rules are applied. There
+    # are three phases in a traffic where the rule match is applied.
+    #
+    # This data type is used specifically for the CreateProxyConfiguration
+    # and UpdateProxyConfiguration APIs.
+    #
+    # @!attribute [rw] pre_dns
+    #   Before domain resolution.
+    #   @return [String]
+    #
+    # @!attribute [rw] pre_request
+    #   After DNS, before request.
+    #   @return [String]
+    #
+    # @!attribute [rw] post_response
+    #   After receiving response.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ProxyConfigDefaultRulePhaseActionsRequest AWS API Documentation
+    #
+    class ProxyConfigDefaultRulePhaseActionsRequest < Struct.new(
+      :pre_dns,
+      :pre_request,
+      :post_response)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Proxy rule group contained within a proxy configuration.
+    #
+    # @!attribute [rw] proxy_rule_group_name
+    #   The descriptive name of the proxy rule group. You can't change the
+    #   name of a proxy rule group after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_rule_group_arn
+    #   The Amazon Resource Name (ARN) of a proxy rule group.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   Proxy rule group type.
+    #   @return [String]
+    #
+    # @!attribute [rw] priority
+    #   Priority of the proxy rule group in the proxy configuration.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ProxyConfigRuleGroup AWS API Documentation
+    #
+    class ProxyConfigRuleGroup < Struct.new(
+      :proxy_rule_group_name,
+      :proxy_rule_group_arn,
+      :type,
+      :priority)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A Proxy Configuration defines the monitoring and protection behavior
+    # for a Proxy. The details of the behavior are defined in the rule
+    # groups that you add to your configuration.
+    #
+    # @!attribute [rw] proxy_configuration_name
+    #   The descriptive name of the proxy configuration. You can't change
+    #   the name of a proxy configuration after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_configuration_arn
+    #   The Amazon Resource Name (ARN) of a proxy configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A description of the proxy configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] create_time
+    #   Time the Proxy Configuration was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] delete_time
+    #   Time the Proxy Configuration was deleted.
+    #   @return [Time]
+    #
+    # @!attribute [rw] rule_groups
+    #   Proxy rule groups within the proxy configuration.
+    #   @return [Array<Types::ProxyConfigRuleGroup>]
+    #
+    # @!attribute [rw] default_rule_phase_actions
+    #   Evaluation points in the traffic flow where rules are applied. There
+    #   are three phases in a traffic where the rule match is applied.
+    #
+    #   Pre-DNS - before domain resolution.
+    #
+    #   Pre-Request - after DNS, before request.
+    #
+    #   Post-Response - after receiving response.
+    #   @return [Types::ProxyConfigDefaultRulePhaseActionsRequest]
+    #
+    # @!attribute [rw] tags
+    #   The key:value pairs to associate with the resource.
+    #   @return [Array<Types::Tag>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ProxyConfiguration AWS API Documentation
+    #
+    class ProxyConfiguration < Struct.new(
+      :proxy_configuration_name,
+      :proxy_configuration_arn,
+      :description,
+      :create_time,
+      :delete_time,
+      :rule_groups,
+      :default_rule_phase_actions,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # High-level information about a proxy configuration, returned by
+    # operations like create and describe. You can use the information
+    # provided in the metadata to retrieve and manage a proxy configuration.
+    # You can retrieve all objects for a proxy configuration by calling
+    # DescribeProxyConfiguration.
+    #
+    # @!attribute [rw] name
+    #   The descriptive name of the proxy configuration. You can't change
+    #   the name of a proxy configuration after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of a proxy configuration.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ProxyConfigurationMetadata AWS API Documentation
+    #
+    class ProxyConfigurationMetadata < Struct.new(
+      :name,
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # High-level information about a proxy, returned by operations like
+    # create and describe. You can use the information provided in the
+    # metadata to retrieve and manage a proxy. You can retrieve all objects
+    # for a proxy by calling DescribeProxy.
+    #
+    # @!attribute [rw] name
+    #   The descriptive name of the proxy. You can't change the name of a
+    #   proxy after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of a proxy.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ProxyMetadata AWS API Documentation
+    #
+    class ProxyMetadata < Struct.new(
+      :name,
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Individual rules that define match conditions and actions for
+    # application-layer traffic. Rules specify what to inspect (domains,
+    # headers, methods) and what action to take (allow, deny, alert).
+    #
+    # @!attribute [rw] proxy_rule_name
+    #   The descriptive name of the proxy rule. You can't change the name
+    #   of a proxy rule after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A description of the proxy rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] action
+    #   Action to take.
+    #   @return [String]
+    #
+    # @!attribute [rw] conditions
+    #   Match criteria that specify what traffic attributes to examine.
+    #   Conditions include operators (StringEquals, StringLike) and values
+    #   to match against.
+    #   @return [Array<Types::ProxyRuleCondition>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ProxyRule AWS API Documentation
+    #
+    class ProxyRule < Struct.new(
+      :proxy_rule_name,
+      :description,
+      :action,
+      :conditions)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Match criteria that specify what traffic attributes to examine.
+    #
+    # @!attribute [rw] condition_operator
+    #   Defines how to perform a match.
+    #   @return [String]
+    #
+    # @!attribute [rw] condition_key
+    #   Defines what is to be matched.
+    #   @return [String]
+    #
+    # @!attribute [rw] condition_values
+    #   Specifes the exact value that needs to be matched against.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ProxyRuleCondition AWS API Documentation
+    #
+    class ProxyRuleCondition < Struct.new(
+      :condition_operator,
+      :condition_key,
+      :condition_values)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Collections of related proxy filtering rules. Rule groups help you
+    # manage and reuse sets of rules across multiple proxy configurations.
+    #
+    # @!attribute [rw] proxy_rule_group_name
+    #   The descriptive name of the proxy rule group. You can't change the
+    #   name of a proxy rule group after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_rule_group_arn
+    #   The Amazon Resource Name (ARN) of a proxy rule group.
+    #   @return [String]
+    #
+    # @!attribute [rw] create_time
+    #   Time the Proxy Rule Group was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] delete_time
+    #   Time the Proxy Rule Group was deleted.
+    #   @return [Time]
+    #
+    # @!attribute [rw] rules
+    #   Individual rules that define match conditions and actions for
+    #   application-layer traffic. Rules specify what to inspect (domains,
+    #   headers, methods) and what action to take (allow, deny, alert).
+    #   @return [Types::ProxyRulesByRequestPhase]
+    #
+    # @!attribute [rw] description
+    #   A description of the proxy rule group.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   The key:value pairs to associate with the resource.
+    #   @return [Array<Types::Tag>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ProxyRuleGroup AWS API Documentation
+    #
+    class ProxyRuleGroup < Struct.new(
+      :proxy_rule_group_name,
+      :proxy_rule_group_arn,
+      :create_time,
+      :delete_time,
+      :rules,
+      :description,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The proxy rule group(s) to attach to the proxy configuration
+    #
+    # @!attribute [rw] proxy_rule_group_name
+    #   The descriptive name of the proxy rule group. You can't change the
+    #   name of a proxy rule group after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] insert_position
+    #   Where to insert a proxy rule group in a proxy configuration.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ProxyRuleGroupAttachment AWS API Documentation
+    #
+    class ProxyRuleGroupAttachment < Struct.new(
+      :proxy_rule_group_name,
+      :insert_position)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # High-level information about a proxy rule group, returned by
+    # operations like create and describe. You can use the information
+    # provided in the metadata to retrieve and manage a proxy rule group.
+    # You can retrieve all objects for a proxy rule group by calling
+    # DescribeProxyRuleGroup.
+    #
+    # @!attribute [rw] name
+    #   The descriptive name of the proxy rule group. You can't change the
+    #   name of a proxy rule group after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of a proxy rule group.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ProxyRuleGroupMetadata AWS API Documentation
+    #
+    class ProxyRuleGroupMetadata < Struct.new(
+      :name,
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Proxy rule group name and new desired position.
+    #
+    # @!attribute [rw] proxy_rule_group_name
+    #   The descriptive name of the proxy rule group. You can't change the
+    #   name of a proxy rule group after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] new_position
+    #   Where to move a proxy rule group in a proxy configuration.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ProxyRuleGroupPriority AWS API Documentation
+    #
+    class ProxyRuleGroupPriority < Struct.new(
+      :proxy_rule_group_name,
+      :new_position)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Proxy rule group along with its priority.
+    #
+    # @!attribute [rw] proxy_rule_group_name
+    #   The descriptive name of the proxy rule group. You can't change the
+    #   name of a proxy rule group after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] priority
+    #   Priority of the proxy rule group in the proxy configuration.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ProxyRuleGroupPriorityResult AWS API Documentation
+    #
+    class ProxyRuleGroupPriorityResult < Struct.new(
+      :proxy_rule_group_name,
+      :priority)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Proxy rule name and new desired position.
+    #
+    # @!attribute [rw] proxy_rule_name
+    #   The descriptive name of the proxy rule. You can't change the name
+    #   of a proxy rule after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] new_position
+    #   Where to move a proxy rule in a proxy rule group.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ProxyRulePriority AWS API Documentation
+    #
+    class ProxyRulePriority < Struct.new(
+      :proxy_rule_name,
+      :new_position)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Evaluation points in the traffic flow where rules are applied. There
+    # are three phases in a traffic where the rule match is applied.
+    #
+    # @!attribute [rw] pre_dns
+    #   Before domain resolution.
+    #   @return [Array<Types::ProxyRule>]
+    #
+    # @!attribute [rw] pre_request
+    #   After DNS, before request.
+    #   @return [Array<Types::ProxyRule>]
+    #
+    # @!attribute [rw] post_response
+    #   After receiving response.
+    #   @return [Array<Types::ProxyRule>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ProxyRulesByRequestPhase AWS API Documentation
+    #
+    class ProxyRulesByRequestPhase < Struct.new(
+      :pre_dns,
+      :pre_request,
+      :post_response)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The listener configuration for a proxy mode firewall. This specifies
+    # the ports and protocols on which the firewall's proxy listens for
+    # traffic.
+    #
+    # @!attribute [rw] listener_properties
+    #   Listener properties for HTTP and HTTPS traffic.
+    #   @return [Array<Types::ListenerProperty>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/ProxySettings AWS API Documentation
+    #
+    class ProxySettings < Struct.new(
+      :listener_properties)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Stateless inspection criteria that publishes the specified metrics to
     # Amazon CloudWatch for the matching packet. This setting defines a
     # CloudWatch dimension value to be published.
@@ -3702,13 +6776,13 @@ module Aws::NetworkFirewall
 
     # @!attribute [rw] resource_arn
     #   The Amazon Resource Name (ARN) of the account that you want to share
-    #   rule groups and firewall policies with.
+    #   your Network Firewall resources with.
     #   @return [String]
     #
     # @!attribute [rw] policy
     #   The IAM policy statement that lists the accounts that you want to
-    #   share your rule group or firewall policy with and the operations
-    #   that you want the accounts to be able to perform.
+    #   share your Network Firewall resources with and the operations that
+    #   you want the accounts to be able to perform.
     #
     #   For a rule group resource, you can specify the following operations
     #   in the Actions section of the statement:
@@ -3726,9 +6800,18 @@ module Aws::NetworkFirewall
     #
     #   * network-firewall:ListFirewallPolicies
     #
+    #   For a firewall resource, you can specify the following operations in
+    #   the Actions section of the statement:
+    #
+    #   * network-firewall:CreateVpcEndpointAssociation
+    #
+    #   * network-firewall:DescribeFirewallMetadata
+    #
+    #   * network-firewall:ListFirewalls
+    #
     #   In the Resource section of the statement, you specify the ARNs for
-    #   the rule groups and firewall policies that you want to share with
-    #   the account that you specified in `Arn`.
+    #   the Network Firewall resources that you want to share with the
+    #   account that you specified in `Arn`.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/PutResourcePolicyRequest AWS API Documentation
@@ -3754,6 +6837,67 @@ module Aws::NetworkFirewall
     #
     class ReferenceSets < Struct.new(
       :ip_set_references)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] transit_gateway_attachment_id
+    #   Required. The unique identifier of the transit gateway attachment to
+    #   reject. This ID is returned in the response when creating a transit
+    #   gateway-attached firewall.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/RejectNetworkFirewallTransitGatewayAttachmentRequest AWS API Documentation
+    #
+    class RejectNetworkFirewallTransitGatewayAttachmentRequest < Struct.new(
+      :transit_gateway_attachment_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] transit_gateway_attachment_id
+    #   The unique identifier of the transit gateway attachment that was
+    #   rejected.
+    #   @return [String]
+    #
+    # @!attribute [rw] transit_gateway_attachment_status
+    #   The current status of the transit gateway attachment. Valid values
+    #   are:
+    #
+    #   * `CREATING` - The attachment is being created
+    #
+    #   * `DELETING` - The attachment is being deleted
+    #
+    #   * `DELETED` - The attachment has been deleted
+    #
+    #   * `FAILED` - The attachment creation has failed and cannot be
+    #     recovered
+    #
+    #   * `ERROR` - The attachment is in an error state that might be
+    #     recoverable
+    #
+    #   * `READY` - The attachment is active and processing traffic
+    #
+    #   * `PENDING_ACCEPTANCE` - The attachment is waiting to be accepted
+    #
+    #   * `REJECTING` - The attachment is in the process of being rejected
+    #
+    #   * `REJECTED` - The attachment has been rejected
+    #
+    #   For information about troubleshooting endpoint failures, see
+    #   [Troubleshooting firewall endpoint failures][1] in the *Network
+    #   Firewall Developer Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/network-firewall/latest/developerguide/firewall-troubleshooting-endpoint-failures.html
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/RejectNetworkFirewallTransitGatewayAttachmentResponse AWS API Documentation
+    #
+    class RejectNetworkFirewallTransitGatewayAttachmentResponse < Struct.new(
+      :transit_gateway_attachment_id,
+      :transit_gateway_attachment_status)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3906,11 +7050,17 @@ module Aws::NetworkFirewall
     #   The Amazon Resource Name (ARN) of the rule group.
     #   @return [String]
     #
+    # @!attribute [rw] vendor_name
+    #   The name of the Amazon Web Services Marketplace seller that provides
+    #   this rule group.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/RuleGroupMetadata AWS API Documentation
     #
     class RuleGroupMetadata < Struct.new(
       :name,
-      :arn)
+      :arn,
+      :vendor_name)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3989,7 +7139,7 @@ module Aws::NetworkFirewall
     #   @return [Types::SourceMetadata]
     #
     # @!attribute [rw] sns_topic
-    #   The Amazon resource name (ARN) of the Amazon Simple Notification
+    #   The Amazon Resource Name (ARN) of the Amazon Simple Notification
     #   Service SNS topic that's used to record changes to the managed rule
     #   group. You can subscribe to the SNS topic to receive notifications
     #   when the managed rule group is modified, such as for new versions
@@ -4016,6 +7166,16 @@ module Aws::NetworkFirewall
     #   in the list of analysis results.
     #   @return [Array<Types::AnalysisResult>]
     #
+    # @!attribute [rw] summary_configuration
+    #   A complex type containing the currently selected rule option fields
+    #   that will be displayed for rule summarization returned by
+    #   DescribeRuleGroupSummary.
+    #
+    #   * The `RuleOptions` specified in SummaryConfiguration
+    #
+    #   * Rule metadata organization preferences
+    #   @return [Types::SummaryConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/RuleGroupResponse AWS API Documentation
     #
     class RuleGroupResponse < Struct.new(
@@ -4033,7 +7193,8 @@ module Aws::NetworkFirewall
       :source_metadata,
       :sns_topic,
       :last_modified_time,
-      :analysis_results)
+      :analysis_results,
+      :summary_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4049,7 +7210,7 @@ module Aws::NetworkFirewall
     #
     #
     #
-    #   [1]: https://suricata.readthedocs.io/en/suricata-7.0.3/rules/intro.html#rule-options
+    #   [1]: https://suricata.readthedocs.io/en/suricata-7.0.8/rules/intro.html#rule-options
     #   @return [String]
     #
     # @!attribute [rw] settings
@@ -4060,7 +7221,7 @@ module Aws::NetworkFirewall
     #
     #
     #
-    #   [1]: https://suricata.readthedocs.io/en/suricata-7.0.3/rules/intro.html#rule-options
+    #   [1]: https://suricata.readthedocs.io/en/suricata-7.0.8/rules/intro.html#rule-options
     #   @return [Array<String>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/RuleOption AWS API Documentation
@@ -4072,8 +7233,42 @@ module Aws::NetworkFirewall
       include Aws::Structure
     end
 
+    # A complex type containing details about a Suricata rule. Contains:
+    #
+    # * `SID`
+    #
+    # * `Msg`
+    #
+    # * `Metadata`
+    #
+    # Summaries are available for rule groups you manage and for active
+    # threat defense Amazon Web Services managed rule groups.
+    #
+    # @!attribute [rw] sid
+    #   The unique identifier (Signature ID) of the Suricata rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] msg
+    #   The contents taken from the rule's msg field.
+    #   @return [String]
+    #
+    # @!attribute [rw] metadata
+    #   The contents of the rule's metadata.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/RuleSummary AWS API Documentation
+    #
+    class RuleSummary < Struct.new(
+      :sid,
+      :msg,
+      :metadata)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Settings that are available for use in the rules in the RuleGroup
-    # where this is defined.
+    # where this is defined. See CreateRuleGroup or UpdateRuleGroup for
+    # usage.
     #
     # @!attribute [rw] ip_sets
     #   A list of IP addresses and address ranges, in CIDR notation.
@@ -4124,7 +7319,7 @@ module Aws::NetworkFirewall
     #
     #
     #
-    #   [1]: https://suricata.readthedocs.io/en/suricata-7.0.3/rules/intro.html
+    #   [1]: https://suricata.readthedocs.io/en/suricata-7.0.8/rules/intro.html
     #   @return [Array<Types::StatefulRule>]
     #
     # @!attribute [rw] stateless_rules_and_custom_actions
@@ -4178,8 +7373,15 @@ module Aws::NetworkFirewall
     #   @return [Array<String>]
     #
     # @!attribute [rw] generated_rules_type
-    #   Whether you want to allow or deny access to the domains in your
-    #   target list.
+    #   Whether you want to apply allow, reject, alert, or drop behavior to
+    #   the domains in your target list.
+    #
+    #   <note markdown="1"> When logging is enabled and you choose Alert, traffic that matches
+    #   the domain specifications generates an alert in the firewall's
+    #   logs. Then, traffic either passes, is rejected, or drops based on
+    #   other rules in the firewall policy.
+    #
+    #    </note>
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/RulesSourceList AWS API Documentation
@@ -4264,9 +7466,8 @@ module Aws::NetworkFirewall
     #     Authority.
     #
     #   For more information about configuring certificates for outbound
-    #   inspection, see [Using SSL/TLS certificates with certificates with
-    #   TLS inspection configurations][1] in the *Network Firewall Developer
-    #   Guide*.
+    #   inspection, see [Using SSL/TLS certificates with TLS inspection
+    #   configurations][1] in the *Network Firewall Developer Guide*.
     #
     #   For information about working with certificates in ACM, see
     #   [Importing certificates][2] in the *Certificate Manager User Guide*.
@@ -4437,6 +7638,15 @@ module Aws::NetworkFirewall
     #   configure a single flow operation.
     #   @return [String]
     #
+    # @!attribute [rw] vpc_endpoint_association_arn
+    #   The Amazon Resource Name (ARN) of a VPC endpoint association.
+    #   @return [String]
+    #
+    # @!attribute [rw] vpc_endpoint_id
+    #   A unique identifier for the primary endpoint associated with a
+    #   firewall.
+    #   @return [String]
+    #
     # @!attribute [rw] minimum_flow_age_in_seconds
     #   The reqested `FlowOperation` ignores flows with an age (in seconds)
     #   lower than `MinimumFlowAgeInSeconds`. You provide this for start
@@ -4458,6 +7668,8 @@ module Aws::NetworkFirewall
     class StartFlowCaptureRequest < Struct.new(
       :firewall_arn,
       :availability_zone,
+      :vpc_endpoint_association_arn,
+      :vpc_endpoint_id,
       :minimum_flow_age_in_seconds,
       :flow_filters)
       SENSITIVE = []
@@ -4505,6 +7717,15 @@ module Aws::NetworkFirewall
     #   configure a single flow operation.
     #   @return [String]
     #
+    # @!attribute [rw] vpc_endpoint_association_arn
+    #   The Amazon Resource Name (ARN) of a VPC endpoint association.
+    #   @return [String]
+    #
+    # @!attribute [rw] vpc_endpoint_id
+    #   A unique identifier for the primary endpoint associated with a
+    #   firewall.
+    #   @return [String]
+    #
     # @!attribute [rw] minimum_flow_age_in_seconds
     #   The reqested `FlowOperation` ignores flows with an age (in seconds)
     #   lower than `MinimumFlowAgeInSeconds`. You provide this for start
@@ -4521,6 +7742,8 @@ module Aws::NetworkFirewall
     class StartFlowFlushRequest < Struct.new(
       :firewall_arn,
       :availability_zone,
+      :vpc_endpoint_association_arn,
+      :vpc_endpoint_id,
       :minimum_flow_age_in_seconds,
       :flow_filters)
       SENSITIVE = []
@@ -4559,19 +7782,25 @@ module Aws::NetworkFirewall
     # Configuration settings for the handling of the stateful rule groups in
     # a firewall policy.
     #
+    # Updating any setting in `StatefulEngineOptions` may require a restart
+    # of the stateful engine in order to apply the changes. When this
+    # occurs, existing connections will be treated according to your stream
+    # exception policy configuration.
+    #
     # @!attribute [rw] rule_order
     #   Indicates how to manage the order of stateful rule evaluation for
-    #   the policy. `STRICT_ORDER` is the default and recommended option.
-    #   With `STRICT_ORDER`, provide your rules in the order that you want
-    #   them to be evaluated. You can then choose one or more default
-    #   actions for packets that don't match any rules. Choose
-    #   `STRICT_ORDER` to have the stateful rules engine determine the
-    #   evaluation order of your rules. The default action for this rule
-    #   order is `PASS`, followed by `DROP`, `REJECT`, and `ALERT` actions.
-    #   Stateful rules are provided to the rule engine as Suricata
-    #   compatible strings, and Suricata evaluates them based on your
-    #   settings. For more information, see [Evaluation order for stateful
-    #   rules][1] in the *Network Firewall Developer Guide*.
+    #   the policy. `STRICT_ORDER` is the recommended option, but
+    #   `DEFAULT_ACTION_ORDER` is the default option. With `STRICT_ORDER`,
+    #   provide your rules in the order that you want them to be evaluated.
+    #   You can then choose one or more default actions for packets that
+    #   don't match any rules. Choose `STRICT_ORDER` to have the stateful
+    #   rules engine determine the evaluation order of your rules. The
+    #   default action for this rule order is `PASS`, followed by `DROP`,
+    #   `REJECT`, and `ALERT` actions. Stateful rules are provided to the
+    #   rule engine as Suricata compatible strings, and Suricata evaluates
+    #   them based on your settings. For more information, see [Evaluation
+    #   order for stateful rules][1] in the *Network Firewall Developer
+    #   Guide*.
     #
     #
     #
@@ -4629,7 +7858,7 @@ module Aws::NetworkFirewall
     #
     #
     #
-    # [1]: https://suricata.readthedocs.io/en/suricata-7.0.3/rules/intro.html
+    # [1]: https://suricata.readthedocs.io/en/suricata-7.0.8/rules/intro.html
     #
     # @!attribute [rw] action
     #   Defines what Network Firewall should do with the packets in a
@@ -4726,12 +7955,32 @@ module Aws::NetworkFirewall
     #   the rule group within a policy.
     #   @return [Types::StatefulRuleGroupOverride]
     #
+    # @!attribute [rw] deep_threat_inspection
+    #   Network Firewall plans to augment the active threat defense managed
+    #   rule group with an additional deep threat inspection capability.
+    #   When this capability is released, Amazon Web Services will analyze
+    #   service logs of network traffic processed by these rule groups to
+    #   identify threat indicators across customers. Amazon Web Services
+    #   will use these threat indicators to improve the active threat
+    #   defense managed rule groups and protect the security of Amazon Web
+    #   Services customers and services.
+    #
+    #   <note markdown="1"> Customers can opt-out of deep threat inspection at any time through
+    #   the Network Firewall console or API. When customers opt out, Network
+    #   Firewall will not use the network traffic processed by those
+    #   customers' active threat defense rule groups for rule group
+    #   improvement.
+    #
+    #    </note>
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/StatefulRuleGroupReference AWS API Documentation
     #
     class StatefulRuleGroupReference < Struct.new(
       :resource_arn,
       :priority,
-      :override)
+      :override,
+      :deep_threat_inspection)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4845,10 +8094,11 @@ module Aws::NetworkFirewall
       include Aws::Structure
     end
 
-    # The ID for a subnet that you want to associate with the firewall. This
-    # is used with CreateFirewall and AssociateSubnets. Network Firewall
-    # creates an instance of the associated firewall in each subnet that you
-    # specify, to filter traffic in the subnet's Availability Zone.
+    # The ID for a subnet that's used in an association with a firewall.
+    # This is used in CreateFirewall, AssociateSubnets, and
+    # CreateVpcEndpointAssociation. Network Firewall creates an instance of
+    # the associated firewall in each subnet that you specify, to filter
+    # traffic in the subnet's Availability Zone.
     #
     # @!attribute [rw] subnet_id
     #   The unique identifier for the subnet.
@@ -4868,8 +8118,54 @@ module Aws::NetworkFirewall
       include Aws::Structure
     end
 
+    # A complex type containing summaries of security protections provided
+    # by a rule group.
+    #
+    # Network Firewall extracts this information from selected fields in the
+    # rule group's Suricata rules, based on your SummaryConfiguration
+    # settings.
+    #
+    # @!attribute [rw] rule_summaries
+    #   An array of RuleSummary objects containing individual rule details
+    #   that had been configured by the rulegroup's SummaryConfiguration.
+    #   @return [Array<Types::RuleSummary>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/Summary AWS API Documentation
+    #
+    class Summary < Struct.new(
+      :rule_summaries)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A complex type that specifies which Suricata rule metadata fields to
+    # use when displaying threat information. Contains:
+    #
+    # * `RuleOptions` - The Suricata rule options fields to extract and
+    #   display
+    #
+    # ^
+    #
+    # These settings affect how threat information appears in both the
+    # console and API responses. Summaries are available for rule groups you
+    # manage and for active threat defense Amazon Web Services managed rule
+    # groups.
+    #
+    # @!attribute [rw] rule_options
+    #   Specifies the selected rule options returned by
+    #   DescribeRuleGroupSummary.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/SummaryConfiguration AWS API Documentation
+    #
+    class SummaryConfiguration < Struct.new(
+      :rule_options)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The status of the firewall endpoint and firewall policy configuration
-    # for a single VPC subnet.
+    # for a single VPC subnet. This is part of the FirewallStatus.
     #
     # For each VPC subnet that you associate with a firewall, Network
     # Firewall does the following:
@@ -4886,11 +8182,10 @@ module Aws::NetworkFirewall
     # complete.
     #
     # @!attribute [rw] attachment
-    #   The attachment status of the firewall's association with a single
-    #   VPC subnet. For each configured subnet, Network Firewall creates the
-    #   attachment by instantiating the firewall endpoint in the subnet so
-    #   that it's ready to take traffic. This is part of the
-    #   FirewallStatus.
+    #   The configuration and status for a single firewall subnet. For each
+    #   configured subnet, Network Firewall creates the attachment by
+    #   instantiating the firewall endpoint in the subnet so that it's
+    #   ready to take traffic.
     #   @return [Types::Attachment]
     #
     # @!attribute [rw] config
@@ -4899,14 +8194,21 @@ module Aws::NetworkFirewall
     #   are configured in the firewall policy. Each time you add a subnet or
     #   modify the associated firewall policy, Network Firewall synchronizes
     #   the rules in the endpoint, so it can properly filter network
-    #   traffic. This is part of the FirewallStatus.
+    #   traffic.
     #   @return [Hash<String,Types::PerObjectStatus>]
+    #
+    # @!attribute [rw] nat_gateway_attachments
+    #   The status of the NAT gateway attachments for a proxy mode firewall
+    #   in the Availability Zone. This reflects the attachment of the
+    #   firewall to each NAT gateway that proxies its traffic.
+    #   @return [Array<Types::NatGatewayAttachment>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/SyncState AWS API Documentation
     #
     class SyncState < Struct.new(
       :attachment,
-      :config)
+      :config,
+      :nat_gateway_attachments)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5172,6 +8474,134 @@ module Aws::NetworkFirewall
       include Aws::Structure
     end
 
+    # TLS decryption on traffic to filter on attributes in the HTTP header.
+    #
+    # @!attribute [rw] pca_arn
+    #   Private Certificate Authority (PCA) used to issue private TLS
+    #   certificates so that the proxy can present PCA-signed certificates
+    #   which applications trust through the same root, establishing a
+    #   secure and consistent trust model for encrypted communication.
+    #   @return [String]
+    #
+    # @!attribute [rw] tls_intercept_mode
+    #   Specifies whether to enable or disable TLS Intercept Mode.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/TlsInterceptProperties AWS API Documentation
+    #
+    class TlsInterceptProperties < Struct.new(
+      :pca_arn,
+      :tls_intercept_mode)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # This data type is used specifically for the CreateProxy and
+    # UpdateProxy APIs.
+    #
+    # TLS decryption on traffic to filter on attributes in the HTTP header.
+    #
+    # @!attribute [rw] pca_arn
+    #   Private Certificate Authority (PCA) used to issue private TLS
+    #   certificates so that the proxy can present PCA-signed certificates
+    #   which applications trust through the same root, establishing a
+    #   secure and consistent trust model for encrypted communication.
+    #   @return [String]
+    #
+    # @!attribute [rw] tls_intercept_mode
+    #   Specifies whether to enable or disable TLS Intercept Mode.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/TlsInterceptPropertiesRequest AWS API Documentation
+    #
+    class TlsInterceptPropertiesRequest < Struct.new(
+      :pca_arn,
+      :tls_intercept_mode)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about the synchronization state of a transit
+    # gateway attachment, including its current status and any error
+    # messages. Network Firewall uses this to track the state of your
+    # transit gateway configuration changes.
+    #
+    # @!attribute [rw] attachment_id
+    #   The unique identifier of the transit gateway attachment.
+    #   @return [String]
+    #
+    # @!attribute [rw] transit_gateway_attachment_status
+    #   The current status of the transit gateway attachment.
+    #
+    #   Valid values are:
+    #
+    #   * `CREATING` - The attachment is being created
+    #
+    #   * `DELETING` - The attachment is being deleted
+    #
+    #   * `DELETED` - The attachment has been deleted
+    #
+    #   * `FAILED` - The attachment creation has failed and cannot be
+    #     recovered
+    #
+    #   * `ERROR` - The attachment is in an error state that might be
+    #     recoverable
+    #
+    #   * `READY` - The attachment is active and processing traffic
+    #
+    #   * `PENDING_ACCEPTANCE` - The attachment is waiting to be accepted
+    #
+    #   * `REJECTING` - The attachment is in the process of being rejected
+    #
+    #   * `REJECTED` - The attachment has been rejected
+    #   @return [String]
+    #
+    # @!attribute [rw] status_message
+    #   A message providing additional information about the current status,
+    #   particularly useful when the transit gateway attachment is in a
+    #   non-`READY` state.
+    #
+    #   Valid values are:
+    #
+    #   * `CREATING` - The attachment is being created
+    #
+    #   * `DELETING` - The attachment is being deleted
+    #
+    #   * `DELETED` - The attachment has been deleted
+    #
+    #   * `FAILED` - The attachment creation has failed and cannot be
+    #     recovered
+    #
+    #   * `ERROR` - The attachment is in an error state that might be
+    #     recoverable
+    #
+    #   * `READY` - The attachment is active and processing traffic
+    #
+    #   * `PENDING_ACCEPTANCE` - The attachment is waiting to be accepted
+    #
+    #   * `REJECTING` - The attachment is in the process of being rejected
+    #
+    #   * `REJECTED` - The attachment has been rejected
+    #
+    #   For information about troubleshooting endpoint failures, see
+    #   [Troubleshooting firewall endpoint failures][1] in the *Network
+    #   Firewall Developer Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/network-firewall/latest/developerguide/firewall-troubleshooting-endpoint-failures.html
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/TransitGatewayAttachmentSyncState AWS API Documentation
+    #
+    class TransitGatewayAttachmentSyncState < Struct.new(
+      :attachment_id,
+      :transit_gateway_attachment_status,
+      :status_message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # A unique source IP address that connected to a domain.
     #
     # @!attribute [rw] count
@@ -5218,6 +8648,236 @@ module Aws::NetworkFirewall
     # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/UntagResourceResponse AWS API Documentation
     #
     class UntagResourceResponse < Aws::EmptyStructure; end
+
+    # @!attribute [rw] update_token
+    #   An optional token that you can use for optimistic locking. Network
+    #   Firewall returns a token to your requests that access the firewall.
+    #   The token marks the state of the firewall resource at the time of
+    #   the request.
+    #
+    #   To make an unconditional change to the firewall, omit the token in
+    #   your update request. Without the token, Network Firewall performs
+    #   your updates regardless of whether the firewall has changed since
+    #   you last retrieved it.
+    #
+    #   To make a conditional change to the firewall, provide the token in
+    #   your update request. Network Firewall uses the token to ensure that
+    #   the firewall hasn't changed since you last retrieved it. If it has
+    #   changed, the operation fails with an `InvalidTokenException`. If
+    #   this happens, retrieve the firewall again to get a current copy of
+    #   it with a new token. Reapply your changes as needed, then try the
+    #   operation again using the new token.
+    #   @return [String]
+    #
+    # @!attribute [rw] firewall_arn
+    #   The Amazon Resource Name (ARN) of the firewall.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] firewall_name
+    #   The descriptive name of the firewall. You can't change the name of
+    #   a firewall after you create it.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_zone_change_protection
+    #   A setting indicating whether the firewall is protected against
+    #   changes to the subnet associations. Use this setting to protect
+    #   against accidentally modifying the subnet associations for a
+    #   firewall that is in use. When you create a firewall, the operation
+    #   initializes this setting to `TRUE`.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/UpdateAvailabilityZoneChangeProtectionRequest AWS API Documentation
+    #
+    class UpdateAvailabilityZoneChangeProtectionRequest < Struct.new(
+      :update_token,
+      :firewall_arn,
+      :firewall_name,
+      :availability_zone_change_protection)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] update_token
+    #   An optional token that you can use for optimistic locking. Network
+    #   Firewall returns a token to your requests that access the firewall.
+    #   The token marks the state of the firewall resource at the time of
+    #   the request.
+    #
+    #   To make an unconditional change to the firewall, omit the token in
+    #   your update request. Without the token, Network Firewall performs
+    #   your updates regardless of whether the firewall has changed since
+    #   you last retrieved it.
+    #
+    #   To make a conditional change to the firewall, provide the token in
+    #   your update request. Network Firewall uses the token to ensure that
+    #   the firewall hasn't changed since you last retrieved it. If it has
+    #   changed, the operation fails with an `InvalidTokenException`. If
+    #   this happens, retrieve the firewall again to get a current copy of
+    #   it with a new token. Reapply your changes as needed, then try the
+    #   operation again using the new token.
+    #   @return [String]
+    #
+    # @!attribute [rw] firewall_arn
+    #   The Amazon Resource Name (ARN) of the firewall.
+    #   @return [String]
+    #
+    # @!attribute [rw] firewall_name
+    #   The descriptive name of the firewall. You can't change the name of
+    #   a firewall after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_zone_change_protection
+    #   A setting indicating whether the firewall is protected against
+    #   changes to the subnet associations. Use this setting to protect
+    #   against accidentally modifying the subnet associations for a
+    #   firewall that is in use. When you create a firewall, the operation
+    #   initializes this setting to `TRUE`.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/UpdateAvailabilityZoneChangeProtectionResponse AWS API Documentation
+    #
+    class UpdateAvailabilityZoneChangeProtectionResponse < Struct.new(
+      :update_token,
+      :firewall_arn,
+      :firewall_name,
+      :availability_zone_change_protection)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] container_association_name
+    #   The descriptive name of the container association.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] container_association_arn
+    #   The Amazon Resource Name (ARN) of the container association.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A description of the container association. When omitted, the
+    #   existing description remains unchanged. To clear the description,
+    #   pass an empty string.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The container type. This value must match the existing type and
+    #   can't be changed. Valid values:
+    #
+    #   * `ECS` - Amazon Elastic Container Service
+    #
+    #   * `EKS` - Amazon Elastic Kubernetes Service
+    #   @return [String]
+    #
+    # @!attribute [rw] container_monitoring_configurations
+    #   The updated monitoring configurations for the container association.
+    #   Each configuration specifies an Amazon ECS or Amazon EKS cluster to
+    #   monitor and optional attribute filters.
+    #   @return [Array<Types::ContainerMonitoringConfiguration>]
+    #
+    # @!attribute [rw] tags
+    #   The key:value pairs to associate with the resource.
+    #   @return [Array<Types::Tag>]
+    #
+    # @!attribute [rw] update_token
+    #   A token used for optimistic locking. Network Firewall returns a
+    #   token to your requests that access the container association. The
+    #   token marks the state of the container association resource at the
+    #   time of the request.
+    #
+    #   To make changes to the container association, you provide the token
+    #   in your request. Network Firewall uses the token to ensure that the
+    #   container association hasn't changed since you last retrieved it.
+    #   If it has changed, the operation fails with an
+    #   `InvalidTokenException`. If this happens, retrieve the container
+    #   association again to get a current copy of it with a current token.
+    #   Reapply your changes as needed, then try the operation again using
+    #   the new token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/UpdateContainerAssociationRequest AWS API Documentation
+    #
+    class UpdateContainerAssociationRequest < Struct.new(
+      :container_association_name,
+      :container_association_arn,
+      :description,
+      :type,
+      :container_monitoring_configurations,
+      :tags,
+      :update_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] container_association_name
+    #   The descriptive name of the container association.
+    #   @return [String]
+    #
+    # @!attribute [rw] container_association_arn
+    #   The Amazon Resource Name (ARN) of the container association.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A description of the container association.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The container type. Valid values:
+    #
+    #   * `ECS` - Amazon Elastic Container Service
+    #
+    #   * `EKS` - Amazon Elastic Kubernetes Service
+    #   @return [String]
+    #
+    # @!attribute [rw] container_monitoring_configurations
+    #   The monitoring configurations for the container association.
+    #   @return [Array<Types::ContainerMonitoringConfiguration>]
+    #
+    # @!attribute [rw] status
+    #   The current status of the container association.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   The key:value pairs to associate with the resource.
+    #   @return [Array<Types::Tag>]
+    #
+    # @!attribute [rw] update_token
+    #   A token used for optimistic locking. Network Firewall returns a
+    #   token to your requests that access the container association. The
+    #   token marks the state of the container association resource at the
+    #   time of the request.
+    #
+    #   To make changes to the container association, you provide the token
+    #   in your request. Network Firewall uses the token to ensure that the
+    #   container association hasn't changed since you last retrieved it.
+    #   If it has changed, the operation fails with an
+    #   `InvalidTokenException`. If this happens, retrieve the container
+    #   association again to get a current copy of it with a current token.
+    #   Reapply your changes as needed, then try the operation again using
+    #   the new token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/UpdateContainerAssociationResponse AWS API Documentation
+    #
+    class UpdateContainerAssociationResponse < Struct.new(
+      :container_association_name,
+      :container_association_arn,
+      :description,
+      :type,
+      :container_monitoring_configurations,
+      :status,
+      :tags,
+      :update_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # @!attribute [rw] enabled_analysis_types
     #   An optional setting indicating the specific traffic analysis types
@@ -5843,12 +9503,27 @@ module Aws::NetworkFirewall
     #   firewall.
     #   @return [Types::LoggingConfiguration]
     #
+    # @!attribute [rw] enable_monitoring_dashboard
+    #   A boolean that lets you enable or disable the detailed firewall
+    #   monitoring dashboard on the firewall.
+    #
+    #   The monitoring dashboard provides comprehensive visibility into your
+    #   firewall's flow logs and alert logs. After you enable detailed
+    #   monitoring, you can access these dashboards directly from the
+    #   **Monitoring** page of the Network Firewall console.
+    #
+    #   Specify `TRUE` to enable the the detailed monitoring dashboard on
+    #   the firewall. Specify `FALSE` to disable the the detailed monitoring
+    #   dashboard on the firewall.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/UpdateLoggingConfigurationRequest AWS API Documentation
     #
     class UpdateLoggingConfigurationRequest < Struct.new(
       :firewall_arn,
       :firewall_name,
-      :logging_configuration)
+      :logging_configuration,
+      :enable_monitoring_dashboard)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5866,12 +9541,544 @@ module Aws::NetworkFirewall
     #   Defines how Network Firewall performs logging for a Firewall.
     #   @return [Types::LoggingConfiguration]
     #
+    # @!attribute [rw] enable_monitoring_dashboard
+    #   A boolean that reflects whether or not the firewall monitoring
+    #   dashboard is enabled on a firewall.
+    #
+    #   Returns `TRUE` when the firewall monitoring dashboard is enabled on
+    #   the firewall. Returns `FALSE` when the firewall monitoring dashboard
+    #   is not enabled on the firewall.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/UpdateLoggingConfigurationResponse AWS API Documentation
     #
     class UpdateLoggingConfigurationResponse < Struct.new(
       :firewall_arn,
       :firewall_name,
-      :logging_configuration)
+      :logging_configuration,
+      :enable_monitoring_dashboard)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_configuration_name
+    #   The descriptive name of the proxy configuration. You can't change
+    #   the name of a proxy configuration after you create it.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_configuration_arn
+    #   The Amazon Resource Name (ARN) of a proxy configuration.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] default_rule_phase_actions
+    #   Evaluation points in the traffic flow where rules are applied. There
+    #   are three phases in a traffic where the rule match is applied.
+    #   @return [Types::ProxyConfigDefaultRulePhaseActionsRequest]
+    #
+    # @!attribute [rw] update_token
+    #   A token used for optimistic locking. Network Firewall returns a
+    #   token to your requests that access the proxy configuration. The
+    #   token marks the state of the proxy configuration resource at the
+    #   time of the request.
+    #
+    #   To make changes to the proxy configuration, you provide the token in
+    #   your request. Network Firewall uses the token to ensure that the
+    #   proxy configuration hasn't changed since you last retrieved it. If
+    #   it has changed, the operation fails with an `InvalidTokenException`.
+    #   If this happens, retrieve the proxy configuration again to get a
+    #   current copy of it with a current token. Reapply your changes as
+    #   needed, then try the operation again using the new token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/UpdateProxyConfigurationRequest AWS API Documentation
+    #
+    class UpdateProxyConfigurationRequest < Struct.new(
+      :proxy_configuration_name,
+      :proxy_configuration_arn,
+      :default_rule_phase_actions,
+      :update_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_configuration
+    #   The updated proxy configuration resource that reflects the updates
+    #   from the request.
+    #   @return [Types::ProxyConfiguration]
+    #
+    # @!attribute [rw] update_token
+    #   A token used for optimistic locking. Network Firewall returns a
+    #   token to your requests that access the proxy configuration. The
+    #   token marks the state of the proxy configuration resource at the
+    #   time of the request.
+    #
+    #   To make changes to the proxy configuration, you provide the token in
+    #   your request. Network Firewall uses the token to ensure that the
+    #   proxy configuration hasn't changed since you last retrieved it. If
+    #   it has changed, the operation fails with an `InvalidTokenException`.
+    #   If this happens, retrieve the proxy configuration again to get a
+    #   current copy of it with a current token. Reapply your changes as
+    #   needed, then try the operation again using the new token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/UpdateProxyConfigurationResponse AWS API Documentation
+    #
+    class UpdateProxyConfigurationResponse < Struct.new(
+      :proxy_configuration,
+      :update_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] nat_gateway_id
+    #   The NAT Gateway the proxy is attached to.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_name
+    #   The descriptive name of the proxy. You can't change the name of a
+    #   proxy after you create it.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_arn
+    #   The Amazon Resource Name (ARN) of a proxy.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] listener_properties_to_add
+    #   Listener properties for HTTP and HTTPS traffic to add.
+    #   @return [Array<Types::ListenerPropertyRequest>]
+    #
+    # @!attribute [rw] listener_properties_to_remove
+    #   Listener properties for HTTP and HTTPS traffic to remove.
+    #   @return [Array<Types::ListenerPropertyRequest>]
+    #
+    # @!attribute [rw] tls_intercept_properties
+    #   TLS decryption on traffic to filter on attributes in the HTTP
+    #   header.
+    #   @return [Types::TlsInterceptPropertiesRequest]
+    #
+    # @!attribute [rw] update_token
+    #   A token used for optimistic locking. Network Firewall returns a
+    #   token to your requests that access the proxy. The token marks the
+    #   state of the proxy resource at the time of the request.
+    #
+    #   To make changes to the proxy, you provide the token in your request.
+    #   Network Firewall uses the token to ensure that the proxy hasn't
+    #   changed since you last retrieved it. If it has changed, the
+    #   operation fails with an `InvalidTokenException`. If this happens,
+    #   retrieve the proxy again to get a current copy of it with a current
+    #   token. Reapply your changes as needed, then try the operation again
+    #   using the new token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/UpdateProxyRequest AWS API Documentation
+    #
+    class UpdateProxyRequest < Struct.new(
+      :nat_gateway_id,
+      :proxy_name,
+      :proxy_arn,
+      :listener_properties_to_add,
+      :listener_properties_to_remove,
+      :tls_intercept_properties,
+      :update_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy
+    #   The updated proxy resource that reflects the updates from the
+    #   request.
+    #   @return [Types::Proxy]
+    #
+    # @!attribute [rw] update_token
+    #   A token used for optimistic locking. Network Firewall returns a
+    #   token to your requests that access the proxy. The token marks the
+    #   state of the proxy resource at the time of the request.
+    #
+    #   To make changes to the proxy, you provide the token in your request.
+    #   Network Firewall uses the token to ensure that the proxy hasn't
+    #   changed since you last retrieved it. If it has changed, the
+    #   operation fails with an `InvalidTokenException`. If this happens,
+    #   retrieve the proxy again to get a current copy of it with a current
+    #   token. Reapply your changes as needed, then try the operation again
+    #   using the new token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/UpdateProxyResponse AWS API Documentation
+    #
+    class UpdateProxyResponse < Struct.new(
+      :proxy,
+      :update_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_configuration_name
+    #   The descriptive name of the proxy configuration. You can't change
+    #   the name of a proxy configuration after you create it.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_configuration_arn
+    #   The Amazon Resource Name (ARN) of a proxy configuration.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] rule_groups
+    #   proxy rule group resources to update to new positions.
+    #   @return [Array<Types::ProxyRuleGroupPriority>]
+    #
+    # @!attribute [rw] update_token
+    #   A token used for optimistic locking. Network Firewall returns a
+    #   token to your requests that access the proxy configuration. The
+    #   token marks the state of the proxy configuration resource at the
+    #   time of the request.
+    #
+    #   To make changes to the proxy configuration, you provide the token in
+    #   your request. Network Firewall uses the token to ensure that the
+    #   proxy configuration hasn't changed since you last retrieved it. If
+    #   it has changed, the operation fails with an `InvalidTokenException`.
+    #   If this happens, retrieve the proxy configuration again to get a
+    #   current copy of it with a current token. Reapply your changes as
+    #   needed, then try the operation again using the new token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/UpdateProxyRuleGroupPrioritiesRequest AWS API Documentation
+    #
+    class UpdateProxyRuleGroupPrioritiesRequest < Struct.new(
+      :proxy_configuration_name,
+      :proxy_configuration_arn,
+      :rule_groups,
+      :update_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_rule_groups
+    #   The updated proxy rule group hierarchy that reflects the updates
+    #   from the request.
+    #   @return [Array<Types::ProxyRuleGroupPriorityResult>]
+    #
+    # @!attribute [rw] update_token
+    #   A token used for optimistic locking. Network Firewall returns a
+    #   token to your requests that access the proxy configuration. The
+    #   token marks the state of the proxy configuration resource at the
+    #   time of the request.
+    #
+    #   To make changes to the proxy configuration, you provide the token in
+    #   your request. Network Firewall uses the token to ensure that the
+    #   proxy configuration hasn't changed since you last retrieved it. If
+    #   it has changed, the operation fails with an `InvalidTokenException`.
+    #   If this happens, retrieve the proxy configuration again to get a
+    #   current copy of it with a current token. Reapply your changes as
+    #   needed, then try the operation again using the new token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/UpdateProxyRuleGroupPrioritiesResponse AWS API Documentation
+    #
+    class UpdateProxyRuleGroupPrioritiesResponse < Struct.new(
+      :proxy_rule_groups,
+      :update_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_rule_group_name
+    #   The descriptive name of the proxy rule group. You can't change the
+    #   name of a proxy rule group after you create it.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_rule_group_arn
+    #   The Amazon Resource Name (ARN) of a proxy rule group.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] rule_group_request_phase
+    #   Evaluation points in the traffic flow where rules are applied. There
+    #   are three phases in a traffic where the rule match is applied.
+    #   @return [String]
+    #
+    # @!attribute [rw] rules
+    #   proxy rule resources to update to new positions.
+    #   @return [Array<Types::ProxyRulePriority>]
+    #
+    # @!attribute [rw] update_token
+    #   A token used for optimistic locking. Network Firewall returns a
+    #   token to your requests that access the proxy rule group. The token
+    #   marks the state of the proxy rule group resource at the time of the
+    #   request.
+    #
+    #   To make changes to the proxy rule group, you provide the token in
+    #   your request. Network Firewall uses the token to ensure that the
+    #   proxy rule group hasn't changed since you last retrieved it. If it
+    #   has changed, the operation fails with an `InvalidTokenException`. If
+    #   this happens, retrieve the proxy rule group again to get a current
+    #   copy of it with a current token. Reapply your changes as needed,
+    #   then try the operation again using the new token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/UpdateProxyRulePrioritiesRequest AWS API Documentation
+    #
+    class UpdateProxyRulePrioritiesRequest < Struct.new(
+      :proxy_rule_group_name,
+      :proxy_rule_group_arn,
+      :rule_group_request_phase,
+      :rules,
+      :update_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_rule_group_name
+    #   The descriptive name of the proxy rule group. You can't change the
+    #   name of a proxy rule group after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_rule_group_arn
+    #   The Amazon Resource Name (ARN) of a proxy rule group.
+    #   @return [String]
+    #
+    # @!attribute [rw] rule_group_request_phase
+    #   Evaluation points in the traffic flow where rules are applied. There
+    #   are three phases in a traffic where the rule match is applied.
+    #   @return [String]
+    #
+    # @!attribute [rw] rules
+    #   The updated proxy rule hierarchy that reflects the updates from the
+    #   request.
+    #   @return [Array<Types::ProxyRulePriority>]
+    #
+    # @!attribute [rw] update_token
+    #   A token used for optimistic locking. Network Firewall returns a
+    #   token to your requests that access the proxy rule group. The token
+    #   marks the state of the proxy rule group resource at the time of the
+    #   request.
+    #
+    #   To make changes to the proxy rule group, you provide the token in
+    #   your request. Network Firewall uses the token to ensure that the
+    #   proxy rule group hasn't changed since you last retrieved it. If it
+    #   has changed, the operation fails with an `InvalidTokenException`. If
+    #   this happens, retrieve the proxy rule group again to get a current
+    #   copy of it with a current token. Reapply your changes as needed,
+    #   then try the operation again using the new token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/UpdateProxyRulePrioritiesResponse AWS API Documentation
+    #
+    class UpdateProxyRulePrioritiesResponse < Struct.new(
+      :proxy_rule_group_name,
+      :proxy_rule_group_arn,
+      :rule_group_request_phase,
+      :rules,
+      :update_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_rule_group_name
+    #   The descriptive name of the proxy rule group. You can't change the
+    #   name of a proxy rule group after you create it.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_rule_group_arn
+    #   The Amazon Resource Name (ARN) of a proxy rule group.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_rule_name
+    #   The descriptive name of the proxy rule. You can't change the name
+    #   of a proxy rule after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A description of the proxy rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] action
+    #   Depending on the match action, the proxy either stops the evaluation
+    #   (if the action is terminal - allow or deny), or continues it (if the
+    #   action is alert) until it matches a rule with a terminal action.
+    #   @return [String]
+    #
+    # @!attribute [rw] add_conditions
+    #   Proxy rule conditions to add. Match criteria that specify what
+    #   traffic attributes to examine. Conditions include operators
+    #   (StringEquals, StringLike) and values to match against.
+    #   @return [Array<Types::ProxyRuleCondition>]
+    #
+    # @!attribute [rw] remove_conditions
+    #   Proxy rule conditions to remove. Match criteria that specify what
+    #   traffic attributes to examine. Conditions include operators
+    #   (StringEquals, StringLike) and values to match against.
+    #   @return [Array<Types::ProxyRuleCondition>]
+    #
+    # @!attribute [rw] update_token
+    #   A token used for optimistic locking. Network Firewall returns a
+    #   token to your requests that access the proxy rule. The token marks
+    #   the state of the proxy rule resource at the time of the request.
+    #
+    #   To make changes to the proxy rule, you provide the token in your
+    #   request. Network Firewall uses the token to ensure that the proxy
+    #   rule hasn't changed since you last retrieved it. If it has changed,
+    #   the operation fails with an `InvalidTokenException`. If this
+    #   happens, retrieve the proxy rule again to get a current copy of it
+    #   with a current token. Reapply your changes as needed, then try the
+    #   operation again using the new token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/UpdateProxyRuleRequest AWS API Documentation
+    #
+    class UpdateProxyRuleRequest < Struct.new(
+      :proxy_rule_group_name,
+      :proxy_rule_group_arn,
+      :proxy_rule_name,
+      :description,
+      :action,
+      :add_conditions,
+      :remove_conditions,
+      :update_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] proxy_rule
+    #   The updated proxy rule resource that reflects the updates from the
+    #   request.
+    #   @return [Types::ProxyRule]
+    #
+    # @!attribute [rw] removed_conditions
+    #   Proxy rule conditions removed from the rule.
+    #   @return [Array<Types::ProxyRuleCondition>]
+    #
+    # @!attribute [rw] update_token
+    #   A token used for optimistic locking. Network Firewall returns a
+    #   token to your requests that access the proxy rule. The token marks
+    #   the state of the proxy rule resource at the time of the request.
+    #
+    #   To make changes to the proxy rule, you provide the token in your
+    #   request. Network Firewall uses the token to ensure that the proxy
+    #   rule hasn't changed since you last retrieved it. If it has changed,
+    #   the operation fails with an `InvalidTokenException`. If this
+    #   happens, retrieve the proxy rule again to get a current copy of it
+    #   with a current token. Reapply your changes as needed, then try the
+    #   operation again using the new token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/UpdateProxyRuleResponse AWS API Documentation
+    #
+    class UpdateProxyRuleResponse < Struct.new(
+      :proxy_rule,
+      :removed_conditions,
+      :update_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] firewall_arn
+    #   The Amazon Resource Name (ARN) of the firewall.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] firewall_name
+    #   The descriptive name of the firewall. You can't change the name of
+    #   a firewall after you create it.
+    #
+    #   You must specify the ARN or the name, and you can specify both.
+    #   @return [String]
+    #
+    # @!attribute [rw] update_token
+    #   An optional token that you can use for optimistic locking. Network
+    #   Firewall returns a token to your requests that access the firewall.
+    #   The token marks the state of the firewall resource at the time of
+    #   the request.
+    #
+    #   To make an unconditional change to the firewall, omit the token in
+    #   your update request. Without the token, Network Firewall performs
+    #   your updates regardless of whether the firewall has changed since
+    #   you last retrieved it.
+    #
+    #   To make a conditional change to the firewall, provide the token in
+    #   your update request. Network Firewall uses the token to ensure that
+    #   the firewall hasn't changed since you last retrieved it. If it has
+    #   changed, the operation fails with an `InvalidTokenException`. If
+    #   this happens, retrieve the firewall again to get a current copy of
+    #   it with a new token. Reapply your changes as needed, then try the
+    #   operation again using the new token.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_settings
+    #   The proxy listener configuration to set on the firewall. This
+    #   specifies the ports and protocols on which the firewall's proxy
+    #   listens for traffic.
+    #   @return [Types::ProxySettings]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/UpdateProxySettingsRequest AWS API Documentation
+    #
+    class UpdateProxySettingsRequest < Struct.new(
+      :firewall_arn,
+      :firewall_name,
+      :update_token,
+      :proxy_settings)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] firewall_arn
+    #   The Amazon Resource Name (ARN) of the firewall.
+    #   @return [String]
+    #
+    # @!attribute [rw] firewall_name
+    #   The descriptive name of the firewall. You can't change the name of
+    #   a firewall after you create it.
+    #   @return [String]
+    #
+    # @!attribute [rw] update_token
+    #   An optional token that you can use for optimistic locking. Network
+    #   Firewall returns a token to your requests that access the firewall.
+    #   The token marks the state of the firewall resource at the time of
+    #   the request.
+    #
+    #   To make an unconditional change to the firewall, omit the token in
+    #   your update request. Without the token, Network Firewall performs
+    #   your updates regardless of whether the firewall has changed since
+    #   you last retrieved it.
+    #
+    #   To make a conditional change to the firewall, provide the token in
+    #   your update request. Network Firewall uses the token to ensure that
+    #   the firewall hasn't changed since you last retrieved it. If it has
+    #   changed, the operation fails with an `InvalidTokenException`. If
+    #   this happens, retrieve the firewall again to get a current copy of
+    #   it with a new token. Reapply your changes as needed, then try the
+    #   operation again using the new token.
+    #   @return [String]
+    #
+    # @!attribute [rw] proxy_settings
+    #   The updated proxy listener configuration on the firewall.
+    #   @return [Types::ProxySettings]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/UpdateProxySettingsResponse AWS API Documentation
+    #
+    class UpdateProxySettingsResponse < Struct.new(
+      :firewall_arn,
+      :firewall_name,
+      :update_token,
+      :proxy_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5978,6 +10185,12 @@ module Aws::NetworkFirewall
     #   analyzer without updating the rule group, set `DryRun` to `TRUE`.
     #   @return [Boolean]
     #
+    # @!attribute [rw] summary_configuration
+    #   Updates the selected summary configuration for a rule group.
+    #
+    #   Changes affect subsequent responses from DescribeRuleGroupSummary.
+    #   @return [Types::SummaryConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/UpdateRuleGroupRequest AWS API Documentation
     #
     class UpdateRuleGroupRequest < Struct.new(
@@ -5991,7 +10204,8 @@ module Aws::NetworkFirewall
       :dry_run,
       :encryption_configuration,
       :source_metadata,
-      :analyze_rule_group)
+      :analyze_rule_group,
+      :summary_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6226,6 +10440,166 @@ module Aws::NetworkFirewall
     class UpdateTLSInspectionConfigurationResponse < Struct.new(
       :update_token,
       :tls_inspection_configuration_response)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The VPC and subnets for a proxy mode firewall endpoint. This is used
+    # in CreateFirewall when `NoSourcePreservation` is `TRUE`, to specify
+    # where Network Firewall creates the firewall endpoint.
+    #
+    # This differs from VpcEndpointAssociation, which defines additional
+    # secondary endpoints for a firewall in other VPCs.
+    #
+    # @!attribute [rw] vpc_id
+    #   The unique identifier of the VPC where Network Firewall creates the
+    #   proxy mode firewall endpoint.
+    #   @return [String]
+    #
+    # @!attribute [rw] subnet_mappings
+    #   The subnets in which Network Firewall creates the firewall endpoint
+    #   for a proxy mode firewall. Each subnet must belong to a different
+    #   Availability Zone in the VPC.
+    #   @return [Array<Types::SubnetMapping>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/VpcEndpoint AWS API Documentation
+    #
+    class VpcEndpoint < Struct.new(
+      :vpc_id,
+      :subnet_mappings)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A VPC endpoint association defines a single subnet to use for a
+    # firewall endpoint for a `Firewall`. You can define VPC endpoint
+    # associations only in the Availability Zones that already have a subnet
+    # mapping defined in the `Firewall` resource.
+    #
+    # <note markdown="1"> You can retrieve the list of Availability Zones that are available for
+    # use by calling `DescribeFirewallMetadata`.
+    #
+    #  </note>
+    #
+    # To manage firewall endpoints, first, in the `Firewall` specification,
+    # you specify a single VPC and one subnet for each of the Availability
+    # Zones where you want to use the firewall. Then you can define
+    # additional endpoints as VPC endpoint associations.
+    #
+    # You can use VPC endpoint associations to expand the protections of the
+    # firewall as follows:
+    #
+    # * **Protect multiple VPCs with a single firewall** - You can use the
+    #   firewall to protect other VPCs, either in your account or in
+    #   accounts where the firewall is shared. You can only specify
+    #   Availability Zones that already have a firewall endpoint defined in
+    #   the `Firewall` subnet mappings.
+    #
+    # * **Define multiple firewall endpoints for a VPC in an Availability
+    #   Zone** - You can create additional firewall endpoints for the VPC
+    #   that you have defined in the firewall, in any Availability Zone that
+    #   already has an endpoint defined in the `Firewall` subnet mappings.
+    #   You can create multiple VPC endpoint associations for any other VPC
+    #   where you use the firewall.
+    #
+    # You can use Resource Access Manager to share a `Firewall` that you own
+    # with other accounts, which gives them the ability to use the firewall
+    # to create VPC endpoint associations. For information about sharing a
+    # firewall, see `PutResourcePolicy` in this guide and see [Sharing
+    # Network Firewall resources][1] in the *Network Firewall Developer
+    # Guide*.
+    #
+    # The status of the VPC endpoint association, which indicates whether
+    # it's ready to filter network traffic, is provided in the
+    # corresponding VpcEndpointAssociationStatus. You can retrieve both the
+    # association and its status by calling DescribeVpcEndpointAssociation.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/network-firewall/latest/developerguide/sharing.html
+    #
+    # @!attribute [rw] vpc_endpoint_association_id
+    #   The unique identifier of the VPC endpoint association.
+    #   @return [String]
+    #
+    # @!attribute [rw] vpc_endpoint_association_arn
+    #   The Amazon Resource Name (ARN) of a VPC endpoint association.
+    #   @return [String]
+    #
+    # @!attribute [rw] firewall_arn
+    #   The Amazon Resource Name (ARN) of the firewall.
+    #   @return [String]
+    #
+    # @!attribute [rw] vpc_id
+    #   The unique identifier of the VPC for the endpoint association.
+    #   @return [String]
+    #
+    # @!attribute [rw] subnet_mapping
+    #   The ID for a subnet that's used in an association with a firewall.
+    #   This is used in CreateFirewall, AssociateSubnets, and
+    #   CreateVpcEndpointAssociation. Network Firewall creates an instance
+    #   of the associated firewall in each subnet that you specify, to
+    #   filter traffic in the subnet's Availability Zone.
+    #   @return [Types::SubnetMapping]
+    #
+    # @!attribute [rw] description
+    #   A description of the VPC endpoint association.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   The key:value pairs to associate with the resource.
+    #   @return [Array<Types::Tag>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/VpcEndpointAssociation AWS API Documentation
+    #
+    class VpcEndpointAssociation < Struct.new(
+      :vpc_endpoint_association_id,
+      :vpc_endpoint_association_arn,
+      :firewall_arn,
+      :vpc_id,
+      :subnet_mapping,
+      :description,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # High-level information about a VPC endpoint association, returned by
+    # `ListVpcEndpointAssociations`. You can use the information provided in
+    # the metadata to retrieve and manage a VPC endpoint association.
+    #
+    # @!attribute [rw] vpc_endpoint_association_arn
+    #   The Amazon Resource Name (ARN) of a VPC endpoint association.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/VpcEndpointAssociationMetadata AWS API Documentation
+    #
+    class VpcEndpointAssociationMetadata < Struct.new(
+      :vpc_endpoint_association_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Detailed information about the current status of a
+    # VpcEndpointAssociation. You can retrieve this by calling
+    # DescribeVpcEndpointAssociation and providing the VPC endpoint
+    # association ARN.
+    #
+    # @!attribute [rw] status
+    #   The readiness of the configured firewall endpoint to handle network
+    #   traffic.
+    #   @return [String]
+    #
+    # @!attribute [rw] association_sync_state
+    #   The list of the Availability Zone sync states for all subnets that
+    #   are defined by the firewall.
+    #   @return [Hash<String,Types::AZSyncState>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/VpcEndpointAssociationStatus AWS API Documentation
+    #
+    class VpcEndpointAssociationStatus < Struct.new(
+      :status,
+      :association_sync_state)
       SENSITIVE = []
       include Aws::Structure
     end

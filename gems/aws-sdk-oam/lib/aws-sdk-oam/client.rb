@@ -95,8 +95,8 @@ module Aws::OAM
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::OAM
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::OAM
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::OAM
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::OAM
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::OAM
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::OAM
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::OAM
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -508,6 +512,14 @@ module Aws::OAM
     #
     #   * `$AccountEmailNoDomain` is the email address of the account without
     #     the domain name
+    #
+    #   <note markdown="1"> In the Amazon Web Services GovCloud (US-East) and Amazon Web Services
+    #   GovCloud (US-West) Regions, the only supported option is to use custom
+    #   labels, and the `$AccountName`, `$AccountEmail`, and
+    #   `$AccountEmailNoDomain` variables all resolve as *account-id* instead
+    #   of the specified variable.
+    #
+    #    </note>
     #
     # @option params [Types::LinkConfiguration] :link_configuration
     #   Use this structure to optionally create filters that specify that only
@@ -721,6 +733,16 @@ module Aws::OAM
     # @option params [required, String] :identifier
     #   The ARN of the link to retrieve information for.
     #
+    # @option params [Boolean] :include_tags
+    #   Specifies whether to include the tags associated with the link in the
+    #   response. When `IncludeTags` is set to `true` and the caller has the
+    #   required permission, `oam:ListTagsForResource`, the API will return
+    #   the tags for the specified resource. If the caller doesn't have the
+    #   required permission, `oam:ListTagsForResource`, the API will raise an
+    #   exception.
+    #
+    #   The default value is `false`.
+    #
     # @return [Types::GetLinkOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::GetLinkOutput#arn #arn} => String
@@ -736,6 +758,7 @@ module Aws::OAM
     #
     #   resp = client.get_link({
     #     identifier: "ResourceIdentifier", # required
+    #     include_tags: false,
     #   })
     #
     # @example Response structure
@@ -773,6 +796,16 @@ module Aws::OAM
     # @option params [required, String] :identifier
     #   The ARN of the sink to retrieve information for.
     #
+    # @option params [Boolean] :include_tags
+    #   Specifies whether to include the tags associated with the sink in the
+    #   response. When `IncludeTags` is set to `true` and the caller has the
+    #   required permission, `oam:ListTagsForResource`, the API will return
+    #   the tags for the specified resource. If the caller doesn't have the
+    #   required permission, `oam:ListTagsForResource`, the API will raise an
+    #   exception.
+    #
+    #   The default value is `false`.
+    #
     # @return [Types::GetSinkOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::GetSinkOutput#arn #arn} => String
@@ -784,6 +817,7 @@ module Aws::OAM
     #
     #   resp = client.get_sink({
     #     identifier: "ResourceIdentifier", # required
+    #     include_tags: false,
     #   })
     #
     # @example Response structure
@@ -1039,7 +1073,8 @@ module Aws::OAM
     # organization or to individual accounts.
     #
     # You can also use a sink policy to limit the types of data that is
-    # shared. The three types that you can allow or deny are:
+    # shared. The six types of services with their respective resource types
+    # that you can allow or deny are:
     #
     # * **Metrics** - Specify with `AWS::CloudWatch::Metric`
     #
@@ -1049,6 +1084,12 @@ module Aws::OAM
     #
     # * **Application Insights - Applications** - Specify with
     #   `AWS::ApplicationInsights::Application`
+    #
+    # * **Internet Monitor** - Specify with `AWS::InternetMonitor::Monitor`
+    #
+    # * **Application Signals** - Specify with
+    #   `AWS::ApplicationSignals::Service` and
+    #   `AWS::ApplicationSignals::ServiceLevelObjective`
     #
     # See the examples in this section to see how to specify permitted
     # source accounts and data types.
@@ -1218,6 +1259,17 @@ module Aws::OAM
     # @option params [required, String] :identifier
     #   The ARN of the link that you want to update.
     #
+    # @option params [Boolean] :include_tags
+    #   Specifies whether to include the tags associated with the link in the
+    #   response after the update operation. When `IncludeTags` is set to
+    #   `true` and the caller has the required permission,
+    #   `oam:ListTagsForResource`, the API will return the tags for the
+    #   specified resource. If the caller doesn't have the required
+    #   permission, `oam:ListTagsForResource`, the API will raise an
+    #   exception.
+    #
+    #   The default value is `false`.
+    #
     # @option params [Types::LinkConfiguration] :link_configuration
     #   Use this structure to filter which metric namespaces and which log
     #   groups are to be shared from the source account to the monitoring
@@ -1245,6 +1297,7 @@ module Aws::OAM
     #
     #   resp = client.update_link({
     #     identifier: "ResourceIdentifier", # required
+    #     include_tags: false,
     #     link_configuration: {
     #       log_group_configuration: {
     #         filter: "LogsFilter", # required
@@ -1297,7 +1350,7 @@ module Aws::OAM
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-oam'
-      context[:gem_version] = '1.31.0'
+      context[:gem_version] = '1.52.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

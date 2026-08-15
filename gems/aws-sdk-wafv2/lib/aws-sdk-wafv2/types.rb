@@ -55,6 +55,16 @@ module Aws::WAFV2
     # rule group, `AWSManagedRulesACFPRuleSet`. This configuration is used
     # in `ManagedRuleGroupConfig`.
     #
+    # For additional information about this and the other intelligent threat
+    # mitigation rule groups, see [Intelligent threat mitigation in WAF][1]
+    # and [Amazon Web Services Managed Rules rule groups list][2] in the
+    # *WAF Developer Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/waf/latest/developerguide/waf-managed-protections
+    # [2]: https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups-list
+    #
     # @!attribute [rw] creation_path
     #   The path of the account creation endpoint for your application. This
     #   is the page on your website that accepts the completed registration
@@ -131,6 +141,16 @@ module Aws::WAFV2
     # group, `AWSManagedRulesATPRuleSet`. This configuration is used in
     # `ManagedRuleGroupConfig`.
     #
+    # For additional information about this and the other intelligent threat
+    # mitigation rule groups, see [Intelligent threat mitigation in WAF][1]
+    # and [Amazon Web Services Managed Rules rule groups list][2] in the
+    # *WAF Developer Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/waf/latest/developerguide/waf-managed-protections
+    # [2]: https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups-list
+    #
     # @!attribute [rw] login_path
     #   The path of the login endpoint for your application. For example,
     #   for the URL `https://example.com/web/login`, you would provide the
@@ -181,9 +201,74 @@ module Aws::WAFV2
       include Aws::Structure
     end
 
+    # Configures the use of the anti-DDoS managed rule group,
+    # `AWSManagedRulesAntiDDoSRuleSet`. This configuration is used in
+    # `ManagedRuleGroupConfig`.
+    #
+    # The configuration that you provide here determines whether and how the
+    # rules in the rule group are used.
+    #
+    # For additional information about this and the other intelligent threat
+    # mitigation rule groups, see [Intelligent threat mitigation in WAF][1]
+    # and [Amazon Web Services Managed Rules rule groups list][2] in the
+    # *WAF Developer Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/waf/latest/developerguide/waf-managed-protections
+    # [2]: https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups-list
+    #
+    # @!attribute [rw] client_side_action_config
+    #   Configures the request handling that's applied by the managed rule
+    #   group rules `ChallengeAllDuringEvent` and `ChallengeDDoSRequests`
+    #   during a distributed denial of service (DDoS) attack.
+    #   @return [Types::ClientSideActionConfig]
+    #
+    # @!attribute [rw] sensitivity_to_block
+    #   The sensitivity that the rule group rule `DDoSRequests` uses when
+    #   matching against the DDoS suspicion labeling on a request. The
+    #   managed rule group adds the labeling during DDoS events, before the
+    #   `DDoSRequests` rule runs.
+    #
+    #   The higher the sensitivity, the more levels of labeling that the
+    #   rule matches:
+    #
+    #   * Low sensitivity is less sensitive, causing the rule to match only
+    #     on the most likely participants in an attack, which are the
+    #     requests with the high suspicion label
+    #     `awswaf:managed:aws:anti-ddos:high-suspicion-ddos-request`.
+    #
+    #   * Medium sensitivity causes the rule to match on the medium and high
+    #     suspicion labels.
+    #
+    #   * High sensitivity causes the rule to match on all of the suspicion
+    #     labels: low, medium, and high.
+    #
+    #   Default: `LOW`
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/AWSManagedRulesAntiDDoSRuleSet AWS API Documentation
+    #
+    class AWSManagedRulesAntiDDoSRuleSet < Struct.new(
+      :client_side_action_config,
+      :sensitivity_to_block)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Details for your use of the Bot Control managed rule group,
     # `AWSManagedRulesBotControlRuleSet`. This configuration is used in
     # `ManagedRuleGroupConfig`.
+    #
+    # For additional information about this and the other intelligent threat
+    # mitigation rule groups, see [Intelligent threat mitigation in WAF][1]
+    # and [Amazon Web Services Managed Rules rule groups list][2] in the
+    # *WAF Developer Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/waf/latest/developerguide/waf-managed-protections
+    # [2]: https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups-list
     #
     # @!attribute [rw] inspection_level
     #   The inspection level to use for the Bot Control rule group. The
@@ -361,6 +446,77 @@ module Aws::WAFV2
       include Aws::Structure
     end
 
+    # Application details defined during the web ACL creation process.
+    # Application attributes help WAF give recommendations for protection
+    # packs.
+    #
+    # @!attribute [rw] name
+    #   Specifies the attribute name.
+    #   @return [String]
+    #
+    # @!attribute [rw] values
+    #   Specifies the attribute value.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/ApplicationAttribute AWS API Documentation
+    #
+    class ApplicationAttribute < Struct.new(
+      :name,
+      :values)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A list of `ApplicationAttribute`s that contains information about the
+    # application.
+    #
+    # @!attribute [rw] attributes
+    #   Contains the attribute name and a list of values for that attribute.
+    #   @return [Array<Types::ApplicationAttribute>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/ApplicationConfig AWS API Documentation
+    #
+    class ApplicationConfig < Struct.new(
+      :attributes)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A rule statement that inspects web traffic based on the Autonomous
+    # System Number (ASN) associated with the request's IP address.
+    #
+    # For additional details, see [ASN match rule statement][1] in the [WAF
+    # Developer Guide][2].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/waf/latest/developerguide/waf-rule-statement-type-asn-match.html
+    # [2]: https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html
+    #
+    # @!attribute [rw] asn_list
+    #   Contains one or more Autonomous System Numbers (ASNs). ASNs are
+    #   unique identifiers assigned to large internet networks managed by
+    #   organizations such as internet service providers, enterprises,
+    #   universities, or government agencies.
+    #   @return [Array<Integer>]
+    #
+    # @!attribute [rw] forwarded_ip_config
+    #   The configuration for inspecting IP addresses to match against an
+    #   ASN in an HTTP header that you specify, instead of using the IP
+    #   address that's reported by the web request origin. Commonly, this
+    #   is the X-Forwarded-For (XFF) header, but you can specify any header
+    #   name.
+    #   @return [Types::ForwardedIPConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/AsnMatchStatement AWS API Documentation
+    #
+    class AsnMatchStatement < Struct.new(
+      :asn_list,
+      :forwarded_ip_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] web_acl_arn
     #   The Amazon Resource Name (ARN) of the web ACL that you want to
     #   associate with the resource.
@@ -393,6 +549,13 @@ module Aws::WAFV2
     #
     #   * For an Amazon Web Services Verified Access instance:
     #     `arn:partition:ec2:region:account-id:verified-access-instance/instance-id
+    #     `
+    #
+    #   * For an Amplify application:
+    #     `arn:partition:amplify:region:account-id:apps/app-id `
+    #
+    #   * For an Amazon Bedrock AgentCore Gateway:
+    #     `arn:partition:bedrock-agentcore:region:account-id:gateway/gateway-id
     #     `
     #   @return [String]
     #
@@ -512,6 +675,8 @@ module Aws::WAFV2
     #     you can increase the limit for each resource type in the web ACL
     #     `AssociationConfig`, for additional processing fees.
     #
+    #   * For Amplify, use the CloudFront limit.
+    #
     #   The options for oversize handling are the following:
     #
     #   * `CONTINUE` - Inspect the available body contents normally,
@@ -534,6 +699,33 @@ module Aws::WAFV2
     #
     class Body < Struct.new(
       :oversize_handling)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Statistics about a specific bot's traffic to a path, including the
+    # bot name, request count, and percentage of traffic.
+    #
+    # @!attribute [rw] bot_name
+    #   The name of the bot. For example, `gptbot` or `googlebot`.
+    #   @return [String]
+    #
+    # @!attribute [rw] request_count
+    #   The number of requests from this bot to the associated path within
+    #   the specified time window.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] percentage
+    #   The percentage of total requests to the associated path that came
+    #   from this bot.
+    #   @return [Float]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/BotStatistics AWS API Documentation
+    #
+    class BotStatistics < Struct.new(
+      :bot_name,
+      :request_count,
+      :percentage)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -617,6 +809,15 @@ module Aws::WAFV2
     #   and then uses the transformed component contents.
     #   @return [Array<Types::TextTransformation>]
     #
+    # @!attribute [rw] pre_parse_text_transformations
+    #   Pre-parse text transformations normalize the raw query string before
+    #   WAF parses it into individual query arguments. They are applied
+    #   before the standard text transformations. Pre-parse text
+    #   transformations are only supported when `FieldToMatch` is
+    #   `SingleQueryArgument` or `AllQueryArguments`. You can specify up to
+    #   10 pre-parse text transformations per rule statement.
+    #   @return [Array<Types::PreParseTextTransformation>]
+    #
     # @!attribute [rw] positional_constraint
     #   The area within the portion of the web request that you want WAF to
     #   search for `SearchString`. Valid values include the following:
@@ -666,6 +867,7 @@ module Aws::WAFV2
       :search_string,
       :field_to_match,
       :text_transformations,
+      :pre_parse_text_transformations,
       :positional_constraint)
       SENSITIVE = []
       include Aws::Structure
@@ -875,7 +1077,8 @@ module Aws::WAFV2
 
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -908,6 +1111,135 @@ module Aws::WAFV2
     #
     class CheckCapacityResponse < Struct.new(
       :capacity)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # This is part of the `AWSManagedRulesAntiDDoSRuleSet`
+    # `ClientSideActionConfig` configuration in `ManagedRuleGroupConfig`.
+    #
+    # @!attribute [rw] usage_of_action
+    #   Determines whether to use the `AWSManagedRulesAntiDDoSRuleSet` rules
+    #   `ChallengeAllDuringEvent` and `ChallengeDDoSRequests` in the rule
+    #   group evaluation and the related label
+    #   `awswaf:managed:aws:anti-ddos:challengeable-request`.
+    #
+    #   * If usage is enabled:
+    #
+    #     * The managed rule group adds the label
+    #       `awswaf:managed:aws:anti-ddos:challengeable-request` to any web
+    #       request whose URL does *NOT* match the regular expressions
+    #       provided in the `ClientSideAction` setting
+    #       `ExemptUriRegularExpressions`.
+    #
+    #     * The two rules are evaluated against web requests for protected
+    #       resources that are experiencing a DDoS attack. The two rules
+    #       only apply their action to matching requests that have the label
+    #       `awswaf:managed:aws:anti-ddos:challengeable-request`.
+    #   * If usage is disabled:
+    #
+    #     * The managed rule group doesn't add the label
+    #       `awswaf:managed:aws:anti-ddos:challengeable-request` to any web
+    #       requests.
+    #
+    #     * The two rules are not evaluated.
+    #
+    #     * None of the other `ClientSideAction` settings have any effect.
+    #
+    #   <note markdown="1"> This setting only enables or disables the use of the two anti-DDOS
+    #   rules `ChallengeAllDuringEvent` and `ChallengeDDoSRequests` in the
+    #   anti-DDoS managed rule group.
+    #
+    #    This setting doesn't alter the action setting in the two rules. To
+    #   override the actions used by the rules `ChallengeAllDuringEvent` and
+    #   `ChallengeDDoSRequests`, enable this setting, and then override the
+    #   rule actions in the usual way, in your managed rule group
+    #   configuration.
+    #
+    #    </note>
+    #   @return [String]
+    #
+    # @!attribute [rw] sensitivity
+    #   The sensitivity that the rule group rule `ChallengeDDoSRequests`
+    #   uses when matching against the DDoS suspicion labeling on a request.
+    #   The managed rule group adds the labeling during DDoS events, before
+    #   the `ChallengeDDoSRequests` rule runs.
+    #
+    #   The higher the sensitivity, the more levels of labeling that the
+    #   rule matches:
+    #
+    #   * Low sensitivity is less sensitive, causing the rule to match only
+    #     on the most likely participants in an attack, which are the
+    #     requests with the high suspicion label
+    #     `awswaf:managed:aws:anti-ddos:high-suspicion-ddos-request`.
+    #
+    #   * Medium sensitivity causes the rule to match on the medium and high
+    #     suspicion labels.
+    #
+    #   * High sensitivity causes the rule to match on all of the suspicion
+    #     labels: low, medium, and high.
+    #
+    #   Default: `HIGH`
+    #   @return [String]
+    #
+    # @!attribute [rw] exempt_uri_regular_expressions
+    #   The regular expression to match against the web request URI, used to
+    #   identify requests that can't handle a silent browser challenge.
+    #   When the `ClientSideAction` setting `UsageOfAction` is enabled, the
+    #   managed rule group uses this setting to determine which requests to
+    #   label with `awswaf:managed:aws:anti-ddos:challengeable-request`. If
+    #   `UsageOfAction` is disabled, this setting has no effect and the
+    #   managed rule group doesn't add the label to any requests.
+    #
+    #   The anti-DDoS managed rule group doesn't evaluate the rules
+    #   `ChallengeDDoSRequests` or `ChallengeAllDuringEvent` for web
+    #   requests whose URIs match this regex. This is true regardless of
+    #   whether you override the rule action for either of the rules in your
+    #   web ACL configuration.
+    #
+    #   Amazon Web Services recommends using a regular expression.
+    #
+    #   This setting is required if `UsageOfAction` is set to `ENABLED`. If
+    #   required, you can provide between 1 and 5 regex objects in the array
+    #   of settings.
+    #
+    #   Amazon Web Services recommends starting with the following setting.
+    #   Review and update it for your application's needs:
+    #
+    #   `\/api\/|\.(acc|avi|css|gif|jpe?g|js|mp[34]|ogg|otf|pdf|png|tiff?|ttf|webm|webp|woff2?)$`
+    #   @return [Array<Types::Regex>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/ClientSideAction AWS API Documentation
+    #
+    class ClientSideAction < Struct.new(
+      :usage_of_action,
+      :sensitivity,
+      :exempt_uri_regular_expressions)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # This is part of the configuration for the managed rules
+    # `AWSManagedRulesAntiDDoSRuleSet` in `ManagedRuleGroupConfig`.
+    #
+    # @!attribute [rw] challenge
+    #   Configuration for the use of the `AWSManagedRulesAntiDDoSRuleSet`
+    #   rules `ChallengeAllDuringEvent` and `ChallengeDDoSRequests`.
+    #
+    #   <note markdown="1"> This setting isn't related to the configuration of the `Challenge`
+    #   action itself. It only configures the use of the two anti-DDoS rules
+    #   named here.
+    #
+    #    </note>
+    #
+    #   You can enable or disable the use of these rules, and you can
+    #   configure how to use them when they are enabled.
+    #   @return [Types::ClientSideAction]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/ClientSideActionConfig AWS API Documentation
+    #
+    class ClientSideActionConfig < Struct.new(
+      :challenge)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1059,7 +1391,8 @@ module Aws::WAFV2
 
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -1109,7 +1442,8 @@ module Aws::WAFV2
     #
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -1210,7 +1544,8 @@ module Aws::WAFV2
     #
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -1268,7 +1603,8 @@ module Aws::WAFV2
     #
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -1342,6 +1678,11 @@ module Aws::WAFV2
     #   [2]: https://docs.aws.amazon.com/waf/latest/developerguide/limits.html
     #   @return [Hash<String,Types::CustomResponseBody>]
     #
+    # @!attribute [rw] monetization_config
+    #   The monetization configuration for the rule group. Provide this when
+    #   any rule in the rule group uses the `Monetize` action.
+    #   @return [Types::MonetizationConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/CreateRuleGroupRequest AWS API Documentation
     #
     class CreateRuleGroupRequest < Struct.new(
@@ -1352,7 +1693,8 @@ module Aws::WAFV2
       :rules,
       :visibility_config,
       :tags,
-      :custom_response_bodies)
+      :custom_response_bodies,
+      :monetization_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1380,7 +1722,8 @@ module Aws::WAFV2
     #
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -1501,6 +1844,27 @@ module Aws::WAFV2
     #   [1]: http://aws.amazon.com/waf/pricing/
     #   @return [Types::AssociationConfig]
     #
+    # @!attribute [rw] on_source_d_do_s_protection_config
+    #   Specifies the type of DDoS protection to apply to web request data
+    #   for a web ACL. For most scenarios, it is recommended to use the
+    #   default protection level, `ACTIVE_UNDER_DDOS`. If a web ACL is
+    #   associated with multiple Application Load Balancers, the changes you
+    #   make to DDoS protection in that web ACL will apply to all associated
+    #   Application Load Balancers.
+    #   @return [Types::OnSourceDDoSProtectionConfig]
+    #
+    # @!attribute [rw] application_config
+    #   Configures the ability for the WAF console to store and retrieve
+    #   application attributes during the web ACL creation process.
+    #   Application attributes help WAF give recommendations for protection
+    #   packs.
+    #   @return [Types::ApplicationConfig]
+    #
+    # @!attribute [rw] monetization_config
+    #   The monetization configuration for the web ACL. Provide this when
+    #   any rule in the web ACL uses the `Monetize` action.
+    #   @return [Types::MonetizationConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/CreateWebACLRequest AWS API Documentation
     #
     class CreateWebACLRequest < Struct.new(
@@ -1516,7 +1880,10 @@ module Aws::WAFV2
       :captcha_config,
       :challenge_config,
       :token_domains,
-      :association_config)
+      :association_config,
+      :on_source_d_do_s_protection_config,
+      :application_config,
+      :monetization_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1532,6 +1899,25 @@ module Aws::WAFV2
     #
     class CreateWebACLResponse < Struct.new(
       :summary)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The cryptocurrency payment configuration for AI bot monetization.
+    # Contains the list of blockchain payment networks where you receive
+    # payments.
+    #
+    # @!attribute [rw] payment_networks
+    #   The blockchain payment networks configured to receive payments. You
+    #   can specify 1 to 2 networks. All networks must be in the same
+    #   environment-either all production networks (Base, Solana) or all
+    #   test networks (Base Sepolia, Solana Devnet).
+    #   @return [Array<Types::PaymentNetwork>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/CryptoConfig AWS API Documentation
+    #
+    class CryptoConfig < Struct.new(
+      :payment_networks)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1687,6 +2073,54 @@ module Aws::WAFV2
       include Aws::Structure
     end
 
+    # A single data point in a revenue time series, representing aggregated
+    # monetization metrics for a specific time interval.
+    #
+    # @!attribute [rw] date
+    #   The timestamp for this data point.
+    #   @return [Time]
+    #
+    # @!attribute [rw] monetize_served_count
+    #   The number of HTTP 402 Payment Required responses served during this
+    #   interval.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] settled_count
+    #   The number of successfully settled payments during this interval.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] total_amount
+    #   The total revenue amount during this interval in the specified
+    #   currency.
+    #   @return [String]
+    #
+    # @!attribute [rw] category
+    #   The bot category for this data point, when grouped by category.
+    #   @return [String]
+    #
+    # @!attribute [rw] intent
+    #   The intent classification for this data point, when grouped by
+    #   intent.
+    #   @return [String]
+    #
+    # @!attribute [rw] group_by_value
+    #   The group-by dimension value for this data point.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/DataPointEntry AWS API Documentation
+    #
+    class DataPointEntry < Struct.new(
+      :date,
+      :monetize_served_count,
+      :settled_count,
+      :total_amount,
+      :category,
+      :intent,
+      :group_by_value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Specifies the protection behavior for a field type. This is part of
     # the data protection configuration for a web ACL.
     #
@@ -1794,7 +2228,8 @@ module Aws::WAFV2
 
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -1874,7 +2309,8 @@ module Aws::WAFV2
     #
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -1941,11 +2377,18 @@ module Aws::WAFV2
     #   Amazon Web Services services][1] in the *Amazon Security Lake user
     #   guide*.
     #
+    #   The log scope `CLOUDWATCH_TELEMETRY_RULE_MANAGED` indicates a
+    #   configuration that is managed through Amazon CloudWatch Logs for
+    #   telemetry data collection and analysis. For information, see [What
+    #   is Amazon CloudWatch Logs ?][2] in the *Amazon CloudWatch Logs user
+    #   guide*.
+    #
     #   Default: `CUSTOMER`
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/security-lake/latest/userguide/internal-sources.html
+    #   [2]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/DeleteLoggingConfigurationRequest AWS API Documentation
@@ -1988,7 +2431,8 @@ module Aws::WAFV2
     #
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -2039,7 +2483,8 @@ module Aws::WAFV2
     #
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -2090,7 +2535,8 @@ module Aws::WAFV2
     #
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -2136,7 +2582,8 @@ module Aws::WAFV2
 
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -2175,7 +2622,8 @@ module Aws::WAFV2
     #
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -2220,7 +2668,8 @@ module Aws::WAFV2
     #
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -2331,6 +2780,27 @@ module Aws::WAFV2
       include Aws::Structure
     end
 
+    # A WAF feature that is not supported by the CloudFront pricing plan
+    # associated with the web ACL.
+    #
+    # @!attribute [rw] feature
+    #   The name of the disallowed WAF feature.
+    #   @return [String]
+    #
+    # @!attribute [rw] required_pricing_plan
+    #   The name of the CloudFront pricing plan required to use the WAF
+    #   feature.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/DisallowedFeature AWS API Documentation
+    #
+    class DisallowedFeature < Struct.new(
+      :feature,
+      :required_pricing_plan)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] resource_arn
     #   The Amazon Resource Name (ARN) of the resource to disassociate from
     #   the web ACL.
@@ -2358,6 +2828,13 @@ module Aws::WAFV2
     #
     #   * For an Amazon Web Services Verified Access instance:
     #     `arn:partition:ec2:region:account-id:verified-access-instance/instance-id
+    #     `
+    #
+    #   * For an Amplify application:
+    #     `arn:partition:amplify:region:account-id:apps/app-id `
+    #
+    #   * For an Amazon Bedrock AgentCore Gateway:
+    #     `arn:partition:bedrock-agentcore:region:account-id:gateway/gateway-id
     #     `
     #   @return [String]
     #
@@ -2520,6 +2997,8 @@ module Aws::WAFV2
     #     you can increase the limit for each resource type in the web ACL
     #     `AssociationConfig`, for additional processing fees.
     #
+    #   * For Amplify, use the CloudFront limit.
+    #
     #   For information about how to handle oversized request bodies, see
     #   the `Body` object configuration.
     #   @return [Types::Body]
@@ -2548,6 +3027,8 @@ module Aws::WAFV2
     #     Verified Access, the default limit is 16 KB (16,384 bytes), and
     #     you can increase the limit for each resource type in the web ACL
     #     `AssociationConfig`, for additional processing fees.
+    #
+    #   * For Amplify, use the CloudFront limit.
     #
     #   For information about how to handle oversized request bodies, see
     #   the `JsonBody` object configuration.
@@ -2731,6 +3212,35 @@ module Aws::WAFV2
       include Aws::Structure
     end
 
+    # Information about the bot filter that was applied to the request. This
+    # structure is populated in the response when you filter by bot
+    # category, organization, or name.
+    #
+    # @!attribute [rw] bot_category
+    #   The bot category that was used to filter the results. For example,
+    #   `ai` or `search_engine`.
+    #   @return [String]
+    #
+    # @!attribute [rw] bot_organization
+    #   The bot organization that was used to filter the results. For
+    #   example, `OpenAI` or `Google`.
+    #   @return [String]
+    #
+    # @!attribute [rw] bot_name
+    #   The bot name that was used to filter the results. For example,
+    #   `gptbot` or `googlebot`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/FilterSource AWS API Documentation
+    #
+    class FilterSource < Struct.new(
+      :bot_category,
+      :bot_organization,
+      :bot_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # A rule group that's defined for an Firewall Manager WAF policy.
     #
     # @!attribute [rw] name
@@ -2823,8 +3333,8 @@ module Aws::WAFV2
     #
     #  </note>
     #
-    # This configuration is used for GeoMatchStatement and
-    # RateBasedStatement. For IPSetReferenceStatement, use
+    # This configuration is used for GeoMatchStatement, AsnMatchStatement,
+    # and RateBasedStatement. For IPSetReferenceStatement, use
     # IPSetForwardedIPConfig instead.
     #
     # WAF only evaluates the first IP address found in the specified HTTP
@@ -2971,7 +3481,8 @@ module Aws::WAFV2
 
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -3019,7 +3530,8 @@ module Aws::WAFV2
     #
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -3093,11 +3605,18 @@ module Aws::WAFV2
     #   Amazon Web Services services][1] in the *Amazon Security Lake user
     #   guide*.
     #
+    #   The log scope `CLOUDWATCH_TELEMETRY_RULE_MANAGED` indicates a
+    #   configuration that is managed through Amazon CloudWatch Logs for
+    #   telemetry data collection and analysis. For information, see [What
+    #   is Amazon CloudWatch Logs ?][2] in the *Amazon CloudWatch Logs user
+    #   guide*.
+    #
     #   Default: `CUSTOMER`
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/security-lake/latest/userguide/internal-sources.html
+    #   [2]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/GetLoggingConfigurationRequest AWS API Documentation
@@ -3132,7 +3651,8 @@ module Aws::WAFV2
     #
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -3242,7 +3762,8 @@ module Aws::WAFV2
 
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -3313,7 +3834,8 @@ module Aws::WAFV2
     #
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -3364,6 +3886,222 @@ module Aws::WAFV2
       include Aws::Structure
     end
 
+    # @!attribute [rw] statistic_type
+    #   `TOP_SOURCES_BY_REVENUE` ranks revenue from AI bot traffic, grouped
+    #   by the dimension you specify in the `GroupBy` parameter (`NAME`,
+    #   `CATEGORY`, `INTENT`, `ORGANIZATION`, or `WEBACL`); `GroupBy` is
+    #   required for this statistic type. `TOP_PATHS_BY_REVENUE` ranks
+    #   revenue by path.
+    #   @return [String]
+    #
+    # @!attribute [rw] time_window
+    #   The time range for the query. Specify start and end timestamps.
+    #   @return [Types::TimeWindow]
+    #
+    # @!attribute [rw] scope
+    #   Specifies whether this is for a Amazon CloudFront distribution
+    #   (`CLOUDFRONT`) or for a regional application (`REGIONAL`).
+    #   @return [String]
+    #
+    # @!attribute [rw] currency
+    #   The currency for the revenue amounts in the response.
+    #   @return [String]
+    #
+    # @!attribute [rw] group_by
+    #   The dimension to group results by: `NAME`, `CATEGORY`, `INTENT`,
+    #   `ORGANIZATION`, or `WEBACL`. Required when `StatisticType` is
+    #   `TOP_SOURCES_BY_REVENUE`. Not required for `TOP_PATHS_BY_REVENUE`,
+    #   where results are grouped by content path. If `StatisticType` is
+    #   `TOP_SOURCES_BY_REVENUE` and `GroupBy` is omitted, the request is
+    #   rejected with a `WAFInvalidParameterException`.
+    #   @return [String]
+    #
+    # @!attribute [rw] filters
+    #   Optional filters to narrow the results.
+    #   @return [Array<Types::MonetizationFilter>]
+    #
+    # @!attribute [rw] next_marker
+    #   When you get a paginated response, this marker indicates that
+    #   additional results are available. Use it in a subsequent request to
+    #   retrieve the next page of results.
+    #   @return [String]
+    #
+    # @!attribute [rw] limit
+    #   The maximum number of results to return.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] sort_by
+    #   The field to sort results by: `REVENUE`, `PERCENTAGE`, or `NAME`.
+    #   @return [String]
+    #
+    # @!attribute [rw] sort_order
+    #   The sort order: `ASC` for ascending or `DESC` for descending.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/GetRevenueStatisticsRequest AWS API Documentation
+    #
+    class GetRevenueStatisticsRequest < Struct.new(
+      :statistic_type,
+      :time_window,
+      :scope,
+      :currency,
+      :group_by,
+      :filters,
+      :next_marker,
+      :limit,
+      :sort_by,
+      :sort_order)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] source_statistics
+    #   Statistics for top revenue sources (AI bots). Populated when
+    #   `StatisticType` is `TOP_SOURCES_BY_REVENUE`.
+    #   @return [Array<Types::SourceStatistics>]
+    #
+    # @!attribute [rw] revenue_path_statistics
+    #   Statistics for top revenue paths. Populated when `StatisticType` is
+    #   `TOP_PATHS_BY_REVENUE`.
+    #   @return [Array<Types::RevenuePathStatistics>]
+    #
+    # @!attribute [rw] next_marker
+    #   When you get a paginated response, this marker indicates that
+    #   additional results are available.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/GetRevenueStatisticsResponse AWS API Documentation
+    #
+    class GetRevenueStatisticsResponse < Struct.new(
+      :source_statistics,
+      :revenue_path_statistics,
+      :next_marker)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] time_window
+    #   The time range for the revenue summary query. Specify start and end
+    #   timestamps.
+    #   @return [Types::TimeWindow]
+    #
+    # @!attribute [rw] scope
+    #   Specifies whether this is for a Amazon CloudFront distribution
+    #   (`CLOUDFRONT`) or for a regional application (`REGIONAL`). AI bot
+    #   monetization is only available for `CLOUDFRONT` scope.
+    #   @return [String]
+    #
+    # @!attribute [rw] currency
+    #   The currency for the revenue amounts in the response. Currently only
+    #   `USDC` is supported.
+    #   @return [String]
+    #
+    # @!attribute [rw] filters
+    #   Optional filters to narrow the results. You can filter by source
+    #   name, category, organization, intent, verified status, content path,
+    #   web ACL ARN, or currency mode.
+    #   @return [Array<Types::MonetizationFilter>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/GetRevenueStatisticsSummaryRequest AWS API Documentation
+    #
+    class GetRevenueStatisticsSummaryRequest < Struct.new(
+      :time_window,
+      :scope,
+      :currency,
+      :filters)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] revenue_breakdown
+    #   The revenue breakdown summary for the specified time window and
+    #   filters.
+    #   @return [Types::RevenueBreakdown]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/GetRevenueStatisticsSummaryResponse AWS API Documentation
+    #
+    class GetRevenueStatisticsSummaryResponse < Struct.new(
+      :revenue_breakdown)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] statistic_type
+    #   The type of time series data to retrieve: `DATE_HISTOGRAM` for
+    #   revenue over time, or `PAYMENT_TRAFFIC` for payment traffic
+    #   patterns.
+    #   @return [String]
+    #
+    # @!attribute [rw] time_window
+    #   The time range for the query. Specify start and end timestamps.
+    #   @return [Types::TimeWindow]
+    #
+    # @!attribute [rw] scope
+    #   Specifies whether this is for a Amazon CloudFront distribution
+    #   (`CLOUDFRONT`) or for a regional application (`REGIONAL`).
+    #   @return [String]
+    #
+    # @!attribute [rw] interval
+    #   The time interval for aggregating data points: `MINUTELY`,
+    #   `FIVE_MINUTELY`, `HOURLY`, or `DAILY`.
+    #   @return [String]
+    #
+    # @!attribute [rw] currency
+    #   The currency for the amounts in the response.
+    #   @return [String]
+    #
+    # @!attribute [rw] group_by
+    #   The dimension to group results by.
+    #   @return [String]
+    #
+    # @!attribute [rw] filters
+    #   Optional filters to narrow the results.
+    #   @return [Array<Types::MonetizationFilter>]
+    #
+    # @!attribute [rw] limit
+    #   The maximum number of data points to return. Minimum: 1. Maximum:
+    #   10000.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_marker
+    #   When you get a paginated response, this marker indicates that
+    #   additional results are available.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/GetRevenueStatisticsTimeSeriesRequest AWS API Documentation
+    #
+    class GetRevenueStatisticsTimeSeriesRequest < Struct.new(
+      :statistic_type,
+      :time_window,
+      :scope,
+      :interval,
+      :currency,
+      :group_by,
+      :filters,
+      :limit,
+      :next_marker)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] data_points
+    #   The list of time series data points.
+    #   @return [Array<Types::DataPointEntry>]
+    #
+    # @!attribute [rw] next_marker
+    #   When you get a paginated response, this marker indicates that
+    #   additional results are available.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/GetRevenueStatisticsTimeSeriesResponse AWS API Documentation
+    #
+    class GetRevenueStatisticsTimeSeriesResponse < Struct.new(
+      :data_points,
+      :next_marker)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] name
     #   The name of the rule group. You cannot change the name of a rule
     #   group after you create it.
@@ -3371,7 +4109,8 @@ module Aws::WAFV2
     #
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -3439,7 +4178,8 @@ module Aws::WAFV2
     #
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -3511,6 +4251,127 @@ module Aws::WAFV2
       include Aws::Structure
     end
 
+    # @!attribute [rw] web_acl_arn
+    #   The Amazon Resource Name (ARN) of the web ACL for which you want to
+    #   retrieve path statistics.
+    #   @return [String]
+    #
+    # @!attribute [rw] scope
+    #   Specifies whether the web ACL is for an Amazon Web Services
+    #   CloudFront distribution or for a regional application. A regional
+    #   application can be an Application Load Balancer, an AppSync GraphQL
+    #   API, an Amazon Cognito user pool, an Amazon Web Services App Runner
+    #   service, or an Amazon Web Services Verified Access instance.
+    #   @return [String]
+    #
+    # @!attribute [rw] uri_path_prefix
+    #   A URI path prefix to filter the results. When you specify this
+    #   parameter, the operation returns statistics for individual URIs
+    #   within the specified path prefix. For example, if you specify
+    #   `/api`, the response includes statistics for paths like
+    #   `/api/v1/users` and `/api/v2/orders`. If you don't specify this
+    #   parameter, the operation returns top-level path statistics.
+    #   @return [String]
+    #
+    # @!attribute [rw] time_window
+    #   The time window for which you want to retrieve path statistics. The
+    #   time window must be within the data retention period for your web
+    #   ACL.
+    #   @return [Types::TimeWindow]
+    #
+    # @!attribute [rw] bot_category
+    #   Filters the results to include only traffic from bots in the
+    #   specified category. For example, you can filter by `ai` to see only
+    #   AI crawler traffic, or `search_engine` to see only search engine bot
+    #   traffic. When you apply this filter, the `Source` field is populated
+    #   in the response.
+    #   @return [String]
+    #
+    # @!attribute [rw] bot_organization
+    #   Filters the results to include only traffic from bots belonging to
+    #   the specified organization. For example, you can filter by `openai`
+    #   or `google`. When you apply this filter, the `Source` field is
+    #   populated in the response.
+    #   @return [String]
+    #
+    # @!attribute [rw] bot_name
+    #   Filters the results to include only traffic from the specified bot.
+    #   For example, you can filter by `gptbot` or `googlebot`. When you
+    #   apply this filter, the `Source` field is populated in the response.
+    #   @return [String]
+    #
+    # @!attribute [rw] limit
+    #   The maximum number of path statistics to return. Valid values are 1
+    #   to 100.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] number_of_top_traffic_bots_per_path
+    #   The maximum number of top bots to include in the statistics for each
+    #   path. Valid values are 1 to 10.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_marker
+    #   When you request a list of objects with a `Limit` setting, if the
+    #   number of objects that are still available for retrieval exceeds the
+    #   limit, WAF returns a `NextMarker` value in the response. To retrieve
+    #   the next batch of objects, provide the marker from the prior call in
+    #   your next request.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/GetTopPathStatisticsByTrafficRequest AWS API Documentation
+    #
+    class GetTopPathStatisticsByTrafficRequest < Struct.new(
+      :web_acl_arn,
+      :scope,
+      :uri_path_prefix,
+      :time_window,
+      :bot_category,
+      :bot_organization,
+      :bot_name,
+      :limit,
+      :number_of_top_traffic_bots_per_path,
+      :next_marker)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] path_statistics
+    #   The list of path statistics, ordered by request count. Each entry
+    #   includes the path, request count, percentage of total traffic, and
+    #   the top bots accessing that path.
+    #   @return [Array<Types::PathStatistics>]
+    #
+    # @!attribute [rw] total_request_count
+    #   The total number of requests that match the query criteria within
+    #   the specified time window.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_marker
+    #   When you request a list of objects with a `Limit` setting, if the
+    #   number of objects that are still available for retrieval exceeds the
+    #   limit, WAF returns a `NextMarker` value in the response. To retrieve
+    #   the next batch of objects, provide the marker from the prior call in
+    #   your next request.
+    #   @return [String]
+    #
+    # @!attribute [rw] top_categories
+    #   Category-level aggregations for visualizing bot category to path
+    #   relationships. This field is only populated when no bot filters are
+    #   applied to the request. Each entry includes the bot category and the
+    #   paths accessed by bots in that category.
+    #   @return [Array<Types::PathStatistics>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/GetTopPathStatisticsByTrafficResponse AWS API Documentation
+    #
+    class GetTopPathStatisticsByTrafficResponse < Struct.new(
+      :path_statistics,
+      :total_request_count,
+      :next_marker,
+      :top_categories)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] resource_arn
     #   The Amazon Resource Name (ARN) of the resource whose web ACL you
     #   want to retrieve.
@@ -3538,6 +4399,13 @@ module Aws::WAFV2
     #
     #   * For an Amazon Web Services Verified Access instance:
     #     `arn:partition:ec2:region:account-id:verified-access-instance/instance-id
+    #     `
+    #
+    #   * For an Amplify application:
+    #     `arn:partition:amplify:region:account-id:apps/app-id `
+    #
+    #   * For an Amazon Bedrock AgentCore Gateway:
+    #     `arn:partition:bedrock-agentcore:region:account-id:gateway/gateway-id
     #     `
     #   @return [String]
     #
@@ -3569,7 +4437,8 @@ module Aws::WAFV2
     #
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -3586,12 +4455,18 @@ module Aws::WAFV2
     #   like update and delete.
     #   @return [String]
     #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the web ACL that you want to
+    #   retrieve.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/GetWebACLRequest AWS API Documentation
     #
     class GetWebACLRequest < Struct.new(
       :name,
       :scope,
-      :id)
+      :id,
+      :arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3760,11 +4635,12 @@ module Aws::WAFV2
     # `host:user-agent:accept:authorization:referer`.
     #
     # @!attribute [rw] oversize_handling
-    #   What WAF should do if the headers of the request are more numerous
-    #   or larger than WAF can inspect. WAF does not support inspecting the
-    #   entire contents of request headers when they exceed 8 KB (8192
-    #   bytes) or 200 total headers. The underlying host service forwards a
-    #   maximum of 200 headers and at most 8 KB of header contents to WAF.
+    #   What WAF should do if the headers determined by your match scope are
+    #   more numerous or larger than WAF can inspect. WAF does not support
+    #   inspecting the entire contents of request headers when they exceed 8
+    #   KB (8192 bytes) or 200 total headers. The underlying host service
+    #   forwards a maximum of 200 headers and at most 8 KB of header
+    #   contents to WAF.
     #
     #   The options for oversize handling are the following:
     #
@@ -3823,11 +4699,12 @@ module Aws::WAFV2
     #   @return [String]
     #
     # @!attribute [rw] oversize_handling
-    #   What WAF should do if the headers of the request are more numerous
-    #   or larger than WAF can inspect. WAF does not support inspecting the
-    #   entire contents of request headers when they exceed 8 KB (8192
-    #   bytes) or 200 total headers. The underlying host service forwards a
-    #   maximum of 200 headers and at most 8 KB of header contents to WAF.
+    #   What WAF should do if the headers determined by your match scope are
+    #   more numerous or larger than WAF can inspect. WAF does not support
+    #   inspecting the entire contents of request headers when they exceed 8
+    #   KB (8192 bytes) or 200 total headers. The underlying host service
+    #   forwards a maximum of 200 headers and at most 8 KB of header
+    #   contents to WAF.
     #
     #   The options for oversize handling are the following:
     #
@@ -4299,6 +5176,8 @@ module Aws::WAFV2
     #     you can increase the limit for each resource type in the web ACL
     #     `AssociationConfig`, for additional processing fees.
     #
+    #   * For Amplify, use the CloudFront limit.
+    #
     #   The options for oversize handling are the following:
     #
     #   * `CONTINUE` - Inspect the available body contents normally,
@@ -4472,7 +5351,8 @@ module Aws::WAFV2
 
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -4548,7 +5428,8 @@ module Aws::WAFV2
     #
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -4616,7 +5497,8 @@ module Aws::WAFV2
 
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -4676,7 +5558,8 @@ module Aws::WAFV2
 
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -4736,7 +5619,8 @@ module Aws::WAFV2
 
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -4773,11 +5657,18 @@ module Aws::WAFV2
     #   Amazon Web Services services][1] in the *Amazon Security Lake user
     #   guide*.
     #
+    #   The log scope `CLOUDWATCH_TELEMETRY_RULE_MANAGED` indicates a
+    #   configuration that is managed through Amazon CloudWatch Logs for
+    #   telemetry data collection and analysis. For information, see [What
+    #   is Amazon CloudWatch Logs ?][2] in the *Amazon CloudWatch Logs user
+    #   guide*.
+    #
     #   Default: `CUSTOMER`
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/security-lake/latest/userguide/internal-sources.html
+    #   [2]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/ListLoggingConfigurationsRequest AWS API Documentation
@@ -4815,7 +5706,8 @@ module Aws::WAFV2
 
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -4927,7 +5819,8 @@ module Aws::WAFV2
 
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -5033,7 +5926,8 @@ module Aws::WAFV2
 
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -5087,6 +5981,76 @@ module Aws::WAFV2
     class ListRuleGroupsResponse < Struct.new(
       :next_marker,
       :rule_groups)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] time_window
+    #   The time range for the query. Specify start and end timestamps.
+    #   @return [Types::TimeWindow]
+    #
+    # @!attribute [rw] scope
+    #   Specifies whether this is for a Amazon CloudFront distribution
+    #   (`CLOUDFRONT`) or for a regional application (`REGIONAL`).
+    #   @return [String]
+    #
+    # @!attribute [rw] currency
+    #   The currency for the amounts in the response.
+    #   @return [String]
+    #
+    # @!attribute [rw] filters
+    #   Optional filters to narrow the results. You can filter by payer
+    #   address, status, source name, network, or other settlement fields.
+    #   @return [Array<Types::MonetizationFilter>]
+    #
+    # @!attribute [rw] sort_by
+    #   The field to sort settlement records by: `TIMESTAMP`, `AMOUNT`,
+    #   `NAME`, or `STATUS`.
+    #   @return [String]
+    #
+    # @!attribute [rw] sort_order
+    #   The sort order: `ASC` for ascending or `DESC` for descending.
+    #   @return [String]
+    #
+    # @!attribute [rw] limit
+    #   The maximum number of settlement records to return. Minimum: 1.
+    #   Maximum: 100.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_marker
+    #   When you get a paginated response, this marker indicates that
+    #   additional results are available.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/ListSettlementRecordsRequest AWS API Documentation
+    #
+    class ListSettlementRecordsRequest < Struct.new(
+      :time_window,
+      :scope,
+      :currency,
+      :filters,
+      :sort_by,
+      :sort_order,
+      :limit,
+      :next_marker)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] settlements
+    #   The list of settlement records.
+    #   @return [Array<Types::SettlementRecord>]
+    #
+    # @!attribute [rw] next_marker
+    #   When you get a paginated response, this marker indicates that
+    #   additional results are available.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/ListSettlementRecordsResponse AWS API Documentation
+    #
+    class ListSettlementRecordsResponse < Struct.new(
+      :settlements,
+      :next_marker)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5145,7 +6109,8 @@ module Aws::WAFV2
 
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -5330,11 +6295,18 @@ module Aws::WAFV2
     #   Amazon Web Services services][1] in the *Amazon Security Lake user
     #   guide*.
     #
+    #   The log scope `CLOUDWATCH_TELEMETRY_RULE_MANAGED` indicates a
+    #   configuration that is managed through Amazon CloudWatch Logs for
+    #   telemetry data collection and analysis. For information, see [What
+    #   is Amazon CloudWatch Logs ?][2] in the *Amazon CloudWatch Logs user
+    #   guide*.
+    #
     #   Default: `CUSTOMER`
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/security-lake/latest/userguide/internal-sources.html
+    #   [2]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/LoggingConfiguration AWS API Documentation
@@ -5461,6 +6433,13 @@ module Aws::WAFV2
     #   your application and the locations in the account creation request
     #   payload of data, such as the user email and phone number fields.
     #
+    # * Use the `AWSManagedRulesAntiDDoSRuleSet` configuration object to
+    #   configure the anti-DDoS managed rule group. The configuration
+    #   includes the sensitivity levels to use in the rules that typically
+    #   block and challenge requests that might be participating in DDoS
+    #   attacks and the specification to use to indicate whether a request
+    #   can handle a silent browser challenge.
+    #
     # * Use the `AWSManagedRulesATPRuleSet` configuration object to
     #   configure the account takeover prevention managed rule group. The
     #   configuration includes the sign-in page of your application and the
@@ -5558,6 +6537,21 @@ module Aws::WAFV2
     #   [2]: https://docs.aws.amazon.com/waf/latest/developerguide/waf-acfp.html
     #   @return [Types::AWSManagedRulesACFPRuleSet]
     #
+    # @!attribute [rw] aws_managed_rules_anti_d_do_s_rule_set
+    #   Additional configuration for using the anti-DDoS managed rule group,
+    #   `AWSManagedRulesAntiDDoSRuleSet`. Use this to configure anti-DDoS
+    #   behavior for the rule group.
+    #
+    #   For information about using the anti-DDoS managed rule group, see
+    #   [WAF Anti-DDoS rule group][1] and [Distributed Denial of Service
+    #   (DDoS) prevention][2] in the *WAF Developer Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups-anti-ddos.html
+    #   [2]: https://docs.aws.amazon.com/waf/latest/developerguide/waf-anti-ddos.html
+    #   @return [Types::AWSManagedRulesAntiDDoSRuleSet]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/ManagedRuleGroupConfig AWS API Documentation
     #
     class ManagedRuleGroupConfig < Struct.new(
@@ -5567,7 +6561,8 @@ module Aws::WAFV2
       :password_field,
       :aws_managed_rules_bot_control_rule_set,
       :aws_managed_rules_atp_rule_set,
-      :aws_managed_rules_acfp_rule_set)
+      :aws_managed_rules_acfp_rule_set,
+      :aws_managed_rules_anti_d_do_s_rule_set)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5647,6 +6642,13 @@ module Aws::WAFV2
     #     creation request payload of data, such as the user email and phone
     #     number fields.
     #
+    #   * Use the `AWSManagedRulesAntiDDoSRuleSet` configuration object to
+    #     configure the anti-DDoS managed rule group. The configuration
+    #     includes the sensitivity levels to use in the rules that typically
+    #     block and challenge requests that might be participating in DDoS
+    #     attacks and the specification to use to indicate whether a request
+    #     can handle a silent browser challenge.
+    #
     #   * Use the `AWSManagedRulesATPRuleSet` configuration object to
     #     configure the account takeover prevention managed rule group. The
     #     configuration includes the sign-in page of your application and
@@ -5663,10 +6665,12 @@ module Aws::WAFV2
     #   configured inside the rule group. You specify one override for each
     #   rule whose action you want to change.
     #
-    #   <note markdown="1"> Take care to verify the rule names in your overrides. If you provide
-    #   a rule name that doesn't match the name of any rule in the rule
-    #   group, WAF doesn't return an error and doesn't apply the override
-    #   setting.
+    #   <note markdown="1"> Verify the rule names in your overrides carefully. With managed rule
+    #   groups, WAF silently ignores any override that uses an invalid rule
+    #   name. With customer-owned rule groups, invalid rule names in your
+    #   overrides will cause web ACL updates to fail. An invalid rule name
+    #   is any name that doesn't exactly match the case-sensitive name of
+    #   an existing rule in the rule group.
     #
     #    </note>
     #
@@ -6041,6 +7045,143 @@ module Aws::WAFV2
       include Aws::Structure
     end
 
+    # The monetization configuration for a web ACL or rule group. Specifies
+    # the cryptocurrency payment networks and currency mode for AI bot
+    # monetization. You must provide this configuration when any rule in the
+    # web ACL or rule group uses the `Monetize` action.
+    #
+    # @!attribute [rw] crypto_config
+    #   The cryptocurrency payment configuration, including the blockchain
+    #   networks and wallet addresses where you receive payments.
+    #   @return [Types::CryptoConfig]
+    #
+    # @!attribute [rw] currency_mode
+    #   Specifies whether the configuration uses real or test currency. Set
+    #   to `REAL` to settle payments in USDC on production blockchain
+    #   networks (Base, Solana). Set to `TEST` to settle on testnet networks
+    #   (Base Sepolia, Solana Devnet) with tokens that have no monetary
+    #   value. If not specified, defaults to `REAL`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/MonetizationConfig AWS API Documentation
+    #
+    class MonetizationConfig < Struct.new(
+      :crypto_config,
+      :currency_mode)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A filter for narrowing monetization statistics and settlement record
+    # results. Specify a filter name and one or more values to match.
+    #
+    # Filter behavior:
+    #
+    # * Multiple values within one filter: OR (match any)
+    #
+    # * Multiple filters: AND (all must match)
+    #
+    # * No duplicate filter names allowed (rejected with error)
+    #
+    # * Duplicate values within a filter are silently deduplicated
+    #
+    # * If no `CurrencyMode` filter is specified, defaults to `REAL`
+    #
+    # @!attribute [rw] name
+    #   The filter name. Format: Key is a string, Value is a list of
+    #   strings.
+    #
+    #   Enum-restricted (invalid values rejected):
+    #
+    #   * `CurrencyMode`: `REAL`, `TEST`
+    #
+    #   * `ChainName`: `BASE`, `SOLANA`, `BASE_SEPOLIA`, `SOLANA_DEVNET`
+    #
+    #   * `SettlementStatus`: `SETTLED`, `PENDING`, `FAILED`,
+    #     `SERVICE_ERROR`, `SKIPPED_ORIGIN_ERROR`, `DUPLICATE`
+    #
+    #   * `HttpSourceName`: `CF`, `ALB`, `APIGW`, `APPRUNNER`, `COGNITO`,
+    #     `VERIFIED_ACCESS`
+    #
+    #   ARN-validated:
+    #
+    #   * `WebACLArn`: valid WAFv2 web ACL ARN
+    #
+    #   ^
+    #
+    #   Free-text (any string up to 256 chars):
+    #
+    #   * `SourceName`: The name of the bot. Populated from Bot Control
+    #     verified bot labels.
+    #
+    #   * `SourceCategory`: The category classification of the bot. From Bot
+    #     Control categorization.
+    #
+    #   * `Intent`: The declared intent of the bot request.
+    #
+    #   * `Organization`: The organization operating the bot.
+    #
+    #   * `UriPathPrefix`: The URI path of the request that was monetized.
+    #
+    #   * `RequestId`: The WAF request ID associated with the transaction.
+    #     Matches the requestId in WAF logs. Pattern:
+    #     `^[a-zA-Z0-9:._\-=+/]+$`
+    #
+    #   * `TransactionId`: The blockchain transaction identifier. Pattern:
+    #     `^[a-zA-Z0-9:._\-=+/]+$`
+    #
+    #   * `TerminatingRuleName`: The name of the WAF rule that triggered the
+    #     Monetize action.
+    #
+    #   * `PayerAddress`: The blockchain wallet address of the paying
+    #     client. Pattern: `^[a-zA-Z0-9:._\-=+/]+$`
+    #
+    #   * `HttpSourceId`: The identifier of the Amazon Web Services resource
+    #     associated with the web ACL (for example, CloudFront distribution
+    #     ID).
+    #   @return [String]
+    #
+    # @!attribute [rw] values
+    #   The values to filter on. Specify as a list of strings. Results match
+    #   any of the specified values (OR logic). Duplicate values are
+    #   silently deduplicated. Maximum: 20 values per filter.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/MonetizationFilter AWS API Documentation
+    #
+    class MonetizationFilter < Struct.new(
+      :name,
+      :values)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Specifies the monetize action settings for a rule. When WAF applies
+    # this action, it returns an HTTP 402 Payment Required response
+    # containing pricing information that the requesting client uses to
+    # complete payment and gain access to the resource. This is a
+    # terminating action-if the client does not complete the 402 payment
+    # flow, the request is blocked. This action is available only for web
+    # ACLs associated with Amazon CloudFront distributions. You must
+    # configure a `MonetizationConfig` on the web ACL or rule group before
+    # adding rules that use this action. You cannot use the Monetize action
+    # for rate-based rules.
+    #
+    # @!attribute [rw] price_multiplier
+    #   An integer multiplier applied to the base price defined in the web
+    #   ACL's `MonetizationConfig`. The effective price for the request is
+    #   the base price multiplied by this value. Specify as a string. Valid
+    #   values: 1 to 100.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/MonetizeAction AWS API Documentation
+    #
+    class MonetizeAction < Struct.new(
+      :price_multiplier)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Specifies that WAF should do nothing. This is used for the
     # `OverrideAction` setting on a Rule when the rule uses a rule group
     # reference statement.
@@ -6068,6 +7209,31 @@ module Aws::WAFV2
     #
     class NotStatement < Struct.new(
       :statement)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configures the level of DDoS protection that applies to web ACLs
+    # associated with Application Load Balancers.
+    #
+    # @!attribute [rw] alb_low_reputation_mode
+    #   The level of DDoS protection that applies to web ACLs associated
+    #   with Application Load Balancers. `ACTIVE_UNDER_DDOS` protection is
+    #   enabled by default whenever a web ACL is associated with an
+    #   Application Load Balancer. In the event that an Application Load
+    #   Balancer experiences high-load conditions or suspected DDoS attacks,
+    #   the `ACTIVE_UNDER_DDOS` protection automatically rate limits traffic
+    #   from known low reputation sources without disrupting Application
+    #   Load Balancer availability. `ALWAYS_ON` protection provides
+    #   constant, always-on monitoring of known low reputation sources for
+    #   suspected DDoS attacks. While this provides a higher level of
+    #   protection, there may be potential impacts on legitimate traffic.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/OnSourceDDoSProtectionConfig AWS API Documentation
+    #
+    class OnSourceDDoSProtectionConfig < Struct.new(
+      :alb_low_reputation_mode)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6168,6 +7334,85 @@ module Aws::WAFV2
       include Aws::Structure
     end
 
+    # Statistics about bot traffic to a specific URI path, including the
+    # path, request count, percentage of total traffic, and the top bots
+    # accessing that path.
+    #
+    # @!attribute [rw] source
+    #   Information about the bot filter that was applied to generate these
+    #   statistics. This field is only populated when you filter by bot
+    #   category, organization, or name.
+    #   @return [Types::FilterSource]
+    #
+    # @!attribute [rw] path
+    #   The URI path. For example, `/api/` or `/api/v1/users`.
+    #   @return [String]
+    #
+    # @!attribute [rw] request_count
+    #   The number of requests to this path within the specified time
+    #   window.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] percentage
+    #   The percentage of total requests that were made to this path.
+    #   @return [Float]
+    #
+    # @!attribute [rw] top_bots
+    #   The list of top bots accessing this path, ordered by request count.
+    #   The number of bots included is determined by the
+    #   `NumberOfTopTrafficBotsPerPath` parameter in the request.
+    #   @return [Array<Types::BotStatistics>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/PathStatistics AWS API Documentation
+    #
+    class PathStatistics < Struct.new(
+      :source,
+      :path,
+      :request_count,
+      :percentage,
+      :top_bots)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A blockchain payment network configuration for receiving AI bot
+    # monetization payments. Specifies the blockchain chain, your wallet
+    # address on that chain, and the price per request.
+    #
+    # @!attribute [rw] chain
+    #   The blockchain network for receiving payments. Production networks:
+    #   `BASE` (Base mainnet), `SOLANA` (Solana mainnet). Test networks:
+    #   `BASE_SEPOLIA` (Base Sepolia testnet), `SOLANA_DEVNET` (Solana
+    #   Devnet).
+    #   @return [String]
+    #
+    # @!attribute [rw] wallet_address
+    #   Your wallet address on the specified blockchain where payments are
+    #   sent. For EVM chains (Base, Base Sepolia), provide a valid Ethereum
+    #   address (42 characters including 0x prefix). For Solana chains,
+    #   provide a valid Base58-encoded public key (32-44 characters).
+    #
+    #   For EVM addresses, WAF performs EIP-55 checksum validation for typo
+    #   detection when the address uses a mix of lower and upper case
+    #   letters. You can bypass this validation by providing the address in
+    #   all lowercase or all uppercase.
+    #   @return [String]
+    #
+    # @!attribute [rw] prices
+    #   The price configuration for this payment network. Currently supports
+    #   a single price entry in USDC.
+    #   @return [Array<Types::Price>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/PaymentNetwork AWS API Documentation
+    #
+    class PaymentNetwork < Struct.new(
+      :chain,
+      :wallet_address,
+      :prices)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The name of a field in the request payload that contains part or all
     # of your customer's primary phone number.
     #
@@ -6210,6 +7455,54 @@ module Aws::WAFV2
       include Aws::Structure
     end
 
+    # A pre-parse text transformation that normalizes the raw query string
+    # before WAF parses it into individual query arguments. Pre-parse text
+    # transformations are only supported when `FieldToMatch` is
+    # `SingleQueryArgument` or `AllQueryArguments`.
+    #
+    # @!attribute [rw] priority
+    #   Sets the relative processing order for the pre-parse text
+    #   transformations that you define. WAF processes all transformations,
+    #   from lowest priority value to highest, before inspecting the
+    #   transformed content.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] type
+    #   The type of pre-parse text transformation to apply to the raw query
+    #   string.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/PreParseTextTransformation AWS API Documentation
+    #
+    class PreParseTextTransformation < Struct.new(
+      :priority,
+      :type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The price per request for a payment network, specifying the amount and
+    # cryptocurrency.
+    #
+    # @!attribute [rw] amount
+    #   The price per request as a decimal string in the specified currency.
+    #   Minimum: 0.001. Maximum: 999999999.999. Supports up to 3 decimal
+    #   places.
+    #   @return [String]
+    #
+    # @!attribute [rw] currency
+    #   The cryptocurrency for payment. Currently only `USDC` is supported.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/Price AWS API Documentation
+    #
+    class Price < Struct.new(
+      :amount,
+      :currency)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] logging_configuration
     #   @return [Types::LoggingConfiguration]
     #
@@ -6242,7 +7535,8 @@ module Aws::WAFV2
     #
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -6692,6 +7986,12 @@ module Aws::WAFV2
     #   defines an aggregation instance.
     #   @return [Types::RateLimitJA4Fingerprint]
     #
+    # @!attribute [rw] asn
+    #   Use an Autonomous System Number (ASN) derived from the request's
+    #   originating or forwarded IP address as an aggregate key. Each
+    #   distinct ASN contributes to the aggregation instance.
+    #   @return [Types::RateLimitAsn]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/RateBasedStatementCustomKey AWS API Documentation
     #
     class RateBasedStatementCustomKey < Struct.new(
@@ -6705,7 +8005,8 @@ module Aws::WAFV2
       :label_namespace,
       :uri_path,
       :ja3_fingerprint,
-      :ja4_fingerprint)
+      :ja4_fingerprint,
+      :asn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6744,6 +8045,18 @@ module Aws::WAFV2
       SENSITIVE = []
       include Aws::Structure
     end
+
+    # Specifies an Autonomous System Number (ASN) derived from the
+    # request's originating or forwarded IP address as an aggregate key for
+    # a rate-based rule. Each distinct ASN contributes to the aggregation
+    # instance. If you use a single ASN as your custom key, then each ASN
+    # fully defines an aggregation instance.
+    #
+    # @api private
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/RateLimitAsn AWS API Documentation
+    #
+    class RateLimitAsn < Aws::EmptyStructure; end
 
     # Specifies a cookie as an aggregate key for a rate-based rule. Each
     # distinct value in the cookie contributes to the aggregation instance.
@@ -7026,10 +8339,18 @@ module Aws::WAFV2
       include Aws::Structure
     end
 
-    # A single regular expression. This is used in a RegexPatternSet.
+    # A single regular expression. This is used in a RegexPatternSet and
+    # also in the configuration for the Amazon Web Services Managed Rules
+    # rule group `AWSManagedRulesAntiDDoSRuleSet`.
     #
     # @!attribute [rw] regex_string
-    #   The string representing the regular expression.
+    #   The string representing the regular expression. WAF enforces a quota
+    #   on the maximum number of characters in a regex pattern. For the
+    #   current limit, see [WAF quotas][1] in the *WAF Developer Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/waf/latest/developerguide/limits.html
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/Regex AWS API Documentation
@@ -7044,7 +8365,13 @@ module Aws::WAFV2
     # against a single regular expression.
     #
     # @!attribute [rw] regex_string
-    #   The string representing the regular expression.
+    #   The string representing the regular expression. WAF enforces a quota
+    #   on the maximum number of characters in a regex pattern. For the
+    #   current limit, see [WAF quotas][1] in the *WAF Developer Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/waf/latest/developerguide/limits.html
     #   @return [String]
     #
     # @!attribute [rw] field_to_match
@@ -7063,12 +8390,22 @@ module Aws::WAFV2
     #   and then uses the transformed component contents.
     #   @return [Array<Types::TextTransformation>]
     #
+    # @!attribute [rw] pre_parse_text_transformations
+    #   Pre-parse text transformations normalize the raw query string before
+    #   WAF parses it into individual query arguments. They are applied
+    #   before the standard text transformations. Pre-parse text
+    #   transformations are only supported when `FieldToMatch` is
+    #   `SingleQueryArgument` or `AllQueryArguments`. You can specify up to
+    #   10 pre-parse text transformations per rule statement.
+    #   @return [Array<Types::PreParseTextTransformation>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/RegexMatchStatement AWS API Documentation
     #
     class RegexMatchStatement < Struct.new(
       :regex_string,
       :field_to_match,
-      :text_transformations)
+      :text_transformations,
+      :pre_parse_text_transformations)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7147,12 +8484,22 @@ module Aws::WAFV2
     #   and then uses the transformed component contents.
     #   @return [Array<Types::TextTransformation>]
     #
+    # @!attribute [rw] pre_parse_text_transformations
+    #   Pre-parse text transformations normalize the raw query string before
+    #   WAF parses it into individual query arguments. They are applied
+    #   before the standard text transformations. Pre-parse text
+    #   transformations are only supported when `FieldToMatch` is
+    #   `SingleQueryArgument` or `AllQueryArguments`. You can specify up to
+    #   10 pre-parse text transformations per rule statement.
+    #   @return [Array<Types::PreParseTextTransformation>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/RegexPatternSetReferenceStatement AWS API Documentation
     #
     class RegexPatternSetReferenceStatement < Struct.new(
       :arn,
       :field_to_match,
-      :text_transformations)
+      :text_transformations,
+      :pre_parse_text_transformations)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7742,6 +9089,77 @@ module Aws::WAFV2
       include Aws::Structure
     end
 
+    # A summary of AI bot monetization revenue, including total revenue,
+    # revenue by verification tier, and request counts.
+    #
+    # @!attribute [rw] total_amount
+    #   The total revenue amount in the specified currency.
+    #   @return [String]
+    #
+    # @!attribute [rw] verified_amount
+    #   The revenue amount from verified AI bots.
+    #   @return [String]
+    #
+    # @!attribute [rw] unverified_amount
+    #   The revenue amount from unverified AI bots.
+    #   @return [String]
+    #
+    # @!attribute [rw] currency
+    #   The currency of the revenue amounts.
+    #   @return [String]
+    #
+    # @!attribute [rw] total_settled
+    #   The total number of successfully settled payment transactions.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] total_monetize_served
+    #   The total number of HTTP 402 Payment Required responses served to AI
+    #   agents.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/RevenueBreakdown AWS API Documentation
+    #
+    class RevenueBreakdown < Struct.new(
+      :total_amount,
+      :verified_amount,
+      :unverified_amount,
+      :currency,
+      :total_settled,
+      :total_monetize_served)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Revenue statistics for a single content path, including the path,
+    # revenue amount, and request count.
+    #
+    # @!attribute [rw] path
+    #   The URI path.
+    #   @return [String]
+    #
+    # @!attribute [rw] percentage
+    #   The percentage of total revenue from this path.
+    #   @return [Float]
+    #
+    # @!attribute [rw] amount
+    #   The total revenue amount from this path in the specified currency.
+    #   @return [String]
+    #
+    # @!attribute [rw] request_count
+    #   The number of monetized requests to this path.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/RevenuePathStatistics AWS API Documentation
+    #
+    class RevenuePathStatistics < Struct.new(
+      :path,
+      :percentage,
+      :amount,
+      :request_count)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # A single rule, which you can use in a WebACL or RuleGroup to identify
     # web requests that you want to manage in some way. Each rule includes
     # one top-level Statement that WAF uses to identify matching web
@@ -7900,6 +9318,16 @@ module Aws::WAFV2
     #   Instructs WAF to run a `Challenge` check against the web request.
     #   @return [Types::ChallengeAction]
     #
+    # @!attribute [rw] monetize
+    #   Instructs WAF to return an HTTP 402 Payment Required response with a
+    #   price manifest. The requesting client can complete payment and
+    #   resubmit the request to gain access. This is a terminating
+    #   action-requests that do not complete payment are blocked. This
+    #   action is available only for web ACLs associated with Amazon
+    #   CloudFront distributions and requires a `MonetizationConfig` on the
+    #   web ACL.
+    #   @return [Types::MonetizeAction]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/RuleAction AWS API Documentation
     #
     class RuleAction < Struct.new(
@@ -7907,7 +9335,8 @@ module Aws::WAFV2
       :allow,
       :count,
       :captcha,
-      :challenge)
+      :challenge,
+      :monetize)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7916,9 +9345,12 @@ module Aws::WAFV2
     # inside the rule group. You specify one override for each rule whose
     # action you want to change.
     #
-    # <note markdown="1"> Take care to verify the rule names in your overrides. If you provide a
-    # rule name that doesn't match the name of any rule in the rule group,
-    # WAF doesn't return an error and doesn't apply the override setting.
+    # <note markdown="1"> Verify the rule names in your overrides carefully. With managed rule
+    # groups, WAF silently ignores any override that uses an invalid rule
+    # name. With customer-owned rule groups, invalid rule names in your
+    # overrides will cause web ACL updates to fail. An invalid rule name is
+    # any name that doesn't exactly match the case-sensitive name of an
+    # existing rule in the rule group.
     #
     #  </note>
     #
@@ -7931,10 +9363,12 @@ module Aws::WAFV2
     # @!attribute [rw] name
     #   The name of the rule to override.
     #
-    #   <note markdown="1"> Take care to verify the rule names in your overrides. If you provide
-    #   a rule name that doesn't match the name of any rule in the rule
-    #   group, WAF doesn't return an error and doesn't apply the override
-    #   setting.
+    #   <note markdown="1"> Verify the rule names in your overrides carefully. With managed rule
+    #   groups, WAF silently ignores any override that uses an invalid rule
+    #   name. With customer-owned rule groups, invalid rule names in your
+    #   overrides will cause web ACL updates to fail. An invalid rule name
+    #   is any name that doesn't exactly match the case-sensitive name of
+    #   an existing rule in the rule group.
     #
     #    </note>
     #   @return [String]
@@ -8063,6 +9497,14 @@ module Aws::WAFV2
     #   a rule.
     #   @return [Array<Types::LabelSummary>]
     #
+    # @!attribute [rw] monetization_config
+    #   The monetization configuration for the rule group. Required when any
+    #   rule in the rule group uses the `Monetize` action. When a rule group
+    #   with a `MonetizationConfig` is used in a web ACL, the rule group's
+    #   configuration applies to rules within that group unless overridden
+    #   at the web ACL level.
+    #   @return [Types::MonetizationConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/RuleGroup AWS API Documentation
     #
     class RuleGroup < Struct.new(
@@ -8076,7 +9518,8 @@ module Aws::WAFV2
       :label_namespace,
       :custom_response_bodies,
       :available_labels,
-      :consumed_labels)
+      :consumed_labels,
+      :monetization_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -8109,10 +9552,12 @@ module Aws::WAFV2
     #   configured inside the rule group. You specify one override for each
     #   rule whose action you want to change.
     #
-    #   <note markdown="1"> Take care to verify the rule names in your overrides. If you provide
-    #   a rule name that doesn't match the name of any rule in the rule
-    #   group, WAF doesn't return an error and doesn't apply the override
-    #   setting.
+    #   <note markdown="1"> Verify the rule names in your overrides carefully. With managed rule
+    #   groups, WAF silently ignores any override that uses an invalid rule
+    #   name. With customer-owned rule groups, invalid rule names in your
+    #   overrides will cause web ACL updates to fail. An invalid rule name
+    #   is any name that doesn't exactly match the case-sensitive name of
+    #   an existing rule in the rule group.
     #
     #    </note>
     #
@@ -8294,6 +9739,134 @@ module Aws::WAFV2
       include Aws::Structure
     end
 
+    # A single settlement transaction record for AI bot monetization.
+    # Contains details about the payment including timestamp, amount,
+    # status, and the parties involved.
+    #
+    # @!attribute [rw] timestamp
+    #   The timestamp when the settlement was recorded.
+    #   @return [Time]
+    #
+    # @!attribute [rw] payer_address
+    #   The blockchain wallet address of the paying AI agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] wallet_address
+    #   Your receiving wallet address.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the settlement. Possible values:
+    #
+    #   * `SETTLED` - The payment was successfully settled on the blockchain
+    #     and the transfer from the payer's wallet to the publisher's
+    #     wallet is confirmed. The `TransactionId` field contains the
+    #     on-chain transaction hash. Content is served to the client.
+    #
+    #   * `PENDING` - The blockchain transaction has been submitted but not
+    #     yet confirmed on-chain. This is a transient state that
+    #     automatically resolves to either `SETTLED` or `FAILED`. No action
+    #     is required. While pending, content is not served and the API
+    #     returns a 402 response. Clients can retry the request.
+    #
+    #   * `FAILED` - The payment settlement was attempted but failed.
+    #     Possible causes include insufficient funds, an expired payment
+    #     authorization, or a reverted blockchain transaction. The
+    #     `failureReason` field contains a machine-readable error code.
+    #     Content is not served.
+    #
+    #   * `SERVICE_ERROR` - Settlement could not be completed due to an
+    #     internal service issue or an issue with the payment network.
+    #     Content is not served. The client's payment authorization remains
+    #     valid and the request can be retried.
+    #
+    #   * `SKIPPED_ORIGIN_ERROR` - The origin returned a non-2xx response,
+    #     so settlement was intentionally skipped. The client is not
+    #     charged.
+    #
+    #   * `DUPLICATE` - A prior request with the same payment payload has
+    #     already been settled. This status typically appears when a
+    #     previous attempt timed out but the payment was ultimately
+    #     processed. The client is not charged again.
+    #   @return [String]
+    #
+    # @!attribute [rw] amount
+    #   The payment amount in the specified currency.
+    #   @return [String]
+    #
+    # @!attribute [rw] currency
+    #   The currency of the payment amount.
+    #   @return [String]
+    #
+    # @!attribute [rw] network
+    #   The blockchain network on which the settlement occurred.
+    #   @return [String]
+    #
+    # @!attribute [rw] transaction_id
+    #   The blockchain transaction identifier. You can use this to verify
+    #   the transaction on a blockchain explorer.
+    #   @return [String]
+    #
+    # @!attribute [rw] request_id
+    #   The WAF request ID associated with this settlement.
+    #   @return [String]
+    #
+    # @!attribute [rw] source_name
+    #   The name of the AI bot that made the payment.
+    #   @return [String]
+    #
+    # @!attribute [rw] organization
+    #   The organization associated with the AI bot.
+    #   @return [String]
+    #
+    # @!attribute [rw] source_category
+    #   The category of the AI bot source.
+    #   @return [String]
+    #
+    # @!attribute [rw] intent
+    #   The declared intent of the AI bot request.
+    #   @return [String]
+    #
+    # @!attribute [rw] verified
+    #   Whether the AI bot's identity was verified.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] content_path
+    #   The content path that was accessed.
+    #   @return [String]
+    #
+    # @!attribute [rw] web_acl_arn
+    #   The ARN of the web ACL that processed the request.
+    #   @return [String]
+    #
+    # @!attribute [rw] request_timestamp
+    #   The timestamp of the original web request.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/SettlementRecord AWS API Documentation
+    #
+    class SettlementRecord < Struct.new(
+      :timestamp,
+      :payer_address,
+      :wallet_address,
+      :status,
+      :amount,
+      :currency,
+      :network,
+      :transaction_id,
+      :request_id,
+      :source_name,
+      :organization,
+      :source_category,
+      :intent,
+      :verified,
+      :content_path,
+      :web_acl_arn,
+      :request_timestamp)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Inspect one of the headers in the web request, identified by name, for
     # example, `User-Agent` or `Referer`. The name isn't case sensitive.
     #
@@ -8379,13 +9952,87 @@ module Aws::WAFV2
     #   and then uses the transformed component contents.
     #   @return [Array<Types::TextTransformation>]
     #
+    # @!attribute [rw] pre_parse_text_transformations
+    #   Pre-parse text transformations normalize the raw query string before
+    #   WAF parses it into individual query arguments. They are applied
+    #   before the standard text transformations. Pre-parse text
+    #   transformations are only supported when `FieldToMatch` is
+    #   `SingleQueryArgument` or `AllQueryArguments`. You can specify up to
+    #   10 pre-parse text transformations per rule statement.
+    #   @return [Array<Types::PreParseTextTransformation>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/SizeConstraintStatement AWS API Documentation
     #
     class SizeConstraintStatement < Struct.new(
       :field_to_match,
       :comparison_operator,
       :size,
-      :text_transformations)
+      :text_transformations,
+      :pre_parse_text_transformations)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Revenue statistics for a single AI bot source, including the bot name,
+    # revenue amount, request count, and verification status.
+    #
+    # @!attribute [rw] source_name
+    #   The name of the AI bot.
+    #   @return [String]
+    #
+    # @!attribute [rw] percentage
+    #   The percentage of total revenue from this source.
+    #   @return [Float]
+    #
+    # @!attribute [rw] amount
+    #   The total revenue amount from this source in the specified currency.
+    #   @return [String]
+    #
+    # @!attribute [rw] request_count
+    #   The number of monetized requests from this source.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] source_category
+    #   The category of this AI bot source.
+    #   @return [String]
+    #
+    # @!attribute [rw] intent
+    #   The declared intent of the AI bot (for example, summarize, index, or
+    #   train).
+    #   @return [String]
+    #
+    # @!attribute [rw] organization
+    #   The organization associated with the AI bot.
+    #   @return [String]
+    #
+    # @!attribute [rw] verified
+    #   Indicates whether the AI bot's identity was verified — for example,
+    #   through a cryptographically signed request (Web Bot Auth) or another
+    #   published verification method. This value is meaningful only when
+    #   GroupBy is NAME, where each result represents a single, identifiable
+    #   bot. For all other GroupBy values (CATEGORY, INTENT, ORGANIZATION,
+    #   or WEBACL), a result aggregates multiple bots that may have
+    #   different verification states, so Verified is always returned as
+    #   false and should be ignored. Type and required-ness are unchanged
+    #   (Boolean, optional).
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] group_by_value
+    #   The value for the group-by dimension, when grouping is applied.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/SourceStatistics AWS API Documentation
+    #
+    class SourceStatistics < Struct.new(
+      :source_name,
+      :percentage,
+      :amount,
+      :request_count,
+      :source_category,
+      :intent,
+      :organization,
+      :verified,
+      :group_by_value)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -8409,6 +10056,15 @@ module Aws::WAFV2
     #   the specified content, starting from the lowest priority setting,
     #   and then uses the transformed component contents.
     #   @return [Array<Types::TextTransformation>]
+    #
+    # @!attribute [rw] pre_parse_text_transformations
+    #   Pre-parse text transformations normalize the raw query string before
+    #   WAF parses it into individual query arguments. They are applied
+    #   before the standard text transformations. Pre-parse text
+    #   transformations are only supported when `FieldToMatch` is
+    #   `SingleQueryArgument` or `AllQueryArguments`. You can specify up to
+    #   10 pre-parse text transformations per rule statement.
+    #   @return [Array<Types::PreParseTextTransformation>]
     #
     # @!attribute [rw] sensitivity_level
     #   The sensitivity that you want WAF to use to inspect for SQL
@@ -8436,6 +10092,7 @@ module Aws::WAFV2
     class SqliMatchStatement < Struct.new(
       :field_to_match,
       :text_transformations,
+      :pre_parse_text_transformations,
       :sensitivity_level)
       SENSITIVE = []
       include Aws::Structure
@@ -8731,6 +10388,19 @@ module Aws::WAFV2
     #   against a single regular expression.
     #   @return [Types::RegexMatchStatement]
     #
+    # @!attribute [rw] asn_match_statement
+    #   A rule statement that inspects web traffic based on the Autonomous
+    #   System Number (ASN) associated with the request's IP address.
+    #
+    #   For additional details, see [ASN match rule statement][1] in the
+    #   [WAF Developer Guide][2].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/waf/latest/developerguide/waf-rule-statement-type-asn-match.html
+    #   [2]: https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html
+    #   @return [Types::AsnMatchStatement]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/Statement AWS API Documentation
     #
     class Statement < Struct.new(
@@ -8748,7 +10418,8 @@ module Aws::WAFV2
       :not_statement,
       :managed_rule_group_statement,
       :label_match_statement,
-      :regex_match_statement)
+      :regex_match_statement,
+      :asn_match_statement)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -8942,7 +10613,8 @@ module Aws::WAFV2
     #
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -9055,7 +10727,8 @@ module Aws::WAFV2
     #
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -9151,7 +10824,8 @@ module Aws::WAFV2
     #
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -9221,7 +10895,8 @@ module Aws::WAFV2
     #
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -9286,6 +10961,11 @@ module Aws::WAFV2
     #   [2]: https://docs.aws.amazon.com/waf/latest/developerguide/limits.html
     #   @return [Hash<String,Types::CustomResponseBody>]
     #
+    # @!attribute [rw] monetization_config
+    #   The monetization configuration for the rule group. Provide this when
+    #   any rule in the rule group uses the `Monetize` action.
+    #   @return [Types::MonetizationConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/UpdateRuleGroupRequest AWS API Documentation
     #
     class UpdateRuleGroupRequest < Struct.new(
@@ -9296,7 +10976,8 @@ module Aws::WAFV2
       :rules,
       :visibility_config,
       :lock_token,
-      :custom_response_bodies)
+      :custom_response_bodies,
+      :monetization_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -9322,7 +11003,8 @@ module Aws::WAFV2
     #
     # @!attribute [rw] scope
     #   Specifies whether this is for a global resource type, such as a
-    #   Amazon CloudFront distribution.
+    #   Amazon CloudFront distribution. For an Amplify application, use
+    #   `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East
     #   (N. Virginia) as follows:
@@ -9457,6 +11139,35 @@ module Aws::WAFV2
     #   [1]: http://aws.amazon.com/waf/pricing/
     #   @return [Types::AssociationConfig]
     #
+    # @!attribute [rw] on_source_d_do_s_protection_config
+    #   Specifies the type of DDoS protection to apply to web request data
+    #   for a web ACL. For most scenarios, it is recommended to use the
+    #   default protection level, `ACTIVE_UNDER_DDOS`. If a web ACL is
+    #   associated with multiple Application Load Balancers, the changes you
+    #   make to DDoS protection in that web ACL will apply to all associated
+    #   Application Load Balancers.
+    #   @return [Types::OnSourceDDoSProtectionConfig]
+    #
+    # @!attribute [rw] application_config
+    #   Configures the ability for the WAF console to store and retrieve
+    #   application attributes. Application attributes help WAF give
+    #   recommendations for protection packs.
+    #
+    #   When using `UpdateWebACL`, `ApplicationConfig` follows these rules:
+    #
+    #   * If you omit `ApplicationConfig` from the request, all existing
+    #     entries in the web ACL are retained.
+    #
+    #   * If you include `ApplicationConfig`, entries must match the
+    #     existing values exactly. Any attempt to modify existing entries
+    #     will result in an error.
+    #   @return [Types::ApplicationConfig]
+    #
+    # @!attribute [rw] monetization_config
+    #   The monetization configuration for the web ACL. Provide this when
+    #   any rule in the web ACL uses the `Monetize` action.
+    #   @return [Types::MonetizationConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/UpdateWebACLRequest AWS API Documentation
     #
     class UpdateWebACLRequest < Struct.new(
@@ -9473,7 +11184,10 @@ module Aws::WAFV2
       :captcha_config,
       :challenge_config,
       :token_domains,
-      :association_config)
+      :association_config,
+      :on_source_d_do_s_protection_config,
+      :application_config,
+      :monetization_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -9747,6 +11461,25 @@ module Aws::WAFV2
     #
     class WAFExpiredManagedRuleGroupVersionException < Struct.new(
       :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The operation failed because the specified WAF feature isn't
+    # supported by the CloudFront pricing plan associated with the web ACL.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @!attribute [rw] disallowed_features
+    #   The names of the disallowed WAF features.
+    #   @return [Array<Types::DisallowedFeature>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/WAFFeatureNotIncludedInPricingPlanException AWS API Documentation
+    #
+    class WAFFeatureNotIncludedInPricingPlanException < Struct.new(
+      :message,
+      :disallowed_features)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -10050,8 +11783,9 @@ module Aws::WAFV2
     # one or more Amazon Web Services resources to protect. The resource
     # types include Amazon CloudFront distribution, Amazon API Gateway REST
     # API, Application Load Balancer, AppSync GraphQL API, Amazon Cognito
-    # user pool, App Runner service, and Amazon Web Services Verified Access
-    # instance.
+    # user pool, App Runner service, Amplify application, Amazon Web
+    # Services Verified Access instance, and Amazon Bedrock AgentCore
+    # Gateway.
     #
     # @!attribute [rw] name
     #   The name of the web ACL. You cannot change the name of a web ACL
@@ -10251,6 +11985,22 @@ module Aws::WAFV2
     #   `PostProcessFirewallManagerRuleGroups`.
     #   @return [Boolean]
     #
+    # @!attribute [rw] on_source_d_do_s_protection_config
+    #   Configures the level of DDoS protection that applies to web ACLs
+    #   associated with Application Load Balancers.
+    #   @return [Types::OnSourceDDoSProtectionConfig]
+    #
+    # @!attribute [rw] application_config
+    #   Returns a list of `ApplicationAttribute`s.
+    #   @return [Types::ApplicationConfig]
+    #
+    # @!attribute [rw] monetization_config
+    #   The monetization configuration for the web ACL. Required when any
+    #   rule in the web ACL uses the `Monetize` action. Specifies the
+    #   cryptocurrency payment networks and currency mode for AI bot
+    #   monetization.
+    #   @return [Types::MonetizationConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/WebACL AWS API Documentation
     #
     class WebACL < Struct.new(
@@ -10272,7 +12022,10 @@ module Aws::WAFV2
       :challenge_config,
       :token_domains,
       :association_config,
-      :retrofitted_by_firewall_manager)
+      :retrofitted_by_firewall_manager,
+      :on_source_d_do_s_protection_config,
+      :application_config,
+      :monetization_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -10346,11 +12099,21 @@ module Aws::WAFV2
     #   and then uses the transformed component contents.
     #   @return [Array<Types::TextTransformation>]
     #
+    # @!attribute [rw] pre_parse_text_transformations
+    #   Pre-parse text transformations normalize the raw query string before
+    #   WAF parses it into individual query arguments. They are applied
+    #   before the standard text transformations. Pre-parse text
+    #   transformations are only supported when `FieldToMatch` is
+    #   `SingleQueryArgument` or `AllQueryArguments`. You can specify up to
+    #   10 pre-parse text transformations per rule statement.
+    #   @return [Array<Types::PreParseTextTransformation>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/XssMatchStatement AWS API Documentation
     #
     class XssMatchStatement < Struct.new(
       :field_to_match,
-      :text_transformations)
+      :text_transformations,
+      :pre_parse_text_transformations)
       SENSITIVE = []
       include Aws::Structure
     end

@@ -26,6 +26,9 @@ module Aws
       class ContactNotFoundException < ::Aws::Errors::ServiceError
         def message: () -> ::String
       end
+      class ContactNotTerminatedException < ::Aws::Errors::ServiceError
+        def message: () -> ::String
+      end
       class DestinationNotAllowedException < ::Aws::Errors::ServiceError
         def message: () -> ::String
       end
@@ -36,6 +39,9 @@ module Aws
         def message: () -> ::String
       end
       class InternalServiceException < ::Aws::Errors::ServiceError
+        def message: () -> ::String
+      end
+      class InvalidActiveRegionException < ::Aws::Errors::ServiceError
         def message: () -> ::String
       end
       class InvalidContactFlowException < ::Aws::Errors::ServiceError
@@ -50,6 +56,9 @@ module Aws
       class InvalidRequestException < ::Aws::Errors::ServiceError
         def message: () -> ::String
         def reason: () -> ::String
+      end
+      class InvalidTestCaseException < ::Aws::Errors::ServiceError
+        def problems: () -> ::String
       end
       class LimitExceededException < ::Aws::Errors::ServiceError
         def message: () -> ::String

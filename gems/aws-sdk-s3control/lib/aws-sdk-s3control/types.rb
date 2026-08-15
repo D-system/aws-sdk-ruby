@@ -116,6 +116,14 @@ module Aws::S3Control
     #   associated with this access point.
     #   @return [String]
     #
+    # @!attribute [rw] data_source_id
+    #   A unique identifier for the data source of the access point.
+    #   @return [String]
+    #
+    # @!attribute [rw] data_source_type
+    #   The type of the data source that the access point is attached to.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/AccessPoint AWS API Documentation
     #
     class AccessPoint < Struct.new(
@@ -125,13 +133,20 @@ module Aws::S3Control
       :bucket,
       :access_point_arn,
       :alias,
-      :bucket_account_id)
+      :bucket_account_id,
+      :data_source_id,
+      :data_source_type)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # A container element for the account-level Amazon S3 Storage Lens
     # configuration.
+    #
+    # <note markdown="1"> You must enable Storage Lens metrics consistently at both the account
+    # level and bucket level, or your request will fail.
+    #
+    #  </note>
     #
     # For more information about S3 Storage Lens, see [Assessing your
     # storage activity and usage with S3 Storage Lens][1] in the *Amazon S3
@@ -166,6 +181,11 @@ module Aws::S3Control
     #   A container element for detailed status code metrics.
     #   @return [Types::DetailedStatusCodesMetrics]
     #
+    # @!attribute [rw] advanced_performance_metrics
+    #   A container element for S3 Storage Lens advanced performance
+    #   metrics.
+    #   @return [Types::AdvancedPerformanceMetrics]
+    #
     # @!attribute [rw] storage_lens_group_level
     #   A container element for S3 Storage Lens groups metrics.
     #   @return [Types::StorageLensGroupLevel]
@@ -178,6 +198,7 @@ module Aws::S3Control
       :advanced_cost_optimization_metrics,
       :advanced_data_protection_metrics,
       :detailed_status_codes_metrics,
+      :advanced_performance_metrics,
       :storage_lens_group_level)
       SENSITIVE = []
       include Aws::Structure
@@ -262,6 +283,36 @@ module Aws::S3Control
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/AdvancedDataProtectionMetrics AWS API Documentation
     #
     class AdvancedDataProtectionMetrics < Struct.new(
+      :is_enabled)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The container element for S3 Storage Lens advanced performance
+    # metrics. Advanced performance metrics provide insights into
+    # application performance, such as request efficiency and access
+    # patterns. These metrics help you optimize your S3 storage for both
+    # cost and performance by providing detailed analytics on how your
+    # applications interact with S3 resources.
+    #
+    # For more information about S3 Storage Lens, see [Assessing your
+    # storage activity and usage with S3 Storage Lens][1] in the *Amazon S3
+    # User Guide*. For a complete list of S3 Storage Lens metrics, see [S3
+    # Storage Lens metrics glossary][2] in the *Amazon S3 User Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage_lens.html
+    # [2]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage_lens_metrics_glossary.html
+    #
+    # @!attribute [rw] is_enabled
+    #   A container that indicates whether S3 Storage Lens advanced
+    #   performance metrics are enabled.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/AdvancedPerformanceMetrics AWS API Documentation
+    #
+    class AdvancedPerformanceMetrics < Struct.new(
       :is_enabled)
       SENSITIVE = []
       include Aws::Structure
@@ -503,6 +554,11 @@ module Aws::S3Control
     #   Storage Lens.
     #   @return [Types::DetailedStatusCodesMetrics]
     #
+    # @!attribute [rw] advanced_performance_metrics
+    #   A container for bucket-level advanced performance metrics for S3
+    #   Storage Lens.
+    #   @return [Types::AdvancedPerformanceMetrics]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/BucketLevel AWS API Documentation
     #
     class BucketLevel < Struct.new(
@@ -510,7 +566,8 @@ module Aws::S3Control
       :prefix_level,
       :advanced_cost_optimization_metrics,
       :advanced_data_protection_metrics,
-      :detailed_status_codes_metrics)
+      :detailed_status_codes_metrics,
+      :advanced_performance_metrics)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -928,6 +985,17 @@ module Aws::S3Control
     #
     # @!attribute [rw] name
     #   The name you want to assign to this access point.
+    #
+    #   For directory buckets, the access point name must consist of a base
+    #   name that you provide and suffix that includes the `ZoneID` (Amazon
+    #   Web Services Availability Zone or Local Zone) of your bucket
+    #   location, followed by `--xa-s3`. For more information, see [Managing
+    #   access to shared datasets in directory buckets with access
+    #   points][1] in the *Amazon S3 User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-points-directory-buckets.html
     #   @return [String]
     #
     # @!attribute [rw] bucket
@@ -974,6 +1042,35 @@ module Aws::S3Control
     #   required.
     #   @return [String]
     #
+    # @!attribute [rw] scope
+    #   For directory buckets, you can filter access control to specific
+    #   prefixes, API operations, or a combination of both. For more
+    #   information, see [Managing access to shared datasets in directory
+    #   buckets with access points][1] in the *Amazon S3 User Guide*.
+    #
+    #   <note markdown="1"> Scope is only supported for access points attached to directory
+    #   buckets.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-points-directory-buckets.html
+    #   @return [Types::Scope]
+    #
+    # @!attribute [rw] tags
+    #   An array of tags that you can apply to an access point. Tags are
+    #   key-value pairs of metadata used to control access to your access
+    #   points. For more information about tags, see [Using tags with Amazon
+    #   S3][1]. For information about tagging access points, see [Using tags
+    #   for attribute-based access control (ABAC)][2].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/tagging.html
+    #   [2]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/tagging.html#using-tags-for-abac
+    #   @return [Array<Types::Tag>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/CreateAccessPointRequest AWS API Documentation
     #
     class CreateAccessPointRequest < Struct.new(
@@ -982,7 +1079,9 @@ module Aws::S3Control
       :bucket,
       :vpc_configuration,
       :public_access_block_configuration,
-      :bucket_account_id)
+      :bucket_account_id,
+      :scope,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1402,6 +1501,27 @@ module Aws::S3Control
       include Aws::Structure
     end
 
+    # A filter that returns objects that are encrypted by dual-layer
+    # server-side encryption with Amazon Web Services Key Management Service
+    # (KMS) keys (DSSE-KMS). You can further refine your filtering by
+    # optionally providing a KMS Key ARN to filter objects encrypted by a
+    # specific key.
+    #
+    # @!attribute [rw] kms_key_arn
+    #   The Amazon Resource Name (ARN) of the customer managed KMS key to
+    #   use for the filter to return objects that are encrypted by the
+    #   specified key. For best performance, use keys in the same Region as
+    #   the S3 Batch Operations job.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/DSSEKMSFilter AWS API Documentation
+    #
+    class DSSEKMSFilter < Struct.new(
+      :kms_key_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] account_id
     #   The Amazon Web Services account ID of the S3 Access Grants instance.
     #   @return [String]
@@ -1557,6 +1677,24 @@ module Aws::S3Control
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/DeleteAccessPointRequest AWS API Documentation
     #
     class DeleteAccessPointRequest < Struct.new(
+      :account_id,
+      :name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] account_id
+    #   The Amazon Web Services account ID that owns the access point with
+    #   the scope that you want to delete.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the access point with the scope that you want to delete.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/DeleteAccessPointScopeRequest AWS API Documentation
+    #
+    class DeleteAccessPointScopeRequest < Struct.new(
       :account_id,
       :name)
       SENSITIVE = []
@@ -2807,6 +2945,14 @@ module Aws::S3Control
     #   associated with this access point.
     #   @return [String]
     #
+    # @!attribute [rw] data_source_id
+    #   The unique identifier for the data source of the access point.
+    #   @return [String]
+    #
+    # @!attribute [rw] data_source_type
+    #   The type of the data source that the access point is attached to.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/GetAccessPointResult AWS API Documentation
     #
     class GetAccessPointResult < Struct.new(
@@ -2819,7 +2965,39 @@ module Aws::S3Control
       :alias,
       :access_point_arn,
       :endpoints,
-      :bucket_account_id)
+      :bucket_account_id,
+      :data_source_id,
+      :data_source_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] account_id
+    #   The Amazon Web Services account ID that owns the access point with
+    #   the scope that you want to retrieve.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the access point with the scope you want to retrieve.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/GetAccessPointScopeRequest AWS API Documentation
+    #
+    class GetAccessPointScopeRequest < Struct.new(
+      :account_id,
+      :name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] scope
+    #   The contents of the access point scope.
+    #   @return [Types::Scope]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/GetAccessPointScopeResult AWS API Documentation
+    #
+    class GetAccessPointScopeResult < Struct.new(
+      :scope)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3132,6 +3310,12 @@ module Aws::S3Control
     #   a bucket and a prefix.
     #   @return [String]
     #
+    # @!attribute [rw] audit_context
+    #   The context to identify the job or query associated with the
+    #   credential request. This information will be displayed in CloudTrail
+    #   log in your account.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/GetDataAccessRequest AWS API Documentation
     #
     class GetDataAccessRequest < Struct.new(
@@ -3140,7 +3324,8 @@ module Aws::S3Control
       :permission,
       :duration_seconds,
       :privilege,
-      :target_type)
+      :target_type,
+      :audit_context)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3880,6 +4065,12 @@ module Aws::S3Control
     #   objects that are stored with the specified storage class.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] match_any_object_encryption
+    #   If provided, the generated object list includes only source bucket
+    #   objects with the indicated server-side encryption type (SSE-S3,
+    #   SSE-KMS, DSSE-KMS, SSE-C, or NOT-SSE).
+    #   @return [Array<Types::ObjectEncryptionFilter>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/JobManifestGeneratorFilter AWS API Documentation
     #
     class JobManifestGeneratorFilter < Struct.new(
@@ -3890,7 +4081,8 @@ module Aws::S3Control
       :key_name_constraint,
       :object_size_greater_than_bytes,
       :object_size_less_than_bytes,
-      :match_any_storage_class)
+      :match_any_storage_class,
+      :match_any_object_encryption)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4053,6 +4245,23 @@ module Aws::S3Control
     #    </note>
     #   @return [Types::S3ReplicateObjectOperation]
     #
+    # @!attribute [rw] s3_compute_object_checksum
+    #   Directs the specified job to compute checksum values for every
+    #   object in the manifest.
+    #   @return [Types::S3ComputeObjectChecksumOperation]
+    #
+    # @!attribute [rw] s3_update_object_encryption
+    #   Updates the server-side encryption type of an existing encrypted
+    #   object in a general purpose bucket. You can use the
+    #   `UpdateObjectEncryption` operation to change encrypted objects from
+    #   server-side encryption with Amazon S3 managed keys (SSE-S3) to
+    #   server-side encryption with Key Management Service (KMS) keys
+    #   (SSE-KMS), or to apply S3 Bucket Keys. You can also use the
+    #   `UpdateObjectEncryption` operation to change the customer-managed
+    #   KMS key used to encrypt your data so that you can comply with custom
+    #   key-rotation standards.
+    #   @return [Types::S3UpdateObjectEncryptionOperation]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/JobOperation AWS API Documentation
     #
     class JobOperation < Struct.new(
@@ -4064,7 +4273,9 @@ module Aws::S3Control
       :s3_initiate_restore_object,
       :s3_put_object_legal_hold,
       :s3_put_object_retention,
-      :s3_replicate_object)
+      :s3_replicate_object,
+      :s3_compute_object_checksum,
+      :s3_update_object_encryption)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4129,6 +4340,11 @@ module Aws::S3Control
     #   all tasks or only failed tasks.
     #   @return [String]
     #
+    # @!attribute [rw] expected_bucket_owner
+    #   Lists the Amazon Web Services account ID that owns the target
+    #   bucket, where the completion report is received.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/JobReport AWS API Documentation
     #
     class JobReport < Struct.new(
@@ -4136,7 +4352,8 @@ module Aws::S3Control
       :format,
       :enabled,
       :prefix,
-      :report_scope)
+      :report_scope,
+      :expected_bucket_owner)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4846,6 +5063,64 @@ module Aws::S3Control
     end
 
     # @!attribute [rw] account_id
+    #   The Amazon Web Services account ID that owns the access points.
+    #   @return [String]
+    #
+    # @!attribute [rw] directory_bucket
+    #   The name of the directory bucket associated with the access points
+    #   you want to list.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   If `NextToken` is returned, there are more access points available
+    #   than requested in the `maxResults` value. The value of `NextToken`
+    #   is a unique pagination token for each page. Make the call again
+    #   using the returned token to retrieve the next page. Keep all other
+    #   arguments unchanged. Each pagination token expires after 24 hours.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of access points that you would like returned in
+    #   the `ListAccessPointsForDirectoryBuckets` response. If the directory
+    #   bucket is associated with more than this number of access points,
+    #   the results include the pagination token `NextToken`. Make another
+    #   call using the `NextToken` to retrieve more results.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/ListAccessPointsForDirectoryBucketsRequest AWS API Documentation
+    #
+    class ListAccessPointsForDirectoryBucketsRequest < Struct.new(
+      :account_id,
+      :directory_bucket,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] access_point_list
+    #   Contains identification and configuration information for one or
+    #   more access points associated with the directory bucket.
+    #   @return [Array<Types::AccessPoint>]
+    #
+    # @!attribute [rw] next_token
+    #   If `NextToken` is returned, there are more access points available
+    #   than requested in the `maxResults` value. The value of `NextToken`
+    #   is a unique pagination token for each page. Make the call again
+    #   using the returned token to retrieve the next page. Keep all other
+    #   arguments unchanged. Each pagination token expires after 24 hours.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/ListAccessPointsForDirectoryBucketsResult AWS API Documentation
+    #
+    class ListAccessPointsForDirectoryBucketsResult < Struct.new(
+      :access_point_list,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] account_id
     #   The account ID for the account that owns the specified Object Lambda
     #   Access Point.
     #   @return [String]
@@ -4934,13 +5209,25 @@ module Aws::S3Control
     #   access points.
     #   @return [Integer]
     #
+    # @!attribute [rw] data_source_id
+    #   The unique identifier for the data source of the access point.
+    #   @return [String]
+    #
+    # @!attribute [rw] data_source_type
+    #   The type of the data source that the access point is attached to.
+    #   Returns only access points attached to S3 buckets by default. To
+    #   return all access points specify `DataSourceType` as `ALL`.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/ListAccessPointsRequest AWS API Documentation
     #
     class ListAccessPointsRequest < Struct.new(
       :account_id,
       :bucket,
       :next_token,
-      :max_results)
+      :max_results,
+      :data_source_id,
+      :data_source_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5358,8 +5645,9 @@ module Aws::S3Control
     #
     # @!attribute [rw] resource_arn
     #   The Amazon Resource Name (ARN) of the S3 resource that you want to
-    #   list the tags for. The tagged resource can be an S3 Storage Lens
-    #   group or S3 Access Grants instance, registered location, or grant.
+    #   list tags for. The tagged resource can be a directory bucket, S3
+    #   Storage Lens group or S3 Access Grants instance, registered
+    #   location, or grant.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/ListTagsForResourceRequest AWS API Documentation
@@ -5413,13 +5701,13 @@ module Aws::S3Control
     #
     # @!attribute [rw] bytes_greater_than
     #   Specifies the minimum object size in Bytes. The value must be a
-    #   positive number, greater than 0 and less than 5 TB.
+    #   positive number, greater than 0 and less than 50 TB.
     #   @return [Integer]
     #
     # @!attribute [rw] bytes_less_than
     #   Specifies the maximum object size in Bytes. The value must be a
     #   positive number, greater than the minimum object size and less than
-    #   5 TB.
+    #   50 TB.
     #   @return [Integer]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/MatchObjectSize AWS API Documentation
@@ -5721,6 +6009,88 @@ module Aws::S3Control
       :message)
       SENSITIVE = []
       include Aws::Structure
+    end
+
+    # A filter that returns objects that aren't server-side encrypted.
+    #
+    # @api private
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/NotSSEFilter AWS API Documentation
+    #
+    class NotSSEFilter < Aws::EmptyStructure; end
+
+    # The updated server-side encryption type for this object. The
+    # `UpdateObjectEncryption` operation supports the SSE-KMS encryption
+    # type.
+    #
+    # Valid Values: `SSEKMS`
+    #
+    # @!attribute [rw] ssekms
+    #   Specifies to update the object encryption type to server-side
+    #   encryption with Key Management Service (KMS) keys (SSE-KMS).
+    #   @return [Types::S3UpdateObjectEncryptionSSEKMS]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/ObjectEncryption AWS API Documentation
+    #
+    class ObjectEncryption < Struct.new(
+      :ssekms)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # An optional filter for the S3JobManifestGenerator that identifies the
+    # subset of objects by encryption type.
+    #
+    # @note ObjectEncryptionFilter is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note ObjectEncryptionFilter is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of ObjectEncryptionFilter corresponding to the set member.
+    #
+    # @!attribute [rw] sses3
+    #   Filters for objects that are encrypted by server-side encryption
+    #   with Amazon S3 managed keys (SSE-S3).
+    #   @return [Types::SSES3Filter]
+    #
+    # @!attribute [rw] ssekms
+    #   Filters for objects that are encrypted by server-side encryption
+    #   with Amazon Web Services Key Management Service (KMS) keys
+    #   (SSE-KMS).
+    #   @return [Types::SSEKMSFilter]
+    #
+    # @!attribute [rw] dssekms
+    #   Filters for objects that are encrypted by dual-layer server-side
+    #   encryption with Amazon Web Services Key Management Service (KMS)
+    #   keys (DSSE-KMS).
+    #   @return [Types::DSSEKMSFilter]
+    #
+    # @!attribute [rw] ssec
+    #   Filters for objects that are encrypted by server-side encryption
+    #   with customer-provided keys (SSE-C).
+    #   @return [Types::SSECFilter]
+    #
+    # @!attribute [rw] notsse
+    #   Filters for objects that are not encrypted by server-side
+    #   encryption.
+    #   @return [Types::NotSSEFilter]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/ObjectEncryptionFilter AWS API Documentation
+    #
+    class ObjectEncryptionFilter < Struct.new(
+      :sses3,
+      :ssekms,
+      :dssekms,
+      :ssec,
+      :notsse,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Sses3 < ObjectEncryptionFilter; end
+      class Ssekms < ObjectEncryptionFilter; end
+      class Dssekms < ObjectEncryptionFilter; end
+      class Ssec < ObjectEncryptionFilter; end
+      class Notsse < ObjectEncryptionFilter; end
+      class Unknown < ObjectEncryptionFilter; end
     end
 
     # An access point with an attached Lambda function used to access
@@ -6128,12 +6498,14 @@ module Aws::S3Control
     # @!attribute [rw] policy
     #   The policy that you want to apply to the specified access point. For
     #   more information about access point policies, see [Managing data
-    #   access with Amazon S3 access points][1] in the *Amazon S3 User
-    #   Guide*.
+    #   access with Amazon S3 access points][1] or [Managing access to
+    #   shared datasets in directory buckets with access points][2] in the
+    #   *Amazon S3 User Guide*.
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-points.html
+    #   [2]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-points-directory-buckets.html
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/PutAccessPointPolicyRequest AWS API Documentation
@@ -6142,6 +6514,30 @@ module Aws::S3Control
       :account_id,
       :name,
       :policy)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] account_id
+    #   The Amazon Web Services account ID that owns the access point with
+    #   scope that you want to create or replace.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the access point with the scope that you want to create
+    #   or replace.
+    #   @return [String]
+    #
+    # @!attribute [rw] scope
+    #   Object prefixes, API operations, or a combination of both.
+    #   @return [Types::Scope]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/PutAccessPointScopeRequest AWS API Documentation
+    #
+    class PutAccessPointScopeRequest < Struct.new(
+      :account_id,
+      :name,
+      :scope)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6938,6 +7334,38 @@ module Aws::S3Control
       include Aws::Structure
     end
 
+    # Directs the specified job to invoke the ComputeObjectChecksum
+    # operation on every object listed in the job's manifest.
+    #
+    # @!attribute [rw] checksum_algorithm
+    #   Indicates the algorithm that you want Amazon S3 to use to create the
+    #   checksum. For more information, see [Checking object integrity][1]
+    #   in the Amazon S3 User Guide.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html
+    #   @return [String]
+    #
+    # @!attribute [rw] checksum_type
+    #   Indicates the checksum type that you want Amazon S3 to use to
+    #   calculate the object's checksum value. For more information, see
+    #   [Checking object integrity][1] in the Amazon S3 User Guide.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/S3ComputeObjectChecksumOperation AWS API Documentation
+    #
+    class S3ComputeObjectChecksumOperation < Struct.new(
+      :checksum_algorithm,
+      :checksum_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains the configuration parameters for a PUT Copy object operation.
     # S3 Batch Operations passes every object to the underlying `CopyObject`
     # API operation. For more information about the parameters for this
@@ -7641,6 +8069,61 @@ module Aws::S3Control
       include Aws::Structure
     end
 
+    # With the `UpdateObjectEncryption` operation, you can atomically update
+    # the server-side encryption type of an existing object in a general
+    # purpose bucket without any data movement.
+    #
+    # @!attribute [rw] object_encryption
+    #   The updated server-side encryption type for this S3 object. The
+    #   `UpdateObjectEncryption` operation supports the SSE-KMS encryption
+    #   type.
+    #   @return [Types::ObjectEncryption]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/S3UpdateObjectEncryptionOperation AWS API Documentation
+    #
+    class S3UpdateObjectEncryptionOperation < Struct.new(
+      :object_encryption)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # If `SSEKMS` is specified for `UpdateObjectEncryption`, this data type
+    # specifies the Amazon Web Services KMS key Amazon Resource Name (ARN)
+    # to use and whether to use an S3 Bucket Key for server-side encryption
+    # using Key Management Service (KMS) keys (SSE-KMS).
+    #
+    # @!attribute [rw] kms_key_arn
+    #   Specifies the Amazon Web Services KMS key Amazon Resource Name (ARN)
+    #   to use for the updated server-side encryption type. Required if
+    #   `UpdateObjectEncryption` specifies `SSEKMS`.
+    #   @return [String]
+    #
+    # @!attribute [rw] bucket_key_enabled
+    #   Specifies whether Amazon S3 should use an S3 Bucket Key for object
+    #   encryption with server-side encryption using Key Management Service
+    #   (KMS) keys (SSE-KMS). If this value isn't specified, it defaults to
+    #   `false`. Setting this value to `true` causes Amazon S3 to use an S3
+    #   Bucket Key for update object encryption with SSE-KMS.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/S3UpdateObjectEncryptionSSEKMS AWS API Documentation
+    #
+    class S3UpdateObjectEncryptionSSEKMS < Struct.new(
+      :kms_key_arn,
+      :bucket_key_enabled)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A filter that returns objects that are encrypted by server-side
+    # encryption with customer-provided keys (SSE-C).
+    #
+    # @api private
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/SSECFilter AWS API Documentation
+    #
+    class SSECFilter < Aws::EmptyStructure; end
+
     # @!attribute [rw] key_id
     #   A container for the ARN of the SSE-KMS encryption. This property is
     #   read-only and follows the following format: `
@@ -7673,6 +8156,33 @@ module Aws::S3Control
       include Aws::Structure
     end
 
+    # A filter that returns objects that are encrypted by server-side
+    # encryption with Amazon Web Services KMS (SSE-KMS).
+    #
+    # @!attribute [rw] kms_key_arn
+    #   The Amazon Resource Name (ARN) of the customer managed KMS key to
+    #   use for the filter to return objects that are encrypted by the
+    #   specified key. For best performance, use keys in the same Region as
+    #   the S3 Batch Operations job.
+    #   @return [String]
+    #
+    # @!attribute [rw] bucket_key_enabled
+    #   Specifies whether Amazon S3 should use an S3 Bucket Key for object
+    #   encryption with server-side encryption using Amazon Web Services Key
+    #   Management Service (Amazon Web Services KMS) keys (SSE-KMS). If
+    #   specified, will filter SSE-KMS encrypted objects by S3 Bucket Key
+    #   status.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/SSEKMSFilter AWS API Documentation
+    #
+    class SSEKMSFilter < Struct.new(
+      :kms_key_arn,
+      :bucket_key_enabled)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @api private
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/SSES3 AWS API Documentation
@@ -7687,6 +8197,43 @@ module Aws::S3Control
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/SSES3Encryption AWS API Documentation
     #
     class SSES3Encryption < Aws::EmptyStructure; end
+
+    # A filter that returns objects that are encrypted by server-side
+    # encryption with Amazon S3 managed keys (SSE-S3).
+    #
+    # @api private
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/SSES3Filter AWS API Documentation
+    #
+    class SSES3Filter < Aws::EmptyStructure; end
+
+    # You can use the access point scope to restrict access to specific
+    # prefixes, API operations, or a combination of both.
+    #
+    # For more information, see [Manage the scope of your access points for
+    # directory buckets][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-points-directory-buckets-manage-scope.html
+    #
+    # @!attribute [rw] prefixes
+    #   You can specify any amount of prefixes, but the total length of
+    #   characters of all prefixes must be less than 256 bytes in size.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] permissions
+    #   You can include one or more API operations as permissions.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/Scope AWS API Documentation
+    #
+    class Scope < Struct.new(
+      :prefixes,
+      :permissions)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # @!attribute [rw] delimiter
     #   A container for the delimiter of the selection criteria being used.
@@ -7827,6 +8374,11 @@ module Aws::S3Control
     #   metrics export including, the destination, schema and format.
     #   @return [Types::StorageLensDataExport]
     #
+    # @!attribute [rw] expanded_prefixes_data_export
+    #   A container that configures your S3 Storage Lens expanded prefixes
+    #   metrics report.
+    #   @return [Types::StorageLensExpandedPrefixesDataExport]
+    #
     # @!attribute [rw] is_enabled
     #   A container for whether the S3 Storage Lens configuration is
     #   enabled.
@@ -7844,6 +8396,25 @@ module Aws::S3Control
     #   `
     #   @return [String]
     #
+    # @!attribute [rw] prefix_delimiter
+    #   A container for all prefix delimiters that are used for object keys
+    #   in this S3 Storage Lens configuration. The prefix delimiters
+    #   determine how S3 Storage Lens counts prefix depth, by separating the
+    #   hierarchical levels in object keys.
+    #
+    #   <note markdown="1"> * If either a prefix delimiter or existing delimiter is undefined,
+    #     Amazon S3 uses the delimiter that’s defined.
+    #
+    #   * If both the prefix delimiter and existing delimiter are undefined,
+    #     S3 uses `/` as the default delimiter.
+    #
+    #   * When custom delimiters are used, both the prefix delimiter and
+    #     existing delimiter must specify the same special character.
+    #     Otherwise, your request results in an error.
+    #
+    #    </note>
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/StorageLensConfiguration AWS API Documentation
     #
     class StorageLensConfiguration < Struct.new(
@@ -7852,9 +8423,11 @@ module Aws::S3Control
       :include,
       :exclude,
       :data_export,
+      :expanded_prefixes_data_export,
       :is_enabled,
       :aws_org,
-      :storage_lens_arn)
+      :storage_lens_arn,
+      :prefix_delimiter)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7877,11 +8450,17 @@ module Aws::S3Control
     #   Lens metrics.
     #   @return [Types::CloudWatchMetrics]
     #
+    # @!attribute [rw] storage_lens_table_destination
+    #   A container for configuring S3 Storage Lens data exports to
+    #   read-only S3 table buckets.
+    #   @return [Types::StorageLensTableDestination]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/StorageLensDataExport AWS API Documentation
     #
     class StorageLensDataExport < Struct.new(
       :s3_bucket_destination,
-      :cloud_watch_metrics)
+      :cloud_watch_metrics,
+      :storage_lens_table_destination)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7899,6 +8478,32 @@ module Aws::S3Control
     class StorageLensDataExportEncryption < Struct.new(
       :sses3,
       :ssekms)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A container for your S3 Storage Lens expanded prefix metrics report
+    # configuration. Unlike the default Storage Lens metrics report, the
+    # enhanced prefix metrics report includes all S3 Storage Lens storage
+    # and activity data related to the full list of prefixes in your Storage
+    # Lens configuration.
+    #
+    # @!attribute [rw] s3_bucket_destination
+    #   A container for the bucket where the Amazon S3 Storage Lens metrics
+    #   export files are located.
+    #   @return [Types::S3BucketDestination]
+    #
+    # @!attribute [rw] storage_lens_table_destination
+    #   A container for the bucket where the S3 Storage Lens metric export
+    #   files are located. At least one export destination must be
+    #   specified.
+    #   @return [Types::StorageLensTableDestination]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/StorageLensExpandedPrefixesDataExport AWS API Documentation
+    #
+    class StorageLensExpandedPrefixesDataExport < Struct.new(
+      :s3_bucket_destination,
+      :storage_lens_table_destination)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -8112,6 +8717,40 @@ module Aws::S3Control
       include Aws::Structure
     end
 
+    # A container for configuring your S3 Storage Lens reports to export to
+    # read-only S3 table buckets. This parameter enables you to store your
+    # Storage Lens metrics in a structured, queryable table format in Apache
+    # Iceberg.
+    #
+    # For more information about S3 Storage Lens, see [Assessing your
+    # storage activity and usage with S3 Storage Lens][1] in the *Amazon S3
+    # User Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage_lens.html
+    #
+    # @!attribute [rw] is_enabled
+    #   A container that indicates whether the export to read-only S3 table
+    #   buckets is enabled for your S3 Storage Lens configuration. When set
+    #   to true, Storage Lens reports are automatically exported to tables
+    #   in addition to other configured destinations.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] encryption
+    #   A container for the encryption of the S3 Storage Lens metrics
+    #   exports.
+    #   @return [Types::StorageLensDataExportEncryption]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/StorageLensTableDestination AWS API Documentation
+    #
+    class StorageLensTableDestination < Struct.new(
+      :is_enabled,
+      :encryption)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] key
     #   @return [String]
     #
@@ -8156,21 +8795,10 @@ module Aws::S3Control
     #
     class SubmitMultiRegionAccessPointRoutesResult < Aws::EmptyStructure; end
 
-    # An Amazon Web Services resource tag that's associated with your S3
-    # resource. You can add tags to new objects when you upload them, or you
-    # can add object tags to existing objects.
-    #
-    # <note markdown="1"> This operation is only supported for [S3 Storage Lens groups][1] and
-    # for [S3 Access Grants][2]. The tagged resource can be an S3 Storage
-    # Lens group or S3 Access Grants instance, registered location, or
-    # grant.
-    #
-    #  </note>
-    #
-    #
-    #
-    # [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-lens-groups.html
-    # [2]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-grants-tagging.html
+    # A key-value pair that you use to label your resources. You can add
+    # tags to new resources when you create them, or you can add tags to
+    # existing resources. Tags can help you organize, track costs for, and
+    # control access to resources.
     #
     # @!attribute [rw] key
     #   The key of the key-value pair of a tag added to your Amazon Web
@@ -8201,8 +8829,9 @@ module Aws::S3Control
     #
     # @!attribute [rw] resource_arn
     #   The Amazon Resource Name (ARN) of the S3 resource that you're
-    #   trying to add tags to. The tagged resource can be an S3 Storage Lens
-    #   group or S3 Access Grants instance, registered location, or grant.
+    #   applying tags to. The tagged resource can be a directory bucket, S3
+    #   Storage Lens group or S3 Access Grants instance, registered
+    #   location, or grant.
     #   @return [String]
     #
     # @!attribute [rw] tags
@@ -8303,7 +8932,9 @@ module Aws::S3Control
     #
     # @!attribute [rw] resource_arn
     #   The Amazon Resource Name (ARN) of the S3 resource that you're
-    #   trying to remove the tags from.
+    #   removing tags from. The tagged resource can be a directory bucket,
+    #   S3 Storage Lens group or S3 Access Grants instance, registered
+    #   location, or grant.
     #   @return [String]
     #
     # @!attribute [rw] tag_keys

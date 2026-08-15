@@ -95,8 +95,8 @@ module Aws::Synthetics
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::Synthetics
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::Synthetics
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::Synthetics
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::Synthetics
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::Synthetics
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::Synthetics
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::Synthetics
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -544,13 +548,14 @@ module Aws::Synthetics
     #
     # @option params [required, Types::CanaryCodeInput] :code
     #   A structure that includes the entry point from which the canary should
-    #   start running your script. If the script is stored in an S3 bucket,
-    #   the bucket name, key, and version are also included.
+    #   start running your script. If the script is stored in an Amazon S3
+    #   bucket, the bucket name, key, and version are also included.
     #
     # @option params [required, String] :artifact_s3_location
     #   The location in Amazon S3 where Synthetics stores artifacts from the
     #   test runs of this canary. Artifacts include the log file, screenshots,
-    #   and HAR files. The name of the S3 bucket can't include a period (.).
+    #   and HAR files. The name of the Amazon S3 bucket can't include a
+    #   period (.).
     #
     # @option params [required, String] :execution_role_arn
     #   The ARN of the IAM role to be used to run the canary. This role must
@@ -580,18 +585,36 @@ module Aws::Synthetics
     #   A structure that contains the configuration for individual canary
     #   runs, such as timeout value and environment variables.
     #
-    #   The environment variables keys and values are not encrypted. Do not
-    #   store sensitive information in this field.
+    #   Environment variable keys and values are encrypted at rest using
+    #   Amazon Web Services owned KMS keys. However, the environment variables
+    #   are not encrypted on the client side. Do not store sensitive
+    #   information in them.
     #
     # @option params [Integer] :success_retention_period_in_days
     #   The number of days to retain data about successful runs of this
     #   canary. If you omit this field, the default of 31 days is used. The
     #   valid range is 1 to 455 days.
     #
+    #   This setting affects the range of information returned by
+    #   [GetCanaryRuns][1], as well as the range of information displayed in
+    #   the Synthetics console.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonSynthetics/latest/APIReference/API_GetCanaryRuns.html
+    #
     # @option params [Integer] :failure_retention_period_in_days
     #   The number of days to retain data about failed runs of this canary. If
     #   you omit this field, the default of 31 days is used. The valid range
     #   is 1 to 455 days.
+    #
+    #   This setting affects the range of information returned by
+    #   [GetCanaryRuns][1], as well as the range of information displayed in
+    #   the Synthetics console.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonSynthetics/latest/APIReference/API_GetCanaryRuns.html
     #
     # @option params [required, String] :runtime_version
     #   Specifies the runtime version to use for the canary. For a list of
@@ -633,6 +656,22 @@ module Aws::Synthetics
     #
     #   [1]: https://docs.aws.amazon.com/AmazonSynthetics/latest/APIReference/API_DeleteCanary.html
     #
+    # @option params [Array<Types::BrowserConfig>] :browser_configs
+    #   CloudWatch Synthetics now supports multibrowser canaries for
+    #   `syn-nodejs-puppeteer-11.0` and `syn-nodejs-playwright-3.0` runtimes.
+    #   This feature allows you to run your canaries on both Firefox and
+    #   Chrome browsers. To create a multibrowser canary, you need to specify
+    #   the BrowserConfigs with a list of browsers you want to use.
+    #
+    #   <note markdown="1"> If not specified, `browserConfigs` defaults to Chrome.
+    #
+    #    </note>
+    #
+    # @option params [Array<Types::AddReplicaLocationInput>] :add_replica_locations
+    #   A list of locations (Amazon Web Services Regions) to add as replicas
+    #   for the canary. Each location specifies a Region and optional VPC
+    #   configuration for the replica. You can add up to 50 replica locations.
+    #
     # @option params [Hash<String,String>] :tags
     #   A list of key-value pairs to associate with the canary. You can
     #   associate as many as 50 tags with a canary.
@@ -650,6 +689,12 @@ module Aws::Synthetics
     #   including the encryption-at-rest settings for artifacts that the
     #   canary uploads to Amazon S3.
     #
+    # @option params [String] :kms_key_arn
+    #   The Amazon Resource Name (ARN) of the customer-managed AWS Key
+    #   Management Service (AWS KMS) key used to encrypt the canary's AWS
+    #   Lambda function environment variables at rest. If you don't specify a
+    #   value, the service uses an AWS-managed key.
+    #
     # @return [Types::CreateCanaryResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateCanaryResponse#canary #canary} => Types::Canary
@@ -663,13 +708,23 @@ module Aws::Synthetics
     #       s3_key: "String",
     #       s3_version: "String",
     #       zip_file: "data",
-    #       handler: "CodeHandler", # required
+    #       handler: "CodeHandler",
+    #       blueprint_types: ["BlueprintType"],
+    #       dependencies: [
+    #         {
+    #           type: "LambdaLayer", # accepts LambdaLayer
+    #           reference: "String", # required
+    #         },
+    #       ],
     #     },
     #     artifact_s3_location: "String", # required
     #     execution_role_arn: "RoleArn", # required
     #     schedule: { # required
     #       expression: "String", # required
     #       duration_in_seconds: 1,
+    #       retry_config: {
+    #         max_retries: 1, # required
+    #       },
     #     },
     #     run_config: {
     #       timeout_in_seconds: 1,
@@ -678,6 +733,7 @@ module Aws::Synthetics
     #       environment_variables: {
     #         "EnvironmentVariableName" => "EnvironmentVariableValue",
     #       },
+    #       ephemeral_storage: 1,
     #     },
     #     success_retention_period_in_days: 1,
     #     failure_retention_period_in_days: 1,
@@ -689,6 +745,22 @@ module Aws::Synthetics
     #     },
     #     resources_to_replicate_tags: ["lambda-function"], # accepts lambda-function
     #     provisioned_resource_cleanup: "AUTOMATIC", # accepts AUTOMATIC, OFF
+    #     browser_configs: [
+    #       {
+    #         browser_type: "CHROME", # accepts CHROME, FIREFOX
+    #       },
+    #     ],
+    #     add_replica_locations: [
+    #       {
+    #         location: "Location", # required
+    #         vpc_config: {
+    #           subnet_ids: ["SubnetId"],
+    #           security_group_ids: ["SecurityGroupId"],
+    #           ipv_6_allowed_for_dual_stack: false,
+    #         },
+    #         kms_key_arn: "KmsKeyArn",
+    #       },
+    #     ],
     #     tags: {
     #       "TagKey" => "TagValue",
     #     },
@@ -698,6 +770,7 @@ module Aws::Synthetics
     #         kms_key_arn: "KmsKeyArn",
     #       },
     #     },
+    #     kms_key_arn: "KmsKeyArn",
     #   })
     #
     # @example Response structure
@@ -706,12 +779,19 @@ module Aws::Synthetics
     #   resp.canary.name #=> String
     #   resp.canary.code.source_location_arn #=> String
     #   resp.canary.code.handler #=> String
+    #   resp.canary.code.blueprint_types #=> Array
+    #   resp.canary.code.blueprint_types[0] #=> String
+    #   resp.canary.code.dependencies #=> Array
+    #   resp.canary.code.dependencies[0].type #=> String, one of "LambdaLayer"
+    #   resp.canary.code.dependencies[0].reference #=> String
     #   resp.canary.execution_role_arn #=> String
     #   resp.canary.schedule.expression #=> String
     #   resp.canary.schedule.duration_in_seconds #=> Integer
+    #   resp.canary.schedule.retry_config.max_retries #=> Integer
     #   resp.canary.run_config.timeout_in_seconds #=> Integer
     #   resp.canary.run_config.memory_in_mb #=> Integer
     #   resp.canary.run_config.active_tracing #=> Boolean
+    #   resp.canary.run_config.ephemeral_storage #=> Integer
     #   resp.canary.success_retention_period_in_days #=> Integer
     #   resp.canary.failure_retention_period_in_days #=> Integer
     #   resp.canary.status.state #=> String, one of "CREATING", "READY", "STARTING", "RUNNING", "UPDATING", "STOPPING", "STOPPED", "ERROR", "DELETING"
@@ -735,11 +815,43 @@ module Aws::Synthetics
     #   resp.canary.visual_reference.base_screenshots[0].ignore_coordinates #=> Array
     #   resp.canary.visual_reference.base_screenshots[0].ignore_coordinates[0] #=> String
     #   resp.canary.visual_reference.base_canary_run_id #=> String
+    #   resp.canary.visual_reference.browser_type #=> String, one of "CHROME", "FIREFOX"
     #   resp.canary.provisioned_resource_cleanup #=> String, one of "AUTOMATIC", "OFF"
+    #   resp.canary.browser_configs #=> Array
+    #   resp.canary.browser_configs[0].browser_type #=> String, one of "CHROME", "FIREFOX"
+    #   resp.canary.engine_configs #=> Array
+    #   resp.canary.engine_configs[0].engine_arn #=> String
+    #   resp.canary.engine_configs[0].browser_type #=> String, one of "CHROME", "FIREFOX"
+    #   resp.canary.visual_references #=> Array
+    #   resp.canary.visual_references[0].base_screenshots #=> Array
+    #   resp.canary.visual_references[0].base_screenshots[0].screenshot_name #=> String
+    #   resp.canary.visual_references[0].base_screenshots[0].ignore_coordinates #=> Array
+    #   resp.canary.visual_references[0].base_screenshots[0].ignore_coordinates[0] #=> String
+    #   resp.canary.visual_references[0].base_canary_run_id #=> String
+    #   resp.canary.visual_references[0].browser_type #=> String, one of "CHROME", "FIREFOX"
+    #   resp.canary.multi_location_config.location_type #=> String, one of "Primary", "Replica"
+    #   resp.canary.multi_location_config.primary_location #=> String
+    #   resp.canary.multi_location_config.replicas #=> Array
+    #   resp.canary.multi_location_config.replicas[0].location #=> String
+    #   resp.canary.multi_location_config.replicas[0].replication_status.state #=> String, one of "InProgress", "InSync", "Inconsistent"
+    #   resp.canary.multi_location_config.replicas[0].replication_status.state_reason #=> String
+    #   resp.canary.multi_location_config.replicas[0].replication_status.state_reason_code #=> String
+    #   resp.canary.multi_location_config.replicas[0].canary_state #=> String, one of "CREATING", "READY", "STARTING", "RUNNING", "UPDATING", "STOPPING", "STOPPED", "ERROR", "DELETING"
+    #   resp.canary.multi_location_config.replicas[0].last_modified #=> Time
+    #   resp.canary.multi_location_config.replicas[0].vpc_config.vpc_id #=> String
+    #   resp.canary.multi_location_config.replicas[0].vpc_config.subnet_ids #=> Array
+    #   resp.canary.multi_location_config.replicas[0].vpc_config.subnet_ids[0] #=> String
+    #   resp.canary.multi_location_config.replicas[0].vpc_config.security_group_ids #=> Array
+    #   resp.canary.multi_location_config.replicas[0].vpc_config.security_group_ids[0] #=> String
+    #   resp.canary.multi_location_config.replicas[0].vpc_config.ipv_6_allowed_for_dual_stack #=> Boolean
+    #   resp.canary.multi_location_config.replication_state #=> String, one of "InProgress", "InSync", "Inconsistent"
     #   resp.canary.tags #=> Hash
     #   resp.canary.tags["TagKey"] #=> String
     #   resp.canary.artifact_config.s3_encryption.encryption_mode #=> String, one of "SSE_S3", "SSE_KMS"
     #   resp.canary.artifact_config.s3_encryption.kms_key_arn #=> String
+    #   resp.canary.kms_key_arn #=> String
+    #   resp.canary.dry_run_config.dry_run_id #=> String
+    #   resp.canary.dry_run_config.last_dry_run_execution_status #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/synthetics-2017-10-11/CreateCanary AWS API Documentation
     #
@@ -988,12 +1100,19 @@ module Aws::Synthetics
     #   resp.canaries[0].name #=> String
     #   resp.canaries[0].code.source_location_arn #=> String
     #   resp.canaries[0].code.handler #=> String
+    #   resp.canaries[0].code.blueprint_types #=> Array
+    #   resp.canaries[0].code.blueprint_types[0] #=> String
+    #   resp.canaries[0].code.dependencies #=> Array
+    #   resp.canaries[0].code.dependencies[0].type #=> String, one of "LambdaLayer"
+    #   resp.canaries[0].code.dependencies[0].reference #=> String
     #   resp.canaries[0].execution_role_arn #=> String
     #   resp.canaries[0].schedule.expression #=> String
     #   resp.canaries[0].schedule.duration_in_seconds #=> Integer
+    #   resp.canaries[0].schedule.retry_config.max_retries #=> Integer
     #   resp.canaries[0].run_config.timeout_in_seconds #=> Integer
     #   resp.canaries[0].run_config.memory_in_mb #=> Integer
     #   resp.canaries[0].run_config.active_tracing #=> Boolean
+    #   resp.canaries[0].run_config.ephemeral_storage #=> Integer
     #   resp.canaries[0].success_retention_period_in_days #=> Integer
     #   resp.canaries[0].failure_retention_period_in_days #=> Integer
     #   resp.canaries[0].status.state #=> String, one of "CREATING", "READY", "STARTING", "RUNNING", "UPDATING", "STOPPING", "STOPPED", "ERROR", "DELETING"
@@ -1017,11 +1136,43 @@ module Aws::Synthetics
     #   resp.canaries[0].visual_reference.base_screenshots[0].ignore_coordinates #=> Array
     #   resp.canaries[0].visual_reference.base_screenshots[0].ignore_coordinates[0] #=> String
     #   resp.canaries[0].visual_reference.base_canary_run_id #=> String
+    #   resp.canaries[0].visual_reference.browser_type #=> String, one of "CHROME", "FIREFOX"
     #   resp.canaries[0].provisioned_resource_cleanup #=> String, one of "AUTOMATIC", "OFF"
+    #   resp.canaries[0].browser_configs #=> Array
+    #   resp.canaries[0].browser_configs[0].browser_type #=> String, one of "CHROME", "FIREFOX"
+    #   resp.canaries[0].engine_configs #=> Array
+    #   resp.canaries[0].engine_configs[0].engine_arn #=> String
+    #   resp.canaries[0].engine_configs[0].browser_type #=> String, one of "CHROME", "FIREFOX"
+    #   resp.canaries[0].visual_references #=> Array
+    #   resp.canaries[0].visual_references[0].base_screenshots #=> Array
+    #   resp.canaries[0].visual_references[0].base_screenshots[0].screenshot_name #=> String
+    #   resp.canaries[0].visual_references[0].base_screenshots[0].ignore_coordinates #=> Array
+    #   resp.canaries[0].visual_references[0].base_screenshots[0].ignore_coordinates[0] #=> String
+    #   resp.canaries[0].visual_references[0].base_canary_run_id #=> String
+    #   resp.canaries[0].visual_references[0].browser_type #=> String, one of "CHROME", "FIREFOX"
+    #   resp.canaries[0].multi_location_config.location_type #=> String, one of "Primary", "Replica"
+    #   resp.canaries[0].multi_location_config.primary_location #=> String
+    #   resp.canaries[0].multi_location_config.replicas #=> Array
+    #   resp.canaries[0].multi_location_config.replicas[0].location #=> String
+    #   resp.canaries[0].multi_location_config.replicas[0].replication_status.state #=> String, one of "InProgress", "InSync", "Inconsistent"
+    #   resp.canaries[0].multi_location_config.replicas[0].replication_status.state_reason #=> String
+    #   resp.canaries[0].multi_location_config.replicas[0].replication_status.state_reason_code #=> String
+    #   resp.canaries[0].multi_location_config.replicas[0].canary_state #=> String, one of "CREATING", "READY", "STARTING", "RUNNING", "UPDATING", "STOPPING", "STOPPED", "ERROR", "DELETING"
+    #   resp.canaries[0].multi_location_config.replicas[0].last_modified #=> Time
+    #   resp.canaries[0].multi_location_config.replicas[0].vpc_config.vpc_id #=> String
+    #   resp.canaries[0].multi_location_config.replicas[0].vpc_config.subnet_ids #=> Array
+    #   resp.canaries[0].multi_location_config.replicas[0].vpc_config.subnet_ids[0] #=> String
+    #   resp.canaries[0].multi_location_config.replicas[0].vpc_config.security_group_ids #=> Array
+    #   resp.canaries[0].multi_location_config.replicas[0].vpc_config.security_group_ids[0] #=> String
+    #   resp.canaries[0].multi_location_config.replicas[0].vpc_config.ipv_6_allowed_for_dual_stack #=> Boolean
+    #   resp.canaries[0].multi_location_config.replication_state #=> String, one of "InProgress", "InSync", "Inconsistent"
     #   resp.canaries[0].tags #=> Hash
     #   resp.canaries[0].tags["TagKey"] #=> String
     #   resp.canaries[0].artifact_config.s3_encryption.encryption_mode #=> String, one of "SSE_S3", "SSE_KMS"
     #   resp.canaries[0].artifact_config.s3_encryption.kms_key_arn #=> String
+    #   resp.canaries[0].kms_key_arn #=> String
+    #   resp.canaries[0].dry_run_config.dry_run_id #=> String
+    #   resp.canaries[0].dry_run_config.last_dry_run_execution_status #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/synthetics-2017-10-11/DescribeCanaries AWS API Documentation
@@ -1080,6 +1231,9 @@ module Aws::Synthetics
     #
     #   [1]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_Restricted.html
     #
+    # @option params [String] :browser_type
+    #   The type of browser to use for the canary run.
+    #
     # @return [Types::DescribeCanariesLastRunResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::DescribeCanariesLastRunResponse#canaries_last_run #canaries_last_run} => Array&lt;Types::CanaryLastRun&gt;
@@ -1093,6 +1247,7 @@ module Aws::Synthetics
     #     next_token: "Token",
     #     max_results: 1,
     #     names: ["CanaryName"],
+    #     browser_type: "CHROME", # accepts CHROME, FIREFOX
     #   })
     #
     # @example Response structure
@@ -1100,13 +1255,20 @@ module Aws::Synthetics
     #   resp.canaries_last_run #=> Array
     #   resp.canaries_last_run[0].canary_name #=> String
     #   resp.canaries_last_run[0].last_run.id #=> String
+    #   resp.canaries_last_run[0].last_run.scheduled_run_id #=> String
+    #   resp.canaries_last_run[0].last_run.retry_attempt #=> Integer
     #   resp.canaries_last_run[0].last_run.name #=> String
     #   resp.canaries_last_run[0].last_run.status.state #=> String, one of "RUNNING", "PASSED", "FAILED"
     #   resp.canaries_last_run[0].last_run.status.state_reason #=> String
     #   resp.canaries_last_run[0].last_run.status.state_reason_code #=> String, one of "CANARY_FAILURE", "EXECUTION_FAILURE"
+    #   resp.canaries_last_run[0].last_run.status.test_result #=> String, one of "PASSED", "FAILED", "UNKNOWN"
     #   resp.canaries_last_run[0].last_run.timeline.started #=> Time
     #   resp.canaries_last_run[0].last_run.timeline.completed #=> Time
+    #   resp.canaries_last_run[0].last_run.timeline.metric_timestamp_for_run_and_retries #=> Time
     #   resp.canaries_last_run[0].last_run.artifact_s3_location #=> String
+    #   resp.canaries_last_run[0].last_run.dry_run_config.dry_run_id #=> String
+    #   resp.canaries_last_run[0].last_run.browser_type #=> String, one of "CHROME", "FIREFOX"
+    #   resp.canaries_last_run[0].last_run.location #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/synthetics-2017-10-11/DescribeCanariesLastRun AWS API Documentation
@@ -1207,6 +1369,10 @@ module Aws::Synthetics
     # @option params [required, String] :name
     #   The name of the canary that you want details for.
     #
+    # @option params [String] :dry_run_id
+    #   The DryRunId associated with an existing canary’s dry run. You can use
+    #   this DryRunId to retrieve information about the dry run.
+    #
     # @return [Types::GetCanaryResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::GetCanaryResponse#canary #canary} => Types::Canary
@@ -1215,6 +1381,7 @@ module Aws::Synthetics
     #
     #   resp = client.get_canary({
     #     name: "CanaryName", # required
+    #     dry_run_id: "UUID",
     #   })
     #
     # @example Response structure
@@ -1223,12 +1390,19 @@ module Aws::Synthetics
     #   resp.canary.name #=> String
     #   resp.canary.code.source_location_arn #=> String
     #   resp.canary.code.handler #=> String
+    #   resp.canary.code.blueprint_types #=> Array
+    #   resp.canary.code.blueprint_types[0] #=> String
+    #   resp.canary.code.dependencies #=> Array
+    #   resp.canary.code.dependencies[0].type #=> String, one of "LambdaLayer"
+    #   resp.canary.code.dependencies[0].reference #=> String
     #   resp.canary.execution_role_arn #=> String
     #   resp.canary.schedule.expression #=> String
     #   resp.canary.schedule.duration_in_seconds #=> Integer
+    #   resp.canary.schedule.retry_config.max_retries #=> Integer
     #   resp.canary.run_config.timeout_in_seconds #=> Integer
     #   resp.canary.run_config.memory_in_mb #=> Integer
     #   resp.canary.run_config.active_tracing #=> Boolean
+    #   resp.canary.run_config.ephemeral_storage #=> Integer
     #   resp.canary.success_retention_period_in_days #=> Integer
     #   resp.canary.failure_retention_period_in_days #=> Integer
     #   resp.canary.status.state #=> String, one of "CREATING", "READY", "STARTING", "RUNNING", "UPDATING", "STOPPING", "STOPPED", "ERROR", "DELETING"
@@ -1252,11 +1426,43 @@ module Aws::Synthetics
     #   resp.canary.visual_reference.base_screenshots[0].ignore_coordinates #=> Array
     #   resp.canary.visual_reference.base_screenshots[0].ignore_coordinates[0] #=> String
     #   resp.canary.visual_reference.base_canary_run_id #=> String
+    #   resp.canary.visual_reference.browser_type #=> String, one of "CHROME", "FIREFOX"
     #   resp.canary.provisioned_resource_cleanup #=> String, one of "AUTOMATIC", "OFF"
+    #   resp.canary.browser_configs #=> Array
+    #   resp.canary.browser_configs[0].browser_type #=> String, one of "CHROME", "FIREFOX"
+    #   resp.canary.engine_configs #=> Array
+    #   resp.canary.engine_configs[0].engine_arn #=> String
+    #   resp.canary.engine_configs[0].browser_type #=> String, one of "CHROME", "FIREFOX"
+    #   resp.canary.visual_references #=> Array
+    #   resp.canary.visual_references[0].base_screenshots #=> Array
+    #   resp.canary.visual_references[0].base_screenshots[0].screenshot_name #=> String
+    #   resp.canary.visual_references[0].base_screenshots[0].ignore_coordinates #=> Array
+    #   resp.canary.visual_references[0].base_screenshots[0].ignore_coordinates[0] #=> String
+    #   resp.canary.visual_references[0].base_canary_run_id #=> String
+    #   resp.canary.visual_references[0].browser_type #=> String, one of "CHROME", "FIREFOX"
+    #   resp.canary.multi_location_config.location_type #=> String, one of "Primary", "Replica"
+    #   resp.canary.multi_location_config.primary_location #=> String
+    #   resp.canary.multi_location_config.replicas #=> Array
+    #   resp.canary.multi_location_config.replicas[0].location #=> String
+    #   resp.canary.multi_location_config.replicas[0].replication_status.state #=> String, one of "InProgress", "InSync", "Inconsistent"
+    #   resp.canary.multi_location_config.replicas[0].replication_status.state_reason #=> String
+    #   resp.canary.multi_location_config.replicas[0].replication_status.state_reason_code #=> String
+    #   resp.canary.multi_location_config.replicas[0].canary_state #=> String, one of "CREATING", "READY", "STARTING", "RUNNING", "UPDATING", "STOPPING", "STOPPED", "ERROR", "DELETING"
+    #   resp.canary.multi_location_config.replicas[0].last_modified #=> Time
+    #   resp.canary.multi_location_config.replicas[0].vpc_config.vpc_id #=> String
+    #   resp.canary.multi_location_config.replicas[0].vpc_config.subnet_ids #=> Array
+    #   resp.canary.multi_location_config.replicas[0].vpc_config.subnet_ids[0] #=> String
+    #   resp.canary.multi_location_config.replicas[0].vpc_config.security_group_ids #=> Array
+    #   resp.canary.multi_location_config.replicas[0].vpc_config.security_group_ids[0] #=> String
+    #   resp.canary.multi_location_config.replicas[0].vpc_config.ipv_6_allowed_for_dual_stack #=> Boolean
+    #   resp.canary.multi_location_config.replication_state #=> String, one of "InProgress", "InSync", "Inconsistent"
     #   resp.canary.tags #=> Hash
     #   resp.canary.tags["TagKey"] #=> String
     #   resp.canary.artifact_config.s3_encryption.encryption_mode #=> String, one of "SSE_S3", "SSE_KMS"
     #   resp.canary.artifact_config.s3_encryption.kms_key_arn #=> String
+    #   resp.canary.kms_key_arn #=> String
+    #   resp.canary.dry_run_config.dry_run_id #=> String
+    #   resp.canary.dry_run_config.last_dry_run_execution_status #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/synthetics-2017-10-11/GetCanary AWS API Documentation
     #
@@ -1277,10 +1483,33 @@ module Aws::Synthetics
     #   this token in a subsequent `GetCanaryRuns` operation to retrieve the
     #   next set of results.
     #
+    #   <note markdown="1"> When auto retry is enabled for the canary, the first subsequent retry
+    #   is suffixed with *1 indicating its the first retry and the next
+    #   subsequent try is suffixed with *2.
+    #
+    #    </note>
+    #
     # @option params [Integer] :max_results
     #   Specify this parameter to limit how many runs are returned each time
     #   you use the `GetCanaryRuns` operation. If you omit this parameter, the
     #   default of 100 is used.
+    #
+    # @option params [String] :dry_run_id
+    #   The DryRunId associated with an existing canary’s dry run. You can use
+    #   this DryRunId to retrieve information about the dry run.
+    #
+    # @option params [String] :run_type
+    #   * When you provide `RunType=CANARY_RUN` and `dryRunId`, you will get
+    #     an exception
+    #
+    #   * When a value is not provided for `RunType`, the default value is
+    #     `CANARY_RUN`
+    #
+    #   * When `CANARY_RUN` is provided, all canary runs excluding dry runs
+    #     are returned
+    #
+    #   * When `DRY_RUN` is provided, all dry runs excluding canary runs are
+    #     returned
     #
     # @return [Types::GetCanaryRunsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1295,19 +1524,28 @@ module Aws::Synthetics
     #     name: "CanaryName", # required
     #     next_token: "Token",
     #     max_results: 1,
+    #     dry_run_id: "UUID",
+    #     run_type: "CANARY_RUN", # accepts CANARY_RUN, DRY_RUN
     #   })
     #
     # @example Response structure
     #
     #   resp.canary_runs #=> Array
     #   resp.canary_runs[0].id #=> String
+    #   resp.canary_runs[0].scheduled_run_id #=> String
+    #   resp.canary_runs[0].retry_attempt #=> Integer
     #   resp.canary_runs[0].name #=> String
     #   resp.canary_runs[0].status.state #=> String, one of "RUNNING", "PASSED", "FAILED"
     #   resp.canary_runs[0].status.state_reason #=> String
     #   resp.canary_runs[0].status.state_reason_code #=> String, one of "CANARY_FAILURE", "EXECUTION_FAILURE"
+    #   resp.canary_runs[0].status.test_result #=> String, one of "PASSED", "FAILED", "UNKNOWN"
     #   resp.canary_runs[0].timeline.started #=> Time
     #   resp.canary_runs[0].timeline.completed #=> Time
+    #   resp.canary_runs[0].timeline.metric_timestamp_for_run_and_retries #=> Time
     #   resp.canary_runs[0].artifact_s3_location #=> String
+    #   resp.canary_runs[0].dry_run_config.dry_run_id #=> String
+    #   resp.canary_runs[0].browser_type #=> String, one of "CHROME", "FIREFOX"
+    #   resp.canary_runs[0].location #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/synthetics-2017-10-11/GetCanaryRuns AWS API Documentation
@@ -1562,6 +1800,249 @@ module Aws::Synthetics
       req.send_request(options)
     end
 
+    # Use this operation to start a dry run for a canary that has already
+    # been created
+    #
+    # @option params [required, String] :name
+    #   The name of the canary that you want to dry run. To find canary names,
+    #   use [DescribeCanaries][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonSynthetics/latest/APIReference/API_DescribeCanaries.html
+    #
+    # @option params [Types::CanaryCodeInput] :code
+    #   Use this structure to input your script code for the canary. This
+    #   structure contains the Lambda handler with the location where the
+    #   canary should start running the script. If the script is stored in an
+    #   Amazon S3 bucket, the bucket name, key, and version are also included.
+    #   If the script was passed into the canary directly, the script code is
+    #   contained in the value of `Zipfile`.
+    #
+    #   If you are uploading your canary scripts with an Amazon S3 bucket,
+    #   your zip file should include your script in a certain folder
+    #   structure.
+    #
+    #   * For Node.js canaries, the folder structure must be
+    #     `nodejs/node_modules/myCanaryFilename.js ` For more information, see
+    #     [Packaging your Node.js canary files][1]
+    #
+    #   * For Python canaries, the folder structure must be
+    #     `python/myCanaryFilename.py ` or
+    #     `python/myFolder/myCanaryFilename.py ` For more information, see
+    #     [Packaging your Python canary files][2]
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_WritingCanary_Nodejs.html#CloudWatch_Synthetics_Canaries_package
+    #   [2]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_WritingCanary_Python.html#CloudWatch_Synthetics_Canaries_WritingCanary_Python_package
+    #
+    # @option params [String] :runtime_version
+    #   Specifies the runtime version to use for the canary. For a list of
+    #   valid runtime versions and for more information about runtime
+    #   versions, see [ Canary Runtime Versions][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_Library.html
+    #
+    # @option params [Types::CanaryRunConfigInput] :run_config
+    #   A structure that contains input information for a canary run.
+    #
+    # @option params [Types::VpcConfigInput] :vpc_config
+    #   If this canary is to test an endpoint in a VPC, this structure
+    #   contains information about the subnets and security groups of the VPC
+    #   endpoint. For more information, see [ Running a Canary in a VPC][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_VPC.html
+    #
+    # @option params [String] :execution_role_arn
+    #   The ARN of the IAM role to be used to run the canary. This role must
+    #   already exist, and must include `lambda.amazonaws.com` as a principal
+    #   in the trust policy. The role must also have the following
+    #   permissions:
+    #
+    # @option params [Integer] :success_retention_period_in_days
+    #   The number of days to retain data about successful runs of this
+    #   canary. If you omit this field, the default of 31 days is used. The
+    #   valid range is 1 to 455 days.
+    #
+    #   This setting affects the range of information returned by
+    #   [GetCanaryRuns][1], as well as the range of information displayed in
+    #   the Synthetics console.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonSynthetics/latest/APIReference/API_GetCanaryRuns.html
+    #
+    # @option params [Integer] :failure_retention_period_in_days
+    #   The number of days to retain data about failed runs of this canary. If
+    #   you omit this field, the default of 31 days is used. The valid range
+    #   is 1 to 455 days.
+    #
+    #   This setting affects the range of information returned by
+    #   [GetCanaryRuns][1], as well as the range of information displayed in
+    #   the Synthetics console.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonSynthetics/latest/APIReference/API_GetCanaryRuns.html
+    #
+    # @option params [Types::VisualReferenceInput] :visual_reference
+    #   An object that specifies what screenshots to use as a baseline for
+    #   visual monitoring by this canary. It can optionally also specify parts
+    #   of the screenshots to ignore during the visual monitoring comparison.
+    #
+    #   Visual monitoring is supported only on canaries running the
+    #   **syn-puppeteer-node-3.2** runtime or later. For more information, see
+    #   [ Visual monitoring][1] and [ Visual monitoring blueprint][2]
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Library_SyntheticsLogger_VisualTesting.html
+    #   [2]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_Blueprints_VisualTesting.html
+    #
+    # @option params [String] :artifact_s3_location
+    #   The location in Amazon S3 where Synthetics stores artifacts from the
+    #   test runs of this canary. Artifacts include the log file, screenshots,
+    #   and HAR files. The name of the Amazon S3 bucket can't include a
+    #   period (.).
+    #
+    # @option params [Types::ArtifactConfigInput] :artifact_config
+    #   A structure that contains the configuration for canary artifacts,
+    #   including the encryption-at-rest settings for artifacts that the
+    #   canary uploads to Amazon S3.
+    #
+    # @option params [String] :provisioned_resource_cleanup
+    #   Specifies whether to also delete the Lambda functions and layers used
+    #   by this canary when the canary is deleted. If you omit this parameter,
+    #   the default of `AUTOMATIC` is used, which means that the Lambda
+    #   functions and layers will be deleted when the canary is deleted.
+    #
+    #   If the value of this parameter is `OFF`, then the value of the
+    #   `DeleteLambda` parameter of the [DeleteCanary][1] operation determines
+    #   whether the Lambda functions and layers will be deleted.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonSynthetics/latest/APIReference/API_DeleteCanary.html
+    #
+    # @option params [Array<Types::BrowserConfig>] :browser_configs
+    #   A structure that specifies the browser type to use for a canary run.
+    #   CloudWatch Synthetics supports running canaries on both `CHROME` and
+    #   `FIREFOX` browsers.
+    #
+    #   <note markdown="1"> If not specified, `browserConfigs` defaults to Chrome.
+    #
+    #    </note>
+    #
+    # @option params [Array<Types::VisualReferenceInput>] :visual_references
+    #   A list of visual reference configurations for the canary, one for each
+    #   browser type that the canary is configured to run on. Visual
+    #   references are used for visual monitoring comparisons.
+    #
+    #   `syn-nodejs-puppeteer-11.0` and above, and `syn-nodejs-playwright-3.0`
+    #   and above, only supports `visualReferences`. `visualReference` field
+    #   is not supported.
+    #
+    #   Versions older than `syn-nodejs-puppeteer-11.0` supports both
+    #   `visualReference` and `visualReferences` for backward compatibility.
+    #   It is recommended to use `visualReferences` for consistency and future
+    #   compatibility.
+    #
+    # @return [Types::StartCanaryDryRunResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::StartCanaryDryRunResponse#dry_run_config #dry_run_config} => Types::DryRunConfigOutput
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.start_canary_dry_run({
+    #     name: "CanaryName", # required
+    #     code: {
+    #       s3_bucket: "String",
+    #       s3_key: "String",
+    #       s3_version: "String",
+    #       zip_file: "data",
+    #       handler: "CodeHandler",
+    #       blueprint_types: ["BlueprintType"],
+    #       dependencies: [
+    #         {
+    #           type: "LambdaLayer", # accepts LambdaLayer
+    #           reference: "String", # required
+    #         },
+    #       ],
+    #     },
+    #     runtime_version: "String",
+    #     run_config: {
+    #       timeout_in_seconds: 1,
+    #       memory_in_mb: 1,
+    #       active_tracing: false,
+    #       environment_variables: {
+    #         "EnvironmentVariableName" => "EnvironmentVariableValue",
+    #       },
+    #       ephemeral_storage: 1,
+    #     },
+    #     vpc_config: {
+    #       subnet_ids: ["SubnetId"],
+    #       security_group_ids: ["SecurityGroupId"],
+    #       ipv_6_allowed_for_dual_stack: false,
+    #     },
+    #     execution_role_arn: "RoleArn",
+    #     success_retention_period_in_days: 1,
+    #     failure_retention_period_in_days: 1,
+    #     visual_reference: {
+    #       base_screenshots: [
+    #         {
+    #           screenshot_name: "String", # required
+    #           ignore_coordinates: ["BaseScreenshotConfigIgnoreCoordinate"],
+    #         },
+    #       ],
+    #       base_canary_run_id: "String", # required
+    #       browser_type: "CHROME", # accepts CHROME, FIREFOX
+    #     },
+    #     artifact_s3_location: "String",
+    #     artifact_config: {
+    #       s3_encryption: {
+    #         encryption_mode: "SSE_S3", # accepts SSE_S3, SSE_KMS
+    #         kms_key_arn: "KmsKeyArn",
+    #       },
+    #     },
+    #     provisioned_resource_cleanup: "AUTOMATIC", # accepts AUTOMATIC, OFF
+    #     browser_configs: [
+    #       {
+    #         browser_type: "CHROME", # accepts CHROME, FIREFOX
+    #       },
+    #     ],
+    #     visual_references: [
+    #       {
+    #         base_screenshots: [
+    #           {
+    #             screenshot_name: "String", # required
+    #             ignore_coordinates: ["BaseScreenshotConfigIgnoreCoordinate"],
+    #           },
+    #         ],
+    #         base_canary_run_id: "String", # required
+    #         browser_type: "CHROME", # accepts CHROME, FIREFOX
+    #       },
+    #     ],
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.dry_run_config.dry_run_id #=> String
+    #   resp.dry_run_config.last_dry_run_execution_status #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/synthetics-2017-10-11/StartCanaryDryRun AWS API Documentation
+    #
+    # @overload start_canary_dry_run(params = {})
+    # @param [Hash] params ({})
+    def start_canary_dry_run(params = {}, options = {})
+      req = build_request(:start_canary_dry_run, params)
+      req.send_request(options)
+    end
+
     # Stops the canary to prevent all future runs. If the canary is
     # currently running,the run that is in progress completes on its own,
     # publishes metrics, and uploads artifacts, but it is not recorded in
@@ -1680,9 +2161,24 @@ module Aws::Synthetics
 
     # Updates the configuration of a canary that has already been created.
     #
+    # For multibrowser canaries, you can add or remove browsers by updating
+    # the browserConfig list in the update call. For example:
+    #
+    # * To add Firefox to a canary that currently uses Chrome, specify
+    #   browserConfigs as \[CHROME, FIREFOX\]
+    #
+    # * To remove Firefox and keep only Chrome, specify browserConfigs as
+    #   \[CHROME\]
+    #
     # You can't use this operation to update the tags of an existing
     # canary. To change the tags of an existing canary, use
     # [TagResource][1].
+    #
+    # <note markdown="1"> When you use the `dryRunId` field when updating a canary, the only
+    # other field you can provide is the `Schedule`. Adding any other field
+    # will thrown an exception.
+    #
+    #  </note>
     #
     #
     #
@@ -1700,8 +2196,8 @@ module Aws::Synthetics
     #
     # @option params [Types::CanaryCodeInput] :code
     #   A structure that includes the entry point from which the canary should
-    #   start running your script. If the script is stored in an S3 bucket,
-    #   the bucket name, key, and version are also included.
+    #   start running your script. If the script is stored in an Amazon S3
+    #   bucket, the bucket name, key, and version are also included.
     #
     # @option params [String] :execution_role_arn
     #   The ARN of the IAM role to be used to run the canary. This role must
@@ -1740,15 +2236,33 @@ module Aws::Synthetics
     #   A structure that contains the timeout value that is used for each
     #   individual run of the canary.
     #
-    #   The environment variables keys and values are not encrypted. Do not
-    #   store sensitive information in this field.
+    #   Environment variable keys and values are encrypted at rest using
+    #   Amazon Web Services owned KMS keys. However, the environment variables
+    #   are not encrypted on the client side. Do not store sensitive
+    #   information in them.
     #
     # @option params [Integer] :success_retention_period_in_days
     #   The number of days to retain data about successful runs of this
     #   canary.
     #
+    #   This setting affects the range of information returned by
+    #   [GetCanaryRuns][1], as well as the range of information displayed in
+    #   the Synthetics console.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonSynthetics/latest/APIReference/API_GetCanaryRuns.html
+    #
     # @option params [Integer] :failure_retention_period_in_days
     #   The number of days to retain data about failed runs of this canary.
+    #
+    #   This setting affects the range of information returned by
+    #   [GetCanaryRuns][1], as well as the range of information displayed in
+    #   the Synthetics console.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonSynthetics/latest/APIReference/API_GetCanaryRuns.html
     #
     # @option params [Types::VpcConfigInput] :vpc_config
     #   If this canary is to test an endpoint in a VPC, this structure
@@ -1777,7 +2291,8 @@ module Aws::Synthetics
     # @option params [String] :artifact_s3_location
     #   The location in Amazon S3 where Synthetics stores artifacts from the
     #   test runs of this canary. Artifacts include the log file, screenshots,
-    #   and HAR files. The name of the S3 bucket can't include a period (.).
+    #   and HAR files. The name of the Amazon S3 bucket can't include a
+    #   period (.).
     #
     # @option params [Types::ArtifactConfigInput] :artifact_config
     #   A structure that contains the configuration for canary artifacts,
@@ -1796,6 +2311,69 @@ module Aws::Synthetics
     #
     #   [1]: https://docs.aws.amazon.com/AmazonSynthetics/latest/APIReference/API_DeleteCanary.html
     #
+    # @option params [String] :dry_run_id
+    #   Update the existing canary using the updated configurations from the
+    #   DryRun associated with the DryRunId.
+    #
+    #   <note markdown="1"> When you use the `dryRunId` field when updating a canary, the only
+    #   other field you can provide is the `Schedule`. Adding any other field
+    #   will thrown an exception.
+    #
+    #    </note>
+    #
+    # @option params [Array<Types::VisualReferenceInput>] :visual_references
+    #   A list of visual reference configurations for the canary, one for each
+    #   browser type that the canary is configured to run on. Visual
+    #   references are used for visual monitoring comparisons.
+    #
+    #   `syn-nodejs-puppeteer-11.0` and above, and `syn-nodejs-playwright-3.0`
+    #   and above, only supports `visualReferences`. `visualReference` field
+    #   is not supported.
+    #
+    #   Versions older than `syn-nodejs-puppeteer-11.0` supports both
+    #   `visualReference` and `visualReferences` for backward compatibility.
+    #   It is recommended to use `visualReferences` for consistency and future
+    #   compatibility.
+    #
+    #   For multibrowser visual monitoring, you can update the baseline for
+    #   all configured browsers in a single update call by specifying a list
+    #   of VisualReference objects, one per browser. Each VisualReference
+    #   object maps to a specific browser configuration, allowing you to
+    #   manage visual baselines for multiple browsers simultaneously.
+    #
+    #   For single configuration canaries using Chrome browser (default
+    #   browser), use visualReferences for `syn-nodejs-puppeteer-11.0` and
+    #   above, and `syn-nodejs-playwright-3.0` and above canaries. The
+    #   browserType in the visualReference object is not mandatory.
+    #
+    # @option params [Array<Types::BrowserConfig>] :browser_configs
+    #   A structure that specifies the browser type to use for a canary run.
+    #   CloudWatch Synthetics supports running canaries on both `CHROME` and
+    #   `FIREFOX` browsers.
+    #
+    #   <note markdown="1"> If not specified, `browserConfigs` defaults to Chrome.
+    #
+    #    </note>
+    #
+    # @option params [Array<Types::AddReplicaLocationInput>] :add_replica_locations
+    #   A list of locations (Amazon Web Services Regions) to add as replicas
+    #   for the canary. Each location specifies a Region and optional VPC
+    #   configuration for the replica. You can add up to 50 replica locations.
+    #
+    # @option params [Array<String>] :remove_replica_locations
+    #   A list of locations (Amazon Web Services Regions) to remove as
+    #   replicas for the canary. You must specify at least one location to
+    #   remove. All replicas can be removed in a single API call and you
+    #   cannot remove the primary location.
+    #
+    # @option params [String] :kms_key_arn
+    #   The Amazon Resource Name (ARN) of the customer-managed AWS Key
+    #   Management Service (AWS KMS) key used to encrypt the canary's AWS
+    #   Lambda function environment variables at rest. If you don't specify a
+    #   value, the service uses an AWS-managed key. If you omit this
+    #   parameter, the service retains the existing value. To revert to the
+    #   AWS-managed key, set this parameter to an empty string.
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
@@ -1807,13 +2385,23 @@ module Aws::Synthetics
     #       s3_key: "String",
     #       s3_version: "String",
     #       zip_file: "data",
-    #       handler: "CodeHandler", # required
+    #       handler: "CodeHandler",
+    #       blueprint_types: ["BlueprintType"],
+    #       dependencies: [
+    #         {
+    #           type: "LambdaLayer", # accepts LambdaLayer
+    #           reference: "String", # required
+    #         },
+    #       ],
     #     },
     #     execution_role_arn: "RoleArn",
     #     runtime_version: "String",
     #     schedule: {
     #       expression: "String", # required
     #       duration_in_seconds: 1,
+    #       retry_config: {
+    #         max_retries: 1, # required
+    #       },
     #     },
     #     run_config: {
     #       timeout_in_seconds: 1,
@@ -1822,6 +2410,7 @@ module Aws::Synthetics
     #       environment_variables: {
     #         "EnvironmentVariableName" => "EnvironmentVariableValue",
     #       },
+    #       ephemeral_storage: 1,
     #     },
     #     success_retention_period_in_days: 1,
     #     failure_retention_period_in_days: 1,
@@ -1838,6 +2427,7 @@ module Aws::Synthetics
     #         },
     #       ],
     #       base_canary_run_id: "String", # required
+    #       browser_type: "CHROME", # accepts CHROME, FIREFOX
     #     },
     #     artifact_s3_location: "String",
     #     artifact_config: {
@@ -1847,6 +2437,37 @@ module Aws::Synthetics
     #       },
     #     },
     #     provisioned_resource_cleanup: "AUTOMATIC", # accepts AUTOMATIC, OFF
+    #     dry_run_id: "UUID",
+    #     visual_references: [
+    #       {
+    #         base_screenshots: [
+    #           {
+    #             screenshot_name: "String", # required
+    #             ignore_coordinates: ["BaseScreenshotConfigIgnoreCoordinate"],
+    #           },
+    #         ],
+    #         base_canary_run_id: "String", # required
+    #         browser_type: "CHROME", # accepts CHROME, FIREFOX
+    #       },
+    #     ],
+    #     browser_configs: [
+    #       {
+    #         browser_type: "CHROME", # accepts CHROME, FIREFOX
+    #       },
+    #     ],
+    #     add_replica_locations: [
+    #       {
+    #         location: "Location", # required
+    #         vpc_config: {
+    #           subnet_ids: ["SubnetId"],
+    #           security_group_ids: ["SecurityGroupId"],
+    #           ipv_6_allowed_for_dual_stack: false,
+    #         },
+    #         kms_key_arn: "KmsKeyArn",
+    #       },
+    #     ],
+    #     remove_replica_locations: ["Location"],
+    #     kms_key_arn: "KmsKeyArn",
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/synthetics-2017-10-11/UpdateCanary AWS API Documentation
@@ -1876,7 +2497,7 @@ module Aws::Synthetics
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-synthetics'
-      context[:gem_version] = '1.61.0'
+      context[:gem_version] = '1.87.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

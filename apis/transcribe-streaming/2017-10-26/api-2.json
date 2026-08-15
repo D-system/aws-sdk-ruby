@@ -185,6 +185,17 @@
         "pt-BR"
       ]
     },
+    "CallAnalyticsLanguageIdentification":{
+      "type":"list",
+      "member":{"shape":"CallAnalyticsLanguageWithScore"}
+    },
+    "CallAnalyticsLanguageWithScore":{
+      "type":"structure",
+      "members":{
+        "LanguageCode":{"shape":"CallAnalyticsLanguageCode"},
+        "Score":{"shape":"Double"}
+      }
+    },
     "CallAnalyticsTranscriptResultStream":{
       "type":"structure",
       "members":{
@@ -445,7 +456,52 @@
         "tl-PH",
         "uk-UA",
         "vi-VN",
-        "zu-ZA"
+        "zu-ZA",
+        "am-ET",
+        "be-BY",
+        "bg-BG",
+        "bn-IN",
+        "bs-BA",
+        "ckb-IQ",
+        "ckb-IR",
+        "cy-WL",
+        "es-MX",
+        "et-ET",
+        "fa-AF",
+        "gu-IN",
+        "ht-HT",
+        "hu-HU",
+        "hy-AM",
+        "is-IS",
+        "jv-ID",
+        "ka-GE",
+        "kab-DZ",
+        "kk-KZ",
+        "km-KH",
+        "kn-IN",
+        "lg-IN",
+        "lt-LT",
+        "mk-MK",
+        "ml-IN",
+        "mr-IN",
+        "my-MM",
+        "ne-NP",
+        "or-IN",
+        "pa-IN",
+        "ps-AF",
+        "si-LK",
+        "sl-SI",
+        "sq-AL",
+        "su-ID",
+        "sw-BI",
+        "sw-KE",
+        "sw-RW",
+        "sw-TZ",
+        "sw-UG",
+        "ta-IN",
+        "te-IN",
+        "tr-TR",
+        "uz-UZ"
       ]
     },
     "LanguageIdentification":{
@@ -484,7 +540,10 @@
       "enum":[
         "pcm",
         "ogg-opus",
-        "flac"
+        "flac",
+        "g711-alaw",
+        "g711-ulaw",
+        "g729"
       ]
     },
     "MediaSampleRateHertz":{
@@ -598,9 +657,16 @@
         "ResourceAccessRoleArn":{"shape":"IamRoleArn"},
         "ChannelDefinitions":{"shape":"MedicalScribeChannelDefinitions"},
         "EncryptionSettings":{"shape":"MedicalScribeEncryptionSettings"},
-        "PostStreamAnalyticsSettings":{"shape":"MedicalScribePostStreamAnalyticsSettings"}
+        "PostStreamAnalyticsSettings":{"shape":"MedicalScribePostStreamAnalyticsSettings"},
+        "MedicalScribeContext":{"shape":"MedicalScribeContext"}
       },
       "event":true
+    },
+    "MedicalScribeContext":{
+      "type":"structure",
+      "members":{
+        "PatientContext":{"shape":"MedicalScribePatientContext"}
+      }
     },
     "MedicalScribeEncryptionSettings":{
       "type":"structure",
@@ -640,7 +706,12 @@
       "type":"string",
       "enum":[
         "HISTORY_AND_PHYSICAL",
-        "GIRPP"
+        "GIRPP",
+        "DAP",
+        "SIRP",
+        "BIRP",
+        "BEHAVIORAL_SOAP",
+        "PHYSICAL_SOAP"
       ]
     },
     "MedicalScribeParticipantRole":{
@@ -649,6 +720,12 @@
         "PATIENT",
         "CLINICIAN"
       ]
+    },
+    "MedicalScribePatientContext":{
+      "type":"structure",
+      "members":{
+        "Pronouns":{"shape":"Pronouns"}
+      }
     },
     "MedicalScribePostStreamAnalyticsResult":{
       "type":"structure",
@@ -704,7 +781,8 @@
         "EncryptionSettings":{"shape":"MedicalScribeEncryptionSettings"},
         "StreamStatus":{"shape":"MedicalScribeStreamStatus"},
         "PostStreamAnalyticsSettings":{"shape":"MedicalScribePostStreamAnalyticsSettings"},
-        "PostStreamAnalyticsResult":{"shape":"MedicalScribePostStreamAnalyticsResult"}
+        "PostStreamAnalyticsResult":{"shape":"MedicalScribePostStreamAnalyticsResult"},
+        "MedicalScribeContextProvided":{"shape":"NullableBoolean"}
       }
     },
     "MedicalScribeStreamStatus":{
@@ -850,6 +928,15 @@
         "OutputEncryptionKMSKeyId":{"shape":"String"}
       }
     },
+    "Pronouns":{
+      "type":"string",
+      "enum":[
+        "HE_HIM",
+        "SHE_HER",
+        "THEY_THEM"
+      ],
+      "sensitive":true
+    },
     "RequestId":{"type":"string"},
     "ResourceNotFoundException":{
       "type":"structure",
@@ -899,6 +986,11 @@
       "min":36,
       "pattern":"[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"
     },
+    "SessionResumeWindow":{
+      "type":"integer",
+      "max":300,
+      "min":1
+    },
     "Specialty":{
       "type":"string",
       "enum":[
@@ -914,7 +1006,6 @@
     "StartCallAnalyticsStreamTranscriptionRequest":{
       "type":"structure",
       "required":[
-        "LanguageCode",
         "MediaSampleRateHertz",
         "MediaEncoding",
         "AudioStream"
@@ -960,6 +1051,31 @@
           "shape":"ModelName",
           "location":"header",
           "locationName":"x-amzn-transcribe-language-model-name"
+        },
+        "IdentifyLanguage":{
+          "shape":"Boolean",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-identify-language"
+        },
+        "LanguageOptions":{
+          "shape":"LanguageOptions",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-language-options"
+        },
+        "PreferredLanguage":{
+          "shape":"CallAnalyticsLanguageCode",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-preferred-language"
+        },
+        "VocabularyNames":{
+          "shape":"VocabularyNames",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-vocabulary-names"
+        },
+        "VocabularyFilterNames":{
+          "shape":"VocabularyFilterNames",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-vocabulary-filter-names"
         },
         "EnablePartialResultsStabilization":{
           "shape":"Boolean",
@@ -1037,6 +1153,31 @@
           "shape":"ModelName",
           "location":"header",
           "locationName":"x-amzn-transcribe-language-model-name"
+        },
+        "IdentifyLanguage":{
+          "shape":"Boolean",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-identify-language"
+        },
+        "LanguageOptions":{
+          "shape":"LanguageOptions",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-language-options"
+        },
+        "PreferredLanguage":{
+          "shape":"CallAnalyticsLanguageCode",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-preferred-language"
+        },
+        "VocabularyNames":{
+          "shape":"VocabularyNames",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-vocabulary-names"
+        },
+        "VocabularyFilterNames":{
+          "shape":"VocabularyFilterNames",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-vocabulary-filter-names"
         },
         "EnablePartialResultsStabilization":{
           "shape":"Boolean",
@@ -1386,6 +1527,16 @@
           "shape":"VocabularyFilterNames",
           "location":"header",
           "locationName":"x-amzn-transcribe-vocabulary-filter-names"
+        },
+        "SessionResumeWindow":{
+          "shape":"SessionResumeWindow",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-session-resume-window"
+        },
+        "TranscriptFormat":{
+          "shape":"TranscriptFormat",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-transcript-format"
         }
       },
       "payload":"AudioStream"
@@ -1508,6 +1659,16 @@
           "shape":"VocabularyFilterNames",
           "location":"header",
           "locationName":"x-amzn-transcribe-vocabulary-filter-names"
+        },
+        "SessionResumeWindow":{
+          "shape":"SessionResumeWindow",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-session-resume-window"
+        },
+        "TranscriptFormat":{
+          "shape":"TranscriptFormat",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-transcript-format"
         }
       },
       "payload":"TranscriptResultStream"
@@ -1540,6 +1701,13 @@
         "Transcript":{"shape":"Transcript"}
       },
       "event":true
+    },
+    "TranscriptFormat":{
+      "type":"string",
+      "enum":[
+        "spoken",
+        "written"
+      ]
     },
     "TranscriptResultStream":{
       "type":"structure",
@@ -1578,7 +1746,9 @@
         "Items":{"shape":"CallAnalyticsItemList"},
         "Entities":{"shape":"CallAnalyticsEntityList"},
         "Sentiment":{"shape":"Sentiment"},
-        "IssuesDetected":{"shape":"IssuesDetected"}
+        "IssuesDetected":{"shape":"IssuesDetected"},
+        "LanguageCode":{"shape":"CallAnalyticsLanguageCode"},
+        "LanguageIdentification":{"shape":"CallAnalyticsLanguageIdentification"}
       },
       "event":true
     },

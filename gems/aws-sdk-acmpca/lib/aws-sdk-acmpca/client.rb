@@ -95,8 +95,8 @@ module Aws::ACMPCA
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::ACMPCA
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::ACMPCA
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::ACMPCA
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::ACMPCA
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::ACMPCA
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::ACMPCA
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::ACMPCA
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -560,22 +564,22 @@ module Aws::ACMPCA
     #   requesting multiple certificate authorities.
     #
     # @option params [String] :key_storage_security_standard
-    #   Specifies a cryptographic key management compliance standard used for
-    #   handling CA keys.
+    #   Specifies a cryptographic key management compliance standard for
+    #   handling and protecting CA keys.
     #
     #   Default: FIPS\_140\_2\_LEVEL\_3\_OR\_HIGHER
     #
-    #   <note markdown="1"> Some Amazon Web Services Regions do not support the default. When
-    #   creating a CA in these Regions, you must provide
-    #   `FIPS_140_2_LEVEL_2_OR_HIGHER` as the argument for
-    #   `KeyStorageSecurityStandard`. Failure to do this results in an
-    #   `InvalidArgsException` with the message, "A certificate authority
+    #   <note markdown="1"> Some Amazon Web Services Regions don't support the default value.
+    #   When you create a CA in these Regions, you must use
+    #   `CCPC_LEVEL_1_OR_HIGHER` for the `KeyStorageSecurityStandard`
+    #   parameter. If you don't, the operation returns an
+    #   `InvalidArgsException` with this message: "A certificate authority
     #   cannot be created in this region with the specified security
     #   standard."
     #
-    #    For information about security standard support in various Regions,
-    #   see [Storage and security compliance of Amazon Web Services Private CA
-    #   private keys][1].
+    #    For information about security standard support in different Amazon
+    #   Web Services Regions, see [Storage and security compliance of Amazon
+    #   Web Services Private CA private keys][1].
     #
     #    </note>
     #
@@ -609,8 +613,8 @@ module Aws::ACMPCA
     #
     #   resp = client.create_certificate_authority({
     #     certificate_authority_configuration: { # required
-    #       key_algorithm: "RSA_2048", # required, accepts RSA_2048, RSA_3072, RSA_4096, EC_prime256v1, EC_secp384r1, EC_secp521r1, SM2
-    #       signing_algorithm: "SHA256WITHECDSA", # required, accepts SHA256WITHECDSA, SHA384WITHECDSA, SHA512WITHECDSA, SHA256WITHRSA, SHA384WITHRSA, SHA512WITHRSA, SM3WITHSM2
+    #       key_algorithm: "RSA_2048", # required, accepts RSA_2048, RSA_3072, RSA_4096, EC_prime256v1, EC_secp384r1, EC_secp521r1, ML_DSA_44, ML_DSA_65, ML_DSA_87, SM2
+    #       signing_algorithm: "SHA256WITHECDSA", # required, accepts SHA256WITHECDSA, SHA384WITHECDSA, SHA512WITHECDSA, SHA256WITHRSA, SHA384WITHRSA, SHA512WITHRSA, SHA256WITHRSA_PSS, SHA384WITHRSA_PSS, SHA512WITHRSA_PSS, SM3WITHSM2, ML_DSA_44, ML_DSA_65, ML_DSA_87
     #       subject: { # required
     #         country: "CountryCodeString",
     #         organization: "String64",
@@ -907,6 +911,16 @@ module Aws::ACMPCA
     # state. To restore an eligible CA, call the
     # [RestoreCertificateAuthority][5] action.
     #
+    # A private CA can be deleted if it is in the `PENDING_CERTIFICATE`,
+    # `CREATING`, `EXPIRED`, `DISABLED`, or `FAILED` state. To delete a CA
+    # in the `ACTIVE` state, you must first disable it, or else the delete
+    # request results in an exception. If you are deleting a private CA in
+    # the `PENDING_CERTIFICATE` or `DISABLED` state, you can set the length
+    # of its restoration period to 7-30 days. The default is 30. During this
+    # time, the status is set to `DELETED` and the CA can be restored. A
+    # private CA deleted in the `CREATING` or `FAILED` state has no assigned
+    # restoration period and cannot be restored.
+    #
     #
     #
     # [1]: https://docs.aws.amazon.com/privateca/latest/APIReference/API_ListCertificateAuthorities.html
@@ -1154,8 +1168,8 @@ module Aws::ACMPCA
     #   resp.certificate_authority.not_before #=> Time
     #   resp.certificate_authority.not_after #=> Time
     #   resp.certificate_authority.failure_reason #=> String, one of "REQUEST_TIMED_OUT", "UNSUPPORTED_ALGORITHM", "OTHER"
-    #   resp.certificate_authority.certificate_authority_configuration.key_algorithm #=> String, one of "RSA_2048", "RSA_3072", "RSA_4096", "EC_prime256v1", "EC_secp384r1", "EC_secp521r1", "SM2"
-    #   resp.certificate_authority.certificate_authority_configuration.signing_algorithm #=> String, one of "SHA256WITHECDSA", "SHA384WITHECDSA", "SHA512WITHECDSA", "SHA256WITHRSA", "SHA384WITHRSA", "SHA512WITHRSA", "SM3WITHSM2"
+    #   resp.certificate_authority.certificate_authority_configuration.key_algorithm #=> String, one of "RSA_2048", "RSA_3072", "RSA_4096", "EC_prime256v1", "EC_secp384r1", "EC_secp521r1", "ML_DSA_44", "ML_DSA_65", "ML_DSA_87", "SM2"
+    #   resp.certificate_authority.certificate_authority_configuration.signing_algorithm #=> String, one of "SHA256WITHECDSA", "SHA384WITHECDSA", "SHA512WITHECDSA", "SHA256WITHRSA", "SHA384WITHRSA", "SHA512WITHRSA", "SHA256WITHRSA_PSS", "SHA384WITHRSA_PSS", "SHA512WITHRSA_PSS", "SM3WITHSM2", "ML_DSA_44", "ML_DSA_65", "ML_DSA_87"
     #   resp.certificate_authority.certificate_authority_configuration.subject.country #=> String
     #   resp.certificate_authority.certificate_authority_configuration.subject.organization #=> String
     #   resp.certificate_authority.certificate_authority_configuration.subject.organizational_unit #=> String
@@ -1301,7 +1315,7 @@ module Aws::ACMPCA
     # the [IssueCertificate][1] action. You must specify both the ARN of
     # your private CA and the ARN of the issued certificate when calling the
     # **GetCertificate** action. You can retrieve the certificate if it is
-    # in the **ISSUED** state. You can call the
+    # in the **ISSUED**, **EXPIRED**, or **REVOKED** state. You can call the
     # [CreateCertificateAuthorityAuditReport][2] action to create a report
     # that contains information about all of the certificates issued and
     # revoked by your private CA.
@@ -1489,7 +1503,7 @@ module Aws::ACMPCA
     # @option params [required, String] :resource_arn
     #   The Amazon Resource Number (ARN) of the private CA that will have its
     #   policy retrieved. You can find the CA's ARN by calling the
-    #   ListCertificateAuthorities action.      </p>
+    #   ListCertificateAuthorities action.
     #
     # @return [Types::GetPolicyResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1923,7 +1937,7 @@ module Aws::ACMPCA
     #     },
     #     certificate_authority_arn: "Arn", # required
     #     csr: "data", # required
-    #     signing_algorithm: "SHA256WITHECDSA", # required, accepts SHA256WITHECDSA, SHA384WITHECDSA, SHA512WITHECDSA, SHA256WITHRSA, SHA384WITHRSA, SHA512WITHRSA, SM3WITHSM2
+    #     signing_algorithm: "SHA256WITHECDSA", # required, accepts SHA256WITHECDSA, SHA384WITHECDSA, SHA512WITHECDSA, SHA256WITHRSA, SHA384WITHRSA, SHA512WITHRSA, SHA256WITHRSA_PSS, SHA384WITHRSA_PSS, SHA512WITHRSA_PSS, SM3WITHSM2, ML_DSA_44, ML_DSA_65, ML_DSA_87
     #     template_arn: "Arn",
     #     validity: { # required
     #       value: 1, # required
@@ -2005,8 +2019,8 @@ module Aws::ACMPCA
     #   resp.certificate_authorities[0].not_before #=> Time
     #   resp.certificate_authorities[0].not_after #=> Time
     #   resp.certificate_authorities[0].failure_reason #=> String, one of "REQUEST_TIMED_OUT", "UNSUPPORTED_ALGORITHM", "OTHER"
-    #   resp.certificate_authorities[0].certificate_authority_configuration.key_algorithm #=> String, one of "RSA_2048", "RSA_3072", "RSA_4096", "EC_prime256v1", "EC_secp384r1", "EC_secp521r1", "SM2"
-    #   resp.certificate_authorities[0].certificate_authority_configuration.signing_algorithm #=> String, one of "SHA256WITHECDSA", "SHA384WITHECDSA", "SHA512WITHECDSA", "SHA256WITHRSA", "SHA384WITHRSA", "SHA512WITHRSA", "SM3WITHSM2"
+    #   resp.certificate_authorities[0].certificate_authority_configuration.key_algorithm #=> String, one of "RSA_2048", "RSA_3072", "RSA_4096", "EC_prime256v1", "EC_secp384r1", "EC_secp521r1", "ML_DSA_44", "ML_DSA_65", "ML_DSA_87", "SM2"
+    #   resp.certificate_authorities[0].certificate_authority_configuration.signing_algorithm #=> String, one of "SHA256WITHECDSA", "SHA384WITHECDSA", "SHA512WITHECDSA", "SHA256WITHRSA", "SHA384WITHRSA", "SHA512WITHRSA", "SHA256WITHRSA_PSS", "SHA384WITHRSA_PSS", "SHA512WITHRSA_PSS", "SM3WITHSM2", "ML_DSA_44", "ML_DSA_65", "ML_DSA_87"
     #   resp.certificate_authorities[0].certificate_authority_configuration.subject.country #=> String
     #   resp.certificate_authorities[0].certificate_authority_configuration.subject.organization #=> String
     #   resp.certificate_authorities[0].certificate_authority_configuration.subject.organizational_unit #=> String
@@ -2697,7 +2711,7 @@ module Aws::ACMPCA
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-acmpca'
-      context[:gem_version] = '1.91.0'
+      context[:gem_version] = '1.113.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

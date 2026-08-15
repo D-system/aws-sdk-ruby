@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -207,33 +208,33 @@ module Aws
                                       {
                                         value: ::String,
                                         operator: ("EQUALS_TO" | "NOT_EQUALS_TO" | "CONTAINS" | "DOES_NOT_CONTAIN" | "BEGINS_WITH" | "ENDS_WITH" | "DOES_NOT_BEGIN_WITH" | "DOES_NOT_END_WITH")?
-                                      },
+                                      }
                                     ]?,
                                     sizes: Array[
                                       {
                                         value: ::Integer,
                                         operator: ("EQUALS_TO" | "NOT_EQUALS_TO" | "LESS_THAN_EQUAL_TO" | "GREATER_THAN_EQUAL_TO")?
-                                      },
+                                      }
                                     ]?,
                                     creation_times: Array[
                                       {
                                         value: ::Time,
                                         operator: ("EQUALS_TO" | "NOT_EQUALS_TO" | "LESS_THAN_EQUAL_TO" | "GREATER_THAN_EQUAL_TO")?
-                                      },
+                                      }
                                     ]?,
                                     version_ids: Array[
                                       {
                                         value: ::String,
                                         operator: ("EQUALS_TO" | "NOT_EQUALS_TO" | "CONTAINS" | "DOES_NOT_CONTAIN" | "BEGINS_WITH" | "ENDS_WITH" | "DOES_NOT_BEGIN_WITH" | "DOES_NOT_END_WITH")?
-                                      },
+                                      }
                                     ]?,
                                     etags: Array[
                                       {
                                         value: ::String,
                                         operator: ("EQUALS_TO" | "NOT_EQUALS_TO" | "CONTAINS" | "DOES_NOT_CONTAIN" | "BEGINS_WITH" | "ENDS_WITH" | "DOES_NOT_BEGIN_WITH" | "DOES_NOT_END_WITH")?
-                                      },
+                                      }
                                     ]?
-                                  },
+                                  }
                                 ]?,
                                 ebs_item_filters: Array[
                                   {
@@ -241,27 +242,27 @@ module Aws
                                       {
                                         value: ::String,
                                         operator: ("EQUALS_TO" | "NOT_EQUALS_TO" | "CONTAINS" | "DOES_NOT_CONTAIN" | "BEGINS_WITH" | "ENDS_WITH" | "DOES_NOT_BEGIN_WITH" | "DOES_NOT_END_WITH")?
-                                      },
+                                      }
                                     ]?,
                                     sizes: Array[
                                       {
                                         value: ::Integer,
                                         operator: ("EQUALS_TO" | "NOT_EQUALS_TO" | "LESS_THAN_EQUAL_TO" | "GREATER_THAN_EQUAL_TO")?
-                                      },
+                                      }
                                     ]?,
                                     creation_times: Array[
                                       {
                                         value: ::Time,
                                         operator: ("EQUALS_TO" | "NOT_EQUALS_TO" | "LESS_THAN_EQUAL_TO" | "GREATER_THAN_EQUAL_TO")?
-                                      },
+                                      }
                                     ]?,
                                     last_modification_times: Array[
                                       {
                                         value: ::Time,
                                         operator: ("EQUALS_TO" | "NOT_EQUALS_TO" | "LESS_THAN_EQUAL_TO" | "GREATER_THAN_EQUAL_TO")?
-                                      },
+                                      }
                                     ]?
-                                  },
+                                  }
                                 ]?
                               }
                             ) -> _StartSearchJobResponseSuccess

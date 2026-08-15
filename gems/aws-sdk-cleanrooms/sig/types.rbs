@@ -8,6 +8,40 @@
 module Aws::CleanRooms
   module Types
 
+    class AccessBudget
+      attr_accessor resource_arn: ::String
+      attr_accessor details: ::Array[Types::AccessBudgetDetails]
+      attr_accessor aggregate_remaining_budget: ::Integer
+      SENSITIVE: []
+    end
+
+    class AccessBudgetDetails
+      attr_accessor start_time: ::Time
+      attr_accessor end_time: ::Time
+      attr_accessor remaining_budget: ::Integer
+      attr_accessor budget: ::Integer
+      attr_accessor budget_type: ("CALENDAR_DAY" | "CALENDAR_MONTH" | "CALENDAR_WEEK" | "LIFETIME")
+      attr_accessor auto_refresh: ("ENABLED" | "DISABLED")
+      SENSITIVE: []
+    end
+
+    class AccessBudgetsPrivacyTemplateParametersInput
+      attr_accessor budget_parameters: ::Array[Types::BudgetParameter]
+      attr_accessor resource_arn: ::String
+      SENSITIVE: []
+    end
+
+    class AccessBudgetsPrivacyTemplateParametersOutput
+      attr_accessor budget_parameters: ::Array[Types::BudgetParameter]
+      attr_accessor resource_arn: ::String
+      SENSITIVE: []
+    end
+
+    class AccessBudgetsPrivacyTemplateUpdateParameters
+      attr_accessor budget_parameters: ::Array[Types::BudgetParameter]
+      SENSITIVE: []
+    end
+
     class AccessDeniedException
       attr_accessor message: ::String
       attr_accessor reason: ("INSUFFICIENT_PERMISSIONS")
@@ -24,6 +58,59 @@ module Aws::CleanRooms
       attr_accessor column_name: ::String
       attr_accessor minimum: ::Integer
       attr_accessor type: ("COUNT_DISTINCT")
+      SENSITIVE: []
+    end
+
+    class AggregationThreshold
+      attr_accessor identity_columns: ::Array[::String]
+      attr_accessor minimum_identity_count: ::Integer
+      attr_accessor type: ("COUNT_DISTINCT")
+      attr_accessor output_column_thresholds: ::Array[Types::OutputColumnThreshold]
+      attr_accessor allowed_aggregate_expression_type: ("COLUMNS_ONLY" | "ANY_EXPRESSION")
+      SENSITIVE: []
+    end
+
+    class AnalysisLogExport
+      attr_accessor analysis_log_export_id: ::String
+      attr_accessor analysis_id: ::String
+      attr_accessor analysis_type: ("PROTECTED_QUERY")
+      attr_accessor membership_id: ::String
+      attr_accessor status: ("IN_PROGRESS" | "SUCCESS" | "FAILED")
+      attr_accessor result_configuration: Types::AnalysisLogExportResultConfiguration
+      attr_accessor create_time: ::Time
+      attr_accessor update_time: ::Time
+      attr_accessor error: Types::AnalysisLogExportError
+      SENSITIVE: []
+    end
+
+    class AnalysisLogExportError
+      attr_accessor code: ::String
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class AnalysisLogExportOutputConfiguration
+      attr_accessor s3: Types::AnalysisLogExportS3OutputConfiguration
+      SENSITIVE: []
+    end
+
+    class AnalysisLogExportResultConfiguration
+      attr_accessor output_configuration: Types::AnalysisLogExportOutputConfiguration
+      SENSITIVE: []
+    end
+
+    class AnalysisLogExportS3OutputConfiguration
+      attr_accessor bucket: ::String
+      attr_accessor key_prefix: ::String
+      SENSITIVE: []
+    end
+
+    class AnalysisLogExportSummary
+      attr_accessor analysis_log_export_id: ::String
+      attr_accessor analysis_id: ::String
+      attr_accessor analysis_type: ("PROTECTED_QUERY")
+      attr_accessor status: ("IN_PROGRESS" | "SUCCESS" | "FAILED")
+      attr_accessor create_time: ::Time
       SENSITIVE: []
     end
 
@@ -64,6 +151,10 @@ module Aws::CleanRooms
       attr_accessor additional_analyses: ("ALLOWED" | "REQUIRED" | "NOT_ALLOWED")
       attr_accessor disallowed_output_columns: ::Array[::String]
       attr_accessor differential_privacy: Types::DifferentialPrivacyConfiguration
+      attr_accessor aggregation_thresholds: ::Array[Types::AggregationThreshold]
+      attr_accessor comparison_controls: Types::ComparisonControls
+      attr_accessor allowed_result_receivers: ::Array[::String]
+      attr_accessor allowed_additional_analyses: ::Array[::String]
       SENSITIVE: []
     end
 
@@ -160,6 +251,8 @@ module Aws::CleanRooms
       attr_accessor source_metadata: Types::AnalysisSourceMetadata
       attr_accessor analysis_parameters: ::Array[Types::AnalysisParameter]
       attr_accessor validations: ::Array[Types::AnalysisTemplateValidationStatusDetail]
+      attr_accessor error_message_configuration: Types::ErrorMessageConfiguration
+      attr_accessor synthetic_data_parameters: Types::SyntheticDataParameters
       SENSITIVE: []
     end
 
@@ -192,6 +285,7 @@ module Aws::CleanRooms
       attr_accessor collaboration_arn: ::String
       attr_accessor collaboration_id: ::String
       attr_accessor description: ::String
+      attr_accessor is_synthetic_data: bool
       SENSITIVE: []
     end
 
@@ -207,11 +301,18 @@ module Aws::CleanRooms
       SENSITIVE: []
     end
 
+    class ApprovalStatusDetails
+      attr_accessor status: ("APPROVED" | "DENIED" | "PENDING")
+      SENSITIVE: []
+    end
+
     class AthenaTableReference
+      attr_accessor region: ("us-west-1" | "us-west-2" | "us-east-1" | "us-east-2" | "af-south-1" | "ap-east-1" | "ap-south-2" | "ap-southeast-1" | "ap-southeast-2" | "ap-southeast-3" | "ap-southeast-5" | "ap-southeast-4" | "ap-southeast-7" | "ap-south-1" | "ap-northeast-3" | "ap-northeast-1" | "ap-northeast-2" | "ca-central-1" | "ca-west-1" | "eu-south-1" | "eu-west-3" | "eu-south-2" | "eu-central-2" | "eu-central-1" | "eu-north-1" | "eu-west-1" | "eu-west-2" | "me-south-1" | "me-central-1" | "il-central-1" | "sa-east-1" | "mx-central-1" | "ap-east-2")
       attr_accessor work_group: ::String
       attr_accessor output_location: ::String
       attr_accessor database_name: ::String
       attr_accessor table_name: ::String
+      attr_accessor catalog_name: ::String
       SENSITIVE: []
     end
 
@@ -283,6 +384,49 @@ module Aws::CleanRooms
       SENSITIVE: []
     end
 
+    class BudgetParameter
+      attr_accessor type: ("CALENDAR_DAY" | "CALENDAR_MONTH" | "CALENDAR_WEEK" | "LIFETIME")
+      attr_accessor budget: ::Integer
+      attr_accessor auto_refresh: ("ENABLED" | "DISABLED")
+      SENSITIVE: []
+    end
+
+    class Change
+      attr_accessor specification_type: ("MEMBER" | "COLLABORATION")
+      attr_accessor specification: Types::ChangeSpecification
+      attr_accessor types: ::Array[("ADD_MEMBER" | "GRANT_RECEIVE_RESULTS_ABILITY" | "REVOKE_RECEIVE_RESULTS_ABILITY" | "EDIT_AUTO_APPROVED_CHANGE_TYPES" | "ADD_PAYER_CANDIDATE" | "REMOVE_PAYER_CANDIDATE" | "GRANT_CAN_RECEIVE_MODEL_OUTPUT" | "GRANT_CAN_RECEIVE_INFERENCE_OUTPUT" | "REVOKE_CAN_RECEIVE_MODEL_OUTPUT" | "REVOKE_CAN_RECEIVE_INFERENCE_OUTPUT" | "GRANT_EXPORT_QUERY_ANALYSIS_LOG_ABILITY" | "REVOKE_EXPORT_QUERY_ANALYSIS_LOG_ABILITY")]
+      SENSITIVE: []
+    end
+
+    class ChangeInput
+      attr_accessor specification_type: ("MEMBER" | "COLLABORATION")
+      attr_accessor specification: Types::ChangeSpecification
+      SENSITIVE: []
+    end
+
+    class ChangeSpecification
+      attr_accessor member: Types::MemberChangeSpecification
+      attr_accessor collaboration: Types::CollaborationChangeSpecification
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class Member < ChangeSpecification
+      end
+      class Collaboration < ChangeSpecification
+      end
+      class Unknown < ChangeSpecification
+      end
+    end
+
+    class ChildResource
+      attr_accessor resource_id: ::String
+      attr_accessor resource_type: ("INTERMEDIATE_TABLE")
+      attr_accessor resource_name: ::String
+      attr_accessor owner_account_id: ::String
+      attr_accessor resource_status: ("CREATED" | "POPULATE_STARTED" | "POPULATE_SUCCESS" | "POPULATE_FAILED" | "DISALLOWED_BY_DATA_PROVIDER" | "BASE_TABLE_REMOVED" | "RETENTION_PERIOD_EXPIRED")
+      SENSITIVE: []
+    end
+
     class Collaboration
       attr_accessor id: ::String
       attr_accessor arn: ::String
@@ -299,6 +443,9 @@ module Aws::CleanRooms
       attr_accessor query_log_status: ("ENABLED" | "DISABLED")
       attr_accessor job_log_status: ("ENABLED" | "DISABLED")
       attr_accessor analytics_engine: ("SPARK" | "CLEAN_ROOMS_SQL")
+      attr_accessor auto_approved_change_types: ::Array[("ADD_MEMBER" | "GRANT_RECEIVE_RESULTS_ABILITY" | "REVOKE_RECEIVE_RESULTS_ABILITY" | "GRANT_EXPORT_QUERY_ANALYSIS_LOG_ABILITY" | "REVOKE_EXPORT_QUERY_ANALYSIS_LOG_ABILITY")]
+      attr_accessor allowed_result_regions: ::Array[("us-west-1" | "us-west-2" | "us-east-1" | "us-east-2" | "af-south-1" | "ap-east-1" | "ap-east-2" | "ap-south-2" | "ap-southeast-1" | "ap-southeast-2" | "ap-southeast-3" | "ap-southeast-5" | "ap-southeast-4" | "ap-southeast-7" | "ap-south-1" | "ap-northeast-3" | "ap-northeast-1" | "ap-northeast-2" | "ca-central-1" | "ca-west-1" | "eu-south-1" | "eu-west-3" | "eu-south-2" | "eu-central-2" | "eu-central-1" | "eu-north-1" | "eu-west-1" | "eu-west-2" | "me-south-1" | "me-central-1" | "il-central-1" | "sa-east-1" | "mx-central-1")]
+      attr_accessor is_metrics_enabled: bool
       SENSITIVE: []
     end
 
@@ -318,6 +465,8 @@ module Aws::CleanRooms
       attr_accessor source_metadata: Types::AnalysisSourceMetadata
       attr_accessor analysis_parameters: ::Array[Types::AnalysisParameter]
       attr_accessor validations: ::Array[Types::AnalysisTemplateValidationStatusDetail]
+      attr_accessor error_message_configuration: Types::ErrorMessageConfiguration
+      attr_accessor synthetic_data_parameters: Types::SyntheticDataParameters
       SENSITIVE: []
     end
 
@@ -331,6 +480,36 @@ module Aws::CleanRooms
       attr_accessor collaboration_id: ::String
       attr_accessor creator_account_id: ::String
       attr_accessor description: ::String
+      attr_accessor is_synthetic_data: bool
+      SENSITIVE: []
+    end
+
+    class CollaborationChangeRequest
+      attr_accessor id: ::String
+      attr_accessor collaboration_id: ::String
+      attr_accessor create_time: ::Time
+      attr_accessor update_time: ::Time
+      attr_accessor status: ("PENDING" | "APPROVED" | "CANCELLED" | "DENIED" | "COMMITTED")
+      attr_accessor is_auto_approved: bool
+      attr_accessor changes: ::Array[Types::Change]
+      attr_accessor approvals: ::Hash[::String, Types::ApprovalStatusDetails]
+      SENSITIVE: []
+    end
+
+    class CollaborationChangeRequestSummary
+      attr_accessor id: ::String
+      attr_accessor collaboration_id: ::String
+      attr_accessor create_time: ::Time
+      attr_accessor update_time: ::Time
+      attr_accessor status: ("PENDING" | "APPROVED" | "CANCELLED" | "DENIED" | "COMMITTED")
+      attr_accessor is_auto_approved: bool
+      attr_accessor changes: ::Array[Types::Change]
+      attr_accessor approvals: ::Hash[::String, Types::ApprovalStatusDetails]
+      SENSITIVE: []
+    end
+
+    class CollaborationChangeSpecification
+      attr_accessor auto_approved_change_types: ::Array[("ADD_MEMBER" | "GRANT_RECEIVE_RESULTS_ABILITY" | "REVOKE_RECEIVE_RESULTS_ABILITY" | "GRANT_EXPORT_QUERY_ANALYSIS_LOG_ABILITY" | "REVOKE_EXPORT_QUERY_ANALYSIS_LOG_ABILITY")]
       SENSITIVE: []
     end
 
@@ -399,7 +578,7 @@ module Aws::CleanRooms
       attr_accessor collaboration_id: ::String
       attr_accessor collaboration_arn: ::String
       attr_accessor creator_account_id: ::String
-      attr_accessor type: ("DIFFERENTIAL_PRIVACY")
+      attr_accessor type: ("DIFFERENTIAL_PRIVACY" | "ACCESS_BUDGET")
       attr_accessor create_time: ::Time
       attr_accessor update_time: ::Time
       attr_accessor budget: Types::PrivacyBudget
@@ -414,7 +593,7 @@ module Aws::CleanRooms
       attr_accessor creator_account_id: ::String
       attr_accessor create_time: ::Time
       attr_accessor update_time: ::Time
-      attr_accessor privacy_budget_type: ("DIFFERENTIAL_PRIVACY")
+      attr_accessor privacy_budget_type: ("DIFFERENTIAL_PRIVACY" | "ACCESS_BUDGET")
       attr_accessor auto_refresh: ("CALENDAR_MONTH" | "NONE")
       attr_accessor parameters: Types::PrivacyBudgetTemplateParametersOutput
       SENSITIVE: []
@@ -426,7 +605,7 @@ module Aws::CleanRooms
       attr_accessor collaboration_id: ::String
       attr_accessor collaboration_arn: ::String
       attr_accessor creator_account_id: ::String
-      attr_accessor privacy_budget_type: ("DIFFERENTIAL_PRIVACY")
+      attr_accessor privacy_budget_type: ("DIFFERENTIAL_PRIVACY" | "ACCESS_BUDGET")
       attr_accessor create_time: ::Time
       attr_accessor update_time: ::Time
       SENSITIVE: []
@@ -450,6 +629,27 @@ module Aws::CleanRooms
     class Column
       attr_accessor name: ::String
       attr_accessor type: ::String
+      SENSITIVE: []
+    end
+
+    class ColumnClassificationDetails
+      attr_accessor column_mapping: ::Array[Types::SyntheticDataColumnProperties]
+      SENSITIVE: []
+    end
+
+    class ColumnLineageEntry
+      attr_accessor column: ::String
+      attr_accessor source_column: ::String
+      attr_accessor source_name: ::String
+      attr_accessor source_id: ::String
+      attr_accessor source_type: ("TABLE" | "INTERMEDIATE_TABLE" | "ID_MAPPING_TABLE")
+      attr_accessor source_account_id: ::String
+      SENSITIVE: []
+    end
+
+    class ComparisonControls
+      attr_accessor allowed_literal_comparison_columns: ::Array[::String]
+      attr_accessor allowed_column_comparison_columns: ::Array[::String]
       SENSITIVE: []
     end
 
@@ -572,6 +772,7 @@ module Aws::CleanRooms
       attr_accessor analysis_rule_types: ::Array[("AGGREGATION" | "LIST" | "CUSTOM")]
       attr_accessor create_time: ::Time
       attr_accessor update_time: ::Time
+      attr_accessor child_resources: ::Array[Types::ChildResource]
       SENSITIVE: []
     end
 
@@ -630,6 +831,11 @@ module Aws::CleanRooms
       end
       class Unknown < ConfiguredTableAssociationAnalysisRulePolicyV1
       end
+    end
+
+    class ConfiguredTableAssociationSchemaTypeProperties
+      attr_accessor configured_table_association_id: ::String
+      SENSITIVE: []
     end
 
     class ConfiguredTableAssociationSummary
@@ -696,6 +902,8 @@ module Aws::CleanRooms
       attr_accessor additional_analyses: ("ALLOWED" | "REQUIRED" | "NOT_ALLOWED")
       attr_accessor disallowed_output_columns: ::Array[::String]
       attr_accessor differential_privacy: Types::DifferentialPrivacyConfiguration
+      attr_accessor aggregation_thresholds: ::Array[Types::AggregationThreshold]
+      attr_accessor comparison_controls: Types::ComparisonControls
       attr_accessor allowed_result_receivers: ::Array[::String]
       attr_accessor allowed_additional_analyses: ::Array[::String]
       SENSITIVE: []
@@ -737,6 +945,8 @@ module Aws::CleanRooms
       attr_accessor tags: ::Hash[::String, ::String]
       attr_accessor analysis_parameters: ::Array[Types::AnalysisParameter]
       attr_accessor schema: Types::AnalysisSchema
+      attr_accessor error_message_configuration: Types::ErrorMessageConfiguration
+      attr_accessor synthetic_data_parameters: Types::SyntheticDataParameters
       SENSITIVE: []
     end
 
@@ -745,11 +955,22 @@ module Aws::CleanRooms
       SENSITIVE: []
     end
 
+    class CreateCollaborationChangeRequestInput
+      attr_accessor collaboration_identifier: ::String
+      attr_accessor changes: ::Array[Types::ChangeInput]
+      SENSITIVE: []
+    end
+
+    class CreateCollaborationChangeRequestOutput
+      attr_accessor collaboration_change_request: Types::CollaborationChangeRequest
+      SENSITIVE: []
+    end
+
     class CreateCollaborationInput
       attr_accessor members: ::Array[Types::MemberSpecification]
       attr_accessor name: ::String
       attr_accessor description: ::String
-      attr_accessor creator_member_abilities: ::Array[("CAN_QUERY" | "CAN_RECEIVE_RESULTS" | "CAN_RUN_JOB")]
+      attr_accessor creator_member_abilities: ::Array[("CAN_QUERY" | "CAN_RECEIVE_RESULTS" | "CAN_RUN_JOB" | "CAN_EXPORT_QUERY_ANALYSIS_LOG")]
       attr_accessor creator_ml_member_abilities: Types::MLMemberAbilities
       attr_accessor creator_display_name: ::String
       attr_accessor data_encryption_metadata: Types::DataEncryptionMetadata
@@ -758,6 +979,9 @@ module Aws::CleanRooms
       attr_accessor tags: ::Hash[::String, ::String]
       attr_accessor creator_payment_configuration: Types::PaymentConfiguration
       attr_accessor analytics_engine: ("SPARK" | "CLEAN_ROOMS_SQL")
+      attr_accessor auto_approved_change_request_types: ::Array[("ADD_MEMBER" | "GRANT_RECEIVE_RESULTS_ABILITY" | "REVOKE_RECEIVE_RESULTS_ABILITY" | "GRANT_EXPORT_QUERY_ANALYSIS_LOG_ABILITY" | "REVOKE_EXPORT_QUERY_ANALYSIS_LOG_ABILITY")]
+      attr_accessor allowed_result_regions: ::Array[("us-west-1" | "us-west-2" | "us-east-1" | "us-east-2" | "af-south-1" | "ap-east-1" | "ap-east-2" | "ap-south-2" | "ap-southeast-1" | "ap-southeast-2" | "ap-southeast-3" | "ap-southeast-5" | "ap-southeast-4" | "ap-southeast-7" | "ap-south-1" | "ap-northeast-3" | "ap-northeast-1" | "ap-northeast-2" | "ca-central-1" | "ca-west-1" | "eu-south-1" | "eu-west-3" | "eu-south-2" | "eu-central-2" | "eu-central-1" | "eu-north-1" | "eu-west-1" | "eu-west-2" | "me-south-1" | "me-central-1" | "il-central-1" | "sa-east-1" | "mx-central-1")]
+      attr_accessor is_metrics_enabled: bool
       SENSITIVE: []
     end
 
@@ -867,6 +1091,35 @@ module Aws::CleanRooms
       SENSITIVE: []
     end
 
+    class CreateIntermediateTableAnalysisRuleInput
+      attr_accessor membership_identifier: ::String
+      attr_accessor intermediate_table_identifier: ::String
+      attr_accessor analysis_rule_type: ("CUSTOM")
+      attr_accessor analysis_rule_policy: Types::IntermediateTableAnalysisRulePolicy
+      SENSITIVE: []
+    end
+
+    class CreateIntermediateTableAnalysisRuleOutput
+      attr_accessor analysis_rule: Types::IntermediateTableAnalysisRule
+      SENSITIVE: []
+    end
+
+    class CreateIntermediateTableInput
+      attr_accessor membership_identifier: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor population_analysis_configuration: Types::PopulationAnalysisConfiguration
+      attr_accessor kms_key_arn: ::String
+      attr_accessor retention_in_days: ::Integer
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class CreateIntermediateTableOutput
+      attr_accessor intermediate_table: Types::IntermediateTable
+      SENSITIVE: []
+    end
+
     class CreateMembershipInput
       attr_accessor collaboration_identifier: ::String
       attr_accessor query_log_status: ("ENABLED" | "DISABLED")
@@ -875,6 +1128,7 @@ module Aws::CleanRooms
       attr_accessor default_result_configuration: Types::MembershipProtectedQueryResultConfiguration
       attr_accessor default_job_result_configuration: Types::MembershipProtectedJobResultConfiguration
       attr_accessor payment_configuration: Types::MembershipPaymentConfiguration
+      attr_accessor is_metrics_enabled: bool
       SENSITIVE: []
     end
 
@@ -886,7 +1140,7 @@ module Aws::CleanRooms
     class CreatePrivacyBudgetTemplateInput
       attr_accessor membership_identifier: ::String
       attr_accessor auto_refresh: ("CALENDAR_MONTH" | "NONE")
-      attr_accessor privacy_budget_type: ("DIFFERENTIAL_PRIVACY")
+      attr_accessor privacy_budget_type: ("DIFFERENTIAL_PRIVACY" | "ACCESS_BUDGET")
       attr_accessor parameters: Types::PrivacyBudgetTemplateParametersInput
       attr_accessor tags: ::Hash[::String, ::String]
       SENSITIVE: []
@@ -983,6 +1237,25 @@ module Aws::CleanRooms
     end
 
     class DeleteIdNamespaceAssociationOutput < Aws::EmptyStructure
+    end
+
+    class DeleteIntermediateTableAnalysisRuleInput
+      attr_accessor membership_identifier: ::String
+      attr_accessor intermediate_table_identifier: ::String
+      attr_accessor analysis_rule_type: ("CUSTOM")
+      SENSITIVE: []
+    end
+
+    class DeleteIntermediateTableAnalysisRuleOutput < Aws::EmptyStructure
+    end
+
+    class DeleteIntermediateTableInput
+      attr_accessor membership_identifier: ::String
+      attr_accessor intermediate_table_identifier: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteIntermediateTableOutput < Aws::EmptyStructure
     end
 
     class DeleteMemberInput
@@ -1088,6 +1361,32 @@ module Aws::CleanRooms
       SENSITIVE: []
     end
 
+    class DisallowIntermediateTableInput
+      attr_accessor membership_identifier: ::String
+      attr_accessor intermediate_table_name: ::String
+      attr_accessor include_descendants: bool
+      SENSITIVE: []
+    end
+
+    class DisallowIntermediateTableOutput < Aws::EmptyStructure
+    end
+
+    class ErrorMessageConfiguration
+      attr_accessor type: ("DETAILED")
+      SENSITIVE: []
+    end
+
+    class GetAnalysisLogExportInput
+      attr_accessor membership_identifier: ::String
+      attr_accessor analysis_log_export_identifier: ::String
+      SENSITIVE: []
+    end
+
+    class GetAnalysisLogExportOutput
+      attr_accessor analysis_log_export: Types::AnalysisLogExport
+      SENSITIVE: []
+    end
+
     class GetAnalysisTemplateInput
       attr_accessor membership_identifier: ::String
       attr_accessor analysis_template_identifier: ::String
@@ -1107,6 +1406,17 @@ module Aws::CleanRooms
 
     class GetCollaborationAnalysisTemplateOutput
       attr_accessor collaboration_analysis_template: Types::CollaborationAnalysisTemplate
+      SENSITIVE: []
+    end
+
+    class GetCollaborationChangeRequestInput
+      attr_accessor collaboration_identifier: ::String
+      attr_accessor change_request_identifier: ::String
+      SENSITIVE: []
+    end
+
+    class GetCollaborationChangeRequestOutput
+      attr_accessor collaboration_change_request: Types::CollaborationChangeRequest
       SENSITIVE: []
     end
 
@@ -1230,6 +1540,29 @@ module Aws::CleanRooms
       SENSITIVE: []
     end
 
+    class GetIntermediateTableAnalysisRuleInput
+      attr_accessor membership_identifier: ::String
+      attr_accessor intermediate_table_identifier: ::String
+      attr_accessor analysis_rule_type: ("CUSTOM")
+      SENSITIVE: []
+    end
+
+    class GetIntermediateTableAnalysisRuleOutput
+      attr_accessor analysis_rule: Types::IntermediateTableAnalysisRule
+      SENSITIVE: []
+    end
+
+    class GetIntermediateTableInput
+      attr_accessor intermediate_table_identifier: ::String
+      attr_accessor membership_identifier: ::String
+      SENSITIVE: []
+    end
+
+    class GetIntermediateTableOutput
+      attr_accessor intermediate_table: Types::IntermediateTable
+      SENSITIVE: []
+    end
+
     class GetMembershipInput
       attr_accessor membership_identifier: ::String
       SENSITIVE: []
@@ -1297,6 +1630,7 @@ module Aws::CleanRooms
     end
 
     class GlueTableReference
+      attr_accessor region: ("us-west-1" | "us-west-2" | "us-east-1" | "us-east-2" | "af-south-1" | "ap-east-1" | "ap-south-2" | "ap-southeast-1" | "ap-southeast-2" | "ap-southeast-3" | "ap-southeast-5" | "ap-southeast-4" | "ap-southeast-7" | "ap-south-1" | "ap-northeast-3" | "ap-northeast-1" | "ap-northeast-2" | "ca-central-1" | "ca-west-1" | "eu-south-1" | "eu-west-3" | "eu-south-2" | "eu-central-2" | "eu-central-1" | "eu-north-1" | "eu-west-1" | "eu-west-2" | "me-south-1" | "me-central-1" | "il-central-1" | "sa-east-1" | "mx-central-1" | "ap-east-2")
       attr_accessor table_name: ::String
       attr_accessor database_name: ::String
       SENSITIVE: []
@@ -1326,6 +1660,7 @@ module Aws::CleanRooms
       attr_accessor update_time: ::Time
       attr_accessor input_reference_properties: Types::IdMappingTableInputReferenceProperties
       attr_accessor kms_key_arn: ::String
+      attr_accessor child_resources: ::Array[Types::ChildResource]
       SENSITIVE: []
     end
 
@@ -1348,6 +1683,7 @@ module Aws::CleanRooms
 
     class IdMappingTableSchemaTypeProperties
       attr_accessor id_mapping_table_input_source: ::Array[Types::IdMappingTableInputSource]
+      attr_accessor id_mapping_table_id: ::String
       SENSITIVE: []
     end
 
@@ -1416,6 +1752,217 @@ module Aws::CleanRooms
       SENSITIVE: []
     end
 
+    class InheritedAdditionalAnalyses
+      attr_accessor value: ("ALLOWED" | "REQUIRED" | "NOT_ALLOWED")
+      attr_accessor sources: ::Array[Types::InheritedAdditionalAnalysesSource]
+      SENSITIVE: []
+    end
+
+    class InheritedAdditionalAnalysesSource
+      attr_accessor name: ::String
+      attr_accessor id: ::String
+      attr_accessor type: ("TABLE" | "INTERMEDIATE_TABLE" | "ID_MAPPING_TABLE")
+      attr_accessor value: ("ALLOWED" | "REQUIRED" | "NOT_ALLOWED")
+      attr_accessor source_account_id: ::String
+      SENSITIVE: []
+    end
+
+    class InheritedAllowedAdditionalAnalyses
+      attr_accessor value: ::Array[::String]
+      attr_accessor sources: ::Array[Types::InheritedAllowedAdditionalAnalysesSource]
+      SENSITIVE: []
+    end
+
+    class InheritedAllowedAdditionalAnalysesSource
+      attr_accessor name: ::String
+      attr_accessor id: ::String
+      attr_accessor type: ("TABLE" | "INTERMEDIATE_TABLE" | "ID_MAPPING_TABLE")
+      attr_accessor value: ::Array[::String]
+      attr_accessor source_account_id: ::String
+      SENSITIVE: []
+    end
+
+    class InheritedAllowedResultReceivers
+      attr_accessor value: ::Array[::String]
+      attr_accessor sources: ::Array[Types::InheritedAllowedResultReceiversSource]
+      SENSITIVE: []
+    end
+
+    class InheritedAllowedResultReceiversSource
+      attr_accessor name: ::String
+      attr_accessor id: ::String
+      attr_accessor type: ("TABLE" | "INTERMEDIATE_TABLE" | "ID_MAPPING_TABLE")
+      attr_accessor value: ::Array[::String]
+      attr_accessor source_account_id: ::String
+      SENSITIVE: []
+    end
+
+    class InheritedDisallowedOutputColumns
+      attr_accessor value: ::Array[::String]
+      attr_accessor column_lineage: ::Array[Types::ColumnLineageEntry]
+      SENSITIVE: []
+    end
+
+    class IntermediateTable
+      attr_accessor id: ::String
+      attr_accessor arn: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor membership_arn: ::String
+      attr_accessor membership_id: ::String
+      attr_accessor collaboration_arn: ::String
+      attr_accessor collaboration_id: ::String
+      attr_accessor child_resources: ::Array[Types::ChildResource]
+      attr_accessor create_time: ::Time
+      attr_accessor update_time: ::Time
+      attr_accessor status: ("CREATED" | "POPULATE_STARTED" | "POPULATE_SUCCESS" | "POPULATE_FAILED" | "DISALLOWED_BY_DATA_PROVIDER" | "BASE_TABLE_REMOVED" | "RETENTION_PERIOD_EXPIRED")
+      attr_accessor status_reason: ::String
+      attr_accessor kms_key_arn: ::String
+      attr_accessor population_analysis_configuration: Types::PopulationAnalysisConfiguration
+      attr_accessor retention_in_days: ::Integer
+      attr_accessor table_dependencies: ::Array[Types::IntermediateTableDependency]
+      attr_accessor intermediate_table_version: Types::IntermediateTableActiveVersion
+      attr_accessor analysis_rule_types: ::Array[("CUSTOM")]
+      attr_accessor schema: Types::IntermediateTableSchema
+      SENSITIVE: []
+    end
+
+    class IntermediateTableActiveVersion
+      attr_accessor version_id: ::String
+      attr_accessor analysis_id: ::String
+      attr_accessor analysis_type: ("QUERY")
+      attr_accessor kms_key_arn: ::String
+      attr_accessor parameters: ::Hash[::String, ::String]
+      attr_accessor inherited_constraints: Types::IntermediateTableInheritedConstraints
+      attr_accessor expiration_time: ::Time
+      SENSITIVE: [:parameters]
+    end
+
+    class IntermediateTableAnalysisRule
+      attr_accessor intermediate_table_identifier: ::String
+      attr_accessor intermediate_table_arn: ::String
+      attr_accessor analysis_rule_policy: Types::IntermediateTableAnalysisRulePolicy
+      attr_accessor analysis_rule_type: ("CUSTOM")
+      attr_accessor create_time: ::Time
+      attr_accessor update_time: ::Time
+      SENSITIVE: []
+    end
+
+    class IntermediateTableAnalysisRuleCustom
+      attr_accessor allowed_analyses: ::Array[::String]
+      attr_accessor additional_analyses: ("ALLOWED" | "REQUIRED" | "NOT_ALLOWED")
+      attr_accessor allowed_additional_analyses: ::Array[::String]
+      attr_accessor allowed_analysis_providers: ::Array[::String]
+      attr_accessor allowed_result_receivers: ::Array[::String]
+      attr_accessor differential_privacy: Types::DifferentialPrivacyConfiguration
+      attr_accessor disallowed_output_columns: ::Array[::String]
+      attr_accessor aggregation_thresholds: ::Array[Types::AggregationThreshold]
+      attr_accessor comparison_controls: Types::ComparisonControls
+      SENSITIVE: []
+    end
+
+    class IntermediateTableAnalysisRulePolicy
+      attr_accessor v1: Types::IntermediateTableAnalysisRulePolicyV1
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class V1 < IntermediateTableAnalysisRulePolicy
+      end
+      class Unknown < IntermediateTableAnalysisRulePolicy
+      end
+    end
+
+    class IntermediateTableAnalysisRulePolicyV1
+      attr_accessor custom: Types::IntermediateTableAnalysisRuleCustom
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class Custom < IntermediateTableAnalysisRulePolicyV1
+      end
+      class Unknown < IntermediateTableAnalysisRulePolicyV1
+      end
+    end
+
+    class IntermediateTableColumn
+      attr_accessor name: ::String
+      attr_accessor type: ::String
+      SENSITIVE: []
+    end
+
+    class IntermediateTableComputeConfiguration
+      attr_accessor query_compute_configuration: Types::WorkerComputeConfiguration
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class QueryComputeConfiguration < IntermediateTableComputeConfiguration
+      end
+      class Unknown < IntermediateTableComputeConfiguration
+      end
+    end
+
+    class IntermediateTableDependency
+      attr_accessor id: ::String
+      attr_accessor name: ::String
+      attr_accessor type: ("TABLE" | "INTERMEDIATE_TABLE" | "ID_MAPPING_TABLE")
+      attr_accessor parent_type: ("DIRECT" | "INDIRECT")
+      attr_accessor creator_account_id: ::String
+      SENSITIVE: []
+    end
+
+    class IntermediateTableInheritedConstraints
+      attr_accessor additional_analyses: Types::InheritedAdditionalAnalyses
+      attr_accessor allowed_additional_analyses: Types::InheritedAllowedAdditionalAnalyses
+      attr_accessor allowed_result_receivers: Types::InheritedAllowedResultReceivers
+      attr_accessor disallowed_output_columns: Types::InheritedDisallowedOutputColumns
+      SENSITIVE: []
+    end
+
+    class IntermediateTableOutputConfiguration
+      attr_accessor id: ::String
+      attr_accessor arn: ::String
+      attr_accessor name: ::String
+      SENSITIVE: []
+    end
+
+    class IntermediateTableSchema
+      attr_accessor columns: ::Array[Types::Column]
+      SENSITIVE: []
+    end
+
+    class IntermediateTableSchemaTypeProperties
+      attr_accessor intermediate_table_id: ::String
+      SENSITIVE: []
+    end
+
+    class IntermediateTableSummary
+      attr_accessor id: ::String
+      attr_accessor arn: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor membership_arn: ::String
+      attr_accessor membership_id: ::String
+      attr_accessor collaboration_arn: ::String
+      attr_accessor collaboration_id: ::String
+      attr_accessor create_time: ::Time
+      attr_accessor update_time: ::Time
+      attr_accessor status: ("CREATED" | "POPULATE_STARTED" | "POPULATE_SUCCESS" | "POPULATE_FAILED" | "DISALLOWED_BY_DATA_PROVIDER" | "BASE_TABLE_REMOVED" | "RETENTION_PERIOD_EXPIRED")
+      attr_accessor retention_in_days: ::Integer
+      attr_accessor analysis_rule_types: ::Array[("CUSTOM")]
+      SENSITIVE: []
+    end
+
+    class IntermediateTableVersionSummary
+      attr_accessor version_id: ::String
+      attr_accessor table_id: ::String
+      attr_accessor create_time: ::Time
+      attr_accessor analysis_id: ::String
+      attr_accessor status: ("POPULATE_STARTED" | "POPULATE_SUCCESS" | "POPULATE_FAILED" | "RETENTION_PERIOD_EXPIRED")
+      attr_accessor analysis_type: ("QUERY")
+      attr_accessor kms_key_arn: ::String
+      attr_accessor expiration_time: ::Time
+      SENSITIVE: []
+    end
+
     class InternalServerException
       attr_accessor message: ::String
       SENSITIVE: []
@@ -1423,6 +1970,21 @@ module Aws::CleanRooms
 
     class JobComputePaymentConfig
       attr_accessor is_responsible: bool
+      SENSITIVE: []
+    end
+
+    class ListAnalysisLogExportsInput
+      attr_accessor membership_identifier: ::String
+      attr_accessor analysis_identifier: ::String
+      attr_accessor status: ("IN_PROGRESS" | "SUCCESS" | "FAILED")
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListAnalysisLogExportsOutput
+      attr_accessor next_token: ::String
+      attr_accessor analysis_log_exports: ::Array[Types::AnalysisLogExportSummary]
       SENSITIVE: []
     end
 
@@ -1449,6 +2011,20 @@ module Aws::CleanRooms
     class ListCollaborationAnalysisTemplatesOutput
       attr_accessor next_token: ::String
       attr_accessor collaboration_analysis_template_summaries: ::Array[Types::CollaborationAnalysisTemplateSummary]
+      SENSITIVE: []
+    end
+
+    class ListCollaborationChangeRequestsInput
+      attr_accessor collaboration_identifier: ::String
+      attr_accessor status: ("PENDING" | "APPROVED" | "CANCELLED" | "DENIED" | "COMMITTED")
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListCollaborationChangeRequestsOutput
+      attr_accessor collaboration_change_request_summaries: ::Array[Types::CollaborationChangeRequestSummary]
+      attr_accessor next_token: ::String
       SENSITIVE: []
     end
 
@@ -1493,9 +2069,10 @@ module Aws::CleanRooms
 
     class ListCollaborationPrivacyBudgetsInput
       attr_accessor collaboration_identifier: ::String
-      attr_accessor privacy_budget_type: ("DIFFERENTIAL_PRIVACY")
+      attr_accessor privacy_budget_type: ("DIFFERENTIAL_PRIVACY" | "ACCESS_BUDGET")
       attr_accessor max_results: ::Integer
       attr_accessor next_token: ::String
+      attr_accessor access_budget_resource_arn: ::String
       SENSITIVE: []
     end
 
@@ -1582,6 +2159,33 @@ module Aws::CleanRooms
       SENSITIVE: []
     end
 
+    class ListIntermediateTableVersionsInput
+      attr_accessor membership_identifier: ::String
+      attr_accessor intermediate_table_identifier: ::String
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListIntermediateTableVersionsOutput
+      attr_accessor intermediate_table_version_summaries: ::Array[Types::IntermediateTableVersionSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListIntermediateTablesInput
+      attr_accessor membership_identifier: ::String
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListIntermediateTablesOutput
+      attr_accessor intermediate_table_summaries: ::Array[Types::IntermediateTableSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
     class ListMembersInput
       attr_accessor collaboration_identifier: ::String
       attr_accessor next_token: ::String
@@ -1623,9 +2227,10 @@ module Aws::CleanRooms
 
     class ListPrivacyBudgetsInput
       attr_accessor membership_identifier: ::String
-      attr_accessor privacy_budget_type: ("DIFFERENTIAL_PRIVACY")
+      attr_accessor privacy_budget_type: ("DIFFERENTIAL_PRIVACY" | "ACCESS_BUDGET")
       attr_accessor next_token: ::String
       attr_accessor max_results: ::Integer
+      attr_accessor access_budget_resource_arn: ::String
       SENSITIVE: []
     end
 
@@ -1665,7 +2270,7 @@ module Aws::CleanRooms
 
     class ListSchemasInput
       attr_accessor collaboration_identifier: ::String
-      attr_accessor schema_type: ("TABLE" | "ID_MAPPING_TABLE")
+      attr_accessor schema_type: ("TABLE" | "ID_MAPPING_TABLE" | "INTERMEDIATE_TABLE")
       attr_accessor next_token: ::String
       attr_accessor max_results: ::Integer
       SENSITIVE: []
@@ -1695,12 +2300,29 @@ module Aws::CleanRooms
     class MLPaymentConfig
       attr_accessor model_training: Types::ModelTrainingPaymentConfig
       attr_accessor model_inference: Types::ModelInferencePaymentConfig
+      attr_accessor synthetic_data_generation: Types::SyntheticDataGenerationPaymentConfig
+      SENSITIVE: []
+    end
+
+    class MLSyntheticDataParameters
+      attr_accessor epsilon: ::Float
+      attr_accessor max_membership_inference_attack_score: ::Float
+      attr_accessor column_classification: Types::ColumnClassificationDetails
+      SENSITIVE: []
+    end
+
+    class MemberChangeSpecification
+      attr_accessor account_id: ::String
+      attr_accessor member_abilities: ::Array[("CAN_QUERY" | "CAN_RECEIVE_RESULTS" | "CAN_RUN_JOB" | "CAN_EXPORT_QUERY_ANALYSIS_LOG")]
+      attr_accessor ml_member_abilities: Types::MLMemberAbilities
+      attr_accessor payment_configuration: Types::PaymentConfiguration
+      attr_accessor display_name: ::String
       SENSITIVE: []
     end
 
     class MemberSpecification
       attr_accessor account_id: ::String
-      attr_accessor member_abilities: ::Array[("CAN_QUERY" | "CAN_RECEIVE_RESULTS" | "CAN_RUN_JOB")]
+      attr_accessor member_abilities: ::Array[("CAN_QUERY" | "CAN_RECEIVE_RESULTS" | "CAN_RUN_JOB" | "CAN_EXPORT_QUERY_ANALYSIS_LOG")]
       attr_accessor ml_member_abilities: Types::MLMemberAbilities
       attr_accessor display_name: ::String
       attr_accessor payment_configuration: Types::PaymentConfiguration
@@ -1711,7 +2333,7 @@ module Aws::CleanRooms
       attr_accessor account_id: ::String
       attr_accessor status: ("INVITED" | "ACTIVE" | "LEFT" | "REMOVED")
       attr_accessor display_name: ::String
-      attr_accessor abilities: ::Array[("CAN_QUERY" | "CAN_RECEIVE_RESULTS" | "CAN_RUN_JOB")]
+      attr_accessor abilities: ::Array[("CAN_QUERY" | "CAN_RECEIVE_RESULTS" | "CAN_RUN_JOB" | "CAN_EXPORT_QUERY_ANALYSIS_LOG")]
       attr_accessor ml_abilities: Types::MLMemberAbilities
       attr_accessor create_time: ::Time
       attr_accessor update_time: ::Time
@@ -1732,13 +2354,14 @@ module Aws::CleanRooms
       attr_accessor create_time: ::Time
       attr_accessor update_time: ::Time
       attr_accessor status: ("ACTIVE" | "REMOVED" | "COLLABORATION_DELETED")
-      attr_accessor member_abilities: ::Array[("CAN_QUERY" | "CAN_RECEIVE_RESULTS" | "CAN_RUN_JOB")]
+      attr_accessor member_abilities: ::Array[("CAN_QUERY" | "CAN_RECEIVE_RESULTS" | "CAN_RUN_JOB" | "CAN_EXPORT_QUERY_ANALYSIS_LOG")]
       attr_accessor ml_member_abilities: Types::MLMemberAbilities
       attr_accessor query_log_status: ("ENABLED" | "DISABLED")
       attr_accessor job_log_status: ("ENABLED" | "DISABLED")
       attr_accessor default_result_configuration: Types::MembershipProtectedQueryResultConfiguration
       attr_accessor default_job_result_configuration: Types::MembershipProtectedJobResultConfiguration
       attr_accessor payment_configuration: Types::MembershipPaymentConfiguration
+      attr_accessor is_metrics_enabled: bool
       SENSITIVE: []
     end
 
@@ -1750,6 +2373,7 @@ module Aws::CleanRooms
     class MembershipMLPaymentConfig
       attr_accessor model_training: Types::MembershipModelTrainingPaymentConfig
       attr_accessor model_inference: Types::MembershipModelInferencePaymentConfig
+      attr_accessor synthetic_data_generation: Types::MembershipSyntheticDataGenerationPaymentConfig
       SENSITIVE: []
     end
 
@@ -1820,9 +2444,14 @@ module Aws::CleanRooms
       attr_accessor create_time: ::Time
       attr_accessor update_time: ::Time
       attr_accessor status: ("ACTIVE" | "REMOVED" | "COLLABORATION_DELETED")
-      attr_accessor member_abilities: ::Array[("CAN_QUERY" | "CAN_RECEIVE_RESULTS" | "CAN_RUN_JOB")]
+      attr_accessor member_abilities: ::Array[("CAN_QUERY" | "CAN_RECEIVE_RESULTS" | "CAN_RUN_JOB" | "CAN_EXPORT_QUERY_ANALYSIS_LOG")]
       attr_accessor ml_member_abilities: Types::MLMemberAbilities
       attr_accessor payment_configuration: Types::MembershipPaymentConfiguration
+      SENSITIVE: []
+    end
+
+    class MembershipSyntheticDataGenerationPaymentConfig
+      attr_accessor is_responsible: bool
       SENSITIVE: []
     end
 
@@ -1836,6 +2465,12 @@ module Aws::CleanRooms
       SENSITIVE: []
     end
 
+    class OutputColumnThreshold
+      attr_accessor output_column_name: ::String
+      attr_accessor minimum_identity_count: ::Integer
+      SENSITIVE: []
+    end
+
     class PaymentConfiguration
       attr_accessor query_compute: Types::QueryComputePaymentConfig
       attr_accessor machine_learning: Types::MLPaymentConfig
@@ -1846,11 +2481,45 @@ module Aws::CleanRooms
     class PopulateIdMappingTableInput
       attr_accessor id_mapping_table_identifier: ::String
       attr_accessor membership_identifier: ::String
+      attr_accessor job_type: ("BATCH" | "INCREMENTAL" | "DELETE_ONLY")
       SENSITIVE: []
     end
 
     class PopulateIdMappingTableOutput
       attr_accessor id_mapping_job_id: ::String
+      SENSITIVE: []
+    end
+
+    class PopulateIntermediateTableInput
+      attr_accessor intermediate_table_identifier: ::String
+      attr_accessor membership_identifier: ::String
+      attr_accessor parameters: ::Hash[::String, ::String]
+      attr_accessor compute_configuration: Types::IntermediateTableComputeConfiguration
+      attr_accessor analysis_payer_account_id: ::String
+      SENSITIVE: [:parameters]
+    end
+
+    class PopulateIntermediateTableOutput
+      attr_accessor analysis_id: ::String
+      attr_accessor analysis_type: ("QUERY")
+      attr_accessor version_id: ::String
+      SENSITIVE: []
+    end
+
+    class PopulationAnalysisConfiguration
+      attr_accessor sql_parameters: Types::PopulationAnalysisSqlParameters
+      attr_accessor unknown: untyped
+      SENSITIVE: [:sql_parameters]
+
+      class SqlParameters < PopulationAnalysisConfiguration
+      end
+      class Unknown < PopulationAnalysisConfiguration
+      end
+    end
+
+    class PopulationAnalysisSqlParameters
+      attr_accessor query_string: ::String
+      attr_accessor analysis_template_arn: ::String
       SENSITIVE: []
     end
 
@@ -1878,10 +2547,13 @@ module Aws::CleanRooms
 
     class PrivacyBudget
       attr_accessor differential_privacy: Types::DifferentialPrivacyPrivacyBudget
+      attr_accessor access_budget: Types::AccessBudget
       attr_accessor unknown: untyped
       SENSITIVE: []
 
       class DifferentialPrivacy < PrivacyBudget
+      end
+      class AccessBudget < PrivacyBudget
       end
       class Unknown < PrivacyBudget
       end
@@ -1895,7 +2567,7 @@ module Aws::CleanRooms
       attr_accessor membership_arn: ::String
       attr_accessor collaboration_id: ::String
       attr_accessor collaboration_arn: ::String
-      attr_accessor type: ("DIFFERENTIAL_PRIVACY")
+      attr_accessor type: ("DIFFERENTIAL_PRIVACY" | "ACCESS_BUDGET")
       attr_accessor create_time: ::Time
       attr_accessor update_time: ::Time
       attr_accessor budget: Types::PrivacyBudget
@@ -1911,7 +2583,7 @@ module Aws::CleanRooms
       attr_accessor collaboration_arn: ::String
       attr_accessor create_time: ::Time
       attr_accessor update_time: ::Time
-      attr_accessor privacy_budget_type: ("DIFFERENTIAL_PRIVACY")
+      attr_accessor privacy_budget_type: ("DIFFERENTIAL_PRIVACY" | "ACCESS_BUDGET")
       attr_accessor auto_refresh: ("CALENDAR_MONTH" | "NONE")
       attr_accessor parameters: Types::PrivacyBudgetTemplateParametersOutput
       SENSITIVE: []
@@ -1919,10 +2591,13 @@ module Aws::CleanRooms
 
     class PrivacyBudgetTemplateParametersInput
       attr_accessor differential_privacy: Types::DifferentialPrivacyTemplateParametersInput
+      attr_accessor access_budget: Types::AccessBudgetsPrivacyTemplateParametersInput
       attr_accessor unknown: untyped
       SENSITIVE: []
 
       class DifferentialPrivacy < PrivacyBudgetTemplateParametersInput
+      end
+      class AccessBudget < PrivacyBudgetTemplateParametersInput
       end
       class Unknown < PrivacyBudgetTemplateParametersInput
       end
@@ -1930,10 +2605,13 @@ module Aws::CleanRooms
 
     class PrivacyBudgetTemplateParametersOutput
       attr_accessor differential_privacy: Types::DifferentialPrivacyTemplateParametersOutput
+      attr_accessor access_budget: Types::AccessBudgetsPrivacyTemplateParametersOutput
       attr_accessor unknown: untyped
       SENSITIVE: []
 
       class DifferentialPrivacy < PrivacyBudgetTemplateParametersOutput
+      end
+      class AccessBudget < PrivacyBudgetTemplateParametersOutput
       end
       class Unknown < PrivacyBudgetTemplateParametersOutput
       end
@@ -1946,7 +2624,7 @@ module Aws::CleanRooms
       attr_accessor membership_arn: ::String
       attr_accessor collaboration_id: ::String
       attr_accessor collaboration_arn: ::String
-      attr_accessor privacy_budget_type: ("DIFFERENTIAL_PRIVACY")
+      attr_accessor privacy_budget_type: ("DIFFERENTIAL_PRIVACY" | "ACCESS_BUDGET")
       attr_accessor create_time: ::Time
       attr_accessor update_time: ::Time
       SENSITIVE: []
@@ -1954,10 +2632,13 @@ module Aws::CleanRooms
 
     class PrivacyBudgetTemplateUpdateParameters
       attr_accessor differential_privacy: Types::DifferentialPrivacyTemplateUpdateParameters
+      attr_accessor access_budget: Types::AccessBudgetsPrivacyTemplateUpdateParameters
       attr_accessor unknown: untyped
       SENSITIVE: []
 
       class DifferentialPrivacy < PrivacyBudgetTemplateUpdateParameters
+      end
+      class AccessBudget < PrivacyBudgetTemplateUpdateParameters
       end
       class Unknown < PrivacyBudgetTemplateUpdateParameters
       end
@@ -1985,7 +2666,20 @@ module Aws::CleanRooms
       attr_accessor statistics: Types::ProtectedJobStatistics
       attr_accessor result: Types::ProtectedJobResult
       attr_accessor error: Types::ProtectedJobError
+      attr_accessor compute_configuration: Types::ProtectedJobComputeConfiguration
+      attr_accessor job_compute_payer_account_id: ::String
       SENSITIVE: []
+    end
+
+    class ProtectedJobComputeConfiguration
+      attr_accessor worker: Types::ProtectedJobWorkerComputeConfiguration
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class Worker < ProtectedJobComputeConfiguration
+      end
+      class Unknown < ProtectedJobComputeConfiguration
+      end
     end
 
     class ProtectedJobConfigurationDetails
@@ -2061,7 +2755,8 @@ module Aws::CleanRooms
 
     class ProtectedJobParameters
       attr_accessor analysis_template_arn: ::String
-      SENSITIVE: []
+      attr_accessor parameters: ::Hash[::String, ::String]
+      SENSITIVE: [:parameters]
     end
 
     class ProtectedJobReceiverConfiguration
@@ -2120,6 +2815,14 @@ module Aws::CleanRooms
       attr_accessor create_time: ::Time
       attr_accessor status: ("SUBMITTED" | "STARTED" | "CANCELLED" | "CANCELLING" | "FAILED" | "SUCCESS")
       attr_accessor receiver_configurations: ::Array[Types::ProtectedJobReceiverConfiguration]
+      attr_accessor job_compute_payer_account_id: ::String
+      SENSITIVE: []
+    end
+
+    class ProtectedJobWorkerComputeConfiguration
+      attr_accessor type: ("CR.1X" | "CR.4X")
+      attr_accessor number: ::Integer
+      attr_accessor properties: Types::WorkerComputeConfigurationProperties
       SENSITIVE: []
     end
 
@@ -2136,7 +2839,33 @@ module Aws::CleanRooms
       attr_accessor error: Types::ProtectedQueryError
       attr_accessor differential_privacy: Types::DifferentialPrivacyParameters
       attr_accessor compute_configuration: Types::ComputeConfiguration
+      attr_accessor query_compute_payer_account_id: ::String
       SENSITIVE: [:sql_parameters]
+    end
+
+    class ProtectedQueryDistributeOutput
+      attr_accessor s3: Types::ProtectedQueryS3Output
+      attr_accessor member_list: ::Array[Types::ProtectedQuerySingleMemberOutput]
+      SENSITIVE: []
+    end
+
+    class ProtectedQueryDistributeOutputConfiguration
+      attr_accessor locations: ::Array[Types::ProtectedQueryDistributeOutputConfigurationLocation]
+      SENSITIVE: []
+    end
+
+    class ProtectedQueryDistributeOutputConfigurationLocation
+      attr_accessor s3: Types::ProtectedQueryS3OutputConfiguration
+      attr_accessor member: Types::ProtectedQueryMemberOutputConfiguration
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class S3 < ProtectedQueryDistributeOutputConfigurationLocation
+      end
+      class Member < ProtectedQueryDistributeOutputConfigurationLocation
+      end
+      class Unknown < ProtectedQueryDistributeOutputConfigurationLocation
+      end
     end
 
     class ProtectedQueryError
@@ -2153,12 +2882,15 @@ module Aws::CleanRooms
     class ProtectedQueryOutput
       attr_accessor s3: Types::ProtectedQueryS3Output
       attr_accessor member_list: ::Array[Types::ProtectedQuerySingleMemberOutput]
+      attr_accessor distribute: Types::ProtectedQueryDistributeOutput
       attr_accessor unknown: untyped
       SENSITIVE: []
 
       class S3 < ProtectedQueryOutput
       end
       class MemberList < ProtectedQueryOutput
+      end
+      class Distribute < ProtectedQueryOutput
       end
       class Unknown < ProtectedQueryOutput
       end
@@ -2167,12 +2899,18 @@ module Aws::CleanRooms
     class ProtectedQueryOutputConfiguration
       attr_accessor s3: Types::ProtectedQueryS3OutputConfiguration
       attr_accessor member: Types::ProtectedQueryMemberOutputConfiguration
+      attr_accessor distribute: Types::ProtectedQueryDistributeOutputConfiguration
+      attr_accessor intermediate_table: Types::IntermediateTableOutputConfiguration
       attr_accessor unknown: untyped
       SENSITIVE: []
 
       class S3 < ProtectedQueryOutputConfiguration
       end
       class Member < ProtectedQueryOutputConfiguration
+      end
+      class Distribute < ProtectedQueryOutputConfiguration
+      end
+      class IntermediateTable < ProtectedQueryOutputConfiguration
       end
       class Unknown < ProtectedQueryOutputConfiguration
       end
@@ -2205,7 +2943,7 @@ module Aws::CleanRooms
       attr_accessor query_string: ::String
       attr_accessor analysis_template_arn: ::String
       attr_accessor parameters: ::Hash[::String, ::String]
-      SENSITIVE: []
+      SENSITIVE: [:parameters]
     end
 
     class ProtectedQuerySingleMemberOutput
@@ -2226,6 +2964,8 @@ module Aws::CleanRooms
       attr_accessor create_time: ::Time
       attr_accessor status: ("SUBMITTED" | "STARTED" | "CANCELLED" | "CANCELLING" | "FAILED" | "SUCCESS" | "TIMED_OUT")
       attr_accessor receiver_configurations: ::Array[Types::ReceiverConfiguration]
+      attr_accessor query_compute_payer_account_id: ::String
+      attr_accessor intermediate_table_configuration: Types::IntermediateTableOutputConfiguration
       SENSITIVE: []
     end
 
@@ -2282,8 +3022,9 @@ module Aws::CleanRooms
       attr_accessor description: ::String
       attr_accessor create_time: ::Time
       attr_accessor update_time: ::Time
-      attr_accessor type: ("TABLE" | "ID_MAPPING_TABLE")
+      attr_accessor type: ("TABLE" | "ID_MAPPING_TABLE" | "INTERMEDIATE_TABLE")
       attr_accessor schema_status_details: ::Array[Types::SchemaStatusDetail]
+      attr_accessor resource_arn: ::String
       attr_accessor schema_type_properties: Types::SchemaTypeProperties
       SENSITIVE: []
     end
@@ -2304,14 +3045,14 @@ module Aws::CleanRooms
     end
 
     class SchemaStatusReason
-      attr_accessor code: ("ANALYSIS_RULE_MISSING" | "ANALYSIS_TEMPLATES_NOT_CONFIGURED" | "ANALYSIS_PROVIDERS_NOT_CONFIGURED" | "DIFFERENTIAL_PRIVACY_POLICY_NOT_CONFIGURED" | "ID_MAPPING_TABLE_NOT_POPULATED" | "COLLABORATION_ANALYSIS_RULE_NOT_CONFIGURED" | "ADDITIONAL_ANALYSES_NOT_CONFIGURED" | "RESULT_RECEIVERS_NOT_CONFIGURED" | "ADDITIONAL_ANALYSES_NOT_ALLOWED" | "RESULT_RECEIVERS_NOT_ALLOWED" | "ANALYSIS_RULE_TYPES_NOT_COMPATIBLE")
+      attr_accessor code: ("ANALYSIS_RULE_MISSING" | "ANALYSIS_TEMPLATES_NOT_CONFIGURED" | "ANALYSIS_PROVIDERS_NOT_CONFIGURED" | "DIFFERENTIAL_PRIVACY_POLICY_NOT_CONFIGURED" | "ID_MAPPING_TABLE_NOT_POPULATED" | "COLLABORATION_ANALYSIS_RULE_NOT_CONFIGURED" | "ADDITIONAL_ANALYSES_NOT_CONFIGURED" | "RESULT_RECEIVERS_NOT_CONFIGURED" | "ADDITIONAL_ANALYSES_NOT_ALLOWED" | "RESULT_RECEIVERS_NOT_ALLOWED" | "ANALYSIS_RULE_TYPES_NOT_COMPATIBLE" | "INTERMEDIATE_TABLE_NOT_POPULATED" | "INTERMEDIATE_TABLE_ANALYSIS_RULE_MISSING" | "INTERMEDIATE_TABLE_BASE_TABLE_REMOVED" | "INTERMEDIATE_TABLE_INHERITED_CONSTRAINTS_VIOLATED" | "INTERMEDIATE_TABLE_DISALLOWED_BY_DATA_PROVIDER" | "INTERMEDIATE_TABLE_RETENTION_PERIOD_EXPIRED")
       attr_accessor message: ::String
       SENSITIVE: []
     end
 
     class SchemaSummary
       attr_accessor name: ::String
-      attr_accessor type: ("TABLE" | "ID_MAPPING_TABLE")
+      attr_accessor type: ("TABLE" | "ID_MAPPING_TABLE" | "INTERMEDIATE_TABLE")
       attr_accessor creator_account_id: ::String
       attr_accessor create_time: ::Time
       attr_accessor update_time: ::Time
@@ -2319,16 +3060,23 @@ module Aws::CleanRooms
       attr_accessor collaboration_arn: ::String
       attr_accessor analysis_rule_types: ::Array[("AGGREGATION" | "LIST" | "CUSTOM" | "ID_MAPPING_TABLE")]
       attr_accessor analysis_method: ("DIRECT_QUERY" | "DIRECT_JOB" | "MULTIPLE")
+      attr_accessor resource_arn: ::String
       attr_accessor selected_analysis_methods: ::Array[("DIRECT_QUERY" | "DIRECT_JOB")]
       SENSITIVE: []
     end
 
     class SchemaTypeProperties
       attr_accessor id_mapping_table: Types::IdMappingTableSchemaTypeProperties
+      attr_accessor intermediate_table: Types::IntermediateTableSchemaTypeProperties
+      attr_accessor configured_table_association: Types::ConfiguredTableAssociationSchemaTypeProperties
       attr_accessor unknown: untyped
       SENSITIVE: []
 
       class IdMappingTable < SchemaTypeProperties
+      end
+      class IntermediateTable < SchemaTypeProperties
+      end
+      class ConfiguredTableAssociation < SchemaTypeProperties
       end
       class Unknown < SchemaTypeProperties
       end
@@ -2368,11 +3116,26 @@ module Aws::CleanRooms
       SENSITIVE: []
     end
 
+    class StartAnalysisLogExportInput
+      attr_accessor membership_identifier: ::String
+      attr_accessor analysis_id: ::String
+      attr_accessor analysis_type: ("PROTECTED_QUERY")
+      attr_accessor result_configuration: Types::AnalysisLogExportResultConfiguration
+      SENSITIVE: []
+    end
+
+    class StartAnalysisLogExportOutput
+      attr_accessor analysis_log_export: Types::AnalysisLogExport
+      SENSITIVE: []
+    end
+
     class StartProtectedJobInput
       attr_accessor type: ("PYSPARK")
       attr_accessor membership_identifier: ::String
       attr_accessor job_parameters: Types::ProtectedJobParameters
       attr_accessor result_configuration: Types::ProtectedJobResultConfigurationInput
+      attr_accessor compute_configuration: Types::ProtectedJobComputeConfiguration
+      attr_accessor job_compute_payer_account_id: ::String
       SENSITIVE: []
     end
 
@@ -2387,12 +3150,36 @@ module Aws::CleanRooms
       attr_accessor sql_parameters: Types::ProtectedQuerySQLParameters
       attr_accessor result_configuration: Types::ProtectedQueryResultConfiguration
       attr_accessor compute_configuration: Types::ComputeConfiguration
+      attr_accessor query_compute_payer_account_id: ::String
       SENSITIVE: [:sql_parameters]
     end
 
     class StartProtectedQueryOutput
       attr_accessor protected_query: Types::ProtectedQuery
       SENSITIVE: []
+    end
+
+    class SyntheticDataColumnProperties
+      attr_accessor column_name: ::String
+      attr_accessor column_type: ("CATEGORICAL" | "NUMERICAL")
+      attr_accessor is_predictive_value: bool
+      SENSITIVE: []
+    end
+
+    class SyntheticDataGenerationPaymentConfig
+      attr_accessor is_responsible: bool
+      SENSITIVE: []
+    end
+
+    class SyntheticDataParameters
+      attr_accessor ml_synthetic_data_parameters: Types::MLSyntheticDataParameters
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class MlSyntheticDataParameters < SyntheticDataParameters
+      end
+      class Unknown < SyntheticDataParameters
+      end
     end
 
     class TableReference
@@ -2447,10 +3234,23 @@ module Aws::CleanRooms
       SENSITIVE: []
     end
 
+    class UpdateCollaborationChangeRequestInput
+      attr_accessor collaboration_identifier: ::String
+      attr_accessor change_request_identifier: ::String
+      attr_accessor action: ("APPROVE" | "DENY" | "CANCEL" | "COMMIT")
+      SENSITIVE: []
+    end
+
+    class UpdateCollaborationChangeRequestOutput
+      attr_accessor collaboration_change_request: Types::CollaborationChangeRequest
+      SENSITIVE: []
+    end
+
     class UpdateCollaborationInput
       attr_accessor collaboration_identifier: ::String
       attr_accessor name: ::String
       attr_accessor description: ::String
+      attr_accessor analytics_engine: ("SPARK" | "CLEAN_ROOMS_SQL")
       SENSITIVE: []
     end
 
@@ -2514,6 +3314,8 @@ module Aws::CleanRooms
       attr_accessor configured_table_identifier: ::String
       attr_accessor name: ::String
       attr_accessor description: ::String
+      attr_accessor table_reference: Types::TableReference
+      attr_accessor allowed_columns: ::Array[::String]
       attr_accessor analysis_method: ("DIRECT_QUERY" | "DIRECT_JOB" | "MULTIPLE")
       attr_accessor selected_analysis_methods: ::Array[("DIRECT_QUERY" | "DIRECT_JOB")]
       SENSITIVE: []
@@ -2551,12 +3353,40 @@ module Aws::CleanRooms
       SENSITIVE: []
     end
 
+    class UpdateIntermediateTableAnalysisRuleInput
+      attr_accessor membership_identifier: ::String
+      attr_accessor intermediate_table_identifier: ::String
+      attr_accessor analysis_rule_type: ("CUSTOM")
+      attr_accessor analysis_rule_policy: Types::IntermediateTableAnalysisRulePolicy
+      SENSITIVE: []
+    end
+
+    class UpdateIntermediateTableAnalysisRuleOutput
+      attr_accessor analysis_rule: Types::IntermediateTableAnalysisRule
+      SENSITIVE: []
+    end
+
+    class UpdateIntermediateTableInput
+      attr_accessor intermediate_table_identifier: ::String
+      attr_accessor membership_identifier: ::String
+      attr_accessor description: ::String
+      attr_accessor kms_key_arn: ::String
+      attr_accessor columns: ::Array[Types::IntermediateTableColumn]
+      SENSITIVE: []
+    end
+
+    class UpdateIntermediateTableOutput
+      attr_accessor intermediate_table: Types::IntermediateTable
+      SENSITIVE: []
+    end
+
     class UpdateMembershipInput
       attr_accessor membership_identifier: ::String
       attr_accessor query_log_status: ("ENABLED" | "DISABLED")
       attr_accessor job_log_status: ("ENABLED" | "DISABLED")
       attr_accessor default_result_configuration: Types::MembershipProtectedQueryResultConfiguration
       attr_accessor default_job_result_configuration: Types::MembershipProtectedJobResultConfiguration
+      attr_accessor membership_payment_configuration: Types::UpdateMembershipPaymentConfiguration
       SENSITIVE: []
     end
 
@@ -2565,10 +3395,17 @@ module Aws::CleanRooms
       SENSITIVE: []
     end
 
+    class UpdateMembershipPaymentConfiguration
+      attr_accessor query_compute: Types::MembershipQueryComputePaymentConfig
+      attr_accessor machine_learning: Types::MembershipMLPaymentConfig
+      attr_accessor job_compute: Types::MembershipJobComputePaymentConfig
+      SENSITIVE: []
+    end
+
     class UpdatePrivacyBudgetTemplateInput
       attr_accessor membership_identifier: ::String
       attr_accessor privacy_budget_template_identifier: ::String
-      attr_accessor privacy_budget_type: ("DIFFERENTIAL_PRIVACY")
+      attr_accessor privacy_budget_type: ("DIFFERENTIAL_PRIVACY" | "ACCESS_BUDGET")
       attr_accessor parameters: Types::PrivacyBudgetTemplateUpdateParameters
       SENSITIVE: []
     end
@@ -2616,9 +3453,21 @@ module Aws::CleanRooms
     end
 
     class WorkerComputeConfiguration
-      attr_accessor type: ("CR.1X" | "CR.4X")
+      attr_accessor type: ("CR.1X" | "CR.4X" | "CR.8X")
       attr_accessor number: ::Integer
+      attr_accessor properties: Types::WorkerComputeConfigurationProperties
       SENSITIVE: []
+    end
+
+    class WorkerComputeConfigurationProperties
+      attr_accessor spark: ::Hash[::String, ::String]
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class Spark < WorkerComputeConfigurationProperties
+      end
+      class Unknown < WorkerComputeConfigurationProperties
+      end
     end
   end
 end

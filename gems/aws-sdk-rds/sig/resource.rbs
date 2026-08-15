@@ -18,6 +18,7 @@ module Aws
                         ?account_id: String,
                         ?active_endpoint_cache: bool,
                         ?adaptive_retry_wait_to_fill: bool,
+                        ?auth_scheme_preference: Array[String],
                         ?client_side_monitoring: bool,
                         ?client_side_monitoring_client_id: String,
                         ?client_side_monitoring_host: String,
@@ -102,7 +103,7 @@ module Aws
                                  {
                                    key: ::String?,
                                    value: ::String?
-                                 },
+                                 }
                                ],
                                ?storage_encrypted: bool,
                                ?kms_key_id: ::String,
@@ -124,6 +125,12 @@ module Aws
                                  transit_gateway_multicast_domain_id: ::String?,
                                  replica_mode: ("open-read-only" | "mounted")?
                                },
+                               ?db_cluster_instance_class: ::String,
+                               ?allocated_storage: ::Integer,
+                               ?storage_type: ::String,
+                               ?iops: ::Integer,
+                               ?publicly_accessible: bool,
+                               ?auto_minor_version_upgrade: bool,
                                ?deletion_protection: bool,
                                ?global_cluster_identifier: ::String,
                                ?enable_http_endpoint: bool,
@@ -131,12 +138,12 @@ module Aws
                                ?domain: ::String,
                                ?domain_iam_role_name: ::String,
                                ?enable_global_write_forwarding: bool,
-                               ?db_cluster_instance_class: ::String,
-                               ?allocated_storage: ::Integer,
-                               ?storage_type: ::String,
-                               ?iops: ::Integer,
-                               ?publicly_accessible: bool,
-                               ?auto_minor_version_upgrade: bool,
+                               ?network_type: ::String,
+                               ?serverless_v2_scaling_configuration: {
+                                 min_capacity: ::Float?,
+                                 max_capacity: ::Float?,
+                                 seconds_until_auto_pause: ::Integer?
+                               },
                                ?monitoring_interval: ::Integer,
                                ?monitoring_role_arn: ::String,
                                ?database_insights_mode: ("standard" | "advanced"),
@@ -144,19 +151,32 @@ module Aws
                                ?performance_insights_kms_key_id: ::String,
                                ?performance_insights_retention_period: ::Integer,
                                ?enable_limitless_database: bool,
-                               ?serverless_v2_scaling_configuration: {
-                                 min_capacity: ::Float?,
-                                 max_capacity: ::Float?,
-                                 seconds_until_auto_pause: ::Integer?
-                               },
-                               ?network_type: ::String,
                                ?cluster_scalability_type: ("standard" | "limitless"),
                                ?db_system_id: ::String,
                                ?manage_master_user_password: bool,
-                               ?master_user_secret_kms_key_id: ::String,
                                ?enable_local_write_forwarding: bool,
+                               ?master_user_secret_kms_key_id: ::String,
                                ?ca_certificate_identifier: ::String,
                                ?engine_lifecycle_support: ::String,
+                               ?tag_specifications: Array[
+                                 {
+                                   resource_type: ::String?,
+                                   tags: Array[
+                                     {
+                                       key: ::String?,
+                                       value: ::String?
+                                     }
+                                   ]?
+                                 }
+                               ],
+                               ?master_user_authentication_type: ("password" | "iam-db-auth"),
+                               ?with_express_configuration: bool,
+                               ?associated_roles: Array[
+                                 {
+                                   role_arn: ::String,
+                                   feature_name: ::String?
+                                 }
+                               ],
                                ?source_region: ::String
                              ) -> DBCluster
                            | (?Hash[Symbol, untyped]) -> DBCluster
@@ -170,7 +190,7 @@ module Aws
                                                  {
                                                    key: ::String?,
                                                    value: ::String?
-                                                 },
+                                                 }
                                                ]
                                              ) -> DBClusterParameterGroup
                                            | (?Hash[Symbol, untyped]) -> DBClusterParameterGroup
@@ -198,6 +218,7 @@ module Aws
                                 ?auto_minor_version_upgrade: bool,
                                 ?license_model: ::String,
                                 ?iops: ::Integer,
+                                ?storage_throughput: ::Integer,
                                 ?option_group_name: ::String,
                                 ?character_set_name: ::String,
                                 ?nchar_character_set_name: ::String,
@@ -206,7 +227,7 @@ module Aws
                                   {
                                     key: ::String?,
                                     value: ::String?
-                                  },
+                                  }
                                 ],
                                 ?db_cluster_identifier: ::String,
                                 ?storage_type: ::String,
@@ -235,22 +256,43 @@ module Aws
                                   {
                                     name: ::String?,
                                     value: ::String?
-                                  },
+                                  }
                                 ],
                                 ?deletion_protection: bool,
                                 ?max_allocated_storage: ::Integer,
                                 ?enable_customer_owned_ip: bool,
-                                ?custom_iam_instance_profile: ::String,
-                                ?backup_target: ::String,
                                 ?network_type: ::String,
-                                ?storage_throughput: ::Integer,
+                                ?backup_target: ::String,
+                                ?custom_iam_instance_profile: ::String,
+                                ?db_system_id: ::String,
+                                ?ca_certificate_identifier: ::String,
                                 ?manage_master_user_password: bool,
                                 ?master_user_secret_kms_key_id: ::String,
-                                ?ca_certificate_identifier: ::String,
-                                ?db_system_id: ::String,
-                                ?dedicated_log_volume: bool,
                                 ?multi_tenant: bool,
-                                ?engine_lifecycle_support: ::String
+                                ?dedicated_log_volume: bool,
+                                ?engine_lifecycle_support: ::String,
+                                ?additional_storage_volumes: Array[
+                                  {
+                                    volume_name: ::String,
+                                    allocated_storage: ::Integer?,
+                                    iops: ::Integer?,
+                                    max_allocated_storage: ::Integer?,
+                                    storage_throughput: ::Integer?,
+                                    storage_type: ::String?
+                                  }
+                                ],
+                                ?tag_specifications: Array[
+                                  {
+                                    resource_type: ::String?,
+                                    tags: Array[
+                                      {
+                                        key: ::String?,
+                                        value: ::String?
+                                      }
+                                    ]?
+                                  }
+                                ],
+                                ?master_user_authentication_type: ("password" | "iam-db-auth")
                               ) -> DBInstance
                             | (?Hash[Symbol, untyped]) -> DBInstance
 
@@ -263,7 +305,7 @@ module Aws
                                          {
                                            key: ::String?,
                                            value: ::String?
-                                         },
+                                         }
                                        ]
                                      ) -> DBParameterGroup
                                    | (?Hash[Symbol, untyped]) -> DBParameterGroup
@@ -276,7 +318,7 @@ module Aws
                                         {
                                           key: ::String?,
                                           value: ::String?
-                                        },
+                                        }
                                       ]
                                     ) -> DBSecurityGroup
                                   | (?Hash[Symbol, untyped]) -> DBSecurityGroup
@@ -290,7 +332,7 @@ module Aws
                                       {
                                         key: ::String?,
                                         value: ::String?
-                                      },
+                                      }
                                     ]
                                   ) -> DBSubnetGroup
                                 | (?Hash[Symbol, untyped]) -> DBSubnetGroup
@@ -307,7 +349,7 @@ module Aws
                                          {
                                            key: ::String?,
                                            value: ::String?
-                                         },
+                                         }
                                        ]
                                      ) -> EventSubscription
                                    | (?Hash[Symbol, untyped]) -> EventSubscription
@@ -322,7 +364,7 @@ module Aws
                                    {
                                      key: ::String?,
                                      value: ::String?
-                                   },
+                                   }
                                  ]
                                ) -> OptionGroup
                              | (?Hash[Symbol, untyped]) -> OptionGroup
@@ -343,7 +385,7 @@ module Aws
                             {
                               name: ::String,
                               values: Array[::String]
-                            },
+                            }
                           ]
                         ) -> Certificate::Collection
                       | (?Hash[Symbol, untyped]) -> Certificate::Collection
@@ -361,7 +403,7 @@ module Aws
                                            {
                                              name: ::String,
                                              values: Array[::String]
-                                           },
+                                           }
                                          ]
                                        ) -> DBClusterParameterGroup::Collection
                                      | (?Hash[Symbol, untyped]) -> DBClusterParameterGroup::Collection
@@ -373,7 +415,7 @@ module Aws
                            {
                              name: ::String,
                              values: Array[::String]
-                           },
+                           }
                          ],
                          ?include_shared: bool
                        ) -> DBCluster::Collection
@@ -394,7 +436,7 @@ module Aws
                                   {
                                     name: ::String,
                                     values: Array[::String]
-                                  },
+                                  }
                                 ],
                                 ?default_only: bool,
                                 ?list_supported_character_sets: bool,
@@ -413,7 +455,7 @@ module Aws
                             {
                               name: ::String,
                               values: Array[::String]
-                            },
+                            }
                           ]
                         ) -> DBInstance::Collection
                       | (?Hash[Symbol, untyped]) -> DBInstance::Collection
@@ -431,7 +473,7 @@ module Aws
                                    {
                                      name: ::String,
                                      values: Array[::String]
-                                   },
+                                   }
                                  ]
                                ) -> DBParameterGroup::Collection
                              | (?Hash[Symbol, untyped]) -> DBParameterGroup::Collection
@@ -446,7 +488,7 @@ module Aws
                                   {
                                     name: ::String,
                                     values: Array[::String]
-                                  },
+                                  }
                                 ]
                               ) -> DBSecurityGroup::Collection
                             | (?Hash[Symbol, untyped]) -> DBSecurityGroup::Collection
@@ -460,7 +502,7 @@ module Aws
                             {
                               name: ::String,
                               values: Array[::String]
-                            },
+                            }
                           ],
                           ?include_shared: bool,
                           ?include_public: bool,
@@ -478,7 +520,7 @@ module Aws
                                 {
                                   name: ::String,
                                   values: Array[::String]
-                                },
+                                }
                               ]
                             ) -> DBSubnetGroup::Collection
                           | (?Hash[Symbol, untyped]) -> DBSubnetGroup::Collection
@@ -493,7 +535,7 @@ module Aws
                                    {
                                      name: ::String,
                                      values: Array[::String]
-                                   },
+                                   }
                                  ]
                                ) -> EventCategoryMap::Collection
                              | (?Hash[Symbol, untyped]) -> EventCategoryMap::Collection
@@ -508,7 +550,7 @@ module Aws
                                    {
                                      name: ::String,
                                      values: Array[::String]
-                                   },
+                                   }
                                  ]
                                ) -> EventSubscription::Collection
                              | (?Hash[Symbol, untyped]) -> EventSubscription::Collection
@@ -516,7 +558,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/Resource.html#events-instance_method
       def events: (
                     ?source_identifier: ::String,
-                    ?source_type: ("db-instance" | "db-parameter-group" | "db-security-group" | "db-snapshot" | "db-cluster" | "db-cluster-snapshot" | "custom-engine-version" | "db-proxy" | "blue-green-deployment"),
+                    ?source_type: ("db-instance" | "db-parameter-group" | "db-security-group" | "db-snapshot" | "db-cluster" | "db-cluster-snapshot" | "custom-engine-version" | "db-proxy" | "blue-green-deployment" | "db-shard-group" | "zero-etl"),
                     ?start_time: ::Time,
                     ?end_time: ::Time,
                     ?duration: ::Integer,
@@ -525,7 +567,7 @@ module Aws
                       {
                         name: ::String,
                         values: Array[::String]
-                      },
+                      }
                     ]
                   ) -> Event::Collection
                 | (?Hash[Symbol, untyped]) -> Event::Collection
@@ -540,7 +582,7 @@ module Aws
                              {
                                name: ::String,
                                values: Array[::String]
-                             },
+                             }
                            ],
                            ?engine_name: ::String,
                            ?major_engine_version: ::String
@@ -567,7 +609,7 @@ module Aws
                                      {
                                        name: ::String,
                                        values: Array[::String]
-                                     },
+                                     }
                                    ]
                                  ) -> ReservedDBInstance::Collection
                                | (?Hash[Symbol, untyped]) -> ReservedDBInstance::Collection
@@ -587,7 +629,7 @@ module Aws
                                                {
                                                  name: ::String,
                                                  values: Array[::String]
-                                               },
+                                               }
                                              ]
                                            ) -> ReservedDBInstancesOffering::Collection
                                          | (?Hash[Symbol, untyped]) -> ReservedDBInstancesOffering::Collection
@@ -602,7 +644,7 @@ module Aws
                                                           {
                                                             name: ::String,
                                                             values: Array[::String]
-                                                          },
+                                                          }
                                                         ]
                                                       ) -> ResourcePendingMaintenanceActionList::Collection
                                                     | (?Hash[Symbol, untyped]) -> ResourcePendingMaintenanceActionList::Collection

@@ -95,8 +95,8 @@ module Aws::ConnectCampaignsV2
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::ConnectCampaignsV2
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::ConnectCampaignsV2
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::ConnectCampaignsV2
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::ConnectCampaignsV2
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::ConnectCampaignsV2
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::ConnectCampaignsV2
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::ConnectCampaignsV2
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -479,8 +483,11 @@ module Aws::ConnectCampaignsV2
     # @option params [required, String] :connect_instance_id
     #   Amazon Connect Instance Id
     #
-    # @option params [required, Types::ChannelSubtypeConfig] :channel_subtype_config
+    # @option params [Types::ChannelSubtypeConfig] :channel_subtype_config
     #   Campaign Channel Subtype config
+    #
+    # @option params [String] :type
+    #   The type of campaign externally exposed in APIs.
     #
     # @option params [Types::Source] :source
     #   Source of the campaign
@@ -490,6 +497,9 @@ module Aws::ConnectCampaignsV2
     #
     # @option params [Types::Schedule] :schedule
     #   Campaign schedule
+    #
+    # @option params [Types::EntryLimitsConfig] :entry_limits_config
+    #   Campaign entry limits config
     #
     # @option params [Types::CommunicationTimeConfig] :communication_time_config
     #   Campaign communication time config
@@ -511,7 +521,7 @@ module Aws::ConnectCampaignsV2
     #   resp = client.create_campaign({
     #     name: "CampaignName", # required
     #     connect_instance_id: "InstanceId", # required
-    #     channel_subtype_config: { # required
+    #     channel_subtype_config: {
     #       telephony: {
     #         capacity: 1.0,
     #         connect_queue_id: "QueueId",
@@ -521,8 +531,25 @@ module Aws::ConnectCampaignsV2
     #           },
     #           predictive: {
     #             bandwidth_allocation: 1.0, # required
+    #             pacing_strategies: [
+    #               {
+    #                 abandonment_rate: {
+    #                   target_rate: 1.0, # required
+    #                   connection_start_point: "CONNECTED_TO_SYSTEM", # required, accepts CONNECTED_TO_SYSTEM, GREETING_START, GREETING_END
+    #                   connection_threshold_seconds: 1, # required
+    #                   evaluation_window: "EvaluationWindow", # required
+    #                 },
+    #               },
+    #             ],
     #           },
     #           agentless: {
+    #           },
+    #           preview: {
+    #             bandwidth_allocation: 1.0, # required
+    #             timeout_config: { # required
+    #               duration_in_seconds: 1, # required
+    #             },
+    #             agent_actions: ["DISCARD"], # accepts DISCARD
     #           },
     #         },
     #         default_outbound_config: { # required
@@ -532,6 +559,7 @@ module Aws::ConnectCampaignsV2
     #             enable_answer_machine_detection: false, # required
     #             await_answer_machine_prompt: false,
     #           },
+    #           ring_timeout: 1,
     #         },
     #       },
     #       sms: {
@@ -557,7 +585,19 @@ module Aws::ConnectCampaignsV2
     #           wisdom_template_arn: "Arn", # required
     #         },
     #       },
+    #       whats_app: {
+    #         capacity: 1.0,
+    #         outbound_mode: { # required
+    #           agentless: {
+    #           },
+    #         },
+    #         default_outbound_config: { # required
+    #           connect_source_phone_number_arn: "Arn", # required
+    #           wisdom_template_arn: "Arn", # required
+    #         },
+    #       },
     #     },
+    #     type: "MANAGED", # accepts MANAGED, JOURNEY
     #     source: {
     #       customer_profiles_segment_arn: "Arn",
     #       event_trigger: {
@@ -570,10 +610,15 @@ module Aws::ConnectCampaignsV2
     #       end_time: Time.now, # required
     #       refresh_frequency: "Iso8601Duration",
     #     },
+    #     entry_limits_config: {
+    #       max_entry_count: 1, # required
+    #       min_entry_interval: "Iso8601Duration", # required
+    #     },
     #     communication_time_config: {
     #       local_time_zone_config: { # required
     #         default_time_zone: "TimeZone",
     #         local_time_zone_detection: ["ZIP_CODE"], # accepts ZIP_CODE, AREA_CODE
+    #         local_time_zone_detection_scope: "PRIMARY_ONLY", # accepts PRIMARY_ONLY, ALL_AVAILABLE
     #       },
     #       telephony: {
     #         open_hours: { # required
@@ -618,6 +663,27 @@ module Aws::ConnectCampaignsV2
     #         },
     #       },
     #       email: {
+    #         open_hours: { # required
+    #           daily_hours: {
+    #             "MONDAY" => [
+    #               {
+    #                 start_time: "Iso8601Time", # required
+    #                 end_time: "Iso8601Time", # required
+    #               },
+    #             ],
+    #           },
+    #         },
+    #         restricted_periods: {
+    #           restricted_period_list: [
+    #             {
+    #               name: "RestrictedPeriodName",
+    #               start_date: "Iso8601Date", # required
+    #               end_date: "Iso8601Date", # required
+    #             },
+    #           ],
+    #         },
+    #       },
+    #       whats_app: {
     #         open_hours: { # required
     #           daily_hours: {
     #             "MONDAY" => [
@@ -649,6 +715,7 @@ module Aws::ConnectCampaignsV2
     #           },
     #         ],
     #       },
+    #       instance_limits_handling: "OPT_IN", # accepts OPT_IN, OPT_OUT
     #     },
     #     tags: {
     #       "TagKey" => "TagValue",
@@ -708,7 +775,7 @@ module Aws::ConnectCampaignsV2
     #
     #   resp = client.delete_campaign_channel_subtype_config({
     #     id: "CampaignId", # required
-    #     channel_subtype: "TELEPHONY", # required, accepts TELEPHONY, SMS, EMAIL
+    #     channel_subtype: "TELEPHONY", # required, accepts TELEPHONY, SMS, EMAIL, WHATSAPP
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/DeleteCampaignChannelSubtypeConfig AWS API Documentation
@@ -762,7 +829,7 @@ module Aws::ConnectCampaignsV2
     #
     #   resp = client.delete_campaign_communication_time({
     #     id: "CampaignId", # required
-    #     config: "TELEPHONY", # required, accepts TELEPHONY, SMS, EMAIL
+    #     config: "TELEPHONY", # required, accepts TELEPHONY, SMS, EMAIL, WHATSAPP
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/DeleteCampaignCommunicationTime AWS API Documentation
@@ -771,6 +838,29 @@ module Aws::ConnectCampaignsV2
     # @param [Hash] params ({})
     def delete_campaign_communication_time(params = {}, options = {})
       req = build_request(:delete_campaign_communication_time, params)
+      req.send_request(options)
+    end
+
+    # Deletes the entry limits config for a campaign. This API is
+    # idempotent.
+    #
+    # @option params [required, String] :id
+    #   Identifier representing a Campaign
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_campaign_entry_limits({
+    #     id: "CampaignId", # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/DeleteCampaignEntryLimits AWS API Documentation
+    #
+    # @overload delete_campaign_entry_limits(params = {})
+    # @param [Hash] params ({})
+    def delete_campaign_entry_limits(params = {}, options = {})
+      req = build_request(:delete_campaign_entry_limits, params)
       req.send_request(options)
     end
 
@@ -821,6 +911,9 @@ module Aws::ConnectCampaignsV2
     #       },
     #       q_connect: {
     #         knowledge_base_arn: "Arn", # required
+    #       },
+    #       lambda: {
+    #         function_arn: "LambdaArn", # required
     #       },
     #     },
     #   })
@@ -882,10 +975,20 @@ module Aws::ConnectCampaignsV2
     #   resp.campaign.channel_subtype_config.telephony.connect_queue_id #=> String
     #   resp.campaign.channel_subtype_config.telephony.outbound_mode.progressive.bandwidth_allocation #=> Float
     #   resp.campaign.channel_subtype_config.telephony.outbound_mode.predictive.bandwidth_allocation #=> Float
+    #   resp.campaign.channel_subtype_config.telephony.outbound_mode.predictive.pacing_strategies #=> Array
+    #   resp.campaign.channel_subtype_config.telephony.outbound_mode.predictive.pacing_strategies[0].abandonment_rate.target_rate #=> Float
+    #   resp.campaign.channel_subtype_config.telephony.outbound_mode.predictive.pacing_strategies[0].abandonment_rate.connection_start_point #=> String, one of "CONNECTED_TO_SYSTEM", "GREETING_START", "GREETING_END"
+    #   resp.campaign.channel_subtype_config.telephony.outbound_mode.predictive.pacing_strategies[0].abandonment_rate.connection_threshold_seconds #=> Integer
+    #   resp.campaign.channel_subtype_config.telephony.outbound_mode.predictive.pacing_strategies[0].abandonment_rate.evaluation_window #=> String
+    #   resp.campaign.channel_subtype_config.telephony.outbound_mode.preview.bandwidth_allocation #=> Float
+    #   resp.campaign.channel_subtype_config.telephony.outbound_mode.preview.timeout_config.duration_in_seconds #=> Integer
+    #   resp.campaign.channel_subtype_config.telephony.outbound_mode.preview.agent_actions #=> Array
+    #   resp.campaign.channel_subtype_config.telephony.outbound_mode.preview.agent_actions[0] #=> String, one of "DISCARD"
     #   resp.campaign.channel_subtype_config.telephony.default_outbound_config.connect_contact_flow_id #=> String
     #   resp.campaign.channel_subtype_config.telephony.default_outbound_config.connect_source_phone_number #=> String
     #   resp.campaign.channel_subtype_config.telephony.default_outbound_config.answer_machine_detection_config.enable_answer_machine_detection #=> Boolean
     #   resp.campaign.channel_subtype_config.telephony.default_outbound_config.answer_machine_detection_config.await_answer_machine_prompt #=> Boolean
+    #   resp.campaign.channel_subtype_config.telephony.default_outbound_config.ring_timeout #=> Integer
     #   resp.campaign.channel_subtype_config.sms.capacity #=> Float
     #   resp.campaign.channel_subtype_config.sms.default_outbound_config.connect_source_phone_number_arn #=> String
     #   resp.campaign.channel_subtype_config.sms.default_outbound_config.wisdom_template_arn #=> String
@@ -893,15 +996,22 @@ module Aws::ConnectCampaignsV2
     #   resp.campaign.channel_subtype_config.email.default_outbound_config.connect_source_email_address #=> String
     #   resp.campaign.channel_subtype_config.email.default_outbound_config.source_email_address_display_name #=> String
     #   resp.campaign.channel_subtype_config.email.default_outbound_config.wisdom_template_arn #=> String
+    #   resp.campaign.channel_subtype_config.whats_app.capacity #=> Float
+    #   resp.campaign.channel_subtype_config.whats_app.default_outbound_config.connect_source_phone_number_arn #=> String
+    #   resp.campaign.channel_subtype_config.whats_app.default_outbound_config.wisdom_template_arn #=> String
+    #   resp.campaign.type #=> String, one of "MANAGED", "JOURNEY"
     #   resp.campaign.source.customer_profiles_segment_arn #=> String
     #   resp.campaign.source.event_trigger.customer_profiles_domain_arn #=> String
     #   resp.campaign.connect_campaign_flow_arn #=> String
     #   resp.campaign.schedule.start_time #=> Time
     #   resp.campaign.schedule.end_time #=> Time
     #   resp.campaign.schedule.refresh_frequency #=> String
+    #   resp.campaign.entry_limits_config.max_entry_count #=> Integer
+    #   resp.campaign.entry_limits_config.min_entry_interval #=> String
     #   resp.campaign.communication_time_config.local_time_zone_config.default_time_zone #=> String
     #   resp.campaign.communication_time_config.local_time_zone_config.local_time_zone_detection #=> Array
     #   resp.campaign.communication_time_config.local_time_zone_config.local_time_zone_detection[0] #=> String, one of "ZIP_CODE", "AREA_CODE"
+    #   resp.campaign.communication_time_config.local_time_zone_config.local_time_zone_detection_scope #=> String, one of "PRIMARY_ONLY", "ALL_AVAILABLE"
     #   resp.campaign.communication_time_config.telephony.open_hours.daily_hours #=> Hash
     #   resp.campaign.communication_time_config.telephony.open_hours.daily_hours["DayOfWeek"] #=> Array
     #   resp.campaign.communication_time_config.telephony.open_hours.daily_hours["DayOfWeek"][0].start_time #=> String
@@ -926,10 +1036,19 @@ module Aws::ConnectCampaignsV2
     #   resp.campaign.communication_time_config.email.restricted_periods.restricted_period_list[0].name #=> String
     #   resp.campaign.communication_time_config.email.restricted_periods.restricted_period_list[0].start_date #=> String
     #   resp.campaign.communication_time_config.email.restricted_periods.restricted_period_list[0].end_date #=> String
+    #   resp.campaign.communication_time_config.whats_app.open_hours.daily_hours #=> Hash
+    #   resp.campaign.communication_time_config.whats_app.open_hours.daily_hours["DayOfWeek"] #=> Array
+    #   resp.campaign.communication_time_config.whats_app.open_hours.daily_hours["DayOfWeek"][0].start_time #=> String
+    #   resp.campaign.communication_time_config.whats_app.open_hours.daily_hours["DayOfWeek"][0].end_time #=> String
+    #   resp.campaign.communication_time_config.whats_app.restricted_periods.restricted_period_list #=> Array
+    #   resp.campaign.communication_time_config.whats_app.restricted_periods.restricted_period_list[0].name #=> String
+    #   resp.campaign.communication_time_config.whats_app.restricted_periods.restricted_period_list[0].start_date #=> String
+    #   resp.campaign.communication_time_config.whats_app.restricted_periods.restricted_period_list[0].end_date #=> String
     #   resp.campaign.communication_limits_override.all_channel_subtypes.communication_limits_list #=> Array
     #   resp.campaign.communication_limits_override.all_channel_subtypes.communication_limits_list[0].max_count_per_recipient #=> Integer
     #   resp.campaign.communication_limits_override.all_channel_subtypes.communication_limits_list[0].frequency #=> Integer
     #   resp.campaign.communication_limits_override.all_channel_subtypes.communication_limits_list[0].unit #=> String, one of "DAY"
+    #   resp.campaign.communication_limits_override.instance_limits_handling #=> String, one of "OPT_IN", "OPT_OUT"
     #   resp.campaign.tags #=> Hash
     #   resp.campaign.tags["TagKey"] #=> String
     #
@@ -1036,6 +1155,37 @@ module Aws::ConnectCampaignsV2
       req.send_request(options)
     end
 
+    # Get the instance communication limits.
+    #
+    # @option params [required, String] :connect_instance_id
+    #   Amazon Connect Instance Id
+    #
+    # @return [Types::GetInstanceCommunicationLimitsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetInstanceCommunicationLimitsResponse#communication_limits_config #communication_limits_config} => Types::InstanceCommunicationLimitsConfig
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_instance_communication_limits({
+    #     connect_instance_id: "InstanceId", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.communication_limits_config.all_channel_subtypes.communication_limits_list #=> Array
+    #   resp.communication_limits_config.all_channel_subtypes.communication_limits_list[0].max_count_per_recipient #=> Integer
+    #   resp.communication_limits_config.all_channel_subtypes.communication_limits_list[0].frequency #=> Integer
+    #   resp.communication_limits_config.all_channel_subtypes.communication_limits_list[0].unit #=> String, one of "DAY"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/GetInstanceCommunicationLimits AWS API Documentation
+    #
+    # @overload get_instance_communication_limits(params = {})
+    # @param [Hash] params ({})
+    def get_instance_communication_limits(params = {}, options = {})
+      req = build_request(:get_instance_communication_limits, params)
+      req.send_request(options)
+    end
+
     # Get the specific instance onboarding job status.
     #
     # @option params [required, String] :connect_instance_id
@@ -1107,10 +1257,13 @@ module Aws::ConnectCampaignsV2
     #   resp.campaign_summary_list[0].name #=> String
     #   resp.campaign_summary_list[0].connect_instance_id #=> String
     #   resp.campaign_summary_list[0].channel_subtypes #=> Array
-    #   resp.campaign_summary_list[0].channel_subtypes[0] #=> String, one of "TELEPHONY", "SMS", "EMAIL"
+    #   resp.campaign_summary_list[0].channel_subtypes[0] #=> String, one of "TELEPHONY", "SMS", "EMAIL", "WHATSAPP"
+    #   resp.campaign_summary_list[0].type #=> String, one of "MANAGED", "JOURNEY"
     #   resp.campaign_summary_list[0].schedule.start_time #=> Time
     #   resp.campaign_summary_list[0].schedule.end_time #=> Time
     #   resp.campaign_summary_list[0].schedule.refresh_frequency #=> String
+    #   resp.campaign_summary_list[0].entry_limits_config.max_entry_count #=> Integer
+    #   resp.campaign_summary_list[0].entry_limits_config.min_entry_interval #=> String
     #   resp.campaign_summary_list[0].connect_campaign_flow_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/ListCampaigns AWS API Documentation
@@ -1157,6 +1310,7 @@ module Aws::ConnectCampaignsV2
     #   resp.integration_summary_list[0].customer_profiles.object_type_names #=> Hash
     #   resp.integration_summary_list[0].customer_profiles.object_type_names["EventType"] #=> String
     #   resp.integration_summary_list[0].q_connect.knowledge_base_arn #=> String
+    #   resp.integration_summary_list[0].lambda.function_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/ListConnectInstanceIntegrations AWS API Documentation
     #
@@ -1243,6 +1397,9 @@ module Aws::ConnectCampaignsV2
     #       q_connect: {
     #         knowledge_base_arn: "Arn", # required
     #       },
+    #       lambda: {
+    #         function_arn: "LambdaArn", # required
+    #       },
     #     },
     #   })
     #
@@ -1252,6 +1409,42 @@ module Aws::ConnectCampaignsV2
     # @param [Hash] params ({})
     def put_connect_instance_integration(params = {}, options = {})
       req = build_request(:put_connect_instance_integration, params)
+      req.send_request(options)
+    end
+
+    # Put the instance communication limits. This API is idempotent.
+    #
+    # @option params [required, String] :connect_instance_id
+    #   Amazon Connect Instance Id
+    #
+    # @option params [required, Types::InstanceCommunicationLimitsConfig] :communication_limits_config
+    #   Instance Communication limits config
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.put_instance_communication_limits({
+    #     connect_instance_id: "InstanceId", # required
+    #     communication_limits_config: { # required
+    #       all_channel_subtypes: {
+    #         communication_limits_list: [
+    #           {
+    #             max_count_per_recipient: 1, # required
+    #             frequency: 1, # required
+    #             unit: "DAY", # required, accepts DAY
+    #           },
+    #         ],
+    #       },
+    #     },
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/PutInstanceCommunicationLimits AWS API Documentation
+    #
+    # @overload put_instance_communication_limits(params = {})
+    # @param [Hash] params ({})
+    def put_instance_communication_limits(params = {}, options = {})
+      req = build_request(:put_instance_communication_limits, params)
       req.send_request(options)
     end
 
@@ -1288,6 +1481,7 @@ module Aws::ConnectCampaignsV2
     #               enable_answer_machine_detection: false, # required
     #               await_answer_machine_prompt: false,
     #             },
+    #             ring_timeout: 1,
     #           },
     #           sms: {
     #             destination_phone_number: "DestinationPhoneNumber", # required
@@ -1300,6 +1494,14 @@ module Aws::ConnectCampaignsV2
     #           email: {
     #             destination_email_address: "EmailAddress", # required
     #             connect_source_email_address: "EmailAddress",
+    #             template_arn: "Arn",
+    #             template_parameters: { # required
+    #               "AttributeName" => "AttributeValue",
+    #             },
+    #           },
+    #           whats_app: {
+    #             destination_phone_number: "DestinationPhoneNumber", # required
+    #             connect_source_phone_number_arn: "Arn",
     #             template_arn: "Arn",
     #             template_parameters: { # required
     #               "AttributeName" => "AttributeValue",
@@ -1352,6 +1554,15 @@ module Aws::ConnectCampaignsV2
     #         client_token: "ClientToken", # required
     #         profile_id: "ProfileId", # required
     #         expiration_time: Time.now,
+    #         event_trigger_context: {
+    #           source_event: "SourceEvent",
+    #           channel_context: {
+    #             web_notification_context: {
+    #               session_id: "SessionId",
+    #               browser_id: "BrowserId",
+    #             },
+    #           },
+    #         },
     #       },
     #     ],
     #   })
@@ -1561,8 +1772,25 @@ module Aws::ConnectCampaignsV2
     #           },
     #           predictive: {
     #             bandwidth_allocation: 1.0, # required
+    #             pacing_strategies: [
+    #               {
+    #                 abandonment_rate: {
+    #                   target_rate: 1.0, # required
+    #                   connection_start_point: "CONNECTED_TO_SYSTEM", # required, accepts CONNECTED_TO_SYSTEM, GREETING_START, GREETING_END
+    #                   connection_threshold_seconds: 1, # required
+    #                   evaluation_window: "EvaluationWindow", # required
+    #                 },
+    #               },
+    #             ],
     #           },
     #           agentless: {
+    #           },
+    #           preview: {
+    #             bandwidth_allocation: 1.0, # required
+    #             timeout_config: { # required
+    #               duration_in_seconds: 1, # required
+    #             },
+    #             agent_actions: ["DISCARD"], # accepts DISCARD
     #           },
     #         },
     #         default_outbound_config: { # required
@@ -1572,6 +1800,7 @@ module Aws::ConnectCampaignsV2
     #             enable_answer_machine_detection: false, # required
     #             await_answer_machine_prompt: false,
     #           },
+    #           ring_timeout: 1,
     #         },
     #       },
     #       sms: {
@@ -1594,6 +1823,17 @@ module Aws::ConnectCampaignsV2
     #         default_outbound_config: { # required
     #           connect_source_email_address: "EmailAddress", # required
     #           source_email_address_display_name: "EmailDisplayName",
+    #           wisdom_template_arn: "Arn", # required
+    #         },
+    #       },
+    #       whats_app: {
+    #         capacity: 1.0,
+    #         outbound_mode: { # required
+    #           agentless: {
+    #           },
+    #         },
+    #         default_outbound_config: { # required
+    #           connect_source_phone_number_arn: "Arn", # required
     #           wisdom_template_arn: "Arn", # required
     #         },
     #       },
@@ -1634,6 +1874,7 @@ module Aws::ConnectCampaignsV2
     #           },
     #         ],
     #       },
+    #       instance_limits_handling: "OPT_IN", # accepts OPT_IN, OPT_OUT
     #     },
     #   })
     #
@@ -1665,6 +1906,7 @@ module Aws::ConnectCampaignsV2
     #       local_time_zone_config: { # required
     #         default_time_zone: "TimeZone",
     #         local_time_zone_detection: ["ZIP_CODE"], # accepts ZIP_CODE, AREA_CODE
+    #         local_time_zone_detection_scope: "PRIMARY_ONLY", # accepts PRIMARY_ONLY, ALL_AVAILABLE
     #       },
     #       telephony: {
     #         open_hours: { # required
@@ -1729,6 +1971,27 @@ module Aws::ConnectCampaignsV2
     #           ],
     #         },
     #       },
+    #       whats_app: {
+    #         open_hours: { # required
+    #           daily_hours: {
+    #             "MONDAY" => [
+    #               {
+    #                 start_time: "Iso8601Time", # required
+    #                 end_time: "Iso8601Time", # required
+    #               },
+    #             ],
+    #           },
+    #         },
+    #         restricted_periods: {
+    #           restricted_period_list: [
+    #             {
+    #               name: "RestrictedPeriodName",
+    #               start_date: "Iso8601Date", # required
+    #               end_date: "Iso8601Date", # required
+    #             },
+    #           ],
+    #         },
+    #       },
     #     },
     #   })
     #
@@ -1738,6 +2001,36 @@ module Aws::ConnectCampaignsV2
     # @param [Hash] params ({})
     def update_campaign_communication_time(params = {}, options = {})
       req = build_request(:update_campaign_communication_time, params)
+      req.send_request(options)
+    end
+
+    # Updates the entry limits config for a campaign. This API is
+    # idempotent.
+    #
+    # @option params [required, String] :id
+    #   Identifier representing a Campaign
+    #
+    # @option params [required, Types::EntryLimitsConfig] :entry_limits_config
+    #   Campaign entry limits config
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_campaign_entry_limits({
+    #     id: "CampaignId", # required
+    #     entry_limits_config: { # required
+    #       max_entry_count: 1, # required
+    #       min_entry_interval: "Iso8601Duration", # required
+    #     },
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/UpdateCampaignEntryLimits AWS API Documentation
+    #
+    # @overload update_campaign_entry_limits(params = {})
+    # @param [Hash] params ({})
+    def update_campaign_entry_limits(params = {}, options = {})
+      req = build_request(:update_campaign_entry_limits, params)
       req.send_request(options)
     end
 
@@ -1873,7 +2166,7 @@ module Aws::ConnectCampaignsV2
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-connectcampaignsv2'
-      context[:gem_version] = '1.4.0'
+      context[:gem_version] = '1.31.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

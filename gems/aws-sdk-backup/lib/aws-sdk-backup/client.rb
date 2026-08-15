@@ -95,8 +95,8 @@ module Aws::Backup
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::Backup
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::Backup
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::Backup
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::Backup
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::Backup
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::Backup
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::Backup
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -470,6 +474,38 @@ module Aws::Backup
 
     # @!group API Operations
 
+    # Associates an MPA approval team with a backup vault.
+    #
+    # @option params [required, String] :backup_vault_name
+    #   The name of the backup vault to associate with the MPA approval team.
+    #
+    # @option params [required, String] :mpa_approval_team_arn
+    #   The Amazon Resource Name (ARN) of the MPA approval team to associate
+    #   with the backup vault.
+    #
+    # @option params [String] :requester_comment
+    #   A comment provided by the requester explaining the association
+    #   request.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.associate_backup_vault_mpa_approval_team({
+    #     backup_vault_name: "BackupVaultName", # required
+    #     mpa_approval_team_arn: "ARN", # required
+    #     requester_comment: "RequesterComment",
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/AssociateBackupVaultMpaApprovalTeam AWS API Documentation
+    #
+    # @overload associate_backup_vault_mpa_approval_team(params = {})
+    # @param [Hash] params ({})
+    def associate_backup_vault_mpa_approval_team(params = {}, options = {})
+      req = build_request(:associate_backup_vault_mpa_approval_team, params)
+      req.send_request(options)
+    end
+
     # Removes the specified legal hold on a recovery point. This action can
     # only be performed by a user with sufficient permissions.
     #
@@ -501,6 +537,89 @@ module Aws::Backup
       req.send_request(options)
     end
 
+    # Creates a backup access point for an Amazon S3 recovery point. A
+    # backup access point provides on-demand, read-only access to the backup
+    # data in a recovery point through an Amazon S3 access point, without
+    # initiating a restore.
+    #
+    # While a backup access point is active for a recovery point, Backup
+    # pauses lifecycle transitions and blocks deletion of that recovery
+    # point.
+    #
+    # @option params [Hash<String,String>] :access_point_metadata
+    #   Metadata for the backup access point. For continuous (point-in-time)
+    #   recovery points, you must include an `AccessPointInTime` timestamp (in
+    #   format `2021-11-27T03:30:27Z`). The access point provides access to
+    #   the content present in the backup at that specific time. You can
+    #   specify any time within the continuous backup's retention period, up
+    #   to the latest restorable time. For snapshot recovery points, do not
+    #   include `AccessPointInTime`.
+    #
+    # @option params [String] :access_point_policy
+    #   An optional resource-based policy, in JSON format, to apply to the
+    #   underlying Amazon S3 access point. The policy controls how backup data
+    #   can be accessed through the access point. If you do not specify a
+    #   policy, access is governed by the caller's IAM permissions. For more
+    #   information, see [Configuring IAM policies for using access points][1]
+    #   in the *Amazon S3 User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-points-policies.html
+    #
+    # @option params [required, String] :name
+    #   The name of the backup access point. This name is shared with the
+    #   Amazon S3 access point namespace. It must be unique within your
+    #   account and Region and cannot conflict with an existing Amazon S3
+    #   access point. For more information about access point naming, see
+    #   [Access points naming rules, restrictions, and limitations][1] in the
+    #   *Amazon S3 User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-points-restrictions-limitations-naming-rules.html
+    #
+    # @option params [required, String] :recovery_point_arn
+    #   The Amazon Resource Name (ARN) of the recovery point for which to
+    #   create the backup access point. The recovery point must be an Amazon
+    #   S3 recovery point in the `AVAILABLE`, `STOPPED`, or `COMPLETED` state.
+    #
+    # @option params [Hash<String,String>] :tags
+    #   The tags to assign to the backup access point.
+    #
+    # @return [Types::CreateBackupAccessPointResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateBackupAccessPointResponse#access_point_arn #access_point_arn} => String
+    #   * {Types::CreateBackupAccessPointResponse#status #status} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_backup_access_point({
+    #     access_point_metadata: {
+    #       "AccessPointMetadataMapKeyString" => "AccessPointMetadataMapValueString",
+    #     },
+    #     access_point_policy: "AccessPointPolicy",
+    #     name: "AccessPointName", # required
+    #     recovery_point_arn: "RecoveryPointArn", # required
+    #     tags: {
+    #       "TagMapKeyString" => "TagMapValueString",
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.access_point_arn #=> String
+    #   resp.status #=> String, one of "AVAILABLE", "CREATING", "DELETING", "DISASSOCIATED", "DISASSOCIATING", "EXPIRED", "FAILED"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/CreateBackupAccessPoint AWS API Documentation
+    #
+    # @overload create_backup_access_point(params = {})
+    # @param [Hash] params ({})
+    def create_backup_access_point(params = {}, options = {})
+      req = build_request(:create_backup_access_point, params)
+      req.send_request(options)
+    end
+
     # Creates a backup plan using a backup plan name and backup rules. A
     # backup plan is a document that contains information that Backup uses
     # to schedule tasks that create recovery points for resources.
@@ -524,6 +643,9 @@ module Aws::Backup
     #   If used, this parameter must contain 1 to 50 alphanumeric or '-\_.'
     #   characters.
     #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
     # @return [Types::CreateBackupPlanOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateBackupPlanOutput#backup_plan_id #backup_plan_id} => String
@@ -541,6 +663,7 @@ module Aws::Backup
     #         {
     #           rule_name: "BackupRuleName", # required
     #           target_backup_vault_name: "BackupVaultName", # required
+    #           target_logically_air_gapped_backup_vault_arn: "ARN",
     #           schedule_expression: "CronExpression",
     #           start_window_minutes: 1,
     #           completion_window_minutes: 1,
@@ -548,6 +671,7 @@ module Aws::Backup
     #             move_to_cold_storage_after_days: 1,
     #             delete_after_days: 1,
     #             opt_in_to_archive_for_supported_resources: false,
+    #             delete_after_event: "DELETE_AFTER_COPY", # accepts DELETE_AFTER_COPY
     #           },
     #           recovery_point_tags: {
     #             "TagKey" => "TagValue",
@@ -558,6 +682,7 @@ module Aws::Backup
     #                 move_to_cold_storage_after_days: 1,
     #                 delete_after_days: 1,
     #                 opt_in_to_archive_for_supported_resources: false,
+    #                 delete_after_event: "DELETE_AFTER_COPY", # accepts DELETE_AFTER_COPY
     #               },
     #               destination_backup_vault_arn: "ARN", # required
     #             },
@@ -569,6 +694,12 @@ module Aws::Backup
     #               resource_types: ["ResourceType"],
     #             },
     #           ],
+    #           scan_actions: [
+    #             {
+    #               malware_scanner: "GUARDDUTY", # accepts GUARDDUTY
+    #               scan_mode: "FULL_SCAN", # accepts FULL_SCAN, INCREMENTAL_SCAN
+    #             },
+    #           ],
     #         },
     #       ],
     #       advanced_backup_settings: [
@@ -577,6 +708,13 @@ module Aws::Backup
     #           backup_options: {
     #             "BackupOptionKey" => "BackupOptionValue",
     #           },
+    #         },
+    #       ],
+    #       scan_settings: [
+    #         {
+    #           malware_scanner: "GUARDDUTY", # accepts GUARDDUTY
+    #           resource_types: ["ResourceType"],
+    #           scanner_role_arn: "IAMRoleArn",
     #         },
     #       ],
     #     },
@@ -627,6 +765,9 @@ module Aws::Backup
     #
     #   If used, this parameter must contain 1 to 50 alphanumeric or '-\_.'
     #   characters.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
     #
     # @return [Types::CreateBackupSelectionOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -725,6 +866,9 @@ module Aws::Backup
     #
     #   If used, this parameter must contain 1 to 50 alphanumeric or '-\_.'
     #   characters.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
     #
     # @return [Types::CreateBackupVaultOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -854,6 +998,9 @@ module Aws::Backup
     #   identical calls. Retrying a successful request with the same
     #   idempotency token results in a success message with no action taken.
     #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
     # @option params [Types::RecoveryPointSelection] :recovery_point_selection
     #   The criteria to assign a set of resources, such as resource types or
     #   backup vaults.
@@ -942,6 +1089,9 @@ module Aws::Backup
     #   This parameter is optional. If used, this parameter must contain 1 to
     #   50 alphanumeric or '-\_.' characters.
     #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
     # @option params [required, Integer] :min_retention_days
     #   This setting specifies the minimum retention period that the vault
     #   retains its recovery points.
@@ -951,6 +1101,12 @@ module Aws::Backup
     # @option params [required, Integer] :max_retention_days
     #   The maximum retention period that the vault retains its recovery
     #   points.
+    #
+    # @option params [String] :encryption_key_arn
+    #   The ARN of the customer-managed KMS key to use for encrypting the
+    #   logically air-gapped backup vault. If not specified, the vault will be
+    #   encrypted with an Amazon Web Services-owned key managed by Amazon Web
+    #   Services Backup.
     #
     # @return [Types::CreateLogicallyAirGappedBackupVaultOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -969,6 +1125,7 @@ module Aws::Backup
     #     creator_request_id: "string",
     #     min_retention_days: 1, # required
     #     max_retention_days: 1, # required
+    #     encryption_key_arn: "ARN",
     #   })
     #
     # @example Response structure
@@ -1013,7 +1170,8 @@ module Aws::Backup
     #   a report template. The report templates are:
     #
     #   `RESOURCE_COMPLIANCE_REPORT | CONTROL_COMPLIANCE_REPORT |
-    #   BACKUP_JOB_REPORT | COPY_JOB_REPORT | RESTORE_JOB_REPORT`
+    #   BACKUP_JOB_REPORT | COPY_JOB_REPORT | RESTORE_JOB_REPORT |
+    #   SCAN_JOB_REPORT `
     #
     #   If the report template is `RESOURCE_COMPLIANCE_REPORT` or
     #   `CONTROL_COMPLIANCE_REPORT`, this API resource also describes the
@@ -1073,6 +1231,66 @@ module Aws::Backup
     # @param [Hash] params ({})
     def create_report_plan(params = {}, options = {})
       req = build_request(:create_report_plan, params)
+      req.send_request(options)
+    end
+
+    # Creates a restore access backup vault that provides temporary access
+    # to recovery points in a logically air-gapped backup vault, subject to
+    # MPA approval.
+    #
+    # @option params [required, String] :source_backup_vault_arn
+    #   The ARN of the source backup vault containing the recovery points to
+    #   which temporary access is requested.
+    #
+    # @option params [String] :backup_vault_name
+    #   The name of the backup vault to associate with an MPA approval team.
+    #
+    # @option params [Hash<String,String>] :backup_vault_tags
+    #   Optional tags to assign to the restore access backup vault.
+    #
+    # @option params [String] :creator_request_id
+    #   A unique string that identifies the request and allows failed requests
+    #   to be retried without the risk of executing the operation twice.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @option params [String] :requester_comment
+    #   A comment explaining the reason for requesting restore access to the
+    #   backup vault.
+    #
+    # @return [Types::CreateRestoreAccessBackupVaultOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateRestoreAccessBackupVaultOutput#restore_access_backup_vault_arn #restore_access_backup_vault_arn} => String
+    #   * {Types::CreateRestoreAccessBackupVaultOutput#vault_state #vault_state} => String
+    #   * {Types::CreateRestoreAccessBackupVaultOutput#restore_access_backup_vault_name #restore_access_backup_vault_name} => String
+    #   * {Types::CreateRestoreAccessBackupVaultOutput#creation_date #creation_date} => Time
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_restore_access_backup_vault({
+    #     source_backup_vault_arn: "ARN", # required
+    #     backup_vault_name: "BackupVaultName",
+    #     backup_vault_tags: {
+    #       "TagKey" => "TagValue",
+    #     },
+    #     creator_request_id: "string",
+    #     requester_comment: "RequesterComment",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.restore_access_backup_vault_arn #=> String
+    #   resp.vault_state #=> String, one of "CREATING", "AVAILABLE", "FAILED"
+    #   resp.restore_access_backup_vault_name #=> String
+    #   resp.creation_date #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/CreateRestoreAccessBackupVault AWS API Documentation
+    #
+    # @overload create_restore_access_backup_vault(params = {})
+    # @param [Hash] params ({})
+    def create_restore_access_backup_vault(params = {}, options = {})
+      req = build_request(:create_restore_access_backup_vault, params)
       req.send_request(options)
     end
 
@@ -1241,6 +1459,105 @@ module Aws::Backup
     # @param [Hash] params ({})
     def create_restore_testing_selection(params = {}, options = {})
       req = build_request(:create_restore_testing_selection, params)
+      req.send_request(options)
+    end
+
+    # Creates a tiering configuration.
+    #
+    # A tiering configuration enables automatic movement of backup data to a
+    # lower-cost storage tier based on the age of backed-up objects in the
+    # backup vault.
+    #
+    # Each vault can only have one vault-specific tiering configuration, in
+    # addition to any global configuration that applies to all vaults.
+    #
+    # @option params [required, Types::TieringConfigurationInputForCreate] :tiering_configuration
+    #   A tiering configuration must contain a unique
+    #   `TieringConfigurationName` string you create and must contain a
+    #   `BackupVaultName` and `ResourceSelection`. You may optionally include
+    #   a `CreatorRequestId` string.
+    #
+    #   The `TieringConfigurationName` is a unique string that is the name of
+    #   the tiering configuration. This cannot be changed after creation, and
+    #   it must consist of only alphanumeric characters and underscores.
+    #
+    # @option params [Hash<String,String>] :tiering_configuration_tags
+    #   The tags to assign to the tiering configuration.
+    #
+    # @option params [String] :creator_request_id
+    #   This is a unique string that identifies the request and allows failed
+    #   requests to be retried without the risk of running the operation
+    #   twice. This parameter is optional. If used, this parameter must
+    #   contain 1 to 50 alphanumeric or '-\_.' characters.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @return [Types::CreateTieringConfigurationOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateTieringConfigurationOutput#tiering_configuration_arn #tiering_configuration_arn} => String
+    #   * {Types::CreateTieringConfigurationOutput#tiering_configuration_name #tiering_configuration_name} => String
+    #   * {Types::CreateTieringConfigurationOutput#creation_time #creation_time} => Time
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_tiering_configuration({
+    #     tiering_configuration: { # required
+    #       tiering_configuration_name: "TieringConfigurationName", # required
+    #       backup_vault_name: "BackupVaultNameOrWildcard", # required
+    #       resource_selection: [ # required
+    #         {
+    #           resources: ["ARN"], # required
+    #           tiering_down_settings_in_days: 1, # required
+    #           resource_type: "ResourceType", # required
+    #         },
+    #       ],
+    #     },
+    #     tiering_configuration_tags: {
+    #       "TagKey" => "TagValue",
+    #     },
+    #     creator_request_id: "CreatorRequestId",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.tiering_configuration_arn #=> String
+    #   resp.tiering_configuration_name #=> String
+    #   resp.creation_time #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/CreateTieringConfiguration AWS API Documentation
+    #
+    # @overload create_tiering_configuration(params = {})
+    # @param [Hash] params ({})
+    def create_tiering_configuration(params = {}, options = {})
+      req = build_request(:create_tiering_configuration, params)
+      req.send_request(options)
+    end
+
+    # Deletes a backup access point. This deletes the underlying Amazon S3
+    # access point and, if no other backup access points remain for the
+    # recovery point, resumes lifecycle transitions for that recovery point.
+    #
+    # Always delete backup access points using this operation rather than
+    # deleting the underlying Amazon S3 access point directly.
+    #
+    # @option params [required, String] :access_point_arn
+    #   The Amazon Resource Name (ARN) of the backup access point to delete.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_backup_access_point({
+    #     access_point_arn: "AccessPointArn", # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/DeleteBackupAccessPoint AWS API Documentation
+    #
+    # @overload delete_backup_access_point(params = {})
+    # @param [Hash] params ({})
+    def delete_backup_access_point(params = {}, options = {})
+      req = build_request(:delete_backup_access_point, params)
       req.send_request(options)
     end
 
@@ -1568,6 +1885,83 @@ module Aws::Backup
       req.send_request(options)
     end
 
+    # Deletes the tiering configuration specified by a tiering configuration
+    # name.
+    #
+    # @option params [required, String] :tiering_configuration_name
+    #   The unique name of a tiering configuration.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_tiering_configuration({
+    #     tiering_configuration_name: "TieringConfigurationName", # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/DeleteTieringConfiguration AWS API Documentation
+    #
+    # @overload delete_tiering_configuration(params = {})
+    # @param [Hash] params ({})
+    def delete_tiering_configuration(params = {}, options = {})
+      req = build_request(:delete_tiering_configuration, params)
+      req.send_request(options)
+    end
+
+    # Returns metadata about a backup access point, including its status and
+    # the details of the underlying Amazon S3 access point.
+    #
+    # After a backup access point reaches the `AVAILABLE` status, use this
+    # operation to retrieve the Amazon S3 access point ARN and alias that
+    # you need to read the backup data.
+    #
+    # @option params [required, String] :access_point_arn
+    #   The Amazon Resource Name (ARN) of the backup access point to describe.
+    #
+    # @return [Types::DescribeBackupAccessPointResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DescribeBackupAccessPointResponse#access_point_arn #access_point_arn} => String
+    #   * {Types::DescribeBackupAccessPointResponse#access_point_metadata #access_point_metadata} => Hash&lt;String,String&gt;
+    #   * {Types::DescribeBackupAccessPointResponse#backup_vault_arn #backup_vault_arn} => String
+    #   * {Types::DescribeBackupAccessPointResponse#backup_vault_name #backup_vault_name} => String
+    #   * {Types::DescribeBackupAccessPointResponse#creation_time #creation_time} => Time
+    #   * {Types::DescribeBackupAccessPointResponse#name #name} => String
+    #   * {Types::DescribeBackupAccessPointResponse#recovery_point_arn #recovery_point_arn} => String
+    #   * {Types::DescribeBackupAccessPointResponse#resource_arn #resource_arn} => String
+    #   * {Types::DescribeBackupAccessPointResponse#resource_type #resource_type} => String
+    #   * {Types::DescribeBackupAccessPointResponse#status #status} => String
+    #   * {Types::DescribeBackupAccessPointResponse#status_message #status_message} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.describe_backup_access_point({
+    #     access_point_arn: "AccessPointArn", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.access_point_arn #=> String
+    #   resp.access_point_metadata #=> Hash
+    #   resp.access_point_metadata["AccessPointMetadataMapKeyString"] #=> String
+    #   resp.backup_vault_arn #=> String
+    #   resp.backup_vault_name #=> String
+    #   resp.creation_time #=> Time
+    #   resp.name #=> String
+    #   resp.recovery_point_arn #=> String
+    #   resp.resource_arn #=> String
+    #   resp.resource_type #=> String
+    #   resp.status #=> String, one of "AVAILABLE", "CREATING", "DELETING", "DISASSOCIATED", "DISASSOCIATING", "EXPIRED", "FAILED"
+    #   resp.status_message #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/DescribeBackupAccessPoint AWS API Documentation
+    #
+    # @overload describe_backup_access_point(params = {})
+    # @param [Hash] params ({})
+    def describe_backup_access_point(params = {}, options = {})
+      req = build_request(:describe_backup_access_point, params)
+      req.send_request(options)
+    end
+
     # Returns backup job details for the specified `BackupJobId`.
     #
     # @option params [required, String] :backup_job_id
@@ -1578,8 +1972,13 @@ module Aws::Backup
     #   * {Types::DescribeBackupJobOutput#account_id #account_id} => String
     #   * {Types::DescribeBackupJobOutput#backup_job_id #backup_job_id} => String
     #   * {Types::DescribeBackupJobOutput#backup_vault_name #backup_vault_name} => String
+    #   * {Types::DescribeBackupJobOutput#recovery_point_lifecycle #recovery_point_lifecycle} => Types::Lifecycle
     #   * {Types::DescribeBackupJobOutput#backup_vault_arn #backup_vault_arn} => String
+    #   * {Types::DescribeBackupJobOutput#vault_type #vault_type} => String
+    #   * {Types::DescribeBackupJobOutput#vault_lock_state #vault_lock_state} => String
     #   * {Types::DescribeBackupJobOutput#recovery_point_arn #recovery_point_arn} => String
+    #   * {Types::DescribeBackupJobOutput#encryption_key_arn #encryption_key_arn} => String
+    #   * {Types::DescribeBackupJobOutput#is_encrypted #is_encrypted} => Boolean
     #   * {Types::DescribeBackupJobOutput#resource_arn #resource_arn} => String
     #   * {Types::DescribeBackupJobOutput#creation_date #creation_date} => Time
     #   * {Types::DescribeBackupJobOutput#completion_date #completion_date} => Time
@@ -1614,8 +2013,16 @@ module Aws::Backup
     #   resp.account_id #=> String
     #   resp.backup_job_id #=> String
     #   resp.backup_vault_name #=> String
+    #   resp.recovery_point_lifecycle.move_to_cold_storage_after_days #=> Integer
+    #   resp.recovery_point_lifecycle.delete_after_days #=> Integer
+    #   resp.recovery_point_lifecycle.opt_in_to_archive_for_supported_resources #=> Boolean
+    #   resp.recovery_point_lifecycle.delete_after_event #=> String, one of "DELETE_AFTER_COPY"
     #   resp.backup_vault_arn #=> String
+    #   resp.vault_type #=> String
+    #   resp.vault_lock_state #=> String
     #   resp.recovery_point_arn #=> String
+    #   resp.encryption_key_arn #=> String
+    #   resp.is_encrypted #=> Boolean
     #   resp.resource_arn #=> String
     #   resp.creation_date #=> Time
     #   resp.completion_date #=> Time
@@ -1626,8 +2033,12 @@ module Aws::Backup
     #   resp.iam_role_arn #=> String
     #   resp.created_by.backup_plan_id #=> String
     #   resp.created_by.backup_plan_arn #=> String
+    #   resp.created_by.backup_plan_name #=> String
     #   resp.created_by.backup_plan_version #=> String
     #   resp.created_by.backup_rule_id #=> String
+    #   resp.created_by.backup_rule_name #=> String
+    #   resp.created_by.backup_rule_cron #=> String
+    #   resp.created_by.backup_rule_timezone #=> String
     #   resp.resource_type #=> String
     #   resp.bytes_transferred #=> Integer
     #   resp.expected_completion_date #=> Time
@@ -1677,6 +2088,11 @@ module Aws::Backup
     #   * {Types::DescribeBackupVaultOutput#min_retention_days #min_retention_days} => Integer
     #   * {Types::DescribeBackupVaultOutput#max_retention_days #max_retention_days} => Integer
     #   * {Types::DescribeBackupVaultOutput#lock_date #lock_date} => Time
+    #   * {Types::DescribeBackupVaultOutput#source_backup_vault_arn #source_backup_vault_arn} => String
+    #   * {Types::DescribeBackupVaultOutput#mpa_approval_team_arn #mpa_approval_team_arn} => String
+    #   * {Types::DescribeBackupVaultOutput#mpa_session_arn #mpa_session_arn} => String
+    #   * {Types::DescribeBackupVaultOutput#latest_mpa_approval_team_update #latest_mpa_approval_team_update} => Types::LatestMpaApprovalTeamUpdate
+    #   * {Types::DescribeBackupVaultOutput#encryption_key_type #encryption_key_type} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -1689,7 +2105,7 @@ module Aws::Backup
     #
     #   resp.backup_vault_name #=> String
     #   resp.backup_vault_arn #=> String
-    #   resp.vault_type #=> String, one of "BACKUP_VAULT", "LOGICALLY_AIR_GAPPED_BACKUP_VAULT"
+    #   resp.vault_type #=> String, one of "BACKUP_VAULT", "LOGICALLY_AIR_GAPPED_BACKUP_VAULT", "RESTORE_ACCESS_BACKUP_VAULT"
     #   resp.vault_state #=> String, one of "CREATING", "AVAILABLE", "FAILED"
     #   resp.encryption_key_arn #=> String
     #   resp.creation_date #=> Time
@@ -1699,6 +2115,15 @@ module Aws::Backup
     #   resp.min_retention_days #=> Integer
     #   resp.max_retention_days #=> Integer
     #   resp.lock_date #=> Time
+    #   resp.source_backup_vault_arn #=> String
+    #   resp.mpa_approval_team_arn #=> String
+    #   resp.mpa_session_arn #=> String
+    #   resp.latest_mpa_approval_team_update.mpa_session_arn #=> String
+    #   resp.latest_mpa_approval_team_update.status #=> String, one of "PENDING", "APPROVED", "FAILED"
+    #   resp.latest_mpa_approval_team_update.status_message #=> String
+    #   resp.latest_mpa_approval_team_update.initiation_date #=> Time
+    #   resp.latest_mpa_approval_team_update.expiry_date #=> Time
+    #   resp.encryption_key_type #=> String, one of "AWS_OWNED_KMS_KEY", "CUSTOMER_MANAGED_KMS_KEY"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/DescribeBackupVault AWS API Documentation
     #
@@ -1731,7 +2156,14 @@ module Aws::Backup
     #   resp.copy_job.source_backup_vault_arn #=> String
     #   resp.copy_job.source_recovery_point_arn #=> String
     #   resp.copy_job.destination_backup_vault_arn #=> String
+    #   resp.copy_job.destination_vault_type #=> String
+    #   resp.copy_job.destination_vault_lock_state #=> String
     #   resp.copy_job.destination_recovery_point_arn #=> String
+    #   resp.copy_job.destination_encryption_key_arn #=> String
+    #   resp.copy_job.destination_recovery_point_lifecycle.move_to_cold_storage_after_days #=> Integer
+    #   resp.copy_job.destination_recovery_point_lifecycle.delete_after_days #=> Integer
+    #   resp.copy_job.destination_recovery_point_lifecycle.opt_in_to_archive_for_supported_resources #=> Boolean
+    #   resp.copy_job.destination_recovery_point_lifecycle.delete_after_event #=> String, one of "DELETE_AFTER_COPY"
     #   resp.copy_job.resource_arn #=> String
     #   resp.copy_job.creation_date #=> Time
     #   resp.copy_job.completion_date #=> Time
@@ -1741,8 +2173,13 @@ module Aws::Backup
     #   resp.copy_job.iam_role_arn #=> String
     #   resp.copy_job.created_by.backup_plan_id #=> String
     #   resp.copy_job.created_by.backup_plan_arn #=> String
+    #   resp.copy_job.created_by.backup_plan_name #=> String
     #   resp.copy_job.created_by.backup_plan_version #=> String
     #   resp.copy_job.created_by.backup_rule_id #=> String
+    #   resp.copy_job.created_by.backup_rule_name #=> String
+    #   resp.copy_job.created_by.backup_rule_cron #=> String
+    #   resp.copy_job.created_by.backup_rule_timezone #=> String
+    #   resp.copy_job.created_by_backup_job_id #=> String
     #   resp.copy_job.resource_type #=> String
     #   resp.copy_job.parent_job_id #=> String
     #   resp.copy_job.is_parent #=> Boolean
@@ -1814,10 +2251,11 @@ module Aws::Backup
       req.send_request(options)
     end
 
-    # Describes whether the Amazon Web Services account is opted in to
-    # cross-account backup. Returns an error if the account is not a member
-    # of an Organizations organization. Example: `describe-global-settings
-    # --region us-west-2`
+    # Describes whether the Amazon Web Services account has enabled
+    # different cross-account management options, including cross-account
+    # backup, multi-party approval, and delegated administrator. Returns an
+    # error if the account is not a member of an Organizations organization.
+    # Example: `describe-global-settings --region us-west-2`
     #
     # @return [Types::DescribeGlobalSettingsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1915,6 +2353,7 @@ module Aws::Backup
     #   * {Types::DescribeRecoveryPointOutput#status #status} => String
     #   * {Types::DescribeRecoveryPointOutput#status_message #status_message} => String
     #   * {Types::DescribeRecoveryPointOutput#creation_date #creation_date} => Time
+    #   * {Types::DescribeRecoveryPointOutput#initiation_date #initiation_date} => Time
     #   * {Types::DescribeRecoveryPointOutput#completion_date #completion_date} => Time
     #   * {Types::DescribeRecoveryPointOutput#backup_size_in_bytes #backup_size_in_bytes} => Integer
     #   * {Types::DescribeRecoveryPointOutput#calculated_lifecycle #calculated_lifecycle} => Types::CalculatedLifecycle
@@ -1930,6 +2369,8 @@ module Aws::Backup
     #   * {Types::DescribeRecoveryPointOutput#vault_type #vault_type} => String
     #   * {Types::DescribeRecoveryPointOutput#index_status #index_status} => String
     #   * {Types::DescribeRecoveryPointOutput#index_status_message #index_status_message} => String
+    #   * {Types::DescribeRecoveryPointOutput#encryption_key_type #encryption_key_type} => String
+    #   * {Types::DescribeRecoveryPointOutput#scan_results #scan_results} => Array&lt;Types::ScanResult&gt;
     #
     # @example Request syntax with placeholder values
     #
@@ -1949,12 +2390,17 @@ module Aws::Backup
     #   resp.resource_type #=> String
     #   resp.created_by.backup_plan_id #=> String
     #   resp.created_by.backup_plan_arn #=> String
+    #   resp.created_by.backup_plan_name #=> String
     #   resp.created_by.backup_plan_version #=> String
     #   resp.created_by.backup_rule_id #=> String
+    #   resp.created_by.backup_rule_name #=> String
+    #   resp.created_by.backup_rule_cron #=> String
+    #   resp.created_by.backup_rule_timezone #=> String
     #   resp.iam_role_arn #=> String
-    #   resp.status #=> String, one of "COMPLETED", "PARTIAL", "DELETING", "EXPIRED"
+    #   resp.status #=> String, one of "COMPLETED", "PARTIAL", "DELETING", "EXPIRED", "AVAILABLE", "STOPPED", "CREATING"
     #   resp.status_message #=> String
     #   resp.creation_date #=> Time
+    #   resp.initiation_date #=> Time
     #   resp.completion_date #=> Time
     #   resp.backup_size_in_bytes #=> Integer
     #   resp.calculated_lifecycle.move_to_cold_storage_at #=> Time
@@ -1962,6 +2408,7 @@ module Aws::Backup
     #   resp.lifecycle.move_to_cold_storage_after_days #=> Integer
     #   resp.lifecycle.delete_after_days #=> Integer
     #   resp.lifecycle.opt_in_to_archive_for_supported_resources #=> Boolean
+    #   resp.lifecycle.delete_after_event #=> String, one of "DELETE_AFTER_COPY"
     #   resp.encryption_key_arn #=> String
     #   resp.is_encrypted #=> Boolean
     #   resp.storage_class #=> String, one of "WARM", "COLD", "DELETED"
@@ -1970,9 +2417,16 @@ module Aws::Backup
     #   resp.composite_member_identifier #=> String
     #   resp.is_parent #=> Boolean
     #   resp.resource_name #=> String
-    #   resp.vault_type #=> String, one of "BACKUP_VAULT", "LOGICALLY_AIR_GAPPED_BACKUP_VAULT"
+    #   resp.vault_type #=> String, one of "BACKUP_VAULT", "LOGICALLY_AIR_GAPPED_BACKUP_VAULT", "RESTORE_ACCESS_BACKUP_VAULT"
     #   resp.index_status #=> String, one of "PENDING", "ACTIVE", "FAILED", "DELETING"
     #   resp.index_status_message #=> String
+    #   resp.encryption_key_type #=> String, one of "AWS_OWNED_KMS_KEY", "CUSTOMER_MANAGED_KMS_KEY"
+    #   resp.scan_results #=> Array
+    #   resp.scan_results[0].malware_scanner #=> String, one of "GUARDDUTY"
+    #   resp.scan_results[0].scan_job_state #=> String, one of "COMPLETED", "COMPLETED_WITH_ISSUES", "FAILED", "CANCELED"
+    #   resp.scan_results[0].last_scan_timestamp #=> Time
+    #   resp.scan_results[0].findings #=> Array
+    #   resp.scan_results[0].findings[0] #=> String, one of "MALWARE"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/DescribeRecoveryPoint AWS API Documentation
     #
@@ -2110,6 +2564,8 @@ module Aws::Backup
     #   * {Types::DescribeRestoreJobOutput#account_id #account_id} => String
     #   * {Types::DescribeRestoreJobOutput#restore_job_id #restore_job_id} => String
     #   * {Types::DescribeRestoreJobOutput#recovery_point_arn #recovery_point_arn} => String
+    #   * {Types::DescribeRestoreJobOutput#source_resource_arn #source_resource_arn} => String
+    #   * {Types::DescribeRestoreJobOutput#backup_vault_arn #backup_vault_arn} => String
     #   * {Types::DescribeRestoreJobOutput#creation_date #creation_date} => Time
     #   * {Types::DescribeRestoreJobOutput#completion_date #completion_date} => Time
     #   * {Types::DescribeRestoreJobOutput#status #status} => String
@@ -2126,6 +2582,8 @@ module Aws::Backup
     #   * {Types::DescribeRestoreJobOutput#validation_status_message #validation_status_message} => String
     #   * {Types::DescribeRestoreJobOutput#deletion_status #deletion_status} => String
     #   * {Types::DescribeRestoreJobOutput#deletion_status_message #deletion_status_message} => String
+    #   * {Types::DescribeRestoreJobOutput#is_parent #is_parent} => Boolean
+    #   * {Types::DescribeRestoreJobOutput#parent_job_id #parent_job_id} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -2138,6 +2596,8 @@ module Aws::Backup
     #   resp.account_id #=> String
     #   resp.restore_job_id #=> String
     #   resp.recovery_point_arn #=> String
+    #   resp.source_resource_arn #=> String
+    #   resp.backup_vault_arn #=> String
     #   resp.creation_date #=> Time
     #   resp.completion_date #=> Time
     #   resp.status #=> String, one of "PENDING", "RUNNING", "COMPLETED", "ABORTED", "FAILED"
@@ -2154,6 +2614,8 @@ module Aws::Backup
     #   resp.validation_status_message #=> String
     #   resp.deletion_status #=> String, one of "DELETING", "FAILED", "SUCCESSFUL"
     #   resp.deletion_status_message #=> String
+    #   resp.is_parent #=> Boolean
+    #   resp.parent_job_id #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/DescribeRestoreJob AWS API Documentation
     #
@@ -2161,6 +2623,108 @@ module Aws::Backup
     # @param [Hash] params ({})
     def describe_restore_job(params = {}, options = {})
       req = build_request(:describe_restore_job, params)
+      req.send_request(options)
+    end
+
+    # Returns scan job details for the specified ScanJobID.
+    #
+    # @option params [required, String] :scan_job_id
+    #   Uniquely identifies a request to Backup to scan a resource.
+    #
+    # @return [Types::DescribeScanJobOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DescribeScanJobOutput#account_id #account_id} => String
+    #   * {Types::DescribeScanJobOutput#backup_vault_arn #backup_vault_arn} => String
+    #   * {Types::DescribeScanJobOutput#backup_vault_name #backup_vault_name} => String
+    #   * {Types::DescribeScanJobOutput#completion_date #completion_date} => Time
+    #   * {Types::DescribeScanJobOutput#continuous_scan_end_time #continuous_scan_end_time} => Time
+    #   * {Types::DescribeScanJobOutput#continuous_scan_start_time #continuous_scan_start_time} => Time
+    #   * {Types::DescribeScanJobOutput#created_by #created_by} => Types::ScanJobCreator
+    #   * {Types::DescribeScanJobOutput#creation_date #creation_date} => Time
+    #   * {Types::DescribeScanJobOutput#iam_role_arn #iam_role_arn} => String
+    #   * {Types::DescribeScanJobOutput#malware_scanner #malware_scanner} => String
+    #   * {Types::DescribeScanJobOutput#recovery_point_arn #recovery_point_arn} => String
+    #   * {Types::DescribeScanJobOutput#resource_arn #resource_arn} => String
+    #   * {Types::DescribeScanJobOutput#resource_name #resource_name} => String
+    #   * {Types::DescribeScanJobOutput#resource_type #resource_type} => String
+    #   * {Types::DescribeScanJobOutput#scan_base_recovery_point_arn #scan_base_recovery_point_arn} => String
+    #   * {Types::DescribeScanJobOutput#scan_id #scan_id} => String
+    #   * {Types::DescribeScanJobOutput#scan_job_id #scan_job_id} => String
+    #   * {Types::DescribeScanJobOutput#scan_mode #scan_mode} => String
+    #   * {Types::DescribeScanJobOutput#scan_result #scan_result} => Types::ScanResultInfo
+    #   * {Types::DescribeScanJobOutput#scanner_role_arn #scanner_role_arn} => String
+    #   * {Types::DescribeScanJobOutput#state #state} => String
+    #   * {Types::DescribeScanJobOutput#status_message #status_message} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.describe_scan_job({
+    #     scan_job_id: "String", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.account_id #=> String
+    #   resp.backup_vault_arn #=> String
+    #   resp.backup_vault_name #=> String
+    #   resp.completion_date #=> Time
+    #   resp.continuous_scan_end_time #=> Time
+    #   resp.continuous_scan_start_time #=> Time
+    #   resp.created_by.backup_plan_arn #=> String
+    #   resp.created_by.backup_plan_id #=> String
+    #   resp.created_by.backup_plan_version #=> String
+    #   resp.created_by.backup_rule_id #=> String
+    #   resp.creation_date #=> Time
+    #   resp.iam_role_arn #=> String
+    #   resp.malware_scanner #=> String, one of "GUARDDUTY"
+    #   resp.recovery_point_arn #=> String
+    #   resp.resource_arn #=> String
+    #   resp.resource_name #=> String
+    #   resp.resource_type #=> String, one of "EBS", "EC2", "S3"
+    #   resp.scan_base_recovery_point_arn #=> String
+    #   resp.scan_id #=> String
+    #   resp.scan_job_id #=> String
+    #   resp.scan_mode #=> String, one of "FULL_SCAN", "INCREMENTAL_SCAN"
+    #   resp.scan_result.scan_result_status #=> String, one of "NO_THREATS_FOUND", "THREATS_FOUND", "UNKNOWN"
+    #   resp.scanner_role_arn #=> String
+    #   resp.state #=> String, one of "CANCELED", "COMPLETED", "COMPLETED_WITH_ISSUES", "CREATED", "FAILED", "RUNNING"
+    #   resp.status_message #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/DescribeScanJob AWS API Documentation
+    #
+    # @overload describe_scan_job(params = {})
+    # @param [Hash] params ({})
+    def describe_scan_job(params = {}, options = {})
+      req = build_request(:describe_scan_job, params)
+      req.send_request(options)
+    end
+
+    # Removes the association between an MPA approval team and a backup
+    # vault, disabling the MPA approval workflow for restore operations.
+    #
+    # @option params [required, String] :backup_vault_name
+    #   The name of the backup vault from which to disassociate the MPA
+    #   approval team.
+    #
+    # @option params [String] :requester_comment
+    #   An optional comment explaining the reason for disassociating the MPA
+    #   approval team from the backup vault.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.disassociate_backup_vault_mpa_approval_team({
+    #     backup_vault_name: "BackupVaultName", # required
+    #     requester_comment: "RequesterComment",
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/DisassociateBackupVaultMpaApprovalTeam AWS API Documentation
+    #
+    # @overload disassociate_backup_vault_mpa_approval_team(params = {})
+    # @param [Hash] params ({})
+    def disassociate_backup_vault_mpa_approval_team(params = {}, options = {})
+      req = build_request(:disassociate_backup_vault_mpa_approval_team, params)
       req.send_request(options)
     end
 
@@ -2270,6 +2834,11 @@ module Aws::Backup
     #   Unique, randomly generated, Unicode, UTF-8 encoded strings that are at
     #   most 1,024 bytes long. Version IDs cannot be edited.
     #
+    # @option params [Integer] :max_scheduled_runs_preview
+    #   Number of future scheduled backup runs to preview. When set to 0
+    #   (default), no scheduled runs preview is included in the response.
+    #   Valid range is 0-10.
+    #
     # @return [Types::GetBackupPlanOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::GetBackupPlanOutput#backup_plan #backup_plan} => Types::BackupPlan
@@ -2281,12 +2850,14 @@ module Aws::Backup
     #   * {Types::GetBackupPlanOutput#deletion_date #deletion_date} => Time
     #   * {Types::GetBackupPlanOutput#last_execution_date #last_execution_date} => Time
     #   * {Types::GetBackupPlanOutput#advanced_backup_settings #advanced_backup_settings} => Array&lt;Types::AdvancedBackupSetting&gt;
+    #   * {Types::GetBackupPlanOutput#scheduled_runs_preview #scheduled_runs_preview} => Array&lt;Types::ScheduledPlanExecutionMember&gt;
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_backup_plan({
     #     backup_plan_id: "string", # required
     #     version_id: "string",
+    #     max_scheduled_runs_preview: 1,
     #   })
     #
     # @example Response structure
@@ -2295,12 +2866,14 @@ module Aws::Backup
     #   resp.backup_plan.rules #=> Array
     #   resp.backup_plan.rules[0].rule_name #=> String
     #   resp.backup_plan.rules[0].target_backup_vault_name #=> String
+    #   resp.backup_plan.rules[0].target_logically_air_gapped_backup_vault_arn #=> String
     #   resp.backup_plan.rules[0].schedule_expression #=> String
     #   resp.backup_plan.rules[0].start_window_minutes #=> Integer
     #   resp.backup_plan.rules[0].completion_window_minutes #=> Integer
     #   resp.backup_plan.rules[0].lifecycle.move_to_cold_storage_after_days #=> Integer
     #   resp.backup_plan.rules[0].lifecycle.delete_after_days #=> Integer
     #   resp.backup_plan.rules[0].lifecycle.opt_in_to_archive_for_supported_resources #=> Boolean
+    #   resp.backup_plan.rules[0].lifecycle.delete_after_event #=> String, one of "DELETE_AFTER_COPY"
     #   resp.backup_plan.rules[0].recovery_point_tags #=> Hash
     #   resp.backup_plan.rules[0].recovery_point_tags["TagKey"] #=> String
     #   resp.backup_plan.rules[0].rule_id #=> String
@@ -2308,16 +2881,25 @@ module Aws::Backup
     #   resp.backup_plan.rules[0].copy_actions[0].lifecycle.move_to_cold_storage_after_days #=> Integer
     #   resp.backup_plan.rules[0].copy_actions[0].lifecycle.delete_after_days #=> Integer
     #   resp.backup_plan.rules[0].copy_actions[0].lifecycle.opt_in_to_archive_for_supported_resources #=> Boolean
+    #   resp.backup_plan.rules[0].copy_actions[0].lifecycle.delete_after_event #=> String, one of "DELETE_AFTER_COPY"
     #   resp.backup_plan.rules[0].copy_actions[0].destination_backup_vault_arn #=> String
     #   resp.backup_plan.rules[0].enable_continuous_backup #=> Boolean
     #   resp.backup_plan.rules[0].schedule_expression_timezone #=> String
     #   resp.backup_plan.rules[0].index_actions #=> Array
     #   resp.backup_plan.rules[0].index_actions[0].resource_types #=> Array
     #   resp.backup_plan.rules[0].index_actions[0].resource_types[0] #=> String
+    #   resp.backup_plan.rules[0].scan_actions #=> Array
+    #   resp.backup_plan.rules[0].scan_actions[0].malware_scanner #=> String, one of "GUARDDUTY"
+    #   resp.backup_plan.rules[0].scan_actions[0].scan_mode #=> String, one of "FULL_SCAN", "INCREMENTAL_SCAN"
     #   resp.backup_plan.advanced_backup_settings #=> Array
     #   resp.backup_plan.advanced_backup_settings[0].resource_type #=> String
     #   resp.backup_plan.advanced_backup_settings[0].backup_options #=> Hash
     #   resp.backup_plan.advanced_backup_settings[0].backup_options["BackupOptionKey"] #=> String
+    #   resp.backup_plan.scan_settings #=> Array
+    #   resp.backup_plan.scan_settings[0].malware_scanner #=> String, one of "GUARDDUTY"
+    #   resp.backup_plan.scan_settings[0].resource_types #=> Array
+    #   resp.backup_plan.scan_settings[0].resource_types[0] #=> String
+    #   resp.backup_plan.scan_settings[0].scanner_role_arn #=> String
     #   resp.backup_plan_id #=> String
     #   resp.backup_plan_arn #=> String
     #   resp.version_id #=> String
@@ -2329,6 +2911,10 @@ module Aws::Backup
     #   resp.advanced_backup_settings[0].resource_type #=> String
     #   resp.advanced_backup_settings[0].backup_options #=> Hash
     #   resp.advanced_backup_settings[0].backup_options["BackupOptionKey"] #=> String
+    #   resp.scheduled_runs_preview #=> Array
+    #   resp.scheduled_runs_preview[0].execution_time #=> Time
+    #   resp.scheduled_runs_preview[0].rule_id #=> String
+    #   resp.scheduled_runs_preview[0].rule_execution_type #=> String, one of "CONTINUOUS", "SNAPSHOTS", "CONTINUOUS_AND_SNAPSHOTS"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/GetBackupPlan AWS API Documentation
     #
@@ -2360,12 +2946,14 @@ module Aws::Backup
     #   resp.backup_plan.rules #=> Array
     #   resp.backup_plan.rules[0].rule_name #=> String
     #   resp.backup_plan.rules[0].target_backup_vault_name #=> String
+    #   resp.backup_plan.rules[0].target_logically_air_gapped_backup_vault_arn #=> String
     #   resp.backup_plan.rules[0].schedule_expression #=> String
     #   resp.backup_plan.rules[0].start_window_minutes #=> Integer
     #   resp.backup_plan.rules[0].completion_window_minutes #=> Integer
     #   resp.backup_plan.rules[0].lifecycle.move_to_cold_storage_after_days #=> Integer
     #   resp.backup_plan.rules[0].lifecycle.delete_after_days #=> Integer
     #   resp.backup_plan.rules[0].lifecycle.opt_in_to_archive_for_supported_resources #=> Boolean
+    #   resp.backup_plan.rules[0].lifecycle.delete_after_event #=> String, one of "DELETE_AFTER_COPY"
     #   resp.backup_plan.rules[0].recovery_point_tags #=> Hash
     #   resp.backup_plan.rules[0].recovery_point_tags["TagKey"] #=> String
     #   resp.backup_plan.rules[0].rule_id #=> String
@@ -2373,16 +2961,25 @@ module Aws::Backup
     #   resp.backup_plan.rules[0].copy_actions[0].lifecycle.move_to_cold_storage_after_days #=> Integer
     #   resp.backup_plan.rules[0].copy_actions[0].lifecycle.delete_after_days #=> Integer
     #   resp.backup_plan.rules[0].copy_actions[0].lifecycle.opt_in_to_archive_for_supported_resources #=> Boolean
+    #   resp.backup_plan.rules[0].copy_actions[0].lifecycle.delete_after_event #=> String, one of "DELETE_AFTER_COPY"
     #   resp.backup_plan.rules[0].copy_actions[0].destination_backup_vault_arn #=> String
     #   resp.backup_plan.rules[0].enable_continuous_backup #=> Boolean
     #   resp.backup_plan.rules[0].schedule_expression_timezone #=> String
     #   resp.backup_plan.rules[0].index_actions #=> Array
     #   resp.backup_plan.rules[0].index_actions[0].resource_types #=> Array
     #   resp.backup_plan.rules[0].index_actions[0].resource_types[0] #=> String
+    #   resp.backup_plan.rules[0].scan_actions #=> Array
+    #   resp.backup_plan.rules[0].scan_actions[0].malware_scanner #=> String, one of "GUARDDUTY"
+    #   resp.backup_plan.rules[0].scan_actions[0].scan_mode #=> String, one of "FULL_SCAN", "INCREMENTAL_SCAN"
     #   resp.backup_plan.advanced_backup_settings #=> Array
     #   resp.backup_plan.advanced_backup_settings[0].resource_type #=> String
     #   resp.backup_plan.advanced_backup_settings[0].backup_options #=> Hash
     #   resp.backup_plan.advanced_backup_settings[0].backup_options["BackupOptionKey"] #=> String
+    #   resp.backup_plan.scan_settings #=> Array
+    #   resp.backup_plan.scan_settings[0].malware_scanner #=> String, one of "GUARDDUTY"
+    #   resp.backup_plan.scan_settings[0].resource_types #=> Array
+    #   resp.backup_plan.scan_settings[0].resource_types[0] #=> String
+    #   resp.backup_plan.scan_settings[0].scanner_role_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/GetBackupPlanFromJSON AWS API Documentation
     #
@@ -2414,12 +3011,14 @@ module Aws::Backup
     #   resp.backup_plan_document.rules #=> Array
     #   resp.backup_plan_document.rules[0].rule_name #=> String
     #   resp.backup_plan_document.rules[0].target_backup_vault_name #=> String
+    #   resp.backup_plan_document.rules[0].target_logically_air_gapped_backup_vault_arn #=> String
     #   resp.backup_plan_document.rules[0].schedule_expression #=> String
     #   resp.backup_plan_document.rules[0].start_window_minutes #=> Integer
     #   resp.backup_plan_document.rules[0].completion_window_minutes #=> Integer
     #   resp.backup_plan_document.rules[0].lifecycle.move_to_cold_storage_after_days #=> Integer
     #   resp.backup_plan_document.rules[0].lifecycle.delete_after_days #=> Integer
     #   resp.backup_plan_document.rules[0].lifecycle.opt_in_to_archive_for_supported_resources #=> Boolean
+    #   resp.backup_plan_document.rules[0].lifecycle.delete_after_event #=> String, one of "DELETE_AFTER_COPY"
     #   resp.backup_plan_document.rules[0].recovery_point_tags #=> Hash
     #   resp.backup_plan_document.rules[0].recovery_point_tags["TagKey"] #=> String
     #   resp.backup_plan_document.rules[0].rule_id #=> String
@@ -2427,16 +3026,25 @@ module Aws::Backup
     #   resp.backup_plan_document.rules[0].copy_actions[0].lifecycle.move_to_cold_storage_after_days #=> Integer
     #   resp.backup_plan_document.rules[0].copy_actions[0].lifecycle.delete_after_days #=> Integer
     #   resp.backup_plan_document.rules[0].copy_actions[0].lifecycle.opt_in_to_archive_for_supported_resources #=> Boolean
+    #   resp.backup_plan_document.rules[0].copy_actions[0].lifecycle.delete_after_event #=> String, one of "DELETE_AFTER_COPY"
     #   resp.backup_plan_document.rules[0].copy_actions[0].destination_backup_vault_arn #=> String
     #   resp.backup_plan_document.rules[0].enable_continuous_backup #=> Boolean
     #   resp.backup_plan_document.rules[0].schedule_expression_timezone #=> String
     #   resp.backup_plan_document.rules[0].index_actions #=> Array
     #   resp.backup_plan_document.rules[0].index_actions[0].resource_types #=> Array
     #   resp.backup_plan_document.rules[0].index_actions[0].resource_types[0] #=> String
+    #   resp.backup_plan_document.rules[0].scan_actions #=> Array
+    #   resp.backup_plan_document.rules[0].scan_actions[0].malware_scanner #=> String, one of "GUARDDUTY"
+    #   resp.backup_plan_document.rules[0].scan_actions[0].scan_mode #=> String, one of "FULL_SCAN", "INCREMENTAL_SCAN"
     #   resp.backup_plan_document.advanced_backup_settings #=> Array
     #   resp.backup_plan_document.advanced_backup_settings[0].resource_type #=> String
     #   resp.backup_plan_document.advanced_backup_settings[0].backup_options #=> Hash
     #   resp.backup_plan_document.advanced_backup_settings[0].backup_options["BackupOptionKey"] #=> String
+    #   resp.backup_plan_document.scan_settings #=> Array
+    #   resp.backup_plan_document.scan_settings[0].malware_scanner #=> String, one of "GUARDDUTY"
+    #   resp.backup_plan_document.scan_settings[0].resource_types #=> Array
+    #   resp.backup_plan_document.scan_settings[0].resource_types[0] #=> String
+    #   resp.backup_plan_document.scan_settings[0].scanner_role_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/GetBackupPlanFromTemplate AWS API Documentation
     #
@@ -2571,7 +3179,7 @@ module Aws::Backup
     #   resp.backup_vault_arn #=> String
     #   resp.sns_topic_arn #=> String
     #   resp.backup_vault_events #=> Array
-    #   resp.backup_vault_events[0] #=> String, one of "BACKUP_JOB_STARTED", "BACKUP_JOB_COMPLETED", "BACKUP_JOB_SUCCESSFUL", "BACKUP_JOB_FAILED", "BACKUP_JOB_EXPIRED", "RESTORE_JOB_STARTED", "RESTORE_JOB_COMPLETED", "RESTORE_JOB_SUCCESSFUL", "RESTORE_JOB_FAILED", "COPY_JOB_STARTED", "COPY_JOB_SUCCESSFUL", "COPY_JOB_FAILED", "RECOVERY_POINT_MODIFIED", "BACKUP_PLAN_CREATED", "BACKUP_PLAN_MODIFIED", "S3_BACKUP_OBJECT_FAILED", "S3_RESTORE_OBJECT_FAILED"
+    #   resp.backup_vault_events[0] #=> String, one of "BACKUP_JOB_STARTED", "BACKUP_JOB_COMPLETED", "BACKUP_JOB_SUCCESSFUL", "BACKUP_JOB_FAILED", "BACKUP_JOB_EXPIRED", "RESTORE_JOB_STARTED", "RESTORE_JOB_COMPLETED", "RESTORE_JOB_SUCCESSFUL", "RESTORE_JOB_FAILED", "COPY_JOB_STARTED", "COPY_JOB_SUCCESSFUL", "COPY_JOB_FAILED", "RECOVERY_POINT_MODIFIED", "BACKUP_PLAN_CREATED", "BACKUP_PLAN_MODIFIED", "S3_BACKUP_OBJECT_FAILED", "S3_RESTORE_OBJECT_FAILED", "CONTINUOUS_BACKUP_INTERRUPTED", "RECOVERY_POINT_INDEX_COMPLETED", "RECOVERY_POINT_INDEX_DELETED", "RECOVERY_POINT_INDEXING_FAILED", "EKS_RESTORE_OBJECT_FAILED", "EKS_RESTORE_OBJECT_SKIPPED", "EKS_BACKUP_OBJECT_FAILED", "ACCESS_POINT_AVAILABLE", "ACCESS_POINT_CREATION_FAILED", "ACCESS_POINT_DELETED", "ACCESS_POINT_DELETION_FAILED", "ACCESS_POINT_EXPIRED", "ACCESS_POINT_DISASSOCIATED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/GetBackupVaultNotifications AWS API Documentation
     #
@@ -2631,6 +3239,61 @@ module Aws::Backup
     # @param [Hash] params ({})
     def get_legal_hold(params = {}, options = {})
       req = build_request(:get_legal_hold, params)
+      req.send_request(options)
+    end
+
+    # Returns the malware scan results for a specified point in time within
+    # a continuous (point-in-time recovery) backup.
+    #
+    # @option params [required, String] :recovery_point_arn
+    #   An ARN that uniquely identifies the target recovery point for
+    #   scanning; for example,
+    #   `arn:aws:backup:us-east-1:123456789012:recovery-point:1EB3B5E7-9EB0-435A-A80B-108B488B0D45`.
+    #
+    # @option params [required, String] :backup_vault_name
+    #   The name of a logical container where backups are stored. Backup
+    #   vaults are identified by names that are unique to the account used to
+    #   create them and the Amazon Web Services Region where they are created.
+    #
+    # @option params [required, Time,DateTime,Date,Integer,String] :scan_end_time
+    #   The point in time within the continuous backup to examine for malware
+    #   scan results.
+    #
+    # @option params [required, String] :malware_scanner
+    #   The scanning engine used for the corresponding scan job. Currently
+    #   only `GUARDDUTY` is supported.
+    #
+    # @return [Types::GetPITRMalwareScanResultsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetPITRMalwareScanResultsOutput#scan_end_time #scan_end_time} => Time
+    #   * {Types::GetPITRMalwareScanResultsOutput#scan_result #scan_result} => Types::ScanResultInfo
+    #   * {Types::GetPITRMalwareScanResultsOutput#last_scan_job_time #last_scan_job_time} => Time
+    #   * {Types::GetPITRMalwareScanResultsOutput#scan_id #scan_id} => String
+    #   * {Types::GetPITRMalwareScanResultsOutput#scan_mode #scan_mode} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_pitr_malware_scan_results({
+    #     recovery_point_arn: "String", # required
+    #     backup_vault_name: "String", # required
+    #     scan_end_time: Time.now, # required
+    #     malware_scanner: "GUARDDUTY", # required, accepts GUARDDUTY
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.scan_end_time #=> Time
+    #   resp.scan_result.scan_result_status #=> String, one of "NO_THREATS_FOUND", "THREATS_FOUND", "UNKNOWN"
+    #   resp.last_scan_job_time #=> Time
+    #   resp.scan_id #=> String
+    #   resp.scan_mode #=> String, one of "FULL_SCAN", "INCREMENTAL_SCAN"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/GetPITRMalwareScanResults AWS API Documentation
+    #
+    # @overload get_pitr_malware_scan_results(params = {})
+    # @param [Hash] params ({})
+    def get_pitr_malware_scan_results(params = {}, options = {})
+      req = build_request(:get_pitr_malware_scan_results, params)
       req.send_request(options)
     end
 
@@ -2927,6 +3590,214 @@ module Aws::Backup
       req.send_request(options)
     end
 
+    # Returns `TieringConfiguration` details for the specified
+    # `TieringConfigurationName`. The details are the body of a tiering
+    # configuration in JSON format, in addition to configuration metadata.
+    #
+    # @option params [required, String] :tiering_configuration_name
+    #   The unique name of a tiering configuration.
+    #
+    # @return [Types::GetTieringConfigurationOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetTieringConfigurationOutput#tiering_configuration #tiering_configuration} => Types::TieringConfiguration
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_tiering_configuration({
+    #     tiering_configuration_name: "TieringConfigurationName", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.tiering_configuration.tiering_configuration_name #=> String
+    #   resp.tiering_configuration.tiering_configuration_arn #=> String
+    #   resp.tiering_configuration.backup_vault_name #=> String
+    #   resp.tiering_configuration.resource_selection #=> Array
+    #   resp.tiering_configuration.resource_selection[0].resources #=> Array
+    #   resp.tiering_configuration.resource_selection[0].resources[0] #=> String
+    #   resp.tiering_configuration.resource_selection[0].tiering_down_settings_in_days #=> Integer
+    #   resp.tiering_configuration.resource_selection[0].resource_type #=> String
+    #   resp.tiering_configuration.creator_request_id #=> String
+    #   resp.tiering_configuration.creation_time #=> Time
+    #   resp.tiering_configuration.last_updated_time #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/GetTieringConfiguration AWS API Documentation
+    #
+    # @overload get_tiering_configuration(params = {})
+    # @param [Hash] params ({})
+    def get_tiering_configuration(params = {}, options = {})
+      req = build_request(:get_tiering_configuration, params)
+      req.send_request(options)
+    end
+
+    # Returns a list of the backup access points in your account and Region.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of items to be returned.
+    #
+    # @option params [String] :next_token
+    #   The next item following a partial list of returned items. For example,
+    #   if a request is made to return `MaxResults` number of items,
+    #   `NextToken` allows you to return more items in your list starting at
+    #   the location pointed to by the next token.
+    #
+    # @return [Types::ListBackupAccessPointsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListBackupAccessPointsResponse#backup_access_points #backup_access_points} => Array&lt;Types::ListAccessPointsMember&gt;
+    #   * {Types::ListBackupAccessPointsResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_backup_access_points({
+    #     max_results: 1,
+    #     next_token: "String",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.backup_access_points #=> Array
+    #   resp.backup_access_points[0].access_point_arn #=> String
+    #   resp.backup_access_points[0].access_point_metadata #=> Hash
+    #   resp.backup_access_points[0].access_point_metadata["AccessPointMetadataMapKeyString"] #=> String
+    #   resp.backup_access_points[0].backup_vault_arn #=> String
+    #   resp.backup_access_points[0].backup_vault_name #=> String
+    #   resp.backup_access_points[0].creation_time #=> Time
+    #   resp.backup_access_points[0].name #=> String
+    #   resp.backup_access_points[0].recovery_point_arn #=> String
+    #   resp.backup_access_points[0].resource_arn #=> String
+    #   resp.backup_access_points[0].resource_type #=> String
+    #   resp.backup_access_points[0].status #=> String, one of "AVAILABLE", "CREATING", "DELETING", "DISASSOCIATED", "DISASSOCIATING", "EXPIRED", "FAILED"
+    #   resp.backup_access_points[0].status_message #=> String
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/ListBackupAccessPoints AWS API Documentation
+    #
+    # @overload list_backup_access_points(params = {})
+    # @param [Hash] params ({})
+    def list_backup_access_points(params = {}, options = {})
+      req = build_request(:list_backup_access_points, params)
+      req.send_request(options)
+    end
+
+    # Returns the backup access points associated with the specified
+    # recovery point.
+    #
+    # If you own the recovery point and have shared it with other accounts,
+    # the response includes backup access points created by those accounts.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of items to be returned.
+    #
+    # @option params [String] :next_token
+    #   The next item following a partial list of returned items. For example,
+    #   if a request is made to return `MaxResults` number of items,
+    #   `NextToken` allows you to return more items in your list starting at
+    #   the location pointed to by the next token.
+    #
+    # @option params [required, String] :recovery_point_arn
+    #   The Amazon Resource Name (ARN) of the recovery point whose backup
+    #   access points you want to list.
+    #
+    # @return [Types::ListBackupAccessPointsByRecoveryPointResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListBackupAccessPointsByRecoveryPointResponse#backup_access_points #backup_access_points} => Array&lt;Types::ListAccessPointsMember&gt;
+    #   * {Types::ListBackupAccessPointsByRecoveryPointResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_backup_access_points_by_recovery_point({
+    #     max_results: 1,
+    #     next_token: "String",
+    #     recovery_point_arn: "RecoveryPointArn", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.backup_access_points #=> Array
+    #   resp.backup_access_points[0].access_point_arn #=> String
+    #   resp.backup_access_points[0].access_point_metadata #=> Hash
+    #   resp.backup_access_points[0].access_point_metadata["AccessPointMetadataMapKeyString"] #=> String
+    #   resp.backup_access_points[0].backup_vault_arn #=> String
+    #   resp.backup_access_points[0].backup_vault_name #=> String
+    #   resp.backup_access_points[0].creation_time #=> Time
+    #   resp.backup_access_points[0].name #=> String
+    #   resp.backup_access_points[0].recovery_point_arn #=> String
+    #   resp.backup_access_points[0].resource_arn #=> String
+    #   resp.backup_access_points[0].resource_type #=> String
+    #   resp.backup_access_points[0].status #=> String, one of "AVAILABLE", "CREATING", "DELETING", "DISASSOCIATED", "DISASSOCIATING", "EXPIRED", "FAILED"
+    #   resp.backup_access_points[0].status_message #=> String
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/ListBackupAccessPointsByRecoveryPoint AWS API Documentation
+    #
+    # @overload list_backup_access_points_by_recovery_point(params = {})
+    # @param [Hash] params ({})
+    def list_backup_access_points_by_recovery_point(params = {}, options = {})
+      req = build_request(:list_backup_access_points_by_recovery_point, params)
+      req.send_request(options)
+    end
+
+    # Returns the backup access points associated with the specified
+    # resource, such as an Amazon S3 bucket.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of items to be returned.
+    #
+    # @option params [String] :next_token
+    #   The next item following a partial list of returned items. For example,
+    #   if a request is made to return `MaxResults` number of items,
+    #   `NextToken` allows you to return more items in your list starting at
+    #   the location pointed to by the next token.
+    #
+    # @option params [required, String] :resource_arn
+    #   The Amazon Resource Name (ARN) of the resource whose backup access
+    #   points you want to list.
+    #
+    # @return [Types::ListBackupAccessPointsByResourceResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListBackupAccessPointsByResourceResponse#backup_access_points #backup_access_points} => Array&lt;Types::ListAccessPointsMember&gt;
+    #   * {Types::ListBackupAccessPointsByResourceResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_backup_access_points_by_resource({
+    #     max_results: 1,
+    #     next_token: "String",
+    #     resource_arn: "ResourceArn", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.backup_access_points #=> Array
+    #   resp.backup_access_points[0].access_point_arn #=> String
+    #   resp.backup_access_points[0].access_point_metadata #=> Hash
+    #   resp.backup_access_points[0].access_point_metadata["AccessPointMetadataMapKeyString"] #=> String
+    #   resp.backup_access_points[0].backup_vault_arn #=> String
+    #   resp.backup_access_points[0].backup_vault_name #=> String
+    #   resp.backup_access_points[0].creation_time #=> Time
+    #   resp.backup_access_points[0].name #=> String
+    #   resp.backup_access_points[0].recovery_point_arn #=> String
+    #   resp.backup_access_points[0].resource_arn #=> String
+    #   resp.backup_access_points[0].resource_type #=> String
+    #   resp.backup_access_points[0].status #=> String, one of "AVAILABLE", "CREATING", "DELETING", "DISASSOCIATED", "DISASSOCIATING", "EXPIRED", "FAILED"
+    #   resp.backup_access_points[0].status_message #=> String
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/ListBackupAccessPointsByResource AWS API Documentation
+    #
+    # @overload list_backup_access_points_by_resource(params = {})
+    # @param [Hash] params ({})
+    def list_backup_access_points_by_resource(params = {}, options = {})
+      req = build_request(:list_backup_access_points_by_resource, params)
+      req.send_request(options)
+    end
+
     # This is a request for a summary of backup jobs created or running
     # within the most recent 30 days. You can include parameters AccountID,
     # State, ResourceType, MessageCategory, AggregationPeriod, MaxResults,
@@ -3130,6 +4001,8 @@ module Aws::Backup
     #
     #   * `EFS` for Amazon Elastic File System
     #
+    #   * `EKS` for Amazon Elastic Kubernetes Service
+    #
     #   * `FSx` for Amazon FSx
     #
     #   * `Neptune` for Amazon Neptune
@@ -3217,7 +4090,15 @@ module Aws::Backup
     #   resp.backup_jobs[0].backup_job_id #=> String
     #   resp.backup_jobs[0].backup_vault_name #=> String
     #   resp.backup_jobs[0].backup_vault_arn #=> String
+    #   resp.backup_jobs[0].vault_type #=> String
+    #   resp.backup_jobs[0].vault_lock_state #=> String
     #   resp.backup_jobs[0].recovery_point_arn #=> String
+    #   resp.backup_jobs[0].recovery_point_lifecycle.move_to_cold_storage_after_days #=> Integer
+    #   resp.backup_jobs[0].recovery_point_lifecycle.delete_after_days #=> Integer
+    #   resp.backup_jobs[0].recovery_point_lifecycle.opt_in_to_archive_for_supported_resources #=> Boolean
+    #   resp.backup_jobs[0].recovery_point_lifecycle.delete_after_event #=> String, one of "DELETE_AFTER_COPY"
+    #   resp.backup_jobs[0].encryption_key_arn #=> String
+    #   resp.backup_jobs[0].is_encrypted #=> Boolean
     #   resp.backup_jobs[0].resource_arn #=> String
     #   resp.backup_jobs[0].creation_date #=> Time
     #   resp.backup_jobs[0].completion_date #=> Time
@@ -3228,8 +4109,12 @@ module Aws::Backup
     #   resp.backup_jobs[0].iam_role_arn #=> String
     #   resp.backup_jobs[0].created_by.backup_plan_id #=> String
     #   resp.backup_jobs[0].created_by.backup_plan_arn #=> String
+    #   resp.backup_jobs[0].created_by.backup_plan_name #=> String
     #   resp.backup_jobs[0].created_by.backup_plan_version #=> String
     #   resp.backup_jobs[0].created_by.backup_rule_id #=> String
+    #   resp.backup_jobs[0].created_by.backup_rule_name #=> String
+    #   resp.backup_jobs[0].created_by.backup_rule_cron #=> String
+    #   resp.backup_jobs[0].created_by.backup_rule_timezone #=> String
     #   resp.backup_jobs[0].expected_completion_date #=> Time
     #   resp.backup_jobs[0].start_by #=> Time
     #   resp.backup_jobs[0].resource_type #=> String
@@ -3485,7 +4370,7 @@ module Aws::Backup
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_backup_vaults({
-    #     by_vault_type: "BACKUP_VAULT", # accepts BACKUP_VAULT, LOGICALLY_AIR_GAPPED_BACKUP_VAULT
+    #     by_vault_type: "BACKUP_VAULT", # accepts BACKUP_VAULT, LOGICALLY_AIR_GAPPED_BACKUP_VAULT, RESTORE_ACCESS_BACKUP_VAULT
     #     by_shared: false,
     #     next_token: "string",
     #     max_results: 1,
@@ -3496,7 +4381,7 @@ module Aws::Backup
     #   resp.backup_vault_list #=> Array
     #   resp.backup_vault_list[0].backup_vault_name #=> String
     #   resp.backup_vault_list[0].backup_vault_arn #=> String
-    #   resp.backup_vault_list[0].vault_type #=> String, one of "BACKUP_VAULT", "LOGICALLY_AIR_GAPPED_BACKUP_VAULT"
+    #   resp.backup_vault_list[0].vault_type #=> String, one of "BACKUP_VAULT", "LOGICALLY_AIR_GAPPED_BACKUP_VAULT", "RESTORE_ACCESS_BACKUP_VAULT"
     #   resp.backup_vault_list[0].vault_state #=> String, one of "CREATING", "AVAILABLE", "FAILED"
     #   resp.backup_vault_list[0].creation_date #=> Time
     #   resp.backup_vault_list[0].encryption_key_arn #=> String
@@ -3506,6 +4391,7 @@ module Aws::Backup
     #   resp.backup_vault_list[0].min_retention_days #=> Integer
     #   resp.backup_vault_list[0].max_retention_days #=> Integer
     #   resp.backup_vault_list[0].lock_date #=> Time
+    #   resp.backup_vault_list[0].encryption_key_type #=> String, one of "AWS_OWNED_KMS_KEY", "CUSTOMER_MANAGED_KMS_KEY"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/ListBackupVaults AWS API Documentation
@@ -3683,6 +4569,8 @@ module Aws::Backup
     #
     #   * `EFS` for Amazon Elastic File System
     #
+    #   * `EKS` for Amazon Elastic Kubernetes Service
+    #
     #   * `FSx` for Amazon FSx
     #
     #   * `Neptune` for Amazon Neptune
@@ -3740,6 +4628,9 @@ module Aws::Backup
     #
     #   [1]: https://docs.aws.amazon.com/aws-backup/latest/devguide/monitoring.html
     #
+    # @option params [String] :by_source_recovery_point_arn
+    #   Filters copy jobs by the specified source recovery point ARN.
+    #
     # @return [Types::ListCopyJobsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::ListCopyJobsOutput#copy_jobs #copy_jobs} => Array&lt;Types::CopyJob&gt;
@@ -3763,6 +4654,7 @@ module Aws::Backup
     #     by_complete_after: Time.now,
     #     by_parent_job_id: "string",
     #     by_message_category: "string",
+    #     by_source_recovery_point_arn: "string",
     #   })
     #
     # @example Response structure
@@ -3773,7 +4665,14 @@ module Aws::Backup
     #   resp.copy_jobs[0].source_backup_vault_arn #=> String
     #   resp.copy_jobs[0].source_recovery_point_arn #=> String
     #   resp.copy_jobs[0].destination_backup_vault_arn #=> String
+    #   resp.copy_jobs[0].destination_vault_type #=> String
+    #   resp.copy_jobs[0].destination_vault_lock_state #=> String
     #   resp.copy_jobs[0].destination_recovery_point_arn #=> String
+    #   resp.copy_jobs[0].destination_encryption_key_arn #=> String
+    #   resp.copy_jobs[0].destination_recovery_point_lifecycle.move_to_cold_storage_after_days #=> Integer
+    #   resp.copy_jobs[0].destination_recovery_point_lifecycle.delete_after_days #=> Integer
+    #   resp.copy_jobs[0].destination_recovery_point_lifecycle.opt_in_to_archive_for_supported_resources #=> Boolean
+    #   resp.copy_jobs[0].destination_recovery_point_lifecycle.delete_after_event #=> String, one of "DELETE_AFTER_COPY"
     #   resp.copy_jobs[0].resource_arn #=> String
     #   resp.copy_jobs[0].creation_date #=> Time
     #   resp.copy_jobs[0].completion_date #=> Time
@@ -3783,8 +4682,13 @@ module Aws::Backup
     #   resp.copy_jobs[0].iam_role_arn #=> String
     #   resp.copy_jobs[0].created_by.backup_plan_id #=> String
     #   resp.copy_jobs[0].created_by.backup_plan_arn #=> String
+    #   resp.copy_jobs[0].created_by.backup_plan_name #=> String
     #   resp.copy_jobs[0].created_by.backup_plan_version #=> String
     #   resp.copy_jobs[0].created_by.backup_rule_id #=> String
+    #   resp.copy_jobs[0].created_by.backup_rule_name #=> String
+    #   resp.copy_jobs[0].created_by.backup_rule_cron #=> String
+    #   resp.copy_jobs[0].created_by.backup_rule_timezone #=> String
+    #   resp.copy_jobs[0].created_by_backup_job_id #=> String
     #   resp.copy_jobs[0].resource_type #=> String
     #   resp.copy_jobs[0].parent_job_id #=> String
     #   resp.copy_jobs[0].is_parent #=> Boolean
@@ -3986,9 +4890,14 @@ module Aws::Backup
       req.send_request(options)
     end
 
-    # Returns an array of resources successfully backed up by Backup,
-    # including the time the resource was saved, an Amazon Resource Name
-    # (ARN) of the resource, and a resource type.
+    # Returns an array of resources with recovery points created by Backup
+    # (regardless of the recovery point's [status][1]), including the time
+    # the resource was saved, an Amazon Resource Name (ARN) of the resource,
+    # and a resource type.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/aws-backup/latest/devguide/API_DescribeRecoveryPoint.html#Backup-DescribeRecoveryPoint-response-Status
     #
     # @option params [String] :next_token
     #   The next item following a partial list of returned items. For example,
@@ -4136,6 +5045,8 @@ module Aws::Backup
     #
     #   * `EFS` for Amazon Elastic File System
     #
+    #   * `EKS` for Amazon Elastic Kubernetes Service
+    #
     #   * `FSx` for Amazon FSx
     #
     #   * `Neptune` for Amazon Neptune
@@ -4204,12 +5115,17 @@ module Aws::Backup
     #   resp.recovery_points[0].resource_type #=> String
     #   resp.recovery_points[0].created_by.backup_plan_id #=> String
     #   resp.recovery_points[0].created_by.backup_plan_arn #=> String
+    #   resp.recovery_points[0].created_by.backup_plan_name #=> String
     #   resp.recovery_points[0].created_by.backup_plan_version #=> String
     #   resp.recovery_points[0].created_by.backup_rule_id #=> String
+    #   resp.recovery_points[0].created_by.backup_rule_name #=> String
+    #   resp.recovery_points[0].created_by.backup_rule_cron #=> String
+    #   resp.recovery_points[0].created_by.backup_rule_timezone #=> String
     #   resp.recovery_points[0].iam_role_arn #=> String
-    #   resp.recovery_points[0].status #=> String, one of "COMPLETED", "PARTIAL", "DELETING", "EXPIRED"
+    #   resp.recovery_points[0].status #=> String, one of "COMPLETED", "PARTIAL", "DELETING", "EXPIRED", "AVAILABLE", "STOPPED", "CREATING"
     #   resp.recovery_points[0].status_message #=> String
     #   resp.recovery_points[0].creation_date #=> Time
+    #   resp.recovery_points[0].initiation_date #=> Time
     #   resp.recovery_points[0].completion_date #=> Time
     #   resp.recovery_points[0].backup_size_in_bytes #=> Integer
     #   resp.recovery_points[0].calculated_lifecycle.move_to_cold_storage_at #=> Time
@@ -4217,6 +5133,7 @@ module Aws::Backup
     #   resp.recovery_points[0].lifecycle.move_to_cold_storage_after_days #=> Integer
     #   resp.recovery_points[0].lifecycle.delete_after_days #=> Integer
     #   resp.recovery_points[0].lifecycle.opt_in_to_archive_for_supported_resources #=> Boolean
+    #   resp.recovery_points[0].lifecycle.delete_after_event #=> String, one of "DELETE_AFTER_COPY"
     #   resp.recovery_points[0].encryption_key_arn #=> String
     #   resp.recovery_points[0].is_encrypted #=> Boolean
     #   resp.recovery_points[0].last_restore_time #=> Time
@@ -4224,9 +5141,14 @@ module Aws::Backup
     #   resp.recovery_points[0].composite_member_identifier #=> String
     #   resp.recovery_points[0].is_parent #=> Boolean
     #   resp.recovery_points[0].resource_name #=> String
-    #   resp.recovery_points[0].vault_type #=> String, one of "BACKUP_VAULT", "LOGICALLY_AIR_GAPPED_BACKUP_VAULT"
+    #   resp.recovery_points[0].vault_type #=> String, one of "BACKUP_VAULT", "LOGICALLY_AIR_GAPPED_BACKUP_VAULT", "RESTORE_ACCESS_BACKUP_VAULT"
     #   resp.recovery_points[0].index_status #=> String, one of "PENDING", "ACTIVE", "FAILED", "DELETING"
     #   resp.recovery_points[0].index_status_message #=> String
+    #   resp.recovery_points[0].encryption_key_type #=> String, one of "AWS_OWNED_KMS_KEY", "CUSTOMER_MANAGED_KMS_KEY"
+    #   resp.recovery_points[0].aggregated_scan_result.failed_scan #=> Boolean
+    #   resp.recovery_points[0].aggregated_scan_result.findings #=> Array
+    #   resp.recovery_points[0].aggregated_scan_result.findings[0] #=> String, one of "MALWARE"
+    #   resp.recovery_points[0].aggregated_scan_result.last_computed #=> Time
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/ListRecoveryPointsByBackupVault AWS API Documentation
     #
@@ -4317,7 +5239,8 @@ module Aws::Backup
     #   associated with the selected resources that are managed by Backup.
     #
     #   If this is set to `FALSE`, the response will contain all recovery
-    #   points associated with the selected resource.
+    #   points associated with the selected resource, except for EBS snapshots
+    #   copied within the same Region and account.
     #
     #   Type: Boolean
     #
@@ -4343,7 +5266,7 @@ module Aws::Backup
     #   resp.recovery_points #=> Array
     #   resp.recovery_points[0].recovery_point_arn #=> String
     #   resp.recovery_points[0].creation_date #=> Time
-    #   resp.recovery_points[0].status #=> String, one of "COMPLETED", "PARTIAL", "DELETING", "EXPIRED"
+    #   resp.recovery_points[0].status #=> String, one of "COMPLETED", "PARTIAL", "DELETING", "EXPIRED", "AVAILABLE", "STOPPED", "CREATING"
     #   resp.recovery_points[0].status_message #=> String
     #   resp.recovery_points[0].encryption_key_arn #=> String
     #   resp.recovery_points[0].backup_size_bytes #=> Integer
@@ -4351,9 +5274,14 @@ module Aws::Backup
     #   resp.recovery_points[0].is_parent #=> Boolean
     #   resp.recovery_points[0].parent_recovery_point_arn #=> String
     #   resp.recovery_points[0].resource_name #=> String
-    #   resp.recovery_points[0].vault_type #=> String, one of "BACKUP_VAULT", "LOGICALLY_AIR_GAPPED_BACKUP_VAULT"
+    #   resp.recovery_points[0].vault_type #=> String, one of "BACKUP_VAULT", "LOGICALLY_AIR_GAPPED_BACKUP_VAULT", "RESTORE_ACCESS_BACKUP_VAULT"
     #   resp.recovery_points[0].index_status #=> String, one of "PENDING", "ACTIVE", "FAILED", "DELETING"
     #   resp.recovery_points[0].index_status_message #=> String
+    #   resp.recovery_points[0].encryption_key_type #=> String, one of "AWS_OWNED_KMS_KEY", "CUSTOMER_MANAGED_KMS_KEY"
+    #   resp.recovery_points[0].aggregated_scan_result.failed_scan #=> Boolean
+    #   resp.recovery_points[0].aggregated_scan_result.findings #=> Array
+    #   resp.recovery_points[0].aggregated_scan_result.findings[0] #=> String, one of "MALWARE"
+    #   resp.recovery_points[0].aggregated_scan_result.last_computed #=> Time
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/ListRecoveryPointsByResource AWS API Documentation
     #
@@ -4385,7 +5313,11 @@ module Aws::Backup
     #   Returns only report jobs that are in the specified status. The
     #   statuses are:
     #
-    #   `CREATED | RUNNING | COMPLETED | FAILED`
+    #   `CREATED | RUNNING | COMPLETED | FAILED | COMPLETED_WITH_ISSUES`
+    #
+    #   Please note that only scanning jobs finish with state completed with
+    #   issues. For backup jobs this is a console interpretation of a job that
+    #   finishes in completed state and has a status message.
     #
     # @option params [Integer] :max_results
     #   The number of desired results from 1 to 1000. Optional. If
@@ -4496,6 +5428,58 @@ module Aws::Backup
     # @param [Hash] params ({})
     def list_report_plans(params = {}, options = {})
       req = build_request(:list_report_plans, params)
+      req.send_request(options)
+    end
+
+    # Returns a list of restore access backup vaults associated with a
+    # specified backup vault.
+    #
+    # @option params [required, String] :backup_vault_name
+    #   The name of the backup vault for which to list associated restore
+    #   access backup vaults.
+    #
+    # @option params [String] :next_token
+    #   The pagination token from a previous request to retrieve the next set
+    #   of results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of items to return in the response.
+    #
+    # @return [Types::ListRestoreAccessBackupVaultsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListRestoreAccessBackupVaultsOutput#next_token #next_token} => String
+    #   * {Types::ListRestoreAccessBackupVaultsOutput#restore_access_backup_vaults #restore_access_backup_vaults} => Array&lt;Types::RestoreAccessBackupVaultListMember&gt;
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_restore_access_backup_vaults({
+    #     backup_vault_name: "BackupVaultName", # required
+    #     next_token: "string",
+    #     max_results: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.next_token #=> String
+    #   resp.restore_access_backup_vaults #=> Array
+    #   resp.restore_access_backup_vaults[0].restore_access_backup_vault_arn #=> String
+    #   resp.restore_access_backup_vaults[0].creation_date #=> Time
+    #   resp.restore_access_backup_vaults[0].approval_date #=> Time
+    #   resp.restore_access_backup_vaults[0].vault_state #=> String, one of "CREATING", "AVAILABLE", "FAILED"
+    #   resp.restore_access_backup_vaults[0].latest_revoke_request.mpa_session_arn #=> String
+    #   resp.restore_access_backup_vaults[0].latest_revoke_request.status #=> String, one of "PENDING", "FAILED"
+    #   resp.restore_access_backup_vaults[0].latest_revoke_request.status_message #=> String
+    #   resp.restore_access_backup_vaults[0].latest_revoke_request.initiation_date #=> Time
+    #   resp.restore_access_backup_vaults[0].latest_revoke_request.expiry_date #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/ListRestoreAccessBackupVaults AWS API Documentation
+    #
+    # @overload list_restore_access_backup_vaults(params = {})
+    # @param [Hash] params ({})
+    def list_restore_access_backup_vaults(params = {}, options = {})
+      req = build_request(:list_restore_access_backup_vaults, params)
       req.send_request(options)
     end
 
@@ -4639,6 +5623,8 @@ module Aws::Backup
     #
     #   * `EFS` for Amazon Elastic File System
     #
+    #   * `EKS` for Amazon Elastic Kubernetes Service
+    #
     #   * `FSx` for Amazon FSx
     #
     #   * `Neptune` for Amazon Neptune
@@ -4679,6 +5665,10 @@ module Aws::Backup
     #   This returns only restore testing jobs that match the specified
     #   resource Amazon Resource Name (ARN).
     #
+    # @option params [String] :by_parent_job_id
+    #   This is a filter to list child (nested) restore jobs based on parent
+    #   restore job ID.
+    #
     # @return [Types::ListRestoreJobsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::ListRestoreJobsOutput#restore_jobs #restore_jobs} => Array&lt;Types::RestoreJobsListMember&gt;
@@ -4699,6 +5689,7 @@ module Aws::Backup
     #     by_complete_before: Time.now,
     #     by_complete_after: Time.now,
     #     by_restore_testing_plan_arn: "ARN",
+    #     by_parent_job_id: "string",
     #   })
     #
     # @example Response structure
@@ -4707,6 +5698,8 @@ module Aws::Backup
     #   resp.restore_jobs[0].account_id #=> String
     #   resp.restore_jobs[0].restore_job_id #=> String
     #   resp.restore_jobs[0].recovery_point_arn #=> String
+    #   resp.restore_jobs[0].source_resource_arn #=> String
+    #   resp.restore_jobs[0].backup_vault_arn #=> String
     #   resp.restore_jobs[0].creation_date #=> Time
     #   resp.restore_jobs[0].completion_date #=> Time
     #   resp.restore_jobs[0].status #=> String, one of "PENDING", "RUNNING", "COMPLETED", "ABORTED", "FAILED"
@@ -4718,6 +5711,8 @@ module Aws::Backup
     #   resp.restore_jobs[0].created_resource_arn #=> String
     #   resp.restore_jobs[0].resource_type #=> String
     #   resp.restore_jobs[0].recovery_point_creation_date #=> Time
+    #   resp.restore_jobs[0].is_parent #=> Boolean
+    #   resp.restore_jobs[0].parent_job_id #=> String
     #   resp.restore_jobs[0].created_by.restore_testing_plan_arn #=> String
     #   resp.restore_jobs[0].validation_status #=> String, one of "FAILED", "SUCCESSFUL", "TIMED_OUT", "VALIDATING"
     #   resp.restore_jobs[0].validation_status_message #=> String
@@ -4790,6 +5785,8 @@ module Aws::Backup
     #   resp.restore_jobs[0].account_id #=> String
     #   resp.restore_jobs[0].restore_job_id #=> String
     #   resp.restore_jobs[0].recovery_point_arn #=> String
+    #   resp.restore_jobs[0].source_resource_arn #=> String
+    #   resp.restore_jobs[0].backup_vault_arn #=> String
     #   resp.restore_jobs[0].creation_date #=> Time
     #   resp.restore_jobs[0].completion_date #=> Time
     #   resp.restore_jobs[0].status #=> String, one of "PENDING", "RUNNING", "COMPLETED", "ABORTED", "FAILED"
@@ -4801,6 +5798,8 @@ module Aws::Backup
     #   resp.restore_jobs[0].created_resource_arn #=> String
     #   resp.restore_jobs[0].resource_type #=> String
     #   resp.restore_jobs[0].recovery_point_creation_date #=> Time
+    #   resp.restore_jobs[0].is_parent #=> Boolean
+    #   resp.restore_jobs[0].parent_job_id #=> String
     #   resp.restore_jobs[0].created_by.restore_testing_plan_arn #=> String
     #   resp.restore_jobs[0].validation_status #=> String, one of "FAILED", "SUCCESSFUL", "TIMED_OUT", "VALIDATING"
     #   resp.restore_jobs[0].validation_status_message #=> String
@@ -4915,8 +5914,264 @@ module Aws::Backup
       req.send_request(options)
     end
 
+    # This is a request for a summary of scan jobs created or running within
+    # the most recent 30 days.
+    #
+    # @option params [String] :account_id
+    #   Returns the job count for the specified account.
+    #
+    #   If the request is sent from a member account or an account not part of
+    #   Amazon Web Services Organizations, jobs within requestor's account
+    #   will be returned.
+    #
+    #   Root, admin, and delegated administrator accounts can use the value
+    #   `ANY` to return job counts from every account in the organization.
+    #
+    #   `AGGREGATE_ALL` aggregates job counts from all accounts within the
+    #   authenticated organization, then returns the sum.
+    #
+    # @option params [String] :resource_type
+    #   Returns the job count for the specified resource type. Use request
+    #   `GetSupportedResourceTypes` to obtain strings for supported resource
+    #   types.
+    #
+    #   The the value `ANY` returns count of all resource types.
+    #
+    #   `AGGREGATE_ALL` aggregates job counts for all resource types and
+    #   returns the sum.
+    #
+    # @option params [String] :malware_scanner
+    #   Returns only the scan jobs for the specified malware scanner.
+    #   Currently the only MalwareScanner is `GUARDDUTY`. But the field also
+    #   supports `ANY`, and `AGGREGATE_ALL`.
+    #
+    # @option params [String] :scan_result_status
+    #   Returns only the scan jobs for the specified scan results.
+    #
+    # @option params [String] :state
+    #   Returns only the scan jobs for the specified scanning job state.
+    #
+    # @option params [String] :aggregation_period
+    #   The period for the returned results.
+    #
+    #   * `ONE_DAY`The daily job count for the prior 1 day.
+    #
+    #   * `SEVEN_DAYS`The daily job count for the prior 7 days.
+    #
+    #   * `FOURTEEN_DAYS`The daily job count for the prior 14 days.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of items to be returned.
+    #
+    #   The value is an integer. Range of accepted values is from 1 to 500.
+    #
+    # @option params [String] :next_token
+    #   The next item following a partial list of returned items. For example,
+    #   if a request is made to return `MaxResults` number of items,
+    #   `NextToken` allows you to return more items in your list starting at
+    #   the location pointed to by the next token.
+    #
+    # @return [Types::ListScanJobSummariesOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListScanJobSummariesOutput#scan_job_summaries #scan_job_summaries} => Array&lt;Types::ScanJobSummary&gt;
+    #   * {Types::ListScanJobSummariesOutput#aggregation_period #aggregation_period} => String
+    #   * {Types::ListScanJobSummariesOutput#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_scan_job_summaries({
+    #     account_id: "AccountId",
+    #     resource_type: "ResourceType",
+    #     malware_scanner: "GUARDDUTY", # accepts GUARDDUTY
+    #     scan_result_status: "NO_THREATS_FOUND", # accepts NO_THREATS_FOUND, THREATS_FOUND, UNKNOWN
+    #     state: "CREATED", # accepts CREATED, COMPLETED, COMPLETED_WITH_ISSUES, RUNNING, FAILED, CANCELED, AGGREGATE_ALL, ANY
+    #     aggregation_period: "ONE_DAY", # accepts ONE_DAY, SEVEN_DAYS, FOURTEEN_DAYS
+    #     max_results: 1,
+    #     next_token: "string",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.scan_job_summaries #=> Array
+    #   resp.scan_job_summaries[0].region #=> String
+    #   resp.scan_job_summaries[0].account_id #=> String
+    #   resp.scan_job_summaries[0].state #=> String, one of "CREATED", "COMPLETED", "COMPLETED_WITH_ISSUES", "RUNNING", "FAILED", "CANCELED", "AGGREGATE_ALL", "ANY"
+    #   resp.scan_job_summaries[0].resource_type #=> String
+    #   resp.scan_job_summaries[0].count #=> Integer
+    #   resp.scan_job_summaries[0].start_time #=> Time
+    #   resp.scan_job_summaries[0].end_time #=> Time
+    #   resp.scan_job_summaries[0].malware_scanner #=> String, one of "GUARDDUTY"
+    #   resp.scan_job_summaries[0].scan_result_status #=> String, one of "NO_THREATS_FOUND", "THREATS_FOUND", "UNKNOWN"
+    #   resp.aggregation_period #=> String
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/ListScanJobSummaries AWS API Documentation
+    #
+    # @overload list_scan_job_summaries(params = {})
+    # @param [Hash] params ({})
+    def list_scan_job_summaries(params = {}, options = {})
+      req = build_request(:list_scan_job_summaries, params)
+      req.send_request(options)
+    end
+
+    # Returns a list of existing scan jobs for an authenticated account for
+    # the last 30 days.
+    #
+    # @option params [String] :by_account_id
+    #   The account ID to list the jobs from. Returns only backup jobs
+    #   associated with the specified account ID.
+    #
+    #   If used from an Amazon Web Services Organizations management account,
+    #   passing `*` returns all jobs across the organization.
+    #
+    #   Pattern: `^[0-9]{12}$`
+    #
+    # @option params [String] :by_backup_vault_name
+    #   Returns only scan jobs that will be stored in the specified backup
+    #   vault. Backup vaults are identified by names that are unique to the
+    #   account used to create them and the Amazon Web Services Region where
+    #   they are created.
+    #
+    #   Pattern: `^[a-zA-Z0-9\-\_\.]{2,50}$`
+    #
+    # @option params [Time,DateTime,Date,Integer,String] :by_complete_after
+    #   Returns only scan jobs completed after a date expressed in Unix format
+    #   and Coordinated Universal Time (UTC).
+    #
+    # @option params [Time,DateTime,Date,Integer,String] :by_complete_before
+    #   Returns only backup jobs completed before a date expressed in Unix
+    #   format and Coordinated Universal Time (UTC).
+    #
+    # @option params [String] :by_malware_scanner
+    #   Returns only the scan jobs for the specified malware scanner.
+    #   Currently only supports `GUARDDUTY`.
+    #
+    # @option params [String] :by_recovery_point_arn
+    #   Returns only the scan jobs that are ran against the specified recovery
+    #   point.
+    #
+    # @option params [String] :by_resource_arn
+    #   Returns only scan jobs that match the specified resource Amazon
+    #   Resource Name (ARN).
+    #
+    # @option params [String] :by_resource_type
+    #   Returns restore testing selections by the specified restore testing
+    #   plan name.
+    #
+    #   * `EBS`for Amazon Elastic Block Store
+    #
+    #   * `EC2`for Amazon Elastic Compute Cloud
+    #
+    #   * `S3`for Amazon Simple Storage Service (Amazon S3)
+    #
+    #   Pattern: `^[a-zA-Z0-9\-\_\.]{1,50}$`
+    #
+    # @option params [String] :by_scan_result_status
+    #   Returns only the scan jobs for the specified scan results:
+    #
+    #   * `THREATS_FOUND`
+    #
+    #   * `NO_THREATS_FOUND`
+    #
+    # @option params [String] :by_state
+    #   Returns only the scan jobs for the specified scanning job state.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of items to be returned.
+    #
+    #   Valid Range: Minimum value of 1. Maximum value of 1000.
+    #
+    # @option params [String] :next_token
+    #   The next item following a partial list of returned items. For example,
+    #   if a request is made to return `MaxResults` number of items,
+    #   `NextToken` allows you to return more items in your list starting at
+    #   the location pointed to by the next token.
+    #
+    # @return [Types::ListScanJobsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListScanJobsOutput#next_token #next_token} => String
+    #   * {Types::ListScanJobsOutput#scan_jobs #scan_jobs} => Array&lt;Types::ScanJob&gt;
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_scan_jobs({
+    #     by_account_id: "String",
+    #     by_backup_vault_name: "String",
+    #     by_complete_after: Time.now,
+    #     by_complete_before: Time.now,
+    #     by_malware_scanner: "GUARDDUTY", # accepts GUARDDUTY
+    #     by_recovery_point_arn: "String",
+    #     by_resource_arn: "String",
+    #     by_resource_type: "EBS", # accepts EBS, EC2, S3
+    #     by_scan_result_status: "NO_THREATS_FOUND", # accepts NO_THREATS_FOUND, THREATS_FOUND, UNKNOWN
+    #     by_state: "CANCELED", # accepts CANCELED, COMPLETED, COMPLETED_WITH_ISSUES, CREATED, FAILED, RUNNING
+    #     max_results: 1,
+    #     next_token: "String",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.next_token #=> String
+    #   resp.scan_jobs #=> Array
+    #   resp.scan_jobs[0].account_id #=> String
+    #   resp.scan_jobs[0].backup_vault_arn #=> String
+    #   resp.scan_jobs[0].backup_vault_name #=> String
+    #   resp.scan_jobs[0].completion_date #=> Time
+    #   resp.scan_jobs[0].continuous_scan_end_time #=> Time
+    #   resp.scan_jobs[0].continuous_scan_start_time #=> Time
+    #   resp.scan_jobs[0].created_by.backup_plan_arn #=> String
+    #   resp.scan_jobs[0].created_by.backup_plan_id #=> String
+    #   resp.scan_jobs[0].created_by.backup_plan_version #=> String
+    #   resp.scan_jobs[0].created_by.backup_rule_id #=> String
+    #   resp.scan_jobs[0].creation_date #=> Time
+    #   resp.scan_jobs[0].iam_role_arn #=> String
+    #   resp.scan_jobs[0].malware_scanner #=> String, one of "GUARDDUTY"
+    #   resp.scan_jobs[0].recovery_point_arn #=> String
+    #   resp.scan_jobs[0].resource_arn #=> String
+    #   resp.scan_jobs[0].resource_name #=> String
+    #   resp.scan_jobs[0].resource_type #=> String, one of "EBS", "EC2", "S3"
+    #   resp.scan_jobs[0].scan_base_recovery_point_arn #=> String
+    #   resp.scan_jobs[0].scan_id #=> String
+    #   resp.scan_jobs[0].scan_job_id #=> String
+    #   resp.scan_jobs[0].scan_mode #=> String, one of "FULL_SCAN", "INCREMENTAL_SCAN"
+    #   resp.scan_jobs[0].scan_result.scan_result_status #=> String, one of "NO_THREATS_FOUND", "THREATS_FOUND", "UNKNOWN"
+    #   resp.scan_jobs[0].scanner_role_arn #=> String
+    #   resp.scan_jobs[0].state #=> String, one of "CANCELED", "COMPLETED", "COMPLETED_WITH_ISSUES", "CREATED", "FAILED", "RUNNING"
+    #   resp.scan_jobs[0].status_message #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/ListScanJobs AWS API Documentation
+    #
+    # @overload list_scan_jobs(params = {})
+    # @param [Hash] params ({})
+    def list_scan_jobs(params = {}, options = {})
+      req = build_request(:list_scan_jobs, params)
+      req.send_request(options)
+    end
+
     # Returns the tags assigned to the resource, such as a target recovery
     # point, backup plan, or backup vault.
+    #
+    # This operation returns results depending on the resource type used in
+    # the value for `resourceArn`. For example, recovery points of Amazon
+    # DynamoDB with Advanced Settings have an ARN (Amazon Resource Name)
+    # that begins with `arn:aws:backup`. Recovery points (backups) of
+    # DynamoDB without Advanced Settings enabled have an ARN that begins
+    # with `arn:aws:dynamodb`.
+    #
+    # When this operation is called and when you include values of
+    # `resourceArn` that have an ARN other than `arn:aws:backup`, it may
+    # return one of the exceptions listed below. To prevent this exception,
+    # include only values representing resource types that are fully managed
+    # by Backup. These have an ARN that begins `arn:aws:backup` and they are
+    # noted in the [Feature availability by resource][1] table.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/aws-backup/latest/devguide/backup-feature-availability.html#features-by-resource
     #
     # @option params [required, String] :resource_arn
     #   An Amazon Resource Name (ARN) that uniquely identifies a resource. The
@@ -4959,6 +6214,50 @@ module Aws::Backup
     # @param [Hash] params ({})
     def list_tags(params = {}, options = {})
       req = build_request(:list_tags, params)
+      req.send_request(options)
+    end
+
+    # Returns a list of tiering configurations.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of items to be returned.
+    #
+    # @option params [String] :next_token
+    #   The next item following a partial list of returned items. For example,
+    #   if a request is made to return `MaxResults` number of items,
+    #   `NextToken` allows you to return more items in your list starting at
+    #   the location pointed to by the next token.
+    #
+    # @return [Types::ListTieringConfigurationsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListTieringConfigurationsOutput#tiering_configurations #tiering_configurations} => Array&lt;Types::TieringConfigurationsListMember&gt;
+    #   * {Types::ListTieringConfigurationsOutput#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_tiering_configurations({
+    #     max_results: 1,
+    #     next_token: "string",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.tiering_configurations #=> Array
+    #   resp.tiering_configurations[0].tiering_configuration_arn #=> String
+    #   resp.tiering_configurations[0].tiering_configuration_name #=> String
+    #   resp.tiering_configurations[0].backup_vault_name #=> String
+    #   resp.tiering_configurations[0].creation_time #=> Time
+    #   resp.tiering_configurations[0].last_updated_time #=> Time
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/ListTieringConfigurations AWS API Documentation
+    #
+    # @overload list_tiering_configurations(params = {})
+    # @param [Hash] params ({})
+    def list_tiering_configurations(params = {}, options = {})
+      req = build_request(:list_tiering_configurations, params)
       req.send_request(options)
     end
 
@@ -5072,6 +6371,9 @@ module Aws::Backup
     #   effect and becomes immutable. Therefore, you must set
     #   `ChangeableForDays` to 3 or greater.
     #
+    #   The maximum value you can specify is 36,500 days (approximately 100
+    #   years).
+    #
     #   Before the lock date, you can delete Vault Lock from the vault using
     #   `DeleteBackupVaultLockConfiguration` or change the Vault Lock
     #   configuration using `PutBackupVaultLockConfiguration`. On and after
@@ -5118,32 +6420,13 @@ module Aws::Backup
     #
     # @option params [required, Array<String>] :backup_vault_events
     #   An array of events that indicate the status of jobs to back up
-    #   resources to the backup vault.
-    #
-    #   For common use cases and code samples, see [Using Amazon SNS to track
-    #   Backup events][1].
-    #
-    #   The following events are supported:
-    #
-    #   * `BACKUP_JOB_STARTED` \| `BACKUP_JOB_COMPLETED`
-    #
-    #   * `COPY_JOB_STARTED` \| `COPY_JOB_SUCCESSFUL` \| `COPY_JOB_FAILED`
-    #
-    #   * `RESTORE_JOB_STARTED` \| `RESTORE_JOB_COMPLETED` \|
-    #     `RECOVERY_POINT_MODIFIED`
-    #
-    #   * `S3_BACKUP_OBJECT_FAILED` \| `S3_RESTORE_OBJECT_FAILED`
-    #
-    #   <note markdown="1"> The list below includes both supported events and deprecated events
-    #   that are no longer in use (for reference). Deprecated events do not
-    #   return statuses or notifications. Refer to the list above for the
-    #   supported events.
-    #
-    #    </note>
+    #   resources to the backup vault. For the list of supported events,
+    #   common use cases, and code samples, see [Notification options with
+    #   Backup][1].
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/aws-backup/latest/devguide/sns-notifications.html
+    #   [1]: https://docs.aws.amazon.com/aws-backup/latest/devguide/backup-notifications.html
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
@@ -5152,7 +6435,7 @@ module Aws::Backup
     #   resp = client.put_backup_vault_notifications({
     #     backup_vault_name: "BackupVaultName", # required
     #     sns_topic_arn: "ARN", # required
-    #     backup_vault_events: ["BACKUP_JOB_STARTED"], # required, accepts BACKUP_JOB_STARTED, BACKUP_JOB_COMPLETED, BACKUP_JOB_SUCCESSFUL, BACKUP_JOB_FAILED, BACKUP_JOB_EXPIRED, RESTORE_JOB_STARTED, RESTORE_JOB_COMPLETED, RESTORE_JOB_SUCCESSFUL, RESTORE_JOB_FAILED, COPY_JOB_STARTED, COPY_JOB_SUCCESSFUL, COPY_JOB_FAILED, RECOVERY_POINT_MODIFIED, BACKUP_PLAN_CREATED, BACKUP_PLAN_MODIFIED, S3_BACKUP_OBJECT_FAILED, S3_RESTORE_OBJECT_FAILED
+    #     backup_vault_events: ["BACKUP_JOB_STARTED"], # required, accepts BACKUP_JOB_STARTED, BACKUP_JOB_COMPLETED, BACKUP_JOB_SUCCESSFUL, BACKUP_JOB_FAILED, BACKUP_JOB_EXPIRED, RESTORE_JOB_STARTED, RESTORE_JOB_COMPLETED, RESTORE_JOB_SUCCESSFUL, RESTORE_JOB_FAILED, COPY_JOB_STARTED, COPY_JOB_SUCCESSFUL, COPY_JOB_FAILED, RECOVERY_POINT_MODIFIED, BACKUP_PLAN_CREATED, BACKUP_PLAN_MODIFIED, S3_BACKUP_OBJECT_FAILED, S3_RESTORE_OBJECT_FAILED, CONTINUOUS_BACKUP_INTERRUPTED, RECOVERY_POINT_INDEX_COMPLETED, RECOVERY_POINT_INDEX_DELETED, RECOVERY_POINT_INDEXING_FAILED, EKS_RESTORE_OBJECT_FAILED, EKS_RESTORE_OBJECT_SKIPPED, EKS_BACKUP_OBJECT_FAILED, ACCESS_POINT_AVAILABLE, ACCESS_POINT_CREATION_FAILED, ACCESS_POINT_DELETED, ACCESS_POINT_DELETION_FAILED, ACCESS_POINT_EXPIRED, ACCESS_POINT_DISASSOCIATED
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/PutBackupVaultNotifications AWS API Documentation
@@ -5197,12 +6480,54 @@ module Aws::Backup
       req.send_request(options)
     end
 
+    # Revokes access to a restore access backup vault, removing the ability
+    # to restore from its recovery points and permanently deleting the
+    # vault.
+    #
+    # @option params [required, String] :backup_vault_name
+    #   The name of the source backup vault associated with the restore access
+    #   backup vault to be revoked.
+    #
+    # @option params [required, String] :restore_access_backup_vault_arn
+    #   The ARN of the restore access backup vault to revoke.
+    #
+    # @option params [String] :requester_comment
+    #   A comment explaining the reason for revoking access to the restore
+    #   access backup vault.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.revoke_restore_access_backup_vault({
+    #     backup_vault_name: "BackupVaultName", # required
+    #     restore_access_backup_vault_arn: "ARN", # required
+    #     requester_comment: "RequesterComment",
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/RevokeRestoreAccessBackupVault AWS API Documentation
+    #
+    # @overload revoke_restore_access_backup_vault(params = {})
+    # @param [Hash] params ({})
+    def revoke_restore_access_backup_vault(params = {}, options = {})
+      req = build_request(:revoke_restore_access_backup_vault, params)
+      req.send_request(options)
+    end
+
     # Starts an on-demand backup job for the specified resource.
     #
     # @option params [required, String] :backup_vault_name
     #   The name of a logical container where backups are stored. Backup
     #   vaults are identified by names that are unique to the account used to
     #   create them and the Amazon Web Services Region where they are created.
+    #
+    # @option params [String] :logically_air_gapped_backup_vault_arn
+    #   The ARN of a logically air-gapped vault. ARN must be in the same
+    #   account and Region. If provided, supported fully managed resources
+    #   back up directly to logically air-gapped vault, while other supported
+    #   resources create a temporary (billable) snapshot in backup vault, then
+    #   copy it to logically air-gapped vault. Unsupported resources only back
+    #   up to the specified backup vault.
     #
     # @option params [required, String] :resource_arn
     #   An Amazon Resource Name (ARN) that uniquely identifies a resource. The
@@ -5217,6 +6542,9 @@ module Aws::Backup
     #   otherwise identical calls to `StartBackupJob`. Retrying a successful
     #   request with the same idempotency token results in a success message
     #   with no action taken.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
     #
     # @option params [Integer] :start_window_minutes
     #   A value in minutes after a backup is scheduled before a job will be
@@ -5306,6 +6634,7 @@ module Aws::Backup
     #
     #   resp = client.start_backup_job({
     #     backup_vault_name: "BackupVaultName", # required
+    #     logically_air_gapped_backup_vault_arn: "ARN",
     #     resource_arn: "ARN", # required
     #     iam_role_arn: "IAMRoleArn", # required
     #     idempotency_token: "string",
@@ -5315,6 +6644,7 @@ module Aws::Backup
     #       move_to_cold_storage_after_days: 1,
     #       delete_after_days: 1,
     #       opt_in_to_archive_for_supported_resources: false,
+    #       delete_after_event: "DELETE_AFTER_COPY", # accepts DELETE_AFTER_COPY
     #     },
     #     recovery_point_tags: {
     #       "TagKey" => "TagValue",
@@ -5345,6 +6675,13 @@ module Aws::Backup
     #
     # Does not support continuous backups.
     #
+    # See [Copy job retry][1] for information on how Backup retries copy job
+    # operations.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/aws-backup/latest/devguide/recov-point-create-a-copy.html#backup-copy-retry
+    #
     # @option params [required, String] :recovery_point_arn
     #   An ARN that uniquely identifies a recovery point to use for the copy
     #   job; for example,
@@ -5370,6 +6707,9 @@ module Aws::Backup
     #   otherwise identical calls to `StartCopyJob`. Retrying a successful
     #   request with the same idempotency token results in a success message
     #   with no action taken.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
     #
     # @option params [Types::Lifecycle] :lifecycle
     #   Specifies the time period, in days, before a recovery point
@@ -5411,6 +6751,7 @@ module Aws::Backup
     #       move_to_cold_storage_after_days: 1,
     #       delete_after_days: 1,
     #       opt_in_to_archive_for_supported_resources: false,
+    #       delete_after_event: "DELETE_AFTER_COPY", # accepts DELETE_AFTER_COPY
     #     },
     #   })
     #
@@ -5501,21 +6842,23 @@ module Aws::Backup
     #
     #   * [Metadata for Amazon EFS][7]
     #
-    #   * [Metadata for Amazon FSx][8]
+    #   * [Metadata for Amazon EKS][8]
     #
-    #   * [Metadata for Amazon Neptune][9]
+    #   * [Metadata for Amazon FSx][9]
     #
-    #   * [Metadata for Amazon RDS][10]
+    #   * [Metadata for Amazon Neptune][10]
     #
-    #   * [Metadata for Amazon Redshift][11]
+    #   * [Metadata for Amazon RDS][11]
     #
-    #   * [Metadata for Storage Gateway][12]
+    #   * [Metadata for Amazon Redshift][12]
     #
-    #   * [Metadata for Amazon S3][13]
+    #   * [Metadata for Storage Gateway][13]
     #
-    #   * [Metadata for Amazon Timestream][14]
+    #   * [Metadata for Amazon S3][14]
     #
-    #   * [Metadata for virtual machines][15]
+    #   * [Metadata for Amazon Timestream][15]
+    #
+    #   * [Metadata for virtual machines][16]
     #
     #
     #
@@ -5526,14 +6869,15 @@ module Aws::Backup
     #   [5]: https://docs.aws.amazon.com/aws-backup/latest/devguide/restoring-ebs.html#ebs-restore-cli
     #   [6]: https://docs.aws.amazon.com/aws-backup/latest/devguide/restoring-ec2.html#restoring-ec2-cli
     #   [7]: https://docs.aws.amazon.com/aws-backup/latest/devguide/restoring-efs.html#efs-restore-cli
-    #   [8]: https://docs.aws.amazon.com/aws-backup/latest/devguide/restoring-fsx.html#fsx-restore-cli
-    #   [9]: https://docs.aws.amazon.com/aws-backup/latest/devguide/restoring-nep.html#nep-restore-cli
-    #   [10]: https://docs.aws.amazon.com/aws-backup/latest/devguide/restoring-rds.html#rds-restore-cli
-    #   [11]: https://docs.aws.amazon.com/aws-backup/latest/devguide/redshift-restores.html#redshift-restore-api
-    #   [12]: https://docs.aws.amazon.com/aws-backup/latest/devguide/restoring-storage-gateway.html#restoring-sgw-cli
-    #   [13]: https://docs.aws.amazon.com/aws-backup/latest/devguide/restoring-s3.html#s3-restore-cli
-    #   [14]: https://docs.aws.amazon.com/aws-backup/latest/devguide/timestream-restore.html#timestream-restore-api
-    #   [15]: https://docs.aws.amazon.com/aws-backup/latest/devguide/restoring-vm.html#vm-restore-cli
+    #   [8]: https://docs.aws.amazon.com/aws-backup/latest/devguide/restoring-eks.html#eks-restore-backup-section
+    #   [9]: https://docs.aws.amazon.com/aws-backup/latest/devguide/restoring-fsx.html#fsx-restore-cli
+    #   [10]: https://docs.aws.amazon.com/aws-backup/latest/devguide/restoring-nep.html#nep-restore-cli
+    #   [11]: https://docs.aws.amazon.com/aws-backup/latest/devguide/restoring-rds.html#rds-restore-cli
+    #   [12]: https://docs.aws.amazon.com/aws-backup/latest/devguide/redshift-restores.html#redshift-restore-api
+    #   [13]: https://docs.aws.amazon.com/aws-backup/latest/devguide/restoring-storage-gateway.html#restoring-sgw-cli
+    #   [14]: https://docs.aws.amazon.com/aws-backup/latest/devguide/restoring-s3.html#s3-restore-cli
+    #   [15]: https://docs.aws.amazon.com/aws-backup/latest/devguide/timestream-restore.html#timestream-restore-api
+    #   [16]: https://docs.aws.amazon.com/aws-backup/latest/devguide/restoring-vm.html#vm-restore-cli
     #
     # @option params [String] :iam_role_arn
     #   The Amazon Resource Name (ARN) of the IAM role that Backup uses to
@@ -5545,6 +6889,9 @@ module Aws::Backup
     #   otherwise identical calls to `StartRestoreJob`. Retrying a successful
     #   request with the same idempotency token results in a success message
     #   with no action taken.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
     #
     # @option params [String] :resource_type
     #   Starts a job to restore a recovery point for one of the following
@@ -5563,6 +6910,8 @@ module Aws::Backup
     #   * `EC2` - Amazon Elastic Compute Cloud
     #
     #   * `EFS` - Amazon Elastic File System
+    #
+    #   * `EKS` - Amazon Elastic Kubernetes Service
     #
     #   * `FSx` - Amazon FSx
     #
@@ -5616,12 +6965,110 @@ module Aws::Backup
       req.send_request(options)
     end
 
+    # Starts scanning jobs for specific resources.
+    #
+    # @option params [required, String] :backup_vault_name
+    #   The name of a logical container where backups are stored. Backup
+    #   vaults are identified by names that are unique to the account used to
+    #   create them and the Amazon Web Services Region where they are created.
+    #
+    #   Pattern: `^[a-zA-Z0-9\-\_]{2,50}$`
+    #
+    # @option params [Time,DateTime,Date,Integer,String] :continuous_scan_end_time
+    #   The point in time the scan job will scan up to for a continuous
+    #   backup.
+    #
+    # @option params [required, String] :iam_role_arn
+    #   Specifies the IAM role ARN used to create the target recovery point;
+    #   for example, `arn:aws:iam::123456789012:role/S3Access`.
+    #
+    # @option params [String] :idempotency_token
+    #   A customer-chosen string that you can use to distinguish between
+    #   otherwise identical calls to `StartScanJob`. Retrying a successful
+    #   request with the same idempotency token results in a success message
+    #   with no action taken.
+    #
+    # @option params [required, String] :malware_scanner
+    #   Specifies the malware scanner used during the scan job. Currently only
+    #   supports `GUARDDUTY`.
+    #
+    # @option params [required, String] :recovery_point_arn
+    #   An Amazon Resource Name (ARN) that uniquely identifies a recovery
+    #   point. This is your target recovery point for a full scan. If you are
+    #   running an incremental scan, this will be your a recovery point which
+    #   has been created after your base recovery point selection.
+    #
+    # @option params [String] :scan_base_recovery_point_arn
+    #   An ARN that uniquely identifies the base recovery point to be used for
+    #   incremental scanning.
+    #
+    # @option params [required, String] :scan_mode
+    #   Specifies the scan type use for the scan job.
+    #
+    #   Includes:
+    #
+    #   * `FULL_SCAN` will scan the entire data lineage within the backup.
+    #
+    #   * `INCREMENTAL_SCAN` will scan the data difference between the target
+    #     recovery point and base recovery point ARN.
+    #
+    # @option params [required, String] :scanner_role_arn
+    #   Specified the IAM scanner role ARN.
+    #
+    # @return [Types::StartScanJobOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::StartScanJobOutput#creation_date #creation_date} => Time
+    #   * {Types::StartScanJobOutput#scan_job_id #scan_job_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.start_scan_job({
+    #     backup_vault_name: "String", # required
+    #     continuous_scan_end_time: Time.now,
+    #     iam_role_arn: "String", # required
+    #     idempotency_token: "String",
+    #     malware_scanner: "GUARDDUTY", # required, accepts GUARDDUTY
+    #     recovery_point_arn: "String", # required
+    #     scan_base_recovery_point_arn: "String",
+    #     scan_mode: "FULL_SCAN", # required, accepts FULL_SCAN, INCREMENTAL_SCAN
+    #     scanner_role_arn: "String", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.creation_date #=> Time
+    #   resp.scan_job_id #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/StartScanJob AWS API Documentation
+    #
+    # @overload start_scan_job(params = {})
+    # @param [Hash] params ({})
+    def start_scan_job(params = {}, options = {})
+      req = build_request(:start_scan_job, params)
+      req.send_request(options)
+    end
+
     # Attempts to cancel a job to create a one-time backup of a resource.
     #
-    # This action is not supported for the following services: Amazon FSx
-    # for Windows File Server, Amazon FSx for Lustre, Amazon FSx for NetApp
-    # ONTAP, Amazon FSx for OpenZFS, Amazon DocumentDB (with MongoDB
-    # compatibility), Amazon RDS, Amazon Aurora, and Amazon Neptune.
+    # This action is not supported for the following services:
+    #
+    # * Amazon Aurora
+    #
+    # * Amazon DocumentDB (with MongoDB compatibility)
+    #
+    # * Amazon FSx for Lustre
+    #
+    # * Amazon FSx for NetApp ONTAP
+    #
+    # * Amazon FSx for OpenZFS
+    #
+    # * Amazon FSx for Windows File Server
+    #
+    # * Amazon Neptune
+    #
+    # * SAP HANA databases on Amazon EC2 instances
+    #
+    # * Amazon RDS
     #
     # @option params [required, String] :backup_job_id
     #   Uniquely identifies a request to Backup to back up a resource.
@@ -5643,21 +7090,10 @@ module Aws::Backup
       req.send_request(options)
     end
 
-    # Assigns a set of key-value pairs to a recovery point, backup plan, or
-    # backup vault identified by an Amazon Resource Name (ARN).
-    #
-    # This API is supported for recovery points for resource types including
-    # Aurora, Amazon DocumentDB. Amazon EBS, Amazon FSx, Neptune, and Amazon
-    # RDS.
+    # Assigns a set of key-value pairs to a resource.
     #
     # @option params [required, String] :resource_arn
-    #   An ARN that uniquely identifies a resource. The format of the ARN
-    #   depends on the type of the tagged resource.
-    #
-    #   ARNs that do not include `backup` are incompatible with tagging.
-    #   `TagResource` and `UntagResource` with invalid ARNs will result in an
-    #   error. Acceptable ARN content can include `arn:aws:backup:us-east`.
-    #   Invalid ARN content may look like `arn:aws:ec2:us-east`.
+    #   The ARN that uniquely identifies the resource.
     #
     # @option params [required, Hash<String,String>] :tags
     #   Key-value pairs that are used to help organize your resources. You can
@@ -5739,6 +7175,7 @@ module Aws::Backup
     #   * {Types::UpdateBackupPlanOutput#creation_date #creation_date} => Time
     #   * {Types::UpdateBackupPlanOutput#version_id #version_id} => String
     #   * {Types::UpdateBackupPlanOutput#advanced_backup_settings #advanced_backup_settings} => Array&lt;Types::AdvancedBackupSetting&gt;
+    #   * {Types::UpdateBackupPlanOutput#scan_settings #scan_settings} => Array&lt;Types::ScanSetting&gt;
     #
     # @example Request syntax with placeholder values
     #
@@ -5750,6 +7187,7 @@ module Aws::Backup
     #         {
     #           rule_name: "BackupRuleName", # required
     #           target_backup_vault_name: "BackupVaultName", # required
+    #           target_logically_air_gapped_backup_vault_arn: "ARN",
     #           schedule_expression: "CronExpression",
     #           start_window_minutes: 1,
     #           completion_window_minutes: 1,
@@ -5757,6 +7195,7 @@ module Aws::Backup
     #             move_to_cold_storage_after_days: 1,
     #             delete_after_days: 1,
     #             opt_in_to_archive_for_supported_resources: false,
+    #             delete_after_event: "DELETE_AFTER_COPY", # accepts DELETE_AFTER_COPY
     #           },
     #           recovery_point_tags: {
     #             "TagKey" => "TagValue",
@@ -5767,6 +7206,7 @@ module Aws::Backup
     #                 move_to_cold_storage_after_days: 1,
     #                 delete_after_days: 1,
     #                 opt_in_to_archive_for_supported_resources: false,
+    #                 delete_after_event: "DELETE_AFTER_COPY", # accepts DELETE_AFTER_COPY
     #               },
     #               destination_backup_vault_arn: "ARN", # required
     #             },
@@ -5778,6 +7218,12 @@ module Aws::Backup
     #               resource_types: ["ResourceType"],
     #             },
     #           ],
+    #           scan_actions: [
+    #             {
+    #               malware_scanner: "GUARDDUTY", # accepts GUARDDUTY
+    #               scan_mode: "FULL_SCAN", # accepts FULL_SCAN, INCREMENTAL_SCAN
+    #             },
+    #           ],
     #         },
     #       ],
     #       advanced_backup_settings: [
@@ -5786,6 +7232,13 @@ module Aws::Backup
     #           backup_options: {
     #             "BackupOptionKey" => "BackupOptionValue",
     #           },
+    #         },
+    #       ],
+    #       scan_settings: [
+    #         {
+    #           malware_scanner: "GUARDDUTY", # accepts GUARDDUTY
+    #           resource_types: ["ResourceType"],
+    #           scanner_role_arn: "IAMRoleArn",
     #         },
     #       ],
     #     },
@@ -5801,6 +7254,11 @@ module Aws::Backup
     #   resp.advanced_backup_settings[0].resource_type #=> String
     #   resp.advanced_backup_settings[0].backup_options #=> Hash
     #   resp.advanced_backup_settings[0].backup_options["BackupOptionKey"] #=> String
+    #   resp.scan_settings #=> Array
+    #   resp.scan_settings[0].malware_scanner #=> String, one of "GUARDDUTY"
+    #   resp.scan_settings[0].resource_types #=> Array
+    #   resp.scan_settings[0].resource_types[0] #=> String
+    #   resp.scan_settings[0].scanner_role_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/UpdateBackupPlan AWS API Documentation
     #
@@ -5882,15 +7340,27 @@ module Aws::Backup
       req.send_request(options)
     end
 
-    # Updates whether the Amazon Web Services account is opted in to
-    # cross-account backup. Returns an error if the account is not an
-    # Organizations management account. Use the `DescribeGlobalSettings` API
-    # to determine the current settings.
+    # Updates whether the Amazon Web Services account has enabled different
+    # cross-account management options, including cross-account backup,
+    # multi-party approval, and delegated administrator. Returns an error if
+    # the account is not an Organizations management account. Use the
+    # `DescribeGlobalSettings` API to determine the current settings.
     #
     # @option params [Hash<String,String>] :global_settings
-    #   A value for `isCrossAccountBackupEnabled` and a Region. Example:
-    #   `update-global-settings --global-settings
-    #   isCrossAccountBackupEnabled=false --region us-west-2`.
+    #   Inputs can include:
+    #
+    #   A value for `isCrossAccountBackupEnabled`. Values can be true or
+    #   false. Example: `update-global-settings --global-settings
+    #   isCrossAccountBackupEnabled=false`.
+    #
+    #   A value for Multi-party approval, styled as `isMpaEnabled`. Values can
+    #   be true or false. Example: `update-global-settings --global-settings
+    #   isMpaEnabled=false`.
+    #
+    #   A value for Backup Service-Linked Role creation, styled as
+    #   `isDelegatedAdministratorEnabled`. Values can be true or false.
+    #   Example: `update-global-settings --global-settings
+    #   isDelegatedAdministratorEnabled=false`.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
@@ -6035,6 +7505,7 @@ module Aws::Backup
     #       move_to_cold_storage_after_days: 1,
     #       delete_after_days: 1,
     #       opt_in_to_archive_for_supported_resources: false,
+    #       delete_after_event: "DELETE_AFTER_COPY", # accepts DELETE_AFTER_COPY
     #     },
     #   })
     #
@@ -6045,6 +7516,7 @@ module Aws::Backup
     #   resp.lifecycle.move_to_cold_storage_after_days #=> Integer
     #   resp.lifecycle.delete_after_days #=> Integer
     #   resp.lifecycle.opt_in_to_archive_for_supported_resources #=> Boolean
+    #   resp.lifecycle.delete_after_event #=> String, one of "DELETE_AFTER_COPY"
     #   resp.calculated_lifecycle.move_to_cold_storage_at #=> Time
     #   resp.calculated_lifecycle.delete_at #=> Time
     #
@@ -6323,6 +7795,63 @@ module Aws::Backup
       req.send_request(options)
     end
 
+    # This request will send changes to your specified tiering
+    # configuration. `TieringConfigurationName` cannot be updated after it
+    # is created.
+    #
+    # `ResourceSelection` can contain:
+    #
+    # * `Resources`
+    #
+    # * `TieringDownSettingsInDays`
+    #
+    # * `ResourceType`
+    #
+    # @option params [required, String] :tiering_configuration_name
+    #   The name of a tiering configuration to update.
+    #
+    # @option params [required, Types::TieringConfigurationInputForUpdate] :tiering_configuration
+    #   Specifies the body of a tiering configuration.
+    #
+    # @return [Types::UpdateTieringConfigurationOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateTieringConfigurationOutput#tiering_configuration_arn #tiering_configuration_arn} => String
+    #   * {Types::UpdateTieringConfigurationOutput#tiering_configuration_name #tiering_configuration_name} => String
+    #   * {Types::UpdateTieringConfigurationOutput#creation_time #creation_time} => Time
+    #   * {Types::UpdateTieringConfigurationOutput#last_updated_time #last_updated_time} => Time
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_tiering_configuration({
+    #     tiering_configuration_name: "TieringConfigurationName", # required
+    #     tiering_configuration: { # required
+    #       resource_selection: [ # required
+    #         {
+    #           resources: ["ARN"], # required
+    #           tiering_down_settings_in_days: 1, # required
+    #           resource_type: "ResourceType", # required
+    #         },
+    #       ],
+    #       backup_vault_name: "BackupVaultNameOrWildcard", # required
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.tiering_configuration_arn #=> String
+    #   resp.tiering_configuration_name #=> String
+    #   resp.creation_time #=> Time
+    #   resp.last_updated_time #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/UpdateTieringConfiguration AWS API Documentation
+    #
+    # @overload update_tiering_configuration(params = {})
+    # @param [Hash] params ({})
+    def update_tiering_configuration(params = {}, options = {})
+      req = build_request(:update_tiering_configuration, params)
+      req.send_request(options)
+    end
+
     # @!endgroup
 
     # @param params ({})
@@ -6341,7 +7870,7 @@ module Aws::Backup
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-backup'
-      context[:gem_version] = '1.86.0'
+      context[:gem_version] = '1.116.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

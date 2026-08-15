@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -87,7 +88,11 @@ module Aws
       def describe_stream: (
                              stream_arn: ::String,
                              ?limit: ::Integer,
-                             ?exclusive_start_shard_id: ::String
+                             ?exclusive_start_shard_id: ::String,
+                             ?shard_filter: {
+                               type: ("CHILD_SHARDS")?,
+                               shard_id: ::String?
+                             }
                            ) -> _DescribeStreamResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeStreamResponseSuccess
 

@@ -42,9 +42,6 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#status-instance_method
       def status: () -> ::String
 
-      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#automatic_restart_time-instance_method
-      def automatic_restart_time: () -> ::Time
-
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#percent_progress-instance_method
       def percent_progress: () -> ::String
 
@@ -87,6 +84,9 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#preferred_maintenance_window-instance_method
       def preferred_maintenance_window: () -> ::String
 
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#upgrade_rollout_order-instance_method
+      def upgrade_rollout_order: () -> ("first" | "second" | "last")
+
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#replication_source_identifier-instance_method
       def replication_source_identifier: () -> ::String
 
@@ -107,6 +107,9 @@ module Aws
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#storage_encrypted-instance_method
       def storage_encrypted: () -> bool
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#storage_encryption_type-instance_method
+      def storage_encryption_type: () -> ("none" | "sse-kms" | "sse-rds")
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#kms_key_id-instance_method
       def kms_key_id: () -> ::String
@@ -144,6 +147,9 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#capacity-instance_method
       def capacity: () -> ::Integer
 
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#pending_modified_values-instance_method
+      def pending_modified_values: () -> Types::ClusterPendingModifiedValues
+
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#engine_mode-instance_method
       def engine_mode: () -> ::String
 
@@ -152,6 +158,27 @@ module Aws
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#rds_custom_cluster_configuration-instance_method
       def rds_custom_cluster_configuration: () -> Types::RdsCustomClusterConfiguration
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#db_cluster_instance_class-instance_method
+      def db_cluster_instance_class: () -> ::String
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#storage_type-instance_method
+      def storage_type: () -> ::String
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#iops-instance_method
+      def iops: () -> ::Integer
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#storage_throughput-instance_method
+      def storage_throughput: () -> ::Integer
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#io_optimized_next_allowed_modification_time-instance_method
+      def io_optimized_next_allowed_modification_time: () -> ::Time
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#publicly_accessible-instance_method
+      def publicly_accessible: () -> bool
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#auto_minor_version_upgrade-instance_method
+      def auto_minor_version_upgrade: () -> bool
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#deletion_protection-instance_method
       def deletion_protection: () -> bool
@@ -183,29 +210,26 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#tag_list-instance_method
       def tag_list: () -> ::Array[Types::Tag]
 
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#global_cluster_identifier-instance_method
+      def global_cluster_identifier: () -> ::String
+
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#global_write_forwarding_status-instance_method
       def global_write_forwarding_status: () -> ("enabled" | "disabled" | "enabling" | "disabling" | "unknown")
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#global_write_forwarding_requested-instance_method
       def global_write_forwarding_requested: () -> bool
 
-      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#pending_modified_values-instance_method
-      def pending_modified_values: () -> Types::ClusterPendingModifiedValues
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#network_type-instance_method
+      def network_type: () -> ::String
 
-      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#db_cluster_instance_class-instance_method
-      def db_cluster_instance_class: () -> ::String
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#automatic_restart_time-instance_method
+      def automatic_restart_time: () -> ::Time
 
-      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#storage_type-instance_method
-      def storage_type: () -> ::String
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#serverless_v2_scaling_configuration-instance_method
+      def serverless_v2_scaling_configuration: () -> Types::ServerlessV2ScalingConfigurationInfo
 
-      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#iops-instance_method
-      def iops: () -> ::Integer
-
-      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#publicly_accessible-instance_method
-      def publicly_accessible: () -> bool
-
-      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#auto_minor_version_upgrade-instance_method
-      def auto_minor_version_upgrade: () -> bool
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#serverless_v2_platform_version-instance_method
+      def serverless_v2_platform_version: () -> ::String
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#monitoring_interval-instance_method
       def monitoring_interval: () -> ::Integer
@@ -225,20 +249,11 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#performance_insights_retention_period-instance_method
       def performance_insights_retention_period: () -> ::Integer
 
-      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#serverless_v2_scaling_configuration-instance_method
-      def serverless_v2_scaling_configuration: () -> Types::ServerlessV2ScalingConfigurationInfo
-
-      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#network_type-instance_method
-      def network_type: () -> ::String
-
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#db_system_id-instance_method
       def db_system_id: () -> ::String
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#master_user_secret-instance_method
       def master_user_secret: () -> Types::MasterUserSecret
-
-      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#io_optimized_next_allowed_modification_time-instance_method
-      def io_optimized_next_allowed_modification_time: () -> ::Time
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#local_write_forwarding_status-instance_method
       def local_write_forwarding_status: () -> ("enabled" | "disabled" | "enabling" | "disabling" | "requested")
@@ -249,9 +264,6 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#limitless_database-instance_method
       def limitless_database: () -> Types::LimitlessDatabase
 
-      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#storage_throughput-instance_method
-      def storage_throughput: () -> ::Integer
-
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#cluster_scalability_type-instance_method
       def cluster_scalability_type: () -> ("standard" | "limitless")
 
@@ -260,6 +272,12 @@ module Aws
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#engine_lifecycle_support-instance_method
       def engine_lifecycle_support: () -> ::String
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#vpc_networking_enabled-instance_method
+      def vpc_networking_enabled: () -> bool
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RDS/DBCluster.html#internet_access_gateway_enabled-instance_method
+      def internet_access_gateway_enabled: () -> bool
 
       def client: () -> Client
 
@@ -296,7 +314,7 @@ module Aws
                       {
                         key: ::String?,
                         value: ::String?
-                      },
+                      }
                     ],
                     ?storage_encrypted: bool,
                     ?kms_key_id: ::String,
@@ -318,6 +336,12 @@ module Aws
                       transit_gateway_multicast_domain_id: ::String?,
                       replica_mode: ("open-read-only" | "mounted")?
                     },
+                    ?db_cluster_instance_class: ::String,
+                    ?allocated_storage: ::Integer,
+                    ?storage_type: ::String,
+                    ?iops: ::Integer,
+                    ?publicly_accessible: bool,
+                    ?auto_minor_version_upgrade: bool,
                     ?deletion_protection: bool,
                     ?global_cluster_identifier: ::String,
                     ?enable_http_endpoint: bool,
@@ -325,12 +349,12 @@ module Aws
                     ?domain: ::String,
                     ?domain_iam_role_name: ::String,
                     ?enable_global_write_forwarding: bool,
-                    ?db_cluster_instance_class: ::String,
-                    ?allocated_storage: ::Integer,
-                    ?storage_type: ::String,
-                    ?iops: ::Integer,
-                    ?publicly_accessible: bool,
-                    ?auto_minor_version_upgrade: bool,
+                    ?network_type: ::String,
+                    ?serverless_v2_scaling_configuration: {
+                      min_capacity: ::Float?,
+                      max_capacity: ::Float?,
+                      seconds_until_auto_pause: ::Integer?
+                    },
                     ?monitoring_interval: ::Integer,
                     ?monitoring_role_arn: ::String,
                     ?database_insights_mode: ("standard" | "advanced"),
@@ -338,19 +362,32 @@ module Aws
                     ?performance_insights_kms_key_id: ::String,
                     ?performance_insights_retention_period: ::Integer,
                     ?enable_limitless_database: bool,
-                    ?serverless_v2_scaling_configuration: {
-                      min_capacity: ::Float?,
-                      max_capacity: ::Float?,
-                      seconds_until_auto_pause: ::Integer?
-                    },
-                    ?network_type: ::String,
                     ?cluster_scalability_type: ("standard" | "limitless"),
                     ?db_system_id: ::String,
                     ?manage_master_user_password: bool,
-                    ?master_user_secret_kms_key_id: ::String,
                     ?enable_local_write_forwarding: bool,
+                    ?master_user_secret_kms_key_id: ::String,
                     ?ca_certificate_identifier: ::String,
                     ?engine_lifecycle_support: ::String,
+                    ?tag_specifications: Array[
+                      {
+                        resource_type: ::String?,
+                        tags: Array[
+                          {
+                            key: ::String?,
+                            value: ::String?
+                          }
+                        ]?
+                      }
+                    ],
+                    ?master_user_authentication_type: ("password" | "iam-db-auth"),
+                    ?with_express_configuration: bool,
+                    ?associated_roles: Array[
+                      {
+                        role_arn: ::String,
+                        feature_name: ::String?
+                      }
+                    ],
                     ?source_region: ::String
                   ) -> DBCluster
                 | (?Hash[Symbol, untyped]) -> DBCluster
@@ -362,7 +399,7 @@ module Aws
                                {
                                  key: ::String?,
                                  value: ::String?
-                               },
+                               }
                              ]
                            ) -> DBClusterSnapshot
                          | (?Hash[Symbol, untyped]) -> DBClusterSnapshot
@@ -421,27 +458,29 @@ module Aws
                     ?storage_type: ::String,
                     ?iops: ::Integer,
                     ?auto_minor_version_upgrade: bool,
+                    ?network_type: ::String,
+                    ?serverless_v2_scaling_configuration: {
+                      min_capacity: ::Float?,
+                      max_capacity: ::Float?,
+                      seconds_until_auto_pause: ::Integer?
+                    },
                     ?monitoring_interval: ::Integer,
                     ?monitoring_role_arn: ::String,
                     ?database_insights_mode: ("standard" | "advanced"),
                     ?enable_performance_insights: bool,
                     ?performance_insights_kms_key_id: ::String,
                     ?performance_insights_retention_period: ::Integer,
-                    ?serverless_v2_scaling_configuration: {
-                      min_capacity: ::Float?,
-                      max_capacity: ::Float?,
-                      seconds_until_auto_pause: ::Integer?
-                    },
-                    ?network_type: ::String,
                     ?manage_master_user_password: bool,
                     ?rotate_master_user_password: bool,
+                    ?enable_local_write_forwarding: bool,
                     ?master_user_secret_kms_key_id: ::String,
                     ?engine_mode: ::String,
                     ?allow_engine_mode_change: bool,
-                    ?enable_local_write_forwarding: bool,
                     ?aws_backup_recovery_point_arn: ::String,
                     ?enable_limitless_database: bool,
-                    ?ca_certificate_identifier: ::String
+                    ?ca_certificate_identifier: ::String,
+                    ?master_user_authentication_type: ("password" | "iam-db-auth"),
+                    ?engine_lifecycle_support: ::String
                   ) -> DBCluster
                 | (?Hash[Symbol, untyped]) -> DBCluster
 
@@ -459,7 +498,7 @@ module Aws
                        {
                          key: ::String?,
                          value: ::String?
-                       },
+                       }
                      ],
                      ?kms_key_id: ::String,
                      ?enable_iam_database_authentication: bool,
@@ -470,6 +509,17 @@ module Aws
                      ?copy_tags_to_snapshot: bool,
                      ?domain: ::String,
                      ?domain_iam_role_name: ::String,
+                     ?db_cluster_instance_class: ::String,
+                     ?storage_type: ::String,
+                     ?publicly_accessible: bool,
+                     ?iops: ::Integer,
+                     ?network_type: ::String,
+                     ?source_db_cluster_resource_id: ::String,
+                     ?serverless_v2_scaling_configuration: {
+                       min_capacity: ::Float?,
+                       max_capacity: ::Float?,
+                       seconds_until_auto_pause: ::Integer?
+                     },
                      ?scaling_configuration: {
                        min_capacity: ::Integer?,
                        max_capacity: ::Integer?,
@@ -479,17 +529,6 @@ module Aws
                        seconds_before_timeout: ::Integer?
                      },
                      ?engine_mode: ::String,
-                     ?db_cluster_instance_class: ::String,
-                     ?storage_type: ::String,
-                     ?publicly_accessible: bool,
-                     ?iops: ::Integer,
-                     ?serverless_v2_scaling_configuration: {
-                       min_capacity: ::Float?,
-                       max_capacity: ::Float?,
-                       seconds_until_auto_pause: ::Integer?
-                     },
-                     ?network_type: ::String,
-                     ?source_db_cluster_resource_id: ::String,
                      ?rds_custom_cluster_configuration: {
                        interconnect_subnet_id: ::String?,
                        transit_gateway_multicast_domain_id: ::String?,
@@ -500,7 +539,28 @@ module Aws
                      ?enable_performance_insights: bool,
                      ?performance_insights_kms_key_id: ::String,
                      ?performance_insights_retention_period: ::Integer,
-                     ?engine_lifecycle_support: ::String
+                     ?backup_retention_period: ::Integer,
+                     ?preferred_backup_window: ::String,
+                     ?engine_lifecycle_support: ::String,
+                     ?tag_specifications: Array[
+                       {
+                         resource_type: ::String?,
+                         tags: Array[
+                           {
+                             key: ::String?,
+                             value: ::String?
+                           }
+                         ]?
+                       }
+                     ],
+                     ?enable_vpc_networking: bool,
+                     ?enable_internet_access_gateway: bool,
+                     ?associated_roles: Array[
+                       {
+                         role_arn: ::String,
+                         feature_name: ::String?
+                       }
+                     ]
                    ) -> DBCluster
                  | (?Hash[Symbol, untyped]) -> DBCluster
 
@@ -514,7 +574,7 @@ module Aws
                       {
                         name: ::String,
                         values: Array[::String]
-                      },
+                      }
                     ]
                   ) -> Event::Collection
                 | (?Hash[Symbol, untyped]) -> Event::Collection
@@ -536,7 +596,7 @@ module Aws
                          {
                            name: ::String,
                            values: Array[::String]
-                         },
+                         }
                        ],
                        ?include_shared: bool,
                        ?include_public: bool,

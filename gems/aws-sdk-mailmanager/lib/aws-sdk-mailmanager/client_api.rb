@@ -60,6 +60,9 @@ module Aws::MailManager
     ArchivedMessageId = Shapes::StringShape.new(name: 'ArchivedMessageId')
     ArchivesList = Shapes::ListShape.new(name: 'ArchivesList')
     Boolean = Shapes::BooleanShape.new(name: 'Boolean')
+    BounceAction = Shapes::StructureShape.new(name: 'BounceAction')
+    BounceMessage = Shapes::StringShape.new(name: 'BounceMessage')
+    CAContent = Shapes::StringShape.new(name: 'CAContent')
     ConflictException = Shapes::StructureShape.new(name: 'ConflictException')
     CreateAddonInstanceRequest = Shapes::StructureShape.new(name: 'CreateAddonInstanceRequest')
     CreateAddonInstanceResponse = Shapes::StructureShape.new(name: 'CreateAddonInstanceResponse')
@@ -79,6 +82,7 @@ module Aws::MailManager
     CreateRuleSetResponse = Shapes::StructureShape.new(name: 'CreateRuleSetResponse')
     CreateTrafficPolicyRequest = Shapes::StructureShape.new(name: 'CreateTrafficPolicyRequest')
     CreateTrafficPolicyResponse = Shapes::StructureShape.new(name: 'CreateTrafficPolicyResponse')
+    CrlContent = Shapes::StringShape.new(name: 'CrlContent')
     DeleteAddonInstanceRequest = Shapes::StructureShape.new(name: 'DeleteAddonInstanceRequest')
     DeleteAddonInstanceResponse = Shapes::StructureShape.new(name: 'DeleteAddonInstanceResponse')
     DeleteAddonSubscriptionRequest = Shapes::StructureShape.new(name: 'DeleteAddonSubscriptionRequest')
@@ -99,6 +103,7 @@ module Aws::MailManager
     DeliverToQBusinessAction = Shapes::StructureShape.new(name: 'DeliverToQBusinessAction')
     DeregisterMemberFromAddressListRequest = Shapes::StructureShape.new(name: 'DeregisterMemberFromAddressListRequest')
     DeregisterMemberFromAddressListResponse = Shapes::StructureShape.new(name: 'DeregisterMemberFromAddressListResponse')
+    DiagnosticMessage = Shapes::StringShape.new(name: 'DiagnosticMessage')
     Double = Shapes::FloatShape.new(name: 'Double')
     DropAction = Shapes::StructureShape.new(name: 'DropAction')
     EmailAddress = Shapes::StringShape.new(name: 'EmailAddress')
@@ -162,6 +167,9 @@ module Aws::MailManager
     IngressIpToEvaluate = Shapes::UnionShape.new(name: 'IngressIpToEvaluate')
     IngressIpv4Attribute = Shapes::StringShape.new(name: 'IngressIpv4Attribute')
     IngressIpv4Expression = Shapes::StructureShape.new(name: 'IngressIpv4Expression')
+    IngressIpv6Attribute = Shapes::StringShape.new(name: 'IngressIpv6Attribute')
+    IngressIpv6Expression = Shapes::StructureShape.new(name: 'IngressIpv6Expression')
+    IngressIpv6ToEvaluate = Shapes::UnionShape.new(name: 'IngressIpv6ToEvaluate')
     IngressIsInAddressList = Shapes::StructureShape.new(name: 'IngressIsInAddressList')
     IngressPoint = Shapes::StructureShape.new(name: 'IngressPoint')
     IngressPointARecord = Shapes::StringShape.new(name: 'IngressPointARecord')
@@ -185,13 +193,20 @@ module Aws::MailManager
     IngressTlsProtocolOperator = Shapes::StringShape.new(name: 'IngressTlsProtocolOperator')
     IngressTlsProtocolToEvaluate = Shapes::UnionShape.new(name: 'IngressTlsProtocolToEvaluate')
     Integer = Shapes::IntegerShape.new(name: 'Integer')
+    InvokeLambdaAction = Shapes::StructureShape.new(name: 'InvokeLambdaAction')
+    IpType = Shapes::StringShape.new(name: 'IpType')
     Ipv4Cidr = Shapes::StringShape.new(name: 'Ipv4Cidr')
     Ipv4Cidrs = Shapes::ListShape.new(name: 'Ipv4Cidrs')
+    Ipv6Cidr = Shapes::StringShape.new(name: 'Ipv6Cidr')
+    Ipv6Cidrs = Shapes::ListShape.new(name: 'Ipv6Cidrs')
     JobId = Shapes::StringShape.new(name: 'JobId')
     JobItemsCount = Shapes::IntegerShape.new(name: 'JobItemsCount')
     JobName = Shapes::StringShape.new(name: 'JobName')
     KmsKeyArn = Shapes::StringShape.new(name: 'KmsKeyArn')
     KmsKeyId = Shapes::StringShape.new(name: 'KmsKeyId')
+    LambdaFunctionArn = Shapes::StringShape.new(name: 'LambdaFunctionArn')
+    LambdaInvocationType = Shapes::StringShape.new(name: 'LambdaInvocationType')
+    LambdaRetryTimeMinutes = Shapes::IntegerShape.new(name: 'LambdaRetryTimeMinutes')
     ListAddonInstancesRequest = Shapes::StructureShape.new(name: 'ListAddonInstancesRequest')
     ListAddonInstancesResponse = Shapes::StructureShape.new(name: 'ListAddonInstancesResponse')
     ListAddonSubscriptionsRequest = Shapes::StructureShape.new(name: 'ListAddonSubscriptionsRequest')
@@ -224,6 +239,7 @@ module Aws::MailManager
     Metadata = Shapes::StructureShape.new(name: 'Metadata')
     MimeHeaderAttribute = Shapes::StringShape.new(name: 'MimeHeaderAttribute')
     NameOrArn = Shapes::StringShape.new(name: 'NameOrArn')
+    NetworkConfiguration = Shapes::UnionShape.new(name: 'NetworkConfiguration')
     NoAuthentication = Shapes::StructureShape.new(name: 'NoAuthentication')
     PageSize = Shapes::IntegerShape.new(name: 'PageSize')
     PaginationToken = Shapes::StringShape.new(name: 'PaginationToken')
@@ -232,6 +248,8 @@ module Aws::MailManager
     PolicyStatement = Shapes::StructureShape.new(name: 'PolicyStatement')
     PolicyStatementList = Shapes::ListShape.new(name: 'PolicyStatementList')
     PreSignedUrl = Shapes::StringShape.new(name: 'PreSignedUrl')
+    PrivateNetworkConfiguration = Shapes::StructureShape.new(name: 'PrivateNetworkConfiguration')
+    PublicNetworkConfiguration = Shapes::StructureShape.new(name: 'PublicNetworkConfiguration')
     QBusinessApplicationId = Shapes::StringShape.new(name: 'QBusinessApplicationId')
     QBusinessIndexId = Shapes::StringShape.new(name: 'QBusinessIndexId')
     Recipients = Shapes::ListShape.new(name: 'Recipients')
@@ -261,6 +279,7 @@ module Aws::MailManager
     RuleBooleanExpression = Shapes::StructureShape.new(name: 'RuleBooleanExpression')
     RuleBooleanOperator = Shapes::StringShape.new(name: 'RuleBooleanOperator')
     RuleBooleanToEvaluate = Shapes::UnionShape.new(name: 'RuleBooleanToEvaluate')
+    RuleClientCertificateAttribute = Shapes::StringShape.new(name: 'RuleClientCertificateAttribute')
     RuleCondition = Shapes::UnionShape.new(name: 'RuleCondition')
     RuleConditions = Shapes::ListShape.new(name: 'RuleConditions')
     RuleDmarcExpression = Shapes::StructureShape.new(name: 'RuleDmarcExpression')
@@ -316,12 +335,18 @@ module Aws::MailManager
     SenderIpAddress = Shapes::StringShape.new(name: 'SenderIpAddress')
     ServiceQuotaExceededException = Shapes::StructureShape.new(name: 'ServiceQuotaExceededException')
     SmtpPassword = Shapes::StringShape.new(name: 'SmtpPassword')
+    SmtpReplyCode = Shapes::StringShape.new(name: 'SmtpReplyCode')
+    SnsAction = Shapes::StructureShape.new(name: 'SnsAction')
+    SnsNotificationEncoding = Shapes::StringShape.new(name: 'SnsNotificationEncoding')
+    SnsNotificationPayloadType = Shapes::StringShape.new(name: 'SnsNotificationPayloadType')
+    SnsTopicArn = Shapes::StringShape.new(name: 'SnsTopicArn')
     StartAddressListImportJobRequest = Shapes::StructureShape.new(name: 'StartAddressListImportJobRequest')
     StartAddressListImportJobResponse = Shapes::StructureShape.new(name: 'StartAddressListImportJobResponse')
     StartArchiveExportRequest = Shapes::StructureShape.new(name: 'StartArchiveExportRequest')
     StartArchiveExportResponse = Shapes::StructureShape.new(name: 'StartArchiveExportResponse')
     StartArchiveSearchRequest = Shapes::StructureShape.new(name: 'StartArchiveSearchRequest')
     StartArchiveSearchResponse = Shapes::StructureShape.new(name: 'StartArchiveSearchResponse')
+    StatusCode = Shapes::StringShape.new(name: 'StatusCode')
     StopAddressListImportJobRequest = Shapes::StructureShape.new(name: 'StopAddressListImportJobRequest')
     StopAddressListImportJobResponse = Shapes::StructureShape.new(name: 'StopAddressListImportJobResponse')
     StopArchiveExportRequest = Shapes::StructureShape.new(name: 'StopArchiveExportRequest')
@@ -342,11 +367,15 @@ module Aws::MailManager
     TaggableResourceArn = Shapes::StringShape.new(name: 'TaggableResourceArn')
     ThrottlingException = Shapes::StructureShape.new(name: 'ThrottlingException')
     Timestamp = Shapes::TimestampShape.new(name: 'Timestamp')
+    TlsAuthConfiguration = Shapes::StructureShape.new(name: 'TlsAuthConfiguration')
+    TlsPolicy = Shapes::StringShape.new(name: 'TlsPolicy')
     TrafficPolicy = Shapes::StructureShape.new(name: 'TrafficPolicy')
     TrafficPolicyArn = Shapes::StringShape.new(name: 'TrafficPolicyArn')
     TrafficPolicyId = Shapes::StringShape.new(name: 'TrafficPolicyId')
     TrafficPolicyList = Shapes::ListShape.new(name: 'TrafficPolicyList')
     TrafficPolicyName = Shapes::StringShape.new(name: 'TrafficPolicyName')
+    TrustStore = Shapes::StructureShape.new(name: 'TrustStore')
+    TrustStoreResponseOption = Shapes::StringShape.new(name: 'TrustStoreResponseOption')
     UntagResourceRequest = Shapes::StructureShape.new(name: 'UntagResourceRequest')
     UntagResourceResponse = Shapes::StructureShape.new(name: 'UntagResourceResponse')
     UpdateArchiveRequest = Shapes::StructureShape.new(name: 'UpdateArchiveRequest')
@@ -360,6 +389,7 @@ module Aws::MailManager
     UpdateTrafficPolicyRequest = Shapes::StructureShape.new(name: 'UpdateTrafficPolicyRequest')
     UpdateTrafficPolicyResponse = Shapes::StructureShape.new(name: 'UpdateTrafficPolicyResponse')
     ValidationException = Shapes::StructureShape.new(name: 'ValidationException')
+    VpcEndpointId = Shapes::StringShape.new(name: 'VpcEndpointId')
 
     AccessDeniedException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, location_name: "Message"))
     AccessDeniedException.struct_class = Types::AccessDeniedException
@@ -368,18 +398,18 @@ module Aws::MailManager
     AddHeaderAction.add_member(:header_value, Shapes::ShapeRef.new(shape: HeaderValue, required: true, location_name: "HeaderValue"))
     AddHeaderAction.struct_class = Types::AddHeaderAction
 
-    AddonInstance.add_member(:addon_instance_arn, Shapes::ShapeRef.new(shape: AddonInstanceArn, location_name: "AddonInstanceArn"))
     AddonInstance.add_member(:addon_instance_id, Shapes::ShapeRef.new(shape: AddonInstanceId, location_name: "AddonInstanceId"))
-    AddonInstance.add_member(:addon_name, Shapes::ShapeRef.new(shape: AddonName, location_name: "AddonName"))
     AddonInstance.add_member(:addon_subscription_id, Shapes::ShapeRef.new(shape: AddonSubscriptionId, location_name: "AddonSubscriptionId"))
+    AddonInstance.add_member(:addon_name, Shapes::ShapeRef.new(shape: AddonName, location_name: "AddonName"))
+    AddonInstance.add_member(:addon_instance_arn, Shapes::ShapeRef.new(shape: AddonInstanceArn, location_name: "AddonInstanceArn"))
     AddonInstance.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "CreatedTimestamp"))
     AddonInstance.struct_class = Types::AddonInstance
 
     AddonInstances.member = Shapes::ShapeRef.new(shape: AddonInstance)
 
+    AddonSubscription.add_member(:addon_subscription_id, Shapes::ShapeRef.new(shape: AddonSubscriptionId, location_name: "AddonSubscriptionId"))
     AddonSubscription.add_member(:addon_name, Shapes::ShapeRef.new(shape: AddonName, location_name: "AddonName"))
     AddonSubscription.add_member(:addon_subscription_arn, Shapes::ShapeRef.new(shape: AddonSubscriptionArn, location_name: "AddonSubscriptionArn"))
-    AddonSubscription.add_member(:addon_subscription_id, Shapes::ShapeRef.new(shape: AddonSubscriptionId, location_name: "AddonSubscriptionId"))
     AddonSubscription.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "CreatedTimestamp"))
     AddonSubscription.struct_class = Types::AddonSubscription
 
@@ -388,8 +418,8 @@ module Aws::MailManager
     AddressFilter.add_member(:address_prefix, Shapes::ShapeRef.new(shape: AddressPrefix, location_name: "AddressPrefix"))
     AddressFilter.struct_class = Types::AddressFilter
 
-    AddressList.add_member(:address_list_arn, Shapes::ShapeRef.new(shape: AddressListArn, required: true, location_name: "AddressListArn"))
     AddressList.add_member(:address_list_id, Shapes::ShapeRef.new(shape: AddressListId, required: true, location_name: "AddressListId"))
+    AddressList.add_member(:address_list_arn, Shapes::ShapeRef.new(shape: AddressListArn, required: true, location_name: "AddressListArn"))
     AddressList.add_member(:address_list_name, Shapes::ShapeRef.new(shape: AddressListName, required: true, location_name: "AddressListName"))
     AddressList.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreatedTimestamp"))
     AddressList.add_member(:last_updated_timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "LastUpdatedTimestamp"))
@@ -421,11 +451,11 @@ module Aws::MailManager
     ArchiveBooleanToEvaluate.add_member_subclass(:unknown, Types::ArchiveBooleanToEvaluate::Unknown)
     ArchiveBooleanToEvaluate.struct_class = Types::ArchiveBooleanToEvaluate
 
-    ArchiveFilterCondition.add_member(:boolean_expression, Shapes::ShapeRef.new(shape: ArchiveBooleanExpression, location_name: "BooleanExpression"))
     ArchiveFilterCondition.add_member(:string_expression, Shapes::ShapeRef.new(shape: ArchiveStringExpression, location_name: "StringExpression"))
+    ArchiveFilterCondition.add_member(:boolean_expression, Shapes::ShapeRef.new(shape: ArchiveBooleanExpression, location_name: "BooleanExpression"))
     ArchiveFilterCondition.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
-    ArchiveFilterCondition.add_member_subclass(:boolean_expression, Types::ArchiveFilterCondition::BooleanExpression)
     ArchiveFilterCondition.add_member_subclass(:string_expression, Types::ArchiveFilterCondition::StringExpression)
+    ArchiveFilterCondition.add_member_subclass(:boolean_expression, Types::ArchiveFilterCondition::BooleanExpression)
     ArchiveFilterCondition.add_member_subclass(:unknown, Types::ArchiveFilterCondition::Unknown)
     ArchiveFilterCondition.struct_class = Types::ArchiveFilterCondition
 
@@ -454,77 +484,88 @@ module Aws::MailManager
 
     ArchivesList.member = Shapes::ShapeRef.new(shape: Archive)
 
+    BounceAction.add_member(:action_failure_policy, Shapes::ShapeRef.new(shape: ActionFailurePolicy, location_name: "ActionFailurePolicy"))
+    BounceAction.add_member(:role_arn, Shapes::ShapeRef.new(shape: IamRoleArn, required: true, location_name: "RoleArn"))
+    BounceAction.add_member(:sender, Shapes::ShapeRef.new(shape: EmailAddress, required: true, location_name: "Sender"))
+    BounceAction.add_member(:status_code, Shapes::ShapeRef.new(shape: StatusCode, required: true, location_name: "StatusCode"))
+    BounceAction.add_member(:smtp_reply_code, Shapes::ShapeRef.new(shape: SmtpReplyCode, required: true, location_name: "SmtpReplyCode"))
+    BounceAction.add_member(:diagnostic_message, Shapes::ShapeRef.new(shape: DiagnosticMessage, required: true, location_name: "DiagnosticMessage"))
+    BounceAction.add_member(:message, Shapes::ShapeRef.new(shape: BounceMessage, location_name: "Message"))
+    BounceAction.struct_class = Types::BounceAction
+
     ConflictException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, location_name: "Message"))
     ConflictException.struct_class = Types::ConflictException
 
+    CreateAddonInstanceRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: IdempotencyToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     CreateAddonInstanceRequest.add_member(:addon_subscription_id, Shapes::ShapeRef.new(shape: AddonSubscriptionId, required: true, location_name: "AddonSubscriptionId"))
-    CreateAddonInstanceRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: IdempotencyToken, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
     CreateAddonInstanceRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
     CreateAddonInstanceRequest.struct_class = Types::CreateAddonInstanceRequest
 
     CreateAddonInstanceResponse.add_member(:addon_instance_id, Shapes::ShapeRef.new(shape: AddonInstanceId, required: true, location_name: "AddonInstanceId"))
     CreateAddonInstanceResponse.struct_class = Types::CreateAddonInstanceResponse
 
+    CreateAddonSubscriptionRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: IdempotencyToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     CreateAddonSubscriptionRequest.add_member(:addon_name, Shapes::ShapeRef.new(shape: AddonName, required: true, location_name: "AddonName"))
-    CreateAddonSubscriptionRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: IdempotencyToken, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
     CreateAddonSubscriptionRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
     CreateAddonSubscriptionRequest.struct_class = Types::CreateAddonSubscriptionRequest
 
     CreateAddonSubscriptionResponse.add_member(:addon_subscription_id, Shapes::ShapeRef.new(shape: AddonSubscriptionId, required: true, location_name: "AddonSubscriptionId"))
     CreateAddonSubscriptionResponse.struct_class = Types::CreateAddonSubscriptionResponse
 
+    CreateAddressListImportJobRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: IdempotencyToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     CreateAddressListImportJobRequest.add_member(:address_list_id, Shapes::ShapeRef.new(shape: AddressListId, required: true, location_name: "AddressListId"))
-    CreateAddressListImportJobRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: IdempotencyToken, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
-    CreateAddressListImportJobRequest.add_member(:import_data_format, Shapes::ShapeRef.new(shape: ImportDataFormat, required: true, location_name: "ImportDataFormat"))
     CreateAddressListImportJobRequest.add_member(:name, Shapes::ShapeRef.new(shape: JobName, required: true, location_name: "Name"))
+    CreateAddressListImportJobRequest.add_member(:import_data_format, Shapes::ShapeRef.new(shape: ImportDataFormat, required: true, location_name: "ImportDataFormat"))
     CreateAddressListImportJobRequest.struct_class = Types::CreateAddressListImportJobRequest
 
     CreateAddressListImportJobResponse.add_member(:job_id, Shapes::ShapeRef.new(shape: JobId, required: true, location_name: "JobId"))
     CreateAddressListImportJobResponse.add_member(:pre_signed_url, Shapes::ShapeRef.new(shape: PreSignedUrl, required: true, location_name: "PreSignedUrl"))
     CreateAddressListImportJobResponse.struct_class = Types::CreateAddressListImportJobResponse
 
+    CreateAddressListRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: IdempotencyToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     CreateAddressListRequest.add_member(:address_list_name, Shapes::ShapeRef.new(shape: AddressListName, required: true, location_name: "AddressListName"))
-    CreateAddressListRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: IdempotencyToken, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
     CreateAddressListRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
     CreateAddressListRequest.struct_class = Types::CreateAddressListRequest
 
     CreateAddressListResponse.add_member(:address_list_id, Shapes::ShapeRef.new(shape: AddressListId, required: true, location_name: "AddressListId"))
     CreateAddressListResponse.struct_class = Types::CreateAddressListResponse
 
+    CreateArchiveRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: IdempotencyToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     CreateArchiveRequest.add_member(:archive_name, Shapes::ShapeRef.new(shape: ArchiveNameString, required: true, location_name: "ArchiveName"))
-    CreateArchiveRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: IdempotencyToken, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
-    CreateArchiveRequest.add_member(:kms_key_arn, Shapes::ShapeRef.new(shape: KmsKeyArn, location_name: "KmsKeyArn"))
     CreateArchiveRequest.add_member(:retention, Shapes::ShapeRef.new(shape: ArchiveRetention, location_name: "Retention"))
+    CreateArchiveRequest.add_member(:kms_key_arn, Shapes::ShapeRef.new(shape: KmsKeyArn, location_name: "KmsKeyArn"))
     CreateArchiveRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
     CreateArchiveRequest.struct_class = Types::CreateArchiveRequest
 
     CreateArchiveResponse.add_member(:archive_id, Shapes::ShapeRef.new(shape: ArchiveIdString, required: true, location_name: "ArchiveId"))
     CreateArchiveResponse.struct_class = Types::CreateArchiveResponse
 
-    CreateIngressPointRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: IdempotencyToken, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
-    CreateIngressPointRequest.add_member(:ingress_point_configuration, Shapes::ShapeRef.new(shape: IngressPointConfiguration, location_name: "IngressPointConfiguration"))
+    CreateIngressPointRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: IdempotencyToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     CreateIngressPointRequest.add_member(:ingress_point_name, Shapes::ShapeRef.new(shape: IngressPointName, required: true, location_name: "IngressPointName"))
-    CreateIngressPointRequest.add_member(:rule_set_id, Shapes::ShapeRef.new(shape: RuleSetId, required: true, location_name: "RuleSetId"))
-    CreateIngressPointRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
-    CreateIngressPointRequest.add_member(:traffic_policy_id, Shapes::ShapeRef.new(shape: TrafficPolicyId, required: true, location_name: "TrafficPolicyId"))
     CreateIngressPointRequest.add_member(:type, Shapes::ShapeRef.new(shape: IngressPointType, required: true, location_name: "Type"))
+    CreateIngressPointRequest.add_member(:rule_set_id, Shapes::ShapeRef.new(shape: RuleSetId, required: true, location_name: "RuleSetId"))
+    CreateIngressPointRequest.add_member(:traffic_policy_id, Shapes::ShapeRef.new(shape: TrafficPolicyId, required: true, location_name: "TrafficPolicyId"))
+    CreateIngressPointRequest.add_member(:ingress_point_configuration, Shapes::ShapeRef.new(shape: IngressPointConfiguration, location_name: "IngressPointConfiguration"))
+    CreateIngressPointRequest.add_member(:network_configuration, Shapes::ShapeRef.new(shape: NetworkConfiguration, location_name: "NetworkConfiguration"))
+    CreateIngressPointRequest.add_member(:tls_policy, Shapes::ShapeRef.new(shape: TlsPolicy, location_name: "TlsPolicy"))
+    CreateIngressPointRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
     CreateIngressPointRequest.struct_class = Types::CreateIngressPointRequest
 
     CreateIngressPointResponse.add_member(:ingress_point_id, Shapes::ShapeRef.new(shape: IngressPointId, required: true, location_name: "IngressPointId"))
     CreateIngressPointResponse.struct_class = Types::CreateIngressPointResponse
 
-    CreateRelayRequest.add_member(:authentication, Shapes::ShapeRef.new(shape: RelayAuthentication, required: true, location_name: "Authentication"))
-    CreateRelayRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: IdempotencyToken, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
+    CreateRelayRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: IdempotencyToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     CreateRelayRequest.add_member(:relay_name, Shapes::ShapeRef.new(shape: RelayName, required: true, location_name: "RelayName"))
     CreateRelayRequest.add_member(:server_name, Shapes::ShapeRef.new(shape: RelayServerName, required: true, location_name: "ServerName"))
     CreateRelayRequest.add_member(:server_port, Shapes::ShapeRef.new(shape: RelayServerPort, required: true, location_name: "ServerPort"))
+    CreateRelayRequest.add_member(:authentication, Shapes::ShapeRef.new(shape: RelayAuthentication, required: true, location_name: "Authentication"))
     CreateRelayRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
     CreateRelayRequest.struct_class = Types::CreateRelayRequest
 
     CreateRelayResponse.add_member(:relay_id, Shapes::ShapeRef.new(shape: RelayId, required: true, location_name: "RelayId"))
     CreateRelayResponse.struct_class = Types::CreateRelayResponse
 
-    CreateRuleSetRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: IdempotencyToken, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
+    CreateRuleSetRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: IdempotencyToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     CreateRuleSetRequest.add_member(:rule_set_name, Shapes::ShapeRef.new(shape: RuleSetName, required: true, location_name: "RuleSetName"))
     CreateRuleSetRequest.add_member(:rules, Shapes::ShapeRef.new(shape: Rules, required: true, location_name: "Rules"))
     CreateRuleSetRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
@@ -533,12 +574,12 @@ module Aws::MailManager
     CreateRuleSetResponse.add_member(:rule_set_id, Shapes::ShapeRef.new(shape: RuleSetId, required: true, location_name: "RuleSetId"))
     CreateRuleSetResponse.struct_class = Types::CreateRuleSetResponse
 
-    CreateTrafficPolicyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: IdempotencyToken, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
+    CreateTrafficPolicyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: IdempotencyToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
+    CreateTrafficPolicyRequest.add_member(:traffic_policy_name, Shapes::ShapeRef.new(shape: TrafficPolicyName, required: true, location_name: "TrafficPolicyName"))
+    CreateTrafficPolicyRequest.add_member(:policy_statements, Shapes::ShapeRef.new(shape: PolicyStatementList, required: true, location_name: "PolicyStatements"))
     CreateTrafficPolicyRequest.add_member(:default_action, Shapes::ShapeRef.new(shape: AcceptAction, required: true, location_name: "DefaultAction"))
     CreateTrafficPolicyRequest.add_member(:max_message_size_bytes, Shapes::ShapeRef.new(shape: MaxMessageSizeBytes, location_name: "MaxMessageSizeBytes"))
-    CreateTrafficPolicyRequest.add_member(:policy_statements, Shapes::ShapeRef.new(shape: PolicyStatementList, required: true, location_name: "PolicyStatements"))
     CreateTrafficPolicyRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
-    CreateTrafficPolicyRequest.add_member(:traffic_policy_name, Shapes::ShapeRef.new(shape: TrafficPolicyName, required: true, location_name: "TrafficPolicyName"))
     CreateTrafficPolicyRequest.struct_class = Types::CreateTrafficPolicyRequest
 
     CreateTrafficPolicyResponse.add_member(:traffic_policy_id, Shapes::ShapeRef.new(shape: TrafficPolicyId, required: true, location_name: "TrafficPolicyId"))
@@ -595,8 +636,8 @@ module Aws::MailManager
     DeliverToQBusinessAction.add_member(:role_arn, Shapes::ShapeRef.new(shape: IamRoleArn, required: true, location_name: "RoleArn"))
     DeliverToQBusinessAction.struct_class = Types::DeliverToQBusinessAction
 
-    DeregisterMemberFromAddressListRequest.add_member(:address, Shapes::ShapeRef.new(shape: Address, required: true, location_name: "Address"))
     DeregisterMemberFromAddressListRequest.add_member(:address_list_id, Shapes::ShapeRef.new(shape: AddressListId, required: true, location_name: "AddressListId"))
+    DeregisterMemberFromAddressListRequest.add_member(:address, Shapes::ShapeRef.new(shape: Address, required: true, location_name: "Address"))
     DeregisterMemberFromAddressListRequest.struct_class = Types::DeregisterMemberFromAddressListRequest
 
     DeregisterMemberFromAddressListResponse.struct_class = Types::DeregisterMemberFromAddressListResponse
@@ -605,8 +646,8 @@ module Aws::MailManager
 
     EmailReceivedHeadersList.member = Shapes::ShapeRef.new(shape: String)
 
-    Envelope.add_member(:from, Shapes::ShapeRef.new(shape: String, location_name: "From"))
     Envelope.add_member(:helo, Shapes::ShapeRef.new(shape: String, location_name: "Helo"))
+    Envelope.add_member(:from, Shapes::ShapeRef.new(shape: String, location_name: "From"))
     Envelope.add_member(:to, Shapes::ShapeRef.new(shape: StringList, location_name: "To"))
     Envelope.struct_class = Types::Envelope
 
@@ -616,10 +657,10 @@ module Aws::MailManager
     ExportDestinationConfiguration.add_member_subclass(:unknown, Types::ExportDestinationConfiguration::Unknown)
     ExportDestinationConfiguration.struct_class = Types::ExportDestinationConfiguration
 
-    ExportStatus.add_member(:completion_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "CompletionTimestamp"))
-    ExportStatus.add_member(:error_message, Shapes::ShapeRef.new(shape: ErrorMessage, location_name: "ErrorMessage"))
-    ExportStatus.add_member(:state, Shapes::ShapeRef.new(shape: ExportState, location_name: "State"))
     ExportStatus.add_member(:submission_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "SubmissionTimestamp"))
+    ExportStatus.add_member(:completion_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "CompletionTimestamp"))
+    ExportStatus.add_member(:state, Shapes::ShapeRef.new(shape: ExportState, location_name: "State"))
+    ExportStatus.add_member(:error_message, Shapes::ShapeRef.new(shape: ErrorMessage, location_name: "ErrorMessage"))
     ExportStatus.struct_class = Types::ExportStatus
 
     ExportSummary.add_member(:export_id, Shapes::ShapeRef.new(shape: ExportId, location_name: "ExportId"))
@@ -631,9 +672,9 @@ module Aws::MailManager
     GetAddonInstanceRequest.add_member(:addon_instance_id, Shapes::ShapeRef.new(shape: AddonInstanceId, required: true, location_name: "AddonInstanceId"))
     GetAddonInstanceRequest.struct_class = Types::GetAddonInstanceRequest
 
-    GetAddonInstanceResponse.add_member(:addon_instance_arn, Shapes::ShapeRef.new(shape: AddonInstanceArn, location_name: "AddonInstanceArn"))
-    GetAddonInstanceResponse.add_member(:addon_name, Shapes::ShapeRef.new(shape: AddonName, location_name: "AddonName"))
     GetAddonInstanceResponse.add_member(:addon_subscription_id, Shapes::ShapeRef.new(shape: AddonSubscriptionId, location_name: "AddonSubscriptionId"))
+    GetAddonInstanceResponse.add_member(:addon_name, Shapes::ShapeRef.new(shape: AddonName, location_name: "AddonName"))
+    GetAddonInstanceResponse.add_member(:addon_instance_arn, Shapes::ShapeRef.new(shape: AddonInstanceArn, location_name: "AddonInstanceArn"))
     GetAddonInstanceResponse.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "CreatedTimestamp"))
     GetAddonInstanceResponse.struct_class = Types::GetAddonInstanceResponse
 
@@ -648,25 +689,25 @@ module Aws::MailManager
     GetAddressListImportJobRequest.add_member(:job_id, Shapes::ShapeRef.new(shape: JobId, required: true, location_name: "JobId"))
     GetAddressListImportJobRequest.struct_class = Types::GetAddressListImportJobRequest
 
-    GetAddressListImportJobResponse.add_member(:address_list_id, Shapes::ShapeRef.new(shape: AddressListId, required: true, location_name: "AddressListId"))
-    GetAddressListImportJobResponse.add_member(:completed_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "CompletedTimestamp"))
-    GetAddressListImportJobResponse.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreatedTimestamp"))
-    GetAddressListImportJobResponse.add_member(:error, Shapes::ShapeRef.new(shape: ErrorMessage, location_name: "Error"))
-    GetAddressListImportJobResponse.add_member(:failed_items_count, Shapes::ShapeRef.new(shape: JobItemsCount, location_name: "FailedItemsCount"))
-    GetAddressListImportJobResponse.add_member(:import_data_format, Shapes::ShapeRef.new(shape: ImportDataFormat, required: true, location_name: "ImportDataFormat"))
-    GetAddressListImportJobResponse.add_member(:imported_items_count, Shapes::ShapeRef.new(shape: JobItemsCount, location_name: "ImportedItemsCount"))
     GetAddressListImportJobResponse.add_member(:job_id, Shapes::ShapeRef.new(shape: JobId, required: true, location_name: "JobId"))
     GetAddressListImportJobResponse.add_member(:name, Shapes::ShapeRef.new(shape: JobName, required: true, location_name: "Name"))
-    GetAddressListImportJobResponse.add_member(:pre_signed_url, Shapes::ShapeRef.new(shape: PreSignedUrl, required: true, location_name: "PreSignedUrl"))
-    GetAddressListImportJobResponse.add_member(:start_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "StartTimestamp"))
     GetAddressListImportJobResponse.add_member(:status, Shapes::ShapeRef.new(shape: ImportJobStatus, required: true, location_name: "Status"))
+    GetAddressListImportJobResponse.add_member(:pre_signed_url, Shapes::ShapeRef.new(shape: PreSignedUrl, required: true, location_name: "PreSignedUrl"))
+    GetAddressListImportJobResponse.add_member(:imported_items_count, Shapes::ShapeRef.new(shape: JobItemsCount, location_name: "ImportedItemsCount"))
+    GetAddressListImportJobResponse.add_member(:failed_items_count, Shapes::ShapeRef.new(shape: JobItemsCount, location_name: "FailedItemsCount"))
+    GetAddressListImportJobResponse.add_member(:import_data_format, Shapes::ShapeRef.new(shape: ImportDataFormat, required: true, location_name: "ImportDataFormat"))
+    GetAddressListImportJobResponse.add_member(:address_list_id, Shapes::ShapeRef.new(shape: AddressListId, required: true, location_name: "AddressListId"))
+    GetAddressListImportJobResponse.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreatedTimestamp"))
+    GetAddressListImportJobResponse.add_member(:start_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "StartTimestamp"))
+    GetAddressListImportJobResponse.add_member(:completed_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "CompletedTimestamp"))
+    GetAddressListImportJobResponse.add_member(:error, Shapes::ShapeRef.new(shape: ErrorMessage, location_name: "Error"))
     GetAddressListImportJobResponse.struct_class = Types::GetAddressListImportJobResponse
 
     GetAddressListRequest.add_member(:address_list_id, Shapes::ShapeRef.new(shape: AddressListId, required: true, location_name: "AddressListId"))
     GetAddressListRequest.struct_class = Types::GetAddressListRequest
 
-    GetAddressListResponse.add_member(:address_list_arn, Shapes::ShapeRef.new(shape: AddressListArn, required: true, location_name: "AddressListArn"))
     GetAddressListResponse.add_member(:address_list_id, Shapes::ShapeRef.new(shape: AddressListId, required: true, location_name: "AddressListId"))
+    GetAddressListResponse.add_member(:address_list_arn, Shapes::ShapeRef.new(shape: AddressListArn, required: true, location_name: "AddressListArn"))
     GetAddressListResponse.add_member(:address_list_name, Shapes::ShapeRef.new(shape: AddressListName, required: true, location_name: "AddressListName"))
     GetAddressListResponse.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreatedTimestamp"))
     GetAddressListResponse.add_member(:last_updated_timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "LastUpdatedTimestamp"))
@@ -676,12 +717,12 @@ module Aws::MailManager
     GetArchiveExportRequest.struct_class = Types::GetArchiveExportRequest
 
     GetArchiveExportResponse.add_member(:archive_id, Shapes::ShapeRef.new(shape: ArchiveId, location_name: "ArchiveId"))
-    GetArchiveExportResponse.add_member(:export_destination_configuration, Shapes::ShapeRef.new(shape: ExportDestinationConfiguration, location_name: "ExportDestinationConfiguration"))
     GetArchiveExportResponse.add_member(:filters, Shapes::ShapeRef.new(shape: ArchiveFilters, location_name: "Filters"))
     GetArchiveExportResponse.add_member(:from_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "FromTimestamp"))
-    GetArchiveExportResponse.add_member(:max_results, Shapes::ShapeRef.new(shape: ExportMaxResults, location_name: "MaxResults"))
-    GetArchiveExportResponse.add_member(:status, Shapes::ShapeRef.new(shape: ExportStatus, location_name: "Status"))
     GetArchiveExportResponse.add_member(:to_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "ToTimestamp"))
+    GetArchiveExportResponse.add_member(:max_results, Shapes::ShapeRef.new(shape: ExportMaxResults, location_name: "MaxResults"))
+    GetArchiveExportResponse.add_member(:export_destination_configuration, Shapes::ShapeRef.new(shape: ExportDestinationConfiguration, location_name: "ExportDestinationConfiguration"))
+    GetArchiveExportResponse.add_member(:status, Shapes::ShapeRef.new(shape: ExportStatus, location_name: "Status"))
     GetArchiveExportResponse.struct_class = Types::GetArchiveExportResponse
 
     GetArchiveMessageContentRequest.add_member(:archived_message_id, Shapes::ShapeRef.new(shape: ArchivedMessageId, required: true, location_name: "ArchivedMessageId"))
@@ -693,22 +734,22 @@ module Aws::MailManager
     GetArchiveMessageRequest.add_member(:archived_message_id, Shapes::ShapeRef.new(shape: ArchivedMessageId, required: true, location_name: "ArchivedMessageId"))
     GetArchiveMessageRequest.struct_class = Types::GetArchiveMessageRequest
 
-    GetArchiveMessageResponse.add_member(:envelope, Shapes::ShapeRef.new(shape: Envelope, location_name: "Envelope"))
     GetArchiveMessageResponse.add_member(:message_download_link, Shapes::ShapeRef.new(shape: S3PresignedURL, location_name: "MessageDownloadLink"))
     GetArchiveMessageResponse.add_member(:metadata, Shapes::ShapeRef.new(shape: Metadata, location_name: "Metadata"))
+    GetArchiveMessageResponse.add_member(:envelope, Shapes::ShapeRef.new(shape: Envelope, location_name: "Envelope"))
     GetArchiveMessageResponse.struct_class = Types::GetArchiveMessageResponse
 
     GetArchiveRequest.add_member(:archive_id, Shapes::ShapeRef.new(shape: ArchiveIdString, required: true, location_name: "ArchiveId"))
     GetArchiveRequest.struct_class = Types::GetArchiveRequest
 
-    GetArchiveResponse.add_member(:archive_arn, Shapes::ShapeRef.new(shape: ArchiveArn, required: true, location_name: "ArchiveArn"))
     GetArchiveResponse.add_member(:archive_id, Shapes::ShapeRef.new(shape: ArchiveIdString, required: true, location_name: "ArchiveId"))
     GetArchiveResponse.add_member(:archive_name, Shapes::ShapeRef.new(shape: ArchiveNameString, required: true, location_name: "ArchiveName"))
+    GetArchiveResponse.add_member(:archive_arn, Shapes::ShapeRef.new(shape: ArchiveArn, required: true, location_name: "ArchiveArn"))
     GetArchiveResponse.add_member(:archive_state, Shapes::ShapeRef.new(shape: ArchiveState, required: true, location_name: "ArchiveState"))
-    GetArchiveResponse.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "CreatedTimestamp"))
-    GetArchiveResponse.add_member(:kms_key_arn, Shapes::ShapeRef.new(shape: KmsKeyArn, location_name: "KmsKeyArn"))
-    GetArchiveResponse.add_member(:last_updated_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "LastUpdatedTimestamp"))
     GetArchiveResponse.add_member(:retention, Shapes::ShapeRef.new(shape: ArchiveRetention, required: true, location_name: "Retention"))
+    GetArchiveResponse.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "CreatedTimestamp"))
+    GetArchiveResponse.add_member(:last_updated_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "LastUpdatedTimestamp"))
+    GetArchiveResponse.add_member(:kms_key_arn, Shapes::ShapeRef.new(shape: KmsKeyArn, location_name: "KmsKeyArn"))
     GetArchiveResponse.struct_class = Types::GetArchiveResponse
 
     GetArchiveSearchRequest.add_member(:search_id, Shapes::ShapeRef.new(shape: SearchId, required: true, location_name: "SearchId"))
@@ -717,9 +758,9 @@ module Aws::MailManager
     GetArchiveSearchResponse.add_member(:archive_id, Shapes::ShapeRef.new(shape: ArchiveId, location_name: "ArchiveId"))
     GetArchiveSearchResponse.add_member(:filters, Shapes::ShapeRef.new(shape: ArchiveFilters, location_name: "Filters"))
     GetArchiveSearchResponse.add_member(:from_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "FromTimestamp"))
+    GetArchiveSearchResponse.add_member(:to_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "ToTimestamp"))
     GetArchiveSearchResponse.add_member(:max_results, Shapes::ShapeRef.new(shape: SearchMaxResults, location_name: "MaxResults"))
     GetArchiveSearchResponse.add_member(:status, Shapes::ShapeRef.new(shape: SearchStatus, location_name: "Status"))
-    GetArchiveSearchResponse.add_member(:to_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "ToTimestamp"))
     GetArchiveSearchResponse.struct_class = Types::GetArchiveSearchResponse
 
     GetArchiveSearchResultsRequest.add_member(:search_id, Shapes::ShapeRef.new(shape: SearchId, required: true, location_name: "SearchId"))
@@ -729,23 +770,26 @@ module Aws::MailManager
     GetArchiveSearchResultsResponse.struct_class = Types::GetArchiveSearchResultsResponse
 
     GetIngressPointRequest.add_member(:ingress_point_id, Shapes::ShapeRef.new(shape: IngressPointId, required: true, location_name: "IngressPointId"))
+    GetIngressPointRequest.add_member(:include_trust_store_contents, Shapes::ShapeRef.new(shape: TrustStoreResponseOption, location_name: "IncludeTrustStoreContents"))
     GetIngressPointRequest.struct_class = Types::GetIngressPointRequest
 
-    GetIngressPointResponse.add_member(:a_record, Shapes::ShapeRef.new(shape: IngressPointARecord, location_name: "ARecord"))
-    GetIngressPointResponse.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "CreatedTimestamp"))
-    GetIngressPointResponse.add_member(:ingress_point_arn, Shapes::ShapeRef.new(shape: IngressPointArn, location_name: "IngressPointArn"))
-    GetIngressPointResponse.add_member(:ingress_point_auth_configuration, Shapes::ShapeRef.new(shape: IngressPointAuthConfiguration, location_name: "IngressPointAuthConfiguration"))
     GetIngressPointResponse.add_member(:ingress_point_id, Shapes::ShapeRef.new(shape: IngressPointId, required: true, location_name: "IngressPointId"))
     GetIngressPointResponse.add_member(:ingress_point_name, Shapes::ShapeRef.new(shape: IngressPointName, required: true, location_name: "IngressPointName"))
-    GetIngressPointResponse.add_member(:last_updated_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "LastUpdatedTimestamp"))
-    GetIngressPointResponse.add_member(:rule_set_id, Shapes::ShapeRef.new(shape: RuleSetId, location_name: "RuleSetId"))
+    GetIngressPointResponse.add_member(:ingress_point_arn, Shapes::ShapeRef.new(shape: IngressPointArn, location_name: "IngressPointArn"))
     GetIngressPointResponse.add_member(:status, Shapes::ShapeRef.new(shape: IngressPointStatus, location_name: "Status"))
-    GetIngressPointResponse.add_member(:traffic_policy_id, Shapes::ShapeRef.new(shape: TrafficPolicyId, location_name: "TrafficPolicyId"))
     GetIngressPointResponse.add_member(:type, Shapes::ShapeRef.new(shape: IngressPointType, location_name: "Type"))
+    GetIngressPointResponse.add_member(:a_record, Shapes::ShapeRef.new(shape: IngressPointARecord, location_name: "ARecord"))
+    GetIngressPointResponse.add_member(:rule_set_id, Shapes::ShapeRef.new(shape: RuleSetId, location_name: "RuleSetId"))
+    GetIngressPointResponse.add_member(:traffic_policy_id, Shapes::ShapeRef.new(shape: TrafficPolicyId, location_name: "TrafficPolicyId"))
+    GetIngressPointResponse.add_member(:ingress_point_auth_configuration, Shapes::ShapeRef.new(shape: IngressPointAuthConfiguration, location_name: "IngressPointAuthConfiguration"))
+    GetIngressPointResponse.add_member(:network_configuration, Shapes::ShapeRef.new(shape: NetworkConfiguration, location_name: "NetworkConfiguration"))
+    GetIngressPointResponse.add_member(:tls_policy, Shapes::ShapeRef.new(shape: TlsPolicy, location_name: "TlsPolicy"))
+    GetIngressPointResponse.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "CreatedTimestamp"))
+    GetIngressPointResponse.add_member(:last_updated_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "LastUpdatedTimestamp"))
     GetIngressPointResponse.struct_class = Types::GetIngressPointResponse
 
-    GetMemberOfAddressListRequest.add_member(:address, Shapes::ShapeRef.new(shape: Address, required: true, location_name: "Address"))
     GetMemberOfAddressListRequest.add_member(:address_list_id, Shapes::ShapeRef.new(shape: AddressListId, required: true, location_name: "AddressListId"))
+    GetMemberOfAddressListRequest.add_member(:address, Shapes::ShapeRef.new(shape: Address, required: true, location_name: "Address"))
     GetMemberOfAddressListRequest.struct_class = Types::GetMemberOfAddressListRequest
 
     GetMemberOfAddressListResponse.add_member(:address, Shapes::ShapeRef.new(shape: Address, required: true, location_name: "Address"))
@@ -755,55 +799,55 @@ module Aws::MailManager
     GetRelayRequest.add_member(:relay_id, Shapes::ShapeRef.new(shape: RelayId, required: true, location_name: "RelayId"))
     GetRelayRequest.struct_class = Types::GetRelayRequest
 
-    GetRelayResponse.add_member(:authentication, Shapes::ShapeRef.new(shape: RelayAuthentication, location_name: "Authentication"))
-    GetRelayResponse.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "CreatedTimestamp"))
-    GetRelayResponse.add_member(:last_modified_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "LastModifiedTimestamp"))
-    GetRelayResponse.add_member(:relay_arn, Shapes::ShapeRef.new(shape: RelayArn, location_name: "RelayArn"))
     GetRelayResponse.add_member(:relay_id, Shapes::ShapeRef.new(shape: RelayId, required: true, location_name: "RelayId"))
+    GetRelayResponse.add_member(:relay_arn, Shapes::ShapeRef.new(shape: RelayArn, location_name: "RelayArn"))
     GetRelayResponse.add_member(:relay_name, Shapes::ShapeRef.new(shape: RelayName, location_name: "RelayName"))
     GetRelayResponse.add_member(:server_name, Shapes::ShapeRef.new(shape: RelayServerName, location_name: "ServerName"))
     GetRelayResponse.add_member(:server_port, Shapes::ShapeRef.new(shape: RelayServerPort, location_name: "ServerPort"))
+    GetRelayResponse.add_member(:authentication, Shapes::ShapeRef.new(shape: RelayAuthentication, location_name: "Authentication"))
+    GetRelayResponse.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "CreatedTimestamp"))
+    GetRelayResponse.add_member(:last_modified_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "LastModifiedTimestamp"))
     GetRelayResponse.struct_class = Types::GetRelayResponse
 
     GetRuleSetRequest.add_member(:rule_set_id, Shapes::ShapeRef.new(shape: RuleSetId, required: true, location_name: "RuleSetId"))
     GetRuleSetRequest.struct_class = Types::GetRuleSetRequest
 
+    GetRuleSetResponse.add_member(:rule_set_id, Shapes::ShapeRef.new(shape: RuleSetId, required: true, location_name: "RuleSetId"))
+    GetRuleSetResponse.add_member(:rule_set_arn, Shapes::ShapeRef.new(shape: RuleSetArn, required: true, location_name: "RuleSetArn"))
+    GetRuleSetResponse.add_member(:rule_set_name, Shapes::ShapeRef.new(shape: RuleSetName, required: true, location_name: "RuleSetName"))
     GetRuleSetResponse.add_member(:created_date, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreatedDate"))
     GetRuleSetResponse.add_member(:last_modification_date, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "LastModificationDate"))
-    GetRuleSetResponse.add_member(:rule_set_arn, Shapes::ShapeRef.new(shape: RuleSetArn, required: true, location_name: "RuleSetArn"))
-    GetRuleSetResponse.add_member(:rule_set_id, Shapes::ShapeRef.new(shape: RuleSetId, required: true, location_name: "RuleSetId"))
-    GetRuleSetResponse.add_member(:rule_set_name, Shapes::ShapeRef.new(shape: RuleSetName, required: true, location_name: "RuleSetName"))
     GetRuleSetResponse.add_member(:rules, Shapes::ShapeRef.new(shape: Rules, required: true, location_name: "Rules"))
     GetRuleSetResponse.struct_class = Types::GetRuleSetResponse
 
     GetTrafficPolicyRequest.add_member(:traffic_policy_id, Shapes::ShapeRef.new(shape: TrafficPolicyId, required: true, location_name: "TrafficPolicyId"))
     GetTrafficPolicyRequest.struct_class = Types::GetTrafficPolicyRequest
 
-    GetTrafficPolicyResponse.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "CreatedTimestamp"))
-    GetTrafficPolicyResponse.add_member(:default_action, Shapes::ShapeRef.new(shape: AcceptAction, location_name: "DefaultAction"))
-    GetTrafficPolicyResponse.add_member(:last_updated_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "LastUpdatedTimestamp"))
-    GetTrafficPolicyResponse.add_member(:max_message_size_bytes, Shapes::ShapeRef.new(shape: MaxMessageSizeBytes, location_name: "MaxMessageSizeBytes"))
-    GetTrafficPolicyResponse.add_member(:policy_statements, Shapes::ShapeRef.new(shape: PolicyStatementList, location_name: "PolicyStatements"))
-    GetTrafficPolicyResponse.add_member(:traffic_policy_arn, Shapes::ShapeRef.new(shape: TrafficPolicyArn, location_name: "TrafficPolicyArn"))
-    GetTrafficPolicyResponse.add_member(:traffic_policy_id, Shapes::ShapeRef.new(shape: TrafficPolicyId, required: true, location_name: "TrafficPolicyId"))
     GetTrafficPolicyResponse.add_member(:traffic_policy_name, Shapes::ShapeRef.new(shape: TrafficPolicyName, required: true, location_name: "TrafficPolicyName"))
+    GetTrafficPolicyResponse.add_member(:traffic_policy_id, Shapes::ShapeRef.new(shape: TrafficPolicyId, required: true, location_name: "TrafficPolicyId"))
+    GetTrafficPolicyResponse.add_member(:traffic_policy_arn, Shapes::ShapeRef.new(shape: TrafficPolicyArn, location_name: "TrafficPolicyArn"))
+    GetTrafficPolicyResponse.add_member(:policy_statements, Shapes::ShapeRef.new(shape: PolicyStatementList, location_name: "PolicyStatements"))
+    GetTrafficPolicyResponse.add_member(:max_message_size_bytes, Shapes::ShapeRef.new(shape: MaxMessageSizeBytes, location_name: "MaxMessageSizeBytes"))
+    GetTrafficPolicyResponse.add_member(:default_action, Shapes::ShapeRef.new(shape: AcceptAction, location_name: "DefaultAction"))
+    GetTrafficPolicyResponse.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "CreatedTimestamp"))
+    GetTrafficPolicyResponse.add_member(:last_updated_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "LastUpdatedTimestamp"))
     GetTrafficPolicyResponse.struct_class = Types::GetTrafficPolicyResponse
 
     ImportDataFormat.add_member(:import_data_type, Shapes::ShapeRef.new(shape: ImportDataType, required: true, location_name: "ImportDataType"))
     ImportDataFormat.struct_class = Types::ImportDataFormat
 
-    ImportJob.add_member(:address_list_id, Shapes::ShapeRef.new(shape: AddressListId, required: true, location_name: "AddressListId"))
-    ImportJob.add_member(:completed_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "CompletedTimestamp"))
-    ImportJob.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreatedTimestamp"))
-    ImportJob.add_member(:error, Shapes::ShapeRef.new(shape: ErrorMessage, location_name: "Error"))
-    ImportJob.add_member(:failed_items_count, Shapes::ShapeRef.new(shape: JobItemsCount, location_name: "FailedItemsCount"))
-    ImportJob.add_member(:import_data_format, Shapes::ShapeRef.new(shape: ImportDataFormat, required: true, location_name: "ImportDataFormat"))
-    ImportJob.add_member(:imported_items_count, Shapes::ShapeRef.new(shape: JobItemsCount, location_name: "ImportedItemsCount"))
     ImportJob.add_member(:job_id, Shapes::ShapeRef.new(shape: JobId, required: true, location_name: "JobId"))
     ImportJob.add_member(:name, Shapes::ShapeRef.new(shape: JobName, required: true, location_name: "Name"))
-    ImportJob.add_member(:pre_signed_url, Shapes::ShapeRef.new(shape: PreSignedUrl, required: true, location_name: "PreSignedUrl"))
-    ImportJob.add_member(:start_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "StartTimestamp"))
     ImportJob.add_member(:status, Shapes::ShapeRef.new(shape: ImportJobStatus, required: true, location_name: "Status"))
+    ImportJob.add_member(:pre_signed_url, Shapes::ShapeRef.new(shape: PreSignedUrl, required: true, location_name: "PreSignedUrl"))
+    ImportJob.add_member(:imported_items_count, Shapes::ShapeRef.new(shape: JobItemsCount, location_name: "ImportedItemsCount"))
+    ImportJob.add_member(:failed_items_count, Shapes::ShapeRef.new(shape: JobItemsCount, location_name: "FailedItemsCount"))
+    ImportJob.add_member(:import_data_format, Shapes::ShapeRef.new(shape: ImportDataFormat, required: true, location_name: "ImportDataFormat"))
+    ImportJob.add_member(:address_list_id, Shapes::ShapeRef.new(shape: AddressListId, required: true, location_name: "AddressListId"))
+    ImportJob.add_member(:created_timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreatedTimestamp"))
+    ImportJob.add_member(:start_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "StartTimestamp"))
+    ImportJob.add_member(:completed_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "CompletedTimestamp"))
+    ImportJob.add_member(:error, Shapes::ShapeRef.new(shape: ErrorMessage, location_name: "Error"))
     ImportJob.struct_class = Types::ImportJob
 
     ImportJobs.member = Shapes::ShapeRef.new(shape: ImportJob)
@@ -837,32 +881,46 @@ module Aws::MailManager
     IngressIpv4Expression.add_member(:values, Shapes::ShapeRef.new(shape: Ipv4Cidrs, required: true, location_name: "Values"))
     IngressIpv4Expression.struct_class = Types::IngressIpv4Expression
 
-    IngressIsInAddressList.add_member(:address_lists, Shapes::ShapeRef.new(shape: IngressAddressListArnList, required: true, location_name: "AddressLists"))
+    IngressIpv6Expression.add_member(:evaluate, Shapes::ShapeRef.new(shape: IngressIpv6ToEvaluate, required: true, location_name: "Evaluate"))
+    IngressIpv6Expression.add_member(:operator, Shapes::ShapeRef.new(shape: IngressIpOperator, required: true, location_name: "Operator"))
+    IngressIpv6Expression.add_member(:values, Shapes::ShapeRef.new(shape: Ipv6Cidrs, required: true, location_name: "Values"))
+    IngressIpv6Expression.struct_class = Types::IngressIpv6Expression
+
+    IngressIpv6ToEvaluate.add_member(:attribute, Shapes::ShapeRef.new(shape: IngressIpv6Attribute, location_name: "Attribute"))
+    IngressIpv6ToEvaluate.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    IngressIpv6ToEvaluate.add_member_subclass(:attribute, Types::IngressIpv6ToEvaluate::Attribute)
+    IngressIpv6ToEvaluate.add_member_subclass(:unknown, Types::IngressIpv6ToEvaluate::Unknown)
+    IngressIpv6ToEvaluate.struct_class = Types::IngressIpv6ToEvaluate
+
     IngressIsInAddressList.add_member(:attribute, Shapes::ShapeRef.new(shape: IngressAddressListEmailAttribute, required: true, location_name: "Attribute"))
+    IngressIsInAddressList.add_member(:address_lists, Shapes::ShapeRef.new(shape: IngressAddressListArnList, required: true, location_name: "AddressLists"))
     IngressIsInAddressList.struct_class = Types::IngressIsInAddressList
 
-    IngressPoint.add_member(:a_record, Shapes::ShapeRef.new(shape: IngressPointARecord, location_name: "ARecord"))
-    IngressPoint.add_member(:ingress_point_id, Shapes::ShapeRef.new(shape: IngressPointId, required: true, location_name: "IngressPointId"))
     IngressPoint.add_member(:ingress_point_name, Shapes::ShapeRef.new(shape: IngressPointName, required: true, location_name: "IngressPointName"))
+    IngressPoint.add_member(:ingress_point_id, Shapes::ShapeRef.new(shape: IngressPointId, required: true, location_name: "IngressPointId"))
     IngressPoint.add_member(:status, Shapes::ShapeRef.new(shape: IngressPointStatus, required: true, location_name: "Status"))
     IngressPoint.add_member(:type, Shapes::ShapeRef.new(shape: IngressPointType, required: true, location_name: "Type"))
+    IngressPoint.add_member(:a_record, Shapes::ShapeRef.new(shape: IngressPointARecord, location_name: "ARecord"))
     IngressPoint.struct_class = Types::IngressPoint
 
     IngressPointAuthConfiguration.add_member(:ingress_point_password_configuration, Shapes::ShapeRef.new(shape: IngressPointPasswordConfiguration, location_name: "IngressPointPasswordConfiguration"))
     IngressPointAuthConfiguration.add_member(:secret_arn, Shapes::ShapeRef.new(shape: SecretArn, location_name: "SecretArn"))
+    IngressPointAuthConfiguration.add_member(:tls_auth_configuration, Shapes::ShapeRef.new(shape: TlsAuthConfiguration, location_name: "TlsAuthConfiguration"))
     IngressPointAuthConfiguration.struct_class = Types::IngressPointAuthConfiguration
 
-    IngressPointConfiguration.add_member(:secret_arn, Shapes::ShapeRef.new(shape: SecretArn, location_name: "SecretArn"))
     IngressPointConfiguration.add_member(:smtp_password, Shapes::ShapeRef.new(shape: SmtpPassword, location_name: "SmtpPassword"))
+    IngressPointConfiguration.add_member(:secret_arn, Shapes::ShapeRef.new(shape: SecretArn, location_name: "SecretArn"))
+    IngressPointConfiguration.add_member(:tls_auth_configuration, Shapes::ShapeRef.new(shape: TlsAuthConfiguration, location_name: "TlsAuthConfiguration"))
     IngressPointConfiguration.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
-    IngressPointConfiguration.add_member_subclass(:secret_arn, Types::IngressPointConfiguration::SecretArn)
     IngressPointConfiguration.add_member_subclass(:smtp_password, Types::IngressPointConfiguration::SmtpPassword)
+    IngressPointConfiguration.add_member_subclass(:secret_arn, Types::IngressPointConfiguration::SecretArn)
+    IngressPointConfiguration.add_member_subclass(:tls_auth_configuration, Types::IngressPointConfiguration::TlsAuthConfiguration)
     IngressPointConfiguration.add_member_subclass(:unknown, Types::IngressPointConfiguration::Unknown)
     IngressPointConfiguration.struct_class = Types::IngressPointConfiguration
 
-    IngressPointPasswordConfiguration.add_member(:previous_smtp_password_expiry_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "PreviousSmtpPasswordExpiryTimestamp"))
-    IngressPointPasswordConfiguration.add_member(:previous_smtp_password_version, Shapes::ShapeRef.new(shape: String, location_name: "PreviousSmtpPasswordVersion"))
     IngressPointPasswordConfiguration.add_member(:smtp_password_version, Shapes::ShapeRef.new(shape: String, location_name: "SmtpPasswordVersion"))
+    IngressPointPasswordConfiguration.add_member(:previous_smtp_password_version, Shapes::ShapeRef.new(shape: String, location_name: "PreviousSmtpPasswordVersion"))
+    IngressPointPasswordConfiguration.add_member(:previous_smtp_password_expiry_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "PreviousSmtpPasswordExpiryTimestamp"))
     IngressPointPasswordConfiguration.struct_class = Types::IngressPointPasswordConfiguration
 
     IngressPointsList.member = Shapes::ShapeRef.new(shape: IngressPoint)
@@ -872,11 +930,11 @@ module Aws::MailManager
     IngressStringExpression.add_member(:values, Shapes::ShapeRef.new(shape: StringList, required: true, location_name: "Values"))
     IngressStringExpression.struct_class = Types::IngressStringExpression
 
-    IngressStringToEvaluate.add_member(:analysis, Shapes::ShapeRef.new(shape: IngressAnalysis, location_name: "Analysis"))
     IngressStringToEvaluate.add_member(:attribute, Shapes::ShapeRef.new(shape: IngressStringEmailAttribute, location_name: "Attribute"))
+    IngressStringToEvaluate.add_member(:analysis, Shapes::ShapeRef.new(shape: IngressAnalysis, location_name: "Analysis"))
     IngressStringToEvaluate.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
-    IngressStringToEvaluate.add_member_subclass(:analysis, Types::IngressStringToEvaluate::Analysis)
     IngressStringToEvaluate.add_member_subclass(:attribute, Types::IngressStringToEvaluate::Attribute)
+    IngressStringToEvaluate.add_member_subclass(:analysis, Types::IngressStringToEvaluate::Analysis)
     IngressStringToEvaluate.add_member_subclass(:unknown, Types::IngressStringToEvaluate::Unknown)
     IngressStringToEvaluate.struct_class = Types::IngressStringToEvaluate
 
@@ -891,7 +949,16 @@ module Aws::MailManager
     IngressTlsProtocolToEvaluate.add_member_subclass(:unknown, Types::IngressTlsProtocolToEvaluate::Unknown)
     IngressTlsProtocolToEvaluate.struct_class = Types::IngressTlsProtocolToEvaluate
 
+    InvokeLambdaAction.add_member(:action_failure_policy, Shapes::ShapeRef.new(shape: ActionFailurePolicy, location_name: "ActionFailurePolicy"))
+    InvokeLambdaAction.add_member(:function_arn, Shapes::ShapeRef.new(shape: LambdaFunctionArn, required: true, location_name: "FunctionArn"))
+    InvokeLambdaAction.add_member(:invocation_type, Shapes::ShapeRef.new(shape: LambdaInvocationType, required: true, location_name: "InvocationType"))
+    InvokeLambdaAction.add_member(:role_arn, Shapes::ShapeRef.new(shape: IamRoleArn, required: true, location_name: "RoleArn"))
+    InvokeLambdaAction.add_member(:retry_time_minutes, Shapes::ShapeRef.new(shape: LambdaRetryTimeMinutes, location_name: "RetryTimeMinutes"))
+    InvokeLambdaAction.struct_class = Types::InvokeLambdaAction
+
     Ipv4Cidrs.member = Shapes::ShapeRef.new(shape: Ipv4Cidr)
+
+    Ipv6Cidrs.member = Shapes::ShapeRef.new(shape: Ipv6Cidr)
 
     ListAddonInstancesRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "NextToken"))
     ListAddonInstancesRequest.add_member(:page_size, Shapes::ShapeRef.new(shape: PageSize, location_name: "PageSize"))
@@ -940,8 +1007,8 @@ module Aws::MailManager
     ListArchiveSearchesRequest.add_member(:page_size, Shapes::ShapeRef.new(shape: PageSize, location_name: "PageSize"))
     ListArchiveSearchesRequest.struct_class = Types::ListArchiveSearchesRequest
 
-    ListArchiveSearchesResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "NextToken"))
     ListArchiveSearchesResponse.add_member(:searches, Shapes::ShapeRef.new(shape: SearchSummaryList, location_name: "Searches"))
+    ListArchiveSearchesResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "NextToken"))
     ListArchiveSearchesResponse.struct_class = Types::ListArchiveSearchesResponse
 
     ListArchivesRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "NextToken"))
@@ -952,8 +1019,8 @@ module Aws::MailManager
     ListArchivesResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "NextToken"))
     ListArchivesResponse.struct_class = Types::ListArchivesResponse
 
-    ListIngressPointsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "NextToken"))
     ListIngressPointsRequest.add_member(:page_size, Shapes::ShapeRef.new(shape: PageSize, location_name: "PageSize"))
+    ListIngressPointsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "NextToken"))
     ListIngressPointsRequest.struct_class = Types::ListIngressPointsRequest
 
     ListIngressPointsResponse.add_member(:ingress_points, Shapes::ShapeRef.new(shape: IngressPointsList, location_name: "IngressPoints"))
@@ -970,20 +1037,20 @@ module Aws::MailManager
     ListMembersOfAddressListResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "NextToken"))
     ListMembersOfAddressListResponse.struct_class = Types::ListMembersOfAddressListResponse
 
-    ListRelaysRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "NextToken"))
     ListRelaysRequest.add_member(:page_size, Shapes::ShapeRef.new(shape: Integer, location_name: "PageSize"))
+    ListRelaysRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "NextToken"))
     ListRelaysRequest.struct_class = Types::ListRelaysRequest
 
-    ListRelaysResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "NextToken"))
     ListRelaysResponse.add_member(:relays, Shapes::ShapeRef.new(shape: Relays, required: true, location_name: "Relays"))
+    ListRelaysResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "NextToken"))
     ListRelaysResponse.struct_class = Types::ListRelaysResponse
 
     ListRuleSetsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "NextToken"))
     ListRuleSetsRequest.add_member(:page_size, Shapes::ShapeRef.new(shape: PageSize, location_name: "PageSize"))
     ListRuleSetsRequest.struct_class = Types::ListRuleSetsRequest
 
-    ListRuleSetsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "NextToken"))
     ListRuleSetsResponse.add_member(:rule_sets, Shapes::ShapeRef.new(shape: RuleSets, required: true, location_name: "RuleSets"))
+    ListRuleSetsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "NextToken"))
     ListRuleSetsResponse.struct_class = Types::ListRuleSetsResponse
 
     ListTagsForResourceRequest.add_member(:resource_arn, Shapes::ShapeRef.new(shape: TaggableResourceArn, required: true, location_name: "ResourceArn"))
@@ -992,79 +1059,95 @@ module Aws::MailManager
     ListTagsForResourceResponse.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, required: true, location_name: "Tags"))
     ListTagsForResourceResponse.struct_class = Types::ListTagsForResourceResponse
 
-    ListTrafficPoliciesRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "NextToken"))
     ListTrafficPoliciesRequest.add_member(:page_size, Shapes::ShapeRef.new(shape: PageSize, location_name: "PageSize"))
+    ListTrafficPoliciesRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "NextToken"))
     ListTrafficPoliciesRequest.struct_class = Types::ListTrafficPoliciesRequest
 
-    ListTrafficPoliciesResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "NextToken"))
     ListTrafficPoliciesResponse.add_member(:traffic_policies, Shapes::ShapeRef.new(shape: TrafficPolicyList, location_name: "TrafficPolicies"))
+    ListTrafficPoliciesResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "NextToken"))
     ListTrafficPoliciesResponse.struct_class = Types::ListTrafficPoliciesResponse
 
+    MessageBody.add_member(:text, Shapes::ShapeRef.new(shape: String, location_name: "Text"))
     MessageBody.add_member(:html, Shapes::ShapeRef.new(shape: String, location_name: "Html"))
     MessageBody.add_member(:message_malformed, Shapes::ShapeRef.new(shape: Boolean, location_name: "MessageMalformed"))
-    MessageBody.add_member(:text, Shapes::ShapeRef.new(shape: String, location_name: "Text"))
     MessageBody.struct_class = Types::MessageBody
 
-    Metadata.add_member(:configuration_set, Shapes::ShapeRef.new(shape: String, location_name: "ConfigurationSet"))
+    Metadata.add_member(:timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "Timestamp"))
     Metadata.add_member(:ingress_point_id, Shapes::ShapeRef.new(shape: IngressPointId, location_name: "IngressPointId"))
+    Metadata.add_member(:traffic_policy_id, Shapes::ShapeRef.new(shape: TrafficPolicyId, location_name: "TrafficPolicyId"))
     Metadata.add_member(:rule_set_id, Shapes::ShapeRef.new(shape: RuleSetId, location_name: "RuleSetId"))
     Metadata.add_member(:sender_hostname, Shapes::ShapeRef.new(shape: String, location_name: "SenderHostname"))
     Metadata.add_member(:sender_ip_address, Shapes::ShapeRef.new(shape: SenderIpAddress, location_name: "SenderIpAddress"))
-    Metadata.add_member(:sending_method, Shapes::ShapeRef.new(shape: String, location_name: "SendingMethod"))
-    Metadata.add_member(:sending_pool, Shapes::ShapeRef.new(shape: String, location_name: "SendingPool"))
-    Metadata.add_member(:source_arn, Shapes::ShapeRef.new(shape: String, location_name: "SourceArn"))
-    Metadata.add_member(:source_identity, Shapes::ShapeRef.new(shape: String, location_name: "SourceIdentity"))
-    Metadata.add_member(:timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "Timestamp"))
     Metadata.add_member(:tls_cipher_suite, Shapes::ShapeRef.new(shape: String, location_name: "TlsCipherSuite"))
     Metadata.add_member(:tls_protocol, Shapes::ShapeRef.new(shape: String, location_name: "TlsProtocol"))
-    Metadata.add_member(:traffic_policy_id, Shapes::ShapeRef.new(shape: TrafficPolicyId, location_name: "TrafficPolicyId"))
+    Metadata.add_member(:sending_method, Shapes::ShapeRef.new(shape: String, location_name: "SendingMethod"))
+    Metadata.add_member(:source_identity, Shapes::ShapeRef.new(shape: String, location_name: "SourceIdentity"))
+    Metadata.add_member(:sending_pool, Shapes::ShapeRef.new(shape: String, location_name: "SendingPool"))
+    Metadata.add_member(:configuration_set, Shapes::ShapeRef.new(shape: String, location_name: "ConfigurationSet"))
+    Metadata.add_member(:source_arn, Shapes::ShapeRef.new(shape: String, location_name: "SourceArn"))
     Metadata.struct_class = Types::Metadata
+
+    NetworkConfiguration.add_member(:public_network_configuration, Shapes::ShapeRef.new(shape: PublicNetworkConfiguration, location_name: "PublicNetworkConfiguration"))
+    NetworkConfiguration.add_member(:private_network_configuration, Shapes::ShapeRef.new(shape: PrivateNetworkConfiguration, location_name: "PrivateNetworkConfiguration"))
+    NetworkConfiguration.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    NetworkConfiguration.add_member_subclass(:public_network_configuration, Types::NetworkConfiguration::PublicNetworkConfiguration)
+    NetworkConfiguration.add_member_subclass(:private_network_configuration, Types::NetworkConfiguration::PrivateNetworkConfiguration)
+    NetworkConfiguration.add_member_subclass(:unknown, Types::NetworkConfiguration::Unknown)
+    NetworkConfiguration.struct_class = Types::NetworkConfiguration
 
     NoAuthentication.struct_class = Types::NoAuthentication
 
-    PolicyCondition.add_member(:boolean_expression, Shapes::ShapeRef.new(shape: IngressBooleanExpression, location_name: "BooleanExpression"))
-    PolicyCondition.add_member(:ip_expression, Shapes::ShapeRef.new(shape: IngressIpv4Expression, location_name: "IpExpression"))
     PolicyCondition.add_member(:string_expression, Shapes::ShapeRef.new(shape: IngressStringExpression, location_name: "StringExpression"))
+    PolicyCondition.add_member(:ip_expression, Shapes::ShapeRef.new(shape: IngressIpv4Expression, location_name: "IpExpression"))
+    PolicyCondition.add_member(:ipv_6_expression, Shapes::ShapeRef.new(shape: IngressIpv6Expression, location_name: "Ipv6Expression"))
     PolicyCondition.add_member(:tls_expression, Shapes::ShapeRef.new(shape: IngressTlsProtocolExpression, location_name: "TlsExpression"))
+    PolicyCondition.add_member(:boolean_expression, Shapes::ShapeRef.new(shape: IngressBooleanExpression, location_name: "BooleanExpression"))
     PolicyCondition.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
-    PolicyCondition.add_member_subclass(:boolean_expression, Types::PolicyCondition::BooleanExpression)
-    PolicyCondition.add_member_subclass(:ip_expression, Types::PolicyCondition::IpExpression)
     PolicyCondition.add_member_subclass(:string_expression, Types::PolicyCondition::StringExpression)
+    PolicyCondition.add_member_subclass(:ip_expression, Types::PolicyCondition::IpExpression)
+    PolicyCondition.add_member_subclass(:ipv_6_expression, Types::PolicyCondition::Ipv6Expression)
     PolicyCondition.add_member_subclass(:tls_expression, Types::PolicyCondition::TlsExpression)
+    PolicyCondition.add_member_subclass(:boolean_expression, Types::PolicyCondition::BooleanExpression)
     PolicyCondition.add_member_subclass(:unknown, Types::PolicyCondition::Unknown)
     PolicyCondition.struct_class = Types::PolicyCondition
 
     PolicyConditions.member = Shapes::ShapeRef.new(shape: PolicyCondition)
 
-    PolicyStatement.add_member(:action, Shapes::ShapeRef.new(shape: AcceptAction, required: true, location_name: "Action"))
     PolicyStatement.add_member(:conditions, Shapes::ShapeRef.new(shape: PolicyConditions, required: true, location_name: "Conditions"))
+    PolicyStatement.add_member(:action, Shapes::ShapeRef.new(shape: AcceptAction, required: true, location_name: "Action"))
     PolicyStatement.struct_class = Types::PolicyStatement
 
     PolicyStatementList.member = Shapes::ShapeRef.new(shape: PolicyStatement)
 
+    PrivateNetworkConfiguration.add_member(:vpc_endpoint_id, Shapes::ShapeRef.new(shape: VpcEndpointId, required: true, location_name: "VpcEndpointId"))
+    PrivateNetworkConfiguration.struct_class = Types::PrivateNetworkConfiguration
+
+    PublicNetworkConfiguration.add_member(:ip_type, Shapes::ShapeRef.new(shape: IpType, required: true, location_name: "IpType"))
+    PublicNetworkConfiguration.struct_class = Types::PublicNetworkConfiguration
+
     Recipients.member = Shapes::ShapeRef.new(shape: EmailAddress)
 
-    RegisterMemberToAddressListRequest.add_member(:address, Shapes::ShapeRef.new(shape: Address, required: true, location_name: "Address"))
     RegisterMemberToAddressListRequest.add_member(:address_list_id, Shapes::ShapeRef.new(shape: AddressListId, required: true, location_name: "AddressListId"))
+    RegisterMemberToAddressListRequest.add_member(:address, Shapes::ShapeRef.new(shape: Address, required: true, location_name: "Address"))
     RegisterMemberToAddressListRequest.struct_class = Types::RegisterMemberToAddressListRequest
 
     RegisterMemberToAddressListResponse.struct_class = Types::RegisterMemberToAddressListResponse
 
-    Relay.add_member(:last_modified_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "LastModifiedTimestamp"))
     Relay.add_member(:relay_id, Shapes::ShapeRef.new(shape: RelayId, location_name: "RelayId"))
     Relay.add_member(:relay_name, Shapes::ShapeRef.new(shape: RelayName, location_name: "RelayName"))
+    Relay.add_member(:last_modified_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "LastModifiedTimestamp"))
     Relay.struct_class = Types::Relay
 
     RelayAction.add_member(:action_failure_policy, Shapes::ShapeRef.new(shape: ActionFailurePolicy, location_name: "ActionFailurePolicy"))
-    RelayAction.add_member(:mail_from, Shapes::ShapeRef.new(shape: MailFrom, location_name: "MailFrom"))
     RelayAction.add_member(:relay, Shapes::ShapeRef.new(shape: IdOrArn, required: true, location_name: "Relay"))
+    RelayAction.add_member(:mail_from, Shapes::ShapeRef.new(shape: MailFrom, location_name: "MailFrom"))
     RelayAction.struct_class = Types::RelayAction
 
-    RelayAuthentication.add_member(:no_authentication, Shapes::ShapeRef.new(shape: NoAuthentication, location_name: "NoAuthentication"))
     RelayAuthentication.add_member(:secret_arn, Shapes::ShapeRef.new(shape: SecretArn, location_name: "SecretArn"))
+    RelayAuthentication.add_member(:no_authentication, Shapes::ShapeRef.new(shape: NoAuthentication, location_name: "NoAuthentication"))
     RelayAuthentication.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
-    RelayAuthentication.add_member_subclass(:no_authentication, Types::RelayAuthentication::NoAuthentication)
     RelayAuthentication.add_member_subclass(:secret_arn, Types::RelayAuthentication::SecretArn)
+    RelayAuthentication.add_member_subclass(:no_authentication, Types::RelayAuthentication::NoAuthentication)
     RelayAuthentication.add_member_subclass(:unknown, Types::RelayAuthentication::Unknown)
     RelayAuthentication.struct_class = Types::RelayAuthentication
 
@@ -1077,53 +1160,59 @@ module Aws::MailManager
     ResourceNotFoundException.struct_class = Types::ResourceNotFoundException
 
     Row.add_member(:archived_message_id, Shapes::ShapeRef.new(shape: ArchivedMessageId, location_name: "ArchivedMessageId"))
-    Row.add_member(:cc, Shapes::ShapeRef.new(shape: String, location_name: "Cc"))
-    Row.add_member(:date, Shapes::ShapeRef.new(shape: String, location_name: "Date"))
-    Row.add_member(:envelope, Shapes::ShapeRef.new(shape: Envelope, location_name: "Envelope"))
-    Row.add_member(:from, Shapes::ShapeRef.new(shape: String, location_name: "From"))
-    Row.add_member(:has_attachments, Shapes::ShapeRef.new(shape: Boolean, location_name: "HasAttachments"))
-    Row.add_member(:in_reply_to, Shapes::ShapeRef.new(shape: String, location_name: "InReplyTo"))
-    Row.add_member(:ingress_point_id, Shapes::ShapeRef.new(shape: IngressPointId, location_name: "IngressPointId"))
-    Row.add_member(:message_id, Shapes::ShapeRef.new(shape: String, location_name: "MessageId"))
-    Row.add_member(:received_headers, Shapes::ShapeRef.new(shape: EmailReceivedHeadersList, location_name: "ReceivedHeaders"))
     Row.add_member(:received_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "ReceivedTimestamp"))
-    Row.add_member(:sender_hostname, Shapes::ShapeRef.new(shape: String, location_name: "SenderHostname"))
-    Row.add_member(:sender_ip_address, Shapes::ShapeRef.new(shape: SenderIpAddress, location_name: "SenderIpAddress"))
-    Row.add_member(:source_arn, Shapes::ShapeRef.new(shape: String, location_name: "SourceArn"))
-    Row.add_member(:subject, Shapes::ShapeRef.new(shape: String, location_name: "Subject"))
+    Row.add_member(:date, Shapes::ShapeRef.new(shape: String, location_name: "Date"))
     Row.add_member(:to, Shapes::ShapeRef.new(shape: String, location_name: "To"))
+    Row.add_member(:from, Shapes::ShapeRef.new(shape: String, location_name: "From"))
+    Row.add_member(:cc, Shapes::ShapeRef.new(shape: String, location_name: "Cc"))
+    Row.add_member(:subject, Shapes::ShapeRef.new(shape: String, location_name: "Subject"))
+    Row.add_member(:message_id, Shapes::ShapeRef.new(shape: String, location_name: "MessageId"))
+    Row.add_member(:has_attachments, Shapes::ShapeRef.new(shape: Boolean, location_name: "HasAttachments"))
+    Row.add_member(:received_headers, Shapes::ShapeRef.new(shape: EmailReceivedHeadersList, location_name: "ReceivedHeaders"))
+    Row.add_member(:in_reply_to, Shapes::ShapeRef.new(shape: String, location_name: "InReplyTo"))
     Row.add_member(:x_mailer, Shapes::ShapeRef.new(shape: String, location_name: "XMailer"))
     Row.add_member(:x_original_mailer, Shapes::ShapeRef.new(shape: String, location_name: "XOriginalMailer"))
     Row.add_member(:x_priority, Shapes::ShapeRef.new(shape: String, location_name: "XPriority"))
+    Row.add_member(:ingress_point_id, Shapes::ShapeRef.new(shape: IngressPointId, location_name: "IngressPointId"))
+    Row.add_member(:sender_hostname, Shapes::ShapeRef.new(shape: String, location_name: "SenderHostname"))
+    Row.add_member(:sender_ip_address, Shapes::ShapeRef.new(shape: SenderIpAddress, location_name: "SenderIpAddress"))
+    Row.add_member(:envelope, Shapes::ShapeRef.new(shape: Envelope, location_name: "Envelope"))
+    Row.add_member(:source_arn, Shapes::ShapeRef.new(shape: String, location_name: "SourceArn"))
     Row.struct_class = Types::Row
 
     RowsList.member = Shapes::ShapeRef.new(shape: Row)
 
-    Rule.add_member(:actions, Shapes::ShapeRef.new(shape: RuleActions, required: true, location_name: "Actions"))
-    Rule.add_member(:conditions, Shapes::ShapeRef.new(shape: RuleConditions, location_name: "Conditions"))
     Rule.add_member(:name, Shapes::ShapeRef.new(shape: RuleName, location_name: "Name"))
+    Rule.add_member(:conditions, Shapes::ShapeRef.new(shape: RuleConditions, location_name: "Conditions"))
     Rule.add_member(:unless, Shapes::ShapeRef.new(shape: RuleConditions, location_name: "Unless"))
+    Rule.add_member(:actions, Shapes::ShapeRef.new(shape: RuleActions, required: true, location_name: "Actions"))
     Rule.struct_class = Types::Rule
 
-    RuleAction.add_member(:add_header, Shapes::ShapeRef.new(shape: AddHeaderAction, location_name: "AddHeader"))
-    RuleAction.add_member(:archive, Shapes::ShapeRef.new(shape: ArchiveAction, location_name: "Archive"))
-    RuleAction.add_member(:deliver_to_mailbox, Shapes::ShapeRef.new(shape: DeliverToMailboxAction, location_name: "DeliverToMailbox"))
-    RuleAction.add_member(:deliver_to_q_business, Shapes::ShapeRef.new(shape: DeliverToQBusinessAction, location_name: "DeliverToQBusiness"))
     RuleAction.add_member(:drop, Shapes::ShapeRef.new(shape: DropAction, location_name: "Drop"))
     RuleAction.add_member(:relay, Shapes::ShapeRef.new(shape: RelayAction, location_name: "Relay"))
-    RuleAction.add_member(:replace_recipient, Shapes::ShapeRef.new(shape: ReplaceRecipientAction, location_name: "ReplaceRecipient"))
-    RuleAction.add_member(:send, Shapes::ShapeRef.new(shape: SendAction, location_name: "Send"))
+    RuleAction.add_member(:archive, Shapes::ShapeRef.new(shape: ArchiveAction, location_name: "Archive"))
     RuleAction.add_member(:write_to_s3, Shapes::ShapeRef.new(shape: S3Action, location_name: "WriteToS3"))
+    RuleAction.add_member(:send, Shapes::ShapeRef.new(shape: SendAction, location_name: "Send"))
+    RuleAction.add_member(:add_header, Shapes::ShapeRef.new(shape: AddHeaderAction, location_name: "AddHeader"))
+    RuleAction.add_member(:replace_recipient, Shapes::ShapeRef.new(shape: ReplaceRecipientAction, location_name: "ReplaceRecipient"))
+    RuleAction.add_member(:deliver_to_mailbox, Shapes::ShapeRef.new(shape: DeliverToMailboxAction, location_name: "DeliverToMailbox"))
+    RuleAction.add_member(:deliver_to_q_business, Shapes::ShapeRef.new(shape: DeliverToQBusinessAction, location_name: "DeliverToQBusiness"))
+    RuleAction.add_member(:publish_to_sns, Shapes::ShapeRef.new(shape: SnsAction, location_name: "PublishToSns"))
+    RuleAction.add_member(:bounce, Shapes::ShapeRef.new(shape: BounceAction, location_name: "Bounce"))
+    RuleAction.add_member(:invoke_lambda, Shapes::ShapeRef.new(shape: InvokeLambdaAction, location_name: "InvokeLambda"))
     RuleAction.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
-    RuleAction.add_member_subclass(:add_header, Types::RuleAction::AddHeader)
-    RuleAction.add_member_subclass(:archive, Types::RuleAction::Archive)
-    RuleAction.add_member_subclass(:deliver_to_mailbox, Types::RuleAction::DeliverToMailbox)
-    RuleAction.add_member_subclass(:deliver_to_q_business, Types::RuleAction::DeliverToQBusiness)
     RuleAction.add_member_subclass(:drop, Types::RuleAction::Drop)
     RuleAction.add_member_subclass(:relay, Types::RuleAction::Relay)
-    RuleAction.add_member_subclass(:replace_recipient, Types::RuleAction::ReplaceRecipient)
-    RuleAction.add_member_subclass(:send, Types::RuleAction::Send)
+    RuleAction.add_member_subclass(:archive, Types::RuleAction::Archive)
     RuleAction.add_member_subclass(:write_to_s3, Types::RuleAction::WriteToS3)
+    RuleAction.add_member_subclass(:send, Types::RuleAction::Send)
+    RuleAction.add_member_subclass(:add_header, Types::RuleAction::AddHeader)
+    RuleAction.add_member_subclass(:replace_recipient, Types::RuleAction::ReplaceRecipient)
+    RuleAction.add_member_subclass(:deliver_to_mailbox, Types::RuleAction::DeliverToMailbox)
+    RuleAction.add_member_subclass(:deliver_to_q_business, Types::RuleAction::DeliverToQBusiness)
+    RuleAction.add_member_subclass(:publish_to_sns, Types::RuleAction::PublishToSns)
+    RuleAction.add_member_subclass(:bounce, Types::RuleAction::Bounce)
+    RuleAction.add_member_subclass(:invoke_lambda, Types::RuleAction::InvokeLambda)
     RuleAction.add_member_subclass(:unknown, Types::RuleAction::Unknown)
     RuleAction.struct_class = Types::RuleAction
 
@@ -1135,29 +1224,29 @@ module Aws::MailManager
     RuleBooleanExpression.add_member(:operator, Shapes::ShapeRef.new(shape: RuleBooleanOperator, required: true, location_name: "Operator"))
     RuleBooleanExpression.struct_class = Types::RuleBooleanExpression
 
-    RuleBooleanToEvaluate.add_member(:analysis, Shapes::ShapeRef.new(shape: Analysis, location_name: "Analysis"))
     RuleBooleanToEvaluate.add_member(:attribute, Shapes::ShapeRef.new(shape: RuleBooleanEmailAttribute, location_name: "Attribute"))
+    RuleBooleanToEvaluate.add_member(:analysis, Shapes::ShapeRef.new(shape: Analysis, location_name: "Analysis"))
     RuleBooleanToEvaluate.add_member(:is_in_address_list, Shapes::ShapeRef.new(shape: RuleIsInAddressList, location_name: "IsInAddressList"))
     RuleBooleanToEvaluate.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
-    RuleBooleanToEvaluate.add_member_subclass(:analysis, Types::RuleBooleanToEvaluate::Analysis)
     RuleBooleanToEvaluate.add_member_subclass(:attribute, Types::RuleBooleanToEvaluate::Attribute)
+    RuleBooleanToEvaluate.add_member_subclass(:analysis, Types::RuleBooleanToEvaluate::Analysis)
     RuleBooleanToEvaluate.add_member_subclass(:is_in_address_list, Types::RuleBooleanToEvaluate::IsInAddressList)
     RuleBooleanToEvaluate.add_member_subclass(:unknown, Types::RuleBooleanToEvaluate::Unknown)
     RuleBooleanToEvaluate.struct_class = Types::RuleBooleanToEvaluate
 
     RuleCondition.add_member(:boolean_expression, Shapes::ShapeRef.new(shape: RuleBooleanExpression, location_name: "BooleanExpression"))
-    RuleCondition.add_member(:dmarc_expression, Shapes::ShapeRef.new(shape: RuleDmarcExpression, location_name: "DmarcExpression"))
-    RuleCondition.add_member(:ip_expression, Shapes::ShapeRef.new(shape: RuleIpExpression, location_name: "IpExpression"))
-    RuleCondition.add_member(:number_expression, Shapes::ShapeRef.new(shape: RuleNumberExpression, location_name: "NumberExpression"))
     RuleCondition.add_member(:string_expression, Shapes::ShapeRef.new(shape: RuleStringExpression, location_name: "StringExpression"))
+    RuleCondition.add_member(:number_expression, Shapes::ShapeRef.new(shape: RuleNumberExpression, location_name: "NumberExpression"))
+    RuleCondition.add_member(:ip_expression, Shapes::ShapeRef.new(shape: RuleIpExpression, location_name: "IpExpression"))
     RuleCondition.add_member(:verdict_expression, Shapes::ShapeRef.new(shape: RuleVerdictExpression, location_name: "VerdictExpression"))
+    RuleCondition.add_member(:dmarc_expression, Shapes::ShapeRef.new(shape: RuleDmarcExpression, location_name: "DmarcExpression"))
     RuleCondition.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
     RuleCondition.add_member_subclass(:boolean_expression, Types::RuleCondition::BooleanExpression)
-    RuleCondition.add_member_subclass(:dmarc_expression, Types::RuleCondition::DmarcExpression)
-    RuleCondition.add_member_subclass(:ip_expression, Types::RuleCondition::IpExpression)
-    RuleCondition.add_member_subclass(:number_expression, Types::RuleCondition::NumberExpression)
     RuleCondition.add_member_subclass(:string_expression, Types::RuleCondition::StringExpression)
+    RuleCondition.add_member_subclass(:number_expression, Types::RuleCondition::NumberExpression)
+    RuleCondition.add_member_subclass(:ip_expression, Types::RuleCondition::IpExpression)
     RuleCondition.add_member_subclass(:verdict_expression, Types::RuleCondition::VerdictExpression)
+    RuleCondition.add_member_subclass(:dmarc_expression, Types::RuleCondition::DmarcExpression)
     RuleCondition.add_member_subclass(:unknown, Types::RuleCondition::Unknown)
     RuleCondition.struct_class = Types::RuleCondition
 
@@ -1182,8 +1271,8 @@ module Aws::MailManager
 
     RuleIpValueList.member = Shapes::ShapeRef.new(shape: RuleIpStringValue)
 
-    RuleIsInAddressList.add_member(:address_lists, Shapes::ShapeRef.new(shape: RuleAddressListArnList, required: true, location_name: "AddressLists"))
     RuleIsInAddressList.add_member(:attribute, Shapes::ShapeRef.new(shape: RuleAddressListEmailAttribute, required: true, location_name: "Attribute"))
+    RuleIsInAddressList.add_member(:address_lists, Shapes::ShapeRef.new(shape: RuleAddressListArnList, required: true, location_name: "AddressLists"))
     RuleIsInAddressList.struct_class = Types::RuleIsInAddressList
 
     RuleNumberExpression.add_member(:evaluate, Shapes::ShapeRef.new(shape: RuleNumberToEvaluate, required: true, location_name: "Evaluate"))
@@ -1197,9 +1286,9 @@ module Aws::MailManager
     RuleNumberToEvaluate.add_member_subclass(:unknown, Types::RuleNumberToEvaluate::Unknown)
     RuleNumberToEvaluate.struct_class = Types::RuleNumberToEvaluate
 
-    RuleSet.add_member(:last_modification_date, Shapes::ShapeRef.new(shape: Timestamp, location_name: "LastModificationDate"))
     RuleSet.add_member(:rule_set_id, Shapes::ShapeRef.new(shape: RuleSetId, location_name: "RuleSetId"))
     RuleSet.add_member(:rule_set_name, Shapes::ShapeRef.new(shape: RuleSetName, location_name: "RuleSetName"))
+    RuleSet.add_member(:last_modification_date, Shapes::ShapeRef.new(shape: Timestamp, location_name: "LastModificationDate"))
     RuleSet.struct_class = Types::RuleSet
 
     RuleSets.member = Shapes::ShapeRef.new(shape: RuleSet)
@@ -1211,13 +1300,15 @@ module Aws::MailManager
 
     RuleStringList.member = Shapes::ShapeRef.new(shape: RuleStringValue)
 
-    RuleStringToEvaluate.add_member(:analysis, Shapes::ShapeRef.new(shape: Analysis, location_name: "Analysis"))
     RuleStringToEvaluate.add_member(:attribute, Shapes::ShapeRef.new(shape: RuleStringEmailAttribute, location_name: "Attribute"))
     RuleStringToEvaluate.add_member(:mime_header_attribute, Shapes::ShapeRef.new(shape: MimeHeaderAttribute, location_name: "MimeHeaderAttribute"))
+    RuleStringToEvaluate.add_member(:analysis, Shapes::ShapeRef.new(shape: Analysis, location_name: "Analysis"))
+    RuleStringToEvaluate.add_member(:client_certificate_attribute, Shapes::ShapeRef.new(shape: RuleClientCertificateAttribute, location_name: "ClientCertificateAttribute"))
     RuleStringToEvaluate.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
-    RuleStringToEvaluate.add_member_subclass(:analysis, Types::RuleStringToEvaluate::Analysis)
     RuleStringToEvaluate.add_member_subclass(:attribute, Types::RuleStringToEvaluate::Attribute)
     RuleStringToEvaluate.add_member_subclass(:mime_header_attribute, Types::RuleStringToEvaluate::MimeHeaderAttribute)
+    RuleStringToEvaluate.add_member_subclass(:analysis, Types::RuleStringToEvaluate::Analysis)
+    RuleStringToEvaluate.add_member_subclass(:client_certificate_attribute, Types::RuleStringToEvaluate::ClientCertificateAttribute)
     RuleStringToEvaluate.add_member_subclass(:unknown, Types::RuleStringToEvaluate::Unknown)
     RuleStringToEvaluate.struct_class = Types::RuleStringToEvaluate
 
@@ -1226,11 +1317,11 @@ module Aws::MailManager
     RuleVerdictExpression.add_member(:values, Shapes::ShapeRef.new(shape: RuleVerdictValueList, required: true, location_name: "Values"))
     RuleVerdictExpression.struct_class = Types::RuleVerdictExpression
 
-    RuleVerdictToEvaluate.add_member(:analysis, Shapes::ShapeRef.new(shape: Analysis, location_name: "Analysis"))
     RuleVerdictToEvaluate.add_member(:attribute, Shapes::ShapeRef.new(shape: RuleVerdictAttribute, location_name: "Attribute"))
+    RuleVerdictToEvaluate.add_member(:analysis, Shapes::ShapeRef.new(shape: Analysis, location_name: "Analysis"))
     RuleVerdictToEvaluate.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
-    RuleVerdictToEvaluate.add_member_subclass(:analysis, Types::RuleVerdictToEvaluate::Analysis)
     RuleVerdictToEvaluate.add_member_subclass(:attribute, Types::RuleVerdictToEvaluate::Attribute)
+    RuleVerdictToEvaluate.add_member_subclass(:analysis, Types::RuleVerdictToEvaluate::Analysis)
     RuleVerdictToEvaluate.add_member_subclass(:unknown, Types::RuleVerdictToEvaluate::Unknown)
     RuleVerdictToEvaluate.struct_class = Types::RuleVerdictToEvaluate
 
@@ -1254,10 +1345,10 @@ module Aws::MailManager
 
     SavedAddresses.member = Shapes::ShapeRef.new(shape: SavedAddress)
 
-    SearchStatus.add_member(:completion_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "CompletionTimestamp"))
-    SearchStatus.add_member(:error_message, Shapes::ShapeRef.new(shape: ErrorMessage, location_name: "ErrorMessage"))
-    SearchStatus.add_member(:state, Shapes::ShapeRef.new(shape: SearchState, location_name: "State"))
     SearchStatus.add_member(:submission_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "SubmissionTimestamp"))
+    SearchStatus.add_member(:completion_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "CompletionTimestamp"))
+    SearchStatus.add_member(:state, Shapes::ShapeRef.new(shape: SearchState, location_name: "State"))
+    SearchStatus.add_member(:error_message, Shapes::ShapeRef.new(shape: ErrorMessage, location_name: "ErrorMessage"))
     SearchStatus.struct_class = Types::SearchStatus
 
     SearchSummary.add_member(:search_id, Shapes::ShapeRef.new(shape: SearchId, location_name: "SearchId"))
@@ -1273,18 +1364,25 @@ module Aws::MailManager
     ServiceQuotaExceededException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, location_name: "Message"))
     ServiceQuotaExceededException.struct_class = Types::ServiceQuotaExceededException
 
+    SnsAction.add_member(:action_failure_policy, Shapes::ShapeRef.new(shape: ActionFailurePolicy, location_name: "ActionFailurePolicy"))
+    SnsAction.add_member(:topic_arn, Shapes::ShapeRef.new(shape: SnsTopicArn, required: true, location_name: "TopicArn"))
+    SnsAction.add_member(:role_arn, Shapes::ShapeRef.new(shape: IamRoleArn, required: true, location_name: "RoleArn"))
+    SnsAction.add_member(:encoding, Shapes::ShapeRef.new(shape: SnsNotificationEncoding, location_name: "Encoding"))
+    SnsAction.add_member(:payload_type, Shapes::ShapeRef.new(shape: SnsNotificationPayloadType, location_name: "PayloadType"))
+    SnsAction.struct_class = Types::SnsAction
+
     StartAddressListImportJobRequest.add_member(:job_id, Shapes::ShapeRef.new(shape: JobId, required: true, location_name: "JobId"))
     StartAddressListImportJobRequest.struct_class = Types::StartAddressListImportJobRequest
 
     StartAddressListImportJobResponse.struct_class = Types::StartAddressListImportJobResponse
 
     StartArchiveExportRequest.add_member(:archive_id, Shapes::ShapeRef.new(shape: ArchiveId, required: true, location_name: "ArchiveId"))
-    StartArchiveExportRequest.add_member(:export_destination_configuration, Shapes::ShapeRef.new(shape: ExportDestinationConfiguration, required: true, location_name: "ExportDestinationConfiguration"))
     StartArchiveExportRequest.add_member(:filters, Shapes::ShapeRef.new(shape: ArchiveFilters, location_name: "Filters"))
     StartArchiveExportRequest.add_member(:from_timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "FromTimestamp"))
-    StartArchiveExportRequest.add_member(:include_metadata, Shapes::ShapeRef.new(shape: Boolean, location_name: "IncludeMetadata"))
-    StartArchiveExportRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: ExportMaxResults, location_name: "MaxResults"))
     StartArchiveExportRequest.add_member(:to_timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "ToTimestamp"))
+    StartArchiveExportRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: ExportMaxResults, location_name: "MaxResults"))
+    StartArchiveExportRequest.add_member(:export_destination_configuration, Shapes::ShapeRef.new(shape: ExportDestinationConfiguration, required: true, location_name: "ExportDestinationConfiguration"))
+    StartArchiveExportRequest.add_member(:include_metadata, Shapes::ShapeRef.new(shape: Boolean, location_name: "IncludeMetadata"))
     StartArchiveExportRequest.struct_class = Types::StartArchiveExportRequest
 
     StartArchiveExportResponse.add_member(:export_id, Shapes::ShapeRef.new(shape: ExportId, location_name: "ExportId"))
@@ -1293,8 +1391,8 @@ module Aws::MailManager
     StartArchiveSearchRequest.add_member(:archive_id, Shapes::ShapeRef.new(shape: ArchiveId, required: true, location_name: "ArchiveId"))
     StartArchiveSearchRequest.add_member(:filters, Shapes::ShapeRef.new(shape: ArchiveFilters, location_name: "Filters"))
     StartArchiveSearchRequest.add_member(:from_timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "FromTimestamp"))
-    StartArchiveSearchRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: SearchMaxResults, required: true, location_name: "MaxResults"))
     StartArchiveSearchRequest.add_member(:to_timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "ToTimestamp"))
+    StartArchiveSearchRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: SearchMaxResults, required: true, location_name: "MaxResults"))
     StartArchiveSearchRequest.struct_class = Types::StartArchiveSearchRequest
 
     StartArchiveSearchResponse.add_member(:search_id, Shapes::ShapeRef.new(shape: SearchId, location_name: "SearchId"))
@@ -1336,12 +1434,20 @@ module Aws::MailManager
     ThrottlingException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, location_name: "Message"))
     ThrottlingException.struct_class = Types::ThrottlingException
 
-    TrafficPolicy.add_member(:default_action, Shapes::ShapeRef.new(shape: AcceptAction, required: true, location_name: "DefaultAction"))
-    TrafficPolicy.add_member(:traffic_policy_id, Shapes::ShapeRef.new(shape: TrafficPolicyId, required: true, location_name: "TrafficPolicyId"))
+    TlsAuthConfiguration.add_member(:trust_store, Shapes::ShapeRef.new(shape: TrustStore, location_name: "TrustStore"))
+    TlsAuthConfiguration.struct_class = Types::TlsAuthConfiguration
+
     TrafficPolicy.add_member(:traffic_policy_name, Shapes::ShapeRef.new(shape: TrafficPolicyName, required: true, location_name: "TrafficPolicyName"))
+    TrafficPolicy.add_member(:traffic_policy_id, Shapes::ShapeRef.new(shape: TrafficPolicyId, required: true, location_name: "TrafficPolicyId"))
+    TrafficPolicy.add_member(:default_action, Shapes::ShapeRef.new(shape: AcceptAction, required: true, location_name: "DefaultAction"))
     TrafficPolicy.struct_class = Types::TrafficPolicy
 
     TrafficPolicyList.member = Shapes::ShapeRef.new(shape: TrafficPolicy)
+
+    TrustStore.add_member(:ca_content, Shapes::ShapeRef.new(shape: CAContent, required: true, location_name: "CAContent"))
+    TrustStore.add_member(:crl_content, Shapes::ShapeRef.new(shape: CrlContent, location_name: "CrlContent"))
+    TrustStore.add_member(:kms_key_arn, Shapes::ShapeRef.new(shape: KmsKeyArn, location_name: "KmsKeyArn"))
+    TrustStore.struct_class = Types::TrustStore
 
     UntagResourceRequest.add_member(:resource_arn, Shapes::ShapeRef.new(shape: TaggableResourceArn, required: true, location_name: "ResourceArn"))
     UntagResourceRequest.add_member(:tag_keys, Shapes::ShapeRef.new(shape: TagKeyList, required: true, location_name: "TagKeys"))
@@ -1356,21 +1462,22 @@ module Aws::MailManager
 
     UpdateArchiveResponse.struct_class = Types::UpdateArchiveResponse
 
-    UpdateIngressPointRequest.add_member(:ingress_point_configuration, Shapes::ShapeRef.new(shape: IngressPointConfiguration, location_name: "IngressPointConfiguration"))
     UpdateIngressPointRequest.add_member(:ingress_point_id, Shapes::ShapeRef.new(shape: IngressPointId, required: true, location_name: "IngressPointId"))
     UpdateIngressPointRequest.add_member(:ingress_point_name, Shapes::ShapeRef.new(shape: IngressPointName, location_name: "IngressPointName"))
-    UpdateIngressPointRequest.add_member(:rule_set_id, Shapes::ShapeRef.new(shape: RuleSetId, location_name: "RuleSetId"))
     UpdateIngressPointRequest.add_member(:status_to_update, Shapes::ShapeRef.new(shape: IngressPointStatusToUpdate, location_name: "StatusToUpdate"))
+    UpdateIngressPointRequest.add_member(:rule_set_id, Shapes::ShapeRef.new(shape: RuleSetId, location_name: "RuleSetId"))
     UpdateIngressPointRequest.add_member(:traffic_policy_id, Shapes::ShapeRef.new(shape: TrafficPolicyId, location_name: "TrafficPolicyId"))
+    UpdateIngressPointRequest.add_member(:ingress_point_configuration, Shapes::ShapeRef.new(shape: IngressPointConfiguration, location_name: "IngressPointConfiguration"))
+    UpdateIngressPointRequest.add_member(:tls_policy, Shapes::ShapeRef.new(shape: TlsPolicy, location_name: "TlsPolicy"))
     UpdateIngressPointRequest.struct_class = Types::UpdateIngressPointRequest
 
     UpdateIngressPointResponse.struct_class = Types::UpdateIngressPointResponse
 
-    UpdateRelayRequest.add_member(:authentication, Shapes::ShapeRef.new(shape: RelayAuthentication, location_name: "Authentication"))
     UpdateRelayRequest.add_member(:relay_id, Shapes::ShapeRef.new(shape: RelayId, required: true, location_name: "RelayId"))
     UpdateRelayRequest.add_member(:relay_name, Shapes::ShapeRef.new(shape: RelayName, location_name: "RelayName"))
     UpdateRelayRequest.add_member(:server_name, Shapes::ShapeRef.new(shape: RelayServerName, location_name: "ServerName"))
     UpdateRelayRequest.add_member(:server_port, Shapes::ShapeRef.new(shape: RelayServerPort, location_name: "ServerPort"))
+    UpdateRelayRequest.add_member(:authentication, Shapes::ShapeRef.new(shape: RelayAuthentication, location_name: "Authentication"))
     UpdateRelayRequest.struct_class = Types::UpdateRelayRequest
 
     UpdateRelayResponse.struct_class = Types::UpdateRelayResponse
@@ -1382,11 +1489,11 @@ module Aws::MailManager
 
     UpdateRuleSetResponse.struct_class = Types::UpdateRuleSetResponse
 
-    UpdateTrafficPolicyRequest.add_member(:default_action, Shapes::ShapeRef.new(shape: AcceptAction, location_name: "DefaultAction"))
-    UpdateTrafficPolicyRequest.add_member(:max_message_size_bytes, Shapes::ShapeRef.new(shape: MaxMessageSizeBytes, location_name: "MaxMessageSizeBytes"))
-    UpdateTrafficPolicyRequest.add_member(:policy_statements, Shapes::ShapeRef.new(shape: PolicyStatementList, location_name: "PolicyStatements"))
     UpdateTrafficPolicyRequest.add_member(:traffic_policy_id, Shapes::ShapeRef.new(shape: TrafficPolicyId, required: true, location_name: "TrafficPolicyId"))
     UpdateTrafficPolicyRequest.add_member(:traffic_policy_name, Shapes::ShapeRef.new(shape: TrafficPolicyName, location_name: "TrafficPolicyName"))
+    UpdateTrafficPolicyRequest.add_member(:policy_statements, Shapes::ShapeRef.new(shape: PolicyStatementList, location_name: "PolicyStatements"))
+    UpdateTrafficPolicyRequest.add_member(:default_action, Shapes::ShapeRef.new(shape: AcceptAction, location_name: "DefaultAction"))
+    UpdateTrafficPolicyRequest.add_member(:max_message_size_bytes, Shapes::ShapeRef.new(shape: MaxMessageSizeBytes, location_name: "MaxMessageSizeBytes"))
     UpdateTrafficPolicyRequest.struct_class = Types::UpdateTrafficPolicyRequest
 
     UpdateTrafficPolicyResponse.struct_class = Types::UpdateTrafficPolicyResponse
@@ -1405,8 +1512,8 @@ module Aws::MailManager
         "auth" => ["aws.auth#sigv4"],
         "endpointPrefix" => "mail-manager",
         "jsonVersion" => "1.0",
-        "protocol" => "json",
-        "protocols" => ["json"],
+        "protocol" => "smithy-rpc-v2-cbor",
+        "protocols" => ["smithy-rpc-v2-cbor", "json"],
         "serviceFullName" => "MailManager",
         "serviceId" => "MailManager",
         "signatureVersion" => "v4",
@@ -1436,6 +1543,7 @@ module Aws::MailManager
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:create_address_list, Seahorse::Model::Operation.new.tap do |o|
@@ -1546,6 +1654,7 @@ module Aws::MailManager
         o.http_request_uri = "/"
         o.input = Shapes::ShapeRef.new(shape: DeleteAddressListRequest)
         o.output = Shapes::ShapeRef.new(shape: DeleteAddressListResponse)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
@@ -1614,6 +1723,7 @@ module Aws::MailManager
         o.output = Shapes::ShapeRef.new(shape: DeregisterMemberFromAddressListResponse)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
@@ -1997,6 +2107,7 @@ module Aws::MailManager
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)

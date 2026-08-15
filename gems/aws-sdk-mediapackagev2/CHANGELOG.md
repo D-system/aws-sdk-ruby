@@ -1,6 +1,171 @@
 Unreleased Changes
 ------------------
 
+1.70.0 (2026-08-07)
+------------------
+
+* Feature - StreamNameOutputMode - a new optional field on MediaPackageV2 OriginEndpoints that lets customers choose whether egress manifests use numeric stream indices (default) or encoder-assigned stream names from the input
+
+1.69.0 (2026-07-23)
+------------------
+
+* Feature - This release adds support for non-epoch-locked CMAF ingest in MediaPackageV2 channels.
+
+1.68.0 (2026-07-09)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.67.0 (2026-06-08)
+------------------
+
+* Feature - Adds support for DASH Audio Timeline Patternization. This enables your DASH manifests to templatize the repeating patterns that emerge in audio segment timelines. This compacts the total timeline length, utilizing the repeat notation, such that manifests don't grow indefinitely long.
+
+1.66.0 (2026-05-26)
+------------------
+
+* Feature - Adding new BDD representation of endpoint ruleset
+
+1.65.0 (2026-05-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.64.0 (2026-05-19)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.63.0 (2026-05-15)
+------------------
+
+* Feature - This release adds support for AvailabilityStartTimeConfiguration in MediaPackageV2 DASH manifests
+
+1.62.0 (2026-05-13)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.61.0 (2026-04-29)
+------------------
+
+* Feature - This feature adds configuration for specifying SCTE marker handling and allow greater control over generated manifest and segment URIs
+
+1.60.0 (2026-03-24)
+------------------
+
+* Feature - Reduces the minimum allowed value for startOverWindowSeconds from 60 to 0, allowing customers to effectively disable the start-over window.
+
+1.59.0 (2026-03-18)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.58.0 (2026-01-16)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.57.0 (2026-01-08)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.56.0 (2026-01-05)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.55.0 (2025-12-17)
+------------------
+
+* Feature - This release adds support for SPEKE V2 content key encryption in MediaPackage v2 Origin Endpoints.
+
+1.54.0 (2025-11-21)
+------------------
+
+* Feature - Adds support for excluding session key tags from HLS multivariant playlists
+
+1.53.0 (2025-11-17)
+------------------
+
+* Feature - Add support for SCTE messages in Segment file output
+
+1.52.0 (2025-10-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.51.0 (2025-10-16)
+------------------
+
+* Feature - Update endpoint ruleset parameters casing
+
+1.50.0 (2025-09-09)
+------------------
+
+* Feature - Added CUE tag SCTE output to MediaPackageV2 HLS and LL-HLS manifests.
+
+1.49.0 (2025-08-26)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.48.0 (2025-08-21)
+------------------
+
+* Feature - Remove incorrect endpoint tests
+
+1.47.0 (2025-08-04)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.46.0 (2025-07-31)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.45.0 (2025-07-25)
+------------------
+
+* Feature - This release adds support for specifying a preferred input for channels using CMAF ingest.
+
+1.44.0 (2025-07-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.43.0 (2025-07-16)
+------------------
+
+* Feature - This release adds support for CDN Authentication using Static Headers in MediaPackage v2.
+
+1.42.0 (2025-07-03)
+------------------
+
+* Feature - This release adds support for Microsoft Smooth Streaming (MSS) and allows users to exclude DRM segment Metadata in MediaPackage v2 Origin Endpoints
+
+1.41.0 (2025-06-02)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.40.0 (2025-05-19)
+------------------
+
+* Feature - This release adds support for DVB-DASH, EBU-TT-D subtitle format, and non-compacted manifests for DASH in MediaPackage v2 Origin Endpoints.
+
+1.39.0 (2025-05-12)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.38.0 (2025-05-01)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
 1.37.0 (2025-03-13)
 ------------------
 

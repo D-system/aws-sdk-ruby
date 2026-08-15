@@ -1,6 +1,301 @@
 Unreleased Changes
 ------------------
 
+1.270.0 (2026-08-14)
+------------------
+
+* Feature - Added support for associating glossary terms with iterable form items, such as table columns.
+
+1.269.0 (2026-08-12)
+------------------
+
+* Feature - Documentation updates for materialized views APIs.
+
+1.268.0 (2026-08-05)
+------------------
+
+* Feature - Added the PutDataCatalogExportConfiguration to export Glue Data Catalog metadata to systems tables stored in S3 Tables.
+
+1.267.0 (2026-07-29)
+------------------
+
+* Feature - Adding filtering, partitioning, and VPC support to AWS Glue REST API connector
+
+1.266.0 (2026-07-27)
+------------------
+
+* Feature - Adds BatchGetDataQualityRulesetEvaluationRun API to retrieve multiple runs in one call, ObservationScope and ObservationMode parameters for anomaly detection, writing evaluation results to Data Catalog tables, and custom log group paths for recommendation runs.
+
+1.265.0 (2026-07-09)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.264.0 (2026-06-29)
+------------------
+
+* Feature - Added the UpdateAsset operation to set the business name and description for an existing AWS Glue Data Catalog asset.
+
+1.263.0 (2026-06-19)
+------------------
+
+* Feature - Adds the SearchAssets operation for discovering assets in the AWS Glue Data Catalog using full-text search and filters. Minor naming refinements across the Glossary Terms and Attachment APIs for consistency.
+
+1.262.0 (2026-06-17)
+------------------
+
+* Feature - This release adds support for Search and Discovery in AWS Glue, letting you and your applications search Data Catalog assets such as table and enrich them with business context and glossary terms.
+
+1.261.0 (2026-06-12)
+------------------
+
+* Feature - Adds support for retrieving Apache Iceberg table metadata via GetTable. Use the new AttributesToGet parameter with LATEST ICEBERG METADATA to receive schema, partition specs, sort orders, and table properties in the response.
+
+1.260.0 (2026-06-04)
+------------------
+
+* Feature - AWS Glue Interactive Sessions now supports Apache Spark Connect, enabling remote Spark execution over gRPC with minimal client-side dependencies. Adds GetSessionEndpoint and GetDashboardUrl APIs. Modifies CreateSession now accepts SPARK CONNECT session type.
+
+1.259.0 (2026-05-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.258.0 (2026-05-19)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.257.0 (2026-05-14)
+------------------
+
+* Feature - Release --has-databases parameter for AWS Glue get-catalogs API, which filters catalog responses to include only those capable of containing databases, excluding parent catalogs that hold only other catalogs. Remove model-level validation on partition index list size for AWS Glue tables.
+
+1.256.0 (2026-05-13)
+------------------
+
+* Feature - AWS Glue now defaults the job timeout to 480 minutes for Glue version 5.0 and later when no timeout value is specified. The default remains 2,880 minutes for Glue version 4.0 and earlier.
+
+1.255.0 (2026-05-06)
+------------------
+
+* Feature - Adds support for a CustomLogGroupPrefix parameter in StartDataQualityRulesetEvaluationRun to specify custom CloudWatch log group paths, and a RulesetName filter in ListDataQualityRulesetEvaluationRuns to filter evaluation runs by ruleset name.
+
+1.254.0 (2026-04-27)
+------------------
+
+* Feature - Addition of AdditionalAuditContext to GetPartition, GetPartitions, GetTableVersion, and GetTableVersions
+
+1.253.0 (2026-04-13)
+------------------
+
+* Feature - AWS Glue now defaults to Glue version 5.1 for newly created jobs if the Glue version is not specified in the request, and UpdateJob now preserves the existing Glue version of a job when the Glue version is not specified in the update request.
+
+1.252.0 (2026-03-18)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.251.0 (2026-03-17)
+------------------
+
+* Feature - Provide approval to overwrite existing Lake Formation permissions on all child resources with the default permissions specified in 'CreateTableDefaultPermissions' and 'CreateDatabaseDefaultPermissions' when updating catalog. Allowed values are ["Accept","Deny"] .
+
+1.250.0 (2026-03-13)
+------------------
+
+* Feature - Add QuerySessionContext to BatchGetPartitionRequest
+
+1.249.0 (2026-02-05)
+------------------
+
+* Feature - This release adds the capability to easily create custom AWS Glue connections to data sources with REST APIs.
+
+1.248.0 (2026-01-16)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.247.0 (2026-01-09)
+------------------
+
+* Feature - Adding MaterializedViews task run APIs
+
+1.246.0 (2026-01-08)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.245.0 (2026-01-05)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.244.0 (2025-12-01)
+------------------
+
+* Feature - Add support for Iceberg materialized view in Glue Data Catalog, including updated CreateTable API to support materialized views and new APIs for managing data refresh for materialized views. Add support for Iceberg table encryption keys and struct field defaults.
+
+1.243.0 (2025-11-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.242.0 (2025-11-20)
+------------------
+
+* Feature - Added FunctionType parameter to Glue GetuserDefinedFunctions.
+
+1.241.0 (2025-11-17)
+------------------
+
+* Feature - Amazon Glue Releasing 2 the new API ListIntegrationResourceProperties and DeleteIntegrationResourceProperty along with minor improvement on existing API(s).
+
+1.240.0 (2025-10-30)
+------------------
+
+* Feature - This release adds the capability to enable User Background Sessions for customers running Trusted Identity Propagation enabled Interactive Sessions on AWS Glue.
+
+1.239.0 (2025-10-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.238.0 (2025-10-10)
+------------------
+
+* Feature - Addition of AuditContext in GetTable/GetTables Request
+
+1.237.0 (2025-10-06)
+------------------
+
+* Feature - Adds labeling for DataQualityRuleResult for GetDataQualityResult and PublishDataQualityResult APIs
+
+1.236.0 (2025-09-25)
+------------------
+
+* Feature - Update GetConnection(s) API to return KmsKeyArn & Add 63 missing connection types
+
+1.235.0 (2025-08-28)
+------------------
+
+* Feature - Adding support to fetch TargetDatabase field during GetDatabases with AttributesToGet
+
+1.234.0 (2025-08-26)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.233.0 (2025-08-21)
+------------------
+
+* Feature - Added support for preprocessing queries in Data Quality operations through new DataQualityGlueTable structure.
+
+1.232.0 (2025-08-15)
+------------------
+
+* Feature - AWS Glue Zero ETL now supports On-demand snapshot load
+
+1.231.0 (2025-08-14)
+------------------
+
+* Feature - AWS Glue now supports Trusted Identity Propagation.
+
+1.230.0 (2025-08-07)
+------------------
+
+* Feature - AWS Glue Data Catalog now supports Iceberg Optimization settings at the Catalog level, and supports new options to control the optimization job run rate.
+
+1.229.0 (2025-08-04)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.228.0 (2025-07-31)
+------------------
+
+* Feature - Added support for Route node, S3 Iceberg sources/targets, catalog Iceberg sources, DynamoDB ELT connector, AutoDataQuality evaluation, enhanced PII detection with redaction, Kinesis fan-out support, and new R-series worker types.
+
+1.227.0 (2025-07-23)
+------------------
+
+* Feature - AWS Glue now supports dynamic session policies for job executions. This feature allows you to specify custom, fine-grained permissions for each job run without creating multiple IAM roles.
+
+1.226.0 (2025-07-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.225.0 (2025-07-16)
+------------------
+
+* Feature - AWS Glue now supports schema, partition and sort management of Apache Iceberg tables using Glue SDK
+
+1.224.0 (2025-06-30)
+------------------
+
+* Feature - releasing source processing properties to support source properties for ODB integrations
+
+1.223.0 (2025-06-27)
+------------------
+
+* Feature - AWS Glue now supports schema, partition and sort management of Apache Iceberg tables using Glue SDK
+
+1.222.0 (2025-06-23)
+------------------
+
+* Feature - AWS Glue now supports sort and z-order strategy for managed automated compaction for Iceberg tables in addition to binpack.
+
+1.221.0 (2025-06-20)
+------------------
+
+* Feature - AWS Glue Data Quality now provides aggregated metrics in evaluation results when publishAggregatedMetrics with row-level results are enabled. These metrics include summary statistics showing total counts of processed, passed, and failed rows and rules in a single view.
+
+1.220.0 (2025-06-02)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.219.0 (2025-05-22)
+------------------
+
+* Feature - This release supports additional ConversionSpec parameter as part of IntegrationPartition Structure in CreateIntegrationTableProperty API. This parameter is referred to apply appropriate column transformation for columns that are used for timestamp based partitioning
+
+1.218.0 (2025-05-20)
+------------------
+
+* Feature - Enhanced AWS Glue ListConnectionTypes API Model with additional metadata fields.
+
+1.217.0 (2025-05-16)
+------------------
+
+* Feature - Changes include (1) Excel as S3 Source type and XML and Tableau's Hyper as S3 Sink types, (2) targeted number of partitions parameter in S3 sinks and (3) new compression types in CSV/JSON and Parquet S3 sinks.
+
+1.216.0 (2025-05-12)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.215.0 (2025-05-08)
+------------------
+
+* Feature - This new release supports customizable RefreshInterval for all Saas ZETL integrations from 15 minutes to 6 days.
+
+1.214.0 (2025-05-01)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.213.0 (2025-04-09)
+------------------
+
+* Feature - The TableOptimizer APIs in AWS Glue now return the DpuHours field in each TableOptimizerRun, providing clients visibility to the DPU-hours used for billing in managed Apache Iceberg table compaction optimization.
+
+1.212.0 (2025-04-07)
+------------------
+
+* Feature - Add input validations for multiple Glue APIs
+
 1.211.0 (2025-03-14)
 ------------------
 

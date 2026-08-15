@@ -95,8 +95,8 @@ module Aws::SSMContacts
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::SSMContacts
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::SSMContacts
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::SSMContacts
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::SSMContacts
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::SSMContacts
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::SSMContacts
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::SSMContacts
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -569,8 +573,13 @@ module Aws::SSMContacts
     #   The full name of the contact or escalation plan.
     #
     # @option params [required, String] :type
-    #   To create an escalation plan use `ESCALATION`. To create a contact use
-    #   `PERSONAL`.
+    #   The type of contact to create.
+    #
+    #   * `PERSONAL`: A single, individual contact.
+    #
+    #   * `ESCALATION`: An escalation plan.
+    #
+    #   * `ONCALL_SCHEDULE`: An on-call schedule.
     #
     # @option params [required, Types::Plan] :plan
     #   A list of stages. A contact has an engagement plan with stages that
@@ -721,6 +730,12 @@ module Aws::SSMContacts
     #   The Amazon Resource Names (ARNs) of the contacts to add to the
     #   rotation.
     #
+    #   <note markdown="1"> Only the `PERSONAL` contact type is supported. The contact types
+    #   `ESCALATION` and `ONCALL_SCHEDULE` are not supported for this
+    #   operation.
+    #
+    #    </note>
+    #
     #   The order that you list the contacts in is their shift order in the
     #   rotation schedule. To change the order of the contact's shifts, use
     #   the UpdateRotation operation.
@@ -735,8 +750,7 @@ module Aws::SSMContacts
     #   information, see the [Time Zone Database][1] on the IANA website.
     #
     #   <note markdown="1"> Designators for time zones that don’t support Daylight Savings Time
-    #   rules, such as Pacific Standard Time (PST) and Pacific Daylight Time
-    #   (PDT), are not supported.
+    #   rules, such as Pacific Standard Time (PST), are not supported.
     #
     #    </note>
     #
@@ -912,10 +926,11 @@ module Aws::SSMContacts
     end
 
     # To remove a contact from Incident Manager, you can delete the contact.
-    # Deleting a contact removes them from all escalation plans and related
-    # response plans. Deleting an escalation plan removes it from all
-    # related response plans. You will have to recreate the contact and its
-    # contact channels before you can use it again.
+    # However, deleting a contact does not remove it from escalation plans
+    # and related response plans. Deleting an escalation plan also does not
+    # remove it from all related response plans. To modify an escalation
+    # plan, we recommend using the UpdateContact action to specify a
+    # different existing contact.
     #
     # @option params [required, String] :contact_id
     #   The Amazon Resource Name (ARN) of the contact that you're deleting.
@@ -937,11 +952,12 @@ module Aws::SSMContacts
       req.send_request(options)
     end
 
-    # To no longer receive engagements on a contact channel, you can delete
-    # the channel from a contact. Deleting the contact channel removes it
-    # from the contact's engagement plan. If you delete the only contact
-    # channel for a contact, you won't be able to engage that contact
-    # during an incident.
+    # To stop receiving engagements on a contact channel, you can delete the
+    # channel from a contact. Deleting the contact channel does not remove
+    # it from the contact's engagement plan, but the stage that includes
+    # the channel will be ignored. If you delete the only contact channel
+    # for a contact, you'll no longer be able to engage that contact during
+    # an incident.
     #
     # @option params [required, String] :contact_channel_id
     #   The Amazon Resource Name (ARN) of the contact channel.
@@ -1389,8 +1405,7 @@ module Aws::SSMContacts
     #   prefix.
     #
     # @option params [String] :type
-    #   The type of contact. A contact is type `PERSONAL` and an escalation
-    #   plan is type `ESCALATION`.
+    #   The type of contact.
     #
     # @return [Types::ListContactsResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1994,10 +2009,12 @@ module Aws::SSMContacts
       req.send_request(options)
     end
 
-    # Lists the tags of an escalation plan or contact.
+    # Lists the tags of a contact, escalation plan, rotation, or on-call
+    # schedule.
     #
     # @option params [required, String] :resource_arn
-    #   The Amazon Resource Name (ARN) of the contact or escalation plan.
+    #   The Amazon Resource Name (ARN) of the contact, escalation plan,
+    #   rotation, or on-call schedule.
     #
     # @return [Types::ListTagsForResourceResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -2328,6 +2345,12 @@ module Aws::SSMContacts
     #   The Amazon Resource Names (ARNs) of the contacts to include in the
     #   updated rotation.
     #
+    #   <note markdown="1"> Only the `PERSONAL` contact type is supported. The contact types
+    #   `ESCALATION` and `ONCALL_SCHEDULE` are not supported for this
+    #   operation.
+    #
+    #    </note>
+    #
     #   The order in which you list the contacts is their shift order in the
     #   rotation schedule.
     #
@@ -2341,8 +2364,7 @@ module Aws::SSMContacts
     #   information, see the [Time Zone Database][1] on the IANA website.
     #
     #   <note markdown="1"> Designators for time zones that don’t support Daylight Savings Time
-    #   Rules, such as Pacific Standard Time (PST) and Pacific Daylight Time
-    #   (PDT), aren't supported.
+    #   Rules, such as Pacific Standard Time (PST), aren't supported.
     #
     #    </note>
     #
@@ -2434,7 +2456,7 @@ module Aws::SSMContacts
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-ssmcontacts'
-      context[:gem_version] = '1.44.0'
+      context[:gem_version] = '1.64.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

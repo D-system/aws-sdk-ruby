@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -81,41 +82,60 @@ module Aws
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateClusterOutput]
         def identifier: () -> ::String
         def arn: () -> ::String
-        def status: () -> ("CREATING" | "ACTIVE" | "UPDATING" | "DELETING" | "DELETED" | "FAILED")
+        def status: () -> ("CREATING" | "ACTIVE" | "IDLE" | "INACTIVE" | "UPDATING" | "DELETING" | "DELETED" | "FAILED" | "PENDING_SETUP" | "PENDING_DELETE")
         def creation_time: () -> ::Time
+        def multi_region_properties: () -> Types::MultiRegionProperties
+        def encryption_details: () -> Types::EncryptionDetails
         def deletion_protection_enabled: () -> bool
+        def endpoint: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DSQL/Client.html#create_cluster-instance_method
       def create_cluster: (
                             ?deletion_protection_enabled: bool,
+                            ?kms_encryption_key: ::String,
                             ?tags: Hash[::String, ::String],
-                            ?client_token: ::String
+                            ?client_token: ::String,
+                            ?multi_region_properties: {
+                              witness_region: ::String?,
+                              clusters: Array[::String]?
+                            },
+                            ?policy: ::String,
+                            ?bypass_policy_lockout_safety_check: bool
                           ) -> _CreateClusterResponseSuccess
                         | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateClusterResponseSuccess
 
-      interface _CreateMultiRegionClustersResponseSuccess
-        include ::Seahorse::Client::_ResponseSuccess[Types::CreateMultiRegionClustersOutput]
-        def linked_cluster_arns: () -> ::Array[::String]
+      interface _CreateStreamResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateStreamOutput]
+        def cluster_identifier: () -> ::String
+        def stream_identifier: () -> ::String
+        def arn: () -> ::String
+        def status: () -> ("CREATING" | "ACTIVE" | "DELETING" | "DELETED" | "FAILED" | "IMPAIRED")
+        def creation_time: () -> ::Time
+        def ordering: () -> ("UNORDERED")
+        def format: () -> ("JSON")
       end
-      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DSQL/Client.html#create_multi_region_clusters-instance_method
-      def create_multi_region_clusters: (
-                                          linked_region_list: Array[::String],
-                                          ?cluster_properties: Hash[::String, {
-                                              deletion_protection_enabled: bool?,
-                                              tags: Hash[::String, ::String]?
-                                            }],
-                                          witness_region: ::String,
-                                          ?client_token: ::String
-                                        ) -> _CreateMultiRegionClustersResponseSuccess
-                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateMultiRegionClustersResponseSuccess
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DSQL/Client.html#create_stream-instance_method
+      def create_stream: (
+                           cluster_identifier: ::String,
+                           target_definition: {
+                             kinesis: {
+                               stream_arn: ::String,
+                               role_arn: ::String
+                             }?
+                           },
+                           ordering: ("UNORDERED"),
+                           format: ("JSON"),
+                           ?tags: Hash[::String, ::String],
+                           ?client_token: ::String
+                         ) -> _CreateStreamResponseSuccess
+                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateStreamResponseSuccess
 
       interface _DeleteClusterResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DeleteClusterOutput]
         def identifier: () -> ::String
         def arn: () -> ::String
-        def status: () -> ("CREATING" | "ACTIVE" | "UPDATING" | "DELETING" | "DELETED" | "FAILED")
+        def status: () -> ("CREATING" | "ACTIVE" | "IDLE" | "INACTIVE" | "UPDATING" | "DELETING" | "DELETED" | "FAILED" | "PENDING_SETUP" | "PENDING_DELETE")
         def creation_time: () -> ::Time
-        def deletion_protection_enabled: () -> bool
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DSQL/Client.html#delete_cluster-instance_method
       def delete_cluster: (
@@ -124,28 +144,93 @@ module Aws
                           ) -> _DeleteClusterResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteClusterResponseSuccess
 
-      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DSQL/Client.html#delete_multi_region_clusters-instance_method
-      def delete_multi_region_clusters: (
-                                          linked_cluster_arns: Array[::String],
-                                          ?client_token: ::String
-                                        ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
-                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+      interface _DeleteClusterPolicyResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteClusterPolicyOutput]
+        def policy_version: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DSQL/Client.html#delete_cluster_policy-instance_method
+      def delete_cluster_policy: (
+                                   identifier: ::String,
+                                   ?expected_policy_version: ::String,
+                                   ?client_token: ::String
+                                 ) -> _DeleteClusterPolicyResponseSuccess
+                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteClusterPolicyResponseSuccess
+
+      interface _DeleteStreamResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteStreamOutput]
+        def cluster_identifier: () -> ::String
+        def stream_identifier: () -> ::String
+        def arn: () -> ::String
+        def status: () -> ("CREATING" | "ACTIVE" | "DELETING" | "DELETED" | "FAILED" | "IMPAIRED")
+        def creation_time: () -> ::Time
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DSQL/Client.html#delete_stream-instance_method
+      def delete_stream: (
+                           cluster_identifier: ::String,
+                           stream_identifier: ::String,
+                           ?client_token: ::String
+                         ) -> _DeleteStreamResponseSuccess
+                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteStreamResponseSuccess
 
       interface _GetClusterResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetClusterOutput]
         def identifier: () -> ::String
         def arn: () -> ::String
-        def status: () -> ("CREATING" | "ACTIVE" | "UPDATING" | "DELETING" | "DELETED" | "FAILED")
+        def status: () -> ("CREATING" | "ACTIVE" | "IDLE" | "INACTIVE" | "UPDATING" | "DELETING" | "DELETED" | "FAILED" | "PENDING_SETUP" | "PENDING_DELETE")
         def creation_time: () -> ::Time
         def deletion_protection_enabled: () -> bool
-        def witness_region: () -> ::String
-        def linked_cluster_arns: () -> ::Array[::String]
+        def multi_region_properties: () -> Types::MultiRegionProperties
+        def tags: () -> ::Hash[::String, ::String]
+        def encryption_details: () -> Types::EncryptionDetails
+        def endpoint: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DSQL/Client.html#get_cluster-instance_method
       def get_cluster: (
                          identifier: ::String
                        ) -> _GetClusterResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetClusterResponseSuccess
+
+      interface _GetClusterPolicyResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetClusterPolicyOutput]
+        def policy: () -> ::String
+        def policy_version: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DSQL/Client.html#get_cluster_policy-instance_method
+      def get_cluster_policy: (
+                                identifier: ::String
+                              ) -> _GetClusterPolicyResponseSuccess
+                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetClusterPolicyResponseSuccess
+
+      interface _GetStreamResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetStreamOutput]
+        def cluster_identifier: () -> ::String
+        def stream_identifier: () -> ::String
+        def arn: () -> ::String
+        def status: () -> ("CREATING" | "ACTIVE" | "DELETING" | "DELETED" | "FAILED" | "IMPAIRED")
+        def creation_time: () -> ::Time
+        def ordering: () -> ("UNORDERED")
+        def format: () -> ("JSON")
+        def target_definition: () -> Types::TargetDefinition
+        def status_reason: () -> Types::StatusReason
+        def tags: () -> ::Hash[::String, ::String]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DSQL/Client.html#get_stream-instance_method
+      def get_stream: (
+                        cluster_identifier: ::String,
+                        stream_identifier: ::String
+                      ) -> _GetStreamResponseSuccess
+                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetStreamResponseSuccess
+
+      interface _GetVpcEndpointServiceNameResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetVpcEndpointServiceNameOutput]
+        def service_name: () -> ::String
+        def cluster_vpc_endpoint: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DSQL/Client.html#get_vpc_endpoint_service_name-instance_method
+      def get_vpc_endpoint_service_name: (
+                                           identifier: ::String
+                                         ) -> _GetVpcEndpointServiceNameResponseSuccess
+                                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetVpcEndpointServiceNameResponseSuccess
 
       interface _ListClustersResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListClustersOutput]
@@ -159,6 +244,19 @@ module Aws
                          ) -> _ListClustersResponseSuccess
                        | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListClustersResponseSuccess
 
+      interface _ListStreamsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListStreamsOutput]
+        def next_token: () -> ::String
+        def streams: () -> ::Array[Types::StreamSummary]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DSQL/Client.html#list_streams-instance_method
+      def list_streams: (
+                          cluster_identifier: ::String,
+                          ?max_results: ::Integer,
+                          ?next_token: ::String
+                        ) -> _ListStreamsResponseSuccess
+                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListStreamsResponseSuccess
+
       interface _ListTagsForResourceResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListTagsForResourceOutput]
         def tags: () -> ::Hash[::String, ::String]
@@ -168,6 +266,20 @@ module Aws
                                     resource_arn: ::String
                                   ) -> _ListTagsForResourceResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListTagsForResourceResponseSuccess
+
+      interface _PutClusterPolicyResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::PutClusterPolicyOutput]
+        def policy_version: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DSQL/Client.html#put_cluster_policy-instance_method
+      def put_cluster_policy: (
+                                identifier: ::String,
+                                policy: ::String,
+                                ?bypass_policy_lockout_safety_check: bool,
+                                ?expected_policy_version: ::String,
+                                ?client_token: ::String
+                              ) -> _PutClusterPolicyResponseSuccess
+                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutClusterPolicyResponseSuccess
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DSQL/Client.html#tag_resource-instance_method
       def tag_resource: (
@@ -187,17 +299,19 @@ module Aws
         include ::Seahorse::Client::_ResponseSuccess[Types::UpdateClusterOutput]
         def identifier: () -> ::String
         def arn: () -> ::String
-        def status: () -> ("CREATING" | "ACTIVE" | "UPDATING" | "DELETING" | "DELETED" | "FAILED")
+        def status: () -> ("CREATING" | "ACTIVE" | "IDLE" | "INACTIVE" | "UPDATING" | "DELETING" | "DELETED" | "FAILED" | "PENDING_SETUP" | "PENDING_DELETE")
         def creation_time: () -> ::Time
-        def deletion_protection_enabled: () -> bool
-        def witness_region: () -> ::String
-        def linked_cluster_arns: () -> ::Array[::String]
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DSQL/Client.html#update_cluster-instance_method
       def update_cluster: (
                             identifier: ::String,
                             ?deletion_protection_enabled: bool,
-                            ?client_token: ::String
+                            ?kms_encryption_key: ::String,
+                            ?client_token: ::String,
+                            ?multi_region_properties: {
+                              witness_region: ::String?,
+                              clusters: Array[::String]?
+                            }
                           ) -> _UpdateClusterResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateClusterResponseSuccess
 
@@ -210,6 +324,16 @@ module Aws
                     identifier: ::String
                   ) -> Client::_GetClusterResponseSuccess
                     | (:cluster_not_exists waiter_name, Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> Client::_GetClusterResponseSuccess
+                    | (:stream_active waiter_name, 
+                    cluster_identifier: ::String,
+                    stream_identifier: ::String
+                  ) -> Client::_GetStreamResponseSuccess
+                    | (:stream_active waiter_name, Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> Client::_GetStreamResponseSuccess
+                    | (:stream_not_exists waiter_name, 
+                    cluster_identifier: ::String,
+                    stream_identifier: ::String
+                  ) -> Client::_GetStreamResponseSuccess
+                    | (:stream_not_exists waiter_name, Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> Client::_GetStreamResponseSuccess
     end
   end
 end

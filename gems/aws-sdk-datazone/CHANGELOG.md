@@ -1,6 +1,271 @@
 Unreleased Changes
 ------------------
 
+1.87.0 (2026-08-11)
+------------------
+
+* Feature - GetSubscriptionGrant now returns materialized asset scope name for mapping Lake Formation data cell filters or Redshift views to subscription grants.
+
+1.86.0 (2026-07-31)
+------------------
+
+* Feature - Adding support for enhanced Git experience in Sagemaker Unified Studio.
+
+1.85.0 (2026-07-23)
+------------------
+
+* Feature - Adds support for notebook sync with S3 ipynb files
+
+1.84.0 (2026-07-09)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.83.0 (2026-06-30)
+------------------
+
+* Feature - Amazon DataZone now supports SNOWFLAKE as a connection type in the CreateConnection API, enabling metadata and lineage retrieval from Snowflake databases. Specify snowflakeProperties with connection details, a Secrets Manager secret, an Athena spill bucket, and an identity mapping for Snowflake.
+
+1.82.0 (2026-06-15)
+------------------
+
+* Feature - Adds support for deleting lineage events in Amazon DataZone.
+
+1.81.0 (2026-05-26)
+------------------
+
+* Feature - Added resourceConfigurations and allowUserProvidedConfigurations fields to environment blueprint configuration APIs, enabling customers who migrated from V1 to V2 domains to update resource configurations (such as lineage schedules) programmatically via the SDK.
+
+1.80.0 (2026-05-22)
+------------------
+
+* Feature - Add support for VPC connection
+
+1.79.0 (2026-05-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.78.0 (2026-05-19)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.77.0 (2026-05-14)
+------------------
+
+* Feature - Adds support for SageMaker Unified Studio notebook operations, including notebook import and export
+
+1.76.0 (2026-05-13)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.75.0 (2026-04-30)
+------------------
+
+* Feature - Adds support for asynchronous notebook runs
+
+1.74.0 (2026-04-23)
+------------------
+
+* Feature - Releasing For LakehouseProperties attributes in the Connections API's
+
+1.73.0 (2026-04-16)
+------------------
+
+* Feature - Launching SMUS IAM domain SDK support
+
+1.72.0 (2026-04-07)
+------------------
+
+* Feature - Update Configurations and registerS3AccessGrantLocation as public attributes for cfn
+
+1.71.0 (2026-03-31)
+------------------
+
+* Feature - Adds environmentConfigurationName field to CreateEnvironmentInput and UpdateEnvironmentInput, so that Domain Owners can now recover orphaned environments by recreating deleted configurations with the same name, and will auto-recover orphaned environments
+
+1.70.0 (2026-03-18)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.69.0 (2026-03-03)
+------------------
+
+* Feature - Adding QueryGraph operation to DataZone SDK
+
+1.68.0 (2026-02-23)
+------------------
+
+* Feature - Add workflow properties support to connections APIs
+
+1.67.0 (2026-01-23)
+------------------
+
+* Feature - Added api for deleting data export configuration for a domain
+
+1.66.0 (2026-01-16)
+------------------
+
+* Feature - This release adds support for numeric filtering and complex free-text searches cases for the Search and SearchListings APIs.
+
+1.65.0 (2026-01-13)
+------------------
+
+* Feature - Adds support for IAM role subscriptions to Glue table listings via CreateSubscriptionRequest API. Also adds owningIamPrincipalArn filter to List APIs and subscriptionGrantCreationMode parameter to subscription target APIs for controlling grant creation behavior.
+
+1.64.0 (2026-01-08)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.63.0 (2026-01-05)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.62.0 (2025-12-02)
+------------------
+
+* Feature - Amazon DataZone now supports exporting Catalog datasets as Amazon S3 tables, and provides automatic business glossary term suggestions for data assets.
+
+1.61.0 (2025-11-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.60.0 (2025-11-19)
+------------------
+
+* Feature - Amazon DataZone now supports business metadata (readme and metadata forms) at the individual attribute (column) level, a new rule type for glossary terms, and the ability to update the owner of the root domain unit.
+
+1.59.0 (2025-11-14)
+------------------
+
+* Feature - Adds support for granting read and write access to Amazon S3 general purpose buckets using CreateSubscriptionRequest and AcceptSubscriptionRequest APIs. Also adds search filters for SSOUser and SSOGroup to ListSubscriptions APIs and deprecates "sortBy" parameter for ListSubscriptions APIs.
+
+1.58.0 (2025-11-10)
+------------------
+
+* Feature - Remove trackingServerName from DataZone Connection MLflowProperties
+
+1.57.0 (2025-11-05)
+------------------
+
+* Feature - Added support for Project Resource Tags
+
+1.56.0 (2025-10-24)
+------------------
+
+* Feature - This release adds support for MLflow connections Creation in DataZone
+
+1.55.0 (2025-10-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.54.0 (2025-10-14)
+------------------
+
+* Feature - Support creating scoped and trustedIdentityPropagation enabled connections.
+
+1.53.0 (2025-09-30)
+------------------
+
+* Feature - This release adds support for creation of EMR on EKS Connections in Amazon DataZone.
+
+1.52.0 (2025-09-11)
+------------------
+
+* Feature - adding IAM principal id to IAM user profile details
+
+1.51.0 (2025-09-09)
+------------------
+
+* Feature - Adds support for custom blueprints
+
+1.50.0 (2025-08-26)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.49.0 (2025-08-25)
+------------------
+
+* Feature - Releasing the following features - Asset classification that lets users use restricted terms for classifying assets if they have the right permissions. Also adding a new enum value "Moving" to project status.
+
+1.48.0 (2025-08-20)
+------------------
+
+* Feature - This release supports policy grant identifier for cloud formation integration
+
+1.47.0 (2025-08-13)
+------------------
+
+* Feature - Adds support for account pools and project profile account decoupling
+
+1.46.0 (2025-08-04)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.45.0 (2025-07-31)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.44.0 (2025-07-24)
+------------------
+
+* Feature - This release adds support for 1) highlighting relevant text in returned results for Search and SearchListings APIs and 2) returning aggregated counts of values for specified attributes for SearchListings API.
+
+1.43.0 (2025-07-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.42.0 (2025-07-15)
+------------------
+
+* Feature - Removing restriction of environment profile identifier as required field, S3 feature release
+
+1.41.0 (2025-07-01)
+------------------
+
+* Feature - Add support for the new optional domain-unit-id parameter in the UpdateProject API.
+
+1.40.0 (2025-06-02)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.39.0 (2025-05-12)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.38.0 (2025-05-05)
+------------------
+
+* Feature - This release adds a new authorization policy to control the usage of custom AssetType when creating an Asset. Customer can now add new grant(s) of policyType USE_ASSET_TYPE for custom AssetTypes to apply authorization policy to projects members and domain unit owners.
+
+1.37.0 (2025-05-01)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.36.0 (2025-04-11)
+------------------
+
+* Feature - Raise hard limit of authorized principals per SubscriptionTarget from 10 to 20.
+
+1.35.0 (2025-03-27)
+------------------
+
+* Feature - This release adds new action type of Create Listing Changeset for the Metadata Enforcement Rule feature.
+
 1.34.0 (2025-03-21)
 ------------------
 

@@ -29,6 +29,7 @@ module Aws::ACM
   # ## Error Classes
   # * {AccessDeniedException}
   # * {ConflictException}
+  # * {InternalServerException}
   # * {InvalidArgsException}
   # * {InvalidArnException}
   # * {InvalidDomainValidationOptionsException}
@@ -39,6 +40,7 @@ module Aws::ACM
   # * {RequestInProgressException}
   # * {ResourceInUseException}
   # * {ResourceNotFoundException}
+  # * {ServiceQuotaExceededException}
   # * {TagPolicyException}
   # * {ThrottlingException}
   # * {TooManyTagsException}
@@ -77,6 +79,25 @@ module Aws::ACM
       # @return [String]
       def message
         @message || @data[:message]
+      end
+    end
+
+    class InternalServerException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::ACM::Types::InternalServerException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+
+      def retryable?
+        true
       end
     end
 
@@ -230,6 +251,21 @@ module Aws::ACM
       end
     end
 
+    class ServiceQuotaExceededException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::ACM::Types::ServiceQuotaExceededException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+    end
+
     class TagPolicyException < ServiceError
 
       # @param [Seahorse::Client::RequestContext] context
@@ -257,6 +293,11 @@ module Aws::ACM
       # @return [String]
       def message
         @message || @data[:message]
+      end
+
+      # @return [String]
+      def throttling_reasons
+        @data[:throttling_reasons]
       end
     end
 

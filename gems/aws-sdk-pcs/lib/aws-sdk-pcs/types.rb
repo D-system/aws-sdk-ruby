@@ -34,6 +34,109 @@ module Aws::PCS
       include Aws::Structure
     end
 
+    # The accounting configuration includes configurable settings for Slurm
+    # accounting. It's a property of the **ClusterSlurmConfiguration**
+    # object.
+    #
+    # @!attribute [rw] default_purge_time_in_days
+    #   The default value for all purge settings for `slurmdbd.conf`. For
+    #   more information, see the [slurmdbd.conf documentation at
+    #   SchedMD][1].
+    #
+    #   The default value for `defaultPurgeTimeInDays` is `-1`.
+    #
+    #   A value of `-1` means there is no purge time and records persist as
+    #   long as the cluster exists.
+    #
+    #   `0` isn't a valid value.
+    #
+    #
+    #
+    #   [1]: https://slurm.schedmd.com/slurmdbd.conf.html
+    #   @return [Integer]
+    #
+    # @!attribute [rw] mode
+    #   The default value for `mode` is `NONE`. A value of `STANDARD` means
+    #   Slurm accounting is enabled.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/Accounting AWS API Documentation
+    #
+    class Accounting < Struct.new(
+      :default_purge_time_in_days,
+      :mode)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The accounting configuration includes configurable settings for Slurm
+    # accounting. It's a property of the **ClusterSlurmConfiguration**
+    # object.
+    #
+    # @!attribute [rw] default_purge_time_in_days
+    #   The default value for all purge settings for `slurmdbd.conf`. For
+    #   more information, see the [slurmdbd.conf documentation at
+    #   SchedMD][1].
+    #
+    #   The default value for `defaultPurgeTimeInDays` is `-1`.
+    #
+    #   A value of `-1` means there is no purge time and records persist as
+    #   long as the cluster exists.
+    #
+    #   `0` isn't a valid value.
+    #
+    #
+    #
+    #   [1]: https://slurm.schedmd.com/slurmdbd.conf.html
+    #   @return [Integer]
+    #
+    # @!attribute [rw] mode
+    #   The default value for `mode` is `NONE`. A value of `STANDARD` means
+    #   Slurm accounting is enabled.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/AccountingRequest AWS API Documentation
+    #
+    class AccountingRequest < Struct.new(
+      :default_purge_time_in_days,
+      :mode)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Additional settings that directly map to Cgroup settings.
+    #
+    # PCS supports a subset of Cgroup settings. For more information, see
+    # [Configuring custom Cgroup settings in PCS][1] in the *PCS User
+    # Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/pcs/latest/userguide/cgroup-custom-settings.html
+    #
+    # @!attribute [rw] parameter_name
+    #   PCS supports custom Cgroup settings for clusters. For more
+    #   information, see [Configuring custom Cgroup settings in PCS][1] in
+    #   the *PCS User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/pcs/latest/userguide/cgroup-custom-settings.html
+    #   @return [String]
+    #
+    # @!attribute [rw] parameter_value
+    #   The values for the configured Cgroup settings.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/CgroupCustomSetting AWS API Documentation
+    #
+    class CgroupCustomSetting < Struct.new(
+      :parameter_name,
+      :parameter_value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The cluster resource and configuration.
     #
     # @!attribute [rw] name
@@ -55,6 +158,19 @@ module Aws::PCS
     #   cluster.
     #
     #    </note>
+    #
+    #   The resource enters the `SUSPENDING` and `SUSPENDED` states when the
+    #   scheduler is beyond end of life and we have suspended the cluster.
+    #   When in these states, you can't use the cluster. The cluster
+    #   controller is down and all compute instances are terminated. The
+    #   resources still count toward your service quotas. You can delete a
+    #   resource if its status is `SUSPENDED`. For more information, see
+    #   [Frequently asked questions about Slurm versions in PCS][1] in the
+    #   *PCS User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/pcs/latest/userguide/slurm-versions_faq.html
     #   @return [String]
     #
     # @!attribute [rw] created_at
@@ -128,17 +244,45 @@ module Aws::PCS
     #   settings.
     #   @return [Array<Types::SlurmCustomSetting>]
     #
+    # @!attribute [rw] slurmdbd_custom_settings
+    #   Additional SlurmDBD-specific configuration that directly maps to
+    #   SlurmDBD settings.
+    #   @return [Array<Types::SlurmdbdCustomSetting>]
+    #
+    # @!attribute [rw] cgroup_custom_settings
+    #   Additional Cgroup-specific configuration that directly maps to
+    #   Cgroup settings.
+    #   @return [Array<Types::CgroupCustomSetting>]
+    #
     # @!attribute [rw] auth_key
     #   The shared Slurm key for authentication, also known as the **cluster
     #   secret**.
     #   @return [Types::SlurmAuthKey]
+    #
+    # @!attribute [rw] jwt_auth
+    #   The JWT authentication configuration for Slurm REST API access.
+    #   @return [Types::JwtAuth]
+    #
+    # @!attribute [rw] accounting
+    #   The accounting configuration includes configurable settings for
+    #   Slurm accounting.
+    #   @return [Types::Accounting]
+    #
+    # @!attribute [rw] slurm_rest
+    #   The Slurm REST API configuration for the cluster.
+    #   @return [Types::SlurmRest]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/ClusterSlurmConfiguration AWS API Documentation
     #
     class ClusterSlurmConfiguration < Struct.new(
       :scale_down_idle_time_in_seconds,
       :slurm_custom_settings,
-      :auth_key)
+      :slurmdbd_custom_settings,
+      :cgroup_custom_settings,
+      :auth_key,
+      :jwt_auth,
+      :accounting,
+      :slurm_rest)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -156,11 +300,34 @@ module Aws::PCS
     #   settings.
     #   @return [Array<Types::SlurmCustomSetting>]
     #
+    # @!attribute [rw] slurmdbd_custom_settings
+    #   Additional SlurmDBD-specific configuration that directly maps to
+    #   SlurmDBD settings.
+    #   @return [Array<Types::SlurmdbdCustomSetting>]
+    #
+    # @!attribute [rw] cgroup_custom_settings
+    #   Additional Cgroup-specific configuration that directly maps to
+    #   Cgroup settings.
+    #   @return [Array<Types::CgroupCustomSetting>]
+    #
+    # @!attribute [rw] accounting
+    #   The accounting configuration includes configurable settings for
+    #   Slurm accounting.
+    #   @return [Types::AccountingRequest]
+    #
+    # @!attribute [rw] slurm_rest
+    #   The Slurm REST API configuration for the cluster.
+    #   @return [Types::SlurmRestRequest]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/ClusterSlurmConfigurationRequest AWS API Documentation
     #
     class ClusterSlurmConfigurationRequest < Struct.new(
       :scale_down_idle_time_in_seconds,
-      :slurm_custom_settings)
+      :slurm_custom_settings,
+      :slurmdbd_custom_settings,
+      :cgroup_custom_settings,
+      :accounting,
+      :slurm_rest)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -194,6 +361,19 @@ module Aws::PCS
     #   cluster.
     #
     #    </note>
+    #
+    #   The resource enters the `SUSPENDING` and `SUSPENDED` states when the
+    #   scheduler is beyond end of life and we have suspended the cluster.
+    #   When in these states, you can't use the cluster. The cluster
+    #   controller is down and all compute instances are terminated. The
+    #   resources still count toward your service quotas. You can delete a
+    #   resource if its status is `SUSPENDED`. For more information, see
+    #   [Frequently asked questions about Slurm versions in PCS][1] in the
+    #   *PCS User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/pcs/latest/userguide/slurm-versions_faq.html
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/ClusterSummary AWS API Documentation
@@ -242,12 +422,25 @@ module Aws::PCS
     #   compute node group.
     #
     #    </note>
+    #
+    #   The resource enters the `SUSPENDING` and `SUSPENDED` states when the
+    #   scheduler is beyond end of life and we have suspended the cluster.
+    #   When in these states, you can't use the cluster. The cluster
+    #   controller is down and all compute instances are terminated. The
+    #   resources still count toward your service quotas. You can delete a
+    #   resource if its status is `SUSPENDED`. For more information, see
+    #   [Frequently asked questions about Slurm versions in PCS][1] in the
+    #   *PCS User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/pcs/latest/userguide/slurm-versions_faq.html
     #   @return [String]
     #
     # @!attribute [rw] ami_id
-    #   The ID of the Amazon Machine Image (AMI) that Amazon Web Services
-    #   PCS uses to launch instances. If not provided, Amazon Web Services
-    #   PCS uses the AMI ID specified in the custom launch template.
+    #   The ID of the Amazon Machine Image (AMI) that PCS uses to launch
+    #   instances. If not provided, PCS uses the AMI ID specified in the
+    #   custom launch template.
     #   @return [String]
     #
     # @!attribute [rw] subnet_ids
@@ -257,35 +450,44 @@ module Aws::PCS
     #   @return [Array<String>]
     #
     # @!attribute [rw] purchase_option
-    #   Specifies how EC2 instances are purchased on your behalf. Amazon Web
-    #   Services PCS supports On-Demand and Spot instances. For more
-    #   information, see [Instance purchasing options][1] in the *Amazon
-    #   Elastic Compute Cloud User Guide*. If you don't provide this
-    #   option, it defaults to On-Demand.
+    #   Specifies how EC2 instances are purchased on your behalf. PCS
+    #   supports On-Demand Instances, Spot Instances, Interruptible Capacity
+    #   Reservations, On-Demand Capacity Reservations, and Amazon EC2
+    #   Capacity Blocks for ML. For more information, see [Amazon EC2
+    #   billing and purchasing options][1] in the *Amazon Elastic Compute
+    #   Cloud User Guide*. For more information about PCS support for
+    #   Capacity Blocks, see [Using Amazon EC2 Capacity Blocks for ML with
+    #   PCS][2] in the *PCS User Guide*. For more information about PCS
+    #   support for interruptible capacity reservations, see [Using I-ODCRs
+    #   with PCS][3] in the *PCS User Guide*. Choose On-Demand if you plan
+    #   to use an On-Demand Capacity Reservation (ODCR). For more
+    #   information, see [Using ODCRs with PCS][4]. If you don't provide
+    #   this option, it defaults to On-Demand.
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-purchasing-options.html
+    #   [2]: https://docs.aws.amazon.com/pcs/latest/userguide/capacity-blocks.html
+    #   [3]: https://docs.aws.amazon.com/pcs/latest/userguide/capacity-reservations-iodcr.html
+    #   [4]: https://docs.aws.amazon.com/pcs/latest/userguide/capacity-reservations-odcr.html
     #   @return [String]
     #
     # @!attribute [rw] custom_launch_template
-    #   An Amazon EC2 launch template Amazon Web Services PCS uses to launch
-    #   compute nodes.
+    #   An Amazon EC2 launch template PCS uses to launch compute nodes.
     #   @return [Types::CustomLaunchTemplate]
     #
     # @!attribute [rw] iam_instance_profile_arn
     #   The Amazon Resource Name (ARN) of the IAM instance profile used to
     #   pass an IAM role when launching EC2 instances. The role contained in
     #   your instance profile must have the
-    #   `pcs:RegisterComputeNodeGroupInstance` permission. The resource
-    #   identifier of the ARN must start with `AWSPCS` or it must have
-    #   `/aws-pcs/` in its path.
+    #   `pcs:RegisterComputeNodeGroupInstance` permission and the role name
+    #   must start with `AWSPCS` or must have the path `/aws-pcs/`. For more
+    #   information, see [IAM instance profiles for PCS][1] in the *PCS User
+    #   Guide*.
     #
-    #   **Examples**
     #
-    #   * `arn:aws:iam::111122223333:instance-profile/AWSPCS-example-role-1`
     #
-    #   * `arn:aws:iam::111122223333:instance-profile/aws-pcs/example-role-2`
+    #   [1]: https://docs.aws.amazon.com/pcs/latest/userguide/security-instance-profiles.html
     #   @return [String]
     #
     # @!attribute [rw] scaling_configuration
@@ -293,8 +495,8 @@ module Aws::PCS
     #   @return [Types::ScalingConfiguration]
     #
     # @!attribute [rw] instance_configs
-    #   A list of EC2 instance configurations that Amazon Web Services PCS
-    #   can provision in the compute node group.
+    #   A list of EC2 instance configurations that PCS can provision in the
+    #   compute node group.
     #   @return [Array<Types::InstanceConfig>]
     #
     # @!attribute [rw] spot_options
@@ -305,6 +507,13 @@ module Aws::PCS
     # @!attribute [rw] slurm_configuration
     #   Additional options related to the Slurm scheduler.
     #   @return [Types::ComputeNodeGroupSlurmConfiguration]
+    #
+    # @!attribute [rw] node_lifecycle_actions
+    #   The lifecycle actions to run on compute nodes in the compute node
+    #   group. Use lifecycle actions to run custom scripts at defined stages
+    #   of a compute node's lifecycle, such as when a compute node finishes
+    #   bootstrapping or becomes ready to accept jobs.
+    #   @return [Types::NodeLifecycleActions]
     #
     # @!attribute [rw] error_info
     #   The list of errors that occurred during compute node group
@@ -330,6 +539,7 @@ module Aws::PCS
       :instance_configs,
       :spot_options,
       :slurm_configuration,
+      :node_lifecycle_actions,
       :error_info)
       SENSITIVE = []
       include Aws::Structure
@@ -351,6 +561,14 @@ module Aws::PCS
 
     # Additional options related to the Slurm scheduler.
     #
+    # @!attribute [rw] scale_down_idle_time_in_seconds
+    #   The time (in seconds) before an idle node is scaled down. If not
+    #   specified, the cluster-level setting applies. This overrides the
+    #   cluster-level `scaleDownIdleTimeInSeconds` setting. A value of `-1`
+    #   removes the override and applies the cluster-level setting to this
+    #   compute node group. Requires Slurm version 25.11 or later.
+    #   @return [Integer]
+    #
     # @!attribute [rw] slurm_custom_settings
     #   Additional Slurm-specific configuration that directly maps to Slurm
     #   settings.
@@ -359,12 +577,21 @@ module Aws::PCS
     # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/ComputeNodeGroupSlurmConfiguration AWS API Documentation
     #
     class ComputeNodeGroupSlurmConfiguration < Struct.new(
+      :scale_down_idle_time_in_seconds,
       :slurm_custom_settings)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # Additional options related to the Slurm scheduler.
+    #
+    # @!attribute [rw] scale_down_idle_time_in_seconds
+    #   The time (in seconds) before an idle node is scaled down. If not
+    #   specified, the cluster-level setting applies. This overrides the
+    #   cluster-level `scaleDownIdleTimeInSeconds` setting. A value of `-1`
+    #   removes the override and applies the cluster-level setting to this
+    #   compute node group. Requires Slurm version 25.11 or later.
+    #   @return [Integer]
     #
     # @!attribute [rw] slurm_custom_settings
     #   Additional Slurm-specific configuration that directly maps to Slurm
@@ -374,6 +601,7 @@ module Aws::PCS
     # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/ComputeNodeGroupSlurmConfigurationRequest AWS API Documentation
     #
     class ComputeNodeGroupSlurmConfigurationRequest < Struct.new(
+      :scale_down_idle_time_in_seconds,
       :slurm_custom_settings)
       SENSITIVE = []
       include Aws::Structure
@@ -412,6 +640,19 @@ module Aws::PCS
     #   compute node group.
     #
     #    </note>
+    #
+    #   The resource enters the `SUSPENDING` and `SUSPENDED` states when the
+    #   scheduler is beyond end of life and we have suspended the cluster.
+    #   When in these states, you can't use the cluster. The cluster
+    #   controller is down and all compute instances are terminated. The
+    #   resources still count toward your service quotas. You can delete a
+    #   resource if its status is `SUSPENDED`. For more information, see
+    #   [Frequently asked questions about Slurm versions in PCS][1] in the
+    #   *PCS User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/pcs/latest/userguide/slurm-versions_faq.html
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/ComputeNodeGroupSummary AWS API Documentation
@@ -548,10 +789,9 @@ module Aws::PCS
     #   @return [String]
     #
     # @!attribute [rw] ami_id
-    #   The ID of the Amazon Machine Image (AMI) that Amazon Web Services
-    #   PCS uses to launch compute nodes (Amazon EC2 instances). If you
-    #   don't provide this value, Amazon Web Services PCS uses the AMI ID
-    #   specified in the custom launch template.
+    #   The ID of the Amazon Machine Image (AMI) that PCS uses to launch
+    #   compute nodes (Amazon EC2 instances). If you don't provide this
+    #   value, PCS uses the AMI ID specified in the custom launch template.
     #   @return [String]
     #
     # @!attribute [rw] subnet_ids
@@ -560,35 +800,44 @@ module Aws::PCS
     #   @return [Array<String>]
     #
     # @!attribute [rw] purchase_option
-    #   Specifies how EC2 instances are purchased on your behalf. Amazon Web
-    #   Services PCS supports On-Demand and Spot instances. For more
-    #   information, see [Instance purchasing options][1] in the *Amazon
-    #   Elastic Compute Cloud User Guide*. If you don't provide this
-    #   option, it defaults to On-Demand.
+    #   Specifies how EC2 instances are purchased on your behalf. PCS
+    #   supports On-Demand Instances, Spot Instances, Interruptible Capacity
+    #   Reservations, On-Demand Capacity Reservations, and Amazon EC2
+    #   Capacity Blocks for ML. For more information, see [Amazon EC2
+    #   billing and purchasing options][1] in the *Amazon Elastic Compute
+    #   Cloud User Guide*. For more information about PCS support for
+    #   Capacity Blocks, see [Using Amazon EC2 Capacity Blocks for ML with
+    #   PCS][2] in the *PCS User Guide*. For more information about PCS
+    #   support for interruptible capacity reservations, see [Using I-ODCRs
+    #   with PCS][3] in the *PCS User Guide*. Choose On-Demand if you plan
+    #   to use an On-Demand Capacity Reservation (ODCR). For more
+    #   information, see [Using ODCRs with PCS][4]. If you don't provide
+    #   this option, it defaults to On-Demand.
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-purchasing-options.html
+    #   [2]: https://docs.aws.amazon.com/pcs/latest/userguide/capacity-blocks.html
+    #   [3]: https://docs.aws.amazon.com/pcs/latest/userguide/capacity-reservations-iodcr.html
+    #   [4]: https://docs.aws.amazon.com/pcs/latest/userguide/capacity-reservations-odcr.html
     #   @return [String]
     #
     # @!attribute [rw] custom_launch_template
-    #   An Amazon EC2 launch template Amazon Web Services PCS uses to launch
-    #   compute nodes.
+    #   An Amazon EC2 launch template PCS uses to launch compute nodes.
     #   @return [Types::CustomLaunchTemplate]
     #
     # @!attribute [rw] iam_instance_profile_arn
     #   The Amazon Resource Name (ARN) of the IAM instance profile used to
     #   pass an IAM role when launching EC2 instances. The role contained in
     #   your instance profile must have the
-    #   `pcs:RegisterComputeNodeGroupInstance` permission. The resource
-    #   identifier of the ARN must start with `AWSPCS` or it must have
-    #   `/aws-pcs/` in its path.
+    #   `pcs:RegisterComputeNodeGroupInstance` permission and the role name
+    #   must start with `AWSPCS` or must have the path `/aws-pcs/`. For more
+    #   information, see [IAM instance profiles for PCS][1] in the *PCS User
+    #   Guide*.
     #
-    #   **Examples**
     #
-    #   * `arn:aws:iam::111122223333:instance-profile/AWSPCS-example-role-1`
     #
-    #   * `arn:aws:iam::111122223333:instance-profile/aws-pcs/example-role-2`
+    #   [1]: https://docs.aws.amazon.com/pcs/latest/userguide/security-instance-profiles.html
     #   @return [String]
     #
     # @!attribute [rw] scaling_configuration
@@ -596,8 +845,8 @@ module Aws::PCS
     #   @return [Types::ScalingConfigurationRequest]
     #
     # @!attribute [rw] instance_configs
-    #   A list of EC2 instance configurations that Amazon Web Services PCS
-    #   can provision in the compute node group.
+    #   A list of EC2 instance configurations that PCS can provision in the
+    #   compute node group.
     #   @return [Array<Types::InstanceConfig>]
     #
     # @!attribute [rw] spot_options
@@ -608,6 +857,13 @@ module Aws::PCS
     # @!attribute [rw] slurm_configuration
     #   Additional options related to the Slurm scheduler.
     #   @return [Types::ComputeNodeGroupSlurmConfigurationRequest]
+    #
+    # @!attribute [rw] node_lifecycle_actions
+    #   The lifecycle actions to run on compute nodes in the compute node
+    #   group. Use lifecycle actions to run custom scripts at defined stages
+    #   of a compute node's lifecycle, such as when a compute node finishes
+    #   bootstrapping or becomes ready to accept jobs.
+    #   @return [Types::NodeLifecycleActionsRequest]
     #
     # @!attribute [rw] client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
@@ -641,6 +897,7 @@ module Aws::PCS
       :instance_configs,
       :spot_options,
       :slurm_configuration,
+      :node_lifecycle_actions,
       :client_token,
       :tags)
       SENSITIVE = []
@@ -672,6 +929,10 @@ module Aws::PCS
     #   queue. Queues assign jobs to associated compute node groups.
     #   @return [Array<Types::ComputeNodeGroupConfiguration>]
     #
+    # @!attribute [rw] slurm_configuration
+    #   Additional options related to the Slurm scheduler.
+    #   @return [Types::QueueSlurmConfigurationRequest]
+    #
     # @!attribute [rw] client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
     #   idempotency of the request. Idempotency ensures that an API request
@@ -696,6 +957,7 @@ module Aws::PCS
       :cluster_identifier,
       :queue_name,
       :compute_node_group_configurations,
+      :slurm_configuration,
       :client_token,
       :tags)
       SENSITIVE = []
@@ -714,8 +976,7 @@ module Aws::PCS
       include Aws::Structure
     end
 
-    # An Amazon EC2 launch template Amazon Web Services PCS uses to launch
-    # compute nodes.
+    # An Amazon EC2 launch template PCS uses to launch compute nodes.
     #
     # @!attribute [rw] id
     #   The ID of the EC2 launch template to use to provision instances.
@@ -844,15 +1105,24 @@ module Aws::PCS
     #   @return [String]
     #
     # @!attribute [rw] private_ip_address
-    #   The endpoint's private IP address.
+    #   For clusters that use IPv4, this is the endpoint's private IP
+    #   address.
     #
-    #   Example: `2.2.2.2`
+    #   Example: `10.1.2.3`
+    #
+    #   For clusters configured to use IPv6, this is an empty string.
     #   @return [String]
     #
     # @!attribute [rw] public_ip_address
     #   The endpoint's public IP address.
     #
-    #   Example: `1.1.1.1`
+    #   Example: `192.0.2.1`
+    #   @return [String]
+    #
+    # @!attribute [rw] ipv6_address
+    #   The endpoint's IPv6 address.
+    #
+    #   Example: `2001:db8::1`
     #   @return [String]
     #
     # @!attribute [rw] port
@@ -867,6 +1137,7 @@ module Aws::PCS
       :type,
       :private_ip_address,
       :public_ip_address,
+      :ipv6_address,
       :port)
       SENSITIVE = []
       include Aws::Structure
@@ -892,7 +1163,7 @@ module Aws::PCS
     end
 
     # @!attribute [rw] cluster_identifier
-    #   The name or ID of the cluster of the queue.
+    #   The name or ID of the cluster.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/GetClusterRequest AWS API Documentation
@@ -973,12 +1244,11 @@ module Aws::PCS
       include Aws::Structure
     end
 
-    # An EC2 instance configuration Amazon Web Services PCS uses to launch
-    # compute nodes.
+    # An EC2 instance configuration PCS uses to launch compute nodes.
     #
     # @!attribute [rw] instance_type
-    #   The EC2 instance type that Amazon Web Services PCS can provision in
-    #   the compute node group.
+    #   The EC2 instance type that PCS can provision in the compute node
+    #   group.
     #
     #   Example: `t2.xlarge`
     #   @return [String]
@@ -991,8 +1261,7 @@ module Aws::PCS
       include Aws::Structure
     end
 
-    # Amazon Web Services PCS can't process your request right now. Try
-    # again later.
+    # PCS can't process your request right now. Try again later.
     #
     # @!attribute [rw] message
     #   @return [String]
@@ -1001,6 +1270,42 @@ module Aws::PCS
     #
     class InternalServerException < Struct.new(
       :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The JWT authentication configuration for Slurm REST API access.
+    #
+    # @!attribute [rw] jwt_key
+    #   The JWT key for Slurm REST API authentication.
+    #   @return [Types::JwtKey]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/JwtAuth AWS API Documentation
+    #
+    class JwtAuth < Struct.new(
+      :jwt_key)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The JWT key stored in Amazon Web Services Secrets Manager for Slurm
+    # REST API authentication.
+    #
+    # @!attribute [rw] secret_arn
+    #   The Amazon Resource Name (ARN) of the Amazon Web Services Secrets
+    #   Manager secret containing the JWT key.
+    #   @return [String]
+    #
+    # @!attribute [rw] secret_version
+    #   The version of the Amazon Web Services Secrets Manager secret
+    #   containing the JWT key.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/JwtKey AWS API Documentation
+    #
+    class JwtKey < Struct.new(
+      :secret_arn,
+      :secret_version)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1185,11 +1490,11 @@ module Aws::PCS
     # The networking configuration for the cluster's control plane.
     #
     # @!attribute [rw] subnet_ids
-    #   The ID of the subnet where Amazon Web Services PCS creates an
-    #   Elastic Network Interface (ENI) to enable communication between
-    #   managed controllers and Amazon Web Services PCS resources. The
-    #   subnet must have an available IP address, cannot reside in AWS
-    #   Outposts, AWS Wavelength, or an AWS Local Zone.
+    #   The ID of the subnet where PCS creates an Elastic Network Interface
+    #   (ENI) to enable communication between managed controllers and PCS
+    #   resources. The subnet must have an available IP address, cannot
+    #   reside in Outposts, Wavelength, or an Amazon Web Services Local
+    #   Zone.
     #
     #   Example: `subnet-abcd1234`
     #   @return [Array<String>]
@@ -1213,7 +1518,7 @@ module Aws::PCS
     #
     #     * Ports: All
     #
-    #     * Destination: 0.0.0.0/0 (IPv4)
+    #     * Destination: 0.0.0.0/0 (IPv4) or ::/0 (IPv6)
     #   * Outbound rule 2
     #
     #     * Protocol: All
@@ -1223,11 +1528,16 @@ module Aws::PCS
     #     * Destination: Self
     #   @return [Array<String>]
     #
+    # @!attribute [rw] network_type
+    #   The IP address version the cluster uses. The default is `IPV4`.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/Networking AWS API Documentation
     #
     class Networking < Struct.new(
       :subnet_ids,
-      :security_group_ids)
+      :security_group_ids,
+      :network_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1235,16 +1545,15 @@ module Aws::PCS
     # The networking configuration for the cluster's control plane.
     #
     # @!attribute [rw] subnet_ids
-    #   The list of subnet IDs where Amazon Web Services PCS creates an
-    #   Elastic Network Interface (ENI) to enable communication between
-    #   managed controllers and Amazon Web Services PCS resources. Subnet
-    #   IDs have the form `subnet-0123456789abcdef0`.
+    #   The list of subnet IDs where PCS creates an Elastic Network
+    #   Interface (ENI) to enable communication between managed controllers
+    #   and PCS resources. Subnet IDs have the form
+    #   `subnet-0123456789abcdef0`.
     #
     #   Subnets can't be in Outposts, Wavelength or an Amazon Web Services
     #   Local Zone.
     #
-    #   <note markdown="1"> Amazon Web Services PCS currently supports only 1 subnet in this
-    #   list.
+    #   <note markdown="1"> PCS currently supports only 1 subnet in this list.
     #
     #    </note>
     #   @return [Array<String>]
@@ -1254,11 +1563,151 @@ module Aws::PCS
     #   Interface (ENI) created in subnets.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] network_type
+    #   The IP address version the cluster uses. The default is `IPV4`.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/NetworkingRequest AWS API Documentation
     #
     class NetworkingRequest < Struct.new(
       :subnet_ids,
-      :security_group_ids)
+      :security_group_ids,
+      :network_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The lifecycle actions configured on a compute node group. Lifecycle
+    # actions define scripts that PCS runs on compute nodes at specific
+    # stages of their lifecycle.
+    #
+    # @!attribute [rw] stages
+    #   The lifecycle stages where you configure scripts to run.
+    #   @return [Types::NodeLifecycleStages]
+    #
+    # @!attribute [rw] script_caching_policy
+    #   The caching policy for node lifecycle scripts. The default value is
+    #   `CACHE_ONCE`. Valid values:
+    #
+    #   * `CACHE_ONCE` – Downloads each script once and reuses it on
+    #     subsequent boots.
+    #
+    #   * `REFRESH_ON_REBOOT` – Downloads each script on every boot.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/NodeLifecycleActions AWS API Documentation
+    #
+    class NodeLifecycleActions < Struct.new(
+      :stages,
+      :script_caching_policy)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The lifecycle actions to configure on a compute node group when you
+    # create it. Lifecycle actions define scripts that PCS runs on compute
+    # nodes at specific stages of their lifecycle.
+    #
+    # @!attribute [rw] stages
+    #   The lifecycle stages where you configure scripts to run.
+    #   @return [Types::NodeLifecycleStages]
+    #
+    # @!attribute [rw] script_caching_policy
+    #   The caching policy for node lifecycle scripts. The default value is
+    #   `CACHE_ONCE`. Valid values:
+    #
+    #   * `CACHE_ONCE` – Downloads each script once and reuses it on
+    #     subsequent boots.
+    #
+    #   * `REFRESH_ON_REBOOT` – Downloads each script on every boot.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/NodeLifecycleActionsRequest AWS API Documentation
+    #
+    class NodeLifecycleActionsRequest < Struct.new(
+      :stages,
+      :script_caching_policy)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A script to run during a compute node lifecycle stage.
+    #
+    # @!attribute [rw] name
+    #   A unique name for the script. The name can be up to 64 characters
+    #   long. Valid characters are letters, numbers, spaces, underscores
+    #   (`_`), and hyphens (`-`). The first character must be a letter or a
+    #   number.
+    #   @return [String]
+    #
+    # @!attribute [rw] script_source
+    #   The source location and integrity information for the script.
+    #   @return [Types::ScriptSource]
+    #
+    # @!attribute [rw] arguments
+    #   The command-line arguments to pass to the script. You can specify up
+    #   to 20 arguments, and each argument can be up to 256 characters long.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] on_error
+    #   The behavior when the script fails. The default value is
+    #   `TERMINATE`. Valid values:
+    #
+    #   * `TERMINATE` – Terminates the compute node.
+    #
+    #   * `STOP_SEQUENCE` – Stops running subsequent scripts in the sequence
+    #     but doesn't terminate the compute node.
+    #
+    #   * `CONTINUE` – Ignores the error and continues running the next
+    #     script.
+    #   @return [String]
+    #
+    # @!attribute [rw] execution_policy
+    #   The policy that determines when the script runs. The default value
+    #   is `FIRST_BOOT_ONLY`. Valid values:
+    #
+    #   * `FIRST_BOOT_ONLY` – Runs the script only the first time the
+    #     compute node boots.
+    #
+    #   * `EVERY_BOOT` – Runs the script every time the compute node boots,
+    #     including reboots.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/NodeLifecycleScript AWS API Documentation
+    #
+    class NodeLifecycleScript < Struct.new(
+      :name,
+      :script_source,
+      :arguments,
+      :on_error,
+      :execution_policy)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The stages of a compute node's lifecycle where you can configure
+    # scripts to run.
+    #
+    # @!attribute [rw] node_bootstrapped
+    #   The scripts to run after PCS finishes setting up the compute node
+    #   and before the Slurm daemon (`slurmd`) starts. Use this stage for
+    #   tasks that must complete before the node accepts jobs, such as
+    #   mounting shared storage, configuring networking, or installing
+    #   software packages.
+    #   @return [Array<Types::NodeLifecycleScript>]
+    #
+    # @!attribute [rw] node_ready
+    #   The scripts to run after the Slurm daemon (`slurmd`) starts and the
+    #   compute node registers with the Slurm controller. Use this stage for
+    #   tasks that require Slurm to be running, such as running Slurm
+    #   commands.
+    #   @return [Array<Types::NodeLifecycleScript>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/NodeLifecycleStages AWS API Documentation
+    #
+    class NodeLifecycleStages < Struct.new(
+      :node_bootstrapped,
+      :node_ready)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1296,12 +1745,29 @@ module Aws::PCS
     #   queue.
     #
     #    </note>
+    #
+    #   The resource enters the `SUSPENDING` and `SUSPENDED` states when the
+    #   scheduler is beyond end of life and we have suspended the cluster.
+    #   When in these states, you can't use the cluster. The cluster
+    #   controller is down and all compute instances are terminated. The
+    #   resources still count toward your service quotas. You can delete a
+    #   resource if its status is `SUSPENDED`. For more information, see
+    #   [Frequently asked questions about Slurm versions in PCS][1] in the
+    #   *PCS User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/pcs/latest/userguide/slurm-versions_faq.html
     #   @return [String]
     #
     # @!attribute [rw] compute_node_group_configurations
     #   The list of compute node group configurations associated with the
     #   queue. Queues assign jobs to associated compute node groups.
     #   @return [Array<Types::ComputeNodeGroupConfiguration>]
+    #
+    # @!attribute [rw] slurm_configuration
+    #   Additional options related to the Slurm scheduler.
+    #   @return [Types::QueueSlurmConfiguration]
     #
     # @!attribute [rw] error_info
     #   The list of errors that occurred during queue provisioning.
@@ -1318,7 +1784,38 @@ module Aws::PCS
       :modified_at,
       :status,
       :compute_node_group_configurations,
+      :slurm_configuration,
       :error_info)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Additional options related to the Slurm scheduler.
+    #
+    # @!attribute [rw] slurm_custom_settings
+    #   Additional Slurm-specific configuration that directly maps to Slurm
+    #   settings.
+    #   @return [Array<Types::SlurmCustomSetting>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/QueueSlurmConfiguration AWS API Documentation
+    #
+    class QueueSlurmConfiguration < Struct.new(
+      :slurm_custom_settings)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Additional options related to the Slurm scheduler.
+    #
+    # @!attribute [rw] slurm_custom_settings
+    #   Additional Slurm-specific configuration that directly maps to Slurm
+    #   settings.
+    #   @return [Array<Types::SlurmCustomSetting>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/QueueSlurmConfigurationRequest AWS API Documentation
+    #
+    class QueueSlurmConfigurationRequest < Struct.new(
+      :slurm_custom_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1356,6 +1853,19 @@ module Aws::PCS
     #   queue.
     #
     #    </note>
+    #
+    #   The resource enters the `SUSPENDING` and `SUSPENDED` states when the
+    #   scheduler is beyond end of life and we have suspended the cluster.
+    #   When in these states, you can't use the cluster. The cluster
+    #   controller is down and all compute instances are terminated. The
+    #   resources still count toward your service quotas. You can delete a
+    #   resource if its status is `SUSPENDED`. For more information, see
+    #   [Frequently asked questions about Slurm versions in PCS][1] in the
+    #   *PCS User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/pcs/latest/userguide/slurm-versions_faq.html
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/QueueSummary AWS API Documentation
@@ -1403,12 +1913,36 @@ module Aws::PCS
     #   The list of endpoints available for interaction with the scheduler.
     #   @return [Array<Types::Endpoint>]
     #
+    # @!attribute [rw] cluster_name
+    #   The name of the cluster that the compute node registered into.
+    #   @return [String]
+    #
+    # @!attribute [rw] compute_node_group_id
+    #   The ID of the compute node group that the compute node registered
+    #   into.
+    #   @return [String]
+    #
+    # @!attribute [rw] compute_node_group_name
+    #   The name of the compute node group that the compute node registered
+    #   into.
+    #   @return [String]
+    #
+    # @!attribute [rw] node_lifecycle_actions
+    #   The node lifecycle actions configured for the node group, including
+    #   scripts to run when a compute node finishes bootstrapping or becomes
+    #   ready to accept jobs.
+    #   @return [Types::NodeLifecycleActions]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/RegisterComputeNodeGroupInstanceResponse AWS API Documentation
     #
     class RegisterComputeNodeGroupInstanceResponse < Struct.new(
       :node_id,
       :shared_secret,
-      :endpoints)
+      :endpoints,
+      :cluster_name,
+      :compute_node_group_id,
+      :compute_node_group_name,
+      :node_lifecycle_actions)
       SENSITIVE = [:shared_secret]
       include Aws::Structure
     end
@@ -1486,13 +2020,22 @@ module Aws::PCS
     # cluster.
     #
     # @!attribute [rw] type
-    #   The software Amazon Web Services PCS uses to manage cluster scaling
-    #   and job scheduling.
+    #   The software PCS uses to manage cluster scaling and job scheduling.
     #   @return [String]
     #
     # @!attribute [rw] version
-    #   The version of the specified scheduling software that Amazon Web
-    #   Services PCS uses to manage cluster scaling and job scheduling.
+    #   The version of the specified scheduling software that PCS uses to
+    #   manage cluster scaling and job scheduling. You can update this
+    #   version using the `UpdateCluster` API action. For more information,
+    #   see [Updating the scheduler version on a cluster][1] and [Slurm
+    #   versions in PCS][2] in the *PCS User Guide*.
+    #
+    #   Valid Values: `23.11 | 24.05 | 24.11 | 25.05 | 25.11`
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/pcs/latest/userguide/working-with_clusters_version_update.html
+    #   [2]: https://docs.aws.amazon.com/pcs/latest/userguide/slurm-versions.html
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/Scheduler AWS API Documentation
@@ -1508,13 +2051,19 @@ module Aws::PCS
     # cluster.
     #
     # @!attribute [rw] type
-    #   The software Amazon Web Services PCS uses to manage cluster scaling
-    #   and job scheduling.
+    #   The software PCS uses to manage cluster scaling and job scheduling.
     #   @return [String]
     #
     # @!attribute [rw] version
-    #   The version of the specified scheduling software that Amazon Web
-    #   Services PCS uses to manage cluster scaling and job scheduling.
+    #   The version of the specified scheduling software that PCS uses to
+    #   manage cluster scaling and job scheduling. For more information, see
+    #   [Slurm versions in PCS][1] in the *PCS User Guide*.
+    #
+    #   Valid Values: `24.11 | 25.05 | 25.11`
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/pcs/latest/userguide/slurm-versions.html
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/SchedulerRequest AWS API Documentation
@@ -1522,6 +2071,36 @@ module Aws::PCS
     class SchedulerRequest < Struct.new(
       :type,
       :version)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The source location and integrity information for a node lifecycle
+    # script.
+    #
+    # @!attribute [rw] script_location
+    #   The location of the script. Specify either an Amazon S3 URI in the
+    #   format `s3://bucket-name/key` or an HTTPS URL.
+    #   @return [String]
+    #
+    # @!attribute [rw] s3_version_id
+    #   The Amazon S3 version ID of the script. Use this value to pin the
+    #   script to a specific version in a versioned Amazon S3 bucket. This
+    #   value is only valid when `scriptLocation` is an Amazon S3 URI.
+    #   @return [String]
+    #
+    # @!attribute [rw] checksum
+    #   The SHA-256 checksum of the script content, as a 64-character
+    #   hexadecimal string. This value is optional. When specified, PCS uses
+    #   this value to verify the integrity of the downloaded script.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/ScriptSource AWS API Documentation
+    #
+    class ScriptSource < Struct.new(
+      :script_location,
+      :s3_version_id,
+      :checksum)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1584,7 +2163,7 @@ module Aws::PCS
     # secret**.
     #
     # @!attribute [rw] secret_arn
-    #   The Amazon Resource Name (ARN) of the the shared Slurm key.
+    #   The Amazon Resource Name (ARN) of the shared Slurm key.
     #   @return [String]
     #
     # @!attribute [rw] secret_version
@@ -1602,29 +2181,21 @@ module Aws::PCS
 
     # Additional settings that directly map to Slurm settings.
     #
+    # PCS supports a subset of Slurm settings. For more information, see
+    # [Configuring custom Slurm settings in PCS][1] in the *PCS User Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/pcs/latest/userguide/slurm-custom-settings.html
+    #
     # @!attribute [rw] parameter_name
-    #   Amazon Web Services PCS supports configuration of the following
-    #   Slurm parameters:
-    #
-    #   * For **clusters**
-    #
-    #     * [ `Prolog` ][1]
-    #
-    #     * [ `Epilog` ][2]
-    #
-    #     * [ `SelectTypeParameters` ][3]
-    #   * For **compute node groups**
-    #
-    #     * [ `Weight` ][4]
-    #
-    #     * [ `RealMemory` ][4]
+    #   PCS supports custom Slurm settings for clusters, compute node
+    #   groups, and queues. For more information, see [Configuring custom
+    #   Slurm settings in PCS][1] in the *PCS User Guide*.
     #
     #
     #
-    #   [1]: https://slurm.schedmd.com/slurm.conf.html#OPT_Prolog_1
-    #   [2]: https://slurm.schedmd.com/slurm.conf.html#OPT_Epilog_1
-    #   [3]: https://slurm.schedmd.com/slurm.conf.html#OPT_SelectTypeParameters
-    #   [4]: https://slurm.schedmd.com/slurm.conf.html#OPT_Weight
+    #   [1]: https://docs.aws.amazon.com/pcs/latest/userguide/slurm-custom-settings.html
     #   @return [String]
     #
     # @!attribute [rw] parameter_value
@@ -1640,17 +2211,84 @@ module Aws::PCS
       include Aws::Structure
     end
 
+    # The Slurm REST API configuration includes settings for enabling and
+    # configuring the Slurm REST API. It's a property of the
+    # **ClusterSlurmConfiguration** object.
+    #
+    # @!attribute [rw] mode
+    #   The default value for `mode` is `NONE`. A value of `STANDARD` means
+    #   the Slurm REST API is enabled.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/SlurmRest AWS API Documentation
+    #
+    class SlurmRest < Struct.new(
+      :mode)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The Slurm REST API configuration includes settings for enabling and
+    # configuring the Slurm REST API. It's a property of the
+    # **ClusterSlurmConfiguration** object.
+    #
+    # @!attribute [rw] mode
+    #   The default value for `mode` is `NONE`. A value of `STANDARD` means
+    #   the Slurm REST API is enabled.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/SlurmRestRequest AWS API Documentation
+    #
+    class SlurmRestRequest < Struct.new(
+      :mode)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Additional settings that directly map to SlurmDBD settings.
+    #
+    # PCS supports a subset of SlurmDBD settings. For more information, see
+    # [Configuring custom SlurmDBD settings in PCS][1] in the *PCS User
+    # Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/pcs/latest/userguide/slurmdbd-custom-settings.html
+    #
+    # @!attribute [rw] parameter_name
+    #   PCS supports custom SlurmDBD settings for clusters. For more
+    #   information, see [Configuring custom SlurmDBD settings in PCS][1] in
+    #   the *PCS User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/pcs/latest/userguide/slurmdbd-custom-settings.html
+    #   @return [String]
+    #
+    # @!attribute [rw] parameter_value
+    #   The values for the configured SlurmDBD settings.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/SlurmdbdCustomSetting AWS API Documentation
+    #
+    class SlurmdbdCustomSetting < Struct.new(
+      :parameter_name,
+      :parameter_value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Additional configuration when you specify `SPOT` as the
     # `purchaseOption` for the `CreateComputeNodeGroup` API action.
     #
     # @!attribute [rw] allocation_strategy
-    #   The Amazon EC2 allocation strategy Amazon Web Services PCS uses to
-    #   provision EC2 instances. Amazon Web Services PCS supports **lowest
-    #   price**, **capacity optimized**, and **price capacity optimized**.
-    #   For more information, see [Use allocation strategies to determine
-    #   how EC2 Fleet or Spot Fleet fulfills Spot and On-Demand capacity][1]
-    #   in the *Amazon Elastic Compute Cloud User Guide*. If you don't
-    #   provide this option, it defaults to **price capacity optimized**.
+    #   The Amazon EC2 allocation strategy PCS uses to provision EC2
+    #   instances. PCS supports **lowest price**, **capacity optimized**,
+    #   and **price capacity optimized**. For more information, see [Use
+    #   allocation strategies to determine how EC2 Fleet or Spot Fleet
+    #   fulfills Spot and On-Demand capacity][1] in the *Amazon Elastic
+    #   Compute Cloud User Guide*. If you don't provide this option, it
+    #   defaults to **price capacity optimized**.
     #
     #
     #
@@ -1682,6 +2320,10 @@ module Aws::PCS
       SENSITIVE = []
       include Aws::Structure
     end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/TagResourceResponse AWS API Documentation
+    #
+    class TagResourceResponse < Aws::EmptyStructure; end
 
     # Your request exceeded a request rate quota. Check the resource's
     # request rate quota and try again.
@@ -1720,6 +2362,143 @@ module Aws::PCS
       include Aws::Structure
     end
 
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/UntagResourceResponse AWS API Documentation
+    #
+    class UntagResourceResponse < Aws::EmptyStructure; end
+
+    # The accounting configuration includes configurable settings for Slurm
+    # accounting.
+    #
+    # @!attribute [rw] default_purge_time_in_days
+    #   The default value for all purge settings for `slurmdbd.conf`. For
+    #   more information, see the [slurmdbd.conf documentation at
+    #   SchedMD][1].
+    #
+    #   The default value for `defaultPurgeTimeInDays` is `-1`.
+    #
+    #   A value of `-1` means there is no purge time and records persist as
+    #   long as the cluster exists.
+    #
+    #   `0` isn't a valid value.
+    #
+    #
+    #
+    #   [1]: https://slurm.schedmd.com/slurmdbd.conf.html
+    #   @return [Integer]
+    #
+    # @!attribute [rw] mode
+    #   The default value for `mode` is `NONE`. A value of `STANDARD` means
+    #   Slurm accounting is enabled.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/UpdateAccountingRequest AWS API Documentation
+    #
+    class UpdateAccountingRequest < Struct.new(
+      :default_purge_time_in_days,
+      :mode)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] cluster_identifier
+    #   The name or ID of the cluster to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] client_token
+    #   A unique, case-sensitive identifier that you provide to ensure the
+    #   idempotency of the request. Idempotency ensures that an API request
+    #   completes only once. With an idempotent request, if the original
+    #   request completes successfully, the subsequent retries with the same
+    #   client token return the result from the original successful request
+    #   and they have no additional effect. If you don't specify a client
+    #   token, the CLI and SDK automatically generate 1 for you.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @!attribute [rw] slurm_configuration
+    #   Additional options related to the Slurm scheduler.
+    #   @return [Types::UpdateClusterSlurmConfigurationRequest]
+    #
+    # @!attribute [rw] scheduler
+    #   The scheduler configuration to update for the cluster. Use this to
+    #   update the scheduler version. For more information, see [Updating
+    #   the scheduler version on a cluster][1] in the *PCS User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/pcs/latest/userguide/working-with_clusters_version_update.html
+    #   @return [Types::UpdateSchedulerRequest]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/UpdateClusterRequest AWS API Documentation
+    #
+    class UpdateClusterRequest < Struct.new(
+      :cluster_identifier,
+      :client_token,
+      :slurm_configuration,
+      :scheduler)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] cluster
+    #   The cluster resource and configuration.
+    #   @return [Types::Cluster]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/UpdateClusterResponse AWS API Documentation
+    #
+    class UpdateClusterResponse < Struct.new(
+      :cluster)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Additional options related to the Slurm scheduler.
+    #
+    # @!attribute [rw] scale_down_idle_time_in_seconds
+    #   The time (in seconds) before an idle node is scaled down.
+    #
+    #   Default: `600`
+    #   @return [Integer]
+    #
+    # @!attribute [rw] slurm_custom_settings
+    #   Additional Slurm-specific configuration that directly maps to Slurm
+    #   settings.
+    #   @return [Array<Types::SlurmCustomSetting>]
+    #
+    # @!attribute [rw] slurmdbd_custom_settings
+    #   Additional SlurmDBD-specific configuration that directly maps to
+    #   SlurmDBD settings.
+    #   @return [Array<Types::SlurmdbdCustomSetting>]
+    #
+    # @!attribute [rw] cgroup_custom_settings
+    #   Additional Cgroup-specific configuration that directly maps to
+    #   Cgroup settings.
+    #   @return [Array<Types::CgroupCustomSetting>]
+    #
+    # @!attribute [rw] accounting
+    #   The accounting configuration includes configurable settings for
+    #   Slurm accounting.
+    #   @return [Types::UpdateAccountingRequest]
+    #
+    # @!attribute [rw] slurm_rest
+    #   The Slurm REST API configuration for the cluster.
+    #   @return [Types::UpdateSlurmRestRequest]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/UpdateClusterSlurmConfigurationRequest AWS API Documentation
+    #
+    class UpdateClusterSlurmConfigurationRequest < Struct.new(
+      :scale_down_idle_time_in_seconds,
+      :slurm_custom_settings,
+      :slurmdbd_custom_settings,
+      :cgroup_custom_settings,
+      :accounting,
+      :slurm_rest)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] cluster_identifier
     #   The name or ID of the cluster of the compute node group.
     #   @return [String]
@@ -1729,9 +2508,9 @@ module Aws::PCS
     #   @return [String]
     #
     # @!attribute [rw] ami_id
-    #   The ID of the Amazon Machine Image (AMI) that Amazon Web Services
-    #   PCS uses to launch instances. If not provided, Amazon Web Services
-    #   PCS uses the AMI ID specified in the custom launch template.
+    #   The ID of the Amazon Machine Image (AMI) that PCS uses to launch
+    #   instances. If not provided, PCS uses the AMI ID specified in the
+    #   custom launch template.
     #   @return [String]
     #
     # @!attribute [rw] subnet_ids
@@ -1740,20 +2519,30 @@ module Aws::PCS
     #   @return [Array<String>]
     #
     # @!attribute [rw] custom_launch_template
-    #   An Amazon EC2 launch template Amazon Web Services PCS uses to launch
-    #   compute nodes.
+    #   An Amazon EC2 launch template PCS uses to launch compute nodes.
     #   @return [Types::CustomLaunchTemplate]
     #
     # @!attribute [rw] purchase_option
-    #   Specifies how EC2 instances are purchased on your behalf. Amazon Web
-    #   Services PCS supports On-Demand and Spot instances. For more
-    #   information, see [Instance purchasing options][1] in the *Amazon
-    #   Elastic Compute Cloud User Guide*. If you don't provide this
-    #   option, it defaults to On-Demand.
+    #   Specifies how EC2 instances are purchased on your behalf. PCS
+    #   supports On-Demand Instances, Spot Instances, Interruptible Capacity
+    #   Reservations, On-Demand Capacity Reservations, and Amazon EC2
+    #   Capacity Blocks for ML. For more information, see [Amazon EC2
+    #   billing and purchasing options][1] in the *Amazon Elastic Compute
+    #   Cloud User Guide*. For more information about PCS support for
+    #   Capacity Blocks, see [Using Amazon EC2 Capacity Blocks for ML with
+    #   PCS][2] in the *PCS User Guide*. For more information about PCS
+    #   support for interruptible capacity reservations, see [Using I-ODCRs
+    #   with PCS][3] in the *PCS User Guide*. Choose On-Demand if you plan
+    #   to use an On-Demand Capacity Reservation (ODCR). For more
+    #   information, see [Using ODCRs with PCS][4]. If you don't provide
+    #   this option, it defaults to On-Demand.
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-purchasing-options.html
+    #   [2]: https://docs.aws.amazon.com/pcs/latest/userguide/capacity-blocks.html
+    #   [3]: https://docs.aws.amazon.com/pcs/latest/userguide/capacity-reservations-iodcr.html
+    #   [4]: https://docs.aws.amazon.com/pcs/latest/userguide/capacity-reservations-odcr.html
     #   @return [String]
     #
     # @!attribute [rw] spot_options
@@ -1769,20 +2558,26 @@ module Aws::PCS
     #   The Amazon Resource Name (ARN) of the IAM instance profile used to
     #   pass an IAM role when launching EC2 instances. The role contained in
     #   your instance profile must have the
-    #   `pcs:RegisterComputeNodeGroupInstance` permission. The resource
-    #   identifier of the ARN must start with `AWSPCS` or it must have
-    #   `/aws-pcs/` in its path.
+    #   `pcs:RegisterComputeNodeGroupInstance` permission and the role name
+    #   must start with `AWSPCS` or must have the path `/aws-pcs/`. For more
+    #   information, see [IAM instance profiles for PCS][1] in the *PCS User
+    #   Guide*.
     #
-    #   **Examples**
     #
-    #   * `arn:aws:iam::111122223333:instance-profile/AWSPCS-example-role-1`
     #
-    #   * `arn:aws:iam::111122223333:instance-profile/aws-pcs/example-role-2`
+    #   [1]: https://docs.aws.amazon.com/pcs/latest/userguide/security-instance-profiles.html
     #   @return [String]
     #
     # @!attribute [rw] slurm_configuration
     #   Additional options related to the Slurm scheduler.
     #   @return [Types::UpdateComputeNodeGroupSlurmConfigurationRequest]
+    #
+    # @!attribute [rw] node_lifecycle_actions
+    #   The lifecycle actions to run on compute nodes in the compute node
+    #   group. Use lifecycle actions to run custom scripts at defined stages
+    #   of a compute node's lifecycle, such as when a compute node finishes
+    #   bootstrapping or becomes ready to accept jobs.
+    #   @return [Types::UpdateNodeLifecycleActionsRequest]
     #
     # @!attribute [rw] client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
@@ -1810,6 +2605,7 @@ module Aws::PCS
       :scaling_configuration,
       :iam_instance_profile_arn,
       :slurm_configuration,
+      :node_lifecycle_actions,
       :client_token)
       SENSITIVE = []
       include Aws::Structure
@@ -1829,6 +2625,14 @@ module Aws::PCS
 
     # Additional options related to the Slurm scheduler.
     #
+    # @!attribute [rw] scale_down_idle_time_in_seconds
+    #   The time (in seconds) before an idle node is scaled down. If not
+    #   specified, the cluster-level setting applies. This overrides the
+    #   cluster-level `scaleDownIdleTimeInSeconds` setting. A value of `-1`
+    #   removes the override and applies the cluster-level setting to this
+    #   compute node group. Requires Slurm version 25.11 or later.
+    #   @return [Integer]
+    #
     # @!attribute [rw] slurm_custom_settings
     #   Additional Slurm-specific configuration that directly maps to Slurm
     #   settings.
@@ -1837,7 +2641,35 @@ module Aws::PCS
     # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/UpdateComputeNodeGroupSlurmConfigurationRequest AWS API Documentation
     #
     class UpdateComputeNodeGroupSlurmConfigurationRequest < Struct.new(
+      :scale_down_idle_time_in_seconds,
       :slurm_custom_settings)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The lifecycle actions to configure on a compute node group when you
+    # update it. Lifecycle actions define scripts that PCS runs on compute
+    # nodes at specific stages of their lifecycle.
+    #
+    # @!attribute [rw] stages
+    #   The lifecycle stages where you configure scripts to run.
+    #   @return [Types::NodeLifecycleStages]
+    #
+    # @!attribute [rw] script_caching_policy
+    #   The caching policy for node lifecycle scripts. The default value is
+    #   `CACHE_ONCE`. Valid values:
+    #
+    #   * `CACHE_ONCE` – Downloads each script once and reuses it on
+    #     subsequent boots.
+    #
+    #   * `REFRESH_ON_REBOOT` – Downloads each script on every boot.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/UpdateNodeLifecycleActionsRequest AWS API Documentation
+    #
+    class UpdateNodeLifecycleActionsRequest < Struct.new(
+      :stages,
+      :script_caching_policy)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1854,6 +2686,10 @@ module Aws::PCS
     #   The list of compute node group configurations to associate with the
     #   queue. Queues assign jobs to associated compute node groups.
     #   @return [Array<Types::ComputeNodeGroupConfiguration>]
+    #
+    # @!attribute [rw] slurm_configuration
+    #   Additional options related to the Slurm scheduler.
+    #   @return [Types::UpdateQueueSlurmConfigurationRequest]
     #
     # @!attribute [rw] client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
@@ -1874,6 +2710,7 @@ module Aws::PCS
       :cluster_identifier,
       :queue_identifier,
       :compute_node_group_configurations,
+      :slurm_configuration,
       :client_token)
       SENSITIVE = []
       include Aws::Structure
@@ -1887,6 +2724,61 @@ module Aws::PCS
     #
     class UpdateQueueResponse < Struct.new(
       :queue)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Additional options related to the Slurm scheduler.
+    #
+    # @!attribute [rw] slurm_custom_settings
+    #   Additional Slurm-specific configuration that directly maps to Slurm
+    #   settings.
+    #   @return [Array<Types::SlurmCustomSetting>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/UpdateQueueSlurmConfigurationRequest AWS API Documentation
+    #
+    class UpdateQueueSlurmConfigurationRequest < Struct.new(
+      :slurm_custom_settings)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The scheduler configuration for updating a cluster. Use this to
+    # specify the scheduler version to update to.
+    #
+    # @!attribute [rw] version
+    #   The scheduler version to update the cluster to. You can only update
+    #   to a newer version. For more information about supported versions
+    #   and update paths, see [Updating the scheduler version on a
+    #   cluster][1] in the *PCS User Guide*.
+    #
+    #   Valid Values: `24.05 | 24.11 | 25.05 | 25.11`
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/pcs/latest/userguide/working-with_clusters_version_update.html
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/UpdateSchedulerRequest AWS API Documentation
+    #
+    class UpdateSchedulerRequest < Struct.new(
+      :version)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The Slurm REST API configuration includes settings for enabling and
+    # configuring the Slurm REST API.
+    #
+    # @!attribute [rw] mode
+    #   The default value for `mode` is `NONE`. A value of `STANDARD` means
+    #   the Slurm REST API is enabled.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/UpdateSlurmRestRequest AWS API Documentation
+    #
+    class UpdateSlurmRestRequest < Struct.new(
+      :mode)
       SENSITIVE = []
       include Aws::Structure
     end

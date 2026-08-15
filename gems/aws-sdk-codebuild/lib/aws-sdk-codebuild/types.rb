@@ -17,6 +17,13 @@ module Aws::CodeBuild
     #
     class AccountLimitExceededException < Aws::EmptyStructure; end
 
+    # The CodeBuild access has been suspended for the calling Amazon Web
+    # Services account.
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/AccountSuspendedException AWS API Documentation
+    #
+    class AccountSuspendedException < Aws::EmptyStructure; end
+
     # Information about the auto-retry configuration for the build.
     #
     # @!attribute [rw] auto_retry_limit
@@ -142,6 +149,41 @@ module Aws::CodeBuild
       include Aws::Structure
     end
 
+    # @!attribute [rw] sandbox_id
+    #   A `sandboxId` or `sandboxArn`.
+    #   @return [String]
+    #
+    # @!attribute [rw] command_execution_ids
+    #   A comma separated list of `commandExecutionIds`.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/BatchGetCommandExecutionsInput AWS API Documentation
+    #
+    class BatchGetCommandExecutionsInput < Struct.new(
+      :sandbox_id,
+      :command_execution_ids)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] command_executions
+    #   Information about the requested command executions.
+    #   @return [Array<Types::CommandExecution>]
+    #
+    # @!attribute [rw] command_executions_not_found
+    #   The IDs of command executions for which information could not be
+    #   found.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/BatchGetCommandExecutionsOutput AWS API Documentation
+    #
+    class BatchGetCommandExecutionsOutput < Struct.new(
+      :command_executions,
+      :command_executions_not_found)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] names
     #   The names or ARNs of the compute fleets.
     #   @return [Array<String>]
@@ -261,6 +303,35 @@ module Aws::CodeBuild
     class BatchGetReportsOutput < Struct.new(
       :reports,
       :reports_not_found)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ids
+    #   A comma separated list of `sandboxIds` or `sandboxArns`.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/BatchGetSandboxesInput AWS API Documentation
+    #
+    class BatchGetSandboxesInput < Struct.new(
+      :ids)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] sandboxes
+    #   Information about the requested sandboxes.
+    #   @return [Array<Types::Sandbox>]
+    #
+    # @!attribute [rw] sandboxes_not_found
+    #   The IDs of sandboxes for which information could not be found.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/BatchGetSandboxesOutput AWS API Documentation
+    #
+    class BatchGetSandboxesOutput < Struct.new(
+      :sandboxes,
+      :sandboxes_not_found)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1455,9 +1526,86 @@ module Aws::CodeBuild
       include Aws::Structure
     end
 
+    # Contains command execution information.
+    #
+    # @!attribute [rw] id
+    #   The ID of the command execution.
+    #   @return [String]
+    #
+    # @!attribute [rw] sandbox_id
+    #   A `sandboxId`.
+    #   @return [String]
+    #
+    # @!attribute [rw] submit_time
+    #   When the command execution process was initially submitted,
+    #   expressed in Unix time format.
+    #   @return [Time]
+    #
+    # @!attribute [rw] start_time
+    #   When the command execution process started, expressed in Unix time
+    #   format.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   When the command execution process ended, expressed in Unix time
+    #   format.
+    #   @return [Time]
+    #
+    # @!attribute [rw] status
+    #   The status of the command execution.
+    #   @return [String]
+    #
+    # @!attribute [rw] command
+    #   The command that needs to be executed.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The command type.
+    #   @return [String]
+    #
+    # @!attribute [rw] exit_code
+    #   The exit code to return upon completion.
+    #   @return [String]
+    #
+    # @!attribute [rw] standard_output_content
+    #   The text written by the command to stdout.
+    #   @return [String]
+    #
+    # @!attribute [rw] standard_err_content
+    #   The text written by the command to stderr.
+    #   @return [String]
+    #
+    # @!attribute [rw] logs
+    #   Information about build logs in CloudWatch Logs.
+    #   @return [Types::LogsLocation]
+    #
+    # @!attribute [rw] sandbox_arn
+    #   A `sandboxArn`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/CommandExecution AWS API Documentation
+    #
+    class CommandExecution < Struct.new(
+      :id,
+      :sandbox_id,
+      :submit_time,
+      :start_time,
+      :end_time,
+      :status,
+      :command,
+      :type,
+      :exit_code,
+      :standard_output_content,
+      :standard_err_content,
+      :logs,
+      :sandbox_arn)
+      SENSITIVE = [:command, :standard_output_content, :standard_err_content]
+      include Aws::Structure
+    end
+
     # Contains compute attributes. These attributes only need be specified
     # when your project's or fleet's `computeType` is set to
-    # `ATTRIBUTE_BASED_COMPUTE`.
+    # `ATTRIBUTE_BASED_COMPUTE` or `CUSTOM_INSTANCE_TYPE`.
     #
     # @!attribute [rw] v_cpu
     #   The number of vCPUs of the instance type included in your fleet.
@@ -1476,13 +1624,18 @@ module Aws::CodeBuild
     #   The machine type of the instance type included in your fleet.
     #   @return [String]
     #
+    # @!attribute [rw] instance_type
+    #   The EC2 instance type to be launched in your fleet.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/ComputeConfiguration AWS API Documentation
     #
     class ComputeConfiguration < Struct.new(
       :v_cpu,
       :memory,
       :disk,
-      :machine_type)
+      :machine_type,
+      :instance_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1576,6 +1729,10 @@ module Aws::CodeBuild
     #
     #      </note>
     #
+    #   * `CUSTOM_INSTANCE_TYPE`: Specify the instance type for your compute
+    #     fleet. For a list of supported instance types, see [Supported
+    #     instance families ][2] in the *CodeBuild User Guide*.
+    #
     #   * `BUILD_GENERAL1_SMALL`: Use up to 4 GiB memory and 2 vCPUs for
     #     builds.
     #
@@ -1634,18 +1791,20 @@ module Aws::CodeBuild
     #   * For environment type `ARM_CONTAINER`, you can use up to 16 GiB
     #     memory and 8 vCPUs on ARM-based processors for builds.
     #
-    #   For more information, see [On-demand environment types][2] in the
+    #   For more information, see [On-demand environment types][3] in the
     #   *CodeBuild User Guide.*
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-compute-types.html#environment-reserved-capacity.types
-    #   [2]: https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-compute-types.html#environment.types
+    #   [2]: https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-compute-types.html#environment-reserved-capacity.instance-types
+    #   [3]: https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-compute-types.html#environment.types
     #   @return [String]
     #
     # @!attribute [rw] compute_configuration
     #   The compute configuration of the compute fleet. This is only
-    #   required if `computeType` is set to `ATTRIBUTE_BASED_COMPUTE`.
+    #   required if `computeType` is set to `ATTRIBUTE_BASED_COMPUTE` or
+    #   `CUSTOM_INSTANCE_TYPE`.
     #   @return [Types::ComputeConfiguration]
     #
     # @!attribute [rw] scaling_configuration
@@ -2045,6 +2204,13 @@ module Aws::CodeBuild
     #    </note>
     #   @return [Types::ScopeConfiguration]
     #
+    # @!attribute [rw] pull_request_build_policy
+    #   A PullRequestBuildPolicy object that defines comment-based approval
+    #   requirements for triggering builds on pull requests. This policy
+    #   helps control when automated builds are executed based on
+    #   contributor permissions and approval workflows.
+    #   @return [Types::PullRequestBuildPolicy]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/CreateWebhookInput AWS API Documentation
     #
     class CreateWebhookInput < Struct.new(
@@ -2053,7 +2219,8 @@ module Aws::CodeBuild
       :filter_groups,
       :build_type,
       :manual_creation,
-      :scope_configuration)
+      :scope_configuration,
+      :pull_request_build_policy)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2401,6 +2568,76 @@ module Aws::CodeBuild
       include Aws::Structure
     end
 
+    # Contains docker server information.
+    #
+    # @!attribute [rw] compute_type
+    #   Information about the compute resources the docker server uses.
+    #   Available values include:
+    #
+    #   * `BUILD_GENERAL1_SMALL`: Use up to 4 GiB memory and 2 vCPUs for
+    #     your docker server.
+    #
+    #   * `BUILD_GENERAL1_MEDIUM`: Use up to 8 GiB memory and 4 vCPUs for
+    #     your docker server.
+    #
+    #   * `BUILD_GENERAL1_LARGE`: Use up to 16 GiB memory and 8 vCPUs for
+    #     your docker server.
+    #
+    #   * `BUILD_GENERAL1_XLARGE`: Use up to 64 GiB memory and 32 vCPUs for
+    #     your docker server.
+    #
+    #   * `BUILD_GENERAL1_2XLARGE`: Use up to 128 GiB memory and 64 vCPUs
+    #     for your docker server.
+    #   @return [String]
+    #
+    # @!attribute [rw] security_group_ids
+    #   A list of one or more security groups IDs.
+    #
+    #   <note markdown="1"> Security groups configured for Docker servers should allow ingress
+    #   network traffic from the VPC configured in the project. They should
+    #   allow ingress on port 9876.
+    #
+    #    </note>
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] status
+    #   A DockerServerStatus object to use for this docker server.
+    #
+    #   <note markdown="1"> Note that `status` is only an output and cannot be passed in as an
+    #   input.
+    #
+    #    </note>
+    #   @return [Types::DockerServerStatus]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/DockerServer AWS API Documentation
+    #
+    class DockerServer < Struct.new(
+      :compute_type,
+      :security_group_ids,
+      :status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about the status of the docker server.
+    #
+    # @!attribute [rw] status
+    #   The status of the docker server.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   A message associated with the status of a docker server.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/DockerServerStatus AWS API Documentation
+    #
+    class DockerServerStatus < Struct.new(
+      :status,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Information about a Docker image that is managed by CodeBuild.
     #
     # @!attribute [rw] name
@@ -2669,6 +2906,10 @@ module Aws::CodeBuild
     #
     #      </note>
     #
+    #   * `CUSTOM_INSTANCE_TYPE`: Specify the instance type for your compute
+    #     fleet. For a list of supported instance types, see [Supported
+    #     instance families ][2] in the *CodeBuild User Guide*.
+    #
     #   * `BUILD_GENERAL1_SMALL`: Use up to 4 GiB memory and 2 vCPUs for
     #     builds.
     #
@@ -2727,18 +2968,20 @@ module Aws::CodeBuild
     #   * For environment type `ARM_CONTAINER`, you can use up to 16 GiB
     #     memory and 8 vCPUs on ARM-based processors for builds.
     #
-    #   For more information, see [On-demand environment types][2] in the
+    #   For more information, see [On-demand environment types][3] in the
     #   *CodeBuild User Guide.*
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-compute-types.html#environment-reserved-capacity.types
-    #   [2]: https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-compute-types.html#environment.types
+    #   [2]: https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-compute-types.html#environment-reserved-capacity.instance-types
+    #   [3]: https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-compute-types.html#environment.types
     #   @return [String]
     #
     # @!attribute [rw] compute_configuration
     #   The compute configuration of the compute fleet. This is only
-    #   required if `computeType` is set to `ATTRIBUTE_BASED_COMPUTE`.
+    #   required if `computeType` is set to `ATTRIBUTE_BASED_COMPUTE` or
+    #   `CUSTOM_INSTANCE_TYPE`.
     #   @return [Types::ComputeConfiguration]
     #
     # @!attribute [rw] scaling_configuration
@@ -3325,6 +3568,51 @@ module Aws::CodeBuild
       include Aws::Structure
     end
 
+    # @!attribute [rw] sandbox_id
+    #   A `sandboxId` or `sandboxArn`.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of sandbox records to be retrieved.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] sort_order
+    #   The order in which sandbox records should be retrieved.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   The next token, if any, to get paginated results. You will get this
+    #   value from previous execution of list sandboxes.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/ListCommandExecutionsForSandboxInput AWS API Documentation
+    #
+    class ListCommandExecutionsForSandboxInput < Struct.new(
+      :sandbox_id,
+      :max_results,
+      :sort_order,
+      :next_token)
+      SENSITIVE = [:next_token]
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] command_executions
+    #   Information about the requested command executions.
+    #   @return [Array<Types::CommandExecution>]
+    #
+    # @!attribute [rw] next_token
+    #   Information about the next token to get paginated results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/ListCommandExecutionsForSandboxOutput AWS API Documentation
+    #
+    class ListCommandExecutionsForSandboxOutput < Struct.new(
+      :command_executions,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @api private
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/ListCuratedEnvironmentImagesInput AWS API Documentation
@@ -3679,6 +3967,91 @@ module Aws::CodeBuild
     class ListReportsOutput < Struct.new(
       :next_token,
       :reports)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] project_name
+    #   The CodeBuild project name.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of sandbox records to be retrieved.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] sort_order
+    #   The order in which sandbox records should be retrieved.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   The next token, if any, to get paginated results. You will get this
+    #   value from previous execution of list sandboxes.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/ListSandboxesForProjectInput AWS API Documentation
+    #
+    class ListSandboxesForProjectInput < Struct.new(
+      :project_name,
+      :max_results,
+      :sort_order,
+      :next_token)
+      SENSITIVE = [:next_token]
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ids
+    #   Information about the requested sandbox IDs.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] next_token
+    #   Information about the next token to get paginated results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/ListSandboxesForProjectOutput AWS API Documentation
+    #
+    class ListSandboxesForProjectOutput < Struct.new(
+      :ids,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] max_results
+    #   The maximum number of sandbox records to be retrieved.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] sort_order
+    #   The order in which sandbox records should be retrieved.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   The next token, if any, to get paginated results. You will get this
+    #   value from previous execution of list sandboxes.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/ListSandboxesInput AWS API Documentation
+    #
+    class ListSandboxesInput < Struct.new(
+      :max_results,
+      :sort_order,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ids
+    #   Information about the requested sandbox IDs.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] next_token
+    #   Information about the next token to get paginated results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/ListSandboxesOutput AWS API Documentation
+    #
+    class ListSandboxesOutput < Struct.new(
+      :ids,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4562,12 +4935,23 @@ module Aws::CodeBuild
     #       paths in the buildspec file.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] cache_namespace
+    #   Defines the scope of the cache. You can use this namespace to share
+    #   a cache across multiple projects. For more information, see [Cache
+    #   sharing between projects][1] in the *CodeBuild User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/codebuild/latest/userguide/caching-s3.html#caching-s3-sharing
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/ProjectCache AWS API Documentation
     #
     class ProjectCache < Struct.new(
       :type,
       :location,
-      :modes)
+      :modes,
+      :cache_namespace)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4765,6 +5149,27 @@ module Aws::CodeBuild
     #   you must use CODEBUILD credentials.
     #   @return [String]
     #
+    # @!attribute [rw] docker_server
+    #   A DockerServer object to use for this build project.
+    #   @return [Types::DockerServer]
+    #
+    # @!attribute [rw] host_kernel
+    #   The host operating system kernel used for on-demand builds in the
+    #   build project. The host kernel does not affect the build environment
+    #   operating system, which is determined by the image you specify.
+    #   Valid values are:
+    #
+    #   * `LINUX_KERNEL_4`: Runs on an Amazon Linux 2 host (kernel 4.x).
+    #
+    #   * `LINUX_KERNEL_6`: Runs on an Amazon Linux 2023 host (kernel 6.x).
+    #
+    #   * `LINUX_KERNEL_LATEST`: Runs on the latest supported host kernel.
+    #
+    #   This setting applies to the `LINUX_CONTAINER`, `ARM_CONTAINER`,
+    #   `LINUX_EC2`, and `ARM_EC2` environment types. It is not applicable
+    #   to Windows, Lambda, or Mac environment types.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/ProjectEnvironment AWS API Documentation
     #
     class ProjectEnvironment < Struct.new(
@@ -4777,7 +5182,9 @@ module Aws::CodeBuild
       :privileged_mode,
       :certificate,
       :registry_credential,
-      :image_pull_credentials_type)
+      :image_pull_credentials_type,
+      :docker_server,
+      :host_kernel)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5124,6 +5531,46 @@ module Aws::CodeBuild
     class ProxyConfiguration < Struct.new(
       :default_behavior,
       :ordered_proxy_rules)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A PullRequestBuildPolicy object that defines comment-based approval
+    # requirements for triggering builds on pull requests. This policy helps
+    # control when automated builds are executed based on contributor
+    # permissions and approval workflows.
+    #
+    # @!attribute [rw] requires_comment_approval
+    #   Specifies when comment-based approval is required before triggering
+    #   a build on pull requests. This setting determines whether builds run
+    #   automatically or require explicit approval through comments.
+    #
+    #   * *DISABLED*: Builds trigger automatically without requiring comment
+    #     approval
+    #
+    #   * *ALL\_PULL\_REQUESTS*: All pull requests require comment approval
+    #     before builds execute (unless contributor is one of the approver
+    #     roles)
+    #
+    #   * *FORK\_PULL\_REQUESTS*: Only pull requests from forked
+    #     repositories require comment approval (unless contributor is one
+    #     of the approver roles)
+    #   @return [String]
+    #
+    # @!attribute [rw] approver_roles
+    #   List of repository roles that have approval privileges for pull
+    #   request builds when comment approval is required. Only users with
+    #   these roles can provide valid comment approvals. If a pull request
+    #   contributor is one of these roles, their pull request builds will
+    #   trigger automatically. This field is only applicable when
+    #   `requiresCommentApproval` is not *DISABLED*.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/PullRequestBuildPolicy AWS API Documentation
+    #
+    class PullRequestBuildPolicy < Struct.new(
+      :requires_comment_approval,
+      :approver_roles)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5694,6 +6141,267 @@ module Aws::CodeBuild
       include Aws::Structure
     end
 
+    # Contains information about the Session Manager session.
+    #
+    # @!attribute [rw] session_id
+    #   The ID of the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] token_value
+    #   An encrypted token value containing session and caller information.
+    #   @return [String]
+    #
+    # @!attribute [rw] stream_url
+    #   A URL back to SSM Agent on the managed node that the Session Manager
+    #   client uses to send commands and receive output from the node.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/SSMSession AWS API Documentation
+    #
+    class SSMSession < Struct.new(
+      :session_id,
+      :token_value,
+      :stream_url)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains sandbox information.
+    #
+    # @!attribute [rw] id
+    #   The ID of the sandbox.
+    #   @return [String]
+    #
+    # @!attribute [rw] arn
+    #   The ARN of the sandbox.
+    #   @return [String]
+    #
+    # @!attribute [rw] project_name
+    #   The CodeBuild project name.
+    #   @return [String]
+    #
+    # @!attribute [rw] request_time
+    #   When the sandbox process was initially requested, expressed in Unix
+    #   time format.
+    #   @return [Time]
+    #
+    # @!attribute [rw] start_time
+    #   When the sandbox process started, expressed in Unix time format.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   When the sandbox process ended, expressed in Unix time format.
+    #   @return [Time]
+    #
+    # @!attribute [rw] status
+    #   The status of the sandbox.
+    #   @return [String]
+    #
+    # @!attribute [rw] source
+    #   Information about the build input source code for the build project.
+    #   @return [Types::ProjectSource]
+    #
+    # @!attribute [rw] source_version
+    #   Any version identifier for the version of the sandbox to be built.
+    #   @return [String]
+    #
+    # @!attribute [rw] secondary_sources
+    #   An array of `ProjectSource` objects.
+    #   @return [Array<Types::ProjectSource>]
+    #
+    # @!attribute [rw] secondary_source_versions
+    #   An array of `ProjectSourceVersion` objects.
+    #   @return [Array<Types::ProjectSourceVersion>]
+    #
+    # @!attribute [rw] environment
+    #   Information about the build environment of the build project.
+    #   @return [Types::ProjectEnvironment]
+    #
+    # @!attribute [rw] file_system_locations
+    #   An array of `ProjectFileSystemLocation` objects for a CodeBuild
+    #   build project. A `ProjectFileSystemLocation` object specifies the
+    #   `identifier`, `location`, `mountOptions`, `mountPoint`, and `type`
+    #   of a file system created using Amazon Elastic File System.
+    #   @return [Array<Types::ProjectFileSystemLocation>]
+    #
+    # @!attribute [rw] timeout_in_minutes
+    #   How long, in minutes, from 5 to 2160 (36 hours), for CodeBuild to
+    #   wait before timing out this sandbox if it does not get marked as
+    #   completed.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] queued_timeout_in_minutes
+    #   The number of minutes a sandbox is allowed to be queued before it
+    #   times out.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] vpc_config
+    #   Information about the VPC configuration that CodeBuild accesses.
+    #   @return [Types::VpcConfig]
+    #
+    # @!attribute [rw] log_config
+    #   Information about logs for a build project. These can be logs in
+    #   CloudWatch Logs, built in a specified S3 bucket, or both.
+    #   @return [Types::LogsConfig]
+    #
+    # @!attribute [rw] encryption_key
+    #   The Key Management Service customer master key (CMK) to be used for
+    #   encrypting the sandbox output artifacts.
+    #   @return [String]
+    #
+    # @!attribute [rw] service_role
+    #   The name of a service role used for this sandbox.
+    #   @return [String]
+    #
+    # @!attribute [rw] current_session
+    #   The current session for the sandbox.
+    #   @return [Types::SandboxSession]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/Sandbox AWS API Documentation
+    #
+    class Sandbox < Struct.new(
+      :id,
+      :arn,
+      :project_name,
+      :request_time,
+      :start_time,
+      :end_time,
+      :status,
+      :source,
+      :source_version,
+      :secondary_sources,
+      :secondary_source_versions,
+      :environment,
+      :file_system_locations,
+      :timeout_in_minutes,
+      :queued_timeout_in_minutes,
+      :vpc_config,
+      :log_config,
+      :encryption_key,
+      :service_role,
+      :current_session)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about the sandbox session.
+    #
+    # @!attribute [rw] id
+    #   The ID of the sandbox session.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the sandbox session.
+    #   @return [String]
+    #
+    # @!attribute [rw] start_time
+    #   When the sandbox session started, expressed in Unix time format.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   When the sandbox session ended, expressed in Unix time format.
+    #   @return [Time]
+    #
+    # @!attribute [rw] current_phase
+    #   The current phase for the sandbox.
+    #   @return [String]
+    #
+    # @!attribute [rw] phases
+    #   An array of `SandboxSessionPhase` objects.
+    #   @return [Array<Types::SandboxSessionPhase>]
+    #
+    # @!attribute [rw] resolved_source_version
+    #   An identifier for the version of this sandbox's source code.
+    #   @return [String]
+    #
+    # @!attribute [rw] logs
+    #   Information about build logs in CloudWatch Logs.
+    #   @return [Types::LogsLocation]
+    #
+    # @!attribute [rw] network_interface
+    #   Describes a network interface.
+    #   @return [Types::NetworkInterface]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/SandboxSession AWS API Documentation
+    #
+    class SandboxSession < Struct.new(
+      :id,
+      :status,
+      :start_time,
+      :end_time,
+      :current_phase,
+      :phases,
+      :resolved_source_version,
+      :logs,
+      :network_interface)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about the sandbox phase.
+    #
+    # @!attribute [rw] phase_type
+    #   The name of the sandbox phase.
+    #   @return [String]
+    #
+    # @!attribute [rw] phase_status
+    #   The current status of the sandbox phase. Valid values include:
+    #
+    #   FAILED
+    #
+    #   : The sandbox phase failed.
+    #
+    #   FAULT
+    #
+    #   : The sandbox phase faulted.
+    #
+    #   IN\_PROGRESS
+    #
+    #   : The sandbox phase is still in progress.
+    #
+    #   STOPPED
+    #
+    #   : The sandbox phase stopped.
+    #
+    #   SUCCEEDED
+    #
+    #   : The sandbox phase succeeded.
+    #
+    #   TIMED\_OUT
+    #
+    #   : The sandbox phase timed out.
+    #   @return [String]
+    #
+    # @!attribute [rw] start_time
+    #   When the sandbox phase started, expressed in Unix time format.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   When the sandbox phase ended, expressed in Unix time format.
+    #   @return [Time]
+    #
+    # @!attribute [rw] duration_in_seconds
+    #   How long, in seconds, between the starting and ending times of the
+    #   sandbox's phase.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] contexts
+    #   An array of `PhaseContext` objects.
+    #   @return [Array<Types::PhaseContext>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/SandboxSessionPhase AWS API Documentation
+    #
+    class SandboxSessionPhase < Struct.new(
+      :phase_type,
+      :phase_status,
+      :start_time,
+      :end_time,
+      :duration_in_seconds,
+      :contexts)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The scaling configuration input of a compute fleet.
     #
     # @!attribute [rw] scaling_type
@@ -5762,7 +6470,8 @@ module Aws::CodeBuild
     #   @return [String]
     #
     # @!attribute [rw] scope
-    #   The type of scope for a GitHub or GitLab webhook.
+    #   The type of scope for a GitHub or GitLab webhook. The scope default
+    #   is GITHUB\_ORGANIZATION.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/ScopeConfiguration AWS API Documentation
@@ -6251,13 +6960,16 @@ module Aws::CodeBuild
     #   with the ability to call this API and set this parameter can
     #   override the default settings. Moreover, we encourage that you use a
     #   trustworthy buildspec location like a file in your source repository
-    #   or a Amazon S3 bucket.
+    #   or a Amazon S3 bucket. Alternatively, you can restrict overrides to
+    #   the buildspec by using a condition key: [Prevent unauthorized
+    #   modifications to project buildspec][2].
     #
     #    </note>
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html#build-spec-ref-name-storage
+    #   [2]: https://docs.aws.amazon.com/codebuild/latest/userguide/action-context-keys.html#action-context-keys-example-overridebuildspec.html
     #   @return [String]
     #
     # @!attribute [rw] insecure_ssl_override
@@ -6414,6 +7126,11 @@ module Aws::CodeBuild
     #   up to 2 additional times.
     #   @return [Integer]
     #
+    # @!attribute [rw] host_kernel_override
+    #   The host operating system kernel for this build that overrides the
+    #   one specified in the build project.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/StartBuildInput AWS API Documentation
     #
     class StartBuildInput < Struct.new(
@@ -6449,7 +7166,8 @@ module Aws::CodeBuild
       :image_pull_credentials_type_override,
       :debug_session_enabled,
       :fleet_override,
-      :auto_retry_limit_override)
+      :auto_retry_limit_override,
+      :host_kernel_override)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6462,6 +7180,93 @@ module Aws::CodeBuild
     #
     class StartBuildOutput < Struct.new(
       :build)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] sandbox_id
+    #   A `sandboxId` or `sandboxArn`.
+    #   @return [String]
+    #
+    # @!attribute [rw] command
+    #   The command that needs to be executed.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The command type.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/StartCommandExecutionInput AWS API Documentation
+    #
+    class StartCommandExecutionInput < Struct.new(
+      :sandbox_id,
+      :command,
+      :type)
+      SENSITIVE = [:command]
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] command_execution
+    #   Information about the requested command executions.
+    #   @return [Types::CommandExecution]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/StartCommandExecutionOutput AWS API Documentation
+    #
+    class StartCommandExecutionOutput < Struct.new(
+      :command_execution)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] sandbox_id
+    #   A `sandboxId` or `sandboxArn`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/StartSandboxConnectionInput AWS API Documentation
+    #
+    class StartSandboxConnectionInput < Struct.new(
+      :sandbox_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ssm_session
+    #   Information about the Session Manager session.
+    #   @return [Types::SSMSession]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/StartSandboxConnectionOutput AWS API Documentation
+    #
+    class StartSandboxConnectionOutput < Struct.new(
+      :ssm_session)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] project_name
+    #   The CodeBuild project name.
+    #   @return [String]
+    #
+    # @!attribute [rw] idempotency_token
+    #   A unique client token.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/StartSandboxInput AWS API Documentation
+    #
+    class StartSandboxInput < Struct.new(
+      :project_name,
+      :idempotency_token)
+      SENSITIVE = [:idempotency_token]
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] sandbox
+    #   Information about the requested sandbox.
+    #   @return [Types::Sandbox]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/StartSandboxOutput AWS API Documentation
+    #
+    class StartSandboxOutput < Struct.new(
+      :sandbox)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6510,6 +7315,30 @@ module Aws::CodeBuild
     #
     class StopBuildOutput < Struct.new(
       :build)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] id
+    #   Information about the requested sandbox ID.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/StopSandboxInput AWS API Documentation
+    #
+    class StopSandboxInput < Struct.new(
+      :id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] sandbox
+    #   Information about the requested sandbox.
+    #   @return [Types::Sandbox]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/StopSandboxOutput AWS API Documentation
+    #
+    class StopSandboxOutput < Struct.new(
+      :sandbox)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6766,6 +7595,10 @@ module Aws::CodeBuild
     #
     #      </note>
     #
+    #   * `CUSTOM_INSTANCE_TYPE`: Specify the instance type for your compute
+    #     fleet. For a list of supported instance types, see [Supported
+    #     instance families ][2] in the *CodeBuild User Guide*.
+    #
     #   * `BUILD_GENERAL1_SMALL`: Use up to 4 GiB memory and 2 vCPUs for
     #     builds.
     #
@@ -6824,18 +7657,20 @@ module Aws::CodeBuild
     #   * For environment type `ARM_CONTAINER`, you can use up to 16 GiB
     #     memory and 8 vCPUs on ARM-based processors for builds.
     #
-    #   For more information, see [On-demand environment types][2] in the
+    #   For more information, see [On-demand environment types][3] in the
     #   *CodeBuild User Guide.*
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-compute-types.html#environment-reserved-capacity.types
-    #   [2]: https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-compute-types.html#environment.types
+    #   [2]: https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-compute-types.html#environment-reserved-capacity.instance-types
+    #   [3]: https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-compute-types.html#environment.types
     #   @return [String]
     #
     # @!attribute [rw] compute_configuration
     #   The compute configuration of the compute fleet. This is only
-    #   required if `computeType` is set to `ATTRIBUTE_BASED_COMPUTE`.
+    #   required if `computeType` is set to `ATTRIBUTE_BASED_COMPUTE` or
+    #   `CUSTOM_INSTANCE_TYPE`.
     #   @return [Types::ComputeConfiguration]
     #
     # @!attribute [rw] scaling_configuration
@@ -7281,6 +8116,13 @@ module Aws::CodeBuild
     #   [1]: https://docs.aws.amazon.com/codebuild/latest/userguide/sample-runner-buildkite.html
     #   @return [String]
     #
+    # @!attribute [rw] pull_request_build_policy
+    #   A PullRequestBuildPolicy object that defines comment-based approval
+    #   requirements for triggering builds on pull requests. This policy
+    #   helps control when automated builds are executed based on
+    #   contributor permissions and approval workflows.
+    #   @return [Types::PullRequestBuildPolicy]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/UpdateWebhookInput AWS API Documentation
     #
     class UpdateWebhookInput < Struct.new(
@@ -7288,7 +8130,8 @@ module Aws::CodeBuild
       :branch_filter,
       :rotate_secret,
       :filter_groups,
-      :build_type)
+      :build_type,
+      :pull_request_build_policy)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7428,6 +8271,13 @@ module Aws::CodeBuild
     #   A message associated with the status of a webhook.
     #   @return [String]
     #
+    # @!attribute [rw] pull_request_build_policy
+    #   A PullRequestBuildPolicy object that defines comment-based approval
+    #   requirements for triggering builds on pull requests. This policy
+    #   helps control when automated builds are executed based on
+    #   contributor permissions and approval workflows.
+    #   @return [Types::PullRequestBuildPolicy]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/Webhook AWS API Documentation
     #
     class Webhook < Struct.new(
@@ -7441,7 +8291,8 @@ module Aws::CodeBuild
       :last_modified_secret,
       :scope_configuration,
       :status,
-      :status_message)
+      :status_message,
+      :pull_request_build_policy)
       SENSITIVE = []
       include Aws::Structure
     end

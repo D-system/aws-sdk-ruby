@@ -95,8 +95,8 @@ module Aws::IoTManagedIntegrations
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::IoTManagedIntegrations
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::IoTManagedIntegrations
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::IoTManagedIntegrations
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::IoTManagedIntegrations
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::IoTManagedIntegrations
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::IoTManagedIntegrations
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::IoTManagedIntegrations
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -470,9 +474,264 @@ module Aws::IoTManagedIntegrations
 
     # @!group API Operations
 
-    # Create a product credential locker. This operation will trigger the
-    # creation of all the manufacturing resources including the Wi-Fi setup
-    # key pair and device certificate.
+    # Creates a new account association via the destination id.
+    #
+    # @option params [String] :client_token
+    #   An idempotency token. If you retry a request that completed
+    #   successfully initially using the same client token and parameters,
+    #   then the retry attempt will succeed without performing any further
+    #   actions.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @option params [required, String] :connector_destination_id
+    #   The identifier of the connector destination.
+    #
+    # @option params [String] :name
+    #   The name of the destination for the new account association.
+    #
+    # @option params [String] :description
+    #   A description of the account association request.
+    #
+    # @option params [Hash<String,String>] :tags
+    #   A set of key/value pairs that are used to manage the account
+    #   association.
+    #
+    # @option params [Types::GeneralAuthorizationName] :general_authorization
+    #   The General Authorization reference by authorization material name.
+    #
+    # @return [Types::CreateAccountAssociationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateAccountAssociationResponse#o_auth_authorization_url #o_auth_authorization_url} => String
+    #   * {Types::CreateAccountAssociationResponse#account_association_id #account_association_id} => String
+    #   * {Types::CreateAccountAssociationResponse#association_state #association_state} => String
+    #   * {Types::CreateAccountAssociationResponse#arn #arn} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_account_association({
+    #     client_token: "ClientToken",
+    #     connector_destination_id: "ConnectorDestinationId", # required
+    #     name: "AccountAssociationName",
+    #     description: "AccountAssociationDescription",
+    #     tags: {
+    #       "TagKey" => "TagValue",
+    #     },
+    #     general_authorization: {
+    #       auth_material_name: "AuthMaterialName",
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.o_auth_authorization_url #=> String
+    #   resp.account_association_id #=> String
+    #   resp.association_state #=> String, one of "ASSOCIATION_IN_PROGRESS", "ASSOCIATION_FAILED", "ASSOCIATION_SUCCEEDED", "ASSOCIATION_DELETING", "REFRESH_TOKEN_EXPIRED"
+    #   resp.arn #=> String
+    #
+    # @overload create_account_association(params = {})
+    # @param [Hash] params ({})
+    def create_account_association(params = {}, options = {})
+      req = build_request(:create_account_association, params)
+      req.send_request(options)
+    end
+
+    # Creates a C2C (cloud-to-cloud) connector.
+    #
+    # @option params [required, String] :name
+    #   The display name of the C2C connector.
+    #
+    # @option params [required, Types::EndpointConfig] :endpoint_config
+    #   The configuration details for the cloud connector endpoint, including
+    #   connection parameters and authentication requirements.
+    #
+    # @option params [String] :description
+    #   A description of the C2C connector.
+    #
+    # @option params [String] :endpoint_type
+    #   The type of endpoint used for the cloud connector, which defines how
+    #   the connector communicates with external services.
+    #
+    # @option params [String] :client_token
+    #   An idempotency token. If you retry a request that completed
+    #   successfully initially using the same client token and parameters,
+    #   then the retry attempt will succeed without performing any further
+    #   actions.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @return [Types::CreateCloudConnectorResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateCloudConnectorResponse#id #id} => String
+    #
+    #
+    # @example Example: CreateCloudConnector happy path for TP Link
+    #
+    #   resp = client.create_cloud_connector({
+    #     client_token: "1234567890", 
+    #     endpoint_config: {
+    #       lambda: {
+    #         arn: "arn:aws:lambda:us-east-1:111122223333:function:my-function:myVersion", 
+    #       }, 
+    #     }, 
+    #     endpoint_type: "LAMBDA", 
+    #     name: "Connector for TP Link Cloud", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     id: "TPLinkConnector1211", 
+    #   }
+    #
+    # @example Example: CreateCloudConnector happy path for Ring
+    #
+    #   resp = client.create_cloud_connector({
+    #     client_token: "12312321", 
+    #     endpoint_config: {
+    #       lambda: {
+    #         arn: "arn:aws:lambda:us-east-1:111122223333:function:my-function:myVersion", 
+    #       }, 
+    #     }, 
+    #     endpoint_type: "LAMBDA", 
+    #     name: "Connector for Ring Cloud", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     id: "RingConnector1212", 
+    #   }
+    #
+    # @example Example: CreateCloudConnector error path for Ring connector which already exists
+    #
+    #   resp = client.create_cloud_connector({
+    #     client_token: "1213123123", 
+    #     endpoint_config: {
+    #       lambda: {
+    #         arn: "arn:aws:lambda:us-east-1:111122223333:function:my-function:myVersion2", 
+    #       }, 
+    #     }, 
+    #     endpoint_type: "LAMBDA", 
+    #     name: "Connector for Ring Cloud", 
+    #   })
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_cloud_connector({
+    #     name: "DisplayName", # required
+    #     endpoint_config: { # required
+    #       lambda: {
+    #         arn: "LambdaArn", # required
+    #       },
+    #     },
+    #     description: "CloudConnectorDescription",
+    #     endpoint_type: "LAMBDA", # accepts LAMBDA
+    #     client_token: "ClientToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.id #=> String
+    #
+    # @overload create_cloud_connector(params = {})
+    # @param [Hash] params ({})
+    def create_cloud_connector(params = {}, options = {})
+      req = build_request(:create_cloud_connector, params)
+      req.send_request(options)
+    end
+
+    # Create a connector destination for connecting a cloud-to-cloud (C2C)
+    # connector to the customer's Amazon Web Services account.
+    #
+    # @option params [String] :name
+    #   The display name of the connector destination.
+    #
+    # @option params [String] :description
+    #   A description of the connector destination.
+    #
+    # @option params [required, String] :cloud_connector_id
+    #   The identifier of the C2C connector.
+    #
+    # @option params [String] :auth_type
+    #   The authentication type used for the connector destination, which
+    #   determines how credentials and access are managed.
+    #
+    # @option params [required, Types::AuthConfig] :auth_config
+    #   The authentication configuration details for the connector
+    #   destination, including OAuth settings and other authentication
+    #   parameters.
+    #
+    # @option params [Types::SecretsManager] :secrets_manager
+    #   The AWS Secrets Manager configuration used to securely store and
+    #   manage sensitive information for the connector destination.
+    #
+    # @option params [String] :client_token
+    #   An idempotency token. If you retry a request that completed
+    #   successfully initially using the same client token and parameters,
+    #   then the retry attempt will succeed without performing any further
+    #   actions.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @return [Types::CreateConnectorDestinationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateConnectorDestinationResponse#id #id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_connector_destination({
+    #     name: "ConnectorDestinationName",
+    #     description: "ConnectorDestinationDescription",
+    #     cloud_connector_id: "CloudConnectorId", # required
+    #     auth_type: "OAUTH", # accepts OAUTH
+    #     auth_config: { # required
+    #       o_auth: {
+    #         auth_url: "AuthUrl", # required
+    #         token_url: "TokenUrl", # required
+    #         scope: "String",
+    #         token_endpoint_authentication_scheme: "HTTP_BASIC", # required, accepts HTTP_BASIC, REQUEST_BODY_CREDENTIALS
+    #         o_auth_complete_redirect_url: "String",
+    #         proactive_refresh_token_renewal: {
+    #           enabled: false,
+    #           days_before_renewal: 1,
+    #         },
+    #       },
+    #       general_authorization: [
+    #         {
+    #           secrets_manager: { # required
+    #             arn: "SecretsManagerArn", # required
+    #             version_id: "SecretsManagerVersionId", # required
+    #           },
+    #           auth_material_name: "AuthMaterialName", # required
+    #         },
+    #       ],
+    #     },
+    #     secrets_manager: {
+    #       arn: "SecretsManagerArn", # required
+    #       version_id: "SecretsManagerVersionId", # required
+    #     },
+    #     client_token: "ClientToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.id #=> String
+    #
+    # @overload create_connector_destination(params = {})
+    # @param [Hash] params ({})
+    def create_connector_destination(params = {}, options = {})
+      req = build_request(:create_connector_destination, params)
+      req.send_request(options)
+    end
+
+    # Create a credential locker.
+    #
+    # <note markdown="1"> This operation will not trigger the creation of all the manufacturing
+    # resources.
+    #
+    #  </note>
     #
     # @option params [String] :name
     #   The name of the credential locker.
@@ -519,8 +778,10 @@ module Aws::IoTManagedIntegrations
       req.send_request(options)
     end
 
-    # Create a destination. IoT managed integrations uses the destination to
-    # determine where to deliver notifications for a device.
+    # Create a notification destination such as Kinesis Data Streams that
+    # receive events and notifications from Managed integrations. Managed
+    # integrations uses the destination to determine where to deliver
+    # notifications.
     #
     # @option params [required, String] :delivery_destination_arn
     #   The Amazon Resource Name (ARN) of the customer-managed destination.
@@ -625,7 +886,7 @@ module Aws::IoTManagedIntegrations
 
     # Creates a managed thing. A managed thing contains the device
     # identifier, protocol supported, and capabilities of the device in a
-    # protocol-specific format.
+    # data model format defined by Managed integrations.
     #
     # @option params [required, String] :role
     #   The type of device used. This will be the hub controller, cloud
@@ -640,11 +901,15 @@ module Aws::IoTManagedIntegrations
     #
     # @option params [required, String] :authentication_material
     #   The authentication material defining the device connectivity setup
-    #   requests. The authentication materials used are the device bar code.
+    #   requests. The authorization materials used are the device bar code.
     #
     # @option params [required, String] :authentication_material_type
     #   The type of authentication material used for device connectivity setup
     #   requests.
+    #
+    # @option params [Types::WiFiSimpleSetupConfiguration] :wi_fi_simple_setup_configuration
+    #   The Wi-Fi Simple Setup configuration for the managed thing, which
+    #   defines provisioning capabilities and timeout settings.
     #
     # @option params [String] :serial_number
     #   The serial number of the device.
@@ -660,6 +925,11 @@ module Aws::IoTManagedIntegrations
     #
     # @option params [Types::CapabilityReport] :capability_report
     #   A report of the capabilities for the managed thing.
+    #
+    # @option params [Array<Types::CapabilitySchemaItem>] :capability_schemas
+    #   The capability schemas that define the functionality and features
+    #   supported by the managed thing, including device capabilities and
+    #   their associated properties.
     #
     # @option params [String] :capabilities
     #   The capabilities of the device such as light bulb.
@@ -683,6 +953,14 @@ module Aws::IoTManagedIntegrations
     # @option params [Hash<String,String>] :meta_data
     #   The metadata for the managed thing.
     #
+    #   <note markdown="1"> The `managedThing` `metadata` parameter is used for associating
+    #   attributes with a `managedThing` that can be used for grouping
+    #   over-the-air (OTA) tasks. Name value pairs in `metadata` can be used
+    #   in the `OtaTargetQueryString` parameter for the `CreateOtaTask` API
+    #   operation.
+    #
+    #    </note>
+    #
     # @return [Types::CreateManagedThingResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateManagedThingResponse#id #id} => String
@@ -696,7 +974,12 @@ module Aws::IoTManagedIntegrations
     #     owner: "Owner",
     #     credential_locker_id: "CredentialLockerId",
     #     authentication_material: "AuthMaterialString", # required
-    #     authentication_material_type: "WIFI_SETUP_QR_BAR_CODE", # required, accepts WIFI_SETUP_QR_BAR_CODE, ZWAVE_QR_BAR_CODE, ZIGBEE_QR_BAR_CODE
+    #     authentication_material_type: "CUSTOM_PROTOCOL_QR_BAR_CODE", # required, accepts CUSTOM_PROTOCOL_QR_BAR_CODE, WIFI_SETUP_QR_BAR_CODE, ZWAVE_QR_BAR_CODE, ZIGBEE_QR_BAR_CODE, DISCOVERED_DEVICE, PRE_ONBOARDED_CLOUD
+    #     wi_fi_simple_setup_configuration: {
+    #       enable_as_provisioner: false,
+    #       enable_as_provisionee: false,
+    #       timeout_in_minutes: 1,
+    #     },
     #     serial_number: "SerialNumber",
     #     brand: "Brand",
     #     model: "Model",
@@ -721,6 +1004,16 @@ module Aws::IoTManagedIntegrations
     #         },
     #       ],
     #     },
+    #     capability_schemas: [
+    #       {
+    #         format: "AWS", # required, accepts AWS, ZCL, CONNECTOR
+    #         capability_id: "SchemaVersionedId", # required
+    #         extrinsic_id: "ExtrinsicSchemaId", # required
+    #         extrinsic_version: 1, # required
+    #         schema: { # required
+    #         },
+    #       },
+    #     ],
     #     capabilities: "Capabilities",
     #     client_token: "ClientToken",
     #     classification: "Classification",
@@ -775,7 +1068,7 @@ module Aws::IoTManagedIntegrations
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_notification_configuration({
-    #     event_type: "DEVICE_COMMAND", # required, accepts DEVICE_COMMAND, DEVICE_COMMAND_REQUEST, DEVICE_EVENT, DEVICE_LIFE_CYCLE, DEVICE_STATE, DEVICE_OTA, CONNECTOR_ASSOCIATION, CONNECTOR_ERROR_REPORT
+    #     event_type: "DEVICE_COMMAND", # required, accepts DEVICE_COMMAND, DEVICE_COMMAND_REQUEST, DEVICE_DISCOVERY_STATUS, DEVICE_EVENT, DEVICE_LIFE_CYCLE, DEVICE_STATE, DEVICE_OTA, DEVICE_WSS, CONNECTOR_ASSOCIATION, ACCOUNT_ASSOCIATION, CONNECTOR_ERROR_REPORT
     #     destination_name: "DestinationName", # required
     #     client_token: "ClientToken",
     #     tags: {
@@ -785,7 +1078,7 @@ module Aws::IoTManagedIntegrations
     #
     # @example Response structure
     #
-    #   resp.event_type #=> String, one of "DEVICE_COMMAND", "DEVICE_COMMAND_REQUEST", "DEVICE_EVENT", "DEVICE_LIFE_CYCLE", "DEVICE_STATE", "DEVICE_OTA", "CONNECTOR_ASSOCIATION", "CONNECTOR_ERROR_REPORT"
+    #   resp.event_type #=> String, one of "DEVICE_COMMAND", "DEVICE_COMMAND_REQUEST", "DEVICE_DISCOVERY_STATUS", "DEVICE_EVENT", "DEVICE_LIFE_CYCLE", "DEVICE_STATE", "DEVICE_OTA", "DEVICE_WSS", "CONNECTOR_ASSOCIATION", "ACCOUNT_ASSOCIATION", "CONNECTOR_ERROR_REPORT"
     #
     # @overload create_notification_configuration(params = {})
     # @param [Hash] params ({})
@@ -794,7 +1087,7 @@ module Aws::IoTManagedIntegrations
       req.send_request(options)
     end
 
-    # Create an over-the-air (OTA) task to update a device.
+    # Create an over-the-air (OTA) task to target a device.
     #
     # @option params [String] :description
     #   The description of the over-the-air (OTA) task.
@@ -966,20 +1259,25 @@ module Aws::IoTManagedIntegrations
       req.send_request(options)
     end
 
-    # Create a provisioning profile for a device to execute the provisioning
-    # flows using a provisioning template. The provisioning template is a
-    # document that defines the set of resources and policies applied to a
-    # device during the provisioning process.
+    # Create a provisioning profile for executing device provisioning flows.
+    # The provisioning profile is a document that defines the set of
+    # resources and policies applied to a device during the provisioning
+    # process.
     #
     # @option params [required, String] :provisioning_type
     #   The type of provisioning workflow the device uses for onboarding to
     #   IoT managed integrations.
     #
     # @option params [String] :ca_certificate
-    #   The id of the certificate authority (CA) certificate.
+    #   The body of the PEM-encoded certificate authority (CA) certificate.
+    #
+    # @option params [String] :claim_certificate
+    #   The body of the PEM-encoded claim certificate. If a claim certificate
+    #   is provided, it will be used for the provisioning profile. Otherwise,
+    #   a claim certificate will be generated.
     #
     # @option params [String] :name
-    #   The name of the provisioning template.
+    #   The name of the provisioning profile.
     #
     # @option params [String] :client_token
     #   An idempotency token. If you retry a request that completed
@@ -1000,6 +1298,7 @@ module Aws::IoTManagedIntegrations
     #   * {Types::CreateProvisioningProfileResponse#name #name} => String
     #   * {Types::CreateProvisioningProfileResponse#provisioning_type #provisioning_type} => String
     #   * {Types::CreateProvisioningProfileResponse#id #id} => String
+    #   * {Types::CreateProvisioningProfileResponse#status #status} => String
     #   * {Types::CreateProvisioningProfileResponse#claim_certificate #claim_certificate} => String
     #   * {Types::CreateProvisioningProfileResponse#claim_certificate_private_key #claim_certificate_private_key} => String
     #
@@ -1008,6 +1307,7 @@ module Aws::IoTManagedIntegrations
     #   resp = client.create_provisioning_profile({
     #     provisioning_type: "FLEET_PROVISIONING", # required, accepts FLEET_PROVISIONING, JITR
     #     ca_certificate: "CaCertificate",
+    #     claim_certificate: "ClaimCertificate",
     #     name: "ProvisioningProfileName",
     #     client_token: "ClientToken",
     #     tags: {
@@ -1021,6 +1321,7 @@ module Aws::IoTManagedIntegrations
     #   resp.name #=> String
     #   resp.provisioning_type #=> String, one of "FLEET_PROVISIONING", "JITR"
     #   resp.id #=> String
+    #   resp.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "CREATED", "DELETE_IN_PROGRESS", "DELETE_FAILED"
     #   resp.claim_certificate #=> String
     #   resp.claim_certificate_private_key #=> String
     #
@@ -1028,6 +1329,78 @@ module Aws::IoTManagedIntegrations
     # @param [Hash] params ({})
     def create_provisioning_profile(params = {}, options = {})
       req = build_request(:create_provisioning_profile, params)
+      req.send_request(options)
+    end
+
+    # Remove a third-party account association for an end user.
+    #
+    # <note markdown="1"> You must first call the `DeregisterAccountAssociation` to remove the
+    # connection between the managed thing and the third-party account
+    # before calling the `DeleteAccountAssociation` API.
+    #
+    #  </note>
+    #
+    # @option params [required, String] :account_association_id
+    #   The unique identifier of the account association to be deleted.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_account_association({
+    #     account_association_id: "AccountAssociationId", # required
+    #   })
+    #
+    # @overload delete_account_association(params = {})
+    # @param [Hash] params ({})
+    def delete_account_association(params = {}, options = {})
+      req = build_request(:delete_account_association, params)
+      req.send_request(options)
+    end
+
+    # Delete a cloud connector.
+    #
+    # @option params [required, String] :identifier
+    #   The identifier of the cloud connector.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_cloud_connector({
+    #     identifier: "CloudConnectorId", # required
+    #   })
+    #
+    # @overload delete_cloud_connector(params = {})
+    # @param [Hash] params ({})
+    def delete_cloud_connector(params = {}, options = {})
+      req = build_request(:delete_cloud_connector, params)
+      req.send_request(options)
+    end
+
+    # Delete a connector destination linked to a cloud-to-cloud (C2C)
+    # connector.
+    #
+    # <note markdown="1"> Deletion can't be done if the account association has used this
+    # connector destination.
+    #
+    #  </note>
+    #
+    # @option params [required, String] :identifier
+    #   The identifier of the connector destination.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_connector_destination({
+    #     identifier: "ConnectorDestinationId", # required
+    #   })
+    #
+    # @overload delete_connector_destination(params = {})
+    # @param [Hash] params ({})
+    def delete_connector_destination(params = {}, options = {})
+      req = build_request(:delete_connector_destination, params)
       req.send_request(options)
     end
 
@@ -1056,7 +1429,7 @@ module Aws::IoTManagedIntegrations
       req.send_request(options)
     end
 
-    # Deletes a customer-managed destination specified by id.
+    # Deletes a notification destination specified by name.
     #
     # @option params [required, String] :name
     #   The id of the customer-managed destination.
@@ -1096,9 +1469,10 @@ module Aws::IoTManagedIntegrations
       req.send_request(options)
     end
 
-    # Delete a managed thing. If a controller is deleted, all of the devices
-    # connected to it will have their status changed to `PENDING`. It is not
-    # possible to remove a cloud device.
+    # Delete a managed thing. For direct-connected and hub-connected devices
+    # connecting with Managed integrations via a controller, all of the
+    # devices connected to it will have their status changed to `PENDING`.
+    # It is not possible to remove a cloud-to-cloud device.
     #
     # @option params [required, String] :identifier
     #   The id of the managed thing.
@@ -1135,7 +1509,7 @@ module Aws::IoTManagedIntegrations
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_notification_configuration({
-    #     event_type: "DEVICE_COMMAND", # required, accepts DEVICE_COMMAND, DEVICE_COMMAND_REQUEST, DEVICE_EVENT, DEVICE_LIFE_CYCLE, DEVICE_STATE, DEVICE_OTA, CONNECTOR_ASSOCIATION, CONNECTOR_ERROR_REPORT
+    #     event_type: "DEVICE_COMMAND", # required, accepts DEVICE_COMMAND, DEVICE_COMMAND_REQUEST, DEVICE_DISCOVERY_STATUS, DEVICE_EVENT, DEVICE_LIFE_CYCLE, DEVICE_STATE, DEVICE_OTA, DEVICE_WSS, CONNECTOR_ASSOCIATION, ACCOUNT_ASSOCIATION, CONNECTOR_ERROR_REPORT
     #   })
     #
     # @overload delete_notification_configuration(params = {})
@@ -1188,7 +1562,7 @@ module Aws::IoTManagedIntegrations
     # Delete a provisioning profile.
     #
     # @option params [required, String] :identifier
-    #   The name of the provisioning template.
+    #   The id of the provisioning profile.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
@@ -1202,6 +1576,206 @@ module Aws::IoTManagedIntegrations
     # @param [Hash] params ({})
     def delete_provisioning_profile(params = {}, options = {})
       req = build_request(:delete_provisioning_profile, params)
+      req.send_request(options)
+    end
+
+    # Deregister an account association from a managed thing.
+    #
+    # @option params [required, String] :managed_thing_id
+    #   The identifier of the managed thing to be deregistered from the
+    #   account association.
+    #
+    # @option params [required, String] :account_association_id
+    #   The unique identifier of the account association to be deregistered.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.deregister_account_association({
+    #     managed_thing_id: "ManagedThingId", # required
+    #     account_association_id: "AccountAssociationId", # required
+    #   })
+    #
+    # @overload deregister_account_association(params = {})
+    # @param [Hash] params ({})
+    def deregister_account_association(params = {}, options = {})
+      req = build_request(:deregister_account_association, params)
+      req.send_request(options)
+    end
+
+    # Get an account association for an Amazon Web Services account linked
+    # to a customer-managed destination.
+    #
+    # @option params [required, String] :account_association_id
+    #   The unique identifier of the account association to retrieve.
+    #
+    # @return [Types::GetAccountAssociationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetAccountAssociationResponse#account_association_id #account_association_id} => String
+    #   * {Types::GetAccountAssociationResponse#association_state #association_state} => String
+    #   * {Types::GetAccountAssociationResponse#error_message #error_message} => String
+    #   * {Types::GetAccountAssociationResponse#connector_destination_id #connector_destination_id} => String
+    #   * {Types::GetAccountAssociationResponse#name #name} => String
+    #   * {Types::GetAccountAssociationResponse#description #description} => String
+    #   * {Types::GetAccountAssociationResponse#arn #arn} => String
+    #   * {Types::GetAccountAssociationResponse#o_auth_authorization_url #o_auth_authorization_url} => String
+    #   * {Types::GetAccountAssociationResponse#tags #tags} => Hash&lt;String,String&gt;
+    #   * {Types::GetAccountAssociationResponse#general_authorization #general_authorization} => Types::GeneralAuthorizationName
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_account_association({
+    #     account_association_id: "AccountAssociationId", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.account_association_id #=> String
+    #   resp.association_state #=> String, one of "ASSOCIATION_IN_PROGRESS", "ASSOCIATION_FAILED", "ASSOCIATION_SUCCEEDED", "ASSOCIATION_DELETING", "REFRESH_TOKEN_EXPIRED"
+    #   resp.error_message #=> String
+    #   resp.connector_destination_id #=> String
+    #   resp.name #=> String
+    #   resp.description #=> String
+    #   resp.arn #=> String
+    #   resp.o_auth_authorization_url #=> String
+    #   resp.tags #=> Hash
+    #   resp.tags["TagKey"] #=> String
+    #   resp.general_authorization.auth_material_name #=> String
+    #
+    # @overload get_account_association(params = {})
+    # @param [Hash] params ({})
+    def get_account_association(params = {}, options = {})
+      req = build_request(:get_account_association, params)
+      req.send_request(options)
+    end
+
+    # Get configuration details for a cloud connector.
+    #
+    # @option params [required, String] :identifier
+    #   The identifier of the C2C connector.
+    #
+    # @return [Types::GetCloudConnectorResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetCloudConnectorResponse#name #name} => String
+    #   * {Types::GetCloudConnectorResponse#endpoint_config #endpoint_config} => Types::EndpointConfig
+    #   * {Types::GetCloudConnectorResponse#description #description} => String
+    #   * {Types::GetCloudConnectorResponse#endpoint_type #endpoint_type} => String
+    #   * {Types::GetCloudConnectorResponse#id #id} => String
+    #   * {Types::GetCloudConnectorResponse#type #type} => String
+    #
+    #
+    # @example Example: GetCloudConnector happy path for TP Link to get connector resource
+    #
+    #   resp = client.get_cloud_connector({
+    #     identifier: "123456789012", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     endpoint_config: {
+    #       lambda: {
+    #         arn: "arn:aws:lambda:us-east-1:111122223333:function:my-function:myVersion", 
+    #       }, 
+    #     }, 
+    #     endpoint_type: "LAMBDA", 
+    #     id: "123456789012", 
+    #     name: "Connector for TP Link Cloud V2", 
+    #   }
+    #
+    # @example Example: GetCloudConnector happy path for Ring to pending status
+    #
+    #   resp = client.get_cloud_connector({
+    #     identifier: "123456789012", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     endpoint_config: {
+    #       lambda: {
+    #         arn: "arn:aws:lambda:us-east-1:111122223333:function:my-function:myVersion", 
+    #       }, 
+    #     }, 
+    #     name: "Connector for Ring Cloud", 
+    #   }
+    #
+    # @example Example: GetCloudConnector error Id for Ring connector which does not exist
+    #
+    #   resp = client.get_cloud_connector({
+    #     identifier: "123456789012", 
+    #   })
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_cloud_connector({
+    #     identifier: "CloudConnectorId", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.name #=> String
+    #   resp.endpoint_config.lambda.arn #=> String
+    #   resp.description #=> String
+    #   resp.endpoint_type #=> String, one of "LAMBDA"
+    #   resp.id #=> String
+    #   resp.type #=> String, one of "LISTED", "UNLISTED"
+    #
+    # @overload get_cloud_connector(params = {})
+    # @param [Hash] params ({})
+    def get_cloud_connector(params = {}, options = {})
+      req = build_request(:get_cloud_connector, params)
+      req.send_request(options)
+    end
+
+    # Get connector destination details linked to a cloud-to-cloud (C2C)
+    # connector.
+    #
+    # @option params [required, String] :identifier
+    #   The identifier of the C2C connector destination.
+    #
+    # @return [Types::GetConnectorDestinationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetConnectorDestinationResponse#name #name} => String
+    #   * {Types::GetConnectorDestinationResponse#description #description} => String
+    #   * {Types::GetConnectorDestinationResponse#cloud_connector_id #cloud_connector_id} => String
+    #   * {Types::GetConnectorDestinationResponse#id #id} => String
+    #   * {Types::GetConnectorDestinationResponse#auth_type #auth_type} => String
+    #   * {Types::GetConnectorDestinationResponse#auth_config #auth_config} => Types::AuthConfig
+    #   * {Types::GetConnectorDestinationResponse#secrets_manager #secrets_manager} => Types::SecretsManager
+    #   * {Types::GetConnectorDestinationResponse#o_auth_complete_redirect_url #o_auth_complete_redirect_url} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_connector_destination({
+    #     identifier: "ConnectorDestinationId", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.name #=> String
+    #   resp.description #=> String
+    #   resp.cloud_connector_id #=> String
+    #   resp.id #=> String
+    #   resp.auth_type #=> String, one of "OAUTH"
+    #   resp.auth_config.o_auth.auth_url #=> String
+    #   resp.auth_config.o_auth.token_url #=> String
+    #   resp.auth_config.o_auth.scope #=> String
+    #   resp.auth_config.o_auth.token_endpoint_authentication_scheme #=> String, one of "HTTP_BASIC", "REQUEST_BODY_CREDENTIALS"
+    #   resp.auth_config.o_auth.o_auth_complete_redirect_url #=> String
+    #   resp.auth_config.o_auth.proactive_refresh_token_renewal.enabled #=> Boolean
+    #   resp.auth_config.o_auth.proactive_refresh_token_renewal.days_before_renewal #=> Integer
+    #   resp.auth_config.general_authorization #=> Array
+    #   resp.auth_config.general_authorization[0].secrets_manager.arn #=> String
+    #   resp.auth_config.general_authorization[0].secrets_manager.version_id #=> String
+    #   resp.auth_config.general_authorization[0].auth_material_name #=> String
+    #   resp.secrets_manager.arn #=> String
+    #   resp.secrets_manager.version_id #=> String
+    #   resp.o_auth_complete_redirect_url #=> String
+    #
+    # @overload get_connector_destination(params = {})
+    # @param [Hash] params ({})
+    def get_connector_destination(params = {}, options = {})
+      req = build_request(:get_connector_destination, params)
       req.send_request(options)
     end
 
@@ -1287,7 +1861,7 @@ module Aws::IoTManagedIntegrations
       req.send_request(options)
     end
 
-    # Gets a destination by ID.
+    # Gets a destination by name.
     #
     # @option params [required, String] :name
     #   The name of the customer-managed destination.
@@ -1342,6 +1916,7 @@ module Aws::IoTManagedIntegrations
     #   * {Types::GetDeviceDiscoveryResponse#started_at #started_at} => Time
     #   * {Types::GetDeviceDiscoveryResponse#controller_id #controller_id} => String
     #   * {Types::GetDeviceDiscoveryResponse#connector_association_id #connector_association_id} => String
+    #   * {Types::GetDeviceDiscoveryResponse#account_association_id #account_association_id} => String
     #   * {Types::GetDeviceDiscoveryResponse#finished_at #finished_at} => Time
     #   * {Types::GetDeviceDiscoveryResponse#tags #tags} => Hash&lt;String,String&gt;
     #
@@ -1355,11 +1930,12 @@ module Aws::IoTManagedIntegrations
     #
     #   resp.id #=> String
     #   resp.arn #=> String
-    #   resp.discovery_type #=> String, one of "ZWAVE", "ZIGBEE", "CLOUD"
+    #   resp.discovery_type #=> String, one of "ZWAVE", "ZIGBEE", "CLOUD", "CUSTOM", "CONTROLLER_CAPABILITY_REDISCOVERY"
     #   resp.status #=> String, one of "RUNNING", "SUCCEEDED", "FAILED", "TIMED_OUT"
     #   resp.started_at #=> Time
     #   resp.controller_id #=> String
     #   resp.connector_association_id #=> String
+    #   resp.account_association_id #=> String
     #   resp.finished_at #=> Time
     #   resp.tags #=> Hash
     #   resp.tags["TagKey"] #=> String
@@ -1422,7 +1998,8 @@ module Aws::IoTManagedIntegrations
       req.send_request(options)
     end
 
-    # Get the attributes and capabilities associated with a managed thing.
+    # Get details of a managed thing including its attributes and
+    # capabilities.
     #
     # @option params [required, String] :identifier
     #   The id of the managed thing.
@@ -1443,6 +2020,7 @@ module Aws::IoTManagedIntegrations
     #   * {Types::GetManagedThingResponse#universal_product_code #universal_product_code} => String
     #   * {Types::GetManagedThingResponse#international_article_number #international_article_number} => String
     #   * {Types::GetManagedThingResponse#connector_policy_id #connector_policy_id} => String
+    #   * {Types::GetManagedThingResponse#connector_destination_id #connector_destination_id} => String
     #   * {Types::GetManagedThingResponse#connector_device_id #connector_device_id} => String
     #   * {Types::GetManagedThingResponse#device_specific_key #device_specific_key} => String
     #   * {Types::GetManagedThingResponse#mac_address #mac_address} => String
@@ -1454,6 +2032,7 @@ module Aws::IoTManagedIntegrations
     #   * {Types::GetManagedThingResponse#hub_network_mode #hub_network_mode} => String
     #   * {Types::GetManagedThingResponse#meta_data #meta_data} => Hash&lt;String,String&gt;
     #   * {Types::GetManagedThingResponse#tags #tags} => Hash&lt;String,String&gt;
+    #   * {Types::GetManagedThingResponse#wi_fi_simple_setup_configuration #wi_fi_simple_setup_configuration} => Types::WiFiSimpleSetupConfiguration
     #
     # @example Request syntax with placeholder values
     #
@@ -1477,6 +2056,7 @@ module Aws::IoTManagedIntegrations
     #   resp.universal_product_code #=> String
     #   resp.international_article_number #=> String
     #   resp.connector_policy_id #=> String
+    #   resp.connector_destination_id #=> String
     #   resp.connector_device_id #=> String
     #   resp.device_specific_key #=> String
     #   resp.mac_address #=> String
@@ -1490,6 +2070,9 @@ module Aws::IoTManagedIntegrations
     #   resp.meta_data["AttributeName"] #=> <Hash,Array,String,Numeric,Boolean,IO,Set,nil>
     #   resp.tags #=> Hash
     #   resp.tags["TagKey"] #=> String
+    #   resp.wi_fi_simple_setup_configuration.enable_as_provisioner #=> Boolean
+    #   resp.wi_fi_simple_setup_configuration.enable_as_provisionee #=> Boolean
+    #   resp.wi_fi_simple_setup_configuration.timeout_in_minutes #=> Integer
     #
     # @overload get_managed_thing(params = {})
     # @param [Hash] params ({})
@@ -1543,6 +2126,47 @@ module Aws::IoTManagedIntegrations
       req.send_request(options)
     end
 
+    # Retrieves the certificate PEM for a managed IoT thing.
+    #
+    # @option params [required, String] :identifier
+    #   The identifier of the managed thing.
+    #
+    # @return [Types::GetManagedThingCertificateResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetManagedThingCertificateResponse#managed_thing_id #managed_thing_id} => String
+    #   * {Types::GetManagedThingCertificateResponse#certificate_pem #certificate_pem} => String
+    #
+    #
+    # @example Example: Get managed thing certificate
+    #
+    #   resp = client.get_managed_thing_certificate({
+    #     identifier: "example-managed-thing-id", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     certificate_pem: "-----BEGIN CERTIFICATE-----\nMIIBkTCB+wIJAKHHH...\n-----END CERTIFICATE-----", 
+    #     managed_thing_id: "example-managed-thing-id", 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_managed_thing_certificate({
+    #     identifier: "ManagedThingId", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.managed_thing_id #=> String
+    #   resp.certificate_pem #=> String
+    #
+    # @overload get_managed_thing_certificate(params = {})
+    # @param [Hash] params ({})
+    def get_managed_thing_certificate(params = {}, options = {})
+      req = build_request(:get_managed_thing_certificate, params)
+      req.send_request(options)
+    end
+
     # Get the connectivity status of a managed thing.
     #
     # @option params [required, String] :identifier
@@ -1576,6 +2200,14 @@ module Aws::IoTManagedIntegrations
     end
 
     # Get the metadata information for a managed thing.
+    #
+    # <note markdown="1"> The `managedThing` `metadata` parameter is used for associating
+    # attributes with a `managedThing` that can be used for grouping
+    # over-the-air (OTA) tasks. Name value pairs in `metadata` can be used
+    # in the `OtaTargetQueryString` parameter for the `CreateOtaTask` API
+    # operation.
+    #
+    #  </note>
     #
     # @option params [required, String] :identifier
     #   The managed thing id.
@@ -1635,7 +2267,7 @@ module Aws::IoTManagedIntegrations
       req.send_request(options)
     end
 
-    # Get a notification configuration.
+    # Get a notification configuration for a specified event type.
     #
     # @option params [required, String] :event_type
     #   The type of event triggering a device notification to the
@@ -1652,12 +2284,12 @@ module Aws::IoTManagedIntegrations
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_notification_configuration({
-    #     event_type: "DEVICE_COMMAND", # required, accepts DEVICE_COMMAND, DEVICE_COMMAND_REQUEST, DEVICE_EVENT, DEVICE_LIFE_CYCLE, DEVICE_STATE, DEVICE_OTA, CONNECTOR_ASSOCIATION, CONNECTOR_ERROR_REPORT
+    #     event_type: "DEVICE_COMMAND", # required, accepts DEVICE_COMMAND, DEVICE_COMMAND_REQUEST, DEVICE_DISCOVERY_STATUS, DEVICE_EVENT, DEVICE_LIFE_CYCLE, DEVICE_STATE, DEVICE_OTA, DEVICE_WSS, CONNECTOR_ASSOCIATION, ACCOUNT_ASSOCIATION, CONNECTOR_ERROR_REPORT
     #   })
     #
     # @example Response structure
     #
-    #   resp.event_type #=> String, one of "DEVICE_COMMAND", "DEVICE_COMMAND_REQUEST", "DEVICE_EVENT", "DEVICE_LIFE_CYCLE", "DEVICE_STATE", "DEVICE_OTA", "CONNECTOR_ASSOCIATION", "CONNECTOR_ERROR_REPORT"
+    #   resp.event_type #=> String, one of "DEVICE_COMMAND", "DEVICE_COMMAND_REQUEST", "DEVICE_DISCOVERY_STATUS", "DEVICE_EVENT", "DEVICE_LIFE_CYCLE", "DEVICE_STATE", "DEVICE_OTA", "DEVICE_WSS", "CONNECTOR_ASSOCIATION", "ACCOUNT_ASSOCIATION", "CONNECTOR_ERROR_REPORT"
     #   resp.destination_name #=> String
     #   resp.created_at #=> Time
     #   resp.updated_at #=> Time
@@ -1671,7 +2303,7 @@ module Aws::IoTManagedIntegrations
       req.send_request(options)
     end
 
-    # Get the over-the-air (OTA) task.
+    # Get details of the over-the-air (OTA) task by its task id.
     #
     # @option params [required, String] :identifier
     #   The over-the-air (OTA) task id.
@@ -1694,6 +2326,7 @@ module Aws::IoTManagedIntegrations
     #   * {Types::GetOtaTaskResponse#ota_scheduling_config #ota_scheduling_config} => Types::OtaTaskSchedulingConfig
     #   * {Types::GetOtaTaskResponse#ota_task_execution_retry_config #ota_task_execution_retry_config} => Types::OtaTaskExecutionRetryConfig
     #   * {Types::GetOtaTaskResponse#status #status} => String
+    #   * {Types::GetOtaTaskResponse#tags #tags} => Hash&lt;String,String&gt;
     #
     # @example Request syntax with placeholder values
     #
@@ -1736,6 +2369,8 @@ module Aws::IoTManagedIntegrations
     #   resp.ota_task_execution_retry_config.retry_config_criteria[0].failure_type #=> String, one of "FAILED", "TIMED_OUT", "ALL"
     #   resp.ota_task_execution_retry_config.retry_config_criteria[0].min_number_of_retries #=> Integer
     #   resp.status #=> String, one of "IN_PROGRESS", "CANCELED", "COMPLETED", "DELETION_IN_PROGRESS", "SCHEDULED"
+    #   resp.tags #=> Hash
+    #   resp.tags["TagKey"] #=> String
     #
     # @overload get_ota_task(params = {})
     # @param [Hash] params ({})
@@ -1788,11 +2423,10 @@ module Aws::IoTManagedIntegrations
       req.send_request(options)
     end
 
-    # Get a provisioning profile by template name.
+    # Get details of a provisioning profile.
     #
     # @option params [required, String] :identifier
-    #   The provisioning template the device uses for the provisioning
-    #   process.
+    #   The id of a provisioning profile.
     #
     # @return [Types::GetProvisioningProfileResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1800,6 +2434,7 @@ module Aws::IoTManagedIntegrations
     #   * {Types::GetProvisioningProfileResponse#name #name} => String
     #   * {Types::GetProvisioningProfileResponse#provisioning_type #provisioning_type} => String
     #   * {Types::GetProvisioningProfileResponse#id #id} => String
+    #   * {Types::GetProvisioningProfileResponse#status #status} => String
     #   * {Types::GetProvisioningProfileResponse#claim_certificate #claim_certificate} => String
     #   * {Types::GetProvisioningProfileResponse#tags #tags} => Hash&lt;String,String&gt;
     #
@@ -1815,6 +2450,7 @@ module Aws::IoTManagedIntegrations
     #   resp.name #=> String
     #   resp.provisioning_type #=> String, one of "FLEET_PROVISIONING", "JITR"
     #   resp.id #=> String
+    #   resp.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "CREATED", "DELETE_IN_PROGRESS", "DELETE_FAILED"
     #   resp.claim_certificate #=> String
     #   resp.tags #=> Hash
     #   resp.tags["TagKey"] #=> String
@@ -1826,8 +2462,7 @@ module Aws::IoTManagedIntegrations
       req.send_request(options)
     end
 
-    # Get the runtime log configuration for a specific managed thing or for
-    # all managed things as a group.
+    # Get the runtime log configuration for a specific managed thing.
     #
     # @option params [required, String] :managed_thing_id
     #   The id for a managed thing.
@@ -1908,6 +2543,189 @@ module Aws::IoTManagedIntegrations
       req.send_request(options)
     end
 
+    # Lists all account associations, with optional filtering by connector
+    # destination ID.
+    #
+    # @option params [String] :connector_destination_id
+    #   The identifier of the connector destination to filter account
+    #   associations by.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of account associations to return in a single
+    #   response.
+    #
+    # @option params [String] :next_token
+    #   A token used for pagination of results.
+    #
+    # @return [Types::ListAccountAssociationsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListAccountAssociationsResponse#items #items} => Array&lt;Types::AccountAssociationItem&gt;
+    #   * {Types::ListAccountAssociationsResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_account_associations({
+    #     connector_destination_id: "ConnectorDestinationId",
+    #     max_results: 1,
+    #     next_token: "NextToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.items #=> Array
+    #   resp.items[0].account_association_id #=> String
+    #   resp.items[0].association_state #=> String, one of "ASSOCIATION_IN_PROGRESS", "ASSOCIATION_FAILED", "ASSOCIATION_SUCCEEDED", "ASSOCIATION_DELETING", "REFRESH_TOKEN_EXPIRED"
+    #   resp.items[0].error_message #=> String
+    #   resp.items[0].connector_destination_id #=> String
+    #   resp.items[0].name #=> String
+    #   resp.items[0].description #=> String
+    #   resp.items[0].arn #=> String
+    #   resp.next_token #=> String
+    #
+    # @overload list_account_associations(params = {})
+    # @param [Hash] params ({})
+    def list_account_associations(params = {}, options = {})
+      req = build_request(:list_account_associations, params)
+      req.send_request(options)
+    end
+
+    # Returns a list of connectors filtered by its Lambda Amazon Resource
+    # Name (ARN) and `type`.
+    #
+    # @option params [String] :type
+    #   The type of cloud connectors to filter by when listing available
+    #   connectors.
+    #
+    # @option params [String] :lambda_arn
+    #   The Amazon Resource Name (ARN) of the Lambda function to filter cloud
+    #   connectors by.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return at one time.
+    #
+    # @option params [String] :next_token
+    #   A token that can be used to retrieve the next set of results.
+    #
+    # @return [Types::ListCloudConnectorsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListCloudConnectorsResponse#items #items} => Array&lt;Types::ConnectorItem&gt;
+    #   * {Types::ListCloudConnectorsResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    #
+    # @example Example: ListCloudConnectors happy path to get a list of connector resources
+    #
+    #   resp = client.list_cloud_connectors({
+    #     max_results: 5, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     items: [
+    #       {
+    #         description: "Description for TP Link Cloud V2", 
+    #         endpoint_config: {
+    #           lambda: {
+    #             arn: "arn:aws:lambda:us-east-1:111122223333:function:my-function:myVersion", 
+    #           }, 
+    #         }, 
+    #         endpoint_type: "LAMBDA", 
+    #         name: "Connector for TP Link Cloud V2", 
+    #       }, 
+    #       {
+    #         description: "Description for Ring Cloud", 
+    #         endpoint_config: {
+    #           lambda: {
+    #             arn: "arn:aws:lambda:us-east-1:111122223333:function:my-function:myVersion", 
+    #           }, 
+    #         }, 
+    #         endpoint_type: "LAMBDA", 
+    #         name: "Connector for Ring Cloud", 
+    #       }, 
+    #     ], 
+    #   }
+    #
+    # @example Example: ListCloudConnectors error path for unauthorized user
+    #
+    #   resp = client.list_cloud_connectors({
+    #     max_results: 5, 
+    #   })
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_cloud_connectors({
+    #     type: "LISTED", # accepts LISTED, UNLISTED
+    #     lambda_arn: "LambdaArn",
+    #     max_results: 1,
+    #     next_token: "NextToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.items #=> Array
+    #   resp.items[0].name #=> String
+    #   resp.items[0].endpoint_config.lambda.arn #=> String
+    #   resp.items[0].description #=> String
+    #   resp.items[0].endpoint_type #=> String, one of "LAMBDA"
+    #   resp.items[0].id #=> String
+    #   resp.items[0].type #=> String, one of "LISTED", "UNLISTED"
+    #   resp.next_token #=> String
+    #
+    # @overload list_cloud_connectors(params = {})
+    # @param [Hash] params ({})
+    def list_cloud_connectors(params = {}, options = {})
+      req = build_request(:list_cloud_connectors, params)
+      req.send_request(options)
+    end
+
+    # Lists all connector destinations, with optional filtering by cloud
+    # connector ID.
+    #
+    # @option params [String] :cloud_connector_id
+    #   The identifier of the cloud connector to filter connector destinations
+    #   by.
+    #
+    # @option params [String] :next_token
+    #   A token used for pagination of results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of connector destinations to return in a single
+    #   response.
+    #
+    # @return [Types::ListConnectorDestinationsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListConnectorDestinationsResponse#connector_destination_list #connector_destination_list} => Array&lt;Types::ConnectorDestinationSummary&gt;
+    #   * {Types::ListConnectorDestinationsResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_connector_destinations({
+    #     cloud_connector_id: "CloudConnectorId",
+    #     next_token: "NextToken",
+    #     max_results: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.connector_destination_list #=> Array
+    #   resp.connector_destination_list[0].name #=> String
+    #   resp.connector_destination_list[0].description #=> String
+    #   resp.connector_destination_list[0].cloud_connector_id #=> String
+    #   resp.connector_destination_list[0].id #=> String
+    #   resp.next_token #=> String
+    #
+    # @overload list_connector_destinations(params = {})
+    # @param [Hash] params ({})
+    def list_connector_destinations(params = {}, options = {})
+      req = build_request(:list_connector_destinations, params)
+      req.send_request(options)
+    end
+
     # List information on an existing credential locker.
     #
     # @option params [String] :next_token
@@ -1946,7 +2764,7 @@ module Aws::IoTManagedIntegrations
       req.send_request(options)
     end
 
-    # List all destination names under one Amazon Web Services account.
+    # List all notification destinations.
     #
     # @option params [String] :next_token
     #   A token that can be used to retrieve the next set of results.
@@ -1985,6 +2803,103 @@ module Aws::IoTManagedIntegrations
       req.send_request(options)
     end
 
+    # Lists all device discovery tasks, with optional filtering by type and
+    # status.
+    #
+    # @option params [String] :next_token
+    #   A token used for pagination of results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of device discovery jobs to return in a single
+    #   response.
+    #
+    # @option params [String] :type_filter
+    #   The discovery type to filter device discovery jobs by.
+    #
+    # @option params [String] :status_filter
+    #   The status to filter device discovery jobs by.
+    #
+    # @return [Types::ListDeviceDiscoveriesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListDeviceDiscoveriesResponse#items #items} => Array&lt;Types::DeviceDiscoverySummary&gt;
+    #   * {Types::ListDeviceDiscoveriesResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_device_discoveries({
+    #     next_token: "NextToken",
+    #     max_results: 1,
+    #     type_filter: "ZWAVE", # accepts ZWAVE, ZIGBEE, CLOUD, CUSTOM, CONTROLLER_CAPABILITY_REDISCOVERY
+    #     status_filter: "RUNNING", # accepts RUNNING, SUCCEEDED, FAILED, TIMED_OUT
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.items #=> Array
+    #   resp.items[0].id #=> String
+    #   resp.items[0].discovery_type #=> String, one of "ZWAVE", "ZIGBEE", "CLOUD", "CUSTOM", "CONTROLLER_CAPABILITY_REDISCOVERY"
+    #   resp.items[0].status #=> String, one of "RUNNING", "SUCCEEDED", "FAILED", "TIMED_OUT"
+    #   resp.next_token #=> String
+    #
+    # @overload list_device_discoveries(params = {})
+    # @param [Hash] params ({})
+    def list_device_discoveries(params = {}, options = {})
+      req = build_request(:list_device_discoveries, params)
+      req.send_request(options)
+    end
+
+    # Lists all devices discovered during a specific device discovery task.
+    #
+    # @option params [required, String] :identifier
+    #   The identifier of the device discovery job to list discovered devices
+    #   for.
+    #
+    # @option params [String] :next_token
+    #   A token used for pagination of results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of discovered devices to return in a single
+    #   response.
+    #
+    # @return [Types::ListDiscoveredDevicesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListDiscoveredDevicesResponse#items #items} => Array&lt;Types::DiscoveredDeviceSummary&gt;
+    #   * {Types::ListDiscoveredDevicesResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_discovered_devices({
+    #     identifier: "DeviceDiscoveryId", # required
+    #     next_token: "NextToken",
+    #     max_results: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.items #=> Array
+    #   resp.items[0].connector_device_id #=> String
+    #   resp.items[0].connector_device_name #=> String
+    #   resp.items[0].device_types #=> Array
+    #   resp.items[0].device_types[0] #=> String
+    #   resp.items[0].managed_thing_id #=> String
+    #   resp.items[0].modification #=> String, one of "DISCOVERED", "UPDATED", "NO_CHANGE"
+    #   resp.items[0].discovered_at #=> Time
+    #   resp.items[0].brand #=> String
+    #   resp.items[0].model #=> String
+    #   resp.items[0].authentication_material #=> String
+    #   resp.next_token #=> String
+    #
+    # @overload list_discovered_devices(params = {})
+    # @param [Hash] params ({})
+    def list_discovered_devices(params = {}, options = {})
+      req = build_request(:list_discovered_devices, params)
+      req.send_request(options)
+    end
+
     # List all event log configurations for an account.
     #
     # @option params [String] :next_token
@@ -2020,6 +2935,54 @@ module Aws::IoTManagedIntegrations
     # @param [Hash] params ({})
     def list_event_log_configurations(params = {}, options = {})
       req = build_request(:list_event_log_configurations, params)
+      req.send_request(options)
+    end
+
+    # Lists all account associations for a specific managed thing.
+    #
+    # @option params [String] :managed_thing_id
+    #   The identifier of the managed thing to list account associations for.
+    #
+    # @option params [String] :account_association_id
+    #   The identifier of the account association to filter results by. When
+    #   specified, only associations with this account association ID will be
+    #   returned.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of account associations to return in a single
+    #   response.
+    #
+    # @option params [String] :next_token
+    #   A token used for pagination of results.
+    #
+    # @return [Types::ListManagedThingAccountAssociationsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListManagedThingAccountAssociationsResponse#items #items} => Array&lt;Types::ManagedThingAssociation&gt;
+    #   * {Types::ListManagedThingAccountAssociationsResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_managed_thing_account_associations({
+    #     managed_thing_id: "ManagedThingId",
+    #     account_association_id: "AccountAssociationId",
+    #     max_results: 1,
+    #     next_token: "NextToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.items #=> Array
+    #   resp.items[0].managed_thing_id #=> String
+    #   resp.items[0].account_association_id #=> String
+    #   resp.items[0].managed_thing_association_status #=> String, one of "PRE_ASSOCIATED", "ASSOCIATED"
+    #   resp.next_token #=> String
+    #
+    # @overload list_managed_thing_account_associations(params = {})
+    # @param [Hash] params ({})
+    def list_managed_thing_account_associations(params = {}, options = {})
+      req = build_request(:list_managed_thing_account_associations, params)
       req.send_request(options)
     end
 
@@ -2071,8 +3034,7 @@ module Aws::IoTManagedIntegrations
       req.send_request(options)
     end
 
-    # List all of the associations and statuses for a managed thing by its
-    # owner.
+    # Listing all managed things with provision for filters.
     #
     # @option params [String] :owner_filter
     #   Filter on device owners when listing managed things.
@@ -2090,11 +3052,25 @@ module Aws::IoTManagedIntegrations
     # @option params [String] :connector_policy_id_filter
     #   Filter on a connector policy id for a managed thing.
     #
+    # @option params [String] :connector_destination_id_filter
+    #   Filter managed things by the connector destination ID they are
+    #   associated with.
+    #
+    # @option params [String] :connector_device_id_filter
+    #   Filter managed things by the connector device ID they are associated
+    #   with. When specified, only managed things with this connector device
+    #   ID will be returned.
+    #
     # @option params [String] :serial_number_filter
     #   Filter on the serial number of the device.
     #
     # @option params [String] :provisioning_status_filter
-    #   Filter on the status of the device.
+    #   Filter on the status of the device. For more information, see [Device
+    #   Provisioning][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/iot-mi/latest/devguide/device-provisioning.html
     #
     # @option params [String] :next_token
     #   A token that can be used to retrieve the next set of results.
@@ -2117,6 +3093,8 @@ module Aws::IoTManagedIntegrations
     #     role_filter: "CONTROLLER", # accepts CONTROLLER, DEVICE
     #     parent_controller_identifier_filter: "ParentControllerId",
     #     connector_policy_id_filter: "ConnectorPolicyId",
+    #     connector_destination_id_filter: "ConnectorDestinationId",
+    #     connector_device_id_filter: "ConnectorDeviceId",
     #     serial_number_filter: "SerialNumber",
     #     provisioning_status_filter: "UNASSOCIATED", # accepts UNASSOCIATED, PRE_ASSOCIATED, DISCOVERED, ACTIVATED, DELETION_FAILED, DELETE_IN_PROGRESS, ISOLATED, DELETED
     #     next_token: "NextToken",
@@ -2133,6 +3111,7 @@ module Aws::IoTManagedIntegrations
     #   resp.items[0].classification #=> String
     #   resp.items[0].connector_device_id #=> String
     #   resp.items[0].connector_policy_id #=> String
+    #   resp.items[0].connector_destination_id #=> String
     #   resp.items[0].model #=> String
     #   resp.items[0].name #=> String
     #   resp.items[0].owner #=> String
@@ -2178,7 +3157,7 @@ module Aws::IoTManagedIntegrations
     # @example Response structure
     #
     #   resp.notification_configuration_list #=> Array
-    #   resp.notification_configuration_list[0].event_type #=> String, one of "DEVICE_COMMAND", "DEVICE_COMMAND_REQUEST", "DEVICE_EVENT", "DEVICE_LIFE_CYCLE", "DEVICE_STATE", "DEVICE_OTA", "CONNECTOR_ASSOCIATION", "CONNECTOR_ERROR_REPORT"
+    #   resp.notification_configuration_list[0].event_type #=> String, one of "DEVICE_COMMAND", "DEVICE_COMMAND_REQUEST", "DEVICE_DISCOVERY_STATUS", "DEVICE_EVENT", "DEVICE_LIFE_CYCLE", "DEVICE_STATE", "DEVICE_OTA", "DEVICE_WSS", "CONNECTOR_ASSOCIATION", "ACCOUNT_ASSOCIATION", "CONNECTOR_ERROR_REPORT"
     #   resp.notification_configuration_list[0].destination_name #=> String
     #   resp.next_token #=> String
     #
@@ -2340,6 +3319,7 @@ module Aws::IoTManagedIntegrations
     #   resp.items[0].id #=> String
     #   resp.items[0].arn #=> String
     #   resp.items[0].provisioning_type #=> String, one of "FLEET_PROVISIONING", "JITR"
+    #   resp.items[0].status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "CREATED", "DELETE_IN_PROGRESS", "DELETE_FAILED"
     #   resp.next_token #=> String
     #
     # @overload list_provisioning_profiles(params = {})
@@ -2384,7 +3364,7 @@ module Aws::IoTManagedIntegrations
     # @example Example: ListSchemaVersions happy path for an example schema version.
     #
     #   resp = client.list_schema_versions({
-    #     schema_id: "matter.ColorControl", 
+    #     schema_id: "example.ColorControl", 
     #     type: "capability", 
     #   })
     #
@@ -2394,8 +3374,8 @@ module Aws::IoTManagedIntegrations
     #       {
     #         description: "The Color Control cluster defined as Harmony Capability.", 
     #         namespace: "matter", 
-    #         schema_id: "matter.ColorControl", 
-    #         semantic_version: "1.3", 
+    #         schema_id: "example.ColorControl", 
+    #         semantic_version: "1.4", 
     #         type: "capability", 
     #       }, 
     #     ], 
@@ -2414,8 +3394,8 @@ module Aws::IoTManagedIntegrations
     #       {
     #         description: "The Color Control cluster defined as Harmony Capability.", 
     #         namespace: "matter", 
-    #         schema_id: "matter.ColorControl", 
-    #         semantic_version: "1.3", 
+    #         schema_id: "example.ColorControl", 
+    #         semantic_version: "1.4", 
     #         type: "capability", 
     #       }, 
     #     ], 
@@ -2425,7 +3405,7 @@ module Aws::IoTManagedIntegrations
     #
     #   resp = client.list_schema_versions({
     #     namespace: "matter", 
-    #     schema_id: "matter.ColorControl", 
+    #     schema_id: "example.ColorControl", 
     #     type: "capability", 
     #   })
     #
@@ -2456,6 +3436,33 @@ module Aws::IoTManagedIntegrations
     # @param [Hash] params ({})
     def list_schema_versions(params = {}, options = {})
       req = build_request(:list_schema_versions, params)
+      req.send_request(options)
+    end
+
+    # Lists the tags for a specified resource.
+    #
+    # @option params [required, String] :resource_arn
+    #   The Amazon Resource Name (ARN) of the resource for which to list tags.
+    #
+    # @return [Types::ListTagsForResourceResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListTagsForResourceResponse#tags #tags} => Hash&lt;String,String&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_tags_for_resource({
+    #     resource_arn: "IoTManagedIntegrationsResourceARN", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.tags #=> Hash
+    #   resp.tags["TagKey"] #=> String
+    #
+    # @overload list_tags_for_resource(params = {})
+    # @param [Hash] params ({})
+    def list_tags_for_resource(params = {}, options = {})
+      req = build_request(:list_tags_for_resource, params)
       req.send_request(options)
     end
 
@@ -2529,8 +3536,7 @@ module Aws::IoTManagedIntegrations
       req.send_request(options)
     end
 
-    # Set the runtime log configuration for a specific managed thing or for
-    # all managed things as a group.
+    # Set the runtime log configuration for a specific managed thing.
     #
     # @option params [required, String] :managed_thing_id
     #   The id for a managed thing.
@@ -2563,6 +3569,48 @@ module Aws::IoTManagedIntegrations
       req.send_request(options)
     end
 
+    # Registers an account association with a managed thing, establishing a
+    # connection between a device and a third-party account.
+    #
+    # @option params [required, String] :managed_thing_id
+    #   The identifier of the managed thing to register with the account
+    #   association.
+    #
+    # @option params [required, String] :account_association_id
+    #   The identifier of the account association to register with the managed
+    #   thing.
+    #
+    # @option params [required, String] :device_discovery_id
+    #   The identifier of the device discovery job associated with this
+    #   registration.
+    #
+    # @return [Types::RegisterAccountAssociationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::RegisterAccountAssociationResponse#account_association_id #account_association_id} => String
+    #   * {Types::RegisterAccountAssociationResponse#device_discovery_id #device_discovery_id} => String
+    #   * {Types::RegisterAccountAssociationResponse#managed_thing_id #managed_thing_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.register_account_association({
+    #     managed_thing_id: "ManagedThingId", # required
+    #     account_association_id: "AccountAssociationId", # required
+    #     device_discovery_id: "DeviceDiscoveryId", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.account_association_id #=> String
+    #   resp.device_discovery_id #=> String
+    #   resp.managed_thing_id #=> String
+    #
+    # @overload register_account_association(params = {})
+    # @param [Hash] params ({})
+    def register_account_association(params = {}, options = {})
+      req = build_request(:register_account_association, params)
+      req.send_request(options)
+    end
+
     # Customers can request IoT managed integrations to manage the server
     # trust for them or bring their own external server trusts for the
     # custom domain. Returns an IoT managed integrations endpoint.
@@ -2582,8 +3630,7 @@ module Aws::IoTManagedIntegrations
       req.send_request(options)
     end
 
-    # Reset a runtime log configuration for a specific managed thing or for
-    # all managed things as a group.
+    # Reset a runtime log configuration for a specific managed thing.
     #
     # @option params [required, String] :managed_thing_id
     #   The id of a managed thing.
@@ -2603,6 +3650,173 @@ module Aws::IoTManagedIntegrations
       req.send_request(options)
     end
 
+    # Relays third-party device events for a connector such as a new device
+    # or a device state change event.
+    #
+    # @option params [required, String] :connector_id
+    #   The id of the connector between the third-party cloud provider and IoT
+    #   managed integrations.
+    #
+    # @option params [String] :user_id
+    #   The id of the third-party cloud provider.
+    #
+    # @option params [required, String] :operation
+    #   The Open Connectivity Foundation (OCF) operation requested to be
+    #   performed on the managed thing.
+    #
+    #   <note markdown="1"> The field op can have a value of "I" or "U". The field "cn" will
+    #   contain the capability types.
+    #
+    #    </note>
+    #
+    # @option params [String] :operation_version
+    #   The Open Connectivity Foundation (OCF) security specification version
+    #   for the operation being requested on the managed thing. For more
+    #   information, see [OCF Security Specification][1].
+    #
+    #
+    #
+    #   [1]: https://openconnectivity.org/specs/OCF_Security_Specification_v1.0.0.pdf
+    #
+    # @option params [Integer] :status_code
+    #   The status code of the Open Connectivity Foundation (OCF) operation
+    #   being performed on the managed thing.
+    #
+    # @option params [String] :message
+    #   The device state change event payload.
+    #
+    #   This parameter will include the following three fields:
+    #
+    #   * `uri`: `schema auc://<PARTNER-DEVICE-ID>/ResourcePath` (The
+    #     `Resourcepath` corresponds to an OCF resource.)
+    #
+    #   * `op`: For device state changes, this field must populate as `n+d`.
+    #
+    #   * `cn`: The content depends on the OCF resource referenced in
+    #     `ResourcePath`.
+    #
+    # @option params [String] :device_discovery_id
+    #   The id for the device discovery job.
+    #
+    # @option params [String] :connector_device_id
+    #   The third-party device id as defined by the connector. This device id
+    #   must not contain personal identifiable information (PII).
+    #
+    #   <note markdown="1"> This parameter is used for cloud-to-cloud devices only.
+    #
+    #    </note>
+    #
+    # @option params [String] :trace_id
+    #   The trace request identifier. This is generated by IoT managed
+    #   integrations and can be used to trace this command and its related
+    #   operations in CloudWatch.
+    #
+    # @option params [Array<Types::Device>] :devices
+    #   The list of devices.
+    #
+    # @option params [Types::MatterEndpoint] :matter_endpoint
+    #   The device endpoint.
+    #
+    # @return [Types::SendConnectorEventResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::SendConnectorEventResponse#connector_id #connector_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.send_connector_event({
+    #     connector_id: "ConnectorId", # required
+    #     user_id: "ThirdPartyUserId",
+    #     operation: "DEVICE_COMMAND_RESPONSE", # required, accepts DEVICE_COMMAND_RESPONSE, DEVICE_DISCOVERY, DEVICE_EVENT, DEVICE_COMMAND_REQUEST
+    #     operation_version: "ConnectorEventOperationVersion",
+    #     status_code: 1,
+    #     message: "ConnectorEventMessage",
+    #     device_discovery_id: "DeviceDiscoveryId",
+    #     connector_device_id: "ConnectorDeviceId",
+    #     trace_id: "TraceId",
+    #     devices: [
+    #       {
+    #         connector_device_id: "ConnectorDeviceId", # required
+    #         connector_device_name: "ConnectorDeviceName",
+    #         capability_report: { # required
+    #           version: "CapabilityReportVersion", # required
+    #           node_id: "NodeId",
+    #           endpoints: [ # required
+    #             {
+    #               id: "EndpointId", # required
+    #               device_types: ["DeviceType"], # required
+    #               clusters: [ # required
+    #                 {
+    #                   id: "ClusterId", # required
+    #                   revision: 1, # required
+    #                   public_id: "SchemaVersionedId",
+    #                   name: "CapabilityName",
+    #                   spec_version: "SpecVersion",
+    #                   attributes: [
+    #                     {
+    #                       id: "MatterAttributeId",
+    #                       name: "ActionName",
+    #                       value: {
+    #                       },
+    #                     },
+    #                   ],
+    #                   commands: ["MatterCommandId"],
+    #                   events: ["MatterEventId"],
+    #                   feature_map: 1,
+    #                   generated_commands: ["MatterCommandId"],
+    #                   fabric_index: 1,
+    #                 },
+    #               ],
+    #               parts: ["EndpointId"],
+    #               semantic_tags: ["EndpointSemanticTag"],
+    #               client_clusters: ["ClusterId"],
+    #             },
+    #           ],
+    #         },
+    #         capability_schemas: [
+    #           {
+    #             format: "AWS", # required, accepts AWS, ZCL, CONNECTOR
+    #             capability_id: "SchemaVersionedId", # required
+    #             extrinsic_id: "ExtrinsicSchemaId", # required
+    #             extrinsic_version: 1, # required
+    #             schema: { # required
+    #             },
+    #           },
+    #         ],
+    #         device_metadata: {
+    #         },
+    #       },
+    #     ],
+    #     matter_endpoint: {
+    #       id: "EndpointId",
+    #       clusters: [
+    #         {
+    #           id: "ClusterId",
+    #           attributes: {
+    #           },
+    #           commands: {
+    #             "MatterCommandId" => {
+    #             },
+    #           },
+    #           events: {
+    #             "MatterEventId" => {
+    #             },
+    #           },
+    #         },
+    #       ],
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.connector_id #=> String
+    #
+    # @overload send_connector_event(params = {})
+    # @param [Hash] params ({})
+    def send_connector_event(params = {}, options = {})
+      req = build_request(:send_connector_event, params)
+      req.send_request(options)
+    end
+
     # Send the command to the device represented by the managed thing.
     #
     # @option params [required, String] :managed_thing_id
@@ -2614,6 +3828,10 @@ module Aws::IoTManagedIntegrations
     # @option params [String] :connector_association_id
     #   The ID tracking the current discovery process for one connector
     #   association.
+    #
+    # @option params [String] :account_association_id
+    #   The identifier of the account association to use when sending a
+    #   command to a managed thing.
     #
     # @return [Types::SendManagedThingCommandResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -2645,6 +3863,7 @@ module Aws::IoTManagedIntegrations
     #       },
     #     ],
     #     connector_association_id: "ConnectorAssociationId",
+    #     account_association_id: "AccountAssociationId",
     #   })
     #
     # @example Response structure
@@ -2658,19 +3877,60 @@ module Aws::IoTManagedIntegrations
       req.send_request(options)
     end
 
-    # During user-guided setup, this is used to start device discovery. The
-    # authentication material (install code) is passed as a message to the
-    # controller telling it to start the discovery.
+    # Initiates a refresh of an existing account association to update its
+    # authorization and connection status.
+    #
+    # @option params [required, String] :account_association_id
+    #   The unique identifier of the account association to refresh.
+    #
+    # @return [Types::StartAccountAssociationRefreshResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::StartAccountAssociationRefreshResponse#o_auth_authorization_url #o_auth_authorization_url} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.start_account_association_refresh({
+    #     account_association_id: "AccountAssociationId", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.o_auth_authorization_url #=> String
+    #
+    # @overload start_account_association_refresh(params = {})
+    # @param [Hash] params ({})
+    def start_account_association_refresh(params = {}, options = {})
+      req = build_request(:start_account_association_refresh, params)
+      req.send_request(options)
+    end
+
+    # This API is used to start device discovery for hub-connected and
+    # third-party-connected devices. The authentication material (install
+    # code) is delivered as a message to the controller instructing it to
+    # start the discovery.
     #
     # @option params [required, String] :discovery_type
     #   The discovery type supporting the type of device to be discovered in
-    #   the device discovery job request.
+    #   the device discovery task request.
+    #
+    # @option params [Hash<String,String>] :custom_protocol_detail
+    #   Additional protocol-specific details required for device discovery,
+    #   which vary based on the discovery type.
+    #
+    #   <note markdown="1"> For a `DiscoveryType` of `CUSTOM`, the string-to-string map must have
+    #   a key value of `Name` set to a non-empty-string.
+    #
+    #    </note>
     #
     # @option params [String] :controller_identifier
     #   The id of the end-user's IoT hub.
     #
     # @option params [String] :connector_association_identifier
     #   The id of the connector association.
+    #
+    # @option params [String] :account_association_id
+    #   The identifier of the cloud-to-cloud account association to use for
+    #   discovery of third-party devices.
     #
     # @option params [String] :authentication_material
     #   The authentication material required to start the local device
@@ -2689,6 +3949,26 @@ module Aws::IoTManagedIntegrations
     #   A set of key/value pairs that are used to manage the device discovery
     #   request.
     #
+    # @option params [Array<String>] :connector_device_id_list
+    #   Used as a filter for PLA discoveries.
+    #
+    # @option params [String] :protocol
+    #   The protocol type for capability rediscovery (ZWAVE, ZIGBEE, or
+    #   CUSTOM).
+    #
+    #   <note markdown="1"> This parameter is only available when the discovery type is
+    #   CONTROLLER\_CAPABILITY\_REDISCOVERY.
+    #
+    #    </note>
+    #
+    # @option params [String] :end_device_identifier
+    #   The unique id of the end device for capability rediscovery.
+    #
+    #   <note markdown="1"> This parameter is only available when the discovery type is
+    #   CONTROLLER\_CAPABILITY\_REDISCOVERY.
+    #
+    #    </note>
+    #
     # @return [Types::StartDeviceDiscoveryResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::StartDeviceDiscoveryResponse#id #id} => String
@@ -2697,15 +3977,22 @@ module Aws::IoTManagedIntegrations
     # @example Request syntax with placeholder values
     #
     #   resp = client.start_device_discovery({
-    #     discovery_type: "ZWAVE", # required, accepts ZWAVE, ZIGBEE, CLOUD
+    #     discovery_type: "ZWAVE", # required, accepts ZWAVE, ZIGBEE, CLOUD, CUSTOM, CONTROLLER_CAPABILITY_REDISCOVERY
+    #     custom_protocol_detail: {
+    #       "CustomProtocolDetailKey" => "CustomProtocolDetailValue",
+    #     },
     #     controller_identifier: "ManagedThingId",
     #     connector_association_identifier: "ConnectorAssociationId",
+    #     account_association_id: "AccountAssociationId",
     #     authentication_material: "DiscoveryAuthMaterialString",
     #     authentication_material_type: "ZWAVE_INSTALL_CODE", # accepts ZWAVE_INSTALL_CODE
     #     client_token: "ClientToken",
     #     tags: {
     #       "TagKey" => "TagValue",
     #     },
+    #     connector_device_id_list: ["ConnectorDeviceId"],
+    #     protocol: "ZWAVE", # accepts ZWAVE, ZIGBEE, CUSTOM
+    #     end_device_identifier: "ManagedThingId",
     #   })
     #
     # @example Response structure
@@ -2720,7 +4007,202 @@ module Aws::IoTManagedIntegrations
       req.send_request(options)
     end
 
-    # Update a destination specified by id.
+    # Adds tags to a specified resource.
+    #
+    # @option params [required, String] :resource_arn
+    #   The Amazon Resource Name (ARN) of the resource to which to add tags.
+    #
+    # @option params [required, Hash<String,String>] :tags
+    #   A set of key/value pairs that are used to manage the resource.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.tag_resource({
+    #     resource_arn: "IoTManagedIntegrationsResourceARN", # required
+    #     tags: { # required
+    #       "TagKey" => "TagValue",
+    #     },
+    #   })
+    #
+    # @overload tag_resource(params = {})
+    # @param [Hash] params ({})
+    def tag_resource(params = {}, options = {})
+      req = build_request(:tag_resource, params)
+      req.send_request(options)
+    end
+
+    # Removes tags from a specified resource.
+    #
+    # @option params [required, String] :resource_arn
+    #   The Amazon Resource Name (ARN) of the resource from which to remove
+    #   tags.
+    #
+    # @option params [required, Array<String>] :tag_keys
+    #   A list of tag keys to remove from the resource.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.untag_resource({
+    #     resource_arn: "IoTManagedIntegrationsResourceARN", # required
+    #     tag_keys: ["TagKey"], # required
+    #   })
+    #
+    # @overload untag_resource(params = {})
+    # @param [Hash] params ({})
+    def untag_resource(params = {}, options = {})
+      req = build_request(:untag_resource, params)
+      req.send_request(options)
+    end
+
+    # Updates the properties of an existing account association.
+    #
+    # @option params [required, String] :account_association_id
+    #   The unique identifier of the account association to update.
+    #
+    # @option params [String] :name
+    #   The new name to assign to the account association.
+    #
+    # @option params [String] :description
+    #   The new description to assign to the account association.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_account_association({
+    #     account_association_id: "AccountAssociationId", # required
+    #     name: "AccountAssociationName",
+    #     description: "AccountAssociationDescription",
+    #   })
+    #
+    # @overload update_account_association(params = {})
+    # @param [Hash] params ({})
+    def update_account_association(params = {}, options = {})
+      req = build_request(:update_account_association, params)
+      req.send_request(options)
+    end
+
+    # Update an existing cloud connector.
+    #
+    # @option params [required, String] :identifier
+    #   The unique identifier of the cloud connector to update.
+    #
+    # @option params [String] :name
+    #   The new display name to assign to the cloud connector.
+    #
+    # @option params [String] :description
+    #   The new description to assign to the cloud connector.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    #
+    # @example Example: UpdateCloudConnector happy path for TP Link to update display name
+    #
+    #   resp = client.update_cloud_connector({
+    #     identifier: "123456789012", 
+    #     name: "Connector for TP Link Cloud V2", 
+    #   })
+    #
+    # @example Example: UpdateCloudConnector error Id for Ring connector which does not exist
+    #
+    #   resp = client.update_cloud_connector({
+    #     identifier: "123456789012", 
+    #     name: "Connector for Ring Cloud", 
+    #   })
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_cloud_connector({
+    #     identifier: "CloudConnectorId", # required
+    #     name: "DisplayName",
+    #     description: "CloudConnectorDescription",
+    #   })
+    #
+    # @overload update_cloud_connector(params = {})
+    # @param [Hash] params ({})
+    def update_cloud_connector(params = {}, options = {})
+      req = build_request(:update_cloud_connector, params)
+      req.send_request(options)
+    end
+
+    # Updates the properties of an existing connector destination.
+    #
+    # @option params [required, String] :identifier
+    #   The unique identifier of the connector destination to update.
+    #
+    # @option params [String] :description
+    #   The new description to assign to the connector destination.
+    #
+    # @option params [String] :name
+    #   The new display name to assign to the connector destination.
+    #
+    # @option params [String] :auth_type
+    #   The new authentication type to use for the connector destination.
+    #
+    # @option params [Types::AuthConfigUpdate] :auth_config
+    #   The updated authentication configuration details for the connector
+    #   destination.
+    #
+    # @option params [Types::SecretsManager] :secrets_manager
+    #   The updated AWS Secrets Manager configuration for the connector
+    #   destination.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_connector_destination({
+    #     identifier: "ConnectorDestinationId", # required
+    #     description: "ConnectorDestinationDescription",
+    #     name: "ConnectorDestinationName",
+    #     auth_type: "OAUTH", # accepts OAUTH
+    #     auth_config: {
+    #       o_auth_update: {
+    #         o_auth_complete_redirect_url: "String",
+    #         proactive_refresh_token_renewal: {
+    #           enabled: false,
+    #           days_before_renewal: 1,
+    #         },
+    #       },
+    #       general_authorization_update: {
+    #         auth_materials_to_add: [
+    #           {
+    #             secrets_manager: { # required
+    #               arn: "SecretsManagerArn", # required
+    #               version_id: "SecretsManagerVersionId", # required
+    #             },
+    #             auth_material_name: "AuthMaterialName", # required
+    #           },
+    #         ],
+    #         auth_materials_to_update: [
+    #           {
+    #             secrets_manager: { # required
+    #               arn: "SecretsManagerArn", # required
+    #               version_id: "SecretsManagerVersionId", # required
+    #             },
+    #             auth_material_name: "AuthMaterialName", # required
+    #           },
+    #         ],
+    #       },
+    #     },
+    #     secrets_manager: {
+    #       arn: "SecretsManagerArn", # required
+    #       version_id: "SecretsManagerVersionId", # required
+    #     },
+    #   })
+    #
+    # @overload update_connector_destination(params = {})
+    # @param [Hash] params ({})
+    def update_connector_destination(params = {}, options = {})
+      req = build_request(:update_connector_destination, params)
+      req.send_request(options)
+    end
+
+    # Update a destination specified by name.
     #
     # @option params [required, String] :name
     #   The name of the customer-managed destination.
@@ -2796,6 +4278,10 @@ module Aws::IoTManagedIntegrations
     # @option params [String] :serial_number
     #   The serial number of the device.
     #
+    # @option params [Types::WiFiSimpleSetupConfiguration] :wi_fi_simple_setup_configuration
+    #   The Wi-Fi Simple Setup configuration for the managed thing, which
+    #   defines provisioning capabilities and timeout settings.
+    #
     # @option params [String] :brand
     #   The brand of the device.
     #
@@ -2807,6 +4293,10 @@ module Aws::IoTManagedIntegrations
     #
     # @option params [Types::CapabilityReport] :capability_report
     #   A report of the capabilities for the managed thing.
+    #
+    # @option params [Array<Types::CapabilitySchemaItem>] :capability_schemas
+    #   The updated capability schemas that define the functionality and
+    #   features supported by the managed thing.
     #
     # @option params [String] :capabilities
     #   The capabilities of the device such as light bulb.
@@ -2830,6 +4320,11 @@ module Aws::IoTManagedIntegrations
     #     owner: "Owner",
     #     credential_locker_id: "CredentialLockerId",
     #     serial_number: "SerialNumber",
+    #     wi_fi_simple_setup_configuration: {
+    #       enable_as_provisioner: false,
+    #       enable_as_provisionee: false,
+    #       timeout_in_minutes: 1,
+    #     },
     #     brand: "Brand",
     #     model: "Model",
     #     name: "Name",
@@ -2853,6 +4348,16 @@ module Aws::IoTManagedIntegrations
     #         },
     #       ],
     #     },
+    #     capability_schemas: [
+    #       {
+    #         format: "AWS", # required, accepts AWS, ZCL, CONNECTOR
+    #         capability_id: "SchemaVersionedId", # required
+    #         extrinsic_id: "ExtrinsicSchemaId", # required
+    #         extrinsic_version: 1, # required
+    #         schema: { # required
+    #         },
+    #       },
+    #     ],
     #     capabilities: "Capabilities",
     #     classification: "Classification",
     #     hub_network_mode: "STANDARD", # accepts STANDARD, NETWORK_WIDE_EXCLUSION
@@ -2882,7 +4387,7 @@ module Aws::IoTManagedIntegrations
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_notification_configuration({
-    #     event_type: "DEVICE_COMMAND", # required, accepts DEVICE_COMMAND, DEVICE_COMMAND_REQUEST, DEVICE_EVENT, DEVICE_LIFE_CYCLE, DEVICE_STATE, DEVICE_OTA, CONNECTOR_ASSOCIATION, CONNECTOR_ERROR_REPORT
+    #     event_type: "DEVICE_COMMAND", # required, accepts DEVICE_COMMAND, DEVICE_COMMAND_REQUEST, DEVICE_DISCOVERY_STATUS, DEVICE_EVENT, DEVICE_LIFE_CYCLE, DEVICE_STATE, DEVICE_OTA, DEVICE_WSS, CONNECTOR_ASSOCIATION, ACCOUNT_ASSOCIATION, CONNECTOR_ERROR_REPORT
     #     destination_name: "DestinationName", # required
     #   })
     #
@@ -2939,7 +4444,7 @@ module Aws::IoTManagedIntegrations
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-iotmanagedintegrations'
-      context[:gem_version] = '1.0.0'
+      context[:gem_version] = '1.25.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

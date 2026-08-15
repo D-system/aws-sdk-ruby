@@ -95,8 +95,8 @@ module Aws::Health
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::Health
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::Health
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::Health
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::Health
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::Health
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::Health
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::Health
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -588,8 +592,8 @@ module Aws::Health
     #   returned, the response does not contain a pagination token value.
     #
     # @option params [Integer] :max_results
-    #   The maximum number of items to return in one batch, between 10 and
-    #   100, inclusive.
+    #   The maximum number of items to return in one batch, between 1 and 100,
+    #   inclusive.
     #
     # @return [Types::DescribeAffectedEntitiesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -693,8 +697,8 @@ module Aws::Health
     #   returned, the response does not contain a pagination token value.
     #
     # @option params [Integer] :max_results
-    #   The maximum number of items to return in one batch, between 10 and
-    #   100, inclusive.
+    #   The maximum number of items to return in one batch, between 1 and 100,
+    #   inclusive.
     #
     # @option params [Array<Types::EntityAccountFilter>] :organization_entity_account_filters
     #   A JSON set of elements including the `awsAccountId`, `eventArn` and a
@@ -876,6 +880,7 @@ module Aws::Health
     #
     #   resp = client.describe_event_aggregates({
     #     filter: {
+    #       actionabilities: ["ACTION_REQUIRED"], # accepts ACTION_REQUIRED, ACTION_MAY_BE_REQUIRED, INFORMATIONAL
     #       event_arns: ["eventArn"],
     #       event_type_codes: ["eventType"],
     #       services: ["service"],
@@ -908,6 +913,7 @@ module Aws::Health
     #         },
     #       ],
     #       event_status_codes: ["open"], # accepts open, closed, upcoming
+    #       personas: ["OPERATIONS"], # accepts OPERATIONS, SECURITY, BILLING
     #     },
     #     aggregate_field: "eventTypeCategory", # required, accepts eventTypeCategory
     #     max_results: 1,
@@ -989,6 +995,9 @@ module Aws::Health
     #   resp.successful_set[0].event.last_updated_time #=> Time
     #   resp.successful_set[0].event.status_code #=> String, one of "open", "closed", "upcoming"
     #   resp.successful_set[0].event.event_scope_code #=> String, one of "PUBLIC", "ACCOUNT_SPECIFIC", "NONE"
+    #   resp.successful_set[0].event.actionability #=> String, one of "ACTION_REQUIRED", "ACTION_MAY_BE_REQUIRED", "INFORMATIONAL"
+    #   resp.successful_set[0].event.personas #=> Array
+    #   resp.successful_set[0].event.personas[0] #=> String, one of "OPERATIONS", "SECURITY", "BILLING"
     #   resp.successful_set[0].event_description.latest_description #=> String
     #   resp.successful_set[0].event_metadata #=> Hash
     #   resp.successful_set[0].event_metadata["metadataKey"] #=> String
@@ -1093,6 +1102,9 @@ module Aws::Health
     #   resp.successful_set[0].event.last_updated_time #=> Time
     #   resp.successful_set[0].event.status_code #=> String, one of "open", "closed", "upcoming"
     #   resp.successful_set[0].event.event_scope_code #=> String, one of "PUBLIC", "ACCOUNT_SPECIFIC", "NONE"
+    #   resp.successful_set[0].event.actionability #=> String, one of "ACTION_REQUIRED", "ACTION_MAY_BE_REQUIRED", "INFORMATIONAL"
+    #   resp.successful_set[0].event.personas #=> Array
+    #   resp.successful_set[0].event.personas[0] #=> String, one of "OPERATIONS", "SECURITY", "BILLING"
     #   resp.successful_set[0].event_description.latest_description #=> String
     #   resp.successful_set[0].event_metadata #=> Hash
     #   resp.successful_set[0].event_metadata["metadataKey"] #=> String
@@ -1165,6 +1177,8 @@ module Aws::Health
     #       event_type_codes: ["eventTypeCode"],
     #       services: ["service"],
     #       event_type_categories: ["issue"], # accepts issue, accountNotification, scheduledChange, investigation
+    #       actionabilities: ["ACTION_REQUIRED"], # accepts ACTION_REQUIRED, ACTION_MAY_BE_REQUIRED, INFORMATIONAL
+    #       personas: ["OPERATIONS"], # accepts OPERATIONS, SECURITY, BILLING
     #     },
     #     locale: "locale",
     #     next_token: "nextToken",
@@ -1177,6 +1191,9 @@ module Aws::Health
     #   resp.event_types[0].service #=> String
     #   resp.event_types[0].code #=> String
     #   resp.event_types[0].category #=> String, one of "issue", "accountNotification", "scheduledChange", "investigation"
+    #   resp.event_types[0].actionability #=> String, one of "ACTION_REQUIRED", "ACTION_MAY_BE_REQUIRED", "INFORMATIONAL"
+    #   resp.event_types[0].personas #=> Array
+    #   resp.event_types[0].personas[0] #=> String, one of "OPERATIONS", "SECURITY", "BILLING"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/health-2016-08-04/DescribeEventTypes AWS API Documentation
@@ -1229,8 +1246,8 @@ module Aws::Health
     #   returned, the response does not contain a pagination token value.
     #
     # @option params [Integer] :max_results
-    #   The maximum number of items to return in one batch, between 10 and
-    #   100, inclusive.
+    #   The maximum number of items to return in one batch, between 1 and 100,
+    #   inclusive.
     #
     # @option params [String] :locale
     #   The locale (language) to return information in. English (en) is the
@@ -1247,6 +1264,7 @@ module Aws::Health
     #
     #   resp = client.describe_events({
     #     filter: {
+    #       actionabilities: ["ACTION_REQUIRED"], # accepts ACTION_REQUIRED, ACTION_MAY_BE_REQUIRED, INFORMATIONAL
     #       event_arns: ["eventArn"],
     #       event_type_codes: ["eventType"],
     #       services: ["service"],
@@ -1279,6 +1297,7 @@ module Aws::Health
     #         },
     #       ],
     #       event_status_codes: ["open"], # accepts open, closed, upcoming
+    #       personas: ["OPERATIONS"], # accepts OPERATIONS, SECURITY, BILLING
     #     },
     #     next_token: "nextToken",
     #     max_results: 1,
@@ -1299,6 +1318,9 @@ module Aws::Health
     #   resp.events[0].last_updated_time #=> Time
     #   resp.events[0].status_code #=> String, one of "open", "closed", "upcoming"
     #   resp.events[0].event_scope_code #=> String, one of "PUBLIC", "ACCOUNT_SPECIFIC", "NONE"
+    #   resp.events[0].actionability #=> String, one of "ACTION_REQUIRED", "ACTION_MAY_BE_REQUIRED", "INFORMATIONAL"
+    #   resp.events[0].personas #=> Array
+    #   resp.events[0].personas[0] #=> String, one of "OPERATIONS", "SECURITY", "BILLING"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/health-2016-08-04/DescribeEvents AWS API Documentation
@@ -1359,8 +1381,8 @@ module Aws::Health
     #   returned, the response does not contain a pagination token value.
     #
     # @option params [Integer] :max_results
-    #   The maximum number of items to return in one batch, between 10 and
-    #   100, inclusive.
+    #   The maximum number of items to return in one batch, between 1 and 100,
+    #   inclusive.
     #
     # @option params [String] :locale
     #   The locale (language) to return information in. English (en) is the
@@ -1377,6 +1399,7 @@ module Aws::Health
     #
     #   resp = client.describe_events_for_organization({
     #     filter: {
+    #       actionabilities: ["ACTION_REQUIRED"], # accepts ACTION_REQUIRED, ACTION_MAY_BE_REQUIRED, INFORMATIONAL
     #       event_type_codes: ["eventType"],
     #       aws_account_ids: ["accountId"],
     #       services: ["service"],
@@ -1397,6 +1420,7 @@ module Aws::Health
     #       entity_values: ["entityValue"],
     #       event_type_categories: ["issue"], # accepts issue, accountNotification, scheduledChange, investigation
     #       event_status_codes: ["open"], # accepts open, closed, upcoming
+    #       personas: ["OPERATIONS"], # accepts OPERATIONS, SECURITY, BILLING
     #     },
     #     next_token: "nextToken",
     #     max_results: 1,
@@ -1416,6 +1440,9 @@ module Aws::Health
     #   resp.events[0].end_time #=> Time
     #   resp.events[0].last_updated_time #=> Time
     #   resp.events[0].status_code #=> String, one of "open", "closed", "upcoming"
+    #   resp.events[0].actionability #=> String, one of "ACTION_REQUIRED", "ACTION_MAY_BE_REQUIRED", "INFORMATIONAL"
+    #   resp.events[0].personas #=> Array
+    #   resp.events[0].personas[0] #=> String, one of "OPERATIONS", "SECURITY", "BILLING"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/health-2016-08-04/DescribeEventsForOrganization AWS API Documentation
@@ -1547,7 +1574,7 @@ module Aws::Health
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-health'
-      context[:gem_version] = '1.78.0'
+      context[:gem_version] = '1.102.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

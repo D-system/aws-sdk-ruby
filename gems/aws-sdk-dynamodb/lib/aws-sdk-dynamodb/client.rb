@@ -101,8 +101,8 @@ module Aws::DynamoDB
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -130,22 +130,24 @@ module Aws::DynamoDB
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -172,6 +174,11 @@ module Aws::DynamoDB
     #     until there is sufficent client side capacity to retry the request.
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
+    #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
     #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
@@ -204,7 +211,7 @@ module Aws::DynamoDB
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -212,8 +219,7 @@ module Aws::DynamoDB
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -266,8 +272,8 @@ module Aws::DynamoDB
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -329,17 +335,15 @@ module Aws::DynamoDB
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -397,8 +401,8 @@ module Aws::DynamoDB
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -595,6 +599,9 @@ module Aws::DynamoDB
     #   resp.consumed_capacity[0].global_secondary_indexes["IndexName"].read_capacity_units #=> Float
     #   resp.consumed_capacity[0].global_secondary_indexes["IndexName"].write_capacity_units #=> Float
     #   resp.consumed_capacity[0].global_secondary_indexes["IndexName"].capacity_units #=> Float
+    #   resp.consumed_capacity[0].vector_indexes #=> Hash
+    #   resp.consumed_capacity[0].vector_indexes["IndexName"].vector_search_request_bytes #=> Float
+    #   resp.consumed_capacity[0].vector_indexes["IndexName"].vector_write_request_bytes #=> Float
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/BatchExecuteStatement AWS API Documentation
     #
@@ -662,6 +669,11 @@ module Aws::DynamoDB
     # Requests for nonexistent items consume the minimum read capacity units
     # according to the type of read. For more information, see [Working with
     # Tables][2] in the *Amazon DynamoDB Developer Guide*.
+    #
+    # <note markdown="1"> `BatchGetItem` will result in a `ValidationException` if the same key
+    # is specified multiple times.
+    #
+    #  </note>
     #
     #
     #
@@ -874,6 +886,9 @@ module Aws::DynamoDB
     #   resp.consumed_capacity[0].global_secondary_indexes["IndexName"].read_capacity_units #=> Float
     #   resp.consumed_capacity[0].global_secondary_indexes["IndexName"].write_capacity_units #=> Float
     #   resp.consumed_capacity[0].global_secondary_indexes["IndexName"].capacity_units #=> Float
+    #   resp.consumed_capacity[0].vector_indexes #=> Hash
+    #   resp.consumed_capacity[0].vector_indexes["IndexName"].vector_search_request_bytes #=> Float
+    #   resp.consumed_capacity[0].vector_indexes["IndexName"].vector_write_request_bytes #=> Float
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/BatchGetItem AWS API Documentation
     #
@@ -912,13 +927,12 @@ module Aws::DynamoDB
     # request with those unprocessed items until all items have been
     # processed.
     #
-    # For tables and indexes with provisioned capacity, if none of the items
-    # can be processed due to insufficient provisioned throughput on all of
-    # the tables in the request, then `BatchWriteItem` returns a
-    # `ProvisionedThroughputExceededException`. For all tables and indexes,
-    # if none of the items can be processed due to other throttling
-    # scenarios (such as exceeding partition level limits), then
-    # `BatchWriteItem` returns a `ThrottlingException`.
+    # If `BatchWriteItem` cannot process any items due to throttling (for
+    # example, insufficient provisioned throughput on the tables in the
+    # request, or partition-level or account-level limits), it returns a
+    # `ProvisionedThroughputExceededException` or a `ThrottlingException`.
+    # Both indicate that the request was throttled; check the
+    # `ThrottlingReason` field in the returned exception for details.
     #
     # If DynamoDB returns any unprocessed items, you should retry the batch
     # operation on those items. However, *we strongly recommend that you use
@@ -1140,6 +1154,9 @@ module Aws::DynamoDB
     #   resp.consumed_capacity[0].global_secondary_indexes["IndexName"].read_capacity_units #=> Float
     #   resp.consumed_capacity[0].global_secondary_indexes["IndexName"].write_capacity_units #=> Float
     #   resp.consumed_capacity[0].global_secondary_indexes["IndexName"].capacity_units #=> Float
+    #   resp.consumed_capacity[0].vector_indexes #=> Hash
+    #   resp.consumed_capacity[0].vector_indexes["IndexName"].vector_search_request_bytes #=> Float
+    #   resp.consumed_capacity[0].vector_indexes["IndexName"].vector_write_request_bytes #=> Float
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/BatchWriteItem AWS API Documentation
     #
@@ -1305,7 +1322,8 @@ module Aws::DynamoDB
     #
     #   resp.global_table_description.replication_group #=> Array
     #   resp.global_table_description.replication_group[0].region_name #=> String
-    #   resp.global_table_description.replication_group[0].replica_status #=> String, one of "CREATING", "CREATION_FAILED", "UPDATING", "DELETING", "ACTIVE", "REGION_DISABLED", "INACCESSIBLE_ENCRYPTION_CREDENTIALS"
+    #   resp.global_table_description.replication_group[0].replica_status #=> String, one of "CREATING", "CREATION_FAILED", "UPDATING", "DELETING", "ACTIVE", "REGION_DISABLED", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
+    #   resp.global_table_description.replication_group[0].replica_arn #=> String
     #   resp.global_table_description.replication_group[0].replica_status_description #=> String
     #   resp.global_table_description.replication_group[0].replica_status_percent_progress #=> String
     #   resp.global_table_description.replication_group[0].kms_master_key_id #=> String
@@ -1313,7 +1331,7 @@ module Aws::DynamoDB
     #   resp.global_table_description.replication_group[0].on_demand_throughput_override.max_read_request_units #=> Integer
     #   resp.global_table_description.replication_group[0].warm_throughput.read_units_per_second #=> Integer
     #   resp.global_table_description.replication_group[0].warm_throughput.write_units_per_second #=> Integer
-    #   resp.global_table_description.replication_group[0].warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED"
+    #   resp.global_table_description.replication_group[0].warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
     #   resp.global_table_description.replication_group[0].global_secondary_indexes #=> Array
     #   resp.global_table_description.replication_group[0].global_secondary_indexes[0].index_name #=> String
     #   resp.global_table_description.replication_group[0].global_secondary_indexes[0].provisioned_throughput_override.read_capacity_units #=> Integer
@@ -1324,6 +1342,7 @@ module Aws::DynamoDB
     #   resp.global_table_description.replication_group[0].replica_inaccessible_date_time #=> Time
     #   resp.global_table_description.replication_group[0].replica_table_class_summary.table_class #=> String, one of "STANDARD", "STANDARD_INFREQUENT_ACCESS"
     #   resp.global_table_description.replication_group[0].replica_table_class_summary.last_update_date_time #=> Time
+    #   resp.global_table_description.replication_group[0].global_table_settings_replication_mode #=> String, one of "ENABLED", "DISABLED", "ENABLED_WITH_OVERRIDES"
     #   resp.global_table_description.global_table_arn #=> String
     #   resp.global_table_description.creation_date_time #=> Time
     #   resp.global_table_description.global_table_status #=> String, one of "CREATING", "ACTIVE", "DELETING", "UPDATING"
@@ -1357,7 +1376,7 @@ module Aws::DynamoDB
     #
     # You can use the `DescribeTable` action to check the table status.
     #
-    # @option params [required, Array<Types::AttributeDefinition>] :attribute_definitions
+    # @option params [Array<Types::AttributeDefinition>] :attribute_definitions
     #   An array of attributes that describe the key schema for the table and
     #   indexes.
     #
@@ -1365,7 +1384,7 @@ module Aws::DynamoDB
     #   The name of the table to create. You can also provide the Amazon
     #   Resource Name (ARN) of the table in this parameter.
     #
-    # @option params [required, Array<Types::KeySchemaElement>] :key_schema
+    # @option params [Array<Types::KeySchemaElement>] :key_schema
     #   Specifies the attributes that make up the primary key for a table or
     #   an index. The attributes in `KeySchema` must also be defined in the
     #   `AttributeDefinitions` array. For more information, see [Data
@@ -1447,7 +1466,11 @@ module Aws::DynamoDB
     #       attributes provided in `NonKeyAttributes`, summed across all of
     #       the secondary indexes, must not exceed 100. If you project the
     #       same attribute into two different indexes, this counts as two
-    #       distinct attributes when determining the total.
+    #       distinct attributes when determining the total. This limit only
+    #       applies when you specify the ProjectionType of `INCLUDE`. You
+    #       still can specify the ProjectionType of `ALL` to project all
+    #       attributes from the source table, even if the table has more than
+    #       100 attributes.
     #
     # @option params [Array<Types::GlobalSecondaryIndex>] :global_secondary_indexes
     #   One or more global secondary indexes (the maximum is 20) to be created
@@ -1460,7 +1483,8 @@ module Aws::DynamoDB
     #
     #
     #   * `KeySchema` - Specifies the key schema for the global secondary
-    #     index.
+    #     index. Each global secondary index supports up to 4 partition keys
+    #     and up to 4 sort keys.
     #
     #   * `Projection` - Specifies attributes that are copied (projected) from
     #     the table into the index. These are in addition to the primary key
@@ -1483,7 +1507,11 @@ module Aws::DynamoDB
     #       attributes provided in `NonKeyAttributes`, summed across all of
     #       the secondary indexes, must not exceed 100. If you project the
     #       same attribute into two different indexes, this counts as two
-    #       distinct attributes when determining the total.
+    #       distinct attributes when determining the total. This limit only
+    #       applies when you specify the ProjectionType of `INCLUDE`. You
+    #       still can specify the ProjectionType of `ALL` to project all
+    #       attributes from the source table, even if the table has more than
+    #       100 attributes.
     #   * `ProvisionedThroughput` - The provisioned throughput settings for
     #     the global secondary index, consisting of read and write capacity
     #     units.
@@ -1492,18 +1520,19 @@ module Aws::DynamoDB
     #   Controls how you are charged for read and write throughput and how you
     #   manage capacity. This setting can be changed later.
     #
-    #   * `PROVISIONED` - We recommend using `PROVISIONED` for predictable
-    #     workloads. `PROVISIONED` sets the billing mode to [Provisioned
-    #     capacity mode][1].
+    #   * `PAY_PER_REQUEST` - We recommend using `PAY_PER_REQUEST` for most
+    #     DynamoDB workloads. `PAY_PER_REQUEST` sets the billing mode to
+    #     [On-demand capacity mode][1].
     #
-    #   * `PAY_PER_REQUEST` - We recommend using `PAY_PER_REQUEST` for
-    #     unpredictable workloads. `PAY_PER_REQUEST` sets the billing mode to
-    #     [On-demand capacity mode][2].
+    #   * `PROVISIONED` - We recommend using `PROVISIONED` for steady
+    #     workloads with predictable growth where capacity requirements can be
+    #     reliably forecasted. `PROVISIONED` sets the billing mode to
+    #     [Provisioned capacity mode][2].
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/provisioned-capacity-mode.html
-    #   [2]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/on-demand-capacity-mode.html
+    #   [1]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/on-demand-capacity-mode.html
+    #   [2]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/provisioned-capacity-mode.html
     #
     # @option params [Types::ProvisionedThroughput] :provisioned_throughput
     #   Represents the provisioned throughput settings for a specified table
@@ -1596,6 +1625,42 @@ module Aws::DynamoDB
     #   table in on-demand capacity mode. If you use this parameter, you must
     #   specify `MaxReadRequestUnits`, `MaxWriteRequestUnits`, or both.
     #
+    # @option params [String] :global_table_source_arn
+    #   The Amazon Resource Name (ARN) of the source table used for the
+    #   creation of a multi-account global table.
+    #
+    # @option params [String] :global_table_settings_replication_mode
+    #   Controls the settings synchronization mode for the global table. For
+    #   multi-account global tables, this parameter is required and the only
+    #   supported value is ENABLED. For same-account global tables, this
+    #   parameter is set to ENABLED\_WITH\_OVERRIDES.
+    #
+    # @option params [Array<Types::VectorIndex>] :vector_indexes
+    #   One or more vector indexes to be created on the table. Each vector
+    #   index enables similarity search on a vector attribute. Each element in
+    #   the list consists of:
+    #
+    #   * `IndexName` - The name of the vector index. Must be unique within
+    #     the table.
+    #
+    #   * `VectorAttribute` - The attribute that contains vector embeddings.
+    #     If multiple vector indexes reference the same attribute, they must
+    #     all use the same number of dimensions.
+    #
+    #   * `Dimensions` - The number of dimensions in each vector.
+    #
+    #   * `DistanceFunction` - The distance function used to calculate
+    #     similarity. Valid values: `COSINE`, `EUCLIDEAN`, `DOT_PRODUCT`.
+    #
+    #   * `Projection` - Specifies attributes that are copied (projected) from
+    #     the table into the vector index. The total number of projected
+    #     non-key attributes is shared across the vector attribute (counts as
+    #     1) and `INLINE_FILTER` search schema elements (each counts as 1).
+    #     `HASH` search schema elements do not count toward this limit.
+    #
+    #   * `SearchSchema` - (Optional) Defines the partition key (`HASH`) and
+    #     inline filter (`INLINE_FILTER`) attributes for the vector index.
+    #
     # @return [Types::CreateTableOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateTableOutput#table_description #table_description} => Types::TableDescription
@@ -1671,14 +1736,14 @@ module Aws::DynamoDB
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_table({
-    #     attribute_definitions: [ # required
+    #     attribute_definitions: [
     #       {
     #         attribute_name: "KeySchemaAttributeName", # required
     #         attribute_type: "S", # required, accepts S, N, B
     #       },
     #     ],
     #     table_name: "TableArn", # required
-    #     key_schema: [ # required
+    #     key_schema: [
     #       {
     #         attribute_name: "KeySchemaAttributeName", # required
     #         key_type: "HASH", # required, accepts HASH, RANGE
@@ -1757,6 +1822,28 @@ module Aws::DynamoDB
     #       max_read_request_units: 1,
     #       max_write_request_units: 1,
     #     },
+    #     global_table_source_arn: "TableArn",
+    #     global_table_settings_replication_mode: "ENABLED", # accepts ENABLED, DISABLED, ENABLED_WITH_OVERRIDES
+    #     vector_indexes: [
+    #       {
+    #         index_name: "IndexName", # required
+    #         vector_attribute: { # required
+    #           attribute_name: "VectorAttributeName", # required
+    #         },
+    #         search_schema: [
+    #           {
+    #             attribute_name: "AttributeName", # required
+    #             search_schema_element_type: "HASH", # required, accepts HASH, INLINE_FILTER
+    #           },
+    #         ],
+    #         projection: { # required
+    #           projection_type: "ALL", # accepts ALL, KEYS_ONLY, INCLUDE
+    #           non_key_attributes: ["NonKeyAttributeName"],
+    #         },
+    #         dimensions: 1, # required
+    #         distance_function: "COSINE", # required, accepts COSINE, DOT_PRODUCT, EUCLIDEAN
+    #       },
+    #     ],
     #   })
     #
     # @example Response structure
@@ -1768,7 +1855,7 @@ module Aws::DynamoDB
     #   resp.table_description.key_schema #=> Array
     #   resp.table_description.key_schema[0].attribute_name #=> String
     #   resp.table_description.key_schema[0].key_type #=> String, one of "HASH", "RANGE"
-    #   resp.table_description.table_status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED"
+    #   resp.table_description.table_status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
     #   resp.table_description.creation_date_time #=> Time
     #   resp.table_description.provisioned_throughput.last_increase_date_time #=> Time
     #   resp.table_description.provisioned_throughput.last_decrease_date_time #=> Time
@@ -1822,7 +1909,8 @@ module Aws::DynamoDB
     #   resp.table_description.global_table_version #=> String
     #   resp.table_description.replicas #=> Array
     #   resp.table_description.replicas[0].region_name #=> String
-    #   resp.table_description.replicas[0].replica_status #=> String, one of "CREATING", "CREATION_FAILED", "UPDATING", "DELETING", "ACTIVE", "REGION_DISABLED", "INACCESSIBLE_ENCRYPTION_CREDENTIALS"
+    #   resp.table_description.replicas[0].replica_status #=> String, one of "CREATING", "CREATION_FAILED", "UPDATING", "DELETING", "ACTIVE", "REGION_DISABLED", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
+    #   resp.table_description.replicas[0].replica_arn #=> String
     #   resp.table_description.replicas[0].replica_status_description #=> String
     #   resp.table_description.replicas[0].replica_status_percent_progress #=> String
     #   resp.table_description.replicas[0].kms_master_key_id #=> String
@@ -1830,7 +1918,7 @@ module Aws::DynamoDB
     #   resp.table_description.replicas[0].on_demand_throughput_override.max_read_request_units #=> Integer
     #   resp.table_description.replicas[0].warm_throughput.read_units_per_second #=> Integer
     #   resp.table_description.replicas[0].warm_throughput.write_units_per_second #=> Integer
-    #   resp.table_description.replicas[0].warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED"
+    #   resp.table_description.replicas[0].warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
     #   resp.table_description.replicas[0].global_secondary_indexes #=> Array
     #   resp.table_description.replicas[0].global_secondary_indexes[0].index_name #=> String
     #   resp.table_description.replicas[0].global_secondary_indexes[0].provisioned_throughput_override.read_capacity_units #=> Integer
@@ -1841,6 +1929,11 @@ module Aws::DynamoDB
     #   resp.table_description.replicas[0].replica_inaccessible_date_time #=> Time
     #   resp.table_description.replicas[0].replica_table_class_summary.table_class #=> String, one of "STANDARD", "STANDARD_INFREQUENT_ACCESS"
     #   resp.table_description.replicas[0].replica_table_class_summary.last_update_date_time #=> Time
+    #   resp.table_description.replicas[0].global_table_settings_replication_mode #=> String, one of "ENABLED", "DISABLED", "ENABLED_WITH_OVERRIDES"
+    #   resp.table_description.global_table_witnesses #=> Array
+    #   resp.table_description.global_table_witnesses[0].region_name #=> String
+    #   resp.table_description.global_table_witnesses[0].witness_status #=> String, one of "CREATING", "DELETING", "ACTIVE"
+    #   resp.table_description.global_table_settings_replication_mode #=> String, one of "ENABLED", "DISABLED", "ENABLED_WITH_OVERRIDES"
     #   resp.table_description.restore_summary.source_backup_arn #=> String
     #   resp.table_description.restore_summary.source_table_arn #=> String
     #   resp.table_description.restore_summary.restore_date_time #=> Time
@@ -1859,8 +1952,24 @@ module Aws::DynamoDB
     #   resp.table_description.on_demand_throughput.max_write_request_units #=> Integer
     #   resp.table_description.warm_throughput.read_units_per_second #=> Integer
     #   resp.table_description.warm_throughput.write_units_per_second #=> Integer
-    #   resp.table_description.warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED"
+    #   resp.table_description.warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
     #   resp.table_description.multi_region_consistency #=> String, one of "EVENTUAL", "STRONG"
+    #   resp.table_description.vector_indexes #=> Array
+    #   resp.table_description.vector_indexes[0].index_name #=> String
+    #   resp.table_description.vector_indexes[0].search_schema #=> Array
+    #   resp.table_description.vector_indexes[0].search_schema[0].attribute_name #=> String
+    #   resp.table_description.vector_indexes[0].search_schema[0].search_schema_element_type #=> String, one of "HASH", "INLINE_FILTER"
+    #   resp.table_description.vector_indexes[0].projection.projection_type #=> String, one of "ALL", "KEYS_ONLY", "INCLUDE"
+    #   resp.table_description.vector_indexes[0].projection.non_key_attributes #=> Array
+    #   resp.table_description.vector_indexes[0].projection.non_key_attributes[0] #=> String
+    #   resp.table_description.vector_indexes[0].vector_attribute.attribute_name #=> String
+    #   resp.table_description.vector_indexes[0].dimensions #=> Integer
+    #   resp.table_description.vector_indexes[0].distance_function #=> String, one of "COSINE", "DOT_PRODUCT", "EUCLIDEAN"
+    #   resp.table_description.vector_indexes[0].index_status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE"
+    #   resp.table_description.vector_indexes[0].backfilling #=> Boolean
+    #   resp.table_description.vector_indexes[0].index_size_bytes #=> Integer
+    #   resp.table_description.vector_indexes[0].item_count #=> Integer
+    #   resp.table_description.vector_indexes[0].index_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/CreateTable AWS API Documentation
     #
@@ -1939,6 +2048,17 @@ module Aws::DynamoDB
     #   resp.backup_description.source_table_feature_details.sse_description.sse_type #=> String, one of "AES256", "KMS"
     #   resp.backup_description.source_table_feature_details.sse_description.kms_master_key_arn #=> String
     #   resp.backup_description.source_table_feature_details.sse_description.inaccessible_encryption_date_time #=> Time
+    #   resp.backup_description.source_table_feature_details.vector_indexes #=> Array
+    #   resp.backup_description.source_table_feature_details.vector_indexes[0].index_name #=> String
+    #   resp.backup_description.source_table_feature_details.vector_indexes[0].vector_attribute.attribute_name #=> String
+    #   resp.backup_description.source_table_feature_details.vector_indexes[0].search_schema #=> Array
+    #   resp.backup_description.source_table_feature_details.vector_indexes[0].search_schema[0].attribute_name #=> String
+    #   resp.backup_description.source_table_feature_details.vector_indexes[0].search_schema[0].search_schema_element_type #=> String, one of "HASH", "INLINE_FILTER"
+    #   resp.backup_description.source_table_feature_details.vector_indexes[0].projection.projection_type #=> String, one of "ALL", "KEYS_ONLY", "INCLUDE"
+    #   resp.backup_description.source_table_feature_details.vector_indexes[0].projection.non_key_attributes #=> Array
+    #   resp.backup_description.source_table_feature_details.vector_indexes[0].projection.non_key_attributes[0] #=> String
+    #   resp.backup_description.source_table_feature_details.vector_indexes[0].dimensions #=> Integer
+    #   resp.backup_description.source_table_feature_details.vector_indexes[0].distance_function #=> String, one of "COSINE", "DOT_PRODUCT", "EUCLIDEAN"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/DeleteBackup AWS API Documentation
     #
@@ -2221,6 +2341,9 @@ module Aws::DynamoDB
     #   resp.consumed_capacity.global_secondary_indexes["IndexName"].read_capacity_units #=> Float
     #   resp.consumed_capacity.global_secondary_indexes["IndexName"].write_capacity_units #=> Float
     #   resp.consumed_capacity.global_secondary_indexes["IndexName"].capacity_units #=> Float
+    #   resp.consumed_capacity.vector_indexes #=> Hash
+    #   resp.consumed_capacity.vector_indexes["IndexName"].vector_search_request_bytes #=> Float
+    #   resp.consumed_capacity.vector_indexes["IndexName"].vector_write_request_bytes #=> Float
     #   resp.item_collection_metrics.item_collection_key #=> Hash
     #   resp.item_collection_metrics.item_collection_key["AttributeName"] #=> <Hash,Array,String,Numeric,Boolean,IO,Set,nil>
     #   resp.item_collection_metrics.size_estimate_range_gb #=> Array
@@ -2305,9 +2428,6 @@ module Aws::DynamoDB
     # DynamoDB returns a `ResourceNotFoundException`. If table is already in
     # the `DELETING` state, no error is returned.
     #
-    # For global tables, this operation only applies to global tables using
-    # Version 2019.11.21 (Current version).
-    #
     # <note markdown="1"> DynamoDB might continue to accept data read and write operations, such
     # as `GetItem` and `PutItem`, on a table in the `DELETING` state until
     # the table deletion is complete. For the full list of table states, see
@@ -2374,7 +2494,7 @@ module Aws::DynamoDB
     #   resp.table_description.key_schema #=> Array
     #   resp.table_description.key_schema[0].attribute_name #=> String
     #   resp.table_description.key_schema[0].key_type #=> String, one of "HASH", "RANGE"
-    #   resp.table_description.table_status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED"
+    #   resp.table_description.table_status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
     #   resp.table_description.creation_date_time #=> Time
     #   resp.table_description.provisioned_throughput.last_increase_date_time #=> Time
     #   resp.table_description.provisioned_throughput.last_decrease_date_time #=> Time
@@ -2428,7 +2548,8 @@ module Aws::DynamoDB
     #   resp.table_description.global_table_version #=> String
     #   resp.table_description.replicas #=> Array
     #   resp.table_description.replicas[0].region_name #=> String
-    #   resp.table_description.replicas[0].replica_status #=> String, one of "CREATING", "CREATION_FAILED", "UPDATING", "DELETING", "ACTIVE", "REGION_DISABLED", "INACCESSIBLE_ENCRYPTION_CREDENTIALS"
+    #   resp.table_description.replicas[0].replica_status #=> String, one of "CREATING", "CREATION_FAILED", "UPDATING", "DELETING", "ACTIVE", "REGION_DISABLED", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
+    #   resp.table_description.replicas[0].replica_arn #=> String
     #   resp.table_description.replicas[0].replica_status_description #=> String
     #   resp.table_description.replicas[0].replica_status_percent_progress #=> String
     #   resp.table_description.replicas[0].kms_master_key_id #=> String
@@ -2436,7 +2557,7 @@ module Aws::DynamoDB
     #   resp.table_description.replicas[0].on_demand_throughput_override.max_read_request_units #=> Integer
     #   resp.table_description.replicas[0].warm_throughput.read_units_per_second #=> Integer
     #   resp.table_description.replicas[0].warm_throughput.write_units_per_second #=> Integer
-    #   resp.table_description.replicas[0].warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED"
+    #   resp.table_description.replicas[0].warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
     #   resp.table_description.replicas[0].global_secondary_indexes #=> Array
     #   resp.table_description.replicas[0].global_secondary_indexes[0].index_name #=> String
     #   resp.table_description.replicas[0].global_secondary_indexes[0].provisioned_throughput_override.read_capacity_units #=> Integer
@@ -2447,6 +2568,11 @@ module Aws::DynamoDB
     #   resp.table_description.replicas[0].replica_inaccessible_date_time #=> Time
     #   resp.table_description.replicas[0].replica_table_class_summary.table_class #=> String, one of "STANDARD", "STANDARD_INFREQUENT_ACCESS"
     #   resp.table_description.replicas[0].replica_table_class_summary.last_update_date_time #=> Time
+    #   resp.table_description.replicas[0].global_table_settings_replication_mode #=> String, one of "ENABLED", "DISABLED", "ENABLED_WITH_OVERRIDES"
+    #   resp.table_description.global_table_witnesses #=> Array
+    #   resp.table_description.global_table_witnesses[0].region_name #=> String
+    #   resp.table_description.global_table_witnesses[0].witness_status #=> String, one of "CREATING", "DELETING", "ACTIVE"
+    #   resp.table_description.global_table_settings_replication_mode #=> String, one of "ENABLED", "DISABLED", "ENABLED_WITH_OVERRIDES"
     #   resp.table_description.restore_summary.source_backup_arn #=> String
     #   resp.table_description.restore_summary.source_table_arn #=> String
     #   resp.table_description.restore_summary.restore_date_time #=> Time
@@ -2465,8 +2591,24 @@ module Aws::DynamoDB
     #   resp.table_description.on_demand_throughput.max_write_request_units #=> Integer
     #   resp.table_description.warm_throughput.read_units_per_second #=> Integer
     #   resp.table_description.warm_throughput.write_units_per_second #=> Integer
-    #   resp.table_description.warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED"
+    #   resp.table_description.warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
     #   resp.table_description.multi_region_consistency #=> String, one of "EVENTUAL", "STRONG"
+    #   resp.table_description.vector_indexes #=> Array
+    #   resp.table_description.vector_indexes[0].index_name #=> String
+    #   resp.table_description.vector_indexes[0].search_schema #=> Array
+    #   resp.table_description.vector_indexes[0].search_schema[0].attribute_name #=> String
+    #   resp.table_description.vector_indexes[0].search_schema[0].search_schema_element_type #=> String, one of "HASH", "INLINE_FILTER"
+    #   resp.table_description.vector_indexes[0].projection.projection_type #=> String, one of "ALL", "KEYS_ONLY", "INCLUDE"
+    #   resp.table_description.vector_indexes[0].projection.non_key_attributes #=> Array
+    #   resp.table_description.vector_indexes[0].projection.non_key_attributes[0] #=> String
+    #   resp.table_description.vector_indexes[0].vector_attribute.attribute_name #=> String
+    #   resp.table_description.vector_indexes[0].dimensions #=> Integer
+    #   resp.table_description.vector_indexes[0].distance_function #=> String, one of "COSINE", "DOT_PRODUCT", "EUCLIDEAN"
+    #   resp.table_description.vector_indexes[0].index_status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE"
+    #   resp.table_description.vector_indexes[0].backfilling #=> Boolean
+    #   resp.table_description.vector_indexes[0].index_size_bytes #=> Integer
+    #   resp.table_description.vector_indexes[0].item_count #=> Integer
+    #   resp.table_description.vector_indexes[0].index_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/DeleteTable AWS API Documentation
     #
@@ -2546,6 +2688,17 @@ module Aws::DynamoDB
     #   resp.backup_description.source_table_feature_details.sse_description.sse_type #=> String, one of "AES256", "KMS"
     #   resp.backup_description.source_table_feature_details.sse_description.kms_master_key_arn #=> String
     #   resp.backup_description.source_table_feature_details.sse_description.inaccessible_encryption_date_time #=> Time
+    #   resp.backup_description.source_table_feature_details.vector_indexes #=> Array
+    #   resp.backup_description.source_table_feature_details.vector_indexes[0].index_name #=> String
+    #   resp.backup_description.source_table_feature_details.vector_indexes[0].vector_attribute.attribute_name #=> String
+    #   resp.backup_description.source_table_feature_details.vector_indexes[0].search_schema #=> Array
+    #   resp.backup_description.source_table_feature_details.vector_indexes[0].search_schema[0].attribute_name #=> String
+    #   resp.backup_description.source_table_feature_details.vector_indexes[0].search_schema[0].search_schema_element_type #=> String, one of "HASH", "INLINE_FILTER"
+    #   resp.backup_description.source_table_feature_details.vector_indexes[0].projection.projection_type #=> String, one of "ALL", "KEYS_ONLY", "INCLUDE"
+    #   resp.backup_description.source_table_feature_details.vector_indexes[0].projection.non_key_attributes #=> Array
+    #   resp.backup_description.source_table_feature_details.vector_indexes[0].projection.non_key_attributes[0] #=> String
+    #   resp.backup_description.source_table_feature_details.vector_indexes[0].dimensions #=> Integer
+    #   resp.backup_description.source_table_feature_details.vector_indexes[0].distance_function #=> String, one of "COSINE", "DOT_PRODUCT", "EUCLIDEAN"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/DescribeBackup AWS API Documentation
     #
@@ -2625,6 +2778,7 @@ module Aws::DynamoDB
     #   * {Types::DescribeContributorInsightsOutput#contributor_insights_status #contributor_insights_status} => String
     #   * {Types::DescribeContributorInsightsOutput#last_update_date_time #last_update_date_time} => Time
     #   * {Types::DescribeContributorInsightsOutput#failure_exception #failure_exception} => Types::FailureException
+    #   * {Types::DescribeContributorInsightsOutput#contributor_insights_mode #contributor_insights_mode} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -2643,6 +2797,12 @@ module Aws::DynamoDB
     #   resp.last_update_date_time #=> Time
     #   resp.failure_exception.exception_name #=> String
     #   resp.failure_exception.exception_description #=> String
+    #   resp.contributor_insights_mode #=> String, one of "ACCESSED_AND_THROTTLED_KEYS", "THROTTLED_KEYS"
+    #
+    #
+    # The following waiters are defined for this operation (see {Client#wait_until} for detailed usage):
+    #
+    #   * contributor_insights_enabled
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/DescribeContributorInsights AWS API Documentation
     #
@@ -2720,6 +2880,11 @@ module Aws::DynamoDB
     #   resp.export_description.incremental_export_specification.export_to_time #=> Time
     #   resp.export_description.incremental_export_specification.export_view_type #=> String, one of "NEW_IMAGE", "NEW_AND_OLD_IMAGES"
     #
+    #
+    # The following waiters are defined for this operation (see {Client#wait_until} for detailed usage):
+    #
+    #   * export_completed
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/DescribeExport AWS API Documentation
     #
     # @overload describe_export(params = {})
@@ -2765,7 +2930,8 @@ module Aws::DynamoDB
     #
     #   resp.global_table_description.replication_group #=> Array
     #   resp.global_table_description.replication_group[0].region_name #=> String
-    #   resp.global_table_description.replication_group[0].replica_status #=> String, one of "CREATING", "CREATION_FAILED", "UPDATING", "DELETING", "ACTIVE", "REGION_DISABLED", "INACCESSIBLE_ENCRYPTION_CREDENTIALS"
+    #   resp.global_table_description.replication_group[0].replica_status #=> String, one of "CREATING", "CREATION_FAILED", "UPDATING", "DELETING", "ACTIVE", "REGION_DISABLED", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
+    #   resp.global_table_description.replication_group[0].replica_arn #=> String
     #   resp.global_table_description.replication_group[0].replica_status_description #=> String
     #   resp.global_table_description.replication_group[0].replica_status_percent_progress #=> String
     #   resp.global_table_description.replication_group[0].kms_master_key_id #=> String
@@ -2773,7 +2939,7 @@ module Aws::DynamoDB
     #   resp.global_table_description.replication_group[0].on_demand_throughput_override.max_read_request_units #=> Integer
     #   resp.global_table_description.replication_group[0].warm_throughput.read_units_per_second #=> Integer
     #   resp.global_table_description.replication_group[0].warm_throughput.write_units_per_second #=> Integer
-    #   resp.global_table_description.replication_group[0].warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED"
+    #   resp.global_table_description.replication_group[0].warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
     #   resp.global_table_description.replication_group[0].global_secondary_indexes #=> Array
     #   resp.global_table_description.replication_group[0].global_secondary_indexes[0].index_name #=> String
     #   resp.global_table_description.replication_group[0].global_secondary_indexes[0].provisioned_throughput_override.read_capacity_units #=> Integer
@@ -2784,6 +2950,7 @@ module Aws::DynamoDB
     #   resp.global_table_description.replication_group[0].replica_inaccessible_date_time #=> Time
     #   resp.global_table_description.replication_group[0].replica_table_class_summary.table_class #=> String, one of "STANDARD", "STANDARD_INFREQUENT_ACCESS"
     #   resp.global_table_description.replication_group[0].replica_table_class_summary.last_update_date_time #=> Time
+    #   resp.global_table_description.replication_group[0].global_table_settings_replication_mode #=> String, one of "ENABLED", "DISABLED", "ENABLED_WITH_OVERRIDES"
     #   resp.global_table_description.global_table_arn #=> String
     #   resp.global_table_description.creation_date_time #=> Time
     #   resp.global_table_description.global_table_status #=> String, one of "CREATING", "ACTIVE", "DELETING", "UPDATING"
@@ -2836,7 +3003,7 @@ module Aws::DynamoDB
     #   resp.global_table_name #=> String
     #   resp.replica_settings #=> Array
     #   resp.replica_settings[0].region_name #=> String
-    #   resp.replica_settings[0].replica_status #=> String, one of "CREATING", "CREATION_FAILED", "UPDATING", "DELETING", "ACTIVE", "REGION_DISABLED", "INACCESSIBLE_ENCRYPTION_CREDENTIALS"
+    #   resp.replica_settings[0].replica_status #=> String, one of "CREATING", "CREATION_FAILED", "UPDATING", "DELETING", "ACTIVE", "REGION_DISABLED", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
     #   resp.replica_settings[0].replica_billing_mode_summary.billing_mode #=> String, one of "PROVISIONED", "PAY_PER_REQUEST"
     #   resp.replica_settings[0].replica_billing_mode_summary.last_update_to_pay_per_request_date_time #=> Time
     #   resp.replica_settings[0].replica_provisioned_read_capacity_units #=> Integer
@@ -2960,6 +3127,17 @@ module Aws::DynamoDB
     #   resp.import_table_description.table_creation_parameters.global_secondary_indexes[0].on_demand_throughput.max_write_request_units #=> Integer
     #   resp.import_table_description.table_creation_parameters.global_secondary_indexes[0].warm_throughput.read_units_per_second #=> Integer
     #   resp.import_table_description.table_creation_parameters.global_secondary_indexes[0].warm_throughput.write_units_per_second #=> Integer
+    #   resp.import_table_description.table_creation_parameters.vector_indexes #=> Array
+    #   resp.import_table_description.table_creation_parameters.vector_indexes[0].index_name #=> String
+    #   resp.import_table_description.table_creation_parameters.vector_indexes[0].vector_attribute.attribute_name #=> String
+    #   resp.import_table_description.table_creation_parameters.vector_indexes[0].search_schema #=> Array
+    #   resp.import_table_description.table_creation_parameters.vector_indexes[0].search_schema[0].attribute_name #=> String
+    #   resp.import_table_description.table_creation_parameters.vector_indexes[0].search_schema[0].search_schema_element_type #=> String, one of "HASH", "INLINE_FILTER"
+    #   resp.import_table_description.table_creation_parameters.vector_indexes[0].projection.projection_type #=> String, one of "ALL", "KEYS_ONLY", "INCLUDE"
+    #   resp.import_table_description.table_creation_parameters.vector_indexes[0].projection.non_key_attributes #=> Array
+    #   resp.import_table_description.table_creation_parameters.vector_indexes[0].projection.non_key_attributes[0] #=> String
+    #   resp.import_table_description.table_creation_parameters.vector_indexes[0].dimensions #=> Integer
+    #   resp.import_table_description.table_creation_parameters.vector_indexes[0].distance_function #=> String, one of "COSINE", "DOT_PRODUCT", "EUCLIDEAN"
     #   resp.import_table_description.start_time #=> Time
     #   resp.import_table_description.end_time #=> Time
     #   resp.import_table_description.processed_size_bytes #=> Integer
@@ -2967,6 +3145,11 @@ module Aws::DynamoDB
     #   resp.import_table_description.imported_item_count #=> Integer
     #   resp.import_table_description.failure_code #=> String
     #   resp.import_table_description.failure_message #=> String
+    #
+    #
+    # The following waiters are defined for this operation (see {Client#wait_until} for detailed usage):
+    #
+    #   * import_completed
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/DescribeImport AWS API Documentation
     #
@@ -3002,6 +3185,11 @@ module Aws::DynamoDB
     #   resp.kinesis_data_stream_destinations[0].destination_status #=> String, one of "ENABLING", "ACTIVE", "DISABLING", "DISABLED", "ENABLE_FAILED", "UPDATING"
     #   resp.kinesis_data_stream_destinations[0].destination_status_description #=> String
     #   resp.kinesis_data_stream_destinations[0].approximate_creation_date_time_precision #=> String, one of "MILLISECOND", "MICROSECOND"
+    #
+    #
+    # The following waiters are defined for this operation (see {Client#wait_until} for detailed usage):
+    #
+    #   * kinesis_streaming_destination_active
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/DescribeKinesisStreamingDestination AWS API Documentation
     #
@@ -3125,9 +3313,6 @@ module Aws::DynamoDB
     # the table, when it was created, the primary key schema, and any
     # indexes on the table.
     #
-    # For global tables, this operation only applies to global tables using
-    # Version 2019.11.21 (Current version).
-    #
     # <note markdown="1"> If you issue a `DescribeTable` request immediately after a
     # `CreateTable` request, DynamoDB might return a
     # `ResourceNotFoundException`. This is because `DescribeTable` uses an
@@ -3205,7 +3390,7 @@ module Aws::DynamoDB
     #   resp.table.key_schema #=> Array
     #   resp.table.key_schema[0].attribute_name #=> String
     #   resp.table.key_schema[0].key_type #=> String, one of "HASH", "RANGE"
-    #   resp.table.table_status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED"
+    #   resp.table.table_status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
     #   resp.table.creation_date_time #=> Time
     #   resp.table.provisioned_throughput.last_increase_date_time #=> Time
     #   resp.table.provisioned_throughput.last_decrease_date_time #=> Time
@@ -3259,7 +3444,8 @@ module Aws::DynamoDB
     #   resp.table.global_table_version #=> String
     #   resp.table.replicas #=> Array
     #   resp.table.replicas[0].region_name #=> String
-    #   resp.table.replicas[0].replica_status #=> String, one of "CREATING", "CREATION_FAILED", "UPDATING", "DELETING", "ACTIVE", "REGION_DISABLED", "INACCESSIBLE_ENCRYPTION_CREDENTIALS"
+    #   resp.table.replicas[0].replica_status #=> String, one of "CREATING", "CREATION_FAILED", "UPDATING", "DELETING", "ACTIVE", "REGION_DISABLED", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
+    #   resp.table.replicas[0].replica_arn #=> String
     #   resp.table.replicas[0].replica_status_description #=> String
     #   resp.table.replicas[0].replica_status_percent_progress #=> String
     #   resp.table.replicas[0].kms_master_key_id #=> String
@@ -3267,7 +3453,7 @@ module Aws::DynamoDB
     #   resp.table.replicas[0].on_demand_throughput_override.max_read_request_units #=> Integer
     #   resp.table.replicas[0].warm_throughput.read_units_per_second #=> Integer
     #   resp.table.replicas[0].warm_throughput.write_units_per_second #=> Integer
-    #   resp.table.replicas[0].warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED"
+    #   resp.table.replicas[0].warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
     #   resp.table.replicas[0].global_secondary_indexes #=> Array
     #   resp.table.replicas[0].global_secondary_indexes[0].index_name #=> String
     #   resp.table.replicas[0].global_secondary_indexes[0].provisioned_throughput_override.read_capacity_units #=> Integer
@@ -3278,6 +3464,11 @@ module Aws::DynamoDB
     #   resp.table.replicas[0].replica_inaccessible_date_time #=> Time
     #   resp.table.replicas[0].replica_table_class_summary.table_class #=> String, one of "STANDARD", "STANDARD_INFREQUENT_ACCESS"
     #   resp.table.replicas[0].replica_table_class_summary.last_update_date_time #=> Time
+    #   resp.table.replicas[0].global_table_settings_replication_mode #=> String, one of "ENABLED", "DISABLED", "ENABLED_WITH_OVERRIDES"
+    #   resp.table.global_table_witnesses #=> Array
+    #   resp.table.global_table_witnesses[0].region_name #=> String
+    #   resp.table.global_table_witnesses[0].witness_status #=> String, one of "CREATING", "DELETING", "ACTIVE"
+    #   resp.table.global_table_settings_replication_mode #=> String, one of "ENABLED", "DISABLED", "ENABLED_WITH_OVERRIDES"
     #   resp.table.restore_summary.source_backup_arn #=> String
     #   resp.table.restore_summary.source_table_arn #=> String
     #   resp.table.restore_summary.restore_date_time #=> Time
@@ -3296,8 +3487,24 @@ module Aws::DynamoDB
     #   resp.table.on_demand_throughput.max_write_request_units #=> Integer
     #   resp.table.warm_throughput.read_units_per_second #=> Integer
     #   resp.table.warm_throughput.write_units_per_second #=> Integer
-    #   resp.table.warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED"
+    #   resp.table.warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
     #   resp.table.multi_region_consistency #=> String, one of "EVENTUAL", "STRONG"
+    #   resp.table.vector_indexes #=> Array
+    #   resp.table.vector_indexes[0].index_name #=> String
+    #   resp.table.vector_indexes[0].search_schema #=> Array
+    #   resp.table.vector_indexes[0].search_schema[0].attribute_name #=> String
+    #   resp.table.vector_indexes[0].search_schema[0].search_schema_element_type #=> String, one of "HASH", "INLINE_FILTER"
+    #   resp.table.vector_indexes[0].projection.projection_type #=> String, one of "ALL", "KEYS_ONLY", "INCLUDE"
+    #   resp.table.vector_indexes[0].projection.non_key_attributes #=> Array
+    #   resp.table.vector_indexes[0].projection.non_key_attributes[0] #=> String
+    #   resp.table.vector_indexes[0].vector_attribute.attribute_name #=> String
+    #   resp.table.vector_indexes[0].dimensions #=> Integer
+    #   resp.table.vector_indexes[0].distance_function #=> String, one of "COSINE", "DOT_PRODUCT", "EUCLIDEAN"
+    #   resp.table.vector_indexes[0].index_status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE"
+    #   resp.table.vector_indexes[0].backfilling #=> Boolean
+    #   resp.table.vector_indexes[0].index_size_bytes #=> Integer
+    #   resp.table.vector_indexes[0].item_count #=> Integer
+    #   resp.table.vector_indexes[0].index_arn #=> String
     #
     #
     # The following waiters are defined for this operation (see {Client#wait_until} for detailed usage):
@@ -3317,9 +3524,6 @@ module Aws::DynamoDB
     # Describes auto scaling settings across replicas of the global table at
     # once.
     #
-    # For global tables, this operation only applies to global tables using
-    # Version 2019.11.21 (Current version).
-    #
     # @option params [required, String] :table_name
     #   The name of the table. You can also provide the Amazon Resource Name
     #   (ARN) of the table in this parameter.
@@ -3337,7 +3541,7 @@ module Aws::DynamoDB
     # @example Response structure
     #
     #   resp.table_auto_scaling_description.table_name #=> String
-    #   resp.table_auto_scaling_description.table_status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED"
+    #   resp.table_auto_scaling_description.table_status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
     #   resp.table_auto_scaling_description.replicas #=> Array
     #   resp.table_auto_scaling_description.replicas[0].region_name #=> String
     #   resp.table_auto_scaling_description.replicas[0].global_secondary_indexes #=> Array
@@ -3383,7 +3587,7 @@ module Aws::DynamoDB
     #   resp.table_auto_scaling_description.replicas[0].replica_provisioned_write_capacity_auto_scaling_settings.scaling_policies[0].target_tracking_scaling_policy_configuration.scale_in_cooldown #=> Integer
     #   resp.table_auto_scaling_description.replicas[0].replica_provisioned_write_capacity_auto_scaling_settings.scaling_policies[0].target_tracking_scaling_policy_configuration.scale_out_cooldown #=> Integer
     #   resp.table_auto_scaling_description.replicas[0].replica_provisioned_write_capacity_auto_scaling_settings.scaling_policies[0].target_tracking_scaling_policy_configuration.target_value #=> Float
-    #   resp.table_auto_scaling_description.replicas[0].replica_status #=> String, one of "CREATING", "CREATION_FAILED", "UPDATING", "DELETING", "ACTIVE", "REGION_DISABLED", "INACCESSIBLE_ENCRYPTION_CREDENTIALS"
+    #   resp.table_auto_scaling_description.replicas[0].replica_status #=> String, one of "CREATING", "CREATION_FAILED", "UPDATING", "DELETING", "ACTIVE", "REGION_DISABLED", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/DescribeTableReplicaAutoScaling AWS API Documentation
     #
@@ -3631,6 +3835,9 @@ module Aws::DynamoDB
     #   resp.consumed_capacity.global_secondary_indexes["IndexName"].read_capacity_units #=> Float
     #   resp.consumed_capacity.global_secondary_indexes["IndexName"].write_capacity_units #=> Float
     #   resp.consumed_capacity.global_secondary_indexes["IndexName"].capacity_units #=> Float
+    #   resp.consumed_capacity.vector_indexes #=> Hash
+    #   resp.consumed_capacity.vector_indexes["IndexName"].vector_search_request_bytes #=> Float
+    #   resp.consumed_capacity.vector_indexes["IndexName"].vector_write_request_bytes #=> Float
     #   resp.last_evaluated_key #=> Hash
     #   resp.last_evaluated_key["AttributeName"] #=> <Hash,Array,String,Numeric,Boolean,IO,Set,nil>
     #
@@ -3718,6 +3925,9 @@ module Aws::DynamoDB
     #   resp.consumed_capacity[0].global_secondary_indexes["IndexName"].read_capacity_units #=> Float
     #   resp.consumed_capacity[0].global_secondary_indexes["IndexName"].write_capacity_units #=> Float
     #   resp.consumed_capacity[0].global_secondary_indexes["IndexName"].capacity_units #=> Float
+    #   resp.consumed_capacity[0].vector_indexes #=> Hash
+    #   resp.consumed_capacity[0].vector_indexes["IndexName"].vector_search_request_bytes #=> Float
+    #   resp.consumed_capacity[0].vector_indexes["IndexName"].vector_write_request_bytes #=> Float
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/ExecuteTransaction AWS API Documentation
     #
@@ -3753,7 +3963,7 @@ module Aws::DynamoDB
     #
     #   If you submit a request with the same client token but a change in
     #   other parameters within the 8-hour idempotency window, DynamoDB
-    #   returns an `ImportConflictException`.
+    #   returns an `ExportConflictException`.
     #
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.**
@@ -4044,6 +4254,9 @@ module Aws::DynamoDB
     #   resp.consumed_capacity.global_secondary_indexes["IndexName"].read_capacity_units #=> Float
     #   resp.consumed_capacity.global_secondary_indexes["IndexName"].write_capacity_units #=> Float
     #   resp.consumed_capacity.global_secondary_indexes["IndexName"].capacity_units #=> Float
+    #   resp.consumed_capacity.vector_indexes #=> Hash
+    #   resp.consumed_capacity.vector_indexes["IndexName"].vector_search_request_bytes #=> Float
+    #   resp.consumed_capacity.vector_indexes["IndexName"].vector_write_request_bytes #=> Float
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/GetItem AWS API Documentation
     #
@@ -4234,6 +4447,26 @@ module Aws::DynamoDB
     #           },
     #         },
     #       ],
+    #       vector_indexes: [
+    #         {
+    #           index_name: "IndexName", # required
+    #           vector_attribute: { # required
+    #             attribute_name: "VectorAttributeName", # required
+    #           },
+    #           search_schema: [
+    #             {
+    #               attribute_name: "AttributeName", # required
+    #               search_schema_element_type: "HASH", # required, accepts HASH, INLINE_FILTER
+    #             },
+    #           ],
+    #           projection: { # required
+    #             projection_type: "ALL", # accepts ALL, KEYS_ONLY, INCLUDE
+    #             non_key_attributes: ["NonKeyAttributeName"],
+    #           },
+    #           dimensions: 1, # required
+    #           distance_function: "COSINE", # required, accepts COSINE, DOT_PRODUCT, EUCLIDEAN
+    #         },
+    #       ],
     #     },
     #   })
     #
@@ -4283,6 +4516,17 @@ module Aws::DynamoDB
     #   resp.import_table_description.table_creation_parameters.global_secondary_indexes[0].on_demand_throughput.max_write_request_units #=> Integer
     #   resp.import_table_description.table_creation_parameters.global_secondary_indexes[0].warm_throughput.read_units_per_second #=> Integer
     #   resp.import_table_description.table_creation_parameters.global_secondary_indexes[0].warm_throughput.write_units_per_second #=> Integer
+    #   resp.import_table_description.table_creation_parameters.vector_indexes #=> Array
+    #   resp.import_table_description.table_creation_parameters.vector_indexes[0].index_name #=> String
+    #   resp.import_table_description.table_creation_parameters.vector_indexes[0].vector_attribute.attribute_name #=> String
+    #   resp.import_table_description.table_creation_parameters.vector_indexes[0].search_schema #=> Array
+    #   resp.import_table_description.table_creation_parameters.vector_indexes[0].search_schema[0].attribute_name #=> String
+    #   resp.import_table_description.table_creation_parameters.vector_indexes[0].search_schema[0].search_schema_element_type #=> String, one of "HASH", "INLINE_FILTER"
+    #   resp.import_table_description.table_creation_parameters.vector_indexes[0].projection.projection_type #=> String, one of "ALL", "KEYS_ONLY", "INCLUDE"
+    #   resp.import_table_description.table_creation_parameters.vector_indexes[0].projection.non_key_attributes #=> Array
+    #   resp.import_table_description.table_creation_parameters.vector_indexes[0].projection.non_key_attributes[0] #=> String
+    #   resp.import_table_description.table_creation_parameters.vector_indexes[0].dimensions #=> Integer
+    #   resp.import_table_description.table_creation_parameters.vector_indexes[0].distance_function #=> String, one of "COSINE", "DOT_PRODUCT", "EUCLIDEAN"
     #   resp.import_table_description.start_time #=> Time
     #   resp.import_table_description.end_time #=> Time
     #   resp.import_table_description.processed_size_bytes #=> Integer
@@ -4429,6 +4673,7 @@ module Aws::DynamoDB
     #   resp.contributor_insights_summaries[0].table_name #=> String
     #   resp.contributor_insights_summaries[0].index_name #=> String
     #   resp.contributor_insights_summaries[0].contributor_insights_status #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "FAILED"
+    #   resp.contributor_insights_summaries[0].contributor_insights_mode #=> String, one of "ACCESSED_AND_THROTTLED_KEYS", "THROTTLED_KEYS"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/ListContributorInsights AWS API Documentation
@@ -4440,7 +4685,8 @@ module Aws::DynamoDB
       req.send_request(options)
     end
 
-    # Lists completed exports within the past 90 days.
+    # Lists completed exports within the past 90 days, in reverse
+    # alphanumeric order of `ExportArn`.
     #
     # @option params [String] :table_arn
     #   The Amazon Resource Name (ARN) associated with the exported table.
@@ -4739,6 +4985,12 @@ module Aws::DynamoDB
     #
     #  </note>
     #
+    # <note markdown="1"> To determine whether `PutItem` overwrote an existing item, use
+    # `ReturnValues` set to `ALL_OLD`. If the response includes the
+    # `Attributes` element, an existing item was overwritten.
+    #
+    #  </note>
+    #
     # For more information about `PutItem`, see [Working with Items][1] in
     # the *Amazon DynamoDB Developer Guide*.
     #
@@ -4763,6 +5015,19 @@ module Aws::DynamoDB
     #   If you specify any attributes that are part of an index key, then the
     #   data types for those attributes must match those of the schema in the
     #   table's attribute definition.
+    #
+    #   If the table has vector indexes, the following validations apply to
+    #   write operations. A violation of any of these constraints results in a
+    #   `ValidationException`:
+    #
+    #   * The vector attribute must be a list of numbers with dimensions
+    #     matching the index configuration.
+    #
+    #   * Vector values must fit in 32-bit IEEE-754 floating point format
+    #     (f32).
+    #
+    #   * Partition key and inline filter attributes defined in the search
+    #     schema must have data types matching the index schema definition.
     #
     #   Empty String and Binary attribute values are allowed. Attribute values
     #   of type String and Binary must have a length greater than zero if the
@@ -5025,6 +5290,9 @@ module Aws::DynamoDB
     #   resp.consumed_capacity.global_secondary_indexes["IndexName"].read_capacity_units #=> Float
     #   resp.consumed_capacity.global_secondary_indexes["IndexName"].write_capacity_units #=> Float
     #   resp.consumed_capacity.global_secondary_indexes["IndexName"].capacity_units #=> Float
+    #   resp.consumed_capacity.vector_indexes #=> Hash
+    #   resp.consumed_capacity.vector_indexes["IndexName"].vector_search_request_bytes #=> Float
+    #   resp.consumed_capacity.vector_indexes["IndexName"].vector_write_request_bytes #=> Float
     #   resp.item_collection_metrics.item_collection_key #=> Hash
     #   resp.item_collection_metrics.item_collection_key["AttributeName"] #=> <Hash,Array,String,Numeric,Boolean,IO,Set,nil>
     #   resp.item_collection_metrics.size_estimate_range_gb #=> Array
@@ -5668,6 +5936,9 @@ module Aws::DynamoDB
     #   resp.consumed_capacity.global_secondary_indexes["IndexName"].read_capacity_units #=> Float
     #   resp.consumed_capacity.global_secondary_indexes["IndexName"].write_capacity_units #=> Float
     #   resp.consumed_capacity.global_secondary_indexes["IndexName"].capacity_units #=> Float
+    #   resp.consumed_capacity.vector_indexes #=> Hash
+    #   resp.consumed_capacity.vector_indexes["IndexName"].vector_search_request_bytes #=> Float
+    #   resp.consumed_capacity.vector_indexes["IndexName"].vector_write_request_bytes #=> Float
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/Query AWS API Documentation
     #
@@ -5728,6 +5999,12 @@ module Aws::DynamoDB
     #
     # @option params [Types::SSESpecification] :sse_specification_override
     #   The new server-side encryption settings for the restored table.
+    #
+    # @option params [Array<Types::VectorIndex>] :vector_index_override
+    #   The vector indexes for the restored table. If not specified, all
+    #   vector indexes from the backup are restored. The indexes provided must
+    #   match existing vector indexes from the backup. You can choose to
+    #   exclude some or all of the vector indexes at the time of restore.
     #
     # @return [Types::RestoreTableFromBackupOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -5794,6 +6071,26 @@ module Aws::DynamoDB
     #       sse_type: "AES256", # accepts AES256, KMS
     #       kms_master_key_id: "KMSMasterKeyId",
     #     },
+    #     vector_index_override: [
+    #       {
+    #         index_name: "IndexName", # required
+    #         vector_attribute: { # required
+    #           attribute_name: "VectorAttributeName", # required
+    #         },
+    #         search_schema: [
+    #           {
+    #             attribute_name: "AttributeName", # required
+    #             search_schema_element_type: "HASH", # required, accepts HASH, INLINE_FILTER
+    #           },
+    #         ],
+    #         projection: { # required
+    #           projection_type: "ALL", # accepts ALL, KEYS_ONLY, INCLUDE
+    #           non_key_attributes: ["NonKeyAttributeName"],
+    #         },
+    #         dimensions: 1, # required
+    #         distance_function: "COSINE", # required, accepts COSINE, DOT_PRODUCT, EUCLIDEAN
+    #       },
+    #     ],
     #   })
     #
     # @example Response structure
@@ -5805,7 +6102,7 @@ module Aws::DynamoDB
     #   resp.table_description.key_schema #=> Array
     #   resp.table_description.key_schema[0].attribute_name #=> String
     #   resp.table_description.key_schema[0].key_type #=> String, one of "HASH", "RANGE"
-    #   resp.table_description.table_status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED"
+    #   resp.table_description.table_status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
     #   resp.table_description.creation_date_time #=> Time
     #   resp.table_description.provisioned_throughput.last_increase_date_time #=> Time
     #   resp.table_description.provisioned_throughput.last_decrease_date_time #=> Time
@@ -5859,7 +6156,8 @@ module Aws::DynamoDB
     #   resp.table_description.global_table_version #=> String
     #   resp.table_description.replicas #=> Array
     #   resp.table_description.replicas[0].region_name #=> String
-    #   resp.table_description.replicas[0].replica_status #=> String, one of "CREATING", "CREATION_FAILED", "UPDATING", "DELETING", "ACTIVE", "REGION_DISABLED", "INACCESSIBLE_ENCRYPTION_CREDENTIALS"
+    #   resp.table_description.replicas[0].replica_status #=> String, one of "CREATING", "CREATION_FAILED", "UPDATING", "DELETING", "ACTIVE", "REGION_DISABLED", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
+    #   resp.table_description.replicas[0].replica_arn #=> String
     #   resp.table_description.replicas[0].replica_status_description #=> String
     #   resp.table_description.replicas[0].replica_status_percent_progress #=> String
     #   resp.table_description.replicas[0].kms_master_key_id #=> String
@@ -5867,7 +6165,7 @@ module Aws::DynamoDB
     #   resp.table_description.replicas[0].on_demand_throughput_override.max_read_request_units #=> Integer
     #   resp.table_description.replicas[0].warm_throughput.read_units_per_second #=> Integer
     #   resp.table_description.replicas[0].warm_throughput.write_units_per_second #=> Integer
-    #   resp.table_description.replicas[0].warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED"
+    #   resp.table_description.replicas[0].warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
     #   resp.table_description.replicas[0].global_secondary_indexes #=> Array
     #   resp.table_description.replicas[0].global_secondary_indexes[0].index_name #=> String
     #   resp.table_description.replicas[0].global_secondary_indexes[0].provisioned_throughput_override.read_capacity_units #=> Integer
@@ -5878,6 +6176,11 @@ module Aws::DynamoDB
     #   resp.table_description.replicas[0].replica_inaccessible_date_time #=> Time
     #   resp.table_description.replicas[0].replica_table_class_summary.table_class #=> String, one of "STANDARD", "STANDARD_INFREQUENT_ACCESS"
     #   resp.table_description.replicas[0].replica_table_class_summary.last_update_date_time #=> Time
+    #   resp.table_description.replicas[0].global_table_settings_replication_mode #=> String, one of "ENABLED", "DISABLED", "ENABLED_WITH_OVERRIDES"
+    #   resp.table_description.global_table_witnesses #=> Array
+    #   resp.table_description.global_table_witnesses[0].region_name #=> String
+    #   resp.table_description.global_table_witnesses[0].witness_status #=> String, one of "CREATING", "DELETING", "ACTIVE"
+    #   resp.table_description.global_table_settings_replication_mode #=> String, one of "ENABLED", "DISABLED", "ENABLED_WITH_OVERRIDES"
     #   resp.table_description.restore_summary.source_backup_arn #=> String
     #   resp.table_description.restore_summary.source_table_arn #=> String
     #   resp.table_description.restore_summary.restore_date_time #=> Time
@@ -5896,8 +6199,24 @@ module Aws::DynamoDB
     #   resp.table_description.on_demand_throughput.max_write_request_units #=> Integer
     #   resp.table_description.warm_throughput.read_units_per_second #=> Integer
     #   resp.table_description.warm_throughput.write_units_per_second #=> Integer
-    #   resp.table_description.warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED"
+    #   resp.table_description.warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
     #   resp.table_description.multi_region_consistency #=> String, one of "EVENTUAL", "STRONG"
+    #   resp.table_description.vector_indexes #=> Array
+    #   resp.table_description.vector_indexes[0].index_name #=> String
+    #   resp.table_description.vector_indexes[0].search_schema #=> Array
+    #   resp.table_description.vector_indexes[0].search_schema[0].attribute_name #=> String
+    #   resp.table_description.vector_indexes[0].search_schema[0].search_schema_element_type #=> String, one of "HASH", "INLINE_FILTER"
+    #   resp.table_description.vector_indexes[0].projection.projection_type #=> String, one of "ALL", "KEYS_ONLY", "INCLUDE"
+    #   resp.table_description.vector_indexes[0].projection.non_key_attributes #=> Array
+    #   resp.table_description.vector_indexes[0].projection.non_key_attributes[0] #=> String
+    #   resp.table_description.vector_indexes[0].vector_attribute.attribute_name #=> String
+    #   resp.table_description.vector_indexes[0].dimensions #=> Integer
+    #   resp.table_description.vector_indexes[0].distance_function #=> String, one of "COSINE", "DOT_PRODUCT", "EUCLIDEAN"
+    #   resp.table_description.vector_indexes[0].index_status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE"
+    #   resp.table_description.vector_indexes[0].backfilling #=> Boolean
+    #   resp.table_description.vector_indexes[0].index_size_bytes #=> Integer
+    #   resp.table_description.vector_indexes[0].item_count #=> Integer
+    #   resp.table_description.vector_indexes[0].index_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/RestoreTableFromBackup AWS API Documentation
     #
@@ -5975,6 +6294,12 @@ module Aws::DynamoDB
     #   provided should match existing secondary indexes. You can choose to
     #   exclude some or all of the indexes at the time of restore.
     #
+    #   The `WarmThroughput` setting is not supported on global secondary
+    #   indexes when you use `RestoreTableToPointInTime`. Although
+    #   `WarmThroughput` appears in the shared index definition, including it
+    #   in a `GlobalSecondaryIndexOverride` entry causes the request to fail
+    #   with a validation error.
+    #
     # @option params [Array<Types::LocalSecondaryIndex>] :local_secondary_index_override
     #   List of local secondary indexes for the restored table. The indexes
     #   provided should match existing secondary indexes. You can choose to
@@ -5990,6 +6315,13 @@ module Aws::DynamoDB
     #
     # @option params [Types::SSESpecification] :sse_specification_override
     #   The new server-side encryption settings for the restored table.
+    #
+    # @option params [Array<Types::VectorIndex>] :vector_index_override
+    #   The vector indexes for the restored table. If not specified, all
+    #   vector indexes from the source table are restored. The indexes
+    #   provided must match existing vector indexes from the source table. You
+    #   can choose to exclude some or all of the vector indexes at the time of
+    #   restore.
     #
     # @return [Types::RestoreTableToPointInTimeOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -6059,6 +6391,26 @@ module Aws::DynamoDB
     #       sse_type: "AES256", # accepts AES256, KMS
     #       kms_master_key_id: "KMSMasterKeyId",
     #     },
+    #     vector_index_override: [
+    #       {
+    #         index_name: "IndexName", # required
+    #         vector_attribute: { # required
+    #           attribute_name: "VectorAttributeName", # required
+    #         },
+    #         search_schema: [
+    #           {
+    #             attribute_name: "AttributeName", # required
+    #             search_schema_element_type: "HASH", # required, accepts HASH, INLINE_FILTER
+    #           },
+    #         ],
+    #         projection: { # required
+    #           projection_type: "ALL", # accepts ALL, KEYS_ONLY, INCLUDE
+    #           non_key_attributes: ["NonKeyAttributeName"],
+    #         },
+    #         dimensions: 1, # required
+    #         distance_function: "COSINE", # required, accepts COSINE, DOT_PRODUCT, EUCLIDEAN
+    #       },
+    #     ],
     #   })
     #
     # @example Response structure
@@ -6070,7 +6422,7 @@ module Aws::DynamoDB
     #   resp.table_description.key_schema #=> Array
     #   resp.table_description.key_schema[0].attribute_name #=> String
     #   resp.table_description.key_schema[0].key_type #=> String, one of "HASH", "RANGE"
-    #   resp.table_description.table_status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED"
+    #   resp.table_description.table_status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
     #   resp.table_description.creation_date_time #=> Time
     #   resp.table_description.provisioned_throughput.last_increase_date_time #=> Time
     #   resp.table_description.provisioned_throughput.last_decrease_date_time #=> Time
@@ -6124,7 +6476,8 @@ module Aws::DynamoDB
     #   resp.table_description.global_table_version #=> String
     #   resp.table_description.replicas #=> Array
     #   resp.table_description.replicas[0].region_name #=> String
-    #   resp.table_description.replicas[0].replica_status #=> String, one of "CREATING", "CREATION_FAILED", "UPDATING", "DELETING", "ACTIVE", "REGION_DISABLED", "INACCESSIBLE_ENCRYPTION_CREDENTIALS"
+    #   resp.table_description.replicas[0].replica_status #=> String, one of "CREATING", "CREATION_FAILED", "UPDATING", "DELETING", "ACTIVE", "REGION_DISABLED", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
+    #   resp.table_description.replicas[0].replica_arn #=> String
     #   resp.table_description.replicas[0].replica_status_description #=> String
     #   resp.table_description.replicas[0].replica_status_percent_progress #=> String
     #   resp.table_description.replicas[0].kms_master_key_id #=> String
@@ -6132,7 +6485,7 @@ module Aws::DynamoDB
     #   resp.table_description.replicas[0].on_demand_throughput_override.max_read_request_units #=> Integer
     #   resp.table_description.replicas[0].warm_throughput.read_units_per_second #=> Integer
     #   resp.table_description.replicas[0].warm_throughput.write_units_per_second #=> Integer
-    #   resp.table_description.replicas[0].warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED"
+    #   resp.table_description.replicas[0].warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
     #   resp.table_description.replicas[0].global_secondary_indexes #=> Array
     #   resp.table_description.replicas[0].global_secondary_indexes[0].index_name #=> String
     #   resp.table_description.replicas[0].global_secondary_indexes[0].provisioned_throughput_override.read_capacity_units #=> Integer
@@ -6143,6 +6496,11 @@ module Aws::DynamoDB
     #   resp.table_description.replicas[0].replica_inaccessible_date_time #=> Time
     #   resp.table_description.replicas[0].replica_table_class_summary.table_class #=> String, one of "STANDARD", "STANDARD_INFREQUENT_ACCESS"
     #   resp.table_description.replicas[0].replica_table_class_summary.last_update_date_time #=> Time
+    #   resp.table_description.replicas[0].global_table_settings_replication_mode #=> String, one of "ENABLED", "DISABLED", "ENABLED_WITH_OVERRIDES"
+    #   resp.table_description.global_table_witnesses #=> Array
+    #   resp.table_description.global_table_witnesses[0].region_name #=> String
+    #   resp.table_description.global_table_witnesses[0].witness_status #=> String, one of "CREATING", "DELETING", "ACTIVE"
+    #   resp.table_description.global_table_settings_replication_mode #=> String, one of "ENABLED", "DISABLED", "ENABLED_WITH_OVERRIDES"
     #   resp.table_description.restore_summary.source_backup_arn #=> String
     #   resp.table_description.restore_summary.source_table_arn #=> String
     #   resp.table_description.restore_summary.restore_date_time #=> Time
@@ -6161,8 +6519,24 @@ module Aws::DynamoDB
     #   resp.table_description.on_demand_throughput.max_write_request_units #=> Integer
     #   resp.table_description.warm_throughput.read_units_per_second #=> Integer
     #   resp.table_description.warm_throughput.write_units_per_second #=> Integer
-    #   resp.table_description.warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED"
+    #   resp.table_description.warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
     #   resp.table_description.multi_region_consistency #=> String, one of "EVENTUAL", "STRONG"
+    #   resp.table_description.vector_indexes #=> Array
+    #   resp.table_description.vector_indexes[0].index_name #=> String
+    #   resp.table_description.vector_indexes[0].search_schema #=> Array
+    #   resp.table_description.vector_indexes[0].search_schema[0].attribute_name #=> String
+    #   resp.table_description.vector_indexes[0].search_schema[0].search_schema_element_type #=> String, one of "HASH", "INLINE_FILTER"
+    #   resp.table_description.vector_indexes[0].projection.projection_type #=> String, one of "ALL", "KEYS_ONLY", "INCLUDE"
+    #   resp.table_description.vector_indexes[0].projection.non_key_attributes #=> Array
+    #   resp.table_description.vector_indexes[0].projection.non_key_attributes[0] #=> String
+    #   resp.table_description.vector_indexes[0].vector_attribute.attribute_name #=> String
+    #   resp.table_description.vector_indexes[0].dimensions #=> Integer
+    #   resp.table_description.vector_indexes[0].distance_function #=> String, one of "COSINE", "DOT_PRODUCT", "EUCLIDEAN"
+    #   resp.table_description.vector_indexes[0].index_status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE"
+    #   resp.table_description.vector_indexes[0].backfilling #=> Boolean
+    #   resp.table_description.vector_indexes[0].index_size_bytes #=> Integer
+    #   resp.table_description.vector_indexes[0].item_count #=> Integer
+    #   resp.table_description.vector_indexes[0].index_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/RestoreTableToPointInTime AWS API Documentation
     #
@@ -6631,6 +7005,9 @@ module Aws::DynamoDB
     #   resp.consumed_capacity.global_secondary_indexes["IndexName"].read_capacity_units #=> Float
     #   resp.consumed_capacity.global_secondary_indexes["IndexName"].write_capacity_units #=> Float
     #   resp.consumed_capacity.global_secondary_indexes["IndexName"].capacity_units #=> Float
+    #   resp.consumed_capacity.vector_indexes #=> Hash
+    #   resp.consumed_capacity.vector_indexes["IndexName"].vector_search_request_bytes #=> Float
+    #   resp.consumed_capacity.vector_indexes["IndexName"].vector_write_request_bytes #=> Float
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/Scan AWS API Documentation
     #
@@ -6638,6 +7015,182 @@ module Aws::DynamoDB
     # @param [Hash] params ({})
     def scan(params = {}, options = {})
       req = build_request(:scan, params)
+      req.send_request(options)
+    end
+
+    # Performs a vector similarity search on a vector index associated with
+    # an Amazon DynamoDB table, and returns the most similar items sorted by
+    # similarity score based on the distance function configured for the
+    # index.
+    #
+    # Score interpretation depends on the distance function:
+    #
+    # * `COSINE` - Returns the items with the *k smallest* scores. Scores
+    #   range from 0 (identical) to 2 (opposite). Lower scores indicate
+    #   higher similarity.
+    #
+    # * `EUCLIDEAN` - Returns the items with the *k smallest* scores. Scores
+    #   represent the Euclidean distance between vectors. Lower scores
+    #   indicate higher similarity.
+    #
+    # * `DOT_PRODUCT` - Returns the items with the *k highest* scores.
+    #   Higher scores indicate higher similarity.
+    #
+    # @option params [required, String] :table_name
+    #   The name or Amazon Resource Name (ARN) of the table containing the
+    #   vector index.
+    #
+    # @option params [required, String] :index_name
+    #   The name of the vector index to search. The index must be in the
+    #   `ACTIVE` state.
+    #
+    # @option params [String] :return_consumed_capacity
+    #   Determines the level of detail about either provisioned or on-demand
+    #   throughput consumption that is returned in the response:
+    #
+    #   * `INDEXES` - The response includes the aggregate `ConsumedCapacity`
+    #     for the operation, together with `ConsumedCapacity` for each table
+    #     and secondary index that was accessed.
+    #
+    #     Note that some operations, such as `GetItem` and `BatchGetItem`, do
+    #     not access any indexes at all. In these cases, specifying `INDEXES`
+    #     will only return `ConsumedCapacity` information for table(s).
+    #
+    #   * `TOTAL` - The response includes only the aggregate
+    #     `ConsumedCapacity` for the operation.
+    #
+    #   * `NONE` - No `ConsumedCapacity` details are included in the response.
+    #
+    # @option params [Hash<String,String>] :expression_attribute_names
+    #   One or more substitution tokens for attribute names in an expression.
+    #   Use the `#` character in an expression to dereference an attribute
+    #   name.
+    #
+    # @option params [Hash<String,Types::AttributeValue>] :expression_attribute_values
+    #   One or more values that can be substituted in an expression. Use the
+    #   `:` character in an expression to dereference an attribute value.
+    #
+    # @option params [String] :projection_expression
+    #   A string that identifies one or more attributes to retrieve from the
+    #   index. Separate attribute names with commas. If not specified, the
+    #   operation returns all attributes projected into the vector index.
+    #
+    #   Only attributes projected into the vector index can be retrieved.
+    #
+    # @option params [required, Array<Types::AttributeValue>] :search_vector
+    #   The search vector to compare against the indexed vectors. Each element
+    #   is a 32-bit IEEE-754 floating point number, provided in DynamoDB list
+    #   format.
+    #
+    #   The number of dimensions must match the number of dimensions
+    #   configured for the vector index.
+    #
+    # @option params [String] :search_condition_expression
+    #   A condition expression used to filter the vector search results. The
+    #   expression can reference attributes defined in the vector index search
+    #   schema, including `HASH` and `INLINE_FILTER` key elements.
+    #
+    #   Only the equality operator (`=`) is supported for `HASH` attributes.
+    #   Comparison and range operators are supported for `INLINE_FILTER`
+    #   attributes. Only top-level attributes from the search schema can be
+    #   referenced.
+    #
+    # @option params [required, Integer] :top_k
+    #   The number of most similar results to return.
+    #
+    # @return [Types::SearchVectorsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::SearchVectorsOutput#consumed_capacity #consumed_capacity} => Types::VectorCapacity
+    #   * {Types::SearchVectorsOutput#search_results #search_results} => Array&lt;Types::SearchResultItem&gt;
+    #
+    #
+    # @example Example: To search for similar vectors
+    #
+    #   # This example searches the Products table for the top 3 items most similar to a provided vector, using the
+    #   # 'cosine-product-idx' vector index. The SearchConditionExpression filters results to the 'Electronics' category. The
+    #   # operation returns only the ProductName and Price attributes.
+    #
+    #   resp = client.search_vectors({
+    #     expression_attribute_values: {
+    #       ":cat" => "Electronics", 
+    #     }, 
+    #     index_name: "cosine-product-idx", 
+    #     projection_expression: "ProductName, Price", 
+    #     return_consumed_capacity: "INDEXES", 
+    #     search_condition_expression: "Category = :cat", 
+    #     search_vector: [
+    #       "0.12", 
+    #       "0.85", 
+    #       "0.44", 
+    #       "0.67", 
+    #     ], 
+    #     table_name: "Products", 
+    #     top_k: 3, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     consumed_capacity: {
+    #       vector_search_request_bytes: 1024, 
+    #     }, 
+    #     search_results: [
+    #       {
+    #         item: {
+    #           "Price" => "79.99", 
+    #           "ProductName" => "Wireless Headphones", 
+    #         }, 
+    #         score: 0.95, 
+    #       }, 
+    #       {
+    #         item: {
+    #           "Price" => "49.99", 
+    #           "ProductName" => "Bluetooth Speaker", 
+    #         }, 
+    #         score: 0.87, 
+    #       }, 
+    #       {
+    #         item: {
+    #           "Price" => "34.99", 
+    #           "ProductName" => "USB-C Hub", 
+    #         }, 
+    #         score: 0.82, 
+    #       }, 
+    #     ], 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.search_vectors({
+    #     table_name: "TableArn", # required
+    #     index_name: "IndexName", # required
+    #     return_consumed_capacity: "INDEXES", # accepts INDEXES, TOTAL, NONE
+    #     expression_attribute_names: {
+    #       "ExpressionAttributeNameVariable" => "AttributeName",
+    #     },
+    #     expression_attribute_values: {
+    #       "ExpressionAttributeValueVariable" => "value", # value <Hash,Array,String,Numeric,Boolean,IO,Set,nil>
+    #     },
+    #     projection_expression: "ProjectionExpression",
+    #     search_vector: ["value"], # required, value <Hash,Array,String,Numeric,Boolean,IO,Set,nil>
+    #     search_condition_expression: "String",
+    #     top_k: 1, # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.consumed_capacity.vector_search_request_bytes #=> Float
+    #   resp.consumed_capacity.vector_write_request_bytes #=> Float
+    #   resp.search_results #=> Array
+    #   resp.search_results[0].item #=> Hash
+    #   resp.search_results[0].item["AttributeName"] #=> <Hash,Array,String,Numeric,Boolean,IO,Set,nil>
+    #   resp.search_results[0].score #=> Float
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/SearchVectors AWS API Documentation
+    #
+    # @overload search_vectors(params = {})
+    # @param [Hash] params ({})
+    def search_vectors(params = {}, options = {})
+      req = build_request(:search_vectors, params)
       req.send_request(options)
     end
 
@@ -6769,6 +7322,9 @@ module Aws::DynamoDB
     #   resp.consumed_capacity[0].global_secondary_indexes["IndexName"].read_capacity_units #=> Float
     #   resp.consumed_capacity[0].global_secondary_indexes["IndexName"].write_capacity_units #=> Float
     #   resp.consumed_capacity[0].global_secondary_indexes["IndexName"].capacity_units #=> Float
+    #   resp.consumed_capacity[0].vector_indexes #=> Hash
+    #   resp.consumed_capacity[0].vector_indexes["IndexName"].vector_search_request_bytes #=> Float
+    #   resp.consumed_capacity[0].vector_indexes["IndexName"].vector_write_request_bytes #=> Float
     #   resp.responses #=> Array
     #   resp.responses[0].item #=> Hash
     #   resp.responses[0].item["AttributeName"] #=> <Hash,Array,String,Numeric,Boolean,IO,Set,nil>
@@ -6988,6 +7544,9 @@ module Aws::DynamoDB
     #   resp.consumed_capacity[0].global_secondary_indexes["IndexName"].read_capacity_units #=> Float
     #   resp.consumed_capacity[0].global_secondary_indexes["IndexName"].write_capacity_units #=> Float
     #   resp.consumed_capacity[0].global_secondary_indexes["IndexName"].capacity_units #=> Float
+    #   resp.consumed_capacity[0].vector_indexes #=> Hash
+    #   resp.consumed_capacity[0].vector_indexes["IndexName"].vector_search_request_bytes #=> Float
+    #   resp.consumed_capacity[0].vector_indexes["IndexName"].vector_write_request_bytes #=> Float
     #   resp.item_collection_metrics #=> Hash
     #   resp.item_collection_metrics["TableArn"] #=> Array
     #   resp.item_collection_metrics["TableArn"][0].item_collection_key #=> Hash
@@ -7065,8 +7624,8 @@ module Aws::DynamoDB
     #
     # `LatestRestorableDateTime` is typically 5 minutes before the current
     # time. You can restore your table to any point in time in the last 35
-    # days. You can set the recovery period to any value between 1 and 35
-    # days.
+    # days. You can set the `RecoveryPeriodInDays` to any value between 1
+    # and 35 days.
     #
     # @option params [required, String] :table_name
     #   The name of the table. You can also provide the Amazon Resource Name
@@ -7125,11 +7684,16 @@ module Aws::DynamoDB
     # @option params [required, String] :contributor_insights_action
     #   Represents the contributor insights action.
     #
+    # @option params [String] :contributor_insights_mode
+    #   Specifies whether to track all access and throttled events or
+    #   throttled events only for the DynamoDB table or index.
+    #
     # @return [Types::UpdateContributorInsightsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::UpdateContributorInsightsOutput#table_name #table_name} => String
     #   * {Types::UpdateContributorInsightsOutput#index_name #index_name} => String
     #   * {Types::UpdateContributorInsightsOutput#contributor_insights_status #contributor_insights_status} => String
+    #   * {Types::UpdateContributorInsightsOutput#contributor_insights_mode #contributor_insights_mode} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -7137,6 +7701,7 @@ module Aws::DynamoDB
     #     table_name: "TableArn", # required
     #     index_name: "IndexName",
     #     contributor_insights_action: "ENABLE", # required, accepts ENABLE, DISABLE
+    #     contributor_insights_mode: "ACCESSED_AND_THROTTLED_KEYS", # accepts ACCESSED_AND_THROTTLED_KEYS, THROTTLED_KEYS
     #   })
     #
     # @example Response structure
@@ -7144,6 +7709,7 @@ module Aws::DynamoDB
     #   resp.table_name #=> String
     #   resp.index_name #=> String
     #   resp.contributor_insights_status #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "FAILED"
+    #   resp.contributor_insights_mode #=> String, one of "ACCESSED_AND_THROTTLED_KEYS", "THROTTLED_KEYS"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/UpdateContributorInsights AWS API Documentation
     #
@@ -7171,9 +7737,8 @@ module Aws::DynamoDB
     # version 2017.11.29 (Legacy) to version 2019.11.21 (Current), see
     # [Upgrading global tables][3].
     #
-    # <note markdown="1"> For global tables, this operation only applies to global tables using
-    # Version 2019.11.21 (Current version). If you are using global tables
-    # [Version 2019.11.21][1] you can use [UpdateTable][4] instead.
+    # <note markdown="1"> If you are using global tables [Version 2019.11.21][1] (Current) you
+    # can use [UpdateTable][4] instead.
     #
     #  Although you can use `UpdateGlobalTable` to add replicas and remove
     # replicas in a single request, for simplicity we recommend that you
@@ -7230,7 +7795,8 @@ module Aws::DynamoDB
     #
     #   resp.global_table_description.replication_group #=> Array
     #   resp.global_table_description.replication_group[0].region_name #=> String
-    #   resp.global_table_description.replication_group[0].replica_status #=> String, one of "CREATING", "CREATION_FAILED", "UPDATING", "DELETING", "ACTIVE", "REGION_DISABLED", "INACCESSIBLE_ENCRYPTION_CREDENTIALS"
+    #   resp.global_table_description.replication_group[0].replica_status #=> String, one of "CREATING", "CREATION_FAILED", "UPDATING", "DELETING", "ACTIVE", "REGION_DISABLED", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
+    #   resp.global_table_description.replication_group[0].replica_arn #=> String
     #   resp.global_table_description.replication_group[0].replica_status_description #=> String
     #   resp.global_table_description.replication_group[0].replica_status_percent_progress #=> String
     #   resp.global_table_description.replication_group[0].kms_master_key_id #=> String
@@ -7238,7 +7804,7 @@ module Aws::DynamoDB
     #   resp.global_table_description.replication_group[0].on_demand_throughput_override.max_read_request_units #=> Integer
     #   resp.global_table_description.replication_group[0].warm_throughput.read_units_per_second #=> Integer
     #   resp.global_table_description.replication_group[0].warm_throughput.write_units_per_second #=> Integer
-    #   resp.global_table_description.replication_group[0].warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED"
+    #   resp.global_table_description.replication_group[0].warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
     #   resp.global_table_description.replication_group[0].global_secondary_indexes #=> Array
     #   resp.global_table_description.replication_group[0].global_secondary_indexes[0].index_name #=> String
     #   resp.global_table_description.replication_group[0].global_secondary_indexes[0].provisioned_throughput_override.read_capacity_units #=> Integer
@@ -7249,6 +7815,7 @@ module Aws::DynamoDB
     #   resp.global_table_description.replication_group[0].replica_inaccessible_date_time #=> Time
     #   resp.global_table_description.replication_group[0].replica_table_class_summary.table_class #=> String, one of "STANDARD", "STANDARD_INFREQUENT_ACCESS"
     #   resp.global_table_description.replication_group[0].replica_table_class_summary.last_update_date_time #=> Time
+    #   resp.global_table_description.replication_group[0].global_table_settings_replication_mode #=> String, one of "ENABLED", "DISABLED", "ENABLED_WITH_OVERRIDES"
     #   resp.global_table_description.global_table_arn #=> String
     #   resp.global_table_description.creation_date_time #=> Time
     #   resp.global_table_description.global_table_status #=> String, one of "CREATING", "ACTIVE", "DELETING", "UPDATING"
@@ -7416,7 +7983,7 @@ module Aws::DynamoDB
     #   resp.global_table_name #=> String
     #   resp.replica_settings #=> Array
     #   resp.replica_settings[0].region_name #=> String
-    #   resp.replica_settings[0].replica_status #=> String, one of "CREATING", "CREATION_FAILED", "UPDATING", "DELETING", "ACTIVE", "REGION_DISABLED", "INACCESSIBLE_ENCRYPTION_CREDENTIALS"
+    #   resp.replica_settings[0].replica_status #=> String, one of "CREATING", "CREATION_FAILED", "UPDATING", "DELETING", "ACTIVE", "REGION_DISABLED", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
     #   resp.replica_settings[0].replica_billing_mode_summary.billing_mode #=> String, one of "PROVISIONED", "PAY_PER_REQUEST"
     #   resp.replica_settings[0].replica_billing_mode_summary.last_update_to_pay_per_request_date_time #=> Time
     #   resp.replica_settings[0].replica_provisioned_read_capacity_units #=> Integer
@@ -7639,9 +8206,7 @@ module Aws::DynamoDB
     #       Both sets must have the same primitive data type. For example, if
     #       the existing data type is a set of strings, the `Value` must also
     #       be a set of strings.
-    #     The `ADD` action only supports Number and set data types. In
-    #     addition, `ADD` can only be used on top-level attributes, not nested
-    #     attributes.
+    #     The `ADD` action only supports Number and set data types.
     #
     #   * `DELETE` - Deletes an element from a set.
     #
@@ -7650,9 +8215,7 @@ module Aws::DynamoDB
     #     `[a,b,c]` and the `DELETE` action specifies `[a,c]`, then the final
     #     attribute value is `[b]`. Specifying an empty set is an error.
     #
-    #     The `DELETE` action only supports set data types. In addition,
-    #     `DELETE` can only be used on top-level attributes, not nested
-    #     attributes.
+    #     The `DELETE` action only supports set data types.
     #
     #   You can have many actions in a single expression, such as the
     #   following: `SET a=:value1, b=:value2 DELETE :value3, :value4, :value5`
@@ -7865,6 +8428,9 @@ module Aws::DynamoDB
     #   resp.consumed_capacity.global_secondary_indexes["IndexName"].read_capacity_units #=> Float
     #   resp.consumed_capacity.global_secondary_indexes["IndexName"].write_capacity_units #=> Float
     #   resp.consumed_capacity.global_secondary_indexes["IndexName"].capacity_units #=> Float
+    #   resp.consumed_capacity.vector_indexes #=> Hash
+    #   resp.consumed_capacity.vector_indexes["IndexName"].vector_search_request_bytes #=> Float
+    #   resp.consumed_capacity.vector_indexes["IndexName"].vector_write_request_bytes #=> Float
     #   resp.item_collection_metrics.item_collection_key #=> Hash
     #   resp.item_collection_metrics.item_collection_key["AttributeName"] #=> <Hash,Array,String,Numeric,Boolean,IO,Set,nil>
     #   resp.item_collection_metrics.size_estimate_range_gb #=> Array
@@ -7927,9 +8493,6 @@ module Aws::DynamoDB
     # Modifies the provisioned throughput settings, global secondary
     # indexes, or DynamoDB Streams settings for a given table.
     #
-    # For global tables, this operation only applies to global tables using
-    # Version 2019.11.21 (Current version).
-    #
     # You can only perform one of the following operations at once:
     #
     # * Modify the provisioned throughput settings of the table.
@@ -7964,18 +8527,19 @@ module Aws::DynamoDB
     #   and write capacity of your table and global secondary indexes over the
     #   past 30 minutes.
     #
-    #   * `PROVISIONED` - We recommend using `PROVISIONED` for predictable
-    #     workloads. `PROVISIONED` sets the billing mode to [Provisioned
-    #     capacity mode][1].
+    #   * `PAY_PER_REQUEST` - We recommend using `PAY_PER_REQUEST` for most
+    #     DynamoDB workloads. `PAY_PER_REQUEST` sets the billing mode to
+    #     [On-demand capacity mode][1].
     #
-    #   * `PAY_PER_REQUEST` - We recommend using `PAY_PER_REQUEST` for
-    #     unpredictable workloads. `PAY_PER_REQUEST` sets the billing mode to
-    #     [On-demand capacity mode][2].
+    #   * `PROVISIONED` - We recommend using `PROVISIONED` for steady
+    #     workloads with predictable growth where capacity requirements can be
+    #     reliably forecasted. `PROVISIONED` sets the billing mode to
+    #     [Provisioned capacity mode][2].
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/provisioned-capacity-mode.html
-    #   [2]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/on-demand-capacity-mode.html
+    #   [1]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/on-demand-capacity-mode.html
+    #   [2]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/provisioned-capacity-mode.html
     #
     # @option params [Types::ProvisionedThroughput] :provisioned_throughput
     #   The new provisioned throughput settings for the specified table or
@@ -8018,11 +8582,6 @@ module Aws::DynamoDB
     #   A list of replica update actions (create, delete, or update) for the
     #   table.
     #
-    #   <note markdown="1"> For global tables, this property only applies to global tables using
-    #   Version 2019.11.21 (Current version).
-    #
-    #    </note>
-    #
     # @option params [String] :table_class
     #   The table class of the table to be updated. Valid values are
     #   `STANDARD` and `STANDARD_INFREQUENT_ACCESS`.
@@ -8039,25 +8598,42 @@ module Aws::DynamoDB
     #   You can specify one of the following consistency modes:
     #
     #   * `EVENTUAL`: Configures a new global table for multi-Region eventual
-    #     consistency. This is the default consistency mode for global tables.
+    #     consistency (MREC). This is the default consistency mode for global
+    #     tables.
     #
     #   * `STRONG`: Configures a new global table for multi-Region strong
-    #     consistency (preview).
+    #     consistency (MRSC).
     #
-    #     <note markdown="1"> Multi-Region strong consistency (MRSC) is a new DynamoDB global
-    #     tables capability currently available in preview mode. For more
-    #     information, see [Global tables multi-Region strong consistency][3].
-    #
-    #      </note>
-    #
-    #   If you don't specify this parameter, the global table consistency
-    #   mode defaults to `EVENTUAL`.
+    #   If you don't specify this field, the global table consistency mode
+    #   defaults to `EVENTUAL`. For more information about global tables
+    #   consistency modes, see [ Consistency modes][3] in DynamoDB developer
+    #   guide.
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_ReplicationGroupUpdate.html#DDB-Type-ReplicationGroupUpdate-Create
-    #   [2]: https://docs.aws.amazon.com/https:/docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_UpdateTable.html#DDB-UpdateTable-request-ReplicaUpdates
-    #   [3]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/PreviewFeatures.html#multi-region-strong-consistency-gt
+    #   [2]: https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_UpdateTable.html#DDB-UpdateTable-request-ReplicaUpdates
+    #   [3]: https://docs.aws.amazon.com/V2globaltables_HowItWorks.html#V2globaltables_HowItWorks.consistency-modes
+    #
+    # @option params [Array<Types::GlobalTableWitnessGroupUpdate>] :global_table_witness_updates
+    #   A list of witness updates for a MRSC global table. A witness provides
+    #   a cost-effective alternative to a full replica in a MRSC global table
+    #   by maintaining replicated change data written to global table
+    #   replicas. You cannot perform read or write operations on a witness.
+    #   For each witness, you can request one action:
+    #
+    #   * `Create` - add a new witness to the global table.
+    #
+    #   * `Delete` - remove a witness from the global table.
+    #
+    #   You can create or delete only one witness per `UpdateTable` operation.
+    #
+    #   For more information, see [Multi-Region strong consistency (MRSC)][1]
+    #   in the Amazon DynamoDB Developer Guide
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/V2globaltables_HowItWorks.html#V2globaltables_HowItWorks.consistency-modes
     #
     # @option params [Types::OnDemandThroughput] :on_demand_throughput
     #   Updates the maximum number of read and write units for the specified
@@ -8067,6 +8643,26 @@ module Aws::DynamoDB
     # @option params [Types::WarmThroughput] :warm_throughput
     #   Represents the warm throughput (in read units per second and write
     #   units per second) for updating a table.
+    #
+    # @option params [String] :global_table_settings_replication_mode
+    #   Controls the settings replication mode for a global table replica.
+    #   This attribute can be defined using UpdateTable operation only on a
+    #   regional table with values:
+    #
+    #   * `ENABLED`: Defines settings replication on a regional table to be
+    #     used as a source table for creating Multi-Account Global Table.
+    #
+    #   * `DISABLED`: Remove settings replication on a regional table.
+    #     Settings replication needs to be defined to ENABLED again in order
+    #     to create a Multi-Account Global Table using this table.
+    #
+    # @option params [Array<Types::VectorIndexUpdate>] :vector_index_updates
+    #   A list of vector indexes to be added to or removed from the table. You
+    #   can add or remove one vector index for each `UpdateTable` operation.
+    #
+    #   To add a vector index, specify `IndexName`, `VectorAttribute`,
+    #   `Dimensions`, `DistanceFunction`, and `Projection`. To remove a vector
+    #   index, specify only the `IndexName`.
     #
     # @return [Types::UpdateTableOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -8247,6 +8843,16 @@ module Aws::DynamoDB
     #     table_class: "STANDARD", # accepts STANDARD, STANDARD_INFREQUENT_ACCESS
     #     deletion_protection_enabled: false,
     #     multi_region_consistency: "EVENTUAL", # accepts EVENTUAL, STRONG
+    #     global_table_witness_updates: [
+    #       {
+    #         create: {
+    #           region_name: "RegionName", # required
+    #         },
+    #         delete: {
+    #           region_name: "RegionName", # required
+    #         },
+    #       },
+    #     ],
     #     on_demand_throughput: {
     #       max_read_request_units: 1,
     #       max_write_request_units: 1,
@@ -8255,6 +8861,32 @@ module Aws::DynamoDB
     #       read_units_per_second: 1,
     #       write_units_per_second: 1,
     #     },
+    #     global_table_settings_replication_mode: "ENABLED", # accepts ENABLED, DISABLED, ENABLED_WITH_OVERRIDES
+    #     vector_index_updates: [
+    #       {
+    #         create: {
+    #           index_name: "IndexName", # required
+    #           vector_attribute: { # required
+    #             attribute_name: "VectorAttributeName", # required
+    #           },
+    #           search_schema: [
+    #             {
+    #               attribute_name: "AttributeName", # required
+    #               search_schema_element_type: "HASH", # required, accepts HASH, INLINE_FILTER
+    #             },
+    #           ],
+    #           projection: { # required
+    #             projection_type: "ALL", # accepts ALL, KEYS_ONLY, INCLUDE
+    #             non_key_attributes: ["NonKeyAttributeName"],
+    #           },
+    #           dimensions: 1, # required
+    #           distance_function: "COSINE", # required, accepts COSINE, DOT_PRODUCT, EUCLIDEAN
+    #         },
+    #         delete: {
+    #           index_name: "IndexName", # required
+    #         },
+    #       },
+    #     ],
     #   })
     #
     # @example Response structure
@@ -8266,7 +8898,7 @@ module Aws::DynamoDB
     #   resp.table_description.key_schema #=> Array
     #   resp.table_description.key_schema[0].attribute_name #=> String
     #   resp.table_description.key_schema[0].key_type #=> String, one of "HASH", "RANGE"
-    #   resp.table_description.table_status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED"
+    #   resp.table_description.table_status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
     #   resp.table_description.creation_date_time #=> Time
     #   resp.table_description.provisioned_throughput.last_increase_date_time #=> Time
     #   resp.table_description.provisioned_throughput.last_decrease_date_time #=> Time
@@ -8320,7 +8952,8 @@ module Aws::DynamoDB
     #   resp.table_description.global_table_version #=> String
     #   resp.table_description.replicas #=> Array
     #   resp.table_description.replicas[0].region_name #=> String
-    #   resp.table_description.replicas[0].replica_status #=> String, one of "CREATING", "CREATION_FAILED", "UPDATING", "DELETING", "ACTIVE", "REGION_DISABLED", "INACCESSIBLE_ENCRYPTION_CREDENTIALS"
+    #   resp.table_description.replicas[0].replica_status #=> String, one of "CREATING", "CREATION_FAILED", "UPDATING", "DELETING", "ACTIVE", "REGION_DISABLED", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
+    #   resp.table_description.replicas[0].replica_arn #=> String
     #   resp.table_description.replicas[0].replica_status_description #=> String
     #   resp.table_description.replicas[0].replica_status_percent_progress #=> String
     #   resp.table_description.replicas[0].kms_master_key_id #=> String
@@ -8328,7 +8961,7 @@ module Aws::DynamoDB
     #   resp.table_description.replicas[0].on_demand_throughput_override.max_read_request_units #=> Integer
     #   resp.table_description.replicas[0].warm_throughput.read_units_per_second #=> Integer
     #   resp.table_description.replicas[0].warm_throughput.write_units_per_second #=> Integer
-    #   resp.table_description.replicas[0].warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED"
+    #   resp.table_description.replicas[0].warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
     #   resp.table_description.replicas[0].global_secondary_indexes #=> Array
     #   resp.table_description.replicas[0].global_secondary_indexes[0].index_name #=> String
     #   resp.table_description.replicas[0].global_secondary_indexes[0].provisioned_throughput_override.read_capacity_units #=> Integer
@@ -8339,6 +8972,11 @@ module Aws::DynamoDB
     #   resp.table_description.replicas[0].replica_inaccessible_date_time #=> Time
     #   resp.table_description.replicas[0].replica_table_class_summary.table_class #=> String, one of "STANDARD", "STANDARD_INFREQUENT_ACCESS"
     #   resp.table_description.replicas[0].replica_table_class_summary.last_update_date_time #=> Time
+    #   resp.table_description.replicas[0].global_table_settings_replication_mode #=> String, one of "ENABLED", "DISABLED", "ENABLED_WITH_OVERRIDES"
+    #   resp.table_description.global_table_witnesses #=> Array
+    #   resp.table_description.global_table_witnesses[0].region_name #=> String
+    #   resp.table_description.global_table_witnesses[0].witness_status #=> String, one of "CREATING", "DELETING", "ACTIVE"
+    #   resp.table_description.global_table_settings_replication_mode #=> String, one of "ENABLED", "DISABLED", "ENABLED_WITH_OVERRIDES"
     #   resp.table_description.restore_summary.source_backup_arn #=> String
     #   resp.table_description.restore_summary.source_table_arn #=> String
     #   resp.table_description.restore_summary.restore_date_time #=> Time
@@ -8357,8 +8995,24 @@ module Aws::DynamoDB
     #   resp.table_description.on_demand_throughput.max_write_request_units #=> Integer
     #   resp.table_description.warm_throughput.read_units_per_second #=> Integer
     #   resp.table_description.warm_throughput.write_units_per_second #=> Integer
-    #   resp.table_description.warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED"
+    #   resp.table_description.warm_throughput.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
     #   resp.table_description.multi_region_consistency #=> String, one of "EVENTUAL", "STRONG"
+    #   resp.table_description.vector_indexes #=> Array
+    #   resp.table_description.vector_indexes[0].index_name #=> String
+    #   resp.table_description.vector_indexes[0].search_schema #=> Array
+    #   resp.table_description.vector_indexes[0].search_schema[0].attribute_name #=> String
+    #   resp.table_description.vector_indexes[0].search_schema[0].search_schema_element_type #=> String, one of "HASH", "INLINE_FILTER"
+    #   resp.table_description.vector_indexes[0].projection.projection_type #=> String, one of "ALL", "KEYS_ONLY", "INCLUDE"
+    #   resp.table_description.vector_indexes[0].projection.non_key_attributes #=> Array
+    #   resp.table_description.vector_indexes[0].projection.non_key_attributes[0] #=> String
+    #   resp.table_description.vector_indexes[0].vector_attribute.attribute_name #=> String
+    #   resp.table_description.vector_indexes[0].dimensions #=> Integer
+    #   resp.table_description.vector_indexes[0].distance_function #=> String, one of "COSINE", "DOT_PRODUCT", "EUCLIDEAN"
+    #   resp.table_description.vector_indexes[0].index_status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE"
+    #   resp.table_description.vector_indexes[0].backfilling #=> Boolean
+    #   resp.table_description.vector_indexes[0].index_size_bytes #=> Integer
+    #   resp.table_description.vector_indexes[0].item_count #=> Integer
+    #   resp.table_description.vector_indexes[0].index_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/UpdateTable AWS API Documentation
     #
@@ -8370,9 +9024,6 @@ module Aws::DynamoDB
     end
 
     # Updates auto scaling settings on your global tables at once.
-    #
-    # For global tables, this operation only applies to global tables using
-    # Version 2019.11.21 (Current version).
     #
     # @option params [Array<Types::GlobalSecondaryIndexAutoScalingUpdate>] :global_secondary_index_updates
     #   Represents the auto scaling settings of the global secondary indexes
@@ -8478,7 +9129,7 @@ module Aws::DynamoDB
     # @example Response structure
     #
     #   resp.table_auto_scaling_description.table_name #=> String
-    #   resp.table_auto_scaling_description.table_status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED"
+    #   resp.table_auto_scaling_description.table_status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
     #   resp.table_auto_scaling_description.replicas #=> Array
     #   resp.table_auto_scaling_description.replicas[0].region_name #=> String
     #   resp.table_auto_scaling_description.replicas[0].global_secondary_indexes #=> Array
@@ -8524,7 +9175,7 @@ module Aws::DynamoDB
     #   resp.table_auto_scaling_description.replicas[0].replica_provisioned_write_capacity_auto_scaling_settings.scaling_policies[0].target_tracking_scaling_policy_configuration.scale_in_cooldown #=> Integer
     #   resp.table_auto_scaling_description.replicas[0].replica_provisioned_write_capacity_auto_scaling_settings.scaling_policies[0].target_tracking_scaling_policy_configuration.scale_out_cooldown #=> Integer
     #   resp.table_auto_scaling_description.replicas[0].replica_provisioned_write_capacity_auto_scaling_settings.scaling_policies[0].target_tracking_scaling_policy_configuration.target_value #=> Float
-    #   resp.table_auto_scaling_description.replicas[0].replica_status #=> String, one of "CREATING", "CREATION_FAILED", "UPDATING", "DELETING", "ACTIVE", "REGION_DISABLED", "INACCESSIBLE_ENCRYPTION_CREDENTIALS"
+    #   resp.table_auto_scaling_description.replicas[0].replica_status #=> String, one of "CREATING", "CREATION_FAILED", "UPDATING", "DELETING", "ACTIVE", "REGION_DISABLED", "INACCESSIBLE_ENCRYPTION_CREDENTIALS", "ARCHIVING", "ARCHIVED", "REPLICATION_NOT_AUTHORIZED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/UpdateTableReplicaAutoScaling AWS API Documentation
     #
@@ -8626,7 +9277,7 @@ module Aws::DynamoDB
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-dynamodb'
-      context[:gem_version] = '1.138.0'
+      context[:gem_version] = '1.172.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 
@@ -8692,10 +9343,14 @@ module Aws::DynamoDB
     # The following table lists the valid waiter names, the operations they call,
     # and the default `:delay` and `:max_attempts` values.
     #
-    # | waiter_name      | params                  | :delay   | :max_attempts |
-    # | ---------------- | ----------------------- | -------- | ------------- |
-    # | table_exists     | {Client#describe_table} | 20       | 25            |
-    # | table_not_exists | {Client#describe_table} | 20       | 25            |
+    # | waiter_name                          | params                                          | :delay   | :max_attempts |
+    # | ------------------------------------ | ----------------------------------------------- | -------- | ------------- |
+    # | contributor_insights_enabled         | {Client#describe_contributor_insights}          | 20       | 30            |
+    # | export_completed                     | {Client#describe_export}                        | 20       | 60            |
+    # | import_completed                     | {Client#describe_import}                        | 20       | 60            |
+    # | kinesis_streaming_destination_active | {Client#describe_kinesis_streaming_destination} | 20       | 30            |
+    # | table_exists                         | {Client#describe_table}                         | 20       | 25            |
+    # | table_not_exists                     | {Client#describe_table}                         | 20       | 25            |
     #
     # @raise [Errors::FailureStateError] Raised when the waiter terminates
     #   because the waiter has entered a state that it will not transition
@@ -8746,6 +9401,10 @@ module Aws::DynamoDB
 
     def waiters
       {
+        contributor_insights_enabled: Waiters::ContributorInsightsEnabled,
+        export_completed: Waiters::ExportCompleted,
+        import_completed: Waiters::ImportCompleted,
+        kinesis_streaming_destination_active: Waiters::KinesisStreamingDestinationActive,
         table_exists: Waiters::TableExists,
         table_not_exists: Waiters::TableNotExists
       }

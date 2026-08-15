@@ -1,6 +1,191 @@
 Unreleased Changes
 ------------------
 
+1.151.0 (2026-07-09)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.150.0 (2026-06-03)
+------------------
+
+* Feature - Adding new BDD representation of endpoint ruleset
+
+1.149.0 (2026-05-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.148.0 (2026-05-19)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.147.0 (2026-05-14)
+------------------
+
+* Feature - Adding a new boolean for OCSP Revocations in Viewer mTLS Create and Update APIs, and adding a new 'Passthrough' option for TrustStore modes
+
+1.146.0 (2026-05-13)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.145.0 (2026-05-05)
+------------------
+
+* Feature - Adds support for tagging CloudFront Functions and KeyValueStores resources.
+
+1.144.0 (2026-04-29)
+------------------
+
+* Feature - Amazon CloudFront now supports cache tag. Tag objects via response headers and invalidate all matching objects in a single request, replacing manual URL tracking and broad wildcards.
+
+1.143.0 (2026-03-31)
+------------------
+
+* Feature - This release adds bring your own IP (BYOIP) IPv6 support to CloudFront's CreateAnycastIpList and UpdateAnycastIpList API through the IpamCidrConfigs field.
+
+1.142.0 (2026-03-18)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.141.0 (2026-02-02)
+------------------
+
+* Feature - Add OriginMTLS support to CloudFront Distribution APIs
+
+1.140.0 (2026-01-16)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.139.0 (2026-01-09)
+------------------
+
+* Feature - Added EntityLimitExceeded exception handling to the following API operations AssociateDistributionWebACL, AssociateDistributionTenantWebACL, UpdateDistributionWithStagingConfig
+
+1.138.0 (2026-01-08)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.137.0 (2026-01-05)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.136.0 (2025-11-24)
+------------------
+
+* Feature - Add TrustStore, ConnectionFunction APIs to CloudFront SDK
+
+1.135.0 (2025-11-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.134.0 (2025-11-20)
+------------------
+
+* Feature - This release adds support for bring your own IP (BYOIP) to CloudFront's CreateAnycastIpList API through an optional IpamCidrConfigs field.
+
+1.133.0 (2025-11-05)
+------------------
+
+* Feature - This release adds new and updated API operations. You can now use the IpAddressType field to specify either ipv4 or dualstack for your Anycast static IP list. You can also enable cross-account resource sharing to share your VPC origins with other AWS accounts
+
+1.132.0 (2025-10-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.131.0 (2025-10-17)
+------------------
+
+* Feature - Update endpoint ruleset parameters casing
+
+1.130.0 (2025-10-10)
+------------------
+
+* Feature - Added new viewer security policy, TLSv1.2_2025, for CloudFront.
+
+1.129.0 (2025-09-16)
+------------------
+
+* Feature - CloudFront signers now support ECDSA private keys in addition to RSA keys.
+
+1.128.0 (2025-09-03)
+------------------
+
+* Feature - Adding an optional field IpAddressType in CustomOriginConfig
+
+1.127.0 (2025-08-26)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.126.0 (2025-08-21)
+------------------
+
+* Feature - Remove incorrect endpoint tests
+
+1.125.0 (2025-08-07)
+------------------
+
+* Feature - Added new viewer security policy, TLSv1.3_2025, for CloudFront.
+
+1.124.0 (2025-08-04)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.123.0 (2025-07-31)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.122.0 (2025-07-30)
+------------------
+
+* Feature - This release adds new origin timeout options: 1) ResponseCompletionTimeout and 2) OriginReadTimeout (for S3 origins)
+
+1.121.0 (2025-07-21)
+------------------
+
+* Feature - Add dualstack endpoint support
+
+1.120.0 (2025-07-17)
+------------------
+
+* Feature - Doc only update for CloudFront that fixes some customer-reported issues
+
+1.119.0 (2025-06-02)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.118.0 (2025-05-12)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.117.0 (2025-05-08)
+------------------
+
+* Feature - Doc-only update for CloudFront. These changes include customer-reported issues.
+
+1.116.0 (2025-05-01)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.115.0 (2025-04-28)
+------------------
+
+* Feature - Add distribution tenant, connection group, and multi-tenant distribution APIs to the CloudFront SDK.
+
 1.114.0 (2025-03-07)
 ------------------
 

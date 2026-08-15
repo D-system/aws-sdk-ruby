@@ -31,6 +31,8 @@ module Aws::Budgets
     ApprovalModel = Shapes::StringShape.new(name: 'ApprovalModel')
     AutoAdjustData = Shapes::StructureShape.new(name: 'AutoAdjustData')
     AutoAdjustType = Shapes::StringShape.new(name: 'AutoAdjustType')
+    BillingViewArn = Shapes::StringShape.new(name: 'BillingViewArn')
+    BillingViewHealthStatusException = Shapes::StructureShape.new(name: 'BillingViewHealthStatusException')
     Budget = Shapes::StructureShape.new(name: 'Budget')
     BudgetName = Shapes::StringShape.new(name: 'BudgetName')
     BudgetNotificationsForAccount = Shapes::StructureShape.new(name: 'BudgetNotificationsForAccount')
@@ -42,6 +44,8 @@ module Aws::Budgets
     Budgets = Shapes::ListShape.new(name: 'Budgets')
     CalculatedSpend = Shapes::StructureShape.new(name: 'CalculatedSpend')
     ComparisonOperator = Shapes::StringShape.new(name: 'ComparisonOperator')
+    CostCategoryName = Shapes::StringShape.new(name: 'CostCategoryName')
+    CostCategoryValues = Shapes::StructureShape.new(name: 'CostCategoryValues')
     CostFilters = Shapes::MapShape.new(name: 'CostFilters')
     CostTypes = Shapes::StructureShape.new(name: 'CostTypes')
     CreateBudgetActionRequest = Shapes::StructureShape.new(name: 'CreateBudgetActionRequest')
@@ -82,6 +86,7 @@ module Aws::Budgets
     DescribeNotificationsForBudgetResponse = Shapes::StructureShape.new(name: 'DescribeNotificationsForBudgetResponse')
     DescribeSubscribersForNotificationRequest = Shapes::StructureShape.new(name: 'DescribeSubscribersForNotificationRequest')
     DescribeSubscribersForNotificationResponse = Shapes::StructureShape.new(name: 'DescribeSubscribersForNotificationResponse')
+    Dimension = Shapes::StringShape.new(name: 'Dimension')
     DimensionValue = Shapes::StringShape.new(name: 'DimensionValue')
     DimensionValues = Shapes::ListShape.new(name: 'DimensionValues')
     DuplicateRecordException = Shapes::StructureShape.new(name: 'DuplicateRecordException')
@@ -90,10 +95,16 @@ module Aws::Budgets
     ExecuteBudgetActionResponse = Shapes::StructureShape.new(name: 'ExecuteBudgetActionResponse')
     ExecutionType = Shapes::StringShape.new(name: 'ExecutionType')
     ExpiredNextTokenException = Shapes::StructureShape.new(name: 'ExpiredNextTokenException')
+    Expression = Shapes::StructureShape.new(name: 'Expression')
+    ExpressionDimensionValues = Shapes::StructureShape.new(name: 'ExpressionDimensionValues')
+    Expressions = Shapes::ListShape.new(name: 'Expressions')
     GenericString = Shapes::StringShape.new(name: 'GenericString')
     GenericTimestamp = Shapes::TimestampShape.new(name: 'GenericTimestamp')
     Group = Shapes::StringShape.new(name: 'Group')
     Groups = Shapes::ListShape.new(name: 'Groups')
+    HealthStatus = Shapes::StructureShape.new(name: 'HealthStatus')
+    HealthStatusReason = Shapes::StringShape.new(name: 'HealthStatusReason')
+    HealthStatusValue = Shapes::StringShape.new(name: 'HealthStatusValue')
     HistoricalOptions = Shapes::StructureShape.new(name: 'HistoricalOptions')
     IamActionDefinition = Shapes::StructureShape.new(name: 'IamActionDefinition')
     InstanceId = Shapes::StringShape.new(name: 'InstanceId')
@@ -103,9 +114,13 @@ module Aws::Budgets
     InvalidParameterException = Shapes::StructureShape.new(name: 'InvalidParameterException')
     ListTagsForResourceRequest = Shapes::StructureShape.new(name: 'ListTagsForResourceRequest')
     ListTagsForResourceResponse = Shapes::StructureShape.new(name: 'ListTagsForResourceResponse')
+    MatchOption = Shapes::StringShape.new(name: 'MatchOption')
+    MatchOptions = Shapes::ListShape.new(name: 'MatchOptions')
     MaxResults = Shapes::IntegerShape.new(name: 'MaxResults')
     MaxResultsBudgetNotifications = Shapes::IntegerShape.new(name: 'MaxResultsBudgetNotifications')
     MaxResultsDescribeBudgets = Shapes::IntegerShape.new(name: 'MaxResultsDescribeBudgets')
+    Metric = Shapes::StringShape.new(name: 'Metric')
+    Metrics = Shapes::ListShape.new(name: 'Metrics')
     NotFoundException = Shapes::StructureShape.new(name: 'NotFoundException')
     Notification = Shapes::StructureShape.new(name: 'Notification')
     NotificationState = Shapes::StringShape.new(name: 'NotificationState')
@@ -137,8 +152,10 @@ module Aws::Budgets
     SubscriberAddress = Shapes::StringShape.new(name: 'SubscriberAddress')
     Subscribers = Shapes::ListShape.new(name: 'Subscribers')
     SubscriptionType = Shapes::StringShape.new(name: 'SubscriptionType')
+    TagKey = Shapes::StringShape.new(name: 'TagKey')
     TagResourceRequest = Shapes::StructureShape.new(name: 'TagResourceRequest')
     TagResourceResponse = Shapes::StructureShape.new(name: 'TagResourceResponse')
+    TagValues = Shapes::StructureShape.new(name: 'TagValues')
     TargetId = Shapes::StringShape.new(name: 'TargetId')
     TargetIds = Shapes::ListShape.new(name: 'TargetIds')
     ThresholdType = Shapes::StringShape.new(name: 'ThresholdType')
@@ -158,6 +175,8 @@ module Aws::Budgets
     UpdateSubscriberResponse = Shapes::StructureShape.new(name: 'UpdateSubscriberResponse')
     User = Shapes::StringShape.new(name: 'User')
     Users = Shapes::ListShape.new(name: 'Users')
+    Value = Shapes::StringShape.new(name: 'Value')
+    Values = Shapes::ListShape.new(name: 'Values')
     errorMessage = Shapes::StringShape.new(name: 'errorMessage')
 
     AccessDeniedException.add_member(:message, Shapes::ShapeRef.new(shape: errorMessage, location_name: "Message"))
@@ -198,17 +217,24 @@ module Aws::Budgets
     AutoAdjustData.add_member(:last_auto_adjust_time, Shapes::ShapeRef.new(shape: GenericTimestamp, location_name: "LastAutoAdjustTime"))
     AutoAdjustData.struct_class = Types::AutoAdjustData
 
+    BillingViewHealthStatusException.add_member(:message, Shapes::ShapeRef.new(shape: errorMessage, location_name: "Message"))
+    BillingViewHealthStatusException.struct_class = Types::BillingViewHealthStatusException
+
     Budget.add_member(:budget_name, Shapes::ShapeRef.new(shape: BudgetName, required: true, location_name: "BudgetName"))
     Budget.add_member(:budget_limit, Shapes::ShapeRef.new(shape: Spend, location_name: "BudgetLimit"))
     Budget.add_member(:planned_budget_limits, Shapes::ShapeRef.new(shape: PlannedBudgetLimits, location_name: "PlannedBudgetLimits"))
-    Budget.add_member(:cost_filters, Shapes::ShapeRef.new(shape: CostFilters, location_name: "CostFilters"))
-    Budget.add_member(:cost_types, Shapes::ShapeRef.new(shape: CostTypes, location_name: "CostTypes"))
+    Budget.add_member(:cost_filters, Shapes::ShapeRef.new(shape: CostFilters, deprecated: true, location_name: "CostFilters", metadata: {"deprecatedMessage" => "CostFilters lack support for newer dimensions and filtering options. Please consider using the new 'FilterExpression' field.", "deprecatedSince" => "2025-04-18"}))
+    Budget.add_member(:cost_types, Shapes::ShapeRef.new(shape: CostTypes, deprecated: true, location_name: "CostTypes", metadata: {"deprecatedMessage" => "CostTypes lack support for newer record type dimensions and filtering options. Please consider using the new 'Metrics' field.", "deprecatedSince" => "2025-04-18"}))
     Budget.add_member(:time_unit, Shapes::ShapeRef.new(shape: TimeUnit, required: true, location_name: "TimeUnit"))
     Budget.add_member(:time_period, Shapes::ShapeRef.new(shape: TimePeriod, location_name: "TimePeriod"))
     Budget.add_member(:calculated_spend, Shapes::ShapeRef.new(shape: CalculatedSpend, location_name: "CalculatedSpend"))
     Budget.add_member(:budget_type, Shapes::ShapeRef.new(shape: BudgetType, required: true, location_name: "BudgetType"))
     Budget.add_member(:last_updated_time, Shapes::ShapeRef.new(shape: GenericTimestamp, location_name: "LastUpdatedTime"))
     Budget.add_member(:auto_adjust_data, Shapes::ShapeRef.new(shape: AutoAdjustData, location_name: "AutoAdjustData"))
+    Budget.add_member(:filter_expression, Shapes::ShapeRef.new(shape: Expression, location_name: "FilterExpression"))
+    Budget.add_member(:metrics, Shapes::ShapeRef.new(shape: Metrics, location_name: "Metrics"))
+    Budget.add_member(:billing_view_arn, Shapes::ShapeRef.new(shape: BillingViewArn, location_name: "BillingViewArn"))
+    Budget.add_member(:health_status, Shapes::ShapeRef.new(shape: HealthStatus, location_name: "HealthStatus"))
     Budget.struct_class = Types::Budget
 
     BudgetNotificationsForAccount.add_member(:notifications, Shapes::ShapeRef.new(shape: Notifications, location_name: "Notifications"))
@@ -222,7 +248,10 @@ module Aws::Budgets
     BudgetPerformanceHistory.add_member(:cost_filters, Shapes::ShapeRef.new(shape: CostFilters, location_name: "CostFilters"))
     BudgetPerformanceHistory.add_member(:cost_types, Shapes::ShapeRef.new(shape: CostTypes, location_name: "CostTypes"))
     BudgetPerformanceHistory.add_member(:time_unit, Shapes::ShapeRef.new(shape: TimeUnit, location_name: "TimeUnit"))
+    BudgetPerformanceHistory.add_member(:billing_view_arn, Shapes::ShapeRef.new(shape: BillingViewArn, location_name: "BillingViewArn"))
     BudgetPerformanceHistory.add_member(:budgeted_and_actual_amounts_list, Shapes::ShapeRef.new(shape: BudgetedAndActualAmountsList, location_name: "BudgetedAndActualAmountsList"))
+    BudgetPerformanceHistory.add_member(:filter_expression, Shapes::ShapeRef.new(shape: Expression, location_name: "FilterExpression"))
+    BudgetPerformanceHistory.add_member(:metrics, Shapes::ShapeRef.new(shape: Metrics, location_name: "Metrics"))
     BudgetPerformanceHistory.struct_class = Types::BudgetPerformanceHistory
 
     BudgetedAndActualAmounts.add_member(:budgeted_amount, Shapes::ShapeRef.new(shape: Spend, location_name: "BudgetedAmount"))
@@ -237,6 +266,11 @@ module Aws::Budgets
     CalculatedSpend.add_member(:actual_spend, Shapes::ShapeRef.new(shape: Spend, required: true, location_name: "ActualSpend"))
     CalculatedSpend.add_member(:forecasted_spend, Shapes::ShapeRef.new(shape: Spend, location_name: "ForecastedSpend"))
     CalculatedSpend.struct_class = Types::CalculatedSpend
+
+    CostCategoryValues.add_member(:key, Shapes::ShapeRef.new(shape: CostCategoryName, location_name: "Key"))
+    CostCategoryValues.add_member(:values, Shapes::ShapeRef.new(shape: Values, location_name: "Values"))
+    CostCategoryValues.add_member(:match_options, Shapes::ShapeRef.new(shape: MatchOptions, location_name: "MatchOptions"))
+    CostCategoryValues.struct_class = Types::CostCategoryValues
 
     CostFilters.key = Shapes::ShapeRef.new(shape: GenericString)
     CostFilters.value = Shapes::ShapeRef.new(shape: DimensionValues)
@@ -397,6 +431,7 @@ module Aws::Budgets
 
     DescribeBudgetRequest.add_member(:account_id, Shapes::ShapeRef.new(shape: AccountId, required: true, location_name: "AccountId"))
     DescribeBudgetRequest.add_member(:budget_name, Shapes::ShapeRef.new(shape: BudgetName, required: true, location_name: "BudgetName"))
+    DescribeBudgetRequest.add_member(:show_filter_expression, Shapes::ShapeRef.new(shape: NullableBoolean, location_name: "ShowFilterExpression"))
     DescribeBudgetRequest.struct_class = Types::DescribeBudgetRequest
 
     DescribeBudgetResponse.add_member(:budget, Shapes::ShapeRef.new(shape: Budget, location_name: "Budget"))
@@ -405,6 +440,7 @@ module Aws::Budgets
     DescribeBudgetsRequest.add_member(:account_id, Shapes::ShapeRef.new(shape: AccountId, required: true, location_name: "AccountId"))
     DescribeBudgetsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResultsDescribeBudgets, location_name: "MaxResults"))
     DescribeBudgetsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: GenericString, location_name: "NextToken"))
+    DescribeBudgetsRequest.add_member(:show_filter_expression, Shapes::ShapeRef.new(shape: NullableBoolean, location_name: "ShowFilterExpression"))
     DescribeBudgetsRequest.struct_class = Types::DescribeBudgetsRequest
 
     DescribeBudgetsResponse.add_member(:budgets, Shapes::ShapeRef.new(shape: Budgets, location_name: "Budgets"))
@@ -452,7 +488,27 @@ module Aws::Budgets
     ExpiredNextTokenException.add_member(:message, Shapes::ShapeRef.new(shape: errorMessage, location_name: "Message"))
     ExpiredNextTokenException.struct_class = Types::ExpiredNextTokenException
 
+    Expression.add_member(:or, Shapes::ShapeRef.new(shape: Expressions, location_name: "Or"))
+    Expression.add_member(:and, Shapes::ShapeRef.new(shape: Expressions, location_name: "And"))
+    Expression.add_member(:not, Shapes::ShapeRef.new(shape: Expression, location_name: "Not"))
+    Expression.add_member(:dimensions, Shapes::ShapeRef.new(shape: ExpressionDimensionValues, location_name: "Dimensions"))
+    Expression.add_member(:tags, Shapes::ShapeRef.new(shape: TagValues, location_name: "Tags"))
+    Expression.add_member(:cost_categories, Shapes::ShapeRef.new(shape: CostCategoryValues, location_name: "CostCategories"))
+    Expression.struct_class = Types::Expression
+
+    ExpressionDimensionValues.add_member(:key, Shapes::ShapeRef.new(shape: Dimension, required: true, location_name: "Key"))
+    ExpressionDimensionValues.add_member(:values, Shapes::ShapeRef.new(shape: Values, required: true, location_name: "Values"))
+    ExpressionDimensionValues.add_member(:match_options, Shapes::ShapeRef.new(shape: MatchOptions, location_name: "MatchOptions"))
+    ExpressionDimensionValues.struct_class = Types::ExpressionDimensionValues
+
+    Expressions.member = Shapes::ShapeRef.new(shape: Expression)
+
     Groups.member = Shapes::ShapeRef.new(shape: Group)
+
+    HealthStatus.add_member(:status, Shapes::ShapeRef.new(shape: HealthStatusValue, location_name: "Status"))
+    HealthStatus.add_member(:status_reason, Shapes::ShapeRef.new(shape: HealthStatusReason, location_name: "StatusReason"))
+    HealthStatus.add_member(:last_updated_time, Shapes::ShapeRef.new(shape: GenericTimestamp, location_name: "LastUpdatedTime"))
+    HealthStatus.struct_class = Types::HealthStatus
 
     HistoricalOptions.add_member(:budget_adjustment_period, Shapes::ShapeRef.new(shape: AdjustmentPeriod, required: true, location_name: "BudgetAdjustmentPeriod"))
     HistoricalOptions.add_member(:look_back_available_periods, Shapes::ShapeRef.new(shape: AdjustmentPeriod, location_name: "LookBackAvailablePeriods"))
@@ -480,6 +536,10 @@ module Aws::Budgets
 
     ListTagsForResourceResponse.add_member(:resource_tags, Shapes::ShapeRef.new(shape: ResourceTagList, location_name: "ResourceTags"))
     ListTagsForResourceResponse.struct_class = Types::ListTagsForResourceResponse
+
+    MatchOptions.member = Shapes::ShapeRef.new(shape: MatchOption)
+
+    Metrics.member = Shapes::ShapeRef.new(shape: Metric)
 
     NotFoundException.add_member(:message, Shapes::ShapeRef.new(shape: errorMessage, location_name: "Message"))
     NotFoundException.struct_class = Types::NotFoundException
@@ -543,6 +603,11 @@ module Aws::Budgets
 
     TagResourceResponse.struct_class = Types::TagResourceResponse
 
+    TagValues.add_member(:key, Shapes::ShapeRef.new(shape: TagKey, location_name: "Key"))
+    TagValues.add_member(:values, Shapes::ShapeRef.new(shape: Values, location_name: "Values"))
+    TagValues.add_member(:match_options, Shapes::ShapeRef.new(shape: MatchOptions, location_name: "MatchOptions"))
+    TagValues.struct_class = Types::TagValues
+
     TargetIds.member = Shapes::ShapeRef.new(shape: TargetId)
 
     ThrottlingException.add_member(:message, Shapes::ShapeRef.new(shape: errorMessage, location_name: "Message"))
@@ -600,6 +665,8 @@ module Aws::Budgets
 
     Users.member = Shapes::ShapeRef.new(shape: User)
 
+    Values.member = Shapes::ShapeRef.new(shape: Value)
+
 
     # @api private
     API = Seahorse::Model::Api.new.tap do |api|
@@ -628,12 +695,14 @@ module Aws::Budgets
         o.input = Shapes::ShapeRef.new(shape: CreateBudgetRequest)
         o.output = Shapes::ShapeRef.new(shape: CreateBudgetResponse)
         o.errors << Shapes::ShapeRef.new(shape: InvalidParameterException)
+        o.errors << Shapes::ShapeRef.new(shape: BillingViewHealthStatusException)
         o.errors << Shapes::ShapeRef.new(shape: InternalErrorException)
         o.errors << Shapes::ShapeRef.new(shape: CreationLimitExceededException)
         o.errors << Shapes::ShapeRef.new(shape: DuplicateRecordException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
       end)
 
       api.add_operation(:create_budget_action, Seahorse::Model::Operation.new.tap do |o|
@@ -854,6 +923,7 @@ module Aws::Budgets
         o.errors << Shapes::ShapeRef.new(shape: ExpiredNextTokenException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: BillingViewHealthStatusException)
         o[:pager] = Aws::Pager.new(
           limit_key: "max_results",
           tokens: {
@@ -987,9 +1057,11 @@ module Aws::Budgets
         o.output = Shapes::ShapeRef.new(shape: UpdateBudgetResponse)
         o.errors << Shapes::ShapeRef.new(shape: InternalErrorException)
         o.errors << Shapes::ShapeRef.new(shape: InvalidParameterException)
+        o.errors << Shapes::ShapeRef.new(shape: BillingViewHealthStatusException)
         o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
       end)
 
       api.add_operation(:update_budget_action, Seahorse::Model::Operation.new.tap do |o|

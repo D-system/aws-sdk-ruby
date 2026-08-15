@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -87,7 +88,7 @@ module Aws
                         {
                           key: ::String,
                           value: ::String?
-                        },
+                        }
                       ]
                     ) -> _AddTagsResponseSuccess
                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _AddTagsResponseSuccess
@@ -167,7 +168,7 @@ module Aws
                                       instance_protocol: ::String?,
                                       instance_port: ::Integer,
                                       ssl_certificate_id: ::String?
-                                    },
+                                    }
                                   ],
                                   ?availability_zones: Array[::String],
                                   ?subnets: Array[::String],
@@ -177,7 +178,7 @@ module Aws
                                     {
                                       key: ::String,
                                       value: ::String?
-                                    },
+                                    }
                                   ]
                                 ) -> _CreateLoadBalancerResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateLoadBalancerResponseSuccess
@@ -195,7 +196,7 @@ module Aws
                                                 instance_protocol: ::String?,
                                                 instance_port: ::Integer,
                                                 ssl_certificate_id: ::String?
-                                              },
+                                              }
                                             ]
                                           ) -> _CreateLoadBalancerListenersResponseSuccess
                                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateLoadBalancerListenersResponseSuccess
@@ -212,7 +213,7 @@ module Aws
                                            {
                                              attribute_name: ::String?,
                                              attribute_value: ::String?
-                                           },
+                                           }
                                          ]
                                        ) -> _CreateLoadBalancerPolicyResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateLoadBalancerPolicyResponseSuccess
@@ -256,7 +257,7 @@ module Aws
                                                      instances: Array[
                                                        {
                                                          instance_id: ::String?
-                                                       },
+                                                       }
                                                      ]
                                                    ) -> _DeregisterInstancesFromLoadBalancerResponseSuccess
                                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeregisterInstancesFromLoadBalancerResponseSuccess
@@ -283,7 +284,7 @@ module Aws
                                       ?instances: Array[
                                         {
                                           instance_id: ::String?
-                                        },
+                                        }
                                       ]
                                     ) -> _DescribeInstanceHealthResponseSuccess
                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeInstanceHealthResponseSuccess
@@ -404,7 +405,7 @@ module Aws
                                                  {
                                                    key: ::String?,
                                                    value: ::String?
-                                                 },
+                                                 }
                                                ]?
                                              }
                                            ) -> _ModifyLoadBalancerAttributesResponseSuccess
@@ -420,7 +421,7 @@ module Aws
                                                    instances: Array[
                                                      {
                                                        instance_id: ::String?
-                                                     },
+                                                     }
                                                    ]
                                                  ) -> _RegisterInstancesWithLoadBalancerResponseSuccess
                                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RegisterInstancesWithLoadBalancerResponseSuccess
@@ -434,7 +435,7 @@ module Aws
                          tags: Array[
                            {
                              key: ::String?
-                           },
+                           }
                          ]
                        ) -> _RemoveTagsResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RemoveTagsResponseSuccess
@@ -478,7 +479,7 @@ module Aws
                     ?instances: Array[
                       {
                         instance_id: ::String?
-                      },
+                      }
                     ]
                   ) -> Client::_DescribeInstanceHealthResponseSuccess
                     | (:any_instance_in_service waiter_name, Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> Client::_DescribeInstanceHealthResponseSuccess
@@ -487,7 +488,7 @@ module Aws
                     ?instances: Array[
                       {
                         instance_id: ::String?
-                      },
+                      }
                     ]
                   ) -> Client::_DescribeInstanceHealthResponseSuccess
                     | (:instance_deregistered waiter_name, Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> Client::_DescribeInstanceHealthResponseSuccess
@@ -496,7 +497,7 @@ module Aws
                     ?instances: Array[
                       {
                         instance_id: ::String?
-                      },
+                      }
                     ]
                   ) -> Client::_DescribeInstanceHealthResponseSuccess
                     | (:instance_in_service waiter_name, Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> Client::_DescribeInstanceHealthResponseSuccess

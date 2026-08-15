@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -85,7 +86,7 @@ module Aws
       def scan_sbom: (
                        sbom: {
                        },
-                       ?output_format: ("CYCLONE_DX_1_5" | "INSPECTOR")
+                       ?output_format: ("CYCLONE_DX_1_5" | "INSPECTOR" | "INSPECTOR_ALT")
                      ) -> _ScanSbomResponseSuccess
                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ScanSbomResponseSuccess
     end

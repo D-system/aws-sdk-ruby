@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -103,7 +104,7 @@ module Aws
                                     {
                                       key: ::String?,
                                       value: ::String?
-                                    },
+                                    }
                                   ]
                                 ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
@@ -133,7 +134,7 @@ module Aws
                                                {
                                                  key: ::String?,
                                                  value: ::String?
-                                               },
+                                               }
                                              ]
                                            ) -> _CopyDBClusterParameterGroupResponseSuccess
                                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CopyDBClusterParameterGroupResponseSuccess
@@ -153,7 +154,7 @@ module Aws
                                         {
                                           key: ::String?,
                                           value: ::String?
-                                        },
+                                        }
                                       ],
                                       ?source_region: ::String
                                     ) -> _CopyDBClusterSnapshotResponseSuccess
@@ -172,7 +173,7 @@ module Aws
                                        {
                                          key: ::String?,
                                          value: ::String?
-                                       },
+                                       }
                                      ]
                                    ) -> _CopyDBParameterGroupResponseSuccess
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CopyDBParameterGroupResponseSuccess
@@ -205,7 +206,7 @@ module Aws
                                  {
                                    key: ::String?,
                                    value: ::String?
-                                 },
+                                 }
                                ],
                                ?storage_encrypted: bool,
                                ?kms_key_id: ::String,
@@ -219,6 +220,7 @@ module Aws
                                },
                                ?global_cluster_identifier: ::String,
                                ?storage_type: ::String,
+                               ?network_type: ::String,
                                ?source_region: ::String
                              ) -> _CreateDBClusterResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateDBClusterResponseSuccess
@@ -247,7 +249,7 @@ module Aws
                                           {
                                             key: ::String?,
                                             value: ::String?
-                                          },
+                                          }
                                         ]
                                       ) -> _CreateDBClusterEndpointResponseSuccess
                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateDBClusterEndpointResponseSuccess
@@ -265,7 +267,7 @@ module Aws
                                                  {
                                                    key: ::String?,
                                                    value: ::String?
-                                                 },
+                                                 }
                                                ]
                                              ) -> _CreateDBClusterParameterGroupResponseSuccess
                                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateDBClusterParameterGroupResponseSuccess
@@ -282,7 +284,7 @@ module Aws
                                           {
                                             key: ::String?,
                                             value: ::String?
-                                          },
+                                          }
                                         ]
                                       ) -> _CreateDBClusterSnapshotResponseSuccess
                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateDBClusterSnapshotResponseSuccess
@@ -321,7 +323,7 @@ module Aws
                                   {
                                     key: ::String?,
                                     value: ::String?
-                                  },
+                                  }
                                 ],
                                 db_cluster_identifier: ::String,
                                 ?storage_type: ::String,
@@ -357,7 +359,7 @@ module Aws
                                          {
                                            key: ::String?,
                                            value: ::String?
-                                         },
+                                         }
                                        ]
                                      ) -> _CreateDBParameterGroupResponseSuccess
                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateDBParameterGroupResponseSuccess
@@ -375,7 +377,7 @@ module Aws
                                       {
                                         key: ::String?,
                                         value: ::String?
-                                      },
+                                      }
                                     ]
                                   ) -> _CreateDBSubnetGroupResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateDBSubnetGroupResponseSuccess
@@ -396,7 +398,7 @@ module Aws
                                          {
                                            key: ::String?,
                                            value: ::String?
-                                         },
+                                         }
                                        ]
                                      ) -> _CreateEventSubscriptionResponseSuccess
                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateEventSubscriptionResponseSuccess
@@ -412,6 +414,13 @@ module Aws
                                    ?engine: ::String,
                                    ?engine_version: ::String,
                                    ?deletion_protection: bool,
+                                   ?database_name: ::String,
+                                   ?tags: Array[
+                                     {
+                                       key: ::String?,
+                                       value: ::String?
+                                     }
+                                   ],
                                    ?storage_encrypted: bool
                                  ) -> _CreateGlobalClusterResponseSuccess
                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateGlobalClusterResponseSuccess
@@ -520,7 +529,7 @@ module Aws
                                              {
                                                name: ::String,
                                                values: Array[::String]
-                                             },
+                                             }
                                            ],
                                            ?max_records: ::Integer,
                                            ?marker: ::String
@@ -539,7 +548,7 @@ module Aws
                                                     {
                                                       name: ::String,
                                                       values: Array[::String]
-                                                    },
+                                                    }
                                                   ],
                                                   ?max_records: ::Integer,
                                                   ?marker: ::String
@@ -559,7 +568,7 @@ module Aws
                                               {
                                                 name: ::String,
                                                 values: Array[::String]
-                                              },
+                                              }
                                             ],
                                             ?max_records: ::Integer,
                                             ?marker: ::String
@@ -590,7 +599,7 @@ module Aws
                                              {
                                                name: ::String,
                                                values: Array[::String]
-                                             },
+                                             }
                                            ],
                                            ?max_records: ::Integer,
                                            ?marker: ::String,
@@ -611,7 +620,7 @@ module Aws
                                     {
                                       name: ::String,
                                       values: Array[::String]
-                                    },
+                                    }
                                   ],
                                   ?max_records: ::Integer,
                                   ?marker: ::String
@@ -632,7 +641,7 @@ module Aws
                                            {
                                              name: ::String,
                                              values: Array[::String]
-                                           },
+                                           }
                                          ],
                                          ?max_records: ::Integer,
                                          ?marker: ::String,
@@ -654,7 +663,7 @@ module Aws
                                      {
                                        name: ::String,
                                        values: Array[::String]
-                                     },
+                                     }
                                    ],
                                    ?max_records: ::Integer,
                                    ?marker: ::String
@@ -673,7 +682,7 @@ module Aws
                                             {
                                               name: ::String,
                                               values: Array[::String]
-                                            },
+                                            }
                                           ],
                                           ?max_records: ::Integer,
                                           ?marker: ::String
@@ -693,7 +702,7 @@ module Aws
                                       {
                                         name: ::String,
                                         values: Array[::String]
-                                      },
+                                      }
                                     ],
                                     ?max_records: ::Integer,
                                     ?marker: ::String
@@ -712,7 +721,7 @@ module Aws
                                          {
                                            name: ::String,
                                            values: Array[::String]
-                                         },
+                                         }
                                        ],
                                        ?max_records: ::Integer,
                                        ?marker: ::String
@@ -730,7 +739,7 @@ module Aws
                                                           {
                                                             name: ::String,
                                                             values: Array[::String]
-                                                          },
+                                                          }
                                                         ],
                                                         ?max_records: ::Integer,
                                                         ?marker: ::String
@@ -748,7 +757,7 @@ module Aws
                                                   {
                                                     name: ::String,
                                                     values: Array[::String]
-                                                  },
+                                                  }
                                                 ],
                                                 ?max_records: ::Integer,
                                                 ?marker: ::String
@@ -766,7 +775,7 @@ module Aws
                                          {
                                            name: ::String,
                                            values: Array[::String]
-                                         },
+                                         }
                                        ]
                                      ) -> _DescribeEventCategoriesResponseSuccess
                                    | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeEventCategoriesResponseSuccess
@@ -783,7 +792,7 @@ module Aws
                                             {
                                               name: ::String,
                                               values: Array[::String]
-                                            },
+                                            }
                                           ],
                                           ?max_records: ::Integer,
                                           ?marker: ::String
@@ -807,7 +816,7 @@ module Aws
                                {
                                  name: ::String,
                                  values: Array[::String]
-                               },
+                               }
                              ],
                              ?max_records: ::Integer,
                              ?marker: ::String
@@ -843,7 +852,7 @@ module Aws
                                                       {
                                                         name: ::String,
                                                         values: Array[::String]
-                                                      },
+                                                      }
                                                     ],
                                                     ?max_records: ::Integer,
                                                     ?marker: ::String
@@ -862,7 +871,7 @@ module Aws
                                                     {
                                                       name: ::String,
                                                       values: Array[::String]
-                                                    },
+                                                    }
                                                   ],
                                                   ?marker: ::String,
                                                   ?max_records: ::Integer
@@ -897,7 +906,9 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Neptune/Client.html#failover_global_cluster-instance_method
       def failover_global_cluster: (
                                      global_cluster_identifier: ::String,
-                                     target_db_cluster_identifier: ::String
+                                     target_db_cluster_identifier: ::String,
+                                     ?allow_data_loss: bool,
+                                     ?switchover: bool
                                    ) -> _FailoverGlobalClusterResponseSuccess
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _FailoverGlobalClusterResponseSuccess
 
@@ -912,7 +923,7 @@ module Aws
                                       {
                                         name: ::String,
                                         values: Array[::String]
-                                      },
+                                      }
                                     ]
                                   ) -> _ListTagsForResourceResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListTagsForResourceResponseSuccess
@@ -948,7 +959,8 @@ module Aws
                                  min_capacity: ::Float?,
                                  max_capacity: ::Float?
                                },
-                               ?storage_type: ::String
+                               ?storage_type: ::String,
+                               ?network_type: ::String
                              ) -> _ModifyDBClusterResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ModifyDBClusterResponseSuccess
 
@@ -982,18 +994,7 @@ module Aws
       def modify_db_cluster_parameter_group: (
                                                db_cluster_parameter_group_name: ::String,
                                                parameters: Array[
-                                                 {
-                                                   parameter_name: ::String?,
-                                                   parameter_value: ::String?,
-                                                   description: ::String?,
-                                                   source: ::String?,
-                                                   apply_type: ::String?,
-                                                   data_type: ::String?,
-                                                   allowed_values: ::String?,
-                                                   is_modifiable: bool?,
-                                                   minimum_engine_version: ::String?,
-                                                   apply_method: ("immediate" | "pending-reboot")?
-                                                 },
+                                                 Params::parameter
                                                ]
                                              ) -> _ModifyDBClusterParameterGroupResponseSuccess
                                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ModifyDBClusterParameterGroupResponseSuccess
@@ -1068,18 +1069,7 @@ module Aws
       def modify_db_parameter_group: (
                                        db_parameter_group_name: ::String,
                                        parameters: Array[
-                                         {
-                                           parameter_name: ::String?,
-                                           parameter_value: ::String?,
-                                           description: ::String?,
-                                           source: ::String?,
-                                           apply_type: ::String?,
-                                           data_type: ::String?,
-                                           allowed_values: ::String?,
-                                           is_modifiable: bool?,
-                                           minimum_engine_version: ::String?,
-                                           apply_method: ("immediate" | "pending-reboot")?
-                                         },
+                                         Params::parameter
                                        ]
                                      ) -> _ModifyDBParameterGroupResponseSuccess
                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ModifyDBParameterGroupResponseSuccess
@@ -1191,18 +1181,7 @@ module Aws
                                               db_cluster_parameter_group_name: ::String,
                                               ?reset_all_parameters: bool,
                                               ?parameters: Array[
-                                                {
-                                                  parameter_name: ::String?,
-                                                  parameter_value: ::String?,
-                                                  description: ::String?,
-                                                  source: ::String?,
-                                                  apply_type: ::String?,
-                                                  data_type: ::String?,
-                                                  allowed_values: ::String?,
-                                                  is_modifiable: bool?,
-                                                  minimum_engine_version: ::String?,
-                                                  apply_method: ("immediate" | "pending-reboot")?
-                                                },
+                                                Params::parameter
                                               ]
                                             ) -> _ResetDBClusterParameterGroupResponseSuccess
                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ResetDBClusterParameterGroupResponseSuccess
@@ -1216,18 +1195,7 @@ module Aws
                                       db_parameter_group_name: ::String,
                                       ?reset_all_parameters: bool,
                                       ?parameters: Array[
-                                        {
-                                          parameter_name: ::String?,
-                                          parameter_value: ::String?,
-                                          description: ::String?,
-                                          source: ::String?,
-                                          apply_type: ::String?,
-                                          data_type: ::String?,
-                                          allowed_values: ::String?,
-                                          is_modifiable: bool?,
-                                          minimum_engine_version: ::String?,
-                                          apply_method: ("immediate" | "pending-reboot")?
-                                        },
+                                        Params::parameter
                                       ]
                                     ) -> _ResetDBParameterGroupResponseSuccess
                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ResetDBParameterGroupResponseSuccess
@@ -1252,7 +1220,7 @@ module Aws
                                                 {
                                                   key: ::String?,
                                                   value: ::String?
-                                                },
+                                                }
                                               ],
                                               ?kms_key_id: ::String,
                                               ?enable_iam_database_authentication: bool,
@@ -1264,7 +1232,8 @@ module Aws
                                                 min_capacity: ::Float?,
                                                 max_capacity: ::Float?
                                               },
-                                              ?storage_type: ::String
+                                              ?storage_type: ::String,
+                                              ?network_type: ::String
                                             ) -> _RestoreDBClusterFromSnapshotResponseSuccess
                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RestoreDBClusterFromSnapshotResponseSuccess
 
@@ -1287,7 +1256,7 @@ module Aws
                                                    {
                                                      key: ::String?,
                                                      value: ::String?
-                                                   },
+                                                   }
                                                  ],
                                                  ?kms_key_id: ::String,
                                                  ?enable_iam_database_authentication: bool,
@@ -1298,7 +1267,8 @@ module Aws
                                                    min_capacity: ::Float?,
                                                    max_capacity: ::Float?
                                                  },
-                                                 ?storage_type: ::String
+                                                 ?storage_type: ::String,
+                                                 ?network_type: ::String
                                                ) -> _RestoreDBClusterToPointInTimeResponseSuccess
                                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RestoreDBClusterToPointInTimeResponseSuccess
 
@@ -1322,6 +1292,17 @@ module Aws
                            ) -> _StopDBClusterResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StopDBClusterResponseSuccess
 
+      interface _SwitchoverGlobalClusterResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::SwitchoverGlobalClusterResult]
+        def global_cluster: () -> Types::GlobalCluster
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Neptune/Client.html#switchover_global_cluster-instance_method
+      def switchover_global_cluster: (
+                                       global_cluster_identifier: ::String,
+                                       target_db_cluster_identifier: ::String
+                                     ) -> _SwitchoverGlobalClusterResponseSuccess
+                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _SwitchoverGlobalClusterResponseSuccess
+
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Neptune/Client.html#wait_until-instance_method
       def wait_until: (:db_instance_available waiter_name, 
                     ?db_instance_identifier: ::String,
@@ -1329,7 +1310,7 @@ module Aws
                       {
                         name: ::String,
                         values: Array[::String]
-                      },
+                      }
                     ],
                     ?max_records: ::Integer,
                     ?marker: ::String
@@ -1341,7 +1322,7 @@ module Aws
                       {
                         name: ::String,
                         values: Array[::String]
-                      },
+                      }
                     ],
                     ?max_records: ::Integer,
                     ?marker: ::String

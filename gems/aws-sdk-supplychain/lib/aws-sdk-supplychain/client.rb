@@ -95,8 +95,8 @@ module Aws::SupplyChain
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::SupplyChain
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::SupplyChain
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::SupplyChain
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::SupplyChain
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::SupplyChain
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::SupplyChain
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::SupplyChain
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -633,6 +637,21 @@ module Aws::SupplyChain
     #     target: {
     #       dataset_target: {
     #         dataset_identifier: "arn:aws:scn:us-east-1:123456789012:instance/8850c54e-e187-4fa7-89d4-6370f165174d/namespaces/asc/datasets/trading_partner", 
+    #         options: {
+    #           dedupe_records: true, 
+    #           dedupe_strategy: {
+    #             type: "FIELD_PRIORITY", 
+    #             field_priority: {
+    #               fields: [
+    #                 {
+    #                   name: "eff_start_date", 
+    #                   sort_order: "DESC", 
+    #                 }, 
+    #               ], 
+    #             }, 
+    #           }, 
+    #           load_type: "REPLACE", 
+    #         }, 
     #       }, 
     #       target_type: "DATASET", 
     #     }, 
@@ -671,6 +690,17 @@ module Aws::SupplyChain
     #           options: {
     #             load_type: "INCREMENTAL", # accepts INCREMENTAL, REPLACE
     #             dedupe_records: false,
+    #             dedupe_strategy: {
+    #               type: "FIELD_PRIORITY", # required, accepts FIELD_PRIORITY
+    #               field_priority: {
+    #                 fields: [ # required
+    #                   {
+    #                     name: "DataIntegrationFlowFieldPriorityDedupeFieldName", # required
+    #                     sort_order: "ASC", # required, accepts ASC, DESC
+    #                   },
+    #                 ],
+    #               },
+    #             },
     #           },
     #         },
     #       },
@@ -695,6 +725,17 @@ module Aws::SupplyChain
     #         options: {
     #           load_type: "INCREMENTAL", # accepts INCREMENTAL, REPLACE
     #           dedupe_records: false,
+    #           dedupe_strategy: {
+    #             type: "FIELD_PRIORITY", # required, accepts FIELD_PRIORITY
+    #             field_priority: {
+    #               fields: [ # required
+    #                 {
+    #                   name: "DataIntegrationFlowFieldPriorityDedupeFieldName", # required
+    #                   sort_order: "ASC", # required, accepts ASC, DESC
+    #                 },
+    #               ],
+    #             },
+    #           },
     #         },
     #       },
     #     },
@@ -726,7 +767,8 @@ module Aws::SupplyChain
     #   The Amazon Web Services Supply Chain instance identifier.
     #
     # @option params [required, String] :namespace
-    #   The name space of the dataset.
+    #   The namespace of the dataset, besides the custom defined namespace,
+    #   every instance comes with below pre-defined namespaces:
     #
     #   * **asc** - For information on the Amazon Web Services Supply Chain
     #     supported datasets see
@@ -748,11 +790,20 @@ module Aws::SupplyChain
     #   [1]: https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/data-model-asc.html
     #
     # @option params [Types::DataLakeDatasetSchema] :schema
-    #   The custom schema of the data lake dataset and is only required when
-    #   the name space is **default**.
+    #   The custom schema of the data lake dataset and required for dataset in
+    #   **default** and custom namespaces.
     #
     # @option params [String] :description
     #   The description of the dataset.
+    #
+    # @option params [Types::DataLakeDatasetPartitionSpec] :partition_spec
+    #   The partition specification of the dataset. Partitioning can
+    #   effectively improve the dataset query performance by reducing the
+    #   amount of data scanned during query execution. But partitioning or not
+    #   will affect how data get ingested by data ingestion methods, such as
+    #   SendDataIntegrationEvent's dataset UPSERT will upsert records within
+    #   partition (instead of within whole dataset). For more details, refer
+    #   to those data ingestion documentations.
     #
     # @option params [Hash<String,String>] :tags
     #   The tags of the dataset.
@@ -950,6 +1001,22 @@ module Aws::SupplyChain
     #     description: "This is a custom dataset", 
     #     instance_id: "1877dd20-dee9-4639-8e99-cb67acf21fe5", 
     #     namespace: "default", 
+    #     partition_spec: {
+    #       fields: [
+    #         {
+    #           name: "creation_time", 
+    #           transform: {
+    #             type: "DAY", 
+    #           }, 
+    #         }, 
+    #         {
+    #           name: "description", 
+    #           transform: {
+    #             type: "IDENTITY", 
+    #           }, 
+    #         }, 
+    #       ], 
+    #     }, 
     #     schema: {
     #       name: "MyDataset", 
     #       fields: [
@@ -973,6 +1040,16 @@ module Aws::SupplyChain
     #           type: "TIMESTAMP", 
     #           is_required: false, 
     #         }, 
+    #         {
+    #           name: "quantity", 
+    #           type: "LONG", 
+    #           is_required: false, 
+    #         }, 
+    #       ], 
+    #       primary_keys: [
+    #         {
+    #           name: "id", 
+    #         }, 
     #       ], 
     #     }, 
     #     tags: {
@@ -991,6 +1068,22 @@ module Aws::SupplyChain
     #       instance_id: "1877dd20-dee9-4639-8e99-cb67acf21fe5", 
     #       last_modified_time: Time.parse(1727116807.751), 
     #       namespace: "default", 
+    #       partition_spec: {
+    #         fields: [
+    #           {
+    #             name: "creation_time", 
+    #             transform: {
+    #               type: "DAY", 
+    #             }, 
+    #           }, 
+    #           {
+    #             name: "description", 
+    #             transform: {
+    #               type: "IDENTITY", 
+    #             }, 
+    #           }, 
+    #         ], 
+    #       }, 
     #       schema: {
     #         name: "MyDataset", 
     #         fields: [
@@ -1014,6 +1107,16 @@ module Aws::SupplyChain
     #             type: "TIMESTAMP", 
     #             is_required: false, 
     #           }, 
+    #           {
+    #             name: "quantity", 
+    #             type: "LONG", 
+    #             is_required: false, 
+    #           }, 
+    #         ], 
+    #         primary_keys: [
+    #           {
+    #             name: "id", 
+    #           }, 
     #         ], 
     #       }, 
     #     }, 
@@ -1023,19 +1126,34 @@ module Aws::SupplyChain
     #
     #   resp = client.create_data_lake_dataset({
     #     instance_id: "UUID", # required
-    #     namespace: "DataLakeDatasetNamespace", # required
+    #     namespace: "DataLakeNamespaceName", # required
     #     name: "DataLakeDatasetName", # required
     #     schema: {
     #       name: "DataLakeDatasetSchemaName", # required
     #       fields: [ # required
     #         {
     #           name: "DataLakeDatasetSchemaFieldName", # required
-    #           type: "INT", # required, accepts INT, DOUBLE, STRING, TIMESTAMP
+    #           type: "INT", # required, accepts INT, DOUBLE, STRING, TIMESTAMP, LONG
     #           is_required: false, # required
+    #         },
+    #       ],
+    #       primary_keys: [
+    #         {
+    #           name: "DataLakeDatasetSchemaFieldName", # required
     #         },
     #       ],
     #     },
     #     description: "DataLakeDatasetDescription",
+    #     partition_spec: {
+    #       fields: [ # required
+    #         {
+    #           name: "DataLakeDatasetSchemaFieldName", # required
+    #           transform: { # required
+    #             type: "YEAR", # required, accepts YEAR, MONTH, DAY, HOUR, IDENTITY
+    #           },
+    #         },
+    #       ],
+    #     },
     #     tags: {
     #       "TagKey" => "TagValue",
     #     },
@@ -1050,9 +1168,14 @@ module Aws::SupplyChain
     #   resp.dataset.schema.name #=> String
     #   resp.dataset.schema.fields #=> Array
     #   resp.dataset.schema.fields[0].name #=> String
-    #   resp.dataset.schema.fields[0].type #=> String, one of "INT", "DOUBLE", "STRING", "TIMESTAMP"
+    #   resp.dataset.schema.fields[0].type #=> String, one of "INT", "DOUBLE", "STRING", "TIMESTAMP", "LONG"
     #   resp.dataset.schema.fields[0].is_required #=> Boolean
+    #   resp.dataset.schema.primary_keys #=> Array
+    #   resp.dataset.schema.primary_keys[0].name #=> String
     #   resp.dataset.description #=> String
+    #   resp.dataset.partition_spec.fields #=> Array
+    #   resp.dataset.partition_spec.fields[0].name #=> String
+    #   resp.dataset.partition_spec.fields[0].transform.type #=> String, one of "YEAR", "MONTH", "DAY", "HOUR", "IDENTITY"
     #   resp.dataset.created_time #=> Time
     #   resp.dataset.last_modified_time #=> Time
     #
@@ -1062,6 +1185,82 @@ module Aws::SupplyChain
     # @param [Hash] params ({})
     def create_data_lake_dataset(params = {}, options = {})
       req = build_request(:create_data_lake_dataset, params)
+      req.send_request(options)
+    end
+
+    # Enables you to programmatically create an Amazon Web Services Supply
+    # Chain data lake namespace. Developers can create the namespaces for a
+    # given instance ID.
+    #
+    # @option params [required, String] :instance_id
+    #   The Amazon Web Services Supply Chain instance identifier.
+    #
+    # @option params [required, String] :name
+    #   The name of the namespace. Noted you cannot create namespace with name
+    #   starting with **asc**, **default**, **scn**, **aws**, **amazon**,
+    #   **amzn**
+    #
+    # @option params [String] :description
+    #   The description of the namespace.
+    #
+    # @option params [Hash<String,String>] :tags
+    #   The tags of the namespace.
+    #
+    # @return [Types::CreateDataLakeNamespaceResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateDataLakeNamespaceResponse#namespace #namespace} => Types::DataLakeNamespace
+    #
+    #
+    # @example Example: Create a data lake namespace
+    #
+    #   resp = client.create_data_lake_namespace({
+    #     name: "my_namespace", 
+    #     description: "This is my AWS Supply Chain namespace", 
+    #     instance_id: "1877dd20-dee9-4639-8e99-cb67acf21fe5", 
+    #     tags: {
+    #       "tagKey1" => "tagValue1", 
+    #       "tagKey2" => "tagValue2", 
+    #     }, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     namespace: {
+    #       name: "my_namespace", 
+    #       arn: "arn:aws:scn:us-east-1:012345678910:instance/1877dd20-dee9-4639-8e99-cb67acf21fe5/namespaces/my_namespace", 
+    #       created_time: Time.parse(1736892560.751), 
+    #       description: "This is my AWS Supply Chain namespace", 
+    #       instance_id: "1877dd20-dee9-4639-8e99-cb67acf21fe5", 
+    #       last_modified_time: Time.parse(1736892560.751), 
+    #     }, 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_data_lake_namespace({
+    #     instance_id: "UUID", # required
+    #     name: "DataLakeNamespaceName", # required
+    #     description: "DataLakeNamespaceDescription",
+    #     tags: {
+    #       "TagKey" => "TagValue",
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.namespace.instance_id #=> String
+    #   resp.namespace.name #=> String
+    #   resp.namespace.arn #=> String
+    #   resp.namespace.description #=> String
+    #   resp.namespace.created_time #=> Time
+    #   resp.namespace.last_modified_time #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/supplychain-2024-01-01/CreateDataLakeNamespace AWS API Documentation
+    #
+    # @overload create_data_lake_namespace(params = {})
+    # @param [Hash] params ({})
+    def create_data_lake_namespace(params = {}, options = {})
+      req = build_request(:create_data_lake_namespace, params)
       req.send_request(options)
     end
 
@@ -1249,7 +1448,8 @@ module Aws::SupplyChain
     #   The AWS Supply Chain instance identifier.
     #
     # @option params [required, String] :namespace
-    #   The name space of the dataset. The available values are:
+    #   The namespace of the dataset, besides the custom defined namespace,
+    #   every instance comes with below pre-defined namespaces:
     #
     #   * **asc** - For information on the Amazon Web Services Supply Chain
     #     supported datasets see
@@ -1262,7 +1462,7 @@ module Aws::SupplyChain
     #   [1]: https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/data-model-asc.html
     #
     # @option params [required, String] :name
-    #   The name of the dataset. For **asc** name space, the name must be one
+    #   The name of the dataset. For **asc** namespace, the name must be one
     #   of the supported data entities under
     #   [https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/data-model-asc.html][1].
     #
@@ -1311,7 +1511,7 @@ module Aws::SupplyChain
     #
     #   resp = client.delete_data_lake_dataset({
     #     instance_id: "UUID", # required
-    #     namespace: "DataLakeDatasetNamespace", # required
+    #     namespace: "DataLakeNamespaceName", # required
     #     name: "DataLakeDatasetName", # required
     #   })
     #
@@ -1327,6 +1527,59 @@ module Aws::SupplyChain
     # @param [Hash] params ({})
     def delete_data_lake_dataset(params = {}, options = {})
       req = build_request(:delete_data_lake_dataset, params)
+      req.send_request(options)
+    end
+
+    # Enables you to programmatically delete an Amazon Web Services Supply
+    # Chain data lake namespace and its underling datasets. Developers can
+    # delete the existing namespaces for a given instance ID and namespace
+    # name.
+    #
+    # @option params [required, String] :instance_id
+    #   The AWS Supply Chain instance identifier.
+    #
+    # @option params [required, String] :name
+    #   The name of the namespace. Noted you cannot delete pre-defined
+    #   namespace like **asc**, **default** which are only deleted through
+    #   instance deletion.
+    #
+    # @return [Types::DeleteDataLakeNamespaceResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DeleteDataLakeNamespaceResponse#instance_id #instance_id} => String
+    #   * {Types::DeleteDataLakeNamespaceResponse#name #name} => String
+    #
+    #
+    # @example Example: Delete an AWS Supply Chain namespace
+    #
+    #   resp = client.delete_data_lake_namespace({
+    #     name: "my_namespace", 
+    #     instance_id: "1877dd20-dee9-4639-8e99-cb67acf21fe5", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     name: "my_namespace", 
+    #     instance_id: "1877dd20-dee9-4639-8e99-cb67acf21fe5", 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_data_lake_namespace({
+    #     instance_id: "UUID", # required
+    #     name: "DataLakeNamespaceName", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.instance_id #=> String
+    #   resp.name #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/supplychain-2024-01-01/DeleteDataLakeNamespace AWS API Documentation
+    #
+    # @overload delete_data_lake_namespace(params = {})
+    # @param [Hash] params ({})
+    def delete_data_lake_namespace(params = {}, options = {})
+      req = build_request(:delete_data_lake_namespace, params)
       req.send_request(options)
     end
 
@@ -1471,6 +1724,74 @@ module Aws::SupplyChain
       req.send_request(options)
     end
 
+    # Enables you to programmatically view an Amazon Web Services Supply
+    # Chain Data Integration Event. Developers can view the eventType,
+    # eventGroupId, eventTimestamp, datasetTarget, datasetLoadExecution.
+    #
+    # @option params [required, String] :instance_id
+    #   The Amazon Web Services Supply Chain instance identifier.
+    #
+    # @option params [required, String] :event_id
+    #   The unique event identifier.
+    #
+    # @return [Types::GetDataIntegrationEventResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetDataIntegrationEventResponse#event #event} => Types::DataIntegrationEvent
+    #
+    #
+    # @example Example: Successful GetDataIntegrationEvent
+    #
+    #   resp = client.get_data_integration_event({
+    #     event_id: "19739c8e-cd2e-4cbc-a2f7-0dc43239f042", 
+    #     instance_id: "8928ae12-15e5-4441-825d-ec2184f0a43a", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     event: {
+    #       dataset_target_details: {
+    #         dataset_identifier: "arn:aws:scn:us-west-2:135808960812:instance/8928ae12-15e5-4441-825d-ec2184f0a43a/namespaces/asc/datasets/product", 
+    #         dataset_load_execution: {
+    #           status: "SUCCEEDED", 
+    #         }, 
+    #         operation_type: "APPEND", 
+    #       }, 
+    #       event_group_id: "datasetId", 
+    #       event_id: "19739c8e-cd2e-4cbc-a2f7-0dc43239f042", 
+    #       event_timestamp: Time.parse(1515531081.123), 
+    #       event_type: "scn.data.dataset", 
+    #       instance_id: "8928ae12-15e5-4441-825d-ec2184f0a43a", 
+    #     }, 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_data_integration_event({
+    #     instance_id: "UUID", # required
+    #     event_id: "UUID", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.event.instance_id #=> String
+    #   resp.event.event_id #=> String
+    #   resp.event.event_type #=> String, one of "scn.data.forecast", "scn.data.inventorylevel", "scn.data.inboundorder", "scn.data.inboundorderline", "scn.data.inboundorderlineschedule", "scn.data.outboundorderline", "scn.data.outboundshipment", "scn.data.processheader", "scn.data.processoperation", "scn.data.processproduct", "scn.data.reservation", "scn.data.shipment", "scn.data.shipmentstop", "scn.data.shipmentstoporder", "scn.data.supplyplan", "scn.data.dataset"
+    #   resp.event.event_group_id #=> String
+    #   resp.event.event_timestamp #=> Time
+    #   resp.event.dataset_target_details.dataset_identifier #=> String
+    #   resp.event.dataset_target_details.operation_type #=> String, one of "APPEND", "UPSERT", "DELETE"
+    #   resp.event.dataset_target_details.dataset_load_execution.status #=> String, one of "SUCCEEDED", "IN_PROGRESS", "FAILED"
+    #   resp.event.dataset_target_details.dataset_load_execution.message #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/supplychain-2024-01-01/GetDataIntegrationEvent AWS API Documentation
+    #
+    # @overload get_data_integration_event(params = {})
+    # @param [Hash] params ({})
+    def get_data_integration_event(params = {}, options = {})
+      req = build_request(:get_data_integration_event, params)
+      req.send_request(options)
+    end
+
     # Enables you to programmatically view a specific data pipeline for the
     # provided Amazon Web Services Supply Chain instance and
     # DataIntegrationFlow name.
@@ -1545,6 +1866,10 @@ module Aws::SupplyChain
     #   resp.flow.sources[0].dataset_source.dataset_identifier #=> String
     #   resp.flow.sources[0].dataset_source.options.load_type #=> String, one of "INCREMENTAL", "REPLACE"
     #   resp.flow.sources[0].dataset_source.options.dedupe_records #=> Boolean
+    #   resp.flow.sources[0].dataset_source.options.dedupe_strategy.type #=> String, one of "FIELD_PRIORITY"
+    #   resp.flow.sources[0].dataset_source.options.dedupe_strategy.field_priority.fields #=> Array
+    #   resp.flow.sources[0].dataset_source.options.dedupe_strategy.field_priority.fields[0].name #=> String
+    #   resp.flow.sources[0].dataset_source.options.dedupe_strategy.field_priority.fields[0].sort_order #=> String, one of "ASC", "DESC"
     #   resp.flow.transformation.transformation_type #=> String, one of "SQL", "NONE"
     #   resp.flow.transformation.sql_transformation.query #=> String
     #   resp.flow.target.target_type #=> String, one of "S3", "DATASET"
@@ -1554,6 +1879,10 @@ module Aws::SupplyChain
     #   resp.flow.target.dataset_target.dataset_identifier #=> String
     #   resp.flow.target.dataset_target.options.load_type #=> String, one of "INCREMENTAL", "REPLACE"
     #   resp.flow.target.dataset_target.options.dedupe_records #=> Boolean
+    #   resp.flow.target.dataset_target.options.dedupe_strategy.type #=> String, one of "FIELD_PRIORITY"
+    #   resp.flow.target.dataset_target.options.dedupe_strategy.field_priority.fields #=> Array
+    #   resp.flow.target.dataset_target.options.dedupe_strategy.field_priority.fields[0].name #=> String
+    #   resp.flow.target.dataset_target.options.dedupe_strategy.field_priority.fields[0].sort_order #=> String, one of "ASC", "DESC"
     #   resp.flow.created_time #=> Time
     #   resp.flow.last_modified_time #=> Time
     #
@@ -1566,6 +1895,107 @@ module Aws::SupplyChain
       req.send_request(options)
     end
 
+    # Get the flow execution.
+    #
+    # @option params [required, String] :instance_id
+    #   The AWS Supply Chain instance identifier.
+    #
+    # @option params [required, String] :flow_name
+    #   The flow name.
+    #
+    # @option params [required, String] :execution_id
+    #   The flow execution identifier.
+    #
+    # @return [Types::GetDataIntegrationFlowExecutionResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetDataIntegrationFlowExecutionResponse#flow_execution #flow_execution} => Types::DataIntegrationFlowExecution
+    #
+    #
+    # @example Example: Successful GetDataIntegrationFlowExecution for S3 source
+    #
+    #   resp = client.get_data_integration_flow_execution({
+    #     execution_id: "edbbdd3f-c0f9-49d9-ab01-f64542f803b7", 
+    #     flow_name: "source-product", 
+    #     instance_id: "8928ae12-15e5-4441-825d-ec2184f0a43a", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     flow_execution: {
+    #       end_time: Time.parse(1515531090.123), 
+    #       execution_id: "edbbdd3f-c0f9-49d9-ab01-f64542f803b7", 
+    #       flow_name: "source-product", 
+    #       instance_id: "8928ae12-15e5-4441-825d-ec2184f0a43a", 
+    #       source_info: {
+    #         s3_source: {
+    #           key: "sources/product-sources.csv", 
+    #           bucket_name: "galaxy-raw-input-test-data-prod-pdx-1", 
+    #         }, 
+    #         source_type: "S3", 
+    #       }, 
+    #       start_time: Time.parse(1515531081.123), 
+    #       status: "SUCCEEDED", 
+    #     }, 
+    #   }
+    #
+    # @example Example: Successful GetDataIntegrationFlowExecution for DATASET source
+    #
+    #   resp = client.get_data_integration_flow_execution({
+    #     execution_id: "9daf6071-d12c-4eef-864c-73cea2557825", 
+    #     flow_name: "target-product", 
+    #     instance_id: "8928ae12-15e5-4441-825d-ec2184f0a43a", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     flow_execution: {
+    #       end_time: Time.parse(1515531090.123), 
+    #       execution_id: "9daf6071-d12c-4eef-864c-73cea2557825", 
+    #       flow_name: "target-product", 
+    #       instance_id: "8928ae12-15e5-4441-825d-ec2184f0a43a", 
+    #       source_info: {
+    #         dataset_source: {
+    #           dataset_identifier: "arn:aws:scn:us-west-2:135808960812:instance/8928ae12-15e5-4441-825d-ec2184f0a43a/namespaces/default/datasets/product", 
+    #         }, 
+    #         source_type: "DATASET", 
+    #       }, 
+    #       start_time: Time.parse(1515531081.123), 
+    #       status: "SUCCEEDED", 
+    #     }, 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_data_integration_flow_execution({
+    #     instance_id: "UUID", # required
+    #     flow_name: "DataIntegrationFlowName", # required
+    #     execution_id: "UUID", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.flow_execution.instance_id #=> String
+    #   resp.flow_execution.flow_name #=> String
+    #   resp.flow_execution.execution_id #=> String
+    #   resp.flow_execution.status #=> String, one of "SUCCEEDED", "IN_PROGRESS", "FAILED"
+    #   resp.flow_execution.source_info.source_type #=> String, one of "S3", "DATASET"
+    #   resp.flow_execution.source_info.s3_source.bucket_name #=> String
+    #   resp.flow_execution.source_info.s3_source.key #=> String
+    #   resp.flow_execution.source_info.dataset_source.dataset_identifier #=> String
+    #   resp.flow_execution.message #=> String
+    #   resp.flow_execution.start_time #=> Time
+    #   resp.flow_execution.end_time #=> Time
+    #   resp.flow_execution.output_metadata.diagnostic_reports_root_s3uri #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/supplychain-2024-01-01/GetDataIntegrationFlowExecution AWS API Documentation
+    #
+    # @overload get_data_integration_flow_execution(params = {})
+    # @param [Hash] params ({})
+    def get_data_integration_flow_execution(params = {}, options = {})
+      req = build_request(:get_data_integration_flow_execution, params)
+      req.send_request(options)
+    end
+
     # Enables you to programmatically view an Amazon Web Services Supply
     # Chain data lake dataset. Developers can view the data lake dataset
     # information such as namespace, schema, and so on for a given instance
@@ -1575,7 +2005,8 @@ module Aws::SupplyChain
     #   The Amazon Web Services Supply Chain instance identifier.
     #
     # @option params [required, String] :namespace
-    #   The name space of the dataset. The available values are:
+    #   The namespace of the dataset, besides the custom defined namespace,
+    #   every instance comes with below pre-defined namespaces:
     #
     #   * **asc** - For information on the Amazon Web Services Supply Chain
     #     supported datasets see
@@ -1588,7 +2019,7 @@ module Aws::SupplyChain
     #   [1]: https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/data-model-asc.html
     #
     # @option params [required, String] :name
-    #   The name of the dataset. For **asc** name space, the name must be one
+    #   The name of the dataset. For **asc** namespace, the name must be one
     #   of the supported data entities under
     #   [https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/data-model-asc.html][1].
     #
@@ -1795,6 +2226,22 @@ module Aws::SupplyChain
     #       instance_id: "1877dd20-dee9-4639-8e99-cb67acf21fe5", 
     #       last_modified_time: Time.parse(1727116807.751), 
     #       namespace: "default", 
+    #       partition_spec: {
+    #         fields: [
+    #           {
+    #             name: "creation_time", 
+    #             transform: {
+    #               type: "DAY", 
+    #             }, 
+    #           }, 
+    #           {
+    #             name: "description", 
+    #             transform: {
+    #               type: "IDENTITY", 
+    #             }, 
+    #           }, 
+    #         ], 
+    #       }, 
     #       schema: {
     #         name: "MyDataset", 
     #         fields: [
@@ -1818,6 +2265,16 @@ module Aws::SupplyChain
     #             type: "TIMESTAMP", 
     #             is_required: false, 
     #           }, 
+    #           {
+    #             name: "quantity", 
+    #             type: "LONG", 
+    #             is_required: false, 
+    #           }, 
+    #         ], 
+    #         primary_keys: [
+    #           {
+    #             name: "id", 
+    #           }, 
     #         ], 
     #       }, 
     #     }, 
@@ -1827,7 +2284,7 @@ module Aws::SupplyChain
     #
     #   resp = client.get_data_lake_dataset({
     #     instance_id: "UUID", # required
-    #     namespace: "DataLakeDatasetNamespace", # required
+    #     namespace: "DataLakeNamespaceName", # required
     #     name: "DataLakeDatasetName", # required
     #   })
     #
@@ -1840,9 +2297,14 @@ module Aws::SupplyChain
     #   resp.dataset.schema.name #=> String
     #   resp.dataset.schema.fields #=> Array
     #   resp.dataset.schema.fields[0].name #=> String
-    #   resp.dataset.schema.fields[0].type #=> String, one of "INT", "DOUBLE", "STRING", "TIMESTAMP"
+    #   resp.dataset.schema.fields[0].type #=> String, one of "INT", "DOUBLE", "STRING", "TIMESTAMP", "LONG"
     #   resp.dataset.schema.fields[0].is_required #=> Boolean
+    #   resp.dataset.schema.primary_keys #=> Array
+    #   resp.dataset.schema.primary_keys[0].name #=> String
     #   resp.dataset.description #=> String
+    #   resp.dataset.partition_spec.fields #=> Array
+    #   resp.dataset.partition_spec.fields[0].name #=> String
+    #   resp.dataset.partition_spec.fields[0].transform.type #=> String, one of "YEAR", "MONTH", "DAY", "HOUR", "IDENTITY"
     #   resp.dataset.created_time #=> Time
     #   resp.dataset.last_modified_time #=> Time
     #
@@ -1852,6 +2314,96 @@ module Aws::SupplyChain
     # @param [Hash] params ({})
     def get_data_lake_dataset(params = {}, options = {})
       req = build_request(:get_data_lake_dataset, params)
+      req.send_request(options)
+    end
+
+    # Enables you to programmatically view an Amazon Web Services Supply
+    # Chain data lake namespace. Developers can view the data lake namespace
+    # information such as description for a given instance ID and namespace
+    # name.
+    #
+    # @option params [required, String] :instance_id
+    #   The Amazon Web Services Supply Chain instance identifier.
+    #
+    # @option params [required, String] :name
+    #   The name of the namespace. Besides the namespaces user created, you
+    #   can also specify the pre-defined namespaces:
+    #
+    #   * **asc** - Pre-defined namespace containing Amazon Web Services
+    #     Supply Chain supported datasets, see
+    #     [https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/data-model-asc.html][1].
+    #
+    #   * **default** - Pre-defined namespace containing datasets with custom
+    #     user-defined schemas.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/data-model-asc.html
+    #
+    # @return [Types::GetDataLakeNamespaceResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetDataLakeNamespaceResponse#namespace #namespace} => Types::DataLakeNamespace
+    #
+    #
+    # @example Example: Get properties of an existing AWS Supply Chain namespace
+    #
+    #   resp = client.get_data_lake_namespace({
+    #     name: "my_namespace", 
+    #     instance_id: "1877dd20-dee9-4639-8e99-cb67acf21fe5", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     namespace: {
+    #       name: "my_namespace", 
+    #       arn: "arn:aws:scn:us-east-1:012345678910:instance/1877dd20-dee9-4639-8e99-cb67acf21fe5/namespaces/my_namespace", 
+    #       created_time: Time.parse(1736892560.751), 
+    #       description: "This is my AWS Supply Chain namespace", 
+    #       instance_id: "1877dd20-dee9-4639-8e99-cb67acf21fe5", 
+    #       last_modified_time: Time.parse(1736892560.751), 
+    #     }, 
+    #   }
+    #
+    # @example Example: Get proporties of an existing pre-defined AWS Supply Chain namespace
+    #
+    #   resp = client.get_data_lake_namespace({
+    #     name: "asc", 
+    #     instance_id: "1877dd20-dee9-4639-8e99-cb67acf21fe5", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     namespace: {
+    #       name: "asc", 
+    #       arn: "arn:aws:scn:us-east-1:012345678910:instance/1877dd20-dee9-4639-8e99-cb67acf21fe5/namespaces/asc", 
+    #       created_time: Time.parse(1736892430.234), 
+    #       instance_id: "1877dd20-dee9-4639-8e99-cb67acf21fe5", 
+    #       last_modified_time: Time.parse(1736892430.234), 
+    #     }, 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_data_lake_namespace({
+    #     instance_id: "UUID", # required
+    #     name: "DataLakeNamespaceName", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.namespace.instance_id #=> String
+    #   resp.namespace.name #=> String
+    #   resp.namespace.arn #=> String
+    #   resp.namespace.description #=> String
+    #   resp.namespace.created_time #=> Time
+    #   resp.namespace.last_modified_time #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/supplychain-2024-01-01/GetDataLakeNamespace AWS API Documentation
+    #
+    # @overload get_data_lake_namespace(params = {})
+    # @param [Hash] params ({})
+    def get_data_lake_namespace(params = {}, options = {})
+      req = build_request(:get_data_lake_namespace, params)
       req.send_request(options)
     end
 
@@ -1938,6 +2490,175 @@ module Aws::SupplyChain
       req.send_request(options)
     end
 
+    # Enables you to programmatically list all data integration events for
+    # the provided Amazon Web Services Supply Chain instance.
+    #
+    # @option params [required, String] :instance_id
+    #   The Amazon Web Services Supply Chain instance identifier.
+    #
+    # @option params [String] :event_type
+    #   List data integration events for the specified eventType.
+    #
+    # @option params [String] :next_token
+    #   The pagination token to fetch the next page of the data integration
+    #   events.
+    #
+    # @option params [Integer] :max_results
+    #   Specify the maximum number of data integration events to fetch in one
+    #   paginated request.
+    #
+    # @return [Types::ListDataIntegrationEventsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListDataIntegrationEventsResponse#events #events} => Array&lt;Types::DataIntegrationEvent&gt;
+    #   * {Types::ListDataIntegrationEventsResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    #
+    # @example Example: Successful ListDataIntegrationEvents
+    #
+    #   resp = client.list_data_integration_events({
+    #     instance_id: "8928ae12-15e5-4441-825d-ec2184f0a43a", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     events: [
+    #       {
+    #         dataset_target_details: {
+    #           dataset_identifier: "arn:aws:scn:us-west-2:135808960812:instance/8928ae12-15e5-4441-825d-ec2184f0a43a/namespaces/asc/datasets/product", 
+    #           dataset_load_execution: {
+    #             status: "SUCCEEDED", 
+    #           }, 
+    #           operation_type: "APPEND", 
+    #         }, 
+    #         event_group_id: "datasetId", 
+    #         event_id: "19739c8e-cd2e-4cbc-a2f7-0dc43239f042", 
+    #         event_timestamp: Time.parse(1515531081.123), 
+    #         event_type: "scn.data.dataset", 
+    #         instance_id: "8928ae12-15e5-4441-825d-ec2184f0a43a", 
+    #       }, 
+    #     ], 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_data_integration_events({
+    #     instance_id: "UUID", # required
+    #     event_type: "scn.data.forecast", # accepts scn.data.forecast, scn.data.inventorylevel, scn.data.inboundorder, scn.data.inboundorderline, scn.data.inboundorderlineschedule, scn.data.outboundorderline, scn.data.outboundshipment, scn.data.processheader, scn.data.processoperation, scn.data.processproduct, scn.data.reservation, scn.data.shipment, scn.data.shipmentstop, scn.data.shipmentstoporder, scn.data.supplyplan, scn.data.dataset
+    #     next_token: "DataIntegrationEventNextToken",
+    #     max_results: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.events #=> Array
+    #   resp.events[0].instance_id #=> String
+    #   resp.events[0].event_id #=> String
+    #   resp.events[0].event_type #=> String, one of "scn.data.forecast", "scn.data.inventorylevel", "scn.data.inboundorder", "scn.data.inboundorderline", "scn.data.inboundorderlineschedule", "scn.data.outboundorderline", "scn.data.outboundshipment", "scn.data.processheader", "scn.data.processoperation", "scn.data.processproduct", "scn.data.reservation", "scn.data.shipment", "scn.data.shipmentstop", "scn.data.shipmentstoporder", "scn.data.supplyplan", "scn.data.dataset"
+    #   resp.events[0].event_group_id #=> String
+    #   resp.events[0].event_timestamp #=> Time
+    #   resp.events[0].dataset_target_details.dataset_identifier #=> String
+    #   resp.events[0].dataset_target_details.operation_type #=> String, one of "APPEND", "UPSERT", "DELETE"
+    #   resp.events[0].dataset_target_details.dataset_load_execution.status #=> String, one of "SUCCEEDED", "IN_PROGRESS", "FAILED"
+    #   resp.events[0].dataset_target_details.dataset_load_execution.message #=> String
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/supplychain-2024-01-01/ListDataIntegrationEvents AWS API Documentation
+    #
+    # @overload list_data_integration_events(params = {})
+    # @param [Hash] params ({})
+    def list_data_integration_events(params = {}, options = {})
+      req = build_request(:list_data_integration_events, params)
+      req.send_request(options)
+    end
+
+    # List flow executions.
+    #
+    # @option params [required, String] :instance_id
+    #   The AWS Supply Chain instance identifier.
+    #
+    # @option params [required, String] :flow_name
+    #   The flow name.
+    #
+    # @option params [String] :next_token
+    #   The pagination token to fetch next page of flow executions.
+    #
+    # @option params [Integer] :max_results
+    #   The number to specify the max number of flow executions to fetch in
+    #   this paginated request.
+    #
+    # @return [Types::ListDataIntegrationFlowExecutionsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListDataIntegrationFlowExecutionsResponse#flow_executions #flow_executions} => Array&lt;Types::DataIntegrationFlowExecution&gt;
+    #   * {Types::ListDataIntegrationFlowExecutionsResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    #
+    # @example Example: Successful ListDataIntegrationFlowExecutions
+    #
+    #   resp = client.list_data_integration_flow_executions({
+    #     flow_name: "source-product", 
+    #     instance_id: "8928ae12-15e5-4441-825d-ec2184f0a43a", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     flow_executions: [
+    #       {
+    #         end_time: Time.parse(1515531090.123), 
+    #         execution_id: "edbbdd3f-c0f9-49d9-ab01-f64542f803b7", 
+    #         flow_name: "source-product", 
+    #         instance_id: "8928ae12-15e5-4441-825d-ec2184f0a43a", 
+    #         source_info: {
+    #           s3_source: {
+    #             key: "sources/product-sources.csv", 
+    #             bucket_name: "galaxy-raw-input-test-data-prod-pdx-1", 
+    #           }, 
+    #           source_type: "S3", 
+    #         }, 
+    #         start_time: Time.parse(1515531081.123), 
+    #         status: "SUCCEEDED", 
+    #       }, 
+    #     ], 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_data_integration_flow_executions({
+    #     instance_id: "UUID", # required
+    #     flow_name: "DataIntegrationFlowName", # required
+    #     next_token: "DataIntegrationFlowExecutionNextToken",
+    #     max_results: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.flow_executions #=> Array
+    #   resp.flow_executions[0].instance_id #=> String
+    #   resp.flow_executions[0].flow_name #=> String
+    #   resp.flow_executions[0].execution_id #=> String
+    #   resp.flow_executions[0].status #=> String, one of "SUCCEEDED", "IN_PROGRESS", "FAILED"
+    #   resp.flow_executions[0].source_info.source_type #=> String, one of "S3", "DATASET"
+    #   resp.flow_executions[0].source_info.s3_source.bucket_name #=> String
+    #   resp.flow_executions[0].source_info.s3_source.key #=> String
+    #   resp.flow_executions[0].source_info.dataset_source.dataset_identifier #=> String
+    #   resp.flow_executions[0].message #=> String
+    #   resp.flow_executions[0].start_time #=> Time
+    #   resp.flow_executions[0].end_time #=> Time
+    #   resp.flow_executions[0].output_metadata.diagnostic_reports_root_s3uri #=> String
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/supplychain-2024-01-01/ListDataIntegrationFlowExecutions AWS API Documentation
+    #
+    # @overload list_data_integration_flow_executions(params = {})
+    # @param [Hash] params ({})
+    def list_data_integration_flow_executions(params = {}, options = {})
+      req = build_request(:list_data_integration_flow_executions, params)
+      req.send_request(options)
+    end
+
     # Enables you to programmatically list all data pipelines for the
     # provided Amazon Web Services Supply Chain instance.
     #
@@ -2021,6 +2742,21 @@ module Aws::SupplyChain
     #         target: {
     #           dataset_target: {
     #             dataset_identifier: "arn:aws:scn:us-east-1:123456789012:instance/8850c54e-e187-4fa7-89d4-6370f165174d/namespaces/asc/datasets/trading_partner", 
+    #             options: {
+    #               dedupe_records: true, 
+    #               dedupe_strategy: {
+    #                 type: "FIELD_PRIORITY", 
+    #                 field_priority: {
+    #                   fields: [
+    #                     {
+    #                       name: "eff_start_date", 
+    #                       sort_order: "DESC", 
+    #                     }, 
+    #                   ], 
+    #                 }, 
+    #               }, 
+    #               load_type: "REPLACE", 
+    #             }, 
     #           }, 
     #           target_type: "DATASET", 
     #         }, 
@@ -2056,6 +2792,10 @@ module Aws::SupplyChain
     #   resp.flows[0].sources[0].dataset_source.dataset_identifier #=> String
     #   resp.flows[0].sources[0].dataset_source.options.load_type #=> String, one of "INCREMENTAL", "REPLACE"
     #   resp.flows[0].sources[0].dataset_source.options.dedupe_records #=> Boolean
+    #   resp.flows[0].sources[0].dataset_source.options.dedupe_strategy.type #=> String, one of "FIELD_PRIORITY"
+    #   resp.flows[0].sources[0].dataset_source.options.dedupe_strategy.field_priority.fields #=> Array
+    #   resp.flows[0].sources[0].dataset_source.options.dedupe_strategy.field_priority.fields[0].name #=> String
+    #   resp.flows[0].sources[0].dataset_source.options.dedupe_strategy.field_priority.fields[0].sort_order #=> String, one of "ASC", "DESC"
     #   resp.flows[0].transformation.transformation_type #=> String, one of "SQL", "NONE"
     #   resp.flows[0].transformation.sql_transformation.query #=> String
     #   resp.flows[0].target.target_type #=> String, one of "S3", "DATASET"
@@ -2065,6 +2805,10 @@ module Aws::SupplyChain
     #   resp.flows[0].target.dataset_target.dataset_identifier #=> String
     #   resp.flows[0].target.dataset_target.options.load_type #=> String, one of "INCREMENTAL", "REPLACE"
     #   resp.flows[0].target.dataset_target.options.dedupe_records #=> Boolean
+    #   resp.flows[0].target.dataset_target.options.dedupe_strategy.type #=> String, one of "FIELD_PRIORITY"
+    #   resp.flows[0].target.dataset_target.options.dedupe_strategy.field_priority.fields #=> Array
+    #   resp.flows[0].target.dataset_target.options.dedupe_strategy.field_priority.fields[0].name #=> String
+    #   resp.flows[0].target.dataset_target.options.dedupe_strategy.field_priority.fields[0].sort_order #=> String, one of "ASC", "DESC"
     #   resp.flows[0].created_time #=> Time
     #   resp.flows[0].last_modified_time #=> Time
     #   resp.next_token #=> String
@@ -2087,7 +2831,8 @@ module Aws::SupplyChain
     #   The Amazon Web Services Supply Chain instance identifier.
     #
     # @option params [required, String] :namespace
-    #   The name space of the dataset. The available values are:
+    #   The namespace of the dataset, besides the custom defined namespace,
+    #   every instance comes with below pre-defined namespaces:
     #
     #   * **asc** - For information on the Amazon Web Services Supply Chain
     #     supported datasets see
@@ -2310,6 +3055,22 @@ module Aws::SupplyChain
     #         instance_id: "1877dd20-dee9-4639-8e99-cb67acf21fe5", 
     #         last_modified_time: Time.parse(1727116807.751), 
     #         namespace: "default", 
+    #         partition_spec: {
+    #           fields: [
+    #             {
+    #               name: "creation_time", 
+    #               transform: {
+    #                 type: "DAY", 
+    #               }, 
+    #             }, 
+    #             {
+    #               name: "description", 
+    #               transform: {
+    #                 type: "IDENTITY", 
+    #               }, 
+    #             }, 
+    #           ], 
+    #         }, 
     #         schema: {
     #           name: "MyDataset", 
     #           fields: [
@@ -2332,6 +3093,16 @@ module Aws::SupplyChain
     #               name: "creation_time", 
     #               type: "TIMESTAMP", 
     #               is_required: false, 
+    #             }, 
+    #             {
+    #               name: "quantity", 
+    #               type: "LONG", 
+    #               is_required: false, 
+    #             }, 
+    #           ], 
+    #           primary_keys: [
+    #             {
+    #               name: "id", 
     #             }, 
     #           ], 
     #         }, 
@@ -2368,7 +3139,7 @@ module Aws::SupplyChain
     #
     #   resp = client.list_data_lake_datasets({
     #     instance_id: "UUID", # required
-    #     namespace: "DataLakeDatasetNamespace", # required
+    #     namespace: "DataLakeNamespaceName", # required
     #     next_token: "DataLakeDatasetNextToken",
     #     max_results: 1,
     #   })
@@ -2383,9 +3154,14 @@ module Aws::SupplyChain
     #   resp.datasets[0].schema.name #=> String
     #   resp.datasets[0].schema.fields #=> Array
     #   resp.datasets[0].schema.fields[0].name #=> String
-    #   resp.datasets[0].schema.fields[0].type #=> String, one of "INT", "DOUBLE", "STRING", "TIMESTAMP"
+    #   resp.datasets[0].schema.fields[0].type #=> String, one of "INT", "DOUBLE", "STRING", "TIMESTAMP", "LONG"
     #   resp.datasets[0].schema.fields[0].is_required #=> Boolean
+    #   resp.datasets[0].schema.primary_keys #=> Array
+    #   resp.datasets[0].schema.primary_keys[0].name #=> String
     #   resp.datasets[0].description #=> String
+    #   resp.datasets[0].partition_spec.fields #=> Array
+    #   resp.datasets[0].partition_spec.fields[0].name #=> String
+    #   resp.datasets[0].partition_spec.fields[0].transform.type #=> String, one of "YEAR", "MONTH", "DAY", "HOUR", "IDENTITY"
     #   resp.datasets[0].created_time #=> Time
     #   resp.datasets[0].last_modified_time #=> Time
     #   resp.next_token #=> String
@@ -2396,6 +3172,105 @@ module Aws::SupplyChain
     # @param [Hash] params ({})
     def list_data_lake_datasets(params = {}, options = {})
       req = build_request(:list_data_lake_datasets, params)
+      req.send_request(options)
+    end
+
+    # Enables you to programmatically view the list of Amazon Web Services
+    # Supply Chain data lake namespaces. Developers can view the namespaces
+    # and the corresponding information such as description for a given
+    # instance ID. Note that this API only return custom namespaces,
+    # instance pre-defined namespaces are not included.
+    #
+    # @option params [required, String] :instance_id
+    #   The Amazon Web Services Supply Chain instance identifier.
+    #
+    # @option params [String] :next_token
+    #   The pagination token to fetch next page of namespaces.
+    #
+    # @option params [Integer] :max_results
+    #   The max number of namespaces to fetch in this paginated request.
+    #
+    # @return [Types::ListDataLakeNamespacesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListDataLakeNamespacesResponse#namespaces #namespaces} => Array&lt;Types::DataLakeNamespace&gt;
+    #   * {Types::ListDataLakeNamespacesResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    #
+    # @example Example: List AWS Supply Chain namespaces
+    #
+    #   resp = client.list_data_lake_namespaces({
+    #     instance_id: "1877dd20-dee9-4639-8e99-cb67acf21fe5", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     namespaces: [
+    #       {
+    #         name: "custom_namespace", 
+    #         arn: "arn:aws:scn:us-east-1:012345678910:instance/1877dd20-dee9-4639-8e99-cb67acf21fe5/namespaces/custom_namespace", 
+    #         created_time: Time.parse(1736892060.751), 
+    #         instance_id: "1877dd20-dee9-4639-8e99-cb67acf21fe5", 
+    #         last_modified_time: Time.parse(1736892060.751), 
+    #       }, 
+    #       {
+    #         name: "my_namespace", 
+    #         arn: "arn:aws:scn:us-east-1:012345678910:instance/1877dd20-dee9-4639-8e99-cb67acf21fe5/namespaces/my_namespace", 
+    #         created_time: Time.parse(1736892560.751), 
+    #         instance_id: "1877dd20-dee9-4639-8e99-cb67acf21fe5", 
+    #         last_modified_time: Time.parse(1736892586.156), 
+    #       }, 
+    #     ], 
+    #   }
+    #
+    # @example Example: List AWS Supply Chain namespaces using pagination
+    #
+    #   resp = client.list_data_lake_namespaces({
+    #     instance_id: "1877dd20-dee9-4639-8e99-cb67acf21fe5", 
+    #     max_results: 1, 
+    #     next_token: "next_token_returned_from_previous_list_request", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     namespaces: [
+    #       {
+    #         name: "my_namespace", 
+    #         arn: "arn:aws:scn:us-east-1:012345678910:instance/1877dd20-dee9-4639-8e99-cb67acf21fe5/namespaces/my_namespace", 
+    #         created_time: Time.parse(1736892560.751), 
+    #         instance_id: "1877dd20-dee9-4639-8e99-cb67acf21fe5", 
+    #         last_modified_time: Time.parse(1736892586.156), 
+    #       }, 
+    #     ], 
+    #     next_token: "next_token_for_next_list_request", 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_data_lake_namespaces({
+    #     instance_id: "UUID", # required
+    #     next_token: "DataLakeNamespaceNextToken",
+    #     max_results: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.namespaces #=> Array
+    #   resp.namespaces[0].instance_id #=> String
+    #   resp.namespaces[0].name #=> String
+    #   resp.namespaces[0].arn #=> String
+    #   resp.namespaces[0].description #=> String
+    #   resp.namespaces[0].created_time #=> Time
+    #   resp.namespaces[0].last_modified_time #=> Time
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/supplychain-2024-01-01/ListDataLakeNamespaces AWS API Documentation
+    #
+    # @overload list_data_lake_namespaces(params = {})
+    # @param [Hash] params ({})
+    def list_data_lake_namespaces(params = {}, options = {})
+      req = build_request(:list_data_lake_namespaces, params)
       req.send_request(options)
     end
 
@@ -2614,12 +3489,9 @@ module Aws::SupplyChain
       req.send_request(options)
     end
 
-    # Send the transactional data payload for the event with real-time data
-    # for analysis or monitoring. The real-time data events are stored in an
-    # Amazon Web Services service before being processed and stored in data
-    # lake. New data events are synced with data lake at 5 PM GMT everyday.
-    # The updated transactional data is available in data lake after
-    # ingestion.
+    # Send the data payload for the event with real-time data for analysis
+    # or monitoring. The real-time data events are stored in an Amazon Web
+    # Services service before being processed and stored in data lake.
     #
     # @option params [required, String] :instance_id
     #   The AWS Supply Chain instance identifier.
@@ -2627,9 +3499,75 @@ module Aws::SupplyChain
     # @option params [required, String] :event_type
     #   The data event type.
     #
+    #   * **scn.data.dataset** - Send data directly to any specified dataset.
+    #
+    #   * **scn.data.supplyplan** - Send data to [supply\_plan][1] dataset.
+    #
+    #   * **scn.data.shipmentstoporder** - Send data to
+    #     [shipment\_stop\_order][2] dataset.
+    #
+    #   * **scn.data.shipmentstop** - Send data to [shipment\_stop][3]
+    #     dataset.
+    #
+    #   * **scn.data.shipment** - Send data to [shipment][4] dataset.
+    #
+    #   * **scn.data.reservation** - Send data to [reservation][5] dataset.
+    #
+    #   * **scn.data.processproduct** - Send data to [process\_product][6]
+    #     dataset.
+    #
+    #   * **scn.data.processoperation** - Send data to [process\_operation][7]
+    #     dataset.
+    #
+    #   * **scn.data.processheader** - Send data to [process\_header][8]
+    #     dataset.
+    #
+    #   * **scn.data.forecast** - Send data to [forecast][9] dataset.
+    #
+    #   * **scn.data.inventorylevel** - Send data to [inv\_level][10] dataset.
+    #
+    #   * **scn.data.inboundorder** - Send data to [inbound\_order][11]
+    #     dataset.
+    #
+    #   * **scn.data.inboundorderline** - Send data to
+    #     [inbound\_order\_line][12] dataset.
+    #
+    #   * **scn.data.inboundorderlineschedule** - Send data to
+    #     [inbound\_order\_line\_schedule][13] dataset.
+    #
+    #   * **scn.data.outboundorderline** - Send data to
+    #     [outbound\_order\_line][14] dataset.
+    #
+    #   * **scn.data.outboundshipment** - Send data to
+    #     [outbound\_shipment][15] dataset.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/supply-plan-entity.html
+    #   [2]: https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/replenishment-shipment-stop-order-entity.html
+    #   [3]: https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/replenishment-shipment-stop-entity.html
+    #   [4]: https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/replenishment-shipment-entity.html
+    #   [5]: https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/planning-reservation-entity.html
+    #   [6]: https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/operation-process-product-entity.html
+    #   [7]: https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/operation-process-operation-entity.html
+    #   [8]: https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/operation-process-header-entity.html
+    #   [9]: https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/forecast-forecast-entity.html
+    #   [10]: https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/inventory_mgmnt-inv-level-entity.html
+    #   [11]: https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/replenishment-inbound-order-entity.html
+    #   [12]: https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/replenishment-inbound-order-line-entity.html
+    #   [13]: https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/replenishment-inbound-order-line-schedule-entity.html
+    #   [14]: https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/outbound-fulfillment-order-line-entity.html
+    #   [15]: https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/outbound-fulfillment-shipment-entity.html
+    #
     # @option params [required, String] :data
-    #   The data payload of the event. For more information on the data schema
-    #   to use, see [Data entities supported in AWS Supply Chain][1].
+    #   The data payload of the event, should follow the data schema of the
+    #   target dataset, or see [Data entities supported in AWS Supply
+    #   Chain][1]. To send single data record, use JsonObject format; to send
+    #   multiple data records, use JsonArray format.
+    #
+    #   Note that for AWS Supply Chain dataset under **asc** namespace, it has
+    #   a connection\_id internal field that is not allowed to be provided by
+    #   client directly, they will be auto populated.
     #
     #
     #
@@ -2637,16 +3575,26 @@ module Aws::SupplyChain
     #
     # @option params [required, String] :event_group_id
     #   Event identifier (for example, orderId for InboundOrder) used for data
-    #   sharing or partitioning.
+    #   sharding or partitioning. Noted under one eventGroupId of same
+    #   eventType and instanceId, events are processed sequentially in the
+    #   order they are received by the server.
     #
     # @option params [Time,DateTime,Date,Integer,String] :event_timestamp
-    #   The event timestamp (in epoch seconds).
+    #   The timestamp (in epoch seconds) associated with the event. If not
+    #   provided, it will be assigned with current timestamp.
     #
     # @option params [String] :client_token
-    #   The idempotent client token.
+    #   The idempotent client token. The token is active for 8 hours, and
+    #   within its lifetime, it ensures the request completes only once upon
+    #   retry with same client token. If omitted, the AWS SDK generates a
+    #   unique value so that AWS SDK can safely retry the request upon network
+    #   errors.
     #
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.**
+    #
+    # @option params [Types::DataIntegrationEventDatasetTargetConfiguration] :dataset_target
+    #   The target dataset configuration for **scn.data.dataset** event type.
     #
     # @return [Types::SendDataIntegrationEventResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -2878,15 +3826,38 @@ module Aws::SupplyChain
     #     event_id: "9abaee56-5dc4-4c31-8250-3206a651d8a1", 
     #   }
     #
+    # @example Example: Successful SendDataIntegrationEvent for dataset event type
+    #
+    #   resp = client.send_data_integration_event({
+    #     data: "{\"dataset_id\": \"datset-id-test-123\" }", 
+    #     dataset_target: {
+    #       dataset_identifier: "arn:aws:scn:us-west-2:135808960812:instance/8928ae12-15e5-4441-825d-ec2184f0a43a/namespaces/asc/datasets/product", 
+    #       operation_type: "APPEND", 
+    #     }, 
+    #     event_group_id: "datasetId", 
+    #     event_timestamp: Time.parse(1515531081.123), 
+    #     event_type: "scn.data.dataset", 
+    #     instance_id: "8928ae12-15e5-4441-825d-ec2184f0a43a", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     event_id: "19739c8e-cd2e-4cbc-a2f7-0dc43239f042", 
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.send_data_integration_event({
     #     instance_id: "UUID", # required
-    #     event_type: "scn.data.forecast", # required, accepts scn.data.forecast, scn.data.inventorylevel, scn.data.inboundorder, scn.data.inboundorderline, scn.data.inboundorderlineschedule, scn.data.outboundorderline, scn.data.outboundshipment, scn.data.processheader, scn.data.processoperation, scn.data.processproduct, scn.data.reservation, scn.data.shipment, scn.data.shipmentstop, scn.data.shipmentstoporder, scn.data.supplyplan
+    #     event_type: "scn.data.forecast", # required, accepts scn.data.forecast, scn.data.inventorylevel, scn.data.inboundorder, scn.data.inboundorderline, scn.data.inboundorderlineschedule, scn.data.outboundorderline, scn.data.outboundshipment, scn.data.processheader, scn.data.processoperation, scn.data.processproduct, scn.data.reservation, scn.data.shipment, scn.data.shipmentstop, scn.data.shipmentstoporder, scn.data.supplyplan, scn.data.dataset
     #     data: "DataIntegrationEventData", # required
     #     event_group_id: "DataIntegrationEventGroupId", # required
     #     event_timestamp: Time.now,
     #     client_token: "ClientToken",
+    #     dataset_target: {
+    #       dataset_identifier: "DataIntegrationDatasetArn", # required
+    #       operation_type: "APPEND", # required, accepts APPEND, UPSERT, DELETE
+    #     },
     #   })
     #
     # @example Response structure
@@ -3108,6 +4079,21 @@ module Aws::SupplyChain
     #     target: {
     #       dataset_target: {
     #         dataset_identifier: "arn:aws:scn:us-east-1:123456789012:instance/8850c54e-e187-4fa7-89d4-6370f165174d/namespaces/asc/datasets/trading_partner", 
+    #         options: {
+    #           dedupe_records: true, 
+    #           dedupe_strategy: {
+    #             type: "FIELD_PRIORITY", 
+    #             field_priority: {
+    #               fields: [
+    #                 {
+    #                   name: "eff_start_date", 
+    #                   sort_order: "ASC", 
+    #                 }, 
+    #               ], 
+    #             }, 
+    #           }, 
+    #           load_type: "REPLACE", 
+    #         }, 
     #       }, 
     #       target_type: "DATASET", 
     #     }, 
@@ -3145,6 +4131,21 @@ module Aws::SupplyChain
     #       target: {
     #         dataset_target: {
     #           dataset_identifier: "arn:aws:scn:us-east-1:123456789012:instance/8850c54e-e187-4fa7-89d4-6370f165174d/namespaces/asc/datasets/trading_partner", 
+    #           options: {
+    #             dedupe_records: true, 
+    #             dedupe_strategy: {
+    #               type: "FIELD_PRIORITY", 
+    #               field_priority: {
+    #                 fields: [
+    #                   {
+    #                     name: "eff_start_date", 
+    #                     sort_order: "ASC", 
+    #                   }, 
+    #                 ], 
+    #               }, 
+    #             }, 
+    #             load_type: "REPLACE", 
+    #           }, 
     #         }, 
     #         target_type: "DATASET", 
     #       }, 
@@ -3178,6 +4179,17 @@ module Aws::SupplyChain
     #           options: {
     #             load_type: "INCREMENTAL", # accepts INCREMENTAL, REPLACE
     #             dedupe_records: false,
+    #             dedupe_strategy: {
+    #               type: "FIELD_PRIORITY", # required, accepts FIELD_PRIORITY
+    #               field_priority: {
+    #                 fields: [ # required
+    #                   {
+    #                     name: "DataIntegrationFlowFieldPriorityDedupeFieldName", # required
+    #                     sort_order: "ASC", # required, accepts ASC, DESC
+    #                   },
+    #                 ],
+    #               },
+    #             },
     #           },
     #         },
     #       },
@@ -3202,6 +4214,17 @@ module Aws::SupplyChain
     #         options: {
     #           load_type: "INCREMENTAL", # accepts INCREMENTAL, REPLACE
     #           dedupe_records: false,
+    #           dedupe_strategy: {
+    #             type: "FIELD_PRIORITY", # required, accepts FIELD_PRIORITY
+    #             field_priority: {
+    #               fields: [ # required
+    #                 {
+    #                   name: "DataIntegrationFlowFieldPriorityDedupeFieldName", # required
+    #                   sort_order: "ASC", # required, accepts ASC, DESC
+    #                 },
+    #               ],
+    #             },
+    #           },
     #         },
     #       },
     #     },
@@ -3220,6 +4243,10 @@ module Aws::SupplyChain
     #   resp.flow.sources[0].dataset_source.dataset_identifier #=> String
     #   resp.flow.sources[0].dataset_source.options.load_type #=> String, one of "INCREMENTAL", "REPLACE"
     #   resp.flow.sources[0].dataset_source.options.dedupe_records #=> Boolean
+    #   resp.flow.sources[0].dataset_source.options.dedupe_strategy.type #=> String, one of "FIELD_PRIORITY"
+    #   resp.flow.sources[0].dataset_source.options.dedupe_strategy.field_priority.fields #=> Array
+    #   resp.flow.sources[0].dataset_source.options.dedupe_strategy.field_priority.fields[0].name #=> String
+    #   resp.flow.sources[0].dataset_source.options.dedupe_strategy.field_priority.fields[0].sort_order #=> String, one of "ASC", "DESC"
     #   resp.flow.transformation.transformation_type #=> String, one of "SQL", "NONE"
     #   resp.flow.transformation.sql_transformation.query #=> String
     #   resp.flow.target.target_type #=> String, one of "S3", "DATASET"
@@ -3229,6 +4256,10 @@ module Aws::SupplyChain
     #   resp.flow.target.dataset_target.dataset_identifier #=> String
     #   resp.flow.target.dataset_target.options.load_type #=> String, one of "INCREMENTAL", "REPLACE"
     #   resp.flow.target.dataset_target.options.dedupe_records #=> Boolean
+    #   resp.flow.target.dataset_target.options.dedupe_strategy.type #=> String, one of "FIELD_PRIORITY"
+    #   resp.flow.target.dataset_target.options.dedupe_strategy.field_priority.fields #=> Array
+    #   resp.flow.target.dataset_target.options.dedupe_strategy.field_priority.fields[0].name #=> String
+    #   resp.flow.target.dataset_target.options.dedupe_strategy.field_priority.fields[0].sort_order #=> String, one of "ASC", "DESC"
     #   resp.flow.created_time #=> Time
     #   resp.flow.last_modified_time #=> Time
     #
@@ -3250,7 +4281,8 @@ module Aws::SupplyChain
     #   The Amazon Web Services Chain instance identifier.
     #
     # @option params [required, String] :namespace
-    #   The name space of the dataset. The available values are:
+    #   The namespace of the dataset, besides the custom defined namespace,
+    #   every instance comes with below pre-defined namespaces:
     #
     #   * **asc** - For information on the Amazon Web Services Supply Chain
     #     supported datasets see
@@ -3263,7 +4295,7 @@ module Aws::SupplyChain
     #   [1]: https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/data-model-asc.html
     #
     # @option params [required, String] :name
-    #   The name of the dataset. For **asc** name space, the name must be one
+    #   The name of the dataset. For **asc** namespace, the name must be one
     #   of the supported data entities under
     #   [https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/data-model-asc.html][1].
     #
@@ -3475,6 +4507,22 @@ module Aws::SupplyChain
     #       instance_id: "1877dd20-dee9-4639-8e99-cb67acf21fe5", 
     #       last_modified_time: Time.parse(1727117453.568), 
     #       namespace: "default", 
+    #       partition_spec: {
+    #         fields: [
+    #           {
+    #             name: "creation_time", 
+    #             transform: {
+    #               type: "DAY", 
+    #             }, 
+    #           }, 
+    #           {
+    #             name: "description", 
+    #             transform: {
+    #               type: "IDENTITY", 
+    #             }, 
+    #           }, 
+    #         ], 
+    #       }, 
     #       schema: {
     #         name: "MyDataset", 
     #         fields: [
@@ -3498,6 +4546,16 @@ module Aws::SupplyChain
     #             type: "TIMESTAMP", 
     #             is_required: false, 
     #           }, 
+    #           {
+    #             name: "quantity", 
+    #             type: "LONG", 
+    #             is_required: false, 
+    #           }, 
+    #         ], 
+    #         primary_keys: [
+    #           {
+    #             name: "id", 
+    #           }, 
     #         ], 
     #       }, 
     #     }, 
@@ -3507,7 +4565,7 @@ module Aws::SupplyChain
     #
     #   resp = client.update_data_lake_dataset({
     #     instance_id: "UUID", # required
-    #     namespace: "DataLakeDatasetNamespace", # required
+    #     namespace: "DataLakeNamespaceName", # required
     #     name: "DataLakeDatasetName", # required
     #     description: "DataLakeDatasetDescription",
     #   })
@@ -3521,9 +4579,14 @@ module Aws::SupplyChain
     #   resp.dataset.schema.name #=> String
     #   resp.dataset.schema.fields #=> Array
     #   resp.dataset.schema.fields[0].name #=> String
-    #   resp.dataset.schema.fields[0].type #=> String, one of "INT", "DOUBLE", "STRING", "TIMESTAMP"
+    #   resp.dataset.schema.fields[0].type #=> String, one of "INT", "DOUBLE", "STRING", "TIMESTAMP", "LONG"
     #   resp.dataset.schema.fields[0].is_required #=> Boolean
+    #   resp.dataset.schema.primary_keys #=> Array
+    #   resp.dataset.schema.primary_keys[0].name #=> String
     #   resp.dataset.description #=> String
+    #   resp.dataset.partition_spec.fields #=> Array
+    #   resp.dataset.partition_spec.fields[0].name #=> String
+    #   resp.dataset.partition_spec.fields[0].transform.type #=> String, one of "YEAR", "MONTH", "DAY", "HOUR", "IDENTITY"
     #   resp.dataset.created_time #=> Time
     #   resp.dataset.last_modified_time #=> Time
     #
@@ -3533,6 +4596,72 @@ module Aws::SupplyChain
     # @param [Hash] params ({})
     def update_data_lake_dataset(params = {}, options = {})
       req = build_request(:update_data_lake_dataset, params)
+      req.send_request(options)
+    end
+
+    # Enables you to programmatically update an Amazon Web Services Supply
+    # Chain data lake namespace. Developers can update the description of a
+    # data lake namespace for a given instance ID and namespace name.
+    #
+    # @option params [required, String] :instance_id
+    #   The Amazon Web Services Chain instance identifier.
+    #
+    # @option params [required, String] :name
+    #   The name of the namespace. Noted you cannot update namespace with name
+    #   starting with **asc**, **default**, **scn**, **aws**, **amazon**,
+    #   **amzn**
+    #
+    # @option params [String] :description
+    #   The updated description of the data lake namespace.
+    #
+    # @return [Types::UpdateDataLakeNamespaceResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateDataLakeNamespaceResponse#namespace #namespace} => Types::DataLakeNamespace
+    #
+    #
+    # @example Example: Update description of an existing AWS Supply Chain namespace
+    #
+    #   resp = client.update_data_lake_namespace({
+    #     name: "my_namespace", 
+    #     description: "This is an updated AWS Supply Chain namespace", 
+    #     instance_id: "1877dd20-dee9-4639-8e99-cb67acf21fe5", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     namespace: {
+    #       name: "my_namespace", 
+    #       arn: "arn:aws:scn:us-east-1:012345678910:instance/1877dd20-dee9-4639-8e99-cb67acf21fe5/namespaces/my_namespace", 
+    #       created_time: Time.parse(1736892560.751), 
+    #       description: "This is an updated AWS Supply Chain namespace", 
+    #       instance_id: "1877dd20-dee9-4639-8e99-cb67acf21fe5", 
+    #       last_modified_time: Time.parse(1736892586.156), 
+    #     }, 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_data_lake_namespace({
+    #     instance_id: "UUID", # required
+    #     name: "DataLakeNamespaceName", # required
+    #     description: "DataLakeNamespaceDescription",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.namespace.instance_id #=> String
+    #   resp.namespace.name #=> String
+    #   resp.namespace.arn #=> String
+    #   resp.namespace.description #=> String
+    #   resp.namespace.created_time #=> Time
+    #   resp.namespace.last_modified_time #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/supplychain-2024-01-01/UpdateDataLakeNamespace AWS API Documentation
+    #
+    # @overload update_data_lake_namespace(params = {})
+    # @param [Hash] params ({})
+    def update_data_lake_namespace(params = {}, options = {})
+      req = build_request(:update_data_lake_namespace, params)
       req.send_request(options)
     end
 
@@ -3627,7 +4756,7 @@ module Aws::SupplyChain
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-supplychain'
-      context[:gem_version] = '1.23.0'
+      context[:gem_version] = '1.43.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

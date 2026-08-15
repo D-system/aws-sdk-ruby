@@ -95,8 +95,8 @@ module Aws::DataSync
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::DataSync
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::DataSync
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::DataSync
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::DataSync
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::DataSync
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::DataSync
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::DataSync
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -476,92 +480,6 @@ module Aws::DataSync
     end
 
     # @!group API Operations
-
-    # Creates an Amazon Web Services resource for an on-premises storage
-    # system that you want DataSync Discovery to collect information about.
-    #
-    # @option params [required, Types::DiscoveryServerConfiguration] :server_configuration
-    #   Specifies the server name and network port required to connect with
-    #   the management interface of your on-premises storage system.
-    #
-    # @option params [required, String] :system_type
-    #   Specifies the type of on-premises storage system that you want
-    #   DataSync Discovery to collect information about.
-    #
-    #   <note markdown="1"> DataSync Discovery currently supports NetApp Fabric-Attached Storage
-    #   (FAS) and All Flash FAS (AFF) systems running ONTAP 9.7 or later.
-    #
-    #    </note>
-    #
-    # @option params [required, Array<String>] :agent_arns
-    #   Specifies the Amazon Resource Name (ARN) of the DataSync agent that
-    #   connects to and reads from your on-premises storage system's
-    #   management interface. You can only specify one ARN.
-    #
-    # @option params [String] :cloud_watch_log_group_arn
-    #   Specifies the ARN of the Amazon CloudWatch log group for monitoring
-    #   and logging discovery job events.
-    #
-    # @option params [Array<Types::TagListEntry>] :tags
-    #   Specifies labels that help you categorize, filter, and search for your
-    #   Amazon Web Services resources. We recommend creating at least a name
-    #   tag for your on-premises storage system.
-    #
-    # @option params [String] :name
-    #   Specifies a familiar name for your on-premises storage system.
-    #
-    # @option params [required, String] :client_token
-    #   Specifies a client token to make sure requests with this API operation
-    #   are idempotent. If you don't specify a client token, DataSync
-    #   generates one for you automatically.
-    #
-    #   **A suitable default value is auto-generated.** You should normally
-    #   not need to pass this option.**
-    #
-    # @option params [required, Types::Credentials] :credentials
-    #   Specifies the user name and password for accessing your on-premises
-    #   storage system's management interface.
-    #
-    # @return [Types::AddStorageSystemResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
-    #
-    #   * {Types::AddStorageSystemResponse#storage_system_arn #storage_system_arn} => String
-    #
-    # @example Request syntax with placeholder values
-    #
-    #   resp = client.add_storage_system({
-    #     server_configuration: { # required
-    #       server_hostname: "DiscoveryServerHostname", # required
-    #       server_port: 1,
-    #     },
-    #     system_type: "NetAppONTAP", # required, accepts NetAppONTAP
-    #     agent_arns: ["AgentArn"], # required
-    #     cloud_watch_log_group_arn: "LogGroupArn",
-    #     tags: [
-    #       {
-    #         key: "TagKey", # required
-    #         value: "TagValue",
-    #       },
-    #     ],
-    #     name: "Name",
-    #     client_token: "PtolemyUUID", # required
-    #     credentials: { # required
-    #       username: "PtolemyUsername", # required
-    #       password: "PtolemyPassword", # required
-    #     },
-    #   })
-    #
-    # @example Response structure
-    #
-    #   resp.storage_system_arn #=> String
-    #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/datasync-2018-11-09/AddStorageSystem AWS API Documentation
-    #
-    # @overload add_storage_system(params = {})
-    # @param [Hash] params ({})
-    def add_storage_system(params = {}, options = {})
-      req = build_request(:add_storage_system, params)
-      req.send_request(options)
-    end
 
     # Stops an DataSync task execution that's in progress. The transfer of
     # some files are abruptly interrupted. File contents that're
@@ -678,18 +596,18 @@ module Aws::DataSync
 
     # Creates a transfer *location* for a Microsoft Azure Blob Storage
     # container. DataSync can use this location as a transfer source or
-    # destination.
+    # destination. You can make transfers with or without a [DataSync
+    # agent][1] that connects to your container.
     #
     # Before you begin, make sure you know [how DataSync accesses Azure Blob
-    # Storage][1] and works with [access tiers][2] and [blob types][3]. You
-    # also need a [DataSync agent][4] that can connect to your container.
+    # Storage][2] and works with [access tiers][3] and [blob types][4].
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/datasync/latest/userguide/creating-azure-blob-location.html#azure-blob-access
-    # [2]: https://docs.aws.amazon.com/datasync/latest/userguide/creating-azure-blob-location.html#azure-blob-access-tiers
-    # [3]: https://docs.aws.amazon.com/datasync/latest/userguide/creating-azure-blob-location.html#blob-types
-    # [4]: https://docs.aws.amazon.com/datasync/latest/userguide/creating-azure-blob-location.html#azure-blob-creating-agent
+    # [1]: https://docs.aws.amazon.com/datasync/latest/userguide/creating-azure-blob-location.html#azure-blob-creating-agent
+    # [2]: https://docs.aws.amazon.com/datasync/latest/userguide/creating-azure-blob-location.html#azure-blob-access
+    # [3]: https://docs.aws.amazon.com/datasync/latest/userguide/creating-azure-blob-location.html#azure-blob-access-tiers
+    # [4]: https://docs.aws.amazon.com/datasync/latest/userguide/creating-azure-blob-location.html#blob-types
     #
     # @option params [required, String] :container_url
     #   Specifies the URL of the Azure Blob Storage container involved in your
@@ -703,6 +621,13 @@ module Aws::DataSync
     # @option params [Types::AzureBlobSasConfiguration] :sas_configuration
     #   Specifies the SAS configuration that allows DataSync to access your
     #   Azure Blob Storage.
+    #
+    #   <note markdown="1"> If you provide an authentication token using `SasConfiguration`, but
+    #   do not provide secret configuration details using `CmkSecretConfig` or
+    #   `CustomSecretConfig`, then DataSync stores the token using your Amazon
+    #   Web Services account's secrets manager secret.
+    #
+    #    </note>
     #
     # @option params [String] :blob_type
     #   Specifies the type of blob that you want your objects or files to be
@@ -728,12 +653,20 @@ module Aws::DataSync
     #   Specifies path segments if you want to limit your transfer to a
     #   virtual directory in your container (for example, `/my/images`).
     #
-    # @option params [required, Array<String>] :agent_arns
-    #   Specifies the Amazon Resource Name (ARN) of the DataSync agent that
-    #   can connect with your Azure Blob Storage container.
+    # @option params [Array<String>] :agent_arns
+    #   (Optional) Specifies the Amazon Resource Name (ARN) of the DataSync
+    #   agent that can connect with your Azure Blob Storage container. If you
+    #   are setting up an agentless cross-cloud transfer, you do not need to
+    #   specify a value for this parameter.
     #
     #   You can specify more than one agent. For more information, see [Using
     #   multiple agents for your transfer][1].
+    #
+    #   <note markdown="1"> Make sure you configure this parameter correctly when you first create
+    #   your storage location. You cannot add or remove agents from a storage
+    #   location after you create it.
+    #
+    #    </note>
     #
     #
     #
@@ -744,6 +677,51 @@ module Aws::DataSync
     #   Amazon Web Services resources. We recommend creating at least a name
     #   tag for your transfer location.
     #
+    # @option params [Types::CmkSecretConfig] :cmk_secret_config
+    #   Specifies configuration information for a DataSync-managed secret,
+    #   which includes the authentication token that DataSync uses to access a
+    #   specific AzureBlob storage location, with a customer-managed KMS key.
+    #
+    #   When you include this parameter as part of a `CreateLocationAzureBlob`
+    #   request, you provide only the KMS key ARN. DataSync uses this KMS key
+    #   together with the authentication token you specify for
+    #   `SasConfiguration` to create a DataSync-managed secret to store the
+    #   location access credentials.
+    #
+    #   Make sure that DataSync has permission to access the KMS key that you
+    #   specify. For more information, see [ Using a service-managed secret
+    #   encrypted with a custom KMS key][1].
+    #
+    #   <note markdown="1"> You can use either `CmkSecretConfig` (with `SasConfiguration`) or
+    #   `CustomSecretConfig` (without `SasConfiguration`) to provide
+    #   credentials for a `CreateLocationAzureBlob` request. Do not provide
+    #   both parameters for the same request.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/datasync/latest/userguide/location-credentials.html#service-secret-custom-key
+    #
+    # @option params [Types::CustomSecretConfig] :custom_secret_config
+    #   Specifies configuration information for a customer-managed Secrets
+    #   Manager secret where the authentication token for an AzureBlob storage
+    #   location is stored in plain text, in Secrets Manager. This
+    #   configuration includes the secret ARN, and the ARN for an IAM role
+    #   that provides access to the secret. For more information, see [ Using
+    #   a secret that you manage][1].
+    #
+    #   <note markdown="1"> You can use either `CmkSecretConfig` (with `SasConfiguration`) or
+    #   `CustomSecretConfig` (without `SasConfiguration`) to provide
+    #   credentials for a `CreateLocationAzureBlob` request. Do not provide
+    #   both parameters for the same request.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/datasync/latest/userguide/location-credentials.html#custom-secret-custom-key
+    #
     # @return [Types::CreateLocationAzureBlobResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateLocationAzureBlobResponse#location_arn #location_arn} => String
@@ -752,20 +730,28 @@ module Aws::DataSync
     #
     #   resp = client.create_location_azure_blob({
     #     container_url: "AzureBlobContainerUrl", # required
-    #     authentication_type: "SAS", # required, accepts SAS
+    #     authentication_type: "SAS", # required, accepts SAS, NONE
     #     sas_configuration: {
     #       token: "AzureBlobSasToken", # required
     #     },
     #     blob_type: "BLOCK", # accepts BLOCK
     #     access_tier: "HOT", # accepts HOT, COOL, ARCHIVE
     #     subdirectory: "AzureBlobSubdirectory",
-    #     agent_arns: ["AgentArn"], # required
+    #     agent_arns: ["AgentArn"],
     #     tags: [
     #       {
     #         key: "TagKey", # required
     #         value: "TagValue",
     #       },
     #     ],
+    #     cmk_secret_config: {
+    #       secret_arn: "SecretArn",
+    #       kms_key_arn: "KmsKeyArn",
+    #     },
+    #     custom_secret_config: {
+    #       secret_arn: "SecretArn",
+    #       secret_access_role_arn: "IamRoleArnOrEmptyString",
+    #     },
     #   })
     #
     # @example Response structure
@@ -1037,8 +1023,19 @@ module Aws::DataSync
     #         mount_options: {
     #           version: "AUTOMATIC", # accepts AUTOMATIC, SMB2, SMB3, SMB1, SMB2_0
     #         },
-    #         password: "SmbPassword", # required
+    #         password: "SmbPassword",
     #         user: "SmbUser", # required
+    #         managed_secret_config: {
+    #           secret_arn: "SecretArn",
+    #         },
+    #         cmk_secret_config: {
+    #           secret_arn: "SecretArn",
+    #           kms_key_arn: "KmsKeyArn",
+    #         },
+    #         custom_secret_config: {
+    #           secret_arn: "SecretArn",
+    #           secret_access_role_arn: "IamRoleArnOrEmptyString",
+    #         },
     #       },
     #     },
     #     security_group_arns: ["Ec2SecurityGroupArn"], # required
@@ -1121,8 +1118,19 @@ module Aws::DataSync
     #         mount_options: {
     #           version: "AUTOMATIC", # accepts AUTOMATIC, SMB2, SMB3, SMB1, SMB2_0
     #         },
-    #         password: "SmbPassword", # required
+    #         password: "SmbPassword",
     #         user: "SmbUser", # required
+    #         managed_secret_config: {
+    #           secret_arn: "SecretArn",
+    #         },
+    #         cmk_secret_config: {
+    #           secret_arn: "SecretArn",
+    #           kms_key_arn: "KmsKeyArn",
+    #         },
+    #         custom_secret_config: {
+    #           secret_arn: "SecretArn",
+    #           secret_access_role_arn: "IamRoleArnOrEmptyString",
+    #         },
     #       },
     #     },
     #     security_group_arns: ["Ec2SecurityGroupArn"], # required
@@ -1218,10 +1226,55 @@ module Aws::DataSync
     #   configuring this parameter makes sure that DataSync connects to the
     #   right file system.
     #
-    # @option params [required, String] :password
+    # @option params [String] :password
     #   Specifies the password of the user with the permissions to mount and
     #   access the files, folders, and file metadata in your FSx for Windows
     #   File Server file system.
+    #
+    # @option params [Types::CmkSecretConfig] :cmk_secret_config
+    #   Specifies configuration information for a DataSync-managed secret,
+    #   which includes the password that DataSync uses to access a specific
+    #   FSx Windows storage location, with a customer-managed KMS key.
+    #
+    #   When you include this parameter as part of a
+    #   `CreateLocationFsxWindows` request, you provide only the KMS key ARN.
+    #   DataSync uses this KMS key together with the `Password` you specify
+    #   for to create a DataSync-managed secret to store the location access
+    #   credentials.
+    #
+    #   Make sure that DataSync has permission to access the KMS key that you
+    #   specify. For more information, see [ Using a service-managed secret
+    #   encrypted with a custom KMS key][1].
+    #
+    #   <note markdown="1"> You can use either `CmkSecretConfig` (with `Password`) or
+    #   `CustomSecretConfig` (without `Password`) to provide credentials for a
+    #   `CreateLocationFsxWindows` request. Do not provide both parameters for
+    #   the same request.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/datasync/latest/userguide/location-credentials.html#service-secret-custom-key
+    #
+    # @option params [Types::CustomSecretConfig] :custom_secret_config
+    #   Specifies configuration information for a customer-managed Secrets
+    #   Manager secret where the password for an FSx for Windows File Server
+    #   storage location is stored in plain text, in Secrets Manager. This
+    #   configuration includes the secret ARN, and the ARN for an IAM role
+    #   that provides access to the secret. For more information, see [ Using
+    #   a secret that you manage][1].
+    #
+    #   <note markdown="1"> You can use either `CmkSecretConfig` (with `Password`) or
+    #   `CustomSecretConfig` (without `Password`) to provide credentials for a
+    #   `CreateLocationFsxWindows` request. Do not provide both parameters for
+    #   the same request.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/datasync/latest/userguide/location-credentials.html#custom-secret-custom-key
     #
     # @return [Types::CreateLocationFsxWindowsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1241,7 +1294,15 @@ module Aws::DataSync
     #     ],
     #     user: "SmbUser", # required
     #     domain: "SmbDomain",
-    #     password: "SmbPassword", # required
+    #     password: "SmbPassword",
+    #     cmk_secret_config: {
+    #       secret_arn: "SecretArn",
+    #       kms_key_arn: "KmsKeyArn",
+    #     },
+    #     custom_secret_config: {
+    #       secret_arn: "SecretArn",
+    #       secret_access_role_arn: "IamRoleArnOrEmptyString",
+    #     },
     #   })
     #
     # @example Response structure
@@ -1277,7 +1338,14 @@ module Aws::DataSync
     #   The NameNode that manages the HDFS namespace. The NameNode performs
     #   operations such as opening, closing, and renaming files and
     #   directories. The NameNode contains the information to map blocks of
-    #   data to the DataNodes. You can use only one NameNode.
+    #   data to the DataNodes.
+    #
+    #   The number of NameNodes you can specify depends on the task mode:
+    #
+    #   * **Enhanced mode** – You can specify multiple NameNodes for HDFS High
+    #     Availability (HA) configurations.
+    #
+    #   * **Basic mode** – You can specify only one NameNode.
     #
     # @option params [Integer] :block_size
     #   The size of data blocks to write into the HDFS cluster. The block size
@@ -1324,9 +1392,7 @@ module Aws::DataSync
     # @option params [String, StringIO, File] :kerberos_keytab
     #   The Kerberos key table (keytab) that contains mappings between the
     #   defined Kerberos principal and the encrypted keys. You can load the
-    #   keytab from a file by providing the file's address. If you're using
-    #   the CLI, it performs base64 encoding for you. Otherwise, provide the
-    #   base64-encoded text.
+    #   keytab from a file by providing the file's address.
     #
     #   <note markdown="1"> If `KERBEROS` is specified for `AuthenticationType`, this parameter is
     #   required.
@@ -1352,6 +1418,51 @@ module Aws::DataSync
     #   The key-value pair that represents the tag that you want to add to the
     #   location. The value can be an empty string. We recommend using tags to
     #   name your resources.
+    #
+    # @option params [Types::CmkSecretConfig] :cmk_secret_config
+    #   Specifies configuration information for a DataSync-managed secret,
+    #   which includes the Kerberos keytab that DataSync uses to access a
+    #   specific Hadoop Distributed File System (HDFS) storage location, with
+    #   a customer-managed KMS key.
+    #
+    #   When you include this parameter as part of a `CreateLocationHdfs`
+    #   request, you provide only the KMS key ARN. DataSync uses this KMS key
+    #   together with the `KerberosKeytab` you specify for to create a
+    #   DataSync-managed secret to store the location access credentials.
+    #
+    #   Make sure that DataSync has permission to access the KMS key that you
+    #   specify. For more information, see [ Using a service-managed secret
+    #   encrypted with a custom KMS key][1].
+    #
+    #   <note markdown="1"> You can use either `CmkSecretConfig` (with `KerberosKeytab`) or
+    #   `CustomSecretConfig` (without `KerberosKeytab`) to provide credentials
+    #   for a `CreateLocationHdfs` request. Do not provide both parameters for
+    #   the same request.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/datasync/latest/userguide/location-credentials.html#service-secret-custom-key
+    #
+    # @option params [Types::CustomSecretConfig] :custom_secret_config
+    #   Specifies configuration information for a customer-managed Secrets
+    #   Manager secret where the Kerberos keytab for the HDFS storage location
+    #   is stored in binary, in Secrets Manager. This configuration includes
+    #   the secret ARN, and the ARN for an IAM role that provides access to
+    #   the secret. For more information, see [ Using a secret that you
+    #   manage][1].
+    #
+    #   <note markdown="1"> You can use either `CmkSecretConfig` (with `KerberosKeytab`) or
+    #   `CustomSecretConfig` (without `KerberosKeytab`) to provide credentials
+    #   for a `CreateLocationHdfs` request. Do not provide both parameters for
+    #   the same request.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/datasync/latest/userguide/location-credentials.html#custom-secret-custom-key
     #
     # @return [Types::CreateLocationHdfsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1386,6 +1497,14 @@ module Aws::DataSync
     #         value: "TagValue",
     #       },
     #     ],
+    #     cmk_secret_config: {
+    #       secret_arn: "SecretArn",
+    #       kms_key_arn: "KmsKeyArn",
+    #     },
+    #     custom_secret_config: {
+    #       secret_arn: "SecretArn",
+    #       secret_access_role_arn: "IamRoleArnOrEmptyString",
+    #     },
     #   })
     #
     # @example Response structure
@@ -1425,8 +1544,8 @@ module Aws::DataSync
     #   [1]: https://docs.aws.amazon.com/datasync/latest/userguide/create-nfs-location.html#accessing-nfs
     #
     # @option params [required, String] :server_hostname
-    #   Specifies the DNS name or IP version 4 address of the NFS file server
-    #   that your DataSync agent connects to.
+    #   Specifies the DNS name or IP address (IPv4 or IPv6) of the NFS file
+    #   server that your DataSync agent connects to.
     #
     # @option params [required, Types::OnPremConfig] :on_prem_config
     #   Specifies the Amazon Resource Name (ARN) of the DataSync agent that
@@ -1486,17 +1605,18 @@ module Aws::DataSync
 
     # Creates a transfer *location* for an object storage system. DataSync
     # can use this location as a source or destination for transferring
-    # data.
+    # data. You can make transfers with or without a [DataSync agent][1].
     #
-    # Before you begin, make sure that you understand the [prerequisites][1]
+    # Before you begin, make sure that you understand the [prerequisites][2]
     # for DataSync to work with object storage systems.
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/datasync/latest/userguide/create-object-location.html#create-object-location-prerequisites
+    # [1]: https://docs.aws.amazon.com/datasync/latest/userguide/do-i-need-datasync-agent.html#when-agent-required
+    # [2]: https://docs.aws.amazon.com/datasync/latest/userguide/create-object-location.html#create-object-location-prerequisites
     #
     # @option params [required, String] :server_hostname
-    #   Specifies the domain name or IP version 4 (IPv4) address of the object
+    #   Specifies the domain name or IP address (IPv4 or IPv6) of the object
     #   storage server that your DataSync agent connects to.
     #
     # @option params [Integer] :server_port
@@ -1505,7 +1625,7 @@ module Aws::DataSync
     #
     # @option params [String] :server_protocol
     #   Specifies the protocol that your object storage server uses to
-    #   communicate.
+    #   communicate. If not specified, the default value is `HTTPS`.
     #
     # @option params [String] :subdirectory
     #   Specifies the object prefix for your object storage server. If this is
@@ -1525,9 +1645,24 @@ module Aws::DataSync
     #   Specifies the secret key (for example, a password) if credentials are
     #   required to authenticate with the object storage server.
     #
-    # @option params [required, Array<String>] :agent_arns
-    #   Specifies the Amazon Resource Names (ARNs) of the DataSync agents that
-    #   can connect with your object storage system.
+    #   <note markdown="1"> If you provide a secret using `SecretKey`, but do not provide secret
+    #   configuration details using `CmkSecretConfig` or `CustomSecretConfig`,
+    #   then DataSync stores the token using your Amazon Web Services
+    #   account's Secrets Manager secret.
+    #
+    #    </note>
+    #
+    # @option params [Array<String>] :agent_arns
+    #   (Optional) Specifies the Amazon Resource Names (ARNs) of the DataSync
+    #   agents that can connect with your object storage system. If you are
+    #   setting up an agentless cross-cloud transfer, you do not need to
+    #   specify a value for this parameter.
+    #
+    #   <note markdown="1"> Make sure you configure this parameter correctly when you first create
+    #   your storage location. You cannot add or remove agents from a storage
+    #   location after you create it.
+    #
+    #    </note>
     #
     # @option params [Array<Types::TagListEntry>] :tags
     #   Specifies the key-value pair that represents a tag that you want to
@@ -1559,6 +1694,51 @@ module Aws::DataSync
     #
     #   To use this parameter, configure `ServerProtocol` to `HTTPS`.
     #
+    # @option params [Types::CmkSecretConfig] :cmk_secret_config
+    #   Specifies configuration information for a DataSync-managed secret,
+    #   which includes the `SecretKey` that DataSync uses to access a specific
+    #   object storage location, with a customer-managed KMS key.
+    #
+    #   When you include this parameter as part of a
+    #   `CreateLocationObjectStorage` request, you provide only the KMS key
+    #   ARN. DataSync uses this KMS key together with the value you specify
+    #   for the `SecretKey` parameter to create a DataSync-managed secret to
+    #   store the location access credentials.
+    #
+    #   Make sure that DataSync has permission to access the KMS key that you
+    #   specify. For more information, see [ Using a service-managed secret
+    #   encrypted with a custom KMS key][1].
+    #
+    #   <note markdown="1"> You can use either `CmkSecretConfig` (with `SecretKey`) or
+    #   `CustomSecretConfig` (without `SecretKey`) to provide credentials for
+    #   a `CreateLocationObjectStorage` request. Do not provide both
+    #   parameters for the same request.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/datasync/latest/userguide/location-credentials.html#service-secret-custom-key
+    #
+    # @option params [Types::CustomSecretConfig] :custom_secret_config
+    #   Specifies configuration information for a customer-managed Secrets
+    #   Manager secret where the secret key for a specific object storage
+    #   location is stored in plain text, in Secrets Manager. This
+    #   configuration includes the secret ARN, and the ARN for an IAM role
+    #   that provides access to the secret. For more information, see [ Using
+    #   a secret that you manage][1].
+    #
+    #   <note markdown="1"> You can use either `CmkSecretConfig` (with `SecretKey`) or
+    #   `CustomSecretConfig` (without `SecretKey`) to provide credentials for
+    #   a `CreateLocationObjectStorage` request. Do not provide both
+    #   parameters for the same request.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/datasync/latest/userguide/location-credentials.html#custom-secret-custom-key
+    #
     # @return [Types::CreateLocationObjectStorageResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateLocationObjectStorageResponse#location_arn #location_arn} => String
@@ -1573,7 +1753,7 @@ module Aws::DataSync
     #     bucket_name: "ObjectStorageBucketName", # required
     #     access_key: "ObjectStorageAccessKey",
     #     secret_key: "ObjectStorageSecretKey",
-    #     agent_arns: ["AgentArn"], # required
+    #     agent_arns: ["AgentArn"],
     #     tags: [
     #       {
     #         key: "TagKey", # required
@@ -1581,6 +1761,14 @@ module Aws::DataSync
     #       },
     #     ],
     #     server_certificate: "data",
+    #     cmk_secret_config: {
+    #       secret_arn: "SecretArn",
+    #       kms_key_arn: "KmsKeyArn",
+    #     },
+    #     custom_secret_config: {
+    #       secret_arn: "SecretArn",
+    #       secret_access_role_arn: "IamRoleArnOrEmptyString",
+    #     },
     #   })
     #
     # @example Response structure
@@ -1747,15 +1935,13 @@ module Aws::DataSync
     #   [1]: https://docs.aws.amazon.com/datasync/latest/userguide/create-smb-location.html#configuring-smb-permissions
     #
     # @option params [required, String] :server_hostname
-    #   Specifies the domain name or IP address of the SMB file server that
-    #   your DataSync agent connects to.
+    #   Specifies the domain name or IP address (IPv4 or IPv6) of the SMB file
+    #   server that your DataSync agent connects to.
     #
-    #   Remember the following when configuring this parameter:
+    #   <note markdown="1"> If you're using Kerberos authentication, you must specify a domain
+    #   name.
     #
-    #   * You can't specify an IP version 6 (IPv6) address.
-    #
-    #   * If you're using Kerberos authentication, you must specify a domain
-    #     name.
+    #    </note>
     #
     # @option params [String] :user
     #   Specifies the user that can mount and access the files, folders, and
@@ -1784,6 +1970,55 @@ module Aws::DataSync
     #   transfer. This parameter applies only if `AuthenticationType` is set
     #   to `NTLM`.
     #
+    # @option params [Types::CmkSecretConfig] :cmk_secret_config
+    #   Specifies configuration information for a DataSync-managed secret,
+    #   either a `Password` or `KerberosKeytab` (for `NTLM` (default) and
+    #   `KERBEROS` authentication types, respectively) that DataSync uses to
+    #   access a specific SMB storage location, with a customer-managed KMS
+    #   key.
+    #
+    #   When you include this parameter as part of a
+    #   `CreateLocationSmbRequest` request, you provide only the KMS key ARN.
+    #   DataSync uses this KMS key together with either the `Password` or
+    #   `KerberosKeytab` you specify to create a DataSync-managed secret to
+    #   store the location access credentials.
+    #
+    #   Make sure that DataSync has permission to access the KMS key that you
+    #   specify. For more information, see [ Using a service-managed secret
+    #   encrypted with a custom KMS key][1].
+    #
+    #   <note markdown="1"> You can use either `CmkSecretConfig` (with either `Password` or
+    #   `KerberosKeytab`) or `CustomSecretConfig` (without any `Password` and
+    #   `KerberosKeytab`) to provide credentials for a
+    #   `CreateLocationSmbRequest` request. Do not provide both
+    #   `CmkSecretConfig` and `CustomSecretConfig` parameters for the same
+    #   request.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/datasync/latest/userguide/location-credentials.html#service-secret-custom-key
+    #
+    # @option params [Types::CustomSecretConfig] :custom_secret_config
+    #   Specifies configuration information for a customer-managed Secrets
+    #   Manager secret where the SMB storage location credentials is stored in
+    #   Secrets Manager as plain text (for `Password`) or binary (for
+    #   `KerberosKeytab`). This configuration includes the secret ARN, and the
+    #   ARN for an IAM role that provides access to the secret. For more
+    #   information, see [ Using a secret that you manage][1].
+    #
+    #   <note markdown="1"> You can use either `CmkSecretConfig` (with `SasConfiguration`) or
+    #   `CustomSecretConfig` (without `SasConfiguration`) to provide
+    #   credentials for a `CreateLocationSmbRequest` request. Do not provide
+    #   both parameters for the same request.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/datasync/latest/userguide/location-credentials.html#custom-secret-custom-key
+    #
     # @option params [required, Array<String>] :agent_arns
     #   Specifies the DataSync agent (or agents) that can connect to your SMB
     #   file server. You specify an agent by using its Amazon Resource Name
@@ -1811,16 +2046,16 @@ module Aws::DataSync
     #   [1]: https://docs.aws.amazon.com/datasync/latest/userguide/create-smb-location.html#configuring-smb-permissions
     #
     # @option params [Array<String>] :dns_ip_addresses
-    #   Specifies the IPv4 addresses for the DNS servers that your SMB file
-    #   server belongs to. This parameter applies only if `AuthenticationType`
-    #   is set to `KERBEROS`.
+    #   Specifies the IPv4 or IPv6 addresses for the DNS servers that your SMB
+    #   file server belongs to. This parameter applies only if
+    #   `AuthenticationType` is set to `KERBEROS`.
     #
     #   If you have multiple domains in your environment, configuring this
     #   parameter makes sure that DataSync connects to the right SMB file
     #   server.
     #
     # @option params [String] :kerberos_principal
-    #   Specifies a Kerberos prinicpal, which is an identity in your Kerberos
+    #   Specifies a Kerberos principal, which is an identity in your Kerberos
     #   realm that has permission to access the files, folders, and file
     #   metadata in your SMB file server.
     #
@@ -1833,9 +2068,6 @@ module Aws::DataSync
     # @option params [String, StringIO, File] :kerberos_keytab
     #   Specifies your Kerberos key table (keytab) file, which includes
     #   mappings between your Kerberos principal and encryption keys.
-    #
-    #   The file must be base64 encoded. If you're using the CLI, the
-    #   encoding is done for you.
     #
     #   To avoid task execution errors, make sure that the Kerberos principal
     #   that you use to create the keytab file matches exactly what you
@@ -1860,6 +2092,14 @@ module Aws::DataSync
     #     user: "SmbUser",
     #     domain: "SmbDomain",
     #     password: "SmbPassword",
+    #     cmk_secret_config: {
+    #       secret_arn: "SecretArn",
+    #       kms_key_arn: "KmsKeyArn",
+    #     },
+    #     custom_secret_config: {
+    #       secret_arn: "SecretArn",
+    #       secret_access_role_arn: "IamRoleArnOrEmptyString",
+    #     },
     #     agent_arns: ["AgentArn"], # required
     #     mount_options: {
     #       version: "AUTOMATIC", # accepts AUTOMATIC, SMB2, SMB3, SMB1, SMB2_0
@@ -1997,7 +2237,9 @@ module Aws::DataSync
     #     higher performance than Basic mode. Enhanced mode tasks optimize the
     #     data transfer process by listing, preparing, transferring, and
     #     verifying data in parallel. Enhanced mode is currently available for
-    #     transfers between Amazon S3 locations.
+    #     transfers between Amazon S3 locations, transfers between Azure Blob
+    #     and Amazon S3 without an agent, and transfers between other clouds
+    #     and Amazon S3 without an agent.
     #
     #     <note markdown="1"> To create an Enhanced mode task, the IAM role that you use to call
     #     the `CreateTask` operation must have the
@@ -2234,7 +2476,7 @@ module Aws::DataSync
     #   resp.status #=> String, one of "ONLINE", "OFFLINE"
     #   resp.last_connection_time #=> Time
     #   resp.creation_time #=> Time
-    #   resp.endpoint_type #=> String, one of "PUBLIC", "PRIVATE_LINK", "FIPS"
+    #   resp.endpoint_type #=> String, one of "PUBLIC", "PRIVATE_LINK", "FIPS", "FIPS_PRIVATE_LINK"
     #   resp.private_link_config.vpc_endpoint_id #=> String
     #   resp.private_link_config.private_link_endpoint #=> String
     #   resp.private_link_config.subnet_arns #=> Array
@@ -2249,45 +2491,6 @@ module Aws::DataSync
     # @param [Hash] params ({})
     def describe_agent(params = {}, options = {})
       req = build_request(:describe_agent, params)
-      req.send_request(options)
-    end
-
-    # Returns information about a DataSync discovery job.
-    #
-    # @option params [required, String] :discovery_job_arn
-    #   Specifies the Amazon Resource Name (ARN) of the discovery job that you
-    #   want information about.
-    #
-    # @return [Types::DescribeDiscoveryJobResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
-    #
-    #   * {Types::DescribeDiscoveryJobResponse#storage_system_arn #storage_system_arn} => String
-    #   * {Types::DescribeDiscoveryJobResponse#discovery_job_arn #discovery_job_arn} => String
-    #   * {Types::DescribeDiscoveryJobResponse#collection_duration_minutes #collection_duration_minutes} => Integer
-    #   * {Types::DescribeDiscoveryJobResponse#status #status} => String
-    #   * {Types::DescribeDiscoveryJobResponse#job_start_time #job_start_time} => Time
-    #   * {Types::DescribeDiscoveryJobResponse#job_end_time #job_end_time} => Time
-    #
-    # @example Request syntax with placeholder values
-    #
-    #   resp = client.describe_discovery_job({
-    #     discovery_job_arn: "DiscoveryJobArn", # required
-    #   })
-    #
-    # @example Response structure
-    #
-    #   resp.storage_system_arn #=> String
-    #   resp.discovery_job_arn #=> String
-    #   resp.collection_duration_minutes #=> Integer
-    #   resp.status #=> String, one of "RUNNING", "WARNING", "TERMINATED", "FAILED", "STOPPED", "COMPLETED", "COMPLETED_WITH_ISSUES"
-    #   resp.job_start_time #=> Time
-    #   resp.job_end_time #=> Time
-    #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/datasync-2018-11-09/DescribeDiscoveryJob AWS API Documentation
-    #
-    # @overload describe_discovery_job(params = {})
-    # @param [Hash] params ({})
-    def describe_discovery_job(params = {}, options = {})
-      req = build_request(:describe_discovery_job, params)
       req.send_request(options)
     end
 
@@ -2307,6 +2510,9 @@ module Aws::DataSync
     #   * {Types::DescribeLocationAzureBlobResponse#access_tier #access_tier} => String
     #   * {Types::DescribeLocationAzureBlobResponse#agent_arns #agent_arns} => Array&lt;String&gt;
     #   * {Types::DescribeLocationAzureBlobResponse#creation_time #creation_time} => Time
+    #   * {Types::DescribeLocationAzureBlobResponse#managed_secret_config #managed_secret_config} => Types::ManagedSecretConfig
+    #   * {Types::DescribeLocationAzureBlobResponse#cmk_secret_config #cmk_secret_config} => Types::CmkSecretConfig
+    #   * {Types::DescribeLocationAzureBlobResponse#custom_secret_config #custom_secret_config} => Types::CustomSecretConfig
     #
     # @example Request syntax with placeholder values
     #
@@ -2318,12 +2524,17 @@ module Aws::DataSync
     #
     #   resp.location_arn #=> String
     #   resp.location_uri #=> String
-    #   resp.authentication_type #=> String, one of "SAS"
+    #   resp.authentication_type #=> String, one of "SAS", "NONE"
     #   resp.blob_type #=> String, one of "BLOCK"
     #   resp.access_tier #=> String, one of "HOT", "COOL", "ARCHIVE"
     #   resp.agent_arns #=> Array
     #   resp.agent_arns[0] #=> String
     #   resp.creation_time #=> Time
+    #   resp.managed_secret_config.secret_arn #=> String
+    #   resp.cmk_secret_config.secret_arn #=> String
+    #   resp.cmk_secret_config.kms_key_arn #=> String
+    #   resp.custom_secret_config.secret_arn #=> String
+    #   resp.custom_secret_config.secret_access_role_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/datasync-2018-11-09/DescribeLocationAzureBlob AWS API Documentation
     #
@@ -2453,6 +2664,11 @@ module Aws::DataSync
     #   resp.protocol.smb.mount_options.version #=> String, one of "AUTOMATIC", "SMB2", "SMB3", "SMB1", "SMB2_0"
     #   resp.protocol.smb.password #=> String
     #   resp.protocol.smb.user #=> String
+    #   resp.protocol.smb.managed_secret_config.secret_arn #=> String
+    #   resp.protocol.smb.cmk_secret_config.secret_arn #=> String
+    #   resp.protocol.smb.cmk_secret_config.kms_key_arn #=> String
+    #   resp.protocol.smb.custom_secret_config.secret_arn #=> String
+    #   resp.protocol.smb.custom_secret_config.secret_access_role_arn #=> String
     #   resp.security_group_arns #=> Array
     #   resp.security_group_arns[0] #=> String
     #   resp.storage_virtual_machine_arn #=> String
@@ -2504,6 +2720,11 @@ module Aws::DataSync
     #   resp.protocol.smb.mount_options.version #=> String, one of "AUTOMATIC", "SMB2", "SMB3", "SMB1", "SMB2_0"
     #   resp.protocol.smb.password #=> String
     #   resp.protocol.smb.user #=> String
+    #   resp.protocol.smb.managed_secret_config.secret_arn #=> String
+    #   resp.protocol.smb.cmk_secret_config.secret_arn #=> String
+    #   resp.protocol.smb.cmk_secret_config.kms_key_arn #=> String
+    #   resp.protocol.smb.custom_secret_config.secret_arn #=> String
+    #   resp.protocol.smb.custom_secret_config.secret_access_role_arn #=> String
     #   resp.creation_time #=> Time
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/datasync-2018-11-09/DescribeLocationFsxOpenZfs AWS API Documentation
@@ -2530,6 +2751,9 @@ module Aws::DataSync
     #   * {Types::DescribeLocationFsxWindowsResponse#creation_time #creation_time} => Time
     #   * {Types::DescribeLocationFsxWindowsResponse#user #user} => String
     #   * {Types::DescribeLocationFsxWindowsResponse#domain #domain} => String
+    #   * {Types::DescribeLocationFsxWindowsResponse#managed_secret_config #managed_secret_config} => Types::ManagedSecretConfig
+    #   * {Types::DescribeLocationFsxWindowsResponse#cmk_secret_config #cmk_secret_config} => Types::CmkSecretConfig
+    #   * {Types::DescribeLocationFsxWindowsResponse#custom_secret_config #custom_secret_config} => Types::CustomSecretConfig
     #
     # @example Request syntax with placeholder values
     #
@@ -2546,6 +2770,11 @@ module Aws::DataSync
     #   resp.creation_time #=> Time
     #   resp.user #=> String
     #   resp.domain #=> String
+    #   resp.managed_secret_config.secret_arn #=> String
+    #   resp.cmk_secret_config.secret_arn #=> String
+    #   resp.cmk_secret_config.kms_key_arn #=> String
+    #   resp.custom_secret_config.secret_arn #=> String
+    #   resp.custom_secret_config.secret_access_role_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/datasync-2018-11-09/DescribeLocationFsxWindows AWS API Documentation
     #
@@ -2576,6 +2805,9 @@ module Aws::DataSync
     #   * {Types::DescribeLocationHdfsResponse#kerberos_principal #kerberos_principal} => String
     #   * {Types::DescribeLocationHdfsResponse#agent_arns #agent_arns} => Array&lt;String&gt;
     #   * {Types::DescribeLocationHdfsResponse#creation_time #creation_time} => Time
+    #   * {Types::DescribeLocationHdfsResponse#managed_secret_config #managed_secret_config} => Types::ManagedSecretConfig
+    #   * {Types::DescribeLocationHdfsResponse#cmk_secret_config #cmk_secret_config} => Types::CmkSecretConfig
+    #   * {Types::DescribeLocationHdfsResponse#custom_secret_config #custom_secret_config} => Types::CustomSecretConfig
     #
     # @example Request syntax with placeholder values
     #
@@ -2601,6 +2833,11 @@ module Aws::DataSync
     #   resp.agent_arns #=> Array
     #   resp.agent_arns[0] #=> String
     #   resp.creation_time #=> Time
+    #   resp.managed_secret_config.secret_arn #=> String
+    #   resp.cmk_secret_config.secret_arn #=> String
+    #   resp.cmk_secret_config.kms_key_arn #=> String
+    #   resp.custom_secret_config.secret_arn #=> String
+    #   resp.custom_secret_config.secret_access_role_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/datasync-2018-11-09/DescribeLocationHdfs AWS API Documentation
     #
@@ -2667,6 +2904,9 @@ module Aws::DataSync
     #   * {Types::DescribeLocationObjectStorageResponse#agent_arns #agent_arns} => Array&lt;String&gt;
     #   * {Types::DescribeLocationObjectStorageResponse#creation_time #creation_time} => Time
     #   * {Types::DescribeLocationObjectStorageResponse#server_certificate #server_certificate} => String
+    #   * {Types::DescribeLocationObjectStorageResponse#managed_secret_config #managed_secret_config} => Types::ManagedSecretConfig
+    #   * {Types::DescribeLocationObjectStorageResponse#cmk_secret_config #cmk_secret_config} => Types::CmkSecretConfig
+    #   * {Types::DescribeLocationObjectStorageResponse#custom_secret_config #custom_secret_config} => Types::CustomSecretConfig
     #
     # @example Request syntax with placeholder values
     #
@@ -2685,6 +2925,11 @@ module Aws::DataSync
     #   resp.agent_arns[0] #=> String
     #   resp.creation_time #=> Time
     #   resp.server_certificate #=> String
+    #   resp.managed_secret_config.secret_arn #=> String
+    #   resp.cmk_secret_config.secret_arn #=> String
+    #   resp.cmk_secret_config.kms_key_arn #=> String
+    #   resp.custom_secret_config.secret_arn #=> String
+    #   resp.custom_secret_config.secret_access_role_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/datasync-2018-11-09/DescribeLocationObjectStorage AWS API Documentation
     #
@@ -2754,6 +2999,9 @@ module Aws::DataSync
     #   * {Types::DescribeLocationSmbResponse#dns_ip_addresses #dns_ip_addresses} => Array&lt;String&gt;
     #   * {Types::DescribeLocationSmbResponse#kerberos_principal #kerberos_principal} => String
     #   * {Types::DescribeLocationSmbResponse#authentication_type #authentication_type} => String
+    #   * {Types::DescribeLocationSmbResponse#managed_secret_config #managed_secret_config} => Types::ManagedSecretConfig
+    #   * {Types::DescribeLocationSmbResponse#cmk_secret_config #cmk_secret_config} => Types::CmkSecretConfig
+    #   * {Types::DescribeLocationSmbResponse#custom_secret_config #custom_secret_config} => Types::CustomSecretConfig
     #
     # @example Request syntax with placeholder values
     #
@@ -2775,6 +3023,11 @@ module Aws::DataSync
     #   resp.dns_ip_addresses[0] #=> String
     #   resp.kerberos_principal #=> String
     #   resp.authentication_type #=> String, one of "NTLM", "KERBEROS"
+    #   resp.managed_secret_config.secret_arn #=> String
+    #   resp.cmk_secret_config.secret_arn #=> String
+    #   resp.cmk_secret_config.kms_key_arn #=> String
+    #   resp.custom_secret_config.secret_arn #=> String
+    #   resp.custom_secret_config.secret_access_role_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/datasync-2018-11-09/DescribeLocationSmb AWS API Documentation
     #
@@ -2782,289 +3035,6 @@ module Aws::DataSync
     # @param [Hash] params ({})
     def describe_location_smb(params = {}, options = {})
       req = build_request(:describe_location_smb, params)
-      req.send_request(options)
-    end
-
-    # Returns information about an on-premises storage system that you're
-    # using with DataSync Discovery.
-    #
-    # @option params [required, String] :storage_system_arn
-    #   Specifies the Amazon Resource Name (ARN) of an on-premises storage
-    #   system that you're using with DataSync Discovery.
-    #
-    # @return [Types::DescribeStorageSystemResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
-    #
-    #   * {Types::DescribeStorageSystemResponse#storage_system_arn #storage_system_arn} => String
-    #   * {Types::DescribeStorageSystemResponse#server_configuration #server_configuration} => Types::DiscoveryServerConfiguration
-    #   * {Types::DescribeStorageSystemResponse#system_type #system_type} => String
-    #   * {Types::DescribeStorageSystemResponse#agent_arns #agent_arns} => Array&lt;String&gt;
-    #   * {Types::DescribeStorageSystemResponse#name #name} => String
-    #   * {Types::DescribeStorageSystemResponse#error_message #error_message} => String
-    #   * {Types::DescribeStorageSystemResponse#connectivity_status #connectivity_status} => String
-    #   * {Types::DescribeStorageSystemResponse#cloud_watch_log_group_arn #cloud_watch_log_group_arn} => String
-    #   * {Types::DescribeStorageSystemResponse#creation_time #creation_time} => Time
-    #   * {Types::DescribeStorageSystemResponse#secrets_manager_arn #secrets_manager_arn} => String
-    #
-    # @example Request syntax with placeholder values
-    #
-    #   resp = client.describe_storage_system({
-    #     storage_system_arn: "StorageSystemArn", # required
-    #   })
-    #
-    # @example Response structure
-    #
-    #   resp.storage_system_arn #=> String
-    #   resp.server_configuration.server_hostname #=> String
-    #   resp.server_configuration.server_port #=> Integer
-    #   resp.system_type #=> String, one of "NetAppONTAP"
-    #   resp.agent_arns #=> Array
-    #   resp.agent_arns[0] #=> String
-    #   resp.name #=> String
-    #   resp.error_message #=> String
-    #   resp.connectivity_status #=> String, one of "PASS", "FAIL", "UNKNOWN"
-    #   resp.cloud_watch_log_group_arn #=> String
-    #   resp.creation_time #=> Time
-    #   resp.secrets_manager_arn #=> String
-    #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/datasync-2018-11-09/DescribeStorageSystem AWS API Documentation
-    #
-    # @overload describe_storage_system(params = {})
-    # @param [Hash] params ({})
-    def describe_storage_system(params = {}, options = {})
-      req = build_request(:describe_storage_system, params)
-      req.send_request(options)
-    end
-
-    # Returns information, including performance data and capacity usage,
-    # which DataSync Discovery collects about a specific resource in
-    # your-premises storage system.
-    #
-    # @option params [required, String] :discovery_job_arn
-    #   Specifies the Amazon Resource Name (ARN) of the discovery job that
-    #   collects information about your on-premises storage system.
-    #
-    # @option params [required, String] :resource_type
-    #   Specifies the kind of storage system resource that you want
-    #   information about.
-    #
-    # @option params [required, String] :resource_id
-    #   Specifies the universally unique identifier (UUID) of the storage
-    #   system resource that you want information about.
-    #
-    # @option params [Time,DateTime,Date,Integer,String] :start_time
-    #   Specifies a time within the total duration that the discovery job ran.
-    #   To see information gathered during a certain time frame, use this
-    #   parameter with `EndTime`.
-    #
-    # @option params [Time,DateTime,Date,Integer,String] :end_time
-    #   Specifies a time within the total duration that the discovery job ran.
-    #   To see information gathered during a certain time frame, use this
-    #   parameter with `StartTime`.
-    #
-    # @option params [Integer] :max_results
-    #   Specifies how many results that you want in the response.
-    #
-    # @option params [String] :next_token
-    #   Specifies an opaque string that indicates the position to begin the
-    #   next list of results in the response.
-    #
-    # @return [Types::DescribeStorageSystemResourceMetricsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
-    #
-    #   * {Types::DescribeStorageSystemResourceMetricsResponse#metrics #metrics} => Array&lt;Types::ResourceMetrics&gt;
-    #   * {Types::DescribeStorageSystemResourceMetricsResponse#next_token #next_token} => String
-    #
-    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
-    #
-    # @example Request syntax with placeholder values
-    #
-    #   resp = client.describe_storage_system_resource_metrics({
-    #     discovery_job_arn: "DiscoveryJobArn", # required
-    #     resource_type: "SVM", # required, accepts SVM, VOLUME, CLUSTER
-    #     resource_id: "ResourceId", # required
-    #     start_time: Time.now,
-    #     end_time: Time.now,
-    #     max_results: 1,
-    #     next_token: "DiscoveryNextToken",
-    #   })
-    #
-    # @example Response structure
-    #
-    #   resp.metrics #=> Array
-    #   resp.metrics[0].timestamp #=> Time
-    #   resp.metrics[0].p95_metrics.iops.read #=> Float
-    #   resp.metrics[0].p95_metrics.iops.write #=> Float
-    #   resp.metrics[0].p95_metrics.iops.other #=> Float
-    #   resp.metrics[0].p95_metrics.iops.total #=> Float
-    #   resp.metrics[0].p95_metrics.throughput.read #=> Float
-    #   resp.metrics[0].p95_metrics.throughput.write #=> Float
-    #   resp.metrics[0].p95_metrics.throughput.other #=> Float
-    #   resp.metrics[0].p95_metrics.throughput.total #=> Float
-    #   resp.metrics[0].p95_metrics.latency.read #=> Float
-    #   resp.metrics[0].p95_metrics.latency.write #=> Float
-    #   resp.metrics[0].p95_metrics.latency.other #=> Float
-    #   resp.metrics[0].capacity.used #=> Integer
-    #   resp.metrics[0].capacity.provisioned #=> Integer
-    #   resp.metrics[0].capacity.logical_used #=> Integer
-    #   resp.metrics[0].capacity.cluster_cloud_storage_used #=> Integer
-    #   resp.metrics[0].resource_id #=> String
-    #   resp.metrics[0].resource_type #=> String, one of "SVM", "VOLUME", "CLUSTER"
-    #   resp.next_token #=> String
-    #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/datasync-2018-11-09/DescribeStorageSystemResourceMetrics AWS API Documentation
-    #
-    # @overload describe_storage_system_resource_metrics(params = {})
-    # @param [Hash] params ({})
-    def describe_storage_system_resource_metrics(params = {}, options = {})
-      req = build_request(:describe_storage_system_resource_metrics, params)
-      req.send_request(options)
-    end
-
-    # Returns information that DataSync Discovery collects about resources
-    # in your on-premises storage system.
-    #
-    # @option params [required, String] :discovery_job_arn
-    #   Specifies the Amazon Resource Name (ARN) of the discovery job that's
-    #   collecting data from your on-premises storage system.
-    #
-    # @option params [required, String] :resource_type
-    #   Specifies what kind of storage system resources that you want
-    #   information about.
-    #
-    # @option params [Array<String>] :resource_ids
-    #   Specifies the universally unique identifiers (UUIDs) of the storage
-    #   system resources that you want information about. You can't use this
-    #   parameter in combination with the `Filter` parameter.
-    #
-    # @option params [Hash<String,Array>] :filter
-    #   Filters the storage system resources that you want returned. For
-    #   example, this might be volumes associated with a specific storage
-    #   virtual machine (SVM).
-    #
-    # @option params [Integer] :max_results
-    #   Specifies the maximum number of storage system resources that you want
-    #   to list in a response.
-    #
-    # @option params [String] :next_token
-    #   Specifies an opaque string that indicates the position to begin the
-    #   next list of results in the response.
-    #
-    # @return [Types::DescribeStorageSystemResourcesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
-    #
-    #   * {Types::DescribeStorageSystemResourcesResponse#resource_details #resource_details} => Types::ResourceDetails
-    #   * {Types::DescribeStorageSystemResourcesResponse#next_token #next_token} => String
-    #
-    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
-    #
-    # @example Request syntax with placeholder values
-    #
-    #   resp = client.describe_storage_system_resources({
-    #     discovery_job_arn: "DiscoveryJobArn", # required
-    #     resource_type: "SVM", # required, accepts SVM, VOLUME, CLUSTER
-    #     resource_ids: ["ResourceId"],
-    #     filter: {
-    #       "SVM" => ["PtolemyString"],
-    #     },
-    #     max_results: 1,
-    #     next_token: "DiscoveryNextToken",
-    #   })
-    #
-    # @example Response structure
-    #
-    #   resp.resource_details.net_app_ontapsv_ms #=> Array
-    #   resp.resource_details.net_app_ontapsv_ms[0].cluster_uuid #=> String
-    #   resp.resource_details.net_app_ontapsv_ms[0].resource_id #=> String
-    #   resp.resource_details.net_app_ontapsv_ms[0].svm_name #=> String
-    #   resp.resource_details.net_app_ontapsv_ms[0].cifs_share_count #=> Integer
-    #   resp.resource_details.net_app_ontapsv_ms[0].enabled_protocols #=> Array
-    #   resp.resource_details.net_app_ontapsv_ms[0].enabled_protocols[0] #=> String
-    #   resp.resource_details.net_app_ontapsv_ms[0].total_capacity_used #=> Integer
-    #   resp.resource_details.net_app_ontapsv_ms[0].total_capacity_provisioned #=> Integer
-    #   resp.resource_details.net_app_ontapsv_ms[0].total_logical_capacity_used #=> Integer
-    #   resp.resource_details.net_app_ontapsv_ms[0].max_p95_performance.iops_read #=> Float
-    #   resp.resource_details.net_app_ontapsv_ms[0].max_p95_performance.iops_write #=> Float
-    #   resp.resource_details.net_app_ontapsv_ms[0].max_p95_performance.iops_other #=> Float
-    #   resp.resource_details.net_app_ontapsv_ms[0].max_p95_performance.iops_total #=> Float
-    #   resp.resource_details.net_app_ontapsv_ms[0].max_p95_performance.throughput_read #=> Float
-    #   resp.resource_details.net_app_ontapsv_ms[0].max_p95_performance.throughput_write #=> Float
-    #   resp.resource_details.net_app_ontapsv_ms[0].max_p95_performance.throughput_other #=> Float
-    #   resp.resource_details.net_app_ontapsv_ms[0].max_p95_performance.throughput_total #=> Float
-    #   resp.resource_details.net_app_ontapsv_ms[0].max_p95_performance.latency_read #=> Float
-    #   resp.resource_details.net_app_ontapsv_ms[0].max_p95_performance.latency_write #=> Float
-    #   resp.resource_details.net_app_ontapsv_ms[0].max_p95_performance.latency_other #=> Float
-    #   resp.resource_details.net_app_ontapsv_ms[0].recommendations #=> Array
-    #   resp.resource_details.net_app_ontapsv_ms[0].recommendations[0].storage_type #=> String
-    #   resp.resource_details.net_app_ontapsv_ms[0].recommendations[0].storage_configuration #=> Hash
-    #   resp.resource_details.net_app_ontapsv_ms[0].recommendations[0].storage_configuration["PtolemyString"] #=> String
-    #   resp.resource_details.net_app_ontapsv_ms[0].recommendations[0].estimated_monthly_storage_cost #=> String
-    #   resp.resource_details.net_app_ontapsv_ms[0].nfs_exported_volumes #=> Integer
-    #   resp.resource_details.net_app_ontapsv_ms[0].recommendation_status #=> String, one of "NONE", "IN_PROGRESS", "COMPLETED", "FAILED"
-    #   resp.resource_details.net_app_ontapsv_ms[0].total_snapshot_capacity_used #=> Integer
-    #   resp.resource_details.net_app_ontapsv_ms[0].lun_count #=> Integer
-    #   resp.resource_details.net_app_ontap_volumes #=> Array
-    #   resp.resource_details.net_app_ontap_volumes[0].volume_name #=> String
-    #   resp.resource_details.net_app_ontap_volumes[0].resource_id #=> String
-    #   resp.resource_details.net_app_ontap_volumes[0].cifs_share_count #=> Integer
-    #   resp.resource_details.net_app_ontap_volumes[0].security_style #=> String
-    #   resp.resource_details.net_app_ontap_volumes[0].svm_uuid #=> String
-    #   resp.resource_details.net_app_ontap_volumes[0].svm_name #=> String
-    #   resp.resource_details.net_app_ontap_volumes[0].capacity_used #=> Integer
-    #   resp.resource_details.net_app_ontap_volumes[0].capacity_provisioned #=> Integer
-    #   resp.resource_details.net_app_ontap_volumes[0].logical_capacity_used #=> Integer
-    #   resp.resource_details.net_app_ontap_volumes[0].nfs_exported #=> Boolean
-    #   resp.resource_details.net_app_ontap_volumes[0].snapshot_capacity_used #=> Integer
-    #   resp.resource_details.net_app_ontap_volumes[0].max_p95_performance.iops_read #=> Float
-    #   resp.resource_details.net_app_ontap_volumes[0].max_p95_performance.iops_write #=> Float
-    #   resp.resource_details.net_app_ontap_volumes[0].max_p95_performance.iops_other #=> Float
-    #   resp.resource_details.net_app_ontap_volumes[0].max_p95_performance.iops_total #=> Float
-    #   resp.resource_details.net_app_ontap_volumes[0].max_p95_performance.throughput_read #=> Float
-    #   resp.resource_details.net_app_ontap_volumes[0].max_p95_performance.throughput_write #=> Float
-    #   resp.resource_details.net_app_ontap_volumes[0].max_p95_performance.throughput_other #=> Float
-    #   resp.resource_details.net_app_ontap_volumes[0].max_p95_performance.throughput_total #=> Float
-    #   resp.resource_details.net_app_ontap_volumes[0].max_p95_performance.latency_read #=> Float
-    #   resp.resource_details.net_app_ontap_volumes[0].max_p95_performance.latency_write #=> Float
-    #   resp.resource_details.net_app_ontap_volumes[0].max_p95_performance.latency_other #=> Float
-    #   resp.resource_details.net_app_ontap_volumes[0].recommendations #=> Array
-    #   resp.resource_details.net_app_ontap_volumes[0].recommendations[0].storage_type #=> String
-    #   resp.resource_details.net_app_ontap_volumes[0].recommendations[0].storage_configuration #=> Hash
-    #   resp.resource_details.net_app_ontap_volumes[0].recommendations[0].storage_configuration["PtolemyString"] #=> String
-    #   resp.resource_details.net_app_ontap_volumes[0].recommendations[0].estimated_monthly_storage_cost #=> String
-    #   resp.resource_details.net_app_ontap_volumes[0].recommendation_status #=> String, one of "NONE", "IN_PROGRESS", "COMPLETED", "FAILED"
-    #   resp.resource_details.net_app_ontap_volumes[0].lun_count #=> Integer
-    #   resp.resource_details.net_app_ontap_clusters #=> Array
-    #   resp.resource_details.net_app_ontap_clusters[0].cifs_share_count #=> Integer
-    #   resp.resource_details.net_app_ontap_clusters[0].nfs_exported_volumes #=> Integer
-    #   resp.resource_details.net_app_ontap_clusters[0].resource_id #=> String
-    #   resp.resource_details.net_app_ontap_clusters[0].cluster_name #=> String
-    #   resp.resource_details.net_app_ontap_clusters[0].max_p95_performance.iops_read #=> Float
-    #   resp.resource_details.net_app_ontap_clusters[0].max_p95_performance.iops_write #=> Float
-    #   resp.resource_details.net_app_ontap_clusters[0].max_p95_performance.iops_other #=> Float
-    #   resp.resource_details.net_app_ontap_clusters[0].max_p95_performance.iops_total #=> Float
-    #   resp.resource_details.net_app_ontap_clusters[0].max_p95_performance.throughput_read #=> Float
-    #   resp.resource_details.net_app_ontap_clusters[0].max_p95_performance.throughput_write #=> Float
-    #   resp.resource_details.net_app_ontap_clusters[0].max_p95_performance.throughput_other #=> Float
-    #   resp.resource_details.net_app_ontap_clusters[0].max_p95_performance.throughput_total #=> Float
-    #   resp.resource_details.net_app_ontap_clusters[0].max_p95_performance.latency_read #=> Float
-    #   resp.resource_details.net_app_ontap_clusters[0].max_p95_performance.latency_write #=> Float
-    #   resp.resource_details.net_app_ontap_clusters[0].max_p95_performance.latency_other #=> Float
-    #   resp.resource_details.net_app_ontap_clusters[0].cluster_block_storage_size #=> Integer
-    #   resp.resource_details.net_app_ontap_clusters[0].cluster_block_storage_used #=> Integer
-    #   resp.resource_details.net_app_ontap_clusters[0].cluster_block_storage_logical_used #=> Integer
-    #   resp.resource_details.net_app_ontap_clusters[0].recommendations #=> Array
-    #   resp.resource_details.net_app_ontap_clusters[0].recommendations[0].storage_type #=> String
-    #   resp.resource_details.net_app_ontap_clusters[0].recommendations[0].storage_configuration #=> Hash
-    #   resp.resource_details.net_app_ontap_clusters[0].recommendations[0].storage_configuration["PtolemyString"] #=> String
-    #   resp.resource_details.net_app_ontap_clusters[0].recommendations[0].estimated_monthly_storage_cost #=> String
-    #   resp.resource_details.net_app_ontap_clusters[0].recommendation_status #=> String, one of "NONE", "IN_PROGRESS", "COMPLETED", "FAILED"
-    #   resp.resource_details.net_app_ontap_clusters[0].lun_count #=> Integer
-    #   resp.resource_details.net_app_ontap_clusters[0].cluster_cloud_storage_used #=> Integer
-    #   resp.next_token #=> String
-    #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/datasync-2018-11-09/DescribeStorageSystemResources AWS API Documentation
-    #
-    # @overload describe_storage_system_resources(params = {})
-    # @param [Hash] params ({})
-    def describe_storage_system_resources(params = {}, options = {})
-      req = build_request(:describe_storage_system_resources, params)
       req.send_request(options)
     end
 
@@ -3219,6 +3189,17 @@ module Aws::DataSync
     #   * {Types::DescribeTaskExecutionResponse#files_prepared #files_prepared} => Integer
     #   * {Types::DescribeTaskExecutionResponse#files_listed #files_listed} => Types::TaskExecutionFilesListedDetail
     #   * {Types::DescribeTaskExecutionResponse#files_failed #files_failed} => Types::TaskExecutionFilesFailedDetail
+    #   * {Types::DescribeTaskExecutionResponse#estimated_folders_to_delete #estimated_folders_to_delete} => Integer
+    #   * {Types::DescribeTaskExecutionResponse#estimated_folders_to_transfer #estimated_folders_to_transfer} => Integer
+    #   * {Types::DescribeTaskExecutionResponse#folders_skipped #folders_skipped} => Integer
+    #   * {Types::DescribeTaskExecutionResponse#folders_prepared #folders_prepared} => Integer
+    #   * {Types::DescribeTaskExecutionResponse#folders_transferred #folders_transferred} => Integer
+    #   * {Types::DescribeTaskExecutionResponse#folders_verified #folders_verified} => Integer
+    #   * {Types::DescribeTaskExecutionResponse#folders_deleted #folders_deleted} => Integer
+    #   * {Types::DescribeTaskExecutionResponse#folders_listed #folders_listed} => Types::TaskExecutionFoldersListedDetail
+    #   * {Types::DescribeTaskExecutionResponse#folders_failed #folders_failed} => Types::TaskExecutionFoldersFailedDetail
+    #   * {Types::DescribeTaskExecutionResponse#launch_time #launch_time} => Time
+    #   * {Types::DescribeTaskExecutionResponse#end_time #end_time} => Time
     #
     # @example Request syntax with placeholder values
     #
@@ -3298,6 +3279,22 @@ module Aws::DataSync
     #   resp.files_failed.transfer #=> Integer
     #   resp.files_failed.verify #=> Integer
     #   resp.files_failed.delete #=> Integer
+    #   resp.estimated_folders_to_delete #=> Integer
+    #   resp.estimated_folders_to_transfer #=> Integer
+    #   resp.folders_skipped #=> Integer
+    #   resp.folders_prepared #=> Integer
+    #   resp.folders_transferred #=> Integer
+    #   resp.folders_verified #=> Integer
+    #   resp.folders_deleted #=> Integer
+    #   resp.folders_listed.at_source #=> Integer
+    #   resp.folders_listed.at_destination_for_delete #=> Integer
+    #   resp.folders_failed.list #=> Integer
+    #   resp.folders_failed.prepare #=> Integer
+    #   resp.folders_failed.transfer #=> Integer
+    #   resp.folders_failed.verify #=> Integer
+    #   resp.folders_failed.delete #=> Integer
+    #   resp.launch_time #=> Time
+    #   resp.end_time #=> Time
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/datasync-2018-11-09/DescribeTaskExecution AWS API Documentation
     #
@@ -3305,51 +3302,6 @@ module Aws::DataSync
     # @param [Hash] params ({})
     def describe_task_execution(params = {}, options = {})
       req = build_request(:describe_task_execution, params)
-      req.send_request(options)
-    end
-
-    # Creates recommendations about where to migrate your data to in Amazon
-    # Web Services. Recommendations are generated based on information that
-    # DataSync Discovery collects about your on-premises storage system's
-    # resources. For more information, see [Recommendations provided by
-    # DataSync Discovery][1].
-    #
-    # Once generated, you can view your recommendations by using the
-    # [DescribeStorageSystemResources][2] operation.
-    #
-    #
-    #
-    # [1]: https://docs.aws.amazon.com/datasync/latest/userguide/discovery-understand-recommendations.html
-    # [2]: https://docs.aws.amazon.com/datasync/latest/userguide/API_DescribeStorageSystemResources.html
-    #
-    # @option params [required, String] :discovery_job_arn
-    #   Specifies the Amazon Resource Name (ARN) of the discovery job that
-    #   collects information about your on-premises storage system.
-    #
-    # @option params [required, Array<String>] :resource_ids
-    #   Specifies the universally unique identifiers (UUIDs) of the resources
-    #   in your storage system that you want recommendations on.
-    #
-    # @option params [required, String] :resource_type
-    #   Specifies the type of resource in your storage system that you want
-    #   recommendations on.
-    #
-    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
-    #
-    # @example Request syntax with placeholder values
-    #
-    #   resp = client.generate_recommendations({
-    #     discovery_job_arn: "DiscoveryJobArn", # required
-    #     resource_ids: ["ResourceId"], # required
-    #     resource_type: "SVM", # required, accepts SVM, VOLUME, CLUSTER
-    #   })
-    #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/datasync-2018-11-09/GenerateRecommendations AWS API Documentation
-    #
-    # @overload generate_recommendations(params = {})
-    # @param [Hash] params ({})
-    def generate_recommendations(params = {}, options = {})
-      req = build_request(:generate_recommendations, params)
       req.send_request(options)
     end
 
@@ -3415,53 +3367,6 @@ module Aws::DataSync
       req.send_request(options)
     end
 
-    # Provides a list of the existing discovery jobs in the Amazon Web
-    # Services Region and Amazon Web Services account where you're using
-    # DataSync Discovery.
-    #
-    # @option params [String] :storage_system_arn
-    #   Specifies the Amazon Resource Name (ARN) of an on-premises storage
-    #   system. Use this parameter if you only want to list the discovery jobs
-    #   that are associated with a specific storage system.
-    #
-    # @option params [Integer] :max_results
-    #   Specifies how many results you want in the response.
-    #
-    # @option params [String] :next_token
-    #   Specifies an opaque string that indicates the position to begin the
-    #   next list of results in the response.
-    #
-    # @return [Types::ListDiscoveryJobsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
-    #
-    #   * {Types::ListDiscoveryJobsResponse#discovery_jobs #discovery_jobs} => Array&lt;Types::DiscoveryJobListEntry&gt;
-    #   * {Types::ListDiscoveryJobsResponse#next_token #next_token} => String
-    #
-    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
-    #
-    # @example Request syntax with placeholder values
-    #
-    #   resp = client.list_discovery_jobs({
-    #     storage_system_arn: "StorageSystemArn",
-    #     max_results: 1,
-    #     next_token: "DiscoveryNextToken",
-    #   })
-    #
-    # @example Response structure
-    #
-    #   resp.discovery_jobs #=> Array
-    #   resp.discovery_jobs[0].discovery_job_arn #=> String
-    #   resp.discovery_jobs[0].status #=> String, one of "RUNNING", "WARNING", "TERMINATED", "FAILED", "STOPPED", "COMPLETED", "COMPLETED_WITH_ISSUES"
-    #   resp.next_token #=> String
-    #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/datasync-2018-11-09/ListDiscoveryJobs AWS API Documentation
-    #
-    # @overload list_discovery_jobs(params = {})
-    # @param [Hash] params ({})
-    def list_discovery_jobs(params = {}, options = {})
-      req = build_request(:list_discovery_jobs, params)
-      req.send_request(options)
-    end
-
     # Returns a list of source and destination locations.
     #
     # If you have more locations than are returned in a response (that is,
@@ -3516,46 +3421,6 @@ module Aws::DataSync
     # @param [Hash] params ({})
     def list_locations(params = {}, options = {})
       req = build_request(:list_locations, params)
-      req.send_request(options)
-    end
-
-    # Lists the on-premises storage systems that you're using with DataSync
-    # Discovery.
-    #
-    # @option params [Integer] :max_results
-    #   Specifies how many results you want in the response.
-    #
-    # @option params [String] :next_token
-    #   Specifies an opaque string that indicates the position to begin the
-    #   next list of results in the response.
-    #
-    # @return [Types::ListStorageSystemsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
-    #
-    #   * {Types::ListStorageSystemsResponse#storage_systems #storage_systems} => Array&lt;Types::StorageSystemListEntry&gt;
-    #   * {Types::ListStorageSystemsResponse#next_token #next_token} => String
-    #
-    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
-    #
-    # @example Request syntax with placeholder values
-    #
-    #   resp = client.list_storage_systems({
-    #     max_results: 1,
-    #     next_token: "DiscoveryNextToken",
-    #   })
-    #
-    # @example Response structure
-    #
-    #   resp.storage_systems #=> Array
-    #   resp.storage_systems[0].storage_system_arn #=> String
-    #   resp.storage_systems[0].name #=> String
-    #   resp.next_token #=> String
-    #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/datasync-2018-11-09/ListStorageSystems AWS API Documentation
-    #
-    # @overload list_storage_systems(params = {})
-    # @param [Hash] params ({})
-    def list_storage_systems(params = {}, options = {})
-      req = build_request(:list_storage_systems, params)
       req.send_request(options)
     end
 
@@ -3699,96 +3564,6 @@ module Aws::DataSync
     # @param [Hash] params ({})
     def list_tasks(params = {}, options = {})
       req = build_request(:list_tasks, params)
-      req.send_request(options)
-    end
-
-    # Permanently removes a storage system resource from DataSync Discovery,
-    # including the associated discovery jobs, collected data, and
-    # recommendations.
-    #
-    # @option params [required, String] :storage_system_arn
-    #   Specifies the Amazon Resource Name (ARN) of the storage system that
-    #   you want to permanently remove from DataSync Discovery.
-    #
-    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
-    #
-    # @example Request syntax with placeholder values
-    #
-    #   resp = client.remove_storage_system({
-    #     storage_system_arn: "StorageSystemArn", # required
-    #   })
-    #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/datasync-2018-11-09/RemoveStorageSystem AWS API Documentation
-    #
-    # @overload remove_storage_system(params = {})
-    # @param [Hash] params ({})
-    def remove_storage_system(params = {}, options = {})
-      req = build_request(:remove_storage_system, params)
-      req.send_request(options)
-    end
-
-    # Runs a DataSync discovery job on your on-premises storage system. If
-    # you haven't added the storage system to DataSync Discovery yet, do
-    # this first by using the [AddStorageSystem][1] operation.
-    #
-    #
-    #
-    # [1]: https://docs.aws.amazon.com/datasync/latest/userguide/API_AddStorageSystem.html
-    #
-    # @option params [required, String] :storage_system_arn
-    #   Specifies the Amazon Resource Name (ARN) of the on-premises storage
-    #   system that you want to run the discovery job on.
-    #
-    # @option params [required, Integer] :collection_duration_minutes
-    #   Specifies in minutes how long you want the discovery job to run.
-    #
-    #   <note markdown="1"> For more accurate recommendations, we recommend a duration of at least
-    #   14 days. Longer durations allow time to collect a sufficient number of
-    #   data points and provide a realistic representation of storage
-    #   performance and utilization.
-    #
-    #    </note>
-    #
-    # @option params [required, String] :client_token
-    #   Specifies a client token to make sure requests with this API operation
-    #   are idempotent. If you don't specify a client token, DataSync
-    #   generates one for you automatically.
-    #
-    #   **A suitable default value is auto-generated.** You should normally
-    #   not need to pass this option.**
-    #
-    # @option params [Array<Types::TagListEntry>] :tags
-    #   Specifies labels that help you categorize, filter, and search for your
-    #   Amazon Web Services resources.
-    #
-    # @return [Types::StartDiscoveryJobResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
-    #
-    #   * {Types::StartDiscoveryJobResponse#discovery_job_arn #discovery_job_arn} => String
-    #
-    # @example Request syntax with placeholder values
-    #
-    #   resp = client.start_discovery_job({
-    #     storage_system_arn: "StorageSystemArn", # required
-    #     collection_duration_minutes: 1, # required
-    #     client_token: "PtolemyUUID", # required
-    #     tags: [
-    #       {
-    #         key: "TagKey", # required
-    #         value: "TagValue",
-    #       },
-    #     ],
-    #   })
-    #
-    # @example Response structure
-    #
-    #   resp.discovery_job_arn #=> String
-    #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/datasync-2018-11-09/StartDiscoveryJob AWS API Documentation
-    #
-    # @overload start_discovery_job(params = {})
-    # @param [Hash] params ({})
-    def start_discovery_job(params = {}, options = {})
-      req = build_request(:start_discovery_job, params)
       req.send_request(options)
     end
 
@@ -3981,39 +3756,6 @@ module Aws::DataSync
       req.send_request(options)
     end
 
-    # Stops a running DataSync discovery job.
-    #
-    # You can stop a discovery job anytime. A job that's stopped before
-    # it's scheduled to end likely will provide you some information about
-    # your on-premises storage system resources. To get recommendations for
-    # a stopped job, you must use the [GenerateRecommendations][1]
-    # operation.
-    #
-    #
-    #
-    # [1]: https://docs.aws.amazon.com/datasync/latest/userguide/API_GenerateRecommendations.html
-    #
-    # @option params [required, String] :discovery_job_arn
-    #   Specifies the Amazon Resource Name (ARN) of the discovery job that you
-    #   want to stop.
-    #
-    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
-    #
-    # @example Request syntax with placeholder values
-    #
-    #   resp = client.stop_discovery_job({
-    #     discovery_job_arn: "DiscoveryJobArn", # required
-    #   })
-    #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/datasync-2018-11-09/StopDiscoveryJob AWS API Documentation
-    #
-    # @overload stop_discovery_job(params = {})
-    # @param [Hash] params ({})
-    def stop_discovery_job(params = {}, options = {})
-      req = build_request(:stop_discovery_job, params)
-      req.send_request(options)
-    end
-
     # Applies a *tag* to an Amazon Web Services resource. Tags are key-value
     # pairs that can help you manage, filter, and search for your resources.
     #
@@ -4103,35 +3845,6 @@ module Aws::DataSync
       req.send_request(options)
     end
 
-    # Edits a DataSync discovery job configuration.
-    #
-    # @option params [required, String] :discovery_job_arn
-    #   Specifies the Amazon Resource Name (ARN) of the discovery job that you
-    #   want to update.
-    #
-    # @option params [required, Integer] :collection_duration_minutes
-    #   Specifies in minutes how long that you want the discovery job to run.
-    #   (You can't set this parameter to less than the number of minutes that
-    #   the job has already run for.)
-    #
-    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
-    #
-    # @example Request syntax with placeholder values
-    #
-    #   resp = client.update_discovery_job({
-    #     discovery_job_arn: "DiscoveryJobArn", # required
-    #     collection_duration_minutes: 1, # required
-    #   })
-    #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/datasync-2018-11-09/UpdateDiscoveryJob AWS API Documentation
-    #
-    # @overload update_discovery_job(params = {})
-    # @param [Hash] params ({})
-    def update_discovery_job(params = {}, options = {})
-      req = build_request(:update_discovery_job, params)
-      req.send_request(options)
-    end
-
     # Modifies the following configurations of the Microsoft Azure Blob
     # Storage transfer location that you're using with DataSync.
     #
@@ -4180,15 +3893,35 @@ module Aws::DataSync
     #   [1]: https://docs.aws.amazon.com/datasync/latest/userguide/creating-azure-blob-location.html#azure-blob-access-tiers
     #
     # @option params [Array<String>] :agent_arns
-    #   Specifies the Amazon Resource Name (ARN) of the DataSync agent that
-    #   can connect with your Azure Blob Storage container.
+    #   (Optional) Specifies the Amazon Resource Name (ARN) of the DataSync
+    #   agent that can connect with your Azure Blob Storage container. If you
+    #   are setting up an agentless cross-cloud transfer, you do not need to
+    #   specify a value for this parameter.
     #
     #   You can specify more than one agent. For more information, see [Using
     #   multiple agents for your transfer][1].
     #
+    #   <note markdown="1"> You cannot add or remove agents from a storage location after you
+    #   initially create it.
+    #
+    #    </note>
+    #
     #
     #
     #   [1]: https://docs.aws.amazon.com/datasync/latest/userguide/multiple-agents.html
+    #
+    # @option params [Types::CmkSecretConfig] :cmk_secret_config
+    #   Specifies configuration information for a DataSync-managed secret,
+    #   such as an authentication token or set of credentials that DataSync
+    #   uses to access a specific transfer location, and a customer-managed
+    #   KMS key.
+    #
+    # @option params [Types::CustomSecretConfig] :custom_secret_config
+    #   Specifies configuration information for a customer-managed secret,
+    #   such as an authentication token or set of credentials that DataSync
+    #   uses to access a specific transfer location, and a customer-managed
+    #   Identity and Access Management (IAM) role that provides access to the
+    #   secret.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
@@ -4197,13 +3930,21 @@ module Aws::DataSync
     #   resp = client.update_location_azure_blob({
     #     location_arn: "LocationArn", # required
     #     subdirectory: "AzureBlobSubdirectory",
-    #     authentication_type: "SAS", # accepts SAS
+    #     authentication_type: "SAS", # accepts SAS, NONE
     #     sas_configuration: {
     #       token: "AzureBlobSasToken", # required
     #     },
     #     blob_type: "BLOCK", # accepts BLOCK
     #     access_tier: "HOT", # accepts HOT, COOL, ARCHIVE
     #     agent_arns: ["AgentArn"],
+    #     cmk_secret_config: {
+    #       secret_arn: "SecretArn",
+    #       kms_key_arn: "KmsKeyArn",
+    #     },
+    #     custom_secret_config: {
+    #       secret_arn: "SecretArn",
+    #       secret_access_role_arn: "IamRoleArnOrEmptyString",
+    #     },
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/datasync-2018-11-09/UpdateLocationAzureBlob AWS API Documentation
@@ -4391,6 +4132,14 @@ module Aws::DataSync
     #         },
     #         password: "SmbPassword",
     #         user: "SmbUser",
+    #         cmk_secret_config: {
+    #           secret_arn: "SecretArn",
+    #           kms_key_arn: "KmsKeyArn",
+    #         },
+    #         custom_secret_config: {
+    #           secret_arn: "SecretArn",
+    #           secret_access_role_arn: "IamRoleArnOrEmptyString",
+    #         },
     #       },
     #     },
     #     subdirectory: "FsxOntapSubdirectory",
@@ -4451,8 +4200,19 @@ module Aws::DataSync
     #         mount_options: {
     #           version: "AUTOMATIC", # accepts AUTOMATIC, SMB2, SMB3, SMB1, SMB2_0
     #         },
-    #         password: "SmbPassword", # required
+    #         password: "SmbPassword",
     #         user: "SmbUser", # required
+    #         managed_secret_config: {
+    #           secret_arn: "SecretArn",
+    #         },
+    #         cmk_secret_config: {
+    #           secret_arn: "SecretArn",
+    #           kms_key_arn: "KmsKeyArn",
+    #         },
+    #         custom_secret_config: {
+    #           secret_arn: "SecretArn",
+    #           secret_access_role_arn: "IamRoleArnOrEmptyString",
+    #         },
     #       },
     #     },
     #     subdirectory: "SmbSubdirectory",
@@ -4513,6 +4273,17 @@ module Aws::DataSync
     #   access the files, folders, and file metadata in your FSx for Windows
     #   File Server file system.
     #
+    # @option params [Types::CmkSecretConfig] :cmk_secret_config
+    #   Specifies configuration information for a DataSync-managed secret,
+    #   such as a `Password` or set of credentials that DataSync uses to
+    #   access a specific transfer location, and a customer-managed KMS key.
+    #
+    # @option params [Types::CustomSecretConfig] :custom_secret_config
+    #   Specifies configuration information for a customer-managed secret,
+    #   such as a `Password` or set of credentials that DataSync uses to
+    #   access a specific transfer location, and a customer-managed Identity
+    #   and Access Management (IAM) role that provides access to the secret.
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
@@ -4523,6 +4294,14 @@ module Aws::DataSync
     #     domain: "UpdateSmbDomain",
     #     user: "SmbUser",
     #     password: "SmbPassword",
+    #     cmk_secret_config: {
+    #       secret_arn: "SecretArn",
+    #       kms_key_arn: "KmsKeyArn",
+    #     },
+    #     custom_secret_config: {
+    #       secret_arn: "SecretArn",
+    #       secret_access_role_arn: "IamRoleArnOrEmptyString",
+    #     },
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/datasync-2018-11-09/UpdateLocationFsxWindows AWS API Documentation
@@ -4556,7 +4335,14 @@ module Aws::DataSync
     #   The NameNode that manages the HDFS namespace. The NameNode performs
     #   operations such as opening, closing, and renaming files and
     #   directories. The NameNode contains the information to map blocks of
-    #   data to the DataNodes. You can use only one NameNode.
+    #   data to the DataNodes.
+    #
+    #   The number of NameNodes you can specify depends on the task mode:
+    #
+    #   * Enhanced mode – You can specify multiple NameNodes for HDFS High
+    #     Availability (HA) configurations.
+    #
+    #   * Basic mode – You can specify only one NameNode.
     #
     # @option params [Integer] :block_size
     #   The size of the data blocks to write into the HDFS cluster.
@@ -4587,9 +4373,7 @@ module Aws::DataSync
     # @option params [String, StringIO, File] :kerberos_keytab
     #   The Kerberos key table (keytab) that contains mappings between the
     #   defined Kerberos principal and the encrypted keys. You can load the
-    #   keytab from a file by providing the file's address. If you use the
-    #   CLI, it performs base64 encoding for you. Otherwise, provide the
-    #   base64-encoded text.
+    #   keytab from a file by providing the file's address.
     #
     # @option params [String, StringIO, File] :kerberos_krb_5_conf
     #   The `krb5.conf` file that contains the Kerberos configuration
@@ -4600,6 +4384,17 @@ module Aws::DataSync
     # @option params [Array<String>] :agent_arns
     #   The Amazon Resource Names (ARNs) of the DataSync agents that can
     #   connect to your HDFS cluster.
+    #
+    # @option params [Types::CmkSecretConfig] :cmk_secret_config
+    #   Specifies configuration information for a DataSync-managed secret,
+    #   such as a `KerberosKeytab` or set of credentials that DataSync uses to
+    #   access a specific transfer location, and a customer-managed KMS key.
+    #
+    # @option params [Types::CustomSecretConfig] :custom_secret_config
+    #   Specifies configuration information for a customer-managed secret,
+    #   such as a `KerberosKeytab` or set of credentials that DataSync uses to
+    #   access a specific transfer location, and a customer-managed Identity
+    #   and Access Management (IAM) role that provides access to the secret.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
@@ -4627,6 +4422,14 @@ module Aws::DataSync
     #     kerberos_keytab: "data",
     #     kerberos_krb_5_conf: "data",
     #     agent_arns: ["AgentArn"],
+    #     cmk_secret_config: {
+    #       secret_arn: "SecretArn",
+    #       kms_key_arn: "KmsKeyArn",
+    #     },
+    #     custom_secret_config: {
+    #       secret_arn: "SecretArn",
+    #       secret_access_role_arn: "IamRoleArnOrEmptyString",
+    #     },
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/datasync-2018-11-09/UpdateLocationHdfs AWS API Documentation
@@ -4665,7 +4468,7 @@ module Aws::DataSync
     #   [1]: https://docs.aws.amazon.com/datasync/latest/userguide/create-nfs-location.html#accessing-nfs
     #
     # @option params [String] :server_hostname
-    #   Specifies the DNS name or IP version 4 (IPv4) address of the NFS file
+    #   Specifies the DNS name or IP address (IPv4 or IPv6) of the NFS file
     #   server that your DataSync agent connects to.
     #
     # @option params [Types::OnPremConfig] :on_prem_config
@@ -4729,7 +4532,7 @@ module Aws::DataSync
     #   prefix.
     #
     # @option params [String] :server_hostname
-    #   Specifies the domain name or IP version 4 (IPv4) address of the object
+    #   Specifies the domain name or IP address (IPv4 or IPv6) of the object
     #   storage server that your DataSync agent connects to.
     #
     # @option params [String] :access_key
@@ -4740,9 +4543,23 @@ module Aws::DataSync
     #   Specifies the secret key (for example, a password) if credentials are
     #   required to authenticate with the object storage server.
     #
+    #   <note markdown="1"> If you provide a secret using `SecretKey`, but do not provide secret
+    #   configuration details using `CmkSecretConfig` or `CustomSecretConfig`,
+    #   then DataSync stores the token using your Amazon Web Services
+    #   account's Secrets Manager secret.
+    #
+    #    </note>
+    #
     # @option params [Array<String>] :agent_arns
-    #   Specifies the Amazon Resource Names (ARNs) of the DataSync agents that
-    #   can connect with your object storage system.
+    #   (Optional) Specifies the Amazon Resource Names (ARNs) of the DataSync
+    #   agents that can connect with your object storage system. If you are
+    #   setting up an agentless cross-cloud transfer, you do not need to
+    #   specify a value for this parameter.
+    #
+    #   <note markdown="1"> You cannot add or remove agents from a storage location after you
+    #   initially create it.
+    #
+    #    </note>
     #
     # @option params [String, StringIO, File] :server_certificate
     #   Specifies a certificate chain for DataSync to authenticate with your
@@ -4772,6 +4589,19 @@ module Aws::DataSync
     #   Updating this parameter doesn't interfere with tasks that you have in
     #   progress.
     #
+    # @option params [Types::CmkSecretConfig] :cmk_secret_config
+    #   Specifies configuration information for a DataSync-managed secret,
+    #   such as an authentication token or set of credentials that DataSync
+    #   uses to access a specific transfer location, and a customer-managed
+    #   KMS key.
+    #
+    # @option params [Types::CustomSecretConfig] :custom_secret_config
+    #   Specifies configuration information for a customer-managed secret,
+    #   such as an authentication token or set of credentials that DataSync
+    #   uses to access a specific transfer location, and a customer-managed
+    #   Identity and Access Management (IAM) role that provides access to the
+    #   secret.
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
@@ -4786,6 +4616,14 @@ module Aws::DataSync
     #     secret_key: "ObjectStorageSecretKey",
     #     agent_arns: ["AgentArn"],
     #     server_certificate: "data",
+    #     cmk_secret_config: {
+    #       secret_arn: "SecretArn",
+    #       kms_key_arn: "KmsKeyArn",
+    #     },
+    #     custom_secret_config: {
+    #       secret_arn: "SecretArn",
+    #       secret_access_role_arn: "IamRoleArnOrEmptyString",
+    #     },
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/datasync-2018-11-09/UpdateLocationObjectStorage AWS API Documentation
@@ -4909,15 +4747,13 @@ module Aws::DataSync
     #   [1]: https://docs.aws.amazon.com/datasync/latest/userguide/create-smb-location.html#configuring-smb-permissions
     #
     # @option params [String] :server_hostname
-    #   Specifies the domain name or IP address of the SMB file server that
-    #   your DataSync agent connects to.
+    #   Specifies the domain name or IP address (IPv4 or IPv6) of the SMB file
+    #   server that your DataSync agent connects to.
     #
-    #   Remember the following when configuring this parameter:
+    #   <note markdown="1"> If you're using Kerberos authentication, you must specify a domain
+    #   name.
     #
-    #   * You can't specify an IP version 6 (IPv6) address.
-    #
-    #   * If you're using Kerberos authentication, you must specify a domain
-    #     name.
+    #    </note>
     #
     # @option params [String] :user
     #   Specifies the user name that can mount your SMB file server and has
@@ -4946,6 +4782,19 @@ module Aws::DataSync
     #   transfer. This parameter applies only if `AuthenticationType` is set
     #   to `NTLM`.
     #
+    # @option params [Types::CmkSecretConfig] :cmk_secret_config
+    #   Specifies configuration information for a DataSync-managed secret,
+    #   such as a `Password` or `KerberosKeytab` or set of credentials that
+    #   DataSync uses to access a specific transfer location, and a
+    #   customer-managed KMS key.
+    #
+    # @option params [Types::CustomSecretConfig] :custom_secret_config
+    #   Specifies configuration information for a customer-managed secret,
+    #   such as a `Password` or `KerberosKeytab` or set of credentials that
+    #   DataSync uses to access a specific transfer location, and a
+    #   customer-managed Identity and Access Management (IAM) role that
+    #   provides access to the secret.
+    #
     # @option params [Array<String>] :agent_arns
     #   Specifies the DataSync agent (or agents) that can connect to your SMB
     #   file server. You specify an agent by using its Amazon Resource Name
@@ -4968,9 +4817,9 @@ module Aws::DataSync
     #   [1]: https://docs.aws.amazon.com/datasync/latest/userguide/create-smb-location.html#configuring-smb-permissions
     #
     # @option params [Array<String>] :dns_ip_addresses
-    #   Specifies the IPv4 addresses for the DNS servers that your SMB file
-    #   server belongs to. This parameter applies only if `AuthenticationType`
-    #   is set to `KERBEROS`.
+    #   Specifies the IP addresses (IPv4 or IPv6) for the DNS servers that
+    #   your SMB file server belongs to. This parameter applies only if
+    #   `AuthenticationType` is set to `KERBEROS`.
     #
     #   If you have multiple domains in your environment, configuring this
     #   parameter makes sure that DataSync connects to the right SMB file
@@ -4990,9 +4839,6 @@ module Aws::DataSync
     # @option params [String, StringIO, File] :kerberos_keytab
     #   Specifies your Kerberos key table (keytab) file, which includes
     #   mappings between your Kerberos principal and encryption keys.
-    #
-    #   The file must be base64 encoded. If you're using the CLI, the
-    #   encoding is done for you.
     #
     #   To avoid task execution errors, make sure that the Kerberos principal
     #   that you use to create the keytab file matches exactly what you
@@ -5016,6 +4862,14 @@ module Aws::DataSync
     #     user: "SmbUser",
     #     domain: "SmbDomain",
     #     password: "SmbPassword",
+    #     cmk_secret_config: {
+    #       secret_arn: "SecretArn",
+    #       kms_key_arn: "KmsKeyArn",
+    #     },
+    #     custom_secret_config: {
+    #       secret_arn: "SecretArn",
+    #       secret_access_role_arn: "IamRoleArnOrEmptyString",
+    #     },
     #     agent_arns: ["AgentArn"],
     #     mount_options: {
     #       version: "AUTOMATIC", # accepts AUTOMATIC, SMB2, SMB3, SMB1, SMB2_0
@@ -5033,61 +4887,6 @@ module Aws::DataSync
     # @param [Hash] params ({})
     def update_location_smb(params = {}, options = {})
       req = build_request(:update_location_smb, params)
-      req.send_request(options)
-    end
-
-    # Modifies some configurations of an on-premises storage system resource
-    # that you're using with DataSync Discovery.
-    #
-    # @option params [required, String] :storage_system_arn
-    #   Specifies the ARN of the on-premises storage system that you want
-    #   reconfigure.
-    #
-    # @option params [Types::DiscoveryServerConfiguration] :server_configuration
-    #   Specifies the server name and network port required to connect with
-    #   your on-premises storage system's management interface.
-    #
-    # @option params [Array<String>] :agent_arns
-    #   Specifies the Amazon Resource Name (ARN) of the DataSync agent that
-    #   connects to and reads your on-premises storage system. You can only
-    #   specify one ARN.
-    #
-    # @option params [String] :name
-    #   Specifies a familiar name for your on-premises storage system.
-    #
-    # @option params [String] :cloud_watch_log_group_arn
-    #   Specifies the ARN of the Amazon CloudWatch log group for monitoring
-    #   and logging discovery job events.
-    #
-    # @option params [Types::Credentials] :credentials
-    #   Specifies the user name and password for accessing your on-premises
-    #   storage system's management interface.
-    #
-    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
-    #
-    # @example Request syntax with placeholder values
-    #
-    #   resp = client.update_storage_system({
-    #     storage_system_arn: "StorageSystemArn", # required
-    #     server_configuration: {
-    #       server_hostname: "DiscoveryServerHostname", # required
-    #       server_port: 1,
-    #     },
-    #     agent_arns: ["AgentArn"],
-    #     name: "Name",
-    #     cloud_watch_log_group_arn: "LogGroupArn",
-    #     credentials: {
-    #       username: "PtolemyUsername", # required
-    #       password: "PtolemyPassword", # required
-    #     },
-    #   })
-    #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/datasync-2018-11-09/UpdateStorageSystem AWS API Documentation
-    #
-    # @overload update_storage_system(params = {})
-    # @param [Hash] params ({})
-    def update_storage_system(params = {}, options = {})
-      req = build_request(:update_storage_system, params)
       req.send_request(options)
     end
 
@@ -5367,7 +5166,7 @@ module Aws::DataSync
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-datasync'
-      context[:gem_version] = '1.100.0'
+      context[:gem_version] = '1.127.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

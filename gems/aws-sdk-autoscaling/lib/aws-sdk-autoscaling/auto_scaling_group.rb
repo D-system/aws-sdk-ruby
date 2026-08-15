@@ -41,13 +41,14 @@ module Aws::AutoScaling
       data[:auto_scaling_group_arn]
     end
 
-    # The name of the associated launch configuration.
+    # The name of the associated launch configuration for the Auto Scaling
+    # group.
     # @return [String]
     def launch_configuration_name
       data[:launch_configuration_name]
     end
 
-    # The launch template for the group.
+    # The launch template for the Auto Scaling group.
     # @return [Types::LaunchTemplateSpecification]
     def launch_template
       data[:launch_template]
@@ -59,19 +60,19 @@ module Aws::AutoScaling
       data[:mixed_instances_policy]
     end
 
-    # The minimum size of the group.
+    # The minimum size of the Auto Scaling group.
     # @return [Integer]
     def min_size
       data[:min_size]
     end
 
-    # The maximum size of the group.
+    # The maximum size of the Auto Scaling group.
     # @return [Integer]
     def max_size
       data[:max_size]
     end
 
-    # The desired size of the group.
+    # The desired size of the Auto Scaling group.
     # @return [Integer]
     def desired_capacity
       data[:desired_capacity]
@@ -84,16 +85,24 @@ module Aws::AutoScaling
       data[:predicted_capacity]
     end
 
-    # The duration of the default cooldown period, in seconds.
+    # The duration of the default cooldown period, in seconds, for the Auto
+    # Scaling group.
     # @return [Integer]
     def default_cooldown
       data[:default_cooldown]
     end
 
-    # One or more Availability Zones for the group.
+    # One or more Availability Zones for the Auto Scaling group.
     # @return [Array<String>]
     def availability_zones
       data[:availability_zones]
+    end
+
+    # The Availability Zone IDs where the Auto Scaling group can launch
+    # instances.
+    # @return [Array<String>]
+    def availability_zone_ids
+      data[:availability_zone_ids]
     end
 
     # One or more load balancers associated with the group.
@@ -109,51 +118,53 @@ module Aws::AutoScaling
       data[:target_group_arns]
     end
 
-    # A comma-separated value string of one or more health check types.
+    # One or more comma-separated health check types for the Auto Scaling
+    # group.
     # @return [String]
     def health_check_type
       data[:health_check_type]
     end
 
-    # The duration of the health check grace period, in seconds.
+    # The duration of the health check grace period, in seconds, for the
+    # Auto Scaling group.
     # @return [Integer]
     def health_check_grace_period
       data[:health_check_grace_period]
     end
 
-    # The date and time the group was created.
+    # The date and time the Auto Scaling group was created.
     # @return [Time]
     def created_time
       data[:created_time]
     end
 
-    # The suspended processes associated with the group.
+    # The suspended processes associated with the Auto Scaling group.
     # @return [Array<Types::SuspendedProcess>]
     def suspended_processes
       data[:suspended_processes]
     end
 
-    # The name of the placement group into which to launch your instances,
-    # if any.
+    # The name of the placement group into which to launch EC2 instances for
+    # the Auto Scaling group.
     # @return [String]
     def placement_group
       data[:placement_group]
     end
 
-    # One or more subnet IDs, if applicable, separated by commas.
+    # One or more comma-separated subnet IDs for the Auto Scaling group.
     # @return [String]
     def vpc_zone_identifier
       data[:vpc_zone_identifier]
     end
 
-    # The metrics enabled for the group.
+    # The metrics enabled for the Auto Scaling group.
     # @return [Array<Types::EnabledMetric>]
     def enabled_metrics
       data[:enabled_metrics]
     end
 
-    # The current state of the group when the [DeleteAutoScalingGroup][1]
-    # operation is in progress.
+    # The current state of the Auto Scaling group when the
+    # [DeleteAutoScalingGroup][1] operation is in progress.
     #
     #
     #
@@ -163,14 +174,22 @@ module Aws::AutoScaling
       data[:status]
     end
 
-    # The termination policies for the group.
+    # The termination policies for the Auto Scaling group.
     # @return [Array<String>]
     def termination_policies
       data[:termination_policies]
     end
 
-    # Indicates whether newly launched instances are protected from
-    # termination by Amazon EC2 Auto Scaling when scaling in.
+    # Indicates whether newly launched EC2 instances are protected from
+    # termination when scaling in for the Auto Scaling group.
+    #
+    # For more information about preventing instances from terminating on
+    # scale in, see [Use instance scale-in protection][1] in the *Amazon EC2
+    # Auto Scaling User Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-instance-protection.html
     # @return [Boolean]
     def new_instances_protected_from_scale_in
       data[:new_instances_protected_from_scale_in]
@@ -184,10 +203,8 @@ module Aws::AutoScaling
       data[:service_linked_role_arn]
     end
 
-    # The maximum amount of time, in seconds, that an instance can be in
-    # service.
-    #
-    # Valid Range: Minimum value of 0.
+    # The maximum amount of time, in seconds, that an EC2 instance can be in
+    # service for the Auto Scaling group.
     # @return [Integer]
     def max_instance_lifetime
       data[:max_instance_lifetime]
@@ -225,7 +242,8 @@ module Aws::AutoScaling
       data[:desired_capacity_type]
     end
 
-    # The duration of the default instance warmup, in seconds.
+    # The duration of the default EC2 instance warmup time, in seconds, for
+    # the Auto Scaling group.
     # @return [Integer]
     def default_instance_warmup
       data[:default_instance_warmup]
@@ -243,22 +261,43 @@ module Aws::AutoScaling
       data[:instance_maintenance_policy]
     end
 
-    # The instance capacity distribution across Availability Zones.
+    # The deletion protection setting for the Auto Scaling group.
+    # @return [String]
+    def deletion_protection
+      data[:deletion_protection]
+    end
+
+    # The EC2 instance capacity distribution across Availability Zones for
+    # the Auto Scaling group.
     # @return [Types::AvailabilityZoneDistribution]
     def availability_zone_distribution
       data[:availability_zone_distribution]
     end
 
-    # The Availability Zone impairment policy.
+    # The Availability Zone impairment policy for the Auto Scaling group.
     # @return [Types::AvailabilityZoneImpairmentPolicy]
     def availability_zone_impairment_policy
       data[:availability_zone_impairment_policy]
     end
 
-    # The capacity reservation specification.
+    # The capacity reservation specification for the Auto Scaling group.
     # @return [Types::CapacityReservationSpecification]
     def capacity_reservation_specification
       data[:capacity_reservation_specification]
+    end
+
+    # The instance lifecycle policy for the Auto Scaling group.
+    # @return [Types::InstanceLifecyclePolicy]
+    def instance_lifecycle_policy
+      data[:instance_lifecycle_policy]
+    end
+
+    # The entity that manages the Auto Scaling group, if applicable. When
+    # set, only the designated operator can make changes to the group
+    # configuration.
+    # @return [Types::Operator]
+    def operator
+      data[:operator]
     end
 
     # @!endgroup
@@ -1217,7 +1256,7 @@ module Aws::AutoScaling
     #                 min: 1, # required
     #                 max: 1,
     #               },
-    #               cpu_manufacturers: ["intel"], # accepts intel, amd, amazon-web-services
+    #               cpu_manufacturers: ["intel"], # accepts intel, amd, amazon-web-services, apple
     #               memory_gi_b_per_v_cpu: {
     #                 min: 1.0,
     #                 max: 1.0,
@@ -1270,6 +1309,7 @@ module Aws::AutoScaling
     #                 },
     #               },
     #             },
+    #             image_id: "ImageId",
     #           },
     #         ],
     #       },
@@ -1287,6 +1327,7 @@ module Aws::AutoScaling
     #     desired_capacity: 1,
     #     default_cooldown: 1,
     #     availability_zones: ["XmlStringMaxLen255"],
+    #     availability_zone_ids: ["XmlStringMaxLen255"],
     #     health_check_type: "XmlStringMaxLen32",
     #     health_check_grace_period: 1,
     #     placement_group: "UpdatePlacementGroupParam",
@@ -1304,7 +1345,7 @@ module Aws::AutoScaling
     #       max_healthy_percentage: 1,
     #     },
     #     availability_zone_distribution: {
-    #       capacity_distribution_strategy: "balanced-only", # accepts balanced-only, balanced-best-effort
+    #       capacity_distribution_strategy: "balanced-only", # accepts balanced-only, balanced-best-effort, reservations-then-balanced
     #     },
     #     availability_zone_impairment_policy: {
     #       zonal_shift_enabled: false,
@@ -1318,6 +1359,12 @@ module Aws::AutoScaling
     #         capacity_reservation_resource_group_arns: ["ResourceName"],
     #       },
     #     },
+    #     instance_lifecycle_policy: {
+    #       retention_triggers: {
+    #         terminate_hook_abandon: "retain", # accepts retain, terminate
+    #       },
+    #     },
+    #     deletion_protection: "none", # accepts none, prevent-force-deletion, prevent-all-deletion
     #   })
     # @param [Hash] options ({})
     # @option options [String] :launch_configuration_name
@@ -1368,6 +1415,10 @@ module Aws::AutoScaling
     #   [1]: https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-scaling-cooldowns.html
     # @option options [Array<String>] :availability_zones
     #   One or more Availability Zones for the group.
+    # @option options [Array<String>] :availability_zone_ids
+    #   A list of Availability Zone IDs for the Auto Scaling group. You cannot
+    #   specify both AvailabilityZones and AvailabilityZoneIds in the same
+    #   request.
     # @option options [String] :health_check_type
     #   A comma-separated value string of one or more health check types.
     #
@@ -1397,8 +1448,7 @@ module Aws::AutoScaling
     #   The name of an existing placement group into which to launch your
     #   instances. To remove the placement group setting, pass an empty string
     #   for `placement-group`. For more information about placement groups,
-    #   see [Placement groups][1] in the *Amazon EC2 User Guide for Linux
-    #   Instances*.
+    #   see [Placement groups][1] in the *Amazon EC2 User Guide*.
     #
     #   <note markdown="1"> A *cluster* placement group is a logical grouping of instances within
     #   a single Availability Zone. You cannot specify multiple Availability
@@ -1459,13 +1509,21 @@ module Aws::AutoScaling
     #
     #   [1]: https://docs.aws.amazon.com/autoscaling/ec2/userguide/asg-max-instance-lifetime.html
     # @option options [Boolean] :capacity_rebalance
-    #   Enables or disables Capacity Rebalancing. For more information, see
-    #   [Use Capacity Rebalancing to handle Amazon EC2 Spot Interruptions][1]
-    #   in the *Amazon EC2 Auto Scaling User Guide*.
+    #   Enables or disables Capacity Rebalancing. If Capacity Rebalancing is
+    #   disabled, proactive replacement of at-risk Spot Instances does not
+    #   occur. For more information, see [Capacity Rebalancing in Auto Scaling
+    #   to replace at-risk Spot Instances][1] in the *Amazon EC2 Auto Scaling
+    #   User Guide*.
+    #
+    #   <note markdown="1"> To suspend rebalancing across Availability Zones, use the
+    #   [SuspendProcesses][2] API.
+    #
+    #    </note>
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-capacity-rebalancing.html
+    #   [2]: https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_SuspendedProcess.html
     # @option options [String] :context
     #   Reserved.
     # @option options [String] :desired_capacity_type
@@ -1531,6 +1589,39 @@ module Aws::AutoScaling
     #   [1]: https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-zonal-shift.html
     # @option options [Types::CapacityReservationSpecification] :capacity_reservation_specification
     #   The capacity reservation specification for the Auto Scaling group.
+    # @option options [Types::InstanceLifecyclePolicy] :instance_lifecycle_policy
+    #   The instance lifecycle policy for the Auto Scaling group. This policy
+    #   controls instance behavior when an instance transitions through its
+    #   lifecycle states. Configure retention triggers to specify when
+    #   instances should move to a `Retained` state instead of automatic
+    #   termination.
+    #
+    #   For more information, see [ Control instance retention with instance
+    #   lifecycle policies][1] in the *Amazon EC2 Auto Scaling User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/autoscaling/ec2/userguide/instance-lifecycle-policy.html
+    # @option options [String] :deletion_protection
+    #   The deletion protection setting for the Auto Scaling group. This
+    #   setting helps safeguard your Auto Scaling group and its instances by
+    #   controlling whether the `DeleteAutoScalingGroup` operation is allowed.
+    #   When deletion protection is enabled, users cannot delete the Auto
+    #   Scaling group according to the specified protection level until the
+    #   setting is changed back to a less restrictive level.
+    #
+    #   The valid values are `none`, `prevent-force-deletion`, and
+    #   `prevent-all-deletion`.
+    #
+    #   Default: `none`
+    #
+    #   For more information, see [ Configure deletion protection for your
+    #   Amazon EC2 Auto Scaling resources][1] in the *Amazon EC2 Auto Scaling
+    #   User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/autoscaling/ec2/userguide/resource-deletion-protection.html
     # @return [AutoScalingGroup]
     def update(options = {})
       options = options.merge(auto_scaling_group_name: @name)
@@ -1550,19 +1641,58 @@ module Aws::AutoScaling
     #   activities = auto_scaling_group.activities({
     #     activity_ids: ["XmlString"],
     #     include_deleted_groups: false,
+    #     filters: [
+    #       {
+    #         name: "XmlString",
+    #         values: ["XmlString"],
+    #       },
+    #     ],
     #   })
     # @param [Hash] options ({})
     # @option options [Array<String>] :activity_ids
-    #   The activity IDs of the desired scaling activities. If you omit this
-    #   property, all activities for the past six weeks are described. If
-    #   unknown activities are requested, they are ignored with no error. If
-    #   you specify an Auto Scaling group, the results are limited to that
-    #   group.
+    #   The activity IDs of the desired scaling activities. If unknown
+    #   activity IDs are requested, they are ignored with no error. Only
+    #   activities started within the last six weeks can be returned
+    #   regardless of the activity IDs specified. If other filters are
+    #   specified with the request, only results matching all filter criteria
+    #   can be returned.
     #
     #   Array Members: Maximum number of 50 IDs.
     # @option options [Boolean] :include_deleted_groups
     #   Indicates whether to include scaling activity from deleted Auto
     #   Scaling groups.
+    # @option options [Array<Types::Filter>] :filters
+    #   One or more filters to limit the results based on specific criteria.
+    #   The following filters are supported:
+    #
+    #   * `StartTimeLowerBound` - The earliest scaling activities to return
+    #     based on the activity start time. Scaling activities with a start
+    #     time earlier than this value are not included in the results. Only
+    #     activities started within the last six weeks can be returned
+    #     regardless of the value specified.
+    #
+    #   * `StartTimeUpperBound` - The latest scaling activities to return
+    #     based on the activity start time. Scaling activities with a start
+    #     time later than this value are not included in the results. Only
+    #     activities started within the last six weeks can be returned
+    #     regardless of the value specified.
+    #
+    #   * `Status` - The `StatusCode` value of the scaling activity. This
+    #     filter can only be used in combination with the
+    #     `AutoScalingGroupName` parameter. For valid `StatusCode` values, see
+    #     [Activity][1] in the *Amazon EC2 Auto Scaling API Reference*.
+    #
+    #   `StartTimeLowerBound` and `StartTimeUpperBound` accept ISO 8601
+    #   formatted timestamps. Timestamps without a timezone offset are assumed
+    #   to be UTC.
+    #
+    #   * `2000-01-18T08:15:00Z`
+    #
+    #   * `2000-01-18T16:15:00+08:00`
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_Activity.html
     # @return [Activity::Collection]
     def activities(options = {})
       batches = Enumerator.new do |y|

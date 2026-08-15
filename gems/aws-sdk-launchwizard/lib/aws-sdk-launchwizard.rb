@@ -49,12 +49,13 @@ module Aws::LaunchWizard
   end
   autoload :Client, 'aws-sdk-launchwizard/client'
   autoload :Errors, 'aws-sdk-launchwizard/errors'
+  autoload :Waiters, 'aws-sdk-launchwizard/waiters'
   autoload :Resource, 'aws-sdk-launchwizard/resource'
   autoload :EndpointParameters, 'aws-sdk-launchwizard/endpoint_parameters'
   autoload :EndpointProvider, 'aws-sdk-launchwizard/endpoint_provider'
   autoload :Endpoints, 'aws-sdk-launchwizard/endpoints'
 
-  GEM_VERSION = '1.20.0'
+  GEM_VERSION = '1.40.0'
 
 end
 

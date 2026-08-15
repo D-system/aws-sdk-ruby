@@ -65,6 +65,11 @@
     }
   },
   "shapes":{
+    "AsyncBodyBlob":{
+      "type":"blob",
+      "max":128000,
+      "sensitive":true
+    },
     "BodyBlob":{
       "type":"blob",
       "max":6291456,
@@ -88,6 +93,12 @@
       "pattern":"^[a-zA-Z0-9](-*[a-zA-Z0-9])*"
     },
     "ErrorCode":{"type":"string"},
+    "FilenameHeader":{
+      "type":"string",
+      "max":32,
+      "min":1,
+      "pattern":"^(?!.*\\..*\\.)[a-zA-Z0-9][a-zA-Z0-9-_\\.]*$"
+    },
     "Header":{
       "type":"string",
       "max":1024,
@@ -146,10 +157,7 @@
     },
     "InvokeEndpointAsyncInput":{
       "type":"structure",
-      "required":[
-        "EndpointName",
-        "InputLocation"
-      ],
+      "required":["EndpointName"],
       "members":{
         "EndpointName":{
           "shape":"EndpointName",
@@ -181,6 +189,16 @@
           "location":"header",
           "locationName":"X-Amzn-SageMaker-InputLocation"
         },
+        "S3OutputPathExtension":{
+          "shape":"S3OutputPathExtensionHeader",
+          "location":"header",
+          "locationName":"X-Amzn-SageMaker-S3OutputPathExtension"
+        },
+        "Filename":{
+          "shape":"FilenameHeader",
+          "location":"header",
+          "locationName":"X-Amzn-SageMaker-Filename"
+        },
         "RequestTTLSeconds":{
           "shape":"RequestTTLSecondsHeader",
           "location":"header",
@@ -190,8 +208,10 @@
           "shape":"InvocationTimeoutSecondsHeader",
           "location":"header",
           "locationName":"X-Amzn-SageMaker-InvocationTimeoutSeconds"
-        }
-      }
+        },
+        "Body":{"shape":"AsyncBodyBlob"}
+      },
+      "payload":"Body"
     },
     "InvokeEndpointAsyncOutput":{
       "type":"structure",
@@ -271,6 +291,11 @@
           "shape":"SessionIdOrNewSessionConstantHeader",
           "location":"header",
           "locationName":"X-Amzn-SageMaker-Session-Id"
+        },
+        "PrefixAwareId":{
+          "shape":"PrefixAwareIdHeader",
+          "location":"header",
+          "locationName":"X-Amzn-SageMaker-Prefix-Aware-Id"
         }
       },
       "payload":"Body"
@@ -360,6 +385,11 @@
           "shape":"SessionIdHeader",
           "location":"header",
           "locationName":"X-Amzn-SageMaker-Session-Id"
+        },
+        "PrefixAwareId":{
+          "shape":"PrefixAwareIdHeader",
+          "location":"header",
+          "locationName":"X-Amzn-SageMaker-Prefix-Aware-Id"
         }
       },
       "payload":"Body"
@@ -440,6 +470,12 @@
       },
       "event":true
     },
+    "PrefixAwareIdHeader":{
+      "type":"string",
+      "max":64,
+      "min":1,
+      "pattern":"\\A\\S[\\p{Print}]*\\z"
+    },
     "RequestTTLSecondsHeader":{
       "type":"integer",
       "max":21600,
@@ -453,6 +489,12 @@
         "InternalStreamFailure":{"shape":"InternalStreamFailure"}
       },
       "eventstream":true
+    },
+    "S3OutputPathExtensionHeader":{
+      "type":"string",
+      "max":512,
+      "min":1,
+      "pattern":"^(?!s3:|https:)[a-zA-Z0-9!_.*'()/-]+$"
     },
     "ServiceUnavailable":{
       "type":"structure",

@@ -87,6 +87,67 @@ module Aws::SESV2
       include Aws::Structure
     end
 
+    # Contains metadata and attachment raw content.
+    #
+    # @!attribute [rw] raw_content
+    #   The raw data of the attachment. It needs to be base64-encoded if you
+    #   are accessing Amazon SES directly through the HTTPS interface. If
+    #   you are accessing Amazon SES using an Amazon Web Services SDK, the
+    #   SDK takes care of the base 64-encoding for you.
+    #   @return [String]
+    #
+    # @!attribute [rw] content_disposition
+    #   A standard descriptor indicating how the attachment should be
+    #   rendered in the email. Supported values: `ATTACHMENT` or `INLINE`.
+    #   @return [String]
+    #
+    # @!attribute [rw] file_name
+    #   The file name for the attachment as it will appear in the email.
+    #   Amazon SES restricts certain file extensions. To ensure attachments
+    #   are accepted, check the [Unsupported attachment types][1] in the
+    #   Amazon SES Developer Guide.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/ses/latest/dg/mime-types.html
+    #   @return [String]
+    #
+    # @!attribute [rw] content_description
+    #   A brief description of the attachment content.
+    #   @return [String]
+    #
+    # @!attribute [rw] content_id
+    #   Unique identifier for the attachment, used for referencing
+    #   attachments with INLINE disposition in HTML content.
+    #   @return [String]
+    #
+    # @!attribute [rw] content_transfer_encoding
+    #   Specifies how the attachment is encoded. Supported values: `BASE64`,
+    #   `QUOTED_PRINTABLE`, `SEVEN_BIT`.
+    #   @return [String]
+    #
+    # @!attribute [rw] content_type
+    #   The MIME type of the attachment.
+    #
+    #   <note markdown="1"> Example: `application/pdf`, `image/jpeg`
+    #
+    #    </note>
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/Attachment AWS API Documentation
+    #
+    class Attachment < Struct.new(
+      :raw_content,
+      :content_disposition,
+      :file_name,
+      :content_description,
+      :content_id,
+      :content_transfer_encoding,
+      :content_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The input you provided is invalid.
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/BadRequestException AWS API Documentation
@@ -500,7 +561,7 @@ module Aws::SESV2
     #   * It can only contain ASCII letters (a–z, A–Z), numbers (0–9),
     #     underscores (\_), or dashes (-).
     #
-    #   * It can contain no more than 256 characters.
+    #   * It can contain no more than 255 characters.
     #   @return [String]
     #
     # @!attribute [rw] dimension_value_source
@@ -520,7 +581,7 @@ module Aws::SESV2
     #   * Can only contain ASCII letters (a–z, A–Z), numbers (0–9),
     #     underscores (\_), or dashes (-), at signs (@), and periods (.).
     #
-    #   * It can contain no more than 256 characters.
+    #   * It can contain no more than 255 characters.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/CloudWatchDimensionConfiguration AWS API Documentation
@@ -741,7 +802,9 @@ module Aws::SESV2
     #
     # @!attribute [rw] suppression_options
     #   An object that contains information about the suppression list
-    #   preferences for your account.
+    #   preferences for the configuration set. You can optionally include a
+    #   `SuppressionScope` to override the tenant or account suppression
+    #   scope for emails sent using this configuration set.
     #   @return [Types::SuppressionOptions]
     #
     # @!attribute [rw] vdm_options
@@ -873,6 +936,11 @@ module Aws::SESV2
     #   [1]: https://docs.aws.amazon.com/ses/latest/dg/creating-identities.html#send-email-verify-address-custom-faq
     #   @return [String]
     #
+    # @!attribute [rw] tags
+    #   An array of objects that define the tags (keys and values) to
+    #   associate with the custom verification email template.
+    #   @return [Array<Types::Tag>]
+    #
     # @!attribute [rw] success_redirection_url
     #   The URL that the recipient of the verification email is sent to if
     #   his or her address is successfully verified.
@@ -890,6 +958,7 @@ module Aws::SESV2
       :from_email_address,
       :template_subject,
       :template_content,
+      :tags,
       :success_redirection_url,
       :failure_redirection_url)
       SENSITIVE = []
@@ -1145,11 +1214,17 @@ module Aws::SESV2
     #   HTML part, and a text-only part.
     #   @return [Types::EmailTemplateContent]
     #
+    # @!attribute [rw] tags
+    #   An array of objects that define the tags (keys and values) to
+    #   associate with the email template.
+    #   @return [Array<Types::Tag>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/CreateEmailTemplateRequest AWS API Documentation
     #
     class CreateEmailTemplateRequest < Struct.new(
       :template_name,
-      :template_content)
+      :template_content,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1287,6 +1362,119 @@ module Aws::SESV2
       include Aws::Structure
     end
 
+    # Represents a request to create a tenant.
+    #
+    # *Tenants* are logical containers that group related SES resources
+    # together. Each tenant can have its own set of resources like email
+    # identities, configuration sets, and templates, along with reputation
+    # metrics and sending status. This helps isolate and manage email
+    # sending for different customers or business units within your Amazon
+    # SES API v2 account.
+    #
+    # @!attribute [rw] tenant_name
+    #   The name of the tenant to create. The name can contain up to 64
+    #   alphanumeric characters, including letters, numbers, hyphens (-) and
+    #   underscores (\_) only.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   An array of objects that define the tags (keys and values) to
+    #   associate with the tenant
+    #   @return [Array<Types::Tag>]
+    #
+    # @!attribute [rw] suppression_attributes
+    #   An object that contains information about the suppression list
+    #   preferences for the tenant. Use this to configure tenant-level
+    #   suppression at creation time.
+    #   @return [Types::TenantSuppressionAttributes]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/CreateTenantRequest AWS API Documentation
+    #
+    class CreateTenantRequest < Struct.new(
+      :tenant_name,
+      :tags,
+      :suppression_attributes)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents a request to associate a resource with a tenant.
+    #
+    # Resources can be email identities, configuration sets, or email
+    # templates. When you associate a resource with a tenant, you can use
+    # that resource when sending emails on behalf of that tenant.
+    #
+    # @!attribute [rw] tenant_name
+    #   The name of the tenant to associate the resource with.
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_arn
+    #   The Amazon Resource Name (ARN) of the resource to associate with the
+    #   tenant.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/CreateTenantResourceAssociationRequest AWS API Documentation
+    #
+    class CreateTenantResourceAssociationRequest < Struct.new(
+      :tenant_name,
+      :resource_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # If the action is successful, the service sends back an HTTP 200
+    # response with an empty HTTP body.
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/CreateTenantResourceAssociationResponse AWS API Documentation
+    #
+    class CreateTenantResourceAssociationResponse < Aws::EmptyStructure; end
+
+    # Information about a newly created tenant.
+    #
+    # @!attribute [rw] tenant_name
+    #   The name of the tenant.
+    #   @return [String]
+    #
+    # @!attribute [rw] tenant_id
+    #   A unique identifier for the tenant.
+    #   @return [String]
+    #
+    # @!attribute [rw] tenant_arn
+    #   The Amazon Resource Name (ARN) of the tenant.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_timestamp
+    #   The date and time when the tenant was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] tags
+    #   An array of objects that define the tags (keys and values)
+    #   associated with the tenant.
+    #   @return [Array<Types::Tag>]
+    #
+    # @!attribute [rw] sending_status
+    #   The status of email sending capability for the tenant.
+    #   @return [String]
+    #
+    # @!attribute [rw] suppression_attributes
+    #   An object that contains the suppression list preferences for a
+    #   tenant.
+    #   @return [Types::TenantSuppressionAttributes]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/CreateTenantResponse AWS API Documentation
+    #
+    class CreateTenantResponse < Struct.new(
+      :tenant_name,
+      :tenant_id,
+      :tenant_arn,
+      :created_timestamp,
+      :tags,
+      :sending_status,
+      :suppression_attributes)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains information about a custom verification email template.
     #
     # @!attribute [rw] template_name
@@ -1419,12 +1607,23 @@ module Aws::SESV2
     #
     #   * `DONE` – The dedicated IP warm-up process is complete, and the IP
     #     address is ready to use.
+    #
+    #   * `NOT_APPLICABLE` – The warm-up status doesn't apply to this IP
+    #     address. This status is used for IP addresses in managed dedicated
+    #     IP pools, where Amazon SES automatically handles the warm-up
+    #     process.
     #   @return [String]
     #
     # @!attribute [rw] warmup_percentage
-    #   Indicates how complete the dedicated IP warm-up process is. When
-    #   this value equals 1, the address has completed the warm-up process
-    #   and is ready for use.
+    #   Indicates the progress of your dedicated IP warm-up:
+    #
+    #   * `0-100` – For standard dedicated IP addresses, this shows the
+    #     warm-up completion percentage. A value of 100 means the IP address
+    #     is fully warmed up and ready for use.
+    #
+    #   * `-1` – Appears for IP addresses in managed dedicated pools where
+    #     Amazon SES automatically handles the warm-up process, making the
+    #     percentage not applicable.
     #   @return [Integer]
     #
     # @!attribute [rw] pool_name
@@ -1725,17 +1924,24 @@ module Aws::SESV2
     end
 
     # A request to remove an email address from the suppression list for
-    # your account.
+    # your account or for a specific tenant.
     #
     # @!attribute [rw] email_address
-    #   The suppressed email destination to remove from the account
-    #   suppression list.
+    #   The suppressed email destination to remove from the suppression list
+    #   for your account or for the specified tenant.
+    #   @return [String]
+    #
+    # @!attribute [rw] tenant_name
+    #   The name of the tenant whose suppression list you want to remove the
+    #   address from. If you omit this parameter, the address is removed
+    #   from the account-level suppression list.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/DeleteSuppressedDestinationRequest AWS API Documentation
     #
     class DeleteSuppressedDestinationRequest < Struct.new(
-      :email_address)
+      :email_address,
+      :tenant_name)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1746,6 +1952,55 @@ module Aws::SESV2
     # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/DeleteSuppressedDestinationResponse AWS API Documentation
     #
     class DeleteSuppressedDestinationResponse < Aws::EmptyStructure; end
+
+    # Represents a request to delete a tenant.
+    #
+    # @!attribute [rw] tenant_name
+    #   The name of the tenant to delete.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/DeleteTenantRequest AWS API Documentation
+    #
+    class DeleteTenantRequest < Struct.new(
+      :tenant_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents a request to delete an association between a tenant and a
+    # resource.
+    #
+    # @!attribute [rw] tenant_name
+    #   The name of the tenant to remove the resource association from.
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_arn
+    #   The Amazon Resource Name (ARN) of the resource to remove from the
+    #   tenant association.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/DeleteTenantResourceAssociationRequest AWS API Documentation
+    #
+    class DeleteTenantResourceAssociationRequest < Struct.new(
+      :tenant_name,
+      :resource_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # If the action is successful, the service sends back an HTTP 200
+    # response with an empty HTTP body.
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/DeleteTenantResourceAssociationResponse AWS API Documentation
+    #
+    class DeleteTenantResourceAssociationResponse < Aws::EmptyStructure; end
+
+    # If the action is successful, the service sends back an HTTP 200
+    # response with an empty HTTP body.
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/DeleteTenantResponse AWS API Documentation
+    #
+    class DeleteTenantResponse < Aws::EmptyStructure; end
 
     # An object that contains metadata related to a predictive inbox
     # placement test.
@@ -1952,6 +2207,25 @@ module Aws::SESV2
     #   [1]: https://docs.aws.amazon.com/ses/latest/DeveloperGuide/easy-dkim.html
     #   @return [Array<String>]
     #
+    # @!attribute [rw] signing_hosted_zone
+    #   The hosted zone where Amazon SES publishes the DKIM public key TXT
+    #   records for this email identity. This value indicates the DNS zone
+    #   that customers must reference when configuring their CNAME records
+    #   for DKIM authentication.
+    #
+    #   When configuring DKIM for your domain, create CNAME records in your
+    #   DNS that point to the selectors in this hosted zone. For example:
+    #
+    #   ` selector1._domainkey.yourdomain.com CNAME
+    #   selector1.<SigningHostedZone> `
+    #
+    #   ` selector2._domainkey.yourdomain.com CNAME
+    #   selector2.<SigningHostedZone> `
+    #
+    #   ` selector3._domainkey.yourdomain.com CNAME
+    #   selector3.<SigningHostedZone> `
+    #   @return [String]
+    #
     # @!attribute [rw] signing_attributes_origin
     #   A string that indicates how DKIM was configured for the identity.
     #   These are the possible values:
@@ -1973,6 +2247,11 @@ module Aws::SESV2
     #   * `AWS_SES_AP_SOUTH_1` – Indicates that DKIM was configured for the
     #     identity by replicating signing attributes from a parent identity
     #     in Asia Pacific (Mumbai) region using Deterministic Easy-DKIM
+    #     (DEED).
+    #
+    #   * `AWS_SES_AP_SOUTH_2` – Indicates that DKIM was configured for the
+    #     identity by replicating signing attributes from a parent identity
+    #     in Asia Pacific (Hyderabad) region using Deterministic Easy-DKIM
     #     (DEED).
     #
     #   * `AWS_SES_EU_WEST_3` – Indicates that DKIM was configured for the
@@ -2001,6 +2280,11 @@ module Aws::SESV2
     #     identity in Asia Pacific (Seoul) region using Deterministic
     #     Easy-DKIM (DEED).
     #
+    #   * `AWS_SES_ME_CENTRAL_1` – Indicates that DKIM was configured for
+    #     the identity by replicating signing attributes from a parent
+    #     identity in Middle East (UAE) region using Deterministic Easy-DKIM
+    #     (DEED).
+    #
     #   * `AWS_SES_ME_SOUTH_1` – Indicates that DKIM was configured for the
     #     identity by replicating signing attributes from a parent identity
     #     in Middle East (Bahrain) region using Deterministic Easy-DKIM
@@ -2026,6 +2310,10 @@ module Aws::SESV2
     #     identity in Canada (Central) region using Deterministic Easy-DKIM
     #     (DEED).
     #
+    #   * `AWS_SES_CA_WEST_1` – Indicates that DKIM was configured for the
+    #     identity by replicating signing attributes from a parent identity
+    #     in Canada (Calgary) region using Deterministic Easy-DKIM (DEED).
+    #
     #   * `AWS_SES_AP_SOUTHEAST_1` – Indicates that DKIM was configured for
     #     the identity by replicating signing attributes from a parent
     #     identity in Asia Pacific (Singapore) region using Deterministic
@@ -2041,10 +2329,20 @@ module Aws::SESV2
     #     identity in Asia Pacific (Jakarta) region using Deterministic
     #     Easy-DKIM (DEED).
     #
+    #   * `AWS_SES_AP_SOUTHEAST_5` – Indicates that DKIM was configured for
+    #     the identity by replicating signing attributes from a parent
+    #     identity in Asia Pacific (Malaysia) region using Deterministic
+    #     Easy-DKIM (DEED).
+    #
     #   * `AWS_SES_EU_CENTRAL_1` – Indicates that DKIM was configured for
     #     the identity by replicating signing attributes from a parent
     #     identity in Europe (Frankfurt) region using Deterministic
     #     Easy-DKIM (DEED).
+    #
+    #   * `AWS_SES_EU_CENTRAL_2` – Indicates that DKIM was configured for
+    #     the identity by replicating signing attributes from a parent
+    #     identity in Europe (Zurich) region using Deterministic Easy-DKIM
+    #     (DEED).
     #
     #   * `AWS_SES_US_EAST_1` – Indicates that DKIM was configured for the
     #     identity by replicating signing attributes from a parent identity
@@ -2063,6 +2361,16 @@ module Aws::SESV2
     #   * `AWS_SES_US_WEST_2` – Indicates that DKIM was configured for the
     #     identity by replicating signing attributes from a parent identity
     #     in US West (Oregon) region using Deterministic Easy-DKIM (DEED).
+    #
+    #   * `AWS_SES_US_GOV_EAST_1` – Indicates that DKIM was configured for
+    #     the identity by replicating signing attributes from a parent
+    #     identity in AWS GovCloud (US-East) region using Deterministic
+    #     Easy-DKIM (DEED).
+    #
+    #   * `AWS_SES_US_GOV_WEST_1` – Indicates that DKIM was configured for
+    #     the identity by replicating signing attributes from a parent
+    #     identity in AWS GovCloud (US-West) region using Deterministic
+    #     Easy-DKIM (DEED).
     #
     #
     #
@@ -2089,6 +2397,7 @@ module Aws::SESV2
       :signing_enabled,
       :status,
       :tokens,
+      :signing_hosted_zone,
       :signing_attributes_origin,
       :next_signing_key_length,
       :current_signing_key_length,
@@ -2152,6 +2461,10 @@ module Aws::SESV2
     #     replicating from a parent identity in Asia Pacific (Mumbai) region
     #     using Deterministic Easy-DKIM (DEED).
     #
+    #   * `AWS_SES_AP_SOUTH_2` – Configure DKIM for the identity by
+    #     replicating from a parent identity in Asia Pacific (Hyderabad)
+    #     region using Deterministic Easy-DKIM (DEED).
+    #
     #   * `AWS_SES_EU_WEST_3` – Configure DKIM for the identity by
     #     replicating from a parent identity in Europe (Paris) region using
     #     Deterministic Easy-DKIM (DEED).
@@ -2176,6 +2489,10 @@ module Aws::SESV2
     #     replicating from a parent identity in Asia Pacific (Seoul) region
     #     using Deterministic Easy-DKIM (DEED).
     #
+    #   * `AWS_SES_ME_CENTRAL_1` – Configure DKIM for the identity by
+    #     replicating from a parent identity in Middle East (UAE) region
+    #     using Deterministic Easy-DKIM (DEED).
+    #
     #   * `AWS_SES_ME_SOUTH_1` – Configure DKIM for the identity by
     #     replicating from a parent identity in Middle East (Bahrain) region
     #     using Deterministic Easy-DKIM (DEED).
@@ -2196,6 +2513,10 @@ module Aws::SESV2
     #     replicating from a parent identity in Canada (Central) region
     #     using Deterministic Easy-DKIM (DEED).
     #
+    #   * `AWS_SES_CA_WEST_1` – Configure DKIM for the identity by
+    #     replicating from a parent identity in Canada (Calgary) region
+    #     using Deterministic Easy-DKIM (DEED).
+    #
     #   * `AWS_SES_AP_SOUTHEAST_1` – Configure DKIM for the identity by
     #     replicating from a parent identity in Asia Pacific (Singapore)
     #     region using Deterministic Easy-DKIM (DEED).
@@ -2208,9 +2529,17 @@ module Aws::SESV2
     #     replicating from a parent identity in Asia Pacific (Jakarta)
     #     region using Deterministic Easy-DKIM (DEED).
     #
+    #   * `AWS_SES_AP_SOUTHEAST_5` – Configure DKIM for the identity by
+    #     replicating from a parent identity in Asia Pacific (Malaysia)
+    #     region using Deterministic Easy-DKIM (DEED).
+    #
     #   * `AWS_SES_EU_CENTRAL_1` – Configure DKIM for the identity by
     #     replicating from a parent identity in Europe (Frankfurt) region
     #     using Deterministic Easy-DKIM (DEED).
+    #
+    #   * `AWS_SES_EU_CENTRAL_2` – Configure DKIM for the identity by
+    #     replicating from a parent identity in Europe (Zurich) region using
+    #     Deterministic Easy-DKIM (DEED).
     #
     #   * `AWS_SES_US_EAST_1` – Configure DKIM for the identity by
     #     replicating from a parent identity in US East (N. Virginia) region
@@ -2227,6 +2556,14 @@ module Aws::SESV2
     #   * `AWS_SES_US_WEST_2` – Configure DKIM for the identity by
     #     replicating from a parent identity in US West (Oregon) region
     #     using Deterministic Easy-DKIM (DEED).
+    #
+    #   * `AWS_SES_US_GOV_EAST_1` – Configure DKIM for the identity by
+    #     replicating from a parent identity in AWS GovCloud (US-East)
+    #     region using Deterministic Easy-DKIM (DEED).
+    #
+    #   * `AWS_SES_US_GOV_WEST_1` – Configure DKIM for the identity by
+    #     replicating from a parent identity in AWS GovCloud (US-West)
+    #     region using Deterministic Easy-DKIM (DEED).
     #
     #
     #
@@ -2420,16 +2757,75 @@ module Aws::SESV2
       include Aws::Structure
     end
 
+    # Contains individual validation checks performed on an email address.
+    #
+    # @!attribute [rw] has_valid_syntax
+    #   Checks that the email address follows proper RFC standards and
+    #   contains valid characters in the correct format.
+    #   @return [Types::EmailAddressInsightsVerdict]
+    #
+    # @!attribute [rw] has_valid_dns_records
+    #   Checks that the domain exists, has valid DNS records, and is
+    #   conﬁgured to receive email.
+    #   @return [Types::EmailAddressInsightsVerdict]
+    #
+    # @!attribute [rw] mailbox_exists
+    #   Checks that the mailbox exists and can receive messages without
+    #   actually sending an email.
+    #   @return [Types::EmailAddressInsightsVerdict]
+    #
+    # @!attribute [rw] is_role_address
+    #   Identiﬁes role-based addresses (such as admin@, support@, or info@)
+    #   that may have lower engagement rates.
+    #   @return [Types::EmailAddressInsightsVerdict]
+    #
+    # @!attribute [rw] is_disposable
+    #   Checks disposable or temporary email addresses that could negatively
+    #   impact your sender reputation.
+    #   @return [Types::EmailAddressInsightsVerdict]
+    #
+    # @!attribute [rw] is_random_input
+    #   Checks if the input appears to be random text.
+    #   @return [Types::EmailAddressInsightsVerdict]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/EmailAddressInsightsMailboxEvaluations AWS API Documentation
+    #
+    class EmailAddressInsightsMailboxEvaluations < Struct.new(
+      :has_valid_syntax,
+      :has_valid_dns_records,
+      :mailbox_exists,
+      :is_role_address,
+      :is_disposable,
+      :is_random_input)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains the overall validation verdict for an email address.
+    #
+    # @!attribute [rw] confidence_verdict
+    #   The confidence level of the validation verdict.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/EmailAddressInsightsVerdict AWS API Documentation
+    #
+    class EmailAddressInsightsVerdict < Struct.new(
+      :confidence_verdict)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # An object that defines the entire content of the email, including the
-    # message headers and the body content. You can create a simple email
-    # message, in which you specify the subject and the text and HTML
-    # versions of the message body. You can also create raw messages, in
-    # which you specify a complete MIME-formatted message. Raw messages can
-    # include attachments and custom headers.
+    # message headers, body content, and attachments. For a simple email
+    # message, you specify the subject and provide both text and HTML
+    # versions of the message body. You can also add attachments to simple
+    # and templated messages. For a raw message, you provide a complete
+    # MIME-formatted message, which can include custom headers and
+    # attachments.
     #
     # @!attribute [rw] simple
-    #   The simple email message. The message consists of a subject and a
-    #   message body.
+    #   The simple email message. The message consists of a subject, message
+    #   body and attachments list.
     #   @return [Types::Message]
     #
     # @!attribute [rw] raw
@@ -2620,8 +3016,7 @@ module Aws::SESV2
     #     rendering issue. This event type can occur when template data is
     #     missing, or when there is a mismatch between template parameters
     #     and data. (This event type only occurs when you send email using
-    #     the [ `SendTemplatedEmail` ][1] or [ `SendBulkTemplatedEmail` ][2]
-    #     API operations.)
+    #     the [ `SendEmail` ][1] or [ `SendBulkEmail` ][2] API operations.)
     #
     #   * `DELIVERY_DELAY` - The email couldn't be delivered to the
     #     recipient’s mail server because a temporary issue occurred.
@@ -2635,8 +3030,8 @@ module Aws::SESV2
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/ses/latest/APIReference/API_SendTemplatedEmail.html
-    #   [2]: https://docs.aws.amazon.com/ses/latest/APIReference/API_SendBulkTemplatedEmail.html
+    #   [1]: https://docs.aws.amazon.com/ses/latest/APIReference-V2/API_SendEmail.html
+    #   [2]: https://docs.aws.amazon.com/ses/latest/APIReference-V2/API_SendBulkEmail.html
     #   [3]: https://docs.aws.amazon.com/ses/latest/dg/sending-email-subscription-management.html
     #   @return [Array<String>]
     #
@@ -3052,6 +3447,12 @@ module Aws::SESV2
     #   The VDM attributes that apply to your Amazon SES account.
     #   @return [Types::VdmAttributes]
     #
+    # @!attribute [rw] pricing_attributes
+    #   The pricing attributes that apply to your Amazon SES account,
+    #   including the currently active pricing plan and any scheduled
+    #   change.
+    #   @return [Types::PricingAttributes]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/GetAccountResponse AWS API Documentation
     #
     class GetAccountResponse < Struct.new(
@@ -3062,7 +3463,8 @@ module Aws::SESV2
       :sending_enabled,
       :suppression_attributes,
       :details,
-      :vdm_attributes)
+      :vdm_attributes,
+      :pricing_attributes)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3177,7 +3579,7 @@ module Aws::SESV2
     #
     # @!attribute [rw] suppression_options
     #   An object that contains information about the suppression list
-    #   preferences for your account.
+    #   preferences for your account or for a specific tenant.
     #   @return [Types::SuppressionOptions]
     #
     # @!attribute [rw] vdm_options
@@ -3357,6 +3759,11 @@ module Aws::SESV2
     #   The content of the custom verification email.
     #   @return [String]
     #
+    # @!attribute [rw] tags
+    #   An array of objects that define the tags (keys and values) that are
+    #   associated with the custom verification email template.
+    #   @return [Array<Types::Tag>]
+    #
     # @!attribute [rw] success_redirection_url
     #   The URL that the recipient of the verification email is sent to if
     #   his or her address is successfully verified.
@@ -3374,6 +3781,7 @@ module Aws::SESV2
       :from_email_address,
       :template_subject,
       :template_content,
+      :tags,
       :success_redirection_url,
       :failure_redirection_url)
       SENSITIVE = []
@@ -3704,6 +4112,34 @@ module Aws::SESV2
       include Aws::Structure
     end
 
+    # A request to return validation insights about an email address.
+    #
+    # @!attribute [rw] email_address
+    #   The email address to analyze for validation insights.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/GetEmailAddressInsightsRequest AWS API Documentation
+    #
+    class GetEmailAddressInsightsRequest < Struct.new(
+      :email_address)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Validation insights about an email address.
+    #
+    # @!attribute [rw] mailbox_validation
+    #   Detailed validation results for the email address.
+    #   @return [Types::MailboxValidation]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/GetEmailAddressInsightsResponse AWS API Documentation
+    #
+    class GetEmailAddressInsightsResponse < Struct.new(
+      :mailbox_validation)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # A request to return the policies of an email identity.
     #
     # @!attribute [rw] email_identity
@@ -3869,11 +4305,17 @@ module Aws::SESV2
     #   HTML part, and a text-only part.
     #   @return [Types::EmailTemplateContent]
     #
+    # @!attribute [rw] tags
+    #   An array of objects that define the tags (keys and values) that are
+    #   associated with the email template.
+    #   @return [Array<Types::Tag>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/GetEmailTemplateResponse AWS API Documentation
     #
     class GetEmailTemplateResponse < Struct.new(
       :template_name,
-      :template_content)
+      :template_content,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4139,17 +4581,62 @@ module Aws::SESV2
       include Aws::Structure
     end
 
+    # Represents a request to retrieve information about a specific
+    # reputation entity.
+    #
+    # @!attribute [rw] reputation_entity_reference
+    #   The unique identifier for the reputation entity. For resource-type
+    #   entities, this is the Amazon Resource Name (ARN) of the resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] reputation_entity_type
+    #   The type of reputation entity. Currently, only `RESOURCE` type
+    #   entities are supported.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/GetReputationEntityRequest AWS API Documentation
+    #
+    class GetReputationEntityRequest < Struct.new(
+      :reputation_entity_reference,
+      :reputation_entity_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Information about the requested reputation entity.
+    #
+    # @!attribute [rw] reputation_entity
+    #   The reputation entity information, including status records, policy
+    #   configuration, and reputation impact.
+    #   @return [Types::ReputationEntity]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/GetReputationEntityResponse AWS API Documentation
+    #
+    class GetReputationEntityResponse < Struct.new(
+      :reputation_entity)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # A request to retrieve information about an email address that's on
-    # the suppression list for your account.
+    # the suppression list for your account or for a specific tenant.
     #
     # @!attribute [rw] email_address
-    #   The email address that's on the account suppression list.
+    #   The email address that's on the suppression list for your account
+    #   or for the specified tenant.
+    #   @return [String]
+    #
+    # @!attribute [rw] tenant_name
+    #   The name of the tenant whose suppression list you want to query. If
+    #   you omit this parameter, the operation targets the account-level
+    #   suppression list.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/GetSuppressedDestinationRequest AWS API Documentation
     #
     class GetSuppressedDestinationRequest < Struct.new(
-      :email_address)
+      :email_address,
+      :tenant_name)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4164,6 +4651,34 @@ module Aws::SESV2
     #
     class GetSuppressedDestinationResponse < Struct.new(
       :suppressed_destination)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents a request to get information about a specific tenant.
+    #
+    # @!attribute [rw] tenant_name
+    #   The name of the tenant to retrieve information about.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/GetTenantRequest AWS API Documentation
+    #
+    class GetTenantRequest < Struct.new(
+      :tenant_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Information about a specific tenant.
+    #
+    # @!attribute [rw] tenant
+    #   A structure that contains details about the tenant.
+    #   @return [Types::Tenant]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/GetTenantResponse AWS API Documentation
+    #
+    class GetTenantResponse < Struct.new(
+      :tenant)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5233,11 +5748,126 @@ module Aws::SESV2
       include Aws::Structure
     end
 
+    # Represents a request to list reputation entities with optional
+    # filtering.
+    #
+    # @!attribute [rw] filter
+    #   An object that contains filters to apply when listing reputation
+    #   entities. You can filter by entity type, reputation impact, sending
+    #   status, or entity reference prefix.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] next_token
+    #   A token returned from a previous call to `ListReputationEntities` to
+    #   indicate the position in the list of reputation entities.
+    #   @return [String]
+    #
+    # @!attribute [rw] page_size
+    #   The number of results to show in a single call to
+    #   `ListReputationEntities`. If the number of results is larger than
+    #   the number you specified in this parameter, then the response
+    #   includes a `NextToken` element, which you can use to obtain
+    #   additional results.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/ListReputationEntitiesRequest AWS API Documentation
+    #
+    class ListReputationEntitiesRequest < Struct.new(
+      :filter,
+      :next_token,
+      :page_size)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A list of reputation entities in your account.
+    #
+    # @!attribute [rw] reputation_entities
+    #   An array that contains information about the reputation entities in
+    #   your account.
+    #   @return [Array<Types::ReputationEntity>]
+    #
+    # @!attribute [rw] next_token
+    #   A token that indicates that there are additional reputation entities
+    #   to list. To view additional reputation entities, issue another
+    #   request to `ListReputationEntities`, and pass this token in the
+    #   `NextToken` parameter.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/ListReputationEntitiesResponse AWS API Documentation
+    #
+    class ListReputationEntitiesResponse < Struct.new(
+      :reputation_entities,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents a request to list tenants associated with a specific
+    # resource.
+    #
+    # @!attribute [rw] resource_arn
+    #   The Amazon Resource Name (ARN) of the resource to list associated
+    #   tenants for.
+    #   @return [String]
+    #
+    # @!attribute [rw] page_size
+    #   The number of results to show in a single call to
+    #   `ListResourceTenants`. If the number of results is larger than the
+    #   number you specified in this parameter, then the response includes a
+    #   `NextToken` element, which you can use to obtain additional results.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   A token returned from a previous call to `ListResourceTenants` to
+    #   indicate the position in the list of resource tenants.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/ListResourceTenantsRequest AWS API Documentation
+    #
+    class ListResourceTenantsRequest < Struct.new(
+      :resource_arn,
+      :page_size,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Information about tenants associated with a specific resource.
+    #
+    # @!attribute [rw] resource_tenants
+    #   An array that contains information about each tenant associated with
+    #   the resource.
+    #   @return [Array<Types::ResourceTenantMetadata>]
+    #
+    # @!attribute [rw] next_token
+    #   A token that indicates that there are additional tenants to list. To
+    #   view additional tenants, issue another request to
+    #   `ListResourceTenants`, and pass this token in the `NextToken`
+    #   parameter.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/ListResourceTenantsResponse AWS API Documentation
+    #
+    class ListResourceTenantsResponse < Struct.new(
+      :resource_tenants,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # A request to obtain a list of email destinations that are on the
-    # suppression list for your account.
+    # suppression list for your account or for a specific tenant.
+    #
+    # @!attribute [rw] tenant_name
+    #   The name of the tenant whose suppression list you want to retrieve.
+    #   If you omit this parameter, the operation targets the account-level
+    #   suppression list.
+    #   @return [String]
     #
     # @!attribute [rw] reasons
-    #   The factors that caused the email address to be added to .
+    #   The factors that caused the email address to be added to the
+    #   suppression list for your account or for a specific tenant.
     #   @return [Array<String>]
     #
     # @!attribute [rw] start_date
@@ -5269,6 +5899,7 @@ module Aws::SESV2
     # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/ListSuppressedDestinationsRequest AWS API Documentation
     #
     class ListSuppressedDestinationsRequest < Struct.new(
+      :tenant_name,
       :reasons,
       :start_date,
       :end_date,
@@ -5287,9 +5918,10 @@ module Aws::SESV2
     #
     # @!attribute [rw] next_token
     #   A token that indicates that there are additional email addresses on
-    #   the suppression list for your account. To view additional suppressed
-    #   addresses, issue another request to `ListSuppressedDestinations`,
-    #   and pass this token in the `NextToken` parameter.
+    #   the suppression list for your account or for the specified tenant.
+    #   To view additional suppressed addresses, issue another request to
+    #   `ListSuppressedDestinations`, and pass this token in the `NextToken`
+    #   parameter.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/ListSuppressedDestinationsResponse AWS API Documentation
@@ -5324,6 +5956,110 @@ module Aws::SESV2
     #
     class ListTagsForResourceResponse < Struct.new(
       :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents a request to list resources associated with a specific
+    # tenant.
+    #
+    # @!attribute [rw] tenant_name
+    #   The name of the tenant to list resources for.
+    #   @return [String]
+    #
+    # @!attribute [rw] filter
+    #   A map of filter keys and values for filtering the list of tenant
+    #   resources. Currently, the only supported filter key is
+    #   `RESOURCE_TYPE`.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] page_size
+    #   The number of results to show in a single call to
+    #   `ListTenantResources`. If the number of results is larger than the
+    #   number you specified in this parameter, then the response includes a
+    #   `NextToken` element, which you can use to obtain additional results.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   A token returned from a previous call to `ListTenantResources` to
+    #   indicate the position in the list of tenant resources.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/ListTenantResourcesRequest AWS API Documentation
+    #
+    class ListTenantResourcesRequest < Struct.new(
+      :tenant_name,
+      :filter,
+      :page_size,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Information about resources associated with a specific tenant.
+    #
+    # @!attribute [rw] tenant_resources
+    #   An array that contains information about each resource associated
+    #   with the tenant.
+    #   @return [Array<Types::TenantResource>]
+    #
+    # @!attribute [rw] next_token
+    #   A token that indicates that there are additional resources to list.
+    #   To view additional resources, issue another request to
+    #   `ListTenantResources`, and pass this token in the `NextToken`
+    #   parameter.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/ListTenantResourcesResponse AWS API Documentation
+    #
+    class ListTenantResourcesResponse < Struct.new(
+      :tenant_resources,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents a request to list all tenants associated with your account
+    # in the current Amazon Web Services Region.
+    #
+    # @!attribute [rw] next_token
+    #   A token returned from a previous call to `ListTenants` to indicate
+    #   the position in the list of tenants.
+    #   @return [String]
+    #
+    # @!attribute [rw] page_size
+    #   The number of results to show in a single call to `ListTenants`. If
+    #   the number of results is larger than the number you specified in
+    #   this parameter, then the response includes a `NextToken` element,
+    #   which you can use to obtain additional results.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/ListTenantsRequest AWS API Documentation
+    #
+    class ListTenantsRequest < Struct.new(
+      :next_token,
+      :page_size)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Information about tenants associated with your account.
+    #
+    # @!attribute [rw] tenants
+    #   An array that contains basic information about each tenant.
+    #   @return [Array<Types::TenantInfo>]
+    #
+    # @!attribute [rw] next_token
+    #   A token that indicates that there are additional tenants to list. To
+    #   view additional tenants, issue another request to `ListTenants`, and
+    #   pass this token in the `NextToken` parameter.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/ListTenantsResponse AWS API Documentation
+    #
+    class ListTenantsResponse < Struct.new(
+      :tenants,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5381,6 +6117,25 @@ module Aws::SESV2
     #
     class MailFromDomainNotVerifiedException < Aws::EmptyStructure; end
 
+    # Contains detailed validation information about an email address.
+    #
+    # @!attribute [rw] is_valid
+    #   Overall validity assessment with a conﬁdence verdict.
+    #   @return [Types::EmailAddressInsightsVerdict]
+    #
+    # @!attribute [rw] evaluations
+    #   Specific validation checks performed on the email address.
+    #   @return [Types::EmailAddressInsightsMailboxEvaluations]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/MailboxValidation AWS API Documentation
+    #
+    class MailboxValidation < Struct.new(
+      :is_valid,
+      :evaluations)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Represents the email message that you're sending. The `Message`
     # object consists of a subject line and a message body.
     #
@@ -5404,12 +6159,18 @@ module Aws::SESV2
     #   The list of message headers that will be added to the email message.
     #   @return [Array<Types::MessageHeader>]
     #
+    # @!attribute [rw] attachments
+    #   The List of attachments to include in your email. All recipients
+    #   will receive the same attachments.
+    #   @return [Array<Types::Attachment>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/Message AWS API Documentation
     #
     class Message < Struct.new(
       :subject,
       :body,
-      :headers)
+      :headers,
+      :attachments)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5433,7 +6194,10 @@ module Aws::SESV2
     #
     #   * Can contain any printable ASCII character.
     #
-    #   * Can contain no more than 870 characters.
+    #   * Can contain no more than 995 characters.
+    #
+    #   * The combined length of the header name and value must not exceed
+    #     996 characters.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/MessageHeader AWS API Documentation
@@ -5821,6 +6585,30 @@ module Aws::SESV2
       include Aws::Structure
     end
 
+    # The pricing attributes that apply to your Amazon SES account,
+    # including the currently active pricing plan and any scheduled change
+    # for the next billing cycle.
+    #
+    # @!attribute [rw] current_plan
+    #   The pricing plan that is currently active on your Amazon SES
+    #   account.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_plan
+    #   The pricing plan that will become active at the start of the next
+    #   billing cycle, if a scheduled change has been requested. This field
+    #   is empty when no scheduled change is pending.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/PricingAttributes AWS API Documentation
+    #
+    class PricingAttributes < Struct.new(
+      :current_plan,
+      :next_plan)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # A request to enable or disable the automatic IP address warm-up
     # feature.
     #
@@ -5904,6 +6692,40 @@ module Aws::SESV2
     #
     class PutAccountDetailsResponse < Aws::EmptyStructure; end
 
+    # A request to set the pricing plan for your Amazon SES account.
+    #
+    # @!attribute [rw] plan
+    #   The pricing plan to apply to your Amazon SES account. Can be one of
+    #   the following:
+    #
+    #   * `NONE` – No pricing plan is applied; billing follows per-feature
+    #     pricing.
+    #
+    #   * `ESSENTIALS` – Baseline Amazon SES capabilities and select premium
+    #     features.
+    #
+    #   * `PRO` – Includes everything in `ESSENTIALS`, plus additional
+    #     premium features for growing senders.
+    #
+    #   * `ENTERPRISE` – Includes everything in `PRO`, plus features
+    #     intended for large-scale senders.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/PutAccountPricingAttributesRequest AWS API Documentation
+    #
+    class PutAccountPricingAttributesRequest < Struct.new(
+      :plan)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # An HTTP 200 response if the request succeeds, or an error response if
+    # the request fails.
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/PutAccountPricingAttributesResponse AWS API Documentation
+    #
+    class PutAccountPricingAttributesResponse < Aws::EmptyStructure; end
+
     # A request to change the ability of your account to send email.
     #
     # @!attribute [rw] sending_enabled
@@ -5949,10 +6771,16 @@ module Aws::SESV2
     #     in a hard bounce.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] validation_attributes
+    #   An object that contains additional suppression attributes for your
+    #   account.
+    #   @return [Types::SuppressionValidationAttributes]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/PutAccountSuppressionAttributesRequest AWS API Documentation
     #
     class PutAccountSuppressionAttributesRequest < Struct.new(
-      :suppressed_reasons)
+      :suppressed_reasons,
+      :validation_attributes)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6114,33 +6942,52 @@ module Aws::SESV2
     #
     class PutConfigurationSetSendingOptionsResponse < Aws::EmptyStructure; end
 
-    # A request to change the account suppression list preferences for a
-    # specific configuration set.
+    # A request to change the suppression list preferences for a specific
+    # configuration set.
     #
     # @!attribute [rw] configuration_set_name
     #   The name of the configuration set to change the suppression list
     #   preferences for.
     #   @return [String]
     #
+    # @!attribute [rw] suppression_scope
+    #   The suppression scope for the configuration set. This overrides the
+    #   tenant or account suppression scope for emails sent using this
+    #   configuration set. Can be one of the following:
+    #
+    #   * `TENANT` – Use the tenant's suppression list.
+    #
+    #   * `ACCOUNT` – Use the account-level suppression list.
+    #   @return [String]
+    #
     # @!attribute [rw] suppressed_reasons
     #   A list that contains the reasons that email addresses are
-    #   automatically added to the suppression list for your account. This
-    #   list can contain any or all of the following:
+    #   automatically added to the suppression list for your account or for
+    #   a specific tenant. This list can contain any or all of the
+    #   following:
     #
     #   * `COMPLAINT` – Amazon SES adds an email address to the suppression
-    #     list for your account when a message sent to that address results
-    #     in a complaint.
+    #     list for your account or for a specific tenant when a message sent
+    #     to that address results in a complaint.
     #
     #   * `BOUNCE` – Amazon SES adds an email address to the suppression
-    #     list for your account when a message sent to that address results
-    #     in a hard bounce.
+    #     list for your account or for a specific tenant when a message sent
+    #     to that address results in a hard bounce.
     #   @return [Array<String>]
+    #
+    # @!attribute [rw] validation_options
+    #   An object that contains information about the email address
+    #   suppression preferences for the configuration set in the current
+    #   Amazon Web Services Region.
+    #   @return [Types::SuppressionValidationOptions]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/PutConfigurationSetSuppressionOptionsRequest AWS API Documentation
     #
     class PutConfigurationSetSuppressionOptionsRequest < Struct.new(
       :configuration_set_name,
-      :suppressed_reasons)
+      :suppression_scope,
+      :suppressed_reasons,
+      :validation_options)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6508,11 +7355,31 @@ module Aws::SESV2
     #   [1]: https://docs.aws.amazon.com/ses/latest/DeveloperGuide/easy-dkim.html
     #   @return [Array<String>]
     #
+    # @!attribute [rw] signing_hosted_zone
+    #   The hosted zone where Amazon SES publishes the DKIM public key TXT
+    #   records for this email identity. This value indicates the DNS zone
+    #   that customers must reference when configuring their CNAME records
+    #   for DKIM authentication.
+    #
+    #   When configuring DKIM for your domain, create CNAME records in your
+    #   DNS that point to the selectors in this hosted zone. For example:
+    #
+    #   ` selector1._domainkey.yourdomain.com CNAME
+    #   selector1.<SigningHostedZone> `
+    #
+    #   ` selector2._domainkey.yourdomain.com CNAME
+    #   selector2.<SigningHostedZone> `
+    #
+    #   ` selector3._domainkey.yourdomain.com CNAME
+    #   selector3.<SigningHostedZone> `
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/PutEmailIdentityDkimSigningAttributesResponse AWS API Documentation
     #
     class PutEmailIdentityDkimSigningAttributesResponse < Struct.new(
       :dkim_status,
-      :dkim_tokens)
+      :dkim_tokens,
+      :signing_hosted_zone)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6605,23 +7472,30 @@ module Aws::SESV2
     class PutEmailIdentityMailFromAttributesResponse < Aws::EmptyStructure; end
 
     # A request to add an email destination to the suppression list for your
-    # account.
+    # account or for a specific tenant.
     #
     # @!attribute [rw] email_address
     #   The email address that should be added to the suppression list for
-    #   your account.
+    #   your account or for the specified tenant.
     #   @return [String]
     #
     # @!attribute [rw] reason
     #   The factors that should cause the email address to be added to the
-    #   suppression list for your account.
+    #   suppression list for your account or for the specified tenant.
+    #   @return [String]
+    #
+    # @!attribute [rw] tenant_name
+    #   The name of the tenant whose suppression list you want to add the
+    #   address to. If you omit this parameter, the address is added to the
+    #   account-level suppression list.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/PutSuppressedDestinationRequest AWS API Documentation
     #
     class PutSuppressedDestinationRequest < Struct.new(
       :email_address,
-      :reason)
+      :reason,
+      :tenant_name)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6632,6 +7506,53 @@ module Aws::SESV2
     # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/PutSuppressedDestinationResponse AWS API Documentation
     #
     class PutSuppressedDestinationResponse < Aws::EmptyStructure; end
+
+    # A request to configure the suppression list preferences for a tenant.
+    #
+    # @!attribute [rw] tenant_name
+    #   The name of the tenant to configure suppression list preferences
+    #   for.
+    #   @return [String]
+    #
+    # @!attribute [rw] suppressed_reasons
+    #   A list that contains the reasons that email addresses are
+    #   automatically added to the suppression list for the tenant. This
+    #   list can contain any or all of the following:
+    #
+    #   * `COMPLAINT` – Amazon SES adds an email address to the suppression
+    #     list when a message sent to that address results in a complaint.
+    #
+    #   * `BOUNCE` – Amazon SES adds an email address to the suppression
+    #     list when a message sent to that address results in a hard bounce.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] suppression_scope
+    #   The suppression scope for the tenant. Specify `TENANT` to use the
+    #   tenant's own suppression list, or `ACCOUNT` to use the
+    #   account-level suppression list.
+    #
+    #   <note markdown="1"> If you don't specify a suppression scope, the tenant defaults to
+    #   `ACCOUNT` scope and uses the account-level suppression list.
+    #
+    #    </note>
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/PutTenantSuppressionAttributesRequest AWS API Documentation
+    #
+    class PutTenantSuppressionAttributesRequest < Struct.new(
+      :tenant_name,
+      :suppressed_reasons,
+      :suppression_scope)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # If the action is successful, the service sends back an HTTP 200
+    # response with an empty HTTP body.
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/PutTenantSuppressionAttributesResponse AWS API Documentation
+    #
+    class PutTenantSuppressionAttributesResponse < Aws::EmptyStructure; end
 
     # Represents the raw content of an email message.
     #
@@ -6756,6 +7677,72 @@ module Aws::SESV2
       include Aws::Structure
     end
 
+    # An object that contains information about a reputation entity,
+    # including its reference, type, policy, status records, and reputation
+    # impact.
+    #
+    # @!attribute [rw] reputation_entity_reference
+    #   The unique identifier for the reputation entity. For resource-type
+    #   entities, this is the Amazon Resource Name (ARN) of the resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] reputation_entity_type
+    #   The type of reputation entity. Currently, only `RESOURCE` type
+    #   entities are supported.
+    #   @return [String]
+    #
+    # @!attribute [rw] reputation_management_policy
+    #   The Amazon Resource Name (ARN) of the reputation management policy
+    #   applied to this entity. This is an Amazon Web Services Amazon
+    #   SES-managed policy.
+    #   @return [String]
+    #
+    # @!attribute [rw] customer_managed_status
+    #   The customer-managed status record for this reputation entity,
+    #   including the current status, cause description, and last updated
+    #   timestamp.
+    #   @return [Types::StatusRecord]
+    #
+    # @!attribute [rw] aws_ses_managed_status
+    #   The Amazon Web Services Amazon SES-managed status record for this
+    #   reputation entity, including the current status, cause description,
+    #   and last updated timestamp.
+    #   @return [Types::StatusRecord]
+    #
+    # @!attribute [rw] sending_status_aggregate
+    #   The aggregate sending status that determines whether the entity is
+    #   allowed to send emails. This status is derived from both the
+    #   customer-managed and Amazon Web Services Amazon SES-managed
+    #   statuses. If either the customer-managed status or the Amazon Web
+    #   Services Amazon SES-managed status is `DISABLED`, the aggregate
+    #   status will be `DISABLED` and the entity will not be allowed to send
+    #   emails. When the customer-managed status is set to `REINSTATED`, the
+    #   entity can continue sending even if there are active reputation
+    #   findings, provided the Amazon Web Services Amazon SES-managed status
+    #   also permits sending. The entity can only send emails when both
+    #   statuses permit sending.
+    #   @return [String]
+    #
+    # @!attribute [rw] reputation_impact
+    #   The reputation impact level for this entity, representing the
+    #   highest impact reputation finding currently active. Reputation
+    #   findings can be retrieved using the `ListRecommendations` operation.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/ReputationEntity AWS API Documentation
+    #
+    class ReputationEntity < Struct.new(
+      :reputation_entity_reference,
+      :reputation_entity_type,
+      :reputation_management_policy,
+      :customer_managed_status,
+      :aws_ses_managed_status,
+      :sending_status_aggregate,
+      :reputation_impact)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Enable or disable collection of reputation metrics for emails that you
     # send using this configuration set in the current Amazon Web Services
     # Region.
@@ -6778,6 +7765,36 @@ module Aws::SESV2
     class ReputationOptions < Struct.new(
       :reputation_metrics_enabled,
       :last_fresh_start)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A structure that contains information about a tenant associated with a
+    # resource.
+    #
+    # @!attribute [rw] tenant_name
+    #   The name of the tenant associated with the resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] tenant_id
+    #   A unique identifier for the tenant associated with the resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_arn
+    #   The Amazon Resource Name (ARN) of the resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] associated_timestamp
+    #   The date and time when the resource was associated with the tenant.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/ResourceTenantMetadata AWS API Documentation
+    #
+    class ResourceTenantMetadata < Struct.new(
+      :tenant_name,
+      :tenant_id,
+      :resource_arn,
+      :associated_timestamp)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6958,6 +7975,16 @@ module Aws::SESV2
     #   The ID of the multi-region endpoint (global-endpoint).
     #   @return [String]
     #
+    # @!attribute [rw] tenant_name
+    #   The name of the tenant through which this bulk email will be sent.
+    #
+    #   <note markdown="1"> The email sending operation will only succeed if all referenced
+    #   resources (identities, configuration sets, and templates) are
+    #   associated with this tenant.
+    #
+    #    </note>
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/SendBulkEmailRequest AWS API Documentation
     #
     class SendBulkEmailRequest < Struct.new(
@@ -6970,7 +7997,8 @@ module Aws::SESV2
       :default_content,
       :bulk_email_entries,
       :configuration_set_name,
-      :endpoint_id)
+      :endpoint_id,
+      :tenant_name)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7124,6 +8152,16 @@ module Aws::SESV2
     #   The ID of the multi-region endpoint (global-endpoint).
     #   @return [String]
     #
+    # @!attribute [rw] tenant_name
+    #   The name of the tenant through which this email will be sent.
+    #
+    #   <note markdown="1"> The email sending operation will only succeed if all referenced
+    #   resources (identities, configuration sets, and templates) are
+    #   associated with this tenant.
+    #
+    #    </note>
+    #   @return [String]
+    #
     # @!attribute [rw] list_management_options
     #   An object used to specify a list or topic to which an email belongs,
     #   which will be used when a contact chooses to unsubscribe.
@@ -7142,6 +8180,7 @@ module Aws::SESV2
       :email_tags,
       :configuration_set_name,
       :endpoint_id,
+      :tenant_name,
       :list_management_options)
       SENSITIVE = []
       include Aws::Structure
@@ -7249,16 +8288,50 @@ module Aws::SESV2
       include Aws::Structure
     end
 
+    # An object that contains status information for a reputation entity,
+    # including the current status, cause description, and timestamp.
+    #
+    # @!attribute [rw] status
+    #   The current sending status. This can be one of the following:
+    #
+    #   * `ENABLED` – Sending is allowed.
+    #
+    #   * `DISABLED` – Sending is prevented.
+    #
+    #   * `REINSTATED` – Sending is allowed even with active reputation
+    #     findings.
+    #   @return [String]
+    #
+    # @!attribute [rw] cause
+    #   A description of the reason for the current status, or null if no
+    #   specific cause is available.
+    #   @return [String]
+    #
+    # @!attribute [rw] last_updated_timestamp
+    #   The timestamp when this status was last updated.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/StatusRecord AWS API Documentation
+    #
+    class StatusRecord < Struct.new(
+      :status,
+      :cause,
+      :last_updated_timestamp)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # An object that contains information about an email address that is on
-    # the suppression list for your account.
+    # the suppression list for your account or for a specific tenant.
     #
     # @!attribute [rw] email_address
-    #   The email address that is on the suppression list for your account.
+    #   The email address that is on the suppression list for your account
+    #   or for a specific tenant.
     #   @return [String]
     #
     # @!attribute [rw] reason
     #   The reason that the address was added to the suppression list for
-    #   your account.
+    #   your account or for a specific tenant.
     #   @return [String]
     #
     # @!attribute [rw] last_update_time
@@ -7269,8 +8342,14 @@ module Aws::SESV2
     # @!attribute [rw] attributes
     #   An optional value that can contain additional information about the
     #   reasons that the address was added to the suppression list for your
-    #   account.
+    #   account or for a specific tenant.
     #   @return [Types::SuppressedDestinationAttributes]
+    #
+    # @!attribute [rw] tenant_name
+    #   The name of the tenant that the suppressed destination belongs to.
+    #   This field is present only when the suppressed destination is on a
+    #   tenant's suppression list.
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/SuppressedDestination AWS API Documentation
     #
@@ -7278,22 +8357,25 @@ module Aws::SESV2
       :email_address,
       :reason,
       :last_update_time,
-      :attributes)
+      :attributes,
+      :tenant_name)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # An object that contains additional attributes that are related an
-    # email address that is on the suppression list for your account.
+    # email address that is on the suppression list for your account or for
+    # a specific tenant.
     #
     # @!attribute [rw] message_id
     #   The unique identifier of the email message that caused the email
-    #   address to be added to the suppression list for your account.
+    #   address to be added to the suppression list for your account or for
+    #   a specific tenant.
     #   @return [String]
     #
     # @!attribute [rw] feedback_id
     #   A unique identifier that's generated when an email address is added
-    #   to the suppression list for your account.
+    #   to the suppression list for your account or for a specific tenant.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/SuppressedDestinationAttributes AWS API Documentation
@@ -7308,12 +8390,13 @@ module Aws::SESV2
     # A summary that describes the suppressed email address.
     #
     # @!attribute [rw] email_address
-    #   The email address that's on the suppression list for your account.
+    #   The email address that's on the suppression list for your account
+    #   or for a specific tenant.
     #   @return [String]
     #
     # @!attribute [rw] reason
     #   The reason that the address was added to the suppression list for
-    #   your account.
+    #   your account or for a specific tenant.
     #   @return [String]
     #
     # @!attribute [rw] last_update_time
@@ -7349,10 +8432,58 @@ module Aws::SESV2
     #     in a hard bounce.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] validation_attributes
+    #   Structure containing validation attributes used for suppressing
+    #   sending to specific destination on account level.
+    #   @return [Types::SuppressionValidationAttributes]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/SuppressionAttributes AWS API Documentation
     #
     class SuppressionAttributes < Struct.new(
-      :suppressed_reasons)
+      :suppressed_reasons,
+      :validation_attributes)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains Auto Validation settings, allowing you to suppress sending to
+    # specific destination(s) if they do not meet required threshold. For
+    # details on Auto Validation, see [Auto Validation][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/ses/latest/DeveloperGuide/email-validation.html
+    #
+    # @!attribute [rw] condition_threshold_enabled
+    #   Indicates whether Auto Validation is enabled for suppression. Set to
+    #   `ENABLED` to enable the Auto Validation feature, or set to
+    #   `DISABLED` to disable it.
+    #   @return [String]
+    #
+    # @!attribute [rw] overall_confidence_threshold
+    #   The overall confidence threshold used to determine suppression
+    #   decisions.
+    #   @return [Types::SuppressionConfidenceThreshold]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/SuppressionConditionThreshold AWS API Documentation
+    #
+    class SuppressionConditionThreshold < Struct.new(
+      :condition_threshold_enabled,
+      :overall_confidence_threshold)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains the confidence threshold settings for Auto Validation.
+    #
+    # @!attribute [rw] confidence_verdict_threshold
+    #   The confidence level threshold for suppression decisions.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/SuppressionConfidenceThreshold AWS API Documentation
+    #
+    class SuppressionConfidenceThreshold < Struct.new(
+      :confidence_verdict_threshold)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7378,26 +8509,74 @@ module Aws::SESV2
     end
 
     # An object that contains information about the suppression list
-    # preferences for your account.
+    # preferences for your account or for a specific tenant.
     #
     # @!attribute [rw] suppressed_reasons
     #   A list that contains the reasons that email addresses are
-    #   automatically added to the suppression list for your account. This
-    #   list can contain any or all of the following:
+    #   automatically added to the suppression list for your account or for
+    #   a specific tenant. This list can contain any or all of the
+    #   following:
     #
     #   * `COMPLAINT` – Amazon SES adds an email address to the suppression
-    #     list for your account when a message sent to that address results
-    #     in a complaint.
+    #     list for your account or for a specific tenant when a message sent
+    #     to that address results in a complaint.
     #
     #   * `BOUNCE` – Amazon SES adds an email address to the suppression
-    #     list for your account when a message sent to that address results
-    #     in a hard bounce.
+    #     list for your account or for a specific tenant when a message sent
+    #     to that address results in a hard bounce.
     #   @return [Array<String>]
+    #
+    # @!attribute [rw] suppression_scope
+    #   The suppression scope for the configuration set. This overrides the
+    #   tenant or account suppression scope for emails sent using this
+    #   configuration set. Can be one of the following:
+    #
+    #   * `TENANT` – Use the tenant's suppression list.
+    #
+    #   * `ACCOUNT` – Use the account-level suppression list.
+    #   @return [String]
+    #
+    # @!attribute [rw] validation_options
+    #   Contains validation options for email address suppression.
+    #   @return [Types::SuppressionValidationOptions]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/SuppressionOptions AWS API Documentation
     #
     class SuppressionOptions < Struct.new(
-      :suppressed_reasons)
+      :suppressed_reasons,
+      :suppression_scope,
+      :validation_options)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Structure containing validation attributes used for suppressing
+    # sending to specific destination on account level.
+    #
+    # @!attribute [rw] condition_threshold
+    #   Specifies the condition threshold settings for account-level
+    #   suppression.
+    #   @return [Types::SuppressionConditionThreshold]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/SuppressionValidationAttributes AWS API Documentation
+    #
+    class SuppressionValidationAttributes < Struct.new(
+      :condition_threshold)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains validation options for email address suppression.
+    #
+    # @!attribute [rw] condition_threshold
+    #   Specifies the condition threshold settings for suppression
+    #   validation.
+    #   @return [Types::SuppressionConditionThreshold]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/SuppressionValidationOptions AWS API Documentation
+    #
+    class SuppressionValidationOptions < Struct.new(
+      :condition_threshold)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7491,8 +8670,7 @@ module Aws::SESV2
     #
     # @!attribute [rw] template_name
     #   The name of the template. You will refer to this name when you send
-    #   email using the `SendTemplatedEmail` or `SendBulkTemplatedEmail`
-    #   operations.
+    #   email using the `SendEmail` or `SendBulkEmail` operations.
     #   @return [String]
     #
     # @!attribute [rw] template_arn
@@ -7520,6 +8698,11 @@ module Aws::SESV2
     #   The list of message headers that will be added to the email message.
     #   @return [Array<Types::MessageHeader>]
     #
+    # @!attribute [rw] attachments
+    #   The List of attachments to include in your email. All recipients
+    #   will receive the same attachments.
+    #   @return [Array<Types::Attachment>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/Template AWS API Documentation
     #
     class Template < Struct.new(
@@ -7527,7 +8710,141 @@ module Aws::SESV2
       :template_arn,
       :template_content,
       :template_data,
-      :headers)
+      :headers,
+      :attachments)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A structure that contains details about a tenant.
+    #
+    # @!attribute [rw] tenant_name
+    #   The name of the tenant.
+    #   @return [String]
+    #
+    # @!attribute [rw] tenant_id
+    #   A unique identifier for the tenant.
+    #   @return [String]
+    #
+    # @!attribute [rw] tenant_arn
+    #   The Amazon Resource Name (ARN) of the tenant.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_timestamp
+    #   The date and time when the tenant was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] tags
+    #   An array of objects that define the tags (keys and values)
+    #   associated with the tenant.
+    #   @return [Array<Types::Tag>]
+    #
+    # @!attribute [rw] sending_status
+    #   The status of sending capability for the tenant.
+    #   @return [String]
+    #
+    # @!attribute [rw] suppression_attributes
+    #   An object that contains information about the suppression list
+    #   preferences for the tenant.
+    #   @return [Types::TenantSuppressionAttributes]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/Tenant AWS API Documentation
+    #
+    class Tenant < Struct.new(
+      :tenant_name,
+      :tenant_id,
+      :tenant_arn,
+      :created_timestamp,
+      :tags,
+      :sending_status,
+      :suppression_attributes)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A structure that contains basic information about a tenant.
+    #
+    # @!attribute [rw] tenant_name
+    #   The name of the tenant.
+    #   @return [String]
+    #
+    # @!attribute [rw] tenant_id
+    #   A unique identifier for the tenant.
+    #   @return [String]
+    #
+    # @!attribute [rw] tenant_arn
+    #   The Amazon Resource Name (ARN) of the tenant.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_timestamp
+    #   The date and time when the tenant was created.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/TenantInfo AWS API Documentation
+    #
+    class TenantInfo < Struct.new(
+      :tenant_name,
+      :tenant_id,
+      :tenant_arn,
+      :created_timestamp)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A structure that contains information about a resource associated with
+    # a tenant.
+    #
+    # @!attribute [rw] resource_type
+    #   The type of resource associated with the tenant. Valid values are
+    #   `EMAIL_IDENTITY`, `CONFIGURATION_SET`, or `EMAIL_TEMPLATE`.
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_arn
+    #   The Amazon Resource Name (ARN) of the resource associated with the
+    #   tenant.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/TenantResource AWS API Documentation
+    #
+    class TenantResource < Struct.new(
+      :resource_type,
+      :resource_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # An object that contains the suppression list preferences for a tenant.
+    #
+    # @!attribute [rw] suppressed_reasons
+    #   A list that contains the reasons that email addresses are
+    #   automatically added to the suppression list for the tenant. This
+    #   list can contain any or all of the following:
+    #
+    #   * `COMPLAINT` – Amazon SES adds an email address to the suppression
+    #     list when a message sent to that address results in a complaint.
+    #
+    #   * `BOUNCE` – Amazon SES adds an email address to the suppression
+    #     list when a message sent to that address results in a hard bounce.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] suppression_scope
+    #   The suppression scope for the tenant. Can be one of the following:
+    #
+    #   * `TENANT` – The tenant uses its own suppression list.
+    #
+    #   * `ACCOUNT` – The tenant uses the account-level suppression list.
+    #
+    #   <note markdown="1"> If you don't specify a suppression scope, the tenant defaults to
+    #   `ACCOUNT` scope and uses the account-level suppression list.
+    #
+    #    </note>
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/TenantSuppressionAttributes AWS API Documentation
+    #
+    class TenantSuppressionAttributes < Struct.new(
+      :suppressed_reasons,
+      :suppression_scope)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7943,6 +9260,84 @@ module Aws::SESV2
     # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/UpdateEmailTemplateResponse AWS API Documentation
     #
     class UpdateEmailTemplateResponse < Aws::EmptyStructure; end
+
+    # Represents a request to update the customer-managed sending status for
+    # a reputation entity.
+    #
+    # @!attribute [rw] reputation_entity_type
+    #   The type of reputation entity. Currently, only `RESOURCE` type
+    #   entities are supported.
+    #   @return [String]
+    #
+    # @!attribute [rw] reputation_entity_reference
+    #   The unique identifier for the reputation entity. For resource-type
+    #   entities, this is the Amazon Resource Name (ARN) of the resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] sending_status
+    #   The new customer-managed sending status for the reputation entity.
+    #   This can be one of the following:
+    #
+    #   * `ENABLED` – Allow sending for this entity.
+    #
+    #   * `DISABLED` – Prevent sending for this entity.
+    #
+    #   * `REINSTATED` – Allow sending even if there are active reputation
+    #     findings.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/UpdateReputationEntityCustomerManagedStatusRequest AWS API Documentation
+    #
+    class UpdateReputationEntityCustomerManagedStatusRequest < Struct.new(
+      :reputation_entity_type,
+      :reputation_entity_reference,
+      :sending_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # If the action is successful, the service sends back an HTTP 200
+    # response with an empty HTTP body.
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/UpdateReputationEntityCustomerManagedStatusResponse AWS API Documentation
+    #
+    class UpdateReputationEntityCustomerManagedStatusResponse < Aws::EmptyStructure; end
+
+    # Represents a request to update the reputation management policy for a
+    # reputation entity.
+    #
+    # @!attribute [rw] reputation_entity_type
+    #   The type of reputation entity. Currently, only `RESOURCE` type
+    #   entities are supported.
+    #   @return [String]
+    #
+    # @!attribute [rw] reputation_entity_reference
+    #   The unique identifier for the reputation entity. For resource-type
+    #   entities, this is the Amazon Resource Name (ARN) of the resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] reputation_entity_policy
+    #   The Amazon Resource Name (ARN) of the reputation management policy
+    #   to apply to this entity. This is an Amazon Web Services Amazon
+    #   SES-managed policy.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/UpdateReputationEntityPolicyRequest AWS API Documentation
+    #
+    class UpdateReputationEntityPolicyRequest < Struct.new(
+      :reputation_entity_type,
+      :reputation_entity_reference,
+      :reputation_entity_policy)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # If the action is successful, the service sends back an HTTP 200
+    # response with an empty HTTP body.
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/UpdateReputationEntityPolicyResponse AWS API Documentation
+    #
+    class UpdateReputationEntityPolicyResponse < Aws::EmptyStructure; end
 
     # The VDM attributes that apply to your Amazon SES account.
     #

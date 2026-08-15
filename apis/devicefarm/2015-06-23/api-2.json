@@ -1194,6 +1194,12 @@
       "type":"list",
       "member":{"shape":"AmazonResourceName"}
     },
+    "AmazonRoleResourceName":{
+      "type":"string",
+      "max":2048,
+      "min":20,
+      "pattern":"^arn:aws:iam::[0-9]{12}:role/.+"
+    },
     "AndroidPaths":{
       "type":"list",
       "member":{"shape":"String"}
@@ -1261,6 +1267,12 @@
       "type":"list",
       "member":{"shape":"Artifact"}
     },
+    "AuxiliaryAppArnList":{
+      "type":"list",
+      "member":{"shape":"AmazonResourceName"},
+      "max":3,
+      "min":0
+    },
     "BillingMethod":{
       "type":"string",
       "enum":[
@@ -1283,11 +1295,6 @@
         "message":{"shape":"Message"}
       },
       "exception":true
-    },
-    "ClientId":{
-      "type":"string",
-      "max":64,
-      "min":0
     },
     "ContentType":{
       "type":"string",
@@ -1377,7 +1384,9 @@
       "members":{
         "name":{"shape":"Name"},
         "defaultJobTimeoutMinutes":{"shape":"JobTimeoutMinutes"},
-        "vpcConfig":{"shape":"VpcConfig"}
+        "vpcConfig":{"shape":"VpcConfig"},
+        "environmentVariables":{"shape":"EnvironmentVariables"},
+        "executionRoleArn":{"shape":"AmazonRoleResourceName"}
       }
     },
     "CreateProjectResult":{
@@ -1389,6 +1398,7 @@
     "CreateRemoteAccessSessionConfiguration":{
       "type":"structure",
       "members":{
+        "auxiliaryApps":{"shape":"AuxiliaryAppArnList"},
         "billingMethod":{"shape":"BillingMethod"},
         "vpceConfigurationArns":{"shape":"AmazonResourceNames"},
         "deviceProxy":{"shape":"DeviceProxy"}
@@ -1403,15 +1413,16 @@
       "members":{
         "projectArn":{"shape":"AmazonResourceName"},
         "deviceArn":{"shape":"AmazonResourceName"},
+        "appArn":{"shape":"AmazonResourceName"},
         "instanceArn":{"shape":"AmazonResourceName"},
-        "sshPublicKey":{"shape":"SshPublicKey"},
-        "remoteDebugEnabled":{"shape":"Boolean"},
-        "remoteRecordEnabled":{"shape":"Boolean"},
-        "remoteRecordAppArn":{"shape":"AmazonResourceName"},
         "name":{"shape":"Name"},
-        "clientId":{"shape":"ClientId"},
         "configuration":{"shape":"CreateRemoteAccessSessionConfiguration"},
-        "interactionMode":{"shape":"InteractionMode"},
+        "interactionMode":{
+          "shape":"InteractionMode",
+          "deprecated":true,
+          "deprecatedMessage":"Changing the interactive mode of Remote Access sessions is no longer available.",
+          "deprecatedSince":"2019-09-09"
+        },
         "skipAppResign":{"shape":"Boolean"}
       }
     },
@@ -1516,8 +1527,7 @@
     },
     "DeleteDevicePoolResult":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteInstanceProfileRequest":{
       "type":"structure",
@@ -1528,8 +1538,7 @@
     },
     "DeleteInstanceProfileResult":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteNetworkProfileRequest":{
       "type":"structure",
@@ -1540,8 +1549,7 @@
     },
     "DeleteNetworkProfileResult":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteProjectRequest":{
       "type":"structure",
@@ -1552,8 +1560,7 @@
     },
     "DeleteProjectResult":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteRemoteAccessSessionRequest":{
       "type":"structure",
@@ -1564,8 +1571,7 @@
     },
     "DeleteRemoteAccessSessionResult":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteRunRequest":{
       "type":"structure",
@@ -1576,8 +1582,7 @@
     },
     "DeleteRunResult":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteTestGridProjectRequest":{
       "type":"structure",
@@ -1588,8 +1593,7 @@
     },
     "DeleteTestGridProjectResult":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteUploadRequest":{
       "type":"structure",
@@ -1600,8 +1604,7 @@
     },
     "DeleteUploadResult":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteVPCEConfigurationRequest":{
       "type":"structure",
@@ -1612,8 +1615,7 @@
     },
     "DeleteVPCEConfigurationResult":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "Device":{
       "type":"structure",
@@ -1634,7 +1636,12 @@
         "carrier":{"shape":"String"},
         "radio":{"shape":"String"},
         "remoteAccessEnabled":{"shape":"Boolean"},
-        "remoteDebugEnabled":{"shape":"Boolean"},
+        "remoteDebugEnabled":{
+          "shape":"Boolean",
+          "deprecated":true,
+          "deprecatedMessage":"Direct Device Access is no longer available.",
+          "deprecatedSince":"2019-09-09"
+        },
         "fleetType":{"shape":"String"},
         "fleetName":{"shape":"String"},
         "instances":{"shape":"DeviceInstances"},
@@ -1834,6 +1841,34 @@
       "member":{"shape":"Device"}
     },
     "Double":{"type":"double"},
+    "EnvironmentVariable":{
+      "type":"structure",
+      "required":[
+        "name",
+        "value"
+      ],
+      "members":{
+        "name":{"shape":"EnvironmentVariableName"},
+        "value":{"shape":"EnvironmentVariableValue"}
+      }
+    },
+    "EnvironmentVariableName":{
+      "type":"string",
+      "max":256,
+      "min":1,
+      "pattern":"[a-zA-Z_][a-zA-Z_0-9]*"
+    },
+    "EnvironmentVariableValue":{
+      "type":"string",
+      "max":256,
+      "min":1
+    },
+    "EnvironmentVariables":{
+      "type":"list",
+      "member":{"shape":"EnvironmentVariable"},
+      "max":32,
+      "min":1
+    },
     "ExceptionMessage":{"type":"string"},
     "ExecutionConfiguration":{
       "type":"structure",
@@ -1885,8 +1920,7 @@
     },
     "GetAccountSettingsRequest":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "GetAccountSettingsResult":{
       "type":"structure",
@@ -1915,7 +1949,8 @@
         "appArn":{"shape":"AmazonResourceName"},
         "testType":{"shape":"TestType"},
         "test":{"shape":"ScheduleRunTest"},
-        "configuration":{"shape":"ScheduleRunConfiguration"}
+        "configuration":{"shape":"ScheduleRunConfiguration"},
+        "projectArn":{"shape":"AmazonResourceName"}
       }
     },
     "GetDevicePoolCompatibilityResult":{
@@ -2122,10 +2157,6 @@
         "vpceConfiguration":{"shape":"VPCEConfiguration"}
       }
     },
-    "HostAddress":{
-      "type":"string",
-      "max":1024
-    },
     "IdempotencyException":{
       "type":"structure",
       "members":{
@@ -2143,6 +2174,16 @@
     "IncompatibilityMessages":{
       "type":"list",
       "member":{"shape":"IncompatibilityMessage"}
+    },
+    "InsightsType":{
+      "type":"string",
+      "enum":["TEST_REPORT"]
+    },
+    "InsightsTypes":{
+      "type":"list",
+      "member":{"shape":"InsightsType"},
+      "max":5,
+      "min":1
     },
     "InstallToRemoteAccessSessionRequest":{
       "type":"structure",
@@ -2236,7 +2277,38 @@
         "instanceArn":{"shape":"AmazonResourceName"},
         "deviceMinutes":{"shape":"DeviceMinutes"},
         "videoEndpoint":{"shape":"String"},
-        "videoCapture":{"shape":"VideoCapture"}
+        "videoCapture":{"shape":"VideoCapture"},
+        "insights":{"shape":"JobInsights"}
+      }
+    },
+    "JobInsights":{
+      "type":"structure",
+      "members":{
+        "status":{"shape":"ReportStatus"},
+        "testReport":{"shape":"TestReport"}
+      }
+    },
+    "JobReport":{
+      "type":"structure",
+      "members":{
+        "message":{"shape":"ReportMessage"},
+        "metrics":{"shape":"JobReportMetrics"},
+        "jobDetailsUrl":{"shape":"SensitiveURL"}
+      }
+    },
+    "JobReportMetrics":{
+      "type":"structure",
+      "members":{
+        "jobsTotal":{"shape":"Integer"},
+        "jobsPassed":{"shape":"Integer"},
+        "jobsFailed":{"shape":"Integer"},
+        "jobsSkipped":{"shape":"Integer"},
+        "jobsErrored":{"shape":"Integer"},
+        "jobsStopped":{"shape":"Integer"},
+        "jobsPassedPercentage":{"shape":"Double"},
+        "totalJobExecutionDurationSeconds":{"shape":"Double"},
+        "averageJobExecutionDurationSeconds":{"shape":"Double"},
+        "medianJobExecutionDurationSeconds":{"shape":"Double"}
       }
     },
     "JobTimeoutMinutes":{"type":"integer"},
@@ -2823,7 +2895,9 @@
         "name":{"shape":"Name"},
         "defaultJobTimeoutMinutes":{"shape":"JobTimeoutMinutes"},
         "created":{"shape":"DateTime"},
-        "vpcConfig":{"shape":"VpcConfig"}
+        "vpcConfig":{"shape":"VpcConfig"},
+        "environmentVariables":{"shape":"EnvironmentVariables"},
+        "executionRoleArn":{"shape":"AmazonRoleResourceName"}
       }
     },
     "Projects":{
@@ -2877,6 +2951,13 @@
       "type":"list",
       "member":{"shape":"RecurringCharge"}
     },
+    "RemoteAccessEndpoints":{
+      "type":"structure",
+      "members":{
+        "remoteDriverEndpoint":{"shape":"SensitiveURL"},
+        "interactiveEndpoint":{"shape":"SensitiveURL"}
+      }
+    },
     "RemoteAccessSession":{
       "type":"structure",
       "members":{
@@ -2890,19 +2971,26 @@
         "stopped":{"shape":"DateTime"},
         "device":{"shape":"Device"},
         "instanceArn":{"shape":"AmazonResourceName"},
-        "remoteDebugEnabled":{"shape":"Boolean"},
-        "remoteRecordEnabled":{"shape":"Boolean"},
-        "remoteRecordAppArn":{"shape":"AmazonResourceName"},
-        "hostAddress":{"shape":"HostAddress"},
-        "clientId":{"shape":"ClientId"},
         "billingMethod":{"shape":"BillingMethod"},
         "deviceMinutes":{"shape":"DeviceMinutes"},
-        "endpoint":{"shape":"String"},
+        "endpoint":{
+          "shape":"String",
+          "deprecated":true,
+          "deprecatedMessage":"This field is deprecated, and is replaced by the new endpoints.interactiveEndpoint field.",
+          "deprecatedSince":"2025-11-17"
+        },
         "deviceUdid":{"shape":"String"},
-        "interactionMode":{"shape":"InteractionMode"},
+        "interactionMode":{
+          "shape":"InteractionMode",
+          "deprecated":true,
+          "deprecatedMessage":"Changing the interactive mode of Remote Access sessions is no longer available.",
+          "deprecatedSince":"2019-09-09"
+        },
         "skipAppResign":{"shape":"SkipAppResign"},
         "vpcConfig":{"shape":"VpcConfig"},
-        "deviceProxy":{"shape":"DeviceProxy"}
+        "deviceProxy":{"shape":"DeviceProxy"},
+        "appUpload":{"shape":"AmazonResourceName"},
+        "endpoints":{"shape":"RemoteAccessEndpoints"}
       }
     },
     "RemoteAccessSessions":{
@@ -2925,6 +3013,21 @@
       "members":{
         "offeringTransaction":{"shape":"OfferingTransaction"}
       }
+    },
+    "ReportMessage":{
+      "type":"string",
+      "max":4096,
+      "min":0
+    },
+    "ReportStatus":{
+      "type":"string",
+      "enum":[
+        "PENDING",
+        "RUNNING",
+        "COMPLETED",
+        "SKIPPED",
+        "ERRORED"
+      ]
     },
     "Resolution":{
       "type":"structure",
@@ -3011,7 +3114,18 @@
         "skipAppResign":{"shape":"SkipAppResign"},
         "testSpecArn":{"shape":"AmazonResourceName"},
         "deviceSelectionResult":{"shape":"DeviceSelectionResult"},
-        "vpcConfig":{"shape":"VpcConfig"}
+        "vpcConfig":{"shape":"VpcConfig"},
+        "executionRoleArn":{"shape":"AmazonRoleResourceName"},
+        "environmentVariables":{"shape":"EnvironmentVariables"},
+        "insightsTypes":{"shape":"InsightsTypes"},
+        "insights":{"shape":"RunInsights"}
+      }
+    },
+    "RunInsights":{
+      "type":"structure",
+      "members":{
+        "status":{"shape":"ReportStatus"},
+        "jobReport":{"shape":"JobReport"}
       }
     },
     "Runs":{
@@ -3064,7 +3178,10 @@
         "customerArtifactPaths":{"shape":"CustomerArtifactPaths"},
         "radios":{"shape":"Radios"},
         "auxiliaryApps":{"shape":"AmazonResourceNames"},
-        "billingMethod":{"shape":"BillingMethod"}
+        "billingMethod":{"shape":"BillingMethod"},
+        "environmentVariables":{"shape":"EnvironmentVariables"},
+        "executionRoleArn":{"shape":"AmazonRoleResourceName"},
+        "insightsTypes":{"shape":"InsightsTypes"}
       }
     },
     "ScheduleRunRequest":{
@@ -3119,7 +3236,7 @@
     },
     "SensitiveURL":{
       "type":"string",
-      "max":2048,
+      "max":4096,
       "min":0,
       "sensitive":true
     },
@@ -3136,11 +3253,6 @@
       "min":0
     },
     "SkipAppResign":{"type":"boolean"},
-    "SshPublicKey":{
-      "type":"string",
-      "max":8192,
-      "min":0
-    },
     "StopJobRequest":{
       "type":"structure",
       "required":["arn"],
@@ -3268,8 +3380,7 @@
     },
     "TagResourceResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "TagValue":{
       "type":"string",
@@ -3393,6 +3504,28 @@
       "key":{"shape":"String"},
       "value":{"shape":"String"}
     },
+    "TestReport":{
+      "type":"structure",
+      "members":{
+        "message":{"shape":"ReportMessage"},
+        "metrics":{"shape":"TestReportMetrics"},
+        "testDetailsUrl":{"shape":"SensitiveURL"}
+      }
+    },
+    "TestReportMetrics":{
+      "type":"structure",
+      "members":{
+        "testsTotal":{"shape":"Integer"},
+        "testsPassed":{"shape":"Integer"},
+        "testsFailed":{"shape":"Integer"},
+        "testsSkipped":{"shape":"Integer"},
+        "testsErrored":{"shape":"Integer"},
+        "testsOther":{"shape":"Integer"},
+        "testsPassedPercentage":{"shape":"Double"},
+        "totalTestExecutionDurationSeconds":{"shape":"Double"},
+        "medianTestExecutionDurationSeconds":{"shape":"Double"}
+      }
+    },
     "TestType":{
       "type":"string",
       "enum":[
@@ -3469,8 +3602,7 @@
     },
     "UntagResourceResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "UpdateDeviceInstanceRequest":{
       "type":"structure",
@@ -3554,7 +3686,9 @@
         "arn":{"shape":"AmazonResourceName"},
         "name":{"shape":"Name"},
         "defaultJobTimeoutMinutes":{"shape":"JobTimeoutMinutes"},
-        "vpcConfig":{"shape":"VpcConfig"}
+        "vpcConfig":{"shape":"VpcConfig"},
+        "environmentVariables":{"shape":"EnvironmentVariables"},
+        "executionRoleArn":{"shape":"AmazonRoleResourceName"}
       }
     },
     "UpdateProjectResult":{

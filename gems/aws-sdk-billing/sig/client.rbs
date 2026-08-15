@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -78,6 +79,17 @@ module Aws
                   | (?Hash[Symbol, untyped]) -> instance
 
 
+      interface _AssociateSourceViewsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::AssociateSourceViewsResponse]
+        def arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Billing/Client.html#associate_source_views-instance_method
+      def associate_source_views: (
+                                    arn: ::String,
+                                    source_views: Array[::String]
+                                  ) -> _AssociateSourceViewsResponseSuccess
+                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _AssociateSourceViewsResponseSuccess
+
       interface _CreateBillingViewResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateBillingViewResponse]
         def arn: () -> ::String
@@ -88,22 +100,13 @@ module Aws
                                  name: ::String,
                                  ?description: ::String,
                                  source_views: Array[::String],
-                                 ?data_filter_expression: {
-                                   dimensions: {
-                                     key: ("LINKED_ACCOUNT"),
-                                     values: Array[::String]
-                                   }?,
-                                   tags: {
-                                     key: ::String,
-                                     values: Array[::String]
-                                   }?
-                                 },
+                                 ?data_filter_expression: Params::expression,
                                  ?client_token: ::String,
                                  ?resource_tags: Array[
                                    {
                                      key: ::String,
                                      value: ::String?
-                                   },
+                                   }
                                  ]
                                ) -> _CreateBillingViewResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateBillingViewResponseSuccess
@@ -114,9 +117,40 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Billing/Client.html#delete_billing_view-instance_method
       def delete_billing_view: (
-                                 arn: ::String
+                                 arn: ::String,
+                                 ?force: bool
                                ) -> _DeleteBillingViewResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteBillingViewResponseSuccess
+
+      interface _DisassociateSourceViewsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DisassociateSourceViewsResponse]
+        def arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Billing/Client.html#disassociate_source_views-instance_method
+      def disassociate_source_views: (
+                                       arn: ::String,
+                                       source_views: Array[::String]
+                                     ) -> _DisassociateSourceViewsResponseSuccess
+                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DisassociateSourceViewsResponseSuccess
+
+      interface _GetBillingPreferencesResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetBillingPreferencesResponse]
+        def billing_preferences: () -> ::Array[Types::BillingPreferenceSummary]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Billing/Client.html#get_billing_preferences-instance_method
+      def get_billing_preferences: (
+                                     ?next_token: ::String,
+                                     ?max_results: ::Integer,
+                                     features: Array[("RI_SHARING" | "RI_SHARING_HISTORY" | "CREDIT_SHARING" | "CREDIT_SHARING_HISTORY" | "CREDIT_LEVEL_SHARING" | "BILLING_ALERTS" | "CREDIT_PREFERENCE_OPTIONS")],
+                                     ?filters: Array[
+                                       {
+                                         name: ("PREFERENCE_KEY")?,
+                                         value: Array[::String]?
+                                       }
+                                     ]
+                                   ) -> _GetBillingPreferencesResponseSuccess
+                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetBillingPreferencesResponseSuccess
 
       interface _GetBillingViewResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetBillingViewResponse]
@@ -127,6 +161,82 @@ module Aws
                               arn: ::String
                             ) -> _GetBillingViewResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetBillingViewResponseSuccess
+
+      interface _GetCreditAllocationHistoryResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetCreditAllocationHistoryResponse]
+        def credit_allocation_history_list: () -> ::Array[Types::CreditAllocationHistoryEntry]
+        def partial_results: () -> bool
+        def failed_months: () -> ::Array[::String]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Billing/Client.html#get_credit_allocation_history-instance_method
+      def get_credit_allocation_history: (
+                                           account_id: ::String,
+                                           ?credit_id: ::Integer,
+                                           start_date: ::Time,
+                                           end_date: ::Time,
+                                           ?next_token: ::String,
+                                           ?max_results: ::Integer
+                                         ) -> _GetCreditAllocationHistoryResponseSuccess
+                                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetCreditAllocationHistoryResponseSuccess
+
+      interface _GetCreditsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetCreditsResponse]
+        def credits: () -> ::Array[Types::CreditData]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Billing/Client.html#get_credits-instance_method
+      def get_credits: (
+                         account_id: ::String,
+                         start_date: ::Time,
+                         ?end_date: ::Time,
+                         ?payer_account_flag: bool
+                       ) -> _GetCreditsResponseSuccess
+                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetCreditsResponseSuccess
+
+      interface _GetEnterpriseSupportChargeSummaryResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetEnterpriseSupportChargeSummaryResponse]
+        def payer_account_id: () -> ::String
+        def billing_month: () -> ::String
+        def billing_period_start_date: () -> ::Time
+        def billing_period_end_date: () -> ::Time
+        def is_estimated: () -> bool
+        def bill_date: () -> ::Time
+        def support_charge: () -> ::String
+        def total_support_charge: () -> ::String
+        def support_discount: () -> ::String
+        def total_support_eligible_spend: () -> ::String
+        def total_support_eligible_usage_spend: () -> ::String
+        def total_support_eligible_reserved_instance_spend: () -> ::String
+        def total_support_eligible_savings_plan_spend: () -> ::String
+        def support_charge_percentage: () -> ::String
+        def support_effective_pricing_plan: () -> Types::PricingPlan
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Billing/Client.html#get_enterprise_support_charge_summary-instance_method
+      def get_enterprise_support_charge_summary: (
+                                                   billing_month: ::String
+                                                 ) -> _GetEnterpriseSupportChargeSummaryResponseSuccess
+                                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetEnterpriseSupportChargeSummaryResponseSuccess
+
+      interface _GetEnterpriseSupportContractDetailsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetEnterpriseSupportContractDetailsResponse]
+        def is_contract_active: () -> bool
+        def support_allocation_method: () -> ::String
+        def support_reserved_instance_amortization_start_date: () -> ::Time
+        def support_reserved_instance_treatment_method: () -> ::String
+        def support_savings_plans_amortization_start_date: () -> ::Time
+        def support_savings_plans_treatment_method: () -> ::String
+        def support_prorate_start_date: () -> ::Time
+        def contract_payer_account_ids: () -> ::Array[Types::ContractAccount]
+        def charged_payer_account_ids: () -> ::Array[Types::ChargeAccount]
+        def additional_support_charge: () -> ::Array[Types::AdditionalCharge]
+        def additional_support_eligible_usage_spend: () -> ::Array[Types::AdditionalCharge]
+        def pricing_plans: () -> ::Array[Types::PricingPlan]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Billing/Client.html#get_enterprise_support_contract_details-instance_method
+      def get_enterprise_support_contract_details: (
+                                                     billing_month: ::String
+                                                   ) -> _GetEnterpriseSupportContractDetailsResponseSuccess
+                                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetEnterpriseSupportContractDetailsResponseSuccess
 
       interface _GetResourcePolicyResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetResourcePolicyResponse]
@@ -151,12 +261,33 @@ module Aws
                                   active_before_inclusive: ::Time
                                 },
                                 ?arns: Array[::String],
-                                ?billing_view_types: Array[("PRIMARY" | "BILLING_GROUP" | "CUSTOM")],
+                                ?billing_view_types: Array[("PRIMARY" | "BILLING_GROUP" | "CUSTOM" | "BILLING_TRANSFER" | "BILLING_TRANSFER_SHOWBACK")],
+                                ?names: Array[
+                                  {
+                                    search_option: ("STARTS_WITH"),
+                                    search_value: ::String
+                                  }
+                                ],
                                 ?owner_account_id: ::String,
+                                ?source_account_id: ::String,
                                 ?max_results: ::Integer,
                                 ?next_token: ::String
                               ) -> _ListBillingViewsResponseSuccess
                             | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListBillingViewsResponseSuccess
+
+      interface _ListEnterpriseSupportLinkedAccountChargesResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListEnterpriseSupportLinkedAccountChargesResponse]
+        def linked_account: () -> ::Array[Types::LinkedAccountCharge]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Billing/Client.html#list_enterprise_support_linked_account_charges-instance_method
+      def list_enterprise_support_linked_account_charges: (
+                                                            billing_month: ::String,
+                                                            ?account_id: ::String,
+                                                            ?max_results: ::Integer,
+                                                            ?next_token: ::String
+                                                          ) -> _ListEnterpriseSupportLinkedAccountChargesResponseSuccess
+                                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListEnterpriseSupportLinkedAccountChargesResponseSuccess
 
       interface _ListSourceViewsForBillingViewResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListSourceViewsForBillingViewResponse]
@@ -181,6 +312,15 @@ module Aws
                                   ) -> _ListTagsForResourceResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListTagsForResourceResponseSuccess
 
+      interface _RedeemCreditsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::RedeemCreditsResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Billing/Client.html#redeem_credits-instance_method
+      def redeem_credits: (
+                            promo_code: ::String
+                          ) -> _RedeemCreditsResponseSuccess
+                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RedeemCreditsResponseSuccess
+
       interface _TagResourceResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::TagResourceResponse]
       end
@@ -191,7 +331,7 @@ module Aws
                             {
                               key: ::String,
                               value: ::String?
-                            },
+                            }
                           ]
                         ) -> _TagResourceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess
@@ -206,6 +346,21 @@ module Aws
                           ) -> _UntagResourceResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UntagResourceResponseSuccess
 
+      interface _UpdateBillingPreferencesResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateBillingPreferencesResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Billing/Client.html#update_billing_preferences-instance_method
+      def update_billing_preferences: (
+                                        feature: ("RI_SHARING" | "RI_SHARING_HISTORY" | "CREDIT_SHARING" | "CREDIT_SHARING_HISTORY" | "CREDIT_LEVEL_SHARING" | "BILLING_ALERTS" | "CREDIT_PREFERENCE_OPTIONS"),
+                                        billing_preferences_per_key: Array[
+                                          {
+                                            key: ::String,
+                                            value: ("ENABLED" | "DISABLED")
+                                          }
+                                        ]
+                                      ) -> _UpdateBillingPreferencesResponseSuccess
+                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateBillingPreferencesResponseSuccess
+
       interface _UpdateBillingViewResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::UpdateBillingViewResponse]
         def arn: () -> ::String
@@ -216,16 +371,7 @@ module Aws
                                  arn: ::String,
                                  ?name: ::String,
                                  ?description: ::String,
-                                 ?data_filter_expression: {
-                                   dimensions: {
-                                     key: ("LINKED_ACCOUNT"),
-                                     values: Array[::String]
-                                   }?,
-                                   tags: {
-                                     key: ::String,
-                                     values: Array[::String]
-                                   }?
-                                 }
+                                 ?data_filter_expression: Params::expression
                                ) -> _UpdateBillingViewResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateBillingViewResponseSuccess
     end

@@ -15,7 +15,7 @@ module Aws::CloudWatchLogs
       attr_accessor policy_name: ::String
       attr_accessor policy_document: ::String
       attr_accessor last_updated_time: ::Integer
-      attr_accessor policy_type: ("DATA_PROTECTION_POLICY" | "SUBSCRIPTION_FILTER_POLICY" | "FIELD_INDEX_POLICY" | "TRANSFORMER_POLICY")
+      attr_accessor policy_type: ("DATA_PROTECTION_POLICY" | "SUBSCRIPTION_FILTER_POLICY" | "FIELD_INDEX_POLICY" | "TRANSFORMER_POLICY" | "METRIC_EXTRACTION_POLICY")
       attr_accessor scope: ("ALL")
       attr_accessor selection_criteria: ::String
       attr_accessor account_id: ::String
@@ -31,6 +31,12 @@ module Aws::CloudWatchLogs
 
     class AddKeys
       attr_accessor entries: ::Array[Types::AddKeyEntry]
+      SENSITIVE: []
+    end
+
+    class AggregateLogGroupSummary
+      attr_accessor log_group_count: ::Integer
+      attr_accessor grouping_identifiers: ::Array[Types::GroupingIdentifier]
       SENSITIVE: []
     end
 
@@ -78,11 +84,23 @@ module Aws::CloudWatchLogs
       SENSITIVE: []
     end
 
+    class AssociateSourceToS3TableIntegrationRequest
+      attr_accessor integration_arn: ::String
+      attr_accessor data_source: Types::DataSource
+      SENSITIVE: []
+    end
+
+    class AssociateSourceToS3TableIntegrationResponse
+      attr_accessor identifier: ::String
+      SENSITIVE: []
+    end
+
     class CSV
       attr_accessor quote_character: ::String
       attr_accessor delimiter: ::String
       attr_accessor columns: ::Array[::String]
       attr_accessor source: ::String
+      attr_accessor destination: ::String
       SENSITIVE: []
     end
 
@@ -91,17 +109,33 @@ module Aws::CloudWatchLogs
       SENSITIVE: []
     end
 
+    class CancelImportTaskRequest
+      attr_accessor import_id: ::String
+      SENSITIVE: []
+    end
+
+    class CancelImportTaskResponse
+      attr_accessor import_id: ::String
+      attr_accessor import_statistics: Types::ImportStatistics
+      attr_accessor import_status: ("IN_PROGRESS" | "CANCELLED" | "COMPLETED" | "FAILED")
+      attr_accessor creation_time: ::Integer
+      attr_accessor last_updated_time: ::Integer
+      SENSITIVE: []
+    end
+
     class ConfigurationTemplate
       attr_accessor service: ::String
       attr_accessor log_type: ::String
       attr_accessor resource_type: ::String
-      attr_accessor delivery_destination_type: ("S3" | "CWL" | "FH")
+      attr_accessor delivery_destination_type: ("S3" | "CWL" | "FH" | "XRAY")
       attr_accessor default_delivery_config_values: Types::ConfigurationTemplateDeliveryConfigValues
       attr_accessor allowed_fields: ::Array[Types::RecordField]
       attr_accessor allowed_output_formats: ::Array[("json" | "plain" | "w3c" | "raw" | "parquet")]
       attr_accessor allowed_action_for_allow_vended_logs_delivery_for_resource: ::String
       attr_accessor allowed_field_delimiters: ::Array[::String]
       attr_accessor allowed_suffix_path_fields: ::Array[::String]
+      attr_accessor delivery_source_configuration: ::Array[Types::DeliverySourceConfigurationSchema]
+      attr_accessor s3_tables_integration: Types::S3TablesIntegration
       SENSITIVE: []
     end
 
@@ -158,6 +192,20 @@ module Aws::CloudWatchLogs
       SENSITIVE: []
     end
 
+    class CreateImportTaskRequest
+      attr_accessor import_source_arn: ::String
+      attr_accessor import_role_arn: ::String
+      attr_accessor import_filter: Types::ImportFilter
+      SENSITIVE: []
+    end
+
+    class CreateImportTaskResponse
+      attr_accessor import_id: ::String
+      attr_accessor import_destination_arn: ::String
+      attr_accessor creation_time: ::Integer
+      SENSITIVE: []
+    end
+
     class CreateLogAnomalyDetectorRequest
       attr_accessor log_group_arn_list: ::Array[::String]
       attr_accessor detector_name: ::String
@@ -178,7 +226,8 @@ module Aws::CloudWatchLogs
       attr_accessor log_group_name: ::String
       attr_accessor kms_key_id: ::String
       attr_accessor tags: ::Hash[::String, ::String]
-      attr_accessor log_group_class: ("STANDARD" | "INFREQUENT_ACCESS")
+      attr_accessor log_group_class: ("STANDARD" | "INFREQUENT_ACCESS" | "DELIVERY")
+      attr_accessor deletion_protection_enabled: bool
       SENSITIVE: []
     end
 
@@ -188,8 +237,61 @@ module Aws::CloudWatchLogs
       SENSITIVE: []
     end
 
+    class CreateLookupTableRequest
+      attr_accessor lookup_table_name: ::String
+      attr_accessor description: ::String
+      attr_accessor table_body: ::String
+      attr_accessor query_id: ::String
+      attr_accessor kms_key_id: ::String
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class CreateLookupTableResponse
+      attr_accessor lookup_table_arn: ::String
+      attr_accessor created_at: ::Integer
+      SENSITIVE: []
+    end
+
+    class CreateScheduledQueryRequest
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor query_language: ("CWLI" | "SQL" | "PPL")
+      attr_accessor query_string: ::String
+      attr_accessor log_group_identifiers: ::Array[::String]
+      attr_accessor schedule_expression: ::String
+      attr_accessor timezone: ::String
+      attr_accessor start_time_offset: ::Integer
+      attr_accessor end_time_offset: ::Integer
+      attr_accessor destination_configuration: Types::DestinationConfiguration
+      attr_accessor schedule_start_time: ::Integer
+      attr_accessor schedule_end_time: ::Integer
+      attr_accessor execution_role_arn: ::String
+      attr_accessor state: ("ENABLED" | "DISABLED")
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class CreateScheduledQueryResponse
+      attr_accessor scheduled_query_arn: ::String
+      attr_accessor state: ("ENABLED" | "DISABLED")
+      SENSITIVE: []
+    end
+
     class DataAlreadyAcceptedException
       attr_accessor expected_sequence_token: ::String
+      SENSITIVE: []
+    end
+
+    class DataSource
+      attr_accessor name: ::String
+      attr_accessor type: ::String
+      SENSITIVE: []
+    end
+
+    class DataSourceFilter
+      attr_accessor name: ::String
+      attr_accessor type: ::String
       SENSITIVE: []
     end
 
@@ -206,7 +308,7 @@ module Aws::CloudWatchLogs
 
     class DeleteAccountPolicyRequest
       attr_accessor policy_name: ::String
-      attr_accessor policy_type: ("DATA_PROTECTION_POLICY" | "SUBSCRIPTION_FILTER_POLICY" | "FIELD_INDEX_POLICY" | "TRANSFORMER_POLICY")
+      attr_accessor policy_type: ("DATA_PROTECTION_POLICY" | "SUBSCRIPTION_FILTER_POLICY" | "FIELD_INDEX_POLICY" | "TRANSFORMER_POLICY" | "METRIC_EXTRACTION_POLICY")
       SENSITIVE: []
     end
 
@@ -278,6 +380,11 @@ module Aws::CloudWatchLogs
       SENSITIVE: []
     end
 
+    class DeleteLookupTableRequest
+      attr_accessor lookup_table_arn: ::String
+      SENSITIVE: []
+    end
+
     class DeleteMetricFilterRequest
       attr_accessor log_group_name: ::String
       attr_accessor filter_name: ::String
@@ -296,6 +403,8 @@ module Aws::CloudWatchLogs
 
     class DeleteResourcePolicyRequest
       attr_accessor policy_name: ::String
+      attr_accessor resource_arn: ::String
+      attr_accessor expected_revision_id: ::String
       SENSITIVE: []
     end
 
@@ -304,9 +413,23 @@ module Aws::CloudWatchLogs
       SENSITIVE: []
     end
 
+    class DeleteScheduledQueryRequest
+      attr_accessor identifier: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteScheduledQueryResponse < Aws::EmptyStructure
+    end
+
     class DeleteSubscriptionFilterRequest
       attr_accessor log_group_name: ::String
       attr_accessor filter_name: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteSyslogConfigurationRequest
+      attr_accessor log_group_identifier: ::String
+      attr_accessor vpc_endpoint_id: ::String
       SENSITIVE: []
     end
 
@@ -320,7 +443,7 @@ module Aws::CloudWatchLogs
       attr_accessor arn: ::String
       attr_accessor delivery_source_name: ::String
       attr_accessor delivery_destination_arn: ::String
-      attr_accessor delivery_destination_type: ("S3" | "CWL" | "FH")
+      attr_accessor delivery_destination_type: ("S3" | "CWL" | "FH" | "XRAY")
       attr_accessor record_fields: ::Array[::String]
       attr_accessor field_delimiter: ::String
       attr_accessor s3_delivery_configuration: Types::S3DeliveryConfiguration
@@ -331,7 +454,7 @@ module Aws::CloudWatchLogs
     class DeliveryDestination
       attr_accessor name: ::String
       attr_accessor arn: ::String
-      attr_accessor delivery_destination_type: ("S3" | "CWL" | "FH")
+      attr_accessor delivery_destination_type: ("S3" | "CWL" | "FH" | "XRAY")
       attr_accessor output_format: ("json" | "plain" | "w3c" | "raw" | "parquet")
       attr_accessor delivery_destination_configuration: Types::DeliveryDestinationConfiguration
       attr_accessor tags: ::Hash[::String, ::String]
@@ -350,11 +473,24 @@ module Aws::CloudWatchLogs
       attr_accessor service: ::String
       attr_accessor log_type: ::String
       attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor delivery_source_configuration: ::Hash[::String, ::String]
+      attr_accessor status: ("ACTIVE" | "INACTIVE")
+      attr_accessor status_reason: ("RESOURCE_DELETED")
+      SENSITIVE: []
+    end
+
+    class DeliverySourceConfigurationSchema
+      attr_accessor key_name: ::String
+      attr_accessor value_type: ("string" | "boolean" | "int" | "double" | "long")
+      attr_accessor default_value: ::String
+      attr_accessor supported_values: ::Array[::String]
+      attr_accessor min_value: ::Float
+      attr_accessor max_value: ::Float
       SENSITIVE: []
     end
 
     class DescribeAccountPoliciesRequest
-      attr_accessor policy_type: ("DATA_PROTECTION_POLICY" | "SUBSCRIPTION_FILTER_POLICY" | "FIELD_INDEX_POLICY" | "TRANSFORMER_POLICY")
+      attr_accessor policy_type: ("DATA_PROTECTION_POLICY" | "SUBSCRIPTION_FILTER_POLICY" | "FIELD_INDEX_POLICY" | "TRANSFORMER_POLICY" | "METRIC_EXTRACTION_POLICY")
       attr_accessor policy_name: ::String
       attr_accessor account_identifiers: ::Array[::String]
       attr_accessor next_token: ::String
@@ -371,7 +507,7 @@ module Aws::CloudWatchLogs
       attr_accessor service: ::String
       attr_accessor log_types: ::Array[::String]
       attr_accessor resource_types: ::Array[::String]
-      attr_accessor delivery_destination_types: ::Array[("S3" | "CWL" | "FH")]
+      attr_accessor delivery_destination_types: ::Array[("S3" | "CWL" | "FH" | "XRAY")]
       attr_accessor next_token: ::String
       attr_accessor limit: ::Integer
       SENSITIVE: []
@@ -448,12 +584,44 @@ module Aws::CloudWatchLogs
 
     class DescribeFieldIndexesRequest
       attr_accessor log_group_identifiers: ::Array[::String]
+      attr_accessor index_categories: ::Array[("DEFAULT" | "CUSTOM" | "AUTO" | "INACTIVE")]
       attr_accessor next_token: ::String
       SENSITIVE: []
     end
 
     class DescribeFieldIndexesResponse
       attr_accessor field_indexes: ::Array[Types::FieldIndex]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeImportTaskBatchesRequest
+      attr_accessor import_id: ::String
+      attr_accessor batch_import_status: ::Array[("IN_PROGRESS" | "CANCELLED" | "COMPLETED" | "FAILED")]
+      attr_accessor limit: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeImportTaskBatchesResponse
+      attr_accessor import_source_arn: ::String
+      attr_accessor import_id: ::String
+      attr_accessor import_batches: ::Array[Types::ImportBatch]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeImportTasksRequest
+      attr_accessor import_id: ::String
+      attr_accessor import_status: ("IN_PROGRESS" | "CANCELLED" | "COMPLETED" | "FAILED")
+      attr_accessor import_source_arn: ::String
+      attr_accessor limit: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeImportTasksResponse
+      attr_accessor imports: ::Array[Types::Import]
       attr_accessor next_token: ::String
       SENSITIVE: []
     end
@@ -477,7 +645,8 @@ module Aws::CloudWatchLogs
       attr_accessor next_token: ::String
       attr_accessor limit: ::Integer
       attr_accessor include_linked_accounts: bool
-      attr_accessor log_group_class: ("STANDARD" | "INFREQUENT_ACCESS")
+      attr_accessor log_group_class: ("STANDARD" | "INFREQUENT_ACCESS" | "DELIVERY")
+      attr_accessor log_group_identifiers: ::Array[::String]
       SENSITIVE: []
     end
 
@@ -500,6 +669,19 @@ module Aws::CloudWatchLogs
 
     class DescribeLogStreamsResponse
       attr_accessor log_streams: ::Array[Types::LogStream]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeLookupTablesRequest
+      attr_accessor lookup_table_name_prefix: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeLookupTablesResponse
+      attr_accessor lookup_tables: ::Array[Types::LookupTable]
       attr_accessor next_token: ::String
       SENSITIVE: []
     end
@@ -552,6 +734,8 @@ module Aws::CloudWatchLogs
     class DescribeResourcePoliciesRequest
       attr_accessor next_token: ::String
       attr_accessor limit: ::Integer
+      attr_accessor resource_arn: ::String
+      attr_accessor policy_scope: ("ACCOUNT" | "RESOURCE")
       SENSITIVE: []
     end
 
@@ -585,9 +769,25 @@ module Aws::CloudWatchLogs
       SENSITIVE: []
     end
 
+    class DestinationConfiguration
+      attr_accessor s3_configuration: Types::S3Configuration
+      attr_accessor lookup_table_configuration: Types::LookupTableConfiguration
+      SENSITIVE: []
+    end
+
     class DisassociateKmsKeyRequest
       attr_accessor log_group_name: ::String
       attr_accessor resource_identifier: ::String
+      SENSITIVE: []
+    end
+
+    class DisassociateSourceFromS3TableIntegrationRequest
+      attr_accessor identifier: ::String
+      SENSITIVE: []
+    end
+
+    class DisassociateSourceFromS3TableIntegrationResponse
+      attr_accessor identifier: ::String
       SENSITIVE: []
     end
 
@@ -628,6 +828,14 @@ module Aws::CloudWatchLogs
       attr_accessor last_scan_time: ::Integer
       attr_accessor first_event_time: ::Integer
       attr_accessor last_event_time: ::Integer
+      attr_accessor type: ("FACET" | "FIELD_INDEX")
+      attr_accessor index_category: ("DEFAULT" | "CUSTOM" | "AUTO" | "INACTIVE")
+      SENSITIVE: []
+    end
+
+    class FieldsData
+      attr_accessor data: ::String
+      attr_accessor event_type: untyped
       SENSITIVE: []
     end
 
@@ -641,6 +849,7 @@ module Aws::CloudWatchLogs
       attr_accessor filter_pattern: ::String
       attr_accessor next_token: ::String
       attr_accessor limit: ::Integer
+      attr_accessor start_from_head: bool
       attr_accessor interleaved: bool
       attr_accessor unmask: bool
       SENSITIVE: []
@@ -765,6 +974,17 @@ module Aws::CloudWatchLogs
       SENSITIVE: []
     end
 
+    class GetLogFieldsRequest
+      attr_accessor data_source_name: ::String
+      attr_accessor data_source_type: ::String
+      SENSITIVE: []
+    end
+
+    class GetLogFieldsResponse
+      attr_accessor log_fields: ::Array[Types::LogFieldsListItem]
+      SENSITIVE: []
+    end
+
     class GetLogGroupFieldsRequest
       attr_accessor log_group_name: ::String
       attr_accessor time: ::Integer
@@ -774,6 +994,17 @@ module Aws::CloudWatchLogs
 
     class GetLogGroupFieldsResponse
       attr_accessor log_group_fields: ::Array[Types::LogGroupField]
+      SENSITIVE: []
+    end
+
+    class GetLogObjectRequest
+      attr_accessor unmask: bool
+      attr_accessor log_object_pointer: ::String
+      SENSITIVE: []
+    end
+
+    class GetLogObjectResponse
+      attr_accessor field_stream: Types::GetLogObjectResponseStream
       SENSITIVE: []
     end
 
@@ -788,8 +1019,26 @@ module Aws::CloudWatchLogs
       SENSITIVE: []
     end
 
+    class GetLookupTableRequest
+      attr_accessor lookup_table_arn: ::String
+      SENSITIVE: []
+    end
+
+    class GetLookupTableResponse
+      attr_accessor lookup_table_arn: ::String
+      attr_accessor lookup_table_name: ::String
+      attr_accessor description: ::String
+      attr_accessor table_body: ::String
+      attr_accessor size_bytes: ::Integer
+      attr_accessor last_updated_time: ::Integer
+      attr_accessor kms_key_id: ::String
+      SENSITIVE: []
+    end
+
     class GetQueryResultsRequest
       attr_accessor query_id: ::String
+      attr_accessor next_token: ::String
+      attr_accessor max_items: ::Integer
       SENSITIVE: []
     end
 
@@ -799,6 +1048,63 @@ module Aws::CloudWatchLogs
       attr_accessor statistics: Types::QueryStatistics
       attr_accessor status: ("Scheduled" | "Running" | "Complete" | "Failed" | "Cancelled" | "Timeout" | "Unknown")
       attr_accessor encryption_key: ::String
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class GetScheduledQueryHistoryRequest
+      attr_accessor identifier: ::String
+      attr_accessor start_time: ::Integer
+      attr_accessor end_time: ::Integer
+      attr_accessor execution_statuses: ::Array[("Running" | "InvalidQuery" | "Complete" | "Failed" | "Timeout")]
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class GetScheduledQueryHistoryResponse
+      attr_accessor name: ::String
+      attr_accessor scheduled_query_arn: ::String
+      attr_accessor trigger_history: ::Array[Types::TriggerHistoryRecord]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class GetScheduledQueryRequest
+      attr_accessor identifier: ::String
+      SENSITIVE: []
+    end
+
+    class GetScheduledQueryResponse
+      attr_accessor scheduled_query_arn: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor query_language: ("CWLI" | "SQL" | "PPL")
+      attr_accessor query_string: ::String
+      attr_accessor log_group_identifiers: ::Array[::String]
+      attr_accessor schedule_expression: ::String
+      attr_accessor timezone: ::String
+      attr_accessor start_time_offset: ::Integer
+      attr_accessor end_time_offset: ::Integer
+      attr_accessor destination_configuration: Types::DestinationConfiguration
+      attr_accessor state: ("ENABLED" | "DISABLED")
+      attr_accessor schedule_type: ("CUSTOMER_MANAGED" | "AWS_MANAGED")
+      attr_accessor last_triggered_time: ::Integer
+      attr_accessor last_execution_status: ("Running" | "InvalidQuery" | "Complete" | "Failed" | "Timeout")
+      attr_accessor schedule_start_time: ::Integer
+      attr_accessor schedule_end_time: ::Integer
+      attr_accessor execution_role_arn: ::String
+      attr_accessor creation_time: ::Integer
+      attr_accessor last_updated_time: ::Integer
+      SENSITIVE: []
+    end
+
+    class GetStorageTierPolicyRequest < Aws::EmptyStructure
+    end
+
+    class GetStorageTierPolicyResponse
+      attr_accessor storage_tier: ("STANDARD" | "INTELLIGENT_TIERING")
+      attr_accessor last_updated_time: ::Integer
       SENSITIVE: []
     end
 
@@ -818,6 +1124,43 @@ module Aws::CloudWatchLogs
     class Grok
       attr_accessor source: ::String
       attr_accessor match: ::String
+      SENSITIVE: []
+    end
+
+    class GroupingIdentifier
+      attr_accessor key: ::String
+      attr_accessor value: ::String
+      SENSITIVE: []
+    end
+
+    class Import
+      attr_accessor import_id: ::String
+      attr_accessor import_source_arn: ::String
+      attr_accessor import_status: ("IN_PROGRESS" | "CANCELLED" | "COMPLETED" | "FAILED")
+      attr_accessor import_destination_arn: ::String
+      attr_accessor import_statistics: Types::ImportStatistics
+      attr_accessor import_filter: Types::ImportFilter
+      attr_accessor creation_time: ::Integer
+      attr_accessor last_updated_time: ::Integer
+      attr_accessor error_message: ::String
+      SENSITIVE: []
+    end
+
+    class ImportBatch
+      attr_accessor batch_id: ::String
+      attr_accessor status: ("IN_PROGRESS" | "CANCELLED" | "COMPLETED" | "FAILED")
+      attr_accessor error_message: ::String
+      SENSITIVE: []
+    end
+
+    class ImportFilter
+      attr_accessor start_event_time: ::Integer
+      attr_accessor end_event_time: ::Integer
+      SENSITIVE: []
+    end
+
+    class ImportStatistics
+      attr_accessor bytes_imported: ::Integer
       SENSITIVE: []
     end
 
@@ -854,6 +1197,15 @@ module Aws::CloudWatchLogs
       SENSITIVE: []
     end
 
+    class InternalServerException < Aws::EmptyStructure
+    end
+
+    class InternalStreamingException
+      attr_accessor message: ::String
+      attr_accessor event_type: untyped
+      SENSITIVE: []
+    end
+
     class InvalidOperationException < Aws::EmptyStructure
     end
 
@@ -866,6 +1218,24 @@ module Aws::CloudWatchLogs
     end
 
     class LimitExceededException < Aws::EmptyStructure
+    end
+
+    class ListAggregateLogGroupSummariesRequest
+      attr_accessor account_identifiers: ::Array[::String]
+      attr_accessor include_linked_accounts: bool
+      attr_accessor log_group_class: ("STANDARD" | "INFREQUENT_ACCESS" | "DELIVERY")
+      attr_accessor log_group_name_pattern: ::String
+      attr_accessor data_sources: ::Array[Types::DataSourceFilter]
+      attr_accessor group_by: ("DATA_SOURCE_NAME_TYPE_AND_FORMAT" | "DATA_SOURCE_NAME_AND_TYPE")
+      attr_accessor next_token: ::String
+      attr_accessor limit: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListAggregateLogGroupSummariesResponse
+      attr_accessor aggregate_log_group_summaries: ::Array[Types::AggregateLogGroupSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
     end
 
     class ListAnomaliesRequest
@@ -916,6 +1286,66 @@ module Aws::CloudWatchLogs
 
     class ListLogGroupsForQueryResponse
       attr_accessor log_group_identifiers: ::Array[::String]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListLogGroupsRequest
+      attr_accessor log_group_name_pattern: ::String
+      attr_accessor log_group_class: ("STANDARD" | "INFREQUENT_ACCESS" | "DELIVERY")
+      attr_accessor include_linked_accounts: bool
+      attr_accessor account_identifiers: ::Array[::String]
+      attr_accessor next_token: ::String
+      attr_accessor limit: ::Integer
+      attr_accessor data_sources: ::Array[Types::DataSourceFilter]
+      attr_accessor field_index_names: ::Array[::String]
+      attr_accessor log_group_tags: ::Array[Types::TagFilter]
+      SENSITIVE: []
+    end
+
+    class ListLogGroupsResponse
+      attr_accessor log_groups: ::Array[Types::LogGroupSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListScheduledQueriesRequest
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      attr_accessor state: ("ENABLED" | "DISABLED")
+      attr_accessor schedule_type: ("CUSTOMER_MANAGED" | "AWS_MANAGED")
+      SENSITIVE: []
+    end
+
+    class ListScheduledQueriesResponse
+      attr_accessor next_token: ::String
+      attr_accessor scheduled_queries: ::Array[Types::ScheduledQuerySummary]
+      SENSITIVE: []
+    end
+
+    class ListSourcesForS3TableIntegrationRequest
+      attr_accessor integration_arn: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListSourcesForS3TableIntegrationResponse
+      attr_accessor sources: ::Array[Types::S3TableIntegrationSource]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListSyslogConfigurationsRequest
+      attr_accessor log_group_identifier: ::String
+      attr_accessor vpc_endpoint_id: ::String
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListSyslogConfigurationsResponse
+      attr_accessor syslog_configurations: ::Array[Types::SyslogConfiguration]
       attr_accessor next_token: ::String
       SENSITIVE: []
     end
@@ -988,6 +1418,19 @@ module Aws::CloudWatchLogs
       SENSITIVE: []
     end
 
+    class LogFieldType
+      attr_accessor type: ::String
+      attr_accessor element: Types::LogFieldType
+      attr_accessor fields: ::Array[Types::LogFieldsListItem]
+      SENSITIVE: []
+    end
+
+    class LogFieldsListItem
+      attr_accessor log_field_name: ::String
+      attr_accessor log_field_type: Types::LogFieldType
+      SENSITIVE: []
+    end
+
     class LogGroup
       attr_accessor log_group_name: ::String
       attr_accessor creation_time: ::Integer
@@ -998,14 +1441,23 @@ module Aws::CloudWatchLogs
       attr_accessor kms_key_id: ::String
       attr_accessor data_protection_status: ("ACTIVATED" | "DELETED" | "ARCHIVED" | "DISABLED")
       attr_accessor inherited_properties: ::Array[("ACCOUNT_DATA_PROTECTION")]
-      attr_accessor log_group_class: ("STANDARD" | "INFREQUENT_ACCESS")
+      attr_accessor log_group_class: ("STANDARD" | "INFREQUENT_ACCESS" | "DELIVERY")
       attr_accessor log_group_arn: ::String
+      attr_accessor deletion_protection_enabled: bool
+      attr_accessor bearer_token_authentication_enabled: bool
       SENSITIVE: []
     end
 
     class LogGroupField
       attr_accessor name: ::String
       attr_accessor percent: ::Integer
+      SENSITIVE: []
+    end
+
+    class LogGroupSummary
+      attr_accessor log_group_name: ::String
+      attr_accessor log_group_arn: ::String
+      attr_accessor log_group_class: ("STANDARD" | "INFREQUENT_ACCESS" | "DELIVERY")
       SENSITIVE: []
     end
 
@@ -1018,6 +1470,27 @@ module Aws::CloudWatchLogs
       attr_accessor upload_sequence_token: ::String
       attr_accessor arn: ::String
       attr_accessor stored_bytes: ::Integer
+      SENSITIVE: []
+    end
+
+    class LookupTable
+      attr_accessor lookup_table_arn: ::String
+      attr_accessor lookup_table_name: ::String
+      attr_accessor description: ::String
+      attr_accessor table_fields: ::Array[::String]
+      attr_accessor records_count: ::Integer
+      attr_accessor size_bytes: ::Integer
+      attr_accessor last_updated_time: ::Integer
+      attr_accessor kms_key_id: ::String
+      SENSITIVE: []
+    end
+
+    class LookupTableConfiguration
+      attr_accessor table_name: ::String
+      attr_accessor role_arn: ::String
+      attr_accessor description: ::String
+      attr_accessor kms_key_id: ::String
+      attr_accessor tags: ::Hash[::String, ::String]
       SENSITIVE: []
     end
 
@@ -1038,6 +1511,8 @@ module Aws::CloudWatchLogs
       attr_accessor creation_time: ::Integer
       attr_accessor log_group_name: ::String
       attr_accessor apply_on_transformed_logs: bool
+      attr_accessor field_selection_criteria: ::String
+      attr_accessor emit_system_field_dimensions: ::Array[::String]
       SENSITIVE: []
     end
 
@@ -1190,6 +1665,14 @@ module Aws::CloudWatchLogs
       SENSITIVE: []
     end
 
+    class ParseToOCSF
+      attr_accessor source: ::String
+      attr_accessor event_source: ("CloudTrail" | "Route53Resolver" | "VPCFlow" | "EKSAudit" | "AWSWAF")
+      attr_accessor ocsf_version: ("V1.1" | "V1.5")
+      attr_accessor mapping_version: ::String
+      SENSITIVE: []
+    end
+
     class ParseVPC
       attr_accessor source: ::String
       SENSITIVE: []
@@ -1228,6 +1711,7 @@ module Aws::CloudWatchLogs
       attr_accessor parse_json: Types::ParseJSON
       attr_accessor parse_key_value: Types::ParseKeyValue
       attr_accessor parse_route_53: Types::ParseRoute53
+      attr_accessor parse_to_ocsf: Types::ParseToOCSF
       attr_accessor parse_postgres: Types::ParsePostgres
       attr_accessor parse_vpc: Types::ParseVPC
       attr_accessor parse_waf: Types::ParseWAF
@@ -1243,7 +1727,7 @@ module Aws::CloudWatchLogs
     class PutAccountPolicyRequest
       attr_accessor policy_name: ::String
       attr_accessor policy_document: ::String
-      attr_accessor policy_type: ("DATA_PROTECTION_POLICY" | "SUBSCRIPTION_FILTER_POLICY" | "FIELD_INDEX_POLICY" | "TRANSFORMER_POLICY")
+      attr_accessor policy_type: ("DATA_PROTECTION_POLICY" | "SUBSCRIPTION_FILTER_POLICY" | "FIELD_INDEX_POLICY" | "TRANSFORMER_POLICY" | "METRIC_EXTRACTION_POLICY")
       attr_accessor scope: ("ALL")
       attr_accessor selection_criteria: ::String
       SENSITIVE: []
@@ -1251,6 +1735,12 @@ module Aws::CloudWatchLogs
 
     class PutAccountPolicyResponse
       attr_accessor account_policy: Types::AccountPolicy
+      SENSITIVE: []
+    end
+
+    class PutBearerTokenAuthenticationRequest
+      attr_accessor log_group_identifier: ::String
+      attr_accessor bearer_token_authentication_enabled: bool
       SENSITIVE: []
     end
 
@@ -1282,6 +1772,7 @@ module Aws::CloudWatchLogs
       attr_accessor name: ::String
       attr_accessor output_format: ("json" | "plain" | "w3c" | "raw" | "parquet")
       attr_accessor delivery_destination_configuration: Types::DeliveryDestinationConfiguration
+      attr_accessor delivery_destination_type: ("S3" | "CWL" | "FH" | "XRAY")
       attr_accessor tags: ::Hash[::String, ::String]
       SENSITIVE: []
     end
@@ -1296,6 +1787,7 @@ module Aws::CloudWatchLogs
       attr_accessor resource_arn: ::String
       attr_accessor log_type: ::String
       attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor delivery_source_configuration: ::Hash[::String, ::String]
       SENSITIVE: []
     end
 
@@ -1364,12 +1856,20 @@ module Aws::CloudWatchLogs
       SENSITIVE: []
     end
 
+    class PutLogGroupDeletionProtectionRequest
+      attr_accessor log_group_identifier: ::String
+      attr_accessor deletion_protection_enabled: bool
+      SENSITIVE: []
+    end
+
     class PutMetricFilterRequest
       attr_accessor log_group_name: ::String
       attr_accessor filter_name: ::String
       attr_accessor filter_pattern: ::String
       attr_accessor metric_transformations: ::Array[Types::MetricTransformation]
       attr_accessor apply_on_transformed_logs: bool
+      attr_accessor field_selection_criteria: ::String
+      attr_accessor emit_system_field_dimensions: ::Array[::String]
       SENSITIVE: []
     end
 
@@ -1380,6 +1880,7 @@ module Aws::CloudWatchLogs
       attr_accessor log_group_names: ::Array[::String]
       attr_accessor query_string: ::String
       attr_accessor client_token: ::String
+      attr_accessor parameters: ::Array[Types::QueryParameter]
       SENSITIVE: []
     end
 
@@ -1391,17 +1892,31 @@ module Aws::CloudWatchLogs
     class PutResourcePolicyRequest
       attr_accessor policy_name: ::String
       attr_accessor policy_document: ::String
+      attr_accessor resource_arn: ::String
+      attr_accessor expected_revision_id: ::String
       SENSITIVE: []
     end
 
     class PutResourcePolicyResponse
       attr_accessor resource_policy: Types::ResourcePolicy
+      attr_accessor revision_id: ::String
       SENSITIVE: []
     end
 
     class PutRetentionPolicyRequest
       attr_accessor log_group_name: ::String
       attr_accessor retention_in_days: ::Integer
+      SENSITIVE: []
+    end
+
+    class PutStorageTierPolicyRequest
+      attr_accessor storage_tier: ("STANDARD" | "INTELLIGENT_TIERING")
+      SENSITIVE: []
+    end
+
+    class PutStorageTierPolicyResponse
+      attr_accessor storage_tier: ("STANDARD" | "INTELLIGENT_TIERING")
+      attr_accessor last_updated_time: ::Integer
       SENSITIVE: []
     end
 
@@ -1413,6 +1928,14 @@ module Aws::CloudWatchLogs
       attr_accessor role_arn: ::String
       attr_accessor distribution: ("Random" | "ByLogStream")
       attr_accessor apply_on_transformed_logs: bool
+      attr_accessor field_selection_criteria: ::String
+      attr_accessor emit_system_fields: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class PutSyslogConfigurationRequest
+      attr_accessor log_group_identifier: ::String
+      attr_accessor vpc_endpoint_id: ::String
       SENSITIVE: []
     end
 
@@ -1441,6 +1964,7 @@ module Aws::CloudWatchLogs
       attr_accessor query_string: ::String
       attr_accessor last_modified: ::Integer
       attr_accessor log_group_names: ::Array[::String]
+      attr_accessor parameters: ::Array[Types::QueryParameter]
       SENSITIVE: []
     end
 
@@ -1451,6 +1975,16 @@ module Aws::CloudWatchLogs
       attr_accessor status: ("Scheduled" | "Running" | "Complete" | "Failed" | "Cancelled" | "Timeout" | "Unknown")
       attr_accessor create_time: ::Integer
       attr_accessor log_group_name: ::String
+      attr_accessor query_duration: ::Integer
+      attr_accessor bytes_scanned: ::Float
+      attr_accessor user_identity: ::String
+      SENSITIVE: []
+    end
+
+    class QueryParameter
+      attr_accessor name: ::String
+      attr_accessor default_value: ::String
+      attr_accessor description: ::String
       SENSITIVE: []
     end
 
@@ -1515,6 +2049,9 @@ module Aws::CloudWatchLogs
       attr_accessor policy_name: ::String
       attr_accessor policy_document: ::String
       attr_accessor last_updated_time: ::Integer
+      attr_accessor policy_scope: ("ACCOUNT" | "RESOURCE")
+      attr_accessor resource_arn: ::String
+      attr_accessor revision_id: ::String
       SENSITIVE: []
     end
 
@@ -1524,9 +2061,57 @@ module Aws::CloudWatchLogs
       SENSITIVE: []
     end
 
+    class S3Configuration
+      attr_accessor destination_identifier: ::String
+      attr_accessor role_arn: ::String
+      attr_accessor owner_account_id: ::String
+      attr_accessor kms_key_id: ::String
+      SENSITIVE: []
+    end
+
     class S3DeliveryConfiguration
       attr_accessor suffix_path: ::String
       attr_accessor enable_hive_compatible_path: bool
+      SENSITIVE: []
+    end
+
+    class S3TableIntegrationSource
+      attr_accessor identifier: ::String
+      attr_accessor data_source: Types::DataSource
+      attr_accessor status: ("ACTIVE" | "UNHEALTHY" | "FAILED" | "DATA_SOURCE_DELETE_IN_PROGRESS")
+      attr_accessor status_reason: ::String
+      attr_accessor created_time_stamp: ::Integer
+      attr_accessor parent_source_identifier: ::String
+      SENSITIVE: []
+    end
+
+    class S3TablesIntegration
+      attr_accessor datasource_name: ::String
+      attr_accessor datasource_type: ::String
+      SENSITIVE: []
+    end
+
+    class ScheduledQueryDestination
+      attr_accessor destination_type: ("S3" | "LOOKUP_TABLE")
+      attr_accessor destination_identifier: ::String
+      attr_accessor status: ("IN_PROGRESS" | "CLIENT_ERROR" | "FAILED" | "COMPLETE")
+      attr_accessor processed_identifier: ::String
+      attr_accessor error_message: ::String
+      SENSITIVE: []
+    end
+
+    class ScheduledQuerySummary
+      attr_accessor scheduled_query_arn: ::String
+      attr_accessor name: ::String
+      attr_accessor state: ("ENABLED" | "DISABLED")
+      attr_accessor schedule_type: ("CUSTOMER_MANAGED" | "AWS_MANAGED")
+      attr_accessor last_triggered_time: ::Integer
+      attr_accessor last_execution_status: ("Running" | "InvalidQuery" | "Complete" | "Failed" | "Timeout")
+      attr_accessor schedule_expression: ::String
+      attr_accessor timezone: ::String
+      attr_accessor destination_configuration: Types::DestinationConfiguration
+      attr_accessor creation_time: ::Integer
+      attr_accessor last_updated_time: ::Integer
       SENSITIVE: []
     end
 
@@ -1614,6 +2199,8 @@ module Aws::CloudWatchLogs
       attr_accessor distribution: ("Random" | "ByLogStream")
       attr_accessor apply_on_transformed_logs: bool
       attr_accessor creation_time: ::Integer
+      attr_accessor field_selection_criteria: ::String
+      attr_accessor emit_system_fields: ::Array[::String]
       SENSITIVE: []
     end
 
@@ -1632,6 +2219,20 @@ module Aws::CloudWatchLogs
     class SuppressionPeriod
       attr_accessor value: ::Integer
       attr_accessor suppression_unit: ("SECONDS" | "MINUTES" | "HOURS")
+      SENSITIVE: []
+    end
+
+    class SyslogConfiguration
+      attr_accessor log_group_arn: ::String
+      attr_accessor source_type: ("VPCE")
+      attr_accessor vpc_endpoint_id: ::String
+      attr_accessor created_at: ::Integer
+      SENSITIVE: []
+    end
+
+    class TagFilter
+      attr_accessor key: ::String
+      attr_accessor values: ::Array[::String]
       SENSITIVE: []
     end
 
@@ -1682,6 +2283,15 @@ module Aws::CloudWatchLogs
       attr_accessor event_number: ::Integer
       attr_accessor event_message: ::String
       attr_accessor transformed_event_message: ::String
+      SENSITIVE: []
+    end
+
+    class TriggerHistoryRecord
+      attr_accessor query_id: ::String
+      attr_accessor execution_status: ("Running" | "InvalidQuery" | "Complete" | "Failed" | "Timeout")
+      attr_accessor triggered_timestamp: ::Integer
+      attr_accessor error_message: ::String
+      attr_accessor destinations: ::Array[Types::ScheduledQueryDestination]
       SENSITIVE: []
     end
 
@@ -1746,12 +2356,73 @@ module Aws::CloudWatchLogs
       SENSITIVE: []
     end
 
+    class UpdateLookupTableRequest
+      attr_accessor lookup_table_arn: ::String
+      attr_accessor description: ::String
+      attr_accessor table_body: ::String
+      attr_accessor query_id: ::String
+      attr_accessor kms_key_id: ::String
+      SENSITIVE: []
+    end
+
+    class UpdateLookupTableResponse
+      attr_accessor lookup_table_arn: ::String
+      attr_accessor last_updated_time: ::Integer
+      SENSITIVE: []
+    end
+
+    class UpdateScheduledQueryRequest
+      attr_accessor identifier: ::String
+      attr_accessor description: ::String
+      attr_accessor query_language: ("CWLI" | "SQL" | "PPL")
+      attr_accessor query_string: ::String
+      attr_accessor log_group_identifiers: ::Array[::String]
+      attr_accessor schedule_expression: ::String
+      attr_accessor timezone: ::String
+      attr_accessor start_time_offset: ::Integer
+      attr_accessor end_time_offset: ::Integer
+      attr_accessor destination_configuration: Types::DestinationConfiguration
+      attr_accessor schedule_start_time: ::Integer
+      attr_accessor schedule_end_time: ::Integer
+      attr_accessor execution_role_arn: ::String
+      attr_accessor state: ("ENABLED" | "DISABLED")
+      SENSITIVE: []
+    end
+
+    class UpdateScheduledQueryResponse
+      attr_accessor scheduled_query_arn: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor query_language: ("CWLI" | "SQL" | "PPL")
+      attr_accessor query_string: ::String
+      attr_accessor log_group_identifiers: ::Array[::String]
+      attr_accessor schedule_expression: ::String
+      attr_accessor timezone: ::String
+      attr_accessor start_time_offset: ::Integer
+      attr_accessor end_time_offset: ::Integer
+      attr_accessor destination_configuration: Types::DestinationConfiguration
+      attr_accessor state: ("ENABLED" | "DISABLED")
+      attr_accessor schedule_type: ("CUSTOMER_MANAGED" | "AWS_MANAGED")
+      attr_accessor last_triggered_time: ::Integer
+      attr_accessor last_execution_status: ("Running" | "InvalidQuery" | "Complete" | "Failed" | "Timeout")
+      attr_accessor schedule_start_time: ::Integer
+      attr_accessor schedule_end_time: ::Integer
+      attr_accessor execution_role_arn: ::String
+      attr_accessor creation_time: ::Integer
+      attr_accessor last_updated_time: ::Integer
+      SENSITIVE: []
+    end
+
     class UpperCaseString
       attr_accessor with_keys: ::Array[::String]
       SENSITIVE: []
     end
 
     class ValidationException < Aws::EmptyStructure
+    end
+
+    class GetLogObjectResponseStream < Enumerator[untyped, untyped]
+      def event_types: () -> [:fields, :internal_streaming_exception]
     end
 
     class StartLiveTailResponseStream < Enumerator[untyped, untyped]

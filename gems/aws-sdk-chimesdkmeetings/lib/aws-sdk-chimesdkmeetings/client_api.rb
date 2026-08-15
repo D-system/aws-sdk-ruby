@@ -64,6 +64,7 @@ module Aws::ChimeSDKMeetings
     ListTagsForResourceResponse = Shapes::StructureShape.new(name: 'ListTagsForResourceResponse')
     MediaCapabilities = Shapes::StringShape.new(name: 'MediaCapabilities')
     MediaPlacement = Shapes::StructureShape.new(name: 'MediaPlacement')
+    MediaPlacementNetworkType = Shapes::StringShape.new(name: 'MediaPlacementNetworkType')
     MediaRegion = Shapes::StringShape.new(name: 'MediaRegion')
     Meeting = Shapes::StructureShape.new(name: 'Meeting')
     MeetingFeatureStatus = Shapes::StringShape.new(name: 'MeetingFeatureStatus')
@@ -186,7 +187,7 @@ module Aws::ChimeSDKMeetings
     CreateAttendeeResponse.add_member(:attendee, Shapes::ShapeRef.new(shape: Attendee, location_name: "Attendee"))
     CreateAttendeeResponse.struct_class = Types::CreateAttendeeResponse
 
-    CreateMeetingRequest.add_member(:client_request_token, Shapes::ShapeRef.new(shape: ClientRequestToken, required: true, location_name: "ClientRequestToken", metadata: {"idempotencyToken"=>true}))
+    CreateMeetingRequest.add_member(:client_request_token, Shapes::ShapeRef.new(shape: ClientRequestToken, required: true, location_name: "ClientRequestToken", metadata: {"idempotencyToken" => true}))
     CreateMeetingRequest.add_member(:media_region, Shapes::ShapeRef.new(shape: MediaRegion, required: true, location_name: "MediaRegion"))
     CreateMeetingRequest.add_member(:meeting_host_id, Shapes::ShapeRef.new(shape: ExternalUserId, location_name: "MeetingHostId"))
     CreateMeetingRequest.add_member(:external_meeting_id, Shapes::ShapeRef.new(shape: ExternalMeetingId, required: true, location_name: "ExternalMeetingId"))
@@ -195,12 +196,13 @@ module Aws::ChimeSDKMeetings
     CreateMeetingRequest.add_member(:primary_meeting_id, Shapes::ShapeRef.new(shape: PrimaryMeetingId, location_name: "PrimaryMeetingId"))
     CreateMeetingRequest.add_member(:tenant_ids, Shapes::ShapeRef.new(shape: TenantIdList, location_name: "TenantIds"))
     CreateMeetingRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
+    CreateMeetingRequest.add_member(:media_placement_network_type, Shapes::ShapeRef.new(shape: MediaPlacementNetworkType, location_name: "MediaPlacementNetworkType"))
     CreateMeetingRequest.struct_class = Types::CreateMeetingRequest
 
     CreateMeetingResponse.add_member(:meeting, Shapes::ShapeRef.new(shape: Meeting, location_name: "Meeting"))
     CreateMeetingResponse.struct_class = Types::CreateMeetingResponse
 
-    CreateMeetingWithAttendeesRequest.add_member(:client_request_token, Shapes::ShapeRef.new(shape: ClientRequestToken, required: true, location_name: "ClientRequestToken", metadata: {"idempotencyToken"=>true}))
+    CreateMeetingWithAttendeesRequest.add_member(:client_request_token, Shapes::ShapeRef.new(shape: ClientRequestToken, required: true, location_name: "ClientRequestToken", metadata: {"idempotencyToken" => true}))
     CreateMeetingWithAttendeesRequest.add_member(:media_region, Shapes::ShapeRef.new(shape: MediaRegion, required: true, location_name: "MediaRegion"))
     CreateMeetingWithAttendeesRequest.add_member(:meeting_host_id, Shapes::ShapeRef.new(shape: ExternalUserId, location_name: "MeetingHostId"))
     CreateMeetingWithAttendeesRequest.add_member(:external_meeting_id, Shapes::ShapeRef.new(shape: ExternalMeetingId, required: true, location_name: "ExternalMeetingId"))
@@ -210,6 +212,7 @@ module Aws::ChimeSDKMeetings
     CreateMeetingWithAttendeesRequest.add_member(:primary_meeting_id, Shapes::ShapeRef.new(shape: PrimaryMeetingId, location_name: "PrimaryMeetingId"))
     CreateMeetingWithAttendeesRequest.add_member(:tenant_ids, Shapes::ShapeRef.new(shape: TenantIdList, location_name: "TenantIds"))
     CreateMeetingWithAttendeesRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
+    CreateMeetingWithAttendeesRequest.add_member(:media_placement_network_type, Shapes::ShapeRef.new(shape: MediaPlacementNetworkType, location_name: "MediaPlacementNetworkType"))
     CreateMeetingWithAttendeesRequest.struct_class = Types::CreateMeetingWithAttendeesRequest
 
     CreateMeetingWithAttendeesRequestItemList.member = Shapes::ShapeRef.new(shape: CreateAttendeeRequestItem)

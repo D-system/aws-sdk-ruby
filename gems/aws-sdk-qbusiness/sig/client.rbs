@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -89,6 +90,13 @@ module Aws
                                   application_id: ::String,
                                   statement_id: ::String,
                                   actions: Array[::String],
+                                  ?conditions: Array[
+                                    {
+                                      condition_operator: ("StringEquals"),
+                                      condition_key: ::String,
+                                      condition_values: Array[::String]
+                                    }
+                                  ],
                                   principal: ::String
                                 ) -> _AssociatePermissionResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _AssociatePermissionResponseSuccess
@@ -104,7 +112,7 @@ module Aws
                                    documents: Array[
                                      {
                                        document_id: ::String
-                                     },
+                                     }
                                    ],
                                    ?data_source_sync_id: ::String
                                  ) -> _BatchDeleteDocumentResponseSuccess
@@ -122,15 +130,7 @@ module Aws
                                   {
                                     id: ::String,
                                     attributes: Array[
-                                      {
-                                        name: ::String,
-                                        value: {
-                                          string_value: ::String?,
-                                          string_list_value: Array[::String]?,
-                                          long_value: ::Integer?,
-                                          date_value: ::Time?
-                                        }
-                                      },
+                                      Params::document_attribute
                                     ]?,
                                     content: {
                                       blob: ::String?,
@@ -156,82 +156,16 @@ module Aws
                                                 access: ("ALLOW" | "DENY"),
                                                 membership_type: ("INDEX" | "DATASOURCE")?
                                               }?
-                                            },
+                                            }
                                           ],
                                           member_relation: ("AND" | "OR")?
-                                        },
+                                        }
                                       ],
                                       member_relation: ("AND" | "OR")?
                                     }?,
-                                    document_enrichment_configuration: {
-                                      inline_configurations: Array[
-                                        {
-                                          condition: {
-                                            key: ::String,
-                                            operator: ("GREATER_THAN" | "GREATER_THAN_OR_EQUALS" | "LESS_THAN" | "LESS_THAN_OR_EQUALS" | "EQUALS" | "NOT_EQUALS" | "CONTAINS" | "NOT_CONTAINS" | "EXISTS" | "NOT_EXISTS" | "BEGINS_WITH"),
-                                            value: {
-                                              string_value: ::String?,
-                                              string_list_value: Array[::String]?,
-                                              long_value: ::Integer?,
-                                              date_value: ::Time?
-                                            }?
-                                          }?,
-                                          target: {
-                                            key: ::String,
-                                            value: {
-                                              string_value: ::String?,
-                                              string_list_value: Array[::String]?,
-                                              long_value: ::Integer?,
-                                              date_value: ::Time?
-                                            }?,
-                                            attribute_value_operator: ("DELETE")?
-                                          }?,
-                                          document_content_operator: ("DELETE")?
-                                        },
-                                      ]?,
-                                      pre_extraction_hook_configuration: {
-                                        invocation_condition: {
-                                          key: ::String,
-                                          operator: ("GREATER_THAN" | "GREATER_THAN_OR_EQUALS" | "LESS_THAN" | "LESS_THAN_OR_EQUALS" | "EQUALS" | "NOT_EQUALS" | "CONTAINS" | "NOT_CONTAINS" | "EXISTS" | "NOT_EXISTS" | "BEGINS_WITH"),
-                                          value: {
-                                            string_value: ::String?,
-                                            string_list_value: Array[::String]?,
-                                            long_value: ::Integer?,
-                                            date_value: ::Time?
-                                          }?
-                                        }?,
-                                        lambda_arn: ::String?,
-                                        s3_bucket_name: ::String?,
-                                        role_arn: ::String?
-                                      }?,
-                                      post_extraction_hook_configuration: {
-                                        invocation_condition: {
-                                          key: ::String,
-                                          operator: ("GREATER_THAN" | "GREATER_THAN_OR_EQUALS" | "LESS_THAN" | "LESS_THAN_OR_EQUALS" | "EQUALS" | "NOT_EQUALS" | "CONTAINS" | "NOT_CONTAINS" | "EXISTS" | "NOT_EXISTS" | "BEGINS_WITH"),
-                                          value: {
-                                            string_value: ::String?,
-                                            string_list_value: Array[::String]?,
-                                            long_value: ::Integer?,
-                                            date_value: ::Time?
-                                          }?
-                                        }?,
-                                        lambda_arn: ::String?,
-                                        s3_bucket_name: ::String?,
-                                        role_arn: ::String?
-                                      }?
-                                    }?,
-                                    media_extraction_configuration: {
-                                      image_extraction_configuration: {
-                                        image_extraction_status: ("ENABLED" | "DISABLED")
-                                      }?,
-                                      audio_extraction_configuration: {
-                                        audio_extraction_status: ("ENABLED" | "DISABLED")
-                                      }?,
-                                      video_extraction_configuration: {
-                                        video_extraction_status: ("ENABLED" | "DISABLED")
-                                      }?
-                                    }?
-                                  },
+                                    document_enrichment_configuration: Params::document_enrichment_configuration?,
+                                    media_extraction_configuration: Params::media_extraction_configuration?
+                                  }
                                 ],
                                 ?role_arn: ::String,
                                 ?data_source_sync_id: ::String
@@ -251,22 +185,6 @@ module Aws
                                ) -> _CancelSubscriptionResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CancelSubscriptionResponseSuccess
 
-      interface _ChatResponseSuccess
-        include ::Seahorse::Client::_ResponseSuccess[Types::ChatOutput]
-        def output_stream: () -> Types::ChatOutputStream
-      end
-      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/QBusiness/Client.html#chat-instance_method
-      def chat: (
-                  application_id: ::String,
-                  ?user_id: ::String,
-                  ?user_groups: Array[::String],
-                  ?conversation_id: ::String,
-                  ?parent_message_id: ::String,
-                  ?client_token: ::String,
-                  input_event_stream_hander: untyped
-                ) ?{ (*untyped) -> void } -> _ChatResponseSuccess
-              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) ?{ (*untyped) -> void } -> _ChatResponseSuccess
-
       interface _ChatSyncResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ChatSyncOutput]
         def conversation_id: () -> ::String
@@ -285,16 +203,7 @@ module Aws
                        ?user_groups: Array[::String],
                        ?user_message: ::String,
                        ?attachments: Array[
-                         {
-                           data: ::String?,
-                           name: ::String?,
-                           copy_from: {
-                             conversation: {
-                               conversation_id: ::String,
-                               attachment_id: ::String
-                             }?
-                           }?
-                         },
+                         Params::attachment_input
                        ],
                        ?action_execution: {
                          plugin_id: ::String,
@@ -309,78 +218,7 @@ module Aws
                        },
                        ?conversation_id: ::String,
                        ?parent_message_id: ::String,
-                       ?attribute_filter: {
-                         and_all_filters: Array[
-                           untyped,
-                         ]?,
-                         or_all_filters: Array[
-                           untyped,
-                         ]?,
-                         not_filter: untyped?,
-                         equals_to: {
-                           name: ::String,
-                           value: {
-                             string_value: ::String?,
-                             string_list_value: Array[::String]?,
-                             long_value: ::Integer?,
-                             date_value: ::Time?
-                           }
-                         }?,
-                         contains_all: {
-                           name: ::String,
-                           value: {
-                             string_value: ::String?,
-                             string_list_value: Array[::String]?,
-                             long_value: ::Integer?,
-                             date_value: ::Time?
-                           }
-                         }?,
-                         contains_any: {
-                           name: ::String,
-                           value: {
-                             string_value: ::String?,
-                             string_list_value: Array[::String]?,
-                             long_value: ::Integer?,
-                             date_value: ::Time?
-                           }
-                         }?,
-                         greater_than: {
-                           name: ::String,
-                           value: {
-                             string_value: ::String?,
-                             string_list_value: Array[::String]?,
-                             long_value: ::Integer?,
-                             date_value: ::Time?
-                           }
-                         }?,
-                         greater_than_or_equals: {
-                           name: ::String,
-                           value: {
-                             string_value: ::String?,
-                             string_list_value: Array[::String]?,
-                             long_value: ::Integer?,
-                             date_value: ::Time?
-                           }
-                         }?,
-                         less_than: {
-                           name: ::String,
-                           value: {
-                             string_value: ::String?,
-                             string_list_value: Array[::String]?,
-                             long_value: ::Integer?,
-                             date_value: ::Time?
-                           }
-                         }?,
-                         less_than_or_equals: {
-                           name: ::String,
-                           value: {
-                             string_value: ::String?,
-                             string_list_value: Array[::String]?,
-                             long_value: ::Integer?,
-                             date_value: ::Time?
-                           }
-                         }?
-                       },
+                       ?attribute_filter: Params::attribute_filter,
                        ?chat_mode: ("RETRIEVAL_MODE" | "CREATOR_MODE" | "PLUGIN_MODE"),
                        ?chat_mode_configuration: {
                          plugin_configuration: {
@@ -391,6 +229,35 @@ module Aws
                      ) -> _ChatSyncResponseSuccess
                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ChatSyncResponseSuccess
 
+      interface _CheckDocumentAccessResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CheckDocumentAccessResponse]
+        def user_groups: () -> ::Array[Types::AssociatedGroup]
+        def user_aliases: () -> ::Array[Types::AssociatedUser]
+        def has_access: () -> bool
+        def document_acl: () -> Types::DocumentAcl
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/QBusiness/Client.html#check_document_access-instance_method
+      def check_document_access: (
+                                   application_id: ::String,
+                                   index_id: ::String,
+                                   user_id: ::String,
+                                   document_id: ::String,
+                                   ?data_source_id: ::String
+                                 ) -> _CheckDocumentAccessResponseSuccess
+                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CheckDocumentAccessResponseSuccess
+
+      interface _CreateAnonymousWebExperienceUrlResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateAnonymousWebExperienceUrlResponse]
+        def anonymous_url: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/QBusiness/Client.html#create_anonymous_web_experience_url-instance_method
+      def create_anonymous_web_experience_url: (
+                                                 application_id: ::String,
+                                                 web_experience_id: ::String,
+                                                 ?session_duration_in_minutes: ::Integer
+                                               ) -> _CreateAnonymousWebExperienceUrlResponseSuccess
+                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateAnonymousWebExperienceUrlResponseSuccess
+
       interface _CreateApplicationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateApplicationResponse]
         def application_id: () -> ::String
@@ -400,7 +267,7 @@ module Aws
       def create_application: (
                                 display_name: ::String,
                                 ?role_arn: ::String,
-                                ?identity_type: ("AWS_IAM_IDP_SAML" | "AWS_IAM_IDP_OIDC" | "AWS_IAM_IDC" | "AWS_QUICKSIGHT_IDP"),
+                                ?identity_type: ("AWS_IAM_IDP_SAML" | "AWS_IAM_IDP_OIDC" | "AWS_IAM_IDC" | "AWS_QUICKSIGHT_IDP" | "ANONYMOUS"),
                                 ?iam_identity_provider_arn: ::String,
                                 ?identity_center_instance_arn: ::String,
                                 ?client_ids_for_oidc: Array[::String],
@@ -412,7 +279,7 @@ module Aws
                                   {
                                     key: ::String,
                                     value: ::String
-                                  },
+                                  }
                                 ],
                                 ?client_token: ::String,
                                 ?attachments_configuration: {
@@ -430,6 +297,26 @@ module Aws
                               ) -> _CreateApplicationResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateApplicationResponseSuccess
 
+      interface _CreateChatResponseConfigurationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateChatResponseConfigurationResponse]
+        def chat_response_configuration_id: () -> ::String
+        def chat_response_configuration_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/QBusiness/Client.html#create_chat_response_configuration-instance_method
+      def create_chat_response_configuration: (
+                                                application_id: ::String,
+                                                display_name: ::String,
+                                                ?client_token: ::String,
+                                                response_configurations: Hash[("ALL"), Params::response_configuration],
+                                                ?tags: Array[
+                                                  {
+                                                    key: ::String,
+                                                    value: ::String
+                                                  }
+                                                ]
+                                              ) -> _CreateChatResponseConfigurationResponseSuccess
+                                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateChatResponseConfigurationResponseSuccess
+
       interface _CreateDataAccessorResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateDataAccessorResponse]
         def data_accessor_id: () -> ::String
@@ -441,91 +328,16 @@ module Aws
                                   application_id: ::String,
                                   principal: ::String,
                                   action_configurations: Array[
-                                    {
-                                      action: ::String,
-                                      filter_configuration: {
-                                        document_attribute_filter: {
-                                          and_all_filters: Array[
-                                            untyped,
-                                          ]?,
-                                          or_all_filters: Array[
-                                            untyped,
-                                          ]?,
-                                          not_filter: untyped?,
-                                          equals_to: {
-                                            name: ::String,
-                                            value: {
-                                              string_value: ::String?,
-                                              string_list_value: Array[::String]?,
-                                              long_value: ::Integer?,
-                                              date_value: ::Time?
-                                            }
-                                          }?,
-                                          contains_all: {
-                                            name: ::String,
-                                            value: {
-                                              string_value: ::String?,
-                                              string_list_value: Array[::String]?,
-                                              long_value: ::Integer?,
-                                              date_value: ::Time?
-                                            }
-                                          }?,
-                                          contains_any: {
-                                            name: ::String,
-                                            value: {
-                                              string_value: ::String?,
-                                              string_list_value: Array[::String]?,
-                                              long_value: ::Integer?,
-                                              date_value: ::Time?
-                                            }
-                                          }?,
-                                          greater_than: {
-                                            name: ::String,
-                                            value: {
-                                              string_value: ::String?,
-                                              string_list_value: Array[::String]?,
-                                              long_value: ::Integer?,
-                                              date_value: ::Time?
-                                            }
-                                          }?,
-                                          greater_than_or_equals: {
-                                            name: ::String,
-                                            value: {
-                                              string_value: ::String?,
-                                              string_list_value: Array[::String]?,
-                                              long_value: ::Integer?,
-                                              date_value: ::Time?
-                                            }
-                                          }?,
-                                          less_than: {
-                                            name: ::String,
-                                            value: {
-                                              string_value: ::String?,
-                                              string_list_value: Array[::String]?,
-                                              long_value: ::Integer?,
-                                              date_value: ::Time?
-                                            }
-                                          }?,
-                                          less_than_or_equals: {
-                                            name: ::String,
-                                            value: {
-                                              string_value: ::String?,
-                                              string_list_value: Array[::String]?,
-                                              long_value: ::Integer?,
-                                              date_value: ::Time?
-                                            }
-                                          }?
-                                        }
-                                      }?
-                                    },
+                                    Params::action_configuration
                                   ],
                                   ?client_token: ::String,
                                   display_name: ::String,
+                                  ?authentication_detail: Params::data_accessor_authentication_detail,
                                   ?tags: Array[
                                     {
                                       key: ::String,
                                       value: ::String
-                                    },
+                                    }
                                   ]
                                 ) -> _CreateDataAccessorResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateDataAccessorResponseSuccess
@@ -551,79 +363,13 @@ module Aws
                                   {
                                     key: ::String,
                                     value: ::String
-                                  },
+                                  }
                                 ],
                                 ?sync_schedule: ::String,
                                 ?role_arn: ::String,
                                 ?client_token: ::String,
-                                ?document_enrichment_configuration: {
-                                  inline_configurations: Array[
-                                    {
-                                      condition: {
-                                        key: ::String,
-                                        operator: ("GREATER_THAN" | "GREATER_THAN_OR_EQUALS" | "LESS_THAN" | "LESS_THAN_OR_EQUALS" | "EQUALS" | "NOT_EQUALS" | "CONTAINS" | "NOT_CONTAINS" | "EXISTS" | "NOT_EXISTS" | "BEGINS_WITH"),
-                                        value: {
-                                          string_value: ::String?,
-                                          string_list_value: Array[::String]?,
-                                          long_value: ::Integer?,
-                                          date_value: ::Time?
-                                        }?
-                                      }?,
-                                      target: {
-                                        key: ::String,
-                                        value: {
-                                          string_value: ::String?,
-                                          string_list_value: Array[::String]?,
-                                          long_value: ::Integer?,
-                                          date_value: ::Time?
-                                        }?,
-                                        attribute_value_operator: ("DELETE")?
-                                      }?,
-                                      document_content_operator: ("DELETE")?
-                                    },
-                                  ]?,
-                                  pre_extraction_hook_configuration: {
-                                    invocation_condition: {
-                                      key: ::String,
-                                      operator: ("GREATER_THAN" | "GREATER_THAN_OR_EQUALS" | "LESS_THAN" | "LESS_THAN_OR_EQUALS" | "EQUALS" | "NOT_EQUALS" | "CONTAINS" | "NOT_CONTAINS" | "EXISTS" | "NOT_EXISTS" | "BEGINS_WITH"),
-                                      value: {
-                                        string_value: ::String?,
-                                        string_list_value: Array[::String]?,
-                                        long_value: ::Integer?,
-                                        date_value: ::Time?
-                                      }?
-                                    }?,
-                                    lambda_arn: ::String?,
-                                    s3_bucket_name: ::String?,
-                                    role_arn: ::String?
-                                  }?,
-                                  post_extraction_hook_configuration: {
-                                    invocation_condition: {
-                                      key: ::String,
-                                      operator: ("GREATER_THAN" | "GREATER_THAN_OR_EQUALS" | "LESS_THAN" | "LESS_THAN_OR_EQUALS" | "EQUALS" | "NOT_EQUALS" | "CONTAINS" | "NOT_CONTAINS" | "EXISTS" | "NOT_EXISTS" | "BEGINS_WITH"),
-                                      value: {
-                                        string_value: ::String?,
-                                        string_list_value: Array[::String]?,
-                                        long_value: ::Integer?,
-                                        date_value: ::Time?
-                                      }?
-                                    }?,
-                                    lambda_arn: ::String?,
-                                    s3_bucket_name: ::String?,
-                                    role_arn: ::String?
-                                  }?
-                                },
-                                ?media_extraction_configuration: {
-                                  image_extraction_configuration: {
-                                    image_extraction_status: ("ENABLED" | "DISABLED")
-                                  }?,
-                                  audio_extraction_configuration: {
-                                    audio_extraction_status: ("ENABLED" | "DISABLED")
-                                  }?,
-                                  video_extraction_configuration: {
-                                    video_extraction_status: ("ENABLED" | "DISABLED")
-                                  }?
-                                }
+                                ?document_enrichment_configuration: Params::document_enrichment_configuration,
+                                ?media_extraction_configuration: Params::media_extraction_configuration
                               ) -> _CreateDataSourceResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateDataSourceResponseSuccess
 
@@ -642,7 +388,7 @@ module Aws
                             {
                               key: ::String,
                               value: ::String
-                            },
+                            }
                           ],
                           ?capacity_configuration: {
                             units: ::Integer?
@@ -662,41 +408,14 @@ module Aws
                            application_id: ::String,
                            display_name: ::String,
                            type: ("SERVICE_NOW" | "SALESFORCE" | "JIRA" | "ZENDESK" | "CUSTOM" | "QUICKSIGHT" | "SERVICENOW_NOW_PLATFORM" | "JIRA_CLOUD" | "SALESFORCE_CRM" | "ZENDESK_SUITE" | "ATLASSIAN_CONFLUENCE" | "GOOGLE_CALENDAR" | "MICROSOFT_TEAMS" | "MICROSOFT_EXCHANGE" | "PAGERDUTY_ADVANCE" | "SMARTSHEET" | "ASANA"),
-                           auth_configuration: {
-                             basic_auth_configuration: {
-                               secret_arn: ::String,
-                               role_arn: ::String
-                             }?,
-                             o_auth_2_client_credential_configuration: {
-                               secret_arn: ::String,
-                               role_arn: ::String,
-                               authorization_url: ::String?,
-                               token_url: ::String?
-                             }?,
-                             no_auth_configuration: {
-                             }?,
-                             idc_auth_configuration: {
-                               idc_application_arn: ::String,
-                               role_arn: ::String
-                             }?
-                           },
+                           auth_configuration: Params::plugin_auth_configuration,
                            ?server_url: ::String,
-                           ?custom_plugin_configuration: {
-                             description: ::String,
-                             api_schema_type: ("OPEN_API_V3"),
-                             api_schema: {
-                               payload: ::String?,
-                               s3: {
-                                 bucket: ::String,
-                                 key: ::String
-                               }?
-                             }
-                           },
+                           ?custom_plugin_configuration: Params::custom_plugin_configuration,
                            ?tags: Array[
                              {
                                key: ::String,
                                value: ::String
-                             },
+                             }
                            ],
                            ?client_token: ::String
                          ) -> _CreatePluginResponseSuccess
@@ -712,38 +431,14 @@ module Aws
                               application_id: ::String,
                               type: ("NATIVE_INDEX" | "KENDRA_INDEX"),
                               display_name: ::String,
-                              configuration: {
-                                native_index_configuration: {
-                                  index_id: ::String,
-                                  boosting_override: Hash[::String, {
-                                      number_configuration: {
-                                        boosting_level: ("NONE" | "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH"),
-                                        boosting_type: ("PRIORITIZE_LARGER_VALUES" | "PRIORITIZE_SMALLER_VALUES")?
-                                      }?,
-                                      string_configuration: {
-                                        boosting_level: ("NONE" | "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH"),
-                                        attribute_value_boosting: Hash[::String, ("LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH")]?
-                                      }?,
-                                      date_configuration: {
-                                        boosting_level: ("NONE" | "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH"),
-                                        boosting_duration_in_seconds: ::Integer?
-                                      }?,
-                                      string_list_configuration: {
-                                        boosting_level: ("NONE" | "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH")
-                                      }?
-                                    }]?
-                                }?,
-                                kendra_index_configuration: {
-                                  index_id: ::String
-                                }?
-                              },
+                              configuration: Params::retriever_configuration,
                               ?role_arn: ::String,
                               ?client_token: ::String,
                               ?tags: Array[
                                 {
                                   key: ::String,
                                   value: ::String
-                                },
+                                }
                               ]
                             ) -> _CreateRetrieverResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateRetrieverResponseSuccess
@@ -779,7 +474,7 @@ module Aws
                              index_id: ::String?,
                              data_source_id: ::String?,
                              user_id: ::String
-                           },
+                           }
                          ],
                          ?client_token: ::String
                        ) -> _CreateUserResponseSuccess
@@ -803,18 +498,10 @@ module Aws
                                      {
                                        key: ::String,
                                        value: ::String
-                                     },
+                                     }
                                    ],
                                    ?client_token: ::String,
-                                   ?identity_provider_configuration: {
-                                     saml_configuration: {
-                                       authentication_url: ::String
-                                     }?,
-                                     open_id_connect_configuration: {
-                                       secrets_arn: ::String,
-                                       secrets_role: ::String
-                                     }?
-                                   },
+                                   ?identity_provider_configuration: Params::identity_provider_configuration,
                                    ?browser_extension_configuration: {
                                      enabled_browser_extensions: Array[("FIREFOX" | "CHROME")]
                                    },
@@ -856,6 +543,16 @@ module Aws
                                                 application_id: ::String
                                               ) -> _DeleteChatControlsConfigurationResponseSuccess
                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteChatControlsConfigurationResponseSuccess
+
+      interface _DeleteChatResponseConfigurationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteChatResponseConfigurationResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/QBusiness/Client.html#delete_chat_response_configuration-instance_method
+      def delete_chat_response_configuration: (
+                                                application_id: ::String,
+                                                chat_response_configuration_id: ::String
+                                              ) -> _DeleteChatResponseConfigurationResponseSuccess
+                                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteChatResponseConfigurationResponseSuccess
 
       interface _DeleteConversationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DeleteConversationResponse]
@@ -966,7 +663,7 @@ module Aws
         def display_name: () -> ::String
         def application_id: () -> ::String
         def application_arn: () -> ::String
-        def identity_type: () -> ("AWS_IAM_IDP_SAML" | "AWS_IAM_IDP_OIDC" | "AWS_IAM_IDC" | "AWS_QUICKSIGHT_IDP")
+        def identity_type: () -> ("AWS_IAM_IDP_SAML" | "AWS_IAM_IDP_OIDC" | "AWS_IAM_IDC" | "AWS_QUICKSIGHT_IDP" | "ANONYMOUS")
         def iam_identity_provider_arn: () -> ::String
         def identity_center_application_arn: () -> ::String
         def role_arn: () -> ::String
@@ -996,6 +693,7 @@ module Aws
         def topic_configurations: () -> ::Array[Types::TopicConfiguration]
         def creator_mode_configuration: () -> Types::AppliedCreatorModeConfiguration
         def next_token: () -> ::String
+        def hallucination_reduction_configuration: () -> Types::HallucinationReductionConfiguration
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/QBusiness/Client.html#get_chat_controls_configuration-instance_method
       def get_chat_controls_configuration: (
@@ -1004,6 +702,22 @@ module Aws
                                              ?next_token: ::String
                                            ) -> _GetChatControlsConfigurationResponseSuccess
                                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetChatControlsConfigurationResponseSuccess
+
+      interface _GetChatResponseConfigurationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetChatResponseConfigurationResponse]
+        def chat_response_configuration_id: () -> ::String
+        def chat_response_configuration_arn: () -> ::String
+        def display_name: () -> ::String
+        def created_at: () -> ::Time
+        def in_use_configuration: () -> Types::ChatResponseConfigurationDetail
+        def last_update_configuration: () -> Types::ChatResponseConfigurationDetail
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/QBusiness/Client.html#get_chat_response_configuration-instance_method
+      def get_chat_response_configuration: (
+                                             application_id: ::String,
+                                             chat_response_configuration_id: ::String
+                                           ) -> _GetChatResponseConfigurationResponseSuccess
+                                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetChatResponseConfigurationResponseSuccess
 
       interface _GetDataAccessorResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetDataAccessorResponse]
@@ -1014,6 +728,7 @@ module Aws
         def idc_application_arn: () -> ::String
         def principal: () -> ::String
         def action_configurations: () -> ::Array[Types::ActionConfiguration]
+        def authentication_detail: () -> Types::DataAccessorAuthenticationDetail
         def created_at: () -> ::Time
         def updated_at: () -> ::Time
       end
@@ -1050,6 +765,21 @@ module Aws
                              data_source_id: ::String
                            ) -> _GetDataSourceResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetDataSourceResponseSuccess
+
+      interface _GetDocumentContentResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetDocumentContentResponse]
+        def presigned_url: () -> ::String
+        def mime_type: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/QBusiness/Client.html#get_document_content-instance_method
+      def get_document_content: (
+                                  application_id: ::String,
+                                  index_id: ::String,
+                                  ?data_source_id: ::String,
+                                  document_id: ::String,
+                                  ?output_format: ("RAW" | "EXTRACTED")
+                                ) -> _GetDocumentContentResponseSuccess
+                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetDocumentContentResponseSuccess
 
       interface _GetGroupResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetGroupResponse]
@@ -1217,6 +947,19 @@ module Aws
                               ?max_results: ::Integer
                             ) -> _ListAttachmentsResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListAttachmentsResponseSuccess
+
+      interface _ListChatResponseConfigurationsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListChatResponseConfigurationsResponse]
+        def chat_response_configurations: () -> ::Array[Types::ChatResponseConfiguration]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/QBusiness/Client.html#list_chat_response_configurations-instance_method
+      def list_chat_response_configurations: (
+                                               application_id: ::String,
+                                               ?max_results: ::Integer,
+                                               ?next_token: ::String
+                                             ) -> _ListChatResponseConfigurationsResponseSuccess
+                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListChatResponseConfigurationsResponseSuccess
 
       interface _ListConversationsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListConversationsResponse]
@@ -1468,13 +1211,13 @@ module Aws
                            {
                              group_name: ::String,
                              type: ("INDEX" | "DATASOURCE")?
-                           },
+                           }
                          ]?,
                          member_users: Array[
                            {
                              user_id: ::String,
                              type: ("INDEX" | "DATASOURCE")?
-                           },
+                           }
                          ]?,
                          s3_path_for_group_members: {
                            bucket: ::String,
@@ -1499,78 +1242,7 @@ module Aws
                                          retriever_id: ::String
                                        }?
                                      },
-                                     ?attribute_filter: {
-                                       and_all_filters: Array[
-                                         untyped,
-                                       ]?,
-                                       or_all_filters: Array[
-                                         untyped,
-                                       ]?,
-                                       not_filter: untyped?,
-                                       equals_to: {
-                                         name: ::String,
-                                         value: {
-                                           string_value: ::String?,
-                                           string_list_value: Array[::String]?,
-                                           long_value: ::Integer?,
-                                           date_value: ::Time?
-                                         }
-                                       }?,
-                                       contains_all: {
-                                         name: ::String,
-                                         value: {
-                                           string_value: ::String?,
-                                           string_list_value: Array[::String]?,
-                                           long_value: ::Integer?,
-                                           date_value: ::Time?
-                                         }
-                                       }?,
-                                       contains_any: {
-                                         name: ::String,
-                                         value: {
-                                           string_value: ::String?,
-                                           string_list_value: Array[::String]?,
-                                           long_value: ::Integer?,
-                                           date_value: ::Time?
-                                         }
-                                       }?,
-                                       greater_than: {
-                                         name: ::String,
-                                         value: {
-                                           string_value: ::String?,
-                                           string_list_value: Array[::String]?,
-                                           long_value: ::Integer?,
-                                           date_value: ::Time?
-                                         }
-                                       }?,
-                                       greater_than_or_equals: {
-                                         name: ::String,
-                                         value: {
-                                           string_value: ::String?,
-                                           string_list_value: Array[::String]?,
-                                           long_value: ::Integer?,
-                                           date_value: ::Time?
-                                         }
-                                       }?,
-                                       less_than: {
-                                         name: ::String,
-                                         value: {
-                                           string_value: ::String?,
-                                           string_list_value: Array[::String]?,
-                                           long_value: ::Integer?,
-                                           date_value: ::Time?
-                                         }
-                                       }?,
-                                       less_than_or_equals: {
-                                         name: ::String,
-                                         value: {
-                                           string_value: ::String?,
-                                           string_list_value: Array[::String]?,
-                                           long_value: ::Integer?,
-                                           date_value: ::Time?
-                                         }
-                                       }?
-                                     },
+                                     ?attribute_filter: Params::attribute_filter,
                                      ?max_results: ::Integer,
                                      ?next_token: ::String
                                    ) -> _SearchRelevantContentResponseSuccess
@@ -1609,7 +1281,7 @@ module Aws
                             {
                               key: ::String,
                               value: ::String
-                            },
+                            }
                           ]
                         ) -> _TagResourceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess
@@ -1667,76 +1339,32 @@ module Aws
                                                   system_message_override: ::String?
                                                 },
                                                 ?topic_configurations_to_create_or_update: Array[
-                                                  {
-                                                    name: ::String,
-                                                    description: ::String?,
-                                                    example_chat_messages: Array[::String]?,
-                                                    rules: Array[
-                                                      {
-                                                        included_users_and_groups: {
-                                                          user_ids: Array[::String]?,
-                                                          user_groups: Array[::String]?
-                                                        }?,
-                                                        excluded_users_and_groups: {
-                                                          user_ids: Array[::String]?,
-                                                          user_groups: Array[::String]?
-                                                        }?,
-                                                        rule_type: ("CONTENT_BLOCKER_RULE" | "CONTENT_RETRIEVAL_RULE"),
-                                                        rule_configuration: {
-                                                          content_blocker_rule: {
-                                                            system_message_override: ::String?
-                                                          }?,
-                                                          content_retrieval_rule: {
-                                                            eligible_data_sources: Array[
-                                                              {
-                                                                index_id: ::String?,
-                                                                data_source_id: ::String?
-                                                              },
-                                                            ]?
-                                                          }?
-                                                        }?
-                                                      },
-                                                    ]
-                                                  },
+                                                  Params::topic_configuration
                                                 ],
                                                 ?topic_configurations_to_delete: Array[
-                                                  {
-                                                    name: ::String,
-                                                    description: ::String?,
-                                                    example_chat_messages: Array[::String]?,
-                                                    rules: Array[
-                                                      {
-                                                        included_users_and_groups: {
-                                                          user_ids: Array[::String]?,
-                                                          user_groups: Array[::String]?
-                                                        }?,
-                                                        excluded_users_and_groups: {
-                                                          user_ids: Array[::String]?,
-                                                          user_groups: Array[::String]?
-                                                        }?,
-                                                        rule_type: ("CONTENT_BLOCKER_RULE" | "CONTENT_RETRIEVAL_RULE"),
-                                                        rule_configuration: {
-                                                          content_blocker_rule: {
-                                                            system_message_override: ::String?
-                                                          }?,
-                                                          content_retrieval_rule: {
-                                                            eligible_data_sources: Array[
-                                                              {
-                                                                index_id: ::String?,
-                                                                data_source_id: ::String?
-                                                              },
-                                                            ]?
-                                                          }?
-                                                        }?
-                                                      },
-                                                    ]
-                                                  },
+                                                  Params::topic_configuration
                                                 ],
                                                 ?creator_mode_configuration: {
                                                   creator_mode_control: ("ENABLED" | "DISABLED")
+                                                },
+                                                ?hallucination_reduction_configuration: {
+                                                  hallucination_reduction_control: ("ENABLED" | "DISABLED")?
                                                 }
                                               ) -> _UpdateChatControlsConfigurationResponseSuccess
                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateChatControlsConfigurationResponseSuccess
+
+      interface _UpdateChatResponseConfigurationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateChatResponseConfigurationResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/QBusiness/Client.html#update_chat_response_configuration-instance_method
+      def update_chat_response_configuration: (
+                                                application_id: ::String,
+                                                chat_response_configuration_id: ::String,
+                                                ?display_name: ::String,
+                                                response_configurations: Hash[("ALL"), Params::response_configuration],
+                                                ?client_token: ::String
+                                              ) -> _UpdateChatResponseConfigurationResponseSuccess
+                                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateChatResponseConfigurationResponseSuccess
 
       interface _UpdateDataAccessorResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::UpdateDataAccessorResponse]
@@ -1746,84 +1374,9 @@ module Aws
                                   application_id: ::String,
                                   data_accessor_id: ::String,
                                   action_configurations: Array[
-                                    {
-                                      action: ::String,
-                                      filter_configuration: {
-                                        document_attribute_filter: {
-                                          and_all_filters: Array[
-                                            untyped,
-                                          ]?,
-                                          or_all_filters: Array[
-                                            untyped,
-                                          ]?,
-                                          not_filter: untyped?,
-                                          equals_to: {
-                                            name: ::String,
-                                            value: {
-                                              string_value: ::String?,
-                                              string_list_value: Array[::String]?,
-                                              long_value: ::Integer?,
-                                              date_value: ::Time?
-                                            }
-                                          }?,
-                                          contains_all: {
-                                            name: ::String,
-                                            value: {
-                                              string_value: ::String?,
-                                              string_list_value: Array[::String]?,
-                                              long_value: ::Integer?,
-                                              date_value: ::Time?
-                                            }
-                                          }?,
-                                          contains_any: {
-                                            name: ::String,
-                                            value: {
-                                              string_value: ::String?,
-                                              string_list_value: Array[::String]?,
-                                              long_value: ::Integer?,
-                                              date_value: ::Time?
-                                            }
-                                          }?,
-                                          greater_than: {
-                                            name: ::String,
-                                            value: {
-                                              string_value: ::String?,
-                                              string_list_value: Array[::String]?,
-                                              long_value: ::Integer?,
-                                              date_value: ::Time?
-                                            }
-                                          }?,
-                                          greater_than_or_equals: {
-                                            name: ::String,
-                                            value: {
-                                              string_value: ::String?,
-                                              string_list_value: Array[::String]?,
-                                              long_value: ::Integer?,
-                                              date_value: ::Time?
-                                            }
-                                          }?,
-                                          less_than: {
-                                            name: ::String,
-                                            value: {
-                                              string_value: ::String?,
-                                              string_list_value: Array[::String]?,
-                                              long_value: ::Integer?,
-                                              date_value: ::Time?
-                                            }
-                                          }?,
-                                          less_than_or_equals: {
-                                            name: ::String,
-                                            value: {
-                                              string_value: ::String?,
-                                              string_list_value: Array[::String]?,
-                                              long_value: ::Integer?,
-                                              date_value: ::Time?
-                                            }
-                                          }?
-                                        }
-                                      }?
-                                    },
+                                    Params::action_configuration
                                   ],
+                                  ?authentication_detail: Params::data_accessor_authentication_detail,
                                   ?display_name: ::String
                                 ) -> _UpdateDataAccessorResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateDataAccessorResponseSuccess
@@ -1846,74 +1399,8 @@ module Aws
                                 ?description: ::String,
                                 ?sync_schedule: ::String,
                                 ?role_arn: ::String,
-                                ?document_enrichment_configuration: {
-                                  inline_configurations: Array[
-                                    {
-                                      condition: {
-                                        key: ::String,
-                                        operator: ("GREATER_THAN" | "GREATER_THAN_OR_EQUALS" | "LESS_THAN" | "LESS_THAN_OR_EQUALS" | "EQUALS" | "NOT_EQUALS" | "CONTAINS" | "NOT_CONTAINS" | "EXISTS" | "NOT_EXISTS" | "BEGINS_WITH"),
-                                        value: {
-                                          string_value: ::String?,
-                                          string_list_value: Array[::String]?,
-                                          long_value: ::Integer?,
-                                          date_value: ::Time?
-                                        }?
-                                      }?,
-                                      target: {
-                                        key: ::String,
-                                        value: {
-                                          string_value: ::String?,
-                                          string_list_value: Array[::String]?,
-                                          long_value: ::Integer?,
-                                          date_value: ::Time?
-                                        }?,
-                                        attribute_value_operator: ("DELETE")?
-                                      }?,
-                                      document_content_operator: ("DELETE")?
-                                    },
-                                  ]?,
-                                  pre_extraction_hook_configuration: {
-                                    invocation_condition: {
-                                      key: ::String,
-                                      operator: ("GREATER_THAN" | "GREATER_THAN_OR_EQUALS" | "LESS_THAN" | "LESS_THAN_OR_EQUALS" | "EQUALS" | "NOT_EQUALS" | "CONTAINS" | "NOT_CONTAINS" | "EXISTS" | "NOT_EXISTS" | "BEGINS_WITH"),
-                                      value: {
-                                        string_value: ::String?,
-                                        string_list_value: Array[::String]?,
-                                        long_value: ::Integer?,
-                                        date_value: ::Time?
-                                      }?
-                                    }?,
-                                    lambda_arn: ::String?,
-                                    s3_bucket_name: ::String?,
-                                    role_arn: ::String?
-                                  }?,
-                                  post_extraction_hook_configuration: {
-                                    invocation_condition: {
-                                      key: ::String,
-                                      operator: ("GREATER_THAN" | "GREATER_THAN_OR_EQUALS" | "LESS_THAN" | "LESS_THAN_OR_EQUALS" | "EQUALS" | "NOT_EQUALS" | "CONTAINS" | "NOT_CONTAINS" | "EXISTS" | "NOT_EXISTS" | "BEGINS_WITH"),
-                                      value: {
-                                        string_value: ::String?,
-                                        string_list_value: Array[::String]?,
-                                        long_value: ::Integer?,
-                                        date_value: ::Time?
-                                      }?
-                                    }?,
-                                    lambda_arn: ::String?,
-                                    s3_bucket_name: ::String?,
-                                    role_arn: ::String?
-                                  }?
-                                },
-                                ?media_extraction_configuration: {
-                                  image_extraction_configuration: {
-                                    image_extraction_status: ("ENABLED" | "DISABLED")
-                                  }?,
-                                  audio_extraction_configuration: {
-                                    audio_extraction_status: ("ENABLED" | "DISABLED")
-                                  }?,
-                                  video_extraction_configuration: {
-                                    video_extraction_status: ("ENABLED" | "DISABLED")
-                                  }?
-                                }
+                                ?document_enrichment_configuration: Params::document_enrichment_configuration,
+                                ?media_extraction_configuration: Params::media_extraction_configuration
                               ) -> _UpdateDataSourceResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateDataSourceResponseSuccess
 
@@ -1934,7 +1421,7 @@ module Aws
                               name: ::String?,
                               type: ("STRING" | "STRING_LIST" | "NUMBER" | "DATE")?,
                               search: ("ENABLED" | "DISABLED")?
-                            },
+                            }
                           ]
                         ) -> _UpdateIndexResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateIndexResponseSuccess
@@ -1949,35 +1436,8 @@ module Aws
                            ?display_name: ::String,
                            ?state: ("ENABLED" | "DISABLED"),
                            ?server_url: ::String,
-                           ?custom_plugin_configuration: {
-                             description: ::String,
-                             api_schema_type: ("OPEN_API_V3"),
-                             api_schema: {
-                               payload: ::String?,
-                               s3: {
-                                 bucket: ::String,
-                                 key: ::String
-                               }?
-                             }
-                           },
-                           ?auth_configuration: {
-                             basic_auth_configuration: {
-                               secret_arn: ::String,
-                               role_arn: ::String
-                             }?,
-                             o_auth_2_client_credential_configuration: {
-                               secret_arn: ::String,
-                               role_arn: ::String,
-                               authorization_url: ::String?,
-                               token_url: ::String?
-                             }?,
-                             no_auth_configuration: {
-                             }?,
-                             idc_auth_configuration: {
-                               idc_application_arn: ::String,
-                               role_arn: ::String
-                             }?
-                           }
+                           ?custom_plugin_configuration: Params::custom_plugin_configuration,
+                           ?auth_configuration: Params::plugin_auth_configuration
                          ) -> _UpdatePluginResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdatePluginResponseSuccess
 
@@ -1988,31 +1448,7 @@ module Aws
       def update_retriever: (
                               application_id: ::String,
                               retriever_id: ::String,
-                              ?configuration: {
-                                native_index_configuration: {
-                                  index_id: ::String,
-                                  boosting_override: Hash[::String, {
-                                      number_configuration: {
-                                        boosting_level: ("NONE" | "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH"),
-                                        boosting_type: ("PRIORITIZE_LARGER_VALUES" | "PRIORITIZE_SMALLER_VALUES")?
-                                      }?,
-                                      string_configuration: {
-                                        boosting_level: ("NONE" | "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH"),
-                                        attribute_value_boosting: Hash[::String, ("LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH")]?
-                                      }?,
-                                      date_configuration: {
-                                        boosting_level: ("NONE" | "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH"),
-                                        boosting_duration_in_seconds: ::Integer?
-                                      }?,
-                                      string_list_configuration: {
-                                        boosting_level: ("NONE" | "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH")
-                                      }?
-                                    }]?
-                                }?,
-                                kendra_index_configuration: {
-                                  index_id: ::String
-                                }?
-                              },
+                              ?configuration: Params::retriever_configuration,
                               ?display_name: ::String,
                               ?role_arn: ::String
                             ) -> _UpdateRetrieverResponseSuccess
@@ -2047,14 +1483,14 @@ module Aws
                              index_id: ::String?,
                              data_source_id: ::String?,
                              user_id: ::String
-                           },
+                           }
                          ],
                          ?user_aliases_to_delete: Array[
                            {
                              index_id: ::String?,
                              data_source_id: ::String?,
                              user_id: ::String
-                           },
+                           }
                          ]
                        ) -> _UpdateUserResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateUserResponseSuccess
@@ -2079,15 +1515,7 @@ module Aws
                                    ?subtitle: ::String,
                                    ?welcome_message: ::String,
                                    ?sample_prompts_control_mode: ("ENABLED" | "DISABLED"),
-                                   ?identity_provider_configuration: {
-                                     saml_configuration: {
-                                       authentication_url: ::String
-                                     }?,
-                                     open_id_connect_configuration: {
-                                       secrets_arn: ::String,
-                                       secrets_role: ::String
-                                     }?
-                                   },
+                                   ?identity_provider_configuration: Params::identity_provider_configuration,
                                    ?origins: Array[::String],
                                    ?browser_extension_configuration: {
                                      enabled_browser_extensions: Array[("FIREFOX" | "CHROME")]

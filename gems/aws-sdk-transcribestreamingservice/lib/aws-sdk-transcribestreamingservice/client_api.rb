@@ -27,6 +27,8 @@ module Aws::TranscribeStreamingService
     CallAnalyticsItem = Shapes::StructureShape.new(name: 'CallAnalyticsItem')
     CallAnalyticsItemList = Shapes::ListShape.new(name: 'CallAnalyticsItemList')
     CallAnalyticsLanguageCode = Shapes::StringShape.new(name: 'CallAnalyticsLanguageCode')
+    CallAnalyticsLanguageIdentification = Shapes::ListShape.new(name: 'CallAnalyticsLanguageIdentification')
+    CallAnalyticsLanguageWithScore = Shapes::StructureShape.new(name: 'CallAnalyticsLanguageWithScore')
     CallAnalyticsTranscriptResultStream = Shapes::StructureShape.new(name: 'CallAnalyticsTranscriptResultStream')
     CategoryEvent = Shapes::StructureShape.new(name: 'CategoryEvent')
     ChannelDefinition = Shapes::StructureShape.new(name: 'ChannelDefinition')
@@ -81,6 +83,7 @@ module Aws::TranscribeStreamingService
     MedicalScribeChannelDefinitions = Shapes::ListShape.new(name: 'MedicalScribeChannelDefinitions')
     MedicalScribeChannelId = Shapes::IntegerShape.new(name: 'MedicalScribeChannelId')
     MedicalScribeConfigurationEvent = Shapes::StructureShape.new(name: 'MedicalScribeConfigurationEvent')
+    MedicalScribeContext = Shapes::StructureShape.new(name: 'MedicalScribeContext')
     MedicalScribeEncryptionSettings = Shapes::StructureShape.new(name: 'MedicalScribeEncryptionSettings')
     MedicalScribeInputStream = Shapes::StructureShape.new(name: 'MedicalScribeInputStream')
     MedicalScribeLanguageCode = Shapes::StringShape.new(name: 'MedicalScribeLanguageCode')
@@ -88,6 +91,7 @@ module Aws::TranscribeStreamingService
     MedicalScribeMediaSampleRateHertz = Shapes::IntegerShape.new(name: 'MedicalScribeMediaSampleRateHertz')
     MedicalScribeNoteTemplate = Shapes::StringShape.new(name: 'MedicalScribeNoteTemplate')
     MedicalScribeParticipantRole = Shapes::StringShape.new(name: 'MedicalScribeParticipantRole')
+    MedicalScribePatientContext = Shapes::StructureShape.new(name: 'MedicalScribePatientContext')
     MedicalScribePostStreamAnalyticsResult = Shapes::StructureShape.new(name: 'MedicalScribePostStreamAnalyticsResult')
     MedicalScribePostStreamAnalyticsSettings = Shapes::StructureShape.new(name: 'MedicalScribePostStreamAnalyticsSettings')
     MedicalScribeResultStream = Shapes::StructureShape.new(name: 'MedicalScribeResultStream')
@@ -113,6 +117,7 @@ module Aws::TranscribeStreamingService
     PiiEntityTypes = Shapes::StringShape.new(name: 'PiiEntityTypes')
     PointsOfInterest = Shapes::StructureShape.new(name: 'PointsOfInterest')
     PostCallAnalyticsSettings = Shapes::StructureShape.new(name: 'PostCallAnalyticsSettings')
+    Pronouns = Shapes::StringShape.new(name: 'Pronouns')
     RequestId = Shapes::StringShape.new(name: 'RequestId')
     ResourceNotFoundException = Shapes::StructureShape.new(name: 'ResourceNotFoundException')
     Result = Shapes::StructureShape.new(name: 'Result')
@@ -120,6 +125,7 @@ module Aws::TranscribeStreamingService
     Sentiment = Shapes::StringShape.new(name: 'Sentiment')
     ServiceUnavailableException = Shapes::StructureShape.new(name: 'ServiceUnavailableException')
     SessionId = Shapes::StringShape.new(name: 'SessionId')
+    SessionResumeWindow = Shapes::IntegerShape.new(name: 'SessionResumeWindow')
     Specialty = Shapes::StringShape.new(name: 'Specialty')
     Stable = Shapes::BooleanShape.new(name: 'Stable')
     StartCallAnalyticsStreamTranscriptionRequest = Shapes::StructureShape.new(name: 'StartCallAnalyticsStreamTranscriptionRequest')
@@ -136,6 +142,7 @@ module Aws::TranscribeStreamingService
     TimestampRanges = Shapes::ListShape.new(name: 'TimestampRanges')
     Transcript = Shapes::StructureShape.new(name: 'Transcript')
     TranscriptEvent = Shapes::StructureShape.new(name: 'TranscriptEvent')
+    TranscriptFormat = Shapes::StringShape.new(name: 'TranscriptFormat')
     TranscriptResultStream = Shapes::StructureShape.new(name: 'TranscriptResultStream')
     Type = Shapes::StringShape.new(name: 'Type')
     Uri = Shapes::StringShape.new(name: 'Uri')
@@ -153,7 +160,7 @@ module Aws::TranscribeStreamingService
 
     AlternativeList.member = Shapes::ShapeRef.new(shape: Alternative)
 
-    AudioEvent.add_member(:audio_chunk, Shapes::ShapeRef.new(shape: AudioChunk, eventpayload: true, eventpayload_type: 'blob', location_name: "AudioChunk", metadata: {"eventpayload"=>true}))
+    AudioEvent.add_member(:audio_chunk, Shapes::ShapeRef.new(shape: AudioChunk, eventpayload: true, eventpayload_type: 'blob', location_name: "AudioChunk", metadata: {"eventpayload" => true}))
     AudioEvent.struct_class = Types::AudioEvent
 
     AudioStream.add_member(:audio_event, Shapes::ShapeRef.new(shape: AudioEvent, event: true, location_name: "AudioEvent"))
@@ -183,6 +190,12 @@ module Aws::TranscribeStreamingService
     CallAnalyticsItem.struct_class = Types::CallAnalyticsItem
 
     CallAnalyticsItemList.member = Shapes::ShapeRef.new(shape: CallAnalyticsItem)
+
+    CallAnalyticsLanguageIdentification.member = Shapes::ShapeRef.new(shape: CallAnalyticsLanguageWithScore)
+
+    CallAnalyticsLanguageWithScore.add_member(:language_code, Shapes::ShapeRef.new(shape: CallAnalyticsLanguageCode, location_name: "LanguageCode"))
+    CallAnalyticsLanguageWithScore.add_member(:score, Shapes::ShapeRef.new(shape: Double, location_name: "Score"))
+    CallAnalyticsLanguageWithScore.struct_class = Types::CallAnalyticsLanguageWithScore
 
     CallAnalyticsTranscriptResultStream.add_member(:utterance_event, Shapes::ShapeRef.new(shape: UtteranceEvent, event: true, location_name: "UtteranceEvent"))
     CallAnalyticsTranscriptResultStream.add_member(:category_event, Shapes::ShapeRef.new(shape: CategoryEvent, event: true, location_name: "CategoryEvent"))
@@ -311,7 +324,7 @@ module Aws::TranscribeStreamingService
 
     MedicalResultList.member = Shapes::ShapeRef.new(shape: MedicalResult)
 
-    MedicalScribeAudioEvent.add_member(:audio_chunk, Shapes::ShapeRef.new(shape: AudioChunk, required: true, eventpayload: true, eventpayload_type: 'blob', location_name: "AudioChunk", metadata: {"eventpayload"=>true}))
+    MedicalScribeAudioEvent.add_member(:audio_chunk, Shapes::ShapeRef.new(shape: AudioChunk, required: true, eventpayload: true, eventpayload_type: 'blob', location_name: "AudioChunk", metadata: {"eventpayload" => true}))
     MedicalScribeAudioEvent.struct_class = Types::MedicalScribeAudioEvent
 
     MedicalScribeChannelDefinition.add_member(:channel_id, Shapes::ShapeRef.new(shape: MedicalScribeChannelId, required: true, location_name: "ChannelId"))
@@ -327,7 +340,11 @@ module Aws::TranscribeStreamingService
     MedicalScribeConfigurationEvent.add_member(:channel_definitions, Shapes::ShapeRef.new(shape: MedicalScribeChannelDefinitions, location_name: "ChannelDefinitions"))
     MedicalScribeConfigurationEvent.add_member(:encryption_settings, Shapes::ShapeRef.new(shape: MedicalScribeEncryptionSettings, location_name: "EncryptionSettings"))
     MedicalScribeConfigurationEvent.add_member(:post_stream_analytics_settings, Shapes::ShapeRef.new(shape: MedicalScribePostStreamAnalyticsSettings, required: true, location_name: "PostStreamAnalyticsSettings"))
+    MedicalScribeConfigurationEvent.add_member(:medical_scribe_context, Shapes::ShapeRef.new(shape: MedicalScribeContext, location_name: "MedicalScribeContext"))
     MedicalScribeConfigurationEvent.struct_class = Types::MedicalScribeConfigurationEvent
+
+    MedicalScribeContext.add_member(:patient_context, Shapes::ShapeRef.new(shape: MedicalScribePatientContext, location_name: "PatientContext"))
+    MedicalScribeContext.struct_class = Types::MedicalScribeContext
 
     MedicalScribeEncryptionSettings.add_member(:kms_encryption_context, Shapes::ShapeRef.new(shape: KMSEncryptionContextMap, location_name: "KmsEncryptionContext"))
     MedicalScribeEncryptionSettings.add_member(:kms_key_id, Shapes::ShapeRef.new(shape: KMSKeyId, required: true, location_name: "KmsKeyId"))
@@ -337,6 +354,9 @@ module Aws::TranscribeStreamingService
     MedicalScribeInputStream.add_member(:session_control_event, Shapes::ShapeRef.new(shape: MedicalScribeSessionControlEvent, event: true, location_name: "SessionControlEvent"))
     MedicalScribeInputStream.add_member(:configuration_event, Shapes::ShapeRef.new(shape: MedicalScribeConfigurationEvent, event: true, location_name: "ConfigurationEvent"))
     MedicalScribeInputStream.struct_class = Types::MedicalScribeInputStream
+
+    MedicalScribePatientContext.add_member(:pronouns, Shapes::ShapeRef.new(shape: Pronouns, location_name: "Pronouns"))
+    MedicalScribePatientContext.struct_class = Types::MedicalScribePatientContext
 
     MedicalScribePostStreamAnalyticsResult.add_member(:clinical_note_generation_result, Shapes::ShapeRef.new(shape: ClinicalNoteGenerationResult, location_name: "ClinicalNoteGenerationResult"))
     MedicalScribePostStreamAnalyticsResult.struct_class = Types::MedicalScribePostStreamAnalyticsResult
@@ -370,6 +390,7 @@ module Aws::TranscribeStreamingService
     MedicalScribeStreamDetails.add_member(:stream_status, Shapes::ShapeRef.new(shape: MedicalScribeStreamStatus, location_name: "StreamStatus"))
     MedicalScribeStreamDetails.add_member(:post_stream_analytics_settings, Shapes::ShapeRef.new(shape: MedicalScribePostStreamAnalyticsSettings, location_name: "PostStreamAnalyticsSettings"))
     MedicalScribeStreamDetails.add_member(:post_stream_analytics_result, Shapes::ShapeRef.new(shape: MedicalScribePostStreamAnalyticsResult, location_name: "PostStreamAnalyticsResult"))
+    MedicalScribeStreamDetails.add_member(:medical_scribe_context_provided, Shapes::ShapeRef.new(shape: NullableBoolean, location_name: "MedicalScribeContextProvided"))
     MedicalScribeStreamDetails.struct_class = Types::MedicalScribeStreamDetails
 
     MedicalScribeTranscriptEvent.add_member(:transcript_segment, Shapes::ShapeRef.new(shape: MedicalScribeTranscriptSegment, location_name: "TranscriptSegment"))
@@ -435,7 +456,7 @@ module Aws::TranscribeStreamingService
     ServiceUnavailableException.add_member(:message, Shapes::ShapeRef.new(shape: String, location_name: "Message"))
     ServiceUnavailableException.struct_class = Types::ServiceUnavailableException
 
-    StartCallAnalyticsStreamTranscriptionRequest.add_member(:language_code, Shapes::ShapeRef.new(shape: CallAnalyticsLanguageCode, required: true, location: "header", location_name: "x-amzn-transcribe-language-code"))
+    StartCallAnalyticsStreamTranscriptionRequest.add_member(:language_code, Shapes::ShapeRef.new(shape: CallAnalyticsLanguageCode, location: "header", location_name: "x-amzn-transcribe-language-code"))
     StartCallAnalyticsStreamTranscriptionRequest.add_member(:media_sample_rate_hertz, Shapes::ShapeRef.new(shape: MediaSampleRateHertz, required: true, location: "header", location_name: "x-amzn-transcribe-sample-rate"))
     StartCallAnalyticsStreamTranscriptionRequest.add_member(:media_encoding, Shapes::ShapeRef.new(shape: MediaEncoding, required: true, location: "header", location_name: "x-amzn-transcribe-media-encoding"))
     StartCallAnalyticsStreamTranscriptionRequest.add_member(:vocabulary_name, Shapes::ShapeRef.new(shape: VocabularyName, location: "header", location_name: "x-amzn-transcribe-vocabulary-name"))
@@ -444,6 +465,11 @@ module Aws::TranscribeStreamingService
     StartCallAnalyticsStreamTranscriptionRequest.add_member(:vocabulary_filter_name, Shapes::ShapeRef.new(shape: VocabularyFilterName, location: "header", location_name: "x-amzn-transcribe-vocabulary-filter-name"))
     StartCallAnalyticsStreamTranscriptionRequest.add_member(:vocabulary_filter_method, Shapes::ShapeRef.new(shape: VocabularyFilterMethod, location: "header", location_name: "x-amzn-transcribe-vocabulary-filter-method"))
     StartCallAnalyticsStreamTranscriptionRequest.add_member(:language_model_name, Shapes::ShapeRef.new(shape: ModelName, location: "header", location_name: "x-amzn-transcribe-language-model-name"))
+    StartCallAnalyticsStreamTranscriptionRequest.add_member(:identify_language, Shapes::ShapeRef.new(shape: Boolean, location: "header", location_name: "x-amzn-transcribe-identify-language"))
+    StartCallAnalyticsStreamTranscriptionRequest.add_member(:language_options, Shapes::ShapeRef.new(shape: LanguageOptions, location: "header", location_name: "x-amzn-transcribe-language-options"))
+    StartCallAnalyticsStreamTranscriptionRequest.add_member(:preferred_language, Shapes::ShapeRef.new(shape: CallAnalyticsLanguageCode, location: "header", location_name: "x-amzn-transcribe-preferred-language"))
+    StartCallAnalyticsStreamTranscriptionRequest.add_member(:vocabulary_names, Shapes::ShapeRef.new(shape: VocabularyNames, location: "header", location_name: "x-amzn-transcribe-vocabulary-names"))
+    StartCallAnalyticsStreamTranscriptionRequest.add_member(:vocabulary_filter_names, Shapes::ShapeRef.new(shape: VocabularyFilterNames, location: "header", location_name: "x-amzn-transcribe-vocabulary-filter-names"))
     StartCallAnalyticsStreamTranscriptionRequest.add_member(:enable_partial_results_stabilization, Shapes::ShapeRef.new(shape: Boolean, location: "header", location_name: "x-amzn-transcribe-enable-partial-results-stabilization"))
     StartCallAnalyticsStreamTranscriptionRequest.add_member(:partial_results_stability, Shapes::ShapeRef.new(shape: PartialResultsStability, location: "header", location_name: "x-amzn-transcribe-partial-results-stability"))
     StartCallAnalyticsStreamTranscriptionRequest.add_member(:content_identification_type, Shapes::ShapeRef.new(shape: ContentIdentificationType, location: "header", location_name: "x-amzn-transcribe-content-identification-type"))
@@ -463,6 +489,11 @@ module Aws::TranscribeStreamingService
     StartCallAnalyticsStreamTranscriptionResponse.add_member(:vocabulary_filter_name, Shapes::ShapeRef.new(shape: VocabularyFilterName, location: "header", location_name: "x-amzn-transcribe-vocabulary-filter-name"))
     StartCallAnalyticsStreamTranscriptionResponse.add_member(:vocabulary_filter_method, Shapes::ShapeRef.new(shape: VocabularyFilterMethod, location: "header", location_name: "x-amzn-transcribe-vocabulary-filter-method"))
     StartCallAnalyticsStreamTranscriptionResponse.add_member(:language_model_name, Shapes::ShapeRef.new(shape: ModelName, location: "header", location_name: "x-amzn-transcribe-language-model-name"))
+    StartCallAnalyticsStreamTranscriptionResponse.add_member(:identify_language, Shapes::ShapeRef.new(shape: Boolean, location: "header", location_name: "x-amzn-transcribe-identify-language"))
+    StartCallAnalyticsStreamTranscriptionResponse.add_member(:language_options, Shapes::ShapeRef.new(shape: LanguageOptions, location: "header", location_name: "x-amzn-transcribe-language-options"))
+    StartCallAnalyticsStreamTranscriptionResponse.add_member(:preferred_language, Shapes::ShapeRef.new(shape: CallAnalyticsLanguageCode, location: "header", location_name: "x-amzn-transcribe-preferred-language"))
+    StartCallAnalyticsStreamTranscriptionResponse.add_member(:vocabulary_names, Shapes::ShapeRef.new(shape: VocabularyNames, location: "header", location_name: "x-amzn-transcribe-vocabulary-names"))
+    StartCallAnalyticsStreamTranscriptionResponse.add_member(:vocabulary_filter_names, Shapes::ShapeRef.new(shape: VocabularyFilterNames, location: "header", location_name: "x-amzn-transcribe-vocabulary-filter-names"))
     StartCallAnalyticsStreamTranscriptionResponse.add_member(:enable_partial_results_stabilization, Shapes::ShapeRef.new(shape: Boolean, location: "header", location_name: "x-amzn-transcribe-enable-partial-results-stabilization"))
     StartCallAnalyticsStreamTranscriptionResponse.add_member(:partial_results_stability, Shapes::ShapeRef.new(shape: PartialResultsStability, location: "header", location_name: "x-amzn-transcribe-partial-results-stability"))
     StartCallAnalyticsStreamTranscriptionResponse.add_member(:content_identification_type, Shapes::ShapeRef.new(shape: ContentIdentificationType, location: "header", location_name: "x-amzn-transcribe-content-identification-type"))
@@ -547,6 +578,8 @@ module Aws::TranscribeStreamingService
     StartStreamTranscriptionRequest.add_member(:identify_multiple_languages, Shapes::ShapeRef.new(shape: Boolean, location: "header", location_name: "x-amzn-transcribe-identify-multiple-languages"))
     StartStreamTranscriptionRequest.add_member(:vocabulary_names, Shapes::ShapeRef.new(shape: VocabularyNames, location: "header", location_name: "x-amzn-transcribe-vocabulary-names"))
     StartStreamTranscriptionRequest.add_member(:vocabulary_filter_names, Shapes::ShapeRef.new(shape: VocabularyFilterNames, location: "header", location_name: "x-amzn-transcribe-vocabulary-filter-names"))
+    StartStreamTranscriptionRequest.add_member(:session_resume_window, Shapes::ShapeRef.new(shape: SessionResumeWindow, location: "header", location_name: "x-amzn-transcribe-session-resume-window"))
+    StartStreamTranscriptionRequest.add_member(:transcript_format, Shapes::ShapeRef.new(shape: TranscriptFormat, location: "header", location_name: "x-amzn-transcribe-transcript-format"))
     StartStreamTranscriptionRequest.struct_class = Types::StartStreamTranscriptionRequest
     StartStreamTranscriptionRequest[:payload] = :audio_stream
     StartStreamTranscriptionRequest[:payload_member] = StartStreamTranscriptionRequest.member(:audio_stream)
@@ -575,6 +608,8 @@ module Aws::TranscribeStreamingService
     StartStreamTranscriptionResponse.add_member(:identify_multiple_languages, Shapes::ShapeRef.new(shape: Boolean, location: "header", location_name: "x-amzn-transcribe-identify-multiple-languages"))
     StartStreamTranscriptionResponse.add_member(:vocabulary_names, Shapes::ShapeRef.new(shape: VocabularyNames, location: "header", location_name: "x-amzn-transcribe-vocabulary-names"))
     StartStreamTranscriptionResponse.add_member(:vocabulary_filter_names, Shapes::ShapeRef.new(shape: VocabularyFilterNames, location: "header", location_name: "x-amzn-transcribe-vocabulary-filter-names"))
+    StartStreamTranscriptionResponse.add_member(:session_resume_window, Shapes::ShapeRef.new(shape: SessionResumeWindow, location: "header", location_name: "x-amzn-transcribe-session-resume-window"))
+    StartStreamTranscriptionResponse.add_member(:transcript_format, Shapes::ShapeRef.new(shape: TranscriptFormat, location: "header", location_name: "x-amzn-transcribe-transcript-format"))
     StartStreamTranscriptionResponse.struct_class = Types::StartStreamTranscriptionResponse
     StartStreamTranscriptionResponse[:payload] = :transcript_result_stream
     StartStreamTranscriptionResponse[:payload_member] = StartStreamTranscriptionResponse.member(:transcript_result_stream)
@@ -611,6 +646,8 @@ module Aws::TranscribeStreamingService
     UtteranceEvent.add_member(:entities, Shapes::ShapeRef.new(shape: CallAnalyticsEntityList, location_name: "Entities"))
     UtteranceEvent.add_member(:sentiment, Shapes::ShapeRef.new(shape: Sentiment, location_name: "Sentiment"))
     UtteranceEvent.add_member(:issues_detected, Shapes::ShapeRef.new(shape: IssuesDetected, location_name: "IssuesDetected"))
+    UtteranceEvent.add_member(:language_code, Shapes::ShapeRef.new(shape: CallAnalyticsLanguageCode, location_name: "LanguageCode"))
+    UtteranceEvent.add_member(:language_identification, Shapes::ShapeRef.new(shape: CallAnalyticsLanguageIdentification, location_name: "LanguageIdentification"))
     UtteranceEvent.struct_class = Types::UtteranceEvent
 
 
@@ -624,7 +661,7 @@ module Aws::TranscribeStreamingService
         "auth" => ["aws.auth#sigv4"],
         "endpointPrefix" => "transcribestreaming",
         "protocol" => "rest-json",
-        "protocolSettings" => {"h2"=>"eventstream"},
+        "protocolSettings" => {"h2" => "eventstream"},
         "protocols" => ["rest-json"],
         "serviceFullName" => "Amazon Transcribe Streaming Service",
         "serviceId" => "Transcribe Streaming",

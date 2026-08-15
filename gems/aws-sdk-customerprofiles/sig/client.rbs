@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -124,6 +125,24 @@ module Aws
                              ) -> _BatchGetProfileResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchGetProfileResponseSuccess
 
+      interface _BatchPutProfileObjectResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::BatchPutProfileObjectResponse]
+        def successful: () -> ::Array[Types::BatchPutProfileObjectResponseItem]
+        def failed: () -> ::Array[Types::BatchPutProfileObjectErrorItem]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#batch_put_profile_object-instance_method
+      def batch_put_profile_object: (
+                                      domain_name: ::String,
+                                      object_type_name: ::String,
+                                      items: Array[
+                                        {
+                                          id: ::String,
+                                          object: ::String
+                                        }
+                                      ]
+                                    ) -> _BatchPutProfileObjectResponseSuccess
+                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchPutProfileObjectResponseSuccess
+
       interface _CreateCalculatedAttributeDefinitionResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateCalculatedAttributeDefinitionResponse]
         def calculated_attribute_name: () -> ::String
@@ -135,6 +154,9 @@ module Aws
         def statistic: () -> ("FIRST_OCCURRENCE" | "LAST_OCCURRENCE" | "COUNT" | "SUM" | "MINIMUM" | "MAXIMUM" | "AVERAGE" | "MAX_OCCURRENCE")
         def created_at: () -> ::Time
         def last_updated_at: () -> ::Time
+        def use_historical_data: () -> bool
+        def status: () -> ("PREPARING" | "IN_PROGRESS" | "COMPLETED" | "FAILED")
+        def readiness: () -> Types::Readiness
         def tags: () -> ::Hash[::String, ::String]
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#create_calculated_attribute_definition-instance_method
@@ -147,21 +169,11 @@ module Aws
                                                       attributes: Array[
                                                         {
                                                           name: ::String
-                                                        },
+                                                        }
                                                       ],
                                                       expression: ::String
                                                     },
-                                                    ?conditions: {
-                                                      range: {
-                                                        value: ::Integer,
-                                                        unit: ("DAYS")
-                                                      }?,
-                                                      object_count: ::Integer?,
-                                                      threshold: {
-                                                        value: ::String,
-                                                        operator: ("EQUAL_TO" | "GREATER_THAN" | "LESS_THAN" | "NOT_EQUAL_TO")
-                                                      }?
-                                                    },
+                                                    ?conditions: Params::conditions,
                                                     ?filter: {
                                                       include: ("ALL" | "ANY" | "NONE"),
                                                       groups: Array[
@@ -173,12 +185,13 @@ module Aws
                                                                   dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH" | "BEFORE" | "AFTER" | "BETWEEN" | "NOT_BETWEEN" | "ON" | "GREATER_THAN" | "LESS_THAN" | "GREATER_THAN_OR_EQUAL" | "LESS_THAN_OR_EQUAL" | "EQUAL"),
                                                                   values: Array[::String]
                                                                 }]
-                                                            },
+                                                            }
                                                           ]
-                                                        },
+                                                        }
                                                       ]
                                                     },
                                                     statistic: ("FIRST_OCCURRENCE" | "LAST_OCCURRENCE" | "COUNT" | "SUM" | "MINIMUM" | "MAXIMUM" | "AVERAGE" | "MAX_OCCURRENCE"),
+                                                    ?use_historical_data: bool,
                                                     ?tags: Hash[::String, ::String]
                                                   ) -> _CreateCalculatedAttributeDefinitionResponseSuccess
                                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateCalculatedAttributeDefinitionResponseSuccess
@@ -191,6 +204,7 @@ module Aws
         def dead_letter_queue_url: () -> ::String
         def matching: () -> Types::MatchingResponse
         def rule_based_matching: () -> Types::RuleBasedMatchingResponse
+        def data_store: () -> Types::DataStoreResponse
         def created_at: () -> ::Time
         def last_updated_at: () -> ::Time
         def tags: () -> ::Hash[::String, ::String]
@@ -201,61 +215,40 @@ module Aws
                            default_expiration_days: ::Integer,
                            ?default_encryption_key: ::String,
                            ?dead_letter_queue_url: ::String,
-                           ?matching: {
-                             enabled: bool,
-                             job_schedule: {
-                               day_of_the_week: ("SUNDAY" | "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY"),
-                               time: ::String
-                             }?,
-                             auto_merging: {
-                               enabled: bool,
-                               consolidation: {
-                                 matching_attributes_list: Array[
-                                   Array[::String],
-                                 ]
-                               }?,
-                               conflict_resolution: {
-                                 conflict_resolving_model: ("RECENCY" | "SOURCE"),
-                                 source_name: ::String?
-                               }?,
-                               min_allowed_confidence_score_for_merging: ::Float?
-                             }?,
-                             exporting_config: {
-                               s3_exporting: {
-                                 s3_bucket_name: ::String,
-                                 s3_key_name: ::String?
-                               }?
-                             }?
-                           },
-                           ?rule_based_matching: {
-                             enabled: bool,
-                             matching_rules: Array[
-                               {
-                                 rule: Array[::String]
-                               },
-                             ]?,
-                             max_allowed_rule_level_for_merging: ::Integer?,
-                             max_allowed_rule_level_for_matching: ::Integer?,
-                             attribute_types_selector: {
-                               attribute_matching_model: ("ONE_TO_ONE" | "MANY_TO_MANY"),
-                               address: Array[::String]?,
-                               phone_number: Array[::String]?,
-                               email_address: Array[::String]?
-                             }?,
-                             conflict_resolution: {
-                               conflict_resolving_model: ("RECENCY" | "SOURCE"),
-                               source_name: ::String?
-                             }?,
-                             exporting_config: {
-                               s3_exporting: {
-                                 s3_bucket_name: ::String,
-                                 s3_key_name: ::String?
-                               }?
-                             }?
+                           ?matching: Params::matching_request,
+                           ?rule_based_matching: Params::rule_based_matching_request,
+                           ?data_store: {
+                             enabled: bool?
                            },
                            ?tags: Hash[::String, ::String]
                          ) -> _CreateDomainResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateDomainResponseSuccess
+
+      interface _CreateDomainLayoutResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateDomainLayoutResponse]
+        def layout_definition_name: () -> ::String
+        def description: () -> ::String
+        def display_name: () -> ::String
+        def is_default: () -> bool
+        def layout_type: () -> ("PROFILE_EXPLORER")
+        def layout: () -> ::String
+        def version: () -> ::String
+        def tags: () -> ::Hash[::String, ::String]
+        def created_at: () -> ::Time
+        def last_updated_at: () -> ::Time
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#create_domain_layout-instance_method
+      def create_domain_layout: (
+                                  domain_name: ::String,
+                                  layout_definition_name: ::String,
+                                  description: ::String,
+                                  display_name: ::String,
+                                  ?is_default: bool,
+                                  layout_type: ("PROFILE_EXPLORER"),
+                                  layout: ::String,
+                                  ?tags: Hash[::String, ::String]
+                                ) -> _CreateDomainLayoutResponseSuccess
+                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateDomainLayoutResponseSuccess
 
       interface _CreateEventStreamResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateEventStreamResponse]
@@ -290,34 +283,10 @@ module Aws
                                   object_type_name: ::String,
                                   ?description: ::String,
                                   event_trigger_conditions: Array[
-                                    {
-                                      event_trigger_dimensions: Array[
-                                        {
-                                          object_attributes: Array[
-                                            {
-                                              source: ::String?,
-                                              field_name: ::String?,
-                                              comparison_operator: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH" | "GREATER_THAN" | "LESS_THAN" | "GREATER_THAN_OR_EQUAL" | "LESS_THAN_OR_EQUAL" | "EQUAL" | "BEFORE" | "AFTER" | "ON" | "BETWEEN" | "NOT_BETWEEN"),
-                                              values: Array[::String]
-                                            },
-                                          ]
-                                        },
-                                      ],
-                                      logical_operator: ("ANY" | "ALL" | "NONE")
-                                    },
+                                    Params::event_trigger_condition
                                   ],
                                   ?segment_filter: ::String,
-                                  ?event_trigger_limits: {
-                                    event_expiration: ::Integer?,
-                                    periods: Array[
-                                      {
-                                        unit: ("HOURS" | "DAYS" | "WEEKS" | "MONTHS"),
-                                        value: ::Integer,
-                                        max_invocations_per_profile: ::Integer?,
-                                        unlimited: bool?
-                                      },
-                                    ]?
-                                  },
+                                  ?event_trigger_limits: Params::event_trigger_limits,
                                   ?tags: Hash[::String, ::String]
                                 ) -> _CreateEventTriggerResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateEventTriggerResponseSuccess
@@ -333,72 +302,12 @@ module Aws
                                          workflow_type: ("APPFLOW_INTEGRATION"),
                                          integration_config: {
                                            appflow_integration: {
-                                             flow_definition: {
-                                               description: ::String?,
-                                               flow_name: ::String,
-                                               kms_arn: ::String,
-                                               source_flow_config: {
-                                                 connector_profile_name: ::String?,
-                                                 connector_type: ("Salesforce" | "Marketo" | "Zendesk" | "Servicenow" | "S3"),
-                                                 incremental_pull_config: {
-                                                   datetime_type_field_name: ::String?
-                                                 }?,
-                                                 source_connector_properties: {
-                                                   marketo: {
-                                                     object: ::String
-                                                   }?,
-                                                   s3: {
-                                                     bucket_name: ::String,
-                                                     bucket_prefix: ::String?
-                                                   }?,
-                                                   salesforce: {
-                                                     object: ::String,
-                                                     enable_dynamic_field_update: bool?,
-                                                     include_deleted_records: bool?
-                                                   }?,
-                                                   service_now: {
-                                                     object: ::String
-                                                   }?,
-                                                   zendesk: {
-                                                     object: ::String
-                                                   }?
-                                                 }
-                                               },
-                                               tasks: Array[
-                                                 {
-                                                   connector_operator: {
-                                                     marketo: ("PROJECTION" | "LESS_THAN" | "GREATER_THAN" | "BETWEEN" | "ADDITION" | "MULTIPLICATION" | "DIVISION" | "SUBTRACTION" | "MASK_ALL" | "MASK_FIRST_N" | "MASK_LAST_N" | "VALIDATE_NON_NULL" | "VALIDATE_NON_ZERO" | "VALIDATE_NON_NEGATIVE" | "VALIDATE_NUMERIC" | "NO_OP")?,
-                                                     s3: ("PROJECTION" | "LESS_THAN" | "GREATER_THAN" | "BETWEEN" | "LESS_THAN_OR_EQUAL_TO" | "GREATER_THAN_OR_EQUAL_TO" | "EQUAL_TO" | "NOT_EQUAL_TO" | "ADDITION" | "MULTIPLICATION" | "DIVISION" | "SUBTRACTION" | "MASK_ALL" | "MASK_FIRST_N" | "MASK_LAST_N" | "VALIDATE_NON_NULL" | "VALIDATE_NON_ZERO" | "VALIDATE_NON_NEGATIVE" | "VALIDATE_NUMERIC" | "NO_OP")?,
-                                                     salesforce: ("PROJECTION" | "LESS_THAN" | "CONTAINS" | "GREATER_THAN" | "BETWEEN" | "LESS_THAN_OR_EQUAL_TO" | "GREATER_THAN_OR_EQUAL_TO" | "EQUAL_TO" | "NOT_EQUAL_TO" | "ADDITION" | "MULTIPLICATION" | "DIVISION" | "SUBTRACTION" | "MASK_ALL" | "MASK_FIRST_N" | "MASK_LAST_N" | "VALIDATE_NON_NULL" | "VALIDATE_NON_ZERO" | "VALIDATE_NON_NEGATIVE" | "VALIDATE_NUMERIC" | "NO_OP")?,
-                                                     service_now: ("PROJECTION" | "CONTAINS" | "LESS_THAN" | "GREATER_THAN" | "BETWEEN" | "LESS_THAN_OR_EQUAL_TO" | "GREATER_THAN_OR_EQUAL_TO" | "EQUAL_TO" | "NOT_EQUAL_TO" | "ADDITION" | "MULTIPLICATION" | "DIVISION" | "SUBTRACTION" | "MASK_ALL" | "MASK_FIRST_N" | "MASK_LAST_N" | "VALIDATE_NON_NULL" | "VALIDATE_NON_ZERO" | "VALIDATE_NON_NEGATIVE" | "VALIDATE_NUMERIC" | "NO_OP")?,
-                                                     zendesk: ("PROJECTION" | "GREATER_THAN" | "ADDITION" | "MULTIPLICATION" | "DIVISION" | "SUBTRACTION" | "MASK_ALL" | "MASK_FIRST_N" | "MASK_LAST_N" | "VALIDATE_NON_NULL" | "VALIDATE_NON_ZERO" | "VALIDATE_NON_NEGATIVE" | "VALIDATE_NUMERIC" | "NO_OP")?
-                                                   }?,
-                                                   destination_field: ::String?,
-                                                   source_fields: Array[::String],
-                                                   task_properties: Hash[("VALUE" | "VALUES" | "DATA_TYPE" | "UPPER_BOUND" | "LOWER_BOUND" | "SOURCE_DATA_TYPE" | "DESTINATION_DATA_TYPE" | "VALIDATION_ACTION" | "MASK_VALUE" | "MASK_LENGTH" | "TRUNCATE_LENGTH" | "MATH_OPERATION_FIELDS_ORDER" | "CONCAT_FORMAT" | "SUBFIELD_CATEGORY_MAP"), ::String]?,
-                                                   task_type: ("Arithmetic" | "Filter" | "Map" | "Mask" | "Merge" | "Truncate" | "Validate")
-                                                 },
-                                               ],
-                                               trigger_config: {
-                                                 trigger_type: ("Scheduled" | "Event" | "OnDemand"),
-                                                 trigger_properties: {
-                                                   scheduled: {
-                                                     schedule_expression: ::String,
-                                                     data_pull_mode: ("Incremental" | "Complete")?,
-                                                     schedule_start_time: ::Time?,
-                                                     schedule_end_time: ::Time?,
-                                                     timezone: ::String?,
-                                                     schedule_offset: ::Integer?,
-                                                     first_execution_from: ::Time?
-                                                   }?
-                                                 }?
-                                               }
-                                             },
+                                             flow_definition: Params::flow_definition,
                                              batches: Array[
                                                {
                                                  start_time: ::Time,
                                                  end_time: ::Time
-                                               },
+                                               }
                                              ]?
                                            }?
                                          },
@@ -431,59 +340,74 @@ module Aws
                             ?email_address: ::String,
                             ?personal_email_address: ::String,
                             ?business_email_address: ::String,
-                            ?address: {
-                              address_1: ::String?,
-                              address_2: ::String?,
-                              address_3: ::String?,
-                              address_4: ::String?,
-                              city: ::String?,
-                              county: ::String?,
-                              state: ::String?,
-                              province: ::String?,
-                              country: ::String?,
-                              postal_code: ::String?
-                            },
-                            ?shipping_address: {
-                              address_1: ::String?,
-                              address_2: ::String?,
-                              address_3: ::String?,
-                              address_4: ::String?,
-                              city: ::String?,
-                              county: ::String?,
-                              state: ::String?,
-                              province: ::String?,
-                              country: ::String?,
-                              postal_code: ::String?
-                            },
-                            ?mailing_address: {
-                              address_1: ::String?,
-                              address_2: ::String?,
-                              address_3: ::String?,
-                              address_4: ::String?,
-                              city: ::String?,
-                              county: ::String?,
-                              state: ::String?,
-                              province: ::String?,
-                              country: ::String?,
-                              postal_code: ::String?
-                            },
-                            ?billing_address: {
-                              address_1: ::String?,
-                              address_2: ::String?,
-                              address_3: ::String?,
-                              address_4: ::String?,
-                              city: ::String?,
-                              county: ::String?,
-                              state: ::String?,
-                              province: ::String?,
-                              country: ::String?,
-                              postal_code: ::String?
-                            },
+                            ?address: Params::address,
+                            ?shipping_address: Params::address,
+                            ?mailing_address: Params::address,
+                            ?billing_address: Params::address,
                             ?attributes: Hash[::String, ::String],
                             ?party_type_string: ::String,
-                            ?gender_string: ::String
+                            ?gender_string: ::String,
+                            ?profile_type: ("ACCOUNT_PROFILE" | "PROFILE"),
+                            ?engagement_preferences: Params::engagement_preferences
                           ) -> _CreateProfileResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateProfileResponseSuccess
+
+      interface _CreateRecommenderResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateRecommenderResponse]
+        def recommender_arn: () -> ::String
+        def tags: () -> ::Hash[::String, ::String]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#create_recommender-instance_method
+      def create_recommender: (
+                                domain_name: ::String,
+                                recommender_name: ::String,
+                                recommender_recipe_name: ("recommended-for-you" | "similar-items" | "frequently-paired-items" | "popular-items" | "trending-now" | "personalized-ranking"),
+                                ?recommender_config: Params::recommender_config,
+                                ?description: ::String,
+                                ?recommender_schema_name: ::String,
+                                ?tags: Hash[::String, ::String]
+                              ) -> _CreateRecommenderResponseSuccess
+                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateRecommenderResponseSuccess
+
+      interface _CreateRecommenderFilterResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateRecommenderFilterResponse]
+        def recommender_filter_arn: () -> ::String
+        def tags: () -> ::Hash[::String, ::String]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#create_recommender_filter-instance_method
+      def create_recommender_filter: (
+                                       domain_name: ::String,
+                                       recommender_filter_name: ::String,
+                                       recommender_filter_expression: ::String,
+                                       ?recommender_schema_name: ::String,
+                                       ?description: ::String,
+                                       ?tags: Hash[::String, ::String]
+                                     ) -> _CreateRecommenderFilterResponseSuccess
+                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateRecommenderFilterResponseSuccess
+
+      interface _CreateRecommenderSchemaResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateRecommenderSchemaResponse]
+        def recommender_schema_arn: () -> ::String
+        def recommender_schema_name: () -> ::String
+        def fields: () -> ::Hash[::String, ::Array[Types::RecommenderSchemaField]]
+        def created_at: () -> ::Time
+        def status: () -> ("ACTIVE" | "DELETING")
+        def tags: () -> ::Hash[::String, ::String]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#create_recommender_schema-instance_method
+      def create_recommender_schema: (
+                                       domain_name: ::String,
+                                       recommender_schema_name: ::String,
+                                       fields: Hash[::String, Array[
+                                           {
+                                             target_field_name: ::String,
+                                             content_type: ("STRING" | "NUMBER")?,
+                                             feature_type: ("TEXTUAL" | "CATEGORICAL")?
+                                           }
+                                         ]],
+                                       ?tags: Hash[::String, ::String]
+                                     ) -> _CreateRecommenderSchemaResponseSuccess
+                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateRecommenderSchemaResponseSuccess
 
       interface _CreateSegmentDefinitionResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateSegmentDefinitionResponse]
@@ -500,208 +424,22 @@ module Aws
                                        segment_definition_name: ::String,
                                        display_name: ::String,
                                        ?description: ::String,
-                                       segment_groups: {
+                                       ?segment_groups: {
                                          groups: Array[
-                                           {
-                                             dimensions: Array[
-                                               {
-                                                 profile_attributes: {
-                                                   account_number: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   additional_information: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   first_name: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   last_name: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   middle_name: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   gender_string: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   party_type_string: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   birth_date: {
-                                                     dimension_type: ("BEFORE" | "AFTER" | "BETWEEN" | "NOT_BETWEEN" | "ON"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   phone_number: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   business_name: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   business_phone_number: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   home_phone_number: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   mobile_phone_number: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   email_address: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   personal_email_address: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   business_email_address: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   address: {
-                                                     city: {
-                                                       dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                       values: Array[::String]
-                                                     }?,
-                                                     country: {
-                                                       dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                       values: Array[::String]
-                                                     }?,
-                                                     county: {
-                                                       dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                       values: Array[::String]
-                                                     }?,
-                                                     postal_code: {
-                                                       dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                       values: Array[::String]
-                                                     }?,
-                                                     province: {
-                                                       dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                       values: Array[::String]
-                                                     }?,
-                                                     state: {
-                                                       dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                       values: Array[::String]
-                                                     }?
-                                                   }?,
-                                                   shipping_address: {
-                                                     city: {
-                                                       dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                       values: Array[::String]
-                                                     }?,
-                                                     country: {
-                                                       dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                       values: Array[::String]
-                                                     }?,
-                                                     county: {
-                                                       dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                       values: Array[::String]
-                                                     }?,
-                                                     postal_code: {
-                                                       dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                       values: Array[::String]
-                                                     }?,
-                                                     province: {
-                                                       dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                       values: Array[::String]
-                                                     }?,
-                                                     state: {
-                                                       dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                       values: Array[::String]
-                                                     }?
-                                                   }?,
-                                                   mailing_address: {
-                                                     city: {
-                                                       dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                       values: Array[::String]
-                                                     }?,
-                                                     country: {
-                                                       dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                       values: Array[::String]
-                                                     }?,
-                                                     county: {
-                                                       dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                       values: Array[::String]
-                                                     }?,
-                                                     postal_code: {
-                                                       dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                       values: Array[::String]
-                                                     }?,
-                                                     province: {
-                                                       dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                       values: Array[::String]
-                                                     }?,
-                                                     state: {
-                                                       dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                       values: Array[::String]
-                                                     }?
-                                                   }?,
-                                                   billing_address: {
-                                                     city: {
-                                                       dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                       values: Array[::String]
-                                                     }?,
-                                                     country: {
-                                                       dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                       values: Array[::String]
-                                                     }?,
-                                                     county: {
-                                                       dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                       values: Array[::String]
-                                                     }?,
-                                                     postal_code: {
-                                                       dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                       values: Array[::String]
-                                                     }?,
-                                                     province: {
-                                                       dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                       values: Array[::String]
-                                                     }?,
-                                                     state: {
-                                                       dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                       values: Array[::String]
-                                                     }?
-                                                   }?,
-                                                   attributes: Hash[::String, {
-                                                       dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH" | "BEFORE" | "AFTER" | "BETWEEN" | "NOT_BETWEEN" | "ON" | "GREATER_THAN" | "LESS_THAN" | "GREATER_THAN_OR_EQUAL" | "LESS_THAN_OR_EQUAL" | "EQUAL"),
-                                                       values: Array[::String]
-                                                     }]?
-                                                 }?,
-                                                 calculated_attributes: Hash[::String, {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH" | "BEFORE" | "AFTER" | "BETWEEN" | "NOT_BETWEEN" | "ON" | "GREATER_THAN" | "LESS_THAN" | "GREATER_THAN_OR_EQUAL" | "LESS_THAN_OR_EQUAL" | "EQUAL"),
-                                                     values: Array[::String],
-                                                     condition_overrides: {
-                                                       range: {
-                                                         start: ::Integer,
-                                                         end: ::Integer?,
-                                                         unit: ("DAYS")
-                                                       }?
-                                                     }?
-                                                   }]?
-                                               },
-                                             ]?,
-                                             source_segments: Array[
-                                               {
-                                                 segment_definition_name: ::String?
-                                               },
-                                             ]?,
-                                             source_type: ("ALL" | "ANY" | "NONE")?,
-                                             type: ("ALL" | "ANY" | "NONE")?
-                                           },
+                                           Params::group
                                          ]?,
                                          include: ("ALL" | "ANY" | "NONE")?
+                                       },
+                                       ?segment_sql_query: ::String,
+                                       ?segment_sort: {
+                                         attributes: Array[
+                                           {
+                                             name: ::String,
+                                             data_type: ("STRING" | "NUMBER" | "DATE")?,
+                                             order: ("ASC" | "DESC"),
+                                             type: ("PROFILE" | "CALCULATED")?
+                                           }
+                                         ]
                                        },
                                        ?tags: Hash[::String, ::String]
                                      ) -> _CreateSegmentDefinitionResponseSuccess
@@ -716,209 +454,13 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#create_segment_estimate-instance_method
       def create_segment_estimate: (
                                      domain_name: ::String,
-                                     segment_query: {
+                                     ?segment_query: {
                                        groups: Array[
-                                         {
-                                           dimensions: Array[
-                                             {
-                                               profile_attributes: {
-                                                 account_number: {
-                                                   dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                   values: Array[::String]
-                                                 }?,
-                                                 additional_information: {
-                                                   dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                   values: Array[::String]
-                                                 }?,
-                                                 first_name: {
-                                                   dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                   values: Array[::String]
-                                                 }?,
-                                                 last_name: {
-                                                   dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                   values: Array[::String]
-                                                 }?,
-                                                 middle_name: {
-                                                   dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                   values: Array[::String]
-                                                 }?,
-                                                 gender_string: {
-                                                   dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                   values: Array[::String]
-                                                 }?,
-                                                 party_type_string: {
-                                                   dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                   values: Array[::String]
-                                                 }?,
-                                                 birth_date: {
-                                                   dimension_type: ("BEFORE" | "AFTER" | "BETWEEN" | "NOT_BETWEEN" | "ON"),
-                                                   values: Array[::String]
-                                                 }?,
-                                                 phone_number: {
-                                                   dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                   values: Array[::String]
-                                                 }?,
-                                                 business_name: {
-                                                   dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                   values: Array[::String]
-                                                 }?,
-                                                 business_phone_number: {
-                                                   dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                   values: Array[::String]
-                                                 }?,
-                                                 home_phone_number: {
-                                                   dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                   values: Array[::String]
-                                                 }?,
-                                                 mobile_phone_number: {
-                                                   dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                   values: Array[::String]
-                                                 }?,
-                                                 email_address: {
-                                                   dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                   values: Array[::String]
-                                                 }?,
-                                                 personal_email_address: {
-                                                   dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                   values: Array[::String]
-                                                 }?,
-                                                 business_email_address: {
-                                                   dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                   values: Array[::String]
-                                                 }?,
-                                                 address: {
-                                                   city: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   country: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   county: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   postal_code: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   province: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   state: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?
-                                                 }?,
-                                                 shipping_address: {
-                                                   city: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   country: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   county: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   postal_code: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   province: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   state: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?
-                                                 }?,
-                                                 mailing_address: {
-                                                   city: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   country: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   county: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   postal_code: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   province: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   state: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?
-                                                 }?,
-                                                 billing_address: {
-                                                   city: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   country: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   county: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   postal_code: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   province: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?,
-                                                   state: {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH"),
-                                                     values: Array[::String]
-                                                   }?
-                                                 }?,
-                                                 attributes: Hash[::String, {
-                                                     dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH" | "BEFORE" | "AFTER" | "BETWEEN" | "NOT_BETWEEN" | "ON" | "GREATER_THAN" | "LESS_THAN" | "GREATER_THAN_OR_EQUAL" | "LESS_THAN_OR_EQUAL" | "EQUAL"),
-                                                     values: Array[::String]
-                                                   }]?
-                                               }?,
-                                               calculated_attributes: Hash[::String, {
-                                                   dimension_type: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH" | "BEFORE" | "AFTER" | "BETWEEN" | "NOT_BETWEEN" | "ON" | "GREATER_THAN" | "LESS_THAN" | "GREATER_THAN_OR_EQUAL" | "LESS_THAN_OR_EQUAL" | "EQUAL"),
-                                                   values: Array[::String],
-                                                   condition_overrides: {
-                                                     range: {
-                                                       start: ::Integer,
-                                                       end: ::Integer?,
-                                                       unit: ("DAYS")
-                                                     }?
-                                                   }?
-                                                 }]?
-                                             },
-                                           ]?,
-                                           source_segments: Array[
-                                             {
-                                               segment_definition_name: ::String?
-                                             },
-                                           ]?,
-                                           source_type: ("ALL" | "ANY" | "NONE")?,
-                                           type: ("ALL" | "ANY" | "NONE")?
-                                         },
+                                         Params::group
                                        ]?,
                                        include: ("ALL" | "ANY" | "NONE")?
-                                     }
+                                     },
+                                     ?segment_sql_query: ::String
                                    ) -> _CreateSegmentEstimateResponseSuccess
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateSegmentEstimateResponseSuccess
 
@@ -936,6 +478,24 @@ module Aws
                                      ?destination_uri: ::String
                                    ) -> _CreateSegmentSnapshotResponseSuccess
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateSegmentSnapshotResponseSuccess
+
+      interface _CreateUploadJobResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateUploadJobResponse]
+        def job_id: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#create_upload_job-instance_method
+      def create_upload_job: (
+                               domain_name: ::String,
+                               display_name: ::String,
+                               fields: Hash[::String, {
+                                   source: ::String?,
+                                   target: ::String?,
+                                   content_type: ("STRING" | "NUMBER" | "PHONE_NUMBER" | "EMAIL_ADDRESS" | "NAME")?
+                                 }],
+                               unique_key: ::String,
+                               ?data_expiry: ::Integer
+                             ) -> _CreateUploadJobResponseSuccess
+                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateUploadJobResponseSuccess
 
       interface _DeleteCalculatedAttributeDefinitionResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DeleteCalculatedAttributeDefinitionResponse]
@@ -956,6 +516,27 @@ module Aws
                            domain_name: ::String
                          ) -> _DeleteDomainResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteDomainResponseSuccess
+
+      interface _DeleteDomainLayoutResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteDomainLayoutResponse]
+        def message: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#delete_domain_layout-instance_method
+      def delete_domain_layout: (
+                                  domain_name: ::String,
+                                  layout_definition_name: ::String
+                                ) -> _DeleteDomainLayoutResponseSuccess
+                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteDomainLayoutResponseSuccess
+
+      interface _DeleteDomainObjectTypeResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteDomainObjectTypeResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#delete_domain_object_type-instance_method
+      def delete_domain_object_type: (
+                                       domain_name: ::String,
+                                       object_type_name: ::String
+                                     ) -> _DeleteDomainObjectTypeResponseSuccess
+                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteDomainObjectTypeResponseSuccess
 
       interface _DeleteEventStreamResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DeleteEventStreamResponse]
@@ -1037,6 +618,37 @@ module Aws
                                       ) -> _DeleteProfileObjectTypeResponseSuccess
                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteProfileObjectTypeResponseSuccess
 
+      interface _DeleteRecommenderResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteRecommenderResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#delete_recommender-instance_method
+      def delete_recommender: (
+                                domain_name: ::String,
+                                recommender_name: ::String
+                              ) -> _DeleteRecommenderResponseSuccess
+                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteRecommenderResponseSuccess
+
+      interface _DeleteRecommenderFilterResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteRecommenderFilterResponse]
+        def message: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#delete_recommender_filter-instance_method
+      def delete_recommender_filter: (
+                                       domain_name: ::String,
+                                       recommender_filter_name: ::String
+                                     ) -> _DeleteRecommenderFilterResponseSuccess
+                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteRecommenderFilterResponseSuccess
+
+      interface _DeleteRecommenderSchemaResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteRecommenderSchemaResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#delete_recommender_schema-instance_method
+      def delete_recommender_schema: (
+                                       domain_name: ::String,
+                                       recommender_schema_name: ::String
+                                     ) -> _DeleteRecommenderSchemaResponseSuccess
+                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteRecommenderSchemaResponseSuccess
+
       interface _DeleteSegmentDefinitionResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DeleteSegmentDefinitionResponse]
         def message: () -> ::String
@@ -1081,7 +693,7 @@ module Aws
                                       domain_name: ::String,
                                       consolidation: {
                                         matching_attributes_list: Array[
-                                          Array[::String],
+                                          Array[::String]
                                         ]
                                       },
                                       conflict_resolution: {
@@ -1103,6 +715,9 @@ module Aws
         def filter: () -> Types::Filter
         def conditions: () -> Types::Conditions
         def attribute_details: () -> Types::AttributeDetails
+        def use_historical_data: () -> bool
+        def status: () -> ("PREPARING" | "IN_PROGRESS" | "COMPLETED" | "FAILED")
+        def readiness: () -> Types::Readiness
         def tags: () -> ::Hash[::String, ::String]
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#get_calculated_attribute_definition-instance_method
@@ -1118,6 +733,7 @@ module Aws
         def display_name: () -> ::String
         def is_data_partial: () -> ::String
         def value: () -> ::String
+        def last_object_timestamp: () -> ::Time
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#get_calculated_attribute_for_profile-instance_method
       def get_calculated_attribute_for_profile: (
@@ -1136,6 +752,7 @@ module Aws
         def stats: () -> Types::DomainStats
         def matching: () -> Types::MatchingResponse
         def rule_based_matching: () -> Types::RuleBasedMatchingResponse
+        def data_store: () -> Types::DataStoreResponse
         def created_at: () -> ::Time
         def last_updated_at: () -> ::Time
         def tags: () -> ::Hash[::String, ::String]
@@ -1145,6 +762,43 @@ module Aws
                         domain_name: ::String
                       ) -> _GetDomainResponseSuccess
                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetDomainResponseSuccess
+
+      interface _GetDomainLayoutResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetDomainLayoutResponse]
+        def layout_definition_name: () -> ::String
+        def description: () -> ::String
+        def display_name: () -> ::String
+        def is_default: () -> bool
+        def layout_type: () -> ("PROFILE_EXPLORER")
+        def layout: () -> ::String
+        def version: () -> ::String
+        def created_at: () -> ::Time
+        def last_updated_at: () -> ::Time
+        def tags: () -> ::Hash[::String, ::String]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#get_domain_layout-instance_method
+      def get_domain_layout: (
+                               domain_name: ::String,
+                               layout_definition_name: ::String
+                             ) -> _GetDomainLayoutResponseSuccess
+                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetDomainLayoutResponseSuccess
+
+      interface _GetDomainObjectTypeResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetDomainObjectTypeResponse]
+        def object_type_name: () -> ::String
+        def description: () -> ::String
+        def encryption_key: () -> ::String
+        def fields: () -> ::Hash[::String, Types::DomainObjectTypeField]
+        def created_at: () -> ::Time
+        def last_updated_at: () -> ::Time
+        def tags: () -> ::Hash[::String, ::String]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#get_domain_object_type-instance_method
+      def get_domain_object_type: (
+                                    domain_name: ::String,
+                                    object_type_name: ::String
+                                  ) -> _GetDomainObjectTypeResponseSuccess
+                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetDomainObjectTypeResponseSuccess
 
       interface _GetEventStreamResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetEventStreamResponse]
@@ -1216,6 +870,7 @@ module Aws
         def is_unstructured: () -> bool
         def role_arn: () -> ::String
         def event_trigger_names: () -> ::Array[::String]
+        def scope: () -> ("PROFILE" | "DOMAIN")
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#get_integration-instance_method
       def get_integration: (
@@ -1239,6 +894,38 @@ module Aws
                        ) -> _GetMatchesResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetMatchesResponseSuccess
 
+      interface _GetObjectTypeAttributeStatisticsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetObjectTypeAttributeStatisticsResponse]
+        def statistics: () -> Types::GetObjectTypeAttributeStatisticsStats
+        def calculated_at: () -> ::Time
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#get_object_type_attribute_statistics-instance_method
+      def get_object_type_attribute_statistics: (
+                                                  domain_name: ::String,
+                                                  object_type_name: ::String,
+                                                  attribute_name: ::String
+                                                ) -> _GetObjectTypeAttributeStatisticsResponseSuccess
+                                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetObjectTypeAttributeStatisticsResponseSuccess
+
+      interface _GetProfileHistoryRecordResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetProfileHistoryRecordResponse]
+        def id: () -> ::String
+        def object_type_name: () -> ::String
+        def created_at: () -> ::Time
+        def last_updated_at: () -> ::Time
+        def action_type: () -> ("ADDED_PROFILE_KEY" | "DELETED_PROFILE_KEY" | "CREATED" | "UPDATED" | "INGESTED" | "DELETED_BY_CUSTOMER" | "EXPIRED" | "MERGED" | "DELETED_BY_MERGE")
+        def profile_object_unique_key: () -> ::String
+        def content: () -> ::String
+        def performed_by: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#get_profile_history_record-instance_method
+      def get_profile_history_record: (
+                                        domain_name: ::String,
+                                        profile_id: ::String,
+                                        id: ::String
+                                      ) -> _GetProfileHistoryRecordResponseSuccess
+                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetProfileHistoryRecordResponseSuccess
+
       interface _GetProfileObjectTypeResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetProfileObjectTypeResponse]
         def object_type_name: () -> ::String
@@ -1250,6 +937,7 @@ module Aws
         def source_last_updated_timestamp_format: () -> ::String
         def max_available_profile_object_count: () -> ::Integer
         def max_profile_object_count: () -> ::Integer
+        def source_priority: () -> ::Integer
         def fields: () -> ::Hash[::String, Types::ObjectTypeField]
         def keys: () -> ::Hash[::String, ::Array[Types::ObjectTypeKey]]
         def created_at: () -> ::Time
@@ -1279,15 +967,110 @@ module Aws
                                             ) -> _GetProfileObjectTypeTemplateResponseSuccess
                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetProfileObjectTypeTemplateResponseSuccess
 
+      interface _GetProfileRecommendationsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetProfileRecommendationsResponse]
+        def recommendations: () -> ::Array[Types::Recommendation]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#get_profile_recommendations-instance_method
+      def get_profile_recommendations: (
+                                         domain_name: ::String,
+                                         profile_id: ::String,
+                                         recommender_name: ::String,
+                                         ?context: Hash[::String, ::String],
+                                         ?recommender_filters: Array[
+                                           {
+                                             name: ::String?,
+                                             values: Hash[::String, ::String]?
+                                           }
+                                         ],
+                                         ?recommender_promotional_filters: Array[
+                                           {
+                                             name: ::String?,
+                                             values: Hash[::String, ::String]?,
+                                             promotion_name: ::String?,
+                                             percent_promoted_items: ::Integer?
+                                           }
+                                         ],
+                                         ?candidate_ids: Array[::String],
+                                         ?max_results: ::Integer,
+                                         ?metadata_config: {
+                                           metadata_columns: Array[::String]?
+                                         },
+                                         ?diversity_config: {
+                                           enabled: bool,
+                                           values: Hash[::String, ::Integer]?
+                                         }
+                                       ) -> _GetProfileRecommendationsResponseSuccess
+                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetProfileRecommendationsResponseSuccess
+
+      interface _GetRecommenderResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetRecommenderResponse]
+        def recommender_name: () -> ::String
+        def recommender_recipe_name: () -> ("recommended-for-you" | "similar-items" | "frequently-paired-items" | "popular-items" | "trending-now" | "personalized-ranking")
+        def recommender_schema_name: () -> ::String
+        def recommender_config: () -> Types::RecommenderConfig
+        def description: () -> ::String
+        def status: () -> ("PENDING" | "IN_PROGRESS" | "ACTIVE" | "FAILED" | "STOPPING" | "INACTIVE" | "STARTING" | "DELETING")
+        def last_updated_at: () -> ::Time
+        def created_at: () -> ::Time
+        def failure_reason: () -> ::String
+        def latest_recommender_update: () -> Types::RecommenderUpdate
+        def active_recommender_version_name: () -> ::String
+        def training_metrics: () -> ::Array[Types::TrainingMetrics]
+        def tags: () -> ::Hash[::String, ::String]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#get_recommender-instance_method
+      def get_recommender: (
+                             domain_name: ::String,
+                             recommender_name: ::String,
+                             ?training_metrics_count: ::Integer
+                           ) -> _GetRecommenderResponseSuccess
+                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetRecommenderResponseSuccess
+
+      interface _GetRecommenderFilterResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetRecommenderFilterResponse]
+        def recommender_filter_name: () -> ::String
+        def recommender_filter_expression: () -> ::String
+        def recommender_schema_name: () -> ::String
+        def created_at: () -> ::Time
+        def status: () -> ("ACTIVE" | "PENDING" | "IN_PROGRESS" | "FAILED" | "DELETING")
+        def description: () -> ::String
+        def failure_reason: () -> ::String
+        def tags: () -> ::Hash[::String, ::String]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#get_recommender_filter-instance_method
+      def get_recommender_filter: (
+                                    domain_name: ::String,
+                                    recommender_filter_name: ::String
+                                  ) -> _GetRecommenderFilterResponseSuccess
+                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetRecommenderFilterResponseSuccess
+
+      interface _GetRecommenderSchemaResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetRecommenderSchemaResponse]
+        def recommender_schema_name: () -> ::String
+        def fields: () -> ::Hash[::String, ::Array[Types::RecommenderSchemaField]]
+        def created_at: () -> ::Time
+        def status: () -> ("ACTIVE" | "DELETING")
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#get_recommender_schema-instance_method
+      def get_recommender_schema: (
+                                    domain_name: ::String,
+                                    recommender_schema_name: ::String
+                                  ) -> _GetRecommenderSchemaResponseSuccess
+                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetRecommenderSchemaResponseSuccess
+
       interface _GetSegmentDefinitionResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetSegmentDefinitionResponse]
         def segment_definition_name: () -> ::String
         def display_name: () -> ::String
         def description: () -> ::String
         def segment_groups: () -> Types::SegmentGroup
+        def segment_sort: () -> Types::SegmentSort
         def segment_definition_arn: () -> ::String
         def created_at: () -> ::Time
         def tags: () -> ::Hash[::String, ::String]
+        def segment_sql_query: () -> ::String
+        def segment_type: () -> ("CLASSIC" | "ENHANCED")
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#get_segment_definition-instance_method
       def get_segment_definition: (
@@ -1317,6 +1100,7 @@ module Aws
         def segment_definition_name: () -> ::String
         def profiles: () -> ::Array[Types::ProfileQueryResult]
         def failures: () -> ::Array[Types::ProfileQueryFailures]
+        def last_computed_at: () -> ::Time
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#get_segment_membership-instance_method
       def get_segment_membership: (
@@ -1363,6 +1147,39 @@ module Aws
                                   search_value: ::String
                                 ) -> _GetSimilarProfilesResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetSimilarProfilesResponseSuccess
+
+      interface _GetUploadJobResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetUploadJobResponse]
+        def job_id: () -> ::String
+        def display_name: () -> ::String
+        def status: () -> ("CREATED" | "IN_PROGRESS" | "PARTIALLY_SUCCEEDED" | "SUCCEEDED" | "FAILED" | "STOPPED")
+        def status_reason: () -> ("VALIDATION_FAILURE" | "INTERNAL_FAILURE")
+        def created_at: () -> ::Time
+        def completed_at: () -> ::Time
+        def fields: () -> ::Hash[::String, Types::ObjectTypeField]
+        def unique_key: () -> ::String
+        def results_summary: () -> Types::ResultsSummary
+        def data_expiry: () -> ::Integer
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#get_upload_job-instance_method
+      def get_upload_job: (
+                            domain_name: ::String,
+                            job_id: ::String
+                          ) -> _GetUploadJobResponseSuccess
+                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetUploadJobResponseSuccess
+
+      interface _GetUploadJobPathResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetUploadJobPathResponse]
+        def url: () -> ::String
+        def client_token: () -> ::String
+        def valid_until: () -> ::Time
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#get_upload_job_path-instance_method
+      def get_upload_job_path: (
+                                 domain_name: ::String,
+                                 job_id: ::String
+                               ) -> _GetUploadJobPathResponseSuccess
+                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetUploadJobPathResponseSuccess
 
       interface _GetWorkflowResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetWorkflowResponse]
@@ -1439,6 +1256,32 @@ module Aws
                                                   ) -> _ListCalculatedAttributesForProfileResponseSuccess
                                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListCalculatedAttributesForProfileResponseSuccess
 
+      interface _ListDomainLayoutsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListDomainLayoutsResponse]
+        def items: () -> ::Array[Types::LayoutItem]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#list_domain_layouts-instance_method
+      def list_domain_layouts: (
+                                 domain_name: ::String,
+                                 ?next_token: ::String,
+                                 ?max_results: ::Integer
+                               ) -> _ListDomainLayoutsResponseSuccess
+                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListDomainLayoutsResponseSuccess
+
+      interface _ListDomainObjectTypesResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListDomainObjectTypesResponse]
+        def items: () -> ::Array[Types::DomainObjectTypesListItem]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#list_domain_object_types-instance_method
+      def list_domain_object_types: (
+                                      domain_name: ::String,
+                                      ?max_results: ::Integer,
+                                      ?next_token: ::String
+                                    ) -> _ListDomainObjectTypesResponseSuccess
+                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListDomainObjectTypesResponseSuccess
+
       interface _ListDomainsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListDomainsResponse]
         def items: () -> ::Array[Types::ListDomainItem]
@@ -1504,6 +1347,21 @@ module Aws
                              ) -> _ListIntegrationsResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListIntegrationsResponseSuccess
 
+      interface _ListObjectTypeAttributeValuesResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListObjectTypeAttributeValuesResponse]
+        def items: () -> ::Array[Types::ListObjectTypeAttributeValuesItem]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#list_object_type_attribute_values-instance_method
+      def list_object_type_attribute_values: (
+                                               ?next_token: ::String,
+                                               ?max_results: ::Integer,
+                                               domain_name: ::String,
+                                               object_type_name: ::String,
+                                               attribute_name: ::String
+                                             ) -> _ListObjectTypeAttributeValuesResponseSuccess
+                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListObjectTypeAttributeValuesResponseSuccess
+
       interface _ListObjectTypeAttributesResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListObjectTypeAttributesResponse]
         def items: () -> ::Array[Types::ListObjectTypeAttributeItem]
@@ -1531,6 +1389,23 @@ module Aws
                                            attribute_name: ::String
                                          ) -> _ListProfileAttributeValuesResponseSuccess
                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListProfileAttributeValuesResponseSuccess
+
+      interface _ListProfileHistoryRecordsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListProfileHistoryRecordsResponse]
+        def profile_history_records: () -> ::Array[Types::ProfileHistoryRecord]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#list_profile_history_records-instance_method
+      def list_profile_history_records: (
+                                          domain_name: ::String,
+                                          profile_id: ::String,
+                                          ?object_type_name: ::String,
+                                          ?next_token: ::String,
+                                          ?max_results: ::Integer,
+                                          ?action_type: ("ADDED_PROFILE_KEY" | "DELETED_PROFILE_KEY" | "CREATED" | "UPDATED" | "INGESTED" | "DELETED_BY_CUSTOMER" | "EXPIRED" | "MERGED" | "DELETED_BY_MERGE"),
+                                          ?performed_by: ::String
+                                        ) -> _ListProfileHistoryRecordsResponseSuccess
+                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListProfileHistoryRecordsResponseSuccess
 
       interface _ListProfileObjectTypeTemplatesResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListProfileObjectTypeTemplatesResponse]
@@ -1576,6 +1451,57 @@ module Aws
                                 ) -> _ListProfileObjectsResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListProfileObjectsResponseSuccess
 
+      interface _ListRecommenderFiltersResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListRecommenderFiltersResponse]
+        def next_token: () -> ::String
+        def recommender_filters: () -> ::Array[Types::RecommenderFilterSummary]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#list_recommender_filters-instance_method
+      def list_recommender_filters: (
+                                      domain_name: ::String,
+                                      ?max_results: ::Integer,
+                                      ?next_token: ::String
+                                    ) -> _ListRecommenderFiltersResponseSuccess
+                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListRecommenderFiltersResponseSuccess
+
+      interface _ListRecommenderRecipesResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListRecommenderRecipesResponse]
+        def next_token: () -> ::String
+        def recommender_recipes: () -> ::Array[Types::RecommenderRecipe]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#list_recommender_recipes-instance_method
+      def list_recommender_recipes: (
+                                      ?max_results: ::Integer,
+                                      ?next_token: ::String
+                                    ) -> _ListRecommenderRecipesResponseSuccess
+                                  | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListRecommenderRecipesResponseSuccess
+
+      interface _ListRecommenderSchemasResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListRecommenderSchemasResponse]
+        def next_token: () -> ::String
+        def recommender_schemas: () -> ::Array[Types::RecommenderSchemaSummary]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#list_recommender_schemas-instance_method
+      def list_recommender_schemas: (
+                                      domain_name: ::String,
+                                      ?max_results: ::Integer,
+                                      ?next_token: ::String
+                                    ) -> _ListRecommenderSchemasResponseSuccess
+                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListRecommenderSchemasResponseSuccess
+
+      interface _ListRecommendersResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListRecommendersResponse]
+        def next_token: () -> ::String
+        def recommenders: () -> ::Array[Types::RecommenderSummary]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#list_recommenders-instance_method
+      def list_recommenders: (
+                               domain_name: ::String,
+                               ?max_results: ::Integer,
+                               ?next_token: ::String
+                             ) -> _ListRecommendersResponseSuccess
+                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListRecommendersResponseSuccess
+
       interface _ListRuleBasedMatchesResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListRuleBasedMatchesResponse]
         def match_ids: () -> ::Array[::String]
@@ -1611,6 +1537,19 @@ module Aws
                                     resource_arn: ::String
                                   ) -> _ListTagsForResourceResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListTagsForResourceResponseSuccess
+
+      interface _ListUploadJobsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListUploadJobsResponse]
+        def next_token: () -> ::String
+        def items: () -> ::Array[Types::UploadJobItem]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#list_upload_jobs-instance_method
+      def list_upload_jobs: (
+                              domain_name: ::String,
+                              ?max_results: ::Integer,
+                              ?next_token: ::String
+                            ) -> _ListUploadJobsResponseSuccess
+                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListUploadJobsResponseSuccess
 
       interface _ListWorkflowsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListWorkflowsResponse]
@@ -1659,10 +1598,38 @@ module Aws
                               shipping_address: ::String?,
                               mailing_address: ::String?,
                               billing_address: ::String?,
-                              attributes: Hash[::String, ::String]?
+                              attributes: Hash[::String, ::String]?,
+                              profile_type: ::String?,
+                              engagement_preferences: ::String?
                             }
                           ) -> _MergeProfilesResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _MergeProfilesResponseSuccess
+
+      interface _PutDomainObjectTypeResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::PutDomainObjectTypeResponse]
+        def object_type_name: () -> ::String
+        def description: () -> ::String
+        def encryption_key: () -> ::String
+        def fields: () -> ::Hash[::String, Types::DomainObjectTypeField]
+        def created_at: () -> ::Time
+        def last_updated_at: () -> ::Time
+        def tags: () -> ::Hash[::String, ::String]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#put_domain_object_type-instance_method
+      def put_domain_object_type: (
+                                    domain_name: ::String,
+                                    object_type_name: ::String,
+                                    ?description: ::String,
+                                    ?encryption_key: ::String,
+                                    fields: Hash[::String, {
+                                        source: ::String,
+                                        target: ::String,
+                                        content_type: ("STRING" | "NUMBER")?,
+                                        feature_type: ("TEXTUAL" | "CATEGORICAL")?
+                                      }],
+                                    ?tags: Hash[::String, ::String]
+                                  ) -> _PutDomainObjectTypeResponseSuccess
+                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutDomainObjectTypeResponseSuccess
 
       interface _PutIntegrationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::PutIntegrationResponse]
@@ -1677,77 +1644,19 @@ module Aws
         def is_unstructured: () -> bool
         def role_arn: () -> ::String
         def event_trigger_names: () -> ::Array[::String]
+        def scope: () -> ("PROFILE" | "DOMAIN")
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#put_integration-instance_method
       def put_integration: (
                              domain_name: ::String,
                              ?uri: ::String,
                              ?object_type_name: ::String,
-                             ?tags: Hash[::String, ::String],
-                             ?flow_definition: {
-                               description: ::String?,
-                               flow_name: ::String,
-                               kms_arn: ::String,
-                               source_flow_config: {
-                                 connector_profile_name: ::String?,
-                                 connector_type: ("Salesforce" | "Marketo" | "Zendesk" | "Servicenow" | "S3"),
-                                 incremental_pull_config: {
-                                   datetime_type_field_name: ::String?
-                                 }?,
-                                 source_connector_properties: {
-                                   marketo: {
-                                     object: ::String
-                                   }?,
-                                   s3: {
-                                     bucket_name: ::String,
-                                     bucket_prefix: ::String?
-                                   }?,
-                                   salesforce: {
-                                     object: ::String,
-                                     enable_dynamic_field_update: bool?,
-                                     include_deleted_records: bool?
-                                   }?,
-                                   service_now: {
-                                     object: ::String
-                                   }?,
-                                   zendesk: {
-                                     object: ::String
-                                   }?
-                                 }
-                               },
-                               tasks: Array[
-                                 {
-                                   connector_operator: {
-                                     marketo: ("PROJECTION" | "LESS_THAN" | "GREATER_THAN" | "BETWEEN" | "ADDITION" | "MULTIPLICATION" | "DIVISION" | "SUBTRACTION" | "MASK_ALL" | "MASK_FIRST_N" | "MASK_LAST_N" | "VALIDATE_NON_NULL" | "VALIDATE_NON_ZERO" | "VALIDATE_NON_NEGATIVE" | "VALIDATE_NUMERIC" | "NO_OP")?,
-                                     s3: ("PROJECTION" | "LESS_THAN" | "GREATER_THAN" | "BETWEEN" | "LESS_THAN_OR_EQUAL_TO" | "GREATER_THAN_OR_EQUAL_TO" | "EQUAL_TO" | "NOT_EQUAL_TO" | "ADDITION" | "MULTIPLICATION" | "DIVISION" | "SUBTRACTION" | "MASK_ALL" | "MASK_FIRST_N" | "MASK_LAST_N" | "VALIDATE_NON_NULL" | "VALIDATE_NON_ZERO" | "VALIDATE_NON_NEGATIVE" | "VALIDATE_NUMERIC" | "NO_OP")?,
-                                     salesforce: ("PROJECTION" | "LESS_THAN" | "CONTAINS" | "GREATER_THAN" | "BETWEEN" | "LESS_THAN_OR_EQUAL_TO" | "GREATER_THAN_OR_EQUAL_TO" | "EQUAL_TO" | "NOT_EQUAL_TO" | "ADDITION" | "MULTIPLICATION" | "DIVISION" | "SUBTRACTION" | "MASK_ALL" | "MASK_FIRST_N" | "MASK_LAST_N" | "VALIDATE_NON_NULL" | "VALIDATE_NON_ZERO" | "VALIDATE_NON_NEGATIVE" | "VALIDATE_NUMERIC" | "NO_OP")?,
-                                     service_now: ("PROJECTION" | "CONTAINS" | "LESS_THAN" | "GREATER_THAN" | "BETWEEN" | "LESS_THAN_OR_EQUAL_TO" | "GREATER_THAN_OR_EQUAL_TO" | "EQUAL_TO" | "NOT_EQUAL_TO" | "ADDITION" | "MULTIPLICATION" | "DIVISION" | "SUBTRACTION" | "MASK_ALL" | "MASK_FIRST_N" | "MASK_LAST_N" | "VALIDATE_NON_NULL" | "VALIDATE_NON_ZERO" | "VALIDATE_NON_NEGATIVE" | "VALIDATE_NUMERIC" | "NO_OP")?,
-                                     zendesk: ("PROJECTION" | "GREATER_THAN" | "ADDITION" | "MULTIPLICATION" | "DIVISION" | "SUBTRACTION" | "MASK_ALL" | "MASK_FIRST_N" | "MASK_LAST_N" | "VALIDATE_NON_NULL" | "VALIDATE_NON_ZERO" | "VALIDATE_NON_NEGATIVE" | "VALIDATE_NUMERIC" | "NO_OP")?
-                                   }?,
-                                   destination_field: ::String?,
-                                   source_fields: Array[::String],
-                                   task_properties: Hash[("VALUE" | "VALUES" | "DATA_TYPE" | "UPPER_BOUND" | "LOWER_BOUND" | "SOURCE_DATA_TYPE" | "DESTINATION_DATA_TYPE" | "VALIDATION_ACTION" | "MASK_VALUE" | "MASK_LENGTH" | "TRUNCATE_LENGTH" | "MATH_OPERATION_FIELDS_ORDER" | "CONCAT_FORMAT" | "SUBFIELD_CATEGORY_MAP"), ::String]?,
-                                   task_type: ("Arithmetic" | "Filter" | "Map" | "Mask" | "Merge" | "Truncate" | "Validate")
-                                 },
-                               ],
-                               trigger_config: {
-                                 trigger_type: ("Scheduled" | "Event" | "OnDemand"),
-                                 trigger_properties: {
-                                   scheduled: {
-                                     schedule_expression: ::String,
-                                     data_pull_mode: ("Incremental" | "Complete")?,
-                                     schedule_start_time: ::Time?,
-                                     schedule_end_time: ::Time?,
-                                     timezone: ::String?,
-                                     schedule_offset: ::Integer?,
-                                     first_execution_from: ::Time?
-                                   }?
-                                 }?
-                               }
-                             },
                              ?object_type_names: Hash[::String, ::String],
+                             ?tags: Hash[::String, ::String],
+                             ?flow_definition: Params::flow_definition,
                              ?role_arn: ::String,
-                             ?event_trigger_names: Array[::String]
+                             ?event_trigger_names: Array[::String],
+                             ?scope: ("PROFILE" | "DOMAIN")
                            ) -> _PutIntegrationResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutIntegrationResponseSuccess
 
@@ -1774,6 +1683,7 @@ module Aws
         def source_last_updated_timestamp_format: () -> ::String
         def max_profile_object_count: () -> ::Integer
         def max_available_profile_object_count: () -> ::Integer
+        def source_priority: () -> ::Integer
         def fields: () -> ::Hash[::String, Types::ObjectTypeField]
         def keys: () -> ::Hash[::String, ::Array[Types::ObjectTypeKey]]
         def created_at: () -> ::Time
@@ -1791,6 +1701,7 @@ module Aws
                                      ?allow_profile_creation: bool,
                                      ?source_last_updated_timestamp_format: ::String,
                                      ?max_profile_object_count: ::Integer,
+                                     ?source_priority: ::Integer,
                                      ?fields: Hash[::String, {
                                          source: ::String?,
                                          target: ::String?,
@@ -1798,9 +1709,9 @@ module Aws
                                        }],
                                      ?keys: Hash[::String, Array[
                                          {
-                                           standard_identifiers: Array[("PROFILE" | "ASSET" | "CASE" | "ORDER" | "COMMUNICATION_RECORD" | "UNIQUE" | "SECONDARY" | "LOOKUP_ONLY" | "NEW_ONLY")]?,
+                                           standard_identifiers: Array[("PROFILE" | "ASSET" | "CASE" | "DEVICE" | "WEB_ANALYTICS" | "ORDER" | "COMMUNICATION_RECORD" | "AIR_PREFERENCE" | "HOTEL_PREFERENCE" | "AIR_BOOKING" | "AIR_SEGMENT" | "HOTEL_RESERVATION" | "HOTEL_STAY_REVENUE" | "LOYALTY" | "LOYALTY_TRANSACTION" | "LOYALTY_PROMOTION" | "UNIQUE" | "SECONDARY" | "LOOKUP_ONLY" | "NEW_ONLY")]?,
                                            field_names: Array[::String]?
-                                         },
+                                         }
                                        ]],
                                      ?tags: Hash[::String, ::String]
                                    ) -> _PutProfileObjectTypeResponseSuccess
@@ -1822,11 +1733,51 @@ module Aws
                                {
                                  key_name: ::String,
                                  values: Array[::String]
-                               },
+                               }
                              ],
                              ?logical_operator: ("AND" | "OR")
                            ) -> _SearchProfilesResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _SearchProfilesResponseSuccess
+
+      interface _StartRecommenderResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StartRecommenderResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#start_recommender-instance_method
+      def start_recommender: (
+                               domain_name: ::String,
+                               recommender_name: ::String
+                             ) -> _StartRecommenderResponseSuccess
+                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartRecommenderResponseSuccess
+
+      interface _StartUploadJobResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StartUploadJobResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#start_upload_job-instance_method
+      def start_upload_job: (
+                              domain_name: ::String,
+                              job_id: ::String
+                            ) -> _StartUploadJobResponseSuccess
+                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartUploadJobResponseSuccess
+
+      interface _StopRecommenderResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StopRecommenderResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#stop_recommender-instance_method
+      def stop_recommender: (
+                              domain_name: ::String,
+                              recommender_name: ::String
+                            ) -> _StopRecommenderResponseSuccess
+                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StopRecommenderResponseSuccess
+
+      interface _StopUploadJobResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StopUploadJobResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#stop_upload_job-instance_method
+      def stop_upload_job: (
+                             domain_name: ::String,
+                             job_id: ::String
+                           ) -> _StopUploadJobResponseSuccess
+                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StopUploadJobResponseSuccess
 
       interface _TagResourceResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::TagResourceResponse]
@@ -1858,6 +1809,9 @@ module Aws
         def statistic: () -> ("FIRST_OCCURRENCE" | "LAST_OCCURRENCE" | "COUNT" | "SUM" | "MINIMUM" | "MAXIMUM" | "AVERAGE" | "MAX_OCCURRENCE")
         def conditions: () -> Types::Conditions
         def attribute_details: () -> Types::AttributeDetails
+        def use_historical_data: () -> bool
+        def status: () -> ("PREPARING" | "IN_PROGRESS" | "COMPLETED" | "FAILED")
+        def readiness: () -> Types::Readiness
         def tags: () -> ::Hash[::String, ::String]
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#update_calculated_attribute_definition-instance_method
@@ -1866,17 +1820,7 @@ module Aws
                                                     calculated_attribute_name: ::String,
                                                     ?display_name: ::String,
                                                     ?description: ::String,
-                                                    ?conditions: {
-                                                      range: {
-                                                        value: ::Integer,
-                                                        unit: ("DAYS")
-                                                      }?,
-                                                      object_count: ::Integer?,
-                                                      threshold: {
-                                                        value: ::String,
-                                                        operator: ("EQUAL_TO" | "GREATER_THAN" | "LESS_THAN" | "NOT_EQUAL_TO")
-                                                      }?
-                                                    }
+                                                    ?conditions: Params::conditions
                                                   ) -> _UpdateCalculatedAttributeDefinitionResponseSuccess
                                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateCalculatedAttributeDefinitionResponseSuccess
 
@@ -1888,6 +1832,7 @@ module Aws
         def dead_letter_queue_url: () -> ::String
         def matching: () -> Types::MatchingResponse
         def rule_based_matching: () -> Types::RuleBasedMatchingResponse
+        def data_store: () -> Types::DataStoreResponse
         def created_at: () -> ::Time
         def last_updated_at: () -> ::Time
         def tags: () -> ::Hash[::String, ::String]
@@ -1898,61 +1843,39 @@ module Aws
                            ?default_expiration_days: ::Integer,
                            ?default_encryption_key: ::String,
                            ?dead_letter_queue_url: ::String,
-                           ?matching: {
-                             enabled: bool,
-                             job_schedule: {
-                               day_of_the_week: ("SUNDAY" | "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY"),
-                               time: ::String
-                             }?,
-                             auto_merging: {
-                               enabled: bool,
-                               consolidation: {
-                                 matching_attributes_list: Array[
-                                   Array[::String],
-                                 ]
-                               }?,
-                               conflict_resolution: {
-                                 conflict_resolving_model: ("RECENCY" | "SOURCE"),
-                                 source_name: ::String?
-                               }?,
-                               min_allowed_confidence_score_for_merging: ::Float?
-                             }?,
-                             exporting_config: {
-                               s3_exporting: {
-                                 s3_bucket_name: ::String,
-                                 s3_key_name: ::String?
-                               }?
-                             }?
-                           },
-                           ?rule_based_matching: {
-                             enabled: bool,
-                             matching_rules: Array[
-                               {
-                                 rule: Array[::String]
-                               },
-                             ]?,
-                             max_allowed_rule_level_for_merging: ::Integer?,
-                             max_allowed_rule_level_for_matching: ::Integer?,
-                             attribute_types_selector: {
-                               attribute_matching_model: ("ONE_TO_ONE" | "MANY_TO_MANY"),
-                               address: Array[::String]?,
-                               phone_number: Array[::String]?,
-                               email_address: Array[::String]?
-                             }?,
-                             conflict_resolution: {
-                               conflict_resolving_model: ("RECENCY" | "SOURCE"),
-                               source_name: ::String?
-                             }?,
-                             exporting_config: {
-                               s3_exporting: {
-                                 s3_bucket_name: ::String,
-                                 s3_key_name: ::String?
-                               }?
-                             }?
+                           ?matching: Params::matching_request,
+                           ?rule_based_matching: Params::rule_based_matching_request,
+                           ?data_store: {
+                             enabled: bool?
                            },
                            ?tags: Hash[::String, ::String]
                          ) -> _UpdateDomainResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateDomainResponseSuccess
+
+      interface _UpdateDomainLayoutResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateDomainLayoutResponse]
+        def layout_definition_name: () -> ::String
+        def description: () -> ::String
+        def display_name: () -> ::String
+        def is_default: () -> bool
+        def layout_type: () -> ("PROFILE_EXPLORER")
+        def layout: () -> ::String
+        def version: () -> ::String
+        def created_at: () -> ::Time
+        def last_updated_at: () -> ::Time
+        def tags: () -> ::Hash[::String, ::String]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#update_domain_layout-instance_method
+      def update_domain_layout: (
+                                  domain_name: ::String,
+                                  layout_definition_name: ::String,
+                                  ?description: ::String,
+                                  ?display_name: ::String,
+                                  ?is_default: bool,
+                                  ?layout_type: ("PROFILE_EXPLORER"),
+                                  ?layout: ::String
+                                ) -> _UpdateDomainLayoutResponseSuccess
+                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateDomainLayoutResponseSuccess
 
       interface _UpdateEventTriggerResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::UpdateEventTriggerResponse]
@@ -1973,34 +1896,10 @@ module Aws
                                   ?object_type_name: ::String,
                                   ?description: ::String,
                                   ?event_trigger_conditions: Array[
-                                    {
-                                      event_trigger_dimensions: Array[
-                                        {
-                                          object_attributes: Array[
-                                            {
-                                              source: ::String?,
-                                              field_name: ::String?,
-                                              comparison_operator: ("INCLUSIVE" | "EXCLUSIVE" | "CONTAINS" | "BEGINS_WITH" | "ENDS_WITH" | "GREATER_THAN" | "LESS_THAN" | "GREATER_THAN_OR_EQUAL" | "LESS_THAN_OR_EQUAL" | "EQUAL" | "BEFORE" | "AFTER" | "ON" | "BETWEEN" | "NOT_BETWEEN"),
-                                              values: Array[::String]
-                                            },
-                                          ]
-                                        },
-                                      ],
-                                      logical_operator: ("ANY" | "ALL" | "NONE")
-                                    },
+                                    Params::event_trigger_condition
                                   ],
                                   ?segment_filter: ::String,
-                                  ?event_trigger_limits: {
-                                    event_expiration: ::Integer?,
-                                    periods: Array[
-                                      {
-                                        unit: ("HOURS" | "DAYS" | "WEEKS" | "MONTHS"),
-                                        value: ::Integer,
-                                        max_invocations_per_profile: ::Integer?,
-                                        unlimited: bool?
-                                      },
-                                    ]?
-                                  }
+                                  ?event_trigger_limits: Params::event_trigger_limits
                                 ) -> _UpdateEventTriggerResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateEventTriggerResponseSuccess
 
@@ -2028,59 +1927,31 @@ module Aws
                             ?email_address: ::String,
                             ?personal_email_address: ::String,
                             ?business_email_address: ::String,
-                            ?address: {
-                              address_1: ::String?,
-                              address_2: ::String?,
-                              address_3: ::String?,
-                              address_4: ::String?,
-                              city: ::String?,
-                              county: ::String?,
-                              state: ::String?,
-                              province: ::String?,
-                              country: ::String?,
-                              postal_code: ::String?
-                            },
-                            ?shipping_address: {
-                              address_1: ::String?,
-                              address_2: ::String?,
-                              address_3: ::String?,
-                              address_4: ::String?,
-                              city: ::String?,
-                              county: ::String?,
-                              state: ::String?,
-                              province: ::String?,
-                              country: ::String?,
-                              postal_code: ::String?
-                            },
-                            ?mailing_address: {
-                              address_1: ::String?,
-                              address_2: ::String?,
-                              address_3: ::String?,
-                              address_4: ::String?,
-                              city: ::String?,
-                              county: ::String?,
-                              state: ::String?,
-                              province: ::String?,
-                              country: ::String?,
-                              postal_code: ::String?
-                            },
-                            ?billing_address: {
-                              address_1: ::String?,
-                              address_2: ::String?,
-                              address_3: ::String?,
-                              address_4: ::String?,
-                              city: ::String?,
-                              county: ::String?,
-                              state: ::String?,
-                              province: ::String?,
-                              country: ::String?,
-                              postal_code: ::String?
-                            },
+                            ?address: Params::update_address,
+                            ?shipping_address: Params::update_address,
+                            ?mailing_address: Params::update_address,
+                            ?billing_address: Params::update_address,
                             ?attributes: Hash[::String, ::String],
                             ?party_type_string: ::String,
-                            ?gender_string: ::String
+                            ?gender_string: ::String,
+                            ?profile_type: ("ACCOUNT_PROFILE" | "PROFILE"),
+                            ?engagement_preferences: Params::engagement_preferences
                           ) -> _UpdateProfileResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateProfileResponseSuccess
+
+      interface _UpdateRecommenderResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateRecommenderResponse]
+        def recommender_name: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CustomerProfiles/Client.html#update_recommender-instance_method
+      def update_recommender: (
+                                domain_name: ::String,
+                                recommender_name: ::String,
+                                ?description: ::String,
+                                ?recommender_config: Params::recommender_config,
+                                ?recommender_version_name: ::String
+                              ) -> _UpdateRecommenderResponseSuccess
+                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateRecommenderResponseSuccess
     end
   end
 end

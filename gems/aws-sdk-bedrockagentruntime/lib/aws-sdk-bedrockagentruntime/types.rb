@@ -158,6 +158,10 @@ module Aws::BedrockAgentRuntime
     # Contains the JSON-formatted string returned by the API invoked by the
     # action group.
     #
+    # @!attribute [rw] metadata
+    #   Contains information about the action group output.
+    #   @return [Types::Metadata]
+    #
     # @!attribute [rw] text
     #   The JSON-formatted string returned by the API invoked by the action
     #   group.
@@ -166,8 +170,9 @@ module Aws::BedrockAgentRuntime
     # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/ActionGroupInvocationOutput AWS API Documentation
     #
     class ActionGroupInvocationOutput < Struct.new(
+      :metadata,
       :text)
-      SENSITIVE = [:text]
+      SENSITIVE = [:metadata, :text]
       include Aws::Structure
     end
 
@@ -329,6 +334,10 @@ module Aws::BedrockAgentRuntime
     #   The output's agent collaborator name.
     #   @return [String]
     #
+    # @!attribute [rw] metadata
+    #   Contains information about the output from the agent collaborator.
+    #   @return [Types::Metadata]
+    #
     # @!attribute [rw] output
     #   The output's output.
     #   @return [Types::AgentCollaboratorOutputPayload]
@@ -338,8 +347,9 @@ module Aws::BedrockAgentRuntime
     class AgentCollaboratorInvocationOutput < Struct.new(
       :agent_collaborator_alias_arn,
       :agent_collaborator_name,
+      :metadata,
       :output)
-      SENSITIVE = []
+      SENSITIVE = [:metadata]
       include Aws::Structure
     end
 
@@ -365,6 +375,634 @@ module Aws::BedrockAgentRuntime
       :text,
       :type)
       SENSITIVE = [:return_control_payload, :text]
+      include Aws::Structure
+    end
+
+    # An action taken during agentic retrieval.
+    #
+    # @!attribute [rw] full_document_expansion
+    #   Details of a full document expansion action.
+    #   @return [Types::AgenticRetrieveFullDocExpansionDetails]
+    #
+    # @!attribute [rw] retrieve
+    #   Details of the retrieve action.
+    #   @return [Types::AgenticRetrieveActionDetails]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrieveAction AWS API Documentation
+    #
+    class AgenticRetrieveAction < Struct.new(
+      :full_document_expansion,
+      :retrieve)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details of a retrieve action including the query and target
+    # retrievers.
+    #
+    # @!attribute [rw] input_query
+    #   The input query used for retrieval.
+    #   @return [Types::AgenticRetrieveMessageContent]
+    #
+    # @!attribute [rw] source_retrievers
+    #   The list of source retrievers targeted by this action.
+    #   @return [Array<Types::AgenticRetrieveSourceRetriever>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrieveActionDetails AWS API Documentation
+    #
+    class AgenticRetrieveActionDetails < Struct.new(
+      :input_query,
+      :source_retrievers)
+      SENSITIVE = [:input_query]
+      include Aws::Structure
+    end
+
+    # Configuration for a Bedrock guardrail applied during agentic
+    # retrieval.
+    #
+    # @!attribute [rw] guardrail_id
+    #   The unique identifier of the guardrail.
+    #   @return [String]
+    #
+    # @!attribute [rw] guardrail_version
+    #   The version of the guardrail to use.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrieveBedrockGuardrailConfiguration AWS API Documentation
+    #
+    class AgenticRetrieveBedrockGuardrailConfiguration < Struct.new(
+      :guardrail_id,
+      :guardrail_version)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration for a Bedrock reranking model.
+    #
+    # @!attribute [rw] model_configuration
+    #   The model configuration containing the model ARN.
+    #   @return [Types::AgenticRetrieveBedrockRerankingModelConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrieveBedrockRerankingConfiguration AWS API Documentation
+    #
+    class AgenticRetrieveBedrockRerankingConfiguration < Struct.new(
+      :model_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Model configuration for a Bedrock reranking model.
+    #
+    # @!attribute [rw] model_arn
+    #   The ARN of the Bedrock reranking model.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrieveBedrockRerankingModelConfiguration AWS API Documentation
+    #
+    class AgenticRetrieveBedrockRerankingModelConfiguration < Struct.new(
+      :model_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A citation mapping a span of the generated answer to supporting
+    # results.
+    #
+    # @!attribute [rw] end_index
+    #   Character offset end (exclusive) in the answer text.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] references
+    #   References to results that support this span.
+    #   @return [Array<Types::AgenticRetrieveCitationReference>]
+    #
+    # @!attribute [rw] start_index
+    #   Character offset start in the answer text.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrieveCitation AWS API Documentation
+    #
+    class AgenticRetrieveCitation < Struct.new(
+      :end_index,
+      :references,
+      :start_index)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A reference to a specific result item.
+    #
+    # @!attribute [rw] result_index
+    #   Index into the results array on the same event.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrieveCitationReference AWS API Documentation
+    #
+    class AgenticRetrieveCitationReference < Struct.new(
+      :result_index)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration settings for the agentic retrieval operation.
+    #
+    # @!attribute [rw] foundation_model_configuration
+    #   The foundation model configuration. Required when
+    #   foundationModelType is CUSTOM.
+    #   @return [Types::FoundationModelConfiguration]
+    #
+    # @!attribute [rw] foundation_model_type
+    #   The type of foundation model to use. CUSTOM uses a specified model,
+    #   MANAGED uses the service default.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_agent_iteration
+    #   The maximum number of agent iterations for retrieval.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] reranking_configuration
+    #   The reranking model configuration. Required when rerankingModelType
+    #   is CUSTOM.
+    #   @return [Types::AgenticRetrieveRerankingConfiguration]
+    #
+    # @!attribute [rw] reranking_model_type
+    #   The type of reranking model to use. CUSTOM uses a specified model,
+    #   MANAGED uses the service default. If not specified, defaults to
+    #   MANAGED for managed embedding knowledge bases and NONE for custom
+    #   embedding knowledge bases.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrieveConfiguration AWS API Documentation
+    #
+    class AgenticRetrieveConfiguration < Struct.new(
+      :foundation_model_configuration,
+      :foundation_model_type,
+      :max_agent_iteration,
+      :reranking_configuration,
+      :reranking_model_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A failure that occurred during agentic retrieval.
+    #
+    # @!attribute [rw] message
+    #   A message describing the failure.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrieveFailure AWS API Documentation
+    #
+    class AgenticRetrieveFailure < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details of a full document expansion action.
+    #
+    # @!attribute [rw] document_id
+    #   The identifier of the document to expand.
+    #   @return [String]
+    #
+    # @!attribute [rw] source_retriever
+    #   The source retriever associated with the document.
+    #   @return [Types::AgenticRetrieveSourceRetriever]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrieveFullDocExpansionDetails AWS API Documentation
+    #
+    class AgenticRetrieveFullDocExpansionDetails < Struct.new(
+      :document_id,
+      :source_retriever)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The generated response synthesized from retrieved results.
+    #
+    # @!attribute [rw] answer
+    #   The generated answer text.
+    #   @return [String]
+    #
+    # @!attribute [rw] citations
+    #   Citations mapping spans of the answer to supporting results.
+    #   @return [Array<Types::AgenticRetrieveCitation>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrieveGeneratedResponse AWS API Documentation
+    #
+    class AgenticRetrieveGeneratedResponse < Struct.new(
+      :answer,
+      :citations)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A warning generated by a guardrail during agentic retrieval.
+    #
+    # @!attribute [rw] action
+    #   The action taken by the guardrail.
+    #   @return [String]
+    #
+    # @!attribute [rw] id
+    #   The unique identifier of the guardrail.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   A message describing the guardrail evaluation result.
+    #   @return [String]
+    #
+    # @!attribute [rw] version
+    #   The version of the guardrail.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrieveGuardrailWarning AWS API Documentation
+    #
+    class AgenticRetrieveGuardrailWarning < Struct.new(
+      :action,
+      :id,
+      :message,
+      :version)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A message in the agentic retrieval conversation.
+    #
+    # @!attribute [rw] content
+    #   The content of the message.
+    #   @return [Types::AgenticRetrieveMessageContent]
+    #
+    # @!attribute [rw] role
+    #   The role of the message sender (e.g., user or assistant).
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrieveMessage AWS API Documentation
+    #
+    class AgenticRetrieveMessage < Struct.new(
+      :content,
+      :role)
+      SENSITIVE = [:content]
+      include Aws::Structure
+    end
+
+    # The content of an agentic retrieval message.
+    #
+    # @!attribute [rw] text
+    #   The text content of the message.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrieveMessageContent AWS API Documentation
+    #
+    class AgenticRetrieveMessageContent < Struct.new(
+      :text)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Policy configuration for agentic retrieval.
+    #
+    # @!attribute [rw] bedrock_guardrail_configuration
+    #   Configuration for Bedrock guardrails to apply during retrieval.
+    #   @return [Types::AgenticRetrieveBedrockGuardrailConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrievePolicyConfiguration AWS API Documentation
+    #
+    class AgenticRetrievePolicyConfiguration < Struct.new(
+      :bedrock_guardrail_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration for the reranking model.
+    #
+    # @!attribute [rw] bedrock_reranking_configuration
+    #   The Bedrock reranking model configuration.
+    #   @return [Types::AgenticRetrieveBedrockRerankingConfiguration]
+    #
+    # @!attribute [rw] type
+    #   The type of reranking configuration.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrieveRerankingConfiguration AWS API Documentation
+    #
+    class AgenticRetrieveRerankingConfiguration < Struct.new(
+      :bedrock_reranking_configuration,
+      :type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A chunk of the generated answer text.
+    #
+    # @!attribute [rw] text
+    #   The generated text chunk.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrieveResponseEvent AWS API Documentation
+    #
+    class AgenticRetrieveResponseEvent < Struct.new(
+      :text,
+      :event_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # An event containing agentic retrieval results.
+    #
+    # @!attribute [rw] generated_response
+    #   The generated response. Present only when generateResponse is true.
+    #   @return [Types::AgenticRetrieveGeneratedResponse]
+    #
+    # @!attribute [rw] next_token
+    #   Opaque continuation token for paginated results.
+    #   @return [String]
+    #
+    # @!attribute [rw] results
+    #   The list of retrieved result items.
+    #   @return [Array<Types::AgenticRetrieveResultItem>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrieveResultEvent AWS API Documentation
+    #
+    class AgenticRetrieveResultEvent < Struct.new(
+      :generated_response,
+      :next_token,
+      :results,
+      :event_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A single item from the agentic retrieval results.
+    #
+    # @!attribute [rw] content
+    #   The retrieved content.
+    #   @return [Types::RetrievalContent]
+    #
+    # @!attribute [rw] metadata
+    #   Metadata associated with the retrieved item.
+    #   @return [Hash<String,Hash,Array,String,Numeric,Boolean>]
+    #
+    # @!attribute [rw] source_retriever
+    #   The source retriever that produced this result.
+    #   @return [Types::AgenticRetrieveSourceRetriever]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrieveResultItem AWS API Documentation
+    #
+    class AgenticRetrieveResultItem < Struct.new(
+      :content,
+      :metadata,
+      :source_retriever)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Metadata about a retrieval source.
+    #
+    # @!attribute [rw] identifier
+    #   The identifier of the retrieval source.
+    #   @return [String]
+    #
+    # @!attribute [rw] retrieval_type
+    #   The type of retrieval source.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrieveSourceMetadata AWS API Documentation
+    #
+    class AgenticRetrieveSourceMetadata < Struct.new(
+      :identifier,
+      :retrieval_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A source retriever that produced retrieval results.
+    #
+    # @!attribute [rw] identifier
+    #   The unique identifier of the source retriever.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrieveSourceRetriever AWS API Documentation
+    #
+    class AgenticRetrieveSourceRetriever < Struct.new(
+      :identifier)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Request structure for the agentic retrieve stream operation.
+    #
+    # @!attribute [rw] agentic_retrieve_configuration
+    #   Configuration settings for the agentic retrieval operation.
+    #   @return [Types::AgenticRetrieveConfiguration]
+    #
+    # @!attribute [rw] generate_response
+    #   Whether to generate a response based on the retrieved results.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] messages
+    #   The list of messages for the agentic retrieval conversation.
+    #   @return [Array<Types::AgenticRetrieveMessage>]
+    #
+    # @!attribute [rw] next_token
+    #   Opaque continuation token for paginated results.
+    #   @return [String]
+    #
+    # @!attribute [rw] policy_configuration
+    #   Policy configuration for guardrails and content filtering.
+    #   @return [Types::AgenticRetrievePolicyConfiguration]
+    #
+    # @!attribute [rw] retrievers
+    #   The list of retrievers to use for agentic retrieval.
+    #   @return [Array<Types::AgenticRetriever>]
+    #
+    # @!attribute [rw] user_context
+    #   Contains information about the user making the request. This is used
+    #   for access control filtering to ensure that retrieval results only
+    #   include documents the user is authorized to access.
+    #   @return [Types::UserContext]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrieveStreamRequest AWS API Documentation
+    #
+    class AgenticRetrieveStreamRequest < Struct.new(
+      :agentic_retrieve_configuration,
+      :generate_response,
+      :messages,
+      :next_token,
+      :policy_configuration,
+      :retrievers,
+      :user_context)
+      SENSITIVE = [:user_context]
+      include Aws::Structure
+    end
+
+    # Response structure for the agentic retrieve stream operation.
+    #
+    # @!attribute [rw] stream
+    #   The output stream containing retrieval results and trace events.
+    #   @return [Types::AgenticRetrieveStreamResponseOutput]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrieveStreamResponse AWS API Documentation
+    #
+    class AgenticRetrieveStreamResponse < Struct.new(
+      :stream)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A trace event providing visibility into the agentic retrieval process.
+    #
+    # @!attribute [rw] attributes
+    #   The attributes describing the trace event details.
+    #   @return [Types::AgenticRetrieveTraceEventAttributes]
+    #
+    # @!attribute [rw] id
+    #   The unique identifier of the trace event.
+    #   @return [String]
+    #
+    # @!attribute [rw] timestamp
+    #   The timestamp when the trace event occurred.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrieveTraceEvent AWS API Documentation
+    #
+    class AgenticRetrieveTraceEvent < Struct.new(
+      :attributes,
+      :id,
+      :timestamp,
+      :event_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Attributes describing the details of an agentic retrieval trace event.
+    #
+    # @!attribute [rw] actions
+    #   The list of actions taken during this step.
+    #   @return [Array<Types::AgenticRetrieveAction>]
+    #
+    # @!attribute [rw] failures
+    #   Failures that occurred during this step.
+    #   @return [Array<Types::AgenticRetrieveFailure>]
+    #
+    # @!attribute [rw] message
+    #   A human-readable message describing the trace event.
+    #   @return [String]
+    #
+    # @!attribute [rw] retrieval_metadata
+    #   Metadata about the retrieval sources used.
+    #   @return [Array<Types::AgenticRetrieveSourceMetadata>]
+    #
+    # @!attribute [rw] retrieval_response
+    #   The retrieval results from this step.
+    #   @return [Array<Types::AgenticRetrieveTraceResultItem>]
+    #
+    # @!attribute [rw] status
+    #   The status of the current step.
+    #   @return [String]
+    #
+    # @!attribute [rw] step
+    #   The current step in the retrieval process.
+    #   @return [String]
+    #
+    # @!attribute [rw] warnings
+    #   Warnings generated during this step.
+    #   @return [Array<Types::AgenticRetrieveWarning>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrieveTraceEventAttributes AWS API Documentation
+    #
+    class AgenticRetrieveTraceEventAttributes < Struct.new(
+      :actions,
+      :failures,
+      :message,
+      :retrieval_metadata,
+      :retrieval_response,
+      :status,
+      :step,
+      :warnings)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A result item from an agentic retrieval trace.
+    #
+    # @!attribute [rw] content
+    #   The retrieved content.
+    #   @return [Types::RetrievalContent]
+    #
+    # @!attribute [rw] metadata
+    #   Metadata associated with the retrieved item.
+    #   @return [Hash<String,Hash,Array,String,Numeric,Boolean>]
+    #
+    # @!attribute [rw] source_retriever
+    #   The source retriever that produced this result.
+    #   @return [Types::AgenticRetrieveSourceRetriever]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrieveTraceResultItem AWS API Documentation
+    #
+    class AgenticRetrieveTraceResultItem < Struct.new(
+      :content,
+      :metadata,
+      :source_retriever)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A warning generated during agentic retrieval.
+    #
+    # @note AgenticRetrieveWarning is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of AgenticRetrieveWarning corresponding to the set member.
+    #
+    # @!attribute [rw] guardrail
+    #   A warning from a guardrail evaluation.
+    #   @return [Types::AgenticRetrieveGuardrailWarning]
+    #
+    # @!attribute [rw] message
+    #   A general warning message.
+    #   @return [Types::AgenticRetrieveWarningMessage]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrieveWarning AWS API Documentation
+    #
+    class AgenticRetrieveWarning < Struct.new(
+      :guardrail,
+      :message,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Guardrail < AgenticRetrieveWarning; end
+      class Message < AgenticRetrieveWarning; end
+      class Unknown < AgenticRetrieveWarning; end
+    end
+
+    # A general warning message from agentic retrieval.
+    #
+    # @!attribute [rw] message
+    #   The warning message text.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrieveWarningMessage AWS API Documentation
+    #
+    class AgenticRetrieveWarningMessage < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A retriever used in agentic retrieval.
+    #
+    # @!attribute [rw] configuration
+    #   The configuration for this retriever.
+    #   @return [Types::RetrieverConfiguration]
+    #
+    # @!attribute [rw] description
+    #   A description of the retriever's purpose.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetriever AWS API Documentation
+    #
+    class AgenticRetriever < Struct.new(
+      :configuration,
+      :description)
+      SENSITIVE = []
       include Aws::Structure
     end
 
@@ -590,6 +1228,37 @@ module Aws::BedrockAgentRuntime
       include Aws::Structure
     end
 
+    # Contains information about an audio segment retrieved from a knowledge
+    # base, including its location and transcription.
+    #
+    # This data type is used in the following API operations:
+    #
+    # * [Retrieve response][1] – in the `audio` field
+    #
+    # ^
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent-runtime_Retrieve.html#API_agent-runtime_Retrieve_ResponseSyntax
+    #
+    # @!attribute [rw] s3_uri
+    #   The S3 URI where this specific audio segment is stored in the
+    #   multimodal storage destination.
+    #   @return [String]
+    #
+    # @!attribute [rw] transcription
+    #   The text transcription of the audio segment content.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AudioSegment AWS API Documentation
+    #
+    class AudioSegment < Struct.new(
+      :s3_uri,
+      :transcription)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # There was an issue with a dependency due to a server issue. Retry your
     # request.
     #
@@ -607,6 +1276,34 @@ module Aws::BedrockAgentRuntime
       :message,
       :resource_name,
       :event_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration for a Bedrock foundation model.
+    #
+    # @!attribute [rw] model_configuration
+    #   The model configuration containing the model ARN.
+    #   @return [Types::BedrockFoundationModelModelConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/BedrockFoundationModelConfiguration AWS API Documentation
+    #
+    class BedrockFoundationModelConfiguration < Struct.new(
+      :model_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Model configuration for a Bedrock foundation model.
+    #
+    # @!attribute [rw] model_arn
+    #   The ARN of the Bedrock foundation model.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/BedrockFoundationModelModelConfiguration AWS API Documentation
+    #
+    class BedrockFoundationModelModelConfiguration < Struct.new(
+      :model_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -772,6 +1469,50 @@ module Aws::BedrockAgentRuntime
       class Unknown < Caller; end
     end
 
+    # @!attribute [rw] data_source_id
+    #   The unique identifier of the data source that contains the document.
+    #   @return [String]
+    #
+    # @!attribute [rw] document_id
+    #   The unique identifier of the document to check access for.
+    #   @return [String]
+    #
+    # @!attribute [rw] knowledge_base_id
+    #   The unique identifier of the knowledge base that contains the
+    #   document.
+    #   @return [String]
+    #
+    # @!attribute [rw] user_context
+    #   The context object containing identity information for access
+    #   control filtering, including user ID and optional group memberships
+    #   used to evaluate the document access control list (ACL).
+    #   @return [Types::UserContext]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/CheckIngestedDocumentAclRequest AWS API Documentation
+    #
+    class CheckIngestedDocumentAclRequest < Struct.new(
+      :data_source_id,
+      :document_id,
+      :knowledge_base_id,
+      :user_context)
+      SENSITIVE = [:user_context]
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] has_access
+    #   Specifies whether the user has access to the document based on the
+    #   ingested access control list (ACL). Returns `true` if the user is
+    #   allowed access, and `false` otherwise.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/CheckIngestedDocumentAclResponse AWS API Documentation
+    #
+    class CheckIngestedDocumentAclResponse < Struct.new(
+      :has_access)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # An object containing a segment of the generated response that is based
     # on a source in the knowledge base, alongside information about the
     # source.
@@ -868,14 +1609,19 @@ module Aws::BedrockAgentRuntime
     #   Contains output files, if generated by code execution.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] metadata
+    #   Contains information about the output from the code interpreter.
+    #   @return [Types::Metadata]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/CodeInterpreterInvocationOutput AWS API Documentation
     #
     class CodeInterpreterInvocationOutput < Struct.new(
       :execution_error,
       :execution_output,
       :execution_timeout,
-      :files)
-      SENSITIVE = []
+      :files,
+      :metadata)
+      SENSITIVE = [:metadata]
       include Aws::Structure
     end
 
@@ -987,6 +1733,37 @@ module Aws::BedrockAgentRuntime
       :collaborator_name,
       :relay_conversation_history)
       SENSITIVE = [:collaborator_instruction, :collaborator_name]
+      include Aws::Structure
+    end
+
+    # Contains information about a condition evaluation result during a flow
+    # execution. This event is generated when a condition node in the flow
+    # evaluates its conditions.
+    #
+    # <note markdown="1"> Flow executions is in preview release for Amazon Bedrock and is
+    # subject to change.
+    #
+    #  </note>
+    #
+    # @!attribute [rw] node_name
+    #   The name of the condition node that evaluated the conditions.
+    #   @return [String]
+    #
+    # @!attribute [rw] satisfied_conditions
+    #   A list of conditions that were satisfied during the evaluation.
+    #   @return [Array<Types::SatisfiedCondition>]
+    #
+    # @!attribute [rw] timestamp
+    #   The timestamp when the condition evaluation occurred.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/ConditionResultEvent AWS API Documentation
+    #
+    class ConditionResultEvent < Struct.new(
+      :node_name,
+      :satisfied_conditions,
+      :timestamp)
+      SENSITIVE = [:satisfied_conditions]
       include Aws::Structure
     end
 
@@ -1185,6 +1962,21 @@ module Aws::BedrockAgentRuntime
       include Aws::Structure
     end
 
+    # Contains details of the custom orchestration configured for the agent.
+    #
+    # @!attribute [rw] executor
+    #   The structure of the executor invoking the actions in custom
+    #   orchestration.
+    #   @return [Types::OrchestrationExecutor]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/CustomOrchestration AWS API Documentation
+    #
+    class CustomOrchestration < Struct.new(
+      :executor)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The trace behavior for the custom orchestration.
     #
     # @!attribute [rw] event
@@ -1285,6 +2077,114 @@ module Aws::BedrockAgentRuntime
       :message,
       :resource_name,
       :event_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The access control list for a document, containing allow and deny
+    # membership lists. Each list specifies conditions that determine which
+    # users and groups are granted or denied access.
+    #
+    # @!attribute [rw] allow_list
+    #   The list of principals allowed access to the document.
+    #   @return [Types::DocumentAclMembership]
+    #
+    # @!attribute [rw] deny_list
+    #   The list of principals denied access to the document.
+    #   @return [Types::DocumentAclMembership]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/DocumentAcl AWS API Documentation
+    #
+    class DocumentAcl < Struct.new(
+      :allow_list,
+      :deny_list)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A condition within a document access control list (ACL) membership,
+    # specifying users and groups that are evaluated together.
+    #
+    # @!attribute [rw] condition_operator
+    #   The logical operator for combining users and groups within this
+    #   condition. Valid values: `AND` – Both a user match and a group match
+    #   are required. `OR` – Either a user match or a group match is
+    #   sufficient.
+    #   @return [String]
+    #
+    # @!attribute [rw] groups
+    #   The list of group entries in this condition.
+    #   @return [Array<Types::DocumentAclGroup>]
+    #
+    # @!attribute [rw] users
+    #   The list of user entries in this condition.
+    #   @return [Array<Types::DocumentAclUser>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/DocumentAclCondition AWS API Documentation
+    #
+    class DocumentAclCondition < Struct.new(
+      :condition_operator,
+      :groups,
+      :users)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A group entry within a document access control list (ACL) condition.
+    #
+    # @!attribute [rw] id
+    #   The identifier of the group.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The membership type indicating the scope of the group entry.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/DocumentAclGroup AWS API Documentation
+    #
+    class DocumentAclGroup < Struct.new(
+      :id,
+      :type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The membership entry for a document access control list (ACL),
+    # containing conditions and their logical relation.
+    #
+    # @!attribute [rw] conditions
+    #   The list of conditions that determine membership.
+    #   @return [Array<Types::DocumentAclCondition>]
+    #
+    # @!attribute [rw] member_relation
+    #   The logical relation between conditions. Valid values: `AND` – All
+    #   conditions must match. `OR` – At least one condition must match.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/DocumentAclMembership AWS API Documentation
+    #
+    class DocumentAclMembership < Struct.new(
+      :conditions,
+      :member_relation)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A user entry within a document access control list (ACL) condition.
+    #
+    # @!attribute [rw] id
+    #   The identifier of the user.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The membership type indicating the scope of the user entry.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/DocumentAclUser AWS API Documentation
+    #
+    class DocumentAclUser < Struct.new(
+      :id,
+      :type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1420,9 +2320,17 @@ module Aws::BedrockAgentRuntime
 
     # Contains information about the failure of the interaction.
     #
+    # @!attribute [rw] failure_code
+    #   The failure code for the trace.
+    #   @return [Integer]
+    #
     # @!attribute [rw] failure_reason
     #   The reason the interaction failed.
     #   @return [String]
+    #
+    # @!attribute [rw] metadata
+    #   Information about the failure that occurred.
+    #   @return [Types::Metadata]
     #
     # @!attribute [rw] trace_id
     #   The unique identifier of the trace.
@@ -1431,9 +2339,11 @@ module Aws::BedrockAgentRuntime
     # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/FailureTrace AWS API Documentation
     #
     class FailureTrace < Struct.new(
+      :failure_code,
       :failure_reason,
+      :metadata,
       :trace_id)
-      SENSITIVE = [:failure_reason]
+      SENSITIVE = [:failure_reason, :metadata]
       include Aws::Structure
     end
 
@@ -1513,7 +2423,7 @@ module Aws::BedrockAgentRuntime
     #   @return [String]
     #
     # @!attribute [rw] value
-    #   The value to whcih to compare the value of the metadata attribute.
+    #   The value to which to compare the value of the metadata attribute.
     #   @return [Hash,Array,String,Numeric,Boolean]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/FilterAttribute AWS API Documentation
@@ -1527,6 +2437,10 @@ module Aws::BedrockAgentRuntime
 
     # Contains details about the response to the user.
     #
+    # @!attribute [rw] metadata
+    #   Contains information about the invoke agent operation.
+    #   @return [Types::Metadata]
+    #
     # @!attribute [rw] text
     #   The text in the response to the user.
     #   @return [String]
@@ -1534,8 +2448,9 @@ module Aws::BedrockAgentRuntime
     # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/FinalResponse AWS API Documentation
     #
     class FinalResponse < Struct.new(
+      :metadata,
       :text)
-      SENSITIVE = [:text]
+      SENSITIVE = [:metadata, :text]
       include Aws::Structure
     end
 
@@ -1550,6 +2465,296 @@ module Aws::BedrockAgentRuntime
     class FlowCompletionEvent < Struct.new(
       :completion_reason,
       :event_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains the content of an flow execution input or output field.
+    #
+    # <note markdown="1"> Flow executions is in preview release for Amazon Bedrock and is
+    # subject to change.
+    #
+    #  </note>
+    #
+    # @note FlowExecutionContent is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of FlowExecutionContent corresponding to the set member.
+    #
+    # @!attribute [rw] document
+    #   The document content of the field, which can contain text or
+    #   structured data.
+    #   @return [Hash,Array,String,Numeric,Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/FlowExecutionContent AWS API Documentation
+    #
+    class FlowExecutionContent < Struct.new(
+      :document,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Document < FlowExecutionContent; end
+      class Unknown < FlowExecutionContent; end
+    end
+
+    # Contains information about an error that occurred during an flow
+    # execution.
+    #
+    # <note markdown="1"> Flow executions is in preview release for Amazon Bedrock and is
+    # subject to change.
+    #
+    #  </note>
+    #
+    # @!attribute [rw] error
+    #   The error code for the type of error that occurred.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   A descriptive message that provides details about the error.
+    #   @return [String]
+    #
+    # @!attribute [rw] node_name
+    #   The name of the node in the flow where the error occurred (if
+    #   applicable).
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/FlowExecutionError AWS API Documentation
+    #
+    class FlowExecutionError < Struct.new(
+      :error,
+      :message,
+      :node_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents an event that occurred during an flow execution. This is a
+    # union type that can contain one of several event types, such as node
+    # input and output events; flow input and output events; condition node
+    # result events, or failure events.
+    #
+    # <note markdown="1"> Flow executions is in preview release for Amazon Bedrock and is
+    # subject to change.
+    #
+    #  </note>
+    #
+    # @note FlowExecutionEvent is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of FlowExecutionEvent corresponding to the set member.
+    #
+    # @!attribute [rw] condition_result_event
+    #   Contains information about a condition evaluation result during the
+    #   flow execution. This event is generated when a condition node in the
+    #   flow evaluates its conditions.
+    #   @return [Types::ConditionResultEvent]
+    #
+    # @!attribute [rw] flow_failure_event
+    #   Contains information about a failure that occurred at the flow level
+    #   during execution.
+    #   @return [Types::FlowFailureEvent]
+    #
+    # @!attribute [rw] flow_input_event
+    #   Contains information about the inputs provided to the flow at the
+    #   start of execution.
+    #   @return [Types::FlowExecutionInputEvent]
+    #
+    # @!attribute [rw] flow_output_event
+    #   Contains information about the outputs produced by the flow at the
+    #   end of execution.
+    #   @return [Types::FlowExecutionOutputEvent]
+    #
+    # @!attribute [rw] node_action_event
+    #   Contains information about an action (operation) called by a node
+    #   during execution.
+    #   @return [Types::NodeActionEvent]
+    #
+    # @!attribute [rw] node_dependency_event
+    #   Contains information about an internal trace of a specific node
+    #   during execution.
+    #   @return [Types::NodeDependencyEvent]
+    #
+    # @!attribute [rw] node_failure_event
+    #   Contains information about a failure that occurred at a specific
+    #   node during execution.
+    #   @return [Types::NodeFailureEvent]
+    #
+    # @!attribute [rw] node_input_event
+    #   Contains information about the inputs provided to a specific node
+    #   during execution.
+    #   @return [Types::NodeInputEvent]
+    #
+    # @!attribute [rw] node_output_event
+    #   Contains information about the outputs produced by a specific node
+    #   during execution.
+    #   @return [Types::NodeOutputEvent]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/FlowExecutionEvent AWS API Documentation
+    #
+    class FlowExecutionEvent < Struct.new(
+      :condition_result_event,
+      :flow_failure_event,
+      :flow_input_event,
+      :flow_output_event,
+      :node_action_event,
+      :node_dependency_event,
+      :node_failure_event,
+      :node_input_event,
+      :node_output_event,
+      :unknown)
+      SENSITIVE = [:condition_result_event, :flow_failure_event, :flow_input_event, :flow_output_event, :node_action_event, :node_dependency_event, :node_failure_event, :node_input_event, :node_output_event]
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class ConditionResultEvent < FlowExecutionEvent; end
+      class FlowFailureEvent < FlowExecutionEvent; end
+      class FlowInputEvent < FlowExecutionEvent; end
+      class FlowOutputEvent < FlowExecutionEvent; end
+      class NodeActionEvent < FlowExecutionEvent; end
+      class NodeDependencyEvent < FlowExecutionEvent; end
+      class NodeFailureEvent < FlowExecutionEvent; end
+      class NodeInputEvent < FlowExecutionEvent; end
+      class NodeOutputEvent < FlowExecutionEvent; end
+      class Unknown < FlowExecutionEvent; end
+    end
+
+    # Contains information about the inputs provided to the flow at the
+    # start of a flow execution.
+    #
+    # <note markdown="1"> Flow executions is in preview release for Amazon Bedrock and is
+    # subject to change.
+    #
+    #  </note>
+    #
+    # @!attribute [rw] fields
+    #   A list of input fields provided to the flow.
+    #   @return [Array<Types::FlowInputField>]
+    #
+    # @!attribute [rw] node_name
+    #   The name of the node that receives the inputs.
+    #   @return [String]
+    #
+    # @!attribute [rw] timestamp
+    #   The timestamp when the inputs are provided.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/FlowExecutionInputEvent AWS API Documentation
+    #
+    class FlowExecutionInputEvent < Struct.new(
+      :fields,
+      :node_name,
+      :timestamp)
+      SENSITIVE = [:fields]
+      include Aws::Structure
+    end
+
+    # Contains information about the outputs produced by the flow during a
+    # flow execution.
+    #
+    # <note markdown="1"> Flow executions is in preview release for Amazon Bedrock and is
+    # subject to change.
+    #
+    #  </note>
+    #
+    # @!attribute [rw] fields
+    #   A list of output fields produced by the flow.
+    #   @return [Array<Types::FlowOutputField>]
+    #
+    # @!attribute [rw] node_name
+    #   The name of the node that produces the outputs.
+    #   @return [String]
+    #
+    # @!attribute [rw] timestamp
+    #   The timestamp when the outputs are produced.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/FlowExecutionOutputEvent AWS API Documentation
+    #
+    class FlowExecutionOutputEvent < Struct.new(
+      :fields,
+      :node_name,
+      :timestamp)
+      SENSITIVE = [:fields]
+      include Aws::Structure
+    end
+
+    # Contains summary information about a flow execution, including its
+    # status, timestamps, and identifiers.
+    #
+    # <note markdown="1"> Flow executions is in preview release for Amazon Bedrock and is
+    # subject to change.
+    #
+    #  </note>
+    #
+    # @!attribute [rw] created_at
+    #   The timestamp when the flow execution was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] ended_at
+    #   The timestamp when the flow execution ended. This field is only
+    #   populated when the execution has completed, failed, timed out, or
+    #   been aborted.
+    #   @return [Time]
+    #
+    # @!attribute [rw] execution_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the flow
+    #   execution.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_alias_identifier
+    #   The unique identifier of the flow alias used for the execution.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_identifier
+    #   The unique identifier of the flow.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_version
+    #   The version of the flow used for the execution.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the flow execution.
+    #
+    #   Flow executions time out after 24 hours.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/FlowExecutionSummary AWS API Documentation
+    #
+    class FlowExecutionSummary < Struct.new(
+      :created_at,
+      :ended_at,
+      :execution_arn,
+      :flow_alias_identifier,
+      :flow_identifier,
+      :flow_version,
+      :status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about a failure that occurred at the flow level
+    # during a flow execution.
+    #
+    # <note markdown="1"> Flow executions is in preview release for Amazon Bedrock and is
+    # subject to change.
+    #
+    #  </note>
+    #
+    # @!attribute [rw] error_code
+    #   The error code that identifies the type of failure that occurred.
+    #   @return [String]
+    #
+    # @!attribute [rw] error_message
+    #   A descriptive message that provides details about the failure.
+    #   @return [String]
+    #
+    # @!attribute [rw] timestamp
+    #   The timestamp when the failure occurred.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/FlowFailureEvent AWS API Documentation
+    #
+    class FlowFailureEvent < Struct.new(
+      :error_code,
+      :error_message,
+      :timestamp)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1604,6 +2809,31 @@ module Aws::BedrockAgentRuntime
 
       class Document < FlowInputContent; end
       class Unknown < FlowInputContent; end
+    end
+
+    # Represents an input field provided to a flow during a flow execution.
+    #
+    # <note markdown="1"> Flow executions is in preview release for Amazon Bedrock and is
+    # subject to change.
+    #
+    #  </note>
+    #
+    # @!attribute [rw] content
+    #   The content of the input field, which can contain text or structured
+    #   data.
+    #   @return [Types::FlowExecutionContent]
+    #
+    # @!attribute [rw] name
+    #   The name of the input field as defined in the flow's input schema.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/FlowInputField AWS API Documentation
+    #
+    class FlowInputField < Struct.new(
+      :content,
+      :name)
+      SENSITIVE = [:content]
+      include Aws::Structure
     end
 
     # The content structure containing input information for multi-turn flow
@@ -1703,6 +2933,32 @@ module Aws::BedrockAgentRuntime
       include Aws::Structure
     end
 
+    # Represents an output field produced by a flow during a flow execution.
+    #
+    # <note markdown="1"> Flow executions is in preview release for Amazon Bedrock and is
+    # subject to change.
+    #
+    #  </note>
+    #
+    # @!attribute [rw] content
+    #   The content of the output field, which can contain text or
+    #   structured data.
+    #   @return [Types::FlowExecutionContent]
+    #
+    # @!attribute [rw] name
+    #   The name of the output field as defined in the flow's output
+    #   schema.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/FlowOutputField AWS API Documentation
+    #
+    class FlowOutputField < Struct.new(
+      :content,
+      :name)
+      SENSITIVE = [:content]
+      include Aws::Structure
+    end
+
     # Contains information about an input or output for a node in the flow.
     # For more information, see [Track each step in your prompt flow by
     # viewing its trace in Amazon Bedrock][1].
@@ -1717,6 +2973,14 @@ module Aws::BedrockAgentRuntime
     #   Contains information about an output from a condition node.
     #   @return [Types::FlowTraceConditionNodeResultEvent]
     #
+    # @!attribute [rw] node_action_trace
+    #   Contains information about an action (operation) called by a node.
+    #   @return [Types::FlowTraceNodeActionEvent]
+    #
+    # @!attribute [rw] node_dependency_trace
+    #   Contains information about an internal trace of a node.
+    #   @return [Types::FlowTraceDependencyEvent]
+    #
     # @!attribute [rw] node_input_trace
     #   Contains information about the input into a node.
     #   @return [Types::FlowTraceNodeInputEvent]
@@ -1729,14 +2993,18 @@ module Aws::BedrockAgentRuntime
     #
     class FlowTrace < Struct.new(
       :condition_node_result_trace,
+      :node_action_trace,
+      :node_dependency_trace,
       :node_input_trace,
       :node_output_trace,
       :unknown)
-      SENSITIVE = [:condition_node_result_trace, :node_input_trace, :node_output_trace]
+      SENSITIVE = [:condition_node_result_trace, :node_action_trace, :node_dependency_trace, :node_input_trace, :node_output_trace]
       include Aws::Structure
       include Aws::Structure::Union
 
       class ConditionNodeResultTrace < FlowTrace; end
+      class NodeActionTrace < FlowTrace; end
+      class NodeDependencyTrace < FlowTrace; end
       class NodeInputTrace < FlowTrace; end
       class NodeOutputTrace < FlowTrace; end
       class Unknown < FlowTrace; end
@@ -1793,6 +3061,31 @@ module Aws::BedrockAgentRuntime
       include Aws::Structure
     end
 
+    # Contains information about a dependency trace event in the flow.
+    #
+    # @!attribute [rw] node_name
+    #   The name of the node that generated the dependency trace.
+    #   @return [String]
+    #
+    # @!attribute [rw] timestamp
+    #   The date and time that the dependency trace was generated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] trace_elements
+    #   The trace elements containing detailed information about the
+    #   dependency.
+    #   @return [Types::TraceElements]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/FlowTraceDependencyEvent AWS API Documentation
+    #
+    class FlowTraceDependencyEvent < Struct.new(
+      :node_name,
+      :timestamp,
+      :trace_elements)
+      SENSITIVE = [:trace_elements]
+      include Aws::Structure
+    end
+
     # Contains information about a trace, which tracks an input or output
     # for a node in the flow. For more information, see [Track each step in
     # your prompt flow by viewing its trace in Amazon Bedrock][1].
@@ -1812,6 +3105,53 @@ module Aws::BedrockAgentRuntime
       :trace,
       :event_type)
       SENSITIVE = [:trace]
+      include Aws::Structure
+    end
+
+    # Contains information about an action (operation) called by a node in
+    # an Amazon Bedrock flow. The service generates action events for calls
+    # made by prompt nodes, agent nodes, and Amazon Web Services Lambda
+    # nodes.
+    #
+    # @!attribute [rw] node_name
+    #   The name of the node that called the operation.
+    #   @return [String]
+    #
+    # @!attribute [rw] operation_name
+    #   The name of the operation that the node called.
+    #   @return [String]
+    #
+    # @!attribute [rw] operation_request
+    #   The request payload sent to the downstream service.
+    #   @return [Hash,Array,String,Numeric,Boolean]
+    #
+    # @!attribute [rw] operation_response
+    #   The response payload received from the downstream service.
+    #   @return [Hash,Array,String,Numeric,Boolean]
+    #
+    # @!attribute [rw] request_id
+    #   The ID of the request that the node made to the operation.
+    #   @return [String]
+    #
+    # @!attribute [rw] service_name
+    #   The name of the service that the node called.
+    #   @return [String]
+    #
+    # @!attribute [rw] timestamp
+    #   The date and time that the operation was called.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/FlowTraceNodeActionEvent AWS API Documentation
+    #
+    class FlowTraceNodeActionEvent < Struct.new(
+      :node_name,
+      :operation_name,
+      :operation_request,
+      :operation_response,
+      :request_id,
+      :service_name,
+      :timestamp)
+      SENSITIVE = []
       include Aws::Structure
     end
 
@@ -1873,6 +3213,32 @@ module Aws::BedrockAgentRuntime
       include Aws::Structure
     end
 
+    # Represents an item in the execution chain for flow trace node input
+    # tracking.
+    #
+    # @!attribute [rw] index
+    #   The index position of this item in the execution chain.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] node_name
+    #   The name of the node in the execution chain.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The type of execution chain item. Supported values are Iterator and
+    #   Loop.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/FlowTraceNodeInputExecutionChainItem AWS API Documentation
+    #
+    class FlowTraceNodeInputExecutionChainItem < Struct.new(
+      :index,
+      :node_name,
+      :type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains information about a field in the input into a node. For more
     # information, see [Track each step in your prompt flow by viewing its
     # trace in Amazon Bedrock][1].
@@ -1881,20 +3247,64 @@ module Aws::BedrockAgentRuntime
     #
     # [1]: https://docs.aws.amazon.com/bedrock/latest/userguide/flows-trace.html
     #
+    # @!attribute [rw] category
+    #   The category of the input field.
+    #   @return [String]
+    #
     # @!attribute [rw] content
     #   The content of the node input.
     #   @return [Types::FlowTraceNodeInputContent]
+    #
+    # @!attribute [rw] execution_chain
+    #   The execution path through nested nodes like iterators and loops.
+    #   @return [Array<Types::FlowTraceNodeInputExecutionChainItem>]
     #
     # @!attribute [rw] node_input_name
     #   The name of the node input.
     #   @return [String]
     #
+    # @!attribute [rw] source
+    #   The source node that provides input data to this field.
+    #   @return [Types::FlowTraceNodeInputSource]
+    #
+    # @!attribute [rw] type
+    #   The data type of the input field for compatibility validation.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/FlowTraceNodeInputField AWS API Documentation
     #
     class FlowTraceNodeInputField < Struct.new(
+      :category,
       :content,
-      :node_input_name)
-      SENSITIVE = [:content]
+      :execution_chain,
+      :node_input_name,
+      :source,
+      :type)
+      SENSITIVE = [:content, :execution_chain, :source]
+      include Aws::Structure
+    end
+
+    # Represents the source of input data for a flow trace node field.
+    #
+    # @!attribute [rw] expression
+    #   The expression used to extract data from the source.
+    #   @return [String]
+    #
+    # @!attribute [rw] node_name
+    #   The name of the source node that provides the input data.
+    #   @return [String]
+    #
+    # @!attribute [rw] output_field_name
+    #   The name of the output field from the source node.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/FlowTraceNodeInputSource AWS API Documentation
+    #
+    class FlowTraceNodeInputSource < Struct.new(
+      :expression,
+      :node_name,
+      :output_field_name)
+      SENSITIVE = [:expression]
       include Aws::Structure
     end
 
@@ -1968,15 +3378,63 @@ module Aws::BedrockAgentRuntime
     #   The content of the node output.
     #   @return [Types::FlowTraceNodeOutputContent]
     #
+    # @!attribute [rw] next
+    #   The next node that receives output data from this field.
+    #   @return [Array<Types::FlowTraceNodeOutputNext>]
+    #
     # @!attribute [rw] node_output_name
     #   The name of the node output.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The data type of the output field for compatibility validation.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/FlowTraceNodeOutputField AWS API Documentation
     #
     class FlowTraceNodeOutputField < Struct.new(
       :content,
-      :node_output_name)
+      :next,
+      :node_output_name,
+      :type)
+      SENSITIVE = [:next]
+      include Aws::Structure
+    end
+
+    # Represents the next node that receives output data from a flow trace.
+    #
+    # @!attribute [rw] input_field_name
+    #   The name of the input field in the next node that receives the data.
+    #   @return [String]
+    #
+    # @!attribute [rw] node_name
+    #   The name of the next node that receives the output data.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/FlowTraceNodeOutputNext AWS API Documentation
+    #
+    class FlowTraceNodeOutputNext < Struct.new(
+      :input_field_name,
+      :node_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration for the foundation model.
+    #
+    # @!attribute [rw] bedrock_foundation_model_configuration
+    #   The Bedrock foundation model configuration.
+    #   @return [Types::BedrockFoundationModelConfiguration]
+    #
+    # @!attribute [rw] type
+    #   The type of foundation model configuration.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/FoundationModelConfiguration AWS API Documentation
+    #
+    class FoundationModelConfiguration < Struct.new(
+      :bedrock_foundation_model_configuration,
+      :type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2384,6 +3842,252 @@ module Aws::BedrockAgentRuntime
       include Aws::Structure
     end
 
+    # @!attribute [rw] data_source_id
+    #   The unique identifier of the data source that contains the document.
+    #   @return [String]
+    #
+    # @!attribute [rw] document_id
+    #   The unique identifier of the document to retrieve content for.
+    #   @return [String]
+    #
+    # @!attribute [rw] knowledge_base_id
+    #   The unique identifier of the knowledge base that contains the
+    #   document.
+    #   @return [String]
+    #
+    # @!attribute [rw] output_format
+    #   The output format for the document content. `RAW` returns the
+    #   original file. `EXTRACTED` returns parsed text as JSON. Defaults to
+    #   `RAW`.
+    #   @return [String]
+    #
+    # @!attribute [rw] user_context
+    #   Contains information about the user making the request. This is used
+    #   for access control filtering to ensure that results only include
+    #   documents the user is authorized to access.
+    #   @return [Types::UserContext]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/GetDocumentContentRequest AWS API Documentation
+    #
+    class GetDocumentContentRequest < Struct.new(
+      :data_source_id,
+      :document_id,
+      :knowledge_base_id,
+      :output_format,
+      :user_context)
+      SENSITIVE = [:user_context]
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] document_content_length
+    #   The size of the document content in bytes available at the
+    #   pre-signed URL.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] mime_type
+    #   The MIME type of the document content. For `RAW` format, this is the
+    #   original file type (for example, `application/pdf`). For `EXTRACTED`
+    #   format, this is always `application/json`.
+    #   @return [String]
+    #
+    # @!attribute [rw] presigned_url
+    #   A pre-signed URL for downloading the document content. The URL
+    #   expires after 5 minutes.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/GetDocumentContentResponse AWS API Documentation
+    #
+    class GetDocumentContentResponse < Struct.new(
+      :document_content_length,
+      :mime_type,
+      :presigned_url)
+      SENSITIVE = [:presigned_url]
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] execution_identifier
+    #   The unique identifier of the flow execution.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_alias_identifier
+    #   The unique identifier of the flow alias used for the flow execution.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_identifier
+    #   The unique identifier of the flow.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/GetExecutionFlowSnapshotRequest AWS API Documentation
+    #
+    class GetExecutionFlowSnapshotRequest < Struct.new(
+      :execution_identifier,
+      :flow_alias_identifier,
+      :flow_identifier)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] customer_encryption_key_arn
+    #   The Amazon Resource Name (ARN) of the customer managed KMS key
+    #   that's used to encrypt the flow snapshot.
+    #   @return [String]
+    #
+    # @!attribute [rw] definition
+    #   The flow definition used for the flow execution, including the
+    #   nodes, connections, and configuration at the time when the execution
+    #   started.
+    #
+    #   The definition returns as a string that follows the structure of a
+    #   [FlowDefinition][1] object.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent_FlowDefinition.html
+    #   @return [String]
+    #
+    # @!attribute [rw] execution_role_arn
+    #   The Amazon Resource Name (ARN) of the IAM service role that's used
+    #   by the flow execution.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_alias_identifier
+    #   The unique identifier of the flow alias used for the flow execution.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_identifier
+    #   The unique identifier of the flow.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_version
+    #   The version of the flow used for the flow execution.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/GetExecutionFlowSnapshotResponse AWS API Documentation
+    #
+    class GetExecutionFlowSnapshotResponse < Struct.new(
+      :customer_encryption_key_arn,
+      :definition,
+      :execution_role_arn,
+      :flow_alias_identifier,
+      :flow_identifier,
+      :flow_version)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] execution_identifier
+    #   The unique identifier of the flow execution to retrieve.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_alias_identifier
+    #   The unique identifier of the flow alias used for the execution.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_identifier
+    #   The unique identifier of the flow.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/GetFlowExecutionRequest AWS API Documentation
+    #
+    class GetFlowExecutionRequest < Struct.new(
+      :execution_identifier,
+      :flow_alias_identifier,
+      :flow_identifier)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ended_at
+    #   The timestamp when the flow execution ended. This field is only
+    #   populated when the execution has completed, failed, timed out, or
+    #   been aborted.
+    #   @return [Time]
+    #
+    # @!attribute [rw] errors
+    #   A list of errors that occurred during the flow execution. Each error
+    #   includes an error code, message, and the node where the error
+    #   occurred, if applicable.
+    #   @return [Array<Types::FlowExecutionError>]
+    #
+    # @!attribute [rw] execution_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the flow
+    #   execution.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_alias_identifier
+    #   The unique identifier of the flow alias used for the execution.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_identifier
+    #   The unique identifier of the flow.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_version
+    #   The version of the flow used for the execution.
+    #   @return [String]
+    #
+    # @!attribute [rw] started_at
+    #   The timestamp when the flow execution started.
+    #   @return [Time]
+    #
+    # @!attribute [rw] status
+    #   The current status of the flow execution.
+    #
+    #   Flow executions time out after 24 hours.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/GetFlowExecutionResponse AWS API Documentation
+    #
+    class GetFlowExecutionResponse < Struct.new(
+      :ended_at,
+      :errors,
+      :execution_arn,
+      :flow_alias_identifier,
+      :flow_identifier,
+      :flow_version,
+      :started_at,
+      :status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] data_source_id
+    #   The unique identifier of the data source that contains the document.
+    #   @return [String]
+    #
+    # @!attribute [rw] document_id
+    #   The unique identifier of the document to retrieve the ingested
+    #   access control list (ACL) for.
+    #   @return [String]
+    #
+    # @!attribute [rw] knowledge_base_id
+    #   The unique identifier of the knowledge base that contains the
+    #   document.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/GetIngestedDocumentAclRequest AWS API Documentation
+    #
+    class GetIngestedDocumentAclRequest < Struct.new(
+      :data_source_id,
+      :document_id,
+      :knowledge_base_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] document_acl
+    #   The ingested document access control list (ACL) containing allow and
+    #   deny membership information.
+    #   @return [Types::DocumentAcl]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/GetIngestedDocumentAclResponse AWS API Documentation
+    #
+    class GetIngestedDocumentAclResponse < Struct.new(
+      :document_acl)
+      SENSITIVE = [:document_acl]
+      include Aws::Structure
+    end
+
     # @!attribute [rw] invocation_identifier
     #   The unique identifier for the invocation in UUID format.
     #   @return [String]
@@ -2772,6 +4476,10 @@ module Aws::BedrockAgentRuntime
     #   The details of the input assessments used in the Guardrail Trace.
     #   @return [Array<Types::GuardrailAssessment>]
     #
+    # @!attribute [rw] metadata
+    #   Contains information about the Guardrail output.
+    #   @return [Types::Metadata]
+    #
     # @!attribute [rw] output_assessments
     #   The details of the output assessments used in the Guardrail Trace.
     #   @return [Array<Types::GuardrailAssessment>]
@@ -2785,9 +4493,10 @@ module Aws::BedrockAgentRuntime
     class GuardrailTrace < Struct.new(
       :action,
       :input_assessments,
+      :metadata,
       :output_assessments,
       :trace_id)
-      SENSITIVE = [:input_assessments, :output_assessments]
+      SENSITIVE = [:input_assessments, :metadata, :output_assessments]
       include Aws::Structure
     end
 
@@ -3078,6 +4787,18 @@ module Aws::BedrockAgentRuntime
     #
     # [1]: https://docs.aws.amazon.com/bedrock/latest/userguide/agents-test.html#trace-enablement
     #
+    # @!attribute [rw] caller_chain
+    #   The caller chain for the trace part.
+    #   @return [Array<Types::Caller>]
+    #
+    # @!attribute [rw] collaborator_name
+    #   The collaborator name for the trace part.
+    #   @return [String]
+    #
+    # @!attribute [rw] event_time
+    #   The time that trace occurred.
+    #   @return [Time]
+    #
     # @!attribute [rw] session_id
     #   The unique identifier of the session with the agent.
     #   @return [String]
@@ -3097,10 +4818,13 @@ module Aws::BedrockAgentRuntime
     # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/InlineAgentTracePart AWS API Documentation
     #
     class InlineAgentTracePart < Struct.new(
+      :caller_chain,
+      :collaborator_name,
+      :event_time,
       :session_id,
       :trace,
       :event_type)
-      SENSITIVE = [:trace]
+      SENSITIVE = [:collaborator_name, :trace]
       include Aws::Structure
     end
 
@@ -3210,6 +4934,38 @@ module Aws::BedrockAgentRuntime
       :source,
       :use_case)
       SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains the image data for multimodal knowledge base queries,
+    # including format and content.
+    #
+    # This data type is used in the following API operations:
+    #
+    # * [Retrieve request][1] – in the `image` field
+    #
+    # ^
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent-runtime_Retrieve.html#API_agent-runtime_Retrieve_RequestSyntax
+    #
+    # @!attribute [rw] format
+    #   The format of the input image. Supported formats include png, gif,
+    #   jpeg, and webp.
+    #   @return [String]
+    #
+    # @!attribute [rw] inline_content
+    #   The base64-encoded image data for inline image content. Maximum size
+    #   is 5MB.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/InputImage AWS API Documentation
+    #
+    class InputImage < Struct.new(
+      :format,
+      :inline_content)
+      SENSITIVE = [:inline_content]
       include Aws::Structure
     end
 
@@ -3550,6 +5306,15 @@ module Aws::BedrockAgentRuntime
     #   The unique identifier of the agent memory.
     #   @return [String]
     #
+    # @!attribute [rw] prompt_creation_configurations
+    #   Specifies parameters that control how the service populates the
+    #   agent prompt for an `InvokeAgent` request. You can control which
+    #   aspects of previous invocations in the same agent session the
+    #   service uses to populate the agent prompt. This gives you more
+    #   granular control over the contextual history that is used to process
+    #   the current request.
+    #   @return [Types::PromptCreationConfigurations]
+    #
     # @!attribute [rw] session_id
     #   The unique identifier of the session. Use the same value across
     #   requests to continue the same conversation.
@@ -3592,6 +5357,7 @@ module Aws::BedrockAgentRuntime
       :end_session,
       :input_text,
       :memory_id,
+      :prompt_creation_configurations,
       :session_id,
       :session_state,
       :source_arn,
@@ -3703,6 +5469,10 @@ module Aws::BedrockAgentRuntime
     #   inline collaborator agent can also be the supervisor.
     #   @return [String]
     #
+    # @!attribute [rw] agent_name
+    #   The name for the agent.
+    #   @return [String]
+    #
     # @!attribute [rw] bedrock_model_configurations
     #   Model settings for the request.
     #   @return [Types::InlineBedrockModelConfigurations]
@@ -3720,6 +5490,11 @@ module Aws::BedrockAgentRuntime
     #   List of collaborator inline agents.
     #   @return [Array<Types::Collaborator>]
     #
+    # @!attribute [rw] custom_orchestration
+    #   Contains details of the custom orchestration configured for the
+    #   agent.
+    #   @return [Types::CustomOrchestration]
+    #
     # @!attribute [rw] customer_encryption_key_arn
     #   The Amazon Resource Name (ARN) of the Amazon Web Services KMS key to
     #   use to encrypt your inline agent.
@@ -3728,7 +5503,6 @@ module Aws::BedrockAgentRuntime
     # @!attribute [rw] enable_trace
     #   Specifies whether to turn on the trace or not to track the agent's
     #   reasoning process. For more information, see [Using trace][1].
-    #   </p>
     #
     #
     #
@@ -3801,6 +5575,20 @@ module Aws::BedrockAgentRuntime
     #   Contains information of the knowledge bases to associate with.
     #   @return [Array<Types::KnowledgeBase>]
     #
+    # @!attribute [rw] orchestration_type
+    #   Specifies the type of orchestration strategy for the agent. This is
+    #   set to DEFAULT orchestration type, by default.
+    #   @return [String]
+    #
+    # @!attribute [rw] prompt_creation_configurations
+    #   Specifies parameters that control how the service populates the
+    #   agent prompt for an `InvokeInlineAgent` request. You can control
+    #   which aspects of previous invocations in the same agent session the
+    #   service uses to populate the agent prompt. This gives you more
+    #   granular control over the contextual history that is used to process
+    #   the current request.
+    #   @return [Types::PromptCreationConfigurations]
+    #
     # @!attribute [rw] prompt_override_configuration
     #   Configurations for advanced prompts used to override the default
     #   prompts to enhance the accuracy of the inline agent.
@@ -3825,9 +5613,11 @@ module Aws::BedrockAgentRuntime
     class InvokeInlineAgentRequest < Struct.new(
       :action_groups,
       :agent_collaboration,
+      :agent_name,
       :bedrock_model_configurations,
       :collaborator_configurations,
       :collaborators,
+      :custom_orchestration,
       :customer_encryption_key_arn,
       :enable_trace,
       :end_session,
@@ -3838,15 +5628,17 @@ module Aws::BedrockAgentRuntime
       :input_text,
       :instruction,
       :knowledge_bases,
+      :orchestration_type,
+      :prompt_creation_configurations,
       :prompt_override_configuration,
       :session_id,
       :streaming_configurations)
-      SENSITIVE = [:input_text, :instruction, :prompt_override_configuration]
+      SENSITIVE = [:agent_name, :input_text, :instruction, :prompt_override_configuration]
       include Aws::Structure
     end
 
     # @!attribute [rw] completion
-    #   </p>
+    #   The inline agent's response to the user prompt.
     #   @return [Types::InlineAgentResponseStream]
     #
     # @!attribute [rw] content_type
@@ -3951,6 +5743,10 @@ module Aws::BedrockAgentRuntime
 
     # Contains details about the results from looking up the knowledge base.
     #
+    # @!attribute [rw] metadata
+    #   Contains information about the knowledge base output.
+    #   @return [Types::Metadata]
+    #
     # @!attribute [rw] retrieved_references
     #   Contains metadata about the sources cited for the generated
     #   response.
@@ -3959,8 +5755,9 @@ module Aws::BedrockAgentRuntime
     # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/KnowledgeBaseLookupOutput AWS API Documentation
     #
     class KnowledgeBaseLookupOutput < Struct.new(
+      :metadata,
       :retrieved_references)
-      SENSITIVE = []
+      SENSITIVE = [:metadata]
       include Aws::Structure
     end
 
@@ -3976,14 +5773,25 @@ module Aws::BedrockAgentRuntime
     #
     # [1]: https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent-runtime_Retrieve.html#API_agent-runtime_Retrieve_RequestSyntax
     #
+    # @!attribute [rw] image
+    #   An image to include in the knowledge base query for multimodal
+    #   retrieval.
+    #   @return [Types::InputImage]
+    #
     # @!attribute [rw] text
     #   The text of the query made to the knowledge base.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The type of query being performed.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/KnowledgeBaseQuery AWS API Documentation
     #
     class KnowledgeBaseQuery < Struct.new(
-      :text)
+      :image,
+      :text,
+      :type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4004,6 +5812,15 @@ module Aws::BedrockAgentRuntime
     # [2]: https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent-runtime_Retrieve.html#API_agent-runtime_Retrieve_RequestSyntax
     # [3]: https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent-runtime_RetrieveAndGenerate.html#API_agent-runtime_RetrieveAndGenerate_RequestSyntax
     #
+    # @!attribute [rw] managed_search_configuration
+    #   Contains configurations for managed search. For more information,
+    #   see [Query configurations][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/bedrock/latest/userguide/kb-test-config.html
+    #   @return [Types::ManagedSearchConfiguration]
+    #
     # @!attribute [rw] vector_search_configuration
     #   Contains details about how the results from the vector search should
     #   be returned. For more information, see [Query configurations][1].
@@ -4016,6 +5833,7 @@ module Aws::BedrockAgentRuntime
     # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/KnowledgeBaseRetrievalConfiguration AWS API Documentation
     #
     class KnowledgeBaseRetrievalConfiguration < Struct.new(
+      :managed_search_configuration,
       :vector_search_configuration)
       SENSITIVE = []
       include Aws::Structure
@@ -4036,6 +5854,11 @@ module Aws::BedrockAgentRuntime
     # @!attribute [rw] content
     #   Contains information about the content of the chunk.
     #   @return [Types::RetrievalResultContent]
+    #
+    # @!attribute [rw] document_id
+    #   The unique identifier of the document. Use with `GetDocumentContent`
+    #   to retrieve the full document.
+    #   @return [String]
     #
     # @!attribute [rw] location
     #   Contains information about the location of the data source.
@@ -4058,6 +5881,7 @@ module Aws::BedrockAgentRuntime
     #
     class KnowledgeBaseRetrievalResult < Struct.new(
       :content,
+      :document_id,
       :location,
       :metadata,
       :score)
@@ -4115,6 +5939,25 @@ module Aws::BedrockAgentRuntime
       :model_arn,
       :orchestration_configuration,
       :retrieval_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration for retrieving from a Bedrock knowledge base.
+    #
+    # @!attribute [rw] knowledge_base_id
+    #   The unique identifier of the knowledge base.
+    #   @return [String]
+    #
+    # @!attribute [rw] retrieval_overrides
+    #   Overrides for retrieval behavior such as filters and result limits.
+    #   @return [Types::RetrievalOverrides]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/KnowledgeBaseRetrieverConfiguration AWS API Documentation
+    #
+    class KnowledgeBaseRetrieverConfiguration < Struct.new(
+      :knowledge_base_id,
+      :retrieval_overrides)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4187,6 +6030,119 @@ module Aws::BedrockAgentRuntime
       :override_search_type,
       :reranking_configuration)
       SENSITIVE = [:filter]
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] event_type
+    #   The type of events to retrieve. Specify `Node` for node-level events
+    #   or `Flow` for flow-level events.
+    #   @return [String]
+    #
+    # @!attribute [rw] execution_identifier
+    #   The unique identifier of the flow execution.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_alias_identifier
+    #   The unique identifier of the flow alias used for the execution.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_identifier
+    #   The unique identifier of the flow.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of events to return in a single response. If more
+    #   events exist than the specified maxResults value, a token is
+    #   included in the response so that the remaining results can be
+    #   retrieved.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   A token to retrieve the next set of results. This value is returned
+    #   in the response if more results are available.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/ListFlowExecutionEventsRequest AWS API Documentation
+    #
+    class ListFlowExecutionEventsRequest < Struct.new(
+      :event_type,
+      :execution_identifier,
+      :flow_alias_identifier,
+      :flow_identifier,
+      :max_results,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] flow_execution_events
+    #   A list of events that occurred during the flow execution. Events can
+    #   include node inputs and outputs, flow inputs and outputs, condition
+    #   results, and failure events.
+    #   @return [Array<Types::FlowExecutionEvent>]
+    #
+    # @!attribute [rw] next_token
+    #   A token to retrieve the next set of results. This value is returned
+    #   if more results are available.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/ListFlowExecutionEventsResponse AWS API Documentation
+    #
+    class ListFlowExecutionEventsResponse < Struct.new(
+      :flow_execution_events,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] flow_alias_identifier
+    #   The unique identifier of the flow alias to list executions for.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_identifier
+    #   The unique identifier of the flow to list executions for.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of flow executions to return in a single
+    #   response. If more executions exist than the specified `maxResults`
+    #   value, a token is included in the response so that the remaining
+    #   results can be retrieved.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   A token to retrieve the next set of results. This value is returned
+    #   in the response if more results are available.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/ListFlowExecutionsRequest AWS API Documentation
+    #
+    class ListFlowExecutionsRequest < Struct.new(
+      :flow_alias_identifier,
+      :flow_identifier,
+      :max_results,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] flow_execution_summaries
+    #   A list of flow execution summaries. Each summary includes the
+    #   execution ARN, flow identifier, flow alias identifier, flow version,
+    #   status, and timestamps.
+    #   @return [Array<Types::FlowExecutionSummary>]
+    #
+    # @!attribute [rw] next_token
+    #   A token to retrieve the next set of results. This value is returned
+    #   if more results are available.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/ListFlowExecutionsResponse AWS API Documentation
+    #
+    class ListFlowExecutionsResponse < Struct.new(
+      :flow_execution_summaries,
+      :next_token)
+      SENSITIVE = []
       include Aws::Structure
     end
 
@@ -4366,6 +6322,104 @@ module Aws::BedrockAgentRuntime
       include Aws::Structure
     end
 
+    # Configuration for a Bedrock reranking model used in managed search.
+    #
+    # @!attribute [rw] metadata_configuration
+    #   The metadata configuration for reranking.
+    #   @return [Types::MetadataConfigurationForReranking]
+    #
+    # @!attribute [rw] model_configuration
+    #   The model configuration containing the model ARN for reranking.
+    #   @return [Types::ManagedSearchBedrockRerankingModelConfiguration]
+    #
+    # @!attribute [rw] number_of_reranked_results
+    #   The number of results to return after reranking.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/ManagedSearchBedrockRerankingConfiguration AWS API Documentation
+    #
+    class ManagedSearchBedrockRerankingConfiguration < Struct.new(
+      :metadata_configuration,
+      :model_configuration,
+      :number_of_reranked_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Model configuration for a Bedrock reranking model used in managed
+    # search.
+    #
+    # @!attribute [rw] additional_model_request_fields
+    #   Additional request fields to pass to the reranking model.
+    #   @return [Hash<String,Hash,Array,String,Numeric,Boolean>]
+    #
+    # @!attribute [rw] model_arn
+    #   The ARN of the Bedrock reranking model.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/ManagedSearchBedrockRerankingModelConfiguration AWS API Documentation
+    #
+    class ManagedSearchBedrockRerankingModelConfiguration < Struct.new(
+      :additional_model_request_fields,
+      :model_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration for managed search in a knowledge base. Managed search
+    # automatically determines the best search strategy based on your data
+    # store configuration.
+    #
+    # @!attribute [rw] filter
+    #   Filters the metadata of the retrieved results so that Amazon Bedrock
+    #   returns only results that match the filter.
+    #   @return [Types::RetrievalFilter]
+    #
+    # @!attribute [rw] number_of_results
+    #   The number of results to retrieve.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] reranking_configuration
+    #   Contains configurations for reranking the results retrieved from the
+    #   managed search.
+    #   @return [Types::ManagedSearchRerankingConfiguration]
+    #
+    # @!attribute [rw] reranking_model_type
+    #   The type of reranking model to use when reranking results retrieved
+    #   from the managed search. Use `CUSTOM` to specify a model, `MANAGED`
+    #   to use the service default, or `NONE` to disable reranking.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/ManagedSearchConfiguration AWS API Documentation
+    #
+    class ManagedSearchConfiguration < Struct.new(
+      :filter,
+      :number_of_results,
+      :reranking_configuration,
+      :reranking_model_type)
+      SENSITIVE = [:filter]
+      include Aws::Structure
+    end
+
+    # Configuration for the reranking model used in managed search.
+    #
+    # @!attribute [rw] bedrock_reranking_configuration
+    #   The Bedrock reranking model configuration for managed search.
+    #   @return [Types::ManagedSearchBedrockRerankingConfiguration]
+    #
+    # @!attribute [rw] type
+    #   The type of reranking configuration.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/ManagedSearchRerankingConfiguration AWS API Documentation
+    #
+    class ManagedSearchRerankingConfiguration < Struct.new(
+      :bedrock_reranking_configuration,
+      :type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains sessions summaries.
     #
     # @note Memory is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of Memory corresponding to the set member.
@@ -4441,15 +6495,51 @@ module Aws::BedrockAgentRuntime
       include Aws::Structure
     end
 
-    # Provides details of the foundation model.
+    # Provides information about the execution process for different types
+    # of invocations, such as model invocation, knowledge base invocation,
+    # agent collaborator invocation, guardrail invocation, and code
+    # interpreter Invocation.
+    #
+    # @!attribute [rw] client_request_id
+    #   A unique identifier associated with the downstream invocation. This
+    #   ID can be used for tracing, debugging, and identifying specific
+    #   invocations in customer logs or systems.
+    #   @return [String]
+    #
+    # @!attribute [rw] end_time
+    #   In the final response, `endTime` is the end time of the agent
+    #   invocation operation.
+    #   @return [Time]
+    #
+    # @!attribute [rw] operation_total_time_ms
+    #   The total time it took for the agent to complete execution. This
+    #   field is only set for the final response.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] start_time
+    #   In the final response, `startTime` is the start time of the agent
+    #   invocation operation.
+    #   @return [Time]
+    #
+    # @!attribute [rw] total_time_ms
+    #   The total execution time for the specific invocation being processed
+    #   (model, knowledge base, guardrail, agent collaborator, or code
+    #   interpreter). It represents how long the individual invocation took.
+    #   @return [Integer]
     #
     # @!attribute [rw] usage
-    #   Contains details of the foundation model usage.
+    #   Specific to model invocation and contains details about the usage of
+    #   a foundation model.
     #   @return [Types::Usage]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/Metadata AWS API Documentation
     #
     class Metadata < Struct.new(
+      :client_request_id,
+      :end_time,
+      :operation_total_time_ms,
+      :start_time,
+      :total_time_ms,
       :usage)
       SENSITIVE = [:usage]
       include Aws::Structure
@@ -4614,6 +6704,366 @@ module Aws::BedrockAgentRuntime
       :performance_config)
       SENSITIVE = []
       include Aws::Structure
+    end
+
+    # Contains information about an action (operation) called by a node
+    # during execution.
+    #
+    # @!attribute [rw] node_name
+    #   The name of the node that called the operation.
+    #   @return [String]
+    #
+    # @!attribute [rw] operation_name
+    #   The name of the operation that the node called.
+    #   @return [String]
+    #
+    # @!attribute [rw] operation_request
+    #   The request payload sent to the downstream service.
+    #   @return [Hash,Array,String,Numeric,Boolean]
+    #
+    # @!attribute [rw] operation_response
+    #   The response payload received from the downstream service.
+    #   @return [Hash,Array,String,Numeric,Boolean]
+    #
+    # @!attribute [rw] request_id
+    #   The ID of the request that the node made to the operation.
+    #   @return [String]
+    #
+    # @!attribute [rw] service_name
+    #   The name of the service that the node called.
+    #   @return [String]
+    #
+    # @!attribute [rw] timestamp
+    #   The date and time that the operation was called.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/NodeActionEvent AWS API Documentation
+    #
+    class NodeActionEvent < Struct.new(
+      :node_name,
+      :operation_name,
+      :operation_request,
+      :operation_response,
+      :request_id,
+      :service_name,
+      :timestamp)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about an internal trace of a specific node during
+    # execution.
+    #
+    # @!attribute [rw] node_name
+    #   The name of the node that generated the dependency trace.
+    #   @return [String]
+    #
+    # @!attribute [rw] timestamp
+    #   The date and time that the dependency trace was generated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] trace_elements
+    #   The trace elements containing detailed information about the node
+    #   execution.
+    #   @return [Types::NodeTraceElements]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/NodeDependencyEvent AWS API Documentation
+    #
+    class NodeDependencyEvent < Struct.new(
+      :node_name,
+      :timestamp,
+      :trace_elements)
+      SENSITIVE = [:trace_elements]
+      include Aws::Structure
+    end
+
+    # Contains the content of a flow node's input or output field for a
+    # flow execution.
+    #
+    # <note markdown="1"> Flow executions is in preview release for Amazon Bedrock and is
+    # subject to change.
+    #
+    #  </note>
+    #
+    # @note NodeExecutionContent is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of NodeExecutionContent corresponding to the set member.
+    #
+    # @!attribute [rw] document
+    #   The document content of the field, which can contain text or
+    #   structured data.
+    #   @return [Hash,Array,String,Numeric,Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/NodeExecutionContent AWS API Documentation
+    #
+    class NodeExecutionContent < Struct.new(
+      :document,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Document < NodeExecutionContent; end
+      class Unknown < NodeExecutionContent; end
+    end
+
+    # Contains information about a failure that occurred at a specific node
+    # during a flow execution.
+    #
+    # <note markdown="1"> Flow executions is in preview release for Amazon Bedrock and is
+    # subject to change.
+    #
+    #  </note>
+    #
+    # @!attribute [rw] error_code
+    #   The error code that identifies the type of failure that occurred at
+    #   the node.
+    #   @return [String]
+    #
+    # @!attribute [rw] error_message
+    #   A descriptive message that provides details about the node failure.
+    #   @return [String]
+    #
+    # @!attribute [rw] node_name
+    #   The name of the node where the failure occurred.
+    #   @return [String]
+    #
+    # @!attribute [rw] timestamp
+    #   The timestamp when the node failure occurred.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/NodeFailureEvent AWS API Documentation
+    #
+    class NodeFailureEvent < Struct.new(
+      :error_code,
+      :error_message,
+      :node_name,
+      :timestamp)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about the inputs provided to a specific node
+    # during a flow execution.
+    #
+    # <note markdown="1"> Flow executions is in preview release for Amazon Bedrock and is
+    # subject to change.
+    #
+    #  </note>
+    #
+    # @!attribute [rw] fields
+    #   A list of input fields provided to the node.
+    #   @return [Array<Types::NodeInputField>]
+    #
+    # @!attribute [rw] node_name
+    #   The name of the node that received the inputs.
+    #   @return [String]
+    #
+    # @!attribute [rw] timestamp
+    #   The timestamp when the inputs were provided to the node.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/NodeInputEvent AWS API Documentation
+    #
+    class NodeInputEvent < Struct.new(
+      :fields,
+      :node_name,
+      :timestamp)
+      SENSITIVE = [:fields]
+      include Aws::Structure
+    end
+
+    # Represents an item in the execution chain for node input tracking.
+    #
+    # @!attribute [rw] index
+    #   The index position of this item in the execution chain.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] node_name
+    #   The name of the node in the execution chain.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The type of execution chain item. Supported values are Iterator and
+    #   Loop.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/NodeInputExecutionChainItem AWS API Documentation
+    #
+    class NodeInputExecutionChainItem < Struct.new(
+      :index,
+      :node_name,
+      :type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents an input field provided to a node during a flow execution.
+    #
+    # @!attribute [rw] category
+    #   The category of the input field.
+    #   @return [String]
+    #
+    # @!attribute [rw] content
+    #   The content of the input field, which can contain text or structured
+    #   data.
+    #   @return [Types::NodeExecutionContent]
+    #
+    # @!attribute [rw] execution_chain
+    #   The execution path through nested nodes like iterators and loops.
+    #   @return [Array<Types::NodeInputExecutionChainItem>]
+    #
+    # @!attribute [rw] name
+    #   The name of the input field as defined in the node's input schema.
+    #   @return [String]
+    #
+    # @!attribute [rw] source
+    #   The source node that provides input data to this field.
+    #   @return [Types::NodeInputSource]
+    #
+    # @!attribute [rw] type
+    #   The data type of the input field for compatibility validation.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/NodeInputField AWS API Documentation
+    #
+    class NodeInputField < Struct.new(
+      :category,
+      :content,
+      :execution_chain,
+      :name,
+      :source,
+      :type)
+      SENSITIVE = [:content]
+      include Aws::Structure
+    end
+
+    # Represents the source of input data for a node field.
+    #
+    # @!attribute [rw] expression
+    #   The expression used to extract data from the source.
+    #   @return [String]
+    #
+    # @!attribute [rw] node_name
+    #   The name of the source node that provides the input data.
+    #   @return [String]
+    #
+    # @!attribute [rw] output_field_name
+    #   The name of the output field from the source node.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/NodeInputSource AWS API Documentation
+    #
+    class NodeInputSource < Struct.new(
+      :expression,
+      :node_name,
+      :output_field_name)
+      SENSITIVE = [:expression]
+      include Aws::Structure
+    end
+
+    # Contains information about the outputs produced by a specific node
+    # during a flow execution.
+    #
+    # <note markdown="1"> Flow executions is in preview release for Amazon Bedrock and is
+    # subject to change.
+    #
+    #  </note>
+    #
+    # @!attribute [rw] fields
+    #   A list of output fields produced by the node.
+    #   @return [Array<Types::NodeOutputField>]
+    #
+    # @!attribute [rw] node_name
+    #   The name of the node that produced the outputs.
+    #   @return [String]
+    #
+    # @!attribute [rw] timestamp
+    #   The timestamp when the outputs were produced by the node.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/NodeOutputEvent AWS API Documentation
+    #
+    class NodeOutputEvent < Struct.new(
+      :fields,
+      :node_name,
+      :timestamp)
+      SENSITIVE = [:fields]
+      include Aws::Structure
+    end
+
+    # Represents an output field produced by a node during a flow execution.
+    #
+    # <note markdown="1"> Flow executions is in preview release for Amazon Bedrock and is
+    # subject to change.
+    #
+    #  </note>
+    #
+    # @!attribute [rw] content
+    #   The content of the output field, which can contain text or
+    #   structured data.
+    #   @return [Types::NodeExecutionContent]
+    #
+    # @!attribute [rw] name
+    #   The name of the output field as defined in the node's output
+    #   schema.
+    #   @return [String]
+    #
+    # @!attribute [rw] next
+    #   The next node that receives output data from this field.
+    #   @return [Array<Types::NodeOutputNext>]
+    #
+    # @!attribute [rw] type
+    #   The data type of the output field for compatibility validation.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/NodeOutputField AWS API Documentation
+    #
+    class NodeOutputField < Struct.new(
+      :content,
+      :name,
+      :next,
+      :type)
+      SENSITIVE = [:content, :next]
+      include Aws::Structure
+    end
+
+    # Represents the next node that receives output data.
+    #
+    # @!attribute [rw] input_field_name
+    #   The name of the input field in the next node that receives the data.
+    #   @return [String]
+    #
+    # @!attribute [rw] node_name
+    #   The name of the next node that receives the output data.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/NodeOutputNext AWS API Documentation
+    #
+    class NodeOutputNext < Struct.new(
+      :input_field_name,
+      :node_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains trace elements for node execution tracking.
+    #
+    # @note NodeTraceElements is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of NodeTraceElements corresponding to the set member.
+    #
+    # @!attribute [rw] agent_traces
+    #   Agent trace information for the node execution.
+    #   @return [Array<Types::TracePart>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/NodeTraceElements AWS API Documentation
+    #
+    class NodeTraceElements < Struct.new(
+      :agent_traces,
+      :unknown)
+      SENSITIVE = [:agent_traces]
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class AgentTraces < NodeTraceElements; end
+      class Unknown < NodeTraceElements; end
     end
 
     # Contains the result or output of an action group or knowledge base, or
@@ -4795,6 +7245,29 @@ module Aws::BedrockAgentRuntime
       :query_transformation_configuration)
       SENSITIVE = []
       include Aws::Structure
+    end
+
+    # The structure of the executor invoking the actions in custom
+    # orchestration.
+    #
+    # @note OrchestrationExecutor is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @!attribute [rw] lambda
+    #   The Amazon Resource Name (ARN) of the Lambda function containing the
+    #   business logic that is carried out upon invoking the action.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/OrchestrationExecutor AWS API Documentation
+    #
+    class OrchestrationExecutor < Struct.new(
+      :lambda,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Lambda < OrchestrationExecutor; end
+      class Unknown < OrchestrationExecutor; end
     end
 
     # The foundation model output from the orchestration step.
@@ -5294,6 +7767,40 @@ module Aws::BedrockAgentRuntime
       include Aws::Structure
     end
 
+    # Specifies parameters that control how the service populates the agent
+    # prompt for an `InvokeAgent` or `InvokeInlineAgent` request. You can
+    # control which aspects of previous invocations in the same agent
+    # session the service uses to populate the agent prompt. This gives you
+    # more granular control over the contextual history that is used to
+    # process the current request.
+    #
+    # @!attribute [rw] exclude_previous_thinking_steps
+    #   If `true`, the service removes any content between `<thinking>` tags
+    #   from previous conversations in an agent session. The service will
+    #   only remove content from already processed turns. This helps you
+    #   remove content which might not be useful for current and subsequent
+    #   invocations. This can reduce the input token count and potentially
+    #   save costs. The default value is `false`.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] previous_conversation_turns_to_include
+    #   The number of previous conversations from the ongoing agent session
+    #   to include in the conversation history of the agent prompt, during
+    #   the current invocation. This gives you more granular control over
+    #   the context that the model is made aware of, and helps the model
+    #   remove older context which is no longer useful during the ongoing
+    #   agent session.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/PromptCreationConfigurations AWS API Documentation
+    #
+    class PromptCreationConfigurations < Struct.new(
+      :exclude_previous_thinking_steps,
+      :previous_conversation_turns_to_include)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains configurations to override prompts in different parts of an
     # agent sequence. For more information, see [Advanced prompts][1].
     #
@@ -5363,7 +7870,7 @@ module Aws::BedrockAgentRuntime
     #
     #
     #   [1]: https://docs.aws.amazon.com/bedrock/latest/userguide/kb-test-config.html#kb-test-config-sysprompt
-    #   [2]: https://docs.anthropic.com/claude/docs/use-xml-tags
+    #   [2]: https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/PromptTemplate AWS API Documentation
@@ -5698,8 +8205,7 @@ module Aws::BedrockAgentRuntime
     #   @return [Types::RerankDocument]
     #
     # @!attribute [rw] index
-    #   The ranking of the document. The lower a number, the higher the
-    #   document is ranked.
+    #   The original index of the document from the input sources array.
     #   @return [Integer]
     #
     # @!attribute [rw] relevance_score
@@ -5814,6 +8320,30 @@ module Aws::BedrockAgentRuntime
     class ResourceNotFoundException < Struct.new(
       :message,
       :event_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The content retrieved from a knowledge source.
+    #
+    # @!attribute [rw] byte_content
+    #   The binary content of the retrieved item.
+    #   @return [String]
+    #
+    # @!attribute [rw] mime_type
+    #   The MIME type of the retrieved content.
+    #   @return [String]
+    #
+    # @!attribute [rw] text
+    #   The text content of the retrieved item.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/RetrievalContent AWS API Documentation
+    #
+    class RetrievalContent < Struct.new(
+      :byte_content,
+      :mime_type,
+      :text)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6019,6 +8549,25 @@ module Aws::BedrockAgentRuntime
       class Unknown < RetrievalFilter; end
     end
 
+    # Overrides for retrieval behavior.
+    #
+    # @!attribute [rw] filter
+    #   A filter to apply to the retrieval results.
+    #   @return [Types::RetrievalFilter]
+    #
+    # @!attribute [rw] max_number_of_results
+    #   The maximum number of results to return.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/RetrievalOverrides AWS API Documentation
+    #
+    class RetrievalOverrides < Struct.new(
+      :filter,
+      :max_number_of_results)
+      SENSITIVE = [:filter]
+      include Aws::Structure
+    end
+
     # The Confluence data source location.
     #
     # @!attribute [rw] url
@@ -6051,6 +8600,11 @@ module Aws::BedrockAgentRuntime
     # [2]: https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent-runtime_RetrieveAndGenerate.html#API_agent-runtime_RetrieveAndGenerate_ResponseSyntax
     # [3]: https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent-runtime_InvokeAgent.html#API_agent-runtime_InvokeAgent_ResponseSyntax
     #
+    # @!attribute [rw] audio
+    #   Audio segment information when the retrieval result contains audio
+    #   content.
+    #   @return [Types::AudioSegment]
+    #
     # @!attribute [rw] byte_content
     #   A data URI with base64-encoded content from the data source. The URI
     #   is in the following format: returned in the following format:
@@ -6070,13 +8624,20 @@ module Aws::BedrockAgentRuntime
     #   The type of content in the retrieval result.
     #   @return [String]
     #
+    # @!attribute [rw] video
+    #   Video segment information when the retrieval result contains video
+    #   content.
+    #   @return [Types::VideoSegment]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/RetrievalResultContent AWS API Documentation
     #
     class RetrievalResultContent < Struct.new(
+      :audio,
       :byte_content,
       :row,
       :text,
-      :type)
+      :type,
+      :video)
       SENSITIVE = [:row]
       include Aws::Structure
     end
@@ -6121,6 +8682,20 @@ module Aws::BedrockAgentRuntime
       include Aws::Structure
     end
 
+    # The Google Drive location of a retrieval result.
+    #
+    # @!attribute [rw] url
+    #   The Google Drive URL for the data source location.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/RetrievalResultGoogleDriveLocation AWS API Documentation
+    #
+    class RetrievalResultGoogleDriveLocation < Struct.new(
+      :url)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The location of a result in Amazon Kendra.
     #
     # @!attribute [rw] uri
@@ -6159,9 +8734,17 @@ module Aws::BedrockAgentRuntime
     #   Specifies the location of a document in a custom data source.
     #   @return [Types::RetrievalResultCustomDocumentLocation]
     #
+    # @!attribute [rw] google_drive_location
+    #   The Google Drive data source location.
+    #   @return [Types::RetrievalResultGoogleDriveLocation]
+    #
     # @!attribute [rw] kendra_document_location
     #   The location of a document in Amazon Kendra.
     #   @return [Types::RetrievalResultKendraDocumentLocation]
+    #
+    # @!attribute [rw] one_drive_location
+    #   The Microsoft OneDrive data source location.
+    #   @return [Types::RetrievalResultOneDriveLocation]
     #
     # @!attribute [rw] s3_location
     #   The S3 data source location.
@@ -6193,13 +8776,29 @@ module Aws::BedrockAgentRuntime
     class RetrievalResultLocation < Struct.new(
       :confluence_location,
       :custom_document_location,
+      :google_drive_location,
       :kendra_document_location,
+      :one_drive_location,
       :s3_location,
       :salesforce_location,
       :share_point_location,
       :sql_location,
       :type,
       :web_location)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The Microsoft OneDrive location of a retrieval result.
+    #
+    # @!attribute [rw] url
+    #   The OneDrive URL for the data source location.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/RetrievalResultOneDriveLocation AWS API Documentation
+    #
+    class RetrievalResultOneDriveLocation < Struct.new(
+      :url)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6344,7 +8943,7 @@ module Aws::BedrockAgentRuntime
     # [1]: https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent-runtime_RetrieveAndGenerate.html#API_agent-runtime_RetrieveAndGenerate_RequestSyntax
     #
     # @!attribute [rw] text
-    #   The query made to the knowledge base.
+    #   The query made to the knowledge base, in characters.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/RetrieveAndGenerateInput AWS API Documentation
@@ -6420,14 +9019,21 @@ module Aws::BedrockAgentRuntime
     #   interactions. You can't explicitly set the `sessionId` yourself.
     #   @return [String]
     #
+    # @!attribute [rw] user_context
+    #   Contains information about the user making the request. This is used
+    #   for access control filtering to ensure that retrieval results only
+    #   include documents the user is authorized to access.
+    #   @return [Types::UserContext]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/RetrieveAndGenerateRequest AWS API Documentation
     #
     class RetrieveAndGenerateRequest < Struct.new(
       :input,
       :retrieve_and_generate_configuration,
       :session_configuration,
-      :session_id)
-      SENSITIVE = [:input]
+      :session_id,
+      :user_context)
+      SENSITIVE = [:input, :user_context]
       include Aws::Structure
     end
 
@@ -6516,14 +9122,21 @@ module Aws::BedrockAgentRuntime
     #   interactions. You can't explicitly set the `sessionId` yourself.
     #   @return [String]
     #
+    # @!attribute [rw] user_context
+    #   Contains information about the user making the request. This is used
+    #   for access control filtering to ensure that retrieval results only
+    #   include documents the user is authorized to access.
+    #   @return [Types::UserContext]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/RetrieveAndGenerateStreamRequest AWS API Documentation
     #
     class RetrieveAndGenerateStreamRequest < Struct.new(
       :input,
       :retrieve_and_generate_configuration,
       :session_configuration,
-      :session_id)
-      SENSITIVE = [:input]
+      :session_id,
+      :user_context)
+      SENSITIVE = [:input, :user_context]
       include Aws::Structure
     end
 
@@ -6571,6 +9184,12 @@ module Aws::BedrockAgentRuntime
     #   Contains the query to send the knowledge base.
     #   @return [Types::KnowledgeBaseQuery]
     #
+    # @!attribute [rw] user_context
+    #   Contains information about the user making the request. This is used
+    #   for access control filtering to ensure that retrieval results only
+    #   include documents the user is authorized to access.
+    #   @return [Types::UserContext]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/RetrieveRequest AWS API Documentation
     #
     class RetrieveRequest < Struct.new(
@@ -6578,8 +9197,9 @@ module Aws::BedrockAgentRuntime
       :knowledge_base_id,
       :next_token,
       :retrieval_configuration,
-      :retrieval_query)
-      SENSITIVE = [:retrieval_query]
+      :retrieval_query,
+      :user_context)
+      SENSITIVE = [:retrieval_query, :user_context]
       include Aws::Structure
     end
 
@@ -6646,6 +9266,28 @@ module Aws::BedrockAgentRuntime
       :metadata)
       SENSITIVE = [:content, :location, :metadata]
       include Aws::Structure
+    end
+
+    # Configuration for a retriever, specified as a union of retriever
+    # types.
+    #
+    # @note RetrieverConfiguration is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @!attribute [rw] knowledge_base
+    #   Configuration for a knowledge base retriever.
+    #   @return [Types::KnowledgeBaseRetrieverConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/RetrieverConfiguration AWS API Documentation
+    #
+    class RetrieverConfiguration < Struct.new(
+      :knowledge_base,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class KnowledgeBase < RetrieverConfiguration; end
+      class Unknown < RetrieverConfiguration; end
     end
 
     # Contains information to return from the action group that the agent
@@ -6820,6 +9462,26 @@ module Aws::BedrockAgentRuntime
     #
     class S3ObjectFile < Struct.new(
       :uri)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents a condition that was satisfied during a condition node
+    # evaluation in a flow execution.
+    #
+    # <note markdown="1"> Flow executions is in preview release for Amazon Bedrock and is
+    # subject to change.
+    #
+    #  </note>
+    #
+    # @!attribute [rw] condition_name
+    #   The name of the condition that was satisfied.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/SatisfiedCondition AWS API Documentation
+    #
+    class SatisfiedCondition < Struct.new(
+      :condition_name)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7009,10 +9671,116 @@ module Aws::BedrockAgentRuntime
       include Aws::Structure
     end
 
+    # @!attribute [rw] flow_alias_identifier
+    #   The unique identifier of the flow alias to use for the flow
+    #   execution.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_execution_name
+    #   The unique name for the flow execution. If you don't provide one, a
+    #   system-generated name is used.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_identifier
+    #   The unique identifier of the flow to execute.
+    #   @return [String]
+    #
+    # @!attribute [rw] inputs
+    #   The input data required for the flow execution. This must match the
+    #   input schema defined in the flow.
+    #   @return [Array<Types::FlowInput>]
+    #
+    # @!attribute [rw] model_performance_configuration
+    #   The performance settings for the foundation model used in the flow
+    #   execution.
+    #   @return [Types::ModelPerformanceConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/StartFlowExecutionRequest AWS API Documentation
+    #
+    class StartFlowExecutionRequest < Struct.new(
+      :flow_alias_identifier,
+      :flow_execution_name,
+      :flow_identifier,
+      :inputs,
+      :model_performance_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] execution_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the flow
+    #   execution.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/StartFlowExecutionResponse AWS API Documentation
+    #
+    class StartFlowExecutionResponse < Struct.new(
+      :execution_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] execution_identifier
+    #   The unique identifier of the flow execution to stop.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_alias_identifier
+    #   The unique identifier of the flow alias used for the execution.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_identifier
+    #   The unique identifier of the flow.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/StopFlowExecutionRequest AWS API Documentation
+    #
+    class StopFlowExecutionRequest < Struct.new(
+      :execution_identifier,
+      :flow_alias_identifier,
+      :flow_identifier)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] execution_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the flow
+    #   execution that was stopped.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The updated status of the flow execution after the stop request.
+    #   This will typically be ABORTED if the execution was successfully
+    #   stopped.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/StopFlowExecutionResponse AWS API Documentation
+    #
+    class StopFlowExecutionResponse < Struct.new(
+      :execution_arn,
+      :status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Configurations for streaming.
     #
     # @!attribute [rw] apply_guardrail_interval
-    #   The guardrail interval to apply as response is generated.
+    #   The guardrail interval to apply as response is generated. By
+    #   default, the guardrail interval is set to 50 characters. If a larger
+    #   interval is specified, the response will be generated in larger
+    #   chunks with fewer `ApplyGuardrail` calls. The following examples
+    #   show the response generated for *Hello, I am an agent* input string.
+    #
+    #   **Example response in chunks: Interval set to 3 characters**
+    #
+    #   `'Hel', 'lo, ','I am', ' an', ' Age', 'nt'`
+    #
+    #   Each chunk has at least 3 characters except for the last chunk
+    #
+    #   **Example response in chunks: Interval set to 20 or more
+    #   characters**
+    #
+    #   `Hello, I am an Agent`
     #   @return [Integer]
     #
     # @!attribute [rw] stream_final_response
@@ -7270,6 +10038,27 @@ module Aws::BedrockAgentRuntime
       class Unknown < Trace; end
     end
 
+    # Contains trace elements for flow execution tracking.
+    #
+    # @note TraceElements is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of TraceElements corresponding to the set member.
+    #
+    # @!attribute [rw] agent_traces
+    #   Agent trace information for the flow execution.
+    #   @return [Array<Types::TracePart>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/TraceElements AWS API Documentation
+    #
+    class TraceElements < Struct.new(
+      :agent_traces,
+      :unknown)
+      SENSITIVE = [:agent_traces]
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class AgentTraces < TraceElements; end
+      class Unknown < TraceElements; end
+    end
+
     # Contains information about the agent and session, alongside the
     # agent's reasoning process and results from calling API actions and
     # querying knowledge bases and metadata about the trace. You can use the
@@ -7451,6 +10240,23 @@ module Aws::BedrockAgentRuntime
       include Aws::Structure
     end
 
+    # Contains information about the user making the request. Use this to
+    # pass user identity information for access control filtering, so that
+    # retrieval results only include documents the user is authorized to
+    # access.
+    #
+    # @!attribute [rw] user_id
+    #   The identifier of the user making the retrieval request.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/UserContext AWS API Documentation
+    #
+    class UserContext < Struct.new(
+      :user_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Input validation failed. Check your request parameters and retry the
     # request.
     #
@@ -7528,6 +10334,66 @@ module Aws::BedrockAgentRuntime
       :type)
       SENSITIVE = []
       include Aws::Structure
+    end
+
+    # Contains information about a video segment retrieved from a knowledge
+    # base, including its location and summary.
+    #
+    # This data type is used in the following API operations:
+    #
+    # * [Retrieve response][1] – in the `video` field
+    #
+    # ^
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent-runtime_Retrieve.html#API_agent-runtime_Retrieve_ResponseSyntax
+    #
+    # @!attribute [rw] s3_uri
+    #   The S3 URI where this specific video segment is stored in the
+    #   multimodal storage destination.
+    #   @return [String]
+    #
+    # @!attribute [rw] summary
+    #   A text summary describing the content of the video segment.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/VideoSegment AWS API Documentation
+    #
+    class VideoSegment < Struct.new(
+      :s3_uri,
+      :summary)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The streaming output for agentic retrieval, containing results,
+    # traces, and errors.
+    #
+    # EventStream is an Enumerator of Events.
+    #  #event_types #=> Array, returns all modeled event types in the stream
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/AgenticRetrieveStreamResponseOutput AWS API Documentation
+    #
+    class AgenticRetrieveStreamResponseOutput < Enumerator
+
+      def event_types
+        [
+          :access_denied_exception,
+          :bad_gateway_exception,
+          :conflict_exception,
+          :dependency_failed_exception,
+          :internal_server_exception,
+          :resource_not_found_exception,
+          :response_event,
+          :result,
+          :service_quota_exceeded_exception,
+          :throttling_exception,
+          :trace_event,
+          :validation_exception
+        ]
+      end
+
     end
 
     # The output of the flow.

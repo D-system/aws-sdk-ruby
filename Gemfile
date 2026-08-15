@@ -3,24 +3,30 @@
 source 'https://rubygems.org'
 
 gem 'rake', require: false
-# SDK feature dependencies
+
 gem 'aws-crt' if ENV['CRT']
 gem 'base64'
 gem 'bigdecimal'
+gem 'csv'
 gem 'http-2'
 gem 'jmespath'
 if defined?(JRUBY_VERSION)
-  # get the latest jruby-openssl to support sigv4a
-  # see: https://github.com/jruby/jruby-openssl/issues/30
+  gem 'irb', '< 1.17.0'
+  # rdoc >= 8.0.0 depends on rbs, which fails to build its native ext on JRuby
+  # https://github.com/ruby/rbs/issues/3018
+  gem 'rdoc', '< 8.0.0'
   gem 'jruby-openssl'
+else
+  gem 'irb'
+  gem 'rdoc'
 end
 
 # protocol parsers
-gem 'json', '>= 2.4.0' # due to load_file support
-gem 'nokogiri', '>= 1.6.8.1'
+gem 'json'
+gem 'nokogiri'
 gem 'oga'
 gem 'rexml'
-# These protocol parsers do not have java gems
+gem 'ruby-ll', '2.1.3' # temporary
 unless defined?(JRUBY_VERSION)
   gem 'libxml-ruby'
   gem 'oj'
@@ -32,8 +38,8 @@ group :benchmark do
 
   # required for uploading report/putting metrics
   gem 'aws-sdk-cloudwatch', require: false
-  gem 'aws-sdk-s3', require: false
   gem 'aws-sdk-lambda', require: false
+  gem 'aws-sdk-s3', require: false
 end
 
 group :build do
@@ -43,7 +49,7 @@ end
 
 group :development do
   gem 'byebug', platforms: :ruby
-  gem 'rubocop', '1.28.0'
+  gem 'rubocop', '>= 1.75.0'
 end
 
 group :docs do
@@ -67,8 +73,8 @@ end
 group :test do
   gem 'addressable'
   gem 'cucumber'
-  gem 'webmock'
   gem 'multipart-post'
-  gem 'rspec'
   gem 'opentelemetry-sdk'
+  gem 'rspec'
+  gem 'webmock'
 end

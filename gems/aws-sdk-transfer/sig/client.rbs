@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -92,7 +93,7 @@ module Aws
                                entry: ::String,
                                target: ::String,
                                type: ("FILE" | "DIRECTORY")?
-                             },
+                             }
                            ],
                            ?policy: ::String,
                            ?posix_profile: {
@@ -123,7 +124,7 @@ module Aws
                                 {
                                   key: ::String,
                                   value: ::String
-                                },
+                                }
                               ],
                               ?preserve_filename: ("ENABLED" | "DISABLED"),
                               ?enforce_message_signing: ("ENABLED" | "DISABLED"),
@@ -143,32 +144,29 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Transfer/Client.html#create_connector-instance_method
       def create_connector: (
-                              url: ::String,
-                              ?as_2_config: {
-                                local_profile_id: ::String?,
-                                partner_profile_id: ::String?,
-                                message_subject: ::String?,
-                                compression: ("ZLIB" | "DISABLED")?,
-                                encryption_algorithm: ("AES128_CBC" | "AES192_CBC" | "AES256_CBC" | "DES_EDE3_CBC" | "NONE")?,
-                                signing_algorithm: ("SHA256" | "SHA384" | "SHA512" | "SHA1" | "NONE")?,
-                                mdn_signing_algorithm: ("SHA256" | "SHA384" | "SHA512" | "SHA1" | "NONE" | "DEFAULT")?,
-                                mdn_response: ("SYNC" | "NONE")?,
-                                basic_auth_secret_id: ::String?,
-                                preserve_content_type: ("ENABLED" | "DISABLED")?
-                              },
+                              ?url: ::String,
+                              ?as_2_config: Params::as_2_connector_config,
                               access_role: ::String,
                               ?logging_role: ::String,
                               ?tags: Array[
                                 {
                                   key: ::String,
                                   value: ::String
-                                },
+                                }
                               ],
                               ?sftp_config: {
                                 user_secret_id: ::String?,
-                                trusted_host_keys: Array[::String]?
+                                trusted_host_keys: Array[::String]?,
+                                max_concurrent_connections: ::Integer?
                               },
-                              ?security_policy_name: ::String
+                              ?security_policy_name: ::String,
+                              ?egress_config: {
+                                vpc_lattice: {
+                                  resource_configuration_arn: ::String,
+                                  port_number: ::Integer?
+                                }?
+                              },
+                              ?ip_address_type: ("IPV4" | "DUALSTACK")
                             ) -> _CreateConnectorResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateConnectorResponseSuccess
 
@@ -185,7 +183,7 @@ module Aws
                               {
                                 key: ::String,
                                 value: ::String
-                              },
+                              }
                             ]
                           ) -> _CreateProfileResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateProfileResponseSuccess
@@ -230,26 +228,14 @@ module Aws
                              {
                                key: ::String,
                                value: ::String
-                             },
+                             }
                            ],
-                           ?workflow_details: {
-                             on_upload: Array[
-                               {
-                                 workflow_id: ::String,
-                                 execution_role: ::String
-                               },
-                             ]?,
-                             on_partial_upload: Array[
-                               {
-                                 workflow_id: ::String,
-                                 execution_role: ::String
-                               },
-                             ]?
-                           },
+                           ?workflow_details: Params::workflow_details,
                            ?structured_log_destinations: Array[::String],
                            ?s3_storage_options: {
                              directory_listing_optimization: ("ENABLED" | "DISABLED")?
-                           }
+                           },
+                           ?ip_address_type: ("IPV4" | "DUALSTACK")
                          ) -> _CreateServerResponseSuccess
                        | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateServerResponseSuccess
 
@@ -267,7 +253,7 @@ module Aws
                              entry: ::String,
                              target: ::String,
                              type: ("FILE" | "DIRECTORY")?
-                           },
+                           }
                          ],
                          ?policy: ::String,
                          ?posix_profile: {
@@ -282,7 +268,7 @@ module Aws
                            {
                              key: ::String,
                              value: ::String
-                           },
+                           }
                          ],
                          user_name: ::String
                        ) -> _CreateUserResponseSuccess
@@ -308,8 +294,17 @@ module Aws
                               {
                                 key: ::String,
                                 value: ::String
-                              },
-                            ]
+                              }
+                            ],
+                            ?web_app_endpoint_policy: ("FIPS" | "STANDARD"),
+                            ?endpoint_details: {
+                              vpc: {
+                                subnet_ids: Array[::String]?,
+                                vpc_id: ::String?,
+                                security_group_ids: Array[::String]?,
+                                ip_address_type: ("IPV4" | "DUALSTACK")?
+                              }?
+                            }
                           ) -> _CreateWebAppResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateWebAppResponseSuccess
 
@@ -321,122 +316,16 @@ module Aws
       def create_workflow: (
                              ?description: ::String,
                              steps: Array[
-                               {
-                                 type: ("COPY" | "CUSTOM" | "TAG" | "DELETE" | "DECRYPT")?,
-                                 copy_step_details: {
-                                   name: ::String?,
-                                   destination_file_location: {
-                                     s3_file_location: {
-                                       bucket: ::String?,
-                                       key: ::String?
-                                     }?,
-                                     efs_file_location: {
-                                       file_system_id: ::String?,
-                                       path: ::String?
-                                     }?
-                                   }?,
-                                   overwrite_existing: ("TRUE" | "FALSE")?,
-                                   source_file_location: ::String?
-                                 }?,
-                                 custom_step_details: {
-                                   name: ::String?,
-                                   target: ::String?,
-                                   timeout_seconds: ::Integer?,
-                                   source_file_location: ::String?
-                                 }?,
-                                 delete_step_details: {
-                                   name: ::String?,
-                                   source_file_location: ::String?
-                                 }?,
-                                 tag_step_details: {
-                                   name: ::String?,
-                                   tags: Array[
-                                     {
-                                       key: ::String,
-                                       value: ::String
-                                     },
-                                   ]?,
-                                   source_file_location: ::String?
-                                 }?,
-                                 decrypt_step_details: {
-                                   name: ::String?,
-                                   type: ("PGP"),
-                                   source_file_location: ::String?,
-                                   overwrite_existing: ("TRUE" | "FALSE")?,
-                                   destination_file_location: {
-                                     s3_file_location: {
-                                       bucket: ::String?,
-                                       key: ::String?
-                                     }?,
-                                     efs_file_location: {
-                                       file_system_id: ::String?,
-                                       path: ::String?
-                                     }?
-                                   }
-                                 }?
-                               },
+                               Params::workflow_step
                              ],
                              ?on_exception_steps: Array[
-                               {
-                                 type: ("COPY" | "CUSTOM" | "TAG" | "DELETE" | "DECRYPT")?,
-                                 copy_step_details: {
-                                   name: ::String?,
-                                   destination_file_location: {
-                                     s3_file_location: {
-                                       bucket: ::String?,
-                                       key: ::String?
-                                     }?,
-                                     efs_file_location: {
-                                       file_system_id: ::String?,
-                                       path: ::String?
-                                     }?
-                                   }?,
-                                   overwrite_existing: ("TRUE" | "FALSE")?,
-                                   source_file_location: ::String?
-                                 }?,
-                                 custom_step_details: {
-                                   name: ::String?,
-                                   target: ::String?,
-                                   timeout_seconds: ::Integer?,
-                                   source_file_location: ::String?
-                                 }?,
-                                 delete_step_details: {
-                                   name: ::String?,
-                                   source_file_location: ::String?
-                                 }?,
-                                 tag_step_details: {
-                                   name: ::String?,
-                                   tags: Array[
-                                     {
-                                       key: ::String,
-                                       value: ::String
-                                     },
-                                   ]?,
-                                   source_file_location: ::String?
-                                 }?,
-                                 decrypt_step_details: {
-                                   name: ::String?,
-                                   type: ("PGP"),
-                                   source_file_location: ::String?,
-                                   overwrite_existing: ("TRUE" | "FALSE")?,
-                                   destination_file_location: {
-                                     s3_file_location: {
-                                       bucket: ::String?,
-                                       key: ::String?
-                                     }?,
-                                     efs_file_location: {
-                                       file_system_id: ::String?,
-                                       path: ::String?
-                                     }?
-                                   }
-                                 }?
-                               },
+                               Params::workflow_step
                              ],
                              ?tags: Array[
                                {
                                  key: ::String,
                                  value: ::String
-                               },
+                               }
                              ]
                            ) -> _CreateWorkflowResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateWorkflowResponseSuccess
@@ -674,7 +563,7 @@ module Aws
                                   {
                                     key: ::String,
                                     value: ::String
-                                  },
+                                  }
                                 ]
                               ) -> _ImportCertificateResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ImportCertificateResponseSuccess
@@ -693,7 +582,7 @@ module Aws
                                {
                                  key: ::String,
                                  value: ::String
-                               },
+                               }
                              ]
                            ) -> _ImportHostKeyResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ImportHostKeyResponseSuccess
@@ -930,9 +819,38 @@ module Aws
                                  ?send_file_paths: Array[::String],
                                  ?retrieve_file_paths: Array[::String],
                                  ?local_directory_path: ::String,
-                                 ?remote_directory_path: ::String
+                                 ?remote_directory_path: ::String,
+                                 ?custom_http_headers: Array[
+                                   {
+                                     key: ::String?,
+                                     value: ::String?
+                                   }
+                                 ]
                                ) -> _StartFileTransferResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartFileTransferResponseSuccess
+
+      interface _StartRemoteDeleteResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StartRemoteDeleteResponse]
+        def delete_id: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Transfer/Client.html#start_remote_delete-instance_method
+      def start_remote_delete: (
+                                 connector_id: ::String,
+                                 delete_path: ::String
+                               ) -> _StartRemoteDeleteResponseSuccess
+                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartRemoteDeleteResponseSuccess
+
+      interface _StartRemoteMoveResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StartRemoteMoveResponse]
+        def move_id: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Transfer/Client.html#start_remote_move-instance_method
+      def start_remote_move: (
+                               connector_id: ::String,
+                               source_path: ::String,
+                               target_path: ::String
+                             ) -> _StartRemoteMoveResponseSuccess
+                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartRemoteMoveResponseSuccess
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Transfer/Client.html#start_server-instance_method
       def start_server: (
@@ -953,7 +871,7 @@ module Aws
                             {
                               key: ::String,
                               value: ::String
-                            },
+                            }
                           ]
                         ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
@@ -963,6 +881,7 @@ module Aws
         def connector_id: () -> ::String
         def status: () -> ::String
         def status_message: () -> ::String
+        def sftp_connection_details: () -> Types::SftpConnectorConnectionDetails
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Transfer/Client.html#test_connection-instance_method
       def test_connection: (
@@ -1008,7 +927,7 @@ module Aws
                                entry: ::String,
                                target: ::String,
                                type: ("FILE" | "DIRECTORY")?
-                             },
+                             }
                            ],
                            ?policy: ::String,
                            ?posix_profile: {
@@ -1069,25 +988,22 @@ module Aws
       def update_connector: (
                               connector_id: ::String,
                               ?url: ::String,
-                              ?as_2_config: {
-                                local_profile_id: ::String?,
-                                partner_profile_id: ::String?,
-                                message_subject: ::String?,
-                                compression: ("ZLIB" | "DISABLED")?,
-                                encryption_algorithm: ("AES128_CBC" | "AES192_CBC" | "AES256_CBC" | "DES_EDE3_CBC" | "NONE")?,
-                                signing_algorithm: ("SHA256" | "SHA384" | "SHA512" | "SHA1" | "NONE")?,
-                                mdn_signing_algorithm: ("SHA256" | "SHA384" | "SHA512" | "SHA1" | "NONE" | "DEFAULT")?,
-                                mdn_response: ("SYNC" | "NONE")?,
-                                basic_auth_secret_id: ::String?,
-                                preserve_content_type: ("ENABLED" | "DISABLED")?
-                              },
+                              ?as_2_config: Params::as_2_connector_config,
                               ?access_role: ::String,
                               ?logging_role: ::String,
                               ?sftp_config: {
                                 user_secret_id: ::String?,
-                                trusted_host_keys: Array[::String]?
+                                trusted_host_keys: Array[::String]?,
+                                max_concurrent_connections: ::Integer?
                               },
-                              ?security_policy_name: ::String
+                              ?security_policy_name: ::String,
+                              ?egress_config: {
+                                vpc_lattice: {
+                                  resource_configuration_arn: ::String?,
+                                  port_number: ::Integer?
+                                }?
+                              },
+                              ?ip_address_type: ("IPV4" | "DUALSTACK")
                             ) -> _UpdateConnectorResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateConnectorResponseSuccess
 
@@ -1150,24 +1066,13 @@ module Aws
                            ?protocols: Array[("SFTP" | "FTP" | "FTPS" | "AS2")],
                            ?security_policy_name: ::String,
                            server_id: ::String,
-                           ?workflow_details: {
-                             on_upload: Array[
-                               {
-                                 workflow_id: ::String,
-                                 execution_role: ::String
-                               },
-                             ]?,
-                             on_partial_upload: Array[
-                               {
-                                 workflow_id: ::String,
-                                 execution_role: ::String
-                               },
-                             ]?
-                           },
+                           ?workflow_details: Params::workflow_details,
                            ?structured_log_destinations: Array[::String],
                            ?s3_storage_options: {
                              directory_listing_optimization: ("ENABLED" | "DISABLED")?
-                           }
+                           },
+                           ?ip_address_type: ("IPV4" | "DUALSTACK"),
+                           ?identity_provider_type: ("SERVICE_MANAGED" | "API_GATEWAY" | "AWS_DIRECTORY_SERVICE" | "AWS_LAMBDA")
                          ) -> _UpdateServerResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateServerResponseSuccess
 
@@ -1185,7 +1090,7 @@ module Aws
                              entry: ::String,
                              target: ::String,
                              type: ("FILE" | "DIRECTORY")?
-                           },
+                           }
                          ],
                          ?policy: ::String,
                          ?posix_profile: {
@@ -1214,6 +1119,12 @@ module Aws
                             ?access_endpoint: ::String,
                             ?web_app_units: {
                               provisioned: ::Integer?
+                            },
+                            ?endpoint_details: {
+                              vpc: {
+                                subnet_ids: Array[::String]?,
+                                ip_address_type: ("IPV4" | "DUALSTACK")?
+                              }?
                             }
                           ) -> _UpdateWebAppResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateWebAppResponseSuccess

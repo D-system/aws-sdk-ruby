@@ -13,48 +13,54 @@ module Aws::Kinesis
   # @!attribute region
   #   The AWS region used to dispatch the request.
   #
-  #   @return [String]
+  #   @return [string]
   #
   # @!attribute use_dual_stack
   #   When true, use the dual-stack endpoint. If the configured endpoint does not support dual-stack, dispatching the request MAY return an error.
   #
-  #   @return [Boolean]
+  #   @return [boolean]
   #
   # @!attribute use_fips
   #   When true, send this request to the FIPS-compliant regional endpoint. If the configured endpoint does not have a FIPS compliant endpoint, dispatching the request will return an error.
   #
-  #   @return [Boolean]
+  #   @return [boolean]
   #
   # @!attribute endpoint
   #   Override the endpoint used to send this request
   #
-  #   @return [String]
+  #   @return [string]
+  #
+  # @!attribute stream_id
+  #   The unique identifier of the Kinesis stream
+  #
+  #   @return [string]
   #
   # @!attribute stream_arn
   #   The ARN of the Kinesis stream
   #
-  #   @return [String]
+  #   @return [string]
   #
   # @!attribute operation_type
   #   Internal parameter to distinguish between Control/Data plane API and accordingly generate control/data plane endpoint
   #
-  #   @return [String]
+  #   @return [string]
   #
   # @!attribute consumer_arn
   #   The ARN of the Kinesis consumer
   #
-  #   @return [String]
+  #   @return [string]
   #
   # @!attribute resource_arn
   #   The ARN of the Kinesis resource
   #
-  #   @return [String]
+  #   @return [string]
   #
   EndpointParameters = Struct.new(
     :region,
     :use_dual_stack,
     :use_fips,
     :endpoint,
+    :stream_id,
     :stream_arn,
     :operation_type,
     :consumer_arn,
@@ -69,6 +75,7 @@ module Aws::Kinesis
         'UseDualStack' => :use_dual_stack,
         'UseFIPS' => :use_fips,
         'Endpoint' => :endpoint,
+        'StreamId' => :stream_id,
         'StreamARN' => :stream_arn,
         'OperationType' => :operation_type,
         'ConsumerARN' => :consumer_arn,
@@ -83,6 +90,7 @@ module Aws::Kinesis
       self[:use_fips] = options[:use_fips]
       self[:use_fips] = false if self[:use_fips].nil?
       self[:endpoint] = options[:endpoint]
+      self[:stream_id] = options[:stream_id]
       self[:stream_arn] = options[:stream_arn]
       self[:operation_type] = options[:operation_type]
       self[:consumer_arn] = options[:consumer_arn]

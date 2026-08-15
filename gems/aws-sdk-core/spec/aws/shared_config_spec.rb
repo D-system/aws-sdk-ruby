@@ -157,6 +157,17 @@ module Aws
       end
     end
 
+    context 'auth_scheme_preference selection' do
+      it 'can resolve auth_scheme_preference from config file' do
+        config = SharedConfig.new(
+          config_path: mock_config_file,
+          config_enabled: true,
+          profile_name: 'auth_scheme_preference'
+        )
+        expect(config.auth_scheme_preference).to eq('httpBearerAuth,sigv4')
+      end
+    end
+
     context 'ca_bundle selection' do
       it 'can resolve ca_bundle from config file' do
         config = SharedConfig.new(
@@ -255,6 +266,17 @@ module Aws
           profile_name: 's3_do_not_use_express_zonal_auth'
         )
         expect(config.s3_disable_express_session_auth).to eq('false')
+      end
+    end
+
+    context 'disable_host_prefix_injection selection' do
+      it 'can resolve disable_host_prefix_injection from config file' do
+        config = SharedConfig.new(
+          config_path: mock_config_file,
+          config_enabled: true,
+          profile_name: 'disable_host_prefix_injection'
+        )
+        expect(config.disable_host_prefix_injection).to eq('true')
       end
     end
 

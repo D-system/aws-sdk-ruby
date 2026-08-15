@@ -95,8 +95,8 @@ module Aws::IoTFleetWise
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::IoTFleetWise
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::IoTFleetWise
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::IoTFleetWise
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::IoTFleetWise
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::IoTFleetWise
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::IoTFleetWise
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::IoTFleetWise
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -630,6 +634,21 @@ module Aws::IoTFleetWise
     #           },
     #         ],
     #         state_templates_to_remove: ["ResourceIdentifier"],
+    #         state_templates_to_update: [
+    #           {
+    #             identifier: "ResourceIdentifier", # required
+    #             state_template_update_strategy: { # required
+    #               periodic: {
+    #                 state_template_update_rate: { # required
+    #                   unit: "MILLISECOND", # required, accepts MILLISECOND, SECOND, MINUTE, HOUR
+    #                   value: 1, # required
+    #                 },
+    #               },
+    #               on_change: {
+    #               },
+    #             },
+    #           },
+    #         ],
     #       },
     #     ],
     #   })
@@ -952,7 +971,7 @@ module Aws::IoTFleetWise
     #   resp = client.create_decoder_manifest({
     #     name: "resourceName", # required
     #     description: "description",
-    #     model_manifest_arn: "arn", # required
+    #     model_manifest_arn: "CreateDecoderManifestRequestModelManifestArnString", # required
     #     signal_decoders: [
     #       {
     #         fully_qualified_name: "FullyQualifiedName", # required
@@ -1207,13 +1226,13 @@ module Aws::IoTFleetWise
     #     nodes: [
     #       {
     #         branch: {
-    #           fully_qualified_name: "string", # required
+    #           fully_qualified_name: "BranchFullyQualifiedNameString", # required
     #           description: "description",
     #           deprecation_message: "message",
     #           comment: "message",
     #         },
     #         sensor: {
-    #           fully_qualified_name: "string", # required
+    #           fully_qualified_name: "SensorFullyQualifiedNameString", # required
     #           data_type: "INT8", # required, accepts INT8, UINT8, INT16, UINT16, INT32, UINT32, INT64, UINT64, BOOLEAN, FLOAT, DOUBLE, STRING, UNIX_TIMESTAMP, INT8_ARRAY, UINT8_ARRAY, INT16_ARRAY, UINT16_ARRAY, INT32_ARRAY, UINT32_ARRAY, INT64_ARRAY, UINT64_ARRAY, BOOLEAN_ARRAY, FLOAT_ARRAY, DOUBLE_ARRAY, STRING_ARRAY, UNIX_TIMESTAMP_ARRAY, UNKNOWN, STRUCT, STRUCT_ARRAY
     #           description: "description",
     #           unit: "string",
@@ -1225,7 +1244,7 @@ module Aws::IoTFleetWise
     #           struct_fully_qualified_name: "NodePath",
     #         },
     #         actuator: {
-    #           fully_qualified_name: "string", # required
+    #           fully_qualified_name: "ActuatorFullyQualifiedNameString", # required
     #           data_type: "INT8", # required, accepts INT8, UINT8, INT16, UINT16, INT32, UINT32, INT64, UINT64, BOOLEAN, FLOAT, DOUBLE, STRING, UNIX_TIMESTAMP, INT8_ARRAY, UINT8_ARRAY, INT16_ARRAY, UINT16_ARRAY, INT32_ARRAY, UINT32_ARRAY, INT64_ARRAY, UINT64_ARRAY, BOOLEAN_ARRAY, FLOAT_ARRAY, DOUBLE_ARRAY, STRING_ARRAY, UNIX_TIMESTAMP_ARRAY, UNKNOWN, STRUCT, STRUCT_ARRAY
     #           description: "description",
     #           unit: "string",
@@ -1238,7 +1257,7 @@ module Aws::IoTFleetWise
     #           struct_fully_qualified_name: "NodePath",
     #         },
     #         attribute: {
-    #           fully_qualified_name: "string", # required
+    #           fully_qualified_name: "AttributeFullyQualifiedNameString", # required
     #           data_type: "INT8", # required, accepts INT8, UINT8, INT16, UINT16, INT32, UINT32, INT64, UINT64, BOOLEAN, FLOAT, DOUBLE, STRING, UNIX_TIMESTAMP, INT8_ARRAY, UINT8_ARRAY, INT16_ARRAY, UINT16_ARRAY, INT32_ARRAY, UINT32_ARRAY, INT64_ARRAY, UINT64_ARRAY, BOOLEAN_ARRAY, FLOAT_ARRAY, DOUBLE_ARRAY, STRING_ARRAY, UNIX_TIMESTAMP_ARRAY, UNKNOWN, STRUCT, STRUCT_ARRAY
     #           description: "description",
     #           unit: "string",
@@ -1251,13 +1270,13 @@ module Aws::IoTFleetWise
     #           comment: "message",
     #         },
     #         struct: {
-    #           fully_qualified_name: "string", # required
+    #           fully_qualified_name: "CustomStructFullyQualifiedNameString", # required
     #           description: "description",
     #           deprecation_message: "message",
     #           comment: "message",
     #         },
     #         property: {
-    #           fully_qualified_name: "string", # required
+    #           fully_qualified_name: "CustomPropertyFullyQualifiedNameString", # required
     #           data_type: "INT8", # required, accepts INT8, UINT8, INT16, UINT16, INT32, UINT32, INT64, UINT64, BOOLEAN, FLOAT, DOUBLE, STRING, UNIX_TIMESTAMP, INT8_ARRAY, UINT8_ARRAY, INT16_ARRAY, UINT16_ARRAY, INT32_ARRAY, UINT32_ARRAY, INT64_ARRAY, UINT64_ARRAY, BOOLEAN_ARRAY, FLOAT_ARRAY, DOUBLE_ARRAY, STRING_ARRAY, UNIX_TIMESTAMP_ARRAY, UNKNOWN, STRUCT, STRUCT_ARRAY
     #           data_encoding: "BINARY", # accepts BINARY, TYPED
     #           description: "description",
@@ -2210,7 +2229,7 @@ module Aws::IoTFleetWise
     #   resp.campaigns #=> Array
     #   resp.campaigns[0].campaign_name #=> String
     #   resp.campaigns[0].vehicle_name #=> String
-    #   resp.campaigns[0].status #=> String, one of "CREATED", "READY", "HEALTHY", "SUSPENDED", "DELETING"
+    #   resp.campaigns[0].status #=> String, one of "CREATED", "READY", "HEALTHY", "SUSPENDED", "DELETING", "READY_FOR_CHECKIN"
     #   resp.next_token #=> String
     #
     # @overload get_vehicle_status(params = {})
@@ -3891,13 +3910,13 @@ module Aws::IoTFleetWise
     #     nodes_to_add: [
     #       {
     #         branch: {
-    #           fully_qualified_name: "string", # required
+    #           fully_qualified_name: "BranchFullyQualifiedNameString", # required
     #           description: "description",
     #           deprecation_message: "message",
     #           comment: "message",
     #         },
     #         sensor: {
-    #           fully_qualified_name: "string", # required
+    #           fully_qualified_name: "SensorFullyQualifiedNameString", # required
     #           data_type: "INT8", # required, accepts INT8, UINT8, INT16, UINT16, INT32, UINT32, INT64, UINT64, BOOLEAN, FLOAT, DOUBLE, STRING, UNIX_TIMESTAMP, INT8_ARRAY, UINT8_ARRAY, INT16_ARRAY, UINT16_ARRAY, INT32_ARRAY, UINT32_ARRAY, INT64_ARRAY, UINT64_ARRAY, BOOLEAN_ARRAY, FLOAT_ARRAY, DOUBLE_ARRAY, STRING_ARRAY, UNIX_TIMESTAMP_ARRAY, UNKNOWN, STRUCT, STRUCT_ARRAY
     #           description: "description",
     #           unit: "string",
@@ -3909,7 +3928,7 @@ module Aws::IoTFleetWise
     #           struct_fully_qualified_name: "NodePath",
     #         },
     #         actuator: {
-    #           fully_qualified_name: "string", # required
+    #           fully_qualified_name: "ActuatorFullyQualifiedNameString", # required
     #           data_type: "INT8", # required, accepts INT8, UINT8, INT16, UINT16, INT32, UINT32, INT64, UINT64, BOOLEAN, FLOAT, DOUBLE, STRING, UNIX_TIMESTAMP, INT8_ARRAY, UINT8_ARRAY, INT16_ARRAY, UINT16_ARRAY, INT32_ARRAY, UINT32_ARRAY, INT64_ARRAY, UINT64_ARRAY, BOOLEAN_ARRAY, FLOAT_ARRAY, DOUBLE_ARRAY, STRING_ARRAY, UNIX_TIMESTAMP_ARRAY, UNKNOWN, STRUCT, STRUCT_ARRAY
     #           description: "description",
     #           unit: "string",
@@ -3922,7 +3941,7 @@ module Aws::IoTFleetWise
     #           struct_fully_qualified_name: "NodePath",
     #         },
     #         attribute: {
-    #           fully_qualified_name: "string", # required
+    #           fully_qualified_name: "AttributeFullyQualifiedNameString", # required
     #           data_type: "INT8", # required, accepts INT8, UINT8, INT16, UINT16, INT32, UINT32, INT64, UINT64, BOOLEAN, FLOAT, DOUBLE, STRING, UNIX_TIMESTAMP, INT8_ARRAY, UINT8_ARRAY, INT16_ARRAY, UINT16_ARRAY, INT32_ARRAY, UINT32_ARRAY, INT64_ARRAY, UINT64_ARRAY, BOOLEAN_ARRAY, FLOAT_ARRAY, DOUBLE_ARRAY, STRING_ARRAY, UNIX_TIMESTAMP_ARRAY, UNKNOWN, STRUCT, STRUCT_ARRAY
     #           description: "description",
     #           unit: "string",
@@ -3935,13 +3954,13 @@ module Aws::IoTFleetWise
     #           comment: "message",
     #         },
     #         struct: {
-    #           fully_qualified_name: "string", # required
+    #           fully_qualified_name: "CustomStructFullyQualifiedNameString", # required
     #           description: "description",
     #           deprecation_message: "message",
     #           comment: "message",
     #         },
     #         property: {
-    #           fully_qualified_name: "string", # required
+    #           fully_qualified_name: "CustomPropertyFullyQualifiedNameString", # required
     #           data_type: "INT8", # required, accepts INT8, UINT8, INT16, UINT16, INT32, UINT32, INT64, UINT64, BOOLEAN, FLOAT, DOUBLE, STRING, UNIX_TIMESTAMP, INT8_ARRAY, UINT8_ARRAY, INT16_ARRAY, UINT16_ARRAY, INT32_ARRAY, UINT32_ARRAY, INT64_ARRAY, UINT64_ARRAY, BOOLEAN_ARRAY, FLOAT_ARRAY, DOUBLE_ARRAY, STRING_ARRAY, UNIX_TIMESTAMP_ARRAY, UNKNOWN, STRUCT, STRUCT_ARRAY
     #           data_encoding: "BINARY", # accepts BINARY, TYPED
     #           description: "description",
@@ -3954,13 +3973,13 @@ module Aws::IoTFleetWise
     #     nodes_to_update: [
     #       {
     #         branch: {
-    #           fully_qualified_name: "string", # required
+    #           fully_qualified_name: "BranchFullyQualifiedNameString", # required
     #           description: "description",
     #           deprecation_message: "message",
     #           comment: "message",
     #         },
     #         sensor: {
-    #           fully_qualified_name: "string", # required
+    #           fully_qualified_name: "SensorFullyQualifiedNameString", # required
     #           data_type: "INT8", # required, accepts INT8, UINT8, INT16, UINT16, INT32, UINT32, INT64, UINT64, BOOLEAN, FLOAT, DOUBLE, STRING, UNIX_TIMESTAMP, INT8_ARRAY, UINT8_ARRAY, INT16_ARRAY, UINT16_ARRAY, INT32_ARRAY, UINT32_ARRAY, INT64_ARRAY, UINT64_ARRAY, BOOLEAN_ARRAY, FLOAT_ARRAY, DOUBLE_ARRAY, STRING_ARRAY, UNIX_TIMESTAMP_ARRAY, UNKNOWN, STRUCT, STRUCT_ARRAY
     #           description: "description",
     #           unit: "string",
@@ -3972,7 +3991,7 @@ module Aws::IoTFleetWise
     #           struct_fully_qualified_name: "NodePath",
     #         },
     #         actuator: {
-    #           fully_qualified_name: "string", # required
+    #           fully_qualified_name: "ActuatorFullyQualifiedNameString", # required
     #           data_type: "INT8", # required, accepts INT8, UINT8, INT16, UINT16, INT32, UINT32, INT64, UINT64, BOOLEAN, FLOAT, DOUBLE, STRING, UNIX_TIMESTAMP, INT8_ARRAY, UINT8_ARRAY, INT16_ARRAY, UINT16_ARRAY, INT32_ARRAY, UINT32_ARRAY, INT64_ARRAY, UINT64_ARRAY, BOOLEAN_ARRAY, FLOAT_ARRAY, DOUBLE_ARRAY, STRING_ARRAY, UNIX_TIMESTAMP_ARRAY, UNKNOWN, STRUCT, STRUCT_ARRAY
     #           description: "description",
     #           unit: "string",
@@ -3985,7 +4004,7 @@ module Aws::IoTFleetWise
     #           struct_fully_qualified_name: "NodePath",
     #         },
     #         attribute: {
-    #           fully_qualified_name: "string", # required
+    #           fully_qualified_name: "AttributeFullyQualifiedNameString", # required
     #           data_type: "INT8", # required, accepts INT8, UINT8, INT16, UINT16, INT32, UINT32, INT64, UINT64, BOOLEAN, FLOAT, DOUBLE, STRING, UNIX_TIMESTAMP, INT8_ARRAY, UINT8_ARRAY, INT16_ARRAY, UINT16_ARRAY, INT32_ARRAY, UINT32_ARRAY, INT64_ARRAY, UINT64_ARRAY, BOOLEAN_ARRAY, FLOAT_ARRAY, DOUBLE_ARRAY, STRING_ARRAY, UNIX_TIMESTAMP_ARRAY, UNKNOWN, STRUCT, STRUCT_ARRAY
     #           description: "description",
     #           unit: "string",
@@ -3998,13 +4017,13 @@ module Aws::IoTFleetWise
     #           comment: "message",
     #         },
     #         struct: {
-    #           fully_qualified_name: "string", # required
+    #           fully_qualified_name: "CustomStructFullyQualifiedNameString", # required
     #           description: "description",
     #           deprecation_message: "message",
     #           comment: "message",
     #         },
     #         property: {
-    #           fully_qualified_name: "string", # required
+    #           fully_qualified_name: "CustomPropertyFullyQualifiedNameString", # required
     #           data_type: "INT8", # required, accepts INT8, UINT8, INT16, UINT16, INT32, UINT32, INT64, UINT64, BOOLEAN, FLOAT, DOUBLE, STRING, UNIX_TIMESTAMP, INT8_ARRAY, UINT8_ARRAY, INT16_ARRAY, UINT16_ARRAY, INT32_ARRAY, UINT32_ARRAY, INT64_ARRAY, UINT64_ARRAY, BOOLEAN_ARRAY, FLOAT_ARRAY, DOUBLE_ARRAY, STRING_ARRAY, UNIX_TIMESTAMP_ARRAY, UNKNOWN, STRUCT, STRUCT_ARRAY
     #           data_encoding: "BINARY", # accepts BINARY, TYPED
     #           description: "description",
@@ -4113,6 +4132,15 @@ module Aws::IoTFleetWise
 
     # Updates a vehicle.
     #
+    # Access to certain Amazon Web Services IoT FleetWise features is
+    # currently gated. For more information, see [Amazon Web Services Region
+    # and feature availability][1] in the *Amazon Web Services IoT FleetWise
+    # Developer Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/iot-fleetwise/latest/developerguide/fleetwise-regions.html
+    #
     # @option params [required, String] :vehicle_name
     #   The unique ID of the vehicle to update.
     #
@@ -4141,6 +4169,10 @@ module Aws::IoTFleetWise
     #
     # @option params [Array<String>] :state_templates_to_remove
     #   Remove state templates from the vehicle.
+    #
+    # @option params [Array<Types::StateTemplateAssociation>] :state_templates_to_update
+    #   Change the `stateTemplateUpdateStrategy` of state templates already
+    #   associated with the vehicle.
     #
     # @return [Types::UpdateVehicleResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -4173,6 +4205,21 @@ module Aws::IoTFleetWise
     #       },
     #     ],
     #     state_templates_to_remove: ["ResourceIdentifier"],
+    #     state_templates_to_update: [
+    #       {
+    #         identifier: "ResourceIdentifier", # required
+    #         state_template_update_strategy: { # required
+    #           periodic: {
+    #             state_template_update_rate: { # required
+    #               unit: "MILLISECOND", # required, accepts MILLISECOND, SECOND, MINUTE, HOUR
+    #               value: 1, # required
+    #             },
+    #           },
+    #           on_change: {
+    #           },
+    #         },
+    #       },
+    #     ],
     #   })
     #
     # @example Response structure
@@ -4205,7 +4252,7 @@ module Aws::IoTFleetWise
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-iotfleetwise'
-      context[:gem_version] = '1.43.0'
+      context[:gem_version] = '1.66.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

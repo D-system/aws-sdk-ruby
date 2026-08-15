@@ -46,6 +46,10 @@ module Aws::SecretsManager
     ExcludeNumbersType = Shapes::BooleanShape.new(name: 'ExcludeNumbersType')
     ExcludePunctuationType = Shapes::BooleanShape.new(name: 'ExcludePunctuationType')
     ExcludeUppercaseType = Shapes::BooleanShape.new(name: 'ExcludeUppercaseType')
+    ExternalSecretRotationMetadataItem = Shapes::StructureShape.new(name: 'ExternalSecretRotationMetadataItem')
+    ExternalSecretRotationMetadataItemKeyType = Shapes::StringShape.new(name: 'ExternalSecretRotationMetadataItemKeyType')
+    ExternalSecretRotationMetadataItemValueType = Shapes::StringShape.new(name: 'ExternalSecretRotationMetadataItemValueType')
+    ExternalSecretRotationMetadataType = Shapes::ListShape.new(name: 'ExternalSecretRotationMetadataType')
     Filter = Shapes::StructureShape.new(name: 'Filter')
     FilterNameStringType = Shapes::StringShape.new(name: 'FilterNameStringType')
     FilterValueStringType = Shapes::StringShape.new(name: 'FilterValueStringType')
@@ -75,6 +79,7 @@ module Aws::SecretsManager
     MalformedPolicyDocumentException = Shapes::StructureShape.new(name: 'MalformedPolicyDocumentException')
     MaxResultsBatchType = Shapes::IntegerShape.new(name: 'MaxResultsBatchType')
     MaxResultsType = Shapes::IntegerShape.new(name: 'MaxResultsType')
+    MedeaTypeType = Shapes::StringShape.new(name: 'MedeaTypeType')
     NameType = Shapes::StringShape.new(name: 'NameType')
     NextRotationDateType = Shapes::TimestampShape.new(name: 'NextRotationDateType')
     NextTokenType = Shapes::StringShape.new(name: 'NextTokenType')
@@ -103,6 +108,7 @@ module Aws::SecretsManager
     ResourceNotFoundException = Shapes::StructureShape.new(name: 'ResourceNotFoundException')
     RestoreSecretRequest = Shapes::StructureShape.new(name: 'RestoreSecretRequest')
     RestoreSecretResponse = Shapes::StructureShape.new(name: 'RestoreSecretResponse')
+    RoleARNType = Shapes::StringShape.new(name: 'RoleARNType')
     RotateSecretRequest = Shapes::StructureShape.new(name: 'RotateSecretRequest')
     RotateSecretResponse = Shapes::StructureShape.new(name: 'RotateSecretResponse')
     RotationEnabledType = Shapes::BooleanShape.new(name: 'RotationEnabledType')
@@ -126,6 +132,7 @@ module Aws::SecretsManager
     SecretVersionsListEntry = Shapes::StructureShape.new(name: 'SecretVersionsListEntry')
     SecretVersionsListType = Shapes::ListShape.new(name: 'SecretVersionsListType')
     SecretVersionsToStagesMapType = Shapes::MapShape.new(name: 'SecretVersionsToStagesMapType')
+    SortByType = Shapes::StringShape.new(name: 'SortByType')
     SortOrderType = Shapes::StringShape.new(name: 'SortOrderType')
     StatusMessageType = Shapes::StringShape.new(name: 'StatusMessageType')
     StatusType = Shapes::StringShape.new(name: 'StatusType')
@@ -159,7 +166,7 @@ module Aws::SecretsManager
 
     BatchGetSecretValueRequest.add_member(:secret_id_list, Shapes::ShapeRef.new(shape: SecretIdListType, location_name: "SecretIdList"))
     BatchGetSecretValueRequest.add_member(:filters, Shapes::ShapeRef.new(shape: FiltersListType, location_name: "Filters"))
-    BatchGetSecretValueRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResultsBatchType, location_name: "MaxResults", metadata: {"box"=>true}))
+    BatchGetSecretValueRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResultsBatchType, location_name: "MaxResults", metadata: {"box" => true}))
     BatchGetSecretValueRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextTokenType, location_name: "NextToken"))
     BatchGetSecretValueRequest.struct_class = Types::BatchGetSecretValueRequest
 
@@ -177,7 +184,7 @@ module Aws::SecretsManager
     CancelRotateSecretResponse.struct_class = Types::CancelRotateSecretResponse
 
     CreateSecretRequest.add_member(:name, Shapes::ShapeRef.new(shape: NameType, required: true, location_name: "Name"))
-    CreateSecretRequest.add_member(:client_request_token, Shapes::ShapeRef.new(shape: ClientRequestTokenType, location_name: "ClientRequestToken", metadata: {"idempotencyToken"=>true}))
+    CreateSecretRequest.add_member(:client_request_token, Shapes::ShapeRef.new(shape: ClientRequestTokenType, location_name: "ClientRequestToken", metadata: {"idempotencyToken" => true}))
     CreateSecretRequest.add_member(:description, Shapes::ShapeRef.new(shape: DescriptionType, location_name: "Description"))
     CreateSecretRequest.add_member(:kms_key_id, Shapes::ShapeRef.new(shape: KmsKeyIdType, location_name: "KmsKeyId"))
     CreateSecretRequest.add_member(:secret_binary, Shapes::ShapeRef.new(shape: SecretBinaryType, location_name: "SecretBinary"))
@@ -185,6 +192,7 @@ module Aws::SecretsManager
     CreateSecretRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagListType, location_name: "Tags"))
     CreateSecretRequest.add_member(:add_replica_regions, Shapes::ShapeRef.new(shape: AddReplicaRegionListType, location_name: "AddReplicaRegions"))
     CreateSecretRequest.add_member(:force_overwrite_replica_secret, Shapes::ShapeRef.new(shape: BooleanType, location_name: "ForceOverwriteReplicaSecret"))
+    CreateSecretRequest.add_member(:type, Shapes::ShapeRef.new(shape: MedeaTypeType, location_name: "Type"))
     CreateSecretRequest.struct_class = Types::CreateSecretRequest
 
     CreateSecretResponse.add_member(:arn, Shapes::ShapeRef.new(shape: SecretARNType, location_name: "ARN"))
@@ -204,13 +212,13 @@ module Aws::SecretsManager
     DeleteResourcePolicyResponse.struct_class = Types::DeleteResourcePolicyResponse
 
     DeleteSecretRequest.add_member(:secret_id, Shapes::ShapeRef.new(shape: SecretIdType, required: true, location_name: "SecretId"))
-    DeleteSecretRequest.add_member(:recovery_window_in_days, Shapes::ShapeRef.new(shape: RecoveryWindowInDaysType, location_name: "RecoveryWindowInDays", metadata: {"box"=>true}))
-    DeleteSecretRequest.add_member(:force_delete_without_recovery, Shapes::ShapeRef.new(shape: BooleanType, location_name: "ForceDeleteWithoutRecovery", metadata: {"box"=>true}))
+    DeleteSecretRequest.add_member(:recovery_window_in_days, Shapes::ShapeRef.new(shape: RecoveryWindowInDaysType, location_name: "RecoveryWindowInDays", metadata: {"box" => true}))
+    DeleteSecretRequest.add_member(:force_delete_without_recovery, Shapes::ShapeRef.new(shape: BooleanType, location_name: "ForceDeleteWithoutRecovery", metadata: {"box" => true}))
     DeleteSecretRequest.struct_class = Types::DeleteSecretRequest
 
     DeleteSecretResponse.add_member(:arn, Shapes::ShapeRef.new(shape: SecretARNType, location_name: "ARN"))
     DeleteSecretResponse.add_member(:name, Shapes::ShapeRef.new(shape: SecretNameType, location_name: "Name"))
-    DeleteSecretResponse.add_member(:deletion_date, Shapes::ShapeRef.new(shape: DeletionDateType, location_name: "DeletionDate", metadata: {"box"=>true}))
+    DeleteSecretResponse.add_member(:deletion_date, Shapes::ShapeRef.new(shape: DeletionDateType, location_name: "DeletionDate", metadata: {"box" => true}))
     DeleteSecretResponse.struct_class = Types::DeleteSecretResponse
 
     DescribeSecretRequest.add_member(:secret_id, Shapes::ShapeRef.new(shape: SecretIdType, required: true, location_name: "SecretId"))
@@ -218,26 +226,35 @@ module Aws::SecretsManager
 
     DescribeSecretResponse.add_member(:arn, Shapes::ShapeRef.new(shape: SecretARNType, location_name: "ARN"))
     DescribeSecretResponse.add_member(:name, Shapes::ShapeRef.new(shape: SecretNameType, location_name: "Name"))
+    DescribeSecretResponse.add_member(:type, Shapes::ShapeRef.new(shape: MedeaTypeType, location_name: "Type"))
     DescribeSecretResponse.add_member(:description, Shapes::ShapeRef.new(shape: DescriptionType, location_name: "Description"))
     DescribeSecretResponse.add_member(:kms_key_id, Shapes::ShapeRef.new(shape: KmsKeyIdType, location_name: "KmsKeyId"))
-    DescribeSecretResponse.add_member(:rotation_enabled, Shapes::ShapeRef.new(shape: RotationEnabledType, location_name: "RotationEnabled", metadata: {"box"=>true}))
+    DescribeSecretResponse.add_member(:rotation_enabled, Shapes::ShapeRef.new(shape: RotationEnabledType, location_name: "RotationEnabled", metadata: {"box" => true}))
     DescribeSecretResponse.add_member(:rotation_lambda_arn, Shapes::ShapeRef.new(shape: RotationLambdaARNType, location_name: "RotationLambdaARN"))
     DescribeSecretResponse.add_member(:rotation_rules, Shapes::ShapeRef.new(shape: RotationRulesType, location_name: "RotationRules"))
-    DescribeSecretResponse.add_member(:last_rotated_date, Shapes::ShapeRef.new(shape: LastRotatedDateType, location_name: "LastRotatedDate", metadata: {"box"=>true}))
-    DescribeSecretResponse.add_member(:last_changed_date, Shapes::ShapeRef.new(shape: LastChangedDateType, location_name: "LastChangedDate", metadata: {"box"=>true}))
-    DescribeSecretResponse.add_member(:last_accessed_date, Shapes::ShapeRef.new(shape: LastAccessedDateType, location_name: "LastAccessedDate", metadata: {"box"=>true}))
-    DescribeSecretResponse.add_member(:deleted_date, Shapes::ShapeRef.new(shape: DeletedDateType, location_name: "DeletedDate", metadata: {"box"=>true}))
+    DescribeSecretResponse.add_member(:external_secret_rotation_metadata, Shapes::ShapeRef.new(shape: ExternalSecretRotationMetadataType, location_name: "ExternalSecretRotationMetadata"))
+    DescribeSecretResponse.add_member(:external_secret_rotation_role_arn, Shapes::ShapeRef.new(shape: RoleARNType, location_name: "ExternalSecretRotationRoleArn"))
+    DescribeSecretResponse.add_member(:last_rotated_date, Shapes::ShapeRef.new(shape: LastRotatedDateType, location_name: "LastRotatedDate", metadata: {"box" => true}))
+    DescribeSecretResponse.add_member(:last_changed_date, Shapes::ShapeRef.new(shape: LastChangedDateType, location_name: "LastChangedDate", metadata: {"box" => true}))
+    DescribeSecretResponse.add_member(:last_accessed_date, Shapes::ShapeRef.new(shape: LastAccessedDateType, location_name: "LastAccessedDate", metadata: {"box" => true}))
+    DescribeSecretResponse.add_member(:deleted_date, Shapes::ShapeRef.new(shape: DeletedDateType, location_name: "DeletedDate", metadata: {"box" => true}))
     DescribeSecretResponse.add_member(:next_rotation_date, Shapes::ShapeRef.new(shape: NextRotationDateType, location_name: "NextRotationDate"))
     DescribeSecretResponse.add_member(:tags, Shapes::ShapeRef.new(shape: TagListType, location_name: "Tags"))
     DescribeSecretResponse.add_member(:version_ids_to_stages, Shapes::ShapeRef.new(shape: SecretVersionsToStagesMapType, location_name: "VersionIdsToStages"))
     DescribeSecretResponse.add_member(:owning_service, Shapes::ShapeRef.new(shape: OwningServiceType, location_name: "OwningService"))
-    DescribeSecretResponse.add_member(:created_date, Shapes::ShapeRef.new(shape: TimestampType, location_name: "CreatedDate", metadata: {"box"=>true}))
+    DescribeSecretResponse.add_member(:created_date, Shapes::ShapeRef.new(shape: TimestampType, location_name: "CreatedDate", metadata: {"box" => true}))
     DescribeSecretResponse.add_member(:primary_region, Shapes::ShapeRef.new(shape: RegionType, location_name: "PrimaryRegion"))
     DescribeSecretResponse.add_member(:replication_status, Shapes::ShapeRef.new(shape: ReplicationStatusListType, location_name: "ReplicationStatus"))
     DescribeSecretResponse.struct_class = Types::DescribeSecretResponse
 
     EncryptionFailure.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, location_name: "Message"))
     EncryptionFailure.struct_class = Types::EncryptionFailure
+
+    ExternalSecretRotationMetadataItem.add_member(:key, Shapes::ShapeRef.new(shape: ExternalSecretRotationMetadataItemKeyType, location_name: "Key"))
+    ExternalSecretRotationMetadataItem.add_member(:value, Shapes::ShapeRef.new(shape: ExternalSecretRotationMetadataItemValueType, location_name: "Value"))
+    ExternalSecretRotationMetadataItem.struct_class = Types::ExternalSecretRotationMetadataItem
+
+    ExternalSecretRotationMetadataType.member = Shapes::ShapeRef.new(shape: ExternalSecretRotationMetadataItem)
 
     Filter.add_member(:key, Shapes::ShapeRef.new(shape: FilterNameStringType, location_name: "Key"))
     Filter.add_member(:values, Shapes::ShapeRef.new(shape: FilterValuesStringList, location_name: "Values"))
@@ -247,14 +264,14 @@ module Aws::SecretsManager
 
     FiltersListType.member = Shapes::ShapeRef.new(shape: Filter)
 
-    GetRandomPasswordRequest.add_member(:password_length, Shapes::ShapeRef.new(shape: PasswordLengthType, location_name: "PasswordLength", metadata: {"box"=>true}))
+    GetRandomPasswordRequest.add_member(:password_length, Shapes::ShapeRef.new(shape: PasswordLengthType, location_name: "PasswordLength", metadata: {"box" => true}))
     GetRandomPasswordRequest.add_member(:exclude_characters, Shapes::ShapeRef.new(shape: ExcludeCharactersType, location_name: "ExcludeCharacters"))
-    GetRandomPasswordRequest.add_member(:exclude_numbers, Shapes::ShapeRef.new(shape: ExcludeNumbersType, location_name: "ExcludeNumbers", metadata: {"box"=>true}))
-    GetRandomPasswordRequest.add_member(:exclude_punctuation, Shapes::ShapeRef.new(shape: ExcludePunctuationType, location_name: "ExcludePunctuation", metadata: {"box"=>true}))
-    GetRandomPasswordRequest.add_member(:exclude_uppercase, Shapes::ShapeRef.new(shape: ExcludeUppercaseType, location_name: "ExcludeUppercase", metadata: {"box"=>true}))
-    GetRandomPasswordRequest.add_member(:exclude_lowercase, Shapes::ShapeRef.new(shape: ExcludeLowercaseType, location_name: "ExcludeLowercase", metadata: {"box"=>true}))
-    GetRandomPasswordRequest.add_member(:include_space, Shapes::ShapeRef.new(shape: IncludeSpaceType, location_name: "IncludeSpace", metadata: {"box"=>true}))
-    GetRandomPasswordRequest.add_member(:require_each_included_type, Shapes::ShapeRef.new(shape: RequireEachIncludedTypeType, location_name: "RequireEachIncludedType", metadata: {"box"=>true}))
+    GetRandomPasswordRequest.add_member(:exclude_numbers, Shapes::ShapeRef.new(shape: ExcludeNumbersType, location_name: "ExcludeNumbers", metadata: {"box" => true}))
+    GetRandomPasswordRequest.add_member(:exclude_punctuation, Shapes::ShapeRef.new(shape: ExcludePunctuationType, location_name: "ExcludePunctuation", metadata: {"box" => true}))
+    GetRandomPasswordRequest.add_member(:exclude_uppercase, Shapes::ShapeRef.new(shape: ExcludeUppercaseType, location_name: "ExcludeUppercase", metadata: {"box" => true}))
+    GetRandomPasswordRequest.add_member(:exclude_lowercase, Shapes::ShapeRef.new(shape: ExcludeLowercaseType, location_name: "ExcludeLowercase", metadata: {"box" => true}))
+    GetRandomPasswordRequest.add_member(:include_space, Shapes::ShapeRef.new(shape: IncludeSpaceType, location_name: "IncludeSpace", metadata: {"box" => true}))
+    GetRandomPasswordRequest.add_member(:require_each_included_type, Shapes::ShapeRef.new(shape: RequireEachIncludedTypeType, location_name: "RequireEachIncludedType", metadata: {"box" => true}))
     GetRandomPasswordRequest.struct_class = Types::GetRandomPasswordRequest
 
     GetRandomPasswordResponse.add_member(:random_password, Shapes::ShapeRef.new(shape: RandomPasswordType, location_name: "RandomPassword"))
@@ -279,7 +296,7 @@ module Aws::SecretsManager
     GetSecretValueResponse.add_member(:secret_binary, Shapes::ShapeRef.new(shape: SecretBinaryType, location_name: "SecretBinary"))
     GetSecretValueResponse.add_member(:secret_string, Shapes::ShapeRef.new(shape: SecretStringType, location_name: "SecretString"))
     GetSecretValueResponse.add_member(:version_stages, Shapes::ShapeRef.new(shape: SecretVersionStagesType, location_name: "VersionStages"))
-    GetSecretValueResponse.add_member(:created_date, Shapes::ShapeRef.new(shape: CreatedDateType, location_name: "CreatedDate", metadata: {"box"=>true}))
+    GetSecretValueResponse.add_member(:created_date, Shapes::ShapeRef.new(shape: CreatedDateType, location_name: "CreatedDate", metadata: {"box" => true}))
     GetSecretValueResponse.struct_class = Types::GetSecretValueResponse
 
     InternalServiceError.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, location_name: "Message"))
@@ -300,9 +317,9 @@ module Aws::SecretsManager
     LimitExceededException.struct_class = Types::LimitExceededException
 
     ListSecretVersionIdsRequest.add_member(:secret_id, Shapes::ShapeRef.new(shape: SecretIdType, required: true, location_name: "SecretId"))
-    ListSecretVersionIdsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResultsType, location_name: "MaxResults", metadata: {"box"=>true}))
+    ListSecretVersionIdsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResultsType, location_name: "MaxResults", metadata: {"box" => true}))
     ListSecretVersionIdsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextTokenType, location_name: "NextToken"))
-    ListSecretVersionIdsRequest.add_member(:include_deprecated, Shapes::ShapeRef.new(shape: BooleanType, location_name: "IncludeDeprecated", metadata: {"box"=>true}))
+    ListSecretVersionIdsRequest.add_member(:include_deprecated, Shapes::ShapeRef.new(shape: BooleanType, location_name: "IncludeDeprecated", metadata: {"box" => true}))
     ListSecretVersionIdsRequest.struct_class = Types::ListSecretVersionIdsRequest
 
     ListSecretVersionIdsResponse.add_member(:versions, Shapes::ShapeRef.new(shape: SecretVersionsListType, location_name: "Versions"))
@@ -311,11 +328,12 @@ module Aws::SecretsManager
     ListSecretVersionIdsResponse.add_member(:name, Shapes::ShapeRef.new(shape: SecretNameType, location_name: "Name"))
     ListSecretVersionIdsResponse.struct_class = Types::ListSecretVersionIdsResponse
 
-    ListSecretsRequest.add_member(:include_planned_deletion, Shapes::ShapeRef.new(shape: BooleanType, location_name: "IncludePlannedDeletion", metadata: {"box"=>true}))
-    ListSecretsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResultsType, location_name: "MaxResults", metadata: {"box"=>true}))
+    ListSecretsRequest.add_member(:include_planned_deletion, Shapes::ShapeRef.new(shape: BooleanType, location_name: "IncludePlannedDeletion", metadata: {"box" => true}))
+    ListSecretsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResultsType, location_name: "MaxResults", metadata: {"box" => true}))
     ListSecretsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextTokenType, location_name: "NextToken"))
     ListSecretsRequest.add_member(:filters, Shapes::ShapeRef.new(shape: FiltersListType, location_name: "Filters"))
     ListSecretsRequest.add_member(:sort_order, Shapes::ShapeRef.new(shape: SortOrderType, location_name: "SortOrder"))
+    ListSecretsRequest.add_member(:sort_by, Shapes::ShapeRef.new(shape: SortByType, location_name: "SortBy"))
     ListSecretsRequest.struct_class = Types::ListSecretsRequest
 
     ListSecretsResponse.add_member(:secret_list, Shapes::ShapeRef.new(shape: SecretListType, location_name: "SecretList"))
@@ -333,7 +351,7 @@ module Aws::SecretsManager
 
     PutResourcePolicyRequest.add_member(:secret_id, Shapes::ShapeRef.new(shape: SecretIdType, required: true, location_name: "SecretId"))
     PutResourcePolicyRequest.add_member(:resource_policy, Shapes::ShapeRef.new(shape: NonEmptyResourcePolicyType, required: true, location_name: "ResourcePolicy"))
-    PutResourcePolicyRequest.add_member(:block_public_policy, Shapes::ShapeRef.new(shape: BooleanType, location_name: "BlockPublicPolicy", metadata: {"box"=>true}))
+    PutResourcePolicyRequest.add_member(:block_public_policy, Shapes::ShapeRef.new(shape: BooleanType, location_name: "BlockPublicPolicy", metadata: {"box" => true}))
     PutResourcePolicyRequest.struct_class = Types::PutResourcePolicyRequest
 
     PutResourcePolicyResponse.add_member(:arn, Shapes::ShapeRef.new(shape: SecretARNType, location_name: "ARN"))
@@ -341,7 +359,7 @@ module Aws::SecretsManager
     PutResourcePolicyResponse.struct_class = Types::PutResourcePolicyResponse
 
     PutSecretValueRequest.add_member(:secret_id, Shapes::ShapeRef.new(shape: SecretIdType, required: true, location_name: "SecretId"))
-    PutSecretValueRequest.add_member(:client_request_token, Shapes::ShapeRef.new(shape: ClientRequestTokenType, location_name: "ClientRequestToken", metadata: {"idempotencyToken"=>true}))
+    PutSecretValueRequest.add_member(:client_request_token, Shapes::ShapeRef.new(shape: ClientRequestTokenType, location_name: "ClientRequestToken", metadata: {"idempotencyToken" => true}))
     PutSecretValueRequest.add_member(:secret_binary, Shapes::ShapeRef.new(shape: SecretBinaryType, location_name: "SecretBinary"))
     PutSecretValueRequest.add_member(:secret_string, Shapes::ShapeRef.new(shape: SecretStringType, location_name: "SecretString"))
     PutSecretValueRequest.add_member(:version_stages, Shapes::ShapeRef.new(shape: SecretVersionStagesType, location_name: "VersionStages"))
@@ -400,18 +418,20 @@ module Aws::SecretsManager
     RestoreSecretResponse.struct_class = Types::RestoreSecretResponse
 
     RotateSecretRequest.add_member(:secret_id, Shapes::ShapeRef.new(shape: SecretIdType, required: true, location_name: "SecretId"))
-    RotateSecretRequest.add_member(:client_request_token, Shapes::ShapeRef.new(shape: ClientRequestTokenType, location_name: "ClientRequestToken", metadata: {"idempotencyToken"=>true}))
+    RotateSecretRequest.add_member(:client_request_token, Shapes::ShapeRef.new(shape: ClientRequestTokenType, location_name: "ClientRequestToken", metadata: {"idempotencyToken" => true}))
     RotateSecretRequest.add_member(:rotation_lambda_arn, Shapes::ShapeRef.new(shape: RotationLambdaARNType, location_name: "RotationLambdaARN"))
     RotateSecretRequest.add_member(:rotation_rules, Shapes::ShapeRef.new(shape: RotationRulesType, location_name: "RotationRules"))
-    RotateSecretRequest.add_member(:rotate_immediately, Shapes::ShapeRef.new(shape: BooleanType, location_name: "RotateImmediately", metadata: {"box"=>true}))
+    RotateSecretRequest.add_member(:external_secret_rotation_metadata, Shapes::ShapeRef.new(shape: ExternalSecretRotationMetadataType, location_name: "ExternalSecretRotationMetadata"))
+    RotateSecretRequest.add_member(:external_secret_rotation_role_arn, Shapes::ShapeRef.new(shape: RoleARNType, location_name: "ExternalSecretRotationRoleArn"))
+    RotateSecretRequest.add_member(:rotate_immediately, Shapes::ShapeRef.new(shape: BooleanType, location_name: "RotateImmediately", metadata: {"box" => true}))
     RotateSecretRequest.struct_class = Types::RotateSecretRequest
 
     RotateSecretResponse.add_member(:arn, Shapes::ShapeRef.new(shape: SecretARNType, location_name: "ARN"))
     RotateSecretResponse.add_member(:name, Shapes::ShapeRef.new(shape: SecretNameType, location_name: "Name"))
-    RotateSecretResponse.add_member(:version_id, Shapes::ShapeRef.new(shape: SecretVersionIdType, location_name: "VersionId", metadata: {"box"=>true}))
+    RotateSecretResponse.add_member(:version_id, Shapes::ShapeRef.new(shape: SecretVersionIdType, location_name: "VersionId", metadata: {"box" => true}))
     RotateSecretResponse.struct_class = Types::RotateSecretResponse
 
-    RotationRulesType.add_member(:automatically_after_days, Shapes::ShapeRef.new(shape: AutomaticallyRotateAfterDaysType, location_name: "AutomaticallyAfterDays", metadata: {"box"=>true}))
+    RotationRulesType.add_member(:automatically_after_days, Shapes::ShapeRef.new(shape: AutomaticallyRotateAfterDaysType, location_name: "AutomaticallyAfterDays", metadata: {"box" => true}))
     RotationRulesType.add_member(:duration, Shapes::ShapeRef.new(shape: DurationType, location_name: "Duration"))
     RotationRulesType.add_member(:schedule_expression, Shapes::ShapeRef.new(shape: ScheduleExpressionType, location_name: "ScheduleExpression"))
     RotationRulesType.struct_class = Types::RotationRulesType
@@ -420,20 +440,23 @@ module Aws::SecretsManager
 
     SecretListEntry.add_member(:arn, Shapes::ShapeRef.new(shape: SecretARNType, location_name: "ARN"))
     SecretListEntry.add_member(:name, Shapes::ShapeRef.new(shape: SecretNameType, location_name: "Name"))
+    SecretListEntry.add_member(:type, Shapes::ShapeRef.new(shape: MedeaTypeType, location_name: "Type"))
     SecretListEntry.add_member(:description, Shapes::ShapeRef.new(shape: DescriptionType, location_name: "Description"))
     SecretListEntry.add_member(:kms_key_id, Shapes::ShapeRef.new(shape: KmsKeyIdType, location_name: "KmsKeyId"))
-    SecretListEntry.add_member(:rotation_enabled, Shapes::ShapeRef.new(shape: RotationEnabledType, location_name: "RotationEnabled", metadata: {"box"=>true}))
+    SecretListEntry.add_member(:rotation_enabled, Shapes::ShapeRef.new(shape: RotationEnabledType, location_name: "RotationEnabled", metadata: {"box" => true}))
     SecretListEntry.add_member(:rotation_lambda_arn, Shapes::ShapeRef.new(shape: RotationLambdaARNType, location_name: "RotationLambdaARN"))
     SecretListEntry.add_member(:rotation_rules, Shapes::ShapeRef.new(shape: RotationRulesType, location_name: "RotationRules"))
-    SecretListEntry.add_member(:last_rotated_date, Shapes::ShapeRef.new(shape: LastRotatedDateType, location_name: "LastRotatedDate", metadata: {"box"=>true}))
-    SecretListEntry.add_member(:last_changed_date, Shapes::ShapeRef.new(shape: LastChangedDateType, location_name: "LastChangedDate", metadata: {"box"=>true}))
-    SecretListEntry.add_member(:last_accessed_date, Shapes::ShapeRef.new(shape: LastAccessedDateType, location_name: "LastAccessedDate", metadata: {"box"=>true}))
+    SecretListEntry.add_member(:external_secret_rotation_metadata, Shapes::ShapeRef.new(shape: ExternalSecretRotationMetadataType, location_name: "ExternalSecretRotationMetadata"))
+    SecretListEntry.add_member(:external_secret_rotation_role_arn, Shapes::ShapeRef.new(shape: RoleARNType, location_name: "ExternalSecretRotationRoleArn"))
+    SecretListEntry.add_member(:last_rotated_date, Shapes::ShapeRef.new(shape: LastRotatedDateType, location_name: "LastRotatedDate", metadata: {"box" => true}))
+    SecretListEntry.add_member(:last_changed_date, Shapes::ShapeRef.new(shape: LastChangedDateType, location_name: "LastChangedDate", metadata: {"box" => true}))
+    SecretListEntry.add_member(:last_accessed_date, Shapes::ShapeRef.new(shape: LastAccessedDateType, location_name: "LastAccessedDate", metadata: {"box" => true}))
     SecretListEntry.add_member(:deleted_date, Shapes::ShapeRef.new(shape: DeletedDateType, location_name: "DeletedDate"))
     SecretListEntry.add_member(:next_rotation_date, Shapes::ShapeRef.new(shape: NextRotationDateType, location_name: "NextRotationDate"))
     SecretListEntry.add_member(:tags, Shapes::ShapeRef.new(shape: TagListType, location_name: "Tags"))
     SecretListEntry.add_member(:secret_versions_to_stages, Shapes::ShapeRef.new(shape: SecretVersionsToStagesMapType, location_name: "SecretVersionsToStages"))
     SecretListEntry.add_member(:owning_service, Shapes::ShapeRef.new(shape: OwningServiceType, location_name: "OwningService"))
-    SecretListEntry.add_member(:created_date, Shapes::ShapeRef.new(shape: TimestampType, location_name: "CreatedDate", metadata: {"box"=>true}))
+    SecretListEntry.add_member(:created_date, Shapes::ShapeRef.new(shape: TimestampType, location_name: "CreatedDate", metadata: {"box" => true}))
     SecretListEntry.add_member(:primary_region, Shapes::ShapeRef.new(shape: RegionType, location_name: "PrimaryRegion"))
     SecretListEntry.struct_class = Types::SecretListEntry
 
@@ -445,7 +468,7 @@ module Aws::SecretsManager
     SecretValueEntry.add_member(:secret_binary, Shapes::ShapeRef.new(shape: SecretBinaryType, location_name: "SecretBinary"))
     SecretValueEntry.add_member(:secret_string, Shapes::ShapeRef.new(shape: SecretStringType, location_name: "SecretString"))
     SecretValueEntry.add_member(:version_stages, Shapes::ShapeRef.new(shape: SecretVersionStagesType, location_name: "VersionStages"))
-    SecretValueEntry.add_member(:created_date, Shapes::ShapeRef.new(shape: CreatedDateType, location_name: "CreatedDate", metadata: {"box"=>true}))
+    SecretValueEntry.add_member(:created_date, Shapes::ShapeRef.new(shape: CreatedDateType, location_name: "CreatedDate", metadata: {"box" => true}))
     SecretValueEntry.struct_class = Types::SecretValueEntry
 
     SecretValuesType.member = Shapes::ShapeRef.new(shape: SecretValueEntry)
@@ -454,8 +477,8 @@ module Aws::SecretsManager
 
     SecretVersionsListEntry.add_member(:version_id, Shapes::ShapeRef.new(shape: SecretVersionIdType, location_name: "VersionId"))
     SecretVersionsListEntry.add_member(:version_stages, Shapes::ShapeRef.new(shape: SecretVersionStagesType, location_name: "VersionStages"))
-    SecretVersionsListEntry.add_member(:last_accessed_date, Shapes::ShapeRef.new(shape: LastAccessedDateType, location_name: "LastAccessedDate", metadata: {"box"=>true}))
-    SecretVersionsListEntry.add_member(:created_date, Shapes::ShapeRef.new(shape: CreatedDateType, location_name: "CreatedDate", metadata: {"box"=>true}))
+    SecretVersionsListEntry.add_member(:last_accessed_date, Shapes::ShapeRef.new(shape: LastAccessedDateType, location_name: "LastAccessedDate", metadata: {"box" => true}))
+    SecretVersionsListEntry.add_member(:created_date, Shapes::ShapeRef.new(shape: CreatedDateType, location_name: "CreatedDate", metadata: {"box" => true}))
     SecretVersionsListEntry.add_member(:kms_key_ids, Shapes::ShapeRef.new(shape: KmsKeyIdListType, location_name: "KmsKeyIds"))
     SecretVersionsListEntry.struct_class = Types::SecretVersionsListEntry
 
@@ -487,11 +510,12 @@ module Aws::SecretsManager
     UntagResourceRequest.struct_class = Types::UntagResourceRequest
 
     UpdateSecretRequest.add_member(:secret_id, Shapes::ShapeRef.new(shape: SecretIdType, required: true, location_name: "SecretId"))
-    UpdateSecretRequest.add_member(:client_request_token, Shapes::ShapeRef.new(shape: ClientRequestTokenType, location_name: "ClientRequestToken", metadata: {"idempotencyToken"=>true}))
+    UpdateSecretRequest.add_member(:client_request_token, Shapes::ShapeRef.new(shape: ClientRequestTokenType, location_name: "ClientRequestToken", metadata: {"idempotencyToken" => true}))
     UpdateSecretRequest.add_member(:description, Shapes::ShapeRef.new(shape: DescriptionType, location_name: "Description"))
     UpdateSecretRequest.add_member(:kms_key_id, Shapes::ShapeRef.new(shape: KmsKeyIdType, location_name: "KmsKeyId"))
     UpdateSecretRequest.add_member(:secret_binary, Shapes::ShapeRef.new(shape: SecretBinaryType, location_name: "SecretBinary"))
     UpdateSecretRequest.add_member(:secret_string, Shapes::ShapeRef.new(shape: SecretStringType, location_name: "SecretString"))
+    UpdateSecretRequest.add_member(:type, Shapes::ShapeRef.new(shape: MedeaTypeType, location_name: "Type"))
     UpdateSecretRequest.struct_class = Types::UpdateSecretRequest
 
     UpdateSecretResponse.add_member(:arn, Shapes::ShapeRef.new(shape: SecretARNType, location_name: "ARN"))
@@ -501,8 +525,8 @@ module Aws::SecretsManager
 
     UpdateSecretVersionStageRequest.add_member(:secret_id, Shapes::ShapeRef.new(shape: SecretIdType, required: true, location_name: "SecretId"))
     UpdateSecretVersionStageRequest.add_member(:version_stage, Shapes::ShapeRef.new(shape: SecretVersionStageType, required: true, location_name: "VersionStage"))
-    UpdateSecretVersionStageRequest.add_member(:remove_from_version_id, Shapes::ShapeRef.new(shape: SecretVersionIdType, location_name: "RemoveFromVersionId", metadata: {"box"=>true}))
-    UpdateSecretVersionStageRequest.add_member(:move_to_version_id, Shapes::ShapeRef.new(shape: SecretVersionIdType, location_name: "MoveToVersionId", metadata: {"box"=>true}))
+    UpdateSecretVersionStageRequest.add_member(:remove_from_version_id, Shapes::ShapeRef.new(shape: SecretVersionIdType, location_name: "RemoveFromVersionId", metadata: {"box" => true}))
+    UpdateSecretVersionStageRequest.add_member(:move_to_version_id, Shapes::ShapeRef.new(shape: SecretVersionIdType, location_name: "MoveToVersionId", metadata: {"box" => true}))
     UpdateSecretVersionStageRequest.struct_class = Types::UpdateSecretVersionStageRequest
 
     UpdateSecretVersionStageResponse.add_member(:arn, Shapes::ShapeRef.new(shape: SecretARNType, location_name: "ARN"))

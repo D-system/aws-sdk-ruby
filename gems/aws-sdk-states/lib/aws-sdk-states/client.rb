@@ -95,8 +95,8 @@ module Aws::States
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::States
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::States
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::States
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::States
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::States
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::States
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::States
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -516,7 +520,11 @@ module Aws::States
     #
     #   * special characters `` " # % \ ^ | ~ ` $ & , ; : / ``
     #
-    #   * control characters (`U+0000-001F`, `U+007F-009F`)
+    #   * control characters (`U+0000-001F`, `U+007F-009F`, `U+FFFE-FFFF`)
+    #
+    #   * surrogates (`U+D800-DFFF`)
+    #
+    #   * invalid characters (` U+10FFFF`)
     #
     #   To enable logging with CloudWatch Logs, the name should only contain
     #   0-9, A-Z, a-z, - and \_.
@@ -631,7 +639,11 @@ module Aws::States
     #
     #   * special characters `` " # % \ ^ | ~ ` $ & , ; : / ``
     #
-    #   * control characters (`U+0000-001F`, `U+007F-009F`)
+    #   * control characters (`U+0000-001F`, `U+007F-009F`, `U+FFFE-FFFF`)
+    #
+    #   * surrogates (`U+D800-DFFF`)
+    #
+    #   * invalid characters (` U+10FFFF`)
     #
     #   To enable logging with CloudWatch Logs, the name should only contain
     #   0-9, A-Z, a-z, - and \_.
@@ -1834,6 +1846,17 @@ module Aws::States
     #   If specified, only list the executions whose current execution status
     #   matches the given filter.
     #
+    #   If you provide a `PENDING_REDRIVE` statusFilter, you must specify
+    #   `mapRunArn`. For more information, see [Child workflow execution
+    #   redrive behaviour][1] in the *Step Functions Developer Guide*.
+    #
+    #   If you provide a stateMachineArn and a `PENDING_REDRIVE` statusFilter,
+    #   the API returns a validation exception.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/step-functions/latest/dg/redrive-map-run.html#redrive-child-workflow-behavior
+    #
     # @option params [Integer] :max_results
     #   The maximum number of results that are returned per call. You can use
     #   `nextToken` to obtain further pages of results. The default is 100 and
@@ -2661,7 +2684,11 @@ module Aws::States
     #
     #   * special characters `` " # % \ ^ | ~ ` $ & , ; : / ``
     #
-    #   * control characters (`U+0000-001F`, `U+007F-009F`)
+    #   * control characters (`U+0000-001F`, `U+007F-009F`, `U+FFFE-FFFF`)
+    #
+    #   * surrogates (`U+D800-DFFF`)
+    #
+    #   * invalid characters (` U+10FFFF`)
     #
     #   To enable logging with CloudWatch Logs, the name should only contain
     #   0-9, A-Z, a-z, - and \_.
@@ -2674,10 +2701,10 @@ module Aws::States
     #   The string that contains the JSON input data for the execution, for
     #   example:
     #
-    #   `"input": "{"first_name" : "test"}"`
+    #   `"{"first_name" : "Alejandro"}"`
     #
     #   <note markdown="1"> If you don't include any JSON input data, you still must include the
-    #   two braces, for example: `"input": "{}"`
+    #   two braces, for example: `"{}"`
     #
     #    </note>
     #
@@ -2687,6 +2714,16 @@ module Aws::States
     # @option params [String] :trace_header
     #   Passes the X-Ray trace header. The trace header can also be passed in
     #   the request payload.
+    #
+    #   <note markdown="1"> For X-Ray traces, all Amazon Web Services services use the
+    #   `X-Amzn-Trace-Id` header from the HTTP request. Using the header is
+    #   the preferred mechanism to identify a trace. `StartExecution` and
+    #   `StartSyncExecution` API operations can also use `traceHeader` from
+    #   the body of the request payload. If **both** sources are provided,
+    #   Step Functions will use the **header value** (preferred) over the
+    #   value in the request body.
+    #
+    #    </note>
     #
     # @return [Types::StartExecutionOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -2741,10 +2778,10 @@ module Aws::States
     #   The string that contains the JSON input data for the execution, for
     #   example:
     #
-    #   `"input": "{"first_name" : "test"}"`
+    #   `"{"first_name" : "Alejandro"}"`
     #
     #   <note markdown="1"> If you don't include any JSON input data, you still must include the
-    #   two braces, for example: `"input": "{}"`
+    #   two braces, for example: `"{}"`
     #
     #    </note>
     #
@@ -2754,6 +2791,16 @@ module Aws::States
     # @option params [String] :trace_header
     #   Passes the X-Ray trace header. The trace header can also be passed in
     #   the request payload.
+    #
+    #   <note markdown="1"> For X-Ray traces, all Amazon Web Services services use the
+    #   `X-Amzn-Trace-Id` header from the HTTP request. Using the header is
+    #   the preferred mechanism to identify a trace. `StartExecution` and
+    #   `StartSyncExecution` API operations can also use `traceHeader` from
+    #   the body of the request payload. If **both** sources are provided,
+    #   Step Functions will use the **header value** (preferred) over the
+    #   value in the request body.
+    #
+    #    </note>
     #
     # @option params [String] :included_data
     #   If your state machine definition is encrypted with a KMS key, callers
@@ -2942,15 +2989,15 @@ module Aws::States
     # of a state exceeds this duration, it fails with the `States.Timeout`
     # error.
     #
-    # `TestState` doesn't support [Activity tasks][5], `.sync` or
-    # `.waitForTaskToken` [service integration patterns][12],
-    # [Parallel][13], or [Map][14] states.
+    # `TestState` only supports the following when a mock is specified:
+    # [Activity tasks][5], `.sync` or `.waitForTaskToken` [service
+    # integration patterns][12], [Parallel][13], or [Map][14] states.
     #
     #
     #
     # [1]: https://docs.aws.amazon.com/step-functions/latest/dg/test-state-isolation.html#test-state-input-output-dataflow
     # [2]: https://docs.aws.amazon.com/step-functions/latest/dg/connect-to-services.html
-    # [3]: https://docs.aws.amazon.com/step-functions/latest/dg/connect-third-party-apis.html
+    # [3]: https://docs.aws.amazon.com/step-functions/latest/dg/call-https-apis.html
     # [4]: https://docs.aws.amazon.com/step-functions/latest/dg/amazon-states-language-task-state.html#task-types
     # [5]: https://docs.aws.amazon.com/step-functions/latest/dg/concepts-activities.html
     # [6]: https://docs.aws.amazon.com/step-functions/latest/dg/amazon-states-language-pass-state.html
@@ -2964,7 +3011,8 @@ module Aws::States
     # [14]: https://docs.aws.amazon.com/step-functions/latest/dg/amazon-states-language-map-state.html
     #
     # @option params [required, String] :definition
-    #   The [Amazon States Language][1] (ASL) definition of the state.
+    #   The [Amazon States Language][1] (ASL) definition of the state or state
+    #   machine.
     #
     #
     #
@@ -3018,6 +3066,25 @@ module Aws::States
     #   JSON object literal that sets variables used in the state under test.
     #   Object keys are the variable names and values are the variable values.
     #
+    # @option params [String] :state_name
+    #   Denotes the particular state within a state machine definition to be
+    #   tested. If this field is specified, the `definition` must contain a
+    #   fully-formed state machine definition.
+    #
+    # @option params [Types::MockInput] :mock
+    #   Defines a mocked result or error for the state under test.
+    #
+    #   A mock can only be specified for Task, Map, or Parallel states. If it
+    #   is specified for another state type, an exception will be thrown.
+    #
+    # @option params [String] :context
+    #   A JSON string representing a valid Context object for the state under
+    #   test. This field may only be specified if a mock is specified in the
+    #   same request.
+    #
+    # @option params [Types::TestStateConfiguration] :state_configuration
+    #   Contains configurations for the state under test.
+    #
     # @return [Types::TestStateOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::TestStateOutput#output #output} => String
@@ -3036,6 +3103,22 @@ module Aws::States
     #     inspection_level: "INFO", # accepts INFO, DEBUG, TRACE
     #     reveal_secrets: false,
     #     variables: "SensitiveData",
+    #     state_name: "TestStateStateName",
+    #     mock: {
+    #       result: "SensitiveData",
+    #       error_output: {
+    #         error: "SensitiveError",
+    #         cause: "SensitiveCause",
+    #       },
+    #       field_validation_mode: "STRICT", # accepts STRICT, PRESENT, NONE
+    #     },
+    #     context: "SensitiveData",
+    #     state_configuration: {
+    #       retrier_retry_count: 1,
+    #       error_caused_by_state: "TestStateStateName",
+    #       map_iteration_failure_count: 1,
+    #       map_item_reader_data: "SensitiveData",
+    #     },
     #   })
     #
     # @example Response structure
@@ -3061,6 +3144,16 @@ module Aws::States
     #   resp.inspection_data.response.headers #=> String
     #   resp.inspection_data.response.body #=> String
     #   resp.inspection_data.variables #=> String
+    #   resp.inspection_data.error_details.catch_index #=> Integer
+    #   resp.inspection_data.error_details.retry_index #=> Integer
+    #   resp.inspection_data.error_details.retry_backoff_interval_seconds #=> Integer
+    #   resp.inspection_data.after_items_path #=> String
+    #   resp.inspection_data.after_item_selector #=> String
+    #   resp.inspection_data.after_item_batcher #=> String
+    #   resp.inspection_data.after_items_pointer #=> String
+    #   resp.inspection_data.tolerated_failure_count #=> Integer
+    #   resp.inspection_data.tolerated_failure_percentage #=> Float
+    #   resp.inspection_data.max_concurrency #=> Integer
     #   resp.next_state #=> String
     #   resp.status #=> String, one of "SUCCEEDED", "FAILED", "RETRIABLE", "CAUGHT_ERROR"
     #
@@ -3483,7 +3576,7 @@ module Aws::States
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-states'
-      context[:gem_version] = '1.87.0'
+      context[:gem_version] = '1.110.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

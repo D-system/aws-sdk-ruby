@@ -27,6 +27,7 @@ module Aws::DirectoryService
   # See {Seahorse::Client::RequestContext} for more information.
   #
   # ## Error Classes
+  # * {ADAssessmentLimitExceededException}
   # * {AccessDeniedException}
   # * {AuthenticationFailedException}
   # * {CertificateAlreadyExistsException}
@@ -41,7 +42,9 @@ module Aws::DirectoryService
   # * {DirectoryLimitExceededException}
   # * {DirectoryNotSharedException}
   # * {DirectoryUnavailableException}
+  # * {DisableAlreadyInProgressException}
   # * {DomainControllerLimitExceededException}
+  # * {EnableAlreadyInProgressException}
   # * {EntityAlreadyExistsException}
   # * {EntityDoesNotExistException}
   # * {IncompatibleSettingsException}
@@ -70,6 +73,26 @@ module Aws::DirectoryService
   module Errors
 
     extend Aws::Errors::DynamicErrors
+
+    class ADAssessmentLimitExceededException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::DirectoryService::Types::ADAssessmentLimitExceededException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+
+      # @return [String]
+      def request_id
+        @data[:request_id]
+      end
+    end
 
     class AccessDeniedException < ServiceError
 
@@ -351,11 +374,51 @@ module Aws::DirectoryService
       end
     end
 
+    class DisableAlreadyInProgressException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::DirectoryService::Types::DisableAlreadyInProgressException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+
+      # @return [String]
+      def request_id
+        @data[:request_id]
+      end
+    end
+
     class DomainControllerLimitExceededException < ServiceError
 
       # @param [Seahorse::Client::RequestContext] context
       # @param [String] message
       # @param [Aws::DirectoryService::Types::DomainControllerLimitExceededException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+
+      # @return [String]
+      def request_id
+        @data[:request_id]
+      end
+    end
+
+    class EnableAlreadyInProgressException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::DirectoryService::Types::EnableAlreadyInProgressException] data
       def initialize(context, message, data = Aws::EmptyStructure.new)
         super(context, message, data)
       end

@@ -40,6 +40,11 @@ module Aws::MarketplaceMetering
       SENSITIVE: []
     end
 
+    class IdempotencyConflictException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
     class InternalServiceErrorException
       attr_accessor message: ::String
       SENSITIVE: []
@@ -51,6 +56,11 @@ module Aws::MarketplaceMetering
     end
 
     class InvalidEndpointRegionException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class InvalidLicenseException
       attr_accessor message: ::String
       SENSITIVE: []
     end
@@ -97,6 +107,7 @@ module Aws::MarketplaceMetering
       attr_accessor usage_quantity: ::Integer
       attr_accessor dry_run: bool
       attr_accessor usage_allocations: ::Array[Types::UsageAllocation]
+      attr_accessor client_token: ::String
       SENSITIVE: []
     end
 
@@ -132,6 +143,7 @@ module Aws::MarketplaceMetering
       attr_accessor customer_identifier: ::String
       attr_accessor product_code: ::String
       attr_accessor customer_aws_account_id: ::String
+      attr_accessor license_arn: ::String
       SENSITIVE: []
     end
 
@@ -163,6 +175,8 @@ module Aws::MarketplaceMetering
       attr_accessor dimension: ::String
       attr_accessor quantity: ::Integer
       attr_accessor usage_allocations: ::Array[Types::UsageAllocation]
+      attr_accessor customer_aws_account_id: ::String
+      attr_accessor license_arn: ::String
       SENSITIVE: []
     end
 

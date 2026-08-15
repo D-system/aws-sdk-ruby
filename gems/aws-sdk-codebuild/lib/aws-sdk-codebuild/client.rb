@@ -95,8 +95,8 @@ module Aws::CodeBuild
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::CodeBuild
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::CodeBuild
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::CodeBuild
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::CodeBuild
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::CodeBuild
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::CodeBuild
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::CodeBuild
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -594,13 +598,15 @@ module Aws::CodeBuild
     #   resp.build_batches[0].cache.location #=> String
     #   resp.build_batches[0].cache.modes #=> Array
     #   resp.build_batches[0].cache.modes[0] #=> String, one of "LOCAL_DOCKER_LAYER_CACHE", "LOCAL_SOURCE_CACHE", "LOCAL_CUSTOM_CACHE"
-    #   resp.build_batches[0].environment.type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
+    #   resp.build_batches[0].cache.cache_namespace #=> String
+    #   resp.build_batches[0].environment.type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "WINDOWS_SERVER_2022_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
     #   resp.build_batches[0].environment.image #=> String
-    #   resp.build_batches[0].environment.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE"
+    #   resp.build_batches[0].environment.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
     #   resp.build_batches[0].environment.compute_configuration.v_cpu #=> Integer
     #   resp.build_batches[0].environment.compute_configuration.memory #=> Integer
     #   resp.build_batches[0].environment.compute_configuration.disk #=> Integer
     #   resp.build_batches[0].environment.compute_configuration.machine_type #=> String, one of "GENERAL", "NVME"
+    #   resp.build_batches[0].environment.compute_configuration.instance_type #=> String
     #   resp.build_batches[0].environment.fleet.fleet_arn #=> String
     #   resp.build_batches[0].environment.environment_variables #=> Array
     #   resp.build_batches[0].environment.environment_variables[0].name #=> String
@@ -611,6 +617,12 @@ module Aws::CodeBuild
     #   resp.build_batches[0].environment.registry_credential.credential #=> String
     #   resp.build_batches[0].environment.registry_credential.credential_provider #=> String, one of "SECRETS_MANAGER"
     #   resp.build_batches[0].environment.image_pull_credentials_type #=> String, one of "CODEBUILD", "SERVICE_ROLE"
+    #   resp.build_batches[0].environment.docker_server.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
+    #   resp.build_batches[0].environment.docker_server.security_group_ids #=> Array
+    #   resp.build_batches[0].environment.docker_server.security_group_ids[0] #=> String
+    #   resp.build_batches[0].environment.docker_server.status.status #=> String
+    #   resp.build_batches[0].environment.docker_server.status.message #=> String
+    #   resp.build_batches[0].environment.host_kernel #=> String, one of "LINUX_KERNEL_4", "LINUX_KERNEL_6", "LINUX_KERNEL_LATEST"
     #   resp.build_batches[0].service_role #=> String
     #   resp.build_batches[0].log_config.cloud_watch_logs.status #=> String, one of "ENABLED", "DISABLED"
     #   resp.build_batches[0].log_config.cloud_watch_logs.group_name #=> String
@@ -771,13 +783,15 @@ module Aws::CodeBuild
     #   resp.builds[0].cache.location #=> String
     #   resp.builds[0].cache.modes #=> Array
     #   resp.builds[0].cache.modes[0] #=> String, one of "LOCAL_DOCKER_LAYER_CACHE", "LOCAL_SOURCE_CACHE", "LOCAL_CUSTOM_CACHE"
-    #   resp.builds[0].environment.type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
+    #   resp.builds[0].cache.cache_namespace #=> String
+    #   resp.builds[0].environment.type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "WINDOWS_SERVER_2022_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
     #   resp.builds[0].environment.image #=> String
-    #   resp.builds[0].environment.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE"
+    #   resp.builds[0].environment.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
     #   resp.builds[0].environment.compute_configuration.v_cpu #=> Integer
     #   resp.builds[0].environment.compute_configuration.memory #=> Integer
     #   resp.builds[0].environment.compute_configuration.disk #=> Integer
     #   resp.builds[0].environment.compute_configuration.machine_type #=> String, one of "GENERAL", "NVME"
+    #   resp.builds[0].environment.compute_configuration.instance_type #=> String
     #   resp.builds[0].environment.fleet.fleet_arn #=> String
     #   resp.builds[0].environment.environment_variables #=> Array
     #   resp.builds[0].environment.environment_variables[0].name #=> String
@@ -788,6 +802,12 @@ module Aws::CodeBuild
     #   resp.builds[0].environment.registry_credential.credential #=> String
     #   resp.builds[0].environment.registry_credential.credential_provider #=> String, one of "SECRETS_MANAGER"
     #   resp.builds[0].environment.image_pull_credentials_type #=> String, one of "CODEBUILD", "SERVICE_ROLE"
+    #   resp.builds[0].environment.docker_server.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
+    #   resp.builds[0].environment.docker_server.security_group_ids #=> Array
+    #   resp.builds[0].environment.docker_server.security_group_ids[0] #=> String
+    #   resp.builds[0].environment.docker_server.status.status #=> String
+    #   resp.builds[0].environment.docker_server.status.message #=> String
+    #   resp.builds[0].environment.host_kernel #=> String, one of "LINUX_KERNEL_4", "LINUX_KERNEL_6", "LINUX_KERNEL_LATEST"
     #   resp.builds[0].service_role #=> String
     #   resp.builds[0].logs.group_name #=> String
     #   resp.builds[0].logs.stream_name #=> String
@@ -844,6 +864,66 @@ module Aws::CodeBuild
       req.send_request(options)
     end
 
+    # Gets information about the command executions.
+    #
+    # @option params [required, String] :sandbox_id
+    #   A `sandboxId` or `sandboxArn`.
+    #
+    # @option params [required, Array<String>] :command_execution_ids
+    #   A comma separated list of `commandExecutionIds`.
+    #
+    # @return [Types::BatchGetCommandExecutionsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::BatchGetCommandExecutionsOutput#command_executions #command_executions} => Array&lt;Types::CommandExecution&gt;
+    #   * {Types::BatchGetCommandExecutionsOutput#command_executions_not_found #command_executions_not_found} => Array&lt;String&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.batch_get_command_executions({
+    #     sandbox_id: "NonEmptyString", # required
+    #     command_execution_ids: ["NonEmptyString"], # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.command_executions #=> Array
+    #   resp.command_executions[0].id #=> String
+    #   resp.command_executions[0].sandbox_id #=> String
+    #   resp.command_executions[0].submit_time #=> Time
+    #   resp.command_executions[0].start_time #=> Time
+    #   resp.command_executions[0].end_time #=> Time
+    #   resp.command_executions[0].status #=> String
+    #   resp.command_executions[0].command #=> String
+    #   resp.command_executions[0].type #=> String, one of "SHELL"
+    #   resp.command_executions[0].exit_code #=> String
+    #   resp.command_executions[0].standard_output_content #=> String
+    #   resp.command_executions[0].standard_err_content #=> String
+    #   resp.command_executions[0].logs.group_name #=> String
+    #   resp.command_executions[0].logs.stream_name #=> String
+    #   resp.command_executions[0].logs.deep_link #=> String
+    #   resp.command_executions[0].logs.s3_deep_link #=> String
+    #   resp.command_executions[0].logs.cloud_watch_logs_arn #=> String
+    #   resp.command_executions[0].logs.s3_logs_arn #=> String
+    #   resp.command_executions[0].logs.cloud_watch_logs.status #=> String, one of "ENABLED", "DISABLED"
+    #   resp.command_executions[0].logs.cloud_watch_logs.group_name #=> String
+    #   resp.command_executions[0].logs.cloud_watch_logs.stream_name #=> String
+    #   resp.command_executions[0].logs.s3_logs.status #=> String, one of "ENABLED", "DISABLED"
+    #   resp.command_executions[0].logs.s3_logs.location #=> String
+    #   resp.command_executions[0].logs.s3_logs.encryption_disabled #=> Boolean
+    #   resp.command_executions[0].logs.s3_logs.bucket_owner_access #=> String, one of "NONE", "READ_ONLY", "FULL"
+    #   resp.command_executions[0].sandbox_arn #=> String
+    #   resp.command_executions_not_found #=> Array
+    #   resp.command_executions_not_found[0] #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/BatchGetCommandExecutions AWS API Documentation
+    #
+    # @overload batch_get_command_executions(params = {})
+    # @param [Hash] params ({})
+    def batch_get_command_executions(params = {}, options = {})
+      req = build_request(:batch_get_command_executions, params)
+      req.send_request(options)
+    end
+
     # Gets information about one or more compute fleets.
     #
     # @option params [required, Array<String>] :names
@@ -872,12 +952,13 @@ module Aws::CodeBuild
     #   resp.fleets[0].status.context #=> String, one of "CREATE_FAILED", "UPDATE_FAILED", "ACTION_REQUIRED", "PENDING_DELETION", "INSUFFICIENT_CAPACITY"
     #   resp.fleets[0].status.message #=> String
     #   resp.fleets[0].base_capacity #=> Integer
-    #   resp.fleets[0].environment_type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
-    #   resp.fleets[0].compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE"
+    #   resp.fleets[0].environment_type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "WINDOWS_SERVER_2022_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
+    #   resp.fleets[0].compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
     #   resp.fleets[0].compute_configuration.v_cpu #=> Integer
     #   resp.fleets[0].compute_configuration.memory #=> Integer
     #   resp.fleets[0].compute_configuration.disk #=> Integer
     #   resp.fleets[0].compute_configuration.machine_type #=> String, one of "GENERAL", "NVME"
+    #   resp.fleets[0].compute_configuration.instance_type #=> String
     #   resp.fleets[0].scaling_configuration.scaling_type #=> String, one of "TARGET_TRACKING_SCALING"
     #   resp.fleets[0].scaling_configuration.target_tracking_scaling_configs #=> Array
     #   resp.fleets[0].scaling_configuration.target_tracking_scaling_configs[0].metric_type #=> String, one of "FLEET_UTILIZATION_RATE"
@@ -991,13 +1072,15 @@ module Aws::CodeBuild
     #   resp.projects[0].cache.location #=> String
     #   resp.projects[0].cache.modes #=> Array
     #   resp.projects[0].cache.modes[0] #=> String, one of "LOCAL_DOCKER_LAYER_CACHE", "LOCAL_SOURCE_CACHE", "LOCAL_CUSTOM_CACHE"
-    #   resp.projects[0].environment.type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
+    #   resp.projects[0].cache.cache_namespace #=> String
+    #   resp.projects[0].environment.type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "WINDOWS_SERVER_2022_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
     #   resp.projects[0].environment.image #=> String
-    #   resp.projects[0].environment.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE"
+    #   resp.projects[0].environment.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
     #   resp.projects[0].environment.compute_configuration.v_cpu #=> Integer
     #   resp.projects[0].environment.compute_configuration.memory #=> Integer
     #   resp.projects[0].environment.compute_configuration.disk #=> Integer
     #   resp.projects[0].environment.compute_configuration.machine_type #=> String, one of "GENERAL", "NVME"
+    #   resp.projects[0].environment.compute_configuration.instance_type #=> String
     #   resp.projects[0].environment.fleet.fleet_arn #=> String
     #   resp.projects[0].environment.environment_variables #=> Array
     #   resp.projects[0].environment.environment_variables[0].name #=> String
@@ -1008,6 +1091,12 @@ module Aws::CodeBuild
     #   resp.projects[0].environment.registry_credential.credential #=> String
     #   resp.projects[0].environment.registry_credential.credential_provider #=> String, one of "SECRETS_MANAGER"
     #   resp.projects[0].environment.image_pull_credentials_type #=> String, one of "CODEBUILD", "SERVICE_ROLE"
+    #   resp.projects[0].environment.docker_server.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
+    #   resp.projects[0].environment.docker_server.security_group_ids #=> Array
+    #   resp.projects[0].environment.docker_server.security_group_ids[0] #=> String
+    #   resp.projects[0].environment.docker_server.status.status #=> String
+    #   resp.projects[0].environment.docker_server.status.message #=> String
+    #   resp.projects[0].environment.host_kernel #=> String, one of "LINUX_KERNEL_4", "LINUX_KERNEL_6", "LINUX_KERNEL_LATEST"
     #   resp.projects[0].service_role #=> String
     #   resp.projects[0].timeout_in_minutes #=> Integer
     #   resp.projects[0].queued_timeout_in_minutes #=> Integer
@@ -1034,6 +1123,9 @@ module Aws::CodeBuild
     #   resp.projects[0].webhook.scope_configuration.scope #=> String, one of "GITHUB_ORGANIZATION", "GITHUB_GLOBAL", "GITLAB_GROUP"
     #   resp.projects[0].webhook.status #=> String, one of "CREATING", "CREATE_FAILED", "ACTIVE", "DELETING"
     #   resp.projects[0].webhook.status_message #=> String
+    #   resp.projects[0].webhook.pull_request_build_policy.requires_comment_approval #=> String, one of "DISABLED", "ALL_PULL_REQUESTS", "FORK_PULL_REQUESTS"
+    #   resp.projects[0].webhook.pull_request_build_policy.approver_roles #=> Array
+    #   resp.projects[0].webhook.pull_request_build_policy.approver_roles[0] #=> String, one of "GITHUB_READ", "GITHUB_TRIAGE", "GITHUB_WRITE", "GITHUB_MAINTAIN", "GITHUB_ADMIN", "GITLAB_GUEST", "GITLAB_PLANNER", "GITLAB_REPORTER", "GITLAB_DEVELOPER", "GITLAB_MAINTAINER", "GITLAB_OWNER", "BITBUCKET_READ", "BITBUCKET_WRITE", "BITBUCKET_ADMIN"
     #   resp.projects[0].vpc_config.vpc_id #=> String
     #   resp.projects[0].vpc_config.subnets #=> Array
     #   resp.projects[0].vpc_config.subnets[0] #=> String
@@ -1185,6 +1277,149 @@ module Aws::CodeBuild
       req.send_request(options)
     end
 
+    # Gets information about the sandbox status.
+    #
+    # @option params [required, Array<String>] :ids
+    #   A comma separated list of `sandboxIds` or `sandboxArns`.
+    #
+    # @return [Types::BatchGetSandboxesOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::BatchGetSandboxesOutput#sandboxes #sandboxes} => Array&lt;Types::Sandbox&gt;
+    #   * {Types::BatchGetSandboxesOutput#sandboxes_not_found #sandboxes_not_found} => Array&lt;String&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.batch_get_sandboxes({
+    #     ids: ["NonEmptyString"], # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.sandboxes #=> Array
+    #   resp.sandboxes[0].id #=> String
+    #   resp.sandboxes[0].arn #=> String
+    #   resp.sandboxes[0].project_name #=> String
+    #   resp.sandboxes[0].request_time #=> Time
+    #   resp.sandboxes[0].start_time #=> Time
+    #   resp.sandboxes[0].end_time #=> Time
+    #   resp.sandboxes[0].status #=> String
+    #   resp.sandboxes[0].source.type #=> String, one of "CODECOMMIT", "CODEPIPELINE", "GITHUB", "GITLAB", "GITLAB_SELF_MANAGED", "S3", "BITBUCKET", "GITHUB_ENTERPRISE", "NO_SOURCE"
+    #   resp.sandboxes[0].source.location #=> String
+    #   resp.sandboxes[0].source.git_clone_depth #=> Integer
+    #   resp.sandboxes[0].source.git_submodules_config.fetch_submodules #=> Boolean
+    #   resp.sandboxes[0].source.buildspec #=> String
+    #   resp.sandboxes[0].source.auth.type #=> String, one of "OAUTH", "CODECONNECTIONS", "SECRETS_MANAGER"
+    #   resp.sandboxes[0].source.auth.resource #=> String
+    #   resp.sandboxes[0].source.report_build_status #=> Boolean
+    #   resp.sandboxes[0].source.build_status_config.context #=> String
+    #   resp.sandboxes[0].source.build_status_config.target_url #=> String
+    #   resp.sandboxes[0].source.insecure_ssl #=> Boolean
+    #   resp.sandboxes[0].source.source_identifier #=> String
+    #   resp.sandboxes[0].source_version #=> String
+    #   resp.sandboxes[0].secondary_sources #=> Array
+    #   resp.sandboxes[0].secondary_sources[0].type #=> String, one of "CODECOMMIT", "CODEPIPELINE", "GITHUB", "GITLAB", "GITLAB_SELF_MANAGED", "S3", "BITBUCKET", "GITHUB_ENTERPRISE", "NO_SOURCE"
+    #   resp.sandboxes[0].secondary_sources[0].location #=> String
+    #   resp.sandboxes[0].secondary_sources[0].git_clone_depth #=> Integer
+    #   resp.sandboxes[0].secondary_sources[0].git_submodules_config.fetch_submodules #=> Boolean
+    #   resp.sandboxes[0].secondary_sources[0].buildspec #=> String
+    #   resp.sandboxes[0].secondary_sources[0].auth.type #=> String, one of "OAUTH", "CODECONNECTIONS", "SECRETS_MANAGER"
+    #   resp.sandboxes[0].secondary_sources[0].auth.resource #=> String
+    #   resp.sandboxes[0].secondary_sources[0].report_build_status #=> Boolean
+    #   resp.sandboxes[0].secondary_sources[0].build_status_config.context #=> String
+    #   resp.sandboxes[0].secondary_sources[0].build_status_config.target_url #=> String
+    #   resp.sandboxes[0].secondary_sources[0].insecure_ssl #=> Boolean
+    #   resp.sandboxes[0].secondary_sources[0].source_identifier #=> String
+    #   resp.sandboxes[0].secondary_source_versions #=> Array
+    #   resp.sandboxes[0].secondary_source_versions[0].source_identifier #=> String
+    #   resp.sandboxes[0].secondary_source_versions[0].source_version #=> String
+    #   resp.sandboxes[0].environment.type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "WINDOWS_SERVER_2022_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
+    #   resp.sandboxes[0].environment.image #=> String
+    #   resp.sandboxes[0].environment.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
+    #   resp.sandboxes[0].environment.compute_configuration.v_cpu #=> Integer
+    #   resp.sandboxes[0].environment.compute_configuration.memory #=> Integer
+    #   resp.sandboxes[0].environment.compute_configuration.disk #=> Integer
+    #   resp.sandboxes[0].environment.compute_configuration.machine_type #=> String, one of "GENERAL", "NVME"
+    #   resp.sandboxes[0].environment.compute_configuration.instance_type #=> String
+    #   resp.sandboxes[0].environment.fleet.fleet_arn #=> String
+    #   resp.sandboxes[0].environment.environment_variables #=> Array
+    #   resp.sandboxes[0].environment.environment_variables[0].name #=> String
+    #   resp.sandboxes[0].environment.environment_variables[0].value #=> String
+    #   resp.sandboxes[0].environment.environment_variables[0].type #=> String, one of "PLAINTEXT", "PARAMETER_STORE", "SECRETS_MANAGER"
+    #   resp.sandboxes[0].environment.privileged_mode #=> Boolean
+    #   resp.sandboxes[0].environment.certificate #=> String
+    #   resp.sandboxes[0].environment.registry_credential.credential #=> String
+    #   resp.sandboxes[0].environment.registry_credential.credential_provider #=> String, one of "SECRETS_MANAGER"
+    #   resp.sandboxes[0].environment.image_pull_credentials_type #=> String, one of "CODEBUILD", "SERVICE_ROLE"
+    #   resp.sandboxes[0].environment.docker_server.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
+    #   resp.sandboxes[0].environment.docker_server.security_group_ids #=> Array
+    #   resp.sandboxes[0].environment.docker_server.security_group_ids[0] #=> String
+    #   resp.sandboxes[0].environment.docker_server.status.status #=> String
+    #   resp.sandboxes[0].environment.docker_server.status.message #=> String
+    #   resp.sandboxes[0].environment.host_kernel #=> String, one of "LINUX_KERNEL_4", "LINUX_KERNEL_6", "LINUX_KERNEL_LATEST"
+    #   resp.sandboxes[0].file_system_locations #=> Array
+    #   resp.sandboxes[0].file_system_locations[0].type #=> String, one of "EFS"
+    #   resp.sandboxes[0].file_system_locations[0].location #=> String
+    #   resp.sandboxes[0].file_system_locations[0].mount_point #=> String
+    #   resp.sandboxes[0].file_system_locations[0].identifier #=> String
+    #   resp.sandboxes[0].file_system_locations[0].mount_options #=> String
+    #   resp.sandboxes[0].timeout_in_minutes #=> Integer
+    #   resp.sandboxes[0].queued_timeout_in_minutes #=> Integer
+    #   resp.sandboxes[0].vpc_config.vpc_id #=> String
+    #   resp.sandboxes[0].vpc_config.subnets #=> Array
+    #   resp.sandboxes[0].vpc_config.subnets[0] #=> String
+    #   resp.sandboxes[0].vpc_config.security_group_ids #=> Array
+    #   resp.sandboxes[0].vpc_config.security_group_ids[0] #=> String
+    #   resp.sandboxes[0].log_config.cloud_watch_logs.status #=> String, one of "ENABLED", "DISABLED"
+    #   resp.sandboxes[0].log_config.cloud_watch_logs.group_name #=> String
+    #   resp.sandboxes[0].log_config.cloud_watch_logs.stream_name #=> String
+    #   resp.sandboxes[0].log_config.s3_logs.status #=> String, one of "ENABLED", "DISABLED"
+    #   resp.sandboxes[0].log_config.s3_logs.location #=> String
+    #   resp.sandboxes[0].log_config.s3_logs.encryption_disabled #=> Boolean
+    #   resp.sandboxes[0].log_config.s3_logs.bucket_owner_access #=> String, one of "NONE", "READ_ONLY", "FULL"
+    #   resp.sandboxes[0].encryption_key #=> String
+    #   resp.sandboxes[0].service_role #=> String
+    #   resp.sandboxes[0].current_session.id #=> String
+    #   resp.sandboxes[0].current_session.status #=> String
+    #   resp.sandboxes[0].current_session.start_time #=> Time
+    #   resp.sandboxes[0].current_session.end_time #=> Time
+    #   resp.sandboxes[0].current_session.current_phase #=> String
+    #   resp.sandboxes[0].current_session.phases #=> Array
+    #   resp.sandboxes[0].current_session.phases[0].phase_type #=> String
+    #   resp.sandboxes[0].current_session.phases[0].phase_status #=> String, one of "SUCCEEDED", "FAILED", "FAULT", "TIMED_OUT", "IN_PROGRESS", "STOPPED"
+    #   resp.sandboxes[0].current_session.phases[0].start_time #=> Time
+    #   resp.sandboxes[0].current_session.phases[0].end_time #=> Time
+    #   resp.sandboxes[0].current_session.phases[0].duration_in_seconds #=> Integer
+    #   resp.sandboxes[0].current_session.phases[0].contexts #=> Array
+    #   resp.sandboxes[0].current_session.phases[0].contexts[0].status_code #=> String
+    #   resp.sandboxes[0].current_session.phases[0].contexts[0].message #=> String
+    #   resp.sandboxes[0].current_session.resolved_source_version #=> String
+    #   resp.sandboxes[0].current_session.logs.group_name #=> String
+    #   resp.sandboxes[0].current_session.logs.stream_name #=> String
+    #   resp.sandboxes[0].current_session.logs.deep_link #=> String
+    #   resp.sandboxes[0].current_session.logs.s3_deep_link #=> String
+    #   resp.sandboxes[0].current_session.logs.cloud_watch_logs_arn #=> String
+    #   resp.sandboxes[0].current_session.logs.s3_logs_arn #=> String
+    #   resp.sandboxes[0].current_session.logs.cloud_watch_logs.status #=> String, one of "ENABLED", "DISABLED"
+    #   resp.sandboxes[0].current_session.logs.cloud_watch_logs.group_name #=> String
+    #   resp.sandboxes[0].current_session.logs.cloud_watch_logs.stream_name #=> String
+    #   resp.sandboxes[0].current_session.logs.s3_logs.status #=> String, one of "ENABLED", "DISABLED"
+    #   resp.sandboxes[0].current_session.logs.s3_logs.location #=> String
+    #   resp.sandboxes[0].current_session.logs.s3_logs.encryption_disabled #=> Boolean
+    #   resp.sandboxes[0].current_session.logs.s3_logs.bucket_owner_access #=> String, one of "NONE", "READ_ONLY", "FULL"
+    #   resp.sandboxes[0].current_session.network_interface.subnet_id #=> String
+    #   resp.sandboxes[0].current_session.network_interface.network_interface_id #=> String
+    #   resp.sandboxes_not_found #=> Array
+    #   resp.sandboxes_not_found[0] #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/BatchGetSandboxes AWS API Documentation
+    #
+    # @overload batch_get_sandboxes(params = {})
+    # @param [Hash] params ({})
+    def batch_get_sandboxes(params = {}, options = {})
+      req = build_request(:batch_get_sandboxes, params)
+      req.send_request(options)
+    end
+
     # Creates a compute fleet.
     #
     # @option params [required, String] :name
@@ -1273,6 +1508,10 @@ module Aws::CodeBuild
     #
     #      </note>
     #
+    #   * `CUSTOM_INSTANCE_TYPE`: Specify the instance type for your compute
+    #     fleet. For a list of supported instance types, see [Supported
+    #     instance families ][2] in the *CodeBuild User Guide*.
+    #
     #   * `BUILD_GENERAL1_SMALL`: Use up to 4 GiB memory and 2 vCPUs for
     #     builds.
     #
@@ -1331,17 +1570,19 @@ module Aws::CodeBuild
     #   * For environment type `ARM_CONTAINER`, you can use up to 16 GiB
     #     memory and 8 vCPUs on ARM-based processors for builds.
     #
-    #   For more information, see [On-demand environment types][2] in the
+    #   For more information, see [On-demand environment types][3] in the
     #   *CodeBuild User Guide.*
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-compute-types.html#environment-reserved-capacity.types
-    #   [2]: https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-compute-types.html#environment.types
+    #   [2]: https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-compute-types.html#environment-reserved-capacity.instance-types
+    #   [3]: https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-compute-types.html#environment.types
     #
     # @option params [Types::ComputeConfiguration] :compute_configuration
     #   The compute configuration of the compute fleet. This is only required
-    #   if `computeType` is set to `ATTRIBUTE_BASED_COMPUTE`.
+    #   if `computeType` is set to `ATTRIBUTE_BASED_COMPUTE` or
+    #   `CUSTOM_INSTANCE_TYPE`.
     #
     # @option params [Types::ScalingConfigurationInput] :scaling_configuration
     #   The scaling configuration of the compute fleet.
@@ -1401,13 +1642,14 @@ module Aws::CodeBuild
     #   resp = client.create_fleet({
     #     name: "FleetName", # required
     #     base_capacity: 1, # required
-    #     environment_type: "WINDOWS_CONTAINER", # required, accepts WINDOWS_CONTAINER, LINUX_CONTAINER, LINUX_GPU_CONTAINER, ARM_CONTAINER, WINDOWS_SERVER_2019_CONTAINER, LINUX_LAMBDA_CONTAINER, ARM_LAMBDA_CONTAINER, LINUX_EC2, ARM_EC2, WINDOWS_EC2, MAC_ARM
-    #     compute_type: "BUILD_GENERAL1_SMALL", # required, accepts BUILD_GENERAL1_SMALL, BUILD_GENERAL1_MEDIUM, BUILD_GENERAL1_LARGE, BUILD_GENERAL1_XLARGE, BUILD_GENERAL1_2XLARGE, BUILD_LAMBDA_1GB, BUILD_LAMBDA_2GB, BUILD_LAMBDA_4GB, BUILD_LAMBDA_8GB, BUILD_LAMBDA_10GB, ATTRIBUTE_BASED_COMPUTE
+    #     environment_type: "WINDOWS_CONTAINER", # required, accepts WINDOWS_CONTAINER, LINUX_CONTAINER, LINUX_GPU_CONTAINER, ARM_CONTAINER, WINDOWS_SERVER_2019_CONTAINER, WINDOWS_SERVER_2022_CONTAINER, LINUX_LAMBDA_CONTAINER, ARM_LAMBDA_CONTAINER, LINUX_EC2, ARM_EC2, WINDOWS_EC2, MAC_ARM
+    #     compute_type: "BUILD_GENERAL1_SMALL", # required, accepts BUILD_GENERAL1_SMALL, BUILD_GENERAL1_MEDIUM, BUILD_GENERAL1_LARGE, BUILD_GENERAL1_XLARGE, BUILD_GENERAL1_2XLARGE, BUILD_LAMBDA_1GB, BUILD_LAMBDA_2GB, BUILD_LAMBDA_4GB, BUILD_LAMBDA_8GB, BUILD_LAMBDA_10GB, ATTRIBUTE_BASED_COMPUTE, CUSTOM_INSTANCE_TYPE
     #     compute_configuration: {
     #       v_cpu: 1,
     #       memory: 1,
     #       disk: 1,
     #       machine_type: "GENERAL", # accepts GENERAL, NVME
+    #       instance_type: "NonEmptyString",
     #     },
     #     scaling_configuration: {
     #       scaling_type: "TARGET_TRACKING_SCALING", # accepts TARGET_TRACKING_SCALING
@@ -1456,12 +1698,13 @@ module Aws::CodeBuild
     #   resp.fleet.status.context #=> String, one of "CREATE_FAILED", "UPDATE_FAILED", "ACTION_REQUIRED", "PENDING_DELETION", "INSUFFICIENT_CAPACITY"
     #   resp.fleet.status.message #=> String
     #   resp.fleet.base_capacity #=> Integer
-    #   resp.fleet.environment_type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
-    #   resp.fleet.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE"
+    #   resp.fleet.environment_type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "WINDOWS_SERVER_2022_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
+    #   resp.fleet.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
     #   resp.fleet.compute_configuration.v_cpu #=> Integer
     #   resp.fleet.compute_configuration.memory #=> Integer
     #   resp.fleet.compute_configuration.disk #=> Integer
     #   resp.fleet.compute_configuration.machine_type #=> String, one of "GENERAL", "NVME"
+    #   resp.fleet.compute_configuration.instance_type #=> String
     #   resp.fleet.scaling_configuration.scaling_type #=> String, one of "TARGET_TRACKING_SCALING"
     #   resp.fleet.scaling_configuration.target_tracking_scaling_configs #=> Array
     #   resp.fleet.scaling_configuration.target_tracking_scaling_configs[0].metric_type #=> String, one of "FLEET_UTILIZATION_RATE"
@@ -1723,16 +1966,18 @@ module Aws::CodeBuild
     #       type: "NO_CACHE", # required, accepts NO_CACHE, S3, LOCAL
     #       location: "String",
     #       modes: ["LOCAL_DOCKER_LAYER_CACHE"], # accepts LOCAL_DOCKER_LAYER_CACHE, LOCAL_SOURCE_CACHE, LOCAL_CUSTOM_CACHE
+    #       cache_namespace: "String",
     #     },
     #     environment: { # required
-    #       type: "WINDOWS_CONTAINER", # required, accepts WINDOWS_CONTAINER, LINUX_CONTAINER, LINUX_GPU_CONTAINER, ARM_CONTAINER, WINDOWS_SERVER_2019_CONTAINER, LINUX_LAMBDA_CONTAINER, ARM_LAMBDA_CONTAINER, LINUX_EC2, ARM_EC2, WINDOWS_EC2, MAC_ARM
+    #       type: "WINDOWS_CONTAINER", # required, accepts WINDOWS_CONTAINER, LINUX_CONTAINER, LINUX_GPU_CONTAINER, ARM_CONTAINER, WINDOWS_SERVER_2019_CONTAINER, WINDOWS_SERVER_2022_CONTAINER, LINUX_LAMBDA_CONTAINER, ARM_LAMBDA_CONTAINER, LINUX_EC2, ARM_EC2, WINDOWS_EC2, MAC_ARM
     #       image: "NonEmptyString", # required
-    #       compute_type: "BUILD_GENERAL1_SMALL", # required, accepts BUILD_GENERAL1_SMALL, BUILD_GENERAL1_MEDIUM, BUILD_GENERAL1_LARGE, BUILD_GENERAL1_XLARGE, BUILD_GENERAL1_2XLARGE, BUILD_LAMBDA_1GB, BUILD_LAMBDA_2GB, BUILD_LAMBDA_4GB, BUILD_LAMBDA_8GB, BUILD_LAMBDA_10GB, ATTRIBUTE_BASED_COMPUTE
+    #       compute_type: "BUILD_GENERAL1_SMALL", # required, accepts BUILD_GENERAL1_SMALL, BUILD_GENERAL1_MEDIUM, BUILD_GENERAL1_LARGE, BUILD_GENERAL1_XLARGE, BUILD_GENERAL1_2XLARGE, BUILD_LAMBDA_1GB, BUILD_LAMBDA_2GB, BUILD_LAMBDA_4GB, BUILD_LAMBDA_8GB, BUILD_LAMBDA_10GB, ATTRIBUTE_BASED_COMPUTE, CUSTOM_INSTANCE_TYPE
     #       compute_configuration: {
     #         v_cpu: 1,
     #         memory: 1,
     #         disk: 1,
     #         machine_type: "GENERAL", # accepts GENERAL, NVME
+    #         instance_type: "NonEmptyString",
     #       },
     #       fleet: {
     #         fleet_arn: "String",
@@ -1751,6 +1996,15 @@ module Aws::CodeBuild
     #         credential_provider: "SECRETS_MANAGER", # required, accepts SECRETS_MANAGER
     #       },
     #       image_pull_credentials_type: "CODEBUILD", # accepts CODEBUILD, SERVICE_ROLE
+    #       docker_server: {
+    #         compute_type: "BUILD_GENERAL1_SMALL", # required, accepts BUILD_GENERAL1_SMALL, BUILD_GENERAL1_MEDIUM, BUILD_GENERAL1_LARGE, BUILD_GENERAL1_XLARGE, BUILD_GENERAL1_2XLARGE, BUILD_LAMBDA_1GB, BUILD_LAMBDA_2GB, BUILD_LAMBDA_4GB, BUILD_LAMBDA_8GB, BUILD_LAMBDA_10GB, ATTRIBUTE_BASED_COMPUTE, CUSTOM_INSTANCE_TYPE
+    #         security_group_ids: ["NonEmptyString"],
+    #         status: {
+    #           status: "String",
+    #           message: "String",
+    #         },
+    #       },
+    #       host_kernel: "LINUX_KERNEL_4", # accepts LINUX_KERNEL_4, LINUX_KERNEL_6, LINUX_KERNEL_LATEST
     #     },
     #     service_role: "NonEmptyString", # required
     #     timeout_in_minutes: 1,
@@ -1864,13 +2118,15 @@ module Aws::CodeBuild
     #   resp.project.cache.location #=> String
     #   resp.project.cache.modes #=> Array
     #   resp.project.cache.modes[0] #=> String, one of "LOCAL_DOCKER_LAYER_CACHE", "LOCAL_SOURCE_CACHE", "LOCAL_CUSTOM_CACHE"
-    #   resp.project.environment.type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
+    #   resp.project.cache.cache_namespace #=> String
+    #   resp.project.environment.type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "WINDOWS_SERVER_2022_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
     #   resp.project.environment.image #=> String
-    #   resp.project.environment.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE"
+    #   resp.project.environment.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
     #   resp.project.environment.compute_configuration.v_cpu #=> Integer
     #   resp.project.environment.compute_configuration.memory #=> Integer
     #   resp.project.environment.compute_configuration.disk #=> Integer
     #   resp.project.environment.compute_configuration.machine_type #=> String, one of "GENERAL", "NVME"
+    #   resp.project.environment.compute_configuration.instance_type #=> String
     #   resp.project.environment.fleet.fleet_arn #=> String
     #   resp.project.environment.environment_variables #=> Array
     #   resp.project.environment.environment_variables[0].name #=> String
@@ -1881,6 +2137,12 @@ module Aws::CodeBuild
     #   resp.project.environment.registry_credential.credential #=> String
     #   resp.project.environment.registry_credential.credential_provider #=> String, one of "SECRETS_MANAGER"
     #   resp.project.environment.image_pull_credentials_type #=> String, one of "CODEBUILD", "SERVICE_ROLE"
+    #   resp.project.environment.docker_server.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
+    #   resp.project.environment.docker_server.security_group_ids #=> Array
+    #   resp.project.environment.docker_server.security_group_ids[0] #=> String
+    #   resp.project.environment.docker_server.status.status #=> String
+    #   resp.project.environment.docker_server.status.message #=> String
+    #   resp.project.environment.host_kernel #=> String, one of "LINUX_KERNEL_4", "LINUX_KERNEL_6", "LINUX_KERNEL_LATEST"
     #   resp.project.service_role #=> String
     #   resp.project.timeout_in_minutes #=> Integer
     #   resp.project.queued_timeout_in_minutes #=> Integer
@@ -1907,6 +2169,9 @@ module Aws::CodeBuild
     #   resp.project.webhook.scope_configuration.scope #=> String, one of "GITHUB_ORGANIZATION", "GITHUB_GLOBAL", "GITLAB_GROUP"
     #   resp.project.webhook.status #=> String, one of "CREATING", "CREATE_FAILED", "ACTIVE", "DELETING"
     #   resp.project.webhook.status_message #=> String
+    #   resp.project.webhook.pull_request_build_policy.requires_comment_approval #=> String, one of "DISABLED", "ALL_PULL_REQUESTS", "FORK_PULL_REQUESTS"
+    #   resp.project.webhook.pull_request_build_policy.approver_roles #=> Array
+    #   resp.project.webhook.pull_request_build_policy.approver_roles[0] #=> String, one of "GITHUB_READ", "GITHUB_TRIAGE", "GITHUB_WRITE", "GITHUB_MAINTAIN", "GITHUB_ADMIN", "GITLAB_GUEST", "GITLAB_PLANNER", "GITLAB_REPORTER", "GITLAB_DEVELOPER", "GITLAB_MAINTAINER", "GITLAB_OWNER", "BITBUCKET_READ", "BITBUCKET_WRITE", "BITBUCKET_ADMIN"
     #   resp.project.vpc_config.vpc_id #=> String
     #   resp.project.vpc_config.subnets #=> Array
     #   resp.project.vpc_config.subnets[0] #=> String
@@ -2100,6 +2365,12 @@ module Aws::CodeBuild
     #
     #    </note>
     #
+    # @option params [Types::PullRequestBuildPolicy] :pull_request_build_policy
+    #   A PullRequestBuildPolicy object that defines comment-based approval
+    #   requirements for triggering builds on pull requests. This policy helps
+    #   control when automated builds are executed based on contributor
+    #   permissions and approval workflows.
+    #
     # @return [Types::CreateWebhookOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateWebhookOutput#webhook #webhook} => Types::Webhook
@@ -2125,6 +2396,10 @@ module Aws::CodeBuild
     #       domain: "String",
     #       scope: "GITHUB_ORGANIZATION", # required, accepts GITHUB_ORGANIZATION, GITHUB_GLOBAL, GITLAB_GROUP
     #     },
+    #     pull_request_build_policy: {
+    #       requires_comment_approval: "DISABLED", # required, accepts DISABLED, ALL_PULL_REQUESTS, FORK_PULL_REQUESTS
+    #       approver_roles: ["GITHUB_READ"], # accepts GITHUB_READ, GITHUB_TRIAGE, GITHUB_WRITE, GITHUB_MAINTAIN, GITHUB_ADMIN, GITLAB_GUEST, GITLAB_PLANNER, GITLAB_REPORTER, GITLAB_DEVELOPER, GITLAB_MAINTAINER, GITLAB_OWNER, BITBUCKET_READ, BITBUCKET_WRITE, BITBUCKET_ADMIN
+    #     },
     #   })
     #
     # @example Response structure
@@ -2146,6 +2421,9 @@ module Aws::CodeBuild
     #   resp.webhook.scope_configuration.scope #=> String, one of "GITHUB_ORGANIZATION", "GITHUB_GLOBAL", "GITLAB_GROUP"
     #   resp.webhook.status #=> String, one of "CREATING", "CREATE_FAILED", "ACTIVE", "DELETING"
     #   resp.webhook.status_message #=> String
+    #   resp.webhook.pull_request_build_policy.requires_comment_approval #=> String, one of "DISABLED", "ALL_PULL_REQUESTS", "FORK_PULL_REQUESTS"
+    #   resp.webhook.pull_request_build_policy.approver_roles #=> Array
+    #   resp.webhook.pull_request_build_policy.approver_roles[0] #=> String, one of "GITHUB_READ", "GITHUB_TRIAGE", "GITHUB_WRITE", "GITHUB_MAINTAIN", "GITHUB_ADMIN", "GITLAB_GUEST", "GITLAB_PLANNER", "GITLAB_REPORTER", "GITLAB_DEVELOPER", "GITLAB_MAINTAINER", "GITLAB_OWNER", "BITBUCKET_READ", "BITBUCKET_WRITE", "BITBUCKET_ADMIN"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/CreateWebhook AWS API Documentation
     #
@@ -2938,6 +3216,76 @@ module Aws::CodeBuild
       req.send_request(options)
     end
 
+    # Gets a list of command executions for a sandbox.
+    #
+    # @option params [required, String] :sandbox_id
+    #   A `sandboxId` or `sandboxArn`.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of sandbox records to be retrieved.
+    #
+    # @option params [String] :sort_order
+    #   The order in which sandbox records should be retrieved.
+    #
+    # @option params [String] :next_token
+    #   The next token, if any, to get paginated results. You will get this
+    #   value from previous execution of list sandboxes.
+    #
+    # @return [Types::ListCommandExecutionsForSandboxOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListCommandExecutionsForSandboxOutput#command_executions #command_executions} => Array&lt;Types::CommandExecution&gt;
+    #   * {Types::ListCommandExecutionsForSandboxOutput#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_command_executions_for_sandbox({
+    #     sandbox_id: "NonEmptyString", # required
+    #     max_results: 1,
+    #     sort_order: "ASCENDING", # accepts ASCENDING, DESCENDING
+    #     next_token: "SensitiveString",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.command_executions #=> Array
+    #   resp.command_executions[0].id #=> String
+    #   resp.command_executions[0].sandbox_id #=> String
+    #   resp.command_executions[0].submit_time #=> Time
+    #   resp.command_executions[0].start_time #=> Time
+    #   resp.command_executions[0].end_time #=> Time
+    #   resp.command_executions[0].status #=> String
+    #   resp.command_executions[0].command #=> String
+    #   resp.command_executions[0].type #=> String, one of "SHELL"
+    #   resp.command_executions[0].exit_code #=> String
+    #   resp.command_executions[0].standard_output_content #=> String
+    #   resp.command_executions[0].standard_err_content #=> String
+    #   resp.command_executions[0].logs.group_name #=> String
+    #   resp.command_executions[0].logs.stream_name #=> String
+    #   resp.command_executions[0].logs.deep_link #=> String
+    #   resp.command_executions[0].logs.s3_deep_link #=> String
+    #   resp.command_executions[0].logs.cloud_watch_logs_arn #=> String
+    #   resp.command_executions[0].logs.s3_logs_arn #=> String
+    #   resp.command_executions[0].logs.cloud_watch_logs.status #=> String, one of "ENABLED", "DISABLED"
+    #   resp.command_executions[0].logs.cloud_watch_logs.group_name #=> String
+    #   resp.command_executions[0].logs.cloud_watch_logs.stream_name #=> String
+    #   resp.command_executions[0].logs.s3_logs.status #=> String, one of "ENABLED", "DISABLED"
+    #   resp.command_executions[0].logs.s3_logs.location #=> String
+    #   resp.command_executions[0].logs.s3_logs.encryption_disabled #=> Boolean
+    #   resp.command_executions[0].logs.s3_logs.bucket_owner_access #=> String, one of "NONE", "READ_ONLY", "FULL"
+    #   resp.command_executions[0].sandbox_arn #=> String
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/ListCommandExecutionsForSandbox AWS API Documentation
+    #
+    # @overload list_command_executions_for_sandbox(params = {})
+    # @param [Hash] params ({})
+    def list_command_executions_for_sandbox(params = {}, options = {})
+      req = build_request(:list_command_executions_for_sandbox, params)
+      req.send_request(options)
+    end
+
     # Gets information about Docker images that are managed by CodeBuild.
     #
     # @return [Types::ListCuratedEnvironmentImagesOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
@@ -3289,6 +3637,94 @@ module Aws::CodeBuild
       req.send_request(options)
     end
 
+    # Gets a list of sandboxes.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of sandbox records to be retrieved.
+    #
+    # @option params [String] :sort_order
+    #   The order in which sandbox records should be retrieved.
+    #
+    # @option params [String] :next_token
+    #   The next token, if any, to get paginated results. You will get this
+    #   value from previous execution of list sandboxes.
+    #
+    # @return [Types::ListSandboxesOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListSandboxesOutput#ids #ids} => Array&lt;String&gt;
+    #   * {Types::ListSandboxesOutput#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_sandboxes({
+    #     max_results: 1,
+    #     sort_order: "ASCENDING", # accepts ASCENDING, DESCENDING
+    #     next_token: "String",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.ids #=> Array
+    #   resp.ids[0] #=> String
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/ListSandboxes AWS API Documentation
+    #
+    # @overload list_sandboxes(params = {})
+    # @param [Hash] params ({})
+    def list_sandboxes(params = {}, options = {})
+      req = build_request(:list_sandboxes, params)
+      req.send_request(options)
+    end
+
+    # Gets a list of sandboxes for a given project.
+    #
+    # @option params [required, String] :project_name
+    #   The CodeBuild project name.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of sandbox records to be retrieved.
+    #
+    # @option params [String] :sort_order
+    #   The order in which sandbox records should be retrieved.
+    #
+    # @option params [String] :next_token
+    #   The next token, if any, to get paginated results. You will get this
+    #   value from previous execution of list sandboxes.
+    #
+    # @return [Types::ListSandboxesForProjectOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListSandboxesForProjectOutput#ids #ids} => Array&lt;String&gt;
+    #   * {Types::ListSandboxesForProjectOutput#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_sandboxes_for_project({
+    #     project_name: "NonEmptyString", # required
+    #     max_results: 1,
+    #     sort_order: "ASCENDING", # accepts ASCENDING, DESCENDING
+    #     next_token: "SensitiveString",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.ids #=> Array
+    #   resp.ids[0] #=> String
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/ListSandboxesForProject AWS API Documentation
+    #
+    # @overload list_sandboxes_for_project(params = {})
+    # @param [Hash] params ({})
+    def list_sandboxes_for_project(params = {}, options = {})
+      req = build_request(:list_sandboxes_for_project, params)
+      req.send_request(options)
+    end
+
     # Gets a list of projects that are shared with other Amazon Web Services
     # accounts or users.
     #
@@ -3573,13 +4009,15 @@ module Aws::CodeBuild
     #   resp.build.cache.location #=> String
     #   resp.build.cache.modes #=> Array
     #   resp.build.cache.modes[0] #=> String, one of "LOCAL_DOCKER_LAYER_CACHE", "LOCAL_SOURCE_CACHE", "LOCAL_CUSTOM_CACHE"
-    #   resp.build.environment.type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
+    #   resp.build.cache.cache_namespace #=> String
+    #   resp.build.environment.type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "WINDOWS_SERVER_2022_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
     #   resp.build.environment.image #=> String
-    #   resp.build.environment.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE"
+    #   resp.build.environment.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
     #   resp.build.environment.compute_configuration.v_cpu #=> Integer
     #   resp.build.environment.compute_configuration.memory #=> Integer
     #   resp.build.environment.compute_configuration.disk #=> Integer
     #   resp.build.environment.compute_configuration.machine_type #=> String, one of "GENERAL", "NVME"
+    #   resp.build.environment.compute_configuration.instance_type #=> String
     #   resp.build.environment.fleet.fleet_arn #=> String
     #   resp.build.environment.environment_variables #=> Array
     #   resp.build.environment.environment_variables[0].name #=> String
@@ -3590,6 +4028,12 @@ module Aws::CodeBuild
     #   resp.build.environment.registry_credential.credential #=> String
     #   resp.build.environment.registry_credential.credential_provider #=> String, one of "SECRETS_MANAGER"
     #   resp.build.environment.image_pull_credentials_type #=> String, one of "CODEBUILD", "SERVICE_ROLE"
+    #   resp.build.environment.docker_server.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
+    #   resp.build.environment.docker_server.security_group_ids #=> Array
+    #   resp.build.environment.docker_server.security_group_ids[0] #=> String
+    #   resp.build.environment.docker_server.status.status #=> String
+    #   resp.build.environment.docker_server.status.message #=> String
+    #   resp.build.environment.host_kernel #=> String, one of "LINUX_KERNEL_4", "LINUX_KERNEL_6", "LINUX_KERNEL_LATEST"
     #   resp.build.service_role #=> String
     #   resp.build.logs.group_name #=> String
     #   resp.build.logs.stream_name #=> String
@@ -3739,13 +4183,15 @@ module Aws::CodeBuild
     #   resp.build_batch.cache.location #=> String
     #   resp.build_batch.cache.modes #=> Array
     #   resp.build_batch.cache.modes[0] #=> String, one of "LOCAL_DOCKER_LAYER_CACHE", "LOCAL_SOURCE_CACHE", "LOCAL_CUSTOM_CACHE"
-    #   resp.build_batch.environment.type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
+    #   resp.build_batch.cache.cache_namespace #=> String
+    #   resp.build_batch.environment.type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "WINDOWS_SERVER_2022_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
     #   resp.build_batch.environment.image #=> String
-    #   resp.build_batch.environment.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE"
+    #   resp.build_batch.environment.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
     #   resp.build_batch.environment.compute_configuration.v_cpu #=> Integer
     #   resp.build_batch.environment.compute_configuration.memory #=> Integer
     #   resp.build_batch.environment.compute_configuration.disk #=> Integer
     #   resp.build_batch.environment.compute_configuration.machine_type #=> String, one of "GENERAL", "NVME"
+    #   resp.build_batch.environment.compute_configuration.instance_type #=> String
     #   resp.build_batch.environment.fleet.fleet_arn #=> String
     #   resp.build_batch.environment.environment_variables #=> Array
     #   resp.build_batch.environment.environment_variables[0].name #=> String
@@ -3756,6 +4202,12 @@ module Aws::CodeBuild
     #   resp.build_batch.environment.registry_credential.credential #=> String
     #   resp.build_batch.environment.registry_credential.credential_provider #=> String, one of "SECRETS_MANAGER"
     #   resp.build_batch.environment.image_pull_credentials_type #=> String, one of "CODEBUILD", "SERVICE_ROLE"
+    #   resp.build_batch.environment.docker_server.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
+    #   resp.build_batch.environment.docker_server.security_group_ids #=> Array
+    #   resp.build_batch.environment.docker_server.security_group_ids[0] #=> String
+    #   resp.build_batch.environment.docker_server.status.status #=> String
+    #   resp.build_batch.environment.docker_server.status.message #=> String
+    #   resp.build_batch.environment.host_kernel #=> String, one of "LINUX_KERNEL_4", "LINUX_KERNEL_6", "LINUX_KERNEL_LATEST"
     #   resp.build_batch.service_role #=> String
     #   resp.build_batch.log_config.cloud_watch_logs.status #=> String, one of "ENABLED", "DISABLED"
     #   resp.build_batch.log_config.cloud_watch_logs.group_name #=> String
@@ -3946,13 +4398,16 @@ module Aws::CodeBuild
     #   ability to call this API and set this parameter can override the
     #   default settings. Moreover, we encourage that you use a trustworthy
     #   buildspec location like a file in your source repository or a Amazon
-    #   S3 bucket.
+    #   S3 bucket. Alternatively, you can restrict overrides to the buildspec
+    #   by using a condition key: [Prevent unauthorized modifications to
+    #   project buildspec][2].
     #
     #    </note>
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html#build-spec-ref-name-storage
+    #   [2]: https://docs.aws.amazon.com/codebuild/latest/userguide/action-context-keys.html#action-context-keys-example-overridebuildspec.html
     #
     # @option params [Boolean] :insecure_ssl_override
     #   Enable this flag to override the insecure SSL setting that is
@@ -4087,6 +4542,10 @@ module Aws::CodeBuild
     #   will call the `RetryBuild` API to automatically retry your build for
     #   up to 2 additional times.
     #
+    # @option params [String] :host_kernel_override
+    #   The host operating system kernel for this build that overrides the one
+    #   specified in the build project.
+    #
     # @return [Types::StartBuildOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::StartBuildOutput#build #build} => Types::Build
@@ -4174,14 +4633,15 @@ module Aws::CodeBuild
     #       context: "String",
     #       target_url: "String",
     #     },
-    #     environment_type_override: "WINDOWS_CONTAINER", # accepts WINDOWS_CONTAINER, LINUX_CONTAINER, LINUX_GPU_CONTAINER, ARM_CONTAINER, WINDOWS_SERVER_2019_CONTAINER, LINUX_LAMBDA_CONTAINER, ARM_LAMBDA_CONTAINER, LINUX_EC2, ARM_EC2, WINDOWS_EC2, MAC_ARM
+    #     environment_type_override: "WINDOWS_CONTAINER", # accepts WINDOWS_CONTAINER, LINUX_CONTAINER, LINUX_GPU_CONTAINER, ARM_CONTAINER, WINDOWS_SERVER_2019_CONTAINER, WINDOWS_SERVER_2022_CONTAINER, LINUX_LAMBDA_CONTAINER, ARM_LAMBDA_CONTAINER, LINUX_EC2, ARM_EC2, WINDOWS_EC2, MAC_ARM
     #     image_override: "NonEmptyString",
-    #     compute_type_override: "BUILD_GENERAL1_SMALL", # accepts BUILD_GENERAL1_SMALL, BUILD_GENERAL1_MEDIUM, BUILD_GENERAL1_LARGE, BUILD_GENERAL1_XLARGE, BUILD_GENERAL1_2XLARGE, BUILD_LAMBDA_1GB, BUILD_LAMBDA_2GB, BUILD_LAMBDA_4GB, BUILD_LAMBDA_8GB, BUILD_LAMBDA_10GB, ATTRIBUTE_BASED_COMPUTE
+    #     compute_type_override: "BUILD_GENERAL1_SMALL", # accepts BUILD_GENERAL1_SMALL, BUILD_GENERAL1_MEDIUM, BUILD_GENERAL1_LARGE, BUILD_GENERAL1_XLARGE, BUILD_GENERAL1_2XLARGE, BUILD_LAMBDA_1GB, BUILD_LAMBDA_2GB, BUILD_LAMBDA_4GB, BUILD_LAMBDA_8GB, BUILD_LAMBDA_10GB, ATTRIBUTE_BASED_COMPUTE, CUSTOM_INSTANCE_TYPE
     #     certificate_override: "String",
     #     cache_override: {
     #       type: "NO_CACHE", # required, accepts NO_CACHE, S3, LOCAL
     #       location: "String",
     #       modes: ["LOCAL_DOCKER_LAYER_CACHE"], # accepts LOCAL_DOCKER_LAYER_CACHE, LOCAL_SOURCE_CACHE, LOCAL_CUSTOM_CACHE
+    #       cache_namespace: "String",
     #     },
     #     service_role_override: "NonEmptyString",
     #     privileged_mode_override: false,
@@ -4212,6 +4672,7 @@ module Aws::CodeBuild
     #       fleet_arn: "String",
     #     },
     #     auto_retry_limit_override: 1,
+    #     host_kernel_override: "LINUX_KERNEL_4", # accepts LINUX_KERNEL_4, LINUX_KERNEL_6, LINUX_KERNEL_LATEST
     #   })
     #
     # @example Response structure
@@ -4282,13 +4743,15 @@ module Aws::CodeBuild
     #   resp.build.cache.location #=> String
     #   resp.build.cache.modes #=> Array
     #   resp.build.cache.modes[0] #=> String, one of "LOCAL_DOCKER_LAYER_CACHE", "LOCAL_SOURCE_CACHE", "LOCAL_CUSTOM_CACHE"
-    #   resp.build.environment.type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
+    #   resp.build.cache.cache_namespace #=> String
+    #   resp.build.environment.type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "WINDOWS_SERVER_2022_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
     #   resp.build.environment.image #=> String
-    #   resp.build.environment.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE"
+    #   resp.build.environment.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
     #   resp.build.environment.compute_configuration.v_cpu #=> Integer
     #   resp.build.environment.compute_configuration.memory #=> Integer
     #   resp.build.environment.compute_configuration.disk #=> Integer
     #   resp.build.environment.compute_configuration.machine_type #=> String, one of "GENERAL", "NVME"
+    #   resp.build.environment.compute_configuration.instance_type #=> String
     #   resp.build.environment.fleet.fleet_arn #=> String
     #   resp.build.environment.environment_variables #=> Array
     #   resp.build.environment.environment_variables[0].name #=> String
@@ -4299,6 +4762,12 @@ module Aws::CodeBuild
     #   resp.build.environment.registry_credential.credential #=> String
     #   resp.build.environment.registry_credential.credential_provider #=> String, one of "SECRETS_MANAGER"
     #   resp.build.environment.image_pull_credentials_type #=> String, one of "CODEBUILD", "SERVICE_ROLE"
+    #   resp.build.environment.docker_server.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
+    #   resp.build.environment.docker_server.security_group_ids #=> Array
+    #   resp.build.environment.docker_server.security_group_ids[0] #=> String
+    #   resp.build.environment.docker_server.status.status #=> String
+    #   resp.build.environment.docker_server.status.message #=> String
+    #   resp.build.environment.host_kernel #=> String, one of "LINUX_KERNEL_4", "LINUX_KERNEL_6", "LINUX_KERNEL_LATEST"
     #   resp.build.service_role #=> String
     #   resp.build.logs.group_name #=> String
     #   resp.build.logs.stream_name #=> String
@@ -4653,14 +5122,15 @@ module Aws::CodeBuild
     #     buildspec_override: "String",
     #     insecure_ssl_override: false,
     #     report_build_batch_status_override: false,
-    #     environment_type_override: "WINDOWS_CONTAINER", # accepts WINDOWS_CONTAINER, LINUX_CONTAINER, LINUX_GPU_CONTAINER, ARM_CONTAINER, WINDOWS_SERVER_2019_CONTAINER, LINUX_LAMBDA_CONTAINER, ARM_LAMBDA_CONTAINER, LINUX_EC2, ARM_EC2, WINDOWS_EC2, MAC_ARM
+    #     environment_type_override: "WINDOWS_CONTAINER", # accepts WINDOWS_CONTAINER, LINUX_CONTAINER, LINUX_GPU_CONTAINER, ARM_CONTAINER, WINDOWS_SERVER_2019_CONTAINER, WINDOWS_SERVER_2022_CONTAINER, LINUX_LAMBDA_CONTAINER, ARM_LAMBDA_CONTAINER, LINUX_EC2, ARM_EC2, WINDOWS_EC2, MAC_ARM
     #     image_override: "NonEmptyString",
-    #     compute_type_override: "BUILD_GENERAL1_SMALL", # accepts BUILD_GENERAL1_SMALL, BUILD_GENERAL1_MEDIUM, BUILD_GENERAL1_LARGE, BUILD_GENERAL1_XLARGE, BUILD_GENERAL1_2XLARGE, BUILD_LAMBDA_1GB, BUILD_LAMBDA_2GB, BUILD_LAMBDA_4GB, BUILD_LAMBDA_8GB, BUILD_LAMBDA_10GB, ATTRIBUTE_BASED_COMPUTE
+    #     compute_type_override: "BUILD_GENERAL1_SMALL", # accepts BUILD_GENERAL1_SMALL, BUILD_GENERAL1_MEDIUM, BUILD_GENERAL1_LARGE, BUILD_GENERAL1_XLARGE, BUILD_GENERAL1_2XLARGE, BUILD_LAMBDA_1GB, BUILD_LAMBDA_2GB, BUILD_LAMBDA_4GB, BUILD_LAMBDA_8GB, BUILD_LAMBDA_10GB, ATTRIBUTE_BASED_COMPUTE, CUSTOM_INSTANCE_TYPE
     #     certificate_override: "String",
     #     cache_override: {
     #       type: "NO_CACHE", # required, accepts NO_CACHE, S3, LOCAL
     #       location: "String",
     #       modes: ["LOCAL_DOCKER_LAYER_CACHE"], # accepts LOCAL_DOCKER_LAYER_CACHE, LOCAL_SOURCE_CACHE, LOCAL_CUSTOM_CACHE
+    #       cache_namespace: "String",
     #     },
     #     service_role_override: "NonEmptyString",
     #     privileged_mode_override: false,
@@ -4767,13 +5237,15 @@ module Aws::CodeBuild
     #   resp.build_batch.cache.location #=> String
     #   resp.build_batch.cache.modes #=> Array
     #   resp.build_batch.cache.modes[0] #=> String, one of "LOCAL_DOCKER_LAYER_CACHE", "LOCAL_SOURCE_CACHE", "LOCAL_CUSTOM_CACHE"
-    #   resp.build_batch.environment.type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
+    #   resp.build_batch.cache.cache_namespace #=> String
+    #   resp.build_batch.environment.type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "WINDOWS_SERVER_2022_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
     #   resp.build_batch.environment.image #=> String
-    #   resp.build_batch.environment.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE"
+    #   resp.build_batch.environment.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
     #   resp.build_batch.environment.compute_configuration.v_cpu #=> Integer
     #   resp.build_batch.environment.compute_configuration.memory #=> Integer
     #   resp.build_batch.environment.compute_configuration.disk #=> Integer
     #   resp.build_batch.environment.compute_configuration.machine_type #=> String, one of "GENERAL", "NVME"
+    #   resp.build_batch.environment.compute_configuration.instance_type #=> String
     #   resp.build_batch.environment.fleet.fleet_arn #=> String
     #   resp.build_batch.environment.environment_variables #=> Array
     #   resp.build_batch.environment.environment_variables[0].name #=> String
@@ -4784,6 +5256,12 @@ module Aws::CodeBuild
     #   resp.build_batch.environment.registry_credential.credential #=> String
     #   resp.build_batch.environment.registry_credential.credential_provider #=> String, one of "SECRETS_MANAGER"
     #   resp.build_batch.environment.image_pull_credentials_type #=> String, one of "CODEBUILD", "SERVICE_ROLE"
+    #   resp.build_batch.environment.docker_server.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
+    #   resp.build_batch.environment.docker_server.security_group_ids #=> Array
+    #   resp.build_batch.environment.docker_server.security_group_ids[0] #=> String
+    #   resp.build_batch.environment.docker_server.status.status #=> String
+    #   resp.build_batch.environment.docker_server.status.message #=> String
+    #   resp.build_batch.environment.host_kernel #=> String, one of "LINUX_KERNEL_4", "LINUX_KERNEL_6", "LINUX_KERNEL_LATEST"
     #   resp.build_batch.service_role #=> String
     #   resp.build_batch.log_config.cloud_watch_logs.status #=> String, one of "ENABLED", "DISABLED"
     #   resp.build_batch.log_config.cloud_watch_logs.group_name #=> String
@@ -4854,6 +5332,239 @@ module Aws::CodeBuild
     # @param [Hash] params ({})
     def start_build_batch(params = {}, options = {})
       req = build_request(:start_build_batch, params)
+      req.send_request(options)
+    end
+
+    # Starts a command execution.
+    #
+    # @option params [required, String] :sandbox_id
+    #   A `sandboxId` or `sandboxArn`.
+    #
+    # @option params [required, String] :command
+    #   The command that needs to be executed.
+    #
+    # @option params [String] :type
+    #   The command type.
+    #
+    # @return [Types::StartCommandExecutionOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::StartCommandExecutionOutput#command_execution #command_execution} => Types::CommandExecution
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.start_command_execution({
+    #     sandbox_id: "NonEmptyString", # required
+    #     command: "SensitiveNonEmptyString", # required
+    #     type: "SHELL", # accepts SHELL
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.command_execution.id #=> String
+    #   resp.command_execution.sandbox_id #=> String
+    #   resp.command_execution.submit_time #=> Time
+    #   resp.command_execution.start_time #=> Time
+    #   resp.command_execution.end_time #=> Time
+    #   resp.command_execution.status #=> String
+    #   resp.command_execution.command #=> String
+    #   resp.command_execution.type #=> String, one of "SHELL"
+    #   resp.command_execution.exit_code #=> String
+    #   resp.command_execution.standard_output_content #=> String
+    #   resp.command_execution.standard_err_content #=> String
+    #   resp.command_execution.logs.group_name #=> String
+    #   resp.command_execution.logs.stream_name #=> String
+    #   resp.command_execution.logs.deep_link #=> String
+    #   resp.command_execution.logs.s3_deep_link #=> String
+    #   resp.command_execution.logs.cloud_watch_logs_arn #=> String
+    #   resp.command_execution.logs.s3_logs_arn #=> String
+    #   resp.command_execution.logs.cloud_watch_logs.status #=> String, one of "ENABLED", "DISABLED"
+    #   resp.command_execution.logs.cloud_watch_logs.group_name #=> String
+    #   resp.command_execution.logs.cloud_watch_logs.stream_name #=> String
+    #   resp.command_execution.logs.s3_logs.status #=> String, one of "ENABLED", "DISABLED"
+    #   resp.command_execution.logs.s3_logs.location #=> String
+    #   resp.command_execution.logs.s3_logs.encryption_disabled #=> Boolean
+    #   resp.command_execution.logs.s3_logs.bucket_owner_access #=> String, one of "NONE", "READ_ONLY", "FULL"
+    #   resp.command_execution.sandbox_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/StartCommandExecution AWS API Documentation
+    #
+    # @overload start_command_execution(params = {})
+    # @param [Hash] params ({})
+    def start_command_execution(params = {}, options = {})
+      req = build_request(:start_command_execution, params)
+      req.send_request(options)
+    end
+
+    # Starts a sandbox.
+    #
+    # @option params [String] :project_name
+    #   The CodeBuild project name.
+    #
+    # @option params [String] :idempotency_token
+    #   A unique client token.
+    #
+    # @return [Types::StartSandboxOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::StartSandboxOutput#sandbox #sandbox} => Types::Sandbox
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.start_sandbox({
+    #     project_name: "NonEmptyString",
+    #     idempotency_token: "SensitiveString",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.sandbox.id #=> String
+    #   resp.sandbox.arn #=> String
+    #   resp.sandbox.project_name #=> String
+    #   resp.sandbox.request_time #=> Time
+    #   resp.sandbox.start_time #=> Time
+    #   resp.sandbox.end_time #=> Time
+    #   resp.sandbox.status #=> String
+    #   resp.sandbox.source.type #=> String, one of "CODECOMMIT", "CODEPIPELINE", "GITHUB", "GITLAB", "GITLAB_SELF_MANAGED", "S3", "BITBUCKET", "GITHUB_ENTERPRISE", "NO_SOURCE"
+    #   resp.sandbox.source.location #=> String
+    #   resp.sandbox.source.git_clone_depth #=> Integer
+    #   resp.sandbox.source.git_submodules_config.fetch_submodules #=> Boolean
+    #   resp.sandbox.source.buildspec #=> String
+    #   resp.sandbox.source.auth.type #=> String, one of "OAUTH", "CODECONNECTIONS", "SECRETS_MANAGER"
+    #   resp.sandbox.source.auth.resource #=> String
+    #   resp.sandbox.source.report_build_status #=> Boolean
+    #   resp.sandbox.source.build_status_config.context #=> String
+    #   resp.sandbox.source.build_status_config.target_url #=> String
+    #   resp.sandbox.source.insecure_ssl #=> Boolean
+    #   resp.sandbox.source.source_identifier #=> String
+    #   resp.sandbox.source_version #=> String
+    #   resp.sandbox.secondary_sources #=> Array
+    #   resp.sandbox.secondary_sources[0].type #=> String, one of "CODECOMMIT", "CODEPIPELINE", "GITHUB", "GITLAB", "GITLAB_SELF_MANAGED", "S3", "BITBUCKET", "GITHUB_ENTERPRISE", "NO_SOURCE"
+    #   resp.sandbox.secondary_sources[0].location #=> String
+    #   resp.sandbox.secondary_sources[0].git_clone_depth #=> Integer
+    #   resp.sandbox.secondary_sources[0].git_submodules_config.fetch_submodules #=> Boolean
+    #   resp.sandbox.secondary_sources[0].buildspec #=> String
+    #   resp.sandbox.secondary_sources[0].auth.type #=> String, one of "OAUTH", "CODECONNECTIONS", "SECRETS_MANAGER"
+    #   resp.sandbox.secondary_sources[0].auth.resource #=> String
+    #   resp.sandbox.secondary_sources[0].report_build_status #=> Boolean
+    #   resp.sandbox.secondary_sources[0].build_status_config.context #=> String
+    #   resp.sandbox.secondary_sources[0].build_status_config.target_url #=> String
+    #   resp.sandbox.secondary_sources[0].insecure_ssl #=> Boolean
+    #   resp.sandbox.secondary_sources[0].source_identifier #=> String
+    #   resp.sandbox.secondary_source_versions #=> Array
+    #   resp.sandbox.secondary_source_versions[0].source_identifier #=> String
+    #   resp.sandbox.secondary_source_versions[0].source_version #=> String
+    #   resp.sandbox.environment.type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "WINDOWS_SERVER_2022_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
+    #   resp.sandbox.environment.image #=> String
+    #   resp.sandbox.environment.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
+    #   resp.sandbox.environment.compute_configuration.v_cpu #=> Integer
+    #   resp.sandbox.environment.compute_configuration.memory #=> Integer
+    #   resp.sandbox.environment.compute_configuration.disk #=> Integer
+    #   resp.sandbox.environment.compute_configuration.machine_type #=> String, one of "GENERAL", "NVME"
+    #   resp.sandbox.environment.compute_configuration.instance_type #=> String
+    #   resp.sandbox.environment.fleet.fleet_arn #=> String
+    #   resp.sandbox.environment.environment_variables #=> Array
+    #   resp.sandbox.environment.environment_variables[0].name #=> String
+    #   resp.sandbox.environment.environment_variables[0].value #=> String
+    #   resp.sandbox.environment.environment_variables[0].type #=> String, one of "PLAINTEXT", "PARAMETER_STORE", "SECRETS_MANAGER"
+    #   resp.sandbox.environment.privileged_mode #=> Boolean
+    #   resp.sandbox.environment.certificate #=> String
+    #   resp.sandbox.environment.registry_credential.credential #=> String
+    #   resp.sandbox.environment.registry_credential.credential_provider #=> String, one of "SECRETS_MANAGER"
+    #   resp.sandbox.environment.image_pull_credentials_type #=> String, one of "CODEBUILD", "SERVICE_ROLE"
+    #   resp.sandbox.environment.docker_server.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
+    #   resp.sandbox.environment.docker_server.security_group_ids #=> Array
+    #   resp.sandbox.environment.docker_server.security_group_ids[0] #=> String
+    #   resp.sandbox.environment.docker_server.status.status #=> String
+    #   resp.sandbox.environment.docker_server.status.message #=> String
+    #   resp.sandbox.environment.host_kernel #=> String, one of "LINUX_KERNEL_4", "LINUX_KERNEL_6", "LINUX_KERNEL_LATEST"
+    #   resp.sandbox.file_system_locations #=> Array
+    #   resp.sandbox.file_system_locations[0].type #=> String, one of "EFS"
+    #   resp.sandbox.file_system_locations[0].location #=> String
+    #   resp.sandbox.file_system_locations[0].mount_point #=> String
+    #   resp.sandbox.file_system_locations[0].identifier #=> String
+    #   resp.sandbox.file_system_locations[0].mount_options #=> String
+    #   resp.sandbox.timeout_in_minutes #=> Integer
+    #   resp.sandbox.queued_timeout_in_minutes #=> Integer
+    #   resp.sandbox.vpc_config.vpc_id #=> String
+    #   resp.sandbox.vpc_config.subnets #=> Array
+    #   resp.sandbox.vpc_config.subnets[0] #=> String
+    #   resp.sandbox.vpc_config.security_group_ids #=> Array
+    #   resp.sandbox.vpc_config.security_group_ids[0] #=> String
+    #   resp.sandbox.log_config.cloud_watch_logs.status #=> String, one of "ENABLED", "DISABLED"
+    #   resp.sandbox.log_config.cloud_watch_logs.group_name #=> String
+    #   resp.sandbox.log_config.cloud_watch_logs.stream_name #=> String
+    #   resp.sandbox.log_config.s3_logs.status #=> String, one of "ENABLED", "DISABLED"
+    #   resp.sandbox.log_config.s3_logs.location #=> String
+    #   resp.sandbox.log_config.s3_logs.encryption_disabled #=> Boolean
+    #   resp.sandbox.log_config.s3_logs.bucket_owner_access #=> String, one of "NONE", "READ_ONLY", "FULL"
+    #   resp.sandbox.encryption_key #=> String
+    #   resp.sandbox.service_role #=> String
+    #   resp.sandbox.current_session.id #=> String
+    #   resp.sandbox.current_session.status #=> String
+    #   resp.sandbox.current_session.start_time #=> Time
+    #   resp.sandbox.current_session.end_time #=> Time
+    #   resp.sandbox.current_session.current_phase #=> String
+    #   resp.sandbox.current_session.phases #=> Array
+    #   resp.sandbox.current_session.phases[0].phase_type #=> String
+    #   resp.sandbox.current_session.phases[0].phase_status #=> String, one of "SUCCEEDED", "FAILED", "FAULT", "TIMED_OUT", "IN_PROGRESS", "STOPPED"
+    #   resp.sandbox.current_session.phases[0].start_time #=> Time
+    #   resp.sandbox.current_session.phases[0].end_time #=> Time
+    #   resp.sandbox.current_session.phases[0].duration_in_seconds #=> Integer
+    #   resp.sandbox.current_session.phases[0].contexts #=> Array
+    #   resp.sandbox.current_session.phases[0].contexts[0].status_code #=> String
+    #   resp.sandbox.current_session.phases[0].contexts[0].message #=> String
+    #   resp.sandbox.current_session.resolved_source_version #=> String
+    #   resp.sandbox.current_session.logs.group_name #=> String
+    #   resp.sandbox.current_session.logs.stream_name #=> String
+    #   resp.sandbox.current_session.logs.deep_link #=> String
+    #   resp.sandbox.current_session.logs.s3_deep_link #=> String
+    #   resp.sandbox.current_session.logs.cloud_watch_logs_arn #=> String
+    #   resp.sandbox.current_session.logs.s3_logs_arn #=> String
+    #   resp.sandbox.current_session.logs.cloud_watch_logs.status #=> String, one of "ENABLED", "DISABLED"
+    #   resp.sandbox.current_session.logs.cloud_watch_logs.group_name #=> String
+    #   resp.sandbox.current_session.logs.cloud_watch_logs.stream_name #=> String
+    #   resp.sandbox.current_session.logs.s3_logs.status #=> String, one of "ENABLED", "DISABLED"
+    #   resp.sandbox.current_session.logs.s3_logs.location #=> String
+    #   resp.sandbox.current_session.logs.s3_logs.encryption_disabled #=> Boolean
+    #   resp.sandbox.current_session.logs.s3_logs.bucket_owner_access #=> String, one of "NONE", "READ_ONLY", "FULL"
+    #   resp.sandbox.current_session.network_interface.subnet_id #=> String
+    #   resp.sandbox.current_session.network_interface.network_interface_id #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/StartSandbox AWS API Documentation
+    #
+    # @overload start_sandbox(params = {})
+    # @param [Hash] params ({})
+    def start_sandbox(params = {}, options = {})
+      req = build_request(:start_sandbox, params)
+      req.send_request(options)
+    end
+
+    # Starts a sandbox connection.
+    #
+    # @option params [required, String] :sandbox_id
+    #   A `sandboxId` or `sandboxArn`.
+    #
+    # @return [Types::StartSandboxConnectionOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::StartSandboxConnectionOutput#ssm_session #ssm_session} => Types::SSMSession
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.start_sandbox_connection({
+    #     sandbox_id: "NonEmptyString", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.ssm_session.session_id #=> String
+    #   resp.ssm_session.token_value #=> String
+    #   resp.ssm_session.stream_url #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/StartSandboxConnection AWS API Documentation
+    #
+    # @overload start_sandbox_connection(params = {})
+    # @param [Hash] params ({})
+    def start_sandbox_connection(params = {}, options = {})
+      req = build_request(:start_sandbox_connection, params)
       req.send_request(options)
     end
 
@@ -4940,13 +5651,15 @@ module Aws::CodeBuild
     #   resp.build.cache.location #=> String
     #   resp.build.cache.modes #=> Array
     #   resp.build.cache.modes[0] #=> String, one of "LOCAL_DOCKER_LAYER_CACHE", "LOCAL_SOURCE_CACHE", "LOCAL_CUSTOM_CACHE"
-    #   resp.build.environment.type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
+    #   resp.build.cache.cache_namespace #=> String
+    #   resp.build.environment.type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "WINDOWS_SERVER_2022_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
     #   resp.build.environment.image #=> String
-    #   resp.build.environment.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE"
+    #   resp.build.environment.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
     #   resp.build.environment.compute_configuration.v_cpu #=> Integer
     #   resp.build.environment.compute_configuration.memory #=> Integer
     #   resp.build.environment.compute_configuration.disk #=> Integer
     #   resp.build.environment.compute_configuration.machine_type #=> String, one of "GENERAL", "NVME"
+    #   resp.build.environment.compute_configuration.instance_type #=> String
     #   resp.build.environment.fleet.fleet_arn #=> String
     #   resp.build.environment.environment_variables #=> Array
     #   resp.build.environment.environment_variables[0].name #=> String
@@ -4957,6 +5670,12 @@ module Aws::CodeBuild
     #   resp.build.environment.registry_credential.credential #=> String
     #   resp.build.environment.registry_credential.credential_provider #=> String, one of "SECRETS_MANAGER"
     #   resp.build.environment.image_pull_credentials_type #=> String, one of "CODEBUILD", "SERVICE_ROLE"
+    #   resp.build.environment.docker_server.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
+    #   resp.build.environment.docker_server.security_group_ids #=> Array
+    #   resp.build.environment.docker_server.security_group_ids[0] #=> String
+    #   resp.build.environment.docker_server.status.status #=> String
+    #   resp.build.environment.docker_server.status.message #=> String
+    #   resp.build.environment.host_kernel #=> String, one of "LINUX_KERNEL_4", "LINUX_KERNEL_6", "LINUX_KERNEL_LATEST"
     #   resp.build.service_role #=> String
     #   resp.build.logs.group_name #=> String
     #   resp.build.logs.stream_name #=> String
@@ -5093,13 +5812,15 @@ module Aws::CodeBuild
     #   resp.build_batch.cache.location #=> String
     #   resp.build_batch.cache.modes #=> Array
     #   resp.build_batch.cache.modes[0] #=> String, one of "LOCAL_DOCKER_LAYER_CACHE", "LOCAL_SOURCE_CACHE", "LOCAL_CUSTOM_CACHE"
-    #   resp.build_batch.environment.type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
+    #   resp.build_batch.cache.cache_namespace #=> String
+    #   resp.build_batch.environment.type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "WINDOWS_SERVER_2022_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
     #   resp.build_batch.environment.image #=> String
-    #   resp.build_batch.environment.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE"
+    #   resp.build_batch.environment.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
     #   resp.build_batch.environment.compute_configuration.v_cpu #=> Integer
     #   resp.build_batch.environment.compute_configuration.memory #=> Integer
     #   resp.build_batch.environment.compute_configuration.disk #=> Integer
     #   resp.build_batch.environment.compute_configuration.machine_type #=> String, one of "GENERAL", "NVME"
+    #   resp.build_batch.environment.compute_configuration.instance_type #=> String
     #   resp.build_batch.environment.fleet.fleet_arn #=> String
     #   resp.build_batch.environment.environment_variables #=> Array
     #   resp.build_batch.environment.environment_variables[0].name #=> String
@@ -5110,6 +5831,12 @@ module Aws::CodeBuild
     #   resp.build_batch.environment.registry_credential.credential #=> String
     #   resp.build_batch.environment.registry_credential.credential_provider #=> String, one of "SECRETS_MANAGER"
     #   resp.build_batch.environment.image_pull_credentials_type #=> String, one of "CODEBUILD", "SERVICE_ROLE"
+    #   resp.build_batch.environment.docker_server.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
+    #   resp.build_batch.environment.docker_server.security_group_ids #=> Array
+    #   resp.build_batch.environment.docker_server.security_group_ids[0] #=> String
+    #   resp.build_batch.environment.docker_server.status.status #=> String
+    #   resp.build_batch.environment.docker_server.status.message #=> String
+    #   resp.build_batch.environment.host_kernel #=> String, one of "LINUX_KERNEL_4", "LINUX_KERNEL_6", "LINUX_KERNEL_LATEST"
     #   resp.build_batch.service_role #=> String
     #   resp.build_batch.log_config.cloud_watch_logs.status #=> String, one of "ENABLED", "DISABLED"
     #   resp.build_batch.log_config.cloud_watch_logs.group_name #=> String
@@ -5180,6 +5907,145 @@ module Aws::CodeBuild
     # @param [Hash] params ({})
     def stop_build_batch(params = {}, options = {})
       req = build_request(:stop_build_batch, params)
+      req.send_request(options)
+    end
+
+    # Stops a sandbox.
+    #
+    # @option params [required, String] :id
+    #   Information about the requested sandbox ID.
+    #
+    # @return [Types::StopSandboxOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::StopSandboxOutput#sandbox #sandbox} => Types::Sandbox
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.stop_sandbox({
+    #     id: "NonEmptyString", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.sandbox.id #=> String
+    #   resp.sandbox.arn #=> String
+    #   resp.sandbox.project_name #=> String
+    #   resp.sandbox.request_time #=> Time
+    #   resp.sandbox.start_time #=> Time
+    #   resp.sandbox.end_time #=> Time
+    #   resp.sandbox.status #=> String
+    #   resp.sandbox.source.type #=> String, one of "CODECOMMIT", "CODEPIPELINE", "GITHUB", "GITLAB", "GITLAB_SELF_MANAGED", "S3", "BITBUCKET", "GITHUB_ENTERPRISE", "NO_SOURCE"
+    #   resp.sandbox.source.location #=> String
+    #   resp.sandbox.source.git_clone_depth #=> Integer
+    #   resp.sandbox.source.git_submodules_config.fetch_submodules #=> Boolean
+    #   resp.sandbox.source.buildspec #=> String
+    #   resp.sandbox.source.auth.type #=> String, one of "OAUTH", "CODECONNECTIONS", "SECRETS_MANAGER"
+    #   resp.sandbox.source.auth.resource #=> String
+    #   resp.sandbox.source.report_build_status #=> Boolean
+    #   resp.sandbox.source.build_status_config.context #=> String
+    #   resp.sandbox.source.build_status_config.target_url #=> String
+    #   resp.sandbox.source.insecure_ssl #=> Boolean
+    #   resp.sandbox.source.source_identifier #=> String
+    #   resp.sandbox.source_version #=> String
+    #   resp.sandbox.secondary_sources #=> Array
+    #   resp.sandbox.secondary_sources[0].type #=> String, one of "CODECOMMIT", "CODEPIPELINE", "GITHUB", "GITLAB", "GITLAB_SELF_MANAGED", "S3", "BITBUCKET", "GITHUB_ENTERPRISE", "NO_SOURCE"
+    #   resp.sandbox.secondary_sources[0].location #=> String
+    #   resp.sandbox.secondary_sources[0].git_clone_depth #=> Integer
+    #   resp.sandbox.secondary_sources[0].git_submodules_config.fetch_submodules #=> Boolean
+    #   resp.sandbox.secondary_sources[0].buildspec #=> String
+    #   resp.sandbox.secondary_sources[0].auth.type #=> String, one of "OAUTH", "CODECONNECTIONS", "SECRETS_MANAGER"
+    #   resp.sandbox.secondary_sources[0].auth.resource #=> String
+    #   resp.sandbox.secondary_sources[0].report_build_status #=> Boolean
+    #   resp.sandbox.secondary_sources[0].build_status_config.context #=> String
+    #   resp.sandbox.secondary_sources[0].build_status_config.target_url #=> String
+    #   resp.sandbox.secondary_sources[0].insecure_ssl #=> Boolean
+    #   resp.sandbox.secondary_sources[0].source_identifier #=> String
+    #   resp.sandbox.secondary_source_versions #=> Array
+    #   resp.sandbox.secondary_source_versions[0].source_identifier #=> String
+    #   resp.sandbox.secondary_source_versions[0].source_version #=> String
+    #   resp.sandbox.environment.type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "WINDOWS_SERVER_2022_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
+    #   resp.sandbox.environment.image #=> String
+    #   resp.sandbox.environment.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
+    #   resp.sandbox.environment.compute_configuration.v_cpu #=> Integer
+    #   resp.sandbox.environment.compute_configuration.memory #=> Integer
+    #   resp.sandbox.environment.compute_configuration.disk #=> Integer
+    #   resp.sandbox.environment.compute_configuration.machine_type #=> String, one of "GENERAL", "NVME"
+    #   resp.sandbox.environment.compute_configuration.instance_type #=> String
+    #   resp.sandbox.environment.fleet.fleet_arn #=> String
+    #   resp.sandbox.environment.environment_variables #=> Array
+    #   resp.sandbox.environment.environment_variables[0].name #=> String
+    #   resp.sandbox.environment.environment_variables[0].value #=> String
+    #   resp.sandbox.environment.environment_variables[0].type #=> String, one of "PLAINTEXT", "PARAMETER_STORE", "SECRETS_MANAGER"
+    #   resp.sandbox.environment.privileged_mode #=> Boolean
+    #   resp.sandbox.environment.certificate #=> String
+    #   resp.sandbox.environment.registry_credential.credential #=> String
+    #   resp.sandbox.environment.registry_credential.credential_provider #=> String, one of "SECRETS_MANAGER"
+    #   resp.sandbox.environment.image_pull_credentials_type #=> String, one of "CODEBUILD", "SERVICE_ROLE"
+    #   resp.sandbox.environment.docker_server.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
+    #   resp.sandbox.environment.docker_server.security_group_ids #=> Array
+    #   resp.sandbox.environment.docker_server.security_group_ids[0] #=> String
+    #   resp.sandbox.environment.docker_server.status.status #=> String
+    #   resp.sandbox.environment.docker_server.status.message #=> String
+    #   resp.sandbox.environment.host_kernel #=> String, one of "LINUX_KERNEL_4", "LINUX_KERNEL_6", "LINUX_KERNEL_LATEST"
+    #   resp.sandbox.file_system_locations #=> Array
+    #   resp.sandbox.file_system_locations[0].type #=> String, one of "EFS"
+    #   resp.sandbox.file_system_locations[0].location #=> String
+    #   resp.sandbox.file_system_locations[0].mount_point #=> String
+    #   resp.sandbox.file_system_locations[0].identifier #=> String
+    #   resp.sandbox.file_system_locations[0].mount_options #=> String
+    #   resp.sandbox.timeout_in_minutes #=> Integer
+    #   resp.sandbox.queued_timeout_in_minutes #=> Integer
+    #   resp.sandbox.vpc_config.vpc_id #=> String
+    #   resp.sandbox.vpc_config.subnets #=> Array
+    #   resp.sandbox.vpc_config.subnets[0] #=> String
+    #   resp.sandbox.vpc_config.security_group_ids #=> Array
+    #   resp.sandbox.vpc_config.security_group_ids[0] #=> String
+    #   resp.sandbox.log_config.cloud_watch_logs.status #=> String, one of "ENABLED", "DISABLED"
+    #   resp.sandbox.log_config.cloud_watch_logs.group_name #=> String
+    #   resp.sandbox.log_config.cloud_watch_logs.stream_name #=> String
+    #   resp.sandbox.log_config.s3_logs.status #=> String, one of "ENABLED", "DISABLED"
+    #   resp.sandbox.log_config.s3_logs.location #=> String
+    #   resp.sandbox.log_config.s3_logs.encryption_disabled #=> Boolean
+    #   resp.sandbox.log_config.s3_logs.bucket_owner_access #=> String, one of "NONE", "READ_ONLY", "FULL"
+    #   resp.sandbox.encryption_key #=> String
+    #   resp.sandbox.service_role #=> String
+    #   resp.sandbox.current_session.id #=> String
+    #   resp.sandbox.current_session.status #=> String
+    #   resp.sandbox.current_session.start_time #=> Time
+    #   resp.sandbox.current_session.end_time #=> Time
+    #   resp.sandbox.current_session.current_phase #=> String
+    #   resp.sandbox.current_session.phases #=> Array
+    #   resp.sandbox.current_session.phases[0].phase_type #=> String
+    #   resp.sandbox.current_session.phases[0].phase_status #=> String, one of "SUCCEEDED", "FAILED", "FAULT", "TIMED_OUT", "IN_PROGRESS", "STOPPED"
+    #   resp.sandbox.current_session.phases[0].start_time #=> Time
+    #   resp.sandbox.current_session.phases[0].end_time #=> Time
+    #   resp.sandbox.current_session.phases[0].duration_in_seconds #=> Integer
+    #   resp.sandbox.current_session.phases[0].contexts #=> Array
+    #   resp.sandbox.current_session.phases[0].contexts[0].status_code #=> String
+    #   resp.sandbox.current_session.phases[0].contexts[0].message #=> String
+    #   resp.sandbox.current_session.resolved_source_version #=> String
+    #   resp.sandbox.current_session.logs.group_name #=> String
+    #   resp.sandbox.current_session.logs.stream_name #=> String
+    #   resp.sandbox.current_session.logs.deep_link #=> String
+    #   resp.sandbox.current_session.logs.s3_deep_link #=> String
+    #   resp.sandbox.current_session.logs.cloud_watch_logs_arn #=> String
+    #   resp.sandbox.current_session.logs.s3_logs_arn #=> String
+    #   resp.sandbox.current_session.logs.cloud_watch_logs.status #=> String, one of "ENABLED", "DISABLED"
+    #   resp.sandbox.current_session.logs.cloud_watch_logs.group_name #=> String
+    #   resp.sandbox.current_session.logs.cloud_watch_logs.stream_name #=> String
+    #   resp.sandbox.current_session.logs.s3_logs.status #=> String, one of "ENABLED", "DISABLED"
+    #   resp.sandbox.current_session.logs.s3_logs.location #=> String
+    #   resp.sandbox.current_session.logs.s3_logs.encryption_disabled #=> Boolean
+    #   resp.sandbox.current_session.logs.s3_logs.bucket_owner_access #=> String, one of "NONE", "READ_ONLY", "FULL"
+    #   resp.sandbox.current_session.network_interface.subnet_id #=> String
+    #   resp.sandbox.current_session.network_interface.network_interface_id #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/StopSandbox AWS API Documentation
+    #
+    # @overload stop_sandbox(params = {})
+    # @param [Hash] params ({})
+    def stop_sandbox(params = {}, options = {})
+      req = build_request(:stop_sandbox, params)
       req.send_request(options)
     end
 
@@ -5271,6 +6137,10 @@ module Aws::CodeBuild
     #
     #      </note>
     #
+    #   * `CUSTOM_INSTANCE_TYPE`: Specify the instance type for your compute
+    #     fleet. For a list of supported instance types, see [Supported
+    #     instance families ][2] in the *CodeBuild User Guide*.
+    #
     #   * `BUILD_GENERAL1_SMALL`: Use up to 4 GiB memory and 2 vCPUs for
     #     builds.
     #
@@ -5329,17 +6199,19 @@ module Aws::CodeBuild
     #   * For environment type `ARM_CONTAINER`, you can use up to 16 GiB
     #     memory and 8 vCPUs on ARM-based processors for builds.
     #
-    #   For more information, see [On-demand environment types][2] in the
+    #   For more information, see [On-demand environment types][3] in the
     #   *CodeBuild User Guide.*
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-compute-types.html#environment-reserved-capacity.types
-    #   [2]: https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-compute-types.html#environment.types
+    #   [2]: https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-compute-types.html#environment-reserved-capacity.instance-types
+    #   [3]: https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-compute-types.html#environment.types
     #
     # @option params [Types::ComputeConfiguration] :compute_configuration
     #   The compute configuration of the compute fleet. This is only required
-    #   if `computeType` is set to `ATTRIBUTE_BASED_COMPUTE`.
+    #   if `computeType` is set to `ATTRIBUTE_BASED_COMPUTE` or
+    #   `CUSTOM_INSTANCE_TYPE`.
     #
     # @option params [Types::ScalingConfigurationInput] :scaling_configuration
     #   The scaling configuration of the compute fleet.
@@ -5399,13 +6271,14 @@ module Aws::CodeBuild
     #   resp = client.update_fleet({
     #     arn: "NonEmptyString", # required
     #     base_capacity: 1,
-    #     environment_type: "WINDOWS_CONTAINER", # accepts WINDOWS_CONTAINER, LINUX_CONTAINER, LINUX_GPU_CONTAINER, ARM_CONTAINER, WINDOWS_SERVER_2019_CONTAINER, LINUX_LAMBDA_CONTAINER, ARM_LAMBDA_CONTAINER, LINUX_EC2, ARM_EC2, WINDOWS_EC2, MAC_ARM
-    #     compute_type: "BUILD_GENERAL1_SMALL", # accepts BUILD_GENERAL1_SMALL, BUILD_GENERAL1_MEDIUM, BUILD_GENERAL1_LARGE, BUILD_GENERAL1_XLARGE, BUILD_GENERAL1_2XLARGE, BUILD_LAMBDA_1GB, BUILD_LAMBDA_2GB, BUILD_LAMBDA_4GB, BUILD_LAMBDA_8GB, BUILD_LAMBDA_10GB, ATTRIBUTE_BASED_COMPUTE
+    #     environment_type: "WINDOWS_CONTAINER", # accepts WINDOWS_CONTAINER, LINUX_CONTAINER, LINUX_GPU_CONTAINER, ARM_CONTAINER, WINDOWS_SERVER_2019_CONTAINER, WINDOWS_SERVER_2022_CONTAINER, LINUX_LAMBDA_CONTAINER, ARM_LAMBDA_CONTAINER, LINUX_EC2, ARM_EC2, WINDOWS_EC2, MAC_ARM
+    #     compute_type: "BUILD_GENERAL1_SMALL", # accepts BUILD_GENERAL1_SMALL, BUILD_GENERAL1_MEDIUM, BUILD_GENERAL1_LARGE, BUILD_GENERAL1_XLARGE, BUILD_GENERAL1_2XLARGE, BUILD_LAMBDA_1GB, BUILD_LAMBDA_2GB, BUILD_LAMBDA_4GB, BUILD_LAMBDA_8GB, BUILD_LAMBDA_10GB, ATTRIBUTE_BASED_COMPUTE, CUSTOM_INSTANCE_TYPE
     #     compute_configuration: {
     #       v_cpu: 1,
     #       memory: 1,
     #       disk: 1,
     #       machine_type: "GENERAL", # accepts GENERAL, NVME
+    #       instance_type: "NonEmptyString",
     #     },
     #     scaling_configuration: {
     #       scaling_type: "TARGET_TRACKING_SCALING", # accepts TARGET_TRACKING_SCALING
@@ -5454,12 +6327,13 @@ module Aws::CodeBuild
     #   resp.fleet.status.context #=> String, one of "CREATE_FAILED", "UPDATE_FAILED", "ACTION_REQUIRED", "PENDING_DELETION", "INSUFFICIENT_CAPACITY"
     #   resp.fleet.status.message #=> String
     #   resp.fleet.base_capacity #=> Integer
-    #   resp.fleet.environment_type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
-    #   resp.fleet.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE"
+    #   resp.fleet.environment_type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "WINDOWS_SERVER_2022_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
+    #   resp.fleet.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
     #   resp.fleet.compute_configuration.v_cpu #=> Integer
     #   resp.fleet.compute_configuration.memory #=> Integer
     #   resp.fleet.compute_configuration.disk #=> Integer
     #   resp.fleet.compute_configuration.machine_type #=> String, one of "GENERAL", "NVME"
+    #   resp.fleet.compute_configuration.instance_type #=> String
     #   resp.fleet.scaling_configuration.scaling_type #=> String, one of "TARGET_TRACKING_SCALING"
     #   resp.fleet.scaling_configuration.target_tracking_scaling_configs #=> Array
     #   resp.fleet.scaling_configuration.target_tracking_scaling_configs[0].metric_type #=> String, one of "FLEET_UTILIZATION_RATE"
@@ -5724,16 +6598,18 @@ module Aws::CodeBuild
     #       type: "NO_CACHE", # required, accepts NO_CACHE, S3, LOCAL
     #       location: "String",
     #       modes: ["LOCAL_DOCKER_LAYER_CACHE"], # accepts LOCAL_DOCKER_LAYER_CACHE, LOCAL_SOURCE_CACHE, LOCAL_CUSTOM_CACHE
+    #       cache_namespace: "String",
     #     },
     #     environment: {
-    #       type: "WINDOWS_CONTAINER", # required, accepts WINDOWS_CONTAINER, LINUX_CONTAINER, LINUX_GPU_CONTAINER, ARM_CONTAINER, WINDOWS_SERVER_2019_CONTAINER, LINUX_LAMBDA_CONTAINER, ARM_LAMBDA_CONTAINER, LINUX_EC2, ARM_EC2, WINDOWS_EC2, MAC_ARM
+    #       type: "WINDOWS_CONTAINER", # required, accepts WINDOWS_CONTAINER, LINUX_CONTAINER, LINUX_GPU_CONTAINER, ARM_CONTAINER, WINDOWS_SERVER_2019_CONTAINER, WINDOWS_SERVER_2022_CONTAINER, LINUX_LAMBDA_CONTAINER, ARM_LAMBDA_CONTAINER, LINUX_EC2, ARM_EC2, WINDOWS_EC2, MAC_ARM
     #       image: "NonEmptyString", # required
-    #       compute_type: "BUILD_GENERAL1_SMALL", # required, accepts BUILD_GENERAL1_SMALL, BUILD_GENERAL1_MEDIUM, BUILD_GENERAL1_LARGE, BUILD_GENERAL1_XLARGE, BUILD_GENERAL1_2XLARGE, BUILD_LAMBDA_1GB, BUILD_LAMBDA_2GB, BUILD_LAMBDA_4GB, BUILD_LAMBDA_8GB, BUILD_LAMBDA_10GB, ATTRIBUTE_BASED_COMPUTE
+    #       compute_type: "BUILD_GENERAL1_SMALL", # required, accepts BUILD_GENERAL1_SMALL, BUILD_GENERAL1_MEDIUM, BUILD_GENERAL1_LARGE, BUILD_GENERAL1_XLARGE, BUILD_GENERAL1_2XLARGE, BUILD_LAMBDA_1GB, BUILD_LAMBDA_2GB, BUILD_LAMBDA_4GB, BUILD_LAMBDA_8GB, BUILD_LAMBDA_10GB, ATTRIBUTE_BASED_COMPUTE, CUSTOM_INSTANCE_TYPE
     #       compute_configuration: {
     #         v_cpu: 1,
     #         memory: 1,
     #         disk: 1,
     #         machine_type: "GENERAL", # accepts GENERAL, NVME
+    #         instance_type: "NonEmptyString",
     #       },
     #       fleet: {
     #         fleet_arn: "String",
@@ -5752,6 +6628,15 @@ module Aws::CodeBuild
     #         credential_provider: "SECRETS_MANAGER", # required, accepts SECRETS_MANAGER
     #       },
     #       image_pull_credentials_type: "CODEBUILD", # accepts CODEBUILD, SERVICE_ROLE
+    #       docker_server: {
+    #         compute_type: "BUILD_GENERAL1_SMALL", # required, accepts BUILD_GENERAL1_SMALL, BUILD_GENERAL1_MEDIUM, BUILD_GENERAL1_LARGE, BUILD_GENERAL1_XLARGE, BUILD_GENERAL1_2XLARGE, BUILD_LAMBDA_1GB, BUILD_LAMBDA_2GB, BUILD_LAMBDA_4GB, BUILD_LAMBDA_8GB, BUILD_LAMBDA_10GB, ATTRIBUTE_BASED_COMPUTE, CUSTOM_INSTANCE_TYPE
+    #         security_group_ids: ["NonEmptyString"],
+    #         status: {
+    #           status: "String",
+    #           message: "String",
+    #         },
+    #       },
+    #       host_kernel: "LINUX_KERNEL_4", # accepts LINUX_KERNEL_4, LINUX_KERNEL_6, LINUX_KERNEL_LATEST
     #     },
     #     service_role: "NonEmptyString",
     #     timeout_in_minutes: 1,
@@ -5865,13 +6750,15 @@ module Aws::CodeBuild
     #   resp.project.cache.location #=> String
     #   resp.project.cache.modes #=> Array
     #   resp.project.cache.modes[0] #=> String, one of "LOCAL_DOCKER_LAYER_CACHE", "LOCAL_SOURCE_CACHE", "LOCAL_CUSTOM_CACHE"
-    #   resp.project.environment.type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
+    #   resp.project.cache.cache_namespace #=> String
+    #   resp.project.environment.type #=> String, one of "WINDOWS_CONTAINER", "LINUX_CONTAINER", "LINUX_GPU_CONTAINER", "ARM_CONTAINER", "WINDOWS_SERVER_2019_CONTAINER", "WINDOWS_SERVER_2022_CONTAINER", "LINUX_LAMBDA_CONTAINER", "ARM_LAMBDA_CONTAINER", "LINUX_EC2", "ARM_EC2", "WINDOWS_EC2", "MAC_ARM"
     #   resp.project.environment.image #=> String
-    #   resp.project.environment.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE"
+    #   resp.project.environment.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
     #   resp.project.environment.compute_configuration.v_cpu #=> Integer
     #   resp.project.environment.compute_configuration.memory #=> Integer
     #   resp.project.environment.compute_configuration.disk #=> Integer
     #   resp.project.environment.compute_configuration.machine_type #=> String, one of "GENERAL", "NVME"
+    #   resp.project.environment.compute_configuration.instance_type #=> String
     #   resp.project.environment.fleet.fleet_arn #=> String
     #   resp.project.environment.environment_variables #=> Array
     #   resp.project.environment.environment_variables[0].name #=> String
@@ -5882,6 +6769,12 @@ module Aws::CodeBuild
     #   resp.project.environment.registry_credential.credential #=> String
     #   resp.project.environment.registry_credential.credential_provider #=> String, one of "SECRETS_MANAGER"
     #   resp.project.environment.image_pull_credentials_type #=> String, one of "CODEBUILD", "SERVICE_ROLE"
+    #   resp.project.environment.docker_server.compute_type #=> String, one of "BUILD_GENERAL1_SMALL", "BUILD_GENERAL1_MEDIUM", "BUILD_GENERAL1_LARGE", "BUILD_GENERAL1_XLARGE", "BUILD_GENERAL1_2XLARGE", "BUILD_LAMBDA_1GB", "BUILD_LAMBDA_2GB", "BUILD_LAMBDA_4GB", "BUILD_LAMBDA_8GB", "BUILD_LAMBDA_10GB", "ATTRIBUTE_BASED_COMPUTE", "CUSTOM_INSTANCE_TYPE"
+    #   resp.project.environment.docker_server.security_group_ids #=> Array
+    #   resp.project.environment.docker_server.security_group_ids[0] #=> String
+    #   resp.project.environment.docker_server.status.status #=> String
+    #   resp.project.environment.docker_server.status.message #=> String
+    #   resp.project.environment.host_kernel #=> String, one of "LINUX_KERNEL_4", "LINUX_KERNEL_6", "LINUX_KERNEL_LATEST"
     #   resp.project.service_role #=> String
     #   resp.project.timeout_in_minutes #=> Integer
     #   resp.project.queued_timeout_in_minutes #=> Integer
@@ -5908,6 +6801,9 @@ module Aws::CodeBuild
     #   resp.project.webhook.scope_configuration.scope #=> String, one of "GITHUB_ORGANIZATION", "GITHUB_GLOBAL", "GITLAB_GROUP"
     #   resp.project.webhook.status #=> String, one of "CREATING", "CREATE_FAILED", "ACTIVE", "DELETING"
     #   resp.project.webhook.status_message #=> String
+    #   resp.project.webhook.pull_request_build_policy.requires_comment_approval #=> String, one of "DISABLED", "ALL_PULL_REQUESTS", "FORK_PULL_REQUESTS"
+    #   resp.project.webhook.pull_request_build_policy.approver_roles #=> Array
+    #   resp.project.webhook.pull_request_build_policy.approver_roles[0] #=> String, one of "GITHUB_READ", "GITHUB_TRIAGE", "GITHUB_WRITE", "GITHUB_MAINTAIN", "GITHUB_ADMIN", "GITLAB_GUEST", "GITLAB_PLANNER", "GITLAB_REPORTER", "GITLAB_DEVELOPER", "GITLAB_MAINTAINER", "GITLAB_OWNER", "BITBUCKET_READ", "BITBUCKET_WRITE", "BITBUCKET_ADMIN"
     #   resp.project.vpc_config.vpc_id #=> String
     #   resp.project.vpc_config.subnets #=> Array
     #   resp.project.vpc_config.subnets[0] #=> String
@@ -6155,6 +7051,12 @@ module Aws::CodeBuild
     #
     #   [1]: https://docs.aws.amazon.com/codebuild/latest/userguide/sample-runner-buildkite.html
     #
+    # @option params [Types::PullRequestBuildPolicy] :pull_request_build_policy
+    #   A PullRequestBuildPolicy object that defines comment-based approval
+    #   requirements for triggering builds on pull requests. This policy helps
+    #   control when automated builds are executed based on contributor
+    #   permissions and approval workflows.
+    #
     # @return [Types::UpdateWebhookOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::UpdateWebhookOutput#webhook #webhook} => Types::Webhook
@@ -6175,6 +7077,10 @@ module Aws::CodeBuild
     #       ],
     #     ],
     #     build_type: "BUILD", # accepts BUILD, BUILD_BATCH, RUNNER_BUILDKITE_BUILD
+    #     pull_request_build_policy: {
+    #       requires_comment_approval: "DISABLED", # required, accepts DISABLED, ALL_PULL_REQUESTS, FORK_PULL_REQUESTS
+    #       approver_roles: ["GITHUB_READ"], # accepts GITHUB_READ, GITHUB_TRIAGE, GITHUB_WRITE, GITHUB_MAINTAIN, GITHUB_ADMIN, GITLAB_GUEST, GITLAB_PLANNER, GITLAB_REPORTER, GITLAB_DEVELOPER, GITLAB_MAINTAINER, GITLAB_OWNER, BITBUCKET_READ, BITBUCKET_WRITE, BITBUCKET_ADMIN
+    #     },
     #   })
     #
     # @example Response structure
@@ -6196,6 +7102,9 @@ module Aws::CodeBuild
     #   resp.webhook.scope_configuration.scope #=> String, one of "GITHUB_ORGANIZATION", "GITHUB_GLOBAL", "GITLAB_GROUP"
     #   resp.webhook.status #=> String, one of "CREATING", "CREATE_FAILED", "ACTIVE", "DELETING"
     #   resp.webhook.status_message #=> String
+    #   resp.webhook.pull_request_build_policy.requires_comment_approval #=> String, one of "DISABLED", "ALL_PULL_REQUESTS", "FORK_PULL_REQUESTS"
+    #   resp.webhook.pull_request_build_policy.approver_roles #=> Array
+    #   resp.webhook.pull_request_build_policy.approver_roles[0] #=> String, one of "GITHUB_READ", "GITHUB_TRIAGE", "GITHUB_WRITE", "GITHUB_MAINTAIN", "GITHUB_ADMIN", "GITLAB_GUEST", "GITLAB_PLANNER", "GITLAB_REPORTER", "GITLAB_DEVELOPER", "GITLAB_MAINTAINER", "GITLAB_OWNER", "BITBUCKET_READ", "BITBUCKET_WRITE", "BITBUCKET_ADMIN"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/UpdateWebhook AWS API Documentation
     #
@@ -6224,7 +7133,7 @@ module Aws::CodeBuild
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-codebuild'
-      context[:gem_version] = '1.148.0'
+      context[:gem_version] = '1.177.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

@@ -1,6 +1,171 @@
 Unreleased Changes
 ------------------
 
+1.105.0 (2026-07-22)
+------------------
+
+* Feature - Launching DEED and MREP in US GOV
+
+1.104.0 (2026-07-20)
+------------------
+
+* Feature - Amazon SES introduces three new Pricing Plans (Essentials, Pro, Enterprise), which bundle SES features under one pricing umbrella.  The new PutAccountPricingAttributes API lets the user set the account's plan, while current plan retrievalif done through the new PricingAttributes field on GetAccount.
+
+1.103.0 (2026-07-09)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.102.0 (2026-05-29)
+------------------
+
+* Feature - This release introduces support for Tenant Suppression Lists
+
+1.101.0 (2026-05-22)
+------------------
+
+* Feature - Adding new BDD representation of endpoint ruleset
+
+1.100.0 (2026-05-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.99.0 (2026-05-19)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.98.0 (2026-05-13)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.97.0 (2026-03-18)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.96.0 (2026-03-06)
+------------------
+
+* Feature - Adds support for longer email message header values, increasing the maximum length from 870 to 995 characters for RFC 5322 compliance.
+
+1.95.0 (2026-01-16)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.94.0 (2026-01-08)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.93.0 (2026-01-05)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.92.0 (2025-12-18)
+------------------
+
+* Feature - Amazon SES introduces Email Validation feature which checks email addresses for syntax errors, domain validity, and risky addresses to help maintain deliverability and protect sender reputation. SES also adds resource tagging and ABAC support for EmailTemplates and CustomVerificationEmailTemplates.
+
+1.91.0 (2025-12-11)
+------------------
+
+* Feature - Update GetEmailIdentity and CreateEmailIdentity response to include SigningHostedZone in DkimAttributes. Updated PutEmailIdentityDkimSigningAttributes Response to include SigningHostedZone.
+
+1.90.0 (2025-12-08)
+------------------
+
+* Feature - Update Mail Manager Archive ARN validation
+
+1.89.0 (2025-12-05)
+------------------
+
+* Feature - Updating the desired url for `PutEmailIdentityDkimSigningAttributes` from v1 to v2
+
+1.88.0 (2025-11-21)
+------------------
+
+* Feature - Added support for new SES regions - Asia Pacific (Malaysia) and Canada (Calgary)
+
+1.87.0 (2025-10-23)
+------------------
+
+* Feature - Update endpoint ruleset parameters casing
+
+1.86.0 (2025-10-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.85.0 (2025-08-28)
+------------------
+
+* Feature - Remove incorrect endpoint tests
+
+1.84.0 (2025-08-26)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.83.0 (2025-08-20)
+------------------
+
+* Feature - Remove incorrect endpoint tests
+
+1.82.0 (2025-08-04)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.81.0 (2025-07-31)
+------------------
+
+* Feature - This release introduces support for Multi-tenant management
+
+1.80.0 (2025-07-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.79.0 (2025-07-18)
+------------------
+
+* Feature - Added IP Visibility support for managed dedicated pools. Enhanced GetDedicatedIp and GetDedicatedIps APIs to return managed IP addresses.
+
+1.78.0 (2025-06-27)
+------------------
+
+* Feature - Added support for new SES regions
+
+1.77.0 (2025-06-02)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.76.0 (2025-05-12)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.75.0 (2025-05-01)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.74.0 (2025-04-03)
+------------------
+
+* Feature - This release enables customers to provide attachments in the SESv2 SendEmail and SendBulkEmail APIs.
+
+1.73.0 (2025-03-31)
+------------------
+
+* Feature - Add dual-stack support to global endpoints.
+
 1.72.0 (2025-02-19)
 ------------------
 

@@ -10,11 +10,111 @@
 module Aws::ECS
   module Types
 
+    # The minimum and maximum number of accelerators (such as GPUs) for
+    # instance type selection. This is used for workloads that require
+    # specific numbers of accelerators.
+    #
+    # @!attribute [rw] min
+    #   The minimum number of accelerators. Instance types with fewer
+    #   accelerators are excluded from selection.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max
+    #   The maximum number of accelerators. Instance types with more
+    #   accelerators are excluded from selection.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/AcceleratorCountRequest AWS API Documentation
+    #
+    class AcceleratorCountRequest < Struct.new(
+      :min,
+      :max)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The minimum and maximum total accelerator memory in mebibytes (MiB)
+    # for instance type selection. This is important for GPU workloads that
+    # require specific amounts of video memory.
+    #
+    # @!attribute [rw] min
+    #   The minimum total accelerator memory in MiB. Instance types with
+    #   less accelerator memory are excluded from selection.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max
+    #   The maximum total accelerator memory in MiB. Instance types with
+    #   more accelerator memory are excluded from selection.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/AcceleratorTotalMemoryMiBRequest AWS API Documentation
+    #
+    class AcceleratorTotalMemoryMiBRequest < Struct.new(
+      :min,
+      :max)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # You don't have authorization to perform the requested action.
+    #
+    # @!attribute [rw] message
+    #   Message that describes the cause of the exception.
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/AccessDeniedException AWS API Documentation
     #
-    class AccessDeniedException < Aws::EmptyStructure; end
+    class AccessDeniedException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The advanced settings for a load balancer used in blue/green
+    # deployments. Specify the alternate target group, listener rules, and
+    # IAM role required for traffic shifting during blue/green deployments.
+    # For more information, see [Required resources for Amazon ECS
+    # blue/green deployments][1] in the *Amazon Elastic Container Service
+    # Developer Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/blue-green-deployment-implementation.html
+    #
+    # @!attribute [rw] alternate_target_group_arn
+    #   The Amazon Resource Name (ARN) of the alternate target group for
+    #   Amazon ECS blue/green deployments.
+    #   @return [String]
+    #
+    # @!attribute [rw] production_listener_rule
+    #   The Amazon Resource Name (ARN) that that identifies the production
+    #   listener rule (in the case of an Application Load Balancer) or
+    #   listener (in the case for an Network Load Balancer) for routing
+    #   production traffic.
+    #   @return [String]
+    #
+    # @!attribute [rw] test_listener_rule
+    #   The Amazon Resource Name (ARN) that identifies ) that identifies the
+    #   test listener rule (in the case of an Application Load Balancer) or
+    #   listener (in the case for an Network Load Balancer) for routing test
+    #   traffic.
+    #   @return [String]
+    #
+    # @!attribute [rw] role_arn
+    #   The Amazon Resource Name (ARN) of the IAM role that grants Amazon
+    #   ECS permission to call the Elastic Load Balancing APIs for you.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/AdvancedConfiguration AWS API Documentation
+    #
+    class AdvancedConfiguration < Struct.new(
+      :alternate_target_group_arn,
+      :production_listener_rule,
+      :test_listener_rule,
+      :role_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # An object representing a container instance or task attachment.
     #
@@ -133,9 +233,39 @@ module Aws::ECS
     # [1]: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_ListAttributes.html
     # [2]: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_DeleteAttributes.html
     #
+    # @!attribute [rw] message
+    #   Message that describes the cause of the exception.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/AttributeLimitExceededException AWS API Documentation
     #
-    class AttributeLimitExceededException < Aws::EmptyStructure; end
+    class AttributeLimitExceededException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The auto repair configuration for an Amazon ECS Managed Instances
+    # capacity provider. When enabled, Amazon ECS automatically replaces
+    # container instances that are detected as unhealthy based on container
+    # instance health checks, including accelerated compute device and
+    # daemon health checks.
+    #
+    # @!attribute [rw] actions_status
+    #   The status of auto repair actions for the capacity provider. When
+    #   set to `ENABLED`, Amazon ECS automatically replaces container
+    #   instances with an `IMPAIRED` health status. When set to `DISABLED`,
+    #   Amazon ECS still monitors container instance health but does not
+    #   automatically replace impaired instances.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/AutoRepairConfiguration AWS API Documentation
+    #
+    class AutoRepairConfiguration < Struct.new(
+      :actions_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # The details of the Auto Scaling group for the capacity provider.
     #
@@ -287,16 +417,77 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # The minimum and maximum baseline Amazon EBS bandwidth in megabits per
+    # second (Mbps) for instance type selection. This is important for
+    # workloads with high storage I/O requirements.
+    #
+    # @!attribute [rw] min
+    #   The minimum baseline Amazon EBS bandwidth in Mbps. Instance types
+    #   with lower Amazon EBS bandwidth are excluded from selection.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max
+    #   The maximum baseline Amazon EBS bandwidth in Mbps. Instance types
+    #   with higher Amazon EBS bandwidth are excluded from selection.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/BaselineEbsBandwidthMbpsRequest AWS API Documentation
+    #
+    class BaselineEbsBandwidthMbpsRequest < Struct.new(
+      :min,
+      :max)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Your Amazon Web Services account was blocked. For more information,
-    # contact [ Amazon Web ServicesSupport][1].
+    # contact [ Amazon Web Services Support][1].
     #
     #
     #
     # [1]: http://aws.amazon.com/contact-us/
     #
+    # @!attribute [rw] message
+    #   Message that describes the cause of the exception.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/BlockedException AWS API Documentation
     #
-    class BlockedException < Aws::EmptyStructure; end
+    class BlockedException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration for a canary deployment strategy that shifts a fixed
+    # percentage of traffic to the new service revision, waits for a
+    # specified bake time, then shifts the remaining traffic.
+    #
+    # This is only valid when you run `CreateService` or `UpdateService`
+    # with `deploymentController` set to `ECS` and a
+    # `deploymentConfiguration` with a strategy set to `CANARY`.
+    #
+    # @!attribute [rw] canary_percent
+    #   The percentage of production traffic to shift to the new service
+    #   revision during the canary phase. Valid values are multiples of 0.1
+    #   from 0.1 to 100.0. The default value is 5.0.
+    #   @return [Float]
+    #
+    # @!attribute [rw] canary_bake_time_in_minutes
+    #   The amount of time in minutes to wait during the canary phase before
+    #   shifting the remaining production traffic to the new service
+    #   revision. Valid values are 0 to 1440 minutes (24 hours). The default
+    #   value is 10.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/CanaryConfiguration AWS API Documentation
+    #
+    class CanaryConfiguration < Struct.new(
+      :canary_percent,
+      :canary_bake_time_in_minutes)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # The details for a capacity provider.
     #
@@ -309,6 +500,14 @@ module Aws::ECS
     #   The name of the capacity provider.
     #   @return [String]
     #
+    # @!attribute [rw] cluster
+    #   The cluster that this capacity provider is associated with. Managed
+    #   instances capacity providers are cluster-scoped, meaning they can
+    #   only be used within their associated cluster.
+    #
+    #   This is required for Managed instances.
+    #   @return [String]
+    #
     # @!attribute [rw] status
     #   The current status of the capacity provider. Only capacity providers
     #   in an `ACTIVE` state can be used in a cluster. When a capacity
@@ -318,6 +517,12 @@ module Aws::ECS
     # @!attribute [rw] auto_scaling_group_provider
     #   The Auto Scaling group settings for the capacity provider.
     #   @return [Types::AutoScalingGroupProvider]
+    #
+    # @!attribute [rw] managed_instances_provider
+    #   The configuration for the Amazon ECS Managed Instances provider.
+    #   This includes the infrastructure role, the launch template
+    #   configuration, and tag propagation settings.
+    #   @return [Types::ManagedInstancesProvider]
     #
     # @!attribute [rw] update_status
     #   The update status of the capacity provider. The following are the
@@ -374,16 +579,25 @@ module Aws::ECS
     #     against your tags per resource limit.
     #   @return [Array<Types::Tag>]
     #
+    # @!attribute [rw] type
+    #   The type of capacity provider. For Amazon ECS Managed Instances,
+    #   this value is `MANAGED_INSTANCES`, indicating that Amazon ECS
+    #   manages the underlying Amazon EC2 instances on your behalf.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/CapacityProvider AWS API Documentation
     #
     class CapacityProvider < Struct.new(
       :capacity_provider_arn,
       :name,
+      :cluster,
       :status,
       :auto_scaling_group_provider,
+      :managed_instances_provider,
       :update_status,
       :update_status_reason,
-      :tags)
+      :tags,
+      :type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -446,20 +660,52 @@ module Aws::ECS
     #   `RunTask` or `CreateService` actions using the capacity provider
     #   strategy will fail.
     #
-    #   An example scenario for using weights is defining a strategy that
-    #   contains two capacity providers and both have a weight of `1`, then
-    #   when the `base` is satisfied, the tasks will be split evenly across
-    #   the two capacity providers. Using that same logic, if you specify a
-    #   weight of `1` for *capacityProviderA* and a weight of `4` for
-    #   *capacityProviderB*, then for every one task that's run using
-    #   *capacityProviderA*, four tasks would use *capacityProviderB*.
+    #   Weight value characteristics:
+    #
+    #   * Weight is considered after the base value is satisfied
+    #
+    #   * The default value is `0` if not specified
+    #
+    #   * The valid range is 0 to 1,000
+    #
+    #   * At least one capacity provider must have a weight greater than
+    #     zero
+    #
+    #   * Capacity providers with weight of `0` cannot place tasks
+    #
+    #   Task distribution logic:
+    #
+    #   1.  Base satisfaction: The minimum number of tasks specified by the
+    #       base value are placed on that capacity provider
+    #
+    #   2.  Weight distribution: After base requirements are met, additional
+    #       tasks are distributed according to weight ratios
+    #
+    #   Examples:
+    #
+    #   Equal Distribution: Two capacity providers both with weight `1` will
+    #   split tasks evenly after base requirements are met.
+    #
+    #   Weighted Distribution: If capacityProviderA has weight `1` and
+    #   capacityProviderB has weight `4`, then for every 1 task on A, 4
+    #   tasks will run on B.
     #   @return [Integer]
     #
     # @!attribute [rw] base
     #   The *base* value designates how many tasks, at a minimum, to run on
-    #   the specified capacity provider. Only one capacity provider in a
-    #   capacity provider strategy can have a *base* defined. If no value is
-    #   specified, the default value of `0` is used.
+    #   the specified capacity provider for each service. Only one capacity
+    #   provider in a capacity provider strategy can have a *base* defined.
+    #   If no value is specified, the default value of `0` is used.
+    #
+    #   Base value characteristics:
+    #
+    #   * Only one capacity provider in a strategy can have a base defined
+    #
+    #   * The default value is `0` if not specified
+    #
+    #   * The valid range is 0 to 100,000
+    #
+    #   * Base requirements are satisfied first before weight distribution
     #   @return [Integer]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/CapacityProviderStrategyItem AWS API Documentation
@@ -472,23 +718,46 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # The Capacity Reservation configurations to be used when using the
+    # `RESERVED` capacity option type.
+    #
+    # @!attribute [rw] reservation_group_arn
+    #   The ARN of the Capacity Reservation resource group in which to run
+    #   the instance.
+    #   @return [String]
+    #
+    # @!attribute [rw] reservation_preference
+    #   The preference on when capacity reservations should be used.
+    #
+    #   Valid values are:
+    #
+    #   * `RESERVATIONS_ONLY` - Exclusively launch instances into capacity
+    #     reservations that match the instance requirements configured for
+    #     the capacity provider. If none exist, instances will fail to
+    #     provision.
+    #
+    #   * `RESERVATIONS_FIRST` - Prefer to launch instances into a capacity
+    #     reservation if any exist that match the instance requirements
+    #     configured for the capacity provider. If none exist, fall back to
+    #     launching instances On-Demand.
+    #
+    #   * `RESERVATIONS_EXCLUDED` - Avoid using capacity reservations and
+    #     launch exclusively On-Demand.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/CapacityReservationRequest AWS API Documentation
+    #
+    class CapacityReservationRequest < Struct.new(
+      :reservation_group_arn,
+      :reservation_preference)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # These errors are usually caused by a client action. This client action
     # might be using an action or resource on behalf of a user that doesn't
     # have permissions to use the action or resource. Or, it might be
     # specifying an identifier that isn't valid.
-    #
-    # The following list includes additional causes for the error:
-    #
-    # * The `RunTask` could not be processed because you use managed scaling
-    #   and there is a capacity error because the quota of tasks in the
-    #   `PROVISIONING` per cluster has been reached. For information about
-    #   the service quotas, see [Amazon ECS service quotas][1].
-    #
-    # ^
-    #
-    #
-    #
-    # [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-quotas.html
     #
     # @!attribute [rw] message
     #   Message that describes the cause of the exception.
@@ -523,7 +792,8 @@ module Aws::ECS
     #   @return [String]
     #
     # @!attribute [rw] configuration
-    #   The execute command configuration for the cluster.
+    #   The execute command and managed storage configuration for the
+    #   cluster.
     #   @return [Types::ClusterConfiguration]
     #
     # @!attribute [rw] status
@@ -574,7 +844,7 @@ module Aws::ECS
     #
     # @!attribute [rw] active_services_count
     #   The number of services that are running on the cluster in an
-    #   `ACTIVE` state. You can view these services with [PListServices][1].
+    #   `ACTIVE` state. You can view these services with [ListServices][1].
     #
     #
     #
@@ -738,6 +1008,25 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # The cluster contains one or more capacity providers that prevent the
+    # requested operation. This exception occurs when you try to delete a
+    # cluster that still has active capacity providers, including Amazon ECS
+    # Managed Instances capacity providers. You must first delete all
+    # capacity providers from the cluster before you can delete the cluster
+    # itself.
+    #
+    # @!attribute [rw] message
+    #   Message that describes the cause of the exception.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ClusterContainsCapacityProviderException AWS API Documentation
+    #
+    class ClusterContainsCapacityProviderException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # You can't delete a cluster that has registered container instances.
     # First, deregister the container instances before you can delete the
     # cluster. For more information, see [DeregisterContainerInstance][1].
@@ -746,9 +1035,17 @@ module Aws::ECS
     #
     # [1]: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_DeregisterContainerInstance.html
     #
+    # @!attribute [rw] message
+    #   Message that describes the cause of the exception.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ClusterContainsContainerInstancesException AWS API Documentation
     #
-    class ClusterContainsContainerInstancesException < Aws::EmptyStructure; end
+    class ClusterContainsContainerInstancesException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # You can't delete a cluster that contains services. First, update the
     # service to reduce its desired task count to 0, and then delete the
@@ -760,15 +1057,31 @@ module Aws::ECS
     # [1]: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_UpdateService.html
     # [2]: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_DeleteService.html
     #
+    # @!attribute [rw] message
+    #   Message that describes the cause of the exception.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ClusterContainsServicesException AWS API Documentation
     #
-    class ClusterContainsServicesException < Aws::EmptyStructure; end
+    class ClusterContainsServicesException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # You can't delete a cluster that has active tasks.
     #
+    # @!attribute [rw] message
+    #   Message that describes the cause of the exception.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ClusterContainsTasksException AWS API Documentation
     #
-    class ClusterContainsTasksException < Aws::EmptyStructure; end
+    class ClusterContainsTasksException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # The specified cluster wasn't found. You can view your available
     # clusters with [ListClusters][1]. Amazon ECS clusters are Region
@@ -778,9 +1091,17 @@ module Aws::ECS
     #
     # [1]: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_ListClusters.html
     #
+    # @!attribute [rw] message
+    #   Message that describes the cause of the exception.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ClusterNotFoundException AWS API Documentation
     #
-    class ClusterNotFoundException < Aws::EmptyStructure; end
+    class ClusterNotFoundException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # Use this parameter to set a default Service Connect namespace. After
     # you set a default Service Connect namespace, any new services with
@@ -900,7 +1221,7 @@ module Aws::ECS
     # [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/cloudwatch-container-insights.html
     #
     # @!attribute [rw] name
-    #   The name of the cluster setting. The value is `containerInsights` .
+    #   The name of the cluster setting. The value is `containerInsights`.
     #   @return [String]
     #
     # @!attribute [rw] value
@@ -932,27 +1253,23 @@ module Aws::ECS
       include Aws::Structure
     end
 
-    # The `RunTask` request could not be processed due to conflicts. The
-    # provided `clientToken` is already in use with a different `RunTask`
-    # request. The `resourceIds` are the existing task ARNs which are
-    # already associated with the `clientToken`.
-    #
-    # To fix this issue:
-    #
-    # * Run `RunTask` with a unique `clientToken`.
-    #
-    # * Run `RunTask` with the `clientToken` and the original set of
-    #   parameters
+    # The request could not be processed because of conflict in the current
+    # state of the resource.
     #
     # @!attribute [rw] resource_ids
     #   The existing task ARNs which are already associated with the
     #   `clientToken`.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] message
+    #   Message that describes the cause of the exception.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ConflictException AWS API Documentation
     #
     class ConflictException < Struct.new(
-      :resource_ids)
+      :resource_ids,
+      :message)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -992,7 +1309,7 @@ module Aws::ECS
     #   @return [Integer]
     #
     # @!attribute [rw] reason
-    #   A short (255 max characters) human-readable string to provide
+    #   A short (1024 max characters) human-readable string to provide
     #   additional details about a running or stopped container.
     #   @return [String]
     #
@@ -1033,6 +1350,10 @@ module Aws::ECS
     #   The IDs of each GPU assigned to the container.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] neuron_device_ids
+    #   The IDs of each Neuron device assigned to the container.
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/Container AWS API Documentation
     #
     class Container < Struct.new(
@@ -1052,7 +1373,8 @@ module Aws::ECS
       :cpu,
       :memory,
       :memory_reservation,
-      :gpu_ids)
+      :gpu_ids,
+      :neuron_device_ids)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1074,11 +1396,18 @@ module Aws::ECS
     #   The image used to start a container. This string is passed directly
     #   to the Docker daemon. By default, images in the Docker Hub registry
     #   are available. Other repositories are specified with either `
-    #   repository-url/image:tag ` or ` repository-url/image@digest `. Up to
-    #   255 letters (uppercase and lowercase), numbers, hyphens,
-    #   underscores, colons, periods, forward slashes, and number signs are
-    #   allowed. This parameter maps to `Image` in the docker container
-    #   create command and the `IMAGE` parameter of docker run.
+    #   repository-url/image:tag ` or ` repository-url/image@digest `. For
+    #   images using tags (repository-url/image:tag), up to 255 characters
+    #   total are allowed, including letters (uppercase and lowercase),
+    #   numbers, hyphens, underscores, colons, periods, forward slashes, and
+    #   number signs (#). For images using digests
+    #   (repository-url/image@digest), the 255 character limit applies only
+    #   to the repository URL and image name (everything before the @ sign).
+    #   The only supported hash function is sha256, and the hash value after
+    #   sha256: must be exactly 64 characters (only letters A-F, a-f, and
+    #   numbers 0-9 are allowed). This parameter maps to `Image` in the
+    #   docker container create command and the `IMAGE` parameter of docker
+    #   run.
     #
     #   * When a new task starts, the Amazon ECS container agent pulls the
     #     latest version of the specified image and tag for the container to
@@ -1108,7 +1437,7 @@ module Aws::ECS
     #
     # @!attribute [rw] cpu
     #   The number of `cpu` units reserved for the container. This parameter
-    #   maps to `CpuShares` in the docker container create commandand the
+    #   maps to `CpuShares` in the docker container create command and the
     #   `--cpu-shares` option to docker run.
     #
     #   This field is optional for tasks using the Fargate launch type, and
@@ -1264,12 +1593,12 @@ module Aws::ECS
     #   so you can't access a container's mapped port from the host
     #   itself.
     #
-    #   This parameter maps to `PortBindings` in the the docker container
-    #   create command and the `--publish` option to docker run. If the
-    #   network mode of a task definition is set to `none`, then you can't
-    #   specify port mappings. If the network mode of a task definition is
-    #   set to `host`, then host ports must either be undefined or they must
-    #   match the container port in the port mapping.
+    #   This parameter maps to `PortBindings` in the docker container create
+    #   command and the `--publish` option to docker run. If the network
+    #   mode of a task definition is set to `none`, then you can't specify
+    #   port mappings. If the network mode of a task definition is set to
+    #   `host`, then host ports must either be undefined or they must match
+    #   the container port in the port mapping.
     #
     #   <note markdown="1"> After a task reaches the `RUNNING` status, manual and automatic host
     #   and container port assignments are visible in the **Network
@@ -1322,7 +1651,8 @@ module Aws::ECS
     #   `entryPoint`, update your container agent or enter your commands and
     #   arguments as `command` array items instead.
     #
-    #   The entry point that's passed to the container. This parameter maps
+    #    The entry point that's passed to the container. This parameter
+    #   maps
     #   to `Entrypoint` in the docker container create command and the
     #   `--entrypoint` option to docker run.
     #   @return [Array<String>]
@@ -1801,8 +2131,8 @@ module Aws::ECS
     #   @return [Array<Types::SystemControl>]
     #
     # @!attribute [rw] resource_requirements
-    #   The type and amount of a resource to assign to a container. The only
-    #   supported resource is a GPU.
+    #   The type and amount of a resource to assign to a container. The
+    #   supported resources are GPUs and Neuron devices.
     #   @return [Array<Types::ResourceRequirement>]
     #
     # @!attribute [rw] firelens_configuration
@@ -1907,7 +2237,7 @@ module Aws::ECS
       :resource_requirements,
       :firelens_configuration,
       :credential_specs)
-      SENSITIVE = []
+      SENSITIVE = [:repository_credentials, :environment]
       include Aws::Structure
     end
 
@@ -2302,8 +2632,8 @@ module Aws::ECS
     #
     # @!attribute [rw] resource_requirements
     #   The type and amount of a resource to assign to a container, instead
-    #   of the default value from the task definition. The only supported
-    #   resource is a GPU.
+    #   of the default value from the task definition. The supported
+    #   resources are GPUs and Neuron devices.
     #   @return [Array<Types::ResourceRequirement>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ContainerOverride AWS API Documentation
@@ -2317,7 +2647,7 @@ module Aws::ECS
       :memory,
       :memory_reservation,
       :resource_requirements)
-      SENSITIVE = []
+      SENSITIVE = [:environment]
       include Aws::Structure
     end
 
@@ -2408,6 +2738,53 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # @!attribute [rw] service_deployment_arn
+    #   The ARN of the service deployment to continue or roll back.
+    #   @return [String]
+    #
+    # @!attribute [rw] hook_id
+    #   The ID of the paused lifecycle hook to act on. You can find the
+    #   `hookId` by calling [DescribeServiceDeployments][1] and inspecting
+    #   the `lifecycleHookDetails` field of the service deployment.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_DescribeServiceDeployments.html
+    #   @return [String]
+    #
+    # @!attribute [rw] action
+    #   The action to take on the paused lifecycle hook. Valid values are:
+    #
+    #   * `CONTINUE` - Proceeds the deployment to the next lifecycle stage.
+    #
+    #   * `ROLLBACK` - Rolls back the deployment to the previous service
+    #     revision.
+    #
+    #   If no value is specified, the default action is `CONTINUE`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ContinueServiceDeploymentRequest AWS API Documentation
+    #
+    class ContinueServiceDeploymentRequest < Struct.new(
+      :service_deployment_arn,
+      :hook_id,
+      :action)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] service_deployment_arn
+    #   The ARN of the service deployment that was continued or rolled back.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ContinueServiceDeploymentResponse AWS API Documentation
+    #
+    class ContinueServiceDeploymentResponse < Struct.new(
+      :service_deployment_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] name
     #   The name of the capacity provider. Up to 255 characters are allowed.
     #   They include letters (both upper and lowercase letters), numbers,
@@ -2415,9 +2792,22 @@ module Aws::ECS
     #   "`aws`", "`ecs`", or "`fargate`".
     #   @return [String]
     #
+    # @!attribute [rw] cluster
+    #   The name of the cluster to associate with the capacity provider.
+    #   When you create a capacity provider with Amazon ECS Managed
+    #   Instances, it becomes available only within the specified cluster.
+    #   @return [String]
+    #
     # @!attribute [rw] auto_scaling_group_provider
     #   The details of the Auto Scaling group for the capacity provider.
     #   @return [Types::AutoScalingGroupProvider]
+    #
+    # @!attribute [rw] managed_instances_provider
+    #   The configuration for the Amazon ECS Managed Instances provider.
+    #   This configuration specifies how Amazon ECS manages Amazon EC2
+    #   instances on your behalf, including the infrastructure role,
+    #   instance launch template, and tag propagation settings.
+    #   @return [Types::CreateManagedInstancesProviderConfiguration]
     #
     # @!attribute [rw] tags
     #   The metadata that you apply to the capacity provider to categorize
@@ -2454,7 +2844,9 @@ module Aws::ECS
     #
     class CreateCapacityProviderRequest < Struct.new(
       :name,
+      :cluster,
       :auto_scaling_group_provider,
+      :managed_instances_provider,
       :tags)
       SENSITIVE = []
       include Aws::Structure
@@ -2472,6 +2864,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] cluster_name
     #   The name of your cluster. If you don't specify a name for your
     #   cluster, you create a cluster that's named `default`. Up to 255
@@ -2611,6 +3007,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] cluster
     #   The full description of your new cluster.
     #   @return [Types::Cluster]
@@ -2623,6 +3023,387 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # @!attribute [rw] daemon_name
+    #   The name of the daemon. Up to 255 letters (uppercase and lowercase),
+    #   numbers, underscores, and hyphens are allowed.
+    #   @return [String]
+    #
+    # @!attribute [rw] cluster_arn
+    #   The Amazon Resource Name (ARN) of the cluster to create the daemon
+    #   in.
+    #   @return [String]
+    #
+    # @!attribute [rw] daemon_task_definition_arn
+    #   The Amazon Resource Name (ARN) of the daemon task definition to use
+    #   for the daemon.
+    #   @return [String]
+    #
+    # @!attribute [rw] capacity_provider_arns
+    #   The Amazon Resource Names (ARNs) of the capacity providers to
+    #   associate with the daemon. The daemon deploys tasks on container
+    #   instances managed by these capacity providers.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] deployment_configuration
+    #   Optional deployment parameters that control how the daemon rolls out
+    #   updates, including the drain percentage, alarm-based rollback, and
+    #   bake time.
+    #   @return [Types::DaemonDeploymentConfiguration]
+    #
+    # @!attribute [rw] tags
+    #   The metadata that you apply to the daemon to help you categorize and
+    #   organize them. Each tag consists of a key and an optional value. You
+    #   define both of them.
+    #
+    #   The following basic restrictions apply to tags:
+    #
+    #   * Maximum number of tags per resource - 50
+    #
+    #   * For each resource, each tag key must be unique, and each tag key
+    #     can have only one value.
+    #
+    #   * Maximum key length - 128 Unicode characters in UTF-8
+    #
+    #   * Maximum value length - 256 Unicode characters in UTF-8
+    #
+    #   * If your tagging schema is used across multiple services and
+    #     resources, remember that other services may have restrictions on
+    #     allowed characters. Generally allowed characters are: letters,
+    #     numbers, and spaces representable in UTF-8, and the following
+    #     characters: + - = . \_ : / @.
+    #
+    #   * Tag keys and values are case-sensitive.
+    #
+    #   * Do not use `aws:`, `AWS:`, or any upper or lowercase combination
+    #     of such as a prefix for either keys or values as it is reserved
+    #     for Amazon Web Services use. You cannot edit or delete tag keys or
+    #     values with this prefix. Tags with this prefix do not count
+    #     against your tags per resource limit.
+    #   @return [Array<Types::Tag>]
+    #
+    # @!attribute [rw] propagate_tags
+    #   Specifies whether to propagate the tags from the daemon to the
+    #   daemon tasks. If you don't specify a value, the tags aren't
+    #   propagated. You can only propagate tags to daemon tasks during task
+    #   creation. To add tags to a task after task creation, use the
+    #   [TagResource][1] API action.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_TagResource.html
+    #   @return [String]
+    #
+    # @!attribute [rw] enable_ecs_managed_tags
+    #   Specifies whether to turn on Amazon ECS managed tags for the tasks
+    #   in the daemon. For more information, see [Tagging your Amazon ECS
+    #   resources][1] in the *Amazon Elastic Container Service Developer
+    #   Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-using-tags.html
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] enable_execute_command
+    #   Determines whether the execute command functionality is turned on
+    #   for the daemon. If `true`, the execute command functionality is
+    #   turned on for all tasks in the daemon.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] client_token
+    #   An identifier that you provide to ensure the idempotency of the
+    #   request. It must be unique and is case sensitive. Up to 36 ASCII
+    #   characters in the range of 33-126 (inclusive) are allowed.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/CreateDaemonRequest AWS API Documentation
+    #
+    class CreateDaemonRequest < Struct.new(
+      :daemon_name,
+      :cluster_arn,
+      :daemon_task_definition_arn,
+      :capacity_provider_arns,
+      :deployment_configuration,
+      :tags,
+      :propagate_tags,
+      :enable_ecs_managed_tags,
+      :enable_execute_command,
+      :client_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] daemon_arn
+    #   The Amazon Resource Name (ARN) of the daemon.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the daemon.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_at
+    #   The Unix timestamp for the time when the daemon was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] deployment_arn
+    #   The Amazon Resource Name (ARN) of the initial daemon deployment.
+    #   This deployment places daemon tasks on each container instance of
+    #   the specified capacity providers.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/CreateDaemonResponse AWS API Documentation
+    #
+    class CreateDaemonResponse < Struct.new(
+      :daemon_arn,
+      :status,
+      :created_at,
+      :deployment_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] execution_role_arn
+    #   The Amazon Resource Name (ARN) of the task execution role that
+    #   grants the Amazon ECS container agent permission to make Amazon Web
+    #   Services API calls on your behalf. This role is required for Amazon
+    #   ECS to pull container images from Amazon ECR, send container logs to
+    #   Amazon CloudWatch Logs, and retrieve sensitive data from Amazon Web
+    #   Services Systems Manager Parameter Store or Amazon Web Services
+    #   Secrets Manager.
+    #
+    #   The execution role must include the
+    #   `AmazonECSTaskExecutionRolePolicy` managed policy or equivalent
+    #   permissions. For Express services, this role is used during task
+    #   startup and runtime for container management operations.
+    #   @return [String]
+    #
+    # @!attribute [rw] infrastructure_role_arn
+    #   The Amazon Resource Name (ARN) of the infrastructure role that
+    #   grants Amazon ECS permission to create and manage Amazon Web
+    #   Services resources on your behalf for the Express service. This role
+    #   is used to provision and manage Application Load Balancers, target
+    #   groups, security groups, auto-scaling policies, and other Amazon Web
+    #   Services infrastructure components.
+    #
+    #   The infrastructure role must include permissions for Elastic Load
+    #   Balancing, Application Auto Scaling, Amazon EC2 (for security
+    #   groups), and other services required for managed infrastructure.
+    #   This role is only used during Express service creation, updates, and
+    #   deletion operations.
+    #   @return [String]
+    #
+    # @!attribute [rw] service_name
+    #   The name of the Express service. This name must be unique within the
+    #   specified cluster and can contain up to 255 letters (uppercase and
+    #   lowercase), numbers, underscores, and hyphens. The name is used to
+    #   identify the service in the Amazon ECS console and API operations.
+    #
+    #   If you don't specify a service name, Amazon ECS generates a unique
+    #   name for the service. The service name becomes part of the service
+    #   ARN and cannot be changed after the service is created.
+    #   @return [String]
+    #
+    # @!attribute [rw] cluster
+    #   The short name or full Amazon Resource Name (ARN) of the cluster on
+    #   which to create the Express service. If you do not specify a
+    #   cluster, the `default` cluster is assumed.
+    #   @return [String]
+    #
+    # @!attribute [rw] health_check_path
+    #   The path on the container that the Application Load Balancer uses
+    #   for health checks. This should be a valid HTTP endpoint that returns
+    #   a successful response (HTTP 200) when the application is healthy.
+    #
+    #   If not specified, the default health check path is `/ping`. The
+    #   health check path must start with a forward slash and can include
+    #   query parameters. Examples: `/health`, `/api/status`,
+    #   `/ping?format=json`.
+    #   @return [String]
+    #
+    # @!attribute [rw] primary_container
+    #   The primary container configuration for the Express service. This
+    #   defines the main application container that will receive traffic
+    #   from the Application Load Balancer.
+    #
+    #   The primary container must specify at minimum a container image. You
+    #   can also configure the container port (defaults to 80), logging
+    #   configuration, environment variables, secrets, and startup commands.
+    #   The container image can be from Amazon ECR, Docker Hub, or any other
+    #   container registry accessible to your execution role.
+    #   @return [Types::ExpressGatewayContainer]
+    #
+    # @!attribute [rw] task_role_arn
+    #   The Amazon Resource Name (ARN) of the IAM role that containers in
+    #   this task can assume. This role allows your application code to
+    #   access other Amazon Web Services services securely.
+    #
+    #   The task role is different from the execution role. While the
+    #   execution role is used by the Amazon ECS agent to set up the task,
+    #   the task role is used by your application code running inside the
+    #   container to make Amazon Web Services API calls. If your application
+    #   doesn't need to access Amazon Web Services services, you can omit
+    #   this parameter.
+    #   @return [String]
+    #
+    # @!attribute [rw] network_configuration
+    #   The network configuration for the Express service tasks. This
+    #   specifies the VPC subnets and security groups for the tasks.
+    #
+    #   For Express services, you can specify custom security groups and
+    #   subnets. If not provided, Amazon ECS will use the default VPC
+    #   configuration and create appropriate security groups automatically.
+    #   The network configuration determines how your service integrates
+    #   with your VPC and what network access it has.
+    #   @return [Types::ExpressGatewayServiceNetworkConfiguration]
+    #
+    # @!attribute [rw] cpu
+    #   The number of CPU units used by the task. This parameter determines
+    #   the CPU allocation for each task in the Express service. The default
+    #   value for an Express service is 256 (.25 vCPU).
+    #   @return [String]
+    #
+    # @!attribute [rw] memory
+    #   The amount of memory (in MiB) used by the task. This parameter
+    #   determines the memory allocation for each task in the Express
+    #   service. The default value for an express service is 512 MiB.
+    #   @return [String]
+    #
+    # @!attribute [rw] scaling_target
+    #   The auto-scaling configuration for the Express service. This defines
+    #   how the service automatically adjusts the number of running tasks
+    #   based on demand.
+    #
+    #   You can specify the minimum and maximum number of tasks, the scaling
+    #   metric (CPU utilization, memory utilization, or request count per
+    #   target), and the target value for the metric. If not specified, the
+    #   default target value for an Express service is 60.
+    #   @return [Types::ExpressGatewayScalingTarget]
+    #
+    # @!attribute [rw] tags
+    #   The metadata that you apply to the Express service to help
+    #   categorize and organize it. Each tag consists of a key and an
+    #   optional value. You can apply up to 50 tags to a service.
+    #   @return [Array<Types::Tag>]
+    #
+    # @!attribute [rw] task_definition_arn
+    #   The Amazon Resource Name (ARN) of a task definition to use to create
+    #   the Express Gateway service. This allows you to manage your own task
+    #   definition, giving you more control over the service configuration
+    #   such as adding sidecar containers.
+    #
+    #   The task definition must have a container named `Main` with a single
+    #   TCP port mapping that includes a container port and port name. The
+    #   task definition must also have `FARGATE` compatibility.
+    #
+    #   If you provide a task definition ARN, you cannot also specify
+    #   `primaryContainer`, `executionRoleArn`, `taskRoleArn`, `cpu`, or
+    #   `memory`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/CreateExpressGatewayServiceRequest AWS API Documentation
+    #
+    class CreateExpressGatewayServiceRequest < Struct.new(
+      :execution_role_arn,
+      :infrastructure_role_arn,
+      :service_name,
+      :cluster,
+      :health_check_path,
+      :primary_container,
+      :task_role_arn,
+      :network_configuration,
+      :cpu,
+      :memory,
+      :scaling_target,
+      :tags,
+      :task_definition_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] service
+    #   The full description of your Express service following the create
+    #   operation.
+    #   @return [Types::ECSExpressGatewayService]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/CreateExpressGatewayServiceResponse AWS API Documentation
+    #
+    class CreateExpressGatewayServiceResponse < Struct.new(
+      :service)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration for creating a Amazon ECS Managed Instances
+    # provider. This specifies how Amazon ECS should manage Amazon EC2
+    # instances, including the infrastructure role, instance launch
+    # template, and whether to propagate tags from the capacity provider to
+    # the instances.
+    #
+    # @!attribute [rw] infrastructure_role_arn
+    #   The Amazon Resource Name (ARN) of the infrastructure role that
+    #   Amazon ECS uses to manage instances on your behalf. This role must
+    #   have permissions to launch, terminate, and manage Amazon EC2
+    #   instances, as well as access to other Amazon Web Services services
+    #   required for Amazon ECS Managed Instances functionality.
+    #
+    #   For more information, see [Amazon ECS infrastructure IAM role][1] in
+    #   the *Amazon ECS Developer Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/infrastructure_IAM_role.html
+    #   @return [String]
+    #
+    # @!attribute [rw] instance_launch_template
+    #   The launch template configuration that specifies how Amazon ECS
+    #   should launch Amazon EC2 instances. This includes the instance
+    #   profile, network configuration, storage settings, and instance
+    #   requirements for attribute-based instance type selection.
+    #
+    #   For more information, see [Store instance launch parameters in
+    #   Amazon EC2 launch templates][1] in the *Amazon EC2 User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-launch-templates.html
+    #   @return [Types::InstanceLaunchTemplate]
+    #
+    # @!attribute [rw] propagate_tags
+    #   Specifies whether to propagate tags from the capacity provider to
+    #   the Amazon ECS Managed Instances. When enabled, tags applied to the
+    #   capacity provider are automatically applied to all instances
+    #   launched by this provider.
+    #   @return [String]
+    #
+    # @!attribute [rw] infrastructure_optimization
+    #   Defines how Amazon ECS Managed Instances optimizes the
+    #   infrastastructure in your capacity provider. Provides control over
+    #   the delay between when EC2 instances become idle or underutilized
+    #   and when Amazon ECS optimizes them.
+    #   @return [Types::InfrastructureOptimization]
+    #
+    # @!attribute [rw] auto_repair_configuration
+    #   The auto repair configuration for the Amazon ECS Managed Instances
+    #   capacity provider. Use this to enable or disable automatic
+    #   replacement of container instances that are detected as unhealthy.
+    #   @return [Types::AutoRepairConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/CreateManagedInstancesProviderConfiguration AWS API Documentation
+    #
+    class CreateManagedInstancesProviderConfiguration < Struct.new(
+      :infrastructure_role_arn,
+      :instance_launch_template,
+      :propagate_tags,
+      :infrastructure_optimization,
+      :auto_repair_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] cluster
     #   The short name or full Amazon Resource Name (ARN) of the cluster
     #   that you run your service on. If you do not specify a cluster, the
@@ -2661,6 +3442,19 @@ module Aws::ECS
     #   Availability Zones][1] in the <i> <i>Amazon Elastic Container
     #   Service Developer Guide</i> </i>.
     #
+    #   The default behavior of `AvailabilityZoneRebalancing` differs
+    #   between create and update requests:
+    #
+    #   * For create service requests, when no value is specified for
+    #     `AvailabilityZoneRebalancing`, Amazon ECS defaults the value to
+    #     `ENABLED`.
+    #
+    #   * For update service requests, when no value is specified for
+    #     `AvailabilityZoneRebalancing`, Amazon ECS defaults to the existing
+    #     service’s `AvailabilityZoneRebalancing` value. If the service
+    #     never had an `AvailabilityZoneRebalancing` value set, Amazon ECS
+    #     treats this as `DISABLED`.
+    #
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-rebalancing.html
@@ -2671,13 +3465,13 @@ module Aws::ECS
     #   your service. For more information, see [Service load balancing][1]
     #   in the *Amazon Elastic Container Service Developer Guide*.
     #
-    #   If the service uses the rolling update (`ECS`) deployment controller
-    #   and using either an Application Load Balancer or Network Load
-    #   Balancer, you must specify one or more target group ARNs to attach
-    #   to the service. The service-linked role is required for services
-    #   that use multiple target groups. For more information, see [Using
-    #   service-linked roles for Amazon ECS][2] in the *Amazon Elastic
-    #   Container Service Developer Guide*.
+    #   If the service uses the `ECS` deployment controller and using either
+    #   an Application Load Balancer or Network Load Balancer, you must
+    #   specify one or more target group ARNs to attach to the service. The
+    #   service-linked role is required for services that use multiple
+    #   target groups. For more information, see [Using service-linked roles
+    #   for Amazon ECS][2] in the *Amazon Elastic Container Service
+    #   Developer Guide*.
     #
     #   If the service uses the `CODE_DEPLOY` deployment controller, the
     #   service is required to use either an Application Load Balancer or
@@ -2760,6 +3554,12 @@ module Aws::ECS
     #   information, see [Amazon ECS launch types][1] in the *Amazon Elastic
     #   Container Service Developer Guide*.
     #
+    #   <note markdown="1"> If you want to use Amazon ECS Managed Instances, you must use the
+    #   `capacityProviderStrategy` request parameter and omit the
+    #   `launchType` request parameter.
+    #
+    #    </note>
+    #
     #   The `FARGATE` launch type runs your tasks on Fargate On-Demand
     #   infrastructure.
     #
@@ -2787,6 +3587,12 @@ module Aws::ECS
     #
     # @!attribute [rw] capacity_provider_strategy
     #   The capacity provider strategy to use for the service.
+    #
+    #   <note markdown="1"> If you want to use Amazon ECS Managed Instances, you must use the
+    #   `capacityProviderStrategy` request parameter and omit the
+    #   `launchType` request parameter.
+    #
+    #    </note>
     #
     #   If a `capacityProviderStrategy` is specified, the `launchType`
     #   parameter must be omitted. If no `capacityProviderStrategy` or
@@ -2875,17 +3681,13 @@ module Aws::ECS
     # @!attribute [rw] health_check_grace_period_seconds
     #   The period of time, in seconds, that the Amazon ECS service
     #   scheduler ignores unhealthy Elastic Load Balancing, VPC Lattice, and
-    #   container health checks after a task has first started. If you
-    #   don't specify a health check grace period value, the default value
-    #   of `0` is used. If you don't use any of the health checks, then
+    #   container health checks after a task has first started. If you do
+    #   not specify a health check grace period value, the default value of
+    #   0 is used. If you do not use any of the health checks, then
     #   `healthCheckGracePeriodSeconds` is unused.
     #
-    #   If your service's tasks take a while to start and respond to health
-    #   checks, you can specify a health check grace period of up to
-    #   2,147,483,647 seconds (about 69 years). During that time, the Amazon
-    #   ECS service scheduler ignores health check status. This grace period
-    #   can prevent the service scheduler from marking tasks as unhealthy
-    #   and stopping them before they have time to come up.
+    #   If your service has more running tasks than desired, unhealthy tasks
+    #   in the grace period might be stopped to reach the desired count.
     #   @return [Integer]
     #
     # @!attribute [rw] scheduling_strategy
@@ -2965,7 +3767,7 @@ module Aws::ECS
     #   ECS resources][1] in the *Amazon Elastic Container Service Developer
     #   Guide*.
     #
-    #   When you use Amazon ECS managed tags, you need to set the
+    #   When you use Amazon ECS managed tags, you must set the
     #   `propagateTags` request parameter.
     #
     #
@@ -3027,6 +3829,13 @@ module Aws::ECS
     #   The VPC Lattice configuration for the service being created.
     #   @return [Array<Types::VpcLatticeConfiguration>]
     #
+    # @!attribute [rw] monitoring
+    #   The optional monitoring configuration for the service, which defines
+    #   the resolution for the service-level `CPUUtilization` and
+    #   `MemoryUtilization` Amazon CloudWatch metrics. When not specified,
+    #   Amazon ECS uses the default resolution of `60` seconds.
+    #   @return [Types::MonitoringConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/CreateServiceRequest AWS API Documentation
     #
     class CreateServiceRequest < Struct.new(
@@ -3055,11 +3864,16 @@ module Aws::ECS
       :enable_execute_command,
       :service_connect_configuration,
       :volume_configurations,
-      :vpc_lattice_configurations)
+      :vpc_lattice_configurations,
+      :monitoring)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] service
     #   The full description of your service following the create call.
     #
@@ -3075,6 +3889,15 @@ module Aws::ECS
     #   `deploymentController`, `taskSets` and `deployments` parameters will
     #   be returned, however the `deployments` parameter will be an empty
     #   list.
+    #
+    #   The response includes a `lifecycleHookDetails` field, which is an
+    #   empty array when the service is created or updated. The values are
+    #   populated when a lifecycle hook executes and are available as part
+    #   of the service deployment details ([DescribeServiceDeployments][1]).
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_DescribeServiceDeployments.html
     #   @return [Types::Service]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/CreateServiceResponse AWS API Documentation
@@ -3283,6 +4106,977 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # The CloudWatch alarm configuration for a daemon. When enabled,
+    # CloudWatch alarms determine whether a daemon deployment has failed.
+    #
+    # @!attribute [rw] alarm_names
+    #   The CloudWatch alarm names to monitor during a daemon deployment.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] enable
+    #   Determines whether to use the CloudWatch alarm option in the daemon
+    #   deployment process. The default value is `false`.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DaemonAlarmConfiguration AWS API Documentation
+    #
+    class DaemonAlarmConfiguration < Struct.new(
+      :alarm_names,
+      :enable)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Information about a capacity provider associated with a daemon
+    # revision.
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the capacity provider.
+    #   @return [String]
+    #
+    # @!attribute [rw] running_count
+    #   The number of daemon tasks running on this capacity provider.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DaemonCapacityProvider AWS API Documentation
+    #
+    class DaemonCapacityProvider < Struct.new(
+      :arn,
+      :running_count)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Information about the circuit breaker used to determine when a daemon
+    # deployment has failed.
+    #
+    # @!attribute [rw] failure_count
+    #   The number of times the circuit breaker detected a daemon deployment
+    #   failure.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] status
+    #   The circuit breaker status. Amazon ECS is not using the circuit
+    #   breaker for daemon deployment failures when the status is
+    #   `DISABLED`.
+    #   @return [String]
+    #
+    # @!attribute [rw] threshold
+    #   The threshold which determines that the daemon deployment failed.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DaemonCircuitBreaker AWS API Documentation
+    #
+    class DaemonCircuitBreaker < Struct.new(
+      :failure_count,
+      :status,
+      :threshold)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A container definition for a daemon task. Daemon container definitions
+    # describe the containers that run as part of a daemon task on container
+    # instances managed by capacity providers.
+    #
+    # @!attribute [rw] name
+    #   The name of the container. Up to 255 letters (uppercase and
+    #   lowercase), numbers, underscores, and hyphens are allowed.
+    #   @return [String]
+    #
+    # @!attribute [rw] image
+    #   The image used to start the container. This string is passed
+    #   directly to the Docker daemon. Images in the Docker Hub registry are
+    #   available by default. Other repositories are specified with either `
+    #   repository-url/image:tag ` or ` repository-url/image@digest `.
+    #   @return [String]
+    #
+    # @!attribute [rw] memory
+    #   The amount (in MiB) of memory to present to the container. If the
+    #   container attempts to exceed the memory specified here, the
+    #   container is killed.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] memory_reservation
+    #   The soft limit (in MiB) of memory to reserve for the container.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] repository_credentials
+    #   The private repository authentication credentials to use.
+    #   @return [Types::RepositoryCredentials]
+    #
+    # @!attribute [rw] health_check
+    #   The container health check command and associated configuration
+    #   parameters for the container.
+    #   @return [Types::HealthCheck]
+    #
+    # @!attribute [rw] cpu
+    #   The number of `cpu` units reserved for the container.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] essential
+    #   If the `essential` parameter of a container is marked as `true`, and
+    #   that container fails or stops for any reason, all other containers
+    #   that are part of the task are stopped.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] entry_point
+    #   The entry point that's passed to the container.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] command
+    #   The command that's passed to the container.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] working_directory
+    #   The working directory to run commands inside the container in.
+    #   @return [String]
+    #
+    # @!attribute [rw] environment_files
+    #   A list of files containing the environment variables to pass to a
+    #   container.
+    #   @return [Array<Types::EnvironmentFile>]
+    #
+    # @!attribute [rw] environment
+    #   The environment variables to pass to a container.
+    #   @return [Array<Types::KeyValuePair>]
+    #
+    # @!attribute [rw] secrets
+    #   The secrets to pass to the container.
+    #   @return [Array<Types::Secret>]
+    #
+    # @!attribute [rw] readonly_root_filesystem
+    #   When this parameter is true, the container is given read-only access
+    #   to its root file system.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] mount_points
+    #   The mount points for data volumes in your container.
+    #   @return [Array<Types::MountPoint>]
+    #
+    # @!attribute [rw] log_configuration
+    #   The log configuration specification for the container.
+    #   @return [Types::LogConfiguration]
+    #
+    # @!attribute [rw] firelens_configuration
+    #   The FireLens configuration for the container. This is used to
+    #   specify and configure a log router for container logs.
+    #   @return [Types::FirelensConfiguration]
+    #
+    # @!attribute [rw] privileged
+    #   When this parameter is true, the container is given elevated
+    #   privileges on the host container instance (similar to the `root`
+    #   user).
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] user
+    #   The user to use inside the container.
+    #   @return [String]
+    #
+    # @!attribute [rw] ulimits
+    #   A list of `ulimits` to set in the container.
+    #   @return [Array<Types::Ulimit>]
+    #
+    # @!attribute [rw] linux_parameters
+    #   Linux-specific modifications that are applied to the container
+    #   configuration, such as Linux kernel capabilities.
+    #   @return [Types::DaemonLinuxParameters]
+    #
+    # @!attribute [rw] depends_on
+    #   The dependencies defined for container startup and shutdown. A
+    #   container can contain multiple dependencies on other containers in a
+    #   task definition.
+    #   @return [Array<Types::ContainerDependency>]
+    #
+    # @!attribute [rw] start_timeout
+    #   Time duration (in seconds) to wait before giving up on resolving
+    #   dependencies for a container.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] stop_timeout
+    #   Time duration (in seconds) to wait before the container is
+    #   forcefully killed if it doesn't exit normally on its own.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] system_controls
+    #   A list of namespaced kernel parameters to set in the container.
+    #   @return [Array<Types::SystemControl>]
+    #
+    # @!attribute [rw] interactive
+    #   When this parameter is `true`, you can deploy containerized
+    #   applications that require `stdin` or a `tty` to be allocated.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] pseudo_terminal
+    #   When this parameter is `true`, a TTY is allocated.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] restart_policy
+    #   The restart policy for the container. When you set up a restart
+    #   policy, Amazon ECS can restart the container without needing to
+    #   replace the task.
+    #   @return [Types::ContainerRestartPolicy]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DaemonContainerDefinition AWS API Documentation
+    #
+    class DaemonContainerDefinition < Struct.new(
+      :name,
+      :image,
+      :memory,
+      :memory_reservation,
+      :repository_credentials,
+      :health_check,
+      :cpu,
+      :essential,
+      :entry_point,
+      :command,
+      :working_directory,
+      :environment_files,
+      :environment,
+      :secrets,
+      :readonly_root_filesystem,
+      :mount_points,
+      :log_configuration,
+      :firelens_configuration,
+      :privileged,
+      :user,
+      :ulimits,
+      :linux_parameters,
+      :depends_on,
+      :start_timeout,
+      :stop_timeout,
+      :system_controls,
+      :interactive,
+      :pseudo_terminal,
+      :restart_policy)
+      SENSITIVE = [:repository_credentials, :environment]
+      include Aws::Structure
+    end
+
+    # The details about the container image a daemon revision uses.
+    #
+    # @!attribute [rw] container_name
+    #   The name of the container.
+    #   @return [String]
+    #
+    # @!attribute [rw] image_digest
+    #   The container image digest.
+    #   @return [String]
+    #
+    # @!attribute [rw] image
+    #   The container image.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DaemonContainerImage AWS API Documentation
+    #
+    class DaemonContainerImage < Struct.new(
+      :container_name,
+      :image_digest,
+      :image)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Information about a daemon deployment. A daemon deployment
+    # orchestrates the progressive rollout of daemon task updates across
+    # container instances.
+    #
+    # @!attribute [rw] daemon_deployment_arn
+    #   The Amazon Resource Name (ARN) of the daemon deployment.
+    #   @return [String]
+    #
+    # @!attribute [rw] cluster_arn
+    #   The Amazon Resource Name (ARN) of the cluster that hosts the daemon.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the daemon deployment.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_reason
+    #   Information about why the daemon deployment is in the current
+    #   status.
+    #   @return [String]
+    #
+    # @!attribute [rw] target_daemon_revision
+    #   The daemon revision being deployed.
+    #   @return [Types::DaemonDeploymentRevisionDetail]
+    #
+    # @!attribute [rw] source_daemon_revisions
+    #   The currently deployed daemon revisions that are being replaced.
+    #   @return [Array<Types::DaemonDeploymentRevisionDetail>]
+    #
+    # @!attribute [rw] circuit_breaker
+    #   The circuit breaker configuration that determines when a daemon
+    #   deployment has failed.
+    #   @return [Types::DaemonCircuitBreaker]
+    #
+    # @!attribute [rw] alarms
+    #   The CloudWatch alarms that determine when a daemon deployment fails.
+    #   @return [Types::DaemonDeploymentAlarms]
+    #
+    # @!attribute [rw] rollback
+    #   The rollback options for the daemon deployment.
+    #   @return [Types::DaemonRollback]
+    #
+    # @!attribute [rw] deployment_configuration
+    #   The deployment configuration used for this daemon deployment.
+    #   @return [Types::DaemonDeploymentConfiguration]
+    #
+    # @!attribute [rw] created_at
+    #   The time the daemon deployment was created. The format is yyyy-MM-dd
+    #   HH:mm:ss.SSSSSS.
+    #   @return [Time]
+    #
+    # @!attribute [rw] started_at
+    #   The time the daemon deployment started. The format is yyyy-MM-dd
+    #   HH:mm:ss.SSSSSS.
+    #   @return [Time]
+    #
+    # @!attribute [rw] stopped_at
+    #   The time the daemon deployment stopped. The format is yyyy-MM-dd
+    #   HH:mm:ss.SSSSSS.
+    #   @return [Time]
+    #
+    # @!attribute [rw] finished_at
+    #   The time the daemon deployment finished. The format is yyyy-MM-dd
+    #   HH:mm:ss.SSSSSS.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DaemonDeployment AWS API Documentation
+    #
+    class DaemonDeployment < Struct.new(
+      :daemon_deployment_arn,
+      :cluster_arn,
+      :status,
+      :status_reason,
+      :target_daemon_revision,
+      :source_daemon_revisions,
+      :circuit_breaker,
+      :alarms,
+      :rollback,
+      :deployment_configuration,
+      :created_at,
+      :started_at,
+      :stopped_at,
+      :finished_at)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The CloudWatch alarms used to determine a daemon deployment failed.
+    #
+    # @!attribute [rw] status
+    #   The status of the alarms check. Amazon ECS is not using alarms for
+    #   daemon deployment failures when the status is `DISABLED`.
+    #   @return [String]
+    #
+    # @!attribute [rw] alarm_names
+    #   The name of the CloudWatch alarms that determine when a daemon
+    #   deployment failed.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] triggered_alarm_names
+    #   One or more CloudWatch alarm names that have been triggered during
+    #   the daemon deployment.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DaemonDeploymentAlarms AWS API Documentation
+    #
+    class DaemonDeploymentAlarms < Struct.new(
+      :status,
+      :alarm_names,
+      :triggered_alarm_names)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Information about a capacity provider during a daemon deployment.
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the capacity provider.
+    #   @return [String]
+    #
+    # @!attribute [rw] running_instance_count
+    #   The number of instances running daemon tasks on this capacity
+    #   provider.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] draining_instance_count
+    #   The number of instances being drained on this capacity provider
+    #   during the deployment.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DaemonDeploymentCapacityProvider AWS API Documentation
+    #
+    class DaemonDeploymentCapacityProvider < Struct.new(
+      :arn,
+      :running_instance_count,
+      :draining_instance_count)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Optional deployment parameters that control how a daemon rolls out
+    # updates across container instances.
+    #
+    # @!attribute [rw] drain_percent
+    #   The percentage of container instances to drain simultaneously during
+    #   a daemon deployment. Valid values are between 0.0 and 100.0.
+    #   @return [Float]
+    #
+    # @!attribute [rw] alarms
+    #   The CloudWatch alarm configuration for the daemon deployment. When
+    #   alarms are triggered during a deployment, the deployment can be
+    #   automatically rolled back.
+    #   @return [Types::DaemonAlarmConfiguration]
+    #
+    # @!attribute [rw] bake_time_in_minutes
+    #   The amount of time (in minutes) to wait after a successful
+    #   deployment step before proceeding. This allows time to monitor for
+    #   issues before continuing. The default value is 0.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DaemonDeploymentConfiguration AWS API Documentation
+    #
+    class DaemonDeploymentConfiguration < Struct.new(
+      :drain_percent,
+      :alarms,
+      :bake_time_in_minutes)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details about a daemon revision during a deployment, including running
+    # and draining instance counts per capacity provider.
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the daemon revision.
+    #   @return [String]
+    #
+    # @!attribute [rw] capacity_providers
+    #   The capacity providers associated with this daemon revision during
+    #   the deployment.
+    #   @return [Array<Types::DaemonDeploymentCapacityProvider>]
+    #
+    # @!attribute [rw] total_running_instance_count
+    #   The total number of instances running daemon tasks for this
+    #   revision.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] total_draining_instance_count
+    #   The total number of instances being drained for this revision during
+    #   the deployment.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DaemonDeploymentRevisionDetail AWS API Documentation
+    #
+    class DaemonDeploymentRevisionDetail < Struct.new(
+      :arn,
+      :capacity_providers,
+      :total_running_instance_count,
+      :total_draining_instance_count)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A summary of a daemon deployment.
+    #
+    # @!attribute [rw] daemon_deployment_arn
+    #   The Amazon Resource Name (ARN) of the daemon deployment.
+    #   @return [String]
+    #
+    # @!attribute [rw] daemon_arn
+    #   The Amazon Resource Name (ARN) of the daemon.
+    #   @return [String]
+    #
+    # @!attribute [rw] cluster_arn
+    #   The Amazon Resource Name (ARN) of the cluster that hosts the daemon.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the daemon deployment.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_reason
+    #   Information about why the daemon deployment is in the current
+    #   status.
+    #   @return [String]
+    #
+    # @!attribute [rw] target_daemon_revision_arn
+    #   The ARN of the daemon revision being deployed.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_at
+    #   The time the daemon deployment was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] started_at
+    #   The time the daemon deployment started.
+    #   @return [Time]
+    #
+    # @!attribute [rw] stopped_at
+    #   The time the daemon deployment stopped.
+    #   @return [Time]
+    #
+    # @!attribute [rw] finished_at
+    #   The time the daemon deployment finished.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DaemonDeploymentSummary AWS API Documentation
+    #
+    class DaemonDeploymentSummary < Struct.new(
+      :daemon_deployment_arn,
+      :daemon_arn,
+      :cluster_arn,
+      :status,
+      :status_reason,
+      :target_daemon_revision_arn,
+      :created_at,
+      :started_at,
+      :stopped_at,
+      :finished_at)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The detailed information about a daemon.
+    #
+    # @!attribute [rw] daemon_arn
+    #   The Amazon Resource Name (ARN) of the daemon.
+    #   @return [String]
+    #
+    # @!attribute [rw] cluster_arn
+    #   The Amazon Resource Name (ARN) of the cluster that the daemon is
+    #   running in.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the daemon.
+    #   @return [String]
+    #
+    # @!attribute [rw] current_revisions
+    #   The current daemon revision details, including the running task
+    #   counts per capacity provider.
+    #   @return [Array<Types::DaemonRevisionDetail>]
+    #
+    # @!attribute [rw] deployment_arn
+    #   The Amazon Resource Name (ARN) of the most recent daemon deployment.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_at
+    #   The Unix timestamp for the time when the daemon was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_at
+    #   The Unix timestamp for the time when the daemon was last updated.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DaemonDetail AWS API Documentation
+    #
+    class DaemonDetail < Struct.new(
+      :daemon_arn,
+      :cluster_arn,
+      :status,
+      :current_revisions,
+      :deployment_arn,
+      :created_at,
+      :updated_at)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The Linux-specific options that are applied to the daemon container,
+    # such as Linux kernel capabilities.
+    #
+    # @!attribute [rw] capabilities
+    #   The Linux capabilities for the container that are added to or
+    #   dropped from the default configuration provided by Docker.
+    #   @return [Types::KernelCapabilities]
+    #
+    # @!attribute [rw] devices
+    #   Any host devices to expose to the container.
+    #   @return [Array<Types::Device>]
+    #
+    # @!attribute [rw] init_process_enabled
+    #   Run an `init` process inside the container that forwards signals and
+    #   reaps processes.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] tmpfs
+    #   The container path, mount options, and size (in MiB) of the tmpfs
+    #   mount.
+    #   @return [Array<Types::Tmpfs>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DaemonLinuxParameters AWS API Documentation
+    #
+    class DaemonLinuxParameters < Struct.new(
+      :capabilities,
+      :devices,
+      :init_process_enabled,
+      :tmpfs)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The specified daemon isn't active. You can't update a daemon that's
+    # inactive. If you have previously deleted a daemon, you can re-create
+    # it with [CreateDaemon][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_CreateDaemon.html
+    #
+    # @!attribute [rw] message
+    #   Message that describes the cause of the exception.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DaemonNotActiveException AWS API Documentation
+    #
+    class DaemonNotActiveException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The specified daemon wasn't found. You can view your available
+    # daemons with [ListDaemons][1]. Amazon ECS daemons are cluster specific
+    # and Region specific.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_ListDaemons.html
+    #
+    # @!attribute [rw] message
+    #   Message that describes the cause of the exception.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DaemonNotFoundException AWS API Documentation
+    #
+    class DaemonNotFoundException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Information about a daemon revision. A daemon revision is a snapshot
+    # of the daemon's configuration at the time a deployment was initiated.
+    #
+    # @!attribute [rw] daemon_revision_arn
+    #   The Amazon Resource Name (ARN) of the daemon revision.
+    #   @return [String]
+    #
+    # @!attribute [rw] cluster_arn
+    #   The Amazon Resource Name (ARN) of the cluster that hosts the daemon.
+    #   @return [String]
+    #
+    # @!attribute [rw] daemon_arn
+    #   The Amazon Resource Name (ARN) of the daemon for this revision.
+    #   @return [String]
+    #
+    # @!attribute [rw] daemon_task_definition_arn
+    #   The Amazon Resource Name (ARN) of the daemon task definition used by
+    #   this revision.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_at
+    #   The Unix timestamp for the time when the daemon revision was
+    #   created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] container_images
+    #   The container images used by the daemon revision.
+    #   @return [Array<Types::DaemonContainerImage>]
+    #
+    # @!attribute [rw] propagate_tags
+    #   Specifies whether tags are propagated from the daemon to the daemon
+    #   tasks.
+    #   @return [String]
+    #
+    # @!attribute [rw] enable_ecs_managed_tags
+    #   Specifies whether Amazon ECS managed tags are turned on for the
+    #   daemon tasks.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] enable_execute_command
+    #   Specifies whether the execute command functionality is turned on for
+    #   the daemon tasks.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DaemonRevision AWS API Documentation
+    #
+    class DaemonRevision < Struct.new(
+      :daemon_revision_arn,
+      :cluster_arn,
+      :daemon_arn,
+      :daemon_task_definition_arn,
+      :created_at,
+      :container_images,
+      :propagate_tags,
+      :enable_ecs_managed_tags,
+      :enable_execute_command)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details about a daemon revision, including the running task counts per
+    # capacity provider.
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the daemon revision.
+    #   @return [String]
+    #
+    # @!attribute [rw] capacity_providers
+    #   The capacity providers associated with this daemon revision.
+    #   @return [Array<Types::DaemonCapacityProvider>]
+    #
+    # @!attribute [rw] total_running_count
+    #   The total number of daemon tasks running for this revision.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DaemonRevisionDetail AWS API Documentation
+    #
+    class DaemonRevisionDetail < Struct.new(
+      :arn,
+      :capacity_providers,
+      :total_running_count)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Information about a daemon deployment rollback.
+    #
+    # @!attribute [rw] reason
+    #   The reason the rollback happened. For example, the circuit breaker
+    #   initiated the rollback operation.
+    #   @return [String]
+    #
+    # @!attribute [rw] started_at
+    #   The time that the rollback started. The format is yyyy-MM-dd
+    #   HH:mm:ss.SSSSSS.
+    #   @return [Time]
+    #
+    # @!attribute [rw] rollback_target_daemon_revision_arn
+    #   The ARN of the daemon revision deployed as part of the rollback.
+    #   @return [String]
+    #
+    # @!attribute [rw] rollback_capacity_providers
+    #   The capacity providers involved in the rollback.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DaemonRollback AWS API Documentation
+    #
+    class DaemonRollback < Struct.new(
+      :reason,
+      :started_at,
+      :rollback_target_daemon_revision_arn,
+      :rollback_capacity_providers)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A summary of a daemon.
+    #
+    # @!attribute [rw] daemon_arn
+    #   The Amazon Resource Name (ARN) of the daemon.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the daemon.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_at
+    #   The Unix timestamp for the time when the daemon was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_at
+    #   The Unix timestamp for the time when the daemon was last updated.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DaemonSummary AWS API Documentation
+    #
+    class DaemonSummary < Struct.new(
+      :daemon_arn,
+      :status,
+      :created_at,
+      :updated_at)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The details of a daemon task definition. A daemon task definition is a
+    # template that describes the containers that form a daemon. Daemons
+    # deploy cross-cutting software agents independently across your Amazon
+    # ECS infrastructure.
+    #
+    # @!attribute [rw] daemon_task_definition_arn
+    #   The full Amazon Resource Name (ARN) of the daemon task definition.
+    #   @return [String]
+    #
+    # @!attribute [rw] family
+    #   The name of a family that this daemon task definition is registered
+    #   to.
+    #   @return [String]
+    #
+    # @!attribute [rw] revision
+    #   The revision of the daemon task in a particular family. The revision
+    #   is a version number of a daemon task definition in a family. When
+    #   you register a daemon task definition for the first time, the
+    #   revision is `1`. Each time that you register a new revision of a
+    #   daemon task definition in the same family, the revision value always
+    #   increases by one.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] task_role_arn
+    #   The short name or full Amazon Resource Name (ARN) of the IAM role
+    #   that grants containers in the daemon task permission to call Amazon
+    #   Web Services APIs on your behalf.
+    #   @return [String]
+    #
+    # @!attribute [rw] execution_role_arn
+    #   The Amazon Resource Name (ARN) of the task execution role that
+    #   grants the Amazon ECS container agent permission to make Amazon Web
+    #   Services API calls on your behalf.
+    #   @return [String]
+    #
+    # @!attribute [rw] container_definitions
+    #   A list of container definitions in JSON format that describe the
+    #   containers that make up the daemon task.
+    #   @return [Array<Types::DaemonContainerDefinition>]
+    #
+    # @!attribute [rw] volumes
+    #   The list of data volume definitions for the daemon task.
+    #   @return [Array<Types::DaemonVolume>]
+    #
+    # @!attribute [rw] cpu
+    #   The number of CPU units used by the daemon task.
+    #   @return [String]
+    #
+    # @!attribute [rw] memory
+    #   The amount of memory (in MiB) used by the daemon task.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the daemon task definition. The valid values are
+    #   `ACTIVE`, `DELETE_IN_PROGRESS`, and `DELETED`.
+    #   @return [String]
+    #
+    # @!attribute [rw] registered_at
+    #   The Unix timestamp for the time when the daemon task definition was
+    #   registered.
+    #   @return [Time]
+    #
+    # @!attribute [rw] delete_requested_at
+    #   The Unix timestamp for the time when the daemon task definition
+    #   delete was requested.
+    #   @return [Time]
+    #
+    # @!attribute [rw] registered_by
+    #   The principal that registered the daemon task definition.
+    #   @return [String]
+    #
+    # @!attribute [rw] pid_mode
+    #   The PID namespace mode for the daemon. The valid values are `none`
+    #   and `shared`. The default is `none`.
+    #
+    #   If `none` is specified or no value is provided, the daemon runs with
+    #   its own PID namespace, isolated from other tasks. If `shared` is
+    #   specified, the daemon joins the host PID namespace, making it
+    #   accessible to non-daemon tasks that use `pidMode: "host"` or other
+    #   daemons that use `pidMode: "shared"`.
+    #   @return [String]
+    #
+    # @!attribute [rw] ipc_mode
+    #   The IPC namespace mode for the daemon. The valid values are `none`
+    #   and `shared`. The default is `none`.
+    #
+    #   If `none` is specified or no value is provided, the daemon runs with
+    #   its own IPC namespace, isolated from other tasks. If `shared` is
+    #   specified, the daemon joins the host IPC namespace, making it
+    #   accessible to non-daemon tasks that use `ipcMode: "host"` or other
+    #   daemons that use `ipcMode: "shared"`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DaemonTaskDefinition AWS API Documentation
+    #
+    class DaemonTaskDefinition < Struct.new(
+      :daemon_task_definition_arn,
+      :family,
+      :revision,
+      :task_role_arn,
+      :execution_role_arn,
+      :container_definitions,
+      :volumes,
+      :cpu,
+      :memory,
+      :status,
+      :registered_at,
+      :delete_requested_at,
+      :registered_by,
+      :pid_mode,
+      :ipc_mode)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A summary of a daemon task definition.
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the daemon task definition.
+    #   @return [String]
+    #
+    # @!attribute [rw] registered_at
+    #   The Unix timestamp for the time when the daemon task definition was
+    #   registered.
+    #   @return [Time]
+    #
+    # @!attribute [rw] registered_by
+    #   The principal that registered the daemon task definition.
+    #   @return [String]
+    #
+    # @!attribute [rw] delete_requested_at
+    #   The Unix timestamp for the time when the daemon task definition
+    #   delete was requested.
+    #   @return [Time]
+    #
+    # @!attribute [rw] status
+    #   The status of the daemon task definition.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DaemonTaskDefinitionSummary AWS API Documentation
+    #
+    class DaemonTaskDefinitionSummary < Struct.new(
+      :arn,
+      :registered_at,
+      :registered_by,
+      :delete_requested_at,
+      :status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A data volume definition for a daemon task.
+    #
+    # @!attribute [rw] name
+    #   The name of the volume. Up to 255 letters (uppercase and lowercase),
+    #   numbers, underscores, and hyphens are allowed.
+    #   @return [String]
+    #
+    # @!attribute [rw] host
+    #   The contents of the `host` parameter determine whether your bind
+    #   mount host volume persists on the host container instance and where
+    #   it's stored.
+    #   @return [Types::HostVolumeProperties]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DaemonVolume AWS API Documentation
+    #
+    class DaemonVolume < Struct.new(
+      :name,
+      :host)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] name
     #   The resource name to disable the account setting for. If
     #   `serviceLongArnFormat` is specified, the ARN for your Amazon ECS
@@ -3295,12 +5089,15 @@ module Aws::ECS
     #   @return [String]
     #
     # @!attribute [rw] principal_arn
-    #   The Amazon Resource Name (ARN) of the principal. It can be an user,
+    #   The Amazon Resource Name (ARN) of the principal. It can be a user,
     #   role, or the root user. If you specify the root user, it disables
     #   the account setting for all users, roles, and the root user of the
     #   account unless a user or role explicitly overrides these settings.
     #   If this field is omitted, the setting is changed only for the
     #   authenticated user.
+    #
+    #   In order to use this parameter, you must be the root user, or the
+    #   principal.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DeleteAccountSettingRequest AWS API Documentation
@@ -3324,6 +5121,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] cluster
     #   The short name or full Amazon Resource Name (ARN) of the cluster
     #   that contains the resource to delete attributes. If you do not
@@ -3347,6 +5148,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] attributes
     #   A list of attribute objects that were successfully deleted from your
     #   resource.
@@ -3365,10 +5170,17 @@ module Aws::ECS
     #   provider to delete.
     #   @return [String]
     #
+    # @!attribute [rw] cluster
+    #   The name of the cluster that contains the capacity provider to
+    #   delete. Managed instances capacity providers are cluster-scoped and
+    #   can only be deleted from their associated cluster.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DeleteCapacityProviderRequest AWS API Documentation
     #
     class DeleteCapacityProviderRequest < Struct.new(
-      :capacity_provider)
+      :capacity_provider,
+      :cluster)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3385,6 +5197,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] cluster
     #   The short name or full Amazon Resource Name (ARN) of the cluster to
     #   delete.
@@ -3398,6 +5214,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] cluster
     #   The full description of the deleted cluster.
     #   @return [Types::Cluster]
@@ -3410,6 +5230,109 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # @!attribute [rw] daemon_arn
+    #   The Amazon Resource Name (ARN) of the daemon to delete.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DeleteDaemonRequest AWS API Documentation
+    #
+    class DeleteDaemonRequest < Struct.new(
+      :daemon_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] daemon_arn
+    #   The Amazon Resource Name (ARN) of the daemon.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the daemon. After you call `DeleteDaemon`, the status
+    #   changes to `DELETE_IN_PROGRESS`.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_at
+    #   The Unix timestamp for the time when the daemon was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_at
+    #   The Unix timestamp for the time when the daemon was last updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] deployment_arn
+    #   The Amazon Resource Name (ARN) of the daemon deployment that was
+    #   triggered by the delete operation. This deployment drains existing
+    #   daemon tasks from the container instances.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DeleteDaemonResponse AWS API Documentation
+    #
+    class DeleteDaemonResponse < Struct.new(
+      :daemon_arn,
+      :status,
+      :created_at,
+      :updated_at,
+      :deployment_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] daemon_task_definition
+    #   The `family` and `revision` (`family:revision`) or full Amazon
+    #   Resource Name (ARN) of the daemon task definition to delete.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DeleteDaemonTaskDefinitionRequest AWS API Documentation
+    #
+    class DeleteDaemonTaskDefinitionRequest < Struct.new(
+      :daemon_task_definition)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] daemon_task_definition_arn
+    #   The full Amazon Resource Name (ARN) of the deleted daemon task
+    #   definition.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DeleteDaemonTaskDefinitionResponse AWS API Documentation
+    #
+    class DeleteDaemonTaskDefinitionResponse < Struct.new(
+      :daemon_task_definition_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] service_arn
+    #   The Amazon Resource Name (ARN) of the Express service to delete. The
+    #   ARN uniquely identifies the service within your Amazon Web Services
+    #   account and region.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DeleteExpressGatewayServiceRequest AWS API Documentation
+    #
+    class DeleteExpressGatewayServiceRequest < Struct.new(
+      :service_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] service
+    #   The full description of the deleted express service.
+    #   @return [Types::ECSExpressGatewayService]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DeleteExpressGatewayServiceResponse AWS API Documentation
+    #
+    class DeleteExpressGatewayServiceResponse < Struct.new(
+      :service)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] cluster
     #   The short name or full Amazon Resource Name (ARN) of the cluster
     #   that hosts the service to delete. If you do not specify a cluster,
@@ -3436,6 +5359,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] service
     #   The full description of the deleted service.
     #   @return [Types::Service]
@@ -3633,13 +5560,14 @@ module Aws::ECS
     #   @return [Types::NetworkConfiguration]
     #
     # @!attribute [rw] rollout_state
-    #   <note markdown="1"> The `rolloutState` of a service is only returned for services that
+    #   <note markdown="1"> The `rolloutState` of a service is only returned
+    #   for services that
     #   use the rolling update (`ECS`) deployment type that aren't behind a
     #   Classic Load Balancer.
     #
     #    </note>
     #
-    #   The rollout state of the deployment. When a service deployment is
+    #    The rollout state of the deployment. When a service deployment is
     #   started, it begins in an `IN_PROGRESS` state. When the service
     #   reaches a steady state, the deployment transitions to a `COMPLETED`
     #   state. If the service fails to reach a steady state and circuit
@@ -3741,7 +5669,7 @@ module Aws::ECS
     # your service to the last completed deployment after a failure.
     #
     # You can only use the `DeploymentAlarms` method to detect failures when
-    # the `DeploymentController` is set to `ECS` (rolling update).
+    # the `DeploymentController` is set to `ECS`.
     #
     # For more information, see [Rolling update][1] in the <i> <i>Amazon
     # Elastic Container Service Developer Guide</i> </i>.
@@ -3777,12 +5705,13 @@ module Aws::ECS
       include Aws::Structure
     end
 
-    # <note markdown="1"> The deployment circuit breaker can only be used for services using the
+    # <note markdown="1"> The deployment circuit breaker can only be used
+    # for services using the
     # rolling update (`ECS`) deployment type.
     #
     #  </note>
     #
-    # The **deployment circuit breaker** determines whether a service
+    #  The **deployment circuit breaker** determines whether a service
     # deployment will fail if the service can't reach a steady state. If it
     # is turned on, a service deployment will transition to a failed state
     # and stop launching new tasks. You can also configure Amazon ECS to
@@ -3790,7 +5719,7 @@ module Aws::ECS
     # failure. For more information, see [Rolling update][1] in the *Amazon
     # Elastic Container Service Developer Guide*.
     #
-    # For more information about API failure reasons, see [API failure
+    #  For more information about API failure reasons, see [API failure
     # reasons][2] in the *Amazon Elastic Container Service Developer Guide*.
     #
     #
@@ -3810,11 +5739,28 @@ module Aws::ECS
     #   that completed successfully.
     #   @return [Boolean]
     #
+    # @!attribute [rw] reset_on_healthy_task
+    #   Specifies whether the deployment circuit breaker resets its failure
+    #   count when a task reaches a healthy state. When set to `true`, a
+    #   task that reaches a healthy state resets the failure count to `0`.
+    #   When set to `false`, Amazon ECS does not reset the failure count.
+    #   The default is `true`.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] threshold_configuration
+    #   The threshold configuration that controls when the deployment
+    #   circuit breaker triggers. The `type` and `value` together determine
+    #   how many task failures are tolerated before the circuit breaker
+    #   activates.
+    #   @return [Types::ThresholdConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DeploymentCircuitBreaker AWS API Documentation
     #
     class DeploymentCircuitBreaker < Struct.new(
       :enable,
-      :rollback)
+      :rollback,
+      :reset_on_healthy_task,
+      :threshold_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3823,12 +5769,13 @@ module Aws::ECS
     # a deployment and the ordering of stopping and starting tasks.
     #
     # @!attribute [rw] deployment_circuit_breaker
-    #   <note markdown="1"> The deployment circuit breaker can only be used for services using
+    #   <note markdown="1"> The deployment circuit breaker can only be used
+    #   for services using
     #   the rolling update (`ECS`) deployment type.
     #
     #    </note>
     #
-    #   The **deployment circuit breaker** determines whether a service
+    #    The **deployment circuit breaker** determines whether a service
     #   deployment will fail if the service can't reach a steady state. If
     #   you use the deployment circuit breaker, a service deployment will
     #   transition to a failed state and stop launching new tasks. If you
@@ -3903,7 +5850,7 @@ module Aws::ECS
     #   stops the unhealthy tasks one-by-one — using the
     #   `minimumHealthyPercent` as a constraint — to clear up capacity to
     #   launch replacement tasks. For more information about how the
-    #   scheduler replaces unhealthy tasks, see [Amazon ECS services][1] .
+    #   scheduler replaces unhealthy tasks, see [Amazon ECS services][1].
     #
     #   For services that *do not* use a load balancer, the following should
     #   be noted:
@@ -3977,13 +5924,78 @@ module Aws::ECS
     #   Information about the CloudWatch alarms.
     #   @return [Types::DeploymentAlarms]
     #
+    # @!attribute [rw] strategy
+    #   The deployment strategy for the service. Choose from these valid
+    #   values:
+    #
+    #   * `ROLLING` - When you create a service which uses the rolling
+    #     update (`ROLLING`) deployment strategy, the Amazon ECS service
+    #     scheduler replaces the currently running tasks with new tasks. The
+    #     number of tasks that Amazon ECS adds or removes from the service
+    #     during a rolling update is controlled by the service deployment
+    #     configuration.
+    #
+    #   * `BLUE_GREEN` - A blue/green deployment strategy (`BLUE_GREEN`) is
+    #     a release methodology that reduces downtime and risk by running
+    #     two identical production environments called blue and green. With
+    #     Amazon ECS blue/green deployments, you can validate new service
+    #     revisions before directing production traffic to them. This
+    #     approach provides a safer way to deploy changes with the ability
+    #     to quickly roll back if needed.
+    #
+    #   * `LINEAR` - A *linear* deployment strategy (`LINEAR`) gradually
+    #     shifts traffic from the current production environment to a new
+    #     environment in equal percentages over time. With Amazon ECS linear
+    #     deployments, you can control the pace of traffic shifting and
+    #     validate new service revisions with increasing amounts of
+    #     production traffic.
+    #
+    #   * `CANARY` - A *canary* deployment strategy (`CANARY`) shifts a
+    #     small percentage of traffic to the new service revision first,
+    #     then shifts the remaining traffic all at once after a specified
+    #     time period. This allows you to test the new version with a subset
+    #     of users before full deployment.
+    #   @return [String]
+    #
+    # @!attribute [rw] bake_time_in_minutes
+    #   The time period when both blue and green service revisions are
+    #   running simultaneously after the production traffic has shifted.
+    #
+    #   You must provide this parameter when you use the `BLUE_GREEN`
+    #   deployment strategy.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] lifecycle_hooks
+    #   An array of deployment lifecycle hook objects to run custom logic or
+    #   pause the deployment at specific stages of the deployment lifecycle.
+    #   @return [Array<Types::DeploymentLifecycleHook>]
+    #
+    # @!attribute [rw] linear_configuration
+    #   Configuration for linear deployment strategy. Only valid when the
+    #   deployment strategy is `LINEAR`. This configuration enables
+    #   progressive traffic shifting in equal percentage increments with
+    #   configurable bake times between each step.
+    #   @return [Types::LinearConfiguration]
+    #
+    # @!attribute [rw] canary_configuration
+    #   Configuration for canary deployment strategy. Only valid when the
+    #   deployment strategy is `CANARY`. This configuration enables shifting
+    #   a fixed percentage of traffic for testing, followed by shifting the
+    #   remaining traffic after a bake period.
+    #   @return [Types::CanaryConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DeploymentConfiguration AWS API Documentation
     #
     class DeploymentConfiguration < Struct.new(
       :deployment_circuit_breaker,
       :maximum_percent,
       :minimum_healthy_percent,
-      :alarms)
+      :alarms,
+      :strategy,
+      :bake_time_in_minutes,
+      :lifecycle_hooks,
+      :linear_configuration,
+      :canary_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3993,49 +6005,92 @@ module Aws::ECS
     # @!attribute [rw] type
     #   The deployment controller type to use.
     #
-    #   There are three deployment controller types available:
+    #   The deployment controller is the mechanism that determines how tasks
+    #   are deployed for your service. The valid options are:
     #
-    #   ECS
+    #   * ECS
     #
-    #   : The rolling update (`ECS`) deployment type involves replacing the
-    #     current running version of the container with the latest version.
-    #     The number of containers Amazon ECS adds or removes from the
-    #     service during a rolling update is controlled by adjusting the
-    #     minimum and maximum number of healthy tasks allowed during a
-    #     service deployment, as specified in the
-    #     [DeploymentConfiguration][1].
+    #     When you create a service which uses the `ECS` deployment
+    #     controller, you can choose between the following deployment
+    #     strategies:
     #
-    #     For more information about rolling deployments, see [Deploy Amazon
-    #     ECS services by replacing tasks][2] in the *Amazon Elastic
-    #     Container Service Developer Guide*.
+    #     * `ROLLING`: When you create a service which uses the *rolling
+    #       update* (`ROLLING`) deployment strategy, the Amazon ECS service
+    #       scheduler replaces the currently running tasks with new tasks.
+    #       The number of tasks that Amazon ECS adds or removes from the
+    #       service during a rolling update is controlled by the service
+    #       deployment configuration.
     #
-    #   CODE\_DEPLOY
+    #       Rolling update deployments are best suited for the following
+    #       scenarios:
     #
-    #   : The blue/green (`CODE_DEPLOY`) deployment type uses the blue/green
-    #     deployment model powered by CodeDeploy, which allows you to verify
-    #     a new deployment of a service before sending production traffic to
-    #     it.
+    #       * Gradual service updates: You need to update your service
+    #         incrementally without taking the entire service offline at
+    #         once.
     #
-    #     For more information about blue/green deployments, see [Validate
-    #     the state of an Amazon ECS service before deployment ][3] in the
-    #     *Amazon Elastic Container Service Developer Guide*.
+    #       * Limited resource requirements: You want to avoid the
+    #         additional resource costs of running two complete environments
+    #         simultaneously (as required by blue/green deployments).
     #
-    #   EXTERNAL
+    #       * Acceptable deployment time: Your application can tolerate a
+    #         longer deployment process, as rolling updates replace tasks
+    #         one by one.
     #
-    #   : The external (`EXTERNAL`) deployment type enables you to use any
-    #     third-party deployment controller for full control over the
-    #     deployment process for an Amazon ECS service.
+    #       * No need for instant roll back: Your service can tolerate a
+    #         rollback process that takes minutes rather than seconds.
     #
-    #     For more information about external deployments, see [Deploy
-    #     Amazon ECS services using a third-party controller ][4] in the
-    #     *Amazon Elastic Container Service Developer Guide*.
+    #       * Simple deployment process: You prefer a straightforward
+    #         deployment approach without the complexity of managing
+    #         multiple environments, target groups, and listeners.
     #
+    #       * No load balancer requirement: Your service doesn't use or
+    #         require a load balancer, Application Load Balancer, Network
+    #         Load Balancer, or Service Connect (which are required for
+    #         blue/green deployments).
     #
+    #       * Stateful applications: Your application maintains state that
+    #         makes it difficult to run two parallel environments.
     #
-    #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_DeploymentConfiguration.html
-    #   [2]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deployment-type-ecs.html
-    #   [3]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deployment-type-bluegreen.html
-    #   [4]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deployment-type-external.html
+    #       * Cost sensitivity: You want to minimize deployment costs by not
+    #         running duplicate environments during deployment.
+    #       Rolling updates are the default deployment strategy for services
+    #       and provide a balance between deployment safety and resource
+    #       efficiency for many common application scenarios.
+    #
+    #     * `BLUE_GREEN`: A *blue/green* deployment strategy (`BLUE_GREEN`)
+    #       is a release methodology that reduces downtime and risk by
+    #       running two identical production environments called blue and
+    #       green. With Amazon ECS blue/green deployments, you can validate
+    #       new service revisions before directing production traffic to
+    #       them. This approach provides a safer way to deploy changes with
+    #       the ability to quickly roll back if needed.
+    #
+    #       Amazon ECS blue/green deployments are best suited for the
+    #       following scenarios:
+    #
+    #       * Service validation: When you need to validate new service
+    #         revisions before directing production traffic to them
+    #
+    #       * Zero downtime: When your service requires zero-downtime
+    #         deployments
+    #
+    #       * Instant roll back: When you need the ability to quickly roll
+    #         back if issues are detected
+    #
+    #       * Load balancer requirement: When your service uses Application
+    #         Load Balancer, Network Load Balancer, or Service Connect
+    #   * External
+    #
+    #     Use a third-party deployment controller.
+    #
+    #   * Blue/green deployment (powered by CodeDeploy)
+    #
+    #     CodeDeploy installs an updated version of the application as a new
+    #     replacement task set and reroutes production traffic from the
+    #     original application task set to the replacement task set. The
+    #     original task set is terminated after a successful deployment. Use
+    #     this deployment controller to verify a new deployment of a service
+    #     before sending production traffic to it.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DeploymentController AWS API Documentation
@@ -4061,6 +6116,247 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # A deployment lifecycle hook runs custom logic or pauses the deployment
+    # at specific stages of the deployment process. You can use Lambda
+    # functions or pause hooks as hook targets.
+    #
+    # For more information, see [Lifecycle hooks for Amazon ECS service
+    # deployments][1] in the <i> Amazon Elastic Container Service Developer
+    # Guide</i>.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deployment-lifecycle-hooks.html
+    #
+    # @!attribute [rw] target_type
+    #   The type of action the lifecycle hook performs. Valid values are:
+    #
+    #   * `AWS_LAMBDA` - Invokes a Lambda function at the specified
+    #     lifecycle stage. This is the default value.
+    #
+    #   * `PAUSE` - Pauses the deployment at the specified lifecycle stage
+    #     until you call `ContinueServiceDeployment` to continue or roll
+    #     back.
+    #
+    #   This field is optional. If not specified, the default value is
+    #   `AWS_LAMBDA`.
+    #   @return [String]
+    #
+    # @!attribute [rw] hook_target_arn
+    #   The Amazon Resource Name (ARN) of the hook target. For `AWS_LAMBDA`
+    #   hooks, this is the Lambda function ARN. This field is not applicable
+    #   for `PAUSE` hooks.
+    #
+    #   You must provide this parameter when configuring an `AWS_LAMBDA`
+    #   lifecycle hook.
+    #   @return [String]
+    #
+    # @!attribute [rw] role_arn
+    #   The Amazon Resource Name (ARN) of the IAM role that grants Amazon
+    #   ECS permission to call Lambda functions on your behalf.
+    #
+    #   For more information, see [Permissions required for Lambda functions
+    #   in Amazon ECS blue/green deployments][1] in the <i> Amazon Elastic
+    #   Container Service Developer Guide</i>.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/blue-green-permissions.html
+    #   @return [String]
+    #
+    # @!attribute [rw] lifecycle_stages
+    #   The lifecycle stages at which to run the hook. Choose from these
+    #   valid values:
+    #
+    #   * RECONCILE\_SERVICE
+    #
+    #     The reconciliation stage that only happens when you start a new
+    #     service deployment with more than 1 service revision in an ACTIVE
+    #     state.
+    #
+    #     You can use a lifecycle hook for this stage.
+    #
+    #   * PRE\_SCALE\_UP
+    #
+    #     The green service revision has not started. The blue service
+    #     revision is handling 100% of the production traffic. There is no
+    #     test traffic.
+    #
+    #     You can use a lifecycle hook for this stage.
+    #
+    #   * POST\_SCALE\_UP
+    #
+    #     The green service revision has started. The blue service revision
+    #     is handling 100% of the production traffic. There is no test
+    #     traffic.
+    #
+    #     You can use a lifecycle hook for this stage.
+    #
+    #   * TEST\_TRAFFIC\_SHIFT
+    #
+    #     The blue and green service revisions are running. The blue service
+    #     revision handles 100% of the production traffic. The green service
+    #     revision is migrating from 0% to 100% of test traffic.
+    #
+    #     You can use a lifecycle hook for this stage.
+    #
+    #   * POST\_TEST\_TRAFFIC\_SHIFT
+    #
+    #     The test traffic shift is complete. The green service revision
+    #     handles 100% of the test traffic.
+    #
+    #     You can use a lifecycle hook for this stage.
+    #
+    #   * PRE\_PRODUCTION\_TRAFFIC\_SHIFT
+    #
+    #     Occurs before production traffic shift. For linear and canary
+    #     deployments, this stage is invoked before every traffic shift
+    #     step.
+    #
+    #     You can use a lifecycle hook for this stage.
+    #
+    #   * PRODUCTION\_TRAFFIC\_SHIFT
+    #
+    #     Production traffic is shifting to the green service revision. The
+    #     green service revision is migrating from 0% to 100% of production
+    #     traffic. For linear and canary deployments, this stage is invoked
+    #     at every traffic shift step.
+    #
+    #     You can use a lifecycle hook for this stage.
+    #
+    #   * POST\_PRODUCTION\_TRAFFIC\_SHIFT
+    #
+    #     The production traffic shift is complete.
+    #
+    #     You can use a lifecycle hook for this stage.
+    #
+    #   <note markdown="1"> `PAUSE` hooks cannot be configured at `TEST_TRAFFIC_SHIFT` or
+    #   `PRODUCTION_TRAFFIC_SHIFT` stages. These stages are only valid for
+    #   `AWS_LAMBDA` hooks.
+    #
+    #    </note>
+    #
+    #   You must provide this parameter when configuring a deployment
+    #   lifecycle hook.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] hook_details
+    #   Use this field to specify custom parameters that Amazon ECS passes
+    #   to your Lambda function on each invocation. This field is not used
+    #   for `PAUSE` hooks.
+    #   @return [Hash,Array,String,Numeric,Boolean]
+    #
+    # @!attribute [rw] timeout_configuration
+    #   The timeout configuration for the lifecycle hook. This specifies how
+    #   long Amazon ECS waits before taking the timeout action if the hook
+    #   is not resolved.
+    #   @return [Types::DeploymentLifecycleHookTimeoutConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DeploymentLifecycleHook AWS API Documentation
+    #
+    class DeploymentLifecycleHook < Struct.new(
+      :target_type,
+      :hook_target_arn,
+      :role_arn,
+      :lifecycle_stages,
+      :hook_details,
+      :timeout_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The details of a deployment lifecycle hook that is active during a
+    # service deployment.
+    #
+    # You can view lifecycle hook details by calling
+    # [DescribeServiceDeployments][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_DescribeServiceDeployments.html
+    #
+    # @!attribute [rw] hook_id
+    #   The ID of the lifecycle hook. Use this value when calling
+    #   `ContinueServiceDeployment` to continue or roll back a paused
+    #   deployment.
+    #   @return [String]
+    #
+    # @!attribute [rw] target_type
+    #   The type of action the lifecycle hook performs, such as `AWS_LAMBDA`
+    #   or `PAUSE`.
+    #   @return [String]
+    #
+    # @!attribute [rw] target_arn
+    #   The Amazon Resource Name (ARN) of the hook target. For `AWS_LAMBDA`
+    #   hooks, this is the Lambda function ARN. For `PAUSE` hooks, this
+    #   field is not set.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the lifecycle hook. Valid values include
+    #   `AWAITING_ACTION`, `IN_PROGRESS`, `SUCCEEDED`, `FAILED`, and
+    #   `TIMED_OUT`.
+    #   @return [String]
+    #
+    # @!attribute [rw] expires_at
+    #   The time when the lifecycle hook times out. If the hook has not been
+    #   completed by this time, Amazon ECS takes the timeout action.
+    #   @return [Time]
+    #
+    # @!attribute [rw] timeout_action
+    #   The action Amazon ECS takes when the lifecycle hook times out. Valid
+    #   values are `CONTINUE` and `ROLLBACK`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DeploymentLifecycleHookDetail AWS API Documentation
+    #
+    class DeploymentLifecycleHookDetail < Struct.new(
+      :hook_id,
+      :target_type,
+      :target_arn,
+      :status,
+      :expires_at,
+      :timeout_action)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The timeout configuration for a deployment lifecycle hook. This
+    # determines how long Amazon ECS waits for the hook to complete before
+    # taking the specified timeout action.
+    #
+    # @!attribute [rw] timeout_in_minutes
+    #   The number of minutes Amazon ECS waits for the lifecycle hook to
+    #   complete before taking the timeout action.
+    #
+    #   Default: 1440 (24 hours)
+    #   @return [Integer]
+    #
+    # @!attribute [rw] action
+    #   The action Amazon ECS takes when the lifecycle hook times out. Valid
+    #   values are:
+    #
+    #   * `CONTINUE` - Proceeds the deployment to the next lifecycle stage.
+    #
+    #   * `ROLLBACK` - Rolls back the deployment to the previous service
+    #     revision.
+    #
+    #   Default: `ROLLBACK`
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DeploymentLifecycleHookTimeoutConfiguration AWS API Documentation
+    #
+    class DeploymentLifecycleHookTimeoutConfiguration < Struct.new(
+      :timeout_in_minutes,
+      :action)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] cluster
     #   The short name or full Amazon Resource Name (ARN) of the cluster
     #   that hosts the container instance to deregister. If you do not
@@ -4103,6 +6399,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] container_instance
     #   The container instance that was deregistered.
     #   @return [Types::ContainerInstance]
@@ -4115,6 +6415,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] task_definition
     #   The `family` and `revision` (`family:revision`) or full Amazon
     #   Resource Name (ARN) of the task definition to deregister. You must
@@ -4129,6 +6433,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] task_definition
     #   The full description of the deregistered task.
     #   @return [Types::TaskDefinition]
@@ -4146,6 +6454,12 @@ module Aws::ECS
     #   capacity providers. Up to `100` capacity providers can be described
     #   in an action.
     #   @return [Array<String>]
+    #
+    # @!attribute [rw] cluster
+    #   The name of the cluster to describe capacity providers for. When
+    #   specified, only capacity providers associated with this cluster are
+    #   returned, including Amazon ECS Managed Instances capacity providers.
+    #   @return [String]
     #
     # @!attribute [rw] include
     #   Specifies whether or not you want to see the resource tags for the
@@ -4184,6 +6498,7 @@ module Aws::ECS
     #
     class DescribeCapacityProvidersRequest < Struct.new(
       :capacity_providers,
+      :cluster,
       :include,
       :max_results,
       :next_token)
@@ -4217,6 +6532,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] clusters
     #   A list of up to 100 cluster names or full cluster Amazon Resource
     #   Name (ARN) entries. If you do not specify a cluster, the default
@@ -4254,6 +6573,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] clusters
     #   The list of clusters.
     #   @return [Array<Types::Cluster>]
@@ -4271,6 +6594,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] cluster
     #   The short name or full Amazon Resource Name (ARN) of the cluster
     #   that hosts the container instances to describe. If you do not
@@ -4304,6 +6631,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] container_instances
     #   The list of container instances.
     #   @return [Array<Types::ContainerInstance>]
@@ -4317,6 +6648,151 @@ module Aws::ECS
     class DescribeContainerInstancesResponse < Struct.new(
       :container_instances,
       :failures)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] daemon_deployment_arns
+    #   The ARN of the daemon deployments to describe. You can specify up to
+    #   20 ARNs.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DescribeDaemonDeploymentsRequest AWS API Documentation
+    #
+    class DescribeDaemonDeploymentsRequest < Struct.new(
+      :daemon_deployment_arns)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] failures
+    #   Any failures associated with the call.
+    #   @return [Array<Types::Failure>]
+    #
+    # @!attribute [rw] daemon_deployments
+    #   The list of daemon deployments.
+    #   @return [Array<Types::DaemonDeployment>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DescribeDaemonDeploymentsResponse AWS API Documentation
+    #
+    class DescribeDaemonDeploymentsResponse < Struct.new(
+      :failures,
+      :daemon_deployments)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] daemon_arn
+    #   The Amazon Resource Name (ARN) of the daemon to describe.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DescribeDaemonRequest AWS API Documentation
+    #
+    class DescribeDaemonRequest < Struct.new(
+      :daemon_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] daemon
+    #   The full description of the daemon, including the current revisions,
+    #   deployment ARN, cluster, and status information.
+    #   @return [Types::DaemonDetail]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DescribeDaemonResponse AWS API Documentation
+    #
+    class DescribeDaemonResponse < Struct.new(
+      :daemon)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] daemon_revision_arns
+    #   The ARN of the daemon revisions to describe. You can specify up to
+    #   20 ARNs.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DescribeDaemonRevisionsRequest AWS API Documentation
+    #
+    class DescribeDaemonRevisionsRequest < Struct.new(
+      :daemon_revision_arns)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] daemon_revisions
+    #   The list of daemon revisions.
+    #   @return [Array<Types::DaemonRevision>]
+    #
+    # @!attribute [rw] failures
+    #   Any failures associated with the call.
+    #   @return [Array<Types::Failure>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DescribeDaemonRevisionsResponse AWS API Documentation
+    #
+    class DescribeDaemonRevisionsResponse < Struct.new(
+      :daemon_revisions,
+      :failures)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] daemon_task_definition
+    #   The `family` for the latest `ACTIVE` revision, `family` and
+    #   `revision` (`family:revision`) for a specific revision in the
+    #   family, or full Amazon Resource Name (ARN) of the daemon task
+    #   definition to describe.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DescribeDaemonTaskDefinitionRequest AWS API Documentation
+    #
+    class DescribeDaemonTaskDefinitionRequest < Struct.new(
+      :daemon_task_definition)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] daemon_task_definition
+    #   The full daemon task definition description.
+    #   @return [Types::DaemonTaskDefinition]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DescribeDaemonTaskDefinitionResponse AWS API Documentation
+    #
+    class DescribeDaemonTaskDefinitionResponse < Struct.new(
+      :daemon_task_definition)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] service_arn
+    #   The Amazon Resource Name (ARN) of the Express service to describe.
+    #   The ARN uniquely identifies the service within your Amazon Web
+    #   Services account and region.
+    #   @return [String]
+    #
+    # @!attribute [rw] include
+    #   Specifies additional information to include in the response. Valid
+    #   values are `TAGS` to include resource tags associated with the
+    #   Express service.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DescribeExpressGatewayServiceRequest AWS API Documentation
+    #
+    class DescribeExpressGatewayServiceRequest < Struct.new(
+      :service_arn,
+      :include)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] service
+    #   The full description of the described express service.
+    #   @return [Types::ECSExpressGatewayService]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/DescribeExpressGatewayServiceResponse AWS API Documentation
+    #
+    class DescribeExpressGatewayServiceResponse < Struct.new(
+      :service)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4393,6 +6869,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] cluster
     #   The short name or full Amazon Resource Name (ARN)the cluster that
     #   hosts the service to describe. If you do not specify a cluster, the
@@ -4423,6 +6903,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] services
     #   The list of services described.
     #   @return [Array<Types::Service>]
@@ -4440,6 +6924,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] task_definition
     #   The `family` for the latest `ACTIVE` revision, `family` and
     #   `revision` (`family:revision`) for a specific revision in the
@@ -4462,6 +6950,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] task_definition
     #   The full task definition description.
     #   @return [Types::TaskDefinition]
@@ -4554,11 +7046,14 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] cluster
     #   The short name or full Amazon Resource Name (ARN) of the cluster
     #   that hosts the task or tasks to describe. If you do not specify a
-    #   cluster, the default cluster is assumed. This parameter is required.
-    #   If you do not specify a value, the `default` cluster is used.
+    #   cluster, the default cluster is assumed.
     #   @return [String]
     #
     # @!attribute [rw] tasks
@@ -4581,6 +7076,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] tasks
     #   The list of tasks.
     #   @return [Array<Types::Task>]
@@ -4624,6 +7123,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] container_instance
     #   The container instance ID or full ARN of the container instance. For
     #   more information about the ARN format, see [Amazon Resource Name
@@ -4648,6 +7151,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] endpoint
     #   The endpoint for the Amazon ECS agent to poll.
     #   @return [String]
@@ -4746,9 +7253,9 @@ module Aws::ECS
     #
     # @!attribute [rw] propagate_tags
     #   Determines whether to propagate the tags from the task definition to
-    #    the Amazon EBS volume. Tags can only propagate to a `SERVICE`
-    #   specified in  `ServiceVolumeConfiguration`. If no value is
-    #   specified, the tags aren't  propagated.
+    #   the Amazon EBS volume. Tags can only propagate to a `SERVICE`
+    #   specified in `ServiceVolumeConfiguration`. If no value is specified,
+    #   the tags aren't propagated.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/EBSTagSpecification AWS API Documentation
@@ -4757,6 +7264,113 @@ module Aws::ECS
       :resource_type,
       :tags,
       :propagate_tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents an Express service, which provides a simplified way to
+    # deploy containerized web applications on Amazon ECS with managed
+    # Amazon Web Services infrastructure. An Express service automatically
+    # provisions and manages Application Load Balancers, target groups,
+    # security groups, and auto-scaling policies.
+    #
+    # Express services use a service revision architecture where each
+    # service can have multiple active configurations, enabling blue-green
+    # deployments and gradual rollouts. The service maintains a list of
+    # active configurations and manages the lifecycle of the underlying
+    # Amazon Web Services resources.
+    #
+    # @!attribute [rw] cluster
+    #   The short name or full ARN of the cluster that hosts the Express
+    #   service.
+    #   @return [String]
+    #
+    # @!attribute [rw] service_name
+    #   The name of the Express service.
+    #   @return [String]
+    #
+    # @!attribute [rw] service_arn
+    #   The ARN that identifies the Express service.
+    #   @return [String]
+    #
+    # @!attribute [rw] infrastructure_role_arn
+    #   The ARN of the infrastructure role that manages Amazon Web Services
+    #   resources for the Express service.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the Express service.
+    #   @return [Types::ExpressGatewayServiceStatus]
+    #
+    # @!attribute [rw] current_deployment
+    #   The current deployment configuration for the Express service.
+    #   @return [String]
+    #
+    # @!attribute [rw] active_configurations
+    #   The list of active service configurations for the Express service.
+    #   @return [Array<Types::ExpressGatewayServiceConfiguration>]
+    #
+    # @!attribute [rw] tags
+    #   The metadata applied to the Express service.
+    #   @return [Array<Types::Tag>]
+    #
+    # @!attribute [rw] created_at
+    #   The Unix timestamp for when the Express service was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_at
+    #   The Unix timestamp for when the Express service was last updated.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ECSExpressGatewayService AWS API Documentation
+    #
+    class ECSExpressGatewayService < Struct.new(
+      :cluster,
+      :service_name,
+      :service_arn,
+      :infrastructure_role_arn,
+      :status,
+      :current_deployment,
+      :active_configurations,
+      :tags,
+      :created_at,
+      :updated_at)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents the Amazon Web Services resources managed by Amazon ECS for
+    # an Express service, including ingress paths, auto-scaling policies,
+    # metric alarms, and security groups.
+    #
+    # @!attribute [rw] ingress_paths
+    #   The ingress paths and endpoints for the Express service.
+    #   @return [Array<Types::ManagedIngressPath>]
+    #
+    # @!attribute [rw] auto_scaling
+    #   The auto-scaling configuration and policies for the Express service.
+    #   @return [Types::ManagedAutoScaling]
+    #
+    # @!attribute [rw] metric_alarms
+    #   The CloudWatch metric alarms associated with the Express service.
+    #   @return [Array<Types::ManagedMetricAlarm>]
+    #
+    # @!attribute [rw] service_security_groups
+    #   The security groups managed by the Express service.
+    #   @return [Array<Types::ManagedSecurityGroup>]
+    #
+    # @!attribute [rw] log_groups
+    #   The log groups managed by the Express service.
+    #   @return [Array<Types::ManagedLogGroup>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ECSManagedResources AWS API Documentation
+    #
+    class ECSManagedResources < Struct.new(
+      :ingress_paths,
+      :auto_scaling,
+      :metric_alarms,
+      :service_security_groups,
+      :log_groups)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5118,6 +7732,256 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # Defines the configuration for the primary container in an Express
+    # service. This container receives traffic from the Application Load
+    # Balancer and runs your application code.
+    #
+    # The container configuration includes the container image, port
+    # mapping, logging settings, environment variables, and secrets. The
+    # container image is the only required parameter, with sensible defaults
+    # provided for other settings.
+    #
+    # @!attribute [rw] image
+    #   The image used to start a container. This string is passed directly
+    #   to the Docker daemon. Images in the Docker Hub registry are
+    #   available by default. Other repositories are specified with either
+    #   `repository-url/image:tag` or `repository-url/image@digest`.
+    #
+    #   For Express services, the image typically contains a web application
+    #   that listens on the specified container port. The image can be
+    #   stored in Amazon ECR, Docker Hub, or any other container registry
+    #   accessible to your execution role.
+    #   @return [String]
+    #
+    # @!attribute [rw] container_port
+    #   The port number on the container that receives traffic from the load
+    #   balancer. Default is 80.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] aws_logs_configuration
+    #   The log configuration for the container.
+    #   @return [Types::ExpressGatewayServiceAwsLogsConfiguration]
+    #
+    # @!attribute [rw] repository_credentials
+    #   The configuration for repository credentials for private registry
+    #   authentication.
+    #   @return [Types::ExpressGatewayRepositoryCredentials]
+    #
+    # @!attribute [rw] command
+    #   The command that is passed to the container.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] environment
+    #   The environment variables to pass to the container.
+    #   @return [Array<Types::KeyValuePair>]
+    #
+    # @!attribute [rw] secrets
+    #   The secrets to pass to the container.
+    #   @return [Array<Types::Secret>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ExpressGatewayContainer AWS API Documentation
+    #
+    class ExpressGatewayContainer < Struct.new(
+      :image,
+      :container_port,
+      :aws_logs_configuration,
+      :repository_credentials,
+      :command,
+      :environment,
+      :secrets)
+      SENSITIVE = [:environment]
+      include Aws::Structure
+    end
+
+    # The repository credentials for private registry authentication to pass
+    # to the container.
+    #
+    # @!attribute [rw] credentials_parameter
+    #   The Amazon Resource Name (ARN) of the secret containing the private
+    #   repository credentials.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ExpressGatewayRepositoryCredentials AWS API Documentation
+    #
+    class ExpressGatewayRepositoryCredentials < Struct.new(
+      :credentials_parameter)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines the auto-scaling configuration for an Express service. This
+    # determines how the service automatically adjusts the number of running
+    # tasks based on demand metrics such as CPU utilization, memory
+    # utilization, or request count per target.
+    #
+    # Auto-scaling helps ensure your application can handle varying levels
+    # of traffic while optimizing costs by scaling down during low-demand
+    # periods. You can specify the minimum and maximum number of tasks, the
+    # scaling metric, and the target value for that metric.
+    #
+    # @!attribute [rw] min_task_count
+    #   The minimum number of tasks to run in the Express service.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max_task_count
+    #   The maximum number of tasks to run in the Express service.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] auto_scaling_metric
+    #   The metric used for auto-scaling decisions. The default metric used
+    #   for an Express service is `CPUUtilization`.
+    #   @return [String]
+    #
+    # @!attribute [rw] auto_scaling_target_value
+    #   The target value for the auto-scaling metric. The default value for
+    #   an Express service is 60.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ExpressGatewayScalingTarget AWS API Documentation
+    #
+    class ExpressGatewayScalingTarget < Struct.new(
+      :min_task_count,
+      :max_task_count,
+      :auto_scaling_metric,
+      :auto_scaling_target_value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Specifies the Amazon CloudWatch Logs configuration for the Express
+    # service container.
+    #
+    # @!attribute [rw] log_group
+    #   The name of the CloudWatch Logs log group to send container logs to.
+    #   @return [String]
+    #
+    # @!attribute [rw] log_stream_prefix
+    #   The prefix for the CloudWatch Logs log stream names. The default for
+    #   an Express service is `ecs`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ExpressGatewayServiceAwsLogsConfiguration AWS API Documentation
+    #
+    class ExpressGatewayServiceAwsLogsConfiguration < Struct.new(
+      :log_group,
+      :log_stream_prefix)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents a specific configuration revision of an Express service,
+    # containing all the settings and parameters for that revision.
+    #
+    # @!attribute [rw] service_revision_arn
+    #   The ARN of the service revision.
+    #   @return [String]
+    #
+    # @!attribute [rw] execution_role_arn
+    #   The ARN of the task execution role for the service revision.
+    #   @return [String]
+    #
+    # @!attribute [rw] task_role_arn
+    #   The ARN of the task role for the service revision.
+    #   @return [String]
+    #
+    # @!attribute [rw] task_definition_arn
+    #   The ARN of the task definition used by this service revision. This
+    #   is present for all Express services and reflects the task definition
+    #   in use, whether managed by Amazon ECS or provided by the customer.
+    #   @return [String]
+    #
+    # @!attribute [rw] cpu
+    #   The CPU allocation for tasks in this service revision.
+    #   @return [String]
+    #
+    # @!attribute [rw] memory
+    #   The memory allocation for tasks in this service revision.
+    #   @return [String]
+    #
+    # @!attribute [rw] network_configuration
+    #   The network configuration for tasks in this service revision.
+    #   @return [Types::ExpressGatewayServiceNetworkConfiguration]
+    #
+    # @!attribute [rw] health_check_path
+    #   The health check path for this service revision.
+    #   @return [String]
+    #
+    # @!attribute [rw] primary_container
+    #   The primary container configuration for this service revision.
+    #   @return [Types::ExpressGatewayContainer]
+    #
+    # @!attribute [rw] scaling_target
+    #   The auto-scaling configuration for this service revision.
+    #   @return [Types::ExpressGatewayScalingTarget]
+    #
+    # @!attribute [rw] ingress_paths
+    #   The entry point into this service revision.
+    #   @return [Array<Types::IngressPathSummary>]
+    #
+    # @!attribute [rw] created_at
+    #   The Unix timestamp for when this service revision was created.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ExpressGatewayServiceConfiguration AWS API Documentation
+    #
+    class ExpressGatewayServiceConfiguration < Struct.new(
+      :service_revision_arn,
+      :execution_role_arn,
+      :task_role_arn,
+      :task_definition_arn,
+      :cpu,
+      :memory,
+      :network_configuration,
+      :health_check_path,
+      :primary_container,
+      :scaling_target,
+      :ingress_paths,
+      :created_at)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The network configuration for an Express service. By default, an
+    # Express service utilizes subnets and security groups associated with
+    # the default VPC.
+    #
+    # @!attribute [rw] security_groups
+    #   The IDs of the security groups associated with the Express service.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] subnets
+    #   The IDs of the subnets associated with the Express service.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ExpressGatewayServiceNetworkConfiguration AWS API Documentation
+    #
+    class ExpressGatewayServiceNetworkConfiguration < Struct.new(
+      :security_groups,
+      :subnets)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # An object that defines the status of Express service creation and
+    # information about the status of the service.
+    #
+    # @!attribute [rw] status_code
+    #   The status of the Express service.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_reason
+    #   Information about why the Express service is in the current status.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ExpressGatewayServiceStatus AWS API Documentation
+    #
+    class ExpressGatewayServiceStatus < Struct.new(
+      :status_code,
+      :status_reason)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The authorization configuration details for Amazon FSx for Windows
     # File Server file system. See
     # [FSxWindowsFileServerVolumeConfiguration][1] in the *Amazon ECS API
@@ -5400,6 +8264,45 @@ module Aws::ECS
     # are part of a service, if the task reports as unhealthy then the task
     # will be stopped and the service scheduler will replace it.
     #
+    # When a container health check fails for a task that is part of a
+    # service, the following process occurs:
+    #
+    # 1.  The task is marked as `UNHEALTHY`.
+    #
+    # 2.  The unhealthy task will be stopped, and during the stopping
+    #     process, it will go through the following states:
+    #
+    #     * `DEACTIVATING` - In this state, Amazon ECS performs additional
+    #       steps before stopping the task. For example, for tasks that are
+    #       part of services configured to use Elastic Load Balancing target
+    #       groups, target groups will be deregistered in this state.
+    #
+    #     * `STOPPING` - The task is in the process of being stopped.
+    #
+    #     * `DEPROVISIONING` - Resources associated with the task are being
+    #       cleaned up.
+    #
+    #     * `STOPPED` - The task has been completely stopped.
+    # 3.  After the old task stops, a new task will be launched to ensure
+    #     service operation, and the new task will go through the following
+    #     lifecycle:
+    #
+    #     * `PROVISIONING` - Resources required for the task are being
+    #       provisioned.
+    #
+    #     * `PENDING` - The task is waiting to be placed on a container
+    #       instance.
+    #
+    #     * `ACTIVATING` - In this state, Amazon ECS pulls container images,
+    #       creates containers, configures task networking, registers load
+    #       balancer target groups, and configures service discovery status.
+    #
+    #     * `RUNNING` - The task is running and performing its work.
+    #
+    # For more detailed information about task lifecycle states, see [Task
+    # lifecycle][1] in the *Amazon Elastic Container Service Developer
+    # Guide*.
+    #
     # The following are notes about container health check support:
     #
     # * If the Amazon ECS container agent becomes disconnected from the
@@ -5414,25 +8317,26 @@ module Aws::ECS
     #
     # * Container health checks require version `1.17.0` or greater of the
     #   Amazon ECS container agent. For more information, see [Updating the
-    #   Amazon ECS container agent][1].
+    #   Amazon ECS container agent][2].
     #
     # * Container health checks are supported for Fargate tasks if you're
     #   using platform version `1.1.0` or greater. For more information, see
-    #   [Fargate platform versions][2].
+    #   [Fargate platform versions][3].
     #
     # * Container health checks aren't supported for tasks that are part of
     #   a service that's configured to use a Classic Load Balancer.
     #
     # For an example of how to specify a task definition with multiple
     # containers where container dependency is specified, see [Container
-    # dependency][3] in the *Amazon Elastic Container Service Developer
+    # dependency][4] in the *Amazon Elastic Container Service Developer
     # Guide*.
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-agent-update.html
-    # [2]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/platform_versions.html
-    # [3]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/example_task_definitions.html#example_task_definition-containerdependency
+    # [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-lifecycle-explanation.html
+    # [2]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-agent-update.html
+    # [3]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/platform_versions.html
+    # [4]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/example_task_definitions.html#example_task_definition-containerdependency
     #
     # @!attribute [rw] command
     #   A string array representing the command that the container runs to
@@ -5612,6 +8516,55 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # The configuration that controls how Amazon ECS optimizes your
+    # infrastructure.
+    #
+    # @!attribute [rw] scale_in_after
+    #   This parameter defines the number of seconds Amazon ECS Managed
+    #   Instances waits before optimizing EC2 instances that have become
+    #   idle or underutilized. A longer delay increases the likelihood of
+    #   placing new tasks on idle or underutilized instances instances,
+    #   reducing startup time. A shorter delay helps reduce infrastructure
+    #   costs by optimizing idle or underutilized instances,instances more
+    #   quickly.
+    #
+    #   Valid values are:
+    #
+    #   * `null` - Uses the default optimization behavior.
+    #
+    #   * `-1` - Disables automatic infrastructure optimization.
+    #
+    #   * A value between `0` and `3600` (inclusive) - Specifies the number
+    #     of seconds to wait before optimizing instances.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/InfrastructureOptimization AWS API Documentation
+    #
+    class InfrastructureOptimization < Struct.new(
+      :scale_in_after)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The entry point into an Express service.
+    #
+    # @!attribute [rw] access_type
+    #   The type of access to the endpoint for the Express service.
+    #   @return [String]
+    #
+    # @!attribute [rw] endpoint
+    #   The endpoint for access to the service.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/IngressPathSummary AWS API Documentation
+    #
+    class IngressPathSummary < Struct.new(
+      :access_type,
+      :endpoint)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # An object representing the result of a container instance health
     # status check.
     #
@@ -5621,6 +8574,10 @@ module Aws::ECS
     #
     # @!attribute [rw] status
     #   The container instance health status.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_reason
+    #   The reason for the container instance health status.
     #   @return [String]
     #
     # @!attribute [rw] last_updated
@@ -5638,8 +8595,457 @@ module Aws::ECS
     class InstanceHealthCheckResult < Struct.new(
       :type,
       :status,
+      :status_reason,
       :last_updated,
       :last_status_change)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The launch template configuration for Amazon ECS Managed Instances.
+    # This defines how Amazon ECS launches Amazon EC2 instances, including
+    # the instance profile for your tasks, network and storage
+    # configuration, capacity options, and instance requirements for
+    # flexible instance type selection.
+    #
+    # @!attribute [rw] ec2_instance_profile_arn
+    #   The Amazon Resource Name (ARN) of the instance profile that Amazon
+    #   ECS applies to Amazon ECS Managed Instances. This instance profile
+    #   must include the necessary permissions for your tasks to access
+    #   Amazon Web Services services and resources.
+    #
+    #   For more information, see [Amazon ECS instance profile for Managed
+    #   Instances][1] in the *Amazon ECS Developer Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/managed-instances-instance-profile.html
+    #   @return [String]
+    #
+    # @!attribute [rw] network_configuration
+    #   The network configuration for Amazon ECS Managed Instances. This
+    #   specifies the subnets and security groups that instances use for
+    #   network connectivity.
+    #   @return [Types::ManagedInstancesNetworkConfiguration]
+    #
+    # @!attribute [rw] storage_configuration
+    #   The storage configuration for Amazon ECS Managed Instances. This
+    #   defines the data volume properties for the instances.
+    #   @return [Types::ManagedInstancesStorageConfiguration]
+    #
+    # @!attribute [rw] local_storage_configuration
+    #   The local storage configuration for Amazon ECS Managed Instances.
+    #   This defines how ECS uses instance store volumes available on the
+    #   container instance.
+    #   @return [Types::ManagedInstancesLocalStorageConfiguration]
+    #
+    # @!attribute [rw] monitoring
+    #   CloudWatch provides two categories of monitoring: basic monitoring
+    #   and detailed monitoring. By default, your managed instance is
+    #   configured for basic monitoring. You can optionally enable detailed
+    #   monitoring to help you more quickly identify and act on operational
+    #   issues. You can enable or turn off detailed monitoring at launch or
+    #   when the managed instance is running or stopped. For more
+    #   information, see [Detailed monitoring for Amazon ECS Managed
+    #   Instances][1] in the Amazon ECS Developer Guide.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/detailed-monitoring-managed-instances.html
+    #   @return [String]
+    #
+    # @!attribute [rw] capacity_option_type
+    #   The capacity option type. This determines whether Amazon ECS
+    #   launches On-Demand, Spot or Capacity Reservation Instances for your
+    #   managed instance capacity provider.
+    #
+    #   Valid values are:
+    #
+    #   * `ON_DEMAND` - Launches standard On-Demand Instances. On-Demand
+    #     Instances provide predictable pricing and availability.
+    #
+    #   * `SPOT` - Launches Spot Instances that use spare Amazon EC2
+    #     capacity at reduced cost. Spot Instances can be interrupted by
+    #     Amazon EC2 with a two-minute notification when the capacity is
+    #     needed back.
+    #
+    #   * `RESERVED` - Launches Instances using Amazon EC2 Capacity
+    #     Reservations. Capacity Reservations allow you to reserve compute
+    #     capacity for Amazon EC2 instances in a specific Availability Zone.
+    #
+    #   The default is On-Demand
+    #
+    #   For more information about Amazon EC2 capacity options, see
+    #   [Instance purchasing options][1] in the *Amazon EC2 User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-purchasing-options.html
+    #   @return [String]
+    #
+    # @!attribute [rw] instance_metadata_tags_propagation
+    #   Determines whether tags are propagated to the instance metadata
+    #   service (IMDS) for Amazon EC2 instances launched by the Managed
+    #   Instances capacity provider. When enabled, all tags associated with
+    #   the instance are available through the instance metadata service.
+    #   When disabled, tags are not propagated to IMDS.
+    #
+    #   Disable this setting if your tags contain characters that are not
+    #   compatible with IMDS, such as `/`. IMDS requires tag keys to match
+    #   the pattern `[0-9a-zA-Z\-_+=,.@:]{1,255}`.
+    #
+    #   The default value is `true`.
+    #
+    #   For more information, see [Work with instance tags in instance
+    #   metadata][1] in the *Amazon EC2 User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Using_Tags.html#work-with-tags-in-IMDS
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] instance_requirements
+    #   The instance requirements. You can specify:
+    #
+    #   * The instance types
+    #
+    #   * Instance requirements such as vCPU count, memory, network
+    #     performance, and accelerator specifications
+    #
+    #   Amazon ECS automatically selects the instances that match the
+    #   specified criteria.
+    #   @return [Types::InstanceRequirementsRequest]
+    #
+    # @!attribute [rw] fips_enabled
+    #   Determines whether to enable FIPS 140-2 validated cryptographic
+    #   modules on EC2 instances launched by the capacity provider. If
+    #   `true`, instances use FIPS-compliant cryptographic algorithms and
+    #   modules for enhanced security compliance. If `false`, instances use
+    #   standard cryptographic implementations.
+    #
+    #   If not specified, instances are launched with FIPS enabled in Amazon
+    #   Web Services GovCloud (US) regions and FIPS disabled in other
+    #   regions.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] capacity_reservations
+    #   Capacity reservation specifications. You can specify:
+    #
+    #   * Capacity reservation preference
+    #
+    #   * Reservation resource group to be used for targeted capacity
+    #     reservations
+    #
+    #   Amazon ECS will launch instances according to the specified
+    #   criteria.
+    #   @return [Types::CapacityReservationRequest]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/InstanceLaunchTemplate AWS API Documentation
+    #
+    class InstanceLaunchTemplate < Struct.new(
+      :ec2_instance_profile_arn,
+      :network_configuration,
+      :storage_configuration,
+      :local_storage_configuration,
+      :monitoring,
+      :capacity_option_type,
+      :instance_metadata_tags_propagation,
+      :instance_requirements,
+      :fips_enabled,
+      :capacity_reservations)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The updated launch template configuration for Amazon ECS Managed
+    # Instances. You can modify the instance profile, network configuration,
+    # storage settings, and instance requirements. Changes apply to new
+    # instances launched after the update.
+    #
+    # For more information, see [Store instance launch parameters in Amazon
+    # EC2 launch templates][1] in the *Amazon EC2 User Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-launch-templates.html
+    #
+    # @!attribute [rw] ec2_instance_profile_arn
+    #   The updated Amazon Resource Name (ARN) of the instance profile. The
+    #   new instance profile must have the necessary permissions for your
+    #   tasks.
+    #
+    #   For more information, see [Amazon ECS instance profile for Managed
+    #   Instances][1] in the *Amazon ECS Developer Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/managed-instances-instance-profile.html
+    #   @return [String]
+    #
+    # @!attribute [rw] network_configuration
+    #   The updated network configuration for Amazon ECS Managed Instances.
+    #   Changes to subnets and security groups affect new instances launched
+    #   after the update.
+    #   @return [Types::ManagedInstancesNetworkConfiguration]
+    #
+    # @!attribute [rw] storage_configuration
+    #   The updated storage configuration for Amazon ECS Managed Instances.
+    #   Changes to storage settings apply to new instances launched after
+    #   the update.
+    #   @return [Types::ManagedInstancesStorageConfiguration]
+    #
+    # @!attribute [rw] instance_metadata_tags_propagation
+    #   Determines whether tags are propagated to the instance metadata
+    #   service (IMDS) for Amazon EC2 instances launched by the Managed
+    #   Instances capacity provider. When enabled, all tags associated with
+    #   the instance are available through the instance metadata service.
+    #   When disabled, tags are not propagated to IMDS.
+    #
+    #   Disable this setting if your tags contain characters that are not
+    #   compatible with IMDS, such as `/`. IMDS requires tag keys to match
+    #   the pattern `[0-9a-zA-Z\-_+=,.@:]{1,255}`.
+    #
+    #   The default value is `true`.
+    #
+    #   For more information, see [Work with instance tags in instance
+    #   metadata][1] in the *Amazon EC2 User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Using_Tags.html#work-with-tags-in-IMDS
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] local_storage_configuration
+    #   The updated local storage configuration for Amazon ECS Managed
+    #   Instances. Changes to local storage settings apply to new instances
+    #   launched after the update.
+    #   @return [Types::ManagedInstancesLocalStorageConfiguration]
+    #
+    # @!attribute [rw] monitoring
+    #   CloudWatch provides two categories of monitoring: basic monitoring
+    #   and detailed monitoring. By default, your managed instance is
+    #   configured for basic monitoring. You can optionally enable detailed
+    #   monitoring to help you more quickly identify and act on operational
+    #   issues. You can enable or turn off detailed monitoring at launch or
+    #   when the managed instance is running or stopped. For more
+    #   information, see [Detailed monitoring for Amazon ECS Managed
+    #   Instances][1] in the Amazon ECS Developer Guide.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/detailed-monitoring-managed-instances.html
+    #   @return [String]
+    #
+    # @!attribute [rw] instance_requirements
+    #   The updated instance requirements for attribute-based instance type
+    #   selection. Changes to instance requirements affect which instance
+    #   types Amazon ECS selects for new instances.
+    #   @return [Types::InstanceRequirementsRequest]
+    #
+    # @!attribute [rw] capacity_reservations
+    #   The updated capacity reservations specifications for Amazon ECS
+    #   Managed Instances. Changes to capacity reservations settings apply
+    #   to new instances launched after the update.
+    #   @return [Types::CapacityReservationRequest]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/InstanceLaunchTemplateUpdate AWS API Documentation
+    #
+    class InstanceLaunchTemplateUpdate < Struct.new(
+      :ec2_instance_profile_arn,
+      :network_configuration,
+      :storage_configuration,
+      :instance_metadata_tags_propagation,
+      :local_storage_configuration,
+      :monitoring,
+      :instance_requirements,
+      :capacity_reservations)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The instance requirements for attribute-based instance type selection.
+    # Instead of specifying exact instance types, you define requirements
+    # such as vCPU count, memory size, network performance, and accelerator
+    # specifications. Amazon ECS automatically selects Amazon EC2 instance
+    # types that match these requirements, providing flexibility and helping
+    # to mitigate capacity constraints.
+    #
+    # @!attribute [rw] v_cpu_count
+    #   The minimum and maximum number of vCPUs for the instance types.
+    #   Amazon ECS selects instance types that have vCPU counts within this
+    #   range.
+    #   @return [Types::VCpuCountRangeRequest]
+    #
+    # @!attribute [rw] memory_mi_b
+    #   The minimum and maximum amount of memory in mebibytes (MiB) for the
+    #   instance types. Amazon ECS selects instance types that have memory
+    #   within this range.
+    #   @return [Types::MemoryMiBRequest]
+    #
+    # @!attribute [rw] cpu_manufacturers
+    #   The CPU manufacturers to include or exclude. You can specify
+    #   `intel`, `amd`, or `amazon-web-services` to control which CPU types
+    #   are used for your workloads.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] memory_gi_b_per_v_cpu
+    #   The minimum and maximum amount of memory per vCPU in gibibytes
+    #   (GiB). This helps ensure that instance types have the appropriate
+    #   memory-to-CPU ratio for your workloads.
+    #   @return [Types::MemoryGiBPerVCpuRequest]
+    #
+    # @!attribute [rw] excluded_instance_types
+    #   The instance types to exclude from selection. Use this to prevent
+    #   Amazon ECS from selecting specific instance types that may not be
+    #   suitable for your workloads.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] instance_generations
+    #   The instance generations to include. You can specify `current` to
+    #   use the latest generation instances, or `previous` to include
+    #   previous generation instances for cost optimization.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] spot_max_price_percentage_over_lowest_price
+    #   The maximum price for Spot instances as a percentage over the lowest
+    #   priced On-Demand instance. This helps control Spot instance costs
+    #   while maintaining access to capacity.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] on_demand_max_price_percentage_over_lowest_price
+    #   The price protection threshold for On-Demand Instances, as a
+    #   percentage higher than an identified On-Demand price. The identified
+    #   On-Demand price is the price of the lowest priced current generation
+    #   C, M, or R instance type with your specified attributes. If no
+    #   current generation C, M, or R instance type matches your attributes,
+    #   then the identified price is from either the lowest priced current
+    #   generation instance types or, failing that, the lowest priced
+    #   previous generation instance types that match your attributes. When
+    #   Amazon ECS selects instance types with your attributes, we will
+    #   exclude instance types whose price exceeds your specified threshold.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] bare_metal
+    #   Indicates whether to include bare metal instance types. Set to
+    #   `included` to allow bare metal instances, `excluded` to exclude
+    #   them, or `required` to use only bare metal instances.
+    #   @return [String]
+    #
+    # @!attribute [rw] burstable_performance
+    #   Indicates whether to include burstable performance instance types
+    #   (T2, T3, T3a, T4g). Set to `included` to allow burstable instances,
+    #   `excluded` to exclude them, or `required` to use only burstable
+    #   instances.
+    #   @return [String]
+    #
+    # @!attribute [rw] require_hibernate_support
+    #   Indicates whether the instance types must support hibernation. When
+    #   set to `true`, only instance types that support hibernation are
+    #   selected.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] network_interface_count
+    #   The minimum and maximum number of network interfaces for the
+    #   instance types. This is useful for workloads that require multiple
+    #   network interfaces.
+    #   @return [Types::NetworkInterfaceCountRequest]
+    #
+    # @!attribute [rw] local_storage
+    #   Indicates whether to include instance types with local storage. Set
+    #   to `included` to allow local storage, `excluded` to exclude it, or
+    #   `required` to use only instances with local storage.
+    #   @return [String]
+    #
+    # @!attribute [rw] local_storage_types
+    #   The local storage types to include. You can specify `hdd` for hard
+    #   disk drives, `ssd` for solid state drives, or both.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] total_local_storage_gb
+    #   The minimum and maximum total local storage in gigabytes (GB) for
+    #   instance types with local storage.
+    #   @return [Types::TotalLocalStorageGBRequest]
+    #
+    # @!attribute [rw] baseline_ebs_bandwidth_mbps
+    #   The minimum and maximum baseline Amazon EBS bandwidth in megabits
+    #   per second (Mbps). This is important for workloads with high storage
+    #   I/O requirements.
+    #   @return [Types::BaselineEbsBandwidthMbpsRequest]
+    #
+    # @!attribute [rw] accelerator_types
+    #   The accelerator types to include. You can specify `gpu` for graphics
+    #   processing units, `fpga` for field programmable gate arrays, or
+    #   `inference` for machine learning inference accelerators.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] accelerator_count
+    #   The minimum and maximum number of accelerators for the instance
+    #   types. This is used when you need instances with specific numbers of
+    #   GPUs or other accelerators.
+    #   @return [Types::AcceleratorCountRequest]
+    #
+    # @!attribute [rw] accelerator_manufacturers
+    #   The accelerator manufacturers to include. You can specify `nvidia`,
+    #   `amd`, `amazon-web-services`, or `xilinx` depending on your
+    #   accelerator requirements.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] accelerator_names
+    #   The specific accelerator names to include. For example, you can
+    #   specify `a100`, `v100`, `k80`, or other specific accelerator models.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] accelerator_total_memory_mi_b
+    #   The minimum and maximum total accelerator memory in mebibytes (MiB).
+    #   This is important for GPU workloads that require specific amounts of
+    #   video memory.
+    #   @return [Types::AcceleratorTotalMemoryMiBRequest]
+    #
+    # @!attribute [rw] network_bandwidth_gbps
+    #   The minimum and maximum network bandwidth in gigabits per second
+    #   (Gbps). This is crucial for network-intensive workloads that require
+    #   high throughput.
+    #   @return [Types::NetworkBandwidthGbpsRequest]
+    #
+    # @!attribute [rw] allowed_instance_types
+    #   The instance types to include in the selection. When specified,
+    #   Amazon ECS only considers these instance types, subject to the other
+    #   requirements specified.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] max_spot_price_as_percentage_of_optimal_on_demand_price
+    #   The maximum price for Spot instances as a percentage of the optimal
+    #   On-Demand price. This provides more precise cost control for Spot
+    #   instance selection.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/InstanceRequirementsRequest AWS API Documentation
+    #
+    class InstanceRequirementsRequest < Struct.new(
+      :v_cpu_count,
+      :memory_mi_b,
+      :cpu_manufacturers,
+      :memory_gi_b_per_v_cpu,
+      :excluded_instance_types,
+      :instance_generations,
+      :spot_max_price_percentage_over_lowest_price,
+      :on_demand_max_price_percentage_over_lowest_price,
+      :bare_metal,
+      :burstable_performance,
+      :require_hibernate_support,
+      :network_interface_count,
+      :local_storage,
+      :local_storage_types,
+      :total_local_storage_gb,
+      :baseline_ebs_bandwidth_mbps,
+      :accelerator_types,
+      :accelerator_count,
+      :accelerator_manufacturers,
+      :accelerator_names,
+      :accelerator_total_memory_mi_b,
+      :network_bandwidth_gbps,
+      :allowed_instance_types,
+      :max_spot_price_as_percentage_of_optimal_on_demand_price)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5654,9 +9060,17 @@ module Aws::ECS
     #
     # [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-event-messages-list.html
     #
+    # @!attribute [rw] message
+    #   Message that describes the cause of the exception.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/InvalidParameterException AWS API Documentation
     #
-    class InvalidParameterException < Aws::EmptyStructure; end
+    class InvalidParameterException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # The Linux capabilities to add or remove from the default Docker
     # configuration for a container defined in the task definition. For more
@@ -5765,9 +9179,46 @@ module Aws::ECS
 
     # The limit for the resource was exceeded.
     #
+    # @!attribute [rw] message
+    #   Message that describes the cause of the exception.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/LimitExceededException AWS API Documentation
     #
-    class LimitExceededException < Aws::EmptyStructure; end
+    class LimitExceededException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration for linear deployment strategy that shifts production
+    # traffic in equal percentage increments with configurable wait times
+    # between each step until 100% of traffic is shifted to the new service
+    # revision. This is only valid when you run `CreateService` or
+    # `UpdateService` with `deploymentController` set to `ECS` and a
+    # `deploymentConfiguration` with a strategy set to `LINEAR`.
+    #
+    # @!attribute [rw] step_percent
+    #   The percentage of production traffic to shift in each step during a
+    #   linear deployment. Valid values are multiples of 0.1 from 3.0 to
+    #   100.0. The default value is 10.0.
+    #   @return [Float]
+    #
+    # @!attribute [rw] step_bake_time_in_minutes
+    #   The amount of time in minutes to wait between each traffic shifting
+    #   step during a linear deployment. Valid values are 0 to 1440 minutes
+    #   (24 hours). The default value is 6. This bake time is not applied
+    #   after reaching 100 percent traffic.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/LinearConfiguration AWS API Documentation
+    #
+    class LinearConfiguration < Struct.new(
+      :step_percent,
+      :step_bake_time_in_minutes)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # The Linux-specific options that are applied to the container, such as
     # Linux [KernelCapabilities][1].
@@ -5821,11 +9272,6 @@ module Aws::ECS
     # @!attribute [rw] tmpfs
     #   The container path, mount options, and size (in MiB) of the tmpfs
     #   mount. This parameter maps to the `--tmpfs` option to docker run.
-    #
-    #   <note markdown="1"> If you're using tasks that use the Fargate launch type, the `tmpfs`
-    #   parameter isn't supported.
-    #
-    #    </note>
     #   @return [Array<Types::Tmpfs>]
     #
     # @!attribute [rw] max_swap
@@ -5896,6 +9342,9 @@ module Aws::ECS
     #   The ARN of the principal, which can be a user, role, or the root
     #   user. If this field is omitted, the account settings are listed only
     #   for the authenticated user.
+    #
+    #   In order to use this parameter, you must be the root user, or the
+    #   principal.
     #
     #   <note markdown="1"> Federated users assume the account setting of the root user and
     #   can't have explicit account settings set for them.
@@ -6026,6 +9475,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] attributes
     #   A list of attribute objects that meet the criteria of the request.
     #   @return [Array<Types::Attribute>]
@@ -6047,6 +9500,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] next_token
     #   The `nextToken` value returned from a `ListClusters` request
     #   indicating that more results are available to fulfill the request
@@ -6080,6 +9537,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] cluster_arns
     #   The list of full Amazon Resource Name (ARN) entries for each cluster
     #   that's associated with your account.
@@ -6101,6 +9562,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] cluster
     #   The short name or full Amazon Resource Name (ARN) of the cluster
     #   that hosts the container instances to list. If you do not specify a
@@ -6148,8 +9613,8 @@ module Aws::ECS
     #   specify the `DRAINING` status, the results include only container
     #   instances that have been set to `DRAINING` using
     #   [UpdateContainerInstancesState][1]. If you don't specify this
-    #   parameter, the default is to include container instances set to all
-    #   states other than `INACTIVE`.
+    #   parameter, the The default is to include container instances set to
+    #   all states other than `INACTIVE`.
     #
     #
     #
@@ -6168,6 +9633,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] container_instance_arns
     #   The list of container instances with full ARN entries for each
     #   container instance associated with the specified cluster.
@@ -6185,6 +9654,240 @@ module Aws::ECS
     #
     class ListContainerInstancesResponse < Struct.new(
       :container_instance_arns,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] daemon_arn
+    #   The Amazon Resource Name (ARN) of the daemon to list deployments
+    #   for.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   An optional filter to narrow the `ListDaemonDeployments` results by
+    #   deployment status. If you don't specify a status, all deployments
+    #   are returned.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] created_at
+    #   An optional filter to narrow the `ListDaemonDeployments` results by
+    #   creation time. If you don't specify a time range, all deployments
+    #   are returned.
+    #   @return [Types::CreatedAt]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of daemon deployment results that
+    #   `ListDaemonDeployments` returned in paginated output. When this
+    #   parameter is used, `ListDaemonDeployments` only returns `maxResults`
+    #   results in a single page along with a `nextToken` response element.
+    #   The remaining results of the initial request can be seen by sending
+    #   another `ListDaemonDeployments` request with the returned
+    #   `nextToken` value. This value can be between 1 and 100. If this
+    #   parameter isn't used, then `ListDaemonDeployments` returns up to 20
+    #   results and a `nextToken` value if applicable.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   The `nextToken` value returned from a `ListDaemonDeployments`
+    #   request indicating that more results are available to fulfill the
+    #   request and further calls will be needed. If `maxResults` was
+    #   provided, it's possible for the number of results to be fewer than
+    #   `maxResults`.
+    #
+    #   <note markdown="1"> This token should be treated as an opaque identifier that is only
+    #   used to retrieve the next items in a list and not for other
+    #   programmatic purposes.
+    #
+    #    </note>
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ListDaemonDeploymentsRequest AWS API Documentation
+    #
+    class ListDaemonDeploymentsRequest < Struct.new(
+      :daemon_arn,
+      :status,
+      :created_at,
+      :max_results,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   The `nextToken` value to include in a future `ListDaemonDeployments`
+    #   request. When the results of a `ListDaemonDeployments` request
+    #   exceed `maxResults`, this value can be used to retrieve the next
+    #   page of results.
+    #   @return [String]
+    #
+    # @!attribute [rw] daemon_deployments
+    #   The list of daemon deployment summaries.
+    #   @return [Array<Types::DaemonDeploymentSummary>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ListDaemonDeploymentsResponse AWS API Documentation
+    #
+    class ListDaemonDeploymentsResponse < Struct.new(
+      :next_token,
+      :daemon_deployments)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] family_prefix
+    #   The full family name to filter the `ListDaemonTaskDefinitions`
+    #   results with. Specifying a `familyPrefix` limits the listed daemon
+    #   task definitions to daemon task definition families that start with
+    #   the `familyPrefix` string.
+    #   @return [String]
+    #
+    # @!attribute [rw] family
+    #   The exact name of the daemon task definition family to filter
+    #   results with.
+    #   @return [String]
+    #
+    # @!attribute [rw] revision
+    #   The revision filter to apply. Specify `LAST_REGISTERED` to return
+    #   only the last registered revision for each daemon task definition
+    #   family.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The daemon task definition status to filter the
+    #   `ListDaemonTaskDefinitions` results with. By default, only `ACTIVE`
+    #   daemon task definitions are listed. If you set this parameter to
+    #   `DELETE_IN_PROGRESS`, only daemon task definitions that are in the
+    #   process of being deleted are listed. If you set this parameter to
+    #   `ALL`, all daemon task definitions are listed regardless of status.
+    #   @return [String]
+    #
+    # @!attribute [rw] sort
+    #   The order to sort the results. Valid values are `ASC` and `DESC`. By
+    #   default (`ASC`), daemon task definitions are listed in ascending
+    #   order by family name and revision number.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   The `nextToken` value returned from a `ListDaemonTaskDefinitions`
+    #   request indicating that more results are available to fulfill the
+    #   request and further calls will be needed. If `maxResults` was
+    #   provided, it's possible for the number of results to be fewer than
+    #   `maxResults`.
+    #
+    #   <note markdown="1"> This token should be treated as an opaque identifier that is only
+    #   used to retrieve the next items in a list and not for other
+    #   programmatic purposes.
+    #
+    #    </note>
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of daemon task definition results that
+    #   `ListDaemonTaskDefinitions` returned in paginated output. When this
+    #   parameter is used, `ListDaemonTaskDefinitions` only returns
+    #   `maxResults` results in a single page along with a `nextToken`
+    #   response element. The remaining results of the initial request can
+    #   be seen by sending another `ListDaemonTaskDefinitions` request with
+    #   the returned `nextToken` value. This value can be between 1 and 100.
+    #   If this parameter isn't used, then `ListDaemonTaskDefinitions`
+    #   returns up to 100 results and a `nextToken` value if applicable.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ListDaemonTaskDefinitionsRequest AWS API Documentation
+    #
+    class ListDaemonTaskDefinitionsRequest < Struct.new(
+      :family_prefix,
+      :family,
+      :revision,
+      :status,
+      :sort,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] daemon_task_definitions
+    #   The list of daemon task definition summaries.
+    #   @return [Array<Types::DaemonTaskDefinitionSummary>]
+    #
+    # @!attribute [rw] next_token
+    #   The `nextToken` value to include in a future
+    #   `ListDaemonTaskDefinitions` request. When the results of a
+    #   `ListDaemonTaskDefinitions` request exceed `maxResults`, this value
+    #   can be used to retrieve the next page of results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ListDaemonTaskDefinitionsResponse AWS API Documentation
+    #
+    class ListDaemonTaskDefinitionsResponse < Struct.new(
+      :daemon_task_definitions,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] cluster_arn
+    #   The Amazon Resource Name (ARN) of the cluster to filter daemons by.
+    #   If you do not specify a cluster, the default cluster is assumed.
+    #   @return [String]
+    #
+    # @!attribute [rw] capacity_provider_arns
+    #   The Amazon Resource Names (ARNs) of the capacity providers to filter
+    #   daemons by. Only daemons associated with the specified capacity
+    #   providers are returned.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of daemon results that `ListDaemons` returned in
+    #   paginated output. When this parameter is used, `ListDaemons` only
+    #   returns `maxResults` results in a single page along with a
+    #   `nextToken` response element. The remaining results of the initial
+    #   request can be seen by sending another `ListDaemons` request with
+    #   the returned `nextToken` value. This value can be between 1 and 100.
+    #   If this parameter isn't used, then `ListDaemons` returns up to 100
+    #   results and a `nextToken` value if applicable.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   The `nextToken` value returned from a `ListDaemons` request
+    #   indicating that more results are available to fulfill the request
+    #   and further calls will be needed. If `maxResults` was provided,
+    #   it's possible for the number of results to be fewer than
+    #   `maxResults`.
+    #
+    #   <note markdown="1"> This token should be treated as an opaque identifier that is only
+    #   used to retrieve the next items in a list and not for other
+    #   programmatic purposes.
+    #
+    #    </note>
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ListDaemonsRequest AWS API Documentation
+    #
+    class ListDaemonsRequest < Struct.new(
+      :cluster_arn,
+      :capacity_provider_arns,
+      :max_results,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] daemon_summaries_list
+    #   The list of daemon summaries.
+    #   @return [Array<Types::DaemonSummary>]
+    #
+    # @!attribute [rw] next_token
+    #   The `nextToken` value to include in a future `ListDaemons` request.
+    #   When the results of a `ListDaemons` request exceed `maxResults`,
+    #   this value can be used to retrieve the next page of results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ListDaemonsResponse AWS API Documentation
+    #
+    class ListDaemonsResponse < Struct.new(
+      :daemon_summaries_list,
       :next_token)
       SENSITIVE = []
       include Aws::Structure
@@ -6357,6 +10060,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] cluster
     #   The short name or full Amazon Resource Name (ARN) of the cluster to
     #   use when filtering the `ListServices` results. If you do not specify
@@ -6396,6 +10103,11 @@ module Aws::ECS
     #   results.
     #   @return [String]
     #
+    # @!attribute [rw] resource_management_type
+    #   The resourceManagementType type to use when filtering the
+    #   `ListServices` results.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ListServicesRequest AWS API Documentation
     #
     class ListServicesRequest < Struct.new(
@@ -6403,11 +10115,16 @@ module Aws::ECS
       :next_token,
       :max_results,
       :launch_type,
-      :scheduling_strategy)
+      :scheduling_strategy,
+      :resource_management_type)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] service_arns
     #   The list of full ARN entries for each service that's associated
     #   with the specified cluster.
@@ -6456,6 +10173,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] family_prefix
     #   The `familyPrefix` is a string that's used to filter the results of
     #   `ListTaskDefinitionFamilies`. If you specify a `familyPrefix`, only
@@ -6512,6 +10233,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] families
     #   The list of task definition family names that match the
     #   `ListTaskDefinitionFamilies` request.
@@ -6534,6 +10259,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] family_prefix
     #   The full family name to filter the `ListTaskDefinitions` results
     #   with. Specifying a `familyPrefix` limits the listed task definitions
@@ -6596,6 +10325,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] task_definition_arns
     #   The list of task definition Amazon Resource Name (ARN) entries for
     #   the `ListTaskDefinitions` request.
@@ -6618,6 +10351,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] cluster
     #   The short name or full Amazon Resource Name (ARN) of the cluster to
     #   use when filtering the `ListTasks` results. If you do not specify a
@@ -6697,6 +10434,12 @@ module Aws::ECS
     #   The launch type to use when filtering the `ListTasks` results.
     #   @return [String]
     #
+    # @!attribute [rw] daemon_name
+    #   The name of the daemon to use when filtering the `ListTasks`
+    #   results. Specifying a `daemonName` limits the results to tasks that
+    #   belong to that daemon.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ListTasksRequest AWS API Documentation
     #
     class ListTasksRequest < Struct.new(
@@ -6708,11 +10451,16 @@ module Aws::ECS
       :started_by,
       :service_name,
       :desired_status,
-      :launch_type)
+      :launch_type,
+      :daemon_name)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] task_arns
     #   The list of task ARN entries for the `ListTasks` request.
     #   @return [Array<String>]
@@ -6805,13 +10553,21 @@ module Aws::ECS
     #   traffic on the `hostPort` of the port mapping.
     #   @return [Integer]
     #
+    # @!attribute [rw] advanced_configuration
+    #   The advanced settings for the load balancer used in blue/green
+    #   deployments. Specify the alternate target group, listener rules, and
+    #   IAM role required for traffic shifting during blue/green
+    #   deployments.
+    #   @return [Types::AdvancedConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/LoadBalancer AWS API Documentation
     #
     class LoadBalancer < Struct.new(
       :target_group_arn,
       :load_balancer_name,
       :container_name,
-      :container_port)
+      :container_port,
+      :advanced_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6935,8 +10691,7 @@ module Aws::ECS
     #
     #   awslogs-stream-prefix
     #
-    #   : Required: Yes, when using the Fargate launch type.Optional for the
-    #     EC2 launch type, required for the Fargate launch type.
+    #   : Required: Yes, when using Fargate.Optional when using EC2.
     #
     #     Use the `awslogs-stream-prefix` option to associate a log stream
     #     with the specified prefix, the container name, and the ID of the
@@ -7008,6 +10763,8 @@ module Aws::ECS
     #
     #      </note>
     #
+    #   The following options apply to all supported log drivers.
+    #
     #   mode
     #
     #   : Required: No
@@ -7015,12 +10772,12 @@ module Aws::ECS
     #     Valid values: `non-blocking` \| `blocking`
     #
     #     This option defines the delivery mode of log messages from the
-    #     container to CloudWatch Logs. The delivery mode you choose affects
-    #     application availability when the flow of logs from container to
-    #     CloudWatch is interrupted.
+    #     container to the log driver specified using `logDriver`. The
+    #     delivery mode you choose affects application availability when the
+    #     flow of logs from container is interrupted.
     #
-    #     If you use the `blocking` mode and the flow of logs to CloudWatch
-    #     is interrupted, calls from container code to write to the `stdout`
+    #     If you use the `blocking` mode and the flow of logs is
+    #     interrupted, calls from container code to write to the `stdout`
     #     and `stderr` streams will block. The logging thread of the
     #     application will block as a result. This may cause the application
     #     to become unresponsive and lead to container healthcheck failure.
@@ -7028,17 +10785,36 @@ module Aws::ECS
     #     If you use the `non-blocking` mode, the container's logs are
     #     instead stored in an in-memory intermediate buffer configured with
     #     the `max-buffer-size` option. This prevents the application from
-    #     becoming unresponsive when logs cannot be sent to CloudWatch. We
-    #     recommend using this mode if you want to ensure service
-    #     availability and are okay with some log loss. For more
-    #     information, see [Preventing log loss with non-blocking mode in
-    #     the `awslogs` container log driver][3].
+    #     becoming unresponsive when logs cannot be sent. We recommend using
+    #     this mode if you want to ensure service availability and are okay
+    #     with some log loss. For more information, see [Preventing log loss
+    #     with non-blocking mode in the `awslogs` container log driver][3].
+    #
+    #     You can set a default `mode` for all containers in a specific
+    #     Amazon Web Services Region by using the `defaultLogDriverMode`
+    #     account setting. If you don't specify the `mode` option or
+    #     configure the account setting, Amazon ECS will default to the
+    #     `non-blocking` mode. For more information about the account
+    #     setting, see [Default log driver mode][4] in the *Amazon Elastic
+    #     Container Service Developer Guide*.
+    #
+    #     <note markdown="1"> On June 25, 2025, Amazon ECS changed the default log driver mode
+    #     from `blocking` to `non-blocking` to prioritize task availability
+    #     over logging. To continue using the `blocking` mode after this
+    #     change, do one of the following:
+    #
+    #      * Set the `mode` option in your container definition's
+    #       `logConfiguration` as `blocking`.
+    #
+    #     * Set the `defaultLogDriverMode` account setting to `blocking`.
+    #
+    #      </note>
     #
     #   max-buffer-size
     #
     #   : Required: No
     #
-    #     Default value: `1m`
+    #     Default value: `10m`
     #
     #     When `non-blocking` mode is used, the `max-buffer-size` log option
     #     controls the size of the buffer that's used for intermediate
@@ -7071,7 +10847,7 @@ module Aws::ECS
     #   options like `Name`, `Host` (OpenSearch Service endpoint without
     #   protocol), `Port`, `Index`, `Type`, `Aws_auth`, `Aws_region`,
     #   `Suppress_Type_Name`, and `tls`. For more information, see [Under
-    #   the hood: FireLens for Amazon ECS Tasks][4].
+    #   the hood: FireLens for Amazon ECS Tasks][5].
     #
     #   When you export logs to Amazon S3, you can specify the bucket using
     #   the `bucket` option. You can also specify `region`,
@@ -7089,7 +10865,8 @@ module Aws::ECS
     #   [1]: https://docs.docker.com/config/containers/logging/awslogs/#awslogs-datetime-format
     #   [2]: https://docs.docker.com/config/containers/logging/awslogs/#awslogs-multiline-pattern
     #   [3]: http://aws.amazon.com/blogs/containers/preventing-log-loss-with-non-blocking-mode-in-the-awslogs-container-log-driver/
-    #   [4]: http://aws.amazon.com/blogs/containers/under-the-hood-firelens-for-amazon-ecs-tasks/
+    #   [4]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-account-settings.html#default-log-driver-mode
+    #   [5]: http://aws.amazon.com/blogs/containers/under-the-hood-firelens-for-amazon-ecs-tasks/
     #   @return [Hash<String,String>]
     #
     # @!attribute [rw] secret_options
@@ -7172,6 +10949,515 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # The Application Auto Scaling policy created by Amazon ECS when you
+    # create an Express service.
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the Application Auto Scaling
+    #   policy associated with the Express service.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of Application Auto Scaling policy creation.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_reason
+    #   Information about why the Application Auto Scaling policy is in the
+    #   current status.
+    #   @return [String]
+    #
+    # @!attribute [rw] updated_at
+    #   The Unix timestamp for when the Application Auto Scaling policy was
+    #   last updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] policy_type
+    #   The type of Application Auto Scaling policy associated with the
+    #   Express service. Valid values are `TargetTrackingScaling`,
+    #   `StepScaling`, and `PredictiveScaling`.
+    #   @return [String]
+    #
+    # @!attribute [rw] target_value
+    #   The target value for the auto scaling metric.
+    #   @return [Float]
+    #
+    # @!attribute [rw] metric
+    #   The metric used for auto scaling decisions. The available metrics
+    #   are `ECSServiceAverageCPUUtilization`,
+    #   `ECSServiceAverageMemoryUtilization`, and
+    #   `ALBRequestCOuntPerTarget`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ManagedApplicationAutoScalingPolicy AWS API Documentation
+    #
+    class ManagedApplicationAutoScalingPolicy < Struct.new(
+      :arn,
+      :status,
+      :status_reason,
+      :updated_at,
+      :policy_type,
+      :target_value,
+      :metric)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The auto scaling configuration created by Amazon ECS for an Express
+    # service.
+    #
+    # @!attribute [rw] scalable_target
+    #   Represents a scalable target.
+    #   @return [Types::ManagedScalableTarget]
+    #
+    # @!attribute [rw] application_auto_scaling_policies
+    #   The policy used for auto scaling.
+    #   @return [Array<Types::ManagedApplicationAutoScalingPolicy>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ManagedAutoScaling AWS API Documentation
+    #
+    class ManagedAutoScaling < Struct.new(
+      :scalable_target,
+      :application_auto_scaling_policies)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The ACM certificate associated with the HTTPS domain created for the
+    # Express service.
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the ACM certificate.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the ACM; certificate.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_reason
+    #   Information about why the ACM certificate is in the current status.
+    #   @return [String]
+    #
+    # @!attribute [rw] updated_at
+    #   The Unix timestamp for when the ACM certificate was last updated
+    #   @return [Time]
+    #
+    # @!attribute [rw] domain_name
+    #   The fully qualified domain name (FQDN) that is secured with this ACM
+    #   certificate.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ManagedCertificate AWS API Documentation
+    #
+    class ManagedCertificate < Struct.new(
+      :arn,
+      :status,
+      :status_reason,
+      :updated_at,
+      :domain_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The entry point into the Express service.
+    #
+    # @!attribute [rw] access_type
+    #   The type of access to the endpoint for the Express service.
+    #   @return [String]
+    #
+    # @!attribute [rw] endpoint
+    #   The endpoint for access to the Express service.
+    #   @return [String]
+    #
+    # @!attribute [rw] load_balancer
+    #   The Application Load Balancer associated with the Express service.
+    #   @return [Types::ManagedLoadBalancer]
+    #
+    # @!attribute [rw] load_balancer_security_groups
+    #   The security groups associated with the Application Load Balancer.
+    #   @return [Array<Types::ManagedSecurityGroup>]
+    #
+    # @!attribute [rw] certificate
+    #   The ACM certificate for the Express service's domain.
+    #   @return [Types::ManagedCertificate]
+    #
+    # @!attribute [rw] listener
+    #   The listeners associated with the Application Load Balancer.
+    #   @return [Types::ManagedListener]
+    #
+    # @!attribute [rw] rule
+    #   The listener rules for the Application Load Balancer.
+    #   @return [Types::ManagedListenerRule]
+    #
+    # @!attribute [rw] target_groups
+    #   The target groups associated with the Application Load Balancer.
+    #   @return [Array<Types::ManagedTargetGroup>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ManagedIngressPath AWS API Documentation
+    #
+    class ManagedIngressPath < Struct.new(
+      :access_type,
+      :endpoint,
+      :load_balancer,
+      :load_balancer_security_groups,
+      :certificate,
+      :listener,
+      :rule,
+      :target_groups)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The local storage configuration for Amazon ECS Managed Instances. This
+    # defines how ECS uses and configures instance store volumes available
+    # on container instance.
+    #
+    # @!attribute [rw] use_local_storage
+    #   Use instance store volumes for data storage when available. EBS
+    #   volumes are not provisioned for data storage. If the container
+    #   instance has multiple instance store volumes, a single data volume
+    #   is created. Consider defining instance store requirements using the
+    #   `localStorage`, `localStorageTypes` and `totalLocalStorageGB`
+    #   properties.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ManagedInstancesLocalStorageConfiguration AWS API Documentation
+    #
+    class ManagedInstancesLocalStorageConfiguration < Struct.new(
+      :use_local_storage)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The network configuration for Amazon ECS Managed Instances. This
+    # specifies the VPC subnets and security groups that instances use for
+    # network connectivity. Amazon ECS Managed Instances support multiple
+    # network modes including `awsvpc` (instances receive ENIs for task
+    # isolation), `host` (instances share network namespace with tasks), and
+    # `none` (no external network connectivity), ensuring backward
+    # compatibility for migrating workloads from Fargate or Amazon EC2.
+    #
+    # @!attribute [rw] subnets
+    #   The list of subnet IDs where Amazon ECS can launch Amazon ECS
+    #   Managed Instances. Instances are distributed across the specified
+    #   subnets for high availability. All subnets must be in the same VPC.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] security_groups
+    #   The list of security group IDs to apply to Amazon ECS Managed
+    #   Instances. These security groups control the network traffic allowed
+    #   to and from the instances.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ManagedInstancesNetworkConfiguration AWS API Documentation
+    #
+    class ManagedInstancesNetworkConfiguration < Struct.new(
+      :subnets,
+      :security_groups)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration for a Amazon ECS Managed Instances provider. Amazon
+    # ECS uses this configuration to automatically launch, manage, and
+    # terminate Amazon EC2 instances on your behalf. Managed instances
+    # provide access to the full range of Amazon EC2 instance types and
+    # features while offloading infrastructure management to Amazon Web
+    # Services.
+    #
+    # @!attribute [rw] infrastructure_role_arn
+    #   The Amazon Resource Name (ARN) of the infrastructure role that
+    #   Amazon ECS assumes to manage instances. This role must include
+    #   permissions for Amazon EC2 instance lifecycle management,
+    #   networking, and any additional Amazon Web Services services required
+    #   for your workloads.
+    #
+    #   For more information, see [Amazon ECS infrastructure IAM role][1] in
+    #   the *Amazon ECS Developer Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/infrastructure_IAM_role.html
+    #   @return [String]
+    #
+    # @!attribute [rw] instance_launch_template
+    #   The launch template that defines how Amazon ECS launches Amazon ECS
+    #   Managed Instances. This includes the instance profile for your
+    #   tasks, network and storage configuration, and instance requirements
+    #   that determine which Amazon EC2 instance types can be used.
+    #
+    #   For more information, see [Store instance launch parameters in
+    #   Amazon EC2 launch templates][1] in the *Amazon EC2 User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-launch-templates.html
+    #   @return [Types::InstanceLaunchTemplate]
+    #
+    # @!attribute [rw] propagate_tags
+    #   Determines whether tags from the capacity provider are automatically
+    #   applied to Amazon ECS Managed Instances. This helps with cost
+    #   allocation and resource management by ensuring consistent tagging
+    #   across your infrastructure.
+    #   @return [String]
+    #
+    # @!attribute [rw] infrastructure_optimization
+    #   Defines how Amazon ECS Managed Instances optimizes the
+    #   infrastastructure in your capacity provider. Configure it to turn on
+    #   or off the infrastructure optimization in your capacity provider,
+    #   and to control the idle or underutilized EC2 instances optimization
+    #   delay.
+    #   @return [Types::InfrastructureOptimization]
+    #
+    # @!attribute [rw] auto_repair_configuration
+    #   The auto repair configuration for the Amazon ECS Managed Instances
+    #   capacity provider. Indicates whether Amazon ECS automatically
+    #   replaces container instances that are detected as unhealthy.
+    #   @return [Types::AutoRepairConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ManagedInstancesProvider AWS API Documentation
+    #
+    class ManagedInstancesProvider < Struct.new(
+      :infrastructure_role_arn,
+      :instance_launch_template,
+      :propagate_tags,
+      :infrastructure_optimization,
+      :auto_repair_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The storage configuration for Amazon ECS Managed Instances. This
+    # defines the data volume configuration for the instances.
+    #
+    # @!attribute [rw] storage_size_gi_b
+    #   The size of the data volume.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ManagedInstancesStorageConfiguration AWS API Documentation
+    #
+    class ManagedInstancesStorageConfiguration < Struct.new(
+      :storage_size_gi_b)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The listeners associated with the Express service's Application Load
+    # Balancer.
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the load balancer listener.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the load balancer listener.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_reason
+    #   Informaion about why the load balancer listener is in the current
+    #   status.
+    #   @return [String]
+    #
+    # @!attribute [rw] updated_at
+    #   The Unix timestamp for when this listener was most recently updated.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ManagedListener AWS API Documentation
+    #
+    class ManagedListener < Struct.new(
+      :arn,
+      :status,
+      :status_reason,
+      :updated_at)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The listener rule associated with the Express service's Application
+    # Load Balancer.
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the load balancer listener rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the load balancer listener rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_reason
+    #   Information about why the load balancer listener rule is in the
+    #   current status.
+    #   @return [String]
+    #
+    # @!attribute [rw] updated_at
+    #   The Unix timestamp for when this listener rule was most recently
+    #   updated.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ManagedListenerRule AWS API Documentation
+    #
+    class ManagedListenerRule < Struct.new(
+      :arn,
+      :status,
+      :status_reason,
+      :updated_at)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The Application Load Balancer associated with the Express service.
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the load balancer.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the load balancer.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_reason
+    #   Information about why the load balancer is in the current status.
+    #   @return [String]
+    #
+    # @!attribute [rw] updated_at
+    #   The Unix timestamp for when this load balancer was most recently
+    #   updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] scheme
+    #   The scheme of the load balancer. By default, the scheme of the load
+    #   balancer is `internet-facing`.
+    #   @return [String]
+    #
+    # @!attribute [rw] subnet_ids
+    #   The IDs of the subnets associated with the load balancer.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] security_group_ids
+    #   The IDs of the security groups associated with the load balancer.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ManagedLoadBalancer AWS API Documentation
+    #
+    class ManagedLoadBalancer < Struct.new(
+      :arn,
+      :status,
+      :status_reason,
+      :updated_at,
+      :scheme,
+      :subnet_ids,
+      :security_group_ids)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The Cloudwatch Log Group created by Amazon ECS for an Express service.
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the Cloudwatch Log Group
+    #   associated with the Express service.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the Cloudwatch LogGroup.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_reason
+    #   Information about why the Cloudwatch LogGroup is in the current
+    #   status.
+    #   @return [String]
+    #
+    # @!attribute [rw] updated_at
+    #   The Unix timestamp for when the Cloudwatch LogGroup was last updated
+    #   @return [Time]
+    #
+    # @!attribute [rw] log_group_name
+    #   The name of the Cloudwatch Log Group associated with the Express
+    #   service.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ManagedLogGroup AWS API Documentation
+    #
+    class ManagedLogGroup < Struct.new(
+      :arn,
+      :status,
+      :status_reason,
+      :updated_at,
+      :log_group_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The CloudWatch metric alarm associated with the Express service's
+    # scaling policy.
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the CloudWatch metric alarm.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the CloudWatch metric alarm.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_reason
+    #   Information about why the CloudWatch metric alarm is in the current
+    #   status.
+    #   @return [String]
+    #
+    # @!attribute [rw] updated_at
+    #   The Unix timestamp for when the CloudWatch metric alarm was last
+    #   updated.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ManagedMetricAlarm AWS API Documentation
+    #
+    class ManagedMetricAlarm < Struct.new(
+      :arn,
+      :status,
+      :status_reason,
+      :updated_at)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents a scalable target.
+    #
+    # @!attribute [rw] arn
+    #   The ARN of the scalable target.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the scalable target.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_reason
+    #   Information about why the scalable target is in the current status.
+    #   @return [String]
+    #
+    # @!attribute [rw] updated_at
+    #   The Unix timestamp for when the target was most recently updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] min_capacity
+    #   The minimum value to scale to in response to a scale-in activity.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max_capacity
+    #   The maximum value to scale to in response to a scale-out activity.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ManagedScalableTarget AWS API Documentation
+    #
+    class ManagedScalableTarget < Struct.new(
+      :arn,
+      :status,
+      :status_reason,
+      :updated_at,
+      :min_capacity,
+      :max_capacity)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The managed scaling settings for the Auto Scaling group capacity
     # provider.
     #
@@ -7212,12 +11498,6 @@ module Aws::ECS
     #   When additional capacity is required, Amazon ECS will scale up the
     #   minimum scaling step size even if the actual demand is less than the
     #   minimum scaling step size.
-    #
-    #   If you use a capacity provider with an Auto Scaling group configured
-    #   with more than one Amazon EC2 instance type or Availability Zone,
-    #   Amazon ECS will scale up by the exact minimum scaling step size
-    #   value and will ignore both the maximum scaling step size as well as
-    #   the capacity demand.
     #   @return [Integer]
     #
     # @!attribute [rw] maximum_scaling_step_size
@@ -7245,20 +11525,72 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # A security group associated with the Express service.
+    #
+    # @!attribute [rw] arn
+    #   The ARN of the security group.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the security group.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_reason
+    #   Information about why the security group is in the current status.
+    #   @return [String]
+    #
+    # @!attribute [rw] updated_at
+    #   The Unix timestamp for when the security group was last updated.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ManagedSecurityGroup AWS API Documentation
+    #
+    class ManagedSecurityGroup < Struct.new(
+      :arn,
+      :status,
+      :status_reason,
+      :updated_at)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The managed storage configuration for the cluster.
     #
     # @!attribute [rw] kms_key_id
-    #   Specify a Key Management Service key ID to encrypt the managed
-    #   storage.
+    #   Specify a Key Management Service key ID to encrypt Amazon ECS
+    #   managed storage.
+    #
+    #   When you specify a `kmsKeyId`, Amazon ECS uses the key to encrypt
+    #   data volumes managed by Amazon ECS that are attached to tasks in the
+    #   cluster. The following data volumes are managed by Amazon ECS:
+    #   Amazon EBS. For more information about encryption of Amazon EBS
+    #   volumes attached to Amazon ECS tasks, see [Encrypt data stored in
+    #   Amazon EBS volumes for Amazon ECS][1] in the *Amazon Elastic
+    #   Container Service Developer Guide*.
     #
     #   The key must be a single Region key.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ebs-kms-encryption.html
     #   @return [String]
     #
     # @!attribute [rw] fargate_ephemeral_storage_kms_key_id
-    #   Specify the Key Management Service key ID for the Fargate ephemeral
+    #   Specify the Key Management Service key ID for Fargate ephemeral
     #   storage.
     #
+    #   When you specify a `fargateEphemeralStorageKmsKeyId`, Amazon Web
+    #   Services Fargate uses the key to encrypt data at rest in ephemeral
+    #   storage. For more information about Fargate ephemeral storage
+    #   encryption, see [Customer managed keys for Amazon Web Services
+    #   Fargate ephemeral storage for Amazon ECS][1] in the *Amazon Elastic
+    #   Container Service Developer Guide*.
+    #
     #   The key must be a single Region key.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/fargate-storage-encryption.html
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ManagedStorageConfiguration AWS API Documentation
@@ -7270,15 +11602,160 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # The target group associated with the Express service's Application
+    # Load Balancer. For more information about load balancer target groups,
+    # see [CreateTargetGroup][1] in the *Elastic Load Balancing API
+    # Reference*
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/API_CreateTargetGroup.html
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the target group.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the target group.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_reason
+    #   Information about why the target group is in the current status.
+    #   @return [String]
+    #
+    # @!attribute [rw] updated_at
+    #   The Unix timestamp for when the target group was last updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] health_check_path
+    #   The destination for health checks on the targets.
+    #   @return [String]
+    #
+    # @!attribute [rw] health_check_port
+    #   The port the load balancer uses when performing health checks on
+    #   targets.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] port
+    #   The port on which the targets receive traffic.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ManagedTargetGroup AWS API Documentation
+    #
+    class ManagedTargetGroup < Struct.new(
+      :arn,
+      :status,
+      :status_reason,
+      :updated_at,
+      :health_check_path,
+      :health_check_port,
+      :port)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The minimum and maximum amount of memory per vCPU in gibibytes (GiB).
+    # This helps ensure that instance types have the appropriate
+    # memory-to-CPU ratio for your workloads.
+    #
+    # @!attribute [rw] min
+    #   The minimum amount of memory per vCPU in GiB. Instance types with a
+    #   lower memory-to-vCPU ratio are excluded from selection.
+    #   @return [Float]
+    #
+    # @!attribute [rw] max
+    #   The maximum amount of memory per vCPU in GiB. Instance types with a
+    #   higher memory-to-vCPU ratio are excluded from selection.
+    #   @return [Float]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/MemoryGiBPerVCpuRequest AWS API Documentation
+    #
+    class MemoryGiBPerVCpuRequest < Struct.new(
+      :min,
+      :max)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The minimum and maximum amount of memory in mebibytes (MiB) for
+    # instance type selection. This ensures that selected instance types
+    # have adequate memory for your workloads.
+    #
+    # @!attribute [rw] min
+    #   The minimum amount of memory in MiB. Instance types with less memory
+    #   than this value are excluded from selection.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max
+    #   The maximum amount of memory in MiB. Instance types with more memory
+    #   than this value are excluded from selection.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/MemoryMiBRequest AWS API Documentation
+    #
+    class MemoryMiBRequest < Struct.new(
+      :min,
+      :max)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration for a specific set of metrics to collect for a
+    # service.
+    #
+    # @!attribute [rw] metric_names
+    #   The list of metric names to configure. The supported metric names
+    #   are `CPUUtilization` and `MemoryUtilization`.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] resolution_seconds
+    #   The resolution, in seconds, at which to collect the metrics. The
+    #   valid values are `20` and `60`.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/MetricConfiguration AWS API Documentation
+    #
+    class MetricConfiguration < Struct.new(
+      :metric_names,
+      :resolution_seconds)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Amazon ECS can't determine the current version of the Amazon ECS
     # container agent on the container instance and doesn't have enough
     # information to proceed with an update. This could be because the agent
     # running on the container instance is a previous or custom version that
     # doesn't use our version information.
     #
+    # @!attribute [rw] message
+    #   Message that describes the cause of the exception.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/MissingVersionException AWS API Documentation
     #
-    class MissingVersionException < Aws::EmptyStructure; end
+    class MissingVersionException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The optional monitoring configuration for a service, which defines the
+    # resolution for the service-level `CPUUtilization` and
+    # `MemoryUtilization` Amazon CloudWatch metrics. When not specified,
+    # Amazon ECS uses the default resolution of `60` seconds.
+    #
+    # @!attribute [rw] metric_configurations
+    #   The list of metric configurations for the service monitoring.
+    #   @return [Array<Types::MetricConfiguration>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/MonitoringConfiguration AWS API Documentation
+    #
+    class MonitoringConfiguration < Struct.new(
+      :metric_configurations)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # The details for a volume mount point that's used in a container
     # definition.
@@ -7310,9 +11787,40 @@ module Aws::ECS
 
     # The specified namespace wasn't found.
     #
+    # @!attribute [rw] message
+    #   Message that describes the cause of the exception.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/NamespaceNotFoundException AWS API Documentation
     #
-    class NamespaceNotFoundException < Aws::EmptyStructure; end
+    class NamespaceNotFoundException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The minimum and maximum network bandwidth in gigabits per second
+    # (Gbps) for instance type selection. This is important for
+    # network-intensive workloads.
+    #
+    # @!attribute [rw] min
+    #   The minimum network bandwidth in Gbps. Instance types with lower
+    #   network bandwidth are excluded from selection.
+    #   @return [Float]
+    #
+    # @!attribute [rw] max
+    #   The maximum network bandwidth in Gbps. Instance types with higher
+    #   network bandwidth are excluded from selection.
+    #   @return [Float]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/NetworkBandwidthGbpsRequest AWS API Documentation
+    #
+    class NetworkBandwidthGbpsRequest < Struct.new(
+      :min,
+      :max)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # Details on the network bindings between a container and its host
     # container instance. After a task reaches the `RUNNING` status, manual
@@ -7464,14 +11972,45 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # The minimum and maximum number of network interfaces for instance type
+    # selection. This is useful for workloads that require multiple network
+    # interfaces.
+    #
+    # @!attribute [rw] min
+    #   The minimum number of network interfaces. Instance types that
+    #   support fewer network interfaces are excluded from selection.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max
+    #   The maximum number of network interfaces. Instance types that
+    #   support more network interfaces are excluded from selection.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/NetworkInterfaceCountRequest AWS API Documentation
+    #
+    class NetworkInterfaceCountRequest < Struct.new(
+      :min,
+      :max)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # There's no update available for this Amazon ECS container agent. This
     # might be because the agent is already running the latest version or
     # because it's so old that there's no update path to the current
     # version.
     #
+    # @!attribute [rw] message
+    #   Message that describes the cause of the exception.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/NoUpdateAvailableException AWS API Documentation
     #
-    class NoUpdateAvailableException < Aws::EmptyStructure; end
+    class NoUpdateAvailableException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # An object representing a constraint on task placement. For more
     # information, see [Task placement constraints][1] in the *Amazon
@@ -7553,18 +12092,20 @@ module Aws::ECS
       include Aws::Structure
     end
 
-    # The devices that are available on the container instance. The only
-    # supported device type is a GPU.
+    # The devices that are available on the container instance. The
+    # supported device types are GPUs and Neuron devices.
     #
     # @!attribute [rw] id
-    #   The ID for the GPUs on the container instance. The available GPU IDs
-    #   can also be obtained on the container instance in the
-    #   `/var/lib/ecs/gpu/nvidia_gpu_info.json` file.
+    #   The ID for the GPU or Neuron device on the container instance. For
+    #   GPUs, the available GPU IDs can also be obtained on the container
+    #   instance in the `/var/lib/ecs/gpu/nvidia_gpu_info.json` file. For
+    #   Neuron devices, the ID corresponds to the device index (for example,
+    #   `0` for `/dev/neuron0`).
     #   @return [String]
     #
     # @!attribute [rw] type
     #   The type of device that's available on the container instance. The
-    #   only supported value is `GPU`.
+    #   supported values are `GPU` and `NEURON_DEVICE`.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/PlatformDevice AWS API Documentation
@@ -7579,15 +12120,31 @@ module Aws::ECS
     # The specified platform version doesn't satisfy the required
     # capabilities of the task definition.
     #
+    # @!attribute [rw] message
+    #   Message that describes the cause of the exception.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/PlatformTaskDefinitionIncompatibilityException AWS API Documentation
     #
-    class PlatformTaskDefinitionIncompatibilityException < Aws::EmptyStructure; end
+    class PlatformTaskDefinitionIncompatibilityException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # The specified platform version doesn't exist.
     #
+    # @!attribute [rw] message
+    #   Message that describes the cause of the exception.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/PlatformUnknownException AWS API Documentation
     #
-    class PlatformUnknownException < Aws::EmptyStructure; end
+    class PlatformUnknownException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # Port mappings allow containers to access ports on the host container
     # instance to send or receive traffic. Port mappings are specified as
@@ -7979,6 +12536,13 @@ module Aws::ECS
     #     maintenance, see [Amazon Web Services Fargate task maintenance][5]
     #     in the *Amazon ECS Developer Guide*.
     #
+    #   * `fargateEventWindows` - When Amazon Web Services determines that a
+    #     security or infrastructure update is needed for an Amazon ECS task
+    #     hosted on Fargate, the tasks need to be stopped and new tasks
+    #     launched to replace them. Use `fargateEventWindows` to use EC2
+    #     Event Windows associated with Fargate tasks to configure time
+    #     windows for task retirement.
+    #
     #   * `tagResourceAuthorization` - Amazon ECS is introducing tagging
     #     authorization for resource creation. Users must have permissions
     #     for actions that create the resource, such as `ecsCreateCluster`.
@@ -7989,12 +12553,35 @@ module Aws::ECS
     #     information, see [Grant permission to tag resources on
     #     creation][6] in the *Amazon ECS Developer Guide*.
     #
+    #   * `defaultLogDriverMode` -Amazon ECS supports setting a default
+    #     delivery mode of log messages from a container to the `logDriver`
+    #     that you specify in the container's `logConfiguration`. The
+    #     delivery mode affects application stability when the flow of logs
+    #     from the container to the log driver is interrupted. The
+    #     `defaultLogDriverMode` setting supports two values: `blocking` and
+    #     `non-blocking`. If you don't specify a delivery mode in your
+    #     container definition's `logConfiguration`, the mode you specify
+    #     using this account setting will be used as the default. For more
+    #     information about log delivery modes, see [LogConfiguration][7].
+    #
+    #     <note markdown="1"> On June 25, 2025, Amazon ECS changed the default log driver mode
+    #     from `blocking` to `non-blocking` to prioritize task availability
+    #     over logging. To continue using the `blocking` mode after this
+    #     change, do one of the following:
+    #
+    #      * Set the `mode` option in your container definition's
+    #       `logConfiguration` as `blocking`.
+    #
+    #     * Set the `defaultLogDriverMode` account setting to `blocking`.
+    #
+    #      </note>
+    #
     #   * `guardDutyActivate` - The `guardDutyActivate` parameter is
     #     read-only in Amazon ECS and indicates whether Amazon ECS Runtime
     #     Monitoring is enabled or disabled by your security administrator
     #     in your Amazon ECS account. Amazon GuardDuty controls this account
     #     setting on your behalf. For more information, see [Protecting
-    #     Amazon ECS workloads with Amazon ECS Runtime Monitoring][7].
+    #     Amazon ECS workloads with Amazon ECS Runtime Monitoring][8].
     #
     #
     #
@@ -8004,7 +12591,8 @@ module Aws::ECS
     #   [4]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/fargate-task-networking.html#fargate-task-networking-vpc-dual-stack
     #   [5]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-maintenance.html
     #   [6]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/supported-iam-actions-tagging.html
-    #   [7]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-guard-duty-integration.html
+    #   [7]: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_LogConfiguration.html
+    #   [8]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-guard-duty-integration.html
     #   @return [String]
     #
     # @!attribute [rw] value
@@ -8068,11 +12656,6 @@ module Aws::ECS
     #     the resource. You must turn on this setting to use Amazon ECS
     #     features such as resource tagging.
     #
-    #   * `fargateFIPSMode` - When turned on, you can run Fargate workloads
-    #     in a manner that is compliant with Federal Information Processing
-    #     Standard (FIPS-140). For more information, see [Fargate Federal
-    #     Information Processing Standard (FIPS-140)][1].
-    #
     #   * `containerInstanceLongArnFormat` - When modified, the Amazon
     #     Resource Name (ARN) and resource ID format of the resource type
     #     for a specified user, role, or the root user for an account is
@@ -8087,7 +12670,7 @@ module Aws::ECS
     #     feature is changed. If `awsvpcTrunking` is turned on, any new
     #     container instances that support the feature are launched have the
     #     increased ENI limits available to them. For more information, see
-    #     [Elastic Network Interface Trunking][2] in the *Amazon Elastic
+    #     [Elastic Network Interface Trunking][1] in the *Amazon Elastic
     #     Container Service Developer Guide*.
     #
     #   * `containerInsights` - Container Insights with enhanced
@@ -8108,15 +12691,15 @@ module Aws::ECS
     #     setting to `enabled`.
     #
     #     For more information, see [Monitor Amazon ECS containers using
-    #     Container Insights with enhanced observability][3] in the *Amazon
+    #     Container Insights with enhanced observability][2] in the *Amazon
     #     Elastic Container Service Developer Guide*.
     #
     #   * `dualStackIPv6` - When turned on, when using a VPC in dual stack
     #     mode, your tasks using the `awsvpc` network mode can have an IPv6
     #     address assigned. For more information on using IPv6 with tasks
     #     launched on Amazon EC2 instances, see [Using a VPC in dual-stack
-    #     mode][4]. For more information on using IPv6 with tasks launched
-    #     on Fargate, see [Using a VPC in dual-stack mode][5].
+    #     mode][3]. For more information on using IPv6 with tasks launched
+    #     on Fargate, see [Using a VPC in dual-stack mode][4].
     #
     #   * `fargateTaskRetirementWaitPeriod` - When Amazon Web Services
     #     determines that a security or infrastructure update is needed for
@@ -8124,8 +12707,15 @@ module Aws::ECS
     #     and new tasks launched to replace them. Use
     #     `fargateTaskRetirementWaitPeriod` to configure the wait time to
     #     retire a Fargate task. For information about the Fargate tasks
-    #     maintenance, see [Amazon Web Services Fargate task maintenance][6]
+    #     maintenance, see [Amazon Web Services Fargate task maintenance][5]
     #     in the *Amazon ECS Developer Guide*.
+    #
+    #   * `fargateEventWindows` - When Amazon Web Services determines that a
+    #     security or infrastructure update is needed for an Amazon ECS task
+    #     hosted on Fargate, the tasks need to be stopped and new tasks
+    #     launched to replace them. Use `fargateEventWindows` to use EC2
+    #     Event Windows associated with Fargate tasks to configure time
+    #     windows for task retirement.
     #
     #   * `tagResourceAuthorization` - Amazon ECS is introducing tagging
     #     authorization for resource creation. Users must have permissions
@@ -8135,7 +12725,30 @@ module Aws::ECS
     #     roles have permissions to create tags. Therefore, you must grant
     #     explicit permissions to use the `ecs:TagResource` action. For more
     #     information, see [Grant permission to tag resources on
-    #     creation][7] in the *Amazon ECS Developer Guide*.
+    #     creation][6] in the *Amazon ECS Developer Guide*.
+    #
+    #   * `defaultLogDriverMode` - Amazon ECS supports setting a default
+    #     delivery mode of log messages from a container to the `logDriver`
+    #     that you specify in the container's `logConfiguration`. The
+    #     delivery mode affects application stability when the flow of logs
+    #     from the container to the log driver is interrupted. The
+    #     `defaultLogDriverMode` setting supports two values: `blocking` and
+    #     `non-blocking`. If you don't specify a delivery mode in your
+    #     container definition's `logConfiguration`, the mode you specify
+    #     using this account setting will be used as the default. For more
+    #     information about log delivery modes, see [LogConfiguration][7].
+    #
+    #     <note markdown="1"> On June 25, 2025, Amazon ECS changed the default log driver mode
+    #     from `blocking` to `non-blocking` to prioritize task availability
+    #     over logging. To continue using the `blocking` mode after this
+    #     change, do one of the following:
+    #
+    #      * Set the `mode` option in your container definition's
+    #       `logConfiguration` as `blocking`.
+    #
+    #     * Set the `defaultLogDriverMode` account setting to `blocking`.
+    #
+    #      </note>
     #
     #   * `guardDutyActivate` - The `guardDutyActivate` parameter is
     #     read-only in Amazon ECS and indicates whether Amazon ECS Runtime
@@ -8146,13 +12759,13 @@ module Aws::ECS
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-fips-compliance.html
-    #   [2]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/container-instance-eni.html
-    #   [3]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/cloudwatch-container-insights.html
-    #   [4]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-networking-awsvpc.html#task-networking-vpc-dual-stack
-    #   [5]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/fargate-task-networking.html#fargate-task-networking-vpc-dual-stack
-    #   [6]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-maintenance.html
-    #   [7]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/supported-iam-actions-tagging.html
+    #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/container-instance-eni.html
+    #   [2]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/cloudwatch-container-insights.html
+    #   [3]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-networking-awsvpc.html#task-networking-vpc-dual-stack
+    #   [4]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/fargate-task-networking.html#fargate-task-networking-vpc-dual-stack
+    #   [5]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-maintenance.html
+    #   [6]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/supported-iam-actions-tagging.html
+    #   [7]: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_LogConfiguration.html
     #   [8]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-guard-duty-integration.html
     #   @return [String]
     #
@@ -8179,6 +12792,9 @@ module Aws::ECS
     #   for all users, roles, and the root user of the account unless a user
     #   or role explicitly overrides these settings. If this field is
     #   omitted, the setting is changed only for the authenticated user.
+    #
+    #   In order to use this parameter, you must be the root user, or the
+    #   principal.
     #
     #   <note markdown="1"> You must use the root user when you set the Fargate wait time
     #   (`fargateTaskRetirementWaitPeriod`).
@@ -8211,6 +12827,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] cluster
     #   The short name or full Amazon Resource Name (ARN) of the cluster
     #   that contains the resource to apply attributes. If you do not
@@ -8232,6 +12852,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] attributes
     #   The attributes applied to your resource.
     #   @return [Array<Types::Attribute>]
@@ -8322,6 +12946,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] cluster
     #   The short name or full Amazon Resource Name (ARN) of the cluster to
     #   register your container instance with. If you do not specify a
@@ -8361,8 +12989,8 @@ module Aws::ECS
     #   @return [Array<Types::Attribute>]
     #
     # @!attribute [rw] platform_devices
-    #   The devices that are available on the container instance. The only
-    #   supported device type is a GPU.
+    #   The devices that are available on the container instance. The
+    #   supported device types are GPUs and Neuron devices.
     #   @return [Array<Types::PlatformDevice>]
     #
     # @!attribute [rw] tags
@@ -8412,6 +13040,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] container_instance
     #   The container instance that was registered.
     #   @return [Types::ContainerInstance]
@@ -8424,6 +13056,135 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # @!attribute [rw] family
+    #   You must specify a `family` for a daemon task definition. This
+    #   family is used as a name for your daemon task definition. Up to 255
+    #   letters (uppercase and lowercase), numbers, underscores, and hyphens
+    #   are allowed.
+    #   @return [String]
+    #
+    # @!attribute [rw] task_role_arn
+    #   The short name or full Amazon Resource Name (ARN) of the IAM role
+    #   that containers in this daemon task can assume. All containers in
+    #   this daemon task are granted the permissions that are specified in
+    #   this role.
+    #   @return [String]
+    #
+    # @!attribute [rw] execution_role_arn
+    #   The Amazon Resource Name (ARN) of the task execution role that
+    #   grants the Amazon ECS container agent permission to make Amazon Web
+    #   Services API calls on your behalf. The task execution role is
+    #   required for daemon tasks that pull container images from Amazon ECR
+    #   or send container logs to CloudWatch.
+    #   @return [String]
+    #
+    # @!attribute [rw] container_definitions
+    #   A list of container definitions in JSON format that describe the
+    #   containers that make up your daemon task.
+    #   @return [Array<Types::DaemonContainerDefinition>]
+    #
+    # @!attribute [rw] cpu
+    #   The number of CPU units used by the daemon task. It can be expressed
+    #   as an integer using CPU units (for example, `1024`).
+    #   @return [String]
+    #
+    # @!attribute [rw] memory
+    #   The amount of memory (in MiB) used by the daemon task. It can be
+    #   expressed as an integer using MiB (for example, `1024`).
+    #   @return [String]
+    #
+    # @!attribute [rw] volumes
+    #   A list of volume definitions in JSON format that containers in your
+    #   daemon task can use.
+    #   @return [Array<Types::DaemonVolume>]
+    #
+    # @!attribute [rw] tags
+    #   The metadata that you apply to the daemon task definition to help
+    #   you categorize and organize them. Each tag consists of a key and an
+    #   optional value. You define both of them.
+    #
+    #   The following basic restrictions apply to tags:
+    #
+    #   * Maximum number of tags per resource - 50
+    #
+    #   * For each resource, each tag key must be unique, and each tag key
+    #     can have only one value.
+    #
+    #   * Maximum key length - 128 Unicode characters in UTF-8
+    #
+    #   * Maximum value length - 256 Unicode characters in UTF-8
+    #
+    #   * If your tagging schema is used across multiple services and
+    #     resources, remember that other services may have restrictions on
+    #     allowed characters. Generally allowed characters are: letters,
+    #     numbers, and spaces representable in UTF-8, and the following
+    #     characters: + - = . \_ : / @.
+    #
+    #   * Tag keys and values are case-sensitive.
+    #
+    #   * Do not use `aws:`, `AWS:`, or any upper or lowercase combination
+    #     of such as a prefix for either keys or values as it is reserved
+    #     for Amazon Web Services use. You cannot edit or delete tag keys or
+    #     values with this prefix. Tags with this prefix do not count
+    #     against your tags per resource limit.
+    #   @return [Array<Types::Tag>]
+    #
+    # @!attribute [rw] pid_mode
+    #   The PID namespace mode for the daemon. The valid values are `none`
+    #   and `shared`. The default is `none`.
+    #
+    #   If `none` is specified or no value is provided, the daemon runs with
+    #   its own PID namespace, isolated from other tasks. If `shared` is
+    #   specified, the daemon joins the host PID namespace, making it
+    #   accessible to non-daemon tasks that use `pidMode: "host"` or other
+    #   daemons that use `pidMode: "shared"`.
+    #   @return [String]
+    #
+    # @!attribute [rw] ipc_mode
+    #   The IPC namespace mode for the daemon. The valid values are `none`
+    #   and `shared`. The default is `none`.
+    #
+    #   If `none` is specified or no value is provided, the daemon runs with
+    #   its own IPC namespace, isolated from other tasks. If `shared` is
+    #   specified, the daemon joins the host IPC namespace, making it
+    #   accessible to non-daemon tasks that use `ipcMode: "host"` or other
+    #   daemons that use `ipcMode: "shared"`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/RegisterDaemonTaskDefinitionRequest AWS API Documentation
+    #
+    class RegisterDaemonTaskDefinitionRequest < Struct.new(
+      :family,
+      :task_role_arn,
+      :execution_role_arn,
+      :container_definitions,
+      :cpu,
+      :memory,
+      :volumes,
+      :tags,
+      :pid_mode,
+      :ipc_mode)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] daemon_task_definition_arn
+    #   The full Amazon Resource Name (ARN) of the registered daemon task
+    #   definition.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/RegisterDaemonTaskDefinitionResponse AWS API Documentation
+    #
+    class RegisterDaemonTaskDefinitionResponse < Struct.new(
+      :daemon_task_definition_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] family
     #   You must specify a `family` for a task definition. You can use it
     #   track multiple versions of the same task definition. The `family` is
@@ -8540,38 +13301,13 @@ module Aws::ECS
     #   (`0.125` vCPUs) and `196608` CPU units (`192` vCPUs). If you do not
     #   specify a value, the parameter is ignored.
     #
-    #   If you're using the Fargate launch type, this field is required and
-    #   you must use one of the following values, which determines your
-    #   range of supported values for the `memory` parameter:
+    #   This field is required for Fargate. For information about the valid
+    #   values, see [Task size][1] in the *Amazon Elastic Container Service
+    #   Developer Guide*.
     #
-    #   The CPU units cannot be less than 1 vCPU when you use Windows
-    #   containers on Fargate.
     #
-    #   * 256 (.25 vCPU) - Available `memory` values: 512 (0.5 GB), 1024 (1
-    #     GB), 2048 (2 GB)
     #
-    #   * 512 (.5 vCPU) - Available `memory` values: 1024 (1 GB), 2048 (2
-    #     GB), 3072 (3 GB), 4096 (4 GB)
-    #
-    #   * 1024 (1 vCPU) - Available `memory` values: 2048 (2 GB), 3072 (3
-    #     GB), 4096 (4 GB), 5120 (5 GB), 6144 (6 GB), 7168 (7 GB), 8192 (8
-    #     GB)
-    #
-    #   * 2048 (2 vCPU) - Available `memory` values: 4096 (4 GB) and 16384
-    #     (16 GB) in increments of 1024 (1 GB)
-    #
-    #   * 4096 (4 vCPU) - Available `memory` values: 8192 (8 GB) and 30720
-    #     (30 GB) in increments of 1024 (1 GB)
-    #
-    #   * 8192 (8 vCPU) - Available `memory` values: 16 GB and 60 GB in 4 GB
-    #     increments
-    #
-    #     This option requires Linux platform `1.4.0` or later.
-    #
-    #   * 16384 (16vCPU) - Available `memory` values: 32GB and 120 GB in 8
-    #     GB increments
-    #
-    #     This option requires Linux platform `1.4.0` or later.
+    #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html#task_size
     #   @return [String]
     #
     # @!attribute [rw] memory
@@ -8667,7 +13403,7 @@ module Aws::ECS
     #   If `task` is specified, all containers within the specified task
     #   share the same process namespace.
     #
-    #   If no value is specified, the default is a private namespace for
+    #   If no value is specified, the The default is a private namespace for
     #   each container.
     #
     #   If the `host` PID mode is used, there's a heightened risk of
@@ -8766,8 +13502,7 @@ module Aws::ECS
     #   @return [Types::EphemeralStorage]
     #
     # @!attribute [rw] runtime_platform
-    #   The operating system that your tasks definitions run on. A platform
-    #   family is specified only for tasks using the Fargate launch type.
+    #   The operating system that your tasks definitions run on.
     #   @return [Types::RuntimePlatform]
     #
     # @!attribute [rw] enable_fault_injection
@@ -8801,6 +13536,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] task_definition
     #   The full description of the registered task definition.
     #   @return [Types::TaskDefinition]
@@ -8837,6 +13576,24 @@ module Aws::ECS
     #
     class RepositoryCredentials < Struct.new(
       :credentials_parameter)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The resolved configuration for a service revision, which contains the
+    # actual resources your service revision uses, such as which target
+    # groups serve traffic.
+    #
+    # @!attribute [rw] load_balancers
+    #   The resolved load balancer configuration for the service revision.
+    #   This includes information about which target groups serve traffic
+    #   and which listener rules direct traffic to them.
+    #   @return [Array<Types::ServiceRevisionLoadBalancer>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ResolvedConfiguration AWS API Documentation
+    #
+    class ResolvedConfiguration < Struct.new(
+      :load_balancers)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -8888,21 +13645,37 @@ module Aws::ECS
 
     # The specified resource is in-use and can't be removed.
     #
+    # @!attribute [rw] message
+    #   Message that describes the cause of the exception.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ResourceInUseException AWS API Documentation
     #
-    class ResourceInUseException < Aws::EmptyStructure; end
+    class ResourceInUseException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # The specified resource wasn't found.
     #
+    # @!attribute [rw] message
+    #   Message that describes the cause of the exception.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ResourceNotFoundException AWS API Documentation
     #
-    class ResourceNotFoundException < Aws::EmptyStructure; end
+    class ResourceNotFoundException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # The type and amount of a resource to assign to a container. The
-    # supported resource types are GPUs and Elastic Inference accelerators.
-    # For more information, see [Working with GPUs on Amazon ECS][1] or
-    # [Working with Amazon Elastic Inference on Amazon ECS][2] in the
-    # *Amazon Elastic Container Service Developer Guide*
+    # supported resource types are GPUs, Neuron devices, and Elastic
+    # Inference accelerators. For more information, see [Working with GPUs
+    # on Amazon ECS][1] or [Working with Amazon Elastic Inference on Amazon
+    # ECS][2] in the *Amazon Elastic Container Service Developer Guide*
     #
     #
     #
@@ -8916,7 +13689,14 @@ module Aws::ECS
     #   the Amazon ECS container agent reserves for the container. The
     #   number of GPUs that's reserved for all containers in a task can't
     #   exceed the number of available GPUs on the container instance that
-    #   the task is launched on.
+    #   the task is launched on. You can also specify `ALL` to allocate all
+    #   available GPUs on the instance to the container.
+    #
+    #   When the type is `NeuronDevice`, the value must be `ALL`. This
+    #   allocates all available Neuron devices on the instance to the
+    #   container. Only one container in a task can specify `NeuronDevice`
+    #   resources. This resource type is only supported on Managed
+    #   Instances.
     #
     #   When the type is `InferenceAccelerator`, the `value` matches the
     #   `deviceName` for an [InferenceAccelerator][1] specified in a task
@@ -8954,20 +13734,6 @@ module Aws::ECS
     #
     # @!attribute [rw] service_revision_arn
     #   The ARN of the service revision deployed as part of the rollback.
-    #
-    #   When the type is `GPU`, the value is the number of physical `GPUs`
-    #   the Amazon ECS container agent reserves for the container. The
-    #   number of GPUs that's reserved for all containers in a task can't
-    #   exceed the number of available GPUs on the container instance that
-    #   the task is launched on.
-    #
-    #   When the type is `InferenceAccelerator`, the `value` matches the
-    #   `deviceName` for an [InferenceAccelerator][1] specified in a task
-    #   definition.
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_InferenceAccelerator.html
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/Rollback AWS API Documentation
@@ -8980,8 +13746,18 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] capacity_provider_strategy
     #   The capacity provider strategy to use for the task.
+    #
+    #   <note markdown="1"> If you want to use Amazon ECS Managed Instances, you must use the
+    #   `capacityProviderStrategy` request parameter and omit the
+    #   `launchType` request parameter.
+    #
+    #    </note>
     #
     #   If a `capacityProviderStrategy` is specified, the `launchType`
     #   parameter must be omitted. If no `capacityProviderStrategy` or
@@ -8999,6 +13775,9 @@ module Aws::ECS
     #   The short name or full Amazon Resource Name (ARN) of the cluster to
     #   run your task on. If you do not specify a cluster, the default
     #   cluster is assumed.
+    #
+    #   Each account receives a default cluster the first time you use the
+    #   service, but you may also create other clusters.
     #   @return [String]
     #
     # @!attribute [rw] count
@@ -9035,6 +13814,12 @@ module Aws::ECS
     #   The infrastructure to run your standalone task on. For more
     #   information, see [Amazon ECS launch types][1] in the *Amazon Elastic
     #   Container Service Developer Guide*.
+    #
+    #   <note markdown="1"> If you want to use Amazon ECS Managed Instances, you must use the
+    #   `capacityProviderStrategy` request parameter and omit the
+    #   `launchType` request parameter.
+    #
+    #    </note>
     #
     #   The `FARGATE` launch type runs your tasks on Fargate On-Demand
     #   infrastructure.
@@ -9229,8 +14014,8 @@ module Aws::ECS
     # @!attribute [rw] volume_configurations
     #   The details of the volume that was `configuredAtLaunch`. You can
     #   configure the size, volumeType, IOPS, throughput, snapshot and
-    #   encryption in in [TaskManagedEBSVolumeConfiguration][1]. The `name`
-    #   of the volume must match the `name` from the task definition.
+    #   encryption in [TaskManagedEBSVolumeConfiguration][1]. The `name` of
+    #   the volume must match the `name` from the task definition.
     #
     #
     #
@@ -9263,6 +14048,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] tasks
     #   A full description of the tasks that were run. The tasks that were
     #   successfully placed on your cluster are described here.
@@ -9304,7 +14093,8 @@ module Aws::ECS
     #
     #   You can run your Linux tasks on an ARM-based platform by setting the
     #   value to `ARM64`. This option is available for tasks that run on
-    #   Linux Amazon EC2 instance or Linux containers on Fargate.
+    #   Linux Amazon EC2 instance, Amazon ECS Managed Instances, or Linux
+    #   containers on Fargate.
     #   @return [String]
     #
     # @!attribute [rw] operating_system_family
@@ -9316,6 +14106,95 @@ module Aws::ECS
     class RuntimePlatform < Struct.new(
       :cpu_architecture,
       :operating_system_family)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The runtime platform that Amazon ECS applies to a service revision.
+    # This value overrides the runtime platform specified in the task
+    # definition. You can't set this value.
+    #
+    # @!attribute [rw] cpu_architecture
+    #   The CPU architecture that tasks in this service revision run on.
+    #   This value might differ from the architecture declared in the task
+    #   definition—for example, when Amazon ECS detects an architecture
+    #   mismatch during an Amazon ECS Express deployment and runs tasks on a
+    #   different architecture. You can't set this value.
+    #
+    #   Valid values:
+    #
+    #   * `X86_64` - The x86 64-bit architecture.
+    #
+    #   * `ARM64` - The 64-bit ARM architecture.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/RuntimePlatformOverride AWS API Documentation
+    #
+    class RuntimePlatformOverride < Struct.new(
+      :cpu_architecture)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # This parameter is specified when you're using an Amazon S3 Files file
+    # system for task storage. For more information, see [Amazon S3 Files
+    # volumes][1] in the *Amazon Elastic Container Service Developer Guide*.
+    #
+    # Your task definition must include a Task IAM Role. See [ IAM role for
+    # attaching your file system to Amazon Web Services compute
+    # resources][2] for required permissions.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/s3files-volumes.html
+    # [2]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-files-prereq-policies.html#s3-files-prereq-iam-compute-role
+    #
+    # @!attribute [rw] file_system_arn
+    #   The full ARN of the S3 Files file system to mount.
+    #   @return [String]
+    #
+    # @!attribute [rw] root_directory
+    #   The directory within the Amazon S3 Files file system to mount as the
+    #   root directory. If this parameter is omitted, the root of the Amazon
+    #   S3 Files file system will be used. Specifying `/` will have the same
+    #   effect as omitting this parameter.
+    #
+    #   If a S3 Files access point is specified in the `accessPointArn`, the
+    #   root directory parameter must either be omitted or set to `/` which
+    #   will enforce the path set on the S3 Files access point.
+    #   @return [String]
+    #
+    # @!attribute [rw] transit_encryption_port
+    #   The port to use for sending encrypted data between the ECS host and
+    #   the S3 Files file system. If you do not specify a transit encryption
+    #   port, it will use the port selection strategy that the Amazon S3
+    #   Files mount helper uses. For more information, see [S3 Files mount
+    #   helper][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-files-mounting.html
+    #   @return [Integer]
+    #
+    # @!attribute [rw] access_point_arn
+    #   The full ARN of the S3 Files access point to use. If an access point
+    #   is specified, the root directory value specified in the
+    #   `S3FilesVolumeConfiguration` must either be omitted or set to `/`
+    #   which will enforce the path set on the S3 Files access point. For
+    #   more information, see [Creating S3 Files access points][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-files-access-points-creating.html
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/S3FilesVolumeConfiguration AWS API Documentation
+    #
+    class S3FilesVolumeConfiguration < Struct.new(
+      :file_system_arn,
+      :root_directory,
+      :transit_encryption_port,
+      :access_point_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -9551,6 +14430,14 @@ module Aws::ECS
     #   The Unix timestamp for the time when the service was created.
     #   @return [Time]
     #
+    # @!attribute [rw] current_service_deployment
+    #   The ARN of the current service deployment.
+    #   @return [String]
+    #
+    # @!attribute [rw] current_service_revisions
+    #   The list of the service revisions.
+    #   @return [Array<Types::ServiceCurrentRevisionSummary>]
+    #
     # @!attribute [rw] placement_constraints
     #   The placement constraints for the tasks in the service.
     #   @return [Array<Types::PlacementConstraint>]
@@ -9568,8 +14455,11 @@ module Aws::ECS
     #
     # @!attribute [rw] health_check_grace_period_seconds
     #   The period of time, in seconds, that the Amazon ECS service
-    #   scheduler ignores unhealthy Elastic Load Balancing target health
-    #   checks after a task has first started.
+    #   scheduler ignores unhealthy Elastic Load Balancing, VPC Lattice, and
+    #   container health checks after a task has first started.
+    #
+    #   If your service has more running tasks than desired, unhealthy tasks
+    #   in the grace period might be stopped to reach the desired count.
     #   @return [Integer]
     #
     # @!attribute [rw] scheduling_strategy
@@ -9670,9 +14560,28 @@ module Aws::ECS
     #   Availability Zones][1] in the <i> <i>Amazon Elastic Container
     #   Service Developer Guide</i> </i>.
     #
+    #   The default behavior of `AvailabilityZoneRebalancing` differs
+    #   between create and update requests:
+    #
+    #   * For create service requests, when no value is specified for
+    #     `AvailabilityZoneRebalancing`, Amazon ECS defaults the value to
+    #     `ENABLED`.
+    #
+    #   * For update service requests, when no value is specified for
+    #     `AvailabilityZoneRebalancing`, Amazon ECS defaults to the existing
+    #     service’s `AvailabilityZoneRebalancing` value. If the service
+    #     never had an `AvailabilityZoneRebalancing` value set, Amazon ECS
+    #     treats this as `DISABLED`.
+    #
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-rebalancing.html
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_management_type
+    #   Identifies whether an ECS Service is an Express Service managed by
+    #   ECS, or managed by the customer. The valid values are `ECS` and
+    #   `CUSTOMER`
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/Service AWS API Documentation
@@ -9698,6 +14607,8 @@ module Aws::ECS
       :role_arn,
       :events,
       :created_at,
+      :current_service_deployment,
+      :current_service_revisions,
       :placement_constraints,
       :placement_strategy,
       :network_configuration,
@@ -9709,7 +14620,44 @@ module Aws::ECS
       :enable_ecs_managed_tags,
       :propagate_tags,
       :enable_execute_command,
-      :availability_zone_rebalancing)
+      :availability_zone_rebalancing,
+      :resource_management_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration for Service Connect access logging. Access logs provide
+    # detailed information about requests made to your service, including
+    # request patterns, response codes, and timing data for debugging and
+    # monitoring purposes.
+    #
+    # <note markdown="1"> To enable access logs, you must also specify a `logConfiguration` in
+    # the `serviceConnectConfiguration`.
+    #
+    #  </note>
+    #
+    # @!attribute [rw] format
+    #   The format for Service Connect access log output. Choose TEXT for
+    #   human-readable logs or JSON for structured data that integrates well
+    #   with log analysis tools.
+    #   @return [String]
+    #
+    # @!attribute [rw] include_query_parameters
+    #   Specifies whether to include query parameters in Service Connect
+    #   access logs.
+    #
+    #   When enabled, query parameters from HTTP requests are included in
+    #   the access logs. Consider security and privacy implications when
+    #   enabling this feature, as query parameters may contain sensitive
+    #   information such as request IDs and tokens. By default, this
+    #   parameter is `DISABLED`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ServiceConnectAccessLogConfiguration AWS API Documentation
+    #
+    class ServiceConnectAccessLogConfiguration < Struct.new(
+      :format,
+      :include_query_parameters)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -9770,11 +14718,19 @@ module Aws::ECS
     #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-connect.html
     #   @return [String]
     #
+    # @!attribute [rw] test_traffic_rules
+    #   The configuration for test traffic routing rules used during
+    #   blue/green deployments with Amazon ECS Service Connect. This allows
+    #   you to route a portion of traffic to the new service revision of
+    #   your service for testing before shifting all production traffic.
+    #   @return [Types::ServiceConnectTestTrafficRules]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ServiceConnectClientAlias AWS API Documentation
     #
     class ServiceConnectClientAlias < Struct.new(
       :port,
-      :dns_name)
+      :dns_name,
+      :test_traffic_rules)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -9875,13 +14831,28 @@ module Aws::ECS
     #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-agent-config.html
     #   @return [Types::LogConfiguration]
     #
+    # @!attribute [rw] access_log_configuration
+    #   The configuration for Service Connect access logging. Access logs
+    #   capture detailed information about requests made to your service,
+    #   including request patterns, response codes, and timing data. They
+    #   can be useful for debugging connectivity issues, monitoring service
+    #   performance, and auditing service-to-service communication for
+    #   security and compliance purposes.
+    #
+    #   <note markdown="1"> To enable access logs, you must also specify a `logConfiguration` in
+    #   the `serviceConnectConfiguration`.
+    #
+    #    </note>
+    #   @return [Types::ServiceConnectAccessLogConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ServiceConnectConfiguration AWS API Documentation
     #
     class ServiceConnectConfiguration < Struct.new(
       :enabled,
       :namespace,
       :services,
-      :log_configuration)
+      :log_configuration,
+      :access_log_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -9991,7 +14962,7 @@ module Aws::ECS
     #   @return [String]
     #
     # @!attribute [rw] discovery_arn
-    #   The Amazon Resource Name (ARN) for the namespace in Cloud Map that
+    #   The Amazon Resource Name (ARN) for the service in Cloud Map that
     #   matches the discovery name for this Service Connect resource. You
     #   can use this ARN in other integrations with Cloud Map. However,
     #   Service Connect can't ensure connectivity outside of Amazon ECS.
@@ -10002,6 +14973,87 @@ module Aws::ECS
     class ServiceConnectServiceResource < Struct.new(
       :discovery_name,
       :discovery_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The header matching rules for test traffic routing in Amazon ECS
+    # blue/green deployments. These rules determine how incoming requests
+    # are matched based on HTTP headers to route test traffic to the new
+    # service revision.
+    #
+    # @!attribute [rw] exact
+    #   The exact value that the HTTP header must match for the test traffic
+    #   routing rule to apply. This provides precise control over which
+    #   requests are routed to the new service revision during blue/green
+    #   deployments.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ServiceConnectTestTrafficHeaderMatchRules AWS API Documentation
+    #
+    class ServiceConnectTestTrafficHeaderMatchRules < Struct.new(
+      :exact)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The HTTP header rules used to identify and route test traffic during
+    # Amazon ECS blue/green deployments. These rules specify which HTTP
+    # headers to examine and what values to match for routing decisions.
+    #
+    # For more information, see [Service Connect for Amazon ECS blue/green
+    # deployments][1] in the <i> Amazon Elastic Container Service Developer
+    # Guide</i>.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-connect-blue-green.html
+    #
+    # @!attribute [rw] name
+    #   The name of the HTTP header to examine for test traffic routing.
+    #   Common examples include custom headers like `X-Test-Version` or
+    #   `X-Canary-Request` that can be used to identify test traffic.
+    #   @return [String]
+    #
+    # @!attribute [rw] value
+    #   The header value matching configuration that determines how the HTTP
+    #   header value is evaluated for test traffic routing decisions.
+    #   @return [Types::ServiceConnectTestTrafficHeaderMatchRules]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ServiceConnectTestTrafficHeaderRules AWS API Documentation
+    #
+    class ServiceConnectTestTrafficHeaderRules < Struct.new(
+      :name,
+      :value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The test traffic routing configuration for Amazon ECS blue/green
+    # deployments. This configuration allows you to define rules for routing
+    # specific traffic to the new service revision during the deployment
+    # process, allowing for safe testing before full production traffic
+    # shift.
+    #
+    # For more information, see [Service Connect for Amazon ECS blue/green
+    # deployments][1] in the <i> Amazon Elastic Container Service Developer
+    # Guide</i>.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-connect-blue-green.html
+    #
+    # @!attribute [rw] header
+    #   The HTTP header-based routing rules that determine which requests
+    #   should be routed to the new service version during blue/green
+    #   deployment testing. These rules provide fine-grained control over
+    #   test traffic routing based on request headers.
+    #   @return [Types::ServiceConnectTestTrafficHeaderRules]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ServiceConnectTestTrafficRules AWS API Documentation
+    #
+    class ServiceConnectTestTrafficRules < Struct.new(
+      :header)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -10043,6 +15095,35 @@ module Aws::ECS
       :issuer_certificate_authority,
       :kms_key,
       :role_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The summary of the current service revision configuration
+    #
+    # @!attribute [rw] arn
+    #   The ARN of the current service revision.
+    #   @return [String]
+    #
+    # @!attribute [rw] requested_task_count
+    #   The number of requested tasks in the current service revision
+    #   @return [Integer]
+    #
+    # @!attribute [rw] running_task_count
+    #   The number of running tasks of the current service revision
+    #   @return [Integer]
+    #
+    # @!attribute [rw] pending_task_count
+    #   The number of pending tasks in the current service revision
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ServiceCurrentRevisionSummary AWS API Documentation
+    #
+    class ServiceCurrentRevisionSummary < Struct.new(
+      :arn,
+      :requested_task_count,
+      :running_task_count,
+      :pending_task_count)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -10121,6 +15202,79 @@ module Aws::ECS
     #   status. For example, the circuit breaker detected a failure.
     #   @return [String]
     #
+    # @!attribute [rw] lifecycle_stage
+    #   The current lifecycle stage of the deployment. Possible values
+    #   include:
+    #
+    #   * RECONCILE\_SERVICE
+    #
+    #     The reconciliation stage that only happens when you start a new
+    #     service deployment with more than 1 service revision in an ACTIVE
+    #     state.
+    #
+    #   * PRE\_SCALE\_UP
+    #
+    #     The green service revision has not started. The blue service
+    #     revision is handling 100% of the production traffic. There is no
+    #     test traffic.
+    #
+    #   * SCALE\_UP
+    #
+    #     The stage when the green service revision scales up to 100% and
+    #     launches new tasks. The green service revision is not serving any
+    #     traffic at this point.
+    #
+    #   * POST\_SCALE\_UP
+    #
+    #     The green service revision has started. The blue service revision
+    #     is handling 100% of the production traffic. There is no test
+    #     traffic.
+    #
+    #   * TEST\_TRAFFIC\_SHIFT
+    #
+    #     The blue and green service revisions are running. The blue service
+    #     revision handles 100% of the production traffic. The green service
+    #     revision is migrating from 0% to 100% of test traffic.
+    #
+    #   * POST\_TEST\_TRAFFIC\_SHIFT
+    #
+    #     The test traffic shift is complete. The green service revision
+    #     handles 100% of the test traffic.
+    #
+    #   * PRE\_PRODUCTION\_TRAFFIC\_SHIFT
+    #
+    #     Occurs before production traffic shift. For linear and canary
+    #     deployments, this stage is invoked before every traffic shift
+    #     step.
+    #
+    #   * PRODUCTION\_TRAFFIC\_SHIFT
+    #
+    #     Production traffic is shifting to the green service revision. The
+    #     green service revision is migrating from 0% to 100% of production
+    #     traffic. For linear and canary deployments, this stage is invoked
+    #     at every traffic shift step.
+    #
+    #   * POST\_PRODUCTION\_TRAFFIC\_SHIFT
+    #
+    #     The production traffic shift is complete.
+    #
+    #   * BAKE\_TIME
+    #
+    #     The stage when both blue and green service revisions are running
+    #     simultaneously after the production traffic has shifted.
+    #
+    #   * CLEAN\_UP
+    #
+    #     The stage when the blue service revision has completely scaled
+    #     down to 0 running tasks. The green service revision is now the
+    #     production service revision after this stage.
+    #   @return [String]
+    #
+    # @!attribute [rw] lifecycle_hook_details
+    #   The details of the lifecycle hooks for the current service
+    #   deployment.
+    #   @return [Array<Types::DeploymentLifecycleHookDetail>]
+    #
     # @!attribute [rw] deployment_configuration
     #   Optional deployment parameters that control how many tasks run
     #   during a deployment and the ordering of stopping and starting tasks.
@@ -10156,6 +15310,8 @@ module Aws::ECS
       :target_service_revision,
       :status,
       :status_reason,
+      :lifecycle_stage,
+      :lifecycle_hook_details,
       :deployment_configuration,
       :rollback,
       :deployment_circuit_breaker,
@@ -10309,6 +15465,22 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # The service deploy ARN that you specified in the
+    # `ContinueServiceDeployment` doesn't exist. You can use
+    # `ListServiceDeployments` to retrieve the service deployment ARNs.
+    #
+    # @!attribute [rw] message
+    #   Message that describes the cause of the exception.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ServiceDeploymentNotFoundException AWS API Documentation
+    #
+    class ServiceDeploymentNotFoundException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The details for an event that's associated with a service.
     #
     # @!attribute [rw] id
@@ -10349,10 +15521,12 @@ module Aws::ECS
     # [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ebs-volumes.html#ebs-volumes-configuration
     #
     # @!attribute [rw] encrypted
-    #   Indicates whether the volume should be encrypted. If no value is
-    #   specified, encryption is turned on by default. This parameter maps
-    #   1:1 with the `Encrypted` parameter of the [CreateVolume API][1] in
-    #   the *Amazon EC2 API Reference*.
+    #   Indicates whether the volume should be encrypted. If you turn on
+    #   Region-level Amazon EBS encryption by default but set this value as
+    #   `false`, the setting is overridden and the volume is encrypted with
+    #   the KMS key specified for Amazon EBS encryption by default. This
+    #   parameter maps 1:1 with the `Encrypted` parameter of the
+    #   [CreateVolume API][1] in the *Amazon EC2 API Reference*.
     #
     #
     #
@@ -10361,12 +15535,14 @@ module Aws::ECS
     #
     # @!attribute [rw] kms_key_id
     #   The Amazon Resource Name (ARN) identifier of the Amazon Web Services
-    #   Key Management Service key to use for Amazon EBS encryption. When
-    #   encryption is turned on and no Amazon Web Services Key Management
-    #   Service key is specified, the default Amazon Web Services managed
-    #   key for Amazon EBS volumes is used. This parameter maps 1:1 with the
-    #   `KmsKeyId` parameter of the [CreateVolume API][1] in the *Amazon EC2
-    #   API Reference*.
+    #   Key Management Service key to use for Amazon EBS encryption. When a
+    #   key is specified using this parameter, it overrides Amazon EBS
+    #   default encryption or any KMS key that you specified for
+    #   cluster-level managed storage encryption. This parameter maps 1:1
+    #   with the `KmsKeyId` parameter of the [CreateVolume API][1] in the
+    #   *Amazon EC2 API Reference*. For more information about encrypting
+    #   Amazon EBS volumes attached to tasks, see [Encrypt data stored in
+    #   Amazon EBS volumes attached to Amazon ECS tasks][2].
     #
     #   Amazon Web Services authenticates the Amazon Web Services Key
     #   Management Service key asynchronously. Therefore, if you specify an
@@ -10376,6 +15552,7 @@ module Aws::ECS
     #
     #
     #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CreateVolume.html
+    #   [2]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ebs-kms-encryption.html
     #   @return [String]
     #
     # @!attribute [rw] volume_type
@@ -10431,15 +15608,28 @@ module Aws::ECS
     #   @return [Integer]
     #
     # @!attribute [rw] snapshot_id
-    #   The snapshot that Amazon ECS uses to create the volume. You must
-    #   specify either a snapshot ID or a volume size. This parameter maps
-    #   1:1 with the `SnapshotId` parameter of the [CreateVolume API][1] in
-    #   the *Amazon EC2 API Reference*.
+    #   The snapshot that Amazon ECS uses to create volumes for attachment
+    #   to tasks maintained by the service. You must specify either
+    #   `snapshotId` or `sizeInGiB` in your volume configuration. This
+    #   parameter maps 1:1 with the `SnapshotId` parameter of the
+    #   [CreateVolume API][1] in the *Amazon EC2 API Reference*.
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CreateVolume.html
     #   @return [String]
+    #
+    # @!attribute [rw] volume_initialization_rate
+    #   The rate, in MiB/s, at which data is fetched from a snapshot of an
+    #   existing EBS volume to create new volumes for attachment to the
+    #   tasks maintained by the service. This property can be specified only
+    #   if you specify a `snapshotId`. For more information, see [Initialize
+    #   Amazon EBS volumes][1] in the *Amazon EBS User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/ebs/latest/userguide/initalize-volume.html
+    #   @return [Integer]
     #
     # @!attribute [rw] iops
     #   The number of I/O operations per second (IOPS). For `gp3`, `io1`,
@@ -10509,9 +15699,9 @@ module Aws::ECS
     #   The filesystem type for the volume. For volumes created from a
     #   snapshot, you must specify the same filesystem type that the volume
     #   was using when the snapshot was created. If there is a filesystem
-    #   type mismatch, the task will fail to start.
+    #   type mismatch, the tasks will fail to start.
     #
-    #   The available Linux filesystem types are  `ext3`, `ext4`, and `xfs`.
+    #   The available Linux filesystem types are `ext3`, `ext4`, and `xfs`.
     #   If no value is specified, the `xfs` filesystem type is used by
     #   default.
     #
@@ -10526,6 +15716,7 @@ module Aws::ECS
       :volume_type,
       :size_in_gi_b,
       :snapshot_id,
+      :volume_initialization_rate,
       :iops,
       :throughput,
       :tag_specifications,
@@ -10543,9 +15734,17 @@ module Aws::ECS
     #
     # [1]: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_CreateService.html
     #
+    # @!attribute [rw] message
+    #   Message that describes the cause of the exception.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ServiceNotActiveException AWS API Documentation
     #
-    class ServiceNotActiveException < Aws::EmptyStructure; end
+    class ServiceNotActiveException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # The specified service wasn't found. You can view your available
     # services with [ListServices][1]. Amazon ECS services are cluster
@@ -10555,9 +15754,17 @@ module Aws::ECS
     #
     # [1]: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_ListServices.html
     #
+    # @!attribute [rw] message
+    #   Message that describes the cause of the exception.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ServiceNotFoundException AWS API Documentation
     #
-    class ServiceNotFoundException < Aws::EmptyStructure; end
+    class ServiceNotFoundException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # The details for the service registry.
     #
@@ -10725,6 +15932,31 @@ module Aws::ECS
     #   The VPC Lattice configuration for the service revision.
     #   @return [Array<Types::VpcLatticeConfiguration>]
     #
+    # @!attribute [rw] resolved_configuration
+    #   The resolved configuration for the service revision which contains
+    #   the actual resources your service revision uses, such as which
+    #   target groups serve traffic.
+    #   @return [Types::ResolvedConfiguration]
+    #
+    # @!attribute [rw] ecs_managed_resources
+    #   The resources created and managed by Amazon ECS when you create an
+    #   Express service for Amazon ECS.
+    #   @return [Types::ECSManagedResources]
+    #
+    # @!attribute [rw] overrides
+    #   The effective runtime overrides that Amazon ECS applies to this
+    #   service revision. This value is present only when Amazon ECS detects
+    #   a difference between the task definition and the actual runtime
+    #   configuration.
+    #   @return [Types::ServiceRevisionOverrides]
+    #
+    # @!attribute [rw] monitoring
+    #   The optional monitoring configuration for the service, which defines
+    #   the resolution for the service-level `CPUUtilization` and
+    #   `MemoryUtilization` Amazon CloudWatch metrics. When not specified,
+    #   Amazon ECS uses the default resolution of `60` seconds.
+    #   @return [Types::MonitoringConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ServiceRevision AWS API Documentation
     #
     class ServiceRevision < Struct.new(
@@ -10745,7 +15977,52 @@ module Aws::ECS
       :volume_configurations,
       :fargate_ephemeral_storage,
       :created_at,
-      :vpc_lattice_configurations)
+      :vpc_lattice_configurations,
+      :resolved_configuration,
+      :ecs_managed_resources,
+      :overrides,
+      :monitoring)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The resolved load balancer configuration for a service revision. This
+    # includes information about which target groups serve traffic and which
+    # listener rules direct traffic to them.
+    #
+    # @!attribute [rw] target_group_arn
+    #   The Amazon Resource Name (ARN) of the target group associated with
+    #   the service revision.
+    #   @return [String]
+    #
+    # @!attribute [rw] production_listener_rule
+    #   The Amazon Resource Name (ARN) of the production listener rule or
+    #   listener that directs traffic to the target group associated with
+    #   the service revision.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ServiceRevisionLoadBalancer AWS API Documentation
+    #
+    class ServiceRevisionLoadBalancer < Struct.new(
+      :target_group_arn,
+      :production_listener_rule)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains the runtime overrides that Amazon ECS automatically applies
+    # to a service revision when the effective runtime configuration differs
+    # from the task definition. This value is read-only.
+    #
+    # @!attribute [rw] runtime_platform
+    #   The runtime platform override that Amazon ECS automatically applies
+    #   to the service revision. You can't set this value.
+    #   @return [Types::RuntimePlatformOverride]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ServiceRevisionOverrides AWS API Documentation
+    #
+    class ServiceRevisionOverrides < Struct.new(
+      :runtime_platform)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -10769,13 +16046,29 @@ module Aws::ECS
     #   The number of pending tasks for the service revision.
     #   @return [Integer]
     #
+    # @!attribute [rw] requested_test_traffic_weight
+    #   The percentage of test traffic that is directed to this service
+    #   revision. This value represents a snapshot of the traffic
+    #   distribution and may not reflect real-time changes during active
+    #   deployments. Valid values are 0.0 to 100.0.
+    #   @return [Float]
+    #
+    # @!attribute [rw] requested_production_traffic_weight
+    #   The percentage of production traffic that is directed to this
+    #   service revision. This value represents a snapshot of the traffic
+    #   distribution and may not reflect real-time changes during active
+    #   deployments. Valid values are 0.0 to 100.0.
+    #   @return [Float]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ServiceRevisionSummary AWS API Documentation
     #
     class ServiceRevisionSummary < Struct.new(
       :arn,
       :requested_task_count,
       :running_task_count,
-      :pending_task_count)
+      :pending_task_count,
+      :requested_test_traffic_weight,
+      :requested_production_traffic_weight)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -10870,6 +16163,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] cluster
     #   The short name or full Amazon Resource Name (ARN) of the cluster
     #   where to start your task. If you do not specify a cluster, the
@@ -11023,6 +16320,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] tasks
     #   A full description of the tasks that were started. Each task that
     #   was successfully placed on your container instances is described.
@@ -11041,6 +16342,41 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # @!attribute [rw] service_deployment_arn
+    #   The ARN of the service deployment that you want to stop.
+    #   @return [String]
+    #
+    # @!attribute [rw] stop_type
+    #   How you want Amazon ECS to stop the service.
+    #
+    #   The valid values are `ROLLBACK`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/StopServiceDeploymentRequest AWS API Documentation
+    #
+    class StopServiceDeploymentRequest < Struct.new(
+      :service_deployment_arn,
+      :stop_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] service_deployment_arn
+    #   The ARN of the stopped service deployment.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/StopServiceDeploymentResponse AWS API Documentation
+    #
+    class StopServiceDeploymentResponse < Struct.new(
+      :service_deployment_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] cluster
     #   The short name or full Amazon Resource Name (ARN) of the cluster
     #   that hosts the task to stop. If you do not specify a cluster, the
@@ -11073,6 +16409,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] task
     #   The task that was stopped.
     #   @return [Types::Task]
@@ -11115,6 +16455,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] cluster
     #   The short name or full ARN of the cluster that hosts the container.
     #   @return [String]
@@ -11163,6 +16507,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] acknowledgment
     #   Acknowledgement of the state change.
     #   @return [String]
@@ -11175,6 +16523,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] cluster
     #   The short name or full Amazon Resource Name (ARN) of the cluster
     #   that hosts the task.
@@ -11235,6 +16587,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] acknowledgment
     #   Acknowledgement of the state change.
     #   @return [String]
@@ -11303,7 +16659,9 @@ module Aws::ECS
     #   "kernel.shmmni" | "kernel.shm_rmid_forced"`, and `Sysctls` that
     #   start with `"fs.mqueue.*"`
     #
-    #   Valid network namespace values: `Sysctls` that start with `"net.*"`
+    #   Valid network namespace values: `Sysctls` that start with `"net.*"`.
+    #   Only namespaced `Sysctls` that exist within the container starting
+    #   with "net.* are accepted.
     #
     #   All of these values are supported by Fargate.
     #   @return [String]
@@ -11453,9 +16811,17 @@ module Aws::ECS
     #
     # [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-exec.html
     #
+    # @!attribute [rw] message
+    #   Message that describes the cause of the exception.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/TargetNotConnectedException AWS API Documentation
     #
-    class TargetNotConnectedException < Aws::EmptyStructure; end
+    class TargetNotConnectedException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # The specified target wasn't found. You can view your available
     # container instances with [ListContainerInstances][1]. Amazon ECS
@@ -11465,9 +16831,17 @@ module Aws::ECS
     #
     # [1]: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_ListContainerInstances.html
     #
+    # @!attribute [rw] message
+    #   Message that describes the cause of the exception.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/TargetNotFoundException AWS API Documentation
     #
-    class TargetNotFoundException < Aws::EmptyStructure; end
+    class TargetNotFoundException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # Details on a task in a cluster.
     #
@@ -11522,38 +16896,13 @@ module Aws::ECS
     #   (`0.125` vCPUs) and `196608` CPU units (`192` vCPUs). If you do not
     #   specify a value, the parameter is ignored.
     #
-    #   If you're using the Fargate launch type, this field is required.
-    #   You must use one of the following values. These values determine the
-    #   range of supported values for the `memory` parameter:
+    #   This field is required for Fargate. For information about the valid
+    #   values, see [Task size][1] in the *Amazon Elastic Container Service
+    #   Developer Guide*.
     #
-    #   The CPU units cannot be less than 1 vCPU when you use Windows
-    #   containers on Fargate.
     #
-    #   * 256 (.25 vCPU) - Available `memory` values: 512 (0.5 GB), 1024 (1
-    #     GB), 2048 (2 GB)
     #
-    #   * 512 (.5 vCPU) - Available `memory` values: 1024 (1 GB), 2048 (2
-    #     GB), 3072 (3 GB), 4096 (4 GB)
-    #
-    #   * 1024 (1 vCPU) - Available `memory` values: 2048 (2 GB), 3072 (3
-    #     GB), 4096 (4 GB), 5120 (5 GB), 6144 (6 GB), 7168 (7 GB), 8192 (8
-    #     GB)
-    #
-    #   * 2048 (2 vCPU) - Available `memory` values: 4096 (4 GB) and 16384
-    #     (16 GB) in increments of 1024 (1 GB)
-    #
-    #   * 4096 (4 vCPU) - Available `memory` values: 8192 (8 GB) and 30720
-    #     (30 GB) in increments of 1024 (1 GB)
-    #
-    #   * 8192 (8 vCPU) - Available `memory` values: 16 GB and 60 GB in 4 GB
-    #     increments
-    #
-    #     This option requires Linux platform `1.4.0` or later.
-    #
-    #   * 16384 (16vCPU) - Available `memory` values: 32GB and 120 GB in 8
-    #     GB increments
-    #
-    #     This option requires Linux platform `1.4.0` or later.
+    #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html#task_size
     #   @return [String]
     #
     # @!attribute [rw] created_at
@@ -12019,9 +17368,9 @@ module Aws::ECS
     #
     # @!attribute [rw] requires_compatibilities
     #   The task launch types the task definition was validated against. The
-    #   valid values are `EC2`, `FARGATE`, and `EXTERNAL`. For more
-    #   information, see [Amazon ECS launch types][1] in the *Amazon Elastic
-    #   Container Service Developer Guide*.
+    #   valid values are `MANAGED_INSTANCES`, `EC2`, `FARGATE`, and
+    #   `EXTERNAL`. For more information, see [Amazon ECS launch types][1]
+    #   in the *Amazon Elastic Container Service Developer Guide*.
     #
     #
     #
@@ -12037,35 +17386,15 @@ module Aws::ECS
     #
     #   If you're using the EC2 launch type or the external launch type,
     #   this field is optional. Supported values are between `128` CPU units
-    #   (`0.125` vCPUs) and `196608` CPU units (`192` vCPUs). The CPU units
-    #   cannot be less than 1 vCPU when you use Windows containers on
-    #   Fargate.
+    #   (`0.125` vCPUs) and `196608` CPU units (`192` vCPUs).
     #
-    #   * 256 (.25 vCPU) - Available `memory` values: 512 (0.5 GB), 1024 (1
-    #     GB), 2048 (2 GB)
+    #   This field is required for Fargate. For information about the valid
+    #   values, see [Task size][1] in the *Amazon Elastic Container Service
+    #   Developer Guide*.
     #
-    #   * 512 (.5 vCPU) - Available `memory` values: 1024 (1 GB), 2048 (2
-    #     GB), 3072 (3 GB), 4096 (4 GB)
     #
-    #   * 1024 (1 vCPU) - Available `memory` values: 2048 (2 GB), 3072 (3
-    #     GB), 4096 (4 GB), 5120 (5 GB), 6144 (6 GB), 7168 (7 GB), 8192 (8
-    #     GB)
     #
-    #   * 2048 (2 vCPU) - Available `memory` values: 4096 (4 GB) and 16384
-    #     (16 GB) in increments of 1024 (1 GB)
-    #
-    #   * 4096 (4 vCPU) - Available `memory` values: 8192 (8 GB) and 30720
-    #     (30 GB) in increments of 1024 (1 GB)
-    #
-    #   * 8192 (8 vCPU) - Available `memory` values: 16 GB and 60 GB in 4 GB
-    #     increments
-    #
-    #     This option requires Linux platform `1.4.0` or later.
-    #
-    #   * 16384 (16vCPU) - Available `memory` values: 32GB and 120 GB in 8
-    #     GB increments
-    #
-    #     This option requires Linux platform `1.4.0` or later.
+    #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html#task_size
     #   @return [String]
     #
     # @!attribute [rw] memory
@@ -12130,7 +17459,7 @@ module Aws::ECS
     #   If `task` is specified, all containers within the specified task
     #   share the same process namespace.
     #
-    #   If no value is specified, the default is a private namespace for
+    #   If no value is specified, the The default is a private namespace for
     #   each container.
     #
     #   If the `host` PID mode is used, there's a heightened risk of
@@ -12212,6 +17541,11 @@ module Aws::ECS
     #   deregistered.
     #   @return [Time]
     #
+    # @!attribute [rw] delete_requested_at
+    #   The Unix timestamp for the time when the task definition delete was
+    #   requested.
+    #   @return [Time]
+    #
     # @!attribute [rw] registered_by
     #   The principal that registered the task definition.
     #   @return [String]
@@ -12252,6 +17586,7 @@ module Aws::ECS
       :proxy_configuration,
       :registered_at,
       :deregistered_at,
+      :delete_requested_at,
       :registered_by,
       :ephemeral_storage,
       :enable_fault_injection)
@@ -12300,7 +17635,7 @@ module Aws::ECS
     # @!attribute [rw] size_in_gi_b
     #   The total amount, in GiB, of the ephemeral storage to set for the
     #   task. The minimum supported value is `20` GiB and the maximum
-    #   supported value is  `200` GiB.
+    #   supported value is `200` GiB.
     #   @return [Integer]
     #
     # @!attribute [rw] kms_key_id
@@ -12322,10 +17657,12 @@ module Aws::ECS
     # Amazon EBS volume, with one volume created for each task.
     #
     # @!attribute [rw] encrypted
-    #   Indicates whether the volume should be encrypted. If no value is
-    #   specified, encryption is turned on by default. This parameter maps
-    #   1:1 with the `Encrypted` parameter of the [CreateVolume API][1] in
-    #   the *Amazon EC2 API Reference*.
+    #   Indicates whether the volume should be encrypted. If you turn on
+    #   Region-level Amazon EBS encryption by default but set this value as
+    #   `false`, the setting is overridden and the volume is encrypted with
+    #   the KMS key specified for Amazon EBS encryption by default. This
+    #   parameter maps 1:1 with the `Encrypted` parameter of the
+    #   [CreateVolume API][1] in the *Amazon EC2 API Reference*.
     #
     #
     #
@@ -12334,12 +17671,14 @@ module Aws::ECS
     #
     # @!attribute [rw] kms_key_id
     #   The Amazon Resource Name (ARN) identifier of the Amazon Web Services
-    #   Key Management Service key to use for Amazon EBS encryption. When
-    #   encryption is turned on and no Amazon Web Services Key Management
-    #   Service key is specified, the default Amazon Web Services managed
-    #   key for Amazon EBS volumes is used. This parameter maps 1:1 with the
-    #   `KmsKeyId` parameter of the [CreateVolume API][1] in the *Amazon EC2
-    #   API Reference*.
+    #   Key Management Service key to use for Amazon EBS encryption. When a
+    #   key is specified using this parameter, it overrides Amazon EBS
+    #   default encryption or any KMS key that you specified for
+    #   cluster-level managed storage encryption. This parameter maps 1:1
+    #   with the `KmsKeyId` parameter of the [CreateVolume API][1] in the
+    #   *Amazon EC2 API Reference*. For more information about encrypting
+    #   Amazon EBS volumes attached to a task, see [Encrypt data stored in
+    #   Amazon EBS volumes attached to Amazon ECS tasks][2].
     #
     #   Amazon Web Services authenticates the Amazon Web Services Key
     #   Management Service key asynchronously. Therefore, if you specify an
@@ -12349,6 +17688,7 @@ module Aws::ECS
     #
     #
     #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CreateVolume.html
+    #   [2]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ebs-kms-encryption.html
     #   @return [String]
     #
     # @!attribute [rw] volume_type
@@ -12413,6 +17753,18 @@ module Aws::ECS
     #
     #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CreateVolume.html
     #   @return [String]
+    #
+    # @!attribute [rw] volume_initialization_rate
+    #   The rate, in MiB/s, at which data is fetched from a snapshot of an
+    #   existing Amazon EBS volume to create a new volume for attachment to
+    #   the task. This property can be specified only if you specify a
+    #   `snapshotId`. For more information, see [Initialize Amazon EBS
+    #   volumes][1] in the *Amazon EBS User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/ebs/latest/userguide/initalize-volume.html
+    #   @return [Integer]
     #
     # @!attribute [rw] iops
     #   The number of I/O operations per second (IOPS). For `gp3`, `io1`,
@@ -12490,7 +17842,7 @@ module Aws::ECS
     #   was using when the snapshot was created. If there is a filesystem
     #   type mismatch, the task will fail to start.
     #
-    #   The available filesystem types are  `ext3`, `ext4`, and `xfs`. If no
+    #   The available filesystem types are `ext3`, `ext4`, and `xfs`. If no
     #   value is specified, the `xfs` filesystem type is used by default.
     #   @return [String]
     #
@@ -12502,6 +17854,7 @@ module Aws::ECS
       :volume_type,
       :size_in_gi_b,
       :snapshot_id,
+      :volume_initialization_rate,
       :iops,
       :throughput,
       :tag_specifications,
@@ -12521,11 +17874,11 @@ module Aws::ECS
     #
     # @!attribute [rw] delete_on_termination
     #   Indicates whether the volume should be deleted on when the task
-    #   stops. If a value of `true` is specified,  Amazon ECS deletes the
+    #   stops. If a value of `true` is specified, Amazon ECS deletes the
     #   Amazon EBS volume on your behalf when the task goes into the
-    #   `STOPPED` state. If no value is specified, the  default value is
+    #   `STOPPED` state. If no value is specified, the default value is
     #   `true` is used. When set to `false`, Amazon ECS leaves the volume in
-    #   your  account.
+    #   your account.
     #   @return [Boolean]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/TaskManagedEBSVolumeTerminationPolicy AWS API Documentation
@@ -12852,9 +18205,17 @@ module Aws::ECS
     #
     # [1]: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_DescribeTaskSets.html
     #
+    # @!attribute [rw] message
+    #   Message that describes the cause of the exception.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/TaskSetNotFoundException AWS API Documentation
     #
-    class TaskSetNotFoundException < Aws::EmptyStructure; end
+    class TaskSetNotFoundException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # Configuration settings for the task volume that was
     # `configuredAtLaunch` that weren't set during `RegisterTaskDef`.
@@ -12877,6 +18238,39 @@ module Aws::ECS
     class TaskVolumeConfiguration < Struct.new(
       :name,
       :managed_ebs_volume)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines the failure threshold that the deployment circuit breaker uses
+    # to monitor a deployment. The `type` and `value` together determine the
+    # number of task failures that are tolerated before the circuit breaker
+    # triggers.
+    #
+    # By default, the threshold configuration uses a `type` of
+    # `BOUNDED_PERCENT` with a `value` of `50`.
+    #
+    # @!attribute [rw] type
+    #   Determines how Amazon ECS uses `value` to calculate the failure
+    #   threshold. For the percentage types (`BOUNDED_PERCENT` and
+    #   `UNBOUNDED_PERCENT`), Amazon ECS multiplies `value` by the latest
+    #   service desired count. For `COUNT`, Amazon ECS uses `value` directly
+    #   as the threshold. The default is `BOUNDED_PERCENT`.
+    #   @return [String]
+    #
+    # @!attribute [rw] value
+    #   Specifies the integer that Amazon ECS uses to calculate the failure
+    #   threshold. When `type` is `COUNT`, this value is the failure
+    #   threshold itself. When `type` is a percentage type, Amazon ECS
+    #   multiplies this value by the latest service desired count to produce
+    #   the failure threshold. The default is `50`.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ThresholdConfiguration AWS API Documentation
+    #
+    class ThresholdConfiguration < Struct.new(
+      :type,
+      :value)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -12948,6 +18342,29 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # The minimum and maximum total local storage in gigabytes (GB) for
+    # instance types with local storage. This is useful for workloads that
+    # require local storage for temporary data or caching.
+    #
+    # @!attribute [rw] min
+    #   The minimum total local storage in GB. Instance types with less
+    #   local storage are excluded from selection.
+    #   @return [Float]
+    #
+    # @!attribute [rw] max
+    #   The maximum total local storage in GB. Instance types with more
+    #   local storage are excluded from selection.
+    #   @return [Float]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/TotalLocalStorageGBRequest AWS API Documentation
+    #
+    class TotalLocalStorageGBRequest < Struct.new(
+      :min,
+      :max)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The `ulimit` settings to pass to the container.
     #
     # Amazon ECS tasks hosted on Fargate use the default resource limit
@@ -12988,9 +18405,17 @@ module Aws::ECS
 
     # The specified task isn't supported in this Region.
     #
+    # @!attribute [rw] message
+    #   Message that describes the cause of the exception.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/UnsupportedFeatureException AWS API Documentation
     #
-    class UnsupportedFeatureException < Aws::EmptyStructure; end
+    class UnsupportedFeatureException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # @!attribute [rw] resource_arn
     #   The Amazon Resource Name (ARN) of the resource to delete tags from.
@@ -13020,16 +18445,31 @@ module Aws::ECS
     #   The name of the capacity provider to update.
     #   @return [String]
     #
+    # @!attribute [rw] cluster
+    #   The name of the cluster that contains the capacity provider to
+    #   update. Managed instances capacity providers are cluster-scoped and
+    #   can only be updated within their associated cluster.
+    #   @return [String]
+    #
     # @!attribute [rw] auto_scaling_group_provider
     #   An object that represent the parameters to update for the Auto
     #   Scaling group capacity provider.
     #   @return [Types::AutoScalingGroupProviderUpdate]
     #
+    # @!attribute [rw] managed_instances_provider
+    #   The updated configuration for the Amazon ECS Managed Instances
+    #   provider. You can modify the infrastructure role, instance launch
+    #   template, and tag propagation settings. Changes take effect for new
+    #   instances launched after the update.
+    #   @return [Types::UpdateManagedInstancesProviderConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/UpdateCapacityProviderRequest AWS API Documentation
     #
     class UpdateCapacityProviderRequest < Struct.new(
       :name,
-      :auto_scaling_group_provider)
+      :cluster,
+      :auto_scaling_group_provider,
+      :managed_instances_provider)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -13149,6 +18589,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] cluster
     #   The short name or full Amazon Resource Name (ARN) of the cluster
     #   that your container instance is running on. If you do not specify a
@@ -13170,6 +18614,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] container_instance
     #   The container instance that the container agent was updated for.
     #   @return [Types::ContainerInstance]
@@ -13182,6 +18630,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] cluster
     #   The short name or full Amazon Resource Name (ARN) of the cluster
     #   that hosts the container instance to update. If you do not specify a
@@ -13212,6 +18664,10 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] container_instances
     #   The list of container instances.
     #   @return [Array<Types::ContainerInstance>]
@@ -13229,6 +18685,183 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # @!attribute [rw] daemon_arn
+    #   The Amazon Resource Name (ARN) of the daemon to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] daemon_task_definition_arn
+    #   The Amazon Resource Name (ARN) of the daemon task definition to use
+    #   for the updated daemon.
+    #   @return [String]
+    #
+    # @!attribute [rw] capacity_provider_arns
+    #   The Amazon Resource Names (ARNs) of the capacity providers to
+    #   associate with the daemon.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] deployment_configuration
+    #   Optional deployment parameters that control how the daemon rolls out
+    #   updates, including the drain percentage, alarm-based rollback, and
+    #   bake time.
+    #   @return [Types::DaemonDeploymentConfiguration]
+    #
+    # @!attribute [rw] propagate_tags
+    #   Specifies whether to propagate the tags from the daemon to the
+    #   daemon tasks. If you don't specify a value, the tags aren't
+    #   propagated. You can only propagate tags to daemon tasks during task
+    #   creation.
+    #   @return [String]
+    #
+    # @!attribute [rw] enable_ecs_managed_tags
+    #   Specifies whether to turn on Amazon ECS managed tags for the tasks
+    #   in the daemon. For more information, see [Tagging your Amazon ECS
+    #   resources][1] in the *Amazon Elastic Container Service Developer
+    #   Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-using-tags.html
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] enable_execute_command
+    #   If `true`, the execute command functionality is turned on for all
+    #   tasks in the daemon. If `false`, the execute command functionality
+    #   is turned off.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/UpdateDaemonRequest AWS API Documentation
+    #
+    class UpdateDaemonRequest < Struct.new(
+      :daemon_arn,
+      :daemon_task_definition_arn,
+      :capacity_provider_arns,
+      :deployment_configuration,
+      :propagate_tags,
+      :enable_ecs_managed_tags,
+      :enable_execute_command)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] daemon_arn
+    #   The Amazon Resource Name (ARN) of the daemon.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the daemon.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_at
+    #   The Unix timestamp for the time when the daemon was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_at
+    #   The Unix timestamp for the time when the daemon was last updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] deployment_arn
+    #   The Amazon Resource Name (ARN) of the daemon deployment that was
+    #   triggered by the update.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/UpdateDaemonResponse AWS API Documentation
+    #
+    class UpdateDaemonResponse < Struct.new(
+      :daemon_arn,
+      :status,
+      :created_at,
+      :updated_at,
+      :deployment_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] service_arn
+    #   The Amazon Resource Name (ARN) of the Express service to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] execution_role_arn
+    #   The Amazon Resource Name (ARN) of the task execution role for the
+    #   Express service.
+    #   @return [String]
+    #
+    # @!attribute [rw] health_check_path
+    #   The path on the container for Application Load Balancer health
+    #   checks.
+    #   @return [String]
+    #
+    # @!attribute [rw] primary_container
+    #   The primary container configuration for the Express service.
+    #   @return [Types::ExpressGatewayContainer]
+    #
+    # @!attribute [rw] task_role_arn
+    #   The Amazon Resource Name (ARN) of the IAM role for containers in
+    #   this task.
+    #   @return [String]
+    #
+    # @!attribute [rw] network_configuration
+    #   The network configuration for the Express service tasks. By default,
+    #   the network configuration for an Express service uses the default
+    #   VPC.
+    #   @return [Types::ExpressGatewayServiceNetworkConfiguration]
+    #
+    # @!attribute [rw] cpu
+    #   The number of CPU units used by the task.
+    #   @return [String]
+    #
+    # @!attribute [rw] memory
+    #   The amount of memory (in MiB) used by the task.
+    #   @return [String]
+    #
+    # @!attribute [rw] scaling_target
+    #   The auto-scaling configuration for the Express service.
+    #   @return [Types::ExpressGatewayScalingTarget]
+    #
+    # @!attribute [rw] task_definition_arn
+    #   The Amazon Resource Name (ARN) of a task definition to use to update
+    #   the Express Gateway service. This allows you to manage your own task
+    #   definition, giving you more control over the service configuration
+    #   such as adding sidecar containers.
+    #
+    #   The task definition must have a container named `Main` with a single
+    #   TCP port mapping that includes a container port and port name. The
+    #   task definition must also have `FARGATE` compatibility.
+    #
+    #   If you provide a task definition ARN, you cannot also specify
+    #   `primaryContainer`, `executionRoleArn`, `taskRoleArn`, `cpu`, or
+    #   `memory`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/UpdateExpressGatewayServiceRequest AWS API Documentation
+    #
+    class UpdateExpressGatewayServiceRequest < Struct.new(
+      :service_arn,
+      :execution_role_arn,
+      :health_check_path,
+      :primary_container,
+      :task_role_arn,
+      :network_configuration,
+      :cpu,
+      :memory,
+      :scaling_target,
+      :task_definition_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] service
+    #   The full description of your express gateway service following the
+    #   update call.
+    #   @return [Types::UpdatedExpressGatewayService]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/UpdateExpressGatewayServiceResponse AWS API Documentation
+    #
+    class UpdateExpressGatewayServiceResponse < Struct.new(
+      :service)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # There's already a current Amazon ECS container agent update in
     # progress on the container instance that's specified. If the container
     # agent becomes disconnected while it's in a transitional stage, such
@@ -13236,9 +18869,69 @@ module Aws::ECS
     # state. However, when the agent reconnects, it resumes where it stopped
     # previously.
     #
+    # @!attribute [rw] message
+    #   Message that describes the cause of the exception.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/UpdateInProgressException AWS API Documentation
     #
-    class UpdateInProgressException < Aws::EmptyStructure; end
+    class UpdateInProgressException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The updated configuration for a Amazon ECS Managed Instances provider.
+    # You can modify the infrastructure role, instance launch template, and
+    # tag propagation settings. Changes apply to new instances launched
+    # after the update.
+    #
+    # @!attribute [rw] infrastructure_role_arn
+    #   The updated Amazon Resource Name (ARN) of the infrastructure role.
+    #   The new role must have the necessary permissions to manage instances
+    #   and access required Amazon Web Services services.
+    #
+    #   For more information, see [Amazon ECS infrastructure IAM role][1] in
+    #   the *Amazon ECS Developer Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/infrastructure_IAM_role.html
+    #   @return [String]
+    #
+    # @!attribute [rw] instance_launch_template
+    #   The updated launch template configuration. Changes to the launch
+    #   template affect new instances launched after the update, while
+    #   existing instances continue to use their original configuration.
+    #   @return [Types::InstanceLaunchTemplateUpdate]
+    #
+    # @!attribute [rw] propagate_tags
+    #   The updated tag propagation setting. When changed, this affects only
+    #   new instances launched after the update.
+    #   @return [String]
+    #
+    # @!attribute [rw] infrastructure_optimization
+    #   The updated infrastructure optimization configuration. Changes to
+    #   this setting affect how Amazon ECS optimizes instances going
+    #   forward.
+    #   @return [Types::InfrastructureOptimization]
+    #
+    # @!attribute [rw] auto_repair_configuration
+    #   The updated auto repair configuration for the Amazon ECS Managed
+    #   Instances capacity provider.
+    #   @return [Types::AutoRepairConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/UpdateManagedInstancesProviderConfiguration AWS API Documentation
+    #
+    class UpdateManagedInstancesProviderConfiguration < Struct.new(
+      :infrastructure_role_arn,
+      :instance_launch_template,
+      :propagate_tags,
+      :infrastructure_optimization,
+      :auto_repair_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # @!attribute [rw] cluster
     #   The short name or full Amazon Resource Name (ARN) of the cluster
@@ -13277,10 +18970,16 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] cluster
     #   The short name or full Amazon Resource Name (ARN) of the cluster
     #   that your service runs on. If you do not specify a cluster, the
     #   default cluster is assumed.
+    #
+    #   You can't change the cluster name.
     #   @return [String]
     #
     # @!attribute [rw] service
@@ -13290,6 +18989,8 @@ module Aws::ECS
     # @!attribute [rw] desired_count
     #   The number of instantiations of the task to place and keep running
     #   in your service.
+    #
+    #   This parameter doesn't trigger a new service deployment.
     #   @return [Integer]
     #
     # @!attribute [rw] task_definition
@@ -13299,53 +19000,62 @@ module Aws::ECS
     #   task definition with `UpdateService`, Amazon ECS spawns a task with
     #   the new version of the task definition and then stops an old task
     #   after the new version is running.
+    #
+    #   This parameter triggers a new service deployment.
     #   @return [String]
     #
     # @!attribute [rw] capacity_provider_strategy
-    #   The capacity provider strategy to update the service to use.
+    #   The details of a capacity provider strategy. You can set a capacity
+    #   provider when you create a cluster, run a task, or update a service.
     #
-    #   if the service uses the default capacity provider strategy for the
-    #   cluster, the service can be updated to use one or more capacity
-    #   providers as opposed to the default capacity provider strategy.
-    #   However, when a service is using a capacity provider strategy
-    #   that's not the default capacity provider strategy, the service
-    #   can't be updated to use the cluster's default capacity provider
-    #   strategy.
+    #   <note markdown="1"> If you want to use Amazon ECS Managed Instances, you must use the
+    #   `capacityProviderStrategy` request parameter.
     #
-    #   A capacity provider strategy consists of one or more capacity
-    #   providers along with the `base` and `weight` to assign to them. A
-    #   capacity provider must be associated with the cluster to be used in
-    #   a capacity provider strategy. The [PutClusterCapacityProviders][1]
-    #   API is used to associate a capacity provider with a cluster. Only
-    #   capacity providers with an `ACTIVE` or `UPDATING` status can be
-    #   used.
+    #    </note>
     #
-    #   If specifying a capacity provider that uses an Auto Scaling group,
-    #   the capacity provider must already be created. New capacity
-    #   providers can be created with the [CreateClusterCapacityProvider][2]
-    #   API operation.
+    #   When you use Fargate, the capacity providers are `FARGATE` or
+    #   `FARGATE_SPOT`.
     #
-    #   To use a Fargate capacity provider, specify either the `FARGATE` or
-    #   `FARGATE_SPOT` capacity providers. The Fargate capacity providers
-    #   are available to all accounts and only need to be associated with a
-    #   cluster to be used.
+    #   When you use Amazon EC2, the capacity providers are Auto Scaling
+    #   groups.
     #
-    #   The [PutClusterCapacityProviders][1]API operation is used to update
-    #   the list of available capacity providers for a cluster after the
-    #   cluster is created.
+    #   You can change capacity providers for rolling deployments and
+    #   blue/green deployments.
+    #
+    #   The following list provides the valid transitions:
+    #
+    #   * Update the Fargate launch type to an Auto Scaling group capacity
+    #     provider.
+    #
+    #   * Update the Amazon EC2 launch type to a Fargate capacity provider.
+    #
+    #   * Update the Fargate capacity provider to an Auto Scaling group
+    #     capacity provider.
+    #
+    #   * Update the Amazon EC2 capacity provider to a Fargate capacity
+    #     provider.
+    #
+    #   * Update the Auto Scaling group or Fargate capacity provider back to
+    #     the launch type.
+    #
+    #     Pass an empty list in the `capacityProviderStrategy` parameter.
+    #
+    #   For information about Amazon Web Services CDK considerations, see
+    #   [Amazon Web Services CDK considerations][1].
+    #
+    #   This parameter doesn't trigger a new service deployment.
     #
     #
     #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_PutClusterCapacityProviders.html
-    #   [2]: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_CreateClusterCapacityProvider.html
+    #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/update-service-parameters.html
     #   @return [Array<Types::CapacityProviderStrategyItem>]
     #
     # @!attribute [rw] deployment_configuration
     #   Optional deployment parameters that control how many tasks run
     #   during the deployment and the ordering of stopping and starting
     #   tasks.
+    #
+    #   This parameter doesn't trigger a new service deployment.
     #   @return [Types::DeploymentConfiguration]
     #
     # @!attribute [rw] availability_zone_rebalancing
@@ -13356,6 +19066,21 @@ module Aws::ECS
     #   Availability Zones][1] in the <i> <i>Amazon Elastic Container
     #   Service Developer Guide</i> </i>.
     #
+    #   The default behavior of `AvailabilityZoneRebalancing` differs
+    #   between create and update requests:
+    #
+    #   * For create service requests, when no value is specified for
+    #     `AvailabilityZoneRebalancing`, Amazon ECS defaults the value to
+    #     `ENABLED`.
+    #
+    #   * For update service requests, when no value is specified for
+    #     `AvailabilityZoneRebalancing`, Amazon ECS defaults to the existing
+    #     service’s `AvailabilityZoneRebalancing` value. If the service
+    #     never had an `AvailabilityZoneRebalancing` value set, Amazon ECS
+    #     treats this as `DISABLED`.
+    #
+    #   This parameter doesn't trigger a new service deployment.
+    #
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-rebalancing.html
@@ -13363,6 +19088,8 @@ module Aws::ECS
     #
     # @!attribute [rw] network_configuration
     #   An object representing the network configuration for the service.
+    #
+    #   This parameter triggers a new service deployment.
     #   @return [Types::NetworkConfiguration]
     #
     # @!attribute [rw] placement_constraints
@@ -13376,6 +19103,8 @@ module Aws::ECS
     #   You can specify a maximum of 10 constraints for each task. This
     #   limit includes constraints in the task definition and those
     #   specified at runtime.
+    #
+    #   This parameter doesn't trigger a new service deployment.
     #   @return [Array<Types::PlacementConstraint>]
     #
     # @!attribute [rw] placement_strategy
@@ -13386,6 +19115,8 @@ module Aws::ECS
     #   remove an existing placement strategy, specify an empty object.
     #
     #   You can specify a maximum of five strategy rules for each service.
+    #
+    #   This parameter doesn't trigger a new service deployment.
     #   @return [Array<Types::PlacementStrategy>]
     #
     # @!attribute [rw] platform_version
@@ -13395,6 +19126,8 @@ module Aws::ECS
     #   platform version is used. For more information, see [Fargate
     #   Platform Versions][1] in the *Amazon Elastic Container Service
     #   Developer Guide*.
+    #
+    #   This parameter triggers a new service deployment.
     #
     #
     #
@@ -13424,7 +19157,16 @@ module Aws::ECS
     #   ECS service scheduler ignores health check status. This grace period
     #   can prevent the service scheduler from marking tasks as unhealthy
     #   and stopping them before they have time to come up.
+    #
+    #   If your service has more running tasks than desired, unhealthy tasks
+    #   in the grace period might be stopped to reach the desired count.
+    #
+    #   This parameter doesn't trigger a new service deployment.
     #   @return [Integer]
+    #
+    # @!attribute [rw] deployment_controller
+    #   The deployment controller to use for the service.
+    #   @return [Types::DeploymentController]
     #
     # @!attribute [rw] enable_execute_command
     #   If `true`, this enables execute command functionality on all task
@@ -13433,6 +19175,8 @@ module Aws::ECS
     #   If you do not want to override the value that was set when the
     #   service was created, you can set this to `null` when performing this
     #   action.
+    #
+    #   This parameter doesn't trigger a new service deployment.
     #   @return [Boolean]
     #
     # @!attribute [rw] enable_ecs_managed_tags
@@ -13445,42 +19189,52 @@ module Aws::ECS
     #   update the tags on all tasks, set `forceNewDeployment` to `true`, so
     #   that Amazon ECS starts new tasks with the updated tags.
     #
+    #   This parameter doesn't trigger a new service deployment.
+    #
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-using-tags.html
     #   @return [Boolean]
     #
     # @!attribute [rw] load_balancers
-    #   A list of Elastic Load Balancing load balancer objects. It contains
+    #   <note markdown="1"> You must have a service-linked role when you
+    #   update this property
+    #
+    #    </note>
+    #
+    #    A list of Elastic Load Balancing load balancer objects. It contains
     #   the load balancer name, the container name, and the container port
     #   to access from the load balancer. The container name is as it
     #   appears in a container definition.
     #
-    #   When you add, update, or remove a load balancer configuration,
+    #    When you add, update, or remove a load balancer configuration,
     #   Amazon ECS starts new tasks with the updated Elastic Load Balancing
     #   configuration, and then stops the old tasks when the new tasks are
     #   running.
     #
-    #   For services that use rolling updates, you can add, update, or
+    #    For services that use rolling updates, you can add, update, or
     #   remove Elastic Load Balancing target groups. You can update from a
     #   single target group to multiple target groups and from multiple
     #   target groups to a single target group.
     #
-    #   For services that use blue/green deployments, you can update Elastic
+    #    For services that use blue/green deployments, you can update
+    #   Elastic
     #   Load Balancing target groups by using ` CreateDeployment ` through
     #   CodeDeploy. Note that multiple target groups are not supported for
     #   blue/green deployments. For more information see [Register multiple
     #   target groups with a service][1] in the *Amazon Elastic Container
     #   Service Developer Guide*.
     #
-    #   For services that use the external deployment controller, you can
+    #    For services that use the external deployment controller, you can
     #   add, update, or remove load balancers by using [CreateTaskSet][2].
     #   Note that multiple target groups are not supported for external
     #   deployments. For more information see [Register multiple target
     #   groups with a service][1] in the *Amazon Elastic Container Service
     #   Developer Guide*.
     #
-    #   You can remove existing `loadBalancers` by passing an empty list.
+    #    You can remove existing `loadBalancers` by passing an empty list.
+    #
+    #    This parameter triggers a new service deployment.
     #
     #
     #
@@ -13496,23 +19250,36 @@ module Aws::ECS
     #   Only tasks launched after the update will reflect the update. To
     #   update the tags on all tasks, set `forceNewDeployment` to `true`, so
     #   that Amazon ECS starts new tasks with the updated tags.
+    #
+    #   This parameter doesn't trigger a new service deployment.
     #   @return [String]
     #
     # @!attribute [rw] service_registries
-    #   The details for the service discovery registries to assign to this
-    #   service. For more information, see [Service Discovery][1].
+    #   <note markdown="1"> You must have a service-linked role when you
+    #   update this property.
     #
-    #   When you add, update, or remove the service registries
+    #    For more information about the role see the `CreateService` request
+    #   parameter [ `role` ][1].
+    #
+    #    </note>
+    #
+    #    The details for the service discovery registries to assign to this
+    #   service. For more information, see [Service Discovery][2].
+    #
+    #    When you add, update, or remove the service registries
     #   configuration, Amazon ECS starts new tasks with the updated service
     #   registries configuration, and then stops the old tasks when the new
     #   tasks are running.
     #
-    #   You can remove existing `serviceRegistries` by passing an empty
+    #    You can remove existing `serviceRegistries` by passing an empty
     #   list.
     #
+    #    This parameter triggers a new service deployment.
     #
     #
-    #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-discovery.html
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_CreateService.html#ECS-CreateService-request-role
+    #   [2]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-discovery.html
     #   @return [Array<Types::ServiceRegistry>]
     #
     # @!attribute [rw] service_connect_configuration
@@ -13529,6 +19296,8 @@ module Aws::ECS
     #   Connect][1] in the *Amazon Elastic Container Service Developer
     #   Guide*.
     #
+    #   This parameter triggers a new service deployment.
+    #
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-connect.html
@@ -13543,6 +19312,8 @@ module Aws::ECS
     #   configuration differs from the existing one, it triggers a new
     #   deployment.
     #
+    #   This parameter triggers a new service deployment.
+    #
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_ServiceManagedEBSVolumeConfiguration.html
@@ -13551,7 +19322,16 @@ module Aws::ECS
     # @!attribute [rw] vpc_lattice_configurations
     #   An object representing the VPC Lattice configuration for the service
     #   being updated.
+    #
+    #   This parameter triggers a new service deployment.
     #   @return [Array<Types::VpcLatticeConfiguration>]
+    #
+    # @!attribute [rw] monitoring
+    #   The optional monitoring configuration for the service, which defines
+    #   the resolution for the service-level `CPUUtilization` and
+    #   `MemoryUtilization` Amazon CloudWatch metrics. When not specified,
+    #   Amazon ECS uses the default resolution of `60` seconds.
+    #   @return [Types::MonitoringConfiguration]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/UpdateServiceRequest AWS API Documentation
     #
@@ -13569,6 +19349,7 @@ module Aws::ECS
       :platform_version,
       :force_new_deployment,
       :health_check_grace_period_seconds,
+      :deployment_controller,
       :enable_execute_command,
       :enable_ecs_managed_tags,
       :load_balancers,
@@ -13576,13 +19357,27 @@ module Aws::ECS
       :service_registries,
       :service_connect_configuration,
       :volume_configurations,
-      :vpc_lattice_configurations)
+      :vpc_lattice_configurations,
+      :monitoring)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # <zonbook />
+    #
+    # <xhtml />
+    #
     # @!attribute [rw] service
     #   The full description of your service following the update call.
+    #
+    #   The response includes a `lifecycleHookDetails` field, which is an
+    #   empty array when the service is created or updated. The values are
+    #   populated when a lifecycle hook executes and are available as part
+    #   of the service deployment details ([DescribeServiceDeployments][1]).
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_DescribeServiceDeployments.html
     #   @return [Types::Service]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/UpdateServiceResponse AWS API Documentation
@@ -13699,6 +19494,77 @@ module Aws::ECS
       include Aws::Structure
     end
 
+    # An object that describes an Express service to be updated.
+    #
+    # @!attribute [rw] service_arn
+    #   The ARN of the Express service that is being updated.
+    #   @return [String]
+    #
+    # @!attribute [rw] cluster
+    #   The cluster associated with the Express service that is being
+    #   updated.
+    #   @return [String]
+    #
+    # @!attribute [rw] service_name
+    #   The name of the Express service that is being updated.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the Express service that is being updated.
+    #   @return [Types::ExpressGatewayServiceStatus]
+    #
+    # @!attribute [rw] target_configuration
+    #   The configuration to which the current Express service is being
+    #   updated to.
+    #   @return [Types::ExpressGatewayServiceConfiguration]
+    #
+    # @!attribute [rw] created_at
+    #   The Unix timestamp for when the Express service that is being
+    #   updated was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_at
+    #   The Unix timestamp for when the Express service that is being
+    #   updated was most recently updated.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/UpdatedExpressGatewayService AWS API Documentation
+    #
+    class UpdatedExpressGatewayService < Struct.new(
+      :service_arn,
+      :cluster,
+      :service_name,
+      :status,
+      :target_configuration,
+      :created_at,
+      :updated_at)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The minimum and maximum number of vCPUs for instance type selection.
+    # This allows you to specify a range of vCPU counts that meet your
+    # workload requirements.
+    #
+    # @!attribute [rw] min
+    #   The minimum number of vCPUs. Instance types with fewer vCPUs than
+    #   this value are excluded from selection.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max
+    #   The maximum number of vCPUs. Instance types with more vCPUs than
+    #   this value are excluded from selection.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/VCpuCountRangeRequest AWS API Documentation
+    #
+    class VCpuCountRangeRequest < Struct.new(
+      :min,
+      :max)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The Docker and Amazon ECS container agent version information about a
     # container instance.
     #
@@ -13712,7 +19578,7 @@ module Aws::ECS
     #
     #
     #
-    #   [1]: https://github.com/aws/amazon-ecs-agent/commits/master
+    #   [1]: https://github.com/aws/amazon-ecs-agent
     #   @return [String]
     #
     # @!attribute [rw] docker_version
@@ -13735,10 +19601,10 @@ module Aws::ECS
     # only one volume configured at launch is supported. Each volume defined
     # in the volume configuration may only specify a `name` and one of
     # either `configuredAtLaunch`, `dockerVolumeConfiguration`,
-    # `efsVolumeConfiguration`, `fsxWindowsFileServerVolumeConfiguration`,
-    # or `host`. If an empty volume configuration is specified, by default
-    # Amazon ECS uses a host volume. For more information, see [Using data
-    # volumes in tasks][1].
+    # `efsVolumeConfiguration`, `s3filesVolumeConfiguration`,
+    # `fsxWindowsFileServerVolumeConfiguration`, or `host`. If an empty
+    # volume configuration is specified, by default Amazon ECS uses a host
+    # volume. For more information, see [Using data volumes in tasks][1].
     #
     #
     #
@@ -13758,6 +19624,9 @@ module Aws::ECS
     #   container definition.
     #
     #   When a volume is using the `efsVolumeConfiguration`, the name is
+    #   required.
+    #
+    #   When a volume is using the `s3filesVolumeConfiguration`, the name is
     #   required.
     #   @return [String]
     #
@@ -13793,6 +19662,11 @@ module Aws::ECS
     #   System file system for task storage.
     #   @return [Types::EFSVolumeConfiguration]
     #
+    # @!attribute [rw] s3files_volume_configuration
+    #   This parameter is specified when you use an Amazon S3 Files file
+    #   system for task storage.
+    #   @return [Types::S3FilesVolumeConfiguration]
+    #
     # @!attribute [rw] fsx_windows_file_server_volume_configuration
     #   This parameter is specified when you use Amazon FSx for Windows File
     #   Server file system for task storage.
@@ -13817,6 +19691,7 @@ module Aws::ECS
       :host,
       :docker_volume_configuration,
       :efs_volume_configuration,
+      :s3files_volume_configuration,
       :fsx_windows_file_server_volume_configuration,
       :configured_at_launch)
       SENSITIVE = []
@@ -13852,7 +19727,7 @@ module Aws::ECS
     #
     # @!attribute [rw] role_arn
     #   The ARN of the IAM role to associate with this VPC Lattice
-    #   configuration. This is the Amazon ECS  infrastructure IAM role that
+    #   configuration. This is the Amazon ECS infrastructure IAM role that
     #   is used to manage your VPC Lattice infrastructure.
     #   @return [String]
     #

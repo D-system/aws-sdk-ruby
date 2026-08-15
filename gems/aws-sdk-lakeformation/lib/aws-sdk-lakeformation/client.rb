@@ -95,8 +95,8 @@ module Aws::LakeFormation
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::LakeFormation
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::LakeFormation
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::LakeFormation
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::LakeFormation
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::LakeFormation
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::LakeFormation
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::LakeFormation
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -589,7 +593,17 @@ module Aws::LakeFormation
     # virtual API `GetDataAccess`. Therefore, all SAML roles that can be
     # assumed via `AssumeDecoratedRoleWithSAML` must at a minimum include
     # `lakeformation:GetDataAccess` in their role policies. A typical IAM
-    # policy attached to such a role would look as follows:
+    # policy attached to such a role would include the following actions:
+    #
+    # * glue:*Database*
+    #
+    # * glue:*Table*
+    #
+    # * glue:*Partition*
+    #
+    # * glue:*UserDefinedFunction*
+    #
+    # * lakeformation:GetDataAccess
     #
     # @option params [required, String] :saml_assertion
     #   A SAML assertion consisting of an assertion statement for the user who
@@ -1138,6 +1152,10 @@ module Aws::LakeFormation
     #   If the `ShareRecipients` value is null or the list is empty, no
     #   resource share is created.
     #
+    # @option params [Array<Types::ServiceIntegrationUnion>] :service_integrations
+    #   A list of service integrations for enabling trusted identity
+    #   propagation with external services such as Redshift.
+    #
     # @return [Types::CreateLakeFormationIdentityCenterConfigurationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateLakeFormationIdentityCenterConfigurationResponse#application_arn #application_arn} => String
@@ -1154,6 +1172,17 @@ module Aws::LakeFormation
     #     share_recipients: [
     #       {
     #         data_lake_principal_identifier: "DataLakePrincipalString",
+    #       },
+    #     ],
+    #     service_integrations: [
+    #       {
+    #         redshift: [
+    #           {
+    #             redshift_connect: {
+    #               authorization: "ENABLED", # required, accepts ENABLED, DISABLED
+    #             },
+    #           },
+    #         ],
     #       },
     #     ],
     #   })
@@ -1296,12 +1325,13 @@ module Aws::LakeFormation
       req.send_request(options)
     end
 
-    # Deletes the specified LF-tag given a key name. If the input parameter
-    # tag key was not found, then the operation will throw an exception.
-    # When you delete an LF-tag, the `LFTagPolicy` attached to the LF-tag
-    # becomes invalid. If the deleted LF-tag was still assigned to any
-    # resource, the tag policy attach to the deleted LF-tag will no longer
-    # be applied to the resource.
+    # Deletes an LF-tag by its key name. The operation fails if the
+    # specified tag key doesn't exist. When you delete an LF-Tag:
+    #
+    # * The associated LF-Tag policy becomes invalid.
+    #
+    # * Resources that had this tag assigned will no longer have the tag
+    #   policy applied to them.
     #
     # @option params [String] :catalog_id
     #   The identifier for the Data Catalog. By default, the account ID. The
@@ -1575,6 +1605,7 @@ module Aws::LakeFormation
     #   * {Types::DescribeLakeFormationIdentityCenterConfigurationResponse#application_arn #application_arn} => String
     #   * {Types::DescribeLakeFormationIdentityCenterConfigurationResponse#external_filtering #external_filtering} => Types::ExternalFilteringConfiguration
     #   * {Types::DescribeLakeFormationIdentityCenterConfigurationResponse#share_recipients #share_recipients} => Array&lt;Types::DataLakePrincipal&gt;
+    #   * {Types::DescribeLakeFormationIdentityCenterConfigurationResponse#service_integrations #service_integrations} => Array&lt;Types::ServiceIntegrationUnion&gt;
     #   * {Types::DescribeLakeFormationIdentityCenterConfigurationResponse#resource_share #resource_share} => String
     #
     # @example Request syntax with placeholder values
@@ -1593,6 +1624,9 @@ module Aws::LakeFormation
     #   resp.external_filtering.authorized_targets[0] #=> String
     #   resp.share_recipients #=> Array
     #   resp.share_recipients[0].data_lake_principal_identifier #=> String
+    #   resp.service_integrations #=> Array
+    #   resp.service_integrations[0].redshift #=> Array
+    #   resp.service_integrations[0].redshift[0].redshift_connect.authorization #=> String, one of "ENABLED", "DISABLED"
     #   resp.resource_share #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lakeformation-2017-03-31/DescribeLakeFormationIdentityCenterConfiguration AWS API Documentation
@@ -1628,6 +1662,8 @@ module Aws::LakeFormation
     #   resp.resource_info.with_federation #=> Boolean
     #   resp.resource_info.hybrid_access_enabled #=> Boolean
     #   resp.resource_info.with_privileged_access #=> Boolean
+    #   resp.resource_info.verification_status #=> String, one of "VERIFIED", "VERIFICATION_FAILED", "NOT_VERIFIED"
+    #   resp.resource_info.expected_resource_owner_account #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lakeformation-2017-03-31/DescribeResource AWS API Documentation
     #
@@ -2257,6 +2293,94 @@ module Aws::LakeFormation
     # @param [Hash] params ({})
     def get_table_objects(params = {}, options = {})
       req = build_request(:get_table_objects, params)
+      req.send_request(options)
+    end
+
+    # Allows a user or application in a secure environment to access data in
+    # a specific Amazon S3 location registered with Lake Formation by
+    # providing temporary scoped credentials that are limited to the
+    # requested data location and the caller's authorized access level.
+    #
+    # `GetDataAccess` is logged in CloudTrail whenever a principal requests
+    # temporary data location credentials to access data in a data lake
+    # location that is registered with Lake Formation.
+    #
+    # The API operation returns an error in the following scenarios:
+    #
+    # * The data location is not registered with Lake Formation.
+    #
+    # * No Glue table is associated with the data location.
+    #
+    # * The caller doesn't have required permissions on the associated
+    #   table. The caller must have `SELECT` or `SUPER` permissions on the
+    #   associated table, and credential vending for full table access must
+    #   be enabled in the data lake settings.
+    #
+    #   For more information, see [Application integration for full table
+    #   access][1].
+    #
+    # * The data location is in a different Amazon Web Services Region. Lake
+    #   Formation doesn't support cross-Region access when vending
+    #   credentials for a data location. Lake Formation only supports Amazon
+    #   S3 paths registered within the same Region as the API call.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/lake-formation/latest/dg/full-table-credential-vending.html
+    #
+    # @option params [Integer] :duration_seconds
+    #   The time period, between 900 and 43,200 seconds, for the timeout of
+    #   the temporary credentials.
+    #
+    # @option params [Types::AuditContext] :audit_context
+    #   A structure used to include auditing information on the privileged
+    #   API.
+    #
+    # @option params [Array<String>] :data_locations
+    #   The Amazon S3 data location that you want to access.
+    #
+    # @option params [String] :credentials_scope
+    #   The credential scope is determined by the caller's Lake Formation
+    #   permission on the associated table. Credential scope can be either:
+    #
+    #   * READ - Provides read-only access to the data location.
+    #
+    #   * READ\_WRITE - Provides both read and write access to the data
+    #     location.
+    #
+    # @return [Types::GetTemporaryDataLocationCredentialsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetTemporaryDataLocationCredentialsResponse#credentials #credentials} => Types::TemporaryCredentials
+    #   * {Types::GetTemporaryDataLocationCredentialsResponse#accessible_data_locations #accessible_data_locations} => Array&lt;String&gt;
+    #   * {Types::GetTemporaryDataLocationCredentialsResponse#credentials_scope #credentials_scope} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_temporary_data_location_credentials({
+    #     duration_seconds: 1,
+    #     audit_context: {
+    #       additional_audit_context: "AuditContextString",
+    #     },
+    #     data_locations: ["PathString"],
+    #     credentials_scope: "READ", # accepts READ, READWRITE
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.credentials.access_key_id #=> String
+    #   resp.credentials.secret_access_key #=> String
+    #   resp.credentials.session_token #=> String
+    #   resp.credentials.expiration #=> Time
+    #   resp.accessible_data_locations #=> Array
+    #   resp.accessible_data_locations[0] #=> String
+    #   resp.credentials_scope #=> String, one of "READ", "READWRITE"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/lakeformation-2017-03-31/GetTemporaryDataLocationCredentials AWS API Documentation
+    #
+    # @overload get_temporary_data_location_credentials(params = {})
+    # @param [Hash] params ({})
+    def get_temporary_data_location_credentials(params = {}, options = {})
+      req = build_request(:get_temporary_data_location_credentials, params)
       req.send_request(options)
     end
 
@@ -2937,7 +3061,9 @@ module Aws::LakeFormation
     # for ALTER.
     #
     # This operation returns only those permissions that have been
-    # explicitly granted.
+    # explicitly granted. If both `Principal` and `Resource` parameters are
+    # provided, the response returns effective permissions rather than the
+    # explicitly granted permissions.
     #
     # For information about permissions, see [Security and Access Control to
     # Metadata and Data][1].
@@ -2973,7 +3099,12 @@ module Aws::LakeFormation
     #   The maximum number of results to return.
     #
     # @option params [String] :include_related
-    #   Indicates that related permissions should be included in the results.
+    #   Indicates that related permissions should be included in the results
+    #   when listing permissions on a table resource.
+    #
+    #   Set the field to `TRUE` to show the cell filters on a table resource.
+    #   Default is `FALSE`. The Principal parameter must not be specified when
+    #   requesting cell filter information.
     #
     # @return [Types::ListPermissionsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -3149,6 +3280,8 @@ module Aws::LakeFormation
     #   resp.resource_info_list[0].with_federation #=> Boolean
     #   resp.resource_info_list[0].hybrid_access_enabled #=> Boolean
     #   resp.resource_info_list[0].with_privileged_access #=> Boolean
+    #   resp.resource_info_list[0].verification_status #=> String, one of "VERIFIED", "VERIFICATION_FAILED", "NOT_VERIFIED"
+    #   resp.resource_info_list[0].expected_resource_owner_account #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lakeformation-2017-03-31/ListResources AWS API Documentation
@@ -3410,6 +3543,10 @@ module Aws::LakeFormation
     #   Grants the calling principal the permissions to perform all supported
     #   Lake Formation operations on the registered data location.
     #
+    # @option params [String] :expected_resource_owner_account
+    #   The Amazon Web Services account that owns the Glue tables associated
+    #   with specific Amazon S3 locations.
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
@@ -3421,6 +3558,7 @@ module Aws::LakeFormation
     #     with_federation: false,
     #     hybrid_access_enabled: false,
     #     with_privileged_access: false,
+    #     expected_resource_owner_account: "AccountIdString",
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lakeformation-2017-03-31/RegisterResource AWS API Documentation
@@ -4020,6 +4158,10 @@ module Aws::LakeFormation
     #   share recipients list will be cleared, and the resource share will be
     #   deleted.
     #
+    # @option params [Array<Types::ServiceIntegrationUnion>] :service_integrations
+    #   A list of service integrations for enabling trusted identity
+    #   propagation with external services such as Redshift.
+    #
     # @option params [String] :application_status
     #   Allows to enable or disable the IAM Identity Center connection.
     #
@@ -4037,6 +4179,17 @@ module Aws::LakeFormation
     #     share_recipients: [
     #       {
     #         data_lake_principal_identifier: "DataLakePrincipalString",
+    #       },
+    #     ],
+    #     service_integrations: [
+    #       {
+    #         redshift: [
+    #           {
+    #             redshift_connect: {
+    #               authorization: "ENABLED", # required, accepts ENABLED, DISABLED
+    #             },
+    #           },
+    #         ],
     #       },
     #     ],
     #     application_status: "ENABLED", # accepts ENABLED, DISABLED
@@ -4073,6 +4226,10 @@ module Aws::LakeFormation
     #   can be managed by both Lake Formation permissions as well as Amazon S3
     #   bucket policies.
     #
+    # @option params [String] :expected_resource_owner_account
+    #   The Amazon Web Services account that owns the Glue tables associated
+    #   with specific Amazon S3 locations.
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
@@ -4082,6 +4239,7 @@ module Aws::LakeFormation
     #     resource_arn: "ResourceArnString", # required
     #     with_federation: false,
     #     hybrid_access_enabled: false,
+    #     expected_resource_owner_account: "AccountIdString",
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lakeformation-2017-03-31/UpdateResource AWS API Documentation
@@ -4210,7 +4368,7 @@ module Aws::LakeFormation
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-lakeformation'
-      context[:gem_version] = '1.69.0'
+      context[:gem_version] = '1.93.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

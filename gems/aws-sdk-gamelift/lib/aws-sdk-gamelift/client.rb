@@ -95,8 +95,8 @@ module Aws::GameLift
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::GameLift
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::GameLift
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::GameLift
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::GameLift
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::GameLift
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::GameLift
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::GameLift
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -477,6 +481,9 @@ module Aws::GameLift
 
     # @!group API Operations
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Registers a player's acceptance or rejection of a proposed FlexMatch
     # match. A matchmaking configuration may require player acceptance; if
     # so, then matches built with that configuration cannot be completed
@@ -491,8 +498,8 @@ module Aws::GameLift
     #
     # To register acceptance, specify the ticket ID, one or more players,
     # and an acceptance response. When all players have accepted, Amazon
-    # GameLift advances the matchmaking tickets to status `PLACING`, and
-    # attempts to create a new game session for the match.
+    # GameLift Servers advances the matchmaking tickets to status `PLACING`,
+    # and attempts to create a new game session for the match.
     #
     # If any player rejects the match, or if acceptances are not received
     # before a specified timeout, the proposed match is dropped. Each
@@ -546,24 +553,23 @@ module Aws::GameLift
       req.send_request(options)
     end
 
-    # **This operation is used with the Amazon GameLift FleetIQ solution and
-    # game server groups.**
+    # **This API works with the following fleet types:** EC2 (FleetIQ)
     #
     # Locates an available game server and temporarily reserves it to host
     # gameplay and players. This operation is called from a game client or
     # client service (such as a matchmaker) to request hosting resources for
-    # a new game session. In response, Amazon GameLift FleetIQ locates an
-    # available game server, places it in `CLAIMED` status for 60 seconds,
-    # and returns connection information that players can use to connect to
-    # the game server.
+    # a new game session. In response, Amazon GameLift Servers FleetIQ
+    # locates an available game server, places it in `CLAIMED` status for 60
+    # seconds, and returns connection information that players can use to
+    # connect to the game server.
     #
     # To claim a game server, identify a game server group. You can also
     # specify a game server ID, although this approach bypasses Amazon
-    # GameLift FleetIQ placement optimization. Optionally, include game data
-    # to pass to the game server at the start of a game session, such as a
-    # game map or player information. Add filter options to further restrict
-    # how a game server is chosen, such as only allowing game servers on
-    # `ACTIVE` instances to be claimed.
+    # GameLift Servers FleetIQ placement optimization. Optionally, include
+    # game data to pass to the game server at the start of a game session,
+    # such as a game map or player information. Add filter options to
+    # further restrict how a game server is chosen, such as only allowing
+    # game servers on `ACTIVE` instances to be claimed.
     #
     # When a game server is successfully claimed, connection information is
     # returned. A claimed game server's utilization status remains
@@ -587,7 +593,7 @@ module Aws::GameLift
     #
     # **Learn more**
     #
-    # [Amazon GameLift FleetIQ Guide][1]
+    # [Amazon GameLift Servers FleetIQ Guide][1]
     #
     #
     #
@@ -596,13 +602,13 @@ module Aws::GameLift
     # @option params [required, String] :game_server_group_name
     #   A unique identifier for the game server group where the game server is
     #   running. If you are not specifying a game server to claim, this value
-    #   identifies where you want Amazon GameLift FleetIQ to look for an
-    #   available game server to claim.
+    #   identifies where you want Amazon GameLift Servers FleetIQ to look for
+    #   an available game server to claim.
     #
     # @option params [String] :game_server_id
     #   A custom string that uniquely identifies the game server to claim. If
-    #   this parameter is left empty, Amazon GameLift FleetIQ searches for an
-    #   available game server in the specified game server group.
+    #   this parameter is left empty, Amazon GameLift Servers FleetIQ searches
+    #   for an available game server in the specified game server group.
     #
     # @option params [String] :game_server_data
     #   A set of custom game server properties, formatted as a single string
@@ -650,17 +656,20 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Creates an alias for a fleet. In most situations, you can use an alias
     # ID in place of a fleet ID. An alias provides a level of abstraction
     # for a fleet that is useful when redirecting player traffic from one
     # fleet to another, such as when updating your game build.
     #
-    # Amazon GameLift supports two types of routing strategies for aliases:
-    # simple and terminal. A simple alias points to an active fleet. A
-    # terminal alias is used to display messaging or link to a URL instead
-    # of routing players to an active fleet. For example, you might use a
-    # terminal alias when a game version is no longer supported and you want
-    # to direct players to an upgrade site.
+    # Amazon GameLift Servers supports two types of routing strategies for
+    # aliases: simple and terminal. A simple alias points to an active
+    # fleet. A terminal alias is used to display messaging or link to a URL
+    # instead of routing players to an active fleet. For example, you might
+    # use a terminal alias when a game version is no longer supported and
+    # you want to direct players to an upgrade site.
     #
     # To create a fleet alias, specify an alias name, routing strategy, and
     # optional description. Each simple alias can point to only one fleet,
@@ -741,33 +750,37 @@ module Aws::GameLift
       req.send_request(options)
     end
 
-    # Creates a new Amazon GameLift build resource for your game server
-    # binary files. Combine game server binaries into a zip file for use
-    # with Amazon GameLift.
+    # **This API works with the following fleet types:** EC2, Anywhere
     #
-    # When setting up a new game build for Amazon GameLift, we recommend
-    # using the CLI command <b> <a
+    # Creates a new Amazon GameLift Servers build resource for your game
+    # server binary files. Combine game server binaries into a zip file for
+    # use with Amazon GameLift Servers.
+    #
+    # When setting up a new game build for Amazon GameLift Servers, we
+    # recommend using the CLI command <b> <a
     # href="https://docs.aws.amazon.com/cli/latest/reference/gamelift/upload-build.html">upload-build</a>
     # </b>. This helper command combines two tasks: (1) it uploads your
-    # build files from a file directory to an Amazon GameLift Amazon S3
-    # location, and (2) it creates a new build resource.
+    # build files from a file directory to an Amazon GameLift Servers Amazon
+    # S3 location, and (2) it creates a new build resource.
     #
     # You can use the `CreateBuild` operation in the following scenarios:
     #
     # * Create a new game build with build files that are in an Amazon S3
     #   location under an Amazon Web Services account that you control. To
-    #   use this option, you give Amazon GameLift access to the Amazon S3
-    #   bucket. With permissions in place, specify a build name, operating
-    #   system, and the Amazon S3 storage location of your game build.
+    #   use this option, you give Amazon GameLift Servers access to the
+    #   Amazon S3 bucket. With permissions in place, specify a build name,
+    #   operating system, and the Amazon S3 storage location of your game
+    #   build.
     #
-    # * Upload your build files to a Amazon GameLift Amazon S3 location. To
-    #   use this option, specify a build name and operating system. This
-    #   operation creates a new build resource and also returns an Amazon S3
-    #   location with temporary access credentials. Use the credentials to
-    #   manually upload your build files to the specified Amazon S3
-    #   location. For more information, see [Uploading Objects][1] in the
-    #   *Amazon S3 Developer Guide*. After you upload build files to the
-    #   Amazon GameLift Amazon S3 location, you can't update them.
+    # * Upload your build files to a Amazon GameLift Servers Amazon S3
+    #   location. To use this option, specify a build name and operating
+    #   system. This operation creates a new build resource and also returns
+    #   an Amazon S3 location with temporary access credentials. Use the
+    #   credentials to manually upload your build files to the specified
+    #   Amazon S3 location. For more information, see [Uploading Objects][1]
+    #   in the *Amazon S3 Developer Guide*. After you upload build files to
+    #   the Amazon GameLift Servers Amazon S3 location, you can't update
+    #   them.
     #
     # If successful, this operation creates a new build resource with a
     # unique build ID and places it in `INITIALIZED` status. A build must be
@@ -801,11 +814,12 @@ module Aws::GameLift
     #   this parameter only when creating a build with files stored in an
     #   Amazon S3 bucket that you own. The storage location must specify an
     #   Amazon S3 bucket name and key. The location must also specify a role
-    #   ARN that you set up to allow Amazon GameLift to access your Amazon S3
-    #   bucket. The S3 bucket and your new build must be in the same Region.
+    #   ARN that you set up to allow Amazon GameLift Servers to access your
+    #   Amazon S3 bucket. The S3 bucket and your new build must be in the same
+    #   Region.
     #
     #   If a `StorageLocation` is specified, the size of your file can be
-    #   found in your Amazon S3 bucket. Amazon GameLift will report a
+    #   found in your Amazon S3 bucket. Amazon GameLift Servers will report a
     #   `SizeOnDisk` of 0.
     #
     # @option params [String] :operating_system
@@ -816,17 +830,26 @@ module Aws::GameLift
     #   in this request. There is no default value. You can't change a
     #   build's operating system later.
     #
-    #   <note markdown="1"> Amazon Linux 2 (AL2) will reach end of support on 6/30/2025. See more
+    #   <note markdown="1"> Amazon Linux 2 (AL2) will reach end of support on 6/30/2026. See more
     #   details in the [Amazon Linux 2 FAQs][1]. For game servers that are
-    #   hosted on AL2 and use Amazon GameLift server SDK 4.x., first update
-    #   the game server build to server SDK 5.x, and then deploy to AL2023
-    #   instances. See [ Migrate to Amazon GameLift server SDK version 5.][2]
+    #   hosted on AL2 and use server SDK version 4.x for Amazon GameLift
+    #   Servers, first update the game server build to server SDK 5.x, and
+    #   then deploy to AL2023 instances. See [ Migrate to server SDK version
+    #   5.][2]
+    #
+    #    </note>
+    #
+    #   <note markdown="1"> Windows Server 2016 will reach end of support on 1/12/2027. For game
+    #   servers that are hosted on Windows Server 2016 and use server SDK
+    #   version 4.x for Amazon GameLift Servers, first update the game server
+    #   build to server SDK 5.x, and then deploy to Windows Server 2022
+    #   instances. See [ Migrate to server SDK version 5.][2]
     #
     #    </note>
     #
     #
     #
-    #   [1]: https://aws.amazon.com/amazon-linux-2/faqs/
+    #   [1]: http://aws.amazon.com/amazon-linux-2/faqs/
     #   [2]: https://docs.aws.amazon.com/gamelift/latest/developerguide/reference-serversdk5-migration.html
     #
     # @option params [Array<Types::Tag>] :tags
@@ -849,9 +872,9 @@ module Aws::GameLift
     #
     # @option params [String] :server_sdk_version
     #   A server SDK version you used when integrating your game server build
-    #   with Amazon GameLift. For more information see [Integrate games with
-    #   custom game servers][1]. By default Amazon GameLift sets this value to
-    #   `4.0.2`.
+    #   with Amazon GameLift Servers. For more information see [Integrate
+    #   games with custom game servers][1]. By default Amazon GameLift Servers
+    #   sets this value to `4.0.2`.
     #
     #
     #
@@ -874,7 +897,7 @@ module Aws::GameLift
     #       role_arn: "NonEmptyString",
     #       object_version: "NonEmptyString",
     #     },
-    #     operating_system: "WINDOWS_2012", # accepts WINDOWS_2012, AMAZON_LINUX, AMAZON_LINUX_2, WINDOWS_2016, AMAZON_LINUX_2023
+    #     operating_system: "WINDOWS_2012", # accepts WINDOWS_2012, AMAZON_LINUX, AMAZON_LINUX_2, WINDOWS_2016, AMAZON_LINUX_2023, WINDOWS_2022
     #     tags: [
     #       {
     #         key: "TagKey", # required
@@ -892,7 +915,7 @@ module Aws::GameLift
     #   resp.build.version #=> String
     #   resp.build.status #=> String, one of "INITIALIZED", "READY", "FAILED"
     #   resp.build.size_on_disk #=> Integer
-    #   resp.build.operating_system #=> String, one of "WINDOWS_2012", "AMAZON_LINUX", "AMAZON_LINUX_2", "WINDOWS_2016", "AMAZON_LINUX_2023"
+    #   resp.build.operating_system #=> String, one of "WINDOWS_2012", "AMAZON_LINUX", "AMAZON_LINUX_2", "WINDOWS_2016", "AMAZON_LINUX_2023", "WINDOWS_2022"
     #   resp.build.creation_time #=> Time
     #   resp.build.server_sdk_version #=> String
     #   resp.upload_credentials.access_key_id #=> String
@@ -912,23 +935,26 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** Container
+    #
     # Creates a managed fleet of Amazon Elastic Compute Cloud (Amazon EC2)
     # instances to host your containerized game servers. Use this operation
     # to define how to deploy a container architecture onto each fleet
     # instance and configure fleet settings. You can create a container
-    # fleet in any Amazon Web Services Regions that Amazon GameLift supports
-    # for multi-location fleets. A container fleet can be deployed to a
-    # single location or multiple locations. Container fleets are deployed
-    # with Amazon Linux 2023 as the instance operating system.
+    # fleet in any Amazon Web Services Regions that Amazon GameLift Servers
+    # supports for multi-location fleets. A container fleet can be deployed
+    # to a single location or multiple locations. Container fleets are
+    # deployed with Amazon Linux 2023 as the instance operating system.
     #
     # Define the fleet's container architecture using container group
     # definitions. Each fleet can have one of the following container group
     # types:
     #
     # * The game server container group runs your game server build and
-    #   dependent software. Amazon GameLift deploys one or more replicas of
-    #   this container group to each fleet instance. The number of replicas
-    #   depends on the computing capabilities of the fleet instance in use.
+    #   dependent software. Amazon GameLift Servers deploys one or more
+    #   replicas of this container group to each fleet instance. The number
+    #   of replicas depends on the computing capabilities of the fleet
+    #   instance in use.
     #
     # * An optional per-instance container group might be used to run other
     #   software that only needs to run once per instance, such as
@@ -981,17 +1007,31 @@ module Aws::GameLift
     #
     # You can update most of the properties of a fleet, including container
     # group definitions, and deploy the update across all fleet instances.
-    # Use a fleet update to deploy a new game server version update across
-    # the container fleet.
+    # Use [UpdateContainerFleet][2] to deploy a new game server version
+    # update across the container fleet.
+    #
+    # <note markdown="1"> A managed fleet's runtime environment depends on the Amazon Machine
+    # Image (AMI) version it uses. When a new fleet is created, Amazon
+    # GameLift Servers assigns the latest available AMI version to the
+    # fleet, and all compute instances in that fleet are deployed with that
+    # version. To update the AMI version, you must create a new fleet. As a
+    # best practice, we recommend replacing your managed fleets every 30
+    # days to maintain a secure and up-to-date runtime environment for your
+    # hosted game servers. For guidance, see [ Security best practices for
+    # Amazon GameLift Servers][3].
+    #
+    #  </note>
     #
     #
     #
     # [1]: https://docs.aws.amazon.com/gamelift/latest/developerguide/fleets-creating-all.html#fleets-creation-workflow
+    # [2]: https://docs.aws.amazon.com/gamelift/latest/apireference/API_UpdateContainerFleet.html
+    # [3]: https://docs.aws.amazon.com/gameliftservers/latest/developerguide/security-best-practices.html
     #
     # @option params [required, String] :fleet_role_arn
     #   The unique identifier for an Identity and Access Management (IAM) role
     #   with permissions to run your containers on resources that are managed
-    #   by Amazon GameLift. Use an IAM service role with the
+    #   by Amazon GameLift Servers. Use an IAM service role with the
     #   `GameLiftContainerFleetPolicy` managed policy attached. For more
     #   information, see [Set up an IAM service role][1]. You can't change
     #   this fleet property after the fleet is created.
@@ -1047,15 +1087,16 @@ module Aws::GameLift
     #   connection ports map to container ports that are configured in the
     #   fleet's container group definitions.
     #
-    #   By default, Amazon GameLift calculates an optimal port range based on
-    #   your fleet configuration. To use the calculated range, don't set this
-    #   parameter. The values are:
+    #   By default, Amazon GameLift Servers calculates an optimal port range
+    #   based on your fleet configuration. To use the calculated range, don't
+    #   set this parameter. The values are:
     #
     #   * Port range: 4192 to a number calculated based on your fleet
-    #     configuration. Amazon GameLift uses the following formula: `4192 +
-    #     [# of game server container groups per fleet instance] * [# of
-    #     container ports in the game server container group definition] + [#
-    #     of container ports in the game server container group definition]`
+    #     configuration. Amazon GameLift Servers uses the following formula:
+    #     `4192 + [# of game server container groups per fleet instance] * [#
+    #     of container ports in the game server container group definition] +
+    #     [# of container ports in the per instance container group
+    #     definition]`
     #
     #   ^
     #
@@ -1063,10 +1104,15 @@ module Aws::GameLift
     #   setting this parameter, you must use port numbers that match the
     #   fleet's inbound permissions port range.
     #
-    #   <note markdown="1"> If you set values manually, Amazon GameLift no longer calculates a
-    #   port range for you, even if you later remove the manual settings.
+    #   <note markdown="1"> If you set values manually, Amazon GameLift Servers no longer
+    #   calculates a port range for you, even if you later remove the manual
+    #   settings.
     #
     #    </note>
+    #
+    #   The port range must not overlap with the Amazon GameLift Servers
+    #   reserved port range `4092-4191`. This range is reserved for internal
+    #   Amazon GameLift Servers services.
     #
     # @option params [Array<Types::IpPermission>] :instance_inbound_permissions
     #   The IP address ranges and port settings that allow inbound traffic to
@@ -1075,37 +1121,43 @@ module Aws::GameLift
     #   opening ports only when you need them and closing them when you're
     #   finished.
     #
-    #   By default, Amazon GameLift calculates an optimal port range based on
-    #   your fleet configuration. To use the calculated range, don't set this
-    #   parameter. The values are:
+    #   By default, Amazon GameLift Servers calculates an optimal port range
+    #   based on your fleet configuration. To use the calculated range, don't
+    #   set this parameter. The values are:
     #
     #   * Protocol: UDP
     #
     #   * Port range: 4192 to a number calculated based on your fleet
-    #     configuration. Amazon GameLift uses the following formula: `4192 +
-    #     [# of game server container groups per fleet instance] * [# of
-    #     container ports in the game server container group definition] + [#
-    #     of container ports in the game server container group definition]`
+    #     configuration. Amazon GameLift Servers uses the following formula:
+    #     `4192 + [# of game server container groups per fleet instance] * [#
+    #     of container ports in the game server container group definition] +
+    #     [# of container ports in the per instance container group
+    #     definition]`
     #
     #   You can also choose to manually set this parameter. When manually
     #   setting this parameter, you must use port numbers that match the
     #   fleet's connection port range.
     #
-    #   <note markdown="1"> If you set values manually, Amazon GameLift no longer calculates a
-    #   port range for you, even if you later remove the manual settings.
+    #   <note markdown="1"> If you set values manually, Amazon GameLift Servers no longer
+    #   calculates a port range for you, even if you later remove the manual
+    #   settings.
     #
     #    </note>
+    #
+    #   The port range must not overlap with the Amazon GameLift Servers
+    #   reserved port range `4092-4191`. This range is reserved for internal
+    #   Amazon GameLift Servers services.
     #
     # @option params [Integer] :game_server_container_groups_per_instance
     #   The number of times to replicate the game server container group on
     #   each fleet instance.
     #
-    #   By default, Amazon GameLift calculates the maximum number of game
-    #   server container groups that can fit on each instance. This
+    #   By default, Amazon GameLift Servers calculates the maximum number of
+    #   game server container groups that can fit on each instance. This
     #   calculation is based on the CPU and memory resources of the fleet's
     #   instance type). To use the calculated maximum, don't set this
-    #   parameter. If you set this number manually, Amazon GameLift uses your
-    #   value as long as it's less than the calculated maximum.
+    #   parameter. If you set this number manually, Amazon GameLift Servers
+    #   uses your value as long as it's less than the calculated maximum.
     #
     # @option params [String] :instance_type
     #   The Amazon EC2 instance type to use for all instances in the fleet.
@@ -1115,11 +1167,11 @@ module Aws::GameLift
     #   your game servers. This includes including CPU, memory, storage, and
     #   networking capacity.
     #
-    #   By default, Amazon GameLift selects an instance type that fits the
-    #   needs of your container groups and is available in all selected fleet
-    #   locations. You can also choose to manually set this parameter. See
-    #   [Amazon Elastic Compute Cloud Instance Types][1] for detailed
-    #   descriptions of Amazon EC2 instance types.
+    #   By default, Amazon GameLift Servers uses the `c5.large` instance type.
+    #   If this instance type does not have sufficient resources for your
+    #   container groups, you can choose a different instance type that better
+    #   fits your needs. See [Amazon Elastic Compute Cloud Instance Types][1]
+    #   for detailed descriptions of Amazon EC2 instance types.
     #
     #   You can't update this fleet property later.
     #
@@ -1143,12 +1195,12 @@ module Aws::GameLift
     # @option params [Array<Types::LocationConfiguration>] :locations
     #   A set of locations to deploy container fleet instances to. You can add
     #   any Amazon Web Services Region or Local Zone that's supported by
-    #   Amazon GameLift. Provide a list of one or more Amazon Web Services
-    #   Region codes, such as `us-west-2`, or Local Zone names. Also include
-    #   the fleet's home Region, which is the Amazon Web Services Region
-    #   where the fleet is created. For a list of supported Regions and Local
-    #   Zones, see [ Amazon GameLift service locations][1] for managed
-    #   hosting.
+    #   Amazon GameLift Servers. Provide a list of one or more Amazon Web
+    #   Services Region codes, such as `us-west-2`, or Local Zone names. Also
+    #   include the fleet's home Region, which is the Amazon Web Services
+    #   Region where the fleet is created. For a list of supported Regions and
+    #   Local Zones, see [ Amazon GameLift Servers service locations][1] for
+    #   managed hosting.
     #
     #
     #
@@ -1162,11 +1214,11 @@ module Aws::GameLift
     #   group, but you can change this value at any time.
     #
     # @option params [String] :new_game_session_protection_policy
-    #   Determines whether Amazon GameLift can shut down game sessions on the
-    #   fleet that are actively running and hosting players. Amazon GameLift
-    #   might prompt an instance shutdown when scaling down fleet capacity or
-    #   when retiring unhealthy instances. You can also set game session
-    #   protection for individual game sessions using
+    #   Determines whether Amazon GameLift Servers can shut down game sessions
+    #   on the fleet that are actively running and hosting players. Amazon
+    #   GameLift Servers might prompt an instance shutdown when scaling down
+    #   fleet capacity or when retiring unhealthy instances. You can also set
+    #   game session protection for individual game sessions using
     #   [UpdateGameSession](gamelift/latest/apireference/API_UpdateGameSession.html).
     #
     #   * **NoProtection** -- Game sessions can be shut down during active
@@ -1184,8 +1236,9 @@ module Aws::GameLift
     #
     # @option params [Types::LogConfiguration] :log_configuration
     #   A method for collecting container logs for the fleet. Amazon GameLift
-    #   saves all standard output for each container in logs, including game
-    #   session logs. You can select from the following methods:
+    #   Servers saves all standard output for each container in logs,
+    #   including game session logs. You can select from the following
+    #   methods:
     #
     #   * `CLOUDWATCH` -- Send logs to an Amazon CloudWatch log group that you
     #     define. Each container emits a log stream, which is organized in the
@@ -1197,9 +1250,9 @@ module Aws::GameLift
     #
     #   By default, this property is set to `CLOUDWATCH`.
     #
-    #   Amazon GameLift requires permissions to send logs other Amazon Web
-    #   Services services in your account. These permissions are included in
-    #   the IAM fleet role for this container fleet (see `FleetRoleArn)`.
+    #   Amazon GameLift Servers requires permissions to send logs other Amazon
+    #   Web Services services in your account. These permissions are included
+    #   in the IAM fleet role for this container fleet (see `FleetRoleArn)`.
     #
     # @option params [Array<Types::Tag>] :tags
     #   A list of labels to assign to the new fleet resource. Tags are
@@ -1211,6 +1264,43 @@ module Aws::GameLift
     #
     #
     #   [1]: https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html
+    #
+    # @option params [String] :player_gateway_mode
+    #   Configures player gateway for your fleet. Player gateway provides
+    #   benefits such as DDoS protection by rate limiting and validating traﬃc
+    #   before it reaches game servers, hiding game server IP addresses from
+    #   players, and providing updated endpoints when relay endpoints become
+    #   unhealthy.
+    #
+    #   **How it works:** When enabled, game clients connect to relay
+    #   endpoints instead of to your game servers. Player gateway validates
+    #   player gateway tokens and routes traffic to the appropriate game
+    #   server. Your game backend calls [GetPlayerConnectionDetails][1] to
+    #   retrieve relay endpoints and player gateway tokens for your game
+    #   clients. To learn more about this topic, see [DDoS protection with
+    #   Amazon GameLift Servers player gateway][2].
+    #
+    #   Possible values include:
+    #
+    #   * `DISABLED` (default) -- Game clients connect to the game server
+    #     endpoint. Use this when you do not intend to integrate your game
+    #     with player gateway.
+    #
+    #   * `ENABLED` -- Player gateway is available in fleet locations where it
+    #     is supported. Your game backend can call
+    #     [GetPlayerConnectionDetails][1] to obtain a player gateway token and
+    #     endpoints for game clients.
+    #
+    #   * `REQUIRED` -- Player gateway is available in fleet locations where
+    #     it is supported, and the fleet can only use locations that support
+    #     this feature. Attempting to add a remote location to your fleet
+    #     which does not support player gateway will result in an
+    #     `InvalidRequestException`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/gamelift/latest/apireference/API_GetPlayerConnectionDetails.html
+    #   [2]: https://docs.aws.amazon.com/gameliftservers/latest/developerguide/ddos-protection-intro.html
     #
     # @return [Types::CreateContainerFleetOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1260,6 +1350,7 @@ module Aws::GameLift
     #         value: "TagValue", # required
     #       },
     #     ],
+    #     player_gateway_mode: "DISABLED", # accepts DISABLED, ENABLED, REQUIRED
     #   })
     #
     # @example Response structure
@@ -1289,14 +1380,16 @@ module Aws::GameLift
     #   resp.container_fleet.new_game_session_protection_policy #=> String, one of "NoProtection", "FullProtection"
     #   resp.container_fleet.game_session_creation_limit_policy.new_game_sessions_per_creator #=> Integer
     #   resp.container_fleet.game_session_creation_limit_policy.policy_period_in_minutes #=> Integer
-    #   resp.container_fleet.status #=> String, one of "PENDING", "CREATING", "CREATED", "ACTIVATING", "ACTIVE", "UPDATING", "DELETING"
+    #   resp.container_fleet.status #=> String, one of "PENDING", "CREATING", "CREATED", "ACTIVATING", "ACTIVE", "UPDATING", "DELETING", "EXPIRED"
     #   resp.container_fleet.deployment_details.latest_deployment_id #=> String
     #   resp.container_fleet.log_configuration.log_destination #=> String, one of "NONE", "CLOUDWATCH", "S3"
     #   resp.container_fleet.log_configuration.s3_bucket_name #=> String
     #   resp.container_fleet.log_configuration.log_group_arn #=> String
     #   resp.container_fleet.location_attributes #=> Array
     #   resp.container_fleet.location_attributes[0].location #=> String
-    #   resp.container_fleet.location_attributes[0].status #=> String, one of "PENDING", "CREATING", "CREATED", "ACTIVATING", "ACTIVE", "UPDATING", "DELETING"
+    #   resp.container_fleet.location_attributes[0].status #=> String, one of "PENDING", "CREATING", "CREATED", "ACTIVATING", "ACTIVE", "UPDATING", "DELETING", "EXPIRED"
+    #   resp.container_fleet.location_attributes[0].player_gateway_status #=> String, one of "DISABLED", "ENABLED"
+    #   resp.container_fleet.player_gateway_mode #=> String, one of "DISABLED", "ENABLED", "REQUIRED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/CreateContainerFleet AWS API Documentation
     #
@@ -1307,14 +1400,16 @@ module Aws::GameLift
       req.send_request(options)
     end
 
-    # Creates a `ContainerGroupDefinition` that describes a set of
-    # containers for hosting your game server with Amazon GameLift managed
-    # containers hosting. An Amazon GameLift container group is similar to a
-    # container task or pod. Use container group definitions when you create
-    # a container fleet with [CreateContainerFleet][1].
+    # **This API works with the following fleet types:** Container
     #
-    # A container group definition determines how Amazon GameLift deploys
-    # your containers to each instance in a container fleet. You can
+    # Creates a `ContainerGroupDefinition` that describes a set of
+    # containers for hosting your game server with Amazon GameLift Servers
+    # managed containers hosting. An Amazon GameLift Servers container group
+    # is similar to a container task or pod. Use container group definitions
+    # when you create a container fleet with [CreateContainerFleet][1].
+    #
+    # A container group definition determines how Amazon GameLift Servers
+    # deploys your containers to each instance in a container fleet. You can
     # maintain multiple versions of a container group definition.
     #
     # There are two types of container groups:
@@ -1350,7 +1445,7 @@ module Aws::GameLift
     #
     # <note markdown="1"> This operation requires Identity and Access Management (IAM)
     # permissions to access container images in Amazon ECR repositories. See
-    # [ IAM permissions for Amazon GameLift][2] for help setting the
+    # [ IAM permissions for Amazon GameLift Servers][2] for help setting the
     # appropriate permissions.
     #
     #  </note>
@@ -1368,11 +1463,11 @@ module Aws::GameLift
     #
     #   * `ContainerGroupType` (`GAME_SERVER`)
     #
-    #   * `OperatingSystem` (omit to use default value)
+    #   * `OperatingSystem`
     #
-    #   * `TotalMemoryLimitMebibytes` (omit to use default value)
+    #   * `TotalMemoryLimitMebibytes`
     #
-    #   * `TotalVcpuLimit `(omit to use default value)
+    #   * `TotalVcpuLimit`
     #
     #   * At least one `GameServerContainerDefinition`
     #
@@ -1382,7 +1477,7 @@ module Aws::GameLift
     #
     #     * `PortConfiguration`
     #
-    #     * `ServerSdkVersion` (omit to use default value)
+    #     * `ServerSdkVersion`
     # * Create a per-instance container group definition. Provide the
     #   following required parameter values:
     #
@@ -1390,11 +1485,11 @@ module Aws::GameLift
     #
     #   * `ContainerGroupType` (`PER_INSTANCE`)
     #
-    #   * `OperatingSystem` (omit to use default value)
+    #   * `OperatingSystem`
     #
-    #   * `TotalMemoryLimitMebibytes` (omit to use default value)
+    #   * `TotalMemoryLimitMebibytes`
     #
-    #   * `TotalVcpuLimit `(omit to use default value)
+    #   * `TotalVcpuLimit`
     #
     #   * At least one `SupportContainerDefinition`
     #
@@ -1422,8 +1517,8 @@ module Aws::GameLift
     #
     # @option params [String] :container_group_type
     #   The type of container group being defined. Container group type
-    #   determines how Amazon GameLift deploys the container group on each
-    #   fleet instance.
+    #   determines how Amazon GameLift Servers deploys the container group on
+    #   each fleet instance.
     #
     #   Default value: `GAME_SERVER`
     #
@@ -1462,17 +1557,18 @@ module Aws::GameLift
     #
     #   Default value: `AMAZON_LINUX_2023`
     #
-    #   <note markdown="1"> Amazon Linux 2 (AL2) will reach end of support on 6/30/2025. See more
+    #   <note markdown="1"> Amazon Linux 2 (AL2) will reach end of support on 6/30/2026. See more
     #   details in the [Amazon Linux 2 FAQs][1]. For game servers that are
-    #   hosted on AL2 and use Amazon GameLift server SDK 4.x, first update the
-    #   game server build to server SDK 5.x, and then deploy to AL2023
-    #   instances. See [ Migrate to Amazon GameLift server SDK version 5.][2]
+    #   hosted on AL2 and use server SDK version 4.x for Amazon GameLift
+    #   Servers, first update the game server build to server SDK 5.x, and
+    #   then deploy to AL2023 instances. See [ Migrate to server SDK version
+    #   5.][2]
     #
     #    </note>
     #
     #
     #
-    #   [1]: https://aws.amazon.com/amazon-linux-2/faqs/
+    #   [1]: http://aws.amazon.com/amazon-linux-2/faqs/
     #   [2]: https://docs.aws.amazon.com/gamelift/latest/developerguide/reference-serversdk5-migration.html
     #
     # @option params [String] :version_description
@@ -1534,6 +1630,9 @@ module Aws::GameLift
     #         ],
     #       },
     #       server_sdk_version: "ServerSdkVersion", # required
+    #       linux_capabilities: {
+    #         include: ["AUDIT_CONTROL"], # accepts AUDIT_CONTROL, AUDIT_WRITE, BLOCK_SUSPEND, CHOWN, DAC_OVERRIDE, DAC_READ_SEARCH, FOWNER, FSETID, IPC_LOCK, IPC_OWNER, KILL, LEASE, LINUX_IMMUTABLE, MAC_ADMIN, MAC_OVERRIDE, MKNOD, NET_ADMIN, NET_BIND_SERVICE, NET_BROADCAST, NET_RAW, SETFCAP, SETGID, SETPCAP, SETUID, SYS_ADMIN, SYS_BOOT, SYS_CHROOT, SYS_MODULE, SYS_NICE, SYS_PACCT, SYS_PTRACE, SYS_RAWIO, SYS_RESOURCE, SYS_TIME, SYS_TTY_CONFIG, SYSLOG, WAKE_ALARM
+    #       },
     #     },
     #     support_container_definitions: [
     #       {
@@ -1577,6 +1676,9 @@ module Aws::GameLift
     #           ],
     #         },
     #         vcpu: 1.0,
+    #         linux_capabilities: {
+    #           include: ["AUDIT_CONTROL"], # accepts AUDIT_CONTROL, AUDIT_WRITE, BLOCK_SUSPEND, CHOWN, DAC_OVERRIDE, DAC_READ_SEARCH, FOWNER, FSETID, IPC_LOCK, IPC_OWNER, KILL, LEASE, LINUX_IMMUTABLE, MAC_ADMIN, MAC_OVERRIDE, MKNOD, NET_ADMIN, NET_BIND_SERVICE, NET_BROADCAST, NET_RAW, SETFCAP, SETGID, SETPCAP, SETUID, SYS_ADMIN, SYS_BOOT, SYS_CHROOT, SYS_MODULE, SYS_NICE, SYS_PACCT, SYS_PTRACE, SYS_RAWIO, SYS_RESOURCE, SYS_TIME, SYS_TTY_CONFIG, SYSLOG, WAKE_ALARM
+    #         },
     #       },
     #     ],
     #     operating_system: "AMAZON_LINUX_2023", # required, accepts AMAZON_LINUX_2023
@@ -1616,6 +1718,8 @@ module Aws::GameLift
     #   resp.container_group_definition.game_server_container_definition.port_configuration.container_port_ranges[0].protocol #=> String, one of "TCP", "UDP"
     #   resp.container_group_definition.game_server_container_definition.resolved_image_digest #=> String
     #   resp.container_group_definition.game_server_container_definition.server_sdk_version #=> String
+    #   resp.container_group_definition.game_server_container_definition.linux_capabilities.include #=> Array
+    #   resp.container_group_definition.game_server_container_definition.linux_capabilities.include[0] #=> String, one of "AUDIT_CONTROL", "AUDIT_WRITE", "BLOCK_SUSPEND", "CHOWN", "DAC_OVERRIDE", "DAC_READ_SEARCH", "FOWNER", "FSETID", "IPC_LOCK", "IPC_OWNER", "KILL", "LEASE", "LINUX_IMMUTABLE", "MAC_ADMIN", "MAC_OVERRIDE", "MKNOD", "NET_ADMIN", "NET_BIND_SERVICE", "NET_BROADCAST", "NET_RAW", "SETFCAP", "SETGID", "SETPCAP", "SETUID", "SYS_ADMIN", "SYS_BOOT", "SYS_CHROOT", "SYS_MODULE", "SYS_NICE", "SYS_PACCT", "SYS_PTRACE", "SYS_RAWIO", "SYS_RESOURCE", "SYS_TIME", "SYS_TTY_CONFIG", "SYSLOG", "WAKE_ALARM"
     #   resp.container_group_definition.support_container_definitions #=> Array
     #   resp.container_group_definition.support_container_definitions[0].container_name #=> String
     #   resp.container_group_definition.support_container_definitions[0].depends_on #=> Array
@@ -1643,6 +1747,8 @@ module Aws::GameLift
     #   resp.container_group_definition.support_container_definitions[0].port_configuration.container_port_ranges[0].protocol #=> String, one of "TCP", "UDP"
     #   resp.container_group_definition.support_container_definitions[0].resolved_image_digest #=> String
     #   resp.container_group_definition.support_container_definitions[0].vcpu #=> Float
+    #   resp.container_group_definition.support_container_definitions[0].linux_capabilities.include #=> Array
+    #   resp.container_group_definition.support_container_definitions[0].linux_capabilities.include[0] #=> String, one of "AUDIT_CONTROL", "AUDIT_WRITE", "BLOCK_SUSPEND", "CHOWN", "DAC_OVERRIDE", "DAC_READ_SEARCH", "FOWNER", "FSETID", "IPC_LOCK", "IPC_OWNER", "KILL", "LEASE", "LINUX_IMMUTABLE", "MAC_ADMIN", "MAC_OVERRIDE", "MKNOD", "NET_ADMIN", "NET_BIND_SERVICE", "NET_BROADCAST", "NET_RAW", "SETFCAP", "SETGID", "SETPCAP", "SETUID", "SYS_ADMIN", "SYS_BOOT", "SYS_CHROOT", "SYS_MODULE", "SYS_NICE", "SYS_PACCT", "SYS_PTRACE", "SYS_RAWIO", "SYS_RESOURCE", "SYS_TIME", "SYS_TTY_CONFIG", "SYSLOG", "WAKE_ALARM"
     #   resp.container_group_definition.version_number #=> Integer
     #   resp.container_group_definition.version_description #=> String
     #   resp.container_group_definition.status #=> String, one of "READY", "COPYING", "FAILED"
@@ -1657,16 +1763,18 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Creates a fleet of compute resources to host your game servers. Use
-    # this operation to set up the following types of fleets based on
-    # compute type:
+    # this operation to set up a fleet for the following compute types:
     #
     # **Managed EC2 fleet**
     #
     # An EC2 fleet is a set of Amazon Elastic Compute Cloud (Amazon EC2)
     # instances. Your game server build is deployed to each fleet instance.
-    # Amazon GameLift manages the fleet's instances and controls the
-    # lifecycle of game server processes, which host game sessions for
+    # Amazon GameLift Servers manages the fleet's instances and controls
+    # the lifecycle of game server processes, which host game sessions for
     # players. EC2 fleets can have instances in multiple locations. Each
     # instance in the fleet is designated a `Compute`.
     #
@@ -1688,22 +1796,34 @@ module Aws::GameLift
     #   configuration
     #
     # If successful, this operation creates a new fleet resource and places
-    # it in `NEW` status while Amazon GameLift initiates the [fleet creation
-    # workflow][1]. To debug your fleet, fetch logs, view performance
-    # metrics or other actions on the fleet, create a development fleet with
-    # port 22/3389 open. As a best practice, we recommend opening ports for
-    # remote access only when you need them and closing them when you're
-    # finished.
+    # it in `NEW` status while Amazon GameLift Servers initiates the [fleet
+    # creation workflow][1]. To debug your fleet, fetch logs, view
+    # performance metrics or other actions on the fleet, create a
+    # development fleet with port 22/3389 open. As a best practice, we
+    # recommend opening ports for remote access only when you need them and
+    # closing them when you're finished.
     #
     # When the fleet status is ACTIVE, you can adjust capacity settings and
     # turn autoscaling on/off for each location.
     #
+    # <note markdown="1"> A managed fleet's runtime environment depends on the Amazon Machine
+    # Image (AMI) version it uses. When a new fleet is created, Amazon
+    # GameLift Servers assigns the latest available AMI version to the
+    # fleet, and all compute instances in that fleet are deployed with that
+    # version. To update the AMI version, you must create a new fleet. As a
+    # best practice, we recommend replacing your managed fleets every 30
+    # days to maintain a secure and up-to-date runtime environment for your
+    # hosted game servers. For guidance, see [ Security best practices for
+    # Amazon GameLift Servers][2].
+    #
+    #  </note>
+    #
     # **Anywhere fleet**
     #
     # An Anywhere fleet represents compute resources that are not owned or
-    # managed by Amazon GameLift. You might create an Anywhere fleet with
-    # your local machine for testing, or use one to host game servers with
-    # on-premises hardware or other game hosting solutions.
+    # managed by Amazon GameLift Servers. You might create an Anywhere fleet
+    # with your local machine for testing, or use one to host game servers
+    # with on-premises hardware or other game hosting solutions.
     #
     # To create an Anywhere fleet, provide these required parameters:
     #
@@ -1719,17 +1839,18 @@ module Aws::GameLift
     #
     # **Learn more**
     #
-    # [Setting up fleets][2]
+    # [Setting up fleets][3]
     #
-    # [Debug fleet creation issues][3]
+    # [Debug fleet creation issues][4]
     #
-    # [Multi-location fleets][2]
+    # [Multi-location fleets][3]
     #
     #
     #
     # [1]: https://docs.aws.amazon.com/gamelift/latest/developerguide/fleets-creating-all.html#fleets-creation-workflow
-    # [2]: https://docs.aws.amazon.com/gamelift/latest/developerguide/fleets-intro.html
-    # [3]: https://docs.aws.amazon.com/gamelift/latest/developerguide/fleets-creating-debug.html#fleets-creating-debug-creation
+    # [2]: https://docs.aws.amazon.com/gameliftservers/latest/developerguide/security-best-practices.html
+    # [3]: https://docs.aws.amazon.com/gamelift/latest/developerguide/fleets-intro.html
+    # [4]: https://docs.aws.amazon.com/gamelift/latest/developerguide/fleets-creating-debug.html#fleets-creating-debug-creation
     #
     # @option params [required, String] :name
     #   A descriptive label that is associated with a fleet. Fleet names do
@@ -1741,16 +1862,16 @@ module Aws::GameLift
     # @option params [String] :build_id
     #   The unique identifier for a custom game server build to be deployed to
     #   a fleet with compute type `EC2`. You can use either the build ID or
-    #   ARN. The build must be uploaded to Amazon GameLift and in `READY`
-    #   status. This fleet property can't be changed after the fleet is
-    #   created.
+    #   ARN. The build must be uploaded to Amazon GameLift Servers and in
+    #   `READY` status. This fleet property can't be changed after the fleet
+    #   is created.
     #
     # @option params [String] :script_id
     #   The unique identifier for a Realtime configuration script to be
     #   deployed to a fleet with compute type `EC2`. You can use either the
-    #   script ID or ARN. Scripts must be uploaded to Amazon GameLift prior to
-    #   creating the fleet. This fleet property can't be changed after the
-    #   fleet is created.
+    #   script ID or ARN. Scripts must be uploaded to Amazon GameLift Servers
+    #   prior to creating the fleet. This fleet property can't be changed
+    #   after the fleet is created.
     #
     # @option params [String] :server_launch_path
     #   **This parameter is no longer used.** Specify a server launch path
@@ -1764,23 +1885,23 @@ module Aws::GameLift
     #
     # @option params [Array<String>] :log_paths
     #   **This parameter is no longer used.** To specify where Amazon GameLift
-    #   should store log files once a server process shuts down, use the
-    #   Amazon GameLift server API `ProcessReady()` and specify one or more
-    #   directory paths in `logParameters`. For more information, see
-    #   [Initialize the server process][1] in the *Amazon GameLift Developer
-    #   Guide*.
+    #   Servers should store log files once a server process shuts down, use
+    #   the Amazon GameLift Servers server API `ProcessReady()` and specify
+    #   one or more directory paths in `logParameters`. For more information,
+    #   see [Initialize the server process][1] in the *Amazon GameLift Servers
+    #   Developer Guide*.
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/gamelift/latest/developerguide/gamelift-sdk-server-api.html#gamelift-sdk-server-initialize
     #
     # @option params [String] :ec2_instance_type
-    #   The Amazon GameLift-supported Amazon EC2 instance type to use with
-    #   managed EC2 fleets. Instance type determines the computing resources
-    #   that will be used to host your game servers, including CPU, memory,
-    #   storage, and networking capacity. See [Amazon Elastic Compute Cloud
-    #   Instance Types][1] for detailed descriptions of Amazon EC2 instance
-    #   types.
+    #   The Amazon GameLift Servers-supported Amazon EC2 instance type to use
+    #   with managed EC2 fleets. Instance type determines the computing
+    #   resources that will be used to host your game servers, including CPU,
+    #   memory, storage, and networking capacity. See [Amazon Elastic Compute
+    #   Cloud Instance Types][1] for detailed descriptions of Amazon EC2
+    #   instance types.
     #
     #
     #
@@ -1794,8 +1915,9 @@ module Aws::GameLift
     #   [https://docs.aws.amazon.com/gamelift/latest/apireference/API\_UpdateFleetPortSettings][1]
     #   to set it before players can connect to game sessions. As a best
     #   practice, we recommend opening ports for remote access only when you
-    #   need them and closing them when you're finished. For Realtime Servers
-    #   fleets, Amazon GameLift automatically sets TCP and UDP ranges.
+    #   need them and closing them when you're finished. For Amazon GameLift
+    #   Servers Realtime fleets, Amazon GameLift Servers automatically sets
+    #   TCP and UDP ranges.
     #
     #
     #
@@ -1818,8 +1940,8 @@ module Aws::GameLift
     #   Instructions for how to launch and run server processes on the fleet.
     #   Set runtime configuration for managed EC2 fleets. For an Anywhere
     #   fleets, set this parameter only if the fleet is running the Amazon
-    #   GameLift Agent. The runtime configuration defines one or more server
-    #   process configurations. Each server process identifies a game
+    #   GameLift Servers Agent. The runtime configuration defines one or more
+    #   server process configurations. Each server process identifies a game
     #   executable or Realtime script file and the number of processes to run
     #   concurrently.
     #
@@ -1842,17 +1964,17 @@ module Aws::GameLift
     #   metric group at a time.
     #
     # @option params [String] :peer_vpc_aws_account_id
-    #   Used when peering your Amazon GameLift fleet with a VPC, the unique
-    #   identifier for the Amazon Web Services account that owns the VPC. You
-    #   can find your account ID in the Amazon Web Services Management Console
-    #   under account settings.
+    #   Used when peering your Amazon GameLift Servers fleet with a VPC, the
+    #   unique identifier for the Amazon Web Services account that owns the
+    #   VPC. You can find your account ID in the Amazon Web Services
+    #   Management Console under account settings.
     #
     # @option params [String] :peer_vpc_id
     #   A unique identifier for a VPC with resources to be accessed by your
-    #   Amazon GameLift fleet. The VPC must be in the same Region as your
-    #   fleet. To look up a VPC ID, use the [VPC Dashboard][1] in the Amazon
-    #   Web Services Management Console. Learn more about VPC peering in [VPC
-    #   Peering with Amazon GameLift Fleets][2].
+    #   Amazon GameLift Servers fleet. The VPC must be in the same Region as
+    #   your fleet. To look up a VPC ID, use the [VPC Dashboard][1] in the
+    #   Amazon Web Services Management Console. Learn more about VPC peering
+    #   in [VPC Peering with Amazon GameLift Servers Fleets][2].
     #
     #
     #
@@ -1886,11 +2008,12 @@ module Aws::GameLift
     #   [2]: https://docs.aws.amazon.com/gamelift/latest/developerguide/gamelift-sdk-server-resources.html
     #
     # @option params [Types::CertificateConfiguration] :certificate_configuration
-    #   Prompts Amazon GameLift to generate a TLS/SSL certificate for the
-    #   fleet. Amazon GameLift uses the certificates to encrypt traffic
-    #   between game clients and the game servers running on Amazon GameLift.
-    #   By default, the `CertificateConfiguration` is `DISABLED`. You can't
-    #   change this property after you create the fleet.
+    #   Prompts Amazon GameLift Servers to generate a TLS/SSL certificate for
+    #   the fleet. Amazon GameLift Servers uses the certificates to encrypt
+    #   traffic between game clients and the game servers running on Amazon
+    #   GameLift Servers. By default, the `CertificateConfiguration` is
+    #   `DISABLED`. You can't change this property after you create the
+    #   fleet.
     #
     #   Certificate Manager (ACM) certificates expire after 13 months.
     #   Certificate expiration can cause fleets to fail, preventing players
@@ -1915,12 +2038,12 @@ module Aws::GameLift
     #   as a multi-location fleet. Use this parameter when creating a fleet in
     #   Amazon Web Services Regions that support multiple locations. You can
     #   add any Amazon Web Services Region or Local Zone that's supported by
-    #   Amazon GameLift. Provide a list of one or more Amazon Web Services
-    #   Region codes, such as `us-west-2`, or Local Zone names. When using
-    #   this parameter, Amazon GameLift requires you to include your home
-    #   location in the request. For a list of supported Regions and Local
-    #   Zones, see [ Amazon GameLift service locations][1] for managed
-    #   hosting.
+    #   Amazon GameLift Servers. Provide a list of one or more Amazon Web
+    #   Services Region codes, such as `us-west-2`, or Local Zone names. When
+    #   using this parameter, Amazon GameLift Servers requires you to include
+    #   your home location in the request. For a list of supported Regions and
+    #   Local Zones, see [ Amazon GameLift Servers service locations][1] for
+    #   managed hosting.
     #
     #
     #
@@ -1948,21 +2071,63 @@ module Aws::GameLift
     #     type, you can also set the `AnywhereConfiguration` parameter.
     #
     # @option params [Types::AnywhereConfiguration] :anywhere_configuration
-    #   Amazon GameLift Anywhere configuration options.
+    #   Amazon GameLift Servers Anywhere configuration options.
     #
     # @option params [String] :instance_role_credentials_provider
-    #   Prompts Amazon GameLift to generate a shared credentials file for the
-    #   IAM role that's defined in `InstanceRoleArn`. The shared credentials
-    #   file is stored on each fleet instance and refreshed as needed. Use
-    #   shared credentials for applications that are deployed along with the
-    #   game server executable, if the game server is integrated with server
-    #   SDK version 5.x. For more information about using shared credentials,
-    #   see [ Communicate with other Amazon Web Services resources from your
-    #   fleets][1].
+    #   Prompts Amazon GameLift Servers to generate a shared credentials file
+    #   for the IAM role that's defined in `InstanceRoleArn`. The shared
+    #   credentials file is stored on each fleet instance and refreshed as
+    #   needed. Use shared credentials for applications that are deployed
+    #   along with the game server executable, if the game server is
+    #   integrated with server SDK version 5.x. For more information about
+    #   using shared credentials, see [ Communicate with other Amazon Web
+    #   Services resources from your fleets][1].
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/gamelift/latest/developerguide/gamelift-sdk-server-resources.html
+    #
+    # @option params [String] :player_gateway_mode
+    #   Configures player gateway for your fleet. Player gateway provides
+    #   benefits such as DDoS protection by rate limiting and validating traﬃc
+    #   before it reaches game servers, hiding game server IP addresses from
+    #   players, and providing updated endpoints when relay endpoints become
+    #   unhealthy. Note, player gateway is only available for fleets using
+    #   server SDK 5.x or later game server builds.
+    #
+    #   **How it works:** When enabled, game clients connect to relay
+    #   endpoints instead of to your game servers. Player gateway validates
+    #   player gateway tokens and routes traffic to the appropriate game
+    #   server. Your game backend calls [GetPlayerConnectionDetails][1] to
+    #   retrieve relay endpoints and player gateway tokens for your game
+    #   clients. To learn more about this topic, see [DDoS protection with
+    #   Amazon GameLift Servers player gateway][2].
+    #
+    #   Possible values include:
+    #
+    #   * `DISABLED` (default) -- Game clients connect to the game server
+    #     endpoint. Use this when you do not intend to integrate your game
+    #     with player gateway.
+    #
+    #   * `ENABLED` -- Player gateway is available in fleet locations where it
+    #     is supported. Your game backend can call
+    #     [GetPlayerConnectionDetails][1] to obtain a player gateway token and
+    #     endpoints for game clients.
+    #
+    #   * `REQUIRED` -- Player gateway is available in fleet locations where
+    #     it is supported, and the fleet can only use locations that support
+    #     this feature. Attempting to add a remote location to your fleet
+    #     which does not support player gateway will result in an
+    #     `InvalidRequestException`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/gamelift/latest/apireference/API_GetPlayerConnectionDetails.html
+    #   [2]: https://docs.aws.amazon.com/gameliftservers/latest/developerguide/ddos-protection-intro.html
+    #
+    # @option params [Types::PlayerGatewayConfiguration] :player_gateway_configuration
+    #   Configuration settings for player gateway. Use this to specify
+    #   advanced options for how player gateway handles connections.
     #
     # @return [Types::CreateFleetOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1979,7 +2144,7 @@ module Aws::GameLift
     #     server_launch_path: "LaunchPathStringModel",
     #     server_launch_parameters: "LaunchParametersStringModel",
     #     log_paths: ["NonZeroAndMaxString"],
-    #     ec2_instance_type: "t2.micro", # accepts t2.micro, t2.small, t2.medium, t2.large, c3.large, c3.xlarge, c3.2xlarge, c3.4xlarge, c3.8xlarge, c4.large, c4.xlarge, c4.2xlarge, c4.4xlarge, c4.8xlarge, c5.large, c5.xlarge, c5.2xlarge, c5.4xlarge, c5.9xlarge, c5.12xlarge, c5.18xlarge, c5.24xlarge, c5a.large, c5a.xlarge, c5a.2xlarge, c5a.4xlarge, c5a.8xlarge, c5a.12xlarge, c5a.16xlarge, c5a.24xlarge, r3.large, r3.xlarge, r3.2xlarge, r3.4xlarge, r3.8xlarge, r4.large, r4.xlarge, r4.2xlarge, r4.4xlarge, r4.8xlarge, r4.16xlarge, r5.large, r5.xlarge, r5.2xlarge, r5.4xlarge, r5.8xlarge, r5.12xlarge, r5.16xlarge, r5.24xlarge, r5a.large, r5a.xlarge, r5a.2xlarge, r5a.4xlarge, r5a.8xlarge, r5a.12xlarge, r5a.16xlarge, r5a.24xlarge, m3.medium, m3.large, m3.xlarge, m3.2xlarge, m4.large, m4.xlarge, m4.2xlarge, m4.4xlarge, m4.10xlarge, m5.large, m5.xlarge, m5.2xlarge, m5.4xlarge, m5.8xlarge, m5.12xlarge, m5.16xlarge, m5.24xlarge, m5a.large, m5a.xlarge, m5a.2xlarge, m5a.4xlarge, m5a.8xlarge, m5a.12xlarge, m5a.16xlarge, m5a.24xlarge, c5d.large, c5d.xlarge, c5d.2xlarge, c5d.4xlarge, c5d.9xlarge, c5d.12xlarge, c5d.18xlarge, c5d.24xlarge, c6a.large, c6a.xlarge, c6a.2xlarge, c6a.4xlarge, c6a.8xlarge, c6a.12xlarge, c6a.16xlarge, c6a.24xlarge, c6i.large, c6i.xlarge, c6i.2xlarge, c6i.4xlarge, c6i.8xlarge, c6i.12xlarge, c6i.16xlarge, c6i.24xlarge, r5d.large, r5d.xlarge, r5d.2xlarge, r5d.4xlarge, r5d.8xlarge, r5d.12xlarge, r5d.16xlarge, r5d.24xlarge, m6g.medium, m6g.large, m6g.xlarge, m6g.2xlarge, m6g.4xlarge, m6g.8xlarge, m6g.12xlarge, m6g.16xlarge, c6g.medium, c6g.large, c6g.xlarge, c6g.2xlarge, c6g.4xlarge, c6g.8xlarge, c6g.12xlarge, c6g.16xlarge, r6g.medium, r6g.large, r6g.xlarge, r6g.2xlarge, r6g.4xlarge, r6g.8xlarge, r6g.12xlarge, r6g.16xlarge, c6gn.medium, c6gn.large, c6gn.xlarge, c6gn.2xlarge, c6gn.4xlarge, c6gn.8xlarge, c6gn.12xlarge, c6gn.16xlarge, c7g.medium, c7g.large, c7g.xlarge, c7g.2xlarge, c7g.4xlarge, c7g.8xlarge, c7g.12xlarge, c7g.16xlarge, r7g.medium, r7g.large, r7g.xlarge, r7g.2xlarge, r7g.4xlarge, r7g.8xlarge, r7g.12xlarge, r7g.16xlarge, m7g.medium, m7g.large, m7g.xlarge, m7g.2xlarge, m7g.4xlarge, m7g.8xlarge, m7g.12xlarge, m7g.16xlarge, g5g.xlarge, g5g.2xlarge, g5g.4xlarge, g5g.8xlarge, g5g.16xlarge
+    #     ec2_instance_type: "t2.micro", # accepts t2.micro, t2.small, t2.medium, t2.large, c3.large, c3.xlarge, c3.2xlarge, c3.4xlarge, c3.8xlarge, c4.large, c4.xlarge, c4.2xlarge, c4.4xlarge, c4.8xlarge, c5.large, c5.xlarge, c5.2xlarge, c5.4xlarge, c5.9xlarge, c5.12xlarge, c5.18xlarge, c5.24xlarge, c5a.large, c5a.xlarge, c5a.2xlarge, c5a.4xlarge, c5a.8xlarge, c5a.12xlarge, c5a.16xlarge, c5a.24xlarge, r3.large, r3.xlarge, r3.2xlarge, r3.4xlarge, r3.8xlarge, r4.large, r4.xlarge, r4.2xlarge, r4.4xlarge, r4.8xlarge, r4.16xlarge, r5.large, r5.xlarge, r5.2xlarge, r5.4xlarge, r5.8xlarge, r5.12xlarge, r5.16xlarge, r5.24xlarge, r5a.large, r5a.xlarge, r5a.2xlarge, r5a.4xlarge, r5a.8xlarge, r5a.12xlarge, r5a.16xlarge, r5a.24xlarge, m3.medium, m3.large, m3.xlarge, m3.2xlarge, m4.large, m4.xlarge, m4.2xlarge, m4.4xlarge, m4.10xlarge, m5.large, m5.xlarge, m5.2xlarge, m5.4xlarge, m5.8xlarge, m5.12xlarge, m5.16xlarge, m5.24xlarge, m5a.large, m5a.xlarge, m5a.2xlarge, m5a.4xlarge, m5a.8xlarge, m5a.12xlarge, m5a.16xlarge, m5a.24xlarge, c5d.large, c5d.xlarge, c5d.2xlarge, c5d.4xlarge, c5d.9xlarge, c5d.12xlarge, c5d.18xlarge, c5d.24xlarge, c6a.large, c6a.xlarge, c6a.2xlarge, c6a.4xlarge, c6a.8xlarge, c6a.12xlarge, c6a.16xlarge, c6a.24xlarge, c6i.large, c6i.xlarge, c6i.2xlarge, c6i.4xlarge, c6i.8xlarge, c6i.12xlarge, c6i.16xlarge, c6i.24xlarge, r5d.large, r5d.xlarge, r5d.2xlarge, r5d.4xlarge, r5d.8xlarge, r5d.12xlarge, r5d.16xlarge, r5d.24xlarge, m6g.medium, m6g.large, m6g.xlarge, m6g.2xlarge, m6g.4xlarge, m6g.8xlarge, m6g.12xlarge, m6g.16xlarge, c6g.medium, c6g.large, c6g.xlarge, c6g.2xlarge, c6g.4xlarge, c6g.8xlarge, c6g.12xlarge, c6g.16xlarge, r6g.medium, r6g.large, r6g.xlarge, r6g.2xlarge, r6g.4xlarge, r6g.8xlarge, r6g.12xlarge, r6g.16xlarge, c6gn.medium, c6gn.large, c6gn.xlarge, c6gn.2xlarge, c6gn.4xlarge, c6gn.8xlarge, c6gn.12xlarge, c6gn.16xlarge, c7g.medium, c7g.large, c7g.xlarge, c7g.2xlarge, c7g.4xlarge, c7g.8xlarge, c7g.12xlarge, c7g.16xlarge, r7g.medium, r7g.large, r7g.xlarge, r7g.2xlarge, r7g.4xlarge, r7g.8xlarge, r7g.12xlarge, r7g.16xlarge, m7g.medium, m7g.large, m7g.xlarge, m7g.2xlarge, m7g.4xlarge, m7g.8xlarge, m7g.12xlarge, m7g.16xlarge, g5g.xlarge, g5g.2xlarge, g5g.4xlarge, g5g.8xlarge, g5g.16xlarge, r6i.large, r6i.xlarge, r6i.2xlarge, r6i.4xlarge, r6i.8xlarge, r6i.12xlarge, r6i.16xlarge, c6gd.medium, c6gd.large, c6gd.xlarge, c6gd.2xlarge, c6gd.4xlarge, c6gd.8xlarge, c6gd.12xlarge, c6gd.16xlarge, c6in.large, c6in.xlarge, c6in.2xlarge, c6in.4xlarge, c6in.8xlarge, c6in.12xlarge, c6in.16xlarge, c7a.medium, c7a.large, c7a.xlarge, c7a.2xlarge, c7a.4xlarge, c7a.8xlarge, c7a.12xlarge, c7a.16xlarge, c7gd.medium, c7gd.large, c7gd.xlarge, c7gd.2xlarge, c7gd.4xlarge, c7gd.8xlarge, c7gd.12xlarge, c7gd.16xlarge, c7gn.medium, c7gn.large, c7gn.xlarge, c7gn.2xlarge, c7gn.4xlarge, c7gn.8xlarge, c7gn.12xlarge, c7gn.16xlarge, c7i.large, c7i.xlarge, c7i.2xlarge, c7i.4xlarge, c7i.8xlarge, c7i.12xlarge, c7i.16xlarge, m6a.large, m6a.xlarge, m6a.2xlarge, m6a.4xlarge, m6a.8xlarge, m6a.12xlarge, m6a.16xlarge, m6gd.medium, m6gd.large, m6gd.xlarge, m6gd.2xlarge, m6gd.4xlarge, m6gd.8xlarge, m6gd.12xlarge, m6gd.16xlarge, m6i.large, m6i.xlarge, m6i.2xlarge, m6i.4xlarge, m6i.8xlarge, m6i.12xlarge, m6i.16xlarge, m7a.medium, m7a.large, m7a.xlarge, m7a.2xlarge, m7a.4xlarge, m7a.8xlarge, m7a.12xlarge, m7a.16xlarge, m7gd.medium, m7gd.large, m7gd.xlarge, m7gd.2xlarge, m7gd.4xlarge, m7gd.8xlarge, m7gd.12xlarge, m7gd.16xlarge, m7i.large, m7i.xlarge, m7i.2xlarge, m7i.4xlarge, m7i.8xlarge, m7i.12xlarge, m7i.16xlarge, r6gd.medium, r6gd.large, r6gd.xlarge, r6gd.2xlarge, r6gd.4xlarge, r6gd.8xlarge, r6gd.12xlarge, r6gd.16xlarge, r7a.medium, r7a.large, r7a.xlarge, r7a.2xlarge, r7a.4xlarge, r7a.8xlarge, r7a.12xlarge, r7a.16xlarge, r7gd.medium, r7gd.large, r7gd.xlarge, r7gd.2xlarge, r7gd.4xlarge, r7gd.8xlarge, r7gd.12xlarge, r7gd.16xlarge, r7i.large, r7i.xlarge, r7i.2xlarge, r7i.4xlarge, r7i.8xlarge, r7i.12xlarge, r7i.16xlarge, r7i.24xlarge, r7i.48xlarge, c5ad.large, c5ad.xlarge, c5ad.2xlarge, c5ad.4xlarge, c5ad.8xlarge, c5ad.12xlarge, c5ad.16xlarge, c5ad.24xlarge, c5n.large, c5n.xlarge, c5n.2xlarge, c5n.4xlarge, c5n.9xlarge, c5n.18xlarge, r5ad.large, r5ad.xlarge, r5ad.2xlarge, r5ad.4xlarge, r5ad.8xlarge, r5ad.12xlarge, r5ad.16xlarge, r5ad.24xlarge, c6id.large, c6id.xlarge, c6id.2xlarge, c6id.4xlarge, c6id.8xlarge, c6id.12xlarge, c6id.16xlarge, c6id.24xlarge, c6id.32xlarge, c8g.medium, c8g.large, c8g.xlarge, c8g.2xlarge, c8g.4xlarge, c8g.8xlarge, c8g.12xlarge, c8g.16xlarge, c8g.24xlarge, c8g.48xlarge, m5ad.large, m5ad.xlarge, m5ad.2xlarge, m5ad.4xlarge, m5ad.8xlarge, m5ad.12xlarge, m5ad.16xlarge, m5ad.24xlarge, m5d.large, m5d.xlarge, m5d.2xlarge, m5d.4xlarge, m5d.8xlarge, m5d.12xlarge, m5d.16xlarge, m5d.24xlarge, m5dn.large, m5dn.xlarge, m5dn.2xlarge, m5dn.4xlarge, m5dn.8xlarge, m5dn.12xlarge, m5dn.16xlarge, m5dn.24xlarge, m5n.large, m5n.xlarge, m5n.2xlarge, m5n.4xlarge, m5n.8xlarge, m5n.12xlarge, m5n.16xlarge, m5n.24xlarge, m6id.large, m6id.xlarge, m6id.2xlarge, m6id.4xlarge, m6id.8xlarge, m6id.12xlarge, m6id.16xlarge, m6id.24xlarge, m6id.32xlarge, m6idn.large, m6idn.xlarge, m6idn.2xlarge, m6idn.4xlarge, m6idn.8xlarge, m6idn.12xlarge, m6idn.16xlarge, m6idn.24xlarge, m6idn.32xlarge, m6in.large, m6in.xlarge, m6in.2xlarge, m6in.4xlarge, m6in.8xlarge, m6in.12xlarge, m6in.16xlarge, m6in.24xlarge, m6in.32xlarge, m8g.medium, m8g.large, m8g.xlarge, m8g.2xlarge, m8g.4xlarge, m8g.8xlarge, m8g.12xlarge, m8g.16xlarge, m8g.24xlarge, m8g.48xlarge, r5dn.large, r5dn.xlarge, r5dn.2xlarge, r5dn.4xlarge, r5dn.8xlarge, r5dn.12xlarge, r5dn.16xlarge, r5dn.24xlarge, r5n.large, r5n.xlarge, r5n.2xlarge, r5n.4xlarge, r5n.8xlarge, r5n.12xlarge, r5n.16xlarge, r5n.24xlarge, r6a.large, r6a.xlarge, r6a.2xlarge, r6a.4xlarge, r6a.8xlarge, r6a.12xlarge, r6a.16xlarge, r6a.24xlarge, r6a.32xlarge, r6a.48xlarge, r6id.large, r6id.xlarge, r6id.2xlarge, r6id.4xlarge, r6id.8xlarge, r6id.12xlarge, r6id.16xlarge, r6id.24xlarge, r6id.32xlarge, r6idn.large, r6idn.xlarge, r6idn.2xlarge, r6idn.4xlarge, r6idn.8xlarge, r6idn.12xlarge, r6idn.16xlarge, r6idn.24xlarge, r6idn.32xlarge, r6in.large, r6in.xlarge, r6in.2xlarge, r6in.4xlarge, r6in.8xlarge, r6in.12xlarge, r6in.16xlarge, r6in.24xlarge, r6in.32xlarge, r8g.medium, r8g.large, r8g.xlarge, r8g.2xlarge, r8g.4xlarge, r8g.8xlarge, r8g.12xlarge, r8g.16xlarge, r8g.24xlarge, r8g.48xlarge, m4.16xlarge, c6a.32xlarge, c6a.48xlarge, c6i.32xlarge, r6i.24xlarge, r6i.32xlarge, c6in.24xlarge, c6in.32xlarge, c7a.24xlarge, c7a.32xlarge, c7a.48xlarge, c7i.24xlarge, c7i.48xlarge, m6a.24xlarge, m6a.32xlarge, m6a.48xlarge, m6i.24xlarge, m6i.32xlarge, m7a.24xlarge, m7a.32xlarge, m7a.48xlarge, m7i.24xlarge, m7i.48xlarge, r7a.24xlarge, r7a.32xlarge, r7a.48xlarge, c8a.medium, c8a.large, c8a.xlarge, c8a.2xlarge, c8i.large, c8i.xlarge, c8i.2xlarge, c9g.medium, c9g.large, c9g.xlarge, c9g.2xlarge, m8a.medium, m8a.large, m8a.xlarge, m8a.2xlarge, m8i.large, m8i.xlarge, m8i.2xlarge, m9g.large, m9g.xlarge, m9g.2xlarge
     #     ec2_inbound_permissions: [
     #       {
     #         from_port: 1, # required
@@ -2028,6 +2193,10 @@ module Aws::GameLift
     #       cost: "NonNegativeLimitedLengthDouble", # required
     #     },
     #     instance_role_credentials_provider: "SHARED_CREDENTIAL_FILE", # accepts SHARED_CREDENTIAL_FILE
+    #     player_gateway_mode: "DISABLED", # accepts DISABLED, ENABLED, REQUIRED
+    #     player_gateway_configuration: {
+    #       game_server_ip_protocol_supported: "IPv4", # accepts IPv4, DUAL_STACK
+    #     },
     #   })
     #
     # @example Response structure
@@ -2035,12 +2204,12 @@ module Aws::GameLift
     #   resp.fleet_attributes.fleet_id #=> String
     #   resp.fleet_attributes.fleet_arn #=> String
     #   resp.fleet_attributes.fleet_type #=> String, one of "ON_DEMAND", "SPOT"
-    #   resp.fleet_attributes.instance_type #=> String, one of "t2.micro", "t2.small", "t2.medium", "t2.large", "c3.large", "c3.xlarge", "c3.2xlarge", "c3.4xlarge", "c3.8xlarge", "c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge", "c4.8xlarge", "c5.large", "c5.xlarge", "c5.2xlarge", "c5.4xlarge", "c5.9xlarge", "c5.12xlarge", "c5.18xlarge", "c5.24xlarge", "c5a.large", "c5a.xlarge", "c5a.2xlarge", "c5a.4xlarge", "c5a.8xlarge", "c5a.12xlarge", "c5a.16xlarge", "c5a.24xlarge", "r3.large", "r3.xlarge", "r3.2xlarge", "r3.4xlarge", "r3.8xlarge", "r4.large", "r4.xlarge", "r4.2xlarge", "r4.4xlarge", "r4.8xlarge", "r4.16xlarge", "r5.large", "r5.xlarge", "r5.2xlarge", "r5.4xlarge", "r5.8xlarge", "r5.12xlarge", "r5.16xlarge", "r5.24xlarge", "r5a.large", "r5a.xlarge", "r5a.2xlarge", "r5a.4xlarge", "r5a.8xlarge", "r5a.12xlarge", "r5a.16xlarge", "r5a.24xlarge", "m3.medium", "m3.large", "m3.xlarge", "m3.2xlarge", "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge", "m4.10xlarge", "m5.large", "m5.xlarge", "m5.2xlarge", "m5.4xlarge", "m5.8xlarge", "m5.12xlarge", "m5.16xlarge", "m5.24xlarge", "m5a.large", "m5a.xlarge", "m5a.2xlarge", "m5a.4xlarge", "m5a.8xlarge", "m5a.12xlarge", "m5a.16xlarge", "m5a.24xlarge", "c5d.large", "c5d.xlarge", "c5d.2xlarge", "c5d.4xlarge", "c5d.9xlarge", "c5d.12xlarge", "c5d.18xlarge", "c5d.24xlarge", "c6a.large", "c6a.xlarge", "c6a.2xlarge", "c6a.4xlarge", "c6a.8xlarge", "c6a.12xlarge", "c6a.16xlarge", "c6a.24xlarge", "c6i.large", "c6i.xlarge", "c6i.2xlarge", "c6i.4xlarge", "c6i.8xlarge", "c6i.12xlarge", "c6i.16xlarge", "c6i.24xlarge", "r5d.large", "r5d.xlarge", "r5d.2xlarge", "r5d.4xlarge", "r5d.8xlarge", "r5d.12xlarge", "r5d.16xlarge", "r5d.24xlarge", "m6g.medium", "m6g.large", "m6g.xlarge", "m6g.2xlarge", "m6g.4xlarge", "m6g.8xlarge", "m6g.12xlarge", "m6g.16xlarge", "c6g.medium", "c6g.large", "c6g.xlarge", "c6g.2xlarge", "c6g.4xlarge", "c6g.8xlarge", "c6g.12xlarge", "c6g.16xlarge", "r6g.medium", "r6g.large", "r6g.xlarge", "r6g.2xlarge", "r6g.4xlarge", "r6g.8xlarge", "r6g.12xlarge", "r6g.16xlarge", "c6gn.medium", "c6gn.large", "c6gn.xlarge", "c6gn.2xlarge", "c6gn.4xlarge", "c6gn.8xlarge", "c6gn.12xlarge", "c6gn.16xlarge", "c7g.medium", "c7g.large", "c7g.xlarge", "c7g.2xlarge", "c7g.4xlarge", "c7g.8xlarge", "c7g.12xlarge", "c7g.16xlarge", "r7g.medium", "r7g.large", "r7g.xlarge", "r7g.2xlarge", "r7g.4xlarge", "r7g.8xlarge", "r7g.12xlarge", "r7g.16xlarge", "m7g.medium", "m7g.large", "m7g.xlarge", "m7g.2xlarge", "m7g.4xlarge", "m7g.8xlarge", "m7g.12xlarge", "m7g.16xlarge", "g5g.xlarge", "g5g.2xlarge", "g5g.4xlarge", "g5g.8xlarge", "g5g.16xlarge"
+    #   resp.fleet_attributes.instance_type #=> String, one of "t2.micro", "t2.small", "t2.medium", "t2.large", "c3.large", "c3.xlarge", "c3.2xlarge", "c3.4xlarge", "c3.8xlarge", "c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge", "c4.8xlarge", "c5.large", "c5.xlarge", "c5.2xlarge", "c5.4xlarge", "c5.9xlarge", "c5.12xlarge", "c5.18xlarge", "c5.24xlarge", "c5a.large", "c5a.xlarge", "c5a.2xlarge", "c5a.4xlarge", "c5a.8xlarge", "c5a.12xlarge", "c5a.16xlarge", "c5a.24xlarge", "r3.large", "r3.xlarge", "r3.2xlarge", "r3.4xlarge", "r3.8xlarge", "r4.large", "r4.xlarge", "r4.2xlarge", "r4.4xlarge", "r4.8xlarge", "r4.16xlarge", "r5.large", "r5.xlarge", "r5.2xlarge", "r5.4xlarge", "r5.8xlarge", "r5.12xlarge", "r5.16xlarge", "r5.24xlarge", "r5a.large", "r5a.xlarge", "r5a.2xlarge", "r5a.4xlarge", "r5a.8xlarge", "r5a.12xlarge", "r5a.16xlarge", "r5a.24xlarge", "m3.medium", "m3.large", "m3.xlarge", "m3.2xlarge", "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge", "m4.10xlarge", "m5.large", "m5.xlarge", "m5.2xlarge", "m5.4xlarge", "m5.8xlarge", "m5.12xlarge", "m5.16xlarge", "m5.24xlarge", "m5a.large", "m5a.xlarge", "m5a.2xlarge", "m5a.4xlarge", "m5a.8xlarge", "m5a.12xlarge", "m5a.16xlarge", "m5a.24xlarge", "c5d.large", "c5d.xlarge", "c5d.2xlarge", "c5d.4xlarge", "c5d.9xlarge", "c5d.12xlarge", "c5d.18xlarge", "c5d.24xlarge", "c6a.large", "c6a.xlarge", "c6a.2xlarge", "c6a.4xlarge", "c6a.8xlarge", "c6a.12xlarge", "c6a.16xlarge", "c6a.24xlarge", "c6i.large", "c6i.xlarge", "c6i.2xlarge", "c6i.4xlarge", "c6i.8xlarge", "c6i.12xlarge", "c6i.16xlarge", "c6i.24xlarge", "r5d.large", "r5d.xlarge", "r5d.2xlarge", "r5d.4xlarge", "r5d.8xlarge", "r5d.12xlarge", "r5d.16xlarge", "r5d.24xlarge", "m6g.medium", "m6g.large", "m6g.xlarge", "m6g.2xlarge", "m6g.4xlarge", "m6g.8xlarge", "m6g.12xlarge", "m6g.16xlarge", "c6g.medium", "c6g.large", "c6g.xlarge", "c6g.2xlarge", "c6g.4xlarge", "c6g.8xlarge", "c6g.12xlarge", "c6g.16xlarge", "r6g.medium", "r6g.large", "r6g.xlarge", "r6g.2xlarge", "r6g.4xlarge", "r6g.8xlarge", "r6g.12xlarge", "r6g.16xlarge", "c6gn.medium", "c6gn.large", "c6gn.xlarge", "c6gn.2xlarge", "c6gn.4xlarge", "c6gn.8xlarge", "c6gn.12xlarge", "c6gn.16xlarge", "c7g.medium", "c7g.large", "c7g.xlarge", "c7g.2xlarge", "c7g.4xlarge", "c7g.8xlarge", "c7g.12xlarge", "c7g.16xlarge", "r7g.medium", "r7g.large", "r7g.xlarge", "r7g.2xlarge", "r7g.4xlarge", "r7g.8xlarge", "r7g.12xlarge", "r7g.16xlarge", "m7g.medium", "m7g.large", "m7g.xlarge", "m7g.2xlarge", "m7g.4xlarge", "m7g.8xlarge", "m7g.12xlarge", "m7g.16xlarge", "g5g.xlarge", "g5g.2xlarge", "g5g.4xlarge", "g5g.8xlarge", "g5g.16xlarge", "r6i.large", "r6i.xlarge", "r6i.2xlarge", "r6i.4xlarge", "r6i.8xlarge", "r6i.12xlarge", "r6i.16xlarge", "c6gd.medium", "c6gd.large", "c6gd.xlarge", "c6gd.2xlarge", "c6gd.4xlarge", "c6gd.8xlarge", "c6gd.12xlarge", "c6gd.16xlarge", "c6in.large", "c6in.xlarge", "c6in.2xlarge", "c6in.4xlarge", "c6in.8xlarge", "c6in.12xlarge", "c6in.16xlarge", "c7a.medium", "c7a.large", "c7a.xlarge", "c7a.2xlarge", "c7a.4xlarge", "c7a.8xlarge", "c7a.12xlarge", "c7a.16xlarge", "c7gd.medium", "c7gd.large", "c7gd.xlarge", "c7gd.2xlarge", "c7gd.4xlarge", "c7gd.8xlarge", "c7gd.12xlarge", "c7gd.16xlarge", "c7gn.medium", "c7gn.large", "c7gn.xlarge", "c7gn.2xlarge", "c7gn.4xlarge", "c7gn.8xlarge", "c7gn.12xlarge", "c7gn.16xlarge", "c7i.large", "c7i.xlarge", "c7i.2xlarge", "c7i.4xlarge", "c7i.8xlarge", "c7i.12xlarge", "c7i.16xlarge", "m6a.large", "m6a.xlarge", "m6a.2xlarge", "m6a.4xlarge", "m6a.8xlarge", "m6a.12xlarge", "m6a.16xlarge", "m6gd.medium", "m6gd.large", "m6gd.xlarge", "m6gd.2xlarge", "m6gd.4xlarge", "m6gd.8xlarge", "m6gd.12xlarge", "m6gd.16xlarge", "m6i.large", "m6i.xlarge", "m6i.2xlarge", "m6i.4xlarge", "m6i.8xlarge", "m6i.12xlarge", "m6i.16xlarge", "m7a.medium", "m7a.large", "m7a.xlarge", "m7a.2xlarge", "m7a.4xlarge", "m7a.8xlarge", "m7a.12xlarge", "m7a.16xlarge", "m7gd.medium", "m7gd.large", "m7gd.xlarge", "m7gd.2xlarge", "m7gd.4xlarge", "m7gd.8xlarge", "m7gd.12xlarge", "m7gd.16xlarge", "m7i.large", "m7i.xlarge", "m7i.2xlarge", "m7i.4xlarge", "m7i.8xlarge", "m7i.12xlarge", "m7i.16xlarge", "r6gd.medium", "r6gd.large", "r6gd.xlarge", "r6gd.2xlarge", "r6gd.4xlarge", "r6gd.8xlarge", "r6gd.12xlarge", "r6gd.16xlarge", "r7a.medium", "r7a.large", "r7a.xlarge", "r7a.2xlarge", "r7a.4xlarge", "r7a.8xlarge", "r7a.12xlarge", "r7a.16xlarge", "r7gd.medium", "r7gd.large", "r7gd.xlarge", "r7gd.2xlarge", "r7gd.4xlarge", "r7gd.8xlarge", "r7gd.12xlarge", "r7gd.16xlarge", "r7i.large", "r7i.xlarge", "r7i.2xlarge", "r7i.4xlarge", "r7i.8xlarge", "r7i.12xlarge", "r7i.16xlarge", "r7i.24xlarge", "r7i.48xlarge", "c5ad.large", "c5ad.xlarge", "c5ad.2xlarge", "c5ad.4xlarge", "c5ad.8xlarge", "c5ad.12xlarge", "c5ad.16xlarge", "c5ad.24xlarge", "c5n.large", "c5n.xlarge", "c5n.2xlarge", "c5n.4xlarge", "c5n.9xlarge", "c5n.18xlarge", "r5ad.large", "r5ad.xlarge", "r5ad.2xlarge", "r5ad.4xlarge", "r5ad.8xlarge", "r5ad.12xlarge", "r5ad.16xlarge", "r5ad.24xlarge", "c6id.large", "c6id.xlarge", "c6id.2xlarge", "c6id.4xlarge", "c6id.8xlarge", "c6id.12xlarge", "c6id.16xlarge", "c6id.24xlarge", "c6id.32xlarge", "c8g.medium", "c8g.large", "c8g.xlarge", "c8g.2xlarge", "c8g.4xlarge", "c8g.8xlarge", "c8g.12xlarge", "c8g.16xlarge", "c8g.24xlarge", "c8g.48xlarge", "m5ad.large", "m5ad.xlarge", "m5ad.2xlarge", "m5ad.4xlarge", "m5ad.8xlarge", "m5ad.12xlarge", "m5ad.16xlarge", "m5ad.24xlarge", "m5d.large", "m5d.xlarge", "m5d.2xlarge", "m5d.4xlarge", "m5d.8xlarge", "m5d.12xlarge", "m5d.16xlarge", "m5d.24xlarge", "m5dn.large", "m5dn.xlarge", "m5dn.2xlarge", "m5dn.4xlarge", "m5dn.8xlarge", "m5dn.12xlarge", "m5dn.16xlarge", "m5dn.24xlarge", "m5n.large", "m5n.xlarge", "m5n.2xlarge", "m5n.4xlarge", "m5n.8xlarge", "m5n.12xlarge", "m5n.16xlarge", "m5n.24xlarge", "m6id.large", "m6id.xlarge", "m6id.2xlarge", "m6id.4xlarge", "m6id.8xlarge", "m6id.12xlarge", "m6id.16xlarge", "m6id.24xlarge", "m6id.32xlarge", "m6idn.large", "m6idn.xlarge", "m6idn.2xlarge", "m6idn.4xlarge", "m6idn.8xlarge", "m6idn.12xlarge", "m6idn.16xlarge", "m6idn.24xlarge", "m6idn.32xlarge", "m6in.large", "m6in.xlarge", "m6in.2xlarge", "m6in.4xlarge", "m6in.8xlarge", "m6in.12xlarge", "m6in.16xlarge", "m6in.24xlarge", "m6in.32xlarge", "m8g.medium", "m8g.large", "m8g.xlarge", "m8g.2xlarge", "m8g.4xlarge", "m8g.8xlarge", "m8g.12xlarge", "m8g.16xlarge", "m8g.24xlarge", "m8g.48xlarge", "r5dn.large", "r5dn.xlarge", "r5dn.2xlarge", "r5dn.4xlarge", "r5dn.8xlarge", "r5dn.12xlarge", "r5dn.16xlarge", "r5dn.24xlarge", "r5n.large", "r5n.xlarge", "r5n.2xlarge", "r5n.4xlarge", "r5n.8xlarge", "r5n.12xlarge", "r5n.16xlarge", "r5n.24xlarge", "r6a.large", "r6a.xlarge", "r6a.2xlarge", "r6a.4xlarge", "r6a.8xlarge", "r6a.12xlarge", "r6a.16xlarge", "r6a.24xlarge", "r6a.32xlarge", "r6a.48xlarge", "r6id.large", "r6id.xlarge", "r6id.2xlarge", "r6id.4xlarge", "r6id.8xlarge", "r6id.12xlarge", "r6id.16xlarge", "r6id.24xlarge", "r6id.32xlarge", "r6idn.large", "r6idn.xlarge", "r6idn.2xlarge", "r6idn.4xlarge", "r6idn.8xlarge", "r6idn.12xlarge", "r6idn.16xlarge", "r6idn.24xlarge", "r6idn.32xlarge", "r6in.large", "r6in.xlarge", "r6in.2xlarge", "r6in.4xlarge", "r6in.8xlarge", "r6in.12xlarge", "r6in.16xlarge", "r6in.24xlarge", "r6in.32xlarge", "r8g.medium", "r8g.large", "r8g.xlarge", "r8g.2xlarge", "r8g.4xlarge", "r8g.8xlarge", "r8g.12xlarge", "r8g.16xlarge", "r8g.24xlarge", "r8g.48xlarge", "m4.16xlarge", "c6a.32xlarge", "c6a.48xlarge", "c6i.32xlarge", "r6i.24xlarge", "r6i.32xlarge", "c6in.24xlarge", "c6in.32xlarge", "c7a.24xlarge", "c7a.32xlarge", "c7a.48xlarge", "c7i.24xlarge", "c7i.48xlarge", "m6a.24xlarge", "m6a.32xlarge", "m6a.48xlarge", "m6i.24xlarge", "m6i.32xlarge", "m7a.24xlarge", "m7a.32xlarge", "m7a.48xlarge", "m7i.24xlarge", "m7i.48xlarge", "r7a.24xlarge", "r7a.32xlarge", "r7a.48xlarge", "c8a.medium", "c8a.large", "c8a.xlarge", "c8a.2xlarge", "c8i.large", "c8i.xlarge", "c8i.2xlarge", "c9g.medium", "c9g.large", "c9g.xlarge", "c9g.2xlarge", "m8a.medium", "m8a.large", "m8a.xlarge", "m8a.2xlarge", "m8i.large", "m8i.xlarge", "m8i.2xlarge", "m9g.large", "m9g.xlarge", "m9g.2xlarge"
     #   resp.fleet_attributes.description #=> String
     #   resp.fleet_attributes.name #=> String
     #   resp.fleet_attributes.creation_time #=> Time
     #   resp.fleet_attributes.termination_time #=> Time
-    #   resp.fleet_attributes.status #=> String, one of "NEW", "DOWNLOADING", "VALIDATING", "BUILDING", "ACTIVATING", "ACTIVE", "DELETING", "ERROR", "TERMINATED", "NOT_FOUND"
+    #   resp.fleet_attributes.status #=> String, one of "NEW", "DOWNLOADING", "VALIDATING", "BUILDING", "ACTIVATING", "ACTIVE", "DELETING", "ERROR", "TERMINATED", "NOT_FOUND", "EXPIRED"
     #   resp.fleet_attributes.build_id #=> String
     #   resp.fleet_attributes.build_arn #=> String
     #   resp.fleet_attributes.script_id #=> String
@@ -2050,7 +2219,7 @@ module Aws::GameLift
     #   resp.fleet_attributes.log_paths #=> Array
     #   resp.fleet_attributes.log_paths[0] #=> String
     #   resp.fleet_attributes.new_game_session_protection_policy #=> String, one of "NoProtection", "FullProtection"
-    #   resp.fleet_attributes.operating_system #=> String, one of "WINDOWS_2012", "AMAZON_LINUX", "AMAZON_LINUX_2", "WINDOWS_2016", "AMAZON_LINUX_2023"
+    #   resp.fleet_attributes.operating_system #=> String, one of "WINDOWS_2012", "AMAZON_LINUX", "AMAZON_LINUX_2", "WINDOWS_2016", "AMAZON_LINUX_2023", "WINDOWS_2022"
     #   resp.fleet_attributes.resource_creation_limit_policy.new_game_sessions_per_creator #=> Integer
     #   resp.fleet_attributes.resource_creation_limit_policy.policy_period_in_minutes #=> Integer
     #   resp.fleet_attributes.metric_groups #=> Array
@@ -2062,9 +2231,12 @@ module Aws::GameLift
     #   resp.fleet_attributes.compute_type #=> String, one of "EC2", "ANYWHERE"
     #   resp.fleet_attributes.anywhere_configuration.cost #=> String
     #   resp.fleet_attributes.instance_role_credentials_provider #=> String, one of "SHARED_CREDENTIAL_FILE"
+    #   resp.fleet_attributes.player_gateway_mode #=> String, one of "DISABLED", "ENABLED", "REQUIRED"
+    #   resp.fleet_attributes.player_gateway_configuration.game_server_ip_protocol_supported #=> String, one of "IPv4", "DUAL_STACK"
     #   resp.location_states #=> Array
     #   resp.location_states[0].location #=> String
-    #   resp.location_states[0].status #=> String, one of "NEW", "DOWNLOADING", "VALIDATING", "BUILDING", "ACTIVATING", "ACTIVE", "DELETING", "ERROR", "TERMINATED", "NOT_FOUND"
+    #   resp.location_states[0].status #=> String, one of "NEW", "DOWNLOADING", "VALIDATING", "BUILDING", "ACTIVATING", "ACTIVE", "DELETING", "ERROR", "TERMINATED", "NOT_FOUND", "EXPIRED"
+    #   resp.location_states[0].player_gateway_status #=> String, one of "DISABLED", "ENABLED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/CreateFleet AWS API Documentation
     #
@@ -2075,6 +2247,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Adds remote locations to an EC2 and begins populating the new
     # locations with instances. The new instances conform to the fleet's
     # instance type, auto-scaling, and other configuration settings.
@@ -2089,10 +2264,10 @@ module Aws::GameLift
     # list of one or more locations.
     #
     # If successful, this operation returns the list of added locations with
-    # their status set to `NEW`. Amazon GameLift initiates the process of
-    # starting an instance in each added location. You can track the status
-    # of each new location by monitoring location creation events using
-    # [DescribeFleetEvents][1].
+    # their status set to `NEW`. Amazon GameLift Servers initiates the
+    # process of starting an instance in each added location. You can track
+    # the status of each new location by monitoring location creation events
+    # using [DescribeFleetEvents][1].
     #
     # **Learn more**
     #
@@ -2100,7 +2275,7 @@ module Aws::GameLift
     #
     # [Update fleet locations][3]
     #
-    # [ Amazon GameLift service locations][4] for managed hosting.
+    # [ Amazon GameLift Servers service locations][4] for managed hosting.
     #
     #
     #
@@ -2115,9 +2290,9 @@ module Aws::GameLift
     #
     # @option params [required, Array<Types::LocationConfiguration>] :locations
     #   A list of locations to deploy additional instances to and manage as
-    #   part of the fleet. You can add any Amazon GameLift-supported Amazon
-    #   Web Services Region as a remote location, in the form of an Amazon Web
-    #   Services Region code such as `us-west-2`.
+    #   part of the fleet. You can add any Amazon GameLift Servers-supported
+    #   Amazon Web Services Region as a remote location, in the form of an
+    #   Amazon Web Services Region code such as `us-west-2`.
     #
     # @return [Types::CreateFleetLocationsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -2142,7 +2317,8 @@ module Aws::GameLift
     #   resp.fleet_arn #=> String
     #   resp.location_states #=> Array
     #   resp.location_states[0].location #=> String
-    #   resp.location_states[0].status #=> String, one of "NEW", "DOWNLOADING", "VALIDATING", "BUILDING", "ACTIVATING", "ACTIVE", "DELETING", "ERROR", "TERMINATED", "NOT_FOUND"
+    #   resp.location_states[0].status #=> String, one of "NEW", "DOWNLOADING", "VALIDATING", "BUILDING", "ACTIVATING", "ACTIVE", "DELETING", "ERROR", "TERMINATED", "NOT_FOUND", "EXPIRED"
+    #   resp.location_states[0].player_gateway_status #=> String, one of "DISABLED", "ENABLED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/CreateFleetLocations AWS API Documentation
     #
@@ -2153,16 +2329,16 @@ module Aws::GameLift
       req.send_request(options)
     end
 
-    # **This operation is used with the Amazon GameLift FleetIQ solution and
-    # game server groups.**
+    # **This API works with the following fleet types:** EC2 (FleetIQ)
     #
-    # Creates a Amazon GameLift FleetIQ game server group for managing game
-    # hosting on a collection of Amazon Elastic Compute Cloud instances for
-    # game hosting. This operation creates the game server group, creates an
-    # Auto Scaling group in your Amazon Web Services account, and
-    # establishes a link between the two groups. You can view the status of
-    # your game server groups in the Amazon GameLift console. Game server
-    # group metrics and events are emitted to Amazon CloudWatch.
+    # Creates a Amazon GameLift Servers FleetIQ game server group for
+    # managing game hosting on a collection of Amazon Elastic Compute Cloud
+    # instances for game hosting. This operation creates the game server
+    # group, creates an Auto Scaling group in your Amazon Web Services
+    # account, and establishes a link between the two groups. You can view
+    # the status of your game server groups in the Amazon GameLift Servers
+    # console. Game server group metrics and events are emitted to Amazon
+    # CloudWatch.
     #
     # Before creating a new game server group, you must have the following:
     #
@@ -2173,17 +2349,17 @@ module Aws::GameLift
     #   Guide*.
     #
     # * An IAM role that extends limited access to your Amazon Web Services
-    #   account to allow Amazon GameLift FleetIQ to create and interact with
-    #   the Auto Scaling group. For more information, see [Create IAM roles
-    #   for cross-service interaction][2] in the *Amazon GameLift FleetIQ
-    #   Developer Guide*.
+    #   account to allow Amazon GameLift Servers FleetIQ to create and
+    #   interact with the Auto Scaling group. For more information, see
+    #   [Create IAM roles for cross-service interaction][2] in the *Amazon
+    #   GameLift Servers FleetIQ Developer Guide*.
     #
     # To create a new game server group, specify a unique group name, IAM
     # role and Amazon Elastic Compute Cloud launch template, and provide a
     # list of instance types that can be used in the group. You must also
     # set initial maximum and minimum limits on the group's instance count.
     # You can optionally set an Auto Scaling policy with target tracking
-    # based on a Amazon GameLift FleetIQ metric.
+    # based on a Amazon GameLift Servers FleetIQ metric.
     #
     # Once the game server group and corresponding Auto Scaling group are
     # created, you have full access to change the Auto Scaling group's
@@ -2191,12 +2367,12 @@ module Aws::GameLift
     # a game server group, including maximum/minimum size and auto-scaling
     # policy settings, must be updated directly in the Auto Scaling group.
     # Keep in mind that some Auto Scaling group properties are periodically
-    # updated by Amazon GameLift FleetIQ as part of its balancing activities
-    # to optimize for availability and cost.
+    # updated by Amazon GameLift Servers FleetIQ as part of its balancing
+    # activities to optimize for availability and cost.
     #
     # **Learn more**
     #
-    # [Amazon GameLift FleetIQ Guide][3]
+    # [Amazon GameLift Servers FleetIQ Guide][3]
     #
     #
     #
@@ -2207,12 +2383,12 @@ module Aws::GameLift
     # @option params [required, String] :game_server_group_name
     #   An identifier for the new game server group. This value is used to
     #   generate unique ARN identifiers for the Amazon EC2 Auto Scaling group
-    #   and the Amazon GameLift FleetIQ game server group. The name must be
-    #   unique per Region per Amazon Web Services account.
+    #   and the Amazon GameLift Servers FleetIQ game server group. The name
+    #   must be unique per Region per Amazon Web Services account.
     #
     # @option params [required, String] :role_arn
     #   The Amazon Resource Name ([ARN][1]) for an IAM role that allows Amazon
-    #   GameLift to access your Amazon EC2 Auto Scaling groups.
+    #   GameLift Servers to access your Amazon EC2 Auto Scaling groups.
     #
     #
     #
@@ -2220,18 +2396,18 @@ module Aws::GameLift
     #
     # @option params [required, Integer] :min_size
     #   The minimum number of instances allowed in the Amazon EC2 Auto Scaling
-    #   group. During automatic scaling events, Amazon GameLift FleetIQ and
-    #   Amazon EC2 do not scale down the group below this minimum. In
-    #   production, this value should be set to at least 1. After the Auto
+    #   group. During automatic scaling events, Amazon GameLift Servers
+    #   FleetIQ and Amazon EC2 do not scale down the group below this minimum.
+    #   In production, this value should be set to at least 1. After the Auto
     #   Scaling group is created, update this value directly in the Auto
     #   Scaling group using the Amazon Web Services console or APIs.
     #
     # @option params [required, Integer] :max_size
     #   The maximum number of instances allowed in the Amazon EC2 Auto Scaling
-    #   group. During automatic scaling events, Amazon GameLift FleetIQ and
-    #   EC2 do not scale up the group above this maximum. After the Auto
-    #   Scaling group is created, update this value directly in the Auto
-    #   Scaling group using the Amazon Web Services console or APIs.
+    #   group. During automatic scaling events, Amazon GameLift Servers
+    #   FleetIQ and EC2 do not scale up the group above this maximum. After
+    #   the Auto Scaling group is created, update this value directly in the
+    #   Auto Scaling group using the Amazon Web Services console or APIs.
     #
     # @option params [required, Types::LaunchTemplateSpecification] :launch_template
     #   The Amazon EC2 launch template that contains configuration settings
@@ -2246,7 +2422,7 @@ module Aws::GameLift
     #   <note markdown="1"> If you specify network interfaces in your launch template, you must
     #   explicitly set the property `AssociatePublicIpAddress` to "true". If
     #   no network interface is specified in the launch template, Amazon
-    #   GameLift FleetIQ uses your account's default VPC.
+    #   GameLift Servers FleetIQ uses your account's default VPC.
     #
     #    </note>
     #
@@ -2257,12 +2433,12 @@ module Aws::GameLift
     # @option params [required, Array<Types::InstanceDefinition>] :instance_definitions
     #   The Amazon EC2 instance types and sizes to use in the Auto Scaling
     #   group. The instance definitions must specify at least two different
-    #   instance types that are supported by Amazon GameLift FleetIQ. For more
-    #   information on instance types, see [EC2 Instance Types][1] in the
-    #   *Amazon Elastic Compute Cloud User Guide*. You can optionally specify
-    #   capacity weighting for each instance type. If no weight value is
-    #   specified for an instance type, it is set to the default value "1".
-    #   For more information about capacity weighting, see [ Instance
+    #   instance types that are supported by Amazon GameLift Servers FleetIQ.
+    #   For more information on instance types, see [EC2 Instance Types][1] in
+    #   the *Amazon Elastic Compute Cloud User Guide*. You can optionally
+    #   specify capacity weighting for each instance type. If no weight value
+    #   is specified for an instance type, it is set to the default value
+    #   "1". For more information about capacity weighting, see [ Instance
     #   Weighting for Amazon EC2 Auto Scaling][2] in the Amazon EC2 Auto
     #   Scaling User Guide.
     #
@@ -2280,7 +2456,7 @@ module Aws::GameLift
     #   the Auto Scaling group using the Amazon Web Services console or APIs.
     #
     # @option params [String] :balancing_strategy
-    #   Indicates how Amazon GameLift FleetIQ balances the use of Spot
+    #   Indicates how Amazon GameLift Servers FleetIQ balances the use of Spot
     #   Instances and On-Demand Instances in the game server group. Method
     #   options include the following:
     #
@@ -2315,7 +2491,7 @@ module Aws::GameLift
     #
     # @option params [Array<String>] :vpc_subnets
     #   A list of virtual private cloud (VPC) subnets to use with instances in
-    #   the game server group. By default, all Amazon GameLift
+    #   the game server group. By default, all Amazon GameLift Servers
     #   FleetIQ-supported Availability Zones are used. You can use this
     #   parameter to specify VPCs that you've set up. This property cannot be
     #   updated after the game server group is created, and the corresponding
@@ -2399,12 +2575,15 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Creates a multiplayer game session for players in a specific fleet
     # location. This operation prompts an available server process to start
     # a game session and retrieves connection information for the new game
-    # session. As an alternative, consider using the Amazon GameLift game
-    # session placement feature with [StartGameSessionPlacement][1], which
-    # uses the FleetIQ algorithm and queues to optimize the placement
+    # session. As an alternative, consider using the Amazon GameLift Servers
+    # game session placement feature with [StartGameSessionPlacement][1],
+    # which uses the FleetIQ algorithm and queues to optimize the placement
     # process.
     #
     # When creating a game session, you specify exactly where you want to
@@ -2424,19 +2603,19 @@ module Aws::GameLift
     # * To create a game session on an instance in an Anywhere fleet,
     #   specify the fleet's custom location.
     #
-    # If successful, Amazon GameLift initiates a workflow to start a new
-    # game session and returns a `GameSession` object containing the game
-    # session configuration and status. When the game session status is
+    # If successful, Amazon GameLift Servers initiates a workflow to start a
+    # new game session and returns a `GameSession` object containing the
+    # game session configuration and status. When the game session status is
     # `ACTIVE`, it is updated with connection information and you can create
     # player sessions for the game session. By default, newly created game
     # sessions are open to new players. You can restrict new player access
     # by using [UpdateGameSession][2] to change the game session's player
     # session creation policy.
     #
-    # Amazon GameLift retains logs for active for 14 days. To access the
-    # logs, call [GetGameSessionLogUrl][3] to download the log files.
+    # Amazon GameLift Servers retains logs for active for 14 days. To access
+    # the logs, call [GetGameSessionLogUrl][3] to download the log files.
     #
-    # *Available in Amazon GameLift Local.*
+    # *Available in Amazon GameLift Servers Local.*
     #
     # **Learn more**
     #
@@ -2475,6 +2654,18 @@ module Aws::GameLift
     #   For example: `{"Key": "difficulty", "Value": "novice"}`. For an
     #   example, see [Create a game session with custom properties][1].
     #
+    #   <note markdown="1"> * Avoid using periods (".") in property keys if you plan to search
+    #     for game sessions by properties. Property keys containing periods
+    #     cannot be searched and will be filtered out from search results due
+    #     to search index limitations.
+    #
+    #   * If you use SearchGameSessions API, there is a limit of 500 game
+    #     property keys across all game sessions and all fleets per region. If
+    #     the limit is exceeded, there will potentially be game session
+    #     entries missing from SearchGameSessions API results.
+    #
+    #    </note>
+    #
     #
     #
     #   [1]: https://docs.aws.amazon.com/gamelift/latest/developerguide/gamelift-sdk-client-api.html#game-properties-create
@@ -2484,12 +2675,13 @@ module Aws::GameLift
     #
     #   If you add a resource creation limit policy to a fleet, the
     #   `CreateGameSession` operation requires a `CreatorId`. Amazon GameLift
-    #   limits the number of game session creation requests with the same
-    #   `CreatorId` in a specified time period.
+    #   Servers limits the number of game session creation requests with the
+    #   same `CreatorId` in a specified time period.
     #
     #   If you your fleet doesn't have a resource creation limit policy and
     #   you provide a `CreatorId` in your `CreateGameSession` requests, Amazon
-    #   GameLift limits requests to one request per `CreatorId` per second.
+    #   GameLift Servers limits requests to one request per `CreatorId` per
+    #   second.
     #
     #   To not limit `CreateGameSession` requests with the same `CreatorId`,
     #   don't provide a `CreatorId` in your `CreateGameSession` request.
@@ -2507,12 +2699,14 @@ module Aws::GameLift
     #   idempotency token are processed only once. Subsequent requests with
     #   the same string return the original `GameSession` object, with an
     #   updated status. Maximum token length is 48 characters. If provided,
-    #   this string is included in the new game session's ID. A game session
-    #   ARN has the following format:
-    #   `arn:aws:gamelift:<region>::gamesession/<fleet ID>/<custom ID string
-    #   or idempotency token>`. Idempotency tokens remain in use for 30 days
-    #   after a game session has ended; game session objects are retained for
-    #   this time period and then deleted.
+    #   this string is included in the new game session's ID. The value is
+    #   always a full ARN in the following format: For Home Region game
+    #   session - `arn:aws:gamelift:<home_region>::gamesession/<fleet ID>/<ID
+    #   string>`. For Remote Location game session -
+    #   `arn:aws:gamelift:<home_region>::gamesession/<fleet ID>/<location>/<ID
+    #   string>`. Idempotency tokens remain in use for 30 days after a game
+    #   session has ended; game session objects are retained for this time
+    #   period and then deleted.
     #
     # @option params [String] :game_session_data
     #   A set of custom game session properties, formatted as a single string
@@ -2579,6 +2773,8 @@ module Aws::GameLift
     #   resp.game_session.game_session_data #=> String
     #   resp.game_session.matchmaker_data #=> String
     #   resp.game_session.location #=> String
+    #   resp.game_session.compute_name #=> String
+    #   resp.game_session.player_gateway_status #=> String, one of "DISABLED", "ENABLED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/CreateGameSession AWS API Documentation
     #
@@ -2589,38 +2785,67 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Creates a placement queue that processes requests for new game
-    # sessions. A queue uses FleetIQ algorithms to determine the best
-    # placement locations and find an available game server there, then
-    # prompts the game server process to start a new game session.
+    # sessions. A queue uses FleetIQ algorithms to locate the best available
+    # placement locations for a new game session, and then prompts the game
+    # server process to start a new game session.
     #
     # A game session queue is configured with a set of destinations (Amazon
-    # GameLift fleets or aliases), which determine the locations where the
-    # queue can place new game sessions. These destinations can span
-    # multiple fleet types (Spot and On-Demand), instance types, and Amazon
-    # Web Services Regions. If the queue includes multi-location fleets, the
-    # queue is able to place game sessions in all of a fleet's remote
-    # locations. You can opt to filter out individual locations if needed.
+    # GameLift Servers fleets or aliases) that determine where the queue can
+    # place new game sessions. These destinations can span multiple Amazon
+    # Web Services Regions, can use different instance types, and can
+    # include both Spot and On-Demand fleets. If the queue includes
+    # multi-location fleets, the queue can place game sessions in any of a
+    # fleet's remote locations.
     #
-    # The queue configuration also determines how FleetIQ selects the best
-    # available placement for a new game session. Before searching for an
-    # available game server, FleetIQ first prioritizes the queue's
-    # destinations and locations, with the best placement locations on top.
-    # You can set up the queue to use the FleetIQ default prioritization or
-    # provide an alternate set of priorities.
+    # You can configure a queue to determine how it selects the best
+    # available placement for a new game session. Queues can prioritize
+    # placement decisions based on a combination of location, hosting cost,
+    # and player latency. You can set up the queue to use the default
+    # prioritization or provide alternate instructions using
+    # `PriorityConfiguration`.
     #
-    # To create a new queue, provide a name, timeout value, and a list of
-    # destinations. Optionally, specify a sort configuration and/or a
-    # filter, and define a set of latency cap policies. You can also include
-    # the ARN for an Amazon Simple Notification Service (SNS) topic to
-    # receive notifications of game session placement activity.
-    # Notifications using SNS or CloudWatch events is the preferred way to
-    # track placement activity.
+    # **Request options**
     #
-    # If successful, a new `GameSessionQueue` object is returned with an
-    # assigned queue ARN. New game session requests, which are submitted to
-    # queue with [StartGameSessionPlacement][1] or [StartMatchmaking][2],
-    # reference a queue's name or ARN.
+    # Use this operation to make these common types of requests.
+    #
+    # * Create a queue with the minimum required parameters.
+    #
+    #   * `Name`
+    #
+    #   * `Destinations` (This parameter isn't required, but a queue can't
+    #     make placements without at least one destination.)
+    # * Create a queue with placement notification. Queues that have high
+    #   placement activity must use a notification system, such as with
+    #   Amazon Simple Notification Service (Amazon SNS) or Amazon
+    #   CloudWatch.
+    #
+    #   * Required parameters `Name` and `Destinations`
+    #
+    #   * `NotificationTarget`
+    # * Create a queue with custom prioritization settings. These custom
+    #   settings replace the default prioritization configuration for a
+    #   queue.
+    #
+    #   * Required parameters `Name` and `Destinations`
+    #
+    #   * `PriorityConfiguration`
+    # * Create a queue with special rules for processing player latency
+    #   data.
+    #
+    #   * Required parameters `Name` and `Destinations`
+    #
+    #   * `PlayerLatencyPolicies`
+    #
+    # **Results**
+    #
+    # If successful, this operation returns a new `GameSessionQueue` object
+    # with an assigned queue ARN. Use the queue's name or ARN when
+    # submitting new game session requests with
+    # [StartGameSessionPlacement][1] or [StartMatchmaking][2].
     #
     # **Learn more**
     #
@@ -2653,14 +2878,19 @@ module Aws::GameLift
     # @option params [Integer] :timeout_in_seconds
     #   The maximum time, in seconds, that a new game session placement
     #   request remains in the queue. When a request exceeds this time, the
-    #   game session placement changes to a `TIMED_OUT` status.
+    #   game session placement changes to a `TIMED_OUT` status. If you don't
+    #   specify a request timeout, the queue uses a default value.
+    #
+    #   <note markdown="1"> The minimum value is 10 and the maximum value is 600.
+    #
+    #    </note>
     #
     # @option params [Array<Types::PlayerLatencyPolicy>] :player_latency_policies
     #   A set of policies that enforce a sliding cap on player latency when
     #   processing game sessions placement requests. Use multiple policies to
-    #   gradually relax the cap over time if Amazon GameLift can't make a
-    #   placement. Policies are evaluated in order starting with the lowest
-    #   maximum latency value.
+    #   gradually relax the cap over time if Amazon GameLift Servers can't
+    #   make a placement. Policies are evaluated in order starting with the
+    #   lowest maximum latency value.
     #
     # @option params [Array<Types::GameSessionQueueDestination>] :destinations
     #   A list of fleets and/or fleet aliases that can be used to fulfill game
@@ -2771,6 +3001,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** Anywhere
+    #
     # Creates a custom location for use in an Anywhere fleet.
     #
     # @option params [required, String] :location_name
@@ -2808,6 +3040,8 @@ module Aws::GameLift
     #
     #   resp.location.location_name #=> String
     #   resp.location.location_arn #=> String
+    #   resp.location.ping_beacon.udp_endpoint.domain #=> String
+    #   resp.location.ping_beacon.udp_endpoint.port #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/CreateLocation AWS API Documentation
     #
@@ -2818,23 +3052,27 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Defines a new matchmaking configuration for use with FlexMatch.
-    # Whether your are using FlexMatch with Amazon GameLift hosting or as a
-    # standalone matchmaking service, the matchmaking configuration sets out
-    # rules for matching players and forming teams. If you're also using
-    # Amazon GameLift hosting, it defines how to start game sessions for
-    # each match. Your matchmaking system can use multiple configurations to
-    # handle different game scenarios. All matchmaking requests identify the
-    # matchmaking configuration to use and provide player attributes
-    # consistent with that configuration.
+    # Whether your are using FlexMatch with Amazon GameLift Servers hosting
+    # or as a standalone matchmaking service, the matchmaking configuration
+    # sets out rules for matching players and forming teams. If you're also
+    # using Amazon GameLift Servers hosting, it defines how to start game
+    # sessions for each match. Your matchmaking system can use multiple
+    # configurations to handle different game scenarios. All matchmaking
+    # requests identify the matchmaking configuration to use and provide
+    # player attributes consistent with that configuration.
     #
     # To create a matchmaking configuration, you must provide the following:
     # configuration name and FlexMatch mode (with or without Amazon GameLift
-    # hosting); a rule set that specifies how to evaluate players and find
-    # acceptable matches; whether player acceptance is required; and the
-    # maximum time allowed for a matchmaking attempt. When using FlexMatch
-    # with Amazon GameLift hosting, you also need to identify the game
-    # session queue to use when starting a game session for the match.
+    # Servers hosting); a rule set that specifies how to evaluate players
+    # and find acceptable matches; whether player acceptance is required;
+    # and the maximum time allowed for a matchmaking attempt. When using
+    # FlexMatch with Amazon GameLift Servers hosting, you also need to
+    # identify the game session queue to use when starting a game session
+    # for the match.
     #
     # In addition, you must set up an Amazon Simple Notification Service
     # topic to receive matchmaking notifications. Provide the topic ARN in
@@ -2861,11 +3099,11 @@ module Aws::GameLift
     #
     # @option params [Array<String>] :game_session_queue_arns
     #   The Amazon Resource Name ([ARN][1]) that is assigned to a Amazon
-    #   GameLift game session queue resource and uniquely identifies it. ARNs
-    #   are unique across all Regions. Format is
+    #   GameLift Servers game session queue resource and uniquely identifies
+    #   it. ARNs are unique across all Regions. Format is
     #   `arn:aws:gamelift:<region>::gamesessionqueue/<queue name>`. Queues can
-    #   be located in any Region. Queues are used to start new Amazon
-    #   GameLift-hosted game sessions for matches that are created with this
+    #   be located in any Region. Queues are used to start new Amazon GameLift
+    #   Servers-hosted game sessions for matches that are created with this
     #   matchmaking configuration. If `FlexMatchMode` is set to `STANDALONE`,
     #   do not set this parameter.
     #
@@ -2922,6 +3160,18 @@ module Aws::GameLift
     #   for a successful match. This parameter is not used if `FlexMatchMode`
     #   is set to `STANDALONE`.
     #
+    #   <note markdown="1"> * Avoid using periods (".") in property keys if you plan to search
+    #     for game sessions by properties. Property keys containing periods
+    #     cannot be searched and will be filtered out from search results due
+    #     to search index limitations.
+    #
+    #   * If you use SearchGameSessions API, there is a limit of 500 game
+    #     property keys across all game sessions and all fleets per region. If
+    #     the limit is exceeded, there will potentially be game session
+    #     entries missing from SearchGameSessions API results.
+    #
+    #    </note>
+    #
     # @option params [String] :game_session_data
     #   A set of custom game session properties, formatted as a single string
     #   value. This data is passed to a game server process with a request to
@@ -2938,9 +3188,9 @@ module Aws::GameLift
     #   The method used to backfill game sessions that are created with this
     #   matchmaking configuration. Specify `MANUAL` when your game manages
     #   backfill requests manually or does not use the match backfill feature.
-    #   Specify `AUTOMATIC` to have Amazon GameLift create a backfill request
-    #   whenever a game session has one or more open slots. Learn more about
-    #   manual and automatic backfill in [ Backfill Existing Games with
+    #   Specify `AUTOMATIC` to have Amazon GameLift Servers create a backfill
+    #   request whenever a game session has one or more open slots. Learn more
+    #   about manual and automatic backfill in [ Backfill Existing Games with
     #   FlexMatch][1]. Automatic backfill is not available when
     #   `FlexMatchMode` is set to `STANDALONE`.
     #
@@ -2950,14 +3200,15 @@ module Aws::GameLift
     #
     # @option params [String] :flex_match_mode
     #   Indicates whether this matchmaking configuration is being used with
-    #   Amazon GameLift hosting or as a standalone matchmaking solution.
+    #   Amazon GameLift Servers hosting or as a standalone matchmaking
+    #   solution.
     #
     #   * **STANDALONE** - FlexMatch forms matches and returns match
     #     information, including players and team assignments, in a [
     #     MatchmakingSucceeded][1] event.
     #
     #   * **WITH\_QUEUE** - FlexMatch forms matches and uses the specified
-    #     Amazon GameLift queue to start a game session for the match.
+    #     Amazon GameLift Servers queue to start a game session for the match.
     #
     #
     #
@@ -3041,6 +3292,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Creates a new rule set for FlexMatch matchmaking. A rule set describes
     # the type of match to create, such as the number and size of teams. It
     # also sets the parameters for acceptable player matches, such as
@@ -3125,6 +3379,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Reserves an open player slot in a game session for a player. New
     # player sessions can be created in any game session with an open slot
     # that is in `ACTIVE` status and has a player creation policy of
@@ -3138,8 +3395,8 @@ module Aws::GameLift
     # and a new `PlayerSessions` object is returned with a player session
     # ID. The player references the player session ID when sending a
     # connection request to the game session, and the game server can use it
-    # to validate the player reservation with the Amazon GameLift service.
-    # Player sessions cannot be updated.
+    # to validate the player reservation with the Amazon GameLift Servers
+    # service. Player sessions cannot be updated.
     #
     # The maximum number of players per game session is 200. It is not
     # adjustable.
@@ -3154,15 +3411,21 @@ module Aws::GameLift
     # [2]: https://docs.aws.amazon.com/gamelift/latest/developerguide/reference-awssdk.html#reference-awssdk-resources-fleets
     #
     # @option params [required, String] :game_session_id
-    #   A unique identifier for the game session to add a player to.
+    #   An identifier for the game session that is unique across all regions
+    #   to add a player to. The value is always a full ARN in the following
+    #   format: For Home Region game session -
+    #   `arn:aws:gamelift:<home_region>::gamesession/<fleet ID>/<ID string>`.
+    #   For Remote Location game session -
+    #   `arn:aws:gamelift:<home_region>::gamesession/<fleet ID>/<location>/<ID
+    #   string>`.
     #
     # @option params [required, String] :player_id
     #   A unique identifier for a player. Player IDs are developer-defined.
     #
     # @option params [String] :player_data
     #   Developer-defined information related to a player. Amazon GameLift
-    #   does not use this data, so it can be formatted as needed for use in
-    #   the game.
+    #   Servers does not use this data, so it can be formatted as needed for
+    #   use in the game.
     #
     # @return [Types::CreatePlayerSessionOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -3200,6 +3463,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Reserves open slots in a game session for a group of players. New
     # player sessions can be created in any game session with an open slot
     # that is in `ACTIVE` status and has a player creation policy of
@@ -3214,8 +3480,8 @@ module Aws::GameLift
     # and new `PlayerSession` objects are returned with player session IDs.
     # Each player references their player session ID when sending a
     # connection request to the game session, and the game server can use it
-    # to validate the player reservation with the Amazon GameLift service.
-    # Player sessions cannot be updated.
+    # to validate the player reservation with the Amazon GameLift Servers
+    # service. Player sessions cannot be updated.
     #
     # The maximum number of players per game session is 200. It is not
     # adjustable.
@@ -3230,7 +3496,13 @@ module Aws::GameLift
     # [2]: https://docs.aws.amazon.com/gamelift/latest/developerguide/reference-awssdk.html#reference-awssdk-resources-fleets
     #
     # @option params [required, String] :game_session_id
-    #   A unique identifier for the game session to add players to.
+    #   An identifier for the game session that is unique across all regions
+    #   to add players to. The value is always a full ARN in the following
+    #   format: For Home Region game session -
+    #   `arn:aws:gamelift:<home_region>::gamesession/<fleet ID>/<ID string>`.
+    #   For Remote Location game session -
+    #   `arn:aws:gamelift:<home_region>::gamesession/<fleet ID>/<location>/<ID
+    #   string>`.
     #
     # @option params [required, Array<String>] :player_ids
     #   List of unique identifiers for the players to be added.
@@ -3238,9 +3510,9 @@ module Aws::GameLift
     # @option params [Hash<String,String>] :player_data_map
     #   Map of string pairs, each specifying a player ID and a set of
     #   developer-defined information related to the player. Amazon GameLift
-    #   does not use this data, so it can be formatted as needed for use in
-    #   the game. Any player data strings for player IDs that are not included
-    #   in the `PlayerIds` parameter are ignored.
+    #   Servers does not use this data, so it can be formatted as needed for
+    #   use in the game. Any player data strings for player IDs that are not
+    #   included in the `PlayerIds` parameter are ignored.
     #
     # @return [Types::CreatePlayerSessionsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -3281,11 +3553,14 @@ module Aws::GameLift
       req.send_request(options)
     end
 
-    # Creates a new script record for your Realtime Servers script. Realtime
-    # scripts are JavaScript that provide configuration settings and
-    # optional custom game logic for your game. The script is deployed when
-    # you create a Realtime Servers fleet to host your game sessions. Script
-    # logic is executed during an active game session.
+    # **This API works with the following fleet types:** EC2, Anywhere
+    #
+    # Creates a new script record for your Amazon GameLift Servers Realtime
+    # script. Realtime scripts are JavaScript that provide configuration
+    # settings and optional custom game logic for your game. The script is
+    # deployed when you create a Amazon GameLift Servers Realtime fleet to
+    # host your game sessions. Script logic is executed during an active
+    # game session.
     #
     # To create a new script record, specify a script name and provide the
     # script file(s). The script files and all dependencies must be zipped
@@ -3298,21 +3573,21 @@ module Aws::GameLift
     # * An Amazon Simple Storage Service (Amazon S3) bucket under your
     #   Amazon Web Services account. Use the *StorageLocation* parameter for
     #   this option. You'll need to have an Identity Access Management
-    #   (IAM) role that allows the Amazon GameLift service to access your S3
-    #   bucket.
+    #   (IAM) role that allows the Amazon GameLift Servers service to access
+    #   your S3 bucket.
     #
     # If the call is successful, a new script record is created with a
     # unique script ID. If the script file is provided as a local file, the
-    # file is uploaded to an Amazon GameLift-owned S3 bucket and the script
-    # record's storage location reflects this location. If the script file
-    # is provided as an S3 bucket, Amazon GameLift accesses the file at this
-    # storage location as needed for deployment.
+    # file is uploaded to an Amazon GameLift Servers-owned S3 bucket and the
+    # script record's storage location reflects this location. If the
+    # script file is provided as an S3 bucket, Amazon GameLift Servers
+    # accesses the file at this storage location as needed for deployment.
     #
     # **Learn more**
     #
-    # [Amazon GameLift Realtime Servers][1]
+    # [Amazon GameLift Servers Amazon GameLift Servers Realtime][1]
     #
-    # [Set Up a Role for Amazon GameLift Access][2]
+    # [Set Up a Role for Amazon GameLift Servers Access][2]
     #
     # **Related actions**
     #
@@ -3346,11 +3621,12 @@ module Aws::GameLift
     #   The location of the Amazon S3 bucket where a zipped file containing
     #   your Realtime scripts is stored. The storage location must specify the
     #   Amazon S3 bucket name, the zip file name (the "key"), and a role ARN
-    #   that allows Amazon GameLift to access the Amazon S3 storage location.
-    #   The S3 bucket must be in the same Region where you want to create a
-    #   new script. By default, Amazon GameLift uploads the latest version of
-    #   the zip file; if you have S3 object versioning turned on, you can use
-    #   the `ObjectVersion` parameter to specify an earlier version.
+    #   that allows Amazon GameLift Servers to access the Amazon S3 storage
+    #   location. The S3 bucket must be in the same Region where you want to
+    #   create a new script. By default, Amazon GameLift Servers uploads the
+    #   latest version of the zip file; if you have S3 object versioning
+    #   turned on, you can use the `ObjectVersion` parameter to specify an
+    #   earlier version.
     #
     # @option params [String, StringIO, File] :zip_file
     #   A data object containing your Realtime scripts and dependencies as a
@@ -3380,6 +3656,22 @@ module Aws::GameLift
     #   [3]: https://docs.aws.amazon.com/gamelift/latest/apireference/API_UntagResource.html
     #   [4]: https://docs.aws.amazon.com/gamelift/latest/apireference/API_ListTagsForResource.html
     #
+    # @option params [String] :node_js_version
+    #   The Node.js version used for execution of your Realtime script. The
+    #   valid values are `10.x | 24.x`. By default, `NodeJsVersion` is `10.x`.
+    #   This value cannot be updated later.
+    #
+    #   <note markdown="1"> Node.js 10 will reach end of support on September 30, 2026. See more
+    #   details in the [Node.js 10 FAQs][1]. For migration guidance, see [
+    #   Migrating from Node.js 10 to 24][2].
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: http://aws.amazon.com/gamelift/faq/nodejs10/
+    #   [2]: https://docs.aws.amazon.com/gamelift/latest/realtimeguide/realtime-script.html#realtime-script-nodejs-migration
+    #
     # @return [Types::CreateScriptOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateScriptOutput#script #script} => Types::Script
@@ -3402,6 +3694,7 @@ module Aws::GameLift
     #         value: "TagValue", # required
     #       },
     #     ],
+    #     node_js_version: "NodeJsVersion",
     #   })
     #
     # @example Response structure
@@ -3416,6 +3709,7 @@ module Aws::GameLift
     #   resp.script.storage_location.key #=> String
     #   resp.script.storage_location.role_arn #=> String
     #   resp.script.storage_location.object_version #=> String
+    #   resp.script.node_js_version #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/CreateScript AWS API Documentation
     #
@@ -3426,38 +3720,60 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2
+    #
     # Requests authorization to create or delete a peer connection between
-    # the VPC for your Amazon GameLift fleet and a virtual private cloud
-    # (VPC) in your Amazon Web Services account. VPC peering enables the
-    # game servers on your fleet to communicate directly with other Amazon
-    # Web Services resources. After you've received authorization, use
-    # [CreateVpcPeeringConnection][1] to establish the peering connection.
-    # For more information, see [VPC Peering with Amazon GameLift
-    # Fleets][2].
+    # the VPC for your Amazon GameLift Servers fleet and a virtual private
+    # cloud (VPC) in your Amazon Web Services account. VPC peering enables
+    # the game servers on your fleet to communicate directly with other
+    # Amazon Web Services resources. After you've received authorization,
+    # use [CreateVpcPeeringConnection][1] to establish the peering
+    # connection. For more information, see [VPC Peering with Amazon
+    # GameLift Servers Fleets][2].
     #
     # You can peer with VPCs that are owned by any Amazon Web Services
     # account you have access to, including the account that you use to
-    # manage your Amazon GameLift fleets. You cannot peer with VPCs that are
-    # in different Regions.
+    # manage your Amazon GameLift Servers fleets. You cannot peer with VPCs
+    # that are in different Regions.
     #
     # To request authorization to create a connection, call this operation
     # from the Amazon Web Services account with the VPC that you want to
-    # peer to your Amazon GameLift fleet. For example, to enable your game
-    # servers to retrieve data from a DynamoDB table, use the account that
-    # manages that DynamoDB resource. Identify the following values: (1) The
-    # ID of the VPC that you want to peer with, and (2) the ID of the Amazon
-    # Web Services account that you use to manage Amazon GameLift. If
-    # successful, VPC peering is authorized for the specified VPC.
+    # peer to your Amazon GameLift Servers fleet. For example, to enable
+    # your game servers to retrieve data from a DynamoDB table, use the
+    # account that manages that DynamoDB resource. Identify the following
+    # values: (1) The ID of the VPC that you want to peer with, and (2) the
+    # ID of the Amazon Web Services account that you use to manage Amazon
+    # GameLift Servers. If successful, VPC peering is authorized for the
+    # specified VPC.
     #
     # To request authorization to delete a connection, call this operation
     # from the Amazon Web Services account with the VPC that is peered with
-    # your Amazon GameLift fleet. Identify the following values: (1) VPC ID
-    # that you want to delete the peering connection for, and (2) ID of the
-    # Amazon Web Services account that you use to manage Amazon GameLift.
+    # your Amazon GameLift Servers fleet. Identify the following values: (1)
+    # VPC ID that you want to delete the peering connection for, and (2) ID
+    # of the Amazon Web Services account that you use to manage Amazon
+    # GameLift Servers.
     #
     # The authorization remains valid for 24 hours unless it is canceled.
     # You must create or delete the peering connection while the
     # authorization is valid.
+    #
+    # <note markdown="1"> Amazon GameLift Servers uses the caller's credentials to update
+    # peer-VPC resources. The IAM user that calls this operation must have
+    # the following Amazon EC2 permissions enabled:
+    #
+    #  * `ec2:AcceptVpcPeeringConnection`
+    #
+    # * `ec2:AuthorizeSecurityGroupEgress`
+    #
+    # * `ec2:AuthorizeSecurityGroupIngress`
+    #
+    # * `ec2:CreateRoute`
+    #
+    # * `ec2:DescribeRouteTables`
+    #
+    # * `ec2:DescribeSecurityGroups`
+    #
+    #  </note>
     #
     # **Related actions**
     #
@@ -3471,15 +3787,16 @@ module Aws::GameLift
     #
     # @option params [required, String] :game_lift_aws_account_id
     #   A unique identifier for the Amazon Web Services account that you use
-    #   to manage your Amazon GameLift fleet. You can find your Account ID in
-    #   the Amazon Web Services Management Console under account settings.
+    #   to manage your Amazon GameLift Servers fleet. You can find your
+    #   Account ID in the Amazon Web Services Management Console under account
+    #   settings.
     #
     # @option params [required, String] :peer_vpc_id
     #   A unique identifier for a VPC with resources to be accessed by your
-    #   Amazon GameLift fleet. The VPC must be in the same Region as your
-    #   fleet. To look up a VPC ID, use the [VPC Dashboard][1] in the Amazon
-    #   Web Services Management Console. Learn more about VPC peering in [VPC
-    #   Peering with Amazon GameLift Fleets][2].
+    #   Amazon GameLift Servers fleet. The VPC must be in the same Region as
+    #   your fleet. To look up a VPC ID, use the [VPC Dashboard][1] in the
+    #   Amazon Web Services Management Console. Learn more about VPC peering
+    #   in [VPC Peering with Amazon GameLift Servers Fleets][2].
     #
     #
     #
@@ -3514,14 +3831,17 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2
+    #
     # Establishes a VPC peering connection between a virtual private cloud
     # (VPC) in an Amazon Web Services account with the VPC for your Amazon
-    # GameLift fleet. VPC peering enables the game servers on your fleet to
-    # communicate directly with other Amazon Web Services resources. You can
-    # peer with VPCs in any Amazon Web Services account that you have access
-    # to, including the account that you use to manage your Amazon GameLift
-    # fleets. You cannot peer with VPCs that are in different Regions. For
-    # more information, see [VPC Peering with Amazon GameLift Fleets][1].
+    # GameLift Servers fleet. VPC peering enables the game servers on your
+    # fleet to communicate directly with other Amazon Web Services
+    # resources. You can peer with VPCs in any Amazon Web Services account
+    # that you have access to, including the account that you use to manage
+    # your Amazon GameLift Servers fleets. You cannot peer with VPCs that
+    # are in different Regions. For more information, see [VPC Peering with
+    # Amazon GameLift Servers Fleets][1].
     #
     # Before calling this operation to establish the peering connection, you
     # first need to use [CreateVpcPeeringAuthorization][2] and identify the
@@ -3531,15 +3851,33 @@ module Aws::GameLift
     # including acceptance, updating routing tables, etc.
     #
     # To establish the connection, call this operation from the Amazon Web
-    # Services account that is used to manage the Amazon GameLift fleets.
-    # Identify the following values: (1) The ID of the fleet you want to be
-    # enable a VPC peering connection for; (2) The Amazon Web Services
-    # account with the VPC that you want to peer with; and (3) The ID of the
-    # VPC you want to peer with. This operation is asynchronous. If
-    # successful, a connection request is created. You can use continuous
+    # Services account that is used to manage the Amazon GameLift Servers
+    # fleets. Identify the following values: (1) The ID of the fleet you
+    # want to be enable a VPC peering connection for; (2) The Amazon Web
+    # Services account with the VPC that you want to peer with; and (3) The
+    # ID of the VPC you want to peer with. This operation is asynchronous.
+    # If successful, a connection request is created. You can use continuous
     # polling to track the request's status using
     # [DescribeVpcPeeringConnections][3] , or by monitoring fleet events for
     # success or failure using [DescribeFleetEvents][4] .
+    #
+    # <note markdown="1"> Amazon GameLift Servers uses the caller's credentials to update
+    # peer-VPC resources. The IAM user that calls this operation must have
+    # the following Amazon EC2 permissions enabled:
+    #
+    #  * `ec2:AcceptVpcPeeringConnection`
+    #
+    # * `ec2:AuthorizeSecurityGroupEgress`
+    #
+    # * `ec2:AuthorizeSecurityGroupIngress`
+    #
+    # * `ec2:CreateRoute`
+    #
+    # * `ec2:DescribeRouteTables`
+    #
+    # * `ec2:DescribeSecurityGroups`
+    #
+    #  </note>
     #
     # **Related actions**
     #
@@ -3555,20 +3893,21 @@ module Aws::GameLift
     #
     # @option params [required, String] :fleet_id
     #   A unique identifier for the fleet. You can use either the fleet ID or
-    #   ARN value. This tells Amazon GameLift which GameLift VPC to peer with.
+    #   ARN value. This tells Amazon GameLift Servers which GameLift VPC to
+    #   peer with.
     #
     # @option params [required, String] :peer_vpc_aws_account_id
     #   A unique identifier for the Amazon Web Services account with the VPC
-    #   that you want to peer your Amazon GameLift fleet with. You can find
-    #   your Account ID in the Amazon Web Services Management Console under
-    #   account settings.
+    #   that you want to peer your Amazon GameLift Servers fleet with. You can
+    #   find your Account ID in the Amazon Web Services Management Console
+    #   under account settings.
     #
     # @option params [required, String] :peer_vpc_id
     #   A unique identifier for a VPC with resources to be accessed by your
-    #   Amazon GameLift fleet. The VPC must be in the same Region as your
-    #   fleet. To look up a VPC ID, use the [VPC Dashboard][1] in the Amazon
-    #   Web Services Management Console. Learn more about VPC peering in [VPC
-    #   Peering with Amazon GameLift Fleets][2].
+    #   Amazon GameLift Servers fleet. The VPC must be in the same Region as
+    #   your fleet. To look up a VPC ID, use the [VPC Dashboard][1] in the
+    #   Amazon Web Services Management Console. Learn more about VPC peering
+    #   in [VPC Peering with Amazon GameLift Servers Fleets][2].
     #
     #
     #
@@ -3594,6 +3933,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Deletes an alias. This operation removes all record of the alias. Game
     # clients attempting to access a server process using the deleted alias
     # receive an error. To delete an alias, specify the alias ID to be
@@ -3628,6 +3970,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2
+    #
     # Deletes a build. This operation permanently deletes the build resource
     # and any uploaded build files. Deleting a build does not affect the
     # status of any active fleets using the build, but you can no longer
@@ -3667,6 +4011,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** Container
+    #
     # Deletes all resources and information related to a container fleet and
     # shuts down currently running fleet instances, including those in
     # remote locations. The container fleet must be in `ACTIVE` status to be
@@ -3677,7 +4023,7 @@ module Aws::GameLift
     #
     # **Learn more**
     #
-    # [Setting up Amazon GameLift Fleets][1]
+    # [Setting up Amazon GameLift Servers Fleets][1]
     #
     #
     #
@@ -3704,9 +4050,11 @@ module Aws::GameLift
       req.send_request(options)
     end
 
-    # Deletes a container group definition.
+    # **This API works with the following fleet types:** Container
     #
     # **Request options:**
+    #
+    # Deletes a container group definition.
     #
     # * Delete an entire container group definition, including all versions.
     #   Specify the container group definition name, or use an ARN value
@@ -3723,9 +4071,9 @@ module Aws::GameLift
     #
     # **Result**
     #
-    # If successful, Amazon GameLift removes the container group definition
-    # versions that you request deletion for. This request will fail for any
-    # requested versions if the following is true:
+    # If successful, Amazon GameLift Servers removes the container group
+    # definition versions that you request deletion for. This request will
+    # fail for any requested versions if the following is true:
     #
     # * If the version is being used in an active fleet
     #
@@ -3775,6 +4123,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere
+    #
     # Deletes all resources and information related to a fleet and shuts
     # down any currently running fleet instances, including those in remote
     # locations.
@@ -3793,7 +4143,7 @@ module Aws::GameLift
     #
     # **Learn more**
     #
-    # [Setting up Amazon GameLift Fleets][2]
+    # [Setting up Amazon GameLift Servers Fleets][2]
     #
     #
     #
@@ -3821,6 +4171,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Removes locations from a multi-location fleet. When deleting a
     # location, all game server process and all instances that are still
     # active in the location are shut down.
@@ -3835,7 +4188,7 @@ module Aws::GameLift
     #
     # **Learn more**
     #
-    # [Setting up Amazon GameLift fleets][1]
+    # [Setting up Amazon GameLift Servers fleets][1]
     #
     #
     #
@@ -3868,7 +4221,8 @@ module Aws::GameLift
     #   resp.fleet_arn #=> String
     #   resp.location_states #=> Array
     #   resp.location_states[0].location #=> String
-    #   resp.location_states[0].status #=> String, one of "NEW", "DOWNLOADING", "VALIDATING", "BUILDING", "ACTIVATING", "ACTIVE", "DELETING", "ERROR", "TERMINATED", "NOT_FOUND"
+    #   resp.location_states[0].status #=> String, one of "NEW", "DOWNLOADING", "VALIDATING", "BUILDING", "ACTIVATING", "ACTIVE", "DELETING", "ERROR", "TERMINATED", "NOT_FOUND", "EXPIRED"
+    #   resp.location_states[0].player_gateway_status #=> String, one of "DISABLED", "ENABLED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/DeleteFleetLocations AWS API Documentation
     #
@@ -3879,8 +4233,7 @@ module Aws::GameLift
       req.send_request(options)
     end
 
-    # **This operation is used with the Amazon GameLift FleetIQ solution and
-    # game server groups.**
+    # **This API works with the following fleet types:** EC2 (FleetIQ)
     #
     # Terminates a game server group and permanently deletes the game server
     # group record. You have several options for how these resources are
@@ -3903,15 +4256,16 @@ module Aws::GameLift
     # off. The game server group status is changed to `DELETE_SCHEDULED`,
     # which prevents new game servers from being registered and stops
     # automatic scaling activity. Once all game servers in the game server
-    # group are deregistered, Amazon GameLift FleetIQ can begin deleting
-    # resources. If any of the delete operations fail, the game server group
-    # is placed in `ERROR` status.
+    # group are deregistered, Amazon GameLift Servers FleetIQ can begin
+    # deleting resources. If any of the delete operations fail, the game
+    # server group is placed in `ERROR` status.
     #
-    # Amazon GameLift FleetIQ emits delete events to Amazon CloudWatch.
+    # Amazon GameLift Servers FleetIQ emits delete events to Amazon
+    # CloudWatch.
     #
     # **Learn more**
     #
-    # [Amazon GameLift FleetIQ Guide][1]
+    # [Amazon GameLift Servers FleetIQ Guide][1]
     #
     #
     #
@@ -3973,6 +4327,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Deletes a game session queue. Once a queue is successfully deleted,
     # unfulfilled [StartGameSessionPlacement][1] requests that reference the
     # queue will fail. To delete a queue, specify the queue name.
@@ -4003,6 +4360,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** Anywhere
+    #
     # Deletes a custom location.
     #
     # Before deleting a custom location, review any fleets currently using
@@ -4033,6 +4392,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Permanently removes a FlexMatch matchmaking configuration. To delete,
     # specify the configuration name. A matchmaking configuration cannot be
     # deleted if it is being used in any active matchmaking tickets.
@@ -4058,6 +4420,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Deletes an existing matchmaking rule set. To delete the rule set,
     # provide the rule set name. Rule sets cannot be deleted if they are
     # currently being used by a matchmaking configuration.
@@ -4094,10 +4459,12 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Container
+    #
     # Deletes a fleet scaling policy. Once deleted, the policy is no longer
-    # in force and Amazon GameLift removes all record of it. To delete a
-    # scaling policy, specify both the scaling policy name and the fleet ID
-    # it is associated with.
+    # in force and Amazon GameLift Servers removes all record of it. To
+    # delete a scaling policy, specify both the scaling policy name and the
+    # fleet ID it is associated with.
     #
     # To temporarily suspend scaling policies, use [StopFleetActions][1].
     # This operation suspends all policies for the fleet.
@@ -4132,6 +4499,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2
+    #
     # Deletes a Realtime script. This operation permanently deletes the
     # script record. If script files were uploaded, they are also deleted
     # (files stored in an S3 bucket are not deleted).
@@ -4144,7 +4513,7 @@ module Aws::GameLift
     #
     # **Learn more**
     #
-    # [Amazon GameLift Realtime Servers][1]
+    # [Amazon GameLift Servers Amazon GameLift Servers Realtime][1]
     #
     # **Related actions**
     #
@@ -4176,6 +4545,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2
+    #
     # Cancels a pending VPC peering authorization for the specified VPC. If
     # you need to delete an existing VPC peering connection, use
     # [DeleteVpcPeeringConnection][1].
@@ -4191,15 +4562,16 @@ module Aws::GameLift
     #
     # @option params [required, String] :game_lift_aws_account_id
     #   A unique identifier for the Amazon Web Services account that you use
-    #   to manage your Amazon GameLift fleet. You can find your Account ID in
-    #   the Amazon Web Services Management Console under account settings.
+    #   to manage your Amazon GameLift Servers fleet. You can find your
+    #   Account ID in the Amazon Web Services Management Console under account
+    #   settings.
     #
     # @option params [required, String] :peer_vpc_id
     #   A unique identifier for a VPC with resources to be accessed by your
-    #   Amazon GameLift fleet. The VPC must be in the same Region as your
-    #   fleet. To look up a VPC ID, use the [VPC Dashboard][1] in the Amazon
-    #   Web Services Management Console. Learn more about VPC peering in [VPC
-    #   Peering with Amazon GameLift Fleets][2].
+    #   Amazon GameLift Servers fleet. The VPC must be in the same Region as
+    #   your fleet. To look up a VPC ID, use the [VPC Dashboard][1] in the
+    #   Amazon Web Services Management Console. Learn more about VPC peering
+    #   in [VPC Peering with Amazon GameLift Servers Fleets][2].
     #
     #
     #
@@ -4224,14 +4596,16 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2
+    #
     # Removes a VPC peering connection. To delete the connection, you must
     # have a valid authorization for the VPC peering connection that you
     # want to delete..
     #
     # Once a valid authorization exists, call this operation from the Amazon
     # Web Services account that is used to manage the Amazon GameLift
-    # fleets. Identify the connection to delete by the connection ID and
-    # fleet ID. If successful, the connection is removed.
+    # Servers fleets. Identify the connection to delete by the connection ID
+    # and fleet ID. If successful, the connection is removed.
     #
     # **Related actions**
     #
@@ -4267,14 +4641,13 @@ module Aws::GameLift
       req.send_request(options)
     end
 
-    # Removes a compute resource from an Amazon GameLift Anywhere fleet.
-    # Deregistered computes can no longer host game sessions through Amazon
-    # GameLift.
+    # **This API works with the following fleet types:** Anywhere
     #
-    # For an Anywhere fleet that's running the Amazon GameLift Agent, the
-    # Agent handles all compute registry tasks for you. For an Anywhere
-    # fleet that doesn't use the Agent, call this operation to deregister
-    # fleet computes.
+    # Removes a compute resource from an Anywhere fleet. Deregistered
+    # computes can no longer host game sessions through Amazon GameLift
+    # Servers. Use this operation with an Anywhere fleet that doesn't use
+    # the Amazon GameLift Servers Agent For Anywhere fleets with the Agent,
+    # the Agent handles all compute registry tasks for you.
     #
     # To deregister a compute, call this operation from the compute that's
     # being deregistered and specify the compute name and the fleet ID.
@@ -4305,8 +4678,7 @@ module Aws::GameLift
       req.send_request(options)
     end
 
-    # **This operation is used with the Amazon GameLift FleetIQ solution and
-    # game server groups.**
+    # **This API works with the following fleet types:** EC2 (FleetIQ)
     #
     # Removes the game server from a game server group. As a result of this
     # operation, the deregistered game server can no longer be claimed and
@@ -4318,7 +4690,7 @@ module Aws::GameLift
     #
     # **Learn more**
     #
-    # [Amazon GameLift FleetIQ Guide][1]
+    # [Amazon GameLift Servers FleetIQ Guide][1]
     #
     #
     #
@@ -4350,6 +4722,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Retrieves properties for an alias. This operation returns all alias
     # metadata and settings. To get an alias's target fleet ID only, use
     # `ResolveAlias`.
@@ -4400,6 +4775,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2
+    #
     # Retrieves properties for a custom game build. To request a build
     # resource, specify a build ID. If successful, an object containing the
     # build properties is returned.
@@ -4437,7 +4814,7 @@ module Aws::GameLift
     #   resp.build.version #=> String
     #   resp.build.status #=> String, one of "INITIALIZED", "READY", "FAILED"
     #   resp.build.size_on_disk #=> Integer
-    #   resp.build.operating_system #=> String, one of "WINDOWS_2012", "AMAZON_LINUX", "AMAZON_LINUX_2", "WINDOWS_2016", "AMAZON_LINUX_2023"
+    #   resp.build.operating_system #=> String, one of "WINDOWS_2012", "AMAZON_LINUX", "AMAZON_LINUX_2", "WINDOWS_2016", "AMAZON_LINUX_2023", "WINDOWS_2022"
     #   resp.build.creation_time #=> Time
     #   resp.build.server_sdk_version #=> String
     #
@@ -4450,21 +4827,39 @@ module Aws::GameLift
       req.send_request(options)
     end
 
-    # Retrieves properties for a compute resource in an Amazon GameLift
-    # fleet. To get a list of all computes in a fleet, call
-    # [https://docs.aws.amazon.com/gamelift/latest/apireference/API\_ListCompute.html][1].
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
     #
-    # To request information on a specific compute, provide the fleet ID and
-    # compute name.
+    # Retrieves properties for a specific compute resource in an Amazon
+    # GameLift Servers fleet. You can list all computes in a fleet by
+    # calling [ListCompute][1].
+    #
+    # **Request options**
+    #
+    # Provide the fleet ID and compute name. The compute name varies
+    # depending on the type of fleet.
+    #
+    # * For a compute in a managed EC2 fleet, provide an instance ID. Each
+    #   instance in the fleet is a compute.
+    #
+    # * For a compute in a managed container fleet, provide a compute name.
+    #   In a container fleet, each game server container group on a fleet
+    #   instance is assigned a compute name.
+    #
+    # * For a compute in an Anywhere fleet, provide a registered compute
+    #   name. Anywhere fleet computes are created when you register a
+    #   hosting resource with the fleet.
+    #
+    # **Results**
     #
     # If successful, this operation returns details for the requested
     # compute resource. Depending on the fleet's compute type, the result
     # includes the following information:
     #
-    # * For managed EC2 fleets, this operation returns information about the
-    #   EC2 instance.
+    # * For a managed EC2 fleet, this operation returns information about
+    #   the EC2 instance.
     #
-    # * For Anywhere fleets, this operation returns information about the
+    # * For an Anywhere fleet, this operation returns information about the
     #   registered compute.
     #
     #
@@ -4477,8 +4872,13 @@ module Aws::GameLift
     #
     # @option params [required, String] :compute_name
     #   The unique identifier of the compute resource to retrieve properties
-    #   for. For an Anywhere fleet compute, use the registered compute name.
-    #   For an EC2 fleet instance, use the instance ID.
+    #   for. For a managed container fleet or Anywhere fleet, use a compute
+    #   name. For an EC2 fleet, use an instance ID. To retrieve a fleet's
+    #   compute identifiers, call [ListCompute][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/gamelift/latest/apireference/API_ListCompute.html
     #
     # @return [Types::DescribeComputeOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -4502,8 +4902,8 @@ module Aws::GameLift
     #   resp.compute.compute_status #=> String, one of "PENDING", "ACTIVE", "TERMINATING", "IMPAIRED"
     #   resp.compute.location #=> String
     #   resp.compute.creation_time #=> Time
-    #   resp.compute.operating_system #=> String, one of "WINDOWS_2012", "AMAZON_LINUX", "AMAZON_LINUX_2", "WINDOWS_2016", "AMAZON_LINUX_2023"
-    #   resp.compute.type #=> String, one of "t2.micro", "t2.small", "t2.medium", "t2.large", "c3.large", "c3.xlarge", "c3.2xlarge", "c3.4xlarge", "c3.8xlarge", "c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge", "c4.8xlarge", "c5.large", "c5.xlarge", "c5.2xlarge", "c5.4xlarge", "c5.9xlarge", "c5.12xlarge", "c5.18xlarge", "c5.24xlarge", "c5a.large", "c5a.xlarge", "c5a.2xlarge", "c5a.4xlarge", "c5a.8xlarge", "c5a.12xlarge", "c5a.16xlarge", "c5a.24xlarge", "r3.large", "r3.xlarge", "r3.2xlarge", "r3.4xlarge", "r3.8xlarge", "r4.large", "r4.xlarge", "r4.2xlarge", "r4.4xlarge", "r4.8xlarge", "r4.16xlarge", "r5.large", "r5.xlarge", "r5.2xlarge", "r5.4xlarge", "r5.8xlarge", "r5.12xlarge", "r5.16xlarge", "r5.24xlarge", "r5a.large", "r5a.xlarge", "r5a.2xlarge", "r5a.4xlarge", "r5a.8xlarge", "r5a.12xlarge", "r5a.16xlarge", "r5a.24xlarge", "m3.medium", "m3.large", "m3.xlarge", "m3.2xlarge", "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge", "m4.10xlarge", "m5.large", "m5.xlarge", "m5.2xlarge", "m5.4xlarge", "m5.8xlarge", "m5.12xlarge", "m5.16xlarge", "m5.24xlarge", "m5a.large", "m5a.xlarge", "m5a.2xlarge", "m5a.4xlarge", "m5a.8xlarge", "m5a.12xlarge", "m5a.16xlarge", "m5a.24xlarge", "c5d.large", "c5d.xlarge", "c5d.2xlarge", "c5d.4xlarge", "c5d.9xlarge", "c5d.12xlarge", "c5d.18xlarge", "c5d.24xlarge", "c6a.large", "c6a.xlarge", "c6a.2xlarge", "c6a.4xlarge", "c6a.8xlarge", "c6a.12xlarge", "c6a.16xlarge", "c6a.24xlarge", "c6i.large", "c6i.xlarge", "c6i.2xlarge", "c6i.4xlarge", "c6i.8xlarge", "c6i.12xlarge", "c6i.16xlarge", "c6i.24xlarge", "r5d.large", "r5d.xlarge", "r5d.2xlarge", "r5d.4xlarge", "r5d.8xlarge", "r5d.12xlarge", "r5d.16xlarge", "r5d.24xlarge", "m6g.medium", "m6g.large", "m6g.xlarge", "m6g.2xlarge", "m6g.4xlarge", "m6g.8xlarge", "m6g.12xlarge", "m6g.16xlarge", "c6g.medium", "c6g.large", "c6g.xlarge", "c6g.2xlarge", "c6g.4xlarge", "c6g.8xlarge", "c6g.12xlarge", "c6g.16xlarge", "r6g.medium", "r6g.large", "r6g.xlarge", "r6g.2xlarge", "r6g.4xlarge", "r6g.8xlarge", "r6g.12xlarge", "r6g.16xlarge", "c6gn.medium", "c6gn.large", "c6gn.xlarge", "c6gn.2xlarge", "c6gn.4xlarge", "c6gn.8xlarge", "c6gn.12xlarge", "c6gn.16xlarge", "c7g.medium", "c7g.large", "c7g.xlarge", "c7g.2xlarge", "c7g.4xlarge", "c7g.8xlarge", "c7g.12xlarge", "c7g.16xlarge", "r7g.medium", "r7g.large", "r7g.xlarge", "r7g.2xlarge", "r7g.4xlarge", "r7g.8xlarge", "r7g.12xlarge", "r7g.16xlarge", "m7g.medium", "m7g.large", "m7g.xlarge", "m7g.2xlarge", "m7g.4xlarge", "m7g.8xlarge", "m7g.12xlarge", "m7g.16xlarge", "g5g.xlarge", "g5g.2xlarge", "g5g.4xlarge", "g5g.8xlarge", "g5g.16xlarge"
+    #   resp.compute.operating_system #=> String, one of "WINDOWS_2012", "AMAZON_LINUX", "AMAZON_LINUX_2", "WINDOWS_2016", "AMAZON_LINUX_2023", "WINDOWS_2022"
+    #   resp.compute.type #=> String, one of "t2.micro", "t2.small", "t2.medium", "t2.large", "c3.large", "c3.xlarge", "c3.2xlarge", "c3.4xlarge", "c3.8xlarge", "c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge", "c4.8xlarge", "c5.large", "c5.xlarge", "c5.2xlarge", "c5.4xlarge", "c5.9xlarge", "c5.12xlarge", "c5.18xlarge", "c5.24xlarge", "c5a.large", "c5a.xlarge", "c5a.2xlarge", "c5a.4xlarge", "c5a.8xlarge", "c5a.12xlarge", "c5a.16xlarge", "c5a.24xlarge", "r3.large", "r3.xlarge", "r3.2xlarge", "r3.4xlarge", "r3.8xlarge", "r4.large", "r4.xlarge", "r4.2xlarge", "r4.4xlarge", "r4.8xlarge", "r4.16xlarge", "r5.large", "r5.xlarge", "r5.2xlarge", "r5.4xlarge", "r5.8xlarge", "r5.12xlarge", "r5.16xlarge", "r5.24xlarge", "r5a.large", "r5a.xlarge", "r5a.2xlarge", "r5a.4xlarge", "r5a.8xlarge", "r5a.12xlarge", "r5a.16xlarge", "r5a.24xlarge", "m3.medium", "m3.large", "m3.xlarge", "m3.2xlarge", "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge", "m4.10xlarge", "m5.large", "m5.xlarge", "m5.2xlarge", "m5.4xlarge", "m5.8xlarge", "m5.12xlarge", "m5.16xlarge", "m5.24xlarge", "m5a.large", "m5a.xlarge", "m5a.2xlarge", "m5a.4xlarge", "m5a.8xlarge", "m5a.12xlarge", "m5a.16xlarge", "m5a.24xlarge", "c5d.large", "c5d.xlarge", "c5d.2xlarge", "c5d.4xlarge", "c5d.9xlarge", "c5d.12xlarge", "c5d.18xlarge", "c5d.24xlarge", "c6a.large", "c6a.xlarge", "c6a.2xlarge", "c6a.4xlarge", "c6a.8xlarge", "c6a.12xlarge", "c6a.16xlarge", "c6a.24xlarge", "c6i.large", "c6i.xlarge", "c6i.2xlarge", "c6i.4xlarge", "c6i.8xlarge", "c6i.12xlarge", "c6i.16xlarge", "c6i.24xlarge", "r5d.large", "r5d.xlarge", "r5d.2xlarge", "r5d.4xlarge", "r5d.8xlarge", "r5d.12xlarge", "r5d.16xlarge", "r5d.24xlarge", "m6g.medium", "m6g.large", "m6g.xlarge", "m6g.2xlarge", "m6g.4xlarge", "m6g.8xlarge", "m6g.12xlarge", "m6g.16xlarge", "c6g.medium", "c6g.large", "c6g.xlarge", "c6g.2xlarge", "c6g.4xlarge", "c6g.8xlarge", "c6g.12xlarge", "c6g.16xlarge", "r6g.medium", "r6g.large", "r6g.xlarge", "r6g.2xlarge", "r6g.4xlarge", "r6g.8xlarge", "r6g.12xlarge", "r6g.16xlarge", "c6gn.medium", "c6gn.large", "c6gn.xlarge", "c6gn.2xlarge", "c6gn.4xlarge", "c6gn.8xlarge", "c6gn.12xlarge", "c6gn.16xlarge", "c7g.medium", "c7g.large", "c7g.xlarge", "c7g.2xlarge", "c7g.4xlarge", "c7g.8xlarge", "c7g.12xlarge", "c7g.16xlarge", "r7g.medium", "r7g.large", "r7g.xlarge", "r7g.2xlarge", "r7g.4xlarge", "r7g.8xlarge", "r7g.12xlarge", "r7g.16xlarge", "m7g.medium", "m7g.large", "m7g.xlarge", "m7g.2xlarge", "m7g.4xlarge", "m7g.8xlarge", "m7g.12xlarge", "m7g.16xlarge", "g5g.xlarge", "g5g.2xlarge", "g5g.4xlarge", "g5g.8xlarge", "g5g.16xlarge", "r6i.large", "r6i.xlarge", "r6i.2xlarge", "r6i.4xlarge", "r6i.8xlarge", "r6i.12xlarge", "r6i.16xlarge", "c6gd.medium", "c6gd.large", "c6gd.xlarge", "c6gd.2xlarge", "c6gd.4xlarge", "c6gd.8xlarge", "c6gd.12xlarge", "c6gd.16xlarge", "c6in.large", "c6in.xlarge", "c6in.2xlarge", "c6in.4xlarge", "c6in.8xlarge", "c6in.12xlarge", "c6in.16xlarge", "c7a.medium", "c7a.large", "c7a.xlarge", "c7a.2xlarge", "c7a.4xlarge", "c7a.8xlarge", "c7a.12xlarge", "c7a.16xlarge", "c7gd.medium", "c7gd.large", "c7gd.xlarge", "c7gd.2xlarge", "c7gd.4xlarge", "c7gd.8xlarge", "c7gd.12xlarge", "c7gd.16xlarge", "c7gn.medium", "c7gn.large", "c7gn.xlarge", "c7gn.2xlarge", "c7gn.4xlarge", "c7gn.8xlarge", "c7gn.12xlarge", "c7gn.16xlarge", "c7i.large", "c7i.xlarge", "c7i.2xlarge", "c7i.4xlarge", "c7i.8xlarge", "c7i.12xlarge", "c7i.16xlarge", "m6a.large", "m6a.xlarge", "m6a.2xlarge", "m6a.4xlarge", "m6a.8xlarge", "m6a.12xlarge", "m6a.16xlarge", "m6gd.medium", "m6gd.large", "m6gd.xlarge", "m6gd.2xlarge", "m6gd.4xlarge", "m6gd.8xlarge", "m6gd.12xlarge", "m6gd.16xlarge", "m6i.large", "m6i.xlarge", "m6i.2xlarge", "m6i.4xlarge", "m6i.8xlarge", "m6i.12xlarge", "m6i.16xlarge", "m7a.medium", "m7a.large", "m7a.xlarge", "m7a.2xlarge", "m7a.4xlarge", "m7a.8xlarge", "m7a.12xlarge", "m7a.16xlarge", "m7gd.medium", "m7gd.large", "m7gd.xlarge", "m7gd.2xlarge", "m7gd.4xlarge", "m7gd.8xlarge", "m7gd.12xlarge", "m7gd.16xlarge", "m7i.large", "m7i.xlarge", "m7i.2xlarge", "m7i.4xlarge", "m7i.8xlarge", "m7i.12xlarge", "m7i.16xlarge", "r6gd.medium", "r6gd.large", "r6gd.xlarge", "r6gd.2xlarge", "r6gd.4xlarge", "r6gd.8xlarge", "r6gd.12xlarge", "r6gd.16xlarge", "r7a.medium", "r7a.large", "r7a.xlarge", "r7a.2xlarge", "r7a.4xlarge", "r7a.8xlarge", "r7a.12xlarge", "r7a.16xlarge", "r7gd.medium", "r7gd.large", "r7gd.xlarge", "r7gd.2xlarge", "r7gd.4xlarge", "r7gd.8xlarge", "r7gd.12xlarge", "r7gd.16xlarge", "r7i.large", "r7i.xlarge", "r7i.2xlarge", "r7i.4xlarge", "r7i.8xlarge", "r7i.12xlarge", "r7i.16xlarge", "r7i.24xlarge", "r7i.48xlarge", "c5ad.large", "c5ad.xlarge", "c5ad.2xlarge", "c5ad.4xlarge", "c5ad.8xlarge", "c5ad.12xlarge", "c5ad.16xlarge", "c5ad.24xlarge", "c5n.large", "c5n.xlarge", "c5n.2xlarge", "c5n.4xlarge", "c5n.9xlarge", "c5n.18xlarge", "r5ad.large", "r5ad.xlarge", "r5ad.2xlarge", "r5ad.4xlarge", "r5ad.8xlarge", "r5ad.12xlarge", "r5ad.16xlarge", "r5ad.24xlarge", "c6id.large", "c6id.xlarge", "c6id.2xlarge", "c6id.4xlarge", "c6id.8xlarge", "c6id.12xlarge", "c6id.16xlarge", "c6id.24xlarge", "c6id.32xlarge", "c8g.medium", "c8g.large", "c8g.xlarge", "c8g.2xlarge", "c8g.4xlarge", "c8g.8xlarge", "c8g.12xlarge", "c8g.16xlarge", "c8g.24xlarge", "c8g.48xlarge", "m5ad.large", "m5ad.xlarge", "m5ad.2xlarge", "m5ad.4xlarge", "m5ad.8xlarge", "m5ad.12xlarge", "m5ad.16xlarge", "m5ad.24xlarge", "m5d.large", "m5d.xlarge", "m5d.2xlarge", "m5d.4xlarge", "m5d.8xlarge", "m5d.12xlarge", "m5d.16xlarge", "m5d.24xlarge", "m5dn.large", "m5dn.xlarge", "m5dn.2xlarge", "m5dn.4xlarge", "m5dn.8xlarge", "m5dn.12xlarge", "m5dn.16xlarge", "m5dn.24xlarge", "m5n.large", "m5n.xlarge", "m5n.2xlarge", "m5n.4xlarge", "m5n.8xlarge", "m5n.12xlarge", "m5n.16xlarge", "m5n.24xlarge", "m6id.large", "m6id.xlarge", "m6id.2xlarge", "m6id.4xlarge", "m6id.8xlarge", "m6id.12xlarge", "m6id.16xlarge", "m6id.24xlarge", "m6id.32xlarge", "m6idn.large", "m6idn.xlarge", "m6idn.2xlarge", "m6idn.4xlarge", "m6idn.8xlarge", "m6idn.12xlarge", "m6idn.16xlarge", "m6idn.24xlarge", "m6idn.32xlarge", "m6in.large", "m6in.xlarge", "m6in.2xlarge", "m6in.4xlarge", "m6in.8xlarge", "m6in.12xlarge", "m6in.16xlarge", "m6in.24xlarge", "m6in.32xlarge", "m8g.medium", "m8g.large", "m8g.xlarge", "m8g.2xlarge", "m8g.4xlarge", "m8g.8xlarge", "m8g.12xlarge", "m8g.16xlarge", "m8g.24xlarge", "m8g.48xlarge", "r5dn.large", "r5dn.xlarge", "r5dn.2xlarge", "r5dn.4xlarge", "r5dn.8xlarge", "r5dn.12xlarge", "r5dn.16xlarge", "r5dn.24xlarge", "r5n.large", "r5n.xlarge", "r5n.2xlarge", "r5n.4xlarge", "r5n.8xlarge", "r5n.12xlarge", "r5n.16xlarge", "r5n.24xlarge", "r6a.large", "r6a.xlarge", "r6a.2xlarge", "r6a.4xlarge", "r6a.8xlarge", "r6a.12xlarge", "r6a.16xlarge", "r6a.24xlarge", "r6a.32xlarge", "r6a.48xlarge", "r6id.large", "r6id.xlarge", "r6id.2xlarge", "r6id.4xlarge", "r6id.8xlarge", "r6id.12xlarge", "r6id.16xlarge", "r6id.24xlarge", "r6id.32xlarge", "r6idn.large", "r6idn.xlarge", "r6idn.2xlarge", "r6idn.4xlarge", "r6idn.8xlarge", "r6idn.12xlarge", "r6idn.16xlarge", "r6idn.24xlarge", "r6idn.32xlarge", "r6in.large", "r6in.xlarge", "r6in.2xlarge", "r6in.4xlarge", "r6in.8xlarge", "r6in.12xlarge", "r6in.16xlarge", "r6in.24xlarge", "r6in.32xlarge", "r8g.medium", "r8g.large", "r8g.xlarge", "r8g.2xlarge", "r8g.4xlarge", "r8g.8xlarge", "r8g.12xlarge", "r8g.16xlarge", "r8g.24xlarge", "r8g.48xlarge", "m4.16xlarge", "c6a.32xlarge", "c6a.48xlarge", "c6i.32xlarge", "r6i.24xlarge", "r6i.32xlarge", "c6in.24xlarge", "c6in.32xlarge", "c7a.24xlarge", "c7a.32xlarge", "c7a.48xlarge", "c7i.24xlarge", "c7i.48xlarge", "m6a.24xlarge", "m6a.32xlarge", "m6a.48xlarge", "m6i.24xlarge", "m6i.32xlarge", "m7a.24xlarge", "m7a.32xlarge", "m7a.48xlarge", "m7i.24xlarge", "m7i.48xlarge", "r7a.24xlarge", "r7a.32xlarge", "r7a.48xlarge", "c8a.medium", "c8a.large", "c8a.xlarge", "c8a.2xlarge", "c8i.large", "c8i.xlarge", "c8i.2xlarge", "c9g.medium", "c9g.large", "c9g.xlarge", "c9g.2xlarge", "m8a.medium", "m8a.large", "m8a.xlarge", "m8a.2xlarge", "m8i.large", "m8i.xlarge", "m8i.2xlarge", "m9g.large", "m9g.xlarge", "m9g.2xlarge"
     #   resp.compute.game_lift_service_sdk_endpoint #=> String
     #   resp.compute.game_lift_agent_endpoint #=> String
     #   resp.compute.instance_id #=> String
@@ -4521,6 +4921,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** Container
+    #
     # Retrieves the properties for a container fleet. When requesting
     # attributes for multiple fleets, use the pagination parameters to
     # retrieve results as a set of sequential pages.
@@ -4585,14 +4987,16 @@ module Aws::GameLift
     #   resp.container_fleet.new_game_session_protection_policy #=> String, one of "NoProtection", "FullProtection"
     #   resp.container_fleet.game_session_creation_limit_policy.new_game_sessions_per_creator #=> Integer
     #   resp.container_fleet.game_session_creation_limit_policy.policy_period_in_minutes #=> Integer
-    #   resp.container_fleet.status #=> String, one of "PENDING", "CREATING", "CREATED", "ACTIVATING", "ACTIVE", "UPDATING", "DELETING"
+    #   resp.container_fleet.status #=> String, one of "PENDING", "CREATING", "CREATED", "ACTIVATING", "ACTIVE", "UPDATING", "DELETING", "EXPIRED"
     #   resp.container_fleet.deployment_details.latest_deployment_id #=> String
     #   resp.container_fleet.log_configuration.log_destination #=> String, one of "NONE", "CLOUDWATCH", "S3"
     #   resp.container_fleet.log_configuration.s3_bucket_name #=> String
     #   resp.container_fleet.log_configuration.log_group_arn #=> String
     #   resp.container_fleet.location_attributes #=> Array
     #   resp.container_fleet.location_attributes[0].location #=> String
-    #   resp.container_fleet.location_attributes[0].status #=> String, one of "PENDING", "CREATING", "CREATED", "ACTIVATING", "ACTIVE", "UPDATING", "DELETING"
+    #   resp.container_fleet.location_attributes[0].status #=> String, one of "PENDING", "CREATING", "CREATED", "ACTIVATING", "ACTIVE", "UPDATING", "DELETING", "EXPIRED"
+    #   resp.container_fleet.location_attributes[0].player_gateway_status #=> String, one of "DISABLED", "ENABLED"
+    #   resp.container_fleet.player_gateway_mode #=> String, one of "DISABLED", "ENABLED", "REQUIRED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/DescribeContainerFleet AWS API Documentation
     #
@@ -4603,6 +5007,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** Container
+    #
     # Retrieves the properties of a container group definition, including
     # all container definitions in the group.
     #
@@ -4676,6 +5082,8 @@ module Aws::GameLift
     #   resp.container_group_definition.game_server_container_definition.port_configuration.container_port_ranges[0].protocol #=> String, one of "TCP", "UDP"
     #   resp.container_group_definition.game_server_container_definition.resolved_image_digest #=> String
     #   resp.container_group_definition.game_server_container_definition.server_sdk_version #=> String
+    #   resp.container_group_definition.game_server_container_definition.linux_capabilities.include #=> Array
+    #   resp.container_group_definition.game_server_container_definition.linux_capabilities.include[0] #=> String, one of "AUDIT_CONTROL", "AUDIT_WRITE", "BLOCK_SUSPEND", "CHOWN", "DAC_OVERRIDE", "DAC_READ_SEARCH", "FOWNER", "FSETID", "IPC_LOCK", "IPC_OWNER", "KILL", "LEASE", "LINUX_IMMUTABLE", "MAC_ADMIN", "MAC_OVERRIDE", "MKNOD", "NET_ADMIN", "NET_BIND_SERVICE", "NET_BROADCAST", "NET_RAW", "SETFCAP", "SETGID", "SETPCAP", "SETUID", "SYS_ADMIN", "SYS_BOOT", "SYS_CHROOT", "SYS_MODULE", "SYS_NICE", "SYS_PACCT", "SYS_PTRACE", "SYS_RAWIO", "SYS_RESOURCE", "SYS_TIME", "SYS_TTY_CONFIG", "SYSLOG", "WAKE_ALARM"
     #   resp.container_group_definition.support_container_definitions #=> Array
     #   resp.container_group_definition.support_container_definitions[0].container_name #=> String
     #   resp.container_group_definition.support_container_definitions[0].depends_on #=> Array
@@ -4703,6 +5111,8 @@ module Aws::GameLift
     #   resp.container_group_definition.support_container_definitions[0].port_configuration.container_port_ranges[0].protocol #=> String, one of "TCP", "UDP"
     #   resp.container_group_definition.support_container_definitions[0].resolved_image_digest #=> String
     #   resp.container_group_definition.support_container_definitions[0].vcpu #=> Float
+    #   resp.container_group_definition.support_container_definitions[0].linux_capabilities.include #=> Array
+    #   resp.container_group_definition.support_container_definitions[0].linux_capabilities.include[0] #=> String, one of "AUDIT_CONTROL", "AUDIT_WRITE", "BLOCK_SUSPEND", "CHOWN", "DAC_OVERRIDE", "DAC_READ_SEARCH", "FOWNER", "FSETID", "IPC_LOCK", "IPC_OWNER", "KILL", "LEASE", "LINUX_IMMUTABLE", "MAC_ADMIN", "MAC_OVERRIDE", "MKNOD", "NET_ADMIN", "NET_BIND_SERVICE", "NET_BROADCAST", "NET_RAW", "SETFCAP", "SETGID", "SETPCAP", "SETUID", "SYS_ADMIN", "SYS_BOOT", "SYS_CHROOT", "SYS_MODULE", "SYS_NICE", "SYS_PACCT", "SYS_PTRACE", "SYS_RAWIO", "SYS_RESOURCE", "SYS_TIME", "SYS_TTY_CONFIG", "SYSLOG", "WAKE_ALARM"
     #   resp.container_group_definition.version_number #=> Integer
     #   resp.container_group_definition.version_description #=> String
     #   resp.container_group_definition.status #=> String, one of "READY", "COPYING", "FAILED"
@@ -4717,6 +5127,142 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** Container
+    #
+    # Retrieves the port mappings for a container group running on a
+    # container fleet. Port mappings show how container ports are mapped to
+    # connection ports on the fleet instance. Use this operation to find the
+    # connection port for a specific container on a fleet instance.
+    #
+    # **Request options**
+    #
+    # * Get port mappings for a game server container group. Provide the
+    #   fleet ID, set `ContainerGroupType` to `GAME_SERVER`, and specify the
+    #   `ComputeName` for the game server container group.
+    #
+    # * Get port mappings for a per-instance container group. Provide the
+    #   fleet ID, set `ContainerGroupType` to `PER_INSTANCE`, and specify
+    #   the `InstanceId` for the instance.
+    #
+    # * Optionally filter results to a single container by providing a
+    #   `ContainerName`.
+    #
+    # **Results**
+    #
+    # This operation returns the fleet ID, fleet ARN, location, container
+    # group definition ARN, container group type, compute name (for game
+    # server container groups), instance ID, and a list of
+    # `ContainerGroupPortMapping` objects. Each object contains the
+    # container name, runtime ID, and a list of port mappings that show how
+    # container ports map to connection ports on the instance.
+    #
+    # **Learn more**
+    #
+    # [Connect to containers][1]
+    #
+    # [Create a container group definition][2]
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/gamelift/latest/developerguide/containers-remote-access.html
+    # [2]: https://docs.aws.amazon.com/gamelift/latest/developerguide/containers-create-groups.html
+    #
+    # @option params [required, String] :fleet_id
+    #   A unique identifier for the container fleet. You can use either the
+    #   fleet ID or ARN value.
+    #
+    # @option params [required, String] :container_group_type
+    #   The type of container group to retrieve port mappings for.
+    #
+    #   * `GAME_SERVER` -- Get port mappings for a game server container
+    #     group.
+    #
+    #   * `PER_INSTANCE` -- Get port mappings for a per-instance container
+    #     group.
+    #
+    # @option params [String] :compute_name
+    #   A unique identifier for the compute resource for which to retrieve
+    #   port mappings. For a container fleet, a compute represents a game
+    #   server container group running on a fleet instance. You can use either
+    #   the compute name or ARN value.
+    #
+    #   When `ContainerGroupType` is `GAME_SERVER`, this parameter is
+    #   required.
+    #
+    #   When `ContainerGroupType` is `PER_INSTANCE`, do not provide this
+    #   parameter. If you provide a compute name with `PER_INSTANCE`, the
+    #   request fails with an `InvalidRequestException`.
+    #
+    # @option params [String] :instance_id
+    #   A unique identifier for the fleet instance to retrieve port mappings
+    #   for.
+    #
+    #   When `ContainerGroupType` is `PER_INSTANCE`, this parameter is
+    #   required.
+    #
+    #   When `ContainerGroupType` is `GAME_SERVER`, this parameter is
+    #   optional. If you provide an instance ID, it must match the instance
+    #   that's running the specified compute. If the instance ID doesn't
+    #   match, the request fails with an `InvalidRequestException`.
+    #
+    # @option params [String] :container_name
+    #   A container name to filter the results. When provided, the operation
+    #   returns port mappings for the specified container only. If no
+    #   container with the specified name exists in the container group, the
+    #   request fails with a `NotFoundException`.
+    #
+    #   If not provided, the operation returns port mappings for all
+    #   containers in the container group.
+    #
+    # @return [Types::DescribeContainerGroupPortMappingsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DescribeContainerGroupPortMappingsOutput#fleet_id #fleet_id} => String
+    #   * {Types::DescribeContainerGroupPortMappingsOutput#fleet_arn #fleet_arn} => String
+    #   * {Types::DescribeContainerGroupPortMappingsOutput#location #location} => String
+    #   * {Types::DescribeContainerGroupPortMappingsOutput#container_group_definition_arn #container_group_definition_arn} => String
+    #   * {Types::DescribeContainerGroupPortMappingsOutput#container_group_type #container_group_type} => String
+    #   * {Types::DescribeContainerGroupPortMappingsOutput#compute_name #compute_name} => String
+    #   * {Types::DescribeContainerGroupPortMappingsOutput#instance_id #instance_id} => String
+    #   * {Types::DescribeContainerGroupPortMappingsOutput#container_group_port_mappings #container_group_port_mappings} => Array&lt;Types::ContainerGroupPortMapping&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.describe_container_group_port_mappings({
+    #     fleet_id: "FleetIdOrArn", # required
+    #     container_group_type: "GAME_SERVER", # required, accepts GAME_SERVER, PER_INSTANCE
+    #     compute_name: "ComputeNameOrArn",
+    #     instance_id: "InstanceId",
+    #     container_name: "ContainerNameQueryFilter",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.fleet_id #=> String
+    #   resp.fleet_arn #=> String
+    #   resp.location #=> String
+    #   resp.container_group_definition_arn #=> String
+    #   resp.container_group_type #=> String, one of "GAME_SERVER", "PER_INSTANCE"
+    #   resp.compute_name #=> String
+    #   resp.instance_id #=> String
+    #   resp.container_group_port_mappings #=> Array
+    #   resp.container_group_port_mappings[0].container_name #=> String
+    #   resp.container_group_port_mappings[0].container_runtime_id #=> String
+    #   resp.container_group_port_mappings[0].container_port_mappings #=> Array
+    #   resp.container_group_port_mappings[0].container_port_mappings[0].container_port #=> Integer
+    #   resp.container_group_port_mappings[0].container_port_mappings[0].connection_port #=> Integer
+    #   resp.container_group_port_mappings[0].container_port_mappings[0].protocol #=> String, one of "TCP", "UDP"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/DescribeContainerGroupPortMappings AWS API Documentation
+    #
+    # @overload describe_container_group_port_mappings(params = {})
+    # @param [Hash] params ({})
+    def describe_container_group_port_mappings(params = {}, options = {})
+      req = build_request(:describe_container_group_port_mappings, params)
+      req.send_request(options)
+    end
+
+    # **This API works with the following fleet types:** EC2
+    #
     # Retrieves the instance limits and current utilization for an Amazon
     # Web Services Region or location. Instance limits control the number of
     # instances, per instance type, per location, that your Amazon Web
@@ -4724,32 +5270,35 @@ module Aws::GameLift
     # Types][1]. The information returned includes the maximum number of
     # instances allowed and your account's current usage across all fleets.
     # This information can affect your ability to scale your Amazon GameLift
-    # fleets. You can request a limit increase for your account by using the
-    # **Service limits** page in the Amazon GameLift console.
+    # Servers fleets. You can request a limit increase for your account by
+    # using the **Service limits** page in the Amazon GameLift Servers
+    # console.
     #
     # Instance limits differ based on whether the instances are deployed in
     # a fleet's home Region or in a remote location. For remote locations,
     # limits also differ based on the combination of home Region and remote
     # location. All requests must specify an Amazon Web Services Region
     # (either explicitly or as your default settings). To get the limit for
-    # a remote location, you must also specify the location. For example,
-    # the following requests all return different results:
+    # a remote location, you must also specify the location. To learn more
+    # about how Amazon GameLift Servers handles locations, see [Amazon
+    # GameLift Servers service locations][2]. For example, the following
+    # requests all return different results:
     #
     # * Request specifies the Region `ap-northeast-1` with no location. The
-    #   result is limits and usage data on all instance types that are
-    #   deployed in `us-east-2`, by all of the fleets that reside in
+    #   result is limits and usage data on all of the fleets that reside in
+    #   `ap-northeast-1`, for all instance types that are deployed in
     #   `ap-northeast-1`.
     #
-    # * Request specifies the Region `us-east-1` with location
-    #   `ca-central-1`. The result is limits and usage data on all instance
-    #   types that are deployed in `ca-central-1`, by all of the fleets that
-    #   reside in `us-east-2`. These limits do not affect fleets in any
-    #   other Regions that deploy instances to `ca-central-1`.
+    # * Request specifies the Region `ap-northeast-1` with location
+    #   `us-west-2`. The result is limits and usage data on all of the
+    #   fleets that reside in `ap-northeast-1`, for all instance types that
+    #   are deployed in `us-west-2`.
     #
-    # * Request specifies the Region `eu-west-1` with location
-    #   `ca-central-1`. The result is limits and usage data on all instance
-    #   types that are deployed in `ca-central-1`, by all of the fleets that
-    #   reside in `eu-west-1`.
+    # * Request specifies the Region `us-east-1` with location
+    #   `ap-northeast-1`. The result is limits and usage data on all of the
+    #   fleets that reside in `us-east-1`, for all instance types that are
+    #   deployed in `ap-northeast-1`. These limits do not affect fleets in
+    #   any other Regions that deploy instances to `ap-northeast-1`.
     #
     # This operation can be used in the following ways:
     #
@@ -4769,19 +5318,20 @@ module Aws::GameLift
     #
     # **Learn more**
     #
-    # [Setting up Amazon GameLift fleets][2]
+    # [Setting up Amazon GameLift Servers fleets][3]
     #
     #
     #
     # [1]: http://aws.amazon.com/ec2/instance-types/
-    # [2]: https://docs.aws.amazon.com/gamelift/latest/developerguide/fleets-intro.html
+    # [2]: https://docs.aws.amazon.com/gameliftservers/latest/developerguide/gamelift-regions.html
+    # [3]: https://docs.aws.amazon.com/gamelift/latest/developerguide/fleets-intro.html
     #
     # @option params [String] :ec2_instance_type
     #   Name of an Amazon EC2 instance type that is supported in Amazon
-    #   GameLift. A fleet instance type determines the computing resources of
-    #   each instance in the fleet, including CPU, memory, storage, and
-    #   networking capacity. Do not specify a value for this parameter to
-    #   retrieve limits for all instance types.
+    #   GameLift Servers. A fleet instance type determines the computing
+    #   resources of each instance in the fleet, including CPU, memory,
+    #   storage, and networking capacity. Do not specify a value for this
+    #   parameter to retrieve limits for all instance types.
     #
     # @option params [String] :location
     #   The name of a remote location to request instance limits for, in the
@@ -4794,14 +5344,14 @@ module Aws::GameLift
     # @example Request syntax with placeholder values
     #
     #   resp = client.describe_ec2_instance_limits({
-    #     ec2_instance_type: "t2.micro", # accepts t2.micro, t2.small, t2.medium, t2.large, c3.large, c3.xlarge, c3.2xlarge, c3.4xlarge, c3.8xlarge, c4.large, c4.xlarge, c4.2xlarge, c4.4xlarge, c4.8xlarge, c5.large, c5.xlarge, c5.2xlarge, c5.4xlarge, c5.9xlarge, c5.12xlarge, c5.18xlarge, c5.24xlarge, c5a.large, c5a.xlarge, c5a.2xlarge, c5a.4xlarge, c5a.8xlarge, c5a.12xlarge, c5a.16xlarge, c5a.24xlarge, r3.large, r3.xlarge, r3.2xlarge, r3.4xlarge, r3.8xlarge, r4.large, r4.xlarge, r4.2xlarge, r4.4xlarge, r4.8xlarge, r4.16xlarge, r5.large, r5.xlarge, r5.2xlarge, r5.4xlarge, r5.8xlarge, r5.12xlarge, r5.16xlarge, r5.24xlarge, r5a.large, r5a.xlarge, r5a.2xlarge, r5a.4xlarge, r5a.8xlarge, r5a.12xlarge, r5a.16xlarge, r5a.24xlarge, m3.medium, m3.large, m3.xlarge, m3.2xlarge, m4.large, m4.xlarge, m4.2xlarge, m4.4xlarge, m4.10xlarge, m5.large, m5.xlarge, m5.2xlarge, m5.4xlarge, m5.8xlarge, m5.12xlarge, m5.16xlarge, m5.24xlarge, m5a.large, m5a.xlarge, m5a.2xlarge, m5a.4xlarge, m5a.8xlarge, m5a.12xlarge, m5a.16xlarge, m5a.24xlarge, c5d.large, c5d.xlarge, c5d.2xlarge, c5d.4xlarge, c5d.9xlarge, c5d.12xlarge, c5d.18xlarge, c5d.24xlarge, c6a.large, c6a.xlarge, c6a.2xlarge, c6a.4xlarge, c6a.8xlarge, c6a.12xlarge, c6a.16xlarge, c6a.24xlarge, c6i.large, c6i.xlarge, c6i.2xlarge, c6i.4xlarge, c6i.8xlarge, c6i.12xlarge, c6i.16xlarge, c6i.24xlarge, r5d.large, r5d.xlarge, r5d.2xlarge, r5d.4xlarge, r5d.8xlarge, r5d.12xlarge, r5d.16xlarge, r5d.24xlarge, m6g.medium, m6g.large, m6g.xlarge, m6g.2xlarge, m6g.4xlarge, m6g.8xlarge, m6g.12xlarge, m6g.16xlarge, c6g.medium, c6g.large, c6g.xlarge, c6g.2xlarge, c6g.4xlarge, c6g.8xlarge, c6g.12xlarge, c6g.16xlarge, r6g.medium, r6g.large, r6g.xlarge, r6g.2xlarge, r6g.4xlarge, r6g.8xlarge, r6g.12xlarge, r6g.16xlarge, c6gn.medium, c6gn.large, c6gn.xlarge, c6gn.2xlarge, c6gn.4xlarge, c6gn.8xlarge, c6gn.12xlarge, c6gn.16xlarge, c7g.medium, c7g.large, c7g.xlarge, c7g.2xlarge, c7g.4xlarge, c7g.8xlarge, c7g.12xlarge, c7g.16xlarge, r7g.medium, r7g.large, r7g.xlarge, r7g.2xlarge, r7g.4xlarge, r7g.8xlarge, r7g.12xlarge, r7g.16xlarge, m7g.medium, m7g.large, m7g.xlarge, m7g.2xlarge, m7g.4xlarge, m7g.8xlarge, m7g.12xlarge, m7g.16xlarge, g5g.xlarge, g5g.2xlarge, g5g.4xlarge, g5g.8xlarge, g5g.16xlarge
+    #     ec2_instance_type: "t2.micro", # accepts t2.micro, t2.small, t2.medium, t2.large, c3.large, c3.xlarge, c3.2xlarge, c3.4xlarge, c3.8xlarge, c4.large, c4.xlarge, c4.2xlarge, c4.4xlarge, c4.8xlarge, c5.large, c5.xlarge, c5.2xlarge, c5.4xlarge, c5.9xlarge, c5.12xlarge, c5.18xlarge, c5.24xlarge, c5a.large, c5a.xlarge, c5a.2xlarge, c5a.4xlarge, c5a.8xlarge, c5a.12xlarge, c5a.16xlarge, c5a.24xlarge, r3.large, r3.xlarge, r3.2xlarge, r3.4xlarge, r3.8xlarge, r4.large, r4.xlarge, r4.2xlarge, r4.4xlarge, r4.8xlarge, r4.16xlarge, r5.large, r5.xlarge, r5.2xlarge, r5.4xlarge, r5.8xlarge, r5.12xlarge, r5.16xlarge, r5.24xlarge, r5a.large, r5a.xlarge, r5a.2xlarge, r5a.4xlarge, r5a.8xlarge, r5a.12xlarge, r5a.16xlarge, r5a.24xlarge, m3.medium, m3.large, m3.xlarge, m3.2xlarge, m4.large, m4.xlarge, m4.2xlarge, m4.4xlarge, m4.10xlarge, m5.large, m5.xlarge, m5.2xlarge, m5.4xlarge, m5.8xlarge, m5.12xlarge, m5.16xlarge, m5.24xlarge, m5a.large, m5a.xlarge, m5a.2xlarge, m5a.4xlarge, m5a.8xlarge, m5a.12xlarge, m5a.16xlarge, m5a.24xlarge, c5d.large, c5d.xlarge, c5d.2xlarge, c5d.4xlarge, c5d.9xlarge, c5d.12xlarge, c5d.18xlarge, c5d.24xlarge, c6a.large, c6a.xlarge, c6a.2xlarge, c6a.4xlarge, c6a.8xlarge, c6a.12xlarge, c6a.16xlarge, c6a.24xlarge, c6i.large, c6i.xlarge, c6i.2xlarge, c6i.4xlarge, c6i.8xlarge, c6i.12xlarge, c6i.16xlarge, c6i.24xlarge, r5d.large, r5d.xlarge, r5d.2xlarge, r5d.4xlarge, r5d.8xlarge, r5d.12xlarge, r5d.16xlarge, r5d.24xlarge, m6g.medium, m6g.large, m6g.xlarge, m6g.2xlarge, m6g.4xlarge, m6g.8xlarge, m6g.12xlarge, m6g.16xlarge, c6g.medium, c6g.large, c6g.xlarge, c6g.2xlarge, c6g.4xlarge, c6g.8xlarge, c6g.12xlarge, c6g.16xlarge, r6g.medium, r6g.large, r6g.xlarge, r6g.2xlarge, r6g.4xlarge, r6g.8xlarge, r6g.12xlarge, r6g.16xlarge, c6gn.medium, c6gn.large, c6gn.xlarge, c6gn.2xlarge, c6gn.4xlarge, c6gn.8xlarge, c6gn.12xlarge, c6gn.16xlarge, c7g.medium, c7g.large, c7g.xlarge, c7g.2xlarge, c7g.4xlarge, c7g.8xlarge, c7g.12xlarge, c7g.16xlarge, r7g.medium, r7g.large, r7g.xlarge, r7g.2xlarge, r7g.4xlarge, r7g.8xlarge, r7g.12xlarge, r7g.16xlarge, m7g.medium, m7g.large, m7g.xlarge, m7g.2xlarge, m7g.4xlarge, m7g.8xlarge, m7g.12xlarge, m7g.16xlarge, g5g.xlarge, g5g.2xlarge, g5g.4xlarge, g5g.8xlarge, g5g.16xlarge, r6i.large, r6i.xlarge, r6i.2xlarge, r6i.4xlarge, r6i.8xlarge, r6i.12xlarge, r6i.16xlarge, c6gd.medium, c6gd.large, c6gd.xlarge, c6gd.2xlarge, c6gd.4xlarge, c6gd.8xlarge, c6gd.12xlarge, c6gd.16xlarge, c6in.large, c6in.xlarge, c6in.2xlarge, c6in.4xlarge, c6in.8xlarge, c6in.12xlarge, c6in.16xlarge, c7a.medium, c7a.large, c7a.xlarge, c7a.2xlarge, c7a.4xlarge, c7a.8xlarge, c7a.12xlarge, c7a.16xlarge, c7gd.medium, c7gd.large, c7gd.xlarge, c7gd.2xlarge, c7gd.4xlarge, c7gd.8xlarge, c7gd.12xlarge, c7gd.16xlarge, c7gn.medium, c7gn.large, c7gn.xlarge, c7gn.2xlarge, c7gn.4xlarge, c7gn.8xlarge, c7gn.12xlarge, c7gn.16xlarge, c7i.large, c7i.xlarge, c7i.2xlarge, c7i.4xlarge, c7i.8xlarge, c7i.12xlarge, c7i.16xlarge, m6a.large, m6a.xlarge, m6a.2xlarge, m6a.4xlarge, m6a.8xlarge, m6a.12xlarge, m6a.16xlarge, m6gd.medium, m6gd.large, m6gd.xlarge, m6gd.2xlarge, m6gd.4xlarge, m6gd.8xlarge, m6gd.12xlarge, m6gd.16xlarge, m6i.large, m6i.xlarge, m6i.2xlarge, m6i.4xlarge, m6i.8xlarge, m6i.12xlarge, m6i.16xlarge, m7a.medium, m7a.large, m7a.xlarge, m7a.2xlarge, m7a.4xlarge, m7a.8xlarge, m7a.12xlarge, m7a.16xlarge, m7gd.medium, m7gd.large, m7gd.xlarge, m7gd.2xlarge, m7gd.4xlarge, m7gd.8xlarge, m7gd.12xlarge, m7gd.16xlarge, m7i.large, m7i.xlarge, m7i.2xlarge, m7i.4xlarge, m7i.8xlarge, m7i.12xlarge, m7i.16xlarge, r6gd.medium, r6gd.large, r6gd.xlarge, r6gd.2xlarge, r6gd.4xlarge, r6gd.8xlarge, r6gd.12xlarge, r6gd.16xlarge, r7a.medium, r7a.large, r7a.xlarge, r7a.2xlarge, r7a.4xlarge, r7a.8xlarge, r7a.12xlarge, r7a.16xlarge, r7gd.medium, r7gd.large, r7gd.xlarge, r7gd.2xlarge, r7gd.4xlarge, r7gd.8xlarge, r7gd.12xlarge, r7gd.16xlarge, r7i.large, r7i.xlarge, r7i.2xlarge, r7i.4xlarge, r7i.8xlarge, r7i.12xlarge, r7i.16xlarge, r7i.24xlarge, r7i.48xlarge, c5ad.large, c5ad.xlarge, c5ad.2xlarge, c5ad.4xlarge, c5ad.8xlarge, c5ad.12xlarge, c5ad.16xlarge, c5ad.24xlarge, c5n.large, c5n.xlarge, c5n.2xlarge, c5n.4xlarge, c5n.9xlarge, c5n.18xlarge, r5ad.large, r5ad.xlarge, r5ad.2xlarge, r5ad.4xlarge, r5ad.8xlarge, r5ad.12xlarge, r5ad.16xlarge, r5ad.24xlarge, c6id.large, c6id.xlarge, c6id.2xlarge, c6id.4xlarge, c6id.8xlarge, c6id.12xlarge, c6id.16xlarge, c6id.24xlarge, c6id.32xlarge, c8g.medium, c8g.large, c8g.xlarge, c8g.2xlarge, c8g.4xlarge, c8g.8xlarge, c8g.12xlarge, c8g.16xlarge, c8g.24xlarge, c8g.48xlarge, m5ad.large, m5ad.xlarge, m5ad.2xlarge, m5ad.4xlarge, m5ad.8xlarge, m5ad.12xlarge, m5ad.16xlarge, m5ad.24xlarge, m5d.large, m5d.xlarge, m5d.2xlarge, m5d.4xlarge, m5d.8xlarge, m5d.12xlarge, m5d.16xlarge, m5d.24xlarge, m5dn.large, m5dn.xlarge, m5dn.2xlarge, m5dn.4xlarge, m5dn.8xlarge, m5dn.12xlarge, m5dn.16xlarge, m5dn.24xlarge, m5n.large, m5n.xlarge, m5n.2xlarge, m5n.4xlarge, m5n.8xlarge, m5n.12xlarge, m5n.16xlarge, m5n.24xlarge, m6id.large, m6id.xlarge, m6id.2xlarge, m6id.4xlarge, m6id.8xlarge, m6id.12xlarge, m6id.16xlarge, m6id.24xlarge, m6id.32xlarge, m6idn.large, m6idn.xlarge, m6idn.2xlarge, m6idn.4xlarge, m6idn.8xlarge, m6idn.12xlarge, m6idn.16xlarge, m6idn.24xlarge, m6idn.32xlarge, m6in.large, m6in.xlarge, m6in.2xlarge, m6in.4xlarge, m6in.8xlarge, m6in.12xlarge, m6in.16xlarge, m6in.24xlarge, m6in.32xlarge, m8g.medium, m8g.large, m8g.xlarge, m8g.2xlarge, m8g.4xlarge, m8g.8xlarge, m8g.12xlarge, m8g.16xlarge, m8g.24xlarge, m8g.48xlarge, r5dn.large, r5dn.xlarge, r5dn.2xlarge, r5dn.4xlarge, r5dn.8xlarge, r5dn.12xlarge, r5dn.16xlarge, r5dn.24xlarge, r5n.large, r5n.xlarge, r5n.2xlarge, r5n.4xlarge, r5n.8xlarge, r5n.12xlarge, r5n.16xlarge, r5n.24xlarge, r6a.large, r6a.xlarge, r6a.2xlarge, r6a.4xlarge, r6a.8xlarge, r6a.12xlarge, r6a.16xlarge, r6a.24xlarge, r6a.32xlarge, r6a.48xlarge, r6id.large, r6id.xlarge, r6id.2xlarge, r6id.4xlarge, r6id.8xlarge, r6id.12xlarge, r6id.16xlarge, r6id.24xlarge, r6id.32xlarge, r6idn.large, r6idn.xlarge, r6idn.2xlarge, r6idn.4xlarge, r6idn.8xlarge, r6idn.12xlarge, r6idn.16xlarge, r6idn.24xlarge, r6idn.32xlarge, r6in.large, r6in.xlarge, r6in.2xlarge, r6in.4xlarge, r6in.8xlarge, r6in.12xlarge, r6in.16xlarge, r6in.24xlarge, r6in.32xlarge, r8g.medium, r8g.large, r8g.xlarge, r8g.2xlarge, r8g.4xlarge, r8g.8xlarge, r8g.12xlarge, r8g.16xlarge, r8g.24xlarge, r8g.48xlarge, m4.16xlarge, c6a.32xlarge, c6a.48xlarge, c6i.32xlarge, r6i.24xlarge, r6i.32xlarge, c6in.24xlarge, c6in.32xlarge, c7a.24xlarge, c7a.32xlarge, c7a.48xlarge, c7i.24xlarge, c7i.48xlarge, m6a.24xlarge, m6a.32xlarge, m6a.48xlarge, m6i.24xlarge, m6i.32xlarge, m7a.24xlarge, m7a.32xlarge, m7a.48xlarge, m7i.24xlarge, m7i.48xlarge, r7a.24xlarge, r7a.32xlarge, r7a.48xlarge, c8a.medium, c8a.large, c8a.xlarge, c8a.2xlarge, c8i.large, c8i.xlarge, c8i.2xlarge, c9g.medium, c9g.large, c9g.xlarge, c9g.2xlarge, m8a.medium, m8a.large, m8a.xlarge, m8a.2xlarge, m8i.large, m8i.xlarge, m8i.2xlarge, m9g.large, m9g.xlarge, m9g.2xlarge
     #     location: "LocationStringModel",
     #   })
     #
     # @example Response structure
     #
     #   resp.ec2_instance_limits #=> Array
-    #   resp.ec2_instance_limits[0].ec2_instance_type #=> String, one of "t2.micro", "t2.small", "t2.medium", "t2.large", "c3.large", "c3.xlarge", "c3.2xlarge", "c3.4xlarge", "c3.8xlarge", "c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge", "c4.8xlarge", "c5.large", "c5.xlarge", "c5.2xlarge", "c5.4xlarge", "c5.9xlarge", "c5.12xlarge", "c5.18xlarge", "c5.24xlarge", "c5a.large", "c5a.xlarge", "c5a.2xlarge", "c5a.4xlarge", "c5a.8xlarge", "c5a.12xlarge", "c5a.16xlarge", "c5a.24xlarge", "r3.large", "r3.xlarge", "r3.2xlarge", "r3.4xlarge", "r3.8xlarge", "r4.large", "r4.xlarge", "r4.2xlarge", "r4.4xlarge", "r4.8xlarge", "r4.16xlarge", "r5.large", "r5.xlarge", "r5.2xlarge", "r5.4xlarge", "r5.8xlarge", "r5.12xlarge", "r5.16xlarge", "r5.24xlarge", "r5a.large", "r5a.xlarge", "r5a.2xlarge", "r5a.4xlarge", "r5a.8xlarge", "r5a.12xlarge", "r5a.16xlarge", "r5a.24xlarge", "m3.medium", "m3.large", "m3.xlarge", "m3.2xlarge", "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge", "m4.10xlarge", "m5.large", "m5.xlarge", "m5.2xlarge", "m5.4xlarge", "m5.8xlarge", "m5.12xlarge", "m5.16xlarge", "m5.24xlarge", "m5a.large", "m5a.xlarge", "m5a.2xlarge", "m5a.4xlarge", "m5a.8xlarge", "m5a.12xlarge", "m5a.16xlarge", "m5a.24xlarge", "c5d.large", "c5d.xlarge", "c5d.2xlarge", "c5d.4xlarge", "c5d.9xlarge", "c5d.12xlarge", "c5d.18xlarge", "c5d.24xlarge", "c6a.large", "c6a.xlarge", "c6a.2xlarge", "c6a.4xlarge", "c6a.8xlarge", "c6a.12xlarge", "c6a.16xlarge", "c6a.24xlarge", "c6i.large", "c6i.xlarge", "c6i.2xlarge", "c6i.4xlarge", "c6i.8xlarge", "c6i.12xlarge", "c6i.16xlarge", "c6i.24xlarge", "r5d.large", "r5d.xlarge", "r5d.2xlarge", "r5d.4xlarge", "r5d.8xlarge", "r5d.12xlarge", "r5d.16xlarge", "r5d.24xlarge", "m6g.medium", "m6g.large", "m6g.xlarge", "m6g.2xlarge", "m6g.4xlarge", "m6g.8xlarge", "m6g.12xlarge", "m6g.16xlarge", "c6g.medium", "c6g.large", "c6g.xlarge", "c6g.2xlarge", "c6g.4xlarge", "c6g.8xlarge", "c6g.12xlarge", "c6g.16xlarge", "r6g.medium", "r6g.large", "r6g.xlarge", "r6g.2xlarge", "r6g.4xlarge", "r6g.8xlarge", "r6g.12xlarge", "r6g.16xlarge", "c6gn.medium", "c6gn.large", "c6gn.xlarge", "c6gn.2xlarge", "c6gn.4xlarge", "c6gn.8xlarge", "c6gn.12xlarge", "c6gn.16xlarge", "c7g.medium", "c7g.large", "c7g.xlarge", "c7g.2xlarge", "c7g.4xlarge", "c7g.8xlarge", "c7g.12xlarge", "c7g.16xlarge", "r7g.medium", "r7g.large", "r7g.xlarge", "r7g.2xlarge", "r7g.4xlarge", "r7g.8xlarge", "r7g.12xlarge", "r7g.16xlarge", "m7g.medium", "m7g.large", "m7g.xlarge", "m7g.2xlarge", "m7g.4xlarge", "m7g.8xlarge", "m7g.12xlarge", "m7g.16xlarge", "g5g.xlarge", "g5g.2xlarge", "g5g.4xlarge", "g5g.8xlarge", "g5g.16xlarge"
+    #   resp.ec2_instance_limits[0].ec2_instance_type #=> String, one of "t2.micro", "t2.small", "t2.medium", "t2.large", "c3.large", "c3.xlarge", "c3.2xlarge", "c3.4xlarge", "c3.8xlarge", "c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge", "c4.8xlarge", "c5.large", "c5.xlarge", "c5.2xlarge", "c5.4xlarge", "c5.9xlarge", "c5.12xlarge", "c5.18xlarge", "c5.24xlarge", "c5a.large", "c5a.xlarge", "c5a.2xlarge", "c5a.4xlarge", "c5a.8xlarge", "c5a.12xlarge", "c5a.16xlarge", "c5a.24xlarge", "r3.large", "r3.xlarge", "r3.2xlarge", "r3.4xlarge", "r3.8xlarge", "r4.large", "r4.xlarge", "r4.2xlarge", "r4.4xlarge", "r4.8xlarge", "r4.16xlarge", "r5.large", "r5.xlarge", "r5.2xlarge", "r5.4xlarge", "r5.8xlarge", "r5.12xlarge", "r5.16xlarge", "r5.24xlarge", "r5a.large", "r5a.xlarge", "r5a.2xlarge", "r5a.4xlarge", "r5a.8xlarge", "r5a.12xlarge", "r5a.16xlarge", "r5a.24xlarge", "m3.medium", "m3.large", "m3.xlarge", "m3.2xlarge", "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge", "m4.10xlarge", "m5.large", "m5.xlarge", "m5.2xlarge", "m5.4xlarge", "m5.8xlarge", "m5.12xlarge", "m5.16xlarge", "m5.24xlarge", "m5a.large", "m5a.xlarge", "m5a.2xlarge", "m5a.4xlarge", "m5a.8xlarge", "m5a.12xlarge", "m5a.16xlarge", "m5a.24xlarge", "c5d.large", "c5d.xlarge", "c5d.2xlarge", "c5d.4xlarge", "c5d.9xlarge", "c5d.12xlarge", "c5d.18xlarge", "c5d.24xlarge", "c6a.large", "c6a.xlarge", "c6a.2xlarge", "c6a.4xlarge", "c6a.8xlarge", "c6a.12xlarge", "c6a.16xlarge", "c6a.24xlarge", "c6i.large", "c6i.xlarge", "c6i.2xlarge", "c6i.4xlarge", "c6i.8xlarge", "c6i.12xlarge", "c6i.16xlarge", "c6i.24xlarge", "r5d.large", "r5d.xlarge", "r5d.2xlarge", "r5d.4xlarge", "r5d.8xlarge", "r5d.12xlarge", "r5d.16xlarge", "r5d.24xlarge", "m6g.medium", "m6g.large", "m6g.xlarge", "m6g.2xlarge", "m6g.4xlarge", "m6g.8xlarge", "m6g.12xlarge", "m6g.16xlarge", "c6g.medium", "c6g.large", "c6g.xlarge", "c6g.2xlarge", "c6g.4xlarge", "c6g.8xlarge", "c6g.12xlarge", "c6g.16xlarge", "r6g.medium", "r6g.large", "r6g.xlarge", "r6g.2xlarge", "r6g.4xlarge", "r6g.8xlarge", "r6g.12xlarge", "r6g.16xlarge", "c6gn.medium", "c6gn.large", "c6gn.xlarge", "c6gn.2xlarge", "c6gn.4xlarge", "c6gn.8xlarge", "c6gn.12xlarge", "c6gn.16xlarge", "c7g.medium", "c7g.large", "c7g.xlarge", "c7g.2xlarge", "c7g.4xlarge", "c7g.8xlarge", "c7g.12xlarge", "c7g.16xlarge", "r7g.medium", "r7g.large", "r7g.xlarge", "r7g.2xlarge", "r7g.4xlarge", "r7g.8xlarge", "r7g.12xlarge", "r7g.16xlarge", "m7g.medium", "m7g.large", "m7g.xlarge", "m7g.2xlarge", "m7g.4xlarge", "m7g.8xlarge", "m7g.12xlarge", "m7g.16xlarge", "g5g.xlarge", "g5g.2xlarge", "g5g.4xlarge", "g5g.8xlarge", "g5g.16xlarge", "r6i.large", "r6i.xlarge", "r6i.2xlarge", "r6i.4xlarge", "r6i.8xlarge", "r6i.12xlarge", "r6i.16xlarge", "c6gd.medium", "c6gd.large", "c6gd.xlarge", "c6gd.2xlarge", "c6gd.4xlarge", "c6gd.8xlarge", "c6gd.12xlarge", "c6gd.16xlarge", "c6in.large", "c6in.xlarge", "c6in.2xlarge", "c6in.4xlarge", "c6in.8xlarge", "c6in.12xlarge", "c6in.16xlarge", "c7a.medium", "c7a.large", "c7a.xlarge", "c7a.2xlarge", "c7a.4xlarge", "c7a.8xlarge", "c7a.12xlarge", "c7a.16xlarge", "c7gd.medium", "c7gd.large", "c7gd.xlarge", "c7gd.2xlarge", "c7gd.4xlarge", "c7gd.8xlarge", "c7gd.12xlarge", "c7gd.16xlarge", "c7gn.medium", "c7gn.large", "c7gn.xlarge", "c7gn.2xlarge", "c7gn.4xlarge", "c7gn.8xlarge", "c7gn.12xlarge", "c7gn.16xlarge", "c7i.large", "c7i.xlarge", "c7i.2xlarge", "c7i.4xlarge", "c7i.8xlarge", "c7i.12xlarge", "c7i.16xlarge", "m6a.large", "m6a.xlarge", "m6a.2xlarge", "m6a.4xlarge", "m6a.8xlarge", "m6a.12xlarge", "m6a.16xlarge", "m6gd.medium", "m6gd.large", "m6gd.xlarge", "m6gd.2xlarge", "m6gd.4xlarge", "m6gd.8xlarge", "m6gd.12xlarge", "m6gd.16xlarge", "m6i.large", "m6i.xlarge", "m6i.2xlarge", "m6i.4xlarge", "m6i.8xlarge", "m6i.12xlarge", "m6i.16xlarge", "m7a.medium", "m7a.large", "m7a.xlarge", "m7a.2xlarge", "m7a.4xlarge", "m7a.8xlarge", "m7a.12xlarge", "m7a.16xlarge", "m7gd.medium", "m7gd.large", "m7gd.xlarge", "m7gd.2xlarge", "m7gd.4xlarge", "m7gd.8xlarge", "m7gd.12xlarge", "m7gd.16xlarge", "m7i.large", "m7i.xlarge", "m7i.2xlarge", "m7i.4xlarge", "m7i.8xlarge", "m7i.12xlarge", "m7i.16xlarge", "r6gd.medium", "r6gd.large", "r6gd.xlarge", "r6gd.2xlarge", "r6gd.4xlarge", "r6gd.8xlarge", "r6gd.12xlarge", "r6gd.16xlarge", "r7a.medium", "r7a.large", "r7a.xlarge", "r7a.2xlarge", "r7a.4xlarge", "r7a.8xlarge", "r7a.12xlarge", "r7a.16xlarge", "r7gd.medium", "r7gd.large", "r7gd.xlarge", "r7gd.2xlarge", "r7gd.4xlarge", "r7gd.8xlarge", "r7gd.12xlarge", "r7gd.16xlarge", "r7i.large", "r7i.xlarge", "r7i.2xlarge", "r7i.4xlarge", "r7i.8xlarge", "r7i.12xlarge", "r7i.16xlarge", "r7i.24xlarge", "r7i.48xlarge", "c5ad.large", "c5ad.xlarge", "c5ad.2xlarge", "c5ad.4xlarge", "c5ad.8xlarge", "c5ad.12xlarge", "c5ad.16xlarge", "c5ad.24xlarge", "c5n.large", "c5n.xlarge", "c5n.2xlarge", "c5n.4xlarge", "c5n.9xlarge", "c5n.18xlarge", "r5ad.large", "r5ad.xlarge", "r5ad.2xlarge", "r5ad.4xlarge", "r5ad.8xlarge", "r5ad.12xlarge", "r5ad.16xlarge", "r5ad.24xlarge", "c6id.large", "c6id.xlarge", "c6id.2xlarge", "c6id.4xlarge", "c6id.8xlarge", "c6id.12xlarge", "c6id.16xlarge", "c6id.24xlarge", "c6id.32xlarge", "c8g.medium", "c8g.large", "c8g.xlarge", "c8g.2xlarge", "c8g.4xlarge", "c8g.8xlarge", "c8g.12xlarge", "c8g.16xlarge", "c8g.24xlarge", "c8g.48xlarge", "m5ad.large", "m5ad.xlarge", "m5ad.2xlarge", "m5ad.4xlarge", "m5ad.8xlarge", "m5ad.12xlarge", "m5ad.16xlarge", "m5ad.24xlarge", "m5d.large", "m5d.xlarge", "m5d.2xlarge", "m5d.4xlarge", "m5d.8xlarge", "m5d.12xlarge", "m5d.16xlarge", "m5d.24xlarge", "m5dn.large", "m5dn.xlarge", "m5dn.2xlarge", "m5dn.4xlarge", "m5dn.8xlarge", "m5dn.12xlarge", "m5dn.16xlarge", "m5dn.24xlarge", "m5n.large", "m5n.xlarge", "m5n.2xlarge", "m5n.4xlarge", "m5n.8xlarge", "m5n.12xlarge", "m5n.16xlarge", "m5n.24xlarge", "m6id.large", "m6id.xlarge", "m6id.2xlarge", "m6id.4xlarge", "m6id.8xlarge", "m6id.12xlarge", "m6id.16xlarge", "m6id.24xlarge", "m6id.32xlarge", "m6idn.large", "m6idn.xlarge", "m6idn.2xlarge", "m6idn.4xlarge", "m6idn.8xlarge", "m6idn.12xlarge", "m6idn.16xlarge", "m6idn.24xlarge", "m6idn.32xlarge", "m6in.large", "m6in.xlarge", "m6in.2xlarge", "m6in.4xlarge", "m6in.8xlarge", "m6in.12xlarge", "m6in.16xlarge", "m6in.24xlarge", "m6in.32xlarge", "m8g.medium", "m8g.large", "m8g.xlarge", "m8g.2xlarge", "m8g.4xlarge", "m8g.8xlarge", "m8g.12xlarge", "m8g.16xlarge", "m8g.24xlarge", "m8g.48xlarge", "r5dn.large", "r5dn.xlarge", "r5dn.2xlarge", "r5dn.4xlarge", "r5dn.8xlarge", "r5dn.12xlarge", "r5dn.16xlarge", "r5dn.24xlarge", "r5n.large", "r5n.xlarge", "r5n.2xlarge", "r5n.4xlarge", "r5n.8xlarge", "r5n.12xlarge", "r5n.16xlarge", "r5n.24xlarge", "r6a.large", "r6a.xlarge", "r6a.2xlarge", "r6a.4xlarge", "r6a.8xlarge", "r6a.12xlarge", "r6a.16xlarge", "r6a.24xlarge", "r6a.32xlarge", "r6a.48xlarge", "r6id.large", "r6id.xlarge", "r6id.2xlarge", "r6id.4xlarge", "r6id.8xlarge", "r6id.12xlarge", "r6id.16xlarge", "r6id.24xlarge", "r6id.32xlarge", "r6idn.large", "r6idn.xlarge", "r6idn.2xlarge", "r6idn.4xlarge", "r6idn.8xlarge", "r6idn.12xlarge", "r6idn.16xlarge", "r6idn.24xlarge", "r6idn.32xlarge", "r6in.large", "r6in.xlarge", "r6in.2xlarge", "r6in.4xlarge", "r6in.8xlarge", "r6in.12xlarge", "r6in.16xlarge", "r6in.24xlarge", "r6in.32xlarge", "r8g.medium", "r8g.large", "r8g.xlarge", "r8g.2xlarge", "r8g.4xlarge", "r8g.8xlarge", "r8g.12xlarge", "r8g.16xlarge", "r8g.24xlarge", "r8g.48xlarge", "m4.16xlarge", "c6a.32xlarge", "c6a.48xlarge", "c6i.32xlarge", "r6i.24xlarge", "r6i.32xlarge", "c6in.24xlarge", "c6in.32xlarge", "c7a.24xlarge", "c7a.32xlarge", "c7a.48xlarge", "c7i.24xlarge", "c7i.48xlarge", "m6a.24xlarge", "m6a.32xlarge", "m6a.48xlarge", "m6i.24xlarge", "m6i.32xlarge", "m7a.24xlarge", "m7a.32xlarge", "m7a.48xlarge", "m7i.24xlarge", "m7i.48xlarge", "r7a.24xlarge", "r7a.32xlarge", "r7a.48xlarge", "c8a.medium", "c8a.large", "c8a.xlarge", "c8a.2xlarge", "c8i.large", "c8i.xlarge", "c8i.2xlarge", "c9g.medium", "c9g.large", "c9g.xlarge", "c9g.2xlarge", "m8a.medium", "m8a.large", "m8a.xlarge", "m8a.2xlarge", "m8i.large", "m8i.xlarge", "m8i.2xlarge", "m9g.large", "m9g.xlarge", "m9g.2xlarge"
     #   resp.ec2_instance_limits[0].current_instances #=> Integer
     #   resp.ec2_instance_limits[0].instance_limit #=> Integer
     #   resp.ec2_instance_limits[0].location #=> String
@@ -4815,6 +5365,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere
+    #
     # Retrieves core fleet-wide properties for fleets in an Amazon Web
     # Services Region. Properties include the computing hardware and
     # deployment configuration for instances in the fleet.
@@ -4840,7 +5392,7 @@ module Aws::GameLift
     #
     # **Learn more**
     #
-    # [Setting up Amazon GameLift fleets][1]
+    # [Setting up Amazon GameLift Servers fleets][1]
     #
     #
     #
@@ -4885,12 +5437,12 @@ module Aws::GameLift
     #   resp.fleet_attributes[0].fleet_id #=> String
     #   resp.fleet_attributes[0].fleet_arn #=> String
     #   resp.fleet_attributes[0].fleet_type #=> String, one of "ON_DEMAND", "SPOT"
-    #   resp.fleet_attributes[0].instance_type #=> String, one of "t2.micro", "t2.small", "t2.medium", "t2.large", "c3.large", "c3.xlarge", "c3.2xlarge", "c3.4xlarge", "c3.8xlarge", "c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge", "c4.8xlarge", "c5.large", "c5.xlarge", "c5.2xlarge", "c5.4xlarge", "c5.9xlarge", "c5.12xlarge", "c5.18xlarge", "c5.24xlarge", "c5a.large", "c5a.xlarge", "c5a.2xlarge", "c5a.4xlarge", "c5a.8xlarge", "c5a.12xlarge", "c5a.16xlarge", "c5a.24xlarge", "r3.large", "r3.xlarge", "r3.2xlarge", "r3.4xlarge", "r3.8xlarge", "r4.large", "r4.xlarge", "r4.2xlarge", "r4.4xlarge", "r4.8xlarge", "r4.16xlarge", "r5.large", "r5.xlarge", "r5.2xlarge", "r5.4xlarge", "r5.8xlarge", "r5.12xlarge", "r5.16xlarge", "r5.24xlarge", "r5a.large", "r5a.xlarge", "r5a.2xlarge", "r5a.4xlarge", "r5a.8xlarge", "r5a.12xlarge", "r5a.16xlarge", "r5a.24xlarge", "m3.medium", "m3.large", "m3.xlarge", "m3.2xlarge", "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge", "m4.10xlarge", "m5.large", "m5.xlarge", "m5.2xlarge", "m5.4xlarge", "m5.8xlarge", "m5.12xlarge", "m5.16xlarge", "m5.24xlarge", "m5a.large", "m5a.xlarge", "m5a.2xlarge", "m5a.4xlarge", "m5a.8xlarge", "m5a.12xlarge", "m5a.16xlarge", "m5a.24xlarge", "c5d.large", "c5d.xlarge", "c5d.2xlarge", "c5d.4xlarge", "c5d.9xlarge", "c5d.12xlarge", "c5d.18xlarge", "c5d.24xlarge", "c6a.large", "c6a.xlarge", "c6a.2xlarge", "c6a.4xlarge", "c6a.8xlarge", "c6a.12xlarge", "c6a.16xlarge", "c6a.24xlarge", "c6i.large", "c6i.xlarge", "c6i.2xlarge", "c6i.4xlarge", "c6i.8xlarge", "c6i.12xlarge", "c6i.16xlarge", "c6i.24xlarge", "r5d.large", "r5d.xlarge", "r5d.2xlarge", "r5d.4xlarge", "r5d.8xlarge", "r5d.12xlarge", "r5d.16xlarge", "r5d.24xlarge", "m6g.medium", "m6g.large", "m6g.xlarge", "m6g.2xlarge", "m6g.4xlarge", "m6g.8xlarge", "m6g.12xlarge", "m6g.16xlarge", "c6g.medium", "c6g.large", "c6g.xlarge", "c6g.2xlarge", "c6g.4xlarge", "c6g.8xlarge", "c6g.12xlarge", "c6g.16xlarge", "r6g.medium", "r6g.large", "r6g.xlarge", "r6g.2xlarge", "r6g.4xlarge", "r6g.8xlarge", "r6g.12xlarge", "r6g.16xlarge", "c6gn.medium", "c6gn.large", "c6gn.xlarge", "c6gn.2xlarge", "c6gn.4xlarge", "c6gn.8xlarge", "c6gn.12xlarge", "c6gn.16xlarge", "c7g.medium", "c7g.large", "c7g.xlarge", "c7g.2xlarge", "c7g.4xlarge", "c7g.8xlarge", "c7g.12xlarge", "c7g.16xlarge", "r7g.medium", "r7g.large", "r7g.xlarge", "r7g.2xlarge", "r7g.4xlarge", "r7g.8xlarge", "r7g.12xlarge", "r7g.16xlarge", "m7g.medium", "m7g.large", "m7g.xlarge", "m7g.2xlarge", "m7g.4xlarge", "m7g.8xlarge", "m7g.12xlarge", "m7g.16xlarge", "g5g.xlarge", "g5g.2xlarge", "g5g.4xlarge", "g5g.8xlarge", "g5g.16xlarge"
+    #   resp.fleet_attributes[0].instance_type #=> String, one of "t2.micro", "t2.small", "t2.medium", "t2.large", "c3.large", "c3.xlarge", "c3.2xlarge", "c3.4xlarge", "c3.8xlarge", "c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge", "c4.8xlarge", "c5.large", "c5.xlarge", "c5.2xlarge", "c5.4xlarge", "c5.9xlarge", "c5.12xlarge", "c5.18xlarge", "c5.24xlarge", "c5a.large", "c5a.xlarge", "c5a.2xlarge", "c5a.4xlarge", "c5a.8xlarge", "c5a.12xlarge", "c5a.16xlarge", "c5a.24xlarge", "r3.large", "r3.xlarge", "r3.2xlarge", "r3.4xlarge", "r3.8xlarge", "r4.large", "r4.xlarge", "r4.2xlarge", "r4.4xlarge", "r4.8xlarge", "r4.16xlarge", "r5.large", "r5.xlarge", "r5.2xlarge", "r5.4xlarge", "r5.8xlarge", "r5.12xlarge", "r5.16xlarge", "r5.24xlarge", "r5a.large", "r5a.xlarge", "r5a.2xlarge", "r5a.4xlarge", "r5a.8xlarge", "r5a.12xlarge", "r5a.16xlarge", "r5a.24xlarge", "m3.medium", "m3.large", "m3.xlarge", "m3.2xlarge", "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge", "m4.10xlarge", "m5.large", "m5.xlarge", "m5.2xlarge", "m5.4xlarge", "m5.8xlarge", "m5.12xlarge", "m5.16xlarge", "m5.24xlarge", "m5a.large", "m5a.xlarge", "m5a.2xlarge", "m5a.4xlarge", "m5a.8xlarge", "m5a.12xlarge", "m5a.16xlarge", "m5a.24xlarge", "c5d.large", "c5d.xlarge", "c5d.2xlarge", "c5d.4xlarge", "c5d.9xlarge", "c5d.12xlarge", "c5d.18xlarge", "c5d.24xlarge", "c6a.large", "c6a.xlarge", "c6a.2xlarge", "c6a.4xlarge", "c6a.8xlarge", "c6a.12xlarge", "c6a.16xlarge", "c6a.24xlarge", "c6i.large", "c6i.xlarge", "c6i.2xlarge", "c6i.4xlarge", "c6i.8xlarge", "c6i.12xlarge", "c6i.16xlarge", "c6i.24xlarge", "r5d.large", "r5d.xlarge", "r5d.2xlarge", "r5d.4xlarge", "r5d.8xlarge", "r5d.12xlarge", "r5d.16xlarge", "r5d.24xlarge", "m6g.medium", "m6g.large", "m6g.xlarge", "m6g.2xlarge", "m6g.4xlarge", "m6g.8xlarge", "m6g.12xlarge", "m6g.16xlarge", "c6g.medium", "c6g.large", "c6g.xlarge", "c6g.2xlarge", "c6g.4xlarge", "c6g.8xlarge", "c6g.12xlarge", "c6g.16xlarge", "r6g.medium", "r6g.large", "r6g.xlarge", "r6g.2xlarge", "r6g.4xlarge", "r6g.8xlarge", "r6g.12xlarge", "r6g.16xlarge", "c6gn.medium", "c6gn.large", "c6gn.xlarge", "c6gn.2xlarge", "c6gn.4xlarge", "c6gn.8xlarge", "c6gn.12xlarge", "c6gn.16xlarge", "c7g.medium", "c7g.large", "c7g.xlarge", "c7g.2xlarge", "c7g.4xlarge", "c7g.8xlarge", "c7g.12xlarge", "c7g.16xlarge", "r7g.medium", "r7g.large", "r7g.xlarge", "r7g.2xlarge", "r7g.4xlarge", "r7g.8xlarge", "r7g.12xlarge", "r7g.16xlarge", "m7g.medium", "m7g.large", "m7g.xlarge", "m7g.2xlarge", "m7g.4xlarge", "m7g.8xlarge", "m7g.12xlarge", "m7g.16xlarge", "g5g.xlarge", "g5g.2xlarge", "g5g.4xlarge", "g5g.8xlarge", "g5g.16xlarge", "r6i.large", "r6i.xlarge", "r6i.2xlarge", "r6i.4xlarge", "r6i.8xlarge", "r6i.12xlarge", "r6i.16xlarge", "c6gd.medium", "c6gd.large", "c6gd.xlarge", "c6gd.2xlarge", "c6gd.4xlarge", "c6gd.8xlarge", "c6gd.12xlarge", "c6gd.16xlarge", "c6in.large", "c6in.xlarge", "c6in.2xlarge", "c6in.4xlarge", "c6in.8xlarge", "c6in.12xlarge", "c6in.16xlarge", "c7a.medium", "c7a.large", "c7a.xlarge", "c7a.2xlarge", "c7a.4xlarge", "c7a.8xlarge", "c7a.12xlarge", "c7a.16xlarge", "c7gd.medium", "c7gd.large", "c7gd.xlarge", "c7gd.2xlarge", "c7gd.4xlarge", "c7gd.8xlarge", "c7gd.12xlarge", "c7gd.16xlarge", "c7gn.medium", "c7gn.large", "c7gn.xlarge", "c7gn.2xlarge", "c7gn.4xlarge", "c7gn.8xlarge", "c7gn.12xlarge", "c7gn.16xlarge", "c7i.large", "c7i.xlarge", "c7i.2xlarge", "c7i.4xlarge", "c7i.8xlarge", "c7i.12xlarge", "c7i.16xlarge", "m6a.large", "m6a.xlarge", "m6a.2xlarge", "m6a.4xlarge", "m6a.8xlarge", "m6a.12xlarge", "m6a.16xlarge", "m6gd.medium", "m6gd.large", "m6gd.xlarge", "m6gd.2xlarge", "m6gd.4xlarge", "m6gd.8xlarge", "m6gd.12xlarge", "m6gd.16xlarge", "m6i.large", "m6i.xlarge", "m6i.2xlarge", "m6i.4xlarge", "m6i.8xlarge", "m6i.12xlarge", "m6i.16xlarge", "m7a.medium", "m7a.large", "m7a.xlarge", "m7a.2xlarge", "m7a.4xlarge", "m7a.8xlarge", "m7a.12xlarge", "m7a.16xlarge", "m7gd.medium", "m7gd.large", "m7gd.xlarge", "m7gd.2xlarge", "m7gd.4xlarge", "m7gd.8xlarge", "m7gd.12xlarge", "m7gd.16xlarge", "m7i.large", "m7i.xlarge", "m7i.2xlarge", "m7i.4xlarge", "m7i.8xlarge", "m7i.12xlarge", "m7i.16xlarge", "r6gd.medium", "r6gd.large", "r6gd.xlarge", "r6gd.2xlarge", "r6gd.4xlarge", "r6gd.8xlarge", "r6gd.12xlarge", "r6gd.16xlarge", "r7a.medium", "r7a.large", "r7a.xlarge", "r7a.2xlarge", "r7a.4xlarge", "r7a.8xlarge", "r7a.12xlarge", "r7a.16xlarge", "r7gd.medium", "r7gd.large", "r7gd.xlarge", "r7gd.2xlarge", "r7gd.4xlarge", "r7gd.8xlarge", "r7gd.12xlarge", "r7gd.16xlarge", "r7i.large", "r7i.xlarge", "r7i.2xlarge", "r7i.4xlarge", "r7i.8xlarge", "r7i.12xlarge", "r7i.16xlarge", "r7i.24xlarge", "r7i.48xlarge", "c5ad.large", "c5ad.xlarge", "c5ad.2xlarge", "c5ad.4xlarge", "c5ad.8xlarge", "c5ad.12xlarge", "c5ad.16xlarge", "c5ad.24xlarge", "c5n.large", "c5n.xlarge", "c5n.2xlarge", "c5n.4xlarge", "c5n.9xlarge", "c5n.18xlarge", "r5ad.large", "r5ad.xlarge", "r5ad.2xlarge", "r5ad.4xlarge", "r5ad.8xlarge", "r5ad.12xlarge", "r5ad.16xlarge", "r5ad.24xlarge", "c6id.large", "c6id.xlarge", "c6id.2xlarge", "c6id.4xlarge", "c6id.8xlarge", "c6id.12xlarge", "c6id.16xlarge", "c6id.24xlarge", "c6id.32xlarge", "c8g.medium", "c8g.large", "c8g.xlarge", "c8g.2xlarge", "c8g.4xlarge", "c8g.8xlarge", "c8g.12xlarge", "c8g.16xlarge", "c8g.24xlarge", "c8g.48xlarge", "m5ad.large", "m5ad.xlarge", "m5ad.2xlarge", "m5ad.4xlarge", "m5ad.8xlarge", "m5ad.12xlarge", "m5ad.16xlarge", "m5ad.24xlarge", "m5d.large", "m5d.xlarge", "m5d.2xlarge", "m5d.4xlarge", "m5d.8xlarge", "m5d.12xlarge", "m5d.16xlarge", "m5d.24xlarge", "m5dn.large", "m5dn.xlarge", "m5dn.2xlarge", "m5dn.4xlarge", "m5dn.8xlarge", "m5dn.12xlarge", "m5dn.16xlarge", "m5dn.24xlarge", "m5n.large", "m5n.xlarge", "m5n.2xlarge", "m5n.4xlarge", "m5n.8xlarge", "m5n.12xlarge", "m5n.16xlarge", "m5n.24xlarge", "m6id.large", "m6id.xlarge", "m6id.2xlarge", "m6id.4xlarge", "m6id.8xlarge", "m6id.12xlarge", "m6id.16xlarge", "m6id.24xlarge", "m6id.32xlarge", "m6idn.large", "m6idn.xlarge", "m6idn.2xlarge", "m6idn.4xlarge", "m6idn.8xlarge", "m6idn.12xlarge", "m6idn.16xlarge", "m6idn.24xlarge", "m6idn.32xlarge", "m6in.large", "m6in.xlarge", "m6in.2xlarge", "m6in.4xlarge", "m6in.8xlarge", "m6in.12xlarge", "m6in.16xlarge", "m6in.24xlarge", "m6in.32xlarge", "m8g.medium", "m8g.large", "m8g.xlarge", "m8g.2xlarge", "m8g.4xlarge", "m8g.8xlarge", "m8g.12xlarge", "m8g.16xlarge", "m8g.24xlarge", "m8g.48xlarge", "r5dn.large", "r5dn.xlarge", "r5dn.2xlarge", "r5dn.4xlarge", "r5dn.8xlarge", "r5dn.12xlarge", "r5dn.16xlarge", "r5dn.24xlarge", "r5n.large", "r5n.xlarge", "r5n.2xlarge", "r5n.4xlarge", "r5n.8xlarge", "r5n.12xlarge", "r5n.16xlarge", "r5n.24xlarge", "r6a.large", "r6a.xlarge", "r6a.2xlarge", "r6a.4xlarge", "r6a.8xlarge", "r6a.12xlarge", "r6a.16xlarge", "r6a.24xlarge", "r6a.32xlarge", "r6a.48xlarge", "r6id.large", "r6id.xlarge", "r6id.2xlarge", "r6id.4xlarge", "r6id.8xlarge", "r6id.12xlarge", "r6id.16xlarge", "r6id.24xlarge", "r6id.32xlarge", "r6idn.large", "r6idn.xlarge", "r6idn.2xlarge", "r6idn.4xlarge", "r6idn.8xlarge", "r6idn.12xlarge", "r6idn.16xlarge", "r6idn.24xlarge", "r6idn.32xlarge", "r6in.large", "r6in.xlarge", "r6in.2xlarge", "r6in.4xlarge", "r6in.8xlarge", "r6in.12xlarge", "r6in.16xlarge", "r6in.24xlarge", "r6in.32xlarge", "r8g.medium", "r8g.large", "r8g.xlarge", "r8g.2xlarge", "r8g.4xlarge", "r8g.8xlarge", "r8g.12xlarge", "r8g.16xlarge", "r8g.24xlarge", "r8g.48xlarge", "m4.16xlarge", "c6a.32xlarge", "c6a.48xlarge", "c6i.32xlarge", "r6i.24xlarge", "r6i.32xlarge", "c6in.24xlarge", "c6in.32xlarge", "c7a.24xlarge", "c7a.32xlarge", "c7a.48xlarge", "c7i.24xlarge", "c7i.48xlarge", "m6a.24xlarge", "m6a.32xlarge", "m6a.48xlarge", "m6i.24xlarge", "m6i.32xlarge", "m7a.24xlarge", "m7a.32xlarge", "m7a.48xlarge", "m7i.24xlarge", "m7i.48xlarge", "r7a.24xlarge", "r7a.32xlarge", "r7a.48xlarge", "c8a.medium", "c8a.large", "c8a.xlarge", "c8a.2xlarge", "c8i.large", "c8i.xlarge", "c8i.2xlarge", "c9g.medium", "c9g.large", "c9g.xlarge", "c9g.2xlarge", "m8a.medium", "m8a.large", "m8a.xlarge", "m8a.2xlarge", "m8i.large", "m8i.xlarge", "m8i.2xlarge", "m9g.large", "m9g.xlarge", "m9g.2xlarge"
     #   resp.fleet_attributes[0].description #=> String
     #   resp.fleet_attributes[0].name #=> String
     #   resp.fleet_attributes[0].creation_time #=> Time
     #   resp.fleet_attributes[0].termination_time #=> Time
-    #   resp.fleet_attributes[0].status #=> String, one of "NEW", "DOWNLOADING", "VALIDATING", "BUILDING", "ACTIVATING", "ACTIVE", "DELETING", "ERROR", "TERMINATED", "NOT_FOUND"
+    #   resp.fleet_attributes[0].status #=> String, one of "NEW", "DOWNLOADING", "VALIDATING", "BUILDING", "ACTIVATING", "ACTIVE", "DELETING", "ERROR", "TERMINATED", "NOT_FOUND", "EXPIRED"
     #   resp.fleet_attributes[0].build_id #=> String
     #   resp.fleet_attributes[0].build_arn #=> String
     #   resp.fleet_attributes[0].script_id #=> String
@@ -4900,7 +5452,7 @@ module Aws::GameLift
     #   resp.fleet_attributes[0].log_paths #=> Array
     #   resp.fleet_attributes[0].log_paths[0] #=> String
     #   resp.fleet_attributes[0].new_game_session_protection_policy #=> String, one of "NoProtection", "FullProtection"
-    #   resp.fleet_attributes[0].operating_system #=> String, one of "WINDOWS_2012", "AMAZON_LINUX", "AMAZON_LINUX_2", "WINDOWS_2016", "AMAZON_LINUX_2023"
+    #   resp.fleet_attributes[0].operating_system #=> String, one of "WINDOWS_2012", "AMAZON_LINUX", "AMAZON_LINUX_2", "WINDOWS_2016", "AMAZON_LINUX_2023", "WINDOWS_2022"
     #   resp.fleet_attributes[0].resource_creation_limit_policy.new_game_sessions_per_creator #=> Integer
     #   resp.fleet_attributes[0].resource_creation_limit_policy.policy_period_in_minutes #=> Integer
     #   resp.fleet_attributes[0].metric_groups #=> Array
@@ -4912,6 +5464,8 @@ module Aws::GameLift
     #   resp.fleet_attributes[0].compute_type #=> String, one of "EC2", "ANYWHERE"
     #   resp.fleet_attributes[0].anywhere_configuration.cost #=> String
     #   resp.fleet_attributes[0].instance_role_credentials_provider #=> String, one of "SHARED_CREDENTIAL_FILE"
+    #   resp.fleet_attributes[0].player_gateway_mode #=> String, one of "DISABLED", "ENABLED", "REQUIRED"
+    #   resp.fleet_attributes[0].player_gateway_configuration.game_server_ip_protocol_supported #=> String, one of "IPv4", "DUAL_STACK"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/DescribeFleetAttributes AWS API Documentation
@@ -4923,6 +5477,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Container
+    #
     # Retrieves the resource capacity settings for one or more fleets. For a
     # container fleet, this operation also returns counts for game server
     # container groups.
@@ -4956,7 +5512,7 @@ module Aws::GameLift
     #
     # **Learn more**
     #
-    # [Setting up Amazon GameLift fleets][2]
+    # [Setting up Amazon GameLift Servers fleets][2]
     #
     # [GameLift metrics for fleets][3]
     #
@@ -5004,7 +5560,7 @@ module Aws::GameLift
     #   resp.fleet_capacity #=> Array
     #   resp.fleet_capacity[0].fleet_id #=> String
     #   resp.fleet_capacity[0].fleet_arn #=> String
-    #   resp.fleet_capacity[0].instance_type #=> String, one of "t2.micro", "t2.small", "t2.medium", "t2.large", "c3.large", "c3.xlarge", "c3.2xlarge", "c3.4xlarge", "c3.8xlarge", "c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge", "c4.8xlarge", "c5.large", "c5.xlarge", "c5.2xlarge", "c5.4xlarge", "c5.9xlarge", "c5.12xlarge", "c5.18xlarge", "c5.24xlarge", "c5a.large", "c5a.xlarge", "c5a.2xlarge", "c5a.4xlarge", "c5a.8xlarge", "c5a.12xlarge", "c5a.16xlarge", "c5a.24xlarge", "r3.large", "r3.xlarge", "r3.2xlarge", "r3.4xlarge", "r3.8xlarge", "r4.large", "r4.xlarge", "r4.2xlarge", "r4.4xlarge", "r4.8xlarge", "r4.16xlarge", "r5.large", "r5.xlarge", "r5.2xlarge", "r5.4xlarge", "r5.8xlarge", "r5.12xlarge", "r5.16xlarge", "r5.24xlarge", "r5a.large", "r5a.xlarge", "r5a.2xlarge", "r5a.4xlarge", "r5a.8xlarge", "r5a.12xlarge", "r5a.16xlarge", "r5a.24xlarge", "m3.medium", "m3.large", "m3.xlarge", "m3.2xlarge", "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge", "m4.10xlarge", "m5.large", "m5.xlarge", "m5.2xlarge", "m5.4xlarge", "m5.8xlarge", "m5.12xlarge", "m5.16xlarge", "m5.24xlarge", "m5a.large", "m5a.xlarge", "m5a.2xlarge", "m5a.4xlarge", "m5a.8xlarge", "m5a.12xlarge", "m5a.16xlarge", "m5a.24xlarge", "c5d.large", "c5d.xlarge", "c5d.2xlarge", "c5d.4xlarge", "c5d.9xlarge", "c5d.12xlarge", "c5d.18xlarge", "c5d.24xlarge", "c6a.large", "c6a.xlarge", "c6a.2xlarge", "c6a.4xlarge", "c6a.8xlarge", "c6a.12xlarge", "c6a.16xlarge", "c6a.24xlarge", "c6i.large", "c6i.xlarge", "c6i.2xlarge", "c6i.4xlarge", "c6i.8xlarge", "c6i.12xlarge", "c6i.16xlarge", "c6i.24xlarge", "r5d.large", "r5d.xlarge", "r5d.2xlarge", "r5d.4xlarge", "r5d.8xlarge", "r5d.12xlarge", "r5d.16xlarge", "r5d.24xlarge", "m6g.medium", "m6g.large", "m6g.xlarge", "m6g.2xlarge", "m6g.4xlarge", "m6g.8xlarge", "m6g.12xlarge", "m6g.16xlarge", "c6g.medium", "c6g.large", "c6g.xlarge", "c6g.2xlarge", "c6g.4xlarge", "c6g.8xlarge", "c6g.12xlarge", "c6g.16xlarge", "r6g.medium", "r6g.large", "r6g.xlarge", "r6g.2xlarge", "r6g.4xlarge", "r6g.8xlarge", "r6g.12xlarge", "r6g.16xlarge", "c6gn.medium", "c6gn.large", "c6gn.xlarge", "c6gn.2xlarge", "c6gn.4xlarge", "c6gn.8xlarge", "c6gn.12xlarge", "c6gn.16xlarge", "c7g.medium", "c7g.large", "c7g.xlarge", "c7g.2xlarge", "c7g.4xlarge", "c7g.8xlarge", "c7g.12xlarge", "c7g.16xlarge", "r7g.medium", "r7g.large", "r7g.xlarge", "r7g.2xlarge", "r7g.4xlarge", "r7g.8xlarge", "r7g.12xlarge", "r7g.16xlarge", "m7g.medium", "m7g.large", "m7g.xlarge", "m7g.2xlarge", "m7g.4xlarge", "m7g.8xlarge", "m7g.12xlarge", "m7g.16xlarge", "g5g.xlarge", "g5g.2xlarge", "g5g.4xlarge", "g5g.8xlarge", "g5g.16xlarge"
+    #   resp.fleet_capacity[0].instance_type #=> String, one of "t2.micro", "t2.small", "t2.medium", "t2.large", "c3.large", "c3.xlarge", "c3.2xlarge", "c3.4xlarge", "c3.8xlarge", "c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge", "c4.8xlarge", "c5.large", "c5.xlarge", "c5.2xlarge", "c5.4xlarge", "c5.9xlarge", "c5.12xlarge", "c5.18xlarge", "c5.24xlarge", "c5a.large", "c5a.xlarge", "c5a.2xlarge", "c5a.4xlarge", "c5a.8xlarge", "c5a.12xlarge", "c5a.16xlarge", "c5a.24xlarge", "r3.large", "r3.xlarge", "r3.2xlarge", "r3.4xlarge", "r3.8xlarge", "r4.large", "r4.xlarge", "r4.2xlarge", "r4.4xlarge", "r4.8xlarge", "r4.16xlarge", "r5.large", "r5.xlarge", "r5.2xlarge", "r5.4xlarge", "r5.8xlarge", "r5.12xlarge", "r5.16xlarge", "r5.24xlarge", "r5a.large", "r5a.xlarge", "r5a.2xlarge", "r5a.4xlarge", "r5a.8xlarge", "r5a.12xlarge", "r5a.16xlarge", "r5a.24xlarge", "m3.medium", "m3.large", "m3.xlarge", "m3.2xlarge", "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge", "m4.10xlarge", "m5.large", "m5.xlarge", "m5.2xlarge", "m5.4xlarge", "m5.8xlarge", "m5.12xlarge", "m5.16xlarge", "m5.24xlarge", "m5a.large", "m5a.xlarge", "m5a.2xlarge", "m5a.4xlarge", "m5a.8xlarge", "m5a.12xlarge", "m5a.16xlarge", "m5a.24xlarge", "c5d.large", "c5d.xlarge", "c5d.2xlarge", "c5d.4xlarge", "c5d.9xlarge", "c5d.12xlarge", "c5d.18xlarge", "c5d.24xlarge", "c6a.large", "c6a.xlarge", "c6a.2xlarge", "c6a.4xlarge", "c6a.8xlarge", "c6a.12xlarge", "c6a.16xlarge", "c6a.24xlarge", "c6i.large", "c6i.xlarge", "c6i.2xlarge", "c6i.4xlarge", "c6i.8xlarge", "c6i.12xlarge", "c6i.16xlarge", "c6i.24xlarge", "r5d.large", "r5d.xlarge", "r5d.2xlarge", "r5d.4xlarge", "r5d.8xlarge", "r5d.12xlarge", "r5d.16xlarge", "r5d.24xlarge", "m6g.medium", "m6g.large", "m6g.xlarge", "m6g.2xlarge", "m6g.4xlarge", "m6g.8xlarge", "m6g.12xlarge", "m6g.16xlarge", "c6g.medium", "c6g.large", "c6g.xlarge", "c6g.2xlarge", "c6g.4xlarge", "c6g.8xlarge", "c6g.12xlarge", "c6g.16xlarge", "r6g.medium", "r6g.large", "r6g.xlarge", "r6g.2xlarge", "r6g.4xlarge", "r6g.8xlarge", "r6g.12xlarge", "r6g.16xlarge", "c6gn.medium", "c6gn.large", "c6gn.xlarge", "c6gn.2xlarge", "c6gn.4xlarge", "c6gn.8xlarge", "c6gn.12xlarge", "c6gn.16xlarge", "c7g.medium", "c7g.large", "c7g.xlarge", "c7g.2xlarge", "c7g.4xlarge", "c7g.8xlarge", "c7g.12xlarge", "c7g.16xlarge", "r7g.medium", "r7g.large", "r7g.xlarge", "r7g.2xlarge", "r7g.4xlarge", "r7g.8xlarge", "r7g.12xlarge", "r7g.16xlarge", "m7g.medium", "m7g.large", "m7g.xlarge", "m7g.2xlarge", "m7g.4xlarge", "m7g.8xlarge", "m7g.12xlarge", "m7g.16xlarge", "g5g.xlarge", "g5g.2xlarge", "g5g.4xlarge", "g5g.8xlarge", "g5g.16xlarge", "r6i.large", "r6i.xlarge", "r6i.2xlarge", "r6i.4xlarge", "r6i.8xlarge", "r6i.12xlarge", "r6i.16xlarge", "c6gd.medium", "c6gd.large", "c6gd.xlarge", "c6gd.2xlarge", "c6gd.4xlarge", "c6gd.8xlarge", "c6gd.12xlarge", "c6gd.16xlarge", "c6in.large", "c6in.xlarge", "c6in.2xlarge", "c6in.4xlarge", "c6in.8xlarge", "c6in.12xlarge", "c6in.16xlarge", "c7a.medium", "c7a.large", "c7a.xlarge", "c7a.2xlarge", "c7a.4xlarge", "c7a.8xlarge", "c7a.12xlarge", "c7a.16xlarge", "c7gd.medium", "c7gd.large", "c7gd.xlarge", "c7gd.2xlarge", "c7gd.4xlarge", "c7gd.8xlarge", "c7gd.12xlarge", "c7gd.16xlarge", "c7gn.medium", "c7gn.large", "c7gn.xlarge", "c7gn.2xlarge", "c7gn.4xlarge", "c7gn.8xlarge", "c7gn.12xlarge", "c7gn.16xlarge", "c7i.large", "c7i.xlarge", "c7i.2xlarge", "c7i.4xlarge", "c7i.8xlarge", "c7i.12xlarge", "c7i.16xlarge", "m6a.large", "m6a.xlarge", "m6a.2xlarge", "m6a.4xlarge", "m6a.8xlarge", "m6a.12xlarge", "m6a.16xlarge", "m6gd.medium", "m6gd.large", "m6gd.xlarge", "m6gd.2xlarge", "m6gd.4xlarge", "m6gd.8xlarge", "m6gd.12xlarge", "m6gd.16xlarge", "m6i.large", "m6i.xlarge", "m6i.2xlarge", "m6i.4xlarge", "m6i.8xlarge", "m6i.12xlarge", "m6i.16xlarge", "m7a.medium", "m7a.large", "m7a.xlarge", "m7a.2xlarge", "m7a.4xlarge", "m7a.8xlarge", "m7a.12xlarge", "m7a.16xlarge", "m7gd.medium", "m7gd.large", "m7gd.xlarge", "m7gd.2xlarge", "m7gd.4xlarge", "m7gd.8xlarge", "m7gd.12xlarge", "m7gd.16xlarge", "m7i.large", "m7i.xlarge", "m7i.2xlarge", "m7i.4xlarge", "m7i.8xlarge", "m7i.12xlarge", "m7i.16xlarge", "r6gd.medium", "r6gd.large", "r6gd.xlarge", "r6gd.2xlarge", "r6gd.4xlarge", "r6gd.8xlarge", "r6gd.12xlarge", "r6gd.16xlarge", "r7a.medium", "r7a.large", "r7a.xlarge", "r7a.2xlarge", "r7a.4xlarge", "r7a.8xlarge", "r7a.12xlarge", "r7a.16xlarge", "r7gd.medium", "r7gd.large", "r7gd.xlarge", "r7gd.2xlarge", "r7gd.4xlarge", "r7gd.8xlarge", "r7gd.12xlarge", "r7gd.16xlarge", "r7i.large", "r7i.xlarge", "r7i.2xlarge", "r7i.4xlarge", "r7i.8xlarge", "r7i.12xlarge", "r7i.16xlarge", "r7i.24xlarge", "r7i.48xlarge", "c5ad.large", "c5ad.xlarge", "c5ad.2xlarge", "c5ad.4xlarge", "c5ad.8xlarge", "c5ad.12xlarge", "c5ad.16xlarge", "c5ad.24xlarge", "c5n.large", "c5n.xlarge", "c5n.2xlarge", "c5n.4xlarge", "c5n.9xlarge", "c5n.18xlarge", "r5ad.large", "r5ad.xlarge", "r5ad.2xlarge", "r5ad.4xlarge", "r5ad.8xlarge", "r5ad.12xlarge", "r5ad.16xlarge", "r5ad.24xlarge", "c6id.large", "c6id.xlarge", "c6id.2xlarge", "c6id.4xlarge", "c6id.8xlarge", "c6id.12xlarge", "c6id.16xlarge", "c6id.24xlarge", "c6id.32xlarge", "c8g.medium", "c8g.large", "c8g.xlarge", "c8g.2xlarge", "c8g.4xlarge", "c8g.8xlarge", "c8g.12xlarge", "c8g.16xlarge", "c8g.24xlarge", "c8g.48xlarge", "m5ad.large", "m5ad.xlarge", "m5ad.2xlarge", "m5ad.4xlarge", "m5ad.8xlarge", "m5ad.12xlarge", "m5ad.16xlarge", "m5ad.24xlarge", "m5d.large", "m5d.xlarge", "m5d.2xlarge", "m5d.4xlarge", "m5d.8xlarge", "m5d.12xlarge", "m5d.16xlarge", "m5d.24xlarge", "m5dn.large", "m5dn.xlarge", "m5dn.2xlarge", "m5dn.4xlarge", "m5dn.8xlarge", "m5dn.12xlarge", "m5dn.16xlarge", "m5dn.24xlarge", "m5n.large", "m5n.xlarge", "m5n.2xlarge", "m5n.4xlarge", "m5n.8xlarge", "m5n.12xlarge", "m5n.16xlarge", "m5n.24xlarge", "m6id.large", "m6id.xlarge", "m6id.2xlarge", "m6id.4xlarge", "m6id.8xlarge", "m6id.12xlarge", "m6id.16xlarge", "m6id.24xlarge", "m6id.32xlarge", "m6idn.large", "m6idn.xlarge", "m6idn.2xlarge", "m6idn.4xlarge", "m6idn.8xlarge", "m6idn.12xlarge", "m6idn.16xlarge", "m6idn.24xlarge", "m6idn.32xlarge", "m6in.large", "m6in.xlarge", "m6in.2xlarge", "m6in.4xlarge", "m6in.8xlarge", "m6in.12xlarge", "m6in.16xlarge", "m6in.24xlarge", "m6in.32xlarge", "m8g.medium", "m8g.large", "m8g.xlarge", "m8g.2xlarge", "m8g.4xlarge", "m8g.8xlarge", "m8g.12xlarge", "m8g.16xlarge", "m8g.24xlarge", "m8g.48xlarge", "r5dn.large", "r5dn.xlarge", "r5dn.2xlarge", "r5dn.4xlarge", "r5dn.8xlarge", "r5dn.12xlarge", "r5dn.16xlarge", "r5dn.24xlarge", "r5n.large", "r5n.xlarge", "r5n.2xlarge", "r5n.4xlarge", "r5n.8xlarge", "r5n.12xlarge", "r5n.16xlarge", "r5n.24xlarge", "r6a.large", "r6a.xlarge", "r6a.2xlarge", "r6a.4xlarge", "r6a.8xlarge", "r6a.12xlarge", "r6a.16xlarge", "r6a.24xlarge", "r6a.32xlarge", "r6a.48xlarge", "r6id.large", "r6id.xlarge", "r6id.2xlarge", "r6id.4xlarge", "r6id.8xlarge", "r6id.12xlarge", "r6id.16xlarge", "r6id.24xlarge", "r6id.32xlarge", "r6idn.large", "r6idn.xlarge", "r6idn.2xlarge", "r6idn.4xlarge", "r6idn.8xlarge", "r6idn.12xlarge", "r6idn.16xlarge", "r6idn.24xlarge", "r6idn.32xlarge", "r6in.large", "r6in.xlarge", "r6in.2xlarge", "r6in.4xlarge", "r6in.8xlarge", "r6in.12xlarge", "r6in.16xlarge", "r6in.24xlarge", "r6in.32xlarge", "r8g.medium", "r8g.large", "r8g.xlarge", "r8g.2xlarge", "r8g.4xlarge", "r8g.8xlarge", "r8g.12xlarge", "r8g.16xlarge", "r8g.24xlarge", "r8g.48xlarge", "m4.16xlarge", "c6a.32xlarge", "c6a.48xlarge", "c6i.32xlarge", "r6i.24xlarge", "r6i.32xlarge", "c6in.24xlarge", "c6in.32xlarge", "c7a.24xlarge", "c7a.32xlarge", "c7a.48xlarge", "c7i.24xlarge", "c7i.48xlarge", "m6a.24xlarge", "m6a.32xlarge", "m6a.48xlarge", "m6i.24xlarge", "m6i.32xlarge", "m7a.24xlarge", "m7a.32xlarge", "m7a.48xlarge", "m7i.24xlarge", "m7i.48xlarge", "r7a.24xlarge", "r7a.32xlarge", "r7a.48xlarge", "c8a.medium", "c8a.large", "c8a.xlarge", "c8a.2xlarge", "c8i.large", "c8i.xlarge", "c8i.2xlarge", "c9g.medium", "c9g.large", "c9g.xlarge", "c9g.2xlarge", "m8a.medium", "m8a.large", "m8a.xlarge", "m8a.2xlarge", "m8i.large", "m8i.xlarge", "m8i.2xlarge", "m9g.large", "m9g.xlarge", "m9g.2xlarge"
     #   resp.fleet_capacity[0].instance_counts.desired #=> Integer
     #   resp.fleet_capacity[0].instance_counts.minimum #=> Integer
     #   resp.fleet_capacity[0].instance_counts.maximum #=> Integer
@@ -5017,6 +5573,8 @@ module Aws::GameLift
     #   resp.fleet_capacity[0].game_server_container_group_counts.active #=> Integer
     #   resp.fleet_capacity[0].game_server_container_group_counts.idle #=> Integer
     #   resp.fleet_capacity[0].game_server_container_group_counts.terminating #=> Integer
+    #   resp.fleet_capacity[0].managed_capacity_configuration.zero_capacity_strategy #=> String, one of "MANUAL", "SCALE_TO_AND_FROM_ZERO"
+    #   resp.fleet_capacity[0].managed_capacity_configuration.scale_in_after_inactivity_minutes #=> Integer
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/DescribeFleetCapacity AWS API Documentation
@@ -5028,6 +5586,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** Container
+    #
     # Retrieves information about a managed container fleet deployment.
     #
     # **Request options**
@@ -5086,6 +5646,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Retrieves entries from a fleet's event log. Fleet events are
     # initiated by changes in status, such as during fleet creation and
     # termination, changes in capacity, etc. If a fleet has multiple
@@ -5101,7 +5664,7 @@ module Aws::GameLift
     #
     # **Learn more**
     #
-    # [Setting up Amazon GameLift fleets][1]
+    # [Setting up Amazon GameLift Servers fleets][1]
     #
     #
     #
@@ -5155,7 +5718,7 @@ module Aws::GameLift
     #   resp.events #=> Array
     #   resp.events[0].event_id #=> String
     #   resp.events[0].resource_id #=> String
-    #   resp.events[0].event_code #=> String, one of "GENERIC_EVENT", "FLEET_CREATED", "FLEET_DELETED", "FLEET_SCALING_EVENT", "FLEET_STATE_DOWNLOADING", "FLEET_STATE_VALIDATING", "FLEET_STATE_BUILDING", "FLEET_STATE_ACTIVATING", "FLEET_STATE_ACTIVE", "FLEET_STATE_ERROR", "FLEET_STATE_PENDING", "FLEET_STATE_CREATING", "FLEET_STATE_CREATED", "FLEET_STATE_UPDATING", "FLEET_INITIALIZATION_FAILED", "FLEET_BINARY_DOWNLOAD_FAILED", "FLEET_VALIDATION_LAUNCH_PATH_NOT_FOUND", "FLEET_VALIDATION_EXECUTABLE_RUNTIME_FAILURE", "FLEET_VALIDATION_TIMED_OUT", "FLEET_ACTIVATION_FAILED", "FLEET_ACTIVATION_FAILED_NO_INSTANCES", "FLEET_NEW_GAME_SESSION_PROTECTION_POLICY_UPDATED", "SERVER_PROCESS_INVALID_PATH", "SERVER_PROCESS_SDK_INITIALIZATION_TIMEOUT", "SERVER_PROCESS_PROCESS_READY_TIMEOUT", "SERVER_PROCESS_CRASHED", "SERVER_PROCESS_TERMINATED_UNHEALTHY", "SERVER_PROCESS_FORCE_TERMINATED", "SERVER_PROCESS_PROCESS_EXIT_TIMEOUT", "SERVER_PROCESS_SDK_INITIALIZATION_FAILED", "SERVER_PROCESS_MISCONFIGURED_CONTAINER_PORT", "GAME_SESSION_ACTIVATION_TIMEOUT", "FLEET_CREATION_EXTRACTING_BUILD", "FLEET_CREATION_RUNNING_INSTALLER", "FLEET_CREATION_VALIDATING_RUNTIME_CONFIG", "FLEET_VPC_PEERING_SUCCEEDED", "FLEET_VPC_PEERING_FAILED", "FLEET_VPC_PEERING_DELETED", "INSTANCE_INTERRUPTED", "INSTANCE_RECYCLED", "INSTANCE_REPLACED_UNHEALTHY", "FLEET_CREATION_COMPLETED_INSTALLER", "FLEET_CREATION_FAILED_INSTALLER", "COMPUTE_LOG_UPLOAD_FAILED", "GAME_SERVER_CONTAINER_GROUP_CRASHED", "PER_INSTANCE_CONTAINER_GROUP_CRASHED", "GAME_SERVER_CONTAINER_GROUP_REPLACED_UNHEALTHY", "LOCATION_STATE_PENDING", "LOCATION_STATE_CREATING", "LOCATION_STATE_CREATED", "LOCATION_STATE_ACTIVATING", "LOCATION_STATE_ACTIVE", "LOCATION_STATE_UPDATING", "LOCATION_STATE_ERROR", "LOCATION_STATE_DELETING", "LOCATION_STATE_DELETED"
+    #   resp.events[0].event_code #=> String, one of "GENERIC_EVENT", "FLEET_CREATED", "FLEET_DELETED", "FLEET_EXPIRED", "FLEET_SCALING_EVENT", "FLEET_STATE_DOWNLOADING", "FLEET_STATE_VALIDATING", "FLEET_STATE_BUILDING", "FLEET_STATE_ACTIVATING", "FLEET_STATE_ACTIVE", "FLEET_STATE_ERROR", "FLEET_STATE_PENDING", "FLEET_STATE_CREATING", "FLEET_STATE_CREATED", "FLEET_STATE_UPDATING", "FLEET_INITIALIZATION_FAILED", "FLEET_BINARY_DOWNLOAD_FAILED", "FLEET_VALIDATION_LAUNCH_PATH_NOT_FOUND", "FLEET_VALIDATION_EXECUTABLE_RUNTIME_FAILURE", "FLEET_VALIDATION_TIMED_OUT", "FLEET_ACTIVATION_FAILED", "FLEET_ACTIVATION_FAILED_NO_INSTANCES", "FLEET_NEW_GAME_SESSION_PROTECTION_POLICY_UPDATED", "SERVER_PROCESS_INVALID_PATH", "SERVER_PROCESS_SDK_INITIALIZATION_TIMEOUT", "SERVER_PROCESS_PROCESS_READY_TIMEOUT", "SERVER_PROCESS_CRASHED", "SERVER_PROCESS_TERMINATED_UNHEALTHY", "SERVER_PROCESS_FORCE_TERMINATED", "SERVER_PROCESS_PROCESS_EXIT_TIMEOUT", "SERVER_PROCESS_SDK_INITIALIZATION_FAILED", "SERVER_PROCESS_MISCONFIGURED_CONTAINER_PORT", "GAME_SESSION_ACTIVATION_TIMEOUT", "FLEET_CREATION_EXTRACTING_BUILD", "FLEET_CREATION_RUNNING_INSTALLER", "FLEET_CREATION_VALIDATING_RUNTIME_CONFIG", "FLEET_VPC_PEERING_SUCCEEDED", "FLEET_VPC_PEERING_FAILED", "FLEET_VPC_PEERING_DELETED", "INSTANCE_INTERRUPTED", "INSTANCE_RECYCLED", "INSTANCE_REPLACED_UNHEALTHY", "FLEET_CREATION_COMPLETED_INSTALLER", "FLEET_CREATION_FAILED_INSTALLER", "COMPUTE_LOG_UPLOAD_FAILED", "GAME_SERVER_CONTAINER_GROUP_CRASHED", "PER_INSTANCE_CONTAINER_GROUP_CRASHED", "GAME_SERVER_CONTAINER_GROUP_REPLACED_UNHEALTHY", "LOCATION_STATE_PENDING", "LOCATION_STATE_CREATING", "LOCATION_STATE_CREATED", "LOCATION_STATE_ACTIVATING", "LOCATION_STATE_ACTIVE", "LOCATION_STATE_UPDATING", "LOCATION_STATE_ERROR", "LOCATION_STATE_DELETING", "LOCATION_STATE_DELETED"
     #   resp.events[0].message #=> String
     #   resp.events[0].event_time #=> Time
     #   resp.events[0].pre_signed_log_url #=> String
@@ -5171,6 +5734,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Retrieves information on a fleet's remote locations, including
     # life-cycle status and any suspended fleet activity.
     #
@@ -5188,15 +5754,13 @@ module Aws::GameLift
     #
     # If successful, a `LocationAttributes` object is returned for each
     # requested location. If the fleet does not have a requested location,
-    # no information is returned. This operation does not return the home
-    # Region. To get information on a fleet's home Region, call
-    # `DescribeFleetAttributes`.
+    # no information is returned.
     #
     # **Learn more**
     #
-    # [Setting up Amazon GameLift fleets][1]
+    # [Setting up Amazon GameLift Servers fleets][1]
     #
-    # [ Amazon GameLift service locations][2] for managed hosting
+    # [ Amazon GameLift Servers service locations][2] for managed hosting
     #
     #
     #
@@ -5247,7 +5811,8 @@ module Aws::GameLift
     #   resp.fleet_arn #=> String
     #   resp.location_attributes #=> Array
     #   resp.location_attributes[0].location_state.location #=> String
-    #   resp.location_attributes[0].location_state.status #=> String, one of "NEW", "DOWNLOADING", "VALIDATING", "BUILDING", "ACTIVATING", "ACTIVE", "DELETING", "ERROR", "TERMINATED", "NOT_FOUND"
+    #   resp.location_attributes[0].location_state.status #=> String, one of "NEW", "DOWNLOADING", "VALIDATING", "BUILDING", "ACTIVATING", "ACTIVE", "DELETING", "ERROR", "TERMINATED", "NOT_FOUND", "EXPIRED"
+    #   resp.location_attributes[0].location_state.player_gateway_status #=> String, one of "DISABLED", "ENABLED"
     #   resp.location_attributes[0].stopped_actions #=> Array
     #   resp.location_attributes[0].stopped_actions[0] #=> String, one of "AUTO_SCALING"
     #   resp.location_attributes[0].update_status #=> String, one of "PENDING_UPDATE"
@@ -5262,6 +5827,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Retrieves the resource capacity settings for a fleet location. The
     # data returned includes the current capacity (number of EC2 instances)
     # and some scaling settings for the requested fleet location. For a
@@ -5279,9 +5847,9 @@ module Aws::GameLift
     #
     # **Learn more**
     #
-    # [Setting up Amazon GameLift fleets][1]
+    # [Setting up Amazon GameLift Servers fleets][1]
     #
-    # [ Amazon GameLift service locations][2] for managed hosting
+    # [ Amazon GameLift Servers service locations][2] for managed hosting
     #
     # [GameLift metrics for fleets][3]
     #
@@ -5315,7 +5883,7 @@ module Aws::GameLift
     #
     #   resp.fleet_capacity.fleet_id #=> String
     #   resp.fleet_capacity.fleet_arn #=> String
-    #   resp.fleet_capacity.instance_type #=> String, one of "t2.micro", "t2.small", "t2.medium", "t2.large", "c3.large", "c3.xlarge", "c3.2xlarge", "c3.4xlarge", "c3.8xlarge", "c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge", "c4.8xlarge", "c5.large", "c5.xlarge", "c5.2xlarge", "c5.4xlarge", "c5.9xlarge", "c5.12xlarge", "c5.18xlarge", "c5.24xlarge", "c5a.large", "c5a.xlarge", "c5a.2xlarge", "c5a.4xlarge", "c5a.8xlarge", "c5a.12xlarge", "c5a.16xlarge", "c5a.24xlarge", "r3.large", "r3.xlarge", "r3.2xlarge", "r3.4xlarge", "r3.8xlarge", "r4.large", "r4.xlarge", "r4.2xlarge", "r4.4xlarge", "r4.8xlarge", "r4.16xlarge", "r5.large", "r5.xlarge", "r5.2xlarge", "r5.4xlarge", "r5.8xlarge", "r5.12xlarge", "r5.16xlarge", "r5.24xlarge", "r5a.large", "r5a.xlarge", "r5a.2xlarge", "r5a.4xlarge", "r5a.8xlarge", "r5a.12xlarge", "r5a.16xlarge", "r5a.24xlarge", "m3.medium", "m3.large", "m3.xlarge", "m3.2xlarge", "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge", "m4.10xlarge", "m5.large", "m5.xlarge", "m5.2xlarge", "m5.4xlarge", "m5.8xlarge", "m5.12xlarge", "m5.16xlarge", "m5.24xlarge", "m5a.large", "m5a.xlarge", "m5a.2xlarge", "m5a.4xlarge", "m5a.8xlarge", "m5a.12xlarge", "m5a.16xlarge", "m5a.24xlarge", "c5d.large", "c5d.xlarge", "c5d.2xlarge", "c5d.4xlarge", "c5d.9xlarge", "c5d.12xlarge", "c5d.18xlarge", "c5d.24xlarge", "c6a.large", "c6a.xlarge", "c6a.2xlarge", "c6a.4xlarge", "c6a.8xlarge", "c6a.12xlarge", "c6a.16xlarge", "c6a.24xlarge", "c6i.large", "c6i.xlarge", "c6i.2xlarge", "c6i.4xlarge", "c6i.8xlarge", "c6i.12xlarge", "c6i.16xlarge", "c6i.24xlarge", "r5d.large", "r5d.xlarge", "r5d.2xlarge", "r5d.4xlarge", "r5d.8xlarge", "r5d.12xlarge", "r5d.16xlarge", "r5d.24xlarge", "m6g.medium", "m6g.large", "m6g.xlarge", "m6g.2xlarge", "m6g.4xlarge", "m6g.8xlarge", "m6g.12xlarge", "m6g.16xlarge", "c6g.medium", "c6g.large", "c6g.xlarge", "c6g.2xlarge", "c6g.4xlarge", "c6g.8xlarge", "c6g.12xlarge", "c6g.16xlarge", "r6g.medium", "r6g.large", "r6g.xlarge", "r6g.2xlarge", "r6g.4xlarge", "r6g.8xlarge", "r6g.12xlarge", "r6g.16xlarge", "c6gn.medium", "c6gn.large", "c6gn.xlarge", "c6gn.2xlarge", "c6gn.4xlarge", "c6gn.8xlarge", "c6gn.12xlarge", "c6gn.16xlarge", "c7g.medium", "c7g.large", "c7g.xlarge", "c7g.2xlarge", "c7g.4xlarge", "c7g.8xlarge", "c7g.12xlarge", "c7g.16xlarge", "r7g.medium", "r7g.large", "r7g.xlarge", "r7g.2xlarge", "r7g.4xlarge", "r7g.8xlarge", "r7g.12xlarge", "r7g.16xlarge", "m7g.medium", "m7g.large", "m7g.xlarge", "m7g.2xlarge", "m7g.4xlarge", "m7g.8xlarge", "m7g.12xlarge", "m7g.16xlarge", "g5g.xlarge", "g5g.2xlarge", "g5g.4xlarge", "g5g.8xlarge", "g5g.16xlarge"
+    #   resp.fleet_capacity.instance_type #=> String, one of "t2.micro", "t2.small", "t2.medium", "t2.large", "c3.large", "c3.xlarge", "c3.2xlarge", "c3.4xlarge", "c3.8xlarge", "c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge", "c4.8xlarge", "c5.large", "c5.xlarge", "c5.2xlarge", "c5.4xlarge", "c5.9xlarge", "c5.12xlarge", "c5.18xlarge", "c5.24xlarge", "c5a.large", "c5a.xlarge", "c5a.2xlarge", "c5a.4xlarge", "c5a.8xlarge", "c5a.12xlarge", "c5a.16xlarge", "c5a.24xlarge", "r3.large", "r3.xlarge", "r3.2xlarge", "r3.4xlarge", "r3.8xlarge", "r4.large", "r4.xlarge", "r4.2xlarge", "r4.4xlarge", "r4.8xlarge", "r4.16xlarge", "r5.large", "r5.xlarge", "r5.2xlarge", "r5.4xlarge", "r5.8xlarge", "r5.12xlarge", "r5.16xlarge", "r5.24xlarge", "r5a.large", "r5a.xlarge", "r5a.2xlarge", "r5a.4xlarge", "r5a.8xlarge", "r5a.12xlarge", "r5a.16xlarge", "r5a.24xlarge", "m3.medium", "m3.large", "m3.xlarge", "m3.2xlarge", "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge", "m4.10xlarge", "m5.large", "m5.xlarge", "m5.2xlarge", "m5.4xlarge", "m5.8xlarge", "m5.12xlarge", "m5.16xlarge", "m5.24xlarge", "m5a.large", "m5a.xlarge", "m5a.2xlarge", "m5a.4xlarge", "m5a.8xlarge", "m5a.12xlarge", "m5a.16xlarge", "m5a.24xlarge", "c5d.large", "c5d.xlarge", "c5d.2xlarge", "c5d.4xlarge", "c5d.9xlarge", "c5d.12xlarge", "c5d.18xlarge", "c5d.24xlarge", "c6a.large", "c6a.xlarge", "c6a.2xlarge", "c6a.4xlarge", "c6a.8xlarge", "c6a.12xlarge", "c6a.16xlarge", "c6a.24xlarge", "c6i.large", "c6i.xlarge", "c6i.2xlarge", "c6i.4xlarge", "c6i.8xlarge", "c6i.12xlarge", "c6i.16xlarge", "c6i.24xlarge", "r5d.large", "r5d.xlarge", "r5d.2xlarge", "r5d.4xlarge", "r5d.8xlarge", "r5d.12xlarge", "r5d.16xlarge", "r5d.24xlarge", "m6g.medium", "m6g.large", "m6g.xlarge", "m6g.2xlarge", "m6g.4xlarge", "m6g.8xlarge", "m6g.12xlarge", "m6g.16xlarge", "c6g.medium", "c6g.large", "c6g.xlarge", "c6g.2xlarge", "c6g.4xlarge", "c6g.8xlarge", "c6g.12xlarge", "c6g.16xlarge", "r6g.medium", "r6g.large", "r6g.xlarge", "r6g.2xlarge", "r6g.4xlarge", "r6g.8xlarge", "r6g.12xlarge", "r6g.16xlarge", "c6gn.medium", "c6gn.large", "c6gn.xlarge", "c6gn.2xlarge", "c6gn.4xlarge", "c6gn.8xlarge", "c6gn.12xlarge", "c6gn.16xlarge", "c7g.medium", "c7g.large", "c7g.xlarge", "c7g.2xlarge", "c7g.4xlarge", "c7g.8xlarge", "c7g.12xlarge", "c7g.16xlarge", "r7g.medium", "r7g.large", "r7g.xlarge", "r7g.2xlarge", "r7g.4xlarge", "r7g.8xlarge", "r7g.12xlarge", "r7g.16xlarge", "m7g.medium", "m7g.large", "m7g.xlarge", "m7g.2xlarge", "m7g.4xlarge", "m7g.8xlarge", "m7g.12xlarge", "m7g.16xlarge", "g5g.xlarge", "g5g.2xlarge", "g5g.4xlarge", "g5g.8xlarge", "g5g.16xlarge", "r6i.large", "r6i.xlarge", "r6i.2xlarge", "r6i.4xlarge", "r6i.8xlarge", "r6i.12xlarge", "r6i.16xlarge", "c6gd.medium", "c6gd.large", "c6gd.xlarge", "c6gd.2xlarge", "c6gd.4xlarge", "c6gd.8xlarge", "c6gd.12xlarge", "c6gd.16xlarge", "c6in.large", "c6in.xlarge", "c6in.2xlarge", "c6in.4xlarge", "c6in.8xlarge", "c6in.12xlarge", "c6in.16xlarge", "c7a.medium", "c7a.large", "c7a.xlarge", "c7a.2xlarge", "c7a.4xlarge", "c7a.8xlarge", "c7a.12xlarge", "c7a.16xlarge", "c7gd.medium", "c7gd.large", "c7gd.xlarge", "c7gd.2xlarge", "c7gd.4xlarge", "c7gd.8xlarge", "c7gd.12xlarge", "c7gd.16xlarge", "c7gn.medium", "c7gn.large", "c7gn.xlarge", "c7gn.2xlarge", "c7gn.4xlarge", "c7gn.8xlarge", "c7gn.12xlarge", "c7gn.16xlarge", "c7i.large", "c7i.xlarge", "c7i.2xlarge", "c7i.4xlarge", "c7i.8xlarge", "c7i.12xlarge", "c7i.16xlarge", "m6a.large", "m6a.xlarge", "m6a.2xlarge", "m6a.4xlarge", "m6a.8xlarge", "m6a.12xlarge", "m6a.16xlarge", "m6gd.medium", "m6gd.large", "m6gd.xlarge", "m6gd.2xlarge", "m6gd.4xlarge", "m6gd.8xlarge", "m6gd.12xlarge", "m6gd.16xlarge", "m6i.large", "m6i.xlarge", "m6i.2xlarge", "m6i.4xlarge", "m6i.8xlarge", "m6i.12xlarge", "m6i.16xlarge", "m7a.medium", "m7a.large", "m7a.xlarge", "m7a.2xlarge", "m7a.4xlarge", "m7a.8xlarge", "m7a.12xlarge", "m7a.16xlarge", "m7gd.medium", "m7gd.large", "m7gd.xlarge", "m7gd.2xlarge", "m7gd.4xlarge", "m7gd.8xlarge", "m7gd.12xlarge", "m7gd.16xlarge", "m7i.large", "m7i.xlarge", "m7i.2xlarge", "m7i.4xlarge", "m7i.8xlarge", "m7i.12xlarge", "m7i.16xlarge", "r6gd.medium", "r6gd.large", "r6gd.xlarge", "r6gd.2xlarge", "r6gd.4xlarge", "r6gd.8xlarge", "r6gd.12xlarge", "r6gd.16xlarge", "r7a.medium", "r7a.large", "r7a.xlarge", "r7a.2xlarge", "r7a.4xlarge", "r7a.8xlarge", "r7a.12xlarge", "r7a.16xlarge", "r7gd.medium", "r7gd.large", "r7gd.xlarge", "r7gd.2xlarge", "r7gd.4xlarge", "r7gd.8xlarge", "r7gd.12xlarge", "r7gd.16xlarge", "r7i.large", "r7i.xlarge", "r7i.2xlarge", "r7i.4xlarge", "r7i.8xlarge", "r7i.12xlarge", "r7i.16xlarge", "r7i.24xlarge", "r7i.48xlarge", "c5ad.large", "c5ad.xlarge", "c5ad.2xlarge", "c5ad.4xlarge", "c5ad.8xlarge", "c5ad.12xlarge", "c5ad.16xlarge", "c5ad.24xlarge", "c5n.large", "c5n.xlarge", "c5n.2xlarge", "c5n.4xlarge", "c5n.9xlarge", "c5n.18xlarge", "r5ad.large", "r5ad.xlarge", "r5ad.2xlarge", "r5ad.4xlarge", "r5ad.8xlarge", "r5ad.12xlarge", "r5ad.16xlarge", "r5ad.24xlarge", "c6id.large", "c6id.xlarge", "c6id.2xlarge", "c6id.4xlarge", "c6id.8xlarge", "c6id.12xlarge", "c6id.16xlarge", "c6id.24xlarge", "c6id.32xlarge", "c8g.medium", "c8g.large", "c8g.xlarge", "c8g.2xlarge", "c8g.4xlarge", "c8g.8xlarge", "c8g.12xlarge", "c8g.16xlarge", "c8g.24xlarge", "c8g.48xlarge", "m5ad.large", "m5ad.xlarge", "m5ad.2xlarge", "m5ad.4xlarge", "m5ad.8xlarge", "m5ad.12xlarge", "m5ad.16xlarge", "m5ad.24xlarge", "m5d.large", "m5d.xlarge", "m5d.2xlarge", "m5d.4xlarge", "m5d.8xlarge", "m5d.12xlarge", "m5d.16xlarge", "m5d.24xlarge", "m5dn.large", "m5dn.xlarge", "m5dn.2xlarge", "m5dn.4xlarge", "m5dn.8xlarge", "m5dn.12xlarge", "m5dn.16xlarge", "m5dn.24xlarge", "m5n.large", "m5n.xlarge", "m5n.2xlarge", "m5n.4xlarge", "m5n.8xlarge", "m5n.12xlarge", "m5n.16xlarge", "m5n.24xlarge", "m6id.large", "m6id.xlarge", "m6id.2xlarge", "m6id.4xlarge", "m6id.8xlarge", "m6id.12xlarge", "m6id.16xlarge", "m6id.24xlarge", "m6id.32xlarge", "m6idn.large", "m6idn.xlarge", "m6idn.2xlarge", "m6idn.4xlarge", "m6idn.8xlarge", "m6idn.12xlarge", "m6idn.16xlarge", "m6idn.24xlarge", "m6idn.32xlarge", "m6in.large", "m6in.xlarge", "m6in.2xlarge", "m6in.4xlarge", "m6in.8xlarge", "m6in.12xlarge", "m6in.16xlarge", "m6in.24xlarge", "m6in.32xlarge", "m8g.medium", "m8g.large", "m8g.xlarge", "m8g.2xlarge", "m8g.4xlarge", "m8g.8xlarge", "m8g.12xlarge", "m8g.16xlarge", "m8g.24xlarge", "m8g.48xlarge", "r5dn.large", "r5dn.xlarge", "r5dn.2xlarge", "r5dn.4xlarge", "r5dn.8xlarge", "r5dn.12xlarge", "r5dn.16xlarge", "r5dn.24xlarge", "r5n.large", "r5n.xlarge", "r5n.2xlarge", "r5n.4xlarge", "r5n.8xlarge", "r5n.12xlarge", "r5n.16xlarge", "r5n.24xlarge", "r6a.large", "r6a.xlarge", "r6a.2xlarge", "r6a.4xlarge", "r6a.8xlarge", "r6a.12xlarge", "r6a.16xlarge", "r6a.24xlarge", "r6a.32xlarge", "r6a.48xlarge", "r6id.large", "r6id.xlarge", "r6id.2xlarge", "r6id.4xlarge", "r6id.8xlarge", "r6id.12xlarge", "r6id.16xlarge", "r6id.24xlarge", "r6id.32xlarge", "r6idn.large", "r6idn.xlarge", "r6idn.2xlarge", "r6idn.4xlarge", "r6idn.8xlarge", "r6idn.12xlarge", "r6idn.16xlarge", "r6idn.24xlarge", "r6idn.32xlarge", "r6in.large", "r6in.xlarge", "r6in.2xlarge", "r6in.4xlarge", "r6in.8xlarge", "r6in.12xlarge", "r6in.16xlarge", "r6in.24xlarge", "r6in.32xlarge", "r8g.medium", "r8g.large", "r8g.xlarge", "r8g.2xlarge", "r8g.4xlarge", "r8g.8xlarge", "r8g.12xlarge", "r8g.16xlarge", "r8g.24xlarge", "r8g.48xlarge", "m4.16xlarge", "c6a.32xlarge", "c6a.48xlarge", "c6i.32xlarge", "r6i.24xlarge", "r6i.32xlarge", "c6in.24xlarge", "c6in.32xlarge", "c7a.24xlarge", "c7a.32xlarge", "c7a.48xlarge", "c7i.24xlarge", "c7i.48xlarge", "m6a.24xlarge", "m6a.32xlarge", "m6a.48xlarge", "m6i.24xlarge", "m6i.32xlarge", "m7a.24xlarge", "m7a.32xlarge", "m7a.48xlarge", "m7i.24xlarge", "m7i.48xlarge", "r7a.24xlarge", "r7a.32xlarge", "r7a.48xlarge", "c8a.medium", "c8a.large", "c8a.xlarge", "c8a.2xlarge", "c8i.large", "c8i.xlarge", "c8i.2xlarge", "c9g.medium", "c9g.large", "c9g.xlarge", "c9g.2xlarge", "m8a.medium", "m8a.large", "m8a.xlarge", "m8a.2xlarge", "m8i.large", "m8i.xlarge", "m8i.2xlarge", "m9g.large", "m9g.xlarge", "m9g.2xlarge"
     #   resp.fleet_capacity.instance_counts.desired #=> Integer
     #   resp.fleet_capacity.instance_counts.minimum #=> Integer
     #   resp.fleet_capacity.instance_counts.maximum #=> Integer
@@ -5328,6 +5896,8 @@ module Aws::GameLift
     #   resp.fleet_capacity.game_server_container_group_counts.active #=> Integer
     #   resp.fleet_capacity.game_server_container_group_counts.idle #=> Integer
     #   resp.fleet_capacity.game_server_container_group_counts.terminating #=> Integer
+    #   resp.fleet_capacity.managed_capacity_configuration.zero_capacity_strategy #=> String, one of "MANUAL", "SCALE_TO_AND_FROM_ZERO"
+    #   resp.fleet_capacity.managed_capacity_configuration.scale_in_after_inactivity_minutes #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/DescribeFleetLocationCapacity AWS API Documentation
     #
@@ -5338,6 +5908,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere
+    #
     # Retrieves current usage data for a fleet location. Utilization data
     # provides a snapshot of current game hosting activity at the requested
     # location. Use this operation to retrieve utilization information for a
@@ -5351,9 +5923,9 @@ module Aws::GameLift
     #
     # **Learn more**
     #
-    # [Setting up Amazon GameLift fleets][1]
+    # [Setting up Amazon GameLift Servers fleets][1]
     #
-    # [ Amazon GameLift service locations][2] for managed hosting
+    # [ Amazon GameLift Servers service locations][2] for managed hosting
     #
     # [GameLift metrics for fleets][3]
     #
@@ -5402,6 +5974,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2
+    #
     # Retrieves a fleet's inbound connection permissions. Connection
     # permissions specify IP addresses and port settings that incoming
     # traffic can use to access server processes in the fleet. Game server
@@ -5424,7 +5998,7 @@ module Aws::GameLift
     #
     # **Learn more**
     #
-    # [Setting up Amazon GameLift fleets][1]
+    # [Setting up Amazon GameLift Servers fleets][1]
     #
     #
     #
@@ -5474,6 +6048,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2
+    #
     # Retrieves utilization statistics for one or more fleets. Utilization
     # data provides a snapshot of how the fleet's hosting resources are
     # currently being used. For fleets with remote locations, this operation
@@ -5505,7 +6081,7 @@ module Aws::GameLift
     #
     # **Learn more**
     #
-    # [Setting up Amazon GameLift Fleets][3]
+    # [Setting up Amazon GameLift Servers Fleets][3]
     #
     # [GameLift Metrics for Fleets][4]
     #
@@ -5570,8 +6146,7 @@ module Aws::GameLift
       req.send_request(options)
     end
 
-    # **This operation is used with the Amazon GameLift FleetIQ solution and
-    # game server groups.**
+    # **This API works with the following fleet types:** EC2 (FleetIQ)
     #
     # Retrieves information for a registered game server. Information
     # includes game server status, health check info, and the instance that
@@ -5582,7 +6157,7 @@ module Aws::GameLift
     #
     # **Learn more**
     #
-    # [Amazon GameLift FleetIQ Guide][1]
+    # [Amazon GameLift Servers FleetIQ Guide][1]
     #
     #
     #
@@ -5630,21 +6205,20 @@ module Aws::GameLift
       req.send_request(options)
     end
 
-    # **This operation is used with the Amazon GameLift FleetIQ solution and
-    # game server groups.**
+    # **This API works with the following fleet types:** EC2 (FleetIQ)
     #
     # Retrieves information on a game server group. This operation returns
-    # only properties related to Amazon GameLift FleetIQ. To view or update
-    # properties for the corresponding Auto Scaling group, such as launch
-    # template, auto scaling policies, and maximum/minimum group size,
-    # access the Auto Scaling group directly.
+    # only properties related to Amazon GameLift Servers FleetIQ. To view or
+    # update properties for the corresponding Auto Scaling group, such as
+    # launch template, auto scaling policies, and maximum/minimum group
+    # size, access the Auto Scaling group directly.
     #
     # To get attributes for a game server group, provide a group name or ARN
     # value. If successful, a `GameServerGroup` object is returned.
     #
     # **Learn more**
     #
-    # [Amazon GameLift FleetIQ Guide][1]
+    # [Amazon GameLift Servers FleetIQ Guide][1]
     #
     #
     #
@@ -5691,13 +6265,12 @@ module Aws::GameLift
       req.send_request(options)
     end
 
-    # **This operation is used with the Amazon GameLift FleetIQ solution and
-    # game server groups.**
+    # **This API works with the following fleet types:** EC2 (FleetIQ)
     #
     # Retrieves status information about the Amazon EC2 instances associated
-    # with a Amazon GameLift FleetIQ game server group. Use this operation
-    # to detect when instances are active or not available to host new game
-    # servers.
+    # with a Amazon GameLift Servers FleetIQ game server group. Use this
+    # operation to detect when instances are active or not available to host
+    # new game servers.
     #
     # To request status for all instances in the game server group, provide
     # a game server group ID only. To request status for specific instances,
@@ -5712,7 +6285,7 @@ module Aws::GameLift
     #
     # **Learn more**
     #
-    # [Amazon GameLift FleetIQ Guide][1]
+    # [Amazon GameLift Servers FleetIQ Guide][1]
     #
     #
     #
@@ -5772,6 +6345,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Retrieves additional game session properties, including the game
     # session protection policy in force, a set of one or more game sessions
     # in a specific fleet location. You can optionally filter the results by
@@ -5816,7 +6392,13 @@ module Aws::GameLift
     #   on the fleet. You can use either the fleet ID or ARN value.
     #
     # @option params [String] :game_session_id
-    #   A unique identifier for the game session to retrieve.
+    #   An identifier for the game session that is unique across all regions
+    #   to retrieve. The value is always a full ARN in the following format:
+    #   For Home Region game session -
+    #   `arn:aws:gamelift:<home_region>::gamesession/<fleet ID>/<ID string>`.
+    #   For Remote Location game session -
+    #   `arn:aws:gamelift:<home_region>::gamesession/<fleet ID>/<location>/<ID
+    #   string>`.
     #
     # @option params [String] :alias_id
     #   A unique identifier for the alias associated with the fleet to
@@ -5886,6 +6468,8 @@ module Aws::GameLift
     #   resp.game_session_details[0].game_session.game_session_data #=> String
     #   resp.game_session_details[0].game_session.matchmaker_data #=> String
     #   resp.game_session_details[0].game_session.location #=> String
+    #   resp.game_session_details[0].game_session.compute_name #=> String
+    #   resp.game_session_details[0].game_session.player_gateway_status #=> String, one of "DISABLED", "ENABLED"
     #   resp.game_session_details[0].protection_policy #=> String, one of "NoProtection", "FullProtection"
     #   resp.next_token #=> String
     #
@@ -5898,6 +6482,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Retrieves information, including current status, about a game session
     # placement request.
     #
@@ -5909,7 +6496,14 @@ module Aws::GameLift
     # Notification Service (SNS) topic to receive notifications from
     # FlexMatch or queues. Continuously polling with
     # `DescribeGameSessionPlacement` should only be used for games in
-    # development with low game session usage.
+    # development with low game session usage. For a reference
+    # implementation of event-based game session placement tracking, see [
+    # Event-based game session placement guidance][1] in the Amazon GameLift
+    # Toolkit.
+    #
+    #
+    #
+    # [1]: https://github.com/amazon-gamelift/amazon-gamelift-toolkit/tree/main/event-based-session-placement
     #
     # @option params [required, String] :placement_id
     #   A unique identifier for a game session placement to retrieve.
@@ -5954,6 +6548,7 @@ module Aws::GameLift
     #   resp.game_session_placement.priority_configuration_override.placement_fallback_strategy #=> String, one of "DEFAULT_AFTER_SINGLE_PASS", "NONE"
     #   resp.game_session_placement.priority_configuration_override.location_order #=> Array
     #   resp.game_session_placement.priority_configuration_override.location_order[0] #=> String
+    #   resp.game_session_placement.player_gateway_status #=> String, one of "DISABLED", "ENABLED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/DescribeGameSessionPlacement AWS API Documentation
     #
@@ -5964,6 +6559,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Retrieves the properties for one or more game session queues. When
     # requesting multiple queues, use the pagination parameters to retrieve
     # results as a set of sequential pages. When specifying a list of
@@ -6039,6 +6637,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Retrieves a set of one or more game sessions in a specific fleet
     # location. You can optionally filter the results by current game
     # session status.
@@ -6073,7 +6674,7 @@ module Aws::GameLift
     # should only be used for games in development with low game session
     # usage.
     #
-    # *Available in Amazon GameLift Local.*
+    # *Available in Amazon GameLift Servers Local.*
     #
     # **Learn more**
     #
@@ -6091,7 +6692,13 @@ module Aws::GameLift
     #   can use either the fleet ID or ARN value.
     #
     # @option params [String] :game_session_id
-    #   A unique identifier for the game session to retrieve.
+    #   An identifier for the game session that is unique across all regions
+    #   to retrieve. The value is always a full ARN in the following format:
+    #   For Home Region game session -
+    #   `arn:aws:gamelift:<home_region>::gamesession/<fleet ID>/<ID string>`.
+    #   For Remote Location game session -
+    #   `arn:aws:gamelift:<home_region>::gamesession/<fleet ID>/<location>/<ID
+    #   string>`.
     #
     # @option params [String] :alias_id
     #   A unique identifier for the alias associated with the fleet to
@@ -6162,6 +6769,8 @@ module Aws::GameLift
     #   resp.game_sessions[0].game_session_data #=> String
     #   resp.game_sessions[0].matchmaker_data #=> String
     #   resp.game_sessions[0].location #=> String
+    #   resp.game_sessions[0].compute_name #=> String
+    #   resp.game_sessions[0].player_gateway_status #=> String, one of "DISABLED", "ENABLED"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/DescribeGameSessions AWS API Documentation
@@ -6173,9 +6782,11 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:**EC2, Container
+    #
     # Retrieves information about the EC2 instances in an Amazon GameLift
-    # managed fleet, including instance ID, connection data, and status. You
-    # can use this operation with a multi-location fleet to get
+    # Servers managed fleet, including instance ID, connection data, and
+    # status. You can use this operation with a multi-location fleet to get
     # location-specific instance information. As an alternative, use the
     # operations
     # [https://docs.aws.amazon.com/gamelift/latest/apireference/API\_ListCompute][1]
@@ -6268,8 +6879,8 @@ module Aws::GameLift
     #   resp.instances[0].instance_id #=> String
     #   resp.instances[0].ip_address #=> String
     #   resp.instances[0].dns_name #=> String
-    #   resp.instances[0].operating_system #=> String, one of "WINDOWS_2012", "AMAZON_LINUX", "AMAZON_LINUX_2", "WINDOWS_2016", "AMAZON_LINUX_2023"
-    #   resp.instances[0].type #=> String, one of "t2.micro", "t2.small", "t2.medium", "t2.large", "c3.large", "c3.xlarge", "c3.2xlarge", "c3.4xlarge", "c3.8xlarge", "c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge", "c4.8xlarge", "c5.large", "c5.xlarge", "c5.2xlarge", "c5.4xlarge", "c5.9xlarge", "c5.12xlarge", "c5.18xlarge", "c5.24xlarge", "c5a.large", "c5a.xlarge", "c5a.2xlarge", "c5a.4xlarge", "c5a.8xlarge", "c5a.12xlarge", "c5a.16xlarge", "c5a.24xlarge", "r3.large", "r3.xlarge", "r3.2xlarge", "r3.4xlarge", "r3.8xlarge", "r4.large", "r4.xlarge", "r4.2xlarge", "r4.4xlarge", "r4.8xlarge", "r4.16xlarge", "r5.large", "r5.xlarge", "r5.2xlarge", "r5.4xlarge", "r5.8xlarge", "r5.12xlarge", "r5.16xlarge", "r5.24xlarge", "r5a.large", "r5a.xlarge", "r5a.2xlarge", "r5a.4xlarge", "r5a.8xlarge", "r5a.12xlarge", "r5a.16xlarge", "r5a.24xlarge", "m3.medium", "m3.large", "m3.xlarge", "m3.2xlarge", "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge", "m4.10xlarge", "m5.large", "m5.xlarge", "m5.2xlarge", "m5.4xlarge", "m5.8xlarge", "m5.12xlarge", "m5.16xlarge", "m5.24xlarge", "m5a.large", "m5a.xlarge", "m5a.2xlarge", "m5a.4xlarge", "m5a.8xlarge", "m5a.12xlarge", "m5a.16xlarge", "m5a.24xlarge", "c5d.large", "c5d.xlarge", "c5d.2xlarge", "c5d.4xlarge", "c5d.9xlarge", "c5d.12xlarge", "c5d.18xlarge", "c5d.24xlarge", "c6a.large", "c6a.xlarge", "c6a.2xlarge", "c6a.4xlarge", "c6a.8xlarge", "c6a.12xlarge", "c6a.16xlarge", "c6a.24xlarge", "c6i.large", "c6i.xlarge", "c6i.2xlarge", "c6i.4xlarge", "c6i.8xlarge", "c6i.12xlarge", "c6i.16xlarge", "c6i.24xlarge", "r5d.large", "r5d.xlarge", "r5d.2xlarge", "r5d.4xlarge", "r5d.8xlarge", "r5d.12xlarge", "r5d.16xlarge", "r5d.24xlarge", "m6g.medium", "m6g.large", "m6g.xlarge", "m6g.2xlarge", "m6g.4xlarge", "m6g.8xlarge", "m6g.12xlarge", "m6g.16xlarge", "c6g.medium", "c6g.large", "c6g.xlarge", "c6g.2xlarge", "c6g.4xlarge", "c6g.8xlarge", "c6g.12xlarge", "c6g.16xlarge", "r6g.medium", "r6g.large", "r6g.xlarge", "r6g.2xlarge", "r6g.4xlarge", "r6g.8xlarge", "r6g.12xlarge", "r6g.16xlarge", "c6gn.medium", "c6gn.large", "c6gn.xlarge", "c6gn.2xlarge", "c6gn.4xlarge", "c6gn.8xlarge", "c6gn.12xlarge", "c6gn.16xlarge", "c7g.medium", "c7g.large", "c7g.xlarge", "c7g.2xlarge", "c7g.4xlarge", "c7g.8xlarge", "c7g.12xlarge", "c7g.16xlarge", "r7g.medium", "r7g.large", "r7g.xlarge", "r7g.2xlarge", "r7g.4xlarge", "r7g.8xlarge", "r7g.12xlarge", "r7g.16xlarge", "m7g.medium", "m7g.large", "m7g.xlarge", "m7g.2xlarge", "m7g.4xlarge", "m7g.8xlarge", "m7g.12xlarge", "m7g.16xlarge", "g5g.xlarge", "g5g.2xlarge", "g5g.4xlarge", "g5g.8xlarge", "g5g.16xlarge"
+    #   resp.instances[0].operating_system #=> String, one of "WINDOWS_2012", "AMAZON_LINUX", "AMAZON_LINUX_2", "WINDOWS_2016", "AMAZON_LINUX_2023", "WINDOWS_2022"
+    #   resp.instances[0].type #=> String, one of "t2.micro", "t2.small", "t2.medium", "t2.large", "c3.large", "c3.xlarge", "c3.2xlarge", "c3.4xlarge", "c3.8xlarge", "c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge", "c4.8xlarge", "c5.large", "c5.xlarge", "c5.2xlarge", "c5.4xlarge", "c5.9xlarge", "c5.12xlarge", "c5.18xlarge", "c5.24xlarge", "c5a.large", "c5a.xlarge", "c5a.2xlarge", "c5a.4xlarge", "c5a.8xlarge", "c5a.12xlarge", "c5a.16xlarge", "c5a.24xlarge", "r3.large", "r3.xlarge", "r3.2xlarge", "r3.4xlarge", "r3.8xlarge", "r4.large", "r4.xlarge", "r4.2xlarge", "r4.4xlarge", "r4.8xlarge", "r4.16xlarge", "r5.large", "r5.xlarge", "r5.2xlarge", "r5.4xlarge", "r5.8xlarge", "r5.12xlarge", "r5.16xlarge", "r5.24xlarge", "r5a.large", "r5a.xlarge", "r5a.2xlarge", "r5a.4xlarge", "r5a.8xlarge", "r5a.12xlarge", "r5a.16xlarge", "r5a.24xlarge", "m3.medium", "m3.large", "m3.xlarge", "m3.2xlarge", "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge", "m4.10xlarge", "m5.large", "m5.xlarge", "m5.2xlarge", "m5.4xlarge", "m5.8xlarge", "m5.12xlarge", "m5.16xlarge", "m5.24xlarge", "m5a.large", "m5a.xlarge", "m5a.2xlarge", "m5a.4xlarge", "m5a.8xlarge", "m5a.12xlarge", "m5a.16xlarge", "m5a.24xlarge", "c5d.large", "c5d.xlarge", "c5d.2xlarge", "c5d.4xlarge", "c5d.9xlarge", "c5d.12xlarge", "c5d.18xlarge", "c5d.24xlarge", "c6a.large", "c6a.xlarge", "c6a.2xlarge", "c6a.4xlarge", "c6a.8xlarge", "c6a.12xlarge", "c6a.16xlarge", "c6a.24xlarge", "c6i.large", "c6i.xlarge", "c6i.2xlarge", "c6i.4xlarge", "c6i.8xlarge", "c6i.12xlarge", "c6i.16xlarge", "c6i.24xlarge", "r5d.large", "r5d.xlarge", "r5d.2xlarge", "r5d.4xlarge", "r5d.8xlarge", "r5d.12xlarge", "r5d.16xlarge", "r5d.24xlarge", "m6g.medium", "m6g.large", "m6g.xlarge", "m6g.2xlarge", "m6g.4xlarge", "m6g.8xlarge", "m6g.12xlarge", "m6g.16xlarge", "c6g.medium", "c6g.large", "c6g.xlarge", "c6g.2xlarge", "c6g.4xlarge", "c6g.8xlarge", "c6g.12xlarge", "c6g.16xlarge", "r6g.medium", "r6g.large", "r6g.xlarge", "r6g.2xlarge", "r6g.4xlarge", "r6g.8xlarge", "r6g.12xlarge", "r6g.16xlarge", "c6gn.medium", "c6gn.large", "c6gn.xlarge", "c6gn.2xlarge", "c6gn.4xlarge", "c6gn.8xlarge", "c6gn.12xlarge", "c6gn.16xlarge", "c7g.medium", "c7g.large", "c7g.xlarge", "c7g.2xlarge", "c7g.4xlarge", "c7g.8xlarge", "c7g.12xlarge", "c7g.16xlarge", "r7g.medium", "r7g.large", "r7g.xlarge", "r7g.2xlarge", "r7g.4xlarge", "r7g.8xlarge", "r7g.12xlarge", "r7g.16xlarge", "m7g.medium", "m7g.large", "m7g.xlarge", "m7g.2xlarge", "m7g.4xlarge", "m7g.8xlarge", "m7g.12xlarge", "m7g.16xlarge", "g5g.xlarge", "g5g.2xlarge", "g5g.4xlarge", "g5g.8xlarge", "g5g.16xlarge", "r6i.large", "r6i.xlarge", "r6i.2xlarge", "r6i.4xlarge", "r6i.8xlarge", "r6i.12xlarge", "r6i.16xlarge", "c6gd.medium", "c6gd.large", "c6gd.xlarge", "c6gd.2xlarge", "c6gd.4xlarge", "c6gd.8xlarge", "c6gd.12xlarge", "c6gd.16xlarge", "c6in.large", "c6in.xlarge", "c6in.2xlarge", "c6in.4xlarge", "c6in.8xlarge", "c6in.12xlarge", "c6in.16xlarge", "c7a.medium", "c7a.large", "c7a.xlarge", "c7a.2xlarge", "c7a.4xlarge", "c7a.8xlarge", "c7a.12xlarge", "c7a.16xlarge", "c7gd.medium", "c7gd.large", "c7gd.xlarge", "c7gd.2xlarge", "c7gd.4xlarge", "c7gd.8xlarge", "c7gd.12xlarge", "c7gd.16xlarge", "c7gn.medium", "c7gn.large", "c7gn.xlarge", "c7gn.2xlarge", "c7gn.4xlarge", "c7gn.8xlarge", "c7gn.12xlarge", "c7gn.16xlarge", "c7i.large", "c7i.xlarge", "c7i.2xlarge", "c7i.4xlarge", "c7i.8xlarge", "c7i.12xlarge", "c7i.16xlarge", "m6a.large", "m6a.xlarge", "m6a.2xlarge", "m6a.4xlarge", "m6a.8xlarge", "m6a.12xlarge", "m6a.16xlarge", "m6gd.medium", "m6gd.large", "m6gd.xlarge", "m6gd.2xlarge", "m6gd.4xlarge", "m6gd.8xlarge", "m6gd.12xlarge", "m6gd.16xlarge", "m6i.large", "m6i.xlarge", "m6i.2xlarge", "m6i.4xlarge", "m6i.8xlarge", "m6i.12xlarge", "m6i.16xlarge", "m7a.medium", "m7a.large", "m7a.xlarge", "m7a.2xlarge", "m7a.4xlarge", "m7a.8xlarge", "m7a.12xlarge", "m7a.16xlarge", "m7gd.medium", "m7gd.large", "m7gd.xlarge", "m7gd.2xlarge", "m7gd.4xlarge", "m7gd.8xlarge", "m7gd.12xlarge", "m7gd.16xlarge", "m7i.large", "m7i.xlarge", "m7i.2xlarge", "m7i.4xlarge", "m7i.8xlarge", "m7i.12xlarge", "m7i.16xlarge", "r6gd.medium", "r6gd.large", "r6gd.xlarge", "r6gd.2xlarge", "r6gd.4xlarge", "r6gd.8xlarge", "r6gd.12xlarge", "r6gd.16xlarge", "r7a.medium", "r7a.large", "r7a.xlarge", "r7a.2xlarge", "r7a.4xlarge", "r7a.8xlarge", "r7a.12xlarge", "r7a.16xlarge", "r7gd.medium", "r7gd.large", "r7gd.xlarge", "r7gd.2xlarge", "r7gd.4xlarge", "r7gd.8xlarge", "r7gd.12xlarge", "r7gd.16xlarge", "r7i.large", "r7i.xlarge", "r7i.2xlarge", "r7i.4xlarge", "r7i.8xlarge", "r7i.12xlarge", "r7i.16xlarge", "r7i.24xlarge", "r7i.48xlarge", "c5ad.large", "c5ad.xlarge", "c5ad.2xlarge", "c5ad.4xlarge", "c5ad.8xlarge", "c5ad.12xlarge", "c5ad.16xlarge", "c5ad.24xlarge", "c5n.large", "c5n.xlarge", "c5n.2xlarge", "c5n.4xlarge", "c5n.9xlarge", "c5n.18xlarge", "r5ad.large", "r5ad.xlarge", "r5ad.2xlarge", "r5ad.4xlarge", "r5ad.8xlarge", "r5ad.12xlarge", "r5ad.16xlarge", "r5ad.24xlarge", "c6id.large", "c6id.xlarge", "c6id.2xlarge", "c6id.4xlarge", "c6id.8xlarge", "c6id.12xlarge", "c6id.16xlarge", "c6id.24xlarge", "c6id.32xlarge", "c8g.medium", "c8g.large", "c8g.xlarge", "c8g.2xlarge", "c8g.4xlarge", "c8g.8xlarge", "c8g.12xlarge", "c8g.16xlarge", "c8g.24xlarge", "c8g.48xlarge", "m5ad.large", "m5ad.xlarge", "m5ad.2xlarge", "m5ad.4xlarge", "m5ad.8xlarge", "m5ad.12xlarge", "m5ad.16xlarge", "m5ad.24xlarge", "m5d.large", "m5d.xlarge", "m5d.2xlarge", "m5d.4xlarge", "m5d.8xlarge", "m5d.12xlarge", "m5d.16xlarge", "m5d.24xlarge", "m5dn.large", "m5dn.xlarge", "m5dn.2xlarge", "m5dn.4xlarge", "m5dn.8xlarge", "m5dn.12xlarge", "m5dn.16xlarge", "m5dn.24xlarge", "m5n.large", "m5n.xlarge", "m5n.2xlarge", "m5n.4xlarge", "m5n.8xlarge", "m5n.12xlarge", "m5n.16xlarge", "m5n.24xlarge", "m6id.large", "m6id.xlarge", "m6id.2xlarge", "m6id.4xlarge", "m6id.8xlarge", "m6id.12xlarge", "m6id.16xlarge", "m6id.24xlarge", "m6id.32xlarge", "m6idn.large", "m6idn.xlarge", "m6idn.2xlarge", "m6idn.4xlarge", "m6idn.8xlarge", "m6idn.12xlarge", "m6idn.16xlarge", "m6idn.24xlarge", "m6idn.32xlarge", "m6in.large", "m6in.xlarge", "m6in.2xlarge", "m6in.4xlarge", "m6in.8xlarge", "m6in.12xlarge", "m6in.16xlarge", "m6in.24xlarge", "m6in.32xlarge", "m8g.medium", "m8g.large", "m8g.xlarge", "m8g.2xlarge", "m8g.4xlarge", "m8g.8xlarge", "m8g.12xlarge", "m8g.16xlarge", "m8g.24xlarge", "m8g.48xlarge", "r5dn.large", "r5dn.xlarge", "r5dn.2xlarge", "r5dn.4xlarge", "r5dn.8xlarge", "r5dn.12xlarge", "r5dn.16xlarge", "r5dn.24xlarge", "r5n.large", "r5n.xlarge", "r5n.2xlarge", "r5n.4xlarge", "r5n.8xlarge", "r5n.12xlarge", "r5n.16xlarge", "r5n.24xlarge", "r6a.large", "r6a.xlarge", "r6a.2xlarge", "r6a.4xlarge", "r6a.8xlarge", "r6a.12xlarge", "r6a.16xlarge", "r6a.24xlarge", "r6a.32xlarge", "r6a.48xlarge", "r6id.large", "r6id.xlarge", "r6id.2xlarge", "r6id.4xlarge", "r6id.8xlarge", "r6id.12xlarge", "r6id.16xlarge", "r6id.24xlarge", "r6id.32xlarge", "r6idn.large", "r6idn.xlarge", "r6idn.2xlarge", "r6idn.4xlarge", "r6idn.8xlarge", "r6idn.12xlarge", "r6idn.16xlarge", "r6idn.24xlarge", "r6idn.32xlarge", "r6in.large", "r6in.xlarge", "r6in.2xlarge", "r6in.4xlarge", "r6in.8xlarge", "r6in.12xlarge", "r6in.16xlarge", "r6in.24xlarge", "r6in.32xlarge", "r8g.medium", "r8g.large", "r8g.xlarge", "r8g.2xlarge", "r8g.4xlarge", "r8g.8xlarge", "r8g.12xlarge", "r8g.16xlarge", "r8g.24xlarge", "r8g.48xlarge", "m4.16xlarge", "c6a.32xlarge", "c6a.48xlarge", "c6i.32xlarge", "r6i.24xlarge", "r6i.32xlarge", "c6in.24xlarge", "c6in.32xlarge", "c7a.24xlarge", "c7a.32xlarge", "c7a.48xlarge", "c7i.24xlarge", "c7i.48xlarge", "m6a.24xlarge", "m6a.32xlarge", "m6a.48xlarge", "m6i.24xlarge", "m6i.32xlarge", "m7a.24xlarge", "m7a.32xlarge", "m7a.48xlarge", "m7i.24xlarge", "m7i.48xlarge", "r7a.24xlarge", "r7a.32xlarge", "r7a.48xlarge", "c8a.medium", "c8a.large", "c8a.xlarge", "c8a.2xlarge", "c8i.large", "c8i.xlarge", "c8i.2xlarge", "c9g.medium", "c9g.large", "c9g.xlarge", "c9g.2xlarge", "m8a.medium", "m8a.large", "m8a.xlarge", "m8a.2xlarge", "m8i.large", "m8i.xlarge", "m8i.2xlarge", "m9g.large", "m9g.xlarge", "m9g.2xlarge"
     #   resp.instances[0].status #=> String, one of "PENDING", "ACTIVE", "TERMINATING"
     #   resp.instances[0].creation_time #=> Time
     #   resp.instances[0].location #=> String
@@ -6284,6 +6895,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Retrieves one or more matchmaking tickets. Use this operation to
     # retrieve ticket information, including--after a successful match is
     # made--connection information for the resulting new game session.
@@ -6350,6 +6964,7 @@ module Aws::GameLift
     #   resp.ticket_list[0].game_session_connection_info.matched_player_sessions #=> Array
     #   resp.ticket_list[0].game_session_connection_info.matched_player_sessions[0].player_id #=> String
     #   resp.ticket_list[0].game_session_connection_info.matched_player_sessions[0].player_session_id #=> String
+    #   resp.ticket_list[0].game_session_connection_info.player_gateway_status #=> String, one of "DISABLED", "ENABLED"
     #   resp.ticket_list[0].estimated_wait_time #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/DescribeMatchmaking AWS API Documentation
@@ -6361,6 +6976,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Retrieves the details of FlexMatch matchmaking configurations.
     #
     # This operation offers the following options: (1) retrieve all
@@ -6453,6 +7071,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Retrieves the details for FlexMatch matchmaking rule sets. You can
     # request all existing rule sets for the Region, or provide a list of
     # one or more rule set names. When requesting multiple items, use the
@@ -6518,6 +7139,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Retrieves properties for one or more player sessions.
     #
     # This action can be used in the following ways:
@@ -6534,8 +7158,8 @@ module Aws::GameLift
     # To request player sessions, specify either a player session ID, game
     # session ID, or player ID. You can filter this request by player
     # session status. If you provide a specific `PlayerSessionId` or
-    # `PlayerId`, Amazon GameLift ignores the filter criteria. Use the
-    # pagination parameters to retrieve results as a set of sequential
+    # `PlayerId`, Amazon GameLift Servers ignores the filter criteria. Use
+    # the pagination parameters to retrieve results as a set of sequential
     # pages.
     #
     # If successful, a `PlayerSession` object is returned for each session
@@ -6550,8 +7174,13 @@ module Aws::GameLift
     # [1]: https://docs.aws.amazon.com/gamelift/latest/developerguide/reference-awssdk.html#reference-awssdk-resources-fleets
     #
     # @option params [String] :game_session_id
-    #   A unique identifier for the game session to retrieve player sessions
-    #   for.
+    #   An identifier for the game session that is unique across all regions
+    #   to retrieve player sessions for. The value is always a full ARN in the
+    #   following format: For Home Region game session -
+    #   `arn:aws:gamelift:<home_region>::gamesession/<fleet ID>/<ID string>`.
+    #   For Remote Location game session -
+    #   `arn:aws:gamelift:<home_region>::gamesession/<fleet ID>/<location>/<ID
+    #   string>`.
     #
     # @option params [String] :player_id
     #   A unique identifier for a player to retrieve player sessions for.
@@ -6636,11 +7265,13 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2
+    #
     # Retrieves a fleet's runtime configuration settings. The runtime
     # configuration determines which server processes run, and how, on
     # computes in the fleet. For managed EC2 fleets, the runtime
     # configuration describes server processes that run on each fleet
-    # instance. can update a fleet's runtime configuration at any time
+    # instance. You can update a fleet's runtime configuration at any time
     # using [UpdateRuntimeConfiguration][1].
     #
     # To get the current runtime configuration for a fleet, provide the
@@ -6652,7 +7283,7 @@ module Aws::GameLift
     #
     # **Learn more**
     #
-    # [Setting up Amazon GameLift fleets][2]
+    # [Setting up Amazon GameLift Servers fleets][2]
     #
     # [Running multiple processes on a fleet][3]
     #
@@ -6694,6 +7325,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Container
+    #
     # Retrieves all scaling policies applied to a fleet.
     #
     # To get a fleet's scaling policies, specify the fleet ID. You can
@@ -6790,6 +7423,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2
+    #
     # Retrieves properties for a Realtime script.
     #
     # To request a script record, specify the script ID. If successful, an
@@ -6797,7 +7432,7 @@ module Aws::GameLift
     #
     # **Learn more**
     #
-    # [Amazon GameLift Realtime Servers][1]
+    # [Amazon GameLift Servers Amazon GameLift Servers Realtime][1]
     #
     # **Related actions**
     #
@@ -6834,6 +7469,7 @@ module Aws::GameLift
     #   resp.script.storage_location.key #=> String
     #   resp.script.storage_location.role_arn #=> String
     #   resp.script.storage_location.object_version #=> String
+    #   resp.script.node_js_version #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/DescribeScript AWS API Documentation
     #
@@ -6844,6 +7480,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2
+    #
     # Retrieves valid VPC peering authorizations that are pending for the
     # Amazon Web Services account. This operation returns all VPC peering
     # authorizations and requests for peering. This includes those initiated
@@ -6879,16 +7517,18 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2
+    #
     # Retrieves information on VPC peering connections. Use this operation
     # to get peering information for all fleets or for one specific fleet
     # ID.
     #
     # To retrieve connection information, call this operation from the
     # Amazon Web Services account that is used to manage the Amazon GameLift
-    # fleets. Specify a fleet ID or leave the parameter empty to retrieve
-    # all connection records. If successful, the retrieved information
-    # includes both active and pending connections. Active connections
-    # identify the IpV4 CIDR block that the VPC uses to connect.
+    # Servers fleets. Specify a fleet ID or leave the parameter empty to
+    # retrieve all connection records. If successful, the retrieved
+    # information includes both active and pending connections. Active
+    # connections identify the IpV4 CIDR block that the VPC uses to connect.
     #
     # **Related actions**
     #
@@ -6933,14 +7573,23 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Container
+    #
     # Requests authorization to remotely connect to a hosting resource in a
-    # Amazon GameLift managed fleet. This operation is not used with Amazon
-    # GameLift Anywhere fleets.
+    # Amazon GameLift Servers managed fleet. This operation is not used with
+    # Amazon GameLift Servers Anywhere fleets.
     #
     # **Request options**
     #
-    # To request access to a compute, specify the compute name and the fleet
-    # ID.
+    # Provide the fleet ID and compute name. The compute name varies
+    # depending on the type of fleet.
+    #
+    # * For a compute in a managed EC2 fleet, provide an instance ID. Each
+    #   instance in the fleet is a compute.
+    #
+    # * For a compute in a managed container fleet, provide a compute name.
+    #   In a container fleet, each game server container group on a fleet
+    #   instance is assigned a compute name.
     #
     # **Results**
     #
@@ -6965,9 +7614,9 @@ module Aws::GameLift
     #
     # @option params [required, String] :compute_name
     #   A unique identifier for the compute resource that you want to connect
-    #   to. For an EC2 fleet compute, use the instance ID. Use
-    #   [https://docs.aws.amazon.com/gamelift/latest/apireference/API\_ListCompute.html][1]
-    #   to retrieve compute identifiers.
+    #   to. For an EC2 fleet, use an instance ID. For a managed container
+    #   fleet, use a compute name. You can retrieve a fleet's compute names
+    #   by calling [ListCompute][1].
     #
     #
     #
@@ -7013,12 +7662,16 @@ module Aws::GameLift
       req.send_request(options)
     end
 
-    # Requests an authentication token from Amazon GameLift for a compute
-    # resource in an Amazon GameLift fleet. Game servers that are running on
-    # the compute use this token to communicate with the Amazon GameLift
-    # service, such as when calling the Amazon GameLift server SDK action
-    # `InitSDK()`. Authentication tokens are valid for a limited time span,
-    # so you need to request a fresh token before the current token expires.
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
+    # Requests an authentication token from Amazon GameLift Servers for a
+    # compute resource in an Amazon GameLift Servers fleet. Game servers
+    # that are running on the compute use this token to communicate with the
+    # Amazon GameLift Servers service, such as when calling the Amazon
+    # GameLift Servers server SDK action `InitSDK()`. Authentication tokens
+    # are valid for a limited time span, so you need to request a fresh
+    # token before the current token expires.
     #
     # **Request options**
     #
@@ -7027,10 +7680,11 @@ module Aws::GameLift
     #   running on all fleet instances have access to a valid auth token.
     #
     # * For Anywhere fleets (compute type `ANYWHERE`), if you're using the
-    #   Amazon GameLift Agent, auth token retrieval and refresh is handled
-    #   automatically for any compute where the Agent is running. If you're
-    #   not using the Agent, create a mechanism to retrieve and refresh auth
-    #   tokens for computes that are running game server processes.
+    #   Amazon GameLift Servers Agent, auth token retrieval and refresh is
+    #   handled automatically for any compute where the Agent is running. If
+    #   you're not using the Agent, create a mechanism to retrieve and
+    #   refresh auth tokens for computes that are running game server
+    #   processes.
     #
     # **Learn more**
     #
@@ -7088,10 +7742,13 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2
+    #
     # Retrieves the location of stored game session logs for a specified
-    # game session on Amazon GameLift managed fleets. When a game session is
-    # terminated, Amazon GameLift automatically stores the logs in Amazon S3
-    # and retains them for 14 days. Use this URL to download the logs.
+    # game session on Amazon GameLift Servers managed fleets. When a game
+    # session is terminated, Amazon GameLift Servers automatically stores
+    # the logs in Amazon S3 and retains them for 14 days. Use this URL to
+    # download the logs.
     #
     # <note markdown="1"> See the [Amazon Web Services Service Limits][1] page for maximum log
     # file sizes. Log files that exceed this limit are not saved.
@@ -7106,7 +7763,13 @@ module Aws::GameLift
     # [2]: https://docs.aws.amazon.com/gamelift/latest/developerguide/reference-awssdk.html#reference-awssdk-resources-fleets
     #
     # @option params [required, String] :game_session_id
-    #   A unique identifier for the game session to get logs for.
+    #   An identifier for the game session that is unique across all regions
+    #   to get logs for. The value is always a full ARN in the following
+    #   format: For Home Region game session -
+    #   `arn:aws:gamelift:<home_region>::gamesession/<fleet ID>/<ID string>`.
+    #   For Remote Location game session -
+    #   `arn:aws:gamelift:<home_region>::gamesession/<fleet ID>/<location>/<ID
+    #   string>`.
     #
     # @return [Types::GetGameSessionLogUrlOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -7131,11 +7794,13 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2
+    #
     # Requests authorization to remotely connect to an instance in an Amazon
-    # GameLift managed fleet. Use this operation to connect to instances
-    # with game servers that use Amazon GameLift server SDK 4.x or earlier.
-    # To connect to instances with game servers that use server SDK 5.x or
-    # later, call
+    # GameLift Servers managed fleet. Use this operation to connect to
+    # instances with game servers that use Amazon GameLift Servers server
+    # SDK 4.x or earlier. To connect to instances with game servers that use
+    # server SDK 5.x or later, call
     # [https://docs.aws.amazon.com/gamelift/latest/apireference/API\_GetComputeAccess][1].
     #
     # To request access to an instance, specify IDs for the instance and the
@@ -7181,7 +7846,7 @@ module Aws::GameLift
     #   fleet ID or an ARN value.
     #
     #   <note markdown="1"> You can access fleets in `ERROR` status for a short period of time
-    #   before Amazon GameLift deletes them.
+    #   before Amazon GameLift Servers deletes them.
     #
     #    </note>
     #
@@ -7205,7 +7870,7 @@ module Aws::GameLift
     #   resp.instance_access.fleet_id #=> String
     #   resp.instance_access.instance_id #=> String
     #   resp.instance_access.ip_address #=> String
-    #   resp.instance_access.operating_system #=> String, one of "WINDOWS_2012", "AMAZON_LINUX", "AMAZON_LINUX_2", "WINDOWS_2016", "AMAZON_LINUX_2023"
+    #   resp.instance_access.operating_system #=> String, one of "WINDOWS_2012", "AMAZON_LINUX", "AMAZON_LINUX_2", "WINDOWS_2016", "AMAZON_LINUX_2023", "WINDOWS_2022"
     #   resp.instance_access.credentials.user_name #=> String
     #   resp.instance_access.credentials.secret #=> String
     #
@@ -7218,6 +7883,86 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2 (server SDK 5.x
+    # or later), Container
+    #
+    # Retrieves connection details for game clients to connect to game
+    # sessions.
+    #
+    # **Player gateway benefits:** DDoS protection with negligible impact to
+    # latency.
+    #
+    # To enable player gateway on your fleet, set `PlayerGatewayMode` to
+    # `ENABLED` or `REQUIRED` when calling [CreateFleet][1] or
+    # [CreateContainerFleet][2].
+    #
+    # **How to use:** After creating a game session and adding players, call
+    # this operation with the game session ID and player IDs. When player
+    # gateway is enabled, the response includes connection endpoints and
+    # player gateway tokens that your game clients can use to connect to the
+    # game session through player gateway. To learn more about player
+    # gateway integration, see [DDoS protection with Amazon GameLift Servers
+    # player gateway][3].
+    #
+    # When player gateway is disabled or in locations where player gateway
+    # is not supported, this operation returns game server connection
+    # information without player gateway tokens, so that your game clients
+    # directly connect to the game server endpoint.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/gamelift/latest/apireference/API_CreateFleet.html
+    # [2]: https://docs.aws.amazon.com/gamelift/latest/apireference/API_CreateContainerFleet.html
+    # [3]: https://docs.aws.amazon.com/gameliftservers/latest/developerguide/ddos-protection-intro.html
+    #
+    # @option params [required, String] :game_session_id
+    #   An identifier for the game session that is unique across all regions
+    #   for which to retrieve player connection details. The value is always a
+    #   full ARN in the following format: For Home Region game session -
+    #   `arn:aws:gamelift:<home_region>::gamesession/<fleet ID>/<ID string>`.
+    #   For Remote Location game session -
+    #   `arn:aws:gamelift:<home_region>::gamesession/<fleet ID>/<location>/<ID
+    #   string>`.
+    #
+    # @option params [required, Array<String>] :player_ids
+    #   List of unique identifiers for players. Connection details are
+    #   returned for each player in this list.
+    #
+    # @return [Types::GetPlayerConnectionDetailsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetPlayerConnectionDetailsOutput#game_session_id #game_session_id} => String
+    #   * {Types::GetPlayerConnectionDetailsOutput#player_connection_details #player_connection_details} => Array&lt;Types::PlayerConnectionDetail&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_player_connection_details({
+    #     game_session_id: "ArnStringModel", # required
+    #     player_ids: ["PlayerId"], # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.game_session_id #=> String
+    #   resp.player_connection_details #=> Array
+    #   resp.player_connection_details[0].player_id #=> String
+    #   resp.player_connection_details[0].endpoints #=> Array
+    #   resp.player_connection_details[0].endpoints[0].ip_address #=> String
+    #   resp.player_connection_details[0].endpoints[0].port #=> Integer
+    #   resp.player_connection_details[0].player_gateway_token #=> String
+    #   resp.player_connection_details[0].expiration #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/GetPlayerConnectionDetails AWS API Documentation
+    #
+    # @overload get_player_connection_details(params = {})
+    # @param [Hash] params ({})
+    def get_player_connection_details(params = {}, options = {})
+      req = build_request(:get_player_connection_details, params)
+      req.send_request(options)
+    end
+
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Retrieves all aliases for this Amazon Web Services account. You can
     # filter the result set by alias name and/or routing strategy type. Use
     # the pagination parameters to retrieve results in sequential pages.
@@ -7306,11 +8051,12 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2
+    #
     # Retrieves build resources for all builds associated with the Amazon
     # Web Services account in use. You can limit results to builds that are
     # in a specific status by using the `Status` parameter. Use the
-    # pagination parameters to retrieve results in a set of sequential
-    # pages.
+    # pagination parameters to retrieve results in
     #
     # <note markdown="1"> Build resources are not listed in any particular order.
     #
@@ -7378,7 +8124,7 @@ module Aws::GameLift
     #   resp.builds[0].version #=> String
     #   resp.builds[0].status #=> String, one of "INITIALIZED", "READY", "FAILED"
     #   resp.builds[0].size_on_disk #=> Integer
-    #   resp.builds[0].operating_system #=> String, one of "WINDOWS_2012", "AMAZON_LINUX", "AMAZON_LINUX_2", "WINDOWS_2016", "AMAZON_LINUX_2023"
+    #   resp.builds[0].operating_system #=> String, one of "WINDOWS_2012", "AMAZON_LINUX", "AMAZON_LINUX_2", "WINDOWS_2016", "AMAZON_LINUX_2023", "WINDOWS_2022"
     #   resp.builds[0].creation_time #=> Time
     #   resp.builds[0].server_sdk_version #=> String
     #   resp.next_token #=> String
@@ -7392,29 +8138,32 @@ module Aws::GameLift
       req.send_request(options)
     end
 
-    # Retrieves information on the compute resources in an Amazon GameLift
-    # fleet. Use the pagination parameters to retrieve results in a set of
-    # sequential pages.
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
     #
-    # **Request options:**
+    # Retrieves information on the compute resources in an Amazon GameLift
+    # Servers fleet. Use the pagination parameters to retrieve results in a
+    # set of sequential pages.
+    #
+    # **Request options**
     #
     # * Retrieve a list of all computes in a fleet. Specify a fleet ID.
     #
     # * Retrieve a list of all computes in a specific fleet location.
     #   Specify a fleet ID and location.
     #
-    # **Results:**
+    # **Results**
     #
     # If successful, this operation returns information on a set of
     # computes. Depending on the type of fleet, the result includes the
     # following information:
     #
-    # * For managed EC2 fleets (compute type `EC2`), this operation returns
+    # * For a managed EC2 fleet (compute type `EC2`), this operation returns
     #   information about the EC2 instance. Compute names are EC2 instance
     #   IDs.
     #
-    # * For Anywhere fleets (compute type `ANYWHERE`), this operation
-    #   returns compute names and details as provided when the compute was
+    # * For an Anywhere fleet (compute type `ANYWHERE`), this operation
+    #   returns compute names and details from when the compute was
     #   registered with `RegisterCompute`. This includes
     #   `GameLiftServiceSdkEndpoint` or `GameLiftAgentEndpoint`.
     #
@@ -7423,9 +8172,9 @@ module Aws::GameLift
     #
     # @option params [String] :location
     #   The name of a location to retrieve compute resources for. For an
-    #   Amazon GameLift Anywhere fleet, use a custom location. For a managed
-    #   fleet, provide a Amazon Web Services Region or Local Zone code (for
-    #   example: `us-west-2` or `us-west-2-lax-1`).
+    #   Amazon GameLift Servers Anywhere fleet, use a custom location. For a
+    #   managed fleet, provide a Amazon Web Services Region or Local Zone code
+    #   (for example: `us-west-2` or `us-west-2-lax-1`).
     #
     # @option params [String] :container_group_definition_name
     #   For computes in a managed container fleet, the name of the deployed
@@ -7482,8 +8231,8 @@ module Aws::GameLift
     #   resp.compute_list[0].compute_status #=> String, one of "PENDING", "ACTIVE", "TERMINATING", "IMPAIRED"
     #   resp.compute_list[0].location #=> String
     #   resp.compute_list[0].creation_time #=> Time
-    #   resp.compute_list[0].operating_system #=> String, one of "WINDOWS_2012", "AMAZON_LINUX", "AMAZON_LINUX_2", "WINDOWS_2016", "AMAZON_LINUX_2023"
-    #   resp.compute_list[0].type #=> String, one of "t2.micro", "t2.small", "t2.medium", "t2.large", "c3.large", "c3.xlarge", "c3.2xlarge", "c3.4xlarge", "c3.8xlarge", "c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge", "c4.8xlarge", "c5.large", "c5.xlarge", "c5.2xlarge", "c5.4xlarge", "c5.9xlarge", "c5.12xlarge", "c5.18xlarge", "c5.24xlarge", "c5a.large", "c5a.xlarge", "c5a.2xlarge", "c5a.4xlarge", "c5a.8xlarge", "c5a.12xlarge", "c5a.16xlarge", "c5a.24xlarge", "r3.large", "r3.xlarge", "r3.2xlarge", "r3.4xlarge", "r3.8xlarge", "r4.large", "r4.xlarge", "r4.2xlarge", "r4.4xlarge", "r4.8xlarge", "r4.16xlarge", "r5.large", "r5.xlarge", "r5.2xlarge", "r5.4xlarge", "r5.8xlarge", "r5.12xlarge", "r5.16xlarge", "r5.24xlarge", "r5a.large", "r5a.xlarge", "r5a.2xlarge", "r5a.4xlarge", "r5a.8xlarge", "r5a.12xlarge", "r5a.16xlarge", "r5a.24xlarge", "m3.medium", "m3.large", "m3.xlarge", "m3.2xlarge", "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge", "m4.10xlarge", "m5.large", "m5.xlarge", "m5.2xlarge", "m5.4xlarge", "m5.8xlarge", "m5.12xlarge", "m5.16xlarge", "m5.24xlarge", "m5a.large", "m5a.xlarge", "m5a.2xlarge", "m5a.4xlarge", "m5a.8xlarge", "m5a.12xlarge", "m5a.16xlarge", "m5a.24xlarge", "c5d.large", "c5d.xlarge", "c5d.2xlarge", "c5d.4xlarge", "c5d.9xlarge", "c5d.12xlarge", "c5d.18xlarge", "c5d.24xlarge", "c6a.large", "c6a.xlarge", "c6a.2xlarge", "c6a.4xlarge", "c6a.8xlarge", "c6a.12xlarge", "c6a.16xlarge", "c6a.24xlarge", "c6i.large", "c6i.xlarge", "c6i.2xlarge", "c6i.4xlarge", "c6i.8xlarge", "c6i.12xlarge", "c6i.16xlarge", "c6i.24xlarge", "r5d.large", "r5d.xlarge", "r5d.2xlarge", "r5d.4xlarge", "r5d.8xlarge", "r5d.12xlarge", "r5d.16xlarge", "r5d.24xlarge", "m6g.medium", "m6g.large", "m6g.xlarge", "m6g.2xlarge", "m6g.4xlarge", "m6g.8xlarge", "m6g.12xlarge", "m6g.16xlarge", "c6g.medium", "c6g.large", "c6g.xlarge", "c6g.2xlarge", "c6g.4xlarge", "c6g.8xlarge", "c6g.12xlarge", "c6g.16xlarge", "r6g.medium", "r6g.large", "r6g.xlarge", "r6g.2xlarge", "r6g.4xlarge", "r6g.8xlarge", "r6g.12xlarge", "r6g.16xlarge", "c6gn.medium", "c6gn.large", "c6gn.xlarge", "c6gn.2xlarge", "c6gn.4xlarge", "c6gn.8xlarge", "c6gn.12xlarge", "c6gn.16xlarge", "c7g.medium", "c7g.large", "c7g.xlarge", "c7g.2xlarge", "c7g.4xlarge", "c7g.8xlarge", "c7g.12xlarge", "c7g.16xlarge", "r7g.medium", "r7g.large", "r7g.xlarge", "r7g.2xlarge", "r7g.4xlarge", "r7g.8xlarge", "r7g.12xlarge", "r7g.16xlarge", "m7g.medium", "m7g.large", "m7g.xlarge", "m7g.2xlarge", "m7g.4xlarge", "m7g.8xlarge", "m7g.12xlarge", "m7g.16xlarge", "g5g.xlarge", "g5g.2xlarge", "g5g.4xlarge", "g5g.8xlarge", "g5g.16xlarge"
+    #   resp.compute_list[0].operating_system #=> String, one of "WINDOWS_2012", "AMAZON_LINUX", "AMAZON_LINUX_2", "WINDOWS_2016", "AMAZON_LINUX_2023", "WINDOWS_2022"
+    #   resp.compute_list[0].type #=> String, one of "t2.micro", "t2.small", "t2.medium", "t2.large", "c3.large", "c3.xlarge", "c3.2xlarge", "c3.4xlarge", "c3.8xlarge", "c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge", "c4.8xlarge", "c5.large", "c5.xlarge", "c5.2xlarge", "c5.4xlarge", "c5.9xlarge", "c5.12xlarge", "c5.18xlarge", "c5.24xlarge", "c5a.large", "c5a.xlarge", "c5a.2xlarge", "c5a.4xlarge", "c5a.8xlarge", "c5a.12xlarge", "c5a.16xlarge", "c5a.24xlarge", "r3.large", "r3.xlarge", "r3.2xlarge", "r3.4xlarge", "r3.8xlarge", "r4.large", "r4.xlarge", "r4.2xlarge", "r4.4xlarge", "r4.8xlarge", "r4.16xlarge", "r5.large", "r5.xlarge", "r5.2xlarge", "r5.4xlarge", "r5.8xlarge", "r5.12xlarge", "r5.16xlarge", "r5.24xlarge", "r5a.large", "r5a.xlarge", "r5a.2xlarge", "r5a.4xlarge", "r5a.8xlarge", "r5a.12xlarge", "r5a.16xlarge", "r5a.24xlarge", "m3.medium", "m3.large", "m3.xlarge", "m3.2xlarge", "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge", "m4.10xlarge", "m5.large", "m5.xlarge", "m5.2xlarge", "m5.4xlarge", "m5.8xlarge", "m5.12xlarge", "m5.16xlarge", "m5.24xlarge", "m5a.large", "m5a.xlarge", "m5a.2xlarge", "m5a.4xlarge", "m5a.8xlarge", "m5a.12xlarge", "m5a.16xlarge", "m5a.24xlarge", "c5d.large", "c5d.xlarge", "c5d.2xlarge", "c5d.4xlarge", "c5d.9xlarge", "c5d.12xlarge", "c5d.18xlarge", "c5d.24xlarge", "c6a.large", "c6a.xlarge", "c6a.2xlarge", "c6a.4xlarge", "c6a.8xlarge", "c6a.12xlarge", "c6a.16xlarge", "c6a.24xlarge", "c6i.large", "c6i.xlarge", "c6i.2xlarge", "c6i.4xlarge", "c6i.8xlarge", "c6i.12xlarge", "c6i.16xlarge", "c6i.24xlarge", "r5d.large", "r5d.xlarge", "r5d.2xlarge", "r5d.4xlarge", "r5d.8xlarge", "r5d.12xlarge", "r5d.16xlarge", "r5d.24xlarge", "m6g.medium", "m6g.large", "m6g.xlarge", "m6g.2xlarge", "m6g.4xlarge", "m6g.8xlarge", "m6g.12xlarge", "m6g.16xlarge", "c6g.medium", "c6g.large", "c6g.xlarge", "c6g.2xlarge", "c6g.4xlarge", "c6g.8xlarge", "c6g.12xlarge", "c6g.16xlarge", "r6g.medium", "r6g.large", "r6g.xlarge", "r6g.2xlarge", "r6g.4xlarge", "r6g.8xlarge", "r6g.12xlarge", "r6g.16xlarge", "c6gn.medium", "c6gn.large", "c6gn.xlarge", "c6gn.2xlarge", "c6gn.4xlarge", "c6gn.8xlarge", "c6gn.12xlarge", "c6gn.16xlarge", "c7g.medium", "c7g.large", "c7g.xlarge", "c7g.2xlarge", "c7g.4xlarge", "c7g.8xlarge", "c7g.12xlarge", "c7g.16xlarge", "r7g.medium", "r7g.large", "r7g.xlarge", "r7g.2xlarge", "r7g.4xlarge", "r7g.8xlarge", "r7g.12xlarge", "r7g.16xlarge", "m7g.medium", "m7g.large", "m7g.xlarge", "m7g.2xlarge", "m7g.4xlarge", "m7g.8xlarge", "m7g.12xlarge", "m7g.16xlarge", "g5g.xlarge", "g5g.2xlarge", "g5g.4xlarge", "g5g.8xlarge", "g5g.16xlarge", "r6i.large", "r6i.xlarge", "r6i.2xlarge", "r6i.4xlarge", "r6i.8xlarge", "r6i.12xlarge", "r6i.16xlarge", "c6gd.medium", "c6gd.large", "c6gd.xlarge", "c6gd.2xlarge", "c6gd.4xlarge", "c6gd.8xlarge", "c6gd.12xlarge", "c6gd.16xlarge", "c6in.large", "c6in.xlarge", "c6in.2xlarge", "c6in.4xlarge", "c6in.8xlarge", "c6in.12xlarge", "c6in.16xlarge", "c7a.medium", "c7a.large", "c7a.xlarge", "c7a.2xlarge", "c7a.4xlarge", "c7a.8xlarge", "c7a.12xlarge", "c7a.16xlarge", "c7gd.medium", "c7gd.large", "c7gd.xlarge", "c7gd.2xlarge", "c7gd.4xlarge", "c7gd.8xlarge", "c7gd.12xlarge", "c7gd.16xlarge", "c7gn.medium", "c7gn.large", "c7gn.xlarge", "c7gn.2xlarge", "c7gn.4xlarge", "c7gn.8xlarge", "c7gn.12xlarge", "c7gn.16xlarge", "c7i.large", "c7i.xlarge", "c7i.2xlarge", "c7i.4xlarge", "c7i.8xlarge", "c7i.12xlarge", "c7i.16xlarge", "m6a.large", "m6a.xlarge", "m6a.2xlarge", "m6a.4xlarge", "m6a.8xlarge", "m6a.12xlarge", "m6a.16xlarge", "m6gd.medium", "m6gd.large", "m6gd.xlarge", "m6gd.2xlarge", "m6gd.4xlarge", "m6gd.8xlarge", "m6gd.12xlarge", "m6gd.16xlarge", "m6i.large", "m6i.xlarge", "m6i.2xlarge", "m6i.4xlarge", "m6i.8xlarge", "m6i.12xlarge", "m6i.16xlarge", "m7a.medium", "m7a.large", "m7a.xlarge", "m7a.2xlarge", "m7a.4xlarge", "m7a.8xlarge", "m7a.12xlarge", "m7a.16xlarge", "m7gd.medium", "m7gd.large", "m7gd.xlarge", "m7gd.2xlarge", "m7gd.4xlarge", "m7gd.8xlarge", "m7gd.12xlarge", "m7gd.16xlarge", "m7i.large", "m7i.xlarge", "m7i.2xlarge", "m7i.4xlarge", "m7i.8xlarge", "m7i.12xlarge", "m7i.16xlarge", "r6gd.medium", "r6gd.large", "r6gd.xlarge", "r6gd.2xlarge", "r6gd.4xlarge", "r6gd.8xlarge", "r6gd.12xlarge", "r6gd.16xlarge", "r7a.medium", "r7a.large", "r7a.xlarge", "r7a.2xlarge", "r7a.4xlarge", "r7a.8xlarge", "r7a.12xlarge", "r7a.16xlarge", "r7gd.medium", "r7gd.large", "r7gd.xlarge", "r7gd.2xlarge", "r7gd.4xlarge", "r7gd.8xlarge", "r7gd.12xlarge", "r7gd.16xlarge", "r7i.large", "r7i.xlarge", "r7i.2xlarge", "r7i.4xlarge", "r7i.8xlarge", "r7i.12xlarge", "r7i.16xlarge", "r7i.24xlarge", "r7i.48xlarge", "c5ad.large", "c5ad.xlarge", "c5ad.2xlarge", "c5ad.4xlarge", "c5ad.8xlarge", "c5ad.12xlarge", "c5ad.16xlarge", "c5ad.24xlarge", "c5n.large", "c5n.xlarge", "c5n.2xlarge", "c5n.4xlarge", "c5n.9xlarge", "c5n.18xlarge", "r5ad.large", "r5ad.xlarge", "r5ad.2xlarge", "r5ad.4xlarge", "r5ad.8xlarge", "r5ad.12xlarge", "r5ad.16xlarge", "r5ad.24xlarge", "c6id.large", "c6id.xlarge", "c6id.2xlarge", "c6id.4xlarge", "c6id.8xlarge", "c6id.12xlarge", "c6id.16xlarge", "c6id.24xlarge", "c6id.32xlarge", "c8g.medium", "c8g.large", "c8g.xlarge", "c8g.2xlarge", "c8g.4xlarge", "c8g.8xlarge", "c8g.12xlarge", "c8g.16xlarge", "c8g.24xlarge", "c8g.48xlarge", "m5ad.large", "m5ad.xlarge", "m5ad.2xlarge", "m5ad.4xlarge", "m5ad.8xlarge", "m5ad.12xlarge", "m5ad.16xlarge", "m5ad.24xlarge", "m5d.large", "m5d.xlarge", "m5d.2xlarge", "m5d.4xlarge", "m5d.8xlarge", "m5d.12xlarge", "m5d.16xlarge", "m5d.24xlarge", "m5dn.large", "m5dn.xlarge", "m5dn.2xlarge", "m5dn.4xlarge", "m5dn.8xlarge", "m5dn.12xlarge", "m5dn.16xlarge", "m5dn.24xlarge", "m5n.large", "m5n.xlarge", "m5n.2xlarge", "m5n.4xlarge", "m5n.8xlarge", "m5n.12xlarge", "m5n.16xlarge", "m5n.24xlarge", "m6id.large", "m6id.xlarge", "m6id.2xlarge", "m6id.4xlarge", "m6id.8xlarge", "m6id.12xlarge", "m6id.16xlarge", "m6id.24xlarge", "m6id.32xlarge", "m6idn.large", "m6idn.xlarge", "m6idn.2xlarge", "m6idn.4xlarge", "m6idn.8xlarge", "m6idn.12xlarge", "m6idn.16xlarge", "m6idn.24xlarge", "m6idn.32xlarge", "m6in.large", "m6in.xlarge", "m6in.2xlarge", "m6in.4xlarge", "m6in.8xlarge", "m6in.12xlarge", "m6in.16xlarge", "m6in.24xlarge", "m6in.32xlarge", "m8g.medium", "m8g.large", "m8g.xlarge", "m8g.2xlarge", "m8g.4xlarge", "m8g.8xlarge", "m8g.12xlarge", "m8g.16xlarge", "m8g.24xlarge", "m8g.48xlarge", "r5dn.large", "r5dn.xlarge", "r5dn.2xlarge", "r5dn.4xlarge", "r5dn.8xlarge", "r5dn.12xlarge", "r5dn.16xlarge", "r5dn.24xlarge", "r5n.large", "r5n.xlarge", "r5n.2xlarge", "r5n.4xlarge", "r5n.8xlarge", "r5n.12xlarge", "r5n.16xlarge", "r5n.24xlarge", "r6a.large", "r6a.xlarge", "r6a.2xlarge", "r6a.4xlarge", "r6a.8xlarge", "r6a.12xlarge", "r6a.16xlarge", "r6a.24xlarge", "r6a.32xlarge", "r6a.48xlarge", "r6id.large", "r6id.xlarge", "r6id.2xlarge", "r6id.4xlarge", "r6id.8xlarge", "r6id.12xlarge", "r6id.16xlarge", "r6id.24xlarge", "r6id.32xlarge", "r6idn.large", "r6idn.xlarge", "r6idn.2xlarge", "r6idn.4xlarge", "r6idn.8xlarge", "r6idn.12xlarge", "r6idn.16xlarge", "r6idn.24xlarge", "r6idn.32xlarge", "r6in.large", "r6in.xlarge", "r6in.2xlarge", "r6in.4xlarge", "r6in.8xlarge", "r6in.12xlarge", "r6in.16xlarge", "r6in.24xlarge", "r6in.32xlarge", "r8g.medium", "r8g.large", "r8g.xlarge", "r8g.2xlarge", "r8g.4xlarge", "r8g.8xlarge", "r8g.12xlarge", "r8g.16xlarge", "r8g.24xlarge", "r8g.48xlarge", "m4.16xlarge", "c6a.32xlarge", "c6a.48xlarge", "c6i.32xlarge", "r6i.24xlarge", "r6i.32xlarge", "c6in.24xlarge", "c6in.32xlarge", "c7a.24xlarge", "c7a.32xlarge", "c7a.48xlarge", "c7i.24xlarge", "c7i.48xlarge", "m6a.24xlarge", "m6a.32xlarge", "m6a.48xlarge", "m6i.24xlarge", "m6i.32xlarge", "m7a.24xlarge", "m7a.32xlarge", "m7a.48xlarge", "m7i.24xlarge", "m7i.48xlarge", "r7a.24xlarge", "r7a.32xlarge", "r7a.48xlarge", "c8a.medium", "c8a.large", "c8a.xlarge", "c8a.2xlarge", "c8i.large", "c8i.xlarge", "c8i.2xlarge", "c9g.medium", "c9g.large", "c9g.xlarge", "c9g.2xlarge", "m8a.medium", "m8a.large", "m8a.xlarge", "m8a.2xlarge", "m8i.large", "m8i.xlarge", "m8i.2xlarge", "m9g.large", "m9g.xlarge", "m9g.2xlarge"
     #   resp.compute_list[0].game_lift_service_sdk_endpoint #=> String
     #   resp.compute_list[0].game_lift_agent_endpoint #=> String
     #   resp.compute_list[0].instance_id #=> String
@@ -7502,6 +8251,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** Container
+    #
     # Retrieves a collection of container fleet resources in an Amazon Web
     # Services Region. For fleets that have multiple locations, this
     # operation retrieves fleets based on their home Region only.
@@ -7514,8 +8265,8 @@ module Aws::GameLift
     # * Get a list of fleets filtered by container group definition. Provide
     #   the container group definition name or ARN value.
     #
-    # * To get a list of all Realtime Servers fleets with a specific
-    #   configuration script, provide the script ID.
+    # * To get a list of all Amazon GameLift Servers Realtime fleets with a
+    #   specific configuration script, provide the script ID.
     #
     # Use the pagination parameters to retrieve results as a set of
     # sequential pages.
@@ -7589,14 +8340,16 @@ module Aws::GameLift
     #   resp.container_fleets[0].new_game_session_protection_policy #=> String, one of "NoProtection", "FullProtection"
     #   resp.container_fleets[0].game_session_creation_limit_policy.new_game_sessions_per_creator #=> Integer
     #   resp.container_fleets[0].game_session_creation_limit_policy.policy_period_in_minutes #=> Integer
-    #   resp.container_fleets[0].status #=> String, one of "PENDING", "CREATING", "CREATED", "ACTIVATING", "ACTIVE", "UPDATING", "DELETING"
+    #   resp.container_fleets[0].status #=> String, one of "PENDING", "CREATING", "CREATED", "ACTIVATING", "ACTIVE", "UPDATING", "DELETING", "EXPIRED"
     #   resp.container_fleets[0].deployment_details.latest_deployment_id #=> String
     #   resp.container_fleets[0].log_configuration.log_destination #=> String, one of "NONE", "CLOUDWATCH", "S3"
     #   resp.container_fleets[0].log_configuration.s3_bucket_name #=> String
     #   resp.container_fleets[0].log_configuration.log_group_arn #=> String
     #   resp.container_fleets[0].location_attributes #=> Array
     #   resp.container_fleets[0].location_attributes[0].location #=> String
-    #   resp.container_fleets[0].location_attributes[0].status #=> String, one of "PENDING", "CREATING", "CREATED", "ACTIVATING", "ACTIVE", "UPDATING", "DELETING"
+    #   resp.container_fleets[0].location_attributes[0].status #=> String, one of "PENDING", "CREATING", "CREATED", "ACTIVATING", "ACTIVE", "UPDATING", "DELETING", "EXPIRED"
+    #   resp.container_fleets[0].location_attributes[0].player_gateway_status #=> String, one of "DISABLED", "ENABLED"
+    #   resp.container_fleets[0].player_gateway_mode #=> String, one of "DISABLED", "ENABLED", "REQUIRED"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/ListContainerFleets AWS API Documentation
@@ -7608,6 +8361,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** Container
+    #
     # Retrieves all versions of a container group definition. Use the
     # pagination parameters to retrieve results in a set of sequential
     # pages.
@@ -7697,6 +8452,8 @@ module Aws::GameLift
     #   resp.container_group_definitions[0].game_server_container_definition.port_configuration.container_port_ranges[0].protocol #=> String, one of "TCP", "UDP"
     #   resp.container_group_definitions[0].game_server_container_definition.resolved_image_digest #=> String
     #   resp.container_group_definitions[0].game_server_container_definition.server_sdk_version #=> String
+    #   resp.container_group_definitions[0].game_server_container_definition.linux_capabilities.include #=> Array
+    #   resp.container_group_definitions[0].game_server_container_definition.linux_capabilities.include[0] #=> String, one of "AUDIT_CONTROL", "AUDIT_WRITE", "BLOCK_SUSPEND", "CHOWN", "DAC_OVERRIDE", "DAC_READ_SEARCH", "FOWNER", "FSETID", "IPC_LOCK", "IPC_OWNER", "KILL", "LEASE", "LINUX_IMMUTABLE", "MAC_ADMIN", "MAC_OVERRIDE", "MKNOD", "NET_ADMIN", "NET_BIND_SERVICE", "NET_BROADCAST", "NET_RAW", "SETFCAP", "SETGID", "SETPCAP", "SETUID", "SYS_ADMIN", "SYS_BOOT", "SYS_CHROOT", "SYS_MODULE", "SYS_NICE", "SYS_PACCT", "SYS_PTRACE", "SYS_RAWIO", "SYS_RESOURCE", "SYS_TIME", "SYS_TTY_CONFIG", "SYSLOG", "WAKE_ALARM"
     #   resp.container_group_definitions[0].support_container_definitions #=> Array
     #   resp.container_group_definitions[0].support_container_definitions[0].container_name #=> String
     #   resp.container_group_definitions[0].support_container_definitions[0].depends_on #=> Array
@@ -7724,6 +8481,8 @@ module Aws::GameLift
     #   resp.container_group_definitions[0].support_container_definitions[0].port_configuration.container_port_ranges[0].protocol #=> String, one of "TCP", "UDP"
     #   resp.container_group_definitions[0].support_container_definitions[0].resolved_image_digest #=> String
     #   resp.container_group_definitions[0].support_container_definitions[0].vcpu #=> Float
+    #   resp.container_group_definitions[0].support_container_definitions[0].linux_capabilities.include #=> Array
+    #   resp.container_group_definitions[0].support_container_definitions[0].linux_capabilities.include[0] #=> String, one of "AUDIT_CONTROL", "AUDIT_WRITE", "BLOCK_SUSPEND", "CHOWN", "DAC_OVERRIDE", "DAC_READ_SEARCH", "FOWNER", "FSETID", "IPC_LOCK", "IPC_OWNER", "KILL", "LEASE", "LINUX_IMMUTABLE", "MAC_ADMIN", "MAC_OVERRIDE", "MKNOD", "NET_ADMIN", "NET_BIND_SERVICE", "NET_BROADCAST", "NET_RAW", "SETFCAP", "SETGID", "SETPCAP", "SETUID", "SYS_ADMIN", "SYS_BOOT", "SYS_CHROOT", "SYS_MODULE", "SYS_NICE", "SYS_PACCT", "SYS_PTRACE", "SYS_RAWIO", "SYS_RESOURCE", "SYS_TIME", "SYS_TTY_CONFIG", "SYSLOG", "WAKE_ALARM"
     #   resp.container_group_definitions[0].version_number #=> Integer
     #   resp.container_group_definitions[0].version_description #=> String
     #   resp.container_group_definitions[0].status #=> String, one of "READY", "COPYING", "FAILED"
@@ -7739,6 +8498,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** Container
+    #
     # Retrieves container group definitions for the Amazon Web Services
     # account and Amazon Web Services Region. Use the pagination parameters
     # to retrieve results in a set of sequential pages.
@@ -7772,8 +8533,8 @@ module Aws::GameLift
     #
     # @option params [String] :container_group_type
     #   The type of container group to retrieve. Container group type
-    #   determines how Amazon GameLift deploys the container group on each
-    #   fleet instance.
+    #   determines how Amazon GameLift Servers deploys the container group on
+    #   each fleet instance.
     #
     # @option params [Integer] :limit
     #   The maximum number of results to return. Use this parameter with
@@ -7828,6 +8589,8 @@ module Aws::GameLift
     #   resp.container_group_definitions[0].game_server_container_definition.port_configuration.container_port_ranges[0].protocol #=> String, one of "TCP", "UDP"
     #   resp.container_group_definitions[0].game_server_container_definition.resolved_image_digest #=> String
     #   resp.container_group_definitions[0].game_server_container_definition.server_sdk_version #=> String
+    #   resp.container_group_definitions[0].game_server_container_definition.linux_capabilities.include #=> Array
+    #   resp.container_group_definitions[0].game_server_container_definition.linux_capabilities.include[0] #=> String, one of "AUDIT_CONTROL", "AUDIT_WRITE", "BLOCK_SUSPEND", "CHOWN", "DAC_OVERRIDE", "DAC_READ_SEARCH", "FOWNER", "FSETID", "IPC_LOCK", "IPC_OWNER", "KILL", "LEASE", "LINUX_IMMUTABLE", "MAC_ADMIN", "MAC_OVERRIDE", "MKNOD", "NET_ADMIN", "NET_BIND_SERVICE", "NET_BROADCAST", "NET_RAW", "SETFCAP", "SETGID", "SETPCAP", "SETUID", "SYS_ADMIN", "SYS_BOOT", "SYS_CHROOT", "SYS_MODULE", "SYS_NICE", "SYS_PACCT", "SYS_PTRACE", "SYS_RAWIO", "SYS_RESOURCE", "SYS_TIME", "SYS_TTY_CONFIG", "SYSLOG", "WAKE_ALARM"
     #   resp.container_group_definitions[0].support_container_definitions #=> Array
     #   resp.container_group_definitions[0].support_container_definitions[0].container_name #=> String
     #   resp.container_group_definitions[0].support_container_definitions[0].depends_on #=> Array
@@ -7855,6 +8618,8 @@ module Aws::GameLift
     #   resp.container_group_definitions[0].support_container_definitions[0].port_configuration.container_port_ranges[0].protocol #=> String, one of "TCP", "UDP"
     #   resp.container_group_definitions[0].support_container_definitions[0].resolved_image_digest #=> String
     #   resp.container_group_definitions[0].support_container_definitions[0].vcpu #=> Float
+    #   resp.container_group_definitions[0].support_container_definitions[0].linux_capabilities.include #=> Array
+    #   resp.container_group_definitions[0].support_container_definitions[0].linux_capabilities.include[0] #=> String, one of "AUDIT_CONTROL", "AUDIT_WRITE", "BLOCK_SUSPEND", "CHOWN", "DAC_OVERRIDE", "DAC_READ_SEARCH", "FOWNER", "FSETID", "IPC_LOCK", "IPC_OWNER", "KILL", "LEASE", "LINUX_IMMUTABLE", "MAC_ADMIN", "MAC_OVERRIDE", "MKNOD", "NET_ADMIN", "NET_BIND_SERVICE", "NET_BROADCAST", "NET_RAW", "SETFCAP", "SETGID", "SETPCAP", "SETUID", "SYS_ADMIN", "SYS_BOOT", "SYS_CHROOT", "SYS_MODULE", "SYS_NICE", "SYS_PACCT", "SYS_PTRACE", "SYS_RAWIO", "SYS_RESOURCE", "SYS_TIME", "SYS_TTY_CONFIG", "SYSLOG", "WAKE_ALARM"
     #   resp.container_group_definitions[0].version_number #=> Integer
     #   resp.container_group_definitions[0].version_description #=> String
     #   resp.container_group_definitions[0].status #=> String, one of "READY", "COPYING", "FAILED"
@@ -7870,6 +8635,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** Container
+    #
     # Retrieves a collection of container fleet deployments in an Amazon Web
     # Services Region. Use the pagination parameters to retrieve results as
     # a set of sequential pages.
@@ -7946,6 +8713,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Retrieves a collection of fleet resources in an Amazon Web Services
     # Region. You can filter the result set to find only those fleets that
     # are deployed with a specific build or script. For fleets that have
@@ -7960,8 +8730,8 @@ module Aws::GameLift
     # * To get a list of all fleets where a specific game build is deployed,
     #   provide the build ID.
     #
-    # * To get a list of all Realtime Servers fleets with a specific
-    #   configuration script, provide the script ID.
+    # * To get a list of all Amazon GameLift Servers Realtime fleets with a
+    #   specific configuration script, provide the script ID.
     #
     # Use the pagination parameters to retrieve results as a set of
     # sequential pages.
@@ -8025,6 +8795,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2 (FleetIQ)
+    #
     # Lists a game server groups.
     #
     # @option params [Integer] :limit
@@ -8077,8 +8849,7 @@ module Aws::GameLift
       req.send_request(options)
     end
 
-    # **This operation is used with the Amazon GameLift FleetIQ solution and
-    # game server groups.**
+    # **This API works with the following fleet types:** EC2 (FleetIQ)
     #
     # Retrieves information on all game servers that are currently active in
     # a specified game server group. You can opt to sort the list by game
@@ -8087,7 +8858,7 @@ module Aws::GameLift
     #
     # **Learn more**
     #
-    # [Amazon GameLift FleetIQ Guide][1]
+    # [Amazon GameLift Servers FleetIQ Guide][1]
     #
     #
     #
@@ -8155,10 +8926,28 @@ module Aws::GameLift
       req.send_request(options)
     end
 
-    # Lists all custom and Amazon Web Services locations.
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
+    # Lists all custom and Amazon Web Services locations where Amazon
+    # GameLift Servers can host game servers. This operation also returns
+    # UDP ping beacon information for locations, which you can use to
+    # measure network latency between player devices and potential hosting
+    # locations.
+    #
+    # **Learn more**
+    #
+    # [Service locations][1]
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/gamelift/latest/developerguide/gamelift-regions.html
     #
     # @option params [Array<String>] :filters
-    #   Filters the list for `AWS` or `CUSTOM` locations.
+    #   Filters the list for `AWS` or `CUSTOM` locations. Use this parameter
+    #   to narrow down results to only Amazon Web Services-managed locations
+    #   (Amazon EC2 or container) or only your custom locations (such as an
+    #   Amazon GameLift Servers Anywhere fleet).
     #
     # @option params [Integer] :limit
     #   The maximum number of results to return. Use this parameter with
@@ -8190,6 +8979,8 @@ module Aws::GameLift
     #   resp.locations #=> Array
     #   resp.locations[0].location_name #=> String
     #   resp.locations[0].location_arn #=> String
+    #   resp.locations[0].ping_beacon.udp_endpoint.domain #=> String
+    #   resp.locations[0].ping_beacon.udp_endpoint.port #=> Integer
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/ListLocations AWS API Documentation
@@ -8201,12 +8992,14 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2
+    #
     # Retrieves script records for all Realtime scripts that are associated
     # with the Amazon Web Services account in use.
     #
     # **Learn more**
     #
-    # [Amazon GameLift Realtime Servers][1]
+    # [Amazon GameLift Servers Amazon GameLift Servers Realtime][1]
     #
     # **Related actions**
     #
@@ -8254,6 +9047,7 @@ module Aws::GameLift
     #   resp.scripts[0].storage_location.key #=> String
     #   resp.scripts[0].storage_location.role_arn #=> String
     #   resp.scripts[0].storage_location.object_version #=> String
+    #   resp.scripts[0].node_js_version #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/ListScripts AWS API Documentation
@@ -8265,10 +9059,13 @@ module Aws::GameLift
       req.send_request(options)
     end
 
-    # Retrieves all tags assigned to a Amazon GameLift resource. Use
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
+    # Retrieves all tags assigned to a Amazon GameLift Servers resource. Use
     # resource tags to organize Amazon Web Services resources for a range of
     # purposes. This operation handles the permissions necessary to manage
-    # tags for Amazon GameLift resources that support tagging.
+    # tags for Amazon GameLift Servers resources that support tagging.
     #
     # To list tags for a resource, specify the unique ARN value for the
     # resource.
@@ -8292,10 +9089,10 @@ module Aws::GameLift
     #
     # @option params [required, String] :resource_arn
     #   The Amazon Resource Name ([ARN][1]) that uniquely identifies the
-    #   Amazon GameLift resource that you want to retrieve tags for. Amazon
-    #   GameLift includes resource ARNs in the data object for the resource.
-    #   You can retrieve the ARN by calling a `List` or `Describe` operation
-    #   for the resource type.
+    #   Amazon GameLift Servers resource that you want to retrieve tags for.
+    #   Amazon GameLift Servers includes resource ARNs in the data object for
+    #   the resource. You can retrieve the ARN by calling a `List` or
+    #   `Describe` operation for the resource type.
     #
     #
     #
@@ -8326,15 +9123,17 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Container
+    #
     # Creates or updates a scaling policy for a fleet. Scaling policies are
     # used to automatically scale a fleet's hosting capacity to meet player
-    # demand. An active scaling policy instructs Amazon GameLift to track a
-    # fleet metric and automatically change the fleet's capacity when a
-    # certain threshold is reached. There are two types of scaling policies:
-    # target-based and rule-based. Use a target-based policy to quickly and
-    # efficiently manage fleet scaling; this option is the most commonly
-    # used. Use rule-based policies when you need to exert fine-grained
-    # control over auto-scaling.
+    # demand. An active scaling policy instructs Amazon GameLift Servers to
+    # track a fleet metric and automatically change the fleet's capacity
+    # when a certain threshold is reached. There are two types of scaling
+    # policies: target-based and rule-based. Use a target-based policy to
+    # quickly and efficiently manage fleet scaling; this option is the most
+    # commonly used. Use rule-based policies when you need to exert
+    # fine-grained control over auto-scaling.
     #
     # Fleets can have multiple scaling policies of each type in force at the
     # same time; you can have one target-based policy, one or multiple
@@ -8353,15 +9152,15 @@ module Aws::GameLift
     # currently in use. This is the fleet's buffer; it measures the
     # additional player demand that the fleet could handle at current
     # capacity. With a target-based policy, you set your ideal buffer size
-    # and leave it to Amazon GameLift to take whatever action is needed to
-    # maintain that target.
+    # and leave it to Amazon GameLift Servers to take whatever action is
+    # needed to maintain that target.
     #
     # For example, you might choose to maintain a 10% buffer for a fleet
     # that has the capacity to host 100 simultaneous game sessions. This
-    # policy tells Amazon GameLift to take action whenever the fleet's
-    # available capacity falls below or rises above 10 game sessions. Amazon
-    # GameLift will start new instances or stop unused instances in order to
-    # return to the 10% buffer.
+    # policy tells Amazon GameLift Servers to take action whenever the
+    # fleet's available capacity falls below or rises above 10 game
+    # sessions. Amazon GameLift Servers will start new instances or stop
+    # unused instances in order to return to the 10% buffer.
     #
     # To create or update a target-based policy, specify a fleet ID and
     # name, and set the policy type to "TargetBased". Specify the metric
@@ -8448,9 +9247,10 @@ module Aws::GameLift
     #   threshold before a scaling event is triggered.
     #
     # @option params [required, String] :metric_name
-    #   Name of the Amazon GameLift-defined metric that is used to trigger a
-    #   scaling adjustment. For detailed descriptions of fleet metrics, see
-    #   [Monitor Amazon GameLift with Amazon CloudWatch][1].
+    #   Name of the Amazon GameLift Servers-defined metric that is used to
+    #   trigger a scaling adjustment. For detailed descriptions of fleet
+    #   metrics, see [Monitor Amazon GameLift Servers with Amazon
+    #   CloudWatch][1].
     #
     #   * **ActivatingGameSessions** -- Game sessions in the process of being
     #     created.
@@ -8536,12 +9336,15 @@ module Aws::GameLift
       req.send_request(options)
     end
 
-    # Registers a compute resource in an Amazon GameLift Anywhere fleet.
+    # **This API works with the following fleet types:** Anywhere
     #
-    # For an Anywhere fleet that's running the Amazon GameLift Agent, the
-    # Agent handles all compute registry tasks for you. For an Anywhere
-    # fleet that doesn't use the Agent, call this operation to register
-    # fleet computes.
+    # Registers a compute resource in an Amazon GameLift Servers Anywhere
+    # fleet.
+    #
+    # For an Anywhere fleet that's running the Amazon GameLift Servers
+    # Agent, the Agent handles all compute registry tasks for you. For an
+    # Anywhere fleet that doesn't use the Agent, call this operation to
+    # register fleet computes.
     #
     # To register a compute, give the compute a name (must be unique within
     # the fleet) and specify the compute resource's DNS name or IP address.
@@ -8550,10 +9353,11 @@ module Aws::GameLift
     # certificate on the compute resource.
     #
     # If successful, this operation returns compute details, including an
-    # Amazon GameLift SDK endpoint or Agent endpoint. Game server processes
-    # running on the compute can use this endpoint to communicate with the
-    # Amazon GameLift service. Each server process includes the SDK endpoint
-    # in its call to the Amazon GameLift server SDK action `InitSDK()`.
+    # Amazon GameLift Servers SDK endpoint or Agent endpoint. Game server
+    # processes running on the compute can use this endpoint to communicate
+    # with the Amazon GameLift Servers service. Each server process includes
+    # the SDK endpoint in its call to the Amazon GameLift Servers server SDK
+    # action `InitSDK()`.
     #
     # To view compute details, call [DescribeCompute][1] with the compute
     # name.
@@ -8582,16 +9386,16 @@ module Aws::GameLift
     #
     # @option params [String] :certificate_path
     #   The path to a TLS certificate on your compute resource. Amazon
-    #   GameLift doesn't validate the path and certificate.
+    #   GameLift Servers doesn't validate the path and certificate.
     #
     # @option params [String] :dns_name
-    #   The DNS name of the compute resource. Amazon GameLift requires either
-    #   a DNS name or IP address.
+    #   The DNS name of the compute resource. Amazon GameLift Servers requires
+    #   either a DNS name or IP address.
     #
     # @option params [String] :ip_address
-    #   The IP address of the compute resource. Amazon GameLift requires
-    #   either a DNS name or IP address. When registering an Anywhere fleet,
-    #   an IP address is required.
+    #   The IP address of the compute resource. Amazon GameLift Servers
+    #   requires either a DNS name or IP address. When registering an Anywhere
+    #   fleet, an IP address is required.
     #
     # @option params [String] :location
     #   The name of a custom location to associate with the compute resource
@@ -8624,8 +9428,8 @@ module Aws::GameLift
     #   resp.compute.compute_status #=> String, one of "PENDING", "ACTIVE", "TERMINATING", "IMPAIRED"
     #   resp.compute.location #=> String
     #   resp.compute.creation_time #=> Time
-    #   resp.compute.operating_system #=> String, one of "WINDOWS_2012", "AMAZON_LINUX", "AMAZON_LINUX_2", "WINDOWS_2016", "AMAZON_LINUX_2023"
-    #   resp.compute.type #=> String, one of "t2.micro", "t2.small", "t2.medium", "t2.large", "c3.large", "c3.xlarge", "c3.2xlarge", "c3.4xlarge", "c3.8xlarge", "c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge", "c4.8xlarge", "c5.large", "c5.xlarge", "c5.2xlarge", "c5.4xlarge", "c5.9xlarge", "c5.12xlarge", "c5.18xlarge", "c5.24xlarge", "c5a.large", "c5a.xlarge", "c5a.2xlarge", "c5a.4xlarge", "c5a.8xlarge", "c5a.12xlarge", "c5a.16xlarge", "c5a.24xlarge", "r3.large", "r3.xlarge", "r3.2xlarge", "r3.4xlarge", "r3.8xlarge", "r4.large", "r4.xlarge", "r4.2xlarge", "r4.4xlarge", "r4.8xlarge", "r4.16xlarge", "r5.large", "r5.xlarge", "r5.2xlarge", "r5.4xlarge", "r5.8xlarge", "r5.12xlarge", "r5.16xlarge", "r5.24xlarge", "r5a.large", "r5a.xlarge", "r5a.2xlarge", "r5a.4xlarge", "r5a.8xlarge", "r5a.12xlarge", "r5a.16xlarge", "r5a.24xlarge", "m3.medium", "m3.large", "m3.xlarge", "m3.2xlarge", "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge", "m4.10xlarge", "m5.large", "m5.xlarge", "m5.2xlarge", "m5.4xlarge", "m5.8xlarge", "m5.12xlarge", "m5.16xlarge", "m5.24xlarge", "m5a.large", "m5a.xlarge", "m5a.2xlarge", "m5a.4xlarge", "m5a.8xlarge", "m5a.12xlarge", "m5a.16xlarge", "m5a.24xlarge", "c5d.large", "c5d.xlarge", "c5d.2xlarge", "c5d.4xlarge", "c5d.9xlarge", "c5d.12xlarge", "c5d.18xlarge", "c5d.24xlarge", "c6a.large", "c6a.xlarge", "c6a.2xlarge", "c6a.4xlarge", "c6a.8xlarge", "c6a.12xlarge", "c6a.16xlarge", "c6a.24xlarge", "c6i.large", "c6i.xlarge", "c6i.2xlarge", "c6i.4xlarge", "c6i.8xlarge", "c6i.12xlarge", "c6i.16xlarge", "c6i.24xlarge", "r5d.large", "r5d.xlarge", "r5d.2xlarge", "r5d.4xlarge", "r5d.8xlarge", "r5d.12xlarge", "r5d.16xlarge", "r5d.24xlarge", "m6g.medium", "m6g.large", "m6g.xlarge", "m6g.2xlarge", "m6g.4xlarge", "m6g.8xlarge", "m6g.12xlarge", "m6g.16xlarge", "c6g.medium", "c6g.large", "c6g.xlarge", "c6g.2xlarge", "c6g.4xlarge", "c6g.8xlarge", "c6g.12xlarge", "c6g.16xlarge", "r6g.medium", "r6g.large", "r6g.xlarge", "r6g.2xlarge", "r6g.4xlarge", "r6g.8xlarge", "r6g.12xlarge", "r6g.16xlarge", "c6gn.medium", "c6gn.large", "c6gn.xlarge", "c6gn.2xlarge", "c6gn.4xlarge", "c6gn.8xlarge", "c6gn.12xlarge", "c6gn.16xlarge", "c7g.medium", "c7g.large", "c7g.xlarge", "c7g.2xlarge", "c7g.4xlarge", "c7g.8xlarge", "c7g.12xlarge", "c7g.16xlarge", "r7g.medium", "r7g.large", "r7g.xlarge", "r7g.2xlarge", "r7g.4xlarge", "r7g.8xlarge", "r7g.12xlarge", "r7g.16xlarge", "m7g.medium", "m7g.large", "m7g.xlarge", "m7g.2xlarge", "m7g.4xlarge", "m7g.8xlarge", "m7g.12xlarge", "m7g.16xlarge", "g5g.xlarge", "g5g.2xlarge", "g5g.4xlarge", "g5g.8xlarge", "g5g.16xlarge"
+    #   resp.compute.operating_system #=> String, one of "WINDOWS_2012", "AMAZON_LINUX", "AMAZON_LINUX_2", "WINDOWS_2016", "AMAZON_LINUX_2023", "WINDOWS_2022"
+    #   resp.compute.type #=> String, one of "t2.micro", "t2.small", "t2.medium", "t2.large", "c3.large", "c3.xlarge", "c3.2xlarge", "c3.4xlarge", "c3.8xlarge", "c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge", "c4.8xlarge", "c5.large", "c5.xlarge", "c5.2xlarge", "c5.4xlarge", "c5.9xlarge", "c5.12xlarge", "c5.18xlarge", "c5.24xlarge", "c5a.large", "c5a.xlarge", "c5a.2xlarge", "c5a.4xlarge", "c5a.8xlarge", "c5a.12xlarge", "c5a.16xlarge", "c5a.24xlarge", "r3.large", "r3.xlarge", "r3.2xlarge", "r3.4xlarge", "r3.8xlarge", "r4.large", "r4.xlarge", "r4.2xlarge", "r4.4xlarge", "r4.8xlarge", "r4.16xlarge", "r5.large", "r5.xlarge", "r5.2xlarge", "r5.4xlarge", "r5.8xlarge", "r5.12xlarge", "r5.16xlarge", "r5.24xlarge", "r5a.large", "r5a.xlarge", "r5a.2xlarge", "r5a.4xlarge", "r5a.8xlarge", "r5a.12xlarge", "r5a.16xlarge", "r5a.24xlarge", "m3.medium", "m3.large", "m3.xlarge", "m3.2xlarge", "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge", "m4.10xlarge", "m5.large", "m5.xlarge", "m5.2xlarge", "m5.4xlarge", "m5.8xlarge", "m5.12xlarge", "m5.16xlarge", "m5.24xlarge", "m5a.large", "m5a.xlarge", "m5a.2xlarge", "m5a.4xlarge", "m5a.8xlarge", "m5a.12xlarge", "m5a.16xlarge", "m5a.24xlarge", "c5d.large", "c5d.xlarge", "c5d.2xlarge", "c5d.4xlarge", "c5d.9xlarge", "c5d.12xlarge", "c5d.18xlarge", "c5d.24xlarge", "c6a.large", "c6a.xlarge", "c6a.2xlarge", "c6a.4xlarge", "c6a.8xlarge", "c6a.12xlarge", "c6a.16xlarge", "c6a.24xlarge", "c6i.large", "c6i.xlarge", "c6i.2xlarge", "c6i.4xlarge", "c6i.8xlarge", "c6i.12xlarge", "c6i.16xlarge", "c6i.24xlarge", "r5d.large", "r5d.xlarge", "r5d.2xlarge", "r5d.4xlarge", "r5d.8xlarge", "r5d.12xlarge", "r5d.16xlarge", "r5d.24xlarge", "m6g.medium", "m6g.large", "m6g.xlarge", "m6g.2xlarge", "m6g.4xlarge", "m6g.8xlarge", "m6g.12xlarge", "m6g.16xlarge", "c6g.medium", "c6g.large", "c6g.xlarge", "c6g.2xlarge", "c6g.4xlarge", "c6g.8xlarge", "c6g.12xlarge", "c6g.16xlarge", "r6g.medium", "r6g.large", "r6g.xlarge", "r6g.2xlarge", "r6g.4xlarge", "r6g.8xlarge", "r6g.12xlarge", "r6g.16xlarge", "c6gn.medium", "c6gn.large", "c6gn.xlarge", "c6gn.2xlarge", "c6gn.4xlarge", "c6gn.8xlarge", "c6gn.12xlarge", "c6gn.16xlarge", "c7g.medium", "c7g.large", "c7g.xlarge", "c7g.2xlarge", "c7g.4xlarge", "c7g.8xlarge", "c7g.12xlarge", "c7g.16xlarge", "r7g.medium", "r7g.large", "r7g.xlarge", "r7g.2xlarge", "r7g.4xlarge", "r7g.8xlarge", "r7g.12xlarge", "r7g.16xlarge", "m7g.medium", "m7g.large", "m7g.xlarge", "m7g.2xlarge", "m7g.4xlarge", "m7g.8xlarge", "m7g.12xlarge", "m7g.16xlarge", "g5g.xlarge", "g5g.2xlarge", "g5g.4xlarge", "g5g.8xlarge", "g5g.16xlarge", "r6i.large", "r6i.xlarge", "r6i.2xlarge", "r6i.4xlarge", "r6i.8xlarge", "r6i.12xlarge", "r6i.16xlarge", "c6gd.medium", "c6gd.large", "c6gd.xlarge", "c6gd.2xlarge", "c6gd.4xlarge", "c6gd.8xlarge", "c6gd.12xlarge", "c6gd.16xlarge", "c6in.large", "c6in.xlarge", "c6in.2xlarge", "c6in.4xlarge", "c6in.8xlarge", "c6in.12xlarge", "c6in.16xlarge", "c7a.medium", "c7a.large", "c7a.xlarge", "c7a.2xlarge", "c7a.4xlarge", "c7a.8xlarge", "c7a.12xlarge", "c7a.16xlarge", "c7gd.medium", "c7gd.large", "c7gd.xlarge", "c7gd.2xlarge", "c7gd.4xlarge", "c7gd.8xlarge", "c7gd.12xlarge", "c7gd.16xlarge", "c7gn.medium", "c7gn.large", "c7gn.xlarge", "c7gn.2xlarge", "c7gn.4xlarge", "c7gn.8xlarge", "c7gn.12xlarge", "c7gn.16xlarge", "c7i.large", "c7i.xlarge", "c7i.2xlarge", "c7i.4xlarge", "c7i.8xlarge", "c7i.12xlarge", "c7i.16xlarge", "m6a.large", "m6a.xlarge", "m6a.2xlarge", "m6a.4xlarge", "m6a.8xlarge", "m6a.12xlarge", "m6a.16xlarge", "m6gd.medium", "m6gd.large", "m6gd.xlarge", "m6gd.2xlarge", "m6gd.4xlarge", "m6gd.8xlarge", "m6gd.12xlarge", "m6gd.16xlarge", "m6i.large", "m6i.xlarge", "m6i.2xlarge", "m6i.4xlarge", "m6i.8xlarge", "m6i.12xlarge", "m6i.16xlarge", "m7a.medium", "m7a.large", "m7a.xlarge", "m7a.2xlarge", "m7a.4xlarge", "m7a.8xlarge", "m7a.12xlarge", "m7a.16xlarge", "m7gd.medium", "m7gd.large", "m7gd.xlarge", "m7gd.2xlarge", "m7gd.4xlarge", "m7gd.8xlarge", "m7gd.12xlarge", "m7gd.16xlarge", "m7i.large", "m7i.xlarge", "m7i.2xlarge", "m7i.4xlarge", "m7i.8xlarge", "m7i.12xlarge", "m7i.16xlarge", "r6gd.medium", "r6gd.large", "r6gd.xlarge", "r6gd.2xlarge", "r6gd.4xlarge", "r6gd.8xlarge", "r6gd.12xlarge", "r6gd.16xlarge", "r7a.medium", "r7a.large", "r7a.xlarge", "r7a.2xlarge", "r7a.4xlarge", "r7a.8xlarge", "r7a.12xlarge", "r7a.16xlarge", "r7gd.medium", "r7gd.large", "r7gd.xlarge", "r7gd.2xlarge", "r7gd.4xlarge", "r7gd.8xlarge", "r7gd.12xlarge", "r7gd.16xlarge", "r7i.large", "r7i.xlarge", "r7i.2xlarge", "r7i.4xlarge", "r7i.8xlarge", "r7i.12xlarge", "r7i.16xlarge", "r7i.24xlarge", "r7i.48xlarge", "c5ad.large", "c5ad.xlarge", "c5ad.2xlarge", "c5ad.4xlarge", "c5ad.8xlarge", "c5ad.12xlarge", "c5ad.16xlarge", "c5ad.24xlarge", "c5n.large", "c5n.xlarge", "c5n.2xlarge", "c5n.4xlarge", "c5n.9xlarge", "c5n.18xlarge", "r5ad.large", "r5ad.xlarge", "r5ad.2xlarge", "r5ad.4xlarge", "r5ad.8xlarge", "r5ad.12xlarge", "r5ad.16xlarge", "r5ad.24xlarge", "c6id.large", "c6id.xlarge", "c6id.2xlarge", "c6id.4xlarge", "c6id.8xlarge", "c6id.12xlarge", "c6id.16xlarge", "c6id.24xlarge", "c6id.32xlarge", "c8g.medium", "c8g.large", "c8g.xlarge", "c8g.2xlarge", "c8g.4xlarge", "c8g.8xlarge", "c8g.12xlarge", "c8g.16xlarge", "c8g.24xlarge", "c8g.48xlarge", "m5ad.large", "m5ad.xlarge", "m5ad.2xlarge", "m5ad.4xlarge", "m5ad.8xlarge", "m5ad.12xlarge", "m5ad.16xlarge", "m5ad.24xlarge", "m5d.large", "m5d.xlarge", "m5d.2xlarge", "m5d.4xlarge", "m5d.8xlarge", "m5d.12xlarge", "m5d.16xlarge", "m5d.24xlarge", "m5dn.large", "m5dn.xlarge", "m5dn.2xlarge", "m5dn.4xlarge", "m5dn.8xlarge", "m5dn.12xlarge", "m5dn.16xlarge", "m5dn.24xlarge", "m5n.large", "m5n.xlarge", "m5n.2xlarge", "m5n.4xlarge", "m5n.8xlarge", "m5n.12xlarge", "m5n.16xlarge", "m5n.24xlarge", "m6id.large", "m6id.xlarge", "m6id.2xlarge", "m6id.4xlarge", "m6id.8xlarge", "m6id.12xlarge", "m6id.16xlarge", "m6id.24xlarge", "m6id.32xlarge", "m6idn.large", "m6idn.xlarge", "m6idn.2xlarge", "m6idn.4xlarge", "m6idn.8xlarge", "m6idn.12xlarge", "m6idn.16xlarge", "m6idn.24xlarge", "m6idn.32xlarge", "m6in.large", "m6in.xlarge", "m6in.2xlarge", "m6in.4xlarge", "m6in.8xlarge", "m6in.12xlarge", "m6in.16xlarge", "m6in.24xlarge", "m6in.32xlarge", "m8g.medium", "m8g.large", "m8g.xlarge", "m8g.2xlarge", "m8g.4xlarge", "m8g.8xlarge", "m8g.12xlarge", "m8g.16xlarge", "m8g.24xlarge", "m8g.48xlarge", "r5dn.large", "r5dn.xlarge", "r5dn.2xlarge", "r5dn.4xlarge", "r5dn.8xlarge", "r5dn.12xlarge", "r5dn.16xlarge", "r5dn.24xlarge", "r5n.large", "r5n.xlarge", "r5n.2xlarge", "r5n.4xlarge", "r5n.8xlarge", "r5n.12xlarge", "r5n.16xlarge", "r5n.24xlarge", "r6a.large", "r6a.xlarge", "r6a.2xlarge", "r6a.4xlarge", "r6a.8xlarge", "r6a.12xlarge", "r6a.16xlarge", "r6a.24xlarge", "r6a.32xlarge", "r6a.48xlarge", "r6id.large", "r6id.xlarge", "r6id.2xlarge", "r6id.4xlarge", "r6id.8xlarge", "r6id.12xlarge", "r6id.16xlarge", "r6id.24xlarge", "r6id.32xlarge", "r6idn.large", "r6idn.xlarge", "r6idn.2xlarge", "r6idn.4xlarge", "r6idn.8xlarge", "r6idn.12xlarge", "r6idn.16xlarge", "r6idn.24xlarge", "r6idn.32xlarge", "r6in.large", "r6in.xlarge", "r6in.2xlarge", "r6in.4xlarge", "r6in.8xlarge", "r6in.12xlarge", "r6in.16xlarge", "r6in.24xlarge", "r6in.32xlarge", "r8g.medium", "r8g.large", "r8g.xlarge", "r8g.2xlarge", "r8g.4xlarge", "r8g.8xlarge", "r8g.12xlarge", "r8g.16xlarge", "r8g.24xlarge", "r8g.48xlarge", "m4.16xlarge", "c6a.32xlarge", "c6a.48xlarge", "c6i.32xlarge", "r6i.24xlarge", "r6i.32xlarge", "c6in.24xlarge", "c6in.32xlarge", "c7a.24xlarge", "c7a.32xlarge", "c7a.48xlarge", "c7i.24xlarge", "c7i.48xlarge", "m6a.24xlarge", "m6a.32xlarge", "m6a.48xlarge", "m6i.24xlarge", "m6i.32xlarge", "m7a.24xlarge", "m7a.32xlarge", "m7a.48xlarge", "m7i.24xlarge", "m7i.48xlarge", "r7a.24xlarge", "r7a.32xlarge", "r7a.48xlarge", "c8a.medium", "c8a.large", "c8a.xlarge", "c8a.2xlarge", "c8i.large", "c8i.xlarge", "c8i.2xlarge", "c9g.medium", "c9g.large", "c9g.xlarge", "c9g.2xlarge", "m8a.medium", "m8a.large", "m8a.xlarge", "m8a.2xlarge", "m8i.large", "m8i.xlarge", "m8i.2xlarge", "m9g.large", "m9g.xlarge", "m9g.2xlarge"
     #   resp.compute.game_lift_service_sdk_endpoint #=> String
     #   resp.compute.game_lift_agent_endpoint #=> String
     #   resp.compute.instance_id #=> String
@@ -8643,16 +9447,15 @@ module Aws::GameLift
       req.send_request(options)
     end
 
-    # **This operation is used with the Amazon GameLift FleetIQ solution and
-    # game server groups.**
+    # **This API works with the following fleet types:** EC2 (FleetIQ)
     #
     # Creates a new game server resource and notifies Amazon GameLift
-    # FleetIQ that the game server is ready to host gameplay and players.
-    # This operation is called by a game server process that is running on
-    # an instance in a game server group. Registering game servers enables
-    # Amazon GameLift FleetIQ to track available game servers and enables
-    # game clients and services to claim a game server for a new game
-    # session.
+    # Servers FleetIQ that the game server is ready to host gameplay and
+    # players. This operation is called by a game server process that is
+    # running on an instance in a game server group. Registering game
+    # servers enables Amazon GameLift Servers FleetIQ to track available
+    # game servers and enables game clients and services to claim a game
+    # server for a new game session.
     #
     # To register a game server, identify the game server group and instance
     # where the game server is running, and provide a unique identifier for
@@ -8665,7 +9468,7 @@ module Aws::GameLift
     #
     # **Learn more**
     #
-    # [Amazon GameLift FleetIQ Guide][1]
+    # [Amazon GameLift Servers FleetIQ Guide][1]
     #
     #
     #
@@ -8732,9 +9535,11 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2
+    #
     # Retrieves a fresh set of credentials for use when uploading a new set
-    # of game build files to Amazon GameLift's Amazon S3. This is done as
-    # part of the build creation process; see [CreateBuild][1].
+    # of game build files to Amazon GameLift Servers's Amazon S3. This is
+    # done as part of the build creation process; see [CreateBuild][1].
     #
     # To request new credentials, specify the build ID as returned with an
     # initial `CreateBuild` request. If successful, a new set of credentials
@@ -8787,12 +9592,15 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Attempts to retrieve a fleet ID that is associated with an alias.
     # Specify a unique alias identifier.
     #
-    # If the alias has a `SIMPLE` routing strategy, Amazon GameLift returns
-    # a fleet ID. If the alias has a `TERMINAL` routing strategy, the result
-    # is a `TerminalRoutingStrategyException`.
+    # If the alias has a `SIMPLE` routing strategy, Amazon GameLift Servers
+    # returns a fleet ID. If the alias has a `TERMINAL` routing strategy,
+    # the result is a `TerminalRoutingStrategyException`.
     #
     # **Related actions**
     #
@@ -8831,8 +9639,7 @@ module Aws::GameLift
       req.send_request(options)
     end
 
-    # **This operation is used with the Amazon GameLift FleetIQ solution and
-    # game server groups.**
+    # **This API works with the following fleet types:** EC2 (FleetIQ)
     #
     # Reinstates activity on a game server group after it has been
     # suspended. A game server group might be suspended by the
@@ -8850,7 +9657,7 @@ module Aws::GameLift
     #
     # **Learn more**
     #
-    # [Amazon GameLift FleetIQ Guide][1]
+    # [Amazon GameLift Servers FleetIQ Guide][1]
     #
     #
     #
@@ -8901,6 +9708,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Retrieves all active game sessions that match a set of search criteria
     # and sorts them into a specified order.
     #
@@ -8939,8 +9749,8 @@ module Aws::GameLift
     # following game session attributes. For game session search examples,
     # see the Examples section of this topic.
     #
-    # * **gameSessionId** -- A unique identifier for the game session. You
-    #   can use either a `GameSessionId` or `GameSessionArn` value.
+    # * **gameSessionId** -- An identifier for the game session that is
+    #   unique across all regions. You must use the full ARN value.
     #
     # * **gameSessionName** -- Name assigned to a game session. Game session
     #   names do not need to be unique to a game session.
@@ -8957,6 +9767,18 @@ module Aws::GameLift
     #
     #   For examples of searching game sessions, see the ones below, and
     #   also see [Search game sessions by game property][3].
+    #
+    #   <note markdown="1"> * Avoid using periods (".") in property keys if you plan to search
+    #     for game sessions by properties. Property keys containing periods
+    #     cannot be searched and will be filtered out from search results
+    #     due to search index limitations.
+    #
+    #   * If you use SearchGameSessions API, there is a limit of 500 game
+    #     property keys across all game sessions and all fleets per region.
+    #     If the limit is exceeded, there will potentially be game session
+    #     entries missing from SearchGameSessions API results.
+    #
+    #    </note>
     #
     # * **maximumSessions** -- Maximum number of player sessions allowed for
     #   a game session.
@@ -9125,6 +9947,8 @@ module Aws::GameLift
     #   resp.game_sessions[0].game_session_data #=> String
     #   resp.game_sessions[0].matchmaker_data #=> String
     #   resp.game_sessions[0].location #=> String
+    #   resp.game_sessions[0].compute_name #=> String
+    #   resp.game_sessions[0].player_gateway_status #=> String, one of "DISABLED", "ENABLED"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/SearchGameSessions AWS API Documentation
@@ -9136,6 +9960,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Container
+    #
     # Resumes certain types of activity on fleet instances that were
     # suspended with [StopFleetActions][1]. For multi-location fleets, fleet
     # actions are managed separately for each location. Currently, this
@@ -9150,13 +9976,14 @@ module Aws::GameLift
     #   locations, provide a fleet ID, a location name, and the type of
     #   actions to resume.
     #
-    # If successful, Amazon GameLift once again initiates scaling events as
-    # triggered by the fleet's scaling policies. If actions on the fleet
-    # location were never stopped, this operation will have no effect.
+    # If successful, Amazon GameLift Servers once again initiates scaling
+    # events as triggered by the fleet's scaling policies. If actions on
+    # the fleet location were never stopped, this operation will have no
+    # effect.
     #
     # **Learn more**
     #
-    # [Setting up Amazon GameLift fleets][2]
+    # [Setting up Amazon GameLift Servers fleets][2]
     #
     #
     #
@@ -9201,50 +10028,66 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Makes a request to start a new game session using a game session
-    # queue. When processing a placement request in a queue, Amazon GameLift
-    # finds the best possible available resource to host the game session
-    # and prompts the resource to start the game session.
+    # queue. When processing a placement request, Amazon GameLift Servers
+    # looks for the best possible available resource to host the game
+    # session, based on how the queue is configured to prioritize factors
+    # such as resource cost, latency, and location. After selecting an
+    # available resource, Amazon GameLift Servers prompts the resource to
+    # start a game session. A placement request can include a list of
+    # players to create a set of player sessions. The request can also
+    # include information to pass to the new game session, such as to
+    # specify a game map or other options.
     #
     # **Request options**
     #
-    # Call this API with the following minimum parameters:
-    # *GameSessionQueueName*, *MaximumPlayerSessionCount*, and
-    # *PlacementID*. You can also include game session data (data formatted
-    # as strings) or game properties (data formatted as key-value pairs) to
-    # pass to the new game session.
+    # Use this operation to make the following types of requests.
     #
-    # * You can change how Amazon GameLift chooses a hosting resource for
-    #   the new game session. Prioritizing resources for game session
-    #   placements is defined when you configure a game session queue. You
-    #   can use the default prioritization process or specify a custom
-    #   process by providing a [ PriorityConfiguration][1] when you create
-    #   or update a queue.
+    # * Request a placement using the queue's default prioritization
+    #   process (see the default prioritization described in
+    #   [PriorityConfiguration][1]). Include these required parameters:
     #
-    #   * Prioritize based on resource cost and location, using the queue's
-    #     configured priority settings. Call this API with the minimum
-    #     parameters.
+    #   * `GameSessionQueueName`
     #
-    #   * Prioritize based on latency. Include a set of values for
-    #     *PlayerLatencies*. You can provide latency data with or without
-    #     player session data. This option instructs Amazon GameLift to
-    #     reorder the queue's prioritized locations list based on the
-    #     latency data. If latency data is provided for multiple players,
-    #     Amazon GameLift calculates each location's average latency for
+    #   * `MaximumPlayerSessionCount`
+    #
+    #   * `PlacementID`
+    # * Request a placement and prioritize based on latency. Include these
+    #   parameters:
+    #
+    #   * Required parameters `GameSessionQueueName`,
+    #     `MaximumPlayerSessionCount`, `PlacementID`.
+    #
+    #   * `PlayerLatencies`. Include a set of latency values for
+    #     destinations in the queue. When a request includes latency data,
+    #     Amazon GameLift Servers automatically reorder the queue's
+    #     locations priority list based on lowest available latency values.
+    #     If a request includes latency data for multiple players, Amazon
+    #     GameLift Servers calculates each location's average latency for
     #     all players and reorders to find the lowest latency across all
-    #     players. Don't include latency data if you're providing a custom
-    #     list of locations.
+    #     players.
+    #
+    #   * Don't include `PriorityConfigurationOverride`.
+    #   ^
     #
     #   * Prioritize based on a custom list of locations. If you're using a
     #     queue that's configured to prioritize location first (see
-    #     [PriorityConfiguration][1] for game session queues), use the
-    #     *PriorityConfigurationOverride* parameter to substitute a
-    #     different location list for this placement request. When
-    #     prioritizing placements by location, Amazon GameLift searches each
-    #     location in prioritized order to find an available hosting
-    #     resource for the new game session. You can choose whether to use
-    #     the override list for the first placement attempt only or for all
-    #     attempts.
+    #     [PriorityConfiguration][1] for game session queues), you can
+    #     optionally use the *PriorityConfigurationOverride* parameter to
+    #     substitute a different location priority list for this placement
+    #     request. Amazon GameLift Servers searches each location on the
+    #     priority override list to find an available hosting resource for
+    #     the new game session. Specify a fallback strategy to use in the
+    #     event that Amazon GameLift Servers fails to place the game session
+    #     in any of the locations on the override list.
+    #
+    #   ^
+    # * Request a placement and prioritized based on a custom list of
+    #   locations.
+    #
     # * You can request new player sessions for a group of players. Include
     #   the *DesiredPlayerSessions* parameter and include at minimum a
     #   unique player ID for each. You can also include player-specific data
@@ -9252,27 +10095,29 @@ module Aws::GameLift
     #
     # **Result**
     #
-    # If successful, this request generates a new game session placement
-    # request and adds it to the game session queue for Amazon GameLift to
-    # process in turn. You can track the status of individual placement
-    # requests by calling [DescribeGameSessionPlacement][2]. A new game
-    # session is running if the status is `FULFILLED` and the request
-    # returns the game session connection information (IP address and port).
-    # If you include player session data, Amazon GameLift creates a player
-    # session for each player ID in the request.
+    # If successful, this operation generates a new game session placement
+    # request and adds it to the game session queue for processing. You can
+    # track the status of individual placement requests by calling
+    # [DescribeGameSessionPlacement][2] or by monitoring queue
+    # notifications. When the request status is `FULFILLED`, a new game
+    # session has started and the placement request is updated with
+    # connection information for the game session (IP address and port). If
+    # the request included player session data, Amazon GameLift Servers
+    # creates a player session for each player ID in the request.
     #
-    # The request results in a `BadRequestException` in the following
+    # The request results in a `InvalidRequestException` in the following
     # situations:
     #
     # * If the request includes both *PlayerLatencies* and
     #   *PriorityConfigurationOverride* parameters.
     #
     # * If the request includes the *PriorityConfigurationOverride*
-    #   parameter and designates a queue doesn't prioritize locations.
+    #   parameter and specifies a queue that doesn't prioritize locations.
     #
-    # Amazon GameLift continues to retry each placement request until it
-    # reaches the queue's timeout setting. If a request times out, you can
-    # resubmit the request to the same queue or try a different queue.
+    # Amazon GameLift Servers continues to retry each placement request
+    # until it reaches the queue's timeout setting. If a request times out,
+    # you can resubmit the request to the same queue or try a different
+    # queue.
     #
     #
     #
@@ -9292,6 +10137,18 @@ module Aws::GameLift
     #   A set of key-value pairs that can store custom data in a game session.
     #   For example: `{"Key": "difficulty", "Value": "novice"}`.
     #
+    #   <note markdown="1"> * Avoid using periods (".") in property keys if you plan to search
+    #     for game sessions by properties. Property keys containing periods
+    #     cannot be searched and will be filtered out from search results due
+    #     to search index limitations.
+    #
+    #   * If you use SearchGameSessions API, there is a limit of 500 game
+    #     property keys across all game sessions and all fleets per region. If
+    #     the limit is exceeded, there will potentially be game session
+    #     entries missing from SearchGameSessions API results.
+    #
+    #    </note>
+    #
     # @option params [required, Integer] :maximum_player_session_count
     #   The maximum number of players that can be connected simultaneously to
     #   the game session.
@@ -9302,10 +10159,11 @@ module Aws::GameLift
     #
     # @option params [Array<Types::PlayerLatency>] :player_latencies
     #   A set of values, expressed in milliseconds, that indicates the amount
-    #   of latency that a player experiences when connected to Amazon Web
-    #   Services Regions. This information is used to try to place the new
-    #   game session where it can offer the best possible gameplay experience
-    #   for the players.
+    #   of latency that a player experiences when connected to a fleet
+    #   location (Amazon Web Services Regions or custom locations for Amazon
+    #   GameLift Servers Anywhere fleets). This information is used to try to
+    #   place the new game session where it can offer the best possible
+    #   gameplay experience for the players.
     #
     # @option params [Array<Types::DesiredPlayerSession>] :desired_player_sessions
     #   Set of information on each player to create a player session for.
@@ -9325,9 +10183,12 @@ module Aws::GameLift
     #   and instructions on how to use it. This list overrides a queue's
     #   prioritized location list for this game session placement request
     #   only. You can include Amazon Web Services Regions, local zones, and
-    #   custom locations (for Anywhere fleets). Choose a fallback strategy to
-    #   instruct Amazon GameLift to use the override list for the first
-    #   placement attempt only or for all placement attempts.
+    #   custom locations (for Anywhere fleets). You can choose to limit
+    #   placements to locations on the override list only, or you can
+    #   prioritize locations on the override list first and then fall back to
+    #   the queue's other locations if needed. Choose a fallback strategy to
+    #   use in the event that Amazon GameLift Servers fails to place a game
+    #   session in any of the locations on the priority override list.
     #
     # @return [Types::StartGameSessionPlacementOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -9396,6 +10257,7 @@ module Aws::GameLift
     #   resp.game_session_placement.priority_configuration_override.placement_fallback_strategy #=> String, one of "DEFAULT_AFTER_SINGLE_PASS", "NONE"
     #   resp.game_session_placement.priority_configuration_override.location_order #=> Array
     #   resp.game_session_placement.priority_configuration_override.location_order[0] #=> String
+    #   resp.game_session_placement.player_gateway_status #=> String, one of "DISABLED", "ENABLED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/StartGameSessionPlacement AWS API Documentation
     #
@@ -9406,6 +10268,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Finds new players to fill open slots in currently running game
     # sessions. The backfill match process is essentially identical to the
     # process of forming new matches. Backfill requests use the same
@@ -9414,8 +10279,8 @@ module Aws::GameLift
     # FlexMatch uses this information to select new players so that
     # backfilled match continues to meet the original match requirements.
     #
-    # When using FlexMatch with Amazon GameLift managed hosting, you can
-    # request a backfill match from a client service by calling this
+    # When using FlexMatch with Amazon GameLift Servers managed hosting, you
+    # can request a backfill match from a client service by calling this
     # operation with a `GameSessions` ID. You also have the option of making
     # backfill requests directly from your game server. In response to a
     # request, FlexMatch creates player sessions for the new players,
@@ -9447,7 +10312,7 @@ module Aws::GameLift
     #
     # [ Matchmaking events][2] (reference)
     #
-    # [ How Amazon GameLift FlexMatch works][3]
+    # [ How Amazon GameLift Servers FlexMatch works][3]
     #
     #
     #
@@ -9457,9 +10322,9 @@ module Aws::GameLift
     #
     # @option params [String] :ticket_id
     #   A unique identifier for a matchmaking ticket. If no ticket ID is
-    #   specified here, Amazon GameLift will generate one in the form of a
-    #   UUID. Use this identifier to track the match backfill ticket status
-    #   and retrieve match results.
+    #   specified here, Amazon GameLift Servers will generate one in the form
+    #   of a UUID. Use this identifier to track the match backfill ticket
+    #   status and retrieve match results.
     #
     # @option params [required, String] :configuration_name
     #   Name of the matchmaker to use for this request. You can use either the
@@ -9468,9 +10333,14 @@ module Aws::GameLift
     #   object, `MatchmakerData` property.
     #
     # @option params [String] :game_session_arn
-    #   A unique identifier for the game session. Use the game session ID.
-    #   When using FlexMatch as a standalone matchmaking solution, this
-    #   parameter is not needed.
+    #   An identifier for the game session that is unique across all regions.
+    #   The value is always a full ARN in the following format: For Home
+    #   Region game session -
+    #   `arn:aws:gamelift:<home_region>::gamesession/<fleet ID>/<ID string>`.
+    #   For Remote Location game session -
+    #   `arn:aws:gamelift:<home_region>::gamesession/<fleet ID>/<location>/<ID
+    #   string>`. When using FlexMatch as a standalone matchmaking solution,
+    #   this parameter is not needed.
     #
     # @option params [required, Array<Types::Player>] :players
     #   Match information on all players that are currently assigned to the
@@ -9544,6 +10414,7 @@ module Aws::GameLift
     #   resp.matchmaking_ticket.game_session_connection_info.matched_player_sessions #=> Array
     #   resp.matchmaking_ticket.game_session_connection_info.matched_player_sessions[0].player_id #=> String
     #   resp.matchmaking_ticket.game_session_connection_info.matched_player_sessions[0].player_session_id #=> String
+    #   resp.matchmaking_ticket.game_session_connection_info.player_gateway_status #=> String, one of "DISABLED", "ENABLED"
     #   resp.matchmaking_ticket.estimated_wait_time #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/StartMatchBackfill AWS API Documentation
@@ -9555,15 +10426,18 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Uses FlexMatch to create a game match for a group of players based on
-    # custom matchmaking rules. With games that use Amazon GameLift managed
-    # hosting, this operation also triggers Amazon GameLift to find hosting
-    # resources and start a new game session for the new match. Each
-    # matchmaking request includes information on one or more players and
-    # specifies the FlexMatch matchmaker to use. When a request is for
-    # multiple players, FlexMatch attempts to build a match that includes
-    # all players in the request, placing them in the same team and finding
-    # additional players as needed to fill the match.
+    # custom matchmaking rules. With games that use Amazon GameLift Servers
+    # managed hosting, this operation also triggers Amazon GameLift Servers
+    # to find hosting resources and start a new game session for the new
+    # match. Each matchmaking request includes information on one or more
+    # players and specifies the FlexMatch matchmaker to use. When a request
+    # is for multiple players, FlexMatch attempts to build a match that
+    # includes all players in the request, placing them in the same team and
+    # finding additional players as needed to fill the match.
     #
     # To start matchmaking, provide a unique ticket ID, specify a
     # matchmaking configuration, and include the players to be matched. You
@@ -9583,7 +10457,7 @@ module Aws::GameLift
     #
     # [ Set Up FlexMatch event notification][2]
     #
-    # [ How Amazon GameLift FlexMatch works][3]
+    # [ How Amazon GameLift Servers FlexMatch works][3]
     #
     #
     #
@@ -9593,9 +10467,9 @@ module Aws::GameLift
     #
     # @option params [String] :ticket_id
     #   A unique identifier for a matchmaking ticket. If no ticket ID is
-    #   specified here, Amazon GameLift will generate one in the form of a
-    #   UUID. Use this identifier to track the matchmaking ticket status and
-    #   retrieve match results.
+    #   specified here, Amazon GameLift Servers will generate one in the form
+    #   of a UUID. Use this identifier to track the matchmaking ticket status
+    #   and retrieve match results.
     #
     # @option params [required, String] :configuration_name
     #   Name of the matchmaking configuration to use for this request.
@@ -9658,6 +10532,7 @@ module Aws::GameLift
     #   resp.matchmaking_ticket.game_session_connection_info.matched_player_sessions #=> Array
     #   resp.matchmaking_ticket.game_session_connection_info.matched_player_sessions[0].player_id #=> String
     #   resp.matchmaking_ticket.game_session_connection_info.matched_player_sessions[0].player_session_id #=> String
+    #   resp.matchmaking_ticket.game_session_connection_info.player_gateway_status #=> String, one of "DISABLED", "ENABLED"
     #   resp.matchmaking_ticket.estimated_wait_time #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/StartMatchmaking AWS API Documentation
@@ -9669,6 +10544,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Container
+    #
     # Suspends certain types of activity in a fleet location. Currently,
     # this operation is used to stop auto-scaling activity. For
     # multi-location fleets, fleet actions are managed separately for each
@@ -9689,13 +10566,14 @@ module Aws::GameLift
     #   locations, provide a fleet ID, a location name, and the type of
     #   actions to suspend.
     #
-    # If successful, Amazon GameLift no longer initiates scaling events
-    # except in response to manual changes using [UpdateFleetCapacity][1].
-    # To restart fleet actions again, call [StartFleetActions][2].
+    # If successful, Amazon GameLift Servers no longer initiates scaling
+    # events except in response to manual changes using
+    # [UpdateFleetCapacity][1]. To restart fleet actions again, call
+    # [StartFleetActions][2].
     #
     # **Learn more**
     #
-    # [Setting up Amazon GameLift Fleets][3]
+    # [Setting up Amazon GameLift Servers Fleets][3]
     #
     #
     #
@@ -9741,9 +10619,25 @@ module Aws::GameLift
       req.send_request(options)
     end
 
-    # Cancels a game session placement that is in `PENDING` status. To stop
-    # a placement, provide the placement ID values. If successful, the
-    # placement is moved to `CANCELLED` status.
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
+    # Cancels a game session placement that's in `PENDING` status. To stop
+    # a placement, provide the placement ID value.
+    #
+    # Results
+    #
+    # If successful, this operation removes the placement request from the
+    # queue and moves the `GameSessionPlacement` to `CANCELLED` status.
+    #
+    # This operation results in an `InvalidRequestExecption` (400) error if
+    # a game session has already been created for this placement. You can
+    # clean up an unneeded game session by calling
+    # [TerminateGameSession][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/gamelift/latest/apireference/API_TerminateGameSession
     #
     # @option params [required, String] :placement_id
     #   A unique identifier for a game session placement to stop.
@@ -9788,6 +10682,7 @@ module Aws::GameLift
     #   resp.game_session_placement.priority_configuration_override.placement_fallback_strategy #=> String, one of "DEFAULT_AFTER_SINGLE_PASS", "NONE"
     #   resp.game_session_placement.priority_configuration_override.location_order #=> Array
     #   resp.game_session_placement.priority_configuration_override.location_order[0] #=> String
+    #   resp.game_session_placement.player_gateway_status #=> String, one of "DISABLED", "ENABLED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/StopGameSessionPlacement AWS API Documentation
     #
@@ -9798,6 +10693,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Cancels a matchmaking ticket or match backfill ticket that is
     # currently being processed. To stop the matchmaking operation, specify
     # the ticket ID. If successful, work on the ticket is stopped, and the
@@ -9842,8 +10740,7 @@ module Aws::GameLift
       req.send_request(options)
     end
 
-    # **This operation is used with the Amazon GameLift FleetIQ solution and
-    # game server groups.**
+    # **This API works with the following fleet types:** EC2 (FleetIQ)
     #
     # Temporarily stops activity on a game server group without terminating
     # instances or the game server group. You can restart activity by
@@ -9869,7 +10766,7 @@ module Aws::GameLift
     #
     # **Learn more**
     #
-    # [Amazon GameLift FleetIQ Guide][1]
+    # [Amazon GameLift Servers FleetIQ Guide][1]
     #
     #
     #
@@ -9920,11 +10817,15 @@ module Aws::GameLift
       req.send_request(options)
     end
 
-    # Assigns a tag to an Amazon GameLift resource. You can use tags to
-    # organize resources, create IAM permissions policies to manage access
-    # to groups of resources, customize Amazon Web Services cost breakdowns,
-    # and more. This operation handles the permissions necessary to manage
-    # tags for Amazon GameLift resources that support tagging.
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
+    # Assigns a tag to an Amazon GameLift Servers resource. You can use tags
+    # to organize resources, create IAM permissions policies to manage
+    # access to groups of resources, customize Amazon Web Services cost
+    # breakdowns, and more. This operation handles the permissions necessary
+    # to manage tags for Amazon GameLift Servers resources that support
+    # tagging.
     #
     # To add a tag to a resource, specify the unique ARN value for the
     # resource and provide a tag list containing one or more tags. The
@@ -9950,10 +10851,10 @@ module Aws::GameLift
     #
     # @option params [required, String] :resource_arn
     #   The Amazon Resource Name ([ARN][1]) that uniquely identifies the
-    #   Amazon GameLift resource that you want to assign tags to. Amazon
-    #   GameLift includes resource ARNs in the data object for the resource.
-    #   You can retrieve the ARN by calling a `List` or `Describe` operation
-    #   for the resource type.
+    #   Amazon GameLift Servers resource that you want to assign tags to.
+    #   Amazon GameLift Servers includes resource ARNs in the data object for
+    #   the resource. You can retrieve the ARN by calling a `List` or
+    #   `Describe` operation for the resource type.
     #
     #
     #
@@ -9961,9 +10862,9 @@ module Aws::GameLift
     #
     # @option params [required, Array<Types::Tag>] :tags
     #   A list of one or more tags to assign to the specified Amazon GameLift
-    #   resource. Tags are developer-defined and structured as key-value
-    #   pairs. The maximum tag limit may be lower than stated. See [ Tagging
-    #   Amazon Web Services Resources][1] for tagging limits.
+    #   Servers resource. Tags are developer-defined and structured as
+    #   key-value pairs. The maximum tag limit may be lower than stated. See [
+    #   Tagging Amazon Web Services Resources][1] for tagging limits.
     #
     #
     #
@@ -9992,15 +10893,18 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Ends a game session that's currently in progress. Use this action to
     # terminate any game session that isn't in `ERROR` status. Terminating
     # a game session is the most efficient way to free up a server process
     # when it's hosting a game session that's in a bad state or not ending
     # properly. You can use this action to terminate a game session that's
-    # being hosted on any type of Amazon GameLift fleet compute, including
-    # computes for managed EC2, managed container, and Anywhere fleets. The
-    # game server must be integrated with Amazon GameLift server SDK 5.x or
-    # greater.
+    # being hosted on any type of Amazon GameLift Servers fleet compute,
+    # including computes for managed EC2, managed container, and Anywhere
+    # fleets. The game server must be integrated with Amazon GameLift
+    # Servers server SDK 5.x or greater.
     #
     # **Request options**
     #
@@ -10009,17 +10913,18 @@ module Aws::GameLift
     # for terminating a game session:
     #
     # * Initiate a graceful termination using the normal game session
-    #   shutdown sequence. With this mode, the Amazon GameLift service
-    #   prompts the server process that's hosting the game session by
-    #   calling the server SDK callback method `OnProcessTerminate()`. The
-    #   callback implementation is part of the custom game server code. It
-    #   might involve a variety of actions to gracefully end a game session,
-    #   such as notifying players, before stopping the server process.
+    #   shutdown sequence. With this mode, the Amazon GameLift Servers
+    #   service prompts the server process that's hosting the game session
+    #   by calling the server SDK callback method `OnProcessTerminate()`.
+    #   The callback implementation is part of the custom game server code.
+    #   It might involve a variety of actions to gracefully end a game
+    #   session, such as notifying players, before stopping the server
+    #   process.
     #
     # * Force an immediate game session termination. With this mode, the
-    #   Amazon GameLift service takes action to stop the server process,
-    #   which ends the game session without the normal game session shutdown
-    #   sequence.
+    #   Amazon GameLift Servers service takes action to stop the server
+    #   process, which ends the game session without the normal game session
+    #   shutdown sequence.
     #
     # **Results**
     #
@@ -10033,9 +10938,9 @@ module Aws::GameLift
     #
     # **Learn more**
     #
-    # [Add Amazon GameLift to your game server][1]
+    # [Add Amazon GameLift Servers to your game server][1]
     #
-    # Amazon GameLift server SDK 5 reference guide for
+    # Amazon GameLift Servers server SDK 5 reference guide for
     # `OnProcessTerminate()` ([C++][2]) ([C#][3]) ([Unreal][4]) ([Go][5])
     #
     #
@@ -10047,34 +10952,37 @@ module Aws::GameLift
     # [5]: https://docs.aws.amazon.com/gamelift/latest/developerguide/integration-server-sdk-go-initsdk.html
     #
     # @option params [required, String] :game_session_id
-    #   A unique identifier for the game session to be terminated. A game
-    #   session ARN has the following format:
-    #   `arn:aws:gamelift:<region>::gamesession/<fleet ID>/<custom ID string
-    #   or idempotency token>`.
+    #   An identifier for the game session that is unique across all regions
+    #   to be terminated. The value is always a full ARN in the following
+    #   format: For Home Region game session -
+    #   `arn:aws:gamelift:<home_region>::gamesession/<fleet ID>/<ID string>`.
+    #   For Remote Location game session -
+    #   `arn:aws:gamelift:<home_region>::gamesession/<fleet ID>/<location>/<ID
+    #   string>`.
     #
     # @option params [required, String] :termination_mode
     #   The method to use to terminate the game session. Available methods
     #   include:
     #
-    #   * `TRIGGER_ON_PROCESS_TERMINATE` – Prompts the Amazon GameLift service
-    #     to send an `OnProcessTerminate()` callback to the server process and
-    #     initiate the normal game session shutdown sequence. The
+    #   * `TRIGGER_ON_PROCESS_TERMINATE` – Prompts the Amazon GameLift Servers
+    #     service to send an `OnProcessTerminate()` callback to the server
+    #     process and initiate the normal game session shutdown sequence. The
     #     `OnProcessTerminate` method, which is implemented in the game server
     #     code, must include a call to the server SDK action
     #     `ProcessEnding()`, which is how the server process signals to Amazon
-    #     GameLift that a game session is ending. If the server process
-    #     doesn't call `ProcessEnding()`, the game session termination won't
-    #     conclude successfully.
+    #     GameLift Servers that a game session is ending. If the server
+    #     process doesn't call `ProcessEnding()`, the game session
+    #     termination won't conclude successfully.
     #
-    #   * `FORCE_TERMINATE` – Prompts the Amazon GameLift service to stop the
-    #     server process immediately. Amazon GameLift takes action (depending
-    #     on the type of fleet) to shut down the server process without the
-    #     normal game session shutdown sequence.
+    #   * `FORCE_TERMINATE` – Prompts the Amazon GameLift Servers service to
+    #     stop the server process immediately. Amazon GameLift Servers takes
+    #     action (depending on the type of fleet) to shut down the server
+    #     process without the normal game session shutdown sequence.
     #
     #     <note markdown="1"> This method is not available for game sessions that are running on
     #     Anywhere fleets unless the fleet is deployed with the Amazon
-    #     GameLift Agent. In this scenario, a force terminate request results
-    #     in an invalid or bad request exception.
+    #     GameLift Servers Agent. In this scenario, a force terminate request
+    #     results in an invalid or bad request exception.
     #
     #      </note>
     #
@@ -10112,6 +11020,8 @@ module Aws::GameLift
     #   resp.game_session.game_session_data #=> String
     #   resp.game_session.matchmaker_data #=> String
     #   resp.game_session.location #=> String
+    #   resp.game_session.compute_name #=> String
+    #   resp.game_session.player_gateway_status #=> String, one of "DISABLED", "ENABLED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/TerminateGameSession AWS API Documentation
     #
@@ -10122,10 +11032,14 @@ module Aws::GameLift
       req.send_request(options)
     end
 
-    # Removes a tag assigned to a Amazon GameLift resource. You can use
-    # resource tags to organize Amazon Web Services resources for a range of
-    # purposes. This operation handles the permissions necessary to manage
-    # tags for Amazon GameLift resources that support tagging.
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
+    # Removes a tag assigned to a Amazon GameLift Servers resource. You can
+    # use resource tags to organize Amazon Web Services resources for a
+    # range of purposes. This operation handles the permissions necessary to
+    # manage tags for Amazon GameLift Servers resources that support
+    # tagging.
     #
     # To remove a tag from a resource, specify the unique ARN value for the
     # resource and provide a string list containing one or more tags to
@@ -10151,10 +11065,10 @@ module Aws::GameLift
     #
     # @option params [required, String] :resource_arn
     #   The Amazon Resource Name ([ARN][1]) that uniquely identifies the
-    #   Amazon GameLift resource that you want to remove tags from. Amazon
-    #   GameLift includes resource ARNs in the data object for the resource.
-    #   You can retrieve the ARN by calling a `List` or `Describe` operation
-    #   for the resource type.
+    #   Amazon GameLift Servers resource that you want to remove tags from.
+    #   Amazon GameLift Servers includes resource ARNs in the data object for
+    #   the resource. You can retrieve the ARN by calling a `List` or
+    #   `Describe` operation for the resource type.
     #
     #
     #
@@ -10162,7 +11076,7 @@ module Aws::GameLift
     #
     # @option params [required, Array<String>] :tag_keys
     #   A list of one or more tag keys to remove from the specified Amazon
-    #   GameLift resource.
+    #   GameLift Servers resource.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
@@ -10182,10 +11096,14 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Updates properties for an alias. Specify the unique identifier of the
-    # alias to be updated and the new property values. When reassigning an
-    # alias to a new fleet, provide an updated routing strategy. If
-    # successful, the updated alias record is returned.
+    # alias to be updated and the new property values.
+    #
+    # When reassigning an alias to a new fleet, provide an updated routing
+    # strategy. If successful, the updated alias record is returned.
     #
     # **Related actions**
     #
@@ -10248,6 +11166,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2
+    #
     # Updates metadata in a build resource, including the build name and
     # version. To update the metadata, specify the build ID to update and
     # provide the new values. If successful, a build object containing the
@@ -10296,7 +11216,7 @@ module Aws::GameLift
     #   resp.build.version #=> String
     #   resp.build.status #=> String, one of "INITIALIZED", "READY", "FAILED"
     #   resp.build.size_on_disk #=> Integer
-    #   resp.build.operating_system #=> String, one of "WINDOWS_2012", "AMAZON_LINUX", "AMAZON_LINUX_2", "WINDOWS_2016", "AMAZON_LINUX_2023"
+    #   resp.build.operating_system #=> String, one of "WINDOWS_2012", "AMAZON_LINUX", "AMAZON_LINUX_2", "WINDOWS_2016", "AMAZON_LINUX_2023", "WINDOWS_2022"
     #   resp.build.creation_time #=> Time
     #   resp.build.server_sdk_version #=> String
     #
@@ -10309,10 +11229,21 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** Container
+    #
     # Updates the properties of a managed container fleet. Depending on the
     # properties being updated, this operation might initiate a fleet
     # deployment. You can track deployments for a fleet using
     # [https://docs.aws.amazon.com/gamelift/latest/apireference/API\_DescribeFleetDeployment.html][1].
+    #
+    # <note markdown="1"> A managed fleet's runtime environment, which depends on the fleet's
+    # Amazon Machine Image \{AMI} version, can't be updated. You must
+    # create a new fleet. As a best practice, we recommend replacing your
+    # managed fleets every 30 days to maintain a secure and up-to-date
+    # runtime environment for your hosted game servers. For guidance, see [
+    # Security best practices for Amazon GameLift Servers][2].
+    #
+    #  </note>
     #
     # **Request options**
     #
@@ -10357,6 +11288,7 @@ module Aws::GameLift
     #
     #
     # [1]: https://docs.aws.amazon.com/gamelift/latest/apireference/API_DescribeFleetDeployment.html
+    # [2]: https://docs.aws.amazon.com/gameliftservers/latest/developerguide/security-best-practices.html
     #
     # @option params [required, String] :fleet_id
     #   A unique identifier for the container fleet to update. You can use
@@ -10401,21 +11333,30 @@ module Aws::GameLift
     #
     # @option params [Integer] :game_server_container_groups_per_instance
     #   The number of times to replicate the game server container group on
-    #   each fleet instance. By default, Amazon GameLift calculates the
-    #   maximum number of game server container groups that can fit on each
-    #   instance. You can remove this property value to use the calculated
-    #   value, or set it manually. If you set this number manually, Amazon
-    #   GameLift uses your value as long as it's less than the calculated
-    #   maximum.
+    #   each fleet instance. By default, Amazon GameLift Servers calculates
+    #   the maximum number of game server container groups that can fit on
+    #   each instance. You can remove this property value to use the
+    #   calculated value, or set it manually. If you set this number manually,
+    #   Amazon GameLift Servers uses your value as long as it's less than the
+    #   calculated maximum.
     #
     # @option params [Types::ConnectionPortRange] :instance_connection_port_range
     #   A revised set of port numbers to open on each fleet instance. By
-    #   default, Amazon GameLift calculates an optimal port range based on
-    #   your fleet configuration. If you previously set this parameter
-    #   manually, you can't reset this to use the calculated settings.
+    #   default, Amazon GameLift Servers calculates an optimal port range
+    #   based on your fleet configuration. If you previously set this
+    #   parameter manually, you can't reset this to use the calculated
+    #   settings.
+    #
+    #   The port range must not overlap with the Amazon GameLift Servers
+    #   reserved port range `4092-4191`. This range is reserved for internal
+    #   Amazon GameLift Servers services.
     #
     # @option params [Array<Types::IpPermission>] :instance_inbound_permission_authorizations
     #   A set of ports to add to the container fleet's inbound permissions.
+    #
+    #   The port range must not overlap with the Amazon GameLift Servers
+    #   reserved port range `4092-4191`. This range is reserved for internal
+    #   Amazon GameLift Servers services.
     #
     # @option params [Array<Types::IpPermission>] :instance_inbound_permission_revocations
     #   A set of ports to remove from the container fleet's inbound
@@ -10530,14 +11471,16 @@ module Aws::GameLift
     #   resp.container_fleet.new_game_session_protection_policy #=> String, one of "NoProtection", "FullProtection"
     #   resp.container_fleet.game_session_creation_limit_policy.new_game_sessions_per_creator #=> Integer
     #   resp.container_fleet.game_session_creation_limit_policy.policy_period_in_minutes #=> Integer
-    #   resp.container_fleet.status #=> String, one of "PENDING", "CREATING", "CREATED", "ACTIVATING", "ACTIVE", "UPDATING", "DELETING"
+    #   resp.container_fleet.status #=> String, one of "PENDING", "CREATING", "CREATED", "ACTIVATING", "ACTIVE", "UPDATING", "DELETING", "EXPIRED"
     #   resp.container_fleet.deployment_details.latest_deployment_id #=> String
     #   resp.container_fleet.log_configuration.log_destination #=> String, one of "NONE", "CLOUDWATCH", "S3"
     #   resp.container_fleet.log_configuration.s3_bucket_name #=> String
     #   resp.container_fleet.log_configuration.log_group_arn #=> String
     #   resp.container_fleet.location_attributes #=> Array
     #   resp.container_fleet.location_attributes[0].location #=> String
-    #   resp.container_fleet.location_attributes[0].status #=> String, one of "PENDING", "CREATING", "CREATED", "ACTIVATING", "ACTIVE", "UPDATING", "DELETING"
+    #   resp.container_fleet.location_attributes[0].status #=> String, one of "PENDING", "CREATING", "CREATED", "ACTIVATING", "ACTIVE", "UPDATING", "DELETING", "EXPIRED"
+    #   resp.container_fleet.location_attributes[0].player_gateway_status #=> String, one of "DISABLED", "ENABLED"
+    #   resp.container_fleet.player_gateway_mode #=> String, one of "DISABLED", "ENABLED", "REQUIRED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/UpdateContainerFleet AWS API Documentation
     #
@@ -10548,6 +11491,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** Container
+    #
     # Updates properties in an existing container group definition. This
     # operation doesn't replace the definition. Instead, it creates a new
     # version of the definition and saves it separately. You can access all
@@ -10569,8 +11514,8 @@ module Aws::GameLift
     #   updated values for the properties that you want to change only. All
     #   other values remain the same as the source version.
     #
-    # * Change a game server container definition. Provide the updated
-    #   container definition.
+    # * Change a game server container definition. Provide a complete set of
+    #   container definitions, including the updated definition.
     #
     # * Add or change a support container definition. Provide a complete set
     #   of container definitions, including the updated definition.
@@ -10634,17 +11579,18 @@ module Aws::GameLift
     #   The platform that all containers in the group use. Containers in a
     #   group must run on the same operating system.
     #
-    #   <note markdown="1"> Amazon Linux 2 (AL2) will reach end of support on 6/30/2025. See more
+    #   <note markdown="1"> Amazon Linux 2 (AL2) will reach end of support on 6/30/2026. See more
     #   details in the [Amazon Linux 2 FAQs][1]. For game servers that are
-    #   hosted on AL2 and use Amazon GameLift server SDK 4.x, first update the
-    #   game server build to server SDK 5.x, and then deploy to AL2023
-    #   instances. See [ Migrate to Amazon GameLift server SDK version 5.][2]
+    #   hosted on AL2 and use server SDK version 4.x for Amazon GameLift
+    #   Servers, first update the game server build to server SDK 5.x, and
+    #   then deploy to AL2023 instances. See [ Migrate to server SDK version
+    #   5.][2]
     #
     #    </note>
     #
     #
     #
-    #   [1]: https://aws.amazon.com/amazon-linux-2/faqs/
+    #   [1]: http://aws.amazon.com/amazon-linux-2/faqs/
     #   [2]: https://docs.aws.amazon.com/gamelift/latest/developerguide/reference-serversdk5-migration.html
     #
     # @return [Types::UpdateContainerGroupDefinitionOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
@@ -10687,6 +11633,9 @@ module Aws::GameLift
     #         ],
     #       },
     #       server_sdk_version: "ServerSdkVersion", # required
+    #       linux_capabilities: {
+    #         include: ["AUDIT_CONTROL"], # accepts AUDIT_CONTROL, AUDIT_WRITE, BLOCK_SUSPEND, CHOWN, DAC_OVERRIDE, DAC_READ_SEARCH, FOWNER, FSETID, IPC_LOCK, IPC_OWNER, KILL, LEASE, LINUX_IMMUTABLE, MAC_ADMIN, MAC_OVERRIDE, MKNOD, NET_ADMIN, NET_BIND_SERVICE, NET_BROADCAST, NET_RAW, SETFCAP, SETGID, SETPCAP, SETUID, SYS_ADMIN, SYS_BOOT, SYS_CHROOT, SYS_MODULE, SYS_NICE, SYS_PACCT, SYS_PTRACE, SYS_RAWIO, SYS_RESOURCE, SYS_TIME, SYS_TTY_CONFIG, SYSLOG, WAKE_ALARM
+    #       },
     #     },
     #     support_container_definitions: [
     #       {
@@ -10730,6 +11679,9 @@ module Aws::GameLift
     #           ],
     #         },
     #         vcpu: 1.0,
+    #         linux_capabilities: {
+    #           include: ["AUDIT_CONTROL"], # accepts AUDIT_CONTROL, AUDIT_WRITE, BLOCK_SUSPEND, CHOWN, DAC_OVERRIDE, DAC_READ_SEARCH, FOWNER, FSETID, IPC_LOCK, IPC_OWNER, KILL, LEASE, LINUX_IMMUTABLE, MAC_ADMIN, MAC_OVERRIDE, MKNOD, NET_ADMIN, NET_BIND_SERVICE, NET_BROADCAST, NET_RAW, SETFCAP, SETGID, SETPCAP, SETUID, SYS_ADMIN, SYS_BOOT, SYS_CHROOT, SYS_MODULE, SYS_NICE, SYS_PACCT, SYS_PTRACE, SYS_RAWIO, SYS_RESOURCE, SYS_TIME, SYS_TTY_CONFIG, SYSLOG, WAKE_ALARM
+    #         },
     #       },
     #     ],
     #     total_memory_limit_mebibytes: 1,
@@ -10766,6 +11718,8 @@ module Aws::GameLift
     #   resp.container_group_definition.game_server_container_definition.port_configuration.container_port_ranges[0].protocol #=> String, one of "TCP", "UDP"
     #   resp.container_group_definition.game_server_container_definition.resolved_image_digest #=> String
     #   resp.container_group_definition.game_server_container_definition.server_sdk_version #=> String
+    #   resp.container_group_definition.game_server_container_definition.linux_capabilities.include #=> Array
+    #   resp.container_group_definition.game_server_container_definition.linux_capabilities.include[0] #=> String, one of "AUDIT_CONTROL", "AUDIT_WRITE", "BLOCK_SUSPEND", "CHOWN", "DAC_OVERRIDE", "DAC_READ_SEARCH", "FOWNER", "FSETID", "IPC_LOCK", "IPC_OWNER", "KILL", "LEASE", "LINUX_IMMUTABLE", "MAC_ADMIN", "MAC_OVERRIDE", "MKNOD", "NET_ADMIN", "NET_BIND_SERVICE", "NET_BROADCAST", "NET_RAW", "SETFCAP", "SETGID", "SETPCAP", "SETUID", "SYS_ADMIN", "SYS_BOOT", "SYS_CHROOT", "SYS_MODULE", "SYS_NICE", "SYS_PACCT", "SYS_PTRACE", "SYS_RAWIO", "SYS_RESOURCE", "SYS_TIME", "SYS_TTY_CONFIG", "SYSLOG", "WAKE_ALARM"
     #   resp.container_group_definition.support_container_definitions #=> Array
     #   resp.container_group_definition.support_container_definitions[0].container_name #=> String
     #   resp.container_group_definition.support_container_definitions[0].depends_on #=> Array
@@ -10793,6 +11747,8 @@ module Aws::GameLift
     #   resp.container_group_definition.support_container_definitions[0].port_configuration.container_port_ranges[0].protocol #=> String, one of "TCP", "UDP"
     #   resp.container_group_definition.support_container_definitions[0].resolved_image_digest #=> String
     #   resp.container_group_definition.support_container_definitions[0].vcpu #=> Float
+    #   resp.container_group_definition.support_container_definitions[0].linux_capabilities.include #=> Array
+    #   resp.container_group_definition.support_container_definitions[0].linux_capabilities.include[0] #=> String, one of "AUDIT_CONTROL", "AUDIT_WRITE", "BLOCK_SUSPEND", "CHOWN", "DAC_OVERRIDE", "DAC_READ_SEARCH", "FOWNER", "FSETID", "IPC_LOCK", "IPC_OWNER", "KILL", "LEASE", "LINUX_IMMUTABLE", "MAC_ADMIN", "MAC_OVERRIDE", "MKNOD", "NET_ADMIN", "NET_BIND_SERVICE", "NET_BROADCAST", "NET_RAW", "SETFCAP", "SETGID", "SETPCAP", "SETUID", "SYS_ADMIN", "SYS_BOOT", "SYS_CHROOT", "SYS_MODULE", "SYS_NICE", "SYS_PACCT", "SYS_PTRACE", "SYS_RAWIO", "SYS_RESOURCE", "SYS_TIME", "SYS_TTY_CONFIG", "SYSLOG", "WAKE_ALARM"
     #   resp.container_group_definition.version_number #=> Integer
     #   resp.container_group_definition.version_description #=> String
     #   resp.container_group_definition.status #=> String, one of "READY", "COPYING", "FAILED"
@@ -10807,20 +11763,32 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere
+    #
     # Updates a fleet's mutable attributes, such as game session protection
     # and resource creation limits.
     #
     # To update fleet attributes, specify the fleet ID and the property
-    # values that you want to change. If successful, Amazon GameLift returns
-    # the identifiers for the updated fleet.
+    # values that you want to change. If successful, Amazon GameLift Servers
+    # returns the identifiers for the updated fleet.
+    #
+    # <note markdown="1"> A managed fleet's runtime environment, which depends on the fleet's
+    # Amazon Machine Image \{AMI} version, can't be updated. You must
+    # create a new fleet. As a best practice, we recommend replacing your
+    # managed fleets every 30 days to maintain a secure and up-to-date
+    # runtime environment for your hosted game servers. For guidance, see [
+    # Security best practices for Amazon GameLift Servers][1].
+    #
+    #  </note>
     #
     # **Learn more**
     #
-    # [Setting up Amazon GameLift fleets][1]
+    # [Setting up Amazon GameLift Servers fleets][2]
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/gamelift/latest/developerguide/fleets-intro.html
+    # [1]: https://docs.aws.amazon.com/gameliftservers/latest/developerguide/security-best-practices.html
+    # [2]: https://docs.aws.amazon.com/gamelift/latest/developerguide/fleets-intro.html
     #
     # @option params [required, String] :fleet_id
     #   A unique identifier for the fleet to update attribute metadata for.
@@ -10861,7 +11829,7 @@ module Aws::GameLift
     #   time.
     #
     # @option params [Types::AnywhereConfiguration] :anywhere_configuration
-    #   Amazon GameLift Anywhere configuration options.
+    #   Amazon GameLift Servers Anywhere configuration options.
     #
     # @return [Types::UpdateFleetAttributesOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -10899,6 +11867,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Container
+    #
     # Updates capacity settings for a managed EC2 fleet or managed container
     # fleet. For these fleets, you adjust capacity by changing the number of
     # instances in the fleet. Fleet capacity determines the number of game
@@ -10906,12 +11876,10 @@ module Aws::GameLift
     # configuration. For fleets with multiple locations, use this operation
     # to manage capacity settings in each location individually.
     #
-    # Use this operation to set these fleet capacity properties:
-    #
     # * Minimum/maximum size: Set hard limits on the number of Amazon EC2
-    #   instances allowed. If Amazon GameLift receives a request--either
-    #   through manual update or automatic scaling--it won't change the
-    #   capacity to a value outside of this range.
+    #   instances allowed. If Amazon GameLift Servers receives a
+    #   request--either through manual update or automatic scaling--it
+    #   won't change the capacity to a value outside of this range.
     #
     # * Desired capacity: As an alternative to automatic scaling, manually
     #   set the number of Amazon EC2 instances to be maintained. Before
@@ -10927,17 +11895,37 @@ module Aws::GameLift
     # parameter to the location to update. The location must be in `ACTIVE`
     # status.
     #
-    # If successful, Amazon GameLift updates the capacity settings and
-    # returns the identifiers for the updated fleet and/or location. If a
-    # requested change to desired capacity exceeds the instance type's
+    # If successful, Amazon GameLift Servers updates the capacity settings
+    # and returns the identifiers for the updated fleet and/or location. If
+    # a requested change to desired capacity exceeds the instance type's
     # limit, the `LimitExceeded` exception occurs.
     #
     # Updates often prompt an immediate change in fleet capacity, such as
     # when current capacity is different than the new desired capacity or
-    # outside the new limits. In this scenario, Amazon GameLift
+    # outside the new limits. In this scenario, Amazon GameLift Servers
     # automatically initiates steps to add or remove instances in the fleet
     # location. You can track a fleet's current capacity by calling
     # [DescribeFleetCapacity][2] or [DescribeFleetLocationCapacity][3].
+    #
+    # Use ManagedCapacityConfiguration with the
+    # "SCALE\_TO\_AND\_FROM\_ZERO" ZeroCapacityStrategy to enable Amazon
+    # GameLift Servers to fully manage the MinSize value, switching between
+    # 0 and 1 based on game session activity. This is ideal for eliminating
+    # compute costs during periods of no game activity. It is particularly
+    # beneficial during development when you're away from your desk,
+    # iterating on builds for extended periods, in production environments
+    # serving low-traffic locations, or for games with long, predictable
+    # downtime windows. By automatically managing capacity between 0 and 1
+    # instances, you avoid paying for idle instances while maintaining the
+    # ability to serve game sessions when demand arrives. Note that while
+    # scale-out is triggered immediately upon receiving a game session
+    # request, actual game session availability depends on your server
+    # process startup time, so this approach works best with multi-location
+    # Fleets where cold-start latency is tolerable. With a "MANUAL"
+    # ZeroCapacityStrategy Amazon GameLift Servers will not modify Fleet
+    # MinSize values automatically and will not scale out from zero
+    # instances in response to game sessions. This is configurable
+    # per-location.
     #
     # **Learn more**
     #
@@ -10962,7 +11950,9 @@ module Aws::GameLift
     #
     # @option params [Integer] :min_size
     #   The minimum number of instances that are allowed in the specified
-    #   fleet location. If this parameter is not set, the default is 0.
+    #   fleet location. If this parameter is not set, the default is 0. This
+    #   parameter cannot be set when using a ManagedCapacityConfiguration
+    #   where ZeroCapacityStrategy has a value of SCALE\_TO\_AND\_FROM\_ZERO.
     #
     # @option params [Integer] :max_size
     #   The maximum number of instances that are allowed in the specified
@@ -10972,11 +11962,16 @@ module Aws::GameLift
     #   The name of a remote location to update fleet capacity settings for,
     #   in the form of an Amazon Web Services Region code such as `us-west-2`.
     #
+    # @option params [Types::ManagedCapacityConfiguration] :managed_capacity_configuration
+    #   Configuration for Amazon GameLift Servers-managed capacity scaling
+    #   options.
+    #
     # @return [Types::UpdateFleetCapacityOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::UpdateFleetCapacityOutput#fleet_id #fleet_id} => String
     #   * {Types::UpdateFleetCapacityOutput#fleet_arn #fleet_arn} => String
     #   * {Types::UpdateFleetCapacityOutput#location #location} => String
+    #   * {Types::UpdateFleetCapacityOutput#managed_capacity_configuration #managed_capacity_configuration} => Types::ManagedCapacityConfiguration
     #
     # @example Request syntax with placeholder values
     #
@@ -10986,6 +11981,10 @@ module Aws::GameLift
     #     min_size: 1,
     #     max_size: 1,
     #     location: "LocationStringModel",
+    #     managed_capacity_configuration: {
+    #       zero_capacity_strategy: "MANUAL", # accepts MANUAL, SCALE_TO_AND_FROM_ZERO
+    #       scale_in_after_inactivity_minutes: 1,
+    #     },
     #   })
     #
     # @example Response structure
@@ -10993,6 +11992,8 @@ module Aws::GameLift
     #   resp.fleet_id #=> String
     #   resp.fleet_arn #=> String
     #   resp.location #=> String
+    #   resp.managed_capacity_configuration.zero_capacity_strategy #=> String, one of "MANUAL", "SCALE_TO_AND_FROM_ZERO"
+    #   resp.managed_capacity_configuration.scale_in_after_inactivity_minutes #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/UpdateFleetCapacity AWS API Documentation
     #
@@ -11003,6 +12004,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2
+    #
     # Updates permissions that allow inbound traffic to connect to game
     # sessions in the fleet.
     #
@@ -11012,15 +12015,15 @@ module Aws::GameLift
     # in `InboundPermissionRevocations`. Permissions to be removed must
     # match existing fleet permissions.
     #
-    # If successful, the fleet ID for the updated fleet is returned. For
-    # fleets with remote locations, port setting updates can take time to
-    # propagate across all locations. You can check the status of updates in
-    # each location by calling `DescribeFleetPortSettings` with a location
-    # name.
+    # If successful, the fleet identifiers for the updated fleet are
+    # returned. For fleets with remote locations, port setting updates can
+    # take time to propagate across all locations. You can check the status
+    # of updates in each location by calling `DescribeFleetPortSettings`
+    # with a location name.
     #
     # **Learn more**
     #
-    # [Setting up Amazon GameLift fleets][1]
+    # [Setting up Amazon GameLift Servers fleets][1]
     #
     #
     #
@@ -11077,13 +12080,12 @@ module Aws::GameLift
       req.send_request(options)
     end
 
-    # **This operation is used with the Amazon GameLift FleetIQ solution and
-    # game server groups.**
+    # **This API works with the following fleet types:** EC2 (FleetIQ)
     #
     # Updates information about a registered game server to help Amazon
-    # GameLift FleetIQ track game server availability. This operation is
-    # called by a game server process that is running on an instance in a
-    # game server group.
+    # GameLift Servers FleetIQ track game server availability. This
+    # operation is called by a game server process that is running on an
+    # instance in a game server group.
     #
     # Use this operation to update the following types of game server
     # information. You can make all three types of updates in the same
@@ -11110,7 +12112,7 @@ module Aws::GameLift
     #
     # **Learn more**
     #
-    # [Amazon GameLift FleetIQ Guide][1]
+    # [Amazon GameLift Servers FleetIQ Guide][1]
     #
     #
     #
@@ -11176,27 +12178,34 @@ module Aws::GameLift
       req.send_request(options)
     end
 
-    # **This operation is used with the Amazon GameLift FleetIQ solution and
-    # game server groups.**
+    # **This API works with the following fleet types:** EC2 (FleetIQ)
     #
-    # Updates Amazon GameLift FleetIQ-specific properties for a game server
-    # group. Many Auto Scaling group properties are updated on the Auto
-    # Scaling group directly, including the launch template, Auto Scaling
-    # policies, and maximum/minimum/desired instance counts.
+    # Updates Amazon GameLift Servers FleetIQ-specific properties for a game
+    # server group. Many Auto Scaling group properties are updated on the
+    # Auto Scaling group directly, including the launch template, Auto
+    # Scaling policies, and maximum/minimum/desired instance counts.
     #
     # To update the game server group, specify the game server group ID and
     # provide the updated values. Before applying the updates, the new
-    # values are validated to ensure that Amazon GameLift FleetIQ can
-    # continue to perform instance balancing activity. If successful, a
+    # values are validated to ensure that Amazon GameLift Servers FleetIQ
+    # can continue to perform instance balancing activity. If successful, a
     # `GameServerGroup` object is returned.
+    #
+    # <note markdown="1"> Target tracking Auto Scaling policies on the Auto Scaling group cannot
+    # be updated through the Amazon Web Services Management Console.
+    # Instead, use the Amazon Elastic Compute Cloud Auto Scaling [
+    # `PutScalingPolicy` ][1] API action to update these policies.
+    #
+    #  </note>
     #
     # **Learn more**
     #
-    # [Amazon GameLift FleetIQ Guide][1]
+    # [Amazon GameLift Servers FleetIQ Guide][2]
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/gamelift/latest/fleetiqguide/gsg-intro.html
+    # [1]: https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_PutScalingPolicy.html
+    # [2]: https://docs.aws.amazon.com/gamelift/latest/fleetiqguide/gsg-intro.html
     #
     # @option params [required, String] :game_server_group_name
     #   A unique identifier for the game server group. Use either the name or
@@ -11204,7 +12213,7 @@ module Aws::GameLift
     #
     # @option params [String] :role_arn
     #   The Amazon Resource Name ([ARN][1]) for an IAM role that allows Amazon
-    #   GameLift to access your Amazon EC2 Auto Scaling groups.
+    #   GameLift Servers to access your Amazon EC2 Auto Scaling groups.
     #
     #
     #
@@ -11213,7 +12222,7 @@ module Aws::GameLift
     # @option params [Array<Types::InstanceDefinition>] :instance_definitions
     #   An updated list of Amazon EC2 instance types to use in the Auto
     #   Scaling group. The instance definitions must specify at least two
-    #   different instance types that are supported by Amazon GameLift
+    #   different instance types that are supported by Amazon GameLift Servers
     #   FleetIQ. This updated list replaces the entire current list of
     #   instance definitions for the game server group. For more information
     #   on instance types, see [EC2 Instance Types][1] in the *Amazon EC2 User
@@ -11240,7 +12249,7 @@ module Aws::GameLift
     #   This property is set to `NO_PROTECTION` by default.
     #
     # @option params [String] :balancing_strategy
-    #   Indicates how Amazon GameLift FleetIQ balances the use of Spot
+    #   Indicates how Amazon GameLift Servers FleetIQ balances the use of Spot
     #   Instances and On-Demand Instances in the game server group. Method
     #   options include the following:
     #
@@ -11308,6 +12317,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Updates the mutable properties of a game session.
     #
     # To update a game session, specify the game session ID and the values
@@ -11322,7 +12334,13 @@ module Aws::GameLift
     # [1]: https://docs.aws.amazon.com/gamelift/latest/developerguide/reference-awssdk.html#reference-awssdk-resources-fleets
     #
     # @option params [required, String] :game_session_id
-    #   A unique identifier for the game session to update.
+    #   An identifier for the game session that is unique across all regions
+    #   to update. The value is always a full ARN in the following format: For
+    #   Home Region game session -
+    #   `arn:aws:gamelift:<home_region>::gamesession/<fleet ID>/<ID string>`.
+    #   For Remote Location game session -
+    #   `arn:aws:gamelift:<home_region>::gamesession/<fleet ID>/<location>/<ID
+    #   string>`.
     #
     # @option params [Integer] :maximum_player_session_count
     #   The maximum number of players that can be connected simultaneously to
@@ -11352,6 +12370,18 @@ module Aws::GameLift
     #   This action adds new properties and modifies existing properties.
     #   There is no way to delete properties. For an example, see [Update the
     #   value of a game property][1].
+    #
+    #   <note markdown="1"> * Avoid using periods (".") in property keys if you plan to search
+    #     for game sessions by properties. Property keys containing periods
+    #     cannot be searched and will be filtered out from search results due
+    #     to search index limitations.
+    #
+    #   * If you use SearchGameSessions API, there is a limit of 500 game
+    #     property keys across all game sessions and all fleets per region. If
+    #     the limit is exceeded, there will potentially be game session
+    #     entries missing from SearchGameSessions API results.
+    #
+    #    </note>
     #
     #
     #
@@ -11400,6 +12430,8 @@ module Aws::GameLift
     #   resp.game_session.game_session_data #=> String
     #   resp.game_session.matchmaker_data #=> String
     #   resp.game_session.location #=> String
+    #   resp.game_session.compute_name #=> String
+    #   resp.game_session.player_gateway_status #=> String, one of "DISABLED", "ENABLED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/UpdateGameSession AWS API Documentation
     #
@@ -11410,6 +12442,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Updates the configuration of a game session queue, which determines
     # how the queue processes new game session requests. To update settings,
     # specify the queue name to be updated and provide the new settings.
@@ -11433,13 +12468,17 @@ module Aws::GameLift
     #   request remains in the queue. When a request exceeds this time, the
     #   game session placement changes to a `TIMED_OUT` status.
     #
+    #   <note markdown="1"> The minimum value is 10 and the maximum value is 600.
+    #
+    #    </note>
+    #
     # @option params [Array<Types::PlayerLatencyPolicy>] :player_latency_policies
     #   A set of policies that enforce a sliding cap on player latency when
     #   processing game sessions placement requests. Use multiple policies to
-    #   gradually relax the cap over time if Amazon GameLift can't make a
-    #   placement. Policies are evaluated in order starting with the lowest
-    #   maximum latency value. When updating policies, provide a complete
-    #   collection of policies.
+    #   gradually relax the cap over time if Amazon GameLift Servers can't
+    #   make a placement. Policies are evaluated in order starting with the
+    #   lowest maximum latency value. When updating policies, provide a
+    #   complete collection of policies.
     #
     # @option params [Array<Types::GameSessionQueueDestination>] :destinations
     #   A list of fleets and/or fleet aliases that can be used to fulfill game
@@ -11535,6 +12574,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Updates settings for a FlexMatch matchmaking configuration. These
     # changes affect all matches and game sessions that are created after
     # the update. To update settings, specify the configuration name to be
@@ -11557,11 +12599,11 @@ module Aws::GameLift
     #
     # @option params [Array<String>] :game_session_queue_arns
     #   The Amazon Resource Name ([ARN][1]) that is assigned to a Amazon
-    #   GameLift game session queue resource and uniquely identifies it. ARNs
-    #   are unique across all Regions. Format is
+    #   GameLift Servers game session queue resource and uniquely identifies
+    #   it. ARNs are unique across all Regions. Format is
     #   `arn:aws:gamelift:<region>::gamesessionqueue/<queue name>`. Queues can
-    #   be located in any Region. Queues are used to start new Amazon
-    #   GameLift-hosted game sessions for matches that are created with this
+    #   be located in any Region. Queues are used to start new Amazon GameLift
+    #   Servers-hosted game sessions for matches that are created with this
     #   matchmaking configuration. If `FlexMatchMode` is set to `STANDALONE`,
     #   do not set this parameter.
     #
@@ -11618,6 +12660,18 @@ module Aws::GameLift
     #   for a successful match. This parameter is not used if `FlexMatchMode`
     #   is set to `STANDALONE`.
     #
+    #   <note markdown="1"> * Avoid using periods (".") in property keys if you plan to search
+    #     for game sessions by properties. Property keys containing periods
+    #     cannot be searched and will be filtered out from search results due
+    #     to search index limitations.
+    #
+    #   * If you use SearchGameSessions API, there is a limit of 500 game
+    #     property keys across all game sessions and all fleets per region. If
+    #     the limit is exceeded, there will potentially be game session
+    #     entries missing from SearchGameSessions API results.
+    #
+    #    </note>
+    #
     # @option params [String] :game_session_data
     #   A set of custom game session properties, formatted as a single string
     #   value. This data is passed to a game server process with a request to
@@ -11646,14 +12700,15 @@ module Aws::GameLift
     #
     # @option params [String] :flex_match_mode
     #   Indicates whether this matchmaking configuration is being used with
-    #   Amazon GameLift hosting or as a standalone matchmaking solution.
+    #   Amazon GameLift Servers hosting or as a standalone matchmaking
+    #   solution.
     #
     #   * **STANDALONE** - FlexMatch forms matches and returns match
     #     information, including players and team assignments, in a [
     #     MatchmakingSucceeded][1] event.
     #
     #   * **WITH\_QUEUE** - FlexMatch forms matches and uses the specified
-    #     Amazon GameLift queue to start a game session for the match.
+    #     Amazon GameLift Servers queue to start a game session for the match.
     #
     #
     #
@@ -11719,11 +12774,13 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2
+    #
     # Updates the runtime configuration for the specified fleet. The runtime
-    # configuration tells Amazon GameLift how to launch server processes on
-    # computes in managed EC2 and Anywhere fleets. You can update a fleet's
-    # runtime configuration at any time after the fleet is created; it does
-    # not need to be in `ACTIVE` status.
+    # configuration tells Amazon GameLift Servers how to launch server
+    # processes on computes in managed EC2 and Anywhere fleets. You can
+    # update a fleet's runtime configuration at any time after the fleet is
+    # created; it does not need to be in `ACTIVE` status.
     #
     # To update runtime configuration, specify the fleet ID and provide a
     # `RuntimeConfiguration` with an updated set of server process
@@ -11739,7 +12796,7 @@ module Aws::GameLift
     #
     # **Learn more**
     #
-    # [Setting up Amazon GameLift fleets][1]
+    # [Setting up Amazon GameLift Servers fleets][1]
     #
     #
     #
@@ -11751,10 +12808,10 @@ module Aws::GameLift
     #
     # @option params [required, Types::RuntimeConfiguration] :runtime_configuration
     #   Instructions for launching server processes on fleet computes. Server
-    #   processes run either a custom game build executable or a Realtime
-    #   Servers script. The runtime configuration lists the types of server
-    #   processes to run, how to launch them, and the number of processes to
-    #   run concurrently.
+    #   processes run either a custom game build executable or a Amazon
+    #   GameLift Servers Realtime script. The runtime configuration lists the
+    #   types of server processes to run, how to launch them, and the number
+    #   of processes to run concurrently.
     #
     # @return [Types::UpdateRuntimeConfigurationOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -11795,6 +12852,8 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2
+    #
     # Updates Realtime script metadata and content.
     #
     # To update script metadata, specify the script ID and provide updated
@@ -11807,12 +12866,12 @@ module Aws::GameLift
     #
     # If the call is successful, the updated metadata is stored in the
     # script record and a revised script is uploaded to the Amazon GameLift
-    # service. Once the script is updated and acquired by a fleet instance,
-    # the new version is used for all new game sessions.
+    # Servers service. Once the script is updated and acquired by a fleet
+    # instance, the new version is used for all new game sessions.
     #
     # **Learn more**
     #
-    # [Amazon GameLift Realtime Servers][1]
+    # [Amazon GameLift Servers Amazon GameLift Servers Realtime][1]
     #
     # **Related actions**
     #
@@ -11839,11 +12898,12 @@ module Aws::GameLift
     #   The location of the Amazon S3 bucket where a zipped file containing
     #   your Realtime scripts is stored. The storage location must specify the
     #   Amazon S3 bucket name, the zip file name (the "key"), and a role ARN
-    #   that allows Amazon GameLift to access the Amazon S3 storage location.
-    #   The S3 bucket must be in the same Region where you want to create a
-    #   new script. By default, Amazon GameLift uploads the latest version of
-    #   the zip file; if you have S3 object versioning turned on, you can use
-    #   the `ObjectVersion` parameter to specify an earlier version.
+    #   that allows Amazon GameLift Servers to access the Amazon S3 storage
+    #   location. The S3 bucket must be in the same Region where you want to
+    #   create a new script. By default, Amazon GameLift Servers uploads the
+    #   latest version of the zip file; if you have S3 object versioning
+    #   turned on, you can use the `ObjectVersion` parameter to specify an
+    #   earlier version.
     #
     # @option params [String, StringIO, File] :zip_file
     #   A data object containing your Realtime scripts and dependencies as a
@@ -11886,6 +12946,7 @@ module Aws::GameLift
     #   resp.script.storage_location.key #=> String
     #   resp.script.storage_location.role_arn #=> String
     #   resp.script.storage_location.object_version #=> String
+    #   resp.script.node_js_version #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/UpdateScript AWS API Documentation
     #
@@ -11896,6 +12957,9 @@ module Aws::GameLift
       req.send_request(options)
     end
 
+    # **This API works with the following fleet types:** EC2, Anywhere,
+    # Container
+    #
     # Validates the syntax of a matchmaking rule or rule set. This operation
     # checks that the rule set is using syntactically correct JSON and that
     # it conforms to allowed property expressions. To validate syntax,
@@ -11956,7 +13020,7 @@ module Aws::GameLift
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-gamelift'
-      context[:gem_version] = '1.101.0'
+      context[:gem_version] = '1.134.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

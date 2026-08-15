@@ -35,6 +35,7 @@ require 'aws-sdk-core/plugins/recursion_detection'
 require 'aws-sdk-core/plugins/telemetry'
 require 'aws-sdk-core/plugins/sign'
 require 'aws-sdk-core/plugins/protocols/rest_json'
+require 'aws-sdk-bedrockruntime/plugins/bearer_authorization'
 require 'aws-sdk-core/plugins/event_stream_configuration'
 
 module Aws::BedrockRuntime
@@ -86,6 +87,7 @@ module Aws::BedrockRuntime
     add_plugin(Aws::Plugins::Telemetry)
     add_plugin(Aws::Plugins::Sign)
     add_plugin(Aws::Plugins::Protocols::RestJson)
+    add_plugin(Aws::BedrockRuntime::Plugins::BearerAuthorization)
     add_plugin(Aws::Plugins::EventStreamConfiguration)
     add_plugin(Aws::BedrockRuntime::Plugins::Endpoints)
 
@@ -97,8 +99,8 @@ module Aws::BedrockRuntime
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -126,22 +128,24 @@ module Aws::BedrockRuntime
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -169,6 +173,11 @@ module Aws::BedrockRuntime
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -194,7 +203,7 @@ module Aws::BedrockRuntime
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -202,8 +211,7 @@ module Aws::BedrockRuntime
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -265,8 +273,8 @@ module Aws::BedrockRuntime
     #     When an EventStream or Proc object is provided, it will be used as callback for each chunk of event stream response received along the way.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -328,17 +336,15 @@ module Aws::BedrockRuntime
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -379,8 +385,8 @@ module Aws::BedrockRuntime
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -503,10 +509,21 @@ module Aws::BedrockRuntime
     # @option params [required, Array<Types::GuardrailContentBlock>] :content
     #   The content details used in the request to apply the guardrail.
     #
+    # @option params [String] :output_scope
+    #   Specifies the scope of the output that you get in the response. Set to
+    #   `FULL` to return the entire output, including any detected and
+    #   non-detected entries in the response for enhanced debugging.
+    #
+    #   Note that the full output scope doesn't apply to word filters or
+    #   regex in sensitive information filters. It does apply to all other
+    #   filtering policies, including sensitive information with filters that
+    #   can detect personally identifiable information (PII).
+    #
     # @return [Types::ApplyGuardrailResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::ApplyGuardrailResponse#usage #usage} => Types::GuardrailUsage
     #   * {Types::ApplyGuardrailResponse#action #action} => String
+    #   * {Types::ApplyGuardrailResponse#action_reason #action_reason} => String
     #   * {Types::ApplyGuardrailResponse#outputs #outputs} => Array&lt;Types::GuardrailOutputContent&gt;
     #   * {Types::ApplyGuardrailResponse#assessments #assessments} => Array&lt;Types::GuardrailAssessment&gt;
     #   * {Types::ApplyGuardrailResponse#guardrail_coverage #guardrail_coverage} => Types::GuardrailCoverage
@@ -531,6 +548,7 @@ module Aws::BedrockRuntime
     #         },
     #       },
     #     ],
+    #     output_scope: "INTERVENTIONS", # accepts INTERVENTIONS, FULL
     #   })
     #
     # @example Response structure
@@ -541,40 +559,159 @@ module Aws::BedrockRuntime
     #   resp.usage.sensitive_information_policy_units #=> Integer
     #   resp.usage.sensitive_information_policy_free_units #=> Integer
     #   resp.usage.contextual_grounding_policy_units #=> Integer
+    #   resp.usage.content_policy_image_units #=> Integer
+    #   resp.usage.automated_reasoning_policy_units #=> Integer
+    #   resp.usage.automated_reasoning_policies #=> Integer
     #   resp.action #=> String, one of "NONE", "GUARDRAIL_INTERVENED"
+    #   resp.action_reason #=> String
     #   resp.outputs #=> Array
     #   resp.outputs[0].text #=> String
     #   resp.assessments #=> Array
     #   resp.assessments[0].topic_policy.topics #=> Array
     #   resp.assessments[0].topic_policy.topics[0].name #=> String
     #   resp.assessments[0].topic_policy.topics[0].type #=> String, one of "DENY"
-    #   resp.assessments[0].topic_policy.topics[0].action #=> String, one of "BLOCKED"
+    #   resp.assessments[0].topic_policy.topics[0].action #=> String, one of "BLOCKED", "NONE"
+    #   resp.assessments[0].topic_policy.topics[0].detected #=> Boolean
     #   resp.assessments[0].content_policy.filters #=> Array
     #   resp.assessments[0].content_policy.filters[0].type #=> String, one of "INSULTS", "HATE", "SEXUAL", "VIOLENCE", "MISCONDUCT", "PROMPT_ATTACK"
     #   resp.assessments[0].content_policy.filters[0].confidence #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH"
     #   resp.assessments[0].content_policy.filters[0].filter_strength #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH"
-    #   resp.assessments[0].content_policy.filters[0].action #=> String, one of "BLOCKED"
+    #   resp.assessments[0].content_policy.filters[0].action #=> String, one of "BLOCKED", "NONE"
+    #   resp.assessments[0].content_policy.filters[0].detected #=> Boolean
     #   resp.assessments[0].word_policy.custom_words #=> Array
     #   resp.assessments[0].word_policy.custom_words[0].match #=> String
-    #   resp.assessments[0].word_policy.custom_words[0].action #=> String, one of "BLOCKED"
+    #   resp.assessments[0].word_policy.custom_words[0].action #=> String, one of "BLOCKED", "NONE"
+    #   resp.assessments[0].word_policy.custom_words[0].detected #=> Boolean
     #   resp.assessments[0].word_policy.managed_word_lists #=> Array
     #   resp.assessments[0].word_policy.managed_word_lists[0].match #=> String
     #   resp.assessments[0].word_policy.managed_word_lists[0].type #=> String, one of "PROFANITY"
-    #   resp.assessments[0].word_policy.managed_word_lists[0].action #=> String, one of "BLOCKED"
+    #   resp.assessments[0].word_policy.managed_word_lists[0].action #=> String, one of "BLOCKED", "NONE"
+    #   resp.assessments[0].word_policy.managed_word_lists[0].detected #=> Boolean
     #   resp.assessments[0].sensitive_information_policy.pii_entities #=> Array
     #   resp.assessments[0].sensitive_information_policy.pii_entities[0].match #=> String
     #   resp.assessments[0].sensitive_information_policy.pii_entities[0].type #=> String, one of "ADDRESS", "AGE", "AWS_ACCESS_KEY", "AWS_SECRET_KEY", "CA_HEALTH_NUMBER", "CA_SOCIAL_INSURANCE_NUMBER", "CREDIT_DEBIT_CARD_CVV", "CREDIT_DEBIT_CARD_EXPIRY", "CREDIT_DEBIT_CARD_NUMBER", "DRIVER_ID", "EMAIL", "INTERNATIONAL_BANK_ACCOUNT_NUMBER", "IP_ADDRESS", "LICENSE_PLATE", "MAC_ADDRESS", "NAME", "PASSWORD", "PHONE", "PIN", "SWIFT_CODE", "UK_NATIONAL_HEALTH_SERVICE_NUMBER", "UK_NATIONAL_INSURANCE_NUMBER", "UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER", "URL", "USERNAME", "US_BANK_ACCOUNT_NUMBER", "US_BANK_ROUTING_NUMBER", "US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER", "US_PASSPORT_NUMBER", "US_SOCIAL_SECURITY_NUMBER", "VEHICLE_IDENTIFICATION_NUMBER"
-    #   resp.assessments[0].sensitive_information_policy.pii_entities[0].action #=> String, one of "ANONYMIZED", "BLOCKED"
+    #   resp.assessments[0].sensitive_information_policy.pii_entities[0].action #=> String, one of "ANONYMIZED", "BLOCKED", "NONE"
+    #   resp.assessments[0].sensitive_information_policy.pii_entities[0].detected #=> Boolean
     #   resp.assessments[0].sensitive_information_policy.regexes #=> Array
     #   resp.assessments[0].sensitive_information_policy.regexes[0].name #=> String
     #   resp.assessments[0].sensitive_information_policy.regexes[0].match #=> String
     #   resp.assessments[0].sensitive_information_policy.regexes[0].regex #=> String
-    #   resp.assessments[0].sensitive_information_policy.regexes[0].action #=> String, one of "ANONYMIZED", "BLOCKED"
+    #   resp.assessments[0].sensitive_information_policy.regexes[0].action #=> String, one of "ANONYMIZED", "BLOCKED", "NONE"
+    #   resp.assessments[0].sensitive_information_policy.regexes[0].detected #=> Boolean
     #   resp.assessments[0].contextual_grounding_policy.filters #=> Array
     #   resp.assessments[0].contextual_grounding_policy.filters[0].type #=> String, one of "GROUNDING", "RELEVANCE"
     #   resp.assessments[0].contextual_grounding_policy.filters[0].threshold #=> Float
     #   resp.assessments[0].contextual_grounding_policy.filters[0].score #=> Float
     #   resp.assessments[0].contextual_grounding_policy.filters[0].action #=> String, one of "BLOCKED", "NONE"
+    #   resp.assessments[0].contextual_grounding_policy.filters[0].detected #=> Boolean
+    #   resp.assessments[0].automated_reasoning_policy.findings #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].valid.translation.premises #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].valid.translation.premises[0].logic #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].valid.translation.premises[0].natural_language #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].valid.translation.claims #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].valid.translation.claims[0].logic #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].valid.translation.claims[0].natural_language #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].valid.translation.untranslated_premises #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].valid.translation.untranslated_premises[0].text #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].valid.translation.untranslated_claims #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].valid.translation.untranslated_claims[0].text #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].valid.translation.confidence #=> Float
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].valid.claims_true_scenario.statements #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].valid.claims_true_scenario.statements[0].logic #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].valid.claims_true_scenario.statements[0].natural_language #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].valid.supporting_rules #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].valid.supporting_rules[0].identifier #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].valid.supporting_rules[0].policy_version_arn #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].valid.logic_warning.type #=> String, one of "ALWAYS_FALSE", "ALWAYS_TRUE"
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].valid.logic_warning.premises #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].valid.logic_warning.premises[0].logic #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].valid.logic_warning.premises[0].natural_language #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].valid.logic_warning.claims #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].valid.logic_warning.claims[0].logic #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].valid.logic_warning.claims[0].natural_language #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].invalid.translation.premises #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].invalid.translation.premises[0].logic #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].invalid.translation.premises[0].natural_language #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].invalid.translation.claims #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].invalid.translation.claims[0].logic #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].invalid.translation.claims[0].natural_language #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].invalid.translation.untranslated_premises #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].invalid.translation.untranslated_premises[0].text #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].invalid.translation.untranslated_claims #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].invalid.translation.untranslated_claims[0].text #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].invalid.translation.confidence #=> Float
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].invalid.contradicting_rules #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].invalid.contradicting_rules[0].identifier #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].invalid.contradicting_rules[0].policy_version_arn #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].invalid.logic_warning.type #=> String, one of "ALWAYS_FALSE", "ALWAYS_TRUE"
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].invalid.logic_warning.premises #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].invalid.logic_warning.premises[0].logic #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].invalid.logic_warning.premises[0].natural_language #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].invalid.logic_warning.claims #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].invalid.logic_warning.claims[0].logic #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].invalid.logic_warning.claims[0].natural_language #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].satisfiable.translation.premises #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].satisfiable.translation.premises[0].logic #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].satisfiable.translation.premises[0].natural_language #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].satisfiable.translation.claims #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].satisfiable.translation.claims[0].logic #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].satisfiable.translation.claims[0].natural_language #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].satisfiable.translation.untranslated_premises #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].satisfiable.translation.untranslated_premises[0].text #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].satisfiable.translation.untranslated_claims #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].satisfiable.translation.untranslated_claims[0].text #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].satisfiable.translation.confidence #=> Float
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].satisfiable.claims_true_scenario.statements #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].satisfiable.claims_true_scenario.statements[0].logic #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].satisfiable.claims_true_scenario.statements[0].natural_language #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].satisfiable.claims_false_scenario.statements #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].satisfiable.claims_false_scenario.statements[0].logic #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].satisfiable.claims_false_scenario.statements[0].natural_language #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].satisfiable.logic_warning.type #=> String, one of "ALWAYS_FALSE", "ALWAYS_TRUE"
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].satisfiable.logic_warning.premises #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].satisfiable.logic_warning.premises[0].logic #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].satisfiable.logic_warning.premises[0].natural_language #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].satisfiable.logic_warning.claims #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].satisfiable.logic_warning.claims[0].logic #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].satisfiable.logic_warning.claims[0].natural_language #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].impossible.translation.premises #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].impossible.translation.premises[0].logic #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].impossible.translation.premises[0].natural_language #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].impossible.translation.claims #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].impossible.translation.claims[0].logic #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].impossible.translation.claims[0].natural_language #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].impossible.translation.untranslated_premises #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].impossible.translation.untranslated_premises[0].text #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].impossible.translation.untranslated_claims #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].impossible.translation.untranslated_claims[0].text #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].impossible.translation.confidence #=> Float
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].impossible.contradicting_rules #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].impossible.contradicting_rules[0].identifier #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].impossible.contradicting_rules[0].policy_version_arn #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].impossible.logic_warning.type #=> String, one of "ALWAYS_FALSE", "ALWAYS_TRUE"
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].impossible.logic_warning.premises #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].impossible.logic_warning.premises[0].logic #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].impossible.logic_warning.premises[0].natural_language #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].impossible.logic_warning.claims #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].impossible.logic_warning.claims[0].logic #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].impossible.logic_warning.claims[0].natural_language #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].translation_ambiguous.options #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].premises #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].premises[0].logic #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].premises[0].natural_language #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].claims #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].claims[0].logic #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].claims[0].natural_language #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].untranslated_premises #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].untranslated_premises[0].text #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].untranslated_claims #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].untranslated_claims[0].text #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].confidence #=> Float
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].translation_ambiguous.difference_scenarios #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].translation_ambiguous.difference_scenarios[0].statements #=> Array
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].translation_ambiguous.difference_scenarios[0].statements[0].logic #=> String
+    #   resp.assessments[0].automated_reasoning_policy.findings[0].translation_ambiguous.difference_scenarios[0].statements[0].natural_language #=> String
     #   resp.assessments[0].invocation_metrics.guardrail_processing_latency #=> Integer
     #   resp.assessments[0].invocation_metrics.usage.topic_policy_units #=> Integer
     #   resp.assessments[0].invocation_metrics.usage.content_policy_units #=> Integer
@@ -582,10 +719,19 @@ module Aws::BedrockRuntime
     #   resp.assessments[0].invocation_metrics.usage.sensitive_information_policy_units #=> Integer
     #   resp.assessments[0].invocation_metrics.usage.sensitive_information_policy_free_units #=> Integer
     #   resp.assessments[0].invocation_metrics.usage.contextual_grounding_policy_units #=> Integer
+    #   resp.assessments[0].invocation_metrics.usage.content_policy_image_units #=> Integer
+    #   resp.assessments[0].invocation_metrics.usage.automated_reasoning_policy_units #=> Integer
+    #   resp.assessments[0].invocation_metrics.usage.automated_reasoning_policies #=> Integer
     #   resp.assessments[0].invocation_metrics.guardrail_coverage.text_characters.guarded #=> Integer
     #   resp.assessments[0].invocation_metrics.guardrail_coverage.text_characters.total #=> Integer
     #   resp.assessments[0].invocation_metrics.guardrail_coverage.images.guarded #=> Integer
     #   resp.assessments[0].invocation_metrics.guardrail_coverage.images.total #=> Integer
+    #   resp.assessments[0].applied_guardrail_details.guardrail_id #=> String
+    #   resp.assessments[0].applied_guardrail_details.guardrail_version #=> String
+    #   resp.assessments[0].applied_guardrail_details.guardrail_arn #=> String
+    #   resp.assessments[0].applied_guardrail_details.guardrail_origin #=> Array
+    #   resp.assessments[0].applied_guardrail_details.guardrail_origin[0] #=> String, one of "REQUEST", "ACCOUNT_ENFORCED", "ORGANIZATION_ENFORCED"
+    #   resp.assessments[0].applied_guardrail_details.guardrail_ownership #=> String, one of "SELF", "CROSS_ACCOUNT"
     #   resp.guardrail_coverage.text_characters.guarded #=> Integer
     #   resp.guardrail_coverage.text_characters.total #=> Integer
     #   resp.guardrail_coverage.images.guarded #=> Integer
@@ -772,6 +918,13 @@ module Aws::BedrockRuntime
     # @option params [Types::PerformanceConfiguration] :performance_config
     #   Model performance settings for the request.
     #
+    # @option params [Types::ServiceTier] :service_tier
+    #   Specifies the processing tier configuration used for serving the
+    #   request.
+    #
+    # @option params [Types::OutputConfig] :output_config
+    #   Output configuration for a model response.
+    #
     # @return [Types::ConverseResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::ConverseResponse#output #output} => Types::ConverseOutput
@@ -781,6 +934,7 @@ module Aws::BedrockRuntime
     #   * {Types::ConverseResponse#additional_model_response_fields #additional_model_response_fields} => Hash,Array,String,Numeric,Boolean
     #   * {Types::ConverseResponse#trace #trace} => Types::ConverseTrace
     #   * {Types::ConverseResponse#performance_config #performance_config} => Types::PerformanceConfiguration
+    #   * {Types::ConverseResponse#service_tier #service_tier} => Types::ServiceTier
     #
     # @example Request syntax with placeholder values
     #
@@ -788,7 +942,7 @@ module Aws::BedrockRuntime
     #     model_id: "ConversationalModelId", # required
     #     messages: [
     #       {
-    #         role: "user", # required, accepts user, assistant
+    #         role: "user", # required, accepts user, assistant, system
     #         content: [ # required
     #           {
     #             text: "String",
@@ -796,13 +950,34 @@ module Aws::BedrockRuntime
     #               format: "png", # required, accepts png, jpeg, gif, webp
     #               source: { # required
     #                 bytes: "data",
+    #                 s3_location: {
+    #                   uri: "S3Uri", # required
+    #                   bucket_owner: "AccountId",
+    #                 },
+    #               },
+    #               error: {
+    #                 message: "String",
     #               },
     #             },
     #             document: {
-    #               format: "pdf", # required, accepts pdf, csv, doc, docx, xls, xlsx, html, txt, md
+    #               format: "pdf", # accepts pdf, csv, doc, docx, xls, xlsx, html, txt, md
     #               name: "DocumentBlockNameString", # required
     #               source: { # required
     #                 bytes: "data",
+    #                 s3_location: {
+    #                   uri: "S3Uri", # required
+    #                   bucket_owner: "AccountId",
+    #                 },
+    #                 text: "String",
+    #                 content: [
+    #                   {
+    #                     text: "String",
+    #                   },
+    #                 ],
+    #               },
+    #               context: "String",
+    #               citations: {
+    #                 enabled: false, # required
     #               },
     #             },
     #             video: {
@@ -815,11 +990,25 @@ module Aws::BedrockRuntime
     #                 },
     #               },
     #             },
+    #             audio: {
+    #               format: "mp3", # required, accepts mp3, opus, wav, aac, flac, mp4, ogg, mkv, mka, x-aac, m4a, mpeg, mpga, pcm, webm
+    #               source: { # required
+    #                 bytes: "data",
+    #                 s3_location: {
+    #                   uri: "S3Uri", # required
+    #                   bucket_owner: "AccountId",
+    #                 },
+    #               },
+    #               error: {
+    #                 message: "String",
+    #               },
+    #             },
     #             tool_use: {
     #               tool_use_id: "ToolUseId", # required
     #               name: "ToolName", # required
     #               input: { # required
     #               },
+    #               type: "server_tool_use", # accepts server_tool_use
     #             },
     #             tool_result: {
     #               tool_use_id: "ToolUseId", # required
@@ -832,13 +1021,34 @@ module Aws::BedrockRuntime
     #                     format: "png", # required, accepts png, jpeg, gif, webp
     #                     source: { # required
     #                       bytes: "data",
+    #                       s3_location: {
+    #                         uri: "S3Uri", # required
+    #                         bucket_owner: "AccountId",
+    #                       },
+    #                     },
+    #                     error: {
+    #                       message: "String",
     #                     },
     #                   },
     #                   document: {
-    #                     format: "pdf", # required, accepts pdf, csv, doc, docx, xls, xlsx, html, txt, md
+    #                     format: "pdf", # accepts pdf, csv, doc, docx, xls, xlsx, html, txt, md
     #                     name: "DocumentBlockNameString", # required
     #                     source: { # required
     #                       bytes: "data",
+    #                       s3_location: {
+    #                         uri: "S3Uri", # required
+    #                         bucket_owner: "AccountId",
+    #                       },
+    #                       text: "String",
+    #                       content: [
+    #                         {
+    #                           text: "String",
+    #                         },
+    #                       ],
+    #                     },
+    #                     context: "String",
+    #                     citations: {
+    #                       enabled: false, # required
     #                     },
     #                   },
     #                   video: {
@@ -851,9 +1061,22 @@ module Aws::BedrockRuntime
     #                       },
     #                     },
     #                   },
+    #                   search_result: {
+    #                     source: "String", # required
+    #                     title: "String", # required
+    #                     content: [ # required
+    #                       {
+    #                         text: "String", # required
+    #                       },
+    #                     ],
+    #                     citations: {
+    #                       enabled: false, # required
+    #                     },
+    #                   },
     #                 },
     #               ],
     #               status: "success", # accepts success, error
+    #               type: "String",
     #             },
     #             guard_content: {
     #               text: {
@@ -867,12 +1090,86 @@ module Aws::BedrockRuntime
     #                 },
     #               },
     #             },
+    #             cache_point: {
+    #               type: "default", # required, accepts default
+    #               ttl: "5m", # accepts 5m, 1h
+    #             },
     #             reasoning_content: {
     #               reasoning_text: {
     #                 text: "String", # required
     #                 signature: "String",
     #               },
     #               redacted_content: "data",
+    #             },
+    #             citations_content: {
+    #               content: [
+    #                 {
+    #                   text: "String",
+    #                 },
+    #               ],
+    #               citations: [
+    #                 {
+    #                   title: "String",
+    #                   source: "String",
+    #                   source_content: [
+    #                     {
+    #                       text: "String",
+    #                     },
+    #                   ],
+    #                   location: {
+    #                     web: {
+    #                       url: "String",
+    #                       domain: "String",
+    #                     },
+    #                     document_char: {
+    #                       document_index: 1,
+    #                       start: 1,
+    #                       end: 1,
+    #                     },
+    #                     document_page: {
+    #                       document_index: 1,
+    #                       start: 1,
+    #                       end: 1,
+    #                     },
+    #                     document_chunk: {
+    #                       document_index: 1,
+    #                       start: 1,
+    #                       end: 1,
+    #                     },
+    #                     search_result_location: {
+    #                       search_result_index: 1,
+    #                       start: 1,
+    #                       end: 1,
+    #                     },
+    #                   },
+    #                 },
+    #               ],
+    #             },
+    #             search_result: {
+    #               source: "String", # required
+    #               title: "String", # required
+    #               content: [ # required
+    #                 {
+    #                   text: "String", # required
+    #                 },
+    #               ],
+    #               citations: {
+    #                 enabled: false, # required
+    #               },
+    #             },
+    #             tool_addition: {
+    #               tool: { # required
+    #                 type: "ToolReferenceTypeString",
+    #                 name: "ToolReferenceNameString",
+    #                 server_name: "ToolReferenceServerNameString",
+    #               },
+    #             },
+    #             tool_removal: {
+    #               tool: { # required
+    #                 type: "ToolReferenceTypeString",
+    #                 name: "ToolReferenceNameString",
+    #                 server_name: "ToolReferenceServerNameString",
+    #               },
     #             },
     #           },
     #         ],
@@ -893,6 +1190,10 @@ module Aws::BedrockRuntime
     #             },
     #           },
     #         },
+    #         cache_point: {
+    #           type: "default", # required, accepts default
+    #           ttl: "5m", # accepts 5m, 1h
+    #         },
     #       },
     #     ],
     #     inference_config: {
@@ -911,6 +1212,14 @@ module Aws::BedrockRuntime
     #               json: {
     #               },
     #             },
+    #             strict: false,
+    #           },
+    #           system_tool: {
+    #             name: "ToolName", # required
+    #           },
+    #           cache_point: {
+    #             type: "default", # required, accepts default
+    #             ttl: "5m", # accepts 5m, 1h
     #           },
     #         },
     #       ],
@@ -925,9 +1234,9 @@ module Aws::BedrockRuntime
     #       },
     #     },
     #     guardrail_config: {
-    #       guardrail_identifier: "GuardrailIdentifier", # required
-    #       guardrail_version: "GuardrailVersion", # required
-    #       trace: "enabled", # accepts enabled, disabled
+    #       guardrail_identifier: "GuardrailIdentifier",
+    #       guardrail_version: "GuardrailVersion",
+    #       trace: "enabled", # accepts enabled, disabled, enabled_full
     #     },
     #     additional_model_request_fields: {
     #     },
@@ -943,49 +1252,136 @@ module Aws::BedrockRuntime
     #     performance_config: {
     #       latency: "standard", # accepts standard, optimized
     #     },
+    #     service_tier: {
+    #       type: "priority", # required, accepts priority, default, flex, reserved
+    #     },
+    #     output_config: {
+    #       text_format: {
+    #         type: "json_schema", # required, accepts json_schema
+    #         structure: { # required
+    #           json_schema: {
+    #             schema: "String", # required
+    #             name: "String",
+    #             description: "String",
+    #           },
+    #         },
+    #       },
+    #       effort: "OutputConfigEffortString",
+    #     },
     #   })
     #
     # @example Response structure
     #
-    #   resp.output.message.role #=> String, one of "user", "assistant"
+    #   resp.output.message.role #=> String, one of "user", "assistant", "system"
     #   resp.output.message.content #=> Array
     #   resp.output.message.content[0].text #=> String
     #   resp.output.message.content[0].image.format #=> String, one of "png", "jpeg", "gif", "webp"
     #   resp.output.message.content[0].image.source.bytes #=> String
+    #   resp.output.message.content[0].image.source.s3_location.uri #=> String
+    #   resp.output.message.content[0].image.source.s3_location.bucket_owner #=> String
+    #   resp.output.message.content[0].image.error.message #=> String
     #   resp.output.message.content[0].document.format #=> String, one of "pdf", "csv", "doc", "docx", "xls", "xlsx", "html", "txt", "md"
     #   resp.output.message.content[0].document.name #=> String
     #   resp.output.message.content[0].document.source.bytes #=> String
+    #   resp.output.message.content[0].document.source.s3_location.uri #=> String
+    #   resp.output.message.content[0].document.source.s3_location.bucket_owner #=> String
+    #   resp.output.message.content[0].document.source.text #=> String
+    #   resp.output.message.content[0].document.source.content #=> Array
+    #   resp.output.message.content[0].document.source.content[0].text #=> String
+    #   resp.output.message.content[0].document.context #=> String
+    #   resp.output.message.content[0].document.citations.enabled #=> Boolean
     #   resp.output.message.content[0].video.format #=> String, one of "mkv", "mov", "mp4", "webm", "flv", "mpeg", "mpg", "wmv", "three_gp"
     #   resp.output.message.content[0].video.source.bytes #=> String
     #   resp.output.message.content[0].video.source.s3_location.uri #=> String
     #   resp.output.message.content[0].video.source.s3_location.bucket_owner #=> String
+    #   resp.output.message.content[0].audio.format #=> String, one of "mp3", "opus", "wav", "aac", "flac", "mp4", "ogg", "mkv", "mka", "x-aac", "m4a", "mpeg", "mpga", "pcm", "webm"
+    #   resp.output.message.content[0].audio.source.bytes #=> String
+    #   resp.output.message.content[0].audio.source.s3_location.uri #=> String
+    #   resp.output.message.content[0].audio.source.s3_location.bucket_owner #=> String
+    #   resp.output.message.content[0].audio.error.message #=> String
     #   resp.output.message.content[0].tool_use.tool_use_id #=> String
     #   resp.output.message.content[0].tool_use.name #=> String
+    #   resp.output.message.content[0].tool_use.type #=> String, one of "server_tool_use"
     #   resp.output.message.content[0].tool_result.tool_use_id #=> String
     #   resp.output.message.content[0].tool_result.content #=> Array
     #   resp.output.message.content[0].tool_result.content[0].text #=> String
     #   resp.output.message.content[0].tool_result.content[0].image.format #=> String, one of "png", "jpeg", "gif", "webp"
     #   resp.output.message.content[0].tool_result.content[0].image.source.bytes #=> String
+    #   resp.output.message.content[0].tool_result.content[0].image.source.s3_location.uri #=> String
+    #   resp.output.message.content[0].tool_result.content[0].image.source.s3_location.bucket_owner #=> String
+    #   resp.output.message.content[0].tool_result.content[0].image.error.message #=> String
     #   resp.output.message.content[0].tool_result.content[0].document.format #=> String, one of "pdf", "csv", "doc", "docx", "xls", "xlsx", "html", "txt", "md"
     #   resp.output.message.content[0].tool_result.content[0].document.name #=> String
     #   resp.output.message.content[0].tool_result.content[0].document.source.bytes #=> String
+    #   resp.output.message.content[0].tool_result.content[0].document.source.s3_location.uri #=> String
+    #   resp.output.message.content[0].tool_result.content[0].document.source.s3_location.bucket_owner #=> String
+    #   resp.output.message.content[0].tool_result.content[0].document.source.text #=> String
+    #   resp.output.message.content[0].tool_result.content[0].document.source.content #=> Array
+    #   resp.output.message.content[0].tool_result.content[0].document.source.content[0].text #=> String
+    #   resp.output.message.content[0].tool_result.content[0].document.context #=> String
+    #   resp.output.message.content[0].tool_result.content[0].document.citations.enabled #=> Boolean
     #   resp.output.message.content[0].tool_result.content[0].video.format #=> String, one of "mkv", "mov", "mp4", "webm", "flv", "mpeg", "mpg", "wmv", "three_gp"
     #   resp.output.message.content[0].tool_result.content[0].video.source.bytes #=> String
     #   resp.output.message.content[0].tool_result.content[0].video.source.s3_location.uri #=> String
     #   resp.output.message.content[0].tool_result.content[0].video.source.s3_location.bucket_owner #=> String
+    #   resp.output.message.content[0].tool_result.content[0].search_result.source #=> String
+    #   resp.output.message.content[0].tool_result.content[0].search_result.title #=> String
+    #   resp.output.message.content[0].tool_result.content[0].search_result.content #=> Array
+    #   resp.output.message.content[0].tool_result.content[0].search_result.content[0].text #=> String
+    #   resp.output.message.content[0].tool_result.content[0].search_result.citations.enabled #=> Boolean
     #   resp.output.message.content[0].tool_result.status #=> String, one of "success", "error"
+    #   resp.output.message.content[0].tool_result.type #=> String
     #   resp.output.message.content[0].guard_content.text.text #=> String
     #   resp.output.message.content[0].guard_content.text.qualifiers #=> Array
     #   resp.output.message.content[0].guard_content.text.qualifiers[0] #=> String, one of "grounding_source", "query", "guard_content"
     #   resp.output.message.content[0].guard_content.image.format #=> String, one of "png", "jpeg"
     #   resp.output.message.content[0].guard_content.image.source.bytes #=> String
+    #   resp.output.message.content[0].cache_point.type #=> String, one of "default"
+    #   resp.output.message.content[0].cache_point.ttl #=> String, one of "5m", "1h"
     #   resp.output.message.content[0].reasoning_content.reasoning_text.text #=> String
     #   resp.output.message.content[0].reasoning_content.reasoning_text.signature #=> String
     #   resp.output.message.content[0].reasoning_content.redacted_content #=> String
-    #   resp.stop_reason #=> String, one of "end_turn", "tool_use", "max_tokens", "stop_sequence", "guardrail_intervened", "content_filtered"
+    #   resp.output.message.content[0].citations_content.content #=> Array
+    #   resp.output.message.content[0].citations_content.content[0].text #=> String
+    #   resp.output.message.content[0].citations_content.citations #=> Array
+    #   resp.output.message.content[0].citations_content.citations[0].title #=> String
+    #   resp.output.message.content[0].citations_content.citations[0].source #=> String
+    #   resp.output.message.content[0].citations_content.citations[0].source_content #=> Array
+    #   resp.output.message.content[0].citations_content.citations[0].source_content[0].text #=> String
+    #   resp.output.message.content[0].citations_content.citations[0].location.web.url #=> String
+    #   resp.output.message.content[0].citations_content.citations[0].location.web.domain #=> String
+    #   resp.output.message.content[0].citations_content.citations[0].location.document_char.document_index #=> Integer
+    #   resp.output.message.content[0].citations_content.citations[0].location.document_char.start #=> Integer
+    #   resp.output.message.content[0].citations_content.citations[0].location.document_char.end #=> Integer
+    #   resp.output.message.content[0].citations_content.citations[0].location.document_page.document_index #=> Integer
+    #   resp.output.message.content[0].citations_content.citations[0].location.document_page.start #=> Integer
+    #   resp.output.message.content[0].citations_content.citations[0].location.document_page.end #=> Integer
+    #   resp.output.message.content[0].citations_content.citations[0].location.document_chunk.document_index #=> Integer
+    #   resp.output.message.content[0].citations_content.citations[0].location.document_chunk.start #=> Integer
+    #   resp.output.message.content[0].citations_content.citations[0].location.document_chunk.end #=> Integer
+    #   resp.output.message.content[0].citations_content.citations[0].location.search_result_location.search_result_index #=> Integer
+    #   resp.output.message.content[0].citations_content.citations[0].location.search_result_location.start #=> Integer
+    #   resp.output.message.content[0].citations_content.citations[0].location.search_result_location.end #=> Integer
+    #   resp.output.message.content[0].search_result.source #=> String
+    #   resp.output.message.content[0].search_result.title #=> String
+    #   resp.output.message.content[0].search_result.content #=> Array
+    #   resp.output.message.content[0].search_result.content[0].text #=> String
+    #   resp.output.message.content[0].search_result.citations.enabled #=> Boolean
+    #   resp.output.message.content[0].tool_addition.tool.type #=> String
+    #   resp.output.message.content[0].tool_addition.tool.name #=> String
+    #   resp.output.message.content[0].tool_addition.tool.server_name #=> String
+    #   resp.output.message.content[0].tool_removal.tool.type #=> String
+    #   resp.output.message.content[0].tool_removal.tool.name #=> String
+    #   resp.output.message.content[0].tool_removal.tool.server_name #=> String
+    #   resp.stop_reason #=> String, one of "end_turn", "tool_use", "max_tokens", "stop_sequence", "guardrail_intervened", "content_filtered", "malformed_model_output", "malformed_tool_use", "model_context_window_exceeded"
     #   resp.usage.input_tokens #=> Integer
     #   resp.usage.output_tokens #=> Integer
     #   resp.usage.total_tokens #=> Integer
+    #   resp.usage.cache_read_input_tokens #=> Integer
+    #   resp.usage.cache_write_input_tokens #=> Integer
+    #   resp.usage.cache_details #=> Array
+    #   resp.usage.cache_details[0].ttl #=> String, one of "5m", "1h"
+    #   resp.usage.cache_details[0].input_tokens #=> Integer
     #   resp.metrics.latency_ms #=> Integer
     #   resp.trace.guardrail.model_output #=> Array
     #   resp.trace.guardrail.model_output[0] #=> String
@@ -993,33 +1389,148 @@ module Aws::BedrockRuntime
     #   resp.trace.guardrail.input_assessment["String"].topic_policy.topics #=> Array
     #   resp.trace.guardrail.input_assessment["String"].topic_policy.topics[0].name #=> String
     #   resp.trace.guardrail.input_assessment["String"].topic_policy.topics[0].type #=> String, one of "DENY"
-    #   resp.trace.guardrail.input_assessment["String"].topic_policy.topics[0].action #=> String, one of "BLOCKED"
+    #   resp.trace.guardrail.input_assessment["String"].topic_policy.topics[0].action #=> String, one of "BLOCKED", "NONE"
+    #   resp.trace.guardrail.input_assessment["String"].topic_policy.topics[0].detected #=> Boolean
     #   resp.trace.guardrail.input_assessment["String"].content_policy.filters #=> Array
     #   resp.trace.guardrail.input_assessment["String"].content_policy.filters[0].type #=> String, one of "INSULTS", "HATE", "SEXUAL", "VIOLENCE", "MISCONDUCT", "PROMPT_ATTACK"
     #   resp.trace.guardrail.input_assessment["String"].content_policy.filters[0].confidence #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH"
     #   resp.trace.guardrail.input_assessment["String"].content_policy.filters[0].filter_strength #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH"
-    #   resp.trace.guardrail.input_assessment["String"].content_policy.filters[0].action #=> String, one of "BLOCKED"
+    #   resp.trace.guardrail.input_assessment["String"].content_policy.filters[0].action #=> String, one of "BLOCKED", "NONE"
+    #   resp.trace.guardrail.input_assessment["String"].content_policy.filters[0].detected #=> Boolean
     #   resp.trace.guardrail.input_assessment["String"].word_policy.custom_words #=> Array
     #   resp.trace.guardrail.input_assessment["String"].word_policy.custom_words[0].match #=> String
-    #   resp.trace.guardrail.input_assessment["String"].word_policy.custom_words[0].action #=> String, one of "BLOCKED"
+    #   resp.trace.guardrail.input_assessment["String"].word_policy.custom_words[0].action #=> String, one of "BLOCKED", "NONE"
+    #   resp.trace.guardrail.input_assessment["String"].word_policy.custom_words[0].detected #=> Boolean
     #   resp.trace.guardrail.input_assessment["String"].word_policy.managed_word_lists #=> Array
     #   resp.trace.guardrail.input_assessment["String"].word_policy.managed_word_lists[0].match #=> String
     #   resp.trace.guardrail.input_assessment["String"].word_policy.managed_word_lists[0].type #=> String, one of "PROFANITY"
-    #   resp.trace.guardrail.input_assessment["String"].word_policy.managed_word_lists[0].action #=> String, one of "BLOCKED"
+    #   resp.trace.guardrail.input_assessment["String"].word_policy.managed_word_lists[0].action #=> String, one of "BLOCKED", "NONE"
+    #   resp.trace.guardrail.input_assessment["String"].word_policy.managed_word_lists[0].detected #=> Boolean
     #   resp.trace.guardrail.input_assessment["String"].sensitive_information_policy.pii_entities #=> Array
     #   resp.trace.guardrail.input_assessment["String"].sensitive_information_policy.pii_entities[0].match #=> String
     #   resp.trace.guardrail.input_assessment["String"].sensitive_information_policy.pii_entities[0].type #=> String, one of "ADDRESS", "AGE", "AWS_ACCESS_KEY", "AWS_SECRET_KEY", "CA_HEALTH_NUMBER", "CA_SOCIAL_INSURANCE_NUMBER", "CREDIT_DEBIT_CARD_CVV", "CREDIT_DEBIT_CARD_EXPIRY", "CREDIT_DEBIT_CARD_NUMBER", "DRIVER_ID", "EMAIL", "INTERNATIONAL_BANK_ACCOUNT_NUMBER", "IP_ADDRESS", "LICENSE_PLATE", "MAC_ADDRESS", "NAME", "PASSWORD", "PHONE", "PIN", "SWIFT_CODE", "UK_NATIONAL_HEALTH_SERVICE_NUMBER", "UK_NATIONAL_INSURANCE_NUMBER", "UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER", "URL", "USERNAME", "US_BANK_ACCOUNT_NUMBER", "US_BANK_ROUTING_NUMBER", "US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER", "US_PASSPORT_NUMBER", "US_SOCIAL_SECURITY_NUMBER", "VEHICLE_IDENTIFICATION_NUMBER"
-    #   resp.trace.guardrail.input_assessment["String"].sensitive_information_policy.pii_entities[0].action #=> String, one of "ANONYMIZED", "BLOCKED"
+    #   resp.trace.guardrail.input_assessment["String"].sensitive_information_policy.pii_entities[0].action #=> String, one of "ANONYMIZED", "BLOCKED", "NONE"
+    #   resp.trace.guardrail.input_assessment["String"].sensitive_information_policy.pii_entities[0].detected #=> Boolean
     #   resp.trace.guardrail.input_assessment["String"].sensitive_information_policy.regexes #=> Array
     #   resp.trace.guardrail.input_assessment["String"].sensitive_information_policy.regexes[0].name #=> String
     #   resp.trace.guardrail.input_assessment["String"].sensitive_information_policy.regexes[0].match #=> String
     #   resp.trace.guardrail.input_assessment["String"].sensitive_information_policy.regexes[0].regex #=> String
-    #   resp.trace.guardrail.input_assessment["String"].sensitive_information_policy.regexes[0].action #=> String, one of "ANONYMIZED", "BLOCKED"
+    #   resp.trace.guardrail.input_assessment["String"].sensitive_information_policy.regexes[0].action #=> String, one of "ANONYMIZED", "BLOCKED", "NONE"
+    #   resp.trace.guardrail.input_assessment["String"].sensitive_information_policy.regexes[0].detected #=> Boolean
     #   resp.trace.guardrail.input_assessment["String"].contextual_grounding_policy.filters #=> Array
     #   resp.trace.guardrail.input_assessment["String"].contextual_grounding_policy.filters[0].type #=> String, one of "GROUNDING", "RELEVANCE"
     #   resp.trace.guardrail.input_assessment["String"].contextual_grounding_policy.filters[0].threshold #=> Float
     #   resp.trace.guardrail.input_assessment["String"].contextual_grounding_policy.filters[0].score #=> Float
     #   resp.trace.guardrail.input_assessment["String"].contextual_grounding_policy.filters[0].action #=> String, one of "BLOCKED", "NONE"
+    #   resp.trace.guardrail.input_assessment["String"].contextual_grounding_policy.filters[0].detected #=> Boolean
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.translation.premises #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.translation.premises[0].logic #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.translation.premises[0].natural_language #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.translation.claims #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.translation.claims[0].logic #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.translation.claims[0].natural_language #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.translation.untranslated_premises #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.translation.untranslated_premises[0].text #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.translation.untranslated_claims #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.translation.untranslated_claims[0].text #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.translation.confidence #=> Float
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.claims_true_scenario.statements #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.claims_true_scenario.statements[0].logic #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.claims_true_scenario.statements[0].natural_language #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.supporting_rules #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.supporting_rules[0].identifier #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.supporting_rules[0].policy_version_arn #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.logic_warning.type #=> String, one of "ALWAYS_FALSE", "ALWAYS_TRUE"
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.logic_warning.premises #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.logic_warning.premises[0].logic #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.logic_warning.premises[0].natural_language #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.logic_warning.claims #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.logic_warning.claims[0].logic #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.logic_warning.claims[0].natural_language #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.translation.premises #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.translation.premises[0].logic #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.translation.premises[0].natural_language #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.translation.claims #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.translation.claims[0].logic #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.translation.claims[0].natural_language #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.translation.untranslated_premises #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.translation.untranslated_premises[0].text #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.translation.untranslated_claims #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.translation.untranslated_claims[0].text #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.translation.confidence #=> Float
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.contradicting_rules #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.contradicting_rules[0].identifier #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.contradicting_rules[0].policy_version_arn #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.logic_warning.type #=> String, one of "ALWAYS_FALSE", "ALWAYS_TRUE"
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.logic_warning.premises #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.logic_warning.premises[0].logic #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.logic_warning.premises[0].natural_language #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.logic_warning.claims #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.logic_warning.claims[0].logic #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.logic_warning.claims[0].natural_language #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.translation.premises #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.translation.premises[0].logic #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.translation.premises[0].natural_language #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.translation.claims #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.translation.claims[0].logic #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.translation.claims[0].natural_language #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.translation.untranslated_premises #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.translation.untranslated_premises[0].text #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.translation.untranslated_claims #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.translation.untranslated_claims[0].text #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.translation.confidence #=> Float
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.claims_true_scenario.statements #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.claims_true_scenario.statements[0].logic #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.claims_true_scenario.statements[0].natural_language #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.claims_false_scenario.statements #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.claims_false_scenario.statements[0].logic #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.claims_false_scenario.statements[0].natural_language #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.logic_warning.type #=> String, one of "ALWAYS_FALSE", "ALWAYS_TRUE"
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.logic_warning.premises #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.logic_warning.premises[0].logic #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.logic_warning.premises[0].natural_language #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.logic_warning.claims #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.logic_warning.claims[0].logic #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.logic_warning.claims[0].natural_language #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.translation.premises #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.translation.premises[0].logic #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.translation.premises[0].natural_language #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.translation.claims #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.translation.claims[0].logic #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.translation.claims[0].natural_language #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.translation.untranslated_premises #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.translation.untranslated_premises[0].text #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.translation.untranslated_claims #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.translation.untranslated_claims[0].text #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.translation.confidence #=> Float
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.contradicting_rules #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.contradicting_rules[0].identifier #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.contradicting_rules[0].policy_version_arn #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.logic_warning.type #=> String, one of "ALWAYS_FALSE", "ALWAYS_TRUE"
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.logic_warning.premises #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.logic_warning.premises[0].logic #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.logic_warning.premises[0].natural_language #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.logic_warning.claims #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.logic_warning.claims[0].logic #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.logic_warning.claims[0].natural_language #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.options #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].premises #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].premises[0].logic #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].premises[0].natural_language #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].claims #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].claims[0].logic #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].claims[0].natural_language #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].untranslated_premises #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].untranslated_premises[0].text #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].untranslated_claims #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].untranslated_claims[0].text #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].confidence #=> Float
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.difference_scenarios #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.difference_scenarios[0].statements #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.difference_scenarios[0].statements[0].logic #=> String
+    #   resp.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.difference_scenarios[0].statements[0].natural_language #=> String
     #   resp.trace.guardrail.input_assessment["String"].invocation_metrics.guardrail_processing_latency #=> Integer
     #   resp.trace.guardrail.input_assessment["String"].invocation_metrics.usage.topic_policy_units #=> Integer
     #   resp.trace.guardrail.input_assessment["String"].invocation_metrics.usage.content_policy_units #=> Integer
@@ -1027,42 +1538,166 @@ module Aws::BedrockRuntime
     #   resp.trace.guardrail.input_assessment["String"].invocation_metrics.usage.sensitive_information_policy_units #=> Integer
     #   resp.trace.guardrail.input_assessment["String"].invocation_metrics.usage.sensitive_information_policy_free_units #=> Integer
     #   resp.trace.guardrail.input_assessment["String"].invocation_metrics.usage.contextual_grounding_policy_units #=> Integer
+    #   resp.trace.guardrail.input_assessment["String"].invocation_metrics.usage.content_policy_image_units #=> Integer
+    #   resp.trace.guardrail.input_assessment["String"].invocation_metrics.usage.automated_reasoning_policy_units #=> Integer
+    #   resp.trace.guardrail.input_assessment["String"].invocation_metrics.usage.automated_reasoning_policies #=> Integer
     #   resp.trace.guardrail.input_assessment["String"].invocation_metrics.guardrail_coverage.text_characters.guarded #=> Integer
     #   resp.trace.guardrail.input_assessment["String"].invocation_metrics.guardrail_coverage.text_characters.total #=> Integer
     #   resp.trace.guardrail.input_assessment["String"].invocation_metrics.guardrail_coverage.images.guarded #=> Integer
     #   resp.trace.guardrail.input_assessment["String"].invocation_metrics.guardrail_coverage.images.total #=> Integer
+    #   resp.trace.guardrail.input_assessment["String"].applied_guardrail_details.guardrail_id #=> String
+    #   resp.trace.guardrail.input_assessment["String"].applied_guardrail_details.guardrail_version #=> String
+    #   resp.trace.guardrail.input_assessment["String"].applied_guardrail_details.guardrail_arn #=> String
+    #   resp.trace.guardrail.input_assessment["String"].applied_guardrail_details.guardrail_origin #=> Array
+    #   resp.trace.guardrail.input_assessment["String"].applied_guardrail_details.guardrail_origin[0] #=> String, one of "REQUEST", "ACCOUNT_ENFORCED", "ORGANIZATION_ENFORCED"
+    #   resp.trace.guardrail.input_assessment["String"].applied_guardrail_details.guardrail_ownership #=> String, one of "SELF", "CROSS_ACCOUNT"
     #   resp.trace.guardrail.output_assessments #=> Hash
     #   resp.trace.guardrail.output_assessments["String"] #=> Array
     #   resp.trace.guardrail.output_assessments["String"][0].topic_policy.topics #=> Array
     #   resp.trace.guardrail.output_assessments["String"][0].topic_policy.topics[0].name #=> String
     #   resp.trace.guardrail.output_assessments["String"][0].topic_policy.topics[0].type #=> String, one of "DENY"
-    #   resp.trace.guardrail.output_assessments["String"][0].topic_policy.topics[0].action #=> String, one of "BLOCKED"
+    #   resp.trace.guardrail.output_assessments["String"][0].topic_policy.topics[0].action #=> String, one of "BLOCKED", "NONE"
+    #   resp.trace.guardrail.output_assessments["String"][0].topic_policy.topics[0].detected #=> Boolean
     #   resp.trace.guardrail.output_assessments["String"][0].content_policy.filters #=> Array
     #   resp.trace.guardrail.output_assessments["String"][0].content_policy.filters[0].type #=> String, one of "INSULTS", "HATE", "SEXUAL", "VIOLENCE", "MISCONDUCT", "PROMPT_ATTACK"
     #   resp.trace.guardrail.output_assessments["String"][0].content_policy.filters[0].confidence #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH"
     #   resp.trace.guardrail.output_assessments["String"][0].content_policy.filters[0].filter_strength #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH"
-    #   resp.trace.guardrail.output_assessments["String"][0].content_policy.filters[0].action #=> String, one of "BLOCKED"
+    #   resp.trace.guardrail.output_assessments["String"][0].content_policy.filters[0].action #=> String, one of "BLOCKED", "NONE"
+    #   resp.trace.guardrail.output_assessments["String"][0].content_policy.filters[0].detected #=> Boolean
     #   resp.trace.guardrail.output_assessments["String"][0].word_policy.custom_words #=> Array
     #   resp.trace.guardrail.output_assessments["String"][0].word_policy.custom_words[0].match #=> String
-    #   resp.trace.guardrail.output_assessments["String"][0].word_policy.custom_words[0].action #=> String, one of "BLOCKED"
+    #   resp.trace.guardrail.output_assessments["String"][0].word_policy.custom_words[0].action #=> String, one of "BLOCKED", "NONE"
+    #   resp.trace.guardrail.output_assessments["String"][0].word_policy.custom_words[0].detected #=> Boolean
     #   resp.trace.guardrail.output_assessments["String"][0].word_policy.managed_word_lists #=> Array
     #   resp.trace.guardrail.output_assessments["String"][0].word_policy.managed_word_lists[0].match #=> String
     #   resp.trace.guardrail.output_assessments["String"][0].word_policy.managed_word_lists[0].type #=> String, one of "PROFANITY"
-    #   resp.trace.guardrail.output_assessments["String"][0].word_policy.managed_word_lists[0].action #=> String, one of "BLOCKED"
+    #   resp.trace.guardrail.output_assessments["String"][0].word_policy.managed_word_lists[0].action #=> String, one of "BLOCKED", "NONE"
+    #   resp.trace.guardrail.output_assessments["String"][0].word_policy.managed_word_lists[0].detected #=> Boolean
     #   resp.trace.guardrail.output_assessments["String"][0].sensitive_information_policy.pii_entities #=> Array
     #   resp.trace.guardrail.output_assessments["String"][0].sensitive_information_policy.pii_entities[0].match #=> String
     #   resp.trace.guardrail.output_assessments["String"][0].sensitive_information_policy.pii_entities[0].type #=> String, one of "ADDRESS", "AGE", "AWS_ACCESS_KEY", "AWS_SECRET_KEY", "CA_HEALTH_NUMBER", "CA_SOCIAL_INSURANCE_NUMBER", "CREDIT_DEBIT_CARD_CVV", "CREDIT_DEBIT_CARD_EXPIRY", "CREDIT_DEBIT_CARD_NUMBER", "DRIVER_ID", "EMAIL", "INTERNATIONAL_BANK_ACCOUNT_NUMBER", "IP_ADDRESS", "LICENSE_PLATE", "MAC_ADDRESS", "NAME", "PASSWORD", "PHONE", "PIN", "SWIFT_CODE", "UK_NATIONAL_HEALTH_SERVICE_NUMBER", "UK_NATIONAL_INSURANCE_NUMBER", "UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER", "URL", "USERNAME", "US_BANK_ACCOUNT_NUMBER", "US_BANK_ROUTING_NUMBER", "US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER", "US_PASSPORT_NUMBER", "US_SOCIAL_SECURITY_NUMBER", "VEHICLE_IDENTIFICATION_NUMBER"
-    #   resp.trace.guardrail.output_assessments["String"][0].sensitive_information_policy.pii_entities[0].action #=> String, one of "ANONYMIZED", "BLOCKED"
+    #   resp.trace.guardrail.output_assessments["String"][0].sensitive_information_policy.pii_entities[0].action #=> String, one of "ANONYMIZED", "BLOCKED", "NONE"
+    #   resp.trace.guardrail.output_assessments["String"][0].sensitive_information_policy.pii_entities[0].detected #=> Boolean
     #   resp.trace.guardrail.output_assessments["String"][0].sensitive_information_policy.regexes #=> Array
     #   resp.trace.guardrail.output_assessments["String"][0].sensitive_information_policy.regexes[0].name #=> String
     #   resp.trace.guardrail.output_assessments["String"][0].sensitive_information_policy.regexes[0].match #=> String
     #   resp.trace.guardrail.output_assessments["String"][0].sensitive_information_policy.regexes[0].regex #=> String
-    #   resp.trace.guardrail.output_assessments["String"][0].sensitive_information_policy.regexes[0].action #=> String, one of "ANONYMIZED", "BLOCKED"
+    #   resp.trace.guardrail.output_assessments["String"][0].sensitive_information_policy.regexes[0].action #=> String, one of "ANONYMIZED", "BLOCKED", "NONE"
+    #   resp.trace.guardrail.output_assessments["String"][0].sensitive_information_policy.regexes[0].detected #=> Boolean
     #   resp.trace.guardrail.output_assessments["String"][0].contextual_grounding_policy.filters #=> Array
     #   resp.trace.guardrail.output_assessments["String"][0].contextual_grounding_policy.filters[0].type #=> String, one of "GROUNDING", "RELEVANCE"
     #   resp.trace.guardrail.output_assessments["String"][0].contextual_grounding_policy.filters[0].threshold #=> Float
     #   resp.trace.guardrail.output_assessments["String"][0].contextual_grounding_policy.filters[0].score #=> Float
     #   resp.trace.guardrail.output_assessments["String"][0].contextual_grounding_policy.filters[0].action #=> String, one of "BLOCKED", "NONE"
+    #   resp.trace.guardrail.output_assessments["String"][0].contextual_grounding_policy.filters[0].detected #=> Boolean
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.translation.premises #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.translation.premises[0].logic #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.translation.premises[0].natural_language #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.translation.claims #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.translation.claims[0].logic #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.translation.claims[0].natural_language #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.translation.untranslated_premises #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.translation.untranslated_premises[0].text #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.translation.untranslated_claims #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.translation.untranslated_claims[0].text #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.translation.confidence #=> Float
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.claims_true_scenario.statements #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.claims_true_scenario.statements[0].logic #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.claims_true_scenario.statements[0].natural_language #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.supporting_rules #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.supporting_rules[0].identifier #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.supporting_rules[0].policy_version_arn #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.logic_warning.type #=> String, one of "ALWAYS_FALSE", "ALWAYS_TRUE"
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.logic_warning.premises #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.logic_warning.premises[0].logic #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.logic_warning.premises[0].natural_language #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.logic_warning.claims #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.logic_warning.claims[0].logic #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.logic_warning.claims[0].natural_language #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.translation.premises #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.translation.premises[0].logic #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.translation.premises[0].natural_language #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.translation.claims #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.translation.claims[0].logic #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.translation.claims[0].natural_language #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.translation.untranslated_premises #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.translation.untranslated_premises[0].text #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.translation.untranslated_claims #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.translation.untranslated_claims[0].text #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.translation.confidence #=> Float
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.contradicting_rules #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.contradicting_rules[0].identifier #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.contradicting_rules[0].policy_version_arn #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.logic_warning.type #=> String, one of "ALWAYS_FALSE", "ALWAYS_TRUE"
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.logic_warning.premises #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.logic_warning.premises[0].logic #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.logic_warning.premises[0].natural_language #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.logic_warning.claims #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.logic_warning.claims[0].logic #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.logic_warning.claims[0].natural_language #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.translation.premises #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.translation.premises[0].logic #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.translation.premises[0].natural_language #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.translation.claims #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.translation.claims[0].logic #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.translation.claims[0].natural_language #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.translation.untranslated_premises #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.translation.untranslated_premises[0].text #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.translation.untranslated_claims #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.translation.untranslated_claims[0].text #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.translation.confidence #=> Float
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.claims_true_scenario.statements #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.claims_true_scenario.statements[0].logic #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.claims_true_scenario.statements[0].natural_language #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.claims_false_scenario.statements #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.claims_false_scenario.statements[0].logic #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.claims_false_scenario.statements[0].natural_language #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.logic_warning.type #=> String, one of "ALWAYS_FALSE", "ALWAYS_TRUE"
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.logic_warning.premises #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.logic_warning.premises[0].logic #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.logic_warning.premises[0].natural_language #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.logic_warning.claims #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.logic_warning.claims[0].logic #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.logic_warning.claims[0].natural_language #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.translation.premises #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.translation.premises[0].logic #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.translation.premises[0].natural_language #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.translation.claims #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.translation.claims[0].logic #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.translation.claims[0].natural_language #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.translation.untranslated_premises #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.translation.untranslated_premises[0].text #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.translation.untranslated_claims #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.translation.untranslated_claims[0].text #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.translation.confidence #=> Float
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.contradicting_rules #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.contradicting_rules[0].identifier #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.contradicting_rules[0].policy_version_arn #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.logic_warning.type #=> String, one of "ALWAYS_FALSE", "ALWAYS_TRUE"
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.logic_warning.premises #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.logic_warning.premises[0].logic #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.logic_warning.premises[0].natural_language #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.logic_warning.claims #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.logic_warning.claims[0].logic #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.logic_warning.claims[0].natural_language #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.options #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].premises #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].premises[0].logic #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].premises[0].natural_language #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].claims #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].claims[0].logic #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].claims[0].natural_language #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].untranslated_premises #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].untranslated_premises[0].text #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].untranslated_claims #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].untranslated_claims[0].text #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].confidence #=> Float
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.difference_scenarios #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.difference_scenarios[0].statements #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.difference_scenarios[0].statements[0].logic #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.difference_scenarios[0].statements[0].natural_language #=> String
     #   resp.trace.guardrail.output_assessments["String"][0].invocation_metrics.guardrail_processing_latency #=> Integer
     #   resp.trace.guardrail.output_assessments["String"][0].invocation_metrics.usage.topic_policy_units #=> Integer
     #   resp.trace.guardrail.output_assessments["String"][0].invocation_metrics.usage.content_policy_units #=> Integer
@@ -1070,12 +1705,23 @@ module Aws::BedrockRuntime
     #   resp.trace.guardrail.output_assessments["String"][0].invocation_metrics.usage.sensitive_information_policy_units #=> Integer
     #   resp.trace.guardrail.output_assessments["String"][0].invocation_metrics.usage.sensitive_information_policy_free_units #=> Integer
     #   resp.trace.guardrail.output_assessments["String"][0].invocation_metrics.usage.contextual_grounding_policy_units #=> Integer
+    #   resp.trace.guardrail.output_assessments["String"][0].invocation_metrics.usage.content_policy_image_units #=> Integer
+    #   resp.trace.guardrail.output_assessments["String"][0].invocation_metrics.usage.automated_reasoning_policy_units #=> Integer
+    #   resp.trace.guardrail.output_assessments["String"][0].invocation_metrics.usage.automated_reasoning_policies #=> Integer
     #   resp.trace.guardrail.output_assessments["String"][0].invocation_metrics.guardrail_coverage.text_characters.guarded #=> Integer
     #   resp.trace.guardrail.output_assessments["String"][0].invocation_metrics.guardrail_coverage.text_characters.total #=> Integer
     #   resp.trace.guardrail.output_assessments["String"][0].invocation_metrics.guardrail_coverage.images.guarded #=> Integer
     #   resp.trace.guardrail.output_assessments["String"][0].invocation_metrics.guardrail_coverage.images.total #=> Integer
+    #   resp.trace.guardrail.output_assessments["String"][0].applied_guardrail_details.guardrail_id #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].applied_guardrail_details.guardrail_version #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].applied_guardrail_details.guardrail_arn #=> String
+    #   resp.trace.guardrail.output_assessments["String"][0].applied_guardrail_details.guardrail_origin #=> Array
+    #   resp.trace.guardrail.output_assessments["String"][0].applied_guardrail_details.guardrail_origin[0] #=> String, one of "REQUEST", "ACCOUNT_ENFORCED", "ORGANIZATION_ENFORCED"
+    #   resp.trace.guardrail.output_assessments["String"][0].applied_guardrail_details.guardrail_ownership #=> String, one of "SELF", "CROSS_ACCOUNT"
+    #   resp.trace.guardrail.action_reason #=> String
     #   resp.trace.prompt_router.invoked_model_id #=> String
     #   resp.performance_config.latency #=> String, one of "standard", "optimized"
+    #   resp.service_tier.type #=> String, one of "priority", "default", "flex", "reserved"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-runtime-2023-09-30/Converse AWS API Documentation
     #
@@ -1269,182 +1915,195 @@ module Aws::BedrockRuntime
     # @option params [Types::PerformanceConfiguration] :performance_config
     #   Model performance settings for the request.
     #
+    # @option params [Types::ServiceTier] :service_tier
+    #   Specifies the processing tier configuration used for serving the
+    #   request.
+    #
+    # @option params [Types::OutputConfig] :output_config
+    #   Output configuration for a model response.
+    #
     # @return [Types::ConverseStreamResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::ConverseStreamResponse#stream #stream} => Types::ConverseStreamOutput
     #
     # @example EventStream Operation Example
     #
-    #   You can process the event once it arrives immediately, or wait until the
-    #   full response is complete and iterate through the eventstream enumerator.
+    #   # You can process the event once it arrives immediately, or wait until the
+    #   # full response is complete and iterate through the eventstream enumerator.
     #
-    #   To interact with event immediately, you need to register #converse_stream
-    #   with callbacks. Callbacks can be registered for specific events or for all
-    #   events, including error events.
+    #   # To interact with event immediately, you need to register converse_stream
+    #   # with callbacks. Callbacks can be registered for specific events or for all
+    #   # events, including error events.
     #
-    #   Callbacks can be passed into the `:event_stream_handler` option or within a
-    #   block statement attached to the #converse_stream call directly. Hybrid
-    #   pattern of both is also supported.
+    #   # Callbacks can be passed into the `:event_stream_handler` option or within a
+    #   # block statement attached to the #converse_stream call directly. Hybrid
+    #   # pattern of both is also supported.
     #
-    #   `:event_stream_handler` option takes in either a Proc object or
-    #   Aws::BedrockRuntime::EventStreams::ConverseStreamOutput object.
+    #   # `:event_stream_handler` option takes in either a Proc object or
+    #   # Aws::BedrockRuntime::EventStreams::ConverseStreamOutput object.
     #
-    #   Usage pattern a): Callbacks with a block attached to #converse_stream
-    #     Example for registering callbacks for all event types and an error event
-    #
-    #     client.converse_stream( # params input# ) do |stream|
-    #       stream.on_error_event do |event|
-    #         # catch unmodeled error event in the stream
-    #         raise event
-    #         # => Aws::Errors::EventError
-    #         # event.event_type => :error
-    #         # event.error_code => String
-    #         # event.error_message => String
-    #       end
-    #
-    #       stream.on_event do |event|
-    #         # process all events arrive
-    #         puts event.event_type
-    #         ...
-    #       end
-    #
+    #   # Usage pattern a): Callbacks with a block attached to #converse_stream
+    #   # Example for registering callbacks for all event types and an error event
+    #   client.converse_stream(
+    #     # params input
+    #   ) do |stream|
+    #     stream.on_error_event do |event|
+    #       # catch unmodeled error event in the stream
+    #       raise event
+    #       # => Aws::Errors::EventError
+    #       # event.event_type => :error
+    #       # event.error_code => String
+    #       # event.error_message => String
     #     end
     #
-    #   Usage pattern b): Pass in `:event_stream_handler` for #converse_stream
-    #
-    #     1) Create a Aws::BedrockRuntime::EventStreams::ConverseStreamOutput object
-    #     Example for registering callbacks with specific events
-    #
-    #       handler = Aws::BedrockRuntime::EventStreams::ConverseStreamOutput.new
-    #       handler.on_message_start_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::messageStart
-    #       end
-    #       handler.on_content_block_start_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::contentBlockStart
-    #       end
-    #       handler.on_content_block_delta_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::contentBlockDelta
-    #       end
-    #       handler.on_content_block_stop_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::contentBlockStop
-    #       end
-    #       handler.on_message_stop_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::messageStop
-    #       end
-    #       handler.on_metadata_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::metadata
-    #       end
-    #       handler.on_internal_server_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::internalServerException
-    #       end
-    #       handler.on_model_stream_error_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::modelStreamErrorException
-    #       end
-    #       handler.on_validation_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::validationException
-    #       end
-    #       handler.on_throttling_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::throttlingException
-    #       end
-    #       handler.on_service_unavailable_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::serviceUnavailableException
-    #       end
-    #
-    #     client.converse_stream( # params input #, event_stream_handler: handler)
-    #
-    #     2) Use a Ruby Proc object
-    #     Example for registering callbacks with specific events
-    #
-    #     handler = Proc.new do |stream|
-    #       stream.on_message_start_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::messageStart
-    #       end
-    #       stream.on_content_block_start_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::contentBlockStart
-    #       end
-    #       stream.on_content_block_delta_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::contentBlockDelta
-    #       end
-    #       stream.on_content_block_stop_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::contentBlockStop
-    #       end
-    #       stream.on_message_stop_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::messageStop
-    #       end
-    #       stream.on_metadata_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::metadata
-    #       end
-    #       stream.on_internal_server_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::internalServerException
-    #       end
-    #       stream.on_model_stream_error_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::modelStreamErrorException
-    #       end
-    #       stream.on_validation_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::validationException
-    #       end
-    #       stream.on_throttling_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::throttlingException
-    #       end
-    #       stream.on_service_unavailable_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::serviceUnavailableException
-    #       end
+    #     stream.on_event do |event|
+    #       # process all events arrive
+    #       puts event.event_type
+    #       # ...
     #     end
+    #   end
     #
-    #     client.converse_stream( # params input #, event_stream_handler: handler)
+    #   # Usage pattern b): Pass in `:event_stream_handler` for #converse_stream
+    #   #  1) Create a Aws::BedrockRuntime::EventStreams::ConverseStreamOutput object
+    #   #  Example for registering callbacks with specific events
     #
-    #   Usage pattern c): Hybrid pattern of a) and b)
+    #   handler = Aws::BedrockRuntime::EventStreams::ConverseStreamOutput.new
+    #   handler.on_message_start_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::messageStart
+    #   end
+    #   handler.on_content_block_start_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::contentBlockStart
+    #   end
+    #   handler.on_content_block_delta_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::contentBlockDelta
+    #   end
+    #   handler.on_content_block_stop_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::contentBlockStop
+    #   end
+    #   handler.on_message_stop_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::messageStop
+    #   end
+    #   handler.on_metadata_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::metadata
+    #   end
+    #   handler.on_internal_server_exception_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::internalServerException
+    #   end
+    #   handler.on_model_stream_error_exception_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::modelStreamErrorException
+    #   end
+    #   handler.on_validation_exception_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::validationException
+    #   end
+    #   handler.on_throttling_exception_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::throttlingException
+    #   end
+    #   handler.on_service_unavailable_exception_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::serviceUnavailableException
+    #   end
     #
-    #       handler = Aws::BedrockRuntime::EventStreams::ConverseStreamOutput.new
-    #       handler.on_message_start_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::messageStart
-    #       end
-    #       handler.on_content_block_start_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::contentBlockStart
-    #       end
-    #       handler.on_content_block_delta_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::contentBlockDelta
-    #       end
-    #       handler.on_content_block_stop_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::contentBlockStop
-    #       end
-    #       handler.on_message_stop_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::messageStop
-    #       end
-    #       handler.on_metadata_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::metadata
-    #       end
-    #       handler.on_internal_server_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::internalServerException
-    #       end
-    #       handler.on_model_stream_error_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::modelStreamErrorException
-    #       end
-    #       handler.on_validation_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::validationException
-    #       end
-    #       handler.on_throttling_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::throttlingException
-    #       end
-    #       handler.on_service_unavailable_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::serviceUnavailableException
-    #       end
+    #   client.converse_stream(
+    #     # params inputs
+    #     event_stream_handler: handler
+    #   )
     #
-    #     client.converse_stream( # params input #, event_stream_handler: handler) do |stream|
-    #       stream.on_error_event do |event|
-    #         # catch unmodeled error event in the stream
-    #         raise event
-    #         # => Aws::Errors::EventError
-    #         # event.event_type => :error
-    #         # event.error_code => String
-    #         # event.error_message => String
-    #       end
+    #   #  2) Use a Ruby Proc object
+    #   #  Example for registering callbacks with specific events
+    #   handler = Proc.new do |stream|
+    #     stream.on_message_start_event do |event|
+    #       event # => Aws::BedrockRuntime::Types::messageStart
     #     end
+    #     stream.on_content_block_start_event do |event|
+    #       event # => Aws::BedrockRuntime::Types::contentBlockStart
+    #     end
+    #     stream.on_content_block_delta_event do |event|
+    #       event # => Aws::BedrockRuntime::Types::contentBlockDelta
+    #     end
+    #     stream.on_content_block_stop_event do |event|
+    #       event # => Aws::BedrockRuntime::Types::contentBlockStop
+    #     end
+    #     stream.on_message_stop_event do |event|
+    #       event # => Aws::BedrockRuntime::Types::messageStop
+    #     end
+    #     stream.on_metadata_event do |event|
+    #       event # => Aws::BedrockRuntime::Types::metadata
+    #     end
+    #     stream.on_internal_server_exception_event do |event|
+    #       event # => Aws::BedrockRuntime::Types::internalServerException
+    #     end
+    #     stream.on_model_stream_error_exception_event do |event|
+    #       event # => Aws::BedrockRuntime::Types::modelStreamErrorException
+    #     end
+    #     stream.on_validation_exception_event do |event|
+    #       event # => Aws::BedrockRuntime::Types::validationException
+    #     end
+    #     stream.on_throttling_exception_event do |event|
+    #       event # => Aws::BedrockRuntime::Types::throttlingException
+    #     end
+    #     stream.on_service_unavailable_exception_event do |event|
+    #       event # => Aws::BedrockRuntime::Types::serviceUnavailableException
+    #     end
+    #   end
     #
-    #   You can also iterate through events after the response complete.
+    #   client.converse_stream(
+    #     # params inputs
+    #     event_stream_handler: handler
+    #   )
     #
-    #   Events are available at resp.stream # => Enumerator
-    #   For parameter input example, please refer to following request syntax
+    #   #  Usage pattern c): Hybrid pattern of a) and b)
+    #   handler = Aws::BedrockRuntime::EventStreams::ConverseStreamOutput.new
+    #   handler.on_message_start_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::messageStart
+    #   end
+    #   handler.on_content_block_start_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::contentBlockStart
+    #   end
+    #   handler.on_content_block_delta_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::contentBlockDelta
+    #   end
+    #   handler.on_content_block_stop_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::contentBlockStop
+    #   end
+    #   handler.on_message_stop_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::messageStop
+    #   end
+    #   handler.on_metadata_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::metadata
+    #   end
+    #   handler.on_internal_server_exception_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::internalServerException
+    #   end
+    #   handler.on_model_stream_error_exception_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::modelStreamErrorException
+    #   end
+    #   handler.on_validation_exception_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::validationException
+    #   end
+    #   handler.on_throttling_exception_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::throttlingException
+    #   end
+    #   handler.on_service_unavailable_exception_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::serviceUnavailableException
+    #   end
+    #
+    #   client.converse_stream(
+    #     # params input
+    #     event_stream_handler: handler
+    #   ) do |stream|
+    #     stream.on_error_event do |event|
+    #       # catch unmodeled error event in the stream
+    #       raise event
+    #       # => Aws::Errors::EventError
+    #       # event.event_type => :error
+    #       # event.error_code => String
+    #       # event.error_message => String
+    #     end
+    #   end
+    #
+    #   # You can also iterate through events after the response complete.
+    #   # Events are available at
+    #   resp.stream # => Enumerator
+    #   # For parameter input example, please refer to following request syntax.
     #
     # @example Request syntax with placeholder values
     #
@@ -1452,7 +2111,7 @@ module Aws::BedrockRuntime
     #     model_id: "ConversationalModelId", # required
     #     messages: [
     #       {
-    #         role: "user", # required, accepts user, assistant
+    #         role: "user", # required, accepts user, assistant, system
     #         content: [ # required
     #           {
     #             text: "String",
@@ -1460,13 +2119,34 @@ module Aws::BedrockRuntime
     #               format: "png", # required, accepts png, jpeg, gif, webp
     #               source: { # required
     #                 bytes: "data",
+    #                 s3_location: {
+    #                   uri: "S3Uri", # required
+    #                   bucket_owner: "AccountId",
+    #                 },
+    #               },
+    #               error: {
+    #                 message: "String",
     #               },
     #             },
     #             document: {
-    #               format: "pdf", # required, accepts pdf, csv, doc, docx, xls, xlsx, html, txt, md
+    #               format: "pdf", # accepts pdf, csv, doc, docx, xls, xlsx, html, txt, md
     #               name: "DocumentBlockNameString", # required
     #               source: { # required
     #                 bytes: "data",
+    #                 s3_location: {
+    #                   uri: "S3Uri", # required
+    #                   bucket_owner: "AccountId",
+    #                 },
+    #                 text: "String",
+    #                 content: [
+    #                   {
+    #                     text: "String",
+    #                   },
+    #                 ],
+    #               },
+    #               context: "String",
+    #               citations: {
+    #                 enabled: false, # required
     #               },
     #             },
     #             video: {
@@ -1479,11 +2159,25 @@ module Aws::BedrockRuntime
     #                 },
     #               },
     #             },
+    #             audio: {
+    #               format: "mp3", # required, accepts mp3, opus, wav, aac, flac, mp4, ogg, mkv, mka, x-aac, m4a, mpeg, mpga, pcm, webm
+    #               source: { # required
+    #                 bytes: "data",
+    #                 s3_location: {
+    #                   uri: "S3Uri", # required
+    #                   bucket_owner: "AccountId",
+    #                 },
+    #               },
+    #               error: {
+    #                 message: "String",
+    #               },
+    #             },
     #             tool_use: {
     #               tool_use_id: "ToolUseId", # required
     #               name: "ToolName", # required
     #               input: { # required
     #               },
+    #               type: "server_tool_use", # accepts server_tool_use
     #             },
     #             tool_result: {
     #               tool_use_id: "ToolUseId", # required
@@ -1496,13 +2190,34 @@ module Aws::BedrockRuntime
     #                     format: "png", # required, accepts png, jpeg, gif, webp
     #                     source: { # required
     #                       bytes: "data",
+    #                       s3_location: {
+    #                         uri: "S3Uri", # required
+    #                         bucket_owner: "AccountId",
+    #                       },
+    #                     },
+    #                     error: {
+    #                       message: "String",
     #                     },
     #                   },
     #                   document: {
-    #                     format: "pdf", # required, accepts pdf, csv, doc, docx, xls, xlsx, html, txt, md
+    #                     format: "pdf", # accepts pdf, csv, doc, docx, xls, xlsx, html, txt, md
     #                     name: "DocumentBlockNameString", # required
     #                     source: { # required
     #                       bytes: "data",
+    #                       s3_location: {
+    #                         uri: "S3Uri", # required
+    #                         bucket_owner: "AccountId",
+    #                       },
+    #                       text: "String",
+    #                       content: [
+    #                         {
+    #                           text: "String",
+    #                         },
+    #                       ],
+    #                     },
+    #                     context: "String",
+    #                     citations: {
+    #                       enabled: false, # required
     #                     },
     #                   },
     #                   video: {
@@ -1515,9 +2230,22 @@ module Aws::BedrockRuntime
     #                       },
     #                     },
     #                   },
+    #                   search_result: {
+    #                     source: "String", # required
+    #                     title: "String", # required
+    #                     content: [ # required
+    #                       {
+    #                         text: "String", # required
+    #                       },
+    #                     ],
+    #                     citations: {
+    #                       enabled: false, # required
+    #                     },
+    #                   },
     #                 },
     #               ],
     #               status: "success", # accepts success, error
+    #               type: "String",
     #             },
     #             guard_content: {
     #               text: {
@@ -1531,12 +2259,86 @@ module Aws::BedrockRuntime
     #                 },
     #               },
     #             },
+    #             cache_point: {
+    #               type: "default", # required, accepts default
+    #               ttl: "5m", # accepts 5m, 1h
+    #             },
     #             reasoning_content: {
     #               reasoning_text: {
     #                 text: "String", # required
     #                 signature: "String",
     #               },
     #               redacted_content: "data",
+    #             },
+    #             citations_content: {
+    #               content: [
+    #                 {
+    #                   text: "String",
+    #                 },
+    #               ],
+    #               citations: [
+    #                 {
+    #                   title: "String",
+    #                   source: "String",
+    #                   source_content: [
+    #                     {
+    #                       text: "String",
+    #                     },
+    #                   ],
+    #                   location: {
+    #                     web: {
+    #                       url: "String",
+    #                       domain: "String",
+    #                     },
+    #                     document_char: {
+    #                       document_index: 1,
+    #                       start: 1,
+    #                       end: 1,
+    #                     },
+    #                     document_page: {
+    #                       document_index: 1,
+    #                       start: 1,
+    #                       end: 1,
+    #                     },
+    #                     document_chunk: {
+    #                       document_index: 1,
+    #                       start: 1,
+    #                       end: 1,
+    #                     },
+    #                     search_result_location: {
+    #                       search_result_index: 1,
+    #                       start: 1,
+    #                       end: 1,
+    #                     },
+    #                   },
+    #                 },
+    #               ],
+    #             },
+    #             search_result: {
+    #               source: "String", # required
+    #               title: "String", # required
+    #               content: [ # required
+    #                 {
+    #                   text: "String", # required
+    #                 },
+    #               ],
+    #               citations: {
+    #                 enabled: false, # required
+    #               },
+    #             },
+    #             tool_addition: {
+    #               tool: { # required
+    #                 type: "ToolReferenceTypeString",
+    #                 name: "ToolReferenceNameString",
+    #                 server_name: "ToolReferenceServerNameString",
+    #               },
+    #             },
+    #             tool_removal: {
+    #               tool: { # required
+    #                 type: "ToolReferenceTypeString",
+    #                 name: "ToolReferenceNameString",
+    #                 server_name: "ToolReferenceServerNameString",
+    #               },
     #             },
     #           },
     #         ],
@@ -1557,6 +2359,10 @@ module Aws::BedrockRuntime
     #             },
     #           },
     #         },
+    #         cache_point: {
+    #           type: "default", # required, accepts default
+    #           ttl: "5m", # accepts 5m, 1h
+    #         },
     #       },
     #     ],
     #     inference_config: {
@@ -1575,6 +2381,14 @@ module Aws::BedrockRuntime
     #               json: {
     #               },
     #             },
+    #             strict: false,
+    #           },
+    #           system_tool: {
+    #             name: "ToolName", # required
+    #           },
+    #           cache_point: {
+    #             type: "default", # required, accepts default
+    #             ttl: "5m", # accepts 5m, 1h
     #           },
     #         },
     #       ],
@@ -1589,9 +2403,9 @@ module Aws::BedrockRuntime
     #       },
     #     },
     #     guardrail_config: {
-    #       guardrail_identifier: "GuardrailIdentifier", # required
-    #       guardrail_version: "GuardrailVersion", # required
-    #       trace: "enabled", # accepts enabled, disabled
+    #       guardrail_identifier: "GuardrailIdentifier",
+    #       guardrail_version: "GuardrailVersion",
+    #       trace: "enabled", # accepts enabled, disabled, enabled_full
     #       stream_processing_mode: "sync", # accepts sync, async
     #     },
     #     additional_model_request_fields: {
@@ -1608,40 +2422,90 @@ module Aws::BedrockRuntime
     #     performance_config: {
     #       latency: "standard", # accepts standard, optimized
     #     },
+    #     service_tier: {
+    #       type: "priority", # required, accepts priority, default, flex, reserved
+    #     },
+    #     output_config: {
+    #       text_format: {
+    #         type: "json_schema", # required, accepts json_schema
+    #         structure: { # required
+    #           json_schema: {
+    #             schema: "String", # required
+    #             name: "String",
+    #             description: "String",
+    #           },
+    #         },
+    #       },
+    #       effort: "OutputConfigEffortString",
+    #     },
     #   })
     #
     # @example Response structure
     #
-    #   All events are available at resp.stream:
+    #   # All events are available at resp.stream:
     #   resp.stream #=> Enumerator
     #   resp.stream.event_types #=> [:message_start, :content_block_start, :content_block_delta, :content_block_stop, :message_stop, :metadata, :internal_server_exception, :model_stream_error_exception, :validation_exception, :throttling_exception, :service_unavailable_exception]
     #
-    #   For :message_start event available at #on_message_start_event callback and response eventstream enumerator:
-    #   event.role #=> String, one of "user", "assistant"
+    #   # For :message_start event available at #on_message_start_event callback and response eventstream enumerator:
+    #   event.role #=> String, one of "user", "assistant", "system"
     #
-    #   For :content_block_start event available at #on_content_block_start_event callback and response eventstream enumerator:
+    #   # For :content_block_start event available at #on_content_block_start_event callback and response eventstream enumerator:
     #   event.start.tool_use.tool_use_id #=> String
     #   event.start.tool_use.name #=> String
+    #   event.start.tool_use.type #=> String, one of "server_tool_use"
+    #   event.start.tool_result.tool_use_id #=> String
+    #   event.start.tool_result.type #=> String
+    #   event.start.tool_result.status #=> String, one of "success", "error"
+    #   event.start.image.format #=> String, one of "png", "jpeg", "gif", "webp"
     #   event.content_block_index #=> Integer
     #
-    #   For :content_block_delta event available at #on_content_block_delta_event callback and response eventstream enumerator:
+    #   # For :content_block_delta event available at #on_content_block_delta_event callback and response eventstream enumerator:
     #   event.delta.text #=> String
     #   event.delta.tool_use.input #=> String
+    #   event.delta.tool_result #=> Array
+    #   event.delta.tool_result[0].text #=> String
     #   event.delta.reasoning_content.text #=> String
     #   event.delta.reasoning_content.redacted_content #=> String
     #   event.delta.reasoning_content.signature #=> String
+    #   event.delta.citation.title #=> String
+    #   event.delta.citation.source #=> String
+    #   event.delta.citation.source_content #=> Array
+    #   event.delta.citation.source_content[0].text #=> String
+    #   event.delta.citation.location.web.url #=> String
+    #   event.delta.citation.location.web.domain #=> String
+    #   event.delta.citation.location.document_char.document_index #=> Integer
+    #   event.delta.citation.location.document_char.start #=> Integer
+    #   event.delta.citation.location.document_char.end #=> Integer
+    #   event.delta.citation.location.document_page.document_index #=> Integer
+    #   event.delta.citation.location.document_page.start #=> Integer
+    #   event.delta.citation.location.document_page.end #=> Integer
+    #   event.delta.citation.location.document_chunk.document_index #=> Integer
+    #   event.delta.citation.location.document_chunk.start #=> Integer
+    #   event.delta.citation.location.document_chunk.end #=> Integer
+    #   event.delta.citation.location.search_result_location.search_result_index #=> Integer
+    #   event.delta.citation.location.search_result_location.start #=> Integer
+    #   event.delta.citation.location.search_result_location.end #=> Integer
+    #   event.delta.image.source.bytes #=> String
+    #   event.delta.image.source.s3_location.uri #=> String
+    #   event.delta.image.source.s3_location.bucket_owner #=> String
+    #   event.delta.image.error.message #=> String
     #   event.content_block_index #=> Integer
     #
-    #   For :content_block_stop event available at #on_content_block_stop_event callback and response eventstream enumerator:
+    #   # For :content_block_stop event available at #on_content_block_stop_event callback and response eventstream enumerator:
     #   event.content_block_index #=> Integer
     #
-    #   For :message_stop event available at #on_message_stop_event callback and response eventstream enumerator:
-    #   event.stop_reason #=> String, one of "end_turn", "tool_use", "max_tokens", "stop_sequence", "guardrail_intervened", "content_filtered"
+    #   # For :message_stop event available at #on_message_stop_event callback and response eventstream enumerator:
+    #   event.stop_reason #=> String, one of "end_turn", "tool_use", "max_tokens", "stop_sequence", "guardrail_intervened", "content_filtered", "malformed_model_output", "malformed_tool_use", "model_context_window_exceeded"
     #
-    #   For :metadata event available at #on_metadata_event callback and response eventstream enumerator:
+    #   # For :metadata event available at #on_metadata_event callback and response eventstream enumerator:
     #   event.usage.input_tokens #=> Integer
     #   event.usage.output_tokens #=> Integer
     #   event.usage.total_tokens #=> Integer
+    #   event.usage.cache_read_input_tokens #=> Integer
+    #   event.usage.cache_write_input_tokens #=> Integer
+    #   event.usage.cache_details #=> Array
+    #   event.usage.cache_details[0].ttl #=> String, one of "5m", "1h"
+    #   event.usage.cache_details[0].input_tokens #=> Integer
     #   event.metrics.latency_ms #=> Integer
     #   event.trace.guardrail.model_output #=> Array
     #   event.trace.guardrail.model_output[0] #=> String
@@ -1649,33 +2513,148 @@ module Aws::BedrockRuntime
     #   event.trace.guardrail.input_assessment["String"].topic_policy.topics #=> Array
     #   event.trace.guardrail.input_assessment["String"].topic_policy.topics[0].name #=> String
     #   event.trace.guardrail.input_assessment["String"].topic_policy.topics[0].type #=> String, one of "DENY"
-    #   event.trace.guardrail.input_assessment["String"].topic_policy.topics[0].action #=> String, one of "BLOCKED"
+    #   event.trace.guardrail.input_assessment["String"].topic_policy.topics[0].action #=> String, one of "BLOCKED", "NONE"
+    #   event.trace.guardrail.input_assessment["String"].topic_policy.topics[0].detected #=> Boolean
     #   event.trace.guardrail.input_assessment["String"].content_policy.filters #=> Array
     #   event.trace.guardrail.input_assessment["String"].content_policy.filters[0].type #=> String, one of "INSULTS", "HATE", "SEXUAL", "VIOLENCE", "MISCONDUCT", "PROMPT_ATTACK"
     #   event.trace.guardrail.input_assessment["String"].content_policy.filters[0].confidence #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH"
     #   event.trace.guardrail.input_assessment["String"].content_policy.filters[0].filter_strength #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH"
-    #   event.trace.guardrail.input_assessment["String"].content_policy.filters[0].action #=> String, one of "BLOCKED"
+    #   event.trace.guardrail.input_assessment["String"].content_policy.filters[0].action #=> String, one of "BLOCKED", "NONE"
+    #   event.trace.guardrail.input_assessment["String"].content_policy.filters[0].detected #=> Boolean
     #   event.trace.guardrail.input_assessment["String"].word_policy.custom_words #=> Array
     #   event.trace.guardrail.input_assessment["String"].word_policy.custom_words[0].match #=> String
-    #   event.trace.guardrail.input_assessment["String"].word_policy.custom_words[0].action #=> String, one of "BLOCKED"
+    #   event.trace.guardrail.input_assessment["String"].word_policy.custom_words[0].action #=> String, one of "BLOCKED", "NONE"
+    #   event.trace.guardrail.input_assessment["String"].word_policy.custom_words[0].detected #=> Boolean
     #   event.trace.guardrail.input_assessment["String"].word_policy.managed_word_lists #=> Array
     #   event.trace.guardrail.input_assessment["String"].word_policy.managed_word_lists[0].match #=> String
     #   event.trace.guardrail.input_assessment["String"].word_policy.managed_word_lists[0].type #=> String, one of "PROFANITY"
-    #   event.trace.guardrail.input_assessment["String"].word_policy.managed_word_lists[0].action #=> String, one of "BLOCKED"
+    #   event.trace.guardrail.input_assessment["String"].word_policy.managed_word_lists[0].action #=> String, one of "BLOCKED", "NONE"
+    #   event.trace.guardrail.input_assessment["String"].word_policy.managed_word_lists[0].detected #=> Boolean
     #   event.trace.guardrail.input_assessment["String"].sensitive_information_policy.pii_entities #=> Array
     #   event.trace.guardrail.input_assessment["String"].sensitive_information_policy.pii_entities[0].match #=> String
     #   event.trace.guardrail.input_assessment["String"].sensitive_information_policy.pii_entities[0].type #=> String, one of "ADDRESS", "AGE", "AWS_ACCESS_KEY", "AWS_SECRET_KEY", "CA_HEALTH_NUMBER", "CA_SOCIAL_INSURANCE_NUMBER", "CREDIT_DEBIT_CARD_CVV", "CREDIT_DEBIT_CARD_EXPIRY", "CREDIT_DEBIT_CARD_NUMBER", "DRIVER_ID", "EMAIL", "INTERNATIONAL_BANK_ACCOUNT_NUMBER", "IP_ADDRESS", "LICENSE_PLATE", "MAC_ADDRESS", "NAME", "PASSWORD", "PHONE", "PIN", "SWIFT_CODE", "UK_NATIONAL_HEALTH_SERVICE_NUMBER", "UK_NATIONAL_INSURANCE_NUMBER", "UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER", "URL", "USERNAME", "US_BANK_ACCOUNT_NUMBER", "US_BANK_ROUTING_NUMBER", "US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER", "US_PASSPORT_NUMBER", "US_SOCIAL_SECURITY_NUMBER", "VEHICLE_IDENTIFICATION_NUMBER"
-    #   event.trace.guardrail.input_assessment["String"].sensitive_information_policy.pii_entities[0].action #=> String, one of "ANONYMIZED", "BLOCKED"
+    #   event.trace.guardrail.input_assessment["String"].sensitive_information_policy.pii_entities[0].action #=> String, one of "ANONYMIZED", "BLOCKED", "NONE"
+    #   event.trace.guardrail.input_assessment["String"].sensitive_information_policy.pii_entities[0].detected #=> Boolean
     #   event.trace.guardrail.input_assessment["String"].sensitive_information_policy.regexes #=> Array
     #   event.trace.guardrail.input_assessment["String"].sensitive_information_policy.regexes[0].name #=> String
     #   event.trace.guardrail.input_assessment["String"].sensitive_information_policy.regexes[0].match #=> String
     #   event.trace.guardrail.input_assessment["String"].sensitive_information_policy.regexes[0].regex #=> String
-    #   event.trace.guardrail.input_assessment["String"].sensitive_information_policy.regexes[0].action #=> String, one of "ANONYMIZED", "BLOCKED"
+    #   event.trace.guardrail.input_assessment["String"].sensitive_information_policy.regexes[0].action #=> String, one of "ANONYMIZED", "BLOCKED", "NONE"
+    #   event.trace.guardrail.input_assessment["String"].sensitive_information_policy.regexes[0].detected #=> Boolean
     #   event.trace.guardrail.input_assessment["String"].contextual_grounding_policy.filters #=> Array
     #   event.trace.guardrail.input_assessment["String"].contextual_grounding_policy.filters[0].type #=> String, one of "GROUNDING", "RELEVANCE"
     #   event.trace.guardrail.input_assessment["String"].contextual_grounding_policy.filters[0].threshold #=> Float
     #   event.trace.guardrail.input_assessment["String"].contextual_grounding_policy.filters[0].score #=> Float
     #   event.trace.guardrail.input_assessment["String"].contextual_grounding_policy.filters[0].action #=> String, one of "BLOCKED", "NONE"
+    #   event.trace.guardrail.input_assessment["String"].contextual_grounding_policy.filters[0].detected #=> Boolean
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.translation.premises #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.translation.premises[0].logic #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.translation.premises[0].natural_language #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.translation.claims #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.translation.claims[0].logic #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.translation.claims[0].natural_language #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.translation.untranslated_premises #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.translation.untranslated_premises[0].text #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.translation.untranslated_claims #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.translation.untranslated_claims[0].text #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.translation.confidence #=> Float
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.claims_true_scenario.statements #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.claims_true_scenario.statements[0].logic #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.claims_true_scenario.statements[0].natural_language #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.supporting_rules #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.supporting_rules[0].identifier #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.supporting_rules[0].policy_version_arn #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.logic_warning.type #=> String, one of "ALWAYS_FALSE", "ALWAYS_TRUE"
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.logic_warning.premises #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.logic_warning.premises[0].logic #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.logic_warning.premises[0].natural_language #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.logic_warning.claims #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.logic_warning.claims[0].logic #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].valid.logic_warning.claims[0].natural_language #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.translation.premises #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.translation.premises[0].logic #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.translation.premises[0].natural_language #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.translation.claims #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.translation.claims[0].logic #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.translation.claims[0].natural_language #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.translation.untranslated_premises #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.translation.untranslated_premises[0].text #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.translation.untranslated_claims #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.translation.untranslated_claims[0].text #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.translation.confidence #=> Float
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.contradicting_rules #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.contradicting_rules[0].identifier #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.contradicting_rules[0].policy_version_arn #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.logic_warning.type #=> String, one of "ALWAYS_FALSE", "ALWAYS_TRUE"
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.logic_warning.premises #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.logic_warning.premises[0].logic #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.logic_warning.premises[0].natural_language #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.logic_warning.claims #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.logic_warning.claims[0].logic #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].invalid.logic_warning.claims[0].natural_language #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.translation.premises #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.translation.premises[0].logic #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.translation.premises[0].natural_language #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.translation.claims #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.translation.claims[0].logic #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.translation.claims[0].natural_language #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.translation.untranslated_premises #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.translation.untranslated_premises[0].text #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.translation.untranslated_claims #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.translation.untranslated_claims[0].text #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.translation.confidence #=> Float
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.claims_true_scenario.statements #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.claims_true_scenario.statements[0].logic #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.claims_true_scenario.statements[0].natural_language #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.claims_false_scenario.statements #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.claims_false_scenario.statements[0].logic #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.claims_false_scenario.statements[0].natural_language #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.logic_warning.type #=> String, one of "ALWAYS_FALSE", "ALWAYS_TRUE"
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.logic_warning.premises #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.logic_warning.premises[0].logic #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.logic_warning.premises[0].natural_language #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.logic_warning.claims #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.logic_warning.claims[0].logic #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].satisfiable.logic_warning.claims[0].natural_language #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.translation.premises #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.translation.premises[0].logic #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.translation.premises[0].natural_language #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.translation.claims #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.translation.claims[0].logic #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.translation.claims[0].natural_language #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.translation.untranslated_premises #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.translation.untranslated_premises[0].text #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.translation.untranslated_claims #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.translation.untranslated_claims[0].text #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.translation.confidence #=> Float
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.contradicting_rules #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.contradicting_rules[0].identifier #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.contradicting_rules[0].policy_version_arn #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.logic_warning.type #=> String, one of "ALWAYS_FALSE", "ALWAYS_TRUE"
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.logic_warning.premises #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.logic_warning.premises[0].logic #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.logic_warning.premises[0].natural_language #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.logic_warning.claims #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.logic_warning.claims[0].logic #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].impossible.logic_warning.claims[0].natural_language #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.options #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].premises #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].premises[0].logic #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].premises[0].natural_language #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].claims #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].claims[0].logic #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].claims[0].natural_language #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].untranslated_premises #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].untranslated_premises[0].text #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].untranslated_claims #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].untranslated_claims[0].text #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].confidence #=> Float
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.difference_scenarios #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.difference_scenarios[0].statements #=> Array
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.difference_scenarios[0].statements[0].logic #=> String
+    #   event.trace.guardrail.input_assessment["String"].automated_reasoning_policy.findings[0].translation_ambiguous.difference_scenarios[0].statements[0].natural_language #=> String
     #   event.trace.guardrail.input_assessment["String"].invocation_metrics.guardrail_processing_latency #=> Integer
     #   event.trace.guardrail.input_assessment["String"].invocation_metrics.usage.topic_policy_units #=> Integer
     #   event.trace.guardrail.input_assessment["String"].invocation_metrics.usage.content_policy_units #=> Integer
@@ -1683,42 +2662,166 @@ module Aws::BedrockRuntime
     #   event.trace.guardrail.input_assessment["String"].invocation_metrics.usage.sensitive_information_policy_units #=> Integer
     #   event.trace.guardrail.input_assessment["String"].invocation_metrics.usage.sensitive_information_policy_free_units #=> Integer
     #   event.trace.guardrail.input_assessment["String"].invocation_metrics.usage.contextual_grounding_policy_units #=> Integer
+    #   event.trace.guardrail.input_assessment["String"].invocation_metrics.usage.content_policy_image_units #=> Integer
+    #   event.trace.guardrail.input_assessment["String"].invocation_metrics.usage.automated_reasoning_policy_units #=> Integer
+    #   event.trace.guardrail.input_assessment["String"].invocation_metrics.usage.automated_reasoning_policies #=> Integer
     #   event.trace.guardrail.input_assessment["String"].invocation_metrics.guardrail_coverage.text_characters.guarded #=> Integer
     #   event.trace.guardrail.input_assessment["String"].invocation_metrics.guardrail_coverage.text_characters.total #=> Integer
     #   event.trace.guardrail.input_assessment["String"].invocation_metrics.guardrail_coverage.images.guarded #=> Integer
     #   event.trace.guardrail.input_assessment["String"].invocation_metrics.guardrail_coverage.images.total #=> Integer
+    #   event.trace.guardrail.input_assessment["String"].applied_guardrail_details.guardrail_id #=> String
+    #   event.trace.guardrail.input_assessment["String"].applied_guardrail_details.guardrail_version #=> String
+    #   event.trace.guardrail.input_assessment["String"].applied_guardrail_details.guardrail_arn #=> String
+    #   event.trace.guardrail.input_assessment["String"].applied_guardrail_details.guardrail_origin #=> Array
+    #   event.trace.guardrail.input_assessment["String"].applied_guardrail_details.guardrail_origin[0] #=> String, one of "REQUEST", "ACCOUNT_ENFORCED", "ORGANIZATION_ENFORCED"
+    #   event.trace.guardrail.input_assessment["String"].applied_guardrail_details.guardrail_ownership #=> String, one of "SELF", "CROSS_ACCOUNT"
     #   event.trace.guardrail.output_assessments #=> Hash
     #   event.trace.guardrail.output_assessments["String"] #=> Array
     #   event.trace.guardrail.output_assessments["String"][0].topic_policy.topics #=> Array
     #   event.trace.guardrail.output_assessments["String"][0].topic_policy.topics[0].name #=> String
     #   event.trace.guardrail.output_assessments["String"][0].topic_policy.topics[0].type #=> String, one of "DENY"
-    #   event.trace.guardrail.output_assessments["String"][0].topic_policy.topics[0].action #=> String, one of "BLOCKED"
+    #   event.trace.guardrail.output_assessments["String"][0].topic_policy.topics[0].action #=> String, one of "BLOCKED", "NONE"
+    #   event.trace.guardrail.output_assessments["String"][0].topic_policy.topics[0].detected #=> Boolean
     #   event.trace.guardrail.output_assessments["String"][0].content_policy.filters #=> Array
     #   event.trace.guardrail.output_assessments["String"][0].content_policy.filters[0].type #=> String, one of "INSULTS", "HATE", "SEXUAL", "VIOLENCE", "MISCONDUCT", "PROMPT_ATTACK"
     #   event.trace.guardrail.output_assessments["String"][0].content_policy.filters[0].confidence #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH"
     #   event.trace.guardrail.output_assessments["String"][0].content_policy.filters[0].filter_strength #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH"
-    #   event.trace.guardrail.output_assessments["String"][0].content_policy.filters[0].action #=> String, one of "BLOCKED"
+    #   event.trace.guardrail.output_assessments["String"][0].content_policy.filters[0].action #=> String, one of "BLOCKED", "NONE"
+    #   event.trace.guardrail.output_assessments["String"][0].content_policy.filters[0].detected #=> Boolean
     #   event.trace.guardrail.output_assessments["String"][0].word_policy.custom_words #=> Array
     #   event.trace.guardrail.output_assessments["String"][0].word_policy.custom_words[0].match #=> String
-    #   event.trace.guardrail.output_assessments["String"][0].word_policy.custom_words[0].action #=> String, one of "BLOCKED"
+    #   event.trace.guardrail.output_assessments["String"][0].word_policy.custom_words[0].action #=> String, one of "BLOCKED", "NONE"
+    #   event.trace.guardrail.output_assessments["String"][0].word_policy.custom_words[0].detected #=> Boolean
     #   event.trace.guardrail.output_assessments["String"][0].word_policy.managed_word_lists #=> Array
     #   event.trace.guardrail.output_assessments["String"][0].word_policy.managed_word_lists[0].match #=> String
     #   event.trace.guardrail.output_assessments["String"][0].word_policy.managed_word_lists[0].type #=> String, one of "PROFANITY"
-    #   event.trace.guardrail.output_assessments["String"][0].word_policy.managed_word_lists[0].action #=> String, one of "BLOCKED"
+    #   event.trace.guardrail.output_assessments["String"][0].word_policy.managed_word_lists[0].action #=> String, one of "BLOCKED", "NONE"
+    #   event.trace.guardrail.output_assessments["String"][0].word_policy.managed_word_lists[0].detected #=> Boolean
     #   event.trace.guardrail.output_assessments["String"][0].sensitive_information_policy.pii_entities #=> Array
     #   event.trace.guardrail.output_assessments["String"][0].sensitive_information_policy.pii_entities[0].match #=> String
     #   event.trace.guardrail.output_assessments["String"][0].sensitive_information_policy.pii_entities[0].type #=> String, one of "ADDRESS", "AGE", "AWS_ACCESS_KEY", "AWS_SECRET_KEY", "CA_HEALTH_NUMBER", "CA_SOCIAL_INSURANCE_NUMBER", "CREDIT_DEBIT_CARD_CVV", "CREDIT_DEBIT_CARD_EXPIRY", "CREDIT_DEBIT_CARD_NUMBER", "DRIVER_ID", "EMAIL", "INTERNATIONAL_BANK_ACCOUNT_NUMBER", "IP_ADDRESS", "LICENSE_PLATE", "MAC_ADDRESS", "NAME", "PASSWORD", "PHONE", "PIN", "SWIFT_CODE", "UK_NATIONAL_HEALTH_SERVICE_NUMBER", "UK_NATIONAL_INSURANCE_NUMBER", "UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER", "URL", "USERNAME", "US_BANK_ACCOUNT_NUMBER", "US_BANK_ROUTING_NUMBER", "US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER", "US_PASSPORT_NUMBER", "US_SOCIAL_SECURITY_NUMBER", "VEHICLE_IDENTIFICATION_NUMBER"
-    #   event.trace.guardrail.output_assessments["String"][0].sensitive_information_policy.pii_entities[0].action #=> String, one of "ANONYMIZED", "BLOCKED"
+    #   event.trace.guardrail.output_assessments["String"][0].sensitive_information_policy.pii_entities[0].action #=> String, one of "ANONYMIZED", "BLOCKED", "NONE"
+    #   event.trace.guardrail.output_assessments["String"][0].sensitive_information_policy.pii_entities[0].detected #=> Boolean
     #   event.trace.guardrail.output_assessments["String"][0].sensitive_information_policy.regexes #=> Array
     #   event.trace.guardrail.output_assessments["String"][0].sensitive_information_policy.regexes[0].name #=> String
     #   event.trace.guardrail.output_assessments["String"][0].sensitive_information_policy.regexes[0].match #=> String
     #   event.trace.guardrail.output_assessments["String"][0].sensitive_information_policy.regexes[0].regex #=> String
-    #   event.trace.guardrail.output_assessments["String"][0].sensitive_information_policy.regexes[0].action #=> String, one of "ANONYMIZED", "BLOCKED"
+    #   event.trace.guardrail.output_assessments["String"][0].sensitive_information_policy.regexes[0].action #=> String, one of "ANONYMIZED", "BLOCKED", "NONE"
+    #   event.trace.guardrail.output_assessments["String"][0].sensitive_information_policy.regexes[0].detected #=> Boolean
     #   event.trace.guardrail.output_assessments["String"][0].contextual_grounding_policy.filters #=> Array
     #   event.trace.guardrail.output_assessments["String"][0].contextual_grounding_policy.filters[0].type #=> String, one of "GROUNDING", "RELEVANCE"
     #   event.trace.guardrail.output_assessments["String"][0].contextual_grounding_policy.filters[0].threshold #=> Float
     #   event.trace.guardrail.output_assessments["String"][0].contextual_grounding_policy.filters[0].score #=> Float
     #   event.trace.guardrail.output_assessments["String"][0].contextual_grounding_policy.filters[0].action #=> String, one of "BLOCKED", "NONE"
+    #   event.trace.guardrail.output_assessments["String"][0].contextual_grounding_policy.filters[0].detected #=> Boolean
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.translation.premises #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.translation.premises[0].logic #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.translation.premises[0].natural_language #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.translation.claims #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.translation.claims[0].logic #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.translation.claims[0].natural_language #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.translation.untranslated_premises #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.translation.untranslated_premises[0].text #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.translation.untranslated_claims #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.translation.untranslated_claims[0].text #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.translation.confidence #=> Float
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.claims_true_scenario.statements #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.claims_true_scenario.statements[0].logic #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.claims_true_scenario.statements[0].natural_language #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.supporting_rules #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.supporting_rules[0].identifier #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.supporting_rules[0].policy_version_arn #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.logic_warning.type #=> String, one of "ALWAYS_FALSE", "ALWAYS_TRUE"
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.logic_warning.premises #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.logic_warning.premises[0].logic #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.logic_warning.premises[0].natural_language #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.logic_warning.claims #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.logic_warning.claims[0].logic #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].valid.logic_warning.claims[0].natural_language #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.translation.premises #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.translation.premises[0].logic #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.translation.premises[0].natural_language #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.translation.claims #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.translation.claims[0].logic #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.translation.claims[0].natural_language #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.translation.untranslated_premises #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.translation.untranslated_premises[0].text #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.translation.untranslated_claims #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.translation.untranslated_claims[0].text #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.translation.confidence #=> Float
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.contradicting_rules #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.contradicting_rules[0].identifier #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.contradicting_rules[0].policy_version_arn #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.logic_warning.type #=> String, one of "ALWAYS_FALSE", "ALWAYS_TRUE"
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.logic_warning.premises #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.logic_warning.premises[0].logic #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.logic_warning.premises[0].natural_language #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.logic_warning.claims #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.logic_warning.claims[0].logic #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].invalid.logic_warning.claims[0].natural_language #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.translation.premises #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.translation.premises[0].logic #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.translation.premises[0].natural_language #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.translation.claims #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.translation.claims[0].logic #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.translation.claims[0].natural_language #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.translation.untranslated_premises #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.translation.untranslated_premises[0].text #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.translation.untranslated_claims #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.translation.untranslated_claims[0].text #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.translation.confidence #=> Float
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.claims_true_scenario.statements #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.claims_true_scenario.statements[0].logic #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.claims_true_scenario.statements[0].natural_language #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.claims_false_scenario.statements #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.claims_false_scenario.statements[0].logic #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.claims_false_scenario.statements[0].natural_language #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.logic_warning.type #=> String, one of "ALWAYS_FALSE", "ALWAYS_TRUE"
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.logic_warning.premises #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.logic_warning.premises[0].logic #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.logic_warning.premises[0].natural_language #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.logic_warning.claims #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.logic_warning.claims[0].logic #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].satisfiable.logic_warning.claims[0].natural_language #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.translation.premises #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.translation.premises[0].logic #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.translation.premises[0].natural_language #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.translation.claims #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.translation.claims[0].logic #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.translation.claims[0].natural_language #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.translation.untranslated_premises #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.translation.untranslated_premises[0].text #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.translation.untranslated_claims #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.translation.untranslated_claims[0].text #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.translation.confidence #=> Float
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.contradicting_rules #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.contradicting_rules[0].identifier #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.contradicting_rules[0].policy_version_arn #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.logic_warning.type #=> String, one of "ALWAYS_FALSE", "ALWAYS_TRUE"
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.logic_warning.premises #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.logic_warning.premises[0].logic #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.logic_warning.premises[0].natural_language #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.logic_warning.claims #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.logic_warning.claims[0].logic #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].impossible.logic_warning.claims[0].natural_language #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.options #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].premises #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].premises[0].logic #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].premises[0].natural_language #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].claims #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].claims[0].logic #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].claims[0].natural_language #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].untranslated_premises #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].untranslated_premises[0].text #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].untranslated_claims #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].untranslated_claims[0].text #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.options[0].translations[0].confidence #=> Float
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.difference_scenarios #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.difference_scenarios[0].statements #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.difference_scenarios[0].statements[0].logic #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].automated_reasoning_policy.findings[0].translation_ambiguous.difference_scenarios[0].statements[0].natural_language #=> String
     #   event.trace.guardrail.output_assessments["String"][0].invocation_metrics.guardrail_processing_latency #=> Integer
     #   event.trace.guardrail.output_assessments["String"][0].invocation_metrics.usage.topic_policy_units #=> Integer
     #   event.trace.guardrail.output_assessments["String"][0].invocation_metrics.usage.content_policy_units #=> Integer
@@ -1726,28 +2829,39 @@ module Aws::BedrockRuntime
     #   event.trace.guardrail.output_assessments["String"][0].invocation_metrics.usage.sensitive_information_policy_units #=> Integer
     #   event.trace.guardrail.output_assessments["String"][0].invocation_metrics.usage.sensitive_information_policy_free_units #=> Integer
     #   event.trace.guardrail.output_assessments["String"][0].invocation_metrics.usage.contextual_grounding_policy_units #=> Integer
+    #   event.trace.guardrail.output_assessments["String"][0].invocation_metrics.usage.content_policy_image_units #=> Integer
+    #   event.trace.guardrail.output_assessments["String"][0].invocation_metrics.usage.automated_reasoning_policy_units #=> Integer
+    #   event.trace.guardrail.output_assessments["String"][0].invocation_metrics.usage.automated_reasoning_policies #=> Integer
     #   event.trace.guardrail.output_assessments["String"][0].invocation_metrics.guardrail_coverage.text_characters.guarded #=> Integer
     #   event.trace.guardrail.output_assessments["String"][0].invocation_metrics.guardrail_coverage.text_characters.total #=> Integer
     #   event.trace.guardrail.output_assessments["String"][0].invocation_metrics.guardrail_coverage.images.guarded #=> Integer
     #   event.trace.guardrail.output_assessments["String"][0].invocation_metrics.guardrail_coverage.images.total #=> Integer
+    #   event.trace.guardrail.output_assessments["String"][0].applied_guardrail_details.guardrail_id #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].applied_guardrail_details.guardrail_version #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].applied_guardrail_details.guardrail_arn #=> String
+    #   event.trace.guardrail.output_assessments["String"][0].applied_guardrail_details.guardrail_origin #=> Array
+    #   event.trace.guardrail.output_assessments["String"][0].applied_guardrail_details.guardrail_origin[0] #=> String, one of "REQUEST", "ACCOUNT_ENFORCED", "ORGANIZATION_ENFORCED"
+    #   event.trace.guardrail.output_assessments["String"][0].applied_guardrail_details.guardrail_ownership #=> String, one of "SELF", "CROSS_ACCOUNT"
+    #   event.trace.guardrail.action_reason #=> String
     #   event.trace.prompt_router.invoked_model_id #=> String
     #   event.performance_config.latency #=> String, one of "standard", "optimized"
+    #   event.service_tier.type #=> String, one of "priority", "default", "flex", "reserved"
     #
-    #   For :internal_server_exception event available at #on_internal_server_exception_event callback and response eventstream enumerator:
+    #   # For :internal_server_exception event available at #on_internal_server_exception_event callback and response eventstream enumerator:
     #   event.message #=> String
     #
-    #   For :model_stream_error_exception event available at #on_model_stream_error_exception_event callback and response eventstream enumerator:
+    #   # For :model_stream_error_exception event available at #on_model_stream_error_exception_event callback and response eventstream enumerator:
     #   event.message #=> String
     #   event.original_status_code #=> Integer
     #   event.original_message #=> String
     #
-    #   For :validation_exception event available at #on_validation_exception_event callback and response eventstream enumerator:
+    #   # For :validation_exception event available at #on_validation_exception_event callback and response eventstream enumerator:
     #   event.message #=> String
     #
-    #   For :throttling_exception event available at #on_throttling_exception_event callback and response eventstream enumerator:
+    #   # For :throttling_exception event available at #on_throttling_exception_event callback and response eventstream enumerator:
     #   event.message #=> String
     #
-    #   For :service_unavailable_exception event available at #on_service_unavailable_exception_event callback and response eventstream enumerator:
+    #   # For :service_unavailable_exception event available at #on_service_unavailable_exception_event callback and response eventstream enumerator:
     #   event.message #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-runtime-2023-09-30/ConverseStream AWS API Documentation
@@ -1775,6 +2889,379 @@ module Aws::BedrockRuntime
       req.handlers.add(Aws::Binary::DecodeHandler, priority: 95)
 
       req.send_request(options, &block)
+    end
+
+    # Returns the token count for a given inference request. This operation
+    # helps you estimate token usage before sending requests to foundation
+    # models by returning the token count that would be used if the same
+    # input were sent to the model in an inference request.
+    #
+    # Token counting is model-specific because different models use
+    # different tokenization strategies. The token count returned by this
+    # operation will match the token count that would be charged if the same
+    # input were sent to the model in an `InvokeModel` or `Converse`
+    # request.
+    #
+    # You can use this operation to:
+    #
+    # * Estimate costs before sending inference requests.
+    #
+    # * Optimize prompts to fit within token limits.
+    #
+    # * Plan for token usage in your applications.
+    #
+    # This operation accepts the same input formats as `InvokeModel` and
+    # `Converse`, allowing you to count tokens for both raw text inputs and
+    # structured conversation formats.
+    #
+    # The following operations are related to `CountTokens`:
+    #
+    # * [InvokeModel][1] - Sends inference requests to foundation models
+    #
+    # * [Converse][2] - Sends conversation-based inference requests to
+    #   foundation models
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/bedrock/latest/API/API_runtime_InvokeModel.html
+    # [2]: https://docs.aws.amazon.com/bedrock/latest/API/API_runtime_Converse.html
+    #
+    # @option params [required, String] :model_id
+    #   The unique identifier or ARN of the foundation model to use for token
+    #   counting. Each model processes tokens differently, so the token count
+    #   is specific to the model you specify.
+    #
+    # @option params [required, Types::CountTokensInput] :input
+    #   The input for which to count tokens. The structure of this parameter
+    #   depends on whether you're counting tokens for an `InvokeModel` or
+    #   `Converse` request:
+    #
+    #   * For `InvokeModel` requests, provide the request body in the
+    #     `invokeModel` field
+    #
+    #   * For `Converse` requests, provide the messages and system content in
+    #     the `converse` field
+    #
+    #   The input format must be compatible with the model specified in the
+    #   `modelId` parameter.
+    #
+    # @return [Types::CountTokensResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CountTokensResponse#input_tokens #input_tokens} => Integer
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.count_tokens({
+    #     model_id: "FoundationModelVersionIdentifier", # required
+    #     input: { # required
+    #       invoke_model: {
+    #         body: "data", # required
+    #       },
+    #       converse: {
+    #         messages: [
+    #           {
+    #             role: "user", # required, accepts user, assistant, system
+    #             content: [ # required
+    #               {
+    #                 text: "String",
+    #                 image: {
+    #                   format: "png", # required, accepts png, jpeg, gif, webp
+    #                   source: { # required
+    #                     bytes: "data",
+    #                     s3_location: {
+    #                       uri: "S3Uri", # required
+    #                       bucket_owner: "AccountId",
+    #                     },
+    #                   },
+    #                   error: {
+    #                     message: "String",
+    #                   },
+    #                 },
+    #                 document: {
+    #                   format: "pdf", # accepts pdf, csv, doc, docx, xls, xlsx, html, txt, md
+    #                   name: "DocumentBlockNameString", # required
+    #                   source: { # required
+    #                     bytes: "data",
+    #                     s3_location: {
+    #                       uri: "S3Uri", # required
+    #                       bucket_owner: "AccountId",
+    #                     },
+    #                     text: "String",
+    #                     content: [
+    #                       {
+    #                         text: "String",
+    #                       },
+    #                     ],
+    #                   },
+    #                   context: "String",
+    #                   citations: {
+    #                     enabled: false, # required
+    #                   },
+    #                 },
+    #                 video: {
+    #                   format: "mkv", # required, accepts mkv, mov, mp4, webm, flv, mpeg, mpg, wmv, three_gp
+    #                   source: { # required
+    #                     bytes: "data",
+    #                     s3_location: {
+    #                       uri: "S3Uri", # required
+    #                       bucket_owner: "AccountId",
+    #                     },
+    #                   },
+    #                 },
+    #                 audio: {
+    #                   format: "mp3", # required, accepts mp3, opus, wav, aac, flac, mp4, ogg, mkv, mka, x-aac, m4a, mpeg, mpga, pcm, webm
+    #                   source: { # required
+    #                     bytes: "data",
+    #                     s3_location: {
+    #                       uri: "S3Uri", # required
+    #                       bucket_owner: "AccountId",
+    #                     },
+    #                   },
+    #                   error: {
+    #                     message: "String",
+    #                   },
+    #                 },
+    #                 tool_use: {
+    #                   tool_use_id: "ToolUseId", # required
+    #                   name: "ToolName", # required
+    #                   input: { # required
+    #                   },
+    #                   type: "server_tool_use", # accepts server_tool_use
+    #                 },
+    #                 tool_result: {
+    #                   tool_use_id: "ToolUseId", # required
+    #                   content: [ # required
+    #                     {
+    #                       json: {
+    #                       },
+    #                       text: "String",
+    #                       image: {
+    #                         format: "png", # required, accepts png, jpeg, gif, webp
+    #                         source: { # required
+    #                           bytes: "data",
+    #                           s3_location: {
+    #                             uri: "S3Uri", # required
+    #                             bucket_owner: "AccountId",
+    #                           },
+    #                         },
+    #                         error: {
+    #                           message: "String",
+    #                         },
+    #                       },
+    #                       document: {
+    #                         format: "pdf", # accepts pdf, csv, doc, docx, xls, xlsx, html, txt, md
+    #                         name: "DocumentBlockNameString", # required
+    #                         source: { # required
+    #                           bytes: "data",
+    #                           s3_location: {
+    #                             uri: "S3Uri", # required
+    #                             bucket_owner: "AccountId",
+    #                           },
+    #                           text: "String",
+    #                           content: [
+    #                             {
+    #                               text: "String",
+    #                             },
+    #                           ],
+    #                         },
+    #                         context: "String",
+    #                         citations: {
+    #                           enabled: false, # required
+    #                         },
+    #                       },
+    #                       video: {
+    #                         format: "mkv", # required, accepts mkv, mov, mp4, webm, flv, mpeg, mpg, wmv, three_gp
+    #                         source: { # required
+    #                           bytes: "data",
+    #                           s3_location: {
+    #                             uri: "S3Uri", # required
+    #                             bucket_owner: "AccountId",
+    #                           },
+    #                         },
+    #                       },
+    #                       search_result: {
+    #                         source: "String", # required
+    #                         title: "String", # required
+    #                         content: [ # required
+    #                           {
+    #                             text: "String", # required
+    #                           },
+    #                         ],
+    #                         citations: {
+    #                           enabled: false, # required
+    #                         },
+    #                       },
+    #                     },
+    #                   ],
+    #                   status: "success", # accepts success, error
+    #                   type: "String",
+    #                 },
+    #                 guard_content: {
+    #                   text: {
+    #                     text: "String", # required
+    #                     qualifiers: ["grounding_source"], # accepts grounding_source, query, guard_content
+    #                   },
+    #                   image: {
+    #                     format: "png", # required, accepts png, jpeg
+    #                     source: { # required
+    #                       bytes: "data",
+    #                     },
+    #                   },
+    #                 },
+    #                 cache_point: {
+    #                   type: "default", # required, accepts default
+    #                   ttl: "5m", # accepts 5m, 1h
+    #                 },
+    #                 reasoning_content: {
+    #                   reasoning_text: {
+    #                     text: "String", # required
+    #                     signature: "String",
+    #                   },
+    #                   redacted_content: "data",
+    #                 },
+    #                 citations_content: {
+    #                   content: [
+    #                     {
+    #                       text: "String",
+    #                     },
+    #                   ],
+    #                   citations: [
+    #                     {
+    #                       title: "String",
+    #                       source: "String",
+    #                       source_content: [
+    #                         {
+    #                           text: "String",
+    #                         },
+    #                       ],
+    #                       location: {
+    #                         web: {
+    #                           url: "String",
+    #                           domain: "String",
+    #                         },
+    #                         document_char: {
+    #                           document_index: 1,
+    #                           start: 1,
+    #                           end: 1,
+    #                         },
+    #                         document_page: {
+    #                           document_index: 1,
+    #                           start: 1,
+    #                           end: 1,
+    #                         },
+    #                         document_chunk: {
+    #                           document_index: 1,
+    #                           start: 1,
+    #                           end: 1,
+    #                         },
+    #                         search_result_location: {
+    #                           search_result_index: 1,
+    #                           start: 1,
+    #                           end: 1,
+    #                         },
+    #                       },
+    #                     },
+    #                   ],
+    #                 },
+    #                 search_result: {
+    #                   source: "String", # required
+    #                   title: "String", # required
+    #                   content: [ # required
+    #                     {
+    #                       text: "String", # required
+    #                     },
+    #                   ],
+    #                   citations: {
+    #                     enabled: false, # required
+    #                   },
+    #                 },
+    #                 tool_addition: {
+    #                   tool: { # required
+    #                     type: "ToolReferenceTypeString",
+    #                     name: "ToolReferenceNameString",
+    #                     server_name: "ToolReferenceServerNameString",
+    #                   },
+    #                 },
+    #                 tool_removal: {
+    #                   tool: { # required
+    #                     type: "ToolReferenceTypeString",
+    #                     name: "ToolReferenceNameString",
+    #                     server_name: "ToolReferenceServerNameString",
+    #                   },
+    #                 },
+    #               },
+    #             ],
+    #           },
+    #         ],
+    #         system: [
+    #           {
+    #             text: "NonEmptyString",
+    #             guard_content: {
+    #               text: {
+    #                 text: "String", # required
+    #                 qualifiers: ["grounding_source"], # accepts grounding_source, query, guard_content
+    #               },
+    #               image: {
+    #                 format: "png", # required, accepts png, jpeg
+    #                 source: { # required
+    #                   bytes: "data",
+    #                 },
+    #               },
+    #             },
+    #             cache_point: {
+    #               type: "default", # required, accepts default
+    #               ttl: "5m", # accepts 5m, 1h
+    #             },
+    #           },
+    #         ],
+    #         tool_config: {
+    #           tools: [ # required
+    #             {
+    #               tool_spec: {
+    #                 name: "ToolName", # required
+    #                 description: "NonEmptyString",
+    #                 input_schema: { # required
+    #                   json: {
+    #                   },
+    #                 },
+    #                 strict: false,
+    #               },
+    #               system_tool: {
+    #                 name: "ToolName", # required
+    #               },
+    #               cache_point: {
+    #                 type: "default", # required, accepts default
+    #                 ttl: "5m", # accepts 5m, 1h
+    #               },
+    #             },
+    #           ],
+    #           tool_choice: {
+    #             auto: {
+    #             },
+    #             any: {
+    #             },
+    #             tool: {
+    #               name: "ToolName", # required
+    #             },
+    #           },
+    #         },
+    #         additional_model_request_fields: {
+    #         },
+    #       },
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.input_tokens #=> Integer
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-runtime-2023-09-30/CountTokens AWS API Documentation
+    #
+    # @overload count_tokens(params = {})
+    # @param [Hash] params ({})
+    def count_tokens(params = {}, options = {})
+      req = build_request(:count_tokens, params)
+      req.send_request(options)
     end
 
     # Retrieve information about an asynchronous invocation.
@@ -1820,6 +3307,90 @@ module Aws::BedrockRuntime
     # @param [Hash] params ({})
     def get_async_invoke(params = {}, options = {})
       req = build_request(:get_async_invoke, params)
+      req.send_request(options)
+    end
+
+    # Evaluates messages against inline guardrail checks. You specify the
+    # check configurations directly in the request, and Amazon Bedrock
+    # returns per-check results with severity or confidence scores.
+    #
+    # @option params [required, Array<Types::GuardrailChecksMessage>] :messages
+    #   The messages to evaluate against the specified guardrail checks. Each
+    #   message includes a role and one or more content blocks.
+    #
+    # @option params [required, Types::GuardrailChecksConfig] :checks
+    #   The inline check configurations that specify which guardrail checks to
+    #   run against the messages.
+    #
+    # @return [Types::InvokeGuardrailChecksResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::InvokeGuardrailChecksResponse#results #results} => Types::GuardrailChecksResults
+    #   * {Types::InvokeGuardrailChecksResponse#usage #usage} => Types::GuardrailChecksUsageResults
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.invoke_guardrail_checks({
+    #     messages: [ # required
+    #       {
+    #         role: "user", # required, accepts user, assistant, system
+    #         content: [ # required
+    #           {
+    #             text: "GuardrailChecksTextContent",
+    #           },
+    #         ],
+    #       },
+    #     ],
+    #     checks: { # required
+    #       content_filter: {
+    #         categories: [ # required
+    #           {
+    #             category: "VIOLENCE", # required, accepts VIOLENCE, HATE, SEXUAL, MISCONDUCT, INSULTS
+    #           },
+    #         ],
+    #       },
+    #       prompt_attack: {
+    #         categories: [ # required
+    #           {
+    #             category: "JAILBREAK", # required, accepts JAILBREAK, PROMPT_INJECTION, PROMPT_LEAKAGE
+    #           },
+    #         ],
+    #       },
+    #       sensitive_information: {
+    #         entities: [ # required
+    #           {
+    #             type: "ADDRESS", # required, accepts ADDRESS, AGE, AWS_ACCESS_KEY, AWS_SECRET_KEY, CA_HEALTH_NUMBER, CA_SOCIAL_INSURANCE_NUMBER, CREDIT_DEBIT_CARD_CVV, CREDIT_DEBIT_CARD_EXPIRY, CREDIT_DEBIT_CARD_NUMBER, DRIVER_ID, EMAIL, INTERNATIONAL_BANK_ACCOUNT_NUMBER, IP_ADDRESS, LICENSE_PLATE, MAC_ADDRESS, NAME, PASSWORD, PHONE, PIN, SWIFT_CODE, UK_NATIONAL_HEALTH_SERVICE_NUMBER, UK_NATIONAL_INSURANCE_NUMBER, UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER, URL, USERNAME, US_BANK_ACCOUNT_NUMBER, US_BANK_ROUTING_NUMBER, US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER, US_PASSPORT_NUMBER, US_SOCIAL_SECURITY_NUMBER, VEHICLE_IDENTIFICATION_NUMBER
+    #           },
+    #         ],
+    #       },
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.results.content_filter.results #=> Array
+    #   resp.results.content_filter.results[0].category #=> String, one of "VIOLENCE", "HATE", "SEXUAL", "MISCONDUCT", "INSULTS"
+    #   resp.results.content_filter.results[0].severity_score #=> Float
+    #   resp.results.prompt_attack.results #=> Array
+    #   resp.results.prompt_attack.results[0].category #=> String, one of "JAILBREAK", "PROMPT_INJECTION", "PROMPT_LEAKAGE"
+    #   resp.results.prompt_attack.results[0].severity_score #=> Float
+    #   resp.results.sensitive_information.results #=> Array
+    #   resp.results.sensitive_information.results[0].type #=> String, one of "ADDRESS", "AGE", "AWS_ACCESS_KEY", "AWS_SECRET_KEY", "CA_HEALTH_NUMBER", "CA_SOCIAL_INSURANCE_NUMBER", "CREDIT_DEBIT_CARD_CVV", "CREDIT_DEBIT_CARD_EXPIRY", "CREDIT_DEBIT_CARD_NUMBER", "DRIVER_ID", "EMAIL", "INTERNATIONAL_BANK_ACCOUNT_NUMBER", "IP_ADDRESS", "LICENSE_PLATE", "MAC_ADDRESS", "NAME", "PASSWORD", "PHONE", "PIN", "SWIFT_CODE", "UK_NATIONAL_HEALTH_SERVICE_NUMBER", "UK_NATIONAL_INSURANCE_NUMBER", "UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER", "URL", "USERNAME", "US_BANK_ACCOUNT_NUMBER", "US_BANK_ROUTING_NUMBER", "US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER", "US_PASSPORT_NUMBER", "US_SOCIAL_SECURITY_NUMBER", "VEHICLE_IDENTIFICATION_NUMBER"
+    #   resp.results.sensitive_information.results[0].confidence_score #=> Float
+    #   resp.results.sensitive_information.results[0].begin_offset #=> Integer
+    #   resp.results.sensitive_information.results[0].end_offset #=> Integer
+    #   resp.results.sensitive_information.results[0].message_index #=> Integer
+    #   resp.results.sensitive_information.results[0].content_index #=> Integer
+    #   resp.results.sensitive_information.truncated #=> Boolean
+    #   resp.usage.content_filter.text_units #=> Integer
+    #   resp.usage.prompt_attack.text_units #=> Integer
+    #   resp.usage.sensitive_information.text_units #=> Integer
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-runtime-2023-09-30/InvokeGuardrailChecks AWS API Documentation
+    #
+    # @overload invoke_guardrail_checks(params = {})
+    # @param [Hash] params ({})
+    def invoke_guardrail_checks(params = {}, options = {})
+      req = build_request(:invoke_guardrail_checks, params)
       req.send_request(options)
     end
 
@@ -1890,10 +3461,10 @@ module Aws::BedrockRuntime
     #     Throughput. For more information, see [Run inference using a
     #     Provisioned Throughput][3] in the Amazon Bedrock User Guide.
     #
-    #   * If you use a custom model, first purchase Provisioned Throughput for
-    #     it. Then specify the ARN of the resulting provisioned model. For
-    #     more information, see [Use a custom model in Amazon Bedrock][4] in
-    #     the Amazon Bedrock User Guide.
+    #   * If you use a custom model, specify the ARN of the custom model
+    #     deployment (for on-demand inference) or the ARN of your provisioned
+    #     model (for Provisioned Throughput). For more information, see [Use a
+    #     custom model in Amazon Bedrock][4] in the Amazon Bedrock User Guide.
     #
     #   * If you use an [imported model][5], specify the ARN of the imported
     #     model. You can get the model ARN from a successful call to
@@ -1934,11 +3505,18 @@ module Aws::BedrockRuntime
     # @option params [String] :performance_config_latency
     #   Model performance settings for the request.
     #
+    # @option params [String] :service_tier
+    #   Specifies the processing tier type used for serving the request.
+    #
+    # @option params [String] :request_metadata
+    #   Key-value pairs that you can use to filter invocation logs.
+    #
     # @return [Types::InvokeModelResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::InvokeModelResponse#body #body} => String
     #   * {Types::InvokeModelResponse#content_type #content_type} => String
     #   * {Types::InvokeModelResponse#performance_config_latency #performance_config_latency} => String
+    #   * {Types::InvokeModelResponse#service_tier #service_tier} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -1947,10 +3525,12 @@ module Aws::BedrockRuntime
     #     content_type: "MimeType",
     #     accept: "MimeType",
     #     model_id: "InvokeModelIdentifier", # required
-    #     trace: "ENABLED", # accepts ENABLED, DISABLED
+    #     trace: "ENABLED", # accepts ENABLED, DISABLED, ENABLED_FULL
     #     guardrail_identifier: "GuardrailIdentifier",
     #     guardrail_version: "GuardrailVersion",
     #     performance_config_latency: "standard", # accepts standard, optimized
+    #     service_tier: "priority", # accepts priority, default, flex, reserved
+    #     request_metadata: "RequestMetadataJson",
     #   })
     #
     # @example Response structure
@@ -1958,6 +3538,7 @@ module Aws::BedrockRuntime
     #   resp.body #=> String
     #   resp.content_type #=> String
     #   resp.performance_config_latency #=> String, one of "standard", "optimized"
+    #   resp.service_tier #=> String, one of "priority", "default", "flex", "reserved"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-runtime-2023-09-30/InvokeModel AWS API Documentation
     #
@@ -2044,10 +3625,10 @@ module Aws::BedrockRuntime
     #     Throughput. For more information, see [Run inference using a
     #     Provisioned Throughput][3] in the Amazon Bedrock User Guide.
     #
-    #   * If you use a custom model, first purchase Provisioned Throughput for
-    #     it. Then specify the ARN of the resulting provisioned model. For
-    #     more information, see [Use a custom model in Amazon Bedrock][4] in
-    #     the Amazon Bedrock User Guide.
+    #   * If you use a custom model, specify the ARN of the custom model
+    #     deployment (for on-demand inference) or the ARN of your provisioned
+    #     model (for Provisioned Throughput). For more information, see [Use a
+    #     custom model in Amazon Bedrock][4] in the Amazon Bedrock User Guide.
     #
     #   * If you use an [imported model][5], specify the ARN of the imported
     #     model. You can get the model ARN from a successful call to
@@ -2088,148 +3669,161 @@ module Aws::BedrockRuntime
     # @option params [String] :performance_config_latency
     #   Model performance settings for the request.
     #
+    # @option params [String] :service_tier
+    #   Specifies the processing tier type used for serving the request.
+    #
+    # @option params [String] :request_metadata
+    #   Key-value pairs that you can use to filter invocation logs.
+    #
     # @return [Types::InvokeModelWithResponseStreamResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::InvokeModelWithResponseStreamResponse#body #body} => Types::ResponseStream
     #   * {Types::InvokeModelWithResponseStreamResponse#content_type #content_type} => String
     #   * {Types::InvokeModelWithResponseStreamResponse#performance_config_latency #performance_config_latency} => String
+    #   * {Types::InvokeModelWithResponseStreamResponse#service_tier #service_tier} => String
     #
     # @example EventStream Operation Example
     #
-    #   You can process the event once it arrives immediately, or wait until the
-    #   full response is complete and iterate through the eventstream enumerator.
+    #   # You can process the event once it arrives immediately, or wait until the
+    #   # full response is complete and iterate through the eventstream enumerator.
     #
-    #   To interact with event immediately, you need to register #invoke_model_with_response_stream
-    #   with callbacks. Callbacks can be registered for specific events or for all
-    #   events, including error events.
+    #   # To interact with event immediately, you need to register invoke_model_with_response_stream
+    #   # with callbacks. Callbacks can be registered for specific events or for all
+    #   # events, including error events.
     #
-    #   Callbacks can be passed into the `:event_stream_handler` option or within a
-    #   block statement attached to the #invoke_model_with_response_stream call directly. Hybrid
-    #   pattern of both is also supported.
+    #   # Callbacks can be passed into the `:event_stream_handler` option or within a
+    #   # block statement attached to the #invoke_model_with_response_stream call directly. Hybrid
+    #   # pattern of both is also supported.
     #
-    #   `:event_stream_handler` option takes in either a Proc object or
-    #   Aws::BedrockRuntime::EventStreams::ResponseStream object.
+    #   # `:event_stream_handler` option takes in either a Proc object or
+    #   # Aws::BedrockRuntime::EventStreams::ResponseStream object.
     #
-    #   Usage pattern a): Callbacks with a block attached to #invoke_model_with_response_stream
-    #     Example for registering callbacks for all event types and an error event
-    #
-    #     client.invoke_model_with_response_stream( # params input# ) do |stream|
-    #       stream.on_error_event do |event|
-    #         # catch unmodeled error event in the stream
-    #         raise event
-    #         # => Aws::Errors::EventError
-    #         # event.event_type => :error
-    #         # event.error_code => String
-    #         # event.error_message => String
-    #       end
-    #
-    #       stream.on_event do |event|
-    #         # process all events arrive
-    #         puts event.event_type
-    #         ...
-    #       end
-    #
+    #   # Usage pattern a): Callbacks with a block attached to #invoke_model_with_response_stream
+    #   # Example for registering callbacks for all event types and an error event
+    #   client.invoke_model_with_response_stream(
+    #     # params input
+    #   ) do |stream|
+    #     stream.on_error_event do |event|
+    #       # catch unmodeled error event in the stream
+    #       raise event
+    #       # => Aws::Errors::EventError
+    #       # event.event_type => :error
+    #       # event.error_code => String
+    #       # event.error_message => String
     #     end
     #
-    #   Usage pattern b): Pass in `:event_stream_handler` for #invoke_model_with_response_stream
-    #
-    #     1) Create a Aws::BedrockRuntime::EventStreams::ResponseStream object
-    #     Example for registering callbacks with specific events
-    #
-    #       handler = Aws::BedrockRuntime::EventStreams::ResponseStream.new
-    #       handler.on_chunk_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::chunk
-    #       end
-    #       handler.on_internal_server_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::internalServerException
-    #       end
-    #       handler.on_model_stream_error_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::modelStreamErrorException
-    #       end
-    #       handler.on_validation_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::validationException
-    #       end
-    #       handler.on_throttling_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::throttlingException
-    #       end
-    #       handler.on_model_timeout_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::modelTimeoutException
-    #       end
-    #       handler.on_service_unavailable_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::serviceUnavailableException
-    #       end
-    #
-    #     client.invoke_model_with_response_stream( # params input #, event_stream_handler: handler)
-    #
-    #     2) Use a Ruby Proc object
-    #     Example for registering callbacks with specific events
-    #
-    #     handler = Proc.new do |stream|
-    #       stream.on_chunk_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::chunk
-    #       end
-    #       stream.on_internal_server_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::internalServerException
-    #       end
-    #       stream.on_model_stream_error_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::modelStreamErrorException
-    #       end
-    #       stream.on_validation_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::validationException
-    #       end
-    #       stream.on_throttling_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::throttlingException
-    #       end
-    #       stream.on_model_timeout_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::modelTimeoutException
-    #       end
-    #       stream.on_service_unavailable_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::serviceUnavailableException
-    #       end
+    #     stream.on_event do |event|
+    #       # process all events arrive
+    #       puts event.event_type
+    #       # ...
     #     end
+    #   end
     #
-    #     client.invoke_model_with_response_stream( # params input #, event_stream_handler: handler)
+    #   # Usage pattern b): Pass in `:event_stream_handler` for #invoke_model_with_response_stream
+    #   #  1) Create a Aws::BedrockRuntime::EventStreams::ResponseStream object
+    #   #  Example for registering callbacks with specific events
     #
-    #   Usage pattern c): Hybrid pattern of a) and b)
+    #   handler = Aws::BedrockRuntime::EventStreams::ResponseStream.new
+    #   handler.on_chunk_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::chunk
+    #   end
+    #   handler.on_internal_server_exception_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::internalServerException
+    #   end
+    #   handler.on_model_stream_error_exception_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::modelStreamErrorException
+    #   end
+    #   handler.on_validation_exception_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::validationException
+    #   end
+    #   handler.on_throttling_exception_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::throttlingException
+    #   end
+    #   handler.on_model_timeout_exception_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::modelTimeoutException
+    #   end
+    #   handler.on_service_unavailable_exception_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::serviceUnavailableException
+    #   end
     #
-    #       handler = Aws::BedrockRuntime::EventStreams::ResponseStream.new
-    #       handler.on_chunk_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::chunk
-    #       end
-    #       handler.on_internal_server_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::internalServerException
-    #       end
-    #       handler.on_model_stream_error_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::modelStreamErrorException
-    #       end
-    #       handler.on_validation_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::validationException
-    #       end
-    #       handler.on_throttling_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::throttlingException
-    #       end
-    #       handler.on_model_timeout_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::modelTimeoutException
-    #       end
-    #       handler.on_service_unavailable_exception_event do |event|
-    #         event # => Aws::BedrockRuntime::Types::serviceUnavailableException
-    #       end
+    #   client.invoke_model_with_response_stream(
+    #     # params inputs
+    #     event_stream_handler: handler
+    #   )
     #
-    #     client.invoke_model_with_response_stream( # params input #, event_stream_handler: handler) do |stream|
-    #       stream.on_error_event do |event|
-    #         # catch unmodeled error event in the stream
-    #         raise event
-    #         # => Aws::Errors::EventError
-    #         # event.event_type => :error
-    #         # event.error_code => String
-    #         # event.error_message => String
-    #       end
+    #   #  2) Use a Ruby Proc object
+    #   #  Example for registering callbacks with specific events
+    #   handler = Proc.new do |stream|
+    #     stream.on_chunk_event do |event|
+    #       event # => Aws::BedrockRuntime::Types::chunk
     #     end
+    #     stream.on_internal_server_exception_event do |event|
+    #       event # => Aws::BedrockRuntime::Types::internalServerException
+    #     end
+    #     stream.on_model_stream_error_exception_event do |event|
+    #       event # => Aws::BedrockRuntime::Types::modelStreamErrorException
+    #     end
+    #     stream.on_validation_exception_event do |event|
+    #       event # => Aws::BedrockRuntime::Types::validationException
+    #     end
+    #     stream.on_throttling_exception_event do |event|
+    #       event # => Aws::BedrockRuntime::Types::throttlingException
+    #     end
+    #     stream.on_model_timeout_exception_event do |event|
+    #       event # => Aws::BedrockRuntime::Types::modelTimeoutException
+    #     end
+    #     stream.on_service_unavailable_exception_event do |event|
+    #       event # => Aws::BedrockRuntime::Types::serviceUnavailableException
+    #     end
+    #   end
     #
-    #   You can also iterate through events after the response complete.
+    #   client.invoke_model_with_response_stream(
+    #     # params inputs
+    #     event_stream_handler: handler
+    #   )
     #
-    #   Events are available at resp.body # => Enumerator
-    #   For parameter input example, please refer to following request syntax
+    #   #  Usage pattern c): Hybrid pattern of a) and b)
+    #   handler = Aws::BedrockRuntime::EventStreams::ResponseStream.new
+    #   handler.on_chunk_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::chunk
+    #   end
+    #   handler.on_internal_server_exception_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::internalServerException
+    #   end
+    #   handler.on_model_stream_error_exception_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::modelStreamErrorException
+    #   end
+    #   handler.on_validation_exception_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::validationException
+    #   end
+    #   handler.on_throttling_exception_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::throttlingException
+    #   end
+    #   handler.on_model_timeout_exception_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::modelTimeoutException
+    #   end
+    #   handler.on_service_unavailable_exception_event do |event|
+    #     event # => Aws::BedrockRuntime::Types::serviceUnavailableException
+    #   end
+    #
+    #   client.invoke_model_with_response_stream(
+    #     # params input
+    #     event_stream_handler: handler
+    #   ) do |stream|
+    #     stream.on_error_event do |event|
+    #       # catch unmodeled error event in the stream
+    #       raise event
+    #       # => Aws::Errors::EventError
+    #       # event.event_type => :error
+    #       # event.error_code => String
+    #       # event.error_message => String
+    #     end
+    #   end
+    #
+    #   # You can also iterate through events after the response complete.
+    #   # Events are available at
+    #   resp.body # => Enumerator
+    #   # For parameter input example, please refer to following request syntax.
     #
     # @example Request syntax with placeholder values
     #
@@ -2238,43 +3832,46 @@ module Aws::BedrockRuntime
     #     content_type: "MimeType",
     #     accept: "MimeType",
     #     model_id: "InvokeModelIdentifier", # required
-    #     trace: "ENABLED", # accepts ENABLED, DISABLED
+    #     trace: "ENABLED", # accepts ENABLED, DISABLED, ENABLED_FULL
     #     guardrail_identifier: "GuardrailIdentifier",
     #     guardrail_version: "GuardrailVersion",
     #     performance_config_latency: "standard", # accepts standard, optimized
+    #     service_tier: "priority", # accepts priority, default, flex, reserved
+    #     request_metadata: "RequestMetadataJson",
     #   })
     #
     # @example Response structure
     #
-    #   All events are available at resp.body:
+    #   # All events are available at resp.body:
     #   resp.body #=> Enumerator
     #   resp.body.event_types #=> [:chunk, :internal_server_exception, :model_stream_error_exception, :validation_exception, :throttling_exception, :model_timeout_exception, :service_unavailable_exception]
     #
-    #   For :chunk event available at #on_chunk_event callback and response eventstream enumerator:
+    #   # For :chunk event available at #on_chunk_event callback and response eventstream enumerator:
     #   event.bytes #=> String
     #
-    #   For :internal_server_exception event available at #on_internal_server_exception_event callback and response eventstream enumerator:
+    #   # For :internal_server_exception event available at #on_internal_server_exception_event callback and response eventstream enumerator:
     #   event.message #=> String
     #
-    #   For :model_stream_error_exception event available at #on_model_stream_error_exception_event callback and response eventstream enumerator:
+    #   # For :model_stream_error_exception event available at #on_model_stream_error_exception_event callback and response eventstream enumerator:
     #   event.message #=> String
     #   event.original_status_code #=> Integer
     #   event.original_message #=> String
     #
-    #   For :validation_exception event available at #on_validation_exception_event callback and response eventstream enumerator:
+    #   # For :validation_exception event available at #on_validation_exception_event callback and response eventstream enumerator:
     #   event.message #=> String
     #
-    #   For :throttling_exception event available at #on_throttling_exception_event callback and response eventstream enumerator:
+    #   # For :throttling_exception event available at #on_throttling_exception_event callback and response eventstream enumerator:
     #   event.message #=> String
     #
-    #   For :model_timeout_exception event available at #on_model_timeout_exception_event callback and response eventstream enumerator:
+    #   # For :model_timeout_exception event available at #on_model_timeout_exception_event callback and response eventstream enumerator:
     #   event.message #=> String
     #
-    #   For :service_unavailable_exception event available at #on_service_unavailable_exception_event callback and response eventstream enumerator:
+    #   # For :service_unavailable_exception event available at #on_service_unavailable_exception_event callback and response eventstream enumerator:
     #   event.message #=> String
     #
     #   resp.content_type #=> String
     #   resp.performance_config_latency #=> String, one of "standard", "optimized"
+    #   resp.service_tier #=> String, one of "priority", "default", "flex", "reserved"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/bedrock-runtime-2023-09-30/InvokeModelWithResponseStream AWS API Documentation
     #
@@ -2469,7 +4066,7 @@ module Aws::BedrockRuntime
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-bedrockruntime'
-      context[:gem_version] = '1.40.0'
+      context[:gem_version] = '1.83.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

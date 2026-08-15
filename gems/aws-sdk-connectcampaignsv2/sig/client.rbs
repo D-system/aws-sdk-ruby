@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -87,53 +88,8 @@ module Aws
       def create_campaign: (
                              name: ::String,
                              connect_instance_id: ::String,
-                             channel_subtype_config: {
-                               telephony: {
-                                 capacity: ::Float?,
-                                 connect_queue_id: ::String?,
-                                 outbound_mode: {
-                                   progressive: {
-                                     bandwidth_allocation: ::Float
-                                   }?,
-                                   predictive: {
-                                     bandwidth_allocation: ::Float
-                                   }?,
-                                   agentless: {
-                                   }?
-                                 },
-                                 default_outbound_config: {
-                                   connect_contact_flow_id: ::String,
-                                   connect_source_phone_number: ::String?,
-                                   answer_machine_detection_config: {
-                                     enable_answer_machine_detection: bool,
-                                     await_answer_machine_prompt: bool?
-                                   }?
-                                 }
-                               }?,
-                               sms: {
-                                 capacity: ::Float?,
-                                 outbound_mode: {
-                                   agentless: {
-                                   }?
-                                 },
-                                 default_outbound_config: {
-                                   connect_source_phone_number_arn: ::String,
-                                   wisdom_template_arn: ::String
-                                 }
-                               }?,
-                               email: {
-                                 capacity: ::Float?,
-                                 outbound_mode: {
-                                   agentless: {
-                                   }?
-                                 },
-                                 default_outbound_config: {
-                                   connect_source_email_address: ::String,
-                                   source_email_address_display_name: ::String?,
-                                   wisdom_template_arn: ::String
-                                 }
-                               }?
-                             },
+                             ?channel_subtype_config: Params::channel_subtype_config,
+                             ?type: ("MANAGED" | "JOURNEY"),
                              ?source: {
                                customer_profiles_segment_arn: ::String?,
                                event_trigger: {
@@ -146,80 +102,12 @@ module Aws
                                end_time: ::Time,
                                refresh_frequency: ::String?
                              },
-                             ?communication_time_config: {
-                               local_time_zone_config: {
-                                 default_time_zone: ::String?,
-                                 local_time_zone_detection: Array[("ZIP_CODE" | "AREA_CODE")]?
-                               },
-                               telephony: {
-                                 open_hours: {
-                                   daily_hours: Hash[("MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY"), Array[
-                                       {
-                                         start_time: ::String,
-                                         end_time: ::String
-                                       },
-                                     ]]?
-                                 },
-                                 restricted_periods: {
-                                   restricted_period_list: Array[
-                                     {
-                                       name: ::String?,
-                                       start_date: ::String,
-                                       end_date: ::String
-                                     },
-                                   ]?
-                                 }?
-                               }?,
-                               sms: {
-                                 open_hours: {
-                                   daily_hours: Hash[("MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY"), Array[
-                                       {
-                                         start_time: ::String,
-                                         end_time: ::String
-                                       },
-                                     ]]?
-                                 },
-                                 restricted_periods: {
-                                   restricted_period_list: Array[
-                                     {
-                                       name: ::String?,
-                                       start_date: ::String,
-                                       end_date: ::String
-                                     },
-                                   ]?
-                                 }?
-                               }?,
-                               email: {
-                                 open_hours: {
-                                   daily_hours: Hash[("MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY"), Array[
-                                       {
-                                         start_time: ::String,
-                                         end_time: ::String
-                                       },
-                                     ]]?
-                                 },
-                                 restricted_periods: {
-                                   restricted_period_list: Array[
-                                     {
-                                       name: ::String?,
-                                       start_date: ::String,
-                                       end_date: ::String
-                                     },
-                                   ]?
-                                 }?
-                               }?
+                             ?entry_limits_config: {
+                               max_entry_count: ::Integer,
+                               min_entry_interval: ::String
                              },
-                             ?communication_limits_override: {
-                               all_channel_subtypes: {
-                                 communication_limits_list: Array[
-                                   {
-                                     max_count_per_recipient: ::Integer,
-                                     frequency: ::Integer,
-                                     unit: ("DAY")
-                                   },
-                                 ]?
-                               }?
-                             },
+                             ?communication_time_config: Params::communication_time_config,
+                             ?communication_limits_override: Params::communication_limits_config,
                              ?tags: Hash[::String, ::String]
                            ) -> _CreateCampaignResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateCampaignResponseSuccess
@@ -233,7 +121,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ConnectCampaignsV2/Client.html#delete_campaign_channel_subtype_config-instance_method
       def delete_campaign_channel_subtype_config: (
                                                     id: ::String,
-                                                    channel_subtype: ("TELEPHONY" | "SMS" | "EMAIL")
+                                                    channel_subtype: ("TELEPHONY" | "SMS" | "EMAIL" | "WHATSAPP")
                                                   ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
@@ -247,9 +135,15 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ConnectCampaignsV2/Client.html#delete_campaign_communication_time-instance_method
       def delete_campaign_communication_time: (
                                                 id: ::String,
-                                                config: ("TELEPHONY" | "SMS" | "EMAIL")
+                                                config: ("TELEPHONY" | "SMS" | "EMAIL" | "WHATSAPP")
                                               ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ConnectCampaignsV2/Client.html#delete_campaign_entry_limits-instance_method
+      def delete_campaign_entry_limits: (
+                                          id: ::String
+                                        ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ConnectCampaignsV2/Client.html#delete_connect_instance_config-instance_method
       def delete_connect_instance_config: (
@@ -267,6 +161,9 @@ module Aws
                                                    }?,
                                                    q_connect: {
                                                      knowledge_base_arn: ::String
+                                                   }?,
+                                                   lambda: {
+                                                     function_arn: ::String
                                                    }?
                                                  }
                                                ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
@@ -318,6 +215,16 @@ module Aws
                                          connect_instance_id: ::String
                                        ) -> _GetConnectInstanceConfigResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetConnectInstanceConfigResponseSuccess
+
+      interface _GetInstanceCommunicationLimitsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetInstanceCommunicationLimitsResponse]
+        def communication_limits_config: () -> Types::InstanceCommunicationLimitsConfig
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ConnectCampaignsV2/Client.html#get_instance_communication_limits-instance_method
+      def get_instance_communication_limits: (
+                                               connect_instance_id: ::String
+                                             ) -> _GetInstanceCommunicationLimitsResponseSuccess
+                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetInstanceCommunicationLimitsResponseSuccess
 
       interface _GetInstanceOnboardingJobStatusResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetInstanceOnboardingJobStatusResponse]
@@ -382,14 +289,34 @@ module Aws
                                               integration_config: {
                                                 customer_profiles: {
                                                   domain_arn: ::String,
-                                                  object_type_names: Hash[("Campaign-Email" | "Campaign-SMS" | "Campaign-Telephony" | "Campaign-Orchestration"), ::String]
+                                                  object_type_names: Hash[("Campaign-Email" | "Campaign-SMS" | "Campaign-Telephony" | "Campaign-Orchestration" | "Campaign-WhatsApp" | "Campaign-WebNotification"), ::String]
                                                 }?,
                                                 q_connect: {
                                                   knowledge_base_arn: ::String
+                                                }?,
+                                                lambda: {
+                                                  function_arn: ::String
                                                 }?
                                               }
                                             ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ConnectCampaignsV2/Client.html#put_instance_communication_limits-instance_method
+      def put_instance_communication_limits: (
+                                               connect_instance_id: ::String,
+                                               communication_limits_config: {
+                                                 all_channel_subtypes: {
+                                                   communication_limits_list: Array[
+                                                     {
+                                                       max_count_per_recipient: ::Integer,
+                                                       frequency: ::Integer,
+                                                       unit: ("DAY")
+                                                     }
+                                                   ]?
+                                                 }?
+                                               }
+                                             ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
       interface _PutOutboundRequestBatchResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::PutOutboundRequestBatchResponse]
@@ -411,7 +338,8 @@ module Aws
                                                 answer_machine_detection_config: {
                                                   enable_answer_machine_detection: bool,
                                                   await_answer_machine_prompt: bool?
-                                                }?
+                                                }?,
+                                                ring_timeout: ::Integer?
                                               }?,
                                               sms: {
                                                 destination_phone_number: ::String,
@@ -424,9 +352,15 @@ module Aws
                                                 connect_source_email_address: ::String?,
                                                 template_arn: ::String?,
                                                 template_parameters: Hash[::String, ::String]
+                                              }?,
+                                              whats_app: {
+                                                destination_phone_number: ::String,
+                                                connect_source_phone_number_arn: ::String?,
+                                                template_arn: ::String?,
+                                                template_parameters: Hash[::String, ::String]
                                               }?
                                             }
-                                          },
+                                          }
                                         ]
                                       ) -> _PutOutboundRequestBatchResponseSuccess
                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutOutboundRequestBatchResponseSuccess
@@ -443,8 +377,17 @@ module Aws
                                                   {
                                                     client_token: ::String,
                                                     profile_id: ::String,
-                                                    expiration_time: ::Time?
-                                                  },
+                                                    expiration_time: ::Time?,
+                                                    event_trigger_context: {
+                                                      source_event: ::String?,
+                                                      channel_context: {
+                                                        web_notification_context: {
+                                                          session_id: ::String?,
+                                                          browser_id: ::String?
+                                                        }?
+                                                      }?
+                                                    }?
+                                                  }
                                                 ]
                                               ) -> _PutProfileOutboundRequestBatchResponseSuccess
                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutProfileOutboundRequestBatchResponseSuccess
@@ -499,141 +442,33 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ConnectCampaignsV2/Client.html#update_campaign_channel_subtype_config-instance_method
       def update_campaign_channel_subtype_config: (
                                                     id: ::String,
-                                                    channel_subtype_config: {
-                                                      telephony: {
-                                                        capacity: ::Float?,
-                                                        connect_queue_id: ::String?,
-                                                        outbound_mode: {
-                                                          progressive: {
-                                                            bandwidth_allocation: ::Float
-                                                          }?,
-                                                          predictive: {
-                                                            bandwidth_allocation: ::Float
-                                                          }?,
-                                                          agentless: {
-                                                          }?
-                                                        },
-                                                        default_outbound_config: {
-                                                          connect_contact_flow_id: ::String,
-                                                          connect_source_phone_number: ::String?,
-                                                          answer_machine_detection_config: {
-                                                            enable_answer_machine_detection: bool,
-                                                            await_answer_machine_prompt: bool?
-                                                          }?
-                                                        }
-                                                      }?,
-                                                      sms: {
-                                                        capacity: ::Float?,
-                                                        outbound_mode: {
-                                                          agentless: {
-                                                          }?
-                                                        },
-                                                        default_outbound_config: {
-                                                          connect_source_phone_number_arn: ::String,
-                                                          wisdom_template_arn: ::String
-                                                        }
-                                                      }?,
-                                                      email: {
-                                                        capacity: ::Float?,
-                                                        outbound_mode: {
-                                                          agentless: {
-                                                          }?
-                                                        },
-                                                        default_outbound_config: {
-                                                          connect_source_email_address: ::String,
-                                                          source_email_address_display_name: ::String?,
-                                                          wisdom_template_arn: ::String
-                                                        }
-                                                      }?
-                                                    }
+                                                    channel_subtype_config: Params::channel_subtype_config
                                                   ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ConnectCampaignsV2/Client.html#update_campaign_communication_limits-instance_method
       def update_campaign_communication_limits: (
                                                   id: ::String,
-                                                  communication_limits_override: {
-                                                    all_channel_subtypes: {
-                                                      communication_limits_list: Array[
-                                                        {
-                                                          max_count_per_recipient: ::Integer,
-                                                          frequency: ::Integer,
-                                                          unit: ("DAY")
-                                                        },
-                                                      ]?
-                                                    }?
-                                                  }
+                                                  communication_limits_override: Params::communication_limits_config
                                                 ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ConnectCampaignsV2/Client.html#update_campaign_communication_time-instance_method
       def update_campaign_communication_time: (
                                                 id: ::String,
-                                                communication_time_config: {
-                                                  local_time_zone_config: {
-                                                    default_time_zone: ::String?,
-                                                    local_time_zone_detection: Array[("ZIP_CODE" | "AREA_CODE")]?
-                                                  },
-                                                  telephony: {
-                                                    open_hours: {
-                                                      daily_hours: Hash[("MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY"), Array[
-                                                          {
-                                                            start_time: ::String,
-                                                            end_time: ::String
-                                                          },
-                                                        ]]?
-                                                    },
-                                                    restricted_periods: {
-                                                      restricted_period_list: Array[
-                                                        {
-                                                          name: ::String?,
-                                                          start_date: ::String,
-                                                          end_date: ::String
-                                                        },
-                                                      ]?
-                                                    }?
-                                                  }?,
-                                                  sms: {
-                                                    open_hours: {
-                                                      daily_hours: Hash[("MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY"), Array[
-                                                          {
-                                                            start_time: ::String,
-                                                            end_time: ::String
-                                                          },
-                                                        ]]?
-                                                    },
-                                                    restricted_periods: {
-                                                      restricted_period_list: Array[
-                                                        {
-                                                          name: ::String?,
-                                                          start_date: ::String,
-                                                          end_date: ::String
-                                                        },
-                                                      ]?
-                                                    }?
-                                                  }?,
-                                                  email: {
-                                                    open_hours: {
-                                                      daily_hours: Hash[("MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY"), Array[
-                                                          {
-                                                            start_time: ::String,
-                                                            end_time: ::String
-                                                          },
-                                                        ]]?
-                                                    },
-                                                    restricted_periods: {
-                                                      restricted_period_list: Array[
-                                                        {
-                                                          name: ::String?,
-                                                          start_date: ::String,
-                                                          end_date: ::String
-                                                        },
-                                                      ]?
-                                                    }?
-                                                  }?
-                                                }
+                                                communication_time_config: Params::communication_time_config
                                               ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ConnectCampaignsV2/Client.html#update_campaign_entry_limits-instance_method
+      def update_campaign_entry_limits: (
+                                          id: ::String,
+                                          entry_limits_config: {
+                                            max_entry_count: ::Integer,
+                                            min_entry_interval: ::String
+                                          }
+                                        ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ConnectCampaignsV2/Client.html#update_campaign_flow_association-instance_method
       def update_campaign_flow_association: (

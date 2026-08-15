@@ -928,8 +928,7 @@
   "shapes":{
     "ALPNPolicyNotSupportedException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"ALPNPolicyNotFound",
         "httpStatusCode":400,
@@ -948,7 +947,8 @@
         "Order":{"shape":"ActionOrder"},
         "RedirectConfig":{"shape":"RedirectActionConfig"},
         "FixedResponseConfig":{"shape":"FixedResponseActionConfig"},
-        "ForwardConfig":{"shape":"ForwardActionConfig"}
+        "ForwardConfig":{"shape":"ForwardActionConfig"},
+        "JwtValidationConfig":{"shape":"JwtValidationActionConfig"}
       }
     },
     "ActionOrder":{
@@ -963,7 +963,8 @@
         "authenticate-oidc",
         "authenticate-cognito",
         "redirect",
-        "fixed-response"
+        "fixed-response",
+        "jwt-validation"
       ]
     },
     "Actions":{
@@ -1000,8 +1001,7 @@
     },
     "AddTagsOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "AddTrustStoreRevocationsInput":{
       "type":"structure",
@@ -1035,8 +1035,7 @@
     "AllocationId":{"type":"string"},
     "AllocationIdNotFoundException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"AllocationIdNotFound",
         "httpStatusCode":400,
@@ -1163,8 +1162,7 @@
     },
     "AvailabilityZoneNotSupportedException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"AvailabilityZoneNotSupported",
         "httpStatusCode":400,
@@ -1178,8 +1176,7 @@
     },
     "CaCertificatesBundleNotFoundException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"CaCertificatesBundleNotFound",
         "httpStatusCode":400,
@@ -1190,8 +1187,7 @@
     "CanonicalHostedZoneId":{"type":"string"},
     "CapacityDecreaseRequestsLimitExceededException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"CapacityDecreaseRequestLimitExceeded",
         "httpStatusCode":400,
@@ -1201,8 +1197,7 @@
     },
     "CapacityReservationPendingException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"CapacityReservationPending",
         "httpStatusCode":400,
@@ -1230,8 +1225,7 @@
     "CapacityUnitsDouble":{"type":"double"},
     "CapacityUnitsLimitExceededException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"CapacityUnitsLimitExceeded",
         "httpStatusCode":400,
@@ -1253,8 +1247,7 @@
     },
     "CertificateNotFoundException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"CertificateNotFound",
         "httpStatusCode":400,
@@ -1339,7 +1332,8 @@
         "Conditions":{"shape":"RuleConditionList"},
         "Priority":{"shape":"RulePriority"},
         "Actions":{"shape":"Actions"},
-        "Tags":{"shape":"TagList"}
+        "Tags":{"shape":"TagList"},
+        "Transforms":{"shape":"RuleTransformList"}
       }
     },
     "CreateRuleOutput":{
@@ -1368,7 +1362,8 @@
         "Matcher":{"shape":"Matcher"},
         "TargetType":{"shape":"TargetTypeEnum"},
         "Tags":{"shape":"TagList"},
-        "IpAddressType":{"shape":"TargetGroupIpAddressTypeEnum"}
+        "IpAddressType":{"shape":"TargetGroupIpAddressTypeEnum"},
+        "TargetControlPort":{"shape":"TargetControlPort"}
       }
     },
     "CreateTargetGroupOutput":{
@@ -1409,8 +1404,7 @@
     "Default":{"type":"boolean"},
     "DeleteAssociationSameAccountException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DeleteAssociationSameAccount",
         "httpStatusCode":400,
@@ -1427,8 +1421,7 @@
     },
     "DeleteListenerOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteLoadBalancerInput":{
       "type":"structure",
@@ -1439,8 +1432,7 @@
     },
     "DeleteLoadBalancerOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteRuleInput":{
       "type":"structure",
@@ -1451,8 +1443,7 @@
     },
     "DeleteRuleOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteSharedTrustStoreAssociationInput":{
       "type":"structure",
@@ -1467,8 +1458,7 @@
     },
     "DeleteSharedTrustStoreAssociationOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteTargetGroupInput":{
       "type":"structure",
@@ -1479,8 +1469,7 @@
     },
     "DeleteTargetGroupOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteTrustStoreInput":{
       "type":"structure",
@@ -1491,8 +1480,7 @@
     },
     "DeleteTrustStoreOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeregisterTargetsInput":{
       "type":"structure",
@@ -1507,8 +1495,7 @@
     },
     "DeregisterTargetsOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DescribeAccountLimitsInput":{
       "type":"structure",
@@ -1776,8 +1763,7 @@
     "Description":{"type":"string"},
     "DuplicateListenerException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DuplicateListener",
         "httpStatusCode":400,
@@ -1787,8 +1773,7 @@
     },
     "DuplicateLoadBalancerNameException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DuplicateLoadBalancerName",
         "httpStatusCode":400,
@@ -1798,8 +1783,7 @@
     },
     "DuplicateTagKeysException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DuplicateTagKeys",
         "httpStatusCode":400,
@@ -1809,8 +1793,7 @@
     },
     "DuplicateTargetGroupNameException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DuplicateTargetGroupName",
         "httpStatusCode":400,
@@ -1820,8 +1803,7 @@
     },
     "DuplicateTrustStoreNameException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DuplicateTrustStoreName",
         "httpStatusCode":400,
@@ -1937,8 +1919,7 @@
     },
     "HealthUnavailableException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"HealthUnavailable",
         "httpStatusCode":500
@@ -1948,7 +1929,14 @@
     "HostHeaderConditionConfig":{
       "type":"structure",
       "members":{
-        "Values":{"shape":"ListOfString"}
+        "Values":{"shape":"ListOfString"},
+        "RegexValues":{"shape":"ListOfString"}
+      }
+    },
+    "HostHeaderRewriteConfig":{
+      "type":"structure",
+      "members":{
+        "Rewrites":{"shape":"RewriteConfigList"}
       }
     },
     "HttpCode":{"type":"string"},
@@ -1956,7 +1944,8 @@
       "type":"structure",
       "members":{
         "HttpHeaderName":{"shape":"HttpHeaderConditionName"},
-        "Values":{"shape":"ListOfString"}
+        "Values":{"shape":"ListOfString"},
+        "RegexValues":{"shape":"ListOfString"}
       }
     },
     "HttpHeaderConditionName":{"type":"string"},
@@ -1970,8 +1959,7 @@
     "IgnoreClientCertificateExpiry":{"type":"boolean"},
     "IncompatibleProtocolsException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"IncompatibleProtocols",
         "httpStatusCode":400,
@@ -1981,8 +1969,7 @@
     },
     "InsufficientCapacityException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InsufficientCapacity",
         "httpStatusCode":500
@@ -1991,8 +1978,7 @@
     },
     "InvalidCaCertificatesBundleException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidCaCertificatesBundle",
         "httpStatusCode":400,
@@ -2002,8 +1988,7 @@
     },
     "InvalidConfigurationRequestException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidConfigurationRequest",
         "httpStatusCode":400,
@@ -2013,8 +1998,7 @@
     },
     "InvalidLoadBalancerActionException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidLoadBalancerAction",
         "httpStatusCode":400,
@@ -2024,8 +2008,7 @@
     },
     "InvalidRevocationContentException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidRevocationContent",
         "httpStatusCode":400,
@@ -2035,8 +2018,7 @@
     },
     "InvalidSchemeException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidScheme",
         "httpStatusCode":400,
@@ -2046,8 +2028,7 @@
     },
     "InvalidSecurityGroupException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidSecurityGroup",
         "httpStatusCode":400,
@@ -2057,8 +2038,7 @@
     },
     "InvalidSubnetException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidSubnet",
         "httpStatusCode":400,
@@ -2068,8 +2048,7 @@
     },
     "InvalidTargetException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidTarget",
         "httpStatusCode":400,
@@ -2098,6 +2077,51 @@
       }
     },
     "IsDefault":{"type":"boolean"},
+    "JwtValidationActionAdditionalClaim":{
+      "type":"structure",
+      "required":[
+        "Format",
+        "Name",
+        "Values"
+      ],
+      "members":{
+        "Format":{"shape":"JwtValidationActionAdditionalClaimFormatEnum"},
+        "Name":{"shape":"JwtValidationActionAdditionalClaimName"},
+        "Values":{"shape":"JwtValidationActionAdditionalClaimValues"}
+      }
+    },
+    "JwtValidationActionAdditionalClaimFormatEnum":{
+      "type":"string",
+      "enum":[
+        "single-string",
+        "string-array",
+        "space-separated-values"
+      ]
+    },
+    "JwtValidationActionAdditionalClaimName":{"type":"string"},
+    "JwtValidationActionAdditionalClaimValue":{"type":"string"},
+    "JwtValidationActionAdditionalClaimValues":{
+      "type":"list",
+      "member":{"shape":"JwtValidationActionAdditionalClaimValue"}
+    },
+    "JwtValidationActionAdditionalClaims":{
+      "type":"list",
+      "member":{"shape":"JwtValidationActionAdditionalClaim"}
+    },
+    "JwtValidationActionConfig":{
+      "type":"structure",
+      "required":[
+        "JwksEndpoint",
+        "Issuer"
+      ],
+      "members":{
+        "JwksEndpoint":{"shape":"JwtValidationActionJwksEndpoint"},
+        "Issuer":{"shape":"JwtValidationActionIssuer"},
+        "AdditionalClaims":{"shape":"JwtValidationActionAdditionalClaims"}
+      }
+    },
+    "JwtValidationActionIssuer":{"type":"string"},
+    "JwtValidationActionJwksEndpoint":{"type":"string"},
     "LastModifiedTime":{"type":"timestamp"},
     "Limit":{
       "type":"structure",
@@ -2156,8 +2180,7 @@
     },
     "ListenerNotFoundException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"ListenerNotFound",
         "httpStatusCode":400,
@@ -2236,8 +2259,7 @@
     },
     "LoadBalancerNotFoundException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"LoadBalancerNotFound",
         "httpStatusCode":400,
@@ -2397,7 +2419,9 @@
       "members":{
         "RuleArn":{"shape":"RuleArn"},
         "Conditions":{"shape":"RuleConditionList"},
-        "Actions":{"shape":"Actions"}
+        "Actions":{"shape":"Actions"},
+        "Transforms":{"shape":"RuleTransformList"},
+        "ResetTransforms":{"shape":"ResetTransforms"}
       }
     },
     "ModifyRuleOutput":{
@@ -2480,8 +2504,7 @@
     "NumberOfRevokedEntries":{"type":"long"},
     "OperationNotPermittedException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"OperationNotPermitted",
         "httpStatusCode":400,
@@ -2503,7 +2526,8 @@
     "PathPatternConditionConfig":{
       "type":"structure",
       "members":{
-        "Values":{"shape":"ListOfString"}
+        "Values":{"shape":"ListOfString"},
+        "RegexValues":{"shape":"ListOfString"}
       }
     },
     "Policy":{
@@ -2517,8 +2541,7 @@
     },
     "PriorRequestNotCompleteException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"PriorRequestNotComplete",
         "httpStatusCode":429,
@@ -2528,8 +2551,7 @@
     },
     "PriorityInUseException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"PriorityInUse",
         "httpStatusCode":400,
@@ -2547,7 +2569,9 @@
         "TLS",
         "UDP",
         "TCP_UDP",
-        "GENEVE"
+        "GENEVE",
+        "QUIC",
+        "TCP_QUIC"
       ]
     },
     "ProtocolVersion":{"type":"string"},
@@ -2567,6 +2591,11 @@
     "QueryStringKeyValuePairList":{
       "type":"list",
       "member":{"shape":"QueryStringKeyValuePair"}
+    },
+    "QuicServerId":{
+      "type":"string",
+      "max":256,
+      "min":1
     },
     "RedirectActionConfig":{
       "type":"structure",
@@ -2620,8 +2649,7 @@
     },
     "RegisterTargetsOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "RemoveIpamPoolEnum":{
       "type":"string",
@@ -2644,8 +2672,7 @@
     },
     "RemoveListenerCertificatesOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "RemoveTagsInput":{
       "type":"structure",
@@ -2660,8 +2687,7 @@
     },
     "RemoveTagsOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "RemoveTrustStoreRevocationsInput":{
       "type":"structure",
@@ -2676,10 +2702,10 @@
     },
     "RemoveTrustStoreRevocationsOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "ResetCapacityReservation":{"type":"boolean"},
+    "ResetTransforms":{"type":"boolean"},
     "ResourceArn":{"type":"string"},
     "ResourceArns":{
       "type":"list",
@@ -2687,8 +2713,7 @@
     },
     "ResourceInUseException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"ResourceInUse",
         "httpStatusCode":400,
@@ -2698,8 +2723,7 @@
     },
     "ResourceNotFoundException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"ResourceNotFound",
         "httpStatusCode":400,
@@ -2718,8 +2742,7 @@
     },
     "RevocationContentNotFoundException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"RevocationContentNotFound",
         "httpStatusCode":400,
@@ -2734,8 +2757,7 @@
     "RevocationId":{"type":"long"},
     "RevocationIdNotFoundException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"RevocationIdNotFound",
         "httpStatusCode":400,
@@ -2751,6 +2773,21 @@
       "type":"string",
       "enum":["CRL"]
     },
+    "RewriteConfig":{
+      "type":"structure",
+      "required":[
+        "Regex",
+        "Replace"
+      ],
+      "members":{
+        "Regex":{"shape":"StringValue"},
+        "Replace":{"shape":"StringValue"}
+      }
+    },
+    "RewriteConfigList":{
+      "type":"list",
+      "member":{"shape":"RewriteConfig"}
+    },
     "Rule":{
       "type":"structure",
       "members":{
@@ -2758,7 +2795,8 @@
         "Priority":{"shape":"String"},
         "Conditions":{"shape":"RuleConditionList"},
         "Actions":{"shape":"Actions"},
-        "IsDefault":{"shape":"IsDefault"}
+        "IsDefault":{"shape":"IsDefault"},
+        "Transforms":{"shape":"RuleTransformList"}
       }
     },
     "RuleArn":{"type":"string"},
@@ -2776,7 +2814,8 @@
         "HttpHeaderConfig":{"shape":"HttpHeaderConditionConfig"},
         "QueryStringConfig":{"shape":"QueryStringConditionConfig"},
         "HttpRequestMethodConfig":{"shape":"HttpRequestMethodConditionConfig"},
-        "SourceIpConfig":{"shape":"SourceIpConditionConfig"}
+        "SourceIpConfig":{"shape":"SourceIpConditionConfig"},
+        "RegexValues":{"shape":"ListOfString"}
       }
     },
     "RuleConditionList":{
@@ -2785,8 +2824,7 @@
     },
     "RuleNotFoundException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"RuleNotFound",
         "httpStatusCode":400,
@@ -2810,6 +2848,19 @@
         "Priority":{"shape":"RulePriority"}
       }
     },
+    "RuleTransform":{
+      "type":"structure",
+      "required":["Type"],
+      "members":{
+        "Type":{"shape":"TransformTypeEnum"},
+        "HostHeaderRewriteConfig":{"shape":"HostHeaderRewriteConfig"},
+        "UrlRewriteConfig":{"shape":"UrlRewriteConfig"}
+      }
+    },
+    "RuleTransformList":{
+      "type":"list",
+      "member":{"shape":"RuleTransform"}
+    },
     "Rules":{
       "type":"list",
       "member":{"shape":"Rule"}
@@ -2819,8 +2870,7 @@
     "S3ObjectVersion":{"type":"string"},
     "SSLPolicyNotFoundException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"SSLPolicyNotFound",
         "httpStatusCode":400,
@@ -2901,10 +2951,18 @@
         "EnablePrefixForIpv6SourceNat":{"shape":"EnablePrefixForIpv6SourceNatEnum"}
       }
     },
+    "SourceIpAddressTypeEnum":{
+      "type":"string",
+      "enum":[
+        "ipv4",
+        "ipv6"
+      ]
+    },
     "SourceIpConditionConfig":{
       "type":"structure",
       "members":{
-        "Values":{"shape":"ListOfString"}
+        "Values":{"shape":"ListOfString"},
+        "IpAddressType":{"shape":"SourceIpAddressTypeEnum"}
       }
     },
     "SourceNatIpv6Prefix":{"type":"string"},
@@ -2955,8 +3013,7 @@
     },
     "SubnetNotFoundException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"SubnetNotFound",
         "httpStatusCode":400,
@@ -3026,13 +3083,19 @@
         "zonal_shift_delegated_to_dns"
       ]
     },
+    "TargetControlPort":{
+      "type":"integer",
+      "max":65535,
+      "min":1
+    },
     "TargetDescription":{
       "type":"structure",
       "required":["Id"],
       "members":{
         "Id":{"shape":"TargetId"},
         "Port":{"shape":"Port"},
-        "AvailabilityZone":{"shape":"ZoneName"}
+        "AvailabilityZone":{"shape":"ZoneName"},
+        "QuicServerId":{"shape":"QuicServerId"}
       }
     },
     "TargetDescriptions":{
@@ -3059,7 +3122,8 @@
         "LoadBalancerArns":{"shape":"LoadBalancerArns"},
         "TargetType":{"shape":"TargetTypeEnum"},
         "ProtocolVersion":{"shape":"ProtocolVersion"},
-        "IpAddressType":{"shape":"TargetGroupIpAddressTypeEnum"}
+        "IpAddressType":{"shape":"TargetGroupIpAddressTypeEnum"},
+        "TargetControlPort":{"shape":"TargetControlPort"}
       }
     },
     "TargetGroupArn":{"type":"string"},
@@ -3069,8 +3133,7 @@
     },
     "TargetGroupAssociationLimitException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"TargetGroupAssociationLimit",
         "httpStatusCode":400,
@@ -3113,8 +3176,7 @@
     },
     "TargetGroupNotFoundException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"TargetGroupNotFound",
         "httpStatusCode":400,
@@ -3206,8 +3268,7 @@
     },
     "TooManyActionsException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"TooManyActions",
         "httpStatusCode":400,
@@ -3217,8 +3278,7 @@
     },
     "TooManyCertificatesException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"TooManyCertificates",
         "httpStatusCode":400,
@@ -3228,8 +3288,7 @@
     },
     "TooManyListenersException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"TooManyListeners",
         "httpStatusCode":400,
@@ -3239,8 +3298,7 @@
     },
     "TooManyLoadBalancersException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"TooManyLoadBalancers",
         "httpStatusCode":400,
@@ -3250,8 +3308,7 @@
     },
     "TooManyRegistrationsForTargetIdException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"TooManyRegistrationsForTargetId",
         "httpStatusCode":400,
@@ -3261,8 +3318,7 @@
     },
     "TooManyRulesException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"TooManyRules",
         "httpStatusCode":400,
@@ -3272,8 +3328,7 @@
     },
     "TooManyTagsException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"TooManyTags",
         "httpStatusCode":400,
@@ -3283,8 +3338,7 @@
     },
     "TooManyTargetGroupsException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"TooManyTargetGroups",
         "httpStatusCode":400,
@@ -3294,8 +3348,7 @@
     },
     "TooManyTargetsException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"TooManyTargets",
         "httpStatusCode":400,
@@ -3305,8 +3358,7 @@
     },
     "TooManyTrustStoreRevocationEntriesException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"TooManyTrustStoreRevocationEntries",
         "httpStatusCode":400,
@@ -3316,8 +3368,7 @@
     },
     "TooManyTrustStoresException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"TooManyTrustStores",
         "httpStatusCode":400,
@@ -3327,8 +3378,7 @@
     },
     "TooManyUniqueTargetGroupsPerLoadBalancerException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"TooManyUniqueTargetGroupsPerLoadBalancer",
         "httpStatusCode":400,
@@ -3337,6 +3387,13 @@
       "exception":true
     },
     "TotalRevokedEntries":{"type":"long"},
+    "TransformTypeEnum":{
+      "type":"string",
+      "enum":[
+        "host-header-rewrite",
+        "url-rewrite"
+      ]
+    },
     "TrustStore":{
       "type":"structure",
       "members":{
@@ -3360,8 +3417,7 @@
     },
     "TrustStoreAssociationNotFoundException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"AssociationNotFound",
         "httpStatusCode":400,
@@ -3383,8 +3439,7 @@
     },
     "TrustStoreInUseException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"TrustStoreInUse",
         "httpStatusCode":400,
@@ -3404,8 +3459,7 @@
     },
     "TrustStoreNotFoundException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"TrustStoreNotFound",
         "httpStatusCode":400,
@@ -3415,8 +3469,7 @@
     },
     "TrustStoreNotReadyException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"TrustStoreNotReady",
         "httpStatusCode":400,
@@ -3450,14 +3503,19 @@
     },
     "UnsupportedProtocolException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"UnsupportedProtocol",
         "httpStatusCode":400,
         "senderFault":true
       },
       "exception":true
+    },
+    "UrlRewriteConfig":{
+      "type":"structure",
+      "members":{
+        "Rewrites":{"shape":"RewriteConfigList"}
+      }
     },
     "VpcId":{"type":"string"},
     "ZonalCapacityReservationState":{

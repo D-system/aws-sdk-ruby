@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -106,7 +107,7 @@ module Aws
                              {
                                key: ::String?,
                                value: ::String?
-                             },
+                             }
                            ]
                          ) -> _CopySnapshotResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CopySnapshotResponseSuccess
@@ -123,7 +124,7 @@ module Aws
                           {
                             key: ::String?,
                             value: ::String?
-                          },
+                          }
                         ]
                       ) -> _CreateACLResponseSuccess
                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateACLResponseSuccess
@@ -155,14 +156,16 @@ module Aws
                               {
                                 key: ::String?,
                                 value: ::String?
-                              },
+                              }
                             ],
                             ?snapshot_window: ::String,
                             acl_name: ::String,
                             ?engine: ::String,
                             ?engine_version: ::String,
                             ?auto_minor_version_upgrade: bool,
-                            ?data_tiering: bool
+                            ?data_tiering: bool,
+                            ?network_type: ("ipv4" | "ipv6" | "dual_stack"),
+                            ?ip_discovery: ("ipv4" | "ipv6")
                           ) -> _CreateClusterResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateClusterResponseSuccess
 
@@ -184,7 +187,7 @@ module Aws
                                            {
                                              key: ::String?,
                                              value: ::String?
-                                           },
+                                           }
                                          ]
                                        ) -> _CreateMultiRegionClusterResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateMultiRegionClusterResponseSuccess
@@ -202,7 +205,7 @@ module Aws
                                       {
                                         key: ::String?,
                                         value: ::String?
-                                      },
+                                      }
                                     ]
                                   ) -> _CreateParameterGroupResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateParameterGroupResponseSuccess
@@ -220,7 +223,7 @@ module Aws
                                {
                                  key: ::String?,
                                  value: ::String?
-                               },
+                               }
                              ]
                            ) -> _CreateSnapshotResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateSnapshotResponseSuccess
@@ -238,7 +241,7 @@ module Aws
                                    {
                                      key: ::String?,
                                      value: ::String?
-                                   },
+                                   }
                                  ]
                                ) -> _CreateSubnetGroupResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateSubnetGroupResponseSuccess
@@ -259,7 +262,7 @@ module Aws
                            {
                              key: ::String?,
                              value: ::String?
-                           },
+                           }
                          ]
                        ) -> _CreateUserResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateUserResponseSuccess
@@ -410,6 +413,33 @@ module Aws
                                           ) -> _DescribeMultiRegionClustersResponseSuccess
                                         | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeMultiRegionClustersResponseSuccess
 
+      interface _DescribeMultiRegionParameterGroupsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DescribeMultiRegionParameterGroupsResponse]
+        def next_token: () -> ::String
+        def multi_region_parameter_groups: () -> ::Array[Types::MultiRegionParameterGroup]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/MemoryDB/Client.html#describe_multi_region_parameter_groups-instance_method
+      def describe_multi_region_parameter_groups: (
+                                                    ?multi_region_parameter_group_name: ::String,
+                                                    ?max_results: ::Integer,
+                                                    ?next_token: ::String
+                                                  ) -> _DescribeMultiRegionParameterGroupsResponseSuccess
+                                                | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeMultiRegionParameterGroupsResponseSuccess
+
+      interface _DescribeMultiRegionParametersResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DescribeMultiRegionParametersResponse]
+        def next_token: () -> ::String
+        def multi_region_parameters: () -> ::Array[Types::MultiRegionParameter]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/MemoryDB/Client.html#describe_multi_region_parameters-instance_method
+      def describe_multi_region_parameters: (
+                                              multi_region_parameter_group_name: ::String,
+                                              ?source: ::String,
+                                              ?max_results: ::Integer,
+                                              ?next_token: ::String
+                                            ) -> _DescribeMultiRegionParametersResponseSuccess
+                                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeMultiRegionParametersResponseSuccess
+
       interface _DescribeParameterGroupsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DescribeParameterGroupsResponse]
         def next_token: () -> ::String
@@ -525,7 +555,7 @@ module Aws
                               {
                                 name: ::String,
                                 values: Array[::String]
-                              },
+                              }
                             ],
                             ?max_results: ::Integer,
                             ?next_token: ::String
@@ -588,7 +618,7 @@ module Aws
                                                 {
                                                   key: ::String?,
                                                   value: ::String?
-                                                },
+                                                }
                                               ]
                                             ) -> _PurchaseReservedNodesOfferingResponseSuccess
                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PurchaseReservedNodesOfferingResponseSuccess
@@ -616,7 +646,7 @@ module Aws
                             {
                               key: ::String?,
                               value: ::String?
-                            },
+                            }
                           ]
                         ) -> _TagResourceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess
@@ -668,7 +698,8 @@ module Aws
                             ?shard_configuration: {
                               shard_count: ::Integer?
                             },
-                            ?acl_name: ::String
+                            ?acl_name: ::String,
+                            ?ip_discovery: ("ipv4" | "ipv6")
                           ) -> _UpdateClusterResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateClusterResponseSuccess
 
@@ -701,7 +732,7 @@ module Aws
                                       {
                                         parameter_name: ::String?,
                                         parameter_value: ::String?
-                                      },
+                                      }
                                     ]
                                   ) -> _UpdateParameterGroupResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateParameterGroupResponseSuccess

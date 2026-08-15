@@ -362,7 +362,7 @@ module Aws::AuditManager
 
     AssessmentControl.add_member(:id, Shapes::ShapeRef.new(shape: UUID, location_name: "id"))
     AssessmentControl.add_member(:name, Shapes::ShapeRef.new(shape: ControlName, location_name: "name"))
-    AssessmentControl.add_member(:description, Shapes::ShapeRef.new(shape: ControlDescription, location_name: "description"))
+    AssessmentControl.add_member(:description, Shapes::ShapeRef.new(shape: ControlDescription, deprecated: true, location_name: "description", metadata: {"deprecatedMessage" => "This data type will be deprecated on May 19, 2025. To view the assessment control description, use GetControl.", "deprecatedSince" => "2025-05-19"}))
     AssessmentControl.add_member(:status, Shapes::ShapeRef.new(shape: ControlStatus, location_name: "status"))
     AssessmentControl.add_member(:response, Shapes::ShapeRef.new(shape: ControlResponse, location_name: "response"))
     AssessmentControl.add_member(:comments, Shapes::ShapeRef.new(shape: ControlComments, location_name: "comments"))
@@ -858,7 +858,7 @@ module Aws::AuditManager
     Framework.add_member(:compliance_type, Shapes::ShapeRef.new(shape: ComplianceType, location_name: "complianceType"))
     Framework.add_member(:description, Shapes::ShapeRef.new(shape: FrameworkDescription, location_name: "description"))
     Framework.add_member(:logo, Shapes::ShapeRef.new(shape: Filename, location_name: "logo"))
-    Framework.add_member(:control_sources, Shapes::ShapeRef.new(shape: ControlSources, location_name: "controlSources"))
+    Framework.add_member(:control_sources, Shapes::ShapeRef.new(shape: ControlSources, deprecated: true, location_name: "controlSources", metadata: {"deprecatedMessage" => "Use controlSources from the Control", "deprecatedSince" => "2025-07-24"}))
     Framework.add_member(:control_sets, Shapes::ShapeRef.new(shape: ControlSets, location_name: "controlSets"))
     Framework.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "createdAt"))
     Framework.add_member(:last_updated_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "lastUpdatedAt"))
@@ -1188,7 +1188,7 @@ module Aws::AuditManager
     Roles.member = Shapes::ShapeRef.new(shape: Role)
 
     Scope.add_member(:aws_accounts, Shapes::ShapeRef.new(shape: AWSAccounts, location_name: "awsAccounts"))
-    Scope.add_member(:aws_services, Shapes::ShapeRef.new(shape: AWSServices, deprecated: true, location_name: "awsServices", metadata: {"deprecatedMessage"=>"You can't specify services in scope when creating/updating an assessment. If you use the parameter to specify one or more AWS services, Audit Manager ignores the input. Instead the value of the parameter will show as empty indicating that the services are defined and managed by Audit Manager."}))
+    Scope.add_member(:aws_services, Shapes::ShapeRef.new(shape: AWSServices, deprecated: true, location_name: "awsServices", metadata: {"deprecatedMessage" => "You can't specify services in scope when creating/updating an assessment. If you use the parameter to specify one or more AWS services, Audit Manager ignores the input. Instead the value of the parameter will show as empty indicating that the services are defined and managed by Audit Manager."}))
     Scope.struct_class = Types::Scope
 
     ServiceMetadata.add_member(:name, Shapes::ShapeRef.new(shape: AWSServiceName, location_name: "name"))
@@ -2061,6 +2061,7 @@ module Aws::AuditManager
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:start_assessment_framework_share, Seahorse::Model::Operation.new.tap do |o|
@@ -2108,6 +2109,7 @@ module Aws::AuditManager
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
       end)
 
       api.add_operation(:update_assessment_control, Seahorse::Model::Operation.new.tap do |o|
@@ -2144,6 +2146,7 @@ module Aws::AuditManager
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
       end)
 
       api.add_operation(:update_assessment_framework_share, Seahorse::Model::Operation.new.tap do |o|

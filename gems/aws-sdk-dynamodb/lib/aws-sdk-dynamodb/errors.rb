@@ -57,6 +57,7 @@ module Aws::DynamoDB
   # * {TableAlreadyExistsException}
   # * {TableInUseException}
   # * {TableNotFoundException}
+  # * {ThrottlingException}
   # * {TransactionCanceledException}
   # * {TransactionConflictException}
   # * {TransactionInProgressException}
@@ -385,6 +386,11 @@ module Aws::DynamoDB
       def message
         @message || @data[:message]
       end
+
+      # @return [String]
+      def throttling_reasons
+        @data[:throttling_reasons]
+      end
     end
 
     class ReplicaAlreadyExistsException < ServiceError
@@ -430,6 +436,10 @@ module Aws::DynamoDB
       def message
         @message || @data[:message]
       end
+
+      def retryable?
+        true
+      end
     end
 
     class RequestLimitExceeded < ServiceError
@@ -444,6 +454,11 @@ module Aws::DynamoDB
       # @return [String]
       def message
         @message || @data[:message]
+      end
+
+      # @return [String]
+      def throttling_reasons
+        @data[:throttling_reasons]
       end
     end
 
@@ -519,6 +534,26 @@ module Aws::DynamoDB
       # @return [String]
       def message
         @message || @data[:message]
+      end
+    end
+
+    class ThrottlingException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::DynamoDB::Types::ThrottlingException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+
+      # @return [String]
+      def throttling_reasons
+        @data[:throttling_reasons]
       end
     end
 

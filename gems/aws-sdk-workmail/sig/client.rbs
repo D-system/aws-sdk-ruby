@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -189,14 +190,7 @@ module Aws
                                        type: ("FULL_ACCESS" | "READ_ONLY"),
                                        ?description: ::String,
                                        rules: Array[
-                                         {
-                                           impersonation_rule_id: ::String,
-                                           name: ::String?,
-                                           description: ::String?,
-                                           effect: ("ALLOW" | "DENY"),
-                                           target_users: Array[::String]?,
-                                           not_target_users: Array[::String]?
-                                         },
+                                         Params::impersonation_rule
                                        ]
                                      ) -> _CreateImpersonationRoleResponseSuccess
                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateImpersonationRoleResponseSuccess
@@ -236,7 +230,7 @@ module Aws
                                    {
                                      domain_name: ::String,
                                      hosted_zone_id: ::String?
-                                   },
+                                   }
                                  ],
                                  ?kms_key_arn: ::String,
                                  ?enable_interoperability: bool
@@ -1055,7 +1049,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/WorkMail/Client.html#put_email_monitoring_configuration-instance_method
       def put_email_monitoring_configuration: (
                                                 organization_id: ::String,
-                                                role_arn: ::String,
+                                                ?role_arn: ::String,
                                                 log_group_arn: ::String
                                               ) -> _PutEmailMonitoringConfigurationResponseSuccess
                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutEmailMonitoringConfigurationResponseSuccess
@@ -1127,7 +1121,7 @@ module Aws
                                       name: ("INBOX" | "DELETED_ITEMS" | "SENT_ITEMS" | "DRAFTS" | "JUNK_EMAIL"),
                                       action: ("NONE" | "DELETE" | "PERMANENTLY_DELETE"),
                                       period: ::Integer?
-                                    },
+                                    }
                                   ]
                                 ) -> _PutRetentionPolicyResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutRetentionPolicyResponseSuccess
@@ -1192,7 +1186,7 @@ module Aws
                             {
                               key: ::String,
                               value: ::String
-                            },
+                            }
                           ]
                         ) -> _TagResourceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess
@@ -1277,14 +1271,7 @@ module Aws
                                        type: ("FULL_ACCESS" | "READ_ONLY"),
                                        ?description: ::String,
                                        rules: Array[
-                                         {
-                                           impersonation_rule_id: ::String,
-                                           name: ::String?,
-                                           description: ::String?,
-                                           effect: ("ALLOW" | "DENY"),
-                                           target_users: Array[::String]?,
-                                           not_target_users: Array[::String]?
-                                         },
+                                         Params::impersonation_rule
                                        ]
                                      ) -> _UpdateImpersonationRoleResponseSuccess
                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateImpersonationRoleResponseSuccess

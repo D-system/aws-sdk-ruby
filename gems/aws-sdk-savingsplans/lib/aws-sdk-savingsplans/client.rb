@@ -95,8 +95,8 @@ module Aws::SavingsPlans
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::SavingsPlans
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::SavingsPlans
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::SavingsPlans
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::SavingsPlans
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::SavingsPlans
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::SavingsPlans
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::SavingsPlans
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -551,7 +555,7 @@ module Aws::SavingsPlans
       req.send_request(options)
     end
 
-    # Describes the rates for the specified Savings Plan.
+    # Describes the rates for a specific, existing Savings Plan.
     #
     # @option params [required, String] :savings_plan_id
     #   The ID of the Savings Plan.
@@ -592,10 +596,10 @@ module Aws::SavingsPlans
     #   resp.savings_plan_id #=> String
     #   resp.search_results #=> Array
     #   resp.search_results[0].rate #=> String
-    #   resp.search_results[0].currency #=> String, one of "CNY", "USD"
-    #   resp.search_results[0].unit #=> String, one of "Hrs", "Lambda-GB-Second", "Request"
-    #   resp.search_results[0].product_type #=> String, one of "EC2", "Fargate", "Lambda", "SageMaker"
-    #   resp.search_results[0].service_code #=> String, one of "AmazonEC2", "AmazonECS", "AmazonEKS", "AWSLambda", "AmazonSageMaker"
+    #   resp.search_results[0].currency #=> String, one of "CNY", "USD", "EUR"
+    #   resp.search_results[0].unit #=> String, one of "Hrs", "Lambda-GB-Second", "Request", "ACU-Hr", "ReadRequestUnits", "WriteRequestUnits", "ReadCapacityUnit-Hrs", "WriteCapacityUnit-Hrs", "ReplicatedWriteRequestUnits", "ReplicatedWriteCapacityUnit-Hrs", "GB-Hours", "DPU", "ElastiCacheProcessingUnit", "DCU-Hr", "NCU-hr", "OCU-hours", "Jobs"
+    #   resp.search_results[0].product_type #=> String, one of "EC2", "Fargate", "Lambda", "SageMaker", "RDS", "DSQL", "DynamoDB", "ElastiCache", "DocDB", "Neptune", "Timestream", "Keyspaces", "DMS", "OpenSearch"
+    #   resp.search_results[0].service_code #=> String, one of "AmazonEC2", "AmazonECS", "AmazonEKS", "AWSLambda", "AmazonSageMaker", "AmazonRDS", "AuroraDSQL", "AmazonDynamoDB", "AmazonElastiCache", "AmazonDocDB", "AmazonNeptune", "AmazonTimestream", "AmazonMCS", "AWSDatabaseMigrationSvc", "AmazonES"
     #   resp.search_results[0].usage_type #=> String
     #   resp.search_results[0].operation #=> String
     #   resp.search_results[0].properties #=> Array
@@ -649,7 +653,7 @@ module Aws::SavingsPlans
     #     states: ["payment-pending"], # accepts payment-pending, payment-failed, active, retired, queued, queued-deleted, pending-return, returned
     #     filters: [
     #       {
-    #         name: "region", # accepts region, ec2-instance-family, commitment, upfront, term, savings-plan-type, payment-option, start, end
+    #         name: "region", # accepts region, ec2-instance-family, commitment, upfront, term, savings-plan-type, payment-option, start, end, instance-family
     #         values: ["String"],
     #       },
     #     ],
@@ -667,11 +671,11 @@ module Aws::SavingsPlans
     #   resp.savings_plans[0].state #=> String, one of "payment-pending", "payment-failed", "active", "retired", "queued", "queued-deleted", "pending-return", "returned"
     #   resp.savings_plans[0].region #=> String
     #   resp.savings_plans[0].ec2_instance_family #=> String
-    #   resp.savings_plans[0].savings_plan_type #=> String, one of "Compute", "EC2Instance", "SageMaker"
+    #   resp.savings_plans[0].savings_plan_type #=> String, one of "Compute", "EC2Instance", "SageMaker", "Database"
     #   resp.savings_plans[0].payment_option #=> String, one of "All Upfront", "Partial Upfront", "No Upfront"
     #   resp.savings_plans[0].product_types #=> Array
-    #   resp.savings_plans[0].product_types[0] #=> String, one of "EC2", "Fargate", "Lambda", "SageMaker"
-    #   resp.savings_plans[0].currency #=> String, one of "CNY", "USD"
+    #   resp.savings_plans[0].product_types[0] #=> String, one of "EC2", "Fargate", "Lambda", "SageMaker", "RDS", "DSQL", "DynamoDB", "ElastiCache", "DocDB", "Neptune", "Timestream", "Keyspaces", "DMS", "OpenSearch"
+    #   resp.savings_plans[0].currency #=> String, one of "CNY", "USD", "EUR"
     #   resp.savings_plans[0].commitment #=> String
     #   resp.savings_plans[0].upfront_payment_amount #=> String
     #   resp.savings_plans[0].recurring_payment_amount #=> String
@@ -690,7 +694,8 @@ module Aws::SavingsPlans
       req.send_request(options)
     end
 
-    # Describes the offering rates for the specified Savings Plans.
+    # Describes the offering rates for Savings Plans you might want to
+    # purchase.
     #
     # @option params [Array<String>] :savings_plan_offering_ids
     #   The IDs of the offerings.
@@ -735,9 +740,9 @@ module Aws::SavingsPlans
     #   resp = client.describe_savings_plans_offering_rates({
     #     savings_plan_offering_ids: ["UUID"],
     #     savings_plan_payment_options: ["All Upfront"], # accepts All Upfront, Partial Upfront, No Upfront
-    #     savings_plan_types: ["Compute"], # accepts Compute, EC2Instance, SageMaker
-    #     products: ["EC2"], # accepts EC2, Fargate, Lambda, SageMaker
-    #     service_codes: ["AmazonEC2"], # accepts AmazonEC2, AmazonECS, AmazonEKS, AWSLambda, AmazonSageMaker
+    #     savings_plan_types: ["Compute"], # accepts Compute, EC2Instance, SageMaker, Database
+    #     products: ["EC2"], # accepts EC2, Fargate, Lambda, SageMaker, RDS, DSQL, DynamoDB, ElastiCache, DocDB, Neptune, Timestream, Keyspaces, DMS, OpenSearch
+    #     service_codes: ["AmazonEC2"], # accepts AmazonEC2, AmazonECS, AmazonEKS, AWSLambda, AmazonSageMaker, AmazonRDS, AuroraDSQL, AmazonDynamoDB, AmazonElastiCache, AmazonDocDB, AmazonNeptune, AmazonTimestream, AmazonMCS, AWSDatabaseMigrationSvc, AmazonES
     #     usage_types: ["SavingsPlanRateUsageType"],
     #     operations: ["SavingsPlanRateOperation"],
     #     filters: [
@@ -755,14 +760,14 @@ module Aws::SavingsPlans
     #   resp.search_results #=> Array
     #   resp.search_results[0].savings_plan_offering.offering_id #=> String
     #   resp.search_results[0].savings_plan_offering.payment_option #=> String, one of "All Upfront", "Partial Upfront", "No Upfront"
-    #   resp.search_results[0].savings_plan_offering.plan_type #=> String, one of "Compute", "EC2Instance", "SageMaker"
+    #   resp.search_results[0].savings_plan_offering.plan_type #=> String, one of "Compute", "EC2Instance", "SageMaker", "Database"
     #   resp.search_results[0].savings_plan_offering.duration_seconds #=> Integer
-    #   resp.search_results[0].savings_plan_offering.currency #=> String, one of "CNY", "USD"
+    #   resp.search_results[0].savings_plan_offering.currency #=> String, one of "CNY", "USD", "EUR"
     #   resp.search_results[0].savings_plan_offering.plan_description #=> String
     #   resp.search_results[0].rate #=> String
-    #   resp.search_results[0].unit #=> String, one of "Hrs", "Lambda-GB-Second", "Request"
-    #   resp.search_results[0].product_type #=> String, one of "EC2", "Fargate", "Lambda", "SageMaker"
-    #   resp.search_results[0].service_code #=> String, one of "AmazonEC2", "AmazonECS", "AmazonEKS", "AWSLambda", "AmazonSageMaker"
+    #   resp.search_results[0].unit #=> String, one of "Hrs", "Lambda-GB-Second", "Request", "ACU-Hr", "ReadRequestUnits", "WriteRequestUnits", "ReadCapacityUnit-Hrs", "WriteCapacityUnit-Hrs", "ReplicatedWriteRequestUnits", "ReplicatedWriteCapacityUnit-Hrs", "GB-Hours", "DPU", "ElastiCacheProcessingUnit", "DCU-Hr", "NCU-hr", "OCU-hours", "Jobs"
+    #   resp.search_results[0].product_type #=> String, one of "EC2", "Fargate", "Lambda", "SageMaker", "RDS", "DSQL", "DynamoDB", "ElastiCache", "DocDB", "Neptune", "Timestream", "Keyspaces", "DMS", "OpenSearch"
+    #   resp.search_results[0].service_code #=> String, one of "AmazonEC2", "AmazonECS", "AmazonEKS", "AWSLambda", "AmazonSageMaker", "AmazonRDS", "AuroraDSQL", "AmazonDynamoDB", "AmazonElastiCache", "AmazonDocDB", "AmazonNeptune", "AmazonTimestream", "AmazonMCS", "AWSDatabaseMigrationSvc", "AmazonES"
     #   resp.search_results[0].usage_type #=> String
     #   resp.search_results[0].operation #=> String
     #   resp.search_results[0].properties #=> Array
@@ -833,10 +838,10 @@ module Aws::SavingsPlans
     #   resp = client.describe_savings_plans_offerings({
     #     offering_ids: ["UUID"],
     #     payment_options: ["All Upfront"], # accepts All Upfront, Partial Upfront, No Upfront
-    #     product_type: "EC2", # accepts EC2, Fargate, Lambda, SageMaker
-    #     plan_types: ["Compute"], # accepts Compute, EC2Instance, SageMaker
+    #     product_type: "EC2", # accepts EC2, Fargate, Lambda, SageMaker, RDS, DSQL, DynamoDB, ElastiCache, DocDB, Neptune, Timestream, Keyspaces, DMS, OpenSearch
+    #     plan_types: ["Compute"], # accepts Compute, EC2Instance, SageMaker, Database
     #     durations: [1],
-    #     currencies: ["CNY"], # accepts CNY, USD
+    #     currencies: ["CNY"], # accepts CNY, USD, EUR
     #     descriptions: ["SavingsPlanDescription"],
     #     service_codes: ["SavingsPlanServiceCode"],
     #     usage_types: ["SavingsPlanUsageType"],
@@ -856,12 +861,12 @@ module Aws::SavingsPlans
     #   resp.search_results #=> Array
     #   resp.search_results[0].offering_id #=> String
     #   resp.search_results[0].product_types #=> Array
-    #   resp.search_results[0].product_types[0] #=> String, one of "EC2", "Fargate", "Lambda", "SageMaker"
-    #   resp.search_results[0].plan_type #=> String, one of "Compute", "EC2Instance", "SageMaker"
+    #   resp.search_results[0].product_types[0] #=> String, one of "EC2", "Fargate", "Lambda", "SageMaker", "RDS", "DSQL", "DynamoDB", "ElastiCache", "DocDB", "Neptune", "Timestream", "Keyspaces", "DMS", "OpenSearch"
+    #   resp.search_results[0].plan_type #=> String, one of "Compute", "EC2Instance", "SageMaker", "Database"
     #   resp.search_results[0].description #=> String
     #   resp.search_results[0].payment_option #=> String, one of "All Upfront", "Partial Upfront", "No Upfront"
     #   resp.search_results[0].duration_seconds #=> Integer
-    #   resp.search_results[0].currency #=> String, one of "CNY", "USD"
+    #   resp.search_results[0].currency #=> String, one of "CNY", "USD", "EUR"
     #   resp.search_results[0].service_code #=> String
     #   resp.search_results[0].usage_type #=> String
     #   resp.search_results[0].operation #=> String
@@ -1017,7 +1022,7 @@ module Aws::SavingsPlans
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-savingsplans'
-      context[:gem_version] = '1.57.0'
+      context[:gem_version] = '1.80.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

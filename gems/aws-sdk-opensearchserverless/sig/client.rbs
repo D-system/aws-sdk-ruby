@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -90,6 +91,18 @@ module Aws
                                 ) -> _BatchGetCollectionResponseSuccess
                               | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchGetCollectionResponseSuccess
 
+      interface _BatchGetCollectionGroupResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::BatchGetCollectionGroupResponse]
+        def collection_group_details: () -> ::Array[Types::CollectionGroupDetail]
+        def collection_group_error_details: () -> ::Array[Types::CollectionGroupErrorDetail]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/OpenSearchServerless/Client.html#batch_get_collection_group-instance_method
+      def batch_get_collection_group: (
+                                        ?ids: Array[::String],
+                                        ?names: Array[::String]
+                                      ) -> _BatchGetCollectionGroupResponseSuccess
+                                    | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchGetCollectionGroupResponseSuccess
+
       interface _BatchGetEffectiveLifecyclePolicyResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::BatchGetEffectiveLifecyclePolicyResponse]
         def effective_lifecycle_policy_details: () -> ::Array[Types::EffectiveLifecyclePolicyDetail]
@@ -101,7 +114,7 @@ module Aws
                                                     {
                                                       type: ("retention"),
                                                       resource: ::String
-                                                    },
+                                                    }
                                                   ]
                                                 ) -> _BatchGetEffectiveLifecyclePolicyResponseSuccess
                                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchGetEffectiveLifecyclePolicyResponseSuccess
@@ -117,7 +130,7 @@ module Aws
                                           {
                                             type: ("retention"),
                                             name: ::String
-                                          },
+                                          }
                                         ]
                                       ) -> _BatchGetLifecyclePolicyResponseSuccess
                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchGetLifecyclePolicyResponseSuccess
@@ -160,12 +173,59 @@ module Aws
                                  {
                                    key: ::String,
                                    value: ::String
-                                 },
+                                 }
                                ],
                                ?standby_replicas: ("ENABLED" | "DISABLED"),
+                               ?vector_options: {
+                                 serverless_vector_acceleration: ("ENABLED" | "DISABLED" | "ALLOWED")
+                               },
+                               ?collection_group_name: ::String,
+                               ?encryption_config: {
+                                 a_ws_owned_key: bool?,
+                                 kms_key_arn: ::String?
+                               },
+                               ?deletion_protection: ("ENABLED" | "DISABLED"),
                                ?client_token: ::String
                              ) -> _CreateCollectionResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateCollectionResponseSuccess
+
+      interface _CreateCollectionGroupResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateCollectionGroupResponse]
+        def create_collection_group_detail: () -> Types::CreateCollectionGroupDetail
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/OpenSearchServerless/Client.html#create_collection_group-instance_method
+      def create_collection_group: (
+                                     name: ::String,
+                                     standby_replicas: ("ENABLED" | "DISABLED"),
+                                     ?description: ::String,
+                                     ?tags: Array[
+                                       {
+                                         key: ::String,
+                                         value: ::String
+                                       }
+                                     ],
+                                     ?capacity_limits: {
+                                       max_indexing_capacity_in_ocu: ::Float?,
+                                       max_search_capacity_in_ocu: ::Float?,
+                                       min_indexing_capacity_in_ocu: ::Float?,
+                                       min_search_capacity_in_ocu: ::Float?
+                                     },
+                                     ?generation: ("CLASSIC" | "NEXTGEN"),
+                                     ?client_token: ::String
+                                   ) -> _CreateCollectionGroupResponseSuccess
+                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateCollectionGroupResponseSuccess
+
+      interface _CreateIndexResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateIndexResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/OpenSearchServerless/Client.html#create_index-instance_method
+      def create_index: (
+                          id: ::String,
+                          index_name: ::String,
+                          ?index_schema: {
+                          }
+                        ) -> _CreateIndexResponseSuccess
+                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateIndexResponseSuccess
 
       interface _CreateLifecyclePolicyResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateLifecyclePolicyResponse]
@@ -187,7 +247,7 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/OpenSearchServerless/Client.html#create_security_config-instance_method
       def create_security_config: (
-                                    type: ("saml" | "iamidentitycenter"),
+                                    type: ("saml" | "iamidentitycenter" | "iamfederation"),
                                     name: ::String,
                                     ?description: ::String,
                                     ?saml_options: {
@@ -201,6 +261,10 @@ module Aws
                                       instance_arn: ::String,
                                       user_attribute: ("UserId" | "UserName" | "Email")?,
                                       group_attribute: ("GroupId" | "GroupName")?
+                                    },
+                                    ?iam_federation_options: {
+                                      group_attribute: ::String?,
+                                      user_attribute: ::String?
                                     },
                                     ?client_token: ::String
                                   ) -> _CreateSecurityConfigResponseSuccess
@@ -255,6 +319,26 @@ module Aws
                                ?client_token: ::String
                              ) -> _DeleteCollectionResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteCollectionResponseSuccess
+
+      interface _DeleteCollectionGroupResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteCollectionGroupResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/OpenSearchServerless/Client.html#delete_collection_group-instance_method
+      def delete_collection_group: (
+                                     id: ::String,
+                                     ?client_token: ::String
+                                   ) -> _DeleteCollectionGroupResponseSuccess
+                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteCollectionGroupResponseSuccess
+
+      interface _DeleteIndexResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteIndexResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/OpenSearchServerless/Client.html#delete_index-instance_method
+      def delete_index: (
+                          id: ::String,
+                          index_name: ::String
+                        ) -> _DeleteIndexResponseSuccess
+                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteIndexResponseSuccess
 
       interface _DeleteLifecyclePolicyResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DeleteLifecyclePolicyResponse]
@@ -319,6 +403,17 @@ module Aws
                                 ) -> _GetAccountSettingsResponseSuccess
                               | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetAccountSettingsResponseSuccess
 
+      interface _GetIndexResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetIndexResponse]
+        def index_schema: () -> untyped
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/OpenSearchServerless/Client.html#get_index-instance_method
+      def get_index: (
+                       id: ::String,
+                       index_name: ::String
+                     ) -> _GetIndexResponseSuccess
+                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetIndexResponseSuccess
+
       interface _GetPoliciesStatsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetPoliciesStatsResponse]
         def access_policy_stats: () -> Types::AccessPolicyStats
@@ -367,6 +462,18 @@ module Aws
                                 ) -> _ListAccessPoliciesResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListAccessPoliciesResponseSuccess
 
+      interface _ListCollectionGroupsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListCollectionGroupsResponse]
+        def collection_group_summaries: () -> ::Array[Types::CollectionGroupSummary]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/OpenSearchServerless/Client.html#list_collection_groups-instance_method
+      def list_collection_groups: (
+                                    ?next_token: ::String,
+                                    ?max_results: ::Integer
+                                  ) -> _ListCollectionGroupsResponseSuccess
+                                | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListCollectionGroupsResponseSuccess
+
       interface _ListCollectionsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListCollectionsResponse]
         def collection_summaries: () -> ::Array[Types::CollectionSummary]
@@ -376,7 +483,8 @@ module Aws
       def list_collections: (
                               ?collection_filters: {
                                 name: ::String?,
-                                status: ("CREATING" | "DELETING" | "ACTIVE" | "FAILED")?
+                                status: ("CREATING" | "UPDATING" | "DELETING" | "ACTIVE" | "FAILED" | "UPDATE_FAILED")?,
+                                collection_group_name: ::String?
                               },
                               ?next_token: ::String,
                               ?max_results: ::Integer
@@ -404,7 +512,7 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/OpenSearchServerless/Client.html#list_security_configs-instance_method
       def list_security_configs: (
-                                   type: ("saml" | "iamidentitycenter"),
+                                   type: ("saml" | "iamidentitycenter" | "iamfederation"),
                                    ?next_token: ::String,
                                    ?max_results: ::Integer
                                  ) -> _ListSecurityConfigsResponseSuccess
@@ -459,7 +567,7 @@ module Aws
                             {
                               key: ::String,
                               value: ::String
-                            },
+                            }
                           ]
                         ) -> _TagResourceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess
@@ -510,9 +618,43 @@ module Aws
       def update_collection: (
                                id: ::String,
                                ?description: ::String,
+                               ?vector_options: {
+                                 serverless_vector_acceleration: ("ENABLED" | "DISABLED" | "ALLOWED")
+                               },
+                               ?deletion_protection: ("ENABLED" | "DISABLED"),
                                ?client_token: ::String
                              ) -> _UpdateCollectionResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateCollectionResponseSuccess
+
+      interface _UpdateCollectionGroupResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateCollectionGroupResponse]
+        def update_collection_group_detail: () -> Types::UpdateCollectionGroupDetail
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/OpenSearchServerless/Client.html#update_collection_group-instance_method
+      def update_collection_group: (
+                                     id: ::String,
+                                     ?description: ::String,
+                                     ?capacity_limits: {
+                                       max_indexing_capacity_in_ocu: ::Float?,
+                                       max_search_capacity_in_ocu: ::Float?,
+                                       min_indexing_capacity_in_ocu: ::Float?,
+                                       min_search_capacity_in_ocu: ::Float?
+                                     },
+                                     ?client_token: ::String
+                                   ) -> _UpdateCollectionGroupResponseSuccess
+                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateCollectionGroupResponseSuccess
+
+      interface _UpdateIndexResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateIndexResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/OpenSearchServerless/Client.html#update_index-instance_method
+      def update_index: (
+                          id: ::String,
+                          index_name: ::String,
+                          ?index_schema: {
+                          }
+                        ) -> _UpdateIndexResponseSuccess
+                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateIndexResponseSuccess
 
       interface _UpdateLifecyclePolicyResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::UpdateLifecyclePolicyResponse]
@@ -548,6 +690,10 @@ module Aws
                                     ?iam_identity_center_options_updates: {
                                       user_attribute: ("UserId" | "UserName" | "Email")?,
                                       group_attribute: ("GroupId" | "GroupName")?
+                                    },
+                                    ?iam_federation_options: {
+                                      group_attribute: ::String?,
+                                      user_attribute: ::String?
                                     },
                                     ?client_token: ::String
                                   ) -> _UpdateSecurityConfigResponseSuccess

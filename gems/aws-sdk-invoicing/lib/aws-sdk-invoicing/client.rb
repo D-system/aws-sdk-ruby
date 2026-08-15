@@ -95,8 +95,8 @@ module Aws::Invoicing
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::Invoicing
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::Invoicing
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::Invoicing
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::Invoicing
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::Invoicing
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::Invoicing
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::Invoicing
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -575,6 +579,13 @@ module Aws::Invoicing
     # @option params [Array<Types::ResourceTag>] :resource_tags
     #   The tag structure that contains a tag key and value.
     #
+    # @option params [String] :client_token
+    #   A unique, case-sensitive identifier that you provide to ensure
+    #   idempotency of the request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
     # @return [Types::CreateInvoiceUnitResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateInvoiceUnitResponse#invoice_unit_arn #invoice_unit_arn} => String
@@ -583,6 +594,7 @@ module Aws::Invoicing
     # @example Example: CreateInvoiceUnit
     #
     #   resp = client.create_invoice_unit({
+    #     client_token: "e362c68e-4e74-48d7-9228-0bc5aa447b42", 
     #     description: "Example Invoice Unit Description", 
     #     invoice_receiver: "111111111111", 
     #     name: "Example Invoice Unit", 
@@ -614,6 +626,7 @@ module Aws::Invoicing
     #     tax_inheritance_disabled: false,
     #     rule: { # required
     #       linked_accounts: ["AccountIdString"],
+    #       bill_source_accounts: ["AccountIdString"],
     #     },
     #     resource_tags: [
     #       {
@@ -621,6 +634,7 @@ module Aws::Invoicing
     #         value: "ResourceTagValue", # required
     #       },
     #     ],
+    #     client_token: "BasicStringWithoutSpace",
     #   })
     #
     # @example Response structure
@@ -636,11 +650,227 @@ module Aws::Invoicing
       req.send_request(options)
     end
 
+    # <i> <b>This feature API is subject to changing at any time. For more
+    # information, see the <a
+    # href="https://aws.amazon.com/service-terms/">Amazon Web Services
+    # Service Terms</a> (Betas and Previews).</b> </i>
+    #
+    # Creates a procurement portal preference configuration for e-invoice
+    # delivery and purchase order retrieval. This preference defines how
+    # invoices are delivered to a procurement portal and how purchase orders
+    # are retrieved.
+    #
+    # @option params [required, String] :procurement_portal_name
+    #   The name of the procurement portal.
+    #
+    # @option params [required, String] :buyer_domain
+    #   The domain identifier for the buyer in the procurement portal.
+    #
+    # @option params [required, String] :buyer_identifier
+    #   The unique identifier for the buyer in the procurement portal.
+    #
+    # @option params [required, String] :supplier_domain
+    #   The domain identifier for the supplier in the procurement portal.
+    #
+    # @option params [required, String] :supplier_identifier
+    #   The unique identifier for the supplier in the procurement portal.
+    #
+    # @option params [Types::ProcurementPortalPreferenceSelector] :selector
+    #   Specifies criteria for selecting which invoices should be processed
+    #   using a particular procurement portal preference.
+    #
+    # @option params [String] :procurement_portal_shared_secret
+    #   The shared secret or authentication credential used to establish
+    #   secure communication with the procurement portal. This value must be
+    #   encrypted at rest.
+    #
+    # @option params [String] :procurement_portal_instance_endpoint
+    #   The endpoint URL where e-invoices will be delivered to the procurement
+    #   portal. Must be a valid HTTPS URL.
+    #
+    # @option params [Types::TestEnvPreferenceInput] :test_env_preference
+    #   Configuration settings for the test environment of the procurement
+    #   portal. Includes test credentials and endpoints that are used for
+    #   validation before production deployment.
+    #
+    # @option params [required, Boolean] :einvoice_delivery_enabled
+    #   Indicates whether e-invoice delivery is enabled for this procurement
+    #   portal preference. Set to true to enable e-invoice delivery, false to
+    #   disable.
+    #
+    # @option params [Types::EinvoiceDeliveryPreference] :einvoice_delivery_preference
+    #   Specifies the e-invoice delivery configuration including document
+    #   types, attachment types, and customization settings for the portal.
+    #
+    # @option params [required, Boolean] :purchase_order_retrieval_enabled
+    #   Indicates whether purchase order retrieval is enabled for this
+    #   procurement portal preference. Set to true to enable PO retrieval,
+    #   false to disable.
+    #
+    # @option params [required, Array<Types::Contact>] :contacts
+    #   List of contact information for portal administrators and technical
+    #   contacts responsible for the e-invoice integration.
+    #
+    # @option params [Array<Types::ResourceTag>] :resource_tags
+    #   The tags to apply to this procurement portal preference resource. Each
+    #   tag consists of a key and an optional value.
+    #
+    # @option params [String] :client_token
+    #   A unique, case-sensitive identifier that you provide to ensure
+    #   idempotency of the request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @return [Types::CreateProcurementPortalPreferenceResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateProcurementPortalPreferenceResponse#procurement_portal_preference_arn #procurement_portal_preference_arn} => String
+    #
+    #
+    # @example Example: CreateProcurementPortalPreference for Coupa
+    #
+    #   resp = client.create_procurement_portal_preference({
+    #     buyer_domain: "NetworkID", 
+    #     buyer_identifier: "BuyerId_1", 
+    #     client_token: "e362c68e-4e74-48d7-9228-0bc5aa447b42", 
+    #     contacts: [
+    #       {
+    #         email: "example-placeholder@amazon.com", 
+    #         name: "John Doe", 
+    #       }, 
+    #     ], 
+    #     einvoice_delivery_enabled: true, 
+    #     einvoice_delivery_preference: {
+    #       connection_testing_method: "PROD_ENV_DOLLAR_TEST", 
+    #       einvoice_delivery_activation_date: Time.parse(1750279280.091), 
+    #       einvoice_delivery_attachment_types: [
+    #         "INVOICE_PDF", 
+    #       ], 
+    #       einvoice_delivery_document_types: [
+    #         "AWS_CLOUD_INVOICE", 
+    #       ], 
+    #       protocol: "CXML", 
+    #       purchase_order_data_sources: [
+    #         {
+    #           einvoice_delivery_document_type: "AWS_CLOUD_INVOICE", 
+    #           purchase_order_data_source_type: "ASSOCIATED_PURCHASE_ORDER_REQUIRED", 
+    #         }, 
+    #       ], 
+    #     }, 
+    #     procurement_portal_instance_endpoint: "https://www.placeholder-domain.test", 
+    #     procurement_portal_name: "COUPA", 
+    #     procurement_portal_shared_secret: "Coupa_Secret", 
+    #     purchase_order_retrieval_enabled: true, 
+    #     resource_tags: [
+    #       {
+    #         key: "testKey", 
+    #         value: "testValue", 
+    #       }, 
+    #     ], 
+    #     selector: {
+    #       invoice_unit_arns: [
+    #         "arn:aws:invoicing::111111111111:invoice-unit/12345678", 
+    #         "arn:aws:invoicing::111111111111:invoice-unit/12345679", 
+    #       ], 
+    #       seller_of_records: [
+    #         "AWS_INC", 
+    #         "AWS_EUROPE", 
+    #       ], 
+    #     }, 
+    #     supplier_domain: "NetworkID", 
+    #     supplier_identifier: "SupplierId_1", 
+    #     test_env_preference: {
+    #       buyer_domain: "NetworkID", 
+    #       buyer_identifier: "BuyerId_1_Test", 
+    #       procurement_portal_instance_endpoint: "https://www.placeholder-domain.test", 
+    #       procurement_portal_shared_secret: "Coupa_Secret_test", 
+    #       supplier_domain: "NetworkID", 
+    #       supplier_identifier: "SupplierId_1_Test", 
+    #     }, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     procurement_portal_preference_arn: "arn:aws:invoicing::111111111111:procurement-portal-preference/a34fd666-7810-4414-9360-aaa4bcab0abd", 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_procurement_portal_preference({
+    #     procurement_portal_name: "SAP_BUSINESS_NETWORK", # required, accepts SAP_BUSINESS_NETWORK, COUPA
+    #     buyer_domain: "NetworkID", # required, accepts NetworkID
+    #     buyer_identifier: "BasicStringWithoutSpace", # required
+    #     supplier_domain: "NetworkID", # required, accepts NetworkID
+    #     supplier_identifier: "BasicStringWithoutSpace", # required
+    #     selector: {
+    #       invoice_unit_arns: ["InvoiceUnitArnString"],
+    #       seller_of_records: ["BasicStringWithoutSpace"],
+    #     },
+    #     procurement_portal_shared_secret: "SensitiveBasicStringWithoutSpace",
+    #     procurement_portal_instance_endpoint: "BasicStringWithoutSpace",
+    #     test_env_preference: {
+    #       buyer_domain: "NetworkID", # required, accepts NetworkID
+    #       buyer_identifier: "BasicStringWithoutSpace", # required
+    #       supplier_domain: "NetworkID", # required, accepts NetworkID
+    #       supplier_identifier: "BasicStringWithoutSpace", # required
+    #       procurement_portal_shared_secret: "BasicStringWithoutSpace",
+    #       procurement_portal_instance_endpoint: "BasicStringWithoutSpace",
+    #     },
+    #     einvoice_delivery_enabled: false, # required
+    #     einvoice_delivery_preference: {
+    #       einvoice_delivery_document_types: ["AWS_CLOUD_INVOICE"], # required, accepts AWS_CLOUD_INVOICE, AWS_CLOUD_CREDIT_MEMO, AWS_MARKETPLACE_INVOICE, AWS_MARKETPLACE_CREDIT_MEMO, AWS_REQUEST_FOR_PAYMENT
+    #       einvoice_delivery_attachment_types: ["INVOICE_PDF"], # accepts INVOICE_PDF, RFP_PDF
+    #       protocol: "CXML", # required, accepts CXML
+    #       purchase_order_data_sources: [ # required
+    #         {
+    #           einvoice_delivery_document_type: "AWS_CLOUD_INVOICE", # accepts AWS_CLOUD_INVOICE, AWS_CLOUD_CREDIT_MEMO, AWS_MARKETPLACE_INVOICE, AWS_MARKETPLACE_CREDIT_MEMO, AWS_REQUEST_FOR_PAYMENT
+    #           purchase_order_data_source_type: "ASSOCIATED_PURCHASE_ORDER_REQUIRED", # accepts ASSOCIATED_PURCHASE_ORDER_REQUIRED, PURCHASE_ORDER_NOT_REQUIRED
+    #         },
+    #       ],
+    #       connection_testing_method: "PROD_ENV_DOLLAR_TEST", # required, accepts PROD_ENV_DOLLAR_TEST, TEST_ENV_REPLAY_TEST
+    #       einvoice_delivery_activation_date: Time.now, # required
+    #     },
+    #     purchase_order_retrieval_enabled: false, # required
+    #     contacts: [ # required
+    #       {
+    #         name: "BasicString",
+    #         email: "EmailString",
+    #       },
+    #     ],
+    #     resource_tags: [
+    #       {
+    #         key: "ResourceTagKey", # required
+    #         value: "ResourceTagValue", # required
+    #       },
+    #     ],
+    #     client_token: "BasicStringWithoutSpace",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.procurement_portal_preference_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/invoicing-2024-12-01/CreateProcurementPortalPreference AWS API Documentation
+    #
+    # @overload create_procurement_portal_preference(params = {})
+    # @param [Hash] params ({})
+    def create_procurement_portal_preference(params = {}, options = {})
+      req = build_request(:create_procurement_portal_preference, params)
+      req.send_request(options)
+    end
+
     # This deletes an invoice unit with the provided invoice unit ARN.
     #
     # @option params [required, String] :invoice_unit_arn
     #   The ARN to identify an invoice unit. This information can't be
     #   modified or deleted.
+    #
+    # @option params [String] :client_token
+    #   A unique, case-sensitive identifier that you provide to ensure
+    #   idempotency of the request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
     #
     # @return [Types::DeleteInvoiceUnitResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -650,6 +880,7 @@ module Aws::Invoicing
     # @example Example: DeleteInvoiceUnit
     #
     #   resp = client.delete_invoice_unit({
+    #     client_token: "e362c68e-4e74-48d7-9228-0bc5aa447b44", 
     #     invoice_unit_arn: "arn:aws:invoicing::000000000000:invoice-unit/12345678", 
     #   })
     #
@@ -662,6 +893,7 @@ module Aws::Invoicing
     #
     #   resp = client.delete_invoice_unit({
     #     invoice_unit_arn: "InvoiceUnitArnString", # required
+    #     client_token: "BasicStringWithoutSpace",
     #   })
     #
     # @example Response structure
@@ -674,6 +906,146 @@ module Aws::Invoicing
     # @param [Hash] params ({})
     def delete_invoice_unit(params = {}, options = {})
       req = build_request(:delete_invoice_unit, params)
+      req.send_request(options)
+    end
+
+    # <i> <b>This feature API is subject to changing at any time. For more
+    # information, see the <a
+    # href="https://aws.amazon.com/service-terms/">Amazon Web Services
+    # Service Terms</a> (Betas and Previews).</b> </i>
+    #
+    # Deletes an existing procurement portal preference. This action cannot
+    # be undone. Active e-invoice delivery and PO retrieval configurations
+    # will be terminated.
+    #
+    # @option params [required, String] :procurement_portal_preference_arn
+    #   The Amazon Resource Name (ARN) of the procurement portal preference to
+    #   delete.
+    #
+    # @option params [String] :client_token
+    #   A unique, case-sensitive identifier that you provide to ensure
+    #   idempotency of the request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @return [Types::DeleteProcurementPortalPreferenceResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DeleteProcurementPortalPreferenceResponse#procurement_portal_preference_arn #procurement_portal_preference_arn} => String
+    #
+    #
+    # @example Example: DeleteProcurementPortalPreference call
+    #
+    #   resp = client.delete_procurement_portal_preference({
+    #     client_token: "e362c68e-4e74-48d7-9228-0bc5aa447b47", 
+    #     procurement_portal_preference_arn: "arn:aws:invoicing::111111111111:procurement-portal-preference/f71dd02e-f855-4b13-b793-0fd25c0b3ecd", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     procurement_portal_preference_arn: "arn:aws:invoicing::111111111111:procurement-portal-preference/f71dd02e-f855-4b13-b793-0fd25c0b3ecd", 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_procurement_portal_preference({
+    #     procurement_portal_preference_arn: "ProcurementPortalPreferenceArnString", # required
+    #     client_token: "BasicStringWithoutSpace",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.procurement_portal_preference_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/invoicing-2024-12-01/DeleteProcurementPortalPreference AWS API Documentation
+    #
+    # @overload delete_procurement_portal_preference(params = {})
+    # @param [Hash] params ({})
+    def delete_procurement_portal_preference(params = {}, options = {})
+      req = build_request(:delete_procurement_portal_preference, params)
+      req.send_request(options)
+    end
+
+    # Returns a URL to download the invoice document and supplemental
+    # documents associated with an invoice. The URLs are pre-signed and have
+    # expiration time. For special cases like Brazil, where Amazon Web
+    # Services generated invoice identifiers and government provided
+    # identifiers do not match, use the Amazon Web Services generated
+    # invoice identifier when making API requests. To grant IAM permission
+    # to use this operation, the caller needs the `invoicing:GetInvoicePDF`
+    # policy action.
+    #
+    # @option params [required, String] :invoice_id
+    #   Your unique invoice ID.
+    #
+    # @return [Types::GetInvoicePDFResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetInvoicePDFResponse#invoice_pdf #invoice_pdf} => Types::InvoicePDF
+    #
+    #
+    # @example Example: GetInvoicePDF without supplemental documents
+    #
+    #   resp = client.get_invoice_pdf({
+    #     invoice_id: "abc123", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     invoice_pdf: {
+    #       document_url: "https://abcd123.com?securityTokenForDoc", 
+    #       document_url_expiration_date: Time.parse("2025-04-01T01:00:00.000Z"), 
+    #       invoice_id: "abc123", 
+    #       supplemental_documents: [
+    #       ], 
+    #     }, 
+    #   }
+    #
+    # @example Example: GetInvoicePDF with supplemental documents
+    #
+    #   resp = client.get_invoice_pdf({
+    #     invoice_id: "abc123", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     invoice_pdf: {
+    #       document_url: "https://abcd123.com?securityTokenForDoc", 
+    #       document_url_expiration_date: Time.parse("2025-04-01T01:00:00.000Z"), 
+    #       invoice_id: "abc123", 
+    #       supplemental_documents: [
+    #         {
+    #           document_id: "supp-doc-1", 
+    #           document_type: "TAX_E_INVOICE", 
+    #           document_url: "https://abcd123.com?securityTokenForSupplementalDoc", 
+    #           document_url_expiration_date: Time.parse("2025-04-01T01:00:00.000Z"), 
+    #         }, 
+    #       ], 
+    #     }, 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_invoice_pdf({
+    #     invoice_id: "StringWithoutNewLine", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.invoice_pdf.invoice_id #=> String
+    #   resp.invoice_pdf.document_url #=> String
+    #   resp.invoice_pdf.document_url_expiration_date #=> Time
+    #   resp.invoice_pdf.supplemental_documents #=> Array
+    #   resp.invoice_pdf.supplemental_documents[0].document_type #=> String, one of "GOVERNMENT_INVOICE", "TAX_E_INVOICE", "PAYMENT_RECEIPT", "SUPPLEMENT"
+    #   resp.invoice_pdf.supplemental_documents[0].document_id #=> String
+    #   resp.invoice_pdf.supplemental_documents[0].document_url #=> String
+    #   resp.invoice_pdf.supplemental_documents[0].document_url_expiration_date #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/invoicing-2024-12-01/GetInvoicePDF AWS API Documentation
+    #
+    # @overload get_invoice_pdf(params = {})
+    # @param [Hash] params ({})
+    def get_invoice_pdf(params = {}, options = {})
+      req = build_request(:get_invoice_pdf, params)
       req.send_request(options)
     end
 
@@ -759,6 +1131,8 @@ module Aws::Invoicing
     #   resp.tax_inheritance_disabled #=> Boolean
     #   resp.rule.linked_accounts #=> Array
     #   resp.rule.linked_accounts[0] #=> String
+    #   resp.rule.bill_source_accounts #=> Array
+    #   resp.rule.bill_source_accounts[0] #=> String
     #   resp.last_modified #=> Time
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/invoicing-2024-12-01/GetInvoiceUnit AWS API Documentation
@@ -767,6 +1141,972 @@ module Aws::Invoicing
     # @param [Hash] params ({})
     def get_invoice_unit(params = {}, options = {})
       req = build_request(:get_invoice_unit, params)
+      req.send_request(options)
+    end
+
+    # <i> <b>This feature API is subject to changing at any time. For more
+    # information, see the <a
+    # href="https://aws.amazon.com/service-terms/">Amazon Web Services
+    # Service Terms</a> (Betas and Previews).</b> </i>
+    #
+    # Retrieves the details of a specific procurement portal preference
+    # configuration.
+    #
+    # @option params [required, String] :procurement_portal_preference_arn
+    #   The Amazon Resource Name (ARN) of the procurement portal preference to
+    #   retrieve.
+    #
+    # @return [Types::GetProcurementPortalPreferenceResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetProcurementPortalPreferenceResponse#procurement_portal_preference #procurement_portal_preference} => Types::ProcurementPortalPreference
+    #
+    #
+    # @example Example: GetProcurementPortalPreference for Coupa pref
+    #
+    #   resp = client.get_procurement_portal_preference({
+    #     procurement_portal_preference_arn: "arn:aws:invoicing::111111111111:procurement-portal-preference/a34fd666-7810-4414-9360-aaa4bcab0abd", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     procurement_portal_preference: {
+    #       aws_account_id: "111111111111", 
+    #       buyer_domain: "NetworkID", 
+    #       buyer_identifier: "BuyerId_1", 
+    #       contacts: [
+    #         {
+    #           email: "example-placeholder@amazon.com", 
+    #           name: "John Doe", 
+    #         }, 
+    #       ], 
+    #       create_date: Time.parse(1750375489.242), 
+    #       einvoice_delivery_enabled: true, 
+    #       einvoice_delivery_preference: {
+    #         connection_testing_method: "PROD_ENV_DOLLAR_TEST", 
+    #         einvoice_delivery_activation_date: Time.parse(1750279280.091), 
+    #         einvoice_delivery_attachment_types: [
+    #           "INVOICE_PDF", 
+    #         ], 
+    #         einvoice_delivery_document_types: [
+    #           "AWS_CLOUD_INVOICE", 
+    #         ], 
+    #         protocol: "CXML", 
+    #         purchase_order_data_sources: [
+    #           {
+    #             einvoice_delivery_document_type: "AWS_CLOUD_INVOICE", 
+    #             purchase_order_data_source_type: "ASSOCIATED_PURCHASE_ORDER_REQUIRED", 
+    #           }, 
+    #         ], 
+    #       }, 
+    #       einvoice_delivery_preference_status: "PENDING_VERIFICATION", 
+    #       last_update_date: Time.parse(1750375489.242), 
+    #       procurement_portal_instance_endpoint: "https://www.placeholder-domain.test", 
+    #       procurement_portal_name: "COUPA", 
+    #       procurement_portal_preference_arn: "arn:aws:invoicing::111111111111:procurement-portal-preference/a34fd666-7810-4414-9360-aaa4bcab0abd", 
+    #       procurement_portal_shared_secret: "Coupa_Secret", 
+    #       purchase_order_retrieval_enabled: true, 
+    #       purchase_order_retrieval_endpoint: "https://www.placeholder-domain.test", 
+    #       purchase_order_retrieval_preference_status: "PENDING_VERIFICATION", 
+    #       selector: {
+    #         invoice_unit_arns: [
+    #           "arn:aws:invoicing::111111111111:invoice-unit/12345678", 
+    #           "arn:aws:invoicing::111111111111:invoice-unit/12345679", 
+    #         ], 
+    #         seller_of_records: [
+    #           "AWS_INC", 
+    #           "AWS_EUROPE", 
+    #         ], 
+    #       }, 
+    #       supplier_domain: "NetworkID", 
+    #       supplier_identifier: "SupplierId_1", 
+    #       test_env_preference: {
+    #         buyer_domain: "NetworkID", 
+    #         buyer_identifier: "BuyerId_1_Test", 
+    #         procurement_portal_instance_endpoint: "https://www.placeholder-domain.test", 
+    #         procurement_portal_shared_secret: "Coupa_Secret_test", 
+    #         purchase_order_retrieval_endpoint: "https://www.placeholder-domain.test", 
+    #         supplier_domain: "NetworkID", 
+    #         supplier_identifier: "SupplierId_1_Test", 
+    #       }, 
+    #       version: 1, 
+    #     }, 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_procurement_portal_preference({
+    #     procurement_portal_preference_arn: "ProcurementPortalPreferenceArnString", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.procurement_portal_preference.aws_account_id #=> String
+    #   resp.procurement_portal_preference.procurement_portal_preference_arn #=> String
+    #   resp.procurement_portal_preference.procurement_portal_name #=> String, one of "SAP_BUSINESS_NETWORK", "COUPA"
+    #   resp.procurement_portal_preference.buyer_domain #=> String, one of "NetworkID"
+    #   resp.procurement_portal_preference.buyer_identifier #=> String
+    #   resp.procurement_portal_preference.supplier_domain #=> String, one of "NetworkID"
+    #   resp.procurement_portal_preference.supplier_identifier #=> String
+    #   resp.procurement_portal_preference.selector.invoice_unit_arns #=> Array
+    #   resp.procurement_portal_preference.selector.invoice_unit_arns[0] #=> String
+    #   resp.procurement_portal_preference.selector.seller_of_records #=> Array
+    #   resp.procurement_portal_preference.selector.seller_of_records[0] #=> String
+    #   resp.procurement_portal_preference.procurement_portal_shared_secret #=> String
+    #   resp.procurement_portal_preference.procurement_portal_instance_endpoint #=> String
+    #   resp.procurement_portal_preference.purchase_order_retrieval_endpoint #=> String
+    #   resp.procurement_portal_preference.test_env_preference.buyer_domain #=> String, one of "NetworkID"
+    #   resp.procurement_portal_preference.test_env_preference.buyer_identifier #=> String
+    #   resp.procurement_portal_preference.test_env_preference.supplier_domain #=> String, one of "NetworkID"
+    #   resp.procurement_portal_preference.test_env_preference.supplier_identifier #=> String
+    #   resp.procurement_portal_preference.test_env_preference.procurement_portal_shared_secret #=> String
+    #   resp.procurement_portal_preference.test_env_preference.procurement_portal_instance_endpoint #=> String
+    #   resp.procurement_portal_preference.test_env_preference.purchase_order_retrieval_endpoint #=> String
+    #   resp.procurement_portal_preference.einvoice_delivery_enabled #=> Boolean
+    #   resp.procurement_portal_preference.einvoice_delivery_preference.einvoice_delivery_document_types #=> Array
+    #   resp.procurement_portal_preference.einvoice_delivery_preference.einvoice_delivery_document_types[0] #=> String, one of "AWS_CLOUD_INVOICE", "AWS_CLOUD_CREDIT_MEMO", "AWS_MARKETPLACE_INVOICE", "AWS_MARKETPLACE_CREDIT_MEMO", "AWS_REQUEST_FOR_PAYMENT"
+    #   resp.procurement_portal_preference.einvoice_delivery_preference.einvoice_delivery_attachment_types #=> Array
+    #   resp.procurement_portal_preference.einvoice_delivery_preference.einvoice_delivery_attachment_types[0] #=> String, one of "INVOICE_PDF", "RFP_PDF"
+    #   resp.procurement_portal_preference.einvoice_delivery_preference.protocol #=> String, one of "CXML"
+    #   resp.procurement_portal_preference.einvoice_delivery_preference.purchase_order_data_sources #=> Array
+    #   resp.procurement_portal_preference.einvoice_delivery_preference.purchase_order_data_sources[0].einvoice_delivery_document_type #=> String, one of "AWS_CLOUD_INVOICE", "AWS_CLOUD_CREDIT_MEMO", "AWS_MARKETPLACE_INVOICE", "AWS_MARKETPLACE_CREDIT_MEMO", "AWS_REQUEST_FOR_PAYMENT"
+    #   resp.procurement_portal_preference.einvoice_delivery_preference.purchase_order_data_sources[0].purchase_order_data_source_type #=> String, one of "ASSOCIATED_PURCHASE_ORDER_REQUIRED", "PURCHASE_ORDER_NOT_REQUIRED"
+    #   resp.procurement_portal_preference.einvoice_delivery_preference.connection_testing_method #=> String, one of "PROD_ENV_DOLLAR_TEST", "TEST_ENV_REPLAY_TEST"
+    #   resp.procurement_portal_preference.einvoice_delivery_preference.einvoice_delivery_activation_date #=> Time
+    #   resp.procurement_portal_preference.purchase_order_retrieval_enabled #=> Boolean
+    #   resp.procurement_portal_preference.contacts #=> Array
+    #   resp.procurement_portal_preference.contacts[0].name #=> String
+    #   resp.procurement_portal_preference.contacts[0].email #=> String
+    #   resp.procurement_portal_preference.einvoice_delivery_preference_status #=> String, one of "PENDING_VERIFICATION", "VALIDATED", "TEST_INITIALIZED", "TEST_INITIALIZATION_FAILED", "TEST_FAILED", "ACTIVE", "SUSPENDED"
+    #   resp.procurement_portal_preference.einvoice_delivery_preference_status_reason #=> String
+    #   resp.procurement_portal_preference.purchase_order_retrieval_preference_status #=> String, one of "PENDING_VERIFICATION", "VALIDATED", "TEST_INITIALIZED", "TEST_INITIALIZATION_FAILED", "TEST_FAILED", "ACTIVE", "SUSPENDED"
+    #   resp.procurement_portal_preference.purchase_order_retrieval_preference_status_reason #=> String
+    #   resp.procurement_portal_preference.version #=> Integer
+    #   resp.procurement_portal_preference.create_date #=> Time
+    #   resp.procurement_portal_preference.last_update_date #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/invoicing-2024-12-01/GetProcurementPortalPreference AWS API Documentation
+    #
+    # @overload get_procurement_portal_preference(params = {})
+    # @param [Hash] params ({})
+    def get_procurement_portal_preference(params = {}, options = {})
+      req = build_request(:get_procurement_portal_preference, params)
+      req.send_request(options)
+    end
+
+    # Retrieves your invoice details programmatically, without line item
+    # details.
+    #
+    # @option params [required, Types::InvoiceSummariesSelector] :selector
+    #   The option to retrieve details for a specific invoice by providing its
+    #   unique ID. Alternatively, access information for all invoices linked
+    #   to the account by providing an account ID.
+    #
+    # @option params [Types::InvoiceSummariesFilter] :filter
+    #   Filters you can use to customize your invoice summary.
+    #
+    # @option params [String] :next_token
+    #   The token for the next set of results. (You received this token from a
+    #   previous call.)
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of invoice summaries a paginated response can
+    #   contain.
+    #
+    # @return [Types::ListInvoiceSummariesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListInvoiceSummariesResponse#invoice_summaries #invoice_summaries} => Array&lt;Types::InvoiceSummary&gt;
+    #   * {Types::ListInvoiceSummariesResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    #
+    # @example Example: ListInvoiceSummaries with InvoiceId as selector
+    #
+    #   resp = client.list_invoice_summaries({
+    #     selector: {
+    #       resource_type: "INVOICE_ID", 
+    #       value: "1111111111", 
+    #     }, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     invoice_summaries: [
+    #       {
+    #         account_id: "111111111111", 
+    #         base_currency_amount: {
+    #           amount_breakdown: {
+    #             discounts: {
+    #               total_amount: "1.00", 
+    #             }, 
+    #             sub_total_amount: "1.00", 
+    #             taxes: {
+    #               total_amount: "1.00", 
+    #             }, 
+    #           }, 
+    #           currency_code: "USD", 
+    #           total_amount: "1.00", 
+    #           total_amount_before_tax: "1.00", 
+    #         }, 
+    #         bill_source_accounts: [
+    #           "111111111111", 
+    #         ], 
+    #         bill_source_accounts_total_count: 1, 
+    #         bill_type: "ANNIVERSARY", 
+    #         billing_period: {
+    #           month: 1, 
+    #           year: 2025, 
+    #         }, 
+    #         commercial_invoice_id: "2222222222", 
+    #         due_date: Time.parse("2025-04-01T01:00:00.000Z"), 
+    #         einvoice_delivery_status: "DELIVERED", 
+    #         entity: {
+    #           billing_entity: "AWS", 
+    #           invoicing_entity: "Amazon Web Services, Inc.", 
+    #         }, 
+    #         invoice_frequency: "RECURRING", 
+    #         invoice_id: "1111111111", 
+    #         invoice_type: "INVOICE", 
+    #         issued_date: Time.parse("2025-04-01T01:00:00.000Z"), 
+    #         original_invoice_id: "1111111111", 
+    #         payment_currency_amount: {
+    #           amount_breakdown: {
+    #             discounts: {
+    #               total_amount: "1.00", 
+    #             }, 
+    #             sub_total_amount: "1.00", 
+    #             taxes: {
+    #               breakdown: [
+    #                 {
+    #                   amount: "1", 
+    #                   description: "VAT", 
+    #                   rate: "1.0", 
+    #                 }, 
+    #               ], 
+    #               total_amount: "1.00", 
+    #             }, 
+    #           }, 
+    #           currency_code: "USD", 
+    #           currency_exchange_details: {
+    #             rate: "1.0", 
+    #             source_currency_code: "USD", 
+    #             target_currency_code: "USD", 
+    #           }, 
+    #           total_amount: "1.00", 
+    #           total_amount_before_tax: "1.00", 
+    #         }, 
+    #         purchase_order_number: "PO-12345", 
+    #         receiver_role: "BUYER", 
+    #         tax_authority_status: "ISSUED", 
+    #         tax_currency_amount: {
+    #           amount_breakdown: {
+    #             discounts: {
+    #               total_amount: "1.00", 
+    #             }, 
+    #             sub_total_amount: "1.00", 
+    #             taxes: {
+    #               breakdown: [
+    #                 {
+    #                   amount: "1", 
+    #                   description: "VAT", 
+    #                   rate: "1.0", 
+    #                 }, 
+    #               ], 
+    #               total_amount: "1.00", 
+    #             }, 
+    #           }, 
+    #           currency_code: "USD", 
+    #           currency_exchange_details: {
+    #             rate: "1.0", 
+    #             source_currency_code: "USD", 
+    #             target_currency_code: "USD", 
+    #           }, 
+    #           total_amount: "1.00", 
+    #           total_amount_before_tax: "1.00", 
+    #         }, 
+    #       }, 
+    #     ], 
+    #   }
+    #
+    # @example Example: ListInvoiceSummaries with AccountId as selector and billing period
+    #
+    #   resp = client.list_invoice_summaries({
+    #     filter: {
+    #       billing_period: {
+    #         month: 1, 
+    #         year: 2025, 
+    #       }, 
+    #     }, 
+    #     selector: {
+    #       resource_type: "ACCOUNT_ID", 
+    #       value: "111111111111", 
+    #     }, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     invoice_summaries: [
+    #       {
+    #         account_id: "111111111111", 
+    #         base_currency_amount: {
+    #           amount_breakdown: {
+    #             discounts: {
+    #               total_amount: "1.00", 
+    #             }, 
+    #             sub_total_amount: "1.00", 
+    #             taxes: {
+    #               total_amount: "1.00", 
+    #             }, 
+    #           }, 
+    #           currency_code: "USD", 
+    #           total_amount: "1.00", 
+    #           total_amount_before_tax: "1.00", 
+    #         }, 
+    #         bill_source_accounts: [
+    #           "111111111111", 
+    #         ], 
+    #         bill_source_accounts_total_count: 1, 
+    #         bill_type: "ANNIVERSARY", 
+    #         billing_period: {
+    #           month: 1, 
+    #           year: 2025, 
+    #         }, 
+    #         due_date: Time.parse("2025-04-01T01:00:00.000Z"), 
+    #         einvoice_delivery_status: "DELIVERED", 
+    #         entity: {
+    #           billing_entity: "AWS", 
+    #           invoicing_entity: "Amazon Web Services, Inc.", 
+    #         }, 
+    #         invoice_frequency: "RECURRING", 
+    #         invoice_id: "1111111111", 
+    #         invoice_type: "INVOICE", 
+    #         issued_date: Time.parse("2025-04-01T01:00:00.000Z"), 
+    #         payment_currency_amount: {
+    #           amount_breakdown: {
+    #             discounts: {
+    #               total_amount: "1.00", 
+    #             }, 
+    #             sub_total_amount: "1.00", 
+    #             taxes: {
+    #               breakdown: [
+    #                 {
+    #                   amount: "1", 
+    #                   description: "VAT", 
+    #                   rate: "1.0", 
+    #                 }, 
+    #               ], 
+    #               total_amount: "1.00", 
+    #             }, 
+    #           }, 
+    #           currency_code: "USD", 
+    #           currency_exchange_details: {
+    #             rate: "1.0", 
+    #             source_currency_code: "USD", 
+    #             target_currency_code: "USD", 
+    #           }, 
+    #           total_amount: "1.00", 
+    #           total_amount_before_tax: "1.00", 
+    #         }, 
+    #         receiver_role: "BUYER", 
+    #         tax_authority_status: "ISSUED", 
+    #         tax_currency_amount: {
+    #           amount_breakdown: {
+    #             discounts: {
+    #               total_amount: "1.00", 
+    #             }, 
+    #             sub_total_amount: "1.00", 
+    #             taxes: {
+    #               breakdown: [
+    #                 {
+    #                   amount: "1", 
+    #                   description: "VAT", 
+    #                   rate: "1.0", 
+    #                 }, 
+    #               ], 
+    #               total_amount: "1.00", 
+    #             }, 
+    #           }, 
+    #           currency_code: "USD", 
+    #           currency_exchange_details: {
+    #             rate: "1.0", 
+    #             source_currency_code: "USD", 
+    #             target_currency_code: "USD", 
+    #           }, 
+    #           total_amount: "1.00", 
+    #           total_amount_before_tax: "1.00", 
+    #         }, 
+    #       }, 
+    #     ], 
+    #   }
+    #
+    # @example Example: ListInvoiceSummaries with AccountId as selector and time interval
+    #
+    #   resp = client.list_invoice_summaries({
+    #     filter: {
+    #       time_interval: {
+    #         end_date: Time.parse(1592639007), 
+    #         start_date: Time.parse(1590997407), 
+    #       }, 
+    #     }, 
+    #     selector: {
+    #       resource_type: "ACCOUNT_ID", 
+    #       value: "111111111111", 
+    #     }, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     invoice_summaries: [
+    #       {
+    #         account_id: "111111111111", 
+    #         base_currency_amount: {
+    #           amount_breakdown: {
+    #             discounts: {
+    #               total_amount: "1.00", 
+    #             }, 
+    #             sub_total_amount: "1.00", 
+    #             taxes: {
+    #               total_amount: "1.00", 
+    #             }, 
+    #           }, 
+    #           currency_code: "USD", 
+    #           total_amount: "1.00", 
+    #           total_amount_before_tax: "1.00", 
+    #         }, 
+    #         bill_source_accounts: [
+    #           "111111111111", 
+    #         ], 
+    #         bill_source_accounts_total_count: 1, 
+    #         bill_type: "ANNIVERSARY", 
+    #         billing_period: {
+    #           month: 1, 
+    #           year: 2025, 
+    #         }, 
+    #         due_date: Time.parse("2025-04-01T01:00:00.000Z"), 
+    #         einvoice_delivery_status: "DELIVERED", 
+    #         entity: {
+    #           billing_entity: "AWS", 
+    #           invoicing_entity: "Amazon Web Services, Inc.", 
+    #         }, 
+    #         invoice_frequency: "RECURRING", 
+    #         invoice_id: "1111111111", 
+    #         invoice_type: "INVOICE", 
+    #         issued_date: Time.parse("2025-04-01T01:00:00.000Z"), 
+    #         payment_currency_amount: {
+    #           amount_breakdown: {
+    #             discounts: {
+    #               total_amount: "1.00", 
+    #             }, 
+    #             sub_total_amount: "1.00", 
+    #             taxes: {
+    #               breakdown: [
+    #                 {
+    #                   amount: "1", 
+    #                   description: "VAT", 
+    #                   rate: "1.0", 
+    #                 }, 
+    #               ], 
+    #               total_amount: "1.00", 
+    #             }, 
+    #           }, 
+    #           currency_code: "USD", 
+    #           currency_exchange_details: {
+    #             rate: "1.0", 
+    #             source_currency_code: "USD", 
+    #             target_currency_code: "USD", 
+    #           }, 
+    #           total_amount: "1.00", 
+    #           total_amount_before_tax: "1.00", 
+    #         }, 
+    #         receiver_role: "BUYER", 
+    #         tax_authority_status: "ISSUED", 
+    #         tax_currency_amount: {
+    #           amount_breakdown: {
+    #             discounts: {
+    #               total_amount: "1.00", 
+    #             }, 
+    #             sub_total_amount: "1.00", 
+    #             taxes: {
+    #               breakdown: [
+    #                 {
+    #                   amount: "1", 
+    #                   description: "VAT", 
+    #                   rate: "1.0", 
+    #                 }, 
+    #               ], 
+    #               total_amount: "1.00", 
+    #             }, 
+    #           }, 
+    #           currency_code: "USD", 
+    #           currency_exchange_details: {
+    #             rate: "1.0", 
+    #             source_currency_code: "USD", 
+    #             target_currency_code: "USD", 
+    #           }, 
+    #           total_amount: "1.00", 
+    #           total_amount_before_tax: "1.00", 
+    #         }, 
+    #       }, 
+    #     ], 
+    #   }
+    #
+    # @example Example: ListInvoiceSummaries filtered by ReceiverRole
+    #
+    #   resp = client.list_invoice_summaries({
+    #     filter: {
+    #       receiver_role: "SELLER", 
+    #       time_interval: {
+    #         end_date: Time.parse(1751328000), 
+    #         start_date: Time.parse(1748736000), 
+    #       }, 
+    #     }, 
+    #     selector: {
+    #       resource_type: "ACCOUNT_ID", 
+    #       value: "111111111111", 
+    #     }, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     invoice_summaries: [
+    #       {
+    #         account_id: "111111111111", 
+    #         base_currency_amount: {
+    #           amount_breakdown: {
+    #             discounts: {
+    #               total_amount: "1.00", 
+    #             }, 
+    #             sub_total_amount: "1.00", 
+    #             taxes: {
+    #               total_amount: "1.00", 
+    #             }, 
+    #           }, 
+    #           currency_code: "USD", 
+    #           total_amount: "1.00", 
+    #           total_amount_before_tax: "1.00", 
+    #         }, 
+    #         bill_source_accounts: [
+    #           "222222222222", 
+    #         ], 
+    #         bill_source_accounts_total_count: 1, 
+    #         bill_type: "ANNIVERSARY", 
+    #         billing_period: {
+    #           month: 6, 
+    #           year: 2025, 
+    #         }, 
+    #         due_date: Time.parse("2025-07-15T01:00:00.000Z"), 
+    #         einvoice_delivery_status: "DELIVERED", 
+    #         entity: {
+    #           billing_entity: "AWS_MARKETPLACE", 
+    #           invoicing_entity: "Amazon Web Services, Inc.", 
+    #         }, 
+    #         invoice_frequency: "RECURRING", 
+    #         invoice_id: "1111111111", 
+    #         invoice_type: "INVOICE", 
+    #         issued_date: Time.parse("2025-06-15T01:00:00.000Z"), 
+    #         payment_currency_amount: {
+    #           amount_breakdown: {
+    #             discounts: {
+    #               total_amount: "1.00", 
+    #             }, 
+    #             sub_total_amount: "1.00", 
+    #             taxes: {
+    #               breakdown: [
+    #                 {
+    #                   amount: "1", 
+    #                   description: "VAT", 
+    #                   rate: "1.0", 
+    #                 }, 
+    #               ], 
+    #               total_amount: "1.00", 
+    #             }, 
+    #           }, 
+    #           currency_code: "USD", 
+    #           currency_exchange_details: {
+    #             rate: "1.0", 
+    #             source_currency_code: "USD", 
+    #             target_currency_code: "USD", 
+    #           }, 
+    #           total_amount: "1.00", 
+    #           total_amount_before_tax: "1.00", 
+    #         }, 
+    #         receiver_role: "SELLER", 
+    #         tax_authority_status: "ISSUED", 
+    #         tax_currency_amount: {
+    #           amount_breakdown: {
+    #             discounts: {
+    #               total_amount: "1.00", 
+    #             }, 
+    #             sub_total_amount: "1.00", 
+    #             taxes: {
+    #               breakdown: [
+    #                 {
+    #                   amount: "1", 
+    #                   description: "VAT", 
+    #                   rate: "1.0", 
+    #                 }, 
+    #               ], 
+    #               total_amount: "1.00", 
+    #             }, 
+    #           }, 
+    #           currency_code: "USD", 
+    #           currency_exchange_details: {
+    #             rate: "1.0", 
+    #             source_currency_code: "USD", 
+    #             target_currency_code: "USD", 
+    #           }, 
+    #           total_amount: "1.00", 
+    #           total_amount_before_tax: "1.00", 
+    #         }, 
+    #       }, 
+    #     ], 
+    #   }
+    #
+    # @example Example: ListInvoiceSummaries with AccountId as selector and a billing period and max results
+    #
+    #   resp = client.list_invoice_summaries({
+    #     filter: {
+    #       billing_period: {
+    #         month: 1, 
+    #         year: 2025, 
+    #       }, 
+    #     }, 
+    #     max_results: 1, 
+    #     selector: {
+    #       resource_type: "ACCOUNT_ID", 
+    #       value: "111111111111", 
+    #     }, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     invoice_summaries: [
+    #       {
+    #         account_id: "111111111111", 
+    #         base_currency_amount: {
+    #           amount_breakdown: {
+    #             discounts: {
+    #               total_amount: "1.00", 
+    #             }, 
+    #             sub_total_amount: "1.00", 
+    #             taxes: {
+    #               total_amount: "1.00", 
+    #             }, 
+    #           }, 
+    #           currency_code: "USD", 
+    #           total_amount: "1.00", 
+    #           total_amount_before_tax: "1.00", 
+    #         }, 
+    #         bill_source_accounts: [
+    #           "111111111111", 
+    #         ], 
+    #         bill_source_accounts_total_count: 1, 
+    #         bill_type: "ANNIVERSARY", 
+    #         billing_period: {
+    #           month: 1, 
+    #           year: 2025, 
+    #         }, 
+    #         due_date: Time.parse("2025-04-01T01:00:00.000Z"), 
+    #         einvoice_delivery_status: "DELIVERED", 
+    #         entity: {
+    #           billing_entity: "AWS", 
+    #           invoicing_entity: "Amazon Web Services, Inc.", 
+    #         }, 
+    #         invoice_frequency: "RECURRING", 
+    #         invoice_id: "1111111111", 
+    #         invoice_type: "INVOICE", 
+    #         issued_date: Time.parse("2025-04-01T01:00:00.000Z"), 
+    #         payment_currency_amount: {
+    #           amount_breakdown: {
+    #             discounts: {
+    #               total_amount: "1.00", 
+    #             }, 
+    #             sub_total_amount: "1.00", 
+    #             taxes: {
+    #               breakdown: [
+    #                 {
+    #                   amount: "1", 
+    #                   description: "VAT", 
+    #                   rate: "1.0", 
+    #                 }, 
+    #               ], 
+    #               total_amount: "1.00", 
+    #             }, 
+    #           }, 
+    #           currency_code: "USD", 
+    #           currency_exchange_details: {
+    #             rate: "1.0", 
+    #             source_currency_code: "USD", 
+    #             target_currency_code: "USD", 
+    #           }, 
+    #           total_amount: "1.00", 
+    #           total_amount_before_tax: "1.00", 
+    #         }, 
+    #         receiver_role: "BUYER", 
+    #         tax_authority_status: "ISSUED", 
+    #         tax_currency_amount: {
+    #           amount_breakdown: {
+    #             discounts: {
+    #               total_amount: "1.00", 
+    #             }, 
+    #             sub_total_amount: "1.00", 
+    #             taxes: {
+    #               breakdown: [
+    #                 {
+    #                   amount: "1", 
+    #                   description: "VAT", 
+    #                   rate: "1.0", 
+    #                 }, 
+    #               ], 
+    #               total_amount: "1.00", 
+    #             }, 
+    #           }, 
+    #           currency_code: "USD", 
+    #           currency_exchange_details: {
+    #             rate: "1.0", 
+    #             source_currency_code: "USD", 
+    #             target_currency_code: "USD", 
+    #           }, 
+    #           total_amount: "1.00", 
+    #           total_amount_before_tax: "1.00", 
+    #         }, 
+    #       }, 
+    #     ], 
+    #     next_token: "abcde12345", 
+    #   }
+    #
+    # @example Example: ListInvoiceSummaries with AccountId as selector and a billing period and next token
+    #
+    #   resp = client.list_invoice_summaries({
+    #     filter: {
+    #       billing_period: {
+    #         month: 1, 
+    #         year: 2025, 
+    #       }, 
+    #     }, 
+    #     next_token: "abcde12345", 
+    #     selector: {
+    #       resource_type: "ACCOUNT_ID", 
+    #       value: "111111111111", 
+    #     }, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     invoice_summaries: [
+    #       {
+    #         account_id: "111111111111", 
+    #         base_currency_amount: {
+    #           amount_breakdown: {
+    #             discounts: {
+    #               total_amount: "1.00", 
+    #             }, 
+    #             sub_total_amount: "1.00", 
+    #             taxes: {
+    #               total_amount: "1.00", 
+    #             }, 
+    #           }, 
+    #           currency_code: "USD", 
+    #           total_amount: "1.00", 
+    #           total_amount_before_tax: "1.00", 
+    #         }, 
+    #         bill_source_accounts: [
+    #           "111111111111", 
+    #         ], 
+    #         bill_source_accounts_total_count: 1, 
+    #         bill_type: "ANNIVERSARY", 
+    #         billing_period: {
+    #           month: 1, 
+    #           year: 2025, 
+    #         }, 
+    #         due_date: Time.parse("2025-04-01T01:00:00.000Z"), 
+    #         einvoice_delivery_status: "DELIVERED", 
+    #         entity: {
+    #           billing_entity: "AWS", 
+    #           invoicing_entity: "Amazon Web Services, Inc.", 
+    #         }, 
+    #         invoice_frequency: "RECURRING", 
+    #         invoice_id: "1111111111", 
+    #         invoice_type: "INVOICE", 
+    #         issued_date: Time.parse("2025-04-01T01:00:00.000Z"), 
+    #         payment_currency_amount: {
+    #           amount_breakdown: {
+    #             discounts: {
+    #               total_amount: "1.00", 
+    #             }, 
+    #             sub_total_amount: "1.00", 
+    #             taxes: {
+    #               breakdown: [
+    #                 {
+    #                   amount: "1", 
+    #                   description: "VAT", 
+    #                   rate: "1.0", 
+    #                 }, 
+    #               ], 
+    #               total_amount: "1.00", 
+    #             }, 
+    #           }, 
+    #           currency_code: "USD", 
+    #           currency_exchange_details: {
+    #             rate: "1.0", 
+    #             source_currency_code: "USD", 
+    #             target_currency_code: "USD", 
+    #           }, 
+    #           total_amount: "1.00", 
+    #           total_amount_before_tax: "1.00", 
+    #         }, 
+    #         receiver_role: "BUYER", 
+    #         tax_authority_status: "ISSUED", 
+    #         tax_currency_amount: {
+    #           amount_breakdown: {
+    #             discounts: {
+    #               total_amount: "1.00", 
+    #             }, 
+    #             sub_total_amount: "1.00", 
+    #             taxes: {
+    #               breakdown: [
+    #                 {
+    #                   amount: "1", 
+    #                   description: "VAT", 
+    #                   rate: "1.0", 
+    #                 }, 
+    #               ], 
+    #               total_amount: "1.00", 
+    #             }, 
+    #           }, 
+    #           currency_code: "USD", 
+    #           currency_exchange_details: {
+    #             rate: "1.0", 
+    #             source_currency_code: "USD", 
+    #             target_currency_code: "USD", 
+    #           }, 
+    #           total_amount: "1.00", 
+    #           total_amount_before_tax: "1.00", 
+    #         }, 
+    #       }, 
+    #     ], 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_invoice_summaries({
+    #     selector: { # required
+    #       resource_type: "ACCOUNT_ID", # required, accepts ACCOUNT_ID, INVOICE_ID
+    #       value: "StringWithoutNewLine", # required
+    #     },
+    #     filter: {
+    #       time_interval: {
+    #         start_date: Time.now, # required
+    #         end_date: Time.now, # required
+    #       },
+    #       billing_period: {
+    #         month: 1, # required
+    #         year: 1, # required
+    #       },
+    #       invoicing_entity: "BasicString",
+    #       receiver_role: "SELLER", # accepts SELLER, RESELLER, BUYER
+    #     },
+    #     next_token: "NextTokenString",
+    #     max_results: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.invoice_summaries #=> Array
+    #   resp.invoice_summaries[0].account_id #=> String
+    #   resp.invoice_summaries[0].invoice_id #=> String
+    #   resp.invoice_summaries[0].issued_date #=> Time
+    #   resp.invoice_summaries[0].due_date #=> Time
+    #   resp.invoice_summaries[0].bill_source_accounts #=> Array
+    #   resp.invoice_summaries[0].bill_source_accounts[0] #=> String
+    #   resp.invoice_summaries[0].bill_source_accounts_total_count #=> Integer
+    #   resp.invoice_summaries[0].receiver_role #=> String, one of "SELLER", "RESELLER", "BUYER"
+    #   resp.invoice_summaries[0].entity.invoicing_entity #=> String
+    #   resp.invoice_summaries[0].entity.billing_entity #=> String, one of "AWS", "AWS_MARKETPLACE"
+    #   resp.invoice_summaries[0].billing_period.month #=> Integer
+    #   resp.invoice_summaries[0].billing_period.year #=> Integer
+    #   resp.invoice_summaries[0].invoice_frequency #=> String, one of "ONE_TIME", "RECURRING"
+    #   resp.invoice_summaries[0].bill_type #=> String, one of "ANNIVERSARY", "PURCHASE", "REFUND"
+    #   resp.invoice_summaries[0].invoice_type #=> String, one of "INVOICE", "CREDIT_MEMO", "PAYMENT_RECEIPT"
+    #   resp.invoice_summaries[0].commercial_invoice_id #=> String
+    #   resp.invoice_summaries[0].original_invoice_id #=> String
+    #   resp.invoice_summaries[0].purchase_order_number #=> String
+    #   resp.invoice_summaries[0].einvoice_delivery_status #=> String, one of "DELIVERED", "NOT_DELIVERED"
+    #   resp.invoice_summaries[0].tax_authority_status #=> String, one of "ISSUED", "CANCELLED"
+    #   resp.invoice_summaries[0].base_currency_amount.total_amount #=> String
+    #   resp.invoice_summaries[0].base_currency_amount.total_amount_before_tax #=> String
+    #   resp.invoice_summaries[0].base_currency_amount.currency_code #=> String
+    #   resp.invoice_summaries[0].base_currency_amount.amount_breakdown.sub_total_amount #=> String
+    #   resp.invoice_summaries[0].base_currency_amount.amount_breakdown.discounts.breakdown #=> Array
+    #   resp.invoice_summaries[0].base_currency_amount.amount_breakdown.discounts.breakdown[0].description #=> String
+    #   resp.invoice_summaries[0].base_currency_amount.amount_breakdown.discounts.breakdown[0].amount #=> String
+    #   resp.invoice_summaries[0].base_currency_amount.amount_breakdown.discounts.breakdown[0].rate #=> String
+    #   resp.invoice_summaries[0].base_currency_amount.amount_breakdown.discounts.total_amount #=> String
+    #   resp.invoice_summaries[0].base_currency_amount.amount_breakdown.taxes.breakdown #=> Array
+    #   resp.invoice_summaries[0].base_currency_amount.amount_breakdown.taxes.breakdown[0].description #=> String
+    #   resp.invoice_summaries[0].base_currency_amount.amount_breakdown.taxes.breakdown[0].amount #=> String
+    #   resp.invoice_summaries[0].base_currency_amount.amount_breakdown.taxes.breakdown[0].rate #=> String
+    #   resp.invoice_summaries[0].base_currency_amount.amount_breakdown.taxes.total_amount #=> String
+    #   resp.invoice_summaries[0].base_currency_amount.amount_breakdown.fees.breakdown #=> Array
+    #   resp.invoice_summaries[0].base_currency_amount.amount_breakdown.fees.breakdown[0].description #=> String
+    #   resp.invoice_summaries[0].base_currency_amount.amount_breakdown.fees.breakdown[0].amount #=> String
+    #   resp.invoice_summaries[0].base_currency_amount.amount_breakdown.fees.breakdown[0].rate #=> String
+    #   resp.invoice_summaries[0].base_currency_amount.amount_breakdown.fees.total_amount #=> String
+    #   resp.invoice_summaries[0].base_currency_amount.currency_exchange_details.source_currency_code #=> String
+    #   resp.invoice_summaries[0].base_currency_amount.currency_exchange_details.target_currency_code #=> String
+    #   resp.invoice_summaries[0].base_currency_amount.currency_exchange_details.rate #=> String
+    #   resp.invoice_summaries[0].tax_currency_amount.total_amount #=> String
+    #   resp.invoice_summaries[0].tax_currency_amount.total_amount_before_tax #=> String
+    #   resp.invoice_summaries[0].tax_currency_amount.currency_code #=> String
+    #   resp.invoice_summaries[0].tax_currency_amount.amount_breakdown.sub_total_amount #=> String
+    #   resp.invoice_summaries[0].tax_currency_amount.amount_breakdown.discounts.breakdown #=> Array
+    #   resp.invoice_summaries[0].tax_currency_amount.amount_breakdown.discounts.breakdown[0].description #=> String
+    #   resp.invoice_summaries[0].tax_currency_amount.amount_breakdown.discounts.breakdown[0].amount #=> String
+    #   resp.invoice_summaries[0].tax_currency_amount.amount_breakdown.discounts.breakdown[0].rate #=> String
+    #   resp.invoice_summaries[0].tax_currency_amount.amount_breakdown.discounts.total_amount #=> String
+    #   resp.invoice_summaries[0].tax_currency_amount.amount_breakdown.taxes.breakdown #=> Array
+    #   resp.invoice_summaries[0].tax_currency_amount.amount_breakdown.taxes.breakdown[0].description #=> String
+    #   resp.invoice_summaries[0].tax_currency_amount.amount_breakdown.taxes.breakdown[0].amount #=> String
+    #   resp.invoice_summaries[0].tax_currency_amount.amount_breakdown.taxes.breakdown[0].rate #=> String
+    #   resp.invoice_summaries[0].tax_currency_amount.amount_breakdown.taxes.total_amount #=> String
+    #   resp.invoice_summaries[0].tax_currency_amount.amount_breakdown.fees.breakdown #=> Array
+    #   resp.invoice_summaries[0].tax_currency_amount.amount_breakdown.fees.breakdown[0].description #=> String
+    #   resp.invoice_summaries[0].tax_currency_amount.amount_breakdown.fees.breakdown[0].amount #=> String
+    #   resp.invoice_summaries[0].tax_currency_amount.amount_breakdown.fees.breakdown[0].rate #=> String
+    #   resp.invoice_summaries[0].tax_currency_amount.amount_breakdown.fees.total_amount #=> String
+    #   resp.invoice_summaries[0].tax_currency_amount.currency_exchange_details.source_currency_code #=> String
+    #   resp.invoice_summaries[0].tax_currency_amount.currency_exchange_details.target_currency_code #=> String
+    #   resp.invoice_summaries[0].tax_currency_amount.currency_exchange_details.rate #=> String
+    #   resp.invoice_summaries[0].payment_currency_amount.total_amount #=> String
+    #   resp.invoice_summaries[0].payment_currency_amount.total_amount_before_tax #=> String
+    #   resp.invoice_summaries[0].payment_currency_amount.currency_code #=> String
+    #   resp.invoice_summaries[0].payment_currency_amount.amount_breakdown.sub_total_amount #=> String
+    #   resp.invoice_summaries[0].payment_currency_amount.amount_breakdown.discounts.breakdown #=> Array
+    #   resp.invoice_summaries[0].payment_currency_amount.amount_breakdown.discounts.breakdown[0].description #=> String
+    #   resp.invoice_summaries[0].payment_currency_amount.amount_breakdown.discounts.breakdown[0].amount #=> String
+    #   resp.invoice_summaries[0].payment_currency_amount.amount_breakdown.discounts.breakdown[0].rate #=> String
+    #   resp.invoice_summaries[0].payment_currency_amount.amount_breakdown.discounts.total_amount #=> String
+    #   resp.invoice_summaries[0].payment_currency_amount.amount_breakdown.taxes.breakdown #=> Array
+    #   resp.invoice_summaries[0].payment_currency_amount.amount_breakdown.taxes.breakdown[0].description #=> String
+    #   resp.invoice_summaries[0].payment_currency_amount.amount_breakdown.taxes.breakdown[0].amount #=> String
+    #   resp.invoice_summaries[0].payment_currency_amount.amount_breakdown.taxes.breakdown[0].rate #=> String
+    #   resp.invoice_summaries[0].payment_currency_amount.amount_breakdown.taxes.total_amount #=> String
+    #   resp.invoice_summaries[0].payment_currency_amount.amount_breakdown.fees.breakdown #=> Array
+    #   resp.invoice_summaries[0].payment_currency_amount.amount_breakdown.fees.breakdown[0].description #=> String
+    #   resp.invoice_summaries[0].payment_currency_amount.amount_breakdown.fees.breakdown[0].amount #=> String
+    #   resp.invoice_summaries[0].payment_currency_amount.amount_breakdown.fees.breakdown[0].rate #=> String
+    #   resp.invoice_summaries[0].payment_currency_amount.amount_breakdown.fees.total_amount #=> String
+    #   resp.invoice_summaries[0].payment_currency_amount.currency_exchange_details.source_currency_code #=> String
+    #   resp.invoice_summaries[0].payment_currency_amount.currency_exchange_details.target_currency_code #=> String
+    #   resp.invoice_summaries[0].payment_currency_amount.currency_exchange_details.rate #=> String
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/invoicing-2024-12-01/ListInvoiceSummaries AWS API Documentation
+    #
+    # @overload list_invoice_summaries(params = {})
+    # @param [Hash] params ({})
+    def list_invoice_summaries(params = {}, options = {})
+      req = build_request(:list_invoice_summaries, params)
       req.send_request(options)
     end
 
@@ -926,6 +2266,7 @@ module Aws::Invoicing
     #       names: ["InvoiceUnitName"],
     #       invoice_receivers: ["AccountIdString"],
     #       accounts: ["AccountIdString"],
+    #       bill_source_accounts: ["AccountIdString"],
     #     },
     #     next_token: "NextTokenString",
     #     max_results: 1,
@@ -942,6 +2283,8 @@ module Aws::Invoicing
     #   resp.invoice_units[0].tax_inheritance_disabled #=> Boolean
     #   resp.invoice_units[0].rule.linked_accounts #=> Array
     #   resp.invoice_units[0].rule.linked_accounts[0] #=> String
+    #   resp.invoice_units[0].rule.bill_source_accounts #=> Array
+    #   resp.invoice_units[0].rule.bill_source_accounts[0] #=> String
     #   resp.invoice_units[0].last_modified #=> Time
     #   resp.next_token #=> String
     #
@@ -951,6 +2294,172 @@ module Aws::Invoicing
     # @param [Hash] params ({})
     def list_invoice_units(params = {}, options = {})
       req = build_request(:list_invoice_units, params)
+      req.send_request(options)
+    end
+
+    # <i> <b>This feature API is subject to changing at any time. For more
+    # information, see the <a
+    # href="https://aws.amazon.com/service-terms/">Amazon Web Services
+    # Service Terms</a> (Betas and Previews).</b> </i>
+    #
+    # Retrieves a list of procurement portal preferences associated with the
+    # Amazon Web Services account.
+    #
+    # @option params [String] :next_token
+    #   The token for the next set of results. (You received this token from a
+    #   previous call.)
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return in a single call. To retrieve
+    #   the remaining results, make another call with the returned NextToken
+    #   value.
+    #
+    # @return [Types::ListProcurementPortalPreferencesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListProcurementPortalPreferencesResponse#procurement_portal_preferences #procurement_portal_preferences} => Array&lt;Types::ProcurementPortalPreferenceSummary&gt;
+    #   * {Types::ListProcurementPortalPreferencesResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    #
+    # @example Example: ListProcurementPortalPreferences for Coupa prefs. First Call with following pages
+    #
+    #   resp = client.list_procurement_portal_preferences({
+    #     max_results: 2, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     next_token: "AAQA-EFRSURBSGpkVFU5MVNUVWNXTzNoUEptWEFGcEt0QzBBeHZaZmRUU2w3L0hRQmdDeEx3R0NuSnF2NjM5NGNmM1I5KzNIQzNnT0FBQUFmakI4QmdrcWhraUc5dzBCQndhZ2J6QnRBZ0VBTUdnR0NTcUdTSWIzRFFFSEFUQWVCZ2xnaGtnQlpRTUVBUzR3RVFRTVhPSnhEQ04rWk1idnAyb1RBZ0VRZ0RzbFJBeFlXMk9RRGFtTU8vdFc0MUJlTFFNU2hPR1E5bDM3MHcyS05mSjIzbU93MG1aVXk1MzBiWWVsZ3FaZzhjMndhTjZtNzNYTWd3bnpsZz09E8JRNUKK1r2-b9X8Qd1RAOSKHZOCy-UCpOQjJdSfZHcUefTH0YmlIW8ykllegYUWB1D1NjDjC3u2z2e4cLBTmQhrQewSBW-I_i8okXup9RWN60eMOnB6dl5jUiinJ-FjY_jGjbOkiWuJhXteDKP16RfVRW7mxp2-v1-B8gPPxGLolXHBHrb8gt18P8eWs8RcvRRmmbGUy5qa6nFH5WiCq9Bx2fTUTy9Iz_xZooNuiqC6y119EGQqJ9WsWsIUa8MbWHFXtn9-Uriz7osYocbFm1Evv_NCn3YK-wFy9rUlUskcM2n9AqvPYhOyf0reV7E8cErZFR_Ev8l008QcxQfaqK19-gKR9clddwoDzMVfVuyiW3vbzUXz7fzQLr-UMLCGdE3yHf1oz2SEbcxhHZ2eh7-9wEYDv0v92wXg7m7xaYvaKuVBPKqBaq66GdpS1HTfakkjRGvsoBStXWVgPahISglPO__-Ym5NnXOw2wENBVXZ7RsVe6nJ1X15bB1RDkqLV8xJD0L83snuCEBtM9pyUUQOPvfGHzC4yRusMgBav_y1kq0wjqsbJV5EhHV_SIwf-WZa_A==", 
+    #     procurement_portal_preferences: [
+    #       {
+    #         aws_account_id: "111111111111", 
+    #         buyer_domain: "NetworkID", 
+    #         buyer_identifier: "BuyerId_2", 
+    #         create_date: Time.parse(1750375489.242), 
+    #         einvoice_delivery_enabled: true, 
+    #         einvoice_delivery_preference_status: "PENDING_VERIFICATION", 
+    #         last_update_date: Time.parse(1750375489.242), 
+    #         procurement_portal_name: "COUPA", 
+    #         procurement_portal_preference_arn: "arn:aws:invoicing::111111111111:procurement-portal-preference/1c7c6d71-fbc1-45bd-a18c-40cb61810679", 
+    #         purchase_order_retrieval_enabled: true, 
+    #         purchase_order_retrieval_preference_status: "PENDING_VERIFICATION", 
+    #         selector: {
+    #           invoice_unit_arns: [
+    #             "arn:aws:invoicing::111111111111:invoice-unit/12345679", 
+    #           ], 
+    #           seller_of_records: [
+    #             "AWS_INC", 
+    #           ], 
+    #         }, 
+    #         supplier_domain: "NetworkID", 
+    #         supplier_identifier: "SupplierId_1", 
+    #         version: 1, 
+    #       }, 
+    #       {
+    #         aws_account_id: "111111111111", 
+    #         buyer_domain: "NetworkID", 
+    #         buyer_identifier: "BuyerId_4", 
+    #         create_date: Time.parse(1750375489.242), 
+    #         einvoice_delivery_enabled: true, 
+    #         einvoice_delivery_preference_status: "PENDING_VERIFICATION", 
+    #         last_update_date: Time.parse(1750375489.242), 
+    #         procurement_portal_name: "COUPA", 
+    #         procurement_portal_preference_arn: "arn:aws:invoicing::111111111111:procurement-portal-preference/ae467ebd-ec8c-4089-b904-a7cd9e76f970", 
+    #         purchase_order_retrieval_enabled: true, 
+    #         purchase_order_retrieval_preference_status: "PENDING_VERIFICATION", 
+    #         selector: {
+    #           invoice_unit_arns: [
+    #             "arn:aws:invoicing::111111111111:invoice-unit/12345678", 
+    #           ], 
+    #           seller_of_records: [
+    #             "AWS_INC", 
+    #           ], 
+    #         }, 
+    #         supplier_domain: "NetworkID", 
+    #         supplier_identifier: "SupplierId_1", 
+    #         version: 1, 
+    #       }, 
+    #     ], 
+    #   }
+    #
+    # @example Example: ListProcurementPortalPreferences for Coupa prefs. Second Call with the last page
+    #
+    #   resp = client.list_procurement_portal_preferences({
+    #     max_results: 2, 
+    #     next_token: "AAQA-EFRSURBSGpkVFU5MVNUVWNXTzNoUEptWEFGcEt0QzBBeHZaZmRUU2w3L0hRQmdDeEx3R0NuSnF2NjM5NGNmM1I5KzNIQzNnT0FBQUFmakI4QmdrcWhraUc5dzBCQndhZ2J6QnRBZ0VBTUdnR0NTcUdTSWIzRFFFSEFUQWVCZ2xnaGtnQlpRTUVBUzR3RVFRTVhPSnhEQ04rWk1idnAyb1RBZ0VRZ0RzbFJBeFlXMk9RRGFtTU8vdFc0MUJlTFFNU2hPR1E5bDM3MHcyS05mSjIzbU93MG1aVXk1MzBiWWVsZ3FaZzhjMndhTjZtNzNYTWd3bnpsZz09E8JRNUKK1r2-b9X8Qd1RAOSKHZOCy-UCpOQjJdSfZHcUefTH0YmlIW8ykllegYUWB1D1NjDjC3u2z2e4cLBTmQhrQewSBW-I_i8okXup9RWN60eMOnB6dl5jUiinJ-FjY_jGjbOkiWuJhXteDKP16RfVRW7mxp2-v1-B8gPPxGLolXHBHrb8gt18P8eWs8RcvRRmmbGUy5qa6nFH5WiCq9Bx2fTUTy9Iz_xZooNuiqC6y119EGQqJ9WsWsIUa8MbWHFXtn9-Uriz7osYocbFm1Evv_NCn3YK-wFy9rUlUskcM2n9AqvPYhOyf0reV7E8cErZFR_Ev8l008QcxQfaqK19-gKR9clddwoDzMVfVuyiW3vbzUXz7fzQLr-UMLCGdE3yHf1oz2SEbcxhHZ2eh7-9wEYDv0v92wXg7m7xaYvaKuVBPKqBaq66GdpS1HTfakkjRGvsoBStXWVgPahISglPO__-Ym5NnXOw2wENBVXZ7RsVe6nJ1X15bB1RDkqLV8xJD0L83snuCEBtM9pyUUQOPvfGHzC4yRusMgBav_y1kq0wjqsbJV5EhHV_SIwf-WZa_A==", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     procurement_portal_preferences: [
+    #       {
+    #         aws_account_id: "111111111111", 
+    #         buyer_domain: "NetworkID", 
+    #         buyer_identifier: "BuyerId_1", 
+    #         create_date: Time.parse(1750375489.242), 
+    #         einvoice_delivery_enabled: true, 
+    #         einvoice_delivery_preference_status: "TEST_INITIALIZED", 
+    #         einvoice_delivery_preference_status_reason: "test initialized example reason", 
+    #         last_update_date: Time.parse(1750375489.242), 
+    #         procurement_portal_name: "COUPA", 
+    #         procurement_portal_preference_arn: "arn:aws:invoicing::111111111111:procurement-portal-preference/f71dd02e-f855-4b13-b793-0fd25c0b3ecd", 
+    #         purchase_order_retrieval_enabled: true, 
+    #         purchase_order_retrieval_preference_status: "TEST_INITIALIZED", 
+    #         purchase_order_retrieval_preference_status_reason: "test initialized example reason", 
+    #         selector: {
+    #           invoice_unit_arns: [
+    #             "arn:aws:invoicing::111111111111:invoice-unit/12345678", 
+    #           ], 
+    #           seller_of_records: [
+    #             "AWS_INC", 
+    #           ], 
+    #         }, 
+    #         supplier_domain: "NetworkID", 
+    #         supplier_identifier: "SupplierId_1", 
+    #         version: 3, 
+    #       }, 
+    #     ], 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_procurement_portal_preferences({
+    #     next_token: "BasicStringWithoutSpace",
+    #     max_results: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.procurement_portal_preferences #=> Array
+    #   resp.procurement_portal_preferences[0].aws_account_id #=> String
+    #   resp.procurement_portal_preferences[0].procurement_portal_preference_arn #=> String
+    #   resp.procurement_portal_preferences[0].procurement_portal_name #=> String, one of "SAP_BUSINESS_NETWORK", "COUPA"
+    #   resp.procurement_portal_preferences[0].buyer_domain #=> String, one of "NetworkID"
+    #   resp.procurement_portal_preferences[0].buyer_identifier #=> String
+    #   resp.procurement_portal_preferences[0].supplier_domain #=> String, one of "NetworkID"
+    #   resp.procurement_portal_preferences[0].supplier_identifier #=> String
+    #   resp.procurement_portal_preferences[0].selector.invoice_unit_arns #=> Array
+    #   resp.procurement_portal_preferences[0].selector.invoice_unit_arns[0] #=> String
+    #   resp.procurement_portal_preferences[0].selector.seller_of_records #=> Array
+    #   resp.procurement_portal_preferences[0].selector.seller_of_records[0] #=> String
+    #   resp.procurement_portal_preferences[0].einvoice_delivery_enabled #=> Boolean
+    #   resp.procurement_portal_preferences[0].purchase_order_retrieval_enabled #=> Boolean
+    #   resp.procurement_portal_preferences[0].einvoice_delivery_preference_status #=> String, one of "PENDING_VERIFICATION", "VALIDATED", "TEST_INITIALIZED", "TEST_INITIALIZATION_FAILED", "TEST_FAILED", "ACTIVE", "SUSPENDED"
+    #   resp.procurement_portal_preferences[0].einvoice_delivery_preference_status_reason #=> String
+    #   resp.procurement_portal_preferences[0].purchase_order_retrieval_preference_status #=> String, one of "PENDING_VERIFICATION", "VALIDATED", "TEST_INITIALIZED", "TEST_INITIALIZATION_FAILED", "TEST_FAILED", "ACTIVE", "SUSPENDED"
+    #   resp.procurement_portal_preferences[0].purchase_order_retrieval_preference_status_reason #=> String
+    #   resp.procurement_portal_preferences[0].version #=> Integer
+    #   resp.procurement_portal_preferences[0].create_date #=> Time
+    #   resp.procurement_portal_preferences[0].last_update_date #=> Time
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/invoicing-2024-12-01/ListProcurementPortalPreferences AWS API Documentation
+    #
+    # @overload list_procurement_portal_preferences(params = {})
+    # @param [Hash] params ({})
+    def list_procurement_portal_preferences(params = {}, options = {})
+      req = build_request(:list_procurement_portal_preferences, params)
       req.send_request(options)
     end
 
@@ -998,6 +2507,231 @@ module Aws::Invoicing
     # @param [Hash] params ({})
     def list_tags_for_resource(params = {}, options = {})
       req = build_request(:list_tags_for_resource, params)
+      req.send_request(options)
+    end
+
+    # <i> <b>This feature API is subject to changing at any time. For more
+    # information, see the <a
+    # href="https://aws.amazon.com/service-terms/">Amazon Web Services
+    # Service Terms</a> (Betas and Previews).</b> </i>
+    #
+    # Updates an existing procurement portal preference configuration. This
+    # operation can modify settings for e-invoice delivery and purchase
+    # order retrieval.
+    #
+    # @option params [required, String] :procurement_portal_preference_arn
+    #   The Amazon Resource Name (ARN) of the procurement portal preference to
+    #   update.
+    #
+    # @option params [Types::ProcurementPortalPreferenceSelector] :selector
+    #   Specifies criteria for selecting which invoices should be processed
+    #   using a particular procurement portal preference.
+    #
+    # @option params [String] :procurement_portal_shared_secret
+    #   The updated shared secret or authentication credential for the
+    #   procurement portal. This value must be encrypted at rest.
+    #
+    # @option params [String] :procurement_portal_instance_endpoint
+    #   The updated endpoint URL where e-invoices will be delivered to the
+    #   procurement portal. Must be a valid HTTPS URL.
+    #
+    # @option params [Types::TestEnvPreferenceInput] :test_env_preference
+    #   Updated configuration settings for the test environment of the
+    #   procurement portal.
+    #
+    # @option params [required, Boolean] :einvoice_delivery_enabled
+    #   Updated flag indicating whether e-invoice delivery is enabled for this
+    #   procurement portal preference.
+    #
+    # @option params [Types::EinvoiceDeliveryPreference] :einvoice_delivery_preference
+    #   Updated e-invoice delivery configuration including document types,
+    #   attachment types, and customization settings for the portal.
+    #
+    # @option params [required, Boolean] :purchase_order_retrieval_enabled
+    #   Updated flag indicating whether purchase order retrieval is enabled
+    #   for this procurement portal preference.
+    #
+    # @option params [required, Array<Types::Contact>] :contacts
+    #   Updated list of contact information for portal administrators and
+    #   technical contacts.
+    #
+    # @option params [String] :client_token
+    #   A unique, case-sensitive identifier that you provide to ensure
+    #   idempotency of the request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @return [Types::PutProcurementPortalPreferenceResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::PutProcurementPortalPreferenceResponse#procurement_portal_preference_arn #procurement_portal_preference_arn} => String
+    #
+    #
+    # @example Example: PutProcurementPortalPreference for Coupa pref
+    #
+    #   resp = client.put_procurement_portal_preference({
+    #     client_token: "e362c68e-4e74-48d7-9228-0bc5aa447b45", 
+    #     contacts: [
+    #       {
+    #         email: "example-placeholder2@amazon.com", 
+    #         name: "John Doe2", 
+    #       }, 
+    #     ], 
+    #     einvoice_delivery_enabled: true, 
+    #     einvoice_delivery_preference: {
+    #       connection_testing_method: "PROD_ENV_DOLLAR_TEST", 
+    #       einvoice_delivery_activation_date: Time.parse(1750279280.091), 
+    #       einvoice_delivery_attachment_types: [
+    #         "INVOICE_PDF", 
+    #       ], 
+    #       einvoice_delivery_document_types: [
+    #         "AWS_CLOUD_INVOICE", 
+    #       ], 
+    #       protocol: "CXML", 
+    #       purchase_order_data_sources: [
+    #         {
+    #           einvoice_delivery_document_type: "AWS_CLOUD_INVOICE", 
+    #           purchase_order_data_source_type: "ASSOCIATED_PURCHASE_ORDER_REQUIRED", 
+    #         }, 
+    #       ], 
+    #     }, 
+    #     procurement_portal_instance_endpoint: "https://www.placeholder-domain.test", 
+    #     procurement_portal_preference_arn: "arn:aws:invoicing::111111111111:procurement-portal-preference/f71dd02e-f855-4b13-b793-0fd25c0b3ecd", 
+    #     procurement_portal_shared_secret: "Coupa_Secret_2", 
+    #     purchase_order_retrieval_enabled: true, 
+    #     selector: {
+    #       invoice_unit_arns: [
+    #         "arn:aws:invoicing::111111111111:invoice-unit/12345679", 
+    #       ], 
+    #       seller_of_records: [
+    #         "AWS_INC", 
+    #       ], 
+    #     }, 
+    #     test_env_preference: {
+    #       buyer_domain: "NetworkID", 
+    #       buyer_identifier: "BuyerId_1_Test", 
+    #       procurement_portal_instance_endpoint: "https://www.placeholder-domain.test", 
+    #       procurement_portal_shared_secret: "Coupa_Secret_test_2", 
+    #       supplier_domain: "NetworkID", 
+    #       supplier_identifier: "SupplierId_1_Test", 
+    #     }, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     procurement_portal_preference_arn: "arn:aws:invoicing::111111111111:procurement-portal-preference/f71dd02e-f855-4b13-b793-0fd25c0b3ecd", 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.put_procurement_portal_preference({
+    #     procurement_portal_preference_arn: "ProcurementPortalPreferenceArnString", # required
+    #     selector: {
+    #       invoice_unit_arns: ["InvoiceUnitArnString"],
+    #       seller_of_records: ["BasicStringWithoutSpace"],
+    #     },
+    #     procurement_portal_shared_secret: "SensitiveBasicStringWithoutSpace",
+    #     procurement_portal_instance_endpoint: "BasicStringWithoutSpace",
+    #     test_env_preference: {
+    #       buyer_domain: "NetworkID", # required, accepts NetworkID
+    #       buyer_identifier: "BasicStringWithoutSpace", # required
+    #       supplier_domain: "NetworkID", # required, accepts NetworkID
+    #       supplier_identifier: "BasicStringWithoutSpace", # required
+    #       procurement_portal_shared_secret: "BasicStringWithoutSpace",
+    #       procurement_portal_instance_endpoint: "BasicStringWithoutSpace",
+    #     },
+    #     einvoice_delivery_enabled: false, # required
+    #     einvoice_delivery_preference: {
+    #       einvoice_delivery_document_types: ["AWS_CLOUD_INVOICE"], # required, accepts AWS_CLOUD_INVOICE, AWS_CLOUD_CREDIT_MEMO, AWS_MARKETPLACE_INVOICE, AWS_MARKETPLACE_CREDIT_MEMO, AWS_REQUEST_FOR_PAYMENT
+    #       einvoice_delivery_attachment_types: ["INVOICE_PDF"], # accepts INVOICE_PDF, RFP_PDF
+    #       protocol: "CXML", # required, accepts CXML
+    #       purchase_order_data_sources: [ # required
+    #         {
+    #           einvoice_delivery_document_type: "AWS_CLOUD_INVOICE", # accepts AWS_CLOUD_INVOICE, AWS_CLOUD_CREDIT_MEMO, AWS_MARKETPLACE_INVOICE, AWS_MARKETPLACE_CREDIT_MEMO, AWS_REQUEST_FOR_PAYMENT
+    #           purchase_order_data_source_type: "ASSOCIATED_PURCHASE_ORDER_REQUIRED", # accepts ASSOCIATED_PURCHASE_ORDER_REQUIRED, PURCHASE_ORDER_NOT_REQUIRED
+    #         },
+    #       ],
+    #       connection_testing_method: "PROD_ENV_DOLLAR_TEST", # required, accepts PROD_ENV_DOLLAR_TEST, TEST_ENV_REPLAY_TEST
+    #       einvoice_delivery_activation_date: Time.now, # required
+    #     },
+    #     purchase_order_retrieval_enabled: false, # required
+    #     contacts: [ # required
+    #       {
+    #         name: "BasicString",
+    #         email: "EmailString",
+    #       },
+    #     ],
+    #     client_token: "BasicStringWithoutSpace",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.procurement_portal_preference_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/invoicing-2024-12-01/PutProcurementPortalPreference AWS API Documentation
+    #
+    # @overload put_procurement_portal_preference(params = {})
+    # @param [Hash] params ({})
+    def put_procurement_portal_preference(params = {}, options = {})
+      req = build_request(:put_procurement_portal_preference, params)
+      req.send_request(options)
+    end
+
+    # <i> <b>This feature API is subject to changing at any time. For more
+    # information, see the <a
+    # href="https://aws.amazon.com/service-terms/">Amazon Web Services
+    # Service Terms</a> (Betas and Previews).</b> </i>
+    #
+    # Sends a validation request for a procurement portal preference. This
+    # operation initiates the validation process by issuing a validation
+    # code that confirms ownership and connectivity of the configured
+    # procurement portal endpoint. Use `VerifyProcurementPortalValidation`
+    # to submit the received code and complete validation.
+    #
+    # @option params [required, String] :procurement_portal_preference_arn
+    #   The Amazon Resource Name (ARN) of the procurement portal preference to
+    #   validate.
+    #
+    # @option params [String] :client_token
+    #   A unique, case-sensitive identifier that you provide to ensure
+    #   idempotency of the request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @return [Types::SendProcurementPortalValidationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::SendProcurementPortalValidationResponse#procurement_portal_preference_arn #procurement_portal_preference_arn} => String
+    #
+    #
+    # @example Example: SendProcurementPortalValidation call
+    #
+    #   resp = client.send_procurement_portal_validation({
+    #     procurement_portal_preference_arn: "arn:aws:invoicing::111111111111:procurement-portal-preference/f71dd02e-f855-4b13-b793-0fd25c0b3ecd", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     procurement_portal_preference_arn: "arn:aws:invoicing::111111111111:procurement-portal-preference/f71dd02e-f855-4b13-b793-0fd25c0b3ecd", 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.send_procurement_portal_validation({
+    #     procurement_portal_preference_arn: "ProcurementPortalPreferenceArnString", # required
+    #     client_token: "BasicStringWithoutSpace",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.procurement_portal_preference_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/invoicing-2024-12-01/SendProcurementPortalValidation AWS API Documentation
+    #
+    # @overload send_procurement_portal_validation(params = {})
+    # @param [Hash] params ({})
+    def send_procurement_portal_validation(params = {}, options = {})
+      req = build_request(:send_procurement_portal_validation, params)
       req.send_request(options)
     end
 
@@ -1108,6 +2842,13 @@ module Aws::Invoicing
     # @option params [Types::InvoiceUnitRule] :rule
     #   The `InvoiceUnitRule` object used to update invoice units.
     #
+    # @option params [String] :client_token
+    #   A unique, case-sensitive identifier that you provide to ensure
+    #   idempotency of the request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
     # @return [Types::UpdateInvoiceUnitResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::UpdateInvoiceUnitResponse#invoice_unit_arn #invoice_unit_arn} => String
@@ -1116,6 +2857,7 @@ module Aws::Invoicing
     # @example Example: UpdateInvoiceUnit with all updatable fields
     #
     #   resp = client.update_invoice_unit({
+    #     client_token: "e362c68e-4e74-48d7-9228-0bc5aa447b42", 
     #     description: "Updated IU description", 
     #     invoice_unit_arn: "arn:aws:invoicing::000000000000:invoice-unit/12345678", 
     #     rule: {
@@ -1135,6 +2877,7 @@ module Aws::Invoicing
     # @example Example: UpdateInvoiceUnit with specific fields
     #
     #   resp = client.update_invoice_unit({
+    #     client_token: "e362c68e-4e74-48d7-9228-0bc5aa447b43", 
     #     description: "Updated IU description. All other fields remain unchanged", 
     #     invoice_unit_arn: "arn:aws:invoicing::000000000000:invoice-unit/12345678", 
     #   })
@@ -1152,7 +2895,9 @@ module Aws::Invoicing
     #     tax_inheritance_disabled: false,
     #     rule: {
     #       linked_accounts: ["AccountIdString"],
+    #       bill_source_accounts: ["AccountIdString"],
     #     },
+    #     client_token: "BasicStringWithoutSpace",
     #   })
     #
     # @example Response structure
@@ -1165,6 +2910,148 @@ module Aws::Invoicing
     # @param [Hash] params ({})
     def update_invoice_unit(params = {}, options = {})
       req = build_request(:update_invoice_unit, params)
+      req.send_request(options)
+    end
+
+    # <i> <b>This feature API is subject to changing at any time. For more
+    # information, see the <a
+    # href="https://aws.amazon.com/service-terms/">Amazon Web Services
+    # Service Terms</a> (Betas and Previews).</b> </i>
+    #
+    # Updates the status of a procurement portal preference, including the
+    # activation state of e-invoice delivery and purchase order retrieval
+    # features.
+    #
+    # @option params [required, String] :procurement_portal_preference_arn
+    #   The Amazon Resource Name (ARN) of the procurement portal preference to
+    #   update.
+    #
+    # @option params [String] :einvoice_delivery_preference_status
+    #   The updated status of the e-invoice delivery preference.
+    #
+    # @option params [String] :einvoice_delivery_preference_status_reason
+    #   The reason for the e-invoice delivery preference status update,
+    #   providing context for the change.
+    #
+    # @option params [String] :purchase_order_retrieval_preference_status
+    #   The updated status of the purchase order retrieval preference.
+    #
+    # @option params [String] :purchase_order_retrieval_preference_status_reason
+    #   The reason for the purchase order retrieval preference status update,
+    #   providing context for the change.
+    #
+    # @option params [String] :client_token
+    #   A unique, case-sensitive identifier that you provide to ensure
+    #   idempotency of the request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @return [Types::UpdateProcurementPortalPreferenceStatusResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateProcurementPortalPreferenceStatusResponse#procurement_portal_preference_arn #procurement_portal_preference_arn} => String
+    #
+    #
+    # @example Example: UpdateProcurementPortalPreference for EinvoiceDeliveryPreferenceStatus and PurchaseOrderRetrievalPreferenceStatus
+    #
+    #   resp = client.update_procurement_portal_preference_status({
+    #     client_token: "e362c68e-4e74-48d7-9228-0bc5aa447b46", 
+    #     einvoice_delivery_preference_status: "SUSPENDED", 
+    #     einvoice_delivery_preference_status_reason: "suspended example reason", 
+    #     procurement_portal_preference_arn: "arn:aws:invoicing::111111111111:procurement-portal-preference/f71dd02e-f855-4b13-b793-0fd25c0b3ecd", 
+    #     purchase_order_retrieval_preference_status: "SUSPENDED", 
+    #     purchase_order_retrieval_preference_status_reason: "suspended example reason", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     procurement_portal_preference_arn: "arn:aws:invoicing::111111111111:procurement-portal-preference/f71dd02e-f855-4b13-b793-0fd25c0b3ecd", 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_procurement_portal_preference_status({
+    #     procurement_portal_preference_arn: "ProcurementPortalPreferenceArnString", # required
+    #     einvoice_delivery_preference_status: "PENDING_VERIFICATION", # accepts PENDING_VERIFICATION, VALIDATED, TEST_INITIALIZED, TEST_INITIALIZATION_FAILED, TEST_FAILED, ACTIVE, SUSPENDED
+    #     einvoice_delivery_preference_status_reason: "BasicString",
+    #     purchase_order_retrieval_preference_status: "PENDING_VERIFICATION", # accepts PENDING_VERIFICATION, VALIDATED, TEST_INITIALIZED, TEST_INITIALIZATION_FAILED, TEST_FAILED, ACTIVE, SUSPENDED
+    #     purchase_order_retrieval_preference_status_reason: "BasicString",
+    #     client_token: "BasicStringWithoutSpace",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.procurement_portal_preference_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/invoicing-2024-12-01/UpdateProcurementPortalPreferenceStatus AWS API Documentation
+    #
+    # @overload update_procurement_portal_preference_status(params = {})
+    # @param [Hash] params ({})
+    def update_procurement_portal_preference_status(params = {}, options = {})
+      req = build_request(:update_procurement_portal_preference_status, params)
+      req.send_request(options)
+    end
+
+    # <i> <b>This feature API is subject to changing at any time. For more
+    # information, see the <a
+    # href="https://aws.amazon.com/service-terms/">Amazon Web Services
+    # Service Terms</a> (Betas and Previews).</b> </i>
+    #
+    # Submits a validation code to complete the validation of a procurement
+    # portal preference. Use this operation after calling
+    # `SendProcurementPortalValidation` to confirm ownership and
+    # connectivity of the configured procurement portal endpoint.
+    #
+    # @option params [required, String] :procurement_portal_preference_arn
+    #   The Amazon Resource Name (ARN) of the procurement portal preference to
+    #   validate.
+    #
+    # @option params [required, String] :code
+    #   The validation code received from the procurement portal in response
+    #   to a previous `SendProcurementPortalValidation` request.
+    #
+    # @option params [String] :client_token
+    #   A unique, case-sensitive identifier that you provide to ensure
+    #   idempotency of the request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @return [Types::VerifyProcurementPortalValidationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::VerifyProcurementPortalValidationResponse#procurement_portal_preference_arn #procurement_portal_preference_arn} => String
+    #
+    #
+    # @example Example: VerifyProcurementPortalValidation call
+    #
+    #   resp = client.verify_procurement_portal_validation({
+    #     code: "validation-code-123", 
+    #     procurement_portal_preference_arn: "arn:aws:invoicing::111111111111:procurement-portal-preference/f71dd02e-f855-4b13-b793-0fd25c0b3ecd", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     procurement_portal_preference_arn: "arn:aws:invoicing::111111111111:procurement-portal-preference/f71dd02e-f855-4b13-b793-0fd25c0b3ecd", 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.verify_procurement_portal_validation({
+    #     procurement_portal_preference_arn: "ProcurementPortalPreferenceArnString", # required
+    #     code: "BasicStringWithoutSpace", # required
+    #     client_token: "BasicStringWithoutSpace",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.procurement_portal_preference_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/invoicing-2024-12-01/VerifyProcurementPortalValidation AWS API Documentation
+    #
+    # @overload verify_procurement_portal_validation(params = {})
+    # @param [Hash] params ({})
+    def verify_procurement_portal_validation(params = {}, options = {})
+      req = build_request(:verify_procurement_portal_validation, params)
       req.send_request(options)
     end
 
@@ -1186,7 +3073,7 @@ module Aws::Invoicing
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-invoicing'
-      context[:gem_version] = '1.3.0'
+      context[:gem_version] = '1.28.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

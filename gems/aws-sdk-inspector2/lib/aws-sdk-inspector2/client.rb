@@ -95,8 +95,8 @@ module Aws::Inspector2
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::Inspector2
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::Inspector2
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::Inspector2
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::Inspector2
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::Inspector2
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::Inspector2
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::Inspector2
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -509,6 +513,96 @@ module Aws::Inspector2
       req.send_request(options)
     end
 
+    # Associates multiple code repositories with an Amazon Inspector code
+    # security scan configuration.
+    #
+    # @option params [required, Array<Types::AssociateConfigurationRequest>] :associate_configuration_requests
+    #   A list of code repositories to associate with the specified scan
+    #   configuration.
+    #
+    # @return [Types::BatchAssociateCodeSecurityScanConfigurationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::BatchAssociateCodeSecurityScanConfigurationResponse#failed_associations #failed_associations} => Array&lt;Types::FailedAssociationResult&gt;
+    #   * {Types::BatchAssociateCodeSecurityScanConfigurationResponse#successful_associations #successful_associations} => Array&lt;Types::SuccessfulAssociationResult&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.batch_associate_code_security_scan_configuration({
+    #     associate_configuration_requests: [ # required
+    #       {
+    #         scan_configuration_arn: "ScanConfigurationArn", # required
+    #         resource: { # required
+    #           project_id: "ProjectId",
+    #         },
+    #       },
+    #     ],
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.failed_associations #=> Array
+    #   resp.failed_associations[0].scan_configuration_arn #=> String
+    #   resp.failed_associations[0].resource.project_id #=> String
+    #   resp.failed_associations[0].status_code #=> String, one of "INTERNAL_ERROR", "ACCESS_DENIED", "SCAN_CONFIGURATION_NOT_FOUND", "INVALID_INPUT", "RESOURCE_NOT_FOUND", "QUOTA_EXCEEDED"
+    #   resp.failed_associations[0].status_message #=> String
+    #   resp.successful_associations #=> Array
+    #   resp.successful_associations[0].scan_configuration_arn #=> String
+    #   resp.successful_associations[0].resource.project_id #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/BatchAssociateCodeSecurityScanConfiguration AWS API Documentation
+    #
+    # @overload batch_associate_code_security_scan_configuration(params = {})
+    # @param [Hash] params ({})
+    def batch_associate_code_security_scan_configuration(params = {}, options = {})
+      req = build_request(:batch_associate_code_security_scan_configuration, params)
+      req.send_request(options)
+    end
+
+    # Disassociates multiple code repositories from an Amazon Inspector code
+    # security scan configuration.
+    #
+    # @option params [required, Array<Types::DisassociateConfigurationRequest>] :disassociate_configuration_requests
+    #   A list of code repositories to disassociate from the specified scan
+    #   configuration.
+    #
+    # @return [Types::BatchDisassociateCodeSecurityScanConfigurationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::BatchDisassociateCodeSecurityScanConfigurationResponse#failed_associations #failed_associations} => Array&lt;Types::FailedAssociationResult&gt;
+    #   * {Types::BatchDisassociateCodeSecurityScanConfigurationResponse#successful_associations #successful_associations} => Array&lt;Types::SuccessfulAssociationResult&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.batch_disassociate_code_security_scan_configuration({
+    #     disassociate_configuration_requests: [ # required
+    #       {
+    #         scan_configuration_arn: "ScanConfigurationArn", # required
+    #         resource: { # required
+    #           project_id: "ProjectId",
+    #         },
+    #       },
+    #     ],
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.failed_associations #=> Array
+    #   resp.failed_associations[0].scan_configuration_arn #=> String
+    #   resp.failed_associations[0].resource.project_id #=> String
+    #   resp.failed_associations[0].status_code #=> String, one of "INTERNAL_ERROR", "ACCESS_DENIED", "SCAN_CONFIGURATION_NOT_FOUND", "INVALID_INPUT", "RESOURCE_NOT_FOUND", "QUOTA_EXCEEDED"
+    #   resp.failed_associations[0].status_message #=> String
+    #   resp.successful_associations #=> Array
+    #   resp.successful_associations[0].scan_configuration_arn #=> String
+    #   resp.successful_associations[0].resource.project_id #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/BatchDisassociateCodeSecurityScanConfiguration AWS API Documentation
+    #
+    # @overload batch_disassociate_code_security_scan_configuration(params = {})
+    # @param [Hash] params ({})
+    def batch_disassociate_code_security_scan_configuration(params = {}, options = {})
+      req = build_request(:batch_disassociate_code_security_scan_configuration, params)
+      req.send_request(options)
+    end
+
     # Retrieves the Amazon Inspector status of multiple Amazon Web Services
     # accounts within your environment.
     #
@@ -531,30 +625,34 @@ module Aws::Inspector2
     #
     #   resp.accounts #=> Array
     #   resp.accounts[0].account_id #=> String
-    #   resp.accounts[0].resource_state.ec2.error_code #=> String, one of "ALREADY_ENABLED", "ENABLE_IN_PROGRESS", "DISABLE_IN_PROGRESS", "SUSPEND_IN_PROGRESS", "RESOURCE_NOT_FOUND", "ACCESS_DENIED", "INTERNAL_ERROR", "SSM_UNAVAILABLE", "SSM_THROTTLED", "EVENTBRIDGE_UNAVAILABLE", "EVENTBRIDGE_THROTTLED", "RESOURCE_SCAN_NOT_DISABLED", "DISASSOCIATE_ALL_MEMBERS", "ACCOUNT_IS_ISOLATED", "EC2_SSM_RESOURCE_DATA_SYNC_LIMIT_EXCEEDED", "EC2_SSM_ASSOCIATION_VERSION_LIMIT_EXCEEDED"
-    #   resp.accounts[0].resource_state.ec2.error_message #=> String
-    #   resp.accounts[0].resource_state.ec2.status #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
-    #   resp.accounts[0].resource_state.ecr.error_code #=> String, one of "ALREADY_ENABLED", "ENABLE_IN_PROGRESS", "DISABLE_IN_PROGRESS", "SUSPEND_IN_PROGRESS", "RESOURCE_NOT_FOUND", "ACCESS_DENIED", "INTERNAL_ERROR", "SSM_UNAVAILABLE", "SSM_THROTTLED", "EVENTBRIDGE_UNAVAILABLE", "EVENTBRIDGE_THROTTLED", "RESOURCE_SCAN_NOT_DISABLED", "DISASSOCIATE_ALL_MEMBERS", "ACCOUNT_IS_ISOLATED", "EC2_SSM_RESOURCE_DATA_SYNC_LIMIT_EXCEEDED", "EC2_SSM_ASSOCIATION_VERSION_LIMIT_EXCEEDED"
-    #   resp.accounts[0].resource_state.ecr.error_message #=> String
-    #   resp.accounts[0].resource_state.ecr.status #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
-    #   resp.accounts[0].resource_state.lambda.error_code #=> String, one of "ALREADY_ENABLED", "ENABLE_IN_PROGRESS", "DISABLE_IN_PROGRESS", "SUSPEND_IN_PROGRESS", "RESOURCE_NOT_FOUND", "ACCESS_DENIED", "INTERNAL_ERROR", "SSM_UNAVAILABLE", "SSM_THROTTLED", "EVENTBRIDGE_UNAVAILABLE", "EVENTBRIDGE_THROTTLED", "RESOURCE_SCAN_NOT_DISABLED", "DISASSOCIATE_ALL_MEMBERS", "ACCOUNT_IS_ISOLATED", "EC2_SSM_RESOURCE_DATA_SYNC_LIMIT_EXCEEDED", "EC2_SSM_ASSOCIATION_VERSION_LIMIT_EXCEEDED"
-    #   resp.accounts[0].resource_state.lambda.error_message #=> String
-    #   resp.accounts[0].resource_state.lambda.status #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
-    #   resp.accounts[0].resource_state.lambda_code.error_code #=> String, one of "ALREADY_ENABLED", "ENABLE_IN_PROGRESS", "DISABLE_IN_PROGRESS", "SUSPEND_IN_PROGRESS", "RESOURCE_NOT_FOUND", "ACCESS_DENIED", "INTERNAL_ERROR", "SSM_UNAVAILABLE", "SSM_THROTTLED", "EVENTBRIDGE_UNAVAILABLE", "EVENTBRIDGE_THROTTLED", "RESOURCE_SCAN_NOT_DISABLED", "DISASSOCIATE_ALL_MEMBERS", "ACCOUNT_IS_ISOLATED", "EC2_SSM_RESOURCE_DATA_SYNC_LIMIT_EXCEEDED", "EC2_SSM_ASSOCIATION_VERSION_LIMIT_EXCEEDED"
-    #   resp.accounts[0].resource_state.lambda_code.error_message #=> String
-    #   resp.accounts[0].resource_state.lambda_code.status #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
-    #   resp.accounts[0].state.error_code #=> String, one of "ALREADY_ENABLED", "ENABLE_IN_PROGRESS", "DISABLE_IN_PROGRESS", "SUSPEND_IN_PROGRESS", "RESOURCE_NOT_FOUND", "ACCESS_DENIED", "INTERNAL_ERROR", "SSM_UNAVAILABLE", "SSM_THROTTLED", "EVENTBRIDGE_UNAVAILABLE", "EVENTBRIDGE_THROTTLED", "RESOURCE_SCAN_NOT_DISABLED", "DISASSOCIATE_ALL_MEMBERS", "ACCOUNT_IS_ISOLATED", "EC2_SSM_RESOURCE_DATA_SYNC_LIMIT_EXCEEDED", "EC2_SSM_ASSOCIATION_VERSION_LIMIT_EXCEEDED"
-    #   resp.accounts[0].state.error_message #=> String
     #   resp.accounts[0].state.status #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
+    #   resp.accounts[0].state.error_code #=> String, one of "ALREADY_ENABLED", "ENABLE_IN_PROGRESS", "DISABLE_IN_PROGRESS", "SUSPEND_IN_PROGRESS", "RESOURCE_NOT_FOUND", "ACCESS_DENIED", "INTERNAL_ERROR", "SSM_UNAVAILABLE", "SSM_THROTTLED", "EVENTBRIDGE_UNAVAILABLE", "EVENTBRIDGE_THROTTLED", "RESOURCE_SCAN_NOT_DISABLED", "DISASSOCIATE_ALL_MEMBERS", "ACCOUNT_IS_ISOLATED", "EC2_SSM_RESOURCE_DATA_SYNC_LIMIT_EXCEEDED", "EC2_SSM_ASSOCIATION_VERSION_LIMIT_EXCEEDED", "BLOCKED_BY_ORGANIZATION_POLICY"
+    #   resp.accounts[0].state.error_message #=> String
+    #   resp.accounts[0].resource_state.ec2.status #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
+    #   resp.accounts[0].resource_state.ec2.error_code #=> String, one of "ALREADY_ENABLED", "ENABLE_IN_PROGRESS", "DISABLE_IN_PROGRESS", "SUSPEND_IN_PROGRESS", "RESOURCE_NOT_FOUND", "ACCESS_DENIED", "INTERNAL_ERROR", "SSM_UNAVAILABLE", "SSM_THROTTLED", "EVENTBRIDGE_UNAVAILABLE", "EVENTBRIDGE_THROTTLED", "RESOURCE_SCAN_NOT_DISABLED", "DISASSOCIATE_ALL_MEMBERS", "ACCOUNT_IS_ISOLATED", "EC2_SSM_RESOURCE_DATA_SYNC_LIMIT_EXCEEDED", "EC2_SSM_ASSOCIATION_VERSION_LIMIT_EXCEEDED", "BLOCKED_BY_ORGANIZATION_POLICY"
+    #   resp.accounts[0].resource_state.ec2.error_message #=> String
+    #   resp.accounts[0].resource_state.ecr.status #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
+    #   resp.accounts[0].resource_state.ecr.error_code #=> String, one of "ALREADY_ENABLED", "ENABLE_IN_PROGRESS", "DISABLE_IN_PROGRESS", "SUSPEND_IN_PROGRESS", "RESOURCE_NOT_FOUND", "ACCESS_DENIED", "INTERNAL_ERROR", "SSM_UNAVAILABLE", "SSM_THROTTLED", "EVENTBRIDGE_UNAVAILABLE", "EVENTBRIDGE_THROTTLED", "RESOURCE_SCAN_NOT_DISABLED", "DISASSOCIATE_ALL_MEMBERS", "ACCOUNT_IS_ISOLATED", "EC2_SSM_RESOURCE_DATA_SYNC_LIMIT_EXCEEDED", "EC2_SSM_ASSOCIATION_VERSION_LIMIT_EXCEEDED", "BLOCKED_BY_ORGANIZATION_POLICY"
+    #   resp.accounts[0].resource_state.ecr.error_message #=> String
+    #   resp.accounts[0].resource_state.lambda.status #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
+    #   resp.accounts[0].resource_state.lambda.error_code #=> String, one of "ALREADY_ENABLED", "ENABLE_IN_PROGRESS", "DISABLE_IN_PROGRESS", "SUSPEND_IN_PROGRESS", "RESOURCE_NOT_FOUND", "ACCESS_DENIED", "INTERNAL_ERROR", "SSM_UNAVAILABLE", "SSM_THROTTLED", "EVENTBRIDGE_UNAVAILABLE", "EVENTBRIDGE_THROTTLED", "RESOURCE_SCAN_NOT_DISABLED", "DISASSOCIATE_ALL_MEMBERS", "ACCOUNT_IS_ISOLATED", "EC2_SSM_RESOURCE_DATA_SYNC_LIMIT_EXCEEDED", "EC2_SSM_ASSOCIATION_VERSION_LIMIT_EXCEEDED", "BLOCKED_BY_ORGANIZATION_POLICY"
+    #   resp.accounts[0].resource_state.lambda.error_message #=> String
+    #   resp.accounts[0].resource_state.lambda_code.status #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
+    #   resp.accounts[0].resource_state.lambda_code.error_code #=> String, one of "ALREADY_ENABLED", "ENABLE_IN_PROGRESS", "DISABLE_IN_PROGRESS", "SUSPEND_IN_PROGRESS", "RESOURCE_NOT_FOUND", "ACCESS_DENIED", "INTERNAL_ERROR", "SSM_UNAVAILABLE", "SSM_THROTTLED", "EVENTBRIDGE_UNAVAILABLE", "EVENTBRIDGE_THROTTLED", "RESOURCE_SCAN_NOT_DISABLED", "DISASSOCIATE_ALL_MEMBERS", "ACCOUNT_IS_ISOLATED", "EC2_SSM_RESOURCE_DATA_SYNC_LIMIT_EXCEEDED", "EC2_SSM_ASSOCIATION_VERSION_LIMIT_EXCEEDED", "BLOCKED_BY_ORGANIZATION_POLICY"
+    #   resp.accounts[0].resource_state.lambda_code.error_message #=> String
+    #   resp.accounts[0].resource_state.code_repository.status #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
+    #   resp.accounts[0].resource_state.code_repository.error_code #=> String, one of "ALREADY_ENABLED", "ENABLE_IN_PROGRESS", "DISABLE_IN_PROGRESS", "SUSPEND_IN_PROGRESS", "RESOURCE_NOT_FOUND", "ACCESS_DENIED", "INTERNAL_ERROR", "SSM_UNAVAILABLE", "SSM_THROTTLED", "EVENTBRIDGE_UNAVAILABLE", "EVENTBRIDGE_THROTTLED", "RESOURCE_SCAN_NOT_DISABLED", "DISASSOCIATE_ALL_MEMBERS", "ACCOUNT_IS_ISOLATED", "EC2_SSM_RESOURCE_DATA_SYNC_LIMIT_EXCEEDED", "EC2_SSM_ASSOCIATION_VERSION_LIMIT_EXCEEDED", "BLOCKED_BY_ORGANIZATION_POLICY"
+    #   resp.accounts[0].resource_state.code_repository.error_message #=> String
     #   resp.failed_accounts #=> Array
     #   resp.failed_accounts[0].account_id #=> String
-    #   resp.failed_accounts[0].error_code #=> String, one of "ALREADY_ENABLED", "ENABLE_IN_PROGRESS", "DISABLE_IN_PROGRESS", "SUSPEND_IN_PROGRESS", "RESOURCE_NOT_FOUND", "ACCESS_DENIED", "INTERNAL_ERROR", "SSM_UNAVAILABLE", "SSM_THROTTLED", "EVENTBRIDGE_UNAVAILABLE", "EVENTBRIDGE_THROTTLED", "RESOURCE_SCAN_NOT_DISABLED", "DISASSOCIATE_ALL_MEMBERS", "ACCOUNT_IS_ISOLATED", "EC2_SSM_RESOURCE_DATA_SYNC_LIMIT_EXCEEDED", "EC2_SSM_ASSOCIATION_VERSION_LIMIT_EXCEEDED"
-    #   resp.failed_accounts[0].error_message #=> String
+    #   resp.failed_accounts[0].status #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
     #   resp.failed_accounts[0].resource_status.ec2 #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
     #   resp.failed_accounts[0].resource_status.ecr #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
     #   resp.failed_accounts[0].resource_status.lambda #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
     #   resp.failed_accounts[0].resource_status.lambda_code #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
-    #   resp.failed_accounts[0].status #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
+    #   resp.failed_accounts[0].resource_status.code_repository #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
+    #   resp.failed_accounts[0].error_code #=> String, one of "ALREADY_ENABLED", "ENABLE_IN_PROGRESS", "DISABLE_IN_PROGRESS", "SUSPEND_IN_PROGRESS", "RESOURCE_NOT_FOUND", "ACCESS_DENIED", "INTERNAL_ERROR", "SSM_UNAVAILABLE", "SSM_THROTTLED", "EVENTBRIDGE_UNAVAILABLE", "EVENTBRIDGE_THROTTLED", "RESOURCE_SCAN_NOT_DISABLED", "DISASSOCIATE_ALL_MEMBERS", "ACCOUNT_IS_ISOLATED", "EC2_SSM_RESOURCE_DATA_SYNC_LIMIT_EXCEEDED", "EC2_SSM_ASSOCIATION_VERSION_LIMIT_EXCEEDED", "BLOCKED_BY_ORGANIZATION_POLICY"
+    #   resp.failed_accounts[0].error_message #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/BatchGetAccountStatus AWS API Documentation
     #
@@ -586,19 +684,19 @@ module Aws::Inspector2
     # @example Response structure
     #
     #   resp.code_snippet_results #=> Array
+    #   resp.code_snippet_results[0].finding_arn #=> String
+    #   resp.code_snippet_results[0].start_line #=> Integer
+    #   resp.code_snippet_results[0].end_line #=> Integer
     #   resp.code_snippet_results[0].code_snippet #=> Array
     #   resp.code_snippet_results[0].code_snippet[0].content #=> String
     #   resp.code_snippet_results[0].code_snippet[0].line_number #=> Integer
-    #   resp.code_snippet_results[0].end_line #=> Integer
-    #   resp.code_snippet_results[0].finding_arn #=> String
-    #   resp.code_snippet_results[0].start_line #=> Integer
     #   resp.code_snippet_results[0].suggested_fixes #=> Array
-    #   resp.code_snippet_results[0].suggested_fixes[0].code #=> String
     #   resp.code_snippet_results[0].suggested_fixes[0].description #=> String
+    #   resp.code_snippet_results[0].suggested_fixes[0].code #=> String
     #   resp.errors #=> Array
+    #   resp.errors[0].finding_arn #=> String
     #   resp.errors[0].error_code #=> String, one of "INTERNAL_ERROR", "ACCESS_DENIED", "CODE_SNIPPET_NOT_FOUND", "INVALID_INPUT"
     #   resp.errors[0].error_message #=> String
-    #   resp.errors[0].finding_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/BatchGetCodeSnippet AWS API Documentation
     #
@@ -616,8 +714,65 @@ module Aws::Inspector2
     #
     # @return [Types::BatchGetFindingDetailsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::BatchGetFindingDetailsResponse#errors #errors} => Array&lt;Types::FindingDetailsError&gt;
     #   * {Types::BatchGetFindingDetailsResponse#finding_details #finding_details} => Array&lt;Types::FindingDetail&gt;
+    #   * {Types::BatchGetFindingDetailsResponse#errors #errors} => Array&lt;Types::FindingDetailsError&gt;
+    #
+    #
+    # @example Example: Sample BatchGetFindingDetails Call
+    #
+    #   resp = client.batch_get_finding_details({
+    #     finding_arns: [
+    #       "arn:aws:inspector2:eu-west-1:123456789012:finding/78b88cc9aa1d78b6e14fde90d774dde7", 
+    #       "arn:aws:inspector2:eu-west-1:111111111111:finding/78b88cc9aa1d78b6e14fde90d874dde7", 
+    #     ], 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     errors: [
+    #       {
+    #         error_code: "ACCESS_DENIED", 
+    #         error_message: "You don't have permission to access this finding", 
+    #         finding_arn: "arn:aws:inspector2:eu-west-1:111111111111:finding/78b88cc9aa1d78b6e14fde90d874dde7", 
+    #       }, 
+    #     ], 
+    #     finding_details: [
+    #       {
+    #         cisa_data: {
+    #           action: "For all affected software assets for which updates exist, the only acceptable remediation actions are: 1) Apply updates; OR 2) remove affected assets from agency networks.", 
+    #           date_added: Time.parse(1688580990), 
+    #           date_due: Time.parse(1688580999), 
+    #         }, 
+    #         cwes: [
+    #           "cwe-1234", 
+    #         ], 
+    #         epss_score: 0.85, 
+    #         evidences: [
+    #           {
+    #             evidence_detail: "2 sightings on 1 source", 
+    #             evidence_rule: "Historically Linked to Penetration Testing Tools", 
+    #             severity: "Low", 
+    #           }, 
+    #         ], 
+    #         exploit_observed: {
+    #           first_seen: Time.parse(1688580800), 
+    #           last_seen: Time.parse(1688580990), 
+    #         }, 
+    #         finding_arn: "arn:aws:inspector2:eu-west-1:123456789012:finding/78b88cc9aa1d78b6e14fde90d774dde7", 
+    #         reference_urls: [
+    #           "https://nvd.nist.gov/vuln/detail/CVE-2019-20367", 
+    #         ], 
+    #         risk_score: 66, 
+    #         tools: [
+    #           "Metasploit", 
+    #         ], 
+    #         ttps: [
+    #           "TA0001", 
+    #           "TA0002", 
+    #         ], 
+    #       }, 
+    #     ], 
+    #   }
     #
     # @example Request syntax with placeholder values
     #
@@ -627,31 +782,31 @@ module Aws::Inspector2
     #
     # @example Response structure
     #
-    #   resp.errors #=> Array
-    #   resp.errors[0].error_code #=> String, one of "INTERNAL_ERROR", "ACCESS_DENIED", "FINDING_DETAILS_NOT_FOUND", "INVALID_INPUT"
-    #   resp.errors[0].error_message #=> String
-    #   resp.errors[0].finding_arn #=> String
     #   resp.finding_details #=> Array
-    #   resp.finding_details[0].cisa_data.action #=> String
+    #   resp.finding_details[0].finding_arn #=> String
     #   resp.finding_details[0].cisa_data.date_added #=> Time
     #   resp.finding_details[0].cisa_data.date_due #=> Time
+    #   resp.finding_details[0].cisa_data.action #=> String
+    #   resp.finding_details[0].risk_score #=> Integer
+    #   resp.finding_details[0].evidences #=> Array
+    #   resp.finding_details[0].evidences[0].evidence_rule #=> String
+    #   resp.finding_details[0].evidences[0].evidence_detail #=> String
+    #   resp.finding_details[0].evidences[0].severity #=> String
+    #   resp.finding_details[0].ttps #=> Array
+    #   resp.finding_details[0].ttps[0] #=> String
+    #   resp.finding_details[0].tools #=> Array
+    #   resp.finding_details[0].tools[0] #=> String
+    #   resp.finding_details[0].exploit_observed.last_seen #=> Time
+    #   resp.finding_details[0].exploit_observed.first_seen #=> Time
+    #   resp.finding_details[0].reference_urls #=> Array
+    #   resp.finding_details[0].reference_urls[0] #=> String
     #   resp.finding_details[0].cwes #=> Array
     #   resp.finding_details[0].cwes[0] #=> String
     #   resp.finding_details[0].epss_score #=> Float
-    #   resp.finding_details[0].evidences #=> Array
-    #   resp.finding_details[0].evidences[0].evidence_detail #=> String
-    #   resp.finding_details[0].evidences[0].evidence_rule #=> String
-    #   resp.finding_details[0].evidences[0].severity #=> String
-    #   resp.finding_details[0].exploit_observed.first_seen #=> Time
-    #   resp.finding_details[0].exploit_observed.last_seen #=> Time
-    #   resp.finding_details[0].finding_arn #=> String
-    #   resp.finding_details[0].reference_urls #=> Array
-    #   resp.finding_details[0].reference_urls[0] #=> String
-    #   resp.finding_details[0].risk_score #=> Integer
-    #   resp.finding_details[0].tools #=> Array
-    #   resp.finding_details[0].tools[0] #=> String
-    #   resp.finding_details[0].ttps #=> Array
-    #   resp.finding_details[0].ttps[0] #=> String
+    #   resp.errors #=> Array
+    #   resp.errors[0].finding_arn #=> String
+    #   resp.errors[0].error_code #=> String, one of "INTERNAL_ERROR", "ACCESS_DENIED", "FINDING_DETAILS_NOT_FOUND", "INVALID_INPUT"
+    #   resp.errors[0].error_message #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/BatchGetFindingDetails AWS API Documentation
     #
@@ -683,10 +838,11 @@ module Aws::Inspector2
     #   resp.accounts #=> Array
     #   resp.accounts[0].account_id #=> String
     #   resp.accounts[0].free_trial_info #=> Array
-    #   resp.accounts[0].free_trial_info[0].end #=> Time
+    #   resp.accounts[0].free_trial_info[0].type #=> String, one of "EC2", "ECR", "LAMBDA", "LAMBDA_CODE", "CODE_REPOSITORY", "VM", "CONTAINER_IMAGE", "SERVERLESS_FUNCTION"
     #   resp.accounts[0].free_trial_info[0].start #=> Time
+    #   resp.accounts[0].free_trial_info[0].end #=> Time
     #   resp.accounts[0].free_trial_info[0].status #=> String, one of "ACTIVE", "INACTIVE"
-    #   resp.accounts[0].free_trial_info[0].type #=> String, one of "EC2", "ECR", "LAMBDA", "LAMBDA_CODE"
+    #   resp.accounts[0].free_trial_info[0].cloud_provider #=> String, one of "AWS", "AZURE", "NOT_APPLICABLE"
     #   resp.failed_accounts #=> Array
     #   resp.failed_accounts[0].account_id #=> String
     #   resp.failed_accounts[0].code #=> String, one of "ACCESS_DENIED", "INTERNAL_ERROR"
@@ -709,7 +865,6 @@ module Aws::Inspector2
     # @option params [Array<String>] :account_ids
     #   The unique identifiers for the Amazon Web Services accounts to
     #   retrieve Amazon Inspector deep inspection activation status for.
-    #   </p>
     #
     # @return [Types::BatchGetMemberEc2DeepInspectionStatusResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -726,8 +881,8 @@ module Aws::Inspector2
     #
     #   resp.account_ids #=> Array
     #   resp.account_ids[0].account_id #=> String
-    #   resp.account_ids[0].error_message #=> String
     #   resp.account_ids[0].status #=> String, one of "ACTIVATED", "DEACTIVATED", "PENDING", "FAILED"
+    #   resp.account_ids[0].error_message #=> String
     #   resp.failed_account_ids #=> Array
     #   resp.failed_account_ids[0].account_id #=> String
     #   resp.failed_account_ids[0].ec2_scan_status #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
@@ -771,8 +926,8 @@ module Aws::Inspector2
     #
     #   resp.account_ids #=> Array
     #   resp.account_ids[0].account_id #=> String
-    #   resp.account_ids[0].error_message #=> String
     #   resp.account_ids[0].status #=> String, one of "ACTIVATED", "DEACTIVATED", "PENDING", "FAILED"
+    #   resp.account_ids[0].error_message #=> String
     #   resp.failed_account_ids #=> Array
     #   resp.failed_account_ids[0].account_id #=> String
     #   resp.failed_account_ids[0].ec2_scan_status #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
@@ -848,60 +1003,91 @@ module Aws::Inspector2
     # @option params [required, String] :scan_name
     #   The scan name for the CIS scan configuration.
     #
-    # @option params [required, Types::Schedule] :schedule
-    #   The schedule for the CIS scan configuration.
-    #
     # @option params [required, String] :security_level
     #   The security level for the CIS scan configuration. Security level
     #   refers to the Benchmark levels that CIS assigns to a profile.
     #
-    # @option params [Hash<String,String>] :tags
-    #   The tags for the CIS scan configuration.
+    # @option params [required, Types::Schedule] :schedule
+    #   The schedule for the CIS scan configuration.
     #
     # @option params [required, Types::CreateCisTargets] :targets
     #   The targets for the CIS scan configuration.
+    #
+    # @option params [Hash<String,String>] :tags
+    #   The tags for the CIS scan configuration.
     #
     # @return [Types::CreateCisScanConfigurationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateCisScanConfigurationResponse#scan_configuration_arn #scan_configuration_arn} => String
     #
+    #
+    # @example Example: Sample CreateCisScanConfiguration Call
+    #
+    #   resp = client.create_cis_scan_configuration({
+    #     scan_name: "sample", 
+    #     schedule: {
+    #       daily: {
+    #         start_time: {
+    #           time_of_day: "12:34", 
+    #           timezone: "UTC", 
+    #         }, 
+    #       }, 
+    #     }, 
+    #     security_level: "LEVEL_1", 
+    #     targets: {
+    #       account_ids: [
+    #         "SELF", 
+    #       ], 
+    #       target_resource_tags: {
+    #         "key" => [
+    #           "value", 
+    #         ], 
+    #       }, 
+    #     }, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     scan_configuration_arn: "arn:aws:inspector2:us-east-1:123412341234:owner/123412341234/cis-configuration/624b746d-e080-44ae-8c1d-48e653365a38", 
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_cis_scan_configuration({
     #     scan_name: "CisScanName", # required
+    #     security_level: "LEVEL_1", # required, accepts LEVEL_1, LEVEL_2
     #     schedule: { # required
+    #       one_time: {
+    #       },
     #       daily: {
     #         start_time: { # required
     #           time_of_day: "TimeOfDay", # required
     #           timezone: "Timezone", # required
     #         },
     #       },
-    #       monthly: {
-    #         day: "SUN", # required, accepts SUN, MON, TUE, WED, THU, FRI, SAT
-    #         start_time: { # required
-    #           time_of_day: "TimeOfDay", # required
-    #           timezone: "Timezone", # required
-    #         },
-    #       },
-    #       one_time: {
-    #       },
     #       weekly: {
-    #         days: ["SUN"], # required, accepts SUN, MON, TUE, WED, THU, FRI, SAT
     #         start_time: { # required
     #           time_of_day: "TimeOfDay", # required
     #           timezone: "Timezone", # required
     #         },
+    #         days: ["SUN"], # required, accepts SUN, MON, TUE, WED, THU, FRI, SAT
     #       },
-    #     },
-    #     security_level: "LEVEL_1", # required, accepts LEVEL_1, LEVEL_2
-    #     tags: {
-    #       "MapKey" => "MapValue",
+    #       monthly: {
+    #         start_time: { # required
+    #           time_of_day: "TimeOfDay", # required
+    #           timezone: "Timezone", # required
+    #         },
+    #         day: "SUN", # required, accepts SUN, MON, TUE, WED, THU, FRI, SAT
+    #       },
     #     },
     #     targets: { # required
     #       account_ids: ["TargetAccount"], # required
     #       target_resource_tags: { # required
     #         "TargetResourceTagsKey" => ["TargetResourceTagsValue"],
     #       },
+    #     },
+    #     tags: {
+    #       "MapKey" => "MapValue",
     #     },
     #   })
     #
@@ -915,6 +1101,239 @@ module Aws::Inspector2
     # @param [Hash] params ({})
     def create_cis_scan_configuration(params = {}, options = {})
       req = build_request(:create_cis_scan_configuration, params)
+      req.send_request(options)
+    end
+
+    # Creates a code security integration with a source code repository
+    # provider.
+    #
+    # After calling the `CreateCodeSecurityIntegration` operation, you
+    # complete authentication and authorization with your provider. Next you
+    # call the `UpdateCodeSecurityIntegration` operation to provide the
+    # `details` to complete the integration setup
+    #
+    # @option params [required, String] :name
+    #   The name of the code security integration.
+    #
+    # @option params [required, String] :type
+    #   The type of repository provider for the integration.
+    #
+    # @option params [Types::CreateIntegrationDetail] :details
+    #   The integration details specific to the repository provider type.
+    #
+    # @option params [Hash<String,String>] :tags
+    #   The tags to apply to the code security integration.
+    #
+    # @return [Types::CreateCodeSecurityIntegrationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateCodeSecurityIntegrationResponse#integration_arn #integration_arn} => String
+    #   * {Types::CreateCodeSecurityIntegrationResponse#status #status} => String
+    #   * {Types::CreateCodeSecurityIntegrationResponse#authorization_url #authorization_url} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_code_security_integration({
+    #     name: "IntegrationName", # required
+    #     type: "GITLAB_SELF_MANAGED", # required, accepts GITLAB_SELF_MANAGED, GITHUB
+    #     details: {
+    #       gitlab_self_managed: {
+    #         instance_url: "InstanceUrl", # required
+    #         access_token: "GitLabAccessToken", # required
+    #       },
+    #     },
+    #     tags: {
+    #       "MapKey" => "MapValue",
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.integration_arn #=> String
+    #   resp.status #=> String, one of "PENDING", "IN_PROGRESS", "ACTIVE", "INACTIVE", "DISABLING"
+    #   resp.authorization_url #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/CreateCodeSecurityIntegration AWS API Documentation
+    #
+    # @overload create_code_security_integration(params = {})
+    # @param [Hash] params ({})
+    def create_code_security_integration(params = {}, options = {})
+      req = build_request(:create_code_security_integration, params)
+      req.send_request(options)
+    end
+
+    # Creates a scan configuration for code security scanning.
+    #
+    # @option params [required, String] :name
+    #   The name of the scan configuration.
+    #
+    # @option params [required, String] :level
+    #   The security level for the scan configuration.
+    #
+    # @option params [required, Types::CodeSecurityScanConfiguration] :configuration
+    #   The configuration settings for the code security scan.
+    #
+    # @option params [Types::ScopeSettings] :scope_settings
+    #   The scope settings that define which repositories will be scanned.
+    #   Include this parameter to create a default scan configuration.
+    #   Otherwise Amazon Inspector creates a general scan configuration.
+    #
+    #   A default scan configuration automatically applies to all existing and
+    #   future projects imported into Amazon Inspector. Use the
+    #   `BatchAssociateCodeSecurityScanConfiguration` operation to associate a
+    #   general scan configuration with projects.
+    #
+    # @option params [Hash<String,String>] :tags
+    #   The tags to apply to the scan configuration.
+    #
+    # @return [Types::CreateCodeSecurityScanConfigurationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateCodeSecurityScanConfigurationResponse#scan_configuration_arn #scan_configuration_arn} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_code_security_scan_configuration({
+    #     name: "ScanConfigurationName", # required
+    #     level: "ORGANIZATION", # required, accepts ORGANIZATION, ACCOUNT
+    #     configuration: { # required
+    #       periodic_scan_configuration: {
+    #         frequency: "WEEKLY", # accepts WEEKLY, MONTHLY, NEVER
+    #         frequency_expression: "FrequencyExpression",
+    #       },
+    #       continuous_integration_scan_configuration: {
+    #         supported_events: ["PULL_REQUEST"], # required, accepts PULL_REQUEST, PUSH
+    #       },
+    #       rule_set_categories: ["SAST"], # required, accepts SAST, IAC, SCA
+    #     },
+    #     scope_settings: {
+    #       project_selection_scope: "ALL", # accepts ALL
+    #     },
+    #     tags: {
+    #       "MapKey" => "MapValue",
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.scan_configuration_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/CreateCodeSecurityScanConfiguration AWS API Documentation
+    #
+    # @overload create_code_security_scan_configuration(params = {})
+    # @param [Hash] params ({})
+    def create_code_security_scan_configuration(params = {}, options = {})
+      req = build_request(:create_code_security_scan_configuration, params)
+      req.send_request(options)
+    end
+
+    # Creates a connector that links an external cloud provider to Amazon
+    # Inspector for vulnerability scanning.
+    #
+    # @option params [String] :client_token
+    #   A unique, case-sensitive identifier that you provide to ensure that
+    #   the operation completes no more than one time. If this token matches a
+    #   previous request, the service ignores the request but does not return
+    #   an error.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @option params [required, String] :name
+    #   The name of the connector.
+    #
+    # @option params [required, String] :provider
+    #   The cloud provider for the connector.
+    #
+    # @option params [String] :description
+    #   A description of the connector.
+    #
+    # @option params [required, Types::ProviderDetailCreate] :provider_detail
+    #   The provider-specific configuration details for the connector.
+    #
+    # @option params [Hash<String,String>] :tags
+    #   The tags to apply to the connector.
+    #
+    # @return [Types::CreateConnectorResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateConnectorResponse#connector_arn #connector_arn} => String
+    #
+    #
+    # @example Example: Create an Azure customer-managed connector for VM scanning at SUBSCRIPTION scope
+    #
+    #   resp = client.create_connector({
+    #     name: "my-azure-connector", 
+    #     description: "Azure subscription scanner", 
+    #     provider: "AZURE", 
+    #     provider_detail: {
+    #       azure: {
+    #         auto_install_vm_scanner: true, 
+    #         aws_config_connector_arn: "arn:aws:config:us-east-1:123456789012:connector/azure/a7bc5463-04ce-4b52-901e-f26f7292a4a7/2fbed4bd-5b95-4947-a751-8defc76ecdae", 
+    #         azure_regions: [
+    #           "eastus", 
+    #         ], 
+    #         scope_configuration: {
+    #           vm_scanning: {
+    #             scope_type: "SUBSCRIPTION", 
+    #             scope_values: [
+    #               "552802f5-1492-4184-bbae-7291c9939b16", 
+    #             ], 
+    #           }, 
+    #         }, 
+    #       }, 
+    #     }, 
+    #     tags: {
+    #       "env" => "prod", 
+    #       "owner" => "security-team", 
+    #     }, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     connector_arn: "arn:aws:inspector2:us-east-1:123456789012:connector/6ccf8549-b52b-57ca-bf52-a2266da3c53a", 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_connector({
+    #     client_token: "String",
+    #     name: "ConnectorName", # required
+    #     provider: "AZURE", # required, accepts AZURE
+    #     description: "ConnectorDescription",
+    #     provider_detail: { # required
+    #       azure: {
+    #         aws_config_connector_arn: "AwsConfigConnectorArn", # required
+    #         scope_configuration: { # required
+    #           vm_scanning: {
+    #             scope_type: "TENANT", # required, accepts TENANT, SUBSCRIPTION
+    #             scope_values: ["ScopeValue"],
+    #           },
+    #           container_image_scanning: {
+    #             scope_type: "TENANT", # required, accepts TENANT, SUBSCRIPTION
+    #             scope_values: ["ScopeValue"],
+    #           },
+    #           serverless_scanning: {
+    #             scope_type: "TENANT", # required, accepts TENANT, SUBSCRIPTION
+    #             scope_values: ["ScopeValue"],
+    #           },
+    #         },
+    #         azure_regions: ["AzureRegion"], # required
+    #         auto_install_vm_scanner: false,
+    #       },
+    #     },
+    #     tags: {
+    #       "ConnectorTagKey" => "ConnectorTagValue",
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.connector_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/CreateConnector AWS API Documentation
+    #
+    # @overload create_connector(params = {})
+    # @param [Hash] params ({})
+    def create_connector(params = {}, options = {})
+      req = build_request(:create_connector, params)
       req.send_request(options)
     end
 
@@ -937,11 +1356,11 @@ module Aws::Inspector2
     #   Valid characters include alphanumeric characters, dot (.), underscore
     #   (\_), and dash (-). Spaces are not allowed.
     #
-    # @option params [String] :reason
-    #   The reason for creating the filter.
-    #
     # @option params [Hash<String,String>] :tags
     #   A list of tags for the filter.
+    #
+    # @option params [String] :reason
+    #   The reason for creating the filter.
     #
     # @return [Types::CreateFilterResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -953,7 +1372,272 @@ module Aws::Inspector2
     #     action: "NONE", # required, accepts NONE, SUPPRESS
     #     description: "FilterDescription",
     #     filter_criteria: { # required
+    #       finding_arn: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
     #       aws_account_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       finding_type: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       severity: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       first_observed_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       last_observed_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       updated_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       finding_status: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       title: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       inspector_score: [
+    #         {
+    #           upper_inclusive: 1.0,
+    #           lower_inclusive: 1.0,
+    #         },
+    #       ],
+    #       resource_type: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       resource_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       resource_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS
+    #           key: "MapKey", # required
+    #           value: "MapValue",
+    #         },
+    #       ],
+    #       ec2_instance_image_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ec2_instance_vpc_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ec2_instance_subnet_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ecr_image_pushed_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       ecr_image_architecture: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ecr_image_registry: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ecr_image_repository_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ecr_image_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ecr_image_hash: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ecr_image_last_in_use_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       ecr_image_in_use_count: [
+    #         {
+    #           upper_inclusive: 1.0,
+    #           lower_inclusive: 1.0,
+    #         },
+    #       ],
+    #       port_range: [
+    #         {
+    #           begin_inclusive: 1,
+    #           end_inclusive: 1,
+    #         },
+    #       ],
+    #       network_protocol: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       component_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       component_type: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       vulnerability_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       vulnerability_source: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       vendor_severity: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       vulnerable_packages: [
+    #         {
+    #           name: {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #           version: {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #           epoch: {
+    #             upper_inclusive: 1.0,
+    #             lower_inclusive: 1.0,
+    #           },
+    #           release: {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #           architecture: {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #           source_layer_hash: {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #           source_lambda_layer_arn: {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #           file_path: {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         },
+    #       ],
+    #       related_vulnerabilities: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       fix_available: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       lambda_function_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       lambda_function_layers: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       lambda_function_runtime: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       lambda_function_last_modified_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       lambda_function_execution_role_arn: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       exploit_available: [
     #         {
     #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
     #           value: "StringInput", # required
@@ -977,271 +1661,144 @@ module Aws::Inspector2
     #           value: "StringInput", # required
     #         },
     #       ],
-    #       component_id: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       component_type: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ec2_instance_image_id: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ec2_instance_subnet_id: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ec2_instance_vpc_id: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ecr_image_architecture: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ecr_image_hash: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ecr_image_pushed_at: [
-    #         {
-    #           end_inclusive: Time.now,
-    #           start_inclusive: Time.now,
-    #         },
-    #       ],
-    #       ecr_image_registry: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ecr_image_repository_name: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ecr_image_tags: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
     #       epss_score: [
     #         {
-    #           lower_inclusive: 1.0,
     #           upper_inclusive: 1.0,
-    #         },
-    #       ],
-    #       exploit_available: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       finding_arn: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       finding_status: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       finding_type: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       first_observed_at: [
-    #         {
-    #           end_inclusive: Time.now,
-    #           start_inclusive: Time.now,
-    #         },
-    #       ],
-    #       fix_available: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       inspector_score: [
-    #         {
     #           lower_inclusive: 1.0,
+    #         },
+    #       ],
+    #       code_repository_project_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       code_repository_provider_type: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_provider: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_provider_region: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_provider_account_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_provider_org_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_vm_image_reference: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_vm_network_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_vm_subnet_ids: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_image_repository_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_image_registry: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_image_digest: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_image_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_image_pushed_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       cloud_image_architecture: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_image_last_in_use_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       cloud_image_in_use_count: [
+    #         {
     #           upper_inclusive: 1.0,
+    #           lower_inclusive: 1.0,
     #         },
     #       ],
-    #       lambda_function_execution_role_arn: [
+    #       cloud_serverless_function_name: [
     #         {
     #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
     #           value: "StringInput", # required
     #         },
     #       ],
-    #       lambda_function_last_modified_at: [
+    #       cloud_serverless_function_runtime: [
     #         {
-    #           end_inclusive: Time.now,
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_serverless_function_last_modified_at: [
+    #         {
     #           start_inclusive: Time.now,
-    #         },
-    #       ],
-    #       lambda_function_layers: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       lambda_function_name: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       lambda_function_runtime: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       last_observed_at: [
-    #         {
     #           end_inclusive: Time.now,
-    #           start_inclusive: Time.now,
     #         },
     #       ],
-    #       network_protocol: [
+    #       cloud_serverless_function_execution_role: [
     #         {
     #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
     #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       port_range: [
-    #         {
-    #           begin_inclusive: 1,
-    #           end_inclusive: 1,
-    #         },
-    #       ],
-    #       related_vulnerabilities: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       resource_id: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       resource_tags: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS
-    #           key: "MapKey", # required
-    #           value: "MapValue",
-    #         },
-    #       ],
-    #       resource_type: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       severity: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       title: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       updated_at: [
-    #         {
-    #           end_inclusive: Time.now,
-    #           start_inclusive: Time.now,
-    #         },
-    #       ],
-    #       vendor_severity: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       vulnerability_id: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       vulnerability_source: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       vulnerable_packages: [
-    #         {
-    #           architecture: {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #           epoch: {
-    #             lower_inclusive: 1.0,
-    #             upper_inclusive: 1.0,
-    #           },
-    #           file_path: {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #           name: {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #           release: {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #           source_lambda_layer_arn: {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #           source_layer_hash: {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #           version: {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
     #         },
     #       ],
     #     },
     #     name: "FilterName", # required
-    #     reason: "FilterReason",
     #     tags: {
     #       "MapKey" => "MapValue",
     #     },
+    #     reason: "FilterReason",
     #   })
     #
     # @example Response structure
@@ -1278,7 +1835,272 @@ module Aws::Inspector2
     #
     #   resp = client.create_findings_report({
     #     filter_criteria: {
+    #       finding_arn: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
     #       aws_account_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       finding_type: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       severity: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       first_observed_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       last_observed_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       updated_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       finding_status: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       title: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       inspector_score: [
+    #         {
+    #           upper_inclusive: 1.0,
+    #           lower_inclusive: 1.0,
+    #         },
+    #       ],
+    #       resource_type: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       resource_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       resource_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS
+    #           key: "MapKey", # required
+    #           value: "MapValue",
+    #         },
+    #       ],
+    #       ec2_instance_image_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ec2_instance_vpc_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ec2_instance_subnet_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ecr_image_pushed_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       ecr_image_architecture: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ecr_image_registry: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ecr_image_repository_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ecr_image_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ecr_image_hash: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ecr_image_last_in_use_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       ecr_image_in_use_count: [
+    #         {
+    #           upper_inclusive: 1.0,
+    #           lower_inclusive: 1.0,
+    #         },
+    #       ],
+    #       port_range: [
+    #         {
+    #           begin_inclusive: 1,
+    #           end_inclusive: 1,
+    #         },
+    #       ],
+    #       network_protocol: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       component_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       component_type: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       vulnerability_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       vulnerability_source: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       vendor_severity: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       vulnerable_packages: [
+    #         {
+    #           name: {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #           version: {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #           epoch: {
+    #             upper_inclusive: 1.0,
+    #             lower_inclusive: 1.0,
+    #           },
+    #           release: {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #           architecture: {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #           source_layer_hash: {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #           source_lambda_layer_arn: {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #           file_path: {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         },
+    #       ],
+    #       related_vulnerabilities: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       fix_available: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       lambda_function_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       lambda_function_layers: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       lambda_function_runtime: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       lambda_function_last_modified_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       lambda_function_execution_role_arn: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       exploit_available: [
     #         {
     #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
     #           value: "StringInput", # required
@@ -1302,263 +2124,136 @@ module Aws::Inspector2
     #           value: "StringInput", # required
     #         },
     #       ],
-    #       component_id: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       component_type: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ec2_instance_image_id: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ec2_instance_subnet_id: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ec2_instance_vpc_id: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ecr_image_architecture: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ecr_image_hash: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ecr_image_pushed_at: [
-    #         {
-    #           end_inclusive: Time.now,
-    #           start_inclusive: Time.now,
-    #         },
-    #       ],
-    #       ecr_image_registry: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ecr_image_repository_name: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ecr_image_tags: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
     #       epss_score: [
     #         {
-    #           lower_inclusive: 1.0,
     #           upper_inclusive: 1.0,
-    #         },
-    #       ],
-    #       exploit_available: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       finding_arn: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       finding_status: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       finding_type: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       first_observed_at: [
-    #         {
-    #           end_inclusive: Time.now,
-    #           start_inclusive: Time.now,
-    #         },
-    #       ],
-    #       fix_available: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       inspector_score: [
-    #         {
     #           lower_inclusive: 1.0,
+    #         },
+    #       ],
+    #       code_repository_project_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       code_repository_provider_type: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_provider: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_provider_region: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_provider_account_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_provider_org_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_vm_image_reference: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_vm_network_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_vm_subnet_ids: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_image_repository_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_image_registry: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_image_digest: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_image_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_image_pushed_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       cloud_image_architecture: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_image_last_in_use_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       cloud_image_in_use_count: [
+    #         {
     #           upper_inclusive: 1.0,
+    #           lower_inclusive: 1.0,
     #         },
     #       ],
-    #       lambda_function_execution_role_arn: [
+    #       cloud_serverless_function_name: [
     #         {
     #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
     #           value: "StringInput", # required
     #         },
     #       ],
-    #       lambda_function_last_modified_at: [
+    #       cloud_serverless_function_runtime: [
     #         {
-    #           end_inclusive: Time.now,
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_serverless_function_last_modified_at: [
+    #         {
     #           start_inclusive: Time.now,
-    #         },
-    #       ],
-    #       lambda_function_layers: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       lambda_function_name: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       lambda_function_runtime: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       last_observed_at: [
-    #         {
     #           end_inclusive: Time.now,
-    #           start_inclusive: Time.now,
     #         },
     #       ],
-    #       network_protocol: [
+    #       cloud_serverless_function_execution_role: [
     #         {
     #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
     #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       port_range: [
-    #         {
-    #           begin_inclusive: 1,
-    #           end_inclusive: 1,
-    #         },
-    #       ],
-    #       related_vulnerabilities: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       resource_id: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       resource_tags: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS
-    #           key: "MapKey", # required
-    #           value: "MapValue",
-    #         },
-    #       ],
-    #       resource_type: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       severity: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       title: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       updated_at: [
-    #         {
-    #           end_inclusive: Time.now,
-    #           start_inclusive: Time.now,
-    #         },
-    #       ],
-    #       vendor_severity: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       vulnerability_id: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       vulnerability_source: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       vulnerable_packages: [
-    #         {
-    #           architecture: {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #           epoch: {
-    #             lower_inclusive: 1.0,
-    #             upper_inclusive: 1.0,
-    #           },
-    #           file_path: {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #           name: {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #           release: {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #           source_lambda_layer_arn: {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #           source_layer_hash: {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #           version: {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
     #         },
     #       ],
     #     },
@@ -1585,12 +2280,12 @@ module Aws::Inspector2
 
     # Creates a software bill of materials (SBOM) report.
     #
-    # @option params [required, String] :report_format
-    #   The output format for the software bill of materials (SBOM) report.
-    #
     # @option params [Types::ResourceFilterCriteria] :resource_filter_criteria
     #   The resource filter criteria for the software bill of materials (SBOM)
     #   report.
+    #
+    # @option params [required, String] :report_format
+    #   The output format for the software bill of materials (SBOM) report.
     #
     # @option params [required, Types::Destination] :s3_destination
     #   Contains details of the Amazon S3 bucket and KMS key used to export
@@ -1603,7 +2298,6 @@ module Aws::Inspector2
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_sbom_export({
-    #     report_format: "CYCLONEDX_1_4", # required, accepts CYCLONEDX_1_4, SPDX_2_3
     #     resource_filter_criteria: {
     #       account_id: [
     #         {
@@ -1611,14 +2305,13 @@ module Aws::Inspector2
     #           value: "ResourceStringInput", # required
     #         },
     #       ],
-    #       ec2_instance_tags: [
+    #       resource_id: [
     #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS
-    #           key: "NonEmptyString", # required
-    #           value: "NonEmptyString",
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "ResourceStringInput", # required
     #         },
     #       ],
-    #       ecr_image_tags: [
+    #       resource_type: [
     #         {
     #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
     #           value: "ResourceStringInput", # required
@@ -1636,6 +2329,19 @@ module Aws::Inspector2
     #           value: "ResourceStringInput", # required
     #         },
     #       ],
+    #       ecr_image_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "ResourceStringInput", # required
+    #         },
+    #       ],
+    #       ec2_instance_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS
+    #           key: "NonEmptyString", # required
+    #           value: "NonEmptyString",
+    #         },
+    #       ],
     #       lambda_function_tags: [
     #         {
     #           comparison: "EQUALS", # required, accepts EQUALS
@@ -1643,19 +2349,76 @@ module Aws::Inspector2
     #           value: "NonEmptyString",
     #         },
     #       ],
-    #       resource_id: [
+    #       cloud_provider: [
     #         {
     #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
     #           value: "ResourceStringInput", # required
     #         },
     #       ],
-    #       resource_type: [
+    #       cloud_provider_account_id: [
     #         {
     #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
     #           value: "ResourceStringInput", # required
+    #         },
+    #       ],
+    #       cloud_provider_org_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "ResourceStringInput", # required
+    #         },
+    #       ],
+    #       cloud_provider_region: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "ResourceStringInput", # required
+    #         },
+    #       ],
+    #       cloud_vm_instance_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS
+    #           key: "NonEmptyString", # required
+    #           value: "NonEmptyString",
+    #         },
+    #       ],
+    #       cloud_container_image_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "ResourceStringInput", # required
+    #         },
+    #       ],
+    #       cloud_container_repository_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "ResourceStringInput", # required
+    #         },
+    #       ],
+    #       cloud_container_registry_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "ResourceStringInput", # required
+    #         },
+    #       ],
+    #       cloud_serverless_function_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "ResourceStringInput", # required
+    #         },
+    #       ],
+    #       cloud_serverless_function_runtime: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "ResourceStringInput", # required
+    #         },
+    #       ],
+    #       cloud_serverless_function_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS
+    #           key: "NonEmptyString", # required
+    #           value: "NonEmptyString",
     #         },
     #       ],
     #     },
+    #     report_format: "CYCLONEDX_1_4", # required, accepts CYCLONEDX_1_4, SPDX_2_3
     #     s3_destination: { # required
     #       bucket_name: "String", # required
     #       key_prefix: "String",
@@ -1685,6 +2448,18 @@ module Aws::Inspector2
     #
     #   * {Types::DeleteCisScanConfigurationResponse#scan_configuration_arn #scan_configuration_arn} => String
     #
+    #
+    # @example Example: Sample DeleteCisScanConfiguration Call
+    #
+    #   resp = client.delete_cis_scan_configuration({
+    #     scan_configuration_arn: "arn:aws:inspector2:us-east-1:123412341234:owner/123412341234/cis-configuration/624b746d-e080-44ae-8c1d-48e653365a38", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     scan_configuration_arn: "arn:aws:inspector2:us-east-1:123412341234:owner/123412341234/cis-configuration/624b746d-e080-44ae-8c1d-48e653365a38", 
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_cis_scan_configuration({
@@ -1701,6 +2476,96 @@ module Aws::Inspector2
     # @param [Hash] params ({})
     def delete_cis_scan_configuration(params = {}, options = {})
       req = build_request(:delete_cis_scan_configuration, params)
+      req.send_request(options)
+    end
+
+    # Deletes a code security integration.
+    #
+    # @option params [required, String] :integration_arn
+    #   The Amazon Resource Name (ARN) of the code security integration to
+    #   delete.
+    #
+    # @return [Types::DeleteCodeSecurityIntegrationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DeleteCodeSecurityIntegrationResponse#integration_arn #integration_arn} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_code_security_integration({
+    #     integration_arn: "CodeSecurityIntegrationArn", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.integration_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/DeleteCodeSecurityIntegration AWS API Documentation
+    #
+    # @overload delete_code_security_integration(params = {})
+    # @param [Hash] params ({})
+    def delete_code_security_integration(params = {}, options = {})
+      req = build_request(:delete_code_security_integration, params)
+      req.send_request(options)
+    end
+
+    # Deletes a code security scan configuration.
+    #
+    # @option params [required, String] :scan_configuration_arn
+    #   The Amazon Resource Name (ARN) of the scan configuration to delete.
+    #
+    # @return [Types::DeleteCodeSecurityScanConfigurationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DeleteCodeSecurityScanConfigurationResponse#scan_configuration_arn #scan_configuration_arn} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_code_security_scan_configuration({
+    #     scan_configuration_arn: "ScanConfigurationArn", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.scan_configuration_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/DeleteCodeSecurityScanConfiguration AWS API Documentation
+    #
+    # @overload delete_code_security_scan_configuration(params = {})
+    # @param [Hash] params ({})
+    def delete_code_security_scan_configuration(params = {}, options = {})
+      req = build_request(:delete_code_security_scan_configuration, params)
+      req.send_request(options)
+    end
+
+    # Deletes a connector from your account.
+    #
+    # @option params [required, String] :connector_arn
+    #   The Amazon Resource Name (ARN) of the connector to delete.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    #
+    # @example Example: Delete a customer-managed connector
+    #
+    #   resp = client.delete_connector({
+    #     connector_arn: "arn:aws:inspector2:us-east-1:123456789012:connector/6ccf8549-b52b-57ca-bf52-a2266da3c53a", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_connector({
+    #     connector_arn: "ConnectorArn", # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/DeleteConnector AWS API Documentation
+    #
+    # @overload delete_connector(params = {})
+    # @param [Hash] params ({})
+    def delete_connector(params = {}, options = {})
+      req = build_request(:delete_connector, params)
       req.send_request(options)
     end
 
@@ -1746,6 +2611,7 @@ module Aws::Inspector2
     #   resp.auto_enable.ecr #=> Boolean
     #   resp.auto_enable.lambda #=> Boolean
     #   resp.auto_enable.lambda_code #=> Boolean
+    #   resp.auto_enable.code_repository #=> Boolean
     #   resp.max_account_limit_reached #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/DescribeOrganizationConfiguration AWS API Documentation
@@ -1777,27 +2643,29 @@ module Aws::Inspector2
     #
     #   resp = client.disable({
     #     account_ids: ["AccountId"],
-    #     resource_types: ["EC2"], # accepts EC2, ECR, LAMBDA, LAMBDA_CODE
+    #     resource_types: ["EC2"], # accepts EC2, ECR, LAMBDA, LAMBDA_CODE, CODE_REPOSITORY
     #   })
     #
     # @example Response structure
     #
     #   resp.accounts #=> Array
     #   resp.accounts[0].account_id #=> String
+    #   resp.accounts[0].status #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
     #   resp.accounts[0].resource_status.ec2 #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
     #   resp.accounts[0].resource_status.ecr #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
     #   resp.accounts[0].resource_status.lambda #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
     #   resp.accounts[0].resource_status.lambda_code #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
-    #   resp.accounts[0].status #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
+    #   resp.accounts[0].resource_status.code_repository #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
     #   resp.failed_accounts #=> Array
     #   resp.failed_accounts[0].account_id #=> String
-    #   resp.failed_accounts[0].error_code #=> String, one of "ALREADY_ENABLED", "ENABLE_IN_PROGRESS", "DISABLE_IN_PROGRESS", "SUSPEND_IN_PROGRESS", "RESOURCE_NOT_FOUND", "ACCESS_DENIED", "INTERNAL_ERROR", "SSM_UNAVAILABLE", "SSM_THROTTLED", "EVENTBRIDGE_UNAVAILABLE", "EVENTBRIDGE_THROTTLED", "RESOURCE_SCAN_NOT_DISABLED", "DISASSOCIATE_ALL_MEMBERS", "ACCOUNT_IS_ISOLATED", "EC2_SSM_RESOURCE_DATA_SYNC_LIMIT_EXCEEDED", "EC2_SSM_ASSOCIATION_VERSION_LIMIT_EXCEEDED"
-    #   resp.failed_accounts[0].error_message #=> String
+    #   resp.failed_accounts[0].status #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
     #   resp.failed_accounts[0].resource_status.ec2 #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
     #   resp.failed_accounts[0].resource_status.ecr #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
     #   resp.failed_accounts[0].resource_status.lambda #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
     #   resp.failed_accounts[0].resource_status.lambda_code #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
-    #   resp.failed_accounts[0].status #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
+    #   resp.failed_accounts[0].resource_status.code_repository #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
+    #   resp.failed_accounts[0].error_code #=> String, one of "ALREADY_ENABLED", "ENABLE_IN_PROGRESS", "DISABLE_IN_PROGRESS", "SUSPEND_IN_PROGRESS", "RESOURCE_NOT_FOUND", "ACCESS_DENIED", "INTERNAL_ERROR", "SSM_UNAVAILABLE", "SSM_THROTTLED", "EVENTBRIDGE_UNAVAILABLE", "EVENTBRIDGE_THROTTLED", "RESOURCE_SCAN_NOT_DISABLED", "DISASSOCIATE_ALL_MEMBERS", "ACCOUNT_IS_ISOLATED", "EC2_SSM_RESOURCE_DATA_SYNC_LIMIT_EXCEEDED", "EC2_SSM_ASSOCIATION_VERSION_LIMIT_EXCEEDED", "BLOCKED_BY_ORGANIZATION_POLICY"
+    #   resp.failed_accounts[0].error_message #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/Disable AWS API Documentation
     #
@@ -1874,14 +2742,14 @@ module Aws::Inspector2
     # @option params [Array<String>] :account_ids
     #   A list of account IDs you want to enable Amazon Inspector scans for.
     #
+    # @option params [required, Array<String>] :resource_types
+    #   The resource scan types you want to enable.
+    #
     # @option params [String] :client_token
     #   The idempotency token for the request.
     #
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.**
-    #
-    # @option params [required, Array<String>] :resource_types
-    #   The resource scan types you want to enable.
     #
     # @return [Types::EnableResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1892,28 +2760,30 @@ module Aws::Inspector2
     #
     #   resp = client.enable({
     #     account_ids: ["AccountId"],
+    #     resource_types: ["EC2"], # required, accepts EC2, ECR, LAMBDA, LAMBDA_CODE, CODE_REPOSITORY
     #     client_token: "ClientToken",
-    #     resource_types: ["EC2"], # required, accepts EC2, ECR, LAMBDA, LAMBDA_CODE
     #   })
     #
     # @example Response structure
     #
     #   resp.accounts #=> Array
     #   resp.accounts[0].account_id #=> String
+    #   resp.accounts[0].status #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
     #   resp.accounts[0].resource_status.ec2 #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
     #   resp.accounts[0].resource_status.ecr #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
     #   resp.accounts[0].resource_status.lambda #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
     #   resp.accounts[0].resource_status.lambda_code #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
-    #   resp.accounts[0].status #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
+    #   resp.accounts[0].resource_status.code_repository #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
     #   resp.failed_accounts #=> Array
     #   resp.failed_accounts[0].account_id #=> String
-    #   resp.failed_accounts[0].error_code #=> String, one of "ALREADY_ENABLED", "ENABLE_IN_PROGRESS", "DISABLE_IN_PROGRESS", "SUSPEND_IN_PROGRESS", "RESOURCE_NOT_FOUND", "ACCESS_DENIED", "INTERNAL_ERROR", "SSM_UNAVAILABLE", "SSM_THROTTLED", "EVENTBRIDGE_UNAVAILABLE", "EVENTBRIDGE_THROTTLED", "RESOURCE_SCAN_NOT_DISABLED", "DISASSOCIATE_ALL_MEMBERS", "ACCOUNT_IS_ISOLATED", "EC2_SSM_RESOURCE_DATA_SYNC_LIMIT_EXCEEDED", "EC2_SSM_ASSOCIATION_VERSION_LIMIT_EXCEEDED"
-    #   resp.failed_accounts[0].error_message #=> String
+    #   resp.failed_accounts[0].status #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
     #   resp.failed_accounts[0].resource_status.ec2 #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
     #   resp.failed_accounts[0].resource_status.ecr #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
     #   resp.failed_accounts[0].resource_status.lambda #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
     #   resp.failed_accounts[0].resource_status.lambda_code #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
-    #   resp.failed_accounts[0].status #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
+    #   resp.failed_accounts[0].resource_status.code_repository #=> String, one of "ENABLING", "ENABLED", "DISABLING", "DISABLED", "SUSPENDING", "SUSPENDED"
+    #   resp.failed_accounts[0].error_code #=> String, one of "ALREADY_ENABLED", "ENABLE_IN_PROGRESS", "DISABLE_IN_PROGRESS", "SUSPEND_IN_PROGRESS", "RESOURCE_NOT_FOUND", "ACCESS_DENIED", "INTERNAL_ERROR", "SSM_UNAVAILABLE", "SSM_THROTTLED", "EVENTBRIDGE_UNAVAILABLE", "EVENTBRIDGE_THROTTLED", "RESOURCE_SCAN_NOT_DISABLED", "DISASSOCIATE_ALL_MEMBERS", "ACCOUNT_IS_ISOLATED", "EC2_SSM_RESOURCE_DATA_SYNC_LIMIT_EXCEEDED", "EC2_SSM_ASSOCIATION_VERSION_LIMIT_EXCEEDED", "BLOCKED_BY_ORGANIZATION_POLICY"
+    #   resp.failed_accounts[0].error_message #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/Enable AWS API Documentation
     #
@@ -1927,15 +2797,15 @@ module Aws::Inspector2
     # Enables the Amazon Inspector delegated administrator for your
     # Organizations organization.
     #
+    # @option params [required, String] :delegated_admin_account_id
+    #   The Amazon Web Services account ID of the Amazon Inspector delegated
+    #   administrator.
+    #
     # @option params [String] :client_token
     #   The idempotency token for the request.
     #
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.**
-    #
-    # @option params [required, String] :delegated_admin_account_id
-    #   The Amazon Web Services account ID of the Amazon Inspector delegated
-    #   administrator.
     #
     # @return [Types::EnableDelegatedAdminAccountResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1944,8 +2814,8 @@ module Aws::Inspector2
     # @example Request syntax with placeholder values
     #
     #   resp = client.enable_delegated_admin_account({
-    #     client_token: "ClientToken",
     #     delegated_admin_account_id: "AccountId", # required
+    #     client_token: "ClientToken",
     #   })
     #
     # @example Response structure
@@ -1963,33 +2833,47 @@ module Aws::Inspector2
 
     # Retrieves a CIS scan report.
     #
-    # @option params [String] :report_format
-    #   The format of the report. Valid values are `PDF` and `CSV`. If no
-    #   value is specified, the report format defaults to `PDF`.
-    #
     # @option params [required, String] :scan_arn
     #   The scan ARN.
     #
     # @option params [Array<String>] :target_accounts
     #   The target accounts.
     #
+    # @option params [String] :report_format
+    #   The format of the report. Valid values are `PDF` and `CSV`. If no
+    #   value is specified, the report format defaults to `PDF`.
+    #
     # @return [Types::GetCisScanReportResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::GetCisScanReportResponse#status #status} => String
     #   * {Types::GetCisScanReportResponse#url #url} => String
+    #   * {Types::GetCisScanReportResponse#status #status} => String
+    #
+    #
+    # @example Example: Sample GetCisScanReport Call
+    #
+    #   resp = client.get_cis_scan_report({
+    #     report_format: "PDF", 
+    #     scan_arn: "arn:aws:inspector2:us-east-1:123412341234:owner/123412341234/cis-scan/624b746d-e080-44ae-8c1d-48e653365a38", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     status: "SUCCEEDED", 
+    #     url: "www.s3.amazon.com/abcdef", 
+    #   }
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_cis_scan_report({
-    #     report_format: "PDF", # accepts PDF, CSV
     #     scan_arn: "CisScanArn", # required
     #     target_accounts: ["AccountId"],
+    #     report_format: "PDF", # accepts PDF, CSV
     #   })
     #
     # @example Response structure
     #
-    #   resp.status #=> String, one of "SUCCEEDED", "FAILED", "IN_PROGRESS"
     #   resp.url #=> String
+    #   resp.status #=> String, one of "SUCCEEDED", "FAILED", "IN_PROGRESS"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/GetCisScanReport AWS API Documentation
     #
@@ -2002,22 +2886,17 @@ module Aws::Inspector2
 
     # Retrieves CIS scan result details.
     #
+    # @option params [required, String] :scan_arn
+    #   The scan ARN.
+    #
+    # @option params [required, String] :target_resource_id
+    #   The target resource ID.
+    #
     # @option params [required, String] :account_id
     #   The account ID.
     #
     # @option params [Types::CisScanResultDetailsFilterCriteria] :filter_criteria
     #   The filter criteria.
-    #
-    # @option params [Integer] :max_results
-    #   The maximum number of CIS scan result details to be returned in a
-    #   single page of results.
-    #
-    # @option params [String] :next_token
-    #   The pagination token from a previous request that's used to retrieve
-    #   the next page of results.
-    #
-    # @option params [required, String] :scan_arn
-    #   The scan ARN.
     #
     # @option params [String] :sort_by
     #   The sort by order.
@@ -2025,43 +2904,65 @@ module Aws::Inspector2
     # @option params [String] :sort_order
     #   The sort order.
     #
-    # @option params [required, String] :target_resource_id
-    #   The target resource ID.
+    # @option params [String] :next_token
+    #   The pagination token from a previous request that's used to retrieve
+    #   the next page of results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of CIS scan result details to be returned in a
+    #   single page of results.
     #
     # @return [Types::GetCisScanResultDetailsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::GetCisScanResultDetailsResponse#next_token #next_token} => String
     #   * {Types::GetCisScanResultDetailsResponse#scan_result_details #scan_result_details} => Array&lt;Types::CisScanResultDetails&gt;
+    #   * {Types::GetCisScanResultDetailsResponse#next_token #next_token} => String
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    #
+    # @example Example: Sample GetCisScanResultDetails Call
+    #
+    #   resp = client.get_cis_scan_result_details({
+    #     account_id: "123412341234", 
+    #     scan_arn: "arn:aws:inspector2:us-east-1:123412341234:owner/123412341234/cis-scan/624b746d-e080-44ae-8c1d-48e653365a38", 
+    #     target_resource_id: "i-12341234", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     scan_result_details: [
+    #       {
+    #         account_id: "123412341234", 
+    #         check_description: "description", 
+    #         check_id: "1.1.1.1", 
+    #         level: "LEVEL_1", 
+    #         platform: "AMAZON_LINUX_2", 
+    #         remediation: "fix", 
+    #         scan_arn: "arn:aws:inspector2:us-east-1:123412341234:owner/123412341234/cis-scan/624b746d-e080-44ae-8c1d-48e653365a38", 
+    #         status: "PASSED", 
+    #         target_resource_id: "i-12341234", 
+    #         title: "title1", 
+    #       }, 
+    #     ], 
+    #   }
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_cis_scan_result_details({
+    #     scan_arn: "CisScanArn", # required
+    #     target_resource_id: "ResourceId", # required
     #     account_id: "AccountId", # required
     #     filter_criteria: {
-    #       check_id_filters: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "String", # required
-    #         },
-    #       ],
-    #       finding_arn_filters: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "String", # required
-    #         },
-    #       ],
     #       finding_status_filters: [
     #         {
     #           comparison: "EQUALS", # required, accepts EQUALS
     #           value: "PASSED", # required, accepts PASSED, FAILED, SKIPPED
     #         },
     #       ],
-    #       security_level_filters: [
+    #       check_id_filters: [
     #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS
-    #           value: "LEVEL_1", # required, accepts LEVEL_1, LEVEL_2
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "String", # required
     #         },
     #       ],
     #       title_filters: [
@@ -2070,31 +2971,41 @@ module Aws::Inspector2
     #           value: "String", # required
     #         },
     #       ],
+    #       security_level_filters: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS
+    #           value: "LEVEL_1", # required, accepts LEVEL_1, LEVEL_2
+    #         },
+    #       ],
+    #       finding_arn_filters: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "String", # required
+    #         },
+    #       ],
     #     },
-    #     max_results: 1,
-    #     next_token: "NextToken",
-    #     scan_arn: "CisScanArn", # required
     #     sort_by: "CHECK_ID", # accepts CHECK_ID, STATUS
     #     sort_order: "ASC", # accepts ASC, DESC
-    #     target_resource_id: "ResourceId", # required
+    #     next_token: "NextToken",
+    #     max_results: 1,
     #   })
     #
     # @example Response structure
     #
-    #   resp.next_token #=> String
     #   resp.scan_result_details #=> Array
-    #   resp.scan_result_details[0].account_id #=> String
-    #   resp.scan_result_details[0].check_description #=> String
-    #   resp.scan_result_details[0].check_id #=> String
-    #   resp.scan_result_details[0].finding_arn #=> String
-    #   resp.scan_result_details[0].level #=> String, one of "LEVEL_1", "LEVEL_2"
-    #   resp.scan_result_details[0].platform #=> String
-    #   resp.scan_result_details[0].remediation #=> String
     #   resp.scan_result_details[0].scan_arn #=> String
+    #   resp.scan_result_details[0].account_id #=> String
+    #   resp.scan_result_details[0].target_resource_id #=> String
+    #   resp.scan_result_details[0].platform #=> String
     #   resp.scan_result_details[0].status #=> String, one of "PASSED", "FAILED", "SKIPPED"
     #   resp.scan_result_details[0].status_reason #=> String
-    #   resp.scan_result_details[0].target_resource_id #=> String
+    #   resp.scan_result_details[0].check_id #=> String
     #   resp.scan_result_details[0].title #=> String
+    #   resp.scan_result_details[0].check_description #=> String
+    #   resp.scan_result_details[0].remediation #=> String
+    #   resp.scan_result_details[0].level #=> String, one of "LEVEL_1", "LEVEL_2"
+    #   resp.scan_result_details[0].finding_arn #=> String
+    #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/GetCisScanResultDetails AWS API Documentation
     #
@@ -2105,21 +3016,244 @@ module Aws::Inspector2
       req.send_request(options)
     end
 
-    # Retrieves setting configurations for Inspector scans.
+    # Returns a list of clusters and metadata associated with an image.
     #
-    # @return [Types::GetConfigurationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    # @option params [required, Types::ClusterForImageFilterCriteria] :filter
+    #   The resource Id for the Amazon ECR image.
     #
-    #   * {Types::GetConfigurationResponse#ec2_configuration #ec2_configuration} => Types::Ec2ConfigurationState
-    #   * {Types::GetConfigurationResponse#ecr_configuration #ecr_configuration} => Types::EcrConfigurationState
+    # @option params [Integer] :max_results
+    #   The maximum number of results to be returned in a single page of
+    #   results.
+    #
+    # @option params [String] :next_token
+    #   The pagination token from a previous request used to retrieve the next
+    #   page of results.
+    #
+    # @return [Types::GetClustersForImageResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetClustersForImageResponse#cluster #cluster} => Array&lt;Types::ClusterInformation&gt;
+    #   * {Types::GetClustersForImageResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_clusters_for_image({
+    #     filter: { # required
+    #       resource_id: "ClusterForImageFilterCriteriaResourceIdString", # required
+    #     },
+    #     max_results: 1,
+    #     next_token: "GetClustersForImageNextToken",
+    #   })
     #
     # @example Response structure
     #
-    #   resp.ec2_configuration.scan_mode_state.scan_mode #=> String, one of "EC2_SSM_AGENT_BASED", "EC2_HYBRID"
-    #   resp.ec2_configuration.scan_mode_state.scan_mode_status #=> String, one of "SUCCESS", "PENDING"
-    #   resp.ecr_configuration.rescan_duration_state.pull_date_rescan_duration #=> String, one of "DAYS_14", "DAYS_30", "DAYS_60", "DAYS_90", "DAYS_180"
-    #   resp.ecr_configuration.rescan_duration_state.rescan_duration #=> String, one of "LIFETIME", "DAYS_30", "DAYS_180", "DAYS_14", "DAYS_60", "DAYS_90"
+    #   resp.cluster #=> Array
+    #   resp.cluster[0].cluster_arn #=> String
+    #   resp.cluster[0].cluster_details #=> Array
+    #   resp.cluster[0].cluster_details[0].last_in_use #=> Time
+    #   resp.cluster[0].cluster_details[0].running_unit_count #=> Integer
+    #   resp.cluster[0].cluster_details[0].stopped_unit_count #=> Integer
+    #   resp.cluster[0].cluster_details[0].cluster_metadata.aws_ecs_metadata_details.details_group #=> String
+    #   resp.cluster[0].cluster_details[0].cluster_metadata.aws_ecs_metadata_details.task_definition_arn #=> String
+    #   resp.cluster[0].cluster_details[0].cluster_metadata.aws_eks_metadata_details.namespace #=> String
+    #   resp.cluster[0].cluster_details[0].cluster_metadata.aws_eks_metadata_details.workload_info_list #=> Array
+    #   resp.cluster[0].cluster_details[0].cluster_metadata.aws_eks_metadata_details.workload_info_list[0].name #=> String
+    #   resp.cluster[0].cluster_details[0].cluster_metadata.aws_eks_metadata_details.workload_info_list[0].type #=> String
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/GetClustersForImage AWS API Documentation
+    #
+    # @overload get_clusters_for_image(params = {})
+    # @param [Hash] params ({})
+    def get_clusters_for_image(params = {}, options = {})
+      req = build_request(:get_clusters_for_image, params)
+      req.send_request(options)
+    end
+
+    # Retrieves information about a code security integration.
+    #
+    # @option params [required, String] :integration_arn
+    #   The Amazon Resource Name (ARN) of the code security integration to
+    #   retrieve.
+    #
+    # @option params [Hash<String,String>] :tags
+    #   The tags associated with the code security integration.
+    #
+    # @return [Types::GetCodeSecurityIntegrationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetCodeSecurityIntegrationResponse#integration_arn #integration_arn} => String
+    #   * {Types::GetCodeSecurityIntegrationResponse#name #name} => String
+    #   * {Types::GetCodeSecurityIntegrationResponse#type #type} => String
+    #   * {Types::GetCodeSecurityIntegrationResponse#status #status} => String
+    #   * {Types::GetCodeSecurityIntegrationResponse#status_reason #status_reason} => String
+    #   * {Types::GetCodeSecurityIntegrationResponse#created_on #created_on} => Time
+    #   * {Types::GetCodeSecurityIntegrationResponse#last_update_on #last_update_on} => Time
+    #   * {Types::GetCodeSecurityIntegrationResponse#authorization_url #authorization_url} => String
+    #   * {Types::GetCodeSecurityIntegrationResponse#tags #tags} => Hash&lt;String,String&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_code_security_integration({
+    #     integration_arn: "CodeSecurityIntegrationArn", # required
+    #     tags: {
+    #       "MapKey" => "MapValue",
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.integration_arn #=> String
+    #   resp.name #=> String
+    #   resp.type #=> String, one of "GITLAB_SELF_MANAGED", "GITHUB"
+    #   resp.status #=> String, one of "PENDING", "IN_PROGRESS", "ACTIVE", "INACTIVE", "DISABLING"
+    #   resp.status_reason #=> String
+    #   resp.created_on #=> Time
+    #   resp.last_update_on #=> Time
+    #   resp.authorization_url #=> String
+    #   resp.tags #=> Hash
+    #   resp.tags["MapKey"] #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/GetCodeSecurityIntegration AWS API Documentation
+    #
+    # @overload get_code_security_integration(params = {})
+    # @param [Hash] params ({})
+    def get_code_security_integration(params = {}, options = {})
+      req = build_request(:get_code_security_integration, params)
+      req.send_request(options)
+    end
+
+    # Retrieves information about a specific code security scan.
+    #
+    # @option params [required, Types::CodeSecurityResource] :resource
+    #   The resource identifier for the code repository that was scanned.
+    #
+    # @option params [required, String] :scan_id
+    #   The unique identifier of the scan to retrieve.
+    #
+    # @return [Types::GetCodeSecurityScanResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetCodeSecurityScanResponse#scan_id #scan_id} => String
+    #   * {Types::GetCodeSecurityScanResponse#resource #resource} => Types::CodeSecurityResource
+    #   * {Types::GetCodeSecurityScanResponse#account_id #account_id} => String
+    #   * {Types::GetCodeSecurityScanResponse#status #status} => String
+    #   * {Types::GetCodeSecurityScanResponse#status_reason #status_reason} => String
+    #   * {Types::GetCodeSecurityScanResponse#created_at #created_at} => Time
+    #   * {Types::GetCodeSecurityScanResponse#updated_at #updated_at} => Time
+    #   * {Types::GetCodeSecurityScanResponse#last_commit_id #last_commit_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_code_security_scan({
+    #     resource: { # required
+    #       project_id: "ProjectId",
+    #     },
+    #     scan_id: "CodeSecurityUuid", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.scan_id #=> String
+    #   resp.resource.project_id #=> String
+    #   resp.account_id #=> String
+    #   resp.status #=> String, one of "IN_PROGRESS", "SUCCESSFUL", "FAILED", "SKIPPED"
+    #   resp.status_reason #=> String
+    #   resp.created_at #=> Time
+    #   resp.updated_at #=> Time
+    #   resp.last_commit_id #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/GetCodeSecurityScan AWS API Documentation
+    #
+    # @overload get_code_security_scan(params = {})
+    # @param [Hash] params ({})
+    def get_code_security_scan(params = {}, options = {})
+      req = build_request(:get_code_security_scan, params)
+      req.send_request(options)
+    end
+
+    # Retrieves information about a code security scan configuration.
+    #
+    # @option params [required, String] :scan_configuration_arn
+    #   The Amazon Resource Name (ARN) of the scan configuration to retrieve.
+    #
+    # @return [Types::GetCodeSecurityScanConfigurationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetCodeSecurityScanConfigurationResponse#scan_configuration_arn #scan_configuration_arn} => String
+    #   * {Types::GetCodeSecurityScanConfigurationResponse#name #name} => String
+    #   * {Types::GetCodeSecurityScanConfigurationResponse#configuration #configuration} => Types::CodeSecurityScanConfiguration
+    #   * {Types::GetCodeSecurityScanConfigurationResponse#level #level} => String
+    #   * {Types::GetCodeSecurityScanConfigurationResponse#scope_settings #scope_settings} => Types::ScopeSettings
+    #   * {Types::GetCodeSecurityScanConfigurationResponse#created_at #created_at} => Time
+    #   * {Types::GetCodeSecurityScanConfigurationResponse#last_updated_at #last_updated_at} => Time
+    #   * {Types::GetCodeSecurityScanConfigurationResponse#tags #tags} => Hash&lt;String,String&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_code_security_scan_configuration({
+    #     scan_configuration_arn: "ScanConfigurationArn", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.scan_configuration_arn #=> String
+    #   resp.name #=> String
+    #   resp.configuration.periodic_scan_configuration.frequency #=> String, one of "WEEKLY", "MONTHLY", "NEVER"
+    #   resp.configuration.periodic_scan_configuration.frequency_expression #=> String
+    #   resp.configuration.continuous_integration_scan_configuration.supported_events #=> Array
+    #   resp.configuration.continuous_integration_scan_configuration.supported_events[0] #=> String, one of "PULL_REQUEST", "PUSH"
+    #   resp.configuration.rule_set_categories #=> Array
+    #   resp.configuration.rule_set_categories[0] #=> String, one of "SAST", "IAC", "SCA"
+    #   resp.level #=> String, one of "ORGANIZATION", "ACCOUNT"
+    #   resp.scope_settings.project_selection_scope #=> String, one of "ALL"
+    #   resp.created_at #=> Time
+    #   resp.last_updated_at #=> Time
+    #   resp.tags #=> Hash
+    #   resp.tags["MapKey"] #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/GetCodeSecurityScanConfiguration AWS API Documentation
+    #
+    # @overload get_code_security_scan_configuration(params = {})
+    # @param [Hash] params ({})
+    def get_code_security_scan_configuration(params = {}, options = {})
+      req = build_request(:get_code_security_scan_configuration, params)
+      req.send_request(options)
+    end
+
+    # Retrieves setting configurations for Amazon Inspector scans. If you
+    # specify an `accountId`, this operation returns the scan configuration
+    # for that member account. You must be the delegated administrator for
+    # the specified member account. If you do not specify an `accountId`,
+    # this operation returns your own scan configuration.
+    #
+    # @option params [String] :account_id
+    #   The 12-digit Amazon Web Services account ID of the member account
+    #   whose scan configuration you want to retrieve. When specified, you
+    #   must be the delegated administrator for this member account. If not
+    #   specified, the operation returns your own configuration.
+    #
+    # @return [Types::GetConfigurationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetConfigurationResponse#ecr_configuration #ecr_configuration} => Types::EcrConfigurationState
+    #   * {Types::GetConfigurationResponse#ec2_configuration #ec2_configuration} => Types::Ec2ConfigurationState
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_configuration({
+    #     account_id: "AccountId",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.ecr_configuration.rescan_duration_state.rescan_duration #=> String, one of "LIFETIME", "DAYS_30", "DAYS_180", "DAYS_14", "DAYS_60", "DAYS_90", "DAYS_3", "DAYS_7"
     #   resp.ecr_configuration.rescan_duration_state.status #=> String, one of "SUCCESS", "PENDING", "FAILED"
     #   resp.ecr_configuration.rescan_duration_state.updated_at #=> Time
+    #   resp.ecr_configuration.rescan_duration_state.pull_date_rescan_duration #=> String, one of "DAYS_14", "DAYS_30", "DAYS_60", "DAYS_90", "DAYS_180", "DAYS_3", "DAYS_7"
+    #   resp.ecr_configuration.rescan_duration_state.pull_date_rescan_mode #=> String, one of "LAST_PULL_DATE", "LAST_IN_USE_AT"
+    #   resp.ec2_configuration.scan_mode_state.scan_mode #=> String, one of "EC2_SSM_AGENT_BASED", "EC2_HYBRID"
+    #   resp.ec2_configuration.scan_mode_state.scan_mode_status #=> String, one of "SUCCESS", "PENDING"
+    #   resp.ec2_configuration.vm_scanner_state.activated #=> Boolean
+    #   resp.ec2_configuration.vm_scanner_state.activated_at #=> Time
+    #   resp.ec2_configuration.vm_scanner_state.status #=> String, one of "SUCCESS", "PENDING", "FAILED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/GetConfiguration AWS API Documentation
     #
@@ -2156,19 +3290,19 @@ module Aws::Inspector2
     #
     # @return [Types::GetEc2DeepInspectionConfigurationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::GetEc2DeepInspectionConfigurationResponse#error_message #error_message} => String
-    #   * {Types::GetEc2DeepInspectionConfigurationResponse#org_package_paths #org_package_paths} => Array&lt;String&gt;
     #   * {Types::GetEc2DeepInspectionConfigurationResponse#package_paths #package_paths} => Array&lt;String&gt;
+    #   * {Types::GetEc2DeepInspectionConfigurationResponse#org_package_paths #org_package_paths} => Array&lt;String&gt;
     #   * {Types::GetEc2DeepInspectionConfigurationResponse#status #status} => String
+    #   * {Types::GetEc2DeepInspectionConfigurationResponse#error_message #error_message} => String
     #
     # @example Response structure
     #
-    #   resp.error_message #=> String
-    #   resp.org_package_paths #=> Array
-    #   resp.org_package_paths[0] #=> String
     #   resp.package_paths #=> Array
     #   resp.package_paths[0] #=> String
+    #   resp.org_package_paths #=> Array
+    #   resp.org_package_paths[0] #=> String
     #   resp.status #=> String, one of "ACTIVATED", "DEACTIVATED", "PENDING", "FAILED"
+    #   resp.error_message #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/GetEc2DeepInspectionConfiguration AWS API Documentation
     #
@@ -2181,11 +3315,11 @@ module Aws::Inspector2
 
     # Gets an encryption key.
     #
-    # @option params [required, String] :resource_type
-    #   The resource type the key encrypts.
-    #
     # @option params [required, String] :scan_type
     #   The scan type the key encrypts.
+    #
+    # @option params [required, String] :resource_type
+    #   The resource type the key encrypts.
     #
     # @return [Types::GetEncryptionKeyResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -2194,8 +3328,8 @@ module Aws::Inspector2
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_encryption_key({
-    #     resource_type: "AWS_EC2_INSTANCE", # required, accepts AWS_EC2_INSTANCE, AWS_ECR_CONTAINER_IMAGE, AWS_ECR_REPOSITORY, AWS_LAMBDA_FUNCTION
     #     scan_type: "NETWORK", # required, accepts NETWORK, PACKAGE, CODE
+    #     resource_type: "AWS_EC2_INSTANCE", # required, accepts AWS_EC2_INSTANCE, AWS_ECR_CONTAINER_IMAGE, AWS_ECR_REPOSITORY, AWS_LAMBDA_FUNCTION, CODE_REPOSITORY, Microsoft.Compute/virtualMachines, Microsoft.ContainerRegistry/registry/containerImage, Microsoft.Web/sites
     #   })
     #
     # @example Response structure
@@ -2218,12 +3352,12 @@ module Aws::Inspector2
     #
     # @return [Types::GetFindingsReportStatusResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::GetFindingsReportStatusResponse#destination #destination} => Types::Destination
-    #   * {Types::GetFindingsReportStatusResponse#error_code #error_code} => String
-    #   * {Types::GetFindingsReportStatusResponse#error_message #error_message} => String
-    #   * {Types::GetFindingsReportStatusResponse#filter_criteria #filter_criteria} => Types::FilterCriteria
     #   * {Types::GetFindingsReportStatusResponse#report_id #report_id} => String
     #   * {Types::GetFindingsReportStatusResponse#status #status} => String
+    #   * {Types::GetFindingsReportStatusResponse#error_code #error_code} => String
+    #   * {Types::GetFindingsReportStatusResponse#error_message #error_message} => String
+    #   * {Types::GetFindingsReportStatusResponse#destination #destination} => Types::Destination
+    #   * {Types::GetFindingsReportStatusResponse#filter_criteria #filter_criteria} => Types::FilterCriteria
     #
     # @example Request syntax with placeholder values
     #
@@ -2233,47 +3367,68 @@ module Aws::Inspector2
     #
     # @example Response structure
     #
+    #   resp.report_id #=> String
+    #   resp.status #=> String, one of "SUCCEEDED", "IN_PROGRESS", "CANCELLED", "FAILED"
+    #   resp.error_code #=> String, one of "INTERNAL_ERROR", "INVALID_PERMISSIONS", "NO_FINDINGS_FOUND", "BUCKET_NOT_FOUND", "INCOMPATIBLE_BUCKET_REGION", "MALFORMED_KMS_KEY"
+    #   resp.error_message #=> String
     #   resp.destination.bucket_name #=> String
     #   resp.destination.key_prefix #=> String
     #   resp.destination.kms_key_arn #=> String
-    #   resp.error_code #=> String, one of "INTERNAL_ERROR", "INVALID_PERMISSIONS", "NO_FINDINGS_FOUND", "BUCKET_NOT_FOUND", "INCOMPATIBLE_BUCKET_REGION", "MALFORMED_KMS_KEY"
-    #   resp.error_message #=> String
+    #   resp.filter_criteria.finding_arn #=> Array
+    #   resp.filter_criteria.finding_arn[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.finding_arn[0].value #=> String
     #   resp.filter_criteria.aws_account_id #=> Array
     #   resp.filter_criteria.aws_account_id[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
     #   resp.filter_criteria.aws_account_id[0].value #=> String
-    #   resp.filter_criteria.code_vulnerability_detector_name #=> Array
-    #   resp.filter_criteria.code_vulnerability_detector_name[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filter_criteria.code_vulnerability_detector_name[0].value #=> String
-    #   resp.filter_criteria.code_vulnerability_detector_tags #=> Array
-    #   resp.filter_criteria.code_vulnerability_detector_tags[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filter_criteria.code_vulnerability_detector_tags[0].value #=> String
-    #   resp.filter_criteria.code_vulnerability_file_path #=> Array
-    #   resp.filter_criteria.code_vulnerability_file_path[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filter_criteria.code_vulnerability_file_path[0].value #=> String
-    #   resp.filter_criteria.component_id #=> Array
-    #   resp.filter_criteria.component_id[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filter_criteria.component_id[0].value #=> String
-    #   resp.filter_criteria.component_type #=> Array
-    #   resp.filter_criteria.component_type[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filter_criteria.component_type[0].value #=> String
+    #   resp.filter_criteria.finding_type #=> Array
+    #   resp.filter_criteria.finding_type[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.finding_type[0].value #=> String
+    #   resp.filter_criteria.severity #=> Array
+    #   resp.filter_criteria.severity[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.severity[0].value #=> String
+    #   resp.filter_criteria.first_observed_at #=> Array
+    #   resp.filter_criteria.first_observed_at[0].start_inclusive #=> Time
+    #   resp.filter_criteria.first_observed_at[0].end_inclusive #=> Time
+    #   resp.filter_criteria.last_observed_at #=> Array
+    #   resp.filter_criteria.last_observed_at[0].start_inclusive #=> Time
+    #   resp.filter_criteria.last_observed_at[0].end_inclusive #=> Time
+    #   resp.filter_criteria.updated_at #=> Array
+    #   resp.filter_criteria.updated_at[0].start_inclusive #=> Time
+    #   resp.filter_criteria.updated_at[0].end_inclusive #=> Time
+    #   resp.filter_criteria.finding_status #=> Array
+    #   resp.filter_criteria.finding_status[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.finding_status[0].value #=> String
+    #   resp.filter_criteria.title #=> Array
+    #   resp.filter_criteria.title[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.title[0].value #=> String
+    #   resp.filter_criteria.inspector_score #=> Array
+    #   resp.filter_criteria.inspector_score[0].upper_inclusive #=> Float
+    #   resp.filter_criteria.inspector_score[0].lower_inclusive #=> Float
+    #   resp.filter_criteria.resource_type #=> Array
+    #   resp.filter_criteria.resource_type[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.resource_type[0].value #=> String
+    #   resp.filter_criteria.resource_id #=> Array
+    #   resp.filter_criteria.resource_id[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.resource_id[0].value #=> String
+    #   resp.filter_criteria.resource_tags #=> Array
+    #   resp.filter_criteria.resource_tags[0].comparison #=> String, one of "EQUALS"
+    #   resp.filter_criteria.resource_tags[0].key #=> String
+    #   resp.filter_criteria.resource_tags[0].value #=> String
     #   resp.filter_criteria.ec2_instance_image_id #=> Array
     #   resp.filter_criteria.ec2_instance_image_id[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
     #   resp.filter_criteria.ec2_instance_image_id[0].value #=> String
-    #   resp.filter_criteria.ec2_instance_subnet_id #=> Array
-    #   resp.filter_criteria.ec2_instance_subnet_id[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filter_criteria.ec2_instance_subnet_id[0].value #=> String
     #   resp.filter_criteria.ec2_instance_vpc_id #=> Array
     #   resp.filter_criteria.ec2_instance_vpc_id[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
     #   resp.filter_criteria.ec2_instance_vpc_id[0].value #=> String
+    #   resp.filter_criteria.ec2_instance_subnet_id #=> Array
+    #   resp.filter_criteria.ec2_instance_subnet_id[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.ec2_instance_subnet_id[0].value #=> String
+    #   resp.filter_criteria.ecr_image_pushed_at #=> Array
+    #   resp.filter_criteria.ecr_image_pushed_at[0].start_inclusive #=> Time
+    #   resp.filter_criteria.ecr_image_pushed_at[0].end_inclusive #=> Time
     #   resp.filter_criteria.ecr_image_architecture #=> Array
     #   resp.filter_criteria.ecr_image_architecture[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
     #   resp.filter_criteria.ecr_image_architecture[0].value #=> String
-    #   resp.filter_criteria.ecr_image_hash #=> Array
-    #   resp.filter_criteria.ecr_image_hash[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filter_criteria.ecr_image_hash[0].value #=> String
-    #   resp.filter_criteria.ecr_image_pushed_at #=> Array
-    #   resp.filter_criteria.ecr_image_pushed_at[0].end_inclusive #=> Time
-    #   resp.filter_criteria.ecr_image_pushed_at[0].start_inclusive #=> Time
     #   resp.filter_criteria.ecr_image_registry #=> Array
     #   resp.filter_criteria.ecr_image_registry[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
     #   resp.filter_criteria.ecr_image_registry[0].value #=> String
@@ -2283,104 +3438,152 @@ module Aws::Inspector2
     #   resp.filter_criteria.ecr_image_tags #=> Array
     #   resp.filter_criteria.ecr_image_tags[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
     #   resp.filter_criteria.ecr_image_tags[0].value #=> String
-    #   resp.filter_criteria.epss_score #=> Array
-    #   resp.filter_criteria.epss_score[0].lower_inclusive #=> Float
-    #   resp.filter_criteria.epss_score[0].upper_inclusive #=> Float
-    #   resp.filter_criteria.exploit_available #=> Array
-    #   resp.filter_criteria.exploit_available[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filter_criteria.exploit_available[0].value #=> String
-    #   resp.filter_criteria.finding_arn #=> Array
-    #   resp.filter_criteria.finding_arn[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filter_criteria.finding_arn[0].value #=> String
-    #   resp.filter_criteria.finding_status #=> Array
-    #   resp.filter_criteria.finding_status[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filter_criteria.finding_status[0].value #=> String
-    #   resp.filter_criteria.finding_type #=> Array
-    #   resp.filter_criteria.finding_type[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filter_criteria.finding_type[0].value #=> String
-    #   resp.filter_criteria.first_observed_at #=> Array
-    #   resp.filter_criteria.first_observed_at[0].end_inclusive #=> Time
-    #   resp.filter_criteria.first_observed_at[0].start_inclusive #=> Time
-    #   resp.filter_criteria.fix_available #=> Array
-    #   resp.filter_criteria.fix_available[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filter_criteria.fix_available[0].value #=> String
-    #   resp.filter_criteria.inspector_score #=> Array
-    #   resp.filter_criteria.inspector_score[0].lower_inclusive #=> Float
-    #   resp.filter_criteria.inspector_score[0].upper_inclusive #=> Float
-    #   resp.filter_criteria.lambda_function_execution_role_arn #=> Array
-    #   resp.filter_criteria.lambda_function_execution_role_arn[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filter_criteria.lambda_function_execution_role_arn[0].value #=> String
-    #   resp.filter_criteria.lambda_function_last_modified_at #=> Array
-    #   resp.filter_criteria.lambda_function_last_modified_at[0].end_inclusive #=> Time
-    #   resp.filter_criteria.lambda_function_last_modified_at[0].start_inclusive #=> Time
-    #   resp.filter_criteria.lambda_function_layers #=> Array
-    #   resp.filter_criteria.lambda_function_layers[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filter_criteria.lambda_function_layers[0].value #=> String
-    #   resp.filter_criteria.lambda_function_name #=> Array
-    #   resp.filter_criteria.lambda_function_name[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filter_criteria.lambda_function_name[0].value #=> String
-    #   resp.filter_criteria.lambda_function_runtime #=> Array
-    #   resp.filter_criteria.lambda_function_runtime[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filter_criteria.lambda_function_runtime[0].value #=> String
-    #   resp.filter_criteria.last_observed_at #=> Array
-    #   resp.filter_criteria.last_observed_at[0].end_inclusive #=> Time
-    #   resp.filter_criteria.last_observed_at[0].start_inclusive #=> Time
-    #   resp.filter_criteria.network_protocol #=> Array
-    #   resp.filter_criteria.network_protocol[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filter_criteria.network_protocol[0].value #=> String
+    #   resp.filter_criteria.ecr_image_hash #=> Array
+    #   resp.filter_criteria.ecr_image_hash[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.ecr_image_hash[0].value #=> String
+    #   resp.filter_criteria.ecr_image_last_in_use_at #=> Array
+    #   resp.filter_criteria.ecr_image_last_in_use_at[0].start_inclusive #=> Time
+    #   resp.filter_criteria.ecr_image_last_in_use_at[0].end_inclusive #=> Time
+    #   resp.filter_criteria.ecr_image_in_use_count #=> Array
+    #   resp.filter_criteria.ecr_image_in_use_count[0].upper_inclusive #=> Float
+    #   resp.filter_criteria.ecr_image_in_use_count[0].lower_inclusive #=> Float
     #   resp.filter_criteria.port_range #=> Array
     #   resp.filter_criteria.port_range[0].begin_inclusive #=> Integer
     #   resp.filter_criteria.port_range[0].end_inclusive #=> Integer
-    #   resp.filter_criteria.related_vulnerabilities #=> Array
-    #   resp.filter_criteria.related_vulnerabilities[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filter_criteria.related_vulnerabilities[0].value #=> String
-    #   resp.filter_criteria.resource_id #=> Array
-    #   resp.filter_criteria.resource_id[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filter_criteria.resource_id[0].value #=> String
-    #   resp.filter_criteria.resource_tags #=> Array
-    #   resp.filter_criteria.resource_tags[0].comparison #=> String, one of "EQUALS"
-    #   resp.filter_criteria.resource_tags[0].key #=> String
-    #   resp.filter_criteria.resource_tags[0].value #=> String
-    #   resp.filter_criteria.resource_type #=> Array
-    #   resp.filter_criteria.resource_type[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filter_criteria.resource_type[0].value #=> String
-    #   resp.filter_criteria.severity #=> Array
-    #   resp.filter_criteria.severity[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filter_criteria.severity[0].value #=> String
-    #   resp.filter_criteria.title #=> Array
-    #   resp.filter_criteria.title[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filter_criteria.title[0].value #=> String
-    #   resp.filter_criteria.updated_at #=> Array
-    #   resp.filter_criteria.updated_at[0].end_inclusive #=> Time
-    #   resp.filter_criteria.updated_at[0].start_inclusive #=> Time
-    #   resp.filter_criteria.vendor_severity #=> Array
-    #   resp.filter_criteria.vendor_severity[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filter_criteria.vendor_severity[0].value #=> String
+    #   resp.filter_criteria.network_protocol #=> Array
+    #   resp.filter_criteria.network_protocol[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.network_protocol[0].value #=> String
+    #   resp.filter_criteria.component_id #=> Array
+    #   resp.filter_criteria.component_id[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.component_id[0].value #=> String
+    #   resp.filter_criteria.component_type #=> Array
+    #   resp.filter_criteria.component_type[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.component_type[0].value #=> String
     #   resp.filter_criteria.vulnerability_id #=> Array
     #   resp.filter_criteria.vulnerability_id[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
     #   resp.filter_criteria.vulnerability_id[0].value #=> String
     #   resp.filter_criteria.vulnerability_source #=> Array
     #   resp.filter_criteria.vulnerability_source[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
     #   resp.filter_criteria.vulnerability_source[0].value #=> String
+    #   resp.filter_criteria.vendor_severity #=> Array
+    #   resp.filter_criteria.vendor_severity[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.vendor_severity[0].value #=> String
     #   resp.filter_criteria.vulnerable_packages #=> Array
-    #   resp.filter_criteria.vulnerable_packages[0].architecture.comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filter_criteria.vulnerable_packages[0].architecture.value #=> String
-    #   resp.filter_criteria.vulnerable_packages[0].epoch.lower_inclusive #=> Float
-    #   resp.filter_criteria.vulnerable_packages[0].epoch.upper_inclusive #=> Float
-    #   resp.filter_criteria.vulnerable_packages[0].file_path.comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filter_criteria.vulnerable_packages[0].file_path.value #=> String
     #   resp.filter_criteria.vulnerable_packages[0].name.comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
     #   resp.filter_criteria.vulnerable_packages[0].name.value #=> String
-    #   resp.filter_criteria.vulnerable_packages[0].release.comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filter_criteria.vulnerable_packages[0].release.value #=> String
-    #   resp.filter_criteria.vulnerable_packages[0].source_lambda_layer_arn.comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filter_criteria.vulnerable_packages[0].source_lambda_layer_arn.value #=> String
-    #   resp.filter_criteria.vulnerable_packages[0].source_layer_hash.comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filter_criteria.vulnerable_packages[0].source_layer_hash.value #=> String
     #   resp.filter_criteria.vulnerable_packages[0].version.comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
     #   resp.filter_criteria.vulnerable_packages[0].version.value #=> String
-    #   resp.report_id #=> String
-    #   resp.status #=> String, one of "SUCCEEDED", "IN_PROGRESS", "CANCELLED", "FAILED"
+    #   resp.filter_criteria.vulnerable_packages[0].epoch.upper_inclusive #=> Float
+    #   resp.filter_criteria.vulnerable_packages[0].epoch.lower_inclusive #=> Float
+    #   resp.filter_criteria.vulnerable_packages[0].release.comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.vulnerable_packages[0].release.value #=> String
+    #   resp.filter_criteria.vulnerable_packages[0].architecture.comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.vulnerable_packages[0].architecture.value #=> String
+    #   resp.filter_criteria.vulnerable_packages[0].source_layer_hash.comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.vulnerable_packages[0].source_layer_hash.value #=> String
+    #   resp.filter_criteria.vulnerable_packages[0].source_lambda_layer_arn.comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.vulnerable_packages[0].source_lambda_layer_arn.value #=> String
+    #   resp.filter_criteria.vulnerable_packages[0].file_path.comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.vulnerable_packages[0].file_path.value #=> String
+    #   resp.filter_criteria.related_vulnerabilities #=> Array
+    #   resp.filter_criteria.related_vulnerabilities[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.related_vulnerabilities[0].value #=> String
+    #   resp.filter_criteria.fix_available #=> Array
+    #   resp.filter_criteria.fix_available[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.fix_available[0].value #=> String
+    #   resp.filter_criteria.lambda_function_name #=> Array
+    #   resp.filter_criteria.lambda_function_name[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.lambda_function_name[0].value #=> String
+    #   resp.filter_criteria.lambda_function_layers #=> Array
+    #   resp.filter_criteria.lambda_function_layers[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.lambda_function_layers[0].value #=> String
+    #   resp.filter_criteria.lambda_function_runtime #=> Array
+    #   resp.filter_criteria.lambda_function_runtime[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.lambda_function_runtime[0].value #=> String
+    #   resp.filter_criteria.lambda_function_last_modified_at #=> Array
+    #   resp.filter_criteria.lambda_function_last_modified_at[0].start_inclusive #=> Time
+    #   resp.filter_criteria.lambda_function_last_modified_at[0].end_inclusive #=> Time
+    #   resp.filter_criteria.lambda_function_execution_role_arn #=> Array
+    #   resp.filter_criteria.lambda_function_execution_role_arn[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.lambda_function_execution_role_arn[0].value #=> String
+    #   resp.filter_criteria.exploit_available #=> Array
+    #   resp.filter_criteria.exploit_available[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.exploit_available[0].value #=> String
+    #   resp.filter_criteria.code_vulnerability_detector_name #=> Array
+    #   resp.filter_criteria.code_vulnerability_detector_name[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.code_vulnerability_detector_name[0].value #=> String
+    #   resp.filter_criteria.code_vulnerability_detector_tags #=> Array
+    #   resp.filter_criteria.code_vulnerability_detector_tags[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.code_vulnerability_detector_tags[0].value #=> String
+    #   resp.filter_criteria.code_vulnerability_file_path #=> Array
+    #   resp.filter_criteria.code_vulnerability_file_path[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.code_vulnerability_file_path[0].value #=> String
+    #   resp.filter_criteria.epss_score #=> Array
+    #   resp.filter_criteria.epss_score[0].upper_inclusive #=> Float
+    #   resp.filter_criteria.epss_score[0].lower_inclusive #=> Float
+    #   resp.filter_criteria.code_repository_project_name #=> Array
+    #   resp.filter_criteria.code_repository_project_name[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.code_repository_project_name[0].value #=> String
+    #   resp.filter_criteria.code_repository_provider_type #=> Array
+    #   resp.filter_criteria.code_repository_provider_type[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.code_repository_provider_type[0].value #=> String
+    #   resp.filter_criteria.cloud_provider #=> Array
+    #   resp.filter_criteria.cloud_provider[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.cloud_provider[0].value #=> String
+    #   resp.filter_criteria.cloud_provider_region #=> Array
+    #   resp.filter_criteria.cloud_provider_region[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.cloud_provider_region[0].value #=> String
+    #   resp.filter_criteria.cloud_provider_account_id #=> Array
+    #   resp.filter_criteria.cloud_provider_account_id[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.cloud_provider_account_id[0].value #=> String
+    #   resp.filter_criteria.cloud_provider_org_id #=> Array
+    #   resp.filter_criteria.cloud_provider_org_id[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.cloud_provider_org_id[0].value #=> String
+    #   resp.filter_criteria.cloud_vm_image_reference #=> Array
+    #   resp.filter_criteria.cloud_vm_image_reference[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.cloud_vm_image_reference[0].value #=> String
+    #   resp.filter_criteria.cloud_vm_network_id #=> Array
+    #   resp.filter_criteria.cloud_vm_network_id[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.cloud_vm_network_id[0].value #=> String
+    #   resp.filter_criteria.cloud_vm_subnet_ids #=> Array
+    #   resp.filter_criteria.cloud_vm_subnet_ids[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.cloud_vm_subnet_ids[0].value #=> String
+    #   resp.filter_criteria.cloud_image_repository_name #=> Array
+    #   resp.filter_criteria.cloud_image_repository_name[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.cloud_image_repository_name[0].value #=> String
+    #   resp.filter_criteria.cloud_image_registry #=> Array
+    #   resp.filter_criteria.cloud_image_registry[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.cloud_image_registry[0].value #=> String
+    #   resp.filter_criteria.cloud_image_digest #=> Array
+    #   resp.filter_criteria.cloud_image_digest[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.cloud_image_digest[0].value #=> String
+    #   resp.filter_criteria.cloud_image_tags #=> Array
+    #   resp.filter_criteria.cloud_image_tags[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.cloud_image_tags[0].value #=> String
+    #   resp.filter_criteria.cloud_image_pushed_at #=> Array
+    #   resp.filter_criteria.cloud_image_pushed_at[0].start_inclusive #=> Time
+    #   resp.filter_criteria.cloud_image_pushed_at[0].end_inclusive #=> Time
+    #   resp.filter_criteria.cloud_image_architecture #=> Array
+    #   resp.filter_criteria.cloud_image_architecture[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.cloud_image_architecture[0].value #=> String
+    #   resp.filter_criteria.cloud_image_last_in_use_at #=> Array
+    #   resp.filter_criteria.cloud_image_last_in_use_at[0].start_inclusive #=> Time
+    #   resp.filter_criteria.cloud_image_last_in_use_at[0].end_inclusive #=> Time
+    #   resp.filter_criteria.cloud_image_in_use_count #=> Array
+    #   resp.filter_criteria.cloud_image_in_use_count[0].upper_inclusive #=> Float
+    #   resp.filter_criteria.cloud_image_in_use_count[0].lower_inclusive #=> Float
+    #   resp.filter_criteria.cloud_serverless_function_name #=> Array
+    #   resp.filter_criteria.cloud_serverless_function_name[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.cloud_serverless_function_name[0].value #=> String
+    #   resp.filter_criteria.cloud_serverless_function_runtime #=> Array
+    #   resp.filter_criteria.cloud_serverless_function_runtime[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.cloud_serverless_function_runtime[0].value #=> String
+    #   resp.filter_criteria.cloud_serverless_function_last_modified_at #=> Array
+    #   resp.filter_criteria.cloud_serverless_function_last_modified_at[0].start_inclusive #=> Time
+    #   resp.filter_criteria.cloud_serverless_function_last_modified_at[0].end_inclusive #=> Time
+    #   resp.filter_criteria.cloud_serverless_function_execution_role #=> Array
+    #   resp.filter_criteria.cloud_serverless_function_execution_role[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filter_criteria.cloud_serverless_function_execution_role[0].value #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/GetFindingsReportStatus AWS API Documentation
     #
@@ -2410,8 +3613,8 @@ module Aws::Inspector2
     # @example Response structure
     #
     #   resp.member.account_id #=> String
-    #   resp.member.delegated_admin_account_id #=> String
     #   resp.member.relationship_status #=> String, one of "CREATED", "INVITED", "DISABLED", "ENABLED", "REMOVED", "RESIGNED", "DELETED", "EMAIL_VERIFICATION_IN_PROGRESS", "EMAIL_VERIFICATION_FAILED", "REGION_DISABLED", "ACCOUNT_SUSPENDED", "CANNOT_CREATE_DETECTOR_IN_ORG_MASTER"
+    #   resp.member.delegated_admin_account_id #=> String
     #   resp.member.updated_at #=> Time
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/GetMember AWS API Documentation
@@ -2430,13 +3633,13 @@ module Aws::Inspector2
     #
     # @return [Types::GetSbomExportResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
+    #   * {Types::GetSbomExportResponse#report_id #report_id} => String
+    #   * {Types::GetSbomExportResponse#format #format} => String
+    #   * {Types::GetSbomExportResponse#status #status} => String
     #   * {Types::GetSbomExportResponse#error_code #error_code} => String
     #   * {Types::GetSbomExportResponse#error_message #error_message} => String
-    #   * {Types::GetSbomExportResponse#filter_criteria #filter_criteria} => Types::ResourceFilterCriteria
-    #   * {Types::GetSbomExportResponse#format #format} => String
-    #   * {Types::GetSbomExportResponse#report_id #report_id} => String
     #   * {Types::GetSbomExportResponse#s3_destination #s3_destination} => Types::Destination
-    #   * {Types::GetSbomExportResponse#status #status} => String
+    #   * {Types::GetSbomExportResponse#filter_criteria #filter_criteria} => Types::ResourceFilterCriteria
     #
     # @example Request syntax with placeholder values
     #
@@ -2446,40 +3649,75 @@ module Aws::Inspector2
     #
     # @example Response structure
     #
+    #   resp.report_id #=> String
+    #   resp.format #=> String, one of "CYCLONEDX_1_4", "SPDX_2_3"
+    #   resp.status #=> String, one of "SUCCEEDED", "IN_PROGRESS", "CANCELLED", "FAILED"
     #   resp.error_code #=> String, one of "INTERNAL_ERROR", "INVALID_PERMISSIONS", "NO_FINDINGS_FOUND", "BUCKET_NOT_FOUND", "INCOMPATIBLE_BUCKET_REGION", "MALFORMED_KMS_KEY"
     #   resp.error_message #=> String
+    #   resp.s3_destination.bucket_name #=> String
+    #   resp.s3_destination.key_prefix #=> String
+    #   resp.s3_destination.kms_key_arn #=> String
     #   resp.filter_criteria.account_id #=> Array
     #   resp.filter_criteria.account_id[0].comparison #=> String, one of "EQUALS", "NOT_EQUALS"
     #   resp.filter_criteria.account_id[0].value #=> String
-    #   resp.filter_criteria.ec2_instance_tags #=> Array
-    #   resp.filter_criteria.ec2_instance_tags[0].comparison #=> String, one of "EQUALS"
-    #   resp.filter_criteria.ec2_instance_tags[0].key #=> String
-    #   resp.filter_criteria.ec2_instance_tags[0].value #=> String
-    #   resp.filter_criteria.ecr_image_tags #=> Array
-    #   resp.filter_criteria.ecr_image_tags[0].comparison #=> String, one of "EQUALS", "NOT_EQUALS"
-    #   resp.filter_criteria.ecr_image_tags[0].value #=> String
-    #   resp.filter_criteria.ecr_repository_name #=> Array
-    #   resp.filter_criteria.ecr_repository_name[0].comparison #=> String, one of "EQUALS", "NOT_EQUALS"
-    #   resp.filter_criteria.ecr_repository_name[0].value #=> String
-    #   resp.filter_criteria.lambda_function_name #=> Array
-    #   resp.filter_criteria.lambda_function_name[0].comparison #=> String, one of "EQUALS", "NOT_EQUALS"
-    #   resp.filter_criteria.lambda_function_name[0].value #=> String
-    #   resp.filter_criteria.lambda_function_tags #=> Array
-    #   resp.filter_criteria.lambda_function_tags[0].comparison #=> String, one of "EQUALS"
-    #   resp.filter_criteria.lambda_function_tags[0].key #=> String
-    #   resp.filter_criteria.lambda_function_tags[0].value #=> String
     #   resp.filter_criteria.resource_id #=> Array
     #   resp.filter_criteria.resource_id[0].comparison #=> String, one of "EQUALS", "NOT_EQUALS"
     #   resp.filter_criteria.resource_id[0].value #=> String
     #   resp.filter_criteria.resource_type #=> Array
     #   resp.filter_criteria.resource_type[0].comparison #=> String, one of "EQUALS", "NOT_EQUALS"
     #   resp.filter_criteria.resource_type[0].value #=> String
-    #   resp.format #=> String, one of "CYCLONEDX_1_4", "SPDX_2_3"
-    #   resp.report_id #=> String
-    #   resp.s3_destination.bucket_name #=> String
-    #   resp.s3_destination.key_prefix #=> String
-    #   resp.s3_destination.kms_key_arn #=> String
-    #   resp.status #=> String, one of "SUCCEEDED", "IN_PROGRESS", "CANCELLED", "FAILED"
+    #   resp.filter_criteria.ecr_repository_name #=> Array
+    #   resp.filter_criteria.ecr_repository_name[0].comparison #=> String, one of "EQUALS", "NOT_EQUALS"
+    #   resp.filter_criteria.ecr_repository_name[0].value #=> String
+    #   resp.filter_criteria.lambda_function_name #=> Array
+    #   resp.filter_criteria.lambda_function_name[0].comparison #=> String, one of "EQUALS", "NOT_EQUALS"
+    #   resp.filter_criteria.lambda_function_name[0].value #=> String
+    #   resp.filter_criteria.ecr_image_tags #=> Array
+    #   resp.filter_criteria.ecr_image_tags[0].comparison #=> String, one of "EQUALS", "NOT_EQUALS"
+    #   resp.filter_criteria.ecr_image_tags[0].value #=> String
+    #   resp.filter_criteria.ec2_instance_tags #=> Array
+    #   resp.filter_criteria.ec2_instance_tags[0].comparison #=> String, one of "EQUALS"
+    #   resp.filter_criteria.ec2_instance_tags[0].key #=> String
+    #   resp.filter_criteria.ec2_instance_tags[0].value #=> String
+    #   resp.filter_criteria.lambda_function_tags #=> Array
+    #   resp.filter_criteria.lambda_function_tags[0].comparison #=> String, one of "EQUALS"
+    #   resp.filter_criteria.lambda_function_tags[0].key #=> String
+    #   resp.filter_criteria.lambda_function_tags[0].value #=> String
+    #   resp.filter_criteria.cloud_provider #=> Array
+    #   resp.filter_criteria.cloud_provider[0].comparison #=> String, one of "EQUALS", "NOT_EQUALS"
+    #   resp.filter_criteria.cloud_provider[0].value #=> String
+    #   resp.filter_criteria.cloud_provider_account_id #=> Array
+    #   resp.filter_criteria.cloud_provider_account_id[0].comparison #=> String, one of "EQUALS", "NOT_EQUALS"
+    #   resp.filter_criteria.cloud_provider_account_id[0].value #=> String
+    #   resp.filter_criteria.cloud_provider_org_id #=> Array
+    #   resp.filter_criteria.cloud_provider_org_id[0].comparison #=> String, one of "EQUALS", "NOT_EQUALS"
+    #   resp.filter_criteria.cloud_provider_org_id[0].value #=> String
+    #   resp.filter_criteria.cloud_provider_region #=> Array
+    #   resp.filter_criteria.cloud_provider_region[0].comparison #=> String, one of "EQUALS", "NOT_EQUALS"
+    #   resp.filter_criteria.cloud_provider_region[0].value #=> String
+    #   resp.filter_criteria.cloud_vm_instance_tags #=> Array
+    #   resp.filter_criteria.cloud_vm_instance_tags[0].comparison #=> String, one of "EQUALS"
+    #   resp.filter_criteria.cloud_vm_instance_tags[0].key #=> String
+    #   resp.filter_criteria.cloud_vm_instance_tags[0].value #=> String
+    #   resp.filter_criteria.cloud_container_image_tags #=> Array
+    #   resp.filter_criteria.cloud_container_image_tags[0].comparison #=> String, one of "EQUALS", "NOT_EQUALS"
+    #   resp.filter_criteria.cloud_container_image_tags[0].value #=> String
+    #   resp.filter_criteria.cloud_container_repository_name #=> Array
+    #   resp.filter_criteria.cloud_container_repository_name[0].comparison #=> String, one of "EQUALS", "NOT_EQUALS"
+    #   resp.filter_criteria.cloud_container_repository_name[0].value #=> String
+    #   resp.filter_criteria.cloud_container_registry_name #=> Array
+    #   resp.filter_criteria.cloud_container_registry_name[0].comparison #=> String, one of "EQUALS", "NOT_EQUALS"
+    #   resp.filter_criteria.cloud_container_registry_name[0].value #=> String
+    #   resp.filter_criteria.cloud_serverless_function_name #=> Array
+    #   resp.filter_criteria.cloud_serverless_function_name[0].comparison #=> String, one of "EQUALS", "NOT_EQUALS"
+    #   resp.filter_criteria.cloud_serverless_function_name[0].value #=> String
+    #   resp.filter_criteria.cloud_serverless_function_runtime #=> Array
+    #   resp.filter_criteria.cloud_serverless_function_runtime[0].comparison #=> String, one of "EQUALS", "NOT_EQUALS"
+    #   resp.filter_criteria.cloud_serverless_function_runtime[0].value #=> String
+    #   resp.filter_criteria.cloud_serverless_function_tags #=> Array
+    #   resp.filter_criteria.cloud_serverless_function_tags[0].comparison #=> String, one of "EQUALS"
+    #   resp.filter_criteria.cloud_serverless_function_tags[0].key #=> String
+    #   resp.filter_criteria.cloud_serverless_function_tags[0].value #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/GetSbomExport AWS API Documentation
     #
@@ -2490,7 +3728,13 @@ module Aws::Inspector2
       req.send_request(options)
     end
 
-    # Lists the permissions an account has to configure Amazon Inspector.
+    # Lists the permissions an account has to configure Amazon Inspector. If
+    # the account is a member account or standalone account with resources
+    # managed by an Organizations policy, the operation returns fewer
+    # permissions.
+    #
+    # @option params [String] :service
+    #   The service scan type to check permissions for.
     #
     # @option params [Integer] :max_results
     #   The maximum number of results the response can return. If your request
@@ -2506,30 +3750,27 @@ module Aws::Inspector2
     #   For subsequent calls, use the NextToken value returned from the
     #   previous request to continue listing results after the first page.
     #
-    # @option params [String] :service
-    #   The service scan type to check permissions for.
-    #
     # @return [Types::ListAccountPermissionsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::ListAccountPermissionsResponse#next_token #next_token} => String
     #   * {Types::ListAccountPermissionsResponse#permissions #permissions} => Array&lt;Types::Permission&gt;
+    #   * {Types::ListAccountPermissionsResponse#next_token #next_token} => String
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_account_permissions({
+    #     service: "EC2", # accepts EC2, ECR, LAMBDA
     #     max_results: 1,
     #     next_token: "NextToken",
-    #     service: "EC2", # accepts EC2, ECR, LAMBDA
     #   })
     #
     # @example Response structure
     #
-    #   resp.next_token #=> String
     #   resp.permissions #=> Array
-    #   resp.permissions[0].operation #=> String, one of "ENABLE_SCANNING", "DISABLE_SCANNING", "ENABLE_REPOSITORY", "DISABLE_REPOSITORY"
     #   resp.permissions[0].service #=> String, one of "EC2", "ECR", "LAMBDA"
+    #   resp.permissions[0].operation #=> String, one of "ENABLE_SCANNING", "DISABLE_SCANNING", "ENABLE_REPOSITORY", "DISABLE_REPOSITORY"
+    #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/ListAccountPermissions AWS API Documentation
     #
@@ -2545,37 +3786,67 @@ module Aws::Inspector2
     # @option params [Types::ListCisScanConfigurationsFilterCriteria] :filter_criteria
     #   The CIS scan configuration filter criteria.
     #
-    # @option params [Integer] :max_results
-    #   The maximum number of CIS scan configurations to be returned in a
-    #   single page of results.
-    #
-    # @option params [String] :next_token
-    #   The pagination token from a previous request that's used to retrieve
-    #   the next page of results.
-    #
     # @option params [String] :sort_by
     #   The CIS scan configuration sort by order.
     #
     # @option params [String] :sort_order
     #   The CIS scan configuration sort order order.
     #
+    # @option params [String] :next_token
+    #   The pagination token from a previous request that's used to retrieve
+    #   the next page of results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of CIS scan configurations to be returned in a
+    #   single page of results.
+    #
     # @return [Types::ListCisScanConfigurationsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::ListCisScanConfigurationsResponse#next_token #next_token} => String
     #   * {Types::ListCisScanConfigurationsResponse#scan_configurations #scan_configurations} => Array&lt;Types::CisScanConfiguration&gt;
+    #   * {Types::ListCisScanConfigurationsResponse#next_token #next_token} => String
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    #
+    # @example Example: Sample ListCisScanConfigurations Call
+    #
+    #   resp = client.list_cis_scan_configurations({
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     scan_configurations: [
+    #       {
+    #         owner_id: "123412341234", 
+    #         scan_configuration_arn: "arn:aws:inspector2:us-east-1:123412341234:owner/123412341234/cis-configuration/624b746d-e080-44ae-8c1d-48e653365a38", 
+    #         scan_name: "sample", 
+    #         schedule: {
+    #           daily: {
+    #             start_time: {
+    #               time_of_day: "12:34", 
+    #               timezone: "UTC", 
+    #             }, 
+    #           }, 
+    #         }, 
+    #         security_level: "LEVEL_1", 
+    #         targets: {
+    #           account_ids: [
+    #             "123412341234", 
+    #           ], 
+    #           target_resource_tags: {
+    #             "key" => [
+    #               "value", 
+    #             ], 
+    #           }, 
+    #         }, 
+    #       }, 
+    #     ], 
+    #   }
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_cis_scan_configurations({
     #     filter_criteria: {
-    #       scan_configuration_arn_filters: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "String", # required
-    #         },
-    #       ],
     #       scan_name_filters: [
     #         {
     #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
@@ -2589,37 +3860,43 @@ module Aws::Inspector2
     #           value: "NonEmptyString", # required
     #         },
     #       ],
+    #       scan_configuration_arn_filters: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "String", # required
+    #         },
+    #       ],
     #     },
-    #     max_results: 1,
-    #     next_token: "NextToken",
     #     sort_by: "SCAN_NAME", # accepts SCAN_NAME, SCAN_CONFIGURATION_ARN
     #     sort_order: "ASC", # accepts ASC, DESC
+    #     next_token: "NextToken",
+    #     max_results: 1,
     #   })
     #
     # @example Response structure
     #
-    #   resp.next_token #=> String
     #   resp.scan_configurations #=> Array
-    #   resp.scan_configurations[0].owner_id #=> String
     #   resp.scan_configurations[0].scan_configuration_arn #=> String
+    #   resp.scan_configurations[0].owner_id #=> String
     #   resp.scan_configurations[0].scan_name #=> String
+    #   resp.scan_configurations[0].security_level #=> String, one of "LEVEL_1", "LEVEL_2"
     #   resp.scan_configurations[0].schedule.daily.start_time.time_of_day #=> String
     #   resp.scan_configurations[0].schedule.daily.start_time.timezone #=> String
-    #   resp.scan_configurations[0].schedule.monthly.day #=> String, one of "SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"
-    #   resp.scan_configurations[0].schedule.monthly.start_time.time_of_day #=> String
-    #   resp.scan_configurations[0].schedule.monthly.start_time.timezone #=> String
-    #   resp.scan_configurations[0].schedule.weekly.days #=> Array
-    #   resp.scan_configurations[0].schedule.weekly.days[0] #=> String, one of "SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"
     #   resp.scan_configurations[0].schedule.weekly.start_time.time_of_day #=> String
     #   resp.scan_configurations[0].schedule.weekly.start_time.timezone #=> String
-    #   resp.scan_configurations[0].security_level #=> String, one of "LEVEL_1", "LEVEL_2"
-    #   resp.scan_configurations[0].tags #=> Hash
-    #   resp.scan_configurations[0].tags["MapKey"] #=> String
+    #   resp.scan_configurations[0].schedule.weekly.days #=> Array
+    #   resp.scan_configurations[0].schedule.weekly.days[0] #=> String, one of "SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"
+    #   resp.scan_configurations[0].schedule.monthly.start_time.time_of_day #=> String
+    #   resp.scan_configurations[0].schedule.monthly.start_time.timezone #=> String
+    #   resp.scan_configurations[0].schedule.monthly.day #=> String, one of "SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"
     #   resp.scan_configurations[0].targets.account_ids #=> Array
     #   resp.scan_configurations[0].targets.account_ids[0] #=> String
     #   resp.scan_configurations[0].targets.target_resource_tags #=> Hash
     #   resp.scan_configurations[0].targets.target_resource_tags["TargetResourceTagsKey"] #=> Array
     #   resp.scan_configurations[0].targets.target_resource_tags["TargetResourceTagsKey"][0] #=> String
+    #   resp.scan_configurations[0].tags #=> Hash
+    #   resp.scan_configurations[0].tags["MapKey"] #=> String
+    #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/ListCisScanConfigurations AWS API Documentation
     #
@@ -2632,25 +3909,25 @@ module Aws::Inspector2
 
     # Lists scan results aggregated by checks.
     #
-    # @option params [Types::CisScanResultsAggregatedByChecksFilterCriteria] :filter_criteria
-    #   The filter criteria.
-    #
-    # @option params [Integer] :max_results
-    #   The maximum number of scan results aggregated by checks to be returned
-    #   in a single page of results.
-    #
-    # @option params [String] :next_token
-    #   The pagination token from a previous request that's used to retrieve
-    #   the next page of results.
-    #
     # @option params [required, String] :scan_arn
     #   The scan ARN.
+    #
+    # @option params [Types::CisScanResultsAggregatedByChecksFilterCriteria] :filter_criteria
+    #   The filter criteria.
     #
     # @option params [String] :sort_by
     #   The sort by order.
     #
     # @option params [String] :sort_order
     #   The sort order.
+    #
+    # @option params [String] :next_token
+    #   The pagination token from a previous request that's used to retrieve
+    #   the next page of results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of scan results aggregated by checks to be returned
+    #   in a single page of results.
     #
     # @return [Types::ListCisScanResultsAggregatedByChecksResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -2659,9 +3936,37 @@ module Aws::Inspector2
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
     #
+    #
+    # @example Example: Sample ListCisScanResultsAggregatedByChecks Call
+    #
+    #   resp = client.list_cis_scan_results_aggregated_by_checks({
+    #     scan_arn: "arn:aws:inspector2:us-east-1:123412341234:owner/123412341234/cis-scan/624b746d-e080-44ae-8c1d-48e653365a38", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     check_aggregations: [
+    #       {
+    #         account_id: "123412341234", 
+    #         check_description: "description", 
+    #         check_id: "1.1.1.1", 
+    #         level: "LEVEL_1", 
+    #         platform: "AMAZON_LINUX_2", 
+    #         scan_arn: "arn:aws:inspector2:us-east-1:123412341234:owner/123412341234/cis-scan/624b746d-e080-44ae-8c1d-48e653365a38", 
+    #         status_counts: {
+    #           failed: 0, 
+    #           passed: 2, 
+    #           skipped: 1, 
+    #         }, 
+    #         title: "title1", 
+    #       }, 
+    #     ], 
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_cis_scan_results_aggregated_by_checks({
+    #     scan_arn: "CisScanArn", # required
     #     filter_criteria: {
     #       account_id_filters: [
     #         {
@@ -2675,10 +3980,10 @@ module Aws::Inspector2
     #           value: "String", # required
     #         },
     #       ],
-    #       failed_resources_filters: [
+    #       title_filters: [
     #         {
-    #           lower_inclusive: 1,
-    #           upper_inclusive: 1,
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "String", # required
     #         },
     #       ],
     #       platform_filters: [
@@ -2687,39 +3992,38 @@ module Aws::Inspector2
     #           value: "String", # required
     #         },
     #       ],
+    #       failed_resources_filters: [
+    #         {
+    #           upper_inclusive: 1,
+    #           lower_inclusive: 1,
+    #         },
+    #       ],
     #       security_level_filters: [
     #         {
     #           comparison: "EQUALS", # required, accepts EQUALS
     #           value: "LEVEL_1", # required, accepts LEVEL_1, LEVEL_2
     #         },
     #       ],
-    #       title_filters: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "String", # required
-    #         },
-    #       ],
     #     },
-    #     max_results: 1,
-    #     next_token: "NextToken",
-    #     scan_arn: "CisScanArn", # required
     #     sort_by: "CHECK_ID", # accepts CHECK_ID, TITLE, PLATFORM, FAILED_COUNTS, SECURITY_LEVEL
     #     sort_order: "ASC", # accepts ASC, DESC
+    #     next_token: "NextToken",
+    #     max_results: 1,
     #   })
     #
     # @example Response structure
     #
     #   resp.check_aggregations #=> Array
-    #   resp.check_aggregations[0].account_id #=> String
-    #   resp.check_aggregations[0].check_description #=> String
-    #   resp.check_aggregations[0].check_id #=> String
-    #   resp.check_aggregations[0].level #=> String, one of "LEVEL_1", "LEVEL_2"
-    #   resp.check_aggregations[0].platform #=> String
     #   resp.check_aggregations[0].scan_arn #=> String
-    #   resp.check_aggregations[0].status_counts.failed #=> Integer
-    #   resp.check_aggregations[0].status_counts.passed #=> Integer
-    #   resp.check_aggregations[0].status_counts.skipped #=> Integer
+    #   resp.check_aggregations[0].check_id #=> String
     #   resp.check_aggregations[0].title #=> String
+    #   resp.check_aggregations[0].check_description #=> String
+    #   resp.check_aggregations[0].level #=> String, one of "LEVEL_1", "LEVEL_2"
+    #   resp.check_aggregations[0].account_id #=> String
+    #   resp.check_aggregations[0].status_counts.failed #=> Integer
+    #   resp.check_aggregations[0].status_counts.skipped #=> Integer
+    #   resp.check_aggregations[0].status_counts.passed #=> Integer
+    #   resp.check_aggregations[0].platform #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/ListCisScanResultsAggregatedByChecks AWS API Documentation
@@ -2733,19 +4037,11 @@ module Aws::Inspector2
 
     # Lists scan results aggregated by a target resource.
     #
-    # @option params [Types::CisScanResultsAggregatedByTargetResourceFilterCriteria] :filter_criteria
-    #   The filter criteria.
-    #
-    # @option params [Integer] :max_results
-    #   The maximum number of scan results aggregated by a target resource to
-    #   be returned in a single page of results.
-    #
-    # @option params [String] :next_token
-    #   The pagination token from a previous request that's used to retrieve
-    #   the next page of results.
-    #
     # @option params [required, String] :scan_arn
     #   The scan ARN.
+    #
+    # @option params [Types::CisScanResultsAggregatedByTargetResourceFilterCriteria] :filter_criteria
+    #   The filter criteria.
     #
     # @option params [String] :sort_by
     #   The sort by order.
@@ -2753,36 +4049,57 @@ module Aws::Inspector2
     # @option params [String] :sort_order
     #   The sort order.
     #
+    # @option params [String] :next_token
+    #   The pagination token from a previous request that's used to retrieve
+    #   the next page of results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of scan results aggregated by a target resource to
+    #   be returned in a single page of results.
+    #
     # @return [Types::ListCisScanResultsAggregatedByTargetResourceResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::ListCisScanResultsAggregatedByTargetResourceResponse#next_token #next_token} => String
     #   * {Types::ListCisScanResultsAggregatedByTargetResourceResponse#target_resource_aggregations #target_resource_aggregations} => Array&lt;Types::CisTargetResourceAggregation&gt;
+    #   * {Types::ListCisScanResultsAggregatedByTargetResourceResponse#next_token #next_token} => String
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    #
+    # @example Example: Sample ListCisScanResultsAggregatedByTargetResource Call
+    #
+    #   resp = client.list_cis_scan_results_aggregated_by_target_resource({
+    #     scan_arn: "arn:aws:inspector2:us-east-1:123412341234:owner/123412341234/cis-scan/624b746d-e080-44ae-8c1d-48e653365a38", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     target_resource_aggregations: [
+    #       {
+    #         account_id: "123412341234", 
+    #         platform: "AMAZON_LINUX_2", 
+    #         scan_arn: "arn:aws:inspector2:us-east-1:123412341234:owner/123412341234/cis-scan/624b746d-e080-44ae-8c1d-48e653365a38", 
+    #         status_counts: {
+    #           failed: 0, 
+    #           passed: 2, 
+    #           skipped: 1, 
+    #         }, 
+    #         target_resource_id: "i-12341234", 
+    #         target_resource_tags: {
+    #           "key" => [
+    #             "value", 
+    #           ], 
+    #         }, 
+    #         target_status: "COMPLETED", 
+    #       }, 
+    #     ], 
+    #   }
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_cis_scan_results_aggregated_by_target_resource({
+    #     scan_arn: "CisScanArn", # required
     #     filter_criteria: {
     #       account_id_filters: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "String", # required
-    #         },
-    #       ],
-    #       check_id_filters: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "String", # required
-    #         },
-    #       ],
-    #       failed_checks_filters: [
-    #         {
-    #           lower_inclusive: 1,
-    #           upper_inclusive: 1,
-    #         },
-    #       ],
-    #       platform_filters: [
     #         {
     #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
     #           value: "String", # required
@@ -2792,6 +4109,12 @@ module Aws::Inspector2
     #         {
     #           comparison: "EQUALS", # required, accepts EQUALS
     #           value: "PASSED", # required, accepts PASSED, FAILED, SKIPPED
+    #         },
+    #       ],
+    #       check_id_filters: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "String", # required
     #         },
     #       ],
     #       target_resource_id_filters: [
@@ -2805,6 +4128,12 @@ module Aws::Inspector2
     #           comparison: "EQUALS", # required, accepts EQUALS
     #           key: "NonEmptyString", # required
     #           value: "NonEmptyString", # required
+    #         },
+    #       ],
+    #       platform_filters: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "String", # required
     #         },
     #       ],
     #       target_status_filters: [
@@ -2819,30 +4148,35 @@ module Aws::Inspector2
     #           value: "SCAN_IN_PROGRESS", # required, accepts SCAN_IN_PROGRESS, UNSUPPORTED_OS, SSM_UNMANAGED
     #         },
     #       ],
+    #       failed_checks_filters: [
+    #         {
+    #           upper_inclusive: 1,
+    #           lower_inclusive: 1,
+    #         },
+    #       ],
     #     },
-    #     max_results: 1,
-    #     next_token: "NextToken",
-    #     scan_arn: "CisScanArn", # required
     #     sort_by: "RESOURCE_ID", # accepts RESOURCE_ID, FAILED_COUNTS, ACCOUNT_ID, PLATFORM, TARGET_STATUS, TARGET_STATUS_REASON
     #     sort_order: "ASC", # accepts ASC, DESC
+    #     next_token: "NextToken",
+    #     max_results: 1,
     #   })
     #
     # @example Response structure
     #
-    #   resp.next_token #=> String
     #   resp.target_resource_aggregations #=> Array
-    #   resp.target_resource_aggregations[0].account_id #=> String
-    #   resp.target_resource_aggregations[0].platform #=> String
     #   resp.target_resource_aggregations[0].scan_arn #=> String
-    #   resp.target_resource_aggregations[0].status_counts.failed #=> Integer
-    #   resp.target_resource_aggregations[0].status_counts.passed #=> Integer
-    #   resp.target_resource_aggregations[0].status_counts.skipped #=> Integer
     #   resp.target_resource_aggregations[0].target_resource_id #=> String
+    #   resp.target_resource_aggregations[0].account_id #=> String
     #   resp.target_resource_aggregations[0].target_resource_tags #=> Hash
     #   resp.target_resource_aggregations[0].target_resource_tags["TargetResourceTagsKey"] #=> Array
     #   resp.target_resource_aggregations[0].target_resource_tags["TargetResourceTagsKey"][0] #=> String
+    #   resp.target_resource_aggregations[0].status_counts.failed #=> Integer
+    #   resp.target_resource_aggregations[0].status_counts.skipped #=> Integer
+    #   resp.target_resource_aggregations[0].status_counts.passed #=> Integer
+    #   resp.target_resource_aggregations[0].platform #=> String
     #   resp.target_resource_aggregations[0].target_status #=> String, one of "TIMED_OUT", "CANCELLED", "COMPLETED"
     #   resp.target_resource_aggregations[0].target_status_reason #=> String, one of "SCAN_IN_PROGRESS", "UNSUPPORTED_OS", "SSM_UNMANAGED"
+    #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/ListCisScanResultsAggregatedByTargetResource AWS API Documentation
     #
@@ -2855,18 +4189,11 @@ module Aws::Inspector2
 
     # Returns a CIS scan list.
     #
-    # @option params [String] :detail_level
-    #   The detail applied to the CIS scan.
-    #
     # @option params [Types::ListCisScansFilterCriteria] :filter_criteria
     #   The CIS scan filter criteria.
     #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to be returned.
-    #
-    # @option params [String] :next_token
-    #   The pagination token from a previous request that's used to retrieve
-    #   the next page of results.
+    # @option params [String] :detail_level
+    #   The detail applied to the CIS scan.
     #
     # @option params [String] :sort_by
     #   The CIS scans sort by order.
@@ -2874,28 +4201,80 @@ module Aws::Inspector2
     # @option params [String] :sort_order
     #   The CIS scans sort order.
     #
+    # @option params [String] :next_token
+    #   The pagination token from a previous request that's used to retrieve
+    #   the next page of results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to be returned.
+    #
     # @return [Types::ListCisScansResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::ListCisScansResponse#next_token #next_token} => String
     #   * {Types::ListCisScansResponse#scans #scans} => Array&lt;Types::CisScan&gt;
+    #   * {Types::ListCisScansResponse#next_token #next_token} => String
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    #
+    # @example Example: Sample ListCisScans Call
+    #
+    #   resp = client.list_cis_scans({
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     scans: [
+    #       {
+    #         failed_checks: 2, 
+    #         scan_arn: "arn:aws:inspector2:us-east-1:123412341234:owner/123412341234/cis-scan/624b746d-e080-44ae-8c1d-48e653365a38", 
+    #         scan_configuration_arn: "arn:aws:inspector2:us-east-1:123412341234:owner/123412341234/cis-configuration/624b746d-e080-44ae-8c1d-48e653365a38", 
+    #         scan_date: Time.parse("2023-04-12T23:20:50.52Z"), 
+    #         scan_name: "sample", 
+    #         scheduled_by: "Delegated Admin", 
+    #         security_level: "LEVEL_1", 
+    #         status: "COMPLETED", 
+    #         targets: {
+    #           account_ids: [
+    #             "123412341234", 
+    #           ], 
+    #           target_resource_tags: {
+    #             "key" => [
+    #               "value", 
+    #             ], 
+    #           }, 
+    #         }, 
+    #         total_checks: 150, 
+    #       }, 
+    #     ], 
+    #   }
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_cis_scans({
-    #     detail_level: "ORGANIZATION", # accepts ORGANIZATION, MEMBER
     #     filter_criteria: {
-    #       failed_checks_filters: [
-    #         {
-    #           lower_inclusive: 1,
-    #           upper_inclusive: 1,
-    #         },
-    #       ],
-    #       scan_arn_filters: [
+    #       scan_name_filters: [
     #         {
     #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
     #           value: "String", # required
+    #         },
+    #       ],
+    #       target_resource_tag_filters: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS
+    #           key: "NonEmptyString", # required
+    #           value: "NonEmptyString", # required
+    #         },
+    #       ],
+    #       target_resource_id_filters: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "String", # required
+    #         },
+    #       ],
+    #       scan_status_filters: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS
+    #           value: "FAILED", # required, accepts FAILED, COMPLETED, CANCELLED, IN_PROGRESS
     #         },
     #       ],
     #       scan_at_filters: [
@@ -2910,16 +4289,10 @@ module Aws::Inspector2
     #           value: "String", # required
     #         },
     #       ],
-    #       scan_name_filters: [
+    #       scan_arn_filters: [
     #         {
     #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
     #           value: "String", # required
-    #         },
-    #       ],
-    #       scan_status_filters: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS
-    #           value: "FAILED", # required, accepts FAILED, COMPLETED, CANCELLED, IN_PROGRESS
     #         },
     #       ],
     #       scheduled_by_filters: [
@@ -2928,50 +4301,44 @@ module Aws::Inspector2
     #           value: "String", # required
     #         },
     #       ],
+    #       failed_checks_filters: [
+    #         {
+    #           upper_inclusive: 1,
+    #           lower_inclusive: 1,
+    #         },
+    #       ],
     #       target_account_id_filters: [
     #         {
     #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
     #           value: "String", # required
     #         },
     #       ],
-    #       target_resource_id_filters: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "String", # required
-    #         },
-    #       ],
-    #       target_resource_tag_filters: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS
-    #           key: "NonEmptyString", # required
-    #           value: "NonEmptyString", # required
-    #         },
-    #       ],
     #     },
-    #     max_results: 1,
-    #     next_token: "NextToken",
+    #     detail_level: "ORGANIZATION", # accepts ORGANIZATION, MEMBER
     #     sort_by: "STATUS", # accepts STATUS, SCHEDULED_BY, SCAN_START_DATE, FAILED_CHECKS
     #     sort_order: "ASC", # accepts ASC, DESC
+    #     next_token: "NextToken",
+    #     max_results: 1,
     #   })
     #
     # @example Response structure
     #
-    #   resp.next_token #=> String
     #   resp.scans #=> Array
-    #   resp.scans[0].failed_checks #=> Integer
     #   resp.scans[0].scan_arn #=> String
     #   resp.scans[0].scan_configuration_arn #=> String
-    #   resp.scans[0].scan_date #=> Time
-    #   resp.scans[0].scan_name #=> String
-    #   resp.scans[0].scheduled_by #=> String
-    #   resp.scans[0].security_level #=> String, one of "LEVEL_1", "LEVEL_2"
     #   resp.scans[0].status #=> String, one of "FAILED", "COMPLETED", "CANCELLED", "IN_PROGRESS"
+    #   resp.scans[0].scan_name #=> String
+    #   resp.scans[0].scan_date #=> Time
+    #   resp.scans[0].failed_checks #=> Integer
+    #   resp.scans[0].total_checks #=> Integer
     #   resp.scans[0].targets.account_ids #=> Array
     #   resp.scans[0].targets.account_ids[0] #=> String
     #   resp.scans[0].targets.target_resource_tags #=> Hash
     #   resp.scans[0].targets.target_resource_tags["TargetResourceTagsKey"] #=> Array
     #   resp.scans[0].targets.target_resource_tags["TargetResourceTagsKey"][0] #=> String
-    #   resp.scans[0].total_checks #=> Integer
+    #   resp.scans[0].scheduled_by #=> String
+    #   resp.scans[0].security_level #=> String, one of "LEVEL_1", "LEVEL_2"
+    #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/ListCisScans AWS API Documentation
     #
@@ -2982,11 +4349,394 @@ module Aws::Inspector2
       req.send_request(options)
     end
 
-    # Lists coverage details for your environment.
+    # Lists all code security integrations in your account.
     #
-    # @option params [Types::CoverageFilterCriteria] :filter_criteria
-    #   An object that contains details on the filters to apply to the
-    #   coverage data for your environment.
+    # @option params [String] :next_token
+    #   A token to use for paginating results that are returned in the
+    #   response. Set the value of this parameter to null for the first
+    #   request. For subsequent calls, use the NextToken value returned from
+    #   the previous request to continue listing results after the first page.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return in a single call.
+    #
+    # @return [Types::ListCodeSecurityIntegrationsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListCodeSecurityIntegrationsResponse#integrations #integrations} => Array&lt;Types::CodeSecurityIntegrationSummary&gt;
+    #   * {Types::ListCodeSecurityIntegrationsResponse#next_token #next_token} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_code_security_integrations({
+    #     next_token: "String",
+    #     max_results: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.integrations #=> Array
+    #   resp.integrations[0].integration_arn #=> String
+    #   resp.integrations[0].name #=> String
+    #   resp.integrations[0].type #=> String, one of "GITLAB_SELF_MANAGED", "GITHUB"
+    #   resp.integrations[0].status #=> String, one of "PENDING", "IN_PROGRESS", "ACTIVE", "INACTIVE", "DISABLING"
+    #   resp.integrations[0].status_reason #=> String
+    #   resp.integrations[0].created_on #=> Time
+    #   resp.integrations[0].last_update_on #=> Time
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/ListCodeSecurityIntegrations AWS API Documentation
+    #
+    # @overload list_code_security_integrations(params = {})
+    # @param [Hash] params ({})
+    def list_code_security_integrations(params = {}, options = {})
+      req = build_request(:list_code_security_integrations, params)
+      req.send_request(options)
+    end
+
+    # Lists the associations between code repositories and Amazon Inspector
+    # code security scan configurations.
+    #
+    # @option params [required, String] :scan_configuration_arn
+    #   The Amazon Resource Name (ARN) of the scan configuration to list
+    #   associations for.
+    #
+    # @option params [String] :next_token
+    #   A token to use for paginating results that are returned in the
+    #   response. Set the value of this parameter to null for the first
+    #   request to a list action. For subsequent calls, use the `NextToken`
+    #   value returned from the previous request to continue listing results
+    #   after the first page.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return in the response. If your
+    #   request would return more than the maximum the response will return a
+    #   `nextToken` value, use this value when you call the action again to
+    #   get the remaining results.
+    #
+    # @return [Types::ListCodeSecurityScanConfigurationAssociationsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListCodeSecurityScanConfigurationAssociationsResponse#associations #associations} => Array&lt;Types::CodeSecurityScanConfigurationAssociationSummary&gt;
+    #   * {Types::ListCodeSecurityScanConfigurationAssociationsResponse#next_token #next_token} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_code_security_scan_configuration_associations({
+    #     scan_configuration_arn: "ScanConfigurationArn", # required
+    #     next_token: "NextToken",
+    #     max_results: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.associations #=> Array
+    #   resp.associations[0].resource.project_id #=> String
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/ListCodeSecurityScanConfigurationAssociations AWS API Documentation
+    #
+    # @overload list_code_security_scan_configuration_associations(params = {})
+    # @param [Hash] params ({})
+    def list_code_security_scan_configuration_associations(params = {}, options = {})
+      req = build_request(:list_code_security_scan_configuration_associations, params)
+      req.send_request(options)
+    end
+
+    # Lists all code security scan configurations in your account.
+    #
+    # @option params [String] :next_token
+    #   A token to use for paginating results that are returned in the
+    #   response. Set the value of this parameter to null for the first
+    #   request. For subsequent calls, use the NextToken value returned from
+    #   the previous request to continue listing results after the first page.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return in a single call.
+    #
+    # @return [Types::ListCodeSecurityScanConfigurationsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListCodeSecurityScanConfigurationsResponse#configurations #configurations} => Array&lt;Types::CodeSecurityScanConfigurationSummary&gt;
+    #   * {Types::ListCodeSecurityScanConfigurationsResponse#next_token #next_token} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_code_security_scan_configurations({
+    #     next_token: "NextToken",
+    #     max_results: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.configurations #=> Array
+    #   resp.configurations[0].scan_configuration_arn #=> String
+    #   resp.configurations[0].name #=> String
+    #   resp.configurations[0].owner_account_id #=> String
+    #   resp.configurations[0].periodic_scan_frequency #=> String, one of "WEEKLY", "MONTHLY", "NEVER"
+    #   resp.configurations[0].frequency_expression #=> String
+    #   resp.configurations[0].continuous_integration_scan_supported_events #=> Array
+    #   resp.configurations[0].continuous_integration_scan_supported_events[0] #=> String, one of "PULL_REQUEST", "PUSH"
+    #   resp.configurations[0].rule_set_categories #=> Array
+    #   resp.configurations[0].rule_set_categories[0] #=> String, one of "SAST", "IAC", "SCA"
+    #   resp.configurations[0].scope_settings.project_selection_scope #=> String, one of "ALL"
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/ListCodeSecurityScanConfigurations AWS API Documentation
+    #
+    # @overload list_code_security_scan_configurations(params = {})
+    # @param [Hash] params ({})
+    def list_code_security_scan_configurations(params = {}, options = {})
+      req = build_request(:list_code_security_scan_configurations, params)
+      req.send_request(options)
+    end
+
+    # Lists scan configurations for Amazon Web Services Config connectors.
+    # Results are paginated. Use the `nextToken` parameter to retrieve the
+    # next page of results.
+    #
+    # @option params [Array<String>] :aws_config_connector_arns
+    #   The list of Amazon Web Services Config connector ARNs to filter
+    #   results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return in a single call. Valid range
+    #   is 1 to 50. To retrieve the remaining results, make another request
+    #   with the `nextToken` value returned from this request.
+    #
+    # @option params [String] :next_token
+    #   A token to use for paginating results. Set this value to null for the
+    #   first request. For subsequent calls, use the `nextToken` value
+    #   returned from the previous request.
+    #
+    # @return [Types::ListConnectorScanConfigurationsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListConnectorScanConfigurationsResponse#scan_configurations #scan_configurations} => Array&lt;Types::ConnectorScanConfigurationItem&gt;
+    #   * {Types::ListConnectorScanConfigurationsResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    #
+    # @example Example: List scan configurations for a specific AWS Config connector
+    #
+    #   resp = client.list_connector_scan_configurations({
+    #     aws_config_connector_arns: [
+    #       "arn:aws:config:us-east-1:123456789012:connector/azure/a7bc5463-04ce-4b52-901e-f26f7292a4a7/2fbed4bd-5b95-4947-a751-8defc76ecdae", 
+    #     ], 
+    #     max_results: 10, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     scan_configurations: [
+    #       {
+    #         aws_config_connector_arn: "arn:aws:config:us-east-1:123456789012:connector/azure/a7bc5463-04ce-4b52-901e-f26f7292a4a7/2fbed4bd-5b95-4947-a751-8defc76ecdae", 
+    #         connector_arns: [
+    #           "arn:aws:inspector2:us-east-1:123456789012:connector/6ccf8549-b52b-57ca-bf52-a2266da3c53a", 
+    #         ], 
+    #         scan_configuration: {
+    #           container_image_scanning: {
+    #             pull_duration: "DAYS_14", 
+    #             push_duration: "DAYS_30", 
+    #           }, 
+    #         }, 
+    #       }, 
+    #     ], 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_connector_scan_configurations({
+    #     aws_config_connector_arns: ["AwsConfigConnectorArn"],
+    #     max_results: 1,
+    #     next_token: "ConnectorNextToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.scan_configurations #=> Array
+    #   resp.scan_configurations[0].aws_config_connector_arn #=> String
+    #   resp.scan_configurations[0].connector_arns #=> Array
+    #   resp.scan_configurations[0].connector_arns[0] #=> String
+    #   resp.scan_configurations[0].scan_configuration.container_image_scanning.push_duration #=> String, one of "LIFETIME", "DAYS_3", "DAYS_7", "DAYS_30", "DAYS_180", "DAYS_14", "DAYS_60", "DAYS_90"
+    #   resp.scan_configurations[0].scan_configuration.container_image_scanning.pull_duration #=> String, one of "DAYS_3", "DAYS_7", "DAYS_14", "DAYS_30", "DAYS_60", "DAYS_90", "DAYS_180"
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/ListConnectorScanConfigurations AWS API Documentation
+    #
+    # @overload list_connector_scan_configurations(params = {})
+    # @param [Hash] params ({})
+    def list_connector_scan_configurations(params = {}, options = {})
+      req = build_request(:list_connector_scan_configurations, params)
+      req.send_request(options)
+    end
+
+    # Lists connectors in your account. Results are paginated. Use the
+    # `nextToken` parameter to retrieve the next page of results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return in a single call. To retrieve
+    #   the remaining results, make another request with the `nextToken` value
+    #   returned from this request.
+    #
+    # @option params [String] :next_token
+    #   A token to use for paginating results. Set this value to null for the
+    #   first request. For subsequent calls, use the `nextToken` value
+    #   returned from the previous request.
+    #
+    # @option params [Types::ConnectorFilterCriteria] :filter_criteria
+    #   The filter criteria to apply to the list of connectors.
+    #
+    # @return [Types::ListConnectorsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListConnectorsResponse#items #items} => Array&lt;Types::Connector&gt;
+    #   * {Types::ListConnectorsResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    #
+    # @example Example: List all Azure customer-managed connectors
+    #
+    #   resp = client.list_connectors({
+    #     filter_criteria: {
+    #       connector_type: [
+    #         {
+    #           value: "CUSTOMER_MANAGED", 
+    #           comparison: "EQUALS", 
+    #         }, 
+    #       ], 
+    #       provider: [
+    #         {
+    #           value: "AZURE", 
+    #           comparison: "EQUALS", 
+    #         }, 
+    #       ], 
+    #     }, 
+    #     max_results: 10, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     items: [
+    #       {
+    #         name: "my-azure-connector", 
+    #         aws_config_connector_arn: "arn:aws:config:us-east-1:123456789012:connector/azure/a7bc5463-04ce-4b52-901e-f26f7292a4a7/2fbed4bd-5b95-4947-a751-8defc76ecdae", 
+    #         azure_regions: [
+    #           "eastus", 
+    #         ], 
+    #         connector_arn: "arn:aws:inspector2:us-east-1:123456789012:connector/6ccf8549-b52b-57ca-bf52-a2266da3c53a", 
+    #         created_at: Time.parse("2026-04-20T21:00:00.000Z"), 
+    #         description: "Azure subscription scanner", 
+    #         enablement_status: "ENABLED", 
+    #         health: {
+    #           connector_status: "CONNECTED", 
+    #           last_checked_at: Time.parse("2026-04-20T21:57:06.400Z"), 
+    #         }, 
+    #         provider: "AZURE", 
+    #         scope_configuration: {
+    #           vm_scanning: {
+    #             scope_type: "SUBSCRIPTION", 
+    #             scope_values: [
+    #               "552802f5-1492-4184-bbae-7291c9939b16", 
+    #             ], 
+    #             state: "ACTIVE", 
+    #           }, 
+    #         }, 
+    #         updated_at: Time.parse("2026-04-20T21:57:06.400Z"), 
+    #       }, 
+    #     ], 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_connectors({
+    #     max_results: 1,
+    #     next_token: "ConnectorNextToken",
+    #     filter_criteria: {
+    #       connector_arns: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS
+    #           value: "ConnectorArn", # required
+    #         },
+    #       ],
+    #       accounts: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       aws_config_connector_arns: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS
+    #           value: "AwsConfigConnectorArn", # required
+    #         },
+    #       ],
+    #       connector_type: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS
+    #           value: "CUSTOMER_MANAGED", # required, accepts CUSTOMER_MANAGED, SERVICE_LINKED
+    #         },
+    #       ],
+    #       provider: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS
+    #           value: "AZURE", # required, accepts AZURE
+    #         },
+    #       ],
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.items #=> Array
+    #   resp.items[0].connector_arn #=> String
+    #   resp.items[0].name #=> String
+    #   resp.items[0].description #=> String
+    #   resp.items[0].provider #=> String, one of "AZURE"
+    #   resp.items[0].enablement_status #=> String, one of "ENABLED", "PENDING_ENABLEMENT", "FAILED_TO_ENABLE", "PENDING_UPDATE", "FAILED_TO_UPDATE", "PENDING_DELETION", "DELETED", "FAILED_TO_DELETE"
+    #   resp.items[0].enablement_status_reason #=> String
+    #   resp.items[0].health.connector_status #=> String, one of "CONNECTED", "DEGRADED", "FAILED_TO_CONNECT", "PENDING_AUTHORIZATION", "PENDING_CONFIGURATION", "UNKNOWN"
+    #   resp.items[0].health.last_checked_at #=> Time
+    #   resp.items[0].health.message #=> String
+    #   resp.items[0].created_at #=> Time
+    #   resp.items[0].updated_at #=> Time
+    #   resp.items[0].azure_regions #=> Array
+    #   resp.items[0].azure_regions[0] #=> String
+    #   resp.items[0].aws_config_connector_arn #=> String
+    #   resp.items[0].scope_configuration.vm_scanning.scope_type #=> String, one of "TENANT", "SUBSCRIPTION"
+    #   resp.items[0].scope_configuration.vm_scanning.scope_values #=> Array
+    #   resp.items[0].scope_configuration.vm_scanning.scope_values[0] #=> String
+    #   resp.items[0].scope_configuration.vm_scanning.state #=> String, one of "ACTIVE", "PENDING", "ERROR", "DISABLED"
+    #   resp.items[0].scope_configuration.vm_scanning.state_reason #=> String
+    #   resp.items[0].scope_configuration.container_image_scanning.scope_type #=> String, one of "TENANT", "SUBSCRIPTION"
+    #   resp.items[0].scope_configuration.container_image_scanning.scope_values #=> Array
+    #   resp.items[0].scope_configuration.container_image_scanning.scope_values[0] #=> String
+    #   resp.items[0].scope_configuration.container_image_scanning.state #=> String, one of "ACTIVE", "PENDING", "ERROR", "DISABLED"
+    #   resp.items[0].scope_configuration.container_image_scanning.state_reason #=> String
+    #   resp.items[0].scope_configuration.serverless_scanning.scope_type #=> String, one of "TENANT", "SUBSCRIPTION"
+    #   resp.items[0].scope_configuration.serverless_scanning.scope_values #=> Array
+    #   resp.items[0].scope_configuration.serverless_scanning.scope_values[0] #=> String
+    #   resp.items[0].scope_configuration.serverless_scanning.state #=> String, one of "ACTIVE", "PENDING", "ERROR", "DISABLED"
+    #   resp.items[0].scope_configuration.serverless_scanning.state_reason #=> String
+    #   resp.items[0].tags #=> Hash
+    #   resp.items[0].tags["ConnectorTagKey"] #=> String
+    #   resp.items[0].auto_install_vm_scanner #=> Boolean
+    #   resp.next_token #=> String
+    #
+    #
+    # The following waiters are defined for this operation (see {Client#wait_until} for detailed usage):
+    #
+    #   * connector_connected
+    #   * connector_deleted
+    #   * connector_enabled
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/ListConnectors AWS API Documentation
+    #
+    # @overload list_connectors(params = {})
+    # @param [Hash] params ({})
+    def list_connectors(params = {}, options = {})
+      req = build_request(:list_connectors, params)
+      req.send_request(options)
+    end
+
+    # Lists coverage details for your environment.
     #
     # @option params [Integer] :max_results
     #   The maximum number of results the response can return. If your request
@@ -3002,71 +4752,39 @@ module Aws::Inspector2
     #   For subsequent calls, use the `nextToken` value returned from the
     #   previous request to continue listing results after the first page.
     #
+    # @option params [Types::CoverageFilterCriteria] :filter_criteria
+    #   An object that contains details on the filters to apply to the
+    #   coverage data for your environment.
+    #
     # @return [Types::ListCoverageResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::ListCoverageResponse#covered_resources #covered_resources} => Array&lt;Types::CoveredResource&gt;
     #   * {Types::ListCoverageResponse#next_token #next_token} => String
+    #   * {Types::ListCoverageResponse#covered_resources #covered_resources} => Array&lt;Types::CoveredResource&gt;
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_coverage({
+    #     max_results: 1,
+    #     next_token: "NextToken",
     #     filter_criteria: {
+    #       scan_status_code: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       scan_status_reason: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
     #       account_id: [
     #         {
     #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
     #           value: "CoverageStringInput", # required
-    #         },
-    #       ],
-    #       ec2_instance_tags: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS
-    #           key: "NonEmptyString", # required
-    #           value: "NonEmptyString",
-    #         },
-    #       ],
-    #       ecr_image_tags: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
-    #           value: "CoverageStringInput", # required
-    #         },
-    #       ],
-    #       ecr_repository_name: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
-    #           value: "CoverageStringInput", # required
-    #         },
-    #       ],
-    #       image_pulled_at: [
-    #         {
-    #           end_inclusive: Time.now,
-    #           start_inclusive: Time.now,
-    #         },
-    #       ],
-    #       lambda_function_name: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
-    #           value: "CoverageStringInput", # required
-    #         },
-    #       ],
-    #       lambda_function_runtime: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
-    #           value: "CoverageStringInput", # required
-    #         },
-    #       ],
-    #       lambda_function_tags: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS
-    #           key: "NonEmptyString", # required
-    #           value: "NonEmptyString",
-    #         },
-    #       ],
-    #       last_scanned_at: [
-    #         {
-    #           end_inclusive: Time.now,
-    #           start_inclusive: Time.now,
     #         },
     #       ],
     #       resource_id: [
@@ -3081,62 +4799,243 @@ module Aws::Inspector2
     #           value: "CoverageStringInput", # required
     #         },
     #       ],
-    #       scan_mode: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
-    #           value: "CoverageStringInput", # required
-    #         },
-    #       ],
-    #       scan_status_code: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
-    #           value: "CoverageStringInput", # required
-    #         },
-    #       ],
-    #       scan_status_reason: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
-    #           value: "CoverageStringInput", # required
-    #         },
-    #       ],
     #       scan_type: [
     #         {
     #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
     #           value: "CoverageStringInput", # required
     #         },
     #       ],
+    #       ecr_repository_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       ecr_image_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       ec2_instance_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS
+    #           key: "NonEmptyString", # required
+    #           value: "NonEmptyString",
+    #         },
+    #       ],
+    #       lambda_function_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       lambda_function_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS
+    #           key: "NonEmptyString", # required
+    #           value: "NonEmptyString",
+    #         },
+    #       ],
+    #       lambda_function_runtime: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       last_scanned_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       scan_mode: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       image_pulled_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       ecr_image_last_in_use_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       ecr_image_in_use_count: [
+    #         {
+    #           upper_inclusive: 1,
+    #           lower_inclusive: 1,
+    #         },
+    #       ],
+    #       code_repository_project_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       code_repository_provider_type: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       code_repository_provider_type_visibility: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       last_scanned_commit_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       cloud_provider: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       cloud_provider_account_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       cloud_provider_region: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       cloud_vm_instance_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS
+    #           key: "NonEmptyString", # required
+    #           value: "NonEmptyString",
+    #         },
+    #       ],
+    #       cloud_container_image_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       cloud_container_repository_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       cloud_container_registry_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       cloud_serverless_function_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       cloud_serverless_function_runtime: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       cloud_serverless_function_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS
+    #           key: "NonEmptyString", # required
+    #           value: "NonEmptyString",
+    #         },
+    #       ],
+    #       cloud_provider_org_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
     #     },
-    #     max_results: 1,
-    #     next_token: "NextToken",
     #   })
     #
     # @example Response structure
     #
+    #   resp.next_token #=> String
     #   resp.covered_resources #=> Array
-    #   resp.covered_resources[0].account_id #=> String
-    #   resp.covered_resources[0].last_scanned_at #=> Time
+    #   resp.covered_resources[0].resource_type #=> String, one of "AWS_EC2_INSTANCE", "AWS_ECR_CONTAINER_IMAGE", "AWS_ECR_REPOSITORY", "AWS_LAMBDA_FUNCTION", "CODE_REPOSITORY", "Microsoft.Compute/virtualMachines", "Microsoft.ContainerRegistry/registry/containerImage", "Microsoft.ContainerRegistry/registry/containerRepository", "Microsoft.Web/sites", "Microsoft.ContainerRegistry/registries"
     #   resp.covered_resources[0].resource_id #=> String
-    #   resp.covered_resources[0].resource_metadata.ec2.ami_id #=> String
-    #   resp.covered_resources[0].resource_metadata.ec2.platform #=> String, one of "WINDOWS", "LINUX", "UNKNOWN", "MACOS"
-    #   resp.covered_resources[0].resource_metadata.ec2.tags #=> Hash
-    #   resp.covered_resources[0].resource_metadata.ec2.tags["MapKey"] #=> String
-    #   resp.covered_resources[0].resource_metadata.ecr_image.image_pulled_at #=> Time
-    #   resp.covered_resources[0].resource_metadata.ecr_image.tags #=> Array
-    #   resp.covered_resources[0].resource_metadata.ecr_image.tags[0] #=> String
+    #   resp.covered_resources[0].account_id #=> String
+    #   resp.covered_resources[0].scan_type #=> String, one of "NETWORK", "PACKAGE", "CODE"
+    #   resp.covered_resources[0].scan_status.status_code #=> String, one of "ACTIVE", "INACTIVE"
+    #   resp.covered_resources[0].scan_status.reason #=> String, one of "PENDING_INITIAL_SCAN", "ACCESS_DENIED", "INTERNAL_ERROR", "UNMANAGED_EC2_INSTANCE", "UNSUPPORTED_OS", "SCAN_ELIGIBILITY_EXPIRED", "RESOURCE_TERMINATED", "SUCCESSFUL", "NO_RESOURCES_FOUND", "IMAGE_SIZE_EXCEEDED", "SCAN_FREQUENCY_MANUAL", "SCAN_FREQUENCY_SCAN_ON_PUSH", "EC2_INSTANCE_STOPPED", "PENDING_DISABLE", "NO_INVENTORY", "STALE_INVENTORY", "EXCLUDED_BY_TAG", "UNSUPPORTED_RUNTIME", "UNSUPPORTED_MEDIA_TYPE", "UNSUPPORTED_CONFIG_FILE", "DEEP_INSPECTION_PACKAGE_COLLECTION_LIMIT_EXCEEDED", "DEEP_INSPECTION_DAILY_SSM_INVENTORY_LIMIT_EXCEEDED", "DEEP_INSPECTION_COLLECTION_TIME_LIMIT_EXCEEDED", "DEEP_INSPECTION_NO_INVENTORY", "AGENTLESS_INSTANCE_STORAGE_LIMIT_EXCEEDED", "AGENTLESS_INSTANCE_COLLECTION_TIME_LIMIT_EXCEEDED", "PENDING_REVIVAL_SCAN", "INTEGRATION_CONNECTION_LOST", "ACCESS_DENIED_TO_ENCRYPTION_KEY", "UNSUPPORTED_LANGUAGE", "NO_SCAN_CONFIGURATION_ASSOCIATED", "SCAN_IN_PROGRESS", "IMAGE_ARCHIVED", "UNSUPPORTED_CODE_ARTIFACTS", "RESOURCE_UNMANAGED", "RESOURCE_STOPPED"
     #   resp.covered_resources[0].resource_metadata.ecr_repository.name #=> String
     #   resp.covered_resources[0].resource_metadata.ecr_repository.scan_frequency #=> String, one of "MANUAL", "SCAN_ON_PUSH", "CONTINUOUS_SCAN"
-    #   resp.covered_resources[0].resource_metadata.lambda_function.function_name #=> String
+    #   resp.covered_resources[0].resource_metadata.ecr_image.tags #=> Array
+    #   resp.covered_resources[0].resource_metadata.ecr_image.tags[0] #=> String
+    #   resp.covered_resources[0].resource_metadata.ecr_image.image_pulled_at #=> Time
+    #   resp.covered_resources[0].resource_metadata.ecr_image.last_in_use_at #=> Time
+    #   resp.covered_resources[0].resource_metadata.ecr_image.in_use_count #=> Integer
+    #   resp.covered_resources[0].resource_metadata.ec2.tags #=> Hash
+    #   resp.covered_resources[0].resource_metadata.ec2.tags["MapKey"] #=> String
+    #   resp.covered_resources[0].resource_metadata.ec2.ami_id #=> String
+    #   resp.covered_resources[0].resource_metadata.ec2.platform #=> String, one of "WINDOWS", "LINUX", "UNKNOWN", "MACOS"
     #   resp.covered_resources[0].resource_metadata.lambda_function.function_tags #=> Hash
     #   resp.covered_resources[0].resource_metadata.lambda_function.function_tags["MapKey"] #=> String
     #   resp.covered_resources[0].resource_metadata.lambda_function.layers #=> Array
     #   resp.covered_resources[0].resource_metadata.lambda_function.layers[0] #=> String
-    #   resp.covered_resources[0].resource_metadata.lambda_function.runtime #=> String, one of "NODEJS", "NODEJS_12_X", "NODEJS_14_X", "NODEJS_16_X", "JAVA_8", "JAVA_8_AL2", "JAVA_11", "PYTHON_3_7", "PYTHON_3_8", "PYTHON_3_9", "UNSUPPORTED", "NODEJS_18_X", "GO_1_X", "JAVA_17", "PYTHON_3_10", "PYTHON_3_11", "DOTNETCORE_3_1", "DOTNET_6", "DOTNET_7", "RUBY_2_7", "RUBY_3_2"
-    #   resp.covered_resources[0].resource_type #=> String, one of "AWS_EC2_INSTANCE", "AWS_ECR_CONTAINER_IMAGE", "AWS_ECR_REPOSITORY", "AWS_LAMBDA_FUNCTION"
-    #   resp.covered_resources[0].scan_mode #=> String, one of "EC2_SSM_AGENT_BASED", "EC2_AGENTLESS"
-    #   resp.covered_resources[0].scan_status.reason #=> String, one of "PENDING_INITIAL_SCAN", "ACCESS_DENIED", "INTERNAL_ERROR", "UNMANAGED_EC2_INSTANCE", "UNSUPPORTED_OS", "SCAN_ELIGIBILITY_EXPIRED", "RESOURCE_TERMINATED", "SUCCESSFUL", "NO_RESOURCES_FOUND", "IMAGE_SIZE_EXCEEDED", "SCAN_FREQUENCY_MANUAL", "SCAN_FREQUENCY_SCAN_ON_PUSH", "EC2_INSTANCE_STOPPED", "PENDING_DISABLE", "NO_INVENTORY", "STALE_INVENTORY", "EXCLUDED_BY_TAG", "UNSUPPORTED_RUNTIME", "UNSUPPORTED_MEDIA_TYPE", "UNSUPPORTED_CONFIG_FILE", "DEEP_INSPECTION_PACKAGE_COLLECTION_LIMIT_EXCEEDED", "DEEP_INSPECTION_DAILY_SSM_INVENTORY_LIMIT_EXCEEDED", "DEEP_INSPECTION_COLLECTION_TIME_LIMIT_EXCEEDED", "DEEP_INSPECTION_NO_INVENTORY", "AGENTLESS_INSTANCE_STORAGE_LIMIT_EXCEEDED", "AGENTLESS_INSTANCE_COLLECTION_TIME_LIMIT_EXCEEDED"
-    #   resp.covered_resources[0].scan_status.status_code #=> String, one of "ACTIVE", "INACTIVE"
-    #   resp.covered_resources[0].scan_type #=> String, one of "NETWORK", "PACKAGE", "CODE"
-    #   resp.next_token #=> String
+    #   resp.covered_resources[0].resource_metadata.lambda_function.function_name #=> String
+    #   resp.covered_resources[0].resource_metadata.lambda_function.runtime #=> String, one of "NODEJS", "NODEJS_12_X", "NODEJS_14_X", "NODEJS_16_X", "JAVA_8", "JAVA_8_AL2", "JAVA_11", "PYTHON_3_7", "PYTHON_3_8", "PYTHON_3_9", "UNSUPPORTED", "NODEJS_18_X", "GO_1_X", "JAVA_17", "PYTHON_3_10", "PYTHON_3_11", "DOTNETCORE_3_1", "DOTNET_6", "DOTNET_7", "RUBY_2_7", "RUBY_3_2", "DOTNET_10", "NODEJS_24_X", "NODEJS_22_X", "JAVA_21", "JAVA_25"
+    #   resp.covered_resources[0].resource_metadata.code_repository.project_name #=> String
+    #   resp.covered_resources[0].resource_metadata.code_repository.integration_arn #=> String
+    #   resp.covered_resources[0].resource_metadata.code_repository.provider_type #=> String
+    #   resp.covered_resources[0].resource_metadata.code_repository.provider_type_visibility #=> String
+    #   resp.covered_resources[0].resource_metadata.code_repository.last_scanned_commit_id #=> String
+    #   resp.covered_resources[0].resource_metadata.code_repository.scan_configuration.periodic_scan_configurations #=> Array
+    #   resp.covered_resources[0].resource_metadata.code_repository.scan_configuration.periodic_scan_configurations[0].frequency_expression #=> String
+    #   resp.covered_resources[0].resource_metadata.code_repository.scan_configuration.periodic_scan_configurations[0].rule_set_categories #=> Array
+    #   resp.covered_resources[0].resource_metadata.code_repository.scan_configuration.periodic_scan_configurations[0].rule_set_categories[0] #=> String, one of "SAST", "IAC", "SCA"
+    #   resp.covered_resources[0].resource_metadata.code_repository.scan_configuration.continuous_integration_scan_configurations #=> Array
+    #   resp.covered_resources[0].resource_metadata.code_repository.scan_configuration.continuous_integration_scan_configurations[0].supported_event #=> String, one of "PULL_REQUEST", "PUSH"
+    #   resp.covered_resources[0].resource_metadata.code_repository.scan_configuration.continuous_integration_scan_configurations[0].rule_set_categories #=> Array
+    #   resp.covered_resources[0].resource_metadata.code_repository.scan_configuration.continuous_integration_scan_configurations[0].rule_set_categories[0] #=> String, one of "SAST", "IAC", "SCA"
+    #   resp.covered_resources[0].resource_metadata.code_repository.on_demand_scan.last_scanned_commit_id #=> String
+    #   resp.covered_resources[0].resource_metadata.code_repository.on_demand_scan.last_scan_at #=> Time
+    #   resp.covered_resources[0].resource_metadata.code_repository.on_demand_scan.scan_status.status_code #=> String, one of "ACTIVE", "INACTIVE"
+    #   resp.covered_resources[0].resource_metadata.code_repository.on_demand_scan.scan_status.reason #=> String, one of "PENDING_INITIAL_SCAN", "ACCESS_DENIED", "INTERNAL_ERROR", "UNMANAGED_EC2_INSTANCE", "UNSUPPORTED_OS", "SCAN_ELIGIBILITY_EXPIRED", "RESOURCE_TERMINATED", "SUCCESSFUL", "NO_RESOURCES_FOUND", "IMAGE_SIZE_EXCEEDED", "SCAN_FREQUENCY_MANUAL", "SCAN_FREQUENCY_SCAN_ON_PUSH", "EC2_INSTANCE_STOPPED", "PENDING_DISABLE", "NO_INVENTORY", "STALE_INVENTORY", "EXCLUDED_BY_TAG", "UNSUPPORTED_RUNTIME", "UNSUPPORTED_MEDIA_TYPE", "UNSUPPORTED_CONFIG_FILE", "DEEP_INSPECTION_PACKAGE_COLLECTION_LIMIT_EXCEEDED", "DEEP_INSPECTION_DAILY_SSM_INVENTORY_LIMIT_EXCEEDED", "DEEP_INSPECTION_COLLECTION_TIME_LIMIT_EXCEEDED", "DEEP_INSPECTION_NO_INVENTORY", "AGENTLESS_INSTANCE_STORAGE_LIMIT_EXCEEDED", "AGENTLESS_INSTANCE_COLLECTION_TIME_LIMIT_EXCEEDED", "PENDING_REVIVAL_SCAN", "INTEGRATION_CONNECTION_LOST", "ACCESS_DENIED_TO_ENCRYPTION_KEY", "UNSUPPORTED_LANGUAGE", "NO_SCAN_CONFIGURATION_ASSOCIATED", "SCAN_IN_PROGRESS", "IMAGE_ARCHIVED", "UNSUPPORTED_CODE_ARTIFACTS", "RESOURCE_UNMANAGED", "RESOURCE_STOPPED"
+    #   resp.covered_resources[0].resource_metadata.vm_instance.tags #=> Hash
+    #   resp.covered_resources[0].resource_metadata.vm_instance.tags["MapKey"] #=> String
+    #   resp.covered_resources[0].resource_metadata.vm_instance.platform #=> String, one of "WINDOWS", "LINUX", "UNKNOWN"
+    #   resp.covered_resources[0].resource_metadata.vm_instance.inventory_hash #=> String
+    #   resp.covered_resources[0].resource_metadata.vm_instance.vm_image_reference #=> String
+    #   resp.covered_resources[0].resource_metadata.container_image.image_tags #=> Array
+    #   resp.covered_resources[0].resource_metadata.container_image.image_tags[0] #=> String
+    #   resp.covered_resources[0].resource_metadata.container_image.image_pulled_at #=> Time
+    #   resp.covered_resources[0].resource_metadata.container_image.last_in_use_at #=> Time
+    #   resp.covered_resources[0].resource_metadata.container_image.in_use_count #=> Integer
+    #   resp.covered_resources[0].resource_metadata.container_repository.name #=> String
+    #   resp.covered_resources[0].resource_metadata.container_repository.scan_frequency #=> String
+    #   resp.covered_resources[0].resource_metadata.container_registry.name #=> String
+    #   resp.covered_resources[0].resource_metadata.serverless_function.serverless_function_name #=> String
+    #   resp.covered_resources[0].resource_metadata.serverless_function.runtime #=> String
+    #   resp.covered_resources[0].resource_metadata.serverless_function.function_tags #=> Hash
+    #   resp.covered_resources[0].resource_metadata.serverless_function.function_tags["MapKey"] #=> String
+    #   resp.covered_resources[0].last_scanned_at #=> Time
+    #   resp.covered_resources[0].scan_mode #=> String, one of "EC2_SSM_AGENT_BASED", "EC2_AGENTLESS", "EC2_INSPECTOR_AGENT_BASED", "VM_INSPECTOR_AGENT_BASED"
+    #   resp.covered_resources[0].provider #=> String, one of "AWS", "AZURE"
+    #   resp.covered_resources[0].provider_account_id #=> String
+    #   resp.covered_resources[0].provider_org_id #=> String
+    #   resp.covered_resources[0].provider_region #=> String
+    #   resp.covered_resources[0].provider_partition #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/ListCoverage AWS API Documentation
     #
@@ -3166,8 +5065,8 @@ module Aws::Inspector2
     # @return [Types::ListCoverageStatisticsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::ListCoverageStatisticsResponse#counts_by_group #counts_by_group} => Array&lt;Types::Counts&gt;
-    #   * {Types::ListCoverageStatisticsResponse#next_token #next_token} => String
     #   * {Types::ListCoverageStatisticsResponse#total_counts #total_counts} => Integer
+    #   * {Types::ListCoverageStatisticsResponse#next_token #next_token} => String
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
     #
@@ -3175,60 +5074,22 @@ module Aws::Inspector2
     #
     #   resp = client.list_coverage_statistics({
     #     filter_criteria: {
+    #       scan_status_code: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       scan_status_reason: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
     #       account_id: [
     #         {
     #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
     #           value: "CoverageStringInput", # required
-    #         },
-    #       ],
-    #       ec2_instance_tags: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS
-    #           key: "NonEmptyString", # required
-    #           value: "NonEmptyString",
-    #         },
-    #       ],
-    #       ecr_image_tags: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
-    #           value: "CoverageStringInput", # required
-    #         },
-    #       ],
-    #       ecr_repository_name: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
-    #           value: "CoverageStringInput", # required
-    #         },
-    #       ],
-    #       image_pulled_at: [
-    #         {
-    #           end_inclusive: Time.now,
-    #           start_inclusive: Time.now,
-    #         },
-    #       ],
-    #       lambda_function_name: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
-    #           value: "CoverageStringInput", # required
-    #         },
-    #       ],
-    #       lambda_function_runtime: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
-    #           value: "CoverageStringInput", # required
-    #         },
-    #       ],
-    #       lambda_function_tags: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS
-    #           key: "NonEmptyString", # required
-    #           value: "NonEmptyString",
-    #         },
-    #       ],
-    #       last_scanned_at: [
-    #         {
-    #           end_inclusive: Time.now,
-    #           start_inclusive: Time.now,
     #         },
     #       ],
     #       resource_id: [
@@ -3243,32 +5104,174 @@ module Aws::Inspector2
     #           value: "CoverageStringInput", # required
     #         },
     #       ],
-    #       scan_mode: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
-    #           value: "CoverageStringInput", # required
-    #         },
-    #       ],
-    #       scan_status_code: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
-    #           value: "CoverageStringInput", # required
-    #         },
-    #       ],
-    #       scan_status_reason: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
-    #           value: "CoverageStringInput", # required
-    #         },
-    #       ],
     #       scan_type: [
     #         {
     #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
     #           value: "CoverageStringInput", # required
     #         },
     #       ],
+    #       ecr_repository_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       ecr_image_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       ec2_instance_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS
+    #           key: "NonEmptyString", # required
+    #           value: "NonEmptyString",
+    #         },
+    #       ],
+    #       lambda_function_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       lambda_function_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS
+    #           key: "NonEmptyString", # required
+    #           value: "NonEmptyString",
+    #         },
+    #       ],
+    #       lambda_function_runtime: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       last_scanned_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       scan_mode: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       image_pulled_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       ecr_image_last_in_use_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       ecr_image_in_use_count: [
+    #         {
+    #           upper_inclusive: 1,
+    #           lower_inclusive: 1,
+    #         },
+    #       ],
+    #       code_repository_project_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       code_repository_provider_type: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       code_repository_provider_type_visibility: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       last_scanned_commit_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       cloud_provider: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       cloud_provider_account_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       cloud_provider_region: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       cloud_vm_instance_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS
+    #           key: "NonEmptyString", # required
+    #           value: "NonEmptyString",
+    #         },
+    #       ],
+    #       cloud_container_image_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       cloud_container_repository_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       cloud_container_registry_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       cloud_serverless_function_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       cloud_serverless_function_runtime: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
+    #       cloud_serverless_function_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS
+    #           key: "NonEmptyString", # required
+    #           value: "NonEmptyString",
+    #         },
+    #       ],
+    #       cloud_provider_org_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, NOT_EQUALS
+    #           value: "CoverageStringInput", # required
+    #         },
+    #       ],
     #     },
-    #     group_by: "SCAN_STATUS_CODE", # accepts SCAN_STATUS_CODE, SCAN_STATUS_REASON, ACCOUNT_ID, RESOURCE_TYPE, ECR_REPOSITORY_NAME
+    #     group_by: "SCAN_STATUS_CODE", # accepts SCAN_STATUS_CODE, SCAN_STATUS_REASON, ACCOUNT_ID, RESOURCE_TYPE, ECR_REPOSITORY_NAME, PROVIDER, PROVIDER_ACCOUNT_ID, PROVIDER_REGION, PROVIDER_ORG_ID
     #     next_token: "NextToken",
     #   })
     #
@@ -3276,9 +5279,9 @@ module Aws::Inspector2
     #
     #   resp.counts_by_group #=> Array
     #   resp.counts_by_group[0].count #=> Integer
-    #   resp.counts_by_group[0].group_key #=> String, one of "SCAN_STATUS_CODE", "SCAN_STATUS_REASON", "ACCOUNT_ID", "RESOURCE_TYPE", "ECR_REPOSITORY_NAME"
-    #   resp.next_token #=> String
+    #   resp.counts_by_group[0].group_key #=> String, one of "SCAN_STATUS_CODE", "SCAN_STATUS_REASON", "ACCOUNT_ID", "RESOURCE_TYPE", "ECR_REPOSITORY_NAME", "PROVIDER", "PROVIDER_ACCOUNT_ID", "PROVIDER_REGION", "PROVIDER_ORG_ID"
     #   resp.total_counts #=> Integer
+    #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/ListCoverageStatistics AWS API Documentation
     #
@@ -3338,17 +5341,11 @@ module Aws::Inspector2
 
     # Lists the filters associated with your account.
     #
-    # @option params [String] :action
-    #   The action the filter applies to matched findings.
-    #
     # @option params [Array<String>] :arns
     #   The Amazon resource number (ARN) of the filter.
     #
-    # @option params [Integer] :max_results
-    #   The maximum number of results the response can return. If your request
-    #   would return more than the maximum the response will return a
-    #   `nextToken` value, use this value when you call the action again to
-    #   get the remaining results.
+    # @option params [String] :action
+    #   The action the filter applies to matched findings.
     #
     # @option params [String] :next_token
     #   A token to use for paginating results that are returned in the
@@ -3357,6 +5354,12 @@ module Aws::Inspector2
     #   `maxResults` maximum value it will also return a `nextToken` value.
     #   For subsequent calls, use the `nextToken` value returned from the
     #   previous request to continue listing results after the first page.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results the response can return. If your request
+    #   would return more than the maximum the response will return a
+    #   `nextToken` value, use this value when you call the action again to
+    #   get the remaining results.
     #
     # @return [Types::ListFiltersResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -3368,54 +5371,73 @@ module Aws::Inspector2
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_filters({
-    #     action: "NONE", # accepts NONE, SUPPRESS
     #     arns: ["FilterArn"],
-    #     max_results: 1,
+    #     action: "NONE", # accepts NONE, SUPPRESS
     #     next_token: "NextToken",
+    #     max_results: 1,
     #   })
     #
     # @example Response structure
     #
     #   resp.filters #=> Array
-    #   resp.filters[0].action #=> String, one of "NONE", "SUPPRESS"
     #   resp.filters[0].arn #=> String
-    #   resp.filters[0].created_at #=> Time
+    #   resp.filters[0].owner_id #=> String
+    #   resp.filters[0].name #=> String
+    #   resp.filters[0].criteria.finding_arn #=> Array
+    #   resp.filters[0].criteria.finding_arn[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.finding_arn[0].value #=> String
     #   resp.filters[0].criteria.aws_account_id #=> Array
     #   resp.filters[0].criteria.aws_account_id[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
     #   resp.filters[0].criteria.aws_account_id[0].value #=> String
-    #   resp.filters[0].criteria.code_vulnerability_detector_name #=> Array
-    #   resp.filters[0].criteria.code_vulnerability_detector_name[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filters[0].criteria.code_vulnerability_detector_name[0].value #=> String
-    #   resp.filters[0].criteria.code_vulnerability_detector_tags #=> Array
-    #   resp.filters[0].criteria.code_vulnerability_detector_tags[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filters[0].criteria.code_vulnerability_detector_tags[0].value #=> String
-    #   resp.filters[0].criteria.code_vulnerability_file_path #=> Array
-    #   resp.filters[0].criteria.code_vulnerability_file_path[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filters[0].criteria.code_vulnerability_file_path[0].value #=> String
-    #   resp.filters[0].criteria.component_id #=> Array
-    #   resp.filters[0].criteria.component_id[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filters[0].criteria.component_id[0].value #=> String
-    #   resp.filters[0].criteria.component_type #=> Array
-    #   resp.filters[0].criteria.component_type[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filters[0].criteria.component_type[0].value #=> String
+    #   resp.filters[0].criteria.finding_type #=> Array
+    #   resp.filters[0].criteria.finding_type[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.finding_type[0].value #=> String
+    #   resp.filters[0].criteria.severity #=> Array
+    #   resp.filters[0].criteria.severity[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.severity[0].value #=> String
+    #   resp.filters[0].criteria.first_observed_at #=> Array
+    #   resp.filters[0].criteria.first_observed_at[0].start_inclusive #=> Time
+    #   resp.filters[0].criteria.first_observed_at[0].end_inclusive #=> Time
+    #   resp.filters[0].criteria.last_observed_at #=> Array
+    #   resp.filters[0].criteria.last_observed_at[0].start_inclusive #=> Time
+    #   resp.filters[0].criteria.last_observed_at[0].end_inclusive #=> Time
+    #   resp.filters[0].criteria.updated_at #=> Array
+    #   resp.filters[0].criteria.updated_at[0].start_inclusive #=> Time
+    #   resp.filters[0].criteria.updated_at[0].end_inclusive #=> Time
+    #   resp.filters[0].criteria.finding_status #=> Array
+    #   resp.filters[0].criteria.finding_status[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.finding_status[0].value #=> String
+    #   resp.filters[0].criteria.title #=> Array
+    #   resp.filters[0].criteria.title[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.title[0].value #=> String
+    #   resp.filters[0].criteria.inspector_score #=> Array
+    #   resp.filters[0].criteria.inspector_score[0].upper_inclusive #=> Float
+    #   resp.filters[0].criteria.inspector_score[0].lower_inclusive #=> Float
+    #   resp.filters[0].criteria.resource_type #=> Array
+    #   resp.filters[0].criteria.resource_type[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.resource_type[0].value #=> String
+    #   resp.filters[0].criteria.resource_id #=> Array
+    #   resp.filters[0].criteria.resource_id[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.resource_id[0].value #=> String
+    #   resp.filters[0].criteria.resource_tags #=> Array
+    #   resp.filters[0].criteria.resource_tags[0].comparison #=> String, one of "EQUALS"
+    #   resp.filters[0].criteria.resource_tags[0].key #=> String
+    #   resp.filters[0].criteria.resource_tags[0].value #=> String
     #   resp.filters[0].criteria.ec2_instance_image_id #=> Array
     #   resp.filters[0].criteria.ec2_instance_image_id[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
     #   resp.filters[0].criteria.ec2_instance_image_id[0].value #=> String
-    #   resp.filters[0].criteria.ec2_instance_subnet_id #=> Array
-    #   resp.filters[0].criteria.ec2_instance_subnet_id[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filters[0].criteria.ec2_instance_subnet_id[0].value #=> String
     #   resp.filters[0].criteria.ec2_instance_vpc_id #=> Array
     #   resp.filters[0].criteria.ec2_instance_vpc_id[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
     #   resp.filters[0].criteria.ec2_instance_vpc_id[0].value #=> String
+    #   resp.filters[0].criteria.ec2_instance_subnet_id #=> Array
+    #   resp.filters[0].criteria.ec2_instance_subnet_id[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.ec2_instance_subnet_id[0].value #=> String
+    #   resp.filters[0].criteria.ecr_image_pushed_at #=> Array
+    #   resp.filters[0].criteria.ecr_image_pushed_at[0].start_inclusive #=> Time
+    #   resp.filters[0].criteria.ecr_image_pushed_at[0].end_inclusive #=> Time
     #   resp.filters[0].criteria.ecr_image_architecture #=> Array
     #   resp.filters[0].criteria.ecr_image_architecture[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
     #   resp.filters[0].criteria.ecr_image_architecture[0].value #=> String
-    #   resp.filters[0].criteria.ecr_image_hash #=> Array
-    #   resp.filters[0].criteria.ecr_image_hash[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filters[0].criteria.ecr_image_hash[0].value #=> String
-    #   resp.filters[0].criteria.ecr_image_pushed_at #=> Array
-    #   resp.filters[0].criteria.ecr_image_pushed_at[0].end_inclusive #=> Time
-    #   resp.filters[0].criteria.ecr_image_pushed_at[0].start_inclusive #=> Time
     #   resp.filters[0].criteria.ecr_image_registry #=> Array
     #   resp.filters[0].criteria.ecr_image_registry[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
     #   resp.filters[0].criteria.ecr_image_registry[0].value #=> String
@@ -3425,109 +5447,159 @@ module Aws::Inspector2
     #   resp.filters[0].criteria.ecr_image_tags #=> Array
     #   resp.filters[0].criteria.ecr_image_tags[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
     #   resp.filters[0].criteria.ecr_image_tags[0].value #=> String
-    #   resp.filters[0].criteria.epss_score #=> Array
-    #   resp.filters[0].criteria.epss_score[0].lower_inclusive #=> Float
-    #   resp.filters[0].criteria.epss_score[0].upper_inclusive #=> Float
-    #   resp.filters[0].criteria.exploit_available #=> Array
-    #   resp.filters[0].criteria.exploit_available[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filters[0].criteria.exploit_available[0].value #=> String
-    #   resp.filters[0].criteria.finding_arn #=> Array
-    #   resp.filters[0].criteria.finding_arn[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filters[0].criteria.finding_arn[0].value #=> String
-    #   resp.filters[0].criteria.finding_status #=> Array
-    #   resp.filters[0].criteria.finding_status[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filters[0].criteria.finding_status[0].value #=> String
-    #   resp.filters[0].criteria.finding_type #=> Array
-    #   resp.filters[0].criteria.finding_type[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filters[0].criteria.finding_type[0].value #=> String
-    #   resp.filters[0].criteria.first_observed_at #=> Array
-    #   resp.filters[0].criteria.first_observed_at[0].end_inclusive #=> Time
-    #   resp.filters[0].criteria.first_observed_at[0].start_inclusive #=> Time
-    #   resp.filters[0].criteria.fix_available #=> Array
-    #   resp.filters[0].criteria.fix_available[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filters[0].criteria.fix_available[0].value #=> String
-    #   resp.filters[0].criteria.inspector_score #=> Array
-    #   resp.filters[0].criteria.inspector_score[0].lower_inclusive #=> Float
-    #   resp.filters[0].criteria.inspector_score[0].upper_inclusive #=> Float
-    #   resp.filters[0].criteria.lambda_function_execution_role_arn #=> Array
-    #   resp.filters[0].criteria.lambda_function_execution_role_arn[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filters[0].criteria.lambda_function_execution_role_arn[0].value #=> String
-    #   resp.filters[0].criteria.lambda_function_last_modified_at #=> Array
-    #   resp.filters[0].criteria.lambda_function_last_modified_at[0].end_inclusive #=> Time
-    #   resp.filters[0].criteria.lambda_function_last_modified_at[0].start_inclusive #=> Time
-    #   resp.filters[0].criteria.lambda_function_layers #=> Array
-    #   resp.filters[0].criteria.lambda_function_layers[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filters[0].criteria.lambda_function_layers[0].value #=> String
-    #   resp.filters[0].criteria.lambda_function_name #=> Array
-    #   resp.filters[0].criteria.lambda_function_name[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filters[0].criteria.lambda_function_name[0].value #=> String
-    #   resp.filters[0].criteria.lambda_function_runtime #=> Array
-    #   resp.filters[0].criteria.lambda_function_runtime[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filters[0].criteria.lambda_function_runtime[0].value #=> String
-    #   resp.filters[0].criteria.last_observed_at #=> Array
-    #   resp.filters[0].criteria.last_observed_at[0].end_inclusive #=> Time
-    #   resp.filters[0].criteria.last_observed_at[0].start_inclusive #=> Time
-    #   resp.filters[0].criteria.network_protocol #=> Array
-    #   resp.filters[0].criteria.network_protocol[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filters[0].criteria.network_protocol[0].value #=> String
+    #   resp.filters[0].criteria.ecr_image_hash #=> Array
+    #   resp.filters[0].criteria.ecr_image_hash[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.ecr_image_hash[0].value #=> String
+    #   resp.filters[0].criteria.ecr_image_last_in_use_at #=> Array
+    #   resp.filters[0].criteria.ecr_image_last_in_use_at[0].start_inclusive #=> Time
+    #   resp.filters[0].criteria.ecr_image_last_in_use_at[0].end_inclusive #=> Time
+    #   resp.filters[0].criteria.ecr_image_in_use_count #=> Array
+    #   resp.filters[0].criteria.ecr_image_in_use_count[0].upper_inclusive #=> Float
+    #   resp.filters[0].criteria.ecr_image_in_use_count[0].lower_inclusive #=> Float
     #   resp.filters[0].criteria.port_range #=> Array
     #   resp.filters[0].criteria.port_range[0].begin_inclusive #=> Integer
     #   resp.filters[0].criteria.port_range[0].end_inclusive #=> Integer
-    #   resp.filters[0].criteria.related_vulnerabilities #=> Array
-    #   resp.filters[0].criteria.related_vulnerabilities[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filters[0].criteria.related_vulnerabilities[0].value #=> String
-    #   resp.filters[0].criteria.resource_id #=> Array
-    #   resp.filters[0].criteria.resource_id[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filters[0].criteria.resource_id[0].value #=> String
-    #   resp.filters[0].criteria.resource_tags #=> Array
-    #   resp.filters[0].criteria.resource_tags[0].comparison #=> String, one of "EQUALS"
-    #   resp.filters[0].criteria.resource_tags[0].key #=> String
-    #   resp.filters[0].criteria.resource_tags[0].value #=> String
-    #   resp.filters[0].criteria.resource_type #=> Array
-    #   resp.filters[0].criteria.resource_type[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filters[0].criteria.resource_type[0].value #=> String
-    #   resp.filters[0].criteria.severity #=> Array
-    #   resp.filters[0].criteria.severity[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filters[0].criteria.severity[0].value #=> String
-    #   resp.filters[0].criteria.title #=> Array
-    #   resp.filters[0].criteria.title[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filters[0].criteria.title[0].value #=> String
-    #   resp.filters[0].criteria.updated_at #=> Array
-    #   resp.filters[0].criteria.updated_at[0].end_inclusive #=> Time
-    #   resp.filters[0].criteria.updated_at[0].start_inclusive #=> Time
-    #   resp.filters[0].criteria.vendor_severity #=> Array
-    #   resp.filters[0].criteria.vendor_severity[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filters[0].criteria.vendor_severity[0].value #=> String
+    #   resp.filters[0].criteria.network_protocol #=> Array
+    #   resp.filters[0].criteria.network_protocol[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.network_protocol[0].value #=> String
+    #   resp.filters[0].criteria.component_id #=> Array
+    #   resp.filters[0].criteria.component_id[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.component_id[0].value #=> String
+    #   resp.filters[0].criteria.component_type #=> Array
+    #   resp.filters[0].criteria.component_type[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.component_type[0].value #=> String
     #   resp.filters[0].criteria.vulnerability_id #=> Array
     #   resp.filters[0].criteria.vulnerability_id[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
     #   resp.filters[0].criteria.vulnerability_id[0].value #=> String
     #   resp.filters[0].criteria.vulnerability_source #=> Array
     #   resp.filters[0].criteria.vulnerability_source[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
     #   resp.filters[0].criteria.vulnerability_source[0].value #=> String
+    #   resp.filters[0].criteria.vendor_severity #=> Array
+    #   resp.filters[0].criteria.vendor_severity[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.vendor_severity[0].value #=> String
     #   resp.filters[0].criteria.vulnerable_packages #=> Array
-    #   resp.filters[0].criteria.vulnerable_packages[0].architecture.comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filters[0].criteria.vulnerable_packages[0].architecture.value #=> String
-    #   resp.filters[0].criteria.vulnerable_packages[0].epoch.lower_inclusive #=> Float
-    #   resp.filters[0].criteria.vulnerable_packages[0].epoch.upper_inclusive #=> Float
-    #   resp.filters[0].criteria.vulnerable_packages[0].file_path.comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filters[0].criteria.vulnerable_packages[0].file_path.value #=> String
     #   resp.filters[0].criteria.vulnerable_packages[0].name.comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
     #   resp.filters[0].criteria.vulnerable_packages[0].name.value #=> String
-    #   resp.filters[0].criteria.vulnerable_packages[0].release.comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filters[0].criteria.vulnerable_packages[0].release.value #=> String
-    #   resp.filters[0].criteria.vulnerable_packages[0].source_lambda_layer_arn.comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filters[0].criteria.vulnerable_packages[0].source_lambda_layer_arn.value #=> String
-    #   resp.filters[0].criteria.vulnerable_packages[0].source_layer_hash.comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
-    #   resp.filters[0].criteria.vulnerable_packages[0].source_layer_hash.value #=> String
     #   resp.filters[0].criteria.vulnerable_packages[0].version.comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
     #   resp.filters[0].criteria.vulnerable_packages[0].version.value #=> String
+    #   resp.filters[0].criteria.vulnerable_packages[0].epoch.upper_inclusive #=> Float
+    #   resp.filters[0].criteria.vulnerable_packages[0].epoch.lower_inclusive #=> Float
+    #   resp.filters[0].criteria.vulnerable_packages[0].release.comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.vulnerable_packages[0].release.value #=> String
+    #   resp.filters[0].criteria.vulnerable_packages[0].architecture.comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.vulnerable_packages[0].architecture.value #=> String
+    #   resp.filters[0].criteria.vulnerable_packages[0].source_layer_hash.comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.vulnerable_packages[0].source_layer_hash.value #=> String
+    #   resp.filters[0].criteria.vulnerable_packages[0].source_lambda_layer_arn.comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.vulnerable_packages[0].source_lambda_layer_arn.value #=> String
+    #   resp.filters[0].criteria.vulnerable_packages[0].file_path.comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.vulnerable_packages[0].file_path.value #=> String
+    #   resp.filters[0].criteria.related_vulnerabilities #=> Array
+    #   resp.filters[0].criteria.related_vulnerabilities[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.related_vulnerabilities[0].value #=> String
+    #   resp.filters[0].criteria.fix_available #=> Array
+    #   resp.filters[0].criteria.fix_available[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.fix_available[0].value #=> String
+    #   resp.filters[0].criteria.lambda_function_name #=> Array
+    #   resp.filters[0].criteria.lambda_function_name[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.lambda_function_name[0].value #=> String
+    #   resp.filters[0].criteria.lambda_function_layers #=> Array
+    #   resp.filters[0].criteria.lambda_function_layers[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.lambda_function_layers[0].value #=> String
+    #   resp.filters[0].criteria.lambda_function_runtime #=> Array
+    #   resp.filters[0].criteria.lambda_function_runtime[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.lambda_function_runtime[0].value #=> String
+    #   resp.filters[0].criteria.lambda_function_last_modified_at #=> Array
+    #   resp.filters[0].criteria.lambda_function_last_modified_at[0].start_inclusive #=> Time
+    #   resp.filters[0].criteria.lambda_function_last_modified_at[0].end_inclusive #=> Time
+    #   resp.filters[0].criteria.lambda_function_execution_role_arn #=> Array
+    #   resp.filters[0].criteria.lambda_function_execution_role_arn[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.lambda_function_execution_role_arn[0].value #=> String
+    #   resp.filters[0].criteria.exploit_available #=> Array
+    #   resp.filters[0].criteria.exploit_available[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.exploit_available[0].value #=> String
+    #   resp.filters[0].criteria.code_vulnerability_detector_name #=> Array
+    #   resp.filters[0].criteria.code_vulnerability_detector_name[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.code_vulnerability_detector_name[0].value #=> String
+    #   resp.filters[0].criteria.code_vulnerability_detector_tags #=> Array
+    #   resp.filters[0].criteria.code_vulnerability_detector_tags[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.code_vulnerability_detector_tags[0].value #=> String
+    #   resp.filters[0].criteria.code_vulnerability_file_path #=> Array
+    #   resp.filters[0].criteria.code_vulnerability_file_path[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.code_vulnerability_file_path[0].value #=> String
+    #   resp.filters[0].criteria.epss_score #=> Array
+    #   resp.filters[0].criteria.epss_score[0].upper_inclusive #=> Float
+    #   resp.filters[0].criteria.epss_score[0].lower_inclusive #=> Float
+    #   resp.filters[0].criteria.code_repository_project_name #=> Array
+    #   resp.filters[0].criteria.code_repository_project_name[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.code_repository_project_name[0].value #=> String
+    #   resp.filters[0].criteria.code_repository_provider_type #=> Array
+    #   resp.filters[0].criteria.code_repository_provider_type[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.code_repository_provider_type[0].value #=> String
+    #   resp.filters[0].criteria.cloud_provider #=> Array
+    #   resp.filters[0].criteria.cloud_provider[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.cloud_provider[0].value #=> String
+    #   resp.filters[0].criteria.cloud_provider_region #=> Array
+    #   resp.filters[0].criteria.cloud_provider_region[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.cloud_provider_region[0].value #=> String
+    #   resp.filters[0].criteria.cloud_provider_account_id #=> Array
+    #   resp.filters[0].criteria.cloud_provider_account_id[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.cloud_provider_account_id[0].value #=> String
+    #   resp.filters[0].criteria.cloud_provider_org_id #=> Array
+    #   resp.filters[0].criteria.cloud_provider_org_id[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.cloud_provider_org_id[0].value #=> String
+    #   resp.filters[0].criteria.cloud_vm_image_reference #=> Array
+    #   resp.filters[0].criteria.cloud_vm_image_reference[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.cloud_vm_image_reference[0].value #=> String
+    #   resp.filters[0].criteria.cloud_vm_network_id #=> Array
+    #   resp.filters[0].criteria.cloud_vm_network_id[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.cloud_vm_network_id[0].value #=> String
+    #   resp.filters[0].criteria.cloud_vm_subnet_ids #=> Array
+    #   resp.filters[0].criteria.cloud_vm_subnet_ids[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.cloud_vm_subnet_ids[0].value #=> String
+    #   resp.filters[0].criteria.cloud_image_repository_name #=> Array
+    #   resp.filters[0].criteria.cloud_image_repository_name[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.cloud_image_repository_name[0].value #=> String
+    #   resp.filters[0].criteria.cloud_image_registry #=> Array
+    #   resp.filters[0].criteria.cloud_image_registry[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.cloud_image_registry[0].value #=> String
+    #   resp.filters[0].criteria.cloud_image_digest #=> Array
+    #   resp.filters[0].criteria.cloud_image_digest[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.cloud_image_digest[0].value #=> String
+    #   resp.filters[0].criteria.cloud_image_tags #=> Array
+    #   resp.filters[0].criteria.cloud_image_tags[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.cloud_image_tags[0].value #=> String
+    #   resp.filters[0].criteria.cloud_image_pushed_at #=> Array
+    #   resp.filters[0].criteria.cloud_image_pushed_at[0].start_inclusive #=> Time
+    #   resp.filters[0].criteria.cloud_image_pushed_at[0].end_inclusive #=> Time
+    #   resp.filters[0].criteria.cloud_image_architecture #=> Array
+    #   resp.filters[0].criteria.cloud_image_architecture[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.cloud_image_architecture[0].value #=> String
+    #   resp.filters[0].criteria.cloud_image_last_in_use_at #=> Array
+    #   resp.filters[0].criteria.cloud_image_last_in_use_at[0].start_inclusive #=> Time
+    #   resp.filters[0].criteria.cloud_image_last_in_use_at[0].end_inclusive #=> Time
+    #   resp.filters[0].criteria.cloud_image_in_use_count #=> Array
+    #   resp.filters[0].criteria.cloud_image_in_use_count[0].upper_inclusive #=> Float
+    #   resp.filters[0].criteria.cloud_image_in_use_count[0].lower_inclusive #=> Float
+    #   resp.filters[0].criteria.cloud_serverless_function_name #=> Array
+    #   resp.filters[0].criteria.cloud_serverless_function_name[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.cloud_serverless_function_name[0].value #=> String
+    #   resp.filters[0].criteria.cloud_serverless_function_runtime #=> Array
+    #   resp.filters[0].criteria.cloud_serverless_function_runtime[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.cloud_serverless_function_runtime[0].value #=> String
+    #   resp.filters[0].criteria.cloud_serverless_function_last_modified_at #=> Array
+    #   resp.filters[0].criteria.cloud_serverless_function_last_modified_at[0].start_inclusive #=> Time
+    #   resp.filters[0].criteria.cloud_serverless_function_last_modified_at[0].end_inclusive #=> Time
+    #   resp.filters[0].criteria.cloud_serverless_function_execution_role #=> Array
+    #   resp.filters[0].criteria.cloud_serverless_function_execution_role[0].comparison #=> String, one of "EQUALS", "PREFIX", "NOT_EQUALS"
+    #   resp.filters[0].criteria.cloud_serverless_function_execution_role[0].value #=> String
+    #   resp.filters[0].action #=> String, one of "NONE", "SUPPRESS"
+    #   resp.filters[0].created_at #=> Time
+    #   resp.filters[0].updated_at #=> Time
     #   resp.filters[0].description #=> String
-    #   resp.filters[0].name #=> String
-    #   resp.filters[0].owner_id #=> String
     #   resp.filters[0].reason #=> String
     #   resp.filters[0].tags #=> Hash
     #   resp.filters[0].tags["MapKey"] #=> String
-    #   resp.filters[0].updated_at #=> Time
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/ListFilters AWS API Documentation
@@ -3542,22 +5614,8 @@ module Aws::Inspector2
     # Lists aggregated finding data for your environment based on specific
     # criteria.
     #
-    # @option params [Array<Types::StringFilter>] :account_ids
-    #   The Amazon Web Services account IDs to retrieve finding aggregation
-    #   data for.
-    #
-    # @option params [Types::AggregationRequest] :aggregation_request
-    #   Details of the aggregation request that is used to filter your
-    #   aggregation results.
-    #
     # @option params [required, String] :aggregation_type
     #   The type of the aggregation request.
-    #
-    # @option params [Integer] :max_results
-    #   The maximum number of results the response can return. If your request
-    #   would return more than the maximum the response will return a
-    #   `nextToken` value, use this value when you call the action again to
-    #   get the remaining results.
     #
     # @option params [String] :next_token
     #   A token to use for paginating results that are returned in the
@@ -3567,17 +5625,34 @@ module Aws::Inspector2
     #   For subsequent calls, use the `nextToken` value returned from the
     #   previous request to continue listing results after the first page.
     #
+    # @option params [Integer] :max_results
+    #   The maximum number of results the response can return. If your request
+    #   would return more than the maximum the response will return a
+    #   `nextToken` value, use this value when you call the action again to
+    #   get the remaining results.
+    #
+    # @option params [Array<Types::StringFilter>] :account_ids
+    #   The Amazon Web Services account IDs to retrieve finding aggregation
+    #   data for.
+    #
+    # @option params [Types::AggregationRequest] :aggregation_request
+    #   Details of the aggregation request that is used to filter your
+    #   aggregation results.
+    #
     # @return [Types::ListFindingAggregationsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::ListFindingAggregationsResponse#aggregation_type #aggregation_type} => String
-    #   * {Types::ListFindingAggregationsResponse#next_token #next_token} => String
     #   * {Types::ListFindingAggregationsResponse#responses #responses} => Array&lt;Types::AggregationResponse&gt;
+    #   * {Types::ListFindingAggregationsResponse#next_token #next_token} => String
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_finding_aggregations({
+    #     aggregation_type: "FINDING_TYPE", # required, accepts FINDING_TYPE, PACKAGE, TITLE, REPOSITORY, AMI, AWS_EC2_INSTANCE, AWS_ECR_CONTAINER, IMAGE_LAYER, ACCOUNT, AWS_LAMBDA_FUNCTION, LAMBDA_LAYER, CODE_REPOSITORY, VM_INSTANCE, CONTAINER_IMAGE, SERVERLESS_FUNCTION
+    #     next_token: "NextToken",
+    #     max_results: 1,
     #     account_ids: [
     #       {
     #         comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
@@ -3587,9 +5662,9 @@ module Aws::Inspector2
     #     aggregation_request: {
     #       account_aggregation: {
     #         finding_type: "NETWORK_REACHABILITY", # accepts NETWORK_REACHABILITY, PACKAGE_VULNERABILITY, CODE_VULNERABILITY
-    #         resource_type: "AWS_EC2_INSTANCE", # accepts AWS_EC2_INSTANCE, AWS_ECR_CONTAINER_IMAGE, AWS_LAMBDA_FUNCTION
-    #         sort_by: "CRITICAL", # accepts CRITICAL, HIGH, ALL
+    #         resource_type: "AWS_EC2_INSTANCE", # accepts AWS_EC2_INSTANCE, AWS_ECR_CONTAINER_IMAGE, AWS_LAMBDA_FUNCTION, CODE_REPOSITORY, Microsoft.Compute/virtualMachines, Microsoft.ContainerRegistry/registry/containerImage, Microsoft.Web/sites
     #         sort_order: "ASC", # accepts ASC, DESC
+    #         sort_by: "CRITICAL", # accepts CRITICAL, HIGH, ALL
     #       },
     #       ami_aggregation: {
     #         amis: [
@@ -3598,11 +5673,11 @@ module Aws::Inspector2
     #             value: "StringInput", # required
     #           },
     #         ],
-    #         sort_by: "CRITICAL", # accepts CRITICAL, HIGH, ALL, AFFECTED_INSTANCES
     #         sort_order: "ASC", # accepts ASC, DESC
+    #         sort_by: "CRITICAL", # accepts CRITICAL, HIGH, ALL, AFFECTED_INSTANCES
     #       },
     #       aws_ecr_container_aggregation: {
-    #         architectures: [
+    #         resource_ids: [
     #           {
     #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
     #             value: "StringInput", # required
@@ -3614,29 +5689,47 @@ module Aws::Inspector2
     #             value: "StringInput", # required
     #           },
     #         ],
-    #         image_tags: [
-    #           {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #         ],
     #         repositories: [
     #           {
     #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
     #             value: "StringInput", # required
     #           },
     #         ],
-    #         resource_ids: [
+    #         architectures: [
     #           {
     #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
     #             value: "StringInput", # required
     #           },
     #         ],
-    #         sort_by: "CRITICAL", # accepts CRITICAL, HIGH, ALL
+    #         image_tags: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
     #         sort_order: "ASC", # accepts ASC, DESC
+    #         sort_by: "CRITICAL", # accepts CRITICAL, HIGH, ALL
+    #         last_in_use_at: [
+    #           {
+    #             start_inclusive: Time.now,
+    #             end_inclusive: Time.now,
+    #           },
+    #         ],
+    #         in_use_count: [
+    #           {
+    #             upper_inclusive: 1.0,
+    #             lower_inclusive: 1.0,
+    #           },
+    #         ],
     #       },
     #       ec2_instance_aggregation: {
     #         amis: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         operating_systems: [
     #           {
     #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
     #             value: "StringInput", # required
@@ -3655,28 +5748,16 @@ module Aws::Inspector2
     #             value: "MapValue",
     #           },
     #         ],
-    #         operating_systems: [
-    #           {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #         ],
-    #         sort_by: "NETWORK_FINDINGS", # accepts NETWORK_FINDINGS, CRITICAL, HIGH, ALL
     #         sort_order: "ASC", # accepts ASC, DESC
+    #         sort_by: "NETWORK_FINDINGS", # accepts NETWORK_FINDINGS, CRITICAL, HIGH, ALL
     #       },
     #       finding_type_aggregation: {
     #         finding_type: "NETWORK_REACHABILITY", # accepts NETWORK_REACHABILITY, PACKAGE_VULNERABILITY, CODE_VULNERABILITY
-    #         resource_type: "AWS_EC2_INSTANCE", # accepts AWS_EC2_INSTANCE, AWS_ECR_CONTAINER_IMAGE, AWS_LAMBDA_FUNCTION
-    #         sort_by: "CRITICAL", # accepts CRITICAL, HIGH, ALL
+    #         resource_type: "AWS_EC2_INSTANCE", # accepts AWS_EC2_INSTANCE, AWS_ECR_CONTAINER_IMAGE, AWS_LAMBDA_FUNCTION, CODE_REPOSITORY, Microsoft.Compute/virtualMachines, Microsoft.ContainerRegistry/registry/containerImage, Microsoft.Web/sites
     #         sort_order: "ASC", # accepts ASC, DESC
+    #         sort_by: "CRITICAL", # accepts CRITICAL, HIGH, ALL
     #       },
     #       image_layer_aggregation: {
-    #         layer_hashes: [
-    #           {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #         ],
     #         repositories: [
     #           {
     #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
@@ -3689,59 +5770,44 @@ module Aws::Inspector2
     #             value: "StringInput", # required
     #           },
     #         ],
-    #         sort_by: "CRITICAL", # accepts CRITICAL, HIGH, ALL
+    #         layer_hashes: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         cloud_providers: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         cloud_account_ids: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         cloud_org_ids: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         cloud_regions: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         cloud_partitions: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
     #         sort_order: "ASC", # accepts ASC, DESC
-    #       },
-    #       lambda_function_aggregation: {
-    #         function_names: [
-    #           {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #         ],
-    #         function_tags: [
-    #           {
-    #             comparison: "EQUALS", # required, accepts EQUALS
-    #             key: "MapKey", # required
-    #             value: "MapValue",
-    #           },
-    #         ],
-    #         resource_ids: [
-    #           {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #         ],
-    #         runtimes: [
-    #           {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #         ],
     #         sort_by: "CRITICAL", # accepts CRITICAL, HIGH, ALL
-    #         sort_order: "ASC", # accepts ASC, DESC
-    #       },
-    #       lambda_layer_aggregation: {
-    #         function_names: [
-    #           {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #         ],
-    #         layer_arns: [
-    #           {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #         ],
-    #         resource_ids: [
-    #           {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #         ],
-    #         sort_by: "CRITICAL", # accepts CRITICAL, HIGH, ALL
-    #         sort_order: "ASC", # accepts ASC, DESC
     #       },
     #       package_aggregation: {
     #         package_names: [
@@ -3750,8 +5816,8 @@ module Aws::Inspector2
     #             value: "StringInput", # required
     #           },
     #         ],
-    #         sort_by: "CRITICAL", # accepts CRITICAL, HIGH, ALL
     #         sort_order: "ASC", # accepts ASC, DESC
+    #         sort_by: "CRITICAL", # accepts CRITICAL, HIGH, ALL
     #       },
     #       repository_aggregation: {
     #         repositories: [
@@ -3760,14 +5826,10 @@ module Aws::Inspector2
     #             value: "StringInput", # required
     #           },
     #         ],
-    #         sort_by: "CRITICAL", # accepts CRITICAL, HIGH, ALL, AFFECTED_IMAGES
     #         sort_order: "ASC", # accepts ASC, DESC
+    #         sort_by: "CRITICAL", # accepts CRITICAL, HIGH, ALL, AFFECTED_IMAGES
     #       },
     #       title_aggregation: {
-    #         finding_type: "NETWORK_REACHABILITY", # accepts NETWORK_REACHABILITY, PACKAGE_VULNERABILITY, CODE_VULNERABILITY
-    #         resource_type: "AWS_EC2_INSTANCE", # accepts AWS_EC2_INSTANCE, AWS_ECR_CONTAINER_IMAGE, AWS_LAMBDA_FUNCTION
-    #         sort_by: "CRITICAL", # accepts CRITICAL, HIGH, ALL
-    #         sort_order: "ASC", # accepts ASC, DESC
     #         titles: [
     #           {
     #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
@@ -3780,108 +5842,471 @@ module Aws::Inspector2
     #             value: "StringInput", # required
     #           },
     #         ],
+    #         resource_type: "AWS_EC2_INSTANCE", # accepts AWS_EC2_INSTANCE, AWS_ECR_CONTAINER_IMAGE, AWS_LAMBDA_FUNCTION, CODE_REPOSITORY, Microsoft.Compute/virtualMachines, Microsoft.ContainerRegistry/registry/containerImage, Microsoft.Web/sites
+    #         finding_type: "NETWORK_REACHABILITY", # accepts NETWORK_REACHABILITY, PACKAGE_VULNERABILITY, CODE_VULNERABILITY
+    #         sort_order: "ASC", # accepts ASC, DESC
+    #         sort_by: "CRITICAL", # accepts CRITICAL, HIGH, ALL
+    #       },
+    #       lambda_layer_aggregation: {
+    #         function_names: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         resource_ids: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         layer_arns: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         sort_order: "ASC", # accepts ASC, DESC
+    #         sort_by: "CRITICAL", # accepts CRITICAL, HIGH, ALL
+    #       },
+    #       lambda_function_aggregation: {
+    #         resource_ids: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         function_names: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         runtimes: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         function_tags: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS
+    #             key: "MapKey", # required
+    #             value: "MapValue",
+    #           },
+    #         ],
+    #         sort_order: "ASC", # accepts ASC, DESC
+    #         sort_by: "CRITICAL", # accepts CRITICAL, HIGH, ALL
+    #       },
+    #       code_repository_aggregation: {
+    #         project_names: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         provider_types: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         sort_order: "ASC", # accepts ASC, DESC
+    #         sort_by: "CRITICAL", # accepts CRITICAL, HIGH, ALL
+    #         resource_ids: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #       },
+    #       vm_instance_aggregation: {
+    #         resource_ids: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         operating_systems: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         instance_tags: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS
+    #             key: "MapKey", # required
+    #             value: "MapValue",
+    #           },
+    #         ],
+    #         vm_image_references: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         cloud_providers: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         cloud_partitions: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         cloud_regions: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         cloud_org_ids: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         cloud_account_ids: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         sort_order: "ASC", # accepts ASC, DESC
+    #         sort_by: "CRITICAL", # accepts CRITICAL, HIGH, ALL, NETWORK_FINDINGS
+    #       },
+    #       container_image_aggregation: {
+    #         resource_ids: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         image_digests: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         repositories: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         registries: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         architectures: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         image_tags: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         cloud_providers: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         cloud_partitions: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         cloud_regions: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         cloud_org_ids: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         cloud_account_ids: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         last_in_use_at: [
+    #           {
+    #             start_inclusive: Time.now,
+    #             end_inclusive: Time.now,
+    #           },
+    #         ],
+    #         in_use_count: [
+    #           {
+    #             upper_inclusive: 1.0,
+    #             lower_inclusive: 1.0,
+    #           },
+    #         ],
+    #         sort_order: "ASC", # accepts ASC, DESC
+    #         sort_by: "CRITICAL", # accepts CRITICAL, HIGH, ALL
+    #       },
+    #       serverless_function_aggregation: {
+    #         resource_ids: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         function_names: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         runtimes: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         function_tags: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS
+    #             key: "MapKey", # required
+    #             value: "MapValue",
+    #           },
+    #         ],
+    #         cloud_providers: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         cloud_partitions: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         cloud_regions: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         cloud_org_ids: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         cloud_account_ids: [
+    #           {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         ],
+    #         sort_order: "ASC", # accepts ASC, DESC
+    #         sort_by: "CRITICAL", # accepts CRITICAL, HIGH, ALL
     #       },
     #     },
-    #     aggregation_type: "FINDING_TYPE", # required, accepts FINDING_TYPE, PACKAGE, TITLE, REPOSITORY, AMI, AWS_EC2_INSTANCE, AWS_ECR_CONTAINER, IMAGE_LAYER, ACCOUNT, AWS_LAMBDA_FUNCTION, LAMBDA_LAYER
-    #     max_results: 1,
-    #     next_token: "NextToken",
     #   })
     #
     # @example Response structure
     #
-    #   resp.aggregation_type #=> String, one of "FINDING_TYPE", "PACKAGE", "TITLE", "REPOSITORY", "AMI", "AWS_EC2_INSTANCE", "AWS_ECR_CONTAINER", "IMAGE_LAYER", "ACCOUNT", "AWS_LAMBDA_FUNCTION", "LAMBDA_LAYER"
-    #   resp.next_token #=> String
+    #   resp.aggregation_type #=> String, one of "FINDING_TYPE", "PACKAGE", "TITLE", "REPOSITORY", "AMI", "AWS_EC2_INSTANCE", "AWS_ECR_CONTAINER", "IMAGE_LAYER", "ACCOUNT", "AWS_LAMBDA_FUNCTION", "LAMBDA_LAYER", "CODE_REPOSITORY", "VM_INSTANCE", "CONTAINER_IMAGE", "SERVERLESS_FUNCTION"
     #   resp.responses #=> Array
     #   resp.responses[0].account_aggregation.account_id #=> String
+    #   resp.responses[0].account_aggregation.severity_counts.all #=> Integer
+    #   resp.responses[0].account_aggregation.severity_counts.medium #=> Integer
+    #   resp.responses[0].account_aggregation.severity_counts.high #=> Integer
+    #   resp.responses[0].account_aggregation.severity_counts.critical #=> Integer
     #   resp.responses[0].account_aggregation.exploit_available_count #=> Integer
     #   resp.responses[0].account_aggregation.fix_available_count #=> Integer
-    #   resp.responses[0].account_aggregation.severity_counts.all #=> Integer
-    #   resp.responses[0].account_aggregation.severity_counts.critical #=> Integer
-    #   resp.responses[0].account_aggregation.severity_counts.high #=> Integer
-    #   resp.responses[0].account_aggregation.severity_counts.medium #=> Integer
-    #   resp.responses[0].ami_aggregation.account_id #=> String
-    #   resp.responses[0].ami_aggregation.affected_instances #=> Integer
     #   resp.responses[0].ami_aggregation.ami #=> String
+    #   resp.responses[0].ami_aggregation.account_id #=> String
+    #   resp.responses[0].ami_aggregation.cloud_provider #=> String, one of "AWS", "AZURE"
+    #   resp.responses[0].ami_aggregation.cloud_partition #=> String
+    #   resp.responses[0].ami_aggregation.cloud_region #=> String
+    #   resp.responses[0].ami_aggregation.cloud_org_id #=> String
+    #   resp.responses[0].ami_aggregation.cloud_account_id #=> String
     #   resp.responses[0].ami_aggregation.severity_counts.all #=> Integer
-    #   resp.responses[0].ami_aggregation.severity_counts.critical #=> Integer
-    #   resp.responses[0].ami_aggregation.severity_counts.high #=> Integer
     #   resp.responses[0].ami_aggregation.severity_counts.medium #=> Integer
-    #   resp.responses[0].aws_ecr_container_aggregation.account_id #=> String
-    #   resp.responses[0].aws_ecr_container_aggregation.architecture #=> String
+    #   resp.responses[0].ami_aggregation.severity_counts.high #=> Integer
+    #   resp.responses[0].ami_aggregation.severity_counts.critical #=> Integer
+    #   resp.responses[0].ami_aggregation.affected_instances #=> Integer
+    #   resp.responses[0].aws_ecr_container_aggregation.resource_id #=> String
     #   resp.responses[0].aws_ecr_container_aggregation.image_sha #=> String
+    #   resp.responses[0].aws_ecr_container_aggregation.repository #=> String
+    #   resp.responses[0].aws_ecr_container_aggregation.architecture #=> String
     #   resp.responses[0].aws_ecr_container_aggregation.image_tags #=> Array
     #   resp.responses[0].aws_ecr_container_aggregation.image_tags[0] #=> String
-    #   resp.responses[0].aws_ecr_container_aggregation.repository #=> String
-    #   resp.responses[0].aws_ecr_container_aggregation.resource_id #=> String
+    #   resp.responses[0].aws_ecr_container_aggregation.account_id #=> String
     #   resp.responses[0].aws_ecr_container_aggregation.severity_counts.all #=> Integer
-    #   resp.responses[0].aws_ecr_container_aggregation.severity_counts.critical #=> Integer
-    #   resp.responses[0].aws_ecr_container_aggregation.severity_counts.high #=> Integer
     #   resp.responses[0].aws_ecr_container_aggregation.severity_counts.medium #=> Integer
-    #   resp.responses[0].ec2_instance_aggregation.account_id #=> String
-    #   resp.responses[0].ec2_instance_aggregation.ami #=> String
+    #   resp.responses[0].aws_ecr_container_aggregation.severity_counts.high #=> Integer
+    #   resp.responses[0].aws_ecr_container_aggregation.severity_counts.critical #=> Integer
+    #   resp.responses[0].aws_ecr_container_aggregation.last_in_use_at #=> Time
+    #   resp.responses[0].aws_ecr_container_aggregation.in_use_count #=> Integer
     #   resp.responses[0].ec2_instance_aggregation.instance_id #=> String
+    #   resp.responses[0].ec2_instance_aggregation.ami #=> String
+    #   resp.responses[0].ec2_instance_aggregation.operating_system #=> String
     #   resp.responses[0].ec2_instance_aggregation.instance_tags #=> Hash
     #   resp.responses[0].ec2_instance_aggregation.instance_tags["MapKey"] #=> String
-    #   resp.responses[0].ec2_instance_aggregation.network_findings #=> Integer
-    #   resp.responses[0].ec2_instance_aggregation.operating_system #=> String
+    #   resp.responses[0].ec2_instance_aggregation.account_id #=> String
     #   resp.responses[0].ec2_instance_aggregation.severity_counts.all #=> Integer
-    #   resp.responses[0].ec2_instance_aggregation.severity_counts.critical #=> Integer
-    #   resp.responses[0].ec2_instance_aggregation.severity_counts.high #=> Integer
     #   resp.responses[0].ec2_instance_aggregation.severity_counts.medium #=> Integer
+    #   resp.responses[0].ec2_instance_aggregation.severity_counts.high #=> Integer
+    #   resp.responses[0].ec2_instance_aggregation.severity_counts.critical #=> Integer
+    #   resp.responses[0].ec2_instance_aggregation.network_findings #=> Integer
     #   resp.responses[0].finding_type_aggregation.account_id #=> String
+    #   resp.responses[0].finding_type_aggregation.severity_counts.all #=> Integer
+    #   resp.responses[0].finding_type_aggregation.severity_counts.medium #=> Integer
+    #   resp.responses[0].finding_type_aggregation.severity_counts.high #=> Integer
+    #   resp.responses[0].finding_type_aggregation.severity_counts.critical #=> Integer
     #   resp.responses[0].finding_type_aggregation.exploit_available_count #=> Integer
     #   resp.responses[0].finding_type_aggregation.fix_available_count #=> Integer
-    #   resp.responses[0].finding_type_aggregation.severity_counts.all #=> Integer
-    #   resp.responses[0].finding_type_aggregation.severity_counts.critical #=> Integer
-    #   resp.responses[0].finding_type_aggregation.severity_counts.high #=> Integer
-    #   resp.responses[0].finding_type_aggregation.severity_counts.medium #=> Integer
-    #   resp.responses[0].image_layer_aggregation.account_id #=> String
-    #   resp.responses[0].image_layer_aggregation.layer_hash #=> String
+    #   resp.responses[0].finding_type_aggregation.cloud_provider #=> String
+    #   resp.responses[0].finding_type_aggregation.cloud_account_id #=> String
+    #   resp.responses[0].finding_type_aggregation.cloud_org_id #=> String
+    #   resp.responses[0].finding_type_aggregation.cloud_region #=> String
+    #   resp.responses[0].finding_type_aggregation.cloud_partition #=> String
     #   resp.responses[0].image_layer_aggregation.repository #=> String
     #   resp.responses[0].image_layer_aggregation.resource_id #=> String
+    #   resp.responses[0].image_layer_aggregation.layer_hash #=> String
+    #   resp.responses[0].image_layer_aggregation.account_id #=> String
+    #   resp.responses[0].image_layer_aggregation.cloud_provider #=> String
+    #   resp.responses[0].image_layer_aggregation.cloud_account_id #=> String
+    #   resp.responses[0].image_layer_aggregation.cloud_org_id #=> String
+    #   resp.responses[0].image_layer_aggregation.cloud_region #=> String
+    #   resp.responses[0].image_layer_aggregation.cloud_partition #=> String
     #   resp.responses[0].image_layer_aggregation.severity_counts.all #=> Integer
-    #   resp.responses[0].image_layer_aggregation.severity_counts.critical #=> Integer
-    #   resp.responses[0].image_layer_aggregation.severity_counts.high #=> Integer
     #   resp.responses[0].image_layer_aggregation.severity_counts.medium #=> Integer
-    #   resp.responses[0].lambda_function_aggregation.account_id #=> String
-    #   resp.responses[0].lambda_function_aggregation.function_name #=> String
-    #   resp.responses[0].lambda_function_aggregation.lambda_tags #=> Hash
-    #   resp.responses[0].lambda_function_aggregation.lambda_tags["MapKey"] #=> String
-    #   resp.responses[0].lambda_function_aggregation.last_modified_at #=> Time
-    #   resp.responses[0].lambda_function_aggregation.resource_id #=> String
-    #   resp.responses[0].lambda_function_aggregation.runtime #=> String
-    #   resp.responses[0].lambda_function_aggregation.severity_counts.all #=> Integer
-    #   resp.responses[0].lambda_function_aggregation.severity_counts.critical #=> Integer
-    #   resp.responses[0].lambda_function_aggregation.severity_counts.high #=> Integer
-    #   resp.responses[0].lambda_function_aggregation.severity_counts.medium #=> Integer
-    #   resp.responses[0].lambda_layer_aggregation.account_id #=> String
-    #   resp.responses[0].lambda_layer_aggregation.function_name #=> String
-    #   resp.responses[0].lambda_layer_aggregation.layer_arn #=> String
-    #   resp.responses[0].lambda_layer_aggregation.resource_id #=> String
-    #   resp.responses[0].lambda_layer_aggregation.severity_counts.all #=> Integer
-    #   resp.responses[0].lambda_layer_aggregation.severity_counts.critical #=> Integer
-    #   resp.responses[0].lambda_layer_aggregation.severity_counts.high #=> Integer
-    #   resp.responses[0].lambda_layer_aggregation.severity_counts.medium #=> Integer
-    #   resp.responses[0].package_aggregation.account_id #=> String
+    #   resp.responses[0].image_layer_aggregation.severity_counts.high #=> Integer
+    #   resp.responses[0].image_layer_aggregation.severity_counts.critical #=> Integer
     #   resp.responses[0].package_aggregation.package_name #=> String
+    #   resp.responses[0].package_aggregation.account_id #=> String
     #   resp.responses[0].package_aggregation.severity_counts.all #=> Integer
-    #   resp.responses[0].package_aggregation.severity_counts.critical #=> Integer
-    #   resp.responses[0].package_aggregation.severity_counts.high #=> Integer
     #   resp.responses[0].package_aggregation.severity_counts.medium #=> Integer
-    #   resp.responses[0].repository_aggregation.account_id #=> String
-    #   resp.responses[0].repository_aggregation.affected_images #=> Integer
+    #   resp.responses[0].package_aggregation.severity_counts.high #=> Integer
+    #   resp.responses[0].package_aggregation.severity_counts.critical #=> Integer
     #   resp.responses[0].repository_aggregation.repository #=> String
+    #   resp.responses[0].repository_aggregation.account_id #=> String
+    #   resp.responses[0].repository_aggregation.cloud_provider #=> String, one of "AWS", "AZURE"
+    #   resp.responses[0].repository_aggregation.cloud_partition #=> String
+    #   resp.responses[0].repository_aggregation.cloud_region #=> String
+    #   resp.responses[0].repository_aggregation.cloud_org_id #=> String
+    #   resp.responses[0].repository_aggregation.cloud_account_id #=> String
     #   resp.responses[0].repository_aggregation.severity_counts.all #=> Integer
-    #   resp.responses[0].repository_aggregation.severity_counts.critical #=> Integer
-    #   resp.responses[0].repository_aggregation.severity_counts.high #=> Integer
     #   resp.responses[0].repository_aggregation.severity_counts.medium #=> Integer
-    #   resp.responses[0].title_aggregation.account_id #=> String
-    #   resp.responses[0].title_aggregation.severity_counts.all #=> Integer
-    #   resp.responses[0].title_aggregation.severity_counts.critical #=> Integer
-    #   resp.responses[0].title_aggregation.severity_counts.high #=> Integer
-    #   resp.responses[0].title_aggregation.severity_counts.medium #=> Integer
+    #   resp.responses[0].repository_aggregation.severity_counts.high #=> Integer
+    #   resp.responses[0].repository_aggregation.severity_counts.critical #=> Integer
+    #   resp.responses[0].repository_aggregation.affected_images #=> Integer
     #   resp.responses[0].title_aggregation.title #=> String
     #   resp.responses[0].title_aggregation.vulnerability_id #=> String
+    #   resp.responses[0].title_aggregation.account_id #=> String
+    #   resp.responses[0].title_aggregation.severity_counts.all #=> Integer
+    #   resp.responses[0].title_aggregation.severity_counts.medium #=> Integer
+    #   resp.responses[0].title_aggregation.severity_counts.high #=> Integer
+    #   resp.responses[0].title_aggregation.severity_counts.critical #=> Integer
+    #   resp.responses[0].lambda_layer_aggregation.function_name #=> String
+    #   resp.responses[0].lambda_layer_aggregation.resource_id #=> String
+    #   resp.responses[0].lambda_layer_aggregation.layer_arn #=> String
+    #   resp.responses[0].lambda_layer_aggregation.account_id #=> String
+    #   resp.responses[0].lambda_layer_aggregation.severity_counts.all #=> Integer
+    #   resp.responses[0].lambda_layer_aggregation.severity_counts.medium #=> Integer
+    #   resp.responses[0].lambda_layer_aggregation.severity_counts.high #=> Integer
+    #   resp.responses[0].lambda_layer_aggregation.severity_counts.critical #=> Integer
+    #   resp.responses[0].lambda_function_aggregation.resource_id #=> String
+    #   resp.responses[0].lambda_function_aggregation.function_name #=> String
+    #   resp.responses[0].lambda_function_aggregation.runtime #=> String
+    #   resp.responses[0].lambda_function_aggregation.lambda_tags #=> Hash
+    #   resp.responses[0].lambda_function_aggregation.lambda_tags["MapKey"] #=> String
+    #   resp.responses[0].lambda_function_aggregation.account_id #=> String
+    #   resp.responses[0].lambda_function_aggregation.severity_counts.all #=> Integer
+    #   resp.responses[0].lambda_function_aggregation.severity_counts.medium #=> Integer
+    #   resp.responses[0].lambda_function_aggregation.severity_counts.high #=> Integer
+    #   resp.responses[0].lambda_function_aggregation.severity_counts.critical #=> Integer
+    #   resp.responses[0].lambda_function_aggregation.last_modified_at #=> Time
+    #   resp.responses[0].code_repository_aggregation.project_names #=> String
+    #   resp.responses[0].code_repository_aggregation.provider_type #=> String
+    #   resp.responses[0].code_repository_aggregation.severity_counts.all #=> Integer
+    #   resp.responses[0].code_repository_aggregation.severity_counts.medium #=> Integer
+    #   resp.responses[0].code_repository_aggregation.severity_counts.high #=> Integer
+    #   resp.responses[0].code_repository_aggregation.severity_counts.critical #=> Integer
+    #   resp.responses[0].code_repository_aggregation.exploit_available_active_findings_count #=> Integer
+    #   resp.responses[0].code_repository_aggregation.fix_available_active_findings_count #=> Integer
+    #   resp.responses[0].code_repository_aggregation.account_id #=> String
+    #   resp.responses[0].code_repository_aggregation.resource_id #=> String
+    #   resp.responses[0].vm_instance_aggregation.resource_id #=> String
+    #   resp.responses[0].vm_instance_aggregation.cloud_provider #=> String, one of "AWS", "AZURE"
+    #   resp.responses[0].vm_instance_aggregation.cloud_account_id #=> String
+    #   resp.responses[0].vm_instance_aggregation.cloud_partition #=> String
+    #   resp.responses[0].vm_instance_aggregation.cloud_region #=> String
+    #   resp.responses[0].vm_instance_aggregation.cloud_org_id #=> String
+    #   resp.responses[0].vm_instance_aggregation.vm_image_reference #=> String
+    #   resp.responses[0].vm_instance_aggregation.operating_system #=> String
+    #   resp.responses[0].vm_instance_aggregation.tags #=> Hash
+    #   resp.responses[0].vm_instance_aggregation.tags["MapKey"] #=> String
+    #   resp.responses[0].vm_instance_aggregation.account_id #=> String
+    #   resp.responses[0].vm_instance_aggregation.severity_counts.all #=> Integer
+    #   resp.responses[0].vm_instance_aggregation.severity_counts.medium #=> Integer
+    #   resp.responses[0].vm_instance_aggregation.severity_counts.high #=> Integer
+    #   resp.responses[0].vm_instance_aggregation.severity_counts.critical #=> Integer
+    #   resp.responses[0].vm_instance_aggregation.network_findings #=> Integer
+    #   resp.responses[0].vm_instance_aggregation.exploit_available_active_findings_count #=> Integer
+    #   resp.responses[0].vm_instance_aggregation.fix_available_active_findings_count #=> Integer
+    #   resp.responses[0].container_image_aggregation.resource_id #=> String
+    #   resp.responses[0].container_image_aggregation.cloud_provider #=> String, one of "AWS", "AZURE"
+    #   resp.responses[0].container_image_aggregation.cloud_account_id #=> String
+    #   resp.responses[0].container_image_aggregation.cloud_partition #=> String
+    #   resp.responses[0].container_image_aggregation.cloud_region #=> String
+    #   resp.responses[0].container_image_aggregation.cloud_org_id #=> String
+    #   resp.responses[0].container_image_aggregation.image_digest #=> String
+    #   resp.responses[0].container_image_aggregation.repository #=> String
+    #   resp.responses[0].container_image_aggregation.registry #=> String
+    #   resp.responses[0].container_image_aggregation.architecture #=> String
+    #   resp.responses[0].container_image_aggregation.image_tags #=> Array
+    #   resp.responses[0].container_image_aggregation.image_tags[0] #=> String
+    #   resp.responses[0].container_image_aggregation.account_id #=> String
+    #   resp.responses[0].container_image_aggregation.severity_counts.all #=> Integer
+    #   resp.responses[0].container_image_aggregation.severity_counts.medium #=> Integer
+    #   resp.responses[0].container_image_aggregation.severity_counts.high #=> Integer
+    #   resp.responses[0].container_image_aggregation.severity_counts.critical #=> Integer
+    #   resp.responses[0].container_image_aggregation.last_in_use_at #=> Time
+    #   resp.responses[0].container_image_aggregation.in_use_count #=> Integer
+    #   resp.responses[0].container_image_aggregation.exploit_available_active_findings_count #=> Integer
+    #   resp.responses[0].container_image_aggregation.fix_available_active_findings_count #=> Integer
+    #   resp.responses[0].serverless_function_aggregation.resource_id #=> String
+    #   resp.responses[0].serverless_function_aggregation.cloud_provider #=> String, one of "AWS", "AZURE"
+    #   resp.responses[0].serverless_function_aggregation.cloud_account_id #=> String
+    #   resp.responses[0].serverless_function_aggregation.cloud_partition #=> String
+    #   resp.responses[0].serverless_function_aggregation.cloud_region #=> String
+    #   resp.responses[0].serverless_function_aggregation.cloud_org_id #=> String
+    #   resp.responses[0].serverless_function_aggregation.function_name #=> String
+    #   resp.responses[0].serverless_function_aggregation.runtime #=> String
+    #   resp.responses[0].serverless_function_aggregation.tags #=> Hash
+    #   resp.responses[0].serverless_function_aggregation.tags["MapKey"] #=> String
+    #   resp.responses[0].serverless_function_aggregation.account_id #=> String
+    #   resp.responses[0].serverless_function_aggregation.severity_counts.all #=> Integer
+    #   resp.responses[0].serverless_function_aggregation.severity_counts.medium #=> Integer
+    #   resp.responses[0].serverless_function_aggregation.severity_counts.high #=> Integer
+    #   resp.responses[0].serverless_function_aggregation.severity_counts.critical #=> Integer
+    #   resp.responses[0].serverless_function_aggregation.last_modified_at #=> Time
+    #   resp.responses[0].serverless_function_aggregation.exploit_available_active_findings_count #=> Integer
+    #   resp.responses[0].serverless_function_aggregation.fix_available_active_findings_count #=> Integer
+    #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/ListFindingAggregations AWS API Documentation
     #
@@ -3893,9 +6318,6 @@ module Aws::Inspector2
     end
 
     # Lists findings for your environment.
-    #
-    # @option params [Types::FilterCriteria] :filter_criteria
-    #   Details on the filters to apply to your finding results.
     #
     # @option params [Integer] :max_results
     #   The maximum number of results the response can return. If your request
@@ -3911,21 +6333,291 @@ module Aws::Inspector2
     #   For subsequent calls, use the `nextToken` value returned from the
     #   previous request to continue listing results after the first page.
     #
+    # @option params [Types::FilterCriteria] :filter_criteria
+    #   Details on the filters to apply to your finding results.
+    #
     # @option params [Types::SortCriteria] :sort_criteria
     #   Details on the sort criteria to apply to your finding results.
     #
     # @return [Types::ListFindingsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::ListFindingsResponse#findings #findings} => Array&lt;Types::Finding&gt;
     #   * {Types::ListFindingsResponse#next_token #next_token} => String
+    #   * {Types::ListFindingsResponse#findings #findings} => Array&lt;Types::Finding&gt;
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_findings({
+    #     max_results: 1,
+    #     next_token: "NextToken",
     #     filter_criteria: {
+    #       finding_arn: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
     #       aws_account_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       finding_type: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       severity: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       first_observed_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       last_observed_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       updated_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       finding_status: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       title: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       inspector_score: [
+    #         {
+    #           upper_inclusive: 1.0,
+    #           lower_inclusive: 1.0,
+    #         },
+    #       ],
+    #       resource_type: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       resource_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       resource_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS
+    #           key: "MapKey", # required
+    #           value: "MapValue",
+    #         },
+    #       ],
+    #       ec2_instance_image_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ec2_instance_vpc_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ec2_instance_subnet_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ecr_image_pushed_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       ecr_image_architecture: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ecr_image_registry: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ecr_image_repository_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ecr_image_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ecr_image_hash: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ecr_image_last_in_use_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       ecr_image_in_use_count: [
+    #         {
+    #           upper_inclusive: 1.0,
+    #           lower_inclusive: 1.0,
+    #         },
+    #       ],
+    #       port_range: [
+    #         {
+    #           begin_inclusive: 1,
+    #           end_inclusive: 1,
+    #         },
+    #       ],
+    #       network_protocol: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       component_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       component_type: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       vulnerability_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       vulnerability_source: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       vendor_severity: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       vulnerable_packages: [
+    #         {
+    #           name: {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #           version: {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #           epoch: {
+    #             upper_inclusive: 1.0,
+    #             lower_inclusive: 1.0,
+    #           },
+    #           release: {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #           architecture: {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #           source_layer_hash: {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #           source_lambda_layer_arn: {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #           file_path: {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         },
+    #       ],
+    #       related_vulnerabilities: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       fix_available: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       lambda_function_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       lambda_function_layers: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       lambda_function_runtime: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       lambda_function_last_modified_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       lambda_function_execution_role_arn: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       exploit_available: [
     #         {
     #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
     #           value: "StringInput", # required
@@ -3949,268 +6641,139 @@ module Aws::Inspector2
     #           value: "StringInput", # required
     #         },
     #       ],
-    #       component_id: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       component_type: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ec2_instance_image_id: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ec2_instance_subnet_id: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ec2_instance_vpc_id: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ecr_image_architecture: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ecr_image_hash: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ecr_image_pushed_at: [
-    #         {
-    #           end_inclusive: Time.now,
-    #           start_inclusive: Time.now,
-    #         },
-    #       ],
-    #       ecr_image_registry: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ecr_image_repository_name: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ecr_image_tags: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
     #       epss_score: [
     #         {
-    #           lower_inclusive: 1.0,
     #           upper_inclusive: 1.0,
-    #         },
-    #       ],
-    #       exploit_available: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       finding_arn: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       finding_status: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       finding_type: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       first_observed_at: [
-    #         {
-    #           end_inclusive: Time.now,
-    #           start_inclusive: Time.now,
-    #         },
-    #       ],
-    #       fix_available: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       inspector_score: [
-    #         {
     #           lower_inclusive: 1.0,
+    #         },
+    #       ],
+    #       code_repository_project_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       code_repository_provider_type: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_provider: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_provider_region: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_provider_account_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_provider_org_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_vm_image_reference: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_vm_network_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_vm_subnet_ids: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_image_repository_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_image_registry: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_image_digest: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_image_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_image_pushed_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       cloud_image_architecture: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_image_last_in_use_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       cloud_image_in_use_count: [
+    #         {
     #           upper_inclusive: 1.0,
+    #           lower_inclusive: 1.0,
     #         },
     #       ],
-    #       lambda_function_execution_role_arn: [
+    #       cloud_serverless_function_name: [
     #         {
     #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
     #           value: "StringInput", # required
     #         },
     #       ],
-    #       lambda_function_last_modified_at: [
+    #       cloud_serverless_function_runtime: [
     #         {
-    #           end_inclusive: Time.now,
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_serverless_function_last_modified_at: [
+    #         {
     #           start_inclusive: Time.now,
-    #         },
-    #       ],
-    #       lambda_function_layers: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       lambda_function_name: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       lambda_function_runtime: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       last_observed_at: [
-    #         {
     #           end_inclusive: Time.now,
-    #           start_inclusive: Time.now,
     #         },
     #       ],
-    #       network_protocol: [
+    #       cloud_serverless_function_execution_role: [
     #         {
     #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
     #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       port_range: [
-    #         {
-    #           begin_inclusive: 1,
-    #           end_inclusive: 1,
-    #         },
-    #       ],
-    #       related_vulnerabilities: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       resource_id: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       resource_tags: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS
-    #           key: "MapKey", # required
-    #           value: "MapValue",
-    #         },
-    #       ],
-    #       resource_type: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       severity: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       title: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       updated_at: [
-    #         {
-    #           end_inclusive: Time.now,
-    #           start_inclusive: Time.now,
-    #         },
-    #       ],
-    #       vendor_severity: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       vulnerability_id: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       vulnerability_source: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       vulnerable_packages: [
-    #         {
-    #           architecture: {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #           epoch: {
-    #             lower_inclusive: 1.0,
-    #             upper_inclusive: 1.0,
-    #           },
-    #           file_path: {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #           name: {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #           release: {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #           source_lambda_layer_arn: {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #           source_layer_hash: {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #           version: {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
     #         },
     #       ],
     #     },
-    #     max_results: 1,
-    #     next_token: "NextToken",
     #     sort_criteria: {
     #       field: "AWS_ACCOUNT_ID", # required, accepts AWS_ACCOUNT_ID, FINDING_TYPE, SEVERITY, FIRST_OBSERVED_AT, LAST_OBSERVED_AT, FINDING_STATUS, RESOURCE_TYPE, ECR_IMAGE_PUSHED_AT, ECR_IMAGE_REPOSITORY_NAME, ECR_IMAGE_REGISTRY, NETWORK_PROTOCOL, COMPONENT_TYPE, VULNERABILITY_ID, VULNERABILITY_SOURCE, INSPECTOR_SCORE, VENDOR_SEVERITY, EPSS_SCORE
     #       sort_order: "ASC", # required, accepts ASC, DESC
@@ -4219,125 +6782,176 @@ module Aws::Inspector2
     #
     # @example Response structure
     #
+    #   resp.next_token #=> String
     #   resp.findings #=> Array
-    #   resp.findings[0].aws_account_id #=> String
-    #   resp.findings[0].code_vulnerability_details.cwes #=> Array
-    #   resp.findings[0].code_vulnerability_details.cwes[0] #=> String
-    #   resp.findings[0].code_vulnerability_details.detector_id #=> String
-    #   resp.findings[0].code_vulnerability_details.detector_name #=> String
-    #   resp.findings[0].code_vulnerability_details.detector_tags #=> Array
-    #   resp.findings[0].code_vulnerability_details.detector_tags[0] #=> String
-    #   resp.findings[0].code_vulnerability_details.file_path.end_line #=> Integer
-    #   resp.findings[0].code_vulnerability_details.file_path.file_name #=> String
-    #   resp.findings[0].code_vulnerability_details.file_path.file_path #=> String
-    #   resp.findings[0].code_vulnerability_details.file_path.start_line #=> Integer
-    #   resp.findings[0].code_vulnerability_details.reference_urls #=> Array
-    #   resp.findings[0].code_vulnerability_details.reference_urls[0] #=> String
-    #   resp.findings[0].code_vulnerability_details.rule_id #=> String
-    #   resp.findings[0].code_vulnerability_details.source_lambda_layer_arn #=> String
-    #   resp.findings[0].description #=> String
-    #   resp.findings[0].epss.score #=> Float
-    #   resp.findings[0].exploit_available #=> String, one of "YES", "NO"
-    #   resp.findings[0].exploitability_details.last_known_exploit_at #=> Time
     #   resp.findings[0].finding_arn #=> String
-    #   resp.findings[0].first_observed_at #=> Time
-    #   resp.findings[0].fix_available #=> String, one of "YES", "NO", "PARTIAL"
-    #   resp.findings[0].inspector_score #=> Float
-    #   resp.findings[0].inspector_score_details.adjusted_cvss.adjustments #=> Array
-    #   resp.findings[0].inspector_score_details.adjusted_cvss.adjustments[0].metric #=> String
-    #   resp.findings[0].inspector_score_details.adjusted_cvss.adjustments[0].reason #=> String
-    #   resp.findings[0].inspector_score_details.adjusted_cvss.cvss_source #=> String
-    #   resp.findings[0].inspector_score_details.adjusted_cvss.score #=> Float
-    #   resp.findings[0].inspector_score_details.adjusted_cvss.score_source #=> String
-    #   resp.findings[0].inspector_score_details.adjusted_cvss.scoring_vector #=> String
-    #   resp.findings[0].inspector_score_details.adjusted_cvss.version #=> String
-    #   resp.findings[0].last_observed_at #=> Time
-    #   resp.findings[0].network_reachability_details.network_path.steps #=> Array
-    #   resp.findings[0].network_reachability_details.network_path.steps[0].component_arn #=> String
-    #   resp.findings[0].network_reachability_details.network_path.steps[0].component_id #=> String
-    #   resp.findings[0].network_reachability_details.network_path.steps[0].component_type #=> String
-    #   resp.findings[0].network_reachability_details.open_port_range.begin #=> Integer
-    #   resp.findings[0].network_reachability_details.open_port_range.end #=> Integer
-    #   resp.findings[0].network_reachability_details.protocol #=> String, one of "TCP", "UDP"
-    #   resp.findings[0].package_vulnerability_details.cvss #=> Array
-    #   resp.findings[0].package_vulnerability_details.cvss[0].base_score #=> Float
-    #   resp.findings[0].package_vulnerability_details.cvss[0].scoring_vector #=> String
-    #   resp.findings[0].package_vulnerability_details.cvss[0].source #=> String
-    #   resp.findings[0].package_vulnerability_details.cvss[0].version #=> String
-    #   resp.findings[0].package_vulnerability_details.reference_urls #=> Array
-    #   resp.findings[0].package_vulnerability_details.reference_urls[0] #=> String
-    #   resp.findings[0].package_vulnerability_details.related_vulnerabilities #=> Array
-    #   resp.findings[0].package_vulnerability_details.related_vulnerabilities[0] #=> String
-    #   resp.findings[0].package_vulnerability_details.source #=> String
-    #   resp.findings[0].package_vulnerability_details.source_url #=> String
-    #   resp.findings[0].package_vulnerability_details.vendor_created_at #=> Time
-    #   resp.findings[0].package_vulnerability_details.vendor_severity #=> String
-    #   resp.findings[0].package_vulnerability_details.vendor_updated_at #=> Time
-    #   resp.findings[0].package_vulnerability_details.vulnerability_id #=> String
-    #   resp.findings[0].package_vulnerability_details.vulnerable_packages #=> Array
-    #   resp.findings[0].package_vulnerability_details.vulnerable_packages[0].arch #=> String
-    #   resp.findings[0].package_vulnerability_details.vulnerable_packages[0].epoch #=> Integer
-    #   resp.findings[0].package_vulnerability_details.vulnerable_packages[0].file_path #=> String
-    #   resp.findings[0].package_vulnerability_details.vulnerable_packages[0].fixed_in_version #=> String
-    #   resp.findings[0].package_vulnerability_details.vulnerable_packages[0].name #=> String
-    #   resp.findings[0].package_vulnerability_details.vulnerable_packages[0].package_manager #=> String, one of "BUNDLER", "CARGO", "COMPOSER", "NPM", "NUGET", "PIPENV", "POETRY", "YARN", "GOBINARY", "GOMOD", "JAR", "OS", "PIP", "PYTHONPKG", "NODEPKG", "POM", "GEMSPEC", "DOTNET_CORE"
-    #   resp.findings[0].package_vulnerability_details.vulnerable_packages[0].release #=> String
-    #   resp.findings[0].package_vulnerability_details.vulnerable_packages[0].remediation #=> String
-    #   resp.findings[0].package_vulnerability_details.vulnerable_packages[0].source_lambda_layer_arn #=> String
-    #   resp.findings[0].package_vulnerability_details.vulnerable_packages[0].source_layer_hash #=> String
-    #   resp.findings[0].package_vulnerability_details.vulnerable_packages[0].version #=> String
-    #   resp.findings[0].remediation.recommendation.url #=> String
+    #   resp.findings[0].aws_account_id #=> String
+    #   resp.findings[0].type #=> String, one of "NETWORK_REACHABILITY", "PACKAGE_VULNERABILITY", "CODE_VULNERABILITY"
+    #   resp.findings[0].description #=> String
+    #   resp.findings[0].title #=> String
     #   resp.findings[0].remediation.recommendation.text #=> String
+    #   resp.findings[0].remediation.recommendation.url #=> String
+    #   resp.findings[0].severity #=> String, one of "INFORMATIONAL", "LOW", "MEDIUM", "HIGH", "CRITICAL", "UNTRIAGED"
+    #   resp.findings[0].first_observed_at #=> Time
+    #   resp.findings[0].last_observed_at #=> Time
+    #   resp.findings[0].updated_at #=> Time
+    #   resp.findings[0].status #=> String, one of "ACTIVE", "SUPPRESSED", "CLOSED"
     #   resp.findings[0].resources #=> Array
-    #   resp.findings[0].resources[0].details.aws_ec2_instance.iam_instance_profile_arn #=> String
+    #   resp.findings[0].resources[0].type #=> String, one of "AWS_EC2_INSTANCE", "AWS_ECR_CONTAINER_IMAGE", "AWS_ECR_REPOSITORY", "AWS_LAMBDA_FUNCTION", "CODE_REPOSITORY", "Microsoft.Compute/virtualMachines", "Microsoft.ContainerRegistry/registry/containerImage", "Microsoft.Web/sites"
+    #   resp.findings[0].resources[0].id #=> String
+    #   resp.findings[0].resources[0].partition #=> String
+    #   resp.findings[0].resources[0].region #=> String
+    #   resp.findings[0].resources[0].tags #=> Hash
+    #   resp.findings[0].resources[0].tags["MapKey"] #=> String
+    #   resp.findings[0].resources[0].details.aws_ec2_instance.type #=> String
     #   resp.findings[0].resources[0].details.aws_ec2_instance.image_id #=> String
     #   resp.findings[0].resources[0].details.aws_ec2_instance.ip_v4_addresses #=> Array
     #   resp.findings[0].resources[0].details.aws_ec2_instance.ip_v4_addresses[0] #=> String
     #   resp.findings[0].resources[0].details.aws_ec2_instance.ip_v6_addresses #=> Array
     #   resp.findings[0].resources[0].details.aws_ec2_instance.ip_v6_addresses[0] #=> String
     #   resp.findings[0].resources[0].details.aws_ec2_instance.key_name #=> String
+    #   resp.findings[0].resources[0].details.aws_ec2_instance.iam_instance_profile_arn #=> String
+    #   resp.findings[0].resources[0].details.aws_ec2_instance.vpc_id #=> String
+    #   resp.findings[0].resources[0].details.aws_ec2_instance.subnet_id #=> String
     #   resp.findings[0].resources[0].details.aws_ec2_instance.launched_at #=> Time
     #   resp.findings[0].resources[0].details.aws_ec2_instance.platform #=> String
-    #   resp.findings[0].resources[0].details.aws_ec2_instance.subnet_id #=> String
-    #   resp.findings[0].resources[0].details.aws_ec2_instance.type #=> String
-    #   resp.findings[0].resources[0].details.aws_ec2_instance.vpc_id #=> String
-    #   resp.findings[0].resources[0].details.aws_ecr_container_image.architecture #=> String
-    #   resp.findings[0].resources[0].details.aws_ecr_container_image.author #=> String
-    #   resp.findings[0].resources[0].details.aws_ecr_container_image.image_hash #=> String
+    #   resp.findings[0].resources[0].details.aws_ecr_container_image.repository_name #=> String
     #   resp.findings[0].resources[0].details.aws_ecr_container_image.image_tags #=> Array
     #   resp.findings[0].resources[0].details.aws_ecr_container_image.image_tags[0] #=> String
-    #   resp.findings[0].resources[0].details.aws_ecr_container_image.platform #=> String
     #   resp.findings[0].resources[0].details.aws_ecr_container_image.pushed_at #=> Time
+    #   resp.findings[0].resources[0].details.aws_ecr_container_image.author #=> String
+    #   resp.findings[0].resources[0].details.aws_ecr_container_image.architecture #=> String
+    #   resp.findings[0].resources[0].details.aws_ecr_container_image.image_hash #=> String
     #   resp.findings[0].resources[0].details.aws_ecr_container_image.registry #=> String
-    #   resp.findings[0].resources[0].details.aws_ecr_container_image.repository_name #=> String
-    #   resp.findings[0].resources[0].details.aws_lambda_function.architectures #=> Array
-    #   resp.findings[0].resources[0].details.aws_lambda_function.architectures[0] #=> String, one of "X86_64", "ARM64"
-    #   resp.findings[0].resources[0].details.aws_lambda_function.code_sha_256 #=> String
-    #   resp.findings[0].resources[0].details.aws_lambda_function.execution_role_arn #=> String
+    #   resp.findings[0].resources[0].details.aws_ecr_container_image.platform #=> String
+    #   resp.findings[0].resources[0].details.aws_ecr_container_image.last_in_use_at #=> Time
+    #   resp.findings[0].resources[0].details.aws_ecr_container_image.in_use_count #=> Integer
     #   resp.findings[0].resources[0].details.aws_lambda_function.function_name #=> String
-    #   resp.findings[0].resources[0].details.aws_lambda_function.last_modified_at #=> Time
+    #   resp.findings[0].resources[0].details.aws_lambda_function.runtime #=> String, one of "NODEJS", "NODEJS_12_X", "NODEJS_14_X", "NODEJS_16_X", "JAVA_8", "JAVA_8_AL2", "JAVA_11", "PYTHON_3_7", "PYTHON_3_8", "PYTHON_3_9", "UNSUPPORTED", "NODEJS_18_X", "GO_1_X", "JAVA_17", "PYTHON_3_10", "PYTHON_3_11", "DOTNETCORE_3_1", "DOTNET_6", "DOTNET_7", "RUBY_2_7", "RUBY_3_2", "DOTNET_10", "NODEJS_24_X", "NODEJS_22_X", "JAVA_21", "JAVA_25"
+    #   resp.findings[0].resources[0].details.aws_lambda_function.code_sha_256 #=> String
+    #   resp.findings[0].resources[0].details.aws_lambda_function.version #=> String
+    #   resp.findings[0].resources[0].details.aws_lambda_function.execution_role_arn #=> String
     #   resp.findings[0].resources[0].details.aws_lambda_function.layers #=> Array
     #   resp.findings[0].resources[0].details.aws_lambda_function.layers[0] #=> String
-    #   resp.findings[0].resources[0].details.aws_lambda_function.package_type #=> String, one of "IMAGE", "ZIP"
-    #   resp.findings[0].resources[0].details.aws_lambda_function.runtime #=> String, one of "NODEJS", "NODEJS_12_X", "NODEJS_14_X", "NODEJS_16_X", "JAVA_8", "JAVA_8_AL2", "JAVA_11", "PYTHON_3_7", "PYTHON_3_8", "PYTHON_3_9", "UNSUPPORTED", "NODEJS_18_X", "GO_1_X", "JAVA_17", "PYTHON_3_10", "PYTHON_3_11", "DOTNETCORE_3_1", "DOTNET_6", "DOTNET_7", "RUBY_2_7", "RUBY_3_2"
-    #   resp.findings[0].resources[0].details.aws_lambda_function.version #=> String
-    #   resp.findings[0].resources[0].details.aws_lambda_function.vpc_config.security_group_ids #=> Array
-    #   resp.findings[0].resources[0].details.aws_lambda_function.vpc_config.security_group_ids[0] #=> String
     #   resp.findings[0].resources[0].details.aws_lambda_function.vpc_config.subnet_ids #=> Array
     #   resp.findings[0].resources[0].details.aws_lambda_function.vpc_config.subnet_ids[0] #=> String
+    #   resp.findings[0].resources[0].details.aws_lambda_function.vpc_config.security_group_ids #=> Array
+    #   resp.findings[0].resources[0].details.aws_lambda_function.vpc_config.security_group_ids[0] #=> String
     #   resp.findings[0].resources[0].details.aws_lambda_function.vpc_config.vpc_id #=> String
-    #   resp.findings[0].resources[0].id #=> String
-    #   resp.findings[0].resources[0].partition #=> String
-    #   resp.findings[0].resources[0].region #=> String
-    #   resp.findings[0].resources[0].tags #=> Hash
-    #   resp.findings[0].resources[0].tags["MapKey"] #=> String
-    #   resp.findings[0].resources[0].type #=> String, one of "AWS_EC2_INSTANCE", "AWS_ECR_CONTAINER_IMAGE", "AWS_ECR_REPOSITORY", "AWS_LAMBDA_FUNCTION"
-    #   resp.findings[0].severity #=> String, one of "INFORMATIONAL", "LOW", "MEDIUM", "HIGH", "CRITICAL", "UNTRIAGED"
-    #   resp.findings[0].status #=> String, one of "ACTIVE", "SUPPRESSED", "CLOSED"
-    #   resp.findings[0].title #=> String
-    #   resp.findings[0].type #=> String, one of "NETWORK_REACHABILITY", "PACKAGE_VULNERABILITY", "CODE_VULNERABILITY"
-    #   resp.findings[0].updated_at #=> Time
-    #   resp.next_token #=> String
+    #   resp.findings[0].resources[0].details.aws_lambda_function.package_type #=> String, one of "IMAGE", "ZIP"
+    #   resp.findings[0].resources[0].details.aws_lambda_function.architectures #=> Array
+    #   resp.findings[0].resources[0].details.aws_lambda_function.architectures[0] #=> String, one of "X86_64", "ARM64"
+    #   resp.findings[0].resources[0].details.aws_lambda_function.last_modified_at #=> Time
+    #   resp.findings[0].resources[0].details.code_repository.project_name #=> String
+    #   resp.findings[0].resources[0].details.code_repository.integration_arn #=> String
+    #   resp.findings[0].resources[0].details.code_repository.provider_type #=> String, one of "GITHUB", "GITLAB_SELF_MANAGED"
+    #   resp.findings[0].resources[0].details.vm.type #=> String
+    #   resp.findings[0].resources[0].details.vm.vm_name #=> String
+    #   resp.findings[0].resources[0].details.vm.vm_image_reference #=> String
+    #   resp.findings[0].resources[0].details.vm.ip_v4_addresses #=> Array
+    #   resp.findings[0].resources[0].details.vm.ip_v4_addresses[0] #=> String
+    #   resp.findings[0].resources[0].details.vm.ip_v6_addresses #=> Array
+    #   resp.findings[0].resources[0].details.vm.ip_v6_addresses[0] #=> String
+    #   resp.findings[0].resources[0].details.vm.network_id #=> String
+    #   resp.findings[0].resources[0].details.vm.subnet_ids #=> Array
+    #   resp.findings[0].resources[0].details.vm.subnet_ids[0] #=> String
+    #   resp.findings[0].resources[0].details.vm.security_group_ids #=> Array
+    #   resp.findings[0].resources[0].details.vm.security_group_ids[0] #=> String
+    #   resp.findings[0].resources[0].details.vm.launched_at #=> Time
+    #   resp.findings[0].resources[0].details.vm.platform #=> String
+    #   resp.findings[0].resources[0].details.vm.execution_role #=> String
+    #   resp.findings[0].resources[0].details.vm.key_name #=> String
+    #   resp.findings[0].resources[0].details.image.repository_name #=> String
+    #   resp.findings[0].resources[0].details.image.registry #=> String
+    #   resp.findings[0].resources[0].details.image.image_tags #=> Array
+    #   resp.findings[0].resources[0].details.image.image_tags[0] #=> String
+    #   resp.findings[0].resources[0].details.image.image_digest #=> String
+    #   resp.findings[0].resources[0].details.image.pushed_at #=> Time
+    #   resp.findings[0].resources[0].details.image.architecture #=> String
+    #   resp.findings[0].resources[0].details.image.author #=> String
+    #   resp.findings[0].resources[0].details.image.in_use_count #=> Integer
+    #   resp.findings[0].resources[0].details.image.last_in_use_at #=> Time
+    #   resp.findings[0].resources[0].details.image.platform #=> String
+    #   resp.findings[0].resources[0].details.serverless_function.serverless_function_name #=> String
+    #   resp.findings[0].resources[0].details.serverless_function.runtime #=> String
+    #   resp.findings[0].resources[0].details.serverless_function.version #=> String
+    #   resp.findings[0].resources[0].details.serverless_function.code_digest #=> String
+    #   resp.findings[0].resources[0].details.serverless_function.last_modified_at #=> Time
+    #   resp.findings[0].resources[0].details.serverless_function.network_id #=> String
+    #   resp.findings[0].resources[0].details.serverless_function.subnet_ids #=> Array
+    #   resp.findings[0].resources[0].details.serverless_function.subnet_ids[0] #=> String
+    #   resp.findings[0].resources[0].details.serverless_function.security_group_ids #=> Array
+    #   resp.findings[0].resources[0].details.serverless_function.security_group_ids[0] #=> String
+    #   resp.findings[0].resources[0].details.serverless_function.execution_role #=> String
+    #   resp.findings[0].resources[0].details.serverless_function.package_type #=> String, one of "IMAGE", "ZIP"
+    #   resp.findings[0].resources[0].details.serverless_function.architectures #=> Array
+    #   resp.findings[0].resources[0].details.serverless_function.architectures[0] #=> String, one of "X86_64", "ARM64"
+    #   resp.findings[0].resources[0].details.serverless_function.layers #=> Array
+    #   resp.findings[0].resources[0].details.serverless_function.layers[0] #=> String
+    #   resp.findings[0].resources[0].provider #=> String, one of "AWS", "AZURE"
+    #   resp.findings[0].resources[0].provider_account_id #=> String
+    #   resp.findings[0].resources[0].provider_org_id #=> String
+    #   resp.findings[0].inspector_score #=> Float
+    #   resp.findings[0].inspector_score_details.adjusted_cvss.score_source #=> String
+    #   resp.findings[0].inspector_score_details.adjusted_cvss.cvss_source #=> String
+    #   resp.findings[0].inspector_score_details.adjusted_cvss.version #=> String
+    #   resp.findings[0].inspector_score_details.adjusted_cvss.score #=> Float
+    #   resp.findings[0].inspector_score_details.adjusted_cvss.scoring_vector #=> String
+    #   resp.findings[0].inspector_score_details.adjusted_cvss.adjustments #=> Array
+    #   resp.findings[0].inspector_score_details.adjusted_cvss.adjustments[0].metric #=> String
+    #   resp.findings[0].inspector_score_details.adjusted_cvss.adjustments[0].reason #=> String
+    #   resp.findings[0].network_reachability_details.open_port_range.begin #=> Integer
+    #   resp.findings[0].network_reachability_details.open_port_range.end #=> Integer
+    #   resp.findings[0].network_reachability_details.protocol #=> String, one of "TCP", "UDP"
+    #   resp.findings[0].network_reachability_details.network_path.steps #=> Array
+    #   resp.findings[0].network_reachability_details.network_path.steps[0].component_id #=> String
+    #   resp.findings[0].network_reachability_details.network_path.steps[0].component_type #=> String
+    #   resp.findings[0].network_reachability_details.network_path.steps[0].component_arn #=> String
+    #   resp.findings[0].package_vulnerability_details.vulnerability_id #=> String
+    #   resp.findings[0].package_vulnerability_details.vulnerable_packages #=> Array
+    #   resp.findings[0].package_vulnerability_details.vulnerable_packages[0].name #=> String
+    #   resp.findings[0].package_vulnerability_details.vulnerable_packages[0].version #=> String
+    #   resp.findings[0].package_vulnerability_details.vulnerable_packages[0].source_layer_hash #=> String
+    #   resp.findings[0].package_vulnerability_details.vulnerable_packages[0].epoch #=> Integer
+    #   resp.findings[0].package_vulnerability_details.vulnerable_packages[0].release #=> String
+    #   resp.findings[0].package_vulnerability_details.vulnerable_packages[0].arch #=> String
+    #   resp.findings[0].package_vulnerability_details.vulnerable_packages[0].package_manager #=> String, one of "BUNDLER", "CARGO", "COMPOSER", "NPM", "NUGET", "PIPENV", "POETRY", "YARN", "GOBINARY", "GOMOD", "JAR", "OS", "PIP", "PYTHONPKG", "NODEPKG", "POM", "GEMSPEC", "DOTNET_CORE"
+    #   resp.findings[0].package_vulnerability_details.vulnerable_packages[0].file_path #=> String
+    #   resp.findings[0].package_vulnerability_details.vulnerable_packages[0].fixed_in_version #=> String
+    #   resp.findings[0].package_vulnerability_details.vulnerable_packages[0].remediation #=> String
+    #   resp.findings[0].package_vulnerability_details.vulnerable_packages[0].source_lambda_layer_arn #=> String
+    #   resp.findings[0].package_vulnerability_details.source #=> String
+    #   resp.findings[0].package_vulnerability_details.cvss #=> Array
+    #   resp.findings[0].package_vulnerability_details.cvss[0].base_score #=> Float
+    #   resp.findings[0].package_vulnerability_details.cvss[0].scoring_vector #=> String
+    #   resp.findings[0].package_vulnerability_details.cvss[0].version #=> String
+    #   resp.findings[0].package_vulnerability_details.cvss[0].source #=> String
+    #   resp.findings[0].package_vulnerability_details.related_vulnerabilities #=> Array
+    #   resp.findings[0].package_vulnerability_details.related_vulnerabilities[0] #=> String
+    #   resp.findings[0].package_vulnerability_details.source_url #=> String
+    #   resp.findings[0].package_vulnerability_details.vendor_severity #=> String
+    #   resp.findings[0].package_vulnerability_details.vendor_created_at #=> Time
+    #   resp.findings[0].package_vulnerability_details.vendor_updated_at #=> Time
+    #   resp.findings[0].package_vulnerability_details.reference_urls #=> Array
+    #   resp.findings[0].package_vulnerability_details.reference_urls[0] #=> String
+    #   resp.findings[0].fix_available #=> String, one of "YES", "NO", "PARTIAL"
+    #   resp.findings[0].exploit_available #=> String, one of "YES", "NO"
+    #   resp.findings[0].exploitability_details.last_known_exploit_at #=> Time
+    #   resp.findings[0].code_vulnerability_details.file_path.file_name #=> String
+    #   resp.findings[0].code_vulnerability_details.file_path.file_path #=> String
+    #   resp.findings[0].code_vulnerability_details.file_path.start_line #=> Integer
+    #   resp.findings[0].code_vulnerability_details.file_path.end_line #=> Integer
+    #   resp.findings[0].code_vulnerability_details.detector_tags #=> Array
+    #   resp.findings[0].code_vulnerability_details.detector_tags[0] #=> String
+    #   resp.findings[0].code_vulnerability_details.reference_urls #=> Array
+    #   resp.findings[0].code_vulnerability_details.reference_urls[0] #=> String
+    #   resp.findings[0].code_vulnerability_details.rule_id #=> String
+    #   resp.findings[0].code_vulnerability_details.source_lambda_layer_arn #=> String
+    #   resp.findings[0].code_vulnerability_details.detector_id #=> String
+    #   resp.findings[0].code_vulnerability_details.detector_name #=> String
+    #   resp.findings[0].code_vulnerability_details.cwes #=> Array
+    #   resp.findings[0].code_vulnerability_details.cwes[0] #=> String
+    #   resp.findings[0].epss.score #=> Float
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/ListFindings AWS API Documentation
     #
@@ -4350,6 +6964,10 @@ module Aws::Inspector2
 
     # List members associated with the Amazon Inspector delegated
     # administrator for your organization.
+    #
+    # @option params [Boolean] :only_associated
+    #   Specifies whether to list only currently associated members if `True`
+    #   or to list all members within the organization if `False`.
     #
     # @option params [Integer] :max_results
     #   The maximum number of results the response can return. If your request
@@ -4365,10 +6983,6 @@ module Aws::Inspector2
     #   For subsequent calls, use the `nextToken` value returned from the
     #   previous request to continue listing results after the first page.
     #
-    # @option params [Boolean] :only_associated
-    #   Specifies whether to list only currently associated members if `True`
-    #   or to list all members within the organization if `False`.
-    #
     # @return [Types::ListMembersResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::ListMembersResponse#members #members} => Array&lt;Types::Member&gt;
@@ -4379,17 +6993,17 @@ module Aws::Inspector2
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_members({
+    #     only_associated: false,
     #     max_results: 1,
     #     next_token: "NextToken",
-    #     only_associated: false,
     #   })
     #
     # @example Response structure
     #
     #   resp.members #=> Array
     #   resp.members[0].account_id #=> String
-    #   resp.members[0].delegated_admin_account_id #=> String
     #   resp.members[0].relationship_status #=> String, one of "CREATED", "INVITED", "DISABLED", "ENABLED", "REMOVED", "RESIGNED", "DELETED", "EMAIL_VERIFICATION_IN_PROGRESS", "EMAIL_VERIFICATION_FAILED", "REGION_DISABLED", "ACCOUNT_SUSPENDED", "CANNOT_CREATE_DETECTOR_IN_ORG_MASTER"
+    #   resp.members[0].delegated_admin_account_id #=> String
     #   resp.members[0].updated_at #=> Time
     #   resp.next_token #=> String
     #
@@ -4433,9 +7047,6 @@ module Aws::Inspector2
 
     # Lists the Amazon Inspector usage totals over the last 30 days.
     #
-    # @option params [Array<String>] :account_ids
-    #   The Amazon Web Services account IDs to retrieve usage totals for.
-    #
     # @option params [Integer] :max_results
     #   The maximum number of results the response can return. If your request
     #   would return more than the maximum the response will return a
@@ -4450,6 +7061,9 @@ module Aws::Inspector2
     #   For subsequent calls, use the `nextToken` value returned from the
     #   previous request to continue listing results after the first page.
     #
+    # @option params [Array<String>] :account_ids
+    #   The Amazon Web Services account IDs to retrieve usage totals for.
+    #
     # @return [Types::ListUsageTotalsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::ListUsageTotalsResponse#next_token #next_token} => String
@@ -4460,9 +7074,9 @@ module Aws::Inspector2
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_usage_totals({
-    #     account_ids: ["UsageAccountId"],
     #     max_results: 1,
     #     next_token: "ListUsageTotalsNextToken",
+    #     account_ids: ["UsageAccountId"],
     #   })
     #
     # @example Response structure
@@ -4471,10 +7085,11 @@ module Aws::Inspector2
     #   resp.totals #=> Array
     #   resp.totals[0].account_id #=> String
     #   resp.totals[0].usage #=> Array
-    #   resp.totals[0].usage[0].currency #=> String, one of "USD"
-    #   resp.totals[0].usage[0].estimated_monthly_cost #=> Float
+    #   resp.totals[0].usage[0].type #=> String, one of "EC2_INSTANCE_HOURS", "ECR_INITIAL_SCAN", "ECR_RESCAN", "LAMBDA_FUNCTION_HOURS", "LAMBDA_FUNCTION_CODE_HOURS", "CODE_REPOSITORY_SAST", "CODE_REPOSITORY_IAC", "CODE_REPOSITORY_SCA", "EC2_AGENTLESS_INSTANCE_HOURS", "AZURE_CONTAINER_IMAGE_INITIAL_SCAN", "AZURE_CONTAINER_IMAGE_RESCAN", "AZURE_VM_AGENT_BASED_INSTANCE_HOURS", "AZURE_SERVERLESS_FUNCTION_HOURS"
     #   resp.totals[0].usage[0].total #=> Float
-    #   resp.totals[0].usage[0].type #=> String, one of "EC2_INSTANCE_HOURS", "ECR_INITIAL_SCAN", "ECR_RESCAN", "LAMBDA_FUNCTION_HOURS", "LAMBDA_FUNCTION_CODE_HOURS"
+    #   resp.totals[0].usage[0].estimated_monthly_cost #=> Float
+    #   resp.totals[0].usage[0].currency #=> String, one of "USD"
+    #   resp.totals[0].usage[0].cloud_provider #=> String, one of "AWS", "AZURE", "NOT_APPLICABLE"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/ListUsageTotals AWS API Documentation
     #
@@ -4488,19 +7103,19 @@ module Aws::Inspector2
     # Resets an encryption key. After the key is reset your resources will
     # be encrypted by an Amazon Web Services owned key.
     #
-    # @option params [required, String] :resource_type
-    #   The resource type the key encrypts.
-    #
     # @option params [required, String] :scan_type
     #   The scan type the key encrypts.
+    #
+    # @option params [required, String] :resource_type
+    #   The resource type the key encrypts.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.reset_encryption_key({
-    #     resource_type: "AWS_EC2_INSTANCE", # required, accepts AWS_EC2_INSTANCE, AWS_ECR_CONTAINER_IMAGE, AWS_ECR_REPOSITORY, AWS_LAMBDA_FUNCTION
     #     scan_type: "NETWORK", # required, accepts NETWORK, PACKAGE, CODE
+    #     resource_type: "AWS_EC2_INSTANCE", # required, accepts AWS_EC2_INSTANCE, AWS_ECR_CONTAINER_IMAGE, AWS_ECR_REPOSITORY, AWS_LAMBDA_FUNCTION, CODE_REPOSITORY, Microsoft.Compute/virtualMachines, Microsoft.ContainerRegistry/registry/containerImage, Microsoft.Web/sites
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/ResetEncryptionKey AWS API Documentation
@@ -4526,8 +7141,8 @@ module Aws::Inspector2
     #
     # @return [Types::SearchVulnerabilitiesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::SearchVulnerabilitiesResponse#next_token #next_token} => String
     #   * {Types::SearchVulnerabilitiesResponse#vulnerabilities #vulnerabilities} => Array&lt;Types::Vulnerability&gt;
+    #   * {Types::SearchVulnerabilitiesResponse#next_token #next_token} => String
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
     #
@@ -4542,39 +7157,41 @@ module Aws::Inspector2
     #
     # @example Response structure
     #
-    #   resp.next_token #=> String
     #   resp.vulnerabilities #=> Array
+    #   resp.vulnerabilities[0].id #=> String
+    #   resp.vulnerabilities[0].cwes #=> Array
+    #   resp.vulnerabilities[0].cwes[0] #=> String
+    #   resp.vulnerabilities[0].cisa_data.date_added #=> Time
+    #   resp.vulnerabilities[0].cisa_data.date_due #=> Time
+    #   resp.vulnerabilities[0].cisa_data.action #=> String
+    #   resp.vulnerabilities[0].source #=> String, one of "NVD"
+    #   resp.vulnerabilities[0].description #=> String
     #   resp.vulnerabilities[0].atig_data.first_seen #=> Time
     #   resp.vulnerabilities[0].atig_data.last_seen #=> Time
     #   resp.vulnerabilities[0].atig_data.targets #=> Array
     #   resp.vulnerabilities[0].atig_data.targets[0] #=> String
     #   resp.vulnerabilities[0].atig_data.ttps #=> Array
     #   resp.vulnerabilities[0].atig_data.ttps[0] #=> String
-    #   resp.vulnerabilities[0].cisa_data.action #=> String
-    #   resp.vulnerabilities[0].cisa_data.date_added #=> Time
-    #   resp.vulnerabilities[0].cisa_data.date_due #=> Time
-    #   resp.vulnerabilities[0].cvss2.base_score #=> Float
-    #   resp.vulnerabilities[0].cvss2.scoring_vector #=> String
+    #   resp.vulnerabilities[0].vendor_severity #=> String
+    #   resp.vulnerabilities[0].cvss4.base_score #=> Float
+    #   resp.vulnerabilities[0].cvss4.scoring_vector #=> String
     #   resp.vulnerabilities[0].cvss3.base_score #=> Float
     #   resp.vulnerabilities[0].cvss3.scoring_vector #=> String
-    #   resp.vulnerabilities[0].cwes #=> Array
-    #   resp.vulnerabilities[0].cwes[0] #=> String
-    #   resp.vulnerabilities[0].description #=> String
+    #   resp.vulnerabilities[0].related_vulnerabilities #=> Array
+    #   resp.vulnerabilities[0].related_vulnerabilities[0] #=> String
+    #   resp.vulnerabilities[0].cvss2.base_score #=> Float
+    #   resp.vulnerabilities[0].cvss2.scoring_vector #=> String
+    #   resp.vulnerabilities[0].vendor_created_at #=> Time
+    #   resp.vulnerabilities[0].vendor_updated_at #=> Time
+    #   resp.vulnerabilities[0].source_url #=> String
+    #   resp.vulnerabilities[0].reference_urls #=> Array
+    #   resp.vulnerabilities[0].reference_urls[0] #=> String
+    #   resp.vulnerabilities[0].exploit_observed.last_seen #=> Time
+    #   resp.vulnerabilities[0].exploit_observed.first_seen #=> Time
     #   resp.vulnerabilities[0].detection_platforms #=> Array
     #   resp.vulnerabilities[0].detection_platforms[0] #=> String
     #   resp.vulnerabilities[0].epss.score #=> Float
-    #   resp.vulnerabilities[0].exploit_observed.first_seen #=> Time
-    #   resp.vulnerabilities[0].exploit_observed.last_seen #=> Time
-    #   resp.vulnerabilities[0].id #=> String
-    #   resp.vulnerabilities[0].reference_urls #=> Array
-    #   resp.vulnerabilities[0].reference_urls[0] #=> String
-    #   resp.vulnerabilities[0].related_vulnerabilities #=> Array
-    #   resp.vulnerabilities[0].related_vulnerabilities[0] #=> String
-    #   resp.vulnerabilities[0].source #=> String, one of "NVD"
-    #   resp.vulnerabilities[0].source_url #=> String
-    #   resp.vulnerabilities[0].vendor_created_at #=> Time
-    #   resp.vulnerabilities[0].vendor_severity #=> String
-    #   resp.vulnerabilities[0].vendor_updated_at #=> Time
+    #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/SearchVulnerabilities AWS API Documentation
     #
@@ -4598,6 +7215,18 @@ module Aws::Inspector2
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
+    #
+    # @example Example: Sample SendCisSessionHealth Call
+    #
+    #   resp = client.send_cis_session_health({
+    #     scan_job_id: "624b746d-e080-44ae-8c1d-48e653365a38", 
+    #     session_token: "624b746d-e080-44ae-8c1d-48e653365a31", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.send_cis_session_health({
@@ -4619,29 +7248,53 @@ module Aws::Inspector2
     # The Amazon Inspector SSM plugin calls this API to start a CIS scan
     # session for the scan ID supplied by the service.
     #
-    # @option params [required, Array<Types::CisSessionMessage>] :messages
-    #   The CIS session telemetry messages.
-    #
     # @option params [required, String] :scan_job_id
     #   A unique identifier for the scan job.
     #
     # @option params [required, String] :session_token
     #   The unique token that identifies the CIS session.
     #
+    # @option params [required, Array<Types::CisSessionMessage>] :messages
+    #   The CIS session telemetry messages.
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    #
+    # @example Example: Sample SendCisSessionTelemetry Call
+    #
+    #   resp = client.send_cis_session_telemetry({
+    #     messages: [
+    #       {
+    #         cis_rule_details: "dGVzdCBleGFtcGxlCg==", 
+    #         rule_id: "1.12.1", 
+    #         status: "FAILED", 
+    #       }, 
+    #       {
+    #         cis_rule_details: "dGVzdCBleGFtcGxlCg==dGVzdCBleGFtcGxlCg", 
+    #         rule_id: "1.2.1", 
+    #         status: "PASSED", 
+    #       }, 
+    #     ], 
+    #     scan_job_id: "624b746d-e080-44ae-8c1d-48e653365a38", 
+    #     session_token: "624b746d-e080-44ae-8c1d-48e653365a31", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #   }
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.send_cis_session_telemetry({
-    #     messages: [ # required
-    #       {
-    #         cis_rule_details: "data", # required
-    #         rule_id: "RuleId", # required
-    #         status: "FAILED", # required, accepts FAILED, PASSED, NOT_EVALUATED, INFORMATIONAL, UNKNOWN, NOT_APPLICABLE, ERROR
-    #       },
-    #     ],
     #     scan_job_id: "UUID", # required
     #     session_token: "UUID", # required
+    #     messages: [ # required
+    #       {
+    #         rule_id: "RuleId", # required
+    #         status: "FAILED", # required, accepts FAILED, PASSED, NOT_EVALUATED, INFORMATIONAL, UNKNOWN, NOT_APPLICABLE, ERROR
+    #         cis_rule_details: "data", # required
+    #       },
+    #     ],
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/SendCisSessionTelemetry AWS API Documentation
@@ -4658,21 +7311,35 @@ module Aws::Inspector2
     # Inspector SSM plugin calls this API to start a CIS scan session for
     # the scan ID supplied by the service.
     #
-    # @option params [required, Types::StartCisSessionMessage] :message
-    #   The start CIS session message.
-    #
     # @option params [required, String] :scan_job_id
     #   A unique identifier for the scan job.
     #
+    # @option params [required, Types::StartCisSessionMessage] :message
+    #   The start CIS session message.
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    #
+    # @example Example: Sample SendCisSessionHealth Call
+    #
+    #   resp = client.start_cis_session({
+    #     message: {
+    #       session_token: "624b746d-e080-44ae-8c1d-48e653365a31", 
+    #     }, 
+    #     scan_job_id: "624b746d-e080-44ae-8c1d-48e653365a38", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #   }
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.start_cis_session({
+    #     scan_job_id: "UUID", # required
     #     message: { # required
     #       session_token: "UUID", # required
     #     },
-    #     scan_job_id: "UUID", # required
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/StartCisSession AWS API Documentation
@@ -4684,13 +7351,50 @@ module Aws::Inspector2
       req.send_request(options)
     end
 
+    # Initiates a code security scan on a specified repository.
+    #
+    # @option params [String] :client_token
+    #   A unique, case-sensitive identifier that you provide to ensure the
+    #   idempotency of the request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @option params [required, Types::CodeSecurityResource] :resource
+    #   The resource identifier for the code repository to scan.
+    #
+    # @return [Types::StartCodeSecurityScanResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::StartCodeSecurityScanResponse#scan_id #scan_id} => String
+    #   * {Types::StartCodeSecurityScanResponse#status #status} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.start_code_security_scan({
+    #     client_token: "CodeSecurityClientToken",
+    #     resource: { # required
+    #       project_id: "ProjectId",
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.scan_id #=> String
+    #   resp.status #=> String, one of "IN_PROGRESS", "SUCCESSFUL", "FAILED", "SKIPPED"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/StartCodeSecurityScan AWS API Documentation
+    #
+    # @overload start_code_security_scan(params = {})
+    # @param [Hash] params ({})
+    def start_code_security_scan(params = {}, options = {})
+      req = build_request(:start_code_security_scan, params)
+      req.send_request(options)
+    end
+
     # Stops a CIS session. This API is used by the Amazon Inspector SSM
     # plugin to communicate with the Amazon Inspector service. The Amazon
     # Inspector SSM plugin calls this API to stop a CIS scan session for the
     # scan ID supplied by the service.
-    #
-    # @option params [required, Types::StopCisSessionMessage] :message
-    #   The stop CIS session message.
     #
     # @option params [required, String] :scan_job_id
     #   A unique identifier for the scan job.
@@ -4698,34 +7402,70 @@ module Aws::Inspector2
     # @option params [required, String] :session_token
     #   The unique token that identifies the CIS session.
     #
+    # @option params [required, Types::StopCisSessionMessage] :message
+    #   The stop CIS session message.
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    #
+    # @example Example: Sample StopCisSession Call
+    #
+    #   resp = client.stop_cis_session({
+    #     message: {
+    #       benchmark_profile: "xccdf_org.cisecurity.benchmarks_profile_Level_1", 
+    #       benchmark_version: "2.0.0", 
+    #       compute_platform: {
+    #         version: "20.04", 
+    #         product: "ubuntu", 
+    #         vendor: "canonical", 
+    #       }, 
+    #       progress: {
+    #         error_checks: 1, 
+    #         failed_checks: 0, 
+    #         informational_checks: 1, 
+    #         not_applicable_checks: 0, 
+    #         not_evaluated_checks: 2, 
+    #         successful_checks: 5, 
+    #         total_checks: 10, 
+    #         unknown_checks: 0, 
+    #       }, 
+    #       reason: "Failure Reason", 
+    #       status: "FAILED", 
+    #     }, 
+    #     scan_job_id: "624b746d-e080-44ae-8c1d-48e653365a38", 
+    #     session_token: "624b746d-e080-44ae-8c1d-48e653365a31", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #   }
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.stop_cis_session({
-    #     message: { # required
-    #       benchmark_profile: "BenchmarkProfile",
-    #       benchmark_version: "BenchmarkVersion",
-    #       compute_platform: {
-    #         product: "Product",
-    #         vendor: "Vendor",
-    #         version: "PlatformVersion",
-    #       },
-    #       progress: { # required
-    #         error_checks: 1,
-    #         failed_checks: 1,
-    #         informational_checks: 1,
-    #         not_applicable_checks: 1,
-    #         not_evaluated_checks: 1,
-    #         successful_checks: 1,
-    #         total_checks: 1,
-    #         unknown_checks: 1,
-    #       },
-    #       reason: "Reason",
-    #       status: "SUCCESS", # required, accepts SUCCESS, FAILED, INTERRUPTED, UNSUPPORTED_OS
-    #     },
     #     scan_job_id: "UUID", # required
     #     session_token: "UUID", # required
+    #     message: { # required
+    #       status: "SUCCESS", # required, accepts SUCCESS, FAILED, INTERRUPTED, UNSUPPORTED_OS
+    #       reason: "Reason",
+    #       progress: { # required
+    #         total_checks: 1,
+    #         successful_checks: 1,
+    #         failed_checks: 1,
+    #         not_evaluated_checks: 1,
+    #         unknown_checks: 1,
+    #         not_applicable_checks: 1,
+    #         informational_checks: 1,
+    #         error_checks: 1,
+    #       },
+    #       compute_platform: {
+    #         vendor: "Vendor",
+    #         product: "Product",
+    #         version: "PlatformVersion",
+    #       },
+    #       benchmark_version: "BenchmarkVersion",
+    #       benchmark_profile: "BenchmarkProfile",
+    #     },
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/StopCisSession AWS API Documentation
@@ -4799,12 +7539,12 @@ module Aws::Inspector2
     # @option params [String] :scan_name
     #   The scan name for the CIS scan configuration.
     #
-    # @option params [Types::Schedule] :schedule
-    #   The schedule for the CIS scan configuration.
-    #
     # @option params [String] :security_level
     #   The security level for the CIS scan configuration. Security level
     #   refers to the Benchmark levels that CIS assigns to a profile.
+    #
+    # @option params [Types::Schedule] :schedule
+    #   The schedule for the CIS scan configuration.
     #
     # @option params [Types::UpdateCisTargets] :targets
     #   The targets for the CIS scan configuration.
@@ -4813,36 +7553,68 @@ module Aws::Inspector2
     #
     #   * {Types::UpdateCisScanConfigurationResponse#scan_configuration_arn #scan_configuration_arn} => String
     #
+    #
+    # @example Example: Sample UpdateCisScanConfiguration Call
+    #
+    #   resp = client.update_cis_scan_configuration({
+    #     scan_configuration_arn: "arn:aws:inspector2:us-east-1:123412341234:owner/123412341234/cis-configuration/624b746d-e080-44ae-8c1d-48e653365a38", 
+    #     scan_name: "sample_new", 
+    #     schedule: {
+    #       daily: {
+    #         start_time: {
+    #           time_of_day: "12:56", 
+    #           timezone: "UTC", 
+    #         }, 
+    #       }, 
+    #     }, 
+    #     security_level: "LEVEL_2", 
+    #     targets: {
+    #       account_ids: [
+    #         "SELF", 
+    #       ], 
+    #       target_resource_tags: {
+    #         "key2" => [
+    #           "value2", 
+    #         ], 
+    #       }, 
+    #     }, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     scan_configuration_arn: "arn:aws:inspector2:us-east-1:123412341234:owner/123412341234/cis-configuration/624b746d-e080-44ae-8c1d-48e653365a38", 
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_cis_scan_configuration({
     #     scan_configuration_arn: "CisScanConfigurationArn", # required
     #     scan_name: "CisScanName",
+    #     security_level: "LEVEL_1", # accepts LEVEL_1, LEVEL_2
     #     schedule: {
+    #       one_time: {
+    #       },
     #       daily: {
     #         start_time: { # required
     #           time_of_day: "TimeOfDay", # required
     #           timezone: "Timezone", # required
     #         },
     #       },
-    #       monthly: {
-    #         day: "SUN", # required, accepts SUN, MON, TUE, WED, THU, FRI, SAT
-    #         start_time: { # required
-    #           time_of_day: "TimeOfDay", # required
-    #           timezone: "Timezone", # required
-    #         },
-    #       },
-    #       one_time: {
-    #       },
     #       weekly: {
-    #         days: ["SUN"], # required, accepts SUN, MON, TUE, WED, THU, FRI, SAT
     #         start_time: { # required
     #           time_of_day: "TimeOfDay", # required
     #           timezone: "Timezone", # required
     #         },
+    #         days: ["SUN"], # required, accepts SUN, MON, TUE, WED, THU, FRI, SAT
+    #       },
+    #       monthly: {
+    #         start_time: { # required
+    #           time_of_day: "TimeOfDay", # required
+    #           timezone: "Timezone", # required
+    #         },
+    #         day: "SUN", # required, accepts SUN, MON, TUE, WED, THU, FRI, SAT
     #       },
     #     },
-    #     security_level: "LEVEL_1", # accepts LEVEL_1, LEVEL_2
     #     targets: {
     #       account_ids: ["TargetAccount"],
     #       target_resource_tags: {
@@ -4864,30 +7636,147 @@ module Aws::Inspector2
       req.send_request(options)
     end
 
-    # Updates setting configurations for your Amazon Inspector account. When
-    # you use this API as an Amazon Inspector delegated administrator this
-    # updates the setting for all accounts you manage. Member accounts in an
-    # organization cannot update this setting.
+    # Updates an existing code security integration.
+    #
+    # After calling the `CreateCodeSecurityIntegration` operation, you
+    # complete authentication and authorization with your provider. Next you
+    # call the `UpdateCodeSecurityIntegration` operation to provide the
+    # `details` to complete the integration setup
+    #
+    # @option params [required, String] :integration_arn
+    #   The Amazon Resource Name (ARN) of the code security integration to
+    #   update.
+    #
+    # @option params [required, Types::UpdateIntegrationDetails] :details
+    #   The updated integration details specific to the repository provider
+    #   type.
+    #
+    # @return [Types::UpdateCodeSecurityIntegrationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateCodeSecurityIntegrationResponse#integration_arn #integration_arn} => String
+    #   * {Types::UpdateCodeSecurityIntegrationResponse#status #status} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_code_security_integration({
+    #     integration_arn: "CodeSecurityIntegrationArn", # required
+    #     details: { # required
+    #       gitlab_self_managed: {
+    #         auth_code: "GitLabAuthCode", # required
+    #       },
+    #       github: {
+    #         code: "GitHubAuthCode", # required
+    #         installation_id: "GitHubInstallationId", # required
+    #       },
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.integration_arn #=> String
+    #   resp.status #=> String, one of "PENDING", "IN_PROGRESS", "ACTIVE", "INACTIVE", "DISABLING"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/UpdateCodeSecurityIntegration AWS API Documentation
+    #
+    # @overload update_code_security_integration(params = {})
+    # @param [Hash] params ({})
+    def update_code_security_integration(params = {}, options = {})
+      req = build_request(:update_code_security_integration, params)
+      req.send_request(options)
+    end
+
+    # Updates an existing code security scan configuration.
+    #
+    # @option params [required, String] :scan_configuration_arn
+    #   The Amazon Resource Name (ARN) of the scan configuration to update.
+    #
+    # @option params [required, Types::CodeSecurityScanConfiguration] :configuration
+    #   The updated configuration settings for the code security scan.
+    #
+    # @return [Types::UpdateCodeSecurityScanConfigurationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateCodeSecurityScanConfigurationResponse#scan_configuration_arn #scan_configuration_arn} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_code_security_scan_configuration({
+    #     scan_configuration_arn: "ScanConfigurationArn", # required
+    #     configuration: { # required
+    #       periodic_scan_configuration: {
+    #         frequency: "WEEKLY", # accepts WEEKLY, MONTHLY, NEVER
+    #         frequency_expression: "FrequencyExpression",
+    #       },
+    #       continuous_integration_scan_configuration: {
+    #         supported_events: ["PULL_REQUEST"], # required, accepts PULL_REQUEST, PUSH
+    #       },
+    #       rule_set_categories: ["SAST"], # required, accepts SAST, IAC, SCA
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.scan_configuration_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/UpdateCodeSecurityScanConfiguration AWS API Documentation
+    #
+    # @overload update_code_security_scan_configuration(params = {})
+    # @param [Hash] params ({})
+    def update_code_security_scan_configuration(params = {}, options = {})
+      req = build_request(:update_code_security_scan_configuration, params)
+      req.send_request(options)
+    end
+
+    # Updates the scan configuration for your Amazon Inspector account. If
+    # you don't specify an `accountId`, this operation updates the
+    # delegated administrator's configuration and propagates it to member
+    # accounts that have not been individually configured. If you specify an
+    # `accountId`, this operation updates that member account's
+    # configuration. Only the delegated administrator can specify an
+    # `accountId`; member accounts cannot call this operation.
+    #
+    # @option params [String] :account_id
+    #   The 12-digit Amazon Web Services account ID of the member account
+    #   whose scan configuration you want to update. When specified, you must
+    #   be the delegated administrator for this member account. If not
+    #   specified, the operation updates your own configuration and propagates
+    #   changes to any member accounts that have not been individually
+    #   configured.
+    #
+    # @option params [Types::EcrConfiguration] :ecr_configuration
+    #   Specifies how the ECR automated re-scan will be updated for your
+    #   environment.
     #
     # @option params [Types::Ec2Configuration] :ec2_configuration
     #   Specifies how the Amazon EC2 automated scan will be updated for your
     #   environment.
     #
-    # @option params [Types::EcrConfiguration] :ecr_configuration
-    #   Specifies how the ECR automated re-scan will be updated for your
-    #   environment.
+    # @option params [Types::UpdateConfigurationInheritance] :update_configuration_inheritance
+    #   Specifies which scan-type configurations to reset to the delegated
+    #   administrator's inherited values for the targeted member account.
+    #   Each member of this structure is independently optional. When
+    #   specified, `ec2Configuration` and `ecrConfiguration` must be absent,
+    #   and `accountId` must also be present. Only `INHERIT_FROM_ADMIN` is
+    #   valid for each member. If not specified, the operation uses the
+    #   `ec2Configuration` and `ecrConfiguration` parameters instead.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_configuration({
+    #     account_id: "AccountId",
+    #     ecr_configuration: {
+    #       rescan_duration: "LIFETIME", # required, accepts LIFETIME, DAYS_30, DAYS_180, DAYS_14, DAYS_60, DAYS_90, DAYS_3, DAYS_7
+    #       pull_date_rescan_duration: "DAYS_14", # accepts DAYS_14, DAYS_30, DAYS_60, DAYS_90, DAYS_180, DAYS_3, DAYS_7
+    #       pull_date_rescan_mode: "LAST_PULL_DATE", # accepts LAST_PULL_DATE, LAST_IN_USE_AT
+    #     },
     #     ec2_configuration: {
     #       scan_mode: "EC2_SSM_AGENT_BASED", # required, accepts EC2_SSM_AGENT_BASED, EC2_HYBRID
+    #       activate_vm_scanner: false,
     #     },
-    #     ecr_configuration: {
-    #       pull_date_rescan_duration: "DAYS_14", # accepts DAYS_14, DAYS_30, DAYS_60, DAYS_90, DAYS_180
-    #       rescan_duration: "LIFETIME", # required, accepts LIFETIME, DAYS_30, DAYS_180, DAYS_14, DAYS_60, DAYS_90
+    #     update_configuration_inheritance: {
+    #       ec2_configuration: "INHERIT_FROM_ADMIN", # accepts INHERIT_FROM_ADMIN
+    #       ecr_configuration: "INHERIT_FROM_ADMIN", # accepts INHERIT_FROM_ADMIN
     #     },
     #   })
     #
@@ -4897,6 +7786,131 @@ module Aws::Inspector2
     # @param [Hash] params ({})
     def update_configuration(params = {}, options = {})
       req = build_request(:update_configuration, params)
+      req.send_request(options)
+    end
+
+    # Updates the description or provider-specific configuration details of
+    # an existing connector.
+    #
+    # @option params [required, String] :connector_arn
+    #   The Amazon Resource Name (ARN) of the connector to update.
+    #
+    # @option params [String] :description
+    #   The updated description of the connector.
+    #
+    # @option params [Types::ProviderDetailUpdate] :provider_detail
+    #   The updated provider-specific configuration details for the connector.
+    #
+    # @return [Types::UpdateConnectorResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateConnectorResponse#connector_arn #connector_arn} => String
+    #
+    #
+    # @example Example: Expand the Azure regions covered by a connector
+    #
+    #   resp = client.update_connector({
+    #     connector_arn: "arn:aws:inspector2:us-east-1:123456789012:connector/6ccf8549-b52b-57ca-bf52-a2266da3c53a", 
+    #     provider_detail: {
+    #       azure: {
+    #         azure_regions: [
+    #           "eastus", 
+    #           "westus", 
+    #         ], 
+    #       }, 
+    #     }, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     connector_arn: "arn:aws:inspector2:us-east-1:123456789012:connector/6ccf8549-b52b-57ca-bf52-a2266da3c53a", 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_connector({
+    #     connector_arn: "ConnectorArn", # required
+    #     description: "ConnectorDescription",
+    #     provider_detail: {
+    #       azure: {
+    #         azure_regions: ["AzureRegion"],
+    #         scope_configuration: {
+    #           vm_scanning: {
+    #             scope_type: "TENANT", # required, accepts TENANT, SUBSCRIPTION
+    #             scope_values: ["ScopeValue"],
+    #           },
+    #           container_image_scanning: {
+    #             scope_type: "TENANT", # required, accepts TENANT, SUBSCRIPTION
+    #             scope_values: ["ScopeValue"],
+    #           },
+    #           serverless_scanning: {
+    #             scope_type: "TENANT", # required, accepts TENANT, SUBSCRIPTION
+    #             scope_values: ["ScopeValue"],
+    #           },
+    #         },
+    #         auto_install_vm_scanner: false,
+    #       },
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.connector_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/UpdateConnector AWS API Documentation
+    #
+    # @overload update_connector(params = {})
+    # @param [Hash] params ({})
+    def update_connector(params = {}, options = {})
+      req = build_request(:update_connector, params)
+      req.send_request(options)
+    end
+
+    # Updates scan configuration settings for resources associated with an
+    # Amazon Web Services Config connector.
+    #
+    # @option params [required, String] :aws_config_connector_arn
+    #   The ARN of the Amazon Web Services Config connector.
+    #
+    # @option params [required, Types::ConnectorScanConfiguration] :scan_configuration
+    #   The scan configuration settings to apply.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    #
+    # @example Example: Set 30-day push and 14-day pull rescan durations for an Azure container registry connector
+    #
+    #   resp = client.update_connector_scan_configuration({
+    #     aws_config_connector_arn: "arn:aws:config:us-east-1:123456789012:connector/azure/a7bc5463-04ce-4b52-901e-f26f7292a4a7/2fbed4bd-5b95-4947-a751-8defc76ecdae", 
+    #     scan_configuration: {
+    #       container_image_scanning: {
+    #         pull_duration: "DAYS_14", 
+    #         push_duration: "DAYS_30", 
+    #       }, 
+    #     }, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_connector_scan_configuration({
+    #     aws_config_connector_arn: "AwsConfigConnectorArn", # required
+    #     scan_configuration: { # required
+    #       container_image_scanning: {
+    #         push_duration: "LIFETIME", # accepts LIFETIME, DAYS_3, DAYS_7, DAYS_30, DAYS_180, DAYS_14, DAYS_60, DAYS_90
+    #         pull_duration: "DAYS_3", # accepts DAYS_3, DAYS_7, DAYS_14, DAYS_30, DAYS_60, DAYS_90, DAYS_180
+    #       },
+    #     },
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/UpdateConnectorScanConfiguration AWS API Documentation
+    #
+    # @overload update_connector_scan_configuration(params = {})
+    # @param [Hash] params ({})
+    def update_connector_scan_configuration(params = {}, options = {})
+      req = build_request(:update_connector_scan_configuration, params)
       req.send_request(options)
     end
 
@@ -4920,10 +7934,10 @@ module Aws::Inspector2
     #
     # @return [Types::UpdateEc2DeepInspectionConfigurationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::UpdateEc2DeepInspectionConfigurationResponse#error_message #error_message} => String
-    #   * {Types::UpdateEc2DeepInspectionConfigurationResponse#org_package_paths #org_package_paths} => Array&lt;String&gt;
     #   * {Types::UpdateEc2DeepInspectionConfigurationResponse#package_paths #package_paths} => Array&lt;String&gt;
+    #   * {Types::UpdateEc2DeepInspectionConfigurationResponse#org_package_paths #org_package_paths} => Array&lt;String&gt;
     #   * {Types::UpdateEc2DeepInspectionConfigurationResponse#status #status} => String
+    #   * {Types::UpdateEc2DeepInspectionConfigurationResponse#error_message #error_message} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -4934,12 +7948,12 @@ module Aws::Inspector2
     #
     # @example Response structure
     #
-    #   resp.error_message #=> String
-    #   resp.org_package_paths #=> Array
-    #   resp.org_package_paths[0] #=> String
     #   resp.package_paths #=> Array
     #   resp.package_paths[0] #=> String
+    #   resp.org_package_paths #=> Array
+    #   resp.org_package_paths[0] #=> String
     #   resp.status #=> String, one of "ACTIVATED", "DEACTIVATED", "PENDING", "FAILED"
+    #   resp.error_message #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/UpdateEc2DeepInspectionConfiguration AWS API Documentation
     #
@@ -4956,11 +7970,11 @@ module Aws::Inspector2
     # @option params [required, String] :kms_key_id
     #   A KMS key ID for the encryption key.
     #
-    # @option params [required, String] :resource_type
-    #   The resource type for the encryption key.
-    #
     # @option params [required, String] :scan_type
     #   The scan type for the encryption key.
+    #
+    # @option params [required, String] :resource_type
+    #   The resource type for the encryption key.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
@@ -4968,8 +7982,8 @@ module Aws::Inspector2
     #
     #   resp = client.update_encryption_key({
     #     kms_key_id: "KmsKeyArn", # required
-    #     resource_type: "AWS_EC2_INSTANCE", # required, accepts AWS_EC2_INSTANCE, AWS_ECR_CONTAINER_IMAGE, AWS_ECR_REPOSITORY, AWS_LAMBDA_FUNCTION
     #     scan_type: "NETWORK", # required, accepts NETWORK, PACKAGE, CODE
+    #     resource_type: "AWS_EC2_INSTANCE", # required, accepts AWS_EC2_INSTANCE, AWS_ECR_CONTAINER_IMAGE, AWS_ECR_REPOSITORY, AWS_LAMBDA_FUNCTION, CODE_REPOSITORY, Microsoft.Compute/virtualMachines, Microsoft.ContainerRegistry/registry/containerImage, Microsoft.Web/sites
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/UpdateEncryptionKey AWS API Documentation
@@ -4991,14 +8005,14 @@ module Aws::Inspector2
     # @option params [String] :description
     #   A description of the filter.
     #
-    # @option params [required, String] :filter_arn
-    #   The Amazon Resource Number (ARN) of the filter to update.
-    #
     # @option params [Types::FilterCriteria] :filter_criteria
     #   Defines the criteria to be update in the filter.
     #
     # @option params [String] :name
     #   The name of the filter.
+    #
+    # @option params [required, String] :filter_arn
+    #   The Amazon Resource Number (ARN) of the filter to update.
     #
     # @option params [String] :reason
     #   The reason the filter was updated.
@@ -5012,9 +8026,273 @@ module Aws::Inspector2
     #   resp = client.update_filter({
     #     action: "NONE", # accepts NONE, SUPPRESS
     #     description: "FilterDescription",
-    #     filter_arn: "FilterArn", # required
     #     filter_criteria: {
+    #       finding_arn: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
     #       aws_account_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       finding_type: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       severity: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       first_observed_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       last_observed_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       updated_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       finding_status: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       title: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       inspector_score: [
+    #         {
+    #           upper_inclusive: 1.0,
+    #           lower_inclusive: 1.0,
+    #         },
+    #       ],
+    #       resource_type: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       resource_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       resource_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS
+    #           key: "MapKey", # required
+    #           value: "MapValue",
+    #         },
+    #       ],
+    #       ec2_instance_image_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ec2_instance_vpc_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ec2_instance_subnet_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ecr_image_pushed_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       ecr_image_architecture: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ecr_image_registry: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ecr_image_repository_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ecr_image_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ecr_image_hash: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       ecr_image_last_in_use_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       ecr_image_in_use_count: [
+    #         {
+    #           upper_inclusive: 1.0,
+    #           lower_inclusive: 1.0,
+    #         },
+    #       ],
+    #       port_range: [
+    #         {
+    #           begin_inclusive: 1,
+    #           end_inclusive: 1,
+    #         },
+    #       ],
+    #       network_protocol: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       component_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       component_type: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       vulnerability_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       vulnerability_source: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       vendor_severity: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       vulnerable_packages: [
+    #         {
+    #           name: {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #           version: {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #           epoch: {
+    #             upper_inclusive: 1.0,
+    #             lower_inclusive: 1.0,
+    #           },
+    #           release: {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #           architecture: {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #           source_layer_hash: {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #           source_lambda_layer_arn: {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #           file_path: {
+    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #             value: "StringInput", # required
+    #           },
+    #         },
+    #       ],
+    #       related_vulnerabilities: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       fix_available: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       lambda_function_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       lambda_function_layers: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       lambda_function_runtime: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       lambda_function_last_modified_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       lambda_function_execution_role_arn: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       exploit_available: [
     #         {
     #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
     #           value: "StringInput", # required
@@ -5038,267 +8316,141 @@ module Aws::Inspector2
     #           value: "StringInput", # required
     #         },
     #       ],
-    #       component_id: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       component_type: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ec2_instance_image_id: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ec2_instance_subnet_id: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ec2_instance_vpc_id: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ecr_image_architecture: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ecr_image_hash: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ecr_image_pushed_at: [
-    #         {
-    #           end_inclusive: Time.now,
-    #           start_inclusive: Time.now,
-    #         },
-    #       ],
-    #       ecr_image_registry: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ecr_image_repository_name: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       ecr_image_tags: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
     #       epss_score: [
     #         {
-    #           lower_inclusive: 1.0,
     #           upper_inclusive: 1.0,
-    #         },
-    #       ],
-    #       exploit_available: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       finding_arn: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       finding_status: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       finding_type: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       first_observed_at: [
-    #         {
-    #           end_inclusive: Time.now,
-    #           start_inclusive: Time.now,
-    #         },
-    #       ],
-    #       fix_available: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       inspector_score: [
-    #         {
     #           lower_inclusive: 1.0,
+    #         },
+    #       ],
+    #       code_repository_project_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       code_repository_provider_type: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_provider: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_provider_region: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_provider_account_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_provider_org_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_vm_image_reference: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_vm_network_id: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_vm_subnet_ids: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_image_repository_name: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_image_registry: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_image_digest: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_image_tags: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_image_pushed_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       cloud_image_architecture: [
+    #         {
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_image_last_in_use_at: [
+    #         {
+    #           start_inclusive: Time.now,
+    #           end_inclusive: Time.now,
+    #         },
+    #       ],
+    #       cloud_image_in_use_count: [
+    #         {
     #           upper_inclusive: 1.0,
+    #           lower_inclusive: 1.0,
     #         },
     #       ],
-    #       lambda_function_execution_role_arn: [
+    #       cloud_serverless_function_name: [
     #         {
     #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
     #           value: "StringInput", # required
     #         },
     #       ],
-    #       lambda_function_last_modified_at: [
+    #       cloud_serverless_function_runtime: [
     #         {
-    #           end_inclusive: Time.now,
+    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
+    #           value: "StringInput", # required
+    #         },
+    #       ],
+    #       cloud_serverless_function_last_modified_at: [
+    #         {
     #           start_inclusive: Time.now,
-    #         },
-    #       ],
-    #       lambda_function_layers: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       lambda_function_name: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       lambda_function_runtime: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       last_observed_at: [
-    #         {
     #           end_inclusive: Time.now,
-    #           start_inclusive: Time.now,
     #         },
     #       ],
-    #       network_protocol: [
+    #       cloud_serverless_function_execution_role: [
     #         {
     #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
     #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       port_range: [
-    #         {
-    #           begin_inclusive: 1,
-    #           end_inclusive: 1,
-    #         },
-    #       ],
-    #       related_vulnerabilities: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       resource_id: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       resource_tags: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS
-    #           key: "MapKey", # required
-    #           value: "MapValue",
-    #         },
-    #       ],
-    #       resource_type: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       severity: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       title: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       updated_at: [
-    #         {
-    #           end_inclusive: Time.now,
-    #           start_inclusive: Time.now,
-    #         },
-    #       ],
-    #       vendor_severity: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       vulnerability_id: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       vulnerability_source: [
-    #         {
-    #           comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #           value: "StringInput", # required
-    #         },
-    #       ],
-    #       vulnerable_packages: [
-    #         {
-    #           architecture: {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #           epoch: {
-    #             lower_inclusive: 1.0,
-    #             upper_inclusive: 1.0,
-    #           },
-    #           file_path: {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #           name: {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #           release: {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #           source_lambda_layer_arn: {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #           source_layer_hash: {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
-    #           version: {
-    #             comparison: "EQUALS", # required, accepts EQUALS, PREFIX, NOT_EQUALS
-    #             value: "StringInput", # required
-    #           },
     #         },
     #       ],
     #     },
     #     name: "FilterName",
+    #     filter_arn: "FilterArn", # required
     #     reason: "FilterReason",
     #   })
     #
@@ -5358,6 +8510,7 @@ module Aws::Inspector2
     #       ecr: false, # required
     #       lambda: false,
     #       lambda_code: false,
+    #       code_repository: false,
     #     },
     #   })
     #
@@ -5367,6 +8520,7 @@ module Aws::Inspector2
     #   resp.auto_enable.ecr #=> Boolean
     #   resp.auto_enable.lambda #=> Boolean
     #   resp.auto_enable.lambda_code #=> Boolean
+    #   resp.auto_enable.code_repository #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/inspector2-2020-06-08/UpdateOrganizationConfiguration AWS API Documentation
     #
@@ -5395,14 +8549,131 @@ module Aws::Inspector2
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-inspector2'
-      context[:gem_version] = '1.49.0'
+      context[:gem_version] = '1.81.0'
       Seahorse::Client::Request.new(handlers, context)
+    end
+
+    # Polls an API operation until a resource enters a desired state.
+    #
+    # ## Basic Usage
+    #
+    # A waiter will call an API operation until:
+    #
+    # * It is successful
+    # * It enters a terminal state
+    # * It makes the maximum number of attempts
+    #
+    # In between attempts, the waiter will sleep.
+    #
+    #     # polls in a loop, sleeping between attempts
+    #     client.wait_until(waiter_name, params)
+    #
+    # ## Configuration
+    #
+    # You can configure the maximum number of polling attempts, and the
+    # delay (in seconds) between each polling attempt. You can pass
+    # configuration as the final arguments hash.
+    #
+    #     # poll for ~25 seconds
+    #     client.wait_until(waiter_name, params, {
+    #       max_attempts: 5,
+    #       delay: 5,
+    #     })
+    #
+    # ## Callbacks
+    #
+    # You can be notified before each polling attempt and before each
+    # delay. If you throw `:success` or `:failure` from these callbacks,
+    # it will terminate the waiter.
+    #
+    #     started_at = Time.now
+    #     client.wait_until(waiter_name, params, {
+    #
+    #       # disable max attempts
+    #       max_attempts: nil,
+    #
+    #       # poll for 1 hour, instead of a number of attempts
+    #       before_wait: -> (attempts, response) do
+    #         throw :failure if Time.now - started_at > 3600
+    #       end
+    #     })
+    #
+    # ## Handling Errors
+    #
+    # When a waiter is unsuccessful, it will raise an error.
+    # All of the failure errors extend from
+    # {Aws::Waiters::Errors::WaiterFailed}.
+    #
+    #     begin
+    #       client.wait_until(...)
+    #     rescue Aws::Waiters::Errors::WaiterFailed
+    #       # resource did not enter the desired state in time
+    #     end
+    #
+    # ## Valid Waiters
+    #
+    # The following table lists the valid waiter names, the operations they call,
+    # and the default `:delay` and `:max_attempts` values.
+    #
+    # | waiter_name         | params                   | :delay   | :max_attempts |
+    # | ------------------- | ------------------------ | -------- | ------------- |
+    # | connector_connected | {Client#list_connectors} | 30       | 5             |
+    # | connector_deleted   | {Client#list_connectors} | 30       | 5             |
+    # | connector_enabled   | {Client#list_connectors} | 30       | 5             |
+    #
+    # @raise [Errors::FailureStateError] Raised when the waiter terminates
+    #   because the waiter has entered a state that it will not transition
+    #   out of, preventing success.
+    #
+    # @raise [Errors::TooManyAttemptsError] Raised when the configured
+    #   maximum number of attempts have been made, and the waiter is not
+    #   yet successful.
+    #
+    # @raise [Errors::UnexpectedError] Raised when an error is encounted
+    #   while polling for a resource that is not expected.
+    #
+    # @raise [Errors::NoSuchWaiterError] Raised when you request to wait
+    #   for an unknown state.
+    #
+    # @return [Boolean] Returns `true` if the waiter was successful.
+    # @param [Symbol] waiter_name
+    # @param [Hash] params ({})
+    # @param [Hash] options ({})
+    # @option options [Integer] :max_attempts
+    # @option options [Integer] :delay
+    # @option options [Proc] :before_attempt
+    # @option options [Proc] :before_wait
+    def wait_until(waiter_name, params = {}, options = {})
+      w = waiter(waiter_name, options)
+      yield(w.waiter) if block_given? # deprecated
+      w.wait(params)
     end
 
     # @api private
     # @deprecated
     def waiter_names
-      []
+      waiters.keys
+    end
+
+    private
+
+    # @param [Symbol] waiter_name
+    # @param [Hash] options ({})
+    def waiter(waiter_name, options = {})
+      waiter_class = waiters[waiter_name]
+      if waiter_class
+        waiter_class.new(options.merge(client: self))
+      else
+        raise Aws::Waiters::Errors::NoSuchWaiterError.new(waiter_name, waiters.keys)
+      end
+    end
+
+    def waiters
+      {
+        connector_connected: Waiters::ConnectorConnected,
+        connector_deleted: Waiters::ConnectorDeleted,
+        connector_enabled: Waiters::ConnectorEnabled
+      }
     end
 
     class << self

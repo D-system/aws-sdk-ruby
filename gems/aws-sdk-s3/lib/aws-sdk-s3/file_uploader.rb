@@ -7,23 +7,22 @@ module Aws
     # @api private
     class FileUploader
 
-      ONE_HUNDRED_MEGABYTES = 100 * 1024 * 1024
+      DEFAULT_MULTIPART_THRESHOLD = 100 * 1024 * 1024
 
       # @param [Hash] options
       # @option options [Client] :client
       # @option options [Integer] :multipart_threshold (104857600)
       def initialize(options = {})
-        @options = options
         @client = options[:client] || Client.new
-        @multipart_threshold = options[:multipart_threshold] ||
-                               ONE_HUNDRED_MEGABYTES
+        @executor = options[:executor]
+        @http_chunk_size = options[:http_chunk_size]
+        @multipart_threshold = options[:multipart_threshold] || DEFAULT_MULTIPART_THRESHOLD
       end
 
       # @return [Client]
       attr_reader :client
 
-      # @return [Integer] Files larger than or equal to this in bytes are uploaded
-      #   using a {MultipartFileUploader}.
+      # @return [Integer] Files larger than or equal to this in bytes are uploaded using a {MultipartFileUploader}.
       attr_reader :multipart_threshold
 
       # @param [String, Pathname, File, Tempfile] source The file to upload.
@@ -38,11 +37,13 @@ module Aws
       # @return [void]
       def upload(source, options = {})
         Aws::Plugins::UserAgent.metric('S3_TRANSFER') do
-          if File.size(source) >= multipart_threshold
-            MultipartFileUploader.new(@options).upload(source, options)
+          if File.size(source) >= @multipart_threshold
+            MultipartFileUploader.new(
+              client: @client,
+              executor: @executor,
+              http_chunk_size: @http_chunk_size
+            ).upload(source, options)
           else
-            # remove multipart parameters not supported by put_object
-            options.delete(:thread_count)
             put_object(source, options)
           end
         end
@@ -50,9 +51,9 @@ module Aws
 
       private
 
-      def open_file(source)
-        if String === source || Pathname === source
-          File.open(source, 'rb') { |file| yield(file) }
+      def open_file(source, &block)
+        if source.is_a?(String) || source.is_a?(Pathname)
+          File.open(source, 'rb', &block)
         else
           yield(source)
         end
@@ -63,7 +64,10 @@ module Aws
           options[:on_chunk_sent] = single_part_progress(callback)
         end
         open_file(source) do |file|
+          Thread.current[:net_http_override_body_stream_chunk] = @http_chunk_size if @http_chunk_size
           @client.put_object(options.merge(body: file))
+        ensure
+          Thread.current[:net_http_override_body_stream_chunk] = nil
         end
       end
 

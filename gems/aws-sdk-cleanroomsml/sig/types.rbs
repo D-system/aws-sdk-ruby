@@ -8,6 +8,23 @@
 module Aws::CleanRoomsML
   module Types
 
+    class AccessBudget
+      attr_accessor resource_arn: ::String
+      attr_accessor details: ::Array[Types::AccessBudgetDetails]
+      attr_accessor aggregate_remaining_budget: ::Integer
+      SENSITIVE: []
+    end
+
+    class AccessBudgetDetails
+      attr_accessor start_time: ::Time
+      attr_accessor end_time: ::Time
+      attr_accessor remaining_budget: ::Integer
+      attr_accessor budget: ::Integer
+      attr_accessor budget_type: ("CALENDAR_DAY" | "CALENDAR_MONTH" | "CALENDAR_WEEK" | "LIFETIME")
+      attr_accessor auto_refresh: ("ENABLED" | "DISABLED")
+      SENSITIVE: []
+    end
+
     class AccessDeniedException
       attr_accessor message: ::String
       SENSITIVE: []
@@ -90,6 +107,7 @@ module Aws::CleanRoomsML
     class CancelTrainedModelRequest
       attr_accessor membership_identifier: ::String
       attr_accessor trained_model_arn: ::String
+      attr_accessor version_identifier: ::String
       SENSITIVE: []
     end
 
@@ -117,6 +135,7 @@ module Aws::CleanRoomsML
       attr_accessor status: ("CREATE_PENDING" | "CREATE_IN_PROGRESS" | "CREATE_FAILED" | "ACTIVE" | "DELETE_PENDING" | "DELETE_IN_PROGRESS" | "DELETE_FAILED" | "INACTIVE")
       attr_accessor creator_account_id: ::String
       attr_accessor description: ::String
+      attr_accessor payer_configuration: Types::PayerConfiguration
       SENSITIVE: []
     end
 
@@ -130,6 +149,7 @@ module Aws::CleanRoomsML
       attr_accessor description: ::String
       attr_accessor creator_account_id: ::String
       attr_accessor trained_model_arn: ::String
+      attr_accessor trained_model_version_identifier: ::String
       attr_accessor membership_identifier: ::String
       attr_accessor collaboration_identifier: ::String
       SENSITIVE: []
@@ -140,6 +160,7 @@ module Aws::CleanRoomsML
       attr_accessor configured_model_algorithm_association_arn: ::String
       attr_accessor membership_identifier: ::String
       attr_accessor trained_model_arn: ::String
+      attr_accessor trained_model_version_identifier: ::String
       attr_accessor collaboration_identifier: ::String
       attr_accessor status: ("CREATE_PENDING" | "CREATE_IN_PROGRESS" | "CREATE_FAILED" | "ACTIVE" | "CANCEL_PENDING" | "CANCEL_IN_PROGRESS" | "CANCEL_FAILED" | "INACTIVE")
       attr_accessor output_configuration: Types::InferenceOutputConfiguration
@@ -149,6 +170,7 @@ module Aws::CleanRoomsML
       attr_accessor metrics_status_details: ::String
       attr_accessor logs_status: ("PUBLISH_SUCCEEDED" | "PUBLISH_FAILED")
       attr_accessor logs_status_details: ::String
+      attr_accessor ml_model_inference_payer_account_id: ::String
       attr_accessor create_time: ::Time
       attr_accessor update_time: ::Time
       attr_accessor creator_account_id: ::String
@@ -160,12 +182,20 @@ module Aws::CleanRoomsML
       attr_accessor update_time: ::Time
       attr_accessor trained_model_arn: ::String
       attr_accessor name: ::String
+      attr_accessor version_identifier: ::String
+      attr_accessor incremental_training_data_channels: ::Array[Types::IncrementalTrainingDataChannelOutput]
       attr_accessor description: ::String
       attr_accessor membership_identifier: ::String
       attr_accessor collaboration_identifier: ::String
       attr_accessor status: ("CREATE_PENDING" | "CREATE_IN_PROGRESS" | "CREATE_FAILED" | "ACTIVE" | "DELETE_PENDING" | "DELETE_IN_PROGRESS" | "DELETE_FAILED" | "INACTIVE" | "CANCEL_PENDING" | "CANCEL_IN_PROGRESS" | "CANCEL_FAILED")
       attr_accessor configured_model_algorithm_association_arn: ::String
       attr_accessor creator_account_id: ::String
+      attr_accessor ml_model_training_payer_account_id: ::String
+      SENSITIVE: []
+    end
+
+    class ColumnClassificationDetails
+      attr_accessor column_mapping: ::Array[Types::SyntheticDataColumnProperties]
       SENSITIVE: []
     end
 
@@ -312,6 +342,7 @@ module Aws::CleanRoomsML
       attr_accessor description: ::String
       attr_accessor kms_key_arn: ::String
       attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor payer_configuration: Types::PayerConfiguration
       SENSITIVE: []
     end
 
@@ -328,15 +359,19 @@ module Aws::CleanRoomsML
       attr_accessor environment: ::Hash[::String, ::String]
       attr_accessor resource_config: Types::ResourceConfig
       attr_accessor stopping_condition: Types::StoppingCondition
+      attr_accessor incremental_training_data_channels: ::Array[Types::IncrementalTrainingDataChannel]
       attr_accessor data_channels: ::Array[Types::ModelTrainingDataChannel]
+      attr_accessor training_input_mode: ("File" | "FastFile" | "Pipe")
       attr_accessor description: ::String
       attr_accessor kms_key_arn: ::String
       attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor ml_model_training_payer_account_id: ::String
       SENSITIVE: []
     end
 
     class CreateTrainedModelResponse
       attr_accessor trained_model_arn: ::String
+      attr_accessor version_identifier: ::String
       SENSITIVE: []
     end
 
@@ -351,6 +386,16 @@ module Aws::CleanRoomsML
 
     class CreateTrainingDatasetResponse
       attr_accessor training_dataset_arn: ::String
+      SENSITIVE: []
+    end
+
+    class CustomEntityConfig
+      attr_accessor custom_data_identifiers: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class DataPrivacyScores
+      attr_accessor membership_inference_attack_scores: ::Array[Types::MembershipInferenceAttackScore]
       SENSITIVE: []
     end
 
@@ -416,6 +461,7 @@ module Aws::CleanRoomsML
     class DeleteTrainedModelOutputRequest
       attr_accessor trained_model_arn: ::String
       attr_accessor membership_identifier: ::String
+      attr_accessor version_identifier: ::String
       SENSITIVE: []
     end
 
@@ -501,9 +547,6 @@ module Aws::CleanRoomsML
     end
 
     class GetCollaborationMLInputChannelResponse
-      attr_accessor create_time: ::Time
-      attr_accessor update_time: ::Time
-      attr_accessor creator_account_id: ::String
       attr_accessor membership_identifier: ::String
       attr_accessor collaboration_identifier: ::String
       attr_accessor ml_input_channel_arn: ::String
@@ -513,13 +556,20 @@ module Aws::CleanRoomsML
       attr_accessor status_details: Types::StatusDetails
       attr_accessor retention_in_days: ::Integer
       attr_accessor number_of_records: ::Integer
+      attr_accessor privacy_budgets: Types::PrivacyBudgets
       attr_accessor description: ::String
+      attr_accessor synthetic_data_configuration: Types::SyntheticDataConfiguration
+      attr_accessor payer_configuration: Types::PayerConfiguration
+      attr_accessor create_time: ::Time
+      attr_accessor update_time: ::Time
+      attr_accessor creator_account_id: ::String
       SENSITIVE: []
     end
 
     class GetCollaborationTrainedModelRequest
       attr_accessor trained_model_arn: ::String
       attr_accessor collaboration_identifier: ::String
+      attr_accessor version_identifier: ::String
       SENSITIVE: []
     end
 
@@ -527,18 +577,22 @@ module Aws::CleanRoomsML
       attr_accessor membership_identifier: ::String
       attr_accessor collaboration_identifier: ::String
       attr_accessor trained_model_arn: ::String
+      attr_accessor version_identifier: ::String
+      attr_accessor incremental_training_data_channels: ::Array[Types::IncrementalTrainingDataChannelOutput]
       attr_accessor name: ::String
       attr_accessor description: ::String
       attr_accessor status: ("CREATE_PENDING" | "CREATE_IN_PROGRESS" | "CREATE_FAILED" | "ACTIVE" | "DELETE_PENDING" | "DELETE_IN_PROGRESS" | "DELETE_FAILED" | "INACTIVE" | "CANCEL_PENDING" | "CANCEL_IN_PROGRESS" | "CANCEL_FAILED")
       attr_accessor status_details: Types::StatusDetails
       attr_accessor configured_model_algorithm_association_arn: ::String
       attr_accessor resource_config: Types::ResourceConfig
+      attr_accessor training_input_mode: ("File" | "FastFile" | "Pipe")
       attr_accessor stopping_condition: Types::StoppingCondition
       attr_accessor metrics_status: ("PUBLISH_SUCCEEDED" | "PUBLISH_FAILED")
       attr_accessor metrics_status_details: ::String
       attr_accessor logs_status: ("PUBLISH_SUCCEEDED" | "PUBLISH_FAILED")
       attr_accessor logs_status_details: ::String
       attr_accessor training_container_image_digest: ::String
+      attr_accessor ml_model_training_payer_account_id: ::String
       attr_accessor create_time: ::Time
       attr_accessor update_time: ::Time
       attr_accessor creator_account_id: ::String
@@ -638,12 +692,8 @@ module Aws::CleanRoomsML
     end
 
     class GetMLInputChannelResponse
-      attr_accessor create_time: ::Time
-      attr_accessor update_time: ::Time
       attr_accessor membership_identifier: ::String
       attr_accessor collaboration_identifier: ::String
-      attr_accessor input_channel: Types::InputChannel
-      attr_accessor protected_query_identifier: ::String
       attr_accessor ml_input_channel_arn: ::String
       attr_accessor name: ::String
       attr_accessor configured_model_algorithm_associations: ::Array[::String]
@@ -651,9 +701,16 @@ module Aws::CleanRoomsML
       attr_accessor status_details: Types::StatusDetails
       attr_accessor retention_in_days: ::Integer
       attr_accessor number_of_records: ::Integer
+      attr_accessor privacy_budgets: Types::PrivacyBudgets
+      attr_accessor description: ::String
+      attr_accessor synthetic_data_configuration: Types::SyntheticDataConfiguration
+      attr_accessor payer_configuration: Types::PayerConfiguration
+      attr_accessor create_time: ::Time
+      attr_accessor update_time: ::Time
+      attr_accessor input_channel: Types::InputChannel
+      attr_accessor protected_query_identifier: ::String
       attr_accessor number_of_files: ::Float
       attr_accessor size_in_gb: ::Float
-      attr_accessor description: ::String
       attr_accessor kms_key_arn: ::String
       attr_accessor tags: ::Hash[::String, ::String]
       SENSITIVE: []
@@ -673,6 +730,7 @@ module Aws::CleanRoomsML
       attr_accessor name: ::String
       attr_accessor status: ("CREATE_PENDING" | "CREATE_IN_PROGRESS" | "CREATE_FAILED" | "ACTIVE" | "CANCEL_PENDING" | "CANCEL_IN_PROGRESS" | "CANCEL_FAILED" | "INACTIVE")
       attr_accessor trained_model_arn: ::String
+      attr_accessor trained_model_version_identifier: ::String
       attr_accessor resource_config: Types::InferenceResourceConfig
       attr_accessor output_configuration: Types::InferenceOutputConfiguration
       attr_accessor membership_identifier: ::String
@@ -688,12 +746,14 @@ module Aws::CleanRoomsML
       attr_accessor logs_status: ("PUBLISH_SUCCEEDED" | "PUBLISH_FAILED")
       attr_accessor logs_status_details: ::String
       attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor ml_model_inference_payer_account_id: ::String
       SENSITIVE: []
     end
 
     class GetTrainedModelRequest
       attr_accessor trained_model_arn: ::String
       attr_accessor membership_identifier: ::String
+      attr_accessor version_identifier: ::String
       SENSITIVE: []
     end
 
@@ -701,18 +761,22 @@ module Aws::CleanRoomsML
       attr_accessor membership_identifier: ::String
       attr_accessor collaboration_identifier: ::String
       attr_accessor trained_model_arn: ::String
+      attr_accessor version_identifier: ::String
+      attr_accessor incremental_training_data_channels: ::Array[Types::IncrementalTrainingDataChannelOutput]
       attr_accessor name: ::String
       attr_accessor description: ::String
       attr_accessor status: ("CREATE_PENDING" | "CREATE_IN_PROGRESS" | "CREATE_FAILED" | "ACTIVE" | "DELETE_PENDING" | "DELETE_IN_PROGRESS" | "DELETE_FAILED" | "INACTIVE" | "CANCEL_PENDING" | "CANCEL_IN_PROGRESS" | "CANCEL_FAILED")
       attr_accessor status_details: Types::StatusDetails
       attr_accessor configured_model_algorithm_association_arn: ::String
       attr_accessor resource_config: Types::ResourceConfig
+      attr_accessor training_input_mode: ("File" | "FastFile" | "Pipe")
       attr_accessor stopping_condition: Types::StoppingCondition
       attr_accessor metrics_status: ("PUBLISH_SUCCEEDED" | "PUBLISH_FAILED")
       attr_accessor metrics_status_details: ::String
       attr_accessor logs_status: ("PUBLISH_SUCCEEDED" | "PUBLISH_FAILED")
       attr_accessor logs_status_details: ::String
       attr_accessor training_container_image_digest: ::String
+      attr_accessor ml_model_training_payer_account_id: ::String
       attr_accessor create_time: ::Time
       attr_accessor update_time: ::Time
       attr_accessor hyperparameters: ::Hash[::String, ::String]
@@ -748,6 +812,20 @@ module Aws::CleanRoomsML
       SENSITIVE: []
     end
 
+    class IncrementalTrainingDataChannel
+      attr_accessor trained_model_arn: ::String
+      attr_accessor version_identifier: ::String
+      attr_accessor channel_name: ::String
+      SENSITIVE: []
+    end
+
+    class IncrementalTrainingDataChannelOutput
+      attr_accessor channel_name: ::String
+      attr_accessor version_identifier: ::String
+      attr_accessor model_name: ::String
+      SENSITIVE: []
+    end
+
     class InferenceContainerConfig
       attr_accessor image_uri: ::String
       SENSITIVE: []
@@ -770,7 +848,7 @@ module Aws::CleanRoomsML
     end
 
     class InferenceResourceConfig
-      attr_accessor instance_type: ("ml.r7i.48xlarge" | "ml.r6i.16xlarge" | "ml.m6i.xlarge" | "ml.m5.4xlarge" | "ml.p2.xlarge" | "ml.m4.16xlarge" | "ml.r7i.16xlarge" | "ml.m7i.xlarge" | "ml.m6i.12xlarge" | "ml.r7i.8xlarge" | "ml.r7i.large" | "ml.m7i.12xlarge" | "ml.m6i.24xlarge" | "ml.m7i.24xlarge" | "ml.r6i.8xlarge" | "ml.r6i.large" | "ml.g5.2xlarge" | "ml.m5.large" | "ml.p3.16xlarge" | "ml.m7i.48xlarge" | "ml.m6i.16xlarge" | "ml.p2.16xlarge" | "ml.g5.4xlarge" | "ml.m7i.16xlarge" | "ml.c4.2xlarge" | "ml.c5.2xlarge" | "ml.c6i.32xlarge" | "ml.c4.4xlarge" | "ml.g5.8xlarge" | "ml.c6i.xlarge" | "ml.c5.4xlarge" | "ml.g4dn.xlarge" | "ml.c7i.xlarge" | "ml.c6i.12xlarge" | "ml.g4dn.12xlarge" | "ml.c7i.12xlarge" | "ml.c6i.24xlarge" | "ml.g4dn.2xlarge" | "ml.c7i.24xlarge" | "ml.c7i.2xlarge" | "ml.c4.8xlarge" | "ml.c6i.2xlarge" | "ml.g4dn.4xlarge" | "ml.c7i.48xlarge" | "ml.c7i.4xlarge" | "ml.c6i.16xlarge" | "ml.c5.9xlarge" | "ml.g4dn.16xlarge" | "ml.c7i.16xlarge" | "ml.c6i.4xlarge" | "ml.c5.xlarge" | "ml.c4.xlarge" | "ml.g4dn.8xlarge" | "ml.c7i.8xlarge" | "ml.c7i.large" | "ml.g5.xlarge" | "ml.c6i.8xlarge" | "ml.c6i.large" | "ml.g5.12xlarge" | "ml.g5.24xlarge" | "ml.m7i.2xlarge" | "ml.c5.18xlarge" | "ml.g5.48xlarge" | "ml.m6i.2xlarge" | "ml.g5.16xlarge" | "ml.m7i.4xlarge" | "ml.p3.2xlarge" | "ml.r6i.32xlarge" | "ml.m6i.4xlarge" | "ml.m5.xlarge" | "ml.m4.10xlarge" | "ml.r6i.xlarge" | "ml.m5.12xlarge" | "ml.m4.xlarge" | "ml.r7i.2xlarge" | "ml.r7i.xlarge" | "ml.r6i.12xlarge" | "ml.m5.24xlarge" | "ml.r7i.12xlarge" | "ml.m7i.8xlarge" | "ml.m7i.large" | "ml.r6i.24xlarge" | "ml.r6i.2xlarge" | "ml.m4.2xlarge" | "ml.r7i.24xlarge" | "ml.r7i.4xlarge" | "ml.m6i.8xlarge" | "ml.m6i.large" | "ml.m5.2xlarge" | "ml.p2.8xlarge" | "ml.r6i.4xlarge" | "ml.m6i.32xlarge" | "ml.p3.8xlarge" | "ml.m4.4xlarge")
+      attr_accessor instance_type: ("ml.r7i.48xlarge" | "ml.r6i.16xlarge" | "ml.m6i.xlarge" | "ml.m5.4xlarge" | "ml.p2.xlarge" | "ml.m4.16xlarge" | "ml.r7i.16xlarge" | "ml.m7i.xlarge" | "ml.m6i.12xlarge" | "ml.r7i.8xlarge" | "ml.r7i.large" | "ml.m7i.12xlarge" | "ml.m6i.24xlarge" | "ml.m7i.24xlarge" | "ml.r6i.8xlarge" | "ml.r6i.large" | "ml.g5.2xlarge" | "ml.m5.large" | "ml.m7i.48xlarge" | "ml.m6i.16xlarge" | "ml.p2.16xlarge" | "ml.g5.4xlarge" | "ml.m7i.16xlarge" | "ml.c4.2xlarge" | "ml.c5.2xlarge" | "ml.c6i.32xlarge" | "ml.c4.4xlarge" | "ml.g5.8xlarge" | "ml.c6i.xlarge" | "ml.c5.4xlarge" | "ml.g4dn.xlarge" | "ml.c7i.xlarge" | "ml.c6i.12xlarge" | "ml.g4dn.12xlarge" | "ml.c7i.12xlarge" | "ml.c6i.24xlarge" | "ml.g4dn.2xlarge" | "ml.c7i.24xlarge" | "ml.c7i.2xlarge" | "ml.c4.8xlarge" | "ml.c6i.2xlarge" | "ml.g4dn.4xlarge" | "ml.c7i.48xlarge" | "ml.c7i.4xlarge" | "ml.c6i.16xlarge" | "ml.c5.9xlarge" | "ml.g4dn.16xlarge" | "ml.c7i.16xlarge" | "ml.c6i.4xlarge" | "ml.c5.xlarge" | "ml.c4.xlarge" | "ml.g4dn.8xlarge" | "ml.c7i.8xlarge" | "ml.c7i.large" | "ml.g5.xlarge" | "ml.c6i.8xlarge" | "ml.c6i.large" | "ml.g5.12xlarge" | "ml.g5.24xlarge" | "ml.m7i.2xlarge" | "ml.c5.18xlarge" | "ml.g5.48xlarge" | "ml.m6i.2xlarge" | "ml.g5.16xlarge" | "ml.m7i.4xlarge" | "ml.r6i.32xlarge" | "ml.m6i.4xlarge" | "ml.m5.xlarge" | "ml.m4.10xlarge" | "ml.r6i.xlarge" | "ml.m5.12xlarge" | "ml.m4.xlarge" | "ml.r7i.2xlarge" | "ml.r7i.xlarge" | "ml.r6i.12xlarge" | "ml.m5.24xlarge" | "ml.r7i.12xlarge" | "ml.m7i.8xlarge" | "ml.m7i.large" | "ml.r6i.24xlarge" | "ml.r6i.2xlarge" | "ml.m4.2xlarge" | "ml.r7i.24xlarge" | "ml.r7i.4xlarge" | "ml.m6i.8xlarge" | "ml.m6i.large" | "ml.m5.2xlarge" | "ml.p2.8xlarge" | "ml.r6i.4xlarge" | "ml.m6i.32xlarge" | "ml.m4.4xlarge" | "ml.p3.16xlarge" | "ml.p3.2xlarge" | "ml.p3.8xlarge")
       attr_accessor instance_count: ::Integer
       SENSITIVE: []
     end
@@ -790,6 +868,11 @@ module Aws::CleanRoomsML
       end
       class Unknown < InputChannelDataSource
       end
+    end
+
+    class InternalServiceException
+      attr_accessor message: ::String
+      SENSITIVE: []
     end
 
     class ListAudienceExportJobsRequest
@@ -862,6 +945,7 @@ module Aws::CleanRoomsML
       attr_accessor max_results: ::Integer
       attr_accessor collaboration_identifier: ::String
       attr_accessor trained_model_arn: ::String
+      attr_accessor trained_model_version_identifier: ::String
       SENSITIVE: []
     end
 
@@ -876,6 +960,7 @@ module Aws::CleanRoomsML
       attr_accessor max_results: ::Integer
       attr_accessor collaboration_identifier: ::String
       attr_accessor trained_model_arn: ::String
+      attr_accessor trained_model_version_identifier: ::String
       SENSITIVE: []
     end
 
@@ -963,12 +1048,28 @@ module Aws::CleanRoomsML
       attr_accessor max_results: ::Integer
       attr_accessor membership_identifier: ::String
       attr_accessor trained_model_arn: ::String
+      attr_accessor trained_model_version_identifier: ::String
       SENSITIVE: []
     end
 
     class ListTrainedModelInferenceJobsResponse
       attr_accessor next_token: ::String
       attr_accessor trained_model_inference_jobs: ::Array[Types::TrainedModelInferenceJobSummary]
+      SENSITIVE: []
+    end
+
+    class ListTrainedModelVersionsRequest
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor membership_identifier: ::String
+      attr_accessor trained_model_arn: ::String
+      attr_accessor status: ("CREATE_PENDING" | "CREATE_IN_PROGRESS" | "CREATE_FAILED" | "ACTIVE" | "DELETE_PENDING" | "DELETE_IN_PROGRESS" | "DELETE_FAILED" | "INACTIVE" | "CANCEL_PENDING" | "CANCEL_IN_PROGRESS" | "CANCEL_FAILED")
+      SENSITIVE: []
+    end
+
+    class ListTrainedModelVersionsResponse
+      attr_accessor next_token: ::String
+      attr_accessor trained_models: ::Array[Types::TrainedModelSummary]
       SENSITIVE: []
     end
 
@@ -997,9 +1098,17 @@ module Aws::CleanRoomsML
       SENSITIVE: []
     end
 
+    class LogRedactionConfiguration
+      attr_accessor entities_to_redact: ::Array[("ALL_PERSONALLY_IDENTIFIABLE_INFORMATION" | "NUMBERS" | "CUSTOM")]
+      attr_accessor custom_entity_config: Types::CustomEntityConfig
+      SENSITIVE: []
+    end
+
     class LogsConfigurationPolicy
       attr_accessor allowed_account_ids: ::Array[::String]
       attr_accessor filter_pattern: ::String
+      attr_accessor log_type: ("ALL" | "ERROR_SUMMARY")
+      attr_accessor log_redaction_configuration: Types::LogRedactionConfiguration
       SENSITIVE: []
     end
 
@@ -1014,12 +1123,26 @@ module Aws::CleanRoomsML
       attr_accessor ml_input_channel_arn: ::String
       attr_accessor status: ("CREATE_PENDING" | "CREATE_IN_PROGRESS" | "CREATE_FAILED" | "ACTIVE" | "DELETE_PENDING" | "DELETE_IN_PROGRESS" | "DELETE_FAILED" | "INACTIVE")
       attr_accessor description: ::String
+      attr_accessor payer_configuration: Types::PayerConfiguration
       SENSITIVE: []
     end
 
     class MLOutputConfiguration
       attr_accessor destination: Types::Destination
       attr_accessor role_arn: ::String
+      SENSITIVE: []
+    end
+
+    class MLSyntheticDataParameters
+      attr_accessor epsilon: ::Float
+      attr_accessor max_membership_inference_attack_score: ::Float
+      attr_accessor column_classification: Types::ColumnClassificationDetails
+      SENSITIVE: []
+    end
+
+    class MembershipInferenceAttackScore
+      attr_accessor attack_version: ("DISTANCE_TO_CLOSEST_RECORD_V1")
+      attr_accessor score: ::Float
       SENSITIVE: []
     end
 
@@ -1042,7 +1165,25 @@ module Aws::CleanRoomsML
     class ModelTrainingDataChannel
       attr_accessor ml_input_channel_arn: ::String
       attr_accessor channel_name: ::String
+      attr_accessor s3_data_distribution_type: ("FullyReplicated" | "ShardedByS3Key")
       SENSITIVE: []
+    end
+
+    class PayerConfiguration
+      attr_accessor compute_payer_account_id: ::String
+      attr_accessor synthetic_data_payer_account_id: ::String
+      SENSITIVE: []
+    end
+
+    class PrivacyBudgets
+      attr_accessor access_budgets: ::Array[Types::AccessBudget]
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class AccessBudgets < PrivacyBudgets
+      end
+      class Unknown < PrivacyBudgets
+      end
     end
 
     class PrivacyConfiguration
@@ -1060,6 +1201,7 @@ module Aws::CleanRoomsML
     class ProtectedQueryInputParameters
       attr_accessor sql_parameters: Types::ProtectedQuerySQLParameters
       attr_accessor compute_configuration: Types::ComputeConfiguration
+      attr_accessor result_format: ("CSV" | "PARQUET")
       SENSITIVE: [:sql_parameters]
     end
 
@@ -1067,7 +1209,7 @@ module Aws::CleanRoomsML
       attr_accessor query_string: ::String
       attr_accessor analysis_template_arn: ::String
       attr_accessor parameters: ::Hash[::String, ::String]
-      SENSITIVE: []
+      SENSITIVE: [:parameters]
     end
 
     class PutConfiguredAudienceModelPolicyRequest
@@ -1098,7 +1240,7 @@ module Aws::CleanRoomsML
 
     class ResourceConfig
       attr_accessor instance_count: ::Integer
-      attr_accessor instance_type: ("ml.m4.xlarge" | "ml.m4.2xlarge" | "ml.m4.4xlarge" | "ml.m4.10xlarge" | "ml.m4.16xlarge" | "ml.g4dn.xlarge" | "ml.g4dn.2xlarge" | "ml.g4dn.4xlarge" | "ml.g4dn.8xlarge" | "ml.g4dn.12xlarge" | "ml.g4dn.16xlarge" | "ml.m5.large" | "ml.m5.xlarge" | "ml.m5.2xlarge" | "ml.m5.4xlarge" | "ml.m5.12xlarge" | "ml.m5.24xlarge" | "ml.c4.xlarge" | "ml.c4.2xlarge" | "ml.c4.4xlarge" | "ml.c4.8xlarge" | "ml.p2.xlarge" | "ml.p2.8xlarge" | "ml.p2.16xlarge" | "ml.p3.2xlarge" | "ml.p3.8xlarge" | "ml.p3.16xlarge" | "ml.p3dn.24xlarge" | "ml.p4d.24xlarge" | "ml.p4de.24xlarge" | "ml.p5.48xlarge" | "ml.c5.xlarge" | "ml.c5.2xlarge" | "ml.c5.4xlarge" | "ml.c5.9xlarge" | "ml.c5.18xlarge" | "ml.c5n.xlarge" | "ml.c5n.2xlarge" | "ml.c5n.4xlarge" | "ml.c5n.9xlarge" | "ml.c5n.18xlarge" | "ml.g5.xlarge" | "ml.g5.2xlarge" | "ml.g5.4xlarge" | "ml.g5.8xlarge" | "ml.g5.16xlarge" | "ml.g5.12xlarge" | "ml.g5.24xlarge" | "ml.g5.48xlarge" | "ml.trn1.2xlarge" | "ml.trn1.32xlarge" | "ml.trn1n.32xlarge" | "ml.m6i.large" | "ml.m6i.xlarge" | "ml.m6i.2xlarge" | "ml.m6i.4xlarge" | "ml.m6i.8xlarge" | "ml.m6i.12xlarge" | "ml.m6i.16xlarge" | "ml.m6i.24xlarge" | "ml.m6i.32xlarge" | "ml.c6i.xlarge" | "ml.c6i.2xlarge" | "ml.c6i.8xlarge" | "ml.c6i.4xlarge" | "ml.c6i.12xlarge" | "ml.c6i.16xlarge" | "ml.c6i.24xlarge" | "ml.c6i.32xlarge" | "ml.r5d.large" | "ml.r5d.xlarge" | "ml.r5d.2xlarge" | "ml.r5d.4xlarge" | "ml.r5d.8xlarge" | "ml.r5d.12xlarge" | "ml.r5d.16xlarge" | "ml.r5d.24xlarge" | "ml.t3.medium" | "ml.t3.large" | "ml.t3.xlarge" | "ml.t3.2xlarge" | "ml.r5.large" | "ml.r5.xlarge" | "ml.r5.2xlarge" | "ml.r5.4xlarge" | "ml.r5.8xlarge" | "ml.r5.12xlarge" | "ml.r5.16xlarge" | "ml.r5.24xlarge")
+      attr_accessor instance_type: ("ml.m4.xlarge" | "ml.m4.2xlarge" | "ml.m4.4xlarge" | "ml.m4.10xlarge" | "ml.m4.16xlarge" | "ml.g4dn.xlarge" | "ml.g4dn.2xlarge" | "ml.g4dn.4xlarge" | "ml.g4dn.8xlarge" | "ml.g4dn.12xlarge" | "ml.g4dn.16xlarge" | "ml.m5.large" | "ml.m5.xlarge" | "ml.m5.2xlarge" | "ml.m5.4xlarge" | "ml.m5.12xlarge" | "ml.m5.24xlarge" | "ml.c4.xlarge" | "ml.c4.2xlarge" | "ml.c4.4xlarge" | "ml.c4.8xlarge" | "ml.p2.xlarge" | "ml.p2.8xlarge" | "ml.p2.16xlarge" | "ml.p4d.24xlarge" | "ml.p4de.24xlarge" | "ml.p5.48xlarge" | "ml.c5.xlarge" | "ml.c5.2xlarge" | "ml.c5.4xlarge" | "ml.c5.9xlarge" | "ml.c5.18xlarge" | "ml.c5n.xlarge" | "ml.c5n.2xlarge" | "ml.c5n.4xlarge" | "ml.c5n.9xlarge" | "ml.c5n.18xlarge" | "ml.g5.xlarge" | "ml.g5.2xlarge" | "ml.g5.4xlarge" | "ml.g5.8xlarge" | "ml.g5.16xlarge" | "ml.g5.12xlarge" | "ml.g5.24xlarge" | "ml.g5.48xlarge" | "ml.trn1.2xlarge" | "ml.trn1.32xlarge" | "ml.trn1n.32xlarge" | "ml.m6i.large" | "ml.m6i.xlarge" | "ml.m6i.2xlarge" | "ml.m6i.4xlarge" | "ml.m6i.8xlarge" | "ml.m6i.12xlarge" | "ml.m6i.16xlarge" | "ml.m6i.24xlarge" | "ml.m6i.32xlarge" | "ml.c6i.xlarge" | "ml.c6i.2xlarge" | "ml.c6i.8xlarge" | "ml.c6i.4xlarge" | "ml.c6i.12xlarge" | "ml.c6i.16xlarge" | "ml.c6i.24xlarge" | "ml.c6i.32xlarge" | "ml.r5d.large" | "ml.r5d.xlarge" | "ml.r5d.2xlarge" | "ml.r5d.4xlarge" | "ml.r5d.8xlarge" | "ml.r5d.12xlarge" | "ml.r5d.16xlarge" | "ml.r5d.24xlarge" | "ml.t3.medium" | "ml.t3.large" | "ml.t3.xlarge" | "ml.t3.2xlarge" | "ml.r5.large" | "ml.r5.xlarge" | "ml.r5.2xlarge" | "ml.r5.4xlarge" | "ml.r5.8xlarge" | "ml.r5.12xlarge" | "ml.r5.16xlarge" | "ml.r5.24xlarge" | "ml.c7i.large" | "ml.c7i.xlarge" | "ml.c7i.2xlarge" | "ml.c7i.4xlarge" | "ml.c7i.8xlarge" | "ml.c7i.12xlarge" | "ml.c7i.16xlarge" | "ml.c7i.24xlarge" | "ml.c7i.48xlarge" | "ml.m7i.large" | "ml.m7i.xlarge" | "ml.m7i.2xlarge" | "ml.m7i.4xlarge" | "ml.m7i.8xlarge" | "ml.m7i.12xlarge" | "ml.m7i.16xlarge" | "ml.m7i.24xlarge" | "ml.m7i.48xlarge" | "ml.r7i.large" | "ml.r7i.xlarge" | "ml.r7i.2xlarge" | "ml.r7i.4xlarge" | "ml.r7i.8xlarge" | "ml.r7i.12xlarge" | "ml.r7i.16xlarge" | "ml.r7i.24xlarge" | "ml.r7i.48xlarge" | "ml.g6.xlarge" | "ml.g6.2xlarge" | "ml.g6.4xlarge" | "ml.g6.8xlarge" | "ml.g6.12xlarge" | "ml.g6.16xlarge" | "ml.g6.24xlarge" | "ml.g6.48xlarge" | "ml.g6e.xlarge" | "ml.g6e.2xlarge" | "ml.g6e.4xlarge" | "ml.g6e.8xlarge" | "ml.g6e.12xlarge" | "ml.g6e.16xlarge" | "ml.g6e.24xlarge" | "ml.g6e.48xlarge" | "ml.p5en.48xlarge" | "ml.p3.2xlarge" | "ml.p3.8xlarge" | "ml.p3.16xlarge" | "ml.p3dn.24xlarge")
       attr_accessor volume_size_in_gb: ::Integer
       SENSITIVE: []
     end
@@ -1115,6 +1257,8 @@ module Aws::CleanRoomsML
 
     class ServiceQuotaExceededException
       attr_accessor message: ::String
+      attr_accessor quota_name: ::String
+      attr_accessor quota_value: ::Float
       SENSITIVE: []
     end
 
@@ -1145,6 +1289,7 @@ module Aws::CleanRoomsML
     class StartTrainedModelExportJobRequest
       attr_accessor name: ::String
       attr_accessor trained_model_arn: ::String
+      attr_accessor trained_model_version_identifier: ::String
       attr_accessor membership_identifier: ::String
       attr_accessor output_configuration: Types::TrainedModelExportOutputConfiguration
       attr_accessor description: ::String
@@ -1155,6 +1300,7 @@ module Aws::CleanRoomsML
       attr_accessor membership_identifier: ::String
       attr_accessor name: ::String
       attr_accessor trained_model_arn: ::String
+      attr_accessor trained_model_version_identifier: ::String
       attr_accessor configured_model_algorithm_association_arn: ::String
       attr_accessor resource_config: Types::InferenceResourceConfig
       attr_accessor output_configuration: Types::InferenceOutputConfiguration
@@ -1164,6 +1310,7 @@ module Aws::CleanRoomsML
       attr_accessor environment: ::Hash[::String, ::String]
       attr_accessor kms_key_arn: ::String
       attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor ml_model_inference_payer_account_id: ::String
       SENSITIVE: []
     end
 
@@ -1183,6 +1330,24 @@ module Aws::CleanRoomsML
       SENSITIVE: []
     end
 
+    class SyntheticDataColumnProperties
+      attr_accessor column_name: ::String
+      attr_accessor column_type: ("CATEGORICAL" | "NUMERICAL")
+      attr_accessor is_predictive_value: bool
+      SENSITIVE: []
+    end
+
+    class SyntheticDataConfiguration
+      attr_accessor synthetic_data_parameters: Types::MLSyntheticDataParameters
+      attr_accessor synthetic_data_evaluation_scores: Types::SyntheticDataEvaluationScores
+      SENSITIVE: []
+    end
+
+    class SyntheticDataEvaluationScores
+      attr_accessor data_privacy_scores: Types::DataPrivacyScores
+      SENSITIVE: []
+    end
+
     class TagResourceRequest
       attr_accessor resource_arn: ::String
       attr_accessor tags: ::Hash[::String, ::String]
@@ -1190,6 +1355,17 @@ module Aws::CleanRoomsML
     end
 
     class TagResourceResponse < Aws::EmptyStructure
+    end
+
+    class ThrottlingException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class TrainedModelArtifactMaxSize
+      attr_accessor unit: ("GB")
+      attr_accessor value: ::Float
+      SENSITIVE: []
     end
 
     class TrainedModelExportOutputConfiguration
@@ -1219,6 +1395,7 @@ module Aws::CleanRoomsML
       attr_accessor configured_model_algorithm_association_arn: ::String
       attr_accessor membership_identifier: ::String
       attr_accessor trained_model_arn: ::String
+      attr_accessor trained_model_version_identifier: ::String
       attr_accessor collaboration_identifier: ::String
       attr_accessor status: ("CREATE_PENDING" | "CREATE_IN_PROGRESS" | "CREATE_FAILED" | "ACTIVE" | "CANCEL_PENDING" | "CANCEL_IN_PROGRESS" | "CANCEL_FAILED" | "INACTIVE")
       attr_accessor output_configuration: Types::InferenceOutputConfiguration
@@ -1228,6 +1405,7 @@ module Aws::CleanRoomsML
       attr_accessor metrics_status_details: ::String
       attr_accessor logs_status: ("PUBLISH_SUCCEEDED" | "PUBLISH_FAILED")
       attr_accessor logs_status_details: ::String
+      attr_accessor ml_model_inference_payer_account_id: ::String
       attr_accessor create_time: ::Time
       attr_accessor update_time: ::Time
       SENSITIVE: []
@@ -1249,18 +1427,22 @@ module Aws::CleanRoomsML
       attr_accessor create_time: ::Time
       attr_accessor update_time: ::Time
       attr_accessor trained_model_arn: ::String
+      attr_accessor version_identifier: ::String
+      attr_accessor incremental_training_data_channels: ::Array[Types::IncrementalTrainingDataChannelOutput]
       attr_accessor name: ::String
       attr_accessor description: ::String
       attr_accessor membership_identifier: ::String
       attr_accessor collaboration_identifier: ::String
       attr_accessor status: ("CREATE_PENDING" | "CREATE_IN_PROGRESS" | "CREATE_FAILED" | "ACTIVE" | "DELETE_PENDING" | "DELETE_IN_PROGRESS" | "DELETE_FAILED" | "INACTIVE" | "CANCEL_PENDING" | "CANCEL_IN_PROGRESS" | "CANCEL_FAILED")
       attr_accessor configured_model_algorithm_association_arn: ::String
+      attr_accessor ml_model_training_payer_account_id: ::String
       SENSITIVE: []
     end
 
     class TrainedModelsConfigurationPolicy
       attr_accessor container_logs: ::Array[Types::LogsConfigurationPolicy]
       attr_accessor container_metrics: Types::MetricsConfigurationPolicy
+      attr_accessor max_artifact_size: Types::TrainedModelArtifactMaxSize
       SENSITIVE: []
     end
 
@@ -1305,9 +1487,21 @@ module Aws::CleanRoomsML
     end
 
     class WorkerComputeConfiguration
-      attr_accessor type: ("CR.1X" | "CR.4X")
+      attr_accessor type: ("CR.1X" | "CR.4X" | "CR.8X")
       attr_accessor number: ::Integer
+      attr_accessor properties: Types::WorkerComputeConfigurationProperties
       SENSITIVE: []
+    end
+
+    class WorkerComputeConfigurationProperties
+      attr_accessor spark: ::Hash[::String, ::String]
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class Spark < WorkerComputeConfigurationProperties
+      end
+      class Unknown < WorkerComputeConfigurationProperties
+      end
     end
   end
 end

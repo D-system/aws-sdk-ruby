@@ -95,8 +95,8 @@ module Aws::IoTDataPlane
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::IoTDataPlane
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::IoTDataPlane
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::IoTDataPlane
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::IoTDataPlane
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::IoTDataPlane
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::IoTDataPlane
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::IoTDataPlane
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -470,6 +474,60 @@ module Aws::IoTDataPlane
 
     # @!group API Operations
 
+    # Disconnects a connected MQTT client from Amazon Web Services IoT Core.
+    # When you disconnect a client, Amazon Web Services IoT Core closes the
+    # client's network connection and optionally cleans the session state.
+    #
+    # Requires permission to access the [DeleteConnection][1] action.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsiot.html#awsiot-actions-as-permissions
+    #
+    # @option params [required, String] :client_id
+    #   The unique identifier of the MQTT client to disconnect. The client ID
+    #   can't start with a dollar sign ($).
+    #
+    #   MQTT client IDs must be URL encoded (percent-encoded) when they
+    #   contain characters that are not valid in HTTP requests, such as
+    #   spaces, forward slashes (/), and UTF-8 characters.
+    #
+    # @option params [Boolean] :clean_session
+    #   Specifies whether to remove the client's persistent session state
+    #   when disconnecting. Set to `TRUE` to delete all session information,
+    #   including subscriptions and queued messages. Set to `FALSE` to
+    #   preserve the session state for [persistent sessions][1]. For clean
+    #   sessions this parameter will be ignored. By default, this is set to
+    #   `FALSE` (preserves the session state).
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/iot/latest/developerguide/mqtt.html#mqtt-persistent-sessions
+    #
+    # @option params [Boolean] :prevent_will_message
+    #   Controls if Amazon Web Services IoT Core publishes the client's Last
+    #   Will and Testament (LWT) message upon disconnection. Set to `TRUE` to
+    #   prevent publishing the LWT message. Set to `FALSE` to ensure that LWT
+    #   is published. By default, this is set to `FALSE` (LWT message is
+    #   published).
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_connection({
+    #     client_id: "ClientId", # required
+    #     clean_session: false,
+    #     prevent_will_message: false,
+    #   })
+    #
+    # @overload delete_connection(params = {})
+    # @param [Hash] params ({})
+    def delete_connection(params = {}, options = {})
+      req = build_request(:delete_connection, params)
+      req.send_request(options)
+    end
+
     # Deletes the shadow for the specified thing.
     #
     # Requires permission to access the [DeleteThingShadow][1] action.
@@ -510,6 +568,81 @@ module Aws::IoTDataPlane
       req.send_request(options)
     end
 
+    # Retrieves connection information for the specified MQTT client.
+    #
+    # Requires permission to access the [GetConnection][1] action.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsiot.html#awsiot-actions-as-permissions
+    #
+    # @option params [required, String] :client_id
+    #   The unique identifier of the MQTT client to retrieve connection
+    #   information. The client ID can't start with a dollar sign ($).
+    #
+    #   MQTT client IDs must be URL encoded (percent-encoded) when they
+    #   contain characters that are not valid in HTTP requests, such as
+    #   spaces, forward slashes (/), and UTF-8 characters.
+    #
+    # @option params [Boolean] :include_socket_information
+    #   Specifies if socket information (sourcePort, targetPort, sourceIp,
+    #   targetIp) should be included in the GetConnection response. Set to
+    #   `TRUE` to include socket information. Set to `FALSE` to omit socket
+    #   information. By default, this is set to `FALSE`. See the [developer
+    #   guide][1] for how to authorize this parameter.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/iot/latest/developerguide/mqtt.html#mqtt-client-disconnect
+    #
+    # @return [Types::GetConnectionResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetConnectionResponse#connected #connected} => Boolean
+    #   * {Types::GetConnectionResponse#thing_name #thing_name} => String
+    #   * {Types::GetConnectionResponse#clean_session #clean_session} => Boolean
+    #   * {Types::GetConnectionResponse#source_ip #source_ip} => String
+    #   * {Types::GetConnectionResponse#source_port #source_port} => Integer
+    #   * {Types::GetConnectionResponse#target_ip #target_ip} => String
+    #   * {Types::GetConnectionResponse#target_port #target_port} => Integer
+    #   * {Types::GetConnectionResponse#keep_alive_duration #keep_alive_duration} => Integer
+    #   * {Types::GetConnectionResponse#connected_since #connected_since} => Integer
+    #   * {Types::GetConnectionResponse#disconnected_since #disconnected_since} => Integer
+    #   * {Types::GetConnectionResponse#disconnect_reason #disconnect_reason} => String
+    #   * {Types::GetConnectionResponse#session_expiry #session_expiry} => Integer
+    #   * {Types::GetConnectionResponse#client_id #client_id} => String
+    #   * {Types::GetConnectionResponse#vpc_endpoint_id #vpc_endpoint_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_connection({
+    #     client_id: "ClientId", # required
+    #     include_socket_information: false,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.connected #=> Boolean
+    #   resp.thing_name #=> String
+    #   resp.clean_session #=> Boolean
+    #   resp.source_ip #=> String
+    #   resp.source_port #=> Integer
+    #   resp.target_ip #=> String
+    #   resp.target_port #=> Integer
+    #   resp.keep_alive_duration #=> Integer
+    #   resp.connected_since #=> Integer
+    #   resp.disconnected_since #=> Integer
+    #   resp.disconnect_reason #=> String
+    #   resp.session_expiry #=> Integer
+    #   resp.client_id #=> String
+    #   resp.vpc_endpoint_id #=> String
+    #
+    # @overload get_connection(params = {})
+    # @param [Hash] params ({})
+    def get_connection(params = {}, options = {})
+      req = build_request(:get_connection, params)
+      req.send_request(options)
+    end
+
     # Gets the details of a single retained message for the specified topic.
     #
     # This action returns the message payload of the retained message, which
@@ -524,7 +657,7 @@ module Aws::IoTDataPlane
     #
     #
     # [1]: https://docs.aws.amazon.com/iot/latest/apireference/API_iotdata_ListRetainedMessages.html
-    # [2]: https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsiotfleethubfordevicemanagement.html#awsiotfleethubfordevicemanagement-actions-as-permissions
+    # [2]: https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsiot.html
     # [3]: http://aws.amazon.com/iot-core/pricing/#Messaging
     #
     # @option params [required, String] :topic
@@ -663,7 +796,7 @@ module Aws::IoTDataPlane
     #
     #
     # [1]: https://docs.aws.amazon.com/iot/latest/apireference/API_iotdata_GetRetainedMessage.html
-    # [2]: https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsiotfleethubfordevicemanagement.html#awsiotfleethubfordevicemanagement-actions-as-permissions
+    # [2]: https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsiot.html
     # [3]: http://aws.amazon.com/iot-core/pricing/#Messaging
     #
     # @option params [String] :next_token
@@ -701,6 +834,61 @@ module Aws::IoTDataPlane
     # @param [Hash] params ({})
     def list_retained_messages(params = {}, options = {})
       req = build_request(:list_retained_messages, params)
+      req.send_request(options)
+    end
+
+    # Returns a list of all subscriptions for MQTT clients with active
+    # sessions, including offline clients with persistent sessions.
+    #
+    # Requires permission to access the [ListSubscriptions][1] action.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsiot.html#awsiot-actions-as-permissions
+    #
+    # @option params [required, String] :client_id
+    #   The unique identifier of the MQTT client to list subscriptions for.
+    #   The client ID can't start with a dollar sign ($).
+    #
+    #   MQTT client IDs must be URL encoded (percent-encoded) when they
+    #   contain characters that are not valid in HTTP requests, such as
+    #   spaces, forward slashes (/), and UTF-8 characters.
+    #
+    # @option params [String] :next_token
+    #   To retrieve the next set of results, the `nextToken` value from a
+    #   previous response; otherwise **null** to receive the first set of
+    #   results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of subscriptions to return in a single request. By
+    #   default, this is set to 20.
+    #
+    # @return [Types::ListSubscriptionsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListSubscriptionsResponse#subscriptions #subscriptions} => Array&lt;Types::SubscriptionSummary&gt;
+    #   * {Types::ListSubscriptionsResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_subscriptions({
+    #     client_id: "ClientId", # required
+    #     next_token: "NextToken",
+    #     max_results: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.subscriptions #=> Array
+    #   resp.subscriptions[0].topic_filter #=> String
+    #   resp.subscriptions[0].qos #=> Integer
+    #   resp.next_token #=> String
+    #
+    # @overload list_subscriptions(params = {})
+    # @param [Hash] params ({})
+    def list_subscriptions(params = {}, options = {})
+      req = build_request(:list_subscriptions, params)
       req.send_request(options)
     end
 
@@ -815,6 +1003,156 @@ module Aws::IoTDataPlane
       req.send_request(options)
     end
 
+    # Sends an MQTT message directly to a specific client identified by its
+    # client ID.
+    #
+    # `SendDirectMessage` targets a single client ID. The receiving client
+    # does not need to subscribe to the topic, but the receiver's policy
+    # must allow `iot:Receive` on the specified topic.
+    #
+    # Requires permission to access the [SendDirectMessage][1] action.
+    #
+    # For more information about messaging costs, see [Amazon Web Services
+    # IoT Core pricing][2].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsiot.html#awsiot-actions-as-permissions
+    # [2]: http://aws.amazon.com/iot-core/pricing/
+    #
+    # @option params [required, String] :client_id
+    #   The unique identifier of the MQTT client to send the message to.
+    #
+    #   Client IDs must not exceed 128 characters and can't start with a
+    #   dollar sign ($). MQTT client IDs must be URL encoded (percent-encoded)
+    #   when they contain characters that are not valid in HTTP requests, such
+    #   as spaces, forward slashes (/), and UTF-8 characters. For more
+    #   information, see [Amazon Web Services IoT Core message broker and
+    #   protocol limits and quotas][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/general/latest/gr/iot-core.html#message-broker-limits
+    #
+    # @option params [required, String] :topic
+    #   The topic of the outbound MQTT Publish message to the receiving
+    #   client. For more information, see [Amazon Web Services IoT Core
+    #   message broker and protocol limits and quotas][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/general/latest/gr/iot-core.html#message-broker-limits
+    #
+    # @option params [String] :content_type
+    #   The MQTT5 content type property forwarded to the receiving client (for
+    #   example, `application/json`).
+    #
+    # @option params [String] :response_topic
+    #   A UTF-8 encoded string that's used as the topic name for a response
+    #   message. The response topic describes the topic which the receiver
+    #   should publish to as part of the request-response flow. The topic must
+    #   not contain wildcard characters. For more information, see [Amazon Web
+    #   Services IoT Core message broker and protocol limits and quotas][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/general/latest/gr/iot-core.html#message-broker-limits
+    #
+    # @option params [Boolean] :confirmation
+    #   A Boolean value that specifies whether to wait for delivery
+    #   confirmation from the receiving client.
+    #
+    #   When set to `true`, the API delivers the message at QoS 1 and waits
+    #   for the client to send a delivery confirmation (PUBACK) before
+    #   returning a successful response. If delivery confirmation is not
+    #   received within the specified `timeout` period, the API returns HTTP
+    #   504.
+    #
+    #   When set to `false`, the API delivers the message at QoS 0 and returns
+    #   after Amazon Web Services IoT Core attempts to deliver the message.
+    #
+    #   Valid values: `true` \| `false`
+    #
+    #   Default value: `false`
+    #
+    # @option params [Integer] :timeout
+    #   An integer that represents the maximum time, in seconds, to wait for a
+    #   delivery confirmation (PUBACK) from the receiving client after the
+    #   message has been delivered. This parameter is only used when
+    #   `confirmation` is set to `true`. If `confirmation` is `false`, this
+    #   parameter is ignored.
+    #
+    #   The total API response time may be higher than this value due to
+    #   internal processing. Set your HTTP client timeout to a value greater
+    #   than this parameter.
+    #
+    #   Valid range: 1 to 15 seconds.
+    #
+    #   Default value: `5` seconds.
+    #
+    # @option params [String, StringIO, File] :payload
+    #   The message body. MQTT accepts text, binary, and empty (null) message
+    #   payloads.
+    #
+    # @option params [String] :user_properties
+    #   A JSON string that contains an array of JSON objects. If you don't
+    #   use Amazon Web Services SDK or CLI, you must encode the JSON string to
+    #   base64 format before adding it to the HTTP header. `userProperties` is
+    #   an HTTP header value in the API.
+    #
+    #   For MQTT 3.1.1 clients, user properties are silently dropped.
+    #
+    #   The following example `userProperties` parameter is a JSON string
+    #   which represents two User Properties. Note that it needs to be
+    #   base64-encoded:
+    #
+    #   `[{"deviceName": "alpha"}, {"deviceCnt": "45"}]`
+    #
+    #   **SDK automatically handles json encoding and base64 encoding for you
+    #   when the required value (Hash, Array, etc.) is provided according to
+    #   the description.**
+    #
+    # @option params [String] :payload_format_indicator
+    #   An `Enum` string value that indicates whether the payload is formatted
+    #   as UTF-8. `payloadFormatIndicator` is an HTTP header value in the API.
+    #
+    # @option params [String] :correlation_data
+    #   The base64-encoded binary data used by the sender of the request
+    #   message to identify which request the response message is for when
+    #   it's received. `correlationData` is an HTTP header value in the API.
+    #
+    # @return [Types::SendDirectMessageResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::SendDirectMessageResponse#message #message} => String
+    #   * {Types::SendDirectMessageResponse#trace_id #trace_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.send_direct_message({
+    #     client_id: "ClientId", # required
+    #     topic: "Topic", # required
+    #     content_type: "ContentType",
+    #     response_topic: "ResponseTopic",
+    #     confirmation: false,
+    #     timeout: 1,
+    #     payload: "data",
+    #     user_properties: "UserProperties",
+    #     payload_format_indicator: "UNSPECIFIED_BYTES", # accepts UNSPECIFIED_BYTES, UTF8_DATA
+    #     correlation_data: "CorrelationData",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.message #=> String
+    #   resp.trace_id #=> String
+    #
+    # @overload send_direct_message(params = {})
+    # @param [Hash] params ({})
+    def send_direct_message(params = {}, options = {})
+      req = build_request(:send_direct_message, params)
+      req.send_request(options)
+    end
+
     # Updates the shadow for the specified thing.
     #
     # Requires permission to access the [UpdateThingShadow][1] action.
@@ -877,7 +1215,7 @@ module Aws::IoTDataPlane
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-iotdataplane'
-      context[:gem_version] = '1.73.0'
+      context[:gem_version] = '1.93.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

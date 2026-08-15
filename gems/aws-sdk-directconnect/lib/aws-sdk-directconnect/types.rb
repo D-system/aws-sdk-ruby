@@ -223,6 +223,28 @@ module Aws::DirectConnect
       include Aws::Structure
     end
 
+    # A segment of an autonomous system (AS) path.
+    #
+    # @!attribute [rw] path_type
+    #   The type of the AS path segment.
+    #
+    #   The valid values are `seq` (an ordered `AS_SEQUENCE`) and `set` (an
+    #   unordered `AS_SET`).
+    #   @return [String]
+    #
+    # @!attribute [rw] path
+    #   The autonomous system (AS) numbers in the segment.
+    #   @return [Array<Integer>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/AsPathSegment AWS API Documentation
+    #
+    class AsPathSegment < Struct.new(
+      :path_type,
+      :path)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] connection_id
     #   The ID of the connection.
     #   @return [String]
@@ -258,16 +280,16 @@ module Aws::DirectConnect
     end
 
     # @!attribute [rw] connection_id
-    #   The ID of the dedicated connection (dxcon-xxxx), or the ID of the
-    #   LAG (dxlag-xxxx).
+    #   The ID of the dedicated connection (dxcon-xxxx), interconnect
+    #   (dxcon-xxxx), or LAG (dxlag-xxxx).
     #
-    #   You can use DescribeConnections or DescribeLags to retrieve
-    #   connection ID.
+    #   You can use DescribeConnections, DescribeInterconnects, or
+    #   DescribeLags to retrieve connection ID.
     #   @return [String]
     #
     # @!attribute [rw] secret_arn
     #   The Amazon Resource Name (ARN) of the MAC Security (MACsec) secret
-    #   key to associate with the dedicated connection.
+    #   key to associate with the connection.
     #
     #   You can use DescribeConnections or DescribeLags to retrieve the MAC
     #   Security (MACsec) secret key.
@@ -277,8 +299,7 @@ module Aws::DirectConnect
     #   @return [String]
     #
     # @!attribute [rw] ckn
-    #   The MAC Security (MACsec) CKN to associate with the dedicated
-    #   connection.
+    #   The MAC Security (MACsec) CKN to associate with the connection.
     #
     #   You can create the CKN/CAK pair using an industry standard tool.
     #
@@ -289,8 +310,7 @@ module Aws::DirectConnect
     #   @return [String]
     #
     # @!attribute [rw] cak
-    #   The MAC Security (MACsec) CAK to associate with the dedicated
-    #   connection.
+    #   The MAC Security (MACsec) CAK to associate with the connection.
     #
     #   You can create the CKN/CAK pair using an industry standard tool.
     #
@@ -312,13 +332,13 @@ module Aws::DirectConnect
     end
 
     # @!attribute [rw] connection_id
-    #   The ID of the dedicated connection (dxcon-xxxx), or the ID of the
-    #   LAG (dxlag-xxxx).
+    #   The ID of the dedicated connection (dxcon-xxxx), interconnect
+    #   (dxcon-xxxx), or LAG (dxlag-xxxx).
     #   @return [String]
     #
     # @!attribute [rw] mac_sec_keys
     #   The MAC Security (MACsec) security keys associated with the
-    #   dedicated connection.
+    #   connection.
     #   @return [Array<Types::MacSecKey>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/AssociateMacSecKeyResponse AWS API Documentation
@@ -348,10 +368,12 @@ module Aws::DirectConnect
     end
 
     # The Amazon Web Services Cloud WAN core network that the Direct Connect
-    # attachment is associated with.
+    # gateway is associated to. This is only returned when a Direct Connect
+    # gateway is associated to a Cloud WAN core network.
     #
     # @!attribute [rw] id
-    #   The ID of the Cloud WAN core network.
+    #   The ID of the Cloud WAN core network that the Direct Connect gateway
+    #   is associated to.
     #   @return [String]
     #
     # @!attribute [rw] owner_account
@@ -359,7 +381,7 @@ module Aws::DirectConnect
     #   @return [String]
     #
     # @!attribute [rw] attachment_id
-    #   the ID of the Direct Connect attachment
+    #   the ID of the Direct Connect gateway attachment.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/AssociatedCoreNetwork AWS API Documentation
@@ -409,8 +431,45 @@ module Aws::DirectConnect
     #   @return [String]
     #
     # @!attribute [rw] asn
-    #   The autonomous system (AS) number for Border Gateway Protocol (BGP)
-    #   configuration.
+    #   The autonomous system number (ASN). The valid range is from 1 to
+    #   2147483646 for Border Gateway Protocol (BGP) configuration. If you
+    #   provide a number greater than the maximum, an error is returned. Use
+    #   `asnLong` instead.
+    #
+    #   * You can use `asnLong` or `asn`, but not both. We recommend using
+    #     `asnLong` as it supports a greater pool of numbers.
+    #
+    #   * If you provide a value in the same API call for both `asn` and
+    #     `asnLong`, the API will only accept the value for `asnLong`.
+    #
+    #   * If you enter a 4-byte ASN for the `asn` parameter, the API returns
+    #     an error.
+    #
+    #   * If you are using a 2-byte ASN, the API response will include the
+    #     2-byte value for both the `asn` and `asnLong` fields.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] asn_long
+    #   The long ASN for the BGP peer. The valid range is from 1 to
+    #   4294967294 for BGP configuration.
+    #
+    #   Note the following limitations when using `asnLong`:
+    #
+    #   * You can use `asnLong` or `asn`, but not both. We recommend using
+    #     `asnLong` as it supports a greater pool of numbers.
+    #
+    #   * `asnLong` accepts any valid ASN value, regardless if it's 2-byte
+    #     or 4-byte.
+    #
+    #   * When using a 4-byte `asnLong`, the API response returns `0` for
+    #     the legacy `asn` attribute since 4-byte ASN values exceed the
+    #     maximum supported value of 2,147,483,647.
+    #
+    #   * If you are using a 2-byte ASN, the API response will include the
+    #     2-byte value for both the `asn` and `asnLong` fields.
+    #
+    #   * If you provide a value in the same API call for both `asn` and
+    #     `asnLong`, the API will only accept the value for `asnLong`.
     #   @return [Integer]
     #
     # @!attribute [rw] auth_key
@@ -475,6 +534,7 @@ module Aws::DirectConnect
     class BGPPeer < Struct.new(
       :bgp_peer_id,
       :asn,
+      :asn_long,
       :auth_key,
       :address_family,
       :amazon_address,
@@ -606,6 +666,10 @@ module Aws::DirectConnect
     #
     #   * `down`: A virtual interface that is BGP down.
     #
+    #   * `testing`: A virtual interface is in this state immediately after
+    #     calling StartBgpFailoverTest and remains in this state during the
+    #     duration of the test.
+    #
     #   * `deleting`: A virtual interface is in this state immediately after
     #     calling DeleteVirtualInterface until it can no longer forward
     #     traffic.
@@ -661,6 +725,10 @@ module Aws::DirectConnect
     #   * `available`: A virtual interface that is able to forward traffic.
     #
     #   * `down`: A virtual interface that is BGP down.
+    #
+    #   * `testing`: A virtual interface is in this state immediately after
+    #     calling StartBgpFailoverTest and remains in this state during the
+    #     duration of the test.
     #
     #   * `deleting`: A virtual interface is in this state immediately after
     #     calling DeleteVirtualInterface until it can no longer forward
@@ -722,6 +790,10 @@ module Aws::DirectConnect
     #   * `available`: A virtual interface that is able to forward traffic.
     #
     #   * `down`: A virtual interface that is BGP down.
+    #
+    #   * `testing`: A virtual interface is in this state immediately after
+    #     calling StartBgpFailoverTest and remains in this state during the
+    #     duration of the test.
     #
     #   * `deleting`: A virtual interface is in this state immediately after
     #     calling DeleteVirtualInterface until it can no longer forward
@@ -873,6 +945,16 @@ module Aws::DirectConnect
     #   connection.
     #   @return [Array<Types::MacSecKey>]
     #
+    # @!attribute [rw] rate_limiter_status
+    #   The rate limiter status for the connection, including how many rate
+    #   limiters are in use and the maximum allowed.
+    #   @return [Types::RateLimiterStatus]
+    #
+    # @!attribute [rw] partner_interconnect_mac_sec_capable
+    #   Indicates whether the interconnect hosting this connection supports
+    #   MAC Security (MACsec).
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/Connection AWS API Documentation
     #
     class Connection < Struct.new(
@@ -897,7 +979,9 @@ module Aws::DirectConnect
       :mac_sec_capable,
       :port_encryption_status,
       :encryption_mode,
-      :mac_sec_keys)
+      :mac_sec_keys,
+      :rate_limiter_status,
+      :partner_interconnect_mac_sec_capable)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -906,10 +990,16 @@ module Aws::DirectConnect
     #   The connections.
     #   @return [Array<Types::Connection>]
     #
+    # @!attribute [rw] next_token
+    #   The token to use to retrieve the next page of results. This value is
+    #   `null` when there are no more results to return.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/Connections AWS API Documentation
     #
     class Connections < Struct.new(
-      :connections)
+      :connections,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -972,13 +1062,13 @@ module Aws::DirectConnect
     #   Indicates whether you want the connection to support MAC Security
     #   (MACsec).
     #
-    #   MAC Security (MACsec) is only available on dedicated connections.
-    #   For information about MAC Security (MACsec) prerequisties, see
-    #   [MACsec prerequisties][1] in the *Direct Connect User Guide*.
+    #   MAC Security (MACsec) is unavailable on hosted connections. For
+    #   information about MAC Security (MACsec) prerequisites, see [MAC
+    #   Security in Direct Connect][1] in the *Direct Connect User Guide*.
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/directconnect/latest/UserGuide/direct-connect-mac-sec-getting-started.html#mac-sec-prerequisites
+    #   [1]: https://docs.aws.amazon.com/directconnect/latest/UserGuide/MACSec.html
     #   @return [Boolean]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/CreateConnectionRequest AWS API Documentation
@@ -1094,6 +1184,10 @@ module Aws::DirectConnect
     #   The name of the Direct Connect gateway.
     #   @return [String]
     #
+    # @!attribute [rw] tags
+    #   The key-value pair tags associated with the request.
+    #   @return [Array<Types::Tag>]
+    #
     # @!attribute [rw] amazon_side_asn
     #   The autonomous system number (ASN) for Border Gateway Protocol (BGP)
     #   to be configured on the Amazon side of the connection. The ASN must
@@ -1105,6 +1199,7 @@ module Aws::DirectConnect
     #
     class CreateDirectConnectGatewayRequest < Struct.new(
       :direct_connect_gateway_name,
+      :tags,
       :amazon_side_asn)
       SENSITIVE = []
       include Aws::Structure
@@ -1146,6 +1241,11 @@ module Aws::DirectConnect
     #   The name of the service provider associated with the interconnect.
     #   @return [String]
     #
+    # @!attribute [rw] request_mac_sec
+    #   Indicates whether you want the interconnect to support MAC Security
+    #   (MACsec).
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/CreateInterconnectRequest AWS API Documentation
     #
     class CreateInterconnectRequest < Struct.new(
@@ -1154,7 +1254,8 @@ module Aws::DirectConnect
       :location,
       :lag_id,
       :tags,
-      :provider_name)
+      :provider_name,
+      :request_mac_sec)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1315,8 +1416,46 @@ module Aws::DirectConnect
     #   @return [String]
     #
     # @!attribute [rw] asn
-    #   The autonomous system (AS) number for Border Gateway Protocol (BGP)
+    #   The autonomous system number (ASN). The valid range is from 1 to
+    #   2147483646 for Border Gateway Protocol (BGP) configuration. If you
+    #   provide a number greater than the maximum, an error is returned. Use
+    #   `asnLong` instead.
+    #
+    #   * You can use `asnLong` or `asn`, but not both. We recommend using
+    #     `asnLong` as it supports a greater pool of numbers.
+    #
+    #   * If you provide a value in the same API call for both `asn` and
+    #     `asnLong`, the API will only accept the value for `asnLong`.
+    #
+    #   * If you enter a 4-byte ASN for the `asn` parameter, the API returns
+    #     an error.
+    #
+    #   * If you are using a 2-byte ASN, the API response will include the
+    #     2-byte value for both the `asn` and `asnLong` fields.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] asn_long
+    #   The long ASN for the BGP peer to be deleted from a Direct Connect
+    #   virtual interface. The valid range is from 1 to 4294967294 for BGP
     #   configuration.
+    #
+    #   Note the following limitations when using `asnLong`:
+    #
+    #   * You can use `asnLong` or `asn`, but not both. We recommend using
+    #     `asnLong` as it supports a greater pool of numbers.
+    #
+    #   * `asnLong` accepts any valid ASN value, regardless if it's 2-byte
+    #     or 4-byte.
+    #
+    #   * When using a 4-byte `asnLong`, the API response returns `0` for
+    #     the legacy `asn` attribute since 4-byte ASN values exceed the
+    #     maximum supported value of 2,147,483,647.
+    #
+    #   * If you are using a 2-byte ASN, the API response will include the
+    #     2-byte value for both the `asn` and `asnLong` fields.
+    #
+    #   * If you provide a value in the same API call for both `asn` and
+    #     `asnLong`, the API will only accept the value for `asnLong`.
     #   @return [Integer]
     #
     # @!attribute [rw] customer_address
@@ -1332,6 +1471,7 @@ module Aws::DirectConnect
     class DeleteBGPPeerRequest < Struct.new(
       :virtual_interface_id,
       :asn,
+      :asn_long,
       :customer_address,
       :bgp_peer_id)
       SENSITIVE = []
@@ -1532,6 +1672,10 @@ module Aws::DirectConnect
     #
     #   * `down`: A virtual interface that is BGP down.
     #
+    #   * `testing`: A virtual interface is in this state immediately after
+    #     calling StartBgpFailoverTest and remains in this state during the
+    #     duration of the test.
+    #
     #   * `deleting`: A virtual interface is in this state immediately after
     #     calling DeleteVirtualInterface until it can no longer forward
     #     traffic.
@@ -1609,10 +1753,25 @@ module Aws::DirectConnect
     #   The ID of the connection.
     #   @return [String]
     #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return with a single call. To
+    #   retrieve the remaining results, make another call with the returned
+    #   `nextToken` value.
+    #
+    #   If `MaxResults` is given a value larger than 100, only 100 results
+    #   are returned.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   The token for the next page of results.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/DescribeConnectionsRequest AWS API Documentation
     #
     class DescribeConnectionsRequest < Struct.new(
-      :connection_id)
+      :connection_id,
+      :max_results,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1854,10 +2013,25 @@ module Aws::DirectConnect
     #   The ID of the interconnect or LAG.
     #   @return [String]
     #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return with a single call. To
+    #   retrieve the remaining results, make another call with the returned
+    #   `nextToken` value.
+    #
+    #   If `MaxResults` is given a value larger than 100, only 100 results
+    #   are returned.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   The token for the next page of results.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/DescribeHostedConnectionsRequest AWS API Documentation
     #
     class DescribeHostedConnectionsRequest < Struct.new(
-      :connection_id)
+      :connection_id,
+      :max_results,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1905,10 +2079,25 @@ module Aws::DirectConnect
     #   The ID of the interconnect.
     #   @return [String]
     #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return with a single call. To
+    #   retrieve the remaining results, make another call with the returned
+    #   `nextToken` value.
+    #
+    #   If `MaxResults` is given a value larger than 100, only 100 results
+    #   are returned.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   The token for the next page of results.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/DescribeInterconnectsRequest AWS API Documentation
     #
     class DescribeInterconnectsRequest < Struct.new(
-      :interconnect_id)
+      :interconnect_id,
+      :max_results,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1917,10 +2106,25 @@ module Aws::DirectConnect
     #   The ID of the LAG.
     #   @return [String]
     #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return with a single call. To
+    #   retrieve the remaining results, make another call with the returned
+    #   `nextToken` value.
+    #
+    #   If `MaxResults` is given a value larger than 100, only 100 results
+    #   are returned.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   The token for the next page of results.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/DescribeLagsRequest AWS API Documentation
     #
     class DescribeLagsRequest < Struct.new(
-      :lag_id)
+      :lag_id,
+      :max_results,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2031,11 +2235,26 @@ module Aws::DirectConnect
     #   The ID of the virtual interface.
     #   @return [String]
     #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return with a single call. To
+    #   retrieve the remaining results, make another call with the returned
+    #   `nextToken` value.
+    #
+    #   If `MaxResults` is given a value larger than 100, only 100 results
+    #   are returned.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   The token for the next page of results.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/DescribeVirtualInterfacesRequest AWS API Documentation
     #
     class DescribeVirtualInterfacesRequest < Struct.new(
       :connection_id,
-      :virtual_interface_id)
+      :virtual_interface_id,
+      :max_results,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2066,7 +2285,7 @@ module Aws::DirectConnect
     #   @return [String]
     #
     # @!attribute [rw] amazon_side_asn
-    #   The autonomous system number (ASN) for the Amazon side of the
+    #   The autonomous system number (AS) for the Amazon side of the
     #   connection.
     #   @return [Integer]
     #
@@ -2095,6 +2314,10 @@ module Aws::DirectConnect
     #   The error message if the state of an object failed to advance.
     #   @return [String]
     #
+    # @!attribute [rw] tags
+    #   Information about a tag.
+    #   @return [Array<Types::Tag>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/DirectConnectGateway AWS API Documentation
     #
     class DirectConnectGateway < Struct.new(
@@ -2103,7 +2326,8 @@ module Aws::DirectConnect
       :amazon_side_asn,
       :owner_account,
       :direct_connect_gateway_state,
-      :state_change_error)
+      :state_change_error,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2161,7 +2385,7 @@ module Aws::DirectConnect
     #
     # @!attribute [rw] associated_core_network
     #   The ID of the Cloud WAN core network associated with the Direct
-    #   Connect attachment.
+    #   Connect gateway attachment.
     #   @return [Types::AssociatedCoreNetwork]
     #
     # @!attribute [rw] virtual_gateway_id
@@ -2345,11 +2569,11 @@ module Aws::DirectConnect
     end
 
     # @!attribute [rw] connection_id
-    #   The ID of the dedicated connection (dxcon-xxxx), or the ID of the
-    #   LAG (dxlag-xxxx).
+    #   The ID of the dedicated connection (dxcon-xxxx), interconnect
+    #   (dxcon-xxxx), or LAG (dxlag-xxxx).
     #
-    #   You can use DescribeConnections or DescribeLags to retrieve
-    #   connection ID.
+    #   You can use DescribeConnections, DescribeInterconnects, or
+    #   DescribeLags to retrieve connection ID.
     #   @return [String]
     #
     # @!attribute [rw] secret_arn
@@ -2370,13 +2594,13 @@ module Aws::DirectConnect
     end
 
     # @!attribute [rw] connection_id
-    #   The ID of the dedicated connection (dxcon-xxxx), or the ID of the
-    #   LAG (dxlag-xxxx).
+    #   The ID of the dedicated connection (dxcon-xxxx), interconnect
+    #   (dxcon-xxxx), or LAG (dxlag-xxxx).
     #   @return [String]
     #
     # @!attribute [rw] mac_sec_keys
     #   The MAC Security (MACsec) security keys no longer associated with
-    #   the dedicated connection.
+    #   the connection.
     #   @return [Array<Types::MacSecKey>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/DisassociateMacSecKeyResponse AWS API Documentation
@@ -2478,6 +2702,28 @@ module Aws::DirectConnect
     #   The name of the service provider associated with the interconnect.
     #   @return [String]
     #
+    # @!attribute [rw] mac_sec_capable
+    #   Indicates whether the interconnect supports MAC Security (MACsec).
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] port_encryption_status
+    #   The MAC Security (MACsec) port link status.
+    #
+    #   The valid values are `Encryption Up`, which means that there is an
+    #   active Connection Key Name, or `Encryption Down`.
+    #   @return [String]
+    #
+    # @!attribute [rw] encryption_mode
+    #   The MAC Security (MACsec) encryption mode.
+    #
+    #   The valid values are `no_encrypt`, `should_encrypt`, and
+    #   `must_encrypt`.
+    #   @return [String]
+    #
+    # @!attribute [rw] mac_sec_keys
+    #   The MAC Security (MACsec) security keys.
+    #   @return [Array<Types::MacSecKey>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/Interconnect AWS API Documentation
     #
     class Interconnect < Struct.new(
@@ -2495,7 +2741,11 @@ module Aws::DirectConnect
       :aws_logical_device_id,
       :has_logical_redundancy,
       :tags,
-      :provider_name)
+      :provider_name,
+      :mac_sec_capable,
+      :port_encryption_status,
+      :encryption_mode,
+      :mac_sec_keys)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2504,10 +2754,16 @@ module Aws::DirectConnect
     #   The interconnects.
     #   @return [Array<Types::Interconnect>]
     #
+    # @!attribute [rw] next_token
+    #   The token to use to retrieve the next page of results. This value is
+    #   `null` when there are no more results to return.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/Interconnects AWS API Documentation
     #
     class Interconnects < Struct.new(
-      :interconnects)
+      :interconnects,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2626,6 +2882,11 @@ module Aws::DirectConnect
     #   The MAC Security (MACsec) security keys associated with the LAG.
     #   @return [Array<Types::MacSecKey>]
     #
+    # @!attribute [rw] rate_limiter_status
+    #   The rate limiter status for the LAG, including how many rate
+    #   limiters are in use and the maximum allowed.
+    #   @return [Types::RateLimiterStatus]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/Lag AWS API Documentation
     #
     class Lag < Struct.new(
@@ -2649,7 +2910,8 @@ module Aws::DirectConnect
       :provider_name,
       :mac_sec_capable,
       :encryption_mode,
-      :mac_sec_keys)
+      :mac_sec_keys,
+      :rate_limiter_status)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2658,10 +2920,79 @@ module Aws::DirectConnect
     #   The LAGs.
     #   @return [Array<Types::Lag>]
     #
+    # @!attribute [rw] next_token
+    #   The token to use to retrieve the next page of results. This value is
+    #   `null` when there are no more results to return.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/Lags AWS API Documentation
     #
     class Lags < Struct.new(
-      :lags)
+      :lags,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The rate limiter limit has been exceeded for the connection. You
+    # cannot add more rate limiters to virtual interfaces on this
+    # connection.
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/LimitExceededException AWS API Documentation
+    #
+    class LimitExceededException < Aws::EmptyStructure; end
+
+    # @!attribute [rw] virtual_interface_id
+    #   The ID of the virtual interface.
+    #   @return [String]
+    #
+    # @!attribute [rw] filters
+    #   The filters to apply to the routes returned.
+    #   @return [Types::RouteFilters]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return with a single call. To
+    #   retrieve the remaining results, make another call with the returned
+    #   `nextToken` value.
+    #
+    #   If `MaxResults` is given a value larger than 100, only 100 results
+    #   are returned.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   The token for the next page of results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/ListVirtualInterfaceRoutesRequest AWS API Documentation
+    #
+    class ListVirtualInterfaceRoutesRequest < Struct.new(
+      :virtual_interface_id,
+      :filters,
+      :max_results,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] virtual_interface_id
+    #   The ID of the virtual interface.
+    #   @return [String]
+    #
+    # @!attribute [rw] routes
+    #   The routes for the virtual interface.
+    #   @return [Array<Types::Route>]
+    #
+    # @!attribute [rw] next_token
+    #   The token to use to retrieve the next page of results. This value is
+    #   `null` when there are no more results to return.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/ListVirtualInterfaceRoutesResponse AWS API Documentation
+    #
+    class ListVirtualInterfaceRoutesResponse < Struct.new(
+      :virtual_interface_id,
+      :routes,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2848,8 +3179,15 @@ module Aws::DirectConnect
     # Information about a new BGP peer.
     #
     # @!attribute [rw] asn
-    #   The autonomous system (AS) number for Border Gateway Protocol (BGP)
-    #   configuration.
+    #   The autonomous system number (ASN). The valid range is from 1 to
+    #   2147483646 for Border Gateway Protocol (BGP) configuration. If you
+    #   provide a number greater than the maximum, an error is returned. Use
+    #   `asnLong` instead.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] asn_long
+    #   The long ASN for a new BGP peer. The valid range is from 1 to
+    #   4294967294.
     #   @return [Integer]
     #
     # @!attribute [rw] auth_key
@@ -2874,6 +3212,7 @@ module Aws::DirectConnect
     #
     class NewBGPPeer < Struct.new(
       :asn,
+      :asn_long,
       :auth_key,
       :address_family,
       :amazon_address,
@@ -2895,10 +3234,47 @@ module Aws::DirectConnect
     #   @return [Integer]
     #
     # @!attribute [rw] asn
-    #   The autonomous system (AS) number for Border Gateway Protocol (BGP)
-    #   configuration.
+    #   The autonomous system number (ASN). The valid range is from 1 to
+    #   2147483646 for Border Gateway Protocol (BGP) configuration. If you
+    #   provide a number greater than the maximum, an error is returned. Use
+    #   `asnLong` instead.
     #
-    #   The valid values are 1-2147483647.
+    #   * You can use `asnLong` or `asn`, but not both. We recommend using
+    #     `asnLong` as it supports a greater pool of numbers.
+    #
+    #   * If you provide a value in the same API call for both `asn` and
+    #     `asnLong`, the API will only accept the value for `asnLong`.
+    #
+    #   * If you enter a 4-byte ASN for the `asn` parameter, the API returns
+    #     an error.
+    #
+    #   * If you are using a 2-byte ASN, the API response will include the
+    #     2-byte value for both the `asn` and `asnLong` fields.
+    #
+    #   The valid values are 1-2147483646.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] asn_long
+    #   The long ASN for a new private virtual interface. The valid range is
+    #   from 1 to 4294967294 for BGP configuration.
+    #
+    #   Note the following limitations when using `asnLong`:
+    #
+    #   * You can use `asnLong` or `asn`, but not both. We recommend using
+    #     `asnLong` as it supports a greater pool of numbers.
+    #
+    #   * `asnLong` accepts any valid ASN value, regardless if it's 2-byte
+    #     or 4-byte.
+    #
+    #   * When using a 4-byte `asnLong`, the API response returns `0` for
+    #     the legacy `asn` attribute since 4-byte ASN values exceed the
+    #     maximum supported value of 2,147,483,647.
+    #
+    #   * If you are using a 2-byte ASN, the API response will include the
+    #     2-byte value for both the `asn` and `asnLong` fields.
+    #
+    #   * If you provide a value in the same API call for both `asn` and
+    #     `asnLong`, the API will only accept the value for `asnLong`.
     #   @return [Integer]
     #
     # @!attribute [rw] mtu
@@ -2940,12 +3316,19 @@ module Aws::DirectConnect
     #   Indicates whether to enable or disable SiteLink.
     #   @return [Boolean]
     #
+    # @!attribute [rw] rate_limit
+    #   The rate limit (bandwidth allocation) to apply to the virtual
+    #   interface. The rate limit restricts the maximum bandwidth that the
+    #   virtual interface can use on the parent connection.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/NewPrivateVirtualInterface AWS API Documentation
     #
     class NewPrivateVirtualInterface < Struct.new(
       :virtual_interface_name,
       :vlan,
       :asn,
+      :asn_long,
       :mtu,
       :auth_key,
       :amazon_address,
@@ -2954,7 +3337,8 @@ module Aws::DirectConnect
       :virtual_gateway_id,
       :direct_connect_gateway_id,
       :tags,
-      :enable_site_link)
+      :enable_site_link,
+      :rate_limit)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2973,10 +3357,47 @@ module Aws::DirectConnect
     #   @return [Integer]
     #
     # @!attribute [rw] asn
-    #   The autonomous system (AS) number for Border Gateway Protocol (BGP)
-    #   configuration.
+    #   The autonomous system number (ASN). The valid range is from 1 to
+    #   2147483646 for Border Gateway Protocol (BGP) configuration. If you
+    #   provide a number greater than the maximum, an error is returned. Use
+    #   `asnLong` instead.
     #
-    #   The valid values are 1-2147483647.
+    #   * You can use `asnLong` or `asn`, but not both. We recommend using
+    #     `asnLong` as it supports a greater pool of numbers.
+    #
+    #   * If you provide a value in the same API call for both `asn` and
+    #     `asnLong`, the API will only accept the value for `asnLong`.
+    #
+    #   * If you enter a 4-byte ASN for the `asn` parameter, the API returns
+    #     an error.
+    #
+    #   * If you are using a 2-byte ASN, the API response will include the
+    #     2-byte value for both the `asn` and `asnLong` fields.
+    #
+    #   The valid values are 1-2147483646.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] asn_long
+    #   The ASN when allocating a new private virtual interface. The valid
+    #   range is from 1 to 4294967294 for BGP configuration.
+    #
+    #   Note the following limitations when using `asnLong`:
+    #
+    #   * You can use `asnLong` or `asn`, but not both. We recommend using
+    #     `asnLong` as it supports a greater pool of numbers.
+    #
+    #   * `asnLong` accepts any valid ASN value, regardless if it's 2-byte
+    #     or 4-byte.
+    #
+    #   * When using a 4-byte `asnLong`, the API response returns `0` for
+    #     the legacy `asn` attribute since 4-byte ASN values exceed the
+    #     maximum supported value of 2,147,483,647.
+    #
+    #   * If you are using a 2-byte ASN, the API response will include the
+    #     2-byte value for both the `asn` and `asnLong` fields.
+    #
+    #   * If you provide a value in the same API call for both `asn` and
+    #     `asnLong`, the API will only accept the value for `asnLong`.
     #   @return [Integer]
     #
     # @!attribute [rw] mtu
@@ -3006,18 +3427,26 @@ module Aws::DirectConnect
     #   The tags associated with the private virtual interface.
     #   @return [Array<Types::Tag>]
     #
+    # @!attribute [rw] rate_limit
+    #   The rate limit (bandwidth allocation) to apply to the virtual
+    #   interface. The rate limit restricts the maximum bandwidth that the
+    #   virtual interface can use on the parent connection.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/NewPrivateVirtualInterfaceAllocation AWS API Documentation
     #
     class NewPrivateVirtualInterfaceAllocation < Struct.new(
       :virtual_interface_name,
       :vlan,
       :asn,
+      :asn_long,
       :mtu,
       :auth_key,
       :amazon_address,
       :address_family,
       :customer_address,
-      :tags)
+      :tags,
+      :rate_limit)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3035,10 +3464,45 @@ module Aws::DirectConnect
     #   @return [Integer]
     #
     # @!attribute [rw] asn
-    #   The autonomous system (AS) number for Border Gateway Protocol (BGP)
-    #   configuration.
+    #   The autonomous system number (ASN). The valid range is from 1 to
+    #   2147483646 for Border Gateway Protocol (BGP) configuration. If you
+    #   provide a number greater than the maximum, an error is returned. Use
+    #   `asnLong` instead.
     #
-    #   The valid values are 1-2147483647.
+    #   * You can use `asnLong` or `asn`, but not both. We recommend using
+    #     `asnLong` as it supports a greater pool of numbers.
+    #
+    #   * If you provide a value in the same API call for both `asn` and
+    #     `asnLong`, the API will only accept the value for `asnLong`.
+    #
+    #   * If you enter a 4-byte ASN for the `asn` parameter, the API returns
+    #     an error.
+    #
+    #   * If you are using a 2-byte ASN, the API response will include the
+    #     2-byte value for both the `asn` and `asnLong` fields.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] asn_long
+    #   The long ASN for a new public virtual interface. The valid range is
+    #   from 1 to 4294967294 for BGP configuration.
+    #
+    #   Note the following limitations when using `asnLong`:
+    #
+    #   * You can use `asnLong` or `asn`, but not both. We recommend using
+    #     `asnLong` as it supports a greater pool of numbers.
+    #
+    #   * `asnLong` accepts any valid ASN value, regardless if it's 2-byte
+    #     or 4-byte.
+    #
+    #   * When using a 4-byte `asnLong`, the API response returns `0` for
+    #     the legacy `asn` attribute since 4-byte ASN values exceed the
+    #     maximum supported value of 2,147,483,647.
+    #
+    #   * If you are using a 2-byte ASN, the API response will include the
+    #     2-byte value for both the `asn` and `asnLong` fields.
+    #
+    #   * If you provide a value in the same API call for both `asn` and
+    #     `asnLong`, the API will only accept the value for `asnLong`.
     #   @return [Integer]
     #
     # @!attribute [rw] auth_key
@@ -3068,18 +3532,26 @@ module Aws::DirectConnect
     #   The tags associated with the public virtual interface.
     #   @return [Array<Types::Tag>]
     #
+    # @!attribute [rw] rate_limit
+    #   The rate limit (bandwidth allocation) to apply to the virtual
+    #   interface. The rate limit restricts the maximum bandwidth that the
+    #   virtual interface can use on the parent connection.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/NewPublicVirtualInterface AWS API Documentation
     #
     class NewPublicVirtualInterface < Struct.new(
       :virtual_interface_name,
       :vlan,
       :asn,
+      :asn_long,
       :auth_key,
       :amazon_address,
       :customer_address,
       :address_family,
       :route_filter_prefixes,
-      :tags)
+      :tags,
+      :rate_limit)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3098,10 +3570,47 @@ module Aws::DirectConnect
     #   @return [Integer]
     #
     # @!attribute [rw] asn
-    #   The autonomous system (AS) number for Border Gateway Protocol (BGP)
-    #   configuration.
+    #   The autonomous system number (ASN). The valid range is from 1 to
+    #   2147483646 for Border Gateway Protocol (BGP) configuration. If you
+    #   provide a number greater than the maximum, an error is returned. Use
+    #   `asnLong` instead.
     #
-    #   The valid values are 1-2147483647.
+    #   * You can use `asnLong` or `asn`, but not both. We recommend using
+    #     `asnLong` as it supports a greater pool of numbers.
+    #
+    #   * If you provide a value in the same API call for both `asn` and
+    #     `asnLong`, the API will only accept the value for `asnLong`.
+    #
+    #   * If you enter a 4-byte ASN for the `asn` parameter, the API returns
+    #     an error.
+    #
+    #   * If you are using a 2-byte ASN, the API response will include the
+    #     2-byte value for both the `asn` and `asnLong` fields.
+    #
+    #   The valid values are 1-2147483646.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] asn_long
+    #   The ASN when allocating a new public virtual interface. The valid
+    #   range is from 1 to 4294967294 for BGP configuration.
+    #
+    #   Note the following limitations when using `asnLong`:
+    #
+    #   * You can use `asnLong` or `asn`, but not both. We recommend using
+    #     `asnLong` as it supports a greater pool of numbers.
+    #
+    #   * `asnLong` accepts any valid ASN value, regardless if it's 2-byte
+    #     or 4-byte.
+    #
+    #   * When using a 4-byte `asnLong`, the API response returns `0` for
+    #     the legacy `asn` attribute since 4-byte ASN values exceed the
+    #     maximum supported value of 2,147,483,647.
+    #
+    #   * If you are using a 2-byte ASN, the API response will include the
+    #     2-byte value for both the `asn` and `asnLong` fields.
+    #
+    #   * If you provide a value in the same API call for both `asn` and
+    #     `asnLong`, the API will only accept the value for `asnLong`.
     #   @return [Integer]
     #
     # @!attribute [rw] auth_key
@@ -3131,18 +3640,26 @@ module Aws::DirectConnect
     #   The tags associated with the public virtual interface.
     #   @return [Array<Types::Tag>]
     #
+    # @!attribute [rw] rate_limit
+    #   The rate limit (bandwidth allocation) to apply to the virtual
+    #   interface. The rate limit restricts the maximum bandwidth that the
+    #   virtual interface can use on the parent connection.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/NewPublicVirtualInterfaceAllocation AWS API Documentation
     #
     class NewPublicVirtualInterfaceAllocation < Struct.new(
       :virtual_interface_name,
       :vlan,
       :asn,
+      :asn_long,
       :auth_key,
       :amazon_address,
       :customer_address,
       :address_family,
       :route_filter_prefixes,
-      :tags)
+      :tags,
+      :rate_limit)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3160,10 +3677,45 @@ module Aws::DirectConnect
     #   @return [Integer]
     #
     # @!attribute [rw] asn
-    #   The autonomous system (AS) number for Border Gateway Protocol (BGP)
-    #   configuration.
+    #   The autonomous system number (ASN). The valid range is from 1 to
+    #   2147483646 for Border Gateway Protocol (BGP) configuration. If you
+    #   provide a number greater than the maximum, an error is returned. Use
+    #   `asnLong` instead.
     #
-    #   The valid values are 1-2147483647.
+    #   * You can use `asnLong` or `asn`, but not both. We recommend using
+    #     `asnLong` as it supports a greater pool of numbers.
+    #
+    #   * If you provide a value in the same API call for both `asn` and
+    #     `asnLong`, the API will only accept the value for `asnLong`.
+    #
+    #   * If you enter a 4-byte ASN for the `asn` parameter, the API returns
+    #     an error.
+    #
+    #   * If you are using a 2-byte ASN, the API response will include the
+    #     2-byte value for both the `asn` and `asnLong` fields.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] asn_long
+    #   The long ASN for a new transit virtual interface.The valid range is
+    #   from 1 to 4294967294 for BGP configuration.
+    #
+    #   Note the following limitations when using `asnLong`:
+    #
+    #   * You can use `asnLong` or `asn`, but not both. We recommend using
+    #     `asnLong` as it supports a greater pool of numbers.
+    #
+    #   * `asnLong` accepts any valid ASN value, regardless if it's 2-byte
+    #     or 4-byte.
+    #
+    #   * When using a 4-byte `asnLong`, the API response returns `0` for
+    #     the legacy `asn` attribute since 4-byte ASN values exceed the
+    #     maximum supported value of 2,147,483,647.
+    #
+    #   * If you are using a 2-byte ASN, the API response will include the
+    #     2-byte value for both the `asn` and `asnLong` fields.
+    #
+    #   * If you provide a value in the same API call for both `asn` and
+    #     `asnLong`, the API will only accept the value for `asnLong`.
     #   @return [Integer]
     #
     # @!attribute [rw] mtu
@@ -3201,12 +3753,19 @@ module Aws::DirectConnect
     #   Indicates whether to enable or disable SiteLink.
     #   @return [Boolean]
     #
+    # @!attribute [rw] rate_limit
+    #   The rate limit (bandwidth allocation) to apply to the virtual
+    #   interface. The rate limit restricts the maximum bandwidth that the
+    #   virtual interface can use on the parent connection.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/NewTransitVirtualInterface AWS API Documentation
     #
     class NewTransitVirtualInterface < Struct.new(
       :virtual_interface_name,
       :vlan,
       :asn,
+      :asn_long,
       :mtu,
       :auth_key,
       :amazon_address,
@@ -3214,7 +3773,8 @@ module Aws::DirectConnect
       :address_family,
       :direct_connect_gateway_id,
       :tags,
-      :enable_site_link)
+      :enable_site_link,
+      :rate_limit)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3233,10 +3793,47 @@ module Aws::DirectConnect
     #   @return [Integer]
     #
     # @!attribute [rw] asn
-    #   The autonomous system (AS) number for Border Gateway Protocol (BGP)
-    #   configuration.
+    #   The autonomous system number (ASN). The valid range is from 1 to
+    #   2147483646 for Border Gateway Protocol (BGP) configuration. If you
+    #   provide a number greater than the maximum, an error is returned. Use
+    #   `asnLong` instead.
     #
-    #   The valid values are 1-2147483647.
+    #   * You can use `asnLong` or `asn`, but not both. We recommend using
+    #     `asnLong` as it supports a greater pool of numbers.
+    #
+    #   * If you provide a value in the same API call for both `asn` and
+    #     `asnLong`, the API will only accept the value for `asnLong`.
+    #
+    #   * If you enter a 4-byte ASN for the `asn` parameter, the API returns
+    #     an error.
+    #
+    #   * If you are using a 2-byte ASN, the API response will include the
+    #     2-byte value for both the `asn` and `asnLong` fields.
+    #
+    #   The valid values are 1-2147483646.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] asn_long
+    #   The ASN when allocating a new transit virtual interface. The valid
+    #   range is from 1 to 4294967294 for BGP configuration.
+    #
+    #   Note the following limitations when using `asnLong`:
+    #
+    #   * You can use `asnLong` or `asn`, but not both. We recommend using
+    #     `asnLong` as it supports a greater pool of numbers.
+    #
+    #   * `asnLong` accepts any valid ASN value, regardless if it's 2-byte
+    #     or 4-byte.
+    #
+    #   * When using a 4-byte `asnLong`, the API response returns `0` for
+    #     the legacy `asn` attribute since 4-byte ASN values exceed the
+    #     maximum supported value of 2,147,483,647.
+    #
+    #   * If you are using a 2-byte ASN, the API response will include the
+    #     2-byte value for both the `asn` and `asnLong` fields.
+    #
+    #   * If you provide a value in the same API call for both `asn` and
+    #     `asnLong`, the API will only accept the value for `asnLong`.
     #   @return [Integer]
     #
     # @!attribute [rw] mtu
@@ -3266,18 +3863,58 @@ module Aws::DirectConnect
     #   The tags associated with the transitive virtual interface.
     #   @return [Array<Types::Tag>]
     #
+    # @!attribute [rw] rate_limit
+    #   The rate limit (bandwidth allocation) to apply to the virtual
+    #   interface. The rate limit restricts the maximum bandwidth that the
+    #   virtual interface can use on the parent connection.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/NewTransitVirtualInterfaceAllocation AWS API Documentation
     #
     class NewTransitVirtualInterfaceAllocation < Struct.new(
       :virtual_interface_name,
       :vlan,
       :asn,
+      :asn_long,
       :mtu,
       :auth_key,
       :amazon_address,
       :customer_address,
       :address_family,
-      :tags)
+      :tags,
+      :rate_limit)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about the rate limiter status for a connection,
+    # including the maximum number of rate limiters allowed, the number
+    # currently in use, and the remaining capacity.
+    #
+    # @!attribute [rw] max_allowed
+    #   The maximum number of rate limiters allowed on the connection.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] in_use
+    #   The number of rate limiters currently in use on the connection.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] remaining
+    #   The number of rate limiters remaining (available) on the connection.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] total_bandwidth
+    #   The total bandwidth allocated across all rate limiters on the
+    #   connection.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/RateLimiterStatus AWS API Documentation
+    #
+    class RateLimiterStatus < Struct.new(
+      :max_allowed,
+      :in_use,
+      :remaining,
+      :total_bandwidth)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3301,6 +3938,58 @@ module Aws::DirectConnect
       include Aws::Structure
     end
 
+    # Information about a route for a virtual interface.
+    #
+    # @!attribute [rw] cidr
+    #   The CIDR (prefix) of the route.
+    #   @return [String]
+    #
+    # @!attribute [rw] route_direction
+    #   The direction of the route.
+    #
+    #   The valid values are `accepted` (received from the customer network)
+    #   and `advertised` (advertised to the customer network).
+    #   @return [String]
+    #
+    # @!attribute [rw] address_family
+    #   The address family of the route.
+    #
+    #   The valid values are `ipv4` and `ipv6`.
+    #   @return [String]
+    #
+    # @!attribute [rw] as_path
+    #   The autonomous system (AS) path of the route.
+    #   @return [Array<Types::AsPathSegment>]
+    #
+    # @!attribute [rw] communities
+    #   The BGP communities associated with the route.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] aws_logical_device_id
+    #   The Direct Connect endpoint that terminates the logical connection.
+    #   This device might be different than the device that terminates the
+    #   physical connection.
+    #   @return [String]
+    #
+    # @!attribute [rw] route_installed_at
+    #   The time when the route was installed. The value is displayed in UTC
+    #   format.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/Route AWS API Documentation
+    #
+    class Route < Struct.new(
+      :cidr,
+      :route_direction,
+      :address_family,
+      :as_path,
+      :communities,
+      :aws_logical_device_id,
+      :route_installed_at)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Information about a route filter prefix that a customer can advertise
     # through Border Gateway Protocol (BGP) over a public virtual interface.
     #
@@ -3313,6 +4002,49 @@ module Aws::DirectConnect
     #
     class RouteFilterPrefix < Struct.new(
       :cidr)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The filters used to limit the routes returned by
+    # ListVirtualInterfaceRoutes.
+    #
+    # @!attribute [rw] route_direction
+    #   The direction of the routes to return.
+    #
+    #   The valid values are `accepted` (routes received from the customer
+    #   network) and `advertised` (routes advertised to the customer
+    #   network).
+    #   @return [String]
+    #
+    # @!attribute [rw] address_family
+    #   The address family of the routes to return.
+    #
+    #   The valid values are `ipv4` and `ipv6`.
+    #   @return [String]
+    #
+    # @!attribute [rw] cidrs
+    #   The CIDRs (prefixes) used to filter the routes. You can specify up
+    #   to 10 CIDRs.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] as_path
+    #   The autonomous system (AS) numbers used to filter the routes by
+    #   their AS path.
+    #   @return [Array<Integer>]
+    #
+    # @!attribute [rw] communities
+    #   The BGP communities used to filter the routes.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/RouteFilters AWS API Documentation
+    #
+    class RouteFilters < Struct.new(
+      :route_direction,
+      :address_family,
+      :cidrs,
+      :as_path,
+      :communities)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3490,7 +4222,7 @@ module Aws::DirectConnect
     class UntagResourceResponse < Aws::EmptyStructure; end
 
     # @!attribute [rw] connection_id
-    #   The ID of the dedicated connection.
+    #   The ID of the connection.
     #
     #   You can use DescribeConnections to retrieve the connection ID.
     #   @return [String]
@@ -3631,13 +4363,20 @@ module Aws::DirectConnect
     #   The name of the virtual private interface.
     #   @return [String]
     #
+    # @!attribute [rw] rate_limit
+    #   The rate limit (bandwidth allocation) to apply to the virtual
+    #   interface. Use this to update the bandwidth allocation on an
+    #   existing virtual interface.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/UpdateVirtualInterfaceAttributesRequest AWS API Documentation
     #
     class UpdateVirtualInterfaceAttributesRequest < Struct.new(
       :virtual_interface_id,
       :mtu,
       :enable_site_link,
-      :virtual_interface_name)
+      :virtual_interface_name,
+      :rate_limit)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3721,14 +4460,49 @@ module Aws::DirectConnect
     #   @return [Integer]
     #
     # @!attribute [rw] asn
-    #   The autonomous system (AS) number for Border Gateway Protocol (BGP)
-    #   configuration.
+    #   The autonomous system number (ASN). The valid range is from 1 to
+    #   2147483646 for Border Gateway Protocol (BGP) configuration. If you
+    #   provide a number greater than the maximum, an error is returned. Use
+    #   `asnLong` instead.
     #
-    #   The valid values are 1-2147483647.
+    #   * You can use `asnLong` or `asn`, but not both. We recommend using
+    #     `asnLong` as it supports a greater pool of numbers.
+    #
+    #   * If you provide a value in the same API call for both `asn` and
+    #     `asnLong`, the API will only accept the value for `asnLong`.
+    #
+    #   * If you enter a 4-byte ASN for the `asn` parameter, the API returns
+    #     an error.
+    #
+    #   * If you are using a 2-byte ASN, the API response will include the
+    #     2-byte value for both the `asn` and `asnLong` fields.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] asn_long
+    #   The long ASN for the virtual interface. The valid range is from 1 to
+    #   4294967294 for BGP configuration.
+    #
+    #   Note the following limitations when using `asnLong`:
+    #
+    #   * You can use `asnLong` or `asn`, but not both. We recommend using
+    #     `asnLong` as it supports a greater pool of numbers.
+    #
+    #   * `asnLong` accepts any valid ASN value, regardless if it's 2-byte
+    #     or 4-byte.
+    #
+    #   * When using a 4-byte `asnLong`, the API response returns `0` for
+    #     the legacy `asn` attribute since 4-byte ASN values exceed the
+    #     maximum supported value of 2,147,483,647.
+    #
+    #   * If you are using a 2-byte ASN, the API response will include the
+    #     2-byte value for both the `asn` and `asnLong` fields.
+    #
+    #   * If you provide a value in the same API call for both `asn` and
+    #     `asnLong`, the API will only accept the value for `asnLong`.
     #   @return [Integer]
     #
     # @!attribute [rw] amazon_side_asn
-    #   The autonomous system number (ASN) for the Amazon side of the
+    #   The autonomous system number (AS) for the Amazon side of the
     #   connection.
     #   @return [Integer]
     #
@@ -3771,6 +4545,10 @@ module Aws::DirectConnect
     #   * `available`: A virtual interface that is able to forward traffic.
     #
     #   * `down`: A virtual interface that is BGP down.
+    #
+    #   * `testing`: A virtual interface is in this state immediately after
+    #     calling StartBgpFailoverTest and remains in this state during the
+    #     duration of the test.
     #
     #   * `deleting`: A virtual interface is in this state immediately after
     #     calling DeleteVirtualInterface until it can no longer forward
@@ -3840,6 +4618,24 @@ module Aws::DirectConnect
     #   Indicates whether SiteLink is enabled.
     #   @return [Boolean]
     #
+    # @!attribute [rw] rate_limit
+    #   The rate limit (bandwidth allocation) applied to the virtual
+    #   interface. The value must be one of the supported bandwidth values
+    #   and cannot exceed the bandwidth of the parent connection or LAG.
+    #   Supported values: `50Mbps`, `100Mbps`, `200Mbps`, `300Mbps`,
+    #   `400Mbps`, `500Mbps`, `600Mbps`, `700Mbps`, `800Mbps`, `900Mbps`,
+    #   `1Gbps`, `1.2Gbps`, `1.5Gbps`, `1.8Gbps`, `2Gbps`, `2.1Gbps`,
+    #   `2.4Gbps`, `2.7Gbps`, `3Gbps`, `3.2Gbps`, `3.6Gbps`, `4Gbps`,
+    #   `5Gbps`, `6Gbps`, `7Gbps`, `8Gbps`, `9Gbps`, `10Gbps`, `12Gbps`,
+    #   `15Gbps`, `18Gbps`, `20Gbps`, `21Gbps`, `24Gbps`, `27Gbps`,
+    #   `30Gbps`, `32Gbps`, `36Gbps`, `40Gbps`, `50Gbps`, `60Gbps`,
+    #   `70Gbps`, `80Gbps`, `100Gbps`, `120Gbps`, `150Gbps`, `180Gbps`,
+    #   `200Gbps`, `210Gbps`, `240Gbps`, `270Gbps`, `300Gbps`, `320Gbps`,
+    #   `360Gbps`, `400Gbps`, `450Gbps`, `480Gbps`, `500Gbps`, `540Gbps`,
+    #   `600Gbps`, `700Gbps`, `800Gbps`, `900Gbps`, `1Tbps`, `1.1Tbps`,
+    #   `1.2Tbps`, `1.3Tbps`, `1.4Tbps`, `1.5Tbps`, `1.6Tbps`.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/VirtualInterface AWS API Documentation
     #
     class VirtualInterface < Struct.new(
@@ -3851,6 +4647,7 @@ module Aws::DirectConnect
       :virtual_interface_name,
       :vlan,
       :asn,
+      :asn_long,
       :amazon_side_asn,
       :auth_key,
       :amazon_address,
@@ -3868,7 +4665,8 @@ module Aws::DirectConnect
       :aws_device_v2,
       :aws_logical_device_id,
       :tags,
-      :site_link_enabled)
+      :site_link_enabled,
+      :rate_limit)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3927,10 +4725,16 @@ module Aws::DirectConnect
     #   The virtual interfaces
     #   @return [Array<Types::VirtualInterface>]
     #
+    # @!attribute [rw] next_token
+    #   The token to use to retrieve the next page of results. This value is
+    #   `null` when there are no more results to return.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/directconnect-2012-10-25/VirtualInterfaces AWS API Documentation
     #
     class VirtualInterfaces < Struct.new(
-      :virtual_interfaces)
+      :virtual_interfaces,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end

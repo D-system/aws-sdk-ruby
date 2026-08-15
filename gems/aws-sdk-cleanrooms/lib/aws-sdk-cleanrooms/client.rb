@@ -95,8 +95,8 @@ module Aws::CleanRooms
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::CleanRooms
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::CleanRooms
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::CleanRooms
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::CleanRooms
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::CleanRooms
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::CleanRooms
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::CleanRooms
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -527,6 +531,13 @@ module Aws::CleanRooms
     #   resp.collaboration_analysis_templates[0].validations[0].status #=> String, one of "VALID", "INVALID", "UNABLE_TO_VALIDATE"
     #   resp.collaboration_analysis_templates[0].validations[0].reasons #=> Array
     #   resp.collaboration_analysis_templates[0].validations[0].reasons[0].message #=> String
+    #   resp.collaboration_analysis_templates[0].error_message_configuration.type #=> String, one of "DETAILED"
+    #   resp.collaboration_analysis_templates[0].synthetic_data_parameters.ml_synthetic_data_parameters.epsilon #=> Float
+    #   resp.collaboration_analysis_templates[0].synthetic_data_parameters.ml_synthetic_data_parameters.max_membership_inference_attack_score #=> Float
+    #   resp.collaboration_analysis_templates[0].synthetic_data_parameters.ml_synthetic_data_parameters.column_classification.column_mapping #=> Array
+    #   resp.collaboration_analysis_templates[0].synthetic_data_parameters.ml_synthetic_data_parameters.column_classification.column_mapping[0].column_name #=> String
+    #   resp.collaboration_analysis_templates[0].synthetic_data_parameters.ml_synthetic_data_parameters.column_classification.column_mapping[0].column_type #=> String, one of "CATEGORICAL", "NUMERICAL"
+    #   resp.collaboration_analysis_templates[0].synthetic_data_parameters.ml_synthetic_data_parameters.column_classification.column_mapping[0].is_predictive_value #=> Boolean
     #   resp.errors #=> Array
     #   resp.errors[0].arn #=> String
     #   resp.errors[0].code #=> String
@@ -583,19 +594,23 @@ module Aws::CleanRooms
     #   resp.schemas[0].description #=> String
     #   resp.schemas[0].create_time #=> Time
     #   resp.schemas[0].update_time #=> Time
-    #   resp.schemas[0].type #=> String, one of "TABLE", "ID_MAPPING_TABLE"
+    #   resp.schemas[0].type #=> String, one of "TABLE", "ID_MAPPING_TABLE", "INTERMEDIATE_TABLE"
     #   resp.schemas[0].schema_status_details #=> Array
     #   resp.schemas[0].schema_status_details[0].status #=> String, one of "READY", "NOT_READY"
     #   resp.schemas[0].schema_status_details[0].reasons #=> Array
-    #   resp.schemas[0].schema_status_details[0].reasons[0].code #=> String, one of "ANALYSIS_RULE_MISSING", "ANALYSIS_TEMPLATES_NOT_CONFIGURED", "ANALYSIS_PROVIDERS_NOT_CONFIGURED", "DIFFERENTIAL_PRIVACY_POLICY_NOT_CONFIGURED", "ID_MAPPING_TABLE_NOT_POPULATED", "COLLABORATION_ANALYSIS_RULE_NOT_CONFIGURED", "ADDITIONAL_ANALYSES_NOT_CONFIGURED", "RESULT_RECEIVERS_NOT_CONFIGURED", "ADDITIONAL_ANALYSES_NOT_ALLOWED", "RESULT_RECEIVERS_NOT_ALLOWED", "ANALYSIS_RULE_TYPES_NOT_COMPATIBLE"
+    #   resp.schemas[0].schema_status_details[0].reasons[0].code #=> String, one of "ANALYSIS_RULE_MISSING", "ANALYSIS_TEMPLATES_NOT_CONFIGURED", "ANALYSIS_PROVIDERS_NOT_CONFIGURED", "DIFFERENTIAL_PRIVACY_POLICY_NOT_CONFIGURED", "ID_MAPPING_TABLE_NOT_POPULATED", "COLLABORATION_ANALYSIS_RULE_NOT_CONFIGURED", "ADDITIONAL_ANALYSES_NOT_CONFIGURED", "RESULT_RECEIVERS_NOT_CONFIGURED", "ADDITIONAL_ANALYSES_NOT_ALLOWED", "RESULT_RECEIVERS_NOT_ALLOWED", "ANALYSIS_RULE_TYPES_NOT_COMPATIBLE", "INTERMEDIATE_TABLE_NOT_POPULATED", "INTERMEDIATE_TABLE_ANALYSIS_RULE_MISSING", "INTERMEDIATE_TABLE_BASE_TABLE_REMOVED", "INTERMEDIATE_TABLE_INHERITED_CONSTRAINTS_VIOLATED", "INTERMEDIATE_TABLE_DISALLOWED_BY_DATA_PROVIDER", "INTERMEDIATE_TABLE_RETENTION_PERIOD_EXPIRED"
     #   resp.schemas[0].schema_status_details[0].reasons[0].message #=> String
     #   resp.schemas[0].schema_status_details[0].analysis_rule_type #=> String, one of "AGGREGATION", "LIST", "CUSTOM", "ID_MAPPING_TABLE"
     #   resp.schemas[0].schema_status_details[0].configurations #=> Array
     #   resp.schemas[0].schema_status_details[0].configurations[0] #=> String, one of "DIFFERENTIAL_PRIVACY"
     #   resp.schemas[0].schema_status_details[0].analysis_type #=> String, one of "DIRECT_ANALYSIS", "ADDITIONAL_ANALYSIS"
+    #   resp.schemas[0].resource_arn #=> String
     #   resp.schemas[0].schema_type_properties.id_mapping_table.id_mapping_table_input_source #=> Array
     #   resp.schemas[0].schema_type_properties.id_mapping_table.id_mapping_table_input_source[0].id_namespace_association_id #=> String
     #   resp.schemas[0].schema_type_properties.id_mapping_table.id_mapping_table_input_source[0].type #=> String, one of "SOURCE", "TARGET"
+    #   resp.schemas[0].schema_type_properties.id_mapping_table.id_mapping_table_id #=> String
+    #   resp.schemas[0].schema_type_properties.intermediate_table.intermediate_table_id #=> String
+    #   resp.schemas[0].schema_type_properties.configured_table_association.configured_table_association_id #=> String
     #   resp.errors #=> Array
     #   resp.errors[0].name #=> String
     #   resp.errors[0].code #=> String
@@ -678,6 +693,23 @@ module Aws::CleanRooms
     #   resp.analysis_rules[0].policy.v1.custom.disallowed_output_columns[0] #=> String
     #   resp.analysis_rules[0].policy.v1.custom.differential_privacy.columns #=> Array
     #   resp.analysis_rules[0].policy.v1.custom.differential_privacy.columns[0].name #=> String
+    #   resp.analysis_rules[0].policy.v1.custom.aggregation_thresholds #=> Array
+    #   resp.analysis_rules[0].policy.v1.custom.aggregation_thresholds[0].identity_columns #=> Array
+    #   resp.analysis_rules[0].policy.v1.custom.aggregation_thresholds[0].identity_columns[0] #=> String
+    #   resp.analysis_rules[0].policy.v1.custom.aggregation_thresholds[0].minimum_identity_count #=> Integer
+    #   resp.analysis_rules[0].policy.v1.custom.aggregation_thresholds[0].type #=> String, one of "COUNT_DISTINCT"
+    #   resp.analysis_rules[0].policy.v1.custom.aggregation_thresholds[0].output_column_thresholds #=> Array
+    #   resp.analysis_rules[0].policy.v1.custom.aggregation_thresholds[0].output_column_thresholds[0].output_column_name #=> String
+    #   resp.analysis_rules[0].policy.v1.custom.aggregation_thresholds[0].output_column_thresholds[0].minimum_identity_count #=> Integer
+    #   resp.analysis_rules[0].policy.v1.custom.aggregation_thresholds[0].allowed_aggregate_expression_type #=> String, one of "COLUMNS_ONLY", "ANY_EXPRESSION"
+    #   resp.analysis_rules[0].policy.v1.custom.comparison_controls.allowed_literal_comparison_columns #=> Array
+    #   resp.analysis_rules[0].policy.v1.custom.comparison_controls.allowed_literal_comparison_columns[0] #=> String
+    #   resp.analysis_rules[0].policy.v1.custom.comparison_controls.allowed_column_comparison_columns #=> Array
+    #   resp.analysis_rules[0].policy.v1.custom.comparison_controls.allowed_column_comparison_columns[0] #=> String
+    #   resp.analysis_rules[0].policy.v1.custom.allowed_result_receivers #=> Array
+    #   resp.analysis_rules[0].policy.v1.custom.allowed_result_receivers[0] #=> String
+    #   resp.analysis_rules[0].policy.v1.custom.allowed_additional_analyses #=> Array
+    #   resp.analysis_rules[0].policy.v1.custom.allowed_additional_analyses[0] #=> String
     #   resp.analysis_rules[0].policy.v1.id_mapping_table.join_columns #=> Array
     #   resp.analysis_rules[0].policy.v1.id_mapping_table.join_columns[0] #=> String
     #   resp.analysis_rules[0].policy.v1.id_mapping_table.query_constraints #=> Array
@@ -739,6 +771,19 @@ module Aws::CleanRooms
     #   resp.analysis_rules[0].consolidated_policy.v1.custom.disallowed_output_columns[0] #=> String
     #   resp.analysis_rules[0].consolidated_policy.v1.custom.differential_privacy.columns #=> Array
     #   resp.analysis_rules[0].consolidated_policy.v1.custom.differential_privacy.columns[0].name #=> String
+    #   resp.analysis_rules[0].consolidated_policy.v1.custom.aggregation_thresholds #=> Array
+    #   resp.analysis_rules[0].consolidated_policy.v1.custom.aggregation_thresholds[0].identity_columns #=> Array
+    #   resp.analysis_rules[0].consolidated_policy.v1.custom.aggregation_thresholds[0].identity_columns[0] #=> String
+    #   resp.analysis_rules[0].consolidated_policy.v1.custom.aggregation_thresholds[0].minimum_identity_count #=> Integer
+    #   resp.analysis_rules[0].consolidated_policy.v1.custom.aggregation_thresholds[0].type #=> String, one of "COUNT_DISTINCT"
+    #   resp.analysis_rules[0].consolidated_policy.v1.custom.aggregation_thresholds[0].output_column_thresholds #=> Array
+    #   resp.analysis_rules[0].consolidated_policy.v1.custom.aggregation_thresholds[0].output_column_thresholds[0].output_column_name #=> String
+    #   resp.analysis_rules[0].consolidated_policy.v1.custom.aggregation_thresholds[0].output_column_thresholds[0].minimum_identity_count #=> Integer
+    #   resp.analysis_rules[0].consolidated_policy.v1.custom.aggregation_thresholds[0].allowed_aggregate_expression_type #=> String, one of "COLUMNS_ONLY", "ANY_EXPRESSION"
+    #   resp.analysis_rules[0].consolidated_policy.v1.custom.comparison_controls.allowed_literal_comparison_columns #=> Array
+    #   resp.analysis_rules[0].consolidated_policy.v1.custom.comparison_controls.allowed_literal_comparison_columns[0] #=> String
+    #   resp.analysis_rules[0].consolidated_policy.v1.custom.comparison_controls.allowed_column_comparison_columns #=> Array
+    #   resp.analysis_rules[0].consolidated_policy.v1.custom.comparison_controls.allowed_column_comparison_columns[0] #=> String
     #   resp.analysis_rules[0].consolidated_policy.v1.custom.allowed_result_receivers #=> Array
     #   resp.analysis_rules[0].consolidated_policy.v1.custom.allowed_result_receivers[0] #=> String
     #   resp.analysis_rules[0].consolidated_policy.v1.custom.allowed_additional_analyses #=> Array
@@ -773,8 +818,7 @@ module Aws::CleanRooms
     #   The format of the analysis template.
     #
     # @option params [required, Types::AnalysisSource] :source
-    #   The information in the analysis template. Currently supports `text`,
-    #   the query text for the analysis template.
+    #   The information in the analysis template.
     #
     # @option params [Hash<String,String>] :tags
     #   An optional label that you can assign to a resource when you create
@@ -787,6 +831,18 @@ module Aws::CleanRooms
     #
     # @option params [Types::AnalysisSchema] :schema
     #   A relation within an analysis.
+    #
+    # @option params [Types::ErrorMessageConfiguration] :error_message_configuration
+    #   The configuration that specifies the level of detail in error messages
+    #   returned by analyses using this template. When set to `DETAILED`,
+    #   error messages include more information to help troubleshoot issues
+    #   with PySpark jobs. Detailed error messages may expose underlying data,
+    #   including sensitive information. Recommended for faster
+    #   troubleshooting in development and testing environments.
+    #
+    # @option params [Types::SyntheticDataParameters] :synthetic_data_parameters
+    #   The parameters for generating synthetic data when running the analysis
+    #   template.
     #
     # @return [Types::CreateAnalysisTemplateOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -832,6 +888,24 @@ module Aws::CleanRooms
     #     schema: {
     #       referenced_tables: ["TableAlias"],
     #     },
+    #     error_message_configuration: {
+    #       type: "DETAILED", # required, accepts DETAILED
+    #     },
+    #     synthetic_data_parameters: {
+    #       ml_synthetic_data_parameters: {
+    #         epsilon: 1.0, # required
+    #         max_membership_inference_attack_score: 1.0, # required
+    #         column_classification: { # required
+    #           column_mapping: [ # required
+    #             {
+    #               column_name: "SyntheticDataColumnName", # required
+    #               column_type: "CATEGORICAL", # required, accepts CATEGORICAL, NUMERICAL
+    #               is_predictive_value: false, # required
+    #             },
+    #           ],
+    #         },
+    #       },
+    #     },
     #   })
     #
     # @example Response structure
@@ -868,6 +942,13 @@ module Aws::CleanRooms
     #   resp.analysis_template.validations[0].status #=> String, one of "VALID", "INVALID", "UNABLE_TO_VALIDATE"
     #   resp.analysis_template.validations[0].reasons #=> Array
     #   resp.analysis_template.validations[0].reasons[0].message #=> String
+    #   resp.analysis_template.error_message_configuration.type #=> String, one of "DETAILED"
+    #   resp.analysis_template.synthetic_data_parameters.ml_synthetic_data_parameters.epsilon #=> Float
+    #   resp.analysis_template.synthetic_data_parameters.ml_synthetic_data_parameters.max_membership_inference_attack_score #=> Float
+    #   resp.analysis_template.synthetic_data_parameters.ml_synthetic_data_parameters.column_classification.column_mapping #=> Array
+    #   resp.analysis_template.synthetic_data_parameters.ml_synthetic_data_parameters.column_classification.column_mapping[0].column_name #=> String
+    #   resp.analysis_template.synthetic_data_parameters.ml_synthetic_data_parameters.column_classification.column_mapping[0].column_type #=> String, one of "CATEGORICAL", "NUMERICAL"
+    #   resp.analysis_template.synthetic_data_parameters.ml_synthetic_data_parameters.column_classification.column_mapping[0].is_predictive_value #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/CreateAnalysisTemplate AWS API Documentation
     #
@@ -887,7 +968,7 @@ module Aws::CleanRooms
     # @option params [required, String] :name
     #   The display name for a collaboration.
     #
-    # @option params [required, String] :description
+    # @option params [String] :description
     #   A description of the collaboration provided by the collaboration
     #   owner.
     #
@@ -936,6 +1017,29 @@ module Aws::CleanRooms
     # @option params [String] :analytics_engine
     #   The analytics engine.
     #
+    #   <note markdown="1"> After July 16, 2025, the `CLEAN_ROOMS_SQL` parameter will no longer be
+    #   available.
+    #
+    #    </note>
+    #
+    # @option params [Array<String>] :auto_approved_change_request_types
+    #   The types of change requests that are automatically approved for this
+    #   collaboration.
+    #
+    # @option params [Array<String>] :allowed_result_regions
+    #   The Amazon Web Services Regions where collaboration query results can
+    #   be stored. When specified, results can only be written to these
+    #   Regions. This parameter enables you to meet your compliance and data
+    #   governance requirements, and implement regional data governance
+    #   policies.
+    #
+    # @option params [Boolean] :is_metrics_enabled
+    #   An indicator as to whether metrics have been enabled or disabled for
+    #   the collaboration.
+    #
+    #   When `true`, collaboration members can opt in to Amazon CloudWatch
+    #   metrics for their membership queries. The default value is `false`.
+    #
     # @return [Types::CreateCollaborationOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateCollaborationOutput#collaboration #collaboration} => Types::Collaboration
@@ -946,7 +1050,7 @@ module Aws::CleanRooms
     #     members: [ # required
     #       {
     #         account_id: "AccountId", # required
-    #         member_abilities: ["CAN_QUERY"], # required, accepts CAN_QUERY, CAN_RECEIVE_RESULTS, CAN_RUN_JOB
+    #         member_abilities: ["CAN_QUERY"], # required, accepts CAN_QUERY, CAN_RECEIVE_RESULTS, CAN_RUN_JOB, CAN_EXPORT_QUERY_ANALYSIS_LOG
     #         ml_member_abilities: {
     #           custom_ml_member_abilities: ["CAN_RECEIVE_MODEL_OUTPUT"], # required, accepts CAN_RECEIVE_MODEL_OUTPUT, CAN_RECEIVE_INFERENCE_OUTPUT
     #         },
@@ -962,6 +1066,9 @@ module Aws::CleanRooms
     #             model_inference: {
     #               is_responsible: false, # required
     #             },
+    #             synthetic_data_generation: {
+    #               is_responsible: false, # required
+    #             },
     #           },
     #           job_compute: {
     #             is_responsible: false, # required
@@ -970,8 +1077,8 @@ module Aws::CleanRooms
     #       },
     #     ],
     #     name: "CollaborationName", # required
-    #     description: "CollaborationDescription", # required
-    #     creator_member_abilities: ["CAN_QUERY"], # required, accepts CAN_QUERY, CAN_RECEIVE_RESULTS, CAN_RUN_JOB
+    #     description: "CollaborationDescription",
+    #     creator_member_abilities: ["CAN_QUERY"], # required, accepts CAN_QUERY, CAN_RECEIVE_RESULTS, CAN_RUN_JOB, CAN_EXPORT_QUERY_ANALYSIS_LOG
     #     creator_ml_member_abilities: {
     #       custom_ml_member_abilities: ["CAN_RECEIVE_MODEL_OUTPUT"], # required, accepts CAN_RECEIVE_MODEL_OUTPUT, CAN_RECEIVE_INFERENCE_OUTPUT
     #     },
@@ -998,12 +1105,18 @@ module Aws::CleanRooms
     #         model_inference: {
     #           is_responsible: false, # required
     #         },
+    #         synthetic_data_generation: {
+    #           is_responsible: false, # required
+    #         },
     #       },
     #       job_compute: {
     #         is_responsible: false, # required
     #       },
     #     },
     #     analytics_engine: "SPARK", # accepts SPARK, CLEAN_ROOMS_SQL
+    #     auto_approved_change_request_types: ["ADD_MEMBER"], # accepts ADD_MEMBER, GRANT_RECEIVE_RESULTS_ABILITY, REVOKE_RECEIVE_RESULTS_ABILITY, GRANT_EXPORT_QUERY_ANALYSIS_LOG_ABILITY, REVOKE_EXPORT_QUERY_ANALYSIS_LOG_ABILITY
+    #     allowed_result_regions: ["us-west-1"], # accepts us-west-1, us-west-2, us-east-1, us-east-2, af-south-1, ap-east-1, ap-east-2, ap-south-2, ap-southeast-1, ap-southeast-2, ap-southeast-3, ap-southeast-5, ap-southeast-4, ap-southeast-7, ap-south-1, ap-northeast-3, ap-northeast-1, ap-northeast-2, ca-central-1, ca-west-1, eu-south-1, eu-west-3, eu-south-2, eu-central-2, eu-central-1, eu-north-1, eu-west-1, eu-west-2, me-south-1, me-central-1, il-central-1, sa-east-1, mx-central-1
+    #     is_metrics_enabled: false,
     #   })
     #
     # @example Response structure
@@ -1026,6 +1139,11 @@ module Aws::CleanRooms
     #   resp.collaboration.query_log_status #=> String, one of "ENABLED", "DISABLED"
     #   resp.collaboration.job_log_status #=> String, one of "ENABLED", "DISABLED"
     #   resp.collaboration.analytics_engine #=> String, one of "SPARK", "CLEAN_ROOMS_SQL"
+    #   resp.collaboration.auto_approved_change_types #=> Array
+    #   resp.collaboration.auto_approved_change_types[0] #=> String, one of "ADD_MEMBER", "GRANT_RECEIVE_RESULTS_ABILITY", "REVOKE_RECEIVE_RESULTS_ABILITY", "GRANT_EXPORT_QUERY_ANALYSIS_LOG_ABILITY", "REVOKE_EXPORT_QUERY_ANALYSIS_LOG_ABILITY"
+    #   resp.collaboration.allowed_result_regions #=> Array
+    #   resp.collaboration.allowed_result_regions[0] #=> String, one of "us-west-1", "us-west-2", "us-east-1", "us-east-2", "af-south-1", "ap-east-1", "ap-east-2", "ap-south-2", "ap-southeast-1", "ap-southeast-2", "ap-southeast-3", "ap-southeast-5", "ap-southeast-4", "ap-southeast-7", "ap-south-1", "ap-northeast-3", "ap-northeast-1", "ap-northeast-2", "ca-central-1", "ca-west-1", "eu-south-1", "eu-west-3", "eu-south-2", "eu-central-2", "eu-central-1", "eu-north-1", "eu-west-1", "eu-west-2", "me-south-1", "me-central-1", "il-central-1", "sa-east-1", "mx-central-1"
+    #   resp.collaboration.is_metrics_enabled #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/CreateCollaboration AWS API Documentation
     #
@@ -1033,6 +1151,103 @@ module Aws::CleanRooms
     # @param [Hash] params ({})
     def create_collaboration(params = {}, options = {})
       req = build_request(:create_collaboration, params)
+      req.send_request(options)
+    end
+
+    # Creates a new change request to modify an existing collaboration. This
+    # enables post-creation modifications to collaborations through a
+    # structured API-driven approach.
+    #
+    # @option params [required, String] :collaboration_identifier
+    #   The identifier of the collaboration that the change request is made
+    #   against.
+    #
+    # @option params [required, Array<Types::ChangeInput>] :changes
+    #   The list of changes to apply to the collaboration. Each change
+    #   specifies the type of modification and the details of what should be
+    #   changed.
+    #
+    # @return [Types::CreateCollaborationChangeRequestOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateCollaborationChangeRequestOutput#collaboration_change_request #collaboration_change_request} => Types::CollaborationChangeRequest
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_collaboration_change_request({
+    #     collaboration_identifier: "CollaborationIdentifier", # required
+    #     changes: [ # required
+    #       {
+    #         specification_type: "MEMBER", # required, accepts MEMBER, COLLABORATION
+    #         specification: { # required
+    #           member: {
+    #             account_id: "AccountId", # required
+    #             member_abilities: ["CAN_QUERY"], # required, accepts CAN_QUERY, CAN_RECEIVE_RESULTS, CAN_RUN_JOB, CAN_EXPORT_QUERY_ANALYSIS_LOG
+    #             ml_member_abilities: {
+    #               custom_ml_member_abilities: ["CAN_RECEIVE_MODEL_OUTPUT"], # required, accepts CAN_RECEIVE_MODEL_OUTPUT, CAN_RECEIVE_INFERENCE_OUTPUT
+    #             },
+    #             payment_configuration: {
+    #               query_compute: { # required
+    #                 is_responsible: false, # required
+    #               },
+    #               machine_learning: {
+    #                 model_training: {
+    #                   is_responsible: false, # required
+    #                 },
+    #                 model_inference: {
+    #                   is_responsible: false, # required
+    #                 },
+    #                 synthetic_data_generation: {
+    #                   is_responsible: false, # required
+    #                 },
+    #               },
+    #               job_compute: {
+    #                 is_responsible: false, # required
+    #               },
+    #             },
+    #             display_name: "DisplayName",
+    #           },
+    #           collaboration: {
+    #             auto_approved_change_types: ["ADD_MEMBER"], # accepts ADD_MEMBER, GRANT_RECEIVE_RESULTS_ABILITY, REVOKE_RECEIVE_RESULTS_ABILITY, GRANT_EXPORT_QUERY_ANALYSIS_LOG_ABILITY, REVOKE_EXPORT_QUERY_ANALYSIS_LOG_ABILITY
+    #           },
+    #         },
+    #       },
+    #     ],
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.collaboration_change_request.id #=> String
+    #   resp.collaboration_change_request.collaboration_id #=> String
+    #   resp.collaboration_change_request.create_time #=> Time
+    #   resp.collaboration_change_request.update_time #=> Time
+    #   resp.collaboration_change_request.status #=> String, one of "PENDING", "APPROVED", "CANCELLED", "DENIED", "COMMITTED"
+    #   resp.collaboration_change_request.is_auto_approved #=> Boolean
+    #   resp.collaboration_change_request.changes #=> Array
+    #   resp.collaboration_change_request.changes[0].specification_type #=> String, one of "MEMBER", "COLLABORATION"
+    #   resp.collaboration_change_request.changes[0].specification.member.account_id #=> String
+    #   resp.collaboration_change_request.changes[0].specification.member.member_abilities #=> Array
+    #   resp.collaboration_change_request.changes[0].specification.member.member_abilities[0] #=> String, one of "CAN_QUERY", "CAN_RECEIVE_RESULTS", "CAN_RUN_JOB", "CAN_EXPORT_QUERY_ANALYSIS_LOG"
+    #   resp.collaboration_change_request.changes[0].specification.member.ml_member_abilities.custom_ml_member_abilities #=> Array
+    #   resp.collaboration_change_request.changes[0].specification.member.ml_member_abilities.custom_ml_member_abilities[0] #=> String, one of "CAN_RECEIVE_MODEL_OUTPUT", "CAN_RECEIVE_INFERENCE_OUTPUT"
+    #   resp.collaboration_change_request.changes[0].specification.member.payment_configuration.query_compute.is_responsible #=> Boolean
+    #   resp.collaboration_change_request.changes[0].specification.member.payment_configuration.machine_learning.model_training.is_responsible #=> Boolean
+    #   resp.collaboration_change_request.changes[0].specification.member.payment_configuration.machine_learning.model_inference.is_responsible #=> Boolean
+    #   resp.collaboration_change_request.changes[0].specification.member.payment_configuration.machine_learning.synthetic_data_generation.is_responsible #=> Boolean
+    #   resp.collaboration_change_request.changes[0].specification.member.payment_configuration.job_compute.is_responsible #=> Boolean
+    #   resp.collaboration_change_request.changes[0].specification.member.display_name #=> String
+    #   resp.collaboration_change_request.changes[0].specification.collaboration.auto_approved_change_types #=> Array
+    #   resp.collaboration_change_request.changes[0].specification.collaboration.auto_approved_change_types[0] #=> String, one of "ADD_MEMBER", "GRANT_RECEIVE_RESULTS_ABILITY", "REVOKE_RECEIVE_RESULTS_ABILITY", "GRANT_EXPORT_QUERY_ANALYSIS_LOG_ABILITY", "REVOKE_EXPORT_QUERY_ANALYSIS_LOG_ABILITY"
+    #   resp.collaboration_change_request.changes[0].types #=> Array
+    #   resp.collaboration_change_request.changes[0].types[0] #=> String, one of "ADD_MEMBER", "GRANT_RECEIVE_RESULTS_ABILITY", "REVOKE_RECEIVE_RESULTS_ABILITY", "EDIT_AUTO_APPROVED_CHANGE_TYPES", "ADD_PAYER_CANDIDATE", "REMOVE_PAYER_CANDIDATE", "GRANT_CAN_RECEIVE_MODEL_OUTPUT", "GRANT_CAN_RECEIVE_INFERENCE_OUTPUT", "REVOKE_CAN_RECEIVE_MODEL_OUTPUT", "REVOKE_CAN_RECEIVE_INFERENCE_OUTPUT", "GRANT_EXPORT_QUERY_ANALYSIS_LOG_ABILITY", "REVOKE_EXPORT_QUERY_ANALYSIS_LOG_ABILITY"
+    #   resp.collaboration_change_request.approvals #=> Hash
+    #   resp.collaboration_change_request.approvals["AccountId"].status #=> String, one of "APPROVED", "DENIED", "PENDING"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/CreateCollaborationChangeRequest AWS API Documentation
+    #
+    # @overload create_collaboration_change_request(params = {})
+    # @param [Hash] params ({})
+    def create_collaboration_change_request(params = {}, options = {})
+      req = build_request(:create_collaboration_change_request, params)
       req.send_request(options)
     end
 
@@ -1161,6 +1376,7 @@ module Aws::CleanRooms
     #     description: "TableDescription",
     #     table_reference: { # required
     #       glue: {
+    #         region: "us-west-1", # accepts us-west-1, us-west-2, us-east-1, us-east-2, af-south-1, ap-east-1, ap-south-2, ap-southeast-1, ap-southeast-2, ap-southeast-3, ap-southeast-5, ap-southeast-4, ap-southeast-7, ap-south-1, ap-northeast-3, ap-northeast-1, ap-northeast-2, ca-central-1, ca-west-1, eu-south-1, eu-west-3, eu-south-2, eu-central-2, eu-central-1, eu-north-1, eu-west-1, eu-west-2, me-south-1, me-central-1, il-central-1, sa-east-1, mx-central-1, ap-east-2
     #         table_name: "GlueTableName", # required
     #         database_name: "GlueDatabaseName", # required
     #       },
@@ -1180,10 +1396,12 @@ module Aws::CleanRooms
     #         },
     #       },
     #       athena: {
+    #         region: "us-west-1", # accepts us-west-1, us-west-2, us-east-1, us-east-2, af-south-1, ap-east-1, ap-south-2, ap-southeast-1, ap-southeast-2, ap-southeast-3, ap-southeast-5, ap-southeast-4, ap-southeast-7, ap-south-1, ap-northeast-3, ap-northeast-1, ap-northeast-2, ca-central-1, ca-west-1, eu-south-1, eu-west-3, eu-south-2, eu-central-2, eu-central-1, eu-north-1, eu-west-1, eu-west-2, me-south-1, me-central-1, il-central-1, sa-east-1, mx-central-1, ap-east-2
     #         work_group: "AthenaWorkGroup", # required
     #         output_location: "AthenaOutputLocation",
     #         database_name: "AthenaDatabaseName", # required
     #         table_name: "AthenaTableName", # required
+    #         catalog_name: "AthenaCatalogName",
     #       },
     #     },
     #     allowed_columns: ["ColumnName"], # required
@@ -1200,6 +1418,7 @@ module Aws::CleanRooms
     #   resp.configured_table.arn #=> String
     #   resp.configured_table.name #=> String
     #   resp.configured_table.description #=> String
+    #   resp.configured_table.table_reference.glue.region #=> String, one of "us-west-1", "us-west-2", "us-east-1", "us-east-2", "af-south-1", "ap-east-1", "ap-south-2", "ap-southeast-1", "ap-southeast-2", "ap-southeast-3", "ap-southeast-5", "ap-southeast-4", "ap-southeast-7", "ap-south-1", "ap-northeast-3", "ap-northeast-1", "ap-northeast-2", "ca-central-1", "ca-west-1", "eu-south-1", "eu-west-3", "eu-south-2", "eu-central-2", "eu-central-1", "eu-north-1", "eu-west-1", "eu-west-2", "me-south-1", "me-central-1", "il-central-1", "sa-east-1", "mx-central-1", "ap-east-2"
     #   resp.configured_table.table_reference.glue.table_name #=> String
     #   resp.configured_table.table_reference.glue.database_name #=> String
     #   resp.configured_table.table_reference.snowflake.secret_arn #=> String
@@ -1210,10 +1429,12 @@ module Aws::CleanRooms
     #   resp.configured_table.table_reference.snowflake.table_schema.v1 #=> Array
     #   resp.configured_table.table_reference.snowflake.table_schema.v1[0].column_name #=> String
     #   resp.configured_table.table_reference.snowflake.table_schema.v1[0].column_type #=> String
+    #   resp.configured_table.table_reference.athena.region #=> String, one of "us-west-1", "us-west-2", "us-east-1", "us-east-2", "af-south-1", "ap-east-1", "ap-south-2", "ap-southeast-1", "ap-southeast-2", "ap-southeast-3", "ap-southeast-5", "ap-southeast-4", "ap-southeast-7", "ap-south-1", "ap-northeast-3", "ap-northeast-1", "ap-northeast-2", "ca-central-1", "ca-west-1", "eu-south-1", "eu-west-3", "eu-south-2", "eu-central-2", "eu-central-1", "eu-north-1", "eu-west-1", "eu-west-2", "me-south-1", "me-central-1", "il-central-1", "sa-east-1", "mx-central-1", "ap-east-2"
     #   resp.configured_table.table_reference.athena.work_group #=> String
     #   resp.configured_table.table_reference.athena.output_location #=> String
     #   resp.configured_table.table_reference.athena.database_name #=> String
     #   resp.configured_table.table_reference.athena.table_name #=> String
+    #   resp.configured_table.table_reference.athena.catalog_name #=> String
     #   resp.configured_table.create_time #=> Time
     #   resp.configured_table.update_time #=> Time
     #   resp.configured_table.analysis_rule_types #=> Array
@@ -1292,10 +1513,30 @@ module Aws::CleanRooms
     #           differential_privacy: {
     #             columns: [ # required
     #               {
-    #                 name: "String", # required
+    #                 name: "ColumnName", # required
     #               },
     #             ],
     #           },
+    #           aggregation_thresholds: [
+    #             {
+    #               identity_columns: ["AnalysisRuleColumnName"], # required
+    #               minimum_identity_count: 1, # required
+    #               type: "COUNT_DISTINCT", # required, accepts COUNT_DISTINCT
+    #               output_column_thresholds: [
+    #                 {
+    #                   output_column_name: "AnalysisRuleColumnName", # required
+    #                   minimum_identity_count: 1, # required
+    #                 },
+    #               ],
+    #               allowed_aggregate_expression_type: "COLUMNS_ONLY", # required, accepts COLUMNS_ONLY, ANY_EXPRESSION
+    #             },
+    #           ],
+    #           comparison_controls: {
+    #             allowed_literal_comparison_columns: ["AnalysisRuleColumnName"], # required
+    #             allowed_column_comparison_columns: ["AnalysisRuleColumnName"], # required
+    #           },
+    #           allowed_result_receivers: ["AccountId"],
+    #           allowed_additional_analyses: ["AdditionalAnalysesResourceArn"],
     #         },
     #       },
     #     },
@@ -1339,6 +1580,23 @@ module Aws::CleanRooms
     #   resp.analysis_rule.policy.v1.custom.disallowed_output_columns[0] #=> String
     #   resp.analysis_rule.policy.v1.custom.differential_privacy.columns #=> Array
     #   resp.analysis_rule.policy.v1.custom.differential_privacy.columns[0].name #=> String
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds #=> Array
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].identity_columns #=> Array
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].identity_columns[0] #=> String
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].minimum_identity_count #=> Integer
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].type #=> String, one of "COUNT_DISTINCT"
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].output_column_thresholds #=> Array
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].output_column_thresholds[0].output_column_name #=> String
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].output_column_thresholds[0].minimum_identity_count #=> Integer
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].allowed_aggregate_expression_type #=> String, one of "COLUMNS_ONLY", "ANY_EXPRESSION"
+    #   resp.analysis_rule.policy.v1.custom.comparison_controls.allowed_literal_comparison_columns #=> Array
+    #   resp.analysis_rule.policy.v1.custom.comparison_controls.allowed_literal_comparison_columns[0] #=> String
+    #   resp.analysis_rule.policy.v1.custom.comparison_controls.allowed_column_comparison_columns #=> Array
+    #   resp.analysis_rule.policy.v1.custom.comparison_controls.allowed_column_comparison_columns[0] #=> String
+    #   resp.analysis_rule.policy.v1.custom.allowed_result_receivers #=> Array
+    #   resp.analysis_rule.policy.v1.custom.allowed_result_receivers[0] #=> String
+    #   resp.analysis_rule.policy.v1.custom.allowed_additional_analyses #=> Array
+    #   resp.analysis_rule.policy.v1.custom.allowed_additional_analyses[0] #=> String
     #   resp.analysis_rule.type #=> String, one of "AGGREGATION", "LIST", "CUSTOM"
     #   resp.analysis_rule.create_time #=> Time
     #   resp.analysis_rule.update_time #=> Time
@@ -1413,6 +1671,12 @@ module Aws::CleanRooms
     #   resp.configured_table_association.analysis_rule_types[0] #=> String, one of "AGGREGATION", "LIST", "CUSTOM"
     #   resp.configured_table_association.create_time #=> Time
     #   resp.configured_table_association.update_time #=> Time
+    #   resp.configured_table_association.child_resources #=> Array
+    #   resp.configured_table_association.child_resources[0].resource_id #=> String
+    #   resp.configured_table_association.child_resources[0].resource_type #=> String, one of "INTERMEDIATE_TABLE"
+    #   resp.configured_table_association.child_resources[0].resource_name #=> String
+    #   resp.configured_table_association.child_resources[0].owner_account_id #=> String
+    #   resp.configured_table_association.child_resources[0].resource_status #=> String, one of "CREATED", "POPULATE_STARTED", "POPULATE_SUCCESS", "POPULATE_FAILED", "DISALLOWED_BY_DATA_PROVIDER", "BASE_TABLE_REMOVED", "RETENTION_PERIOD_EXPIRED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/CreateConfiguredTableAssociation AWS API Documentation
     #
@@ -1563,6 +1827,12 @@ module Aws::CleanRooms
     #   resp.id_mapping_table.input_reference_properties.id_mapping_table_input_source[0].id_namespace_association_id #=> String
     #   resp.id_mapping_table.input_reference_properties.id_mapping_table_input_source[0].type #=> String, one of "SOURCE", "TARGET"
     #   resp.id_mapping_table.kms_key_arn #=> String
+    #   resp.id_mapping_table.child_resources #=> Array
+    #   resp.id_mapping_table.child_resources[0].resource_id #=> String
+    #   resp.id_mapping_table.child_resources[0].resource_type #=> String, one of "INTERMEDIATE_TABLE"
+    #   resp.id_mapping_table.child_resources[0].resource_name #=> String
+    #   resp.id_mapping_table.child_resources[0].owner_account_id #=> String
+    #   resp.id_mapping_table.child_resources[0].resource_status #=> String, one of "CREATED", "POPULATE_STARTED", "POPULATE_SUCCESS", "POPULATE_FAILED", "DISALLOWED_BY_DATA_PROVIDER", "BASE_TABLE_REMOVED", "RETENTION_PERIOD_EXPIRED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/CreateIdMappingTable AWS API Documentation
     #
@@ -1647,6 +1917,257 @@ module Aws::CleanRooms
       req.send_request(options)
     end
 
+    # Creates an intermediate table in a membership. The intermediate table
+    # is owned by the member with the CAN\_QUERY ability. To populate the
+    # table with results, use `PopulateIntermediateTable`.
+    #
+    # @option params [required, String] :membership_identifier
+    #   The unique identifier of the membership where the intermediate table
+    #   is created.
+    #
+    # @option params [required, String] :name
+    #   The display name for the intermediate table.
+    #
+    # @option params [String] :description
+    #   A description of the intermediate table.
+    #
+    # @option params [required, Types::PopulationAnalysisConfiguration] :population_analysis_configuration
+    #   The configuration that defines the analysis used to populate the
+    #   intermediate table.
+    #
+    # @option params [String] :kms_key_arn
+    #   The Amazon Resource Name (ARN) of the customer-managed KMS key used to
+    #   encrypt the intermediate table data.
+    #
+    # @option params [Integer] :retention_in_days
+    #   The number of days to retain populated data versions.
+    #
+    # @option params [Hash<String,String>] :tags
+    #   An optional label that you can assign to a resource when you create
+    #   it. Each tag consists of a key and an optional value, both of which
+    #   you define. When you use tagging, you can also use tag-based access
+    #   control in IAM policies to control access to this resource.
+    #
+    # @return [Types::CreateIntermediateTableOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateIntermediateTableOutput#intermediate_table #intermediate_table} => Types::IntermediateTable
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_intermediate_table({
+    #     membership_identifier: "MembershipIdentifier", # required
+    #     name: "DisplayName", # required
+    #     description: "ResourceDescription",
+    #     population_analysis_configuration: { # required
+    #       sql_parameters: {
+    #         query_string: "PopulationAnalysisSqlParametersQueryStringString",
+    #         analysis_template_arn: "AnalysisTemplateArn",
+    #       },
+    #     },
+    #     kms_key_arn: "KMSKeyArn",
+    #     retention_in_days: 1,
+    #     tags: {
+    #       "TagKey" => "TagValue",
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.intermediate_table.id #=> String
+    #   resp.intermediate_table.arn #=> String
+    #   resp.intermediate_table.name #=> String
+    #   resp.intermediate_table.description #=> String
+    #   resp.intermediate_table.membership_arn #=> String
+    #   resp.intermediate_table.membership_id #=> String
+    #   resp.intermediate_table.collaboration_arn #=> String
+    #   resp.intermediate_table.collaboration_id #=> String
+    #   resp.intermediate_table.child_resources #=> Array
+    #   resp.intermediate_table.child_resources[0].resource_id #=> String
+    #   resp.intermediate_table.child_resources[0].resource_type #=> String, one of "INTERMEDIATE_TABLE"
+    #   resp.intermediate_table.child_resources[0].resource_name #=> String
+    #   resp.intermediate_table.child_resources[0].owner_account_id #=> String
+    #   resp.intermediate_table.child_resources[0].resource_status #=> String, one of "CREATED", "POPULATE_STARTED", "POPULATE_SUCCESS", "POPULATE_FAILED", "DISALLOWED_BY_DATA_PROVIDER", "BASE_TABLE_REMOVED", "RETENTION_PERIOD_EXPIRED"
+    #   resp.intermediate_table.create_time #=> Time
+    #   resp.intermediate_table.update_time #=> Time
+    #   resp.intermediate_table.status #=> String, one of "CREATED", "POPULATE_STARTED", "POPULATE_SUCCESS", "POPULATE_FAILED", "DISALLOWED_BY_DATA_PROVIDER", "BASE_TABLE_REMOVED", "RETENTION_PERIOD_EXPIRED"
+    #   resp.intermediate_table.status_reason #=> String
+    #   resp.intermediate_table.kms_key_arn #=> String
+    #   resp.intermediate_table.population_analysis_configuration.sql_parameters.query_string #=> String
+    #   resp.intermediate_table.population_analysis_configuration.sql_parameters.analysis_template_arn #=> String
+    #   resp.intermediate_table.retention_in_days #=> Integer
+    #   resp.intermediate_table.table_dependencies #=> Array
+    #   resp.intermediate_table.table_dependencies[0].id #=> String
+    #   resp.intermediate_table.table_dependencies[0].name #=> String
+    #   resp.intermediate_table.table_dependencies[0].type #=> String, one of "TABLE", "INTERMEDIATE_TABLE", "ID_MAPPING_TABLE"
+    #   resp.intermediate_table.table_dependencies[0].parent_type #=> String, one of "DIRECT", "INDIRECT"
+    #   resp.intermediate_table.table_dependencies[0].creator_account_id #=> String
+    #   resp.intermediate_table.intermediate_table_version.version_id #=> String
+    #   resp.intermediate_table.intermediate_table_version.analysis_id #=> String
+    #   resp.intermediate_table.intermediate_table_version.analysis_type #=> String, one of "QUERY"
+    #   resp.intermediate_table.intermediate_table_version.kms_key_arn #=> String
+    #   resp.intermediate_table.intermediate_table_version.parameters #=> Hash
+    #   resp.intermediate_table.intermediate_table_version.parameters["ParameterName"] #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.additional_analyses.value #=> String, one of "ALLOWED", "REQUIRED", "NOT_ALLOWED"
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.additional_analyses.sources #=> Array
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.additional_analyses.sources[0].name #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.additional_analyses.sources[0].id #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.additional_analyses.sources[0].type #=> String, one of "TABLE", "INTERMEDIATE_TABLE", "ID_MAPPING_TABLE"
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.additional_analyses.sources[0].value #=> String, one of "ALLOWED", "REQUIRED", "NOT_ALLOWED"
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.additional_analyses.sources[0].source_account_id #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_additional_analyses.value #=> Array
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_additional_analyses.value[0] #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_additional_analyses.sources #=> Array
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_additional_analyses.sources[0].name #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_additional_analyses.sources[0].id #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_additional_analyses.sources[0].type #=> String, one of "TABLE", "INTERMEDIATE_TABLE", "ID_MAPPING_TABLE"
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_additional_analyses.sources[0].value #=> Array
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_additional_analyses.sources[0].value[0] #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_additional_analyses.sources[0].source_account_id #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_result_receivers.value #=> Array
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_result_receivers.value[0] #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_result_receivers.sources #=> Array
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_result_receivers.sources[0].name #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_result_receivers.sources[0].id #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_result_receivers.sources[0].type #=> String, one of "TABLE", "INTERMEDIATE_TABLE", "ID_MAPPING_TABLE"
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_result_receivers.sources[0].value #=> Array
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_result_receivers.sources[0].value[0] #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_result_receivers.sources[0].source_account_id #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.disallowed_output_columns.value #=> Array
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.disallowed_output_columns.value[0] #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.disallowed_output_columns.column_lineage #=> Array
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.disallowed_output_columns.column_lineage[0].column #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.disallowed_output_columns.column_lineage[0].source_column #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.disallowed_output_columns.column_lineage[0].source_name #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.disallowed_output_columns.column_lineage[0].source_id #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.disallowed_output_columns.column_lineage[0].source_type #=> String, one of "TABLE", "INTERMEDIATE_TABLE", "ID_MAPPING_TABLE"
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.disallowed_output_columns.column_lineage[0].source_account_id #=> String
+    #   resp.intermediate_table.intermediate_table_version.expiration_time #=> Time
+    #   resp.intermediate_table.analysis_rule_types #=> Array
+    #   resp.intermediate_table.analysis_rule_types[0] #=> String, one of "CUSTOM"
+    #   resp.intermediate_table.schema.columns #=> Array
+    #   resp.intermediate_table.schema.columns[0].name #=> String
+    #   resp.intermediate_table.schema.columns[0].type #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/CreateIntermediateTable AWS API Documentation
+    #
+    # @overload create_intermediate_table(params = {})
+    # @param [Hash] params ({})
+    def create_intermediate_table(params = {}, options = {})
+      req = build_request(:create_intermediate_table, params)
+      req.send_request(options)
+    end
+
+    # Creates an analysis rule for an intermediate table. Only the CUSTOM
+    # analysis rule type is supported. Only the intermediate table owner can
+    # call this operation.
+    #
+    # @option params [required, String] :membership_identifier
+    #   The unique identifier of the membership that contains the intermediate
+    #   table.
+    #
+    # @option params [required, String] :intermediate_table_identifier
+    #   The unique identifier of the intermediate table for which to create
+    #   the analysis rule.
+    #
+    # @option params [required, String] :analysis_rule_type
+    #   The type of analysis rule to create. Currently, only `CUSTOM` is
+    #   supported.
+    #
+    # @option params [required, Types::IntermediateTableAnalysisRulePolicy] :analysis_rule_policy
+    #   The analysis rule policy to apply to the intermediate table.
+    #
+    # @return [Types::CreateIntermediateTableAnalysisRuleOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateIntermediateTableAnalysisRuleOutput#analysis_rule #analysis_rule} => Types::IntermediateTableAnalysisRule
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_intermediate_table_analysis_rule({
+    #     membership_identifier: "MembershipIdentifier", # required
+    #     intermediate_table_identifier: "IntermediateTableIdentifier", # required
+    #     analysis_rule_type: "CUSTOM", # required, accepts CUSTOM
+    #     analysis_rule_policy: { # required
+    #       v1: {
+    #         custom: {
+    #           allowed_analyses: ["AnalysisTemplateArnOrQueryWildcard"],
+    #           additional_analyses: "ALLOWED", # accepts ALLOWED, REQUIRED, NOT_ALLOWED
+    #           allowed_additional_analyses: ["AdditionalAnalysesResourceArn"],
+    #           allowed_analysis_providers: ["AccountId"],
+    #           allowed_result_receivers: ["AccountId"],
+    #           differential_privacy: {
+    #             columns: [ # required
+    #               {
+    #                 name: "ColumnName", # required
+    #               },
+    #             ],
+    #           },
+    #           disallowed_output_columns: ["AnalysisRuleColumnName"],
+    #           aggregation_thresholds: [
+    #             {
+    #               identity_columns: ["AnalysisRuleColumnName"], # required
+    #               minimum_identity_count: 1, # required
+    #               type: "COUNT_DISTINCT", # required, accepts COUNT_DISTINCT
+    #               output_column_thresholds: [
+    #                 {
+    #                   output_column_name: "AnalysisRuleColumnName", # required
+    #                   minimum_identity_count: 1, # required
+    #                 },
+    #               ],
+    #               allowed_aggregate_expression_type: "COLUMNS_ONLY", # required, accepts COLUMNS_ONLY, ANY_EXPRESSION
+    #             },
+    #           ],
+    #           comparison_controls: {
+    #             allowed_literal_comparison_columns: ["AnalysisRuleColumnName"], # required
+    #             allowed_column_comparison_columns: ["AnalysisRuleColumnName"], # required
+    #           },
+    #         },
+    #       },
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.analysis_rule.intermediate_table_identifier #=> String
+    #   resp.analysis_rule.intermediate_table_arn #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.allowed_analyses #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.allowed_analyses[0] #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.additional_analyses #=> String, one of "ALLOWED", "REQUIRED", "NOT_ALLOWED"
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.allowed_additional_analyses #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.allowed_additional_analyses[0] #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.allowed_analysis_providers #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.allowed_analysis_providers[0] #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.allowed_result_receivers #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.allowed_result_receivers[0] #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.differential_privacy.columns #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.differential_privacy.columns[0].name #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.disallowed_output_columns #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.disallowed_output_columns[0] #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.aggregation_thresholds #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.aggregation_thresholds[0].identity_columns #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.aggregation_thresholds[0].identity_columns[0] #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.aggregation_thresholds[0].minimum_identity_count #=> Integer
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.aggregation_thresholds[0].type #=> String, one of "COUNT_DISTINCT"
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.aggregation_thresholds[0].output_column_thresholds #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.aggregation_thresholds[0].output_column_thresholds[0].output_column_name #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.aggregation_thresholds[0].output_column_thresholds[0].minimum_identity_count #=> Integer
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.aggregation_thresholds[0].allowed_aggregate_expression_type #=> String, one of "COLUMNS_ONLY", "ANY_EXPRESSION"
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.comparison_controls.allowed_literal_comparison_columns #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.comparison_controls.allowed_literal_comparison_columns[0] #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.comparison_controls.allowed_column_comparison_columns #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.comparison_controls.allowed_column_comparison_columns[0] #=> String
+    #   resp.analysis_rule.analysis_rule_type #=> String, one of "CUSTOM"
+    #   resp.analysis_rule.create_time #=> Time
+    #   resp.analysis_rule.update_time #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/CreateIntermediateTableAnalysisRule AWS API Documentation
+    #
+    # @overload create_intermediate_table_analysis_rule(params = {})
+    # @param [Hash] params ({})
+    def create_intermediate_table_analysis_rule(params = {}, options = {})
+      req = build_request(:create_intermediate_table_analysis_rule, params)
+      req.send_request(options)
+    end
+
     # Creates a membership for a specific collaboration identifier and joins
     # the collaboration.
     #
@@ -1694,6 +2215,18 @@ module Aws::CleanRooms
     #   to run queries but is configured as a payer by the collaboration
     #   creator.
     #
+    # @option params [Boolean] :is_metrics_enabled
+    #   An indicator as to whether Amazon CloudWatch metrics have been enabled
+    #   or disabled for the membership.
+    #
+    #   Amazon CloudWatch metrics are only available when the collaboration
+    #   has metrics enabled. This option can be set by collaboration members
+    #   who have the ability to run queries (analysis runners) or by members
+    #   who are configured as payers.
+    #
+    #   When `true`, metrics about query execution are collected in Amazon
+    #   CloudWatch. The default value is `false`.
+    #
     # @return [Types::CreateMembershipOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateMembershipOutput#membership #membership} => Types::Membership
@@ -1738,11 +2271,15 @@ module Aws::CleanRooms
     #         model_inference: {
     #           is_responsible: false, # required
     #         },
+    #         synthetic_data_generation: {
+    #           is_responsible: false, # required
+    #         },
     #       },
     #       job_compute: {
     #         is_responsible: false, # required
     #       },
     #     },
+    #     is_metrics_enabled: false,
     #   })
     #
     # @example Response structure
@@ -1758,7 +2295,7 @@ module Aws::CleanRooms
     #   resp.membership.update_time #=> Time
     #   resp.membership.status #=> String, one of "ACTIVE", "REMOVED", "COLLABORATION_DELETED"
     #   resp.membership.member_abilities #=> Array
-    #   resp.membership.member_abilities[0] #=> String, one of "CAN_QUERY", "CAN_RECEIVE_RESULTS", "CAN_RUN_JOB"
+    #   resp.membership.member_abilities[0] #=> String, one of "CAN_QUERY", "CAN_RECEIVE_RESULTS", "CAN_RUN_JOB", "CAN_EXPORT_QUERY_ANALYSIS_LOG"
     #   resp.membership.ml_member_abilities.custom_ml_member_abilities #=> Array
     #   resp.membership.ml_member_abilities.custom_ml_member_abilities[0] #=> String, one of "CAN_RECEIVE_MODEL_OUTPUT", "CAN_RECEIVE_INFERENCE_OUTPUT"
     #   resp.membership.query_log_status #=> String, one of "ENABLED", "DISABLED"
@@ -1774,7 +2311,9 @@ module Aws::CleanRooms
     #   resp.membership.payment_configuration.query_compute.is_responsible #=> Boolean
     #   resp.membership.payment_configuration.machine_learning.model_training.is_responsible #=> Boolean
     #   resp.membership.payment_configuration.machine_learning.model_inference.is_responsible #=> Boolean
+    #   resp.membership.payment_configuration.machine_learning.synthetic_data_generation.is_responsible #=> Boolean
     #   resp.membership.payment_configuration.job_compute.is_responsible #=> Boolean
+    #   resp.membership.is_metrics_enabled #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/CreateMembership AWS API Documentation
     #
@@ -1785,18 +2324,17 @@ module Aws::CleanRooms
       req.send_request(options)
     end
 
-    # Creates a privacy budget template for a specified membership. Each
-    # membership can have only one privacy budget template, but it can be
-    # deleted and recreated. If you need to change the privacy budget
-    # template for a membership, use the UpdatePrivacyBudgetTemplate
-    # operation.
+    # Creates a privacy budget template for a specified collaboration. Each
+    # collaboration can have only one privacy budget template. If you need
+    # to change the privacy budget template, use the
+    # UpdatePrivacyBudgetTemplate operation.
     #
     # @option params [required, String] :membership_identifier
     #   A unique identifier for one of your memberships for a collaboration.
     #   The privacy budget template is created in the collaboration that this
     #   membership belongs to. Accepts a membership ID.
     #
-    # @option params [required, String] :auto_refresh
+    # @option params [String] :auto_refresh
     #   How often the privacy budget refreshes.
     #
     #   If you plan to regularly bring new data into the collaboration, you
@@ -1826,12 +2364,22 @@ module Aws::CleanRooms
     #
     #   resp = client.create_privacy_budget_template({
     #     membership_identifier: "MembershipIdentifier", # required
-    #     auto_refresh: "CALENDAR_MONTH", # required, accepts CALENDAR_MONTH, NONE
-    #     privacy_budget_type: "DIFFERENTIAL_PRIVACY", # required, accepts DIFFERENTIAL_PRIVACY
+    #     auto_refresh: "CALENDAR_MONTH", # accepts CALENDAR_MONTH, NONE
+    #     privacy_budget_type: "DIFFERENTIAL_PRIVACY", # required, accepts DIFFERENTIAL_PRIVACY, ACCESS_BUDGET
     #     parameters: { # required
     #       differential_privacy: {
     #         epsilon: 1, # required
     #         users_noise_per_query: 1, # required
+    #       },
+    #       access_budget: {
+    #         budget_parameters: [ # required
+    #           {
+    #             type: "CALENDAR_DAY", # required, accepts CALENDAR_DAY, CALENDAR_MONTH, CALENDAR_WEEK, LIFETIME
+    #             budget: 1, # required
+    #             auto_refresh: "ENABLED", # accepts ENABLED, DISABLED
+    #           },
+    #         ],
+    #         resource_arn: "BudgetedResourceArn", # required
     #       },
     #     },
     #     tags: {
@@ -1849,10 +2397,15 @@ module Aws::CleanRooms
     #   resp.privacy_budget_template.collaboration_arn #=> String
     #   resp.privacy_budget_template.create_time #=> Time
     #   resp.privacy_budget_template.update_time #=> Time
-    #   resp.privacy_budget_template.privacy_budget_type #=> String, one of "DIFFERENTIAL_PRIVACY"
+    #   resp.privacy_budget_template.privacy_budget_type #=> String, one of "DIFFERENTIAL_PRIVACY", "ACCESS_BUDGET"
     #   resp.privacy_budget_template.auto_refresh #=> String, one of "CALENDAR_MONTH", "NONE"
     #   resp.privacy_budget_template.parameters.differential_privacy.epsilon #=> Integer
     #   resp.privacy_budget_template.parameters.differential_privacy.users_noise_per_query #=> Integer
+    #   resp.privacy_budget_template.parameters.access_budget.budget_parameters #=> Array
+    #   resp.privacy_budget_template.parameters.access_budget.budget_parameters[0].type #=> String, one of "CALENDAR_DAY", "CALENDAR_MONTH", "CALENDAR_WEEK", "LIFETIME"
+    #   resp.privacy_budget_template.parameters.access_budget.budget_parameters[0].budget #=> Integer
+    #   resp.privacy_budget_template.parameters.access_budget.budget_parameters[0].auto_refresh #=> String, one of "ENABLED", "DISABLED"
+    #   resp.privacy_budget_template.parameters.access_budget.resource_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/CreatePrivacyBudgetTemplate AWS API Documentation
     #
@@ -2107,6 +2660,70 @@ module Aws::CleanRooms
       req.send_request(options)
     end
 
+    # Deletes an intermediate table. The delete is idempotent. Only the
+    # intermediate table owner can call this operation.
+    #
+    # @option params [required, String] :membership_identifier
+    #   The unique identifier of the membership that contains the intermediate
+    #   table.
+    #
+    # @option params [required, String] :intermediate_table_identifier
+    #   The unique identifier of the intermediate table to delete.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_intermediate_table({
+    #     membership_identifier: "MembershipIdentifier", # required
+    #     intermediate_table_identifier: "IntermediateTableIdentifier", # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/DeleteIntermediateTable AWS API Documentation
+    #
+    # @overload delete_intermediate_table(params = {})
+    # @param [Hash] params ({})
+    def delete_intermediate_table(params = {}, options = {})
+      req = build_request(:delete_intermediate_table, params)
+      req.send_request(options)
+    end
+
+    # Deletes an analysis rule from an intermediate table. After the
+    # analysis rule is deleted, the intermediate table becomes unqueryable
+    # until a new analysis rule is attached. Only the intermediate table
+    # owner can call this operation.
+    #
+    # @option params [required, String] :membership_identifier
+    #   The unique identifier of the membership that contains the intermediate
+    #   table.
+    #
+    # @option params [required, String] :intermediate_table_identifier
+    #   The unique identifier of the intermediate table from which to delete
+    #   the analysis rule.
+    #
+    # @option params [required, String] :analysis_rule_type
+    #   The type of analysis rule to delete. Currently, only `CUSTOM` is
+    #   supported.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_intermediate_table_analysis_rule({
+    #     membership_identifier: "MembershipIdentifier", # required
+    #     intermediate_table_identifier: "IntermediateTableIdentifier", # required
+    #     analysis_rule_type: "CUSTOM", # required, accepts CUSTOM
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/DeleteIntermediateTableAnalysisRule AWS API Documentation
+    #
+    # @overload delete_intermediate_table_analysis_rule(params = {})
+    # @param [Hash] params ({})
+    def delete_intermediate_table_analysis_rule(params = {}, options = {})
+      req = build_request(:delete_intermediate_table_analysis_rule, params)
+      req.send_request(options)
+    end
+
     # Removes the specified member from a collaboration. The removed member
     # is placed in the Removed status and can't interact with the
     # collaboration. The removed member's data is inaccessible to active
@@ -2159,7 +2776,7 @@ module Aws::CleanRooms
       req.send_request(options)
     end
 
-    # Deletes a privacy budget template for a specified membership.
+    # Deletes a privacy budget template for a specified collaboration.
     #
     # @option params [required, String] :membership_identifier
     #   A unique identifier for one of your memberships for a collaboration.
@@ -2184,6 +2801,88 @@ module Aws::CleanRooms
     # @param [Hash] params ({})
     def delete_privacy_budget_template(params = {}, options = {})
       req = build_request(:delete_privacy_budget_template, params)
+      req.send_request(options)
+    end
+
+    # Marks an intermediate table as invalid when it references the
+    # caller's base table. The data provider (base table owner) calls this
+    # operation, not the intermediate table owner. By default, the operation
+    # also marks all descendant intermediate tables as invalid.
+    #
+    # @option params [required, String] :membership_identifier
+    #   The unique identifier of the membership that contains the intermediate
+    #   table to disallow.
+    #
+    # @option params [required, String] :intermediate_table_name
+    #   The name of the intermediate table to disallow.
+    #
+    # @option params [Boolean] :include_descendants
+    #   Specifies whether to cascade the disallow action to descendant
+    #   intermediate tables. Default is `true`.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.disallow_intermediate_table({
+    #     membership_identifier: "MembershipIdentifier", # required
+    #     intermediate_table_name: "DisplayName", # required
+    #     include_descendants: false,
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/DisallowIntermediateTable AWS API Documentation
+    #
+    # @overload disallow_intermediate_table(params = {})
+    # @param [Hash] params ({})
+    def disallow_intermediate_table(params = {}, options = {})
+      req = build_request(:disallow_intermediate_table, params)
+      req.send_request(options)
+    end
+
+    # Returns information about an analysis log export, including its
+    # current status and, if the export failed, the reason for the failure.
+    #
+    # Poll this operation until the `status` is `SUCCESS` or `FAILED`. An
+    # export can't be canceled after it starts.
+    #
+    # @option params [required, String] :membership_identifier
+    #   A unique identifier for the membership that the analysis log export
+    #   belongs to. Currently accepts the membership ID.
+    #
+    # @option params [required, String] :analysis_log_export_identifier
+    #   The unique identifier of the analysis log export to retrieve.
+    #
+    # @return [Types::GetAnalysisLogExportOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetAnalysisLogExportOutput#analysis_log_export #analysis_log_export} => Types::AnalysisLogExport
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_analysis_log_export({
+    #     membership_identifier: "MembershipIdentifier", # required
+    #     analysis_log_export_identifier: "AnalysisLogExportIdentifier", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.analysis_log_export.analysis_log_export_id #=> String
+    #   resp.analysis_log_export.analysis_id #=> String
+    #   resp.analysis_log_export.analysis_type #=> String, one of "PROTECTED_QUERY"
+    #   resp.analysis_log_export.membership_id #=> String
+    #   resp.analysis_log_export.status #=> String, one of "IN_PROGRESS", "SUCCESS", "FAILED"
+    #   resp.analysis_log_export.result_configuration.output_configuration.s3.bucket #=> String
+    #   resp.analysis_log_export.result_configuration.output_configuration.s3.key_prefix #=> String
+    #   resp.analysis_log_export.create_time #=> Time
+    #   resp.analysis_log_export.update_time #=> Time
+    #   resp.analysis_log_export.error.code #=> String
+    #   resp.analysis_log_export.error.message #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/GetAnalysisLogExport AWS API Documentation
+    #
+    # @overload get_analysis_log_export(params = {})
+    # @param [Hash] params ({})
+    def get_analysis_log_export(params = {}, options = {})
+      req = build_request(:get_analysis_log_export, params)
       req.send_request(options)
     end
 
@@ -2240,6 +2939,13 @@ module Aws::CleanRooms
     #   resp.analysis_template.validations[0].status #=> String, one of "VALID", "INVALID", "UNABLE_TO_VALIDATE"
     #   resp.analysis_template.validations[0].reasons #=> Array
     #   resp.analysis_template.validations[0].reasons[0].message #=> String
+    #   resp.analysis_template.error_message_configuration.type #=> String, one of "DETAILED"
+    #   resp.analysis_template.synthetic_data_parameters.ml_synthetic_data_parameters.epsilon #=> Float
+    #   resp.analysis_template.synthetic_data_parameters.ml_synthetic_data_parameters.max_membership_inference_attack_score #=> Float
+    #   resp.analysis_template.synthetic_data_parameters.ml_synthetic_data_parameters.column_classification.column_mapping #=> Array
+    #   resp.analysis_template.synthetic_data_parameters.ml_synthetic_data_parameters.column_classification.column_mapping[0].column_name #=> String
+    #   resp.analysis_template.synthetic_data_parameters.ml_synthetic_data_parameters.column_classification.column_mapping[0].column_type #=> String, one of "CATEGORICAL", "NUMERICAL"
+    #   resp.analysis_template.synthetic_data_parameters.ml_synthetic_data_parameters.column_classification.column_mapping[0].is_predictive_value #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/GetAnalysisTemplate AWS API Documentation
     #
@@ -2285,6 +2991,11 @@ module Aws::CleanRooms
     #   resp.collaboration.query_log_status #=> String, one of "ENABLED", "DISABLED"
     #   resp.collaboration.job_log_status #=> String, one of "ENABLED", "DISABLED"
     #   resp.collaboration.analytics_engine #=> String, one of "SPARK", "CLEAN_ROOMS_SQL"
+    #   resp.collaboration.auto_approved_change_types #=> Array
+    #   resp.collaboration.auto_approved_change_types[0] #=> String, one of "ADD_MEMBER", "GRANT_RECEIVE_RESULTS_ABILITY", "REVOKE_RECEIVE_RESULTS_ABILITY", "GRANT_EXPORT_QUERY_ANALYSIS_LOG_ABILITY", "REVOKE_EXPORT_QUERY_ANALYSIS_LOG_ABILITY"
+    #   resp.collaboration.allowed_result_regions #=> Array
+    #   resp.collaboration.allowed_result_regions[0] #=> String, one of "us-west-1", "us-west-2", "us-east-1", "us-east-2", "af-south-1", "ap-east-1", "ap-east-2", "ap-south-2", "ap-southeast-1", "ap-southeast-2", "ap-southeast-3", "ap-southeast-5", "ap-southeast-4", "ap-southeast-7", "ap-south-1", "ap-northeast-3", "ap-northeast-1", "ap-northeast-2", "ca-central-1", "ca-west-1", "eu-south-1", "eu-west-3", "eu-south-2", "eu-central-2", "eu-central-1", "eu-north-1", "eu-west-1", "eu-west-2", "me-south-1", "me-central-1", "il-central-1", "sa-east-1", "mx-central-1"
+    #   resp.collaboration.is_metrics_enabled #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/GetCollaboration AWS API Documentation
     #
@@ -2349,6 +3060,13 @@ module Aws::CleanRooms
     #   resp.collaboration_analysis_template.validations[0].status #=> String, one of "VALID", "INVALID", "UNABLE_TO_VALIDATE"
     #   resp.collaboration_analysis_template.validations[0].reasons #=> Array
     #   resp.collaboration_analysis_template.validations[0].reasons[0].message #=> String
+    #   resp.collaboration_analysis_template.error_message_configuration.type #=> String, one of "DETAILED"
+    #   resp.collaboration_analysis_template.synthetic_data_parameters.ml_synthetic_data_parameters.epsilon #=> Float
+    #   resp.collaboration_analysis_template.synthetic_data_parameters.ml_synthetic_data_parameters.max_membership_inference_attack_score #=> Float
+    #   resp.collaboration_analysis_template.synthetic_data_parameters.ml_synthetic_data_parameters.column_classification.column_mapping #=> Array
+    #   resp.collaboration_analysis_template.synthetic_data_parameters.ml_synthetic_data_parameters.column_classification.column_mapping[0].column_name #=> String
+    #   resp.collaboration_analysis_template.synthetic_data_parameters.ml_synthetic_data_parameters.column_classification.column_mapping[0].column_type #=> String, one of "CATEGORICAL", "NUMERICAL"
+    #   resp.collaboration_analysis_template.synthetic_data_parameters.ml_synthetic_data_parameters.column_classification.column_mapping[0].is_predictive_value #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/GetCollaborationAnalysisTemplate AWS API Documentation
     #
@@ -2356,6 +3074,64 @@ module Aws::CleanRooms
     # @param [Hash] params ({})
     def get_collaboration_analysis_template(params = {}, options = {})
       req = build_request(:get_collaboration_analysis_template, params)
+      req.send_request(options)
+    end
+
+    # Retrieves detailed information about a specific collaboration change
+    # request.
+    #
+    # @option params [required, String] :collaboration_identifier
+    #   The identifier of the collaboration that the change request is made
+    #   against.
+    #
+    # @option params [required, String] :change_request_identifier
+    #   A unique identifier for the change request to retrieve.
+    #
+    # @return [Types::GetCollaborationChangeRequestOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetCollaborationChangeRequestOutput#collaboration_change_request #collaboration_change_request} => Types::CollaborationChangeRequest
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_collaboration_change_request({
+    #     collaboration_identifier: "CollaborationIdentifier", # required
+    #     change_request_identifier: "CollaborationChangeRequestIdentifier", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.collaboration_change_request.id #=> String
+    #   resp.collaboration_change_request.collaboration_id #=> String
+    #   resp.collaboration_change_request.create_time #=> Time
+    #   resp.collaboration_change_request.update_time #=> Time
+    #   resp.collaboration_change_request.status #=> String, one of "PENDING", "APPROVED", "CANCELLED", "DENIED", "COMMITTED"
+    #   resp.collaboration_change_request.is_auto_approved #=> Boolean
+    #   resp.collaboration_change_request.changes #=> Array
+    #   resp.collaboration_change_request.changes[0].specification_type #=> String, one of "MEMBER", "COLLABORATION"
+    #   resp.collaboration_change_request.changes[0].specification.member.account_id #=> String
+    #   resp.collaboration_change_request.changes[0].specification.member.member_abilities #=> Array
+    #   resp.collaboration_change_request.changes[0].specification.member.member_abilities[0] #=> String, one of "CAN_QUERY", "CAN_RECEIVE_RESULTS", "CAN_RUN_JOB", "CAN_EXPORT_QUERY_ANALYSIS_LOG"
+    #   resp.collaboration_change_request.changes[0].specification.member.ml_member_abilities.custom_ml_member_abilities #=> Array
+    #   resp.collaboration_change_request.changes[0].specification.member.ml_member_abilities.custom_ml_member_abilities[0] #=> String, one of "CAN_RECEIVE_MODEL_OUTPUT", "CAN_RECEIVE_INFERENCE_OUTPUT"
+    #   resp.collaboration_change_request.changes[0].specification.member.payment_configuration.query_compute.is_responsible #=> Boolean
+    #   resp.collaboration_change_request.changes[0].specification.member.payment_configuration.machine_learning.model_training.is_responsible #=> Boolean
+    #   resp.collaboration_change_request.changes[0].specification.member.payment_configuration.machine_learning.model_inference.is_responsible #=> Boolean
+    #   resp.collaboration_change_request.changes[0].specification.member.payment_configuration.machine_learning.synthetic_data_generation.is_responsible #=> Boolean
+    #   resp.collaboration_change_request.changes[0].specification.member.payment_configuration.job_compute.is_responsible #=> Boolean
+    #   resp.collaboration_change_request.changes[0].specification.member.display_name #=> String
+    #   resp.collaboration_change_request.changes[0].specification.collaboration.auto_approved_change_types #=> Array
+    #   resp.collaboration_change_request.changes[0].specification.collaboration.auto_approved_change_types[0] #=> String, one of "ADD_MEMBER", "GRANT_RECEIVE_RESULTS_ABILITY", "REVOKE_RECEIVE_RESULTS_ABILITY", "GRANT_EXPORT_QUERY_ANALYSIS_LOG_ABILITY", "REVOKE_EXPORT_QUERY_ANALYSIS_LOG_ABILITY"
+    #   resp.collaboration_change_request.changes[0].types #=> Array
+    #   resp.collaboration_change_request.changes[0].types[0] #=> String, one of "ADD_MEMBER", "GRANT_RECEIVE_RESULTS_ABILITY", "REVOKE_RECEIVE_RESULTS_ABILITY", "EDIT_AUTO_APPROVED_CHANGE_TYPES", "ADD_PAYER_CANDIDATE", "REMOVE_PAYER_CANDIDATE", "GRANT_CAN_RECEIVE_MODEL_OUTPUT", "GRANT_CAN_RECEIVE_INFERENCE_OUTPUT", "REVOKE_CAN_RECEIVE_MODEL_OUTPUT", "REVOKE_CAN_RECEIVE_INFERENCE_OUTPUT", "GRANT_EXPORT_QUERY_ANALYSIS_LOG_ABILITY", "REVOKE_EXPORT_QUERY_ANALYSIS_LOG_ABILITY"
+    #   resp.collaboration_change_request.approvals #=> Hash
+    #   resp.collaboration_change_request.approvals["AccountId"].status #=> String, one of "APPROVED", "DENIED", "PENDING"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/GetCollaborationChangeRequest AWS API Documentation
+    #
+    # @overload get_collaboration_change_request(params = {})
+    # @param [Hash] params ({})
+    def get_collaboration_change_request(params = {}, options = {})
+      req = build_request(:get_collaboration_change_request, params)
       req.send_request(options)
     end
 
@@ -2478,10 +3254,15 @@ module Aws::CleanRooms
     #   resp.collaboration_privacy_budget_template.creator_account_id #=> String
     #   resp.collaboration_privacy_budget_template.create_time #=> Time
     #   resp.collaboration_privacy_budget_template.update_time #=> Time
-    #   resp.collaboration_privacy_budget_template.privacy_budget_type #=> String, one of "DIFFERENTIAL_PRIVACY"
+    #   resp.collaboration_privacy_budget_template.privacy_budget_type #=> String, one of "DIFFERENTIAL_PRIVACY", "ACCESS_BUDGET"
     #   resp.collaboration_privacy_budget_template.auto_refresh #=> String, one of "CALENDAR_MONTH", "NONE"
     #   resp.collaboration_privacy_budget_template.parameters.differential_privacy.epsilon #=> Integer
     #   resp.collaboration_privacy_budget_template.parameters.differential_privacy.users_noise_per_query #=> Integer
+    #   resp.collaboration_privacy_budget_template.parameters.access_budget.budget_parameters #=> Array
+    #   resp.collaboration_privacy_budget_template.parameters.access_budget.budget_parameters[0].type #=> String, one of "CALENDAR_DAY", "CALENDAR_MONTH", "CALENDAR_WEEK", "LIFETIME"
+    #   resp.collaboration_privacy_budget_template.parameters.access_budget.budget_parameters[0].budget #=> Integer
+    #   resp.collaboration_privacy_budget_template.parameters.access_budget.budget_parameters[0].auto_refresh #=> String, one of "ENABLED", "DISABLED"
+    #   resp.collaboration_privacy_budget_template.parameters.access_budget.resource_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/GetCollaborationPrivacyBudgetTemplate AWS API Documentation
     #
@@ -2558,6 +3339,7 @@ module Aws::CleanRooms
     #   resp.configured_table.arn #=> String
     #   resp.configured_table.name #=> String
     #   resp.configured_table.description #=> String
+    #   resp.configured_table.table_reference.glue.region #=> String, one of "us-west-1", "us-west-2", "us-east-1", "us-east-2", "af-south-1", "ap-east-1", "ap-south-2", "ap-southeast-1", "ap-southeast-2", "ap-southeast-3", "ap-southeast-5", "ap-southeast-4", "ap-southeast-7", "ap-south-1", "ap-northeast-3", "ap-northeast-1", "ap-northeast-2", "ca-central-1", "ca-west-1", "eu-south-1", "eu-west-3", "eu-south-2", "eu-central-2", "eu-central-1", "eu-north-1", "eu-west-1", "eu-west-2", "me-south-1", "me-central-1", "il-central-1", "sa-east-1", "mx-central-1", "ap-east-2"
     #   resp.configured_table.table_reference.glue.table_name #=> String
     #   resp.configured_table.table_reference.glue.database_name #=> String
     #   resp.configured_table.table_reference.snowflake.secret_arn #=> String
@@ -2568,10 +3350,12 @@ module Aws::CleanRooms
     #   resp.configured_table.table_reference.snowflake.table_schema.v1 #=> Array
     #   resp.configured_table.table_reference.snowflake.table_schema.v1[0].column_name #=> String
     #   resp.configured_table.table_reference.snowflake.table_schema.v1[0].column_type #=> String
+    #   resp.configured_table.table_reference.athena.region #=> String, one of "us-west-1", "us-west-2", "us-east-1", "us-east-2", "af-south-1", "ap-east-1", "ap-south-2", "ap-southeast-1", "ap-southeast-2", "ap-southeast-3", "ap-southeast-5", "ap-southeast-4", "ap-southeast-7", "ap-south-1", "ap-northeast-3", "ap-northeast-1", "ap-northeast-2", "ca-central-1", "ca-west-1", "eu-south-1", "eu-west-3", "eu-south-2", "eu-central-2", "eu-central-1", "eu-north-1", "eu-west-1", "eu-west-2", "me-south-1", "me-central-1", "il-central-1", "sa-east-1", "mx-central-1", "ap-east-2"
     #   resp.configured_table.table_reference.athena.work_group #=> String
     #   resp.configured_table.table_reference.athena.output_location #=> String
     #   resp.configured_table.table_reference.athena.database_name #=> String
     #   resp.configured_table.table_reference.athena.table_name #=> String
+    #   resp.configured_table.table_reference.athena.catalog_name #=> String
     #   resp.configured_table.create_time #=> Time
     #   resp.configured_table.update_time #=> Time
     #   resp.configured_table.analysis_rule_types #=> Array
@@ -2651,6 +3435,23 @@ module Aws::CleanRooms
     #   resp.analysis_rule.policy.v1.custom.disallowed_output_columns[0] #=> String
     #   resp.analysis_rule.policy.v1.custom.differential_privacy.columns #=> Array
     #   resp.analysis_rule.policy.v1.custom.differential_privacy.columns[0].name #=> String
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds #=> Array
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].identity_columns #=> Array
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].identity_columns[0] #=> String
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].minimum_identity_count #=> Integer
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].type #=> String, one of "COUNT_DISTINCT"
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].output_column_thresholds #=> Array
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].output_column_thresholds[0].output_column_name #=> String
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].output_column_thresholds[0].minimum_identity_count #=> Integer
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].allowed_aggregate_expression_type #=> String, one of "COLUMNS_ONLY", "ANY_EXPRESSION"
+    #   resp.analysis_rule.policy.v1.custom.comparison_controls.allowed_literal_comparison_columns #=> Array
+    #   resp.analysis_rule.policy.v1.custom.comparison_controls.allowed_literal_comparison_columns[0] #=> String
+    #   resp.analysis_rule.policy.v1.custom.comparison_controls.allowed_column_comparison_columns #=> Array
+    #   resp.analysis_rule.policy.v1.custom.comparison_controls.allowed_column_comparison_columns[0] #=> String
+    #   resp.analysis_rule.policy.v1.custom.allowed_result_receivers #=> Array
+    #   resp.analysis_rule.policy.v1.custom.allowed_result_receivers[0] #=> String
+    #   resp.analysis_rule.policy.v1.custom.allowed_additional_analyses #=> Array
+    #   resp.analysis_rule.policy.v1.custom.allowed_additional_analyses[0] #=> String
     #   resp.analysis_rule.type #=> String, one of "AGGREGATION", "LIST", "CUSTOM"
     #   resp.analysis_rule.create_time #=> Time
     #   resp.analysis_rule.update_time #=> Time
@@ -2700,6 +3501,12 @@ module Aws::CleanRooms
     #   resp.configured_table_association.analysis_rule_types[0] #=> String, one of "AGGREGATION", "LIST", "CUSTOM"
     #   resp.configured_table_association.create_time #=> Time
     #   resp.configured_table_association.update_time #=> Time
+    #   resp.configured_table_association.child_resources #=> Array
+    #   resp.configured_table_association.child_resources[0].resource_id #=> String
+    #   resp.configured_table_association.child_resources[0].resource_type #=> String, one of "INTERMEDIATE_TABLE"
+    #   resp.configured_table_association.child_resources[0].resource_name #=> String
+    #   resp.configured_table_association.child_resources[0].owner_account_id #=> String
+    #   resp.configured_table_association.child_resources[0].resource_status #=> String, one of "CREATED", "POPULATE_STARTED", "POPULATE_SUCCESS", "POPULATE_FAILED", "DISALLOWED_BY_DATA_PROVIDER", "BASE_TABLE_REMOVED", "RETENTION_PERIOD_EXPIRED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/GetConfiguredTableAssociation AWS API Documentation
     #
@@ -2804,6 +3611,12 @@ module Aws::CleanRooms
     #   resp.id_mapping_table.input_reference_properties.id_mapping_table_input_source[0].id_namespace_association_id #=> String
     #   resp.id_mapping_table.input_reference_properties.id_mapping_table_input_source[0].type #=> String, one of "SOURCE", "TARGET"
     #   resp.id_mapping_table.kms_key_arn #=> String
+    #   resp.id_mapping_table.child_resources #=> Array
+    #   resp.id_mapping_table.child_resources[0].resource_id #=> String
+    #   resp.id_mapping_table.child_resources[0].resource_type #=> String, one of "INTERMEDIATE_TABLE"
+    #   resp.id_mapping_table.child_resources[0].resource_name #=> String
+    #   resp.id_mapping_table.child_resources[0].owner_account_id #=> String
+    #   resp.id_mapping_table.child_resources[0].resource_status #=> String, one of "CREATED", "POPULATE_STARTED", "POPULATE_SUCCESS", "POPULATE_FAILED", "DISALLOWED_BY_DATA_PROVIDER", "BASE_TABLE_REMOVED", "RETENTION_PERIOD_EXPIRED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/GetIdMappingTable AWS API Documentation
     #
@@ -2862,6 +3675,184 @@ module Aws::CleanRooms
       req.send_request(options)
     end
 
+    # Retrieves an intermediate table. Returns the full details of the
+    # intermediate table, including schema, table dependencies, inherited
+    # constraints, child resources, and status. Only the intermediate table
+    # owner can call this operation.
+    #
+    # @option params [required, String] :intermediate_table_identifier
+    #   The unique identifier of the intermediate table to retrieve.
+    #
+    # @option params [required, String] :membership_identifier
+    #   The unique identifier of the membership that contains the intermediate
+    #   table.
+    #
+    # @return [Types::GetIntermediateTableOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetIntermediateTableOutput#intermediate_table #intermediate_table} => Types::IntermediateTable
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_intermediate_table({
+    #     intermediate_table_identifier: "IntermediateTableIdentifier", # required
+    #     membership_identifier: "MembershipIdentifier", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.intermediate_table.id #=> String
+    #   resp.intermediate_table.arn #=> String
+    #   resp.intermediate_table.name #=> String
+    #   resp.intermediate_table.description #=> String
+    #   resp.intermediate_table.membership_arn #=> String
+    #   resp.intermediate_table.membership_id #=> String
+    #   resp.intermediate_table.collaboration_arn #=> String
+    #   resp.intermediate_table.collaboration_id #=> String
+    #   resp.intermediate_table.child_resources #=> Array
+    #   resp.intermediate_table.child_resources[0].resource_id #=> String
+    #   resp.intermediate_table.child_resources[0].resource_type #=> String, one of "INTERMEDIATE_TABLE"
+    #   resp.intermediate_table.child_resources[0].resource_name #=> String
+    #   resp.intermediate_table.child_resources[0].owner_account_id #=> String
+    #   resp.intermediate_table.child_resources[0].resource_status #=> String, one of "CREATED", "POPULATE_STARTED", "POPULATE_SUCCESS", "POPULATE_FAILED", "DISALLOWED_BY_DATA_PROVIDER", "BASE_TABLE_REMOVED", "RETENTION_PERIOD_EXPIRED"
+    #   resp.intermediate_table.create_time #=> Time
+    #   resp.intermediate_table.update_time #=> Time
+    #   resp.intermediate_table.status #=> String, one of "CREATED", "POPULATE_STARTED", "POPULATE_SUCCESS", "POPULATE_FAILED", "DISALLOWED_BY_DATA_PROVIDER", "BASE_TABLE_REMOVED", "RETENTION_PERIOD_EXPIRED"
+    #   resp.intermediate_table.status_reason #=> String
+    #   resp.intermediate_table.kms_key_arn #=> String
+    #   resp.intermediate_table.population_analysis_configuration.sql_parameters.query_string #=> String
+    #   resp.intermediate_table.population_analysis_configuration.sql_parameters.analysis_template_arn #=> String
+    #   resp.intermediate_table.retention_in_days #=> Integer
+    #   resp.intermediate_table.table_dependencies #=> Array
+    #   resp.intermediate_table.table_dependencies[0].id #=> String
+    #   resp.intermediate_table.table_dependencies[0].name #=> String
+    #   resp.intermediate_table.table_dependencies[0].type #=> String, one of "TABLE", "INTERMEDIATE_TABLE", "ID_MAPPING_TABLE"
+    #   resp.intermediate_table.table_dependencies[0].parent_type #=> String, one of "DIRECT", "INDIRECT"
+    #   resp.intermediate_table.table_dependencies[0].creator_account_id #=> String
+    #   resp.intermediate_table.intermediate_table_version.version_id #=> String
+    #   resp.intermediate_table.intermediate_table_version.analysis_id #=> String
+    #   resp.intermediate_table.intermediate_table_version.analysis_type #=> String, one of "QUERY"
+    #   resp.intermediate_table.intermediate_table_version.kms_key_arn #=> String
+    #   resp.intermediate_table.intermediate_table_version.parameters #=> Hash
+    #   resp.intermediate_table.intermediate_table_version.parameters["ParameterName"] #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.additional_analyses.value #=> String, one of "ALLOWED", "REQUIRED", "NOT_ALLOWED"
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.additional_analyses.sources #=> Array
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.additional_analyses.sources[0].name #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.additional_analyses.sources[0].id #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.additional_analyses.sources[0].type #=> String, one of "TABLE", "INTERMEDIATE_TABLE", "ID_MAPPING_TABLE"
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.additional_analyses.sources[0].value #=> String, one of "ALLOWED", "REQUIRED", "NOT_ALLOWED"
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.additional_analyses.sources[0].source_account_id #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_additional_analyses.value #=> Array
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_additional_analyses.value[0] #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_additional_analyses.sources #=> Array
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_additional_analyses.sources[0].name #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_additional_analyses.sources[0].id #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_additional_analyses.sources[0].type #=> String, one of "TABLE", "INTERMEDIATE_TABLE", "ID_MAPPING_TABLE"
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_additional_analyses.sources[0].value #=> Array
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_additional_analyses.sources[0].value[0] #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_additional_analyses.sources[0].source_account_id #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_result_receivers.value #=> Array
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_result_receivers.value[0] #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_result_receivers.sources #=> Array
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_result_receivers.sources[0].name #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_result_receivers.sources[0].id #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_result_receivers.sources[0].type #=> String, one of "TABLE", "INTERMEDIATE_TABLE", "ID_MAPPING_TABLE"
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_result_receivers.sources[0].value #=> Array
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_result_receivers.sources[0].value[0] #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_result_receivers.sources[0].source_account_id #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.disallowed_output_columns.value #=> Array
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.disallowed_output_columns.value[0] #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.disallowed_output_columns.column_lineage #=> Array
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.disallowed_output_columns.column_lineage[0].column #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.disallowed_output_columns.column_lineage[0].source_column #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.disallowed_output_columns.column_lineage[0].source_name #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.disallowed_output_columns.column_lineage[0].source_id #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.disallowed_output_columns.column_lineage[0].source_type #=> String, one of "TABLE", "INTERMEDIATE_TABLE", "ID_MAPPING_TABLE"
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.disallowed_output_columns.column_lineage[0].source_account_id #=> String
+    #   resp.intermediate_table.intermediate_table_version.expiration_time #=> Time
+    #   resp.intermediate_table.analysis_rule_types #=> Array
+    #   resp.intermediate_table.analysis_rule_types[0] #=> String, one of "CUSTOM"
+    #   resp.intermediate_table.schema.columns #=> Array
+    #   resp.intermediate_table.schema.columns[0].name #=> String
+    #   resp.intermediate_table.schema.columns[0].type #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/GetIntermediateTable AWS API Documentation
+    #
+    # @overload get_intermediate_table(params = {})
+    # @param [Hash] params ({})
+    def get_intermediate_table(params = {}, options = {})
+      req = build_request(:get_intermediate_table, params)
+      req.send_request(options)
+    end
+
+    # Retrieves the analysis rule for an intermediate table.
+    #
+    # @option params [required, String] :membership_identifier
+    #   The unique identifier of the membership that contains the intermediate
+    #   table.
+    #
+    # @option params [required, String] :intermediate_table_identifier
+    #   The unique identifier of the intermediate table for which to retrieve
+    #   the analysis rule.
+    #
+    # @option params [required, String] :analysis_rule_type
+    #   The type of analysis rule to retrieve. Currently, only `CUSTOM` is
+    #   supported.
+    #
+    # @return [Types::GetIntermediateTableAnalysisRuleOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetIntermediateTableAnalysisRuleOutput#analysis_rule #analysis_rule} => Types::IntermediateTableAnalysisRule
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_intermediate_table_analysis_rule({
+    #     membership_identifier: "MembershipIdentifier", # required
+    #     intermediate_table_identifier: "IntermediateTableIdentifier", # required
+    #     analysis_rule_type: "CUSTOM", # required, accepts CUSTOM
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.analysis_rule.intermediate_table_identifier #=> String
+    #   resp.analysis_rule.intermediate_table_arn #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.allowed_analyses #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.allowed_analyses[0] #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.additional_analyses #=> String, one of "ALLOWED", "REQUIRED", "NOT_ALLOWED"
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.allowed_additional_analyses #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.allowed_additional_analyses[0] #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.allowed_analysis_providers #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.allowed_analysis_providers[0] #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.allowed_result_receivers #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.allowed_result_receivers[0] #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.differential_privacy.columns #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.differential_privacy.columns[0].name #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.disallowed_output_columns #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.disallowed_output_columns[0] #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.aggregation_thresholds #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.aggregation_thresholds[0].identity_columns #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.aggregation_thresholds[0].identity_columns[0] #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.aggregation_thresholds[0].minimum_identity_count #=> Integer
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.aggregation_thresholds[0].type #=> String, one of "COUNT_DISTINCT"
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.aggregation_thresholds[0].output_column_thresholds #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.aggregation_thresholds[0].output_column_thresholds[0].output_column_name #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.aggregation_thresholds[0].output_column_thresholds[0].minimum_identity_count #=> Integer
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.aggregation_thresholds[0].allowed_aggregate_expression_type #=> String, one of "COLUMNS_ONLY", "ANY_EXPRESSION"
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.comparison_controls.allowed_literal_comparison_columns #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.comparison_controls.allowed_literal_comparison_columns[0] #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.comparison_controls.allowed_column_comparison_columns #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.comparison_controls.allowed_column_comparison_columns[0] #=> String
+    #   resp.analysis_rule.analysis_rule_type #=> String, one of "CUSTOM"
+    #   resp.analysis_rule.create_time #=> Time
+    #   resp.analysis_rule.update_time #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/GetIntermediateTableAnalysisRule AWS API Documentation
+    #
+    # @overload get_intermediate_table_analysis_rule(params = {})
+    # @param [Hash] params ({})
+    def get_intermediate_table_analysis_rule(params = {}, options = {})
+      req = build_request(:get_intermediate_table_analysis_rule, params)
+      req.send_request(options)
+    end
+
     # Retrieves a specified membership for an identifier.
     #
     # @option params [required, String] :membership_identifier
@@ -2890,7 +3881,7 @@ module Aws::CleanRooms
     #   resp.membership.update_time #=> Time
     #   resp.membership.status #=> String, one of "ACTIVE", "REMOVED", "COLLABORATION_DELETED"
     #   resp.membership.member_abilities #=> Array
-    #   resp.membership.member_abilities[0] #=> String, one of "CAN_QUERY", "CAN_RECEIVE_RESULTS", "CAN_RUN_JOB"
+    #   resp.membership.member_abilities[0] #=> String, one of "CAN_QUERY", "CAN_RECEIVE_RESULTS", "CAN_RUN_JOB", "CAN_EXPORT_QUERY_ANALYSIS_LOG"
     #   resp.membership.ml_member_abilities.custom_ml_member_abilities #=> Array
     #   resp.membership.ml_member_abilities.custom_ml_member_abilities[0] #=> String, one of "CAN_RECEIVE_MODEL_OUTPUT", "CAN_RECEIVE_INFERENCE_OUTPUT"
     #   resp.membership.query_log_status #=> String, one of "ENABLED", "DISABLED"
@@ -2906,7 +3897,9 @@ module Aws::CleanRooms
     #   resp.membership.payment_configuration.query_compute.is_responsible #=> Boolean
     #   resp.membership.payment_configuration.machine_learning.model_training.is_responsible #=> Boolean
     #   resp.membership.payment_configuration.machine_learning.model_inference.is_responsible #=> Boolean
+    #   resp.membership.payment_configuration.machine_learning.synthetic_data_generation.is_responsible #=> Boolean
     #   resp.membership.payment_configuration.job_compute.is_responsible #=> Boolean
+    #   resp.membership.is_metrics_enabled #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/GetMembership AWS API Documentation
     #
@@ -2948,10 +3941,15 @@ module Aws::CleanRooms
     #   resp.privacy_budget_template.collaboration_arn #=> String
     #   resp.privacy_budget_template.create_time #=> Time
     #   resp.privacy_budget_template.update_time #=> Time
-    #   resp.privacy_budget_template.privacy_budget_type #=> String, one of "DIFFERENTIAL_PRIVACY"
+    #   resp.privacy_budget_template.privacy_budget_type #=> String, one of "DIFFERENTIAL_PRIVACY", "ACCESS_BUDGET"
     #   resp.privacy_budget_template.auto_refresh #=> String, one of "CALENDAR_MONTH", "NONE"
     #   resp.privacy_budget_template.parameters.differential_privacy.epsilon #=> Integer
     #   resp.privacy_budget_template.parameters.differential_privacy.users_noise_per_query #=> Integer
+    #   resp.privacy_budget_template.parameters.access_budget.budget_parameters #=> Array
+    #   resp.privacy_budget_template.parameters.access_budget.budget_parameters[0].type #=> String, one of "CALENDAR_DAY", "CALENDAR_MONTH", "CALENDAR_WEEK", "LIFETIME"
+    #   resp.privacy_budget_template.parameters.access_budget.budget_parameters[0].budget #=> Integer
+    #   resp.privacy_budget_template.parameters.access_budget.budget_parameters[0].auto_refresh #=> String, one of "ENABLED", "DISABLED"
+    #   resp.privacy_budget_template.parameters.access_budget.resource_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/GetPrivacyBudgetTemplate AWS API Documentation
     #
@@ -2988,6 +3986,8 @@ module Aws::CleanRooms
     #   resp.protected_job.membership_arn #=> String
     #   resp.protected_job.create_time #=> Time
     #   resp.protected_job.job_parameters.analysis_template_arn #=> String
+    #   resp.protected_job.job_parameters.parameters #=> Hash
+    #   resp.protected_job.job_parameters.parameters["JobParameterName"] #=> String
     #   resp.protected_job.status #=> String, one of "SUBMITTED", "STARTED", "CANCELLED", "CANCELLING", "FAILED", "SUCCESS"
     #   resp.protected_job.result_configuration.output_configuration.s3.bucket #=> String
     #   resp.protected_job.result_configuration.output_configuration.s3.key_prefix #=> String
@@ -2999,6 +3999,11 @@ module Aws::CleanRooms
     #   resp.protected_job.result.output.member_list[0].account_id #=> String
     #   resp.protected_job.error.message #=> String
     #   resp.protected_job.error.code #=> String
+    #   resp.protected_job.compute_configuration.worker.type #=> String, one of "CR.1X", "CR.4X"
+    #   resp.protected_job.compute_configuration.worker.number #=> Integer
+    #   resp.protected_job.compute_configuration.worker.properties.spark #=> Hash
+    #   resp.protected_job.compute_configuration.worker.properties.spark["SparkPropertyKey"] #=> String
+    #   resp.protected_job.job_compute_payer_account_id #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/GetProtectedJob AWS API Documentation
     #
@@ -3044,11 +4049,23 @@ module Aws::CleanRooms
     #   resp.protected_query.result_configuration.output_configuration.s3.key_prefix #=> String
     #   resp.protected_query.result_configuration.output_configuration.s3.single_file_output #=> Boolean
     #   resp.protected_query.result_configuration.output_configuration.member.account_id #=> String
+    #   resp.protected_query.result_configuration.output_configuration.distribute.locations #=> Array
+    #   resp.protected_query.result_configuration.output_configuration.distribute.locations[0].s3.result_format #=> String, one of "CSV", "PARQUET"
+    #   resp.protected_query.result_configuration.output_configuration.distribute.locations[0].s3.bucket #=> String
+    #   resp.protected_query.result_configuration.output_configuration.distribute.locations[0].s3.key_prefix #=> String
+    #   resp.protected_query.result_configuration.output_configuration.distribute.locations[0].s3.single_file_output #=> Boolean
+    #   resp.protected_query.result_configuration.output_configuration.distribute.locations[0].member.account_id #=> String
+    #   resp.protected_query.result_configuration.output_configuration.intermediate_table.id #=> String
+    #   resp.protected_query.result_configuration.output_configuration.intermediate_table.arn #=> String
+    #   resp.protected_query.result_configuration.output_configuration.intermediate_table.name #=> String
     #   resp.protected_query.statistics.total_duration_in_millis #=> Integer
     #   resp.protected_query.statistics.billed_resource_utilization.units #=> Float
     #   resp.protected_query.result.output.s3.location #=> String
     #   resp.protected_query.result.output.member_list #=> Array
     #   resp.protected_query.result.output.member_list[0].account_id #=> String
+    #   resp.protected_query.result.output.distribute.s3.location #=> String
+    #   resp.protected_query.result.output.distribute.member_list #=> Array
+    #   resp.protected_query.result.output.distribute.member_list[0].account_id #=> String
     #   resp.protected_query.error.message #=> String
     #   resp.protected_query.error.code #=> String
     #   resp.protected_query.differential_privacy.sensitivity_parameters #=> Array
@@ -3057,8 +4074,11 @@ module Aws::CleanRooms
     #   resp.protected_query.differential_privacy.sensitivity_parameters[0].user_contribution_limit #=> Integer
     #   resp.protected_query.differential_privacy.sensitivity_parameters[0].min_column_value #=> Float
     #   resp.protected_query.differential_privacy.sensitivity_parameters[0].max_column_value #=> Float
-    #   resp.protected_query.compute_configuration.worker.type #=> String, one of "CR.1X", "CR.4X"
+    #   resp.protected_query.compute_configuration.worker.type #=> String, one of "CR.1X", "CR.4X", "CR.8X"
     #   resp.protected_query.compute_configuration.worker.number #=> Integer
+    #   resp.protected_query.compute_configuration.worker.properties.spark #=> Hash
+    #   resp.protected_query.compute_configuration.worker.properties.spark["SparkPropertyKey"] #=> String
+    #   resp.protected_query.query_compute_payer_account_id #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/GetProtectedQuery AWS API Documentation
     #
@@ -3109,19 +4129,23 @@ module Aws::CleanRooms
     #   resp.schema.description #=> String
     #   resp.schema.create_time #=> Time
     #   resp.schema.update_time #=> Time
-    #   resp.schema.type #=> String, one of "TABLE", "ID_MAPPING_TABLE"
+    #   resp.schema.type #=> String, one of "TABLE", "ID_MAPPING_TABLE", "INTERMEDIATE_TABLE"
     #   resp.schema.schema_status_details #=> Array
     #   resp.schema.schema_status_details[0].status #=> String, one of "READY", "NOT_READY"
     #   resp.schema.schema_status_details[0].reasons #=> Array
-    #   resp.schema.schema_status_details[0].reasons[0].code #=> String, one of "ANALYSIS_RULE_MISSING", "ANALYSIS_TEMPLATES_NOT_CONFIGURED", "ANALYSIS_PROVIDERS_NOT_CONFIGURED", "DIFFERENTIAL_PRIVACY_POLICY_NOT_CONFIGURED", "ID_MAPPING_TABLE_NOT_POPULATED", "COLLABORATION_ANALYSIS_RULE_NOT_CONFIGURED", "ADDITIONAL_ANALYSES_NOT_CONFIGURED", "RESULT_RECEIVERS_NOT_CONFIGURED", "ADDITIONAL_ANALYSES_NOT_ALLOWED", "RESULT_RECEIVERS_NOT_ALLOWED", "ANALYSIS_RULE_TYPES_NOT_COMPATIBLE"
+    #   resp.schema.schema_status_details[0].reasons[0].code #=> String, one of "ANALYSIS_RULE_MISSING", "ANALYSIS_TEMPLATES_NOT_CONFIGURED", "ANALYSIS_PROVIDERS_NOT_CONFIGURED", "DIFFERENTIAL_PRIVACY_POLICY_NOT_CONFIGURED", "ID_MAPPING_TABLE_NOT_POPULATED", "COLLABORATION_ANALYSIS_RULE_NOT_CONFIGURED", "ADDITIONAL_ANALYSES_NOT_CONFIGURED", "RESULT_RECEIVERS_NOT_CONFIGURED", "ADDITIONAL_ANALYSES_NOT_ALLOWED", "RESULT_RECEIVERS_NOT_ALLOWED", "ANALYSIS_RULE_TYPES_NOT_COMPATIBLE", "INTERMEDIATE_TABLE_NOT_POPULATED", "INTERMEDIATE_TABLE_ANALYSIS_RULE_MISSING", "INTERMEDIATE_TABLE_BASE_TABLE_REMOVED", "INTERMEDIATE_TABLE_INHERITED_CONSTRAINTS_VIOLATED", "INTERMEDIATE_TABLE_DISALLOWED_BY_DATA_PROVIDER", "INTERMEDIATE_TABLE_RETENTION_PERIOD_EXPIRED"
     #   resp.schema.schema_status_details[0].reasons[0].message #=> String
     #   resp.schema.schema_status_details[0].analysis_rule_type #=> String, one of "AGGREGATION", "LIST", "CUSTOM", "ID_MAPPING_TABLE"
     #   resp.schema.schema_status_details[0].configurations #=> Array
     #   resp.schema.schema_status_details[0].configurations[0] #=> String, one of "DIFFERENTIAL_PRIVACY"
     #   resp.schema.schema_status_details[0].analysis_type #=> String, one of "DIRECT_ANALYSIS", "ADDITIONAL_ANALYSIS"
+    #   resp.schema.resource_arn #=> String
     #   resp.schema.schema_type_properties.id_mapping_table.id_mapping_table_input_source #=> Array
     #   resp.schema.schema_type_properties.id_mapping_table.id_mapping_table_input_source[0].id_namespace_association_id #=> String
     #   resp.schema.schema_type_properties.id_mapping_table.id_mapping_table_input_source[0].type #=> String, one of "SOURCE", "TARGET"
+    #   resp.schema.schema_type_properties.id_mapping_table.id_mapping_table_id #=> String
+    #   resp.schema.schema_type_properties.intermediate_table.intermediate_table_id #=> String
+    #   resp.schema.schema_type_properties.configured_table_association.configured_table_association_id #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/GetSchema AWS API Documentation
     #
@@ -3199,6 +4223,23 @@ module Aws::CleanRooms
     #   resp.analysis_rule.policy.v1.custom.disallowed_output_columns[0] #=> String
     #   resp.analysis_rule.policy.v1.custom.differential_privacy.columns #=> Array
     #   resp.analysis_rule.policy.v1.custom.differential_privacy.columns[0].name #=> String
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds #=> Array
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].identity_columns #=> Array
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].identity_columns[0] #=> String
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].minimum_identity_count #=> Integer
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].type #=> String, one of "COUNT_DISTINCT"
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].output_column_thresholds #=> Array
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].output_column_thresholds[0].output_column_name #=> String
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].output_column_thresholds[0].minimum_identity_count #=> Integer
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].allowed_aggregate_expression_type #=> String, one of "COLUMNS_ONLY", "ANY_EXPRESSION"
+    #   resp.analysis_rule.policy.v1.custom.comparison_controls.allowed_literal_comparison_columns #=> Array
+    #   resp.analysis_rule.policy.v1.custom.comparison_controls.allowed_literal_comparison_columns[0] #=> String
+    #   resp.analysis_rule.policy.v1.custom.comparison_controls.allowed_column_comparison_columns #=> Array
+    #   resp.analysis_rule.policy.v1.custom.comparison_controls.allowed_column_comparison_columns[0] #=> String
+    #   resp.analysis_rule.policy.v1.custom.allowed_result_receivers #=> Array
+    #   resp.analysis_rule.policy.v1.custom.allowed_result_receivers[0] #=> String
+    #   resp.analysis_rule.policy.v1.custom.allowed_additional_analyses #=> Array
+    #   resp.analysis_rule.policy.v1.custom.allowed_additional_analyses[0] #=> String
     #   resp.analysis_rule.policy.v1.id_mapping_table.join_columns #=> Array
     #   resp.analysis_rule.policy.v1.id_mapping_table.join_columns[0] #=> String
     #   resp.analysis_rule.policy.v1.id_mapping_table.query_constraints #=> Array
@@ -3260,6 +4301,19 @@ module Aws::CleanRooms
     #   resp.analysis_rule.consolidated_policy.v1.custom.disallowed_output_columns[0] #=> String
     #   resp.analysis_rule.consolidated_policy.v1.custom.differential_privacy.columns #=> Array
     #   resp.analysis_rule.consolidated_policy.v1.custom.differential_privacy.columns[0].name #=> String
+    #   resp.analysis_rule.consolidated_policy.v1.custom.aggregation_thresholds #=> Array
+    #   resp.analysis_rule.consolidated_policy.v1.custom.aggregation_thresholds[0].identity_columns #=> Array
+    #   resp.analysis_rule.consolidated_policy.v1.custom.aggregation_thresholds[0].identity_columns[0] #=> String
+    #   resp.analysis_rule.consolidated_policy.v1.custom.aggregation_thresholds[0].minimum_identity_count #=> Integer
+    #   resp.analysis_rule.consolidated_policy.v1.custom.aggregation_thresholds[0].type #=> String, one of "COUNT_DISTINCT"
+    #   resp.analysis_rule.consolidated_policy.v1.custom.aggregation_thresholds[0].output_column_thresholds #=> Array
+    #   resp.analysis_rule.consolidated_policy.v1.custom.aggregation_thresholds[0].output_column_thresholds[0].output_column_name #=> String
+    #   resp.analysis_rule.consolidated_policy.v1.custom.aggregation_thresholds[0].output_column_thresholds[0].minimum_identity_count #=> Integer
+    #   resp.analysis_rule.consolidated_policy.v1.custom.aggregation_thresholds[0].allowed_aggregate_expression_type #=> String, one of "COLUMNS_ONLY", "ANY_EXPRESSION"
+    #   resp.analysis_rule.consolidated_policy.v1.custom.comparison_controls.allowed_literal_comparison_columns #=> Array
+    #   resp.analysis_rule.consolidated_policy.v1.custom.comparison_controls.allowed_literal_comparison_columns[0] #=> String
+    #   resp.analysis_rule.consolidated_policy.v1.custom.comparison_controls.allowed_column_comparison_columns #=> Array
+    #   resp.analysis_rule.consolidated_policy.v1.custom.comparison_controls.allowed_column_comparison_columns[0] #=> String
     #   resp.analysis_rule.consolidated_policy.v1.custom.allowed_result_receivers #=> Array
     #   resp.analysis_rule.consolidated_policy.v1.custom.allowed_result_receivers[0] #=> String
     #   resp.analysis_rule.consolidated_policy.v1.custom.allowed_additional_analyses #=> Array
@@ -3271,6 +4325,66 @@ module Aws::CleanRooms
     # @param [Hash] params ({})
     def get_schema_analysis_rule(params = {}, options = {})
       req = build_request(:get_schema_analysis_rule, params)
+      req.send_request(options)
+    end
+
+    # Lists analysis log exports, sorted by the most recent export. Results
+    # are paginated. Use the `nextToken` parameter to retrieve additional
+    # results.
+    #
+    # @option params [required, String] :membership_identifier
+    #   A unique identifier for the membership to list analysis log exports
+    #   for. Currently accepts the membership ID.
+    #
+    # @option params [String] :analysis_identifier
+    #   A filter on the unique identifier of the protected query that the
+    #   analysis logs were exported for.
+    #
+    # @option params [String] :status
+    #   A filter on the status of the analysis log export.
+    #
+    # @option params [String] :next_token
+    #   The pagination token that's used to fetch the next set of results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results that are returned for an API request
+    #   call. The service chooses a default number if you don't set one. The
+    #   service might return a `nextToken` even if the `maxResults` value has
+    #   not been met.
+    #
+    # @return [Types::ListAnalysisLogExportsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListAnalysisLogExportsOutput#next_token #next_token} => String
+    #   * {Types::ListAnalysisLogExportsOutput#analysis_log_exports #analysis_log_exports} => Array&lt;Types::AnalysisLogExportSummary&gt;
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_analysis_log_exports({
+    #     membership_identifier: "MembershipIdentifier", # required
+    #     analysis_identifier: "UUID",
+    #     status: "IN_PROGRESS", # accepts IN_PROGRESS, SUCCESS, FAILED
+    #     next_token: "PaginationToken",
+    #     max_results: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.next_token #=> String
+    #   resp.analysis_log_exports #=> Array
+    #   resp.analysis_log_exports[0].analysis_log_export_id #=> String
+    #   resp.analysis_log_exports[0].analysis_id #=> String
+    #   resp.analysis_log_exports[0].analysis_type #=> String, one of "PROTECTED_QUERY"
+    #   resp.analysis_log_exports[0].status #=> String, one of "IN_PROGRESS", "SUCCESS", "FAILED"
+    #   resp.analysis_log_exports[0].create_time #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/ListAnalysisLogExports AWS API Documentation
+    #
+    # @overload list_analysis_log_exports(params = {})
+    # @param [Hash] params ({})
+    def list_analysis_log_exports(params = {}, options = {})
+      req = build_request(:list_analysis_log_exports, params)
       req.send_request(options)
     end
 
@@ -3317,6 +4431,7 @@ module Aws::CleanRooms
     #   resp.analysis_template_summaries[0].collaboration_arn #=> String
     #   resp.analysis_template_summaries[0].collaboration_id #=> String
     #   resp.analysis_template_summaries[0].description #=> String
+    #   resp.analysis_template_summaries[0].is_synthetic_data #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/ListAnalysisTemplates AWS API Documentation
     #
@@ -3370,6 +4485,7 @@ module Aws::CleanRooms
     #   resp.collaboration_analysis_template_summaries[0].collaboration_id #=> String
     #   resp.collaboration_analysis_template_summaries[0].creator_account_id #=> String
     #   resp.collaboration_analysis_template_summaries[0].description #=> String
+    #   resp.collaboration_analysis_template_summaries[0].is_synthetic_data #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/ListCollaborationAnalysisTemplates AWS API Documentation
     #
@@ -3377,6 +4493,78 @@ module Aws::CleanRooms
     # @param [Hash] params ({})
     def list_collaboration_analysis_templates(params = {}, options = {})
       req = build_request(:list_collaboration_analysis_templates, params)
+      req.send_request(options)
+    end
+
+    # Lists all change requests for a collaboration with pagination support.
+    # Returns change requests sorted by creation time.
+    #
+    # @option params [required, String] :collaboration_identifier
+    #   The identifier of the collaboration that the change request is made
+    #   against.
+    #
+    # @option params [String] :status
+    #   A filter to only return change requests with the specified status.
+    #
+    # @option params [String] :next_token
+    #   The pagination token that's used to fetch the next set of results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results that are returned for an API request
+    #   call.
+    #
+    # @return [Types::ListCollaborationChangeRequestsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListCollaborationChangeRequestsOutput#collaboration_change_request_summaries #collaboration_change_request_summaries} => Array&lt;Types::CollaborationChangeRequestSummary&gt;
+    #   * {Types::ListCollaborationChangeRequestsOutput#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_collaboration_change_requests({
+    #     collaboration_identifier: "CollaborationIdentifier", # required
+    #     status: "PENDING", # accepts PENDING, APPROVED, CANCELLED, DENIED, COMMITTED
+    #     next_token: "PaginationToken",
+    #     max_results: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.collaboration_change_request_summaries #=> Array
+    #   resp.collaboration_change_request_summaries[0].id #=> String
+    #   resp.collaboration_change_request_summaries[0].collaboration_id #=> String
+    #   resp.collaboration_change_request_summaries[0].create_time #=> Time
+    #   resp.collaboration_change_request_summaries[0].update_time #=> Time
+    #   resp.collaboration_change_request_summaries[0].status #=> String, one of "PENDING", "APPROVED", "CANCELLED", "DENIED", "COMMITTED"
+    #   resp.collaboration_change_request_summaries[0].is_auto_approved #=> Boolean
+    #   resp.collaboration_change_request_summaries[0].changes #=> Array
+    #   resp.collaboration_change_request_summaries[0].changes[0].specification_type #=> String, one of "MEMBER", "COLLABORATION"
+    #   resp.collaboration_change_request_summaries[0].changes[0].specification.member.account_id #=> String
+    #   resp.collaboration_change_request_summaries[0].changes[0].specification.member.member_abilities #=> Array
+    #   resp.collaboration_change_request_summaries[0].changes[0].specification.member.member_abilities[0] #=> String, one of "CAN_QUERY", "CAN_RECEIVE_RESULTS", "CAN_RUN_JOB", "CAN_EXPORT_QUERY_ANALYSIS_LOG"
+    #   resp.collaboration_change_request_summaries[0].changes[0].specification.member.ml_member_abilities.custom_ml_member_abilities #=> Array
+    #   resp.collaboration_change_request_summaries[0].changes[0].specification.member.ml_member_abilities.custom_ml_member_abilities[0] #=> String, one of "CAN_RECEIVE_MODEL_OUTPUT", "CAN_RECEIVE_INFERENCE_OUTPUT"
+    #   resp.collaboration_change_request_summaries[0].changes[0].specification.member.payment_configuration.query_compute.is_responsible #=> Boolean
+    #   resp.collaboration_change_request_summaries[0].changes[0].specification.member.payment_configuration.machine_learning.model_training.is_responsible #=> Boolean
+    #   resp.collaboration_change_request_summaries[0].changes[0].specification.member.payment_configuration.machine_learning.model_inference.is_responsible #=> Boolean
+    #   resp.collaboration_change_request_summaries[0].changes[0].specification.member.payment_configuration.machine_learning.synthetic_data_generation.is_responsible #=> Boolean
+    #   resp.collaboration_change_request_summaries[0].changes[0].specification.member.payment_configuration.job_compute.is_responsible #=> Boolean
+    #   resp.collaboration_change_request_summaries[0].changes[0].specification.member.display_name #=> String
+    #   resp.collaboration_change_request_summaries[0].changes[0].specification.collaboration.auto_approved_change_types #=> Array
+    #   resp.collaboration_change_request_summaries[0].changes[0].specification.collaboration.auto_approved_change_types[0] #=> String, one of "ADD_MEMBER", "GRANT_RECEIVE_RESULTS_ABILITY", "REVOKE_RECEIVE_RESULTS_ABILITY", "GRANT_EXPORT_QUERY_ANALYSIS_LOG_ABILITY", "REVOKE_EXPORT_QUERY_ANALYSIS_LOG_ABILITY"
+    #   resp.collaboration_change_request_summaries[0].changes[0].types #=> Array
+    #   resp.collaboration_change_request_summaries[0].changes[0].types[0] #=> String, one of "ADD_MEMBER", "GRANT_RECEIVE_RESULTS_ABILITY", "REVOKE_RECEIVE_RESULTS_ABILITY", "EDIT_AUTO_APPROVED_CHANGE_TYPES", "ADD_PAYER_CANDIDATE", "REMOVE_PAYER_CANDIDATE", "GRANT_CAN_RECEIVE_MODEL_OUTPUT", "GRANT_CAN_RECEIVE_INFERENCE_OUTPUT", "REVOKE_CAN_RECEIVE_MODEL_OUTPUT", "REVOKE_CAN_RECEIVE_INFERENCE_OUTPUT", "GRANT_EXPORT_QUERY_ANALYSIS_LOG_ABILITY", "REVOKE_EXPORT_QUERY_ANALYSIS_LOG_ABILITY"
+    #   resp.collaboration_change_request_summaries[0].approvals #=> Hash
+    #   resp.collaboration_change_request_summaries[0].approvals["AccountId"].status #=> String, one of "APPROVED", "DENIED", "PENDING"
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/ListCollaborationChangeRequests AWS API Documentation
+    #
+    # @overload list_collaboration_change_requests(params = {})
+    # @param [Hash] params ({})
+    def list_collaboration_change_requests(params = {}, options = {})
+      req = build_request(:list_collaboration_change_requests, params)
       req.send_request(options)
     end
 
@@ -3527,7 +4715,7 @@ module Aws::CleanRooms
     #   resp.collaboration_privacy_budget_template_summaries[0].collaboration_id #=> String
     #   resp.collaboration_privacy_budget_template_summaries[0].collaboration_arn #=> String
     #   resp.collaboration_privacy_budget_template_summaries[0].creator_account_id #=> String
-    #   resp.collaboration_privacy_budget_template_summaries[0].privacy_budget_type #=> String, one of "DIFFERENTIAL_PRIVACY"
+    #   resp.collaboration_privacy_budget_template_summaries[0].privacy_budget_type #=> String, one of "DIFFERENTIAL_PRIVACY", "ACCESS_BUDGET"
     #   resp.collaboration_privacy_budget_template_summaries[0].create_time #=> Time
     #   resp.collaboration_privacy_budget_template_summaries[0].update_time #=> Time
     #
@@ -3559,6 +4747,10 @@ module Aws::CleanRooms
     # @option params [String] :next_token
     #   The pagination token that's used to fetch the next set of results.
     #
+    # @option params [String] :access_budget_resource_arn
+    #   The Amazon Resource Name (ARN) of the Configured Table Association
+    #   (ConfiguredTableAssociation) used to filter privacy budgets.
+    #
     # @return [Types::ListCollaborationPrivacyBudgetsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::ListCollaborationPrivacyBudgetsOutput#collaboration_privacy_budget_summaries #collaboration_privacy_budget_summaries} => Array&lt;Types::CollaborationPrivacyBudgetSummary&gt;
@@ -3570,9 +4762,10 @@ module Aws::CleanRooms
     #
     #   resp = client.list_collaboration_privacy_budgets({
     #     collaboration_identifier: "CollaborationIdentifier", # required
-    #     privacy_budget_type: "DIFFERENTIAL_PRIVACY", # required, accepts DIFFERENTIAL_PRIVACY
+    #     privacy_budget_type: "DIFFERENTIAL_PRIVACY", # required, accepts DIFFERENTIAL_PRIVACY, ACCESS_BUDGET
     #     max_results: 1,
     #     next_token: "PaginationToken",
+    #     access_budget_resource_arn: "BudgetedResourceArn",
     #   })
     #
     # @example Response structure
@@ -3584,7 +4777,7 @@ module Aws::CleanRooms
     #   resp.collaboration_privacy_budget_summaries[0].collaboration_id #=> String
     #   resp.collaboration_privacy_budget_summaries[0].collaboration_arn #=> String
     #   resp.collaboration_privacy_budget_summaries[0].creator_account_id #=> String
-    #   resp.collaboration_privacy_budget_summaries[0].type #=> String, one of "DIFFERENTIAL_PRIVACY"
+    #   resp.collaboration_privacy_budget_summaries[0].type #=> String, one of "DIFFERENTIAL_PRIVACY", "ACCESS_BUDGET"
     #   resp.collaboration_privacy_budget_summaries[0].create_time #=> Time
     #   resp.collaboration_privacy_budget_summaries[0].update_time #=> Time
     #   resp.collaboration_privacy_budget_summaries[0].budget.differential_privacy.aggregations #=> Array
@@ -3592,6 +4785,15 @@ module Aws::CleanRooms
     #   resp.collaboration_privacy_budget_summaries[0].budget.differential_privacy.aggregations[0].max_count #=> Integer
     #   resp.collaboration_privacy_budget_summaries[0].budget.differential_privacy.aggregations[0].remaining_count #=> Integer
     #   resp.collaboration_privacy_budget_summaries[0].budget.differential_privacy.epsilon #=> Integer
+    #   resp.collaboration_privacy_budget_summaries[0].budget.access_budget.resource_arn #=> String
+    #   resp.collaboration_privacy_budget_summaries[0].budget.access_budget.details #=> Array
+    #   resp.collaboration_privacy_budget_summaries[0].budget.access_budget.details[0].start_time #=> Time
+    #   resp.collaboration_privacy_budget_summaries[0].budget.access_budget.details[0].end_time #=> Time
+    #   resp.collaboration_privacy_budget_summaries[0].budget.access_budget.details[0].remaining_budget #=> Integer
+    #   resp.collaboration_privacy_budget_summaries[0].budget.access_budget.details[0].budget #=> Integer
+    #   resp.collaboration_privacy_budget_summaries[0].budget.access_budget.details[0].budget_type #=> String, one of "CALENDAR_DAY", "CALENDAR_MONTH", "CALENDAR_WEEK", "LIFETIME"
+    #   resp.collaboration_privacy_budget_summaries[0].budget.access_budget.details[0].auto_refresh #=> String, one of "ENABLED", "DISABLED"
+    #   resp.collaboration_privacy_budget_summaries[0].budget.access_budget.aggregate_remaining_budget #=> Integer
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/ListCollaborationPrivacyBudgets AWS API Documentation
@@ -3928,6 +5130,126 @@ module Aws::CleanRooms
       req.send_request(options)
     end
 
+    # Lists the version history of an intermediate table. Each call to
+    # `PopulateIntermediateTable` creates a new version. We recommend using
+    # pagination to ensure that the operation returns quickly and
+    # successfully.
+    #
+    # @option params [required, String] :membership_identifier
+    #   The unique identifier of the membership that contains the intermediate
+    #   table.
+    #
+    # @option params [required, String] :intermediate_table_identifier
+    #   The unique identifier of the intermediate table for which to list
+    #   versions.
+    #
+    # @option params [String] :next_token
+    #   The pagination token that's used to fetch the next set of results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results that are returned for an API request
+    #   call. The service chooses a default number if you don't set one. The
+    #   service might return a `nextToken` even if the `maxResults` value has
+    #   not been met.
+    #
+    # @return [Types::ListIntermediateTableVersionsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListIntermediateTableVersionsOutput#intermediate_table_version_summaries #intermediate_table_version_summaries} => Array&lt;Types::IntermediateTableVersionSummary&gt;
+    #   * {Types::ListIntermediateTableVersionsOutput#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_intermediate_table_versions({
+    #     membership_identifier: "MembershipIdentifier", # required
+    #     intermediate_table_identifier: "IntermediateTableIdentifier", # required
+    #     next_token: "PaginationToken",
+    #     max_results: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.intermediate_table_version_summaries #=> Array
+    #   resp.intermediate_table_version_summaries[0].version_id #=> String
+    #   resp.intermediate_table_version_summaries[0].table_id #=> String
+    #   resp.intermediate_table_version_summaries[0].create_time #=> Time
+    #   resp.intermediate_table_version_summaries[0].analysis_id #=> String
+    #   resp.intermediate_table_version_summaries[0].status #=> String, one of "POPULATE_STARTED", "POPULATE_SUCCESS", "POPULATE_FAILED", "RETENTION_PERIOD_EXPIRED"
+    #   resp.intermediate_table_version_summaries[0].analysis_type #=> String, one of "QUERY"
+    #   resp.intermediate_table_version_summaries[0].kms_key_arn #=> String
+    #   resp.intermediate_table_version_summaries[0].expiration_time #=> Time
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/ListIntermediateTableVersions AWS API Documentation
+    #
+    # @overload list_intermediate_table_versions(params = {})
+    # @param [Hash] params ({})
+    def list_intermediate_table_versions(params = {}, options = {})
+      req = build_request(:list_intermediate_table_versions, params)
+      req.send_request(options)
+    end
+
+    # Lists intermediate tables owned by the caller in a membership. We
+    # recommend using pagination to ensure that the operation returns
+    # quickly and successfully.
+    #
+    # @option params [required, String] :membership_identifier
+    #   The unique identifier of the membership for which to list intermediate
+    #   tables.
+    #
+    # @option params [String] :next_token
+    #   The pagination token that's used to fetch the next set of results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results that are returned for an API request
+    #   call. The service chooses a default number if you don't set one. The
+    #   service might return a `nextToken` even if the `maxResults` value has
+    #   not been met.
+    #
+    # @return [Types::ListIntermediateTablesOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListIntermediateTablesOutput#intermediate_table_summaries #intermediate_table_summaries} => Array&lt;Types::IntermediateTableSummary&gt;
+    #   * {Types::ListIntermediateTablesOutput#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_intermediate_tables({
+    #     membership_identifier: "MembershipIdentifier", # required
+    #     next_token: "PaginationToken",
+    #     max_results: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.intermediate_table_summaries #=> Array
+    #   resp.intermediate_table_summaries[0].id #=> String
+    #   resp.intermediate_table_summaries[0].arn #=> String
+    #   resp.intermediate_table_summaries[0].name #=> String
+    #   resp.intermediate_table_summaries[0].description #=> String
+    #   resp.intermediate_table_summaries[0].membership_arn #=> String
+    #   resp.intermediate_table_summaries[0].membership_id #=> String
+    #   resp.intermediate_table_summaries[0].collaboration_arn #=> String
+    #   resp.intermediate_table_summaries[0].collaboration_id #=> String
+    #   resp.intermediate_table_summaries[0].create_time #=> Time
+    #   resp.intermediate_table_summaries[0].update_time #=> Time
+    #   resp.intermediate_table_summaries[0].status #=> String, one of "CREATED", "POPULATE_STARTED", "POPULATE_SUCCESS", "POPULATE_FAILED", "DISALLOWED_BY_DATA_PROVIDER", "BASE_TABLE_REMOVED", "RETENTION_PERIOD_EXPIRED"
+    #   resp.intermediate_table_summaries[0].retention_in_days #=> Integer
+    #   resp.intermediate_table_summaries[0].analysis_rule_types #=> Array
+    #   resp.intermediate_table_summaries[0].analysis_rule_types[0] #=> String, one of "CUSTOM"
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/ListIntermediateTables AWS API Documentation
+    #
+    # @overload list_intermediate_tables(params = {})
+    # @param [Hash] params ({})
+    def list_intermediate_tables(params = {}, options = {})
+      req = build_request(:list_intermediate_tables, params)
+      req.send_request(options)
+    end
+
     # Lists all members within a collaboration.
     #
     # @option params [required, String] :collaboration_identifier
@@ -3965,7 +5287,7 @@ module Aws::CleanRooms
     #   resp.member_summaries[0].status #=> String, one of "INVITED", "ACTIVE", "LEFT", "REMOVED"
     #   resp.member_summaries[0].display_name #=> String
     #   resp.member_summaries[0].abilities #=> Array
-    #   resp.member_summaries[0].abilities[0] #=> String, one of "CAN_QUERY", "CAN_RECEIVE_RESULTS", "CAN_RUN_JOB"
+    #   resp.member_summaries[0].abilities[0] #=> String, one of "CAN_QUERY", "CAN_RECEIVE_RESULTS", "CAN_RUN_JOB", "CAN_EXPORT_QUERY_ANALYSIS_LOG"
     #   resp.member_summaries[0].ml_abilities.custom_ml_member_abilities #=> Array
     #   resp.member_summaries[0].ml_abilities.custom_ml_member_abilities[0] #=> String, one of "CAN_RECEIVE_MODEL_OUTPUT", "CAN_RECEIVE_INFERENCE_OUTPUT"
     #   resp.member_summaries[0].create_time #=> Time
@@ -3975,6 +5297,7 @@ module Aws::CleanRooms
     #   resp.member_summaries[0].payment_configuration.query_compute.is_responsible #=> Boolean
     #   resp.member_summaries[0].payment_configuration.machine_learning.model_training.is_responsible #=> Boolean
     #   resp.member_summaries[0].payment_configuration.machine_learning.model_inference.is_responsible #=> Boolean
+    #   resp.member_summaries[0].payment_configuration.machine_learning.synthetic_data_generation.is_responsible #=> Boolean
     #   resp.member_summaries[0].payment_configuration.job_compute.is_responsible #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/ListMembers AWS API Documentation
@@ -4030,12 +5353,13 @@ module Aws::CleanRooms
     #   resp.membership_summaries[0].update_time #=> Time
     #   resp.membership_summaries[0].status #=> String, one of "ACTIVE", "REMOVED", "COLLABORATION_DELETED"
     #   resp.membership_summaries[0].member_abilities #=> Array
-    #   resp.membership_summaries[0].member_abilities[0] #=> String, one of "CAN_QUERY", "CAN_RECEIVE_RESULTS", "CAN_RUN_JOB"
+    #   resp.membership_summaries[0].member_abilities[0] #=> String, one of "CAN_QUERY", "CAN_RECEIVE_RESULTS", "CAN_RUN_JOB", "CAN_EXPORT_QUERY_ANALYSIS_LOG"
     #   resp.membership_summaries[0].ml_member_abilities.custom_ml_member_abilities #=> Array
     #   resp.membership_summaries[0].ml_member_abilities.custom_ml_member_abilities[0] #=> String, one of "CAN_RECEIVE_MODEL_OUTPUT", "CAN_RECEIVE_INFERENCE_OUTPUT"
     #   resp.membership_summaries[0].payment_configuration.query_compute.is_responsible #=> Boolean
     #   resp.membership_summaries[0].payment_configuration.machine_learning.model_training.is_responsible #=> Boolean
     #   resp.membership_summaries[0].payment_configuration.machine_learning.model_inference.is_responsible #=> Boolean
+    #   resp.membership_summaries[0].payment_configuration.machine_learning.synthetic_data_generation.is_responsible #=> Boolean
     #   resp.membership_summaries[0].payment_configuration.job_compute.is_responsible #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/ListMemberships AWS API Documentation
@@ -4089,7 +5413,7 @@ module Aws::CleanRooms
     #   resp.privacy_budget_template_summaries[0].membership_arn #=> String
     #   resp.privacy_budget_template_summaries[0].collaboration_id #=> String
     #   resp.privacy_budget_template_summaries[0].collaboration_arn #=> String
-    #   resp.privacy_budget_template_summaries[0].privacy_budget_type #=> String, one of "DIFFERENTIAL_PRIVACY"
+    #   resp.privacy_budget_template_summaries[0].privacy_budget_type #=> String, one of "DIFFERENTIAL_PRIVACY", "ACCESS_BUDGET"
     #   resp.privacy_budget_template_summaries[0].create_time #=> Time
     #   resp.privacy_budget_template_summaries[0].update_time #=> Time
     #
@@ -4122,6 +5446,10 @@ module Aws::CleanRooms
     #   service might return a `nextToken` even if the `maxResults` value
     #   has not been met.
     #
+    # @option params [String] :access_budget_resource_arn
+    #   The Amazon Resource Name (ARN) of the access budget resource to filter
+    #   privacy budgets by.
+    #
     # @return [Types::ListPrivacyBudgetsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::ListPrivacyBudgetsOutput#privacy_budget_summaries #privacy_budget_summaries} => Array&lt;Types::PrivacyBudgetSummary&gt;
@@ -4133,9 +5461,10 @@ module Aws::CleanRooms
     #
     #   resp = client.list_privacy_budgets({
     #     membership_identifier: "MembershipIdentifier", # required
-    #     privacy_budget_type: "DIFFERENTIAL_PRIVACY", # required, accepts DIFFERENTIAL_PRIVACY
+    #     privacy_budget_type: "DIFFERENTIAL_PRIVACY", # required, accepts DIFFERENTIAL_PRIVACY, ACCESS_BUDGET
     #     next_token: "PaginationToken",
     #     max_results: 1,
+    #     access_budget_resource_arn: "BudgetedResourceArn",
     #   })
     #
     # @example Response structure
@@ -4148,7 +5477,7 @@ module Aws::CleanRooms
     #   resp.privacy_budget_summaries[0].membership_arn #=> String
     #   resp.privacy_budget_summaries[0].collaboration_id #=> String
     #   resp.privacy_budget_summaries[0].collaboration_arn #=> String
-    #   resp.privacy_budget_summaries[0].type #=> String, one of "DIFFERENTIAL_PRIVACY"
+    #   resp.privacy_budget_summaries[0].type #=> String, one of "DIFFERENTIAL_PRIVACY", "ACCESS_BUDGET"
     #   resp.privacy_budget_summaries[0].create_time #=> Time
     #   resp.privacy_budget_summaries[0].update_time #=> Time
     #   resp.privacy_budget_summaries[0].budget.differential_privacy.aggregations #=> Array
@@ -4156,6 +5485,15 @@ module Aws::CleanRooms
     #   resp.privacy_budget_summaries[0].budget.differential_privacy.aggregations[0].max_count #=> Integer
     #   resp.privacy_budget_summaries[0].budget.differential_privacy.aggregations[0].remaining_count #=> Integer
     #   resp.privacy_budget_summaries[0].budget.differential_privacy.epsilon #=> Integer
+    #   resp.privacy_budget_summaries[0].budget.access_budget.resource_arn #=> String
+    #   resp.privacy_budget_summaries[0].budget.access_budget.details #=> Array
+    #   resp.privacy_budget_summaries[0].budget.access_budget.details[0].start_time #=> Time
+    #   resp.privacy_budget_summaries[0].budget.access_budget.details[0].end_time #=> Time
+    #   resp.privacy_budget_summaries[0].budget.access_budget.details[0].remaining_budget #=> Integer
+    #   resp.privacy_budget_summaries[0].budget.access_budget.details[0].budget #=> Integer
+    #   resp.privacy_budget_summaries[0].budget.access_budget.details[0].budget_type #=> String, one of "CALENDAR_DAY", "CALENDAR_MONTH", "CALENDAR_WEEK", "LIFETIME"
+    #   resp.privacy_budget_summaries[0].budget.access_budget.details[0].auto_refresh #=> String, one of "ENABLED", "DISABLED"
+    #   resp.privacy_budget_summaries[0].budget.access_budget.aggregate_remaining_budget #=> Integer
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/ListPrivacyBudgets AWS API Documentation
@@ -4213,6 +5551,7 @@ module Aws::CleanRooms
     #   resp.protected_jobs[0].receiver_configurations[0].analysis_type #=> String, one of "DIRECT_ANALYSIS"
     #   resp.protected_jobs[0].receiver_configurations[0].configuration_details.direct_analysis_configuration_details.receiver_account_ids #=> Array
     #   resp.protected_jobs[0].receiver_configurations[0].configuration_details.direct_analysis_configuration_details.receiver_account_ids[0] #=> String
+    #   resp.protected_jobs[0].job_compute_payer_account_id #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/ListProtectedJobs AWS API Documentation
     #
@@ -4269,6 +5608,10 @@ module Aws::CleanRooms
     #   resp.protected_queries[0].receiver_configurations[0].analysis_type #=> String, one of "DIRECT_ANALYSIS", "ADDITIONAL_ANALYSIS"
     #   resp.protected_queries[0].receiver_configurations[0].configuration_details.direct_analysis_configuration_details.receiver_account_ids #=> Array
     #   resp.protected_queries[0].receiver_configurations[0].configuration_details.direct_analysis_configuration_details.receiver_account_ids[0] #=> String
+    #   resp.protected_queries[0].query_compute_payer_account_id #=> String
+    #   resp.protected_queries[0].intermediate_table_configuration.id #=> String
+    #   resp.protected_queries[0].intermediate_table_configuration.arn #=> String
+    #   resp.protected_queries[0].intermediate_table_configuration.name #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/ListProtectedQueries AWS API Documentation
     #
@@ -4308,7 +5651,7 @@ module Aws::CleanRooms
     #
     #   resp = client.list_schemas({
     #     collaboration_identifier: "CollaborationIdentifier", # required
-    #     schema_type: "TABLE", # accepts TABLE, ID_MAPPING_TABLE
+    #     schema_type: "TABLE", # accepts TABLE, ID_MAPPING_TABLE, INTERMEDIATE_TABLE
     #     next_token: "PaginationToken",
     #     max_results: 1,
     #   })
@@ -4317,7 +5660,7 @@ module Aws::CleanRooms
     #
     #   resp.schema_summaries #=> Array
     #   resp.schema_summaries[0].name #=> String
-    #   resp.schema_summaries[0].type #=> String, one of "TABLE", "ID_MAPPING_TABLE"
+    #   resp.schema_summaries[0].type #=> String, one of "TABLE", "ID_MAPPING_TABLE", "INTERMEDIATE_TABLE"
     #   resp.schema_summaries[0].creator_account_id #=> String
     #   resp.schema_summaries[0].create_time #=> Time
     #   resp.schema_summaries[0].update_time #=> Time
@@ -4326,6 +5669,7 @@ module Aws::CleanRooms
     #   resp.schema_summaries[0].analysis_rule_types #=> Array
     #   resp.schema_summaries[0].analysis_rule_types[0] #=> String, one of "AGGREGATION", "LIST", "CUSTOM", "ID_MAPPING_TABLE"
     #   resp.schema_summaries[0].analysis_method #=> String, one of "DIRECT_QUERY", "DIRECT_JOB", "MULTIPLE"
+    #   resp.schema_summaries[0].resource_arn #=> String
     #   resp.schema_summaries[0].selected_analysis_methods #=> Array
     #   resp.schema_summaries[0].selected_analysis_methods[0] #=> String, one of "DIRECT_QUERY", "DIRECT_JOB"
     #   resp.next_token #=> String
@@ -4380,6 +5724,28 @@ module Aws::CleanRooms
     #   The unique identifier of the membership that contains the ID mapping
     #   table that you want to populate.
     #
+    # @option params [String] :job_type
+    #   The job type of the rule-based ID mapping job. Valid values include:
+    #
+    #   `INCREMENTAL`: Processes only new or changed data since the last job
+    #   run. This is the default job type if the ID mapping workflow was
+    #   created in Entity Resolution with `incrementalRunConfig` specified.
+    #
+    #   `BATCH`: Processes all data from the input source, regardless of
+    #   previous job runs. This is the default job type if the ID mapping
+    #   workflow was created in Entity Resolution but `incrementalRunConfig`
+    #   wasn't specified.
+    #
+    #   `DELETE_ONLY`: Processes only deletion requests from
+    #   `BatchDeleteUniqueId`, which is set in Entity Resolution.
+    #
+    #   For more information about `incrementalRunConfig` and
+    #   `BatchDeleteUniqueId`, see the [Entity Resolution API Reference][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/entityresolution/latest/apireference/Welcome.html
+    #
     # @return [Types::PopulateIdMappingTableOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::PopulateIdMappingTableOutput#id_mapping_job_id #id_mapping_job_id} => String
@@ -4389,6 +5755,7 @@ module Aws::CleanRooms
     #   resp = client.populate_id_mapping_table({
     #     id_mapping_table_identifier: "UUID", # required
     #     membership_identifier: "MembershipIdentifier", # required
+    #     job_type: "BATCH", # accepts BATCH, INCREMENTAL, DELETE_ONLY
     #   })
     #
     # @example Response structure
@@ -4401,6 +5768,71 @@ module Aws::CleanRooms
     # @param [Hash] params ({})
     def populate_id_mapping_table(params = {}, options = {})
       req = build_request(:populate_id_mapping_table, params)
+      req.send_request(options)
+    end
+
+    # Runs the stored query of an intermediate table and makes the results
+    # available for querying. Each call creates a new version. Use
+    # `GetProtectedQuery` with the returned analysis ID to track progress.
+    # Only the intermediate table owner can call this operation.
+    #
+    # @option params [required, String] :intermediate_table_identifier
+    #   The unique identifier of the intermediate table to populate.
+    #
+    # @option params [required, String] :membership_identifier
+    #   The unique identifier of the membership that contains the intermediate
+    #   table.
+    #
+    # @option params [Hash<String,String>] :parameters
+    #   The runtime parameter values that override the defaults in the stored
+    #   query.
+    #
+    # @option params [Types::IntermediateTableComputeConfiguration] :compute_configuration
+    #   The compute configuration for the population query execution.
+    #
+    # @option params [String] :analysis_payer_account_id
+    #   The account ID of the member that pays for the analysis compute costs.
+    #
+    # @return [Types::PopulateIntermediateTableOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::PopulateIntermediateTableOutput#analysis_id #analysis_id} => String
+    #   * {Types::PopulateIntermediateTableOutput#analysis_type #analysis_type} => String
+    #   * {Types::PopulateIntermediateTableOutput#version_id #version_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.populate_intermediate_table({
+    #     intermediate_table_identifier: "IntermediateTableIdentifier", # required
+    #     membership_identifier: "MembershipIdentifier", # required
+    #     parameters: {
+    #       "ParameterName" => "ParameterValue",
+    #     },
+    #     compute_configuration: {
+    #       query_compute_configuration: {
+    #         type: "CR.1X", # accepts CR.1X, CR.4X, CR.8X
+    #         number: 1,
+    #         properties: {
+    #           spark: {
+    #             "SparkPropertyKey" => "SparkPropertyValue",
+    #           },
+    #         },
+    #       },
+    #     },
+    #     analysis_payer_account_id: "AccountId",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.analysis_id #=> String
+    #   resp.analysis_type #=> String, one of "QUERY"
+    #   resp.version_id #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/PopulateIntermediateTable AWS API Documentation
+    #
+    # @overload populate_intermediate_table(params = {})
+    # @param [Hash] params ({})
+    def populate_intermediate_table(params = {}, options = {})
+      req = build_request(:populate_intermediate_table, params)
       req.send_request(options)
     end
 
@@ -4445,6 +5877,107 @@ module Aws::CleanRooms
       req.send_request(options)
     end
 
+    # Starts an export of the Apache Spark logs for a protected query to an
+    # Amazon S3 bucket that you own. Use the exported logs to diagnose a
+    # query that failed or that ran more slowly than you expected.
+    #
+    # Clean Rooms exports a redacted copy of the Spark logs instead of the
+    # raw logs. Analyze the exported logs with the tooling of your choice,
+    # such as Spark History Server. For details about what the exported logs
+    # contain, see
+    # [https://docs.aws.amazon.com/clean-rooms/latest/userguide/export-analysis-logs-contents.html][1].
+    #
+    # The export runs asynchronously and returns with a `status` of
+    # `IN_PROGRESS`. Call `GetAnalysisLogExport` to poll for the final
+    # status.
+    #
+    # To use this operation, you must have the
+    # `CAN_EXPORT_QUERY_ANALYSIS_LOG` ability for your membership. You must
+    # also be the query runner or the query payer. Having the ability alone
+    # is not sufficient.
+    #
+    #  The query must have reached a terminal state, and it must have
+    # reached
+    # the execution stage. A query that failed validation or that was
+    # canceled before it started produces no Spark logs.
+    #
+    #  Log export isn't supported for queries that use differential
+    # privacy,
+    # and isn't supported for PySpark jobs.
+    #
+    #  The destination bucket must be in the same Amazon Web Services Region
+    # as the collaboration. Cross-Region export isn't supported.
+    #
+    # For more information, see
+    # [https://docs.aws.amazon.com/clean-rooms/latest/userguide/export-analysis-logs.html][2].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/clean-rooms/latest/userguide/export-analysis-logs-contents.html
+    # [2]: https://docs.aws.amazon.com/clean-rooms/latest/userguide/export-analysis-logs.html
+    #
+    # @option params [required, String] :membership_identifier
+    #   A unique identifier for the membership to export the analysis logs
+    #   for. Currently accepts a membership ID.
+    #
+    # @option params [required, String] :analysis_id
+    #   The unique identifier of the protected query that you want to export
+    #   the analysis logs for.
+    #
+    # @option params [required, String] :analysis_type
+    #   The type of analysis that the logs are exported for. Currently, only
+    #   `PROTECTED_QUERY` is supported.
+    #
+    # @option params [required, Types::AnalysisLogExportResultConfiguration] :result_configuration
+    #   The details needed to write the exported analysis logs.
+    #
+    #   You don't need to create an IAM role for log export. Clean Rooms
+    #   writes the exported logs using your own identity, so Clean Rooms
+    #   writes the exported logs only where your existing permissions allow.
+    #
+    # @return [Types::StartAnalysisLogExportOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::StartAnalysisLogExportOutput#analysis_log_export #analysis_log_export} => Types::AnalysisLogExport
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.start_analysis_log_export({
+    #     membership_identifier: "MembershipIdentifier", # required
+    #     analysis_id: "UUID", # required
+    #     analysis_type: "PROTECTED_QUERY", # required, accepts PROTECTED_QUERY
+    #     result_configuration: { # required
+    #       output_configuration: { # required
+    #         s3: { # required
+    #           bucket: "AnalysisLogExportS3OutputConfigurationBucketString", # required
+    #           key_prefix: "KeyPrefix",
+    #         },
+    #       },
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.analysis_log_export.analysis_log_export_id #=> String
+    #   resp.analysis_log_export.analysis_id #=> String
+    #   resp.analysis_log_export.analysis_type #=> String, one of "PROTECTED_QUERY"
+    #   resp.analysis_log_export.membership_id #=> String
+    #   resp.analysis_log_export.status #=> String, one of "IN_PROGRESS", "SUCCESS", "FAILED"
+    #   resp.analysis_log_export.result_configuration.output_configuration.s3.bucket #=> String
+    #   resp.analysis_log_export.result_configuration.output_configuration.s3.key_prefix #=> String
+    #   resp.analysis_log_export.create_time #=> Time
+    #   resp.analysis_log_export.update_time #=> Time
+    #   resp.analysis_log_export.error.code #=> String
+    #   resp.analysis_log_export.error.message #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/StartAnalysisLogExport AWS API Documentation
+    #
+    # @overload start_analysis_log_export(params = {})
+    # @param [Hash] params ({})
+    def start_analysis_log_export(params = {}, options = {})
+      req = build_request(:start_analysis_log_export, params)
+      req.send_request(options)
+    end
+
     # Creates a protected job that is started by Clean Rooms.
     #
     # @option params [required, String] :type
@@ -4460,6 +5993,12 @@ module Aws::CleanRooms
     # @option params [Types::ProtectedJobResultConfigurationInput] :result_configuration
     #   The details needed to write the job results.
     #
+    # @option params [Types::ProtectedJobComputeConfiguration] :compute_configuration
+    #   The compute configuration for the protected job.
+    #
+    # @option params [String] :job_compute_payer_account_id
+    #   The account ID of the member that pays for the job compute costs.
+    #
     # @return [Types::StartProtectedJobOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::StartProtectedJobOutput#protected_job #protected_job} => Types::ProtectedJob
@@ -4470,7 +6009,10 @@ module Aws::CleanRooms
     #     type: "PYSPARK", # required, accepts PYSPARK
     #     membership_identifier: "MembershipIdentifier", # required
     #     job_parameters: { # required
-    #       analysis_template_arn: "AnalysisTemplateArn",
+    #       analysis_template_arn: "AnalysisTemplateArn", # required
+    #       parameters: {
+    #         "JobParameterName" => "JobParameterValue",
+    #       },
     #     },
     #     result_configuration: {
     #       output_configuration: { # required
@@ -4479,6 +6021,18 @@ module Aws::CleanRooms
     #         },
     #       },
     #     },
+    #     compute_configuration: {
+    #       worker: {
+    #         type: "CR.1X", # required, accepts CR.1X, CR.4X
+    #         number: 1, # required
+    #         properties: {
+    #           spark: {
+    #             "SparkPropertyKey" => "SparkPropertyValue",
+    #           },
+    #         },
+    #       },
+    #     },
+    #     job_compute_payer_account_id: "AccountId",
     #   })
     #
     # @example Response structure
@@ -4488,6 +6042,8 @@ module Aws::CleanRooms
     #   resp.protected_job.membership_arn #=> String
     #   resp.protected_job.create_time #=> Time
     #   resp.protected_job.job_parameters.analysis_template_arn #=> String
+    #   resp.protected_job.job_parameters.parameters #=> Hash
+    #   resp.protected_job.job_parameters.parameters["JobParameterName"] #=> String
     #   resp.protected_job.status #=> String, one of "SUBMITTED", "STARTED", "CANCELLED", "CANCELLING", "FAILED", "SUCCESS"
     #   resp.protected_job.result_configuration.output_configuration.s3.bucket #=> String
     #   resp.protected_job.result_configuration.output_configuration.s3.key_prefix #=> String
@@ -4499,6 +6055,11 @@ module Aws::CleanRooms
     #   resp.protected_job.result.output.member_list[0].account_id #=> String
     #   resp.protected_job.error.message #=> String
     #   resp.protected_job.error.code #=> String
+    #   resp.protected_job.compute_configuration.worker.type #=> String, one of "CR.1X", "CR.4X"
+    #   resp.protected_job.compute_configuration.worker.number #=> Integer
+    #   resp.protected_job.compute_configuration.worker.properties.spark #=> Hash
+    #   resp.protected_job.compute_configuration.worker.properties.spark["SparkPropertyKey"] #=> String
+    #   resp.protected_job.job_compute_payer_account_id #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/StartProtectedJob AWS API Documentation
     #
@@ -4527,6 +6088,9 @@ module Aws::CleanRooms
     # @option params [Types::ComputeConfiguration] :compute_configuration
     #   The compute configuration for the protected query.
     #
+    # @option params [String] :query_compute_payer_account_id
+    #   The account ID of the member that pays for the query compute costs.
+    #
     # @return [Types::StartProtectedQueryOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::StartProtectedQueryOutput#protected_query #protected_query} => Types::ProtectedQuery
@@ -4554,14 +6118,40 @@ module Aws::CleanRooms
     #         member: {
     #           account_id: "AccountId", # required
     #         },
+    #         distribute: {
+    #           locations: [ # required
+    #             {
+    #               s3: {
+    #                 result_format: "CSV", # required, accepts CSV, PARQUET
+    #                 bucket: "ProtectedQueryS3OutputConfigurationBucketString", # required
+    #                 key_prefix: "KeyPrefix",
+    #                 single_file_output: false,
+    #               },
+    #               member: {
+    #                 account_id: "AccountId", # required
+    #               },
+    #             },
+    #           ],
+    #         },
+    #         intermediate_table: {
+    #           id: "UUID", # required
+    #           arn: "IntermediateTableArn", # required
+    #           name: "DisplayName", # required
+    #         },
     #       },
     #     },
     #     compute_configuration: {
     #       worker: {
-    #         type: "CR.1X", # accepts CR.1X, CR.4X
+    #         type: "CR.1X", # accepts CR.1X, CR.4X, CR.8X
     #         number: 1,
+    #         properties: {
+    #           spark: {
+    #             "SparkPropertyKey" => "SparkPropertyValue",
+    #           },
+    #         },
     #       },
     #     },
+    #     query_compute_payer_account_id: "AccountId",
     #   })
     #
     # @example Response structure
@@ -4580,11 +6170,23 @@ module Aws::CleanRooms
     #   resp.protected_query.result_configuration.output_configuration.s3.key_prefix #=> String
     #   resp.protected_query.result_configuration.output_configuration.s3.single_file_output #=> Boolean
     #   resp.protected_query.result_configuration.output_configuration.member.account_id #=> String
+    #   resp.protected_query.result_configuration.output_configuration.distribute.locations #=> Array
+    #   resp.protected_query.result_configuration.output_configuration.distribute.locations[0].s3.result_format #=> String, one of "CSV", "PARQUET"
+    #   resp.protected_query.result_configuration.output_configuration.distribute.locations[0].s3.bucket #=> String
+    #   resp.protected_query.result_configuration.output_configuration.distribute.locations[0].s3.key_prefix #=> String
+    #   resp.protected_query.result_configuration.output_configuration.distribute.locations[0].s3.single_file_output #=> Boolean
+    #   resp.protected_query.result_configuration.output_configuration.distribute.locations[0].member.account_id #=> String
+    #   resp.protected_query.result_configuration.output_configuration.intermediate_table.id #=> String
+    #   resp.protected_query.result_configuration.output_configuration.intermediate_table.arn #=> String
+    #   resp.protected_query.result_configuration.output_configuration.intermediate_table.name #=> String
     #   resp.protected_query.statistics.total_duration_in_millis #=> Integer
     #   resp.protected_query.statistics.billed_resource_utilization.units #=> Float
     #   resp.protected_query.result.output.s3.location #=> String
     #   resp.protected_query.result.output.member_list #=> Array
     #   resp.protected_query.result.output.member_list[0].account_id #=> String
+    #   resp.protected_query.result.output.distribute.s3.location #=> String
+    #   resp.protected_query.result.output.distribute.member_list #=> Array
+    #   resp.protected_query.result.output.distribute.member_list[0].account_id #=> String
     #   resp.protected_query.error.message #=> String
     #   resp.protected_query.error.code #=> String
     #   resp.protected_query.differential_privacy.sensitivity_parameters #=> Array
@@ -4593,8 +6195,11 @@ module Aws::CleanRooms
     #   resp.protected_query.differential_privacy.sensitivity_parameters[0].user_contribution_limit #=> Integer
     #   resp.protected_query.differential_privacy.sensitivity_parameters[0].min_column_value #=> Float
     #   resp.protected_query.differential_privacy.sensitivity_parameters[0].max_column_value #=> Float
-    #   resp.protected_query.compute_configuration.worker.type #=> String, one of "CR.1X", "CR.4X"
+    #   resp.protected_query.compute_configuration.worker.type #=> String, one of "CR.1X", "CR.4X", "CR.8X"
     #   resp.protected_query.compute_configuration.worker.number #=> Integer
+    #   resp.protected_query.compute_configuration.worker.properties.spark #=> Hash
+    #   resp.protected_query.compute_configuration.worker.properties.spark["SparkPropertyKey"] #=> String
+    #   resp.protected_query.query_compute_payer_account_id #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/StartProtectedQuery AWS API Documentation
     #
@@ -4718,6 +6323,13 @@ module Aws::CleanRooms
     #   resp.analysis_template.validations[0].status #=> String, one of "VALID", "INVALID", "UNABLE_TO_VALIDATE"
     #   resp.analysis_template.validations[0].reasons #=> Array
     #   resp.analysis_template.validations[0].reasons[0].message #=> String
+    #   resp.analysis_template.error_message_configuration.type #=> String, one of "DETAILED"
+    #   resp.analysis_template.synthetic_data_parameters.ml_synthetic_data_parameters.epsilon #=> Float
+    #   resp.analysis_template.synthetic_data_parameters.ml_synthetic_data_parameters.max_membership_inference_attack_score #=> Float
+    #   resp.analysis_template.synthetic_data_parameters.ml_synthetic_data_parameters.column_classification.column_mapping #=> Array
+    #   resp.analysis_template.synthetic_data_parameters.ml_synthetic_data_parameters.column_classification.column_mapping[0].column_name #=> String
+    #   resp.analysis_template.synthetic_data_parameters.ml_synthetic_data_parameters.column_classification.column_mapping[0].column_type #=> String, one of "CATEGORICAL", "NUMERICAL"
+    #   resp.analysis_template.synthetic_data_parameters.ml_synthetic_data_parameters.column_classification.column_mapping[0].is_predictive_value #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/UpdateAnalysisTemplate AWS API Documentation
     #
@@ -4741,6 +6353,14 @@ module Aws::CleanRooms
     # @option params [String] :description
     #   A description of the collaboration.
     #
+    # @option params [String] :analytics_engine
+    #   The analytics engine.
+    #
+    #   <note markdown="1"> After July 16, 2025, the `CLEAN_ROOMS_SQL` parameter will no longer be
+    #   available.
+    #
+    #    </note>
+    #
     # @return [Types::UpdateCollaborationOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::UpdateCollaborationOutput#collaboration #collaboration} => Types::Collaboration
@@ -4751,6 +6371,7 @@ module Aws::CleanRooms
     #     collaboration_identifier: "CollaborationIdentifier", # required
     #     name: "CollaborationName",
     #     description: "CollaborationDescription",
+    #     analytics_engine: "SPARK", # accepts SPARK, CLEAN_ROOMS_SQL
     #   })
     #
     # @example Response structure
@@ -4773,6 +6394,11 @@ module Aws::CleanRooms
     #   resp.collaboration.query_log_status #=> String, one of "ENABLED", "DISABLED"
     #   resp.collaboration.job_log_status #=> String, one of "ENABLED", "DISABLED"
     #   resp.collaboration.analytics_engine #=> String, one of "SPARK", "CLEAN_ROOMS_SQL"
+    #   resp.collaboration.auto_approved_change_types #=> Array
+    #   resp.collaboration.auto_approved_change_types[0] #=> String, one of "ADD_MEMBER", "GRANT_RECEIVE_RESULTS_ABILITY", "REVOKE_RECEIVE_RESULTS_ABILITY", "GRANT_EXPORT_QUERY_ANALYSIS_LOG_ABILITY", "REVOKE_EXPORT_QUERY_ANALYSIS_LOG_ABILITY"
+    #   resp.collaboration.allowed_result_regions #=> Array
+    #   resp.collaboration.allowed_result_regions[0] #=> String, one of "us-west-1", "us-west-2", "us-east-1", "us-east-2", "af-south-1", "ap-east-1", "ap-east-2", "ap-south-2", "ap-southeast-1", "ap-southeast-2", "ap-southeast-3", "ap-southeast-5", "ap-southeast-4", "ap-southeast-7", "ap-south-1", "ap-northeast-3", "ap-northeast-1", "ap-northeast-2", "ca-central-1", "ca-west-1", "eu-south-1", "eu-west-3", "eu-south-2", "eu-central-2", "eu-central-1", "eu-north-1", "eu-west-1", "eu-west-2", "me-south-1", "me-central-1", "il-central-1", "sa-east-1", "mx-central-1"
+    #   resp.collaboration.is_metrics_enabled #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/UpdateCollaboration AWS API Documentation
     #
@@ -4780,6 +6406,80 @@ module Aws::CleanRooms
     # @param [Hash] params ({})
     def update_collaboration(params = {}, options = {})
       req = build_request(:update_collaboration, params)
+      req.send_request(options)
+    end
+
+    # Updates an existing collaboration change request. This operation
+    # allows approval actions for pending change requests in collaborations
+    # (APPROVE, DENY, CANCEL, COMMIT).
+    #
+    # For change requests without automatic approval, a member in the
+    # collaboration can manually APPROVE or DENY a change request. The
+    # collaboration owner can manually CANCEL or COMMIT a change request.
+    #
+    # @option params [required, String] :collaboration_identifier
+    #   The unique identifier of the collaboration that contains the change
+    #   request to be updated.
+    #
+    # @option params [required, String] :change_request_identifier
+    #   The unique identifier of the specific change request to be updated
+    #   within the collaboration.
+    #
+    # @option params [required, String] :action
+    #   The action to perform on the change request. Valid values include
+    #   APPROVE (approve the change), DENY (reject the change), CANCEL (cancel
+    #   the request), and COMMIT (commit after the request is approved).
+    #
+    #   For change requests without automatic approval, a member in the
+    #   collaboration can manually APPROVE or DENY a change request. The
+    #   collaboration owner can manually CANCEL or COMMIT a change request.
+    #
+    # @return [Types::UpdateCollaborationChangeRequestOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateCollaborationChangeRequestOutput#collaboration_change_request #collaboration_change_request} => Types::CollaborationChangeRequest
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_collaboration_change_request({
+    #     collaboration_identifier: "CollaborationIdentifier", # required
+    #     change_request_identifier: "CollaborationChangeRequestIdentifier", # required
+    #     action: "APPROVE", # required, accepts APPROVE, DENY, CANCEL, COMMIT
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.collaboration_change_request.id #=> String
+    #   resp.collaboration_change_request.collaboration_id #=> String
+    #   resp.collaboration_change_request.create_time #=> Time
+    #   resp.collaboration_change_request.update_time #=> Time
+    #   resp.collaboration_change_request.status #=> String, one of "PENDING", "APPROVED", "CANCELLED", "DENIED", "COMMITTED"
+    #   resp.collaboration_change_request.is_auto_approved #=> Boolean
+    #   resp.collaboration_change_request.changes #=> Array
+    #   resp.collaboration_change_request.changes[0].specification_type #=> String, one of "MEMBER", "COLLABORATION"
+    #   resp.collaboration_change_request.changes[0].specification.member.account_id #=> String
+    #   resp.collaboration_change_request.changes[0].specification.member.member_abilities #=> Array
+    #   resp.collaboration_change_request.changes[0].specification.member.member_abilities[0] #=> String, one of "CAN_QUERY", "CAN_RECEIVE_RESULTS", "CAN_RUN_JOB", "CAN_EXPORT_QUERY_ANALYSIS_LOG"
+    #   resp.collaboration_change_request.changes[0].specification.member.ml_member_abilities.custom_ml_member_abilities #=> Array
+    #   resp.collaboration_change_request.changes[0].specification.member.ml_member_abilities.custom_ml_member_abilities[0] #=> String, one of "CAN_RECEIVE_MODEL_OUTPUT", "CAN_RECEIVE_INFERENCE_OUTPUT"
+    #   resp.collaboration_change_request.changes[0].specification.member.payment_configuration.query_compute.is_responsible #=> Boolean
+    #   resp.collaboration_change_request.changes[0].specification.member.payment_configuration.machine_learning.model_training.is_responsible #=> Boolean
+    #   resp.collaboration_change_request.changes[0].specification.member.payment_configuration.machine_learning.model_inference.is_responsible #=> Boolean
+    #   resp.collaboration_change_request.changes[0].specification.member.payment_configuration.machine_learning.synthetic_data_generation.is_responsible #=> Boolean
+    #   resp.collaboration_change_request.changes[0].specification.member.payment_configuration.job_compute.is_responsible #=> Boolean
+    #   resp.collaboration_change_request.changes[0].specification.member.display_name #=> String
+    #   resp.collaboration_change_request.changes[0].specification.collaboration.auto_approved_change_types #=> Array
+    #   resp.collaboration_change_request.changes[0].specification.collaboration.auto_approved_change_types[0] #=> String, one of "ADD_MEMBER", "GRANT_RECEIVE_RESULTS_ABILITY", "REVOKE_RECEIVE_RESULTS_ABILITY", "GRANT_EXPORT_QUERY_ANALYSIS_LOG_ABILITY", "REVOKE_EXPORT_QUERY_ANALYSIS_LOG_ABILITY"
+    #   resp.collaboration_change_request.changes[0].types #=> Array
+    #   resp.collaboration_change_request.changes[0].types[0] #=> String, one of "ADD_MEMBER", "GRANT_RECEIVE_RESULTS_ABILITY", "REVOKE_RECEIVE_RESULTS_ABILITY", "EDIT_AUTO_APPROVED_CHANGE_TYPES", "ADD_PAYER_CANDIDATE", "REMOVE_PAYER_CANDIDATE", "GRANT_CAN_RECEIVE_MODEL_OUTPUT", "GRANT_CAN_RECEIVE_INFERENCE_OUTPUT", "REVOKE_CAN_RECEIVE_MODEL_OUTPUT", "REVOKE_CAN_RECEIVE_INFERENCE_OUTPUT", "GRANT_EXPORT_QUERY_ANALYSIS_LOG_ABILITY", "REVOKE_EXPORT_QUERY_ANALYSIS_LOG_ABILITY"
+    #   resp.collaboration_change_request.approvals #=> Hash
+    #   resp.collaboration_change_request.approvals["AccountId"].status #=> String, one of "APPROVED", "DENIED", "PENDING"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/UpdateCollaborationChangeRequest AWS API Documentation
+    #
+    # @overload update_collaboration_change_request(params = {})
+    # @param [Hash] params ({})
+    def update_collaboration_change_request(params = {}, options = {})
+      req = build_request(:update_collaboration_change_request, params)
       req.send_request(options)
     end
 
@@ -4849,6 +6549,13 @@ module Aws::CleanRooms
     # @option params [String] :description
     #   A new description for the configured table.
     #
+    # @option params [Types::TableReference] :table_reference
+    #   A pointer to the dataset that underlies this table.
+    #
+    # @option params [Array<String>] :allowed_columns
+    #   The columns of the underlying table that can be used by collaborations
+    #   or analysis rules.
+    #
     # @option params [String] :analysis_method
     #   The analysis method for the configured table.
     #
@@ -4872,6 +6579,37 @@ module Aws::CleanRooms
     #     configured_table_identifier: "ConfiguredTableIdentifier", # required
     #     name: "DisplayName",
     #     description: "TableDescription",
+    #     table_reference: {
+    #       glue: {
+    #         region: "us-west-1", # accepts us-west-1, us-west-2, us-east-1, us-east-2, af-south-1, ap-east-1, ap-south-2, ap-southeast-1, ap-southeast-2, ap-southeast-3, ap-southeast-5, ap-southeast-4, ap-southeast-7, ap-south-1, ap-northeast-3, ap-northeast-1, ap-northeast-2, ca-central-1, ca-west-1, eu-south-1, eu-west-3, eu-south-2, eu-central-2, eu-central-1, eu-north-1, eu-west-1, eu-west-2, me-south-1, me-central-1, il-central-1, sa-east-1, mx-central-1, ap-east-2
+    #         table_name: "GlueTableName", # required
+    #         database_name: "GlueDatabaseName", # required
+    #       },
+    #       snowflake: {
+    #         secret_arn: "SecretsManagerArn", # required
+    #         account_identifier: "SnowflakeAccountIdentifier", # required
+    #         database_name: "SnowflakeDatabaseName", # required
+    #         table_name: "SnowflakeTableName", # required
+    #         schema_name: "SnowflakeSchemaName", # required
+    #         table_schema: { # required
+    #           v1: [
+    #             {
+    #               column_name: "ColumnName", # required
+    #               column_type: "ColumnTypeString", # required
+    #             },
+    #           ],
+    #         },
+    #       },
+    #       athena: {
+    #         region: "us-west-1", # accepts us-west-1, us-west-2, us-east-1, us-east-2, af-south-1, ap-east-1, ap-south-2, ap-southeast-1, ap-southeast-2, ap-southeast-3, ap-southeast-5, ap-southeast-4, ap-southeast-7, ap-south-1, ap-northeast-3, ap-northeast-1, ap-northeast-2, ca-central-1, ca-west-1, eu-south-1, eu-west-3, eu-south-2, eu-central-2, eu-central-1, eu-north-1, eu-west-1, eu-west-2, me-south-1, me-central-1, il-central-1, sa-east-1, mx-central-1, ap-east-2
+    #         work_group: "AthenaWorkGroup", # required
+    #         output_location: "AthenaOutputLocation",
+    #         database_name: "AthenaDatabaseName", # required
+    #         table_name: "AthenaTableName", # required
+    #         catalog_name: "AthenaCatalogName",
+    #       },
+    #     },
+    #     allowed_columns: ["ColumnName"],
     #     analysis_method: "DIRECT_QUERY", # accepts DIRECT_QUERY, DIRECT_JOB, MULTIPLE
     #     selected_analysis_methods: ["DIRECT_QUERY"], # accepts DIRECT_QUERY, DIRECT_JOB
     #   })
@@ -4882,6 +6620,7 @@ module Aws::CleanRooms
     #   resp.configured_table.arn #=> String
     #   resp.configured_table.name #=> String
     #   resp.configured_table.description #=> String
+    #   resp.configured_table.table_reference.glue.region #=> String, one of "us-west-1", "us-west-2", "us-east-1", "us-east-2", "af-south-1", "ap-east-1", "ap-south-2", "ap-southeast-1", "ap-southeast-2", "ap-southeast-3", "ap-southeast-5", "ap-southeast-4", "ap-southeast-7", "ap-south-1", "ap-northeast-3", "ap-northeast-1", "ap-northeast-2", "ca-central-1", "ca-west-1", "eu-south-1", "eu-west-3", "eu-south-2", "eu-central-2", "eu-central-1", "eu-north-1", "eu-west-1", "eu-west-2", "me-south-1", "me-central-1", "il-central-1", "sa-east-1", "mx-central-1", "ap-east-2"
     #   resp.configured_table.table_reference.glue.table_name #=> String
     #   resp.configured_table.table_reference.glue.database_name #=> String
     #   resp.configured_table.table_reference.snowflake.secret_arn #=> String
@@ -4892,10 +6631,12 @@ module Aws::CleanRooms
     #   resp.configured_table.table_reference.snowflake.table_schema.v1 #=> Array
     #   resp.configured_table.table_reference.snowflake.table_schema.v1[0].column_name #=> String
     #   resp.configured_table.table_reference.snowflake.table_schema.v1[0].column_type #=> String
+    #   resp.configured_table.table_reference.athena.region #=> String, one of "us-west-1", "us-west-2", "us-east-1", "us-east-2", "af-south-1", "ap-east-1", "ap-south-2", "ap-southeast-1", "ap-southeast-2", "ap-southeast-3", "ap-southeast-5", "ap-southeast-4", "ap-southeast-7", "ap-south-1", "ap-northeast-3", "ap-northeast-1", "ap-northeast-2", "ca-central-1", "ca-west-1", "eu-south-1", "eu-west-3", "eu-south-2", "eu-central-2", "eu-central-1", "eu-north-1", "eu-west-1", "eu-west-2", "me-south-1", "me-central-1", "il-central-1", "sa-east-1", "mx-central-1", "ap-east-2"
     #   resp.configured_table.table_reference.athena.work_group #=> String
     #   resp.configured_table.table_reference.athena.output_location #=> String
     #   resp.configured_table.table_reference.athena.database_name #=> String
     #   resp.configured_table.table_reference.athena.table_name #=> String
+    #   resp.configured_table.table_reference.athena.catalog_name #=> String
     #   resp.configured_table.create_time #=> Time
     #   resp.configured_table.update_time #=> Time
     #   resp.configured_table.analysis_rule_types #=> Array
@@ -4975,10 +6716,30 @@ module Aws::CleanRooms
     #           differential_privacy: {
     #             columns: [ # required
     #               {
-    #                 name: "String", # required
+    #                 name: "ColumnName", # required
     #               },
     #             ],
     #           },
+    #           aggregation_thresholds: [
+    #             {
+    #               identity_columns: ["AnalysisRuleColumnName"], # required
+    #               minimum_identity_count: 1, # required
+    #               type: "COUNT_DISTINCT", # required, accepts COUNT_DISTINCT
+    #               output_column_thresholds: [
+    #                 {
+    #                   output_column_name: "AnalysisRuleColumnName", # required
+    #                   minimum_identity_count: 1, # required
+    #                 },
+    #               ],
+    #               allowed_aggregate_expression_type: "COLUMNS_ONLY", # required, accepts COLUMNS_ONLY, ANY_EXPRESSION
+    #             },
+    #           ],
+    #           comparison_controls: {
+    #             allowed_literal_comparison_columns: ["AnalysisRuleColumnName"], # required
+    #             allowed_column_comparison_columns: ["AnalysisRuleColumnName"], # required
+    #           },
+    #           allowed_result_receivers: ["AccountId"],
+    #           allowed_additional_analyses: ["AdditionalAnalysesResourceArn"],
     #         },
     #       },
     #     },
@@ -5022,6 +6783,23 @@ module Aws::CleanRooms
     #   resp.analysis_rule.policy.v1.custom.disallowed_output_columns[0] #=> String
     #   resp.analysis_rule.policy.v1.custom.differential_privacy.columns #=> Array
     #   resp.analysis_rule.policy.v1.custom.differential_privacy.columns[0].name #=> String
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds #=> Array
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].identity_columns #=> Array
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].identity_columns[0] #=> String
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].minimum_identity_count #=> Integer
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].type #=> String, one of "COUNT_DISTINCT"
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].output_column_thresholds #=> Array
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].output_column_thresholds[0].output_column_name #=> String
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].output_column_thresholds[0].minimum_identity_count #=> Integer
+    #   resp.analysis_rule.policy.v1.custom.aggregation_thresholds[0].allowed_aggregate_expression_type #=> String, one of "COLUMNS_ONLY", "ANY_EXPRESSION"
+    #   resp.analysis_rule.policy.v1.custom.comparison_controls.allowed_literal_comparison_columns #=> Array
+    #   resp.analysis_rule.policy.v1.custom.comparison_controls.allowed_literal_comparison_columns[0] #=> String
+    #   resp.analysis_rule.policy.v1.custom.comparison_controls.allowed_column_comparison_columns #=> Array
+    #   resp.analysis_rule.policy.v1.custom.comparison_controls.allowed_column_comparison_columns[0] #=> String
+    #   resp.analysis_rule.policy.v1.custom.allowed_result_receivers #=> Array
+    #   resp.analysis_rule.policy.v1.custom.allowed_result_receivers[0] #=> String
+    #   resp.analysis_rule.policy.v1.custom.allowed_additional_analyses #=> Array
+    #   resp.analysis_rule.policy.v1.custom.allowed_additional_analyses[0] #=> String
     #   resp.analysis_rule.type #=> String, one of "AGGREGATION", "LIST", "CUSTOM"
     #   resp.analysis_rule.create_time #=> Time
     #   resp.analysis_rule.update_time #=> Time
@@ -5080,6 +6858,12 @@ module Aws::CleanRooms
     #   resp.configured_table_association.analysis_rule_types[0] #=> String, one of "AGGREGATION", "LIST", "CUSTOM"
     #   resp.configured_table_association.create_time #=> Time
     #   resp.configured_table_association.update_time #=> Time
+    #   resp.configured_table_association.child_resources #=> Array
+    #   resp.configured_table_association.child_resources[0].resource_id #=> String
+    #   resp.configured_table_association.child_resources[0].resource_type #=> String, one of "INTERMEDIATE_TABLE"
+    #   resp.configured_table_association.child_resources[0].resource_name #=> String
+    #   resp.configured_table_association.child_resources[0].owner_account_id #=> String
+    #   resp.configured_table_association.child_resources[0].resource_status #=> String, one of "CREATED", "POPULATE_STARTED", "POPULATE_SUCCESS", "POPULATE_FAILED", "DISALLOWED_BY_DATA_PROVIDER", "BASE_TABLE_REMOVED", "RETENTION_PERIOD_EXPIRED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/UpdateConfiguredTableAssociation AWS API Documentation
     #
@@ -5209,6 +6993,12 @@ module Aws::CleanRooms
     #   resp.id_mapping_table.input_reference_properties.id_mapping_table_input_source[0].id_namespace_association_id #=> String
     #   resp.id_mapping_table.input_reference_properties.id_mapping_table_input_source[0].type #=> String, one of "SOURCE", "TARGET"
     #   resp.id_mapping_table.kms_key_arn #=> String
+    #   resp.id_mapping_table.child_resources #=> Array
+    #   resp.id_mapping_table.child_resources[0].resource_id #=> String
+    #   resp.id_mapping_table.child_resources[0].resource_type #=> String, one of "INTERMEDIATE_TABLE"
+    #   resp.id_mapping_table.child_resources[0].resource_name #=> String
+    #   resp.id_mapping_table.child_resources[0].owner_account_id #=> String
+    #   resp.id_mapping_table.child_resources[0].resource_status #=> String, one of "CREATED", "POPULATE_STARTED", "POPULATE_SUCCESS", "POPULATE_FAILED", "DISALLOWED_BY_DATA_PROVIDER", "BASE_TABLE_REMOVED", "RETENTION_PERIOD_EXPIRED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/UpdateIdMappingTable AWS API Documentation
     #
@@ -5282,6 +7072,243 @@ module Aws::CleanRooms
       req.send_request(options)
     end
 
+    # Updates an intermediate table. You can update the description, KMS key
+    # ARN, and column types of existing columns. Only the intermediate table
+    # owner can call this operation.
+    #
+    # @option params [required, String] :intermediate_table_identifier
+    #   The unique identifier of the intermediate table to update.
+    #
+    # @option params [required, String] :membership_identifier
+    #   The unique identifier of the membership that contains the intermediate
+    #   table.
+    #
+    # @option params [String] :description
+    #   A new description for the intermediate table.
+    #
+    # @option params [String] :kms_key_arn
+    #   The Amazon Resource Name (ARN) of the customer-managed KMS key to use
+    #   for encrypting future population data.
+    #
+    # @option params [Array<Types::IntermediateTableColumn>] :columns
+    #   The list of columns with updated type definitions. Only the type of
+    #   existing columns can be updated.
+    #
+    # @return [Types::UpdateIntermediateTableOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateIntermediateTableOutput#intermediate_table #intermediate_table} => Types::IntermediateTable
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_intermediate_table({
+    #     intermediate_table_identifier: "IntermediateTableIdentifier", # required
+    #     membership_identifier: "MembershipIdentifier", # required
+    #     description: "ResourceDescription",
+    #     kms_key_arn: "KMSKeyArn",
+    #     columns: [
+    #       {
+    #         name: "ColumnName", # required
+    #         type: "IntermediateTableColumnTypeString", # required
+    #       },
+    #     ],
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.intermediate_table.id #=> String
+    #   resp.intermediate_table.arn #=> String
+    #   resp.intermediate_table.name #=> String
+    #   resp.intermediate_table.description #=> String
+    #   resp.intermediate_table.membership_arn #=> String
+    #   resp.intermediate_table.membership_id #=> String
+    #   resp.intermediate_table.collaboration_arn #=> String
+    #   resp.intermediate_table.collaboration_id #=> String
+    #   resp.intermediate_table.child_resources #=> Array
+    #   resp.intermediate_table.child_resources[0].resource_id #=> String
+    #   resp.intermediate_table.child_resources[0].resource_type #=> String, one of "INTERMEDIATE_TABLE"
+    #   resp.intermediate_table.child_resources[0].resource_name #=> String
+    #   resp.intermediate_table.child_resources[0].owner_account_id #=> String
+    #   resp.intermediate_table.child_resources[0].resource_status #=> String, one of "CREATED", "POPULATE_STARTED", "POPULATE_SUCCESS", "POPULATE_FAILED", "DISALLOWED_BY_DATA_PROVIDER", "BASE_TABLE_REMOVED", "RETENTION_PERIOD_EXPIRED"
+    #   resp.intermediate_table.create_time #=> Time
+    #   resp.intermediate_table.update_time #=> Time
+    #   resp.intermediate_table.status #=> String, one of "CREATED", "POPULATE_STARTED", "POPULATE_SUCCESS", "POPULATE_FAILED", "DISALLOWED_BY_DATA_PROVIDER", "BASE_TABLE_REMOVED", "RETENTION_PERIOD_EXPIRED"
+    #   resp.intermediate_table.status_reason #=> String
+    #   resp.intermediate_table.kms_key_arn #=> String
+    #   resp.intermediate_table.population_analysis_configuration.sql_parameters.query_string #=> String
+    #   resp.intermediate_table.population_analysis_configuration.sql_parameters.analysis_template_arn #=> String
+    #   resp.intermediate_table.retention_in_days #=> Integer
+    #   resp.intermediate_table.table_dependencies #=> Array
+    #   resp.intermediate_table.table_dependencies[0].id #=> String
+    #   resp.intermediate_table.table_dependencies[0].name #=> String
+    #   resp.intermediate_table.table_dependencies[0].type #=> String, one of "TABLE", "INTERMEDIATE_TABLE", "ID_MAPPING_TABLE"
+    #   resp.intermediate_table.table_dependencies[0].parent_type #=> String, one of "DIRECT", "INDIRECT"
+    #   resp.intermediate_table.table_dependencies[0].creator_account_id #=> String
+    #   resp.intermediate_table.intermediate_table_version.version_id #=> String
+    #   resp.intermediate_table.intermediate_table_version.analysis_id #=> String
+    #   resp.intermediate_table.intermediate_table_version.analysis_type #=> String, one of "QUERY"
+    #   resp.intermediate_table.intermediate_table_version.kms_key_arn #=> String
+    #   resp.intermediate_table.intermediate_table_version.parameters #=> Hash
+    #   resp.intermediate_table.intermediate_table_version.parameters["ParameterName"] #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.additional_analyses.value #=> String, one of "ALLOWED", "REQUIRED", "NOT_ALLOWED"
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.additional_analyses.sources #=> Array
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.additional_analyses.sources[0].name #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.additional_analyses.sources[0].id #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.additional_analyses.sources[0].type #=> String, one of "TABLE", "INTERMEDIATE_TABLE", "ID_MAPPING_TABLE"
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.additional_analyses.sources[0].value #=> String, one of "ALLOWED", "REQUIRED", "NOT_ALLOWED"
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.additional_analyses.sources[0].source_account_id #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_additional_analyses.value #=> Array
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_additional_analyses.value[0] #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_additional_analyses.sources #=> Array
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_additional_analyses.sources[0].name #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_additional_analyses.sources[0].id #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_additional_analyses.sources[0].type #=> String, one of "TABLE", "INTERMEDIATE_TABLE", "ID_MAPPING_TABLE"
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_additional_analyses.sources[0].value #=> Array
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_additional_analyses.sources[0].value[0] #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_additional_analyses.sources[0].source_account_id #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_result_receivers.value #=> Array
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_result_receivers.value[0] #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_result_receivers.sources #=> Array
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_result_receivers.sources[0].name #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_result_receivers.sources[0].id #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_result_receivers.sources[0].type #=> String, one of "TABLE", "INTERMEDIATE_TABLE", "ID_MAPPING_TABLE"
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_result_receivers.sources[0].value #=> Array
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_result_receivers.sources[0].value[0] #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.allowed_result_receivers.sources[0].source_account_id #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.disallowed_output_columns.value #=> Array
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.disallowed_output_columns.value[0] #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.disallowed_output_columns.column_lineage #=> Array
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.disallowed_output_columns.column_lineage[0].column #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.disallowed_output_columns.column_lineage[0].source_column #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.disallowed_output_columns.column_lineage[0].source_name #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.disallowed_output_columns.column_lineage[0].source_id #=> String
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.disallowed_output_columns.column_lineage[0].source_type #=> String, one of "TABLE", "INTERMEDIATE_TABLE", "ID_MAPPING_TABLE"
+    #   resp.intermediate_table.intermediate_table_version.inherited_constraints.disallowed_output_columns.column_lineage[0].source_account_id #=> String
+    #   resp.intermediate_table.intermediate_table_version.expiration_time #=> Time
+    #   resp.intermediate_table.analysis_rule_types #=> Array
+    #   resp.intermediate_table.analysis_rule_types[0] #=> String, one of "CUSTOM"
+    #   resp.intermediate_table.schema.columns #=> Array
+    #   resp.intermediate_table.schema.columns[0].name #=> String
+    #   resp.intermediate_table.schema.columns[0].type #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/UpdateIntermediateTable AWS API Documentation
+    #
+    # @overload update_intermediate_table(params = {})
+    # @param [Hash] params ({})
+    def update_intermediate_table(params = {}, options = {})
+      req = build_request(:update_intermediate_table, params)
+      req.send_request(options)
+    end
+
+    # Updates the analysis rule policy for an intermediate table. Only the
+    # intermediate table owner can call this operation.
+    #
+    # @option params [required, String] :membership_identifier
+    #   The unique identifier of the membership that contains the intermediate
+    #   table.
+    #
+    # @option params [required, String] :intermediate_table_identifier
+    #   The unique identifier of the intermediate table for which to update
+    #   the analysis rule.
+    #
+    # @option params [required, String] :analysis_rule_type
+    #   The type of analysis rule to update. Currently, only `CUSTOM` is
+    #   supported.
+    #
+    # @option params [required, Types::IntermediateTableAnalysisRulePolicy] :analysis_rule_policy
+    #   The updated analysis rule policy for the intermediate table.
+    #
+    # @return [Types::UpdateIntermediateTableAnalysisRuleOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateIntermediateTableAnalysisRuleOutput#analysis_rule #analysis_rule} => Types::IntermediateTableAnalysisRule
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_intermediate_table_analysis_rule({
+    #     membership_identifier: "MembershipIdentifier", # required
+    #     intermediate_table_identifier: "IntermediateTableIdentifier", # required
+    #     analysis_rule_type: "CUSTOM", # required, accepts CUSTOM
+    #     analysis_rule_policy: { # required
+    #       v1: {
+    #         custom: {
+    #           allowed_analyses: ["AnalysisTemplateArnOrQueryWildcard"],
+    #           additional_analyses: "ALLOWED", # accepts ALLOWED, REQUIRED, NOT_ALLOWED
+    #           allowed_additional_analyses: ["AdditionalAnalysesResourceArn"],
+    #           allowed_analysis_providers: ["AccountId"],
+    #           allowed_result_receivers: ["AccountId"],
+    #           differential_privacy: {
+    #             columns: [ # required
+    #               {
+    #                 name: "ColumnName", # required
+    #               },
+    #             ],
+    #           },
+    #           disallowed_output_columns: ["AnalysisRuleColumnName"],
+    #           aggregation_thresholds: [
+    #             {
+    #               identity_columns: ["AnalysisRuleColumnName"], # required
+    #               minimum_identity_count: 1, # required
+    #               type: "COUNT_DISTINCT", # required, accepts COUNT_DISTINCT
+    #               output_column_thresholds: [
+    #                 {
+    #                   output_column_name: "AnalysisRuleColumnName", # required
+    #                   minimum_identity_count: 1, # required
+    #                 },
+    #               ],
+    #               allowed_aggregate_expression_type: "COLUMNS_ONLY", # required, accepts COLUMNS_ONLY, ANY_EXPRESSION
+    #             },
+    #           ],
+    #           comparison_controls: {
+    #             allowed_literal_comparison_columns: ["AnalysisRuleColumnName"], # required
+    #             allowed_column_comparison_columns: ["AnalysisRuleColumnName"], # required
+    #           },
+    #         },
+    #       },
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.analysis_rule.intermediate_table_identifier #=> String
+    #   resp.analysis_rule.intermediate_table_arn #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.allowed_analyses #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.allowed_analyses[0] #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.additional_analyses #=> String, one of "ALLOWED", "REQUIRED", "NOT_ALLOWED"
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.allowed_additional_analyses #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.allowed_additional_analyses[0] #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.allowed_analysis_providers #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.allowed_analysis_providers[0] #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.allowed_result_receivers #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.allowed_result_receivers[0] #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.differential_privacy.columns #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.differential_privacy.columns[0].name #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.disallowed_output_columns #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.disallowed_output_columns[0] #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.aggregation_thresholds #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.aggregation_thresholds[0].identity_columns #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.aggregation_thresholds[0].identity_columns[0] #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.aggregation_thresholds[0].minimum_identity_count #=> Integer
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.aggregation_thresholds[0].type #=> String, one of "COUNT_DISTINCT"
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.aggregation_thresholds[0].output_column_thresholds #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.aggregation_thresholds[0].output_column_thresholds[0].output_column_name #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.aggregation_thresholds[0].output_column_thresholds[0].minimum_identity_count #=> Integer
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.aggregation_thresholds[0].allowed_aggregate_expression_type #=> String, one of "COLUMNS_ONLY", "ANY_EXPRESSION"
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.comparison_controls.allowed_literal_comparison_columns #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.comparison_controls.allowed_literal_comparison_columns[0] #=> String
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.comparison_controls.allowed_column_comparison_columns #=> Array
+    #   resp.analysis_rule.analysis_rule_policy.v1.custom.comparison_controls.allowed_column_comparison_columns[0] #=> String
+    #   resp.analysis_rule.analysis_rule_type #=> String, one of "CUSTOM"
+    #   resp.analysis_rule.create_time #=> Time
+    #   resp.analysis_rule.update_time #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/UpdateIntermediateTableAnalysisRule AWS API Documentation
+    #
+    # @overload update_intermediate_table_analysis_rule(params = {})
+    # @param [Hash] params ({})
+    def update_intermediate_table_analysis_rule(params = {}, options = {})
+      req = build_request(:update_intermediate_table_analysis_rule, params)
+      req.send_request(options)
+    end
+
     # Updates a membership.
     #
     # @option params [required, String] :membership_identifier
@@ -5309,6 +7336,9 @@ module Aws::CleanRooms
     #
     # @option params [Types::MembershipProtectedJobResultConfiguration] :default_job_result_configuration
     #   The default job result configuration.
+    #
+    # @option params [Types::UpdateMembershipPaymentConfiguration] :membership_payment_configuration
+    #   The payment configuration to update for the membership.
     #
     # @return [Types::UpdateMembershipOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -5340,6 +7370,25 @@ module Aws::CleanRooms
     #       },
     #       role_arn: "RoleArn", # required
     #     },
+    #     membership_payment_configuration: {
+    #       query_compute: {
+    #         is_responsible: false, # required
+    #       },
+    #       machine_learning: {
+    #         model_training: {
+    #           is_responsible: false, # required
+    #         },
+    #         model_inference: {
+    #           is_responsible: false, # required
+    #         },
+    #         synthetic_data_generation: {
+    #           is_responsible: false, # required
+    #         },
+    #       },
+    #       job_compute: {
+    #         is_responsible: false, # required
+    #       },
+    #     },
     #   })
     #
     # @example Response structure
@@ -5355,7 +7404,7 @@ module Aws::CleanRooms
     #   resp.membership.update_time #=> Time
     #   resp.membership.status #=> String, one of "ACTIVE", "REMOVED", "COLLABORATION_DELETED"
     #   resp.membership.member_abilities #=> Array
-    #   resp.membership.member_abilities[0] #=> String, one of "CAN_QUERY", "CAN_RECEIVE_RESULTS", "CAN_RUN_JOB"
+    #   resp.membership.member_abilities[0] #=> String, one of "CAN_QUERY", "CAN_RECEIVE_RESULTS", "CAN_RUN_JOB", "CAN_EXPORT_QUERY_ANALYSIS_LOG"
     #   resp.membership.ml_member_abilities.custom_ml_member_abilities #=> Array
     #   resp.membership.ml_member_abilities.custom_ml_member_abilities[0] #=> String, one of "CAN_RECEIVE_MODEL_OUTPUT", "CAN_RECEIVE_INFERENCE_OUTPUT"
     #   resp.membership.query_log_status #=> String, one of "ENABLED", "DISABLED"
@@ -5371,7 +7420,9 @@ module Aws::CleanRooms
     #   resp.membership.payment_configuration.query_compute.is_responsible #=> Boolean
     #   resp.membership.payment_configuration.machine_learning.model_training.is_responsible #=> Boolean
     #   resp.membership.payment_configuration.machine_learning.model_inference.is_responsible #=> Boolean
+    #   resp.membership.payment_configuration.machine_learning.synthetic_data_generation.is_responsible #=> Boolean
     #   resp.membership.payment_configuration.job_compute.is_responsible #=> Boolean
+    #   resp.membership.is_metrics_enabled #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/UpdateMembership AWS API Documentation
     #
@@ -5382,7 +7433,7 @@ module Aws::CleanRooms
       req.send_request(options)
     end
 
-    # Updates the privacy budget template for the specified membership.
+    # Updates the privacy budget template for the specified collaboration.
     #
     # @option params [required, String] :membership_identifier
     #   A unique identifier for one of your memberships for a collaboration.
@@ -5409,11 +7460,20 @@ module Aws::CleanRooms
     #   resp = client.update_privacy_budget_template({
     #     membership_identifier: "MembershipIdentifier", # required
     #     privacy_budget_template_identifier: "PrivacyBudgetTemplateIdentifier", # required
-    #     privacy_budget_type: "DIFFERENTIAL_PRIVACY", # required, accepts DIFFERENTIAL_PRIVACY
+    #     privacy_budget_type: "DIFFERENTIAL_PRIVACY", # required, accepts DIFFERENTIAL_PRIVACY, ACCESS_BUDGET
     #     parameters: {
     #       differential_privacy: {
     #         epsilon: 1,
     #         users_noise_per_query: 1,
+    #       },
+    #       access_budget: {
+    #         budget_parameters: [ # required
+    #           {
+    #             type: "CALENDAR_DAY", # required, accepts CALENDAR_DAY, CALENDAR_MONTH, CALENDAR_WEEK, LIFETIME
+    #             budget: 1, # required
+    #             auto_refresh: "ENABLED", # accepts ENABLED, DISABLED
+    #           },
+    #         ],
     #       },
     #     },
     #   })
@@ -5428,10 +7488,15 @@ module Aws::CleanRooms
     #   resp.privacy_budget_template.collaboration_arn #=> String
     #   resp.privacy_budget_template.create_time #=> Time
     #   resp.privacy_budget_template.update_time #=> Time
-    #   resp.privacy_budget_template.privacy_budget_type #=> String, one of "DIFFERENTIAL_PRIVACY"
+    #   resp.privacy_budget_template.privacy_budget_type #=> String, one of "DIFFERENTIAL_PRIVACY", "ACCESS_BUDGET"
     #   resp.privacy_budget_template.auto_refresh #=> String, one of "CALENDAR_MONTH", "NONE"
     #   resp.privacy_budget_template.parameters.differential_privacy.epsilon #=> Integer
     #   resp.privacy_budget_template.parameters.differential_privacy.users_noise_per_query #=> Integer
+    #   resp.privacy_budget_template.parameters.access_budget.budget_parameters #=> Array
+    #   resp.privacy_budget_template.parameters.access_budget.budget_parameters[0].type #=> String, one of "CALENDAR_DAY", "CALENDAR_MONTH", "CALENDAR_WEEK", "LIFETIME"
+    #   resp.privacy_budget_template.parameters.access_budget.budget_parameters[0].budget #=> Integer
+    #   resp.privacy_budget_template.parameters.access_budget.budget_parameters[0].auto_refresh #=> String, one of "ENABLED", "DISABLED"
+    #   resp.privacy_budget_template.parameters.access_budget.resource_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/UpdatePrivacyBudgetTemplate AWS API Documentation
     #
@@ -5473,6 +7538,8 @@ module Aws::CleanRooms
     #   resp.protected_job.membership_arn #=> String
     #   resp.protected_job.create_time #=> Time
     #   resp.protected_job.job_parameters.analysis_template_arn #=> String
+    #   resp.protected_job.job_parameters.parameters #=> Hash
+    #   resp.protected_job.job_parameters.parameters["JobParameterName"] #=> String
     #   resp.protected_job.status #=> String, one of "SUBMITTED", "STARTED", "CANCELLED", "CANCELLING", "FAILED", "SUCCESS"
     #   resp.protected_job.result_configuration.output_configuration.s3.bucket #=> String
     #   resp.protected_job.result_configuration.output_configuration.s3.key_prefix #=> String
@@ -5484,6 +7551,11 @@ module Aws::CleanRooms
     #   resp.protected_job.result.output.member_list[0].account_id #=> String
     #   resp.protected_job.error.message #=> String
     #   resp.protected_job.error.code #=> String
+    #   resp.protected_job.compute_configuration.worker.type #=> String, one of "CR.1X", "CR.4X"
+    #   resp.protected_job.compute_configuration.worker.number #=> Integer
+    #   resp.protected_job.compute_configuration.worker.properties.spark #=> Hash
+    #   resp.protected_job.compute_configuration.worker.properties.spark["SparkPropertyKey"] #=> String
+    #   resp.protected_job.job_compute_payer_account_id #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/UpdateProtectedJob AWS API Documentation
     #
@@ -5534,11 +7606,23 @@ module Aws::CleanRooms
     #   resp.protected_query.result_configuration.output_configuration.s3.key_prefix #=> String
     #   resp.protected_query.result_configuration.output_configuration.s3.single_file_output #=> Boolean
     #   resp.protected_query.result_configuration.output_configuration.member.account_id #=> String
+    #   resp.protected_query.result_configuration.output_configuration.distribute.locations #=> Array
+    #   resp.protected_query.result_configuration.output_configuration.distribute.locations[0].s3.result_format #=> String, one of "CSV", "PARQUET"
+    #   resp.protected_query.result_configuration.output_configuration.distribute.locations[0].s3.bucket #=> String
+    #   resp.protected_query.result_configuration.output_configuration.distribute.locations[0].s3.key_prefix #=> String
+    #   resp.protected_query.result_configuration.output_configuration.distribute.locations[0].s3.single_file_output #=> Boolean
+    #   resp.protected_query.result_configuration.output_configuration.distribute.locations[0].member.account_id #=> String
+    #   resp.protected_query.result_configuration.output_configuration.intermediate_table.id #=> String
+    #   resp.protected_query.result_configuration.output_configuration.intermediate_table.arn #=> String
+    #   resp.protected_query.result_configuration.output_configuration.intermediate_table.name #=> String
     #   resp.protected_query.statistics.total_duration_in_millis #=> Integer
     #   resp.protected_query.statistics.billed_resource_utilization.units #=> Float
     #   resp.protected_query.result.output.s3.location #=> String
     #   resp.protected_query.result.output.member_list #=> Array
     #   resp.protected_query.result.output.member_list[0].account_id #=> String
+    #   resp.protected_query.result.output.distribute.s3.location #=> String
+    #   resp.protected_query.result.output.distribute.member_list #=> Array
+    #   resp.protected_query.result.output.distribute.member_list[0].account_id #=> String
     #   resp.protected_query.error.message #=> String
     #   resp.protected_query.error.code #=> String
     #   resp.protected_query.differential_privacy.sensitivity_parameters #=> Array
@@ -5547,8 +7631,11 @@ module Aws::CleanRooms
     #   resp.protected_query.differential_privacy.sensitivity_parameters[0].user_contribution_limit #=> Integer
     #   resp.protected_query.differential_privacy.sensitivity_parameters[0].min_column_value #=> Float
     #   resp.protected_query.differential_privacy.sensitivity_parameters[0].max_column_value #=> Float
-    #   resp.protected_query.compute_configuration.worker.type #=> String, one of "CR.1X", "CR.4X"
+    #   resp.protected_query.compute_configuration.worker.type #=> String, one of "CR.1X", "CR.4X", "CR.8X"
     #   resp.protected_query.compute_configuration.worker.number #=> Integer
+    #   resp.protected_query.compute_configuration.worker.properties.spark #=> Hash
+    #   resp.protected_query.compute_configuration.worker.properties.spark["SparkPropertyKey"] #=> String
+    #   resp.protected_query.query_compute_payer_account_id #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/UpdateProtectedQuery AWS API Documentation
     #
@@ -5577,7 +7664,7 @@ module Aws::CleanRooms
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-cleanrooms'
-      context[:gem_version] = '1.41.0'
+      context[:gem_version] = '1.79.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

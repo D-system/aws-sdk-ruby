@@ -186,6 +186,10 @@ module Aws::Route53Resolver
     # @!attribute [rw] name
     #   A name for the association that you're creating between a Resolver
     #   rule and a VPC.
+    #
+    #   The name can be up to 64 characters long and can contain letters
+    #   (a-z, A-Z), numbers (0-9), hyphens (-), underscores (\_), and
+    #   spaces. The name cannot consist of only numbers.
     #   @return [String]
     #
     # @!attribute [rw] vpc_id
@@ -211,6 +215,168 @@ module Aws::Route53Resolver
     #
     class AssociateResolverRuleResponse < Struct.new(
       :resolver_rule_association)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # An error that occurred while creating a firewall rule in a batch
+    # operation.
+    #
+    # @!attribute [rw] firewall_rule
+    #   The firewall rule entry that caused the error.
+    #   @return [Types::CreateFirewallRuleEntry]
+    #
+    # @!attribute [rw] code
+    #   The error code for the failure.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   A message that provides details about the error.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/BatchCreateFirewallRuleError AWS API Documentation
+    #
+    class BatchCreateFirewallRuleError < Struct.new(
+      :firewall_rule,
+      :code,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] create_firewall_rule_entries
+    #   The list of firewall rules to create.
+    #   @return [Array<Types::CreateFirewallRuleEntry>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/BatchCreateFirewallRuleRequest AWS API Documentation
+    #
+    class BatchCreateFirewallRuleRequest < Struct.new(
+      :create_firewall_rule_entries)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] created_firewall_rules
+    #   The firewall rules that were successfully created by the request.
+    #   @return [Array<Types::FirewallRule>]
+    #
+    # @!attribute [rw] create_errors
+    #   A list of errors that occurred while creating the firewall rules.
+    #   @return [Array<Types::BatchCreateFirewallRuleError>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/BatchCreateFirewallRuleResponse AWS API Documentation
+    #
+    class BatchCreateFirewallRuleResponse < Struct.new(
+      :created_firewall_rules,
+      :create_errors)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # An error that occurred while deleting a firewall rule in a batch
+    # operation.
+    #
+    # @!attribute [rw] firewall_rule
+    #   The firewall rule entry that caused the error.
+    #   @return [Types::DeleteFirewallRuleEntry]
+    #
+    # @!attribute [rw] code
+    #   The error code for the failure.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   A message that provides details about the error.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/BatchDeleteFirewallRuleError AWS API Documentation
+    #
+    class BatchDeleteFirewallRuleError < Struct.new(
+      :firewall_rule,
+      :code,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] delete_firewall_rule_entries
+    #   The list of firewall rules to delete.
+    #   @return [Array<Types::DeleteFirewallRuleEntry>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/BatchDeleteFirewallRuleRequest AWS API Documentation
+    #
+    class BatchDeleteFirewallRuleRequest < Struct.new(
+      :delete_firewall_rule_entries)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] deleted_firewall_rules
+    #   The firewall rules that were successfully deleted by the request.
+    #   @return [Array<Types::FirewallRule>]
+    #
+    # @!attribute [rw] delete_errors
+    #   A list of errors that occurred while deleting the firewall rules.
+    #   @return [Array<Types::BatchDeleteFirewallRuleError>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/BatchDeleteFirewallRuleResponse AWS API Documentation
+    #
+    class BatchDeleteFirewallRuleResponse < Struct.new(
+      :deleted_firewall_rules,
+      :delete_errors)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # An error that occurred while updating a firewall rule in a batch
+    # operation.
+    #
+    # @!attribute [rw] firewall_rule
+    #   The firewall rule entry that caused the error.
+    #   @return [Types::UpdateFirewallRuleEntry]
+    #
+    # @!attribute [rw] code
+    #   The error code for the failure.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   A message that provides details about the error.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/BatchUpdateFirewallRuleError AWS API Documentation
+    #
+    class BatchUpdateFirewallRuleError < Struct.new(
+      :firewall_rule,
+      :code,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] update_firewall_rule_entries
+    #   The list of firewall rules to update.
+    #   @return [Array<Types::UpdateFirewallRuleEntry>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/BatchUpdateFirewallRuleRequest AWS API Documentation
+    #
+    class BatchUpdateFirewallRuleRequest < Struct.new(
+      :update_firewall_rule_entries)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] updated_firewall_rules
+    #   The firewall rules that were successfully updated by the request.
+    #   @return [Array<Types::FirewallRule>]
+    #
+    # @!attribute [rw] update_errors
+    #   A list of errors that occurred while updating the firewall rules.
+    #   @return [Array<Types::BatchUpdateFirewallRuleError>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/BatchUpdateFirewallRuleResponse AWS API Documentation
+    #
+    class BatchUpdateFirewallRuleResponse < Struct.new(
+      :updated_firewall_rules,
+      :update_errors)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -268,6 +434,221 @@ module Aws::Route53Resolver
     #
     class CreateFirewallDomainListResponse < Struct.new(
       :firewall_domain_list)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The details for creating a single firewall rule in a batch operation.
+    #
+    # @!attribute [rw] creator_request_id
+    #   A unique string that identifies the request and that allows you to
+    #   retry failed requests without the risk of running the operation
+    #   twice. `CreatorRequestId` can be any unique string, for example, a
+    #   date/time stamp.
+    #   @return [String]
+    #
+    # @!attribute [rw] firewall_rule_group_id
+    #   The unique identifier of the firewall rule group where you want to
+    #   create the rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] firewall_domain_list_id
+    #   The ID of the domain list that you want to use in the rule. This
+    #   setting is mutually exclusive with `DnsThreatProtection` and
+    #   `FirewallRuleType`.
+    #   @return [String]
+    #
+    # @!attribute [rw] priority
+    #   The setting that determines the processing order of the rule in the
+    #   rule group. DNS Firewall processes the rules in a rule group by
+    #   order of priority, starting from the lowest setting.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] action
+    #   The action that DNS Firewall should take on a DNS query when it
+    #   matches one of the domains in the rule's domain list, or a threat
+    #   in a DNS Firewall Advanced rule:
+    #
+    #   * `ALLOW` - Permit the request to go through. Not available for DNS
+    #     Firewall Advanced rules.
+    #
+    #   * `ALERT` - Permit the request and send metrics and logs to
+    #     CloudWatch.
+    #
+    #   * `BLOCK` - Disallow the request. This option requires additional
+    #     details in the rule's `BlockResponse`.
+    #   @return [String]
+    #
+    # @!attribute [rw] block_response
+    #   The way that you want DNS Firewall to block the request, used with
+    #   the rule action setting `BLOCK`.
+    #
+    #   * `NODATA` - Respond indicating that the query was successful, but
+    #     no response is available for it.
+    #
+    #   * `NXDOMAIN` - Respond indicating that the domain name that's in
+    #     the query doesn't exist.
+    #
+    #   * `OVERRIDE` - Provide a custom override in the response. This
+    #     option requires custom handling details in the rule's
+    #     `BlockOverride*` settings.
+    #   @return [String]
+    #
+    # @!attribute [rw] block_override_domain
+    #   The custom DNS record to send back in response to the query. Used
+    #   for the rule action `BLOCK` with a `BlockResponse` setting of
+    #   `OVERRIDE`.
+    #   @return [String]
+    #
+    # @!attribute [rw] block_override_dns_type
+    #   The DNS record's type. This determines the format of the record
+    #   value that you provided in `BlockOverrideDomain`. Used for the rule
+    #   action `BLOCK` with a `BlockResponse` setting of `OVERRIDE`.
+    #   @return [String]
+    #
+    # @!attribute [rw] block_override_ttl
+    #   The recommended amount of time, in seconds, for the DNS resolver or
+    #   web browser to cache the provided override record. Used for the rule
+    #   action `BLOCK` with a `BlockResponse` setting of `OVERRIDE`.
+    #
+    #   This setting is required if the `BlockResponse` setting is
+    #   `OVERRIDE`.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] name
+    #   A name that lets you identify the rule in the rule group.
+    #   @return [String]
+    #
+    # @!attribute [rw] firewall_domain_redirection_action
+    #   How you want the rule to evaluate DNS redirection in the DNS
+    #   redirection chain, such as CNAME or DNAME.
+    #
+    #   `INSPECT_REDIRECTION_DOMAIN`: (Default) inspects all domains in the
+    #   redirection chain. The individual domains in the redirection chain
+    #   must be added to the domain list.
+    #
+    #   `TRUST_REDIRECTION_DOMAIN`: Inspects only the first domain in the
+    #   redirection chain. You don't need to add the subsequent domains in
+    #   the redirection list to the domain list.
+    #   @return [String]
+    #
+    # @!attribute [rw] qtype
+    #   The DNS query type you want the rule to evaluate. Allowed values
+    #   are:
+    #
+    #   * A: Returns an IPv4 address.
+    #
+    #   * AAAA: Returns an IPv6 address.
+    #
+    #   * CAA: Restricts CAs that can create SSL/TLS certifications for the
+    #     domain.
+    #
+    #   * CNAME: Returns another domain name.
+    #
+    #   * DS: Record that identifies the DNSSEC signing key of a delegated
+    #     zone.
+    #
+    #   * MX: Specifies mail servers.
+    #
+    #   * NAPTR: Regular-expression-based rewriting of domain names.
+    #
+    #   * NS: Authoritative name servers.
+    #
+    #   * PTR: Maps an IP address to a domain name.
+    #
+    #   * SOA: Start of authority record for the zone.
+    #
+    #   * SPF: Lists the servers authorized to send emails from a domain.
+    #
+    #   * SRV: Application specific values that identify servers.
+    #
+    #   * TXT: Verifies email senders and application-specific values.
+    #
+    #   * A query type you define by using the DNS type ID, for example 28
+    #     for AAAA. The values must be defined as TYPENUMBER, where the
+    #     NUMBER can be 1-65534, for example, TYPE28. For more information,
+    #     see [List of DNS record types][1].
+    #
+    #
+    #
+    #   [1]: https://en.wikipedia.org/wiki/List_of_DNS_record_types
+    #   @return [String]
+    #
+    # @!attribute [rw] dns_threat_protection
+    #   The type of the DNS Firewall Advanced rule. This setting is mutually
+    #   exclusive with `FirewallDomainListId` and `FirewallRuleType`. Valid
+    #   values are:
+    #
+    #   * `DGA`: Domain generation algorithms detection. DGAs are used by
+    #     attackers to generate a large number of domains to launch malware
+    #     attacks.
+    #
+    #   * `DNS_TUNNELING`: DNS tunneling detection. DNS tunneling is used by
+    #     attackers to exfiltrate data from the client by using the DNS
+    #     tunnel without making a network connection to the client.
+    #
+    #   * `DICTIONARY_DGA`: Dictionary-based domain generation algorithms
+    #     detection. Dictionary DGAs use wordlists to generate domains that
+    #     appear more legitimate, making them harder to detect than
+    #     traditional DGAs.
+    #   @return [String]
+    #
+    # @!attribute [rw] confidence_threshold
+    #   The confidence threshold for DNS Firewall Advanced. You must provide
+    #   this value when you create or update a DNS Firewall Advanced rule.
+    #   The confidence level values mean:
+    #
+    #   * `LOW`: Provides the highest detection rate for threats, but also
+    #     increases false positives.
+    #
+    #   * `MEDIUM`: Provides a balance between detecting threats and false
+    #     positives.
+    #
+    #   * `HIGH`: Detects only the most well corroborated threats with a low
+    #     rate of false positives.
+    #   @return [String]
+    #
+    # @!attribute [rw] firewall_rule_type
+    #   The rule type configuration for the firewall rule. This is a tagged
+    #   union — set exactly one of its members. This setting is mutually
+    #   exclusive with the top-level `FirewallDomainListId` and
+    #   `DnsThreatProtection` fields. Use one of:
+    #
+    #   * `FirewallAdvancedContentCategory` — match an AWS-managed content
+    #     category (for example, `VIOLENCE_AND_HATE_SPEECH`).
+    #
+    #   * `FirewallAdvancedThreatCategory` — match an AWS-managed advanced
+    #     threat category (for example, `PHISHING`).
+    #
+    #   * `DnsThreatProtection` — match a built-in DNS Firewall Advanced
+    #     threat detector (`DGA`, `DNS_TUNNELING`, or `DICTIONARY_DGA`).
+    #
+    #   * `PartnerThreatProtection` — match a third-party threat feed
+    #     delivered through AWS Marketplace. The selected partner must be an
+    #     active subscription on the calling account.
+    #
+    #   To enumerate the values supported in your account, call
+    #   ListFirewallRuleTypes.
+    #   @return [Types::FirewallRuleType]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/CreateFirewallRuleEntry AWS API Documentation
+    #
+    class CreateFirewallRuleEntry < Struct.new(
+      :creator_request_id,
+      :firewall_rule_group_id,
+      :firewall_domain_list_id,
+      :priority,
+      :action,
+      :block_response,
+      :block_override_domain,
+      :block_override_dns_type,
+      :block_override_ttl,
+      :name,
+      :firewall_domain_redirection_action,
+      :qtype,
+      :dns_threat_protection,
+      :confidence_threshold,
+      :firewall_rule_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -454,7 +835,7 @@ module Aws::Route53Resolver
     #
     #   * A query type you define by using the DNS type ID, for example 28
     #     for AAAA. The values must be defined as TYPENUMBER, where the
-    #     NUMBER can be 1-65334, for example, TYPE28. For more information,
+    #     NUMBER can be 1-65534, for example, TYPE28. For more information,
     #     see [List of DNS record types][1].
     #
     #
@@ -463,7 +844,22 @@ module Aws::Route53Resolver
     #   @return [String]
     #
     # @!attribute [rw] dns_threat_protection
-    #   Use to create a DNS Firewall Advanced rule.
+    #   The type of the DNS Firewall Advanced rule. This setting is mutually
+    #   exclusive with `FirewallDomainListId` and `FirewallRuleType`. Valid
+    #   values are:
+    #
+    #   * `DGA`: Domain generation algorithms detection. DGAs are used by
+    #     attackers to generate a large number of domains to launch malware
+    #     attacks.
+    #
+    #   * `DNS_TUNNELING`: DNS tunneling detection. DNS tunneling is used by
+    #     attackers to exfiltrate data from the client by using the DNS
+    #     tunnel without making a network connection to the client.
+    #
+    #   * `DICTIONARY_DGA`: Dictionary-based domain generation algorithms
+    #     detection. Dictionary DGAs use wordlists to generate domains that
+    #     appear more legitimate, making them harder to detect than
+    #     traditional DGAs.
     #   @return [String]
     #
     # @!attribute [rw] confidence_threshold
@@ -481,6 +877,29 @@ module Aws::Route53Resolver
     #     rate of false positives.
     #   @return [String]
     #
+    # @!attribute [rw] firewall_rule_type
+    #   The rule type configuration for the firewall rule. This is a tagged
+    #   union — set exactly one of its members. This setting is mutually
+    #   exclusive with the top-level `FirewallDomainListId` and
+    #   `DnsThreatProtection` fields. Use one of:
+    #
+    #   * `FirewallAdvancedContentCategory` — match an AWS-managed content
+    #     category (for example, `VIOLENCE_AND_HATE_SPEECH`).
+    #
+    #   * `FirewallAdvancedThreatCategory` — match an AWS-managed advanced
+    #     threat category (for example, `PHISHING`).
+    #
+    #   * `DnsThreatProtection` — match a built-in DNS Firewall Advanced
+    #     threat detector (`DGA`, `DNS_TUNNELING`, or `DICTIONARY_DGA`).
+    #
+    #   * `PartnerThreatProtection` — match a third-party threat feed
+    #     delivered through AWS Marketplace. The selected partner must be an
+    #     active subscription on the calling account.
+    #
+    #   To enumerate the values supported in your account, call
+    #   ListFirewallRuleTypes.
+    #   @return [Types::FirewallRuleType]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/CreateFirewallRuleRequest AWS API Documentation
     #
     class CreateFirewallRuleRequest < Struct.new(
@@ -497,7 +916,8 @@ module Aws::Route53Resolver
       :firewall_domain_redirection_action,
       :qtype,
       :dns_threat_protection,
-      :confidence_threshold)
+      :confidence_threshold,
+      :firewall_rule_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -611,10 +1031,13 @@ module Aws::Route53Resolver
     #   Specify the applicable value:
     #
     #   * `INBOUND`: Resolver forwards DNS queries to the DNS service for a
-    #     VPC from your network
+    #     VPC from your network.
     #
     #   * `OUTBOUND`: Resolver forwards DNS queries from the DNS service for
-    #     a VPC to your network
+    #     a VPC to your network.
+    #
+    #   * `INBOUND_DELEGATION`: Resolver delegates queries to Route 53
+    #     private hosted zones from your network.
     #   @return [String]
     #
     # @!attribute [rw] ip_addresses
@@ -652,9 +1075,10 @@ module Aws::Route53Resolver
     #
     # @!attribute [rw] protocols
     #   The protocols you want to use for the endpoint. DoH-FIPS is
-    #   applicable for inbound endpoints only.
+    #   applicable for default inbound endpoints only.
     #
-    #   For an inbound endpoint you can apply the protocols as follows:
+    #   For a default inbound endpoint you can apply the protocols as
+    #   follows:
     #
     #   * Do53 and DoH in combination.
     #
@@ -668,6 +1092,8 @@ module Aws::Route53Resolver
     #
     #   * None, which is treated as Do53.
     #
+    #   For a delegation inbound endpoint you can use Do53 only.
+    #
     #   For an outbound endpoint you can apply the protocols as follows:
     #
     #   * Do53 and DoH in combination.
@@ -678,6 +1104,71 @@ module Aws::Route53Resolver
     #
     #   * None, which is treated as Do53.
     #   @return [Array<String>]
+    #
+    # @!attribute [rw] rni_enhanced_metrics_enabled
+    #   Specifies whether RNI enhanced metrics are enabled for the Resolver
+    #   endpoints. When set to true, one-minute granular metrics are
+    #   published in CloudWatch for each RNI associated with this endpoint.
+    #   When set to false, metrics are not published. Default is false.
+    #
+    #   <note markdown="1"> Standard CloudWatch pricing and charges are applied for using the
+    #   Route 53 Resolver endpoint RNI enhanced metrics. For more
+    #   information, see [Detailed metrics][1].
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/monitoring-resolver-with-cloudwatch.html
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] target_name_server_metrics_enabled
+    #   Specifies whether target name server metrics are enabled for the
+    #   outbound Resolver endpoints. When set to true, one-minute granular
+    #   metrics are published in CloudWatch for each target name server
+    #   associated with this endpoint. When set to false, metrics are not
+    #   published. Default is false. This is not supported for inbound
+    #   Resolver endpoints.
+    #
+    #   <note markdown="1"> Standard CloudWatch pricing and charges are applied for using the
+    #   Route 53 Resolver endpoint target name server metrics. For more
+    #   information, see [Detailed metrics][1].
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/monitoring-resolver-with-cloudwatch.html
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] dns_64_enabled
+    #   Specifies whether DNS64 is enabled for the inbound Resolver
+    #   endpoint. When set to `true`, Route 53 Resolver synthesizes AAAA
+    #   (IPv6) records for IPv4-only services by prepending the
+    #   `64:ff9b::/96` prefix to the IPv4 address. This enables IPv6-only
+    #   clients that send queries through the inbound endpoint to reach
+    #   IPv4-only services. DNS64 works with NAT64 to provide complete
+    #   IPv6-to-IPv4 translation. Default is false.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] ipv_6_internet_access_enabled
+    #   Specifies whether IPv6 internet access is enabled for the outbound
+    #   Resolver endpoint. When set to `true`, the endpoint elastic network
+    #   interfaces (ENIs) can forward DNS queries to public IPv6 targets
+    #   through an internet gateway. Default is false.
+    #
+    #   When you enable IPv6 internet access, use network controls like
+    #   security groups, NACLs, or egress-only internet gateways to protect
+    #   the endpoint ENIs from unsolicited ingress traffic. Be aware that
+    #   some network controls can affect DNS query throughput due to
+    #   connection tracking. For more information, see [Amazon EC2 security
+    #   group connection tracking][1] and [Resolver endpoint scaling][2].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/ec2/latest/userguide/security-group-connection-tracking.html
+    #   [2]: https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/best-practices-resolver-endpoint-scaling.html
+    #   @return [Boolean]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/CreateResolverEndpointRequest AWS API Documentation
     #
@@ -691,7 +1182,11 @@ module Aws::Route53Resolver
       :preferred_instance_type,
       :tags,
       :resolver_endpoint_type,
-      :protocols)
+      :protocols,
+      :rni_enhanced_metrics_enabled,
+      :target_name_server_metrics_enabled,
+      :dns_64_enabled,
+      :ipv_6_internet_access_enabled)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -785,11 +1280,15 @@ module Aws::Route53Resolver
     # @!attribute [rw] name
     #   A friendly name that lets you easily find a rule in the Resolver
     #   dashboard in the Route 53 console.
+    #
+    #   The name can be up to 64 characters long and can contain letters
+    #   (a-z, A-Z), numbers (0-9), hyphens (-), underscores (\_), and
+    #   spaces. The name cannot consist of only numbers.
     #   @return [String]
     #
     # @!attribute [rw] rule_type
     #   When you want to forward DNS queries for specified domain name to
-    #   resolvers on your network, specify `FORWARD`.
+    #   resolvers on your network, specify `FORWARD` or `DELEGATE`.
     #
     #   When you have a forwarding rule to forward DNS queries for a domain
     #   to your network and you want Resolver to process queries for a
@@ -819,7 +1318,16 @@ module Aws::Route53Resolver
     #   Separate IP addresses with a space.
     #
     #   `TargetIps` is available only when the value of `Rule type` is
-    #   `FORWARD`.
+    #   `FORWARD`. You should not provide TargetIps when the Rule type is
+    #   `DELEGATE`.
+    #
+    #   <note markdown="1"> when creating a DELEGATE rule, you must not provide the `TargetIps`
+    #   parameter. If you provide the `TargetIps`, you may receive an ERROR
+    #   message similar to "Delegate resolver rules need to specify a
+    #   nameserver name". This error means you should not provide
+    #   `TargetIps`.
+    #
+    #    </note>
     #   @return [Array<Types::TargetAddress>]
     #
     # @!attribute [rw] resolver_endpoint_id
@@ -833,6 +1341,11 @@ module Aws::Route53Resolver
     #   the endpoint.
     #   @return [Array<Types::Tag>]
     #
+    # @!attribute [rw] delegation_record
+    #   DNS queries with the delegation records that match this domain name
+    #   are forwarded to the resolvers on your network.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/CreateResolverRuleRequest AWS API Documentation
     #
     class CreateResolverRuleRequest < Struct.new(
@@ -842,7 +1355,8 @@ module Aws::Route53Resolver
       :domain_name,
       :target_ips,
       :resolver_endpoint_id,
-      :tags)
+      :tags,
+      :delegation_record)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -880,6 +1394,35 @@ module Aws::Route53Resolver
     #
     class DeleteFirewallDomainListResponse < Struct.new(
       :firewall_domain_list)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The details for deleting a single firewall rule in a batch operation.
+    #
+    # @!attribute [rw] firewall_rule_group_id
+    #   The unique identifier of the firewall rule group for the rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] firewall_domain_list_id
+    #   The ID of the domain list that's used in the rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] firewall_threat_protection_id
+    #   The ID of the DNS Firewall Advanced rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] qtype
+    #   The DNS query type that the rule evaluates.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/DeleteFirewallRuleEntry AWS API Documentation
+    #
+    class DeleteFirewallRuleEntry < Struct.new(
+      :firewall_rule_group_id,
+      :firewall_domain_list_id,
+      :firewall_threat_protection_id,
+      :qtype)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -956,7 +1499,7 @@ module Aws::Route53Resolver
     #
     #   * A query type you define by using the DNS type ID, for example 28
     #     for AAAA. The values must be defined as TYPENUMBER, where the
-    #     NUMBER can be 1-65334, for example, TYPE28. For more information,
+    #     NUMBER can be 1-65534, for example, TYPE28. For more information,
     #     see [List of DNS record types][1].
     #
     #
@@ -1205,6 +1748,50 @@ module Aws::Route53Resolver
       include Aws::Structure
     end
 
+    # The configuration for a DNS threat protection rule type within the
+    # rule type framework.
+    #
+    # @!attribute [rw] value
+    #   The type of DNS threat protection. Valid values are:
+    #
+    #   * `DGA`: Domain generation algorithms detection. DGAs are used by
+    #     attackers to generate a large number of domains to launch malware
+    #     attacks.
+    #
+    #   * `DNS_TUNNELING`: DNS tunneling detection. DNS tunneling is used by
+    #     attackers to exfiltrate data from the client by using the DNS
+    #     tunnel without making a network connection to the client.
+    #
+    #   * `DICTIONARY_DGA`: Dictionary-based domain generation algorithms
+    #     detection. Dictionary DGAs use wordlists to generate domains that
+    #     appear more legitimate, making them harder to detect than
+    #     traditional DGAs.
+    #   @return [String]
+    #
+    # @!attribute [rw] confidence_threshold
+    #   The confidence threshold for DNS Firewall Advanced. You must provide
+    #   this value when you create or update a DNS Firewall Advanced rule.
+    #   The confidence level values mean:
+    #
+    #   * `LOW`: Provides the highest detection rate for threats, but also
+    #     increases false positives.
+    #
+    #   * `MEDIUM`: Provides a balance between detecting threats and false
+    #     positives.
+    #
+    #   * `HIGH`: Detects only the most well corroborated threats with a low
+    #     rate of false positives.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/DnsThreatProtectionRuleTypeConfig AWS API Documentation
+    #
+    class DnsThreatProtectionRuleTypeConfig < Struct.new(
+      :value,
+      :confidence_threshold)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # For Resolver list operations ([ListResolverEndpoints][1],
     # [ListResolverRules][2], [ListResolverRuleAssociations][3],
     # [ListResolverQueryLogConfigs][4],
@@ -1426,6 +2013,40 @@ module Aws::Route53Resolver
       include Aws::Structure
     end
 
+    # The configuration for a content category-based filtering rule. This
+    # specifies which content category to use for DNS query evaluation.
+    #
+    # @!attribute [rw] category
+    #   The content category identifier. To retrieve the list of available
+    #   content categories, call ListFirewallRuleTypes with `RuleType` set
+    #   to `FirewallAdvancedContentCategory`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/FirewallAdvancedContentCategoryConfig AWS API Documentation
+    #
+    class FirewallAdvancedContentCategoryConfig < Struct.new(
+      :category)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration for a threat category-based filtering rule. This
+    # specifies which threat category to use for DNS query evaluation.
+    #
+    # @!attribute [rw] category
+    #   The threat category identifier. To retrieve the list of available
+    #   threat categories, call ListFirewallRuleTypes with `RuleType` set to
+    #   `FirewallAdvancedThreatCategory`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/FirewallAdvancedThreatCategoryConfig AWS API Documentation
+    #
+    class FirewallAdvancedThreatCategoryConfig < Struct.new(
+      :category)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Configuration of the firewall behavior provided by DNS Firewall for a
     # single VPC from Amazon Virtual Private Cloud (Amazon VPC).
     #
@@ -1525,6 +2146,14 @@ module Aws::Route53Resolver
     #   time format and Coordinated Universal Time (UTC).
     #   @return [String]
     #
+    # @!attribute [rw] category
+    #   The category of the domain list.
+    #   @return [String]
+    #
+    # @!attribute [rw] managed_list_type
+    #   The type of the managed domain list, for example `THREAT`.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/FirewallDomainList AWS API Documentation
     #
     class FirewallDomainList < Struct.new(
@@ -1537,7 +2166,9 @@ module Aws::Route53Resolver
       :managed_owner_name,
       :creator_request_id,
       :creation_time,
-      :modification_time)
+      :modification_time,
+      :category,
+      :managed_list_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1574,6 +2205,14 @@ module Aws::Route53Resolver
     #   `Route 53 Resolver DNS Firewall`.
     #   @return [String]
     #
+    # @!attribute [rw] managed_list_type
+    #   The type of the managed domain list, for example `THREAT`.
+    #   @return [String]
+    #
+    # @!attribute [rw] category
+    #   The category of the domain list.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/FirewallDomainListMetadata AWS API Documentation
     #
     class FirewallDomainListMetadata < Struct.new(
@@ -1581,7 +2220,9 @@ module Aws::Route53Resolver
       :arn,
       :name,
       :creator_request_id,
-      :managed_owner_name)
+      :managed_owner_name,
+      :managed_list_type,
+      :category)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1723,7 +2364,7 @@ module Aws::Route53Resolver
     #
     #   * A query type you define by using the DNS type ID, for example 28
     #     for AAAA. The values must be defined as TYPENUMBER, where the
-    #     NUMBER can be 1-65334, for example, TYPE28. For more information,
+    #     NUMBER can be 1-65534, for example, TYPE28. For more information,
     #     see [List of DNS record types][1].
     #
     #
@@ -1735,12 +2376,17 @@ module Aws::Route53Resolver
     #   The type of the DNS Firewall Advanced rule. Valid values are:
     #
     #   * `DGA`: Domain generation algorithms detection. DGAs are used by
-    #     attackers to generate a large number of domains to to launch
-    #     malware attacks.
+    #     attackers to generate a large number of domains to launch malware
+    #     attacks.
     #
     #   * `DNS_TUNNELING`: DNS tunneling detection. DNS tunneling is used by
     #     attackers to exfiltrate data from the client by using the DNS
     #     tunnel without making a network connection to the client.
+    #
+    #   * `DICTIONARY_DGA`: Dictionary-based domain generation algorithms
+    #     detection. Dictionary DGAs use wordlists to generate domains that
+    #     appear more legitimate, making them harder to detect than
+    #     traditional DGAs.
     #   @return [String]
     #
     # @!attribute [rw] confidence_threshold
@@ -1756,6 +2402,52 @@ module Aws::Route53Resolver
     #
     #   * `HIGH`: Detects only the most well corroborated threats with a low
     #     rate of false positives.
+    #   @return [String]
+    #
+    # @!attribute [rw] firewall_rule_type
+    #   The rule type configuration for the firewall rule. This is a tagged
+    #   union — exactly one of its members will be populated. Possible
+    #   members are:
+    #
+    #   * `FirewallAdvancedContentCategory` — an AWS-managed content
+    #     category (for example, `VIOLENCE_AND_HATE_SPEECH`).
+    #
+    #   * `FirewallAdvancedThreatCategory` — an AWS-managed advanced threat
+    #     category (for example, `PHISHING`).
+    #
+    #   * `DnsThreatProtection` — a built-in DNS Firewall Advanced threat
+    #     detector (`DGA`, `DNS_TUNNELING`, or `DICTIONARY_DGA`).
+    #
+    #   * `PartnerThreatProtection` — a third-party threat feed delivered
+    #     through AWS Marketplace.
+    #
+    #   To enumerate the values supported in your account, call
+    #   ListFirewallRuleTypes.
+    #   @return [Types::FirewallRuleType]
+    #
+    # @!attribute [rw] status
+    #   The lifecycle state of the firewall rule. Possible values:
+    #
+    #   * `CREATING` — DNS Firewall is provisioning the rule. Rules created
+    #     with the `PartnerThreatProtection` rule type begin in this state
+    #     while DNS Firewall verifies the calling account's AWS Marketplace
+    #     entitlement.
+    #
+    #   * `COMPLETE` — The rule is provisioned and enforcing matches.
+    #
+    #   * `CREATION_FAILED` — Provisioning failed. `StatusMessage` contains
+    #     a human-readable reason. A rule in this state is immutable:
+    #     UpdateFirewallRule rejects the request, and the rule must be
+    #     removed with DeleteFirewallRule.
+    #
+    #   For rules that do not require asynchronous provisioning, this field
+    #   may be absent.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_message
+    #   An additional message about the rule's lifecycle state. Populated
+    #   when `Status` is `CREATION_FAILED` to describe why provisioning
+    #   failed.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/FirewallRule AWS API Documentation
@@ -1777,7 +2469,10 @@ module Aws::Route53Resolver
       :firewall_domain_redirection_action,
       :qtype,
       :dns_threat_protection,
-      :confidence_threshold)
+      :confidence_threshold,
+      :firewall_rule_type,
+      :status,
+      :status_message)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1997,6 +2692,96 @@ module Aws::Route53Resolver
       :owner_id,
       :creator_request_id,
       :share_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The rule-type configuration for a DNS Firewall rule.
+    # `FirewallRuleType` is a tagged union — exactly one member must be set
+    # per rule, and the member determines what the rule matches against.
+    # This shape is mutually exclusive with the top-level
+    # `FirewallDomainListId` and `DnsThreatProtection` fields on
+    # CreateFirewallRule and UpdateFirewallRule.
+    #
+    # Call ListFirewallRuleTypes to discover which rule-type variants and
+    # which values within each variant are available in your account and
+    # Region.
+    #
+    # @!attribute [rw] partner_threat_protection
+    #   Configures the rule to match a third-party threat feed delivered
+    #   through AWS Marketplace. The calling account must hold an active
+    #   subscription to the partner product named in `Partner`; if the
+    #   subscription is missing or revoked, the rule is created with
+    #   `Status` `CREATION_FAILED` and cannot be modified — only deleted.
+    #   See PartnerThreatProtectionConfig.
+    #   @return [Types::PartnerThreatProtectionConfig]
+    #
+    # @!attribute [rw] firewall_advanced_content_category
+    #   Configures the rule to match an AWS-managed content category (for
+    #   example, `VIOLENCE_AND_HATE_SPEECH`). See
+    #   FirewallAdvancedContentCategoryConfig.
+    #   @return [Types::FirewallAdvancedContentCategoryConfig]
+    #
+    # @!attribute [rw] firewall_advanced_threat_category
+    #   Configures the rule to match an AWS-managed advanced threat category
+    #   (for example, `PHISHING`). See FirewallAdvancedThreatCategoryConfig.
+    #   @return [Types::FirewallAdvancedThreatCategoryConfig]
+    #
+    # @!attribute [rw] dns_threat_protection
+    #   Configures the rule to match a built-in DNS Firewall Advanced threat
+    #   detector — `DGA`, `DNS_TUNNELING`, or `DICTIONARY_DGA`. See
+    #   DnsThreatProtectionRuleTypeConfig.
+    #   @return [Types::DnsThreatProtectionRuleTypeConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/FirewallRuleType AWS API Documentation
+    #
+    class FirewallRuleType < Struct.new(
+      :partner_threat_protection,
+      :firewall_advanced_content_category,
+      :firewall_advanced_threat_category,
+      :dns_threat_protection)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The definition of an available rule type that can be used in DNS
+    # Firewall rules. This is returned by ListFirewallRuleTypes.
+    #
+    # @!attribute [rw] rule_type
+    #   The category or class of the rule type, such as
+    #   `FirewallAdvancedContentCategory` or
+    #   `FirewallAdvancedThreatCategory`.
+    #   @return [String]
+    #
+    # @!attribute [rw] value
+    #   The specific identifier within the rule type category, such as
+    #   `VIOLENCE_AND_HATE_SPEECH` or `PHISHING`.
+    #   @return [String]
+    #
+    # @!attribute [rw] display_name
+    #   The display name of the rule type.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A description of the rule type.
+    #   @return [String]
+    #
+    # @!attribute [rw] subscription_info
+    #   For rule types that require an external subscription (today, only
+    #   the `PartnerThreatProtection` variant), describes the AWS
+    #   Marketplace product that backs the rule type. Absent for rule types
+    #   that are managed by AWS and do not require a separate subscription.
+    #   See SubscriptionInfo.
+    #   @return [Types::SubscriptionInfo]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/FirewallRuleTypeDefinition AWS API Documentation
+    #
+    class FirewallRuleTypeDefinition < Struct.new(
+      :rule_type,
+      :value,
+      :display_name,
+      :description,
+      :subscription_info)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2967,6 +3752,59 @@ module Aws::Route53Resolver
       include Aws::Structure
     end
 
+    # @!attribute [rw] rule_type
+    #   An optional filter that restricts the response to a single
+    #   FirewallRuleType variant. Supported values:
+    #   `FirewallAdvancedContentCategory`, `FirewallAdvancedThreatCategory`,
+    #   `DnsThreatProtection`, and `PartnerThreatProtection`. If omitted,
+    #   definitions across all variants are returned.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of objects that you want Resolver to return for
+    #   this request. If more objects are available, in the response,
+    #   Resolver provides a `NextToken` value that you can use in a
+    #   subsequent call to get the next batch of objects.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   For the first call to this list request, omit this value. When you
+    #   request a list of objects, Resolver returns at most the number of
+    #   objects specified in `MaxResults`. If more objects are available for
+    #   retrieval, Resolver provides a `NextToken` value in the response. To
+    #   retrieve the next batch of objects, use the token that was returned
+    #   for the prior request in your next request.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/ListFirewallRuleTypesRequest AWS API Documentation
+    #
+    class ListFirewallRuleTypesRequest < Struct.new(
+      :rule_type,
+      :max_results,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] firewall_rule_types
+    #   A list of the available rule type definitions.
+    #   @return [Array<Types::FirewallRuleTypeDefinition>]
+    #
+    # @!attribute [rw] next_token
+    #   If objects are still available for retrieval, Resolver returns this
+    #   token in the response. To retrieve the next batch of objects,
+    #   provide this token in your next request.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/ListFirewallRuleTypesResponse AWS API Documentation
+    #
+    class ListFirewallRuleTypesResponse < Struct.new(
+      :firewall_rule_types,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] firewall_rule_group_id
     #   The unique identifier of the firewall rule group that you want to
     #   retrieve the rules for.
@@ -3894,6 +4732,27 @@ module Aws::Route53Resolver
       include Aws::Structure
     end
 
+    # The configuration for a partner threat-protection rule. To enumerate
+    # the partners available in your account, call ListFirewallRuleTypes
+    # with `RuleType` set to `PartnerThreatProtection` — each returned
+    # FirewallRuleTypeDefinition includes a SubscriptionInfo identifying the
+    # AWS Marketplace product that backs it.
+    #
+    # @!attribute [rw] partner
+    #   The identifier of the partner threat-protection product, exactly as
+    #   returned in the `Value` field of a FirewallRuleTypeDefinition with
+    #   `RuleType` set to `PartnerThreatProtection`. The calling account
+    #   must hold an active AWS Marketplace subscription to this product.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/PartnerThreatProtectionConfig AWS API Documentation
+    #
+    class PartnerThreatProtectionConfig < Struct.new(
+      :partner)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] arn
     #   The ARN (Amazon Resource Name) for the rule group that you want to
     #   share.
@@ -4029,8 +4888,8 @@ module Aws::Route53Resolver
     #   @return [String]
     #
     # @!attribute [rw] resource_id
-    #   The ID of the Amazon Virtual Private Cloud VPC that you're
-    #   configuring Resolver for.
+    #   The ID of the Amazon Virtual Private Cloud VPC or a Route 53 Profile
+    #   that you're configuring Resolver for.
     #   @return [String]
     #
     # @!attribute [rw] owner_id
@@ -4161,6 +5020,9 @@ module Aws::Route53Resolver
     #   * `INBOUND`: allows DNS queries to your VPC from your network
     #
     #   * `OUTBOUND`: allows DNS queries from your VPC to your network
+    #
+    #   * `INBOUND_DELEGATION`: Resolver delegates queries to Route 53
+    #     private hosted zones from your network.
     #   @return [String]
     #
     # @!attribute [rw] ip_address_count
@@ -4242,8 +5104,8 @@ module Aws::Route53Resolver
     #   @return [String]
     #
     # @!attribute [rw] protocols
-    #   Protocols used for the endpoint. DoH-FIPS is applicable for inbound
-    #   endpoints only.
+    #   Protocols used for the endpoint. DoH-FIPS is applicable for a
+    #   default inbound endpoints only.
     #
     #   For an inbound endpoint you can apply the protocols as follows:
     #
@@ -4259,6 +5121,8 @@ module Aws::Route53Resolver
     #
     #   * None, which is treated as Do53.
     #
+    #   For a delegation inbound endpoint you can use Do53 only.
+    #
     #   For an outbound endpoint you can apply the protocols as follows:
     #
     #   * Do53 and DoH in combination.
@@ -4269,6 +5133,36 @@ module Aws::Route53Resolver
     #
     #   * None, which is treated as Do53.
     #   @return [Array<String>]
+    #
+    # @!attribute [rw] rni_enhanced_metrics_enabled
+    #   Indicates whether RNI enhanced metrics are enabled for the Resolver
+    #   endpoint. When enabled, one-minute granular metrics are published in
+    #   CloudWatch for each RNI associated with this endpoint. When
+    #   disabled, these metrics are not published.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] target_name_server_metrics_enabled
+    #   Indicates whether target name server metrics are enabled for the
+    #   outbound Resolver endpoint. When enabled, one-minute granular
+    #   metrics are published in CloudWatch for each target name server
+    #   associated with this endpoint. When disabled, these metrics are not
+    #   published. This feature is not supported for inbound Resolver
+    #   endpoint.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] dns_64_enabled
+    #   Indicates whether DNS64 is enabled for the inbound Resolver
+    #   endpoint. When `true`, Route 53 Resolver synthesizes AAAA (IPv6)
+    #   records for IPv4-only services by prepending the `64:ff9b::/96`
+    #   prefix to the IPv4 address.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] ipv_6_internet_access_enabled
+    #   Indicates whether IPv6 internet access is enabled for the outbound
+    #   Resolver endpoint. When `true`, the endpoint elastic network
+    #   interfaces (ENIs) can forward DNS queries to public IPv6 targets
+    #   through an internet gateway.
+    #   @return [Boolean]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/ResolverEndpoint AWS API Documentation
     #
@@ -4288,7 +5182,11 @@ module Aws::Route53Resolver
       :outpost_arn,
       :preferred_instance_type,
       :resolver_endpoint_type,
-      :protocols)
+      :protocols,
+      :rni_enhanced_metrics_enabled,
+      :target_name_server_metrics_enabled,
+      :dns_64_enabled,
+      :ipv_6_internet_access_enabled)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4524,7 +5422,10 @@ module Aws::Route53Resolver
     #
     # @!attribute [rw] rule_type
     #   When you want to forward DNS queries for specified domain name to
-    #   resolvers on your network, specify `FORWARD`.
+    #   resolvers on your network, specify `FORWARD` or `DELEGATE`. If a
+    #   query matches multiple Resolver rules (example.com and
+    #   www.example.com), outbound DNS queries are routed using the Resolver
+    #   rule that contains the most specific domain name (www.example.com).
     #
     #   When you have a forwarding rule to forward DNS queries for a domain
     #   to your network and you want Resolver to process queries for a
@@ -4543,6 +5444,10 @@ module Aws::Route53Resolver
     # @!attribute [rw] name
     #   The name for the Resolver rule, which you specified when you created
     #   the Resolver rule.
+    #
+    #   The name can be up to 64 characters long and can contain letters
+    #   (a-z, A-Z), numbers (0-9), hyphens (-), underscores (\_), and
+    #   spaces. The name cannot consist of only numbers.
     #   @return [String]
     #
     # @!attribute [rw] target_ips
@@ -4576,6 +5481,11 @@ module Aws::Route53Resolver
     #   time format and Coordinated Universal Time (UTC).
     #   @return [String]
     #
+    # @!attribute [rw] delegation_record
+    #   DNS queries with delegation records that point to this domain name
+    #   are forwarded to resolvers on your network.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/ResolverRule AWS API Documentation
     #
     class ResolverRule < Struct.new(
@@ -4592,7 +5502,8 @@ module Aws::Route53Resolver
       :owner_id,
       :share_status,
       :creation_time,
-      :modification_time)
+      :modification_time,
+      :delegation_record)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4626,6 +5537,10 @@ module Aws::Route53Resolver
     #
     # @!attribute [rw] name
     #   The name of an association between a Resolver rule and a VPC.
+    #
+    #   The name can be up to 64 characters long and can contain letters
+    #   (a-z, A-Z), numbers (0-9), hyphens (-), underscores (\_), and
+    #   spaces. The name cannot consist of only numbers.
     #   @return [String]
     #
     # @!attribute [rw] vpc_id
@@ -4665,6 +5580,10 @@ module Aws::Route53Resolver
     # @!attribute [rw] name
     #   The new name for the Resolver rule. The name that you specify
     #   appears in the Resolver dashboard in the Route 53 console.
+    #
+    #   The name can be up to 64 characters long and can contain letters
+    #   (a-z, A-Z), numbers (0-9), hyphens (-), underscores (\_), and
+    #   spaces. The name cannot consist of only numbers.
     #   @return [String]
     #
     # @!attribute [rw] target_ips
@@ -4773,6 +5692,32 @@ module Aws::Route53Resolver
     #
     class ServiceQuotaExceededException < Struct.new(
       :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Identifies the AWS Marketplace product that backs a partner-managed
+    # rule type. Returned as part of FirewallRuleTypeDefinition when the
+    # rule type variant requires an active customer subscription to the
+    # named product.
+    #
+    # @!attribute [rw] vendor_name
+    #   The name of the AWS Marketplace seller (vendor) that publishes the
+    #   partner threat-protection product (for example, `Palo Alto
+    #   Networks`).
+    #   @return [String]
+    #
+    # @!attribute [rw] product_id
+    #   The AWS Marketplace product identifier of the partner
+    #   threat-protection product. Use this value to verify or manage the
+    #   calling account's subscription in AWS Marketplace.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/SubscriptionInfo AWS API Documentation
+    #
+    class SubscriptionInfo < Struct.new(
+      :vendor_name,
+      :product_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5072,6 +6017,217 @@ module Aws::Route53Resolver
       include Aws::Structure
     end
 
+    # The details for updating a single firewall rule in a batch operation.
+    #
+    # @!attribute [rw] firewall_rule_group_id
+    #   The unique identifier of the firewall rule group for the rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] firewall_domain_list_id
+    #   The ID of the domain list to use in the rule. This setting is
+    #   mutually exclusive with `DnsThreatProtection` and
+    #   `FirewallRuleType`.
+    #   @return [String]
+    #
+    # @!attribute [rw] firewall_threat_protection_id
+    #   The ID of the DNS Firewall Advanced rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] priority
+    #   The setting that determines the processing order of the rule in the
+    #   rule group. DNS Firewall processes the rules in a rule group by
+    #   order of priority, starting from the lowest setting.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] action
+    #   The action that DNS Firewall should take on a DNS query when it
+    #   matches one of the domains in the rule's domain list, or a threat
+    #   in a DNS Firewall Advanced rule:
+    #
+    #   * `ALLOW` - Permit the request to go through. Not available for DNS
+    #     Firewall Advanced rules.
+    #
+    #   * `ALERT` - Permit the request and send metrics and logs to
+    #     CloudWatch.
+    #
+    #   * `BLOCK` - Disallow the request. This option requires additional
+    #     details in the rule's `BlockResponse`.
+    #   @return [String]
+    #
+    # @!attribute [rw] block_response
+    #   The way that you want DNS Firewall to block the request, used with
+    #   the rule action setting `BLOCK`.
+    #
+    #   * `NODATA` - Respond indicating that the query was successful, but
+    #     no response is available for it.
+    #
+    #   * `NXDOMAIN` - Respond indicating that the domain name that's in
+    #     the query doesn't exist.
+    #
+    #   * `OVERRIDE` - Provide a custom override in the response. This
+    #     option requires custom handling details in the rule's
+    #     `BlockOverride*` settings.
+    #   @return [String]
+    #
+    # @!attribute [rw] block_override_domain
+    #   The custom DNS record to send back in response to the query. Used
+    #   for the rule action `BLOCK` with a `BlockResponse` setting of
+    #   `OVERRIDE`.
+    #   @return [String]
+    #
+    # @!attribute [rw] block_override_dns_type
+    #   The DNS record's type. This determines the format of the record
+    #   value that you provided in `BlockOverrideDomain`. Used for the rule
+    #   action `BLOCK` with a `BlockResponse` setting of `OVERRIDE`.
+    #   @return [String]
+    #
+    # @!attribute [rw] block_override_ttl
+    #   The recommended amount of time, in seconds, for the DNS resolver or
+    #   web browser to cache the provided override record. Used for the rule
+    #   action `BLOCK` with a `BlockResponse` setting of `OVERRIDE`.
+    #
+    #   This setting is required if the `BlockResponse` setting is
+    #   `OVERRIDE`.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] name
+    #   The name of the rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] firewall_domain_redirection_action
+    #   How you want the rule to evaluate DNS redirection in the DNS
+    #   redirection chain, such as CNAME or DNAME.
+    #
+    #   `INSPECT_REDIRECTION_DOMAIN`: (Default) inspects all domains in the
+    #   redirection chain. The individual domains in the redirection chain
+    #   must be added to the domain list.
+    #
+    #   `TRUST_REDIRECTION_DOMAIN`: Inspects only the first domain in the
+    #   redirection chain. You don't need to add the subsequent domains in
+    #   the redirection list to the domain list.
+    #   @return [String]
+    #
+    # @!attribute [rw] qtype
+    #   The DNS query type you want the rule to evaluate. Allowed values
+    #   are:
+    #
+    #   * A: Returns an IPv4 address.
+    #
+    #   * AAAA: Returns an IPv6 address.
+    #
+    #   * CAA: Restricts CAs that can create SSL/TLS certifications for the
+    #     domain.
+    #
+    #   * CNAME: Returns another domain name.
+    #
+    #   * DS: Record that identifies the DNSSEC signing key of a delegated
+    #     zone.
+    #
+    #   * MX: Specifies mail servers.
+    #
+    #   * NAPTR: Regular-expression-based rewriting of domain names.
+    #
+    #   * NS: Authoritative name servers.
+    #
+    #   * PTR: Maps an IP address to a domain name.
+    #
+    #   * SOA: Start of authority record for the zone.
+    #
+    #   * SPF: Lists the servers authorized to send emails from a domain.
+    #
+    #   * SRV: Application specific values that identify servers.
+    #
+    #   * TXT: Verifies email senders and application-specific values.
+    #
+    #   * A query type you define by using the DNS type ID, for example 28
+    #     for AAAA. The values must be defined as TYPENUMBER, where the
+    #     NUMBER can be 1-65534, for example, TYPE28. For more information,
+    #     see [List of DNS record types][1].
+    #
+    #
+    #
+    #   [1]: https://en.wikipedia.org/wiki/List_of_DNS_record_types
+    #   @return [String]
+    #
+    # @!attribute [rw] dns_threat_protection
+    #   The type of the DNS Firewall Advanced rule. This setting is mutually
+    #   exclusive with `FirewallDomainListId` and `FirewallRuleType`. Valid
+    #   values are:
+    #
+    #   * `DGA`: Domain generation algorithms detection. DGAs are used by
+    #     attackers to generate a large number of domains to launch malware
+    #     attacks.
+    #
+    #   * `DNS_TUNNELING`: DNS tunneling detection. DNS tunneling is used by
+    #     attackers to exfiltrate data from the client by using the DNS
+    #     tunnel without making a network connection to the client.
+    #
+    #   * `DICTIONARY_DGA`: Dictionary-based domain generation algorithms
+    #     detection. Dictionary DGAs use wordlists to generate domains that
+    #     appear more legitimate, making them harder to detect than
+    #     traditional DGAs.
+    #   @return [String]
+    #
+    # @!attribute [rw] confidence_threshold
+    #   The confidence threshold for DNS Firewall Advanced. You must provide
+    #   this value when you create or update a DNS Firewall Advanced rule.
+    #   The confidence level values mean:
+    #
+    #   * `LOW`: Provides the highest detection rate for threats, but also
+    #     increases false positives.
+    #
+    #   * `MEDIUM`: Provides a balance between detecting threats and false
+    #     positives.
+    #
+    #   * `HIGH`: Detects only the most well corroborated threats with a low
+    #     rate of false positives.
+    #   @return [String]
+    #
+    # @!attribute [rw] firewall_rule_type
+    #   The rule type configuration for the firewall rule. This is a tagged
+    #   union — set exactly one of its members. This setting is mutually
+    #   exclusive with the top-level `FirewallDomainListId` and
+    #   `DnsThreatProtection` fields. Use one of:
+    #
+    #   * `FirewallAdvancedContentCategory` — match an AWS-managed content
+    #     category (for example, `VIOLENCE_AND_HATE_SPEECH`).
+    #
+    #   * `FirewallAdvancedThreatCategory` — match an AWS-managed advanced
+    #     threat category (for example, `PHISHING`).
+    #
+    #   * `DnsThreatProtection` — match a built-in DNS Firewall Advanced
+    #     threat detector (`DGA`, `DNS_TUNNELING`, or `DICTIONARY_DGA`).
+    #
+    #   * `PartnerThreatProtection` — match a third-party threat feed
+    #     delivered through AWS Marketplace. The selected partner must be an
+    #     active subscription on the calling account.
+    #
+    #   To enumerate the values supported in your account, call
+    #   ListFirewallRuleTypes.
+    #   @return [Types::FirewallRuleType]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/UpdateFirewallRuleEntry AWS API Documentation
+    #
+    class UpdateFirewallRuleEntry < Struct.new(
+      :firewall_rule_group_id,
+      :firewall_domain_list_id,
+      :firewall_threat_protection_id,
+      :priority,
+      :action,
+      :block_response,
+      :block_override_domain,
+      :block_override_dns_type,
+      :block_override_ttl,
+      :name,
+      :firewall_domain_redirection_action,
+      :qtype,
+      :dns_threat_protection,
+      :confidence_threshold,
+      :firewall_rule_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] firewall_rule_group_association_id
     #   The identifier of the FirewallRuleGroupAssociation.
     #   @return [String]
@@ -5244,7 +6400,7 @@ module Aws::Route53Resolver
     #
     #   * A query type you define by using the DNS type ID, for example 28
     #     for AAAA. The values must be defined as TYPENUMBER, where the
-    #     NUMBER can be 1-65334, for example, TYPE28. For more information,
+    #     NUMBER can be 1-65534, for example, TYPE28. For more information,
     #     see [List of DNS record types][1].
     #
     #     <note markdown="1"> If you set up a firewall BLOCK rule with action NXDOMAIN on query
@@ -5259,15 +6415,22 @@ module Aws::Route53Resolver
     #   @return [String]
     #
     # @!attribute [rw] dns_threat_protection
-    #   The type of the DNS Firewall Advanced rule. Valid values are:
+    #   The type of the DNS Firewall Advanced rule. This setting is mutually
+    #   exclusive with `FirewallDomainListId` and `FirewallRuleType`. Valid
+    #   values are:
     #
     #   * `DGA`: Domain generation algorithms detection. DGAs are used by
-    #     attackers to generate a large number of domains to to launch
-    #     malware attacks.
+    #     attackers to generate a large number of domains to launch malware
+    #     attacks.
     #
     #   * `DNS_TUNNELING`: DNS tunneling detection. DNS tunneling is used by
     #     attackers to exfiltrate data from the client by using the DNS
     #     tunnel without making a network connection to the client.
+    #
+    #   * `DICTIONARY_DGA`: Dictionary-based domain generation algorithms
+    #     detection. Dictionary DGAs use wordlists to generate domains that
+    #     appear more legitimate, making them harder to detect than
+    #     traditional DGAs.
     #   @return [String]
     #
     # @!attribute [rw] confidence_threshold
@@ -5285,6 +6448,29 @@ module Aws::Route53Resolver
     #     rate of false positives.
     #   @return [String]
     #
+    # @!attribute [rw] firewall_rule_type
+    #   The rule type configuration for the firewall rule. This is a tagged
+    #   union — set exactly one of its members. This setting is mutually
+    #   exclusive with the top-level `FirewallDomainListId` and
+    #   `DnsThreatProtection` fields. Use one of:
+    #
+    #   * `FirewallAdvancedContentCategory` — match an AWS-managed content
+    #     category (for example, `VIOLENCE_AND_HATE_SPEECH`).
+    #
+    #   * `FirewallAdvancedThreatCategory` — match an AWS-managed advanced
+    #     threat category (for example, `PHISHING`).
+    #
+    #   * `DnsThreatProtection` — match a built-in DNS Firewall Advanced
+    #     threat detector (`DGA`, `DNS_TUNNELING`, or `DICTIONARY_DGA`).
+    #
+    #   * `PartnerThreatProtection` — match a third-party threat feed
+    #     delivered through AWS Marketplace. The selected partner must be an
+    #     active subscription on the calling account.
+    #
+    #   To enumerate the values supported in your account, call
+    #   ListFirewallRuleTypes.
+    #   @return [Types::FirewallRuleType]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/UpdateFirewallRuleRequest AWS API Documentation
     #
     class UpdateFirewallRuleRequest < Struct.new(
@@ -5301,7 +6487,8 @@ module Aws::Route53Resolver
       :firewall_domain_redirection_action,
       :qtype,
       :dns_threat_protection,
-      :confidence_threshold)
+      :confidence_threshold,
+      :firewall_rule_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5382,8 +6569,8 @@ module Aws::Route53Resolver
     end
 
     # @!attribute [rw] resource_id
-    #   Resource ID of the Amazon VPC that you want to update the Resolver
-    #   configuration for.
+    #   The ID of the Amazon Virtual Private Cloud VPC or a Route 53 Profile
+    #   that you're configuring Resolver for.
     #   @return [String]
     #
     # @!attribute [rw] autodefined_reverse_flag
@@ -5489,9 +6676,10 @@ module Aws::Route53Resolver
     #
     # @!attribute [rw] protocols
     #   The protocols you want to use for the endpoint. DoH-FIPS is
-    #   applicable for inbound endpoints only.
+    #   applicable for default inbound endpoints only.
     #
-    #   For an inbound endpoint you can apply the protocols as follows:
+    #   For a default inbound endpoint you can apply the protocols as
+    #   follows:
     #
     #   * Do53 and DoH in combination.
     #
@@ -5504,6 +6692,8 @@ module Aws::Route53Resolver
     #   * DoH-FIPS alone.
     #
     #   * None, which is treated as Do53.
+    #
+    #   For a delegation inbound endpoint you can use Do53 only.
     #
     #   For an outbound endpoint you can apply the protocols as follows:
     #
@@ -5524,6 +6714,71 @@ module Aws::Route53Resolver
     #   then remove the Do53.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] rni_enhanced_metrics_enabled
+    #   Updates whether RNI enhanced metrics are enabled for the Resolver
+    #   endpoints. When set to true, one-minute granular metrics are
+    #   published in CloudWatch for each RNI associated with this endpoint.
+    #   When set to false, metrics are not published.
+    #
+    #   <note markdown="1"> Standard CloudWatch pricing and charges are applied for using the
+    #   Route 53 Resolver endpoint RNI enhanced metrics. For more
+    #   information, see [Detailed metrics][1].
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/monitoring-resolver-with-cloudwatch.html
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] target_name_server_metrics_enabled
+    #   Updates whether target name server metrics are enabled for the
+    #   outbound Resolver endpoints. When set to true, one-minute granular
+    #   metrics are published in CloudWatch for each target name server
+    #   associated with this endpoint. When set to false, metrics are not
+    #   published. This setting is not supported for inbound Resolver
+    #   endpoints.
+    #
+    #   <note markdown="1"> Standard CloudWatch pricing and charges are applied for using the
+    #   Route 53 Resolver endpoint target name server metrics. For more
+    #   information, see [Detailed metrics][1].
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/monitoring-resolver-with-cloudwatch.html
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] dns_64_enabled
+    #   Specifies whether DNS64 is enabled for the inbound Resolver
+    #   endpoint. When set to `true`, Route 53 Resolver synthesizes AAAA
+    #   (IPv6) records for IPv4-only services by prepending the
+    #   `64:ff9b::/96` prefix to the IPv4 address. This enables IPv6-only
+    #   clients that send queries through the inbound endpoint to reach
+    #   IPv4-only services. DNS64 works with NAT64 to provide complete
+    #   IPv6-to-IPv4 translation.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] ipv_6_internet_access_enabled
+    #   Specifies whether IPv6 internet access is enabled for the outbound
+    #   Resolver endpoint. When set to `true`, the endpoint elastic network
+    #   interfaces (ENIs) can forward DNS queries to public IPv6 targets
+    #   through an internet gateway.
+    #
+    #   When you enable IPv6 internet access, use network controls like
+    #   security groups, NACLs, or egress-only internet gateways to protect
+    #   the endpoint ENIs from unsolicited ingress traffic. Be aware that
+    #   some network controls can affect DNS query throughput due to
+    #   connection tracking. For more information, see [Amazon EC2 security
+    #   group connection tracking][1] and [Resolver endpoint scaling][2].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/ec2/latest/userguide/security-group-connection-tracking.html
+    #   [2]: https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/best-practices-resolver-endpoint-scaling.html
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/UpdateResolverEndpointRequest AWS API Documentation
     #
     class UpdateResolverEndpointRequest < Struct.new(
@@ -5531,7 +6786,11 @@ module Aws::Route53Resolver
       :name,
       :resolver_endpoint_type,
       :update_ip_addresses,
-      :protocols)
+      :protocols,
+      :rni_enhanced_metrics_enabled,
+      :target_name_server_metrics_enabled,
+      :dns_64_enabled,
+      :ipv_6_internet_access_enabled)
       SENSITIVE = []
       include Aws::Structure
     end

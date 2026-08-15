@@ -345,6 +345,16 @@ module Aws::DynamoDB
       end
     end
 
+    class SearchVectors
+      def self.build(context)
+        Aws::DynamoDB::EndpointParameters.create(
+          context.config,
+          resource_arn: context.params[:table_name],
+          is_search_operation: true,
+        )
+      end
+    end
+
     class TagResource
       def self.build(context)
         Aws::DynamoDB::EndpointParameters.create(
@@ -359,6 +369,15 @@ module Aws::DynamoDB
         Aws::DynamoDB::EndpointParameters.create(
           context.config,
           resource_arn_list: JMESPath.search("transact_items[*].get.table_name", context.params),
+        )
+      end
+    end
+
+    class TransactWriteItems
+      def self.build(context)
+        Aws::DynamoDB::EndpointParameters.create(
+          context.config,
+          resource_arn_list: JMESPath.search("transact_items[*].[condition_check.table_name, put.table_name, delete.table_name, update.table_name][]", context.params),
         )
       end
     end
@@ -530,10 +549,14 @@ module Aws::DynamoDB
         RestoreTableToPointInTime.build(context)
       when :scan
         Scan.build(context)
+      when :search_vectors
+        SearchVectors.build(context)
       when :tag_resource
         TagResource.build(context)
       when :transact_get_items
         TransactGetItems.build(context)
+      when :transact_write_items
+        TransactWriteItems.build(context)
       when :untag_resource
         UntagResource.build(context)
       when :update_continuous_backups

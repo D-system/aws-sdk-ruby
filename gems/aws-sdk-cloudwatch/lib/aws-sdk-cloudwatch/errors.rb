@@ -28,6 +28,7 @@ module Aws::CloudWatch
   #
   # ## Error Classes
   # * {ConcurrentModificationException}
+  # * {ConflictException}
   # * {DashboardInvalidInputError}
   #    * This error class is not used. `InvalidParameterInput` is used during parsing instead.
   # * {DashboardNotFoundError}
@@ -41,17 +42,20 @@ module Aws::CloudWatch
   #    * This error class is not used. `InvalidParameterCombination` is used during parsing instead.
   # * {InvalidParameterValueException}
   #    * This error class is not used. `InvalidParameterValue` is used during parsing instead.
+  # * {KmsAccessDeniedException}
+  # * {KmsKeyDisabledException}
+  # * {KmsKeyNotFoundException}
   # * {LimitExceededException}
   # * {LimitExceededFault}
   #    * This error class is not used. `LimitExceeded` is used during parsing instead.
   # * {MissingRequiredParameterException}
   #    * This error class is not used. `MissingParameter` is used during parsing instead.
+  # * {ResourceConflict}
   # * {ResourceNotFound}
   # * {ResourceNotFoundException}
   #
   # Additionally, error classes are dynamically generated for service errors based on the error code
   # if they are not defined above.
-  # Some existing error classes may use a different class name than the one documented.
   module Errors
 
     extend Aws::Errors::DynamicErrors
@@ -63,6 +67,21 @@ module Aws::CloudWatch
       # @param [Aws::CloudWatch::Types::ConcurrentModificationException] data
       def initialize(context, message, data = Aws::EmptyStructure.new)
         super(context, message, data)
+      end
+    end
+
+    class ConflictException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::CloudWatch::Types::ConflictException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
       end
     end
 
@@ -188,6 +207,51 @@ module Aws::CloudWatch
       end
     end
 
+    class KmsAccessDeniedException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::CloudWatch::Types::KmsAccessDeniedException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+    end
+
+    class KmsKeyDisabledException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::CloudWatch::Types::KmsKeyDisabledException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+    end
+
+    class KmsKeyNotFoundException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::CloudWatch::Types::KmsKeyNotFoundException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+    end
+
     class LimitExceededException < ServiceError
 
       # @param [Seahorse::Client::RequestContext] context
@@ -222,6 +286,21 @@ module Aws::CloudWatch
       # @param [Seahorse::Client::RequestContext] context
       # @param [String] message
       # @param [Aws::CloudWatch::Types::MissingRequiredParameterException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+    end
+
+    class ResourceConflict < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::CloudWatch::Types::ResourceConflict] data
       def initialize(context, message, data = Aws::EmptyStructure.new)
         super(context, message, data)
       end

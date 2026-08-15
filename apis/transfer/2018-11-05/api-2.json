@@ -347,7 +347,8 @@
         {"shape":"InvalidRequestException"},
         {"shape":"InternalServiceError"},
         {"shape":"ServiceUnavailableException"}
-      ]
+      ],
+      "readonly":true
     },
     "DescribeAgreement":{
       "name":"DescribeAgreement",
@@ -362,7 +363,8 @@
         {"shape":"InvalidRequestException"},
         {"shape":"InternalServiceError"},
         {"shape":"ServiceUnavailableException"}
-      ]
+      ],
+      "readonly":true
     },
     "DescribeCertificate":{
       "name":"DescribeCertificate",
@@ -377,7 +379,8 @@
         {"shape":"InvalidRequestException"},
         {"shape":"InternalServiceError"},
         {"shape":"ServiceUnavailableException"}
-      ]
+      ],
+      "readonly":true
     },
     "DescribeConnector":{
       "name":"DescribeConnector",
@@ -392,7 +395,8 @@
         {"shape":"InvalidRequestException"},
         {"shape":"InternalServiceError"},
         {"shape":"ServiceUnavailableException"}
-      ]
+      ],
+      "readonly":true
     },
     "DescribeExecution":{
       "name":"DescribeExecution",
@@ -407,7 +411,8 @@
         {"shape":"InvalidRequestException"},
         {"shape":"InternalServiceError"},
         {"shape":"ServiceUnavailableException"}
-      ]
+      ],
+      "readonly":true
     },
     "DescribeHostKey":{
       "name":"DescribeHostKey",
@@ -422,7 +427,8 @@
         {"shape":"InvalidRequestException"},
         {"shape":"InternalServiceError"},
         {"shape":"ServiceUnavailableException"}
-      ]
+      ],
+      "readonly":true
     },
     "DescribeProfile":{
       "name":"DescribeProfile",
@@ -437,7 +443,8 @@
         {"shape":"InvalidRequestException"},
         {"shape":"InternalServiceError"},
         {"shape":"ServiceUnavailableException"}
-      ]
+      ],
+      "readonly":true
     },
     "DescribeSecurityPolicy":{
       "name":"DescribeSecurityPolicy",
@@ -452,7 +459,8 @@
         {"shape":"InvalidRequestException"},
         {"shape":"InternalServiceError"},
         {"shape":"ServiceUnavailableException"}
-      ]
+      ],
+      "readonly":true
     },
     "DescribeServer":{
       "name":"DescribeServer",
@@ -467,7 +475,8 @@
         {"shape":"InvalidRequestException"},
         {"shape":"InternalServiceError"},
         {"shape":"ServiceUnavailableException"}
-      ]
+      ],
+      "readonly":true
     },
     "DescribeUser":{
       "name":"DescribeUser",
@@ -482,7 +491,8 @@
         {"shape":"InvalidRequestException"},
         {"shape":"InternalServiceError"},
         {"shape":"ServiceUnavailableException"}
-      ]
+      ],
+      "readonly":true
     },
     "DescribeWebApp":{
       "name":"DescribeWebApp",
@@ -498,7 +508,8 @@
         {"shape":"ThrottlingException"},
         {"shape":"InternalServiceError"},
         {"shape":"AccessDeniedException"}
-      ]
+      ],
+      "readonly":true
     },
     "DescribeWebAppCustomization":{
       "name":"DescribeWebAppCustomization",
@@ -514,7 +525,8 @@
         {"shape":"ThrottlingException"},
         {"shape":"InternalServiceError"},
         {"shape":"AccessDeniedException"}
-      ]
+      ],
+      "readonly":true
     },
     "DescribeWorkflow":{
       "name":"DescribeWorkflow",
@@ -529,7 +541,8 @@
         {"shape":"InvalidRequestException"},
         {"shape":"InternalServiceError"},
         {"shape":"ServiceUnavailableException"}
-      ]
+      ],
+      "readonly":true
     },
     "ImportCertificate":{
       "name":"ImportCertificate",
@@ -594,7 +607,8 @@
         {"shape":"InternalServiceError"},
         {"shape":"ServiceUnavailableException"},
         {"shape":"InvalidNextTokenException"}
-      ]
+      ],
+      "readonly":true
     },
     "ListAgreements":{
       "name":"ListAgreements",
@@ -610,7 +624,8 @@
         {"shape":"InternalServiceError"},
         {"shape":"ServiceUnavailableException"},
         {"shape":"InvalidNextTokenException"}
-      ]
+      ],
+      "readonly":true
     },
     "ListCertificates":{
       "name":"ListCertificates",
@@ -626,7 +641,8 @@
         {"shape":"InternalServiceError"},
         {"shape":"ServiceUnavailableException"},
         {"shape":"InvalidNextTokenException"}
-      ]
+      ],
+      "readonly":true
     },
     "ListConnectors":{
       "name":"ListConnectors",
@@ -642,7 +658,8 @@
         {"shape":"InternalServiceError"},
         {"shape":"ServiceUnavailableException"},
         {"shape":"InvalidNextTokenException"}
-      ]
+      ],
+      "readonly":true
     },
     "ListExecutions":{
       "name":"ListExecutions",
@@ -658,7 +675,8 @@
         {"shape":"InternalServiceError"},
         {"shape":"ServiceUnavailableException"},
         {"shape":"InvalidNextTokenException"}
-      ]
+      ],
+      "readonly":true
     },
     "ListFileTransferResults":{
       "name":"ListFileTransferResults",
@@ -689,7 +707,8 @@
         {"shape":"InternalServiceError"},
         {"shape":"ServiceUnavailableException"},
         {"shape":"InvalidNextTokenException"}
-      ]
+      ],
+      "readonly":true
     },
     "ListProfiles":{
       "name":"ListProfiles",
@@ -705,7 +724,8 @@
         {"shape":"InternalServiceError"},
         {"shape":"ServiceUnavailableException"},
         {"shape":"InvalidNextTokenException"}
-      ]
+      ],
+      "readonly":true
     },
     "ListSecurityPolicies":{
       "name":"ListSecurityPolicies",
@@ -720,7 +740,8 @@
         {"shape":"InternalServiceError"},
         {"shape":"ServiceUnavailableException"},
         {"shape":"InvalidNextTokenException"}
-      ]
+      ],
+      "readonly":true
     },
     "ListServers":{
       "name":"ListServers",
@@ -735,7 +756,8 @@
         {"shape":"InternalServiceError"},
         {"shape":"ServiceUnavailableException"},
         {"shape":"InvalidNextTokenException"}
-      ]
+      ],
+      "readonly":true
     },
     "ListTagsForResource":{
       "name":"ListTagsForResource",
@@ -750,7 +772,8 @@
         {"shape":"InternalServiceError"},
         {"shape":"ServiceUnavailableException"},
         {"shape":"InvalidNextTokenException"}
-      ]
+      ],
+      "readonly":true
     },
     "ListUsers":{
       "name":"ListUsers",
@@ -766,7 +789,8 @@
         {"shape":"InternalServiceError"},
         {"shape":"ServiceUnavailableException"},
         {"shape":"InvalidNextTokenException"}
-      ]
+      ],
+      "readonly":true
     },
     "ListWebApps":{
       "name":"ListWebApps",
@@ -781,7 +805,8 @@
         {"shape":"ThrottlingException"},
         {"shape":"InternalServiceError"},
         {"shape":"InvalidNextTokenException"}
-      ]
+      ],
+      "readonly":true
     },
     "ListWorkflows":{
       "name":"ListWorkflows",
@@ -796,7 +821,8 @@
         {"shape":"InternalServiceError"},
         {"shape":"ServiceUnavailableException"},
         {"shape":"InvalidNextTokenException"}
-      ]
+      ],
+      "readonly":true
     },
     "SendWorkflowStepState":{
       "name":"SendWorkflowStepState",
@@ -839,6 +865,38 @@
       },
       "input":{"shape":"StartFileTransferRequest"},
       "output":{"shape":"StartFileTransferResponse"},
+      "errors":[
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InvalidRequestException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"InternalServiceError"},
+        {"shape":"ServiceUnavailableException"}
+      ]
+    },
+    "StartRemoteDelete":{
+      "name":"StartRemoteDelete",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"StartRemoteDeleteRequest"},
+      "output":{"shape":"StartRemoteDeleteResponse"},
+      "errors":[
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InvalidRequestException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"InternalServiceError"},
+        {"shape":"ServiceUnavailableException"}
+      ]
+    },
+    "StartRemoteMove":{
+      "name":"StartRemoteMove",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"StartRemoteMoveRequest"},
+      "output":{"shape":"StartRemoteMoveResponse"},
       "errors":[
         {"shape":"ResourceNotFoundException"},
         {"shape":"InvalidRequestException"},
@@ -1136,6 +1194,19 @@
       "min":20,
       "pattern":"arn:\\S+"
     },
+    "As2AsyncMdnConnectorConfig":{
+      "type":"structure",
+      "members":{
+        "Url":{"shape":"Url"},
+        "ServerIds":{"shape":"As2AsyncMdnServerIds"}
+      }
+    },
+    "As2AsyncMdnServerIds":{
+      "type":"list",
+      "member":{"shape":"ServerId"},
+      "max":10,
+      "min":1
+    },
     "As2ConnectorConfig":{
       "type":"structure",
       "members":{
@@ -1148,7 +1219,8 @@
         "MdnSigningAlgorithm":{"shape":"MdnSigningAlg"},
         "MdnResponse":{"shape":"MdnResponse"},
         "BasicAuthSecretId":{"shape":"As2ConnectorSecretId"},
-        "PreserveContentType":{"shape":"PreserveContentType"}
+        "PreserveContentType":{"shape":"PreserveContentType"},
+        "AsyncMdnConfig":{"shape":"As2AsyncMdnConnectorConfig"}
       }
     },
     "As2ConnectorSecretId":{
@@ -1160,7 +1232,7 @@
       "type":"string",
       "max":128,
       "min":1,
-      "pattern":"[\\p{Print}\\s]*"
+      "pattern":"[\\u0020-\\u007E\\s]*"
     },
     "As2Transport":{
       "type":"string",
@@ -1183,7 +1255,7 @@
       "type":"string",
       "max":48,
       "min":0,
-      "pattern":"[\\p{XDigit}{2}:?]*"
+      "pattern":"[0-9a-fA-F{}:?]*"
     },
     "Certificate":{
       "type":"string",
@@ -1194,14 +1266,14 @@
       "type":"string",
       "max":16384,
       "min":1,
-      "pattern":"[\\u0009\\u000A\\u000D\\u0020-\\u00FF]*",
+      "pattern":"[\\t\\n\\r\\u0020-\\u00FF]+",
       "sensitive":true
     },
     "CertificateChainType":{
       "type":"string",
       "max":2097152,
       "min":1,
-      "pattern":"[\\u0009\\u000A\\u000D\\u0020-\\u00FF]*",
+      "pattern":"[\\t\\n\\r\\u0020-\\u00FF]+",
       "sensitive":true
     },
     "CertificateId":{
@@ -1252,6 +1324,21 @@
       },
       "exception":true
     },
+    "ConnectorEgressConfig":{
+      "type":"structure",
+      "members":{
+        "VpcLattice":{"shape":"ConnectorVpcLatticeEgressConfig"}
+      },
+      "union":true
+    },
+    "ConnectorEgressType":{
+      "type":"string",
+      "enum":[
+        "SERVICE_MANAGED",
+        "VPC_LATTICE"
+      ]
+    },
+    "ConnectorErrorMessage":{"type":"string"},
     "ConnectorFileTransferResult":{
       "type":"structure",
       "required":[
@@ -1282,6 +1369,29 @@
       "max":100,
       "min":0,
       "pattern":"TransferSFTPConnectorSecurityPolicy-[A-Za-z0-9-]+"
+    },
+    "ConnectorStatus":{
+      "type":"string",
+      "enum":[
+        "ACTIVE",
+        "ERRORED",
+        "PENDING"
+      ]
+    },
+    "ConnectorVpcLatticeEgressConfig":{
+      "type":"structure",
+      "required":["ResourceConfigurationArn"],
+      "members":{
+        "ResourceConfigurationArn":{"shape":"VpcLatticeResourceConfigurationArn"},
+        "PortNumber":{"shape":"SftpPort"}
+      }
+    },
+    "ConnectorsIpAddressType":{
+      "type":"string",
+      "enum":[
+        "IPV4",
+        "DUALSTACK"
+      ]
     },
     "CopyStepDetails":{
       "type":"structure",
@@ -1352,10 +1462,7 @@
     },
     "CreateConnectorRequest":{
       "type":"structure",
-      "required":[
-        "Url",
-        "AccessRole"
-      ],
+      "required":["AccessRole"],
       "members":{
         "Url":{"shape":"Url"},
         "As2Config":{"shape":"As2ConnectorConfig"},
@@ -1363,7 +1470,9 @@
         "LoggingRole":{"shape":"Role"},
         "Tags":{"shape":"Tags"},
         "SftpConfig":{"shape":"SftpConnectorConfig"},
-        "SecurityPolicyName":{"shape":"ConnectorSecurityPolicyName"}
+        "SecurityPolicyName":{"shape":"ConnectorSecurityPolicyName"},
+        "EgressConfig":{"shape":"ConnectorEgressConfig"},
+        "IpAddressType":{"shape":"ConnectorsIpAddressType"}
       }
     },
     "CreateConnectorResponse":{
@@ -1412,7 +1521,8 @@
         "Tags":{"shape":"Tags"},
         "WorkflowDetails":{"shape":"WorkflowDetails"},
         "StructuredLogDestinations":{"shape":"StructuredLogDestinations"},
-        "S3StorageOptions":{"shape":"S3StorageOptions"}
+        "S3StorageOptions":{"shape":"S3StorageOptions"},
+        "IpAddressType":{"shape":"IpAddressType"}
       }
     },
     "CreateServerResponse":{
@@ -1460,7 +1570,9 @@
         "IdentityProviderDetails":{"shape":"WebAppIdentityProviderDetails"},
         "AccessEndpoint":{"shape":"WebAppAccessEndpoint"},
         "WebAppUnits":{"shape":"WebAppUnits"},
-        "Tags":{"shape":"Tags"}
+        "Tags":{"shape":"Tags"},
+        "WebAppEndpointPolicy":{"shape":"WebAppEndpointPolicy"},
+        "EndpointDetails":{"shape":"WebAppEndpointDetails"}
       }
     },
     "CreateWebAppResponse":{
@@ -1503,6 +1615,32 @@
         "StatusFilesDirectory":{"shape":"HomeDirectory"},
         "TemporaryFilesDirectory":{"shape":"HomeDirectory"}
       }
+    },
+    "CustomHttpHeader":{
+      "type":"structure",
+      "members":{
+        "Key":{"shape":"CustomHttpHeaderKeyType"},
+        "Value":{"shape":"CustomHttpHeaderValueType"}
+      },
+      "sensitive":true
+    },
+    "CustomHttpHeaderKeyType":{
+      "type":"string",
+      "max":64,
+      "min":1,
+      "pattern":"[a-zA-Z0-9-]+",
+      "sensitive":true
+    },
+    "CustomHttpHeaderValueType":{
+      "type":"string",
+      "max":256,
+      "min":0,
+      "pattern":"[a-zA-Z0-9 +\\-./:=@_]*",
+      "sensitive":true
+    },
+    "CustomHttpHeaders":{
+      "type":"list",
+      "member":{"shape":"CustomHttpHeader"}
     },
     "CustomStepDetails":{
       "type":"structure",
@@ -1593,6 +1731,12 @@
         "ServerId":{"shape":"ServerId"},
         "HostKeyId":{"shape":"HostKeyId"}
       }
+    },
+    "DeleteId":{
+      "type":"string",
+      "max":512,
+      "min":1,
+      "pattern":"[0-9a-zA-Z./-]+"
     },
     "DeleteProfileRequest":{
       "type":"structure",
@@ -1927,7 +2071,11 @@
     },
     "DescribedConnector":{
       "type":"structure",
-      "required":["Arn"],
+      "required":[
+        "Arn",
+        "EgressType",
+        "Status"
+      ],
       "members":{
         "Arn":{"shape":"Arn"},
         "ConnectorId":{"shape":"ConnectorId"},
@@ -1938,7 +2086,27 @@
         "Tags":{"shape":"Tags"},
         "SftpConfig":{"shape":"SftpConnectorConfig"},
         "ServiceManagedEgressIpAddresses":{"shape":"ServiceManagedEgressIpAddresses"},
-        "SecurityPolicyName":{"shape":"ConnectorSecurityPolicyName"}
+        "SecurityPolicyName":{"shape":"ConnectorSecurityPolicyName"},
+        "EgressConfig":{"shape":"DescribedConnectorEgressConfig"},
+        "EgressType":{"shape":"ConnectorEgressType"},
+        "ErrorMessage":{"shape":"ConnectorErrorMessage"},
+        "Status":{"shape":"ConnectorStatus"},
+        "IpAddressType":{"shape":"ConnectorsIpAddressType"}
+      }
+    },
+    "DescribedConnectorEgressConfig":{
+      "type":"structure",
+      "members":{
+        "VpcLattice":{"shape":"DescribedConnectorVpcLatticeEgressConfig"}
+      },
+      "union":true
+    },
+    "DescribedConnectorVpcLatticeEgressConfig":{
+      "type":"structure",
+      "required":["ResourceConfigurationArn"],
+      "members":{
+        "ResourceConfigurationArn":{"shape":"VpcLatticeResourceConfigurationArn"},
+        "PortNumber":{"shape":"SftpPort"}
       }
     },
     "DescribedExecution":{
@@ -2027,7 +2195,8 @@
         "WorkflowDetails":{"shape":"WorkflowDetails"},
         "StructuredLogDestinations":{"shape":"StructuredLogDestinations"},
         "S3StorageOptions":{"shape":"S3StorageOptions"},
-        "As2ServiceManagedEgressIpAddresses":{"shape":"ServiceManagedEgressIpAddresses"}
+        "As2ServiceManagedEgressIpAddresses":{"shape":"ServiceManagedEgressIpAddresses"},
+        "IpAddressType":{"shape":"IpAddressType"}
       }
     },
     "DescribedUser":{
@@ -2059,7 +2228,10 @@
         "AccessEndpoint":{"shape":"WebAppAccessEndpoint"},
         "WebAppEndpoint":{"shape":"WebAppEndpoint"},
         "WebAppUnits":{"shape":"WebAppUnits"},
-        "Tags":{"shape":"Tags"}
+        "Tags":{"shape":"Tags"},
+        "WebAppEndpointPolicy":{"shape":"WebAppEndpointPolicy"},
+        "EndpointType":{"shape":"WebAppEndpointType"},
+        "DescribedEndpointDetails":{"shape":"DescribedWebAppEndpointDetails"}
       }
     },
     "DescribedWebAppCustomization":{
@@ -2076,12 +2248,27 @@
         "FaviconFile":{"shape":"WebAppFaviconFile"}
       }
     },
+    "DescribedWebAppEndpointDetails":{
+      "type":"structure",
+      "members":{
+        "Vpc":{"shape":"DescribedWebAppVpcConfig"}
+      },
+      "union":true
+    },
     "DescribedWebAppIdentityProviderDetails":{
       "type":"structure",
       "members":{
         "IdentityCenterConfig":{"shape":"DescribedIdentityCenterConfig"}
       },
       "union":true
+    },
+    "DescribedWebAppVpcConfig":{
+      "type":"structure",
+      "members":{
+        "SubnetIds":{"shape":"SubnetIds"},
+        "VpcId":{"shape":"VpcId"},
+        "VpcEndpointId":{"shape":"VpcEndpointId"}
+      }
     },
     "DescribedWorkflow":{
       "type":"structure",
@@ -2099,7 +2286,7 @@
       "type":"string",
       "max":200,
       "min":1,
-      "pattern":"[\\p{Graph}]+"
+      "pattern":"[\\u0021-\\u007E]+"
     },
     "DirectoryId":{
       "type":"string",
@@ -2470,6 +2657,13 @@
         "Message":{"shape":"Message"}
       },
       "exception":true
+    },
+    "IpAddressType":{
+      "type":"string",
+      "enum":[
+        "IPV4",
+        "DUALSTACK"
+      ]
     },
     "ListAccessesRequest":{
       "type":"structure",
@@ -2860,7 +3054,8 @@
         "Arn":{"shape":"Arn"},
         "WebAppId":{"shape":"WebAppId"},
         "AccessEndpoint":{"shape":"WebAppAccessEndpoint"},
-        "WebAppEndpoint":{"shape":"WebAppEndpoint"}
+        "WebAppEndpoint":{"shape":"WebAppEndpoint"},
+        "EndpointType":{"shape":"WebAppEndpointType"}
       }
     },
     "ListedWebApps":{
@@ -2917,10 +3112,14 @@
         "DIRECTORY"
       ]
     },
+    "MaxConcurrentConnections":{
+      "type":"integer",
+      "box":true,
+      "min":1
+    },
     "MaxItems":{
       "type":"integer",
       "box":true,
-      "max":10000,
       "min":1
     },
     "MaxResults":{
@@ -2933,7 +3132,8 @@
       "type":"string",
       "enum":[
         "SYNC",
-        "NONE"
+        "NONE",
+        "ASYNC"
       ]
     },
     "MdnSigningAlg":{
@@ -2952,7 +3152,14 @@
       "type":"string",
       "max":1024,
       "min":1,
-      "pattern":"[\\p{Print}\\p{Blank}]+"
+      "pattern":"[\\u0020-\\u007E\\t]+",
+      "sensitive":true
+    },
+    "MoveId":{
+      "type":"string",
+      "max":512,
+      "min":1,
+      "pattern":"[0-9a-zA-Z./-]+"
     },
     "NextToken":{
       "type":"string",
@@ -3048,7 +3255,7 @@
       "type":"string",
       "max":16384,
       "min":1,
-      "pattern":"[\\u0009\\u000A\\u000D\\u0020-\\u00FF]*",
+      "pattern":"[\\t\\n\\r\\u0020-\\u00FF]+",
       "sensitive":true
     },
     "ProfileId":{
@@ -3278,8 +3485,7 @@
     },
     "SendWorkflowStepStateResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "ServerId":{
       "type":"string",
@@ -3337,8 +3543,20 @@
       "type":"structure",
       "members":{
         "UserSecretId":{"shape":"SecretId"},
-        "TrustedHostKeys":{"shape":"SftpConnectorTrustedHostKeyList"}
+        "TrustedHostKeys":{"shape":"SftpConnectorTrustedHostKeyList"},
+        "MaxConcurrentConnections":{"shape":"MaxConcurrentConnections"}
       }
+    },
+    "SftpConnectorConnectionDetails":{
+      "type":"structure",
+      "members":{
+        "HostKey":{"shape":"SftpConnectorHostKey"}
+      }
+    },
+    "SftpConnectorHostKey":{
+      "type":"string",
+      "max":2048,
+      "min":1
     },
     "SftpConnectorTrustedHostKey":{
       "type":"string",
@@ -3349,6 +3567,12 @@
       "type":"list",
       "member":{"shape":"SftpConnectorTrustedHostKey"},
       "max":10,
+      "min":0
+    },
+    "SftpPort":{
+      "type":"integer",
+      "box":true,
+      "max":65535,
       "min":1
     },
     "SigningAlg":{
@@ -3371,7 +3595,7 @@
       "type":"string",
       "max":32,
       "min":0,
-      "pattern":"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}"
+      "pattern":"[0-9a-fA-F\\.\\:]+"
     },
     "SshPublicKey":{
       "type":"structure",
@@ -3441,7 +3665,8 @@
         "SendFilePaths":{"shape":"FilePaths"},
         "RetrieveFilePaths":{"shape":"FilePaths"},
         "LocalDirectoryPath":{"shape":"FilePath"},
-        "RemoteDirectoryPath":{"shape":"FilePath"}
+        "RemoteDirectoryPath":{"shape":"FilePath"},
+        "CustomHttpHeaders":{"shape":"CustomHttpHeaders"}
       }
     },
     "StartFileTransferResponse":{
@@ -3449,6 +3674,44 @@
       "required":["TransferId"],
       "members":{
         "TransferId":{"shape":"TransferId"}
+      }
+    },
+    "StartRemoteDeleteRequest":{
+      "type":"structure",
+      "required":[
+        "ConnectorId",
+        "DeletePath"
+      ],
+      "members":{
+        "ConnectorId":{"shape":"ConnectorId"},
+        "DeletePath":{"shape":"FilePath"}
+      }
+    },
+    "StartRemoteDeleteResponse":{
+      "type":"structure",
+      "required":["DeleteId"],
+      "members":{
+        "DeleteId":{"shape":"DeleteId"}
+      }
+    },
+    "StartRemoteMoveRequest":{
+      "type":"structure",
+      "required":[
+        "ConnectorId",
+        "SourcePath",
+        "TargetPath"
+      ],
+      "members":{
+        "ConnectorId":{"shape":"ConnectorId"},
+        "SourcePath":{"shape":"FilePath"},
+        "TargetPath":{"shape":"FilePath"}
+      }
+    },
+    "StartRemoteMoveResponse":{
+      "type":"structure",
+      "required":["MoveId"],
+      "members":{
+        "MoveId":{"shape":"MoveId"}
       }
     },
     "StartServerRequest":{
@@ -3558,7 +3821,8 @@
       "members":{
         "ConnectorId":{"shape":"ConnectorId"},
         "Status":{"shape":"Status"},
-        "StatusMessage":{"shape":"Message"}
+        "StatusMessage":{"shape":"Message"},
+        "SftpConnectionDetails":{"shape":"SftpConnectorConnectionDetails"}
       }
     },
     "TestIdentityProviderRequest":{
@@ -3701,6 +3965,13 @@
         "CertificateId":{"shape":"CertificateId"}
       }
     },
+    "UpdateConnectorEgressConfig":{
+      "type":"structure",
+      "members":{
+        "VpcLattice":{"shape":"UpdateConnectorVpcLatticeEgressConfig"}
+      },
+      "union":true
+    },
     "UpdateConnectorRequest":{
       "type":"structure",
       "required":["ConnectorId"],
@@ -3711,7 +3982,9 @@
         "AccessRole":{"shape":"Role"},
         "LoggingRole":{"shape":"Role"},
         "SftpConfig":{"shape":"SftpConnectorConfig"},
-        "SecurityPolicyName":{"shape":"ConnectorSecurityPolicyName"}
+        "SecurityPolicyName":{"shape":"ConnectorSecurityPolicyName"},
+        "EgressConfig":{"shape":"UpdateConnectorEgressConfig"},
+        "IpAddressType":{"shape":"ConnectorsIpAddressType"}
       }
     },
     "UpdateConnectorResponse":{
@@ -3719,6 +3992,13 @@
       "required":["ConnectorId"],
       "members":{
         "ConnectorId":{"shape":"ConnectorId"}
+      }
+    },
+    "UpdateConnectorVpcLatticeEgressConfig":{
+      "type":"structure",
+      "members":{
+        "ResourceConfigurationArn":{"shape":"VpcLatticeResourceConfigurationArn"},
+        "PortNumber":{"shape":"SftpPort"}
       }
     },
     "UpdateHostKeyRequest":{
@@ -3778,7 +4058,9 @@
         "ServerId":{"shape":"ServerId"},
         "WorkflowDetails":{"shape":"WorkflowDetails"},
         "StructuredLogDestinations":{"shape":"StructuredLogDestinations"},
-        "S3StorageOptions":{"shape":"S3StorageOptions"}
+        "S3StorageOptions":{"shape":"S3StorageOptions"},
+        "IpAddressType":{"shape":"IpAddressType"},
+        "IdentityProviderType":{"shape":"IdentityProviderType"}
       }
     },
     "UpdateServerResponse":{
@@ -3833,6 +4115,13 @@
         "WebAppId":{"shape":"WebAppId"}
       }
     },
+    "UpdateWebAppEndpointDetails":{
+      "type":"structure",
+      "members":{
+        "Vpc":{"shape":"UpdateWebAppVpcConfig"}
+      },
+      "union":true
+    },
     "UpdateWebAppIdentityCenterConfig":{
       "type":"structure",
       "members":{
@@ -3853,7 +4142,8 @@
         "WebAppId":{"shape":"WebAppId"},
         "IdentityProviderDetails":{"shape":"UpdateWebAppIdentityProviderDetails"},
         "AccessEndpoint":{"shape":"WebAppAccessEndpoint"},
-        "WebAppUnits":{"shape":"WebAppUnits"}
+        "WebAppUnits":{"shape":"WebAppUnits"},
+        "EndpointDetails":{"shape":"UpdateWebAppEndpointDetails"}
       }
     },
     "UpdateWebAppResponse":{
@@ -3861,6 +4151,13 @@
       "required":["WebAppId"],
       "members":{
         "WebAppId":{"shape":"WebAppId"}
+      }
+    },
+    "UpdateWebAppVpcConfig":{
+      "type":"structure",
+      "members":{
+        "SubnetIds":{"shape":"SubnetIds"},
+        "IpAddressType":{"shape":"WebAppVpcEndpointIpAddressType"}
       }
     },
     "Url":{
@@ -3903,6 +4200,12 @@
       "pattern":"vpce-[0-9a-f]{17}"
     },
     "VpcId":{"type":"string"},
+    "VpcLatticeResourceConfigurationArn":{
+      "type":"string",
+      "max":2048,
+      "min":1,
+      "pattern":"arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:resourceconfiguration/rcfg-[0-9a-z]{17}"
+    },
     "WebAppAccessEndpoint":{
       "type":"string",
       "max":1024,
@@ -3912,6 +4215,27 @@
       "type":"string",
       "max":1024,
       "min":1
+    },
+    "WebAppEndpointDetails":{
+      "type":"structure",
+      "members":{
+        "Vpc":{"shape":"WebAppVpcConfig"}
+      },
+      "union":true
+    },
+    "WebAppEndpointPolicy":{
+      "type":"string",
+      "enum":[
+        "FIPS",
+        "STANDARD"
+      ]
+    },
+    "WebAppEndpointType":{
+      "type":"string",
+      "enum":[
+        "PUBLIC",
+        "VPC"
+      ]
     },
     "WebAppFaviconFile":{
       "type":"blob",
@@ -3954,6 +4278,22 @@
         "Provisioned":{"shape":"WebAppUnitCount"}
       },
       "union":true
+    },
+    "WebAppVpcConfig":{
+      "type":"structure",
+      "members":{
+        "SubnetIds":{"shape":"SubnetIds"},
+        "VpcId":{"shape":"VpcId"},
+        "SecurityGroupIds":{"shape":"SecurityGroupIds"},
+        "IpAddressType":{"shape":"WebAppVpcEndpointIpAddressType"}
+      }
+    },
+    "WebAppVpcEndpointIpAddressType":{
+      "type":"string",
+      "enum":[
+        "IPV4",
+        "DUALSTACK"
+      ]
     },
     "WorkflowDescription":{
       "type":"string",

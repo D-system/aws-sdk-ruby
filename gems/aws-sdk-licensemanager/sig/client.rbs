@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -119,7 +120,7 @@ module Aws
                                          name: ::String,
                                          value: ::String?,
                                          unit: ("Count" | "None" | "Seconds" | "Microseconds" | "Milliseconds" | "Bytes" | "Kilobytes" | "Megabytes" | "Gigabytes" | "Terabytes" | "Bits" | "Kilobits" | "Megabits" | "Gigabits" | "Terabits" | "Percent" | "Bytes/Second" | "Kilobytes/Second" | "Megabytes/Second" | "Gigabytes/Second" | "Terabytes/Second" | "Bits/Second" | "Kilobits/Second" | "Megabits/Second" | "Gigabits/Second" | "Terabits/Second" | "Count/Second")
-                                       },
+                                       }
                                      ],
                                      digital_signature_method: ("JWT_PS384"),
                                      ?node_id: ::String,
@@ -127,7 +128,7 @@ module Aws
                                        {
                                          name: ::String?,
                                          value: ::String?
-                                       },
+                                       }
                                      ],
                                      client_token: ::String
                                    ) -> _CheckoutBorrowLicenseResponseSuccess
@@ -154,7 +155,7 @@ module Aws
                                   name: ::String,
                                   value: ::String?,
                                   unit: ("Count" | "None" | "Seconds" | "Microseconds" | "Milliseconds" | "Bytes" | "Kilobytes" | "Megabytes" | "Gigabytes" | "Terabytes" | "Bits" | "Kilobits" | "Megabits" | "Gigabits" | "Terabits" | "Percent" | "Bytes/Second" | "Kilobytes/Second" | "Megabytes/Second" | "Gigabytes/Second" | "Terabytes/Second" | "Bits/Second" | "Kilobits/Second" | "Megabits/Second" | "Gigabits/Second" | "Terabits/Second" | "Count/Second")
-                                },
+                                }
                               ],
                               client_token: ::String,
                               ?beneficiary: ::String,
@@ -175,7 +176,13 @@ module Aws
                           license_arn: ::String,
                           principals: Array[::String],
                           home_region: ::String,
-                          allowed_operations: Array[("CreateGrant" | "CheckoutLicense" | "CheckoutBorrowLicense" | "CheckInLicense" | "ExtendConsumptionLicense" | "ListPurchasedLicenses" | "CreateToken")]
+                          allowed_operations: Array[("CreateGrant" | "CheckoutLicense" | "CheckoutBorrowLicense" | "CheckInLicense" | "ExtendConsumptionLicense" | "ListPurchasedLicenses" | "CreateToken")],
+                          ?tags: Array[
+                            {
+                              key: ::String?,
+                              value: ::String?
+                            }
+                          ]
                         ) -> _CreateGrantResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateGrantResponseSuccess
 
@@ -221,35 +228,77 @@ module Aws
                               end: ::String?
                             },
                             entitlements: Array[
-                              {
-                                name: ::String,
-                                value: ::String?,
-                                max_count: ::Integer?,
-                                overage: bool?,
-                                unit: ("Count" | "None" | "Seconds" | "Microseconds" | "Milliseconds" | "Bytes" | "Kilobytes" | "Megabytes" | "Gigabytes" | "Terabytes" | "Bits" | "Kilobits" | "Megabits" | "Gigabits" | "Terabits" | "Percent" | "Bytes/Second" | "Kilobytes/Second" | "Megabytes/Second" | "Gigabytes/Second" | "Terabytes/Second" | "Bits/Second" | "Kilobits/Second" | "Megabits/Second" | "Gigabits/Second" | "Terabits/Second" | "Count/Second"),
-                                allow_check_in: bool?
-                              },
+                              Params::entitlement
                             ],
                             beneficiary: ::String,
-                            consumption_configuration: {
-                              renew_type: ("None" | "Weekly" | "Monthly")?,
-                              provisional_configuration: {
-                                max_time_to_live_in_minutes: ::Integer
-                              }?,
-                              borrow_configuration: {
-                                allow_early_check_in: bool,
-                                max_time_to_live_in_minutes: ::Integer
-                              }?
-                            },
+                            consumption_configuration: Params::consumption_configuration,
                             ?license_metadata: Array[
                               {
                                 name: ::String?,
                                 value: ::String?
-                              },
+                              }
                             ],
-                            client_token: ::String
+                            client_token: ::String,
+                            ?tags: Array[
+                              {
+                                key: ::String?,
+                                value: ::String?
+                              }
+                            ]
                           ) -> _CreateLicenseResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateLicenseResponseSuccess
+
+      interface _CreateLicenseAssetGroupResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateLicenseAssetGroupResponse]
+        def license_asset_group_arn: () -> ::String
+        def status: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/LicenseManager/Client.html#create_license_asset_group-instance_method
+      def create_license_asset_group: (
+                                        name: ::String,
+                                        ?description: ::String,
+                                        license_asset_group_configurations: Array[
+                                          {
+                                            usage_dimension: ::String?
+                                          }
+                                        ],
+                                        associated_license_asset_ruleset_arns: Array[::String],
+                                        ?properties: Array[
+                                          {
+                                            key: ::String,
+                                            value: ::String
+                                          }
+                                        ],
+                                        ?tags: Array[
+                                          {
+                                            key: ::String?,
+                                            value: ::String?
+                                          }
+                                        ],
+                                        client_token: ::String
+                                      ) -> _CreateLicenseAssetGroupResponseSuccess
+                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateLicenseAssetGroupResponseSuccess
+
+      interface _CreateLicenseAssetRulesetResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateLicenseAssetRulesetResponse]
+        def license_asset_ruleset_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/LicenseManager/Client.html#create_license_asset_ruleset-instance_method
+      def create_license_asset_ruleset: (
+                                          name: ::String,
+                                          ?description: ::String,
+                                          rules: Array[
+                                            Params::license_asset_rule
+                                          ],
+                                          ?tags: Array[
+                                            {
+                                              key: ::String?,
+                                              value: ::String?
+                                            }
+                                          ],
+                                          client_token: ::String
+                                        ) -> _CreateLicenseAssetRulesetResponseSuccess
+                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateLicenseAssetRulesetResponseSuccess
 
       interface _CreateLicenseConfigurationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateLicenseConfigurationResponse]
@@ -267,21 +316,13 @@ module Aws
                                             {
                                               key: ::String?,
                                               value: ::String?
-                                            },
+                                            }
                                           ],
                                           ?disassociate_when_not_found: bool,
                                           ?product_information_list: Array[
-                                            {
-                                              resource_type: ::String,
-                                              product_information_filter_list: Array[
-                                                {
-                                                  product_information_filter_name: ::String,
-                                                  product_information_filter_value: Array[::String]?,
-                                                  product_information_filter_comparator: ::String
-                                                },
-                                              ]
-                                            },
-                                          ]
+                                            Params::product_information
+                                          ],
+                                          ?license_expiry: ::Integer
                                         ) -> _CreateLicenseConfigurationResponseSuccess
                                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateLicenseConfigurationResponseSuccess
 
@@ -293,10 +334,22 @@ module Aws
       def create_license_conversion_task_for_resource: (
                                                          resource_arn: ::String,
                                                          source_license_context: {
-                                                           usage_operation: ::String?
+                                                           usage_operation: ::String?,
+                                                           product_codes: Array[
+                                                             {
+                                                               product_code_id: ::String,
+                                                               product_code_type: ("marketplace")
+                                                             }
+                                                           ]?
                                                          },
                                                          destination_license_context: {
-                                                           usage_operation: ::String?
+                                                           usage_operation: ::String?,
+                                                           product_codes: Array[
+                                                             {
+                                                               product_code_id: ::String,
+                                                               product_code_type: ("marketplace")
+                                                             }
+                                                           ]?
                                                          }
                                                        ) -> _CreateLicenseConversionTaskForResourceResponseSuccess
                                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateLicenseConversionTaskForResourceResponseSuccess
@@ -308,13 +361,16 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/LicenseManager/Client.html#create_license_manager_report_generator-instance_method
       def create_license_manager_report_generator: (
                                                      report_generator_name: ::String,
-                                                     type: Array[("LicenseConfigurationSummaryReport" | "LicenseConfigurationUsageReport")],
+                                                     type: Array[("LicenseConfigurationSummaryReport" | "LicenseConfigurationUsageReport" | "LicenseAssetGroupUsageReport")],
                                                      report_context: {
-                                                       license_configuration_arns: Array[::String]
+                                                       license_configuration_arns: Array[::String]?,
+                                                       license_asset_group_arns: Array[::String]?,
+                                                       report_start_date: ::Time?,
+                                                       report_end_date: ::Time?
                                                      },
                                                      report_frequency: {
                                                        value: ::Integer?,
-                                                       period: ("DAY" | "WEEK" | "MONTH")?
+                                                       period: ("DAY" | "WEEK" | "MONTH" | "ONE_TIME")?
                                                      },
                                                      client_token: ::String,
                                                      ?description: ::String,
@@ -322,7 +378,7 @@ module Aws
                                                        {
                                                          key: ::String?,
                                                          value: ::String?
-                                                       },
+                                                       }
                                                      ]
                                                    ) -> _CreateLicenseManagerReportGeneratorResponseSuccess
                                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateLicenseManagerReportGeneratorResponseSuccess
@@ -351,31 +407,16 @@ module Aws
                                       {
                                         name: ::String?,
                                         value: ::String?
-                                      },
+                                      }
                                     ],
                                     entitlements: Array[
-                                      {
-                                        name: ::String,
-                                        value: ::String?,
-                                        max_count: ::Integer?,
-                                        overage: bool?,
-                                        unit: ("Count" | "None" | "Seconds" | "Microseconds" | "Milliseconds" | "Bytes" | "Kilobytes" | "Megabytes" | "Gigabytes" | "Terabytes" | "Bits" | "Kilobits" | "Megabits" | "Gigabits" | "Terabits" | "Percent" | "Bytes/Second" | "Kilobytes/Second" | "Megabytes/Second" | "Gigabytes/Second" | "Terabytes/Second" | "Bits/Second" | "Kilobits/Second" | "Megabits/Second" | "Gigabits/Second" | "Terabits/Second" | "Count/Second"),
-                                        allow_check_in: bool?
-                                      },
+                                      Params::entitlement
                                     ],
-                                    consumption_configuration: {
-                                      renew_type: ("None" | "Weekly" | "Monthly")?,
-                                      provisional_configuration: {
-                                        max_time_to_live_in_minutes: ::Integer
-                                      }?,
-                                      borrow_configuration: {
-                                        allow_early_check_in: bool,
-                                        max_time_to_live_in_minutes: ::Integer
-                                      }?
-                                    },
+                                    consumption_configuration: Params::consumption_configuration,
                                     status: ("AVAILABLE" | "PENDING_AVAILABLE" | "DEACTIVATED" | "SUSPENDED" | "EXPIRED" | "PENDING_DELETE" | "DELETED"),
                                     client_token: ::String,
-                                    ?source_version: ::String
+                                    ?source_version: ::String,
+                                    ?reset_usage: bool
                                   ) -> _CreateLicenseVersionResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateLicenseVersionResponseSuccess
 
@@ -420,6 +461,25 @@ module Aws
                             source_version: ::String
                           ) -> _DeleteLicenseResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteLicenseResponseSuccess
+
+      interface _DeleteLicenseAssetGroupResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteLicenseAssetGroupResponse]
+        def status: () -> ("ACTIVE" | "DISABLED" | "DELETED")
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/LicenseManager/Client.html#delete_license_asset_group-instance_method
+      def delete_license_asset_group: (
+                                        license_asset_group_arn: ::String
+                                      ) -> _DeleteLicenseAssetGroupResponseSuccess
+                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteLicenseAssetGroupResponseSuccess
+
+      interface _DeleteLicenseAssetRulesetResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteLicenseAssetRulesetResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/LicenseManager/Client.html#delete_license_asset_ruleset-instance_method
+      def delete_license_asset_ruleset: (
+                                          license_asset_ruleset_arn: ::String
+                                        ) -> _DeleteLicenseAssetRulesetResponseSuccess
+                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteLicenseAssetRulesetResponseSuccess
 
       interface _DeleteLicenseConfigurationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DeleteLicenseConfigurationResponse]
@@ -493,6 +553,26 @@ module Aws
                        ) -> _GetLicenseResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetLicenseResponseSuccess
 
+      interface _GetLicenseAssetGroupResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetLicenseAssetGroupResponse]
+        def license_asset_group: () -> Types::LicenseAssetGroup
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/LicenseManager/Client.html#get_license_asset_group-instance_method
+      def get_license_asset_group: (
+                                     license_asset_group_arn: ::String
+                                   ) -> _GetLicenseAssetGroupResponseSuccess
+                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetLicenseAssetGroupResponseSuccess
+
+      interface _GetLicenseAssetRulesetResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetLicenseAssetRulesetResponse]
+        def license_asset_ruleset: () -> Types::LicenseAssetRuleset
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/LicenseManager/Client.html#get_license_asset_ruleset-instance_method
+      def get_license_asset_ruleset: (
+                                       license_asset_ruleset_arn: ::String
+                                     ) -> _GetLicenseAssetRulesetResponseSuccess
+                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetLicenseAssetRulesetResponseSuccess
+
       interface _GetLicenseConfigurationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetLicenseConfigurationResponse]
         def license_configuration_id: () -> ::String
@@ -512,6 +592,7 @@ module Aws
         def product_information_list: () -> ::Array[Types::ProductInformation]
         def automated_discovery_information: () -> Types::AutomatedDiscoveryInformation
         def disassociate_when_not_found: () -> bool
+        def license_expiry: () -> ::Integer
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/LicenseManager/Client.html#get_license_configuration-instance_method
       def get_license_configuration: (
@@ -564,11 +645,28 @@ module Aws
         def organization_configuration: () -> Types::OrganizationConfiguration
         def enable_cross_accounts_discovery: () -> bool
         def license_manager_resource_share_arn: () -> ::String
+        def cross_region_discovery_home_region: () -> ::String
+        def cross_region_discovery_source_regions: () -> ::Array[::String]
+        def service_status: () -> Types::ServiceStatus
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/LicenseManager/Client.html#get_service_settings-instance_method
       def get_service_settings: (
                                 ) -> _GetServiceSettingsResponseSuccess
                               | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetServiceSettingsResponseSuccess
+
+      interface _ListAssetsForLicenseAssetGroupResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListAssetsForLicenseAssetGroupResponse]
+        def assets: () -> ::Array[Types::Asset]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/LicenseManager/Client.html#list_assets_for_license_asset_group-instance_method
+      def list_assets_for_license_asset_group: (
+                                                 license_asset_group_arn: ::String,
+                                                 asset_type: ::String,
+                                                 ?max_results: ::Integer,
+                                                 ?next_token: ::String
+                                               ) -> _ListAssetsForLicenseAssetGroupResponseSuccess
+                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListAssetsForLicenseAssetGroupResponseSuccess
 
       interface _ListAssociationsForLicenseConfigurationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListAssociationsForLicenseConfigurationResponse]
@@ -595,7 +693,7 @@ module Aws
                                        {
                                          name: ::String?,
                                          values: Array[::String]?
-                                       },
+                                       }
                                      ],
                                      ?next_token: ::String,
                                      ?max_results: ::Integer
@@ -615,6 +713,43 @@ module Aws
                                                               ) -> _ListFailuresForLicenseConfigurationOperationsResponseSuccess
                                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListFailuresForLicenseConfigurationOperationsResponseSuccess
 
+      interface _ListLicenseAssetGroupsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListLicenseAssetGroupsResponse]
+        def license_asset_groups: () -> ::Array[Types::LicenseAssetGroup]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/LicenseManager/Client.html#list_license_asset_groups-instance_method
+      def list_license_asset_groups: (
+                                       ?filters: Array[
+                                         {
+                                           name: ::String?,
+                                           values: Array[::String]?
+                                         }
+                                       ],
+                                       ?max_results: ::Integer,
+                                       ?next_token: ::String
+                                     ) -> _ListLicenseAssetGroupsResponseSuccess
+                                   | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListLicenseAssetGroupsResponseSuccess
+
+      interface _ListLicenseAssetRulesetsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListLicenseAssetRulesetsResponse]
+        def license_asset_rulesets: () -> ::Array[Types::LicenseAssetRuleset]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/LicenseManager/Client.html#list_license_asset_rulesets-instance_method
+      def list_license_asset_rulesets: (
+                                         ?filters: Array[
+                                           {
+                                             name: ::String?,
+                                             values: Array[::String]?
+                                           }
+                                         ],
+                                         ?show_aws_managed_license_asset_rulesets: bool,
+                                         ?max_results: ::Integer,
+                                         ?next_token: ::String
+                                       ) -> _ListLicenseAssetRulesetsResponseSuccess
+                                     | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListLicenseAssetRulesetsResponseSuccess
+
       interface _ListLicenseConfigurationsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListLicenseConfigurationsResponse]
         def license_configurations: () -> ::Array[Types::LicenseConfiguration]
@@ -629,10 +764,29 @@ module Aws
                                            {
                                              name: ::String?,
                                              values: Array[::String]?
-                                           },
+                                           }
                                          ]
                                        ) -> _ListLicenseConfigurationsResponseSuccess
                                      | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListLicenseConfigurationsResponseSuccess
+
+      interface _ListLicenseConfigurationsForOrganizationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListLicenseConfigurationsForOrganizationResponse]
+        def license_configurations: () -> ::Array[Types::LicenseConfiguration]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/LicenseManager/Client.html#list_license_configurations_for_organization-instance_method
+      def list_license_configurations_for_organization: (
+                                                          ?license_configuration_arns: Array[::String],
+                                                          ?max_results: ::Integer,
+                                                          ?next_token: ::String,
+                                                          ?filters: Array[
+                                                            {
+                                                              name: ::String?,
+                                                              values: Array[::String]?
+                                                            }
+                                                          ]
+                                                        ) -> _ListLicenseConfigurationsForOrganizationResponseSuccess
+                                                      | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListLicenseConfigurationsForOrganizationResponseSuccess
 
       interface _ListLicenseConversionTasksResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListLicenseConversionTasksResponse]
@@ -647,7 +801,7 @@ module Aws
                                              {
                                                name: ::String?,
                                                values: Array[::String]?
-                                             },
+                                             }
                                            ]
                                          ) -> _ListLicenseConversionTasksResponseSuccess
                                        | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListLicenseConversionTasksResponseSuccess
@@ -663,7 +817,7 @@ module Aws
                                                       {
                                                         name: ::String?,
                                                         values: Array[::String]?
-                                                      },
+                                                      }
                                                     ],
                                                     ?next_token: ::String,
                                                     ?max_results: ::Integer
@@ -708,7 +862,7 @@ module Aws
                              {
                                name: ::String?,
                                values: Array[::String]?
-                             },
+                             }
                            ],
                            ?next_token: ::String,
                            ?max_results: ::Integer
@@ -727,7 +881,7 @@ module Aws
                                     {
                                       name: ::String?,
                                       values: Array[::String]?
-                                    },
+                                    }
                                   ],
                                   ?next_token: ::String,
                                   ?max_results: ::Integer
@@ -746,7 +900,7 @@ module Aws
                                                      {
                                                        name: ::String?,
                                                        values: Array[::String]?
-                                                     },
+                                                     }
                                                    ],
                                                    ?next_token: ::String,
                                                    ?max_results: ::Integer
@@ -765,7 +919,7 @@ module Aws
                                       {
                                         name: ::String?,
                                         values: Array[::String]?
-                                      },
+                                      }
                                     ],
                                     ?next_token: ::String,
                                     ?max_results: ::Integer
@@ -783,7 +937,7 @@ module Aws
                                                        {
                                                          name: ::String?,
                                                          values: Array[::String]?
-                                                       },
+                                                       }
                                                      ],
                                                      ?next_token: ::String,
                                                      ?max_results: ::Integer
@@ -804,7 +958,7 @@ module Aws
                                          name: ::String,
                                          condition: ("EQUALS" | "NOT_EQUALS" | "BEGINS_WITH" | "CONTAINS"),
                                          value: ::String?
-                                       },
+                                       }
                                      ]
                                    ) -> _ListResourceInventoryResponseSuccess
                                  | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListResourceInventoryResponseSuccess
@@ -831,7 +985,7 @@ module Aws
                            {
                              name: ::String?,
                              values: Array[::String]?
-                           },
+                           }
                          ],
                          ?next_token: ::String,
                          ?max_results: ::Integer
@@ -852,7 +1006,7 @@ module Aws
                                                     {
                                                       name: ::String?,
                                                       values: Array[::String]?
-                                                    },
+                                                    }
                                                   ]
                                                 ) -> _ListUsageForLicenseConfigurationResponseSuccess
                                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListUsageForLicenseConfigurationResponseSuccess
@@ -879,7 +1033,7 @@ module Aws
                             {
                               key: ::String?,
                               value: ::String?
-                            },
+                            }
                           ]
                         ) -> _TagResourceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess
@@ -894,6 +1048,49 @@ module Aws
                           ) -> _UntagResourceResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UntagResourceResponseSuccess
 
+      interface _UpdateLicenseAssetGroupResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateLicenseAssetGroupResponse]
+        def license_asset_group_arn: () -> ::String
+        def status: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/LicenseManager/Client.html#update_license_asset_group-instance_method
+      def update_license_asset_group: (
+                                        ?name: ::String,
+                                        ?description: ::String,
+                                        ?license_asset_group_configurations: Array[
+                                          {
+                                            usage_dimension: ::String?
+                                          }
+                                        ],
+                                        associated_license_asset_ruleset_arns: Array[::String],
+                                        ?properties: Array[
+                                          {
+                                            key: ::String,
+                                            value: ::String
+                                          }
+                                        ],
+                                        license_asset_group_arn: ::String,
+                                        ?status: ("ACTIVE" | "DISABLED" | "DELETED"),
+                                        client_token: ::String
+                                      ) -> _UpdateLicenseAssetGroupResponseSuccess
+                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateLicenseAssetGroupResponseSuccess
+
+      interface _UpdateLicenseAssetRulesetResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateLicenseAssetRulesetResponse]
+        def license_asset_ruleset_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/LicenseManager/Client.html#update_license_asset_ruleset-instance_method
+      def update_license_asset_ruleset: (
+                                          ?name: ::String,
+                                          ?description: ::String,
+                                          rules: Array[
+                                            Params::license_asset_rule
+                                          ],
+                                          license_asset_ruleset_arn: ::String,
+                                          client_token: ::String
+                                        ) -> _UpdateLicenseAssetRulesetResponseSuccess
+                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateLicenseAssetRulesetResponseSuccess
+
       interface _UpdateLicenseConfigurationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::UpdateLicenseConfigurationResponse]
       end
@@ -907,18 +1104,10 @@ module Aws
                                           ?name: ::String,
                                           ?description: ::String,
                                           ?product_information_list: Array[
-                                            {
-                                              resource_type: ::String,
-                                              product_information_filter_list: Array[
-                                                {
-                                                  product_information_filter_name: ::String,
-                                                  product_information_filter_value: Array[::String]?,
-                                                  product_information_filter_comparator: ::String
-                                                },
-                                              ]
-                                            },
+                                            Params::product_information
                                           ],
-                                          ?disassociate_when_not_found: bool
+                                          ?disassociate_when_not_found: bool,
+                                          ?license_expiry: ::Integer
                                         ) -> _UpdateLicenseConfigurationResponseSuccess
                                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateLicenseConfigurationResponseSuccess
 
@@ -929,13 +1118,16 @@ module Aws
       def update_license_manager_report_generator: (
                                                      license_manager_report_generator_arn: ::String,
                                                      report_generator_name: ::String,
-                                                     type: Array[("LicenseConfigurationSummaryReport" | "LicenseConfigurationUsageReport")],
+                                                     type: Array[("LicenseConfigurationSummaryReport" | "LicenseConfigurationUsageReport" | "LicenseAssetGroupUsageReport")],
                                                      report_context: {
-                                                       license_configuration_arns: Array[::String]
+                                                       license_configuration_arns: Array[::String]?,
+                                                       license_asset_group_arns: Array[::String]?,
+                                                       report_start_date: ::Time?,
+                                                       report_end_date: ::Time?
                                                      },
                                                      report_frequency: {
                                                        value: ::Integer?,
-                                                       period: ("DAY" | "WEEK" | "MONTH")?
+                                                       period: ("DAY" | "WEEK" | "MONTH" | "ONE_TIME")?
                                                      },
                                                      client_token: ::String,
                                                      ?description: ::String
@@ -952,13 +1144,13 @@ module Aws
                                                           {
                                                             license_configuration_arn: ::String,
                                                             ami_association_scope: ::String?
-                                                          },
+                                                          }
                                                         ],
                                                         ?remove_license_specifications: Array[
                                                           {
                                                             license_configuration_arn: ::String,
                                                             ami_association_scope: ::String?
-                                                          },
+                                                          }
                                                         ]
                                                       ) -> _UpdateLicenseSpecificationsForResourceResponseSuccess
                                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateLicenseSpecificationsForResourceResponseSuccess
@@ -973,7 +1165,8 @@ module Aws
                                      ?organization_configuration: {
                                        enable_integration: bool
                                      },
-                                     ?enable_cross_accounts_discovery: bool
+                                     ?enable_cross_accounts_discovery: bool,
+                                     ?enabled_discovery_source_regions: Array[::String]
                                    ) -> _UpdateServiceSettingsResponseSuccess
                                  | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateServiceSettingsResponseSuccess
     end

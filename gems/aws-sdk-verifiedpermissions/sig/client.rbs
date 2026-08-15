@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -89,7 +90,7 @@ module Aws
                                 {
                                   policy_store_id: ::String,
                                   policy_id: ::String
-                                },
+                                }
                               ]
                             ) -> _BatchGetPolicyResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchGetPolicyResponseSuccess
@@ -101,24 +102,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/VerifiedPermissions/Client.html#batch_is_authorized-instance_method
       def batch_is_authorized: (
                                  policy_store_id: ::String,
-                                 ?entities: {
-                                   entity_list: Array[
-                                     {
-                                       identifier: {
-                                         entity_type: ::String,
-                                         entity_id: ::String
-                                       },
-                                       attributes: Hash[::String, untyped]?,
-                                       parents: Array[
-                                         {
-                                           entity_type: ::String,
-                                           entity_id: ::String
-                                         },
-                                       ]?
-                                     },
-                                   ]?,
-                                   cedar_json: ::String?
-                                 },
+                                 ?entities: Params::entities_definition,
                                  requests: Array[
                                    {
                                      principal: {
@@ -133,11 +117,8 @@ module Aws
                                        entity_type: ::String,
                                        entity_id: ::String
                                      }?,
-                                     context: {
-                                       context_map: Hash[::String, untyped]?,
-                                       cedar_json: ::String?
-                                     }?
-                                   },
+                                     context: Params::context_definition?
+                                   }
                                  ]
                                ) -> _BatchIsAuthorizedResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchIsAuthorizedResponseSuccess
@@ -152,24 +133,7 @@ module Aws
                                             policy_store_id: ::String,
                                             ?identity_token: ::String,
                                             ?access_token: ::String,
-                                            ?entities: {
-                                              entity_list: Array[
-                                                {
-                                                  identifier: {
-                                                    entity_type: ::String,
-                                                    entity_id: ::String
-                                                  },
-                                                  attributes: Hash[::String, untyped]?,
-                                                  parents: Array[
-                                                    {
-                                                      entity_type: ::String,
-                                                      entity_id: ::String
-                                                    },
-                                                  ]?
-                                                },
-                                              ]?,
-                                              cedar_json: ::String?
-                                            },
+                                            ?entities: Params::entities_definition,
                                             requests: Array[
                                               {
                                                 action: {
@@ -180,11 +144,8 @@ module Aws
                                                   entity_type: ::String,
                                                   entity_id: ::String
                                                 }?,
-                                                context: {
-                                                  context_map: Hash[::String, untyped]?,
-                                                  cedar_json: ::String?
-                                                }?
-                                              },
+                                                context: Params::context_definition?
+                                              }
                                             ]
                                           ) -> _BatchIsAuthorizedWithTokenResponseSuccess
                                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchIsAuthorizedWithTokenResponseSuccess
@@ -263,7 +224,8 @@ module Aws
                                  entity_id: ::String
                                }?
                              }?
-                           }
+                           },
+                           ?name: ::String
                          ) -> _CreatePolicyResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreatePolicyResponseSuccess
 
@@ -280,9 +242,33 @@ module Aws
                                  validation_settings: {
                                    mode: ("OFF" | "STRICT")
                                  },
-                                 ?description: ::String
+                                 ?description: ::String,
+                                 ?deletion_protection: ("ENABLED" | "DISABLED"),
+                                 ?encryption_settings: {
+                                   kms_encryption_settings: {
+                                     key: ::String,
+                                     encryption_context: Hash[::String, ::String]?
+                                   }?,
+                                   default: {
+                                   }?
+                                 },
+                                 ?tags: Hash[::String, ::String]
                                ) -> _CreatePolicyStoreResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreatePolicyStoreResponseSuccess
+
+      interface _CreatePolicyStoreAliasResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreatePolicyStoreAliasOutput]
+        def alias_name: () -> ::String
+        def policy_store_id: () -> ::String
+        def alias_arn: () -> ::String
+        def created_at: () -> ::Time
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/VerifiedPermissions/Client.html#create_policy_store_alias-instance_method
+      def create_policy_store_alias: (
+                                       alias_name: ::String,
+                                       policy_store_id: ::String
+                                     ) -> _CreatePolicyStoreAliasResponseSuccess
+                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreatePolicyStoreAliasResponseSuccess
 
       interface _CreatePolicyTemplateResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreatePolicyTemplateOutput]
@@ -296,7 +282,8 @@ module Aws
                                     ?client_token: ::String,
                                     policy_store_id: ::String,
                                     ?description: ::String,
-                                    statement: ::String
+                                    statement: ::String,
+                                    ?name: ::String
                                   ) -> _CreatePolicyTemplateResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreatePolicyTemplateResponseSuccess
 
@@ -328,6 +315,16 @@ module Aws
                                  policy_store_id: ::String
                                ) -> _DeletePolicyStoreResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeletePolicyStoreResponseSuccess
+
+      interface _DeletePolicyStoreAliasResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeletePolicyStoreAliasOutput]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/VerifiedPermissions/Client.html#delete_policy_store_alias-instance_method
+      def delete_policy_store_alias: (
+                                       alias_name: ::String,
+                                       ?deletion_mode: ("SoftDelete" | "HardDelete")
+                                     ) -> _DeletePolicyStoreAliasResponseSuccess
+                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeletePolicyStoreAliasResponseSuccess
 
       interface _DeletePolicyTemplateResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DeletePolicyTemplateOutput]
@@ -368,6 +365,7 @@ module Aws
         def created_date: () -> ::Time
         def last_updated_date: () -> ::Time
         def effect: () -> ("Permit" | "Forbid")
+        def name: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/VerifiedPermissions/Client.html#get_policy-instance_method
       def get_policy: (
@@ -384,12 +382,31 @@ module Aws
         def created_date: () -> ::Time
         def last_updated_date: () -> ::Time
         def description: () -> ::String
+        def deletion_protection: () -> ("ENABLED" | "DISABLED")
+        def encryption_state: () -> Types::EncryptionState
+        def cedar_version: () -> ("CEDAR_2" | "CEDAR_4")
+        def tags: () -> ::Hash[::String, ::String]
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/VerifiedPermissions/Client.html#get_policy_store-instance_method
       def get_policy_store: (
-                              policy_store_id: ::String
+                              policy_store_id: ::String,
+                              ?tags: bool
                             ) -> _GetPolicyStoreResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetPolicyStoreResponseSuccess
+
+      interface _GetPolicyStoreAliasResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetPolicyStoreAliasOutput]
+        def alias_name: () -> ::String
+        def policy_store_id: () -> ::String
+        def alias_arn: () -> ::String
+        def created_at: () -> ::Time
+        def state: () -> ("Active" | "PendingDeletion")
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/VerifiedPermissions/Client.html#get_policy_store_alias-instance_method
+      def get_policy_store_alias: (
+                                    alias_name: ::String
+                                  ) -> _GetPolicyStoreAliasResponseSuccess
+                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetPolicyStoreAliasResponseSuccess
 
       interface _GetPolicyTemplateResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetPolicyTemplateOutput]
@@ -399,6 +416,7 @@ module Aws
         def statement: () -> ::String
         def created_date: () -> ::Time
         def last_updated_date: () -> ::Time
+        def name: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/VerifiedPermissions/Client.html#get_policy_template-instance_method
       def get_policy_template: (
@@ -442,28 +460,8 @@ module Aws
                              entity_type: ::String,
                              entity_id: ::String
                            },
-                           ?context: {
-                             context_map: Hash[::String, untyped]?,
-                             cedar_json: ::String?
-                           },
-                           ?entities: {
-                             entity_list: Array[
-                               {
-                                 identifier: {
-                                   entity_type: ::String,
-                                   entity_id: ::String
-                                 },
-                                 attributes: Hash[::String, untyped]?,
-                                 parents: Array[
-                                   {
-                                     entity_type: ::String,
-                                     entity_id: ::String
-                                   },
-                                 ]?
-                               },
-                             ]?,
-                             cedar_json: ::String?
-                           }
+                           ?context: Params::context_definition,
+                           ?entities: Params::entities_definition
                          ) -> _IsAuthorizedResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _IsAuthorizedResponseSuccess
 
@@ -487,28 +485,8 @@ module Aws
                                         entity_type: ::String,
                                         entity_id: ::String
                                       },
-                                      ?context: {
-                                        context_map: Hash[::String, untyped]?,
-                                        cedar_json: ::String?
-                                      },
-                                      ?entities: {
-                                        entity_list: Array[
-                                          {
-                                            identifier: {
-                                              entity_type: ::String,
-                                              entity_id: ::String
-                                            },
-                                            attributes: Hash[::String, untyped]?,
-                                            parents: Array[
-                                              {
-                                                entity_type: ::String,
-                                                entity_id: ::String
-                                              },
-                                            ]?
-                                          },
-                                        ]?,
-                                        cedar_json: ::String?
-                                      }
+                                      ?context: Params::context_definition,
+                                      ?entities: Params::entities_definition
                                     ) -> _IsAuthorizedWithTokenResponseSuccess
                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _IsAuthorizedWithTokenResponseSuccess
 
@@ -525,7 +503,7 @@ module Aws
                                    ?filters: Array[
                                      {
                                        principal_entity_type: ::String?
-                                     },
+                                     }
                                    ]
                                  ) -> _ListIdentitySourcesResponseSuccess
                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListIdentitySourcesResponseSuccess
@@ -561,6 +539,21 @@ module Aws
                          ) -> _ListPoliciesResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListPoliciesResponseSuccess
 
+      interface _ListPolicyStoreAliasesResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListPolicyStoreAliasesOutput]
+        def next_token: () -> ::String
+        def policy_store_aliases: () -> ::Array[Types::PolicyStoreAliasItem]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/VerifiedPermissions/Client.html#list_policy_store_aliases-instance_method
+      def list_policy_store_aliases: (
+                                       ?next_token: ::String,
+                                       ?max_results: ::Integer,
+                                       ?filter: {
+                                         policy_store_id: ::String?
+                                       }
+                                     ) -> _ListPolicyStoreAliasesResponseSuccess
+                                   | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListPolicyStoreAliasesResponseSuccess
+
       interface _ListPolicyStoresResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListPolicyStoresOutput]
         def next_token: () -> ::String
@@ -586,6 +579,16 @@ module Aws
                                  ) -> _ListPolicyTemplatesResponseSuccess
                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListPolicyTemplatesResponseSuccess
 
+      interface _ListTagsForResourceResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListTagsForResourceOutput]
+        def tags: () -> ::Hash[::String, ::String]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/VerifiedPermissions/Client.html#list_tags_for_resource-instance_method
+      def list_tags_for_resource: (
+                                    resource_arn: ::String
+                                  ) -> _ListTagsForResourceResponseSuccess
+                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListTagsForResourceResponseSuccess
+
       interface _PutSchemaResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::PutSchemaOutput]
         def policy_store_id: () -> ::String
@@ -601,6 +604,26 @@ module Aws
                         }
                       ) -> _PutSchemaResponseSuccess
                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutSchemaResponseSuccess
+
+      interface _TagResourceResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::TagResourceOutput]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/VerifiedPermissions/Client.html#tag_resource-instance_method
+      def tag_resource: (
+                          resource_arn: ::String,
+                          tags: Hash[::String, ::String]
+                        ) -> _TagResourceResponseSuccess
+                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess
+
+      interface _UntagResourceResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UntagResourceOutput]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/VerifiedPermissions/Client.html#untag_resource-instance_method
+      def untag_resource: (
+                            resource_arn: ::String,
+                            tag_keys: Array[::String]
+                          ) -> _UntagResourceResponseSuccess
+                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UntagResourceResponseSuccess
 
       interface _UpdateIdentitySourceResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::UpdateIdentitySourceOutput]
@@ -660,12 +683,13 @@ module Aws
       def update_policy: (
                            policy_store_id: ::String,
                            policy_id: ::String,
-                           definition: {
+                           ?definition: {
                              static: {
                                description: ::String?,
                                statement: ::String
                              }?
-                           }
+                           },
+                           ?name: ::String
                          ) -> _UpdatePolicyResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdatePolicyResponseSuccess
 
@@ -682,6 +706,7 @@ module Aws
                                  validation_settings: {
                                    mode: ("OFF" | "STRICT")
                                  },
+                                 ?deletion_protection: ("ENABLED" | "DISABLED"),
                                  ?description: ::String
                                ) -> _UpdatePolicyStoreResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdatePolicyStoreResponseSuccess
@@ -698,7 +723,8 @@ module Aws
                                     policy_store_id: ::String,
                                     policy_template_id: ::String,
                                     ?description: ::String,
-                                    statement: ::String
+                                    statement: ::String,
+                                    ?name: ::String
                                   ) -> _UpdatePolicyTemplateResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdatePolicyTemplateResponseSuccess
     end

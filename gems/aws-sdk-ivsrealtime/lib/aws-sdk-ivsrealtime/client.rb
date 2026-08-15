@@ -95,8 +95,8 @@ module Aws::IVSRealTime
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::IVSRealTime
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::IVSRealTime
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::IVSRealTime
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::IVSRealTime
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::IVSRealTime
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::IVSRealTime
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::IVSRealTime
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -563,6 +567,10 @@ module Aws::IVSRealTime
     #   Whether the stage allows insecure RTMP ingest. This must be set to
     #   `true`, if `ingestProtocol` is set to `RTMP`. Default: `false`.
     #
+    # @option params [Boolean] :redundant_ingest
+    #   Indicates whether redundant ingest is enabled for the ingest
+    #   configuration. Default: `false`.
+    #
     # @option params [Hash<String,String>] :tags
     #   Tags attached to the resource. Array of maps, each of the form
     #   `string:string (key:value)`. See [Best practices and strategies][1] in
@@ -590,6 +598,7 @@ module Aws::IVSRealTime
     #     },
     #     ingest_protocol: "RTMP", # required, accepts RTMP, RTMPS
     #     insecure_ingest: false,
+    #     redundant_ingest: false,
     #     tags: {
     #       "TagKey" => "TagValue",
     #     },
@@ -605,6 +614,10 @@ module Aws::IVSRealTime
     #   resp.ingest_configuration.participant_id #=> String
     #   resp.ingest_configuration.state #=> String, one of "ACTIVE", "INACTIVE"
     #   resp.ingest_configuration.user_id #=> String
+    #   resp.ingest_configuration.redundant_ingest #=> Boolean
+    #   resp.ingest_configuration.redundant_ingest_credentials #=> Array
+    #   resp.ingest_configuration.redundant_ingest_credentials[0].participant_id #=> String
+    #   resp.ingest_configuration.redundant_ingest_credentials[0].stream_key #=> String
     #   resp.ingest_configuration.attributes #=> Hash
     #   resp.ingest_configuration.attributes["String"] #=> String
     #   resp.ingest_configuration.tags #=> Hash
@@ -746,6 +759,7 @@ module Aws::IVSRealTime
     #       hls_configuration: {
     #         target_segment_duration_seconds: 1,
     #       },
+    #       record_participant_replicas: false,
     #     },
     #   })
     #
@@ -765,6 +779,7 @@ module Aws::IVSRealTime
     #   resp.stage.auto_participant_recording_configuration.thumbnail_configuration.recording_mode #=> String, one of "INTERVAL", "DISABLED"
     #   resp.stage.auto_participant_recording_configuration.recording_reconnect_window_seconds #=> Integer
     #   resp.stage.auto_participant_recording_configuration.hls_configuration.target_segment_duration_seconds #=> Integer
+    #   resp.stage.auto_participant_recording_configuration.record_participant_replicas #=> Boolean
     #   resp.stage.endpoints.events #=> String
     #   resp.stage.endpoints.whip #=> String
     #   resp.stage.endpoints.rtmp #=> String
@@ -1038,6 +1053,7 @@ module Aws::IVSRealTime
     #   resp.composition.layout.grid.video_aspect_ratio #=> String, one of "AUTO", "VIDEO", "SQUARE", "PORTRAIT"
     #   resp.composition.layout.grid.video_fill_mode #=> String, one of "FILL", "COVER", "CONTAIN"
     #   resp.composition.layout.grid.grid_gap #=> Integer
+    #   resp.composition.layout.grid.participant_order_attribute #=> String
     #   resp.composition.layout.pip.featured_participant_attribute #=> String
     #   resp.composition.layout.pip.omit_stopped_video #=> Boolean
     #   resp.composition.layout.pip.video_fill_mode #=> String, one of "FILL", "COVER", "CONTAIN"
@@ -1048,6 +1064,7 @@ module Aws::IVSRealTime
     #   resp.composition.layout.pip.pip_position #=> String, one of "TOP_LEFT", "TOP_RIGHT", "BOTTOM_LEFT", "BOTTOM_RIGHT"
     #   resp.composition.layout.pip.pip_width #=> Integer
     #   resp.composition.layout.pip.pip_height #=> Integer
+    #   resp.composition.layout.pip.participant_order_attribute #=> String
     #   resp.composition.destinations #=> Array
     #   resp.composition.destinations[0].id #=> String
     #   resp.composition.destinations[0].state #=> String, one of "STARTING", "ACTIVE", "STOPPING", "RECONNECTING", "FAILED", "STOPPED"
@@ -1140,6 +1157,10 @@ module Aws::IVSRealTime
     #   resp.ingest_configuration.participant_id #=> String
     #   resp.ingest_configuration.state #=> String, one of "ACTIVE", "INACTIVE"
     #   resp.ingest_configuration.user_id #=> String
+    #   resp.ingest_configuration.redundant_ingest #=> Boolean
+    #   resp.ingest_configuration.redundant_ingest_credentials #=> Array
+    #   resp.ingest_configuration.redundant_ingest_credentials[0].participant_id #=> String
+    #   resp.ingest_configuration.redundant_ingest_credentials[0].stream_key #=> String
     #   resp.ingest_configuration.attributes #=> Hash
     #   resp.ingest_configuration.attributes["String"] #=> String
     #   resp.ingest_configuration.tags #=> Hash
@@ -1197,6 +1218,12 @@ module Aws::IVSRealTime
     #   resp.participant.recording_s3_prefix #=> String
     #   resp.participant.recording_state #=> String, one of "STARTING", "ACTIVE", "STOPPING", "STOPPED", "FAILED", "DISABLED"
     #   resp.participant.protocol #=> String, one of "UNKNOWN", "WHIP", "RTMP", "RTMPS"
+    #   resp.participant.replication_type #=> String, one of "SOURCE", "REPLICA", "NONE"
+    #   resp.participant.replication_state #=> String, one of "ACTIVE", "STOPPED"
+    #   resp.participant.source_stage_arn #=> String
+    #   resp.participant.source_session_id #=> String
+    #   resp.participant.redundant_ingest #=> Boolean
+    #   resp.participant.ingest_configuration_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ivs-realtime-2020-07-14/GetParticipant AWS API Documentation
     #
@@ -1271,6 +1298,7 @@ module Aws::IVSRealTime
     #   resp.stage.auto_participant_recording_configuration.thumbnail_configuration.recording_mode #=> String, one of "INTERVAL", "DISABLED"
     #   resp.stage.auto_participant_recording_configuration.recording_reconnect_window_seconds #=> Integer
     #   resp.stage.auto_participant_recording_configuration.hls_configuration.target_segment_duration_seconds #=> Integer
+    #   resp.stage.auto_participant_recording_configuration.record_participant_replicas #=> Boolean
     #   resp.stage.endpoints.events #=> String
     #   resp.stage.endpoints.whip #=> String
     #   resp.stage.endpoints.rtmp #=> String
@@ -1548,6 +1576,7 @@ module Aws::IVSRealTime
     #   resp.ingest_configurations[0].participant_id #=> String
     #   resp.ingest_configurations[0].state #=> String, one of "ACTIVE", "INACTIVE"
     #   resp.ingest_configurations[0].user_id #=> String
+    #   resp.ingest_configurations[0].redundant_ingest #=> Boolean
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ivs-realtime-2020-07-14/ListIngestConfigurations AWS API Documentation
@@ -1599,11 +1628,26 @@ module Aws::IVSRealTime
     # @example Response structure
     #
     #   resp.events #=> Array
-    #   resp.events[0].name #=> String, one of "JOINED", "LEFT", "PUBLISH_STARTED", "PUBLISH_STOPPED", "SUBSCRIBE_STARTED", "SUBSCRIBE_STOPPED", "PUBLISH_ERROR", "SUBSCRIBE_ERROR", "JOIN_ERROR"
+    #   resp.events[0].name #=> String, one of "JOINED", "LEFT", "PUBLISH_STARTED", "PUBLISH_STOPPED", "SUBSCRIBE_STARTED", "SUBSCRIBE_STOPPED", "PUBLISH_ERROR", "SUBSCRIBE_ERROR", "JOIN_ERROR", "REPLICATION_STARTED", "REPLICATION_STOPPED", "TOKEN_EXCHANGED"
     #   resp.events[0].participant_id #=> String
     #   resp.events[0].event_time #=> Time
     #   resp.events[0].remote_participant_id #=> String
     #   resp.events[0].error_code #=> String, one of "INSUFFICIENT_CAPABILITIES", "QUOTA_EXCEEDED", "PUBLISHER_NOT_FOUND", "BITRATE_EXCEEDED", "RESOLUTION_EXCEEDED", "STREAM_DURATION_EXCEEDED", "INVALID_AUDIO_CODEC", "INVALID_VIDEO_CODEC", "INVALID_PROTOCOL", "INVALID_STREAM_KEY", "REUSE_OF_STREAM_KEY", "B_FRAME_PRESENT", "INVALID_INPUT", "INTERNAL_SERVER_EXCEPTION"
+    #   resp.events[0].destination_stage_arn #=> String
+    #   resp.events[0].destination_session_id #=> String
+    #   resp.events[0].replica #=> Boolean
+    #   resp.events[0].previous_token.capabilities #=> Array
+    #   resp.events[0].previous_token.capabilities[0] #=> String, one of "PUBLISH", "SUBSCRIBE"
+    #   resp.events[0].previous_token.attributes #=> Hash
+    #   resp.events[0].previous_token.attributes["String"] #=> String
+    #   resp.events[0].previous_token.user_id #=> String
+    #   resp.events[0].previous_token.expiration_time #=> Time
+    #   resp.events[0].new_token.capabilities #=> Array
+    #   resp.events[0].new_token.capabilities[0] #=> String, one of "PUBLISH", "SUBSCRIBE"
+    #   resp.events[0].new_token.attributes #=> Hash
+    #   resp.events[0].new_token.attributes["String"] #=> String
+    #   resp.events[0].new_token.user_id #=> String
+    #   resp.events[0].new_token.expiration_time #=> Time
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ivs-realtime-2020-07-14/ListParticipantEvents AWS API Documentation
@@ -1612,6 +1656,63 @@ module Aws::IVSRealTime
     # @param [Hash] params ({})
     def list_participant_events(params = {}, options = {})
       req = build_request(:list_participant_events, params)
+      req.send_request(options)
+    end
+
+    # Lists all the replicas for a participant from a source stage.
+    #
+    # @option params [required, String] :source_stage_arn
+    #   ARN of the stage where the participant is publishing.
+    #
+    # @option params [required, String] :participant_id
+    #   Participant ID of the publisher that has been replicated. This is
+    #   assigned by IVS and returned by CreateParticipantToken or the `jti`
+    #   (JWT ID) used to [create a self signed token][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/ivs/latest/RealTimeUserGuide/getting-started-distribute-tokens.html#getting-started-distribute-tokens-self-signed
+    #
+    # @option params [String] :next_token
+    #   The first participant to retrieve. This is used for pagination; see
+    #   the `nextToken` response field.
+    #
+    # @option params [Integer] :max_results
+    #   Maximum number of results to return. Default: 50.
+    #
+    # @return [Types::ListParticipantReplicasResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListParticipantReplicasResponse#replicas #replicas} => Array&lt;Types::ParticipantReplica&gt;
+    #   * {Types::ListParticipantReplicasResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_participant_replicas({
+    #     source_stage_arn: "StageArn", # required
+    #     participant_id: "ParticipantId", # required
+    #     next_token: "PaginationToken",
+    #     max_results: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.replicas #=> Array
+    #   resp.replicas[0].source_stage_arn #=> String
+    #   resp.replicas[0].participant_id #=> String
+    #   resp.replicas[0].source_session_id #=> String
+    #   resp.replicas[0].destination_stage_arn #=> String
+    #   resp.replicas[0].destination_session_id #=> String
+    #   resp.replicas[0].replication_state #=> String, one of "ACTIVE", "STOPPED"
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ivs-realtime-2020-07-14/ListParticipantReplicas AWS API Documentation
+    #
+    # @overload list_participant_replicas(params = {})
+    # @param [Hash] params ({})
+    def list_participant_replicas(params = {}, options = {})
+      req = build_request(:list_participant_replicas, params)
       req.send_request(options)
     end
 
@@ -1684,6 +1785,12 @@ module Aws::IVSRealTime
     #   resp.participants[0].first_join_time #=> Time
     #   resp.participants[0].published #=> Boolean
     #   resp.participants[0].recording_state #=> String, one of "STARTING", "ACTIVE", "STOPPING", "STOPPED", "FAILED", "DISABLED"
+    #   resp.participants[0].replication_type #=> String, one of "SOURCE", "REPLICA", "NONE"
+    #   resp.participants[0].replication_state #=> String, one of "ACTIVE", "STOPPED"
+    #   resp.participants[0].source_stage_arn #=> String
+    #   resp.participants[0].source_session_id #=> String
+    #   resp.participants[0].redundant_ingest #=> Boolean
+    #   resp.participants[0].ingest_configuration_arn #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ivs-realtime-2020-07-14/ListParticipants AWS API Documentation
@@ -1961,6 +2068,7 @@ module Aws::IVSRealTime
     #         video_aspect_ratio: "AUTO", # accepts AUTO, VIDEO, SQUARE, PORTRAIT
     #         video_fill_mode: "FILL", # accepts FILL, COVER, CONTAIN
     #         grid_gap: 1,
+    #         participant_order_attribute: "AttributeKey",
     #       },
     #       pip: {
     #         featured_participant_attribute: "AttributeKey",
@@ -1973,6 +2081,7 @@ module Aws::IVSRealTime
     #         pip_position: "TOP_LEFT", # accepts TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT
     #         pip_width: 1,
     #         pip_height: 1,
+    #         participant_order_attribute: "AttributeKey",
     #       },
     #     },
     #     destinations: [ # required
@@ -2015,6 +2124,7 @@ module Aws::IVSRealTime
     #   resp.composition.layout.grid.video_aspect_ratio #=> String, one of "AUTO", "VIDEO", "SQUARE", "PORTRAIT"
     #   resp.composition.layout.grid.video_fill_mode #=> String, one of "FILL", "COVER", "CONTAIN"
     #   resp.composition.layout.grid.grid_gap #=> Integer
+    #   resp.composition.layout.grid.participant_order_attribute #=> String
     #   resp.composition.layout.pip.featured_participant_attribute #=> String
     #   resp.composition.layout.pip.omit_stopped_video #=> Boolean
     #   resp.composition.layout.pip.video_fill_mode #=> String, one of "FILL", "COVER", "CONTAIN"
@@ -2025,6 +2135,7 @@ module Aws::IVSRealTime
     #   resp.composition.layout.pip.pip_position #=> String, one of "TOP_LEFT", "TOP_RIGHT", "BOTTOM_LEFT", "BOTTOM_RIGHT"
     #   resp.composition.layout.pip.pip_width #=> Integer
     #   resp.composition.layout.pip.pip_height #=> Integer
+    #   resp.composition.layout.pip.participant_order_attribute #=> String
     #   resp.composition.destinations #=> Array
     #   resp.composition.destinations[0].id #=> String
     #   resp.composition.destinations[0].state #=> String, one of "STARTING", "ACTIVE", "STOPPING", "RECONNECTING", "FAILED", "STOPPED"
@@ -2057,6 +2168,81 @@ module Aws::IVSRealTime
       req.send_request(options)
     end
 
+    # Starts replicating a publishing participant from a source stage to a
+    # destination stage.
+    #
+    # @option params [required, String] :source_stage_arn
+    #   ARN of the stage where the participant is publishing.
+    #
+    # @option params [required, String] :destination_stage_arn
+    #   ARN of the stage to which the participant will be replicated.
+    #
+    # @option params [required, String] :participant_id
+    #   Participant ID of the publisher that will be replicated. This is
+    #   assigned by IVS and returned by CreateParticipantToken or the `jti`
+    #   (JWT ID) used to [create a self signed token][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/ivs/latest/RealTimeUserGuide/getting-started-distribute-tokens.html#getting-started-distribute-tokens-self-signed
+    #
+    # @option params [Integer] :reconnect_window_seconds
+    #   If the participant disconnects and then reconnects within the
+    #   specified interval, replication will continue to be `ACTIVE`. Default:
+    #   0.
+    #
+    # @option params [Hash<String,String>] :attributes
+    #   Application-provided attributes to set on the replicated participant
+    #   in the destination stage. Map keys and values can contain UTF-8
+    #   encoded text. The maximum length of this field is 1 KB total. *This
+    #   field is exposed to all stage participants and should not be used for
+    #   personally identifying, confidential, or sensitive information.*
+    #
+    #   These attributes are merged with any attributes set for this
+    #   participant when creating the token. If there is overlap in keys, the
+    #   values in these attributes are replaced.
+    #
+    # @return [Types::StartParticipantReplicationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::StartParticipantReplicationResponse#access_control_allow_origin #access_control_allow_origin} => String
+    #   * {Types::StartParticipantReplicationResponse#access_control_expose_headers #access_control_expose_headers} => String
+    #   * {Types::StartParticipantReplicationResponse#cache_control #cache_control} => String
+    #   * {Types::StartParticipantReplicationResponse#content_security_policy #content_security_policy} => String
+    #   * {Types::StartParticipantReplicationResponse#strict_transport_security #strict_transport_security} => String
+    #   * {Types::StartParticipantReplicationResponse#x_content_type_options #x_content_type_options} => String
+    #   * {Types::StartParticipantReplicationResponse#x_frame_options #x_frame_options} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.start_participant_replication({
+    #     source_stage_arn: "StageArn", # required
+    #     destination_stage_arn: "StageArn", # required
+    #     participant_id: "ParticipantId", # required
+    #     reconnect_window_seconds: 1,
+    #     attributes: {
+    #       "String" => "String",
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.access_control_allow_origin #=> String
+    #   resp.access_control_expose_headers #=> String
+    #   resp.cache_control #=> String
+    #   resp.content_security_policy #=> String
+    #   resp.strict_transport_security #=> String
+    #   resp.x_content_type_options #=> String
+    #   resp.x_frame_options #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ivs-realtime-2020-07-14/StartParticipantReplication AWS API Documentation
+    #
+    # @overload start_participant_replication(params = {})
+    # @param [Hash] params ({})
+    def start_participant_replication(params = {}, options = {})
+      req = build_request(:start_participant_replication, params)
+      req.send_request(options)
+    end
+
     # Stops and deletes a Composition resource. Any broadcast from the
     # Composition resource is stopped.
     #
@@ -2077,6 +2263,60 @@ module Aws::IVSRealTime
     # @param [Hash] params ({})
     def stop_composition(params = {}, options = {})
       req = build_request(:stop_composition, params)
+      req.send_request(options)
+    end
+
+    # Stops a replicated participant session.
+    #
+    # @option params [required, String] :source_stage_arn
+    #   ARN of the stage where the participant is publishing.
+    #
+    # @option params [required, String] :destination_stage_arn
+    #   ARN of the stage where the participant has been replicated.
+    #
+    # @option params [required, String] :participant_id
+    #   Participant ID of the publisher that has been replicated. This is
+    #   assigned by IVS and returned by CreateParticipantToken or the `jti`
+    #   (JWT ID) used to [ create a self signed token][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/ivs/latest/RealTimeUserGuide/getting-started-distribute-tokens.html#getting-started-distribute-tokens-self-signed
+    #
+    # @return [Types::StopParticipantReplicationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::StopParticipantReplicationResponse#access_control_allow_origin #access_control_allow_origin} => String
+    #   * {Types::StopParticipantReplicationResponse#access_control_expose_headers #access_control_expose_headers} => String
+    #   * {Types::StopParticipantReplicationResponse#cache_control #cache_control} => String
+    #   * {Types::StopParticipantReplicationResponse#content_security_policy #content_security_policy} => String
+    #   * {Types::StopParticipantReplicationResponse#strict_transport_security #strict_transport_security} => String
+    #   * {Types::StopParticipantReplicationResponse#x_content_type_options #x_content_type_options} => String
+    #   * {Types::StopParticipantReplicationResponse#x_frame_options #x_frame_options} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.stop_participant_replication({
+    #     source_stage_arn: "StageArn", # required
+    #     destination_stage_arn: "StageArn", # required
+    #     participant_id: "ParticipantId", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.access_control_allow_origin #=> String
+    #   resp.access_control_expose_headers #=> String
+    #   resp.cache_control #=> String
+    #   resp.content_security_policy #=> String
+    #   resp.strict_transport_security #=> String
+    #   resp.x_content_type_options #=> String
+    #   resp.x_frame_options #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ivs-realtime-2020-07-14/StopParticipantReplication AWS API Documentation
+    #
+    # @overload stop_participant_replication(params = {})
+    # @param [Hash] params ({})
+    def stop_participant_replication(params = {}, options = {})
+      req = build_request(:stop_participant_replication, params)
       req.send_request(options)
     end
 
@@ -2162,6 +2402,10 @@ module Aws::IVSRealTime
     # @option params [String] :stage_arn
     #   Stage ARN that needs to be updated.
     #
+    # @option params [Boolean] :redundant_ingest
+    #   Indicates whether redundant ingest is enabled for the ingest
+    #   configuration. Default: `false`.
+    #
     # @return [Types::UpdateIngestConfigurationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::UpdateIngestConfigurationResponse#ingest_configuration #ingest_configuration} => Types::IngestConfiguration
@@ -2171,6 +2415,7 @@ module Aws::IVSRealTime
     #   resp = client.update_ingest_configuration({
     #     arn: "IngestConfigurationArn", # required
     #     stage_arn: "IngestConfigurationStageArn",
+    #     redundant_ingest: false,
     #   })
     #
     # @example Response structure
@@ -2183,6 +2428,10 @@ module Aws::IVSRealTime
     #   resp.ingest_configuration.participant_id #=> String
     #   resp.ingest_configuration.state #=> String, one of "ACTIVE", "INACTIVE"
     #   resp.ingest_configuration.user_id #=> String
+    #   resp.ingest_configuration.redundant_ingest #=> Boolean
+    #   resp.ingest_configuration.redundant_ingest_credentials #=> Array
+    #   resp.ingest_configuration.redundant_ingest_credentials[0].participant_id #=> String
+    #   resp.ingest_configuration.redundant_ingest_credentials[0].stream_key #=> String
     #   resp.ingest_configuration.attributes #=> Hash
     #   resp.ingest_configuration.attributes["String"] #=> String
     #   resp.ingest_configuration.tags #=> Hash
@@ -2231,6 +2480,7 @@ module Aws::IVSRealTime
     #       hls_configuration: {
     #         target_segment_duration_seconds: 1,
     #       },
+    #       record_participant_replicas: false,
     #     },
     #   })
     #
@@ -2250,6 +2500,7 @@ module Aws::IVSRealTime
     #   resp.stage.auto_participant_recording_configuration.thumbnail_configuration.recording_mode #=> String, one of "INTERVAL", "DISABLED"
     #   resp.stage.auto_participant_recording_configuration.recording_reconnect_window_seconds #=> Integer
     #   resp.stage.auto_participant_recording_configuration.hls_configuration.target_segment_duration_seconds #=> Integer
+    #   resp.stage.auto_participant_recording_configuration.record_participant_replicas #=> Boolean
     #   resp.stage.endpoints.events #=> String
     #   resp.stage.endpoints.whip #=> String
     #   resp.stage.endpoints.rtmp #=> String
@@ -2282,7 +2533,7 @@ module Aws::IVSRealTime
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-ivsrealtime'
-      context[:gem_version] = '1.40.0'
+      context[:gem_version] = '1.66.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

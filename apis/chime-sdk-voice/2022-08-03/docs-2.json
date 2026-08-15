@@ -7,7 +7,7 @@
     "BatchDeletePhoneNumber": "<p> Moves phone numbers into the <b>Deletion queue</b>. Phone numbers must be disassociated from any users or Amazon Chime SDK Voice Connectors before they can be deleted. </p> <p> Phone numbers remain in the <b>Deletion queue</b> for 7 days before they are deleted permanently. </p>",
     "BatchUpdatePhoneNumber": "<p>Updates phone number product types, calling names, or phone number names. You can update one attribute at a time for each <code>UpdatePhoneNumberRequestItem</code>. For example, you can update the product type, the calling name, or phone name. </p> <note> <p>You cannot have a duplicate <code>phoneNumberId</code> in a request.</p> </note>",
     "CreatePhoneNumberOrder": "<p>Creates an order for phone numbers to be provisioned. For numbers outside the U.S., you must use the Amazon Chime SDK SIP media application dial-in product type.</p>",
-    "CreateProxySession": "<p>Creates a proxy session for the specified Amazon Chime SDK Voice Connector for the specified participant phone numbers.</p>",
+    "CreateProxySession": "<p>Creates a proxy session for the specified Amazon Chime SDK Voice Connector for the specified participant phone numbers.</p> <important> <p>End of support notice: On April 7, 2026, AWS will end support for Amazon Chime SDK proxy sessions.</p> </important>",
     "CreateSipMediaApplication": "<p>Creates a SIP media application. For more information about SIP media applications, see <a href=\"https://docs.aws.amazon.com/chime-sdk/latest/ag/manage-sip-applications.html\">Managing SIP media applications and rules</a> in the <i>Amazon Chime SDK Administrator Guide</i>.</p>",
     "CreateSipMediaApplicationCall": "<p>Creates an outbound call to a phone number from the phone number specified in the request, and it invokes the endpoint of the specified <code>sipMediaApplicationId</code>.</p>",
     "CreateSipRule": "<p>Creates a SIP rule, which can be used to run a SIP media application as a target for a specific trigger type. For more information about SIP rules, see <a href=\"https://docs.aws.amazon.com/chime-sdk/latest/ag/manage-sip-applications.html\">Managing SIP media applications and rules</a> in the <i>Amazon Chime SDK Administrator Guide</i>.</p>",
@@ -16,7 +16,7 @@
     "CreateVoiceProfile": "<p>Creates a voice profile, which consists of an enrolled user and their latest voice print.</p> <important> <p>Before creating any voice profiles, you must provide all notices and obtain all consents from the speaker as required under applicable privacy and biometrics laws, and as required under the <a href=\"https://aws.amazon.com/service-terms/\">AWS service terms</a> for the Amazon Chime SDK.</p> </important> <p>For more information about voice profiles and voice analytics, see <a href=\"https://docs.aws.amazon.com/chime-sdk/latest/dg/pstn-voice-analytics.html\">Using Amazon Chime SDK Voice Analytics</a> in the <i>Amazon Chime SDK Developer Guide</i>.</p>",
     "CreateVoiceProfileDomain": "<p>Creates a voice profile domain, a collection of voice profiles, their voice prints, and encrypted enrollment audio.</p> <important> <p>Before creating any voice profiles, you must provide all notices and obtain all consents from the speaker as required under applicable privacy and biometrics laws, and as required under the <a href=\"https://aws.amazon.com/service-terms/\">AWS service terms</a> for the Amazon Chime SDK.</p> </important> <p>For more information about voice profile domains, see <a href=\"https://docs.aws.amazon.com/chime-sdk/latest/dg/pstn-voice-analytics.html\">Using Amazon Chime SDK Voice Analytics</a> in the <i>Amazon Chime SDK Developer Guide</i>.</p>",
     "DeletePhoneNumber": "<p>Moves the specified phone number into the <b>Deletion queue</b>. A phone number must be disassociated from any users or Amazon Chime SDK Voice Connectors before it can be deleted.</p> <p>Deleted phone numbers remain in the <b>Deletion queue</b> queue for 7 days before they are deleted permanently.</p>",
-    "DeleteProxySession": "<p>Deletes the specified proxy session from the specified Amazon Chime SDK Voice Connector.</p>",
+    "DeleteProxySession": "<p>Deletes the specified proxy session from the specified Amazon Chime SDK Voice Connector.</p> <important> <p>End of support notice: On April 7, 2026, AWS will end support for Amazon Chime SDK proxy sessions.</p> </important>",
     "DeleteSipMediaApplication": "<p>Deletes a SIP media application.</p>",
     "DeleteSipRule": "<p>Deletes a SIP rule.</p>",
     "DeleteVoiceConnector": "<p>Deletes an Amazon Chime SDK Voice Connector. Any phone numbers associated with the Amazon Chime SDK Voice Connector must be disassociated from it before it can be deleted.</p>",
@@ -24,7 +24,7 @@
     "DeleteVoiceConnectorExternalSystemsConfiguration": "<p>Deletes the external systems configuration for a Voice Connector.</p>",
     "DeleteVoiceConnectorGroup": "<p>Deletes an Amazon Chime SDK Voice Connector group. Any <code>VoiceConnectorItems</code> and phone numbers associated with the group must be removed before it can be deleted.</p>",
     "DeleteVoiceConnectorOrigination": "<p>Deletes the origination settings for the specified Amazon Chime SDK Voice Connector. </p> <note> <p>If emergency calling is configured for the Voice Connector, it must be deleted prior to deleting the origination settings.</p> </note>",
-    "DeleteVoiceConnectorProxy": "<p>Deletes the proxy configuration from the specified Amazon Chime SDK Voice Connector.</p>",
+    "DeleteVoiceConnectorProxy": "<p>Deletes the proxy configuration from the specified Amazon Chime SDK Voice Connector.</p> <important> <p>End of support notice: On April 7, 2026, AWS will end support for Amazon Chime SDK proxy sessions.</p> </important>",
     "DeleteVoiceConnectorStreamingConfiguration": "<p>Deletes a Voice Connector's streaming configuration.</p>",
     "DeleteVoiceConnectorTermination": "<p>Deletes the termination settings for the specified Amazon Chime SDK Voice Connector.</p> <note> <p>If emergency calling is configured for the Voice Connector, it must be deleted prior to deleting the termination settings.</p> </note>",
     "DeleteVoiceConnectorTerminationCredentials": "<p>Deletes the specified SIP credentials used by your equipment to authenticate during call termination.</p>",
@@ -36,7 +36,7 @@
     "GetPhoneNumber": "<p>Retrieves details for the specified phone number ID, such as associations, capabilities, and product type.</p>",
     "GetPhoneNumberOrder": "<p>Retrieves details for the specified phone number order, such as the order creation timestamp, phone numbers in E.164 format, product type, and order status.</p>",
     "GetPhoneNumberSettings": "<p>Retrieves the phone number settings for the administrator's AWS account, such as the default outbound calling name.</p>",
-    "GetProxySession": "<p>Retrieves the specified proxy session details for the specified Amazon Chime SDK Voice Connector.</p>",
+    "GetProxySession": "<p>Retrieves the specified proxy session details for the specified Amazon Chime SDK Voice Connector.</p> <important> <p>End of support notice: On April 7, 2026, AWS will end support for Amazon Chime SDK proxy sessions.</p> </important>",
     "GetSipMediaApplication": "<p>Retrieves the information for a SIP media application, including name, AWS Region, and endpoints.</p>",
     "GetSipMediaApplicationAlexaSkillConfiguration": "<p>Gets the Alexa Skill configuration for the SIP media application.</p> <important> <p>Due to changes made by the Amazon Alexa service, this API is no longer available for use. For more information, refer to the <a href=\"https://developer.amazon.com/en-US/alexa/alexasmartproperties\">Alexa Smart Properties</a> page.</p> </important>",
     "GetSipMediaApplicationLoggingConfiguration": "<p>Retrieves the logging configuration for the specified SIP media application.</p>",
@@ -48,7 +48,7 @@
     "GetVoiceConnectorGroup": "<p>Retrieves details for the specified Amazon Chime SDK Voice Connector group, such as timestamps,name, and associated <code>VoiceConnectorItems</code>.</p>",
     "GetVoiceConnectorLoggingConfiguration": "<p>Retrieves the logging configuration settings for the specified Voice Connector. Shows whether SIP message logs are enabled for sending to Amazon CloudWatch Logs.</p>",
     "GetVoiceConnectorOrigination": "<p>Retrieves the origination settings for the specified Voice Connector.</p>",
-    "GetVoiceConnectorProxy": "<p>Retrieves the proxy configuration details for the specified Amazon Chime SDK Voice Connector.</p>",
+    "GetVoiceConnectorProxy": "<p>Retrieves the proxy configuration details for the specified Amazon Chime SDK Voice Connector.</p> <important> <p>End of support notice: On April 7, 2026, AWS will end support for Amazon Chime SDK proxy sessions.</p> </important>",
     "GetVoiceConnectorStreamingConfiguration": "<p>Retrieves the streaming configuration details for the specified Amazon Chime SDK Voice Connector. Shows whether media streaming is enabled for sending to Amazon Kinesis. It also shows the retention period, in hours, for the Amazon Kinesis data.</p>",
     "GetVoiceConnectorTermination": "<p>Retrieves the termination setting details for the specified Voice Connector.</p>",
     "GetVoiceConnectorTerminationHealth": "<p>Retrieves information about the last time a <code>SIP OPTIONS</code> ping was received from your SIP infrastructure for the specified Amazon Chime SDK Voice Connector.</p>",
@@ -58,7 +58,7 @@
     "ListAvailableVoiceConnectorRegions": "<p>Lists the available AWS Regions in which you can create an Amazon Chime SDK Voice Connector.</p>",
     "ListPhoneNumberOrders": "<p>Lists the phone numbers for an administrator's Amazon Chime SDK account.</p>",
     "ListPhoneNumbers": "<p>Lists the phone numbers for the specified Amazon Chime SDK account, Amazon Chime SDK user, Amazon Chime SDK Voice Connector, or Amazon Chime SDK Voice Connector group.</p>",
-    "ListProxySessions": "<p>Lists the proxy sessions for the specified Amazon Chime SDK Voice Connector.</p>",
+    "ListProxySessions": "<p>Lists the proxy sessions for the specified Amazon Chime SDK Voice Connector.</p> <important> <p>End of support notice: On April 7, 2026, AWS will end support for Amazon Chime SDK proxy sessions.</p> </important>",
     "ListSipMediaApplications": "<p>Lists the SIP media applications under the administrator's AWS account.</p>",
     "ListSipRules": "<p>Lists the SIP rules under the administrator's AWS account.</p>",
     "ListSupportedPhoneNumberCountries": "<p>Lists the countries that you can order phone numbers from.</p>",
@@ -74,7 +74,7 @@
     "PutVoiceConnectorExternalSystemsConfiguration": "<p>Adds an external systems configuration to a Voice Connector.</p>",
     "PutVoiceConnectorLoggingConfiguration": "<p>Updates a Voice Connector's logging configuration.</p>",
     "PutVoiceConnectorOrigination": "<p>Updates a Voice Connector's origination settings.</p>",
-    "PutVoiceConnectorProxy": "<p>Puts the specified proxy configuration to the specified Amazon Chime SDK Voice Connector.</p>",
+    "PutVoiceConnectorProxy": "<p>Puts the specified proxy configuration to the specified Amazon Chime SDK Voice Connector.</p> <important> <p>End of support notice: On April 7, 2026, AWS will end support for Amazon Chime SDK proxy sessions.</p> </important>",
     "PutVoiceConnectorStreamingConfiguration": "<p>Updates a Voice Connector's streaming configuration settings.</p>",
     "PutVoiceConnectorTermination": "<p>Updates a Voice Connector's termination settings.</p>",
     "PutVoiceConnectorTerminationCredentials": "<p>Updates a Voice Connector's termination credentials.</p>",
@@ -89,7 +89,7 @@
     "UpdateGlobalSettings": "<p>Updates global settings for the Amazon Chime SDK Voice Connectors in an AWS account.</p>",
     "UpdatePhoneNumber": "<p>Updates phone number details, such as product type, calling name, or phone number name for the specified phone number ID. You can update one phone number detail at a time. For example, you can update either the product type, calling name, or phone number name in one action.</p> <p>For numbers outside the U.S., you must use the Amazon Chime SDK SIP Media Application Dial-In product type.</p> <p>Updates to outbound calling names can take 72 hours to complete. Pending updates to outbound calling names must be complete before you can request another update.</p>",
     "UpdatePhoneNumberSettings": "<p>Updates the phone number settings for the administrator's AWS account, such as the default outbound calling name. You can update the default outbound calling name once every seven days. Outbound calling names can take up to 72 hours to update.</p>",
-    "UpdateProxySession": "<p>Updates the specified proxy session details, such as voice or SMS capabilities.</p>",
+    "UpdateProxySession": "<p>Updates the specified proxy session details, such as voice or SMS capabilities.</p> <important> <p>End of support notice: On April 7, 2026, AWS will end support for Amazon Chime SDK proxy sessions.</p> </important>",
     "UpdateSipMediaApplication": "<p>Updates the details of the specified SIP media application.</p>",
     "UpdateSipMediaApplicationCall": "<p>Invokes the AWS Lambda function associated with the SIP media application and transaction ID in an update request. The Lambda function can then return a new set of actions.</p>",
     "UpdateSipRule": "<p>Updates the details of the specified SIP rule.</p>",
@@ -102,8 +102,7 @@
   "shapes": {
     "AccessDeniedException": {
       "base": "<p>You don't have the permissions needed to run this action.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "Address": {
       "base": "<p>A validated address.</p>",
@@ -160,48 +159,39 @@
     },
     "AssociatePhoneNumbersWithVoiceConnectorGroupRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "AssociatePhoneNumbersWithVoiceConnectorGroupResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "AssociatePhoneNumbersWithVoiceConnectorRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "AssociatePhoneNumbersWithVoiceConnectorResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "BadRequestException": {
       "base": "<p>The input parameters don't match the service's restrictions.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "BatchDeletePhoneNumberRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "BatchDeletePhoneNumberResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "BatchUpdatePhoneNumberRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "BatchUpdatePhoneNumberResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "Boolean": {
       "base": null,
@@ -228,6 +218,14 @@
       "refs": {
         "SpeakerSearchTask$CallDetails": "<p>The call details of a speaker search task.</p>",
         "VoiceToneAnalysisTask$CallDetails": "<p>The call details of a voice tone analysis task.</p>"
+      }
+    },
+    "CallDistributionType": {
+      "base": null,
+      "refs": {
+        "CreateVoiceConnectorGroupRequest$CallDistributionType": null,
+        "UpdateVoiceConnectorGroupRequest$CallDistributionType": null,
+        "VoiceConnectorGroup$CallDistributionType": null
       }
     },
     "CallLegType": {
@@ -306,8 +304,7 @@
     },
     "ConflictException": {
       "base": "<p>Multiple instances of the same request were made simultaneously.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ContactCenterSystemType": {
       "base": null,
@@ -343,93 +340,75 @@
     },
     "CreatePhoneNumberOrderRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreatePhoneNumberOrderResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateProxySessionRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateProxySessionResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateSipMediaApplicationCallRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateSipMediaApplicationCallResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateSipMediaApplicationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateSipMediaApplicationResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateSipRuleRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateSipRuleResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateVoiceConnectorGroupRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateVoiceConnectorGroupResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateVoiceConnectorRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateVoiceConnectorResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateVoiceProfileDomainRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateVoiceProfileDomainResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateVoiceProfileRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateVoiceProfileResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "Credential": {
       "base": "<p>The SIP credentials used to authenticate requests to an Amazon Chime SDK Voice Connector.</p>",
@@ -463,98 +442,79 @@
     },
     "DeletePhoneNumberRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteProxySessionRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteSipMediaApplicationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteSipRuleRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteVoiceConnectorEmergencyCallingConfigurationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteVoiceConnectorExternalSystemsConfigurationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteVoiceConnectorGroupRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteVoiceConnectorOriginationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteVoiceConnectorProxyRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteVoiceConnectorRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteVoiceConnectorStreamingConfigurationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteVoiceConnectorTerminationCredentialsRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteVoiceConnectorTerminationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteVoiceProfileDomainRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteVoiceProfileRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DisassociatePhoneNumbersFromVoiceConnectorGroupRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DisassociatePhoneNumbersFromVoiceConnectorGroupResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DisassociatePhoneNumbersFromVoiceConnectorRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DisassociatePhoneNumbersFromVoiceConnectorResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "E164PhoneNumber": {
       "base": null,
@@ -608,8 +568,7 @@
     },
     "ForbiddenException": {
       "base": "<p>The client is permanently forbidden from making the request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "FunctionArn": {
       "base": null,
@@ -633,228 +592,183 @@
     },
     "GetGlobalSettingsResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetPhoneNumberOrderRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetPhoneNumberOrderResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetPhoneNumberRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetPhoneNumberResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetPhoneNumberSettingsResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetProxySessionRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetProxySessionResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetSipMediaApplicationAlexaSkillConfigurationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetSipMediaApplicationAlexaSkillConfigurationResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetSipMediaApplicationLoggingConfigurationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetSipMediaApplicationLoggingConfigurationResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetSipMediaApplicationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetSipMediaApplicationResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetSipRuleRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetSipRuleResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetSpeakerSearchTaskRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetSpeakerSearchTaskResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetVoiceConnectorEmergencyCallingConfigurationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetVoiceConnectorEmergencyCallingConfigurationResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetVoiceConnectorExternalSystemsConfigurationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetVoiceConnectorExternalSystemsConfigurationResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetVoiceConnectorGroupRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetVoiceConnectorGroupResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetVoiceConnectorLoggingConfigurationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetVoiceConnectorLoggingConfigurationResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetVoiceConnectorOriginationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetVoiceConnectorOriginationResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetVoiceConnectorProxyRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetVoiceConnectorProxyResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetVoiceConnectorRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetVoiceConnectorResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetVoiceConnectorStreamingConfigurationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetVoiceConnectorStreamingConfigurationResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetVoiceConnectorTerminationHealthRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetVoiceConnectorTerminationHealthResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetVoiceConnectorTerminationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetVoiceConnectorTerminationResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetVoiceProfileDomainRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetVoiceProfileDomainResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetVoiceProfileRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetVoiceProfileResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetVoiceToneAnalysisTaskRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetVoiceToneAnalysisTaskResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GoneException": {
       "base": "<p>Access to the target resource is no longer available at the origin server. This condition is likely to be permanent.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GuidString": {
       "base": null,
@@ -920,128 +834,103 @@
     },
     "ListAvailableVoiceConnectorRegionsResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListPhoneNumberOrdersRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListPhoneNumberOrdersResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListPhoneNumbersRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListPhoneNumbersResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListProxySessionsRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListProxySessionsResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListSipMediaApplicationsRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListSipMediaApplicationsResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListSipRulesRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListSipRulesResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListSupportedPhoneNumberCountriesRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListSupportedPhoneNumberCountriesResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListTagsForResourceRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListTagsForResourceResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListVoiceConnectorGroupsRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListVoiceConnectorGroupsResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListVoiceConnectorTerminationCredentialsRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListVoiceConnectorTerminationCredentialsResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListVoiceConnectorsRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListVoiceConnectorsResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListVoiceProfileDomainsRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListVoiceProfileDomainsResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListVoiceProfilesRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListVoiceProfilesResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "LoggingConfiguration": {
       "base": "<p>The logging configuration associated with an Amazon Chime SDK Voice Connector. Specifies whether SIP message logs can be sent to Amazon CloudWatch Logs.</p>",
@@ -1057,9 +946,17 @@
         "StreamingConfiguration$MediaInsightsConfiguration": "<p>The call analytics configuration.</p>"
       }
     },
+    "NetworkType": {
+      "base": null,
+      "refs": {
+        "CreateVoiceConnectorRequest$NetworkType": "<p>The type of network for the Voice Connector.</p>",
+        "VoiceConnector$NetworkType": "<p>The type of network for the Voice Connector.</p>"
+      }
+    },
     "NextTokenString": {
       "base": null,
       "refs": {
+        "ListPhoneNumberOrdersRequest$NextToken": "<p>The token used to retrieve the next page of results.</p>",
         "ListProxySessionsRequest$NextToken": "<p>The token used to retrieve the next page of results.</p>",
         "ListProxySessionsResponse$NextToken": "<p>The token used to retrieve the next page of results.</p>",
         "ListSipMediaApplicationsRequest$NextToken": "<p>The token used to return the next page of results.</p>",
@@ -1072,44 +969,21 @@
       "base": null,
       "refs": {
         "AssociatePhoneNumbersWithVoiceConnectorGroupRequest$VoiceConnectorGroupId": "<p>The Amazon Chime SDK Voice Connector group ID.</p>",
-        "AssociatePhoneNumbersWithVoiceConnectorRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
         "CreateSipMediaApplicationCallRequest$SipMediaApplicationId": "<p>The ID of the SIP media application.</p>",
         "CreateSipRuleRequest$TriggerValue": "<p>If <code>TriggerType</code> is <code>RequestUriHostname</code>, the value can be the outbound host name of a Voice Connector. If <code>TriggerType</code> is <code>ToPhoneNumber</code>, the value can be a customer-owned phone number in the E164 format. The <code>SipMediaApplication</code> specified in the <code>SipRule</code> is triggered if the request URI in an incoming SIP request matches the <code>RequestUriHostname</code>, or if the <code>To</code> header in the incoming SIP request matches the <code>ToPhoneNumber</code> value.</p>",
         "DeleteSipMediaApplicationRequest$SipMediaApplicationId": "<p>The SIP media application ID.</p>",
         "DeleteSipRuleRequest$SipRuleId": "<p>The SIP rule ID.</p>",
-        "DeleteVoiceConnectorEmergencyCallingConfigurationRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
-        "DeleteVoiceConnectorExternalSystemsConfigurationRequest$VoiceConnectorId": "<p>The ID of the Voice Connector for which to delete the external system configuration.</p>",
         "DeleteVoiceConnectorGroupRequest$VoiceConnectorGroupId": "<p>The Voice Connector Group ID.</p>",
-        "DeleteVoiceConnectorOriginationRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
-        "DeleteVoiceConnectorRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
-        "DeleteVoiceConnectorStreamingConfigurationRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
-        "DeleteVoiceConnectorTerminationCredentialsRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
-        "DeleteVoiceConnectorTerminationRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
         "DisassociatePhoneNumbersFromVoiceConnectorGroupRequest$VoiceConnectorGroupId": "<p>The Voice Connector group ID.</p>",
-        "DisassociatePhoneNumbersFromVoiceConnectorRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
         "GetSipMediaApplicationAlexaSkillConfigurationRequest$SipMediaApplicationId": "<p>The SIP media application ID.</p>",
         "GetSipMediaApplicationLoggingConfigurationRequest$SipMediaApplicationId": "<p>The SIP media application ID.</p>",
         "GetSipMediaApplicationRequest$SipMediaApplicationId": "<p>The SIP media application ID .</p>",
         "GetSipRuleRequest$SipRuleId": "<p>The SIP rule ID.</p>",
-        "GetVoiceConnectorEmergencyCallingConfigurationRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
-        "GetVoiceConnectorExternalSystemsConfigurationRequest$VoiceConnectorId": "<p>The ID of the Voice Connector for which to return information about the external system configuration.</p>",
         "GetVoiceConnectorGroupRequest$VoiceConnectorGroupId": "<p>The Voice Connector group ID.</p>",
-        "GetVoiceConnectorLoggingConfigurationRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
-        "GetVoiceConnectorOriginationRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
-        "GetVoiceConnectorRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
-        "GetVoiceConnectorStreamingConfigurationRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
-        "GetVoiceConnectorTerminationHealthRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
-        "GetVoiceConnectorTerminationRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
         "ListSipRulesRequest$SipMediaApplicationId": "<p>The SIP media application ID.</p>",
-        "ListVoiceConnectorTerminationCredentialsRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "PhoneNumber$PhoneNumberArn": null,
         "PutSipMediaApplicationAlexaSkillConfigurationRequest$SipMediaApplicationId": "<p>The SIP media application ID.</p>",
         "PutSipMediaApplicationLoggingConfigurationRequest$SipMediaApplicationId": "<p>The SIP media application ID.</p>",
-        "PutVoiceConnectorEmergencyCallingConfigurationRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
-        "PutVoiceConnectorLoggingConfigurationRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
-        "PutVoiceConnectorOriginationRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
-        "PutVoiceConnectorStreamingConfigurationRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
-        "PutVoiceConnectorTerminationCredentialsRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
-        "PutVoiceConnectorTerminationRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
         "SipMediaApplication$SipMediaApplicationId": "<p>A SIP media application's ID.</p>",
         "SipMediaApplication$SipMediaApplicationArn": "<p>The ARN of the SIP media application.</p>",
         "SipRule$SipRuleId": "<p>A SIP rule's ID.</p>",
@@ -1121,39 +995,19 @@
         "UpdateSipMediaApplicationRequest$SipMediaApplicationId": "<p>The SIP media application ID.</p>",
         "UpdateSipRuleRequest$SipRuleId": "<p>The SIP rule ID.</p>",
         "UpdateVoiceConnectorGroupRequest$VoiceConnectorGroupId": "<p>The Voice Connector ID.</p>",
-        "UpdateVoiceConnectorRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
         "ValidateE911AddressRequest$AwsAccountId": "<p>The AWS account ID.</p>",
-        "VoiceConnector$VoiceConnectorId": "<p>The Voice Connector's ID.</p>",
         "VoiceConnector$VoiceConnectorArn": "<p>The ARN of the Voice Connector.</p>",
         "VoiceConnectorGroup$VoiceConnectorGroupId": "<p>The ID of a Voice Connector group.</p>",
         "VoiceConnectorGroup$VoiceConnectorGroupArn": "<p>The ARN of the Voice Connector group.</p>",
-        "VoiceConnectorItem$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
         "VoiceToneAnalysisTask$VoiceToneAnalysisTaskStatus": "<p>The status of a voice tone analysis task, <code>IN_QUEUE</code>, <code>IN_PROGRESS</code>, <code>PARTIAL_SUCCESS</code>, <code>SUCCEEDED</code>, <code>FAILED</code>, or <code>STOPPED</code>.</p>"
       }
     },
     "NonEmptyString128": {
       "base": null,
       "refs": {
-        "CallDetails$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
-        "CreateProxySessionRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
-        "DeleteProxySessionRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
         "DeleteProxySessionRequest$ProxySessionId": "<p>The proxy session ID.</p>",
-        "DeleteVoiceConnectorProxyRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
-        "GetProxySessionRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
         "GetProxySessionRequest$ProxySessionId": "<p>The proxy session ID.</p>",
-        "GetSpeakerSearchTaskRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
-        "GetVoiceConnectorProxyRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
-        "GetVoiceToneAnalysisTaskRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
-        "ListProxySessionsRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
-        "ProxySession$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
         "ProxySession$ProxySessionId": "<p>The proxy session ID.</p>",
-        "PutVoiceConnectorExternalSystemsConfigurationRequest$VoiceConnectorId": "<p>The ID of the Voice Connector for which to add the external system configuration.</p>",
-        "PutVoiceConnectorProxyRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
-        "StartSpeakerSearchTaskRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
-        "StartVoiceToneAnalysisTaskRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
-        "StopSpeakerSearchTaskRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
-        "StopVoiceToneAnalysisTaskRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
-        "UpdateProxySessionRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
         "UpdateProxySessionRequest$ProxySessionId": "<p>The proxy session ID.</p>"
       }
     },
@@ -1197,8 +1051,7 @@
     },
     "NotFoundException": {
       "base": "<p>The requested resource couldn't be found.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "NotificationTarget": {
       "base": null,
@@ -1495,113 +1348,91 @@
     },
     "PutSipMediaApplicationAlexaSkillConfigurationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutSipMediaApplicationAlexaSkillConfigurationResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutSipMediaApplicationLoggingConfigurationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutSipMediaApplicationLoggingConfigurationResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutVoiceConnectorEmergencyCallingConfigurationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutVoiceConnectorEmergencyCallingConfigurationResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutVoiceConnectorExternalSystemsConfigurationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutVoiceConnectorExternalSystemsConfigurationResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutVoiceConnectorLoggingConfigurationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutVoiceConnectorLoggingConfigurationResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutVoiceConnectorOriginationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutVoiceConnectorOriginationResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutVoiceConnectorProxyRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutVoiceConnectorProxyResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutVoiceConnectorStreamingConfigurationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutVoiceConnectorStreamingConfigurationResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutVoiceConnectorTerminationCredentialsRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutVoiceConnectorTerminationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutVoiceConnectorTerminationResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ResourceLimitExceededException": {
       "base": "<p>The request exceeds the resource limit.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "RestorePhoneNumberRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "RestorePhoneNumberResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ResultMax": {
       "base": null,
@@ -1615,6 +1446,12 @@
         "ListVoiceConnectorsRequest$MaxResults": "<p>The maximum number of results to return in a single call.</p>",
         "ListVoiceProfileDomainsRequest$MaxResults": "<p>The maximum number of results to return in a single call.</p>",
         "ListVoiceProfilesRequest$MaxResults": "<p>The maximum number of results in the request.</p>"
+      }
+    },
+    "S3BucketName": {
+      "base": null,
+      "refs": {
+        "VoiceConnectorSettings$CdrBucket": "<p>The S3 bucket that stores the Voice Connector's call detail records.</p>"
       }
     },
     "SMACreateCallArgumentsMap": {
@@ -1631,13 +1468,11 @@
     },
     "SearchAvailablePhoneNumbersRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "SearchAvailablePhoneNumbersResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "SensitiveNonEmptyString": {
       "base": null,
@@ -1704,13 +1539,11 @@
     },
     "ServiceFailureException": {
       "base": "<p>The service encountered an unexpected error.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ServiceUnavailableException": {
       "base": "<p>The service is currently unavailable.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "SessionBorderControllerType": {
       "base": null,
@@ -1868,33 +1701,27 @@
     },
     "StartSpeakerSearchTaskRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "StartSpeakerSearchTaskResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "StartVoiceToneAnalysisTaskRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "StartVoiceToneAnalysisTaskResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "StopSpeakerSearchTaskRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "StopVoiceToneAnalysisTaskRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "StreamingConfiguration": {
       "base": "<p>The streaming configuration associated with an Amazon Chime SDK Voice Connector. Specifies whether media streaming is enabled for sending to Amazon Kinesis, and shows the retention period for the Amazon Kinesis data, in hours.</p>",
@@ -1920,7 +1747,6 @@
       "base": null,
       "refs": {
         "CreateSipMediaApplicationRequest$AwsRegion": "<p>The AWS Region assigned to the SIP media application.</p>",
-        "ListPhoneNumberOrdersRequest$NextToken": "<p>The token used to retrieve the next page of results.</p>",
         "ListPhoneNumberOrdersResponse$NextToken": "<p>The token used to retrieve the next page of results.</p>",
         "ListPhoneNumbersRequest$Status": "<p>The status of your organization's phone numbers.</p>",
         "ListPhoneNumbersRequest$FilterValue": "<p>The filter value.</p>",
@@ -1938,6 +1764,7 @@
         "OriginationRoute$Host": "<p>The FQDN or IP address to contact for origination traffic.</p>",
         "PhoneNumberAssociation$Value": "<p>Contains the ID for the entity specified in Name.</p>",
         "PhoneNumberError$ErrorMessage": "<p>The error message.</p>",
+        "PhoneNumberOrder$FocDate": "<p>The Firm Order Commitment (FOC) date for phone number porting orders. This field is null if a phone number order is not a porting order.</p>",
         "SearchAvailablePhoneNumbersRequest$AreaCode": "<p>Confines a search to just the phone numbers associated with the specified area code.</p>",
         "SearchAvailablePhoneNumbersRequest$City": "<p>Confines a search to just the phone numbers associated with the specified city.</p>",
         "SearchAvailablePhoneNumbersRequest$State": "<p>Confines a search to just the phone numbers associated with the specified state.</p>",
@@ -1950,7 +1777,6 @@
         "TerminationHealth$Source": "<p>The source IP address.</p>",
         "ValidateE911AddressResponse$AddressExternalId": "<p>The ID that represents the address.</p>",
         "VoiceConnector$OutboundHostName": "<p>The outbound host name for the Voice Connector.</p>",
-        "VoiceConnectorSettings$CdrBucket": "<p>The S3 bucket that stores the Voice Connector's call detail records.</p>",
         "VoiceToneAnalysisTask$StatusMessage": "<p>The status of a voice tone analysis task.</p>"
       }
     },
@@ -1998,8 +1824,7 @@
     },
     "TagResourceRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "TagValue": {
       "base": null,
@@ -2023,8 +1848,7 @@
     },
     "ThrottledClientException": {
       "base": "<p>The number of customer requests exceeds the request rate limit.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "TollFreePrefix": {
       "base": null,
@@ -2034,28 +1858,23 @@
     },
     "UnauthorizedClientException": {
       "base": "<p>The client isn't authorized to request a resource.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "UnprocessableEntityException": {
       "base": "<p>A well-formed request couldn't be followed due to semantic errors.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "UntagResourceRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateGlobalSettingsRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdatePhoneNumberRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdatePhoneNumberRequestItem": {
       "base": "<p>The phone number ID, product type, or calling name fields to update, used with the <a>BatchUpdatePhoneNumber</a> and <a>UpdatePhoneNumber</a> actions.</p>",
@@ -2071,103 +1890,83 @@
     },
     "UpdatePhoneNumberResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdatePhoneNumberSettingsRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateProxySessionRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateProxySessionResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateSipMediaApplicationCallRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateSipMediaApplicationCallResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateSipMediaApplicationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateSipMediaApplicationResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateSipRuleRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateSipRuleResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateVoiceConnectorGroupRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateVoiceConnectorGroupResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateVoiceConnectorRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateVoiceConnectorResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateVoiceProfileDomainRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateVoiceProfileDomainResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateVoiceProfileRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateVoiceProfileResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ValidateE911AddressRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ValidateE911AddressResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ValidationResult": {
       "base": null,
@@ -2221,11 +2020,60 @@
         "VoiceConnectorGroup$Name": "<p>The name of a Voice Connector group.</p>"
       }
     },
+    "VoiceConnectorId": {
+      "base": null,
+      "refs": {
+        "AssociatePhoneNumbersWithVoiceConnectorRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "CallDetails$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "CreateProxySessionRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "DeleteProxySessionRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "DeleteVoiceConnectorEmergencyCallingConfigurationRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "DeleteVoiceConnectorExternalSystemsConfigurationRequest$VoiceConnectorId": "<p>The ID of the Voice Connector for which to delete the external system configuration.</p>",
+        "DeleteVoiceConnectorOriginationRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "DeleteVoiceConnectorProxyRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "DeleteVoiceConnectorRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "DeleteVoiceConnectorStreamingConfigurationRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "DeleteVoiceConnectorTerminationCredentialsRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "DeleteVoiceConnectorTerminationRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "DisassociatePhoneNumbersFromVoiceConnectorRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "GetProxySessionRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "GetSpeakerSearchTaskRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "GetVoiceConnectorEmergencyCallingConfigurationRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "GetVoiceConnectorExternalSystemsConfigurationRequest$VoiceConnectorId": "<p>The ID of the Voice Connector for which to return information about the external system configuration.</p>",
+        "GetVoiceConnectorLoggingConfigurationRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "GetVoiceConnectorOriginationRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "GetVoiceConnectorProxyRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "GetVoiceConnectorRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "GetVoiceConnectorStreamingConfigurationRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "GetVoiceConnectorTerminationHealthRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "GetVoiceConnectorTerminationRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "GetVoiceToneAnalysisTaskRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "ListProxySessionsRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "ListVoiceConnectorTerminationCredentialsRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "ProxySession$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "PutVoiceConnectorEmergencyCallingConfigurationRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "PutVoiceConnectorExternalSystemsConfigurationRequest$VoiceConnectorId": "<p>The ID of the Voice Connector for which to add the external system configuration.</p>",
+        "PutVoiceConnectorLoggingConfigurationRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "PutVoiceConnectorOriginationRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "PutVoiceConnectorProxyRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "PutVoiceConnectorStreamingConfigurationRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "PutVoiceConnectorTerminationCredentialsRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "PutVoiceConnectorTerminationRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "StartSpeakerSearchTaskRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "StartVoiceToneAnalysisTaskRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "StopSpeakerSearchTaskRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "StopVoiceToneAnalysisTaskRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "UpdateProxySessionRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "UpdateVoiceConnectorRequest$VoiceConnectorId": "<p>The Voice Connector ID.</p>",
+        "VoiceConnector$VoiceConnectorId": "<p>The Voice Connector's ID.</p>",
+        "VoiceConnectorItem$VoiceConnectorId": "<p>The Voice Connector ID.</p>"
+      }
+    },
     "VoiceConnectorIntegrationType": {
       "base": null,
       "refs": {
-        "CreateVoiceConnectorRequest$IntegrationType": "<p>The connectors for use with Amazon Connect.</p> <p>The following options are available:</p> <ul> <li> <p> <code>CONNECT_CALL_TRANSFER_CONNECTOR</code> - Enables enterprises to integrate Amazon Connect with other voice systems to directly transfer voice calls and metadata without using the public telephone network. They can use Amazon Connect telephony and Interactive Voice Response (IVR) with their existing voice systems to modernize the IVR experience of their existing contact center and their enterprise and branch voice systems. Additionally, enterprises migrating their contact center to Amazon Connect can start with Connect telephony and IVR for immediate modernization ahead of agent migration.</p> </li> <li> <p> <code>CONNECT_ANALYTICS_CONNECTOR</code> - Enables enterprises to integrate Amazon Connect with other voice systems for real-time and post-call analytics. They can use Amazon Connect Contact Lens with their existing voice systems to provides call recordings, conversational analytics (including contact transcript, sensitive data redaction, content categorization, theme detection, sentiment analysis, real-time alerts, and post-contact summary), and agent performance evaluations (including evaluation forms, automated evaluation, supervisor review) with a rich user experience to display, search and filter customer interactions, and programmatic access to data streams and the data lake. Additionally, enterprises migrating their contact center to Amazon Connect can start with Contact Lens analytics and performance insights ahead of agent migration.</p> </li> </ul>",
-        "VoiceConnector$IntegrationType": "<p>The connectors for use with Amazon Connect.</p>"
+        "CreateVoiceConnectorRequest$IntegrationType": "<p>The connectors for use with Connect Customer.</p> <p>The following options are available:</p> <ul> <li> <p> <code>CONNECT_CALL_TRANSFER_CONNECTOR</code> - Enables enterprises to integrate Connect Customer with other voice systems to directly transfer voice calls and metadata without using the public telephone network. They can use Connect Customer telephony and Interactive Voice Response (IVR) with their existing voice systems to modernize the IVR experience of their existing contact center and their enterprise and branch voice systems. Additionally, enterprises migrating their contact center to Connect Customer can start with Connect telephony and IVR for immediate modernization ahead of agent migration.</p> <note> <p>This integration is a gated feature. Please reach out to your account team to discuss this feature with a Connect Specialist.</p> </note> </li> <li> <p> <code>CONNECT_ANALYTICS_CONNECTOR</code> - Enables enterprises to integrate Connect Customer with other voice systems for real-time and post-call analytics. They can use Connect Customer Contact Lens with their existing voice systems to provides call recordings, conversational analytics (including contact transcript, sensitive data redaction, content categorization, theme detection, sentiment analysis, real-time alerts, and post-contact summary), and agent performance evaluations (including evaluation forms, automated evaluation, supervisor review) with a rich user experience to display, search and filter customer interactions, and programmatic access to data streams and the data lake. Additionally, enterprises migrating their contact center to Connect Customer can start with Contact Lens analytics and performance insights ahead of agent migration.</p> </li> </ul>",
+        "VoiceConnector$IntegrationType": "<p>The connectors for use with Connect Customer.</p>"
       }
     },
     "VoiceConnectorItem": {

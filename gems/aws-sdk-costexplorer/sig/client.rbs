@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -91,38 +92,15 @@ module Aws
                                       last_updated_date: ::String?,
                                       last_evaluated_date: ::String?,
                                       monitor_type: ("DIMENSIONAL" | "CUSTOM"),
-                                      monitor_dimension: ("SERVICE")?,
-                                      monitor_specification: {
-                                        or: Array[
-                                          untyped,
-                                        ]?,
-                                        and: Array[
-                                          untyped,
-                                        ]?,
-                                        not: untyped?,
-                                        dimensions: {
-                                          key: ("AZ" | "INSTANCE_TYPE" | "LINKED_ACCOUNT" | "LINKED_ACCOUNT_NAME" | "OPERATION" | "PURCHASE_TYPE" | "REGION" | "SERVICE" | "SERVICE_CODE" | "USAGE_TYPE" | "USAGE_TYPE_GROUP" | "RECORD_TYPE" | "OPERATING_SYSTEM" | "TENANCY" | "SCOPE" | "PLATFORM" | "SUBSCRIPTION_ID" | "LEGAL_ENTITY_NAME" | "DEPLOYMENT_OPTION" | "DATABASE_ENGINE" | "CACHE_ENGINE" | "INSTANCE_TYPE_FAMILY" | "BILLING_ENTITY" | "RESERVATION_ID" | "RESOURCE_ID" | "RIGHTSIZING_TYPE" | "SAVINGS_PLANS_TYPE" | "SAVINGS_PLAN_ARN" | "PAYMENT_OPTION" | "AGREEMENT_END_DATE_TIME_AFTER" | "AGREEMENT_END_DATE_TIME_BEFORE" | "INVOICING_ENTITY" | "ANOMALY_TOTAL_IMPACT_ABSOLUTE" | "ANOMALY_TOTAL_IMPACT_PERCENTAGE")?,
-                                          values: Array[::String]?,
-                                          match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                        }?,
-                                        tags: {
-                                          key: ::String?,
-                                          values: Array[::String]?,
-                                          match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                        }?,
-                                        cost_categories: {
-                                          key: ::String?,
-                                          values: Array[::String]?,
-                                          match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                        }?
-                                      }?,
+                                      monitor_dimension: ("SERVICE" | "LINKED_ACCOUNT" | "TAG" | "COST_CATEGORY")?,
+                                      monitor_specification: Params::expression?,
                                       dimensional_value_count: ::Integer?
                                     },
                                     ?resource_tags: Array[
                                       {
                                         key: ::String,
                                         value: ::String
-                                      },
+                                      }
                                     ]
                                   ) -> _CreateAnomalyMonitorResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateAnomalyMonitorResponseSuccess
@@ -142,41 +120,18 @@ module Aws
                                                address: ::String?,
                                                type: ("EMAIL" | "SNS")?,
                                                status: ("CONFIRMED" | "DECLINED")?
-                                             },
+                                             }
                                            ],
                                            threshold: ::Float?,
                                            frequency: ("DAILY" | "IMMEDIATE" | "WEEKLY"),
                                            subscription_name: ::String,
-                                           threshold_expression: {
-                                             or: Array[
-                                               untyped,
-                                             ]?,
-                                             and: Array[
-                                               untyped,
-                                             ]?,
-                                             not: untyped?,
-                                             dimensions: {
-                                               key: ("AZ" | "INSTANCE_TYPE" | "LINKED_ACCOUNT" | "LINKED_ACCOUNT_NAME" | "OPERATION" | "PURCHASE_TYPE" | "REGION" | "SERVICE" | "SERVICE_CODE" | "USAGE_TYPE" | "USAGE_TYPE_GROUP" | "RECORD_TYPE" | "OPERATING_SYSTEM" | "TENANCY" | "SCOPE" | "PLATFORM" | "SUBSCRIPTION_ID" | "LEGAL_ENTITY_NAME" | "DEPLOYMENT_OPTION" | "DATABASE_ENGINE" | "CACHE_ENGINE" | "INSTANCE_TYPE_FAMILY" | "BILLING_ENTITY" | "RESERVATION_ID" | "RESOURCE_ID" | "RIGHTSIZING_TYPE" | "SAVINGS_PLANS_TYPE" | "SAVINGS_PLAN_ARN" | "PAYMENT_OPTION" | "AGREEMENT_END_DATE_TIME_AFTER" | "AGREEMENT_END_DATE_TIME_BEFORE" | "INVOICING_ENTITY" | "ANOMALY_TOTAL_IMPACT_ABSOLUTE" | "ANOMALY_TOTAL_IMPACT_PERCENTAGE")?,
-                                               values: Array[::String]?,
-                                               match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                             }?,
-                                             tags: {
-                                               key: ::String?,
-                                               values: Array[::String]?,
-                                               match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                             }?,
-                                             cost_categories: {
-                                               key: ::String?,
-                                               values: Array[::String]?,
-                                               match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                             }?
-                                           }?
+                                           threshold_expression: Params::expression?
                                          },
                                          ?resource_tags: Array[
                                            {
                                              key: ::String,
                                              value: ::String
-                                           },
+                                           }
                                          ]
                                        ) -> _CreateAnomalySubscriptionResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateAnomalySubscriptionResponseSuccess
@@ -192,58 +147,17 @@ module Aws
                                              ?effective_start: ::String,
                                              rule_version: ("CostCategoryExpression.v1"),
                                              rules: Array[
-                                               {
-                                                 value: ::String?,
-                                                 rule: {
-                                                   or: Array[
-                                                     untyped,
-                                                   ]?,
-                                                   and: Array[
-                                                     untyped,
-                                                   ]?,
-                                                   not: untyped?,
-                                                   dimensions: {
-                                                     key: ("AZ" | "INSTANCE_TYPE" | "LINKED_ACCOUNT" | "LINKED_ACCOUNT_NAME" | "OPERATION" | "PURCHASE_TYPE" | "REGION" | "SERVICE" | "SERVICE_CODE" | "USAGE_TYPE" | "USAGE_TYPE_GROUP" | "RECORD_TYPE" | "OPERATING_SYSTEM" | "TENANCY" | "SCOPE" | "PLATFORM" | "SUBSCRIPTION_ID" | "LEGAL_ENTITY_NAME" | "DEPLOYMENT_OPTION" | "DATABASE_ENGINE" | "CACHE_ENGINE" | "INSTANCE_TYPE_FAMILY" | "BILLING_ENTITY" | "RESERVATION_ID" | "RESOURCE_ID" | "RIGHTSIZING_TYPE" | "SAVINGS_PLANS_TYPE" | "SAVINGS_PLAN_ARN" | "PAYMENT_OPTION" | "AGREEMENT_END_DATE_TIME_AFTER" | "AGREEMENT_END_DATE_TIME_BEFORE" | "INVOICING_ENTITY" | "ANOMALY_TOTAL_IMPACT_ABSOLUTE" | "ANOMALY_TOTAL_IMPACT_PERCENTAGE")?,
-                                                     values: Array[::String]?,
-                                                     match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                                   }?,
-                                                   tags: {
-                                                     key: ::String?,
-                                                     values: Array[::String]?,
-                                                     match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                                   }?,
-                                                   cost_categories: {
-                                                     key: ::String?,
-                                                     values: Array[::String]?,
-                                                     match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                                   }?
-                                                 }?,
-                                                 inherited_value: {
-                                                   dimension_name: ("LINKED_ACCOUNT_NAME" | "TAG")?,
-                                                   dimension_key: ::String?
-                                                 }?,
-                                                 type: ("REGULAR" | "INHERITED_VALUE")?
-                                               },
+                                               Params::cost_category_rule
                                              ],
                                              ?default_value: ::String,
                                              ?split_charge_rules: Array[
-                                               {
-                                                 source: ::String,
-                                                 targets: Array[::String],
-                                                 method: ("FIXED" | "PROPORTIONAL" | "EVEN"),
-                                                 parameters: Array[
-                                                   {
-                                                     type: ("ALLOCATION_PERCENTAGES"),
-                                                     values: Array[::String]
-                                                   },
-                                                 ]?
-                                               },
+                                               Params::cost_category_split_charge_rule
                                              ],
                                              ?resource_tags: Array[
                                                {
                                                  key: ::String,
                                                  value: ::String
-                                               },
+                                               }
                                              ]
                                            ) -> _CreateCostCategoryDefinitionResponseSuccess
                                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateCostCategoryDefinitionResponseSuccess
@@ -383,41 +297,48 @@ module Aws
                                   end: ::String
                                 },
                                 granularity: ("DAILY" | "MONTHLY" | "HOURLY"),
-                                ?filter: {
-                                  or: Array[
-                                    untyped,
-                                  ]?,
-                                  and: Array[
-                                    untyped,
-                                  ]?,
-                                  not: untyped?,
-                                  dimensions: {
-                                    key: ("AZ" | "INSTANCE_TYPE" | "LINKED_ACCOUNT" | "LINKED_ACCOUNT_NAME" | "OPERATION" | "PURCHASE_TYPE" | "REGION" | "SERVICE" | "SERVICE_CODE" | "USAGE_TYPE" | "USAGE_TYPE_GROUP" | "RECORD_TYPE" | "OPERATING_SYSTEM" | "TENANCY" | "SCOPE" | "PLATFORM" | "SUBSCRIPTION_ID" | "LEGAL_ENTITY_NAME" | "DEPLOYMENT_OPTION" | "DATABASE_ENGINE" | "CACHE_ENGINE" | "INSTANCE_TYPE_FAMILY" | "BILLING_ENTITY" | "RESERVATION_ID" | "RESOURCE_ID" | "RIGHTSIZING_TYPE" | "SAVINGS_PLANS_TYPE" | "SAVINGS_PLAN_ARN" | "PAYMENT_OPTION" | "AGREEMENT_END_DATE_TIME_AFTER" | "AGREEMENT_END_DATE_TIME_BEFORE" | "INVOICING_ENTITY" | "ANOMALY_TOTAL_IMPACT_ABSOLUTE" | "ANOMALY_TOTAL_IMPACT_PERCENTAGE")?,
-                                    values: Array[::String]?,
-                                    match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                  }?,
-                                  tags: {
-                                    key: ::String?,
-                                    values: Array[::String]?,
-                                    match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                  }?,
-                                  cost_categories: {
-                                    key: ::String?,
-                                    values: Array[::String]?,
-                                    match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                  }?
-                                },
+                                ?filter: Params::expression,
                                 metrics: Array[::String],
                                 ?group_by: Array[
                                   {
                                     type: ("DIMENSION" | "TAG" | "COST_CATEGORY")?,
                                     key: ::String?
-                                  },
+                                  }
                                 ],
                                 ?billing_view_arn: ::String,
                                 ?next_page_token: ::String
                               ) -> _GetCostAndUsageResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetCostAndUsageResponseSuccess
+
+      interface _GetCostAndUsageComparisonsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetCostAndUsageComparisonsResponse]
+        def cost_and_usage_comparisons: () -> ::Array[Types::CostAndUsageComparison]
+        def total_cost_and_usage: () -> ::Hash[::String, Types::ComparisonMetricValue]
+        def next_page_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CostExplorer/Client.html#get_cost_and_usage_comparisons-instance_method
+      def get_cost_and_usage_comparisons: (
+                                            ?billing_view_arn: ::String,
+                                            baseline_time_period: {
+                                              start: ::String,
+                                              end: ::String
+                                            },
+                                            comparison_time_period: {
+                                              start: ::String,
+                                              end: ::String
+                                            },
+                                            metric_for_comparison: ::String,
+                                            ?filter: Params::expression,
+                                            ?group_by: Array[
+                                              {
+                                                type: ("DIMENSION" | "TAG" | "COST_CATEGORY")?,
+                                                key: ::String?
+                                              }
+                                            ],
+                                            ?max_results: ::Integer,
+                                            ?next_page_token: ::String
+                                          ) -> _GetCostAndUsageComparisonsResponseSuccess
+                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetCostAndUsageComparisonsResponseSuccess
 
       interface _GetCostAndUsageWithResourcesResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetCostAndUsageWithResourcesResponse]
@@ -433,36 +354,13 @@ module Aws
                                                  end: ::String
                                                },
                                                granularity: ("DAILY" | "MONTHLY" | "HOURLY"),
-                                               filter: {
-                                                 or: Array[
-                                                   untyped,
-                                                 ]?,
-                                                 and: Array[
-                                                   untyped,
-                                                 ]?,
-                                                 not: untyped?,
-                                                 dimensions: {
-                                                   key: ("AZ" | "INSTANCE_TYPE" | "LINKED_ACCOUNT" | "LINKED_ACCOUNT_NAME" | "OPERATION" | "PURCHASE_TYPE" | "REGION" | "SERVICE" | "SERVICE_CODE" | "USAGE_TYPE" | "USAGE_TYPE_GROUP" | "RECORD_TYPE" | "OPERATING_SYSTEM" | "TENANCY" | "SCOPE" | "PLATFORM" | "SUBSCRIPTION_ID" | "LEGAL_ENTITY_NAME" | "DEPLOYMENT_OPTION" | "DATABASE_ENGINE" | "CACHE_ENGINE" | "INSTANCE_TYPE_FAMILY" | "BILLING_ENTITY" | "RESERVATION_ID" | "RESOURCE_ID" | "RIGHTSIZING_TYPE" | "SAVINGS_PLANS_TYPE" | "SAVINGS_PLAN_ARN" | "PAYMENT_OPTION" | "AGREEMENT_END_DATE_TIME_AFTER" | "AGREEMENT_END_DATE_TIME_BEFORE" | "INVOICING_ENTITY" | "ANOMALY_TOTAL_IMPACT_ABSOLUTE" | "ANOMALY_TOTAL_IMPACT_PERCENTAGE")?,
-                                                   values: Array[::String]?,
-                                                   match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                                 }?,
-                                                 tags: {
-                                                   key: ::String?,
-                                                   values: Array[::String]?,
-                                                   match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                                 }?,
-                                                 cost_categories: {
-                                                   key: ::String?,
-                                                   values: Array[::String]?,
-                                                   match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                                 }?
-                                               },
+                                               filter: Params::expression,
                                                ?metrics: Array[::String],
                                                ?group_by: Array[
                                                  {
                                                    type: ("DIMENSION" | "TAG" | "COST_CATEGORY")?,
                                                    key: ::String?
-                                                 },
+                                                 }
                                                ],
                                                ?billing_view_arn: ::String,
                                                ?next_page_token: ::String
@@ -485,41 +383,47 @@ module Aws
                                    end: ::String
                                  },
                                  ?cost_category_name: ::String,
-                                 ?filter: {
-                                   or: Array[
-                                     untyped,
-                                   ]?,
-                                   and: Array[
-                                     untyped,
-                                   ]?,
-                                   not: untyped?,
-                                   dimensions: {
-                                     key: ("AZ" | "INSTANCE_TYPE" | "LINKED_ACCOUNT" | "LINKED_ACCOUNT_NAME" | "OPERATION" | "PURCHASE_TYPE" | "REGION" | "SERVICE" | "SERVICE_CODE" | "USAGE_TYPE" | "USAGE_TYPE_GROUP" | "RECORD_TYPE" | "OPERATING_SYSTEM" | "TENANCY" | "SCOPE" | "PLATFORM" | "SUBSCRIPTION_ID" | "LEGAL_ENTITY_NAME" | "DEPLOYMENT_OPTION" | "DATABASE_ENGINE" | "CACHE_ENGINE" | "INSTANCE_TYPE_FAMILY" | "BILLING_ENTITY" | "RESERVATION_ID" | "RESOURCE_ID" | "RIGHTSIZING_TYPE" | "SAVINGS_PLANS_TYPE" | "SAVINGS_PLAN_ARN" | "PAYMENT_OPTION" | "AGREEMENT_END_DATE_TIME_AFTER" | "AGREEMENT_END_DATE_TIME_BEFORE" | "INVOICING_ENTITY" | "ANOMALY_TOTAL_IMPACT_ABSOLUTE" | "ANOMALY_TOTAL_IMPACT_PERCENTAGE")?,
-                                     values: Array[::String]?,
-                                     match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                   }?,
-                                   tags: {
-                                     key: ::String?,
-                                     values: Array[::String]?,
-                                     match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                   }?,
-                                   cost_categories: {
-                                     key: ::String?,
-                                     values: Array[::String]?,
-                                     match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                   }?
-                                 },
+                                 ?filter: Params::expression,
                                  ?sort_by: Array[
                                    {
                                      key: ::String,
                                      sort_order: ("ASCENDING" | "DESCENDING")?
-                                   },
+                                   }
                                  ],
                                  ?billing_view_arn: ::String,
                                  ?max_results: ::Integer,
                                  ?next_page_token: ::String
                                ) -> _GetCostCategoriesResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetCostCategoriesResponseSuccess
+
+      interface _GetCostComparisonDriversResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetCostComparisonDriversResponse]
+        def cost_comparison_drivers: () -> ::Array[Types::CostComparisonDriver]
+        def next_page_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CostExplorer/Client.html#get_cost_comparison_drivers-instance_method
+      def get_cost_comparison_drivers: (
+                                         ?billing_view_arn: ::String,
+                                         baseline_time_period: {
+                                           start: ::String,
+                                           end: ::String
+                                         },
+                                         comparison_time_period: {
+                                           start: ::String,
+                                           end: ::String
+                                         },
+                                         metric_for_comparison: ::String,
+                                         ?filter: Params::expression,
+                                         ?group_by: Array[
+                                           {
+                                             type: ("DIMENSION" | "TAG" | "COST_CATEGORY")?,
+                                             key: ::String?
+                                           }
+                                         ],
+                                         ?max_results: ::Integer,
+                                         ?next_page_token: ::String
+                                       ) -> _GetCostComparisonDriversResponseSuccess
+                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetCostComparisonDriversResponseSuccess
 
       interface _GetCostForecastResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetCostForecastResponse]
@@ -534,30 +438,7 @@ module Aws
                                },
                                metric: ("BLENDED_COST" | "UNBLENDED_COST" | "AMORTIZED_COST" | "NET_UNBLENDED_COST" | "NET_AMORTIZED_COST" | "USAGE_QUANTITY" | "NORMALIZED_USAGE_AMOUNT"),
                                granularity: ("DAILY" | "MONTHLY" | "HOURLY"),
-                               ?filter: {
-                                 or: Array[
-                                   untyped,
-                                 ]?,
-                                 and: Array[
-                                   untyped,
-                                 ]?,
-                                 not: untyped?,
-                                 dimensions: {
-                                   key: ("AZ" | "INSTANCE_TYPE" | "LINKED_ACCOUNT" | "LINKED_ACCOUNT_NAME" | "OPERATION" | "PURCHASE_TYPE" | "REGION" | "SERVICE" | "SERVICE_CODE" | "USAGE_TYPE" | "USAGE_TYPE_GROUP" | "RECORD_TYPE" | "OPERATING_SYSTEM" | "TENANCY" | "SCOPE" | "PLATFORM" | "SUBSCRIPTION_ID" | "LEGAL_ENTITY_NAME" | "DEPLOYMENT_OPTION" | "DATABASE_ENGINE" | "CACHE_ENGINE" | "INSTANCE_TYPE_FAMILY" | "BILLING_ENTITY" | "RESERVATION_ID" | "RESOURCE_ID" | "RIGHTSIZING_TYPE" | "SAVINGS_PLANS_TYPE" | "SAVINGS_PLAN_ARN" | "PAYMENT_OPTION" | "AGREEMENT_END_DATE_TIME_AFTER" | "AGREEMENT_END_DATE_TIME_BEFORE" | "INVOICING_ENTITY" | "ANOMALY_TOTAL_IMPACT_ABSOLUTE" | "ANOMALY_TOTAL_IMPACT_PERCENTAGE")?,
-                                   values: Array[::String]?,
-                                   match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                 }?,
-                                 tags: {
-                                   key: ::String?,
-                                   values: Array[::String]?,
-                                   match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                 }?,
-                                 cost_categories: {
-                                   key: ::String?,
-                                   values: Array[::String]?,
-                                   match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                 }?
-                               },
+                               ?filter: Params::expression,
                                ?billing_view_arn: ::String,
                                ?prediction_interval_level: ::Integer
                              ) -> _GetCostForecastResponseSuccess
@@ -577,37 +458,14 @@ module Aws
                                     start: ::String,
                                     end: ::String
                                   },
-                                  dimension: ("AZ" | "INSTANCE_TYPE" | "LINKED_ACCOUNT" | "LINKED_ACCOUNT_NAME" | "OPERATION" | "PURCHASE_TYPE" | "REGION" | "SERVICE" | "SERVICE_CODE" | "USAGE_TYPE" | "USAGE_TYPE_GROUP" | "RECORD_TYPE" | "OPERATING_SYSTEM" | "TENANCY" | "SCOPE" | "PLATFORM" | "SUBSCRIPTION_ID" | "LEGAL_ENTITY_NAME" | "DEPLOYMENT_OPTION" | "DATABASE_ENGINE" | "CACHE_ENGINE" | "INSTANCE_TYPE_FAMILY" | "BILLING_ENTITY" | "RESERVATION_ID" | "RESOURCE_ID" | "RIGHTSIZING_TYPE" | "SAVINGS_PLANS_TYPE" | "SAVINGS_PLAN_ARN" | "PAYMENT_OPTION" | "AGREEMENT_END_DATE_TIME_AFTER" | "AGREEMENT_END_DATE_TIME_BEFORE" | "INVOICING_ENTITY" | "ANOMALY_TOTAL_IMPACT_ABSOLUTE" | "ANOMALY_TOTAL_IMPACT_PERCENTAGE"),
+                                  dimension: ("AZ" | "INSTANCE_TYPE" | "LINKED_ACCOUNT" | "PAYER_ACCOUNT" | "LINKED_ACCOUNT_NAME" | "OPERATION" | "PURCHASE_TYPE" | "REGION" | "SERVICE" | "SERVICE_CODE" | "USAGE_TYPE" | "USAGE_TYPE_GROUP" | "RECORD_TYPE" | "OPERATING_SYSTEM" | "TENANCY" | "SCOPE" | "PLATFORM" | "SUBSCRIPTION_ID" | "LEGAL_ENTITY_NAME" | "DEPLOYMENT_OPTION" | "DATABASE_ENGINE" | "CACHE_ENGINE" | "INSTANCE_TYPE_FAMILY" | "BILLING_ENTITY" | "RESERVATION_ID" | "RESOURCE_ID" | "RIGHTSIZING_TYPE" | "SAVINGS_PLANS_TYPE" | "SAVINGS_PLAN_ARN" | "PAYMENT_OPTION" | "AGREEMENT_END_DATE_TIME_AFTER" | "AGREEMENT_END_DATE_TIME_BEFORE" | "INVOICING_ENTITY" | "ANOMALY_TOTAL_IMPACT_ABSOLUTE" | "ANOMALY_TOTAL_IMPACT_PERCENTAGE"),
                                   ?context: ("COST_AND_USAGE" | "RESERVATIONS" | "SAVINGS_PLANS"),
-                                  ?filter: {
-                                    or: Array[
-                                      untyped,
-                                    ]?,
-                                    and: Array[
-                                      untyped,
-                                    ]?,
-                                    not: untyped?,
-                                    dimensions: {
-                                      key: ("AZ" | "INSTANCE_TYPE" | "LINKED_ACCOUNT" | "LINKED_ACCOUNT_NAME" | "OPERATION" | "PURCHASE_TYPE" | "REGION" | "SERVICE" | "SERVICE_CODE" | "USAGE_TYPE" | "USAGE_TYPE_GROUP" | "RECORD_TYPE" | "OPERATING_SYSTEM" | "TENANCY" | "SCOPE" | "PLATFORM" | "SUBSCRIPTION_ID" | "LEGAL_ENTITY_NAME" | "DEPLOYMENT_OPTION" | "DATABASE_ENGINE" | "CACHE_ENGINE" | "INSTANCE_TYPE_FAMILY" | "BILLING_ENTITY" | "RESERVATION_ID" | "RESOURCE_ID" | "RIGHTSIZING_TYPE" | "SAVINGS_PLANS_TYPE" | "SAVINGS_PLAN_ARN" | "PAYMENT_OPTION" | "AGREEMENT_END_DATE_TIME_AFTER" | "AGREEMENT_END_DATE_TIME_BEFORE" | "INVOICING_ENTITY" | "ANOMALY_TOTAL_IMPACT_ABSOLUTE" | "ANOMALY_TOTAL_IMPACT_PERCENTAGE")?,
-                                      values: Array[::String]?,
-                                      match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                    }?,
-                                    tags: {
-                                      key: ::String?,
-                                      values: Array[::String]?,
-                                      match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                    }?,
-                                    cost_categories: {
-                                      key: ::String?,
-                                      values: Array[::String]?,
-                                      match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                    }?
-                                  },
+                                  ?filter: Params::expression,
                                   ?sort_by: Array[
                                     {
                                       key: ::String,
                                       sort_order: ("ASCENDING" | "DESCENDING")?
-                                    },
+                                    }
                                   ],
                                   ?billing_view_arn: ::String,
                                   ?max_results: ::Integer,
@@ -631,33 +489,10 @@ module Aws
                                         {
                                           type: ("DIMENSION" | "TAG" | "COST_CATEGORY")?,
                                           key: ::String?
-                                        },
+                                        }
                                       ],
                                       ?granularity: ("DAILY" | "MONTHLY" | "HOURLY"),
-                                      ?filter: {
-                                        or: Array[
-                                          untyped,
-                                        ]?,
-                                        and: Array[
-                                          untyped,
-                                        ]?,
-                                        not: untyped?,
-                                        dimensions: {
-                                          key: ("AZ" | "INSTANCE_TYPE" | "LINKED_ACCOUNT" | "LINKED_ACCOUNT_NAME" | "OPERATION" | "PURCHASE_TYPE" | "REGION" | "SERVICE" | "SERVICE_CODE" | "USAGE_TYPE" | "USAGE_TYPE_GROUP" | "RECORD_TYPE" | "OPERATING_SYSTEM" | "TENANCY" | "SCOPE" | "PLATFORM" | "SUBSCRIPTION_ID" | "LEGAL_ENTITY_NAME" | "DEPLOYMENT_OPTION" | "DATABASE_ENGINE" | "CACHE_ENGINE" | "INSTANCE_TYPE_FAMILY" | "BILLING_ENTITY" | "RESERVATION_ID" | "RESOURCE_ID" | "RIGHTSIZING_TYPE" | "SAVINGS_PLANS_TYPE" | "SAVINGS_PLAN_ARN" | "PAYMENT_OPTION" | "AGREEMENT_END_DATE_TIME_AFTER" | "AGREEMENT_END_DATE_TIME_BEFORE" | "INVOICING_ENTITY" | "ANOMALY_TOTAL_IMPACT_ABSOLUTE" | "ANOMALY_TOTAL_IMPACT_PERCENTAGE")?,
-                                          values: Array[::String]?,
-                                          match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                        }?,
-                                        tags: {
-                                          key: ::String?,
-                                          values: Array[::String]?,
-                                          match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                        }?,
-                                        cost_categories: {
-                                          key: ::String?,
-                                          values: Array[::String]?,
-                                          match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                        }?
-                                      },
+                                      ?filter: Params::expression,
                                       ?metrics: Array[::String],
                                       ?next_page_token: ::String,
                                       ?sort_by: {
@@ -678,30 +513,7 @@ module Aws
       def get_reservation_purchase_recommendation: (
                                                      ?account_id: ::String,
                                                      service: ::String,
-                                                     ?filter: {
-                                                       or: Array[
-                                                         untyped,
-                                                       ]?,
-                                                       and: Array[
-                                                         untyped,
-                                                       ]?,
-                                                       not: untyped?,
-                                                       dimensions: {
-                                                         key: ("AZ" | "INSTANCE_TYPE" | "LINKED_ACCOUNT" | "LINKED_ACCOUNT_NAME" | "OPERATION" | "PURCHASE_TYPE" | "REGION" | "SERVICE" | "SERVICE_CODE" | "USAGE_TYPE" | "USAGE_TYPE_GROUP" | "RECORD_TYPE" | "OPERATING_SYSTEM" | "TENANCY" | "SCOPE" | "PLATFORM" | "SUBSCRIPTION_ID" | "LEGAL_ENTITY_NAME" | "DEPLOYMENT_OPTION" | "DATABASE_ENGINE" | "CACHE_ENGINE" | "INSTANCE_TYPE_FAMILY" | "BILLING_ENTITY" | "RESERVATION_ID" | "RESOURCE_ID" | "RIGHTSIZING_TYPE" | "SAVINGS_PLANS_TYPE" | "SAVINGS_PLAN_ARN" | "PAYMENT_OPTION" | "AGREEMENT_END_DATE_TIME_AFTER" | "AGREEMENT_END_DATE_TIME_BEFORE" | "INVOICING_ENTITY" | "ANOMALY_TOTAL_IMPACT_ABSOLUTE" | "ANOMALY_TOTAL_IMPACT_PERCENTAGE")?,
-                                                         values: Array[::String]?,
-                                                         match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                                       }?,
-                                                       tags: {
-                                                         key: ::String?,
-                                                         values: Array[::String]?,
-                                                         match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                                       }?,
-                                                       cost_categories: {
-                                                         key: ::String?,
-                                                         values: Array[::String]?,
-                                                         match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                                       }?
-                                                     },
+                                                     ?filter: Params::expression,
                                                      ?account_scope: ("PAYER" | "LINKED"),
                                                      ?lookback_period_in_days: ("SEVEN_DAYS" | "THIRTY_DAYS" | "SIXTY_DAYS"),
                                                      ?term_in_years: ("ONE_YEAR" | "THREE_YEARS"),
@@ -732,33 +544,10 @@ module Aws
                                            {
                                              type: ("DIMENSION" | "TAG" | "COST_CATEGORY")?,
                                              key: ::String?
-                                           },
+                                           }
                                          ],
                                          ?granularity: ("DAILY" | "MONTHLY" | "HOURLY"),
-                                         ?filter: {
-                                           or: Array[
-                                             untyped,
-                                           ]?,
-                                           and: Array[
-                                             untyped,
-                                           ]?,
-                                           not: untyped?,
-                                           dimensions: {
-                                             key: ("AZ" | "INSTANCE_TYPE" | "LINKED_ACCOUNT" | "LINKED_ACCOUNT_NAME" | "OPERATION" | "PURCHASE_TYPE" | "REGION" | "SERVICE" | "SERVICE_CODE" | "USAGE_TYPE" | "USAGE_TYPE_GROUP" | "RECORD_TYPE" | "OPERATING_SYSTEM" | "TENANCY" | "SCOPE" | "PLATFORM" | "SUBSCRIPTION_ID" | "LEGAL_ENTITY_NAME" | "DEPLOYMENT_OPTION" | "DATABASE_ENGINE" | "CACHE_ENGINE" | "INSTANCE_TYPE_FAMILY" | "BILLING_ENTITY" | "RESERVATION_ID" | "RESOURCE_ID" | "RIGHTSIZING_TYPE" | "SAVINGS_PLANS_TYPE" | "SAVINGS_PLAN_ARN" | "PAYMENT_OPTION" | "AGREEMENT_END_DATE_TIME_AFTER" | "AGREEMENT_END_DATE_TIME_BEFORE" | "INVOICING_ENTITY" | "ANOMALY_TOTAL_IMPACT_ABSOLUTE" | "ANOMALY_TOTAL_IMPACT_PERCENTAGE")?,
-                                             values: Array[::String]?,
-                                             match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                           }?,
-                                           tags: {
-                                             key: ::String?,
-                                             values: Array[::String]?,
-                                             match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                           }?,
-                                           cost_categories: {
-                                             key: ::String?,
-                                             values: Array[::String]?,
-                                             match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                           }?
-                                         },
+                                         ?filter: Params::expression,
                                          ?sort_by: {
                                            key: ::String,
                                            sort_order: ("ASCENDING" | "DESCENDING")?
@@ -778,30 +567,7 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CostExplorer/Client.html#get_rightsizing_recommendation-instance_method
       def get_rightsizing_recommendation: (
-                                            ?filter: {
-                                              or: Array[
-                                                untyped,
-                                              ]?,
-                                              and: Array[
-                                                untyped,
-                                              ]?,
-                                              not: untyped?,
-                                              dimensions: {
-                                                key: ("AZ" | "INSTANCE_TYPE" | "LINKED_ACCOUNT" | "LINKED_ACCOUNT_NAME" | "OPERATION" | "PURCHASE_TYPE" | "REGION" | "SERVICE" | "SERVICE_CODE" | "USAGE_TYPE" | "USAGE_TYPE_GROUP" | "RECORD_TYPE" | "OPERATING_SYSTEM" | "TENANCY" | "SCOPE" | "PLATFORM" | "SUBSCRIPTION_ID" | "LEGAL_ENTITY_NAME" | "DEPLOYMENT_OPTION" | "DATABASE_ENGINE" | "CACHE_ENGINE" | "INSTANCE_TYPE_FAMILY" | "BILLING_ENTITY" | "RESERVATION_ID" | "RESOURCE_ID" | "RIGHTSIZING_TYPE" | "SAVINGS_PLANS_TYPE" | "SAVINGS_PLAN_ARN" | "PAYMENT_OPTION" | "AGREEMENT_END_DATE_TIME_AFTER" | "AGREEMENT_END_DATE_TIME_BEFORE" | "INVOICING_ENTITY" | "ANOMALY_TOTAL_IMPACT_ABSOLUTE" | "ANOMALY_TOTAL_IMPACT_PERCENTAGE")?,
-                                                values: Array[::String]?,
-                                                match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                              }?,
-                                              tags: {
-                                                key: ::String?,
-                                                values: Array[::String]?,
-                                                match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                              }?,
-                                              cost_categories: {
-                                                key: ::String?,
-                                                values: Array[::String]?,
-                                                match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                              }?
-                                            },
+                                            ?filter: Params::expression,
                                             ?configuration: {
                                               recommendation_target: ("SAME_INSTANCE_FAMILY" | "CROSS_INSTANCE_FAMILY"),
                                               benefits_considered: bool
@@ -838,33 +604,10 @@ module Aws
                                           {
                                             type: ("DIMENSION" | "TAG" | "COST_CATEGORY")?,
                                             key: ::String?
-                                          },
+                                          }
                                         ],
                                         ?granularity: ("DAILY" | "MONTHLY" | "HOURLY"),
-                                        ?filter: {
-                                          or: Array[
-                                            untyped,
-                                          ]?,
-                                          and: Array[
-                                            untyped,
-                                          ]?,
-                                          not: untyped?,
-                                          dimensions: {
-                                            key: ("AZ" | "INSTANCE_TYPE" | "LINKED_ACCOUNT" | "LINKED_ACCOUNT_NAME" | "OPERATION" | "PURCHASE_TYPE" | "REGION" | "SERVICE" | "SERVICE_CODE" | "USAGE_TYPE" | "USAGE_TYPE_GROUP" | "RECORD_TYPE" | "OPERATING_SYSTEM" | "TENANCY" | "SCOPE" | "PLATFORM" | "SUBSCRIPTION_ID" | "LEGAL_ENTITY_NAME" | "DEPLOYMENT_OPTION" | "DATABASE_ENGINE" | "CACHE_ENGINE" | "INSTANCE_TYPE_FAMILY" | "BILLING_ENTITY" | "RESERVATION_ID" | "RESOURCE_ID" | "RIGHTSIZING_TYPE" | "SAVINGS_PLANS_TYPE" | "SAVINGS_PLAN_ARN" | "PAYMENT_OPTION" | "AGREEMENT_END_DATE_TIME_AFTER" | "AGREEMENT_END_DATE_TIME_BEFORE" | "INVOICING_ENTITY" | "ANOMALY_TOTAL_IMPACT_ABSOLUTE" | "ANOMALY_TOTAL_IMPACT_PERCENTAGE")?,
-                                            values: Array[::String]?,
-                                            match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                          }?,
-                                          tags: {
-                                            key: ::String?,
-                                            values: Array[::String]?,
-                                            match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                          }?,
-                                          cost_categories: {
-                                            key: ::String?,
-                                            values: Array[::String]?,
-                                            match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                          }?
-                                        },
+                                        ?filter: Params::expression,
                                         ?metrics: Array[::String],
                                         ?next_token: ::String,
                                         ?max_results: ::Integer,
@@ -883,37 +626,14 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CostExplorer/Client.html#get_savings_plans_purchase_recommendation-instance_method
       def get_savings_plans_purchase_recommendation: (
-                                                       savings_plans_type: ("COMPUTE_SP" | "EC2_INSTANCE_SP" | "SAGEMAKER_SP"),
+                                                       savings_plans_type: ("COMPUTE_SP" | "EC2_INSTANCE_SP" | "SAGEMAKER_SP" | "DATABASE_SP"),
                                                        term_in_years: ("ONE_YEAR" | "THREE_YEARS"),
                                                        payment_option: ("NO_UPFRONT" | "PARTIAL_UPFRONT" | "ALL_UPFRONT" | "LIGHT_UTILIZATION" | "MEDIUM_UTILIZATION" | "HEAVY_UTILIZATION"),
                                                        ?account_scope: ("PAYER" | "LINKED"),
                                                        ?next_page_token: ::String,
                                                        ?page_size: ::Integer,
                                                        lookback_period_in_days: ("SEVEN_DAYS" | "THIRTY_DAYS" | "SIXTY_DAYS"),
-                                                       ?filter: {
-                                                         or: Array[
-                                                           untyped,
-                                                         ]?,
-                                                         and: Array[
-                                                           untyped,
-                                                         ]?,
-                                                         not: untyped?,
-                                                         dimensions: {
-                                                           key: ("AZ" | "INSTANCE_TYPE" | "LINKED_ACCOUNT" | "LINKED_ACCOUNT_NAME" | "OPERATION" | "PURCHASE_TYPE" | "REGION" | "SERVICE" | "SERVICE_CODE" | "USAGE_TYPE" | "USAGE_TYPE_GROUP" | "RECORD_TYPE" | "OPERATING_SYSTEM" | "TENANCY" | "SCOPE" | "PLATFORM" | "SUBSCRIPTION_ID" | "LEGAL_ENTITY_NAME" | "DEPLOYMENT_OPTION" | "DATABASE_ENGINE" | "CACHE_ENGINE" | "INSTANCE_TYPE_FAMILY" | "BILLING_ENTITY" | "RESERVATION_ID" | "RESOURCE_ID" | "RIGHTSIZING_TYPE" | "SAVINGS_PLANS_TYPE" | "SAVINGS_PLAN_ARN" | "PAYMENT_OPTION" | "AGREEMENT_END_DATE_TIME_AFTER" | "AGREEMENT_END_DATE_TIME_BEFORE" | "INVOICING_ENTITY" | "ANOMALY_TOTAL_IMPACT_ABSOLUTE" | "ANOMALY_TOTAL_IMPACT_PERCENTAGE")?,
-                                                           values: Array[::String]?,
-                                                           match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                                         }?,
-                                                         tags: {
-                                                           key: ::String?,
-                                                           values: Array[::String]?,
-                                                           match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                                         }?,
-                                                         cost_categories: {
-                                                           key: ::String?,
-                                                           values: Array[::String]?,
-                                                           match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                                         }?
-                                                       }
+                                                       ?filter: Params::expression
                                                      ) -> _GetSavingsPlansPurchaseRecommendationResponseSuccess
                                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetSavingsPlansPurchaseRecommendationResponseSuccess
 
@@ -929,30 +649,7 @@ module Aws
                                              end: ::String
                                            },
                                            ?granularity: ("DAILY" | "MONTHLY" | "HOURLY"),
-                                           ?filter: {
-                                             or: Array[
-                                               untyped,
-                                             ]?,
-                                             and: Array[
-                                               untyped,
-                                             ]?,
-                                             not: untyped?,
-                                             dimensions: {
-                                               key: ("AZ" | "INSTANCE_TYPE" | "LINKED_ACCOUNT" | "LINKED_ACCOUNT_NAME" | "OPERATION" | "PURCHASE_TYPE" | "REGION" | "SERVICE" | "SERVICE_CODE" | "USAGE_TYPE" | "USAGE_TYPE_GROUP" | "RECORD_TYPE" | "OPERATING_SYSTEM" | "TENANCY" | "SCOPE" | "PLATFORM" | "SUBSCRIPTION_ID" | "LEGAL_ENTITY_NAME" | "DEPLOYMENT_OPTION" | "DATABASE_ENGINE" | "CACHE_ENGINE" | "INSTANCE_TYPE_FAMILY" | "BILLING_ENTITY" | "RESERVATION_ID" | "RESOURCE_ID" | "RIGHTSIZING_TYPE" | "SAVINGS_PLANS_TYPE" | "SAVINGS_PLAN_ARN" | "PAYMENT_OPTION" | "AGREEMENT_END_DATE_TIME_AFTER" | "AGREEMENT_END_DATE_TIME_BEFORE" | "INVOICING_ENTITY" | "ANOMALY_TOTAL_IMPACT_ABSOLUTE" | "ANOMALY_TOTAL_IMPACT_PERCENTAGE")?,
-                                               values: Array[::String]?,
-                                               match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                             }?,
-                                             tags: {
-                                               key: ::String?,
-                                               values: Array[::String]?,
-                                               match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                             }?,
-                                             cost_categories: {
-                                               key: ::String?,
-                                               values: Array[::String]?,
-                                               match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                             }?
-                                           },
+                                           ?filter: Params::expression,
                                            ?sort_by: {
                                              key: ::String,
                                              sort_order: ("ASCENDING" | "DESCENDING")?
@@ -973,30 +670,7 @@ module Aws
                                                      start: ::String,
                                                      end: ::String
                                                    },
-                                                   ?filter: {
-                                                     or: Array[
-                                                       untyped,
-                                                     ]?,
-                                                     and: Array[
-                                                       untyped,
-                                                     ]?,
-                                                     not: untyped?,
-                                                     dimensions: {
-                                                       key: ("AZ" | "INSTANCE_TYPE" | "LINKED_ACCOUNT" | "LINKED_ACCOUNT_NAME" | "OPERATION" | "PURCHASE_TYPE" | "REGION" | "SERVICE" | "SERVICE_CODE" | "USAGE_TYPE" | "USAGE_TYPE_GROUP" | "RECORD_TYPE" | "OPERATING_SYSTEM" | "TENANCY" | "SCOPE" | "PLATFORM" | "SUBSCRIPTION_ID" | "LEGAL_ENTITY_NAME" | "DEPLOYMENT_OPTION" | "DATABASE_ENGINE" | "CACHE_ENGINE" | "INSTANCE_TYPE_FAMILY" | "BILLING_ENTITY" | "RESERVATION_ID" | "RESOURCE_ID" | "RIGHTSIZING_TYPE" | "SAVINGS_PLANS_TYPE" | "SAVINGS_PLAN_ARN" | "PAYMENT_OPTION" | "AGREEMENT_END_DATE_TIME_AFTER" | "AGREEMENT_END_DATE_TIME_BEFORE" | "INVOICING_ENTITY" | "ANOMALY_TOTAL_IMPACT_ABSOLUTE" | "ANOMALY_TOTAL_IMPACT_PERCENTAGE")?,
-                                                       values: Array[::String]?,
-                                                       match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                                     }?,
-                                                     tags: {
-                                                       key: ::String?,
-                                                       values: Array[::String]?,
-                                                       match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                                     }?,
-                                                     cost_categories: {
-                                                       key: ::String?,
-                                                       values: Array[::String]?,
-                                                       match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                                     }?
-                                                   },
+                                                   ?filter: Params::expression,
                                                    ?data_type: Array[("ATTRIBUTES" | "UTILIZATION" | "AMORTIZED_COMMITMENT" | "SAVINGS")],
                                                    ?next_token: ::String,
                                                    ?max_results: ::Integer,
@@ -1022,35 +696,12 @@ module Aws
                         end: ::String
                       },
                       ?tag_key: ::String,
-                      ?filter: {
-                        or: Array[
-                          untyped,
-                        ]?,
-                        and: Array[
-                          untyped,
-                        ]?,
-                        not: untyped?,
-                        dimensions: {
-                          key: ("AZ" | "INSTANCE_TYPE" | "LINKED_ACCOUNT" | "LINKED_ACCOUNT_NAME" | "OPERATION" | "PURCHASE_TYPE" | "REGION" | "SERVICE" | "SERVICE_CODE" | "USAGE_TYPE" | "USAGE_TYPE_GROUP" | "RECORD_TYPE" | "OPERATING_SYSTEM" | "TENANCY" | "SCOPE" | "PLATFORM" | "SUBSCRIPTION_ID" | "LEGAL_ENTITY_NAME" | "DEPLOYMENT_OPTION" | "DATABASE_ENGINE" | "CACHE_ENGINE" | "INSTANCE_TYPE_FAMILY" | "BILLING_ENTITY" | "RESERVATION_ID" | "RESOURCE_ID" | "RIGHTSIZING_TYPE" | "SAVINGS_PLANS_TYPE" | "SAVINGS_PLAN_ARN" | "PAYMENT_OPTION" | "AGREEMENT_END_DATE_TIME_AFTER" | "AGREEMENT_END_DATE_TIME_BEFORE" | "INVOICING_ENTITY" | "ANOMALY_TOTAL_IMPACT_ABSOLUTE" | "ANOMALY_TOTAL_IMPACT_PERCENTAGE")?,
-                          values: Array[::String]?,
-                          match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                        }?,
-                        tags: {
-                          key: ::String?,
-                          values: Array[::String]?,
-                          match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                        }?,
-                        cost_categories: {
-                          key: ::String?,
-                          values: Array[::String]?,
-                          match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                        }?
-                      },
+                      ?filter: Params::expression,
                       ?sort_by: Array[
                         {
                           key: ::String,
                           sort_order: ("ASCENDING" | "DESCENDING")?
-                        },
+                        }
                       ],
                       ?billing_view_arn: ::String,
                       ?max_results: ::Integer,
@@ -1071,30 +722,7 @@ module Aws
                                 },
                                 metric: ("BLENDED_COST" | "UNBLENDED_COST" | "AMORTIZED_COST" | "NET_UNBLENDED_COST" | "NET_AMORTIZED_COST" | "USAGE_QUANTITY" | "NORMALIZED_USAGE_AMOUNT"),
                                 granularity: ("DAILY" | "MONTHLY" | "HOURLY"),
-                                ?filter: {
-                                  or: Array[
-                                    untyped,
-                                  ]?,
-                                  and: Array[
-                                    untyped,
-                                  ]?,
-                                  not: untyped?,
-                                  dimensions: {
-                                    key: ("AZ" | "INSTANCE_TYPE" | "LINKED_ACCOUNT" | "LINKED_ACCOUNT_NAME" | "OPERATION" | "PURCHASE_TYPE" | "REGION" | "SERVICE" | "SERVICE_CODE" | "USAGE_TYPE" | "USAGE_TYPE_GROUP" | "RECORD_TYPE" | "OPERATING_SYSTEM" | "TENANCY" | "SCOPE" | "PLATFORM" | "SUBSCRIPTION_ID" | "LEGAL_ENTITY_NAME" | "DEPLOYMENT_OPTION" | "DATABASE_ENGINE" | "CACHE_ENGINE" | "INSTANCE_TYPE_FAMILY" | "BILLING_ENTITY" | "RESERVATION_ID" | "RESOURCE_ID" | "RIGHTSIZING_TYPE" | "SAVINGS_PLANS_TYPE" | "SAVINGS_PLAN_ARN" | "PAYMENT_OPTION" | "AGREEMENT_END_DATE_TIME_AFTER" | "AGREEMENT_END_DATE_TIME_BEFORE" | "INVOICING_ENTITY" | "ANOMALY_TOTAL_IMPACT_ABSOLUTE" | "ANOMALY_TOTAL_IMPACT_PERCENTAGE")?,
-                                    values: Array[::String]?,
-                                    match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                  }?,
-                                  tags: {
-                                    key: ::String?,
-                                    values: Array[::String]?,
-                                    match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                  }?,
-                                  cost_categories: {
-                                    key: ::String?,
-                                    values: Array[::String]?,
-                                    match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                  }?
-                                },
+                                ?filter: Params::expression,
                                 ?billing_view_arn: ::String,
                                 ?prediction_interval_level: ::Integer
                               ) -> _GetUsageForecastResponseSuccess
@@ -1150,9 +778,23 @@ module Aws
       def list_cost_category_definitions: (
                                             ?effective_on: ::String,
                                             ?next_token: ::String,
-                                            ?max_results: ::Integer
+                                            ?max_results: ::Integer,
+                                            ?supported_resource_types: Array[::String]
                                           ) -> _ListCostCategoryDefinitionsResponseSuccess
                                         | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListCostCategoryDefinitionsResponseSuccess
+
+      interface _ListCostCategoryResourceAssociationsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListCostCategoryResourceAssociationsResponse]
+        def cost_category_resource_associations: () -> ::Array[Types::CostCategoryResourceAssociation]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CostExplorer/Client.html#list_cost_category_resource_associations-instance_method
+      def list_cost_category_resource_associations: (
+                                                      ?cost_category_arn: ::String,
+                                                      ?next_token: ::String,
+                                                      ?max_results: ::Integer
+                                                    ) -> _ListCostCategoryResourceAssociationsResponseSuccess
+                                                  | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListCostCategoryResourceAssociationsResponseSuccess
 
       interface _ListSavingsPlansPurchaseRecommendationGenerationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListSavingsPlansPurchaseRecommendationGenerationResponse]
@@ -1201,23 +843,24 @@ module Aws
                                                   savings_plans_purchase_analysis_configuration: {
                                                     account_scope: ("PAYER" | "LINKED")?,
                                                     account_id: ::String?,
-                                                    analysis_type: ("MAX_SAVINGS" | "CUSTOM_COMMITMENT"),
+                                                    analysis_type: ("MAX_SAVINGS" | "CUSTOM_COMMITMENT" | "TARGET_AVERAGE_COVERAGE"),
                                                     savings_plans_to_add: Array[
                                                       {
                                                         payment_option: ("NO_UPFRONT" | "PARTIAL_UPFRONT" | "ALL_UPFRONT" | "LIGHT_UTILIZATION" | "MEDIUM_UTILIZATION" | "HEAVY_UTILIZATION")?,
-                                                        savings_plans_type: ("COMPUTE_SP" | "EC2_INSTANCE_SP" | "SAGEMAKER_SP")?,
+                                                        savings_plans_type: ("COMPUTE_SP" | "EC2_INSTANCE_SP" | "SAGEMAKER_SP" | "DATABASE_SP")?,
                                                         region: ::String?,
                                                         instance_family: ::String?,
                                                         term_in_years: ("ONE_YEAR" | "THREE_YEARS")?,
                                                         savings_plans_commitment: ::Float?,
                                                         offering_id: ::String?
-                                                      },
+                                                      }
                                                     ],
                                                     savings_plans_to_exclude: Array[::String]?,
                                                     look_back_time_period: {
                                                       start: ::String,
                                                       end: ::String
-                                                    }
+                                                    },
+                                                    savings_plans_target_coverage: ::Integer?
                                                   }?
                                                 }
                                               ) -> _StartCommitmentPurchaseAnalysisResponseSuccess
@@ -1254,7 +897,7 @@ module Aws
                             {
                               key: ::String,
                               value: ::String
-                            },
+                            }
                           ]
                         ) -> _TagResourceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess
@@ -1295,33 +938,10 @@ module Aws
                                              address: ::String?,
                                              type: ("EMAIL" | "SNS")?,
                                              status: ("CONFIRMED" | "DECLINED")?
-                                           },
+                                           }
                                          ],
                                          ?subscription_name: ::String,
-                                         ?threshold_expression: {
-                                           or: Array[
-                                             untyped,
-                                           ]?,
-                                           and: Array[
-                                             untyped,
-                                           ]?,
-                                           not: untyped?,
-                                           dimensions: {
-                                             key: ("AZ" | "INSTANCE_TYPE" | "LINKED_ACCOUNT" | "LINKED_ACCOUNT_NAME" | "OPERATION" | "PURCHASE_TYPE" | "REGION" | "SERVICE" | "SERVICE_CODE" | "USAGE_TYPE" | "USAGE_TYPE_GROUP" | "RECORD_TYPE" | "OPERATING_SYSTEM" | "TENANCY" | "SCOPE" | "PLATFORM" | "SUBSCRIPTION_ID" | "LEGAL_ENTITY_NAME" | "DEPLOYMENT_OPTION" | "DATABASE_ENGINE" | "CACHE_ENGINE" | "INSTANCE_TYPE_FAMILY" | "BILLING_ENTITY" | "RESERVATION_ID" | "RESOURCE_ID" | "RIGHTSIZING_TYPE" | "SAVINGS_PLANS_TYPE" | "SAVINGS_PLAN_ARN" | "PAYMENT_OPTION" | "AGREEMENT_END_DATE_TIME_AFTER" | "AGREEMENT_END_DATE_TIME_BEFORE" | "INVOICING_ENTITY" | "ANOMALY_TOTAL_IMPACT_ABSOLUTE" | "ANOMALY_TOTAL_IMPACT_PERCENTAGE")?,
-                                             values: Array[::String]?,
-                                             match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                           }?,
-                                           tags: {
-                                             key: ::String?,
-                                             values: Array[::String]?,
-                                             match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                           }?,
-                                           cost_categories: {
-                                             key: ::String?,
-                                             values: Array[::String]?,
-                                             match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                           }?
-                                         }
+                                         ?threshold_expression: Params::expression
                                        ) -> _UpdateAnomalySubscriptionResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateAnomalySubscriptionResponseSuccess
 
@@ -1335,7 +955,7 @@ module Aws
                                                   {
                                                     tag_key: ::String,
                                                     status: ("Active" | "Inactive")
-                                                  },
+                                                  }
                                                 ]
                                               ) -> _UpdateCostAllocationTagsStatusResponseSuccess
                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateCostAllocationTagsStatusResponseSuccess
@@ -1351,52 +971,11 @@ module Aws
                                              ?effective_start: ::String,
                                              rule_version: ("CostCategoryExpression.v1"),
                                              rules: Array[
-                                               {
-                                                 value: ::String?,
-                                                 rule: {
-                                                   or: Array[
-                                                     untyped,
-                                                   ]?,
-                                                   and: Array[
-                                                     untyped,
-                                                   ]?,
-                                                   not: untyped?,
-                                                   dimensions: {
-                                                     key: ("AZ" | "INSTANCE_TYPE" | "LINKED_ACCOUNT" | "LINKED_ACCOUNT_NAME" | "OPERATION" | "PURCHASE_TYPE" | "REGION" | "SERVICE" | "SERVICE_CODE" | "USAGE_TYPE" | "USAGE_TYPE_GROUP" | "RECORD_TYPE" | "OPERATING_SYSTEM" | "TENANCY" | "SCOPE" | "PLATFORM" | "SUBSCRIPTION_ID" | "LEGAL_ENTITY_NAME" | "DEPLOYMENT_OPTION" | "DATABASE_ENGINE" | "CACHE_ENGINE" | "INSTANCE_TYPE_FAMILY" | "BILLING_ENTITY" | "RESERVATION_ID" | "RESOURCE_ID" | "RIGHTSIZING_TYPE" | "SAVINGS_PLANS_TYPE" | "SAVINGS_PLAN_ARN" | "PAYMENT_OPTION" | "AGREEMENT_END_DATE_TIME_AFTER" | "AGREEMENT_END_DATE_TIME_BEFORE" | "INVOICING_ENTITY" | "ANOMALY_TOTAL_IMPACT_ABSOLUTE" | "ANOMALY_TOTAL_IMPACT_PERCENTAGE")?,
-                                                     values: Array[::String]?,
-                                                     match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                                   }?,
-                                                   tags: {
-                                                     key: ::String?,
-                                                     values: Array[::String]?,
-                                                     match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                                   }?,
-                                                   cost_categories: {
-                                                     key: ::String?,
-                                                     values: Array[::String]?,
-                                                     match_options: Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "CASE_SENSITIVE" | "CASE_INSENSITIVE" | "GREATER_THAN_OR_EQUAL")]?
-                                                   }?
-                                                 }?,
-                                                 inherited_value: {
-                                                   dimension_name: ("LINKED_ACCOUNT_NAME" | "TAG")?,
-                                                   dimension_key: ::String?
-                                                 }?,
-                                                 type: ("REGULAR" | "INHERITED_VALUE")?
-                                               },
+                                               Params::cost_category_rule
                                              ],
                                              ?default_value: ::String,
                                              ?split_charge_rules: Array[
-                                               {
-                                                 source: ::String,
-                                                 targets: Array[::String],
-                                                 method: ("FIXED" | "PROPORTIONAL" | "EVEN"),
-                                                 parameters: Array[
-                                                   {
-                                                     type: ("ALLOCATION_PERCENTAGES"),
-                                                     values: Array[::String]
-                                                   },
-                                                 ]?
-                                               },
+                                               Params::cost_category_split_charge_rule
                                              ]
                                            ) -> _UpdateCostCategoryDefinitionResponseSuccess
                                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateCostCategoryDefinitionResponseSuccess

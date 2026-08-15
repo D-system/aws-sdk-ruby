@@ -95,8 +95,8 @@ module Aws::DirectoryService
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::DirectoryService
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::DirectoryService
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::DirectoryService
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::DirectoryService
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::DirectoryService
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::DirectoryService
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::DirectoryService
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -612,6 +616,25 @@ module Aws::DirectoryService
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
+    #
+    # @example Example: To add a CIDR address block that routes traffic for Microsoft AD
+    #
+    #   # The following example adds a CIDR address block to correctly route traffic to and from your Microsoft AD on AWS.
+    #
+    #   resp = client.add_ip_routes({
+    #     directory_id: "d-92654abfed", 
+    #     ip_routes: [
+    #       {
+    #         cidr_ip: "12.12.12.12/32", 
+    #         description: "my IpRoute", 
+    #       }, 
+    #     ], 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.add_ip_routes({
@@ -619,6 +642,7 @@ module Aws::DirectoryService
     #     ip_routes: [ # required
     #       {
     #         cidr_ip: "CidrIp",
+    #         cidr_ipv_6: "CidrIpv6",
     #         description: "Description",
     #       },
     #     ],
@@ -646,8 +670,8 @@ module Aws::DirectoryService
     #   replication. For example, `us-east-1`.
     #
     # @option params [required, Types::DirectoryVpcSettings] :vpc_settings
-    #   Contains VPC information for the CreateDirectory or CreateMicrosoftAD
-    #   operation.
+    #   Contains VPC information for the CreateDirectory, CreateMicrosoftAD,
+    #   or CreateHybridAD operation.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
@@ -682,6 +706,25 @@ module Aws::DirectoryService
     #   The tags to be assigned to the directory.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    #
+    # @example Example: To add tags to a directory
+    #
+    #   # The following example adds or overwrites one or more tags for the specified directory.
+    #
+    #   resp = client.add_tags_to_resource({
+    #     resource_id: "d-92654abfed", 
+    #     tags: [
+    #       {
+    #         key: "environment", 
+    #         value: "production", 
+    #       }, 
+    #     ], 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #   }
     #
     # @example Request syntax with placeholder values
     #
@@ -718,6 +761,20 @@ module Aws::DirectoryService
     #   The identifier of the schema extension that will be canceled.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    #
+    # @example Example: To cancel a Microsoft AD schema extension that is in progress
+    #
+    #   # The following example cancels an in-progress schema extension to a Microsoft AD directory.
+    #
+    #   resp = client.cancel_schema_extension({
+    #     directory_id: "d-92654abfed", 
+    #     schema_extension_id: "e-926731d2a0", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #   }
     #
     # @example Request syntax with placeholder values
     #
@@ -770,9 +827,42 @@ module Aws::DirectoryService
     # @option params [Array<Types::Tag>] :tags
     #   The tags to be assigned to AD Connector.
     #
+    # @option params [String] :network_type
+    #   The network type for your directory. The default value is `IPv4` or
+    #   `IPv6` based on the provided subnet capabilities.
+    #
     # @return [Types::ConnectDirectoryResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::ConnectDirectoryResult#directory_id #directory_id} => String
+    #
+    #
+    # @example Example: To connect to an on-premises directory
+    #
+    #   # The following example creates an AD Connector to connect to an on-premises directory.
+    #
+    #   resp = client.connect_directory({
+    #     connect_settings: {
+    #       customer_dns_ips: [
+    #         "172.30.21.228", 
+    #       ], 
+    #       customer_user_name: "Administrator", 
+    #       subnet_ids: [
+    #         "subnet-ba0146de", 
+    #         "subnet-bef46bc8", 
+    #       ], 
+    #       vpc_id: "vpc-45025421", 
+    #     }, 
+    #     description: "Connector to corp", 
+    #     name: "corp.example.com", 
+    #     password: "Str0ngP@ssw0rd", 
+    #     short_name: "corp", 
+    #     size: "Small", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     directory_id: "d-92654abfed", 
+    #   }
     #
     # @example Request syntax with placeholder values
     #
@@ -785,7 +875,8 @@ module Aws::DirectoryService
     #     connect_settings: { # required
     #       vpc_id: "VpcId", # required
     #       subnet_ids: ["SubnetId"], # required
-    #       customer_dns_ips: ["IpAddr"], # required
+    #       customer_dns_ips: ["IpAddr"],
+    #       customer_dns_ips_v6: ["Ipv6Addr"],
     #       customer_user_name: "UserName", # required
     #     },
     #     tags: [
@@ -794,6 +885,7 @@ module Aws::DirectoryService
     #         value: "TagValue", # required
     #       },
     #     ],
+    #     network_type: "Dual-stack", # accepts Dual-stack, IPv4, IPv6
     #   })
     #
     # @example Response structure
@@ -830,6 +922,22 @@ module Aws::DirectoryService
     #
     #   * {Types::CreateAliasResult#directory_id #directory_id} => String
     #   * {Types::CreateAliasResult#alias #alias} => String
+    #
+    #
+    # @example Example: To create an alias for a directory
+    #
+    #   # The following example creates an alias for a directory.
+    #
+    #   resp = client.create_alias({
+    #     alias: "salesorg", 
+    #     directory_id: "d-92654abfed", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     alias: "salesorg", 
+    #     directory_id: "d-92654abfed", 
+    #   }
     #
     # @example Request syntax with placeholder values
     #
@@ -879,6 +987,42 @@ module Aws::DirectoryService
     #
     #   * {Types::CreateComputerResult#computer #computer} => Types::Computer
     #
+    #
+    # @example Example: To create a computer account
+    #
+    #   # The following example creates a computer account in the specified directory, and joins the computer to the directory.
+    #
+    #   resp = client.create_computer({
+    #     computer_attributes: [
+    #       {
+    #         name: "ip", 
+    #         value: "192.168.101.100", 
+    #       }, 
+    #     ], 
+    #     computer_name: "labcomputer", 
+    #     directory_id: "d-92654abfed", 
+    #     organizational_unit_distinguished_name: "OU=Computers,OU=example,DC=corp,DC=example,DC=com", 
+    #     password: "Str0ngP@ssw0rd", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     computer: {
+    #       computer_attributes: [
+    #         {
+    #           name: "DistinguishedName", 
+    #           value: "CN=labcomputer,OU=Computers,OU=nickcorp,DC=seattle,DC=nickcorp,DC=com", 
+    #         }, 
+    #         {
+    #           name: "WindowsSamName", 
+    #           value: "labcomputer$", 
+    #         }, 
+    #       ], 
+    #       computer_id: "S-1-5-21-1932691875-1648176379-1176097576-1124", 
+    #       computer_name: "labcomputer", 
+    #     }, 
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_computer({
@@ -924,18 +1068,40 @@ module Aws::DirectoryService
     #   The fully qualified domain name (FQDN) of the remote domain with which
     #   you will set up a trust relationship.
     #
-    # @option params [required, Array<String>] :dns_ip_addrs
+    # @option params [Array<String>] :dns_ip_addrs
     #   The IP addresses of the remote DNS server associated with
     #   RemoteDomainName.
     #
+    # @option params [Array<String>] :dns_ipv_6_addrs
+    #   The IPv6 addresses of the remote DNS server associated with
+    #   RemoteDomainName.
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    #
+    # @example Example: To create a conditional forwarder
+    #
+    #   # The following example creates a conditional forwarder associated with your AWS directory.
+    #
+    #   resp = client.create_conditional_forwarder({
+    #     directory_id: "d-92654abfed", 
+    #     dns_ip_addrs: [
+    #       "172.30.21.228", 
+    #     ], 
+    #     remote_domain_name: "sales.example.com", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #   }
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_conditional_forwarder({
     #     directory_id: "DirectoryId", # required
     #     remote_domain_name: "RemoteDomainName", # required
-    #     dns_ip_addrs: ["IpAddr"], # required
+    #     dns_ip_addrs: ["IpAddr"],
+    #     dns_ipv_6_addrs: ["Ipv6Addr"],
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ds-2015-04-16/CreateConditionalForwarder AWS API Documentation
@@ -1019,9 +1185,38 @@ module Aws::DirectoryService
     # @option params [Array<Types::Tag>] :tags
     #   The tags to be assigned to the Simple AD directory.
     #
+    # @option params [String] :network_type
+    #   The network type for your directory. Simple AD supports IPv4 and
+    #   Dual-stack only.
+    #
     # @return [Types::CreateDirectoryResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateDirectoryResult#directory_id #directory_id} => String
+    #
+    #
+    # @example Example: To create a Simple AD directory
+    #
+    #   # The following example creates a Simple AD directory.
+    #
+    #   resp = client.create_directory({
+    #     description: "Regional directory for example.com", 
+    #     name: "seattle.example.com", 
+    #     password: "Str0ngP@ssw0rd", 
+    #     short_name: "seattle", 
+    #     size: "Small", 
+    #     vpc_settings: {
+    #       subnet_ids: [
+    #         "subnet-ba0146de", 
+    #         "subnet-bef46bc8", 
+    #       ], 
+    #       vpc_id: "vpc-45025421", 
+    #     }, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     directory_id: "d-92654abfed", 
+    #   }
     #
     # @example Request syntax with placeholder values
     #
@@ -1041,6 +1236,7 @@ module Aws::DirectoryService
     #         value: "TagValue", # required
     #       },
     #     ],
+    #     network_type: "Dual-stack", # accepts Dual-stack, IPv4, IPv6
     #   })
     #
     # @example Response structure
@@ -1053,6 +1249,66 @@ module Aws::DirectoryService
     # @param [Hash] params ({})
     def create_directory(params = {}, options = {})
       req = build_request(:create_directory, params)
+      req.send_request(options)
+    end
+
+    # Creates a hybrid directory that connects your self-managed Active
+    # Directory (AD) infrastructure and Amazon Web Services.
+    #
+    # You must have a successful directory assessment using
+    # StartADAssessment to validate your environment compatibility before
+    # you use this operation.
+    #
+    # Updates are applied asynchronously. Use DescribeDirectories to monitor
+    # the progress of directory creation.
+    #
+    # @option params [required, String] :secret_arn
+    #   The Amazon Resource Name (ARN) of the Amazon Web Services Secrets
+    #   Manager secret that contains the credentials for the service account
+    #   used to join hybrid domain controllers to your self-managed AD domain.
+    #   This secret is used once and not stored.
+    #
+    #   The secret must contain key-value pairs with keys matching
+    #   `customerAdAdminDomainUsername` and `customerAdAdminDomainPassword`.
+    #   For example:
+    #   `{"customerAdAdminDomainUsername":"carlos_salazar","customerAdAdminDomainPassword":"ExamplePassword123!"}`.
+    #
+    # @option params [required, String] :assessment_id
+    #   The unique identifier of the successful directory assessment that
+    #   validates your self-managed AD environment. You must have a successful
+    #   directory assessment before you create a hybrid directory.
+    #
+    # @option params [Array<Types::Tag>] :tags
+    #   The tags to be assigned to the directory. Each tag consists of a key
+    #   and value pair. You can specify multiple tags as a list.
+    #
+    # @return [Types::CreateHybridADResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateHybridADResult#directory_id #directory_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_hybrid_ad({
+    #     secret_arn: "SecretArn", # required
+    #     assessment_id: "AssessmentId", # required
+    #     tags: [
+    #       {
+    #         key: "TagKey", # required
+    #         value: "TagValue", # required
+    #       },
+    #     ],
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.directory_id #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ds-2015-04-16/CreateHybridAD AWS API Documentation
+    #
+    # @overload create_hybrid_ad(params = {})
+    # @param [Hash] params ({})
+    def create_hybrid_ad(params = {}, options = {})
+      req = build_request(:create_hybrid_ad, params)
       req.send_request(options)
     end
 
@@ -1134,9 +1390,37 @@ module Aws::DirectoryService
     # @option params [Array<Types::Tag>] :tags
     #   The tags to be assigned to the Managed Microsoft AD directory.
     #
+    # @option params [String] :network_type
+    #   The network type for your domain. The default value is `IPv4` or
+    #   `IPv6` based on the provided subnet capabilities.
+    #
     # @return [Types::CreateMicrosoftADResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateMicrosoftADResult#directory_id #directory_id} => String
+    #
+    #
+    # @example Example: To create a Microsoft AD directory
+    #
+    #   # The following example creates a Microsoft AD directory in the AWS cloud.
+    #
+    #   resp = client.create_microsoft_ad({
+    #     description: "Corporate AD directory", 
+    #     name: "ad.example.com", 
+    #     password: "Str0ngP@ssw0rd", 
+    #     short_name: "ad", 
+    #     vpc_settings: {
+    #       subnet_ids: [
+    #         "subnet-ba0146de", 
+    #         "subnet-bef46bc8", 
+    #       ], 
+    #       vpc_id: "vpc-45025421", 
+    #     }, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     directory_id: "d-92654abfed", 
+    #   }
     #
     # @example Request syntax with placeholder values
     #
@@ -1149,13 +1433,14 @@ module Aws::DirectoryService
     #       vpc_id: "VpcId", # required
     #       subnet_ids: ["SubnetId"], # required
     #     },
-    #     edition: "Enterprise", # accepts Enterprise, Standard
+    #     edition: "Enterprise", # accepts Enterprise, Standard, Hybrid
     #     tags: [
     #       {
     #         key: "TagKey", # required
     #         value: "TagValue", # required
     #       },
     #     ],
+    #     network_type: "Dual-stack", # accepts Dual-stack, IPv4, IPv6
     #   })
     #
     # @example Response structure
@@ -1187,6 +1472,21 @@ module Aws::DirectoryService
     # @return [Types::CreateSnapshotResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateSnapshotResult#snapshot_id #snapshot_id} => String
+    #
+    #
+    # @example Example: To create a snapshot of a directory
+    #
+    #   # The following example creates a snapshot of a Simple AD or Microsoft AD directory in the AWS cloud.
+    #
+    #   resp = client.create_snapshot({
+    #     directory_id: "d-92654abfed", 
+    #     name: "ad.example.com", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     snapshot_id: "s-9267f8d3f0", 
+    #   }
     #
     # @example Request syntax with placeholder values
     #
@@ -1242,12 +1542,37 @@ module Aws::DirectoryService
     #   The IP addresses of the remote DNS server associated with
     #   RemoteDomainName.
     #
+    # @option params [Array<String>] :conditional_forwarder_ipv_6_addrs
+    #   The IPv6 addresses of the remote DNS server associated with
+    #   RemoteDomainName.
+    #
     # @option params [String] :selective_auth
     #   Optional parameter to enable selective authentication for the trust.
     #
     # @return [Types::CreateTrustResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateTrustResult#trust_id #trust_id} => String
+    #
+    #
+    # @example Example: To create a trust
+    #
+    #   # The following example creates a trust between Microsoft AD in the AWS cloud and an external domain.
+    #
+    #   resp = client.create_trust({
+    #     conditional_forwarder_ip_addrs: [
+    #       "172.30.21.228", 
+    #     ], 
+    #     directory_id: "d-92654abfed", 
+    #     remote_domain_name: "europe.example.com", 
+    #     trust_direction: "One-Way: Outgoing", 
+    #     trust_password: "Str0ngP@ssw0rd", 
+    #     trust_type: "Forest", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     trust_id: "t-9267353743", 
+    #   }
     #
     # @example Request syntax with placeholder values
     #
@@ -1258,6 +1583,7 @@ module Aws::DirectoryService
     #     trust_direction: "One-Way: Outgoing", # required, accepts One-Way: Outgoing, One-Way: Incoming, Two-Way
     #     trust_type: "Forest", # accepts Forest, External
     #     conditional_forwarder_ip_addrs: ["IpAddr"],
+    #     conditional_forwarder_ipv_6_addrs: ["Ipv6Addr"],
     #     selective_auth: "Enabled", # accepts Enabled, Disabled
     #   })
     #
@@ -1274,6 +1600,39 @@ module Aws::DirectoryService
       req.send_request(options)
     end
 
+    # Deletes a directory assessment and all associated data. This operation
+    # permanently removes the assessment results, validation reports, and
+    # configuration information.
+    #
+    # You cannot delete system-initiated assessments. You can delete
+    # customer-created assessments even if they are in progress.
+    #
+    # @option params [required, String] :assessment_id
+    #   The unique identifier of the directory assessment to delete.
+    #
+    # @return [Types::DeleteADAssessmentResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DeleteADAssessmentResult#assessment_id #assessment_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_ad_assessment({
+    #     assessment_id: "AssessmentId", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.assessment_id #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ds-2015-04-16/DeleteADAssessment AWS API Documentation
+    #
+    # @overload delete_ad_assessment(params = {})
+    # @param [Hash] params ({})
+    def delete_ad_assessment(params = {}, options = {})
+      req = build_request(:delete_ad_assessment, params)
+      req.send_request(options)
+    end
+
     # Deletes a conditional forwarder that has been set up for your Amazon
     # Web Services directory.
     #
@@ -1285,6 +1644,20 @@ module Aws::DirectoryService
     #   you are deleting the conditional forwarder.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    #
+    # @example Example: To delete a conditional forwarder
+    #
+    #   # The following example deletes a conditional forwarder. 
+    #
+    #   resp = client.delete_conditional_forwarder({
+    #     directory_id: "d-92654abfed", 
+    #     remote_domain_name: "sales.example.com", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #   }
     #
     # @example Request syntax with placeholder values
     #
@@ -1320,6 +1693,20 @@ module Aws::DirectoryService
     # @return [Types::DeleteDirectoryResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::DeleteDirectoryResult#directory_id #directory_id} => String
+    #
+    #
+    # @example Example: To delete a directory
+    #
+    #   # The following example deletes a directory from your AWS account.
+    #
+    #   resp = client.delete_directory({
+    #     directory_id: "d-92654abfed", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     directory_id: "d-92654abfed", 
+    #   }
     #
     # @example Request syntax with placeholder values
     #
@@ -1371,6 +1758,20 @@ module Aws::DirectoryService
     #
     #   * {Types::DeleteSnapshotResult#snapshot_id #snapshot_id} => String
     #
+    #
+    # @example Example: To delete a snapshot
+    #
+    #   # The following example deletes a directory snapshot.
+    #
+    #   resp = client.delete_snapshot({
+    #     snapshot_id: "s-9267f8d3f0", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     snapshot_id: "s-9267f8d3f0", 
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_snapshot({
@@ -1402,6 +1803,21 @@ module Aws::DirectoryService
     # @return [Types::DeleteTrustResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::DeleteTrustResult#trust_id #trust_id} => String
+    #
+    #
+    # @example Example: To delete a trust
+    #
+    #   # The following example deletes an existing trust between your Microsoft AD in the AWS cloud and an external domain.
+    #
+    #   resp = client.delete_trust({
+    #     delete_associated_conditional_forwarder: true, 
+    #     trust_id: "t-9267353743", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     trust_id: "t-9267353743", 
+    #   }
     #
     # @example Request syntax with placeholder values
     #
@@ -1463,6 +1879,20 @@ module Aws::DirectoryService
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
+    #
+    # @example Example: To remove an event topic
+    #
+    #   # The following example removes the specified directory as a publisher to the specified SNS topic.
+    #
+    #   resp = client.deregister_event_topic({
+    #     directory_id: "d-92654abfed", 
+    #     topic_name: "snstopicexample", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.deregister_event_topic({
@@ -1476,6 +1906,105 @@ module Aws::DirectoryService
     # @param [Hash] params ({})
     def deregister_event_topic(params = {}, options = {})
       req = build_request(:deregister_event_topic, params)
+      req.send_request(options)
+    end
+
+    # Retrieves detailed information about a directory assessment, including
+    # its current status, validation results, and configuration details. Use
+    # this operation to monitor assessment progress and review results.
+    #
+    # @option params [required, String] :assessment_id
+    #   The identifier of the directory assessment to describe.
+    #
+    # @return [Types::DescribeADAssessmentResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DescribeADAssessmentResult#assessment #assessment} => Types::Assessment
+    #   * {Types::DescribeADAssessmentResult#assessment_reports #assessment_reports} => Array&lt;Types::AssessmentReport&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.describe_ad_assessment({
+    #     assessment_id: "AssessmentId", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.assessment.assessment_id #=> String
+    #   resp.assessment.directory_id #=> String
+    #   resp.assessment.dns_name #=> String
+    #   resp.assessment.start_time #=> Time
+    #   resp.assessment.last_update_date_time #=> Time
+    #   resp.assessment.status #=> String
+    #   resp.assessment.status_code #=> String
+    #   resp.assessment.status_reason #=> String
+    #   resp.assessment.customer_dns_ips #=> Array
+    #   resp.assessment.customer_dns_ips[0] #=> String
+    #   resp.assessment.vpc_id #=> String
+    #   resp.assessment.subnet_ids #=> Array
+    #   resp.assessment.subnet_ids[0] #=> String
+    #   resp.assessment.security_group_ids #=> Array
+    #   resp.assessment.security_group_ids[0] #=> String
+    #   resp.assessment.self_managed_instance_ids #=> Array
+    #   resp.assessment.self_managed_instance_ids[0] #=> String
+    #   resp.assessment.report_type #=> String
+    #   resp.assessment.version #=> String
+    #   resp.assessment_reports #=> Array
+    #   resp.assessment_reports[0].domain_controller_ip #=> String
+    #   resp.assessment_reports[0].validations #=> Array
+    #   resp.assessment_reports[0].validations[0].category #=> String
+    #   resp.assessment_reports[0].validations[0].name #=> String
+    #   resp.assessment_reports[0].validations[0].status #=> String
+    #   resp.assessment_reports[0].validations[0].status_code #=> String
+    #   resp.assessment_reports[0].validations[0].status_reason #=> String
+    #   resp.assessment_reports[0].validations[0].start_time #=> Time
+    #   resp.assessment_reports[0].validations[0].last_update_date_time #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ds-2015-04-16/DescribeADAssessment AWS API Documentation
+    #
+    # @overload describe_ad_assessment(params = {})
+    # @param [Hash] params ({})
+    def describe_ad_assessment(params = {}, options = {})
+      req = build_request(:describe_ad_assessment, params)
+      req.send_request(options)
+    end
+
+    # Retrieves detailed information about the certificate authority (CA)
+    # enrollment policy for the specified directory. This policy determines
+    # how client certificates are automatically enrolled and managed through
+    # Amazon Web Services Private Certificate Authority.
+    #
+    # @option params [required, String] :directory_id
+    #   The identifier of the directory for which to retrieve the CA
+    #   enrollment policy information.
+    #
+    # @return [Types::DescribeCAEnrollmentPolicyResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DescribeCAEnrollmentPolicyResult#directory_id #directory_id} => String
+    #   * {Types::DescribeCAEnrollmentPolicyResult#pca_connector_arn #pca_connector_arn} => String
+    #   * {Types::DescribeCAEnrollmentPolicyResult#ca_enrollment_policy_status #ca_enrollment_policy_status} => String
+    #   * {Types::DescribeCAEnrollmentPolicyResult#last_updated_date_time #last_updated_date_time} => Time
+    #   * {Types::DescribeCAEnrollmentPolicyResult#ca_enrollment_policy_status_reason #ca_enrollment_policy_status_reason} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.describe_ca_enrollment_policy({
+    #     directory_id: "DirectoryId", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.directory_id #=> String
+    #   resp.pca_connector_arn #=> String
+    #   resp.ca_enrollment_policy_status #=> String, one of "InProgress", "Success", "Failed", "Disabling", "Disabled", "Impaired"
+    #   resp.last_updated_date_time #=> Time
+    #   resp.ca_enrollment_policy_status_reason #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ds-2015-04-16/DescribeCAEnrollmentPolicy AWS API Documentation
+    #
+    # @overload describe_ca_enrollment_policy(params = {})
+    # @param [Hash] params ({})
+    def describe_ca_enrollment_policy(params = {}, options = {})
+      req = build_request(:describe_ca_enrollment_policy, params)
       req.send_request(options)
     end
 
@@ -1595,6 +2124,24 @@ module Aws::DirectoryService
     #
     #   * {Types::DescribeConditionalForwardersResult#conditional_forwarders #conditional_forwarders} => Array&lt;Types::ConditionalForwarder&gt;
     #
+    #
+    # @example Example: To describe conditional forwarders
+    #
+    #   # The following example obtains information about the conditional forwarders for a specified directory.
+    #
+    #   resp = client.describe_conditional_forwarders({
+    #     directory_id: "d-92654abfed", 
+    #     remote_domain_names: [
+    #       "sales.example.com", 
+    #     ], 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     conditional_forwarders: [
+    #     ], 
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.describe_conditional_forwarders({
@@ -1608,6 +2155,8 @@ module Aws::DirectoryService
     #   resp.conditional_forwarders[0].remote_domain_name #=> String
     #   resp.conditional_forwarders[0].dns_ip_addrs #=> Array
     #   resp.conditional_forwarders[0].dns_ip_addrs[0] #=> String
+    #   resp.conditional_forwarders[0].dns_ipv_6_addrs #=> Array
+    #   resp.conditional_forwarders[0].dns_ipv_6_addrs[0] #=> String
     #   resp.conditional_forwarders[0].replication_scope #=> String, one of "Domain"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ds-2015-04-16/DescribeConditionalForwarders AWS API Documentation
@@ -1657,6 +2206,51 @@ module Aws::DirectoryService
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
     #
+    #
+    # @example Example: To describe one or more directories
+    #
+    #   # The following example obtains information about a specified directory.
+    #
+    #   resp = client.describe_directories({
+    #     directory_ids: [
+    #       "d-92654abfed", 
+    #     ], 
+    #     limit: 0, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     directory_descriptions: [
+    #       {
+    #         access_url: "myaccess.awsapps.com", 
+    #         alias: "myaccess", 
+    #         directory_id: "d-92654abfed", 
+    #         dns_ip_addrs: [
+    #           "172.30.21.228", 
+    #           "172.30.9.82", 
+    #         ], 
+    #         launch_time: Time.parse(1469737584.772), 
+    #         name: "corp.example.com", 
+    #         short_name: "example", 
+    #         sso_enabled: true, 
+    #         stage: "Active", 
+    #         stage_last_updated_date_time: Time.parse(1469739131.71), 
+    #         type: "MicrosoftAD", 
+    #         vpc_settings: {
+    #           availability_zones: [
+    #             "us-west-2a", 
+    #             "us-west-2b", 
+    #           ], 
+    #           subnet_ids: [
+    #             "subnet-ba0146de", 
+    #             "subnet-bef46bc8", 
+    #           ], 
+    #           vpc_id: "vpc-45025421", 
+    #         }, 
+    #       }, 
+    #     ], 
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.describe_directories({
@@ -1672,12 +2266,14 @@ module Aws::DirectoryService
     #   resp.directory_descriptions[0].name #=> String
     #   resp.directory_descriptions[0].short_name #=> String
     #   resp.directory_descriptions[0].size #=> String, one of "Small", "Large"
-    #   resp.directory_descriptions[0].edition #=> String, one of "Enterprise", "Standard"
+    #   resp.directory_descriptions[0].edition #=> String, one of "Enterprise", "Standard", "Hybrid"
     #   resp.directory_descriptions[0].alias #=> String
     #   resp.directory_descriptions[0].access_url #=> String
     #   resp.directory_descriptions[0].description #=> String
     #   resp.directory_descriptions[0].dns_ip_addrs #=> Array
     #   resp.directory_descriptions[0].dns_ip_addrs[0] #=> String
+    #   resp.directory_descriptions[0].dns_ipv_6_addrs #=> Array
+    #   resp.directory_descriptions[0].dns_ipv_6_addrs[0] #=> String
     #   resp.directory_descriptions[0].stage #=> String, one of "Requested", "Creating", "Created", "Active", "Inoperable", "Impaired", "Restoring", "RestoreFailed", "Deleting", "Deleted", "Failed", "Updating"
     #   resp.directory_descriptions[0].share_status #=> String, one of "Shared", "PendingAcceptance", "Rejected", "Rejecting", "RejectFailed", "Sharing", "ShareFailed", "Deleted", "Deleting"
     #   resp.directory_descriptions[0].share_method #=> String, one of "ORGANIZATIONS", "HANDSHAKE"
@@ -1700,8 +2296,12 @@ module Aws::DirectoryService
     #   resp.directory_descriptions[0].connect_settings.availability_zones[0] #=> String
     #   resp.directory_descriptions[0].connect_settings.connect_ips #=> Array
     #   resp.directory_descriptions[0].connect_settings.connect_ips[0] #=> String
+    #   resp.directory_descriptions[0].connect_settings.connect_ips_v6 #=> Array
+    #   resp.directory_descriptions[0].connect_settings.connect_ips_v6[0] #=> String
     #   resp.directory_descriptions[0].radius_settings.radius_servers #=> Array
     #   resp.directory_descriptions[0].radius_settings.radius_servers[0] #=> String
+    #   resp.directory_descriptions[0].radius_settings.radius_servers_ipv_6 #=> Array
+    #   resp.directory_descriptions[0].radius_settings.radius_servers_ipv_6[0] #=> String
     #   resp.directory_descriptions[0].radius_settings.radius_port #=> Integer
     #   resp.directory_descriptions[0].radius_settings.radius_timeout #=> Integer
     #   resp.directory_descriptions[0].radius_settings.radius_retries #=> Integer
@@ -1717,6 +2317,8 @@ module Aws::DirectoryService
     #   resp.directory_descriptions[0].owner_directory_description.account_id #=> String
     #   resp.directory_descriptions[0].owner_directory_description.dns_ip_addrs #=> Array
     #   resp.directory_descriptions[0].owner_directory_description.dns_ip_addrs[0] #=> String
+    #   resp.directory_descriptions[0].owner_directory_description.dns_ipv_6_addrs #=> Array
+    #   resp.directory_descriptions[0].owner_directory_description.dns_ipv_6_addrs[0] #=> String
     #   resp.directory_descriptions[0].owner_directory_description.vpc_settings.vpc_id #=> String
     #   resp.directory_descriptions[0].owner_directory_description.vpc_settings.subnet_ids #=> Array
     #   resp.directory_descriptions[0].owner_directory_description.vpc_settings.subnet_ids[0] #=> String
@@ -1725,6 +2327,8 @@ module Aws::DirectoryService
     #   resp.directory_descriptions[0].owner_directory_description.vpc_settings.availability_zones[0] #=> String
     #   resp.directory_descriptions[0].owner_directory_description.radius_settings.radius_servers #=> Array
     #   resp.directory_descriptions[0].owner_directory_description.radius_settings.radius_servers[0] #=> String
+    #   resp.directory_descriptions[0].owner_directory_description.radius_settings.radius_servers_ipv_6 #=> Array
+    #   resp.directory_descriptions[0].owner_directory_description.radius_settings.radius_servers_ipv_6[0] #=> String
     #   resp.directory_descriptions[0].owner_directory_description.radius_settings.radius_port #=> Integer
     #   resp.directory_descriptions[0].owner_directory_description.radius_settings.radius_timeout #=> Integer
     #   resp.directory_descriptions[0].owner_directory_description.radius_settings.radius_retries #=> Integer
@@ -1733,10 +2337,16 @@ module Aws::DirectoryService
     #   resp.directory_descriptions[0].owner_directory_description.radius_settings.display_label #=> String
     #   resp.directory_descriptions[0].owner_directory_description.radius_settings.use_same_username #=> Boolean
     #   resp.directory_descriptions[0].owner_directory_description.radius_status #=> String, one of "Creating", "Completed", "Failed"
+    #   resp.directory_descriptions[0].owner_directory_description.network_type #=> String, one of "Dual-stack", "IPv4", "IPv6"
     #   resp.directory_descriptions[0].regions_info.primary_region #=> String
     #   resp.directory_descriptions[0].regions_info.additional_regions #=> Array
     #   resp.directory_descriptions[0].regions_info.additional_regions[0] #=> String
     #   resp.directory_descriptions[0].os_version #=> String, one of "SERVER_2012", "SERVER_2019"
+    #   resp.directory_descriptions[0].hybrid_settings.self_managed_dns_ip_addrs #=> Array
+    #   resp.directory_descriptions[0].hybrid_settings.self_managed_dns_ip_addrs[0] #=> String
+    #   resp.directory_descriptions[0].hybrid_settings.self_managed_instance_ids #=> Array
+    #   resp.directory_descriptions[0].hybrid_settings.self_managed_instance_ids[0] #=> String
+    #   resp.directory_descriptions[0].network_type #=> String, one of "Dual-stack", "IPv4", "IPv6"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ds-2015-04-16/DescribeDirectories AWS API Documentation
@@ -1816,6 +2426,7 @@ module Aws::DirectoryService
     #   resp.domain_controllers[0].directory_id #=> String
     #   resp.domain_controllers[0].domain_controller_id #=> String
     #   resp.domain_controllers[0].dns_ip_addr #=> String
+    #   resp.domain_controllers[0].dns_ipv_6_addr #=> String
     #   resp.domain_controllers[0].vpc_id #=> String
     #   resp.domain_controllers[0].subnet_id #=> String
     #   resp.domain_controllers[0].availability_zone #=> String
@@ -1856,6 +2467,30 @@ module Aws::DirectoryService
     #
     #   * {Types::DescribeEventTopicsResult#event_topics #event_topics} => Array&lt;Types::EventTopic&gt;
     #
+    #
+    # @example Example: To describe event topics
+    #
+    #   # The following example obtains information about which SNS topics receive status messages from the specified directory.
+    #
+    #   resp = client.describe_event_topics({
+    #     directory_id: "d-92654abfed", 
+    #     topic_names: [
+    #       "snstopicexample", 
+    #     ], 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     event_topics: [
+    #       {
+    #         directory_id: "d-92654abfed", 
+    #         status: "Registered", 
+    #         topic_arn: "arn:aws:sns:us-east-2:123456789012:snstopicexample", 
+    #         topic_name: "snstopicexample", 
+    #       }, 
+    #     ], 
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.describe_event_topics({
@@ -1878,6 +2513,84 @@ module Aws::DirectoryService
     # @param [Hash] params ({})
     def describe_event_topics(params = {}, options = {})
       req = build_request(:describe_event_topics, params)
+      req.send_request(options)
+    end
+
+    # Retrieves information about update activities for a hybrid directory.
+    # This operation provides details about configuration changes,
+    # administrator account updates, and self-managed instance settings (IDs
+    # and DNS IPs).
+    #
+    # @option params [required, String] :directory_id
+    #   The identifier of the hybrid directory for which to retrieve update
+    #   information.
+    #
+    # @option params [String] :update_type
+    #   The type of update activities to retrieve. Valid values include
+    #   `SelfManagedInstances` and `HybridAdministratorAccount`.
+    #
+    # @option params [String] :next_token
+    #   The pagination token from a previous request to
+    #   DescribeHybridADUpdate. Pass null if this is the first request.
+    #
+    # @return [Types::DescribeHybridADUpdateResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DescribeHybridADUpdateResult#update_activities #update_activities} => Types::HybridUpdateActivities
+    #   * {Types::DescribeHybridADUpdateResult#next_token #next_token} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.describe_hybrid_ad_update({
+    #     directory_id: "DirectoryId", # required
+    #     update_type: "SelfManagedInstances", # accepts SelfManagedInstances, HybridAdministratorAccount
+    #     next_token: "NextToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.update_activities.self_managed_instances #=> Array
+    #   resp.update_activities.self_managed_instances[0].status #=> String, one of "Updated", "Updating", "UpdateFailed"
+    #   resp.update_activities.self_managed_instances[0].status_reason #=> String
+    #   resp.update_activities.self_managed_instances[0].initiated_by #=> String
+    #   resp.update_activities.self_managed_instances[0].new_value.instance_ids #=> Array
+    #   resp.update_activities.self_managed_instances[0].new_value.instance_ids[0] #=> String
+    #   resp.update_activities.self_managed_instances[0].new_value.dns_ips #=> Array
+    #   resp.update_activities.self_managed_instances[0].new_value.dns_ips[0] #=> String
+    #   resp.update_activities.self_managed_instances[0].previous_value.instance_ids #=> Array
+    #   resp.update_activities.self_managed_instances[0].previous_value.instance_ids[0] #=> String
+    #   resp.update_activities.self_managed_instances[0].previous_value.dns_ips #=> Array
+    #   resp.update_activities.self_managed_instances[0].previous_value.dns_ips[0] #=> String
+    #   resp.update_activities.self_managed_instances[0].start_time #=> Time
+    #   resp.update_activities.self_managed_instances[0].last_updated_date_time #=> Time
+    #   resp.update_activities.self_managed_instances[0].assessment_id #=> String
+    #   resp.update_activities.hybrid_administrator_account #=> Array
+    #   resp.update_activities.hybrid_administrator_account[0].status #=> String, one of "Updated", "Updating", "UpdateFailed"
+    #   resp.update_activities.hybrid_administrator_account[0].status_reason #=> String
+    #   resp.update_activities.hybrid_administrator_account[0].initiated_by #=> String
+    #   resp.update_activities.hybrid_administrator_account[0].new_value.instance_ids #=> Array
+    #   resp.update_activities.hybrid_administrator_account[0].new_value.instance_ids[0] #=> String
+    #   resp.update_activities.hybrid_administrator_account[0].new_value.dns_ips #=> Array
+    #   resp.update_activities.hybrid_administrator_account[0].new_value.dns_ips[0] #=> String
+    #   resp.update_activities.hybrid_administrator_account[0].previous_value.instance_ids #=> Array
+    #   resp.update_activities.hybrid_administrator_account[0].previous_value.instance_ids[0] #=> String
+    #   resp.update_activities.hybrid_administrator_account[0].previous_value.dns_ips #=> Array
+    #   resp.update_activities.hybrid_administrator_account[0].previous_value.dns_ips[0] #=> String
+    #   resp.update_activities.hybrid_administrator_account[0].start_time #=> Time
+    #   resp.update_activities.hybrid_administrator_account[0].last_updated_date_time #=> Time
+    #   resp.update_activities.hybrid_administrator_account[0].assessment_id #=> String
+    #   resp.next_token #=> String
+    #
+    #
+    # The following waiters are defined for this operation (see {Client#wait_until} for detailed usage):
+    #
+    #   * hybrid_ad_updated
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ds-2015-04-16/DescribeHybridADUpdate AWS API Documentation
+    #
+    # @overload describe_hybrid_ad_update(params = {})
+    # @param [Hash] params ({})
+    def describe_hybrid_ad_update(params = {}, options = {})
+      req = build_request(:describe_hybrid_ad_update, params)
       req.send_request(options)
     end
 
@@ -2127,6 +2840,32 @@ module Aws::DirectoryService
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
     #
+    #
+    # @example Example: To describe snapshots
+    #
+    #   # The following example obtains information about a specified directory snapshot.
+    #
+    #   resp = client.describe_snapshots({
+    #     directory_id: "d-92654abfed", 
+    #     limit: 0, 
+    #     snapshot_ids: [
+    #       "s-9267f6da4e", 
+    #     ], 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     snapshots: [
+    #       {
+    #         directory_id: "d-92673c8a8f", 
+    #         snapshot_id: "s-9267f6da4e", 
+    #         start_time: Time.parse(1481289211.615), 
+    #         status: "Completed", 
+    #         type: "Auto", 
+    #       }, 
+    #     ], 
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.describe_snapshots({
@@ -2186,6 +2925,37 @@ module Aws::DirectoryService
     #   * {Types::DescribeTrustsResult#next_token #next_token} => String
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    #
+    # @example Example: To describe a trust 
+    #
+    #   # The following example obtains information about the trust relationship for a specified directory.
+    #
+    #   resp = client.describe_trusts({
+    #     directory_id: "d-92654abfed", 
+    #     limit: 0, 
+    #     trust_ids: [
+    #       "t-9267353df0", 
+    #     ], 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     trusts: [
+    #       {
+    #         created_date_time: Time.parse(1481749250.657), 
+    #         directory_id: "d-92654abfed", 
+    #         last_updated_date_time: Time.parse(1481749260.156), 
+    #         remote_domain_name: "sales.example.com", 
+    #         state_last_updated_date_time: Time.parse(1481749260.156), 
+    #         trust_direction: "One-Way: Outgoing", 
+    #         trust_id: "t-9267353df0", 
+    #         trust_state: "Failed", 
+    #         trust_state_reason: "The specified domain either does not exist or could not be contacted. Name: sales.example.com", 
+    #         trust_type: "Forest", 
+    #       }, 
+    #     ], 
+    #   }
     #
     # @example Request syntax with placeholder values
     #
@@ -2247,7 +3017,7 @@ module Aws::DirectoryService
     #
     #   resp = client.describe_update_directory({
     #     directory_id: "DirectoryId", # required
-    #     update_type: "OS", # required, accepts OS
+    #     update_type: "OS", # required, accepts OS, NETWORK, SIZE
     #     region_name: "RegionName",
     #     next_token: "NextToken",
     #   })
@@ -2271,6 +3041,36 @@ module Aws::DirectoryService
     # @param [Hash] params ({})
     def describe_update_directory(params = {}, options = {})
       req = build_request(:describe_update_directory, params)
+      req.send_request(options)
+    end
+
+    # Disables the certificate authority (CA) enrollment policy for the
+    # specified directory. This stops automatic certificate enrollment and
+    # management for domain-joined clients, but does not affect existing
+    # certificates.
+    #
+    # Disabling the CA enrollment policy prevents new certificates from
+    # being automatically enrolled, but existing certificates remain valid
+    # and functional until they expire.
+    #
+    # @option params [required, String] :directory_id
+    #   The identifier of the directory for which to disable the CA enrollment
+    #   policy.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.disable_ca_enrollment_policy({
+    #     directory_id: "DirectoryId", # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ds-2015-04-16/DisableCAEnrollmentPolicy AWS API Documentation
+    #
+    # @overload disable_ca_enrollment_policy(params = {})
+    # @param [Hash] params ({})
+    def disable_ca_enrollment_policy(params = {}, options = {})
+      req = build_request(:disable_ca_enrollment_policy, params)
       req.send_request(options)
     end
 
@@ -2303,7 +3103,12 @@ module Aws::DirectoryService
     end
 
     # Deactivates access to directory data via the Directory Service Data
-    # API for the specified directory.
+    # API for the specified directory. For more information, see [Directory
+    # Service Data API Reference][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/directoryservicedata/latest/DirectoryServiceDataAPIReference/Welcome.html
     #
     # @option params [required, String] :directory_id
     #   The directory identifier.
@@ -2361,6 +3166,20 @@ module Aws::DirectoryService
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
+    #
+    # @example Example: To disable radius
+    #
+    #   # The following example disables multi-factor authentication (MFA) with the Remote Authentication Dial In User Service
+    #   # (RADIUS) server for an AD Connector directory.
+    #
+    #   resp = client.disable_radius({
+    #     directory_id: "d-92654abfed", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.disable_radius({
@@ -2399,6 +3218,21 @@ module Aws::DirectoryService
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
+    #
+    # @example Example: To disable SSO
+    #
+    #   # The following example disables single sign-on for a specified directory.
+    #
+    #   resp = client.disable_sso({
+    #     directory_id: "d-92654abfed", 
+    #     password: "Str0ngP@ssw0rd", 
+    #     user_name: "Admin", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.disable_sso({
@@ -2413,6 +3247,48 @@ module Aws::DirectoryService
     # @param [Hash] params ({})
     def disable_sso(params = {}, options = {})
       req = build_request(:disable_sso, params)
+      req.send_request(options)
+    end
+
+    # Enables certificate authority (CA) enrollment policy for the specified
+    # directory. This allows domain-joined clients to automatically request
+    # and receive certificates from the specified Amazon Web Services
+    # Private Certificate Authority.
+    #
+    # <note markdown="1"> Before enabling CA enrollment, ensure that the PCA connector is
+    # properly configured and accessible from the directory. The connector
+    # must be in an active state and have the necessary permissions.
+    #
+    #  </note>
+    #
+    # @option params [required, String] :directory_id
+    #   The identifier of the directory for which to enable the CA enrollment
+    #   policy.
+    #
+    # @option params [required, String] :pca_connector_arn
+    #   The Amazon Resource Name (ARN) of the Private Certificate Authority
+    #   (PCA) connector to use for automatic certificate enrollment. This
+    #   connector must be properly configured and accessible from the
+    #   directory.
+    #
+    #   The ARN format is:
+    #   `arn:aws:pca-connector-ad:region:account-id:connector/connector-id `
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.enable_ca_enrollment_policy({
+    #     directory_id: "DirectoryId", # required
+    #     pca_connector_arn: "PcaConnectorArn", # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ds-2015-04-16/EnableCAEnrollmentPolicy AWS API Documentation
+    #
+    # @overload enable_ca_enrollment_policy(params = {})
+    # @param [Hash] params ({})
+    def enable_ca_enrollment_policy(params = {}, options = {})
+      req = build_request(:enable_ca_enrollment_policy, params)
       req.send_request(options)
     end
 
@@ -2447,7 +3323,12 @@ module Aws::DirectoryService
     end
 
     # Enables access to directory data via the Directory Service Data API
-    # for the specified directory.
+    # for the specified directory. For more information, see [Directory
+    # Service Data API Reference][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/directoryservicedata/latest/DirectoryServiceDataAPIReference/Welcome.html
     #
     # @option params [required, String] :directory_id
     #   The directory identifier.
@@ -2510,12 +3391,39 @@ module Aws::DirectoryService
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
+    #
+    # @example Example: To enable radius
+    #
+    #   # The following example enables multi-factor authentication (MFA) with the Remote Authentication Dial In User Service
+    #   # (RADIUS) server for an AD Connector directory.
+    #
+    #   resp = client.enable_radius({
+    #     directory_id: "d-92654abfed", 
+    #     radius_settings: {
+    #       authentication_protocol: "PAP", 
+    #       display_label: "MyRadius", 
+    #       radius_port: 1200, 
+    #       radius_retries: 2, 
+    #       radius_servers: [
+    #         "172.168.111.12", 
+    #       ], 
+    #       radius_timeout: 1, 
+    #       shared_secret: "123456789", 
+    #       use_same_username: true, 
+    #     }, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.enable_radius({
     #     directory_id: "DirectoryId", # required
     #     radius_settings: { # required
     #       radius_servers: ["Server"],
+    #       radius_servers_ipv_6: ["Server"],
     #       radius_port: 1,
     #       radius_timeout: 1,
     #       radius_retries: 1,
@@ -2561,6 +3469,21 @@ module Aws::DirectoryService
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
+    #
+    # @example Example: To enable SSO
+    #
+    #   # To enable single sign-on for a specified directory.
+    #
+    #   resp = client.enable_sso({
+    #     directory_id: "d-92654abfed", 
+    #     password: "Str0ngP@ssw0rd", 
+    #     user_name: "Admin", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.enable_sso({
@@ -2583,6 +3506,29 @@ module Aws::DirectoryService
     # @return [Types::GetDirectoryLimitsResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::GetDirectoryLimitsResult#directory_limits #directory_limits} => Types::DirectoryLimits
+    #
+    #
+    # @example Example: To get directory limits
+    #
+    #   # The following example obtains directory limit information for the current region.
+    #
+    #   resp = client.get_directory_limits({
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     directory_limits: {
+    #       cloud_only_directories_current_count: 2, 
+    #       cloud_only_directories_limit: 10, 
+    #       cloud_only_directories_limit_reached: false, 
+    #       cloud_only_microsoft_ad_current_count: 2, 
+    #       cloud_only_microsoft_ad_limit: 10, 
+    #       cloud_only_microsoft_ad_limit_reached: false, 
+    #       connected_directories_current_count: 1, 
+    #       connected_directories_limit: 10, 
+    #       connected_directories_limit_reached: false, 
+    #     }, 
+    #   }
     #
     # @example Response structure
     #
@@ -2614,6 +3560,24 @@ module Aws::DirectoryService
     #
     #   * {Types::GetSnapshotLimitsResult#snapshot_limits #snapshot_limits} => Types::SnapshotLimits
     #
+    #
+    # @example Example: To get snapshot limits
+    #
+    #   # The following example obtains the manual snapshot limits for a specified directory.
+    #
+    #   resp = client.get_snapshot_limits({
+    #     directory_id: "d-92654abfed", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     snapshot_limits: {
+    #       manual_snapshots_current_count: 1, 
+    #       manual_snapshots_limit: 5, 
+    #       manual_snapshots_limit_reached: false, 
+    #     }, 
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_snapshot_limits({
@@ -2632,6 +3596,59 @@ module Aws::DirectoryService
     # @param [Hash] params ({})
     def get_snapshot_limits(params = {}, options = {})
       req = build_request(:get_snapshot_limits, params)
+      req.send_request(options)
+    end
+
+    # Retrieves a list of directory assessments for the specified directory
+    # or all assessments in your account. Use this operation to monitor
+    # assessment status and manage multiple assessments.
+    #
+    # @option params [String] :directory_id
+    #   The identifier of the directory for which to list assessments. If not
+    #   specified, all assessments in your account are returned.
+    #
+    # @option params [String] :next_token
+    #   The pagination token from a previous request to ListADAssessments.
+    #   Pass null if this is the first request.
+    #
+    # @option params [Integer] :limit
+    #   The maximum number of assessment summaries to return.
+    #
+    # @return [Types::ListADAssessmentsResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListADAssessmentsResult#assessments #assessments} => Array&lt;Types::AssessmentSummary&gt;
+    #   * {Types::ListADAssessmentsResult#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_ad_assessments({
+    #     directory_id: "DirectoryId",
+    #     next_token: "NextToken",
+    #     limit: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.assessments #=> Array
+    #   resp.assessments[0].assessment_id #=> String
+    #   resp.assessments[0].directory_id #=> String
+    #   resp.assessments[0].dns_name #=> String
+    #   resp.assessments[0].start_time #=> Time
+    #   resp.assessments[0].last_update_date_time #=> Time
+    #   resp.assessments[0].status #=> String
+    #   resp.assessments[0].customer_dns_ips #=> Array
+    #   resp.assessments[0].customer_dns_ips[0] #=> String
+    #   resp.assessments[0].report_type #=> String
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ds-2015-04-16/ListADAssessments AWS API Documentation
+    #
+    # @overload list_ad_assessments(params = {})
+    # @param [Hash] params ({})
+    def list_ad_assessments(params = {}, options = {})
+      req = build_request(:list_ad_assessments, params)
       req.send_request(options)
     end
 
@@ -2705,6 +3722,29 @@ module Aws::DirectoryService
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
     #
+    #
+    # @example Example: To list IP routes
+    #
+    #   # The following example lists the address blocks that have been added to a specified directory.
+    #
+    #   resp = client.list_ip_routes({
+    #     directory_id: "d-92654abfed", 
+    #     limit: 0, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     ip_routes_info: [
+    #       {
+    #         added_date_time: Time.parse(1481577631.63), 
+    #         cidr_ip: "12.12.12.12/32", 
+    #         description: "example", 
+    #         directory_id: "d-92654abfed", 
+    #         ip_route_status_msg: "Added", 
+    #       }, 
+    #     ], 
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_ip_routes({
@@ -2718,6 +3758,7 @@ module Aws::DirectoryService
     #   resp.ip_routes_info #=> Array
     #   resp.ip_routes_info[0].directory_id #=> String
     #   resp.ip_routes_info[0].cidr_ip #=> String
+    #   resp.ip_routes_info[0].cidr_ipv_6 #=> String
     #   resp.ip_routes_info[0].ip_route_status_msg #=> String, one of "Adding", "Added", "Removing", "Removed", "AddFailed", "RemoveFailed"
     #   resp.ip_routes_info[0].added_date_time #=> Time
     #   resp.ip_routes_info[0].ip_route_status_reason #=> String
@@ -2801,6 +3842,31 @@ module Aws::DirectoryService
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
     #
+    #
+    # @example Example: To list schema extensions
+    #
+    #   # The following example lists all schema extensions applied to a specified Microsoft AD Directory.
+    #
+    #   resp = client.list_schema_extensions({
+    #     directory_id: "d-92654abfed", 
+    #     limit: 0, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     schema_extensions_info: [
+    #       {
+    #         description: "example text", 
+    #         directory_id: "d-92654abfed", 
+    #         end_date_time: Time.parse(1481586088.301), 
+    #         schema_extension_id: "e-926731d2a0", 
+    #         schema_extension_status: "Cancelled", 
+    #         schema_extension_status_reason: "Cancellation is complete. No schema updates were applied to your directory.", 
+    #         start_date_time: Time.parse(1481584463.548), 
+    #       }, 
+    #     ], 
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_schema_extensions({
@@ -2847,6 +3913,26 @@ module Aws::DirectoryService
     #   * {Types::ListTagsForResourceResult#next_token #next_token} => String
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    #
+    # @example Example: To list tags for a directory
+    #
+    #   # The following example lists all tags associated with a specified directory.
+    #
+    #   resp = client.list_tags_for_resource({
+    #     limit: 0, 
+    #     resource_id: "d-92654abfed", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     tags: [
+    #       {
+    #         key: "environment", 
+    #         value: "production", 
+    #       }, 
+    #     ], 
+    #   }
     #
     # @example Request syntax with placeholder values
     #
@@ -2936,6 +4022,20 @@ module Aws::DirectoryService
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
+    #
+    # @example Example: To register an event topic
+    #
+    #   # The following example associates a directory with an SNS topic.
+    #
+    #   resp = client.register_event_topic({
+    #     directory_id: "d-92654abfed", 
+    #     topic_name: "snstopicexample", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.register_event_topic({
@@ -2988,16 +4088,36 @@ module Aws::DirectoryService
     #   Identifier (ID) of the directory from which you want to remove the IP
     #   addresses.
     #
-    # @option params [required, Array<String>] :cidr_ips
+    # @option params [Array<String>] :cidr_ips
     #   IP address blocks that you want to remove.
     #
+    # @option params [Array<String>] :cidr_ipv_6s
+    #   IPv6 address blocks that you want to remove.
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    #
+    # @example Example: To remove IP routes
+    #
+    #   # The following example removes IP address blocks from a specified directory.
+    #
+    #   resp = client.remove_ip_routes({
+    #     cidr_ips: [
+    #       "12.12.12.12/32", 
+    #     ], 
+    #     directory_id: "d-92654abfed", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #   }
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.remove_ip_routes({
     #     directory_id: "DirectoryId", # required
-    #     cidr_ips: ["CidrIp"], # required
+    #     cidr_ips: ["CidrIp"],
+    #     cidr_ipv_6s: ["CidrIpv6"],
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ds-2015-04-16/RemoveIpRoutes AWS API Documentation
@@ -3043,6 +4163,22 @@ module Aws::DirectoryService
     #   The tag key (name) of the tag to be removed.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    #
+    # @example Example: To remove tags from a directory
+    #
+    #   # The following example removes a tag from a specified directory.
+    #
+    #   resp = client.remove_tags_from_resource({
+    #     resource_id: "d-92654abfed", 
+    #     tag_keys: [
+    #       "environment", 
+    #     ], 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #   }
     #
     # @example Request syntax with placeholder values
     #
@@ -3127,6 +4263,19 @@ module Aws::DirectoryService
     #   The identifier of the snapshot to restore from.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    #
+    # @example Example: To restore a snapshot
+    #
+    #   # The following example restores a directory using an existing directory snapshot.
+    #
+    #   resp = client.restore_from_snapshot({
+    #     snapshot_id: "s-9267f6da4e", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #   }
     #
     # @example Request syntax with placeholder values
     #
@@ -3213,6 +4362,73 @@ module Aws::DirectoryService
       req.send_request(options)
     end
 
+    # Initiates a directory assessment to validate your self-managed AD
+    # environment for hybrid domain join. The assessment checks
+    # compatibility and connectivity of the self-managed AD environment.
+    #
+    # A directory assessment is automatically created when you create a
+    # hybrid directory. There are two types of assessments: `CUSTOMER` and
+    # `SYSTEM`. Your Amazon Web Services account has a limit of 100
+    # `CUSTOMER` directory assessments.
+    #
+    # The assessment process typically takes 30 minutes or more to complete.
+    # The assessment process is asynchronous and you can monitor it with
+    # `DescribeADAssessment`.
+    #
+    # The `InstanceIds` must have a one-to-one correspondence with
+    # `CustomerDnsIps`, meaning that if the IP address for instance
+    # i-10243410 is 10.24.34.100 and the IP address for instance i-10243420
+    # is 10.24.34.200, then the input arrays must maintain the same order
+    # relationship, either \[10.24.34.100, 10.24.34.200\] paired with
+    # \[i-10243410, i-10243420\] or \[10.24.34.200, 10.24.34.100\] paired
+    # with \[i-10243420, i-10243410\].
+    #
+    # Note: You must provide exactly one `DirectoryId` or
+    # `AssessmentConfiguration`.
+    #
+    # @option params [Types::AssessmentConfiguration] :assessment_configuration
+    #   Configuration parameters for the directory assessment, including DNS
+    #   server information, domain name, Amazon VPC subnet, and Amazon Web
+    #   Services System Manager managed node details.
+    #
+    # @option params [String] :directory_id
+    #   The identifier of the directory for which to perform the assessment.
+    #   This should be an existing directory. If the assessment is not for an
+    #   existing directory, this parameter should be omitted.
+    #
+    # @return [Types::StartADAssessmentResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::StartADAssessmentResult#assessment_id #assessment_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.start_ad_assessment({
+    #     assessment_configuration: {
+    #       customer_dns_ips: ["IpAddr"], # required
+    #       dns_name: "DirectoryName", # required
+    #       vpc_settings: { # required
+    #         vpc_id: "VpcId", # required
+    #         subnet_ids: ["SubnetId"], # required
+    #       },
+    #       instance_ids: ["AssessmentInstanceId"], # required
+    #       security_group_ids: ["SecurityGroupId"],
+    #     },
+    #     directory_id: "DirectoryId",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.assessment_id #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ds-2015-04-16/StartADAssessment AWS API Documentation
+    #
+    # @overload start_ad_assessment(params = {})
+    # @param [Hash] params ({})
+    def start_ad_assessment(params = {}, options = {})
+      req = build_request(:start_ad_assessment, params)
+      req.send_request(options)
+    end
+
     # Applies a schema extension to a Microsoft AD directory.
     #
     # @option params [required, String] :directory_id
@@ -3235,6 +4451,23 @@ module Aws::DirectoryService
     # @return [Types::StartSchemaExtensionResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::StartSchemaExtensionResult#schema_extension_id #schema_extension_id} => String
+    #
+    #
+    # @example Example: To start a schema extension
+    #
+    #   # The following example applies a schema extension to a specified Microsoft AD directory.
+    #
+    #   resp = client.start_schema_extension({
+    #     create_snapshot_before_schema_extension: true, 
+    #     description: "Adds maycontain attribute to user class. Precede each line as it would be formatted in an ldif file.", 
+    #     directory_id: "d-92654abfed", 
+    #     ldif_content: "dn: CN=User,CN=Schema,CN=Configuration,DC=sales,DC=example,DC=com\nchangetype: modify\nadd: mayContain\nmayContain: drink\n-\n\nDN:\nchangetype: modify\nreplace: schemaupdatenow\nschemaupdatenow: 1\n-", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     schema_extension_id: "e-926731dc50", 
+    #   }
     #
     # @example Request syntax with placeholder values
     #
@@ -3307,18 +4540,40 @@ module Aws::DirectoryService
     #   The fully qualified domain name (FQDN) of the remote domain with which
     #   you will set up a trust relationship.
     #
-    # @option params [required, Array<String>] :dns_ip_addrs
+    # @option params [Array<String>] :dns_ip_addrs
     #   The updated IP addresses of the remote DNS server associated with the
     #   conditional forwarder.
     #
+    # @option params [Array<String>] :dns_ipv_6_addrs
+    #   The updated IPv6 addresses of the remote DNS server associated with
+    #   the conditional forwarder.
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    #
+    # @example Example: To update a conditional forwarder
+    #
+    #   # The following example updates a conditional forwarder for a specified directory.
+    #
+    #   resp = client.update_conditional_forwarder({
+    #     directory_id: "d-92654abfed", 
+    #     dns_ip_addrs: [
+    #       "172.168.101.11", 
+    #     ], 
+    #     remote_domain_name: "sales.example.com", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #   }
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_conditional_forwarder({
     #     directory_id: "DirectoryId", # required
     #     remote_domain_name: "RemoteDomainName", # required
-    #     dns_ip_addrs: ["IpAddr"], # required
+    #     dns_ip_addrs: ["IpAddr"],
+    #     dns_ipv_6_addrs: ["Ipv6Addr"],
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ds-2015-04-16/UpdateConditionalForwarder AWS API Documentation
@@ -3330,23 +4585,27 @@ module Aws::DirectoryService
       req.send_request(options)
     end
 
-    # Updates the directory for a particular update type.
+    # Updates directory configuration for the specified update type.
     #
     # @option params [required, String] :directory_id
-    #   The identifier of the directory on which you want to perform the
-    #   update.
+    #   The identifier of the directory to update.
     #
     # @option params [required, String] :update_type
-    #   The type of update that needs to be performed on the directory. For
-    #   example, OS.
+    #   The type of update to perform on the directory.
     #
     # @option params [Types::OSUpdateSettings] :os_update_settings
-    #   The settings for the OS update that needs to be performed on the
-    #   directory.
+    #   Operating system configuration to apply during the directory update
+    #   operation.
+    #
+    # @option params [Types::DirectorySizeUpdateSettings] :directory_size_update_settings
+    #   Directory size configuration to apply during the update operation.
+    #
+    # @option params [Types::NetworkUpdateSettings] :network_update_settings
+    #   Network configuration to apply during the directory update operation.
     #
     # @option params [Boolean] :create_snapshot_before_update
-    #   The boolean that specifies if a snapshot for the directory needs to be
-    #   taken before updating the directory.
+    #   Specifies whether to create a directory snapshot before performing the
+    #   update.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
@@ -3354,9 +4613,16 @@ module Aws::DirectoryService
     #
     #   resp = client.update_directory_setup({
     #     directory_id: "DirectoryId", # required
-    #     update_type: "OS", # required, accepts OS
+    #     update_type: "OS", # required, accepts OS, NETWORK, SIZE
     #     os_update_settings: {
     #       os_version: "SERVER_2012", # accepts SERVER_2012, SERVER_2019
+    #     },
+    #     directory_size_update_settings: {
+    #       directory_size: "Small", # accepts Small, Large
+    #     },
+    #     network_update_settings: {
+    #       network_type: "Dual-stack", # accepts Dual-stack, IPv4, IPv6
+    #       customer_dns_ips_v6: ["Ipv6Addr"],
     #     },
     #     create_snapshot_before_update: false,
     #   })
@@ -3367,6 +4633,82 @@ module Aws::DirectoryService
     # @param [Hash] params ({})
     def update_directory_setup(params = {}, options = {})
       req = build_request(:update_directory_setup, params)
+      req.send_request(options)
+    end
+
+    # Updates the configuration of an existing hybrid directory. You can
+    # recover hybrid directory administrator account or modify self-managed
+    # instance settings.
+    #
+    # Updates are applied asynchronously. Use DescribeHybridADUpdate to
+    # monitor the progress of configuration changes.
+    #
+    # The `InstanceIds` must have a one-to-one correspondence with
+    # `CustomerDnsIps`, meaning that if the IP address for instance
+    # i-10243410 is 10.24.34.100 and the IP address for instance i-10243420
+    # is 10.24.34.200, then the input arrays must maintain the same order
+    # relationship, either \[10.24.34.100, 10.24.34.200\] paired with
+    # \[i-10243410, i-10243420\] or \[10.24.34.200, 10.24.34.100\] paired
+    # with \[i-10243420, i-10243410\].
+    #
+    # <note markdown="1"> You must provide at least one update to
+    # UpdateHybridADRequest$HybridAdministratorAccountUpdate or
+    # UpdateHybridADRequest$SelfManagedInstancesSettings.
+    #
+    #  </note>
+    #
+    # @option params [required, String] :directory_id
+    #   The identifier of the hybrid directory to update.
+    #
+    # @option params [Types::HybridAdministratorAccountUpdate] :hybrid_administrator_account_update
+    #   We create a hybrid directory administrator account when we create a
+    #   hybrid directory. Use `HybridAdministratorAccountUpdate` to recover
+    #   the hybrid directory administrator account if you have deleted it.
+    #
+    #   To recover your hybrid directory administrator account, we need
+    #   temporary access to a user in your self-managed AD with administrator
+    #   permissions in the form of a secret from Amazon Web Services Secrets
+    #   Manager. We use these credentials once during recovery and don't
+    #   store them.
+    #
+    #   If your hybrid directory administrator account exists, then you don’t
+    #   need to use `HybridAdministratorAccountUpdate`, even if you have
+    #   updated your self-managed AD administrator user.
+    #
+    # @option params [Types::HybridCustomerInstancesSettings] :self_managed_instances_settings
+    #   Updates to the self-managed AD configuration, including DNS server IP
+    #   addresses and Amazon Web Services System Manager managed node
+    #   identifiers.
+    #
+    # @return [Types::UpdateHybridADResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateHybridADResult#directory_id #directory_id} => String
+    #   * {Types::UpdateHybridADResult#assessment_id #assessment_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_hybrid_ad({
+    #     directory_id: "DirectoryId", # required
+    #     hybrid_administrator_account_update: {
+    #       secret_arn: "SecretArn", # required
+    #     },
+    #     self_managed_instances_settings: {
+    #       customer_dns_ips: ["IpAddr"], # required
+    #       instance_ids: ["AssessmentInstanceId"], # required
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.directory_id #=> String
+    #   resp.assessment_id #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ds-2015-04-16/UpdateHybridAD AWS API Documentation
+    #
+    # @overload update_hybrid_ad(params = {})
+    # @param [Hash] params ({})
+    def update_hybrid_ad(params = {}, options = {})
+      req = build_request(:update_hybrid_ad, params)
       req.send_request(options)
     end
 
@@ -3415,12 +4757,39 @@ module Aws::DirectoryService
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
+    #
+    # @example Example: To update Radius
+    #
+    #   # The following example updates the Remote Authentication Dial In User Service (RADIUS) server settings for an AD
+    #   # Connector directory.
+    #
+    #   resp = client.update_radius({
+    #     directory_id: "d-92654abfed", 
+    #     radius_settings: {
+    #       authentication_protocol: "PAP", 
+    #       display_label: "MyRadius", 
+    #       radius_port: 1027, 
+    #       radius_retries: 1, 
+    #       radius_servers: [
+    #         "172.168.101.113", 
+    #       ], 
+    #       radius_timeout: 1, 
+    #       shared_secret: "12345678", 
+    #       use_same_username: true, 
+    #     }, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_radius({
     #     directory_id: "DirectoryId", # required
     #     radius_settings: { # required
     #       radius_servers: ["Server"],
+    #       radius_servers_ipv_6: ["Server"],
     #       radius_port: 1,
     #       radius_timeout: 1,
     #       radius_retries: 1,
@@ -3525,6 +4894,20 @@ module Aws::DirectoryService
     #
     #   * {Types::VerifyTrustResult#trust_id #trust_id} => String
     #
+    #
+    # @example Example: To verify a trust
+    #
+    #   # The following example verifies a trust relationship between your Microsoft AD in the AWS cloud and an external domain.
+    #
+    #   resp = client.verify_trust({
+    #     trust_id: "t-9267353df0", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     trust_id: "t-9267353df0", 
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.verify_trust({
@@ -3562,14 +4945,127 @@ module Aws::DirectoryService
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-directoryservice'
-      context[:gem_version] = '1.82.0'
+      context[:gem_version] = '1.106.0'
       Seahorse::Client::Request.new(handlers, context)
+    end
+
+    # Polls an API operation until a resource enters a desired state.
+    #
+    # ## Basic Usage
+    #
+    # A waiter will call an API operation until:
+    #
+    # * It is successful
+    # * It enters a terminal state
+    # * It makes the maximum number of attempts
+    #
+    # In between attempts, the waiter will sleep.
+    #
+    #     # polls in a loop, sleeping between attempts
+    #     client.wait_until(waiter_name, params)
+    #
+    # ## Configuration
+    #
+    # You can configure the maximum number of polling attempts, and the
+    # delay (in seconds) between each polling attempt. You can pass
+    # configuration as the final arguments hash.
+    #
+    #     # poll for ~25 seconds
+    #     client.wait_until(waiter_name, params, {
+    #       max_attempts: 5,
+    #       delay: 5,
+    #     })
+    #
+    # ## Callbacks
+    #
+    # You can be notified before each polling attempt and before each
+    # delay. If you throw `:success` or `:failure` from these callbacks,
+    # it will terminate the waiter.
+    #
+    #     started_at = Time.now
+    #     client.wait_until(waiter_name, params, {
+    #
+    #       # disable max attempts
+    #       max_attempts: nil,
+    #
+    #       # poll for 1 hour, instead of a number of attempts
+    #       before_wait: -> (attempts, response) do
+    #         throw :failure if Time.now - started_at > 3600
+    #       end
+    #     })
+    #
+    # ## Handling Errors
+    #
+    # When a waiter is unsuccessful, it will raise an error.
+    # All of the failure errors extend from
+    # {Aws::Waiters::Errors::WaiterFailed}.
+    #
+    #     begin
+    #       client.wait_until(...)
+    #     rescue Aws::Waiters::Errors::WaiterFailed
+    #       # resource did not enter the desired state in time
+    #     end
+    #
+    # ## Valid Waiters
+    #
+    # The following table lists the valid waiter names, the operations they call,
+    # and the default `:delay` and `:max_attempts` values.
+    #
+    # | waiter_name       | params                             | :delay   | :max_attempts |
+    # | ----------------- | ---------------------------------- | -------- | ------------- |
+    # | hybrid_ad_updated | {Client#describe_hybrid_ad_update} | 120      | 60            |
+    #
+    # @raise [Errors::FailureStateError] Raised when the waiter terminates
+    #   because the waiter has entered a state that it will not transition
+    #   out of, preventing success.
+    #
+    # @raise [Errors::TooManyAttemptsError] Raised when the configured
+    #   maximum number of attempts have been made, and the waiter is not
+    #   yet successful.
+    #
+    # @raise [Errors::UnexpectedError] Raised when an error is encounted
+    #   while polling for a resource that is not expected.
+    #
+    # @raise [Errors::NoSuchWaiterError] Raised when you request to wait
+    #   for an unknown state.
+    #
+    # @return [Boolean] Returns `true` if the waiter was successful.
+    # @param [Symbol] waiter_name
+    # @param [Hash] params ({})
+    # @param [Hash] options ({})
+    # @option options [Integer] :max_attempts
+    # @option options [Integer] :delay
+    # @option options [Proc] :before_attempt
+    # @option options [Proc] :before_wait
+    def wait_until(waiter_name, params = {}, options = {})
+      w = waiter(waiter_name, options)
+      yield(w.waiter) if block_given? # deprecated
+      w.wait(params)
     end
 
     # @api private
     # @deprecated
     def waiter_names
-      []
+      waiters.keys
+    end
+
+    private
+
+    # @param [Symbol] waiter_name
+    # @param [Hash] options ({})
+    def waiter(waiter_name, options = {})
+      waiter_class = waiters[waiter_name]
+      if waiter_class
+        waiter_class.new(options.merge(client: self))
+      else
+        raise Aws::Waiters::Errors::NoSuchWaiterError.new(waiter_name, waiters.keys)
+      end
+    end
+
+    def waiters
+      {
+        hybrid_ad_updated: Waiters::HybridADUpdated
+      }
     end
 
     class << self

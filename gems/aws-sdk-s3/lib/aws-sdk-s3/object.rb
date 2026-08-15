@@ -97,9 +97,10 @@ module Aws::S3
     # For more information about archiving objects, see [Transitioning
     # Objects: General Considerations][2].
     #
-    # <note markdown="1"> This functionality is not supported for directory buckets. Only the S3
-    # Express One Zone storage class is supported by directory buckets to
-    # store objects.
+    # <note markdown="1"> This functionality is not supported for directory buckets. Directory
+    # buckets only support `EXPRESS_ONEZONE` (the S3 Express One Zone
+    # storage class) in Availability Zones and `ONEZONE_IA` (the S3 One
+    # Zone-Infrequent Access storage class) in Dedicated Local Zones.
     #
     #  </note>
     #
@@ -135,10 +136,10 @@ module Aws::S3
     end
 
     # The Base64 encoded, 32-bit `CRC32 checksum` of the object. This
-    # checksum is only be present if the checksum was uploaded with the
-    # object. When you use an API operation on an object that was uploaded
-    # using multipart uploads, this value may not be a direct checksum value
-    # of the full object. Instead, it's a calculation based on the checksum
+    # checksum is only present if the checksum was uploaded with the object.
+    # When you use an API operation on an object that was uploaded using
+    # multipart uploads, this value may not be a direct checksum value of
+    # the full object. Instead, it's a calculation based on the checksum
     # values of each individual part. For more information about how
     # checksums are calculated with multipart uploads, see [ Checking object
     # integrity][1] in the *Amazon S3 User Guide*.
@@ -180,8 +181,8 @@ module Aws::S3
       data[:checksum_crc64nvme]
     end
 
-    # The Base64 encoded, 160-bit `SHA1` digest of the object. This will
-    # only be present if the object was uploaded with the object. When you
+    # The Base64 encoded, 160-bit `SHA1` digest of the object. This checksum
+    # is only present if the checksum was uploaded with the object. When you
     # use the API operation on an object that was uploaded using multipart
     # uploads, this value may not be a direct checksum value of the full
     # object. Instead, it's a calculation based on the checksum values of
@@ -197,14 +198,14 @@ module Aws::S3
       data[:checksum_sha1]
     end
 
-    # The Base64 encoded, 256-bit `SHA256` digest of the object. This will
-    # only be present if the object was uploaded with the object. When you
-    # use an API operation on an object that was uploaded using multipart
-    # uploads, this value may not be a direct checksum value of the full
-    # object. Instead, it's a calculation based on the checksum values of
-    # each individual part. For more information about how checksums are
-    # calculated with multipart uploads, see [ Checking object integrity][1]
-    # in the *Amazon S3 User Guide*.
+    # The Base64 encoded, 256-bit `SHA256` digest of the object. This
+    # checksum is only present if the checksum was uploaded with the object.
+    # When you use an API operation on an object that was uploaded using
+    # multipart uploads, this value may not be a direct checksum value of
+    # the full object. Instead, it's a calculation based on the checksum
+    # values of each individual part. For more information about how
+    # checksums are calculated with multipart uploads, see [ Checking object
+    # integrity][1] in the *Amazon S3 User Guide*.
     #
     #
     #
@@ -212,6 +213,66 @@ module Aws::S3
     # @return [String]
     def checksum_sha256
       data[:checksum_sha256]
+    end
+
+    # The Base64 encoded, 512-bit `SHA512` digest of the object. For more
+    # information, see [Checking object integrity in the Amazon S3 User
+    # Guide][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html
+    # @return [String]
+    def checksum_sha512
+      data[:checksum_sha512]
+    end
+
+    # The Base64 encoded, 128-bit `MD5` digest of the object. For more
+    # information, see [Checking object integrity in the Amazon S3 User
+    # Guide][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html
+    # @return [String]
+    def checksum_md5
+      data[:checksum_md5]
+    end
+
+    # The Base64 encoded, 64-bit `XXHASH64` checksum of the object. For more
+    # information, see [Checking object integrity in the Amazon S3 User
+    # Guide][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html
+    # @return [String]
+    def checksum_xxhash64
+      data[:checksum_xxhash64]
+    end
+
+    # The Base64 encoded, 64-bit `XXHASH3` checksum of the object. For more
+    # information, see [Checking object integrity in the Amazon S3 User
+    # Guide][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html
+    # @return [String]
+    def checksum_xxhash3
+      data[:checksum_xxhash3]
+    end
+
+    # The Base64 encoded, 128-bit `XXHASH128` checksum of the object. For
+    # more information, see [Checking object integrity in the Amazon S3 User
+    # Guide][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html
+    # @return [String]
+    def checksum_xxhash128
+      data[:checksum_xxhash128]
     end
 
     # The checksum type, which determines how part-level checksums are
@@ -323,7 +384,12 @@ module Aws::S3
     end
 
     # The server-side encryption algorithm used when you store this object
-    # in Amazon S3 (for example, `AES256`, `aws:kms`, `aws:kms:dsse`).
+    # in Amazon S3 or Amazon FSx.
+    #
+    # <note markdown="1"> When accessing data stored in Amazon FSx file systems using S3 access
+    # points, the only valid server side encryption option is `aws:fsx`.
+    #
+    #  </note>
     # @return [String]
     def server_side_encryption
       data[:server_side_encryption]
@@ -380,8 +446,10 @@ module Aws::S3
     #
     # For more information, see [Storage Classes][1].
     #
-    # <note markdown="1"> <b>Directory buckets </b> - Only the S3 Express One Zone storage class
-    # is supported by directory buckets to store objects.
+    # <note markdown="1"> <b>Directory buckets </b> - Directory buckets only support
+    # `EXPRESS_ONEZONE` (the S3 Express One Zone storage class) in
+    # Availability Zones and `ONEZONE_IA` (the S3 One Zone-Infrequent Access
+    # storage class) in Dedicated Local Zones.
     #
     #  </note>
     #
@@ -394,11 +462,17 @@ module Aws::S3
     end
 
     # If present, indicates that the requester was successfully charged for
-    # the request.
+    # the request. For more information, see [Using Requester Pays buckets
+    # for storage transfers and usage][1] in the *Amazon Simple Storage
+    # Service user guide*.
     #
     # <note markdown="1"> This functionality is not supported for directory buckets.
     #
     #  </note>
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/RequesterPaysBuckets.html
     # @return [String]
     def request_charged
       data[:request_charged]
@@ -459,6 +533,24 @@ module Aws::S3
     # @return [Integer]
     def parts_count
       data[:parts_count]
+    end
+
+    # The number of tags, if any, on the object, when you have the relevant
+    # permission to read object tags.
+    #
+    # You can use [GetObjectTagging][1] to retrieve the tag set associated
+    # with an object.
+    #
+    # <note markdown="1"> This functionality is not supported for directory buckets.
+    #
+    #  </note>
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetObjectTagging.html
+    # @return [Integer]
+    def tag_count
+      data[:tag_count]
     end
 
     # The Object Lock mode, if any, that's in effect for this object. This
@@ -710,7 +802,7 @@ module Aws::S3
     #   object.copy_from({
     #     acl: "private", # accepts private, public-read, public-read-write, authenticated-read, aws-exec-read, bucket-owner-read, bucket-owner-full-control
     #     cache_control: "CacheControl",
-    #     checksum_algorithm: "CRC32", # accepts CRC32, CRC32C, SHA1, SHA256, CRC64NVME
+    #     checksum_algorithm: "CRC32", # accepts CRC32, CRC32C, SHA1, SHA256, CRC64NVME, SHA512, MD5, XXHASH64, XXHASH3, XXHASH128
     #     content_disposition: "ContentDisposition",
     #     content_encoding: "ContentEncoding",
     #     content_language: "ContentLanguage",
@@ -725,13 +817,16 @@ module Aws::S3
     #     grant_read: "GrantRead",
     #     grant_read_acp: "GrantReadACP",
     #     grant_write_acp: "GrantWriteACP",
+    #     if_match: "IfMatch",
+    #     if_none_match: "IfNoneMatch",
     #     metadata: {
     #       "MetadataKey" => "MetadataValue",
     #     },
     #     metadata_directive: "COPY", # accepts COPY, REPLACE
     #     tagging_directive: "COPY", # accepts COPY, REPLACE
-    #     server_side_encryption: "AES256", # accepts AES256, aws:kms, aws:kms:dsse
-    #     storage_class: "STANDARD", # accepts STANDARD, REDUCED_REDUNDANCY, STANDARD_IA, ONEZONE_IA, INTELLIGENT_TIERING, GLACIER, DEEP_ARCHIVE, OUTPOSTS, GLACIER_IR, SNOW, EXPRESS_ONEZONE
+    #     annotation_directive: "COPY", # accepts COPY, EXCLUDE
+    #     server_side_encryption: "AES256", # accepts AES256, aws:fsx, aws:backup, aws:kms, aws:kms:dsse
+    #     storage_class: "STANDARD", # accepts STANDARD, REDUCED_REDUNDANCY, STANDARD_IA, ONEZONE_IA, INTELLIGENT_TIERING, GLACIER, DEEP_ARCHIVE, OUTPOSTS, GLACIER_IR, SNOW, EXPRESS_ONEZONE, FSX_OPENZFS, FSX_ONTAP, AWS_BACKUP_WARM, AWS_BACKUP_LOW_COST_WARM
     #     website_redirect_location: "WebsiteRedirectLocation",
     #     sse_customer_algorithm: "SSECustomerAlgorithm",
     #     sse_customer_key: "SSECustomerKey",
@@ -981,6 +1076,35 @@ module Aws::S3
     #   * This functionality is not supported for Amazon S3 on Outposts.
     #
     #    </note>
+    # @option options [String] :if_match
+    #   Copies the object if the entity tag (ETag) of the destination object
+    #   matches the specified tag. If the ETag values do not match, the
+    #   operation returns a `412 Precondition Failed` error. If a concurrent
+    #   operation occurs during the upload S3 returns a `409
+    #   ConditionalRequestConflict` response. On a 409 failure you should
+    #   fetch the object's ETag and retry the upload.
+    #
+    #   Expects the ETag value as a string.
+    #
+    #   For more information about conditional requests, see [RFC 7232][1].
+    #
+    #
+    #
+    #   [1]: https://tools.ietf.org/html/rfc7232
+    # @option options [String] :if_none_match
+    #   Copies the object only if the object key name at the destination does
+    #   not already exist in the bucket specified. Otherwise, Amazon S3
+    #   returns a `412 Precondition Failed` error. If a concurrent operation
+    #   occurs during the upload S3 returns a `409 ConditionalRequestConflict`
+    #   response. On a 409 failure you should retry the upload.
+    #
+    #   Expects the '*' (asterisk) character.
+    #
+    #   For more information about conditional requests, see [RFC 7232][1].
+    #
+    #
+    #
+    #   [1]: https://tools.ietf.org/html/rfc7232
     # @option options [Hash<String,String>] :metadata
     #   A map of metadata to store with the object in S3.
     # @option options [String] :metadata_directive
@@ -1049,6 +1173,42 @@ module Aws::S3
     #     source object and don't set the `x-amz-tagging` value of the
     #     directory bucket destination object. This is because the default
     #     value of `x-amz-tagging` is the empty value.
+    #
+    #    </note>
+    # @option options [String] :annotation_directive
+    #   Specifies whether you want to copy annotations from the source object
+    #   or exclude them. If this header isn't specified, `COPY` is the
+    #   default behavior.
+    #
+    #   Valid Values: `COPY | EXCLUDE`
+    #
+    #   You can specify this directive as either an HTTP header
+    #   (`x-amz-object-annotation-directive`) or as a query string parameter.
+    #   Use the query string form when generating presigned URLs that need to
+    #   control annotation copy behavior.
+    #
+    #   When set to `COPY`, you must have `s3:GetObjectAnnotation` permission
+    #   on the source object and `s3:PutObjectAnnotation` permission on the
+    #   destination. Each annotation copied is billed as a separate PUT
+    #   request. If annotations on the source are modified during the copy,
+    #   Amazon S3 returns a retryable error.
+    #
+    #   <note markdown="1"> For directory buckets, annotations are not supported. Use `EXCLUDE` to
+    #   copy objects to directory buckets without errors. If you specify
+    #   `COPY` for a directory bucket, the request returns HTTP 501 (Not
+    #   Implemented).
+    #
+    #    </note>
+    #
+    #   <note markdown="1"> When you copy objects using multipart upload (for example, when the
+    #   Amazon Web Services CLI or Amazon Web Services SDKs use Transfer
+    #   Manager for objects larger than approximately 8 MB), annotations are
+    #   not copied by default. To include annotations, specify `--copy-props
+    #   default` in the Amazon Web Services CLI or the equivalent SDK
+    #   configuration. With this opt-in, the SDK reads source annotations,
+    #   completes the multipart upload, and then writes each annotation to the
+    #   destination. Between the upload completion and the last annotation
+    #   write, the destination object exists without all its annotations.
     #
     #    </note>
     # @option options [String] :server_side_encryption
@@ -1121,6 +1281,14 @@ module Aws::S3
     #     key is the same customer managed key that you specified for the
     #     directory bucket's default encryption configuration.
     #
+    #   * <b>S3 access points for Amazon FSx </b> - When accessing data stored
+    #     in Amazon FSx file systems using S3 access points, the only valid
+    #     server side encryption option is `aws:fsx`. All Amazon FSx file
+    #     systems have encryption configured by default and are encrypted at
+    #     rest. Data is automatically encrypted before being written to the
+    #     file system, and automatically decrypted as it is read. These
+    #     processes are handled transparently by Amazon FSx.
+    #
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/dev/serv-side-encryption.html
@@ -1135,10 +1303,12 @@ module Aws::S3
     #   availability. Depending on performance needs, you can specify a
     #   different Storage Class.
     #
-    #   <note markdown="1"> * <b>Directory buckets </b> - For directory buckets, only the S3
-    #     Express One Zone storage class is supported to store newly created
-    #     objects. Unsupported storage class values won't write a destination
-    #     object and will respond with the HTTP status code `400 Bad Request`.
+    #   <note markdown="1"> * <b>Directory buckets </b> - Directory buckets only support
+    #     `EXPRESS_ONEZONE` (the S3 Express One Zone storage class) in
+    #     Availability Zones and `ONEZONE_IA` (the S3 One Zone-Infrequent
+    #     Access storage class) in Dedicated Local Zones. Unsupported storage
+    #     class values won't write a destination object and will respond with
+    #     the HTTP status code `400 Bad Request`.
     #
     #   * <b>Amazon S3 on Outposts </b> - S3 on Outposts only uses the
     #     `OUTPOSTS` Storage Class.
@@ -1332,10 +1502,10 @@ module Aws::S3
     #   Confirms that the requester knows that they will be charged for the
     #   request. Bucket owners need not specify this parameter in their
     #   requests. If either the source or destination S3 bucket has Requester
-    #   Pays enabled, the requester will pay for corresponding charges to copy
-    #   the object. For information about downloading objects from Requester
-    #   Pays buckets, see [Downloading Objects in Requester Pays Buckets][1]
-    #   in the *Amazon S3 User Guide*.
+    #   Pays enabled, the requester will pay for the corresponding charges.
+    #   For information about downloading objects from Requester Pays buckets,
+    #   see [Downloading Objects in Requester Pays Buckets][1] in the *Amazon
+    #   S3 User Guide*.
     #
     #   <note markdown="1"> This functionality is not supported for directory buckets.
     #
@@ -1468,10 +1638,10 @@ module Aws::S3
     #   Confirms that the requester knows that they will be charged for the
     #   request. Bucket owners need not specify this parameter in their
     #   requests. If either the source or destination S3 bucket has Requester
-    #   Pays enabled, the requester will pay for corresponding charges to copy
-    #   the object. For information about downloading objects from Requester
-    #   Pays buckets, see [Downloading Objects in Requester Pays Buckets][1]
-    #   in the *Amazon S3 User Guide*.
+    #   Pays enabled, the requester will pay for the corresponding charges.
+    #   For information about downloading objects from Requester Pays buckets,
+    #   see [Downloading Objects in Requester Pays Buckets][1] in the *Amazon
+    #   S3 User Guide*.
     #
     #   <note markdown="1"> This functionality is not supported for directory buckets.
     #
@@ -1493,17 +1663,15 @@ module Aws::S3
     #   you provide does not match the actual owner of the bucket, the request
     #   fails with the HTTP status code `403 Forbidden` (access denied).
     # @option options [String] :if_match
-    #   The `If-Match` header field makes the request method conditional on
-    #   ETags. If the ETag value does not match, the operation returns a `412
-    #   Precondition Failed` error. If the ETag matches or if the object
-    #   doesn't exist, the operation will return a `204 Success (No Content)
-    #   response`.
+    #   Deletes the object if the ETag (entity tag) value provided during the
+    #   delete operation matches the ETag of the object in S3. If the ETag
+    #   values do not match, the operation returns a `412 Precondition Failed`
+    #   error.
+    #
+    #   Expects the ETag value as a string. `If-Match` does accept a string
+    #   value of an '*' (asterisk) character to denote a match of any ETag.
     #
     #   For more information about conditional requests, see [RFC 7232][1].
-    #
-    #   <note markdown="1"> This functionality is only supported for directory buckets.
-    #
-    #    </note>
     #
     #
     #
@@ -1765,10 +1933,10 @@ module Aws::S3
     #   Confirms that the requester knows that they will be charged for the
     #   request. Bucket owners need not specify this parameter in their
     #   requests. If either the source or destination S3 bucket has Requester
-    #   Pays enabled, the requester will pay for corresponding charges to copy
-    #   the object. For information about downloading objects from Requester
-    #   Pays buckets, see [Downloading Objects in Requester Pays Buckets][1]
-    #   in the *Amazon S3 User Guide*.
+    #   Pays enabled, the requester will pay for the corresponding charges.
+    #   For information about downloading objects from Requester Pays buckets,
+    #   see [Downloading Objects in Requester Pays Buckets][1] in the *Amazon
+    #   S3 User Guide*.
     #
     #   <note markdown="1"> This functionality is not supported for directory buckets.
     #
@@ -1817,8 +1985,8 @@ module Aws::S3
     #     metadata: {
     #       "MetadataKey" => "MetadataValue",
     #     },
-    #     server_side_encryption: "AES256", # accepts AES256, aws:kms, aws:kms:dsse
-    #     storage_class: "STANDARD", # accepts STANDARD, REDUCED_REDUNDANCY, STANDARD_IA, ONEZONE_IA, INTELLIGENT_TIERING, GLACIER, DEEP_ARCHIVE, OUTPOSTS, GLACIER_IR, SNOW, EXPRESS_ONEZONE
+    #     server_side_encryption: "AES256", # accepts AES256, aws:fsx, aws:backup, aws:kms, aws:kms:dsse
+    #     storage_class: "STANDARD", # accepts STANDARD, REDUCED_REDUNDANCY, STANDARD_IA, ONEZONE_IA, INTELLIGENT_TIERING, GLACIER, DEEP_ARCHIVE, OUTPOSTS, GLACIER_IR, SNOW, EXPRESS_ONEZONE, FSX_OPENZFS, FSX_ONTAP, AWS_BACKUP_WARM, AWS_BACKUP_LOW_COST_WARM
     #     website_redirect_location: "WebsiteRedirectLocation",
     #     sse_customer_algorithm: "SSECustomerAlgorithm",
     #     sse_customer_key: "SSECustomerKey",
@@ -1832,7 +2000,7 @@ module Aws::S3
     #     object_lock_retain_until_date: Time.now,
     #     object_lock_legal_hold_status: "ON", # accepts ON, OFF
     #     expected_bucket_owner: "AccountId",
-    #     checksum_algorithm: "CRC32", # accepts CRC32, CRC32C, SHA1, SHA256, CRC64NVME
+    #     checksum_algorithm: "CRC32", # accepts CRC32, CRC32C, SHA1, SHA256, CRC64NVME, SHA512, MD5, XXHASH64, XXHASH3, XXHASH128
     #     checksum_type: "COMPOSITE", # accepts COMPOSITE, FULL_OBJECT
     #   })
     # @param [Hash] options ({})
@@ -2135,7 +2303,7 @@ module Aws::S3
     #   A map of metadata to store with the object in S3.
     # @option options [String] :server_side_encryption
     #   The server-side encryption algorithm used when you store this object
-    #   in Amazon S3 (for example, `AES256`, `aws:kms`).
+    #   in Amazon S3 or Amazon FSx.
     #
     #   * <b>Directory buckets </b> - For directory buckets, there are only
     #     two supported options for server-side encryption: server-side
@@ -2177,6 +2345,14 @@ module Aws::S3
     #
     #      </note>
     #
+    #   * <b>S3 access points for Amazon FSx </b> - When accessing data stored
+    #     in Amazon FSx file systems using S3 access points, the only valid
+    #     server side encryption option is `aws:fsx`. All Amazon FSx file
+    #     systems have encryption configured by default and are encrypted at
+    #     rest. Data is automatically encrypted before being written to the
+    #     file system, and automatically decrypted as it is read. These
+    #     processes are handled transparently by Amazon FSx.
+    #
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-express-serv-side-encryption.html
@@ -2190,8 +2366,9 @@ module Aws::S3
     #   a different Storage Class. For more information, see [Storage
     #   Classes][1] in the *Amazon S3 User Guide*.
     #
-    #   <note markdown="1"> * For directory buckets, only the S3 Express One Zone storage class is
-    #     supported to store newly created objects.
+    #   <note markdown="1"> * Directory buckets only support `EXPRESS_ONEZONE` (the S3 Express One
+    #     Zone storage class) in Availability Zones and `ONEZONE_IA` (the S3
+    #     One Zone-Infrequent Access storage class) in Dedicated Local Zones.
     #
     #   * Amazon S3 on Outposts only uses the OUTPOSTS Storage Class.
     #
@@ -2304,10 +2481,10 @@ module Aws::S3
     #   Confirms that the requester knows that they will be charged for the
     #   request. Bucket owners need not specify this parameter in their
     #   requests. If either the source or destination S3 bucket has Requester
-    #   Pays enabled, the requester will pay for corresponding charges to copy
-    #   the object. For information about downloading objects from Requester
-    #   Pays buckets, see [Downloading Objects in Requester Pays Buckets][1]
-    #   in the *Amazon S3 User Guide*.
+    #   Pays enabled, the requester will pay for the corresponding charges.
+    #   For information about downloading objects from Requester Pays buckets,
+    #   see [Downloading Objects in Requester Pays Buckets][1] in the *Amazon
+    #   S3 User Guide*.
     #
     #   <note markdown="1"> This functionality is not supported for directory buckets.
     #
@@ -2392,12 +2569,17 @@ module Aws::S3
     #     content_length: 1,
     #     content_md5: "ContentMD5",
     #     content_type: "ContentType",
-    #     checksum_algorithm: "CRC32", # accepts CRC32, CRC32C, SHA1, SHA256, CRC64NVME
+    #     checksum_algorithm: "CRC32", # accepts CRC32, CRC32C, SHA1, SHA256, CRC64NVME, SHA512, MD5, XXHASH64, XXHASH3, XXHASH128
     #     checksum_crc32: "ChecksumCRC32",
     #     checksum_crc32c: "ChecksumCRC32C",
     #     checksum_crc64nvme: "ChecksumCRC64NVME",
     #     checksum_sha1: "ChecksumSHA1",
     #     checksum_sha256: "ChecksumSHA256",
+    #     checksum_sha512: "ChecksumSHA512",
+    #     checksum_md5: "ChecksumMD5",
+    #     checksum_xxhash64: "ChecksumXXHASH64",
+    #     checksum_xxhash3: "ChecksumXXHASH3",
+    #     checksum_xxhash128: "ChecksumXXHASH128",
     #     expires: Time.now,
     #     if_match: "IfMatch",
     #     if_none_match: "IfNoneMatch",
@@ -2409,8 +2591,8 @@ module Aws::S3
     #     metadata: {
     #       "MetadataKey" => "MetadataValue",
     #     },
-    #     server_side_encryption: "AES256", # accepts AES256, aws:kms, aws:kms:dsse
-    #     storage_class: "STANDARD", # accepts STANDARD, REDUCED_REDUNDANCY, STANDARD_IA, ONEZONE_IA, INTELLIGENT_TIERING, GLACIER, DEEP_ARCHIVE, OUTPOSTS, GLACIER_IR, SNOW, EXPRESS_ONEZONE
+    #     server_side_encryption: "AES256", # accepts AES256, aws:fsx, aws:backup, aws:kms, aws:kms:dsse
+    #     storage_class: "STANDARD", # accepts STANDARD, REDUCED_REDUNDANCY, STANDARD_IA, ONEZONE_IA, INTELLIGENT_TIERING, GLACIER, DEEP_ARCHIVE, OUTPOSTS, GLACIER_IR, SNOW, EXPRESS_ONEZONE, FSX_OPENZFS, FSX_ONTAP, AWS_BACKUP_WARM, AWS_BACKUP_LOW_COST_WARM
     #     website_redirect_location: "WebsiteRedirectLocation",
     #     sse_customer_algorithm: "SSECustomerAlgorithm",
     #     sse_customer_key: "SSECustomerKey",
@@ -2550,9 +2732,19 @@ module Aws::S3
     #
     #   * `CRC64NVME`
     #
+    #   * `MD5`
+    #
     #   * `SHA1`
     #
     #   * `SHA256`
+    #
+    #   * `SHA512`
+    #
+    #   * `XXHASH3`
+    #
+    #   * `XXHASH64`
+    #
+    #   * `XXHASH128`
     #
     #   For more information, see [Checking object integrity][1] in the
     #   *Amazon S3 User Guide*.
@@ -2624,6 +2816,56 @@ module Aws::S3
     #   specifies the Base64 encoded, 256-bit `SHA256` digest of the object.
     #   For more information, see [Checking object integrity][1] in the
     #   *Amazon S3 User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html
+    # @option options [String] :checksum_sha512
+    #   This header can be used as a data integrity check to verify that the
+    #   data received is the same data that was originally sent. This header
+    #   specifies the Base64 encoded, 512-bit `SHA512` digest of the object.
+    #   For more information, see [Checking object integrity in the Amazon S3
+    #   User Guide][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html
+    # @option options [String] :checksum_md5
+    #   This header can be used as a data integrity check to verify that the
+    #   data received is the same data that was originally sent. This header
+    #   specifies the Base64 encoded, 128-bit `MD5` digest of the object. For
+    #   more information, see [Checking object integrity in the Amazon S3 User
+    #   Guide][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html
+    # @option options [String] :checksum_xxhash64
+    #   This header can be used as a data integrity check to verify that the
+    #   data received is the same data that was originally sent. This header
+    #   specifies the Base64 encoded, 64-bit `XXHASH64` checksum of the
+    #   object. For more information, see [Checking object integrity in the
+    #   Amazon S3 User Guide][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html
+    # @option options [String] :checksum_xxhash3
+    #   This header can be used as a data integrity check to verify that the
+    #   data received is the same data that was originally sent. This header
+    #   specifies the Base64 encoded, 64-bit `XXHASH3` checksum of the object.
+    #   For more information, see [Checking object integrity in the Amazon S3
+    #   User Guide][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html
+    # @option options [String] :checksum_xxhash128
+    #   This header can be used as a data integrity check to verify that the
+    #   data received is the same data that was originally sent. This header
+    #   specifies the Base64 encoded, 128-bit `XXHASH128` checksum of the
+    #   object. For more information, see [Checking object integrity in the
+    #   Amazon S3 User Guide][1].
     #
     #
     #
@@ -2720,8 +2962,7 @@ module Aws::S3
     #   A map of metadata to store with the object in S3.
     # @option options [String] :server_side_encryption
     #   The server-side encryption algorithm that was used when you store this
-    #   object in Amazon S3 (for example, `AES256`, `aws:kms`,
-    #   `aws:kms:dsse`).
+    #   object in Amazon S3 or Amazon FSx.
     #
     #   * <b>General purpose buckets </b> - You have four mutually exclusive
     #     options to protect data using server-side encryption in Amazon S3,
@@ -2775,6 +3016,14 @@ module Aws::S3
     #
     #      </note>
     #
+    #   * <b>S3 access points for Amazon FSx </b> - When accessing data stored
+    #     in Amazon FSx file systems using S3 access points, the only valid
+    #     server side encryption option is `aws:fsx`. All Amazon FSx file
+    #     systems have encryption configured by default and are encrypted at
+    #     rest. Data is automatically encrypted before being written to the
+    #     file system, and automatically decrypted as it is read. These
+    #     processes are handled transparently by Amazon FSx.
+    #
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingServerSideEncryption.html
@@ -2789,8 +3038,9 @@ module Aws::S3
     #   a different Storage Class. For more information, see [Storage
     #   Classes][1] in the *Amazon S3 User Guide*.
     #
-    #   <note markdown="1"> * For directory buckets, only the S3 Express One Zone storage class is
-    #     supported to store newly created objects.
+    #   <note markdown="1"> * Directory buckets only support `EXPRESS_ONEZONE` (the S3 Express One
+    #     Zone storage class) in Availability Zones and `ONEZONE_IA` (the S3
+    #     One Zone-Infrequent Access storage class) in Dedicated Local Zones.
     #
     #   * Amazon S3 on Outposts only uses the OUTPOSTS Storage Class.
     #
@@ -2936,10 +3186,10 @@ module Aws::S3
     #   Confirms that the requester knows that they will be charged for the
     #   request. Bucket owners need not specify this parameter in their
     #   requests. If either the source or destination S3 bucket has Requester
-    #   Pays enabled, the requester will pay for corresponding charges to copy
-    #   the object. For information about downloading objects from Requester
-    #   Pays buckets, see [Downloading Objects in Requester Pays Buckets][1]
-    #   in the *Amazon S3 User Guide*.
+    #   Pays enabled, the requester will pay for the corresponding charges.
+    #   For information about downloading objects from Requester Pays buckets,
+    #   see [Downloading Objects in Requester Pays Buckets][1] in the *Amazon
+    #   S3 User Guide*.
     #
     #   <note markdown="1"> This functionality is not supported for directory buckets.
     #
@@ -3046,7 +3296,7 @@ module Aws::S3
     #           bucket_name: "BucketName", # required
     #           prefix: "LocationPrefix", # required
     #           encryption: {
-    #             encryption_type: "AES256", # required, accepts AES256, aws:kms, aws:kms:dsse
+    #             encryption_type: "AES256", # required, accepts AES256, aws:fsx, aws:backup, aws:kms, aws:kms:dsse
     #             kms_key_id: "SSEKMSKeyId",
     #             kms_context: "KMSContext",
     #           },
@@ -3077,12 +3327,12 @@ module Aws::S3
     #               value: "MetadataValue",
     #             },
     #           ],
-    #           storage_class: "STANDARD", # accepts STANDARD, REDUCED_REDUNDANCY, STANDARD_IA, ONEZONE_IA, INTELLIGENT_TIERING, GLACIER, DEEP_ARCHIVE, OUTPOSTS, GLACIER_IR, SNOW, EXPRESS_ONEZONE
+    #           storage_class: "STANDARD", # accepts STANDARD, REDUCED_REDUNDANCY, STANDARD_IA, ONEZONE_IA, INTELLIGENT_TIERING, GLACIER, DEEP_ARCHIVE, OUTPOSTS, GLACIER_IR, SNOW, EXPRESS_ONEZONE, FSX_OPENZFS, FSX_ONTAP, AWS_BACKUP_WARM, AWS_BACKUP_LOW_COST_WARM
     #         },
     #       },
     #     },
     #     request_payer: "requester", # accepts requester
-    #     checksum_algorithm: "CRC32", # accepts CRC32, CRC32C, SHA1, SHA256, CRC64NVME
+    #     checksum_algorithm: "CRC32", # accepts CRC32, CRC32C, SHA1, SHA256, CRC64NVME, SHA512, MD5, XXHASH64, XXHASH3, XXHASH128
     #     expected_bucket_owner: "AccountId",
     #   })
     # @param [Hash] options ({})
@@ -3094,10 +3344,10 @@ module Aws::S3
     #   Confirms that the requester knows that they will be charged for the
     #   request. Bucket owners need not specify this parameter in their
     #   requests. If either the source or destination S3 bucket has Requester
-    #   Pays enabled, the requester will pay for corresponding charges to copy
-    #   the object. For information about downloading objects from Requester
-    #   Pays buckets, see [Downloading Objects in Requester Pays Buckets][1]
-    #   in the *Amazon S3 User Guide*.
+    #   Pays enabled, the requester will pay for the corresponding charges.
+    #   For information about downloading objects from Requester Pays buckets,
+    #   see [Downloading Objects in Requester Pays Buckets][1] in the *Amazon
+    #   S3 User Guide*.
     #
     #   <note markdown="1"> This functionality is not supported for directory buckets.
     #
@@ -3286,10 +3536,10 @@ module Aws::S3
     #   Confirms that the requester knows that they will be charged for the
     #   request. Bucket owners need not specify this parameter in their
     #   requests. If either the source or destination S3 bucket has Requester
-    #   Pays enabled, the requester will pay for corresponding charges to copy
-    #   the object. For information about downloading objects from Requester
-    #   Pays buckets, see [Downloading Objects in Requester Pays Buckets][1]
-    #   in the *Amazon S3 User Guide*.
+    #   Pays enabled, the requester will pay for the corresponding charges.
+    #   For information about downloading objects from Requester Pays buckets,
+    #   see [Downloading Objects in Requester Pays Buckets][1] in the *Amazon
+    #   S3 User Guide*.
     #
     #   <note markdown="1"> This functionality is not supported for directory buckets.
     #
@@ -3449,7 +3699,7 @@ module Aws::S3
       #     request_payer: "requester", # accepts requester
       #     bypass_governance_retention: false,
       #     expected_bucket_owner: "AccountId",
-      #     checksum_algorithm: "CRC32", # accepts CRC32, CRC32C, SHA1, SHA256, CRC64NVME
+      #     checksum_algorithm: "CRC32", # accepts CRC32, CRC32C, SHA1, SHA256, CRC64NVME, SHA512, MD5, XXHASH64, XXHASH3, XXHASH128
       #   })
       # @param options ({})
       # @option options [String] :mfa
@@ -3478,10 +3728,10 @@ module Aws::S3
       #   Confirms that the requester knows that they will be charged for the
       #   request. Bucket owners need not specify this parameter in their
       #   requests. If either the source or destination S3 bucket has Requester
-      #   Pays enabled, the requester will pay for corresponding charges to copy
-      #   the object. For information about downloading objects from Requester
-      #   Pays buckets, see [Downloading Objects in Requester Pays Buckets][1]
-      #   in the *Amazon S3 User Guide*.
+      #   Pays enabled, the requester will pay for the corresponding charges.
+      #   For information about downloading objects from Requester Pays buckets,
+      #   see [Downloading Objects in Requester Pays Buckets][1] in the *Amazon
+      #   S3 User Guide*.
       #
       #   <note markdown="1"> This functionality is not supported for directory buckets.
       #
@@ -3519,9 +3769,19 @@ module Aws::S3
       #
       #   * `CRC64NVME`
       #
+      #   * `MD5`
+      #
       #   * `SHA1`
       #
       #   * `SHA256`
+      #
+      #   * `SHA512`
+      #
+      #   * `XXHASH3`
+      #
+      #   * `XXHASH64`
+      #
+      #   * `XXHASH128`
       #
       #   For more information, see [Checking object integrity][1] in the
       #   *Amazon S3 User Guide*.

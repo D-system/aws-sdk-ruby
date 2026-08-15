@@ -29,6 +29,17 @@ module Aws::SESV2
       SENSITIVE: []
     end
 
+    class Attachment
+      attr_accessor raw_content: ::String
+      attr_accessor content_disposition: ("ATTACHMENT" | "INLINE")
+      attr_accessor file_name: ::String
+      attr_accessor content_description: ::String
+      attr_accessor content_id: ::String
+      attr_accessor content_transfer_encoding: ("BASE64" | "QUOTED_PRINTABLE" | "SEVEN_BIT")
+      attr_accessor content_type: ::String
+      SENSITIVE: []
+    end
+
     class BadRequestException < Aws::EmptyStructure
     end
 
@@ -206,6 +217,7 @@ module Aws::SESV2
       attr_accessor from_email_address: ::String
       attr_accessor template_subject: ::String
       attr_accessor template_content: ::String
+      attr_accessor tags: ::Array[Types::Tag]
       attr_accessor success_redirection_url: ::String
       attr_accessor failure_redirection_url: ::String
       SENSITIVE: []
@@ -266,6 +278,7 @@ module Aws::SESV2
     class CreateEmailTemplateRequest
       attr_accessor template_name: ::String
       attr_accessor template_content: Types::EmailTemplateContent
+      attr_accessor tags: ::Array[Types::Tag]
       SENSITIVE: []
     end
 
@@ -307,6 +320,33 @@ module Aws::SESV2
       SENSITIVE: []
     end
 
+    class CreateTenantRequest
+      attr_accessor tenant_name: ::String
+      attr_accessor tags: ::Array[Types::Tag]
+      attr_accessor suppression_attributes: Types::TenantSuppressionAttributes
+      SENSITIVE: []
+    end
+
+    class CreateTenantResourceAssociationRequest
+      attr_accessor tenant_name: ::String
+      attr_accessor resource_arn: ::String
+      SENSITIVE: []
+    end
+
+    class CreateTenantResourceAssociationResponse < Aws::EmptyStructure
+    end
+
+    class CreateTenantResponse
+      attr_accessor tenant_name: ::String
+      attr_accessor tenant_id: ::String
+      attr_accessor tenant_arn: ::String
+      attr_accessor created_timestamp: ::Time
+      attr_accessor tags: ::Array[Types::Tag]
+      attr_accessor sending_status: ("ENABLED" | "REINSTATED" | "DISABLED")
+      attr_accessor suppression_attributes: Types::TenantSuppressionAttributes
+      SENSITIVE: []
+    end
+
     class CustomVerificationEmailTemplateMetadata
       attr_accessor template_name: ::String
       attr_accessor from_email_address: ::String
@@ -335,7 +375,7 @@ module Aws::SESV2
 
     class DedicatedIp
       attr_accessor ip: ::String
-      attr_accessor warmup_status: ("IN_PROGRESS" | "DONE")
+      attr_accessor warmup_status: ("IN_PROGRESS" | "DONE" | "NOT_APPLICABLE")
       attr_accessor warmup_percentage: ::Integer
       attr_accessor pool_name: ::String
       SENSITIVE: []
@@ -434,10 +474,28 @@ module Aws::SESV2
 
     class DeleteSuppressedDestinationRequest
       attr_accessor email_address: ::String
+      attr_accessor tenant_name: ::String
       SENSITIVE: []
     end
 
     class DeleteSuppressedDestinationResponse < Aws::EmptyStructure
+    end
+
+    class DeleteTenantRequest
+      attr_accessor tenant_name: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteTenantResourceAssociationRequest
+      attr_accessor tenant_name: ::String
+      attr_accessor resource_arn: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteTenantResourceAssociationResponse < Aws::EmptyStructure
+    end
+
+    class DeleteTenantResponse < Aws::EmptyStructure
     end
 
     class DeliverabilityTestReport
@@ -473,7 +531,8 @@ module Aws::SESV2
       attr_accessor signing_enabled: bool
       attr_accessor status: ("PENDING" | "SUCCESS" | "FAILED" | "TEMPORARY_FAILURE" | "NOT_STARTED")
       attr_accessor tokens: ::Array[::String]
-      attr_accessor signing_attributes_origin: ("AWS_SES" | "EXTERNAL" | "AWS_SES_AF_SOUTH_1" | "AWS_SES_EU_NORTH_1" | "AWS_SES_AP_SOUTH_1" | "AWS_SES_EU_WEST_3" | "AWS_SES_EU_WEST_2" | "AWS_SES_EU_SOUTH_1" | "AWS_SES_EU_WEST_1" | "AWS_SES_AP_NORTHEAST_3" | "AWS_SES_AP_NORTHEAST_2" | "AWS_SES_ME_SOUTH_1" | "AWS_SES_AP_NORTHEAST_1" | "AWS_SES_IL_CENTRAL_1" | "AWS_SES_SA_EAST_1" | "AWS_SES_CA_CENTRAL_1" | "AWS_SES_AP_SOUTHEAST_1" | "AWS_SES_AP_SOUTHEAST_2" | "AWS_SES_AP_SOUTHEAST_3" | "AWS_SES_EU_CENTRAL_1" | "AWS_SES_US_EAST_1" | "AWS_SES_US_EAST_2" | "AWS_SES_US_WEST_1" | "AWS_SES_US_WEST_2")
+      attr_accessor signing_hosted_zone: ::String
+      attr_accessor signing_attributes_origin: ("AWS_SES" | "EXTERNAL" | "AWS_SES_AF_SOUTH_1" | "AWS_SES_EU_NORTH_1" | "AWS_SES_AP_SOUTH_1" | "AWS_SES_EU_WEST_3" | "AWS_SES_EU_WEST_2" | "AWS_SES_EU_SOUTH_1" | "AWS_SES_EU_WEST_1" | "AWS_SES_AP_NORTHEAST_3" | "AWS_SES_AP_NORTHEAST_2" | "AWS_SES_ME_SOUTH_1" | "AWS_SES_AP_NORTHEAST_1" | "AWS_SES_IL_CENTRAL_1" | "AWS_SES_SA_EAST_1" | "AWS_SES_CA_CENTRAL_1" | "AWS_SES_AP_SOUTHEAST_1" | "AWS_SES_AP_SOUTHEAST_2" | "AWS_SES_AP_SOUTHEAST_3" | "AWS_SES_EU_CENTRAL_1" | "AWS_SES_US_EAST_1" | "AWS_SES_US_EAST_2" | "AWS_SES_US_WEST_1" | "AWS_SES_US_WEST_2" | "AWS_SES_ME_CENTRAL_1" | "AWS_SES_AP_SOUTH_2" | "AWS_SES_EU_CENTRAL_2" | "AWS_SES_AP_SOUTHEAST_5" | "AWS_SES_CA_WEST_1" | "AWS_SES_US_GOV_EAST_1" | "AWS_SES_US_GOV_WEST_1")
       attr_accessor next_signing_key_length: ("RSA_1024_BIT" | "RSA_2048_BIT")
       attr_accessor current_signing_key_length: ("RSA_1024_BIT" | "RSA_2048_BIT")
       attr_accessor last_key_generation_timestamp: ::Time
@@ -484,7 +543,7 @@ module Aws::SESV2
       attr_accessor domain_signing_selector: ::String
       attr_accessor domain_signing_private_key: ::String
       attr_accessor next_signing_key_length: ("RSA_1024_BIT" | "RSA_2048_BIT")
-      attr_accessor domain_signing_attributes_origin: ("AWS_SES" | "EXTERNAL" | "AWS_SES_AF_SOUTH_1" | "AWS_SES_EU_NORTH_1" | "AWS_SES_AP_SOUTH_1" | "AWS_SES_EU_WEST_3" | "AWS_SES_EU_WEST_2" | "AWS_SES_EU_SOUTH_1" | "AWS_SES_EU_WEST_1" | "AWS_SES_AP_NORTHEAST_3" | "AWS_SES_AP_NORTHEAST_2" | "AWS_SES_ME_SOUTH_1" | "AWS_SES_AP_NORTHEAST_1" | "AWS_SES_IL_CENTRAL_1" | "AWS_SES_SA_EAST_1" | "AWS_SES_CA_CENTRAL_1" | "AWS_SES_AP_SOUTHEAST_1" | "AWS_SES_AP_SOUTHEAST_2" | "AWS_SES_AP_SOUTHEAST_3" | "AWS_SES_EU_CENTRAL_1" | "AWS_SES_US_EAST_1" | "AWS_SES_US_EAST_2" | "AWS_SES_US_WEST_1" | "AWS_SES_US_WEST_2")
+      attr_accessor domain_signing_attributes_origin: ("AWS_SES" | "EXTERNAL" | "AWS_SES_AF_SOUTH_1" | "AWS_SES_EU_NORTH_1" | "AWS_SES_AP_SOUTH_1" | "AWS_SES_EU_WEST_3" | "AWS_SES_EU_WEST_2" | "AWS_SES_EU_SOUTH_1" | "AWS_SES_EU_WEST_1" | "AWS_SES_AP_NORTHEAST_3" | "AWS_SES_AP_NORTHEAST_2" | "AWS_SES_ME_SOUTH_1" | "AWS_SES_AP_NORTHEAST_1" | "AWS_SES_IL_CENTRAL_1" | "AWS_SES_SA_EAST_1" | "AWS_SES_CA_CENTRAL_1" | "AWS_SES_AP_SOUTHEAST_1" | "AWS_SES_AP_SOUTHEAST_2" | "AWS_SES_AP_SOUTHEAST_3" | "AWS_SES_EU_CENTRAL_1" | "AWS_SES_US_EAST_1" | "AWS_SES_US_EAST_2" | "AWS_SES_US_WEST_1" | "AWS_SES_US_WEST_2" | "AWS_SES_ME_CENTRAL_1" | "AWS_SES_AP_SOUTH_2" | "AWS_SES_EU_CENTRAL_2" | "AWS_SES_AP_SOUTHEAST_5" | "AWS_SES_CA_WEST_1" | "AWS_SES_US_GOV_EAST_1" | "AWS_SES_US_GOV_WEST_1")
       SENSITIVE: [:domain_signing_private_key]
     end
 
@@ -519,6 +578,21 @@ module Aws::SESV2
       attr_accessor spam_raw_count: ::Integer
       attr_accessor inbox_percentage: ::Float
       attr_accessor spam_percentage: ::Float
+      SENSITIVE: []
+    end
+
+    class EmailAddressInsightsMailboxEvaluations
+      attr_accessor has_valid_syntax: Types::EmailAddressInsightsVerdict
+      attr_accessor has_valid_dns_records: Types::EmailAddressInsightsVerdict
+      attr_accessor mailbox_exists: Types::EmailAddressInsightsVerdict
+      attr_accessor is_role_address: Types::EmailAddressInsightsVerdict
+      attr_accessor is_disposable: Types::EmailAddressInsightsVerdict
+      attr_accessor is_random_input: Types::EmailAddressInsightsVerdict
+      SENSITIVE: []
+    end
+
+    class EmailAddressInsightsVerdict
+      attr_accessor confidence_verdict: ("LOW" | "MEDIUM" | "HIGH")
       SENSITIVE: []
     end
 
@@ -634,6 +708,7 @@ module Aws::SESV2
       attr_accessor suppression_attributes: Types::SuppressionAttributes
       attr_accessor details: Types::AccountDetails
       attr_accessor vdm_attributes: Types::VdmAttributes
+      attr_accessor pricing_attributes: Types::PricingAttributes
       SENSITIVE: []
     end
 
@@ -718,6 +793,7 @@ module Aws::SESV2
       attr_accessor from_email_address: ::String
       attr_accessor template_subject: ::String
       attr_accessor template_content: ::String
+      attr_accessor tags: ::Array[Types::Tag]
       attr_accessor success_redirection_url: ::String
       attr_accessor failure_redirection_url: ::String
       SENSITIVE: []
@@ -805,6 +881,16 @@ module Aws::SESV2
       SENSITIVE: []
     end
 
+    class GetEmailAddressInsightsRequest
+      attr_accessor email_address: ::String
+      SENSITIVE: []
+    end
+
+    class GetEmailAddressInsightsResponse
+      attr_accessor mailbox_validation: Types::MailboxValidation
+      SENSITIVE: []
+    end
+
     class GetEmailIdentityPoliciesRequest
       attr_accessor email_identity: ::String
       SENSITIVE: []
@@ -842,6 +928,7 @@ module Aws::SESV2
     class GetEmailTemplateResponse
       attr_accessor template_name: ::String
       attr_accessor template_content: Types::EmailTemplateContent
+      attr_accessor tags: ::Array[Types::Tag]
       SENSITIVE: []
     end
 
@@ -910,13 +997,35 @@ module Aws::SESV2
       SENSITIVE: []
     end
 
+    class GetReputationEntityRequest
+      attr_accessor reputation_entity_reference: ::String
+      attr_accessor reputation_entity_type: ("RESOURCE")
+      SENSITIVE: []
+    end
+
+    class GetReputationEntityResponse
+      attr_accessor reputation_entity: Types::ReputationEntity
+      SENSITIVE: []
+    end
+
     class GetSuppressedDestinationRequest
       attr_accessor email_address: ::String
+      attr_accessor tenant_name: ::String
       SENSITIVE: []
     end
 
     class GetSuppressedDestinationResponse
       attr_accessor suppressed_destination: Types::SuppressedDestination
+      SENSITIVE: []
+    end
+
+    class GetTenantRequest
+      attr_accessor tenant_name: ::String
+      SENSITIVE: []
+    end
+
+    class GetTenantResponse
+      attr_accessor tenant: Types::Tenant
       SENSITIVE: []
     end
 
@@ -1171,7 +1280,34 @@ module Aws::SESV2
       SENSITIVE: []
     end
 
+    class ListReputationEntitiesRequest
+      attr_accessor filter: ::Hash[("ENTITY_TYPE" | "REPUTATION_IMPACT" | "SENDING_STATUS" | "ENTITY_REFERENCE_PREFIX"), ::String]
+      attr_accessor next_token: ::String
+      attr_accessor page_size: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListReputationEntitiesResponse
+      attr_accessor reputation_entities: ::Array[Types::ReputationEntity]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListResourceTenantsRequest
+      attr_accessor resource_arn: ::String
+      attr_accessor page_size: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListResourceTenantsResponse
+      attr_accessor resource_tenants: ::Array[Types::ResourceTenantMetadata]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
     class ListSuppressedDestinationsRequest
+      attr_accessor tenant_name: ::String
       attr_accessor reasons: ::Array[("BOUNCE" | "COMPLAINT")]
       attr_accessor start_date: ::Time
       attr_accessor end_date: ::Time
@@ -1196,6 +1332,32 @@ module Aws::SESV2
       SENSITIVE: []
     end
 
+    class ListTenantResourcesRequest
+      attr_accessor tenant_name: ::String
+      attr_accessor filter: ::Hash[("RESOURCE_TYPE"), ::String]
+      attr_accessor page_size: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListTenantResourcesResponse
+      attr_accessor tenant_resources: ::Array[Types::TenantResource]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListTenantsRequest
+      attr_accessor next_token: ::String
+      attr_accessor page_size: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListTenantsResponse
+      attr_accessor tenants: ::Array[Types::TenantInfo]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
     class MailFromAttributes
       attr_accessor mail_from_domain: ::String
       attr_accessor mail_from_domain_status: ("PENDING" | "SUCCESS" | "FAILED" | "TEMPORARY_FAILURE")
@@ -1206,10 +1368,17 @@ module Aws::SESV2
     class MailFromDomainNotVerifiedException < Aws::EmptyStructure
     end
 
+    class MailboxValidation
+      attr_accessor is_valid: Types::EmailAddressInsightsVerdict
+      attr_accessor evaluations: Types::EmailAddressInsightsMailboxEvaluations
+      SENSITIVE: []
+    end
+
     class Message
       attr_accessor subject: Types::Content
       attr_accessor body: Types::Body
       attr_accessor headers: ::Array[Types::MessageHeader]
+      attr_accessor attachments: ::Array[Types::Attachment]
       SENSITIVE: []
     end
 
@@ -1304,6 +1473,12 @@ module Aws::SESV2
       SENSITIVE: []
     end
 
+    class PricingAttributes
+      attr_accessor current_plan: ("NONE" | "ESSENTIALS" | "PRO" | "ENTERPRISE")
+      attr_accessor next_plan: ("NONE" | "ESSENTIALS" | "PRO" | "ENTERPRISE")
+      SENSITIVE: []
+    end
+
     class PutAccountDedicatedIpWarmupAttributesRequest
       attr_accessor auto_warmup_enabled: bool
       SENSITIVE: []
@@ -1325,6 +1500,14 @@ module Aws::SESV2
     class PutAccountDetailsResponse < Aws::EmptyStructure
     end
 
+    class PutAccountPricingAttributesRequest
+      attr_accessor plan: ("NONE" | "ESSENTIALS" | "PRO" | "ENTERPRISE")
+      SENSITIVE: []
+    end
+
+    class PutAccountPricingAttributesResponse < Aws::EmptyStructure
+    end
+
     class PutAccountSendingAttributesRequest
       attr_accessor sending_enabled: bool
       SENSITIVE: []
@@ -1335,6 +1518,7 @@ module Aws::SESV2
 
     class PutAccountSuppressionAttributesRequest
       attr_accessor suppressed_reasons: ::Array[("BOUNCE" | "COMPLAINT")]
+      attr_accessor validation_attributes: Types::SuppressionValidationAttributes
       SENSITIVE: []
     end
 
@@ -1389,7 +1573,9 @@ module Aws::SESV2
 
     class PutConfigurationSetSuppressionOptionsRequest
       attr_accessor configuration_set_name: ::String
+      attr_accessor suppression_scope: ("ACCOUNT" | "TENANT")
       attr_accessor suppressed_reasons: ::Array[("BOUNCE" | "COMPLAINT")]
+      attr_accessor validation_options: Types::SuppressionValidationOptions
       SENSITIVE: []
     end
 
@@ -1471,7 +1657,7 @@ module Aws::SESV2
 
     class PutEmailIdentityDkimSigningAttributesRequest
       attr_accessor email_identity: ::String
-      attr_accessor signing_attributes_origin: ("AWS_SES" | "EXTERNAL" | "AWS_SES_AF_SOUTH_1" | "AWS_SES_EU_NORTH_1" | "AWS_SES_AP_SOUTH_1" | "AWS_SES_EU_WEST_3" | "AWS_SES_EU_WEST_2" | "AWS_SES_EU_SOUTH_1" | "AWS_SES_EU_WEST_1" | "AWS_SES_AP_NORTHEAST_3" | "AWS_SES_AP_NORTHEAST_2" | "AWS_SES_ME_SOUTH_1" | "AWS_SES_AP_NORTHEAST_1" | "AWS_SES_IL_CENTRAL_1" | "AWS_SES_SA_EAST_1" | "AWS_SES_CA_CENTRAL_1" | "AWS_SES_AP_SOUTHEAST_1" | "AWS_SES_AP_SOUTHEAST_2" | "AWS_SES_AP_SOUTHEAST_3" | "AWS_SES_EU_CENTRAL_1" | "AWS_SES_US_EAST_1" | "AWS_SES_US_EAST_2" | "AWS_SES_US_WEST_1" | "AWS_SES_US_WEST_2")
+      attr_accessor signing_attributes_origin: ("AWS_SES" | "EXTERNAL" | "AWS_SES_AF_SOUTH_1" | "AWS_SES_EU_NORTH_1" | "AWS_SES_AP_SOUTH_1" | "AWS_SES_EU_WEST_3" | "AWS_SES_EU_WEST_2" | "AWS_SES_EU_SOUTH_1" | "AWS_SES_EU_WEST_1" | "AWS_SES_AP_NORTHEAST_3" | "AWS_SES_AP_NORTHEAST_2" | "AWS_SES_ME_SOUTH_1" | "AWS_SES_AP_NORTHEAST_1" | "AWS_SES_IL_CENTRAL_1" | "AWS_SES_SA_EAST_1" | "AWS_SES_CA_CENTRAL_1" | "AWS_SES_AP_SOUTHEAST_1" | "AWS_SES_AP_SOUTHEAST_2" | "AWS_SES_AP_SOUTHEAST_3" | "AWS_SES_EU_CENTRAL_1" | "AWS_SES_US_EAST_1" | "AWS_SES_US_EAST_2" | "AWS_SES_US_WEST_1" | "AWS_SES_US_WEST_2" | "AWS_SES_ME_CENTRAL_1" | "AWS_SES_AP_SOUTH_2" | "AWS_SES_EU_CENTRAL_2" | "AWS_SES_AP_SOUTHEAST_5" | "AWS_SES_CA_WEST_1" | "AWS_SES_US_GOV_EAST_1" | "AWS_SES_US_GOV_WEST_1")
       attr_accessor signing_attributes: Types::DkimSigningAttributes
       SENSITIVE: []
     end
@@ -1479,6 +1665,7 @@ module Aws::SESV2
     class PutEmailIdentityDkimSigningAttributesResponse
       attr_accessor dkim_status: ("PENDING" | "SUCCESS" | "FAILED" | "TEMPORARY_FAILURE" | "NOT_STARTED")
       attr_accessor dkim_tokens: ::Array[::String]
+      attr_accessor signing_hosted_zone: ::String
       SENSITIVE: []
     end
 
@@ -1504,10 +1691,21 @@ module Aws::SESV2
     class PutSuppressedDestinationRequest
       attr_accessor email_address: ::String
       attr_accessor reason: ("BOUNCE" | "COMPLAINT")
+      attr_accessor tenant_name: ::String
       SENSITIVE: []
     end
 
     class PutSuppressedDestinationResponse < Aws::EmptyStructure
+    end
+
+    class PutTenantSuppressionAttributesRequest
+      attr_accessor tenant_name: ::String
+      attr_accessor suppressed_reasons: ::Array[("BOUNCE" | "COMPLAINT")]
+      attr_accessor suppression_scope: ("ACCOUNT" | "TENANT")
+      SENSITIVE: []
+    end
+
+    class PutTenantSuppressionAttributesResponse < Aws::EmptyStructure
     end
 
     class RawMessage
@@ -1517,7 +1715,7 @@ module Aws::SESV2
 
     class Recommendation
       attr_accessor resource_arn: ::String
-      attr_accessor type: ("DKIM" | "DMARC" | "SPF" | "BIMI" | "COMPLAINT")
+      attr_accessor type: ("DKIM" | "DMARC" | "SPF" | "BIMI" | "COMPLAINT" | "BOUNCE" | "FEEDBACK_3P" | "IP_LISTING")
       attr_accessor description: ::String
       attr_accessor status: ("OPEN" | "FIXED")
       attr_accessor created_timestamp: ::Time
@@ -1536,9 +1734,28 @@ module Aws::SESV2
       SENSITIVE: []
     end
 
+    class ReputationEntity
+      attr_accessor reputation_entity_reference: ::String
+      attr_accessor reputation_entity_type: ("RESOURCE")
+      attr_accessor reputation_management_policy: ::String
+      attr_accessor customer_managed_status: Types::StatusRecord
+      attr_accessor aws_ses_managed_status: Types::StatusRecord
+      attr_accessor sending_status_aggregate: ("ENABLED" | "REINSTATED" | "DISABLED")
+      attr_accessor reputation_impact: ("LOW" | "HIGH")
+      SENSITIVE: []
+    end
+
     class ReputationOptions
       attr_accessor reputation_metrics_enabled: bool
       attr_accessor last_fresh_start: ::Time
+      SENSITIVE: []
+    end
+
+    class ResourceTenantMetadata
+      attr_accessor tenant_name: ::String
+      attr_accessor tenant_id: ::String
+      attr_accessor resource_arn: ::String
+      attr_accessor associated_timestamp: ::Time
       SENSITIVE: []
     end
 
@@ -1576,6 +1793,7 @@ module Aws::SESV2
       attr_accessor bulk_email_entries: ::Array[Types::BulkEmailEntry]
       attr_accessor configuration_set_name: ::String
       attr_accessor endpoint_id: ::String
+      attr_accessor tenant_name: ::String
       SENSITIVE: []
     end
 
@@ -1607,6 +1825,7 @@ module Aws::SESV2
       attr_accessor email_tags: ::Array[Types::MessageTag]
       attr_accessor configuration_set_name: ::String
       attr_accessor endpoint_id: ::String
+      attr_accessor tenant_name: ::String
       attr_accessor list_management_options: Types::ListManagementOptions
       SENSITIVE: []
     end
@@ -1636,11 +1855,19 @@ module Aws::SESV2
       SENSITIVE: []
     end
 
+    class StatusRecord
+      attr_accessor status: ("ENABLED" | "REINSTATED" | "DISABLED")
+      attr_accessor cause: ::String
+      attr_accessor last_updated_timestamp: ::Time
+      SENSITIVE: []
+    end
+
     class SuppressedDestination
       attr_accessor email_address: ::String
       attr_accessor reason: ("BOUNCE" | "COMPLAINT")
       attr_accessor last_update_time: ::Time
       attr_accessor attributes: Types::SuppressedDestinationAttributes
+      attr_accessor tenant_name: ::String
       SENSITIVE: []
     end
 
@@ -1659,6 +1886,18 @@ module Aws::SESV2
 
     class SuppressionAttributes
       attr_accessor suppressed_reasons: ::Array[("BOUNCE" | "COMPLAINT")]
+      attr_accessor validation_attributes: Types::SuppressionValidationAttributes
+      SENSITIVE: []
+    end
+
+    class SuppressionConditionThreshold
+      attr_accessor condition_threshold_enabled: ("ENABLED" | "DISABLED")
+      attr_accessor overall_confidence_threshold: Types::SuppressionConfidenceThreshold
+      SENSITIVE: []
+    end
+
+    class SuppressionConfidenceThreshold
+      attr_accessor confidence_verdict_threshold: ("MEDIUM" | "HIGH" | "MANAGED")
       SENSITIVE: []
     end
 
@@ -1669,6 +1908,18 @@ module Aws::SESV2
 
     class SuppressionOptions
       attr_accessor suppressed_reasons: ::Array[("BOUNCE" | "COMPLAINT")]
+      attr_accessor suppression_scope: ("ACCOUNT" | "TENANT")
+      attr_accessor validation_options: Types::SuppressionValidationOptions
+      SENSITIVE: []
+    end
+
+    class SuppressionValidationAttributes
+      attr_accessor condition_threshold: Types::SuppressionConditionThreshold
+      SENSITIVE: []
+    end
+
+    class SuppressionValidationOptions
+      attr_accessor condition_threshold: Types::SuppressionConditionThreshold
       SENSITIVE: []
     end
 
@@ -1693,6 +1944,38 @@ module Aws::SESV2
       attr_accessor template_content: Types::EmailTemplateContent
       attr_accessor template_data: ::String
       attr_accessor headers: ::Array[Types::MessageHeader]
+      attr_accessor attachments: ::Array[Types::Attachment]
+      SENSITIVE: []
+    end
+
+    class Tenant
+      attr_accessor tenant_name: ::String
+      attr_accessor tenant_id: ::String
+      attr_accessor tenant_arn: ::String
+      attr_accessor created_timestamp: ::Time
+      attr_accessor tags: ::Array[Types::Tag]
+      attr_accessor sending_status: ("ENABLED" | "REINSTATED" | "DISABLED")
+      attr_accessor suppression_attributes: Types::TenantSuppressionAttributes
+      SENSITIVE: []
+    end
+
+    class TenantInfo
+      attr_accessor tenant_name: ::String
+      attr_accessor tenant_id: ::String
+      attr_accessor tenant_arn: ::String
+      attr_accessor created_timestamp: ::Time
+      SENSITIVE: []
+    end
+
+    class TenantResource
+      attr_accessor resource_type: ("EMAIL_IDENTITY" | "CONFIGURATION_SET" | "EMAIL_TEMPLATE")
+      attr_accessor resource_arn: ::String
+      SENSITIVE: []
+    end
+
+    class TenantSuppressionAttributes
+      attr_accessor suppressed_reasons: ::Array[("BOUNCE" | "COMPLAINT")]
+      attr_accessor suppression_scope: ("ACCOUNT" | "TENANT")
       SENSITIVE: []
     end
 
@@ -1807,6 +2090,26 @@ module Aws::SESV2
     end
 
     class UpdateEmailTemplateResponse < Aws::EmptyStructure
+    end
+
+    class UpdateReputationEntityCustomerManagedStatusRequest
+      attr_accessor reputation_entity_type: ("RESOURCE")
+      attr_accessor reputation_entity_reference: ::String
+      attr_accessor sending_status: ("ENABLED" | "REINSTATED" | "DISABLED")
+      SENSITIVE: []
+    end
+
+    class UpdateReputationEntityCustomerManagedStatusResponse < Aws::EmptyStructure
+    end
+
+    class UpdateReputationEntityPolicyRequest
+      attr_accessor reputation_entity_type: ("RESOURCE")
+      attr_accessor reputation_entity_reference: ::String
+      attr_accessor reputation_entity_policy: ::String
+      SENSITIVE: []
+    end
+
+    class UpdateReputationEntityPolicyResponse < Aws::EmptyStructure
     end
 
     class VdmAttributes

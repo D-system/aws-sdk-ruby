@@ -95,8 +95,8 @@ module Aws::Rekognition
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::Rekognition
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::Rekognition
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::Rekognition
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::Rekognition
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::Rekognition
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::Rekognition
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::Rekognition
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -479,8 +483,14 @@ module Aws::Rekognition
 
     # Associates one or more faces with an existing UserID. Takes an array
     # of `FaceIds`. Each `FaceId` that are present in the `FaceIds` list is
-    # associated with the provided UserID. The maximum number of total
-    # `FaceIds` per UserID is 100.
+    # associated with the provided UserID. The number of FaceIds that can be
+    # used as input in a single request is limited to 100.
+    #
+    # Note that the total number of faces that can be associated with a
+    # single `UserID` is also limited to 100. Once a `UserID` has 100 faces
+    # associated with it, no additional faces can be added. If more API
+    # calls are made after the limit is reached, a
+    # `ServiceQuotaExceededException` will result.
     #
     # The `UserMatchThreshold` parameter specifies the minimum user match
     # confidence required for the face to be associated with a UserID that
@@ -1214,6 +1224,15 @@ module Aws::Rekognition
     #         s3_key_prefix: "LivenessS3KeyPrefix",
     #       },
     #       audit_images_limit: 1,
+    #       challenge_preferences: [
+    #         {
+    #           type: "FaceMovementAndLightChallenge", # required, accepts FaceMovementAndLightChallenge, FaceMovementChallenge
+    #           versions: {
+    #             minimum: "Version",
+    #             maximum: "Version",
+    #           },
+    #         },
+    #       ],
     #     },
     #     client_request_token: "ClientRequestToken",
     #   })
@@ -2628,8 +2647,7 @@ module Aws::Rekognition
     # `CustomLabel` object provides the label name (`Name`), the level of
     # confidence that the image contains the object (`Confidence`), and
     # object location information, if it exists, for the label on the image
-    # (`Geometry`). Note that for the `DetectCustomLabelsLabels` operation,
-    # `Polygons` are not returned in the `Geometry` section of the response.
+    # (`Geometry`).
     #
     # To filter labels that are returned, specify a value for
     # `MinConfidence`. `DetectCustomLabelsLabels` only returns labels with a
@@ -4267,6 +4285,7 @@ module Aws::Rekognition
     #   * {Types::GetFaceLivenessSessionResultsResponse#confidence #confidence} => Float
     #   * {Types::GetFaceLivenessSessionResultsResponse#reference_image #reference_image} => Types::AuditImage
     #   * {Types::GetFaceLivenessSessionResultsResponse#audit_images #audit_images} => Array&lt;Types::AuditImage&gt;
+    #   * {Types::GetFaceLivenessSessionResultsResponse#challenge #challenge} => Types::Challenge
     #
     # @example Request syntax with placeholder values
     #
@@ -4296,6 +4315,8 @@ module Aws::Rekognition
     #   resp.audit_images[0].bounding_box.height #=> Float
     #   resp.audit_images[0].bounding_box.left #=> Float
     #   resp.audit_images[0].bounding_box.top #=> Float
+    #   resp.challenge.type #=> String, one of "FaceMovementAndLightChallenge", "FaceMovementChallenge"
+    #   resp.challenge.version #=> String
     #
     # @overload get_face_liveness_session_results(params = {})
     # @param [Hash] params ({})
@@ -4762,6 +4783,13 @@ module Aws::Rekognition
       req.send_request(options)
     end
 
+    # <note markdown="1"> *End of support notice:* On October 31, 2025, AWS will discontinue
+    # support for Amazon Rekognition People Pathing. After October 31, 2025,
+    # you will no longer be able to use the Rekognition People Pathing
+    # capability. For more information, visit this [blog post][1].
+    #
+    #  </note>
+    #
     # Gets the path tracking results of a Amazon Rekognition Video analysis
     # started by StartPersonTracking.
     #
@@ -4800,6 +4828,10 @@ module Aws::Rekognition
     # `GetPersonTracking` and populate the `NextToken` request parameter
     # with the token value returned from the previous call to
     # `GetPersonTracking`.
+    #
+    #
+    #
+    # [1]: https://aws.amazon.com/blogs/machine-learning/transitioning-from-amazon-rekognition-people-pathing-exploring-other-alternatives/
     #
     # @option params [required, String] :job_id
     #   The identifier for a job that tracks persons in a video. You get the
@@ -7765,6 +7797,13 @@ module Aws::Rekognition
       req.send_request(options)
     end
 
+    # <note markdown="1"> *End of support notice:* On October 31, 2025, AWS will discontinue
+    # support for Amazon Rekognition People Pathing. After October 31, 2025,
+    # you will no longer be able to use the Rekognition People Pathing
+    # capability. For more information, visit this [blog post][1].
+    #
+    #  </note>
+    #
     # Starts the asynchronous tracking of a person's path in a stored
     # video.
     #
@@ -7780,6 +7819,10 @@ module Aws::Rekognition
     # the status value published to the Amazon SNS topic is `SUCCEEDED`. If
     # so, call GetPersonTracking and pass the job identifier (`JobId`) from
     # the initial call to `StartPersonTracking`.
+    #
+    #
+    #
+    # [1]: https://aws.amazon.com/blogs/machine-learning/transitioning-from-amazon-rekognition-people-pathing-exploring-other-alternatives/
     #
     # @option params [required, Types::Video] :video
     #   The video in which you want to detect people. The video must be stored
@@ -8482,7 +8525,7 @@ module Aws::Rekognition
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-rekognition'
-      context[:gem_version] = '1.113.0'
+      context[:gem_version] = '1.134.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

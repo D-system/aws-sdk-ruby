@@ -10,6 +10,77 @@
 module Aws::CleanRoomsML
   module Types
 
+    # An access budget that defines consumption limits for a specific
+    # resource within defined time periods.
+    #
+    # @!attribute [rw] resource_arn
+    #   The Amazon Resource Name (ARN) of the resource that this access
+    #   budget applies to.
+    #   @return [String]
+    #
+    # @!attribute [rw] details
+    #   A list of budget details for this resource. Contains active budget
+    #   periods that apply to the resource.
+    #   @return [Array<Types::AccessBudgetDetails>]
+    #
+    # @!attribute [rw] aggregate_remaining_budget
+    #   The total remaining budget across all active budget periods for this
+    #   resource.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/AccessBudget AWS API Documentation
+    #
+    class AccessBudget < Struct.new(
+      :resource_arn,
+      :details,
+      :aggregate_remaining_budget)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The detailed information for a specific budget period, including time
+    # boundaries and budget amounts.
+    #
+    # @!attribute [rw] start_time
+    #   The start time of this budget period.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   The end time of this budget period. If not specified, the budget
+    #   period continues indefinitely.
+    #   @return [Time]
+    #
+    # @!attribute [rw] remaining_budget
+    #   The amount of budget remaining in this period.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] budget
+    #   The total budget amount allocated for this period.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] budget_type
+    #   The type of budget period. Calendar-based types reset automatically
+    #   at regular intervals, while LIFETIME budgets never reset.
+    #   @return [String]
+    #
+    # @!attribute [rw] auto_refresh
+    #   Specifies whether this budget automatically refreshes when the
+    #   current period ends.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/AccessBudgetDetails AWS API Documentation
+    #
+    class AccessBudgetDetails < Struct.new(
+      :start_time,
+      :end_time,
+      :remaining_budget,
+      :budget,
+      :budget_type,
+      :auto_refresh)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # You do not have sufficient access to perform this action.
     #
     # @!attribute [rw] message
@@ -340,11 +411,21 @@ module Aws::CleanRoomsML
     #   want to cancel.
     #   @return [String]
     #
+    # @!attribute [rw] version_identifier
+    #   The version identifier of the trained model to cancel. This
+    #   parameter allows you to specify which version of the trained model
+    #   you want to cancel when multiple versions exist.
+    #
+    #   If `versionIdentifier` is not specified, the base model will be
+    #   cancelled.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/CancelTrainedModelRequest AWS API Documentation
     #
     class CancelTrainedModelRequest < Struct.new(
       :membership_identifier,
-      :trained_model_arn)
+      :trained_model_arn,
+      :version_identifier)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -457,6 +538,10 @@ module Aws::CleanRoomsML
     #   The description of the ML input channel.
     #   @return [String]
     #
+    # @!attribute [rw] payer_configuration
+    #   The payer configuration for the ML input channel.
+    #   @return [Types::PayerConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/CollaborationMLInputChannelSummary AWS API Documentation
     #
     class CollaborationMLInputChannelSummary < Struct.new(
@@ -469,7 +554,8 @@ module Aws::CleanRoomsML
       :ml_input_channel_arn,
       :status,
       :creator_account_id,
-      :description)
+      :description,
+      :payer_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -515,6 +601,11 @@ module Aws::CleanRoomsML
     #   exported.
     #   @return [String]
     #
+    # @!attribute [rw] trained_model_version_identifier
+    #   The version identifier of the trained model that was exported in
+    #   this job.
+    #   @return [String]
+    #
     # @!attribute [rw] membership_identifier
     #   The membership ID of the member that created the trained model
     #   export job.
@@ -537,6 +628,7 @@ module Aws::CleanRoomsML
       :description,
       :creator_account_id,
       :trained_model_arn,
+      :trained_model_version_identifier,
       :membership_identifier,
       :collaboration_identifier)
       SENSITIVE = []
@@ -563,6 +655,11 @@ module Aws::CleanRoomsML
     # @!attribute [rw] trained_model_arn
     #   The Amazon Resource Name (ARN) of the trained model that is used for
     #   the trained model inference job.
+    #   @return [String]
+    #
+    # @!attribute [rw] trained_model_version_identifier
+    #   The version identifier of the trained model that was used for
+    #   inference in this job.
     #   @return [String]
     #
     # @!attribute [rw] collaboration_identifier
@@ -603,6 +700,11 @@ module Aws::CleanRoomsML
     #   Details about the logs status for the trained model inference job.
     #   @return [String]
     #
+    # @!attribute [rw] ml_model_inference_payer_account_id
+    #   The account ID of the member that is responsible for paying for
+    #   model inference costs.
+    #   @return [String]
+    #
     # @!attribute [rw] create_time
     #   The time at which the trained model inference job was created.
     #   @return [Time]
@@ -623,6 +725,7 @@ module Aws::CleanRoomsML
       :configured_model_algorithm_association_arn,
       :membership_identifier,
       :trained_model_arn,
+      :trained_model_version_identifier,
       :collaboration_identifier,
       :status,
       :output_configuration,
@@ -632,6 +735,7 @@ module Aws::CleanRoomsML
       :metrics_status_details,
       :logs_status,
       :logs_status_details,
+      :ml_model_inference_payer_account_id,
       :create_time,
       :update_time,
       :creator_account_id)
@@ -656,6 +760,15 @@ module Aws::CleanRoomsML
     # @!attribute [rw] name
     #   The name of the trained model.
     #   @return [String]
+    #
+    # @!attribute [rw] version_identifier
+    #   The version identifier of this trained model version.
+    #   @return [String]
+    #
+    # @!attribute [rw] incremental_training_data_channels
+    #   Information about the incremental training data channels used to
+    #   create this version of the trained model.
+    #   @return [Array<Types::IncrementalTrainingDataChannelOutput>]
     #
     # @!attribute [rw] description
     #   The description of the trained model.
@@ -683,6 +796,11 @@ module Aws::CleanRoomsML
     #   The account ID of the member that created the trained model.
     #   @return [String]
     #
+    # @!attribute [rw] ml_model_training_payer_account_id
+    #   The account ID of the member that is responsible for paying for
+    #   model training costs.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/CollaborationTrainedModelSummary AWS API Documentation
     #
     class CollaborationTrainedModelSummary < Struct.new(
@@ -690,12 +808,33 @@ module Aws::CleanRoomsML
       :update_time,
       :trained_model_arn,
       :name,
+      :version_identifier,
+      :incremental_training_data_channels,
       :description,
       :membership_identifier,
       :collaboration_identifier,
       :status,
       :configured_model_algorithm_association_arn,
-      :creator_account_id)
+      :creator_account_id,
+      :ml_model_training_payer_account_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains classification information for data columns, including
+    # mappings that specify how columns should be handled during synthetic
+    # data generation and privacy analysis.
+    #
+    # @!attribute [rw] column_mapping
+    #   A mapping that defines the classification of data columns for
+    #   synthetic data generation and specifies how each column should be
+    #   handled during the privacy-preserving data synthesis process.
+    #   @return [Array<Types::SyntheticDataColumnProperties>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/ColumnClassificationDetails AWS API Documentation
+    #
+    class ColumnClassificationDetails < Struct.new(
+      :column_mapping)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -926,10 +1065,10 @@ module Aws::CleanRoomsML
     #
     # @!attribute [rw] image_uri
     #   The registry path of the docker image that contains the algorithm.
-    #   Clean Rooms ML supports both `registry/repository[:tag]` and
-    #   `registry/repositry[@digest]` image path formats. For more
-    #   information about using images in Clean Rooms ML, see the [Sagemaker
-    #   API reference][1].
+    #   Clean Rooms ML currently only supports the
+    #   `registry/repository[:tag]` image path format. For more information
+    #   about using images in Clean Rooms ML, see the [Sagemaker API
+    #   reference][1].
     #
     #
     #
@@ -1417,6 +1556,11 @@ module Aws::CleanRoomsML
     #     of aws do not count against your tags per resource limit.
     #   @return [Hash<String,String>]
     #
+    # @!attribute [rw] payer_configuration
+    #   The payer configuration for the ML input channel. Determines which
+    #   member account pays for compute and synthetic data costs.
+    #   @return [Types::PayerConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/CreateMLInputChannelRequest AWS API Documentation
     #
     class CreateMLInputChannelRequest < Struct.new(
@@ -1427,7 +1571,8 @@ module Aws::CleanRoomsML
       :retention_in_days,
       :description,
       :kms_key_arn,
-      :tags)
+      :tags,
+      :payer_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1475,10 +1620,43 @@ module Aws::CleanRoomsML
     #   The criteria that is used to stop model training.
     #   @return [Types::StoppingCondition]
     #
+    # @!attribute [rw] incremental_training_data_channels
+    #   Specifies the incremental training data channels for the trained
+    #   model.
+    #
+    #   Incremental training allows you to create a new trained model with
+    #   updates without retraining from scratch. You can specify up to one
+    #   incremental training data channel that references a previously
+    #   trained model and its version.
+    #
+    #   Limit: Maximum of 20 channels total (including both
+    #   `incrementalTrainingDataChannels` and `dataChannels`).
+    #   @return [Array<Types::IncrementalTrainingDataChannel>]
+    #
     # @!attribute [rw] data_channels
     #   Defines the data channels that are used as input for the trained
     #   model request.
+    #
+    #   Limit: Maximum of 20 channels total (including both `dataChannels`
+    #   and `incrementalTrainingDataChannels`).
     #   @return [Array<Types::ModelTrainingDataChannel>]
+    #
+    # @!attribute [rw] training_input_mode
+    #   The input mode for accessing the training data. This parameter
+    #   determines how the training data is made available to the training
+    #   algorithm. Valid values are:
+    #
+    #   * `File` - The training data is downloaded to the training instance
+    #     and made available as files.
+    #
+    #   * `FastFile` - The training data is streamed directly from Amazon S3
+    #     to the training algorithm, providing faster access for large
+    #     datasets.
+    #
+    #   * `Pipe` - The training data is streamed to the training algorithm
+    #     using named pipes, which can improve performance for certain
+    #     algorithms.
+    #   @return [String]
     #
     # @!attribute [rw] description
     #   The description of the trained model.
@@ -1523,6 +1701,11 @@ module Aws::CleanRoomsML
     #     of aws do not count against your tags per resource limit.
     #   @return [Hash<String,String>]
     #
+    # @!attribute [rw] ml_model_training_payer_account_id
+    #   The account ID of the member that is responsible for paying for
+    #   model training costs.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/CreateTrainedModelRequest AWS API Documentation
     #
     class CreateTrainedModelRequest < Struct.new(
@@ -1533,10 +1716,13 @@ module Aws::CleanRoomsML
       :environment,
       :resource_config,
       :stopping_condition,
+      :incremental_training_data_channels,
       :data_channels,
+      :training_input_mode,
       :description,
       :kms_key_arn,
-      :tags)
+      :tags,
+      :ml_model_training_payer_account_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1545,10 +1731,21 @@ module Aws::CleanRoomsML
     #   The Amazon Resource Name (ARN) of the trained model.
     #   @return [String]
     #
+    # @!attribute [rw] version_identifier
+    #   The unique version identifier assigned to the newly created trained
+    #   model. This identifier can be used to reference this specific
+    #   version of the trained model in subsequent operations such as
+    #   inference jobs or incremental training.
+    #
+    #   The initial version identifier for the base version of the trained
+    #   model is "NULL".
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/CreateTrainedModelResponse AWS API Documentation
     #
     class CreateTrainedModelResponse < Struct.new(
-      :trained_model_arn)
+      :trained_model_arn,
+      :version_identifier)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1630,6 +1827,42 @@ module Aws::CleanRoomsML
     #
     class CreateTrainingDatasetResponse < Struct.new(
       :training_dataset_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration for defining custom patterns to be redacted from
+    # logs and error messages. This is for the CUSTOM config under
+    # entitiesToRedact. Both CustomEntityConfig and entitiesToRedact need to
+    # be present or not present.
+    #
+    # @!attribute [rw] custom_data_identifiers
+    #   Defines data identifiers for the custom entity configuration.
+    #   Provide this only if CUSTOM redaction is configured.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/CustomEntityConfig AWS API Documentation
+    #
+    class CustomEntityConfig < Struct.new(
+      :custom_data_identifiers)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Privacy evaluation scores that measure the privacy characteristics of
+    # the generated synthetic data, including assessments of potential
+    # privacy risks such as membership inference attacks.
+    #
+    # @!attribute [rw] membership_inference_attack_scores
+    #   Scores that evaluate the vulnerability of the synthetic data to
+    #   membership inference attacks, which attempt to determine whether a
+    #   specific individual was a member of the original dataset.
+    #   @return [Array<Types::MembershipInferenceAttackScore>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/DataPrivacyScores AWS API Documentation
+    #
+    class DataPrivacyScores < Struct.new(
+      :membership_inference_attack_scores)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1817,11 +2050,18 @@ module Aws::CleanRoomsML
     #   output.
     #   @return [String]
     #
+    # @!attribute [rw] version_identifier
+    #   The version identifier of the trained model to delete. If not
+    #   specified, the operation will delete the base version of the trained
+    #   model. When specified, only the particular version will be deleted.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/DeleteTrainedModelOutputRequest AWS API Documentation
     #
     class DeleteTrainedModelOutputRequest < Struct.new(
       :trained_model_arn,
-      :membership_identifier)
+      :membership_identifier,
+      :version_identifier)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2146,18 +2386,6 @@ module Aws::CleanRoomsML
       include Aws::Structure
     end
 
-    # @!attribute [rw] create_time
-    #   The time at which the ML input channel was created.
-    #   @return [Time]
-    #
-    # @!attribute [rw] update_time
-    #   The most recent time at which the ML input channel was updated.
-    #   @return [Time]
-    #
-    # @!attribute [rw] creator_account_id
-    #   The account ID of the member who created the ML input channel.
-    #   @return [String]
-    #
     # @!attribute [rw] membership_identifier
     #   The membership ID of the membership that contains the ML input
     #   channel.
@@ -2197,16 +2425,42 @@ module Aws::CleanRoomsML
     #   The number of records in the ML input channel.
     #   @return [Integer]
     #
+    # @!attribute [rw] privacy_budgets
+    #   Returns the privacy budgets that control access to this Clean Rooms
+    #   ML input channel. Use these budgets to monitor and limit resource
+    #   consumption over specified time periods.
+    #   @return [Types::PrivacyBudgets]
+    #
     # @!attribute [rw] description
     #   The description of the ML input channel.
+    #   @return [String]
+    #
+    # @!attribute [rw] synthetic_data_configuration
+    #   The synthetic data configuration for this ML input channel,
+    #   including parameters for generating privacy-preserving synthetic
+    #   data and evaluation scores for measuring the privacy of the
+    #   generated data.
+    #   @return [Types::SyntheticDataConfiguration]
+    #
+    # @!attribute [rw] payer_configuration
+    #   The payer configuration for the ML input channel.
+    #   @return [Types::PayerConfiguration]
+    #
+    # @!attribute [rw] create_time
+    #   The time at which the ML input channel was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] update_time
+    #   The most recent time at which the ML input channel was updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] creator_account_id
+    #   The account ID of the member who created the ML input channel.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/GetCollaborationMLInputChannelResponse AWS API Documentation
     #
     class GetCollaborationMLInputChannelResponse < Struct.new(
-      :create_time,
-      :update_time,
-      :creator_account_id,
       :membership_identifier,
       :collaboration_identifier,
       :ml_input_channel_arn,
@@ -2216,7 +2470,13 @@ module Aws::CleanRoomsML
       :status_details,
       :retention_in_days,
       :number_of_records,
-      :description)
+      :privacy_budgets,
+      :description,
+      :synthetic_data_configuration,
+      :payer_configuration,
+      :create_time,
+      :update_time,
+      :creator_account_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2231,11 +2491,18 @@ module Aws::CleanRoomsML
     #   to return information about.
     #   @return [String]
     #
+    # @!attribute [rw] version_identifier
+    #   The version identifier of the trained model to retrieve. If not
+    #   specified, the operation returns information about the latest
+    #   version of the trained model.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/GetCollaborationTrainedModelRequest AWS API Documentation
     #
     class GetCollaborationTrainedModelRequest < Struct.new(
       :trained_model_arn,
-      :collaboration_identifier)
+      :collaboration_identifier,
+      :version_identifier)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2252,6 +2519,19 @@ module Aws::CleanRoomsML
     # @!attribute [rw] trained_model_arn
     #   The Amazon Resource Name (ARN) of the trained model.
     #   @return [String]
+    #
+    # @!attribute [rw] version_identifier
+    #   The version identifier of the trained model. This unique identifier
+    #   distinguishes this version from other versions of the same trained
+    #   model.
+    #   @return [String]
+    #
+    # @!attribute [rw] incremental_training_data_channels
+    #   Information about the incremental training data channels used to
+    #   create this version of the trained model. This includes details
+    #   about the base model that was used for incremental training and the
+    #   channel configuration.
+    #   @return [Array<Types::IncrementalTrainingDataChannelOutput>]
     #
     # @!attribute [rw] name
     #   The name of the trained model.
@@ -2278,6 +2558,12 @@ module Aws::CleanRoomsML
     #   The EC2 resource configuration that was used to train this model.
     #   @return [Types::ResourceConfig]
     #
+    # @!attribute [rw] training_input_mode
+    #   The input mode that was used for accessing the training data when
+    #   this trained model was created. This indicates how the training data
+    #   was made available to the training algorithm.
+    #   @return [String]
+    #
     # @!attribute [rw] stopping_condition
     #   The stopping condition that determined when model training ended.
     #   @return [Types::StoppingCondition]
@@ -2302,6 +2588,11 @@ module Aws::CleanRoomsML
     #   Information about the training container image.
     #   @return [String]
     #
+    # @!attribute [rw] ml_model_training_payer_account_id
+    #   The account ID of the member that is responsible for paying for
+    #   model training costs.
+    #   @return [String]
+    #
     # @!attribute [rw] create_time
     #   The time at which the trained model was created.
     #   @return [Time]
@@ -2320,18 +2611,22 @@ module Aws::CleanRoomsML
       :membership_identifier,
       :collaboration_identifier,
       :trained_model_arn,
+      :version_identifier,
+      :incremental_training_data_channels,
       :name,
       :description,
       :status,
       :status_details,
       :configured_model_algorithm_association_arn,
       :resource_config,
+      :training_input_mode,
       :stopping_condition,
       :metrics_status,
       :metrics_status_details,
       :logs_status,
       :logs_status_details,
       :training_container_image_digest,
+      :ml_model_training_payer_account_id,
       :create_time,
       :update_time,
       :creator_account_id)
@@ -2747,14 +3042,6 @@ module Aws::CleanRoomsML
       include Aws::Structure
     end
 
-    # @!attribute [rw] create_time
-    #   The time at which the ML input channel was created.
-    #   @return [Time]
-    #
-    # @!attribute [rw] update_time
-    #   The most recent time at which the ML input channel was updated.
-    #   @return [Time]
-    #
     # @!attribute [rw] membership_identifier
     #   The membership ID of the membership that contains the ML input
     #   channel.
@@ -2762,15 +3049,6 @@ module Aws::CleanRoomsML
     #
     # @!attribute [rw] collaboration_identifier
     #   The collaboration ID of the collaboration that contains the ML input
-    #   channel.
-    #   @return [String]
-    #
-    # @!attribute [rw] input_channel
-    #   The input channel that was used to create the ML input channel.
-    #   @return [Types::InputChannel]
-    #
-    # @!attribute [rw] protected_query_identifier
-    #   The ID of the protected query that was used to create the ML input
     #   channel.
     #   @return [String]
     #
@@ -2803,6 +3081,44 @@ module Aws::CleanRoomsML
     #   The number of records in the ML input channel.
     #   @return [Integer]
     #
+    # @!attribute [rw] privacy_budgets
+    #   Returns the privacy budgets that control access to this Clean Rooms
+    #   ML input channel. Use these budgets to monitor and limit resource
+    #   consumption over specified time periods.
+    #   @return [Types::PrivacyBudgets]
+    #
+    # @!attribute [rw] description
+    #   The description of the ML input channel.
+    #   @return [String]
+    #
+    # @!attribute [rw] synthetic_data_configuration
+    #   The synthetic data configuration for this ML input channel,
+    #   including parameters for generating privacy-preserving synthetic
+    #   data and evaluation scores for measuring the privacy of the
+    #   generated data.
+    #   @return [Types::SyntheticDataConfiguration]
+    #
+    # @!attribute [rw] payer_configuration
+    #   The payer configuration for the ML input channel.
+    #   @return [Types::PayerConfiguration]
+    #
+    # @!attribute [rw] create_time
+    #   The time at which the ML input channel was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] update_time
+    #   The most recent time at which the ML input channel was updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] input_channel
+    #   The input channel that was used to create the ML input channel.
+    #   @return [Types::InputChannel]
+    #
+    # @!attribute [rw] protected_query_identifier
+    #   The ID of the protected query that was used to create the ML input
+    #   channel.
+    #   @return [String]
+    #
     # @!attribute [rw] number_of_files
     #   The number of files in the ML input channel.
     #   @return [Float]
@@ -2810,10 +3126,6 @@ module Aws::CleanRoomsML
     # @!attribute [rw] size_in_gb
     #   The size, in GB, of the ML input channel.
     #   @return [Float]
-    #
-    # @!attribute [rw] description
-    #   The description of the ML input channel.
-    #   @return [String]
     #
     # @!attribute [rw] kms_key_arn
     #   The Amazon Resource Name (ARN) of the KMS key that was used to
@@ -2856,12 +3168,8 @@ module Aws::CleanRoomsML
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/GetMLInputChannelResponse AWS API Documentation
     #
     class GetMLInputChannelResponse < Struct.new(
-      :create_time,
-      :update_time,
       :membership_identifier,
       :collaboration_identifier,
-      :input_channel,
-      :protected_query_identifier,
       :ml_input_channel_arn,
       :name,
       :configured_model_algorithm_associations,
@@ -2869,9 +3177,16 @@ module Aws::CleanRoomsML
       :status_details,
       :retention_in_days,
       :number_of_records,
+      :privacy_budgets,
+      :description,
+      :synthetic_data_configuration,
+      :payer_configuration,
+      :create_time,
+      :update_time,
+      :input_channel,
+      :protected_query_identifier,
       :number_of_files,
       :size_in_gb,
-      :description,
       :kms_key_arn,
       :tags)
       SENSITIVE = []
@@ -2926,6 +3241,12 @@ module Aws::CleanRoomsML
     # @!attribute [rw] trained_model_arn
     #   The Amazon Resource Name (ARN) for the trained model that was used
     #   for the trained model inference job.
+    #   @return [String]
+    #
+    # @!attribute [rw] trained_model_version_identifier
+    #   The version identifier of the trained model used for this inference
+    #   job. This identifies the specific version of the trained model that
+    #   was used to generate the inference results.
     #   @return [String]
     #
     # @!attribute [rw] resource_config
@@ -3023,6 +3344,11 @@ module Aws::CleanRoomsML
     #     of aws do not count against your tags per resource limit.
     #   @return [Hash<String,String>]
     #
+    # @!attribute [rw] ml_model_inference_payer_account_id
+    #   The account ID of the member that is responsible for paying for
+    #   model inference costs.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/GetTrainedModelInferenceJobResponse AWS API Documentation
     #
     class GetTrainedModelInferenceJobResponse < Struct.new(
@@ -3033,6 +3359,7 @@ module Aws::CleanRoomsML
       :name,
       :status,
       :trained_model_arn,
+      :trained_model_version_identifier,
       :resource_config,
       :output_configuration,
       :membership_identifier,
@@ -3047,7 +3374,8 @@ module Aws::CleanRoomsML
       :metrics_status_details,
       :logs_status,
       :logs_status_details,
-      :tags)
+      :tags,
+      :ml_model_inference_payer_account_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3062,11 +3390,18 @@ module Aws::CleanRoomsML
     #   you are interested in.
     #   @return [String]
     #
+    # @!attribute [rw] version_identifier
+    #   The version identifier of the trained model to retrieve. If not
+    #   specified, the operation returns information about the latest
+    #   version of the trained model.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/GetTrainedModelRequest AWS API Documentation
     #
     class GetTrainedModelRequest < Struct.new(
       :trained_model_arn,
-      :membership_identifier)
+      :membership_identifier,
+      :version_identifier)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3083,6 +3418,19 @@ module Aws::CleanRoomsML
     # @!attribute [rw] trained_model_arn
     #   The Amazon Resource Name (ARN) of the trained model.
     #   @return [String]
+    #
+    # @!attribute [rw] version_identifier
+    #   The version identifier of the trained model. This unique identifier
+    #   distinguishes this version from other versions of the same trained
+    #   model.
+    #   @return [String]
+    #
+    # @!attribute [rw] incremental_training_data_channels
+    #   Information about the incremental training data channels used to
+    #   create this version of the trained model. This includes details
+    #   about the base model that was used for incremental training and the
+    #   channel configuration.
+    #   @return [Array<Types::IncrementalTrainingDataChannelOutput>]
     #
     # @!attribute [rw] name
     #   The name of the trained model.
@@ -3110,6 +3458,12 @@ module Aws::CleanRoomsML
     #   model.
     #   @return [Types::ResourceConfig]
     #
+    # @!attribute [rw] training_input_mode
+    #   The input mode that was used for accessing the training data when
+    #   this trained model was created. This indicates how the training data
+    #   was made available to the training algorithm.
+    #   @return [String]
+    #
     # @!attribute [rw] stopping_condition
     #   The stopping condition that was used to terminate model training.
     #   @return [Types::StoppingCondition]
@@ -3132,6 +3486,11 @@ module Aws::CleanRoomsML
     #
     # @!attribute [rw] training_container_image_digest
     #   Information about the training image container.
+    #   @return [String]
+    #
+    # @!attribute [rw] ml_model_training_payer_account_id
+    #   The account ID of the member that is responsible for paying for
+    #   model training costs.
     #   @return [String]
     #
     # @!attribute [rw] create_time
@@ -3199,18 +3558,22 @@ module Aws::CleanRoomsML
       :membership_identifier,
       :collaboration_identifier,
       :trained_model_arn,
+      :version_identifier,
+      :incremental_training_data_channels,
       :name,
       :description,
       :status,
       :status_details,
       :configured_model_algorithm_association_arn,
       :resource_config,
+      :training_input_mode,
       :stopping_condition,
       :metrics_status,
       :metrics_status_details,
       :logs_status,
       :logs_status_details,
       :training_container_image_digest,
+      :ml_model_training_payer_account_id,
       :create_time,
       :update_time,
       :hyperparameters,
@@ -3311,14 +3674,78 @@ module Aws::CleanRoomsML
       include Aws::Structure
     end
 
+    # Defines an incremental training data channel that references a
+    # previously trained model. Incremental training allows you to update an
+    # existing trained model with new data, building upon the knowledge from
+    # a base model rather than training from scratch. This can significantly
+    # reduce training time and computational costs while improving model
+    # performance with additional data.
+    #
+    # @!attribute [rw] trained_model_arn
+    #   The Amazon Resource Name (ARN) of the base trained model to use for
+    #   incremental training. This model serves as the starting point for
+    #   the incremental training process.
+    #   @return [String]
+    #
+    # @!attribute [rw] version_identifier
+    #   The version identifier of the base trained model to use for
+    #   incremental training. If not specified, the latest version of the
+    #   trained model is used.
+    #   @return [String]
+    #
+    # @!attribute [rw] channel_name
+    #   The name of the incremental training data channel. This name is used
+    #   to identify the channel during the training process and must be
+    #   unique within the training job.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/IncrementalTrainingDataChannel AWS API Documentation
+    #
+    class IncrementalTrainingDataChannel < Struct.new(
+      :trained_model_arn,
+      :version_identifier,
+      :channel_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about an incremental training data channel that
+    # was used to create a trained model. This structure provides details
+    # about the base model and channel configuration used during incremental
+    # training.
+    #
+    # @!attribute [rw] channel_name
+    #   The name of the incremental training data channel that was used.
+    #   @return [String]
+    #
+    # @!attribute [rw] version_identifier
+    #   The version identifier of the trained model that was used for
+    #   incremental training.
+    #   @return [String]
+    #
+    # @!attribute [rw] model_name
+    #   The name of the base trained model that was used for incremental
+    #   training.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/IncrementalTrainingDataChannelOutput AWS API Documentation
+    #
+    class IncrementalTrainingDataChannelOutput < Struct.new(
+      :channel_name,
+      :version_identifier,
+      :model_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Provides configuration information for the inference container.
     #
     # @!attribute [rw] image_uri
     #   The registry path of the docker image that contains the inference
-    #   algorithm. Clean Rooms ML supports both `registry/repository[:tag]`
-    #   and `registry/repositry[@digest]` image path formats. For more
-    #   information about using images in Clean Rooms ML, see the [Sagemaker
-    #   API reference][1].
+    #   algorithm. Clean Rooms ML currently only supports the
+    #   `registry/repository[:tag]` image path format. For more information
+    #   about using images in Clean Rooms ML, see the [Sagemaker API
+    #   reference][1].
     #
     #
     #
@@ -3408,8 +3835,8 @@ module Aws::CleanRoomsML
     #   @return [Types::InputChannelDataSource]
     #
     # @!attribute [rw] role_arn
-    #   The ARN of the IAM role that Clean Rooms ML can assume to read the
-    #   data referred to in the `dataSource` field the input channel.
+    #   The Amazon Resource Name (ARN) of the role used to run the query
+    #   specified in the `dataSource` field of the input channel.
     #
     #   Passing a role across AWS accounts is not allowed. If you pass a
     #   role that isn't in your account, you get an `AccessDeniedException`
@@ -3446,6 +3873,20 @@ module Aws::CleanRoomsML
 
       class ProtectedQueryInputParameters < InputChannelDataSource; end
       class Unknown < InputChannelDataSource; end
+    end
+
+    # An internal service error occurred. Retry your request. If the problem
+    # persists, contact AWS Support.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/InternalServiceException AWS API Documentation
+    #
+    class InternalServiceException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
     end
 
     # @!attribute [rw] next_token
@@ -3674,13 +4115,20 @@ module Aws::CleanRoomsML
     #   create the export jobs that you are interested in.
     #   @return [String]
     #
+    # @!attribute [rw] trained_model_version_identifier
+    #   The version identifier of the trained model to filter export jobs
+    #   by. When specified, only export jobs for this specific version of
+    #   the trained model are returned.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/ListCollaborationTrainedModelExportJobsRequest AWS API Documentation
     #
     class ListCollaborationTrainedModelExportJobsRequest < Struct.new(
       :next_token,
       :max_results,
       :collaboration_identifier,
-      :trained_model_arn)
+      :trained_model_arn,
+      :trained_model_version_identifier)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3722,13 +4170,20 @@ module Aws::CleanRoomsML
     #   create the trained model inference jobs that you are interested in.
     #   @return [String]
     #
+    # @!attribute [rw] trained_model_version_identifier
+    #   The version identifier of the trained model to filter inference jobs
+    #   by. When specified, only inference jobs that used this specific
+    #   version of the trained model are returned.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/ListCollaborationTrainedModelInferenceJobsRequest AWS API Documentation
     #
     class ListCollaborationTrainedModelInferenceJobsRequest < Struct.new(
       :next_token,
       :max_results,
       :collaboration_identifier,
-      :trained_model_arn)
+      :trained_model_arn,
+      :trained_model_version_identifier)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3986,13 +4441,20 @@ module Aws::CleanRoomsML
     #   create the trained model inference jobs that you are interested in.
     #   @return [String]
     #
+    # @!attribute [rw] trained_model_version_identifier
+    #   The version identifier of the trained model to filter inference jobs
+    #   by. When specified, only inference jobs that used this specific
+    #   version of the trained model are returned.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/ListTrainedModelInferenceJobsRequest AWS API Documentation
     #
     class ListTrainedModelInferenceJobsRequest < Struct.new(
       :next_token,
       :max_results,
       :membership_identifier,
-      :trained_model_arn)
+      :trained_model_arn,
+      :trained_model_version_identifier)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4010,6 +4472,67 @@ module Aws::CleanRoomsML
     class ListTrainedModelInferenceJobsResponse < Struct.new(
       :next_token,
       :trained_model_inference_jobs)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   The pagination token from a previous `ListTrainedModelVersions`
+    #   request. Use this token to retrieve the next page of results.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of trained model versions to return in a single
+    #   page. The default value is 10, and the maximum value is 100.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] membership_identifier
+    #   The membership identifier for the collaboration that contains the
+    #   trained model.
+    #   @return [String]
+    #
+    # @!attribute [rw] trained_model_arn
+    #   The Amazon Resource Name (ARN) of the trained model for which to
+    #   list versions.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   Filter the results to only include trained model versions with the
+    #   specified status. Valid values include `CREATE_PENDING`,
+    #   `CREATE_IN_PROGRESS`, `ACTIVE`, `CREATE_FAILED`, and others.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/ListTrainedModelVersionsRequest AWS API Documentation
+    #
+    class ListTrainedModelVersionsRequest < Struct.new(
+      :next_token,
+      :max_results,
+      :membership_identifier,
+      :trained_model_arn,
+      :status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   The pagination token to use in a subsequent
+    #   `ListTrainedModelVersions` request to retrieve the next page of
+    #   results. This value is null when there are no more results to
+    #   return.
+    #   @return [String]
+    #
+    # @!attribute [rw] trained_models
+    #   A list of trained model versions that match the specified criteria.
+    #   Each entry contains summary information about a trained model
+    #   version, including its version identifier, status, and creation
+    #   details.
+    #   @return [Array<Types::TrainedModelSummary>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/ListTrainedModelVersionsResponse AWS API Documentation
+    #
+    class ListTrainedModelVersionsResponse < Struct.new(
+      :next_token,
+      :trained_models)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4090,6 +4613,30 @@ module Aws::CleanRoomsML
       include Aws::Structure
     end
 
+    # The configuration for log redaction.
+    #
+    # @!attribute [rw] entities_to_redact
+    #   Specifies the entities to be redacted from logs. Entities to redact
+    #   are "ALL\_PERSONALLY\_IDENTIFIABLE\_INFORMATION",
+    #   "NUMBERS","CUSTOM". If CUSTOM is supplied or configured, custom
+    #   patterns (customDataIdentifiers) should be provided, and the
+    #   patterns will be redacted in logs or error messages.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] custom_entity_config
+    #   Specifies the configuration for custom entities in the context of
+    #   log redaction.
+    #   @return [Types::CustomEntityConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/LogRedactionConfiguration AWS API Documentation
+    #
+    class LogRedactionConfiguration < Struct.new(
+      :entities_to_redact,
+      :custom_entity_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Provides the information necessary for a user to access the logs.
     #
     # @!attribute [rw] allowed_account_ids
@@ -4101,11 +4648,22 @@ module Aws::CleanRoomsML
     #   return information that matches the pattern.
     #   @return [String]
     #
+    # @!attribute [rw] log_type
+    #   Specifies the type of log this policy applies to. The currently
+    #   supported policies are ALL or ERROR\_SUMMARY.
+    #   @return [String]
+    #
+    # @!attribute [rw] log_redaction_configuration
+    #   Specifies the log redaction configuration for this policy.
+    #   @return [Types::LogRedactionConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/LogsConfigurationPolicy AWS API Documentation
     #
     class LogsConfigurationPolicy < Struct.new(
       :allowed_account_ids,
-      :filter_pattern)
+      :filter_pattern,
+      :log_type,
+      :log_redaction_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4156,6 +4714,10 @@ module Aws::CleanRoomsML
     #   The description of the ML input channel.
     #   @return [String]
     #
+    # @!attribute [rw] payer_configuration
+    #   The payer configuration for the ML input channel.
+    #   @return [Types::PayerConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/MLInputChannelSummary AWS API Documentation
     #
     class MLInputChannelSummary < Struct.new(
@@ -4168,7 +4730,8 @@ module Aws::CleanRoomsML
       :protected_query_identifier,
       :ml_input_channel_arn,
       :status,
-      :description)
+      :description,
+      :payer_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4190,6 +4753,61 @@ module Aws::CleanRoomsML
     class MLOutputConfiguration < Struct.new(
       :destination,
       :role_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Parameters that control the generation of synthetic data for custom
+    # model training, including privacy settings and column classification
+    # details.
+    #
+    # @!attribute [rw] epsilon
+    #   The epsilon value for differential privacy, which controls the
+    #   privacy-utility tradeoff in synthetic data generation. Lower values
+    #   provide stronger privacy guarantees but may reduce data utility.
+    #   @return [Float]
+    #
+    # @!attribute [rw] max_membership_inference_attack_score
+    #   The maximum acceptable score for membership inference attack
+    #   vulnerability. Synthetic data generation fails if the score for the
+    #   resulting data exceeds this threshold.
+    #   @return [Float]
+    #
+    # @!attribute [rw] column_classification
+    #   Classification details for data columns that specify how each column
+    #   should be treated during synthetic data generation.
+    #   @return [Types::ColumnClassificationDetails]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/MLSyntheticDataParameters AWS API Documentation
+    #
+    class MLSyntheticDataParameters < Struct.new(
+      :epsilon,
+      :max_membership_inference_attack_score,
+      :column_classification)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A score that measures the vulnerability of synthetic data to
+    # membership inference attacks and provides both the numerical score and
+    # the version of the attack methodology used for evaluation.
+    #
+    # @!attribute [rw] attack_version
+    #   The version of the membership inference attack, which consists of
+    #   the attack type and its version number, used to generate this
+    #   privacy score.
+    #   @return [String]
+    #
+    # @!attribute [rw] score
+    #   The numerical score representing the vulnerability to membership
+    #   inference attacks.
+    #   @return [Float]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/MembershipInferenceAttackScore AWS API Documentation
+    #
+    class MembershipInferenceAttackScore < Struct.new(
+      :attack_version,
+      :score)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4257,13 +4875,74 @@ module Aws::CleanRoomsML
     #   The name of the training data channel.
     #   @return [String]
     #
+    # @!attribute [rw] s3_data_distribution_type
+    #   Specifies how the training data stored in Amazon S3 should be
+    #   distributed to training instances. This parameter controls the data
+    #   distribution strategy for the training job:
+    #
+    #   * `FullyReplicated` - The entire dataset is replicated on each
+    #     training instance. This is suitable for smaller datasets and
+    #     algorithms that require access to the complete dataset.
+    #
+    #   * `ShardedByS3Key` - The dataset is distributed across training
+    #     instances based on Amazon S3 key names. This is suitable for
+    #     larger datasets and distributed training scenarios where each
+    #     instance processes a subset of the data.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/ModelTrainingDataChannel AWS API Documentation
     #
     class ModelTrainingDataChannel < Struct.new(
       :ml_input_channel_arn,
-      :channel_name)
+      :channel_name,
+      :s3_data_distribution_type)
       SENSITIVE = []
       include Aws::Structure
+    end
+
+    # Specifies which member accounts are responsible for paying for compute
+    # and synthetic data generation costs in a Clean Rooms ML collaboration.
+    #
+    # @!attribute [rw] compute_payer_account_id
+    #   The account ID of the member that is responsible for paying compute
+    #   costs.
+    #   @return [String]
+    #
+    # @!attribute [rw] synthetic_data_payer_account_id
+    #   The account ID of the member that is responsible for paying
+    #   synthetic data generation costs.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/PayerConfiguration AWS API Documentation
+    #
+    class PayerConfiguration < Struct.new(
+      :compute_payer_account_id,
+      :synthetic_data_payer_account_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The privacy budget information that controls access to Clean Rooms ML
+    # input channels.
+    #
+    # @note PrivacyBudgets is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of PrivacyBudgets corresponding to the set member.
+    #
+    # @!attribute [rw] access_budgets
+    #   A list of access budgets that apply to resources associated with
+    #   this Clean Rooms ML input channel.
+    #   @return [Array<Types::AccessBudget>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/PrivacyBudgets AWS API Documentation
+    #
+    class PrivacyBudgets < Struct.new(
+      :access_budgets,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class AccessBudgets < PrivacyBudgets; end
+      class Unknown < PrivacyBudgets; end
     end
 
     # Information about the privacy configuration for a configured model
@@ -4318,11 +4997,17 @@ module Aws::CleanRoomsML
     #   the protected query.
     #   @return [Types::ComputeConfiguration]
     #
+    # @!attribute [rw] result_format
+    #   The format in which the query results should be returned. If not
+    #   specified, defaults to `CSV`.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/ProtectedQueryInputParameters AWS API Documentation
     #
     class ProtectedQueryInputParameters < Struct.new(
       :sql_parameters,
-      :compute_configuration)
+      :compute_configuration,
+      :result_format)
       SENSITIVE = [:sql_parameters]
       include Aws::Structure
     end
@@ -4348,7 +5033,7 @@ module Aws::CleanRoomsML
       :query_string,
       :analysis_template_arn,
       :parameters)
-      SENSITIVE = []
+      SENSITIVE = [:parameters]
       include Aws::Structure
     end
 
@@ -4449,7 +5134,13 @@ module Aws::CleanRoomsML
     #   @return [String]
     #
     # @!attribute [rw] volume_size_in_gb
-    #   The maximum size of the instance that is used to train the model.
+    #   The volume size of the instance that is used to train the model.
+    #   Please see [EC2 volume limit][1] for volume size limitations on
+    #   different instance types.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-store-volumes.html
     #   @return [Integer]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/ResourceConfig AWS API Documentation
@@ -4494,10 +5185,20 @@ module Aws::CleanRoomsML
     # @!attribute [rw] message
     #   @return [String]
     #
+    # @!attribute [rw] quota_name
+    #   The name of the service quota limit that was exceeded
+    #   @return [String]
+    #
+    # @!attribute [rw] quota_value
+    #   The current limit on the service quota that was exceeded
+    #   @return [Float]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/ServiceQuotaExceededException AWS API Documentation
     #
     class ServiceQuotaExceededException < Struct.new(
-      :message)
+      :message,
+      :quota_name,
+      :quota_value)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4626,6 +5327,12 @@ module Aws::CleanRoomsML
     #   export.
     #   @return [String]
     #
+    # @!attribute [rw] trained_model_version_identifier
+    #   The version identifier of the trained model to export. This
+    #   specifies which version of the trained model should be exported to
+    #   the specified destination.
+    #   @return [String]
+    #
     # @!attribute [rw] membership_identifier
     #   The membership ID of the member that is receiving the exported
     #   trained model artifacts.
@@ -4645,6 +5352,7 @@ module Aws::CleanRoomsML
     class StartTrainedModelExportJobRequest < Struct.new(
       :name,
       :trained_model_arn,
+      :trained_model_version_identifier,
       :membership_identifier,
       :output_configuration,
       :description)
@@ -4664,6 +5372,12 @@ module Aws::CleanRoomsML
     # @!attribute [rw] trained_model_arn
     #   The Amazon Resource Name (ARN) of the trained model that is used for
     #   this trained model inference job.
+    #   @return [String]
+    #
+    # @!attribute [rw] trained_model_version_identifier
+    #   The version identifier of the trained model to use for inference.
+    #   This specifies which version of the trained model should be used to
+    #   generate predictions on the input data.
     #   @return [String]
     #
     # @!attribute [rw] configured_model_algorithm_association_arn
@@ -4737,12 +5451,18 @@ module Aws::CleanRoomsML
     #     of aws do not count against your tags per resource limit.
     #   @return [Hash<String,String>]
     #
+    # @!attribute [rw] ml_model_inference_payer_account_id
+    #   The account ID of the member that is responsible for paying for
+    #   model inference costs.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/StartTrainedModelInferenceJobRequest AWS API Documentation
     #
     class StartTrainedModelInferenceJobRequest < Struct.new(
       :membership_identifier,
       :name,
       :trained_model_arn,
+      :trained_model_version_identifier,
       :configured_model_algorithm_association_arn,
       :resource_config,
       :output_configuration,
@@ -4751,7 +5471,8 @@ module Aws::CleanRoomsML
       :container_execution_parameters,
       :environment,
       :kms_key_arn,
-      :tags)
+      :tags,
+      :ml_model_inference_payer_account_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4806,6 +5527,81 @@ module Aws::CleanRoomsML
       include Aws::Structure
     end
 
+    # Properties that define how a specific data column should be handled
+    # during synthetic data generation, including its name, type, and role
+    # in predictive modeling.
+    #
+    # @!attribute [rw] column_name
+    #   The name of the data column as it appears in the dataset.
+    #   @return [String]
+    #
+    # @!attribute [rw] column_type
+    #   The data type of the column, which determines how the synthetic data
+    #   generation algorithm processes and synthesizes values for this
+    #   column.
+    #   @return [String]
+    #
+    # @!attribute [rw] is_predictive_value
+    #   Indicates if this column contains predictive values that should be
+    #   treated as target variables in machine learning models. This affects
+    #   how the synthetic data generation preserves statistical
+    #   relationships.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/SyntheticDataColumnProperties AWS API Documentation
+    #
+    class SyntheticDataColumnProperties < Struct.new(
+      :column_name,
+      :column_type,
+      :is_predictive_value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration settings for synthetic data generation, including the
+    # parameters that control data synthesis and the evaluation scores that
+    # measure the quality and privacy characteristics of the generated
+    # synthetic data.
+    #
+    # @!attribute [rw] synthetic_data_parameters
+    #   The parameters that control how synthetic data is generated,
+    #   including privacy settings, column classifications, and other
+    #   configuration options that affect the data synthesis process.
+    #   @return [Types::MLSyntheticDataParameters]
+    #
+    # @!attribute [rw] synthetic_data_evaluation_scores
+    #   Evaluation scores that assess the quality and privacy
+    #   characteristics of the generated synthetic data, providing metrics
+    #   on data utility and privacy preservation.
+    #   @return [Types::SyntheticDataEvaluationScores]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/SyntheticDataConfiguration AWS API Documentation
+    #
+    class SyntheticDataConfiguration < Struct.new(
+      :synthetic_data_parameters,
+      :synthetic_data_evaluation_scores)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Comprehensive evaluation metrics for synthetic data that assess both
+    # the utility of the generated data for machine learning tasks and its
+    # privacy preservation characteristics.
+    #
+    # @!attribute [rw] data_privacy_scores
+    #   Privacy-specific evaluation scores that measure how well the
+    #   synthetic data protects individual privacy, including assessments of
+    #   potential privacy risks such as membership inference attacks.
+    #   @return [Types::DataPrivacyScores]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/SyntheticDataEvaluationScores AWS API Documentation
+    #
+    class SyntheticDataEvaluationScores < Struct.new(
+      :data_privacy_scores)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] resource_arn
     #   The Amazon Resource Name (ARN) of the resource that you want to
     #   assign tags.
@@ -4856,6 +5652,45 @@ module Aws::CleanRoomsML
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/TagResourceResponse AWS API Documentation
     #
     class TagResourceResponse < Aws::EmptyStructure; end
+
+    # The request was denied due to request throttling.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/ThrottlingException AWS API Documentation
+    #
+    class ThrottlingException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Specifies the maximum size limit for trained model artifacts. This
+    # configuration helps control storage costs and ensures that trained
+    # models don't exceed specified size constraints. The size limit
+    # applies to the total size of all artifacts produced by the training
+    # job.
+    #
+    # @!attribute [rw] unit
+    #   The unit of measurement for the maximum artifact size. Valid values
+    #   include common storage units such as bytes, kilobytes, megabytes,
+    #   gigabytes, and terabytes.
+    #   @return [String]
+    #
+    # @!attribute [rw] value
+    #   The numerical value for the maximum artifact size limit. This value
+    #   is interpreted according to the specified unit.
+    #   @return [Float]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/TrainedModelArtifactMaxSize AWS API Documentation
+    #
+    class TrainedModelArtifactMaxSize < Struct.new(
+      :unit,
+      :value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # Information about the output of the trained model export job.
     #
@@ -4947,6 +5782,11 @@ module Aws::CleanRoomsML
     #   the trained model inference job.
     #   @return [String]
     #
+    # @!attribute [rw] trained_model_version_identifier
+    #   The version identifier of the trained model that was used for
+    #   inference in this job.
+    #   @return [String]
+    #
     # @!attribute [rw] collaboration_identifier
     #   The collaboration ID of the collaboration that contains the trained
     #   model inference job.
@@ -4985,6 +5825,11 @@ module Aws::CleanRoomsML
     #   Details about the log status for the trained model inference job.
     #   @return [String]
     #
+    # @!attribute [rw] ml_model_inference_payer_account_id
+    #   The account ID of the member that is responsible for paying for
+    #   model inference costs.
+    #   @return [String]
+    #
     # @!attribute [rw] create_time
     #   The time at which the trained model inference job was created.
     #   @return [Time]
@@ -5001,6 +5846,7 @@ module Aws::CleanRoomsML
       :configured_model_algorithm_association_arn,
       :membership_identifier,
       :trained_model_arn,
+      :trained_model_version_identifier,
       :collaboration_identifier,
       :status,
       :output_configuration,
@@ -5010,6 +5856,7 @@ module Aws::CleanRoomsML
       :metrics_status_details,
       :logs_status,
       :logs_status_details,
+      :ml_model_inference_payer_account_id,
       :create_time,
       :update_time)
       SENSITIVE = []
@@ -5071,6 +5918,15 @@ module Aws::CleanRoomsML
     #   The Amazon Resource Name (ARN) of the trained model.
     #   @return [String]
     #
+    # @!attribute [rw] version_identifier
+    #   The version identifier of this trained model version.
+    #   @return [String]
+    #
+    # @!attribute [rw] incremental_training_data_channels
+    #   Information about the incremental training data channels used to
+    #   create this version of the trained model.
+    #   @return [Array<Types::IncrementalTrainingDataChannelOutput>]
+    #
     # @!attribute [rw] name
     #   The name of the trained model.
     #   @return [String]
@@ -5097,18 +5953,26 @@ module Aws::CleanRoomsML
     #   association that was used to create this trained model.
     #   @return [String]
     #
+    # @!attribute [rw] ml_model_training_payer_account_id
+    #   The account ID of the member that is responsible for paying for
+    #   model training costs.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/TrainedModelSummary AWS API Documentation
     #
     class TrainedModelSummary < Struct.new(
       :create_time,
       :update_time,
       :trained_model_arn,
+      :version_identifier,
+      :incremental_training_data_channels,
       :name,
       :description,
       :membership_identifier,
       :collaboration_identifier,
       :status,
-      :configured_model_algorithm_association_arn)
+      :configured_model_algorithm_association_arn,
+      :ml_model_training_payer_account_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5123,11 +5987,18 @@ module Aws::CleanRoomsML
     #   The container for the metrics of the trained model.
     #   @return [Types::MetricsConfigurationPolicy]
     #
+    # @!attribute [rw] max_artifact_size
+    #   The maximum size limit for trained model artifacts as defined in the
+    #   configuration policy. This setting helps enforce consistent size
+    #   limits across trained models in the collaboration.
+    #   @return [Types::TrainedModelArtifactMaxSize]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/TrainedModelsConfigurationPolicy AWS API Documentation
     #
     class TrainedModelsConfigurationPolicy < Struct.new(
       :container_logs,
-      :container_metrics)
+      :container_metrics,
+      :max_artifact_size)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5275,13 +6146,50 @@ module Aws::CleanRoomsML
     #   The number of compute workers that are used.
     #   @return [Integer]
     #
+    # @!attribute [rw] properties
+    #   The configuration properties for the worker compute environment.
+    #   These properties allow you to customize the compute settings for
+    #   your Clean Rooms workloads.
+    #   @return [Types::WorkerComputeConfigurationProperties]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/WorkerComputeConfiguration AWS API Documentation
     #
     class WorkerComputeConfiguration < Struct.new(
       :type,
-      :number)
+      :number,
+      :properties)
       SENSITIVE = []
       include Aws::Structure
+    end
+
+    # The configuration properties for the worker compute environment. These
+    # properties allow you to customize the compute settings for your Clean
+    # Rooms workloads.
+    #
+    # @note WorkerComputeConfigurationProperties is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note WorkerComputeConfigurationProperties is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of WorkerComputeConfigurationProperties corresponding to the set member.
+    #
+    # @!attribute [rw] spark
+    #   The Spark configuration properties for SQL workloads. This map
+    #   contains key-value pairs that configure Apache Spark settings to
+    #   optimize performance for your data processing jobs. You can specify
+    #   up to 50 Spark properties, with each key being 1-200 characters and
+    #   each value being 0-500 characters. These properties allow you to
+    #   adjust compute capacity for large datasets and complex workloads.
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cleanroomsml-2023-09-06/WorkerComputeConfigurationProperties AWS API Documentation
+    #
+    class WorkerComputeConfigurationProperties < Struct.new(
+      :spark,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Spark < WorkerComputeConfigurationProperties; end
+      class Unknown < WorkerComputeConfigurationProperties; end
     end
 
   end

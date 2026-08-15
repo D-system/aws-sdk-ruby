@@ -68,7 +68,7 @@ module Aws
       end
     end
 
-    # Rasied when endpoint discovery failed for operations
+    # Raised when endpoint discovery failed for operations
     # that requires endpoints from endpoint discovery
     class EndpointDiscoveryError < RuntimeError
       def initialize(*args)
@@ -78,7 +78,7 @@ module Aws
       end
     end
 
-    # raised when hostLabel member is not provided
+    # Raised when hostLabel member is not provided
     # at operation input when endpoint trait is available
     # with 'hostPrefix' requirement
     class MissingEndpointHostLabelValue < RuntimeError
@@ -212,6 +212,9 @@ module Aws
 
     # Raised when SSO Token is invalid
     class InvalidSSOToken < RuntimeError; end
+
+    # Raised when Login Token is invalid
+    class InvalidLoginToken < RuntimeError; end
 
     # Raised when a client is unable to sign a request because
     # the bearer token is not configured or available

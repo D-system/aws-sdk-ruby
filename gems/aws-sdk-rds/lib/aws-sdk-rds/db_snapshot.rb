@@ -127,6 +127,12 @@ module Aws::RDS
       data[:iops]
     end
 
+    # Specifies the storage throughput for the DB snapshot.
+    # @return [Integer]
+    def storage_throughput
+      data[:storage_throughput]
+    end
+
     # Provides the option group name for the DB snapshot.
     # @return [String]
     def option_group_name
@@ -171,6 +177,35 @@ module Aws::RDS
     # @return [Boolean]
     def encrypted
       data[:encrypted]
+    end
+
+    # The type of encryption used to protect data at rest in the DB
+    # snapshot. Possible values:
+    #
+    # * `none` - The DB snapshot is not encrypted.
+    #
+    # * `sse-rds` - The DB snapshot is encrypted using an Amazon Web
+    #   Services owned KMS key.
+    #
+    # * `sse-kms` - The DB snapshot is encrypted using a customer managed
+    #   KMS key or Amazon Web Services managed KMS key.
+    # @return [String]
+    def storage_encryption_type
+      data[:storage_encryption_type]
+    end
+
+    # The number of days for which automatic DB snapshots are retained.
+    # @return [Integer]
+    def backup_retention_period
+      data[:backup_retention_period]
+    end
+
+    # The daily time range during which automated backups are created if
+    # automated backups are enabled, as determined by the
+    # `BackupRetentionPeriod`.
+    # @return [String]
+    def preferred_backup_window
+      data[:preferred_backup_window]
     end
 
     # If `Encrypted` is true, the Amazon Web Services KMS key identifier for
@@ -234,6 +269,13 @@ module Aws::RDS
       data[:tag_list]
     end
 
+    # Specifies where manual snapshots are stored: Dedicated Local Zones,
+    # Amazon Web Services Outposts or the Amazon Web Services Region.
+    # @return [String]
+    def snapshot_target
+      data[:snapshot_target]
+    end
+
     # Specifies the time of the CreateDBSnapshot operation in Coordinated
     # Universal Time (UTC). Doesn't change when the snapshot is copied.
     # @return [Time]
@@ -256,25 +298,20 @@ module Aws::RDS
       data[:snapshot_database_time]
     end
 
-    # Specifies where manual snapshots are stored: Amazon Web Services
-    # Outposts or the Amazon Web Services Region.
-    # @return [String]
-    def snapshot_target
-      data[:snapshot_target]
-    end
-
-    # Specifies the storage throughput for the DB snapshot.
-    # @return [Integer]
-    def storage_throughput
-      data[:storage_throughput]
-    end
-
     # The Oracle system identifier (SID), which is the name of the Oracle
     # database instance that manages your database files. The Oracle SID is
     # also the name of your CDB.
     # @return [String]
     def db_system_id
       data[:db_system_id]
+    end
+
+    # Indicates whether the snapshot is of a DB instance using the
+    # multi-tenant configuration (TRUE) or the single-tenant configuration
+    # (FALSE).
+    # @return [Boolean]
+    def multi_tenant
+      data[:multi_tenant]
     end
 
     # Indicates whether the DB instance has a dedicated log volume (DLV)
@@ -284,12 +321,20 @@ module Aws::RDS
       data[:dedicated_log_volume]
     end
 
-    # Indicates whether the snapshot is of a DB instance using the
-    # multi-tenant configuration (TRUE) or the single-tenant configuration
-    # (FALSE).
-    # @return [Boolean]
-    def multi_tenant
-      data[:multi_tenant]
+    # The additional storage volumes associated with the DB snapshot. RDS
+    # supports additional storage volumes for RDS for Oracle and RDS for SQL
+    # Server.
+    # @return [Array<Types::AdditionalStorageVolume>]
+    def additional_storage_volumes
+      data[:additional_storage_volumes]
+    end
+
+    # Specifies the name of the Availability Zone where RDS stores the DB
+    # snapshot. This value is valid only for snapshots that RDS stores on a
+    # Dedicated Local Zone.
+    # @return [String]
+    def snapshot_availability_zone
+      data[:snapshot_availability_zone]
     end
 
     # @!endgroup
@@ -481,10 +526,12 @@ module Aws::RDS
     #       },
     #     ],
     #     copy_tags: false,
-    #     pre_signed_url: "String",
+    #     pre_signed_url: "SensitiveString",
     #     option_group_name: "String",
     #     target_custom_availability_zone: "String",
+    #     snapshot_target: "String",
     #     copy_option_group: false,
+    #     snapshot_availability_zone: "String",
     #     source_region: "String",
     #   })
     # @param [Hash] options ({})
@@ -626,11 +673,25 @@ module Aws::RDS
     #   CAZ.
     #
     #   Example: `rds-caz-aiqhTgQv`.
+    # @option options [String] :snapshot_target
+    #   Configures the location where RDS will store copied snapshots.
+    #
+    #   Valid Values:
+    #
+    #   * `local` (Dedicated Local Zone)
+    #
+    #   * `outposts` (Amazon Web Services Outposts)
+    #
+    #   * `region` (Amazon Web Services Region)
     # @option options [Boolean] :copy_option_group
     #   Specifies whether to copy the DB option group associated with the
     #   source DB snapshot to the target Amazon Web Services account and
     #   associate with the target DB snapshot. The associated option group can
     #   be copied only with cross-account snapshot copy calls.
+    # @option options [String] :snapshot_availability_zone
+    #   Specifies the name of the Availability Zone where RDS stores the DB
+    #   snapshot. This value is valid only for snapshots that RDS stores on a
+    #   Dedicated Local Zone.
     # @option options [String] :source_region
     #   The source region of the snapshot. This is only needed when the
     #   shapshot is encrypted and in a different region.
@@ -681,6 +742,7 @@ module Aws::RDS
     #     db_name: "String",
     #     engine: "String",
     #     iops: 1,
+    #     storage_throughput: 1,
     #     option_group_name: "String",
     #     tags: [
     #       {
@@ -690,7 +752,7 @@ module Aws::RDS
     #     ],
     #     storage_type: "String",
     #     tde_credential_arn: "String",
-    #     tde_credential_password: "String",
+    #     tde_credential_password: "SensitiveString",
     #     vpc_security_group_ids: ["String"],
     #     domain: "String",
     #     domain_fqdn: "String",
@@ -711,15 +773,39 @@ module Aws::RDS
     #     db_parameter_group_name: "String",
     #     deletion_protection: false,
     #     enable_customer_owned_ip: false,
-    #     custom_iam_instance_profile: "String",
-    #     backup_target: "String",
     #     network_type: "String",
-    #     storage_throughput: 1,
-    #     db_cluster_snapshot_identifier: "String",
+    #     backup_target: "String",
+    #     custom_iam_instance_profile: "String",
     #     allocated_storage: 1,
+    #     db_cluster_snapshot_identifier: "String",
+    #     backup_retention_period: 1,
+    #     preferred_backup_window: "String",
     #     dedicated_log_volume: false,
     #     ca_certificate_identifier: "String",
     #     engine_lifecycle_support: "String",
+    #     additional_storage_volumes: [
+    #       {
+    #         volume_name: "String", # required
+    #         allocated_storage: 1,
+    #         iops: 1,
+    #         max_allocated_storage: 1,
+    #         storage_throughput: 1,
+    #         storage_type: "String",
+    #       },
+    #     ],
+    #     tag_specifications: [
+    #       {
+    #         resource_type: "String",
+    #         tags: [
+    #           {
+    #             key: "String",
+    #             value: "String",
+    #           },
+    #         ],
+    #       },
+    #     ],
+    #     manage_master_user_password: false,
+    #     master_user_secret_kms_key_id: "String",
     #   })
     # @param [Hash] options ({})
     # @option options [required, String] :db_instance_identifier
@@ -800,11 +886,18 @@ module Aws::RDS
     #
     #   If you restore an RDS Custom DB instance, you must disable this
     #   parameter.
+    #
+    #   For more information about automatic minor version upgrades, see
+    #   [Automatically upgrading the minor engine version][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_UpgradeDBInstance.Upgrading.html#USER_UpgradeDBInstance.Upgrading.AutoMinorVersionUpgrades
     # @option options [String] :license_model
     #   License model information for the restored DB instance.
     #
     #   <note markdown="1"> License models for RDS for Db2 require additional configuration. The
-    #   Bring Your Own License (BYOL) model requires a custom parameter group
+    #   bring your own license (BYOL) model requires a custom parameter group
     #   and an Amazon Web Services License Manager self-managed license. The
     #   Db2 license through Amazon Web Services Marketplace model requires an
     #   Amazon Web Services Marketplace subscription. For more information,
@@ -822,7 +915,8 @@ module Aws::RDS
     #
     #   * RDS for MariaDB - `general-public-license`
     #
-    #   * RDS for Microsoft SQL Server - `license-included`
+    #   * RDS for Microsoft SQL Server - `license-included |
+    #     bring-your-own-media`
     #
     #   * RDS for MySQL - `general-public-license`
     #
@@ -855,6 +949,8 @@ module Aws::RDS
     #   Valid Values:
     #
     #   * `db2-ae`
+    #
+    #   * `db2-ce`
     #
     #   * `db2-se`
     #
@@ -896,6 +992,10 @@ module Aws::RDS
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Storage.html#USER_PIOPS
+    # @option options [Integer] :storage_throughput
+    #   Specifies the storage throughput value for the DB instance.
+    #
+    #   This setting doesn't apply to RDS Custom or Amazon Aurora.
     # @option options [String] :option_group_name
     #   The name of the option group to be used for the restored DB instance.
     #
@@ -1105,6 +1205,39 @@ module Aws::RDS
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-on-outposts.html
     #   [2]: https://docs.aws.amazon.com/outposts/latest/userguide/routing.html#ip-addressing
+    # @option options [String] :network_type
+    #   The network type of the DB instance.
+    #
+    #   Valid Values:
+    #
+    #   * `IPV4`
+    #
+    #   * `DUAL`
+    #
+    #   The network type is determined by the `DBSubnetGroup` specified for
+    #   the DB instance. A `DBSubnetGroup` can support only the IPv4 protocol
+    #   or the IPv4 and the IPv6 protocols (`DUAL`).
+    #
+    #   For more information, see [ Working with a DB instance in a VPC][1] in
+    #   the *Amazon RDS User Guide.*
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html
+    # @option options [String] :backup_target
+    #   Specifies where automated backups and manual snapshots are stored for
+    #   the restored DB instance.
+    #
+    #   Possible values are `local` (Dedicated Local Zone), `outposts` (Amazon
+    #   Web Services Outposts), and `region` (Amazon Web Services Region). The
+    #   default is `region`.
+    #
+    #   For more information, see [Working with Amazon RDS on Amazon Web
+    #   Services Outposts][1] in the *Amazon RDS User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-on-outposts.html
     # @option options [String] :custom_iam_instance_profile
     #   The instance profile associated with the underlying Amazon EC2
     #   instance of an RDS Custom DB instance. The instance profile must meet
@@ -1126,42 +1259,17 @@ module Aws::RDS
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/custom-setup-orcl.html#custom-setup-orcl.iam-vpc
-    # @option options [String] :backup_target
-    #   Specifies where automated backups and manual snapshots are stored for
-    #   the restored DB instance.
+    # @option options [Integer] :allocated_storage
+    #   The amount of storage (in gibibytes) to allocate initially for the DB
+    #   instance. Follow the allocation rules specified in CreateDBInstance.
     #
-    #   Possible values are `outposts` (Amazon Web Services Outposts) and
-    #   `region` (Amazon Web Services Region). The default is `region`.
+    #   This setting isn't valid for RDS for SQL Server.
     #
-    #   For more information, see [Working with Amazon RDS on Amazon Web
-    #   Services Outposts][1] in the *Amazon RDS User Guide*.
+    #   <note markdown="1"> Be sure to allocate enough storage for your new DB instance so that
+    #   the restore operation can succeed. You can also allocate additional
+    #   storage for future growth.
     #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-on-outposts.html
-    # @option options [String] :network_type
-    #   The network type of the DB instance.
-    #
-    #   Valid Values:
-    #
-    #   * `IPV4`
-    #
-    #   * `DUAL`
-    #
-    #   The network type is determined by the `DBSubnetGroup` specified for
-    #   the DB instance. A `DBSubnetGroup` can support only the IPv4 protocol
-    #   or the IPv4 and the IPv6 protocols (`DUAL`).
-    #
-    #   For more information, see [ Working with a DB instance in a VPC][1] in
-    #   the *Amazon RDS User Guide.*
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html
-    # @option options [Integer] :storage_throughput
-    #   Specifies the storage throughput value for the DB instance.
-    #
-    #   This setting doesn't apply to RDS Custom or Amazon Aurora.
+    #    </note>
     # @option options [String] :db_cluster_snapshot_identifier
     #   The identifier for the Multi-AZ DB cluster snapshot to restore from.
     #
@@ -1186,17 +1294,56 @@ module Aws::RDS
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/multi-az-db-clusters-concepts.html
-    # @option options [Integer] :allocated_storage
-    #   The amount of storage (in gibibytes) to allocate initially for the DB
-    #   instance. Follow the allocation rules specified in CreateDBInstance.
+    # @option options [Integer] :backup_retention_period
+    #   The number of days to retain automated backups. Setting this parameter
+    #   to a positive number enables backups. Setting this parameter to 0
+    #   disables automated backups.
     #
-    #   This setting isn't valid for RDS for SQL Server.
-    #
-    #   <note markdown="1"> Be sure to allocate enough storage for your new DB instance so that
-    #   the restore operation can succeed. You can also allocate additional
-    #   storage for future growth.
+    #   <note markdown="1"> Enabling and disabling backups can result in a brief I/O suspension
+    #   that lasts from a few seconds to a few minutes, depending on the size
+    #   and class of your DB instance.
     #
     #    </note>
+    #
+    #   This setting doesn't apply to Amazon Aurora DB instances. The
+    #   retention period for automated backups is managed by the DB cluster.
+    #   For more information, see `ModifyDBCluster`.
+    #
+    #   Default: Uses existing setting
+    #
+    #   Constraints:
+    #
+    #   * Must be a value from 0 to 35.
+    #
+    #   * Can't be set to 0 if the DB instance is a source to read replicas.
+    #
+    #   * Can't be set to 0 for an RDS Custom for Oracle DB instance.
+    # @option options [String] :preferred_backup_window
+    #   The daily time range during which automated backups are created if
+    #   automated backups are enabled, as determined by the
+    #   `BackupRetentionPeriod` parameter. Changing this parameter doesn't
+    #   result in an outage and the change is asynchronously applied as soon
+    #   as possible. The default is a 30-minute window selected at random from
+    #   an 8-hour block of time for each Amazon Web Services Region. For more
+    #   information, see [Backup window][1] in the *Amazon RDS User Guide*.
+    #
+    #   This setting doesn't apply to Amazon Aurora DB instances. The daily
+    #   time range for creating automated backups is managed by the DB
+    #   cluster. For more information, see `ModifyDBCluster`.
+    #
+    #   Constraints:
+    #
+    #   * Must be in the format `hh24:mi-hh24:mi`.
+    #
+    #   * Must be in Universal Coordinated Time (UTC).
+    #
+    #   * Must not conflict with the preferred maintenance window.
+    #
+    #   * Must be at least 30 minutes.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithAutomatedBackups.html#USER_WorkingWithAutomatedBackups.BackupWindow
     # @option options [Boolean] :dedicated_log_volume
     #   Specifies whether to enable a dedicated log volume (DLV) for the DB
     #   instance.
@@ -1216,7 +1363,7 @@ module Aws::RDS
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html
     #   [2]: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.SSL.html
     # @option options [String] :engine_lifecycle_support
-    #   The life cycle type for this DB instance.
+    #   The lifecycle type for this DB instance.
     #
     #   <note markdown="1"> By default, this value is set to `open-source-rds-extended-support`,
     #   which enrolls your DB instance into Amazon RDS Extended Support. At
@@ -1232,12 +1379,12 @@ module Aws::RDS
     #   You can use this setting to enroll your DB instance into Amazon RDS
     #   Extended Support. With RDS Extended Support, you can run the selected
     #   major engine version on your DB instance past the end of standard
-    #   support for that engine version. For more information, see [Using
-    #   Amazon RDS Extended Support][1] in the *Amazon RDS User Guide*.
+    #   support for that engine version. For more information, see [Amazon RDS
+    #   Extended Support with Amazon RDS][1] in the *Amazon RDS User Guide*.
     #
     #   This setting applies only to RDS for MySQL and RDS for PostgreSQL. For
-    #   Amazon Aurora DB instances, the life cycle type is managed by the DB
-    #   cluster.
+    #   Amazon Aurora DB instances, the engine lifecycle support is managed by
+    #   the DB cluster.
     #
     #   Valid Values: `open-source-rds-extended-support |
     #   open-source-rds-extended-support-disabled`
@@ -1247,6 +1394,58 @@ module Aws::RDS
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/extended-support.html
+    # @option options [Array<Types::AdditionalStorageVolume>] :additional_storage_volumes
+    #   A list of additional storage volumes to create for the DB instance.
+    #   You can create up to three additional storage volumes using the names
+    #   `rdsdbdata2`, `rdsdbdata3`, and `rdsdbdata4`. Additional storage
+    #   volumes are supported for RDS for Oracle and RDS for SQL Server DB
+    #   instances only.
+    # @option options [Array<Types::TagSpecification>] :tag_specifications
+    #   Tags to assign to resources associated with the DB instance.
+    #
+    #   Valid Values:
+    #
+    #   * `auto-backup` - The DB instance's automated backup.
+    #
+    #   ^
+    # @option options [Boolean] :manage_master_user_password
+    #   Specifies whether to manage the master user password with Amazon Web
+    #   Services Secrets Manager in the restored DB instance.
+    #
+    #   For more information, see [Password management with Amazon Web
+    #   Services Secrets Manager][1] in the *Amazon RDS User Guide*.
+    #
+    #   Constraints:
+    #
+    #   * Applies to RDS for Oracle only.
+    #
+    #   ^
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-secrets-manager.html
+    # @option options [String] :master_user_secret_kms_key_id
+    #   The Amazon Web Services KMS key identifier to encrypt a secret that is
+    #   automatically generated and managed in Amazon Web Services Secrets
+    #   Manager.
+    #
+    #   This setting is valid only if the master user password is managed by
+    #   RDS in Amazon Web Services Secrets Manager for the DB instance.
+    #
+    #   The Amazon Web Services KMS key identifier is the key ARN, key ID,
+    #   alias ARN, or alias name for the KMS key. To use a KMS key in a
+    #   different Amazon Web Services account, specify the key ARN or alias
+    #   ARN.
+    #
+    #   If you don't specify `MasterUserSecretKmsKeyId`, then the
+    #   `aws/secretsmanager` KMS key is used to encrypt the secret. If the
+    #   secret is in a different Amazon Web Services account, then you can't
+    #   use the `aws/secretsmanager` KMS key to encrypt the secret, and you
+    #   must use a customer managed KMS key.
+    #
+    #   There is a default KMS key for your Amazon Web Services account. Your
+    #   Amazon Web Services account has a different default KMS key for each
+    #   Amazon Web Services Region.
     # @return [DBInstance]
     def restore(options = {})
       options = options.merge(db_snapshot_identifier: @snapshot_id)

@@ -47,7 +47,7 @@ module Aws
             'String' => { 'type' => 'string' },
             'ChecksumAlgorithm' => {
               'type' => 'string',
-              'enum' => ['CRC32', 'CRC32C', 'CRC64NVME', 'SHA1', 'SHA256']
+              'enum' => %w[CRC32 CRC32C CRC64NVME SHA1 SHA256]
             },
             'SomeInput' => {
               'type' => 'structure',
@@ -193,6 +193,27 @@ module Aws
           end.to raise_error(ArgumentError)
         end
 
+        it 'does not recompute checksums on a retry' do
+          original_checksum = nil
+          t = Tempfile.new
+          t.write('original')
+          t.rewind
+          client.stub_responses(
+            :http_checksum_operation,
+            proc do |context|
+              original_checksum = context.http_request.headers['x-amz-checksum-crc32']
+              t.rewind
+              t.write('different')
+              Seahorse::Client::NetworkingError.new(Timeout::Error.new)
+            end,
+            {}
+          )
+          # Retry happens after calculating the checksum, but ensure a new one isn't generated.
+          client.handlers.add(Aws::Plugins::RetryErrors::LegacyHandler, step: :sign, priority: 99)
+          resp = client.http_checksum_operation(body: t)
+          expect(resp.context.http_request.headers['x-amz-checksum-crc32']).to eq(original_checksum)
+        end
+
         file = File.expand_path('checksum_request.json', __dir__)
         test_cases = JSON.load_file(file)
 
@@ -218,7 +239,8 @@ module Aws
         end
       end
 
-      context 'request streaming checksum calculation' do
+      # JRuby live testing against service is not reliable. We plan to investigate deeper before enabling
+      context 'request streaming checksum calculation', skip: defined?(JRUBY_VERSION) do
         file = File.expand_path('checksum_streaming_request.json', __dir__)
         test_cases = JSON.load_file(file)
 
@@ -238,8 +260,7 @@ module Aws
             client.stub_responses(:http_checksum_streaming_operation, lambda do |context|
               headers = context.http_request.headers
 
-              expect(headers['x-amz-content-sha256'])
-                .to eq('STREAMING-UNSIGNED-PAYLOAD-TRAILER')
+              expect(headers['x-amz-content-sha256']).to eq('STREAMING-UNSIGNED-PAYLOAD-TRAILER')
               test_case['expectHeaders'].each do |key, value|
                 expect(headers[key]).to eq(value)
               end
@@ -384,6 +405,16 @@ module Aws
           expect(resp.context.http_request.headers['x-amz-checksum-crc32'])
             .to be_nil
         end
+
+        it 'when_required; given algorithm; include a checksum' do
+          client = checksum_client.new(
+            stub_responses: true,
+            request_checksum_calculation: 'when_required'
+          )
+          resp = client.http_checksum_operation(checksum_algorithm: 'CRC32')
+          expect(resp.context.http_request.headers['x-amz-checksum-crc32'])
+            .to eq('AAAAAA==')
+        end
       end
 
       context 'when checksums are required' do
@@ -446,6 +477,22 @@ module Aws
           stub_client(client)
           resp = client.http_checksum_operation(validation_mode: 'ENABLED')
           expect(resp.context[:http_checksum][:validated]).to eq('CRC32')
+        end
+      end
+
+      describe 'AwsChunkedTrailerDigestIO' do
+        it 'rewinds IO on initialization' do
+          io = StringIO.new('hello world')
+          io.read # move to EOF
+          expect(io.pos).to eq(11)
+
+          ChecksumAlgorithm::AwsChunkedTrailerDigestIO.new(
+            io: io,
+            algorithm: 'CRC32',
+            location_name: 'x-amz-checksum-crc32'
+          )
+
+          expect(io.pos).to eq(0)
         end
       end
     end

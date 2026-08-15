@@ -2,7 +2,7 @@
   "version": "2.0",
   "service": "<fullname>Amazon Data Firehose</fullname> <note> <p>Amazon Data Firehose was previously known as Amazon Kinesis Data Firehose.</p> </note> <p>Amazon Data Firehose is a fully managed service that delivers real-time streaming data to destinations such as Amazon Simple Storage Service (Amazon S3), Amazon OpenSearch Service, Amazon Redshift, Splunk, and various other supported destinations.</p>",
   "operations": {
-    "CreateDeliveryStream": "<p>Creates a Firehose stream.</p> <p>By default, you can create up to 50 Firehose streams per Amazon Web Services Region.</p> <p>This is an asynchronous operation that immediately returns. The initial status of the Firehose stream is <code>CREATING</code>. After the Firehose stream is created, its status is <code>ACTIVE</code> and it now accepts data. If the Firehose stream creation fails, the status transitions to <code>CREATING_FAILED</code>. Attempts to send data to a delivery stream that is not in the <code>ACTIVE</code> state cause an exception. To check the state of a Firehose stream, use <a>DescribeDeliveryStream</a>.</p> <p>If the status of a Firehose stream is <code>CREATING_FAILED</code>, this status doesn't change, and you can't invoke <code>CreateDeliveryStream</code> again on it. However, you can invoke the <a>DeleteDeliveryStream</a> operation to delete it.</p> <p>A Firehose stream can be configured to receive records directly from providers using <a>PutRecord</a> or <a>PutRecordBatch</a>, or it can be configured to use an existing Kinesis stream as its source. To specify a Kinesis data stream as input, set the <code>DeliveryStreamType</code> parameter to <code>KinesisStreamAsSource</code>, and provide the Kinesis stream Amazon Resource Name (ARN) and role ARN in the <code>KinesisStreamSourceConfiguration</code> parameter.</p> <p>To create a Firehose stream with server-side encryption (SSE) enabled, include <a>DeliveryStreamEncryptionConfigurationInput</a> in your request. This is optional. You can also invoke <a>StartDeliveryStreamEncryption</a> to turn on SSE for an existing Firehose stream that doesn't have SSE enabled.</p> <p>A Firehose stream is configured with a single destination, such as Amazon Simple Storage Service (Amazon S3), Amazon Redshift, Amazon OpenSearch Service, Amazon OpenSearch Serverless, Splunk, and any custom HTTP endpoint or HTTP endpoints owned by or supported by third-party service providers, including Datadog, Dynatrace, LogicMonitor, MongoDB, New Relic, and Sumo Logic. You must specify only one of the following destination configuration parameters: <code>ExtendedS3DestinationConfiguration</code>, <code>S3DestinationConfiguration</code>, <code>ElasticsearchDestinationConfiguration</code>, <code>RedshiftDestinationConfiguration</code>, or <code>SplunkDestinationConfiguration</code>.</p> <p>When you specify <code>S3DestinationConfiguration</code>, you can also provide the following optional values: BufferingHints, <code>EncryptionConfiguration</code>, and <code>CompressionFormat</code>. By default, if no <code>BufferingHints</code> value is provided, Firehose buffers data up to 5 MB or for 5 minutes, whichever condition is satisfied first. <code>BufferingHints</code> is a hint, so there are some cases where the service cannot adhere to these conditions strictly. For example, record boundaries might be such that the size is a little over or under the configured buffering size. By default, no encryption is performed. We strongly recommend that you enable encryption to ensure secure data storage in Amazon S3.</p> <p>A few notes about Amazon Redshift as a destination:</p> <ul> <li> <p>An Amazon Redshift destination requires an S3 bucket as intermediate location. Firehose first delivers data to Amazon S3 and then uses <code>COPY</code> syntax to load data into an Amazon Redshift table. This is specified in the <code>RedshiftDestinationConfiguration.S3Configuration</code> parameter.</p> </li> <li> <p>The compression formats <code>SNAPPY</code> or <code>ZIP</code> cannot be specified in <code>RedshiftDestinationConfiguration.S3Configuration</code> because the Amazon Redshift <code>COPY</code> operation that reads from the S3 bucket doesn't support these compression formats.</p> </li> <li> <p>We strongly recommend that you use the user name and password you provide exclusively with Firehose, and that the permissions for the account are restricted for Amazon Redshift <code>INSERT</code> permissions.</p> </li> </ul> <p>Firehose assumes the IAM role that is configured as part of the destination. The role should allow the Firehose principal to assume the role, and the role should have permissions that allow the service to deliver the data. For more information, see <a href=\"https://docs.aws.amazon.com/firehose/latest/dev/controlling-access.html#using-iam-s3\">Grant Firehose Access to an Amazon S3 Destination</a> in the <i>Amazon Firehose Developer Guide</i>.</p>",
+    "CreateDeliveryStream": "<p>Creates a Firehose stream.</p> <p>By default, you can create up to 5,000 Firehose streams per Amazon Web Services Region.</p> <p>This is an asynchronous operation that immediately returns. The initial status of the Firehose stream is <code>CREATING</code>. After the Firehose stream is created, its status is <code>ACTIVE</code> and it now accepts data. If the Firehose stream creation fails, the status transitions to <code>CREATING_FAILED</code>. Attempts to send data to a delivery stream that is not in the <code>ACTIVE</code> state cause an exception. To check the state of a Firehose stream, use <a>DescribeDeliveryStream</a>.</p> <p>If the status of a Firehose stream is <code>CREATING_FAILED</code>, this status doesn't change, and you can't invoke <code>CreateDeliveryStream</code> again on it. However, you can invoke the <a>DeleteDeliveryStream</a> operation to delete it.</p> <p>A Firehose stream can be configured to receive records directly from providers using <a>PutRecord</a> or <a>PutRecordBatch</a>, or it can be configured to use an existing Kinesis stream as its source. To specify a Kinesis data stream as input, set the <code>DeliveryStreamType</code> parameter to <code>KinesisStreamAsSource</code>, and provide the Kinesis stream Amazon Resource Name (ARN) and role ARN in the <code>KinesisStreamSourceConfiguration</code> parameter.</p> <p>To create a Firehose stream with server-side encryption (SSE) enabled, include <a>DeliveryStreamEncryptionConfigurationInput</a> in your request. This is optional. You can also invoke <a>StartDeliveryStreamEncryption</a> to turn on SSE for an existing Firehose stream that doesn't have SSE enabled.</p> <p>A Firehose stream is configured with a single destination, such as Amazon Simple Storage Service (Amazon S3), Amazon Redshift, Amazon OpenSearch Service, Amazon OpenSearch Serverless, Splunk, and any custom HTTP endpoint or HTTP endpoints owned by or supported by third-party service providers, including Datadog, Dynatrace, LogicMonitor, MongoDB, New Relic, and Sumo Logic. You must specify only one of the following destination configuration parameters: <code>ExtendedS3DestinationConfiguration</code>, <code>S3DestinationConfiguration</code>, <code>ElasticsearchDestinationConfiguration</code>, <code>RedshiftDestinationConfiguration</code>, or <code>SplunkDestinationConfiguration</code>.</p> <p>When you specify <code>S3DestinationConfiguration</code>, you can also provide the following optional values: BufferingHints, <code>EncryptionConfiguration</code>, and <code>CompressionFormat</code>. By default, if no <code>BufferingHints</code> value is provided, Firehose buffers data up to 5 MB or for 5 minutes, whichever condition is satisfied first. <code>BufferingHints</code> is a hint, so there are some cases where the service cannot adhere to these conditions strictly. For example, record boundaries might be such that the size is a little over or under the configured buffering size. By default, no encryption is performed. We strongly recommend that you enable encryption to ensure secure data storage in Amazon S3.</p> <p>A few notes about Amazon Redshift as a destination:</p> <ul> <li> <p>An Amazon Redshift destination requires an S3 bucket as intermediate location. Firehose first delivers data to Amazon S3 and then uses <code>COPY</code> syntax to load data into an Amazon Redshift table. This is specified in the <code>RedshiftDestinationConfiguration.S3Configuration</code> parameter.</p> </li> <li> <p>The compression formats <code>SNAPPY</code> or <code>ZIP</code> cannot be specified in <code>RedshiftDestinationConfiguration.S3Configuration</code> because the Amazon Redshift <code>COPY</code> operation that reads from the S3 bucket doesn't support these compression formats.</p> </li> <li> <p>We strongly recommend that you use the user name and password you provide exclusively with Firehose, and that the permissions for the account are restricted for Amazon Redshift <code>INSERT</code> permissions.</p> </li> </ul> <p>Firehose assumes the IAM role that is configured as part of the destination. The role should allow the Firehose principal to assume the role, and the role should have permissions that allow the service to deliver the data. For more information, see <a href=\"https://docs.aws.amazon.com/firehose/latest/dev/controlling-access.html#using-iam-s3\">Grant Firehose Access to an Amazon S3 Destination</a> in the <i>Amazon Firehose Developer Guide</i>.</p>",
     "DeleteDeliveryStream": "<p>Deletes a Firehose stream and its data.</p> <p>You can delete a Firehose stream only if it is in one of the following states: <code>ACTIVE</code>, <code>DELETING</code>, <code>CREATING_FAILED</code>, or <code>DELETING_FAILED</code>. You can't delete a Firehose stream that is in the <code>CREATING</code> state. To check the state of a Firehose stream, use <a>DescribeDeliveryStream</a>. </p> <p>DeleteDeliveryStream is an asynchronous API. When an API request to DeleteDeliveryStream succeeds, the Firehose stream is marked for deletion, and it goes into the <code>DELETING</code> state.While the Firehose stream is in the <code>DELETING</code> state, the service might continue to accept records, but it doesn't make any guarantees with respect to delivering the data. Therefore, as a best practice, first stop any applications that are sending records before you delete a Firehose stream.</p> <p>Removal of a Firehose stream that is in the <code>DELETING</code> state is a low priority operation for the service. A stream may remain in the <code>DELETING</code> state for several minutes. Therefore, as a best practice, applications should not wait for streams in the <code>DELETING</code> state to be removed. </p>",
     "DescribeDeliveryStream": "<p>Describes the specified Firehose stream and its status. For example, after your Firehose stream is created, call <code>DescribeDeliveryStream</code> to see whether the Firehose stream is <code>ACTIVE</code> and therefore ready for data to be sent to it. </p> <p>If the status of a Firehose stream is <code>CREATING_FAILED</code>, this status doesn't change, and you can't invoke <a>CreateDeliveryStream</a> again on it. However, you can invoke the <a>DeleteDeliveryStream</a> operation to delete it. If the status is <code>DELETING_FAILED</code>, you can force deletion by invoking <a>DeleteDeliveryStream</a> again but with <a>DeleteDeliveryStreamInput$AllowForceDelete</a> set to true.</p>",
     "ListDeliveryStreams": "<p>Lists your Firehose streams in alphabetical order of their names.</p> <p>The number of Firehose streams might be too large to return using a single call to <code>ListDeliveryStreams</code>. You can limit the number of Firehose streams returned, using the <code>Limit</code> parameter. To determine whether there are more delivery streams to list, check the value of <code>HasMoreDeliveryStreams</code> in the output. If there are more Firehose streams to list, you can request them by calling this operation again and setting the <code>ExclusiveStartDeliveryStreamName</code> parameter to the name of the last Firehose stream returned in the last call.</p>",
@@ -19,9 +19,14 @@
     "AWSKMSKeyARN": {
       "base": null,
       "refs": {
-        "DeliveryStreamEncryptionConfiguration$KeyARN": "<p>If <code>KeyType</code> is <code>CUSTOMER_MANAGED_CMK</code>, this field contains the ARN of the customer managed CMK. If <code>KeyType</code> is <code>Amazon Web Services_OWNED_CMK</code>, <code>DeliveryStreamEncryptionConfiguration</code> doesn't contain a value for <code>KeyARN</code>.</p>",
-        "DeliveryStreamEncryptionConfigurationInput$KeyARN": "<p>If you set <code>KeyType</code> to <code>CUSTOMER_MANAGED_CMK</code>, you must specify the Amazon Resource Name (ARN) of the CMK. If you set <code>KeyType</code> to <code>Amazon Web Services_OWNED_CMK</code>, Firehose uses a service-account CMK.</p>",
         "KMSEncryptionConfig$AWSKMSKeyARN": "<p>The Amazon Resource Name (ARN) of the encryption key. Must belong to the same Amazon Web Services Region as the destination Amazon S3 bucket. For more information, see <a href=\"https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html\">Amazon Resource Names (ARNs) and Amazon Web Services Service Namespaces</a>.</p>"
+      }
+    },
+    "AWSKMSKeyARNForSSE": {
+      "base": null,
+      "refs": {
+        "DeliveryStreamEncryptionConfiguration$KeyARN": "<p>If <code>KeyType</code> is <code>CUSTOMER_MANAGED_CMK</code>, this field contains the ARN of the customer managed CMK. If <code>KeyType</code> is <code>Amazon Web Services_OWNED_CMK</code>, <code>DeliveryStreamEncryptionConfiguration</code> doesn't contain a value for <code>KeyARN</code>.</p>",
+        "DeliveryStreamEncryptionConfigurationInput$KeyARN": "<p>If you set <code>KeyType</code> to <code>CUSTOMER_MANAGED_CMK</code>, you must specify the Amazon Resource Name (ARN) of the CMK. If you set <code>KeyType</code> to <code>Amazon Web Services_OWNED_CMK</code>, Firehose uses a service-account CMK.</p>"
       }
     },
     "AmazonOpenSearchServerlessBufferingHints": {
@@ -333,8 +338,7 @@
     },
     "ConcurrentModificationException": {
       "base": "<p>Another modification has already happened. Fetch <code>VersionId</code> again and use it to update the destination.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "Connectivity": {
       "base": null,
@@ -364,13 +368,11 @@
     },
     "CreateDeliveryStreamInput": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateDeliveryStreamOutput": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CustomTimeZone": {
       "base": null,
@@ -543,13 +545,11 @@
     },
     "DeleteDeliveryStreamInput": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteDeliveryStreamOutput": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeliveryStartTimestamp": {
       "base": null,
@@ -644,8 +644,7 @@
     },
     "DescribeDeliveryStreamInput": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeDeliveryStreamInputLimit": {
       "base": null,
@@ -655,8 +654,7 @@
     },
     "DescribeDeliveryStreamOutput": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "Deserializer": {
       "base": "<p>The deserializer you want Firehose to use for converting the input data from JSON. Firehose then serializes the data to its final format using the <a>Serializer</a>. Firehose supports two types of deserializers: the <a href=\"https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL#LanguageManualDDL-JSON\">Apache Hive JSON SerDe</a> and the <a href=\"https://github.com/rcongiu/Hive-JSON-Serde\">OpenX JSON SerDe</a>.</p>",
@@ -1116,18 +1114,15 @@
     },
     "InvalidArgumentException": {
       "base": "<p>The specified input parameter has a value that is not valid.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidKMSResourceException": {
       "base": "<p>Firehose throws this exception when an attempt to put records or to start or stop Firehose stream encryption fails. This happens when the KMS service throws one of the following exception types: <code>AccessDeniedException</code>, <code>InvalidStateException</code>, <code>DisabledException</code>, or <code>NotFoundException</code>.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidSourceException": {
       "base": "<p>Only requests from CloudWatch Logs are supported when CloudWatch Logs decompression is enabled.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "KMSEncryptionConfig": {
       "base": "<p>Describes an encryption key for a destination in Amazon S3.</p>",
@@ -1163,13 +1158,11 @@
     },
     "LimitExceededException": {
       "base": "<p>You have already reached the limit for a requested resource.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListDeliveryStreamsInput": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListDeliveryStreamsInputLimit": {
       "base": null,
@@ -1179,8 +1172,7 @@
     },
     "ListDeliveryStreamsOutput": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListOfNonEmptyStrings": {
       "base": null,
@@ -1197,8 +1189,7 @@
     },
     "ListTagsForDeliveryStreamInput": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListTagsForDeliveryStreamInputLimit": {
       "base": null,
@@ -1208,8 +1199,7 @@
     },
     "ListTagsForDeliveryStreamOutput": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListTagsForDeliveryStreamOutputTagList": {
       "base": null,
@@ -1474,13 +1464,11 @@
     },
     "PutRecordBatchInput": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutRecordBatchOutput": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutRecordBatchRequestEntryList": {
       "base": null,
@@ -1502,13 +1490,11 @@
     },
     "PutRecordInput": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutRecordOutput": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutResponseRecordId": {
       "base": null,
@@ -1573,13 +1559,11 @@
     },
     "ResourceInUseException": {
       "base": "<p>The resource is already in use and not available for this operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ResourceNotFoundException": {
       "base": "<p>The specified resource could not be found.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "RetryDurationInSeconds": {
       "base": null,
@@ -1750,8 +1734,7 @@
     },
     "ServiceUnavailableException": {
       "base": "<p>The service is unavailable. Back off and retry the operation. If you continue to see the exception, throughput limits for the Firehose stream may have been exceeded. For more information about limits and how to request an increase, see <a href=\"https://docs.aws.amazon.com/firehose/latest/dev/limits.html\">Amazon Firehose Limits</a>.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "SizeInMBs": {
       "base": null,
@@ -2004,23 +1987,19 @@
     },
     "StartDeliveryStreamEncryptionInput": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "StartDeliveryStreamEncryptionOutput": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "StopDeliveryStreamEncryptionInput": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "StopDeliveryStreamEncryptionOutput": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "StringWithLettersDigitsUnderscoresDots": {
       "base": null,
@@ -2053,8 +2032,7 @@
     },
     "TagDeliveryStreamInput": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "TagDeliveryStreamInputTagList": {
       "base": null,
@@ -2065,8 +2043,7 @@
     },
     "TagDeliveryStreamOutput": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "TagKey": {
       "base": null,
@@ -2112,23 +2089,19 @@
     },
     "UntagDeliveryStreamInput": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UntagDeliveryStreamOutput": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateDestinationInput": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateDestinationOutput": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "Username": {
       "base": null,

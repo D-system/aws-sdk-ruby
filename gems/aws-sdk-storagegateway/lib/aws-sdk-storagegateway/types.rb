@@ -470,7 +470,7 @@ module Aws::StorageGateway
     #
     # @!attribute [rw] network_interface_id
     #   The network interface of the gateway on which to expose the iSCSI
-    #   target. Only IPv4 addresses are accepted. Use
+    #   target. Accepts IPv4 and IPv6 addresses. Use
     #   DescribeGatewayInformation to get a list of the network interfaces
     #   available on a gateway.
     #
@@ -1113,7 +1113,7 @@ module Aws::StorageGateway
     #
     # @!attribute [rw] network_interface_id
     #   The network interface of the gateway on which to expose the iSCSI
-    #   target. Only IPv4 addresses are accepted. Use
+    #   target. Accepts IPv4 and IPv6 addresses. Use
     #   DescribeGatewayInformation to get a list of the network interfaces
     #   available on a gateway.
     #
@@ -1304,7 +1304,7 @@ module Aws::StorageGateway
     #
     # @!attribute [rw] client_list
     #   The list of clients that are allowed to access the S3 File Gateway.
-    #   The list must contain either valid IP addresses or valid CIDR
+    #   The list must contain either valid IPv4/IPv6 addresses or valid CIDR
     #   blocks.
     #   @return [Array<String>]
     #
@@ -2011,7 +2011,7 @@ module Aws::StorageGateway
     #
     # @!attribute [rw] network_interface_id
     #   The network interface of the gateway on which to expose the iSCSI
-    #   target. Only IPv4 addresses are accepted. Use
+    #   target. Accepts IPv4 and IPv6 addresses. Use
     #   DescribeGatewayInformation to get a list of the network interfaces
     #   available on a gateway.
     #
@@ -4563,9 +4563,16 @@ module Aws::StorageGateway
     #   @return [String]
     #
     # @!attribute [rw] domain_controllers
-    #   List of IPv4 addresses, NetBIOS names, or host names of your domain
+    #   List of IP addresses, NetBIOS names, or host names of your domain
     #   server. If you need to specify the port number include it after the
     #   colon (“:”). For example, `mydc.mydomain.com:389`.
+    #
+    #   <note markdown="1"> S3 File Gateway supports IPv6 addresses in addition to IPv4 and
+    #   other existing formats.
+    #
+    #    FSx File Gateway does not support IPv6.
+    #
+    #    </note>
     #   @return [Array<String>]
     #
     # @!attribute [rw] timeout_in_seconds
@@ -4626,6 +4633,10 @@ module Aws::StorageGateway
     #     domain.
     #
     #   * `JOINING`: Indicates that a `JoinDomain` operation is in progress.
+    #
+    #   * `INSUFFICIENT_PERMISSIONS`: Indicates that the `JoinDomain`
+    #     operation failed because the specified user lacks the necessary
+    #     permissions to join the domain.
     #
     #   * `NETWORK_ERROR`: Indicates that `JoinDomain` operation failed due
     #     to a network or connectivity error.
@@ -5375,7 +5386,7 @@ module Aws::StorageGateway
     #
     # @!attribute [rw] client_list
     #   The list of clients that are allowed to access the S3 File Gateway.
-    #   The list must contain either valid IP addresses or valid CIDR
+    #   The list must contain either valid IPv4/IPv6 addresses or valid CIDR
     #   blocks.
     #   @return [Array<String>]
     #
@@ -5545,7 +5556,11 @@ module Aws::StorageGateway
     #
     # @!attribute [rw] ipv_6_address
     #   The Internet Protocol version 6 (IPv6) address of the interface.
-    #   *Currently not supported*.
+    #
+    #   <note markdown="1"> This element returns IPv6 addresses for all gateway types except FSx
+    #   File Gateway.
+    #
+    #    </note>
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/NetworkInterface AWS API Documentation
@@ -6387,8 +6402,8 @@ module Aws::StorageGateway
     #   @return [String]
     #
     # @!attribute [rw] location_arn
-    #   The ARN of the Amazon S3 bucket where the cache report will be
-    #   saved.
+    #   The ARN of the Amazon S3 bucket where you want to save the cache
+    #   report.
     #
     #   <note markdown="1"> We do not recommend saving the cache report to the same Amazon S3
     #   bucket for which you are generating the report.
@@ -6399,8 +6414,8 @@ module Aws::StorageGateway
     #   @return [String]
     #
     # @!attribute [rw] bucket_region
-    #   The Amazon Web Services Region of the Amazon S3 bucket associated
-    #   with the file share for which you want to generate the cache report.
+    #   The Amazon Web Services Region of the Amazon S3 bucket where you
+    #   want to save the cache report.
     #   @return [String]
     #
     # @!attribute [rw] vpc_endpoint_dns_name
@@ -7452,7 +7467,7 @@ module Aws::StorageGateway
     #
     # @!attribute [rw] client_list
     #   The list of clients that are allowed to access the S3 File Gateway.
-    #   The list must contain either valid IP addresses or valid CIDR
+    #   The list must contain either valid IPv4/IPv6 addresses or valid CIDR
     #   blocks.
     #   @return [Array<String>]
     #

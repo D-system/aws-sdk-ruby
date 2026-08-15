@@ -46,6 +46,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EC2/RouteTable.html#associate_with_subnet-instance_method
       def associate_with_subnet: (
                                    ?gateway_id: ::String,
+                                   ?public_ipv_4_pool: ::String,
                                    ?dry_run: bool,
                                    ?subnet_id: ::String
                                  ) -> RouteTableAssociation
@@ -59,6 +60,7 @@ module Aws
                           ?local_gateway_id: ::String,
                           ?carrier_gateway_id: ::String,
                           ?core_network_arn: ::String,
+                          ?odb_network_arn: ::String,
                           ?dry_run: bool,
                           ?destination_cidr_block: ::String,
                           ?gateway_id: ::String,
@@ -78,7 +80,7 @@ module Aws
                            {
                              key: ::String?,
                              value: ::String?
-                           },
+                           }
                          ]
                        ) -> Tag::Collection
                      | (?Hash[Symbol, untyped]) -> Tag::Collection
@@ -90,7 +92,7 @@ module Aws
                            {
                              key: ::String?,
                              value: ::String?
-                           },
+                           }
                          ]
                        ) -> Tag::Collection
                      | (?Hash[Symbol, untyped]) -> Tag::Collection

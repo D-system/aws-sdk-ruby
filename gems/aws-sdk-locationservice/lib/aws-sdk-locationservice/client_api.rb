@@ -15,13 +15,19 @@ module Aws::LocationService
     include Seahorse::Model
 
     AccessDeniedException = Shapes::StructureShape.new(name: 'AccessDeniedException')
+    AndroidApp = Shapes::StructureShape.new(name: 'AndroidApp')
+    AndroidPackageName = Shapes::StringShape.new(name: 'AndroidPackageName')
     ApiKey = Shapes::StringShape.new(name: 'ApiKey')
     ApiKeyAction = Shapes::StringShape.new(name: 'ApiKeyAction')
     ApiKeyFilter = Shapes::StructureShape.new(name: 'ApiKeyFilter')
     ApiKeyRestrictions = Shapes::StructureShape.new(name: 'ApiKeyRestrictions')
     ApiKeyRestrictionsAllowActionsList = Shapes::ListShape.new(name: 'ApiKeyRestrictionsAllowActionsList')
+    ApiKeyRestrictionsAllowAndroidAppsList = Shapes::ListShape.new(name: 'ApiKeyRestrictionsAllowAndroidAppsList')
+    ApiKeyRestrictionsAllowAppleAppsList = Shapes::ListShape.new(name: 'ApiKeyRestrictionsAllowAppleAppsList')
     ApiKeyRestrictionsAllowReferersList = Shapes::ListShape.new(name: 'ApiKeyRestrictionsAllowReferersList')
     ApiKeyRestrictionsAllowResourcesList = Shapes::ListShape.new(name: 'ApiKeyRestrictionsAllowResourcesList')
+    AppleApp = Shapes::StructureShape.new(name: 'AppleApp')
+    AppleBundleId = Shapes::StringShape.new(name: 'AppleBundleId')
     Arn = Shapes::StringShape.new(name: 'Arn')
     ArnList = Shapes::ListShape.new(name: 'ArnList')
     AssociateTrackerConsumerRequest = Shapes::StructureShape.new(name: 'AssociateTrackerConsumerRequest')
@@ -83,9 +89,12 @@ module Aws::LocationService
     CalculateRouteSummaryDistanceDouble = Shapes::FloatShape.new(name: 'CalculateRouteSummaryDistanceDouble')
     CalculateRouteSummaryDurationSecondsDouble = Shapes::FloatShape.new(name: 'CalculateRouteSummaryDurationSecondsDouble')
     CalculateRouteTruckModeOptions = Shapes::StructureShape.new(name: 'CalculateRouteTruckModeOptions')
+    CancelJobRequest = Shapes::StructureShape.new(name: 'CancelJobRequest')
+    CancelJobResponse = Shapes::StructureShape.new(name: 'CancelJobResponse')
     CellSignals = Shapes::StructureShape.new(name: 'CellSignals')
     CellSignalsLteCellDetailsList = Shapes::ListShape.new(name: 'CellSignalsLteCellDetailsList')
     Circle = Shapes::StructureShape.new(name: 'Circle')
+    ClientToken = Shapes::StringShape.new(name: 'ClientToken')
     ConflictException = Shapes::StructureShape.new(name: 'ConflictException')
     CountryCode3 = Shapes::StringShape.new(name: 'CountryCode3')
     CountryCode3OrEmpty = Shapes::StringShape.new(name: 'CountryCode3OrEmpty')
@@ -155,6 +164,8 @@ module Aws::LocationService
     GeoArn = Shapes::StringShape.new(name: 'GeoArn')
     GeoArnV2 = Shapes::StringShape.new(name: 'GeoArnV2')
     GeofenceGeometry = Shapes::StructureShape.new(name: 'GeofenceGeometry')
+    GeofenceGeometryMultiPolygonList = Shapes::ListShape.new(name: 'GeofenceGeometryMultiPolygonList')
+    GeofenceGeometryPolygonList = Shapes::ListShape.new(name: 'GeofenceGeometryPolygonList')
     GetDevicePositionHistoryRequest = Shapes::StructureShape.new(name: 'GetDevicePositionHistoryRequest')
     GetDevicePositionHistoryRequestMaxResultsInteger = Shapes::IntegerShape.new(name: 'GetDevicePositionHistoryRequestMaxResultsInteger')
     GetDevicePositionHistoryResponse = Shapes::StructureShape.new(name: 'GetDevicePositionHistoryResponse')
@@ -162,6 +173,8 @@ module Aws::LocationService
     GetDevicePositionResponse = Shapes::StructureShape.new(name: 'GetDevicePositionResponse')
     GetGeofenceRequest = Shapes::StructureShape.new(name: 'GetGeofenceRequest')
     GetGeofenceResponse = Shapes::StructureShape.new(name: 'GetGeofenceResponse')
+    GetJobRequest = Shapes::StructureShape.new(name: 'GetJobRequest')
+    GetJobResponse = Shapes::StructureShape.new(name: 'GetJobResponse')
     GetMapGlyphsRequest = Shapes::StructureShape.new(name: 'GetMapGlyphsRequest')
     GetMapGlyphsRequestFontUnicodeRangeString = Shapes::StringShape.new(name: 'GetMapGlyphsRequestFontUnicodeRangeString')
     GetMapGlyphsResponse = Shapes::StructureShape.new(name: 'GetMapGlyphsResponse')
@@ -177,11 +190,27 @@ module Aws::LocationService
     GetMapTileResponse = Shapes::StructureShape.new(name: 'GetMapTileResponse')
     GetPlaceRequest = Shapes::StructureShape.new(name: 'GetPlaceRequest')
     GetPlaceResponse = Shapes::StructureShape.new(name: 'GetPlaceResponse')
+    IamRoleArn = Shapes::StringShape.new(name: 'IamRoleArn')
     Id = Shapes::StringShape.new(name: 'Id')
     InferredState = Shapes::StructureShape.new(name: 'InferredState')
     Integer = Shapes::IntegerShape.new(name: 'Integer')
     IntendedUse = Shapes::StringShape.new(name: 'IntendedUse')
     InternalServerException = Shapes::StructureShape.new(name: 'InternalServerException')
+    JobAction = Shapes::StringShape.new(name: 'JobAction')
+    JobActionOptions = Shapes::StructureShape.new(name: 'JobActionOptions')
+    JobError = Shapes::StructureShape.new(name: 'JobError')
+    JobErrorCode = Shapes::StringShape.new(name: 'JobErrorCode')
+    JobErrorMessage = Shapes::StringShape.new(name: 'JobErrorMessage')
+    JobErrorMessagesList = Shapes::ListShape.new(name: 'JobErrorMessagesList')
+    JobId = Shapes::StringShape.new(name: 'JobId')
+    JobInputFormat = Shapes::StringShape.new(name: 'JobInputFormat')
+    JobInputLocation = Shapes::StringShape.new(name: 'JobInputLocation')
+    JobInputOptions = Shapes::StructureShape.new(name: 'JobInputOptions')
+    JobOutputFormat = Shapes::StringShape.new(name: 'JobOutputFormat')
+    JobOutputLocation = Shapes::StringShape.new(name: 'JobOutputLocation')
+    JobOutputOptions = Shapes::StructureShape.new(name: 'JobOutputOptions')
+    JobStatus = Shapes::StringShape.new(name: 'JobStatus')
+    JobsFilter = Shapes::StructureShape.new(name: 'JobsFilter')
     KmsKeyId = Shapes::StringShape.new(name: 'KmsKeyId')
     LanguageTag = Shapes::StringShape.new(name: 'LanguageTag')
     LargeToken = Shapes::StringShape.new(name: 'LargeToken')
@@ -208,6 +237,11 @@ module Aws::LocationService
     ListGeofencesRequest = Shapes::StructureShape.new(name: 'ListGeofencesRequest')
     ListGeofencesRequestMaxResultsInteger = Shapes::IntegerShape.new(name: 'ListGeofencesRequestMaxResultsInteger')
     ListGeofencesResponse = Shapes::StructureShape.new(name: 'ListGeofencesResponse')
+    ListJobsRequest = Shapes::StructureShape.new(name: 'ListJobsRequest')
+    ListJobsRequestMaxResultsInteger = Shapes::IntegerShape.new(name: 'ListJobsRequestMaxResultsInteger')
+    ListJobsResponse = Shapes::StructureShape.new(name: 'ListJobsResponse')
+    ListJobsResponseEntry = Shapes::StructureShape.new(name: 'ListJobsResponseEntry')
+    ListJobsResponseEntryList = Shapes::ListShape.new(name: 'ListJobsResponseEntryList')
     ListKeysRequest = Shapes::StructureShape.new(name: 'ListKeysRequest')
     ListKeysRequestMaxResultsInteger = Shapes::IntegerShape.new(name: 'ListKeysRequestMaxResultsInteger')
     ListKeysResponse = Shapes::StructureShape.new(name: 'ListKeysResponse')
@@ -307,9 +341,15 @@ module Aws::LocationService
     SearchPlaceIndexForTextRequestTextString = Shapes::StringShape.new(name: 'SearchPlaceIndexForTextRequestTextString')
     SearchPlaceIndexForTextResponse = Shapes::StructureShape.new(name: 'SearchPlaceIndexForTextResponse')
     SearchPlaceIndexForTextSummary = Shapes::StructureShape.new(name: 'SearchPlaceIndexForTextSummary')
+    SensitiveBoolean = Shapes::BooleanShape.new(name: 'SensitiveBoolean')
+    SensitiveDouble = Shapes::FloatShape.new(name: 'SensitiveDouble')
+    SensitiveInteger = Shapes::IntegerShape.new(name: 'SensitiveInteger')
     SensitiveString = Shapes::StringShape.new(name: 'SensitiveString')
     ServiceQuotaExceededException = Shapes::StructureShape.new(name: 'ServiceQuotaExceededException')
+    Sha1CertificateFingerprint = Shapes::StringShape.new(name: 'Sha1CertificateFingerprint')
     SpeedUnit = Shapes::StringShape.new(name: 'SpeedUnit')
+    StartJobRequest = Shapes::StructureShape.new(name: 'StartJobRequest')
+    StartJobResponse = Shapes::StructureShape.new(name: 'StartJobResponse')
     Status = Shapes::StringShape.new(name: 'Status')
     Step = Shapes::StructureShape.new(name: 'Step')
     StepDistanceDouble = Shapes::FloatShape.new(name: 'StepDistanceDouble')
@@ -350,6 +390,9 @@ module Aws::LocationService
     UpdateTrackerRequest = Shapes::StructureShape.new(name: 'UpdateTrackerRequest')
     UpdateTrackerResponse = Shapes::StructureShape.new(name: 'UpdateTrackerResponse')
     Uuid = Shapes::StringShape.new(name: 'Uuid')
+    ValidateAddressActionOptions = Shapes::StructureShape.new(name: 'ValidateAddressActionOptions')
+    ValidateAddressAdditionalFeature = Shapes::StringShape.new(name: 'ValidateAddressAdditionalFeature')
+    ValidateAddressAdditionalFeatureList = Shapes::ListShape.new(name: 'ValidateAddressAdditionalFeatureList')
     ValidationException = Shapes::StructureShape.new(name: 'ValidationException')
     ValidationExceptionField = Shapes::StructureShape.new(name: 'ValidationExceptionField')
     ValidationExceptionFieldList = Shapes::ListShape.new(name: 'ValidationExceptionFieldList')
@@ -365,19 +408,32 @@ module Aws::LocationService
     AccessDeniedException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
     AccessDeniedException.struct_class = Types::AccessDeniedException
 
+    AndroidApp.add_member(:package, Shapes::ShapeRef.new(shape: AndroidPackageName, required: true, location_name: "Package"))
+    AndroidApp.add_member(:certificate_fingerprint, Shapes::ShapeRef.new(shape: Sha1CertificateFingerprint, required: true, location_name: "CertificateFingerprint"))
+    AndroidApp.struct_class = Types::AndroidApp
+
     ApiKeyFilter.add_member(:key_status, Shapes::ShapeRef.new(shape: Status, location_name: "KeyStatus"))
     ApiKeyFilter.struct_class = Types::ApiKeyFilter
 
     ApiKeyRestrictions.add_member(:allow_actions, Shapes::ShapeRef.new(shape: ApiKeyRestrictionsAllowActionsList, required: true, location_name: "AllowActions"))
     ApiKeyRestrictions.add_member(:allow_resources, Shapes::ShapeRef.new(shape: ApiKeyRestrictionsAllowResourcesList, required: true, location_name: "AllowResources"))
     ApiKeyRestrictions.add_member(:allow_referers, Shapes::ShapeRef.new(shape: ApiKeyRestrictionsAllowReferersList, location_name: "AllowReferers"))
+    ApiKeyRestrictions.add_member(:allow_android_apps, Shapes::ShapeRef.new(shape: ApiKeyRestrictionsAllowAndroidAppsList, location_name: "AllowAndroidApps"))
+    ApiKeyRestrictions.add_member(:allow_apple_apps, Shapes::ShapeRef.new(shape: ApiKeyRestrictionsAllowAppleAppsList, location_name: "AllowAppleApps"))
     ApiKeyRestrictions.struct_class = Types::ApiKeyRestrictions
 
     ApiKeyRestrictionsAllowActionsList.member = Shapes::ShapeRef.new(shape: ApiKeyAction)
 
+    ApiKeyRestrictionsAllowAndroidAppsList.member = Shapes::ShapeRef.new(shape: AndroidApp)
+
+    ApiKeyRestrictionsAllowAppleAppsList.member = Shapes::ShapeRef.new(shape: AppleApp)
+
     ApiKeyRestrictionsAllowReferersList.member = Shapes::ShapeRef.new(shape: RefererPattern)
 
     ApiKeyRestrictionsAllowResourcesList.member = Shapes::ShapeRef.new(shape: GeoArnV2)
+
+    AppleApp.add_member(:bundle_id, Shapes::ShapeRef.new(shape: AppleBundleId, required: true, location_name: "BundleId"))
+    AppleApp.struct_class = Types::AppleApp
 
     ArnList.member = Shapes::ShapeRef.new(shape: Arn)
 
@@ -499,8 +555,8 @@ module Aws::LocationService
 
     BoundingBox.member = Shapes::ShapeRef.new(shape: Double)
 
-    CalculateRouteCarModeOptions.add_member(:avoid_ferries, Shapes::ShapeRef.new(shape: Boolean, location_name: "AvoidFerries"))
-    CalculateRouteCarModeOptions.add_member(:avoid_tolls, Shapes::ShapeRef.new(shape: Boolean, location_name: "AvoidTolls"))
+    CalculateRouteCarModeOptions.add_member(:avoid_ferries, Shapes::ShapeRef.new(shape: SensitiveBoolean, location_name: "AvoidFerries"))
+    CalculateRouteCarModeOptions.add_member(:avoid_tolls, Shapes::ShapeRef.new(shape: SensitiveBoolean, location_name: "AvoidTolls"))
     CalculateRouteCarModeOptions.struct_class = Types::CalculateRouteCarModeOptions
 
     CalculateRouteMatrixRequest.add_member(:calculator_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location: "uri", location_name: "CalculatorName"))
@@ -508,7 +564,7 @@ module Aws::LocationService
     CalculateRouteMatrixRequest.add_member(:destination_positions, Shapes::ShapeRef.new(shape: CalculateRouteMatrixRequestDestinationPositionsList, required: true, location_name: "DestinationPositions"))
     CalculateRouteMatrixRequest.add_member(:travel_mode, Shapes::ShapeRef.new(shape: TravelMode, location_name: "TravelMode"))
     CalculateRouteMatrixRequest.add_member(:departure_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "DepartureTime"))
-    CalculateRouteMatrixRequest.add_member(:depart_now, Shapes::ShapeRef.new(shape: Boolean, location_name: "DepartNow"))
+    CalculateRouteMatrixRequest.add_member(:depart_now, Shapes::ShapeRef.new(shape: SensitiveBoolean, location_name: "DepartNow"))
     CalculateRouteMatrixRequest.add_member(:distance_unit, Shapes::ShapeRef.new(shape: DistanceUnit, location_name: "DistanceUnit"))
     CalculateRouteMatrixRequest.add_member(:car_mode_options, Shapes::ShapeRef.new(shape: CalculateRouteCarModeOptions, location_name: "CarModeOptions"))
     CalculateRouteMatrixRequest.add_member(:truck_mode_options, Shapes::ShapeRef.new(shape: CalculateRouteTruckModeOptions, location_name: "TruckModeOptions"))
@@ -541,9 +597,9 @@ module Aws::LocationService
     CalculateRouteRequest.add_member(:waypoint_positions, Shapes::ShapeRef.new(shape: CalculateRouteRequestWaypointPositionsList, location_name: "WaypointPositions"))
     CalculateRouteRequest.add_member(:travel_mode, Shapes::ShapeRef.new(shape: TravelMode, location_name: "TravelMode"))
     CalculateRouteRequest.add_member(:departure_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "DepartureTime"))
-    CalculateRouteRequest.add_member(:depart_now, Shapes::ShapeRef.new(shape: Boolean, location_name: "DepartNow"))
+    CalculateRouteRequest.add_member(:depart_now, Shapes::ShapeRef.new(shape: SensitiveBoolean, location_name: "DepartNow"))
     CalculateRouteRequest.add_member(:distance_unit, Shapes::ShapeRef.new(shape: DistanceUnit, location_name: "DistanceUnit"))
-    CalculateRouteRequest.add_member(:include_leg_geometry, Shapes::ShapeRef.new(shape: Boolean, location_name: "IncludeLegGeometry"))
+    CalculateRouteRequest.add_member(:include_leg_geometry, Shapes::ShapeRef.new(shape: SensitiveBoolean, location_name: "IncludeLegGeometry"))
     CalculateRouteRequest.add_member(:car_mode_options, Shapes::ShapeRef.new(shape: CalculateRouteCarModeOptions, location_name: "CarModeOptions"))
     CalculateRouteRequest.add_member(:truck_mode_options, Shapes::ShapeRef.new(shape: CalculateRouteTruckModeOptions, location_name: "TruckModeOptions"))
     CalculateRouteRequest.add_member(:arrival_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "ArrivalTime"))
@@ -564,11 +620,19 @@ module Aws::LocationService
     CalculateRouteSummary.add_member(:distance_unit, Shapes::ShapeRef.new(shape: DistanceUnit, required: true, location_name: "DistanceUnit"))
     CalculateRouteSummary.struct_class = Types::CalculateRouteSummary
 
-    CalculateRouteTruckModeOptions.add_member(:avoid_ferries, Shapes::ShapeRef.new(shape: Boolean, location_name: "AvoidFerries"))
-    CalculateRouteTruckModeOptions.add_member(:avoid_tolls, Shapes::ShapeRef.new(shape: Boolean, location_name: "AvoidTolls"))
+    CalculateRouteTruckModeOptions.add_member(:avoid_ferries, Shapes::ShapeRef.new(shape: SensitiveBoolean, location_name: "AvoidFerries"))
+    CalculateRouteTruckModeOptions.add_member(:avoid_tolls, Shapes::ShapeRef.new(shape: SensitiveBoolean, location_name: "AvoidTolls"))
     CalculateRouteTruckModeOptions.add_member(:dimensions, Shapes::ShapeRef.new(shape: TruckDimensions, location_name: "Dimensions"))
     CalculateRouteTruckModeOptions.add_member(:weight, Shapes::ShapeRef.new(shape: TruckWeight, location_name: "Weight"))
     CalculateRouteTruckModeOptions.struct_class = Types::CalculateRouteTruckModeOptions
+
+    CancelJobRequest.add_member(:job_id, Shapes::ShapeRef.new(shape: JobId, required: true, location_name: "JobId"))
+    CancelJobRequest.struct_class = Types::CancelJobRequest
+
+    CancelJobResponse.add_member(:job_arn, Shapes::ShapeRef.new(shape: GeoArn, required: true, location_name: "JobArn"))
+    CancelJobResponse.add_member(:job_id, Shapes::ShapeRef.new(shape: JobId, required: true, location_name: "JobId"))
+    CancelJobResponse.add_member(:status, Shapes::ShapeRef.new(shape: JobStatus, required: true, location_name: "Status"))
+    CancelJobResponse.struct_class = Types::CancelJobResponse
 
     CellSignals.add_member(:lte_cell_details, Shapes::ShapeRef.new(shape: CellSignalsLteCellDetailsList, required: true, location_name: "LteCellDetails"))
     CellSignals.struct_class = Types::CellSignals
@@ -576,7 +640,7 @@ module Aws::LocationService
     CellSignalsLteCellDetailsList.member = Shapes::ShapeRef.new(shape: LteCellDetails)
 
     Circle.add_member(:center, Shapes::ShapeRef.new(shape: Position, required: true, location_name: "Center"))
-    Circle.add_member(:radius, Shapes::ShapeRef.new(shape: Double, required: true, location_name: "Radius"))
+    Circle.add_member(:radius, Shapes::ShapeRef.new(shape: SensitiveDouble, required: true, location_name: "Radius"))
     Circle.struct_class = Types::Circle
 
     ConflictException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
@@ -585,8 +649,8 @@ module Aws::LocationService
     CountryCodeList.member = Shapes::ShapeRef.new(shape: CountryCode3)
 
     CreateGeofenceCollectionRequest.add_member(:collection_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location_name: "CollectionName"))
-    CreateGeofenceCollectionRequest.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage"=>"Deprecated. If included, the only allowed value is RequestBasedUsage.", "deprecatedSince"=>"2022-02-01"}))
-    CreateGeofenceCollectionRequest.add_member(:pricing_plan_data_source, Shapes::ShapeRef.new(shape: String, deprecated: true, location_name: "PricingPlanDataSource", metadata: {"deprecatedMessage"=>"Deprecated. No longer allowed.", "deprecatedSince"=>"2022-02-01"}))
+    CreateGeofenceCollectionRequest.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage" => "Deprecated. If included, the only allowed value is RequestBasedUsage.", "deprecatedSince" => "2022-02-01"}))
+    CreateGeofenceCollectionRequest.add_member(:pricing_plan_data_source, Shapes::ShapeRef.new(shape: String, deprecated: true, location_name: "PricingPlanDataSource", metadata: {"deprecatedMessage" => "Deprecated. No longer allowed.", "deprecatedSince" => "2022-02-01"}))
     CreateGeofenceCollectionRequest.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, location_name: "Description"))
     CreateGeofenceCollectionRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "Tags"))
     CreateGeofenceCollectionRequest.add_member(:kms_key_id, Shapes::ShapeRef.new(shape: KmsKeyId, location_name: "KmsKeyId"))
@@ -613,7 +677,7 @@ module Aws::LocationService
 
     CreateMapRequest.add_member(:map_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location_name: "MapName"))
     CreateMapRequest.add_member(:configuration, Shapes::ShapeRef.new(shape: MapConfiguration, required: true, location_name: "Configuration"))
-    CreateMapRequest.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage"=>"Deprecated. If included, the only allowed value is RequestBasedUsage.", "deprecatedSince"=>"2022-02-01"}))
+    CreateMapRequest.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage" => "Deprecated. If included, the only allowed value is RequestBasedUsage.", "deprecatedSince" => "2022-02-01"}))
     CreateMapRequest.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, location_name: "Description"))
     CreateMapRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "Tags"))
     CreateMapRequest.struct_class = Types::CreateMapRequest
@@ -625,7 +689,7 @@ module Aws::LocationService
 
     CreatePlaceIndexRequest.add_member(:index_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location_name: "IndexName"))
     CreatePlaceIndexRequest.add_member(:data_source, Shapes::ShapeRef.new(shape: String, required: true, location_name: "DataSource"))
-    CreatePlaceIndexRequest.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage"=>"Deprecated. If included, the only allowed value is RequestBasedUsage.", "deprecatedSince"=>"2022-02-01"}))
+    CreatePlaceIndexRequest.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage" => "Deprecated. If included, the only allowed value is RequestBasedUsage.", "deprecatedSince" => "2022-02-01"}))
     CreatePlaceIndexRequest.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, location_name: "Description"))
     CreatePlaceIndexRequest.add_member(:data_source_configuration, Shapes::ShapeRef.new(shape: DataSourceConfiguration, location_name: "DataSourceConfiguration"))
     CreatePlaceIndexRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "Tags"))
@@ -638,7 +702,7 @@ module Aws::LocationService
 
     CreateRouteCalculatorRequest.add_member(:calculator_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location_name: "CalculatorName"))
     CreateRouteCalculatorRequest.add_member(:data_source, Shapes::ShapeRef.new(shape: String, required: true, location_name: "DataSource"))
-    CreateRouteCalculatorRequest.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage"=>"Deprecated. If included, the only allowed value is RequestBasedUsage.", "deprecatedSince"=>"2022-02-01"}))
+    CreateRouteCalculatorRequest.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage" => "Deprecated. If included, the only allowed value is RequestBasedUsage.", "deprecatedSince" => "2022-02-01"}))
     CreateRouteCalculatorRequest.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, location_name: "Description"))
     CreateRouteCalculatorRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "Tags"))
     CreateRouteCalculatorRequest.struct_class = Types::CreateRouteCalculatorRequest
@@ -649,9 +713,9 @@ module Aws::LocationService
     CreateRouteCalculatorResponse.struct_class = Types::CreateRouteCalculatorResponse
 
     CreateTrackerRequest.add_member(:tracker_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location_name: "TrackerName"))
-    CreateTrackerRequest.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage"=>"Deprecated. If included, the only allowed value is RequestBasedUsage.", "deprecatedSince"=>"2022-02-01"}))
+    CreateTrackerRequest.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage" => "Deprecated. If included, the only allowed value is RequestBasedUsage.", "deprecatedSince" => "2022-02-01"}))
     CreateTrackerRequest.add_member(:kms_key_id, Shapes::ShapeRef.new(shape: KmsKeyId, location_name: "KmsKeyId"))
-    CreateTrackerRequest.add_member(:pricing_plan_data_source, Shapes::ShapeRef.new(shape: String, deprecated: true, location_name: "PricingPlanDataSource", metadata: {"deprecatedMessage"=>"Deprecated. No longer allowed.", "deprecatedSince"=>"2022-02-01"}))
+    CreateTrackerRequest.add_member(:pricing_plan_data_source, Shapes::ShapeRef.new(shape: String, deprecated: true, location_name: "PricingPlanDataSource", metadata: {"deprecatedMessage" => "Deprecated. No longer allowed.", "deprecatedSince" => "2022-02-01"}))
     CreateTrackerRequest.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, location_name: "Description"))
     CreateTrackerRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "Tags"))
     CreateTrackerRequest.add_member(:position_filtering, Shapes::ShapeRef.new(shape: PositionFiltering, location_name: "PositionFiltering"))
@@ -706,8 +770,8 @@ module Aws::LocationService
     DescribeGeofenceCollectionResponse.add_member(:collection_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location_name: "CollectionName"))
     DescribeGeofenceCollectionResponse.add_member(:collection_arn, Shapes::ShapeRef.new(shape: Arn, required: true, location_name: "CollectionArn"))
     DescribeGeofenceCollectionResponse.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, required: true, location_name: "Description"))
-    DescribeGeofenceCollectionResponse.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage"=>"Deprecated. Always returns RequestBasedUsage.", "deprecatedSince"=>"2022-02-01"}))
-    DescribeGeofenceCollectionResponse.add_member(:pricing_plan_data_source, Shapes::ShapeRef.new(shape: String, deprecated: true, location_name: "PricingPlanDataSource", metadata: {"deprecatedMessage"=>"Deprecated. Unused.", "deprecatedSince"=>"2022-02-01"}))
+    DescribeGeofenceCollectionResponse.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage" => "Deprecated. Always returns RequestBasedUsage.", "deprecatedSince" => "2022-02-01"}))
+    DescribeGeofenceCollectionResponse.add_member(:pricing_plan_data_source, Shapes::ShapeRef.new(shape: String, deprecated: true, location_name: "PricingPlanDataSource", metadata: {"deprecatedMessage" => "Deprecated. Unused.", "deprecatedSince" => "2022-02-01"}))
     DescribeGeofenceCollectionResponse.add_member(:kms_key_id, Shapes::ShapeRef.new(shape: KmsKeyId, location_name: "KmsKeyId"))
     DescribeGeofenceCollectionResponse.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "Tags"))
     DescribeGeofenceCollectionResponse.add_member(:create_time, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreateTime"))
@@ -734,7 +798,7 @@ module Aws::LocationService
 
     DescribeMapResponse.add_member(:map_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location_name: "MapName"))
     DescribeMapResponse.add_member(:map_arn, Shapes::ShapeRef.new(shape: GeoArn, required: true, location_name: "MapArn"))
-    DescribeMapResponse.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage"=>"Deprecated. Always returns RequestBasedUsage.", "deprecatedSince"=>"2022-02-01"}))
+    DescribeMapResponse.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage" => "Deprecated. Always returns RequestBasedUsage.", "deprecatedSince" => "2022-02-01"}))
     DescribeMapResponse.add_member(:data_source, Shapes::ShapeRef.new(shape: String, required: true, location_name: "DataSource"))
     DescribeMapResponse.add_member(:configuration, Shapes::ShapeRef.new(shape: MapConfiguration, required: true, location_name: "Configuration"))
     DescribeMapResponse.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, required: true, location_name: "Description"))
@@ -748,7 +812,7 @@ module Aws::LocationService
 
     DescribePlaceIndexResponse.add_member(:index_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location_name: "IndexName"))
     DescribePlaceIndexResponse.add_member(:index_arn, Shapes::ShapeRef.new(shape: GeoArn, required: true, location_name: "IndexArn"))
-    DescribePlaceIndexResponse.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage"=>"Deprecated. Always returns RequestBasedUsage.", "deprecatedSince"=>"2022-02-01"}))
+    DescribePlaceIndexResponse.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage" => "Deprecated. Always returns RequestBasedUsage.", "deprecatedSince" => "2022-02-01"}))
     DescribePlaceIndexResponse.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, required: true, location_name: "Description"))
     DescribePlaceIndexResponse.add_member(:create_time, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreateTime"))
     DescribePlaceIndexResponse.add_member(:update_time, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "UpdateTime"))
@@ -762,7 +826,7 @@ module Aws::LocationService
 
     DescribeRouteCalculatorResponse.add_member(:calculator_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location_name: "CalculatorName"))
     DescribeRouteCalculatorResponse.add_member(:calculator_arn, Shapes::ShapeRef.new(shape: GeoArn, required: true, location_name: "CalculatorArn"))
-    DescribeRouteCalculatorResponse.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage"=>"Deprecated. Always returns RequestBasedUsage.", "deprecatedSince"=>"2022-02-01"}))
+    DescribeRouteCalculatorResponse.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage" => "Deprecated. Always returns RequestBasedUsage.", "deprecatedSince" => "2022-02-01"}))
     DescribeRouteCalculatorResponse.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, required: true, location_name: "Description"))
     DescribeRouteCalculatorResponse.add_member(:create_time, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreateTime"))
     DescribeRouteCalculatorResponse.add_member(:update_time, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "UpdateTime"))
@@ -776,8 +840,8 @@ module Aws::LocationService
     DescribeTrackerResponse.add_member(:tracker_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location_name: "TrackerName"))
     DescribeTrackerResponse.add_member(:tracker_arn, Shapes::ShapeRef.new(shape: Arn, required: true, location_name: "TrackerArn"))
     DescribeTrackerResponse.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, required: true, location_name: "Description"))
-    DescribeTrackerResponse.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage"=>"Deprecated. Always returns RequestBasedUsage.", "deprecatedSince"=>"2022-02-01"}))
-    DescribeTrackerResponse.add_member(:pricing_plan_data_source, Shapes::ShapeRef.new(shape: String, deprecated: true, location_name: "PricingPlanDataSource", metadata: {"deprecatedMessage"=>"Deprecated. Unused.", "deprecatedSince"=>"2022-02-01"}))
+    DescribeTrackerResponse.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage" => "Deprecated. Always returns RequestBasedUsage.", "deprecatedSince" => "2022-02-01"}))
+    DescribeTrackerResponse.add_member(:pricing_plan_data_source, Shapes::ShapeRef.new(shape: String, deprecated: true, location_name: "PricingPlanDataSource", metadata: {"deprecatedMessage" => "Deprecated. Unused.", "deprecatedSince" => "2022-02-01"}))
     DescribeTrackerResponse.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "Tags"))
     DescribeTrackerResponse.add_member(:create_time, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreateTime"))
     DescribeTrackerResponse.add_member(:update_time, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "UpdateTime"))
@@ -851,10 +915,15 @@ module Aws::LocationService
 
     ForecastedEventsList.member = Shapes::ShapeRef.new(shape: ForecastedEvent)
 
-    GeofenceGeometry.add_member(:polygon, Shapes::ShapeRef.new(shape: LinearRings, location_name: "Polygon"))
+    GeofenceGeometry.add_member(:polygon, Shapes::ShapeRef.new(shape: GeofenceGeometryPolygonList, location_name: "Polygon"))
     GeofenceGeometry.add_member(:circle, Shapes::ShapeRef.new(shape: Circle, location_name: "Circle"))
     GeofenceGeometry.add_member(:geobuf, Shapes::ShapeRef.new(shape: Base64EncodedGeobuf, location_name: "Geobuf"))
+    GeofenceGeometry.add_member(:multi_polygon, Shapes::ShapeRef.new(shape: GeofenceGeometryMultiPolygonList, location_name: "MultiPolygon"))
     GeofenceGeometry.struct_class = Types::GeofenceGeometry
+
+    GeofenceGeometryMultiPolygonList.member = Shapes::ShapeRef.new(shape: LinearRings)
+
+    GeofenceGeometryPolygonList.member = Shapes::ShapeRef.new(shape: LinearRing)
 
     GetDevicePositionHistoryRequest.add_member(:tracker_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location: "uri", location_name: "TrackerName"))
     GetDevicePositionHistoryRequest.add_member(:device_id, Shapes::ShapeRef.new(shape: Id, required: true, location: "uri", location_name: "DeviceId"))
@@ -891,6 +960,25 @@ module Aws::LocationService
     GetGeofenceResponse.add_member(:update_time, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "UpdateTime"))
     GetGeofenceResponse.add_member(:geofence_properties, Shapes::ShapeRef.new(shape: PropertyMap, location_name: "GeofenceProperties"))
     GetGeofenceResponse.struct_class = Types::GetGeofenceResponse
+
+    GetJobRequest.add_member(:job_id, Shapes::ShapeRef.new(shape: JobId, required: true, location: "uri", location_name: "JobId"))
+    GetJobRequest.struct_class = Types::GetJobRequest
+
+    GetJobResponse.add_member(:action, Shapes::ShapeRef.new(shape: JobAction, required: true, location_name: "Action"))
+    GetJobResponse.add_member(:action_options, Shapes::ShapeRef.new(shape: JobActionOptions, location_name: "ActionOptions"))
+    GetJobResponse.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreatedAt"))
+    GetJobResponse.add_member(:ended_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "EndedAt"))
+    GetJobResponse.add_member(:error, Shapes::ShapeRef.new(shape: JobError, location_name: "Error"))
+    GetJobResponse.add_member(:execution_role_arn, Shapes::ShapeRef.new(shape: IamRoleArn, required: true, location_name: "ExecutionRoleArn"))
+    GetJobResponse.add_member(:input_options, Shapes::ShapeRef.new(shape: JobInputOptions, required: true, location_name: "InputOptions"))
+    GetJobResponse.add_member(:job_arn, Shapes::ShapeRef.new(shape: GeoArn, required: true, location_name: "JobArn"))
+    GetJobResponse.add_member(:job_id, Shapes::ShapeRef.new(shape: JobId, required: true, location_name: "JobId"))
+    GetJobResponse.add_member(:name, Shapes::ShapeRef.new(shape: ResourceName, location_name: "Name"))
+    GetJobResponse.add_member(:output_options, Shapes::ShapeRef.new(shape: JobOutputOptions, required: true, location_name: "OutputOptions"))
+    GetJobResponse.add_member(:status, Shapes::ShapeRef.new(shape: JobStatus, required: true, location_name: "Status"))
+    GetJobResponse.add_member(:updated_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "UpdatedAt"))
+    GetJobResponse.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "Tags"))
+    GetJobResponse.struct_class = Types::GetJobResponse
 
     GetMapGlyphsRequest.add_member(:map_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location: "uri", location_name: "MapName"))
     GetMapGlyphsRequest.add_member(:font_stack, Shapes::ShapeRef.new(shape: String, required: true, location: "uri", location_name: "FontStack"))
@@ -960,6 +1048,26 @@ module Aws::LocationService
     InternalServerException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
     InternalServerException.struct_class = Types::InternalServerException
 
+    JobActionOptions.add_member(:validate_address, Shapes::ShapeRef.new(shape: ValidateAddressActionOptions, location_name: "ValidateAddress"))
+    JobActionOptions.struct_class = Types::JobActionOptions
+
+    JobError.add_member(:code, Shapes::ShapeRef.new(shape: JobErrorCode, required: true, location_name: "Code"))
+    JobError.add_member(:messages, Shapes::ShapeRef.new(shape: JobErrorMessagesList, location_name: "Messages"))
+    JobError.struct_class = Types::JobError
+
+    JobErrorMessagesList.member = Shapes::ShapeRef.new(shape: JobErrorMessage)
+
+    JobInputOptions.add_member(:location, Shapes::ShapeRef.new(shape: JobInputLocation, required: true, location_name: "Location"))
+    JobInputOptions.add_member(:format, Shapes::ShapeRef.new(shape: JobInputFormat, required: true, location_name: "Format"))
+    JobInputOptions.struct_class = Types::JobInputOptions
+
+    JobOutputOptions.add_member(:format, Shapes::ShapeRef.new(shape: JobOutputFormat, required: true, location_name: "Format"))
+    JobOutputOptions.add_member(:location, Shapes::ShapeRef.new(shape: JobOutputLocation, required: true, location_name: "Location"))
+    JobOutputOptions.struct_class = Types::JobOutputOptions
+
+    JobsFilter.add_member(:job_status, Shapes::ShapeRef.new(shape: JobStatus, location_name: "JobStatus"))
+    JobsFilter.struct_class = Types::JobsFilter
+
     Leg.add_member(:start_position, Shapes::ShapeRef.new(shape: Position, required: true, location_name: "StartPosition"))
     Leg.add_member(:end_position, Shapes::ShapeRef.new(shape: Position, required: true, location_name: "EndPosition"))
     Leg.add_member(:distance, Shapes::ShapeRef.new(shape: LegDistanceDouble, required: true, location_name: "Distance"))
@@ -1008,8 +1116,8 @@ module Aws::LocationService
 
     ListGeofenceCollectionsResponseEntry.add_member(:collection_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location_name: "CollectionName"))
     ListGeofenceCollectionsResponseEntry.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, required: true, location_name: "Description"))
-    ListGeofenceCollectionsResponseEntry.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage"=>"Deprecated. Always returns RequestBasedUsage.", "deprecatedSince"=>"2022-02-01"}))
-    ListGeofenceCollectionsResponseEntry.add_member(:pricing_plan_data_source, Shapes::ShapeRef.new(shape: String, deprecated: true, location_name: "PricingPlanDataSource", metadata: {"deprecatedMessage"=>"Deprecated. Unused.", "deprecatedSince"=>"2022-02-01"}))
+    ListGeofenceCollectionsResponseEntry.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage" => "Deprecated. Always returns RequestBasedUsage.", "deprecatedSince" => "2022-02-01"}))
+    ListGeofenceCollectionsResponseEntry.add_member(:pricing_plan_data_source, Shapes::ShapeRef.new(shape: String, deprecated: true, location_name: "PricingPlanDataSource", metadata: {"deprecatedMessage" => "Deprecated. Unused.", "deprecatedSince" => "2022-02-01"}))
     ListGeofenceCollectionsResponseEntry.add_member(:create_time, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreateTime"))
     ListGeofenceCollectionsResponseEntry.add_member(:update_time, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "UpdateTime"))
     ListGeofenceCollectionsResponseEntry.struct_class = Types::ListGeofenceCollectionsResponseEntry
@@ -1034,6 +1142,32 @@ module Aws::LocationService
     ListGeofencesResponse.add_member(:entries, Shapes::ShapeRef.new(shape: ListGeofenceResponseEntryList, required: true, location_name: "Entries"))
     ListGeofencesResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: LargeToken, location_name: "NextToken"))
     ListGeofencesResponse.struct_class = Types::ListGeofencesResponse
+
+    ListJobsRequest.add_member(:filter, Shapes::ShapeRef.new(shape: JobsFilter, location_name: "Filter"))
+    ListJobsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: ListJobsRequestMaxResultsInteger, location_name: "MaxResults"))
+    ListJobsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: LargeToken, location_name: "NextToken"))
+    ListJobsRequest.struct_class = Types::ListJobsRequest
+
+    ListJobsResponse.add_member(:entries, Shapes::ShapeRef.new(shape: ListJobsResponseEntryList, required: true, location_name: "Entries"))
+    ListJobsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: LargeToken, location_name: "NextToken"))
+    ListJobsResponse.struct_class = Types::ListJobsResponse
+
+    ListJobsResponseEntry.add_member(:action, Shapes::ShapeRef.new(shape: JobAction, required: true, location_name: "Action"))
+    ListJobsResponseEntry.add_member(:action_options, Shapes::ShapeRef.new(shape: JobActionOptions, location_name: "ActionOptions"))
+    ListJobsResponseEntry.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreatedAt"))
+    ListJobsResponseEntry.add_member(:execution_role_arn, Shapes::ShapeRef.new(shape: IamRoleArn, required: true, location_name: "ExecutionRoleArn"))
+    ListJobsResponseEntry.add_member(:ended_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "EndedAt"))
+    ListJobsResponseEntry.add_member(:error, Shapes::ShapeRef.new(shape: JobError, location_name: "Error"))
+    ListJobsResponseEntry.add_member(:input_options, Shapes::ShapeRef.new(shape: JobInputOptions, required: true, location_name: "InputOptions"))
+    ListJobsResponseEntry.add_member(:job_id, Shapes::ShapeRef.new(shape: JobId, required: true, location_name: "JobId"))
+    ListJobsResponseEntry.add_member(:job_arn, Shapes::ShapeRef.new(shape: GeoArn, required: true, location_name: "JobArn"))
+    ListJobsResponseEntry.add_member(:name, Shapes::ShapeRef.new(shape: ResourceName, location_name: "Name"))
+    ListJobsResponseEntry.add_member(:output_options, Shapes::ShapeRef.new(shape: JobOutputOptions, required: true, location_name: "OutputOptions"))
+    ListJobsResponseEntry.add_member(:status, Shapes::ShapeRef.new(shape: JobStatus, required: true, location_name: "Status"))
+    ListJobsResponseEntry.add_member(:updated_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "UpdatedAt"))
+    ListJobsResponseEntry.struct_class = Types::ListJobsResponseEntry
+
+    ListJobsResponseEntryList.member = Shapes::ShapeRef.new(shape: ListJobsResponseEntry)
 
     ListKeysRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: ListKeysRequestMaxResultsInteger, location_name: "MaxResults"))
     ListKeysRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: Token, location_name: "NextToken"))
@@ -1065,7 +1199,7 @@ module Aws::LocationService
     ListMapsResponseEntry.add_member(:map_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location_name: "MapName"))
     ListMapsResponseEntry.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, required: true, location_name: "Description"))
     ListMapsResponseEntry.add_member(:data_source, Shapes::ShapeRef.new(shape: String, required: true, location_name: "DataSource"))
-    ListMapsResponseEntry.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage"=>"Deprecated. Always returns RequestBasedUsage.", "deprecatedSince"=>"2022-02-01"}))
+    ListMapsResponseEntry.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage" => "Deprecated. Always returns RequestBasedUsage.", "deprecatedSince" => "2022-02-01"}))
     ListMapsResponseEntry.add_member(:create_time, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreateTime"))
     ListMapsResponseEntry.add_member(:update_time, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "UpdateTime"))
     ListMapsResponseEntry.struct_class = Types::ListMapsResponseEntry
@@ -1083,7 +1217,7 @@ module Aws::LocationService
     ListPlaceIndexesResponseEntry.add_member(:index_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location_name: "IndexName"))
     ListPlaceIndexesResponseEntry.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, required: true, location_name: "Description"))
     ListPlaceIndexesResponseEntry.add_member(:data_source, Shapes::ShapeRef.new(shape: String, required: true, location_name: "DataSource"))
-    ListPlaceIndexesResponseEntry.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage"=>"Deprecated. Always returns RequestBasedUsage.", "deprecatedSince"=>"2022-02-01"}))
+    ListPlaceIndexesResponseEntry.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage" => "Deprecated. Always returns RequestBasedUsage.", "deprecatedSince" => "2022-02-01"}))
     ListPlaceIndexesResponseEntry.add_member(:create_time, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreateTime"))
     ListPlaceIndexesResponseEntry.add_member(:update_time, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "UpdateTime"))
     ListPlaceIndexesResponseEntry.struct_class = Types::ListPlaceIndexesResponseEntry
@@ -1101,7 +1235,7 @@ module Aws::LocationService
     ListRouteCalculatorsResponseEntry.add_member(:calculator_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location_name: "CalculatorName"))
     ListRouteCalculatorsResponseEntry.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, required: true, location_name: "Description"))
     ListRouteCalculatorsResponseEntry.add_member(:data_source, Shapes::ShapeRef.new(shape: String, required: true, location_name: "DataSource"))
-    ListRouteCalculatorsResponseEntry.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage"=>"Deprecated. Always returns RequestBasedUsage.", "deprecatedSince"=>"2022-02-01"}))
+    ListRouteCalculatorsResponseEntry.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage" => "Deprecated. Always returns RequestBasedUsage.", "deprecatedSince" => "2022-02-01"}))
     ListRouteCalculatorsResponseEntry.add_member(:create_time, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreateTime"))
     ListRouteCalculatorsResponseEntry.add_member(:update_time, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "UpdateTime"))
     ListRouteCalculatorsResponseEntry.struct_class = Types::ListRouteCalculatorsResponseEntry
@@ -1133,8 +1267,8 @@ module Aws::LocationService
 
     ListTrackersResponseEntry.add_member(:tracker_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location_name: "TrackerName"))
     ListTrackersResponseEntry.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, required: true, location_name: "Description"))
-    ListTrackersResponseEntry.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage"=>"Deprecated. Always returns RequestBasedUsage.", "deprecatedSince"=>"2022-02-01"}))
-    ListTrackersResponseEntry.add_member(:pricing_plan_data_source, Shapes::ShapeRef.new(shape: String, deprecated: true, location_name: "PricingPlanDataSource", metadata: {"deprecatedMessage"=>"Deprecated. Unused.", "deprecatedSince"=>"2022-02-01"}))
+    ListTrackersResponseEntry.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage" => "Deprecated. Always returns RequestBasedUsage.", "deprecatedSince" => "2022-02-01"}))
+    ListTrackersResponseEntry.add_member(:pricing_plan_data_source, Shapes::ShapeRef.new(shape: String, deprecated: true, location_name: "PricingPlanDataSource", metadata: {"deprecatedMessage" => "Deprecated. Unused.", "deprecatedSince" => "2022-02-01"}))
     ListTrackersResponseEntry.add_member(:create_time, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreateTime"))
     ListTrackersResponseEntry.add_member(:update_time, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "UpdateTime"))
     ListTrackersResponseEntry.struct_class = Types::ListTrackersResponseEntry
@@ -1175,23 +1309,23 @@ module Aws::LocationService
     MapConfigurationUpdate.add_member(:custom_layers, Shapes::ShapeRef.new(shape: CustomLayerList, location_name: "CustomLayers"))
     MapConfigurationUpdate.struct_class = Types::MapConfigurationUpdate
 
-    Place.add_member(:label, Shapes::ShapeRef.new(shape: String, location_name: "Label"))
+    Place.add_member(:label, Shapes::ShapeRef.new(shape: SensitiveString, location_name: "Label"))
     Place.add_member(:geometry, Shapes::ShapeRef.new(shape: PlaceGeometry, required: true, location_name: "Geometry"))
-    Place.add_member(:address_number, Shapes::ShapeRef.new(shape: String, location_name: "AddressNumber"))
-    Place.add_member(:street, Shapes::ShapeRef.new(shape: String, location_name: "Street"))
-    Place.add_member(:neighborhood, Shapes::ShapeRef.new(shape: String, location_name: "Neighborhood"))
-    Place.add_member(:municipality, Shapes::ShapeRef.new(shape: String, location_name: "Municipality"))
-    Place.add_member(:sub_region, Shapes::ShapeRef.new(shape: String, location_name: "SubRegion"))
-    Place.add_member(:region, Shapes::ShapeRef.new(shape: String, location_name: "Region"))
-    Place.add_member(:country, Shapes::ShapeRef.new(shape: String, location_name: "Country"))
-    Place.add_member(:postal_code, Shapes::ShapeRef.new(shape: String, location_name: "PostalCode"))
-    Place.add_member(:interpolated, Shapes::ShapeRef.new(shape: Boolean, location_name: "Interpolated"))
+    Place.add_member(:address_number, Shapes::ShapeRef.new(shape: SensitiveString, location_name: "AddressNumber"))
+    Place.add_member(:street, Shapes::ShapeRef.new(shape: SensitiveString, location_name: "Street"))
+    Place.add_member(:neighborhood, Shapes::ShapeRef.new(shape: SensitiveString, location_name: "Neighborhood"))
+    Place.add_member(:municipality, Shapes::ShapeRef.new(shape: SensitiveString, location_name: "Municipality"))
+    Place.add_member(:sub_region, Shapes::ShapeRef.new(shape: SensitiveString, location_name: "SubRegion"))
+    Place.add_member(:region, Shapes::ShapeRef.new(shape: SensitiveString, location_name: "Region"))
+    Place.add_member(:country, Shapes::ShapeRef.new(shape: SensitiveString, location_name: "Country"))
+    Place.add_member(:postal_code, Shapes::ShapeRef.new(shape: SensitiveString, location_name: "PostalCode"))
+    Place.add_member(:interpolated, Shapes::ShapeRef.new(shape: SensitiveBoolean, location_name: "Interpolated"))
     Place.add_member(:time_zone, Shapes::ShapeRef.new(shape: TimeZone, location_name: "TimeZone"))
-    Place.add_member(:unit_type, Shapes::ShapeRef.new(shape: String, location_name: "UnitType"))
-    Place.add_member(:unit_number, Shapes::ShapeRef.new(shape: String, location_name: "UnitNumber"))
+    Place.add_member(:unit_type, Shapes::ShapeRef.new(shape: SensitiveString, location_name: "UnitType"))
+    Place.add_member(:unit_number, Shapes::ShapeRef.new(shape: SensitiveString, location_name: "UnitNumber"))
     Place.add_member(:categories, Shapes::ShapeRef.new(shape: PlaceCategoryList, location_name: "Categories"))
     Place.add_member(:supplemental_categories, Shapes::ShapeRef.new(shape: PlaceSupplementalCategoryList, location_name: "SupplementalCategories"))
-    Place.add_member(:sub_municipality, Shapes::ShapeRef.new(shape: String, location_name: "SubMunicipality"))
+    Place.add_member(:sub_municipality, Shapes::ShapeRef.new(shape: SensitiveString, location_name: "SubMunicipality"))
     Place.struct_class = Types::Place
 
     PlaceCategoryList.member = Shapes::ShapeRef.new(shape: PlaceCategory)
@@ -1246,7 +1380,7 @@ module Aws::LocationService
 
     SearchForPositionResultList.member = Shapes::ShapeRef.new(shape: SearchForPositionResult)
 
-    SearchForSuggestionsResult.add_member(:text, Shapes::ShapeRef.new(shape: String, required: true, location_name: "Text"))
+    SearchForSuggestionsResult.add_member(:text, Shapes::ShapeRef.new(shape: SensitiveString, required: true, location_name: "Text"))
     SearchForSuggestionsResult.add_member(:place_id, Shapes::ShapeRef.new(shape: PlaceId, location_name: "PlaceId"))
     SearchForSuggestionsResult.add_member(:categories, Shapes::ShapeRef.new(shape: PlaceCategoryList, location_name: "Categories"))
     SearchForSuggestionsResult.add_member(:supplemental_categories, Shapes::ShapeRef.new(shape: PlaceSupplementalCategoryList, location_name: "SupplementalCategories"))
@@ -1333,6 +1467,22 @@ module Aws::LocationService
     ServiceQuotaExceededException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
     ServiceQuotaExceededException.struct_class = Types::ServiceQuotaExceededException
 
+    StartJobRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
+    StartJobRequest.add_member(:action, Shapes::ShapeRef.new(shape: JobAction, required: true, location_name: "Action"))
+    StartJobRequest.add_member(:action_options, Shapes::ShapeRef.new(shape: JobActionOptions, location_name: "ActionOptions"))
+    StartJobRequest.add_member(:execution_role_arn, Shapes::ShapeRef.new(shape: IamRoleArn, required: true, location_name: "ExecutionRoleArn"))
+    StartJobRequest.add_member(:input_options, Shapes::ShapeRef.new(shape: JobInputOptions, required: true, location_name: "InputOptions"))
+    StartJobRequest.add_member(:name, Shapes::ShapeRef.new(shape: ResourceName, location_name: "Name"))
+    StartJobRequest.add_member(:output_options, Shapes::ShapeRef.new(shape: JobOutputOptions, required: true, location_name: "OutputOptions"))
+    StartJobRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "Tags"))
+    StartJobRequest.struct_class = Types::StartJobRequest
+
+    StartJobResponse.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "CreatedAt"))
+    StartJobResponse.add_member(:job_arn, Shapes::ShapeRef.new(shape: GeoArn, required: true, location_name: "JobArn"))
+    StartJobResponse.add_member(:job_id, Shapes::ShapeRef.new(shape: JobId, required: true, location_name: "JobId"))
+    StartJobResponse.add_member(:status, Shapes::ShapeRef.new(shape: JobStatus, required: true, location_name: "Status"))
+    StartJobResponse.struct_class = Types::StartJobResponse
+
     Step.add_member(:start_position, Shapes::ShapeRef.new(shape: Position, required: true, location_name: "StartPosition"))
     Step.add_member(:end_position, Shapes::ShapeRef.new(shape: Position, required: true, location_name: "EndPosition"))
     Step.add_member(:distance, Shapes::ShapeRef.new(shape: StepDistanceDouble, required: true, location_name: "Distance"))
@@ -1356,8 +1506,8 @@ module Aws::LocationService
     ThrottlingException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
     ThrottlingException.struct_class = Types::ThrottlingException
 
-    TimeZone.add_member(:name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "Name"))
-    TimeZone.add_member(:offset, Shapes::ShapeRef.new(shape: Integer, location_name: "Offset"))
+    TimeZone.add_member(:name, Shapes::ShapeRef.new(shape: SensitiveString, required: true, location_name: "Name"))
+    TimeZone.add_member(:offset, Shapes::ShapeRef.new(shape: SensitiveInteger, location_name: "Offset"))
     TimeZone.struct_class = Types::TimeZone
 
     TrackingFilterGeometry.add_member(:polygon, Shapes::ShapeRef.new(shape: LinearRings, location_name: "Polygon"))
@@ -1380,8 +1530,8 @@ module Aws::LocationService
     UntagResourceResponse.struct_class = Types::UntagResourceResponse
 
     UpdateGeofenceCollectionRequest.add_member(:collection_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location: "uri", location_name: "CollectionName"))
-    UpdateGeofenceCollectionRequest.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage"=>"Deprecated. If included, the only allowed value is RequestBasedUsage.", "deprecatedSince"=>"2022-02-01"}))
-    UpdateGeofenceCollectionRequest.add_member(:pricing_plan_data_source, Shapes::ShapeRef.new(shape: String, deprecated: true, location_name: "PricingPlanDataSource", metadata: {"deprecatedMessage"=>"Deprecated. No longer allowed.", "deprecatedSince"=>"2022-02-01"}))
+    UpdateGeofenceCollectionRequest.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage" => "Deprecated. If included, the only allowed value is RequestBasedUsage.", "deprecatedSince" => "2022-02-01"}))
+    UpdateGeofenceCollectionRequest.add_member(:pricing_plan_data_source, Shapes::ShapeRef.new(shape: String, deprecated: true, location_name: "PricingPlanDataSource", metadata: {"deprecatedMessage" => "Deprecated. No longer allowed.", "deprecatedSince" => "2022-02-01"}))
     UpdateGeofenceCollectionRequest.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, location_name: "Description"))
     UpdateGeofenceCollectionRequest.struct_class = Types::UpdateGeofenceCollectionRequest
 
@@ -1404,7 +1554,7 @@ module Aws::LocationService
     UpdateKeyResponse.struct_class = Types::UpdateKeyResponse
 
     UpdateMapRequest.add_member(:map_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location: "uri", location_name: "MapName"))
-    UpdateMapRequest.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage"=>"Deprecated. If included, the only allowed value is RequestBasedUsage.", "deprecatedSince"=>"2022-02-01"}))
+    UpdateMapRequest.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage" => "Deprecated. If included, the only allowed value is RequestBasedUsage.", "deprecatedSince" => "2022-02-01"}))
     UpdateMapRequest.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, location_name: "Description"))
     UpdateMapRequest.add_member(:configuration_update, Shapes::ShapeRef.new(shape: MapConfigurationUpdate, location_name: "ConfigurationUpdate"))
     UpdateMapRequest.struct_class = Types::UpdateMapRequest
@@ -1415,7 +1565,7 @@ module Aws::LocationService
     UpdateMapResponse.struct_class = Types::UpdateMapResponse
 
     UpdatePlaceIndexRequest.add_member(:index_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location: "uri", location_name: "IndexName"))
-    UpdatePlaceIndexRequest.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage"=>"Deprecated. If included, the only allowed value is RequestBasedUsage.", "deprecatedSince"=>"2022-02-01"}))
+    UpdatePlaceIndexRequest.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage" => "Deprecated. If included, the only allowed value is RequestBasedUsage.", "deprecatedSince" => "2022-02-01"}))
     UpdatePlaceIndexRequest.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, location_name: "Description"))
     UpdatePlaceIndexRequest.add_member(:data_source_configuration, Shapes::ShapeRef.new(shape: DataSourceConfiguration, location_name: "DataSourceConfiguration"))
     UpdatePlaceIndexRequest.struct_class = Types::UpdatePlaceIndexRequest
@@ -1426,7 +1576,7 @@ module Aws::LocationService
     UpdatePlaceIndexResponse.struct_class = Types::UpdatePlaceIndexResponse
 
     UpdateRouteCalculatorRequest.add_member(:calculator_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location: "uri", location_name: "CalculatorName"))
-    UpdateRouteCalculatorRequest.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage"=>"Deprecated. If included, the only allowed value is RequestBasedUsage.", "deprecatedSince"=>"2022-02-01"}))
+    UpdateRouteCalculatorRequest.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage" => "Deprecated. If included, the only allowed value is RequestBasedUsage.", "deprecatedSince" => "2022-02-01"}))
     UpdateRouteCalculatorRequest.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, location_name: "Description"))
     UpdateRouteCalculatorRequest.struct_class = Types::UpdateRouteCalculatorRequest
 
@@ -1436,8 +1586,8 @@ module Aws::LocationService
     UpdateRouteCalculatorResponse.struct_class = Types::UpdateRouteCalculatorResponse
 
     UpdateTrackerRequest.add_member(:tracker_name, Shapes::ShapeRef.new(shape: ResourceName, required: true, location: "uri", location_name: "TrackerName"))
-    UpdateTrackerRequest.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage"=>"Deprecated. If included, the only allowed value is RequestBasedUsage.", "deprecatedSince"=>"2022-02-01"}))
-    UpdateTrackerRequest.add_member(:pricing_plan_data_source, Shapes::ShapeRef.new(shape: String, deprecated: true, location_name: "PricingPlanDataSource", metadata: {"deprecatedMessage"=>"Deprecated. No longer allowed.", "deprecatedSince"=>"2022-02-01"}))
+    UpdateTrackerRequest.add_member(:pricing_plan, Shapes::ShapeRef.new(shape: PricingPlan, deprecated: true, location_name: "PricingPlan", metadata: {"deprecatedMessage" => "Deprecated. If included, the only allowed value is RequestBasedUsage.", "deprecatedSince" => "2022-02-01"}))
+    UpdateTrackerRequest.add_member(:pricing_plan_data_source, Shapes::ShapeRef.new(shape: String, deprecated: true, location_name: "PricingPlanDataSource", metadata: {"deprecatedMessage" => "Deprecated. No longer allowed.", "deprecatedSince" => "2022-02-01"}))
     UpdateTrackerRequest.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, location_name: "Description"))
     UpdateTrackerRequest.add_member(:position_filtering, Shapes::ShapeRef.new(shape: PositionFiltering, location_name: "PositionFiltering"))
     UpdateTrackerRequest.add_member(:event_bridge_enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "EventBridgeEnabled"))
@@ -1448,6 +1598,11 @@ module Aws::LocationService
     UpdateTrackerResponse.add_member(:tracker_arn, Shapes::ShapeRef.new(shape: Arn, required: true, location_name: "TrackerArn"))
     UpdateTrackerResponse.add_member(:update_time, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "UpdateTime"))
     UpdateTrackerResponse.struct_class = Types::UpdateTrackerResponse
+
+    ValidateAddressActionOptions.add_member(:additional_features, Shapes::ShapeRef.new(shape: ValidateAddressAdditionalFeatureList, location_name: "AdditionalFeatures"))
+    ValidateAddressActionOptions.struct_class = Types::ValidateAddressActionOptions
+
+    ValidateAddressAdditionalFeatureList.member = Shapes::ShapeRef.new(shape: ValidateAddressAdditionalFeature)
 
     ValidationException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
     ValidationException.add_member(:reason, Shapes::ShapeRef.new(shape: ValidationExceptionReason, required: true, location_name: "reason"))
@@ -1507,8 +1662,8 @@ module Aws::LocationService
         o.input = Shapes::ShapeRef.new(shape: AssociateTrackerConsumerRequest)
         o.output = Shapes::ShapeRef.new(shape: AssociateTrackerConsumerResponse)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
@@ -1638,6 +1793,21 @@ module Aws::LocationService
         o.output = Shapes::ShapeRef.new(shape: CalculateRouteMatrixResponse)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+      end)
+
+      api.add_operation(:cancel_job, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CancelJob"
+        o.http_method = "POST"
+        o.http_request_uri = "/metadata/v0/jobs/cancel-job"
+        o.endpoint_pattern = {
+          "hostPrefix" => "metadata.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: CancelJobRequest)
+        o.output = Shapes::ShapeRef.new(shape: CancelJobResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
@@ -2029,6 +2199,22 @@ module Aws::LocationService
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
+      api.add_operation(:get_job, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetJob"
+        o.http_method = "GET"
+        o.http_request_uri = "/metadata/v0/jobs/{JobId}"
+        o.endpoint_pattern = {
+          "hostPrefix" => "metadata.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: GetJobRequest)
+        o.output = Shapes::ShapeRef.new(shape: GetJobResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+      end)
+
       api.add_operation(:get_map_glyphs, Seahorse::Model::Operation.new.tap do |o|
         o.name = "GetMapGlyphs"
         o.http_method = "GET"
@@ -2162,6 +2348,27 @@ module Aws::LocationService
         o.output = Shapes::ShapeRef.new(shape: ListGeofencesResponse)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:list_jobs, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListJobs"
+        o.http_method = "POST"
+        o.http_request_uri = "/metadata/v0/jobs/list-jobs"
+        o.endpoint_pattern = {
+          "hostPrefix" => "metadata.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: ListJobsRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListJobsResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
@@ -2326,8 +2533,8 @@ module Aws::LocationService
         o.input = Shapes::ShapeRef.new(shape: PutGeofenceRequest)
         o.output = Shapes::ShapeRef.new(shape: PutGeofenceResponse)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
@@ -2376,6 +2583,21 @@ module Aws::LocationService
         o.output = Shapes::ShapeRef.new(shape: SearchPlaceIndexForTextResponse)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+      end)
+
+      api.add_operation(:start_job, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "StartJob"
+        o.http_method = "POST"
+        o.http_request_uri = "/metadata/v0/jobs"
+        o.endpoint_pattern = {
+          "hostPrefix" => "metadata.",
+        }
+        o.input = Shapes::ShapeRef.new(shape: StartJobRequest)
+        o.output = Shapes::ShapeRef.new(shape: StartJobResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)

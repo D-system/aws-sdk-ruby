@@ -95,8 +95,8 @@ module Aws::Account
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::Account
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::Account
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::Account
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::Account
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::Account
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::Account
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::Account
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -497,17 +501,17 @@ module Aws::Account
     #
     #   [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#account
     #   [2]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_org_support-all-features.html
-    #   [3]: https://docs.aws.amazon.com/organizations/latest/userguide/using-orgs-trusted-access.html
-    #   [4]: https://docs.aws.amazon.com/organizations/latest/userguide/using-orgs-delegated-admin.html
-    #
-    # @option params [required, String] :otp
-    #   The OTP code sent to the `PrimaryEmail` specified on the
-    #   `StartPrimaryEmailUpdate` API call.
+    #   [3]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_integrate_services.html
+    #   [4]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#delegated-admin
     #
     # @option params [required, String] :primary_email
     #   The new primary email address for use with the specified account. This
     #   must match the `PrimaryEmail` from the `StartPrimaryEmailUpdate` API
     #   call.
+    #
+    # @option params [required, String] :otp
+    #   The OTP code sent to the `PrimaryEmail` specified on the
+    #   `StartPrimaryEmailUpdate` API call.
     #
     # @return [Types::AcceptPrimaryEmailUpdateResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -517,13 +521,13 @@ module Aws::Account
     #
     #   resp = client.accept_primary_email_update({
     #     account_id: "AccountId", # required
-    #     otp: "Otp", # required
     #     primary_email: "PrimaryEmailAddress", # required
+    #     otp: "Otp", # required
     #   })
     #
     # @example Response structure
     #
-    #   resp.status #=> String, one of "PENDING", "ACCEPTED"
+    #   resp.status #=> String, one of "PENDING", "ACCEPTED", "COMPLETED", "FAILED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/account-2021-02-01/AcceptPrimaryEmailUpdate AWS API Documentation
     #
@@ -538,20 +542,24 @@ module Aws::Account
     # account.
     #
     # For complete details about how to use the alternate contact
-    # operations, see [Access or updating the alternate contacts][1].
+    # operations, see [Update the alternate contacts for your Amazon Web
+    # Services account][1].
     #
     # <note markdown="1"> Before you can update the alternate contact information for an Amazon
     # Web Services account that is managed by Organizations, you must first
     # enable integration between Amazon Web Services Account Management and
-    # Organizations. For more information, see [Enabling trusted access for
+    # Organizations. For more information, see [Enable trusted access for
     # Amazon Web Services Account Management][2].
     #
     #  </note>
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-update-contact.html
+    # [1]: https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-update-contact-alternate.html
     # [2]: https://docs.aws.amazon.com/accounts/latest/reference/using-orgs-trusted-access.html
+    #
+    # @option params [required, String] :alternate_contact_type
+    #   Specifies which of the alternate contacts to delete.
     #
     # @option params [String] :account_id
     #   Specifies the 12 digit account ID number of the Amazon Web Services
@@ -566,7 +574,7 @@ module Aws::Account
     #   same organization. The organization must have [all features
     #   enabled][2], and the organization must have [trusted access][3]
     #   enabled for the Account Management service, and optionally a
-    #   [delegated admin][4] account assigned.
+    #   [delegated administrator][4] account assigned.
     #
     #   <note markdown="1"> The management account can't specify its own `AccountId`; it must
     #   call the operation in standalone context by not including the
@@ -583,19 +591,16 @@ module Aws::Account
     #
     #   [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#account
     #   [2]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_org_support-all-features.html
-    #   [3]: https://docs.aws.amazon.com/organizations/latest/userguide/using-orgs-trusted-access.html
-    #   [4]: https://docs.aws.amazon.com/organizations/latest/userguide/using-orgs-delegated-admin.html
-    #
-    # @option params [required, String] :alternate_contact_type
-    #   Specifies which of the alternate contacts to delete.
+    #   [3]: https://docs.aws.amazon.com/organizations/latest/userguide/services-that-can-integrate-account.html
+    #   [4]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#delegated-admin
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_alternate_contact({
-    #     account_id: "AccountId",
     #     alternate_contact_type: "BILLING", # required, accepts BILLING, OPERATIONS, SECURITY
+    #     account_id: "AccountId",
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/account-2021-02-01/DeleteAlternateContact AWS API Documentation
@@ -642,8 +647,8 @@ module Aws::Account
     #
     #   [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#account
     #   [2]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_org_support-all-features.html
-    #   [3]: https://docs.aws.amazon.com/organizations/latest/userguide/using-orgs-trusted-access.html
-    #   [4]: https://docs.aws.amazon.com/organizations/latest/userguide/using-orgs-delegated-admin.html
+    #   [3]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_integrate_services.html
+    #   [4]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#delegated-admin
     #
     # @option params [required, String] :region_name
     #   Specifies the Region-code for a given Region name (for example,
@@ -701,8 +706,8 @@ module Aws::Account
     #
     #   [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#account
     #   [2]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_org_support-all-features.html
-    #   [3]: https://docs.aws.amazon.com/organizations/latest/userguide/using-orgs-trusted-access.html
-    #   [4]: https://docs.aws.amazon.com/organizations/latest/userguide/using-orgs-delegated-admin.html
+    #   [3]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_integrate_services.html
+    #   [4]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#delegated-admin
     #
     # @option params [required, String] :region_name
     #   Specifies the Region-code for a given Region name (for example,
@@ -731,24 +736,10 @@ module Aws::Account
       req.send_request(options)
     end
 
-    # Retrieves the specified alternate contact attached to an Amazon Web
-    # Services account.
-    #
-    # For complete details about how to use the alternate contact
-    # operations, see [Access or updating the alternate contacts][1].
-    #
-    # <note markdown="1"> Before you can update the alternate contact information for an Amazon
-    # Web Services account that is managed by Organizations, you must first
-    # enable integration between Amazon Web Services Account Management and
-    # Organizations. For more information, see [Enabling trusted access for
-    # Amazon Web Services Account Management][2].
-    #
-    #  </note>
-    #
-    #
-    #
-    # [1]: https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-update-contact.html
-    # [2]: https://docs.aws.amazon.com/accounts/latest/reference/using-orgs-trusted-access.html
+    # Retrieves information about the specified account including its
+    # account name, account ID, account creation date and time, and account
+    # state. To use this API, an IAM user or role must have the
+    # `account:GetAccountInformation` IAM permission.
     #
     # @option params [String] :account_id
     #   Specifies the 12 digit account ID number of the Amazon Web Services
@@ -763,7 +754,7 @@ module Aws::Account
     #   same organization. The organization must have [all features
     #   enabled][2], and the organization must have [trusted access][3]
     #   enabled for the Account Management service, and optionally a
-    #   [delegated admin][4] account assigned.
+    #   [delegated administrator][4] account assigned.
     #
     #   <note markdown="1"> The management account can't specify its own `AccountId`; it must
     #   call the operation in standalone context by not including the
@@ -780,11 +771,93 @@ module Aws::Account
     #
     #   [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#account
     #   [2]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_org_support-all-features.html
-    #   [3]: https://docs.aws.amazon.com/organizations/latest/userguide/using-orgs-trusted-access.html
-    #   [4]: https://docs.aws.amazon.com/organizations/latest/userguide/using-orgs-delegated-admin.html
+    #   [3]: https://docs.aws.amazon.com/organizations/latest/userguide/services-that-can-integrate-account.html
+    #   [4]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#delegated-admin
+    #
+    # @return [Types::GetAccountInformationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetAccountInformationResponse#account_id #account_id} => String
+    #   * {Types::GetAccountInformationResponse#account_name #account_name} => String
+    #   * {Types::GetAccountInformationResponse#account_created_date #account_created_date} => Time
+    #   * {Types::GetAccountInformationResponse#account_state #account_state} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_account_information({
+    #     account_id: "AccountId",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.account_id #=> String
+    #   resp.account_name #=> String
+    #   resp.account_created_date #=> Time
+    #   resp.account_state #=> String, one of "PENDING_ACTIVATION", "ACTIVE", "SUSPENDED", "CLOSED"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/account-2021-02-01/GetAccountInformation AWS API Documentation
+    #
+    # @overload get_account_information(params = {})
+    # @param [Hash] params ({})
+    def get_account_information(params = {}, options = {})
+      req = build_request(:get_account_information, params)
+      req.send_request(options)
+    end
+
+    # Retrieves the specified alternate contact attached to an Amazon Web
+    # Services account.
+    #
+    # For complete details about how to use the alternate contact
+    # operations, see [Update the alternate contacts for your Amazon Web
+    # Services account][1].
+    #
+    # <note markdown="1"> Before you can update the alternate contact information for an Amazon
+    # Web Services account that is managed by Organizations, you must first
+    # enable integration between Amazon Web Services Account Management and
+    # Organizations. For more information, see [Enable trusted access for
+    # Amazon Web Services Account Management][2].
+    #
+    #  </note>
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-update-contact-alternate.html
+    # [2]: https://docs.aws.amazon.com/accounts/latest/reference/using-orgs-trusted-access.html
     #
     # @option params [required, String] :alternate_contact_type
     #   Specifies which alternate contact you want to retrieve.
+    #
+    # @option params [String] :account_id
+    #   Specifies the 12 digit account ID number of the Amazon Web Services
+    #   account that you want to access or modify with this operation.
+    #
+    #   If you do not specify this parameter, it defaults to the Amazon Web
+    #   Services account of the identity used to call the operation.
+    #
+    #   To use this parameter, the caller must be an identity in the
+    #   [organization's management account][1] or a delegated administrator
+    #   account, and the specified account ID must be a member account in the
+    #   same organization. The organization must have [all features
+    #   enabled][2], and the organization must have [trusted access][3]
+    #   enabled for the Account Management service, and optionally a
+    #   [delegated administrator][4] account assigned.
+    #
+    #   <note markdown="1"> The management account can't specify its own `AccountId`; it must
+    #   call the operation in standalone context by not including the
+    #   `AccountId` parameter.
+    #
+    #    </note>
+    #
+    #   To call this operation on an account that is not a member of an
+    #   organization, then don't specify this parameter, and call the
+    #   operation using an identity belonging to the account whose contacts
+    #   you wish to retrieve or modify.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#account
+    #   [2]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_org_support-all-features.html
+    #   [3]: https://docs.aws.amazon.com/organizations/latest/userguide/services-that-can-integrate-account.html
+    #   [4]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#delegated-admin
     #
     # @return [Types::GetAlternateContactResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -793,17 +866,17 @@ module Aws::Account
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_alternate_contact({
-    #     account_id: "AccountId",
     #     alternate_contact_type: "BILLING", # required, accepts BILLING, OPERATIONS, SECURITY
+    #     account_id: "AccountId",
     #   })
     #
     # @example Response structure
     #
-    #   resp.alternate_contact.alternate_contact_type #=> String, one of "BILLING", "OPERATIONS", "SECURITY"
-    #   resp.alternate_contact.email_address #=> String
     #   resp.alternate_contact.name #=> String
-    #   resp.alternate_contact.phone_number #=> String
     #   resp.alternate_contact.title #=> String
+    #   resp.alternate_contact.email_address #=> String
+    #   resp.alternate_contact.phone_number #=> String
+    #   resp.alternate_contact.alternate_contact_type #=> String, one of "BILLING", "OPERATIONS", "SECURITY"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/account-2021-02-01/GetAlternateContact AWS API Documentation
     #
@@ -818,11 +891,12 @@ module Aws::Account
     # account.
     #
     # For complete details about how to use the primary contact operations,
-    # see [Update the primary and alternate contact information][1].
+    # see [Update the primary contact for your Amazon Web Services
+    # account][1].
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-update-contact.html
+    # [1]: https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-update-contact-primary.html
     #
     # @option params [String] :account_id
     #   Specifies the 12-digit account ID number of the Amazon Web Services
@@ -852,8 +926,8 @@ module Aws::Account
     #
     #   [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#account
     #   [2]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_org_support-all-features.html
-    #   [3]: https://docs.aws.amazon.com/organizations/latest/userguide/using-orgs-trusted-access.html
-    #   [4]: https://docs.aws.amazon.com/organizations/latest/userguide/using-orgs-delegated-admin.html
+    #   [3]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_integrate_services.html
+    #   [4]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#delegated-admin
     #
     # @return [Types::GetContactInformationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -867,17 +941,17 @@ module Aws::Account
     #
     # @example Response structure
     #
+    #   resp.contact_information.full_name #=> String
     #   resp.contact_information.address_line_1 #=> String
     #   resp.contact_information.address_line_2 #=> String
     #   resp.contact_information.address_line_3 #=> String
     #   resp.contact_information.city #=> String
-    #   resp.contact_information.company_name #=> String
-    #   resp.contact_information.country_code #=> String
-    #   resp.contact_information.district_or_county #=> String
-    #   resp.contact_information.full_name #=> String
-    #   resp.contact_information.phone_number #=> String
-    #   resp.contact_information.postal_code #=> String
     #   resp.contact_information.state_or_region #=> String
+    #   resp.contact_information.district_or_county #=> String
+    #   resp.contact_information.postal_code #=> String
+    #   resp.contact_information.country_code #=> String
+    #   resp.contact_information.phone_number #=> String
+    #   resp.contact_information.company_name #=> String
     #   resp.contact_information.website_url #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/account-2021-02-01/GetContactInformation AWS API Documentation
@@ -886,6 +960,69 @@ module Aws::Account
     # @param [Hash] params ({})
     def get_contact_information(params = {}, options = {})
       req = build_request(:get_contact_information, params)
+      req.send_request(options)
+    end
+
+    # Retrieves information about the GovCloud account linked to the
+    # specified standard account (if it exists) including the GovCloud
+    # account ID and state. To use this API, an IAM user or role must have
+    # the `account:GetGovCloudAccountInformation` IAM permission.
+    #
+    # @option params [String] :standard_account_id
+    #   Specifies the 12 digit account ID number of the Amazon Web Services
+    #   account that you want to access or modify with this operation.
+    #
+    #   If you do not specify this parameter, it defaults to the Amazon Web
+    #   Services account of the identity used to call the operation.
+    #
+    #   To use this parameter, the caller must be an identity in the
+    #   [organization's management account][1] or a delegated administrator
+    #   account, and the specified account ID must be a member account in the
+    #   same organization. The organization must have [all features
+    #   enabled][2], and the organization must have [trusted access][3]
+    #   enabled for the Account Management service, and optionally a
+    #   [delegated administrator][4] account assigned.
+    #
+    #   <note markdown="1"> The management account can't specify its own `AccountId`; it must
+    #   call the operation in standalone context by not including the
+    #   `AccountId` parameter.
+    #
+    #    </note>
+    #
+    #   To call this operation on an account that is not a member of an
+    #   organization, then don't specify this parameter, and call the
+    #   operation using an identity belonging to the account whose contacts
+    #   you wish to retrieve or modify.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#account
+    #   [2]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_org_support-all-features.html
+    #   [3]: https://docs.aws.amazon.com/organizations/latest/userguide/services-that-can-integrate-account.html
+    #   [4]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#delegated-admin
+    #
+    # @return [Types::GetGovCloudAccountInformationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetGovCloudAccountInformationResponse#gov_cloud_account_id #gov_cloud_account_id} => String
+    #   * {Types::GetGovCloudAccountInformationResponse#account_state #account_state} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_gov_cloud_account_information({
+    #     standard_account_id: "AccountId",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.gov_cloud_account_id #=> String
+    #   resp.account_state #=> String, one of "PENDING_ACTIVATION", "ACTIVE", "SUSPENDED", "CLOSED"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/account-2021-02-01/GetGovCloudAccountInformation AWS API Documentation
+    #
+    # @overload get_gov_cloud_account_information(params = {})
+    # @param [Hash] params ({})
+    def get_gov_cloud_account_information(params = {}, options = {})
+      req = build_request(:get_gov_cloud_account_information, params)
       req.send_request(options)
     end
 
@@ -914,8 +1051,8 @@ module Aws::Account
     #
     #   [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#account
     #   [2]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_org_support-all-features.html
-    #   [3]: https://docs.aws.amazon.com/organizations/latest/userguide/using-orgs-trusted-access.html
-    #   [4]: https://docs.aws.amazon.com/organizations/latest/userguide/using-orgs-delegated-admin.html
+    #   [3]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_integrate_services.html
+    #   [4]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#delegated-admin
     #
     # @return [Types::GetPrimaryEmailResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -937,6 +1074,66 @@ module Aws::Account
     # @param [Hash] params ({})
     def get_primary_email(params = {}, options = {})
       req = build_request(:get_primary_email, params)
+      req.send_request(options)
+    end
+
+    # Retrieves the status of the most recent primary email update for the
+    # specified account. For complete details about how to update the
+    # primary email address, see [Update the primary email address for your
+    # AWS account][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-update-root-user-email.html
+    #
+    # @option params [String] :account_id
+    #   Specifies the 12-digit account ID number of the Amazon Web Services
+    #   account that you want to access or modify with this operation. To use
+    #   this parameter, the caller must be an identity in the [organization's
+    #   management account][1] or a delegated administrator account. The
+    #   specified account ID must be a member account in the same
+    #   organization. The organization must have [all features enabled][2],
+    #   and the organization must have [trusted access][3] enabled for the
+    #   Account Management service, and optionally a [delegated admin][4]
+    #   account assigned.
+    #
+    #   This operation can only be called from the management account or the
+    #   delegated administrator account of an organization for a member
+    #   account.
+    #
+    #   <note markdown="1"> The management account can't specify its own `AccountId`.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#account
+    #   [2]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_org_support-all-features.html
+    #   [3]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_integrate_services.html
+    #   [4]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#delegated-admin
+    #
+    # @return [Types::GetPrimaryEmailUpdateStatusResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetPrimaryEmailUpdateStatusResponse#status #status} => String
+    #   * {Types::GetPrimaryEmailUpdateStatusResponse#updated_at #updated_at} => Time
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_primary_email_update_status({
+    #     account_id: "AccountId",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.status #=> String, one of "PENDING", "ACCEPTED", "COMPLETED", "FAILED"
+    #   resp.updated_at #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/account-2021-02-01/GetPrimaryEmailUpdateStatus AWS API Documentation
+    #
+    # @overload get_primary_email_update_status(params = {})
+    # @param [Hash] params ({})
+    def get_primary_email_update_status(params = {}, options = {})
+      req = build_request(:get_primary_email_update_status, params)
       req.send_request(options)
     end
 
@@ -970,8 +1167,8 @@ module Aws::Account
     #
     #   [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#account
     #   [2]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_org_support-all-features.html
-    #   [3]: https://docs.aws.amazon.com/organizations/latest/userguide/using-orgs-trusted-access.html
-    #   [4]: https://docs.aws.amazon.com/organizations/latest/userguide/using-orgs-delegated-admin.html
+    #   [3]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_integrate_services.html
+    #   [4]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#delegated-admin
     #
     # @option params [required, String] :region_name
     #   Specifies the Region-code for a given Region name (for example,
@@ -1036,8 +1233,8 @@ module Aws::Account
     #
     #   [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#account
     #   [2]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_org_support-all-features.html
-    #   [3]: https://docs.aws.amazon.com/organizations/latest/userguide/using-orgs-trusted-access.html
-    #   [4]: https://docs.aws.amazon.com/organizations/latest/userguide/using-orgs-delegated-admin.html
+    #   [3]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_integrate_services.html
+    #   [4]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#delegated-admin
     #
     # @option params [Integer] :max_results
     #   The total number of items to return in the command’s output. If the
@@ -1101,24 +1298,11 @@ module Aws::Account
       req.send_request(options)
     end
 
-    # Modifies the specified alternate contact attached to an Amazon Web
-    # Services account.
+    # Updates the account name of the specified account. To use this API,
+    # IAM principals must have the `account:PutAccountName` IAM permission.
     #
-    # For complete details about how to use the alternate contact
-    # operations, see [Access or updating the alternate contacts][1].
-    #
-    # <note markdown="1"> Before you can update the alternate contact information for an Amazon
-    # Web Services account that is managed by Organizations, you must first
-    # enable integration between Amazon Web Services Account Management and
-    # Organizations. For more information, see [Enabling trusted access for
-    # Amazon Web Services Account Management][2].
-    #
-    #  </note>
-    #
-    #
-    #
-    # [1]: https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-update-contact.html
-    # [2]: https://docs.aws.amazon.com/accounts/latest/reference/using-orgs-trusted-access.html
+    # @option params [required, String] :account_name
+    #   The name of the account.
     #
     # @option params [String] :account_id
     #   Specifies the 12 digit account ID number of the Amazon Web Services
@@ -1133,7 +1317,7 @@ module Aws::Account
     #   same organization. The organization must have [all features
     #   enabled][2], and the organization must have [trusted access][3]
     #   enabled for the Account Management service, and optionally a
-    #   [delegated admin][4] account assigned.
+    #   [delegated administrator][4] account assigned.
     #
     #   <note markdown="1"> The management account can't specify its own `AccountId`; it must
     #   call the operation in standalone context by not including the
@@ -1150,35 +1334,106 @@ module Aws::Account
     #
     #   [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#account
     #   [2]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_org_support-all-features.html
-    #   [3]: https://docs.aws.amazon.com/organizations/latest/userguide/using-orgs-trusted-access.html
-    #   [4]: https://docs.aws.amazon.com/organizations/latest/userguide/using-orgs-delegated-admin.html
+    #   [3]: https://docs.aws.amazon.com/organizations/latest/userguide/services-that-can-integrate-account.html
+    #   [4]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#delegated-admin
     #
-    # @option params [required, String] :alternate_contact_type
-    #   Specifies which alternate contact you want to create or update.
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
-    # @option params [required, String] :email_address
-    #   Specifies an email address for the alternate contact.
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.put_account_name({
+    #     account_name: "AccountName", # required
+    #     account_id: "AccountId",
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/account-2021-02-01/PutAccountName AWS API Documentation
+    #
+    # @overload put_account_name(params = {})
+    # @param [Hash] params ({})
+    def put_account_name(params = {}, options = {})
+      req = build_request(:put_account_name, params)
+      req.send_request(options)
+    end
+
+    # Modifies the specified alternate contact attached to an Amazon Web
+    # Services account.
+    #
+    # For complete details about how to use the alternate contact
+    # operations, see [Update the alternate contacts for your Amazon Web
+    # Services account][1].
+    #
+    # <note markdown="1"> Before you can update the alternate contact information for an Amazon
+    # Web Services account that is managed by Organizations, you must first
+    # enable integration between Amazon Web Services Account Management and
+    # Organizations. For more information, see [Enable trusted access for
+    # Amazon Web Services Account Management][2].
+    #
+    #  </note>
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-update-contact-alternate.html
+    # [2]: https://docs.aws.amazon.com/accounts/latest/reference/using-orgs-trusted-access.html
     #
     # @option params [required, String] :name
     #   Specifies a name for the alternate contact.
     #
+    # @option params [required, String] :title
+    #   Specifies a title for the alternate contact.
+    #
+    # @option params [required, String] :email_address
+    #   Specifies an email address for the alternate contact.
+    #
     # @option params [required, String] :phone_number
     #   Specifies a phone number for the alternate contact.
     #
-    # @option params [required, String] :title
-    #   Specifies a title for the alternate contact.
+    # @option params [required, String] :alternate_contact_type
+    #   Specifies which alternate contact you want to create or update.
+    #
+    # @option params [String] :account_id
+    #   Specifies the 12 digit account ID number of the Amazon Web Services
+    #   account that you want to access or modify with this operation.
+    #
+    #   If you do not specify this parameter, it defaults to the Amazon Web
+    #   Services account of the identity used to call the operation.
+    #
+    #   To use this parameter, the caller must be an identity in the
+    #   [organization's management account][1] or a delegated administrator
+    #   account, and the specified account ID must be a member account in the
+    #   same organization. The organization must have [all features
+    #   enabled][2], and the organization must have [trusted access][3]
+    #   enabled for the Account Management service, and optionally a
+    #   [delegated administrator][4] account assigned.
+    #
+    #   <note markdown="1"> The management account can't specify its own `AccountId`; it must
+    #   call the operation in standalone context by not including the
+    #   `AccountId` parameter.
+    #
+    #    </note>
+    #
+    #   To call this operation on an account that is not a member of an
+    #   organization, then don't specify this parameter, and call the
+    #   operation using an identity belonging to the account whose contacts
+    #   you wish to retrieve or modify.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#account
+    #   [2]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_org_support-all-features.html
+    #   [3]: https://docs.aws.amazon.com/organizations/latest/userguide/services-that-can-integrate-account.html
+    #   [4]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#delegated-admin
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.put_alternate_contact({
-    #     account_id: "AccountId",
-    #     alternate_contact_type: "BILLING", # required, accepts BILLING, OPERATIONS, SECURITY
-    #     email_address: "EmailAddress", # required
     #     name: "Name", # required
-    #     phone_number: "PhoneNumber", # required
     #     title: "Title", # required
+    #     email_address: "EmailAddress", # required
+    #     phone_number: "PhoneNumber", # required
+    #     alternate_contact_type: "BILLING", # required, accepts BILLING, OPERATIONS, SECURITY
+    #     account_id: "AccountId",
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/account-2021-02-01/PutAlternateContact AWS API Documentation
@@ -1194,11 +1449,16 @@ module Aws::Account
     # account.
     #
     # For complete details about how to use the primary contact operations,
-    # see [Update the primary and alternate contact information][1].
+    # see [Update the primary contact for your Amazon Web Services
+    # account][1].
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-update-contact.html
+    # [1]: https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-update-contact-primary.html
+    #
+    # @option params [required, Types::ContactInformation] :contact_information
+    #   Contains the details of the primary contact information associated
+    #   with an Amazon Web Services account.
     #
     # @option params [String] :account_id
     #   Specifies the 12-digit account ID number of the Amazon Web Services
@@ -1210,8 +1470,8 @@ module Aws::Account
     #   specified account ID must be a member account in the same
     #   organization. The organization must have [all features enabled][2],
     #   and the organization must have [trusted access][3] enabled for the
-    #   Account Management service, and optionally a [delegated admin][4]
-    #   account assigned.
+    #   Account Management service, and optionally a [delegated
+    #   administrator][4] account assigned.
     #
     #   <note markdown="1"> The management account can't specify its own `AccountId`. It must
     #   call the operation in standalone context by not including the
@@ -1228,33 +1488,29 @@ module Aws::Account
     #
     #   [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#account
     #   [2]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_org_support-all-features.html
-    #   [3]: https://docs.aws.amazon.com/organizations/latest/userguide/using-orgs-trusted-access.html
-    #   [4]: https://docs.aws.amazon.com/organizations/latest/userguide/using-orgs-delegated-admin.html
-    #
-    # @option params [required, Types::ContactInformation] :contact_information
-    #   Contains the details of the primary contact information associated
-    #   with an Amazon Web Services account.
+    #   [3]: https://docs.aws.amazon.com/organizations/latest/userguide/services-that-can-integrate-account.html
+    #   [4]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#delegated-admin
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.put_contact_information({
-    #     account_id: "AccountId",
     #     contact_information: { # required
+    #       full_name: "FullName", # required
     #       address_line_1: "AddressLine", # required
     #       address_line_2: "AddressLine",
     #       address_line_3: "AddressLine",
     #       city: "City", # required
-    #       company_name: "CompanyName",
-    #       country_code: "CountryCode", # required
-    #       district_or_county: "DistrictOrCounty",
-    #       full_name: "FullName", # required
-    #       phone_number: "ContactInformationPhoneNumber", # required
-    #       postal_code: "PostalCode", # required
     #       state_or_region: "StateOrRegion",
+    #       district_or_county: "DistrictOrCounty",
+    #       postal_code: "PostalCode", # required
+    #       country_code: "CountryCode", # required
+    #       phone_number: "ContactInformationPhoneNumber", # required
+    #       company_name: "CompanyName",
     #       website_url: "WebsiteUrl",
     #     },
+    #     account_id: "AccountId",
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/account-2021-02-01/PutContactInformation AWS API Documentation
@@ -1292,8 +1548,8 @@ module Aws::Account
     #
     #   [1]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#account
     #   [2]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_org_support-all-features.html
-    #   [3]: https://docs.aws.amazon.com/organizations/latest/userguide/using-orgs-trusted-access.html
-    #   [4]: https://docs.aws.amazon.com/organizations/latest/userguide/using-orgs-delegated-admin.html
+    #   [3]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_integrate_services.html
+    #   [4]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#delegated-admin
     #
     # @option params [required, String] :primary_email
     #   The new primary email address (also known as the root user email
@@ -1312,7 +1568,7 @@ module Aws::Account
     #
     # @example Response structure
     #
-    #   resp.status #=> String, one of "PENDING", "ACCEPTED"
+    #   resp.status #=> String, one of "PENDING", "ACCEPTED", "COMPLETED", "FAILED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/account-2021-02-01/StartPrimaryEmailUpdate AWS API Documentation
     #
@@ -1341,7 +1597,7 @@ module Aws::Account
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-account'
-      context[:gem_version] = '1.39.0'
+      context[:gem_version] = '1.62.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

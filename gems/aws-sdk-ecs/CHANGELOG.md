@@ -1,6 +1,316 @@
 Unreleased Changes
 ------------------
 
+1.243.0 (2026-08-05)
+------------------
+
+* Feature - New enum values added for Agent Connectivity issues
+
+1.242.0 (2026-07-09)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.241.0 (2026-07-08)
+------------------
+
+* Feature - Amazon ECS now automatically detects the correct CPU architecture for Express Mode services.
+
+1.240.0 (2026-06-30)
+------------------
+
+* Feature - Updated threshold configuration documentation.
+
+1.239.0 (2026-06-29)
+------------------
+
+* Feature - Amazon ECS now supports customizable deployment circuit breaker configurations. Customers can now define the failure threshold or control the failure counting mechanism.
+
+1.238.0 (2026-06-18)
+------------------
+
+* Feature - Amazon ECS services now support high resolution (20 second) CloudWatch metrics for CPUUtilization and MemoryUtilization. Use these metrics for faster service auto scaling.
+
+1.237.0 (2026-06-17)
+------------------
+
+* Feature - Releasing the ability to bring-your-own task-definition for CreateExpressGatewayService and UpdateGatewayExpressService
+
+1.236.0 (2026-06-10)
+------------------
+
+* Feature - Amazon ECS Managed Daemon task definitions now support pidMode and ipcMode parameters. Set shared to allow daemons to share PID or IPC namespaces with co-located tasks on Managed Instances, enabling process tracing and shared memory communication.
+
+1.235.0 (2026-06-01)
+------------------
+
+* Feature - Adding new BDD representation of endpoint ruleset
+
+1.234.0 (2026-05-27)
+------------------
+
+* Feature - Add support for Neuron device resource requirements for Amazon ECS
+
+1.233.0 (2026-05-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.232.0 (2026-05-19)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.231.0 (2026-05-18)
+------------------
+
+* Feature - Amazon ECS now supports Pause lifecycle hooks for service deployments, allowing customers to automatically pause deployments at specified stages and use the new ContinueServiceDeployment API to continue or roll back with confidence.
+
+1.230.0 (2026-05-13)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.229.0 (2026-04-22)
+------------------
+
+* Feature - GPU health monitoring and auto-repair for ECS Managed Instances
+
+1.228.0 (2026-04-10)
+------------------
+
+* Feature - Minor updates to exceptions for completeness
+
+1.227.0 (2026-04-07)
+------------------
+
+* Feature - This release provides the functionality of mounting Amazon S3 Files to Amazon ECS tasks by adding support for the new S3FilesVolumeConfiguration parameter in ECS RegisterTaskDefinition API.
+
+1.226.0 (2026-04-01)
+------------------
+
+* Feature - Amazon ECS now supports Managed Daemons with dedicated APIs for registering daemon task definitions, creating daemons, and managing daemon deployments.
+
+1.225.0 (2026-03-30)
+------------------
+
+* Feature - Adding Local Storage support for ECS Managed Instances by introducing a new field "localStorageConfiguration" for CreateCapacityProvider and UpdateCapacityProvider APIs.
+
+1.224.0 (2026-03-18)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.223.0 (2026-03-16)
+------------------
+
+* Feature - Amazon ECS now supports configuring whether tags are propagated to the EC2 Instance Metadata Service (IMDS) for instances launched by the Managed Instances capacity provider. This gives customers control over tag visibility in IMDS when using ECS Managed Instances.
+
+1.222.0 (2026-02-26)
+------------------
+
+* Feature - Adding support for Capacity Reservations for ECS Managed Instances by introducing a new "capacityOptionType" value of "RESERVED" and new field "capacityReservations" for CreateCapacityProvider and UpdateCapacityProvider APIs.
+
+1.221.0 (2026-02-20)
+------------------
+
+* Feature - Migrated to Smithy. No functional changes
+
+1.220.0 (2026-01-16)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.219.0 (2026-01-15)
+------------------
+
+* Feature - Adds support for configuring FIPS in AWS GovCloud (US) Regions via a new ECS Capacity Provider field fipsEnabled. When enabled, instances launched by the capacity provider will use a FIPS-140 enabled AMI. Instances will use FIPS-140 compliant cryptographic modules and AWS FIPS endpoints.
+
+1.218.0 (2026-01-08)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.217.0 (2026-01-05)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.216.0 (2025-12-18)
+------------------
+
+* Feature - Adding support for Event Windows via a new ECS account setting "fargateEventWindows". When enabled, ECS Fargate will use the configured event window for patching tasks. Introducing "CapacityOptionType" for CreateCapacityProvider API, allowing support for Spot capacity for ECS Managed Instances.
+
+1.215.0 (2025-12-05)
+------------------
+
+* Feature - Updating stop-task API to encapsulate containers with custom stop signal
+
+1.214.0 (2025-11-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.213.0 (2025-11-20)
+------------------
+
+* Feature - Launching Amazon ECS Express Mode - a new feature that enables developers to quickly launch highly available, scalable containerized applications with a single command.
+
+1.212.0 (2025-11-19)
+------------------
+
+* Feature - Added support for Amazon ECS Managed Instances infrastructure optimization configuration.
+
+1.211.0 (2025-11-03)
+------------------
+
+* Feature - Documentation-only update for LINEAR and CANARY deployment strategies.
+
+1.210.0 (2025-10-30)
+------------------
+
+* Feature - Amazon ECS Service Connect now supports Envoy access logs, providing deeper observability into request-level traffic patterns and service interactions.
+
+1.209.0 (2025-10-28)
+------------------
+
+* Feature - Amazon ECS supports native linear and canary service deployments, allowing you to shift traffic in increments for more control.
+
+1.208.0 (2025-10-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.207.0 (2025-10-01)
+------------------
+
+* Feature - This is a documentation only Amazon ECS release that adds additional information for health checks.
+
+1.206.0 (2025-09-30)
+------------------
+
+* Feature - This release adds support for Managed Instances on Amazon ECS.
+
+1.205.0 (2025-09-11)
+------------------
+
+* Feature - This release supports hook details for Amazon ECS lifecycle hooks.
+
+1.204.0 (2025-09-05)
+------------------
+
+* Feature - This is a documentation only release that adds additional information for Amazon ECS Availability Zone rebalancing.
+
+1.203.0 (2025-08-26)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.202.0 (2025-08-21)
+------------------
+
+* Feature - This is a documentation only release that adds additional information for the update-service request parameters.
+
+1.201.0 (2025-08-04)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.200.0 (2025-07-31)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.199.0 (2025-07-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.198.0 (2025-07-16)
+------------------
+
+* Feature - This release removes hookDetails for the Amazon ECS native blue/green deployments.
+
+1.197.0 (2025-07-15)
+------------------
+
+* Feature - Amazon ECS supports native blue/green deployments, allowing you to validate new service revisions before directing production traffic to them.
+
+1.196.0 (2025-06-25)
+------------------
+
+* Feature - Updates for change to Amazon ECS default log driver mode from blocking to non-blocking
+
+1.195.0 (2025-06-20)
+------------------
+
+* Feature - Add ECS support for Windows Server 2025
+
+1.194.0 (2025-06-12)
+------------------
+
+* Feature - This Amazon ECS  release supports updating the capacityProviderStrategy parameter in update-service.
+
+1.193.0 (2025-06-02)
+------------------
+
+* Feature - Updates Amazon ECS documentation to include note for upcoming default log driver mode change.
+
+1.192.0 (2025-05-16)
+------------------
+
+* Feature - This is an Amazon ECs documentation only release to support the change of the container exit "reason" field from 255 characters to 1024 characters.
+
+1.191.0 (2025-05-13)
+------------------
+
+* Feature - This release extends functionality for Amazon EBS volumes attached to Amazon ECS tasks by adding support for the new EBS volumeInitializationRate parameter in ECS RunTask/StartTask/CreateService/UpdateService APIs.
+
+1.190.0 (2025-05-12)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.189.0 (2025-05-05)
+------------------
+
+* Feature - Add support to roll back an In_Progress ECS Service Deployment
+
+1.188.0 (2025-05-01)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.187.0 (2025-04-25)
+------------------
+
+* Feature - Documentation only release for Amazon ECS.
+
+1.186.0 (2025-04-24)
+------------------
+
+* Feature - Documentation only release for Amazon ECS
+
+1.185.0 (2025-04-23)
+------------------
+
+* Feature - Add support to roll back an In_Progress ECS Service Deployment
+
+1.184.0 (2025-04-17)
+------------------
+
+* Feature - Adds a new AccountSetting - defaultLogDriverMode for ECS.
+
+1.183.0 (2025-04-02)
+------------------
+
+* Feature - This is an Amazon ECS documentation only update to address various tickets.
+
+1.182.0 (2025-03-28)
+------------------
+
+* Feature - This is an Amazon ECS documentation only release that addresses tickets.
+
 1.181.0 (2025-03-11)
 ------------------
 

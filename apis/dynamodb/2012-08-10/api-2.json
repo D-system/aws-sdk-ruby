@@ -25,7 +25,8 @@
       "output":{"shape":"BatchExecuteStatementOutput"},
       "errors":[
         {"shape":"RequestLimitExceeded"},
-        {"shape":"InternalServerError"}
+        {"shape":"InternalServerError"},
+        {"shape":"ThrottlingException"}
       ]
     },
     "BatchGetItem":{
@@ -40,10 +41,10 @@
         {"shape":"ProvisionedThroughputExceededException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"RequestLimitExceeded"},
-        {"shape":"InternalServerError"}
+        {"shape":"InternalServerError"},
+        {"shape":"ThrottlingException"}
       ],
-      "endpointdiscovery":{
-      },
+      "endpointdiscovery":{},
       "operationContextParams":{
         "ResourceArnList":{"path":"keys(RequestItems)"}
       }
@@ -61,10 +62,11 @@
         {"shape":"ResourceNotFoundException"},
         {"shape":"ItemCollectionSizeLimitExceededException"},
         {"shape":"RequestLimitExceeded"},
-        {"shape":"InternalServerError"}
+        {"shape":"InternalServerError"},
+        {"shape":"ReplicatedWriteConflictException"},
+        {"shape":"ThrottlingException"}
       ],
-      "endpointdiscovery":{
-      },
+      "endpointdiscovery":{},
       "operationContextParams":{
         "ResourceArnList":{"path":"keys(RequestItems)"}
       }
@@ -85,8 +87,7 @@
         {"shape":"LimitExceededException"},
         {"shape":"InternalServerError"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "CreateGlobalTable":{
       "name":"CreateGlobalTable",
@@ -102,8 +103,7 @@
         {"shape":"GlobalTableAlreadyExistsException"},
         {"shape":"TableNotFoundException"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "CreateTable":{
       "name":"CreateTable",
@@ -118,8 +118,7 @@
         {"shape":"LimitExceededException"},
         {"shape":"InternalServerError"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "DeleteBackup":{
       "name":"DeleteBackup",
@@ -135,8 +134,7 @@
         {"shape":"LimitExceededException"},
         {"shape":"InternalServerError"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "DeleteItem":{
       "name":"DeleteItem",
@@ -154,10 +152,10 @@
         {"shape":"TransactionConflictException"},
         {"shape":"RequestLimitExceeded"},
         {"shape":"InternalServerError"},
-        {"shape":"ReplicatedWriteConflictException"}
+        {"shape":"ReplicatedWriteConflictException"},
+        {"shape":"ThrottlingException"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "DeleteResourcePolicy":{
       "name":"DeleteResourcePolicy",
@@ -174,8 +172,7 @@
         {"shape":"ResourceInUseException"},
         {"shape":"LimitExceededException"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "DeleteTable":{
       "name":"DeleteTable",
@@ -191,8 +188,7 @@
         {"shape":"LimitExceededException"},
         {"shape":"InternalServerError"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "DescribeBackup":{
       "name":"DescribeBackup",
@@ -206,8 +202,7 @@
         {"shape":"BackupNotFoundException"},
         {"shape":"InternalServerError"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "DescribeContinuousBackups":{
       "name":"DescribeContinuousBackups",
@@ -221,8 +216,7 @@
         {"shape":"TableNotFoundException"},
         {"shape":"InternalServerError"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "DescribeContributorInsights":{
       "name":"DescribeContributorInsights",
@@ -273,8 +267,7 @@
         {"shape":"InternalServerError"},
         {"shape":"GlobalTableNotFoundException"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "DescribeGlobalTableSettings":{
       "name":"DescribeGlobalTableSettings",
@@ -288,8 +281,7 @@
         {"shape":"GlobalTableNotFoundException"},
         {"shape":"InternalServerError"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "DescribeImport":{
       "name":"DescribeImport",
@@ -315,8 +307,7 @@
         {"shape":"ResourceNotFoundException"},
         {"shape":"InternalServerError"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "DescribeLimits":{
       "name":"DescribeLimits",
@@ -329,8 +320,7 @@
       "errors":[
         {"shape":"InternalServerError"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "DescribeTable":{
       "name":"DescribeTable",
@@ -344,8 +334,7 @@
         {"shape":"ResourceNotFoundException"},
         {"shape":"InternalServerError"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "DescribeTableReplicaAutoScaling":{
       "name":"DescribeTableReplicaAutoScaling",
@@ -372,8 +361,7 @@
         {"shape":"ResourceNotFoundException"},
         {"shape":"InternalServerError"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "DisableKinesisStreamingDestination":{
       "name":"DisableKinesisStreamingDestination",
@@ -389,8 +377,7 @@
         {"shape":"ResourceInUseException"},
         {"shape":"ResourceNotFoundException"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "EnableKinesisStreamingDestination":{
       "name":"EnableKinesisStreamingDestination",
@@ -406,8 +393,7 @@
         {"shape":"ResourceInUseException"},
         {"shape":"ResourceNotFoundException"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "ExecuteStatement":{
       "name":"ExecuteStatement",
@@ -425,7 +411,8 @@
         {"shape":"TransactionConflictException"},
         {"shape":"RequestLimitExceeded"},
         {"shape":"InternalServerError"},
-        {"shape":"DuplicateItemException"}
+        {"shape":"DuplicateItemException"},
+        {"shape":"ThrottlingException"}
       ]
     },
     "ExecuteTransaction":{
@@ -443,7 +430,8 @@
         {"shape":"IdempotentParameterMismatchException"},
         {"shape":"ProvisionedThroughputExceededException"},
         {"shape":"RequestLimitExceeded"},
-        {"shape":"InternalServerError"}
+        {"shape":"InternalServerError"},
+        {"shape":"ThrottlingException"}
       ]
     },
     "ExportTableToPointInTime":{
@@ -475,10 +463,10 @@
         {"shape":"ProvisionedThroughputExceededException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"RequestLimitExceeded"},
-        {"shape":"InternalServerError"}
+        {"shape":"InternalServerError"},
+        {"shape":"ThrottlingException"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "GetResourcePolicy":{
       "name":"GetResourcePolicy",
@@ -493,8 +481,7 @@
         {"shape":"InternalServerError"},
         {"shape":"PolicyNotFoundException"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "ImportTable":{
       "name":"ImportTable",
@@ -524,8 +511,7 @@
       "errors":[
         {"shape":"InternalServerError"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "ListContributorInsights":{
       "name":"ListContributorInsights",
@@ -564,8 +550,7 @@
       "errors":[
         {"shape":"InternalServerError"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "ListImports":{
       "name":"ListImports",
@@ -590,8 +575,7 @@
       "errors":[
         {"shape":"InternalServerError"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "ListTagsOfResource":{
       "name":"ListTagsOfResource",
@@ -605,8 +589,7 @@
         {"shape":"ResourceNotFoundException"},
         {"shape":"InternalServerError"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "PutItem":{
       "name":"PutItem",
@@ -624,10 +607,10 @@
         {"shape":"TransactionConflictException"},
         {"shape":"RequestLimitExceeded"},
         {"shape":"InternalServerError"},
-        {"shape":"ReplicatedWriteConflictException"}
+        {"shape":"ReplicatedWriteConflictException"},
+        {"shape":"ThrottlingException"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "PutResourcePolicy":{
       "name":"PutResourcePolicy",
@@ -644,8 +627,7 @@
         {"shape":"PolicyNotFoundException"},
         {"shape":"ResourceInUseException"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "Query":{
       "name":"Query",
@@ -659,10 +641,10 @@
         {"shape":"ProvisionedThroughputExceededException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"RequestLimitExceeded"},
-        {"shape":"InternalServerError"}
+        {"shape":"InternalServerError"},
+        {"shape":"ThrottlingException"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "RestoreTableFromBackup":{
       "name":"RestoreTableFromBackup",
@@ -680,8 +662,7 @@
         {"shape":"LimitExceededException"},
         {"shape":"InternalServerError"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "RestoreTableToPointInTime":{
       "name":"RestoreTableToPointInTime",
@@ -700,8 +681,7 @@
         {"shape":"PointInTimeRecoveryUnavailableException"},
         {"shape":"InternalServerError"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "Scan":{
       "name":"Scan",
@@ -715,9 +695,27 @@
         {"shape":"ProvisionedThroughputExceededException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"RequestLimitExceeded"},
-        {"shape":"InternalServerError"}
+        {"shape":"InternalServerError"},
+        {"shape":"ThrottlingException"}
       ],
-      "endpointdiscovery":{
+      "endpointdiscovery":{}
+    },
+    "SearchVectors":{
+      "name":"SearchVectors",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"SearchVectorsInput"},
+      "output":{"shape":"SearchVectorsOutput"},
+      "errors":[
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"RequestLimitExceeded"},
+        {"shape":"InternalServerError"},
+        {"shape":"ThrottlingException"}
+      ],
+      "staticContextParams":{
+        "IsSearchOperation":{"value":true}
       }
     },
     "TagResource":{
@@ -733,8 +731,7 @@
         {"shape":"InternalServerError"},
         {"shape":"ResourceInUseException"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "TransactGetItems":{
       "name":"TransactGetItems",
@@ -749,10 +746,10 @@
         {"shape":"TransactionCanceledException"},
         {"shape":"ProvisionedThroughputExceededException"},
         {"shape":"RequestLimitExceeded"},
-        {"shape":"InternalServerError"}
+        {"shape":"InternalServerError"},
+        {"shape":"ThrottlingException"}
       ],
-      "endpointdiscovery":{
-      },
+      "endpointdiscovery":{},
       "operationContextParams":{
         "ResourceArnList":{"path":"TransactItems[*].Get.TableName"}
       }
@@ -772,9 +769,12 @@
         {"shape":"IdempotentParameterMismatchException"},
         {"shape":"ProvisionedThroughputExceededException"},
         {"shape":"RequestLimitExceeded"},
-        {"shape":"InternalServerError"}
+        {"shape":"InternalServerError"},
+        {"shape":"ThrottlingException"}
       ],
-      "endpointdiscovery":{
+      "endpointdiscovery":{},
+      "operationContextParams":{
+        "ResourceArnList":{"path":"TransactItems[*].[ConditionCheck.TableName, Put.TableName, Delete.TableName, Update.TableName][]"}
       }
     },
     "UntagResource":{
@@ -790,8 +790,7 @@
         {"shape":"InternalServerError"},
         {"shape":"ResourceInUseException"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "UpdateContinuousBackups":{
       "name":"UpdateContinuousBackups",
@@ -806,8 +805,7 @@
         {"shape":"ContinuousBackupsUnavailableException"},
         {"shape":"InternalServerError"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "UpdateContributorInsights":{
       "name":"UpdateContributorInsights",
@@ -837,8 +835,7 @@
         {"shape":"ReplicaNotFoundException"},
         {"shape":"TableNotFoundException"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "UpdateGlobalTableSettings":{
       "name":"UpdateGlobalTableSettings",
@@ -856,8 +853,7 @@
         {"shape":"ResourceInUseException"},
         {"shape":"InternalServerError"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "UpdateItem":{
       "name":"UpdateItem",
@@ -875,10 +871,10 @@
         {"shape":"TransactionConflictException"},
         {"shape":"RequestLimitExceeded"},
         {"shape":"InternalServerError"},
-        {"shape":"ReplicatedWriteConflictException"}
+        {"shape":"ReplicatedWriteConflictException"},
+        {"shape":"ThrottlingException"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "UpdateKinesisStreamingDestination":{
       "name":"UpdateKinesisStreamingDestination",
@@ -894,8 +890,7 @@
         {"shape":"ResourceInUseException"},
         {"shape":"ResourceNotFoundException"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "UpdateTable":{
       "name":"UpdateTable",
@@ -911,8 +906,7 @@
         {"shape":"LimitExceededException"},
         {"shape":"InternalServerError"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     },
     "UpdateTableReplicaAutoScaling":{
       "name":"UpdateTableReplicaAutoScaling",
@@ -943,8 +937,7 @@
         {"shape":"LimitExceededException"},
         {"shape":"InternalServerError"}
       ],
-      "endpointdiscovery":{
-      }
+      "endpointdiscovery":{}
     }
   },
   "shapes":{
@@ -1103,6 +1096,7 @@
         "TargetValue":{"shape":"DoubleObject"}
       }
     },
+    "AvailabilityErrorMessage":{"type":"string"},
     "Backfilling":{"type":"boolean"},
     "BackupArn":{
       "type":"string",
@@ -1450,7 +1444,8 @@
         "WriteCapacityUnits":{"shape":"ConsumedCapacityUnits"},
         "Table":{"shape":"Capacity"},
         "LocalSecondaryIndexes":{"shape":"SecondaryIndexesCapacityMap"},
-        "GlobalSecondaryIndexes":{"shape":"SecondaryIndexesCapacityMap"}
+        "GlobalSecondaryIndexes":{"shape":"SecondaryIndexesCapacityMap"},
+        "VectorIndexes":{"shape":"VectorIndexesCapacityMap"}
       }
     },
     "ConsumedCapacityMultiple":{
@@ -1487,6 +1482,13 @@
         "DISABLE"
       ]
     },
+    "ContributorInsightsMode":{
+      "type":"string",
+      "enum":[
+        "ACCESSED_AND_THROTTLED_KEYS",
+        "THROTTLED_KEYS"
+      ]
+    },
     "ContributorInsightsRule":{
       "type":"string",
       "pattern":"[A-Za-z0-9][A-Za-z0-9\\-\\_\\.]{0,126}[A-Za-z0-9]"
@@ -1514,7 +1516,8 @@
       "members":{
         "TableName":{"shape":"TableName"},
         "IndexName":{"shape":"IndexName"},
-        "ContributorInsightsStatus":{"shape":"ContributorInsightsStatus"}
+        "ContributorInsightsStatus":{"shape":"ContributorInsightsStatus"},
+        "ContributorInsightsMode":{"shape":"ContributorInsightsMode"}
       }
     },
     "CreateBackupInput":{
@@ -1573,6 +1576,13 @@
         "GlobalTableDescription":{"shape":"GlobalTableDescription"}
       }
     },
+    "CreateGlobalTableWitnessGroupMemberAction":{
+      "type":"structure",
+      "required":["RegionName"],
+      "members":{
+        "RegionName":{"shape":"RegionName"}
+      }
+    },
     "CreateReplicaAction":{
       "type":"structure",
       "required":["RegionName"],
@@ -1594,11 +1604,7 @@
     },
     "CreateTableInput":{
       "type":"structure",
-      "required":[
-        "AttributeDefinitions",
-        "TableName",
-        "KeySchema"
-      ],
+      "required":["TableName"],
       "members":{
         "AttributeDefinitions":{"shape":"AttributeDefinitions"},
         "TableName":{
@@ -1617,13 +1623,34 @@
         "DeletionProtectionEnabled":{"shape":"DeletionProtectionEnabled"},
         "WarmThroughput":{"shape":"WarmThroughput"},
         "ResourcePolicy":{"shape":"ResourcePolicy"},
-        "OnDemandThroughput":{"shape":"OnDemandThroughput"}
+        "OnDemandThroughput":{"shape":"OnDemandThroughput"},
+        "GlobalTableSourceArn":{"shape":"TableArn"},
+        "GlobalTableSettingsReplicationMode":{"shape":"GlobalTableSettingsReplicationMode"},
+        "VectorIndexes":{"shape":"VectorIndexList"}
       }
     },
     "CreateTableOutput":{
       "type":"structure",
       "members":{
         "TableDescription":{"shape":"TableDescription"}
+      }
+    },
+    "CreateVectorIndexAction":{
+      "type":"structure",
+      "required":[
+        "IndexName",
+        "VectorAttribute",
+        "Projection",
+        "Dimensions",
+        "DistanceFunction"
+      ],
+      "members":{
+        "IndexName":{"shape":"IndexName"},
+        "VectorAttribute":{"shape":"VectorAttributeDefinition"},
+        "SearchSchema":{"shape":"SearchSchema"},
+        "Projection":{"shape":"Projection"},
+        "Dimensions":{"shape":"PositiveLongObject"},
+        "DistanceFunction":{"shape":"VectorDistanceFunction"}
       }
     },
     "CsvDelimiter":{
@@ -1688,6 +1715,13 @@
       "required":["IndexName"],
       "members":{
         "IndexName":{"shape":"IndexName"}
+      }
+    },
+    "DeleteGlobalTableWitnessGroupMemberAction":{
+      "type":"structure",
+      "required":["RegionName"],
+      "members":{
+        "RegionName":{"shape":"RegionName"}
       }
     },
     "DeleteItemInput":{
@@ -1775,6 +1809,13 @@
         "TableDescription":{"shape":"TableDescription"}
       }
     },
+    "DeleteVectorIndexAction":{
+      "type":"structure",
+      "required":["IndexName"],
+      "members":{
+        "IndexName":{"shape":"IndexName"}
+      }
+    },
     "DeletionProtectionEnabled":{"type":"boolean"},
     "DescribeBackupInput":{
       "type":"structure",
@@ -1827,13 +1868,13 @@
         "ContributorInsightsRuleList":{"shape":"ContributorInsightsRuleList"},
         "ContributorInsightsStatus":{"shape":"ContributorInsightsStatus"},
         "LastUpdateDateTime":{"shape":"LastUpdateDateTime"},
-        "FailureException":{"shape":"FailureException"}
+        "FailureException":{"shape":"FailureException"},
+        "ContributorInsightsMode":{"shape":"ContributorInsightsMode"}
       }
     },
     "DescribeEndpointsRequest":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DescribeEndpointsResponse":{
       "type":"structure",
@@ -1927,8 +1968,7 @@
     },
     "DescribeLimitsInput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DescribeLimitsOutput":{
       "type":"structure",
@@ -2433,6 +2473,14 @@
       },
       "exception":true
     },
+    "GlobalTableSettingsReplicationMode":{
+      "type":"string",
+      "enum":[
+        "ENABLED",
+        "DISABLED",
+        "ENABLED_WITH_OVERRIDES"
+      ]
+    },
     "GlobalTableStatus":{
       "type":"string",
       "enum":[
@@ -2441,6 +2489,30 @@
         "DELETING",
         "UPDATING"
       ]
+    },
+    "GlobalTableWitnessDescription":{
+      "type":"structure",
+      "members":{
+        "RegionName":{"shape":"RegionName"},
+        "WitnessStatus":{"shape":"WitnessStatus"}
+      }
+    },
+    "GlobalTableWitnessDescriptionList":{
+      "type":"list",
+      "member":{"shape":"GlobalTableWitnessDescription"}
+    },
+    "GlobalTableWitnessGroupUpdate":{
+      "type":"structure",
+      "members":{
+        "Create":{"shape":"CreateGlobalTableWitnessGroupMemberAction"},
+        "Delete":{"shape":"DeleteGlobalTableWitnessGroupMemberAction"}
+      }
+    },
+    "GlobalTableWitnessGroupUpdateList":{
+      "type":"list",
+      "member":{"shape":"GlobalTableWitnessGroupUpdate"},
+      "max":1,
+      "min":1
     },
     "IdempotentParameterMismatchException":{
       "type":"structure",
@@ -2708,7 +2780,6 @@
     "KeySchema":{
       "type":"list",
       "member":{"shape":"KeySchemaElement"},
-      "max":2,
       "min":1
     },
     "KeySchemaAttributeName":{
@@ -3163,7 +3234,8 @@
     "ProvisionedThroughputExceededException":{
       "type":"structure",
       "members":{
-        "message":{"shape":"ErrorMessage"}
+        "message":{"shape":"ErrorMessage"},
+        "ThrottlingReasons":{"shape":"ThrottlingReasonList"}
       },
       "exception":true
     },
@@ -3289,6 +3361,7 @@
         "ConsumedCapacity":{"shape":"ConsumedCapacity"}
       }
     },
+    "Reason":{"type":"string"},
     "RecoveryPeriodInDays":{
       "type":"integer",
       "max":35,
@@ -3341,6 +3414,7 @@
       "members":{
         "RegionName":{"shape":"RegionName"},
         "ReplicaStatus":{"shape":"ReplicaStatus"},
+        "ReplicaArn":{"shape":"String"},
         "ReplicaStatusDescription":{"shape":"ReplicaStatusDescription"},
         "ReplicaStatusPercentProgress":{"shape":"ReplicaStatusPercentProgress"},
         "KMSMasterKeyId":{"shape":"KMSMasterKeyId"},
@@ -3349,7 +3423,8 @@
         "WarmThroughput":{"shape":"TableWarmThroughputDescription"},
         "GlobalSecondaryIndexes":{"shape":"ReplicaGlobalSecondaryIndexDescriptionList"},
         "ReplicaInaccessibleDateTime":{"shape":"Date"},
-        "ReplicaTableClassSummary":{"shape":"TableClassSummary"}
+        "ReplicaTableClassSummary":{"shape":"TableClassSummary"},
+        "GlobalTableSettingsReplicationMode":{"shape":"GlobalTableSettingsReplicationMode"}
       }
     },
     "ReplicaDescriptionList":{
@@ -3494,7 +3569,10 @@
         "DELETING",
         "ACTIVE",
         "REGION_DISABLED",
-        "INACCESSIBLE_ENCRYPTION_CREDENTIALS"
+        "INACCESSIBLE_ENCRYPTION_CREDENTIALS",
+        "ARCHIVING",
+        "ARCHIVED",
+        "REPLICATION_NOT_AUTHORIZED"
       ]
     },
     "ReplicaStatusDescription":{"type":"string"},
@@ -3515,7 +3593,8 @@
       "members":{
         "message":{"shape":"ErrorMessage"}
       },
-      "exception":true
+      "exception":true,
+      "retryable":{"throttling":false}
     },
     "ReplicationGroupUpdate":{
       "type":"structure",
@@ -3533,10 +3612,12 @@
     "RequestLimitExceeded":{
       "type":"structure",
       "members":{
-        "message":{"shape":"ErrorMessage"}
+        "message":{"shape":"ErrorMessage"},
+        "ThrottlingReasons":{"shape":"ThrottlingReasonList"}
       },
       "exception":true
     },
+    "Resource":{"type":"string"},
     "ResourceArnString":{
       "type":"string",
       "max":1283,
@@ -3588,7 +3669,8 @@
         "LocalSecondaryIndexOverride":{"shape":"LocalSecondaryIndexList"},
         "ProvisionedThroughputOverride":{"shape":"ProvisionedThroughput"},
         "OnDemandThroughputOverride":{"shape":"OnDemandThroughput"},
-        "SSESpecificationOverride":{"shape":"SSESpecification"}
+        "SSESpecificationOverride":{"shape":"SSESpecification"},
+        "VectorIndexOverride":{"shape":"VectorIndexList"}
       }
     },
     "RestoreTableFromBackupOutput":{
@@ -3614,7 +3696,8 @@
         "LocalSecondaryIndexOverride":{"shape":"LocalSecondaryIndexList"},
         "ProvisionedThroughputOverride":{"shape":"ProvisionedThroughput"},
         "OnDemandThroughputOverride":{"shape":"OnDemandThroughput"},
-        "SSESpecificationOverride":{"shape":"SSESpecification"}
+        "SSESpecificationOverride":{"shape":"SSESpecification"},
+        "VectorIndexOverride":{"shape":"VectorIndexList"}
       }
     },
     "RestoreTableToPointInTimeOutput":{
@@ -3777,6 +3860,77 @@
       "max":1000000,
       "min":1
     },
+    "ScoreNumber":{"type":"double"},
+    "SearchResultItem":{
+      "type":"structure",
+      "members":{
+        "Item":{"shape":"AttributeMap"},
+        "Score":{"shape":"ScoreNumber"}
+      }
+    },
+    "SearchResultList":{
+      "type":"list",
+      "member":{"shape":"SearchResultItem"}
+    },
+    "SearchSchema":{
+      "type":"list",
+      "member":{"shape":"SearchSchemaElement"},
+      "min":1
+    },
+    "SearchSchemaElement":{
+      "type":"structure",
+      "required":[
+        "AttributeName",
+        "SearchSchemaElementType"
+      ],
+      "members":{
+        "AttributeName":{"shape":"AttributeName"},
+        "SearchSchemaElementType":{"shape":"SearchSchemaElementType"}
+      }
+    },
+    "SearchSchemaElementType":{
+      "type":"string",
+      "enum":[
+        "HASH",
+        "INLINE_FILTER"
+      ]
+    },
+    "SearchVectorList":{
+      "type":"list",
+      "member":{"shape":"AttributeValue"},
+      "max":4096,
+      "min":1
+    },
+    "SearchVectorsInput":{
+      "type":"structure",
+      "required":[
+        "TableName",
+        "IndexName",
+        "SearchVector",
+        "TopK"
+      ],
+      "members":{
+        "TableName":{
+          "shape":"TableArn",
+          "contextParam":{"name":"ResourceArn"}
+        },
+        "IndexName":{"shape":"IndexName"},
+        "ReturnConsumedCapacity":{"shape":"ReturnConsumedCapacity"},
+        "ExpressionAttributeNames":{"shape":"ExpressionAttributeNameMap"},
+        "ExpressionAttributeValues":{"shape":"ExpressionAttributeValueMap"},
+        "ProjectionExpression":{"shape":"ProjectionExpression"},
+        "SearchVector":{"shape":"SearchVectorList"},
+        "SearchConditionExpression":{"shape":"String"},
+        "TopK":{"shape":"TopKInteger"}
+      }
+    },
+    "SearchVectorsOutput":{
+      "type":"structure",
+      "members":{
+        "ConsumedCapacity":{"shape":"VectorCapacity"},
+        "SearchResults":{"shape":"SearchResultList"}
+      }
+    },
     "SecondaryIndexesCapacityMap":{
       "type":"map",
       "key":{"shape":"IndexName"},
@@ -3820,7 +3974,8 @@
         "GlobalSecondaryIndexes":{"shape":"GlobalSecondaryIndexes"},
         "StreamDescription":{"shape":"StreamSpecification"},
         "TimeToLiveDescription":{"shape":"TimeToLiveDescription"},
-        "SSEDescription":{"shape":"SSEDescription"}
+        "SSEDescription":{"shape":"SSEDescription"},
+        "VectorIndexes":{"shape":"VectorIndexes"}
       }
     },
     "StreamArn":{
@@ -3902,7 +4057,8 @@
         "ProvisionedThroughput":{"shape":"ProvisionedThroughput"},
         "OnDemandThroughput":{"shape":"OnDemandThroughput"},
         "SSESpecification":{"shape":"SSESpecification"},
-        "GlobalSecondaryIndexes":{"shape":"GlobalSecondaryIndexList"}
+        "GlobalSecondaryIndexes":{"shape":"GlobalSecondaryIndexList"},
+        "VectorIndexes":{"shape":"VectorIndexList"}
       }
     },
     "TableDescription":{
@@ -3926,6 +4082,8 @@
         "LatestStreamArn":{"shape":"StreamArn"},
         "GlobalTableVersion":{"shape":"String"},
         "Replicas":{"shape":"ReplicaDescriptionList"},
+        "GlobalTableWitnesses":{"shape":"GlobalTableWitnessDescriptionList"},
+        "GlobalTableSettingsReplicationMode":{"shape":"GlobalTableSettingsReplicationMode"},
         "RestoreSummary":{"shape":"RestoreSummary"},
         "SSEDescription":{"shape":"SSEDescription"},
         "ArchivalSummary":{"shape":"ArchivalSummary"},
@@ -3933,7 +4091,8 @@
         "DeletionProtectionEnabled":{"shape":"DeletionProtectionEnabled"},
         "OnDemandThroughput":{"shape":"OnDemandThroughput"},
         "WarmThroughput":{"shape":"TableWarmThroughputDescription"},
-        "MultiRegionConsistency":{"shape":"MultiRegionConsistency"}
+        "MultiRegionConsistency":{"shape":"MultiRegionConsistency"},
+        "VectorIndexes":{"shape":"VectorIndexDescriptionList"}
       }
     },
     "TableId":{
@@ -3973,7 +4132,8 @@
         "ACTIVE",
         "INACCESSIBLE_ENCRYPTION_CREDENTIALS",
         "ARCHIVING",
-        "ARCHIVED"
+        "ARCHIVED",
+        "REPLICATION_NOT_AUTHORIZED"
       ]
     },
     "TableWarmThroughputDescription":{
@@ -4027,6 +4187,26 @@
       "max":256,
       "min":0
     },
+    "ThrottlingException":{
+      "type":"structure",
+      "members":{
+        "message":{"shape":"AvailabilityErrorMessage"},
+        "throttlingReasons":{"shape":"ThrottlingReasonList"}
+      },
+      "exception":true,
+      "synthetic":true
+    },
+    "ThrottlingReason":{
+      "type":"structure",
+      "members":{
+        "reason":{"shape":"Reason"},
+        "resource":{"shape":"Resource"}
+      }
+    },
+    "ThrottlingReasonList":{
+      "type":"list",
+      "member":{"shape":"ThrottlingReason"}
+    },
     "TimeRangeLowerBound":{"type":"timestamp"},
     "TimeRangeUpperBound":{"type":"timestamp"},
     "TimeToLiveAttributeName":{
@@ -4061,6 +4241,11 @@
         "ENABLED",
         "DISABLED"
       ]
+    },
+    "TopKInteger":{
+      "type":"integer",
+      "box":true,
+      "min":1
     },
     "TransactGetItem":{
       "type":"structure",
@@ -4210,7 +4395,8 @@
           "contextParam":{"name":"ResourceArn"}
         },
         "IndexName":{"shape":"IndexName"},
-        "ContributorInsightsAction":{"shape":"ContributorInsightsAction"}
+        "ContributorInsightsAction":{"shape":"ContributorInsightsAction"},
+        "ContributorInsightsMode":{"shape":"ContributorInsightsMode"}
       }
     },
     "UpdateContributorInsightsOutput":{
@@ -4218,7 +4404,8 @@
       "members":{
         "TableName":{"shape":"TableName"},
         "IndexName":{"shape":"IndexName"},
-        "ContributorInsightsStatus":{"shape":"ContributorInsightsStatus"}
+        "ContributorInsightsStatus":{"shape":"ContributorInsightsStatus"},
+        "ContributorInsightsMode":{"shape":"ContributorInsightsMode"}
       }
     },
     "UpdateExpression":{"type":"string"},
@@ -4367,8 +4554,11 @@
         "TableClass":{"shape":"TableClass"},
         "DeletionProtectionEnabled":{"shape":"DeletionProtectionEnabled"},
         "MultiRegionConsistency":{"shape":"MultiRegionConsistency"},
+        "GlobalTableWitnessUpdates":{"shape":"GlobalTableWitnessGroupUpdateList"},
         "OnDemandThroughput":{"shape":"OnDemandThroughput"},
-        "WarmThroughput":{"shape":"WarmThroughput"}
+        "WarmThroughput":{"shape":"WarmThroughput"},
+        "GlobalTableSettingsReplicationMode":{"shape":"GlobalTableSettingsReplicationMode"},
+        "VectorIndexUpdates":{"shape":"VectorIndexUpdateList"}
       }
     },
     "UpdateTableOutput":{
@@ -4416,12 +4606,120 @@
         "TimeToLiveSpecification":{"shape":"TimeToLiveSpecification"}
       }
     },
+    "VectorAttributeDefinition":{
+      "type":"structure",
+      "required":["AttributeName"],
+      "members":{
+        "AttributeName":{"shape":"VectorAttributeName"}
+      }
+    },
+    "VectorAttributeName":{
+      "type":"string",
+      "max":255,
+      "min":1
+    },
+    "VectorCapacity":{
+      "type":"structure",
+      "members":{
+        "VectorSearchRequestBytes":{"shape":"ConsumedCapacityUnits"},
+        "VectorWriteRequestBytes":{"shape":"ConsumedCapacityUnits"}
+      }
+    },
+    "VectorDistanceFunction":{
+      "type":"string",
+      "enum":[
+        "COSINE",
+        "DOT_PRODUCT",
+        "EUCLIDEAN"
+      ]
+    },
+    "VectorIndex":{
+      "type":"structure",
+      "required":[
+        "IndexName",
+        "VectorAttribute",
+        "Projection",
+        "Dimensions",
+        "DistanceFunction"
+      ],
+      "members":{
+        "IndexName":{"shape":"IndexName"},
+        "VectorAttribute":{"shape":"VectorAttributeDefinition"},
+        "SearchSchema":{"shape":"SearchSchema"},
+        "Projection":{"shape":"Projection"},
+        "Dimensions":{"shape":"PositiveLongObject"},
+        "DistanceFunction":{"shape":"VectorDistanceFunction"}
+      }
+    },
+    "VectorIndexDescription":{
+      "type":"structure",
+      "members":{
+        "IndexName":{"shape":"IndexName"},
+        "SearchSchema":{"shape":"SearchSchema"},
+        "Projection":{"shape":"Projection"},
+        "VectorAttribute":{"shape":"VectorAttributeDefinition"},
+        "Dimensions":{"shape":"PositiveLongObject"},
+        "DistanceFunction":{"shape":"VectorDistanceFunction"},
+        "IndexStatus":{"shape":"IndexStatus"},
+        "Backfilling":{"shape":"Backfilling"},
+        "IndexSizeBytes":{"shape":"LongObject"},
+        "ItemCount":{"shape":"LongObject"},
+        "IndexArn":{"shape":"String"}
+      }
+    },
+    "VectorIndexDescriptionList":{
+      "type":"list",
+      "member":{"shape":"VectorIndexDescription"}
+    },
+    "VectorIndexInfo":{
+      "type":"structure",
+      "members":{
+        "IndexName":{"shape":"IndexName"},
+        "VectorAttribute":{"shape":"VectorAttributeDefinition"},
+        "SearchSchema":{"shape":"SearchSchema"},
+        "Projection":{"shape":"Projection"},
+        "Dimensions":{"shape":"PositiveLongObject"},
+        "DistanceFunction":{"shape":"VectorDistanceFunction"}
+      }
+    },
+    "VectorIndexList":{
+      "type":"list",
+      "member":{"shape":"VectorIndex"}
+    },
+    "VectorIndexUpdate":{
+      "type":"structure",
+      "members":{
+        "Create":{"shape":"CreateVectorIndexAction"},
+        "Delete":{"shape":"DeleteVectorIndexAction"}
+      }
+    },
+    "VectorIndexUpdateList":{
+      "type":"list",
+      "member":{"shape":"VectorIndexUpdate"}
+    },
+    "VectorIndexes":{
+      "type":"list",
+      "member":{"shape":"VectorIndexInfo"}
+    },
+    "VectorIndexesCapacityMap":{
+      "type":"map",
+      "key":{"shape":"IndexName"},
+      "value":{"shape":"VectorCapacity"}
+    },
     "WarmThroughput":{
       "type":"structure",
       "members":{
         "ReadUnitsPerSecond":{"shape":"LongObject"},
         "WriteUnitsPerSecond":{"shape":"LongObject"}
       }
+    },
+    "WitnessStatus":{
+      "type":"string",
+      "enum":[
+        "CREATING",
+        "DELETING",
+        "ACTIVE"
+      ]
     },
     "WriteRequest":{
       "type":"structure",

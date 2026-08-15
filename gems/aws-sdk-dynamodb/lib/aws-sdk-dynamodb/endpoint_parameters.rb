@@ -13,42 +13,47 @@ module Aws::DynamoDB
   # @!attribute region
   #   The AWS region used to dispatch the request.
   #
-  #   @return [String]
+  #   @return [string]
   #
   # @!attribute use_dual_stack
   #   When true, use the dual-stack endpoint. If the configured endpoint does not support dual-stack, dispatching the request MAY return an error.
   #
-  #   @return [Boolean]
+  #   @return [boolean]
   #
   # @!attribute use_fips
   #   When true, send this request to the FIPS-compliant regional endpoint. If the configured endpoint does not have a FIPS compliant endpoint, dispatching the request will return an error.
   #
-  #   @return [Boolean]
+  #   @return [boolean]
   #
   # @!attribute endpoint
   #   Override the endpoint used to send this request
   #
-  #   @return [String]
+  #   @return [string]
   #
   # @!attribute account_id
   #   The AWS AccountId used for the request.
   #
-  #   @return [String]
+  #   @return [string]
   #
   # @!attribute account_id_endpoint_mode
   #   The AccountId Endpoint Mode.
   #
-  #   @return [String]
+  #   @return [string]
   #
   # @!attribute resource_arn
   #   ResourceArn containing arn of resource
   #
-  #   @return [String]
+  #   @return [string]
   #
   # @!attribute resource_arn_list
   #   ResourceArnList containing list of resource arns
   #
   #   @return [stringArray]
+  #
+  # @!attribute is_search_operation
+  #   Set to true for SearchVectors to route to the Search FQDN
+  #
+  #   @return [boolean]
   #
   EndpointParameters = Struct.new(
     :region,
@@ -59,6 +64,7 @@ module Aws::DynamoDB
     :account_id_endpoint_mode,
     :resource_arn,
     :resource_arn_list,
+    :is_search_operation,
   ) do
     include Aws::Structure
 
@@ -73,6 +79,7 @@ module Aws::DynamoDB
         'AccountIdEndpointMode' => :account_id_endpoint_mode,
         'ResourceArn' => :resource_arn,
         'ResourceArnList' => :resource_arn_list,
+        'IsSearchOperation' => :is_search_operation,
       }.freeze
     end
 
@@ -87,6 +94,7 @@ module Aws::DynamoDB
       self[:account_id_endpoint_mode] = options[:account_id_endpoint_mode]
       self[:resource_arn] = options[:resource_arn]
       self[:resource_arn_list] = options[:resource_arn_list]
+      self[:is_search_operation] = options[:is_search_operation]
     end
 
     def self.create(config, options={})

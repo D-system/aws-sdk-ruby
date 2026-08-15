@@ -95,8 +95,8 @@ module Aws::Amplify
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::Amplify
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::Amplify
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::Amplify
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::Amplify
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::Amplify
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::Amplify
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::Amplify
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -606,6 +610,10 @@ module Aws::Amplify
     # @option params [Types::AutoBranchCreationConfig] :auto_branch_creation_config
     #   The automated branch creation configuration for an Amplify app.
     #
+    # @option params [Types::JobConfig] :job_config
+    #   Describes the configuration details that apply to the jobs for an
+    #   Amplify app.
+    #
     # @option params [Types::CacheConfig] :cache_config
     #   The cache configuration for the Amplify app.
     #
@@ -659,6 +667,9 @@ module Aws::Amplify
     #       build_spec: "BuildSpec",
     #       enable_pull_request_preview: false,
     #       pull_request_environment_name: "PullRequestEnvironmentName",
+    #     },
+    #     job_config: {
+    #       build_compute_type: "STANDARD_8GB", # required, accepts STANDARD_8GB, LARGE_16GB, XLARGE_72GB
     #     },
     #     cache_config: {
     #       type: "AMPLIFY_MANAGED", # required, accepts AMPLIFY_MANAGED, AMPLIFY_MANAGED_NO_COOKIES
@@ -717,6 +728,7 @@ module Aws::Amplify
     #   resp.app.waf_configuration.web_acl_arn #=> String
     #   resp.app.waf_configuration.waf_status #=> String, one of "ASSOCIATING", "ASSOCIATION_FAILED", "ASSOCIATION_SUCCESS", "DISASSOCIATING", "DISASSOCIATION_FAILED"
     #   resp.app.waf_configuration.status_reason #=> String
+    #   resp.app.job_config.build_compute_type #=> String, one of "STANDARD_8GB", "LARGE_16GB", "XLARGE_72GB"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/amplify-2017-07-25/CreateApp AWS API Documentation
     #
@@ -1208,6 +1220,7 @@ module Aws::Amplify
     #   resp.app.waf_configuration.web_acl_arn #=> String
     #   resp.app.waf_configuration.waf_status #=> String, one of "ASSOCIATING", "ASSOCIATION_FAILED", "ASSOCIATION_SUCCESS", "DISASSOCIATING", "DISASSOCIATION_FAILED"
     #   resp.app.waf_configuration.status_reason #=> String
+    #   resp.app.job_config.build_compute_type #=> String, one of "STANDARD_8GB", "LARGE_16GB", "XLARGE_72GB"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/amplify-2017-07-25/DeleteApp AWS API Documentation
     #
@@ -1566,6 +1579,7 @@ module Aws::Amplify
     #   resp.app.waf_configuration.web_acl_arn #=> String
     #   resp.app.waf_configuration.waf_status #=> String, one of "ASSOCIATING", "ASSOCIATION_FAILED", "ASSOCIATION_SUCCESS", "DISASSOCIATING", "DISASSOCIATION_FAILED"
     #   resp.app.waf_configuration.status_reason #=> String
+    #   resp.app.job_config.build_compute_type #=> String, one of "STANDARD_8GB", "LARGE_16GB", "XLARGE_72GB"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/amplify-2017-07-25/GetApp AWS API Documentation
     #
@@ -1934,6 +1948,7 @@ module Aws::Amplify
     #   resp.apps[0].waf_configuration.web_acl_arn #=> String
     #   resp.apps[0].waf_configuration.waf_status #=> String, one of "ASSOCIATING", "ASSOCIATION_FAILED", "ASSOCIATION_SUCCESS", "DISASSOCIATING", "DISASSOCIATION_FAILED"
     #   resp.apps[0].waf_configuration.status_reason #=> String
+    #   resp.apps[0].job_config.build_compute_type #=> String, one of "STANDARD_8GB", "LARGE_16GB", "XLARGE_72GB"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/amplify-2017-07-25/ListApps AWS API Documentation
@@ -2694,6 +2709,10 @@ module Aws::Amplify
     #
     #   [1]: https://docs.aws.amazon.com/amplify/latest/userguide/setting-up-GitHub-access.html#migrating-to-github-app-auth
     #
+    # @option params [Types::JobConfig] :job_config
+    #   Describes the configuration details that apply to the jobs for an
+    #   Amplify app.
+    #
     # @option params [Types::CacheConfig] :cache_config
     #   The cache configuration for the Amplify app.
     #
@@ -2746,6 +2765,9 @@ module Aws::Amplify
     #     repository: "Repository",
     #     oauth_token: "OauthToken",
     #     access_token: "AccessToken",
+    #     job_config: {
+    #       build_compute_type: "STANDARD_8GB", # required, accepts STANDARD_8GB, LARGE_16GB, XLARGE_72GB
+    #     },
     #     cache_config: {
     #       type: "AMPLIFY_MANAGED", # required, accepts AMPLIFY_MANAGED, AMPLIFY_MANAGED_NO_COOKIES
     #     },
@@ -2803,6 +2825,7 @@ module Aws::Amplify
     #   resp.app.waf_configuration.web_acl_arn #=> String
     #   resp.app.waf_configuration.waf_status #=> String, one of "ASSOCIATING", "ASSOCIATION_FAILED", "ASSOCIATION_SUCCESS", "DISASSOCIATING", "DISASSOCIATION_FAILED"
     #   resp.app.waf_configuration.status_reason #=> String
+    #   resp.app.job_config.build_compute_type #=> String, one of "STANDARD_8GB", "LARGE_16GB", "XLARGE_72GB"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/amplify-2017-07-25/UpdateApp AWS API Documentation
     #
@@ -3133,7 +3156,7 @@ module Aws::Amplify
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-amplify'
-      context[:gem_version] = '1.82.0'
+      context[:gem_version] = '1.105.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

@@ -17,7 +17,7 @@
       "name":"Autocomplete",
       "http":{
         "method":"POST",
-        "requestUri":"/autocomplete",
+        "requestUri":"/v2/autocomplete",
         "responseCode":200
       },
       "input":{"shape":"AutocompleteRequest"},
@@ -27,13 +27,14 @@
         {"shape":"AccessDeniedException"},
         {"shape":"ValidationException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "Geocode":{
       "name":"Geocode",
       "http":{
         "method":"POST",
-        "requestUri":"/geocode",
+        "requestUri":"/v2/geocode",
         "responseCode":200
       },
       "input":{"shape":"GeocodeRequest"},
@@ -43,13 +44,14 @@
         {"shape":"AccessDeniedException"},
         {"shape":"ValidationException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "GetPlace":{
       "name":"GetPlace",
       "http":{
         "method":"GET",
-        "requestUri":"/place/{PlaceId}",
+        "requestUri":"/v2/place/{PlaceId}",
         "responseCode":200
       },
       "input":{"shape":"GetPlaceRequest"},
@@ -59,13 +61,14 @@
         {"shape":"AccessDeniedException"},
         {"shape":"ValidationException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "ReverseGeocode":{
       "name":"ReverseGeocode",
       "http":{
         "method":"POST",
-        "requestUri":"/reverse-geocode",
+        "requestUri":"/v2/reverse-geocode",
         "responseCode":200
       },
       "input":{"shape":"ReverseGeocodeRequest"},
@@ -75,13 +78,14 @@
         {"shape":"AccessDeniedException"},
         {"shape":"ValidationException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "SearchNearby":{
       "name":"SearchNearby",
       "http":{
         "method":"POST",
-        "requestUri":"/search-nearby",
+        "requestUri":"/v2/search-nearby",
         "responseCode":200
       },
       "input":{"shape":"SearchNearbyRequest"},
@@ -91,13 +95,14 @@
         {"shape":"AccessDeniedException"},
         {"shape":"ValidationException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "SearchText":{
       "name":"SearchText",
       "http":{
         "method":"POST",
-        "requestUri":"/search-text",
+        "requestUri":"/v2/search-text",
         "responseCode":200
       },
       "input":{"shape":"SearchTextRequest"},
@@ -107,13 +112,14 @@
         {"shape":"AccessDeniedException"},
         {"shape":"ValidationException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "Suggest":{
       "name":"Suggest",
       "http":{
         "method":"POST",
-        "requestUri":"/suggest",
+        "requestUri":"/v2/suggest",
         "responseCode":200
       },
       "input":{"shape":"SuggestRequest"},
@@ -123,7 +129,8 @@
         {"shape":"AccessDeniedException"},
         {"shape":"ValidationException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     }
   },
   "shapes":{
@@ -145,7 +152,10 @@
     "AccessPoint":{
       "type":"structure",
       "members":{
-        "Position":{"shape":"Position"}
+        "Position":{"shape":"Position"},
+        "Type":{"shape":"AccessPointType"},
+        "Primary":{"shape":"SensitiveBoolean"},
+        "Label":{"shape":"SensitiveString"}
       }
     },
     "AccessPointList":{
@@ -154,10 +164,22 @@
       "max":100,
       "min":0
     },
+    "AccessPointType":{
+      "type":"string",
+      "enum":[
+        "Delivery",
+        "Emergency",
+        "Entrance",
+        "Loading",
+        "Other",
+        "Parking",
+        "Taxi"
+      ]
+    },
     "AccessRestriction":{
       "type":"structure",
       "members":{
-        "Restricted":{"shape":"Boolean"},
+        "Restricted":{"shape":"SensitiveBoolean"},
         "Categories":{"shape":"CategoryList"}
       }
     },
@@ -180,27 +202,31 @@
         "PostalCode":{"shape":"AddressPostalCodeString"},
         "Block":{"shape":"AddressBlockString"},
         "SubBlock":{"shape":"AddressSubBlockString"},
-        "Intersection":{"shape":"IntersectionList"},
+        "Intersection":{"shape":"IntersectionStreetList"},
         "Street":{"shape":"AddressStreetString"},
         "StreetComponents":{"shape":"StreetComponentsList"},
         "AddressNumber":{"shape":"AddressAddressNumberString"},
-        "Building":{"shape":"AddressBuildingString"}
+        "Building":{"shape":"AddressBuildingString"},
+        "SecondaryAddressComponents":{"shape":"SecondaryAddressComponentList"}
       }
     },
     "AddressAddressNumberString":{
       "type":"string",
       "max":10,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "AddressBlockString":{
       "type":"string",
       "max":200,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "AddressBuildingString":{
       "type":"string",
       "max":200,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "AddressComponentMatchScores":{
       "type":"structure",
@@ -216,7 +242,8 @@
         "SubBlock":{"shape":"MatchScore"},
         "Intersection":{"shape":"AddressComponentMatchScoresIntersectionList"},
         "AddressNumber":{"shape":"MatchScore"},
-        "Building":{"shape":"MatchScore"}
+        "Building":{"shape":"MatchScore"},
+        "SecondaryAddressComponents":{"shape":"SecondaryAddressComponentMatchScoreList"}
       }
     },
     "AddressComponentMatchScoresIntersectionList":{
@@ -242,37 +269,80 @@
     "AddressDistrictString":{
       "type":"string",
       "max":200,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "AddressLabelString":{
       "type":"string",
       "max":200,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "AddressLocalityString":{
       "type":"string",
       "max":200,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "AddressPostalCodeString":{
       "type":"string",
       "max":50,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "AddressStreetString":{
       "type":"string",
       "max":200,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "AddressSubBlockString":{
       "type":"string",
       "max":200,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "AddressSubDistrictString":{
       "type":"string",
       "max":200,
-      "min":0
+      "min":0,
+      "sensitive":true
+    },
+    "AddressTranslationComponent":{
+      "type":"string",
+      "enum":[
+        "District",
+        "Locality",
+        "Region",
+        "SubRegion"
+      ]
+    },
+    "AddressTranslationComponentList":{
+      "type":"list",
+      "member":{"shape":"AddressTranslationComponent"},
+      "max":4,
+      "min":1
+    },
+    "AdminNames":{
+      "type":"structure",
+      "required":["Names"],
+      "members":{
+        "Names":{"shape":"TranslationNameList"},
+        "Preference":{"shape":"AdminNamesPreference"}
+      }
+    },
+    "AdminNamesList":{
+      "type":"list",
+      "member":{"shape":"AdminNames"},
+      "max":2,
+      "min":1
+    },
+    "AdminNamesPreference":{
+      "type":"string",
+      "enum":[
+        "Alternative",
+        "Primary"
+      ]
     },
     "ApiKey":{
       "type":"string",
@@ -322,13 +392,19 @@
       "type":"string",
       "enum":[
         "Locality",
-        "PostalCode"
+        "PostalCode",
+        "Street",
+        "Intersection",
+        "PointAddress",
+        "InterpolatedAddress",
+        "Country",
+        "Region"
       ]
     },
     "AutocompleteFilterPlaceTypeList":{
       "type":"list",
       "member":{"shape":"AutocompleteFilterPlaceType"},
-      "max":2,
+      "max":8,
       "min":1
     },
     "AutocompleteHighlights":{
@@ -401,7 +477,8 @@
         "Distance":{"shape":"DistanceMeters"},
         "Language":{"shape":"LanguageTag"},
         "PoliticalView":{"shape":"CountryCode3"},
-        "Highlights":{"shape":"AutocompleteHighlights"}
+        "Highlights":{"shape":"AutocompleteHighlights"},
+        "EstimatedPointAddress":{"shape":"SensitiveBoolean"}
       }
     },
     "AutocompleteResultItemList":{
@@ -412,17 +489,15 @@
     },
     "AutocompleteResultItemPlaceIdString":{
       "type":"string",
-      "max":200,
-      "min":0
+      "max":500,
+      "min":0,
+      "sensitive":true
     },
     "AutocompleteResultItemTitleString":{
       "type":"string",
       "max":200,
-      "min":0
-    },
-    "Boolean":{
-      "type":"boolean",
-      "box":true
+      "min":0,
+      "sensitive":true
     },
     "BoundingBox":{
       "type":"list",
@@ -441,7 +516,8 @@
     "BusinessChainIdString":{
       "type":"string",
       "max":100,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "BusinessChainList":{
       "type":"list",
@@ -452,7 +528,8 @@
     "BusinessChainNameString":{
       "type":"string",
       "max":100,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "Category":{
       "type":"structure",
@@ -464,13 +541,14 @@
         "Id":{"shape":"CategoryIdString"},
         "Name":{"shape":"CategoryNameString"},
         "LocalizedName":{"shape":"CategoryLocalizedNameString"},
-        "Primary":{"shape":"Boolean"}
+        "Primary":{"shape":"SensitiveBoolean"}
       }
     },
     "CategoryIdString":{
       "type":"string",
       "max":100,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "CategoryList":{
       "type":"list",
@@ -481,12 +559,14 @@
     "CategoryLocalizedNameString":{
       "type":"string",
       "max":100,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "CategoryNameString":{
       "type":"string",
       "max":100,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "ComponentMatchScores":{
       "type":"structure",
@@ -506,7 +586,8 @@
     "ContactDetailsLabelString":{
       "type":"string",
       "max":200,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "ContactDetailsList":{
       "type":"list",
@@ -517,7 +598,8 @@
     "ContactDetailsValueString":{
       "type":"string",
       "max":200,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "Contacts":{
       "type":"structure",
@@ -540,19 +622,22 @@
       "type":"string",
       "max":3,
       "min":2,
-      "pattern":"([A-Z]{2}|[A-Z]{3})"
+      "pattern":"([A-Z]{2}|[A-Z]{3})",
+      "sensitive":true
     },
     "CountryCode2":{
       "type":"string",
       "max":2,
       "min":2,
-      "pattern":"[A-Z]{2}"
+      "pattern":"[A-Z]{2}",
+      "sensitive":true
     },
     "CountryCode3":{
       "type":"string",
       "max":3,
       "min":3,
-      "pattern":"[A-Z]{3}"
+      "pattern":"[A-Z]{3}",
+      "sensitive":true
     },
     "CountryCodeList":{
       "type":"list",
@@ -570,12 +655,44 @@
     "CountryNameString":{
       "type":"string",
       "max":100,
+      "min":0,
+      "sensitive":true
+    },
+    "CrossReference":{
+      "type":"structure",
+      "required":[
+        "Source",
+        "SourcePlaceId"
+      ],
+      "members":{
+        "Source":{"shape":"CrossReferenceSourceString"},
+        "SourcePlaceId":{"shape":"CrossReferenceSourcePlaceIdString"},
+        "SourceCategories":{"shape":"CategoryList"}
+      }
+    },
+    "CrossReferenceList":{
+      "type":"list",
+      "member":{"shape":"CrossReference"},
+      "max":100,
       "min":0
+    },
+    "CrossReferenceSourcePlaceIdString":{
+      "type":"string",
+      "max":100,
+      "min":1,
+      "sensitive":true
+    },
+    "CrossReferenceSourceString":{
+      "type":"string",
+      "max":100,
+      "min":1,
+      "sensitive":true
     },
     "DistanceMeters":{
       "type":"long",
       "max":4294967295,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "Double":{
       "type":"double",
@@ -590,7 +707,8 @@
     "FilterBusinessChainListMemberString":{
       "type":"string",
       "max":100,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "FilterCategoryList":{
       "type":"list",
@@ -601,7 +719,8 @@
     "FilterCategoryListMemberString":{
       "type":"string",
       "max":100,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "FilterCircle":{
       "type":"structure",
@@ -621,7 +740,8 @@
     "FilterCircleRadiusLong":{
       "type":"long",
       "max":21000000,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "FilterFoodTypeList":{
       "type":"list",
@@ -632,7 +752,8 @@
     "FilterFoodTypeListMemberString":{
       "type":"string",
       "max":100,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "FoodType":{
       "type":"structure",
@@ -640,13 +761,14 @@
       "members":{
         "LocalizedName":{"shape":"FoodTypeLocalizedNameString"},
         "Id":{"shape":"FoodTypeIdString"},
-        "Primary":{"shape":"Boolean"}
+        "Primary":{"shape":"SensitiveBoolean"}
       }
     },
     "FoodTypeIdString":{
       "type":"string",
       "max":100,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "FoodTypeList":{
       "type":"list",
@@ -657,20 +779,30 @@
     "FoodTypeLocalizedNameString":{
       "type":"string",
       "max":100,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "GeocodeAdditionalFeature":{
       "type":"string",
       "enum":[
         "TimeZone",
-        "Access"
+        "Access",
+        "SecondaryAddresses",
+        "Intersections"
       ]
     },
     "GeocodeAdditionalFeatureList":{
       "type":"list",
       "member":{"shape":"GeocodeAdditionalFeature"},
-      "max":2,
+      "max":4,
       "min":1
+    },
+    "GeocodeAddressNamesMode":{
+      "type":"string",
+      "enum":[
+        "Matched",
+        "Administrative"
+      ]
     },
     "GeocodeFilter":{
       "type":"structure",
@@ -687,13 +819,18 @@
         "Intersection",
         "Street",
         "PointAddress",
-        "InterpolatedAddress"
-      ]
+        "InterpolatedAddress",
+        "SecondaryAddress",
+        "PointOfInterest",
+        "Country",
+        "Region"
+      ],
+      "sensitive":true
     },
     "GeocodeFilterPlaceTypeList":{
       "type":"list",
       "member":{"shape":"GeocodeFilterPlaceType"},
-      "max":6,
+      "max":10,
       "min":1
     },
     "GeocodeIntendedUse":{
@@ -702,6 +839,32 @@
         "SingleUse",
         "Storage"
       ]
+    },
+    "GeocodeParsedQuery":{
+      "type":"structure",
+      "members":{
+        "Title":{"shape":"ParsedQueryComponentList"},
+        "Address":{"shape":"GeocodeParsedQueryAddressComponents"}
+      }
+    },
+    "GeocodeParsedQueryAddressComponents":{
+      "type":"structure",
+      "members":{
+        "Country":{"shape":"ParsedQueryComponentList"},
+        "Region":{"shape":"ParsedQueryComponentList"},
+        "SubRegion":{"shape":"ParsedQueryComponentList"},
+        "Locality":{"shape":"ParsedQueryComponentList"},
+        "District":{"shape":"ParsedQueryComponentList"},
+        "SubDistrict":{"shape":"ParsedQueryComponentList"},
+        "PostalCode":{"shape":"ParsedQueryComponentList"},
+        "Block":{"shape":"ParsedQueryComponentList"},
+        "SubBlock":{"shape":"ParsedQueryComponentList"},
+        "Street":{"shape":"ParsedQueryComponentList"},
+        "AddressNumber":{"shape":"ParsedQueryComponentList"},
+        "Building":{"shape":"ParsedQueryComponentList"},
+        "SecondaryAddressComponents":{"shape":"ParsedQuerySecondaryAddressComponentList"},
+        "OtherComponents":{"shape":"ParsedQueryComponentList"}
+      }
     },
     "GeocodeQueryComponents":{
       "type":"structure",
@@ -788,7 +951,10 @@
           "shape":"ApiKey",
           "location":"querystring",
           "locationName":"key"
-        }
+        },
+        "PostalCodeMode":{"shape":"PostalCodeMode"},
+        "AddressTranslations":{"shape":"AddressTranslationComponentList"},
+        "AddressNamesMode":{"shape":"GeocodeAddressNamesMode"}
       }
     },
     "GeocodeRequestMaxResultsInteger":{
@@ -827,7 +993,7 @@
         "PlaceType":{"shape":"PlaceType"},
         "Title":{"shape":"GeocodeResultItemTitleString"},
         "Address":{"shape":"Address"},
-        "AddressNumberCorrected":{"shape":"Boolean"},
+        "AddressNumberCorrected":{"shape":"SensitiveBoolean"},
         "PostalCodeDetails":{"shape":"PostalCodeDetailsList"},
         "Position":{"shape":"Position"},
         "Distance":{"shape":"DistanceMeters"},
@@ -837,7 +1003,13 @@
         "AccessPoints":{"shape":"AccessPointList"},
         "TimeZone":{"shape":"TimeZone"},
         "PoliticalView":{"shape":"CountryCode3"},
-        "MatchScores":{"shape":"MatchScoreDetails"}
+        "MatchScores":{"shape":"MatchScoreDetails"},
+        "ParsedQuery":{"shape":"GeocodeParsedQuery"},
+        "Intersections":{"shape":"IntersectionList"},
+        "MainAddress":{"shape":"RelatedPlace"},
+        "SecondaryAddresses":{"shape":"RelatedPlaceList"},
+        "Translations":{"shape":"TranslationDetails"},
+        "EstimatedPointAddress":{"shape":"SensitiveBoolean"}
       }
     },
     "GeocodeResultItemList":{
@@ -848,13 +1020,15 @@
     },
     "GeocodeResultItemPlaceIdString":{
       "type":"string",
-      "max":200,
-      "min":0
+      "max":500,
+      "min":0,
+      "sensitive":true
     },
     "GeocodeResultItemTitleString":{
       "type":"string",
       "max":200,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "GetPlaceAdditionalFeature":{
       "type":"string",
@@ -862,14 +1036,20 @@
         "TimeZone",
         "Phonemes",
         "Access",
-        "Contact"
+        "Contact",
+        "SecondaryAddresses",
+        "CrossReferences"
       ]
     },
     "GetPlaceAdditionalFeatureList":{
       "type":"list",
       "member":{"shape":"GetPlaceAdditionalFeature"},
-      "max":4,
+      "max":6,
       "min":1
+    },
+    "GetPlaceAddressNamesMode":{
+      "type":"string",
+      "enum":["Administrative"]
     },
     "GetPlaceIntendedUse":{
       "type":"string",
@@ -911,12 +1091,17 @@
           "shape":"ApiKey",
           "location":"querystring",
           "locationName":"key"
+        },
+        "AddressNamesMode":{
+          "shape":"GetPlaceAddressNamesMode",
+          "location":"querystring",
+          "locationName":"address-names-mode"
         }
       }
     },
     "GetPlaceRequestPlaceIdString":{
       "type":"string",
-      "max":200,
+      "max":500,
       "min":0,
       "sensitive":true
     },
@@ -938,7 +1123,7 @@
           "locationName":"x-amz-geo-pricing-bucket"
         },
         "Address":{"shape":"Address"},
-        "AddressNumberCorrected":{"shape":"Boolean"},
+        "AddressNumberCorrected":{"shape":"SensitiveBoolean"},
         "PostalCodeDetails":{"shape":"PostalCodeDetailsList"},
         "Position":{"shape":"Position"},
         "MapView":{"shape":"BoundingBox"},
@@ -951,18 +1136,31 @@
         "AccessRestrictions":{"shape":"AccessRestrictionList"},
         "TimeZone":{"shape":"TimeZone"},
         "PoliticalView":{"shape":"CountryCode3"},
-        "Phonemes":{"shape":"PhonemeDetails"}
+        "Phonemes":{"shape":"PhonemeDetails"},
+        "MainAddress":{"shape":"RelatedPlace"},
+        "SecondaryAddresses":{"shape":"RelatedPlaceList"},
+        "PlaceAttributes":{"shape":"PlaceAttributeList"},
+        "EstimatedPointAddress":{"shape":"SensitiveBoolean"},
+        "CrossReferences":{"shape":"CrossReferenceList"}
       }
     },
     "GetPlaceResponsePlaceIdString":{
       "type":"string",
-      "max":200,
-      "min":0
+      "max":500,
+      "min":0,
+      "sensitive":true
     },
     "GetPlaceResponseTitleString":{
       "type":"string",
       "max":200,
-      "min":0
+      "min":0,
+      "sensitive":true
+    },
+    "Heading":{
+      "type":"double",
+      "max":360.0,
+      "min":0.0,
+      "sensitive":true
     },
     "Highlight":{
       "type":"structure",
@@ -991,7 +1189,8 @@
     "HighlightValueString":{
       "type":"string",
       "max":200,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "InternalServerException":{
       "type":"structure",
@@ -1007,6 +1206,29 @@
       "fault":true,
       "retryable":{"throttling":false}
     },
+    "Intersection":{
+      "type":"structure",
+      "required":[
+        "PlaceId",
+        "Title"
+      ],
+      "members":{
+        "PlaceId":{"shape":"IntersectionPlaceIdString"},
+        "Title":{"shape":"IntersectionTitleString"},
+        "Address":{"shape":"Address"},
+        "Position":{"shape":"Position"},
+        "Distance":{
+          "shape":"DistanceMeters",
+          "box":true
+        },
+        "RouteDistance":{
+          "shape":"DistanceMeters",
+          "box":true
+        },
+        "MapView":{"shape":"BoundingBox"},
+        "AccessPoints":{"shape":"AccessPointList"}
+      }
+    },
     "IntersectionHighlightsList":{
       "type":"list",
       "member":{"shape":"HighlightList"},
@@ -1015,14 +1237,31 @@
     },
     "IntersectionList":{
       "type":"list",
-      "member":{"shape":"IntersectionStreet"},
-      "max":100,
+      "member":{"shape":"Intersection"},
       "min":1
+    },
+    "IntersectionPlaceIdString":{
+      "type":"string",
+      "max":500,
+      "min":0,
+      "sensitive":true
     },
     "IntersectionStreet":{
       "type":"string",
       "max":200,
       "min":0
+    },
+    "IntersectionStreetList":{
+      "type":"list",
+      "member":{"shape":"IntersectionStreet"},
+      "max":100,
+      "min":1
+    },
+    "IntersectionTitleString":{
+      "type":"string",
+      "max":200,
+      "min":0,
+      "sensitive":true
     },
     "LanguageTag":{
       "type":"string",
@@ -1045,7 +1284,7 @@
       "type":"structure",
       "members":{
         "Display":{"shape":"OpeningHoursDisplayList"},
-        "OpenNow":{"shape":"Boolean"},
+        "OpenNow":{"shape":"SensitiveBoolean"},
         "Components":{"shape":"OpeningHoursComponentsList"},
         "Categories":{"shape":"CategoryList"}
       }
@@ -1067,22 +1306,26 @@
     "OpeningHoursComponentsOpenDurationString":{
       "type":"string",
       "max":200,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "OpeningHoursComponentsOpenTimeString":{
       "type":"string",
       "max":21,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "OpeningHoursComponentsRecurrenceString":{
       "type":"string",
       "max":200,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "OpeningHoursDisplay":{
       "type":"string",
       "max":200,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "OpeningHoursDisplayList":{
       "type":"list",
@@ -1096,6 +1339,94 @@
       "max":100,
       "min":1
     },
+    "ParsedQueryComponent":{
+      "type":"structure",
+      "members":{
+        "StartIndex":{"shape":"ParsedQueryComponentStartIndexInteger"},
+        "EndIndex":{"shape":"ParsedQueryComponentEndIndexInteger"},
+        "Value":{"shape":"ParsedQueryComponentValueString"},
+        "QueryComponent":{"shape":"ParsedQueryComponentQueryComponentString"}
+      }
+    },
+    "ParsedQueryComponentEndIndexInteger":{
+      "type":"integer",
+      "box":true,
+      "min":0
+    },
+    "ParsedQueryComponentList":{
+      "type":"list",
+      "member":{"shape":"ParsedQueryComponent"},
+      "max":200,
+      "min":0
+    },
+    "ParsedQueryComponentQueryComponentString":{
+      "type":"string",
+      "max":11,
+      "min":0,
+      "sensitive":true
+    },
+    "ParsedQueryComponentStartIndexInteger":{
+      "type":"integer",
+      "box":true,
+      "min":0
+    },
+    "ParsedQueryComponentValueString":{
+      "type":"string",
+      "max":200,
+      "min":0,
+      "sensitive":true
+    },
+    "ParsedQuerySecondaryAddressComponent":{
+      "type":"structure",
+      "required":[
+        "StartIndex",
+        "EndIndex",
+        "Value",
+        "Number",
+        "Designator"
+      ],
+      "members":{
+        "StartIndex":{"shape":"ParsedQuerySecondaryAddressComponentStartIndexInteger"},
+        "EndIndex":{"shape":"ParsedQuerySecondaryAddressComponentEndIndexInteger"},
+        "Value":{"shape":"ParsedQuerySecondaryAddressComponentValueString"},
+        "Number":{"shape":"ParsedQuerySecondaryAddressComponentNumberString"},
+        "Designator":{"shape":"ParsedQuerySecondaryAddressComponentDesignatorString"}
+      }
+    },
+    "ParsedQuerySecondaryAddressComponentDesignatorString":{
+      "type":"string",
+      "max":4,
+      "min":0,
+      "sensitive":true
+    },
+    "ParsedQuerySecondaryAddressComponentEndIndexInteger":{
+      "type":"integer",
+      "box":true,
+      "min":0
+    },
+    "ParsedQuerySecondaryAddressComponentList":{
+      "type":"list",
+      "member":{"shape":"ParsedQuerySecondaryAddressComponent"},
+      "max":200,
+      "min":0
+    },
+    "ParsedQuerySecondaryAddressComponentNumberString":{
+      "type":"string",
+      "max":10,
+      "min":0,
+      "sensitive":true
+    },
+    "ParsedQuerySecondaryAddressComponentStartIndexInteger":{
+      "type":"integer",
+      "box":true,
+      "min":0
+    },
+    "ParsedQuerySecondaryAddressComponentValueString":{
+      "type":"string",
+      "max":200,
+      "min":0,
+      "sensitive":true
+    },
     "PhonemeDetails":{
       "type":"structure",
       "members":{
@@ -1108,7 +1439,7 @@
       "members":{
         "Value":{"shape":"PhonemeTranscriptionValueString"},
         "Language":{"shape":"LanguageTag"},
-        "Preferred":{"shape":"Boolean"}
+        "Preferred":{"shape":"SensitiveBoolean"}
       }
     },
     "PhonemeTranscriptionList":{
@@ -1120,6 +1451,18 @@
     "PhonemeTranscriptionValueString":{
       "type":"string",
       "max":50,
+      "min":0,
+      "sensitive":true
+    },
+    "PlaceAttribute":{
+      "type":"string",
+      "enum":["DriveThrough"],
+      "sensitive":true
+    },
+    "PlaceAttributeList":{
+      "type":"list",
+      "member":{"shape":"PlaceAttribute"},
+      "max":1,
       "min":0
     },
     "PlaceType":{
@@ -1138,8 +1481,11 @@
         "Street",
         "PointOfInterest",
         "PointAddress",
-        "InterpolatedAddress"
-      ]
+        "InterpolatedAddress",
+        "SecondaryAddress",
+        "InferredSecondaryAddress"
+      ],
+      "sensitive":true
     },
     "Position":{
       "type":"list",
@@ -1150,7 +1496,8 @@
     },
     "PostalAuthority":{
       "type":"string",
-      "enum":["Usps"]
+      "enum":["Usps"],
+      "sensitive":true
     },
     "PostalCodeDetails":{
       "type":"structure",
@@ -1171,13 +1518,15 @@
     "PostalCodeDetailsPostalCodeString":{
       "type":"string",
       "max":50,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "PostalCodeMode":{
       "type":"string",
       "enum":[
         "MergeAllSpannedLocalities",
-        "EnumerateSpannedLocalities"
+        "EnumerateSpannedLocalities",
+        "EnumerateSpannedDistricts"
       ]
     },
     "PostalCodeType":{
@@ -1185,7 +1534,8 @@
       "enum":[
         "UspsZip",
         "UspsZipPlus4"
-      ]
+      ],
+      "sensitive":true
     },
     "QueryRefinement":{
       "type":"structure",
@@ -1216,12 +1566,14 @@
     "QueryRefinementOriginalTermString":{
       "type":"string",
       "max":200,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "QueryRefinementRefinedTermString":{
       "type":"string",
       "max":200,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "QueryRefinementStartIndexInteger":{
       "type":"integer",
@@ -1244,7 +1596,8 @@
         "PostOfficeBox",
         "Rural",
         "Street"
-      ]
+      ],
+      "sensitive":true
     },
     "Region":{
       "type":"structure",
@@ -1256,7 +1609,8 @@
     "RegionCodeString":{
       "type":"string",
       "max":3,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "RegionHighlights":{
       "type":"structure",
@@ -1268,20 +1622,59 @@
     "RegionNameString":{
       "type":"string",
       "max":200,
-      "min":0
+      "min":0,
+      "sensitive":true
+    },
+    "RelatedPlace":{
+      "type":"structure",
+      "required":[
+        "PlaceId",
+        "PlaceType",
+        "Title"
+      ],
+      "members":{
+        "PlaceId":{"shape":"RelatedPlacePlaceIdString"},
+        "PlaceType":{"shape":"PlaceType"},
+        "Title":{"shape":"RelatedPlaceTitleString"},
+        "Address":{"shape":"Address"},
+        "Position":{"shape":"Position"},
+        "AccessPoints":{"shape":"AccessPointList"}
+      }
+    },
+    "RelatedPlaceList":{
+      "type":"list",
+      "member":{"shape":"RelatedPlace"},
+      "min":1
+    },
+    "RelatedPlacePlaceIdString":{
+      "type":"string",
+      "max":500,
+      "min":0,
+      "sensitive":true
+    },
+    "RelatedPlaceTitleString":{
+      "type":"string",
+      "max":200,
+      "min":0,
+      "sensitive":true
     },
     "ReverseGeocodeAdditionalFeature":{
       "type":"string",
       "enum":[
         "TimeZone",
-        "Access"
+        "Access",
+        "Intersections"
       ]
     },
     "ReverseGeocodeAdditionalFeatureList":{
       "type":"list",
       "member":{"shape":"ReverseGeocodeAdditionalFeature"},
-      "max":2,
+      "max":3,
       "min":1
+    },
+    "ReverseGeocodeAddressNamesMode":{
+      "type":"string",
+      "enum":["Administrative"]
     },
     "ReverseGeocodeFilter":{
       "type":"structure",
@@ -1296,13 +1689,15 @@
         "Intersection",
         "Street",
         "PointAddress",
-        "InterpolatedAddress"
+        "InterpolatedAddress",
+        "SecondaryAddress",
+        "PointOfInterest"
       ]
     },
     "ReverseGeocodeFilterPlaceTypeList":{
       "type":"list",
       "member":{"shape":"ReverseGeocodeFilterPlaceType"},
-      "max":5,
+      "max":7,
       "min":1
     },
     "ReverseGeocodeIntendedUse":{
@@ -1331,7 +1726,9 @@
           "shape":"ApiKey",
           "location":"querystring",
           "locationName":"key"
-        }
+        },
+        "Heading":{"shape":"Heading"},
+        "AddressNamesMode":{"shape":"ReverseGeocodeAddressNamesMode"}
       }
     },
     "ReverseGeocodeRequestMaxResultsInteger":{
@@ -1343,7 +1740,8 @@
     "ReverseGeocodeRequestQueryRadiusLong":{
       "type":"long",
       "max":21000000,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "ReverseGeocodeResponse":{
       "type":"structure",
@@ -1369,7 +1767,7 @@
         "PlaceType":{"shape":"PlaceType"},
         "Title":{"shape":"ReverseGeocodeResultItemTitleString"},
         "Address":{"shape":"Address"},
-        "AddressNumberCorrected":{"shape":"Boolean"},
+        "AddressNumberCorrected":{"shape":"SensitiveBoolean"},
         "PostalCodeDetails":{"shape":"PostalCodeDetailsList"},
         "Position":{"shape":"Position"},
         "Distance":{"shape":"DistanceMeters"},
@@ -1378,7 +1776,10 @@
         "FoodTypes":{"shape":"FoodTypeList"},
         "AccessPoints":{"shape":"AccessPointList"},
         "TimeZone":{"shape":"TimeZone"},
-        "PoliticalView":{"shape":"CountryCode3"}
+        "PoliticalView":{"shape":"CountryCode3"},
+        "Intersections":{"shape":"IntersectionList"},
+        "MainAddress":{"shape":"RelatedPlace"},
+        "EstimatedPointAddress":{"shape":"SensitiveBoolean"}
       }
     },
     "ReverseGeocodeResultItemList":{
@@ -1389,13 +1790,15 @@
     },
     "ReverseGeocodeResultItemPlaceIdString":{
       "type":"string",
-      "max":200,
-      "min":0
+      "max":500,
+      "min":0,
+      "sensitive":true
     },
     "ReverseGeocodeResultItemTitleString":{
       "type":"string",
       "max":200,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "SearchNearbyAdditionalFeature":{
       "type":"string",
@@ -1403,13 +1806,14 @@
         "TimeZone",
         "Phonemes",
         "Access",
-        "Contact"
+        "Contact",
+        "CrossReferences"
       ]
     },
     "SearchNearbyAdditionalFeatureList":{
       "type":"list",
       "member":{"shape":"SearchNearbyAdditionalFeature"},
-      "max":4,
+      "max":5,
       "min":1
     },
     "SearchNearbyFilter":{
@@ -1464,7 +1868,8 @@
     "SearchNearbyRequestQueryRadiusLong":{
       "type":"long",
       "max":21000000,
-      "min":1
+      "min":1,
+      "sensitive":true
     },
     "SearchNearbyResponse":{
       "type":"structure",
@@ -1491,7 +1896,7 @@
         "PlaceType":{"shape":"PlaceType"},
         "Title":{"shape":"SearchNearbyResultItemTitleString"},
         "Address":{"shape":"Address"},
-        "AddressNumberCorrected":{"shape":"Boolean"},
+        "AddressNumberCorrected":{"shape":"SensitiveBoolean"},
         "Position":{"shape":"Position"},
         "Distance":{"shape":"DistanceMeters"},
         "MapView":{"shape":"BoundingBox"},
@@ -1504,7 +1909,9 @@
         "AccessRestrictions":{"shape":"AccessRestrictionList"},
         "TimeZone":{"shape":"TimeZone"},
         "PoliticalView":{"shape":"CountryCode3"},
-        "Phonemes":{"shape":"PhonemeDetails"}
+        "Phonemes":{"shape":"PhonemeDetails"},
+        "PlaceAttributes":{"shape":"PlaceAttributeList"},
+        "CrossReferences":{"shape":"CrossReferenceList"}
       }
     },
     "SearchNearbyResultItemList":{
@@ -1515,13 +1922,15 @@
     },
     "SearchNearbyResultItemPlaceIdString":{
       "type":"string",
-      "max":200,
-      "min":0
+      "max":500,
+      "min":0,
+      "sensitive":true
     },
     "SearchNearbyResultItemTitleString":{
       "type":"string",
       "max":200,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "SearchTextAdditionalFeature":{
       "type":"string",
@@ -1529,13 +1938,14 @@
         "TimeZone",
         "Phonemes",
         "Access",
-        "Contact"
+        "Contact",
+        "CrossReferences"
       ]
     },
     "SearchTextAdditionalFeatureList":{
       "type":"list",
       "member":{"shape":"SearchTextAdditionalFeature"},
-      "max":4,
+      "max":5,
       "min":1
     },
     "SearchTextFilter":{
@@ -1566,6 +1976,7 @@
         "PoliticalView":{"shape":"CountryCode"},
         "IntendedUse":{"shape":"SearchTextIntendedUse"},
         "NextToken":{"shape":"Token"},
+        "TravelMode":{"shape":"SearchTextTravelMode"},
         "Key":{
           "shape":"ApiKey",
           "location":"querystring",
@@ -1581,7 +1992,7 @@
     },
     "SearchTextRequestQueryIdString":{
       "type":"string",
-      "max":400,
+      "max":500,
       "min":1,
       "sensitive":true
     },
@@ -1616,7 +2027,7 @@
         "PlaceType":{"shape":"PlaceType"},
         "Title":{"shape":"SearchTextResultItemTitleString"},
         "Address":{"shape":"Address"},
-        "AddressNumberCorrected":{"shape":"Boolean"},
+        "AddressNumberCorrected":{"shape":"SensitiveBoolean"},
         "Position":{"shape":"Position"},
         "Distance":{"shape":"DistanceMeters"},
         "MapView":{"shape":"BoundingBox"},
@@ -1629,7 +2040,9 @@
         "AccessRestrictions":{"shape":"AccessRestrictionList"},
         "TimeZone":{"shape":"TimeZone"},
         "PoliticalView":{"shape":"CountryCode3"},
-        "Phonemes":{"shape":"PhonemeDetails"}
+        "Phonemes":{"shape":"PhonemeDetails"},
+        "PlaceAttributes":{"shape":"PlaceAttributeList"},
+        "CrossReferences":{"shape":"CrossReferenceList"}
       }
     },
     "SearchTextResultItemList":{
@@ -1640,13 +2053,68 @@
     },
     "SearchTextResultItemPlaceIdString":{
       "type":"string",
-      "max":200,
-      "min":0
+      "max":500,
+      "min":0,
+      "sensitive":true
     },
     "SearchTextResultItemTitleString":{
       "type":"string",
       "max":200,
+      "min":0,
+      "sensitive":true
+    },
+    "SearchTextTravelMode":{
+      "type":"string",
+      "enum":[
+        "Car",
+        "Scooter",
+        "Truck"
+      ]
+    },
+    "SecondaryAddressComponent":{
+      "type":"structure",
+      "required":["Number"],
+      "members":{
+        "Number":{"shape":"SecondaryAddressComponentNumberString"},
+        "Designator":{"shape":"SecondaryAddressComponentDesignatorString"}
+      }
+    },
+    "SecondaryAddressComponentDesignatorString":{
+      "type":"string",
+      "max":20,
+      "min":0,
+      "sensitive":true
+    },
+    "SecondaryAddressComponentList":{
+      "type":"list",
+      "member":{"shape":"SecondaryAddressComponent"},
+      "max":3,
       "min":0
+    },
+    "SecondaryAddressComponentMatchScore":{
+      "type":"structure",
+      "members":{
+        "Number":{"shape":"MatchScore"}
+      }
+    },
+    "SecondaryAddressComponentMatchScoreList":{
+      "type":"list",
+      "member":{"shape":"SecondaryAddressComponentMatchScore"}
+    },
+    "SecondaryAddressComponentNumberString":{
+      "type":"string",
+      "max":10,
+      "min":0,
+      "sensitive":true
+    },
+    "SensitiveBoolean":{
+      "type":"boolean",
+      "box":true,
+      "sensitive":true
+    },
+    "SensitiveString":{
+      "type":"string",
+      "sensitive":true
     },
     "StreetComponents":{
       "type":"structure",
@@ -1664,12 +2132,14 @@
     "StreetComponentsBaseNameString":{
       "type":"string",
       "max":200,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "StreetComponentsDirectionString":{
       "type":"string",
       "max":50,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "StreetComponentsList":{
       "type":"list",
@@ -1680,17 +2150,20 @@
     "StreetComponentsPrefixString":{
       "type":"string",
       "max":50,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "StreetComponentsSuffixString":{
       "type":"string",
       "max":50,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "StreetComponentsTypeString":{
       "type":"string",
       "max":50,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "String":{"type":"string"},
     "SubRegion":{
@@ -1703,7 +2176,8 @@
     "SubRegionCodeString":{
       "type":"string",
       "max":3,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "SubRegionHighlights":{
       "type":"structure",
@@ -1715,7 +2189,8 @@
     "SubRegionNameString":{
       "type":"string",
       "max":200,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "SuggestAdditionalFeature":{
       "type":"string",
@@ -1723,13 +2198,14 @@
         "Core",
         "TimeZone",
         "Phonemes",
-        "Access"
+        "Access",
+        "CrossReferences"
       ]
     },
     "SuggestAdditionalFeatureList":{
       "type":"list",
       "member":{"shape":"SuggestAdditionalFeature"},
-      "max":4,
+      "max":5,
       "min":1
     },
     "SuggestAddressHighlights":{
@@ -1773,13 +2249,16 @@
         "AccessRestrictions":{"shape":"AccessRestrictionList"},
         "TimeZone":{"shape":"TimeZone"},
         "PoliticalView":{"shape":"CountryCode3"},
-        "Phonemes":{"shape":"PhonemeDetails"}
+        "Phonemes":{"shape":"PhonemeDetails"},
+        "PlaceAttributes":{"shape":"PlaceAttributeList"},
+        "CrossReferences":{"shape":"CrossReferenceList"}
       }
     },
     "SuggestPlaceResultPlaceIdString":{
       "type":"string",
-      "max":200,
-      "min":1
+      "max":500,
+      "min":1,
+      "sensitive":true
     },
     "SuggestQueryResult":{
       "type":"structure",
@@ -1790,8 +2269,9 @@
     },
     "SuggestQueryResultQueryIdString":{
       "type":"string",
-      "max":400,
-      "min":0
+      "max":500,
+      "min":0,
+      "sensitive":true
     },
     "SuggestRequest":{
       "type":"structure",
@@ -1806,6 +2286,7 @@
         "Language":{"shape":"LanguageTag"},
         "PoliticalView":{"shape":"CountryCode"},
         "IntendedUse":{"shape":"SuggestIntendedUse"},
+        "TravelMode":{"shape":"SuggestTravelMode"},
         "Key":{
           "shape":"ApiKey",
           "location":"querystring",
@@ -1867,13 +2348,22 @@
     "SuggestResultItemTitleString":{
       "type":"string",
       "max":200,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "SuggestResultItemType":{
       "type":"string",
       "enum":[
         "Place",
         "Query"
+      ]
+    },
+    "SuggestTravelMode":{
+      "type":"string",
+      "enum":[
+        "Car",
+        "Scooter",
+        "Truck"
       ]
     },
     "ThrottlingException":{
@@ -1904,21 +2394,69 @@
     "TimeZoneNameString":{
       "type":"string",
       "max":200,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "TimeZoneOffsetSecondsLong":{
       "type":"long",
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "TimeZoneOffsetString":{
       "type":"string",
       "max":6,
-      "min":0
+      "min":0,
+      "sensitive":true
     },
     "Token":{
       "type":"string",
       "max":2000,
       "min":1
+    },
+    "TranslationDetails":{
+      "type":"structure",
+      "members":{
+        "Locality":{"shape":"AdminNamesList"},
+        "Region":{"shape":"AdminNamesList"},
+        "District":{"shape":"AdminNamesList"},
+        "SubRegion":{"shape":"AdminNamesList"}
+      }
+    },
+    "TranslationName":{
+      "type":"structure",
+      "required":[
+        "Value",
+        "Type"
+      ],
+      "members":{
+        "Value":{"shape":"TranslationNameValueString"},
+        "Language":{"shape":"LanguageTag"},
+        "Type":{"shape":"TranslationNameType"},
+        "Primary":{"shape":"SensitiveBoolean"},
+        "Transliterated":{"shape":"SensitiveBoolean"}
+      }
+    },
+    "TranslationNameList":{
+      "type":"list",
+      "member":{"shape":"TranslationName"},
+      "min":1
+    },
+    "TranslationNameType":{
+      "type":"string",
+      "enum":[
+        "Abbreviation",
+        "AreaCode",
+        "BaseName",
+        "Exonym",
+        "Shortened",
+        "Synonym"
+      ]
+    },
+    "TranslationNameValueString":{
+      "type":"string",
+      "max":200,
+      "min":1,
+      "sensitive":true
     },
     "TypePlacement":{
       "type":"string",
@@ -2010,7 +2548,8 @@
         "Military",
         "PostOfficeBoxes",
         "Unique"
-      ]
+      ],
+      "sensitive":true
     }
   }
 }

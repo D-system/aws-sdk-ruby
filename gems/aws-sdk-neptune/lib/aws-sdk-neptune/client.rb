@@ -97,8 +97,8 @@ module Aws::Neptune
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -126,22 +126,24 @@ module Aws::Neptune
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -169,6 +171,11 @@ module Aws::Neptune
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -194,7 +201,7 @@ module Aws::Neptune
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -202,8 +209,7 @@ module Aws::Neptune
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -256,8 +262,8 @@ module Aws::Neptune
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -319,17 +325,15 @@ module Aws::Neptune
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -370,8 +374,8 @@ module Aws::Neptune
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -680,14 +684,12 @@ module Aws::Neptune
     #
     #   * Must specify a valid DB cluster parameter group.
     #
-    #   * If the source DB cluster parameter group is in the same Amazon
-    #     Region as the copy, specify a valid DB parameter group identifier,
-    #     for example `my-db-cluster-param-group`, or a valid ARN.
+    #   * Must specify a valid DB cluster parameter group identifier, for
+    #     example `my-db-cluster-param-group`, or a valid ARN.
     #
-    #   * If the source DB parameter group is in a different Amazon Region
-    #     than the copy, specify a valid DB cluster parameter group ARN, for
-    #     example
-    #     `arn:aws:rds:us-east-1:123456789012:cluster-pg:custom-cluster-group1`.
+    #   * The source DB cluster parameter group must be in the same Amazon
+    #     Region as the copy. Neptune does not support cross-Region copying of
+    #     parameter groups.
     #
     #
     #
@@ -756,7 +758,9 @@ module Aws::Neptune
     #
     # @option params [required, String] :source_db_cluster_snapshot_identifier
     #   The identifier of the DB cluster snapshot to copy. This parameter is
-    #   not case-sensitive.
+    #   not case-sensitive. If the source DB cluster snapshot is in a
+    #   different region or owned by another account, specify the snapshot
+    #   ARN.
     #
     #   Constraints:
     #
@@ -781,9 +785,9 @@ module Aws::Neptune
     #   Example: `my-cluster-snapshot2`
     #
     # @option params [String] :kms_key_id
-    #   The Amazon Amazon KMS key ID for an encrypted DB cluster snapshot. The
-    #   KMS key ID is the Amazon Resource Name (ARN), KMS key identifier, or
-    #   the KMS key alias for the KMS encryption key.
+    #   The Amazon KMS key ID for an encrypted DB cluster snapshot. The KMS
+    #   key ID is the Amazon Resource Name (ARN), KMS key identifier, or the
+    #   KMS key alias for the KMS encryption key.
     #
     #   If you copy an encrypted DB cluster snapshot from your Amazon account,
     #   you can specify a value for `KmsKeyId` to encrypt the copy with a new
@@ -885,6 +889,10 @@ module Aws::Neptune
     #   * Must specify a valid DB parameter group identifier, for example
     #     `my-db-param-group`, or a valid ARN.
     #
+    #   * The source DB parameter group must be in the same Amazon Region as
+    #     the copy. Neptune does not support cross-Region copying of parameter
+    #     groups.
+    #
     #
     #
     #   [1]: https://docs.aws.amazon.com/neptune/latest/UserGuide/tagging.ARN.html#tagging.ARN.Constructing
@@ -980,9 +988,7 @@ module Aws::Neptune
     #   that is created.*
     #
     # @option params [String] :database_name
-    #   The name for your database of up to 64 alpha-numeric characters. If
-    #   you do not provide a name, Amazon Neptune will not create a database
-    #   in the DB cluster you are creating.
+    #   Not supported by Neptune.
     #
     # @option params [required, String] :db_cluster_identifier
     #   The DB cluster identifier. This parameter is stored as a lowercase
@@ -1029,7 +1035,7 @@ module Aws::Neptune
     #   The version number of the database engine to use for the new DB
     #   cluster.
     #
-    #   Example: `1.0.2.1`
+    #   Example: `1.2.1.0`
     #
     # @option params [Integer] :port
     #   The port number on which the instances in the DB cluster accept
@@ -1168,25 +1174,38 @@ module Aws::Neptune
     #   should be added.
     #
     # @option params [String] :storage_type
-    #   The storage type to associate with the DB cluster.
+    #   The storage type for the new DB cluster.
     #
     #   Valid Values:
     #
-    #   * `standard | iopt1`
+    #   * <b> <code>standard</code> </b>   –   ( *the default* ) Configures
+    #     cost-effective database storage for applications with moderate to
+    #     small I/O usage. When set to `standard`, the storage type is not
+    #     returned in the response.
     #
-    #   ^
+    #   * <b> <code>iopt1</code> </b>   –   Enables [I/O-Optimized storage][1]
+    #     that's designed to meet the needs of I/O-intensive graph workloads
+    #     that require predictable pricing with low I/O latency and consistent
+    #     I/O throughput.
     #
-    #   Default:
+    #     Neptune I/O-Optimized storage is only available starting with engine
+    #     release 1.3.0.0.
     #
-    #   * `standard`
     #
-    #   ^
     #
-    #   <note markdown="1"> When you create a Neptune cluster with the storage type set to
-    #   `iopt1`, the storage type is returned in the response. The storage
-    #   type isn't returned when you set it to `standard`.
+    #   [1]: https://docs.aws.amazon.com/neptune/latest/userguide/storage-types.html#provisioned-iops-storage
     #
-    #    </note>
+    # @option params [String] :network_type
+    #   The network type of the DB cluster.
+    #
+    #   Valid Values:
+    #
+    #   * <b> <code>IPV4</code> </b>   –   ( *the default* ) The DB cluster
+    #     uses only IPv4 addresses for communication.
+    #
+    #   * <b> <code>DUAL</code> </b>   –   The DB cluster uses both IPv4 and
+    #     IPv6 addresses for communication. The DB subnet group associated
+    #     with the cluster must support IPv6.
     #
     # @option params [String] :source_region
     #   The source region of the snapshot. This is only needed when the
@@ -1235,6 +1254,7 @@ module Aws::Neptune
     #     },
     #     global_cluster_identifier: "GlobalClusterIdentifier",
     #     storage_type: "String",
+    #     network_type: "String",
     #     source_region: "String",
     #   })
     #
@@ -1302,6 +1322,7 @@ module Aws::Neptune
     #   resp.db_cluster.pending_modified_values.storage_type #=> String
     #   resp.db_cluster.pending_modified_values.allocated_storage #=> Integer
     #   resp.db_cluster.pending_modified_values.iops #=> Integer
+    #   resp.db_cluster.pending_modified_values.network_type #=> String
     #   resp.db_cluster.deletion_protection #=> Boolean
     #   resp.db_cluster.cross_account_clone #=> Boolean
     #   resp.db_cluster.automatic_restart_time #=> Time
@@ -1310,6 +1331,7 @@ module Aws::Neptune
     #   resp.db_cluster.global_cluster_identifier #=> String
     #   resp.db_cluster.io_optimized_next_allowed_modification_time #=> Time
     #   resp.db_cluster.storage_type #=> String
+    #   resp.db_cluster.network_type #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-2014-10-31/CreateDBCluster AWS API Documentation
     #
@@ -1732,7 +1754,19 @@ module Aws::Neptune
     #   *(Not supported by Neptune)*
     #
     # @option params [Boolean] :publicly_accessible
-    #   This flag should no longer be used.
+    #   Indicates whether the DB instance is publicly accessible.
+    #
+    #   When the DB instance is publicly accessible and you connect from
+    #   outside of the DB instance's virtual private cloud (VPC), its Domain
+    #   Name System (DNS) endpoint resolves to the public IP address. When you
+    #   connect from within the same VPC as the DB instance, the endpoint
+    #   resolves to the private IP address. Access to the DB instance is
+    #   ultimately controlled by the security group it uses. That public
+    #   access isn't permitted if the security group assigned to the DB
+    #   cluster doesn't permit it.
+    #
+    #   When the DB instance isn't publicly accessible, it is an internal DB
+    #   instance with a DNS name that resolves to a private IP address.
     #
     # @option params [Array<Types::Tag>] :tags
     #   The tags to assign to the new instance.
@@ -1745,9 +1779,8 @@ module Aws::Neptune
     #   Type: String
     #
     # @option params [String] :storage_type
-    #   Specifies the storage type to be associated with the DB instance.
-    #
-    #   Not applicable. Storage is managed by the DB Cluster.
+    #   Not applicable. In Neptune the storage type is managed at the DB
+    #   Cluster level.
     #
     # @option params [String] :tde_credential_arn
     #   The ARN from the key store with which to associate the instance for
@@ -1772,7 +1805,7 @@ module Aws::Neptune
     #   encryption key. If you are creating a DB instance with the same Amazon
     #   account that owns the KMS encryption key used to encrypt the new DB
     #   instance, then you can use the KMS key alias instead of the ARN for
-    #   the KM encryption key.
+    #   the KMS encryption key.
     #
     #   Not applicable. The KMS key identifier is managed by the DB cluster.
     #   For more information, see CreateDBCluster.
@@ -1941,6 +1974,8 @@ module Aws::Neptune
     #   resp.db_instance.db_subnet_group.subnets[0].subnet_availability_zone.name #=> String
     #   resp.db_instance.db_subnet_group.subnets[0].subnet_status #=> String
     #   resp.db_instance.db_subnet_group.db_subnet_group_arn #=> String
+    #   resp.db_instance.db_subnet_group.supported_network_types #=> Array
+    #   resp.db_instance.db_subnet_group.supported_network_types[0] #=> String
     #   resp.db_instance.preferred_maintenance_window #=> String
     #   resp.db_instance.pending_modified_values.db_instance_class #=> String
     #   resp.db_instance.pending_modified_values.allocated_storage #=> Integer
@@ -2007,6 +2042,7 @@ module Aws::Neptune
     #   resp.db_instance.enabled_cloudwatch_logs_exports #=> Array
     #   resp.db_instance.enabled_cloudwatch_logs_exports[0] #=> String
     #   resp.db_instance.deletion_protection #=> Boolean
+    #   resp.db_instance.network_type #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-2014-10-31/CreateDBInstance AWS API Documentation
     #
@@ -2152,6 +2188,8 @@ module Aws::Neptune
     #   resp.db_subnet_group.subnets[0].subnet_availability_zone.name #=> String
     #   resp.db_subnet_group.subnets[0].subnet_status #=> String
     #   resp.db_subnet_group.db_subnet_group_arn #=> String
+    #   resp.db_subnet_group.supported_network_types #=> Array
+    #   resp.db_subnet_group.supported_network_types[0] #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-2014-10-31/CreateDBSubnetGroup AWS API Documentation
     #
@@ -2233,7 +2271,7 @@ module Aws::Neptune
     #
     # @option params [Boolean] :enabled
     #   A Boolean value; set to **true** to activate the subscription, set to
-    #   **false** to create the subscription but not active it.
+    #   **false** to create the subscription but not activate it.
     #
     # @option params [Array<Types::Tag>] :tags
     #   The tags to be applied to the new event subscription.
@@ -2315,6 +2353,13 @@ module Aws::Neptune
     #   The deletion protection setting for the new global database. The
     #   global database can't be deleted when deletion protection is enabled.
     #
+    # @option params [String] :database_name
+    #   The name for the new global database (up to 64 alpha-numeric
+    #   characters).
+    #
+    # @option params [Array<Types::Tag>] :tags
+    #   Tags to assign to the global cluster.
+    #
     # @option params [Boolean] :storage_encrypted
     #   The storage encryption setting for the new global database cluster.
     #
@@ -2330,6 +2375,13 @@ module Aws::Neptune
     #     engine: "String",
     #     engine_version: "String",
     #     deletion_protection: false,
+    #     database_name: "String",
+    #     tags: [
+    #       {
+    #         key: "String",
+    #         value: "String",
+    #       },
+    #     ],
     #     storage_encrypted: false,
     #   })
     #
@@ -2341,6 +2393,7 @@ module Aws::Neptune
     #   resp.global_cluster.status #=> String
     #   resp.global_cluster.engine #=> String
     #   resp.global_cluster.engine_version #=> String
+    #   resp.global_cluster.database_name #=> String
     #   resp.global_cluster.storage_encrypted #=> Boolean
     #   resp.global_cluster.deletion_protection #=> Boolean
     #   resp.global_cluster.global_cluster_members #=> Array
@@ -2348,6 +2401,13 @@ module Aws::Neptune
     #   resp.global_cluster.global_cluster_members[0].readers #=> Array
     #   resp.global_cluster.global_cluster_members[0].readers[0] #=> String
     #   resp.global_cluster.global_cluster_members[0].is_writer #=> Boolean
+    #   resp.global_cluster.failover_state.status #=> String, one of "pending", "failing-over", "cancelling"
+    #   resp.global_cluster.failover_state.from_db_cluster_arn #=> String
+    #   resp.global_cluster.failover_state.to_db_cluster_arn #=> String
+    #   resp.global_cluster.failover_state.is_data_loss_allowed #=> Boolean
+    #   resp.global_cluster.tag_list #=> Array
+    #   resp.global_cluster.tag_list[0].key #=> String
+    #   resp.global_cluster.tag_list[0].value #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-2014-10-31/CreateGlobalCluster AWS API Documentation
     #
@@ -2394,7 +2454,7 @@ module Aws::Neptune
     #   The DB cluster snapshot identifier of the new DB cluster snapshot
     #   created when `SkipFinalSnapshot` is set to `false`.
     #
-    #   <note markdown="1"> Specifying this parameter and also setting the `SkipFinalShapshot`
+    #   <note markdown="1"> Specifying this parameter and also setting the `SkipFinalSnapshot`
     #   parameter to true results in an error.
     #
     #    </note>
@@ -2483,6 +2543,7 @@ module Aws::Neptune
     #   resp.db_cluster.pending_modified_values.storage_type #=> String
     #   resp.db_cluster.pending_modified_values.allocated_storage #=> Integer
     #   resp.db_cluster.pending_modified_values.iops #=> Integer
+    #   resp.db_cluster.pending_modified_values.network_type #=> String
     #   resp.db_cluster.deletion_protection #=> Boolean
     #   resp.db_cluster.cross_account_clone #=> Boolean
     #   resp.db_cluster.automatic_restart_time #=> Time
@@ -2491,6 +2552,7 @@ module Aws::Neptune
     #   resp.db_cluster.global_cluster_identifier #=> String
     #   resp.db_cluster.io_optimized_next_allowed_modification_time #=> Time
     #   resp.db_cluster.storage_type #=> String
+    #   resp.db_cluster.network_type #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-2014-10-31/DeleteDBCluster AWS API Documentation
     #
@@ -2694,7 +2756,7 @@ module Aws::Neptune
     #   The DBSnapshotIdentifier of the new DBSnapshot created when
     #   SkipFinalSnapshot is set to `false`.
     #
-    #   <note markdown="1"> Specifying this parameter and also setting the SkipFinalShapshot
+    #   <note markdown="1"> Specifying this parameter and also setting the SkipFinalSnapshot
     #   parameter to true results in an error.
     #
     #    </note>
@@ -2755,6 +2817,8 @@ module Aws::Neptune
     #   resp.db_instance.db_subnet_group.subnets[0].subnet_availability_zone.name #=> String
     #   resp.db_instance.db_subnet_group.subnets[0].subnet_status #=> String
     #   resp.db_instance.db_subnet_group.db_subnet_group_arn #=> String
+    #   resp.db_instance.db_subnet_group.supported_network_types #=> Array
+    #   resp.db_instance.db_subnet_group.supported_network_types[0] #=> String
     #   resp.db_instance.preferred_maintenance_window #=> String
     #   resp.db_instance.pending_modified_values.db_instance_class #=> String
     #   resp.db_instance.pending_modified_values.allocated_storage #=> Integer
@@ -2821,6 +2885,7 @@ module Aws::Neptune
     #   resp.db_instance.enabled_cloudwatch_logs_exports #=> Array
     #   resp.db_instance.enabled_cloudwatch_logs_exports[0] #=> String
     #   resp.db_instance.deletion_protection #=> Boolean
+    #   resp.db_instance.network_type #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-2014-10-31/DeleteDBInstance AWS API Documentation
     #
@@ -2963,6 +3028,7 @@ module Aws::Neptune
     #   resp.global_cluster.status #=> String
     #   resp.global_cluster.engine #=> String
     #   resp.global_cluster.engine_version #=> String
+    #   resp.global_cluster.database_name #=> String
     #   resp.global_cluster.storage_encrypted #=> Boolean
     #   resp.global_cluster.deletion_protection #=> Boolean
     #   resp.global_cluster.global_cluster_members #=> Array
@@ -2970,6 +3036,13 @@ module Aws::Neptune
     #   resp.global_cluster.global_cluster_members[0].readers #=> Array
     #   resp.global_cluster.global_cluster_members[0].readers[0] #=> String
     #   resp.global_cluster.global_cluster_members[0].is_writer #=> Boolean
+    #   resp.global_cluster.failover_state.status #=> String, one of "pending", "failing-over", "cancelling"
+    #   resp.global_cluster.failover_state.from_db_cluster_arn #=> String
+    #   resp.global_cluster.failover_state.to_db_cluster_arn #=> String
+    #   resp.global_cluster.failover_state.is_data_loss_allowed #=> Boolean
+    #   resp.global_cluster.tag_list #=> Array
+    #   resp.global_cluster.tag_list[0].key #=> String
+    #   resp.global_cluster.tag_list[0].value #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-2014-10-31/DeleteGlobalCluster AWS API Documentation
     #
@@ -3566,6 +3639,7 @@ module Aws::Neptune
     #   resp.db_clusters[0].pending_modified_values.storage_type #=> String
     #   resp.db_clusters[0].pending_modified_values.allocated_storage #=> Integer
     #   resp.db_clusters[0].pending_modified_values.iops #=> Integer
+    #   resp.db_clusters[0].pending_modified_values.network_type #=> String
     #   resp.db_clusters[0].deletion_protection #=> Boolean
     #   resp.db_clusters[0].cross_account_clone #=> Boolean
     #   resp.db_clusters[0].automatic_restart_time #=> Time
@@ -3574,6 +3648,7 @@ module Aws::Neptune
     #   resp.db_clusters[0].global_cluster_identifier #=> String
     #   resp.db_clusters[0].io_optimized_next_allowed_modification_time #=> Time
     #   resp.db_clusters[0].storage_type #=> String
+    #   resp.db_clusters[0].network_type #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-2014-10-31/DescribeDBClusters AWS API Documentation
     #
@@ -3809,6 +3884,8 @@ module Aws::Neptune
     #   resp.db_instances[0].db_subnet_group.subnets[0].subnet_availability_zone.name #=> String
     #   resp.db_instances[0].db_subnet_group.subnets[0].subnet_status #=> String
     #   resp.db_instances[0].db_subnet_group.db_subnet_group_arn #=> String
+    #   resp.db_instances[0].db_subnet_group.supported_network_types #=> Array
+    #   resp.db_instances[0].db_subnet_group.supported_network_types[0] #=> String
     #   resp.db_instances[0].preferred_maintenance_window #=> String
     #   resp.db_instances[0].pending_modified_values.db_instance_class #=> String
     #   resp.db_instances[0].pending_modified_values.allocated_storage #=> Integer
@@ -3875,6 +3952,7 @@ module Aws::Neptune
     #   resp.db_instances[0].enabled_cloudwatch_logs_exports #=> Array
     #   resp.db_instances[0].enabled_cloudwatch_logs_exports[0] #=> String
     #   resp.db_instances[0].deletion_protection #=> Boolean
+    #   resp.db_instances[0].network_type #=> String
     #
     #
     # The following waiters are defined for this operation (see {Client#wait_until} for detailed usage):
@@ -4113,6 +4191,8 @@ module Aws::Neptune
     #   resp.db_subnet_groups[0].subnets[0].subnet_availability_zone.name #=> String
     #   resp.db_subnet_groups[0].subnets[0].subnet_status #=> String
     #   resp.db_subnet_groups[0].db_subnet_group_arn #=> String
+    #   resp.db_subnet_groups[0].supported_network_types #=> Array
+    #   resp.db_subnet_groups[0].supported_network_types[0] #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-2014-10-31/DescribeDBSubnetGroups AWS API Documentation
     #
@@ -4562,6 +4642,7 @@ module Aws::Neptune
     #   resp.global_clusters[0].status #=> String
     #   resp.global_clusters[0].engine #=> String
     #   resp.global_clusters[0].engine_version #=> String
+    #   resp.global_clusters[0].database_name #=> String
     #   resp.global_clusters[0].storage_encrypted #=> Boolean
     #   resp.global_clusters[0].deletion_protection #=> Boolean
     #   resp.global_clusters[0].global_cluster_members #=> Array
@@ -4569,6 +4650,13 @@ module Aws::Neptune
     #   resp.global_clusters[0].global_cluster_members[0].readers #=> Array
     #   resp.global_clusters[0].global_cluster_members[0].readers[0] #=> String
     #   resp.global_clusters[0].global_cluster_members[0].is_writer #=> Boolean
+    #   resp.global_clusters[0].failover_state.status #=> String, one of "pending", "failing-over", "cancelling"
+    #   resp.global_clusters[0].failover_state.from_db_cluster_arn #=> String
+    #   resp.global_clusters[0].failover_state.to_db_cluster_arn #=> String
+    #   resp.global_clusters[0].failover_state.is_data_loss_allowed #=> Boolean
+    #   resp.global_clusters[0].tag_list #=> Array
+    #   resp.global_clusters[0].tag_list[0].key #=> String
+    #   resp.global_clusters[0].tag_list[0].value #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-2014-10-31/DescribeGlobalClusters AWS API Documentation
     #
@@ -4670,6 +4758,8 @@ module Aws::Neptune
     #   resp.orderable_db_instance_options[0].min_iops_per_gib #=> Float
     #   resp.orderable_db_instance_options[0].max_iops_per_gib #=> Float
     #   resp.orderable_db_instance_options[0].supports_global_databases #=> Boolean
+    #   resp.orderable_db_instance_options[0].supported_network_types #=> Array
+    #   resp.orderable_db_instance_options[0].supported_network_types[0] #=> String
     #   resp.marker #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-2014-10-31/DescribeOrderableDBInstanceOptions AWS API Documentation
@@ -4907,6 +4997,7 @@ module Aws::Neptune
     #   resp.db_cluster.pending_modified_values.storage_type #=> String
     #   resp.db_cluster.pending_modified_values.allocated_storage #=> Integer
     #   resp.db_cluster.pending_modified_values.iops #=> Integer
+    #   resp.db_cluster.pending_modified_values.network_type #=> String
     #   resp.db_cluster.deletion_protection #=> Boolean
     #   resp.db_cluster.cross_account_clone #=> Boolean
     #   resp.db_cluster.automatic_restart_time #=> Time
@@ -4915,6 +5006,7 @@ module Aws::Neptune
     #   resp.db_cluster.global_cluster_identifier #=> String
     #   resp.db_cluster.io_optimized_next_allowed_modification_time #=> Time
     #   resp.db_cluster.storage_type #=> String
+    #   resp.db_cluster.network_type #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-2014-10-31/FailoverDBCluster AWS API Documentation
     #
@@ -4956,6 +5048,22 @@ module Aws::Neptune
     #   The Amazon Resource Name (ARN) of the secondary Neptune DB cluster
     #   that you want to promote to primary for the global database.
     #
+    # @option params [Boolean] :allow_data_loss
+    #   Specifies whether to allow data loss for this global database cluster
+    #   operation. Allowing data loss triggers a global failover operation.
+    #
+    #   If you don't specify `AllowDataLoss`, the global database cluster
+    #   operation defaults to a switchover.
+    #
+    #   Constraints: Can't be specified together with the `Switchover`
+    #   parameter.
+    #
+    # @option params [Boolean] :switchover
+    #   Specifies whether to switch over this global database cluster.
+    #
+    #   Constraints: Can't be specified together with the `AllowDataLoss`
+    #   parameter.
+    #
     # @return [Types::FailoverGlobalClusterResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::FailoverGlobalClusterResult#global_cluster #global_cluster} => Types::GlobalCluster
@@ -4965,6 +5073,8 @@ module Aws::Neptune
     #   resp = client.failover_global_cluster({
     #     global_cluster_identifier: "GlobalClusterIdentifier", # required
     #     target_db_cluster_identifier: "String", # required
+    #     allow_data_loss: false,
+    #     switchover: false,
     #   })
     #
     # @example Response structure
@@ -4975,6 +5085,7 @@ module Aws::Neptune
     #   resp.global_cluster.status #=> String
     #   resp.global_cluster.engine #=> String
     #   resp.global_cluster.engine_version #=> String
+    #   resp.global_cluster.database_name #=> String
     #   resp.global_cluster.storage_encrypted #=> Boolean
     #   resp.global_cluster.deletion_protection #=> Boolean
     #   resp.global_cluster.global_cluster_members #=> Array
@@ -4982,6 +5093,13 @@ module Aws::Neptune
     #   resp.global_cluster.global_cluster_members[0].readers #=> Array
     #   resp.global_cluster.global_cluster_members[0].readers[0] #=> String
     #   resp.global_cluster.global_cluster_members[0].is_writer #=> Boolean
+    #   resp.global_cluster.failover_state.status #=> String, one of "pending", "failing-over", "cancelling"
+    #   resp.global_cluster.failover_state.from_db_cluster_arn #=> String
+    #   resp.global_cluster.failover_state.to_db_cluster_arn #=> String
+    #   resp.global_cluster.failover_state.is_data_loss_allowed #=> Boolean
+    #   resp.global_cluster.tag_list #=> Array
+    #   resp.global_cluster.tag_list[0].key #=> String
+    #   resp.global_cluster.tag_list[0].value #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-2014-10-31/FailoverGlobalCluster AWS API Documentation
     #
@@ -5223,15 +5341,33 @@ module Aws::Neptune
     #
     #   Valid Values:
     #
-    #   * `standard | iopt1`
+    #   * <b> <code>standard</code> </b>   –   ( *the default* ) Configures
+    #     cost-effective database storage for applications with moderate to
+    #     small I/O usage.
     #
-    #   ^
+    #   * <b> <code>iopt1</code> </b>   –   Enables [I/O-Optimized storage][1]
+    #     that's designed to meet the needs of I/O-intensive graph workloads
+    #     that require predictable pricing with low I/O latency and consistent
+    #     I/O throughput.
     #
-    #   Default:
+    #     Neptune I/O-Optimized storage is only available starting with engine
+    #     release 1.3.0.0.
     #
-    #   * `standard`
     #
-    #   ^
+    #
+    #   [1]: https://docs.aws.amazon.com/neptune/latest/userguide/storage-types.html#provisioned-iops-storage
+    #
+    # @option params [String] :network_type
+    #   The network type of the DB cluster.
+    #
+    #   Valid Values:
+    #
+    #   * <b> <code>IPV4</code> </b>   –   The DB cluster uses only IPv4
+    #     addresses for communication.
+    #
+    #   * <b> <code>DUAL</code> </b>   –   The DB cluster uses both IPv4 and
+    #     IPv6 addresses for communication. The DB subnet group associated
+    #     with the cluster must support IPv6.
     #
     # @return [Types::ModifyDBClusterResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -5266,6 +5402,7 @@ module Aws::Neptune
     #       max_capacity: 1.0,
     #     },
     #     storage_type: "String",
+    #     network_type: "String",
     #   })
     #
     # @example Response structure
@@ -5332,6 +5469,7 @@ module Aws::Neptune
     #   resp.db_cluster.pending_modified_values.storage_type #=> String
     #   resp.db_cluster.pending_modified_values.allocated_storage #=> Integer
     #   resp.db_cluster.pending_modified_values.iops #=> Integer
+    #   resp.db_cluster.pending_modified_values.network_type #=> String
     #   resp.db_cluster.deletion_protection #=> Boolean
     #   resp.db_cluster.cross_account_clone #=> Boolean
     #   resp.db_cluster.automatic_restart_time #=> Time
@@ -5340,6 +5478,7 @@ module Aws::Neptune
     #   resp.db_cluster.global_cluster_identifier #=> String
     #   resp.db_cluster.io_optimized_next_allowed_modification_time #=> Time
     #   resp.db_cluster.storage_type #=> String
+    #   resp.db_cluster.network_type #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-2014-10-31/ModifyDBCluster AWS API Documentation
     #
@@ -5762,7 +5901,8 @@ module Aws::Neptune
     #   Example: `mydbinstance`
     #
     # @option params [String] :storage_type
-    #   Not supported.
+    #   Not applicable. In Neptune the storage type is managed at the DB
+    #   Cluster level.
     #
     # @option params [String] :tde_credential_arn
     #   The ARN from the key store with which to associate the instance for
@@ -5806,7 +5946,19 @@ module Aws::Neptune
     #   Default: `8182`
     #
     # @option params [Boolean] :publicly_accessible
-    #   This flag should no longer be used.
+    #   Indicates whether the DB instance is publicly accessible.
+    #
+    #   When the DB instance is publicly accessible and you connect from
+    #   outside of the DB instance's virtual private cloud (VPC), its Domain
+    #   Name System (DNS) endpoint resolves to the public IP address. When you
+    #   connect from within the same VPC as the DB instance, the endpoint
+    #   resolves to the private IP address. Access to the DB instance is
+    #   ultimately controlled by the security group it uses. That public
+    #   access isn't permitted if the security group assigned to the DB
+    #   cluster doesn't permit it.
+    #
+    #   When the DB instance isn't publicly accessible, it is an internal DB
+    #   instance with a DNS name that resolves to a private IP address.
     #
     # @option params [String] :monitoring_role_arn
     #   The ARN for the IAM role that permits Neptune to send enhanced
@@ -5943,6 +6095,8 @@ module Aws::Neptune
     #   resp.db_instance.db_subnet_group.subnets[0].subnet_availability_zone.name #=> String
     #   resp.db_instance.db_subnet_group.subnets[0].subnet_status #=> String
     #   resp.db_instance.db_subnet_group.db_subnet_group_arn #=> String
+    #   resp.db_instance.db_subnet_group.supported_network_types #=> Array
+    #   resp.db_instance.db_subnet_group.supported_network_types[0] #=> String
     #   resp.db_instance.preferred_maintenance_window #=> String
     #   resp.db_instance.pending_modified_values.db_instance_class #=> String
     #   resp.db_instance.pending_modified_values.allocated_storage #=> Integer
@@ -6009,6 +6163,7 @@ module Aws::Neptune
     #   resp.db_instance.enabled_cloudwatch_logs_exports #=> Array
     #   resp.db_instance.enabled_cloudwatch_logs_exports[0] #=> String
     #   resp.db_instance.deletion_protection #=> Boolean
+    #   resp.db_instance.network_type #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-2014-10-31/ModifyDBInstance AWS API Documentation
     #
@@ -6145,6 +6300,8 @@ module Aws::Neptune
     #   resp.db_subnet_group.subnets[0].subnet_availability_zone.name #=> String
     #   resp.db_subnet_group.subnets[0].subnet_status #=> String
     #   resp.db_subnet_group.db_subnet_group_arn #=> String
+    #   resp.db_subnet_group.supported_network_types #=> Array
+    #   resp.db_subnet_group.supported_network_types[0] #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-2014-10-31/ModifyDBSubnetGroup AWS API Documentation
     #
@@ -6300,6 +6457,7 @@ module Aws::Neptune
     #   resp.global_cluster.status #=> String
     #   resp.global_cluster.engine #=> String
     #   resp.global_cluster.engine_version #=> String
+    #   resp.global_cluster.database_name #=> String
     #   resp.global_cluster.storage_encrypted #=> Boolean
     #   resp.global_cluster.deletion_protection #=> Boolean
     #   resp.global_cluster.global_cluster_members #=> Array
@@ -6307,6 +6465,13 @@ module Aws::Neptune
     #   resp.global_cluster.global_cluster_members[0].readers #=> Array
     #   resp.global_cluster.global_cluster_members[0].readers[0] #=> String
     #   resp.global_cluster.global_cluster_members[0].is_writer #=> Boolean
+    #   resp.global_cluster.failover_state.status #=> String, one of "pending", "failing-over", "cancelling"
+    #   resp.global_cluster.failover_state.from_db_cluster_arn #=> String
+    #   resp.global_cluster.failover_state.to_db_cluster_arn #=> String
+    #   resp.global_cluster.failover_state.is_data_loss_allowed #=> Boolean
+    #   resp.global_cluster.tag_list #=> Array
+    #   resp.global_cluster.tag_list[0].key #=> String
+    #   resp.global_cluster.tag_list[0].value #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-2014-10-31/ModifyGlobalCluster AWS API Documentation
     #
@@ -6396,6 +6561,7 @@ module Aws::Neptune
     #   resp.db_cluster.pending_modified_values.storage_type #=> String
     #   resp.db_cluster.pending_modified_values.allocated_storage #=> Integer
     #   resp.db_cluster.pending_modified_values.iops #=> Integer
+    #   resp.db_cluster.pending_modified_values.network_type #=> String
     #   resp.db_cluster.deletion_protection #=> Boolean
     #   resp.db_cluster.cross_account_clone #=> Boolean
     #   resp.db_cluster.automatic_restart_time #=> Time
@@ -6404,6 +6570,7 @@ module Aws::Neptune
     #   resp.db_cluster.global_cluster_identifier #=> String
     #   resp.db_cluster.io_optimized_next_allowed_modification_time #=> Time
     #   resp.db_cluster.storage_type #=> String
+    #   resp.db_cluster.network_type #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-2014-10-31/PromoteReadReplicaDBCluster AWS API Documentation
     #
@@ -6484,6 +6651,8 @@ module Aws::Neptune
     #   resp.db_instance.db_subnet_group.subnets[0].subnet_availability_zone.name #=> String
     #   resp.db_instance.db_subnet_group.subnets[0].subnet_status #=> String
     #   resp.db_instance.db_subnet_group.db_subnet_group_arn #=> String
+    #   resp.db_instance.db_subnet_group.supported_network_types #=> Array
+    #   resp.db_instance.db_subnet_group.supported_network_types[0] #=> String
     #   resp.db_instance.preferred_maintenance_window #=> String
     #   resp.db_instance.pending_modified_values.db_instance_class #=> String
     #   resp.db_instance.pending_modified_values.allocated_storage #=> Integer
@@ -6550,6 +6719,7 @@ module Aws::Neptune
     #   resp.db_instance.enabled_cloudwatch_logs_exports #=> Array
     #   resp.db_instance.enabled_cloudwatch_logs_exports[0] #=> String
     #   resp.db_instance.deletion_protection #=> Boolean
+    #   resp.db_instance.network_type #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-2014-10-31/RebootDBInstance AWS API Documentation
     #
@@ -6563,7 +6733,7 @@ module Aws::Neptune
     # Detaches a Neptune DB cluster from a Neptune global database. A
     # secondary cluster becomes a normal standalone cluster with read-write
     # capability instead of being read-only, and no longer receives data
-    # from a the primary cluster.
+    # from the primary cluster.
     #
     # @option params [required, String] :global_cluster_identifier
     #   The identifier of the Neptune global database from which to detach the
@@ -6592,6 +6762,7 @@ module Aws::Neptune
     #   resp.global_cluster.status #=> String
     #   resp.global_cluster.engine #=> String
     #   resp.global_cluster.engine_version #=> String
+    #   resp.global_cluster.database_name #=> String
     #   resp.global_cluster.storage_encrypted #=> Boolean
     #   resp.global_cluster.deletion_protection #=> Boolean
     #   resp.global_cluster.global_cluster_members #=> Array
@@ -6599,6 +6770,13 @@ module Aws::Neptune
     #   resp.global_cluster.global_cluster_members[0].readers #=> Array
     #   resp.global_cluster.global_cluster_members[0].readers[0] #=> String
     #   resp.global_cluster.global_cluster_members[0].is_writer #=> Boolean
+    #   resp.global_cluster.failover_state.status #=> String, one of "pending", "failing-over", "cancelling"
+    #   resp.global_cluster.failover_state.from_db_cluster_arn #=> String
+    #   resp.global_cluster.failover_state.to_db_cluster_arn #=> String
+    #   resp.global_cluster.failover_state.is_data_loss_allowed #=> Boolean
+    #   resp.global_cluster.tag_list #=> Array
+    #   resp.global_cluster.tag_list[0].key #=> String
+    #   resp.global_cluster.tag_list[0].value #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-2014-10-31/RemoveFromGlobalCluster AWS API Documentation
     #
@@ -7005,6 +7183,18 @@ module Aws::Neptune
     #
     #   Default: `standard`
     #
+    # @option params [String] :network_type
+    #   The network type of the DB cluster.
+    #
+    #   Valid Values:
+    #
+    #   * <b> <code>IPV4</code> </b>   –   ( *the default* ) The DB cluster
+    #     uses only IPv4 addresses for communication.
+    #
+    #   * <b> <code>DUAL</code> </b>   –   The DB cluster uses both IPv4 and
+    #     IPv6 addresses for communication. The DB subnet group associated
+    #     with the cluster must support IPv6.
+    #
     # @return [Types::RestoreDBClusterFromSnapshotResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::RestoreDBClusterFromSnapshotResult#db_cluster #db_cluster} => Types::DBCluster
@@ -7039,6 +7229,7 @@ module Aws::Neptune
     #       max_capacity: 1.0,
     #     },
     #     storage_type: "String",
+    #     network_type: "String",
     #   })
     #
     # @example Response structure
@@ -7105,6 +7296,7 @@ module Aws::Neptune
     #   resp.db_cluster.pending_modified_values.storage_type #=> String
     #   resp.db_cluster.pending_modified_values.allocated_storage #=> Integer
     #   resp.db_cluster.pending_modified_values.iops #=> Integer
+    #   resp.db_cluster.pending_modified_values.network_type #=> String
     #   resp.db_cluster.deletion_protection #=> Boolean
     #   resp.db_cluster.cross_account_clone #=> Boolean
     #   resp.db_cluster.automatic_restart_time #=> Time
@@ -7113,6 +7305,7 @@ module Aws::Neptune
     #   resp.db_cluster.global_cluster_identifier #=> String
     #   resp.db_cluster.io_optimized_next_allowed_modification_time #=> Time
     #   resp.db_cluster.storage_type #=> String
+    #   resp.db_cluster.network_type #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-2014-10-31/RestoreDBClusterFromSnapshot AWS API Documentation
     #
@@ -7295,6 +7488,18 @@ module Aws::Neptune
     #
     #   Default: `standard`
     #
+    # @option params [String] :network_type
+    #   The network type of the DB cluster.
+    #
+    #   Valid Values:
+    #
+    #   * <b> <code>IPV4</code> </b>   –   ( *the default* ) The DB cluster
+    #     uses only IPv4 addresses for communication.
+    #
+    #   * <b> <code>DUAL</code> </b>   –   The DB cluster uses both IPv4 and
+    #     IPv6 addresses for communication. The DB subnet group associated
+    #     with the cluster must support IPv6.
+    #
     # @return [Types::RestoreDBClusterToPointInTimeResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::RestoreDBClusterToPointInTimeResult#db_cluster #db_cluster} => Types::DBCluster
@@ -7327,6 +7532,7 @@ module Aws::Neptune
     #       max_capacity: 1.0,
     #     },
     #     storage_type: "String",
+    #     network_type: "String",
     #   })
     #
     # @example Response structure
@@ -7393,6 +7599,7 @@ module Aws::Neptune
     #   resp.db_cluster.pending_modified_values.storage_type #=> String
     #   resp.db_cluster.pending_modified_values.allocated_storage #=> Integer
     #   resp.db_cluster.pending_modified_values.iops #=> Integer
+    #   resp.db_cluster.pending_modified_values.network_type #=> String
     #   resp.db_cluster.deletion_protection #=> Boolean
     #   resp.db_cluster.cross_account_clone #=> Boolean
     #   resp.db_cluster.automatic_restart_time #=> Time
@@ -7401,6 +7608,7 @@ module Aws::Neptune
     #   resp.db_cluster.global_cluster_identifier #=> String
     #   resp.db_cluster.io_optimized_next_allowed_modification_time #=> Time
     #   resp.db_cluster.storage_type #=> String
+    #   resp.db_cluster.network_type #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-2014-10-31/RestoreDBClusterToPointInTime AWS API Documentation
     #
@@ -7493,6 +7701,7 @@ module Aws::Neptune
     #   resp.db_cluster.pending_modified_values.storage_type #=> String
     #   resp.db_cluster.pending_modified_values.allocated_storage #=> Integer
     #   resp.db_cluster.pending_modified_values.iops #=> Integer
+    #   resp.db_cluster.pending_modified_values.network_type #=> String
     #   resp.db_cluster.deletion_protection #=> Boolean
     #   resp.db_cluster.cross_account_clone #=> Boolean
     #   resp.db_cluster.automatic_restart_time #=> Time
@@ -7501,6 +7710,7 @@ module Aws::Neptune
     #   resp.db_cluster.global_cluster_identifier #=> String
     #   resp.db_cluster.io_optimized_next_allowed_modification_time #=> Time
     #   resp.db_cluster.storage_type #=> String
+    #   resp.db_cluster.network_type #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-2014-10-31/StartDBCluster AWS API Documentation
     #
@@ -7596,6 +7806,7 @@ module Aws::Neptune
     #   resp.db_cluster.pending_modified_values.storage_type #=> String
     #   resp.db_cluster.pending_modified_values.allocated_storage #=> Integer
     #   resp.db_cluster.pending_modified_values.iops #=> Integer
+    #   resp.db_cluster.pending_modified_values.network_type #=> String
     #   resp.db_cluster.deletion_protection #=> Boolean
     #   resp.db_cluster.cross_account_clone #=> Boolean
     #   resp.db_cluster.automatic_restart_time #=> Time
@@ -7604,6 +7815,7 @@ module Aws::Neptune
     #   resp.db_cluster.global_cluster_identifier #=> String
     #   resp.db_cluster.io_optimized_next_allowed_modification_time #=> Time
     #   resp.db_cluster.storage_type #=> String
+    #   resp.db_cluster.network_type #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-2014-10-31/StopDBCluster AWS API Documentation
     #
@@ -7611,6 +7823,80 @@ module Aws::Neptune
     # @param [Hash] params ({})
     def stop_db_cluster(params = {}, options = {})
       req = build_request(:stop_db_cluster, params)
+      req.send_request(options)
+    end
+
+    # Switches over the specified secondary DB cluster to be the new primary
+    # DB cluster in the global database cluster. Switchover operations were
+    # previously called "managed planned failovers."
+    #
+    # Promotes the specified secondary cluster to assume full read/write
+    # capabilities and demotes the current primary cluster to a secondary
+    # (read-only) cluster, maintaining the original replication topology.
+    # All secondary clusters are synchronized with the primary at the
+    # beginning of the process so the new primary continues operations for
+    # the global database without losing any data. Your database is
+    # unavailable for a short time while the primary and selected secondary
+    # clusters are assuming their new roles.
+    #
+    # <note markdown="1"> This operation is intended for controlled environments, for operations
+    # such as "regional rotation" or to fall back to the original primary
+    # after a global database failover.
+    #
+    #  </note>
+    #
+    # @option params [required, String] :global_cluster_identifier
+    #   The identifier of the global database cluster to switch over. This
+    #   parameter isn't case-sensitive.
+    #
+    #   Constraints: Must match the identifier of an existing global database
+    #   cluster.
+    #
+    # @option params [required, String] :target_db_cluster_identifier
+    #   The Amazon Resource Name (ARN) of the secondary Neptune DB cluster
+    #   that you want to promote to primary for the global database.
+    #
+    # @return [Types::SwitchoverGlobalClusterResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::SwitchoverGlobalClusterResult#global_cluster #global_cluster} => Types::GlobalCluster
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.switchover_global_cluster({
+    #     global_cluster_identifier: "GlobalClusterIdentifier", # required
+    #     target_db_cluster_identifier: "String", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.global_cluster.global_cluster_identifier #=> String
+    #   resp.global_cluster.global_cluster_resource_id #=> String
+    #   resp.global_cluster.global_cluster_arn #=> String
+    #   resp.global_cluster.status #=> String
+    #   resp.global_cluster.engine #=> String
+    #   resp.global_cluster.engine_version #=> String
+    #   resp.global_cluster.database_name #=> String
+    #   resp.global_cluster.storage_encrypted #=> Boolean
+    #   resp.global_cluster.deletion_protection #=> Boolean
+    #   resp.global_cluster.global_cluster_members #=> Array
+    #   resp.global_cluster.global_cluster_members[0].db_cluster_arn #=> String
+    #   resp.global_cluster.global_cluster_members[0].readers #=> Array
+    #   resp.global_cluster.global_cluster_members[0].readers[0] #=> String
+    #   resp.global_cluster.global_cluster_members[0].is_writer #=> Boolean
+    #   resp.global_cluster.failover_state.status #=> String, one of "pending", "failing-over", "cancelling"
+    #   resp.global_cluster.failover_state.from_db_cluster_arn #=> String
+    #   resp.global_cluster.failover_state.to_db_cluster_arn #=> String
+    #   resp.global_cluster.failover_state.is_data_loss_allowed #=> Boolean
+    #   resp.global_cluster.tag_list #=> Array
+    #   resp.global_cluster.tag_list[0].key #=> String
+    #   resp.global_cluster.tag_list[0].value #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-2014-10-31/SwitchoverGlobalCluster AWS API Documentation
+    #
+    # @overload switchover_global_cluster(params = {})
+    # @param [Hash] params ({})
+    def switchover_global_cluster(params = {}, options = {})
+      req = build_request(:switchover_global_cluster, params)
       req.send_request(options)
     end
 
@@ -7632,7 +7918,7 @@ module Aws::Neptune
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-neptune'
-      context[:gem_version] = '1.82.0'
+      context[:gem_version] = '1.108.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

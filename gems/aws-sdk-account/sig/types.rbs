@@ -10,54 +10,56 @@ module Aws::Account
 
     class AcceptPrimaryEmailUpdateRequest
       attr_accessor account_id: ::String
-      attr_accessor otp: ::String
       attr_accessor primary_email: ::String
-      SENSITIVE: [:otp, :primary_email]
+      attr_accessor otp: ::String
+      SENSITIVE: [:primary_email, :otp]
     end
 
     class AcceptPrimaryEmailUpdateResponse
-      attr_accessor status: ("PENDING" | "ACCEPTED")
+      attr_accessor status: ("PENDING" | "ACCEPTED" | "COMPLETED" | "FAILED")
       SENSITIVE: []
     end
 
     class AccessDeniedException
       attr_accessor message: ::String
+      attr_accessor error_type: ::String
       SENSITIVE: []
     end
 
     class AlternateContact
-      attr_accessor alternate_contact_type: ("BILLING" | "OPERATIONS" | "SECURITY")
-      attr_accessor email_address: ::String
       attr_accessor name: ::String
-      attr_accessor phone_number: ::String
       attr_accessor title: ::String
-      SENSITIVE: [:email_address, :name, :phone_number, :title]
+      attr_accessor email_address: ::String
+      attr_accessor phone_number: ::String
+      attr_accessor alternate_contact_type: ("BILLING" | "OPERATIONS" | "SECURITY")
+      SENSITIVE: [:name, :title, :email_address, :phone_number]
     end
 
     class ConflictException
       attr_accessor message: ::String
+      attr_accessor error_type: ::String
       SENSITIVE: []
     end
 
     class ContactInformation
+      attr_accessor full_name: ::String
       attr_accessor address_line_1: ::String
       attr_accessor address_line_2: ::String
       attr_accessor address_line_3: ::String
       attr_accessor city: ::String
-      attr_accessor company_name: ::String
-      attr_accessor country_code: ::String
-      attr_accessor district_or_county: ::String
-      attr_accessor full_name: ::String
-      attr_accessor phone_number: ::String
-      attr_accessor postal_code: ::String
       attr_accessor state_or_region: ::String
+      attr_accessor district_or_county: ::String
+      attr_accessor postal_code: ::String
+      attr_accessor country_code: ::String
+      attr_accessor phone_number: ::String
+      attr_accessor company_name: ::String
       attr_accessor website_url: ::String
-      SENSITIVE: [:address_line_1, :address_line_2, :address_line_3, :city, :company_name, :country_code, :district_or_county, :full_name, :phone_number, :postal_code, :state_or_region, :website_url]
+      SENSITIVE: [:full_name, :address_line_1, :address_line_2, :address_line_3, :city, :state_or_region, :district_or_county, :postal_code, :country_code, :phone_number, :company_name, :website_url]
     end
 
     class DeleteAlternateContactRequest
-      attr_accessor account_id: ::String
       attr_accessor alternate_contact_type: ("BILLING" | "OPERATIONS" | "SECURITY")
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
@@ -73,9 +75,22 @@ module Aws::Account
       SENSITIVE: []
     end
 
-    class GetAlternateContactRequest
+    class GetAccountInformationRequest
       attr_accessor account_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetAccountInformationResponse
+      attr_accessor account_id: ::String
+      attr_accessor account_name: ::String
+      attr_accessor account_created_date: ::Time
+      attr_accessor account_state: ("PENDING_ACTIVATION" | "ACTIVE" | "SUSPENDED" | "CLOSED")
+      SENSITIVE: [:account_name]
+    end
+
+    class GetAlternateContactRequest
       attr_accessor alternate_contact_type: ("BILLING" | "OPERATIONS" | "SECURITY")
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
@@ -94,6 +109,17 @@ module Aws::Account
       SENSITIVE: []
     end
 
+    class GetGovCloudAccountInformationRequest
+      attr_accessor standard_account_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetGovCloudAccountInformationResponse
+      attr_accessor gov_cloud_account_id: ::String
+      attr_accessor account_state: ("PENDING_ACTIVATION" | "ACTIVE" | "SUSPENDED" | "CLOSED")
+      SENSITIVE: []
+    end
+
     class GetPrimaryEmailRequest
       attr_accessor account_id: ::String
       SENSITIVE: []
@@ -102,6 +128,17 @@ module Aws::Account
     class GetPrimaryEmailResponse
       attr_accessor primary_email: ::String
       SENSITIVE: [:primary_email]
+    end
+
+    class GetPrimaryEmailUpdateStatusRequest
+      attr_accessor account_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetPrimaryEmailUpdateStatusResponse
+      attr_accessor status: ("PENDING" | "ACCEPTED" | "COMPLETED" | "FAILED")
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
     end
 
     class GetRegionOptStatusRequest
@@ -118,6 +155,7 @@ module Aws::Account
 
     class InternalServerException
       attr_accessor message: ::String
+      attr_accessor error_type: ::String
       SENSITIVE: []
     end
 
@@ -135,19 +173,25 @@ module Aws::Account
       SENSITIVE: []
     end
 
-    class PutAlternateContactRequest
+    class PutAccountNameRequest
+      attr_accessor account_name: ::String
       attr_accessor account_id: ::String
-      attr_accessor alternate_contact_type: ("BILLING" | "OPERATIONS" | "SECURITY")
-      attr_accessor email_address: ::String
+      SENSITIVE: [:account_name]
+    end
+
+    class PutAlternateContactRequest
       attr_accessor name: ::String
-      attr_accessor phone_number: ::String
       attr_accessor title: ::String
-      SENSITIVE: [:email_address, :name, :phone_number, :title]
+      attr_accessor email_address: ::String
+      attr_accessor phone_number: ::String
+      attr_accessor alternate_contact_type: ("BILLING" | "OPERATIONS" | "SECURITY")
+      attr_accessor account_id: ::String
+      SENSITIVE: [:name, :title, :email_address, :phone_number]
     end
 
     class PutContactInformationRequest
-      attr_accessor account_id: ::String
       attr_accessor contact_information: Types::ContactInformation
+      attr_accessor account_id: ::String
       SENSITIVE: []
     end
 
@@ -159,6 +203,13 @@ module Aws::Account
 
     class ResourceNotFoundException
       attr_accessor message: ::String
+      attr_accessor error_type: ::String
+      SENSITIVE: []
+    end
+
+    class ResourceUnavailableException
+      attr_accessor message: ::String
+      attr_accessor error_type: ::String
       SENSITIVE: []
     end
 
@@ -169,25 +220,26 @@ module Aws::Account
     end
 
     class StartPrimaryEmailUpdateResponse
-      attr_accessor status: ("PENDING" | "ACCEPTED")
+      attr_accessor status: ("PENDING" | "ACCEPTED" | "COMPLETED" | "FAILED")
       SENSITIVE: []
     end
 
     class TooManyRequestsException
       attr_accessor message: ::String
+      attr_accessor error_type: ::String
       SENSITIVE: []
     end
 
     class ValidationException
-      attr_accessor field_list: ::Array[Types::ValidationExceptionField]
       attr_accessor message: ::String
       attr_accessor reason: ("invalidRegionOptTarget" | "fieldValidationFailed")
+      attr_accessor field_list: ::Array[Types::ValidationExceptionField]
       SENSITIVE: [:message]
     end
 
     class ValidationExceptionField
-      attr_accessor message: ::String
       attr_accessor name: ::String
+      attr_accessor message: ::String
       SENSITIVE: [:message]
     end
   end

@@ -95,8 +95,8 @@ module Aws::AutoScaling
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::AutoScaling
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::AutoScaling
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::AutoScaling
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::AutoScaling
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::AutoScaling
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::AutoScaling
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::AutoScaling
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -610,9 +614,8 @@ module Aws::AutoScaling
       req.send_request(options)
     end
 
-    # <note markdown="1"> This API operation is superseded by
-    # [https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API\_AttachTrafficSources.html][1],
-    # which can attach multiple traffic sources types. We recommend using
+    # <note markdown="1"> This API operation is superseded by [AttachTrafficSources][1], which
+    # can attach multiple traffic sources types. We recommend using
     # `AttachTrafficSources` to simplify how you manage traffic sources.
     # However, we continue to support `AttachLoadBalancers`. You can use
     # both the original `AttachLoadBalancers` API operation and
@@ -872,6 +875,15 @@ module Aws::AutoScaling
     # @option params [required, String] :auto_scaling_group_name
     #   The name of the Auto Scaling group.
     #
+    # @option params [Boolean] :wait_for_transitioning_instances
+    #   When cancelling an instance refresh, this indicates whether to wait
+    #   for in-flight launches and terminations to complete. The default is
+    #   true.
+    #
+    #   When set to false, Amazon EC2 Auto Scaling cancels the instance
+    #   refresh without waiting for any pending launches or terminations to
+    #   complete.
+    #
     # @return [Types::CancelInstanceRefreshAnswer] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CancelInstanceRefreshAnswer#instance_refresh_id #instance_refresh_id} => String
@@ -894,6 +906,7 @@ module Aws::AutoScaling
     #
     #   resp = client.cancel_instance_refresh({
     #     auto_scaling_group_name: "XmlStringMaxLen255", # required
+    #     wait_for_transitioning_instances: false,
     #   })
     #
     # @example Response structure
@@ -1131,6 +1144,11 @@ module Aws::AutoScaling
     #   for attaching a network interface when an existing network interface
     #   ID is specified in a launch template.
     #
+    # @option params [Array<String>] :availability_zone_ids
+    #   A list of Availability Zone IDs where the Auto Scaling group can
+    #   launch instances. You cannot specify both AvailabilityZones and
+    #   AvailabilityZoneIds in the same request.
+    #
     # @option params [Array<String>] :load_balancer_names
     #   A list of Classic Load Balancers associated with this Auto Scaling
     #   group. For Application Load Balancers, Network Load Balancers, and
@@ -1182,7 +1200,7 @@ module Aws::AutoScaling
     # @option params [String] :placement_group
     #   The name of the placement group into which to launch your instances.
     #   For more information, see [Placement groups][1] in the *Amazon EC2
-    #   User Guide for Linux Instances*.
+    #   User Guide*.
     #
     #   <note markdown="1"> A *cluster* placement group is a logical grouping of instances within
     #   a single Availability Zone. You cannot specify multiple Availability
@@ -1244,6 +1262,27 @@ module Aws::AutoScaling
     # @option params [Array<Types::LifecycleHookSpecification>] :lifecycle_hook_specification_list
     #   One or more lifecycle hooks to add to the Auto Scaling group before
     #   instances are launched.
+    #
+    # @option params [String] :deletion_protection
+    #   The deletion protection setting for the Auto Scaling group. This
+    #   setting helps safeguard your Auto Scaling group and its instances by
+    #   controlling whether the `DeleteAutoScalingGroup` operation is allowed.
+    #   When deletion protection is enabled, users cannot delete the Auto
+    #   Scaling group according to the specified protection level until the
+    #   setting is changed back to a less restrictive level.
+    #
+    #   The valid values are `none`, `prevent-force-deletion`, and
+    #   `prevent-all-deletion`.
+    #
+    #   Default: `none`
+    #
+    #   For more information, see [ Configure deletion protection for your
+    #   Amazon EC2 Auto Scaling resources][1] in the *Amazon EC2 Auto Scaling
+    #   User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/autoscaling/ec2/userguide/resource-deletion-protection.html
     #
     # @option params [Array<Types::Tag>] :tags
     #   One or more tags. You can tag your Auto Scaling group and propagate
@@ -1363,6 +1402,32 @@ module Aws::AutoScaling
     #
     # @option params [Types::CapacityReservationSpecification] :capacity_reservation_specification
     #   The capacity reservation specification for the Auto Scaling group.
+    #
+    # @option params [Types::InstanceLifecyclePolicy] :instance_lifecycle_policy
+    #   The instance lifecycle policy for the Auto Scaling group. This policy
+    #   controls instance behavior when an instance transitions through its
+    #   lifecycle states. Configure retention triggers to specify when
+    #   instances should move to a `Retained` state instead of automatic
+    #   termination.
+    #
+    #   For more information, see [ Control instance retention with instance
+    #   lifecycle policies][1] in the *Amazon EC2 Auto Scaling User Guide*.
+    #
+    #   <note markdown="1"> Instances in a Retained state will continue to incur standard EC2
+    #   charges until terminated.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/autoscaling/ec2/userguide/instance-lifecycle-policy.html
+    #
+    # @option params [Types::Operator] :operator
+    #   The entity that manages the Auto Scaling group. If you specify this
+    #   parameter, Amazon EC2 Auto Scaling passes the operator identity to EC2
+    #   for instance launches and only allows the designated operator to make
+    #   changes to the Auto Scaling group. All mutating API calls from
+    #   non-operator callers are rejected with an `AccessDenied` exception.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
@@ -1523,7 +1588,7 @@ module Aws::AutoScaling
     #                 min: 1, # required
     #                 max: 1,
     #               },
-    #               cpu_manufacturers: ["intel"], # accepts intel, amd, amazon-web-services
+    #               cpu_manufacturers: ["intel"], # accepts intel, amd, amazon-web-services, apple
     #               memory_gi_b_per_v_cpu: {
     #                 min: 1.0,
     #                 max: 1.0,
@@ -1576,6 +1641,7 @@ module Aws::AutoScaling
     #                 },
     #               },
     #             },
+    #             image_id: "ImageId",
     #           },
     #         ],
     #       },
@@ -1594,6 +1660,7 @@ module Aws::AutoScaling
     #     desired_capacity: 1,
     #     default_cooldown: 1,
     #     availability_zones: ["XmlStringMaxLen255"],
+    #     availability_zone_ids: ["XmlStringMaxLen255"],
     #     load_balancer_names: ["XmlStringMaxLen255"],
     #     target_group_arns: ["XmlStringMaxLen511"],
     #     health_check_type: "XmlStringMaxLen32",
@@ -1614,6 +1681,7 @@ module Aws::AutoScaling
     #         role_arn: "XmlStringMaxLen255",
     #       },
     #     ],
+    #     deletion_protection: "none", # accepts none, prevent-force-deletion, prevent-all-deletion
     #     tags: [
     #       {
     #         resource_id: "XmlString",
@@ -1639,7 +1707,7 @@ module Aws::AutoScaling
     #       max_healthy_percentage: 1,
     #     },
     #     availability_zone_distribution: {
-    #       capacity_distribution_strategy: "balanced-only", # accepts balanced-only, balanced-best-effort
+    #       capacity_distribution_strategy: "balanced-only", # accepts balanced-only, balanced-best-effort, reservations-then-balanced
     #     },
     #     availability_zone_impairment_policy: {
     #       zonal_shift_enabled: false,
@@ -1652,6 +1720,14 @@ module Aws::AutoScaling
     #         capacity_reservation_ids: ["AsciiStringMaxLen255"],
     #         capacity_reservation_resource_group_arns: ["ResourceName"],
     #       },
+    #     },
+    #     instance_lifecycle_policy: {
+    #       retention_triggers: {
+    #         terminate_hook_abandon: "retain", # accepts retain, terminate
+    #       },
+    #     },
+    #     operator: {
+    #       principal: "ManagerIdentifier", # required
     #     },
     #   })
     #
@@ -1698,7 +1774,7 @@ module Aws::AutoScaling
     # @option params [String] :image_id
     #   The ID of the Amazon Machine Image (AMI) that was assigned during
     #   registration. For more information, see [Find a Linux AMI][1] in the
-    #   *Amazon EC2 User Guide for Linux Instances*.
+    #   *Amazon EC2 User Guide*.
     #
     #   If you specify `InstanceId`, an `ImageId` is not required.
     #
@@ -1708,8 +1784,7 @@ module Aws::AutoScaling
     #
     # @option params [String] :key_name
     #   The name of the key pair. For more information, see [Amazon EC2 key
-    #   pairs and Amazon EC2 instances][1] in the *Amazon EC2 User Guide for
-    #   Linux Instances*.
+    #   pairs and Amazon EC2 instances][1] in the *Amazon EC2 User Guide*.
     #
     #
     #
@@ -1763,7 +1838,7 @@ module Aws::AutoScaling
     # @option params [String] :instance_type
     #   Specifies the instance type of the EC2 instance. For information about
     #   available instance types, see [Available instance types][1] in the
-    #   *Amazon EC2 User Guide for Linux Instances*.
+    #   *Amazon EC2 User Guide*.
     #
     #   If you specify `InstanceId`, an `InstanceType` is not required.
     #
@@ -1776,7 +1851,7 @@ module Aws::AutoScaling
     #
     #   <note markdown="1"> We recommend that you use PV-GRUB instead of kernels and RAM disks.
     #   For more information, see [User provided kernels][1] in the *Amazon
-    #   EC2 User Guide for Linux Instances*.
+    #   EC2 User Guide*.
     #
     #    </note>
     #
@@ -1789,7 +1864,7 @@ module Aws::AutoScaling
     #
     #   <note markdown="1"> We recommend that you use PV-GRUB instead of kernels and RAM disks.
     #   For more information, see [User provided kernels][1] in the *Amazon
-    #   EC2 User Guide for Linux Instances*.
+    #   EC2 User Guide*.
     #
     #    </note>
     #
@@ -1802,7 +1877,7 @@ module Aws::AutoScaling
     #   attach to the instances at launch. By default, the block devices
     #   specified in the block device mapping for the AMI are used. For more
     #   information, see [Block device mappings][1] in the *Amazon EC2 User
-    #   Guide for Linux Instances*.
+    #   Guide*.
     #
     #
     #
@@ -1863,7 +1938,7 @@ module Aws::AutoScaling
     #   with all instance types. Additional fees are incurred when you enable
     #   EBS optimization for an instance type that is not EBS-optimized by
     #   default. For more information, see [Amazon EBS-optimized instances][1]
-    #   in the *Amazon EC2 User Guide for Linux Instances*.
+    #   in the *Amazon EC2 User Guide*.
     #
     #   The default value is `false`.
     #
@@ -2530,6 +2605,11 @@ module Aws::AutoScaling
     #
     #   If you omit this property, all Auto Scaling groups are described.
     #
+    # @option params [Boolean] :include_instances
+    #   Specifies whether to include information about Amazon EC2 instances in
+    #   the response. When set to `true` (default), the response includes
+    #   instance details.
+    #
     # @option params [String] :next_token
     #   The token for the next set of items to return. (You received this
     #   token from a previous call.)
@@ -2565,6 +2645,11 @@ module Aws::AutoScaling
     #       {
     #         auto_scaling_group_arn: "arn:aws:autoscaling:us-west-1:123456789012:autoScalingGroup:12345678-1234-1234-1234-123456789012:autoScalingGroupName/my-auto-scaling-group", 
     #         auto_scaling_group_name: "my-auto-scaling-group", 
+    #         availability_zone_ids: [
+    #           "usw2-az1", 
+    #           "usw2-az2", 
+    #           "usw2-az3", 
+    #         ], 
     #         availability_zones: [
     #           "us-west-2a", 
     #           "us-west-2b", 
@@ -2580,6 +2665,7 @@ module Aws::AutoScaling
     #         instances: [
     #           {
     #             availability_zone: "us-west-2c", 
+    #             availability_zone_id: "usw2-az3", 
     #             health_status: "Healthy", 
     #             instance_id: "i-05b4f7d5be44822a6", 
     #             instance_type: "t3.micro", 
@@ -2589,6 +2675,7 @@ module Aws::AutoScaling
     #           }, 
     #           {
     #             availability_zone: "us-west-2b", 
+    #             availability_zone_id: "usw2-az2", 
     #             health_status: "Healthy", 
     #             instance_id: "i-0c20ac468fa3049e8", 
     #             instance_type: "t3.micro", 
@@ -2624,6 +2711,7 @@ module Aws::AutoScaling
     #
     #   resp = client.describe_auto_scaling_groups({
     #     auto_scaling_group_names: ["XmlStringMaxLen255"],
+    #     include_instances: false,
     #     next_token: "XmlString",
     #     max_records: 1,
     #     filters: [
@@ -2657,7 +2745,7 @@ module Aws::AutoScaling
     #   resp.auto_scaling_groups[0].mixed_instances_policy.launch_template.overrides[0].instance_requirements.memory_mi_b.min #=> Integer
     #   resp.auto_scaling_groups[0].mixed_instances_policy.launch_template.overrides[0].instance_requirements.memory_mi_b.max #=> Integer
     #   resp.auto_scaling_groups[0].mixed_instances_policy.launch_template.overrides[0].instance_requirements.cpu_manufacturers #=> Array
-    #   resp.auto_scaling_groups[0].mixed_instances_policy.launch_template.overrides[0].instance_requirements.cpu_manufacturers[0] #=> String, one of "intel", "amd", "amazon-web-services"
+    #   resp.auto_scaling_groups[0].mixed_instances_policy.launch_template.overrides[0].instance_requirements.cpu_manufacturers[0] #=> String, one of "intel", "amd", "amazon-web-services", "apple"
     #   resp.auto_scaling_groups[0].mixed_instances_policy.launch_template.overrides[0].instance_requirements.memory_gi_b_per_v_cpu.min #=> Float
     #   resp.auto_scaling_groups[0].mixed_instances_policy.launch_template.overrides[0].instance_requirements.memory_gi_b_per_v_cpu.max #=> Float
     #   resp.auto_scaling_groups[0].mixed_instances_policy.launch_template.overrides[0].instance_requirements.excluded_instance_types #=> Array
@@ -2695,6 +2783,7 @@ module Aws::AutoScaling
     #   resp.auto_scaling_groups[0].mixed_instances_policy.launch_template.overrides[0].instance_requirements.allowed_instance_types[0] #=> String
     #   resp.auto_scaling_groups[0].mixed_instances_policy.launch_template.overrides[0].instance_requirements.baseline_performance_factors.cpu.references #=> Array
     #   resp.auto_scaling_groups[0].mixed_instances_policy.launch_template.overrides[0].instance_requirements.baseline_performance_factors.cpu.references[0].instance_family #=> String
+    #   resp.auto_scaling_groups[0].mixed_instances_policy.launch_template.overrides[0].image_id #=> String
     #   resp.auto_scaling_groups[0].mixed_instances_policy.instances_distribution.on_demand_allocation_strategy #=> String
     #   resp.auto_scaling_groups[0].mixed_instances_policy.instances_distribution.on_demand_base_capacity #=> Integer
     #   resp.auto_scaling_groups[0].mixed_instances_policy.instances_distribution.on_demand_percentage_above_base_capacity #=> Integer
@@ -2708,6 +2797,8 @@ module Aws::AutoScaling
     #   resp.auto_scaling_groups[0].default_cooldown #=> Integer
     #   resp.auto_scaling_groups[0].availability_zones #=> Array
     #   resp.auto_scaling_groups[0].availability_zones[0] #=> String
+    #   resp.auto_scaling_groups[0].availability_zone_ids #=> Array
+    #   resp.auto_scaling_groups[0].availability_zone_ids[0] #=> String
     #   resp.auto_scaling_groups[0].load_balancer_names #=> Array
     #   resp.auto_scaling_groups[0].load_balancer_names[0] #=> String
     #   resp.auto_scaling_groups[0].target_group_arns #=> Array
@@ -2718,12 +2809,14 @@ module Aws::AutoScaling
     #   resp.auto_scaling_groups[0].instances[0].instance_id #=> String
     #   resp.auto_scaling_groups[0].instances[0].instance_type #=> String
     #   resp.auto_scaling_groups[0].instances[0].availability_zone #=> String
-    #   resp.auto_scaling_groups[0].instances[0].lifecycle_state #=> String, one of "Pending", "Pending:Wait", "Pending:Proceed", "Quarantined", "InService", "Terminating", "Terminating:Wait", "Terminating:Proceed", "Terminated", "Detaching", "Detached", "EnteringStandby", "Standby", "Warmed:Pending", "Warmed:Pending:Wait", "Warmed:Pending:Proceed", "Warmed:Terminating", "Warmed:Terminating:Wait", "Warmed:Terminating:Proceed", "Warmed:Terminated", "Warmed:Stopped", "Warmed:Running", "Warmed:Hibernated"
+    #   resp.auto_scaling_groups[0].instances[0].availability_zone_id #=> String
+    #   resp.auto_scaling_groups[0].instances[0].lifecycle_state #=> String, one of "Pending", "Pending:Wait", "Pending:Proceed", "Quarantined", "InService", "Terminating", "Terminating:Wait", "Terminating:Proceed", "Terminating:Retained", "Terminated", "Detaching", "Detached", "EnteringStandby", "Standby", "ReplacingRootVolume", "ReplacingRootVolume:Wait", "ReplacingRootVolume:Proceed", "RootVolumeReplaced", "Warmed:Pending", "Warmed:Pending:Wait", "Warmed:Pending:Proceed", "Warmed:Pending:Retained", "Warmed:Terminating", "Warmed:Terminating:Wait", "Warmed:Terminating:Proceed", "Warmed:Terminating:Retained", "Warmed:Terminated", "Warmed:Stopped", "Warmed:Running", "Warmed:Hibernated"
     #   resp.auto_scaling_groups[0].instances[0].health_status #=> String
     #   resp.auto_scaling_groups[0].instances[0].launch_configuration_name #=> String
     #   resp.auto_scaling_groups[0].instances[0].launch_template.launch_template_id #=> String
     #   resp.auto_scaling_groups[0].instances[0].launch_template.launch_template_name #=> String
     #   resp.auto_scaling_groups[0].instances[0].launch_template.version #=> String
+    #   resp.auto_scaling_groups[0].instances[0].image_id #=> String
     #   resp.auto_scaling_groups[0].instances[0].protected_from_scale_in #=> Boolean
     #   resp.auto_scaling_groups[0].instances[0].weighted_capacity #=> String
     #   resp.auto_scaling_groups[0].created_time #=> Time
@@ -2762,7 +2855,8 @@ module Aws::AutoScaling
     #   resp.auto_scaling_groups[0].traffic_sources[0].type #=> String
     #   resp.auto_scaling_groups[0].instance_maintenance_policy.min_healthy_percentage #=> Integer
     #   resp.auto_scaling_groups[0].instance_maintenance_policy.max_healthy_percentage #=> Integer
-    #   resp.auto_scaling_groups[0].availability_zone_distribution.capacity_distribution_strategy #=> String, one of "balanced-only", "balanced-best-effort"
+    #   resp.auto_scaling_groups[0].deletion_protection #=> String, one of "none", "prevent-force-deletion", "prevent-all-deletion"
+    #   resp.auto_scaling_groups[0].availability_zone_distribution.capacity_distribution_strategy #=> String, one of "balanced-only", "balanced-best-effort", "reservations-then-balanced"
     #   resp.auto_scaling_groups[0].availability_zone_impairment_policy.zonal_shift_enabled #=> Boolean
     #   resp.auto_scaling_groups[0].availability_zone_impairment_policy.impaired_zone_health_check_behavior #=> String, one of "ReplaceUnhealthy", "IgnoreUnhealthy"
     #   resp.auto_scaling_groups[0].capacity_reservation_specification.capacity_reservation_preference #=> String, one of "capacity-reservations-only", "capacity-reservations-first", "none", "default"
@@ -2770,6 +2864,8 @@ module Aws::AutoScaling
     #   resp.auto_scaling_groups[0].capacity_reservation_specification.capacity_reservation_target.capacity_reservation_ids[0] #=> String
     #   resp.auto_scaling_groups[0].capacity_reservation_specification.capacity_reservation_target.capacity_reservation_resource_group_arns #=> Array
     #   resp.auto_scaling_groups[0].capacity_reservation_specification.capacity_reservation_target.capacity_reservation_resource_group_arns[0] #=> String
+    #   resp.auto_scaling_groups[0].instance_lifecycle_policy.retention_triggers.terminate_hook_abandon #=> String, one of "retain", "terminate"
+    #   resp.auto_scaling_groups[0].operator.principal #=> String
     #   resp.next_token #=> String
     #
     #
@@ -2830,6 +2926,7 @@ module Aws::AutoScaling
     #       {
     #         auto_scaling_group_name: "my-auto-scaling-group", 
     #         availability_zone: "us-west-2c", 
+    #         availability_zone_id: "usw2-az2", 
     #         health_status: "HEALTHY", 
     #         instance_id: "i-05b4f7d5be44822a6", 
     #         instance_type: "t3.micro", 
@@ -2855,12 +2952,14 @@ module Aws::AutoScaling
     #   resp.auto_scaling_instances[0].instance_type #=> String
     #   resp.auto_scaling_instances[0].auto_scaling_group_name #=> String
     #   resp.auto_scaling_instances[0].availability_zone #=> String
+    #   resp.auto_scaling_instances[0].availability_zone_id #=> String
     #   resp.auto_scaling_instances[0].lifecycle_state #=> String
     #   resp.auto_scaling_instances[0].health_status #=> String
     #   resp.auto_scaling_instances[0].launch_configuration_name #=> String
     #   resp.auto_scaling_instances[0].launch_template.launch_template_id #=> String
     #   resp.auto_scaling_instances[0].launch_template.launch_template_name #=> String
     #   resp.auto_scaling_instances[0].launch_template.version #=> String
+    #   resp.auto_scaling_instances[0].image_id #=> String
     #   resp.auto_scaling_instances[0].protected_from_scale_in #=> Boolean
     #   resp.auto_scaling_instances[0].weighted_capacity #=> String
     #   resp.next_token #=> String
@@ -3070,7 +3169,7 @@ module Aws::AutoScaling
     #   resp.instance_refreshes[0].desired_configuration.mixed_instances_policy.launch_template.overrides[0].instance_requirements.memory_mi_b.min #=> Integer
     #   resp.instance_refreshes[0].desired_configuration.mixed_instances_policy.launch_template.overrides[0].instance_requirements.memory_mi_b.max #=> Integer
     #   resp.instance_refreshes[0].desired_configuration.mixed_instances_policy.launch_template.overrides[0].instance_requirements.cpu_manufacturers #=> Array
-    #   resp.instance_refreshes[0].desired_configuration.mixed_instances_policy.launch_template.overrides[0].instance_requirements.cpu_manufacturers[0] #=> String, one of "intel", "amd", "amazon-web-services"
+    #   resp.instance_refreshes[0].desired_configuration.mixed_instances_policy.launch_template.overrides[0].instance_requirements.cpu_manufacturers[0] #=> String, one of "intel", "amd", "amazon-web-services", "apple"
     #   resp.instance_refreshes[0].desired_configuration.mixed_instances_policy.launch_template.overrides[0].instance_requirements.memory_gi_b_per_v_cpu.min #=> Float
     #   resp.instance_refreshes[0].desired_configuration.mixed_instances_policy.launch_template.overrides[0].instance_requirements.memory_gi_b_per_v_cpu.max #=> Float
     #   resp.instance_refreshes[0].desired_configuration.mixed_instances_policy.launch_template.overrides[0].instance_requirements.excluded_instance_types #=> Array
@@ -3108,6 +3207,7 @@ module Aws::AutoScaling
     #   resp.instance_refreshes[0].desired_configuration.mixed_instances_policy.launch_template.overrides[0].instance_requirements.allowed_instance_types[0] #=> String
     #   resp.instance_refreshes[0].desired_configuration.mixed_instances_policy.launch_template.overrides[0].instance_requirements.baseline_performance_factors.cpu.references #=> Array
     #   resp.instance_refreshes[0].desired_configuration.mixed_instances_policy.launch_template.overrides[0].instance_requirements.baseline_performance_factors.cpu.references[0].instance_family #=> String
+    #   resp.instance_refreshes[0].desired_configuration.mixed_instances_policy.launch_template.overrides[0].image_id #=> String
     #   resp.instance_refreshes[0].desired_configuration.mixed_instances_policy.instances_distribution.on_demand_allocation_strategy #=> String
     #   resp.instance_refreshes[0].desired_configuration.mixed_instances_policy.instances_distribution.on_demand_base_capacity #=> Integer
     #   resp.instance_refreshes[0].desired_configuration.mixed_instances_policy.instances_distribution.on_demand_percentage_above_base_capacity #=> Integer
@@ -3122,6 +3222,7 @@ module Aws::AutoScaling
     #   resp.instance_refreshes[0].rollback_details.progress_details_on_rollback.live_pool_progress.instances_to_update #=> Integer
     #   resp.instance_refreshes[0].rollback_details.progress_details_on_rollback.warm_pool_progress.percentage_complete #=> Integer
     #   resp.instance_refreshes[0].rollback_details.progress_details_on_rollback.warm_pool_progress.instances_to_update #=> Integer
+    #   resp.instance_refreshes[0].strategy #=> String, one of "Rolling", "ReplaceRootVolume"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/DescribeInstanceRefreshes AWS API Documentation
@@ -3926,16 +4027,20 @@ module Aws::AutoScaling
     # [2]: https://docs.aws.amazon.com/autoscaling/ec2/userguide/CHAP_Troubleshooting.html
     #
     # @option params [Array<String>] :activity_ids
-    #   The activity IDs of the desired scaling activities. If you omit this
-    #   property, all activities for the past six weeks are described. If
-    #   unknown activities are requested, they are ignored with no error. If
-    #   you specify an Auto Scaling group, the results are limited to that
-    #   group.
+    #   The activity IDs of the desired scaling activities. If unknown
+    #   activity IDs are requested, they are ignored with no error. Only
+    #   activities started within the last six weeks can be returned
+    #   regardless of the activity IDs specified. If other filters are
+    #   specified with the request, only results matching all filter criteria
+    #   can be returned.
     #
     #   Array Members: Maximum number of 50 IDs.
     #
     # @option params [String] :auto_scaling_group_name
     #   The name of the Auto Scaling group.
+    #
+    #   Omitting this property performs an account-wide operation, which can
+    #   result in slower or timed-out requests.
     #
     # @option params [Boolean] :include_deleted_groups
     #   Indicates whether to include scaling activity from deleted Auto
@@ -3948,6 +4053,39 @@ module Aws::AutoScaling
     # @option params [String] :next_token
     #   The token for the next set of items to return. (You received this
     #   token from a previous call.)
+    #
+    # @option params [Array<Types::Filter>] :filters
+    #   One or more filters to limit the results based on specific criteria.
+    #   The following filters are supported:
+    #
+    #   * `StartTimeLowerBound` - The earliest scaling activities to return
+    #     based on the activity start time. Scaling activities with a start
+    #     time earlier than this value are not included in the results. Only
+    #     activities started within the last six weeks can be returned
+    #     regardless of the value specified.
+    #
+    #   * `StartTimeUpperBound` - The latest scaling activities to return
+    #     based on the activity start time. Scaling activities with a start
+    #     time later than this value are not included in the results. Only
+    #     activities started within the last six weeks can be returned
+    #     regardless of the value specified.
+    #
+    #   * `Status` - The `StatusCode` value of the scaling activity. This
+    #     filter can only be used in combination with the
+    #     `AutoScalingGroupName` parameter. For valid `StatusCode` values, see
+    #     [Activity][1] in the *Amazon EC2 Auto Scaling API Reference*.
+    #
+    #   `StartTimeLowerBound` and `StartTimeUpperBound` accept ISO 8601
+    #   formatted timestamps. Timestamps without a timezone offset are assumed
+    #   to be UTC.
+    #
+    #   * `2000-01-18T08:15:00Z`
+    #
+    #   * `2000-01-18T16:15:00+08:00`
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_Activity.html
     #
     # @return [Types::ActivitiesType] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -3991,6 +4129,12 @@ module Aws::AutoScaling
     #     include_deleted_groups: false,
     #     max_records: 1,
     #     next_token: "XmlString",
+    #     filters: [
+    #       {
+    #         name: "XmlString",
+    #         values: ["XmlString"],
+    #       },
+    #     ],
     #   })
     #
     # @example Response structure
@@ -4002,7 +4146,7 @@ module Aws::AutoScaling
     #   resp.activities[0].cause #=> String
     #   resp.activities[0].start_time #=> Time
     #   resp.activities[0].end_time #=> Time
-    #   resp.activities[0].status_code #=> String, one of "PendingSpotBidPlacement", "WaitingForSpotInstanceRequestId", "WaitingForSpotInstanceId", "WaitingForInstanceId", "PreInService", "InProgress", "WaitingForELBConnectionDraining", "MidLifecycleAction", "WaitingForInstanceWarmup", "Successful", "Failed", "Cancelled", "WaitingForConnectionDraining"
+    #   resp.activities[0].status_code #=> String, one of "PendingSpotBidPlacement", "WaitingForSpotInstanceRequestId", "WaitingForSpotInstanceId", "WaitingForInstanceId", "PreInService", "InProgress", "WaitingForELBConnectionDraining", "MidLifecycleAction", "WaitingForInstanceWarmup", "Successful", "Failed", "Cancelled", "WaitingForConnectionDraining", "WaitingForInPlaceUpdateToStart", "WaitingForInPlaceUpdateToFinalize", "InPlaceUpdateInProgress"
     #   resp.activities[0].status_message #=> String
     #   resp.activities[0].progress #=> Integer
     #   resp.activities[0].details #=> String
@@ -4475,12 +4619,14 @@ module Aws::AutoScaling
     #   resp.instances[0].instance_id #=> String
     #   resp.instances[0].instance_type #=> String
     #   resp.instances[0].availability_zone #=> String
-    #   resp.instances[0].lifecycle_state #=> String, one of "Pending", "Pending:Wait", "Pending:Proceed", "Quarantined", "InService", "Terminating", "Terminating:Wait", "Terminating:Proceed", "Terminated", "Detaching", "Detached", "EnteringStandby", "Standby", "Warmed:Pending", "Warmed:Pending:Wait", "Warmed:Pending:Proceed", "Warmed:Terminating", "Warmed:Terminating:Wait", "Warmed:Terminating:Proceed", "Warmed:Terminated", "Warmed:Stopped", "Warmed:Running", "Warmed:Hibernated"
+    #   resp.instances[0].availability_zone_id #=> String
+    #   resp.instances[0].lifecycle_state #=> String, one of "Pending", "Pending:Wait", "Pending:Proceed", "Quarantined", "InService", "Terminating", "Terminating:Wait", "Terminating:Proceed", "Terminating:Retained", "Terminated", "Detaching", "Detached", "EnteringStandby", "Standby", "ReplacingRootVolume", "ReplacingRootVolume:Wait", "ReplacingRootVolume:Proceed", "RootVolumeReplaced", "Warmed:Pending", "Warmed:Pending:Wait", "Warmed:Pending:Proceed", "Warmed:Pending:Retained", "Warmed:Terminating", "Warmed:Terminating:Wait", "Warmed:Terminating:Proceed", "Warmed:Terminating:Retained", "Warmed:Terminated", "Warmed:Stopped", "Warmed:Running", "Warmed:Hibernated"
     #   resp.instances[0].health_status #=> String
     #   resp.instances[0].launch_configuration_name #=> String
     #   resp.instances[0].launch_template.launch_template_id #=> String
     #   resp.instances[0].launch_template.launch_template_name #=> String
     #   resp.instances[0].launch_template.version #=> String
+    #   resp.instances[0].image_id #=> String
     #   resp.instances[0].protected_from_scale_in #=> Boolean
     #   resp.instances[0].weighted_capacity #=> String
     #   resp.next_token #=> String
@@ -4575,7 +4721,7 @@ module Aws::AutoScaling
     #   resp.activities[0].cause #=> String
     #   resp.activities[0].start_time #=> Time
     #   resp.activities[0].end_time #=> Time
-    #   resp.activities[0].status_code #=> String, one of "PendingSpotBidPlacement", "WaitingForSpotInstanceRequestId", "WaitingForSpotInstanceId", "WaitingForInstanceId", "PreInService", "InProgress", "WaitingForELBConnectionDraining", "MidLifecycleAction", "WaitingForInstanceWarmup", "Successful", "Failed", "Cancelled", "WaitingForConnectionDraining"
+    #   resp.activities[0].status_code #=> String, one of "PendingSpotBidPlacement", "WaitingForSpotInstanceRequestId", "WaitingForSpotInstanceId", "WaitingForInstanceId", "PreInService", "InProgress", "WaitingForELBConnectionDraining", "MidLifecycleAction", "WaitingForInstanceWarmup", "Successful", "Failed", "Cancelled", "WaitingForConnectionDraining", "WaitingForInPlaceUpdateToStart", "WaitingForInPlaceUpdateToFinalize", "InPlaceUpdateInProgress"
     #   resp.activities[0].status_message #=> String
     #   resp.activities[0].progress #=> Integer
     #   resp.activities[0].details #=> String
@@ -4617,7 +4763,7 @@ module Aws::AutoScaling
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_DescribeTrafficSources.html
+    # [1]: https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_DetachTrafficSources.html
     # [2]: https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_DescribeLoadBalancerTargetGroups.html
     # [3]: https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_AttachLoadBalancerTargetGroups.html
     # [4]: https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_AttachTrafficSources.html
@@ -5056,7 +5202,7 @@ module Aws::AutoScaling
     #   resp.activities[0].cause #=> String
     #   resp.activities[0].start_time #=> Time
     #   resp.activities[0].end_time #=> Time
-    #   resp.activities[0].status_code #=> String, one of "PendingSpotBidPlacement", "WaitingForSpotInstanceRequestId", "WaitingForSpotInstanceId", "WaitingForInstanceId", "PreInService", "InProgress", "WaitingForELBConnectionDraining", "MidLifecycleAction", "WaitingForInstanceWarmup", "Successful", "Failed", "Cancelled", "WaitingForConnectionDraining"
+    #   resp.activities[0].status_code #=> String, one of "PendingSpotBidPlacement", "WaitingForSpotInstanceRequestId", "WaitingForSpotInstanceId", "WaitingForInstanceId", "PreInService", "InProgress", "WaitingForELBConnectionDraining", "MidLifecycleAction", "WaitingForInstanceWarmup", "Successful", "Failed", "Cancelled", "WaitingForConnectionDraining", "WaitingForInPlaceUpdateToStart", "WaitingForInPlaceUpdateToFinalize", "InPlaceUpdateInProgress"
     #   resp.activities[0].status_message #=> String
     #   resp.activities[0].progress #=> Integer
     #   resp.activities[0].details #=> String
@@ -5211,7 +5357,7 @@ module Aws::AutoScaling
     #   resp.activities[0].cause #=> String
     #   resp.activities[0].start_time #=> Time
     #   resp.activities[0].end_time #=> Time
-    #   resp.activities[0].status_code #=> String, one of "PendingSpotBidPlacement", "WaitingForSpotInstanceRequestId", "WaitingForSpotInstanceId", "WaitingForInstanceId", "PreInService", "InProgress", "WaitingForELBConnectionDraining", "MidLifecycleAction", "WaitingForInstanceWarmup", "Successful", "Failed", "Cancelled", "WaitingForConnectionDraining"
+    #   resp.activities[0].status_code #=> String, one of "PendingSpotBidPlacement", "WaitingForSpotInstanceRequestId", "WaitingForSpotInstanceId", "WaitingForInstanceId", "PreInService", "InProgress", "WaitingForELBConnectionDraining", "MidLifecycleAction", "WaitingForInstanceWarmup", "Successful", "Failed", "Cancelled", "WaitingForConnectionDraining", "WaitingForInPlaceUpdateToStart", "WaitingForInPlaceUpdateToFinalize", "InPlaceUpdateInProgress"
     #   resp.activities[0].status_message #=> String
     #   resp.activities[0].progress #=> Integer
     #   resp.activities[0].details #=> String
@@ -5343,6 +5489,97 @@ module Aws::AutoScaling
     # @param [Hash] params ({})
     def get_predictive_scaling_forecast(params = {}, options = {})
       req = build_request(:get_predictive_scaling_forecast, params)
+      req.send_request(options)
+    end
+
+    # Launches a specified number of instances in an Auto Scaling group.
+    # Returns instance IDs and other details if launch is successful or
+    # error details if launch is unsuccessful.
+    #
+    # @option params [required, String] :auto_scaling_group_name
+    #   The name of the Auto Scaling group to launch instances into.
+    #
+    # @option params [required, Integer] :requested_capacity
+    #   The number of instances to launch. Although this value can exceed 100
+    #   for instance weights, the actual instance count is limited to 100
+    #   instances per launch.
+    #
+    # @option params [required, String] :client_token
+    #   A unique, case-sensitive identifier to ensure idempotency of the
+    #   request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @option params [Array<String>] :availability_zones
+    #   The Availability Zones for the instance launch. Must match or be
+    #   included in the Auto Scaling group's Availability Zone configuration.
+    #   Either `AvailabilityZones` or `SubnetIds` must be specified for groups
+    #   with multiple Availability Zone configurations.
+    #
+    # @option params [Array<String>] :availability_zone_ids
+    #   A list of Availability Zone IDs where instances should be launched.
+    #   Must match or be included in the group's AZ configuration. You cannot
+    #   specify both AvailabilityZones and AvailabilityZoneIds. Required for
+    #   multi-AZ groups, optional for single-AZ groups.
+    #
+    # @option params [Array<String>] :subnet_ids
+    #   The subnet IDs for the instance launch. Either `AvailabilityZones` or
+    #   `SubnetIds` must be specified. If both are specified, the subnets must
+    #   reside in the specified Availability Zones.
+    #
+    # @option params [String] :retry_strategy
+    #   Specifies whether to retry asynchronously if the synchronous launch
+    #   fails. Valid values are NONE (default, no async retry) and
+    #   RETRY\_WITH\_GROUP\_CONFIGURATION (increase desired capacity and retry
+    #   with group configuration).
+    #
+    # @return [Types::LaunchInstancesResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::LaunchInstancesResult#auto_scaling_group_name #auto_scaling_group_name} => String
+    #   * {Types::LaunchInstancesResult#client_token #client_token} => String
+    #   * {Types::LaunchInstancesResult#instances #instances} => Array&lt;Types::InstanceCollection&gt;
+    #   * {Types::LaunchInstancesResult#errors #errors} => Array&lt;Types::LaunchInstancesError&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.launch_instances({
+    #     auto_scaling_group_name: "XmlStringMaxLen255", # required
+    #     requested_capacity: 1, # required
+    #     client_token: "ClientToken", # required
+    #     availability_zones: ["XmlStringMaxLen255"],
+    #     availability_zone_ids: ["XmlStringMaxLen255"],
+    #     subnet_ids: ["XmlStringMaxLen255"],
+    #     retry_strategy: "retry-with-group-configuration", # accepts retry-with-group-configuration, none
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.auto_scaling_group_name #=> String
+    #   resp.client_token #=> String
+    #   resp.instances #=> Array
+    #   resp.instances[0].instance_type #=> String
+    #   resp.instances[0].market_type #=> String
+    #   resp.instances[0].subnet_id #=> String
+    #   resp.instances[0].availability_zone #=> String
+    #   resp.instances[0].availability_zone_id #=> String
+    #   resp.instances[0].instance_ids #=> Array
+    #   resp.instances[0].instance_ids[0] #=> String
+    #   resp.errors #=> Array
+    #   resp.errors[0].instance_type #=> String
+    #   resp.errors[0].market_type #=> String
+    #   resp.errors[0].subnet_id #=> String
+    #   resp.errors[0].availability_zone #=> String
+    #   resp.errors[0].availability_zone_id #=> String
+    #   resp.errors[0].error_code #=> String
+    #   resp.errors[0].error_message #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/LaunchInstances AWS API Documentation
+    #
+    # @overload launch_instances(params = {})
+    # @param [Hash] params ({})
+    def launch_instances(params = {}, options = {})
+      req = build_request(:launch_instances, params)
       req.send_request(options)
     end
 
@@ -6633,7 +6870,7 @@ module Aws::AutoScaling
     #   The name of the Auto Scaling group.
     #
     # @option params [String] :strategy
-    #   The strategy to use for the instance refresh. The only valid value is
+    #   The strategy to use for the instance refresh. The default value is
     #   `Rolling`.
     #
     # @option params [Types::DesiredConfiguration] :desired_configuration
@@ -6711,7 +6948,7 @@ module Aws::AutoScaling
     #
     #   resp = client.start_instance_refresh({
     #     auto_scaling_group_name: "XmlStringMaxLen255", # required
-    #     strategy: "Rolling", # accepts Rolling
+    #     strategy: "Rolling", # accepts Rolling, ReplaceRootVolume
     #     desired_configuration: {
     #       launch_template: {
     #         launch_template_id: "XmlStringMaxLen255",
@@ -6743,7 +6980,7 @@ module Aws::AutoScaling
     #                   min: 1, # required
     #                   max: 1,
     #                 },
-    #                 cpu_manufacturers: ["intel"], # accepts intel, amd, amazon-web-services
+    #                 cpu_manufacturers: ["intel"], # accepts intel, amd, amazon-web-services, apple
     #                 memory_gi_b_per_v_cpu: {
     #                   min: 1.0,
     #                   max: 1.0,
@@ -6796,6 +7033,7 @@ module Aws::AutoScaling
     #                   },
     #                 },
     #               },
+    #               image_id: "ImageId",
     #             },
     #           ],
     #         },
@@ -6915,7 +7153,7 @@ module Aws::AutoScaling
     # group size. This operation cannot be called on instances in a warm
     # pool.
     #
-    # This call simply makes a termination request. The instance is not
+    # This call simply makes a termination request. The instances are not
     # terminated immediately. When an instance is terminated, the instance
     # status changes to `terminated`. You can't connect to or start an
     # instance after you've terminated it.
@@ -6923,6 +7161,11 @@ module Aws::AutoScaling
     # If you do not specify the option to decrement the desired capacity,
     # Amazon EC2 Auto Scaling launches instances to replace the ones that
     # are terminated.
+    #
+    # To terminate multiple instances in a single call, use the
+    # `InstanceIds` and `AutoScalingGroupName` parameters instead of
+    # `InstanceId`. When terminating multiple instances, the response
+    # populates `Activities` instead of `Activity`.
     #
     # By default, Amazon EC2 Auto Scaling balances instances across all
     # Availability Zones. If you decrement the desired capacity, your Auto
@@ -6935,8 +7178,16 @@ module Aws::AutoScaling
     #
     # [1]: https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-scaling-manually.html
     #
-    # @option params [required, String] :instance_id
+    # @option params [String] :instance_id
     #   The ID of the instance.
+    #
+    # @option params [Array<String>] :instance_ids
+    #   The IDs of the instances. You can specify up to 100 instances.
+    #
+    #   This parameter requires that you also specify `AutoScalingGroupName`.
+    #
+    # @option params [String] :auto_scaling_group_name
+    #   The name of the Auto Scaling group. Required when using `InstanceIds`.
     #
     # @option params [required, Boolean] :should_decrement_desired_capacity
     #   Indicates whether terminating the instance also decrements the size of
@@ -6945,6 +7196,7 @@ module Aws::AutoScaling
     # @return [Types::ActivityType] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::ActivityType#activity #activity} => Types::Activity
+    #   * {Types::ActivityType#activities #activities} => Array&lt;Types::Activity&gt;
     #
     #
     # @example Example: To terminate an instance in an Auto Scaling group
@@ -6957,10 +7209,50 @@ module Aws::AutoScaling
     #     should_decrement_desired_capacity: false, 
     #   })
     #
+    # @example Example: To terminate multiple instances in an Auto Scaling group
+    #
+    #   # This example terminates multiple instances from the specified Auto Scaling group without updating the size of the group.
+    #   # Auto Scaling launches replacement instances after the specified instances terminate.
+    #
+    #   resp = client.terminate_instance_in_auto_scaling_group({
+    #     auto_scaling_group_name: "my-asg", 
+    #     instance_ids: [
+    #       "i-93633f9b", 
+    #       "i-ab4d5e6f7", 
+    #     ], 
+    #     should_decrement_desired_capacity: false, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     activities: [
+    #       {
+    #         activity_id: "12345678-1234-1234-1234-123456789012", 
+    #         auto_scaling_group_name: "my-asg", 
+    #         cause: "At 2024-03-14T00:07:30Z instance i-93633f9b was taken out of service in response to a user request.", 
+    #         description: "Terminating EC2 instance: i-93633f9b", 
+    #         progress: 0, 
+    #         start_time: Time.parse("2024-03-14T00:07:30.280Z"), 
+    #         status_code: "InProgress", 
+    #       }, 
+    #       {
+    #         activity_id: "12345678-1234-1234-1234-123456789013", 
+    #         auto_scaling_group_name: "my-asg", 
+    #         cause: "At 2024-03-14T00:07:30Z instance i-ab4d5e6f7 was taken out of service in response to a user request.", 
+    #         description: "Terminating EC2 instance: i-ab4d5e6f7", 
+    #         progress: 0, 
+    #         start_time: Time.parse("2024-03-14T00:07:30.280Z"), 
+    #         status_code: "InProgress", 
+    #       }, 
+    #     ], 
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.terminate_instance_in_auto_scaling_group({
-    #     instance_id: "XmlStringMaxLen19", # required
+    #     instance_id: "XmlStringMaxLen19",
+    #     instance_ids: ["XmlStringMaxLen19"],
+    #     auto_scaling_group_name: "XmlStringMaxLen255",
     #     should_decrement_desired_capacity: false, # required
     #   })
     #
@@ -6972,12 +7264,25 @@ module Aws::AutoScaling
     #   resp.activity.cause #=> String
     #   resp.activity.start_time #=> Time
     #   resp.activity.end_time #=> Time
-    #   resp.activity.status_code #=> String, one of "PendingSpotBidPlacement", "WaitingForSpotInstanceRequestId", "WaitingForSpotInstanceId", "WaitingForInstanceId", "PreInService", "InProgress", "WaitingForELBConnectionDraining", "MidLifecycleAction", "WaitingForInstanceWarmup", "Successful", "Failed", "Cancelled", "WaitingForConnectionDraining"
+    #   resp.activity.status_code #=> String, one of "PendingSpotBidPlacement", "WaitingForSpotInstanceRequestId", "WaitingForSpotInstanceId", "WaitingForInstanceId", "PreInService", "InProgress", "WaitingForELBConnectionDraining", "MidLifecycleAction", "WaitingForInstanceWarmup", "Successful", "Failed", "Cancelled", "WaitingForConnectionDraining", "WaitingForInPlaceUpdateToStart", "WaitingForInPlaceUpdateToFinalize", "InPlaceUpdateInProgress"
     #   resp.activity.status_message #=> String
     #   resp.activity.progress #=> Integer
     #   resp.activity.details #=> String
     #   resp.activity.auto_scaling_group_state #=> String
     #   resp.activity.auto_scaling_group_arn #=> String
+    #   resp.activities #=> Array
+    #   resp.activities[0].activity_id #=> String
+    #   resp.activities[0].auto_scaling_group_name #=> String
+    #   resp.activities[0].description #=> String
+    #   resp.activities[0].cause #=> String
+    #   resp.activities[0].start_time #=> Time
+    #   resp.activities[0].end_time #=> Time
+    #   resp.activities[0].status_code #=> String, one of "PendingSpotBidPlacement", "WaitingForSpotInstanceRequestId", "WaitingForSpotInstanceId", "WaitingForInstanceId", "PreInService", "InProgress", "WaitingForELBConnectionDraining", "MidLifecycleAction", "WaitingForInstanceWarmup", "Successful", "Failed", "Cancelled", "WaitingForConnectionDraining", "WaitingForInPlaceUpdateToStart", "WaitingForInPlaceUpdateToFinalize", "InPlaceUpdateInProgress"
+    #   resp.activities[0].status_message #=> String
+    #   resp.activities[0].progress #=> Integer
+    #   resp.activities[0].details #=> String
+    #   resp.activities[0].auto_scaling_group_state #=> String
+    #   resp.activities[0].auto_scaling_group_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/TerminateInstanceInAutoScalingGroup AWS API Documentation
     #
@@ -7102,6 +7407,11 @@ module Aws::AutoScaling
     # @option params [Array<String>] :availability_zones
     #   One or more Availability Zones for the group.
     #
+    # @option params [Array<String>] :availability_zone_ids
+    #   A list of Availability Zone IDs for the Auto Scaling group. You cannot
+    #   specify both AvailabilityZones and AvailabilityZoneIds in the same
+    #   request.
+    #
     # @option params [String] :health_check_type
     #   A comma-separated value string of one or more health check types.
     #
@@ -7133,8 +7443,7 @@ module Aws::AutoScaling
     #   The name of an existing placement group into which to launch your
     #   instances. To remove the placement group setting, pass an empty string
     #   for `placement-group`. For more information about placement groups,
-    #   see [Placement groups][1] in the *Amazon EC2 User Guide for Linux
-    #   Instances*.
+    #   see [Placement groups][1] in the *Amazon EC2 User Guide*.
     #
     #   <note markdown="1"> A *cluster* placement group is a logical grouping of instances within
     #   a single Availability Zone. You cannot specify multiple Availability
@@ -7201,13 +7510,21 @@ module Aws::AutoScaling
     #   [1]: https://docs.aws.amazon.com/autoscaling/ec2/userguide/asg-max-instance-lifetime.html
     #
     # @option params [Boolean] :capacity_rebalance
-    #   Enables or disables Capacity Rebalancing. For more information, see
-    #   [Use Capacity Rebalancing to handle Amazon EC2 Spot Interruptions][1]
-    #   in the *Amazon EC2 Auto Scaling User Guide*.
+    #   Enables or disables Capacity Rebalancing. If Capacity Rebalancing is
+    #   disabled, proactive replacement of at-risk Spot Instances does not
+    #   occur. For more information, see [Capacity Rebalancing in Auto Scaling
+    #   to replace at-risk Spot Instances][1] in the *Amazon EC2 Auto Scaling
+    #   User Guide*.
+    #
+    #   <note markdown="1"> To suspend rebalancing across Availability Zones, use the
+    #   [SuspendProcesses][2] API.
+    #
+    #    </note>
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-capacity-rebalancing.html
+    #   [2]: https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_SuspendedProcess.html
     #
     # @option params [String] :context
     #   Reserved.
@@ -7282,6 +7599,41 @@ module Aws::AutoScaling
     # @option params [Types::CapacityReservationSpecification] :capacity_reservation_specification
     #   The capacity reservation specification for the Auto Scaling group.
     #
+    # @option params [Types::InstanceLifecyclePolicy] :instance_lifecycle_policy
+    #   The instance lifecycle policy for the Auto Scaling group. This policy
+    #   controls instance behavior when an instance transitions through its
+    #   lifecycle states. Configure retention triggers to specify when
+    #   instances should move to a `Retained` state instead of automatic
+    #   termination.
+    #
+    #   For more information, see [ Control instance retention with instance
+    #   lifecycle policies][1] in the *Amazon EC2 Auto Scaling User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/autoscaling/ec2/userguide/instance-lifecycle-policy.html
+    #
+    # @option params [String] :deletion_protection
+    #   The deletion protection setting for the Auto Scaling group. This
+    #   setting helps safeguard your Auto Scaling group and its instances by
+    #   controlling whether the `DeleteAutoScalingGroup` operation is allowed.
+    #   When deletion protection is enabled, users cannot delete the Auto
+    #   Scaling group according to the specified protection level until the
+    #   setting is changed back to a less restrictive level.
+    #
+    #   The valid values are `none`, `prevent-force-deletion`, and
+    #   `prevent-all-deletion`.
+    #
+    #   Default: `none`
+    #
+    #   For more information, see [ Configure deletion protection for your
+    #   Amazon EC2 Auto Scaling resources][1] in the *Amazon EC2 Auto Scaling
+    #   User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/autoscaling/ec2/userguide/resource-deletion-protection.html
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     #
@@ -7335,7 +7687,7 @@ module Aws::AutoScaling
     #                 min: 1, # required
     #                 max: 1,
     #               },
-    #               cpu_manufacturers: ["intel"], # accepts intel, amd, amazon-web-services
+    #               cpu_manufacturers: ["intel"], # accepts intel, amd, amazon-web-services, apple
     #               memory_gi_b_per_v_cpu: {
     #                 min: 1.0,
     #                 max: 1.0,
@@ -7388,6 +7740,7 @@ module Aws::AutoScaling
     #                 },
     #               },
     #             },
+    #             image_id: "ImageId",
     #           },
     #         ],
     #       },
@@ -7405,6 +7758,7 @@ module Aws::AutoScaling
     #     desired_capacity: 1,
     #     default_cooldown: 1,
     #     availability_zones: ["XmlStringMaxLen255"],
+    #     availability_zone_ids: ["XmlStringMaxLen255"],
     #     health_check_type: "XmlStringMaxLen32",
     #     health_check_grace_period: 1,
     #     placement_group: "UpdatePlacementGroupParam",
@@ -7422,7 +7776,7 @@ module Aws::AutoScaling
     #       max_healthy_percentage: 1,
     #     },
     #     availability_zone_distribution: {
-    #       capacity_distribution_strategy: "balanced-only", # accepts balanced-only, balanced-best-effort
+    #       capacity_distribution_strategy: "balanced-only", # accepts balanced-only, balanced-best-effort, reservations-then-balanced
     #     },
     #     availability_zone_impairment_policy: {
     #       zonal_shift_enabled: false,
@@ -7436,6 +7790,12 @@ module Aws::AutoScaling
     #         capacity_reservation_resource_group_arns: ["ResourceName"],
     #       },
     #     },
+    #     instance_lifecycle_policy: {
+    #       retention_triggers: {
+    #         terminate_hook_abandon: "retain", # accepts retain, terminate
+    #       },
+    #     },
+    #     deletion_protection: "none", # accepts none, prevent-force-deletion, prevent-all-deletion
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/UpdateAutoScalingGroup AWS API Documentation
@@ -7465,7 +7825,7 @@ module Aws::AutoScaling
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-autoscaling'
-      context[:gem_version] = '1.132.0'
+      context[:gem_version] = '1.165.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

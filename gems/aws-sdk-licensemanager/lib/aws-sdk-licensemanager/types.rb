@@ -57,6 +57,44 @@ module Aws::LicenseManager
       include Aws::Structure
     end
 
+    # AND rule statement.
+    #
+    # @!attribute [rw] matching_rule_statements
+    #   Matching rule statements.
+    #   @return [Array<Types::MatchingRuleStatement>]
+    #
+    # @!attribute [rw] script_rule_statements
+    #   Script rule statements.
+    #   @return [Array<Types::ScriptRuleStatement>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/AndRuleStatement AWS API Documentation
+    #
+    class AndRuleStatement < Struct.new(
+      :matching_rule_statements,
+      :script_rule_statements)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Asset.
+    #
+    # @!attribute [rw] asset_arn
+    #   Amazon Resource Name (ARN) of the asset.
+    #   @return [String]
+    #
+    # @!attribute [rw] latest_asset_discovery_time
+    #   Latest asset discovery time.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/Asset AWS API Documentation
+    #
+    class Asset < Struct.new(
+      :asset_arn,
+      :latest_asset_discovery_time)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The Amazon Web Services user account does not have permission to
     # perform the action. Check the IAM policy associated with this account.
     #
@@ -406,6 +444,15 @@ module Aws::LicenseManager
     #   Allowed operations for the grant.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] tags
+    #   Tags to add to the grant. For more information about tagging support
+    #   in License Manager, see the [TagResource][1] operation.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/license-manager/latest/APIReference/API_TagResource.html
+    #   @return [Array<Types::Tag>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/CreateGrantRequest AWS API Documentation
     #
     class CreateGrantRequest < Struct.new(
@@ -414,7 +461,8 @@ module Aws::LicenseManager
       :license_arn,
       :principals,
       :home_region,
-      :allowed_operations)
+      :allowed_operations,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -512,6 +560,111 @@ module Aws::LicenseManager
     end
 
     # @!attribute [rw] name
+    #   License asset group name.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   License asset group description.
+    #   @return [String]
+    #
+    # @!attribute [rw] license_asset_group_configurations
+    #   License asset group configurations.
+    #   @return [Array<Types::LicenseAssetGroupConfiguration>]
+    #
+    # @!attribute [rw] associated_license_asset_ruleset_arns
+    #   ARNs of associated license asset rulesets.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] properties
+    #   License asset group properties.
+    #   @return [Array<Types::LicenseAssetGroupProperty>]
+    #
+    # @!attribute [rw] tags
+    #   Tags to add to the license asset group.
+    #   @return [Array<Types::Tag>]
+    #
+    # @!attribute [rw] client_token
+    #   Unique, case-sensitive identifier that you provide to ensure the
+    #   idempotency of the request.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/CreateLicenseAssetGroupRequest AWS API Documentation
+    #
+    class CreateLicenseAssetGroupRequest < Struct.new(
+      :name,
+      :description,
+      :license_asset_group_configurations,
+      :associated_license_asset_ruleset_arns,
+      :properties,
+      :tags,
+      :client_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] license_asset_group_arn
+    #   Amazon Resource Name (ARN) of the license asset group.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   License asset group status.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/CreateLicenseAssetGroupResponse AWS API Documentation
+    #
+    class CreateLicenseAssetGroupResponse < Struct.new(
+      :license_asset_group_arn,
+      :status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] name
+    #   License asset ruleset name.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   License asset ruleset description.
+    #   @return [String]
+    #
+    # @!attribute [rw] rules
+    #   License asset rules.
+    #   @return [Array<Types::LicenseAssetRule>]
+    #
+    # @!attribute [rw] tags
+    #   Tags to add to the license asset ruleset.
+    #   @return [Array<Types::Tag>]
+    #
+    # @!attribute [rw] client_token
+    #   Unique, case-sensitive identifier that you provide to ensure the
+    #   idempotency of the request.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/CreateLicenseAssetRulesetRequest AWS API Documentation
+    #
+    class CreateLicenseAssetRulesetRequest < Struct.new(
+      :name,
+      :description,
+      :rules,
+      :tags,
+      :client_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] license_asset_ruleset_arn
+    #   Amazon Resource Name (ARN) of the license asset ruleset.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/CreateLicenseAssetRulesetResponse AWS API Documentation
+    #
+    class CreateLicenseAssetRulesetResponse < Struct.new(
+      :license_asset_ruleset_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] name
     #   Name of the license configuration.
     #   @return [String]
     #
@@ -540,9 +693,8 @@ module Aws::LicenseManager
     #   * `Cores` dimension: `allowedTenancy` \| `licenseAffinityToHost` \|
     #     `maximumCores` \| `minimumCores`
     #
-    #   * `Instances` dimension: `allowedTenancy` \| `maximumCores` \|
-    #     `minimumCores` \| `maximumSockets` \| `minimumSockets` \|
-    #     `maximumVcpus` \| `minimumVcpus`
+    #   * `Instances` dimension: `allowedTenancy` \| `maximumVcpus` \|
+    #     `minimumVcpus`
     #
     #   * `Sockets` dimension: `allowedTenancy` \| `licenseAffinityToHost`
     #     \| `maximumSockets` \| `minimumSockets`
@@ -568,6 +720,10 @@ module Aws::LicenseManager
     #   Product information.
     #   @return [Array<Types::ProductInformation>]
     #
+    # @!attribute [rw] license_expiry
+    #   License configuration expiry.
+    #   @return [Integer]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/CreateLicenseConfigurationRequest AWS API Documentation
     #
     class CreateLicenseConfigurationRequest < Struct.new(
@@ -579,7 +735,8 @@ module Aws::LicenseManager
       :license_rules,
       :tags,
       :disassociate_when_not_found,
-      :product_information_list)
+      :product_information_list,
+      :license_expiry)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -755,6 +912,15 @@ module Aws::LicenseManager
     #   idempotency of the request.
     #   @return [String]
     #
+    # @!attribute [rw] tags
+    #   Tags to add to the license. For more information about tagging
+    #   support in License Manager, see the [TagResource][1] operation.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/license-manager/latest/APIReference/API_TagResource.html
+    #   @return [Array<Types::Tag>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/CreateLicenseRequest AWS API Documentation
     #
     class CreateLicenseRequest < Struct.new(
@@ -768,7 +934,8 @@ module Aws::LicenseManager
       :beneficiary,
       :consumption_configuration,
       :license_metadata,
-      :client_token)
+      :client_token,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -847,6 +1014,12 @@ module Aws::LicenseManager
     #   Current version of the license.
     #   @return [String]
     #
+    # @!attribute [rw] reset_usage
+    #   Specifies whether to reset the license usage for the new license
+    #   version. If you don't specify a value, the license usage is not
+    #   reset.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/CreateLicenseVersionRequest AWS API Documentation
     #
     class CreateLicenseVersionRequest < Struct.new(
@@ -861,7 +1034,8 @@ module Aws::LicenseManager
       :consumption_configuration,
       :status,
       :client_token,
-      :source_version)
+      :source_version,
+      :reset_usage)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -946,6 +1120,34 @@ module Aws::LicenseManager
       include Aws::Structure
     end
 
+    # Status information for cross-account discovery service.
+    #
+    # @!attribute [rw] message
+    #   Status message for cross-account discovery service.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/CrossAccountDiscoveryServiceStatus AWS API Documentation
+    #
+    class CrossAccountDiscoveryServiceStatus < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Status information for cross-region discovery.
+    #
+    # @!attribute [rw] message
+    #   Map of region status messages for cross-region discovery.
+    #   @return [Hash<String,Types::RegionStatus>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/CrossRegionDiscoveryStatus AWS API Documentation
+    #
+    class CrossRegionDiscoveryStatus < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Describes a time range, in ISO8601-UTC format.
     #
     # @!attribute [rw] begin
@@ -1008,6 +1210,46 @@ module Aws::LicenseManager
       SENSITIVE = []
       include Aws::Structure
     end
+
+    # @!attribute [rw] license_asset_group_arn
+    #   Amazon Resource Name (ARN) of the license asset group.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/DeleteLicenseAssetGroupRequest AWS API Documentation
+    #
+    class DeleteLicenseAssetGroupRequest < Struct.new(
+      :license_asset_group_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] status
+    #   License asset group status.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/DeleteLicenseAssetGroupResponse AWS API Documentation
+    #
+    class DeleteLicenseAssetGroupResponse < Struct.new(
+      :status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] license_asset_ruleset_arn
+    #   Amazon Resource Name (ARN) of the license asset ruleset.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/DeleteLicenseAssetRulesetRequest AWS API Documentation
+    #
+    class DeleteLicenseAssetRulesetRequest < Struct.new(
+      :license_asset_ruleset_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/DeleteLicenseAssetRulesetResponse AWS API Documentation
+    #
+    class DeleteLicenseAssetRulesetResponse < Aws::EmptyStructure; end
 
     # @!attribute [rw] license_configuration_arn
     #   ID of the license configuration.
@@ -1342,6 +1584,54 @@ module Aws::LicenseManager
       include Aws::Structure
     end
 
+    # @!attribute [rw] license_asset_group_arn
+    #   Amazon Resource Name (ARN) of the license asset group.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/GetLicenseAssetGroupRequest AWS API Documentation
+    #
+    class GetLicenseAssetGroupRequest < Struct.new(
+      :license_asset_group_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] license_asset_group
+    #   License asset group.
+    #   @return [Types::LicenseAssetGroup]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/GetLicenseAssetGroupResponse AWS API Documentation
+    #
+    class GetLicenseAssetGroupResponse < Struct.new(
+      :license_asset_group)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] license_asset_ruleset_arn
+    #   Amazon Resource Name (ARN) of the license asset ruleset.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/GetLicenseAssetRulesetRequest AWS API Documentation
+    #
+    class GetLicenseAssetRulesetRequest < Struct.new(
+      :license_asset_ruleset_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] license_asset_ruleset
+    #   License asset ruleset.
+    #   @return [Types::LicenseAssetRuleset]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/GetLicenseAssetRulesetResponse AWS API Documentation
+    #
+    class GetLicenseAssetRulesetResponse < Struct.new(
+      :license_asset_ruleset)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] license_configuration_arn
     #   Amazon Resource Name (ARN) of the license configuration.
     #   @return [String]
@@ -1422,6 +1712,10 @@ module Aws::LicenseManager
     #   When true, disassociates a resource when software is uninstalled.
     #   @return [Boolean]
     #
+    # @!attribute [rw] license_expiry
+    #   License Expiry.
+    #   @return [Integer]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/GetLicenseConfigurationResponse AWS API Documentation
     #
     class GetLicenseConfigurationResponse < Struct.new(
@@ -1441,7 +1735,8 @@ module Aws::LicenseManager
       :tags,
       :product_information_list,
       :automated_discovery_information,
-      :disassociate_when_not_found)
+      :disassociate_when_not_found,
+      :license_expiry)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1619,6 +1914,18 @@ module Aws::LicenseManager
     #   this share.
     #   @return [String]
     #
+    # @!attribute [rw] cross_region_discovery_home_region
+    #   Cross region discovery home region.
+    #   @return [String]
+    #
+    # @!attribute [rw] cross_region_discovery_source_regions
+    #   Cross region discovery source regions.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] service_status
+    #   Service status.
+    #   @return [Types::ServiceStatus]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/GetServiceSettingsResponse AWS API Documentation
     #
     class GetServiceSettingsResponse < Struct.new(
@@ -1626,7 +1933,10 @@ module Aws::LicenseManager
       :sns_topic_arn,
       :organization_configuration,
       :enable_cross_accounts_discovery,
-      :license_manager_resource_share_arn)
+      :license_manager_resource_share_arn,
+      :cross_region_discovery_home_region,
+      :cross_region_discovery_source_regions,
+      :service_status)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1776,6 +2086,35 @@ module Aws::LicenseManager
       :create_time,
       :version,
       :received_metadata)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Instance rule statement.
+    #
+    # @!attribute [rw] and_rule_statement
+    #   AND rule statement.
+    #   @return [Types::AndRuleStatement]
+    #
+    # @!attribute [rw] or_rule_statement
+    #   OR rule statement.
+    #   @return [Types::OrRuleStatement]
+    #
+    # @!attribute [rw] matching_rule_statement
+    #   Matching rule statement.
+    #   @return [Types::MatchingRuleStatement]
+    #
+    # @!attribute [rw] script_rule_statement
+    #   Script rule statement.
+    #   @return [Types::ScriptRuleStatement]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/InstanceRuleStatement AWS API Documentation
+    #
+    class InstanceRuleStatement < Struct.new(
+      :and_rule_statement,
+      :or_rule_statement,
+      :matching_rule_statement,
+      :script_rule_statement)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1961,6 +2300,141 @@ module Aws::LicenseManager
       include Aws::Structure
     end
 
+    # License asset group.
+    #
+    # @!attribute [rw] name
+    #   License asset group name.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   License asset group description.
+    #   @return [String]
+    #
+    # @!attribute [rw] license_asset_group_configurations
+    #   License asset group configurations.
+    #   @return [Array<Types::LicenseAssetGroupConfiguration>]
+    #
+    # @!attribute [rw] associated_license_asset_ruleset_arns
+    #   ARNs of associated license asset rulesets.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] properties
+    #   License asset group properties.
+    #   @return [Array<Types::LicenseAssetGroupProperty>]
+    #
+    # @!attribute [rw] license_asset_group_arn
+    #   Amazon Resource Name (ARN) of the license asset group.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   License asset group status.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_message
+    #   License asset group status message.
+    #   @return [String]
+    #
+    # @!attribute [rw] latest_usage_analysis_time
+    #   Latest usage analysis time.
+    #   @return [Time]
+    #
+    # @!attribute [rw] latest_resource_discovery_time
+    #   Latest resource discovery time.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/LicenseAssetGroup AWS API Documentation
+    #
+    class LicenseAssetGroup < Struct.new(
+      :name,
+      :description,
+      :license_asset_group_configurations,
+      :associated_license_asset_ruleset_arns,
+      :properties,
+      :license_asset_group_arn,
+      :status,
+      :status_message,
+      :latest_usage_analysis_time,
+      :latest_resource_discovery_time)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # License asset group configuration.
+    #
+    # @!attribute [rw] usage_dimension
+    #   License Asset Group Configuration Usage dimension.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/LicenseAssetGroupConfiguration AWS API Documentation
+    #
+    class LicenseAssetGroupConfiguration < Struct.new(
+      :usage_dimension)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # License asset group property.
+    #
+    # @!attribute [rw] key
+    #   Property key.
+    #   @return [String]
+    #
+    # @!attribute [rw] value
+    #   Property value.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/LicenseAssetGroupProperty AWS API Documentation
+    #
+    class LicenseAssetGroupProperty < Struct.new(
+      :key,
+      :value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # License asset rule.
+    #
+    # @!attribute [rw] rule_statement
+    #   Rule statement.
+    #   @return [Types::RuleStatement]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/LicenseAssetRule AWS API Documentation
+    #
+    class LicenseAssetRule < Struct.new(
+      :rule_statement)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # License asset ruleset.
+    #
+    # @!attribute [rw] name
+    #   License asset ruleset name.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   License asset ruleset description.
+    #   @return [String]
+    #
+    # @!attribute [rw] rules
+    #   License asset rules.
+    #   @return [Array<Types::LicenseAssetRule>]
+    #
+    # @!attribute [rw] license_asset_ruleset_arn
+    #   Amazon Resource Name (ARN) of the license asset ruleset.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/LicenseAssetRuleset AWS API Documentation
+    #
+    class LicenseAssetRuleset < Struct.new(
+      :name,
+      :description,
+      :rules,
+      :license_asset_ruleset_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # A license configuration is an abstraction of a customer license
     # agreement that can be consumed and enforced by License Manager.
     # Components include specifications for the license type (licensing by
@@ -2033,6 +2507,10 @@ module Aws::LicenseManager
     #   Automated discovery information.
     #   @return [Types::AutomatedDiscoveryInformation]
     #
+    # @!attribute [rw] license_expiry
+    #   License configuration expiry time in Unix timestamp format.
+    #   @return [Integer]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/LicenseConfiguration AWS API Documentation
     #
     class LicenseConfiguration < Struct.new(
@@ -2051,7 +2529,8 @@ module Aws::LicenseManager
       :consumed_license_summary_list,
       :managed_resource_summary_list,
       :product_information_list,
-      :automated_discovery_information)
+      :automated_discovery_information,
+      :license_expiry)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2088,6 +2567,30 @@ module Aws::LicenseManager
       :resource_owner_id,
       :association_time,
       :ami_association_scope)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # License configuration rule statement.
+    #
+    # @!attribute [rw] and_rule_statement
+    #   AND rule statement.
+    #   @return [Types::AndRuleStatement]
+    #
+    # @!attribute [rw] or_rule_statement
+    #   OR rule statement.
+    #   @return [Types::OrRuleStatement]
+    #
+    # @!attribute [rw] matching_rule_statement
+    #   Matching rule statement.
+    #   @return [Types::MatchingRuleStatement]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/LicenseConfigurationRuleStatement AWS API Documentation
+    #
+    class LicenseConfigurationRuleStatement < Struct.new(
+      :and_rule_statement,
+      :or_rule_statement,
+      :matching_rule_statement)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2146,10 +2649,15 @@ module Aws::LicenseManager
     #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/billing-info-fields.html#billing-info
     #   @return [String]
     #
+    # @!attribute [rw] product_codes
+    #   Product codes referred to in the license conversion process.
+    #   @return [Array<Types::ProductCodeListItem>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/LicenseConversionContext AWS API Documentation
     #
     class LicenseConversionContext < Struct.new(
-      :usage_operation)
+      :usage_operation,
+      :product_codes)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2260,6 +2768,30 @@ module Aws::LicenseManager
       include Aws::Structure
     end
 
+    # License rule statement.
+    #
+    # @!attribute [rw] and_rule_statement
+    #   AND rule statement.
+    #   @return [Types::AndRuleStatement]
+    #
+    # @!attribute [rw] or_rule_statement
+    #   OR rule statement.
+    #   @return [Types::OrRuleStatement]
+    #
+    # @!attribute [rw] matching_rule_statement
+    #   Matching rule statement.
+    #   @return [Types::MatchingRuleStatement]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/LicenseRuleStatement AWS API Documentation
+    #
+    class LicenseRuleStatement < Struct.new(
+      :and_rule_statement,
+      :or_rule_statement,
+      :matching_rule_statement)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Details for associating a license configuration with a resource.
     #
     # @!attribute [rw] license_configuration_arn
@@ -2303,6 +2835,51 @@ module Aws::LicenseManager
     #
     class LicenseUsageException < Struct.new(
       :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] license_asset_group_arn
+    #   Amazon Resource Name (ARN) of the license asset group.
+    #   @return [String]
+    #
+    # @!attribute [rw] asset_type
+    #   Asset type. The possible values are `Instance` \| `License` \|
+    #   `LicenseConfiguration`.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   Maximum number of results to return in a single call.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   Token for the next set of results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/ListAssetsForLicenseAssetGroupRequest AWS API Documentation
+    #
+    class ListAssetsForLicenseAssetGroupRequest < Struct.new(
+      :license_asset_group_arn,
+      :asset_type,
+      :max_results,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] assets
+    #   Assets.
+    #   @return [Array<Types::Asset>]
+    #
+    # @!attribute [rw] next_token
+    #   Token for the next set of results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/ListAssetsForLicenseAssetGroupResponse AWS API Documentation
+    #
+    class ListAssetsForLicenseAssetGroupResponse < Struct.new(
+      :assets,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2439,6 +3016,142 @@ module Aws::LicenseManager
       include Aws::Structure
     end
 
+    # @!attribute [rw] filters
+    #   Filters to scope the results. Following filters are supported
+    #
+    #   * `LicenseAssetRulesetArn`
+    #
+    #   ^
+    #   @return [Array<Types::Filter>]
+    #
+    # @!attribute [rw] max_results
+    #   Maximum number of results to return in a single call.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   Token for the next set of results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/ListLicenseAssetGroupsRequest AWS API Documentation
+    #
+    class ListLicenseAssetGroupsRequest < Struct.new(
+      :filters,
+      :max_results,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] license_asset_groups
+    #   License asset groups.
+    #   @return [Array<Types::LicenseAssetGroup>]
+    #
+    # @!attribute [rw] next_token
+    #   Token for the next set of results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/ListLicenseAssetGroupsResponse AWS API Documentation
+    #
+    class ListLicenseAssetGroupsResponse < Struct.new(
+      :license_asset_groups,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] filters
+    #   Filters to scope the results. Following filters are supported
+    #
+    #   * `Name`
+    #
+    #   ^
+    #   @return [Array<Types::Filter>]
+    #
+    # @!attribute [rw] show_aws_managed_license_asset_rulesets
+    #   Specifies whether to show License Manager managed license asset
+    #   rulesets.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] max_results
+    #   Maximum number of results to return in a single call.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   Token for the next set of results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/ListLicenseAssetRulesetsRequest AWS API Documentation
+    #
+    class ListLicenseAssetRulesetsRequest < Struct.new(
+      :filters,
+      :show_aws_managed_license_asset_rulesets,
+      :max_results,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] license_asset_rulesets
+    #   License asset rulesets.
+    #   @return [Array<Types::LicenseAssetRuleset>]
+    #
+    # @!attribute [rw] next_token
+    #   Token for the next set of results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/ListLicenseAssetRulesetsResponse AWS API Documentation
+    #
+    class ListLicenseAssetRulesetsResponse < Struct.new(
+      :license_asset_rulesets,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] license_configuration_arns
+    #   License configuration ARNs.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] max_results
+    #   Maximum number of results to return in a single call.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   Token for the next set of results.
+    #   @return [String]
+    #
+    # @!attribute [rw] filters
+    #   Filters to scope the results.
+    #   @return [Array<Types::Filter>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/ListLicenseConfigurationsForOrganizationRequest AWS API Documentation
+    #
+    class ListLicenseConfigurationsForOrganizationRequest < Struct.new(
+      :license_configuration_arns,
+      :max_results,
+      :next_token,
+      :filters)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] license_configurations
+    #   License configurations.
+    #   @return [Array<Types::LicenseConfiguration>]
+    #
+    # @!attribute [rw] next_token
+    #   Token for the next set of results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/ListLicenseConfigurationsForOrganizationResponse AWS API Documentation
+    #
+    class ListLicenseConfigurationsForOrganizationResponse < Struct.new(
+      :license_configurations,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] license_configuration_arns
     #   Amazon Resource Names (ARN) of the license configurations.
     #   @return [Array<String>]
@@ -2457,15 +3170,13 @@ module Aws::LicenseManager
     #
     #   * `licenseCountingType` - The dimension for which licenses are
     #     counted. Possible values are `vCPU` \| `Instance` \| `Core` \|
-    #     `Socket`. Logical operators are `EQUALS` \| `NOT_EQUALS`.
+    #     `Socket`.
     #
     #   * `enforceLicenseCount` - A Boolean value that indicates whether
-    #     hard license enforcement is used. Logical operators are `EQUALS`
-    #     \| `NOT_EQUALS`.
+    #     hard license enforcement is used.
     #
     #   * `usagelimitExceeded` - A Boolean value that indicates whether the
-    #     available licenses have been exceeded. Logical operators are
-    #     `EQUALS` \| `NOT_EQUALS`.
+    #     available licenses have been exceeded.
     #   @return [Array<Types::Filter>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/ListLicenseConfigurationsRequest AWS API Documentation
@@ -2972,7 +3683,7 @@ module Aws::LicenseManager
     end
 
     # @!attribute [rw] resource_arn
-    #   Amazon Resource Name (ARN) of the license configuration.
+    #   Amazon Resource Name (ARN) of the resource.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/ListTagsForResourceRequest AWS API Documentation
@@ -3060,14 +3771,11 @@ module Aws::LicenseManager
     #   operators are supported:
     #
     #   * `resourceArn` - The ARN of the license configuration resource.
-    #     Logical operators are `EQUALS` \| `NOT_EQUALS`.
     #
     #   * `resourceType` - The resource type (`EC2_INSTANCE` \| `EC2_HOST`
-    #     \| `EC2_AMI` \| `SYSTEMS_MANAGER_MANAGED_INSTANCE`). Logical
-    #     operators are `EQUALS` \| `NOT_EQUALS`.
+    #     \| `EC2_AMI` \| `SYSTEMS_MANAGER_MANAGED_INSTANCE`).
     #
     #   * `resourceAccount` - The ID of the account that owns the resource.
-    #     Logical operators are `EQUALS` \| `NOT_EQUALS`.
     #   @return [Array<Types::Filter>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/ListUsageForLicenseConfigurationRequest AWS API Documentation
@@ -3113,6 +3821,90 @@ module Aws::LicenseManager
     class ManagedResourceSummary < Struct.new(
       :resource_type,
       :association_count)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Matching rule statement.
+    #
+    # @!attribute [rw] key_to_match
+    #   Key to match.
+    #
+    #   The following keys and are supported when the RuleStatement type is
+    #   `Instance`:
+    #
+    #   * `Platform` - The name of the platform. Logical operators are
+    #     `EQUALS` and `NOT_EQUALS`.
+    #
+    #   * `EC2BillingProduct` - The billing product code. Logical operators
+    #     are `EQUALS` and `NOT_EQUALS`. Possible values are:
+    #     `windows-server-enterprise` \| `windows-byol` \| `rhel` \|
+    #     `rhel-byol` \| `rhel-high-availability` \| `ubuntu-pro` \|
+    #     `suse-linux` \| `sql-server-standard` \| `sql-server-enterprise`.
+    #
+    #   * `MarketPlaceProductCode` - The Marketplace product code. Logical
+    #     operators are `EQUALS` and `NOT_EQUALS`.
+    #
+    #   * `AMIId` - The ID of the AMI. Logical operators are `EQUALS` and
+    #     `NOT_EQUALS`.
+    #
+    #   * `InstanceType` - The instance type. Logical operators are `EQUALS`
+    #     and `NOT_EQUALS`.
+    #
+    #   * `InstanceId` - The ID of the instance. Logical operators are
+    #     `EQUALS` and `NOT_EQUALS`.
+    #
+    #   * `HostId` - The ID of the host. Logical operators are `EQUALS` and
+    #     `NOT_EQUALS`.
+    #
+    #   * `AccountId` - The ID of the account. Logical operators are
+    #     `EQUALS` and `NOT_EQUALS`.
+    #
+    #   The following keys and are supported when the RuleStatement type is
+    #   `License`:
+    #
+    #   * `LicenseArn` - The ARN of a Managed Entitlement License. Logical
+    #     operators are `EQUALS` and `NOT_EQUALS`.
+    #
+    #   * `ProductSKU` - The productSKU of the license. Logical operators
+    #     are `EQUALS` and `NOT_EQUALS`.
+    #
+    #   * `Issuer` - The issuer of the license. Logical operators are
+    #     `EQUALS` and `NOT_EQUALS`.
+    #
+    #   * `Beneficiary` - The beneficiary of the license. Logical operators
+    #     are `EQUALS` and `NOT_EQUALS`.
+    #
+    #   * `LicenseStatus` - The status of the license. Logical operators are
+    #     `EQUALS` and `NOT_EQUALS`.
+    #
+    #   * `HomeRegion` - The home region of the license. Logical operators
+    #     are `EQUALS` and `NOT_EQUALS`.
+    #
+    #   The following keys and are supported when the RuleStatement type is
+    #   `License Configuration`:
+    #
+    #   * `LicenseConfigurationArn` - The ARN of a self-managed license
+    #     configuration. Logical operators are `EQUALS` and `NOT_EQUALS`.
+    #
+    #   * `AccountId` - The account of the license configuration. Logical
+    #     operators are `EQUALS` and `NOT_EQUALS`.
+    #   @return [String]
+    #
+    # @!attribute [rw] constraint
+    #   Constraint.
+    #   @return [String]
+    #
+    # @!attribute [rw] value_to_match
+    #   Value to match.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/MatchingRuleStatement AWS API Documentation
+    #
+    class MatchingRuleStatement < Struct.new(
+      :key_to_match,
+      :constraint,
+      :value_to_match)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3198,6 +3990,25 @@ module Aws::LicenseManager
       include Aws::Structure
     end
 
+    # OR rule statement.
+    #
+    # @!attribute [rw] matching_rule_statements
+    #   Matching rule statements.
+    #   @return [Array<Types::MatchingRuleStatement>]
+    #
+    # @!attribute [rw] script_rule_statements
+    #   Script rule statements.
+    #   @return [Array<Types::ScriptRuleStatement>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/OrRuleStatement AWS API Documentation
+    #
+    class OrRuleStatement < Struct.new(
+      :matching_rule_statements,
+      :script_rule_statements)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Configuration information for Organizations.
     #
     # @!attribute [rw] enable_integration
@@ -3208,6 +4019,25 @@ module Aws::LicenseManager
     #
     class OrganizationConfiguration < Struct.new(
       :enable_integration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A list item that contains a product code.
+    #
+    # @!attribute [rw] product_code_id
+    #   The product code ID
+    #   @return [String]
+    #
+    # @!attribute [rw] product_code_type
+    #   The product code type
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/ProductCodeListItem AWS API Documentation
+    #
+    class ProductCodeListItem < Struct.new(
+      :product_code_id,
+      :product_code_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3267,7 +4097,8 @@ module Aws::LicenseManager
     #
     #   * `Engine Edition` - The edition of the database engine. Logical
     #     operator is `EQUALS`. Possible values are: `oracle-ee` \|
-    #     `oracle-se` \| `oracle-se1` \| `oracle-se2`.
+    #     `oracle-se` \| `oracle-se1` \| `oracle-se2` \| `db2-se` \|
+    #     `db2-ae`.
     #
     #   * `License Pack` - The license pack. Logical operator is `EQUALS`.
     #     Possible values are: `data guard` \| `diagnostic pack sqlt` \|
@@ -3375,6 +4206,20 @@ module Aws::LicenseManager
       include Aws::Structure
     end
 
+    # Status information for a specific region.
+    #
+    # @!attribute [rw] status
+    #   Status value for the region.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/RegionStatus AWS API Documentation
+    #
+    class RegionStatus < Struct.new(
+      :status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] grant_arn
     #   Amazon Resource Name (ARN) of the grant.
     #   @return [String]
@@ -3416,10 +4261,26 @@ module Aws::LicenseManager
     #   generator reports on.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] license_asset_group_arns
+    #   Amazon Resource Names (ARNs) of the license asset groups to include
+    #   in the report.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] report_start_date
+    #   Start date for the report data collection period.
+    #   @return [Time]
+    #
+    # @!attribute [rw] report_end_date
+    #   End date for the report data collection period.
+    #   @return [Time]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/ReportContext AWS API Documentation
     #
     class ReportContext < Struct.new(
-      :license_configuration_arns)
+      :license_configuration_arns,
+      :license_asset_group_arns,
+      :report_start_date,
+      :report_end_date)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3547,6 +4408,31 @@ module Aws::LicenseManager
     #   ID of the account that owns the resource.
     #   @return [String]
     #
+    # @!attribute [rw] marketplace_product_codes
+    #   List of Marketplace product codes associated with the resource.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] usage_operation
+    #   Usage operation value that corresponds to the license type for
+    #   billing purposes.
+    #   @return [String]
+    #
+    # @!attribute [rw] ami_id
+    #   Amazon Machine Image (AMI) ID associated with the resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] host_id
+    #   Dedicated Host ID where the resource is running.
+    #   @return [String]
+    #
+    # @!attribute [rw] region
+    #   Region where the resource is located.
+    #   @return [String]
+    #
+    # @!attribute [rw] instance_type
+    #   EC2 instance type of the resource.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/ResourceInventory AWS API Documentation
     #
     class ResourceInventory < Struct.new(
@@ -3555,7 +4441,13 @@ module Aws::LicenseManager
       :resource_arn,
       :platform,
       :platform_version,
-      :resource_owning_account_id)
+      :resource_owning_account_id,
+      :marketplace_product_codes,
+      :usage_operation,
+      :ami_id,
+      :host_id,
+      :region,
+      :instance_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3586,6 +4478,30 @@ module Aws::LicenseManager
       include Aws::Structure
     end
 
+    # Rule statement.
+    #
+    # @!attribute [rw] license_configuration_rule_statement
+    #   License configuration rule statement.
+    #   @return [Types::LicenseConfigurationRuleStatement]
+    #
+    # @!attribute [rw] license_rule_statement
+    #   License rule statement.
+    #   @return [Types::LicenseRuleStatement]
+    #
+    # @!attribute [rw] instance_rule_statement
+    #   Instance rule statement.
+    #   @return [Types::InstanceRuleStatement]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/RuleStatement AWS API Documentation
+    #
+    class RuleStatement < Struct.new(
+      :license_configuration_rule_statement,
+      :license_rule_statement,
+      :instance_rule_statement)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Details of the S3 bucket that report generator reports are published
     # to.
     #
@@ -3606,6 +4522,26 @@ module Aws::LicenseManager
       include Aws::Structure
     end
 
+    # Rule statement that uses a script to evaluate license asset
+    # conditions.
+    #
+    # @!attribute [rw] key_to_match
+    #   Key name to match against in the script rule evaluation.
+    #   @return [String]
+    #
+    # @!attribute [rw] script
+    #   Script code used to evaluate the rule condition.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/ScriptRuleStatement AWS API Documentation
+    #
+    class ScriptRuleStatement < Struct.new(
+      :key_to_match,
+      :script)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The server experienced an internal error. Try again.
     #
     # @!attribute [rw] message
@@ -3619,14 +4555,39 @@ module Aws::LicenseManager
       include Aws::Structure
     end
 
-    # Details about a tag for a license configuration.
+    # Overall service status information for License Manager.
+    #
+    # @!attribute [rw] cross_account_discovery
+    #   Status of cross-account discovery service.
+    #   @return [Types::CrossAccountDiscoveryServiceStatus]
+    #
+    # @!attribute [rw] cross_region_discovery
+    #   Status of cross-region discovery service.
+    #   @return [Types::CrossRegionDiscoveryStatus]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/ServiceStatus AWS API Documentation
+    #
+    class ServiceStatus < Struct.new(
+      :cross_account_discovery,
+      :cross_region_discovery)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details about the tags for a resource. For more information about
+    # tagging support in License Manager, see the [TagResource][1]
+    # operation.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/license-manager/latest/APIReference/API_TagResource.html
     #
     # @!attribute [rw] key
-    #   Tag key.
+    #   The tag key.
     #   @return [String]
     #
     # @!attribute [rw] value
-    #   Tag value.
+    #   The tag value.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/Tag AWS API Documentation
@@ -3639,7 +4600,21 @@ module Aws::LicenseManager
     end
 
     # @!attribute [rw] resource_arn
-    #   Amazon Resource Name (ARN) of the license configuration.
+    #   Amazon Resource Name (ARN) of the resource. The following examples
+    #   provide an example ARN for each supported resource in License
+    #   Manager:
+    #
+    #   * Licenses -
+    #     `arn:aws:license-manager::111122223333:license:l-EXAMPLE2da7646d6861033667f20e895`
+    #
+    #   * Grants -
+    #     `arn:aws:license-manager::111122223333:grant:g-EXAMPLE7b19f4a0ab73679b0beb52707`
+    #
+    #   * License configurations -
+    #     `arn:aws:license-manager:us-east-1:111122223333:license-configuration:lic-EXAMPLE6a788d4c8acd4264ff0ecf2ed2d`
+    #
+    #   * Report generators -
+    #     `arn:aws:license-manager:us-east-1:111122223333:report-generator:r-EXAMPLE825b4a4f8fe5a3e0c88824e5fc6`
     #   @return [String]
     #
     # @!attribute [rw] tags
@@ -3717,7 +4692,7 @@ module Aws::LicenseManager
     end
 
     # @!attribute [rw] resource_arn
-    #   Amazon Resource Name (ARN) of the license configuration.
+    #   Amazon Resource Name (ARN) of the resource.
     #   @return [String]
     #
     # @!attribute [rw] tag_keys
@@ -3736,6 +4711,117 @@ module Aws::LicenseManager
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/UntagResourceResponse AWS API Documentation
     #
     class UntagResourceResponse < Aws::EmptyStructure; end
+
+    # @!attribute [rw] name
+    #   License asset group name.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   License asset group description.
+    #   @return [String]
+    #
+    # @!attribute [rw] license_asset_group_configurations
+    #   License asset group configurations.
+    #   @return [Array<Types::LicenseAssetGroupConfiguration>]
+    #
+    # @!attribute [rw] associated_license_asset_ruleset_arns
+    #   ARNs of associated license asset rulesets.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] properties
+    #   License asset group properties.
+    #   @return [Array<Types::LicenseAssetGroupProperty>]
+    #
+    # @!attribute [rw] license_asset_group_arn
+    #   Amazon Resource Name (ARN) of the license asset group.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   License asset group status. The possible values are `ACTIVE` \|
+    #   `DISABLED`.
+    #   @return [String]
+    #
+    # @!attribute [rw] client_token
+    #   Unique, case-sensitive identifier that you provide to ensure the
+    #   idempotency of the request.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/UpdateLicenseAssetGroupRequest AWS API Documentation
+    #
+    class UpdateLicenseAssetGroupRequest < Struct.new(
+      :name,
+      :description,
+      :license_asset_group_configurations,
+      :associated_license_asset_ruleset_arns,
+      :properties,
+      :license_asset_group_arn,
+      :status,
+      :client_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] license_asset_group_arn
+    #   Amazon Resource Name (ARN) of the license asset group.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   License asset group status.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/UpdateLicenseAssetGroupResponse AWS API Documentation
+    #
+    class UpdateLicenseAssetGroupResponse < Struct.new(
+      :license_asset_group_arn,
+      :status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] name
+    #   License asset ruleset name.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   License asset ruleset description.
+    #   @return [String]
+    #
+    # @!attribute [rw] rules
+    #   License asset rules.
+    #   @return [Array<Types::LicenseAssetRule>]
+    #
+    # @!attribute [rw] license_asset_ruleset_arn
+    #   Amazon Resource Name (ARN) of the license asset ruleset.
+    #   @return [String]
+    #
+    # @!attribute [rw] client_token
+    #   Unique, case-sensitive identifier that you provide to ensure the
+    #   idempotency of the request.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/UpdateLicenseAssetRulesetRequest AWS API Documentation
+    #
+    class UpdateLicenseAssetRulesetRequest < Struct.new(
+      :name,
+      :description,
+      :rules,
+      :license_asset_ruleset_arn,
+      :client_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] license_asset_ruleset_arn
+    #   Amazon Resource Name (ARN) of the license asset ruleset.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/UpdateLicenseAssetRulesetResponse AWS API Documentation
+    #
+    class UpdateLicenseAssetRulesetResponse < Struct.new(
+      :license_asset_ruleset_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # @!attribute [rw] license_configuration_arn
     #   Amazon Resource Name (ARN) of the license configuration.
@@ -3774,6 +4860,10 @@ module Aws::LicenseManager
     #   When true, disassociates a resource when software is uninstalled.
     #   @return [Boolean]
     #
+    # @!attribute [rw] license_expiry
+    #   License configuration expiry time.
+    #   @return [Integer]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/UpdateLicenseConfigurationRequest AWS API Documentation
     #
     class UpdateLicenseConfigurationRequest < Struct.new(
@@ -3785,7 +4875,8 @@ module Aws::LicenseManager
       :name,
       :description,
       :product_information_list,
-      :disassociate_when_not_found)
+      :disassociate_when_not_found,
+      :license_expiry)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3892,13 +4983,18 @@ module Aws::LicenseManager
     #   Activates cross-account discovery.
     #   @return [Boolean]
     #
+    # @!attribute [rw] enabled_discovery_source_regions
+    #   Cross region discovery enabled source regions.
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/license-manager-2018-08-01/UpdateServiceSettingsRequest AWS API Documentation
     #
     class UpdateServiceSettingsRequest < Struct.new(
       :s3_bucket_arn,
       :sns_topic_arn,
       :organization_configuration,
-      :enable_cross_accounts_discovery)
+      :enable_cross_accounts_discovery,
+      :enabled_discovery_source_regions)
       SENSITIVE = []
       include Aws::Structure
     end

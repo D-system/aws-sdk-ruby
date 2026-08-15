@@ -51,6 +51,9 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudFormation/Stack.html#disable_rollback-instance_method
       def disable_rollback: () -> bool
 
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudFormation/Stack.html#deployment_config-instance_method
+      def deployment_config: () -> Types::DeploymentConfig
+
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudFormation/Stack.html#notification_arns-instance_method
       def notification_arns: () -> ::Array[::String]
 
@@ -90,6 +93,9 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudFormation/Stack.html#detailed_status-instance_method
       def detailed_status: () -> ("CONFIGURATION_COMPLETE" | "VALIDATION_FAILED")
 
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudFormation/Stack.html#last_operations-instance_method
+      def last_operations: () -> ::Array[Types::OperationEntry]
+
       def client: () -> Client
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudFormation/Stack.html#load-instance_method
@@ -126,7 +132,7 @@ module Aws
                         parameter_value: ::String?,
                         use_previous_value: bool?,
                         resolved_value: ::String?
-                      },
+                      }
                     ],
                     ?disable_rollback: bool,
                     ?rollback_configuration: {
@@ -134,7 +140,7 @@ module Aws
                         {
                           arn: ::String,
                           type: ::String
-                        },
+                        }
                       ]?,
                       monitoring_time_in_minutes: ::Integer?
                     },
@@ -150,11 +156,16 @@ module Aws
                       {
                         key: ::String,
                         value: ::String
-                      },
+                      }
                     ],
                     ?client_request_token: ::String,
                     ?enable_termination_protection: bool,
-                    ?retain_except_on_create: bool
+                    ?retain_except_on_create: bool,
+                    ?deployment_config: {
+                      mode: ("STANDARD" | "EXPRESS")?,
+                      disable_rollback: bool?
+                    },
+                    ?disable_validation: bool
                   ) -> Types::CreateStackOutput
                 | (?Hash[Symbol, untyped]) -> Types::CreateStackOutput
 
@@ -163,7 +174,11 @@ module Aws
                     ?retain_resources: Array[::String],
                     ?role_arn: ::String,
                     ?client_request_token: ::String,
-                    ?deletion_mode: ("STANDARD" | "FORCE_DELETE_STACK")
+                    ?deletion_mode: ("STANDARD" | "FORCE_DELETE_STACK"),
+                    ?deployment_config: {
+                      mode: ("STANDARD" | "EXPRESS")?,
+                      disable_rollback: bool?
+                    }
                   ) -> ::Aws::EmptyStructure
                 | (?Hash[Symbol, untyped]) -> ::Aws::EmptyStructure
 
@@ -180,7 +195,7 @@ module Aws
                         parameter_value: ::String?,
                         use_previous_value: bool?,
                         resolved_value: ::String?
-                      },
+                      }
                     ],
                     ?capabilities: Array[("CAPABILITY_IAM" | "CAPABILITY_NAMED_IAM" | "CAPABILITY_AUTO_EXPAND")],
                     ?resource_types: Array[::String],
@@ -190,7 +205,7 @@ module Aws
                         {
                           arn: ::String,
                           type: ::String
-                        },
+                        }
                       ]?,
                       monitoring_time_in_minutes: ::Integer?
                     },
@@ -201,11 +216,16 @@ module Aws
                       {
                         key: ::String,
                         value: ::String
-                      },
+                      }
                     ],
                     ?disable_rollback: bool,
                     ?client_request_token: ::String,
-                    ?retain_except_on_create: bool
+                    ?retain_except_on_create: bool,
+                    ?deployment_config: {
+                      mode: ("STANDARD" | "EXPRESS")?,
+                      disable_rollback: bool?
+                    },
+                    ?disable_validation: bool
                   ) -> Types::UpdateStackOutput
                 | (?Hash[Symbol, untyped]) -> Types::UpdateStackOutput
 

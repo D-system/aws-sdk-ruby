@@ -49,6 +49,23 @@ module Aws::S3
       data[:bucket_region]
     end
 
+    # The Amazon Resource Name (ARN) of the S3 bucket. ARNs uniquely
+    # identify Amazon Web Services resources across all of Amazon Web
+    # Services.
+    #
+    # <note markdown="1"> This parameter is only supported for S3 directory buckets. For more
+    # information, see [Using tags with directory buckets][1].
+    #
+    #  </note>
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/directory-buckets-tagging.html
+    # @return [String]
+    def bucket_arn
+      data[:bucket_arn]
+    end
+
     # @!endgroup
 
     # @return [Client]
@@ -237,7 +254,7 @@ module Aws::S3
     #   bucket.create({
     #     acl: "private", # accepts private, public-read, public-read-write, authenticated-read
     #     create_bucket_configuration: {
-    #       location_constraint: "af-south-1", # accepts af-south-1, ap-east-1, ap-northeast-1, ap-northeast-2, ap-northeast-3, ap-south-1, ap-south-2, ap-southeast-1, ap-southeast-2, ap-southeast-3, ap-southeast-4, ap-southeast-5, ca-central-1, cn-north-1, cn-northwest-1, EU, eu-central-1, eu-central-2, eu-north-1, eu-south-1, eu-south-2, eu-west-1, eu-west-2, eu-west-3, il-central-1, me-central-1, me-south-1, sa-east-1, us-east-2, us-gov-east-1, us-gov-west-1, us-west-1, us-west-2
+    #       location_constraint: "af-south-1", # accepts af-south-1, ap-east-1, ap-east-2, ap-northeast-1, ap-northeast-2, ap-northeast-3, ap-south-1, ap-south-2, ap-southeast-1, ap-southeast-2, ap-southeast-3, ap-southeast-4, ap-southeast-5, ap-southeast-6, ap-southeast-7, ca-central-1, ca-west-1, cn-north-1, cn-northwest-1, EU, eu-central-1, eu-central-2, eu-north-1, eu-south-1, eu-south-2, eu-west-1, eu-west-2, eu-west-3, il-central-1, me-central-1, me-south-1, mx-central-1, sa-east-1, us-east-2, us-gov-east-1, us-gov-west-1, us-west-1, us-west-2
     #       location: {
     #         type: "AvailabilityZone", # accepts AvailabilityZone, LocalZone
     #         name: "LocationNameAsString",
@@ -246,6 +263,12 @@ module Aws::S3
     #         data_redundancy: "SingleAvailabilityZone", # accepts SingleAvailabilityZone, SingleLocalZone
     #         type: "Directory", # accepts Directory
     #       },
+    #       tags: [
+    #         {
+    #           key: "ObjectKey", # required
+    #           value: "Value", # required
+    #         },
+    #       ],
     #     },
     #     grant_full_control: "GrantFullControl",
     #     grant_read: "GrantRead",
@@ -254,6 +277,7 @@ module Aws::S3
     #     grant_write_acp: "GrantWriteACP",
     #     object_lock_enabled_for_bucket: false,
     #     object_ownership: "BucketOwnerPreferred", # accepts BucketOwnerPreferred, ObjectWriter, BucketOwnerEnforced
+    #     bucket_namespace: "account-regional", # accepts account-regional, global
     #   })
     # @param [Hash] options ({})
     # @option options [String] :acl
@@ -339,6 +363,33 @@ module Aws::S3
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/about-object-ownership.html
+    # @option options [String] :bucket_namespace
+    #   Specifies the namespace where you want to create your general purpose
+    #   bucket. When you create a general purpose bucket, you can choose to
+    #   create a bucket in the shared global namespace or you can choose to
+    #   create a bucket in your account regional namespace. Your account
+    #   regional namespace is a subdivision of the global namespace that only
+    #   your account can create buckets in. For more information on bucket
+    #   namespaces, see [Namespaces for general purpose buckets][1].
+    #
+    #   General purpose buckets in your account regional namespace must follow
+    #   a specific naming convention. These buckets consist of a bucket name
+    #   prefix that you create, and a suffix that contains your 12-digit
+    #   Amazon Web Services Account ID, the Amazon Web Services Region code,
+    #   and ends with `-an`. Bucket names must follow the format
+    #   `bucket-name-prefix-accountId-region-an` (for example,
+    #   `amzn-s3-demo-bucket-111122223333-us-west-2-an`). For information
+    #   about bucket naming restrictions, see [Account regional namespace
+    #   naming rules][2] in the *Amazon S3 User Guide*.
+    #
+    #   <note markdown="1"> This functionality is not supported for directory buckets.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/gpbucketnamespaces.html
+    #   [2]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html#account-regional-naming-rules
     # @return [Types::CreateBucketOutput]
     def create(options = {})
       options = options.merge(bucket: @name)
@@ -392,7 +443,7 @@ module Aws::S3
     #     request_payer: "requester", # accepts requester
     #     bypass_governance_retention: false,
     #     expected_bucket_owner: "AccountId",
-    #     checksum_algorithm: "CRC32", # accepts CRC32, CRC32C, SHA1, SHA256, CRC64NVME
+    #     checksum_algorithm: "CRC32", # accepts CRC32, CRC32C, SHA1, SHA256, CRC64NVME, SHA512, MD5, XXHASH64, XXHASH3, XXHASH128
     #   })
     # @param [Hash] options ({})
     # @option options [required, Types::Delete] :delete
@@ -423,10 +474,10 @@ module Aws::S3
     #   Confirms that the requester knows that they will be charged for the
     #   request. Bucket owners need not specify this parameter in their
     #   requests. If either the source or destination S3 bucket has Requester
-    #   Pays enabled, the requester will pay for corresponding charges to copy
-    #   the object. For information about downloading objects from Requester
-    #   Pays buckets, see [Downloading Objects in Requester Pays Buckets][1]
-    #   in the *Amazon S3 User Guide*.
+    #   Pays enabled, the requester will pay for the corresponding charges.
+    #   For information about downloading objects from Requester Pays buckets,
+    #   see [Downloading Objects in Requester Pays Buckets][1] in the *Amazon
+    #   S3 User Guide*.
     #
     #   <note markdown="1"> This functionality is not supported for directory buckets.
     #
@@ -464,9 +515,19 @@ module Aws::S3
     #
     #   * `CRC64NVME`
     #
+    #   * `MD5`
+    #
     #   * `SHA1`
     #
     #   * `SHA256`
+    #
+    #   * `SHA512`
+    #
+    #   * `XXHASH3`
+    #
+    #   * `XXHASH64`
+    #
+    #   * `XXHASH128`
     #
     #   For more information, see [Checking object integrity][1] in the
     #   *Amazon S3 User Guide*.
@@ -503,12 +564,17 @@ module Aws::S3
     #     content_length: 1,
     #     content_md5: "ContentMD5",
     #     content_type: "ContentType",
-    #     checksum_algorithm: "CRC32", # accepts CRC32, CRC32C, SHA1, SHA256, CRC64NVME
+    #     checksum_algorithm: "CRC32", # accepts CRC32, CRC32C, SHA1, SHA256, CRC64NVME, SHA512, MD5, XXHASH64, XXHASH3, XXHASH128
     #     checksum_crc32: "ChecksumCRC32",
     #     checksum_crc32c: "ChecksumCRC32C",
     #     checksum_crc64nvme: "ChecksumCRC64NVME",
     #     checksum_sha1: "ChecksumSHA1",
     #     checksum_sha256: "ChecksumSHA256",
+    #     checksum_sha512: "ChecksumSHA512",
+    #     checksum_md5: "ChecksumMD5",
+    #     checksum_xxhash64: "ChecksumXXHASH64",
+    #     checksum_xxhash3: "ChecksumXXHASH3",
+    #     checksum_xxhash128: "ChecksumXXHASH128",
     #     expires: Time.now,
     #     if_match: "IfMatch",
     #     if_none_match: "IfNoneMatch",
@@ -521,8 +587,8 @@ module Aws::S3
     #     metadata: {
     #       "MetadataKey" => "MetadataValue",
     #     },
-    #     server_side_encryption: "AES256", # accepts AES256, aws:kms, aws:kms:dsse
-    #     storage_class: "STANDARD", # accepts STANDARD, REDUCED_REDUNDANCY, STANDARD_IA, ONEZONE_IA, INTELLIGENT_TIERING, GLACIER, DEEP_ARCHIVE, OUTPOSTS, GLACIER_IR, SNOW, EXPRESS_ONEZONE
+    #     server_side_encryption: "AES256", # accepts AES256, aws:fsx, aws:backup, aws:kms, aws:kms:dsse
+    #     storage_class: "STANDARD", # accepts STANDARD, REDUCED_REDUNDANCY, STANDARD_IA, ONEZONE_IA, INTELLIGENT_TIERING, GLACIER, DEEP_ARCHIVE, OUTPOSTS, GLACIER_IR, SNOW, EXPRESS_ONEZONE, FSX_OPENZFS, FSX_ONTAP, AWS_BACKUP_WARM, AWS_BACKUP_LOW_COST_WARM
     #     website_redirect_location: "WebsiteRedirectLocation",
     #     sse_customer_algorithm: "SSECustomerAlgorithm",
     #     sse_customer_key: "SSECustomerKey",
@@ -662,9 +728,19 @@ module Aws::S3
     #
     #   * `CRC64NVME`
     #
+    #   * `MD5`
+    #
     #   * `SHA1`
     #
     #   * `SHA256`
+    #
+    #   * `SHA512`
+    #
+    #   * `XXHASH3`
+    #
+    #   * `XXHASH64`
+    #
+    #   * `XXHASH128`
     #
     #   For more information, see [Checking object integrity][1] in the
     #   *Amazon S3 User Guide*.
@@ -736,6 +812,56 @@ module Aws::S3
     #   specifies the Base64 encoded, 256-bit `SHA256` digest of the object.
     #   For more information, see [Checking object integrity][1] in the
     #   *Amazon S3 User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html
+    # @option options [String] :checksum_sha512
+    #   This header can be used as a data integrity check to verify that the
+    #   data received is the same data that was originally sent. This header
+    #   specifies the Base64 encoded, 512-bit `SHA512` digest of the object.
+    #   For more information, see [Checking object integrity in the Amazon S3
+    #   User Guide][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html
+    # @option options [String] :checksum_md5
+    #   This header can be used as a data integrity check to verify that the
+    #   data received is the same data that was originally sent. This header
+    #   specifies the Base64 encoded, 128-bit `MD5` digest of the object. For
+    #   more information, see [Checking object integrity in the Amazon S3 User
+    #   Guide][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html
+    # @option options [String] :checksum_xxhash64
+    #   This header can be used as a data integrity check to verify that the
+    #   data received is the same data that was originally sent. This header
+    #   specifies the Base64 encoded, 64-bit `XXHASH64` checksum of the
+    #   object. For more information, see [Checking object integrity in the
+    #   Amazon S3 User Guide][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html
+    # @option options [String] :checksum_xxhash3
+    #   This header can be used as a data integrity check to verify that the
+    #   data received is the same data that was originally sent. This header
+    #   specifies the Base64 encoded, 64-bit `XXHASH3` checksum of the object.
+    #   For more information, see [Checking object integrity in the Amazon S3
+    #   User Guide][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html
+    # @option options [String] :checksum_xxhash128
+    #   This header can be used as a data integrity check to verify that the
+    #   data received is the same data that was originally sent. This header
+    #   specifies the Base64 encoded, 128-bit `XXHASH128` checksum of the
+    #   object. For more information, see [Checking object integrity in the
+    #   Amazon S3 User Guide][1].
     #
     #
     #
@@ -834,8 +960,7 @@ module Aws::S3
     #   A map of metadata to store with the object in S3.
     # @option options [String] :server_side_encryption
     #   The server-side encryption algorithm that was used when you store this
-    #   object in Amazon S3 (for example, `AES256`, `aws:kms`,
-    #   `aws:kms:dsse`).
+    #   object in Amazon S3 or Amazon FSx.
     #
     #   * <b>General purpose buckets </b> - You have four mutually exclusive
     #     options to protect data using server-side encryption in Amazon S3,
@@ -889,6 +1014,14 @@ module Aws::S3
     #
     #      </note>
     #
+    #   * <b>S3 access points for Amazon FSx </b> - When accessing data stored
+    #     in Amazon FSx file systems using S3 access points, the only valid
+    #     server side encryption option is `aws:fsx`. All Amazon FSx file
+    #     systems have encryption configured by default and are encrypted at
+    #     rest. Data is automatically encrypted before being written to the
+    #     file system, and automatically decrypted as it is read. These
+    #     processes are handled transparently by Amazon FSx.
+    #
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingServerSideEncryption.html
@@ -903,8 +1036,9 @@ module Aws::S3
     #   a different Storage Class. For more information, see [Storage
     #   Classes][1] in the *Amazon S3 User Guide*.
     #
-    #   <note markdown="1"> * For directory buckets, only the S3 Express One Zone storage class is
-    #     supported to store newly created objects.
+    #   <note markdown="1"> * Directory buckets only support `EXPRESS_ONEZONE` (the S3 Express One
+    #     Zone storage class) in Availability Zones and `ONEZONE_IA` (the S3
+    #     One Zone-Infrequent Access storage class) in Dedicated Local Zones.
     #
     #   * Amazon S3 on Outposts only uses the OUTPOSTS Storage Class.
     #
@@ -1050,10 +1184,10 @@ module Aws::S3
     #   Confirms that the requester knows that they will be charged for the
     #   request. Bucket owners need not specify this parameter in their
     #   requests. If either the source or destination S3 bucket has Requester
-    #   Pays enabled, the requester will pay for corresponding charges to copy
-    #   the object. For information about downloading objects from Requester
-    #   Pays buckets, see [Downloading Objects in Requester Pays Buckets][1]
-    #   in the *Amazon S3 User Guide*.
+    #   Pays enabled, the requester will pay for the corresponding charges.
+    #   For information about downloading objects from Requester Pays buckets,
+    #   see [Downloading Objects in Requester Pays Buckets][1] in the *Amazon
+    #   S3 User Guide*.
     #
     #   <note markdown="1"> This functionality is not supported for directory buckets.
     #
@@ -1175,6 +1309,9 @@ module Aws::S3
     #   beginning of the key. The keys that are grouped under `CommonPrefixes`
     #   result element are not returned elsewhere in the response.
     #
+    #   `CommonPrefixes` is filtered out from results if it is not
+    #   lexicographically greater than the key-marker.
+    #
     #   <note markdown="1"> **Directory buckets** - For directory buckets, `/` is the only
     #   supported delimiter.
     #
@@ -1257,10 +1394,10 @@ module Aws::S3
     #   Confirms that the requester knows that they will be charged for the
     #   request. Bucket owners need not specify this parameter in their
     #   requests. If either the source or destination S3 bucket has Requester
-    #   Pays enabled, the requester will pay for corresponding charges to copy
-    #   the object. For information about downloading objects from Requester
-    #   Pays buckets, see [Downloading Objects in Requester Pays Buckets][1]
-    #   in the *Amazon S3 User Guide*.
+    #   Pays enabled, the requester will pay for the corresponding charges.
+    #   For information about downloading objects from Requester Pays buckets,
+    #   see [Downloading Objects in Requester Pays Buckets][1] in the *Amazon
+    #   S3 User Guide*.
     #
     #   <note markdown="1"> This functionality is not supported for directory buckets.
     #
@@ -1331,6 +1468,9 @@ module Aws::S3
     #   in `CommonPrefixes`. These groups are counted as one result against
     #   the `max-keys` limitation. These keys are not returned elsewhere in
     #   the response.
+    #
+    #   `CommonPrefixes` is filtered out from results if it is not
+    #   lexicographically greater than the key-marker.
     # @option options [String] :encoding_type
     #   Encoding type used by Amazon S3 to encode the [object keys][1] in the
     #   response. Responses are encoded only in UTF-8. An object key can
@@ -1371,10 +1511,10 @@ module Aws::S3
     #   Confirms that the requester knows that they will be charged for the
     #   request. Bucket owners need not specify this parameter in their
     #   requests. If either the source or destination S3 bucket has Requester
-    #   Pays enabled, the requester will pay for corresponding charges to copy
-    #   the object. For information about downloading objects from Requester
-    #   Pays buckets, see [Downloading Objects in Requester Pays Buckets][1]
-    #   in the *Amazon S3 User Guide*.
+    #   Pays enabled, the requester will pay for the corresponding charges.
+    #   For information about downloading objects from Requester Pays buckets,
+    #   see [Downloading Objects in Requester Pays Buckets][1] in the *Amazon
+    #   S3 User Guide*.
     #
     #   <note markdown="1"> This functionality is not supported for directory buckets.
     #
@@ -1425,6 +1565,9 @@ module Aws::S3
     # @param [Hash] options ({})
     # @option options [String] :delimiter
     #   A delimiter is a character that you use to group keys.
+    #
+    #   `CommonPrefixes` is filtered out from results if it is not
+    #   lexicographically greater than the `StartAfter` value.
     #
     #   <note markdown="1"> * **Directory buckets** - For directory buckets, `/` is the only
     #     supported delimiter.

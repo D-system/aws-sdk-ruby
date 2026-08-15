@@ -95,8 +95,8 @@ module Aws::OSIS
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::OSIS
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::OSIS
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::OSIS
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::OSIS
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::OSIS
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::OSIS
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::OSIS
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -512,6 +516,10 @@ module Aws::OSIS
     # @option params [Array<Types::Tag>] :tags
     #   List of tags to add to the pipeline upon creation.
     #
+    # @option params [String] :pipeline_role_arn
+    #   The Amazon Resource Name (ARN) of the IAM role that grants the
+    #   pipeline permission to access Amazon Web Services resources.
+    #
     # @return [Types::CreatePipelineResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreatePipelineResponse#pipeline #pipeline} => Types::Pipeline
@@ -550,6 +558,7 @@ module Aws::OSIS
     #         value: "TagValue", # required
     #       },
     #     ],
+    #     pipeline_role_arn: "PipelineRoleArn",
     #   })
     #
     # @example Response structure
@@ -589,6 +598,7 @@ module Aws::OSIS
     #   resp.pipeline.tags #=> Array
     #   resp.pipeline.tags[0].key #=> String
     #   resp.pipeline.tags[0].value #=> String
+    #   resp.pipeline.pipeline_role_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/osis-2022-01-01/CreatePipeline AWS API Documentation
     #
@@ -596,6 +606,51 @@ module Aws::OSIS
     # @param [Hash] params ({})
     def create_pipeline(params = {}, options = {})
       req = build_request(:create_pipeline, params)
+      req.send_request(options)
+    end
+
+    # Creates a VPC endpoint for an OpenSearch Ingestion pipeline. Pipeline
+    # endpoints allow you to ingest data from your VPC into pipelines that
+    # you have access to.
+    #
+    # @option params [required, String] :pipeline_arn
+    #   The Amazon Resource Name (ARN) of the pipeline to create the endpoint
+    #   for.
+    #
+    # @option params [required, Types::PipelineEndpointVpcOptions] :vpc_options
+    #   Container for the VPC configuration for the pipeline endpoint,
+    #   including subnet IDs and security group IDs.
+    #
+    # @return [Types::CreatePipelineEndpointResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreatePipelineEndpointResponse#pipeline_arn #pipeline_arn} => String
+    #   * {Types::CreatePipelineEndpointResponse#endpoint_id #endpoint_id} => String
+    #   * {Types::CreatePipelineEndpointResponse#status #status} => String
+    #   * {Types::CreatePipelineEndpointResponse#vpc_id #vpc_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_pipeline_endpoint({
+    #     pipeline_arn: "PipelineArn", # required
+    #     vpc_options: { # required
+    #       subnet_ids: ["SubnetId"],
+    #       security_group_ids: ["SecurityGroupId"],
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.pipeline_arn #=> String
+    #   resp.endpoint_id #=> String
+    #   resp.status #=> String, one of "CREATING", "ACTIVE", "CREATE_FAILED", "DELETING", "REVOKING", "REVOKED"
+    #   resp.vpc_id #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/osis-2022-01-01/CreatePipelineEndpoint AWS API Documentation
+    #
+    # @overload create_pipeline_endpoint(params = {})
+    # @param [Hash] params ({})
+    def create_pipeline_endpoint(params = {}, options = {})
+      req = build_request(:create_pipeline_endpoint, params)
       req.send_request(options)
     end
 
@@ -623,6 +678,51 @@ module Aws::OSIS
     # @param [Hash] params ({})
     def delete_pipeline(params = {}, options = {})
       req = build_request(:delete_pipeline, params)
+      req.send_request(options)
+    end
+
+    # Deletes a VPC endpoint for an OpenSearch Ingestion pipeline.
+    #
+    # @option params [required, String] :endpoint_id
+    #   The unique identifier of the pipeline endpoint to delete.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_pipeline_endpoint({
+    #     endpoint_id: "PipelineEndpointId", # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/osis-2022-01-01/DeletePipelineEndpoint AWS API Documentation
+    #
+    # @overload delete_pipeline_endpoint(params = {})
+    # @param [Hash] params ({})
+    def delete_pipeline_endpoint(params = {}, options = {})
+      req = build_request(:delete_pipeline_endpoint, params)
+      req.send_request(options)
+    end
+
+    # Deletes a resource-based policy from an OpenSearch Ingestion resource.
+    #
+    # @option params [required, String] :resource_arn
+    #   The Amazon Resource Name (ARN) of the resource from which to delete
+    #   the policy.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_resource_policy({
+    #     resource_arn: "PipelineArn", # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/osis-2022-01-01/DeleteResourcePolicy AWS API Documentation
+    #
+    # @overload delete_resource_policy(params = {})
+    # @param [Hash] params ({})
+    def delete_resource_policy(params = {}, options = {})
+      req = build_request(:delete_resource_policy, params)
       req.send_request(options)
     end
 
@@ -678,6 +778,7 @@ module Aws::OSIS
     #   resp.pipeline.tags #=> Array
     #   resp.pipeline.tags[0].key #=> String
     #   resp.pipeline.tags[0].value #=> String
+    #   resp.pipeline.pipeline_role_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/osis-2022-01-01/GetPipeline AWS API Documentation
     #
@@ -779,6 +880,38 @@ module Aws::OSIS
       req.send_request(options)
     end
 
+    # Retrieves the resource-based policy attached to an OpenSearch
+    # Ingestion resource.
+    #
+    # @option params [required, String] :resource_arn
+    #   The Amazon Resource Name (ARN) of the resource for which to retrieve
+    #   the policy.
+    #
+    # @return [Types::GetResourcePolicyResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetResourcePolicyResponse#resource_arn #resource_arn} => String
+    #   * {Types::GetResourcePolicyResponse#policy #policy} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_resource_policy({
+    #     resource_arn: "PipelineArn", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.resource_arn #=> String
+    #   resp.policy #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/osis-2022-01-01/GetResourcePolicy AWS API Documentation
+    #
+    # @overload get_resource_policy(params = {})
+    # @param [Hash] params ({})
+    def get_resource_policy(params = {}, options = {})
+      req = build_request(:get_resource_policy, params)
+      req.send_request(options)
+    end
+
     # Retrieves a list of all available blueprints for Data Prepper. For
     # more information, see [Using blueprints to create a pipeline][1].
     #
@@ -805,6 +938,98 @@ module Aws::OSIS
     # @param [Hash] params ({})
     def list_pipeline_blueprints(params = {}, options = {})
       req = build_request(:list_pipeline_blueprints, params)
+      req.send_request(options)
+    end
+
+    # Lists the pipeline endpoints connected to pipelines in your account.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of pipeline endpoint connections to return in the
+    #   response.
+    #
+    # @option params [String] :next_token
+    #   If your initial `ListPipelineEndpointConnections` operation returns a
+    #   `nextToken`, you can include the returned `nextToken` in subsequent
+    #   `ListPipelineEndpointConnections` operations, which returns results in
+    #   the next page.
+    #
+    # @return [Types::ListPipelineEndpointConnectionsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListPipelineEndpointConnectionsResponse#next_token #next_token} => String
+    #   * {Types::ListPipelineEndpointConnectionsResponse#pipeline_endpoint_connections #pipeline_endpoint_connections} => Array&lt;Types::PipelineEndpointConnection&gt;
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_pipeline_endpoint_connections({
+    #     max_results: 1,
+    #     next_token: "NextToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.next_token #=> String
+    #   resp.pipeline_endpoint_connections #=> Array
+    #   resp.pipeline_endpoint_connections[0].pipeline_arn #=> String
+    #   resp.pipeline_endpoint_connections[0].endpoint_id #=> String
+    #   resp.pipeline_endpoint_connections[0].status #=> String, one of "CREATING", "ACTIVE", "CREATE_FAILED", "DELETING", "REVOKING", "REVOKED"
+    #   resp.pipeline_endpoint_connections[0].vpc_endpoint_owner #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/osis-2022-01-01/ListPipelineEndpointConnections AWS API Documentation
+    #
+    # @overload list_pipeline_endpoint_connections(params = {})
+    # @param [Hash] params ({})
+    def list_pipeline_endpoint_connections(params = {}, options = {})
+      req = build_request(:list_pipeline_endpoint_connections, params)
+      req.send_request(options)
+    end
+
+    # Lists all pipeline endpoints in your account.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of pipeline endpoints to return in the response.
+    #
+    # @option params [String] :next_token
+    #   If your initial `ListPipelineEndpoints` operation returns a
+    #   `NextToken`, you can include the returned `NextToken` in subsequent
+    #   `ListPipelineEndpoints` operations, which returns results in the next
+    #   page.
+    #
+    # @return [Types::ListPipelineEndpointsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListPipelineEndpointsResponse#next_token #next_token} => String
+    #   * {Types::ListPipelineEndpointsResponse#pipeline_endpoints #pipeline_endpoints} => Array&lt;Types::PipelineEndpoint&gt;
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_pipeline_endpoints({
+    #     max_results: 1,
+    #     next_token: "NextToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.next_token #=> String
+    #   resp.pipeline_endpoints #=> Array
+    #   resp.pipeline_endpoints[0].pipeline_arn #=> String
+    #   resp.pipeline_endpoints[0].endpoint_id #=> String
+    #   resp.pipeline_endpoints[0].status #=> String, one of "CREATING", "ACTIVE", "CREATE_FAILED", "DELETING", "REVOKING", "REVOKED"
+    #   resp.pipeline_endpoints[0].vpc_id #=> String
+    #   resp.pipeline_endpoints[0].vpc_options.subnet_ids #=> Array
+    #   resp.pipeline_endpoints[0].vpc_options.subnet_ids[0] #=> String
+    #   resp.pipeline_endpoints[0].vpc_options.security_group_ids #=> Array
+    #   resp.pipeline_endpoints[0].vpc_options.security_group_ids[0] #=> String
+    #   resp.pipeline_endpoints[0].ingest_endpoint_url #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/osis-2022-01-01/ListPipelineEndpoints AWS API Documentation
+    #
+    # @overload list_pipeline_endpoints(params = {})
+    # @param [Hash] params ({})
+    def list_pipeline_endpoints(params = {}, options = {})
+      req = build_request(:list_pipeline_endpoints, params)
       req.send_request(options)
     end
 
@@ -903,6 +1128,76 @@ module Aws::OSIS
       req.send_request(options)
     end
 
+    # Attaches a resource-based policy to an OpenSearch Ingestion resource.
+    # Resource-based policies grant permissions to principals to perform
+    # actions on the resource.
+    #
+    # @option params [required, String] :resource_arn
+    #   The Amazon Resource Name (ARN) of the resource to attach the policy
+    #   to.
+    #
+    # @option params [required, String] :policy
+    #   The resource-based policy document in JSON format.
+    #
+    # @return [Types::PutResourcePolicyResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::PutResourcePolicyResponse#resource_arn #resource_arn} => String
+    #   * {Types::PutResourcePolicyResponse#policy #policy} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.put_resource_policy({
+    #     resource_arn: "PipelineArn", # required
+    #     policy: "ResourcePolicy", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.resource_arn #=> String
+    #   resp.policy #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/osis-2022-01-01/PutResourcePolicy AWS API Documentation
+    #
+    # @overload put_resource_policy(params = {})
+    # @param [Hash] params ({})
+    def put_resource_policy(params = {}, options = {})
+      req = build_request(:put_resource_policy, params)
+      req.send_request(options)
+    end
+
+    # Revokes pipeline endpoints from specified endpoint IDs.
+    #
+    # @option params [required, String] :pipeline_arn
+    #   The Amazon Resource Name (ARN) of the pipeline from which to revoke
+    #   endpoint connections.
+    #
+    # @option params [required, Array<String>] :endpoint_ids
+    #   A list of endpoint IDs for which to revoke access to the pipeline.
+    #
+    # @return [Types::RevokePipelineEndpointConnectionsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::RevokePipelineEndpointConnectionsResponse#pipeline_arn #pipeline_arn} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.revoke_pipeline_endpoint_connections({
+    #     pipeline_arn: "PipelineArn", # required
+    #     endpoint_ids: ["PipelineEndpointId"], # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.pipeline_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/osis-2022-01-01/RevokePipelineEndpointConnections AWS API Documentation
+    #
+    # @overload revoke_pipeline_endpoint_connections(params = {})
+    # @param [Hash] params ({})
+    def revoke_pipeline_endpoint_connections(params = {}, options = {})
+      req = build_request(:revoke_pipeline_endpoint_connections, params)
+      req.send_request(options)
+    end
+
     # Starts an OpenSearch Ingestion pipeline. For more information, see
     # [Starting an OpenSearch Ingestion pipeline][1].
     #
@@ -960,6 +1255,7 @@ module Aws::OSIS
     #   resp.pipeline.tags #=> Array
     #   resp.pipeline.tags[0].key #=> String
     #   resp.pipeline.tags[0].value #=> String
+    #   resp.pipeline.pipeline_role_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/osis-2022-01-01/StartPipeline AWS API Documentation
     #
@@ -1027,6 +1323,7 @@ module Aws::OSIS
     #   resp.pipeline.tags #=> Array
     #   resp.pipeline.tags[0].key #=> String
     #   resp.pipeline.tags[0].value #=> String
+    #   resp.pipeline.pipeline_role_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/osis-2022-01-01/StopPipeline AWS API Documentation
     #
@@ -1137,6 +1434,10 @@ module Aws::OSIS
     #   Key-value pairs to configure encryption for data that is written to a
     #   persistent buffer.
     #
+    # @option params [String] :pipeline_role_arn
+    #   The Amazon Resource Name (ARN) of the IAM role that grants the
+    #   pipeline permission to access Amazon Web Services resources.
+    #
     # @return [Types::UpdatePipelineResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::UpdatePipelineResponse#pipeline #pipeline} => Types::Pipeline
@@ -1160,6 +1461,7 @@ module Aws::OSIS
     #     encryption_at_rest_options: {
     #       kms_key_arn: "KmsKeyArn", # required
     #     },
+    #     pipeline_role_arn: "PipelineRoleArn",
     #   })
     #
     # @example Response structure
@@ -1199,6 +1501,7 @@ module Aws::OSIS
     #   resp.pipeline.tags #=> Array
     #   resp.pipeline.tags[0].key #=> String
     #   resp.pipeline.tags[0].value #=> String
+    #   resp.pipeline.pipeline_role_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/osis-2022-01-01/UpdatePipeline AWS API Documentation
     #
@@ -1267,7 +1570,7 @@ module Aws::OSIS
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-osis'
-      context[:gem_version] = '1.30.0'
+      context[:gem_version] = '1.53.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

@@ -61,7 +61,7 @@ module Aws::VerifiedPermissions
     # an authorization decision is made.
     #
     # This data type is used as a member of the [ContextDefinition][1]
-    # structure which is uses as a request parameter for the
+    # structure which is used as a request parameter for the
     # [IsAuthorized][2], [BatchIsAuthorized][3], and
     # [IsAuthorizedWithToken][4] operations.
     #
@@ -83,14 +83,14 @@ module Aws::VerifiedPermissions
     #
     #
     #
-    #   [1]: https://docs.cedarpolicy.com/policies/syntax-datatypes.html#boolean
+    #   [1]: https://docs.cedarpolicy.com/policies/syntax-datatypes.html#datatype-bool
     #   @return [Boolean]
     #
     # @!attribute [rw] entity_identifier
     #   An attribute value of type [EntityIdentifier][1].
     #
-    #   Example: `"entityIdentifier": { "entityId": "<id>", "entityType":
-    #   "<entity type>"}`
+    #   Example: `{"entityIdentifier": { "entityId": "alice", "entityType":
+    #   "User"} }`
     #
     #
     #
@@ -104,7 +104,7 @@ module Aws::VerifiedPermissions
     #
     #
     #
-    #   [1]: https://docs.cedarpolicy.com/policies/syntax-datatypes.html#long
+    #   [1]: https://docs.cedarpolicy.com/policies/syntax-datatypes.html#datatype-long
     #   @return [Integer]
     #
     # @!attribute [rw] string
@@ -114,7 +114,7 @@ module Aws::VerifiedPermissions
     #
     #
     #
-    #   [1]: https://docs.cedarpolicy.com/policies/syntax-datatypes.html#string
+    #   [1]: https://docs.cedarpolicy.com/policies/syntax-datatypes.html#datatype-string
     #   @return [String]
     #
     # @!attribute [rw] set
@@ -124,7 +124,7 @@ module Aws::VerifiedPermissions
     #
     #
     #
-    #   [1]: https://docs.cedarpolicy.com/policies/syntax-datatypes.html#set
+    #   [1]: https://docs.cedarpolicy.com/policies/syntax-datatypes.html#datatype-set
     #   @return [Array<Types::AttributeValue>]
     #
     # @!attribute [rw] record
@@ -134,7 +134,7 @@ module Aws::VerifiedPermissions
     #
     #
     #
-    #   [1]: https://docs.cedarpolicy.com/policies/syntax-datatypes.html#record
+    #   [1]: https://docs.cedarpolicy.com/policies/syntax-datatypes.html#datatype-record
     #   @return [Hash<String,Types::AttributeValue>]
     #
     # @!attribute [rw] ipaddr
@@ -157,6 +157,26 @@ module Aws::VerifiedPermissions
     #   [1]: https://docs.cedarpolicy.com/policies/syntax-datatypes.html#datatype-decimal
     #   @return [String]
     #
+    # @!attribute [rw] datetime
+    #   An attribute value of [datetime][1] type.
+    #
+    #   Example: `{"datetime": "2024-10-15T11:35:00Z"}`
+    #
+    #
+    #
+    #   [1]: https://docs.cedarpolicy.com/policies/syntax-datatypes.html#datatype-datetime
+    #   @return [String]
+    #
+    # @!attribute [rw] duration
+    #   An attribute value of [duration][1] type.
+    #
+    #   Example: `{"duration": "1h30m"}`
+    #
+    #
+    #
+    #   [1]: https://docs.cedarpolicy.com/policies/syntax-datatypes.html#datatype-duration
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/AttributeValue AWS API Documentation
     #
     class AttributeValue < Struct.new(
@@ -168,8 +188,10 @@ module Aws::VerifiedPermissions
       :record,
       :ipaddr,
       :decimal,
+      :datetime,
+      :duration,
       :unknown)
-      SENSITIVE = [:boolean, :long, :string, :ipaddr, :decimal]
+      SENSITIVE = [:boolean, :long, :string, :ipaddr, :decimal, :datetime, :duration]
       include Aws::Structure
       include Aws::Structure::Union
 
@@ -181,6 +203,8 @@ module Aws::VerifiedPermissions
       class Record < AttributeValue; end
       class Ipaddr < AttributeValue; end
       class Decimal < AttributeValue; end
+      class Datetime < AttributeValue; end
+      class Duration < AttributeValue; end
       class Unknown < AttributeValue; end
     end
 
@@ -237,6 +261,13 @@ module Aws::VerifiedPermissions
     #
     # @!attribute [rw] policy_id
     #   The identifier of the policy you want information about.
+    #
+    #   You can use the policy name in place of the policy ID. When using a
+    #   name, prefix it with `name/`. For example:
+    #
+    #   * ID: `SPEXAMPLEabcdefg111111`
+    #
+    #   * Name: `name/example-policy`
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/BatchGetPolicyInputItem AWS API Documentation
@@ -300,6 +331,11 @@ module Aws::VerifiedPermissions
     #   The date and time the policy was most recently updated.
     #   @return [Time]
     #
+    # @!attribute [rw] name
+    #   The name of the policy, if one was assigned when the policy was
+    #   created or last updated.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/BatchGetPolicyOutputItem AWS API Documentation
     #
     class BatchGetPolicyOutputItem < Struct.new(
@@ -308,7 +344,8 @@ module Aws::VerifiedPermissions
       :policy_type,
       :definition,
       :created_date,
-      :last_updated_date)
+      :last_updated_date,
+      :name)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -316,12 +353,27 @@ module Aws::VerifiedPermissions
     # @!attribute [rw] policy_store_id
     #   Specifies the ID of the policy store. Policies in this policy store
     #   will be used to make the authorization decisions for the input.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #   @return [String]
     #
     # @!attribute [rw] entities
-    #   Specifies the list of resources and principals and their associated
-    #   attributes that Verified Permissions can examine when evaluating the
-    #   policies.
+    #   (Optional) Specifies the list of resources and principals and their
+    #   associated attributes that Verified Permissions can examine when
+    #   evaluating the policies. These additional entities and their
+    #   attributes can be referenced and checked by conditional elements in
+    #   the policies in the specified policy store.
     #
     #   <note markdown="1"> You can include only principal and resource entities in this
     #   parameter; you can't include actions. You must specify actions in
@@ -435,6 +487,19 @@ module Aws::VerifiedPermissions
     # @!attribute [rw] policy_store_id
     #   Specifies the ID of the policy store. Policies in this policy store
     #   will be used to make an authorization decision for the input.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #   @return [String]
     #
     # @!attribute [rw] identity_token
@@ -460,8 +525,11 @@ module Aws::VerifiedPermissions
     #   @return [String]
     #
     # @!attribute [rw] entities
-    #   Specifies the list of resources and their associated attributes that
-    #   Verified Permissions can examine when evaluating the policies.
+    #   (Optional) Specifies the list of resources and their associated
+    #   attributes that Verified Permissions can examine when evaluating the
+    #   policies. These additional entities and their attributes can be
+    #   referenced and checked by conditional elements in the policies in
+    #   the specified policy store.
     #
     #   You can't include principals in this parameter, only resource and
     #   action entities. This parameter can't include any entities of a
@@ -577,6 +645,155 @@ module Aws::VerifiedPermissions
       :errors)
       SENSITIVE = [:errors]
       include Aws::Structure
+    end
+
+    # The value of an entity's Cedar tag.
+    #
+    # This data type is used as a member of the [EntityItem][1] structure
+    # that forms the body of the `Entities` request parameter for the
+    # [IsAuthorized][2], [BatchIsAuthorized][3], [IsAuthorizedWithToken][4],
+    # and [BatchIsAuthorizedWithToken][5] operations.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_EntityItem.html
+    # [2]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_IsAuthorized.html
+    # [3]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_BatchIsAuthorized.html
+    # [4]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_IsAuthorizedWithToken.html
+    # [5]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_BatchIsAuthorizedWithToken.html
+    #
+    # @note CedarTagValue is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @!attribute [rw] boolean
+    #   A Cedar tag value of [Boolean][1] type.
+    #
+    #   Example: `{"boolean": false}`
+    #
+    #
+    #
+    #   [1]: https://docs.cedarpolicy.com/policies/syntax-datatypes.html#datatype-bool
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] entity_identifier
+    #   A Cedar tag value of type [EntityIdentifier][1].
+    #
+    #   Example: `{"entityIdentifier": { "entityId": "alice", "entityType":
+    #   "User"} }`
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_EntityIdentifier.html
+    #   @return [Types::EntityIdentifier]
+    #
+    # @!attribute [rw] long
+    #   A Cedar tag value of [Long][1] type.
+    #
+    #   Example: `{"long": 0}`
+    #
+    #
+    #
+    #   [1]: https://docs.cedarpolicy.com/policies/syntax-datatypes.html#datatype-long
+    #   @return [Integer]
+    #
+    # @!attribute [rw] string
+    #   A Cedar tag value of [String][1] type.
+    #
+    #   Example: `{"string": "abc"}`
+    #
+    #
+    #
+    #   [1]: https://docs.cedarpolicy.com/policies/syntax-datatypes.html#datatype-string
+    #   @return [String]
+    #
+    # @!attribute [rw] set
+    #   A Cedar tag value of [Set][1] type.
+    #
+    #   Example: `{"set": [ { "string": "abc" } ] }`
+    #
+    #
+    #
+    #   [1]: https://docs.cedarpolicy.com/policies/syntax-datatypes.html#datatype-set
+    #   @return [Array<Types::CedarTagValue>]
+    #
+    # @!attribute [rw] record
+    #   A Cedar tag value of [Record][1] type.
+    #
+    #   Example: `{"record": { "keyName": {} } }`
+    #
+    #
+    #
+    #   [1]: https://docs.cedarpolicy.com/policies/syntax-datatypes.html#datatype-record
+    #   @return [Hash<String,Types::CedarTagValue>]
+    #
+    # @!attribute [rw] ipaddr
+    #   A Cedar tag value of [ipaddr][1] type.
+    #
+    #   Example: `{"ip": "10.50.0.0/24"}`
+    #
+    #
+    #
+    #   [1]: https://docs.cedarpolicy.com/policies/syntax-datatypes.html#datatype-ipaddr
+    #   @return [String]
+    #
+    # @!attribute [rw] decimal
+    #   A Cedar tag value of [decimal][1] type.
+    #
+    #   Example: `{"decimal": "-2.0"}`
+    #
+    #
+    #
+    #   [1]: https://docs.cedarpolicy.com/policies/syntax-datatypes.html#datatype-decimal
+    #   @return [String]
+    #
+    # @!attribute [rw] datetime
+    #   A Cedar tag value of [datetime][1] type.
+    #
+    #   Example: `{"datetime": "2025-11-04T11:35:00.000+0100"}`
+    #
+    #
+    #
+    #   [1]: https://docs.cedarpolicy.com/policies/syntax-datatypes.html#datatype-datetime
+    #   @return [String]
+    #
+    # @!attribute [rw] duration
+    #   A Cedar tag value of [duration][1] type.
+    #
+    #   Example: `{"duration": "-1d12h"}`
+    #
+    #
+    #
+    #   [1]: https://docs.cedarpolicy.com/policies/syntax-datatypes.html#datatype-duration
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/CedarTagValue AWS API Documentation
+    #
+    class CedarTagValue < Struct.new(
+      :boolean,
+      :entity_identifier,
+      :long,
+      :string,
+      :set,
+      :record,
+      :ipaddr,
+      :decimal,
+      :datetime,
+      :duration,
+      :unknown)
+      SENSITIVE = [:boolean, :long, :string, :ipaddr, :decimal, :datetime, :duration]
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Boolean < CedarTagValue; end
+      class EntityIdentifier < CedarTagValue; end
+      class Long < CedarTagValue; end
+      class String < CedarTagValue; end
+      class Set < CedarTagValue; end
+      class Record < CedarTagValue; end
+      class Ipaddr < CedarTagValue; end
+      class Decimal < CedarTagValue; end
+      class Datetime < CedarTagValue; end
+      class Duration < CedarTagValue; end
+      class Unknown < CedarTagValue; end
     end
 
     # The type of entity that a policy store maps to groups from an Amazon
@@ -981,7 +1198,7 @@ module Aws::VerifiedPermissions
     end
 
     # The request failed because another request to modify a resource
-    # occurred at the same.
+    # occurred at the same time.
     #
     # @!attribute [rw] message
     #   @return [String]
@@ -1090,6 +1307,19 @@ module Aws::VerifiedPermissions
     #   identity source. Only policies and requests made using this policy
     #   store can reference identities from the identity provider configured
     #   in the new identity source.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #   @return [String]
     #
     # @!attribute [rw] configuration
@@ -1171,6 +1401,19 @@ module Aws::VerifiedPermissions
     # @!attribute [rw] policy_store_id
     #   Specifies the `PolicyStoreId` of the policy store you want to store
     #   the policy in.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #   @return [String]
     #
     # @!attribute [rw] definition
@@ -1180,12 +1423,23 @@ module Aws::VerifiedPermissions
     #   language.
     #   @return [Types::PolicyDefinition]
     #
+    # @!attribute [rw] name
+    #   Specifies a name for the policy that is unique among all policies
+    #   within the policy store. You can use the name in place of the policy
+    #   ID in API operations that reference the policy. The name must be
+    #   prefixed with `name/`.
+    #
+    #   If you specify a name that is already associated with another policy
+    #   in the policy store, you receive a `ConflictException` error.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/CreatePolicyInput AWS API Documentation
     #
     class CreatePolicyInput < Struct.new(
       :client_token,
       :policy_store_id,
-      :definition)
+      :definition,
+      :name)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1250,6 +1504,61 @@ module Aws::VerifiedPermissions
       include Aws::Structure
     end
 
+    # @!attribute [rw] alias_name
+    #   Specifies the name of the policy store alias to create. The name
+    #   must be unique within your Amazon Web Services account and Amazon
+    #   Web Services Region.
+    #
+    #   <note markdown="1"> The alias name must always be prefixed with `policy-store-alias/`.
+    #
+    #    </note>
+    #   @return [String]
+    #
+    # @!attribute [rw] policy_store_id
+    #   Specifies the ID of the policy store to associate with the alias.
+    #
+    #   <note markdown="1"> The associated policy store must be specified using its ID. The
+    #   alias name cannot be used.
+    #
+    #    </note>
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/CreatePolicyStoreAliasInput AWS API Documentation
+    #
+    class CreatePolicyStoreAliasInput < Struct.new(
+      :alias_name,
+      :policy_store_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] alias_name
+    #   The name of the policy store alias.
+    #   @return [String]
+    #
+    # @!attribute [rw] policy_store_id
+    #   The ID of the policy store associated with the alias.
+    #   @return [String]
+    #
+    # @!attribute [rw] alias_arn
+    #   The Amazon Resource Name (ARN) of the policy store alias.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_at
+    #   The date and time the policy store alias was created.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/CreatePolicyStoreAliasOutput AWS API Documentation
+    #
+    class CreatePolicyStoreAliasOutput < Struct.new(
+      :alias_name,
+      :policy_store_id,
+      :alias_arn,
+      :created_at)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] client_token
     #   Specifies a unique, case-sensitive ID that you provide to ensure the
     #   idempotency of the request. This lets you safely retry the request
@@ -1300,12 +1609,35 @@ module Aws::VerifiedPermissions
     #   the current policy store.
     #   @return [String]
     #
+    # @!attribute [rw] deletion_protection
+    #   Specifies whether the policy store can be deleted. If enabled, the
+    #   policy store can't be deleted.
+    #
+    #   The default state is `DISABLED`.
+    #   @return [String]
+    #
+    # @!attribute [rw] encryption_settings
+    #   Specifies the encryption settings used to encrypt the policy store
+    #   and their child resources. Allows for the ability to use a customer
+    #   owned KMS key for encryption of data.
+    #
+    #   This is an optional field to be used when providing a
+    #   customer-managed KMS key for encryption.
+    #   @return [Types::EncryptionSettings]
+    #
+    # @!attribute [rw] tags
+    #   The list of key-value pairs to associate with the policy store.
+    #   @return [Hash<String,String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/CreatePolicyStoreInput AWS API Documentation
     #
     class CreatePolicyStoreInput < Struct.new(
       :client_token,
       :validation_settings,
-      :description)
+      :description,
+      :deletion_protection,
+      :encryption_settings,
+      :tags)
       SENSITIVE = [:description]
       include Aws::Structure
     end
@@ -1367,6 +1699,19 @@ module Aws::VerifiedPermissions
     #
     # @!attribute [rw] policy_store_id
     #   The ID of the policy store in which to create the policy template.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #   @return [String]
     #
     # @!attribute [rw] description
@@ -1378,13 +1723,25 @@ module Aws::VerifiedPermissions
     #   template, written in the Cedar policy language.
     #   @return [String]
     #
+    # @!attribute [rw] name
+    #   Specifies a name for the policy template that is unique among all
+    #   policy templates within the policy store. You can use the name in
+    #   place of the policy template ID in API operations that reference the
+    #   policy template. The name must be prefixed with `name/`.
+    #
+    #   If you specify a name that is already associated with another policy
+    #   template in the policy store, you receive a `ConflictException`
+    #   error.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/CreatePolicyTemplateInput AWS API Documentation
     #
     class CreatePolicyTemplateInput < Struct.new(
       :client_token,
       :policy_store_id,
       :description,
-      :statement)
+      :statement,
+      :name)
       SENSITIVE = [:description, :statement]
       include Aws::Structure
     end
@@ -1419,6 +1776,19 @@ module Aws::VerifiedPermissions
     # @!attribute [rw] policy_store_id
     #   Specifies the ID of the policy store that contains the identity
     #   source that you want to delete.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #   @return [String]
     #
     # @!attribute [rw] identity_source_id
@@ -1441,10 +1811,30 @@ module Aws::VerifiedPermissions
     # @!attribute [rw] policy_store_id
     #   Specifies the ID of the policy store that contains the policy that
     #   you want to delete.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #   @return [String]
     #
     # @!attribute [rw] policy_id
     #   Specifies the ID of the policy that you want to delete.
+    #
+    #   You can use the policy name in place of the policy ID. When using a
+    #   name, prefix it with `name/`. For example:
+    #
+    #   * ID: `SPEXAMPLEabcdefg111111`
+    #
+    #   * Name: `name/example-policy`
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/DeletePolicyInput AWS API Documentation
@@ -1460,8 +1850,47 @@ module Aws::VerifiedPermissions
     #
     class DeletePolicyOutput < Aws::EmptyStructure; end
 
+    # @!attribute [rw] alias_name
+    #   Specifies the name of the policy store alias that you want to
+    #   delete.
+    #
+    #   <note markdown="1"> The alias name must always be prefixed with `policy-store-alias/`.
+    #
+    #    </note>
+    #   @return [String]
+    #
+    # @!attribute [rw] deletion_mode
+    #   Specifies the deletion mode for the policy store alias. The valid
+    #   values are:
+    #
+    #   * **SoftDelete** – The policy store alias enters the
+    #     `PendingDeletion` state. This is the default behavior when no
+    #     `deletionMode` is specified.
+    #
+    #   * **HardDelete** – The policy store alias is immediately deleted,
+    #     bypassing the `PendingDeletion` state.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/DeletePolicyStoreAliasInput AWS API Documentation
+    #
+    class DeletePolicyStoreAliasInput < Struct.new(
+      :alias_name,
+      :deletion_mode)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/DeletePolicyStoreAliasOutput AWS API Documentation
+    #
+    class DeletePolicyStoreAliasOutput < Aws::EmptyStructure; end
+
     # @!attribute [rw] policy_store_id
     #   Specifies the ID of the policy store that you want to delete.
+    #
+    #   <note markdown="1"> To specify a policy store, the alias name cannot be used. Only the
+    #   ID can be used.
+    #
+    #    </note>
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/DeletePolicyStoreInput AWS API Documentation
@@ -1479,10 +1908,30 @@ module Aws::VerifiedPermissions
     # @!attribute [rw] policy_store_id
     #   Specifies the ID of the policy store that contains the policy
     #   template that you want to delete.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #   @return [String]
     #
     # @!attribute [rw] policy_template_id
     #   Specifies the ID of the policy template that you want to delete.
+    #
+    #   You can use the policy template name in place of the policy template
+    #   ID. When using a name, prefix it with `name/`. For example:
+    #
+    #   * ID: `PTEXAMPLEabcdefg111111`
+    #
+    #   * Name: `name/example-policy-template`
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/DeletePolicyTemplateInput AWS API Documentation
@@ -1526,6 +1975,82 @@ module Aws::VerifiedPermissions
       :policy_id)
       SENSITIVE = []
       include Aws::Structure
+    end
+
+    # A structure that contains the encryption configuration for the policy
+    # store and child resources.
+    #
+    # This data type is used as a request parameter in the
+    # [CreatePolicyStore][1] operation.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_CreatePolicyStore.html
+    #
+    # @note EncryptionSettings is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @!attribute [rw] kms_encryption_settings
+    #   The KMS encryption settings for this policy store to encrypt data
+    #   with. It will contain the customer-managed KMS key, and a
+    #   user-defined encryption context.
+    #   @return [Types::KmsEncryptionSettings]
+    #
+    # @!attribute [rw] default
+    #   This is the default encryption setting. The policy store uses an
+    #   Amazon Web Services owned key for encrypting data.
+    #   @return [Types::Unit]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/EncryptionSettings AWS API Documentation
+    #
+    class EncryptionSettings < Struct.new(
+      :kms_encryption_settings,
+      :default,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class KmsEncryptionSettings < EncryptionSettings; end
+      class Default < EncryptionSettings; end
+      class Unknown < EncryptionSettings; end
+    end
+
+    # A structure that contains the encryption configuration for the policy
+    # store and child resources.
+    #
+    # This data type is used as a response parameter field for the
+    # [GetPolicyStore][1] operation.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_GetPolicyStore.html
+    #
+    # @note EncryptionState is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of EncryptionState corresponding to the set member.
+    #
+    # @!attribute [rw] kms_encryption_state
+    #   The KMS encryption settings currently configured for this policy
+    #   store to encrypt data with. It contains the customer-managed KMS
+    #   key, and a user-defined encryption context.
+    #   @return [Types::KmsEncryptionState]
+    #
+    # @!attribute [rw] default
+    #   This is the default encryption state. The policy store is encrypted
+    #   using an Amazon Web Services owned key.
+    #   @return [Types::Unit]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/EncryptionState AWS API Documentation
+    #
+    class EncryptionState < Struct.new(
+      :kms_encryption_state,
+      :default,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class KmsEncryptionState < EncryptionState; end
+      class Default < EncryptionState; end
+      class Unknown < EncryptionState; end
     end
 
     # Contains the list of entities to be considered during an authorization
@@ -1647,12 +2172,17 @@ module Aws::VerifiedPermissions
     #   and eight parents of parents.
     #   @return [Array<Types::EntityIdentifier>]
     #
+    # @!attribute [rw] tags
+    #   A list of cedar tags for the entity.
+    #   @return [Hash<String,Types::CedarTagValue>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/EntityItem AWS API Documentation
     #
     class EntityItem < Struct.new(
       :identifier,
       :attributes,
-      :parents)
+      :parents,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1722,6 +2252,19 @@ module Aws::VerifiedPermissions
     # @!attribute [rw] policy_store_id
     #   Specifies the ID of the policy store that contains the identity
     #   source you want information about.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #   @return [String]
     #
     # @!attribute [rw] identity_source_id
@@ -1784,10 +2327,30 @@ module Aws::VerifiedPermissions
     # @!attribute [rw] policy_store_id
     #   Specifies the ID of the policy store that contains the policy that
     #   you want information about.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #   @return [String]
     #
     # @!attribute [rw] policy_id
     #   Specifies the ID of the policy you want information about.
+    #
+    #   You can use the policy name in place of the policy ID. When using a
+    #   name, prefix it with `name/`. For example:
+    #
+    #   * ID: `SPEXAMPLEabcdefg111111`
+    #
+    #   * Name: `name/example-policy`
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/GetPolicyInput AWS API Documentation
@@ -1848,6 +2411,11 @@ module Aws::VerifiedPermissions
     #   request. For example, `"effect": "Permit"`.
     #   @return [String]
     #
+    # @!attribute [rw] name
+    #   The name of the policy, if one was assigned when the policy was
+    #   created or last updated.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/GetPolicyOutput AWS API Documentation
     #
     class GetPolicyOutput < Struct.new(
@@ -1860,20 +2428,99 @@ module Aws::VerifiedPermissions
       :definition,
       :created_date,
       :last_updated_date,
-      :effect)
+      :effect,
+      :name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] alias_name
+    #   Specifies the name of the policy store alias that you want
+    #   information about.
+    #
+    #   <note markdown="1"> The alias name must always be prefixed with `policy-store-alias/`.
+    #
+    #    </note>
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/GetPolicyStoreAliasInput AWS API Documentation
+    #
+    class GetPolicyStoreAliasInput < Struct.new(
+      :alias_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] alias_name
+    #   The name of the policy store alias.
+    #   @return [String]
+    #
+    # @!attribute [rw] policy_store_id
+    #   The ID of the policy store associated with the alias.
+    #   @return [String]
+    #
+    # @!attribute [rw] alias_arn
+    #   The Amazon Resource Name (ARN) of the policy store alias.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_at
+    #   The date and time the policy store alias was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] state
+    #   The state of the policy store alias. Policy Store Aliases in the
+    #   Active state can be used normally. When a policy store alias is
+    #   deleted, it enters the PendingDeletion state. Policy Store Aliases
+    #   in the PendingDeletion cannot be used, and creating a policy store
+    #   alias with the same alias name will fail.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/GetPolicyStoreAliasOutput AWS API Documentation
+    #
+    class GetPolicyStoreAliasOutput < Struct.new(
+      :alias_name,
+      :policy_store_id,
+      :alias_arn,
+      :created_at,
+      :state)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # @!attribute [rw] policy_store_id
-    #   Specifies the ID of the policy store that you want information
-    #   about.
+    #   Specifies the policy store that you want information about.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   Specifies whether to return the tags that are attached to the policy
+    #   store. If this parameter is included in the API call, the tags are
+    #   returned, otherwise they are not returned.
+    #
+    #   <note markdown="1"> If this parameter is included in the API call but there are no tags
+    #   attached to the policy store, the `tags` response parameter is
+    #   omitted from the response.
+    #
+    #    </note>
+    #   @return [Boolean]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/GetPolicyStoreInput AWS API Documentation
     #
     class GetPolicyStoreInput < Struct.new(
-      :policy_store_id)
+      :policy_store_id,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1903,6 +2550,32 @@ module Aws::VerifiedPermissions
     #   the current policy store.
     #   @return [String]
     #
+    # @!attribute [rw] deletion_protection
+    #   Specifies whether the policy store can be deleted. If enabled, the
+    #   policy store can't be deleted.
+    #
+    #   The default state is `DISABLED`.
+    #   @return [String]
+    #
+    # @!attribute [rw] encryption_state
+    #   A structure that contains the encryption configuration for the
+    #   policy store.
+    #   @return [Types::EncryptionState]
+    #
+    # @!attribute [rw] cedar_version
+    #   The version of the Cedar language used with policies, policy
+    #   templates, and schemas in this policy store. For more information,
+    #   see [Amazon Verified Permissions upgrade to Cedar v4 FAQ][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/userguide/cedar4-faq.html
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   The list of tags associated with the policy store.
+    #   @return [Hash<String,String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/GetPolicyStoreOutput AWS API Documentation
     #
     class GetPolicyStoreOutput < Struct.new(
@@ -1911,7 +2584,11 @@ module Aws::VerifiedPermissions
       :validation_settings,
       :created_date,
       :last_updated_date,
-      :description)
+      :description,
+      :deletion_protection,
+      :encryption_state,
+      :cedar_version,
+      :tags)
       SENSITIVE = [:description]
       include Aws::Structure
     end
@@ -1919,11 +2596,31 @@ module Aws::VerifiedPermissions
     # @!attribute [rw] policy_store_id
     #   Specifies the ID of the policy store that contains the policy
     #   template that you want information about.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #   @return [String]
     #
     # @!attribute [rw] policy_template_id
     #   Specifies the ID of the policy template that you want information
     #   about.
+    #
+    #   You can use the policy template name in place of the policy template
+    #   ID. When using a name, prefix it with `name/`. For example:
+    #
+    #   * ID: `PTEXAMPLEabcdefg111111`
+    #
+    #   * Name: `name/example-policy-template`
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/GetPolicyTemplateInput AWS API Documentation
@@ -1961,6 +2658,11 @@ module Aws::VerifiedPermissions
     #   updated.
     #   @return [Time]
     #
+    # @!attribute [rw] name
+    #   The name of the policy template, if one was assigned when the policy
+    #   template was created or last updated.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/GetPolicyTemplateOutput AWS API Documentation
     #
     class GetPolicyTemplateOutput < Struct.new(
@@ -1969,13 +2671,27 @@ module Aws::VerifiedPermissions
       :description,
       :statement,
       :created_date,
-      :last_updated_date)
+      :last_updated_date,
+      :name)
       SENSITIVE = [:description, :statement]
       include Aws::Structure
     end
 
     # @!attribute [rw] policy_store_id
     #   Specifies the ID of the policy store that contains the schema.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/GetSchemaInput AWS API Documentation
@@ -2211,9 +2927,36 @@ module Aws::VerifiedPermissions
       include Aws::Structure
     end
 
+    # The policy store can't be deleted because deletion protection is
+    # enabled. To delete this policy store, disable deletion protection.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/InvalidStateException AWS API Documentation
+    #
+    class InvalidStateException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] policy_store_id
     #   Specifies the ID of the policy store. Policies in this policy store
     #   will be used to make an authorization decision for the input.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #   @return [String]
     #
     # @!attribute [rw] principal
@@ -2237,9 +2980,11 @@ module Aws::VerifiedPermissions
     #   @return [Types::ContextDefinition]
     #
     # @!attribute [rw] entities
-    #   Specifies the list of resources and principals and their associated
-    #   attributes that Verified Permissions can examine when evaluating the
-    #   policies.
+    #   (Optional) Specifies the list of resources and principals and their
+    #   associated attributes that Verified Permissions can examine when
+    #   evaluating the policies. These additional entities and their
+    #   attributes can be referenced and checked by conditional elements in
+    #   the policies in the specified policy store.
     #
     #   <note markdown="1"> You can include only principal and resource entities in this
     #   parameter; you can't include actions. You must specify actions in
@@ -2295,6 +3040,19 @@ module Aws::VerifiedPermissions
     # @!attribute [rw] policy_store_id
     #   Specifies the ID of the policy store. Policies in this policy store
     #   will be used to make an authorization decision for the input.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #   @return [String]
     #
     # @!attribute [rw] identity_token
@@ -2335,8 +3093,11 @@ module Aws::VerifiedPermissions
     #   @return [Types::ContextDefinition]
     #
     # @!attribute [rw] entities
-    #   Specifies the list of resources and their associated attributes that
-    #   Verified Permissions can examine when evaluating the policies.
+    #   (Optional) Specifies the list of resources and their associated
+    #   attributes that Verified Permissions can examine when evaluating the
+    #   policies. These additional entities and their attributes can be
+    #   referenced and checked by conditional elements in the policies in
+    #   the specified policy store.
     #
     #   You can't include principals in this parameter, only resource and
     #   action entities. This parameter can't include any entities of a
@@ -2401,9 +3162,97 @@ module Aws::VerifiedPermissions
       include Aws::Structure
     end
 
+    # A structure that contains the KMS encryption configuration for the
+    # policy store. The encryption settings determine what customer-managed
+    # KMS key will be used to encrypt all resources within the policy store,
+    # and any user-defined context key-value pairs to append during
+    # encryption processes.
+    #
+    # This data type is used as a field that is part of the
+    # [EncryptionSettings][1] type.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_EncryptionSettings.html
+    #
+    # @!attribute [rw] key
+    #   The customer-managed KMS key [Amazon Resource Name (ARN)][1], alias
+    #   or ID to be used for encryption processes.
+    #
+    #   Users can provide the full KMS key ARN, a KMS key alias, or a KMS
+    #   key ID, but it will be mapped to the full KMS key ARN after policy
+    #   store creation, and referenced when encrypting child resources.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html
+    #   @return [String]
+    #
+    # @!attribute [rw] encryption_context
+    #   User-defined, additional context to be added to encryption
+    #   processes.
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/KmsEncryptionSettings AWS API Documentation
+    #
+    class KmsEncryptionSettings < Struct.new(
+      :key,
+      :encryption_context)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A structure that contains the KMS encryption configuration for the
+    # policy store. The encryption state shows what customer-managed KMS key
+    # is being used to encrypt all resources within the policy store, and
+    # any user-defined context key-value pairs added during encryption
+    # processes.
+    #
+    # This data type is used as a field that is part of the
+    # [EncryptionState][1] type.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_EncryptionState.html
+    #
+    # @!attribute [rw] key
+    #   The customer-managed KMS key [Amazon Resource Name (ARN)][1] being
+    #   used for encryption processes.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html
+    #   @return [String]
+    #
+    # @!attribute [rw] encryption_context
+    #   User-defined, additional context added to encryption processes.
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/KmsEncryptionState AWS API Documentation
+    #
+    class KmsEncryptionState < Struct.new(
+      :key,
+      :encryption_context)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] policy_store_id
     #   Specifies the ID of the policy store that contains the identity
     #   sources that you want to list.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #   @return [String]
     #
     # @!attribute [rw] next_token
@@ -2470,6 +3319,19 @@ module Aws::VerifiedPermissions
 
     # @!attribute [rw] policy_store_id
     #   Specifies the ID of the policy store you want to list policies from.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #   @return [String]
     #
     # @!attribute [rw] next_token
@@ -2554,6 +3416,68 @@ module Aws::VerifiedPermissions
     #   `NextToken` after every operation to ensure that you receive all of
     #   the results.
     #
+    #   If you do not specify this parameter, the operation defaults to 5
+    #   policy store aliases per response. You can specify a maximum of 50
+    #   policy store aliases per response.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] filter
+    #   Specifies a filter to narrow the results. You can filter by
+    #   `policyStoreId` to list only the policy store aliases associated
+    #   with a specific policy store.
+    #   @return [Types::PolicyStoreAliasFilter]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/ListPolicyStoreAliasesInput AWS API Documentation
+    #
+    class ListPolicyStoreAliasesInput < Struct.new(
+      :next_token,
+      :max_results,
+      :filter)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   If present, this value indicates that more output is available than
+    #   is included in the current response. Use this value in the
+    #   `NextToken` request parameter in a subsequent call to the operation
+    #   to get the next part of the output. You should repeat this until the
+    #   `NextToken` response element comes back as `null`. This indicates
+    #   that this is the last page of results.
+    #   @return [String]
+    #
+    # @!attribute [rw] policy_store_aliases
+    #   The list of policy store aliases in the account.
+    #   @return [Array<Types::PolicyStoreAliasItem>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/ListPolicyStoreAliasesOutput AWS API Documentation
+    #
+    class ListPolicyStoreAliasesOutput < Struct.new(
+      :next_token,
+      :policy_store_aliases)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   Specifies that you want to receive the next page of results. Valid
+    #   only if you received a `NextToken` response in the previous request.
+    #   If you did, it indicates that more output is available. Set this
+    #   parameter to the value provided by the previous call's `NextToken`
+    #   response to request the next page of results.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   Specifies the total number of results that you want included in each
+    #   response. If additional items exist beyond the number you specify,
+    #   the `NextToken` response element is returned with a value (not
+    #   null). Include the specified value as the `NextToken` request
+    #   parameter in the next call to the operation to get the next set of
+    #   results. Note that the service might return fewer results than the
+    #   maximum even when there are more results available. You should check
+    #   `NextToken` after every operation to ensure that you receive all of
+    #   the results.
+    #
     #   If you do not specify this parameter, the operation defaults to 10
     #   policy stores per response. You can specify a maximum of 50 policy
     #   stores per response.
@@ -2593,6 +3517,19 @@ module Aws::VerifiedPermissions
     # @!attribute [rw] policy_store_id
     #   Specifies the ID of the policy store that contains the policy
     #   templates you want to list.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #   @return [String]
     #
     # @!attribute [rw] next_token
@@ -2647,6 +3584,30 @@ module Aws::VerifiedPermissions
     class ListPolicyTemplatesOutput < Struct.new(
       :next_token,
       :policy_templates)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] resource_arn
+    #   The ARN of the resource for which you want to view tags.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/ListTagsForResourceInput AWS API Documentation
+    #
+    class ListTagsForResourceInput < Struct.new(
+      :resource_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] tags
+    #   The list of tags associated with the resource.
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/ListTagsForResourceOutput AWS API Documentation
+    #
+    class ListTagsForResourceOutput < Struct.new(
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3196,7 +4157,7 @@ module Aws::VerifiedPermissions
     #
     #
     # [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_OpenIdConnectConfigurationItem.html
-    # [2]: http://amazonaws.com/verifiedpermissions/latest/apireference/API_ListIdentitySources.html
+    # [2]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListIdentitySources.html
     #
     # @note OpenIdConnectTokenSelectionItem is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of OpenIdConnectTokenSelectionItem corresponding to the set member.
     #
@@ -3447,6 +4408,11 @@ module Aws::VerifiedPermissions
     #   request. For example, `"effect": "Permit"`.
     #   @return [String]
     #
+    # @!attribute [rw] name
+    #   The name of the policy, if one was assigned when the policy was
+    #   created or last updated.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/PolicyItem AWS API Documentation
     #
     class PolicyItem < Struct.new(
@@ -3459,7 +4425,68 @@ module Aws::VerifiedPermissions
       :definition,
       :created_date,
       :last_updated_date,
-      :effect)
+      :effect,
+      :name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains filters for the `ListPolicyStoreAliases` operation.
+    #
+    # @!attribute [rw] policy_store_id
+    #   The ID of the policy store to filter by. Only policy store aliases
+    #   associated with this policy store are returned.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/PolicyStoreAliasFilter AWS API Documentation
+    #
+    class PolicyStoreAliasFilter < Struct.new(
+      :policy_store_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about a policy store alias.
+    #
+    # This data type is used as a response parameter for the
+    # [ListPolicyStoreAliases][1] operation.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
+    #
+    # @!attribute [rw] alias_name
+    #   The name of the policy store alias.
+    #   @return [String]
+    #
+    # @!attribute [rw] policy_store_id
+    #   The ID of the policy store associated with the alias.
+    #   @return [String]
+    #
+    # @!attribute [rw] alias_arn
+    #   The Amazon Resource Name (ARN) of the policy store alias.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_at
+    #   The date and time the policy store alias was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] state
+    #   The state of the policy store alias. Policy Store Aliases in the
+    #   Active state can be used normally. When a policy store alias is
+    #   deleted, it enters the PendingDeletion state. Policy Store Aliases
+    #   in the PendingDeletion state cannot be used, and creating a policy
+    #   store alias with the same alias name will fail.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/PolicyStoreAliasItem AWS API Documentation
+    #
+    class PolicyStoreAliasItem < Struct.new(
+      :alias_name,
+      :policy_store_id,
+      :alias_arn,
+      :created_at,
+      :state)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3537,6 +4564,11 @@ module Aws::VerifiedPermissions
     #   updated.
     #   @return [Time]
     #
+    # @!attribute [rw] name
+    #   The name of the policy template, if one was assigned when the policy
+    #   template was created or last updated.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/PolicyTemplateItem AWS API Documentation
     #
     class PolicyTemplateItem < Struct.new(
@@ -3544,13 +4576,27 @@ module Aws::VerifiedPermissions
       :policy_template_id,
       :description,
       :created_date,
-      :last_updated_date)
+      :last_updated_date,
+      :name)
       SENSITIVE = [:description]
       include Aws::Structure
     end
 
     # @!attribute [rw] policy_store_id
     #   Specifies the ID of the policy store in which to place the schema.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #   @return [String]
     #
     # @!attribute [rw] definition
@@ -3784,6 +4830,27 @@ module Aws::VerifiedPermissions
       include Aws::Structure
     end
 
+    # @!attribute [rw] resource_arn
+    #   The ARN of the resource that you're adding tags to.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   The list of key-value pairs to associate with the resource.
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/TagResourceInput AWS API Documentation
+    #
+    class TagResourceInput < Struct.new(
+      :resource_arn,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/TagResourceOutput AWS API Documentation
+    #
+    class TagResourceOutput < Aws::EmptyStructure; end
+
     # Contains information about a policy created by instantiating a policy
     # template.
     #
@@ -3851,8 +4918,6 @@ module Aws::VerifiedPermissions
     # Contains information about a policy created by instantiating a policy
     # template.
     #
-    # This
-    #
     # @!attribute [rw] policy_template_id
     #   The unique identifier of the policy template used to create this
     #   policy.
@@ -3905,6 +4970,52 @@ module Aws::VerifiedPermissions
       SENSITIVE = []
       include Aws::Structure
     end
+
+    # No more tags be added because the limit (50) has been reached. To add
+    # new tags, use `UntagResource` to remove existing tags.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_name
+    #   An Amazon Resource Name (ARN) uniquely identifies an AWS resource.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/TooManyTagsException AWS API Documentation
+    #
+    class TooManyTagsException < Struct.new(
+      :message,
+      :resource_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @api private
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/Unit AWS API Documentation
+    #
+    class Unit < Aws::EmptyStructure; end
+
+    # @!attribute [rw] resource_arn
+    #   The ARN of the resource from which you are removing tags.
+    #   @return [String]
+    #
+    # @!attribute [rw] tag_keys
+    #   The list of tag keys to remove from the resource.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/UntagResourceInput AWS API Documentation
+    #
+    class UntagResourceInput < Struct.new(
+      :resource_arn,
+      :tag_keys)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/UntagResourceOutput AWS API Documentation
+    #
+    class UntagResourceOutput < Aws::EmptyStructure; end
 
     # The user group entities from an Amazon Cognito user pool identity
     # source.
@@ -3989,6 +5100,19 @@ module Aws::VerifiedPermissions
     # @!attribute [rw] policy_store_id
     #   Specifies the ID of the policy store that contains the identity
     #   source that you want to update.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #   @return [String]
     #
     # @!attribute [rw] identity_source_id
@@ -4269,11 +5393,31 @@ module Aws::VerifiedPermissions
     # @!attribute [rw] policy_store_id
     #   Specifies the ID of the policy store that contains the policy that
     #   you want to update.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #   @return [String]
     #
     # @!attribute [rw] policy_id
     #   Specifies the ID of the policy that you want to update. To find this
     #   value, you can use [ListPolicies][1].
+    #
+    #   You can use the policy name in place of the policy ID. When using a
+    #   name, prefix it with `name/`. For example:
+    #
+    #   * ID: `SPEXAMPLEabcdefg111111`
+    #
+    #   * Name: `name/example-policy`
     #
     #
     #
@@ -4284,6 +5428,9 @@ module Aws::VerifiedPermissions
     #   Specifies the updated policy content that you want to replace on the
     #   specified policy. The content must be valid Cedar policy language
     #   text.
+    #
+    #   If you don't specify this parameter, the existing policy definition
+    #   remains unchanged.
     #
     #   You can change only the following elements from the policy
     #   definition:
@@ -4303,12 +5450,29 @@ module Aws::VerifiedPermissions
     #   * The `resource` referenced by the policy.
     #   @return [Types::UpdatePolicyDefinition]
     #
+    # @!attribute [rw] name
+    #   Specifies a name for the policy that is unique among all policies
+    #   within the policy store. You can use the name in place of the policy
+    #   ID in API operations that reference the policy. The name must be
+    #   prefixed with `name/`.
+    #
+    #   <note markdown="1"> If you don't include the name in an update request, the existing
+    #   name is unchanged. To remove a name, set it to an empty string
+    #   (`""`).
+    #
+    #    </note>
+    #
+    #   If you specify a name that is already associated with another policy
+    #   in the policy store, you receive a `ConflictException` error.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/UpdatePolicyInput AWS API Documentation
     #
     class UpdatePolicyInput < Struct.new(
       :policy_store_id,
       :policy_id,
-      :definition)
+      :definition,
+      :name)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4376,12 +5540,33 @@ module Aws::VerifiedPermissions
 
     # @!attribute [rw] policy_store_id
     #   Specifies the ID of the policy store that you want to update
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #   @return [String]
     #
     # @!attribute [rw] validation_settings
     #   A structure that defines the validation settings that want to enable
     #   for the policy store.
     #   @return [Types::ValidationSettings]
+    #
+    # @!attribute [rw] deletion_protection
+    #   Specifies whether the policy store can be deleted. If enabled, the
+    #   policy store can't be deleted.
+    #
+    #   When you call `UpdatePolicyStore`, this parameter is unchanged
+    #   unless explicitly included in the call.
+    #   @return [String]
     #
     # @!attribute [rw] description
     #   Descriptive text that you can provide to help with identification of
@@ -4393,6 +5578,7 @@ module Aws::VerifiedPermissions
     class UpdatePolicyStoreInput < Struct.new(
       :policy_store_id,
       :validation_settings,
+      :deletion_protection,
       :description)
       SENSITIVE = [:description]
       include Aws::Structure
@@ -4432,10 +5618,30 @@ module Aws::VerifiedPermissions
     # @!attribute [rw] policy_store_id
     #   Specifies the ID of the policy store that contains the policy
     #   template that you want to update.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #   @return [String]
     #
     # @!attribute [rw] policy_template_id
     #   Specifies the ID of the policy template that you want to update.
+    #
+    #   You can use the policy template name in place of the policy template
+    #   ID. When using a name, prefix it with `name/`. For example:
+    #
+    #   * ID: `PTEXAMPLEabcdefg111111`
+    #
+    #   * Name: `name/example-policy-template`
     #   @return [String]
     #
     # @!attribute [rw] description
@@ -4461,13 +5667,31 @@ module Aws::VerifiedPermissions
     #   * The `resource` referenced by the policy template.
     #   @return [String]
     #
+    # @!attribute [rw] name
+    #   Specifies a name for the policy template that is unique among all
+    #   policy templates within the policy store. You can use the name in
+    #   place of the policy template ID in API operations that reference the
+    #   policy template. The name must be prefixed with `name/`.
+    #
+    #   <note markdown="1"> If you don't include the name in an update request, the existing
+    #   name is unchanged. To remove a name, set it to an empty string
+    #   (`""`).
+    #
+    #    </note>
+    #
+    #   If you specify a name that is already associated with another policy
+    #   template in the policy store, you receive a `ConflictException`
+    #   error.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/UpdatePolicyTemplateInput AWS API Documentation
     #
     class UpdatePolicyTemplateInput < Struct.new(
       :policy_store_id,
       :policy_template_id,
       :description,
-      :statement)
+      :statement,
+      :name)
       SENSITIVE = [:description, :statement]
       include Aws::Structure
     end

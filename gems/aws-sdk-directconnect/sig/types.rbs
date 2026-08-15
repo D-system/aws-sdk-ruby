@@ -66,6 +66,12 @@ module Aws::DirectConnect
       SENSITIVE: []
     end
 
+    class AsPathSegment
+      attr_accessor path_type: ("seq" | "set")
+      attr_accessor path: ::Array[::Integer]
+      SENSITIVE: []
+    end
+
     class AssociateConnectionWithLagRequest
       attr_accessor connection_id: ::String
       attr_accessor lag_id: ::String
@@ -116,6 +122,7 @@ module Aws::DirectConnect
     class BGPPeer
       attr_accessor bgp_peer_id: ::String
       attr_accessor asn: ::Integer
+      attr_accessor asn_long: ::Integer
       attr_accessor auth_key: ::String
       attr_accessor address_family: ("ipv4" | "ipv6")
       attr_accessor amazon_address: ::String
@@ -155,7 +162,7 @@ module Aws::DirectConnect
     end
 
     class ConfirmPrivateVirtualInterfaceResponse
-      attr_accessor virtual_interface_state: ("confirming" | "verifying" | "pending" | "available" | "down" | "deleting" | "deleted" | "rejected" | "unknown")
+      attr_accessor virtual_interface_state: ("confirming" | "verifying" | "pending" | "available" | "down" | "testing" | "deleting" | "deleted" | "rejected" | "unknown")
       SENSITIVE: []
     end
 
@@ -165,7 +172,7 @@ module Aws::DirectConnect
     end
 
     class ConfirmPublicVirtualInterfaceResponse
-      attr_accessor virtual_interface_state: ("confirming" | "verifying" | "pending" | "available" | "down" | "deleting" | "deleted" | "rejected" | "unknown")
+      attr_accessor virtual_interface_state: ("confirming" | "verifying" | "pending" | "available" | "down" | "testing" | "deleting" | "deleted" | "rejected" | "unknown")
       SENSITIVE: []
     end
 
@@ -176,7 +183,7 @@ module Aws::DirectConnect
     end
 
     class ConfirmTransitVirtualInterfaceResponse
-      attr_accessor virtual_interface_state: ("confirming" | "verifying" | "pending" | "available" | "down" | "deleting" | "deleted" | "rejected" | "unknown")
+      attr_accessor virtual_interface_state: ("confirming" | "verifying" | "pending" | "available" | "down" | "testing" | "deleting" | "deleted" | "rejected" | "unknown")
       SENSITIVE: []
     end
 
@@ -203,11 +210,14 @@ module Aws::DirectConnect
       attr_accessor port_encryption_status: ::String
       attr_accessor encryption_mode: ::String
       attr_accessor mac_sec_keys: ::Array[Types::MacSecKey]
+      attr_accessor rate_limiter_status: Types::RateLimiterStatus
+      attr_accessor partner_interconnect_mac_sec_capable: bool
       SENSITIVE: []
     end
 
     class Connections
       attr_accessor connections: ::Array[Types::Connection]
+      attr_accessor next_token: ::String
       SENSITIVE: []
     end
 
@@ -262,6 +272,7 @@ module Aws::DirectConnect
 
     class CreateDirectConnectGatewayRequest
       attr_accessor direct_connect_gateway_name: ::String
+      attr_accessor tags: ::Array[Types::Tag]
       attr_accessor amazon_side_asn: ::Integer
       SENSITIVE: []
     end
@@ -278,6 +289,7 @@ module Aws::DirectConnect
       attr_accessor lag_id: ::String
       attr_accessor tags: ::Array[Types::Tag]
       attr_accessor provider_name: ::String
+      attr_accessor request_mac_sec: bool
       SENSITIVE: []
     end
 
@@ -326,6 +338,7 @@ module Aws::DirectConnect
     class DeleteBGPPeerRequest
       attr_accessor virtual_interface_id: ::String
       attr_accessor asn: ::Integer
+      attr_accessor asn_long: ::Integer
       attr_accessor customer_address: ::String
       attr_accessor bgp_peer_id: ::String
       SENSITIVE: []
@@ -394,7 +407,7 @@ module Aws::DirectConnect
     end
 
     class DeleteVirtualInterfaceResponse
-      attr_accessor virtual_interface_state: ("confirming" | "verifying" | "pending" | "available" | "down" | "deleting" | "deleted" | "rejected" | "unknown")
+      attr_accessor virtual_interface_state: ("confirming" | "verifying" | "pending" | "available" | "down" | "testing" | "deleting" | "deleted" | "rejected" | "unknown")
       SENSITIVE: []
     end
 
@@ -417,6 +430,8 @@ module Aws::DirectConnect
 
     class DescribeConnectionsRequest
       attr_accessor connection_id: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
       SENSITIVE: []
     end
 
@@ -486,6 +501,8 @@ module Aws::DirectConnect
 
     class DescribeHostedConnectionsRequest
       attr_accessor connection_id: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
       SENSITIVE: []
     end
 
@@ -503,11 +520,15 @@ module Aws::DirectConnect
 
     class DescribeInterconnectsRequest
       attr_accessor interconnect_id: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
       SENSITIVE: []
     end
 
     class DescribeLagsRequest
       attr_accessor lag_id: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
       SENSITIVE: []
     end
 
@@ -545,6 +566,8 @@ module Aws::DirectConnect
     class DescribeVirtualInterfacesRequest
       attr_accessor connection_id: ::String
       attr_accessor virtual_interface_id: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
       SENSITIVE: []
     end
 
@@ -560,6 +583,7 @@ module Aws::DirectConnect
       attr_accessor owner_account: ::String
       attr_accessor direct_connect_gateway_state: ("pending" | "available" | "deleting" | "deleted")
       attr_accessor state_change_error: ::String
+      attr_accessor tags: ::Array[Types::Tag]
       SENSITIVE: []
     end
 
@@ -642,11 +666,16 @@ module Aws::DirectConnect
       attr_accessor has_logical_redundancy: ("unknown" | "yes" | "no")
       attr_accessor tags: ::Array[Types::Tag]
       attr_accessor provider_name: ::String
+      attr_accessor mac_sec_capable: bool
+      attr_accessor port_encryption_status: ::String
+      attr_accessor encryption_mode: ::String
+      attr_accessor mac_sec_keys: ::Array[Types::MacSecKey]
       SENSITIVE: []
     end
 
     class Interconnects
       attr_accessor interconnects: ::Array[Types::Interconnect]
+      attr_accessor next_token: ::String
       SENSITIVE: []
     end
 
@@ -672,11 +701,31 @@ module Aws::DirectConnect
       attr_accessor mac_sec_capable: bool
       attr_accessor encryption_mode: ::String
       attr_accessor mac_sec_keys: ::Array[Types::MacSecKey]
+      attr_accessor rate_limiter_status: Types::RateLimiterStatus
       SENSITIVE: []
     end
 
     class Lags
       attr_accessor lags: ::Array[Types::Lag]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class LimitExceededException < Aws::EmptyStructure
+    end
+
+    class ListVirtualInterfaceRoutesRequest
+      attr_accessor virtual_interface_id: ::String
+      attr_accessor filters: Types::RouteFilters
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListVirtualInterfaceRoutesResponse
+      attr_accessor virtual_interface_id: ::String
+      attr_accessor routes: ::Array[Types::Route]
+      attr_accessor next_token: ::String
       SENSITIVE: []
     end
 
@@ -727,6 +776,7 @@ module Aws::DirectConnect
 
     class NewBGPPeer
       attr_accessor asn: ::Integer
+      attr_accessor asn_long: ::Integer
       attr_accessor auth_key: ::String
       attr_accessor address_family: ("ipv4" | "ipv6")
       attr_accessor amazon_address: ::String
@@ -738,6 +788,7 @@ module Aws::DirectConnect
       attr_accessor virtual_interface_name: ::String
       attr_accessor vlan: ::Integer
       attr_accessor asn: ::Integer
+      attr_accessor asn_long: ::Integer
       attr_accessor mtu: ::Integer
       attr_accessor auth_key: ::String
       attr_accessor amazon_address: ::String
@@ -747,6 +798,7 @@ module Aws::DirectConnect
       attr_accessor direct_connect_gateway_id: ::String
       attr_accessor tags: ::Array[Types::Tag]
       attr_accessor enable_site_link: bool
+      attr_accessor rate_limit: ::String
       SENSITIVE: []
     end
 
@@ -754,12 +806,14 @@ module Aws::DirectConnect
       attr_accessor virtual_interface_name: ::String
       attr_accessor vlan: ::Integer
       attr_accessor asn: ::Integer
+      attr_accessor asn_long: ::Integer
       attr_accessor mtu: ::Integer
       attr_accessor auth_key: ::String
       attr_accessor amazon_address: ::String
       attr_accessor address_family: ("ipv4" | "ipv6")
       attr_accessor customer_address: ::String
       attr_accessor tags: ::Array[Types::Tag]
+      attr_accessor rate_limit: ::String
       SENSITIVE: []
     end
 
@@ -767,12 +821,14 @@ module Aws::DirectConnect
       attr_accessor virtual_interface_name: ::String
       attr_accessor vlan: ::Integer
       attr_accessor asn: ::Integer
+      attr_accessor asn_long: ::Integer
       attr_accessor auth_key: ::String
       attr_accessor amazon_address: ::String
       attr_accessor customer_address: ::String
       attr_accessor address_family: ("ipv4" | "ipv6")
       attr_accessor route_filter_prefixes: ::Array[Types::RouteFilterPrefix]
       attr_accessor tags: ::Array[Types::Tag]
+      attr_accessor rate_limit: ::String
       SENSITIVE: []
     end
 
@@ -780,12 +836,14 @@ module Aws::DirectConnect
       attr_accessor virtual_interface_name: ::String
       attr_accessor vlan: ::Integer
       attr_accessor asn: ::Integer
+      attr_accessor asn_long: ::Integer
       attr_accessor auth_key: ::String
       attr_accessor amazon_address: ::String
       attr_accessor customer_address: ::String
       attr_accessor address_family: ("ipv4" | "ipv6")
       attr_accessor route_filter_prefixes: ::Array[Types::RouteFilterPrefix]
       attr_accessor tags: ::Array[Types::Tag]
+      attr_accessor rate_limit: ::String
       SENSITIVE: []
     end
 
@@ -793,6 +851,7 @@ module Aws::DirectConnect
       attr_accessor virtual_interface_name: ::String
       attr_accessor vlan: ::Integer
       attr_accessor asn: ::Integer
+      attr_accessor asn_long: ::Integer
       attr_accessor mtu: ::Integer
       attr_accessor auth_key: ::String
       attr_accessor amazon_address: ::String
@@ -801,6 +860,7 @@ module Aws::DirectConnect
       attr_accessor direct_connect_gateway_id: ::String
       attr_accessor tags: ::Array[Types::Tag]
       attr_accessor enable_site_link: bool
+      attr_accessor rate_limit: ::String
       SENSITIVE: []
     end
 
@@ -808,12 +868,22 @@ module Aws::DirectConnect
       attr_accessor virtual_interface_name: ::String
       attr_accessor vlan: ::Integer
       attr_accessor asn: ::Integer
+      attr_accessor asn_long: ::Integer
       attr_accessor mtu: ::Integer
       attr_accessor auth_key: ::String
       attr_accessor amazon_address: ::String
       attr_accessor customer_address: ::String
       attr_accessor address_family: ("ipv4" | "ipv6")
       attr_accessor tags: ::Array[Types::Tag]
+      attr_accessor rate_limit: ::String
+      SENSITIVE: []
+    end
+
+    class RateLimiterStatus
+      attr_accessor max_allowed: ::Integer
+      attr_accessor in_use: ::Integer
+      attr_accessor remaining: ::Integer
+      attr_accessor total_bandwidth: ::String
       SENSITIVE: []
     end
 
@@ -823,8 +893,28 @@ module Aws::DirectConnect
       SENSITIVE: []
     end
 
+    class Route
+      attr_accessor cidr: ::String
+      attr_accessor route_direction: ("accepted" | "advertised")
+      attr_accessor address_family: ("ipv4" | "ipv6")
+      attr_accessor as_path: ::Array[Types::AsPathSegment]
+      attr_accessor communities: ::Array[::String]
+      attr_accessor aws_logical_device_id: ::String
+      attr_accessor route_installed_at: ::Time
+      SENSITIVE: []
+    end
+
     class RouteFilterPrefix
       attr_accessor cidr: ::String
+      SENSITIVE: []
+    end
+
+    class RouteFilters
+      attr_accessor route_direction: ("accepted" | "advertised")
+      attr_accessor address_family: ("ipv4" | "ipv6")
+      attr_accessor cidrs: ::Array[::String]
+      attr_accessor as_path: ::Array[::Integer]
+      attr_accessor communities: ::Array[::String]
       SENSITIVE: []
     end
 
@@ -930,6 +1020,7 @@ module Aws::DirectConnect
       attr_accessor mtu: ::Integer
       attr_accessor enable_site_link: bool
       attr_accessor virtual_interface_name: ::String
+      attr_accessor rate_limit: ::String
       SENSITIVE: []
     end
 
@@ -953,12 +1044,13 @@ module Aws::DirectConnect
       attr_accessor virtual_interface_name: ::String
       attr_accessor vlan: ::Integer
       attr_accessor asn: ::Integer
+      attr_accessor asn_long: ::Integer
       attr_accessor amazon_side_asn: ::Integer
       attr_accessor auth_key: ::String
       attr_accessor amazon_address: ::String
       attr_accessor customer_address: ::String
       attr_accessor address_family: ("ipv4" | "ipv6")
-      attr_accessor virtual_interface_state: ("confirming" | "verifying" | "pending" | "available" | "down" | "deleting" | "deleted" | "rejected" | "unknown")
+      attr_accessor virtual_interface_state: ("confirming" | "verifying" | "pending" | "available" | "down" | "testing" | "deleting" | "deleted" | "rejected" | "unknown")
       attr_accessor customer_router_config: ::String
       attr_accessor mtu: ::Integer
       attr_accessor jumbo_frame_capable: bool
@@ -971,6 +1063,7 @@ module Aws::DirectConnect
       attr_accessor aws_logical_device_id: ::String
       attr_accessor tags: ::Array[Types::Tag]
       attr_accessor site_link_enabled: bool
+      attr_accessor rate_limit: ::String
       SENSITIVE: []
     end
 
@@ -988,6 +1081,7 @@ module Aws::DirectConnect
 
     class VirtualInterfaces
       attr_accessor virtual_interfaces: ::Array[Types::VirtualInterface]
+      attr_accessor next_token: ::String
       SENSITIVE: []
     end
   end

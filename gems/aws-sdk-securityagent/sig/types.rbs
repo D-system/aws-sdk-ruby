@@ -1,0 +1,2546 @@
+# WARNING ABOUT GENERATED CODE
+#
+# This file is generated. See the contributing guide for more information:
+# https://github.com/aws/aws-sdk-ruby/blob/version-3/CONTRIBUTING.md
+#
+# WARNING ABOUT GENERATED CODE
+
+module Aws::SecurityAgent
+  module Types
+
+    class AWSResources
+      attr_accessor vpcs: ::Array[Types::VpcConfig]
+      attr_accessor log_groups: ::Array[::String]
+      attr_accessor s3_buckets: ::Array[::String]
+      attr_accessor secret_arns: ::Array[::String]
+      attr_accessor lambda_function_arns: ::Array[::String]
+      attr_accessor iam_roles: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class AccessDeniedException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class Actor
+      attr_accessor identifier: ::String
+      attr_accessor uris: ::Array[::String]
+      attr_accessor authentication: Types::Authentication
+      attr_accessor description: ::String
+      attr_accessor enable_email_mfa: bool
+      attr_accessor mfa_forwarding_address: ::String
+      SENSITIVE: [:mfa_forwarding_address]
+    end
+
+    class AddArtifactInput
+      attr_accessor agent_space_id: ::String
+      attr_accessor artifact_content: ::String
+      attr_accessor artifact_type: ("TXT" | "PNG" | "JPEG" | "MD" | "PDF" | "DOCX" | "DOC" | "JSON" | "YAML")
+      attr_accessor file_name: ::String
+      SENSITIVE: []
+    end
+
+    class AddArtifactOutput
+      attr_accessor artifact_id: ::String
+      SENSITIVE: []
+    end
+
+    class AgentSpace
+      attr_accessor agent_space_id: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor aws_resources: Types::AWSResources
+      attr_accessor target_domain_ids: ::Array[::String]
+      attr_accessor code_review_settings: Types::CodeReviewSettings
+      attr_accessor kms_key_id: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class AgentSpaceSummary
+      attr_accessor agent_space_id: ::String
+      attr_accessor name: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class ApplicationSummary
+      attr_accessor application_id: ::String
+      attr_accessor application_name: ::String
+      attr_accessor domain: ::String
+      attr_accessor default_kms_key_id: ::String
+      SENSITIVE: []
+    end
+
+    class Artifact
+      attr_accessor contents: ::String
+      attr_accessor type: ("TXT" | "PNG" | "JPEG" | "MD" | "PDF" | "DOCX" | "DOC" | "JSON" | "YAML")
+      SENSITIVE: []
+    end
+
+    class ArtifactMetadataItem
+      attr_accessor agent_space_id: ::String
+      attr_accessor artifact_id: ::String
+      attr_accessor file_name: ::String
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class ArtifactSummary
+      attr_accessor artifact_id: ::String
+      attr_accessor file_name: ::String
+      attr_accessor artifact_type: ("TXT" | "PNG" | "JPEG" | "MD" | "PDF" | "DOCX" | "DOC" | "JSON" | "YAML")
+      SENSITIVE: []
+    end
+
+    class Assets
+      attr_accessor endpoints: ::Array[Types::Endpoint]
+      attr_accessor actors: ::Array[Types::Actor]
+      attr_accessor documents: ::Array[Types::DocumentInfo]
+      attr_accessor source_code: ::Array[Types::SourceCodeRepository]
+      attr_accessor integrated_repositories: ::Array[Types::IntegratedRepository]
+      SENSITIVE: []
+    end
+
+    class Authentication
+      attr_accessor provider_type: ("SECRETS_MANAGER" | "AWS_LAMBDA" | "AWS_IAM_ROLE" | "AWS_INTERNAL")
+      attr_accessor value: ::String
+      SENSITIVE: []
+    end
+
+    class BatchCreateSecurityRequirementResult
+      attr_accessor pack_id: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor domain: ::String
+      attr_accessor evaluation: ::String
+      attr_accessor remediation: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class BatchCreateSecurityRequirementsInput
+      attr_accessor pack_id: ::String
+      attr_accessor security_requirements: ::Array[Types::CreateSecurityRequirementEntry]
+      SENSITIVE: []
+    end
+
+    class BatchCreateSecurityRequirementsOutput
+      attr_accessor security_requirements: ::Array[Types::BatchCreateSecurityRequirementResult]
+      attr_accessor errors: ::Array[Types::BatchSecurityRequirementError]
+      SENSITIVE: []
+    end
+
+    class BatchDeleteCodeReviewsInput
+      attr_accessor code_review_ids: ::Array[::String]
+      attr_accessor agent_space_id: ::String
+      SENSITIVE: []
+    end
+
+    class BatchDeleteCodeReviewsOutput
+      attr_accessor deleted: ::Array[::String]
+      attr_accessor failed: ::Array[Types::DeleteCodeReviewFailure]
+      SENSITIVE: []
+    end
+
+    class BatchDeletePentestsInput
+      attr_accessor pentest_ids: ::Array[::String]
+      attr_accessor agent_space_id: ::String
+      SENSITIVE: []
+    end
+
+    class BatchDeletePentestsOutput
+      attr_accessor deleted: ::Array[Types::Pentest]
+      attr_accessor failed: ::Array[Types::DeletePentestFailure]
+      SENSITIVE: []
+    end
+
+    class BatchDeleteSecurityRequirementsInput
+      attr_accessor pack_id: ::String
+      attr_accessor security_requirement_names: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class BatchDeleteSecurityRequirementsOutput
+      attr_accessor deleted_security_requirement_names: ::Array[::String]
+      attr_accessor errors: ::Array[Types::BatchSecurityRequirementError]
+      SENSITIVE: []
+    end
+
+    class BatchDeleteThreatModelsInput
+      attr_accessor threat_model_ids: ::Array[::String]
+      attr_accessor agent_space_id: ::String
+      SENSITIVE: []
+    end
+
+    class BatchDeleteThreatModelsOutput
+      attr_accessor deleted: ::Array[::String]
+      attr_accessor failed: ::Array[Types::DeleteThreatModelFailure]
+      SENSITIVE: []
+    end
+
+    class BatchGetAgentSpacesInput
+      attr_accessor agent_space_ids: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class BatchGetAgentSpacesOutput
+      attr_accessor agent_spaces: ::Array[Types::AgentSpace]
+      attr_accessor not_found: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class BatchGetArtifactMetadataInput
+      attr_accessor agent_space_id: ::String
+      attr_accessor artifact_ids: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class BatchGetArtifactMetadataOutput
+      attr_accessor artifact_metadata_list: ::Array[Types::ArtifactMetadataItem]
+      SENSITIVE: []
+    end
+
+    class BatchGetCodeReviewJobTasksInput
+      attr_accessor agent_space_id: ::String
+      attr_accessor code_review_job_task_ids: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class BatchGetCodeReviewJobTasksOutput
+      attr_accessor code_review_job_tasks: ::Array[Types::CodeReviewJobTask]
+      attr_accessor not_found: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class BatchGetCodeReviewJobsInput
+      attr_accessor code_review_job_ids: ::Array[::String]
+      attr_accessor agent_space_id: ::String
+      SENSITIVE: []
+    end
+
+    class BatchGetCodeReviewJobsOutput
+      attr_accessor code_review_jobs: ::Array[Types::CodeReviewJob]
+      attr_accessor not_found: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class BatchGetCodeReviewsInput
+      attr_accessor code_review_ids: ::Array[::String]
+      attr_accessor agent_space_id: ::String
+      SENSITIVE: []
+    end
+
+    class BatchGetCodeReviewsOutput
+      attr_accessor code_reviews: ::Array[Types::CodeReview]
+      attr_accessor not_found: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class BatchGetFindingsInput
+      attr_accessor finding_ids: ::Array[::String]
+      attr_accessor agent_space_id: ::String
+      SENSITIVE: []
+    end
+
+    class BatchGetFindingsOutput
+      attr_accessor findings: ::Array[Types::Finding]
+      attr_accessor not_found: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class BatchGetPentestJobTasksInput
+      attr_accessor agent_space_id: ::String
+      attr_accessor task_ids: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class BatchGetPentestJobTasksOutput
+      attr_accessor tasks: ::Array[Types::Task]
+      attr_accessor not_found: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class BatchGetPentestJobsInput
+      attr_accessor pentest_job_ids: ::Array[::String]
+      attr_accessor agent_space_id: ::String
+      SENSITIVE: []
+    end
+
+    class BatchGetPentestJobsOutput
+      attr_accessor pentest_jobs: ::Array[Types::PentestJob]
+      attr_accessor not_found: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class BatchGetPentestsInput
+      attr_accessor pentest_ids: ::Array[::String]
+      attr_accessor agent_space_id: ::String
+      SENSITIVE: []
+    end
+
+    class BatchGetPentestsOutput
+      attr_accessor pentests: ::Array[Types::Pentest]
+      attr_accessor not_found: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class BatchGetSecurityRequirementResult
+      attr_accessor pack_id: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor domain: ::String
+      attr_accessor evaluation: ::String
+      attr_accessor remediation: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class BatchGetSecurityRequirementsInput
+      attr_accessor pack_id: ::String
+      attr_accessor security_requirement_names: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class BatchGetSecurityRequirementsOutput
+      attr_accessor security_requirements: ::Array[Types::BatchGetSecurityRequirementResult]
+      attr_accessor errors: ::Array[Types::BatchSecurityRequirementError]
+      SENSITIVE: []
+    end
+
+    class BatchGetTargetDomainsInput
+      attr_accessor target_domain_ids: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class BatchGetTargetDomainsOutput
+      attr_accessor target_domains: ::Array[Types::TargetDomain]
+      attr_accessor not_found: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class BatchGetThreatModelJobTasksInput
+      attr_accessor agent_space_id: ::String
+      attr_accessor threat_model_job_task_ids: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class BatchGetThreatModelJobTasksOutput
+      attr_accessor threat_model_job_tasks: ::Array[Types::ThreatModelJobTask]
+      attr_accessor not_found: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class BatchGetThreatModelJobsInput
+      attr_accessor threat_model_job_ids: ::Array[::String]
+      attr_accessor agent_space_id: ::String
+      SENSITIVE: []
+    end
+
+    class BatchGetThreatModelJobsOutput
+      attr_accessor threat_model_jobs: ::Array[Types::ThreatModelJob]
+      attr_accessor not_found: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class BatchGetThreatModelsInput
+      attr_accessor threat_model_ids: ::Array[::String]
+      attr_accessor agent_space_id: ::String
+      SENSITIVE: []
+    end
+
+    class BatchGetThreatModelsOutput
+      attr_accessor threat_models: ::Array[Types::ThreatModel]
+      attr_accessor not_found: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class BatchGetThreatsInput
+      attr_accessor threat_ids: ::Array[::String]
+      attr_accessor agent_space_id: ::String
+      SENSITIVE: []
+    end
+
+    class BatchGetThreatsOutput
+      attr_accessor threats: ::Array[Types::Threat]
+      attr_accessor not_found: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class BatchSecurityRequirementError
+      attr_accessor security_requirement_name: ::String
+      attr_accessor code: ::String
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class BatchUpdateSecurityRequirementsInput
+      attr_accessor pack_id: ::String
+      attr_accessor security_requirements: ::Array[Types::UpdateSecurityRequirementEntry]
+      SENSITIVE: []
+    end
+
+    class BatchUpdateSecurityRequirementsOutput
+      attr_accessor updated_security_requirement_names: ::Array[::String]
+      attr_accessor errors: ::Array[Types::BatchSecurityRequirementError]
+      SENSITIVE: []
+    end
+
+    class BitbucketIntegrationInput
+      attr_accessor installation_id: ::String
+      attr_accessor workspace: ::String
+      attr_accessor code: ::String
+      attr_accessor state: ::String
+      SENSITIVE: []
+    end
+
+    class BitbucketRepositoryMetadata
+      attr_accessor name: ::String
+      attr_accessor provider_resource_id: ::String
+      attr_accessor workspace: ::String
+      attr_accessor access_type: ("PRIVATE" | "PUBLIC")
+      SENSITIVE: []
+    end
+
+    class BitbucketRepositoryResource
+      attr_accessor name: ::String
+      attr_accessor workspace: ::String
+      SENSITIVE: []
+    end
+
+    class BitbucketResourceCapabilities
+      attr_accessor leave_comments: bool
+      attr_accessor remediate_code: bool
+      SENSITIVE: []
+    end
+
+    class Category
+      attr_accessor name: ::String
+      attr_accessor is_primary: bool
+      SENSITIVE: []
+    end
+
+    class CloudWatchLog
+      attr_accessor log_group: ::String
+      attr_accessor log_stream: ::String
+      SENSITIVE: []
+    end
+
+    class CodeLocation
+      attr_accessor file_path: ::String
+      attr_accessor line_start: ::Integer
+      attr_accessor line_end: ::Integer
+      attr_accessor label: ::String
+      SENSITIVE: []
+    end
+
+    class CodeRemediationTask
+      attr_accessor status: ("IN_PROGRESS" | "COMPLETED" | "FAILED")
+      attr_accessor status_reason: ::String
+      attr_accessor task_details: ::Array[Types::CodeRemediationTaskDetails]
+      SENSITIVE: []
+    end
+
+    class CodeRemediationTaskDetails
+      attr_accessor repo_name: ::String
+      attr_accessor code_diff_link: ::String
+      attr_accessor pull_request_link: ::String
+      SENSITIVE: []
+    end
+
+    class CodeReview
+      attr_accessor code_review_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor title: ::String
+      attr_accessor assets: Types::Assets
+      attr_accessor service_role: ::String
+      attr_accessor log_config: Types::CloudWatchLog
+      attr_accessor code_remediation_strategy: ("AUTOMATIC" | "DISABLED")
+      attr_accessor validation_mode: ("DISABLED" | "SIMULATED")
+      attr_accessor max_task_hours: ::Float
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class CodeReviewJob
+      attr_accessor code_review_job_id: ::String
+      attr_accessor code_review_id: ::String
+      attr_accessor title: ::String
+      attr_accessor overview: ::String
+      attr_accessor status: ("IN_PROGRESS" | "STOPPING" | "STOPPED" | "FAILED" | "COMPLETED")
+      attr_accessor documents: ::Array[Types::DocumentInfo]
+      attr_accessor source_code: ::Array[Types::SourceCodeRepository]
+      attr_accessor steps: ::Array[Types::Step]
+      attr_accessor execution_context: ::Array[Types::ExecutionContext]
+      attr_accessor service_role: ::String
+      attr_accessor log_config: Types::CloudWatchLog
+      attr_accessor error_information: Types::ErrorInformation
+      attr_accessor integrated_repositories: ::Array[Types::IntegratedRepository]
+      attr_accessor code_remediation_strategy: ("AUTOMATIC" | "DISABLED")
+      attr_accessor max_task_hours: ::Float
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class CodeReviewJobSummary
+      attr_accessor code_review_job_id: ::String
+      attr_accessor code_review_id: ::String
+      attr_accessor title: ::String
+      attr_accessor status: ("IN_PROGRESS" | "STOPPING" | "STOPPED" | "FAILED" | "COMPLETED")
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class CodeReviewJobTask
+      attr_accessor task_id: ::String
+      attr_accessor code_review_id: ::String
+      attr_accessor code_review_job_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor title: ::String
+      attr_accessor description: ::String
+      attr_accessor categories: ::Array[Types::Category]
+      attr_accessor risk_type: ("CROSS_SITE_SCRIPTING" | "DEFAULT_CREDENTIALS" | "INSECURE_DIRECT_OBJECT_REFERENCE" | "PRIVILEGE_ESCALATION" | "SERVER_SIDE_TEMPLATE_INJECTION" | "COMMAND_INJECTION" | "CODE_INJECTION" | "SQL_INJECTION" | "ARBITRARY_FILE_UPLOAD" | "INSECURE_DESERIALIZATION" | "LOCAL_FILE_INCLUSION" | "INFORMATION_DISCLOSURE" | "PATH_TRAVERSAL" | "SERVER_SIDE_REQUEST_FORGERY" | "JSON_WEB_TOKEN_VULNERABILITIES" | "XML_EXTERNAL_ENTITY" | "FILE_DELETION" | "OTHER" | "GRAPHQL_VULNERABILITIES" | "BUSINESS_LOGIC_VULNERABILITIES" | "CRYPTOGRAPHIC_VULNERABILITIES" | "DENIAL_OF_SERVICE" | "FILE_ACCESS" | "FILE_CREATION" | "DATABASE_MODIFICATION" | "DATABASE_ACCESS" | "OUTBOUND_SERVICE_REQUEST" | "UNKNOWN")
+      attr_accessor execution_status: ("IN_PROGRESS" | "ABORTED" | "COMPLETED" | "INTERNAL_ERROR" | "FAILED")
+      attr_accessor logs_location: Types::LogLocation
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class CodeReviewJobTaskSummary
+      attr_accessor task_id: ::String
+      attr_accessor code_review_id: ::String
+      attr_accessor code_review_job_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor title: ::String
+      attr_accessor risk_type: ("CROSS_SITE_SCRIPTING" | "DEFAULT_CREDENTIALS" | "INSECURE_DIRECT_OBJECT_REFERENCE" | "PRIVILEGE_ESCALATION" | "SERVER_SIDE_TEMPLATE_INJECTION" | "COMMAND_INJECTION" | "CODE_INJECTION" | "SQL_INJECTION" | "ARBITRARY_FILE_UPLOAD" | "INSECURE_DESERIALIZATION" | "LOCAL_FILE_INCLUSION" | "INFORMATION_DISCLOSURE" | "PATH_TRAVERSAL" | "SERVER_SIDE_REQUEST_FORGERY" | "JSON_WEB_TOKEN_VULNERABILITIES" | "XML_EXTERNAL_ENTITY" | "FILE_DELETION" | "OTHER" | "GRAPHQL_VULNERABILITIES" | "BUSINESS_LOGIC_VULNERABILITIES" | "CRYPTOGRAPHIC_VULNERABILITIES" | "DENIAL_OF_SERVICE" | "FILE_ACCESS" | "FILE_CREATION" | "DATABASE_MODIFICATION" | "DATABASE_ACCESS" | "OUTBOUND_SERVICE_REQUEST" | "UNKNOWN")
+      attr_accessor execution_status: ("IN_PROGRESS" | "ABORTED" | "COMPLETED" | "INTERNAL_ERROR" | "FAILED")
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class CodeReviewSettings
+      attr_accessor controls_scanning: bool
+      attr_accessor general_purpose_scanning: bool
+      SENSITIVE: []
+    end
+
+    class CodeReviewSummary
+      attr_accessor code_review_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor title: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class ConflictException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class ConfluenceDocumentMetadata
+      attr_accessor name: ::String
+      attr_accessor provider_resource_id: ::String
+      attr_accessor space_key: ::String
+      attr_accessor page_id: ::String
+      attr_accessor title: ::String
+      attr_accessor space_title: ::String
+      SENSITIVE: []
+    end
+
+    class ConfluenceDocumentResource
+      attr_accessor name: ::String
+      attr_accessor space_key: ::String
+      attr_accessor page_id: ::String
+      attr_accessor title: ::String
+      attr_accessor space_title: ::String
+      SENSITIVE: []
+    end
+
+    class ConfluenceIntegrationInput
+      attr_accessor installation_id: ::String
+      attr_accessor code: ::String
+      attr_accessor state: ::String
+      attr_accessor site_url: ::String
+      SENSITIVE: []
+    end
+
+    class ConfluenceResourceCapabilities
+      attr_accessor fetch_document: bool
+      attr_accessor create_document: bool
+      attr_accessor update_document: bool
+      SENSITIVE: []
+    end
+
+    class CreateAgentSpaceInput
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor aws_resources: Types::AWSResources
+      attr_accessor target_domain_ids: ::Array[::String]
+      attr_accessor code_review_settings: Types::CodeReviewSettings
+      attr_accessor kms_key_id: ::String
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class CreateAgentSpaceOutput
+      attr_accessor agent_space_id: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor aws_resources: Types::AWSResources
+      attr_accessor target_domain_ids: ::Array[::String]
+      attr_accessor code_review_settings: Types::CodeReviewSettings
+      attr_accessor kms_key_id: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class CreateApplicationRequest
+      attr_accessor idc_instance_arn: ::String
+      attr_accessor role_arn: ::String
+      attr_accessor default_kms_key_id: ::String
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class CreateApplicationResponse
+      attr_accessor application_id: ::String
+      SENSITIVE: []
+    end
+
+    class CreateCodeReviewInput
+      attr_accessor title: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor assets: Types::Assets
+      attr_accessor service_role: ::String
+      attr_accessor log_config: Types::CloudWatchLog
+      attr_accessor code_remediation_strategy: ("AUTOMATIC" | "DISABLED")
+      attr_accessor validation_mode: ("DISABLED" | "SIMULATED")
+      attr_accessor max_task_hours: ::Float
+      SENSITIVE: []
+    end
+
+    class CreateCodeReviewOutput
+      attr_accessor code_review_id: ::String
+      attr_accessor title: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      attr_accessor assets: Types::Assets
+      attr_accessor service_role: ::String
+      attr_accessor log_config: Types::CloudWatchLog
+      attr_accessor agent_space_id: ::String
+      attr_accessor code_remediation_strategy: ("AUTOMATIC" | "DISABLED")
+      attr_accessor validation_mode: ("DISABLED" | "SIMULATED")
+      attr_accessor max_task_hours: ::Float
+      SENSITIVE: []
+    end
+
+    class CreateIntegrationInput
+      attr_accessor provider: ("GITHUB" | "GITLAB" | "BITBUCKET" | "CONFLUENCE")
+      attr_accessor input: Types::ProviderInput
+      attr_accessor integration_display_name: ::String
+      attr_accessor kms_key_id: ::String
+      attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor private_connection_name: ::String
+      SENSITIVE: []
+    end
+
+    class CreateIntegrationOutput
+      attr_accessor integration_id: ::String
+      SENSITIVE: []
+    end
+
+    class CreateMembershipRequest
+      attr_accessor application_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor membership_id: ::String
+      attr_accessor member_type: ("USER")
+      attr_accessor config: Types::MembershipConfig
+      SENSITIVE: []
+    end
+
+    class CreateMembershipResponse < Aws::EmptyStructure
+    end
+
+    class CreatePentestInput
+      attr_accessor title: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor assets: Types::Assets
+      attr_accessor exclude_risk_types: ::Array[("CROSS_SITE_SCRIPTING" | "DEFAULT_CREDENTIALS" | "INSECURE_DIRECT_OBJECT_REFERENCE" | "PRIVILEGE_ESCALATION" | "SERVER_SIDE_TEMPLATE_INJECTION" | "COMMAND_INJECTION" | "CODE_INJECTION" | "SQL_INJECTION" | "ARBITRARY_FILE_UPLOAD" | "INSECURE_DESERIALIZATION" | "LOCAL_FILE_INCLUSION" | "INFORMATION_DISCLOSURE" | "PATH_TRAVERSAL" | "SERVER_SIDE_REQUEST_FORGERY" | "JSON_WEB_TOKEN_VULNERABILITIES" | "XML_EXTERNAL_ENTITY" | "FILE_DELETION" | "OTHER" | "GRAPHQL_VULNERABILITIES" | "BUSINESS_LOGIC_VULNERABILITIES" | "CRYPTOGRAPHIC_VULNERABILITIES" | "DENIAL_OF_SERVICE" | "FILE_ACCESS" | "FILE_CREATION" | "DATABASE_MODIFICATION" | "DATABASE_ACCESS" | "OUTBOUND_SERVICE_REQUEST" | "UNKNOWN")]
+      attr_accessor service_role: ::String
+      attr_accessor log_config: Types::CloudWatchLog
+      attr_accessor vpc_config: Types::VpcConfig
+      attr_accessor network_traffic_config: Types::NetworkTrafficConfig
+      attr_accessor code_remediation_strategy: ("AUTOMATIC" | "DISABLED")
+      attr_accessor disable_managed_skills: ::Array[("FINDING_PERSONALIZATION" | "LOGIN_OPTIMIZATION")]
+      attr_accessor max_task_hours: ::Float
+      SENSITIVE: []
+    end
+
+    class CreatePentestOutput
+      attr_accessor pentest_id: ::String
+      attr_accessor title: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      attr_accessor assets: Types::Assets
+      attr_accessor exclude_risk_types: ::Array[("CROSS_SITE_SCRIPTING" | "DEFAULT_CREDENTIALS" | "INSECURE_DIRECT_OBJECT_REFERENCE" | "PRIVILEGE_ESCALATION" | "SERVER_SIDE_TEMPLATE_INJECTION" | "COMMAND_INJECTION" | "CODE_INJECTION" | "SQL_INJECTION" | "ARBITRARY_FILE_UPLOAD" | "INSECURE_DESERIALIZATION" | "LOCAL_FILE_INCLUSION" | "INFORMATION_DISCLOSURE" | "PATH_TRAVERSAL" | "SERVER_SIDE_REQUEST_FORGERY" | "JSON_WEB_TOKEN_VULNERABILITIES" | "XML_EXTERNAL_ENTITY" | "FILE_DELETION" | "OTHER" | "GRAPHQL_VULNERABILITIES" | "BUSINESS_LOGIC_VULNERABILITIES" | "CRYPTOGRAPHIC_VULNERABILITIES" | "DENIAL_OF_SERVICE" | "FILE_ACCESS" | "FILE_CREATION" | "DATABASE_MODIFICATION" | "DATABASE_ACCESS" | "OUTBOUND_SERVICE_REQUEST" | "UNKNOWN")]
+      attr_accessor service_role: ::String
+      attr_accessor log_config: Types::CloudWatchLog
+      attr_accessor agent_space_id: ::String
+      SENSITIVE: []
+    end
+
+    class CreatePrivateConnectionInput
+      attr_accessor private_connection_name: ::String
+      attr_accessor mode: Types::PrivateConnectionMode
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class CreatePrivateConnectionOutput
+      attr_accessor name: ::String
+      attr_accessor type: ("SERVICE_MANAGED" | "SELF_MANAGED")
+      attr_accessor status: ("ACTIVE" | "CREATE_IN_PROGRESS" | "CREATE_FAILED" | "DELETE_IN_PROGRESS" | "DELETE_FAILED")
+      attr_accessor resource_gateway_id: ::String
+      attr_accessor host_address: ::String
+      attr_accessor vpc_id: ::String
+      attr_accessor resource_configuration_id: ::String
+      attr_accessor certificate_expiry_time: ::Time
+      attr_accessor dns_resolution: ("PUBLIC" | "IN_VPC")
+      attr_accessor failure_message: ::String
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class CreateSecurityRequirementEntry
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor domain: ::String
+      attr_accessor evaluation: ::String
+      attr_accessor remediation: ::String
+      SENSITIVE: []
+    end
+
+    class CreateSecurityRequirementPackInput
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor status: ("ENABLED" | "DISABLED")
+      attr_accessor kms_key_id: ::String
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class CreateSecurityRequirementPackOutput
+      attr_accessor pack_id: ::String
+      attr_accessor status: ("ENABLED" | "DISABLED")
+      attr_accessor kms_key_id: ::String
+      SENSITIVE: []
+    end
+
+    class CreateTargetDomainInput
+      attr_accessor target_domain_name: ::String
+      attr_accessor verification_method: ("DNS_TXT" | "HTTP_ROUTE" | "PRIVATE_VPC")
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class CreateTargetDomainOutput
+      attr_accessor target_domain_id: ::String
+      attr_accessor domain_name: ::String
+      attr_accessor verification_status: ("PENDING" | "VERIFIED" | "FAILED" | "UNREACHABLE")
+      attr_accessor verification_status_reason: ::String
+      attr_accessor verification_details: Types::VerificationDetails
+      attr_accessor created_at: ::Time
+      attr_accessor verified_at: ::Time
+      SENSITIVE: []
+    end
+
+    class CreateThreatInput
+      attr_accessor agent_space_id: ::String
+      attr_accessor threat_job_id: ::String
+      attr_accessor title: ::String
+      attr_accessor statement: ::String
+      attr_accessor severity: ("CRITICAL" | "HIGH" | "MEDIUM" | "LOW" | "INFO")
+      attr_accessor comments: ::String
+      attr_accessor stride: ::Array[("SPOOFING" | "TAMPERING" | "REPUDIATION" | "INFORMATION_DISCLOSURE" | "DENIAL_OF_SERVICE" | "ELEVATION_OF_PRIVILEGE")]
+      attr_accessor threat_source: ::String
+      attr_accessor prerequisites: ::String
+      attr_accessor threat_action: ::String
+      attr_accessor threat_impact: ::String
+      attr_accessor impacted_goal: ::Array[::String]
+      attr_accessor impacted_assets: ::Array[::String]
+      attr_accessor anchor: Types::ThreatAnchorShape
+      attr_accessor evidence: ::Array[Types::ThreatEvidenceShape]
+      attr_accessor recommendation: ::String
+      SENSITIVE: []
+    end
+
+    class CreateThreatModelInput
+      attr_accessor title: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor description: ::String
+      attr_accessor assets: Types::Assets
+      attr_accessor scope_docs: ::Array[Types::DocumentInfo]
+      attr_accessor service_role: ::String
+      attr_accessor log_config: Types::CloudWatchLog
+      attr_accessor report_destination: Types::ReportDestination
+      SENSITIVE: []
+    end
+
+    class CreateThreatModelOutput
+      attr_accessor threat_model_id: ::String
+      attr_accessor title: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor description: ::String
+      attr_accessor assets: Types::Assets
+      attr_accessor scope_docs: ::Array[Types::DocumentInfo]
+      attr_accessor service_role: ::String
+      attr_accessor log_config: Types::CloudWatchLog
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class CreateThreatOutput
+      attr_accessor threat_id: ::String
+      attr_accessor threat_job_id: ::String
+      attr_accessor title: ::String
+      attr_accessor statement: ::String
+      attr_accessor severity: ("CRITICAL" | "HIGH" | "MEDIUM" | "LOW" | "INFO")
+      attr_accessor status: ("OPEN" | "RESOLVED" | "DISMISSED")
+      attr_accessor comments: ::String
+      attr_accessor stride: ::Array[("SPOOFING" | "TAMPERING" | "REPUDIATION" | "INFORMATION_DISCLOSURE" | "DENIAL_OF_SERVICE" | "ELEVATION_OF_PRIVILEGE")]
+      attr_accessor threat_source: ::String
+      attr_accessor prerequisites: ::String
+      attr_accessor threat_action: ::String
+      attr_accessor threat_impact: ::String
+      attr_accessor impacted_goal: ::Array[::String]
+      attr_accessor impacted_assets: ::Array[::String]
+      attr_accessor anchor: Types::ThreatAnchorShape
+      attr_accessor evidence: ::Array[Types::ThreatEvidenceShape]
+      attr_accessor recommendation: ::String
+      attr_accessor created_by: ("CUSTOMER" | "AGENT")
+      attr_accessor updated_by: ("CUSTOMER" | "AGENT")
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class CustomHeader
+      attr_accessor name: ::String
+      attr_accessor value: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteAgentSpaceInput
+      attr_accessor agent_space_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteAgentSpaceOutput
+      attr_accessor agent_space_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteApplicationRequest
+      attr_accessor application_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteArtifactInput
+      attr_accessor agent_space_id: ::String
+      attr_accessor artifact_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteArtifactOutput < Aws::EmptyStructure
+    end
+
+    class DeleteCodeReviewFailure
+      attr_accessor code_review_id: ::String
+      attr_accessor reason: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteIntegrationInput
+      attr_accessor integration_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteIntegrationOutput < Aws::EmptyStructure
+    end
+
+    class DeleteMembershipRequest
+      attr_accessor application_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor membership_id: ::String
+      attr_accessor member_type: ("USER")
+      SENSITIVE: []
+    end
+
+    class DeleteMembershipResponse < Aws::EmptyStructure
+    end
+
+    class DeletePentestFailure
+      attr_accessor pentest_id: ::String
+      attr_accessor reason: ::String
+      SENSITIVE: []
+    end
+
+    class DeletePrivateConnectionInput
+      attr_accessor private_connection_name: ::String
+      SENSITIVE: []
+    end
+
+    class DeletePrivateConnectionOutput
+      attr_accessor name: ::String
+      attr_accessor type: ("SERVICE_MANAGED" | "SELF_MANAGED")
+      attr_accessor status: ("ACTIVE" | "CREATE_IN_PROGRESS" | "CREATE_FAILED" | "DELETE_IN_PROGRESS" | "DELETE_FAILED")
+      attr_accessor resource_gateway_id: ::String
+      attr_accessor host_address: ::String
+      attr_accessor vpc_id: ::String
+      attr_accessor resource_configuration_id: ::String
+      attr_accessor certificate_expiry_time: ::Time
+      attr_accessor dns_resolution: ("PUBLIC" | "IN_VPC")
+      attr_accessor failure_message: ::String
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class DeleteSecurityRequirementPackInput
+      attr_accessor pack_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteSecurityRequirementPackOutput < Aws::EmptyStructure
+    end
+
+    class DeleteTargetDomainInput
+      attr_accessor target_domain_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteTargetDomainOutput
+      attr_accessor target_domain_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteThreatModelFailure
+      attr_accessor threat_model_id: ::String
+      attr_accessor reason: ::String
+      SENSITIVE: []
+    end
+
+    class DescribePrivateConnectionInput
+      attr_accessor private_connection_name: ::String
+      SENSITIVE: []
+    end
+
+    class DescribePrivateConnectionOutput
+      attr_accessor name: ::String
+      attr_accessor type: ("SERVICE_MANAGED" | "SELF_MANAGED")
+      attr_accessor status: ("ACTIVE" | "CREATE_IN_PROGRESS" | "CREATE_FAILED" | "DELETE_IN_PROGRESS" | "DELETE_FAILED")
+      attr_accessor resource_gateway_id: ::String
+      attr_accessor host_address: ::String
+      attr_accessor vpc_id: ::String
+      attr_accessor resource_configuration_id: ::String
+      attr_accessor certificate_expiry_time: ::Time
+      attr_accessor dns_resolution: ("PUBLIC" | "IN_VPC")
+      attr_accessor failure_message: ::String
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class DiffSource
+      attr_accessor s3_uri: ::String
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class S3Uri < DiffSource
+      end
+      class Unknown < DiffSource
+      end
+    end
+
+    class DiscoveredEndpoint
+      attr_accessor uri: ::String
+      attr_accessor pentest_job_id: ::String
+      attr_accessor task_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor evidence: ::String
+      attr_accessor operation: ::String
+      attr_accessor description: ::String
+      SENSITIVE: []
+    end
+
+    class DnsVerification
+      attr_accessor token: ::String
+      attr_accessor dns_record_name: ::String
+      attr_accessor dns_record_type: ("TXT")
+      SENSITIVE: []
+    end
+
+    class DocumentInfo
+      attr_accessor s3_location: ::String
+      attr_accessor artifact_id: ::String
+      attr_accessor integrated_document: Types::IntegratedDocument
+      SENSITIVE: []
+    end
+
+    class Endpoint
+      attr_accessor uri: ::String
+      SENSITIVE: []
+    end
+
+    class ErrorInformation
+      attr_accessor code: ("CLIENT_ERROR" | "INTERNAL_ERROR" | "STOPPED_BY_USER")
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class ExecutionContext
+      attr_accessor context_type: ("ERROR" | "CLIENT_ERROR" | "WARNING" | "INFO")
+      attr_accessor context: ::String
+      attr_accessor timestamp: ::Time
+      SENSITIVE: []
+    end
+
+    class Finding
+      attr_accessor finding_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor pentest_id: ::String
+      attr_accessor pentest_job_id: ::String
+      attr_accessor code_review_id: ::String
+      attr_accessor code_review_job_id: ::String
+      attr_accessor task_id: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor status: ("ACTIVE" | "RESOLVED" | "ACCEPTED" | "FALSE_POSITIVE")
+      attr_accessor risk_type: ::String
+      attr_accessor risk_level: ("UNKNOWN" | "INFORMATIONAL" | "LOW" | "MEDIUM" | "HIGH" | "CRITICAL")
+      attr_accessor risk_score: ::String
+      attr_accessor reasoning: ::String
+      attr_accessor confidence: ("FALSE_POSITIVE" | "UNCONFIRMED" | "LOW" | "MEDIUM" | "HIGH")
+      attr_accessor validation_status: ("CONFIRMED" | "NOT_REPRODUCED" | "VALIDATION_FAILED" | "VALIDATING" | "NOT_VALIDATED")
+      attr_accessor attack_script: ::String
+      attr_accessor code_remediation_task: Types::CodeRemediationTask
+      attr_accessor last_updated_by: ::String
+      attr_accessor customer_note: ::String
+      attr_accessor code_locations: ::Array[Types::CodeLocation]
+      attr_accessor verification_script: Types::VerificationScript
+      attr_accessor alignment_rationale: ::String
+      attr_accessor revalidation_job_ids: ::Array[::String]
+      attr_accessor original_finding_id: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class FindingSummary
+      attr_accessor finding_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor pentest_id: ::String
+      attr_accessor pentest_job_id: ::String
+      attr_accessor code_review_id: ::String
+      attr_accessor code_review_job_id: ::String
+      attr_accessor name: ::String
+      attr_accessor status: ("ACTIVE" | "RESOLVED" | "ACCEPTED" | "FALSE_POSITIVE")
+      attr_accessor risk_type: ::String
+      attr_accessor risk_level: ("UNKNOWN" | "INFORMATIONAL" | "LOW" | "MEDIUM" | "HIGH" | "CRITICAL")
+      attr_accessor confidence: ("FALSE_POSITIVE" | "UNCONFIRMED" | "LOW" | "MEDIUM" | "HIGH")
+      attr_accessor validation_status: ("CONFIRMED" | "NOT_REPRODUCED" | "VALIDATION_FAILED" | "VALIDATING" | "NOT_VALIDATED")
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class GetApplicationRequest
+      attr_accessor application_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetApplicationResponse
+      attr_accessor application_id: ::String
+      attr_accessor domain: ::String
+      attr_accessor application_name: ::String
+      attr_accessor idc_configuration: Types::IdCConfiguration
+      attr_accessor role_arn: ::String
+      attr_accessor default_kms_key_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetArtifactInput
+      attr_accessor agent_space_id: ::String
+      attr_accessor artifact_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetArtifactOutput
+      attr_accessor agent_space_id: ::String
+      attr_accessor artifact_id: ::String
+      attr_accessor artifact: Types::Artifact
+      attr_accessor file_name: ::String
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class GetIntegrationInput
+      attr_accessor integration_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetIntegrationOutput
+      attr_accessor integration_id: ::String
+      attr_accessor installation_id: ::String
+      attr_accessor provider: ("GITHUB" | "GITLAB" | "BITBUCKET" | "CONFLUENCE")
+      attr_accessor provider_type: ("SOURCE_CODE" | "DOCUMENTATION")
+      attr_accessor display_name: ::String
+      attr_accessor kms_key_id: ::String
+      attr_accessor target_url: ::String
+      attr_accessor private_connection_name: ::String
+      SENSITIVE: []
+    end
+
+    class GetSecurityRequirementPackInput
+      attr_accessor pack_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetSecurityRequirementPackOutput
+      attr_accessor pack_id: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor vendor_name: ::String
+      attr_accessor management_type: ("AWS_MANAGED" | "CUSTOMER_MANAGED")
+      attr_accessor status: ("ENABLED" | "DISABLED")
+      attr_accessor import_status: ("PENDING" | "IN_PROGRESS" | "FAILED" | "COMPLETED")
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      attr_accessor kms_key_id: ::String
+      SENSITIVE: []
+    end
+
+    class GitHubIntegrationInput
+      attr_accessor code: ::String
+      attr_accessor state: ::String
+      attr_accessor organization_name: ::String
+      attr_accessor target_url: ::String
+      attr_accessor installation_id: ::String
+      SENSITIVE: []
+    end
+
+    class GitHubRepositoryMetadata
+      attr_accessor name: ::String
+      attr_accessor provider_resource_id: ::String
+      attr_accessor owner: ::String
+      attr_accessor access_type: ("PRIVATE" | "PUBLIC")
+      SENSITIVE: []
+    end
+
+    class GitHubRepositoryResource
+      attr_accessor name: ::String
+      attr_accessor owner: ::String
+      SENSITIVE: []
+    end
+
+    class GitHubResourceCapabilities
+      attr_accessor leave_comments: bool
+      attr_accessor remediate_code: bool
+      SENSITIVE: []
+    end
+
+    class GitLabIntegrationInput
+      attr_accessor access_token: ::String
+      attr_accessor target_url: ::String
+      attr_accessor token_type: ("PERSONAL" | "GROUP")
+      attr_accessor group_id: ::String
+      SENSITIVE: [:access_token]
+    end
+
+    class GitLabRepositoryMetadata
+      attr_accessor name: ::String
+      attr_accessor provider_resource_id: ::String
+      attr_accessor namespace: ::String
+      attr_accessor access_type: ("PRIVATE" | "PUBLIC")
+      SENSITIVE: []
+    end
+
+    class GitLabRepositoryResource
+      attr_accessor name: ::String
+      attr_accessor namespace: ::String
+      SENSITIVE: []
+    end
+
+    class GitLabResourceCapabilities
+      attr_accessor leave_comments: bool
+      attr_accessor remediate_code: bool
+      SENSITIVE: []
+    end
+
+    class HttpVerification
+      attr_accessor token: ::String
+      attr_accessor route_path: ::String
+      SENSITIVE: []
+    end
+
+    class IdCConfiguration
+      attr_accessor idc_application_arn: ::String
+      attr_accessor idc_instance_arn: ::String
+      SENSITIVE: []
+    end
+
+    class ImportSecurityRequirementsInput
+      attr_accessor pack_id: ::String
+      attr_accessor input: Types::ImportSource
+      SENSITIVE: []
+    end
+
+    class ImportSecurityRequirementsOutput
+      attr_accessor pack_id: ::String
+      attr_accessor import_status: ("PENDING" | "IN_PROGRESS" | "FAILED" | "COMPLETED")
+      SENSITIVE: []
+    end
+
+    class ImportSource
+      attr_accessor documents: ::Array[Types::SecurityRequirementArtifact]
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class Documents < ImportSource
+      end
+      class Unknown < ImportSource
+      end
+    end
+
+    class InitiateProviderRegistrationInput
+      attr_accessor provider: ("GITHUB" | "GITLAB" | "BITBUCKET" | "CONFLUENCE")
+      SENSITIVE: []
+    end
+
+    class InitiateProviderRegistrationOutput
+      attr_accessor redirect_to: ::String
+      attr_accessor csrf_state: ::String
+      SENSITIVE: []
+    end
+
+    class IntegratedDocument
+      attr_accessor integration_id: ::String
+      attr_accessor resource_id: ::String
+      SENSITIVE: []
+    end
+
+    class IntegratedRepository
+      attr_accessor integration_id: ::String
+      attr_accessor provider_resource_id: ::String
+      attr_accessor branch: ::String
+      SENSITIVE: []
+    end
+
+    class IntegratedResource
+      attr_accessor github_repository: Types::GitHubRepositoryResource
+      attr_accessor gitlab_repository: Types::GitLabRepositoryResource
+      attr_accessor bitbucket_repository: Types::BitbucketRepositoryResource
+      attr_accessor confluence_document: Types::ConfluenceDocumentResource
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class GithubRepository < IntegratedResource
+      end
+      class GitlabRepository < IntegratedResource
+      end
+      class BitbucketRepository < IntegratedResource
+      end
+      class ConfluenceDocument < IntegratedResource
+      end
+      class Unknown < IntegratedResource
+      end
+    end
+
+    class IntegratedResourceInputItem
+      attr_accessor resource: Types::IntegratedResource
+      attr_accessor capabilities: Types::ProviderResourceCapabilities
+      SENSITIVE: []
+    end
+
+    class IntegratedResourceMetadata
+      attr_accessor github_repository: Types::GitHubRepositoryMetadata
+      attr_accessor gitlab_repository: Types::GitLabRepositoryMetadata
+      attr_accessor bitbucket_repository: Types::BitbucketRepositoryMetadata
+      attr_accessor confluence_document: Types::ConfluenceDocumentMetadata
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class GithubRepository < IntegratedResourceMetadata
+      end
+      class GitlabRepository < IntegratedResourceMetadata
+      end
+      class BitbucketRepository < IntegratedResourceMetadata
+      end
+      class ConfluenceDocument < IntegratedResourceMetadata
+      end
+      class Unknown < IntegratedResourceMetadata
+      end
+    end
+
+    class IntegratedResourceSummary
+      attr_accessor integration_id: ::String
+      attr_accessor resource: Types::IntegratedResourceMetadata
+      attr_accessor capabilities: Types::ProviderResourceCapabilities
+      SENSITIVE: []
+    end
+
+    class IntegrationFilter
+      attr_accessor provider: ("GITHUB" | "GITLAB" | "BITBUCKET" | "CONFLUENCE")
+      attr_accessor provider_type: ("SOURCE_CODE" | "DOCUMENTATION")
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class Provider < IntegrationFilter
+      end
+      class ProviderType < IntegrationFilter
+      end
+      class Unknown < IntegrationFilter
+      end
+    end
+
+    class IntegrationSummary
+      attr_accessor integration_id: ::String
+      attr_accessor installation_id: ::String
+      attr_accessor provider: ("GITHUB" | "GITLAB" | "BITBUCKET" | "CONFLUENCE")
+      attr_accessor provider_type: ("SOURCE_CODE" | "DOCUMENTATION")
+      attr_accessor display_name: ::String
+      attr_accessor target_url: ::String
+      attr_accessor private_connection_name: ::String
+      SENSITIVE: []
+    end
+
+    class InternalServerException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class ListAgentSpacesInput
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListAgentSpacesOutput
+      attr_accessor agent_space_summaries: ::Array[Types::AgentSpaceSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListApplicationsRequest
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListApplicationsResponse
+      attr_accessor application_summaries: ::Array[Types::ApplicationSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListArtifactsInput
+      attr_accessor agent_space_id: ::String
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListArtifactsOutput
+      attr_accessor artifact_summaries: ::Array[Types::ArtifactSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListCodeReviewJobTasksInput
+      attr_accessor agent_space_id: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor code_review_job_id: ::String
+      attr_accessor step_name: ("PREFLIGHT" | "STATIC_ANALYSIS" | "PENTEST" | "FINALIZING" | "VALIDATION")
+      attr_accessor category_name: ::String
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListCodeReviewJobTasksOutput
+      attr_accessor code_review_job_task_summaries: ::Array[Types::CodeReviewJobTaskSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListCodeReviewJobsForCodeReviewInput
+      attr_accessor max_results: ::Integer
+      attr_accessor code_review_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListCodeReviewJobsForCodeReviewOutput
+      attr_accessor code_review_job_summaries: ::Array[Types::CodeReviewJobSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListCodeReviewsInput
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      attr_accessor agent_space_id: ::String
+      SENSITIVE: []
+    end
+
+    class ListCodeReviewsOutput
+      attr_accessor code_review_summaries: ::Array[Types::CodeReviewSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListDiscoveredEndpointsInput
+      attr_accessor max_results: ::Integer
+      attr_accessor pentest_job_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor prefix: ::String
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListDiscoveredEndpointsOutput
+      attr_accessor discovered_endpoints: ::Array[Types::DiscoveredEndpoint]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListFindingsInput
+      attr_accessor max_results: ::Integer
+      attr_accessor pentest_job_id: ::String
+      attr_accessor code_review_job_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor next_token: ::String
+      attr_accessor risk_type: ::String
+      attr_accessor risk_level: ("UNKNOWN" | "INFORMATIONAL" | "LOW" | "MEDIUM" | "HIGH" | "CRITICAL")
+      attr_accessor status: ("ACTIVE" | "RESOLVED" | "ACCEPTED" | "FALSE_POSITIVE")
+      attr_accessor confidence: ("FALSE_POSITIVE" | "UNCONFIRMED" | "LOW" | "MEDIUM" | "HIGH")
+      attr_accessor name: ::String
+      SENSITIVE: []
+    end
+
+    class ListFindingsOutput
+      attr_accessor findings_summaries: ::Array[Types::FindingSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListIntegratedResourcesInput
+      attr_accessor agent_space_id: ::String
+      attr_accessor integration_id: ::String
+      attr_accessor resource_type: ("CODE_REPOSITORY" | "DOCUMENT")
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListIntegratedResourcesOutput
+      attr_accessor integrated_resource_summaries: ::Array[Types::IntegratedResourceSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListIntegrationsInput
+      attr_accessor filter: Types::IntegrationFilter
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListIntegrationsOutput
+      attr_accessor integration_summaries: ::Array[Types::IntegrationSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListMembershipsRequest
+      attr_accessor application_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor member_type: ("USER" | "ALL")
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListMembershipsResponse
+      attr_accessor membership_summaries: ::Array[Types::MembershipSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListPentestJobTasksInput
+      attr_accessor agent_space_id: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor pentest_job_id: ::String
+      attr_accessor step_name: ("PREFLIGHT" | "STATIC_ANALYSIS" | "PENTEST" | "FINALIZING" | "VALIDATION")
+      attr_accessor category_name: ::String
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListPentestJobTasksOutput
+      attr_accessor task_summaries: ::Array[Types::TaskSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListPentestJobsForPentestInput
+      attr_accessor max_results: ::Integer
+      attr_accessor pentest_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListPentestJobsForPentestOutput
+      attr_accessor pentest_job_summaries: ::Array[Types::PentestJobSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListPentestsInput
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      attr_accessor agent_space_id: ::String
+      SENSITIVE: []
+    end
+
+    class ListPentestsOutput
+      attr_accessor pentest_summaries: ::Array[Types::PentestSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListPrivateConnectionsInput
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListPrivateConnectionsOutput
+      attr_accessor private_connections: ::Array[Types::PrivateConnectionSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListSecurityRequirementPackFilter
+      attr_accessor management_type: ("AWS_MANAGED" | "CUSTOMER_MANAGED")
+      attr_accessor status: ("ENABLED" | "DISABLED")
+      SENSITIVE: []
+    end
+
+    class ListSecurityRequirementPacksInput
+      attr_accessor filter: Types::ListSecurityRequirementPackFilter
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListSecurityRequirementPacksOutput
+      attr_accessor security_requirement_pack_summaries: ::Array[Types::SecurityRequirementPackSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListSecurityRequirementsInput
+      attr_accessor pack_id: ::String
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListSecurityRequirementsOutput
+      attr_accessor security_requirement_summaries: ::Array[Types::SecurityRequirementSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListTagsForResourceInput
+      attr_accessor resource_arn: ::String
+      SENSITIVE: []
+    end
+
+    class ListTagsForResourceOutput
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class ListTargetDomainsInput
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListTargetDomainsOutput
+      attr_accessor target_domain_summaries: ::Array[Types::TargetDomainSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListThreatModelJobTasksInput
+      attr_accessor agent_space_id: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor threat_model_job_id: ::String
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListThreatModelJobTasksOutput
+      attr_accessor threat_model_job_task_summaries: ::Array[Types::ThreatModelJobTaskSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListThreatModelJobsInput
+      attr_accessor max_results: ::Integer
+      attr_accessor threat_model_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListThreatModelJobsOutput
+      attr_accessor threat_model_job_summaries: ::Array[Types::ThreatModelJobSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListThreatModelsInput
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      attr_accessor agent_space_id: ::String
+      SENSITIVE: []
+    end
+
+    class ListThreatModelsOutput
+      attr_accessor threat_model_summaries: ::Array[Types::ThreatModelSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListThreatsInput
+      attr_accessor threat_job_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListThreatsOutput
+      attr_accessor threats: ::Array[Types::ThreatSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class LogLocation
+      attr_accessor log_type: ("CLOUDWATCH")
+      attr_accessor cloud_watch_log: Types::CloudWatchLog
+      SENSITIVE: []
+    end
+
+    class MemberMetadata
+      attr_accessor user: Types::UserMetadata
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class User < MemberMetadata
+      end
+      class Unknown < MemberMetadata
+      end
+    end
+
+    class MembershipConfig
+      attr_accessor user: Types::UserConfig
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class User < MembershipConfig
+      end
+      class Unknown < MembershipConfig
+      end
+    end
+
+    class MembershipSummary
+      attr_accessor membership_id: ::String
+      attr_accessor application_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor member_type: ("USER")
+      attr_accessor config: Types::MembershipConfig
+      attr_accessor metadata: Types::MemberMetadata
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      attr_accessor created_by: ::String
+      attr_accessor updated_by: ::String
+      SENSITIVE: []
+    end
+
+    class NetworkTrafficConfig
+      attr_accessor rules: ::Array[Types::NetworkTrafficRule]
+      attr_accessor custom_headers: ::Array[Types::CustomHeader]
+      SENSITIVE: []
+    end
+
+    class NetworkTrafficRule
+      attr_accessor effect: ("ALLOW" | "DENY")
+      attr_accessor pattern: ::String
+      attr_accessor network_traffic_rule_type: ("URL")
+      SENSITIVE: []
+    end
+
+    class Pentest
+      attr_accessor pentest_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor title: ::String
+      attr_accessor assets: Types::Assets
+      attr_accessor exclude_risk_types: ::Array[("CROSS_SITE_SCRIPTING" | "DEFAULT_CREDENTIALS" | "INSECURE_DIRECT_OBJECT_REFERENCE" | "PRIVILEGE_ESCALATION" | "SERVER_SIDE_TEMPLATE_INJECTION" | "COMMAND_INJECTION" | "CODE_INJECTION" | "SQL_INJECTION" | "ARBITRARY_FILE_UPLOAD" | "INSECURE_DESERIALIZATION" | "LOCAL_FILE_INCLUSION" | "INFORMATION_DISCLOSURE" | "PATH_TRAVERSAL" | "SERVER_SIDE_REQUEST_FORGERY" | "JSON_WEB_TOKEN_VULNERABILITIES" | "XML_EXTERNAL_ENTITY" | "FILE_DELETION" | "OTHER" | "GRAPHQL_VULNERABILITIES" | "BUSINESS_LOGIC_VULNERABILITIES" | "CRYPTOGRAPHIC_VULNERABILITIES" | "DENIAL_OF_SERVICE" | "FILE_ACCESS" | "FILE_CREATION" | "DATABASE_MODIFICATION" | "DATABASE_ACCESS" | "OUTBOUND_SERVICE_REQUEST" | "UNKNOWN")]
+      attr_accessor service_role: ::String
+      attr_accessor log_config: Types::CloudWatchLog
+      attr_accessor vpc_config: Types::VpcConfig
+      attr_accessor network_traffic_config: Types::NetworkTrafficConfig
+      attr_accessor code_remediation_strategy: ("AUTOMATIC" | "DISABLED")
+      attr_accessor clean_up_strategy: ("BEST_EFFORT_DELETE" | "RETAIN_ALL")
+      attr_accessor disable_managed_skills: ::Array[("FINDING_PERSONALIZATION" | "LOGIN_OPTIMIZATION")]
+      attr_accessor max_task_hours: ::Float
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class PentestJob
+      attr_accessor pentest_job_id: ::String
+      attr_accessor pentest_id: ::String
+      attr_accessor title: ::String
+      attr_accessor overview: ::String
+      attr_accessor status: ("IN_PROGRESS" | "STOPPING" | "STOPPED" | "FAILED" | "COMPLETED")
+      attr_accessor endpoints: ::Array[Types::Endpoint]
+      attr_accessor actors: ::Array[Types::Actor]
+      attr_accessor documents: ::Array[Types::DocumentInfo]
+      attr_accessor source_code: ::Array[Types::SourceCodeRepository]
+      attr_accessor exclude_paths: ::Array[Types::Endpoint]
+      attr_accessor allowed_domains: ::Array[Types::Endpoint]
+      attr_accessor exclude_risk_types: ::Array[("CROSS_SITE_SCRIPTING" | "DEFAULT_CREDENTIALS" | "INSECURE_DIRECT_OBJECT_REFERENCE" | "PRIVILEGE_ESCALATION" | "SERVER_SIDE_TEMPLATE_INJECTION" | "COMMAND_INJECTION" | "CODE_INJECTION" | "SQL_INJECTION" | "ARBITRARY_FILE_UPLOAD" | "INSECURE_DESERIALIZATION" | "LOCAL_FILE_INCLUSION" | "INFORMATION_DISCLOSURE" | "PATH_TRAVERSAL" | "SERVER_SIDE_REQUEST_FORGERY" | "JSON_WEB_TOKEN_VULNERABILITIES" | "XML_EXTERNAL_ENTITY" | "FILE_DELETION" | "OTHER" | "GRAPHQL_VULNERABILITIES" | "BUSINESS_LOGIC_VULNERABILITIES" | "CRYPTOGRAPHIC_VULNERABILITIES" | "DENIAL_OF_SERVICE" | "FILE_ACCESS" | "FILE_CREATION" | "DATABASE_MODIFICATION" | "DATABASE_ACCESS" | "OUTBOUND_SERVICE_REQUEST" | "UNKNOWN")]
+      attr_accessor steps: ::Array[Types::Step]
+      attr_accessor execution_context: ::Array[Types::ExecutionContext]
+      attr_accessor service_role: ::String
+      attr_accessor log_config: Types::CloudWatchLog
+      attr_accessor vpc_config: Types::VpcConfig
+      attr_accessor network_traffic_config: Types::NetworkTrafficConfig
+      attr_accessor error_information: Types::ErrorInformation
+      attr_accessor integrated_repositories: ::Array[Types::IntegratedRepository]
+      attr_accessor code_remediation_strategy: ("AUTOMATIC" | "DISABLED")
+      attr_accessor clean_up_strategy: ("BEST_EFFORT_DELETE" | "RETAIN_ALL")
+      attr_accessor disable_managed_skills: ::Array[("FINDING_PERSONALIZATION" | "LOGIN_OPTIMIZATION")]
+      attr_accessor max_task_hours: ::Float
+      attr_accessor job_type: ("FULL" | "REVALIDATION")
+      attr_accessor selected_finding_ids: ::Array[::String]
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class PentestJobSummary
+      attr_accessor pentest_job_id: ::String
+      attr_accessor pentest_id: ::String
+      attr_accessor title: ::String
+      attr_accessor status: ("IN_PROGRESS" | "STOPPING" | "STOPPED" | "FAILED" | "COMPLETED")
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class PentestSummary
+      attr_accessor pentest_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor title: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class PrivateConnectionMode
+      attr_accessor service_managed: Types::ServiceManagedInput
+      attr_accessor self_managed: Types::SelfManagedInput
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class ServiceManaged < PrivateConnectionMode
+      end
+      class SelfManaged < PrivateConnectionMode
+      end
+      class Unknown < PrivateConnectionMode
+      end
+    end
+
+    class PrivateConnectionSummary
+      attr_accessor name: ::String
+      attr_accessor type: ("SERVICE_MANAGED" | "SELF_MANAGED")
+      attr_accessor status: ("ACTIVE" | "CREATE_IN_PROGRESS" | "CREATE_FAILED" | "DELETE_IN_PROGRESS" | "DELETE_FAILED")
+      attr_accessor resource_gateway_id: ::String
+      attr_accessor host_address: ::String
+      attr_accessor vpc_id: ::String
+      attr_accessor resource_configuration_id: ::String
+      attr_accessor certificate_expiry_time: ::Time
+      attr_accessor dns_resolution: ("PUBLIC" | "IN_VPC")
+      attr_accessor failure_message: ::String
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class ProviderInput
+      attr_accessor github: Types::GitHubIntegrationInput
+      attr_accessor gitlab: Types::GitLabIntegrationInput
+      attr_accessor bitbucket: Types::BitbucketIntegrationInput
+      attr_accessor confluence: Types::ConfluenceIntegrationInput
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class Github < ProviderInput
+      end
+      class Gitlab < ProviderInput
+      end
+      class Bitbucket < ProviderInput
+      end
+      class Confluence < ProviderInput
+      end
+      class Unknown < ProviderInput
+      end
+    end
+
+    class ProviderResourceCapabilities
+      attr_accessor github: Types::GitHubResourceCapabilities
+      attr_accessor gitlab: Types::GitLabResourceCapabilities
+      attr_accessor bitbucket: Types::BitbucketResourceCapabilities
+      attr_accessor confluence: Types::ConfluenceResourceCapabilities
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class Github < ProviderResourceCapabilities
+      end
+      class Gitlab < ProviderResourceCapabilities
+      end
+      class Bitbucket < ProviderResourceCapabilities
+      end
+      class Confluence < ProviderResourceCapabilities
+      end
+      class Unknown < ProviderResourceCapabilities
+      end
+    end
+
+    class ReportDestination
+      attr_accessor integration_id: ::String
+      attr_accessor container_id: ::String
+      attr_accessor parent_id: ::String
+      attr_accessor document_id: ::String
+      SENSITIVE: []
+    end
+
+    class ResourceNotFoundException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class SecurityRequirementArtifact
+      attr_accessor name: ::String
+      attr_accessor format: ("MD" | "PDF" | "TXT" | "DOCX" | "DOC")
+      attr_accessor content: ::String
+      SENSITIVE: [:content]
+    end
+
+    class SecurityRequirementPackSummary
+      attr_accessor pack_id: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor vendor_name: ::String
+      attr_accessor management_type: ("AWS_MANAGED" | "CUSTOMER_MANAGED")
+      attr_accessor status: ("ENABLED" | "DISABLED")
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class SecurityRequirementSummary
+      attr_accessor pack_id: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class SelfManagedInput
+      attr_accessor resource_configuration_id: ::String
+      attr_accessor certificate: ::String
+      SENSITIVE: [:certificate]
+    end
+
+    class ServiceManagedInput
+      attr_accessor host_address: ::String
+      attr_accessor vpc_id: ::String
+      attr_accessor subnet_ids: ::Array[::String]
+      attr_accessor security_group_ids: ::Array[::String]
+      attr_accessor ip_address_type: ("IPV4" | "IPV6" | "DUAL_STACK")
+      attr_accessor ipv4_addresses_per_eni: ::Integer
+      attr_accessor port_ranges: ::Array[::String]
+      attr_accessor certificate: ::String
+      attr_accessor dns_resolution: ("PUBLIC" | "IN_VPC")
+      SENSITIVE: [:certificate]
+    end
+
+    class ServiceQuotaExceededException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class SourceCodeRepository
+      attr_accessor s3_location: ::String
+      SENSITIVE: []
+    end
+
+    class StartCodeRemediationInput
+      attr_accessor agent_space_id: ::String
+      attr_accessor pentest_job_id: ::String
+      attr_accessor code_review_job_id: ::String
+      attr_accessor finding_ids: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class StartCodeRemediationOutput < Aws::EmptyStructure
+    end
+
+    class StartCodeReviewJobInput
+      attr_accessor agent_space_id: ::String
+      attr_accessor code_review_id: ::String
+      attr_accessor diff_source: Types::DiffSource
+      SENSITIVE: []
+    end
+
+    class StartCodeReviewJobOutput
+      attr_accessor title: ::String
+      attr_accessor status: ("IN_PROGRESS" | "STOPPING" | "STOPPED" | "FAILED" | "COMPLETED")
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      attr_accessor code_review_id: ::String
+      attr_accessor code_review_job_id: ::String
+      attr_accessor agent_space_id: ::String
+      SENSITIVE: []
+    end
+
+    class StartPentestJobInput
+      attr_accessor agent_space_id: ::String
+      attr_accessor pentest_id: ::String
+      attr_accessor job_type: ("FULL" | "REVALIDATION")
+      attr_accessor selected_finding_ids: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class StartPentestJobOutput
+      attr_accessor title: ::String
+      attr_accessor status: ("IN_PROGRESS" | "STOPPING" | "STOPPED" | "FAILED" | "COMPLETED")
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      attr_accessor pentest_id: ::String
+      attr_accessor pentest_job_id: ::String
+      attr_accessor agent_space_id: ::String
+      SENSITIVE: []
+    end
+
+    class StartThreatModelJobInput
+      attr_accessor agent_space_id: ::String
+      attr_accessor threat_model_id: ::String
+      SENSITIVE: []
+    end
+
+    class StartThreatModelJobOutput
+      attr_accessor title: ::String
+      attr_accessor status: ("IN_PROGRESS" | "STOPPING" | "STOPPED" | "FAILED" | "COMPLETED")
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      attr_accessor threat_model_id: ::String
+      attr_accessor threat_model_job_id: ::String
+      attr_accessor agent_space_id: ::String
+      SENSITIVE: []
+    end
+
+    class Step
+      attr_accessor name: ("PREFLIGHT" | "STATIC_ANALYSIS" | "PENTEST" | "FINALIZING" | "VALIDATION")
+      attr_accessor status: ("NOT_STARTED" | "IN_PROGRESS" | "COMPLETED" | "FAILED" | "STOPPED")
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class StopCodeReviewJobInput
+      attr_accessor agent_space_id: ::String
+      attr_accessor code_review_job_id: ::String
+      SENSITIVE: []
+    end
+
+    class StopCodeReviewJobOutput < Aws::EmptyStructure
+    end
+
+    class StopPentestJobInput
+      attr_accessor agent_space_id: ::String
+      attr_accessor pentest_job_id: ::String
+      SENSITIVE: []
+    end
+
+    class StopPentestJobOutput < Aws::EmptyStructure
+    end
+
+    class StopThreatModelJobInput
+      attr_accessor agent_space_id: ::String
+      attr_accessor threat_model_job_id: ::String
+      SENSITIVE: []
+    end
+
+    class StopThreatModelJobOutput < Aws::EmptyStructure
+    end
+
+    class TagResourceInput
+      attr_accessor resource_arn: ::String
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class TagResourceOutput < Aws::EmptyStructure
+    end
+
+    class TargetDomain
+      attr_accessor target_domain_id: ::String
+      attr_accessor domain_name: ::String
+      attr_accessor verification_status: ("PENDING" | "VERIFIED" | "FAILED" | "UNREACHABLE")
+      attr_accessor verification_status_reason: ::String
+      attr_accessor verification_details: Types::VerificationDetails
+      attr_accessor created_at: ::Time
+      attr_accessor verified_at: ::Time
+      SENSITIVE: []
+    end
+
+    class TargetDomainSummary
+      attr_accessor target_domain_id: ::String
+      attr_accessor domain_name: ::String
+      attr_accessor verification_status: ("PENDING" | "VERIFIED" | "FAILED" | "UNREACHABLE")
+      SENSITIVE: []
+    end
+
+    class Task
+      attr_accessor task_id: ::String
+      attr_accessor pentest_id: ::String
+      attr_accessor pentest_job_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor title: ::String
+      attr_accessor description: ::String
+      attr_accessor categories: ::Array[Types::Category]
+      attr_accessor risk_type: ("CROSS_SITE_SCRIPTING" | "DEFAULT_CREDENTIALS" | "INSECURE_DIRECT_OBJECT_REFERENCE" | "PRIVILEGE_ESCALATION" | "SERVER_SIDE_TEMPLATE_INJECTION" | "COMMAND_INJECTION" | "CODE_INJECTION" | "SQL_INJECTION" | "ARBITRARY_FILE_UPLOAD" | "INSECURE_DESERIALIZATION" | "LOCAL_FILE_INCLUSION" | "INFORMATION_DISCLOSURE" | "PATH_TRAVERSAL" | "SERVER_SIDE_REQUEST_FORGERY" | "JSON_WEB_TOKEN_VULNERABILITIES" | "XML_EXTERNAL_ENTITY" | "FILE_DELETION" | "OTHER" | "GRAPHQL_VULNERABILITIES" | "BUSINESS_LOGIC_VULNERABILITIES" | "CRYPTOGRAPHIC_VULNERABILITIES" | "DENIAL_OF_SERVICE" | "FILE_ACCESS" | "FILE_CREATION" | "DATABASE_MODIFICATION" | "DATABASE_ACCESS" | "OUTBOUND_SERVICE_REQUEST" | "UNKNOWN")
+      attr_accessor target_endpoint: Types::Endpoint
+      attr_accessor execution_status: ("IN_PROGRESS" | "ABORTED" | "COMPLETED" | "INTERNAL_ERROR" | "FAILED")
+      attr_accessor logs_location: Types::LogLocation
+      attr_accessor task_hours: ::Float
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class TaskSummary
+      attr_accessor task_id: ::String
+      attr_accessor pentest_id: ::String
+      attr_accessor pentest_job_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor title: ::String
+      attr_accessor risk_type: ("CROSS_SITE_SCRIPTING" | "DEFAULT_CREDENTIALS" | "INSECURE_DIRECT_OBJECT_REFERENCE" | "PRIVILEGE_ESCALATION" | "SERVER_SIDE_TEMPLATE_INJECTION" | "COMMAND_INJECTION" | "CODE_INJECTION" | "SQL_INJECTION" | "ARBITRARY_FILE_UPLOAD" | "INSECURE_DESERIALIZATION" | "LOCAL_FILE_INCLUSION" | "INFORMATION_DISCLOSURE" | "PATH_TRAVERSAL" | "SERVER_SIDE_REQUEST_FORGERY" | "JSON_WEB_TOKEN_VULNERABILITIES" | "XML_EXTERNAL_ENTITY" | "FILE_DELETION" | "OTHER" | "GRAPHQL_VULNERABILITIES" | "BUSINESS_LOGIC_VULNERABILITIES" | "CRYPTOGRAPHIC_VULNERABILITIES" | "DENIAL_OF_SERVICE" | "FILE_ACCESS" | "FILE_CREATION" | "DATABASE_MODIFICATION" | "DATABASE_ACCESS" | "OUTBOUND_SERVICE_REQUEST" | "UNKNOWN")
+      attr_accessor execution_status: ("IN_PROGRESS" | "ABORTED" | "COMPLETED" | "INTERNAL_ERROR" | "FAILED")
+      attr_accessor task_hours: ::Float
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class Threat
+      attr_accessor threat_id: ::String
+      attr_accessor threat_job_id: ::String
+      attr_accessor title: ::String
+      attr_accessor statement: ::String
+      attr_accessor severity: ("CRITICAL" | "HIGH" | "MEDIUM" | "LOW" | "INFO")
+      attr_accessor status: ("OPEN" | "RESOLVED" | "DISMISSED")
+      attr_accessor comments: ::String
+      attr_accessor threat_source: ::String
+      attr_accessor prerequisites: ::String
+      attr_accessor threat_action: ::String
+      attr_accessor threat_impact: ::String
+      attr_accessor impacted_goal: ::Array[::String]
+      attr_accessor impacted_assets: ::Array[::String]
+      attr_accessor anchor: Types::ThreatAnchorShape
+      attr_accessor evidence: ::Array[Types::ThreatEvidenceShape]
+      attr_accessor stride: ::Array[("SPOOFING" | "TAMPERING" | "REPUDIATION" | "INFORMATION_DISCLOSURE" | "DENIAL_OF_SERVICE" | "ELEVATION_OF_PRIVILEGE")]
+      attr_accessor recommendation: ::String
+      attr_accessor created_by: ("CUSTOMER" | "AGENT")
+      attr_accessor updated_by: ("CUSTOMER" | "AGENT")
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class ThreatAnchorShape
+      attr_accessor kind: ::String
+      attr_accessor id: ::String
+      attr_accessor package_id: ::String
+      SENSITIVE: []
+    end
+
+    class ThreatEvidenceShape
+      attr_accessor package_id: ::String
+      attr_accessor path: ::String
+      SENSITIVE: []
+    end
+
+    class ThreatModel
+      attr_accessor threat_model_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor title: ::String
+      attr_accessor description: ::String
+      attr_accessor assets: Types::Assets
+      attr_accessor scope_docs: ::Array[Types::DocumentInfo]
+      attr_accessor service_role: ::String
+      attr_accessor log_config: Types::CloudWatchLog
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class ThreatModelJob
+      attr_accessor threat_model_job_id: ::String
+      attr_accessor threat_model_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor title: ::String
+      attr_accessor status: ("IN_PROGRESS" | "STOPPING" | "STOPPED" | "FAILED" | "COMPLETED")
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      attr_accessor execution_start_time: ::Time
+      attr_accessor execution_end_time: ::Time
+      attr_accessor source_code: ::Array[Types::SourceCodeRepository]
+      attr_accessor integrated_repositories: ::Array[Types::IntegratedRepository]
+      attr_accessor documents: ::Array[Types::DocumentInfo]
+      attr_accessor scope_docs: ::Array[Types::DocumentInfo]
+      attr_accessor error_information: Types::ErrorInformation
+      attr_accessor system_overview: ::String
+      SENSITIVE: []
+    end
+
+    class ThreatModelJobSummary
+      attr_accessor threat_model_job_id: ::String
+      attr_accessor threat_model_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor title: ::String
+      attr_accessor status: ("IN_PROGRESS" | "STOPPING" | "STOPPED" | "FAILED" | "COMPLETED")
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class ThreatModelJobTask
+      attr_accessor task_id: ::String
+      attr_accessor threat_model_id: ::String
+      attr_accessor threat_model_job_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor title: ::String
+      attr_accessor description: ::String
+      attr_accessor execution_status: ("IN_PROGRESS" | "ABORTED" | "COMPLETED" | "INTERNAL_ERROR" | "FAILED")
+      attr_accessor logs_location: Types::LogLocation
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class ThreatModelJobTaskSummary
+      attr_accessor task_id: ::String
+      attr_accessor threat_model_id: ::String
+      attr_accessor threat_model_job_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor title: ::String
+      attr_accessor execution_status: ("IN_PROGRESS" | "ABORTED" | "COMPLETED" | "INTERNAL_ERROR" | "FAILED")
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class ThreatModelSummary
+      attr_accessor threat_model_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor title: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class ThreatSummary
+      attr_accessor threat_id: ::String
+      attr_accessor threat_job_id: ::String
+      attr_accessor title: ::String
+      attr_accessor statement: ::String
+      attr_accessor severity: ("CRITICAL" | "HIGH" | "MEDIUM" | "LOW" | "INFO")
+      attr_accessor status: ("OPEN" | "RESOLVED" | "DISMISSED")
+      attr_accessor stride: ::Array[("SPOOFING" | "TAMPERING" | "REPUDIATION" | "INFORMATION_DISCLOSURE" | "DENIAL_OF_SERVICE" | "ELEVATION_OF_PRIVILEGE")]
+      attr_accessor created_by: ("CUSTOMER" | "AGENT")
+      attr_accessor updated_by: ("CUSTOMER" | "AGENT")
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class ThrottlingException
+      attr_accessor message: ::String
+      attr_accessor service_code: ::String
+      attr_accessor quota_code: ::String
+      SENSITIVE: []
+    end
+
+    class UntagResourceInput
+      attr_accessor resource_arn: ::String
+      attr_accessor tag_keys: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class UntagResourceOutput < Aws::EmptyStructure
+    end
+
+    class UpdateAgentSpaceInput
+      attr_accessor agent_space_id: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor aws_resources: Types::AWSResources
+      attr_accessor target_domain_ids: ::Array[::String]
+      attr_accessor code_review_settings: Types::CodeReviewSettings
+      SENSITIVE: []
+    end
+
+    class UpdateAgentSpaceOutput
+      attr_accessor agent_space_id: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor aws_resources: Types::AWSResources
+      attr_accessor target_domain_ids: ::Array[::String]
+      attr_accessor code_review_settings: Types::CodeReviewSettings
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class UpdateApplicationRequest
+      attr_accessor application_id: ::String
+      attr_accessor role_arn: ::String
+      attr_accessor default_kms_key_id: ::String
+      SENSITIVE: []
+    end
+
+    class UpdateApplicationResponse
+      attr_accessor application_id: ::String
+      SENSITIVE: []
+    end
+
+    class UpdateCodeReviewInput
+      attr_accessor code_review_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor title: ::String
+      attr_accessor assets: Types::Assets
+      attr_accessor service_role: ::String
+      attr_accessor log_config: Types::CloudWatchLog
+      attr_accessor code_remediation_strategy: ("AUTOMATIC" | "DISABLED")
+      attr_accessor validation_mode: ("DISABLED" | "SIMULATED")
+      attr_accessor max_task_hours: ::Float
+      SENSITIVE: []
+    end
+
+    class UpdateCodeReviewOutput
+      attr_accessor code_review_id: ::String
+      attr_accessor title: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      attr_accessor assets: Types::Assets
+      attr_accessor service_role: ::String
+      attr_accessor log_config: Types::CloudWatchLog
+      attr_accessor agent_space_id: ::String
+      attr_accessor code_remediation_strategy: ("AUTOMATIC" | "DISABLED")
+      attr_accessor validation_mode: ("DISABLED" | "SIMULATED")
+      attr_accessor max_task_hours: ::Float
+      SENSITIVE: []
+    end
+
+    class UpdateFindingInput
+      attr_accessor finding_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor risk_type: ::String
+      attr_accessor risk_level: ("UNKNOWN" | "INFORMATIONAL" | "LOW" | "MEDIUM" | "HIGH" | "CRITICAL")
+      attr_accessor risk_score: ::String
+      attr_accessor attack_script: ::String
+      attr_accessor reasoning: ::String
+      attr_accessor status: ("ACTIVE" | "RESOLVED" | "ACCEPTED" | "FALSE_POSITIVE")
+      attr_accessor customer_note: ::String
+      SENSITIVE: []
+    end
+
+    class UpdateFindingOutput < Aws::EmptyStructure
+    end
+
+    class UpdateIntegratedResourcesInput
+      attr_accessor agent_space_id: ::String
+      attr_accessor integration_id: ::String
+      attr_accessor items: ::Array[Types::IntegratedResourceInputItem]
+      SENSITIVE: []
+    end
+
+    class UpdateIntegratedResourcesOutput < Aws::EmptyStructure
+    end
+
+    class UpdatePentestInput
+      attr_accessor pentest_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor title: ::String
+      attr_accessor assets: Types::Assets
+      attr_accessor exclude_risk_types: ::Array[("CROSS_SITE_SCRIPTING" | "DEFAULT_CREDENTIALS" | "INSECURE_DIRECT_OBJECT_REFERENCE" | "PRIVILEGE_ESCALATION" | "SERVER_SIDE_TEMPLATE_INJECTION" | "COMMAND_INJECTION" | "CODE_INJECTION" | "SQL_INJECTION" | "ARBITRARY_FILE_UPLOAD" | "INSECURE_DESERIALIZATION" | "LOCAL_FILE_INCLUSION" | "INFORMATION_DISCLOSURE" | "PATH_TRAVERSAL" | "SERVER_SIDE_REQUEST_FORGERY" | "JSON_WEB_TOKEN_VULNERABILITIES" | "XML_EXTERNAL_ENTITY" | "FILE_DELETION" | "OTHER" | "GRAPHQL_VULNERABILITIES" | "BUSINESS_LOGIC_VULNERABILITIES" | "CRYPTOGRAPHIC_VULNERABILITIES" | "DENIAL_OF_SERVICE" | "FILE_ACCESS" | "FILE_CREATION" | "DATABASE_MODIFICATION" | "DATABASE_ACCESS" | "OUTBOUND_SERVICE_REQUEST" | "UNKNOWN")]
+      attr_accessor service_role: ::String
+      attr_accessor log_config: Types::CloudWatchLog
+      attr_accessor vpc_config: Types::VpcConfig
+      attr_accessor network_traffic_config: Types::NetworkTrafficConfig
+      attr_accessor code_remediation_strategy: ("AUTOMATIC" | "DISABLED")
+      attr_accessor disable_managed_skills: ::Array[("FINDING_PERSONALIZATION" | "LOGIN_OPTIMIZATION")]
+      attr_accessor max_task_hours: ::Float
+      SENSITIVE: []
+    end
+
+    class UpdatePentestOutput
+      attr_accessor pentest_id: ::String
+      attr_accessor title: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      attr_accessor assets: Types::Assets
+      attr_accessor exclude_risk_types: ::Array[("CROSS_SITE_SCRIPTING" | "DEFAULT_CREDENTIALS" | "INSECURE_DIRECT_OBJECT_REFERENCE" | "PRIVILEGE_ESCALATION" | "SERVER_SIDE_TEMPLATE_INJECTION" | "COMMAND_INJECTION" | "CODE_INJECTION" | "SQL_INJECTION" | "ARBITRARY_FILE_UPLOAD" | "INSECURE_DESERIALIZATION" | "LOCAL_FILE_INCLUSION" | "INFORMATION_DISCLOSURE" | "PATH_TRAVERSAL" | "SERVER_SIDE_REQUEST_FORGERY" | "JSON_WEB_TOKEN_VULNERABILITIES" | "XML_EXTERNAL_ENTITY" | "FILE_DELETION" | "OTHER" | "GRAPHQL_VULNERABILITIES" | "BUSINESS_LOGIC_VULNERABILITIES" | "CRYPTOGRAPHIC_VULNERABILITIES" | "DENIAL_OF_SERVICE" | "FILE_ACCESS" | "FILE_CREATION" | "DATABASE_MODIFICATION" | "DATABASE_ACCESS" | "OUTBOUND_SERVICE_REQUEST" | "UNKNOWN")]
+      attr_accessor service_role: ::String
+      attr_accessor log_config: Types::CloudWatchLog
+      attr_accessor agent_space_id: ::String
+      SENSITIVE: []
+    end
+
+    class UpdatePrivateConnectionCertificateInput
+      attr_accessor private_connection_name: ::String
+      attr_accessor certificate: ::String
+      SENSITIVE: [:certificate]
+    end
+
+    class UpdatePrivateConnectionCertificateOutput
+      attr_accessor name: ::String
+      attr_accessor type: ("SERVICE_MANAGED" | "SELF_MANAGED")
+      attr_accessor status: ("ACTIVE" | "CREATE_IN_PROGRESS" | "CREATE_FAILED" | "DELETE_IN_PROGRESS" | "DELETE_FAILED")
+      attr_accessor resource_gateway_id: ::String
+      attr_accessor host_address: ::String
+      attr_accessor vpc_id: ::String
+      attr_accessor resource_configuration_id: ::String
+      attr_accessor certificate_expiry_time: ::Time
+      attr_accessor dns_resolution: ("PUBLIC" | "IN_VPC")
+      attr_accessor failure_message: ::String
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class UpdateSecurityRequirementEntry
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor domain: ::String
+      attr_accessor evaluation: ::String
+      attr_accessor remediation: ::String
+      SENSITIVE: []
+    end
+
+    class UpdateSecurityRequirementPackInput
+      attr_accessor pack_id: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor status: ("ENABLED" | "DISABLED")
+      SENSITIVE: []
+    end
+
+    class UpdateSecurityRequirementPackOutput
+      attr_accessor pack_id: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor status: ("ENABLED" | "DISABLED")
+      SENSITIVE: []
+    end
+
+    class UpdateTargetDomainInput
+      attr_accessor target_domain_id: ::String
+      attr_accessor verification_method: ("DNS_TXT" | "HTTP_ROUTE" | "PRIVATE_VPC")
+      SENSITIVE: []
+    end
+
+    class UpdateTargetDomainOutput
+      attr_accessor target_domain_id: ::String
+      attr_accessor domain_name: ::String
+      attr_accessor verification_status: ("PENDING" | "VERIFIED" | "FAILED" | "UNREACHABLE")
+      attr_accessor verification_status_reason: ::String
+      attr_accessor verification_details: Types::VerificationDetails
+      attr_accessor created_at: ::Time
+      attr_accessor verified_at: ::Time
+      SENSITIVE: []
+    end
+
+    class UpdateThreatInput
+      attr_accessor threat_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor title: ::String
+      attr_accessor status: ("OPEN" | "RESOLVED" | "DISMISSED")
+      attr_accessor comments: ::String
+      attr_accessor statement: ::String
+      attr_accessor severity: ("CRITICAL" | "HIGH" | "MEDIUM" | "LOW" | "INFO")
+      attr_accessor threat_source: ::String
+      attr_accessor prerequisites: ::String
+      attr_accessor threat_action: ::String
+      attr_accessor threat_impact: ::String
+      attr_accessor impacted_goal: ::Array[::String]
+      attr_accessor impacted_assets: ::Array[::String]
+      attr_accessor anchor: Types::ThreatAnchorShape
+      attr_accessor evidence: ::Array[Types::ThreatEvidenceShape]
+      attr_accessor recommendation: ::String
+      SENSITIVE: []
+    end
+
+    class UpdateThreatModelInput
+      attr_accessor threat_model_id: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor title: ::String
+      attr_accessor description: ::String
+      attr_accessor assets: Types::Assets
+      attr_accessor scope_docs: ::Array[Types::DocumentInfo]
+      attr_accessor service_role: ::String
+      attr_accessor log_config: Types::CloudWatchLog
+      SENSITIVE: []
+    end
+
+    class UpdateThreatModelOutput
+      attr_accessor threat_model_id: ::String
+      attr_accessor title: ::String
+      attr_accessor agent_space_id: ::String
+      attr_accessor description: ::String
+      attr_accessor assets: Types::Assets
+      attr_accessor scope_docs: ::Array[Types::DocumentInfo]
+      attr_accessor service_role: ::String
+      attr_accessor log_config: Types::CloudWatchLog
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class UpdateThreatOutput
+      attr_accessor threat_id: ::String
+      attr_accessor threat_job_id: ::String
+      attr_accessor title: ::String
+      attr_accessor statement: ::String
+      attr_accessor severity: ("CRITICAL" | "HIGH" | "MEDIUM" | "LOW" | "INFO")
+      attr_accessor status: ("OPEN" | "RESOLVED" | "DISMISSED")
+      attr_accessor comments: ::String
+      attr_accessor stride: ::Array[("SPOOFING" | "TAMPERING" | "REPUDIATION" | "INFORMATION_DISCLOSURE" | "DENIAL_OF_SERVICE" | "ELEVATION_OF_PRIVILEGE")]
+      attr_accessor threat_source: ::String
+      attr_accessor prerequisites: ::String
+      attr_accessor threat_action: ::String
+      attr_accessor threat_impact: ::String
+      attr_accessor impacted_goal: ::Array[::String]
+      attr_accessor impacted_assets: ::Array[::String]
+      attr_accessor anchor: Types::ThreatAnchorShape
+      attr_accessor evidence: ::Array[Types::ThreatEvidenceShape]
+      attr_accessor recommendation: ::String
+      attr_accessor created_by: ("CUSTOMER" | "AGENT")
+      attr_accessor updated_by: ("CUSTOMER" | "AGENT")
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class UserConfig
+      attr_accessor role: ("MEMBER")
+      SENSITIVE: []
+    end
+
+    class UserMetadata
+      attr_accessor username: ::String
+      attr_accessor email: ::String
+      SENSITIVE: []
+    end
+
+    class ValidationException
+      attr_accessor message: ::String
+      attr_accessor field_list: ::Array[Types::ValidationExceptionField]
+      SENSITIVE: []
+    end
+
+    class ValidationExceptionField
+      attr_accessor path: ::String
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class VerificationDetails
+      attr_accessor method: ("DNS_TXT" | "HTTP_ROUTE" | "PRIVATE_VPC")
+      attr_accessor dns_txt: Types::DnsVerification
+      attr_accessor http_route: Types::HttpVerification
+      SENSITIVE: []
+    end
+
+    class VerificationScript
+      attr_accessor script_type: ::String
+      attr_accessor script_url: ::String
+      attr_accessor instructions: ::String
+      attr_accessor env_vars: ::Array[Types::VerificationScriptEnvVar]
+      SENSITIVE: []
+    end
+
+    class VerificationScriptEnvVar
+      attr_accessor name: ::String
+      attr_accessor value: ::String
+      SENSITIVE: []
+    end
+
+    class VerifyTargetDomainInput
+      attr_accessor target_domain_id: ::String
+      SENSITIVE: []
+    end
+
+    class VerifyTargetDomainOutput
+      attr_accessor target_domain_id: ::String
+      attr_accessor domain_name: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      attr_accessor verified_at: ::Time
+      attr_accessor status: ("PENDING" | "VERIFIED" | "FAILED" | "UNREACHABLE")
+      attr_accessor verification_status_reason: ::String
+      SENSITIVE: []
+    end
+
+    class VpcConfig
+      attr_accessor vpc_arn: ::String
+      attr_accessor security_group_arns: ::Array[::String]
+      attr_accessor subnet_arns: ::Array[::String]
+      SENSITIVE: []
+    end
+  end
+end

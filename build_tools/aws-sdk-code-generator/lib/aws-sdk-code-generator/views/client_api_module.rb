@@ -44,11 +44,13 @@ module AwsSdkCodeGenerator
         'eventpayload' => false,
         'exceptionEvent' => false, # internal, exceptions cannot be events
         # other
+        'sparse' => false,
         'synthetic' => false,
         'box' => false,
         'fault' => false,
         'deprecated' => false,
         'deprecatedMessage' => false,
+        'deprecatedSince' => false,
         'type' => false,
         'documentation' => false,
         'members' => false,
@@ -259,8 +261,7 @@ module AwsSdkCodeGenerator
             o.auth = operation['auth'] if operation.key?('auth')
             o.require_apikey = operation['requiresApiKey'] if operation.key?('requiresApiKey')
             o.pager = pager(operation_name)
-            o.async = @service.protocol_settings['h2'] == 'eventstream' &&
-              AwsSdkCodeGenerator::Helper.operation_eventstreaming?(operation, @service.api)
+            o.async = async(operation)
           end
         end
       end
@@ -279,6 +280,20 @@ module AwsSdkCodeGenerator
             end
           end
         end
+      end
+
+      def async(operation)
+        # When h2 is eventstream, all eventstream operations must be sent over H2. This includes all operations that
+        # have any input OR output structures targeted with event traits. Other operations MAY use h2, but we
+        # currently do not do this.
+        (@service.protocol_settings['h2'] == 'eventstream' &&
+          AwsSdkCodeGenerator::Helper.operation_eventstreaming?(operation, @service.api)) ||
+          # When h2 is optional, only bidirectional eventstreaming operations will be on the async client. Other
+          # operations MAY be on the async client, but we currently do not do this. (They are disjoint).
+          (@service.protocol_settings['h2'] == 'optional' &&
+            AwsSdkCodeGenerator::Helper.operation_bidirectional_eventstreaming?(operation, @service.api)) ||
+          # When h2 is required, the operation must be sent over H2.
+          @service.protocol_settings['h2'] == 'required'
       end
 
       def endpoint_operation
@@ -316,8 +331,9 @@ module AwsSdkCodeGenerator
         args << "name: '#{shape_name}'"
         shape.each_pair do |key, value|
           if SHAPE_KEYS[key]
-            # only query protocols have custom error code
-            next if @service.protocol != 'query' && key == 'error'
+            query_or_query_compatible = @service.protocol == 'query' || @service.api['metadata']['awsQueryCompatible']
+            # only query and query compatible protocols have custom error code
+            next if !query_or_query_compatible && key == 'error'
 
             args << "#{key}: #{value.inspect}"
           elsif SHAPE_KEYS[key].nil?

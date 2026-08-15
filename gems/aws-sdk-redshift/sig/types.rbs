@@ -250,6 +250,9 @@ module Aws::Redshift
       attr_accessor ip_address_type: ::String
       attr_accessor multi_az: ::String
       attr_accessor multi_az_secondary: Types::SecondaryClusterInfo
+      attr_accessor lakehouse_registration_status: ::String
+      attr_accessor catalog_arn: ::String
+      attr_accessor extra_compute_for_automatic_optimization: ::String
       SENSITIVE: []
     end
 
@@ -460,6 +463,11 @@ module Aws::Redshift
     class ConflictPolicyUpdateFault < Aws::EmptyStructure
     end
 
+    class Connect
+      attr_accessor authorization: ("Enabled" | "Disabled")
+      SENSITIVE: []
+    end
+
     class CopyClusterSnapshotMessage
       attr_accessor source_snapshot_identifier: ::String
       attr_accessor source_snapshot_cluster_identifier: ::String
@@ -528,6 +536,8 @@ module Aws::Redshift
       attr_accessor ip_address_type: ::String
       attr_accessor multi_az: bool
       attr_accessor redshift_idc_application_arn: ::String
+      attr_accessor catalog_name: ::String
+      attr_accessor extra_compute_for_automatic_optimization: bool
       SENSITIVE: [:master_user_password]
     end
 
@@ -666,6 +676,19 @@ module Aws::Redshift
       SENSITIVE: []
     end
 
+    class CreateQev2IdcApplicationMessage
+      attr_accessor idc_instance_arn: ::String
+      attr_accessor qev_2_idc_application_name: ::String
+      attr_accessor idc_display_name: ::String
+      attr_accessor tags: ::Array[Types::Tag]
+      SENSITIVE: []
+    end
+
+    class CreateQev2IdcApplicationResult
+      attr_accessor qev_2_idc_application: Types::Qev2IdcApplication
+      SENSITIVE: []
+    end
+
     class CreateRedshiftIdcApplicationMessage
       attr_accessor idc_instance_arn: ::String
       attr_accessor redshift_idc_application_name: ::String
@@ -674,6 +697,9 @@ module Aws::Redshift
       attr_accessor iam_role_arn: ::String
       attr_accessor authorized_token_issuer_list: ::Array[Types::AuthorizedTokenIssuer]
       attr_accessor service_integrations: ::Array[Types::ServiceIntegrationsUnion]
+      attr_accessor application_type: ("None" | "Lakehouse")
+      attr_accessor tags: ::Array[Types::Tag]
+      attr_accessor sso_tag_keys: ::Array[::String]
       SENSITIVE: []
     end
 
@@ -724,7 +750,7 @@ module Aws::Redshift
 
     class CreateUsageLimitMessage
       attr_accessor cluster_identifier: ::String
-      attr_accessor feature_type: ("spectrum" | "concurrency-scaling" | "cross-region-datasharing")
+      attr_accessor feature_type: ("spectrum" | "concurrency-scaling" | "cross-region-datasharing" | "extra-compute-for-automatic-optimization")
       attr_accessor limit_type: ("time" | "data-scanned")
       attr_accessor amount: ::Integer
       attr_accessor period: ("daily" | "weekly" | "monthly")
@@ -879,6 +905,11 @@ module Aws::Redshift
 
     class DeleteIntegrationMessage
       attr_accessor integration_arn: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteQev2IdcApplicationMessage
+      attr_accessor qev_2_idc_application_arn: ::String
       SENSITIVE: []
     end
 
@@ -1219,6 +1250,19 @@ module Aws::Redshift
       SENSITIVE: []
     end
 
+    class DescribeQev2IdcApplicationsMessage
+      attr_accessor qev_2_idc_application_arn: ::String
+      attr_accessor max_records: ::Integer
+      attr_accessor marker: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeQev2IdcApplicationsResult
+      attr_accessor qev_2_idc_applications: ::Array[Types::Qev2IdcApplication]
+      attr_accessor marker: ::String
+      SENSITIVE: []
+    end
+
     class DescribeRedshiftIdcApplicationsMessage
       attr_accessor redshift_idc_application_arn: ::String
       attr_accessor max_records: ::Integer
@@ -1323,7 +1367,7 @@ module Aws::Redshift
     class DescribeUsageLimitsMessage
       attr_accessor usage_limit_id: ::String
       attr_accessor cluster_identifier: ::String
-      attr_accessor feature_type: ("spectrum" | "concurrency-scaling" | "cross-region-datasharing")
+      attr_accessor feature_type: ("spectrum" | "concurrency-scaling" | "cross-region-datasharing" | "extra-compute-for-automatic-optimization")
       attr_accessor max_records: ::Integer
       attr_accessor marker: ::String
       attr_accessor tag_keys: ::Array[::String]
@@ -1545,6 +1589,17 @@ module Aws::Redshift
       attr_accessor duration_seconds: ::Integer
       attr_accessor custom_domain_name: ::String
       SENSITIVE: []
+    end
+
+    class GetIdentityCenterAuthTokenRequest
+      attr_accessor cluster_ids: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class GetIdentityCenterAuthTokenResponse
+      attr_accessor token: ::String
+      attr_accessor expiration_time: ::Time
+      SENSITIVE: [:token]
     end
 
     class GetReservedNodeExchangeConfigurationOptionsInputMessage
@@ -1833,6 +1888,14 @@ module Aws::Redshift
       end
     end
 
+    class LakehouseConfiguration
+      attr_accessor cluster_identifier: ::String
+      attr_accessor lakehouse_idc_application_arn: ::String
+      attr_accessor lakehouse_registration_status: ::String
+      attr_accessor catalog_arn: ::String
+      SENSITIVE: []
+    end
+
     class LimitExceededFault < Aws::EmptyStructure
     end
 
@@ -1961,6 +2024,7 @@ module Aws::Redshift
       attr_accessor master_password_secret_kms_key_id: ::String
       attr_accessor ip_address_type: ::String
       attr_accessor multi_az: bool
+      attr_accessor extra_compute_for_automatic_optimization: bool
       SENSITIVE: [:master_user_password]
     end
 
@@ -2047,6 +2111,27 @@ module Aws::Redshift
       attr_accessor integration_arn: ::String
       attr_accessor description: ::String
       attr_accessor integration_name: ::String
+      SENSITIVE: []
+    end
+
+    class ModifyLakehouseConfigurationMessage
+      attr_accessor cluster_identifier: ::String
+      attr_accessor lakehouse_registration: ("Register" | "Deregister")
+      attr_accessor catalog_name: ::String
+      attr_accessor lakehouse_idc_registration: ("Associate" | "Disassociate")
+      attr_accessor lakehouse_idc_application_arn: ::String
+      attr_accessor dry_run: bool
+      SENSITIVE: []
+    end
+
+    class ModifyQev2IdcApplicationMessage
+      attr_accessor qev_2_idc_application_arn: ::String
+      attr_accessor idc_display_name: ::String
+      SENSITIVE: []
+    end
+
+    class ModifyQev2IdcApplicationResult
+      attr_accessor qev_2_idc_application: Types::Qev2IdcApplication
       SENSITIVE: []
     end
 
@@ -2258,6 +2343,23 @@ module Aws::Redshift
       SENSITIVE: []
     end
 
+    class Qev2IdcApplication
+      attr_accessor idc_instance_arn: ::String
+      attr_accessor qev_2_idc_application_name: ::String
+      attr_accessor qev_2_idc_application_arn: ::String
+      attr_accessor idc_managed_application_arn: ::String
+      attr_accessor idc_onboard_status: ::String
+      attr_accessor idc_display_name: ::String
+      attr_accessor tags: ::Array[Types::Tag]
+      SENSITIVE: []
+    end
+
+    class Qev2IdcApplicationAlreadyExistsFault < Aws::EmptyStructure
+    end
+
+    class Qev2IdcApplicationNotExistsFault < Aws::EmptyStructure
+    end
+
     class ReadWriteAccess
       attr_accessor authorization: ("Enabled" | "Disabled")
       SENSITIVE: []
@@ -2314,6 +2416,9 @@ module Aws::Redshift
       attr_accessor idc_onboard_status: ::String
       attr_accessor authorized_token_issuer_list: ::Array[Types::AuthorizedTokenIssuer]
       attr_accessor service_integrations: ::Array[Types::ServiceIntegrationsUnion]
+      attr_accessor application_type: ("None" | "Lakehouse")
+      attr_accessor tags: ::Array[Types::Tag]
+      attr_accessor sso_tag_keys: ::Array[::String]
       SENSITIVE: []
     end
 
@@ -2324,6 +2429,20 @@ module Aws::Redshift
     end
 
     class RedshiftIdcApplicationQuotaExceededFault < Aws::EmptyStructure
+    end
+
+    class RedshiftInvalidParameterFault < Aws::EmptyStructure
+    end
+
+    class RedshiftScopeUnion
+      attr_accessor connect: Types::Connect
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class Connect < RedshiftScopeUnion
+      end
+      class Unknown < RedshiftScopeUnion
+      end
     end
 
     class ReferenceLink
@@ -2527,6 +2646,8 @@ module Aws::Redshift
       attr_accessor master_password_secret_kms_key_id: ::String
       attr_accessor ip_address_type: ::String
       attr_accessor multi_az: bool
+      attr_accessor catalog_name: ::String
+      attr_accessor redshift_idc_application_arn: ::String
       SENSITIVE: []
     end
 
@@ -2706,12 +2827,15 @@ module Aws::Redshift
     class ServiceIntegrationsUnion
       attr_accessor lake_formation: ::Array[Types::LakeFormationScopeUnion]
       attr_accessor s3_access_grants: ::Array[Types::S3AccessGrantsScopeUnion]
+      attr_accessor redshift: ::Array[Types::RedshiftScopeUnion]
       attr_accessor unknown: untyped
       SENSITIVE: []
 
       class LakeFormation < ServiceIntegrationsUnion
       end
       class S3AccessGrants < ServiceIntegrationsUnion
+      end
+      class Redshift < ServiceIntegrationsUnion
       end
       class Unknown < ServiceIntegrationsUnion
       end
@@ -2963,7 +3087,7 @@ module Aws::Redshift
     class UsageLimit
       attr_accessor usage_limit_id: ::String
       attr_accessor cluster_identifier: ::String
-      attr_accessor feature_type: ("spectrum" | "concurrency-scaling" | "cross-region-datasharing")
+      attr_accessor feature_type: ("spectrum" | "concurrency-scaling" | "cross-region-datasharing" | "extra-compute-for-automatic-optimization")
       attr_accessor limit_type: ("time" | "data-scanned")
       attr_accessor amount: ::Integer
       attr_accessor period: ("daily" | "weekly" | "monthly")

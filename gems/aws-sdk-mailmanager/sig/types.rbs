@@ -20,18 +20,18 @@ module Aws::MailManager
     end
 
     class AddonInstance
-      attr_accessor addon_instance_arn: ::String
       attr_accessor addon_instance_id: ::String
-      attr_accessor addon_name: ::String
       attr_accessor addon_subscription_id: ::String
+      attr_accessor addon_name: ::String
+      attr_accessor addon_instance_arn: ::String
       attr_accessor created_timestamp: ::Time
       SENSITIVE: []
     end
 
     class AddonSubscription
+      attr_accessor addon_subscription_id: ::String
       attr_accessor addon_name: ::String
       attr_accessor addon_subscription_arn: ::String
-      attr_accessor addon_subscription_id: ::String
       attr_accessor created_timestamp: ::Time
       SENSITIVE: []
     end
@@ -42,8 +42,8 @@ module Aws::MailManager
     end
 
     class AddressList
-      attr_accessor address_list_arn: ::String
       attr_accessor address_list_id: ::String
+      attr_accessor address_list_arn: ::String
       attr_accessor address_list_name: ::String
       attr_accessor created_timestamp: ::Time
       attr_accessor last_updated_timestamp: ::Time
@@ -88,14 +88,14 @@ module Aws::MailManager
     end
 
     class ArchiveFilterCondition
-      attr_accessor boolean_expression: Types::ArchiveBooleanExpression
       attr_accessor string_expression: Types::ArchiveStringExpression
+      attr_accessor boolean_expression: Types::ArchiveBooleanExpression
       attr_accessor unknown: untyped
       SENSITIVE: []
 
-      class BooleanExpression < ArchiveFilterCondition
-      end
       class StringExpression < ArchiveFilterCondition
+      end
+      class BooleanExpression < ArchiveFilterCondition
       end
       class Unknown < ArchiveFilterCondition
       end
@@ -136,14 +136,25 @@ module Aws::MailManager
       end
     end
 
+    class BounceAction
+      attr_accessor action_failure_policy: ("CONTINUE" | "DROP")
+      attr_accessor role_arn: ::String
+      attr_accessor sender: ::String
+      attr_accessor status_code: ::String
+      attr_accessor smtp_reply_code: ::String
+      attr_accessor diagnostic_message: ::String
+      attr_accessor message: ::String
+      SENSITIVE: [:sender, :diagnostic_message, :message]
+    end
+
     class ConflictException
       attr_accessor message: ::String
       SENSITIVE: []
     end
 
     class CreateAddonInstanceRequest
-      attr_accessor addon_subscription_id: ::String
       attr_accessor client_token: ::String
+      attr_accessor addon_subscription_id: ::String
       attr_accessor tags: ::Array[Types::Tag]
       SENSITIVE: []
     end
@@ -154,8 +165,8 @@ module Aws::MailManager
     end
 
     class CreateAddonSubscriptionRequest
-      attr_accessor addon_name: ::String
       attr_accessor client_token: ::String
+      attr_accessor addon_name: ::String
       attr_accessor tags: ::Array[Types::Tag]
       SENSITIVE: []
     end
@@ -166,10 +177,10 @@ module Aws::MailManager
     end
 
     class CreateAddressListImportJobRequest
-      attr_accessor address_list_id: ::String
       attr_accessor client_token: ::String
-      attr_accessor import_data_format: Types::ImportDataFormat
+      attr_accessor address_list_id: ::String
       attr_accessor name: ::String
+      attr_accessor import_data_format: Types::ImportDataFormat
       SENSITIVE: []
     end
 
@@ -180,8 +191,8 @@ module Aws::MailManager
     end
 
     class CreateAddressListRequest
-      attr_accessor address_list_name: ::String
       attr_accessor client_token: ::String
+      attr_accessor address_list_name: ::String
       attr_accessor tags: ::Array[Types::Tag]
       SENSITIVE: []
     end
@@ -192,10 +203,10 @@ module Aws::MailManager
     end
 
     class CreateArchiveRequest
-      attr_accessor archive_name: ::String
       attr_accessor client_token: ::String
-      attr_accessor kms_key_arn: ::String
+      attr_accessor archive_name: ::String
       attr_accessor retention: Types::ArchiveRetention
+      attr_accessor kms_key_arn: ::String
       attr_accessor tags: ::Array[Types::Tag]
       SENSITIVE: []
     end
@@ -207,12 +218,14 @@ module Aws::MailManager
 
     class CreateIngressPointRequest
       attr_accessor client_token: ::String
-      attr_accessor ingress_point_configuration: Types::IngressPointConfiguration
       attr_accessor ingress_point_name: ::String
+      attr_accessor type: ("OPEN" | "AUTH" | "MTLS")
       attr_accessor rule_set_id: ::String
-      attr_accessor tags: ::Array[Types::Tag]
       attr_accessor traffic_policy_id: ::String
-      attr_accessor type: ("OPEN" | "AUTH")
+      attr_accessor ingress_point_configuration: Types::IngressPointConfiguration
+      attr_accessor network_configuration: Types::NetworkConfiguration
+      attr_accessor tls_policy: ("REQUIRED" | "OPTIONAL" | "FIPS")
+      attr_accessor tags: ::Array[Types::Tag]
       SENSITIVE: []
     end
 
@@ -222,11 +235,11 @@ module Aws::MailManager
     end
 
     class CreateRelayRequest
-      attr_accessor authentication: Types::RelayAuthentication
       attr_accessor client_token: ::String
       attr_accessor relay_name: ::String
       attr_accessor server_name: ::String
       attr_accessor server_port: ::Integer
+      attr_accessor authentication: Types::RelayAuthentication
       attr_accessor tags: ::Array[Types::Tag]
       SENSITIVE: []
     end
@@ -251,11 +264,11 @@ module Aws::MailManager
 
     class CreateTrafficPolicyRequest
       attr_accessor client_token: ::String
+      attr_accessor traffic_policy_name: ::String
+      attr_accessor policy_statements: ::Array[Types::PolicyStatement]
       attr_accessor default_action: ("ALLOW" | "DENY")
       attr_accessor max_message_size_bytes: ::Integer
-      attr_accessor policy_statements: ::Array[Types::PolicyStatement]
       attr_accessor tags: ::Array[Types::Tag]
-      attr_accessor traffic_policy_name: ::String
       SENSITIVE: []
     end
 
@@ -344,8 +357,8 @@ module Aws::MailManager
     end
 
     class DeregisterMemberFromAddressListRequest
-      attr_accessor address: ::String
       attr_accessor address_list_id: ::String
+      attr_accessor address: ::String
       SENSITIVE: [:address]
     end
 
@@ -356,8 +369,8 @@ module Aws::MailManager
     end
 
     class Envelope
-      attr_accessor from: ::String
       attr_accessor helo: ::String
+      attr_accessor from: ::String
       attr_accessor to: ::Array[::String]
       SENSITIVE: []
     end
@@ -374,10 +387,10 @@ module Aws::MailManager
     end
 
     class ExportStatus
-      attr_accessor completion_timestamp: ::Time
-      attr_accessor error_message: ::String
-      attr_accessor state: ("QUEUED" | "PREPROCESSING" | "PROCESSING" | "COMPLETED" | "FAILED" | "CANCELLED")
       attr_accessor submission_timestamp: ::Time
+      attr_accessor completion_timestamp: ::Time
+      attr_accessor state: ("QUEUED" | "PREPROCESSING" | "PROCESSING" | "COMPLETED" | "FAILED" | "CANCELLED")
+      attr_accessor error_message: ::String
       SENSITIVE: []
     end
 
@@ -393,9 +406,9 @@ module Aws::MailManager
     end
 
     class GetAddonInstanceResponse
-      attr_accessor addon_instance_arn: ::String
-      attr_accessor addon_name: ::String
       attr_accessor addon_subscription_id: ::String
+      attr_accessor addon_name: ::String
+      attr_accessor addon_instance_arn: ::String
       attr_accessor created_timestamp: ::Time
       SENSITIVE: []
     end
@@ -418,18 +431,18 @@ module Aws::MailManager
     end
 
     class GetAddressListImportJobResponse
-      attr_accessor address_list_id: ::String
-      attr_accessor completed_timestamp: ::Time
-      attr_accessor created_timestamp: ::Time
-      attr_accessor error: ::String
-      attr_accessor failed_items_count: ::Integer
-      attr_accessor import_data_format: Types::ImportDataFormat
-      attr_accessor imported_items_count: ::Integer
       attr_accessor job_id: ::String
       attr_accessor name: ::String
-      attr_accessor pre_signed_url: ::String
-      attr_accessor start_timestamp: ::Time
       attr_accessor status: ("CREATED" | "PROCESSING" | "COMPLETED" | "FAILED" | "STOPPED")
+      attr_accessor pre_signed_url: ::String
+      attr_accessor imported_items_count: ::Integer
+      attr_accessor failed_items_count: ::Integer
+      attr_accessor import_data_format: Types::ImportDataFormat
+      attr_accessor address_list_id: ::String
+      attr_accessor created_timestamp: ::Time
+      attr_accessor start_timestamp: ::Time
+      attr_accessor completed_timestamp: ::Time
+      attr_accessor error: ::String
       SENSITIVE: [:pre_signed_url]
     end
 
@@ -439,8 +452,8 @@ module Aws::MailManager
     end
 
     class GetAddressListResponse
-      attr_accessor address_list_arn: ::String
       attr_accessor address_list_id: ::String
+      attr_accessor address_list_arn: ::String
       attr_accessor address_list_name: ::String
       attr_accessor created_timestamp: ::Time
       attr_accessor last_updated_timestamp: ::Time
@@ -454,12 +467,12 @@ module Aws::MailManager
 
     class GetArchiveExportResponse
       attr_accessor archive_id: ::String
-      attr_accessor export_destination_configuration: Types::ExportDestinationConfiguration
       attr_accessor filters: Types::ArchiveFilters
       attr_accessor from_timestamp: ::Time
-      attr_accessor max_results: ::Integer
-      attr_accessor status: Types::ExportStatus
       attr_accessor to_timestamp: ::Time
+      attr_accessor max_results: ::Integer
+      attr_accessor export_destination_configuration: Types::ExportDestinationConfiguration
+      attr_accessor status: Types::ExportStatus
       SENSITIVE: []
     end
 
@@ -479,9 +492,9 @@ module Aws::MailManager
     end
 
     class GetArchiveMessageResponse
-      attr_accessor envelope: Types::Envelope
       attr_accessor message_download_link: ::String
       attr_accessor metadata: Types::Metadata
+      attr_accessor envelope: Types::Envelope
       SENSITIVE: []
     end
 
@@ -491,14 +504,14 @@ module Aws::MailManager
     end
 
     class GetArchiveResponse
-      attr_accessor archive_arn: ::String
       attr_accessor archive_id: ::String
       attr_accessor archive_name: ::String
+      attr_accessor archive_arn: ::String
       attr_accessor archive_state: ("ACTIVE" | "PENDING_DELETION")
-      attr_accessor created_timestamp: ::Time
-      attr_accessor kms_key_arn: ::String
-      attr_accessor last_updated_timestamp: ::Time
       attr_accessor retention: Types::ArchiveRetention
+      attr_accessor created_timestamp: ::Time
+      attr_accessor last_updated_timestamp: ::Time
+      attr_accessor kms_key_arn: ::String
       SENSITIVE: []
     end
 
@@ -511,9 +524,9 @@ module Aws::MailManager
       attr_accessor archive_id: ::String
       attr_accessor filters: Types::ArchiveFilters
       attr_accessor from_timestamp: ::Time
+      attr_accessor to_timestamp: ::Time
       attr_accessor max_results: ::Integer
       attr_accessor status: Types::SearchStatus
-      attr_accessor to_timestamp: ::Time
       SENSITIVE: []
     end
 
@@ -529,27 +542,30 @@ module Aws::MailManager
 
     class GetIngressPointRequest
       attr_accessor ingress_point_id: ::String
+      attr_accessor include_trust_store_contents: ("EXCLUDE" | "INCLUDE")
       SENSITIVE: []
     end
 
     class GetIngressPointResponse
-      attr_accessor a_record: ::String
-      attr_accessor created_timestamp: ::Time
-      attr_accessor ingress_point_arn: ::String
-      attr_accessor ingress_point_auth_configuration: Types::IngressPointAuthConfiguration
       attr_accessor ingress_point_id: ::String
       attr_accessor ingress_point_name: ::String
-      attr_accessor last_updated_timestamp: ::Time
+      attr_accessor ingress_point_arn: ::String
+      attr_accessor status: ("PROVISIONING" | "DEPROVISIONING" | "UPDATING" | "ACTIVE" | "CLOSED" | "FAILED" | "ASSOCIATED_VPC_ENDPOINT_DOES_NOT_EXIST")
+      attr_accessor type: ("OPEN" | "AUTH" | "MTLS")
+      attr_accessor a_record: ::String
       attr_accessor rule_set_id: ::String
-      attr_accessor status: ("PROVISIONING" | "DEPROVISIONING" | "UPDATING" | "ACTIVE" | "CLOSED" | "FAILED")
       attr_accessor traffic_policy_id: ::String
-      attr_accessor type: ("OPEN" | "AUTH")
+      attr_accessor ingress_point_auth_configuration: Types::IngressPointAuthConfiguration
+      attr_accessor network_configuration: Types::NetworkConfiguration
+      attr_accessor tls_policy: ("REQUIRED" | "OPTIONAL" | "FIPS")
+      attr_accessor created_timestamp: ::Time
+      attr_accessor last_updated_timestamp: ::Time
       SENSITIVE: []
     end
 
     class GetMemberOfAddressListRequest
-      attr_accessor address: ::String
       attr_accessor address_list_id: ::String
+      attr_accessor address: ::String
       SENSITIVE: [:address]
     end
 
@@ -565,14 +581,14 @@ module Aws::MailManager
     end
 
     class GetRelayResponse
-      attr_accessor authentication: Types::RelayAuthentication
-      attr_accessor created_timestamp: ::Time
-      attr_accessor last_modified_timestamp: ::Time
-      attr_accessor relay_arn: ::String
       attr_accessor relay_id: ::String
+      attr_accessor relay_arn: ::String
       attr_accessor relay_name: ::String
       attr_accessor server_name: ::String
       attr_accessor server_port: ::Integer
+      attr_accessor authentication: Types::RelayAuthentication
+      attr_accessor created_timestamp: ::Time
+      attr_accessor last_modified_timestamp: ::Time
       SENSITIVE: []
     end
 
@@ -582,11 +598,11 @@ module Aws::MailManager
     end
 
     class GetRuleSetResponse
+      attr_accessor rule_set_id: ::String
+      attr_accessor rule_set_arn: ::String
+      attr_accessor rule_set_name: ::String
       attr_accessor created_date: ::Time
       attr_accessor last_modification_date: ::Time
-      attr_accessor rule_set_arn: ::String
-      attr_accessor rule_set_id: ::String
-      attr_accessor rule_set_name: ::String
       attr_accessor rules: ::Array[Types::Rule]
       SENSITIVE: []
     end
@@ -597,14 +613,14 @@ module Aws::MailManager
     end
 
     class GetTrafficPolicyResponse
-      attr_accessor created_timestamp: ::Time
-      attr_accessor default_action: ("ALLOW" | "DENY")
-      attr_accessor last_updated_timestamp: ::Time
-      attr_accessor max_message_size_bytes: ::Integer
-      attr_accessor policy_statements: ::Array[Types::PolicyStatement]
-      attr_accessor traffic_policy_arn: ::String
-      attr_accessor traffic_policy_id: ::String
       attr_accessor traffic_policy_name: ::String
+      attr_accessor traffic_policy_id: ::String
+      attr_accessor traffic_policy_arn: ::String
+      attr_accessor policy_statements: ::Array[Types::PolicyStatement]
+      attr_accessor max_message_size_bytes: ::Integer
+      attr_accessor default_action: ("ALLOW" | "DENY")
+      attr_accessor created_timestamp: ::Time
+      attr_accessor last_updated_timestamp: ::Time
       SENSITIVE: []
     end
 
@@ -614,18 +630,18 @@ module Aws::MailManager
     end
 
     class ImportJob
-      attr_accessor address_list_id: ::String
-      attr_accessor completed_timestamp: ::Time
-      attr_accessor created_timestamp: ::Time
-      attr_accessor error: ::String
-      attr_accessor failed_items_count: ::Integer
-      attr_accessor import_data_format: Types::ImportDataFormat
-      attr_accessor imported_items_count: ::Integer
       attr_accessor job_id: ::String
       attr_accessor name: ::String
-      attr_accessor pre_signed_url: ::String
-      attr_accessor start_timestamp: ::Time
       attr_accessor status: ("CREATED" | "PROCESSING" | "COMPLETED" | "FAILED" | "STOPPED")
+      attr_accessor pre_signed_url: ::String
+      attr_accessor imported_items_count: ::Integer
+      attr_accessor failed_items_count: ::Integer
+      attr_accessor import_data_format: Types::ImportDataFormat
+      attr_accessor address_list_id: ::String
+      attr_accessor created_timestamp: ::Time
+      attr_accessor start_timestamp: ::Time
+      attr_accessor completed_timestamp: ::Time
+      attr_accessor error: ::String
       SENSITIVE: [:pre_signed_url]
     end
 
@@ -673,45 +689,67 @@ module Aws::MailManager
       SENSITIVE: []
     end
 
+    class IngressIpv6Expression
+      attr_accessor evaluate: Types::IngressIpv6ToEvaluate
+      attr_accessor operator: ("CIDR_MATCHES" | "NOT_CIDR_MATCHES")
+      attr_accessor values: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class IngressIpv6ToEvaluate
+      attr_accessor attribute: ("SENDER_IPV6")
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class Attribute < IngressIpv6ToEvaluate
+      end
+      class Unknown < IngressIpv6ToEvaluate
+      end
+    end
+
     class IngressIsInAddressList
-      attr_accessor address_lists: ::Array[::String]
       attr_accessor attribute: ("RECIPIENT")
+      attr_accessor address_lists: ::Array[::String]
       SENSITIVE: []
     end
 
     class IngressPoint
-      attr_accessor a_record: ::String
-      attr_accessor ingress_point_id: ::String
       attr_accessor ingress_point_name: ::String
-      attr_accessor status: ("PROVISIONING" | "DEPROVISIONING" | "UPDATING" | "ACTIVE" | "CLOSED" | "FAILED")
-      attr_accessor type: ("OPEN" | "AUTH")
+      attr_accessor ingress_point_id: ::String
+      attr_accessor status: ("PROVISIONING" | "DEPROVISIONING" | "UPDATING" | "ACTIVE" | "CLOSED" | "FAILED" | "ASSOCIATED_VPC_ENDPOINT_DOES_NOT_EXIST")
+      attr_accessor type: ("OPEN" | "AUTH" | "MTLS")
+      attr_accessor a_record: ::String
       SENSITIVE: []
     end
 
     class IngressPointAuthConfiguration
       attr_accessor ingress_point_password_configuration: Types::IngressPointPasswordConfiguration
       attr_accessor secret_arn: ::String
+      attr_accessor tls_auth_configuration: Types::TlsAuthConfiguration
       SENSITIVE: []
     end
 
     class IngressPointConfiguration
-      attr_accessor secret_arn: ::String
       attr_accessor smtp_password: ::String
+      attr_accessor secret_arn: ::String
+      attr_accessor tls_auth_configuration: Types::TlsAuthConfiguration
       attr_accessor unknown: untyped
       SENSITIVE: [:smtp_password]
 
+      class SmtpPassword < IngressPointConfiguration
+      end
       class SecretArn < IngressPointConfiguration
       end
-      class SmtpPassword < IngressPointConfiguration
+      class TlsAuthConfiguration < IngressPointConfiguration
       end
       class Unknown < IngressPointConfiguration
       end
     end
 
     class IngressPointPasswordConfiguration
-      attr_accessor previous_smtp_password_expiry_timestamp: ::Time
-      attr_accessor previous_smtp_password_version: ::String
       attr_accessor smtp_password_version: ::String
+      attr_accessor previous_smtp_password_version: ::String
+      attr_accessor previous_smtp_password_expiry_timestamp: ::Time
       SENSITIVE: []
     end
 
@@ -723,14 +761,14 @@ module Aws::MailManager
     end
 
     class IngressStringToEvaluate
-      attr_accessor analysis: Types::IngressAnalysis
       attr_accessor attribute: ("RECIPIENT")
+      attr_accessor analysis: Types::IngressAnalysis
       attr_accessor unknown: untyped
       SENSITIVE: []
 
-      class Analysis < IngressStringToEvaluate
-      end
       class Attribute < IngressStringToEvaluate
+      end
+      class Analysis < IngressStringToEvaluate
       end
       class Unknown < IngressStringToEvaluate
       end
@@ -752,6 +790,15 @@ module Aws::MailManager
       end
       class Unknown < IngressTlsProtocolToEvaluate
       end
+    end
+
+    class InvokeLambdaAction
+      attr_accessor action_failure_policy: ("CONTINUE" | "DROP")
+      attr_accessor function_arn: ::String
+      attr_accessor invocation_type: ("EVENT" | "REQUEST_RESPONSE")
+      attr_accessor role_arn: ::String
+      attr_accessor retry_time_minutes: ::Integer
+      SENSITIVE: []
     end
 
     class ListAddonInstancesRequest
@@ -824,8 +871,8 @@ module Aws::MailManager
     end
 
     class ListArchiveSearchesResponse
-      attr_accessor next_token: ::String
       attr_accessor searches: ::Array[Types::SearchSummary]
+      attr_accessor next_token: ::String
       SENSITIVE: []
     end
 
@@ -842,8 +889,8 @@ module Aws::MailManager
     end
 
     class ListIngressPointsRequest
-      attr_accessor next_token: ::String
       attr_accessor page_size: ::Integer
+      attr_accessor next_token: ::String
       SENSITIVE: []
     end
 
@@ -868,14 +915,14 @@ module Aws::MailManager
     end
 
     class ListRelaysRequest
-      attr_accessor next_token: ::String
       attr_accessor page_size: ::Integer
+      attr_accessor next_token: ::String
       SENSITIVE: []
     end
 
     class ListRelaysResponse
-      attr_accessor next_token: ::String
       attr_accessor relays: ::Array[Types::Relay]
+      attr_accessor next_token: ::String
       SENSITIVE: []
     end
 
@@ -886,8 +933,8 @@ module Aws::MailManager
     end
 
     class ListRuleSetsResponse
-      attr_accessor next_token: ::String
       attr_accessor rule_sets: ::Array[Types::RuleSet]
+      attr_accessor next_token: ::String
       SENSITIVE: []
     end
 
@@ -902,73 +949,100 @@ module Aws::MailManager
     end
 
     class ListTrafficPoliciesRequest
-      attr_accessor next_token: ::String
       attr_accessor page_size: ::Integer
+      attr_accessor next_token: ::String
       SENSITIVE: []
     end
 
     class ListTrafficPoliciesResponse
-      attr_accessor next_token: ::String
       attr_accessor traffic_policies: ::Array[Types::TrafficPolicy]
+      attr_accessor next_token: ::String
       SENSITIVE: []
     end
 
     class MessageBody
+      attr_accessor text: ::String
       attr_accessor html: ::String
       attr_accessor message_malformed: bool
-      attr_accessor text: ::String
       SENSITIVE: []
     end
 
     class Metadata
-      attr_accessor configuration_set: ::String
+      attr_accessor timestamp: ::Time
       attr_accessor ingress_point_id: ::String
+      attr_accessor traffic_policy_id: ::String
       attr_accessor rule_set_id: ::String
       attr_accessor sender_hostname: ::String
       attr_accessor sender_ip_address: ::String
-      attr_accessor sending_method: ::String
-      attr_accessor sending_pool: ::String
-      attr_accessor source_arn: ::String
-      attr_accessor source_identity: ::String
-      attr_accessor timestamp: ::Time
       attr_accessor tls_cipher_suite: ::String
       attr_accessor tls_protocol: ::String
-      attr_accessor traffic_policy_id: ::String
+      attr_accessor sending_method: ::String
+      attr_accessor source_identity: ::String
+      attr_accessor sending_pool: ::String
+      attr_accessor configuration_set: ::String
+      attr_accessor source_arn: ::String
       SENSITIVE: [:sender_ip_address]
+    end
+
+    class NetworkConfiguration
+      attr_accessor public_network_configuration: Types::PublicNetworkConfiguration
+      attr_accessor private_network_configuration: Types::PrivateNetworkConfiguration
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class PublicNetworkConfiguration < NetworkConfiguration
+      end
+      class PrivateNetworkConfiguration < NetworkConfiguration
+      end
+      class Unknown < NetworkConfiguration
+      end
     end
 
     class NoAuthentication < Aws::EmptyStructure
     end
 
     class PolicyCondition
-      attr_accessor boolean_expression: Types::IngressBooleanExpression
-      attr_accessor ip_expression: Types::IngressIpv4Expression
       attr_accessor string_expression: Types::IngressStringExpression
+      attr_accessor ip_expression: Types::IngressIpv4Expression
+      attr_accessor ipv_6_expression: Types::IngressIpv6Expression
       attr_accessor tls_expression: Types::IngressTlsProtocolExpression
+      attr_accessor boolean_expression: Types::IngressBooleanExpression
       attr_accessor unknown: untyped
       SENSITIVE: []
 
-      class BooleanExpression < PolicyCondition
+      class StringExpression < PolicyCondition
       end
       class IpExpression < PolicyCondition
       end
-      class StringExpression < PolicyCondition
+      class Ipv6Expression < PolicyCondition
       end
       class TlsExpression < PolicyCondition
+      end
+      class BooleanExpression < PolicyCondition
       end
       class Unknown < PolicyCondition
       end
     end
 
     class PolicyStatement
-      attr_accessor action: ("ALLOW" | "DENY")
       attr_accessor conditions: ::Array[Types::PolicyCondition]
+      attr_accessor action: ("ALLOW" | "DENY")
+      SENSITIVE: []
+    end
+
+    class PrivateNetworkConfiguration
+      attr_accessor vpc_endpoint_id: ::String
+      SENSITIVE: []
+    end
+
+    class PublicNetworkConfiguration
+      attr_accessor ip_type: ("IPV4" | "DUAL_STACK")
       SENSITIVE: []
     end
 
     class RegisterMemberToAddressListRequest
-      attr_accessor address: ::String
       attr_accessor address_list_id: ::String
+      attr_accessor address: ::String
       SENSITIVE: [:address]
     end
 
@@ -976,28 +1050,28 @@ module Aws::MailManager
     end
 
     class Relay
-      attr_accessor last_modified_timestamp: ::Time
       attr_accessor relay_id: ::String
       attr_accessor relay_name: ::String
+      attr_accessor last_modified_timestamp: ::Time
       SENSITIVE: []
     end
 
     class RelayAction
       attr_accessor action_failure_policy: ("CONTINUE" | "DROP")
-      attr_accessor mail_from: ("REPLACE" | "PRESERVE")
       attr_accessor relay: ::String
+      attr_accessor mail_from: ("REPLACE" | "PRESERVE")
       SENSITIVE: []
     end
 
     class RelayAuthentication
-      attr_accessor no_authentication: Types::NoAuthentication
       attr_accessor secret_arn: ::String
+      attr_accessor no_authentication: Types::NoAuthentication
       attr_accessor unknown: untyped
       SENSITIVE: []
 
-      class NoAuthentication < RelayAuthentication
-      end
       class SecretArn < RelayAuthentication
+      end
+      class NoAuthentication < RelayAuthentication
       end
       class Unknown < RelayAuthentication
       end
@@ -1015,65 +1089,74 @@ module Aws::MailManager
 
     class Row
       attr_accessor archived_message_id: ::String
-      attr_accessor cc: ::String
-      attr_accessor date: ::String
-      attr_accessor envelope: Types::Envelope
-      attr_accessor from: ::String
-      attr_accessor has_attachments: bool
-      attr_accessor in_reply_to: ::String
-      attr_accessor ingress_point_id: ::String
-      attr_accessor message_id: ::String
-      attr_accessor received_headers: ::Array[::String]
       attr_accessor received_timestamp: ::Time
-      attr_accessor sender_hostname: ::String
-      attr_accessor sender_ip_address: ::String
-      attr_accessor source_arn: ::String
-      attr_accessor subject: ::String
+      attr_accessor date: ::String
       attr_accessor to: ::String
+      attr_accessor from: ::String
+      attr_accessor cc: ::String
+      attr_accessor subject: ::String
+      attr_accessor message_id: ::String
+      attr_accessor has_attachments: bool
+      attr_accessor received_headers: ::Array[::String]
+      attr_accessor in_reply_to: ::String
       attr_accessor x_mailer: ::String
       attr_accessor x_original_mailer: ::String
       attr_accessor x_priority: ::String
+      attr_accessor ingress_point_id: ::String
+      attr_accessor sender_hostname: ::String
+      attr_accessor sender_ip_address: ::String
+      attr_accessor envelope: Types::Envelope
+      attr_accessor source_arn: ::String
       SENSITIVE: [:sender_ip_address]
     end
 
     class Rule
-      attr_accessor actions: ::Array[Types::RuleAction]
-      attr_accessor conditions: ::Array[Types::RuleCondition]
       attr_accessor name: ::String
+      attr_accessor conditions: ::Array[Types::RuleCondition]
       attr_accessor unless: ::Array[Types::RuleCondition]
+      attr_accessor actions: ::Array[Types::RuleAction]
       SENSITIVE: []
     end
 
     class RuleAction
-      attr_accessor add_header: Types::AddHeaderAction
-      attr_accessor archive: Types::ArchiveAction
-      attr_accessor deliver_to_mailbox: Types::DeliverToMailboxAction
-      attr_accessor deliver_to_q_business: Types::DeliverToQBusinessAction
       attr_accessor drop: Types::DropAction
       attr_accessor relay: Types::RelayAction
-      attr_accessor replace_recipient: Types::ReplaceRecipientAction
-      attr_accessor send: Types::SendAction
+      attr_accessor archive: Types::ArchiveAction
       attr_accessor write_to_s3: Types::S3Action
+      attr_accessor send: Types::SendAction
+      attr_accessor add_header: Types::AddHeaderAction
+      attr_accessor replace_recipient: Types::ReplaceRecipientAction
+      attr_accessor deliver_to_mailbox: Types::DeliverToMailboxAction
+      attr_accessor deliver_to_q_business: Types::DeliverToQBusinessAction
+      attr_accessor publish_to_sns: Types::SnsAction
+      attr_accessor bounce: Types::BounceAction
+      attr_accessor invoke_lambda: Types::InvokeLambdaAction
       attr_accessor unknown: untyped
       SENSITIVE: []
 
-      class AddHeader < RuleAction
+      class Drop < RuleAction
+      end
+      class Relay < RuleAction
       end
       class Archive < RuleAction
+      end
+      class WriteToS3 < RuleAction
+      end
+      class Send < RuleAction
+      end
+      class AddHeader < RuleAction
+      end
+      class ReplaceRecipient < RuleAction
       end
       class DeliverToMailbox < RuleAction
       end
       class DeliverToQBusiness < RuleAction
       end
-      class Drop < RuleAction
+      class PublishToSns < RuleAction
       end
-      class Relay < RuleAction
+      class Bounce < RuleAction
       end
-      class ReplaceRecipient < RuleAction
-      end
-      class Send < RuleAction
-      end
-      class WriteToS3 < RuleAction
+      class InvokeLambda < RuleAction
       end
       class Unknown < RuleAction
       end
@@ -1086,15 +1169,15 @@ module Aws::MailManager
     end
 
     class RuleBooleanToEvaluate
-      attr_accessor analysis: Types::Analysis
       attr_accessor attribute: ("READ_RECEIPT_REQUESTED" | "TLS" | "TLS_WRAPPED")
+      attr_accessor analysis: Types::Analysis
       attr_accessor is_in_address_list: Types::RuleIsInAddressList
       attr_accessor unknown: untyped
       SENSITIVE: []
 
-      class Analysis < RuleBooleanToEvaluate
-      end
       class Attribute < RuleBooleanToEvaluate
+      end
+      class Analysis < RuleBooleanToEvaluate
       end
       class IsInAddressList < RuleBooleanToEvaluate
       end
@@ -1104,25 +1187,25 @@ module Aws::MailManager
 
     class RuleCondition
       attr_accessor boolean_expression: Types::RuleBooleanExpression
-      attr_accessor dmarc_expression: Types::RuleDmarcExpression
-      attr_accessor ip_expression: Types::RuleIpExpression
-      attr_accessor number_expression: Types::RuleNumberExpression
       attr_accessor string_expression: Types::RuleStringExpression
+      attr_accessor number_expression: Types::RuleNumberExpression
+      attr_accessor ip_expression: Types::RuleIpExpression
       attr_accessor verdict_expression: Types::RuleVerdictExpression
+      attr_accessor dmarc_expression: Types::RuleDmarcExpression
       attr_accessor unknown: untyped
       SENSITIVE: []
 
       class BooleanExpression < RuleCondition
       end
-      class DmarcExpression < RuleCondition
-      end
-      class IpExpression < RuleCondition
+      class StringExpression < RuleCondition
       end
       class NumberExpression < RuleCondition
       end
-      class StringExpression < RuleCondition
+      class IpExpression < RuleCondition
       end
       class VerdictExpression < RuleCondition
+      end
+      class DmarcExpression < RuleCondition
       end
       class Unknown < RuleCondition
       end
@@ -1153,8 +1236,8 @@ module Aws::MailManager
     end
 
     class RuleIsInAddressList
-      attr_accessor address_lists: ::Array[::String]
       attr_accessor attribute: ("RECIPIENT" | "MAIL_FROM" | "SENDER" | "FROM" | "TO" | "CC")
+      attr_accessor address_lists: ::Array[::String]
       SENSITIVE: []
     end
 
@@ -1177,9 +1260,9 @@ module Aws::MailManager
     end
 
     class RuleSet
-      attr_accessor last_modification_date: ::Time
       attr_accessor rule_set_id: ::String
       attr_accessor rule_set_name: ::String
+      attr_accessor last_modification_date: ::Time
       SENSITIVE: []
     end
 
@@ -1191,17 +1274,20 @@ module Aws::MailManager
     end
 
     class RuleStringToEvaluate
-      attr_accessor analysis: Types::Analysis
       attr_accessor attribute: ("MAIL_FROM" | "HELO" | "RECIPIENT" | "SENDER" | "FROM" | "SUBJECT" | "TO" | "CC")
       attr_accessor mime_header_attribute: ::String
+      attr_accessor analysis: Types::Analysis
+      attr_accessor client_certificate_attribute: ("CN" | "SAN_RFC822_NAME" | "SAN_DNS_NAME" | "SAN_DIRECTORY_NAME" | "SAN_UNIFORM_RESOURCE_IDENTIFIER" | "SAN_IP_ADDRESS" | "SAN_REGISTERED_ID" | "SERIAL_NUMBER")
       attr_accessor unknown: untyped
       SENSITIVE: []
 
-      class Analysis < RuleStringToEvaluate
-      end
       class Attribute < RuleStringToEvaluate
       end
       class MimeHeaderAttribute < RuleStringToEvaluate
+      end
+      class Analysis < RuleStringToEvaluate
+      end
+      class ClientCertificateAttribute < RuleStringToEvaluate
       end
       class Unknown < RuleStringToEvaluate
       end
@@ -1215,14 +1301,14 @@ module Aws::MailManager
     end
 
     class RuleVerdictToEvaluate
-      attr_accessor analysis: Types::Analysis
       attr_accessor attribute: ("SPF" | "DKIM")
+      attr_accessor analysis: Types::Analysis
       attr_accessor unknown: untyped
       SENSITIVE: []
 
-      class Analysis < RuleVerdictToEvaluate
-      end
       class Attribute < RuleVerdictToEvaluate
+      end
+      class Analysis < RuleVerdictToEvaluate
       end
       class Unknown < RuleVerdictToEvaluate
       end
@@ -1249,10 +1335,10 @@ module Aws::MailManager
     end
 
     class SearchStatus
-      attr_accessor completion_timestamp: ::Time
-      attr_accessor error_message: ::String
-      attr_accessor state: ("QUEUED" | "RUNNING" | "COMPLETED" | "FAILED" | "CANCELLED")
       attr_accessor submission_timestamp: ::Time
+      attr_accessor completion_timestamp: ::Time
+      attr_accessor state: ("QUEUED" | "RUNNING" | "COMPLETED" | "FAILED" | "CANCELLED")
+      attr_accessor error_message: ::String
       SENSITIVE: []
     end
 
@@ -1273,6 +1359,15 @@ module Aws::MailManager
       SENSITIVE: []
     end
 
+    class SnsAction
+      attr_accessor action_failure_policy: ("CONTINUE" | "DROP")
+      attr_accessor topic_arn: ::String
+      attr_accessor role_arn: ::String
+      attr_accessor encoding: ("UTF-8" | "BASE64")
+      attr_accessor payload_type: ("HEADERS" | "CONTENT")
+      SENSITIVE: []
+    end
+
     class StartAddressListImportJobRequest
       attr_accessor job_id: ::String
       SENSITIVE: []
@@ -1283,12 +1378,12 @@ module Aws::MailManager
 
     class StartArchiveExportRequest
       attr_accessor archive_id: ::String
-      attr_accessor export_destination_configuration: Types::ExportDestinationConfiguration
       attr_accessor filters: Types::ArchiveFilters
       attr_accessor from_timestamp: ::Time
-      attr_accessor include_metadata: bool
-      attr_accessor max_results: ::Integer
       attr_accessor to_timestamp: ::Time
+      attr_accessor max_results: ::Integer
+      attr_accessor export_destination_configuration: Types::ExportDestinationConfiguration
+      attr_accessor include_metadata: bool
       SENSITIVE: []
     end
 
@@ -1301,8 +1396,8 @@ module Aws::MailManager
       attr_accessor archive_id: ::String
       attr_accessor filters: Types::ArchiveFilters
       attr_accessor from_timestamp: ::Time
-      attr_accessor max_results: ::Integer
       attr_accessor to_timestamp: ::Time
+      attr_accessor max_results: ::Integer
       SENSITIVE: []
     end
 
@@ -1355,11 +1450,23 @@ module Aws::MailManager
       SENSITIVE: []
     end
 
-    class TrafficPolicy
-      attr_accessor default_action: ("ALLOW" | "DENY")
-      attr_accessor traffic_policy_id: ::String
-      attr_accessor traffic_policy_name: ::String
+    class TlsAuthConfiguration
+      attr_accessor trust_store: Types::TrustStore
       SENSITIVE: []
+    end
+
+    class TrafficPolicy
+      attr_accessor traffic_policy_name: ::String
+      attr_accessor traffic_policy_id: ::String
+      attr_accessor default_action: ("ALLOW" | "DENY")
+      SENSITIVE: []
+    end
+
+    class TrustStore
+      attr_accessor ca_content: ::String
+      attr_accessor crl_content: ::String
+      attr_accessor kms_key_arn: ::String
+      SENSITIVE: [:ca_content, :crl_content]
     end
 
     class UntagResourceRequest
@@ -1382,12 +1489,13 @@ module Aws::MailManager
     end
 
     class UpdateIngressPointRequest
-      attr_accessor ingress_point_configuration: Types::IngressPointConfiguration
       attr_accessor ingress_point_id: ::String
       attr_accessor ingress_point_name: ::String
-      attr_accessor rule_set_id: ::String
       attr_accessor status_to_update: ("ACTIVE" | "CLOSED")
+      attr_accessor rule_set_id: ::String
       attr_accessor traffic_policy_id: ::String
+      attr_accessor ingress_point_configuration: Types::IngressPointConfiguration
+      attr_accessor tls_policy: ("REQUIRED" | "OPTIONAL" | "FIPS")
       SENSITIVE: []
     end
 
@@ -1395,11 +1503,11 @@ module Aws::MailManager
     end
 
     class UpdateRelayRequest
-      attr_accessor authentication: Types::RelayAuthentication
       attr_accessor relay_id: ::String
       attr_accessor relay_name: ::String
       attr_accessor server_name: ::String
       attr_accessor server_port: ::Integer
+      attr_accessor authentication: Types::RelayAuthentication
       SENSITIVE: []
     end
 
@@ -1417,11 +1525,11 @@ module Aws::MailManager
     end
 
     class UpdateTrafficPolicyRequest
-      attr_accessor default_action: ("ALLOW" | "DENY")
-      attr_accessor max_message_size_bytes: ::Integer
-      attr_accessor policy_statements: ::Array[Types::PolicyStatement]
       attr_accessor traffic_policy_id: ::String
       attr_accessor traffic_policy_name: ::String
+      attr_accessor policy_statements: ::Array[Types::PolicyStatement]
+      attr_accessor default_action: ("ALLOW" | "DENY")
+      attr_accessor max_message_size_bytes: ::Integer
       SENSITIVE: []
     end
 

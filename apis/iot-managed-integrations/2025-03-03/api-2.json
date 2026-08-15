@@ -13,6 +13,62 @@
     "uid":"iot-managed-integrations-2025-03-03"
   },
   "operations":{
+    "CreateAccountAssociation":{
+      "name":"CreateAccountAssociation",
+      "http":{
+        "method":"POST",
+        "requestUri":"/account-associations",
+        "responseCode":201
+      },
+      "input":{"shape":"CreateAccountAssociationRequest"},
+      "output":{"shape":"CreateAccountAssociationResponse"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"InternalServerException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"ConflictException"},
+        {"shape":"ServiceUnavailableException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"ResourceNotFoundException"}
+      ]
+    },
+    "CreateCloudConnector":{
+      "name":"CreateCloudConnector",
+      "http":{
+        "method":"POST",
+        "requestUri":"/cloud-connectors",
+        "responseCode":201
+      },
+      "input":{"shape":"CreateCloudConnectorRequest"},
+      "output":{"shape":"CreateCloudConnectorResponse"},
+      "errors":[
+        {"shape":"AccessDeniedException"},
+        {"shape":"ValidationException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ConflictException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
+    "CreateConnectorDestination":{
+      "name":"CreateConnectorDestination",
+      "http":{
+        "method":"POST",
+        "requestUri":"/connector-destinations",
+        "responseCode":201
+      },
+      "input":{"shape":"CreateConnectorDestinationRequest"},
+      "output":{"shape":"CreateConnectorDestinationResponse"},
+      "errors":[
+        {"shape":"AccessDeniedException"},
+        {"shape":"ValidationException"},
+        {"shape":"InternalServerException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"ConflictException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"ResourceNotFoundException"}
+      ]
+    },
     "CreateCredentialLocker":{
       "name":"CreateCredentialLocker",
       "http":{
@@ -117,8 +173,10 @@
         {"shape":"AccessDeniedException"},
         {"shape":"ValidationException"},
         {"shape":"InternalServerException"},
+        {"shape":"UnauthorizedException"},
         {"shape":"ConflictException"},
-        {"shape":"ThrottlingException"}
+        {"shape":"ThrottlingException"},
+        {"shape":"ResourceNotFoundException"}
       ]
     },
     "CreateOtaTaskConfiguration":{
@@ -154,8 +212,62 @@
         {"shape":"UnauthorizedException"},
         {"shape":"ConflictException"},
         {"shape":"ServiceUnavailableException"},
-        {"shape":"ThrottlingException"}
+        {"shape":"ThrottlingException"},
+        {"shape":"ResourceNotFoundException"}
       ]
+    },
+    "DeleteAccountAssociation":{
+      "name":"DeleteAccountAssociation",
+      "http":{
+        "method":"DELETE",
+        "requestUri":"/account-associations/{AccountAssociationId}",
+        "responseCode":200
+      },
+      "input":{"shape":"DeleteAccountAssociationRequest"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ServiceUnavailableException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ],
+      "idempotent":true
+    },
+    "DeleteCloudConnector":{
+      "name":"DeleteCloudConnector",
+      "http":{
+        "method":"DELETE",
+        "requestUri":"/cloud-connectors/{Identifier}",
+        "responseCode":200
+      },
+      "input":{"shape":"DeleteCloudConnectorRequest"},
+      "errors":[
+        {"shape":"AccessDeniedException"},
+        {"shape":"ValidationException"},
+        {"shape":"InternalServerException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ],
+      "idempotent":true
+    },
+    "DeleteConnectorDestination":{
+      "name":"DeleteConnectorDestination",
+      "http":{
+        "method":"DELETE",
+        "requestUri":"/connector-destinations/{Identifier}",
+        "responseCode":200
+      },
+      "input":{"shape":"DeleteConnectorDestinationRequest"},
+      "errors":[
+        {"shape":"AccessDeniedException"},
+        {"shape":"ValidationException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ],
+      "idempotent":true
     },
     "DeleteCredentialLocker":{
       "name":"DeleteCredentialLocker",
@@ -259,7 +371,8 @@
         {"shape":"ValidationException"},
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ThrottlingException"}
+        {"shape":"ThrottlingException"},
+        {"shape":"LimitExceededException"}
       ],
       "idempotent":true
     },
@@ -293,11 +406,85 @@
         {"shape":"AccessDeniedException"},
         {"shape":"InternalServerException"},
         {"shape":"UnauthorizedException"},
+        {"shape":"ConflictException"},
         {"shape":"ServiceUnavailableException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"ThrottlingException"}
       ],
       "idempotent":true
+    },
+    "DeregisterAccountAssociation":{
+      "name":"DeregisterAccountAssociation",
+      "http":{
+        "method":"PUT",
+        "requestUri":"/managed-thing-associations/deregister",
+        "responseCode":200
+      },
+      "input":{"shape":"DeregisterAccountAssociationRequest"},
+      "errors":[
+        {"shape":"AccessDeniedException"},
+        {"shape":"ValidationException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ConflictException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"ResourceNotFoundException"}
+      ],
+      "idempotent":true
+    },
+    "GetAccountAssociation":{
+      "name":"GetAccountAssociation",
+      "http":{
+        "method":"GET",
+        "requestUri":"/account-associations/{AccountAssociationId}",
+        "responseCode":200
+      },
+      "input":{"shape":"GetAccountAssociationRequest"},
+      "output":{"shape":"GetAccountAssociationResponse"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ServiceUnavailableException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ],
+      "readonly":true
+    },
+    "GetCloudConnector":{
+      "name":"GetCloudConnector",
+      "http":{
+        "method":"GET",
+        "requestUri":"/cloud-connectors/{Identifier}",
+        "responseCode":200
+      },
+      "input":{"shape":"GetCloudConnectorRequest"},
+      "output":{"shape":"GetCloudConnectorResponse"},
+      "errors":[
+        {"shape":"AccessDeniedException"},
+        {"shape":"ValidationException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ],
+      "readonly":true
+    },
+    "GetConnectorDestination":{
+      "name":"GetConnectorDestination",
+      "http":{
+        "method":"GET",
+        "requestUri":"/connector-destinations/{Identifier}",
+        "responseCode":200
+      },
+      "input":{"shape":"GetConnectorDestinationRequest"},
+      "output":{"shape":"GetConnectorDestinationResponse"},
+      "errors":[
+        {"shape":"AccessDeniedException"},
+        {"shape":"ValidationException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ],
+      "readonly":true
     },
     "GetCredentialLocker":{
       "name":"GetCredentialLocker",
@@ -315,7 +502,8 @@
         {"shape":"ServiceUnavailableException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "GetCustomEndpoint":{
       "name":"GetCustomEndpoint",
@@ -334,7 +522,8 @@
         {"shape":"ServiceUnavailableException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "GetDefaultEncryptionConfiguration":{
       "name":"GetDefaultEncryptionConfiguration",
@@ -353,7 +542,8 @@
         {"shape":"ServiceUnavailableException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "GetDestination":{
       "name":"GetDestination",
@@ -370,7 +560,8 @@
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "GetDeviceDiscovery":{
       "name":"GetDeviceDiscovery",
@@ -389,7 +580,8 @@
         {"shape":"ServiceUnavailableException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "GetEventLogConfiguration":{
       "name":"GetEventLogConfiguration",
@@ -406,7 +598,8 @@
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "GetHubConfiguration":{
       "name":"GetHubConfiguration",
@@ -424,7 +617,8 @@
         {"shape":"ServiceUnavailableException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "GetManagedThing":{
       "name":"GetManagedThing",
@@ -443,7 +637,8 @@
         {"shape":"ServiceUnavailableException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "GetManagedThingCapabilities":{
       "name":"GetManagedThingCapabilities",
@@ -462,7 +657,28 @@
         {"shape":"ServiceUnavailableException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
+    },
+    "GetManagedThingCertificate":{
+      "name":"GetManagedThingCertificate",
+      "http":{
+        "method":"GET",
+        "requestUri":"/managed-things-certificate/{Identifier}",
+        "responseCode":200
+      },
+      "input":{"shape":"GetManagedThingCertificateRequest"},
+      "output":{"shape":"GetManagedThingCertificateResponse"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"InternalServerException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"ServiceUnavailableException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ],
+      "readonly":true
     },
     "GetManagedThingConnectivityData":{
       "name":"GetManagedThingConnectivityData",
@@ -481,7 +697,8 @@
         {"shape":"ServiceUnavailableException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "GetManagedThingMetaData":{
       "name":"GetManagedThingMetaData",
@@ -500,7 +717,8 @@
         {"shape":"ServiceUnavailableException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "GetManagedThingState":{
       "name":"GetManagedThingState",
@@ -519,7 +737,8 @@
         {"shape":"ServiceUnavailableException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "GetNotificationConfiguration":{
       "name":"GetNotificationConfiguration",
@@ -536,7 +755,8 @@
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "GetOtaTask":{
       "name":"GetOtaTask",
@@ -553,7 +773,8 @@
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "GetOtaTaskConfiguration":{
       "name":"GetOtaTaskConfiguration",
@@ -570,7 +791,8 @@
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "GetProvisioningProfile":{
       "name":"GetProvisioningProfile",
@@ -589,7 +811,8 @@
         {"shape":"ServiceUnavailableException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "GetRuntimeLogConfiguration":{
       "name":"GetRuntimeLogConfiguration",
@@ -606,7 +829,8 @@
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "GetSchemaVersion":{
       "name":"GetSchemaVersion",
@@ -625,7 +849,60 @@
         {"shape":"ServiceUnavailableException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
+    },
+    "ListAccountAssociations":{
+      "name":"ListAccountAssociations",
+      "http":{
+        "method":"GET",
+        "requestUri":"/account-associations",
+        "responseCode":200
+      },
+      "input":{"shape":"ListAccountAssociationsRequest"},
+      "output":{"shape":"ListAccountAssociationsResponse"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ServiceUnavailableException"},
+        {"shape":"ThrottlingException"}
+      ],
+      "readonly":true
+    },
+    "ListCloudConnectors":{
+      "name":"ListCloudConnectors",
+      "http":{
+        "method":"GET",
+        "requestUri":"/cloud-connectors",
+        "responseCode":200
+      },
+      "input":{"shape":"ListCloudConnectorsRequest"},
+      "output":{"shape":"ListCloudConnectorsResponse"},
+      "errors":[
+        {"shape":"AccessDeniedException"},
+        {"shape":"ValidationException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"}
+      ],
+      "readonly":true
+    },
+    "ListConnectorDestinations":{
+      "name":"ListConnectorDestinations",
+      "http":{
+        "method":"GET",
+        "requestUri":"/connector-destinations",
+        "responseCode":200
+      },
+      "input":{"shape":"ListConnectorDestinationsRequest"},
+      "output":{"shape":"ListConnectorDestinationsResponse"},
+      "errors":[
+        {"shape":"AccessDeniedException"},
+        {"shape":"ValidationException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"}
+      ],
+      "readonly":true
     },
     "ListCredentialLockers":{
       "name":"ListCredentialLockers",
@@ -642,7 +919,8 @@
         {"shape":"InternalServerException"},
         {"shape":"ServiceUnavailableException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "ListDestinations":{
       "name":"ListDestinations",
@@ -658,7 +936,47 @@
         {"shape":"ValidationException"},
         {"shape":"InternalServerException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
+    },
+    "ListDeviceDiscoveries":{
+      "name":"ListDeviceDiscoveries",
+      "http":{
+        "method":"GET",
+        "requestUri":"/device-discoveries",
+        "responseCode":200
+      },
+      "input":{"shape":"ListDeviceDiscoveriesRequest"},
+      "output":{"shape":"ListDeviceDiscoveriesResponse"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"InternalServerException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"ServiceUnavailableException"},
+        {"shape":"ThrottlingException"}
+      ],
+      "readonly":true
+    },
+    "ListDiscoveredDevices":{
+      "name":"ListDiscoveredDevices",
+      "http":{
+        "method":"GET",
+        "requestUri":"/device-discoveries/{Identifier}/devices",
+        "responseCode":200
+      },
+      "input":{"shape":"ListDiscoveredDevicesRequest"},
+      "output":{"shape":"ListDiscoveredDevicesResponse"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"InternalServerException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"ServiceUnavailableException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ],
+      "readonly":true
     },
     "ListEventLogConfigurations":{
       "name":"ListEventLogConfigurations",
@@ -674,7 +992,25 @@
         {"shape":"ValidationException"},
         {"shape":"InternalServerException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
+    },
+    "ListManagedThingAccountAssociations":{
+      "name":"ListManagedThingAccountAssociations",
+      "http":{
+        "method":"GET",
+        "requestUri":"/managed-thing-associations",
+        "responseCode":200
+      },
+      "input":{"shape":"ListManagedThingAccountAssociationsRequest"},
+      "output":{"shape":"ListManagedThingAccountAssociationsResponse"},
+      "errors":[
+        {"shape":"AccessDeniedException"},
+        {"shape":"ValidationException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"}
+      ],
+      "readonly":true
     },
     "ListManagedThingSchemas":{
       "name":"ListManagedThingSchemas",
@@ -693,7 +1029,8 @@
         {"shape":"ServiceUnavailableException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "ListManagedThings":{
       "name":"ListManagedThings",
@@ -711,7 +1048,8 @@
         {"shape":"UnauthorizedException"},
         {"shape":"ServiceUnavailableException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "ListNotificationConfigurations":{
       "name":"ListNotificationConfigurations",
@@ -727,7 +1065,8 @@
         {"shape":"ValidationException"},
         {"shape":"InternalServerException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "ListOtaTaskConfigurations":{
       "name":"ListOtaTaskConfigurations",
@@ -743,7 +1082,8 @@
         {"shape":"ValidationException"},
         {"shape":"InternalServerException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "ListOtaTaskExecutions":{
       "name":"ListOtaTaskExecutions",
@@ -758,8 +1098,10 @@
         {"shape":"AccessDeniedException"},
         {"shape":"ValidationException"},
         {"shape":"InternalServerException"},
-        {"shape":"ThrottlingException"}
-      ]
+        {"shape":"ThrottlingException"},
+        {"shape":"ResourceNotFoundException"}
+      ],
+      "readonly":true
     },
     "ListOtaTasks":{
       "name":"ListOtaTasks",
@@ -774,8 +1116,10 @@
         {"shape":"AccessDeniedException"},
         {"shape":"ValidationException"},
         {"shape":"InternalServerException"},
-        {"shape":"ThrottlingException"}
-      ]
+        {"shape":"ThrottlingException"},
+        {"shape":"ResourceNotFoundException"}
+      ],
+      "readonly":true
     },
     "ListProvisioningProfiles":{
       "name":"ListProvisioningProfiles",
@@ -793,7 +1137,8 @@
         {"shape":"UnauthorizedException"},
         {"shape":"ServiceUnavailableException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "ListSchemaVersions":{
       "name":"ListSchemaVersions",
@@ -811,7 +1156,25 @@
         {"shape":"ConflictException"},
         {"shape":"ServiceUnavailableException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
+    },
+    "ListTagsForResource":{
+      "name":"ListTagsForResource",
+      "http":{
+        "method":"GET",
+        "requestUri":"/tags/{ResourceArn}",
+        "responseCode":200
+      },
+      "input":{"shape":"ListTagsForResourceRequest"},
+      "output":{"shape":"ListTagsForResourceResponse"},
+      "errors":[
+        {"shape":"UnauthorizedException"},
+        {"shape":"InvalidRequestException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ],
+      "readonly":true
     },
     "PutDefaultEncryptionConfiguration":{
       "name":"PutDefaultEncryptionConfiguration",
@@ -868,6 +1231,25 @@
       ],
       "idempotent":true
     },
+    "RegisterAccountAssociation":{
+      "name":"RegisterAccountAssociation",
+      "http":{
+        "method":"PUT",
+        "requestUri":"/managed-thing-associations/register",
+        "responseCode":201
+      },
+      "input":{"shape":"RegisterAccountAssociationRequest"},
+      "output":{"shape":"RegisterAccountAssociationResponse"},
+      "errors":[
+        {"shape":"AccessDeniedException"},
+        {"shape":"ValidationException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ConflictException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"ResourceNotFoundException"}
+      ],
+      "idempotent":true
+    },
     "RegisterCustomEndpoint":{
       "name":"RegisterCustomEndpoint",
       "http":{
@@ -904,6 +1286,25 @@
       ],
       "idempotent":true
     },
+    "SendConnectorEvent":{
+      "name":"SendConnectorEvent",
+      "http":{
+        "method":"POST",
+        "requestUri":"/connector-event/{ConnectorId}",
+        "responseCode":202
+      },
+      "input":{"shape":"SendConnectorEventRequest"},
+      "output":{"shape":"SendConnectorEventResponse"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ServiceUnavailableException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ],
+      "idempotent":true
+    },
     "SendManagedThingCommand":{
       "name":"SendManagedThingCommand",
       "http":{
@@ -917,6 +1318,26 @@
         {"shape":"ValidationException"},
         {"shape":"AccessDeniedException"},
         {"shape":"InternalServerException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"ServiceUnavailableException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
+    "StartAccountAssociationRefresh":{
+      "name":"StartAccountAssociationRefresh",
+      "http":{
+        "method":"POST",
+        "requestUri":"/account-associations/{AccountAssociationId}/refresh",
+        "responseCode":200
+      },
+      "input":{"shape":"StartAccountAssociationRefreshRequest"},
+      "output":{"shape":"StartAccountAssociationRefreshResponse"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ConflictException"},
         {"shape":"ServiceUnavailableException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"ThrottlingException"}
@@ -941,6 +1362,96 @@
         {"shape":"ResourceNotFoundException"},
         {"shape":"ThrottlingException"}
       ]
+    },
+    "TagResource":{
+      "name":"TagResource",
+      "http":{
+        "method":"POST",
+        "requestUri":"/tags/{ResourceArn}",
+        "responseCode":200
+      },
+      "input":{"shape":"TagResourceRequest"},
+      "output":{"shape":"TagResourceResponse"},
+      "errors":[
+        {"shape":"UnauthorizedException"},
+        {"shape":"ConflictException"},
+        {"shape":"InvalidRequestException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ],
+      "idempotent":true
+    },
+    "UntagResource":{
+      "name":"UntagResource",
+      "http":{
+        "method":"DELETE",
+        "requestUri":"/tags/{ResourceArn}",
+        "responseCode":200
+      },
+      "input":{"shape":"UntagResourceRequest"},
+      "output":{"shape":"UntagResourceResponse"},
+      "errors":[
+        {"shape":"UnauthorizedException"},
+        {"shape":"ConflictException"},
+        {"shape":"InvalidRequestException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ],
+      "idempotent":true
+    },
+    "UpdateAccountAssociation":{
+      "name":"UpdateAccountAssociation",
+      "http":{
+        "method":"PUT",
+        "requestUri":"/account-associations/{AccountAssociationId}",
+        "responseCode":204
+      },
+      "input":{"shape":"UpdateAccountAssociationRequest"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ConflictException"},
+        {"shape":"ServiceUnavailableException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ],
+      "idempotent":true
+    },
+    "UpdateCloudConnector":{
+      "name":"UpdateCloudConnector",
+      "http":{
+        "method":"PUT",
+        "requestUri":"/cloud-connectors/{Identifier}",
+        "responseCode":200
+      },
+      "input":{"shape":"UpdateCloudConnectorRequest"},
+      "errors":[
+        {"shape":"AccessDeniedException"},
+        {"shape":"ValidationException"},
+        {"shape":"InternalServerException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ],
+      "idempotent":true
+    },
+    "UpdateConnectorDestination":{
+      "name":"UpdateConnectorDestination",
+      "http":{
+        "method":"PUT",
+        "requestUri":"/connector-destinations/{Identifier}",
+        "responseCode":204
+      },
+      "input":{"shape":"UpdateConnectorDestinationRequest"},
+      "errors":[
+        {"shape":"AccessDeniedException"},
+        {"shape":"ValidationException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ],
+      "idempotent":true
     },
     "UpdateDestination":{
       "name":"UpdateDestination",
@@ -1069,11 +1580,61 @@
       },
       "exception":true
     },
+    "AccountAssociationArn":{
+      "type":"string",
+      "max":1011,
+      "min":67,
+      "pattern":"arn:aws:iotmanagedintegrations:[0-9a-zA-Z-]+:[0-9]+:account-association/[0-9a-zA-Z]+"
+    },
+    "AccountAssociationDescription":{
+      "type":"string",
+      "max":4096,
+      "min":1,
+      "pattern":"[A-Za-z0-9-_ ]+"
+    },
+    "AccountAssociationErrorMessage":{
+      "type":"string",
+      "max":4096,
+      "min":1,
+      "pattern":"[A-Za-z0-9-_ ]+"
+    },
+    "AccountAssociationId":{
+      "type":"string",
+      "max":64,
+      "min":1,
+      "pattern":"[0-9a-zA-Z]+"
+    },
+    "AccountAssociationItem":{
+      "type":"structure",
+      "required":[
+        "AccountAssociationId",
+        "AssociationState"
+      ],
+      "members":{
+        "AccountAssociationId":{"shape":"AccountAssociationId"},
+        "AssociationState":{"shape":"AssociationState"},
+        "ErrorMessage":{"shape":"AccountAssociationErrorMessage"},
+        "ConnectorDestinationId":{"shape":"ConnectorDestinationId"},
+        "Name":{"shape":"AccountAssociationName"},
+        "Description":{"shape":"AccountAssociationDescription"},
+        "Arn":{"shape":"AccountAssociationArn"}
+      }
+    },
+    "AccountAssociationListDefinition":{
+      "type":"list",
+      "member":{"shape":"AccountAssociationItem"}
+    },
+    "AccountAssociationName":{
+      "type":"string",
+      "max":128,
+      "min":1,
+      "pattern":"[A-Za-z0-9-_ ]+"
+    },
     "ActionName":{
       "type":"string",
       "max":128,
       "min":1,
-      "pattern":"[/a-zA-Z0-9\\._ ]+"
+      "pattern":"[/a-zA-Z0-9\\._ -]+"
     },
     "ActionReference":{
       "type":"string",
@@ -1091,6 +1652,16 @@
       "min":5,
       "pattern":"([A-Za-z0-9!#$%&()*\\+\\-;<=>?@^_`{|}~])+"
     },
+    "AssociationState":{
+      "type":"string",
+      "enum":[
+        "ASSOCIATION_IN_PROGRESS",
+        "ASSOCIATION_FAILED",
+        "ASSOCIATION_SUCCEEDED",
+        "ASSOCIATION_DELETING",
+        "REFRESH_TOKEN_EXPIRED"
+      ]
+    },
     "AttributeName":{
       "type":"string",
       "max":128,
@@ -1103,20 +1674,70 @@
       "min":0,
       "pattern":".*[a-zA-Z0-9_.,@/:#-]*.*"
     },
+    "AuthConfig":{
+      "type":"structure",
+      "members":{
+        "oAuth":{"shape":"OAuthConfig"},
+        "GeneralAuthorization":{"shape":"AuthMaterials"}
+      }
+    },
+    "AuthConfigUpdate":{
+      "type":"structure",
+      "members":{
+        "oAuthUpdate":{"shape":"OAuthUpdate"},
+        "GeneralAuthorizationUpdate":{"shape":"GeneralAuthorizationUpdate"}
+      }
+    },
+    "AuthMaterial":{
+      "type":"structure",
+      "required":[
+        "SecretsManager",
+        "AuthMaterialName"
+      ],
+      "members":{
+        "SecretsManager":{"shape":"SecretsManager"},
+        "AuthMaterialName":{"shape":"AuthMaterialName"}
+      }
+    },
+    "AuthMaterialName":{
+      "type":"string",
+      "max":100,
+      "min":1,
+      "pattern":"[a-zA-Z0-9=_+/-]+"
+    },
     "AuthMaterialString":{
       "type":"string",
       "max":512,
       "min":1,
-      "pattern":"[0-9A-Za-z!#$%&()*\\+\\-;<=>?@^_`{|}~\\/: ]+",
+      "pattern":"[0-9A-Za-z!#$%&()*\\+\\-;<=>?@^_`{|}~\\/: {},\\\\\"]+",
       "sensitive":true
     },
     "AuthMaterialType":{
       "type":"string",
       "enum":[
+        "CUSTOM_PROTOCOL_QR_BAR_CODE",
         "WIFI_SETUP_QR_BAR_CODE",
         "ZWAVE_QR_BAR_CODE",
-        "ZIGBEE_QR_BAR_CODE"
+        "ZIGBEE_QR_BAR_CODE",
+        "DISCOVERED_DEVICE",
+        "PRE_ONBOARDED_CLOUD"
       ]
+    },
+    "AuthMaterials":{
+      "type":"list",
+      "member":{"shape":"AuthMaterial"},
+      "max":3,
+      "min":0
+    },
+    "AuthType":{
+      "type":"string",
+      "enum":["OAUTH"]
+    },
+    "AuthUrl":{
+      "type":"string",
+      "max":1024,
+      "min":1,
+      "pattern":"https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}([-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)"
     },
     "BaseRatePerMinute":{
       "type":"integer",
@@ -1176,12 +1797,11 @@
       "type":"string",
       "max":128,
       "min":1,
-      "pattern":"[/a-zA-Z0-9\\._ ]+"
+      "pattern":"[/a-zA-Z0-9\\._ -]+"
     },
     "CapabilityProperties":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "document":true,
       "sensitive":true
     },
@@ -1206,7 +1826,7 @@
     "CapabilityReportCapabilities":{
       "type":"list",
       "member":{"shape":"CapabilityReportCapability"},
-      "max":50,
+      "max":40,
       "min":0
     },
     "CapabilityReportCapability":{
@@ -1244,7 +1864,7 @@
     "CapabilityReportEndpoints":{
       "type":"list",
       "member":{"shape":"CapabilityReportEndpoint"},
-      "max":50,
+      "max":40,
       "min":0
     },
     "CapabilityReportEvents":{
@@ -1265,11 +1885,40 @@
       "min":1,
       "pattern":"1\\.0\\.0"
     },
+    "CapabilitySchemaItem":{
+      "type":"structure",
+      "required":[
+        "Format",
+        "CapabilityId",
+        "ExtrinsicId",
+        "ExtrinsicVersion",
+        "Schema"
+      ],
+      "members":{
+        "Format":{"shape":"SchemaVersionFormat"},
+        "CapabilityId":{"shape":"SchemaVersionedId"},
+        "ExtrinsicId":{"shape":"ExtrinsicSchemaId"},
+        "ExtrinsicVersion":{"shape":"MatterCapabilityReportClusterRevisionId"},
+        "Schema":{"shape":"ValidationSchema"}
+      }
+    },
+    "CapabilitySchemas":{
+      "type":"list",
+      "member":{"shape":"CapabilitySchemaItem"},
+      "max":40,
+      "min":0
+    },
     "CapabilityVersion":{
       "type":"string",
       "max":64,
       "min":1,
       "pattern":"(0|[1-9][0-9]*)"
+    },
+    "CertificatePem":{
+      "type":"string",
+      "max":65536,
+      "min":1,
+      "pattern":"[\\s\\S]*"
     },
     "ClaimCertificate":{
       "type":"string",
@@ -1290,6 +1939,31 @@
       "max":64,
       "min":1,
       "pattern":"[a-zA-Z0-9=_-]+"
+    },
+    "CloudConnectorDescription":{
+      "type":"string",
+      "max":256,
+      "min":1,
+      "pattern":"[0-9A-Za-z_\\- ]+"
+    },
+    "CloudConnectorId":{
+      "type":"string",
+      "max":64,
+      "min":1,
+      "pattern":"[A-Za-z0-9-_]+"
+    },
+    "CloudConnectorType":{
+      "type":"string",
+      "enum":[
+        "LISTED",
+        "UNLISTED"
+      ]
+    },
+    "ClusterId":{
+      "type":"string",
+      "max":24,
+      "min":1,
+      "pattern":"0[xX][0-9a-fA-F]+$|^[0-9]+"
     },
     "CommandCapabilities":{
       "type":"list",
@@ -1382,9 +2056,43 @@
     "ConnectivityTimestamp":{"type":"timestamp"},
     "ConnectorAssociationId":{
       "type":"string",
+      "deprecated":true,
+      "deprecatedMessage":"ConnectorAssociationId is deprecated",
+      "deprecatedSince":"2025-06-25",
       "max":64,
       "min":1,
       "pattern":"[0-9a-zA-Z]+"
+    },
+    "ConnectorDestinationDescription":{
+      "type":"string",
+      "max":256,
+      "min":1,
+      "pattern":"[0-9A-Za-z_\\- ]+"
+    },
+    "ConnectorDestinationId":{
+      "type":"string",
+      "max":64,
+      "min":1,
+      "pattern":"[A-Za-z0-9-_]+"
+    },
+    "ConnectorDestinationListDefinition":{
+      "type":"list",
+      "member":{"shape":"ConnectorDestinationSummary"}
+    },
+    "ConnectorDestinationName":{
+      "type":"string",
+      "max":128,
+      "min":1,
+      "pattern":"[A-Za-z0-9-_ ]+"
+    },
+    "ConnectorDestinationSummary":{
+      "type":"structure",
+      "members":{
+        "Name":{"shape":"ConnectorDestinationName"},
+        "Description":{"shape":"ConnectorDestinationDescription"},
+        "CloudConnectorId":{"shape":"CloudConnectorId"},
+        "Id":{"shape":"ConnectorDestinationId"}
+      }
     },
     "ConnectorDeviceId":{
       "type":"string",
@@ -1393,11 +2101,156 @@
       "pattern":"[a-zA-Z0-9_.,@-]+",
       "sensitive":true
     },
-    "ConnectorPolicyId":{
+    "ConnectorDeviceIdList":{
+      "type":"list",
+      "member":{"shape":"ConnectorDeviceId"},
+      "max":100,
+      "min":0
+    },
+    "ConnectorDeviceName":{
+      "type":"string",
+      "max":256,
+      "min":1,
+      "pattern":"[\\p{L}\\p{N} ._-]+"
+    },
+    "ConnectorEventMessage":{
+      "type":"string",
+      "max":256,
+      "min":1,
+      "pattern":"[\\sa-zA-Z0-9_.,@-]+",
+      "sensitive":true
+    },
+    "ConnectorEventOperation":{
+      "type":"string",
+      "enum":[
+        "DEVICE_COMMAND_RESPONSE",
+        "DEVICE_DISCOVERY",
+        "DEVICE_EVENT",
+        "DEVICE_COMMAND_REQUEST"
+      ]
+    },
+    "ConnectorEventOperationVersion":{
+      "type":"string",
+      "max":6,
+      "min":1,
+      "pattern":"[0-9.]+"
+    },
+    "ConnectorEventStatusCode":{
+      "type":"integer",
+      "box":true,
+      "max":550,
+      "min":100
+    },
+    "ConnectorId":{
       "type":"string",
       "max":64,
       "min":1,
       "pattern":"[A-Za-z0-9-_]+"
+    },
+    "ConnectorItem":{
+      "type":"structure",
+      "required":[
+        "Name",
+        "EndpointConfig"
+      ],
+      "members":{
+        "Name":{"shape":"DisplayName"},
+        "EndpointConfig":{"shape":"EndpointConfig"},
+        "Description":{"shape":"CloudConnectorDescription"},
+        "EndpointType":{"shape":"EndpointType"},
+        "Id":{"shape":"CloudConnectorId"},
+        "Type":{"shape":"CloudConnectorType"}
+      }
+    },
+    "ConnectorList":{
+      "type":"list",
+      "member":{"shape":"ConnectorItem"}
+    },
+    "ConnectorPolicyId":{
+      "type":"string",
+      "deprecated":true,
+      "deprecatedMessage":"ConnectorPolicyId is deprecated",
+      "deprecatedSince":"2025-06-25",
+      "max":64,
+      "min":1,
+      "pattern":"[A-Za-z0-9-_]+"
+    },
+    "CreateAccountAssociationRequest":{
+      "type":"structure",
+      "required":["ConnectorDestinationId"],
+      "members":{
+        "ClientToken":{
+          "shape":"ClientToken",
+          "idempotencyToken":true
+        },
+        "ConnectorDestinationId":{"shape":"ConnectorDestinationId"},
+        "Name":{"shape":"AccountAssociationName"},
+        "Description":{"shape":"AccountAssociationDescription"},
+        "Tags":{"shape":"TagsMap"},
+        "GeneralAuthorization":{"shape":"GeneralAuthorizationName"}
+      }
+    },
+    "CreateAccountAssociationResponse":{
+      "type":"structure",
+      "required":[
+        "OAuthAuthorizationUrl",
+        "AccountAssociationId",
+        "AssociationState"
+      ],
+      "members":{
+        "OAuthAuthorizationUrl":{"shape":"OAuthAuthorizationUrlOutput"},
+        "AccountAssociationId":{"shape":"AccountAssociationId"},
+        "AssociationState":{"shape":"AssociationState"},
+        "Arn":{"shape":"AccountAssociationArn"}
+      }
+    },
+    "CreateCloudConnectorRequest":{
+      "type":"structure",
+      "required":[
+        "Name",
+        "EndpointConfig"
+      ],
+      "members":{
+        "Name":{"shape":"DisplayName"},
+        "EndpointConfig":{"shape":"EndpointConfig"},
+        "Description":{"shape":"CloudConnectorDescription"},
+        "EndpointType":{"shape":"EndpointType"},
+        "ClientToken":{
+          "shape":"ClientToken",
+          "idempotencyToken":true
+        }
+      }
+    },
+    "CreateCloudConnectorResponse":{
+      "type":"structure",
+      "members":{
+        "Id":{"shape":"CloudConnectorId"}
+      }
+    },
+    "CreateConnectorDestinationRequest":{
+      "type":"structure",
+      "required":[
+        "CloudConnectorId",
+        "AuthConfig"
+      ],
+      "members":{
+        "Name":{"shape":"ConnectorDestinationName"},
+        "Description":{"shape":"ConnectorDestinationDescription"},
+        "CloudConnectorId":{"shape":"CloudConnectorId"},
+        "AuthType":{"shape":"AuthType"},
+        "AuthConfig":{"shape":"AuthConfig"},
+        "SecretsManager":{"shape":"SecretsManager"},
+        "ClientToken":{
+          "shape":"ClientToken",
+          "idempotencyToken":true
+        }
+      }
+    },
+    "CreateConnectorDestinationResponse":{
+      "type":"structure",
+      "members":{
+        "Id":{"shape":"ConnectorDestinationId"}
+      }
     },
     "CreateCredentialLockerRequest":{
       "type":"structure",
@@ -1436,7 +2289,12 @@
           "idempotencyToken":true
         },
         "Description":{"shape":"DestinationDescription"},
-        "Tags":{"shape":"TagsMap"}
+        "Tags":{
+          "shape":"TagsMap",
+          "deprecated":true,
+          "deprecatedMessage":"Tags have been deprecated from this api",
+          "deprecatedSince":"06-25-2025"
+        }
       }
     },
     "CreateDestinationResponse":{
@@ -1480,12 +2338,19 @@
         "CredentialLockerId":{"shape":"CredentialLockerId"},
         "AuthenticationMaterial":{"shape":"AuthMaterialString"},
         "AuthenticationMaterialType":{"shape":"AuthMaterialType"},
+        "WiFiSimpleSetupConfiguration":{"shape":"WiFiSimpleSetupConfiguration"},
         "SerialNumber":{"shape":"SerialNumber"},
         "Brand":{"shape":"Brand"},
         "Model":{"shape":"Model"},
         "Name":{"shape":"Name"},
         "CapabilityReport":{"shape":"CapabilityReport"},
-        "Capabilities":{"shape":"Capabilities"},
+        "CapabilitySchemas":{"shape":"CapabilitySchemas"},
+        "Capabilities":{
+          "shape":"Capabilities",
+          "deprecated":true,
+          "deprecatedMessage":"Capabilities has been deprecated, use CapabilityReport instead",
+          "deprecatedSince":"06-25-2025"
+        },
         "ClientToken":{
           "shape":"ClientToken",
           "idempotencyToken":true
@@ -1516,7 +2381,12 @@
           "shape":"ClientToken",
           "idempotencyToken":true
         },
-        "Tags":{"shape":"TagsMap"}
+        "Tags":{
+          "shape":"TagsMap",
+          "deprecated":true,
+          "deprecatedMessage":"Tags has been deprecated from this api",
+          "deprecatedSince":"06-25-2025"
+        }
       }
     },
     "CreateNotificationConfigurationResponse":{
@@ -1581,6 +2451,7 @@
       "members":{
         "ProvisioningType":{"shape":"ProvisioningType"},
         "CaCertificate":{"shape":"CaCertificate"},
+        "ClaimCertificate":{"shape":"ClaimCertificate"},
         "Name":{"shape":"ProvisioningProfileName"},
         "ClientToken":{
           "shape":"ClientToken",
@@ -1596,6 +2467,7 @@
         "Name":{"shape":"ProvisioningProfileName"},
         "ProvisioningType":{"shape":"ProvisioningType"},
         "Id":{"shape":"ProvisioningProfileId"},
+        "Status":{"shape":"ProvisioningProfileStatus"},
         "ClaimCertificate":{"shape":"ClaimCertificate"},
         "ClaimCertificatePrivateKey":{"shape":"ClaimCertificatePrivateKey"}
       }
@@ -1632,6 +2504,58 @@
         "Arn":{"shape":"CredentialLockerArn"},
         "Name":{"shape":"CredentialLockerName"},
         "CreatedAt":{"shape":"CredentialLockerCreatedAt"}
+      }
+    },
+    "CustomProtocolDetail":{
+      "type":"map",
+      "key":{"shape":"CustomProtocolDetailKey"},
+      "value":{"shape":"CustomProtocolDetailValue"},
+      "max":50,
+      "min":0
+    },
+    "CustomProtocolDetailKey":{
+      "type":"string",
+      "max":256,
+      "min":1,
+      "pattern":"[a-zA-Z0-9 _.-]+"
+    },
+    "CustomProtocolDetailValue":{
+      "type":"string",
+      "max":512,
+      "min":1,
+      "pattern":"[a-zA-Z0-9 _.{}:\"-]+"
+    },
+    "DeleteAccountAssociationRequest":{
+      "type":"structure",
+      "required":["AccountAssociationId"],
+      "members":{
+        "AccountAssociationId":{
+          "shape":"AccountAssociationId",
+          "location":"uri",
+          "locationName":"AccountAssociationId"
+        }
+      }
+    },
+    "DeleteCloudConnectorRequest":{
+      "type":"structure",
+      "required":["Identifier"],
+      "members":{
+        "Identifier":{
+          "shape":"CloudConnectorId",
+          "location":"uri",
+          "locationName":"Identifier"
+        }
+      }
+    },
+    "DeleteConnectorDestinationRequest":{
+      "type":"structure",
+      "required":["Identifier"],
+      "members":{
+        "Identifier":{
+          "shape":"ConnectorDestinationId",
+          "location":"uri",
+          "locationName":"Identifier"
+        }
       }
     },
     "DeleteCredentialLockerRequest":{
@@ -1742,6 +2666,17 @@
       "type":"string",
       "enum":["KINESIS"]
     },
+    "DeregisterAccountAssociationRequest":{
+      "type":"structure",
+      "required":[
+        "ManagedThingId",
+        "AccountAssociationId"
+      ],
+      "members":{
+        "ManagedThingId":{"shape":"ManagedThingId"},
+        "AccountAssociationId":{"shape":"AccountAssociationId"}
+      }
+    },
     "DestinationCreatedAt":{"type":"timestamp"},
     "DestinationDescription":{
       "type":"string",
@@ -1770,6 +2705,20 @@
       }
     },
     "DestinationUpdatedAt":{"type":"timestamp"},
+    "Device":{
+      "type":"structure",
+      "required":[
+        "ConnectorDeviceId",
+        "CapabilityReport"
+      ],
+      "members":{
+        "ConnectorDeviceId":{"shape":"ConnectorDeviceId"},
+        "ConnectorDeviceName":{"shape":"ConnectorDeviceName"},
+        "CapabilityReport":{"shape":"MatterCapabilityReport"},
+        "CapabilitySchemas":{"shape":"CapabilitySchemas"},
+        "DeviceMetadata":{"shape":"DeviceMetadata"}
+      }
+    },
     "DeviceDiscoveryArn":{
       "type":"string",
       "pattern":"arn:aws:iotmanagedintegrations:[0-9a-zA-Z-]+:[0-9]+:device-discovery/[0-9a-zA-Z]+"
@@ -1780,6 +2729,10 @@
       "min":1,
       "pattern":"[A-Za-z0-9]+"
     },
+    "DeviceDiscoveryListDefinition":{
+      "type":"list",
+      "member":{"shape":"DeviceDiscoverySummary"}
+    },
     "DeviceDiscoveryStatus":{
       "type":"string",
       "enum":[
@@ -1788,6 +2741,19 @@
         "FAILED",
         "TIMED_OUT"
       ]
+    },
+    "DeviceDiscoverySummary":{
+      "type":"structure",
+      "members":{
+        "Id":{"shape":"DeviceDiscoveryId"},
+        "DiscoveryType":{"shape":"DiscoveryType"},
+        "Status":{"shape":"DeviceDiscoveryStatus"}
+      }
+    },
+    "DeviceMetadata":{
+      "type":"structure",
+      "members":{},
+      "document":true
     },
     "DeviceSpecificKey":{
       "type":"string",
@@ -1802,11 +2768,19 @@
       "min":0,
       "pattern":"[a-zA-Z0-9=_. ,@\\+\\-/]+"
     },
+    "DeviceTypeList":{
+      "type":"list",
+      "member":{"shape":"DeviceType"}
+    },
     "DeviceTypes":{
       "type":"list",
       "member":{"shape":"DeviceType"},
       "max":50,
       "min":0
+    },
+    "Devices":{
+      "type":"list",
+      "member":{"shape":"Device"}
     },
     "DisconnectReasonValue":{
       "type":"string",
@@ -1827,6 +2801,25 @@
         "NONE"
       ]
     },
+    "DiscoveredAt":{"type":"timestamp"},
+    "DiscoveredDeviceListDefinition":{
+      "type":"list",
+      "member":{"shape":"DiscoveredDeviceSummary"}
+    },
+    "DiscoveredDeviceSummary":{
+      "type":"structure",
+      "members":{
+        "ConnectorDeviceId":{"shape":"ConnectorDeviceId"},
+        "ConnectorDeviceName":{"shape":"ConnectorDeviceName"},
+        "DeviceTypes":{"shape":"DeviceTypeList"},
+        "ManagedThingId":{"shape":"ManagedThingId"},
+        "Modification":{"shape":"DiscoveryModification"},
+        "DiscoveredAt":{"shape":"DiscoveredAt"},
+        "Brand":{"shape":"Brand"},
+        "Model":{"shape":"Model"},
+        "AuthenticationMaterial":{"shape":"AuthMaterialString"}
+      }
+    },
     "DiscoveryAuthMaterialString":{
       "type":"string",
       "max":64,
@@ -1839,20 +2832,44 @@
       "enum":["ZWAVE_INSTALL_CODE"]
     },
     "DiscoveryFinishedAt":{"type":"timestamp"},
+    "DiscoveryModification":{
+      "type":"string",
+      "enum":[
+        "DISCOVERED",
+        "UPDATED",
+        "NO_CHANGE"
+      ]
+    },
     "DiscoveryStartedAt":{"type":"timestamp"},
     "DiscoveryType":{
       "type":"string",
       "enum":[
         "ZWAVE",
         "ZIGBEE",
-        "CLOUD"
+        "CLOUD",
+        "CUSTOM",
+        "CONTROLLER_CAPABILITY_REDISCOVERY"
       ]
+    },
+    "DisplayName":{
+      "type":"string",
+      "max":128,
+      "min":1,
+      "pattern":"[A-Za-z0-9-_ ]+"
     },
     "DurationInMinutes":{
       "type":"integer",
       "box":true,
       "max":1430,
       "min":1
+    },
+    "EnableAsProvisionee":{
+      "type":"boolean",
+      "box":true
+    },
+    "EnableAsProvisioner":{
+      "type":"boolean",
+      "box":true
     },
     "EncryptionType":{
       "type":"string",
@@ -1868,13 +2885,31 @@
       "min":1,
       "pattern":"[A-Za-z0-9._@-]+"
     },
+    "EndpointConfig":{
+      "type":"structure",
+      "members":{
+        "lambda":{"shape":"LambdaConfig"}
+      }
+    },
     "EndpointId":{
       "type":"string",
       "max":64,
       "min":1,
       "pattern":"[0-9a-zA-Z]+"
     },
+    "EndpointSemanticTag":{
+      "type":"string",
+      "max":128,
+      "min":1,
+      "pattern":"[0-9a-zA-Z._-]+"
+    },
+    "EndpointType":{
+      "type":"string",
+      "enum":["LAMBDA"]
+    },
     "ErrorMessage":{"type":"string"},
+    "ErrorResourceId":{"type":"string"},
+    "ErrorResourceType":{"type":"string"},
     "EventLogConfigurationListDefinition":{
       "type":"list",
       "member":{"shape":"EventLogConfigurationSummary"}
@@ -1892,18 +2927,21 @@
       "type":"string",
       "max":128,
       "min":1,
-      "pattern":"[/a-zA-Z0-9\\._ ]+"
+      "pattern":"[/a-zA-Z0-9\\._ -]+"
     },
     "EventType":{
       "type":"string",
       "enum":[
         "DEVICE_COMMAND",
         "DEVICE_COMMAND_REQUEST",
+        "DEVICE_DISCOVERY_STATUS",
         "DEVICE_EVENT",
         "DEVICE_LIFE_CYCLE",
         "DEVICE_STATE",
         "DEVICE_OTA",
+        "DEVICE_WSS",
         "CONNECTOR_ASSOCIATION",
+        "ACCOUNT_ASSOCIATION",
         "CONNECTOR_ERROR_REPORT"
       ]
     },
@@ -1917,6 +2955,106 @@
         "BaseRatePerMinute":{"shape":"BaseRatePerMinute"},
         "IncrementFactor":{"shape":"IncrementFactor"},
         "RateIncreaseCriteria":{"shape":"RolloutRateIncreaseCriteria"}
+      }
+    },
+    "ExtrinsicSchemaId":{
+      "type":"string",
+      "max":10,
+      "min":1,
+      "pattern":"0[xX][0-9a-fA-F]+$|^[0-9]+"
+    },
+    "GeneralAuthorizationName":{
+      "type":"structure",
+      "members":{
+        "AuthMaterialName":{"shape":"AuthMaterialName"}
+      }
+    },
+    "GeneralAuthorizationUpdate":{
+      "type":"structure",
+      "members":{
+        "AuthMaterialsToAdd":{"shape":"AuthMaterials"},
+        "AuthMaterialsToUpdate":{"shape":"AuthMaterials"}
+      }
+    },
+    "GetAccountAssociationRequest":{
+      "type":"structure",
+      "required":["AccountAssociationId"],
+      "members":{
+        "AccountAssociationId":{
+          "shape":"AccountAssociationId",
+          "location":"uri",
+          "locationName":"AccountAssociationId"
+        }
+      }
+    },
+    "GetAccountAssociationResponse":{
+      "type":"structure",
+      "required":[
+        "AccountAssociationId",
+        "AssociationState",
+        "OAuthAuthorizationUrl"
+      ],
+      "members":{
+        "AccountAssociationId":{"shape":"AccountAssociationId"},
+        "AssociationState":{"shape":"AssociationState"},
+        "ErrorMessage":{"shape":"AccountAssociationErrorMessage"},
+        "ConnectorDestinationId":{"shape":"ConnectorDestinationId"},
+        "Name":{"shape":"AccountAssociationName"},
+        "Description":{"shape":"AccountAssociationDescription"},
+        "Arn":{"shape":"AccountAssociationArn"},
+        "OAuthAuthorizationUrl":{"shape":"OAuthAuthorizationUrlOutput"},
+        "Tags":{"shape":"TagsMap"},
+        "GeneralAuthorization":{"shape":"GeneralAuthorizationName"}
+      }
+    },
+    "GetCloudConnectorRequest":{
+      "type":"structure",
+      "required":["Identifier"],
+      "members":{
+        "Identifier":{
+          "shape":"CloudConnectorId",
+          "location":"uri",
+          "locationName":"Identifier"
+        }
+      }
+    },
+    "GetCloudConnectorResponse":{
+      "type":"structure",
+      "required":[
+        "Name",
+        "EndpointConfig"
+      ],
+      "members":{
+        "Name":{"shape":"DisplayName"},
+        "EndpointConfig":{"shape":"EndpointConfig"},
+        "Description":{"shape":"CloudConnectorDescription"},
+        "EndpointType":{"shape":"EndpointType"},
+        "Id":{"shape":"CloudConnectorId"},
+        "Type":{"shape":"CloudConnectorType"}
+      }
+    },
+    "GetConnectorDestinationRequest":{
+      "type":"structure",
+      "required":["Identifier"],
+      "members":{
+        "Identifier":{
+          "shape":"ConnectorDestinationId",
+          "location":"uri",
+          "locationName":"Identifier"
+        }
+      }
+    },
+    "GetConnectorDestinationResponse":{
+      "type":"structure",
+      "members":{
+        "Name":{"shape":"ConnectorDestinationName"},
+        "Description":{"shape":"ConnectorDestinationDescription"},
+        "CloudConnectorId":{"shape":"CloudConnectorId"},
+        "Id":{"shape":"ConnectorDestinationId"},
+        "AuthType":{"shape":"AuthType"},
+        "AuthConfig":{"shape":"AuthConfig"},
+        "SecretsManager":{"shape":"SecretsManager"},
+        "OAuthCompleteRedirectUrl":{"shape":"OAuthCompleteRedirectUrl"}
       }
     },
     "GetCredentialLockerRequest":{
@@ -1942,8 +3080,7 @@
     },
     "GetCustomEndpointRequest":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "GetCustomEndpointResponse":{
       "type":"structure",
@@ -1954,8 +3091,7 @@
     },
     "GetDefaultEncryptionConfigurationRequest":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "GetDefaultEncryptionConfigurationResponse":{
       "type":"structure",
@@ -1990,7 +3126,12 @@
         "RoleArn":{"shape":"DeliveryDestinationRoleArn"},
         "CreatedAt":{"shape":"DestinationCreatedAt"},
         "UpdatedAt":{"shape":"DestinationUpdatedAt"},
-        "Tags":{"shape":"TagsMap"}
+        "Tags":{
+          "shape":"TagsMap",
+          "deprecated":true,
+          "deprecatedMessage":"Tags has been deprecated from this api",
+          "deprecatedSince":"06-25-2025"
+        }
       }
     },
     "GetDeviceDiscoveryRequest":{
@@ -2020,9 +3161,20 @@
         "Status":{"shape":"DeviceDiscoveryStatus"},
         "StartedAt":{"shape":"DiscoveryStartedAt"},
         "ControllerId":{"shape":"ManagedThingId"},
-        "ConnectorAssociationId":{"shape":"ConnectorAssociationId"},
+        "ConnectorAssociationId":{
+          "shape":"ConnectorAssociationId",
+          "deprecated":true,
+          "deprecatedMessage":"ConnectorAssociationId has been deprecated",
+          "deprecatedSince":"2025-06-25"
+        },
+        "AccountAssociationId":{"shape":"AccountAssociationId"},
         "FinishedAt":{"shape":"DiscoveryFinishedAt"},
-        "Tags":{"shape":"TagsMap"}
+        "Tags":{
+          "shape":"TagsMap",
+          "deprecated":true,
+          "deprecatedMessage":"Tags have been deprecated from this api",
+          "deprecatedSince":"06-25-2025"
+        }
       }
     },
     "GetEventLogConfigurationRequest":{
@@ -2047,8 +3199,7 @@
     },
     "GetHubConfigurationRequest":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "GetHubConfigurationResponse":{
       "type":"structure",
@@ -2072,8 +3223,31 @@
       "type":"structure",
       "members":{
         "ManagedThingId":{"shape":"ManagedThingId"},
-        "Capabilities":{"shape":"Capabilities"},
+        "Capabilities":{
+          "shape":"Capabilities",
+          "deprecated":true,
+          "deprecatedMessage":"Capabilities has been deprecated, use CapabilityReport instead",
+          "deprecatedSince":"06-25-2025"
+        },
         "CapabilityReport":{"shape":"CapabilityReport"}
+      }
+    },
+    "GetManagedThingCertificateRequest":{
+      "type":"structure",
+      "required":["Identifier"],
+      "members":{
+        "Identifier":{
+          "shape":"ManagedThingId",
+          "location":"uri",
+          "locationName":"Identifier"
+        }
+      }
+    },
+    "GetManagedThingCertificateResponse":{
+      "type":"structure",
+      "members":{
+        "ManagedThingId":{"shape":"ManagedThingId"},
+        "CertificatePem":{"shape":"CertificatePem"}
       }
     },
     "GetManagedThingConnectivityDataRequest":{
@@ -2141,7 +3315,13 @@
         "SerialNumber":{"shape":"SerialNumber"},
         "UniversalProductCode":{"shape":"UniversalProductCode"},
         "InternationalArticleNumber":{"shape":"InternationalArticleNumber"},
-        "ConnectorPolicyId":{"shape":"ConnectorPolicyId"},
+        "ConnectorPolicyId":{
+          "shape":"ConnectorPolicyId",
+          "deprecated":true,
+          "deprecatedMessage":"ConnectorPolicyId is deprecated",
+          "deprecatedSince":"2025-06-25"
+        },
+        "ConnectorDestinationId":{"shape":"ConnectorDestinationId"},
         "ConnectorDeviceId":{"shape":"ConnectorDeviceId"},
         "DeviceSpecificKey":{"shape":"DeviceSpecificKey"},
         "MacAddress":{"shape":"MacAddress"},
@@ -2152,7 +3332,8 @@
         "ActivatedAt":{"shape":"SetupAt"},
         "HubNetworkMode":{"shape":"HubNetworkMode"},
         "MetaData":{"shape":"MetaData"},
-        "Tags":{"shape":"TagsMap"}
+        "Tags":{"shape":"TagsMap"},
+        "WiFiSimpleSetupConfiguration":{"shape":"WiFiSimpleSetupConfiguration"}
       }
     },
     "GetManagedThingStateRequest":{
@@ -2191,7 +3372,12 @@
         "DestinationName":{"shape":"DestinationName"},
         "CreatedAt":{"shape":"NotificationConfigurationCreatedAt"},
         "UpdatedAt":{"shape":"NotificationConfigurationUpdatedAt"},
-        "Tags":{"shape":"TagsMap"}
+        "Tags":{
+          "shape":"TagsMap",
+          "deprecated":true,
+          "deprecatedMessage":"Tags has been deprecated for this api",
+          "deprecatedSince":"06-25-2025"
+        }
       }
     },
     "GetOtaTaskConfigurationRequest":{
@@ -2244,7 +3430,8 @@
         "TaskProcessingDetails":{"shape":"TaskProcessingDetails"},
         "OtaSchedulingConfig":{"shape":"OtaTaskSchedulingConfig"},
         "OtaTaskExecutionRetryConfig":{"shape":"OtaTaskExecutionRetryConfig"},
-        "Status":{"shape":"OtaStatus"}
+        "Status":{"shape":"OtaStatus"},
+        "Tags":{"shape":"TagsMap"}
       }
     },
     "GetProvisioningProfileRequest":{
@@ -2265,6 +3452,7 @@
         "Name":{"shape":"ProvisioningProfileName"},
         "ProvisioningType":{"shape":"ProvisioningType"},
         "Id":{"shape":"ProvisioningProfileId"},
+        "Status":{"shape":"ProvisioningProfileStatus"},
         "ClaimCertificate":{"shape":"ClaimCertificate"},
         "Tags":{"shape":"TagsMap"}
       }
@@ -2377,13 +3565,138 @@
       "pattern":"[0-9]+",
       "sensitive":true
     },
+    "InvalidRequestException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"ErrorMessage"}
+      },
+      "error":{
+        "httpStatusCode":400,
+        "senderFault":true
+      },
+      "exception":true
+    },
+    "IoTManagedIntegrationsResourceARN":{
+      "type":"string",
+      "max":200,
+      "min":1,
+      "pattern":"arn:aws:iotmanagedintegrations:[0-9a-zA-Z-]+:[0-9]+:(managed-thing|provisioning-profile|ota-task|credential-locker|account-association)/[0-9a-zA-Z]+"
+    },
     "KmsKeyArn":{
       "type":"string",
       "max":200,
       "min":1,
       "pattern":"arn:aws:kms:[0-9a-zA-Z-]+:[0-9]+:key/[0-9a-zA-Z-]+"
     },
+    "LambdaArn":{
+      "type":"string",
+      "pattern":"(arn:aws:lambda:[0-9a-zA-Z-]+:[0-9]+:function:)?([a-zA-Z0-9-_]+(:(\\$LATEST|[a-zA-Z0-9-_]+))?)"
+    },
+    "LambdaConfig":{
+      "type":"structure",
+      "required":["arn"],
+      "members":{
+        "arn":{"shape":"LambdaArn"}
+      }
+    },
     "LastUpdatedAt":{"type":"timestamp"},
+    "LimitExceededException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"ErrorMessage"}
+      },
+      "error":{
+        "httpStatusCode":410,
+        "senderFault":true
+      },
+      "exception":true
+    },
+    "ListAccountAssociationsRequest":{
+      "type":"structure",
+      "members":{
+        "ConnectorDestinationId":{
+          "shape":"ConnectorDestinationId",
+          "location":"querystring",
+          "locationName":"ConnectorDestinationId"
+        },
+        "MaxResults":{
+          "shape":"MaxResults",
+          "location":"querystring",
+          "locationName":"MaxResults"
+        },
+        "NextToken":{
+          "shape":"NextToken",
+          "location":"querystring",
+          "locationName":"NextToken"
+        }
+      }
+    },
+    "ListAccountAssociationsResponse":{
+      "type":"structure",
+      "members":{
+        "Items":{"shape":"AccountAssociationListDefinition"},
+        "NextToken":{"shape":"NextToken"}
+      }
+    },
+    "ListCloudConnectorsRequest":{
+      "type":"structure",
+      "members":{
+        "Type":{
+          "shape":"CloudConnectorType",
+          "location":"querystring",
+          "locationName":"Type"
+        },
+        "LambdaArn":{
+          "shape":"LambdaArn",
+          "location":"querystring",
+          "locationName":"LambdaArn"
+        },
+        "MaxResults":{
+          "shape":"MaxResults",
+          "location":"querystring",
+          "locationName":"MaxResults"
+        },
+        "NextToken":{
+          "shape":"NextToken",
+          "location":"querystring",
+          "locationName":"NextToken"
+        }
+      }
+    },
+    "ListCloudConnectorsResponse":{
+      "type":"structure",
+      "members":{
+        "Items":{"shape":"ConnectorList"},
+        "NextToken":{"shape":"NextToken"}
+      }
+    },
+    "ListConnectorDestinationsRequest":{
+      "type":"structure",
+      "members":{
+        "CloudConnectorId":{
+          "shape":"CloudConnectorId",
+          "location":"querystring",
+          "locationName":"CloudConnectorId"
+        },
+        "NextToken":{
+          "shape":"NextToken",
+          "location":"querystring",
+          "locationName":"NextToken"
+        },
+        "MaxResults":{
+          "shape":"MaxResults",
+          "location":"querystring",
+          "locationName":"MaxResults"
+        }
+      }
+    },
+    "ListConnectorDestinationsResponse":{
+      "type":"structure",
+      "members":{
+        "ConnectorDestinationList":{"shape":"ConnectorDestinationListDefinition"},
+        "NextToken":{"shape":"NextToken"}
+      }
+    },
     "ListCredentialLockersRequest":{
       "type":"structure",
       "members":{
@@ -2428,6 +3741,66 @@
         "NextToken":{"shape":"NextToken"}
       }
     },
+    "ListDeviceDiscoveriesRequest":{
+      "type":"structure",
+      "members":{
+        "NextToken":{
+          "shape":"NextToken",
+          "location":"querystring",
+          "locationName":"NextToken"
+        },
+        "MaxResults":{
+          "shape":"MaxResults",
+          "location":"querystring",
+          "locationName":"MaxResults"
+        },
+        "TypeFilter":{
+          "shape":"DiscoveryType",
+          "location":"querystring",
+          "locationName":"TypeFilter"
+        },
+        "StatusFilter":{
+          "shape":"DeviceDiscoveryStatus",
+          "location":"querystring",
+          "locationName":"StatusFilter"
+        }
+      }
+    },
+    "ListDeviceDiscoveriesResponse":{
+      "type":"structure",
+      "members":{
+        "Items":{"shape":"DeviceDiscoveryListDefinition"},
+        "NextToken":{"shape":"NextToken"}
+      }
+    },
+    "ListDiscoveredDevicesRequest":{
+      "type":"structure",
+      "required":["Identifier"],
+      "members":{
+        "Identifier":{
+          "shape":"DeviceDiscoveryId",
+          "location":"uri",
+          "locationName":"Identifier"
+        },
+        "NextToken":{
+          "shape":"NextToken",
+          "location":"querystring",
+          "locationName":"NextToken"
+        },
+        "MaxResults":{
+          "shape":"MaxResults",
+          "location":"querystring",
+          "locationName":"MaxResults"
+        }
+      }
+    },
+    "ListDiscoveredDevicesResponse":{
+      "type":"structure",
+      "members":{
+        "Items":{"shape":"DiscoveredDeviceListDefinition"},
+        "NextToken":{"shape":"NextToken"}
+      }
+    },
     "ListEventLogConfigurationsRequest":{
       "type":"structure",
       "members":{
@@ -2448,6 +3821,38 @@
       "members":{
         "EventLogConfigurationList":{"shape":"EventLogConfigurationListDefinition"},
         "NextToken":{"shape":"NextToken"}
+      }
+    },
+    "ListManagedThingAccountAssociationsRequest":{
+      "type":"structure",
+      "members":{
+        "ManagedThingId":{
+          "shape":"ManagedThingId",
+          "location":"querystring",
+          "locationName":"ManagedThingId"
+        },
+        "AccountAssociationId":{
+          "shape":"AccountAssociationId",
+          "location":"querystring",
+          "locationName":"AccountAssociationId"
+        },
+        "MaxResults":{
+          "shape":"MaxResults",
+          "location":"querystring",
+          "locationName":"MaxResults"
+        },
+        "NextToken":{
+          "shape":"NextToken",
+          "location":"querystring",
+          "locationName":"NextToken"
+        }
+      }
+    },
+    "ListManagedThingAccountAssociationsResponse":{
+      "type":"structure",
+      "members":{
+        "Items":{"shape":"ManagedThingAssociationList"},
+        "NextToken":{"shape":"String"}
       }
     },
     "ListManagedThingSchemasRequest":{
@@ -2513,8 +3918,21 @@
         },
         "ConnectorPolicyIdFilter":{
           "shape":"ConnectorPolicyId",
+          "deprecated":true,
+          "deprecatedMessage":"ConnectorPolicyIdFilter is deprecated",
+          "deprecatedSince":"06-25-2025",
           "location":"querystring",
           "locationName":"ConnectorPolicyIdFilter"
+        },
+        "ConnectorDestinationIdFilter":{
+          "shape":"ConnectorDestinationId",
+          "location":"querystring",
+          "locationName":"ConnectorDestinationIdFilter"
+        },
+        "ConnectorDeviceIdFilter":{
+          "shape":"ConnectorDeviceId",
+          "location":"querystring",
+          "locationName":"ConnectorDeviceIdFilter"
         },
         "SerialNumberFilter":{
           "shape":"SerialNumber",
@@ -2709,6 +4127,23 @@
         "NextToken":{"shape":"NextToken"}
       }
     },
+    "ListTagsForResourceRequest":{
+      "type":"structure",
+      "required":["ResourceArn"],
+      "members":{
+        "ResourceArn":{
+          "shape":"IoTManagedIntegrationsResourceARN",
+          "location":"uri",
+          "locationName":"ResourceArn"
+        }
+      }
+    },
+    "ListTagsForResourceResponse":{
+      "type":"structure",
+      "members":{
+        "tags":{"shape":"TagsMap"}
+      }
+    },
     "LocalStoreFileRotationMaxBytes":{
       "type":"integer",
       "box":true
@@ -2745,6 +4180,25 @@
       "min":32,
       "pattern":"arn:aws:iotmanagedintegrations:[0-9a-zA-Z-]+:[0-9]+:managed-thing/([0-9a-zA-Z:_-])+"
     },
+    "ManagedThingAssociation":{
+      "type":"structure",
+      "members":{
+        "ManagedThingId":{"shape":"ManagedThingId"},
+        "AccountAssociationId":{"shape":"AccountAssociationId"},
+        "ManagedThingAssociationStatus":{"shape":"ManagedThingAssociationStatus"}
+      }
+    },
+    "ManagedThingAssociationList":{
+      "type":"list",
+      "member":{"shape":"ManagedThingAssociation"}
+    },
+    "ManagedThingAssociationStatus":{
+      "type":"string",
+      "enum":[
+        "PRE_ASSOCIATED",
+        "ASSOCIATED"
+      ]
+    },
     "ManagedThingId":{
       "type":"string",
       "max":64,
@@ -2776,7 +4230,13 @@
         "Brand":{"shape":"Brand"},
         "Classification":{"shape":"Classification"},
         "ConnectorDeviceId":{"shape":"ConnectorDeviceId"},
-        "ConnectorPolicyId":{"shape":"ConnectorPolicyId"},
+        "ConnectorPolicyId":{
+          "shape":"ConnectorPolicyId",
+          "deprecated":true,
+          "deprecatedMessage":"ConnectorPolicyId has been deprecated",
+          "deprecatedSince":"06-25-2025"
+        },
+        "ConnectorDestinationId":{"shape":"ConnectorDestinationId"},
         "Model":{"shape":"Model"},
         "Name":{"shape":"Name"},
         "Owner":{"shape":"Owner"},
@@ -2789,6 +4249,205 @@
         "UpdatedAt":{"shape":"CreatedAt"},
         "ActivatedAt":{"shape":"SetupAt"}
       }
+    },
+    "MatterAttributeId":{
+      "type":"string",
+      "max":24,
+      "min":1,
+      "pattern":"0[xX][0-9a-fA-F]+$|^[0-9]+"
+    },
+    "MatterAttributes":{
+      "type":"structure",
+      "members":{},
+      "document":true,
+      "sensitive":true
+    },
+    "MatterCapabilityReport":{
+      "type":"structure",
+      "required":[
+        "version",
+        "endpoints"
+      ],
+      "members":{
+        "version":{"shape":"CapabilityReportVersion"},
+        "nodeId":{"shape":"NodeId"},
+        "endpoints":{"shape":"MatterCapabilityReportEndpoints"}
+      }
+    },
+    "MatterCapabilityReportAttribute":{
+      "type":"structure",
+      "members":{
+        "id":{"shape":"MatterAttributeId"},
+        "name":{"shape":"ActionName"},
+        "value":{"shape":"MatterCapabilityReportAttributeValue"}
+      }
+    },
+    "MatterCapabilityReportAttributeValue":{
+      "type":"structure",
+      "members":{},
+      "document":true
+    },
+    "MatterCapabilityReportAttributes":{
+      "type":"list",
+      "member":{"shape":"MatterCapabilityReportAttribute"},
+      "max":100,
+      "min":0
+    },
+    "MatterCapabilityReportCluster":{
+      "type":"structure",
+      "required":[
+        "id",
+        "revision"
+      ],
+      "members":{
+        "id":{"shape":"ClusterId"},
+        "revision":{"shape":"MatterCapabilityReportClusterRevisionId"},
+        "publicId":{"shape":"SchemaVersionedId"},
+        "name":{"shape":"CapabilityName"},
+        "specVersion":{"shape":"SpecVersion"},
+        "attributes":{"shape":"MatterCapabilityReportAttributes"},
+        "commands":{"shape":"MatterCapabilityReportCommands"},
+        "events":{"shape":"MatterCapabilityReportEvents"},
+        "featureMap":{"shape":"MatterCapabilityReportFeatureMap"},
+        "generatedCommands":{"shape":"MatterCapabilityReportGeneratedCommands"},
+        "fabricIndex":{"shape":"MatterCapabilityReportFabricIndex"}
+      }
+    },
+    "MatterCapabilityReportClusterRevisionId":{
+      "type":"integer",
+      "box":true,
+      "max":10,
+      "min":1
+    },
+    "MatterCapabilityReportClusters":{
+      "type":"list",
+      "member":{"shape":"MatterCapabilityReportCluster"},
+      "max":50,
+      "min":0
+    },
+    "MatterCapabilityReportCommands":{
+      "type":"list",
+      "member":{"shape":"MatterCommandId"},
+      "max":100,
+      "min":0
+    },
+    "MatterCapabilityReportEndpoint":{
+      "type":"structure",
+      "required":[
+        "id",
+        "deviceTypes",
+        "clusters"
+      ],
+      "members":{
+        "id":{"shape":"EndpointId"},
+        "deviceTypes":{"shape":"DeviceTypes"},
+        "clusters":{"shape":"MatterCapabilityReportClusters"},
+        "parts":{"shape":"MatterCapabilityReportEndpointParts"},
+        "semanticTags":{"shape":"MatterCapabilityReportEndpointSemanticTags"},
+        "clientClusters":{"shape":"MatterCapabilityReportEndpointClientClusters"}
+      }
+    },
+    "MatterCapabilityReportEndpointClientClusters":{
+      "type":"list",
+      "member":{"shape":"ClusterId"},
+      "max":32,
+      "min":0
+    },
+    "MatterCapabilityReportEndpointParts":{
+      "type":"list",
+      "member":{"shape":"EndpointId"},
+      "max":32,
+      "min":0
+    },
+    "MatterCapabilityReportEndpointSemanticTags":{
+      "type":"list",
+      "member":{"shape":"EndpointSemanticTag"},
+      "max":32,
+      "min":0
+    },
+    "MatterCapabilityReportEndpoints":{
+      "type":"list",
+      "member":{"shape":"MatterCapabilityReportEndpoint"},
+      "max":50,
+      "min":0
+    },
+    "MatterCapabilityReportEvents":{
+      "type":"list",
+      "member":{"shape":"MatterEventId"},
+      "max":100,
+      "min":0
+    },
+    "MatterCapabilityReportFabricIndex":{
+      "type":"integer",
+      "box":true,
+      "max":4096,
+      "min":0
+    },
+    "MatterCapabilityReportFeatureMap":{
+      "type":"long",
+      "box":true,
+      "max":4294967295,
+      "min":0
+    },
+    "MatterCapabilityReportGeneratedCommands":{
+      "type":"list",
+      "member":{"shape":"MatterCommandId"},
+      "max":50,
+      "min":0
+    },
+    "MatterCluster":{
+      "type":"structure",
+      "members":{
+        "id":{"shape":"ClusterId"},
+        "attributes":{"shape":"MatterAttributes"},
+        "commands":{"shape":"MatterCommands"},
+        "events":{"shape":"MatterEvents"}
+      }
+    },
+    "MatterClusters":{
+      "type":"list",
+      "member":{"shape":"MatterCluster"},
+      "max":5,
+      "min":1
+    },
+    "MatterCommandId":{
+      "type":"string",
+      "max":24,
+      "min":1,
+      "pattern":"0[xX][0-9a-fA-F]+$|^[0-9]+"
+    },
+    "MatterCommands":{
+      "type":"map",
+      "key":{"shape":"MatterCommandId"},
+      "value":{"shape":"MatterFields"},
+      "max":5,
+      "min":1
+    },
+    "MatterEndpoint":{
+      "type":"structure",
+      "members":{
+        "id":{"shape":"EndpointId"},
+        "clusters":{"shape":"MatterClusters"}
+      }
+    },
+    "MatterEventId":{
+      "type":"string",
+      "max":24,
+      "min":1,
+      "pattern":"0[xX][0-9a-fA-F]+$|^[0-9]+"
+    },
+    "MatterEvents":{
+      "type":"map",
+      "key":{"shape":"MatterEventId"},
+      "value":{"shape":"MatterFields"},
+      "max":5,
+      "min":1
+    },
+    "MatterFields":{
+      "type":"structure",
+      "members":{},
+      "document":true,
+      "sensitive":true
     },
     "MaxResults":{
       "type":"integer",
@@ -2870,6 +4529,42 @@
       "max":100,
       "min":1
     },
+    "OAuthAuthorizationUrlOutput":{
+      "type":"string",
+      "max":1024,
+      "min":0,
+      "pattern":"$|^(https):\\/\\/.*",
+      "sensitive":true
+    },
+    "OAuthCompleteRedirectUrl":{
+      "type":"string",
+      "max":1024,
+      "min":1,
+      "pattern":"(http|https)://.*"
+    },
+    "OAuthConfig":{
+      "type":"structure",
+      "required":[
+        "authUrl",
+        "tokenUrl",
+        "tokenEndpointAuthenticationScheme"
+      ],
+      "members":{
+        "authUrl":{"shape":"AuthUrl"},
+        "tokenUrl":{"shape":"TokenUrl"},
+        "scope":{"shape":"String"},
+        "tokenEndpointAuthenticationScheme":{"shape":"TokenEndpointAuthenticationScheme"},
+        "oAuthCompleteRedirectUrl":{"shape":"String"},
+        "proactiveRefreshTokenRenewal":{"shape":"ProactiveRefreshTokenRenewal"}
+      }
+    },
+    "OAuthUpdate":{
+      "type":"structure",
+      "members":{
+        "oAuthCompleteRedirectUrl":{"shape":"String"},
+        "proactiveRefreshTokenRenewal":{"shape":"ProactiveRefreshTokenRenewal"}
+      }
+    },
     "OtaDescription":{
       "type":"string",
       "max":256,
@@ -2910,7 +4605,7 @@
     "OtaTaskArn":{
       "type":"string",
       "max":1011,
-      "min":0,
+      "min":32,
       "pattern":"arn:aws:iotmanagedintegrations:[0-9a-zA-Z-]+:[0-9]+:ota-task/[0-9a-zA-Z]+"
     },
     "OtaTaskConfigurationId":{
@@ -3042,11 +4737,31 @@
       "min":1,
       "pattern":"[A-Za-z0-9]+"
     },
+    "ProactiveRefreshTokenRenewal":{
+      "type":"structure",
+      "members":{
+        "enabled":{"shape":"Boolean"},
+        "DaysBeforeRenewal":{"shape":"ProactiveRefreshTokenRenewalDaysBeforeRenewalInteger"}
+      }
+    },
+    "ProactiveRefreshTokenRenewalDaysBeforeRenewalInteger":{
+      "type":"integer",
+      "box":true,
+      "min":30
+    },
     "PropertyName":{
       "type":"string",
       "max":128,
       "min":1,
-      "pattern":"[/a-zA-Z0-9\\._ ]+"
+      "pattern":"[/a-zA-Z0-9\\._ -]+"
+    },
+    "ProtocolType":{
+      "type":"string",
+      "enum":[
+        "ZWAVE",
+        "ZIGBEE",
+        "CUSTOM"
+      ]
     },
     "ProvisioningProfileArn":{
       "type":"string",
@@ -3070,13 +4785,24 @@
       "min":1,
       "pattern":"[0-9A-Za-z_-]+"
     },
+    "ProvisioningProfileStatus":{
+      "type":"string",
+      "enum":[
+        "CREATE_IN_PROGRESS",
+        "CREATE_FAILED",
+        "CREATED",
+        "DELETE_IN_PROGRESS",
+        "DELETE_FAILED"
+      ]
+    },
     "ProvisioningProfileSummary":{
       "type":"structure",
       "members":{
         "Name":{"shape":"ProvisioningProfileName"},
         "Id":{"shape":"ProvisioningProfileId"},
         "Arn":{"shape":"ProvisioningProfileArn"},
-        "ProvisioningType":{"shape":"ProvisioningType"}
+        "ProvisioningType":{"shape":"ProvisioningType"},
+        "Status":{"shape":"ProvisioningProfileStatus"}
       }
     },
     "ProvisioningStatus":{
@@ -3156,10 +4882,30 @@
       }
     },
     "QueuedAt":{"type":"timestamp"},
-    "RegisterCustomEndpointRequest":{
+    "RegisterAccountAssociationRequest":{
+      "type":"structure",
+      "required":[
+        "ManagedThingId",
+        "AccountAssociationId",
+        "DeviceDiscoveryId"
+      ],
+      "members":{
+        "ManagedThingId":{"shape":"ManagedThingId"},
+        "AccountAssociationId":{"shape":"AccountAssociationId"},
+        "DeviceDiscoveryId":{"shape":"DeviceDiscoveryId"}
+      }
+    },
+    "RegisterAccountAssociationResponse":{
       "type":"structure",
       "members":{
+        "AccountAssociationId":{"shape":"AccountAssociationId"},
+        "DeviceDiscoveryId":{"shape":"DeviceDiscoveryId"},
+        "ManagedThingId":{"shape":"ManagedThingId"}
       }
+    },
+    "RegisterCustomEndpointRequest":{
+      "type":"structure",
+      "members":{}
     },
     "RegisterCustomEndpointResponse":{
       "type":"structure",
@@ -3182,7 +4928,9 @@
     "ResourceNotFoundException":{
       "type":"structure",
       "members":{
-        "Message":{"shape":"ErrorMessage"}
+        "Message":{"shape":"ErrorMessage"},
+        "ResourceId":{"shape":"ErrorResourceId"},
+        "ResourceType":{"shape":"ErrorResourceType"}
       },
       "error":{
         "httpStatusCode":404,
@@ -3268,14 +5016,14 @@
     "SchemaId":{
       "type":"string",
       "max":128,
-      "min":1,
-      "pattern":"[a-zA-Z0-9./]+"
+      "min":3,
+      "pattern":"[a-zA-Z0-9.]+"
     },
     "SchemaVersionDescription":{
       "type":"string",
-      "max":256,
-      "min":1,
-      "pattern":"[a-zA-Z0-9., ]+"
+      "max":2048,
+      "min":10,
+      "pattern":"[a-zA-Z0-9.,/ -]+"
     },
     "SchemaVersionFormat":{
       "type":"string",
@@ -3302,14 +5050,13 @@
     },
     "SchemaVersionNamespaceName":{
       "type":"string",
-      "max":256,
-      "min":1,
-      "pattern":"[a-z]+"
+      "max":12,
+      "min":3,
+      "pattern":"[a-z0-9]+"
     },
     "SchemaVersionSchema":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "document":true
     },
     "SchemaVersionType":{
@@ -3321,9 +5068,9 @@
     },
     "SchemaVersionVersion":{
       "type":"string",
-      "max":256,
-      "min":1,
-      "pattern":"(\\d+\\.\\d+|\\$latest)"
+      "max":12,
+      "min":3,
+      "pattern":"(\\d+\\.\\d+(\\.\\d+)?|\\$latest)"
     },
     "SchemaVersionVisibility":{
       "type":"string",
@@ -3335,8 +5082,62 @@
     "SchemaVersionedId":{
       "type":"string",
       "max":128,
-      "min":1,
-      "pattern":"[a-zA-Z0-9.\\/]+(@(\\d+\\.\\d+|\\$latest))?"
+      "min":7,
+      "pattern":"[a-zA-Z0-9.]+@(\\d+\\.\\d+(\\.\\d+)?|\\$latest)"
+    },
+    "SecretsManager":{
+      "type":"structure",
+      "required":[
+        "arn",
+        "versionId"
+      ],
+      "members":{
+        "arn":{"shape":"SecretsManagerArn"},
+        "versionId":{"shape":"SecretsManagerVersionId"}
+      }
+    },
+    "SecretsManagerArn":{
+      "type":"string",
+      "max":2048,
+      "min":20,
+      "pattern":"arn:aws:secretsmanager:[0-9a-zA-Z-]{1,32}:\\d{12}:secret:[A-Za-z0-9/_+=.@-]{8,520}"
+    },
+    "SecretsManagerVersionId":{
+      "type":"string",
+      "max":64,
+      "min":32,
+      "pattern":"[a-zA-Z0-9-_]+"
+    },
+    "SendConnectorEventRequest":{
+      "type":"structure",
+      "required":[
+        "ConnectorId",
+        "Operation"
+      ],
+      "members":{
+        "ConnectorId":{
+          "shape":"ConnectorId",
+          "location":"uri",
+          "locationName":"ConnectorId"
+        },
+        "UserId":{"shape":"ThirdPartyUserId"},
+        "Operation":{"shape":"ConnectorEventOperation"},
+        "OperationVersion":{"shape":"ConnectorEventOperationVersion"},
+        "StatusCode":{"shape":"ConnectorEventStatusCode"},
+        "Message":{"shape":"ConnectorEventMessage"},
+        "DeviceDiscoveryId":{"shape":"DeviceDiscoveryId"},
+        "ConnectorDeviceId":{"shape":"ConnectorDeviceId"},
+        "TraceId":{"shape":"TraceId"},
+        "Devices":{"shape":"Devices"},
+        "MatterEndpoint":{"shape":"MatterEndpoint"}
+      }
+    },
+    "SendConnectorEventResponse":{
+      "type":"structure",
+      "required":["ConnectorId"],
+      "members":{
+        "ConnectorId":{"shape":"ConnectorId"}
+      }
     },
     "SendManagedThingCommandRequest":{
       "type":"structure",
@@ -3351,7 +5152,13 @@
           "locationName":"ManagedThingId"
         },
         "Endpoints":{"shape":"CommandEndpoints"},
-        "ConnectorAssociationId":{"shape":"ConnectorAssociationId"}
+        "ConnectorAssociationId":{
+          "shape":"ConnectorAssociationId",
+          "deprecated":true,
+          "deprecatedMessage":"ConnectorAssociationId has been deprecated",
+          "deprecatedSince":"06-25-2025"
+        },
+        "AccountAssociationId":{"shape":"AccountAssociationId"}
       }
     },
     "SendManagedThingCommandResponse":{
@@ -3396,19 +5203,58 @@
     },
     "SmartHomeResourceType":{
       "type":"string",
-      "pattern":"[*]$|^(managed-thing|credential-locker|provisioning-profile|ota-task)"
+      "pattern":"[*]$|^(managed-thing|credential-locker|provisioning-profile|ota-task|account-association)"
+    },
+    "SpecVersion":{
+      "type":"string",
+      "max":64,
+      "min":1,
+      "pattern":"\\d+\\.\\d+"
+    },
+    "StartAccountAssociationRefreshRequest":{
+      "type":"structure",
+      "required":["AccountAssociationId"],
+      "members":{
+        "AccountAssociationId":{
+          "shape":"AccountAssociationId",
+          "location":"uri",
+          "locationName":"AccountAssociationId"
+        }
+      }
+    },
+    "StartAccountAssociationRefreshResponse":{
+      "type":"structure",
+      "required":["OAuthAuthorizationUrl"],
+      "members":{
+        "OAuthAuthorizationUrl":{"shape":"OAuthAuthorizationUrlOutput"}
+      }
     },
     "StartDeviceDiscoveryRequest":{
       "type":"structure",
       "required":["DiscoveryType"],
       "members":{
         "DiscoveryType":{"shape":"DiscoveryType"},
+        "CustomProtocolDetail":{"shape":"CustomProtocolDetail"},
         "ControllerIdentifier":{"shape":"ManagedThingId"},
-        "ConnectorAssociationIdentifier":{"shape":"ConnectorAssociationId"},
+        "ConnectorAssociationIdentifier":{
+          "shape":"ConnectorAssociationId",
+          "deprecated":true,
+          "deprecatedMessage":"ConnectorAssociationIdentifier is deprecated",
+          "deprecatedSince":"06-25-2025"
+        },
+        "AccountAssociationId":{"shape":"AccountAssociationId"},
         "AuthenticationMaterial":{"shape":"DiscoveryAuthMaterialString"},
         "AuthenticationMaterialType":{"shape":"DiscoveryAuthMaterialType"},
         "ClientToken":{"shape":"ClientToken"},
-        "Tags":{"shape":"TagsMap"}
+        "Tags":{
+          "shape":"TagsMap",
+          "deprecated":true,
+          "deprecatedMessage":"Tags have been deprecated from this api",
+          "deprecatedSince":"06-25-2025"
+        },
+        "ConnectorDeviceIdList":{"shape":"ConnectorDeviceIdList"},
+        "Protocol":{"shape":"ProtocolType"},
+        "EndDeviceIdentifier":{"shape":"ManagedThingId"}
       }
     },
     "StartDeviceDiscoveryResponse":{
@@ -3463,6 +5309,31 @@
       "max":128,
       "min":1
     },
+    "TagKeyList":{
+      "type":"list",
+      "member":{"shape":"TagKey"},
+      "max":200,
+      "min":0
+    },
+    "TagResourceRequest":{
+      "type":"structure",
+      "required":[
+        "ResourceArn",
+        "Tags"
+      ],
+      "members":{
+        "ResourceArn":{
+          "shape":"IoTManagedIntegrationsResourceARN",
+          "location":"uri",
+          "locationName":"ResourceArn"
+        },
+        "Tags":{"shape":"TagsMap"}
+      }
+    },
+    "TagResourceResponse":{
+      "type":"structure",
+      "members":{}
+    },
     "TagValue":{
       "type":"string",
       "max":256,
@@ -3494,6 +5365,13 @@
         "processingTargets":{"shape":"Target"}
       }
     },
+    "ThirdPartyUserId":{
+      "type":"string",
+      "max":64,
+      "min":1,
+      "pattern":"[a-zA-Z0-9_.,@-]+",
+      "sensitive":true
+    },
     "ThresholdPercentage":{
       "type":"double",
       "box":true,
@@ -3509,6 +5387,25 @@
         "senderFault":true
       },
       "exception":true
+    },
+    "TimeoutInMinutes":{
+      "type":"integer",
+      "box":true,
+      "max":15,
+      "min":5
+    },
+    "TokenEndpointAuthenticationScheme":{
+      "type":"string",
+      "enum":[
+        "HTTP_BASIC",
+        "REQUEST_BODY_CREDENTIALS"
+      ]
+    },
+    "TokenUrl":{
+      "type":"string",
+      "max":1024,
+      "min":1,
+      "pattern":"https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}([-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)"
     },
     "TraceId":{
       "type":"string",
@@ -3533,6 +5430,71 @@
       "min":12,
       "pattern":"[0-9]+",
       "sensitive":true
+    },
+    "UntagResourceRequest":{
+      "type":"structure",
+      "required":[
+        "ResourceArn",
+        "TagKeys"
+      ],
+      "members":{
+        "ResourceArn":{
+          "shape":"IoTManagedIntegrationsResourceARN",
+          "location":"uri",
+          "locationName":"ResourceArn"
+        },
+        "TagKeys":{
+          "shape":"TagKeyList",
+          "location":"querystring",
+          "locationName":"tagKeys"
+        }
+      }
+    },
+    "UntagResourceResponse":{
+      "type":"structure",
+      "members":{}
+    },
+    "UpdateAccountAssociationRequest":{
+      "type":"structure",
+      "required":["AccountAssociationId"],
+      "members":{
+        "AccountAssociationId":{
+          "shape":"AccountAssociationId",
+          "location":"uri",
+          "locationName":"AccountAssociationId"
+        },
+        "Name":{"shape":"AccountAssociationName"},
+        "Description":{"shape":"AccountAssociationDescription"}
+      }
+    },
+    "UpdateCloudConnectorRequest":{
+      "type":"structure",
+      "required":["Identifier"],
+      "members":{
+        "Identifier":{
+          "shape":"CloudConnectorId",
+          "location":"uri",
+          "locationName":"Identifier"
+        },
+        "Name":{"shape":"DisplayName"},
+        "Description":{"shape":"CloudConnectorDescription"}
+      }
+    },
+    "UpdateConnectorDestinationRequest":{
+      "type":"structure",
+      "required":["Identifier"],
+      "members":{
+        "Identifier":{
+          "shape":"ConnectorDestinationId",
+          "location":"uri",
+          "locationName":"Identifier"
+        },
+        "Description":{"shape":"ConnectorDestinationDescription"},
+        "Name":{"shape":"ConnectorDestinationName"},
+        "AuthType":{"shape":"AuthType"},
+        "AuthConfig":{"shape":"AuthConfigUpdate"},
+        "SecretsManager":{"shape":"SecretsManager"}
+      }
     },
     "UpdateDestinationRequest":{
       "type":"structure",
@@ -3576,11 +5538,18 @@
         "Owner":{"shape":"Owner"},
         "CredentialLockerId":{"shape":"CredentialLockerId"},
         "SerialNumber":{"shape":"SerialNumber"},
+        "WiFiSimpleSetupConfiguration":{"shape":"WiFiSimpleSetupConfiguration"},
         "Brand":{"shape":"Brand"},
         "Model":{"shape":"Model"},
         "Name":{"shape":"Name"},
         "CapabilityReport":{"shape":"CapabilityReport"},
-        "Capabilities":{"shape":"Capabilities"},
+        "CapabilitySchemas":{"shape":"CapabilitySchemas"},
+        "Capabilities":{
+          "shape":"Capabilities",
+          "deprecated":true,
+          "deprecatedMessage":"Capabilities has been deprecated, use CapabilityReport instead",
+          "deprecatedSince":"06-25-2025"
+        },
         "Classification":{"shape":"Classification"},
         "HubNetworkMode":{"shape":"HubNetworkMode"},
         "MetaData":{"shape":"MetaData"}
@@ -3636,9 +5605,16 @@
     },
     "ValidationSchema":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "document":true
+    },
+    "WiFiSimpleSetupConfiguration":{
+      "type":"structure",
+      "members":{
+        "EnableAsProvisioner":{"shape":"EnableAsProvisioner"},
+        "EnableAsProvisionee":{"shape":"EnableAsProvisionee"},
+        "TimeoutInMinutes":{"shape":"TimeoutInMinutes"}
+      }
     }
   }
 }

@@ -95,8 +95,8 @@ module Aws::ConnectParticipant
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::ConnectParticipant
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::ConnectParticipant
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::ConnectParticipant
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::ConnectParticipant
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::ConnectParticipant
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::ConnectParticipant
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::ConnectParticipant
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -478,6 +482,18 @@ module Aws::ConnectParticipant
     #
     #  </note>
     #
+    # <note markdown="1"> `ConnectionToken` is used for invoking this API instead of
+    # `ParticipantToken`.
+    #
+    #  </note>
+    #
+    # The Amazon Connect Participant Service APIs do not use [Signature
+    # Version 4 authentication][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/general/latest/gr/signature-version-4.html
+    #
     # @option params [required, String] :session_id
     #   The `sessionId` provided in the `authenticationInitiated` event.
     #
@@ -508,7 +524,7 @@ module Aws::ConnectParticipant
     # exception is thrown when an attachment with that identifier is already
     # being uploaded.
     #
-    # For security recommendations, see [Amazon Connect Chat security best
+    # For security recommendations, see [Connect Customer Chat security best
     # practices][1].
     #
     # <note markdown="1"> `ConnectionToken` is used for invoking this API instead of
@@ -565,8 +581,11 @@ module Aws::ConnectParticipant
 
     # Creates the participant's connection.
     #
-    # For security recommendations, see [Amazon Connect Chat security best
+    # For security recommendations, see [Connect Customer Chat security best
     # practices][1].
+    #
+    # For WebRTC security recommendations, see [Connect Customer WebRTC
+    # security best practices][2].
     #
     # <note markdown="1"> `ParticipantToken` is used for invoking this API instead of
     # `ConnectionToken`.
@@ -574,11 +593,15 @@ module Aws::ConnectParticipant
     #  </note>
     #
     # The participant token is valid for the lifetime of the participant –
-    # until they are part of a contact.
+    # until they are part of a contact. For WebRTC participants, if they
+    # leave or are disconnected for 60 seconds, a new participant needs to
+    # be created using the [CreateParticipant][3] API.
     #
-    # The response URL for `WEBSOCKET` Type has a connect expiry timeout of
-    # 100s. Clients must manually connect to the returned websocket URL and
-    # subscribe to the desired topic.
+    # **For `WEBSOCKET` Type**:
+    #
+    # The response URL for has a connect expiry timeout of 100s. Clients
+    # must manually connect to the returned websocket URL and subscribe to
+    # the desired topic.
     #
     # For chat, you need to publish the following on the established
     # websocket connection:
@@ -589,29 +612,60 @@ module Aws::ConnectParticipant
     # ConnectionExpiry parameter, clients need to call this API again to
     # obtain a new websocket URL and perform the same steps as before.
     #
+    # The expiry time for the connection token is different than the
+    # `ChatDurationInMinutes`. Expiry time for the connection token is 1
+    # day.
+    #
+    # **For `WEBRTC_CONNECTION` Type**:
+    #
+    # The response includes connection data required for the client
+    # application to join the call using the Amazon Chime SDK client
+    # libraries. The WebRTCConnection response contains Meeting and Attendee
+    # information needed to establish the media connection.
+    #
+    # The attendee join token in WebRTCConnection response is valid for the
+    # lifetime of the participant in the call. If a participant leaves or is
+    # disconnected for 60 seconds, their participant credentials will no
+    # longer be valid, and a new participant will need to be created to
+    # rejoin the call.
+    #
     # **Message streaming support**: This API can also be used together with
-    # the [StartContactStreaming][2] API to create a participant connection
+    # the [StartContactStreaming][4] API to create a participant connection
     # for chat contacts that are not using a websocket. For more information
-    # about message streaming, [Enable real-time chat message streaming][3]
+    # about message streaming, [Enable real-time chat message streaming][5]
     # in the *Amazon Connect Administrator Guide*.
+    #
+    # **Multi-user web, in-app, video calling support**:
+    #
+    # For WebRTC calls, this API is used in conjunction with the
+    # CreateParticipant API to enable multi-party calling. The
+    # StartWebRTCContact API creates the initial contact and routes it to an
+    # agent, while CreateParticipant adds additional participants to the
+    # ongoing call. For more information about multi-party WebRTC calls, see
+    # [Enable multi-user web, in-app, and video calling][6] in the *Amazon
+    # Connect Administrator Guide*.
     #
     # **Feature specifications**: For information about feature
     # specifications, such as the allowed number of open websocket
-    # connections per participant, see [Feature specifications][4] in the
-    # *Amazon Connect Administrator Guide*.
+    # connections per participant or maximum number of WebRTC participants,
+    # see [Feature specifications][7] in the *Amazon Connect Administrator
+    # Guide*.
     #
     # <note markdown="1"> The Amazon Connect Participant Service APIs do not use [Signature
-    # Version 4 authentication][5].
+    # Version 4 authentication][8].
     #
     #  </note>
     #
     #
     #
     # [1]: https://docs.aws.amazon.com/connect/latest/adminguide/security-best-practices.html#bp-security-chat
-    # [2]: https://docs.aws.amazon.com/connect/latest/APIReference/API_StartContactStreaming.html
-    # [3]: https://docs.aws.amazon.com/connect/latest/adminguide/chat-message-streaming.html
-    # [4]: https://docs.aws.amazon.com/connect/latest/adminguide/amazon-connect-service-limits.html#feature-limits
-    # [5]: https://docs.aws.amazon.com/general/latest/gr/signature-version-4.html
+    # [2]: https://docs.aws.amazon.com/connect/latest/adminguide/security-best-practices.html#bp-webrtc-security
+    # [3]: https://docs.aws.amazon.com/connect/latest/APIReference/API_CreateParticipant.html
+    # [4]: https://docs.aws.amazon.com/connect/latest/APIReference/API_StartContactStreaming.html
+    # [5]: https://docs.aws.amazon.com/connect/latest/adminguide/chat-message-streaming.html
+    # [6]: https://docs.aws.amazon.com/connect/latest/adminguide/enable-multiuser-inapp.html
+    # [7]: https://docs.aws.amazon.com/connect/latest/adminguide/amazon-connect-service-limits.html#feature-limits
+    # [8]: https://docs.aws.amazon.com/general/latest/gr/signature-version-4.html
     #
     # @option params [Array<String>] :type
     #   Type of connection information required. If you need
@@ -637,11 +691,12 @@ module Aws::ConnectParticipant
     #
     #   * {Types::CreateParticipantConnectionResponse#websocket #websocket} => Types::Websocket
     #   * {Types::CreateParticipantConnectionResponse#connection_credentials #connection_credentials} => Types::ConnectionCredentials
+    #   * {Types::CreateParticipantConnectionResponse#web_rtc_connection #web_rtc_connection} => Types::WebRTCConnection
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_participant_connection({
-    #     type: ["WEBSOCKET"], # accepts WEBSOCKET, CONNECTION_CREDENTIALS
+    #     type: ["WEBSOCKET"], # accepts WEBSOCKET, CONNECTION_CREDENTIALS, WEBRTC_CONNECTION
     #     participant_token: "ParticipantToken", # required
     #     connect_participant: false,
     #   })
@@ -652,6 +707,14 @@ module Aws::ConnectParticipant
     #   resp.websocket.connection_expiry #=> String
     #   resp.connection_credentials.connection_token #=> String
     #   resp.connection_credentials.expiry #=> String
+    #   resp.web_rtc_connection.attendee.attendee_id #=> String
+    #   resp.web_rtc_connection.attendee.join_token #=> String
+    #   resp.web_rtc_connection.meeting.media_placement.audio_host_url #=> String
+    #   resp.web_rtc_connection.meeting.media_placement.audio_fallback_url #=> String
+    #   resp.web_rtc_connection.meeting.media_placement.signaling_url #=> String
+    #   resp.web_rtc_connection.meeting.media_placement.event_ingestion_url #=> String
+    #   resp.web_rtc_connection.meeting.meeting_features.audio.echo_reduction #=> String, one of "AVAILABLE", "UNAVAILABLE"
+    #   resp.web_rtc_connection.meeting.meeting_id #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectparticipant-2018-09-07/CreateParticipantConnection AWS API Documentation
     #
@@ -664,7 +727,7 @@ module Aws::ConnectParticipant
 
     # Retrieves the view for the specified view token.
     #
-    # For security recommendations, see [Amazon Connect Chat security best
+    # For security recommendations, see [Connect Customer Chat security best
     # practices][1].
     #
     #
@@ -711,7 +774,7 @@ module Aws::ConnectParticipant
 
     # Disconnects a participant.
     #
-    # For security recommendations, see [Amazon Connect Chat security best
+    # For security recommendations, see [Connect Customer Chat security best
     # practices][1].
     #
     # <note markdown="1"> `ConnectionToken` is used for invoking this API instead of
@@ -765,11 +828,16 @@ module Aws::ConnectParticipant
     # Provides a pre-signed URL for download of a completed attachment. This
     # is an asynchronous API for use with active contacts.
     #
-    # For security recommendations, see [Amazon Connect Chat security best
+    # For security recommendations, see [Connect Customer Chat security best
     # practices][1].
     #
-    # <note markdown="1"> `ConnectionToken` is used for invoking this API instead of
-    # `ParticipantToken`.
+    # <note markdown="1"> * The participant role `CUSTOM_BOT` is not permitted to access
+    #   attachments customers may upload. An `AccessDeniedException` can
+    #   indicate that the participant may be a CUSTOM\_BOT, and it doesn't
+    #   have access to attachments.
+    #
+    # * `ConnectionToken` is used for invoking this API instead of
+    #   `ParticipantToken`.
     #
     #  </note>
     #
@@ -825,7 +893,7 @@ module Aws::ConnectParticipant
     # Retrieves the AuthenticationUrl for the current authentication session
     # for the AuthenticateCustomer flow block.
     #
-    # For security recommendations, see [Amazon Connect Chat security best
+    # For security recommendations, see [Connect Customer Chat security best
     # practices][1].
     #
     # <note markdown="1"> * This API can only be called within one minute of receiving the
@@ -836,9 +904,18 @@ module Aws::ConnectParticipant
     #
     #  </note>
     #
+    # <note markdown="1"> `ConnectionToken` is used for invoking this API instead of
+    # `ParticipantToken`.
+    #
+    #  </note>
+    #
+    # The Amazon Connect Participant Service APIs do not use [Signature
+    # Version 4 authentication][2].
+    #
     #
     #
     # [1]: https://docs.aws.amazon.com/connect/latest/adminguide/security-best-practices.html#bp-security-chat
+    # [2]: https://docs.aws.amazon.com/general/latest/gr/signature-version-4.html
     #
     # @option params [required, String] :session_id
     #   The sessionId provided in the authenticationInitiated event.
@@ -880,16 +957,18 @@ module Aws::ConnectParticipant
     # attachments. For information about accessing past chat contact
     # transcripts for a persistent chat, see [Enable persistent chat][1].
     #
-    # For security recommendations, see [Amazon Connect Chat security best
+    # For security recommendations, see [Connect Customer Chat security best
     # practices][2].
     #
     # If you have a process that consumes events in the transcript of an
     # chat that has ended, note that chat transcripts contain the following
     # event content types if the event has occurred during the chat session:
     #
-    # * `application/vnd.amazonaws.connect.event.participant.left`
+    # * `application/vnd.amazonaws.connect.event.participant.invited`
     #
     # * `application/vnd.amazonaws.connect.event.participant.joined`
+    #
+    # * `application/vnd.amazonaws.connect.event.participant.left`
     #
     # * `application/vnd.amazonaws.connect.event.chat.ended`
     #
@@ -983,6 +1062,7 @@ module Aws::ConnectParticipant
     #   resp.transcript[0].message_metadata.receipts[0].delivered_timestamp #=> String
     #   resp.transcript[0].message_metadata.receipts[0].read_timestamp #=> String
     #   resp.transcript[0].message_metadata.receipts[0].recipient_participant_id #=> String
+    #   resp.transcript[0].message_metadata.message_processing_status #=> String, one of "PROCESSING", "FAILED", "REJECTED"
     #   resp.transcript[0].related_contact_id #=> String
     #   resp.transcript[0].contact_id #=> String
     #   resp.next_token #=> String
@@ -997,9 +1077,9 @@ module Aws::ConnectParticipant
     end
 
     # <note markdown="1"> The `application/vnd.amazonaws.connect.event.connection.acknowledged`
-    # ContentType will no longer be supported starting December 31, 2024.
-    # This event has been migrated to the [CreateParticipantConnection][1]
-    # API using the `ConnectParticipant` field.
+    # ContentType is no longer maintained since December 31, 2024. This
+    # event has been migrated to the [CreateParticipantConnection][1] API
+    # using the `ConnectParticipant` field.
     #
     #  </note>
     #
@@ -1008,7 +1088,7 @@ module Aws::ConnectParticipant
     # message receipts when a supervisor is barged-in will result in a
     # conflict exception.
     #
-    # For security recommendations, see [Amazon Connect Chat security best
+    # For security recommendations, see [Connect Customer Chat security best
     # practices][2].
     #
     # <note markdown="1"> `ConnectionToken` is used for invoking this API instead of
@@ -1030,8 +1110,8 @@ module Aws::ConnectParticipant
     #
     #   * application/vnd.amazonaws.connect.event.typing
     #
-    #   * application/vnd.amazonaws.connect.event.connection.acknowledged
-    #     (will be deprecated on December 31, 2024)
+    #   * application/vnd.amazonaws.connect.event.connection.acknowledged (is
+    #     no longer maintained since December 31, 2024)
     #
     #   * application/vnd.amazonaws.connect.event.message.delivered
     #
@@ -1092,7 +1172,7 @@ module Aws::ConnectParticipant
 
     # Sends a message.
     #
-    # For security recommendations, see [Amazon Connect Chat security best
+    # For security recommendations, see [Connect Customer Chat security best
     # practices][1].
     #
     # <note markdown="1"> `ConnectionToken` is used for invoking this API instead of
@@ -1109,9 +1189,21 @@ module Aws::ConnectParticipant
     # [2]: https://docs.aws.amazon.com/general/latest/gr/signature-version-4.html
     #
     # @option params [required, String] :content_type
-    #   The type of the content. Supported types are `text/plain`,
+    #   The type of the content. Possible types are `text/plain`,
     #   `text/markdown`, `application/json`, and
     #   `application/vnd.amazonaws.connect.message.interactive.response`.
+    #
+    #   Supported types on the contact are configured through
+    #   `SupportedMessagingContentTypes` on [StartChatContact][1] and
+    #   [StartOutboundChatContact][2].
+    #
+    #   For Apple Messages for Business, SMS, and WhatsApp Business Messaging
+    #   contacts, only `text/plain` is supported.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/connect/latest/APIReference/API_StartChatContact.html
+    #   [2]: https://docs.aws.amazon.com/connect/latest/APIReference/API_StartOutboundChatContact.html
     #
     # @option params [required, String] :content
     #   The content of the message.
@@ -1146,6 +1238,7 @@ module Aws::ConnectParticipant
     #
     #   * {Types::SendMessageResponse#id #id} => String
     #   * {Types::SendMessageResponse#absolute_time #absolute_time} => String
+    #   * {Types::SendMessageResponse#message_metadata #message_metadata} => Types::MessageProcessingMetadata
     #
     # @example Request syntax with placeholder values
     #
@@ -1160,6 +1253,7 @@ module Aws::ConnectParticipant
     #
     #   resp.id #=> String
     #   resp.absolute_time #=> String
+    #   resp.message_metadata.message_processing_status #=> String, one of "PROCESSING", "FAILED", "REJECTED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectparticipant-2018-09-07/SendMessage AWS API Documentation
     #
@@ -1173,7 +1267,7 @@ module Aws::ConnectParticipant
     # Provides a pre-signed Amazon S3 URL in response for uploading the file
     # directly to S3.
     #
-    # For security recommendations, see [Amazon Connect Chat security best
+    # For security recommendations, see [Connect Customer Chat security best
     # practices][1].
     #
     # <note markdown="1"> `ConnectionToken` is used for invoking this API instead of
@@ -1271,7 +1365,7 @@ module Aws::ConnectParticipant
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-connectparticipant'
-      context[:gem_version] = '1.61.0'
+      context[:gem_version] = '1.82.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

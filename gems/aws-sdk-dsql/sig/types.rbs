@@ -28,30 +28,45 @@ module Aws::DSQL
 
     class CreateClusterInput
       attr_accessor deletion_protection_enabled: bool
+      attr_accessor kms_encryption_key: ::String
       attr_accessor tags: ::Hash[::String, ::String]
       attr_accessor client_token: ::String
+      attr_accessor multi_region_properties: Types::MultiRegionProperties
+      attr_accessor policy: ::String
+      attr_accessor bypass_policy_lockout_safety_check: bool
       SENSITIVE: []
     end
 
     class CreateClusterOutput
       attr_accessor identifier: ::String
       attr_accessor arn: ::String
-      attr_accessor status: ("CREATING" | "ACTIVE" | "UPDATING" | "DELETING" | "DELETED" | "FAILED")
+      attr_accessor status: ("CREATING" | "ACTIVE" | "IDLE" | "INACTIVE" | "UPDATING" | "DELETING" | "DELETED" | "FAILED" | "PENDING_SETUP" | "PENDING_DELETE")
       attr_accessor creation_time: ::Time
+      attr_accessor multi_region_properties: Types::MultiRegionProperties
+      attr_accessor encryption_details: Types::EncryptionDetails
       attr_accessor deletion_protection_enabled: bool
+      attr_accessor endpoint: ::String
       SENSITIVE: []
     end
 
-    class CreateMultiRegionClustersInput
-      attr_accessor linked_region_list: ::Array[::String]
-      attr_accessor cluster_properties: ::Hash[::String, Types::LinkedClusterProperties]
-      attr_accessor witness_region: ::String
+    class CreateStreamInput
+      attr_accessor cluster_identifier: ::String
+      attr_accessor target_definition: Types::TargetDefinition
+      attr_accessor ordering: ("UNORDERED")
+      attr_accessor format: ("JSON")
+      attr_accessor tags: ::Hash[::String, ::String]
       attr_accessor client_token: ::String
       SENSITIVE: []
     end
 
-    class CreateMultiRegionClustersOutput
-      attr_accessor linked_cluster_arns: ::Array[::String]
+    class CreateStreamOutput
+      attr_accessor cluster_identifier: ::String
+      attr_accessor stream_identifier: ::String
+      attr_accessor arn: ::String
+      attr_accessor status: ("CREATING" | "ACTIVE" | "DELETING" | "DELETED" | "FAILED" | "IMPAIRED")
+      attr_accessor creation_time: ::Time
+      attr_accessor ordering: ("UNORDERED")
+      attr_accessor format: ("JSON")
       SENSITIVE: []
     end
 
@@ -64,15 +79,43 @@ module Aws::DSQL
     class DeleteClusterOutput
       attr_accessor identifier: ::String
       attr_accessor arn: ::String
-      attr_accessor status: ("CREATING" | "ACTIVE" | "UPDATING" | "DELETING" | "DELETED" | "FAILED")
+      attr_accessor status: ("CREATING" | "ACTIVE" | "IDLE" | "INACTIVE" | "UPDATING" | "DELETING" | "DELETED" | "FAILED" | "PENDING_SETUP" | "PENDING_DELETE")
       attr_accessor creation_time: ::Time
-      attr_accessor deletion_protection_enabled: bool
       SENSITIVE: []
     end
 
-    class DeleteMultiRegionClustersInput
-      attr_accessor linked_cluster_arns: ::Array[::String]
+    class DeleteClusterPolicyInput
+      attr_accessor identifier: ::String
+      attr_accessor expected_policy_version: ::String
       attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteClusterPolicyOutput
+      attr_accessor policy_version: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteStreamInput
+      attr_accessor cluster_identifier: ::String
+      attr_accessor stream_identifier: ::String
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteStreamOutput
+      attr_accessor cluster_identifier: ::String
+      attr_accessor stream_identifier: ::String
+      attr_accessor arn: ::String
+      attr_accessor status: ("CREATING" | "ACTIVE" | "DELETING" | "DELETED" | "FAILED" | "IMPAIRED")
+      attr_accessor creation_time: ::Time
+      SENSITIVE: []
+    end
+
+    class EncryptionDetails
+      attr_accessor encryption_type: ("AWS_OWNED_KMS_KEY" | "CUSTOMER_MANAGED_KMS_KEY")
+      attr_accessor kms_key_arn: ::String
+      attr_accessor encryption_status: ("ENABLED" | "UPDATING" | "KMS_KEY_INACCESSIBLE" | "ENABLING")
       SENSITIVE: []
     end
 
@@ -84,11 +127,55 @@ module Aws::DSQL
     class GetClusterOutput
       attr_accessor identifier: ::String
       attr_accessor arn: ::String
-      attr_accessor status: ("CREATING" | "ACTIVE" | "UPDATING" | "DELETING" | "DELETED" | "FAILED")
+      attr_accessor status: ("CREATING" | "ACTIVE" | "IDLE" | "INACTIVE" | "UPDATING" | "DELETING" | "DELETED" | "FAILED" | "PENDING_SETUP" | "PENDING_DELETE")
       attr_accessor creation_time: ::Time
       attr_accessor deletion_protection_enabled: bool
-      attr_accessor witness_region: ::String
-      attr_accessor linked_cluster_arns: ::Array[::String]
+      attr_accessor multi_region_properties: Types::MultiRegionProperties
+      attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor encryption_details: Types::EncryptionDetails
+      attr_accessor endpoint: ::String
+      SENSITIVE: []
+    end
+
+    class GetClusterPolicyInput
+      attr_accessor identifier: ::String
+      SENSITIVE: []
+    end
+
+    class GetClusterPolicyOutput
+      attr_accessor policy: ::String
+      attr_accessor policy_version: ::String
+      SENSITIVE: []
+    end
+
+    class GetStreamInput
+      attr_accessor cluster_identifier: ::String
+      attr_accessor stream_identifier: ::String
+      SENSITIVE: []
+    end
+
+    class GetStreamOutput
+      attr_accessor cluster_identifier: ::String
+      attr_accessor stream_identifier: ::String
+      attr_accessor arn: ::String
+      attr_accessor status: ("CREATING" | "ACTIVE" | "DELETING" | "DELETED" | "FAILED" | "IMPAIRED")
+      attr_accessor creation_time: ::Time
+      attr_accessor ordering: ("UNORDERED")
+      attr_accessor format: ("JSON")
+      attr_accessor target_definition: Types::TargetDefinition
+      attr_accessor status_reason: Types::StatusReason
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class GetVpcEndpointServiceNameInput
+      attr_accessor identifier: ::String
+      SENSITIVE: []
+    end
+
+    class GetVpcEndpointServiceNameOutput
+      attr_accessor service_name: ::String
+      attr_accessor cluster_vpc_endpoint: ::String
       SENSITIVE: []
     end
 
@@ -98,9 +185,9 @@ module Aws::DSQL
       SENSITIVE: []
     end
 
-    class LinkedClusterProperties
-      attr_accessor deletion_protection_enabled: bool
-      attr_accessor tags: ::Hash[::String, ::String]
+    class KinesisTargetDefinition
+      attr_accessor stream_arn: ::String
+      attr_accessor role_arn: ::String
       SENSITIVE: []
     end
 
@@ -116,6 +203,19 @@ module Aws::DSQL
       SENSITIVE: []
     end
 
+    class ListStreamsInput
+      attr_accessor cluster_identifier: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListStreamsOutput
+      attr_accessor next_token: ::String
+      attr_accessor streams: ::Array[Types::StreamSummary]
+      SENSITIVE: []
+    end
+
     class ListTagsForResourceInput
       attr_accessor resource_arn: ::String
       SENSITIVE: []
@@ -123,6 +223,26 @@ module Aws::DSQL
 
     class ListTagsForResourceOutput
       attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class MultiRegionProperties
+      attr_accessor witness_region: ::String
+      attr_accessor clusters: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class PutClusterPolicyInput
+      attr_accessor identifier: ::String
+      attr_accessor policy: ::String
+      attr_accessor bypass_policy_lockout_safety_check: bool
+      attr_accessor expected_policy_version: ::String
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class PutClusterPolicyOutput
+      attr_accessor policy_version: ::String
       SENSITIVE: []
     end
 
@@ -142,10 +262,36 @@ module Aws::DSQL
       SENSITIVE: []
     end
 
+    class StatusReason
+      attr_accessor error: ("KINESIS_THROUGHPUT_EXCEEDED" | "KINESIS_STREAM_NOT_FOUND" | "ROLE_ACCESS_DENIED" | "KINESIS_ACCESS_DENIED" | "KINESIS_KMS_ACCESS_DENIED" | "KINESIS_OVERSIZE_RECORD" | "CLUSTER_CMK_INACCESSIBLE" | "INTERNAL_ERROR")
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class StreamSummary
+      attr_accessor cluster_identifier: ::String
+      attr_accessor stream_identifier: ::String
+      attr_accessor arn: ::String
+      attr_accessor creation_time: ::Time
+      attr_accessor status: ("CREATING" | "ACTIVE" | "DELETING" | "DELETED" | "FAILED" | "IMPAIRED")
+      SENSITIVE: []
+    end
+
     class TagResourceInput
       attr_accessor resource_arn: ::String
       attr_accessor tags: ::Hash[::String, ::String]
       SENSITIVE: []
+    end
+
+    class TargetDefinition
+      attr_accessor kinesis: Types::KinesisTargetDefinition
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class Kinesis < TargetDefinition
+      end
+      class Unknown < TargetDefinition
+      end
     end
 
     class ThrottlingException
@@ -165,18 +311,17 @@ module Aws::DSQL
     class UpdateClusterInput
       attr_accessor identifier: ::String
       attr_accessor deletion_protection_enabled: bool
+      attr_accessor kms_encryption_key: ::String
       attr_accessor client_token: ::String
+      attr_accessor multi_region_properties: Types::MultiRegionProperties
       SENSITIVE: []
     end
 
     class UpdateClusterOutput
       attr_accessor identifier: ::String
       attr_accessor arn: ::String
-      attr_accessor status: ("CREATING" | "ACTIVE" | "UPDATING" | "DELETING" | "DELETED" | "FAILED")
+      attr_accessor status: ("CREATING" | "ACTIVE" | "IDLE" | "INACTIVE" | "UPDATING" | "DELETING" | "DELETED" | "FAILED" | "PENDING_SETUP" | "PENDING_DELETE")
       attr_accessor creation_time: ::Time
-      attr_accessor deletion_protection_enabled: bool
-      attr_accessor witness_region: ::String
-      attr_accessor linked_cluster_arns: ::Array[::String]
       SENSITIVE: []
     end
 

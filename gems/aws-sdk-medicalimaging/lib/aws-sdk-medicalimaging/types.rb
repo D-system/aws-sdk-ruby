@@ -23,6 +23,19 @@ module Aws::MedicalImaging
       include Aws::Structure
     end
 
+    # The request is invalid or malformed.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medical-imaging-2023-07-19/BadRequestException AWS API Documentation
+    #
+    class BadRequestException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Updating or deleting a resource can cause an inconsistent state.
     #
     # @!attribute [rw] message
@@ -136,9 +149,17 @@ module Aws::MedicalImaging
     #   @return [Types::CopyImageSetInformation]
     #
     # @!attribute [rw] force
-    #   Setting this flag will force the `CopyImageSet` operation, even if
-    #   Patient, Study, or Series level metadata are mismatched across the
-    #   `sourceImageSet` and `destinationImageSet`.
+    #   Providing this parameter will force completion of the `CopyImageSet`
+    #   operation, even if there are inconsistent Patient, Study, and/or
+    #   Series level metadata elements between the `sourceImageSet` and
+    #   `destinationImageSet`.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] promote_to_primary
+    #   Providing this parameter will configure the `CopyImageSet` operation
+    #   to promote the given image set to the primary DICOM hierarchy. If
+    #   successful, a new primary image set ID will be returned as the
+    #   destination image set.
     #   @return [Boolean]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medical-imaging-2023-07-19/CopyImageSetRequest AWS API Documentation
@@ -147,7 +168,8 @@ module Aws::MedicalImaging
       :datastore_id,
       :source_image_set_id,
       :copy_image_set_information,
-      :force)
+      :force,
+      :promote_to_primary)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -258,13 +280,23 @@ module Aws::MedicalImaging
     #   Service (KMS) key for accessing encrypted data.
     #   @return [String]
     #
+    # @!attribute [rw] lambda_authorizer_arn
+    #   The ARN of the authorizer's Lambda function.
+    #   @return [String]
+    #
+    # @!attribute [rw] lossless_storage_format
+    #   The lossless storage format for the datastore.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medical-imaging-2023-07-19/CreateDatastoreRequest AWS API Documentation
     #
     class CreateDatastoreRequest < Struct.new(
       :datastore_name,
       :client_token,
       :tags,
-      :kms_key_arn)
+      :kms_key_arn,
+      :lambda_authorizer_arn,
+      :lossless_storage_format)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -331,6 +363,10 @@ module Aws::MedicalImaging
     #   The error message thrown if an import job fails.
     #   @return [String]
     #
+    # @!attribute [rw] import_configuration
+    #   The object containing `DicomJsonMetadataImportConfiguration`.
+    #   @return [Types::ImportConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medical-imaging-2023-07-19/DICOMImportJobProperties AWS API Documentation
     #
     class DICOMImportJobProperties < Struct.new(
@@ -343,7 +379,8 @@ module Aws::MedicalImaging
       :submitted_at,
       :input_s3_uri,
       :output_s3_uri,
-      :message)
+      :message,
+      :import_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -546,6 +583,14 @@ module Aws::MedicalImaging
     #   Service (KMS) key for accessing encrypted data.
     #   @return [String]
     #
+    # @!attribute [rw] lambda_authorizer_arn
+    #   The ARN of the authorizer's Lambda function.
+    #   @return [String]
+    #
+    # @!attribute [rw] lossless_storage_format
+    #   The datastore's lossless storage format.
+    #   @return [String]
+    #
     # @!attribute [rw] datastore_arn
     #   The Amazon Resource Name (ARN) for the data store.
     #   @return [String]
@@ -565,6 +610,8 @@ module Aws::MedicalImaging
       :datastore_name,
       :datastore_status,
       :kms_key_arn,
+      :lambda_authorizer_arn,
+      :lossless_storage_format,
       :datastore_arn,
       :created_at,
       :updated_at)
@@ -684,6 +731,46 @@ module Aws::MedicalImaging
       include Aws::Structure
     end
 
+    # The configuration parameters that are specific to DICOM JSON metadata
+    # import operations.
+    #
+    # @!attribute [rw] dicom_metadata_mappings
+    #   Maps DCM files to their metadata.
+    #   @return [Array<Types::DicomMetadataMapping>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medical-imaging-2023-07-19/DicomJsonMetadataImportConfiguration AWS API Documentation
+    #
+    class DicomJsonMetadataImportConfiguration < Struct.new(
+      :dicom_metadata_mappings)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Maps DCM files to their metadata.
+    #
+    # @!attribute [rw] study_instance_uid
+    #   The Study Instance UID that identifies the study.
+    #   @return [String]
+    #
+    # @!attribute [rw] series_instance_uid
+    #   The Series Instance UID that identifies the series. This parameter
+    #   is optional because the mapping might be at the study level.
+    #   @return [String]
+    #
+    # @!attribute [rw] metadata_file_path
+    #   The path to the JSON metadata file relative to inputS3Uri.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medical-imaging-2023-07-19/DicomMetadataMapping AWS API Documentation
+    #
+    class DicomMetadataMapping < Struct.new(
+      :study_instance_uid,
+      :series_instance_uid,
+      :metadata_file_path)
+      SENSITIVE = [:study_instance_uid, :series_instance_uid]
+      include Aws::Structure
+    end
+
     # @!attribute [rw] datastore_id
     #   The data store identifier.
     #   @return [String]
@@ -766,6 +853,58 @@ module Aws::MedicalImaging
     # @!attribute [rw] content_type
     #   The format in which the image frame information is returned to the
     #   customer. Default is `application/octet-stream`.
+    #
+    #   <note markdown="1"> * If the stored transfer syntax is `1.2.840.10008.1.2.1`, the
+    #     returned `contentType` is `application/octet-stream`.
+    #
+    #   ^
+    #
+    #    * If the stored transfer syntax is `1.2.840.10008.1.2.4.50`, the
+    #     returned `contentType` is `image/jpeg`.
+    #
+    #   ^
+    #
+    #    * If the stored transfer syntax is `1.2.840.10008.1.2.4.91`, the
+    #     returned `contentType` is `image/j2c`.
+    #
+    #   ^
+    #
+    #    * If the stored transfer syntax is MPEG2, `1.2.840.10008.1.2.4.100`,
+    #     `1.2.840.10008.1.2.4.100.1`, `1.2.840.10008.1.2.4.101`, or
+    #     `1.2.840.10008.1.2.4.101.1`, the returned `contentType` is
+    #     `video/mpeg`.
+    #
+    #   ^
+    #
+    #    * If the stored transfer syntax is MPEG-4 AVC/H.264, UID
+    #     `1.2.840.10008.1.2.4.102`, `1.2.840.10008.1.2.4.102.1`,
+    #     `1.2.840.10008.1.2.4.103`, `1.2.840.10008.1.2.4.103.1`,
+    #     `1.2.840.10008.1.2.4.104`, `1.2.840.10008.1.2.4.104.1`,
+    #     `1.2.840.10008.1.2.4.105`, `1.2.840.10008.1.2.4.105.1`,
+    #     `1.2.840.10008.1.2.4.106`, or `1.2.840.10008.1.2.4.106.1`, the
+    #     returned `contentType` is `video/mp4`.
+    #
+    #   ^
+    #
+    #    * If the stored transfer syntax is HEVC/H.265, UID
+    #     `1.2.840.10008.1.2.4.107` or `1.2.840.10008.1.2.4.108`, the
+    #     returned `contentType` is `video/H256`.
+    #
+    #   ^
+    #
+    #    * If the stored transfer syntax is `1.2.840.10008.1.2.4.202` or if
+    #     the stored transfer syntax is *missing*, the returned
+    #     `contentType` is `image/jph`.
+    #
+    #   ^
+    #
+    #    * If the stored transfer syntax is `1.2.840.10008.1.2.4.203`, the
+    #     returned contentType is `image/jphc`.
+    #
+    #   * If the stored transfer syntax is `1.2.840.10008.1.2.4.112` the
+    #     returned `contentType` is `image/jxl`.
+    #
+    #    </note>
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medical-imaging-2023-07-19/GetImageFrameResponse AWS API Documentation
@@ -893,6 +1032,18 @@ module Aws::MedicalImaging
     #   `forced` flag.
     #   @return [Types::Overrides]
     #
+    # @!attribute [rw] is_primary
+    #   The flag to determine whether the image set is primary or not.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] last_accessed_at
+    #   When the image set was last accessed.
+    #   @return [Time]
+    #
+    # @!attribute [rw] storage_tier
+    #   The storage tier of the image set.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medical-imaging-2023-07-19/GetImageSetResponse AWS API Documentation
     #
     class GetImageSetResponse < Struct.new(
@@ -906,7 +1057,10 @@ module Aws::MedicalImaging
       :deleted_at,
       :message,
       :image_set_arn,
-      :overrides)
+      :overrides,
+      :is_primary,
+      :last_accessed_at,
+      :storage_tier)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -965,6 +1119,10 @@ module Aws::MedicalImaging
     #   `forced` flag was used when creating the image set.
     #   @return [Types::Overrides]
     #
+    # @!attribute [rw] is_primary
+    #   The flag to determine whether the image set is primary or not.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medical-imaging-2023-07-19/ImageSetProperties AWS API Documentation
     #
     class ImageSetProperties < Struct.new(
@@ -976,7 +1134,8 @@ module Aws::MedicalImaging
       :updated_at,
       :deleted_at,
       :message,
-      :overrides)
+      :overrides,
+      :is_primary)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1000,9 +1159,21 @@ module Aws::MedicalImaging
     #   The time an image set was last updated.
     #   @return [Time]
     #
+    # @!attribute [rw] last_accessed_at
+    #   When the image set was last accessed.
+    #   @return [Time]
+    #
+    # @!attribute [rw] storage_tier
+    #   The image set's storage tier.
+    #   @return [String]
+    #
     # @!attribute [rw] dicom_tags
     #   The DICOM tags associated with the image set.
     #   @return [Types::DICOMTags]
+    #
+    # @!attribute [rw] is_primary
+    #   The flag to determine whether the image set is primary or not.
+    #   @return [Boolean]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medical-imaging-2023-07-19/ImageSetsMetadataSummary AWS API Documentation
     #
@@ -1011,9 +1182,36 @@ module Aws::MedicalImaging
       :version,
       :created_at,
       :updated_at,
-      :dicom_tags)
+      :last_accessed_at,
+      :storage_tier,
+      :dicom_tags,
+      :is_primary)
       SENSITIVE = []
       include Aws::Structure
+    end
+
+    # The configuration options for different types of import operations.
+    #
+    # @note ImportConfiguration is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note ImportConfiguration is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of ImportConfiguration corresponding to the set member.
+    #
+    # @!attribute [rw] dicom_json_metadata_import_configuration
+    #   The configuration parameters that are specific to DICOM JSON
+    #   metadata import operations.
+    #   @return [Types::DicomJsonMetadataImportConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medical-imaging-2023-07-19/ImportConfiguration AWS API Documentation
+    #
+    class ImportConfiguration < Struct.new(
+      :dicom_json_metadata_import_configuration,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class DicomJsonMetadataImportConfiguration < ImportConfiguration; end
+      class Unknown < ImportConfiguration; end
     end
 
     # An unexpected error occurred during processing of the request.
@@ -1239,13 +1437,26 @@ module Aws::MedicalImaging
       class Unknown < MetadataUpdates; end
     end
 
+    # The request content type or accept header is not supported.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/medical-imaging-2023-07-19/NotAcceptableException AWS API Documentation
+    #
+    class NotAcceptableException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Specifies the overrides used in image set modification calls to
     # `CopyImageSet` and `UpdateImageSetMetadata`.
     #
     # @!attribute [rw] forced
-    #   Setting this flag will force the `CopyImageSet` and
-    #   `UpdateImageSetMetadata` operations, even if Patient, Study, or
-    #   Series level metadata are mismatched.
+    #   Providing this parameter will force completion of the `CopyImageSet`
+    #   and `UpdateImageSetMetadata` actions, even if metadata is
+    #   inconsistent at the Patient, Study, and/or Series levels.
     #   @return [Boolean]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medical-imaging-2023-07-19/Overrides AWS API Documentation
@@ -1306,6 +1517,10 @@ module Aws::MedicalImaging
     #   for search.
     #   @return [Types::DICOMStudyDateAndTime]
     #
+    # @!attribute [rw] is_primary
+    #   The primary image set flag provided for search.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medical-imaging-2023-07-19/SearchByAttributeValue AWS API Documentation
     #
     class SearchByAttributeValue < Struct.new(
@@ -1317,6 +1532,7 @@ module Aws::MedicalImaging
       :created_at,
       :updated_at,
       :dicom_study_date_and_time,
+      :is_primary,
       :unknown)
       SENSITIVE = [:dicom_patient_id, :dicom_accession_number, :dicom_study_id, :dicom_study_instance_uid, :dicom_series_instance_uid]
       include Aws::Structure
@@ -1330,6 +1546,7 @@ module Aws::MedicalImaging
       class CreatedAt < SearchByAttributeValue; end
       class UpdatedAt < SearchByAttributeValue; end
       class DicomStudyDateAndTime < SearchByAttributeValue; end
+      class IsPrimary < SearchByAttributeValue; end
       class Unknown < SearchByAttributeValue; end
     end
 
@@ -1489,6 +1706,10 @@ module Aws::MedicalImaging
     #   The account ID of the source S3 bucket owner.
     #   @return [String]
     #
+    # @!attribute [rw] import_configuration
+    #   The import configuration for the import job.
+    #   @return [Types::ImportConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medical-imaging-2023-07-19/StartDICOMImportJobRequest AWS API Documentation
     #
     class StartDICOMImportJobRequest < Struct.new(
@@ -1498,7 +1719,8 @@ module Aws::MedicalImaging
       :datastore_id,
       :input_s3_uri,
       :output_s3_uri,
-      :input_owner_account_id)
+      :input_owner_account_id,
+      :import_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1612,6 +1834,11 @@ module Aws::MedicalImaging
     #     Instance
     #   @return [Boolean]
     #
+    # @!attribute [rw] include_study_image_sets
+    #   Flag to apply the metadata updates to all image sets in the same
+    #   Study as the requested image set ID.
+    #   @return [Boolean]
+    #
     # @!attribute [rw] update_image_set_metadata_updates
     #   Update image set metadata updates.
     #   @return [Types::MetadataUpdates]
@@ -1623,6 +1850,7 @@ module Aws::MedicalImaging
       :image_set_id,
       :latest_version_id,
       :force,
+      :include_study_image_sets,
       :update_image_set_metadata_updates)
       SENSITIVE = []
       include Aws::Structure

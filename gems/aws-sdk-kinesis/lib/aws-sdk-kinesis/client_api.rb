@@ -32,6 +32,8 @@ module Aws::Kinesis
     DeleteResourcePolicyInput = Shapes::StructureShape.new(name: 'DeleteResourcePolicyInput')
     DeleteStreamInput = Shapes::StructureShape.new(name: 'DeleteStreamInput')
     DeregisterStreamConsumerInput = Shapes::StructureShape.new(name: 'DeregisterStreamConsumerInput')
+    DescribeAccountSettingsInput = Shapes::StructureShape.new(name: 'DescribeAccountSettingsInput')
+    DescribeAccountSettingsOutput = Shapes::StructureShape.new(name: 'DescribeAccountSettingsOutput')
     DescribeLimitsInput = Shapes::StructureShape.new(name: 'DescribeLimitsInput')
     DescribeLimitsOutput = Shapes::StructureShape.new(name: 'DescribeLimitsOutput')
     DescribeStreamConsumerInput = Shapes::StructureShape.new(name: 'DescribeStreamConsumerInput')
@@ -80,13 +82,21 @@ module Aws::Kinesis
     ListStreamsInput = Shapes::StructureShape.new(name: 'ListStreamsInput')
     ListStreamsInputLimit = Shapes::IntegerShape.new(name: 'ListStreamsInputLimit')
     ListStreamsOutput = Shapes::StructureShape.new(name: 'ListStreamsOutput')
+    ListTagsForResourceInput = Shapes::StructureShape.new(name: 'ListTagsForResourceInput')
+    ListTagsForResourceOutput = Shapes::StructureShape.new(name: 'ListTagsForResourceOutput')
     ListTagsForStreamInput = Shapes::StructureShape.new(name: 'ListTagsForStreamInput')
     ListTagsForStreamInputLimit = Shapes::IntegerShape.new(name: 'ListTagsForStreamInputLimit')
     ListTagsForStreamOutput = Shapes::StructureShape.new(name: 'ListTagsForStreamOutput')
+    MaxRecordSizeInKiB = Shapes::IntegerShape.new(name: 'MaxRecordSizeInKiB')
     MergeShardsInput = Shapes::StructureShape.new(name: 'MergeShardsInput')
     MetricsName = Shapes::StringShape.new(name: 'MetricsName')
     MetricsNameList = Shapes::ListShape.new(name: 'MetricsNameList')
     MillisBehindLatest = Shapes::IntegerShape.new(name: 'MillisBehindLatest')
+    MinimumThroughputBillingCommitmentInput = Shapes::StructureShape.new(name: 'MinimumThroughputBillingCommitmentInput')
+    MinimumThroughputBillingCommitmentInputStatus = Shapes::StringShape.new(name: 'MinimumThroughputBillingCommitmentInputStatus')
+    MinimumThroughputBillingCommitmentOutput = Shapes::StructureShape.new(name: 'MinimumThroughputBillingCommitmentOutput')
+    MinimumThroughputBillingCommitmentOutputStatus = Shapes::StringShape.new(name: 'MinimumThroughputBillingCommitmentOutputStatus')
+    NaturalIntegerObject = Shapes::IntegerShape.new(name: 'NaturalIntegerObject')
     NextToken = Shapes::StringShape.new(name: 'NextToken')
     OnDemandStreamCountLimitObject = Shapes::IntegerShape.new(name: 'OnDemandStreamCountLimitObject')
     OnDemandStreamCountObject = Shapes::IntegerShape.new(name: 'OnDemandStreamCountObject')
@@ -131,6 +141,7 @@ module Aws::Kinesis
     StreamARN = Shapes::StringShape.new(name: 'StreamARN')
     StreamDescription = Shapes::StructureShape.new(name: 'StreamDescription')
     StreamDescriptionSummary = Shapes::StructureShape.new(name: 'StreamDescriptionSummary')
+    StreamId = Shapes::StringShape.new(name: 'StreamId')
     StreamMode = Shapes::StringShape.new(name: 'StreamMode')
     StreamModeDetails = Shapes::StructureShape.new(name: 'StreamModeDetails')
     StreamName = Shapes::StringShape.new(name: 'StreamName')
@@ -147,19 +158,28 @@ module Aws::Kinesis
     TagKeyList = Shapes::ListShape.new(name: 'TagKeyList')
     TagList = Shapes::ListShape.new(name: 'TagList')
     TagMap = Shapes::MapShape.new(name: 'TagMap')
+    TagResourceInput = Shapes::StructureShape.new(name: 'TagResourceInput')
     TagValue = Shapes::StringShape.new(name: 'TagValue')
     Timestamp = Shapes::TimestampShape.new(name: 'Timestamp')
+    UntagResourceInput = Shapes::StructureShape.new(name: 'UntagResourceInput')
+    UpdateAccountSettingsInput = Shapes::StructureShape.new(name: 'UpdateAccountSettingsInput')
+    UpdateAccountSettingsOutput = Shapes::StructureShape.new(name: 'UpdateAccountSettingsOutput')
+    UpdateMaxRecordSizeInput = Shapes::StructureShape.new(name: 'UpdateMaxRecordSizeInput')
     UpdateShardCountInput = Shapes::StructureShape.new(name: 'UpdateShardCountInput')
     UpdateShardCountOutput = Shapes::StructureShape.new(name: 'UpdateShardCountOutput')
     UpdateStreamModeInput = Shapes::StructureShape.new(name: 'UpdateStreamModeInput')
+    UpdateStreamWarmThroughputInput = Shapes::StructureShape.new(name: 'UpdateStreamWarmThroughputInput')
+    UpdateStreamWarmThroughputOutput = Shapes::StructureShape.new(name: 'UpdateStreamWarmThroughputOutput')
     ValidationException = Shapes::StructureShape.new(name: 'ValidationException')
+    WarmThroughputObject = Shapes::StructureShape.new(name: 'WarmThroughputObject')
 
     AccessDeniedException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, location_name: "message"))
     AccessDeniedException.struct_class = Types::AccessDeniedException
 
     AddTagsToStreamInput.add_member(:stream_name, Shapes::ShapeRef.new(shape: StreamName, location_name: "StreamName"))
     AddTagsToStreamInput.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, required: true, location_name: "Tags"))
-    AddTagsToStreamInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam"=>{"name"=>"StreamARN"}}))
+    AddTagsToStreamInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam" => {"name" => "StreamARN"}}))
+    AddTagsToStreamInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
     AddTagsToStreamInput.struct_class = Types::AddTagsToStreamInput
 
     ChildShard.add_member(:shard_id, Shapes::ShapeRef.new(shape: ShardId, required: true, location_name: "ShardId"))
@@ -188,25 +208,36 @@ module Aws::Kinesis
     CreateStreamInput.add_member(:shard_count, Shapes::ShapeRef.new(shape: PositiveIntegerObject, location_name: "ShardCount"))
     CreateStreamInput.add_member(:stream_mode_details, Shapes::ShapeRef.new(shape: StreamModeDetails, location_name: "StreamModeDetails"))
     CreateStreamInput.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "Tags"))
+    CreateStreamInput.add_member(:warm_throughput_mi_bps, Shapes::ShapeRef.new(shape: NaturalIntegerObject, location_name: "WarmThroughputMiBps"))
+    CreateStreamInput.add_member(:max_record_size_in_ki_b, Shapes::ShapeRef.new(shape: MaxRecordSizeInKiB, location_name: "MaxRecordSizeInKiB"))
     CreateStreamInput.struct_class = Types::CreateStreamInput
 
     DecreaseStreamRetentionPeriodInput.add_member(:stream_name, Shapes::ShapeRef.new(shape: StreamName, location_name: "StreamName"))
     DecreaseStreamRetentionPeriodInput.add_member(:retention_period_hours, Shapes::ShapeRef.new(shape: RetentionPeriodHours, required: true, location_name: "RetentionPeriodHours"))
-    DecreaseStreamRetentionPeriodInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam"=>{"name"=>"StreamARN"}}))
+    DecreaseStreamRetentionPeriodInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam" => {"name" => "StreamARN"}}))
+    DecreaseStreamRetentionPeriodInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
     DecreaseStreamRetentionPeriodInput.struct_class = Types::DecreaseStreamRetentionPeriodInput
 
-    DeleteResourcePolicyInput.add_member(:resource_arn, Shapes::ShapeRef.new(shape: ResourceARN, required: true, location_name: "ResourceARN", metadata: {"contextParam"=>{"name"=>"ResourceARN"}}))
+    DeleteResourcePolicyInput.add_member(:resource_arn, Shapes::ShapeRef.new(shape: ResourceARN, required: true, location_name: "ResourceARN", metadata: {"contextParam" => {"name" => "ResourceARN"}}))
+    DeleteResourcePolicyInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
     DeleteResourcePolicyInput.struct_class = Types::DeleteResourcePolicyInput
 
     DeleteStreamInput.add_member(:stream_name, Shapes::ShapeRef.new(shape: StreamName, location_name: "StreamName"))
     DeleteStreamInput.add_member(:enforce_consumer_deletion, Shapes::ShapeRef.new(shape: BooleanObject, location_name: "EnforceConsumerDeletion"))
-    DeleteStreamInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam"=>{"name"=>"StreamARN"}}))
+    DeleteStreamInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam" => {"name" => "StreamARN"}}))
+    DeleteStreamInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
     DeleteStreamInput.struct_class = Types::DeleteStreamInput
 
-    DeregisterStreamConsumerInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam"=>{"name"=>"StreamARN"}}))
+    DeregisterStreamConsumerInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam" => {"name" => "StreamARN"}}))
     DeregisterStreamConsumerInput.add_member(:consumer_name, Shapes::ShapeRef.new(shape: ConsumerName, location_name: "ConsumerName"))
-    DeregisterStreamConsumerInput.add_member(:consumer_arn, Shapes::ShapeRef.new(shape: ConsumerARN, location_name: "ConsumerARN", metadata: {"contextParam"=>{"name"=>"ConsumerARN"}}))
+    DeregisterStreamConsumerInput.add_member(:consumer_arn, Shapes::ShapeRef.new(shape: ConsumerARN, location_name: "ConsumerARN", metadata: {"contextParam" => {"name" => "ConsumerARN"}}))
+    DeregisterStreamConsumerInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
     DeregisterStreamConsumerInput.struct_class = Types::DeregisterStreamConsumerInput
+
+    DescribeAccountSettingsInput.struct_class = Types::DescribeAccountSettingsInput
+
+    DescribeAccountSettingsOutput.add_member(:minimum_throughput_billing_commitment, Shapes::ShapeRef.new(shape: MinimumThroughputBillingCommitmentOutput, location_name: "MinimumThroughputBillingCommitment"))
+    DescribeAccountSettingsOutput.struct_class = Types::DescribeAccountSettingsOutput
 
     DescribeLimitsInput.struct_class = Types::DescribeLimitsInput
 
@@ -216,9 +247,10 @@ module Aws::Kinesis
     DescribeLimitsOutput.add_member(:on_demand_stream_count_limit, Shapes::ShapeRef.new(shape: OnDemandStreamCountLimitObject, required: true, location_name: "OnDemandStreamCountLimit"))
     DescribeLimitsOutput.struct_class = Types::DescribeLimitsOutput
 
-    DescribeStreamConsumerInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam"=>{"name"=>"StreamARN"}}))
+    DescribeStreamConsumerInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam" => {"name" => "StreamARN"}}))
     DescribeStreamConsumerInput.add_member(:consumer_name, Shapes::ShapeRef.new(shape: ConsumerName, location_name: "ConsumerName"))
-    DescribeStreamConsumerInput.add_member(:consumer_arn, Shapes::ShapeRef.new(shape: ConsumerARN, location_name: "ConsumerARN", metadata: {"contextParam"=>{"name"=>"ConsumerARN"}}))
+    DescribeStreamConsumerInput.add_member(:consumer_arn, Shapes::ShapeRef.new(shape: ConsumerARN, location_name: "ConsumerARN", metadata: {"contextParam" => {"name" => "ConsumerARN"}}))
+    DescribeStreamConsumerInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
     DescribeStreamConsumerInput.struct_class = Types::DescribeStreamConsumerInput
 
     DescribeStreamConsumerOutput.add_member(:consumer_description, Shapes::ShapeRef.new(shape: ConsumerDescription, required: true, location_name: "ConsumerDescription"))
@@ -227,14 +259,16 @@ module Aws::Kinesis
     DescribeStreamInput.add_member(:stream_name, Shapes::ShapeRef.new(shape: StreamName, location_name: "StreamName"))
     DescribeStreamInput.add_member(:limit, Shapes::ShapeRef.new(shape: DescribeStreamInputLimit, location_name: "Limit"))
     DescribeStreamInput.add_member(:exclusive_start_shard_id, Shapes::ShapeRef.new(shape: ShardId, location_name: "ExclusiveStartShardId"))
-    DescribeStreamInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam"=>{"name"=>"StreamARN"}}))
+    DescribeStreamInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam" => {"name" => "StreamARN"}}))
+    DescribeStreamInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
     DescribeStreamInput.struct_class = Types::DescribeStreamInput
 
     DescribeStreamOutput.add_member(:stream_description, Shapes::ShapeRef.new(shape: StreamDescription, required: true, location_name: "StreamDescription"))
     DescribeStreamOutput.struct_class = Types::DescribeStreamOutput
 
     DescribeStreamSummaryInput.add_member(:stream_name, Shapes::ShapeRef.new(shape: StreamName, location_name: "StreamName"))
-    DescribeStreamSummaryInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam"=>{"name"=>"StreamARN"}}))
+    DescribeStreamSummaryInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam" => {"name" => "StreamARN"}}))
+    DescribeStreamSummaryInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
     DescribeStreamSummaryInput.struct_class = Types::DescribeStreamSummaryInput
 
     DescribeStreamSummaryOutput.add_member(:stream_description_summary, Shapes::ShapeRef.new(shape: StreamDescriptionSummary, required: true, location_name: "StreamDescriptionSummary"))
@@ -242,12 +276,14 @@ module Aws::Kinesis
 
     DisableEnhancedMonitoringInput.add_member(:stream_name, Shapes::ShapeRef.new(shape: StreamName, location_name: "StreamName"))
     DisableEnhancedMonitoringInput.add_member(:shard_level_metrics, Shapes::ShapeRef.new(shape: MetricsNameList, required: true, location_name: "ShardLevelMetrics"))
-    DisableEnhancedMonitoringInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam"=>{"name"=>"StreamARN"}}))
+    DisableEnhancedMonitoringInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam" => {"name" => "StreamARN"}}))
+    DisableEnhancedMonitoringInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
     DisableEnhancedMonitoringInput.struct_class = Types::DisableEnhancedMonitoringInput
 
     EnableEnhancedMonitoringInput.add_member(:stream_name, Shapes::ShapeRef.new(shape: StreamName, location_name: "StreamName"))
     EnableEnhancedMonitoringInput.add_member(:shard_level_metrics, Shapes::ShapeRef.new(shape: MetricsNameList, required: true, location_name: "ShardLevelMetrics"))
-    EnableEnhancedMonitoringInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam"=>{"name"=>"StreamARN"}}))
+    EnableEnhancedMonitoringInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam" => {"name" => "StreamARN"}}))
+    EnableEnhancedMonitoringInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
     EnableEnhancedMonitoringInput.struct_class = Types::EnableEnhancedMonitoringInput
 
     EnhancedMetrics.add_member(:shard_level_metrics, Shapes::ShapeRef.new(shape: MetricsNameList, location_name: "ShardLevelMetrics"))
@@ -269,7 +305,8 @@ module Aws::Kinesis
 
     GetRecordsInput.add_member(:shard_iterator, Shapes::ShapeRef.new(shape: ShardIterator, required: true, location_name: "ShardIterator"))
     GetRecordsInput.add_member(:limit, Shapes::ShapeRef.new(shape: GetRecordsInputLimit, location_name: "Limit"))
-    GetRecordsInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam"=>{"name"=>"StreamARN"}}))
+    GetRecordsInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam" => {"name" => "StreamARN"}}))
+    GetRecordsInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
     GetRecordsInput.struct_class = Types::GetRecordsInput
 
     GetRecordsOutput.add_member(:records, Shapes::ShapeRef.new(shape: RecordList, required: true, location_name: "Records"))
@@ -278,7 +315,8 @@ module Aws::Kinesis
     GetRecordsOutput.add_member(:child_shards, Shapes::ShapeRef.new(shape: ChildShardList, location_name: "ChildShards"))
     GetRecordsOutput.struct_class = Types::GetRecordsOutput
 
-    GetResourcePolicyInput.add_member(:resource_arn, Shapes::ShapeRef.new(shape: ResourceARN, required: true, location_name: "ResourceARN", metadata: {"contextParam"=>{"name"=>"ResourceARN"}}))
+    GetResourcePolicyInput.add_member(:resource_arn, Shapes::ShapeRef.new(shape: ResourceARN, required: true, location_name: "ResourceARN", metadata: {"contextParam" => {"name" => "ResourceARN"}}))
+    GetResourcePolicyInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
     GetResourcePolicyInput.struct_class = Types::GetResourcePolicyInput
 
     GetResourcePolicyOutput.add_member(:policy, Shapes::ShapeRef.new(shape: Policy, required: true, location_name: "Policy"))
@@ -289,7 +327,8 @@ module Aws::Kinesis
     GetShardIteratorInput.add_member(:shard_iterator_type, Shapes::ShapeRef.new(shape: ShardIteratorType, required: true, location_name: "ShardIteratorType"))
     GetShardIteratorInput.add_member(:starting_sequence_number, Shapes::ShapeRef.new(shape: SequenceNumber, location_name: "StartingSequenceNumber"))
     GetShardIteratorInput.add_member(:timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "Timestamp"))
-    GetShardIteratorInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam"=>{"name"=>"StreamARN"}}))
+    GetShardIteratorInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam" => {"name" => "StreamARN"}}))
+    GetShardIteratorInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
     GetShardIteratorInput.struct_class = Types::GetShardIteratorInput
 
     GetShardIteratorOutput.add_member(:shard_iterator, Shapes::ShapeRef.new(shape: ShardIterator, location_name: "ShardIterator"))
@@ -301,7 +340,8 @@ module Aws::Kinesis
 
     IncreaseStreamRetentionPeriodInput.add_member(:stream_name, Shapes::ShapeRef.new(shape: StreamName, location_name: "StreamName"))
     IncreaseStreamRetentionPeriodInput.add_member(:retention_period_hours, Shapes::ShapeRef.new(shape: RetentionPeriodHours, required: true, location_name: "RetentionPeriodHours"))
-    IncreaseStreamRetentionPeriodInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam"=>{"name"=>"StreamARN"}}))
+    IncreaseStreamRetentionPeriodInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam" => {"name" => "StreamARN"}}))
+    IncreaseStreamRetentionPeriodInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
     IncreaseStreamRetentionPeriodInput.struct_class = Types::IncreaseStreamRetentionPeriodInput
 
     InternalFailureException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, location_name: "message"))
@@ -337,17 +377,19 @@ module Aws::Kinesis
     ListShardsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: ListShardsInputLimit, location_name: "MaxResults"))
     ListShardsInput.add_member(:stream_creation_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "StreamCreationTimestamp"))
     ListShardsInput.add_member(:shard_filter, Shapes::ShapeRef.new(shape: ShardFilter, location_name: "ShardFilter"))
-    ListShardsInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam"=>{"name"=>"StreamARN"}}))
+    ListShardsInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam" => {"name" => "StreamARN"}}))
+    ListShardsInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
     ListShardsInput.struct_class = Types::ListShardsInput
 
     ListShardsOutput.add_member(:shards, Shapes::ShapeRef.new(shape: ShardList, location_name: "Shards"))
     ListShardsOutput.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "NextToken"))
     ListShardsOutput.struct_class = Types::ListShardsOutput
 
-    ListStreamConsumersInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, required: true, location_name: "StreamARN", metadata: {"contextParam"=>{"name"=>"StreamARN"}}))
+    ListStreamConsumersInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, required: true, location_name: "StreamARN", metadata: {"contextParam" => {"name" => "StreamARN"}}))
     ListStreamConsumersInput.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "NextToken"))
     ListStreamConsumersInput.add_member(:max_results, Shapes::ShapeRef.new(shape: ListStreamConsumersInputLimit, location_name: "MaxResults"))
     ListStreamConsumersInput.add_member(:stream_creation_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "StreamCreationTimestamp"))
+    ListStreamConsumersInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
     ListStreamConsumersInput.struct_class = Types::ListStreamConsumersInput
 
     ListStreamConsumersOutput.add_member(:consumers, Shapes::ShapeRef.new(shape: ConsumerList, location_name: "Consumers"))
@@ -365,10 +407,18 @@ module Aws::Kinesis
     ListStreamsOutput.add_member(:stream_summaries, Shapes::ShapeRef.new(shape: StreamSummaryList, location_name: "StreamSummaries"))
     ListStreamsOutput.struct_class = Types::ListStreamsOutput
 
+    ListTagsForResourceInput.add_member(:resource_arn, Shapes::ShapeRef.new(shape: ResourceARN, required: true, location_name: "ResourceARN", metadata: {"contextParam" => {"name" => "ResourceARN"}}))
+    ListTagsForResourceInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
+    ListTagsForResourceInput.struct_class = Types::ListTagsForResourceInput
+
+    ListTagsForResourceOutput.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
+    ListTagsForResourceOutput.struct_class = Types::ListTagsForResourceOutput
+
     ListTagsForStreamInput.add_member(:stream_name, Shapes::ShapeRef.new(shape: StreamName, location_name: "StreamName"))
     ListTagsForStreamInput.add_member(:exclusive_start_tag_key, Shapes::ShapeRef.new(shape: TagKey, location_name: "ExclusiveStartTagKey"))
     ListTagsForStreamInput.add_member(:limit, Shapes::ShapeRef.new(shape: ListTagsForStreamInputLimit, location_name: "Limit"))
-    ListTagsForStreamInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam"=>{"name"=>"StreamARN"}}))
+    ListTagsForStreamInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam" => {"name" => "StreamARN"}}))
+    ListTagsForStreamInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
     ListTagsForStreamInput.struct_class = Types::ListTagsForStreamInput
 
     ListTagsForStreamOutput.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, required: true, location_name: "Tags"))
@@ -378,10 +428,20 @@ module Aws::Kinesis
     MergeShardsInput.add_member(:stream_name, Shapes::ShapeRef.new(shape: StreamName, location_name: "StreamName"))
     MergeShardsInput.add_member(:shard_to_merge, Shapes::ShapeRef.new(shape: ShardId, required: true, location_name: "ShardToMerge"))
     MergeShardsInput.add_member(:adjacent_shard_to_merge, Shapes::ShapeRef.new(shape: ShardId, required: true, location_name: "AdjacentShardToMerge"))
-    MergeShardsInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam"=>{"name"=>"StreamARN"}}))
+    MergeShardsInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam" => {"name" => "StreamARN"}}))
+    MergeShardsInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
     MergeShardsInput.struct_class = Types::MergeShardsInput
 
     MetricsNameList.member = Shapes::ShapeRef.new(shape: MetricsName)
+
+    MinimumThroughputBillingCommitmentInput.add_member(:status, Shapes::ShapeRef.new(shape: MinimumThroughputBillingCommitmentInputStatus, required: true, location_name: "Status"))
+    MinimumThroughputBillingCommitmentInput.struct_class = Types::MinimumThroughputBillingCommitmentInput
+
+    MinimumThroughputBillingCommitmentOutput.add_member(:status, Shapes::ShapeRef.new(shape: MinimumThroughputBillingCommitmentOutputStatus, required: true, location_name: "Status"))
+    MinimumThroughputBillingCommitmentOutput.add_member(:started_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "StartedAt"))
+    MinimumThroughputBillingCommitmentOutput.add_member(:ended_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "EndedAt"))
+    MinimumThroughputBillingCommitmentOutput.add_member(:earliest_allowed_end_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "EarliestAllowedEndAt"))
+    MinimumThroughputBillingCommitmentOutput.struct_class = Types::MinimumThroughputBillingCommitmentOutput
 
     ProvisionedThroughputExceededException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, location_name: "message"))
     ProvisionedThroughputExceededException.struct_class = Types::ProvisionedThroughputExceededException
@@ -391,7 +451,8 @@ module Aws::Kinesis
     PutRecordInput.add_member(:partition_key, Shapes::ShapeRef.new(shape: PartitionKey, required: true, location_name: "PartitionKey"))
     PutRecordInput.add_member(:explicit_hash_key, Shapes::ShapeRef.new(shape: HashKey, location_name: "ExplicitHashKey"))
     PutRecordInput.add_member(:sequence_number_for_ordering, Shapes::ShapeRef.new(shape: SequenceNumber, location_name: "SequenceNumberForOrdering"))
-    PutRecordInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam"=>{"name"=>"StreamARN"}}))
+    PutRecordInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam" => {"name" => "StreamARN"}}))
+    PutRecordInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
     PutRecordInput.struct_class = Types::PutRecordInput
 
     PutRecordOutput.add_member(:shard_id, Shapes::ShapeRef.new(shape: ShardId, required: true, location_name: "ShardId"))
@@ -401,7 +462,8 @@ module Aws::Kinesis
 
     PutRecordsInput.add_member(:records, Shapes::ShapeRef.new(shape: PutRecordsRequestEntryList, required: true, location_name: "Records"))
     PutRecordsInput.add_member(:stream_name, Shapes::ShapeRef.new(shape: StreamName, location_name: "StreamName"))
-    PutRecordsInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam"=>{"name"=>"StreamARN"}}))
+    PutRecordsInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam" => {"name" => "StreamARN"}}))
+    PutRecordsInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
     PutRecordsInput.struct_class = Types::PutRecordsInput
 
     PutRecordsOutput.add_member(:failed_record_count, Shapes::ShapeRef.new(shape: PositiveIntegerObject, location_name: "FailedRecordCount"))
@@ -424,7 +486,8 @@ module Aws::Kinesis
 
     PutRecordsResultEntryList.member = Shapes::ShapeRef.new(shape: PutRecordsResultEntry)
 
-    PutResourcePolicyInput.add_member(:resource_arn, Shapes::ShapeRef.new(shape: ResourceARN, required: true, location_name: "ResourceARN", metadata: {"contextParam"=>{"name"=>"ResourceARN"}}))
+    PutResourcePolicyInput.add_member(:resource_arn, Shapes::ShapeRef.new(shape: ResourceARN, required: true, location_name: "ResourceARN", metadata: {"contextParam" => {"name" => "ResourceARN"}}))
+    PutResourcePolicyInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
     PutResourcePolicyInput.add_member(:policy, Shapes::ShapeRef.new(shape: Policy, required: true, location_name: "Policy"))
     PutResourcePolicyInput.struct_class = Types::PutResourcePolicyInput
 
@@ -437,8 +500,10 @@ module Aws::Kinesis
 
     RecordList.member = Shapes::ShapeRef.new(shape: Record)
 
-    RegisterStreamConsumerInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, required: true, location_name: "StreamARN", metadata: {"contextParam"=>{"name"=>"StreamARN"}}))
+    RegisterStreamConsumerInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, required: true, location_name: "StreamARN", metadata: {"contextParam" => {"name" => "StreamARN"}}))
     RegisterStreamConsumerInput.add_member(:consumer_name, Shapes::ShapeRef.new(shape: ConsumerName, required: true, location_name: "ConsumerName"))
+    RegisterStreamConsumerInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
+    RegisterStreamConsumerInput.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "Tags"))
     RegisterStreamConsumerInput.struct_class = Types::RegisterStreamConsumerInput
 
     RegisterStreamConsumerOutput.add_member(:consumer, Shapes::ShapeRef.new(shape: Consumer, required: true, location_name: "Consumer"))
@@ -446,7 +511,8 @@ module Aws::Kinesis
 
     RemoveTagsFromStreamInput.add_member(:stream_name, Shapes::ShapeRef.new(shape: StreamName, location_name: "StreamName"))
     RemoveTagsFromStreamInput.add_member(:tag_keys, Shapes::ShapeRef.new(shape: TagKeyList, required: true, location_name: "TagKeys"))
-    RemoveTagsFromStreamInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam"=>{"name"=>"StreamARN"}}))
+    RemoveTagsFromStreamInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam" => {"name" => "StreamARN"}}))
+    RemoveTagsFromStreamInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
     RemoveTagsFromStreamInput.struct_class = Types::RemoveTagsFromStreamInput
 
     ResourceInUseException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, location_name: "message"))
@@ -478,13 +544,15 @@ module Aws::Kinesis
     SplitShardInput.add_member(:stream_name, Shapes::ShapeRef.new(shape: StreamName, location_name: "StreamName"))
     SplitShardInput.add_member(:shard_to_split, Shapes::ShapeRef.new(shape: ShardId, required: true, location_name: "ShardToSplit"))
     SplitShardInput.add_member(:new_starting_hash_key, Shapes::ShapeRef.new(shape: HashKey, required: true, location_name: "NewStartingHashKey"))
-    SplitShardInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam"=>{"name"=>"StreamARN"}}))
+    SplitShardInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam" => {"name" => "StreamARN"}}))
+    SplitShardInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
     SplitShardInput.struct_class = Types::SplitShardInput
 
     StartStreamEncryptionInput.add_member(:stream_name, Shapes::ShapeRef.new(shape: StreamName, location_name: "StreamName"))
     StartStreamEncryptionInput.add_member(:encryption_type, Shapes::ShapeRef.new(shape: EncryptionType, required: true, location_name: "EncryptionType"))
     StartStreamEncryptionInput.add_member(:key_id, Shapes::ShapeRef.new(shape: KeyId, required: true, location_name: "KeyId"))
-    StartStreamEncryptionInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam"=>{"name"=>"StreamARN"}}))
+    StartStreamEncryptionInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam" => {"name" => "StreamARN"}}))
+    StartStreamEncryptionInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
     StartStreamEncryptionInput.struct_class = Types::StartStreamEncryptionInput
 
     StartingPosition.add_member(:type, Shapes::ShapeRef.new(shape: ShardIteratorType, required: true, location_name: "Type"))
@@ -495,7 +563,8 @@ module Aws::Kinesis
     StopStreamEncryptionInput.add_member(:stream_name, Shapes::ShapeRef.new(shape: StreamName, location_name: "StreamName"))
     StopStreamEncryptionInput.add_member(:encryption_type, Shapes::ShapeRef.new(shape: EncryptionType, required: true, location_name: "EncryptionType"))
     StopStreamEncryptionInput.add_member(:key_id, Shapes::ShapeRef.new(shape: KeyId, required: true, location_name: "KeyId"))
-    StopStreamEncryptionInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam"=>{"name"=>"StreamARN"}}))
+    StopStreamEncryptionInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam" => {"name" => "StreamARN"}}))
+    StopStreamEncryptionInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
     StopStreamEncryptionInput.struct_class = Types::StopStreamEncryptionInput
 
     StreamDescription.add_member(:stream_name, Shapes::ShapeRef.new(shape: StreamName, required: true, location_name: "StreamName"))
@@ -513,6 +582,7 @@ module Aws::Kinesis
 
     StreamDescriptionSummary.add_member(:stream_name, Shapes::ShapeRef.new(shape: StreamName, required: true, location_name: "StreamName"))
     StreamDescriptionSummary.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, required: true, location_name: "StreamARN"))
+    StreamDescriptionSummary.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId"))
     StreamDescriptionSummary.add_member(:stream_status, Shapes::ShapeRef.new(shape: StreamStatus, required: true, location_name: "StreamStatus"))
     StreamDescriptionSummary.add_member(:stream_mode_details, Shapes::ShapeRef.new(shape: StreamModeDetails, location_name: "StreamModeDetails"))
     StreamDescriptionSummary.add_member(:retention_period_hours, Shapes::ShapeRef.new(shape: RetentionPeriodHours, required: true, location_name: "RetentionPeriodHours"))
@@ -522,6 +592,8 @@ module Aws::Kinesis
     StreamDescriptionSummary.add_member(:key_id, Shapes::ShapeRef.new(shape: KeyId, location_name: "KeyId"))
     StreamDescriptionSummary.add_member(:open_shard_count, Shapes::ShapeRef.new(shape: ShardCountObject, required: true, location_name: "OpenShardCount"))
     StreamDescriptionSummary.add_member(:consumer_count, Shapes::ShapeRef.new(shape: ConsumerCountObject, location_name: "ConsumerCount"))
+    StreamDescriptionSummary.add_member(:warm_throughput, Shapes::ShapeRef.new(shape: WarmThroughputObject, location_name: "WarmThroughput"))
+    StreamDescriptionSummary.add_member(:max_record_size_in_ki_b, Shapes::ShapeRef.new(shape: MaxRecordSizeInKiB, location_name: "MaxRecordSizeInKiB"))
     StreamDescriptionSummary.struct_class = Types::StreamDescriptionSummary
 
     StreamModeDetails.add_member(:stream_mode, Shapes::ShapeRef.new(shape: StreamMode, required: true, location_name: "StreamMode"))
@@ -556,7 +628,8 @@ module Aws::Kinesis
     SubscribeToShardEventStream.add_member(:internal_failure_exception, Shapes::ShapeRef.new(shape: InternalFailureException, event: true, location_name: "InternalFailureException"))
     SubscribeToShardEventStream.struct_class = Types::SubscribeToShardEventStream
 
-    SubscribeToShardInput.add_member(:consumer_arn, Shapes::ShapeRef.new(shape: ConsumerARN, required: true, location_name: "ConsumerARN", metadata: {"contextParam"=>{"name"=>"ConsumerARN"}}))
+    SubscribeToShardInput.add_member(:consumer_arn, Shapes::ShapeRef.new(shape: ConsumerARN, required: true, location_name: "ConsumerARN", metadata: {"contextParam" => {"name" => "ConsumerARN"}}))
+    SubscribeToShardInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
     SubscribeToShardInput.add_member(:shard_id, Shapes::ShapeRef.new(shape: ShardId, required: true, location_name: "ShardId"))
     SubscribeToShardInput.add_member(:starting_position, Shapes::ShapeRef.new(shape: StartingPosition, required: true, location_name: "StartingPosition"))
     SubscribeToShardInput.struct_class = Types::SubscribeToShardInput
@@ -575,10 +648,32 @@ module Aws::Kinesis
     TagMap.key = Shapes::ShapeRef.new(shape: TagKey)
     TagMap.value = Shapes::ShapeRef.new(shape: TagValue)
 
+    TagResourceInput.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, required: true, location_name: "Tags"))
+    TagResourceInput.add_member(:resource_arn, Shapes::ShapeRef.new(shape: ResourceARN, required: true, location_name: "ResourceARN", metadata: {"contextParam" => {"name" => "ResourceARN"}}))
+    TagResourceInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
+    TagResourceInput.struct_class = Types::TagResourceInput
+
+    UntagResourceInput.add_member(:tag_keys, Shapes::ShapeRef.new(shape: TagKeyList, required: true, location_name: "TagKeys"))
+    UntagResourceInput.add_member(:resource_arn, Shapes::ShapeRef.new(shape: ResourceARN, required: true, location_name: "ResourceARN", metadata: {"contextParam" => {"name" => "ResourceARN"}}))
+    UntagResourceInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
+    UntagResourceInput.struct_class = Types::UntagResourceInput
+
+    UpdateAccountSettingsInput.add_member(:minimum_throughput_billing_commitment, Shapes::ShapeRef.new(shape: MinimumThroughputBillingCommitmentInput, required: true, location_name: "MinimumThroughputBillingCommitment"))
+    UpdateAccountSettingsInput.struct_class = Types::UpdateAccountSettingsInput
+
+    UpdateAccountSettingsOutput.add_member(:minimum_throughput_billing_commitment, Shapes::ShapeRef.new(shape: MinimumThroughputBillingCommitmentOutput, location_name: "MinimumThroughputBillingCommitment"))
+    UpdateAccountSettingsOutput.struct_class = Types::UpdateAccountSettingsOutput
+
+    UpdateMaxRecordSizeInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam" => {"name" => "StreamARN"}}))
+    UpdateMaxRecordSizeInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
+    UpdateMaxRecordSizeInput.add_member(:max_record_size_in_ki_b, Shapes::ShapeRef.new(shape: MaxRecordSizeInKiB, required: true, location_name: "MaxRecordSizeInKiB"))
+    UpdateMaxRecordSizeInput.struct_class = Types::UpdateMaxRecordSizeInput
+
     UpdateShardCountInput.add_member(:stream_name, Shapes::ShapeRef.new(shape: StreamName, location_name: "StreamName"))
     UpdateShardCountInput.add_member(:target_shard_count, Shapes::ShapeRef.new(shape: PositiveIntegerObject, required: true, location_name: "TargetShardCount"))
     UpdateShardCountInput.add_member(:scaling_type, Shapes::ShapeRef.new(shape: ScalingType, required: true, location_name: "ScalingType"))
-    UpdateShardCountInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam"=>{"name"=>"StreamARN"}}))
+    UpdateShardCountInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam" => {"name" => "StreamARN"}}))
+    UpdateShardCountInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
     UpdateShardCountInput.struct_class = Types::UpdateShardCountInput
 
     UpdateShardCountOutput.add_member(:stream_name, Shapes::ShapeRef.new(shape: StreamName, location_name: "StreamName"))
@@ -587,12 +682,29 @@ module Aws::Kinesis
     UpdateShardCountOutput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN"))
     UpdateShardCountOutput.struct_class = Types::UpdateShardCountOutput
 
-    UpdateStreamModeInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, required: true, location_name: "StreamARN", metadata: {"contextParam"=>{"name"=>"StreamARN"}}))
+    UpdateStreamModeInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, required: true, location_name: "StreamARN", metadata: {"contextParam" => {"name" => "StreamARN"}}))
+    UpdateStreamModeInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
     UpdateStreamModeInput.add_member(:stream_mode_details, Shapes::ShapeRef.new(shape: StreamModeDetails, required: true, location_name: "StreamModeDetails"))
+    UpdateStreamModeInput.add_member(:warm_throughput_mi_bps, Shapes::ShapeRef.new(shape: NaturalIntegerObject, location_name: "WarmThroughputMiBps"))
     UpdateStreamModeInput.struct_class = Types::UpdateStreamModeInput
+
+    UpdateStreamWarmThroughputInput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN", metadata: {"contextParam" => {"name" => "StreamARN"}}))
+    UpdateStreamWarmThroughputInput.add_member(:stream_name, Shapes::ShapeRef.new(shape: StreamName, location_name: "StreamName"))
+    UpdateStreamWarmThroughputInput.add_member(:stream_id, Shapes::ShapeRef.new(shape: StreamId, location_name: "StreamId", metadata: {"contextParam" => {"name" => "StreamId"}}))
+    UpdateStreamWarmThroughputInput.add_member(:warm_throughput_mi_bps, Shapes::ShapeRef.new(shape: NaturalIntegerObject, required: true, location_name: "WarmThroughputMiBps"))
+    UpdateStreamWarmThroughputInput.struct_class = Types::UpdateStreamWarmThroughputInput
+
+    UpdateStreamWarmThroughputOutput.add_member(:stream_arn, Shapes::ShapeRef.new(shape: StreamARN, location_name: "StreamARN"))
+    UpdateStreamWarmThroughputOutput.add_member(:stream_name, Shapes::ShapeRef.new(shape: StreamName, location_name: "StreamName"))
+    UpdateStreamWarmThroughputOutput.add_member(:warm_throughput, Shapes::ShapeRef.new(shape: WarmThroughputObject, location_name: "WarmThroughput"))
+    UpdateStreamWarmThroughputOutput.struct_class = Types::UpdateStreamWarmThroughputOutput
 
     ValidationException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, location_name: "message"))
     ValidationException.struct_class = Types::ValidationException
+
+    WarmThroughputObject.add_member(:target_mi_bps, Shapes::ShapeRef.new(shape: NaturalIntegerObject, location_name: "TargetMiBps"))
+    WarmThroughputObject.add_member(:current_mi_bps, Shapes::ShapeRef.new(shape: NaturalIntegerObject, location_name: "CurrentMiBps"))
+    WarmThroughputObject.struct_class = Types::WarmThroughputObject
 
 
     # @api private
@@ -606,7 +718,7 @@ module Aws::Kinesis
         "endpointPrefix" => "kinesis",
         "jsonVersion" => "1.1",
         "protocol" => "json",
-        "protocolSettings" => {"h2"=>"eventstream"},
+        "protocolSettings" => {"h2" => "eventstream"},
         "protocols" => ["json"],
         "serviceAbbreviation" => "Kinesis",
         "serviceFullName" => "Amazon Kinesis",
@@ -638,6 +750,7 @@ module Aws::Kinesis
         o.errors << Shapes::ShapeRef.new(shape: ResourceInUseException)
         o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
         o.errors << Shapes::ShapeRef.new(shape: InvalidArgumentException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
       end)
 
       api.add_operation(:decrease_stream_retention_period, Seahorse::Model::Operation.new.tap do |o|
@@ -688,6 +801,15 @@ module Aws::Kinesis
         o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InvalidArgumentException)
+      end)
+
+      api.add_operation(:describe_account_settings, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DescribeAccountSettings"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: DescribeAccountSettingsInput)
+        o.output = Shapes::ShapeRef.new(shape: DescribeAccountSettingsOutput)
+        o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
       end)
 
       api.add_operation(:describe_limits, Seahorse::Model::Operation.new.tap do |o|
@@ -784,6 +906,7 @@ module Aws::Kinesis
         o.errors << Shapes::ShapeRef.new(shape: KMSOptInRequired)
         o.errors << Shapes::ShapeRef.new(shape: KMSThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
       end)
 
       api.add_operation(:get_resource_policy, Seahorse::Model::Operation.new.tap do |o|
@@ -809,6 +932,7 @@ module Aws::Kinesis
         o.errors << Shapes::ShapeRef.new(shape: InvalidArgumentException)
         o.errors << Shapes::ShapeRef.new(shape: ProvisionedThroughputExceededException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
       end)
 
       api.add_operation(:increase_stream_retention_period, Seahorse::Model::Operation.new.tap do |o|
@@ -875,6 +999,19 @@ module Aws::Kinesis
         )
       end)
 
+      api.add_operation(:list_tags_for_resource, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListTagsForResource"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: ListTagsForResourceInput)
+        o.output = Shapes::ShapeRef.new(shape: ListTagsForResourceOutput)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceInUseException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidArgumentException)
+        o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
       api.add_operation(:list_tags_for_stream, Seahorse::Model::Operation.new.tap do |o|
         o.name = "ListTagsForStream"
         o.http_method = "POST"
@@ -917,6 +1054,7 @@ module Aws::Kinesis
         o.errors << Shapes::ShapeRef.new(shape: KMSOptInRequired)
         o.errors << Shapes::ShapeRef.new(shape: KMSThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
       end)
 
       api.add_operation(:put_records, Seahorse::Model::Operation.new.tap do |o|
@@ -935,6 +1073,7 @@ module Aws::Kinesis
         o.errors << Shapes::ShapeRef.new(shape: KMSOptInRequired)
         o.errors << Shapes::ShapeRef.new(shape: KMSThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalFailureException)
       end)
 
       api.add_operation(:put_resource_policy, Seahorse::Model::Operation.new.tap do |o|
@@ -1035,6 +1174,57 @@ module Aws::Kinesis
         o.async = true
       end)
 
+      api.add_operation(:tag_resource, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "TagResource"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: TagResourceInput)
+        o.output = Shapes::ShapeRef.new(shape: Shapes::StructureShape.new(struct_class: Aws::EmptyStructure))
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceInUseException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidArgumentException)
+        o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
+      api.add_operation(:untag_resource, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "UntagResource"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: UntagResourceInput)
+        o.output = Shapes::ShapeRef.new(shape: Shapes::StructureShape.new(struct_class: Aws::EmptyStructure))
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceInUseException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidArgumentException)
+        o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
+      api.add_operation(:update_account_settings, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "UpdateAccountSettings"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: UpdateAccountSettingsInput)
+        o.output = Shapes::ShapeRef.new(shape: UpdateAccountSettingsOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidArgumentException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
+      end)
+
+      api.add_operation(:update_max_record_size, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "UpdateMaxRecordSize"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: UpdateMaxRecordSizeInput)
+        o.output = Shapes::ShapeRef.new(shape: Shapes::StructureShape.new(struct_class: Aws::EmptyStructure))
+        o.errors << Shapes::ShapeRef.new(shape: ResourceInUseException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidArgumentException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+      end)
+
       api.add_operation(:update_shard_count, Seahorse::Model::Operation.new.tap do |o|
         o.name = "UpdateShardCount"
         o.http_method = "POST"
@@ -1059,6 +1249,21 @@ module Aws::Kinesis
         o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceInUseException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+      end)
+
+      api.add_operation(:update_stream_warm_throughput, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "UpdateStreamWarmThroughput"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: UpdateStreamWarmThroughputInput)
+        o.output = Shapes::ShapeRef.new(shape: UpdateStreamWarmThroughputOutput)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: LimitExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidArgumentException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceInUseException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
       end)
     end
 

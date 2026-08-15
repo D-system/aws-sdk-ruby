@@ -38,7 +38,9 @@ module Aws::OpenSearchService
   # * {LimitExceededException}
   # * {ResourceAlreadyExistsException}
   # * {ResourceNotFoundException}
+  # * {ServiceQuotaExceededException}
   # * {SlotNotAvailableException}
+  # * {ThrottlingException}
   # * {ValidationException}
   #
   # Additionally, error classes are dynamically generated for service errors based on the error code
@@ -162,6 +164,16 @@ module Aws::OpenSearchService
       end
     end
 
+    class ServiceQuotaExceededException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::OpenSearchService::Types::ServiceQuotaExceededException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+    end
+
     class SlotNotAvailableException < ServiceError
 
       # @param [Seahorse::Client::RequestContext] context
@@ -174,6 +186,16 @@ module Aws::OpenSearchService
       # @return [String]
       def slot_suggestions
         @data[:slot_suggestions]
+      end
+    end
+
+    class ThrottlingException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::OpenSearchService::Types::ThrottlingException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
       end
     end
 

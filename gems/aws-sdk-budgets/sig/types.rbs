@@ -54,18 +54,27 @@ module Aws::Budgets
       SENSITIVE: []
     end
 
+    class BillingViewHealthStatusException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
     class Budget
       attr_accessor budget_name: ::String
       attr_accessor budget_limit: Types::Spend
       attr_accessor planned_budget_limits: ::Hash[::String, Types::Spend]
       attr_accessor cost_filters: ::Hash[::String, ::Array[::String]]
       attr_accessor cost_types: Types::CostTypes
-      attr_accessor time_unit: ("DAILY" | "MONTHLY" | "QUARTERLY" | "ANNUALLY")
+      attr_accessor time_unit: ("DAILY" | "MONTHLY" | "QUARTERLY" | "ANNUALLY" | "CUSTOM")
       attr_accessor time_period: Types::TimePeriod
       attr_accessor calculated_spend: Types::CalculatedSpend
       attr_accessor budget_type: ("USAGE" | "COST" | "RI_UTILIZATION" | "RI_COVERAGE" | "SAVINGS_PLANS_UTILIZATION" | "SAVINGS_PLANS_COVERAGE")
       attr_accessor last_updated_time: ::Time
       attr_accessor auto_adjust_data: Types::AutoAdjustData
+      attr_accessor filter_expression: Types::Expression
+      attr_accessor metrics: ::Array[("BlendedCost" | "UnblendedCost" | "AmortizedCost" | "NetUnblendedCost" | "NetAmortizedCost" | "UsageQuantity" | "NormalizedUsageAmount" | "Hours")]
+      attr_accessor billing_view_arn: ::String
+      attr_accessor health_status: Types::HealthStatus
       SENSITIVE: []
     end
 
@@ -80,8 +89,11 @@ module Aws::Budgets
       attr_accessor budget_type: ("USAGE" | "COST" | "RI_UTILIZATION" | "RI_COVERAGE" | "SAVINGS_PLANS_UTILIZATION" | "SAVINGS_PLANS_COVERAGE")
       attr_accessor cost_filters: ::Hash[::String, ::Array[::String]]
       attr_accessor cost_types: Types::CostTypes
-      attr_accessor time_unit: ("DAILY" | "MONTHLY" | "QUARTERLY" | "ANNUALLY")
+      attr_accessor time_unit: ("DAILY" | "MONTHLY" | "QUARTERLY" | "ANNUALLY" | "CUSTOM")
+      attr_accessor billing_view_arn: ::String
       attr_accessor budgeted_and_actual_amounts_list: ::Array[Types::BudgetedAndActualAmounts]
+      attr_accessor filter_expression: Types::Expression
+      attr_accessor metrics: ::Array[("BlendedCost" | "UnblendedCost" | "AmortizedCost" | "NetUnblendedCost" | "NetAmortizedCost" | "UsageQuantity" | "NormalizedUsageAmount" | "Hours")]
       SENSITIVE: []
     end
 
@@ -95,6 +107,13 @@ module Aws::Budgets
     class CalculatedSpend
       attr_accessor actual_spend: Types::Spend
       attr_accessor forecasted_spend: Types::Spend
+      SENSITIVE: []
+    end
+
+    class CostCategoryValues
+      attr_accessor key: ::String
+      attr_accessor values: ::Array[::String]
+      attr_accessor match_options: ::Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "GREATER_THAN_OR_EQUAL" | "CASE_SENSITIVE" | "CASE_INSENSITIVE")]
       SENSITIVE: []
     end
 
@@ -311,6 +330,7 @@ module Aws::Budgets
     class DescribeBudgetRequest
       attr_accessor account_id: ::String
       attr_accessor budget_name: ::String
+      attr_accessor show_filter_expression: bool
       SENSITIVE: []
     end
 
@@ -323,6 +343,7 @@ module Aws::Budgets
       attr_accessor account_id: ::String
       attr_accessor max_results: ::Integer
       attr_accessor next_token: ::String
+      attr_accessor show_filter_expression: bool
       SENSITIVE: []
     end
 
@@ -384,6 +405,30 @@ module Aws::Budgets
 
     class ExpiredNextTokenException
       attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class Expression
+      attr_accessor or: ::Array[Types::Expression]
+      attr_accessor and: ::Array[Types::Expression]
+      attr_accessor not: Types::Expression
+      attr_accessor dimensions: Types::ExpressionDimensionValues
+      attr_accessor tags: Types::TagValues
+      attr_accessor cost_categories: Types::CostCategoryValues
+      SENSITIVE: []
+    end
+
+    class ExpressionDimensionValues
+      attr_accessor key: ("AZ" | "INSTANCE_TYPE" | "LINKED_ACCOUNT" | "LINKED_ACCOUNT_NAME" | "OPERATION" | "PURCHASE_TYPE" | "REGION" | "SERVICE" | "SERVICE_CODE" | "USAGE_TYPE" | "USAGE_TYPE_GROUP" | "RECORD_TYPE" | "OPERATING_SYSTEM" | "TENANCY" | "SCOPE" | "PLATFORM" | "SUBSCRIPTION_ID" | "LEGAL_ENTITY_NAME" | "INVOICING_ENTITY" | "DEPLOYMENT_OPTION" | "DATABASE_ENGINE" | "CACHE_ENGINE" | "INSTANCE_TYPE_FAMILY" | "BILLING_ENTITY" | "RESERVATION_ID" | "RESOURCE_ID" | "RIGHTSIZING_TYPE" | "SAVINGS_PLANS_TYPE" | "SAVINGS_PLAN_ARN" | "PAYMENT_OPTION" | "RESERVATION_MODIFIED" | "TAG_KEY" | "COST_CATEGORY_NAME")
+      attr_accessor values: ::Array[::String]
+      attr_accessor match_options: ::Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "GREATER_THAN_OR_EQUAL" | "CASE_SENSITIVE" | "CASE_INSENSITIVE")]
+      SENSITIVE: []
+    end
+
+    class HealthStatus
+      attr_accessor status: ("HEALTHY" | "UNHEALTHY")
+      attr_accessor status_reason: ("BILLING_VIEW_NO_ACCESS" | "BILLING_VIEW_UNHEALTHY" | "FILTER_INVALID" | "MULTI_YEAR_HISTORICAL_DATA_DISABLED")
+      attr_accessor last_updated_time: ::Time
       SENSITIVE: []
     end
 
@@ -494,6 +539,13 @@ module Aws::Budgets
     end
 
     class TagResourceResponse < Aws::EmptyStructure
+    end
+
+    class TagValues
+      attr_accessor key: ::String
+      attr_accessor values: ::Array[::String]
+      attr_accessor match_options: ::Array[("EQUALS" | "ABSENT" | "STARTS_WITH" | "ENDS_WITH" | "CONTAINS" | "GREATER_THAN_OR_EQUAL" | "CASE_SENSITIVE" | "CASE_INSENSITIVE")]
+      SENSITIVE: []
     end
 
     class ThrottlingException

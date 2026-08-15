@@ -95,8 +95,8 @@ module Aws::DataExchange
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::DataExchange
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::DataExchange
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::DataExchange
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::DataExchange
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::DataExchange
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::DataExchange
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::DataExchange
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -533,7 +537,7 @@ module Aws::DataExchange
     # @example Request syntax with placeholder values
     #
     #   resp = client.cancel_job({
-    #     job_id: "__string", # required
+    #     job_id: "Id", # required
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dataexchange-2017-07-25/CancelJob AWS API Documentation
@@ -705,6 +709,9 @@ module Aws::DataExchange
     # @option params [required, Types::Event] :event
     #   What occurs to start an action.
     #
+    # @option params [Hash<String,String>] :tags
+    #   Key-value pairs that you can associate with the event action.
+    #
     # @return [Types::CreateEventActionResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateEventActionResponse#action #action} => Types::Action
@@ -712,6 +719,7 @@ module Aws::DataExchange
     #   * {Types::CreateEventActionResponse#created_at #created_at} => Time
     #   * {Types::CreateEventActionResponse#event #event} => Types::Event
     #   * {Types::CreateEventActionResponse#id #id} => String
+    #   * {Types::CreateEventActionResponse#tags #tags} => Hash&lt;String,String&gt;
     #   * {Types::CreateEventActionResponse#updated_at #updated_at} => Time
     #
     # @example Request syntax with placeholder values
@@ -734,6 +742,9 @@ module Aws::DataExchange
     #         data_set_id: "Id", # required
     #       },
     #     },
+    #     tags: {
+    #       "__string" => "__string",
+    #     },
     #   })
     #
     # @example Response structure
@@ -746,6 +757,8 @@ module Aws::DataExchange
     #   resp.created_at #=> Time
     #   resp.event.revision_published.data_set_id #=> String
     #   resp.id #=> String
+    #   resp.tags #=> Hash
+    #   resp.tags["__string"] #=> String
     #   resp.updated_at #=> Time
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dataexchange-2017-07-25/CreateEventAction AWS API Documentation
@@ -759,6 +772,10 @@ module Aws::DataExchange
 
     # This operation creates a job.
     #
+    # @option params [Types::AssetConfiguration] :asset_configuration
+    #   The configuration for the asset, including tags to be applied to
+    #   assets created by the job.
+    #
     # @option params [required, Types::RequestDetails] :details
     #   The details for the CreateJob request.
     #
@@ -768,6 +785,7 @@ module Aws::DataExchange
     # @return [Types::CreateJobResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateJobResponse#arn #arn} => String
+    #   * {Types::CreateJobResponse#asset_configuration #asset_configuration} => Types::AssetConfiguration
     #   * {Types::CreateJobResponse#created_at #created_at} => Time
     #   * {Types::CreateJobResponse#details #details} => Types::ResponseDetails
     #   * {Types::CreateJobResponse#errors #errors} => Array&lt;Types::JobError&gt;
@@ -779,6 +797,14 @@ module Aws::DataExchange
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_job({
+    #     asset_configuration: {
+    #       tags: [
+    #         {
+    #           key: "__string", # required
+    #           value: "__string", # required
+    #         },
+    #       ],
+    #     },
     #     details: { # required
     #       export_asset_to_signed_url: {
     #         asset_id: "Id", # required
@@ -895,6 +921,9 @@ module Aws::DataExchange
     # @example Response structure
     #
     #   resp.arn #=> String
+    #   resp.asset_configuration.tags #=> Array
+    #   resp.asset_configuration.tags[0].key #=> String
+    #   resp.asset_configuration.tags[0].value #=> String
     #   resp.created_at #=> Time
     #   resp.details.export_asset_to_signed_url.asset_id #=> String
     #   resp.details.export_asset_to_signed_url.data_set_id #=> String
@@ -1027,7 +1056,7 @@ module Aws::DataExchange
     #
     #   resp = client.create_revision({
     #     comment: "__stringMin0Max16384",
-    #     data_set_id: "__string", # required
+    #     data_set_id: "Id", # required
     #     tags: {
     #       "__string" => "__string",
     #     },
@@ -1074,9 +1103,9 @@ module Aws::DataExchange
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_asset({
-    #     asset_id: "__string", # required
-    #     data_set_id: "__string", # required
-    #     revision_id: "__string", # required
+    #     asset_id: "Id", # required
+    #     data_set_id: "Id", # required
+    #     revision_id: "Id", # required
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dataexchange-2017-07-25/DeleteAsset AWS API Documentation
@@ -1120,7 +1149,7 @@ module Aws::DataExchange
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_data_set({
-    #     data_set_id: "__string", # required
+    #     data_set_id: "Id", # required
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dataexchange-2017-07-25/DeleteDataSet AWS API Documentation
@@ -1167,8 +1196,8 @@ module Aws::DataExchange
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_revision({
-    #     data_set_id: "__string", # required
-    #     revision_id: "__string", # required
+    #     data_set_id: "Id", # required
+    #     revision_id: "Id", # required
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dataexchange-2017-07-25/DeleteRevision AWS API Documentation
@@ -1202,14 +1231,15 @@ module Aws::DataExchange
     #   * {Types::GetAssetResponse#name #name} => String
     #   * {Types::GetAssetResponse#revision_id #revision_id} => String
     #   * {Types::GetAssetResponse#source_id #source_id} => String
+    #   * {Types::GetAssetResponse#tags #tags} => Hash&lt;String,String&gt;
     #   * {Types::GetAssetResponse#updated_at #updated_at} => Time
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_asset({
-    #     asset_id: "__string", # required
-    #     data_set_id: "__string", # required
-    #     revision_id: "__string", # required
+    #     asset_id: "Id", # required
+    #     data_set_id: "Id", # required
+    #     revision_id: "Id", # required
     #   })
     #
     # @example Response structure
@@ -1256,6 +1286,8 @@ module Aws::DataExchange
     #   resp.name #=> String
     #   resp.revision_id #=> String
     #   resp.source_id #=> String
+    #   resp.tags #=> Hash
+    #   resp.tags["__string"] #=> String
     #   resp.updated_at #=> Time
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dataexchange-2017-07-25/GetAsset AWS API Documentation
@@ -1346,7 +1378,7 @@ module Aws::DataExchange
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_data_set({
-    #     data_set_id: "__string", # required
+    #     data_set_id: "Id", # required
     #   })
     #
     # @example Response structure
@@ -1386,6 +1418,7 @@ module Aws::DataExchange
     #   * {Types::GetEventActionResponse#created_at #created_at} => Time
     #   * {Types::GetEventActionResponse#event #event} => Types::Event
     #   * {Types::GetEventActionResponse#id #id} => String
+    #   * {Types::GetEventActionResponse#tags #tags} => Hash&lt;String,String&gt;
     #   * {Types::GetEventActionResponse#updated_at #updated_at} => Time
     #
     # @example Request syntax with placeholder values
@@ -1404,6 +1437,8 @@ module Aws::DataExchange
     #   resp.created_at #=> Time
     #   resp.event.revision_published.data_set_id #=> String
     #   resp.id #=> String
+    #   resp.tags #=> Hash
+    #   resp.tags["__string"] #=> String
     #   resp.updated_at #=> Time
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dataexchange-2017-07-25/GetEventAction AWS API Documentation
@@ -1423,6 +1458,7 @@ module Aws::DataExchange
     # @return [Types::GetJobResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::GetJobResponse#arn #arn} => String
+    #   * {Types::GetJobResponse#asset_configuration #asset_configuration} => Types::AssetConfiguration
     #   * {Types::GetJobResponse#created_at #created_at} => Time
     #   * {Types::GetJobResponse#details #details} => Types::ResponseDetails
     #   * {Types::GetJobResponse#errors #errors} => Array&lt;Types::JobError&gt;
@@ -1434,12 +1470,15 @@ module Aws::DataExchange
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_job({
-    #     job_id: "__string", # required
+    #     job_id: "Id", # required
     #   })
     #
     # @example Response structure
     #
     #   resp.arn #=> String
+    #   resp.asset_configuration.tags #=> Array
+    #   resp.asset_configuration.tags[0].key #=> String
+    #   resp.asset_configuration.tags[0].value #=> String
     #   resp.created_at #=> Time
     #   resp.details.export_asset_to_signed_url.asset_id #=> String
     #   resp.details.export_asset_to_signed_url.data_set_id #=> String
@@ -1616,8 +1655,8 @@ module Aws::DataExchange
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_revision({
-    #     data_set_id: "__string", # required
-    #     revision_id: "__string", # required
+    #     data_set_id: "Id", # required
+    #     revision_id: "Id", # required
     #   })
     #
     # @example Response structure
@@ -1717,7 +1756,7 @@ module Aws::DataExchange
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_data_set_revisions({
-    #     data_set_id: "__string", # required
+    #     data_set_id: "Id", # required
     #     max_results: 1,
     #     next_token: "__string",
     #   })
@@ -1888,6 +1927,9 @@ module Aws::DataExchange
     #
     #   resp.jobs #=> Array
     #   resp.jobs[0].arn #=> String
+    #   resp.jobs[0].asset_configuration.tags #=> Array
+    #   resp.jobs[0].asset_configuration.tags[0].key #=> String
+    #   resp.jobs[0].asset_configuration.tags[0].value #=> String
     #   resp.jobs[0].created_at #=> Time
     #   resp.jobs[0].details.export_asset_to_signed_url.asset_id #=> String
     #   resp.jobs[0].details.export_asset_to_signed_url.data_set_id #=> String
@@ -2065,10 +2107,10 @@ module Aws::DataExchange
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_revision_assets({
-    #     data_set_id: "__string", # required
+    #     data_set_id: "Id", # required
     #     max_results: 1,
     #     next_token: "__string",
-    #     revision_id: "__string", # required
+    #     revision_id: "Id", # required
     #   })
     #
     # @example Response structure
@@ -2187,8 +2229,8 @@ module Aws::DataExchange
     # @example Request syntax with placeholder values
     #
     #   resp = client.revoke_revision({
-    #     data_set_id: "__string", # required
-    #     revision_id: "__string", # required
+    #     data_set_id: "Id", # required
+    #     revision_id: "Id", # required
     #     revocation_comment: "__stringMin10Max512", # required
     #   })
     #
@@ -2344,7 +2386,7 @@ module Aws::DataExchange
     #     },
     #     client_token: "ClientToken",
     #     comment: "__stringMin0Max4096",
-    #     data_set_id: "__string", # required
+    #     data_set_id: "Id", # required
     #     details: {
     #       data_update: {
     #         data_updated_at: Time.now,
@@ -2385,7 +2427,7 @@ module Aws::DataExchange
     # @example Request syntax with placeholder values
     #
     #   resp = client.start_job({
-    #     job_id: "__string", # required
+    #     job_id: "Id", # required
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dataexchange-2017-07-25/StartJob AWS API Documentation
@@ -2490,10 +2532,10 @@ module Aws::DataExchange
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_asset({
-    #     asset_id: "__string", # required
-    #     data_set_id: "__string", # required
+    #     asset_id: "Id", # required
+    #     data_set_id: "Id", # required
     #     name: "AssetName", # required
-    #     revision_id: "__string", # required
+    #     revision_id: "Id", # required
     #   })
     #
     # @example Response structure
@@ -2578,7 +2620,7 @@ module Aws::DataExchange
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_data_set({
-    #     data_set_id: "__string", # required
+    #     data_set_id: "Id", # required
     #     description: "Description",
     #     name: "Name",
     #   })
@@ -2696,9 +2738,9 @@ module Aws::DataExchange
     #
     #   resp = client.update_revision({
     #     comment: "__stringMin0Max16384",
-    #     data_set_id: "__string", # required
+    #     data_set_id: "Id", # required
     #     finalized: false,
-    #     revision_id: "__string", # required
+    #     revision_id: "Id", # required
     #   })
     #
     # @example Response structure
@@ -2742,7 +2784,7 @@ module Aws::DataExchange
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-dataexchange'
-      context[:gem_version] = '1.64.0'
+      context[:gem_version] = '1.87.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

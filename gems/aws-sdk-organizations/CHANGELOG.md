@@ -1,6 +1,171 @@
 Unreleased Changes
 ------------------
 
+1.146.0 (2026-08-11)
+------------------
+
+* Feature - Documentation update for AWS Organizations that clarifies valid input values for the HandshakePartyType parameter in the InviteAccountToOrganization. API ORGANIZATION is valid in responses only. valid input values are ACCOUNT and EMAIL
+
+1.145.0 (2026-08-04)
+------------------
+
+* Feature - Improved accuracy of CloudTrail event documentation for AWS Organizations membership operations.
+
+1.144.0 (2026-07-20)
+------------------
+
+* Feature - Updated InvalidInputException error documentation to clarify that the service validates free-text field values against common cross-site scripting (XSS) patterns.
+
+1.143.0 (2026-07-09)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.142.0 (2026-05-27)
+------------------
+
+* Feature - AWS Organizations now emits CloudTrail events (AccountJoinedOrganization, AccountDepartedOrganization) to the management account for membership changes, including join and departure method and timestamp.
+
+1.141.0 (2026-05-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.140.0 (2026-05-19)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.139.0 (2026-05-13)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.138.0 (2026-04-03)
+------------------
+
+* Feature - Updates close Account quota for member accounts in an Organization.
+
+1.137.0 (2026-03-31)
+------------------
+
+* Feature - Added Path field to Account and OrganizationalUnit objects in AWS Organizations API responses.
+
+1.136.0 (2026-03-18)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.135.0 (2026-02-03)
+------------------
+
+* Feature - Updated the CloseAccount description.
+
+1.134.0 (2026-01-16)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.133.0 (2026-01-08)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.132.0 (2026-01-05)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.131.0 (2025-12-11)
+------------------
+
+* Feature - Add support for policy operations on the NETWORK SECURITY DIRECTOR POLICY policy type.
+
+1.130.0 (2025-11-25)
+------------------
+
+* Feature - Add support for policy operations on the S3_POLICY and BEDROCK_POLICY policy type.
+
+1.129.0 (2025-11-21)
+------------------
+
+* Feature - Add support for policy operations on the UPGRADE_ROLLOUT_POLICY policy type.
+
+1.128.0 (2025-11-20)
+------------------
+
+* Feature - Added new APIs for Billing Transfer, new policy type INSPECTOR_POLICY, and allow an account to transfer between organizations
+
+1.127.0 (2025-10-28)
+------------------
+
+* Feature - Added Account State field to the ListDelegatedAdministrators API response.
+
+1.126.0 (2025-10-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.125.0 (2025-10-17)
+------------------
+
+* Feature - Update endpoint ruleset parameters casing
+
+1.124.0 (2025-09-09)
+------------------
+
+* Feature - Documentation updates for AWS Organizations APIs.
+
+1.123.0 (2025-08-26)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.122.0 (2025-08-22)
+------------------
+
+* Feature - Remove incorrect endpoint tests
+
+1.121.0 (2025-08-12)
+------------------
+
+* Feature - This release introduces 2 new APIs in Organizations: 1. ListAccountsWithInvalidEffectivePolicy 2. ListEffectivePolicyValidationErrors
+
+1.120.0 (2025-08-04)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.119.0 (2025-07-31)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.118.0 (2025-07-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.117.0 (2025-06-17)
+------------------
+
+* Feature - Add support for policy operations on the SECURITYHUB_POLICY policy type.
+
+1.116.0 (2025-06-02)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.115.0 (2025-05-12)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.114.0 (2025-05-01)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
 1.113.0 (2025-02-18)
 ------------------
 

@@ -89,6 +89,12 @@ module Aws::IVSRealTime
     #   HLS configuration object for individual participant recording.
     #   @return [Types::ParticipantRecordingHlsConfiguration]
     #
+    # @!attribute [rw] record_participant_replicas
+    #   Optional field to disable replica participant recording. If this is
+    #   set to `false` when a participant is a replica, replica participants
+    #   are not recorded. Default: `true`.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ivs-realtime-2020-07-14/AutoParticipantRecordingConfiguration AWS API Documentation
     #
     class AutoParticipantRecordingConfiguration < Struct.new(
@@ -96,7 +102,8 @@ module Aws::IVSRealTime
       :media_types,
       :thumbnail_configuration,
       :recording_reconnect_window_seconds,
-      :hls_configuration)
+      :hls_configuration,
+      :record_participant_replicas)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -189,9 +196,7 @@ module Aws::IVSRealTime
     #
     # @!attribute [rw] target_segment_duration_seconds
     #   Defines the target duration for recorded segments generated when
-    #   using composite recording. Segments may have durations shorter than
-    #   the specified value when needed to ensure each segment begins with a
-    #   keyframe. Default: 2.
+    #   using composite recording. Default: 2.
     #   @return [Integer]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ivs-realtime-2020-07-14/CompositionRecordingHlsConfiguration AWS API Documentation
@@ -408,6 +413,11 @@ module Aws::IVSRealTime
     #   `true`, if `ingestProtocol` is set to `RTMP`. Default: `false`.
     #   @return [Boolean]
     #
+    # @!attribute [rw] redundant_ingest
+    #   Indicates whether redundant ingest is enabled for the ingest
+    #   configuration. Default: `false`.
+    #   @return [Boolean]
+    #
     # @!attribute [rw] tags
     #   Tags attached to the resource. Array of maps, each of the form
     #   `string:string (key:value)`. See [Best practices and strategies][1]
@@ -430,6 +440,7 @@ module Aws::IVSRealTime
       :attributes,
       :ingest_protocol,
       :insecure_ingest,
+      :redundant_ingest,
       :tags)
       SENSITIVE = []
       include Aws::Structure
@@ -981,6 +992,31 @@ module Aws::IVSRealTime
     #   [3]: https://docs.aws.amazon.com/ivs/latest/RealTimeUserGuide/rt-stream-ingest.html
     #   @return [String]
     #
+    # @!attribute [rw] destination_stage_arn
+    #   ARN of the stage where the participant is replicated. Applicable
+    #   only if the event name is `REPLICATION_STARTED` or
+    #   `REPLICATION_STOPPED`.
+    #   @return [String]
+    #
+    # @!attribute [rw] destination_session_id
+    #   ID of the session within the destination stage. Applicable only if
+    #   the event name is `REPLICATION_STARTED` or `REPLICATION_STOPPED`.
+    #   @return [String]
+    #
+    # @!attribute [rw] replica
+    #   If true, this indicates the `participantId` is a replicated
+    #   participant. If this is a subscribe event, then this flag refers to
+    #   `remoteParticipantId`. Default: `false`.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] previous_token
+    #   Source participant token for `TOKEN_EXCHANGED` event.
+    #   @return [Types::ExchangedParticipantToken]
+    #
+    # @!attribute [rw] new_token
+    #   Participant token created during `TOKEN_EXCHANGED` event.
+    #   @return [Types::ExchangedParticipantToken]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ivs-realtime-2020-07-14/Event AWS API Documentation
     #
     class Event < Struct.new(
@@ -988,7 +1024,56 @@ module Aws::IVSRealTime
       :participant_id,
       :event_time,
       :remote_participant_id,
-      :error_code)
+      :error_code,
+      :destination_stage_arn,
+      :destination_session_id,
+      :replica,
+      :previous_token,
+      :new_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Object specifying an exchanged participant token in a stage, created
+    # when an original participant token is updated.
+    #
+    # **Important**: Treat tokens as opaque; i.e., do not build
+    # functionality based on token contents. The format of tokens could
+    # change in the future.
+    #
+    # @!attribute [rw] capabilities
+    #   Set of capabilities that the user is allowed to perform in the
+    #   stage.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] attributes
+    #   Application-provided attributes to encode into the token and attach
+    #   to a stage. Map keys and values can contain UTF-8 encoded text. The
+    #   maximum length of this field is 1 KB total. *This field is exposed
+    #   to all stage participants and should not be used for personally
+    #   identifying, confidential, or sensitive information.*
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] user_id
+    #   Customer-assigned name to help identify the token; this can be used
+    #   to link a participant to a user in the customer’s own systems. This
+    #   can be any UTF-8 encoded text. *This field is exposed to all stage
+    #   participants and should not be used for personally identifying,
+    #   confidential, or sensitive information.*
+    #   @return [String]
+    #
+    # @!attribute [rw] expiration_time
+    #   ISO 8601 timestamp (returned as a string) for when this token
+    #   expires.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ivs-realtime-2020-07-14/ExchangedParticipantToken AWS API Documentation
+    #
+    class ExchangedParticipantToken < Struct.new(
+      :capabilities,
+      :attributes,
+      :user_id,
+      :expiration_time)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1238,6 +1323,13 @@ module Aws::IVSRealTime
     #   `2`.
     #   @return [Integer]
     #
+    # @!attribute [rw] participant_order_attribute
+    #   Attribute name in ParticipantTokenConfiguration identifying the
+    #   participant ordering key. Participants with
+    #   `participantOrderAttribute` set to `""` or not specified are ordered
+    #   based on their arrival time into the stage.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ivs-realtime-2020-07-14/GridConfiguration AWS API Documentation
     #
     class GridConfiguration < Struct.new(
@@ -1245,7 +1337,8 @@ module Aws::IVSRealTime
       :omit_stopped_video,
       :video_aspect_ratio,
       :video_fill_mode,
-      :grid_gap)
+      :grid_gap,
+      :participant_order_attribute)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1334,6 +1427,21 @@ module Aws::IVSRealTime
     #   information.*
     #   @return [String]
     #
+    # @!attribute [rw] redundant_ingest
+    #   Indicates whether redundant ingest is enabled for the ingest
+    #   configuration.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] redundant_ingest_credentials
+    #   A list of redundant ingest credentials, present only when
+    #   `redundantIngest` is set to `true`. See [Redundant Ingest][1] in
+    #   *IVS RTMP Publishing* for details.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/ivs/latest/RealTimeUserGuide/rt-rtmp-publishing.html#redundant-ingest
+    #   @return [Array<Types::RedundantIngestCredential>]
+    #
     # @!attribute [rw] attributes
     #   Application-provided attributes to to store in the
     #   IngestConfiguration and attach to a stage. Map keys and values can
@@ -1367,6 +1475,8 @@ module Aws::IVSRealTime
       :participant_id,
       :state,
       :user_id,
+      :redundant_ingest,
+      :redundant_ingest_credentials,
       :attributes,
       :tags)
       SENSITIVE = [:stream_key]
@@ -1410,6 +1520,11 @@ module Aws::IVSRealTime
     #   information.*
     #   @return [String]
     #
+    # @!attribute [rw] redundant_ingest
+    #   Indicates whether redundant ingest is enabled for the ingest
+    #   configuration.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ivs-realtime-2020-07-14/IngestConfigurationSummary AWS API Documentation
     #
     class IngestConfigurationSummary < Struct.new(
@@ -1419,7 +1534,8 @@ module Aws::IVSRealTime
       :stage_arn,
       :participant_id,
       :state,
-      :user_id)
+      :user_id,
+      :redundant_ingest)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1668,6 +1784,58 @@ module Aws::IVSRealTime
     #
     class ListParticipantEventsResponse < Struct.new(
       :events,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] source_stage_arn
+    #   ARN of the stage where the participant is publishing.
+    #   @return [String]
+    #
+    # @!attribute [rw] participant_id
+    #   Participant ID of the publisher that has been replicated. This is
+    #   assigned by IVS and returned by CreateParticipantToken or the `jti`
+    #   (JWT ID) used to [create a self signed token][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/ivs/latest/RealTimeUserGuide/getting-started-distribute-tokens.html#getting-started-distribute-tokens-self-signed
+    #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   The first participant to retrieve. This is used for pagination; see
+    #   the `nextToken` response field.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   Maximum number of results to return. Default: 50.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ivs-realtime-2020-07-14/ListParticipantReplicasRequest AWS API Documentation
+    #
+    class ListParticipantReplicasRequest < Struct.new(
+      :source_stage_arn,
+      :participant_id,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] replicas
+    #   List of all participant replicas.
+    #   @return [Array<Types::ParticipantReplica>]
+    #
+    # @!attribute [rw] next_token
+    #   If there are more participants than `maxResults`, use `nextToken` in
+    #   the request to get the next set.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ivs-realtime-2020-07-14/ListParticipantReplicasResponse AWS API Documentation
+    #
+    class ListParticipantReplicasResponse < Struct.new(
+      :replicas,
       :next_token)
       SENSITIVE = []
       include Aws::Structure
@@ -1997,7 +2165,12 @@ module Aws::IVSRealTime
     # @!attribute [rw] recording_s3_prefix
     #   S3 prefix of the S3 bucket where the participant is being recorded,
     #   if individual participant recording is enabled, or `""` (empty
-    #   string), if recording is not enabled.
+    #   string), if recording is not enabled. If individual participant
+    #   recording merge is enabled, and if a stage publisher disconnects
+    #   from a stage and then reconnects, IVS tries to record to the same S3
+    #   prefix as the previous session. See [ Merge Fragmented Individual
+    #   Participant
+    #   Recordings](/ivs/latest/RealTimeUserGuide/rt-individual-participant-recording.html#ind-part-rec-merge-frag).
     #   @return [String]
     #
     # @!attribute [rw] recording_state
@@ -2007,6 +2180,33 @@ module Aws::IVSRealTime
     # @!attribute [rw] protocol
     #   Type of ingest protocol that the participant employs for
     #   broadcasting.
+    #   @return [String]
+    #
+    # @!attribute [rw] replication_type
+    #   Indicates if the participant has been replicated to another stage or
+    #   is a replica from another stage. Default: `NONE`.
+    #   @return [String]
+    #
+    # @!attribute [rw] replication_state
+    #   The participant's replication state.
+    #   @return [String]
+    #
+    # @!attribute [rw] source_stage_arn
+    #   Source stage ARN from which this participant is replicated, if
+    #   `replicationType` is `REPLICA`.
+    #   @return [String]
+    #
+    # @!attribute [rw] source_session_id
+    #   ID of the session within the source stage, if `replicationType` is
+    #   `REPLICA`.
+    #   @return [String]
+    #
+    # @!attribute [rw] redundant_ingest
+    #   Indicates whether redundant ingest is enabled for the participant.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] ingest_configuration_arn
+    #   The participant’s ingest configuration.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ivs-realtime-2020-07-14/Participant AWS API Documentation
@@ -2027,7 +2227,13 @@ module Aws::IVSRealTime
       :recording_s3_bucket_name,
       :recording_s3_prefix,
       :recording_state,
-      :protocol)
+      :protocol,
+      :replication_type,
+      :replication_state,
+      :source_stage_arn,
+      :source_session_id,
+      :redundant_ingest,
+      :ingest_configuration_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2046,6 +2252,51 @@ module Aws::IVSRealTime
     #
     class ParticipantRecordingHlsConfiguration < Struct.new(
       :target_segment_duration_seconds)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Information about the replicated destination stage for a participant.
+    #
+    # @!attribute [rw] source_stage_arn
+    #   ARN of the stage from which this participant is replicated.
+    #   @return [String]
+    #
+    # @!attribute [rw] participant_id
+    #   Participant ID of the publisher that will be replicated. This is
+    #   assigned by IVS and returned by CreateParticipantToken or the `jti`
+    #   (JWT ID) used to [ create a self signed token][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/ivs/latest/RealTimeUserGuide/getting-started-distribute-tokens.html#getting-started-distribute-tokens-self-signed
+    #   @return [String]
+    #
+    # @!attribute [rw] source_session_id
+    #   ID of the session within the source stage.
+    #   @return [String]
+    #
+    # @!attribute [rw] destination_stage_arn
+    #   ARN of the stage where the participant is replicated.
+    #   @return [String]
+    #
+    # @!attribute [rw] destination_session_id
+    #   ID of the session within the destination stage.
+    #   @return [String]
+    #
+    # @!attribute [rw] replication_state
+    #   Replica’s current replication state.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ivs-realtime-2020-07-14/ParticipantReplica AWS API Documentation
+    #
+    class ParticipantReplica < Struct.new(
+      :source_stage_arn,
+      :participant_id,
+      :source_session_id,
+      :destination_stage_arn,
+      :destination_session_id,
+      :replication_state)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2082,6 +2333,33 @@ module Aws::IVSRealTime
     #   The participant’s recording state.
     #   @return [String]
     #
+    # @!attribute [rw] replication_type
+    #   Indicates if the participant has been replicated to another stage or
+    #   is a replica from another stage. Default: `NONE`.
+    #   @return [String]
+    #
+    # @!attribute [rw] replication_state
+    #   The participant's replication state.
+    #   @return [String]
+    #
+    # @!attribute [rw] source_stage_arn
+    #   Source stage ARN from which this participant is replicated, if
+    #   `replicationType` is `REPLICA`.
+    #   @return [String]
+    #
+    # @!attribute [rw] source_session_id
+    #   ID of the session within the source stage, if `replicationType` is
+    #   `REPLICA`.
+    #   @return [String]
+    #
+    # @!attribute [rw] redundant_ingest
+    #   Indicates whether redundant ingest is enabled for the participant.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] ingest_configuration_arn
+    #   The participant’s ingest configuration.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ivs-realtime-2020-07-14/ParticipantSummary AWS API Documentation
     #
     class ParticipantSummary < Struct.new(
@@ -2090,7 +2368,13 @@ module Aws::IVSRealTime
       :state,
       :first_join_time,
       :published,
-      :recording_state)
+      :recording_state,
+      :replication_type,
+      :replication_state,
+      :source_stage_arn,
+      :source_session_id,
+      :redundant_ingest,
+      :ingest_configuration_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2150,9 +2434,10 @@ module Aws::IVSRealTime
     #
     # @!attribute [rw] attributes
     #   Application-provided attributes to encode into the token and attach
-    #   to a stage. *This field is exposed to all stage participants and
-    #   should not be used for personally identifying, confidential, or
-    #   sensitive information.*
+    #   to a stage. Map keys and values can contain UTF-8 encoded text. The
+    #   maximum length of this field is 1 KB total. *This field is exposed
+    #   to all stage participants and should not be used for personally
+    #   identifying, confidential, or sensitive information.*
     #   @return [Hash<String,String>]
     #
     # @!attribute [rw] duration
@@ -2333,6 +2618,13 @@ module Aws::IVSRealTime
     #   composition and the aspect ratio of the participant’s video.
     #   @return [Integer]
     #
+    # @!attribute [rw] participant_order_attribute
+    #   Attribute name in ParticipantTokenConfiguration identifying the
+    #   participant ordering key. Participants with
+    #   `participantOrderAttribute` set to `""` or not specified are ordered
+    #   based on their arrival time into the stage.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ivs-realtime-2020-07-14/PipConfiguration AWS API Documentation
     #
     class PipConfiguration < Struct.new(
@@ -2345,7 +2637,8 @@ module Aws::IVSRealTime
       :pip_offset,
       :pip_position,
       :pip_width,
-      :pip_height)
+      :pip_height,
+      :participant_order_attribute)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2444,6 +2737,25 @@ module Aws::IVSRealTime
       :hls_configuration,
       :format)
       SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # An object representing a redundant ingest credential.
+    #
+    # @!attribute [rw] participant_id
+    #   ID of the participant within the stage.
+    #   @return [String]
+    #
+    # @!attribute [rw] stream_key
+    #   Ingest-key value.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ivs-realtime-2020-07-14/RedundantIngestCredential AWS API Documentation
+    #
+    class RedundantIngestCredential < Struct.new(
+      :participant_id,
+      :stream_key)
+      SENSITIVE = [:stream_key]
       include Aws::Structure
     end
 
@@ -2835,6 +3147,124 @@ module Aws::IVSRealTime
       include Aws::Structure
     end
 
+    # @!attribute [rw] source_stage_arn
+    #   ARN of the stage where the participant is publishing.
+    #   @return [String]
+    #
+    # @!attribute [rw] destination_stage_arn
+    #   ARN of the stage to which the participant will be replicated.
+    #   @return [String]
+    #
+    # @!attribute [rw] participant_id
+    #   Participant ID of the publisher that will be replicated. This is
+    #   assigned by IVS and returned by CreateParticipantToken or the `jti`
+    #   (JWT ID) used to [create a self signed token][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/ivs/latest/RealTimeUserGuide/getting-started-distribute-tokens.html#getting-started-distribute-tokens-self-signed
+    #   @return [String]
+    #
+    # @!attribute [rw] reconnect_window_seconds
+    #   If the participant disconnects and then reconnects within the
+    #   specified interval, replication will continue to be `ACTIVE`.
+    #   Default: 0.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] attributes
+    #   Application-provided attributes to set on the replicated participant
+    #   in the destination stage. Map keys and values can contain UTF-8
+    #   encoded text. The maximum length of this field is 1 KB total. *This
+    #   field is exposed to all stage participants and should not be used
+    #   for personally identifying, confidential, or sensitive information.*
+    #
+    #   These attributes are merged with any attributes set for this
+    #   participant when creating the token. If there is overlap in keys,
+    #   the values in these attributes are replaced.
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ivs-realtime-2020-07-14/StartParticipantReplicationRequest AWS API Documentation
+    #
+    class StartParticipantReplicationRequest < Struct.new(
+      :source_stage_arn,
+      :destination_stage_arn,
+      :participant_id,
+      :reconnect_window_seconds,
+      :attributes)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] access_control_allow_origin
+    #   See [Access-Control-Allow-Origin][1] in the MDN Web Docs.
+    #
+    #
+    #
+    #   [1]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Access-Control-Allow-Origin
+    #   @return [String]
+    #
+    # @!attribute [rw] access_control_expose_headers
+    #   See [Access-Control-Expose-Headers][1] in the MDN Web Docs.
+    #
+    #
+    #
+    #   [1]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Access-Control-Expose-Headers
+    #   @return [String]
+    #
+    # @!attribute [rw] cache_control
+    #   See [Cache-Control][1] in the MDN Web Docs.
+    #
+    #
+    #
+    #   [1]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Cache-Control
+    #   @return [String]
+    #
+    # @!attribute [rw] content_security_policy
+    #   See [Content-Security-Policy][1] in the MDN Web Docs.
+    #
+    #
+    #
+    #   [1]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy
+    #   @return [String]
+    #
+    # @!attribute [rw] strict_transport_security
+    #   See [Strict-Transport-Security][1] in the MDN Web Docs.
+    #
+    #
+    #
+    #   [1]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Strict-Transport-Security
+    #   @return [String]
+    #
+    # @!attribute [rw] x_content_type_options
+    #   See [X-Content-Type-Options][1] in the MDN Web Docs.
+    #
+    #
+    #
+    #   [1]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/X-Content-Type-Options
+    #   @return [String]
+    #
+    # @!attribute [rw] x_frame_options
+    #   See [X-Frame-Options][1] in the MDN Web Docs.
+    #
+    #
+    #
+    #   [1]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/X-Frame-Options
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ivs-realtime-2020-07-14/StartParticipantReplicationResponse AWS API Documentation
+    #
+    class StartParticipantReplicationResponse < Struct.new(
+      :access_control_allow_origin,
+      :access_control_expose_headers,
+      :cache_control,
+      :content_security_policy,
+      :strict_transport_security,
+      :x_content_type_options,
+      :x_frame_options)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] arn
     #   ARN of the Composition.
     #   @return [String]
@@ -2850,6 +3280,104 @@ module Aws::IVSRealTime
     # @see http://docs.aws.amazon.com/goto/WebAPI/ivs-realtime-2020-07-14/StopCompositionResponse AWS API Documentation
     #
     class StopCompositionResponse < Aws::EmptyStructure; end
+
+    # @!attribute [rw] source_stage_arn
+    #   ARN of the stage where the participant is publishing.
+    #   @return [String]
+    #
+    # @!attribute [rw] destination_stage_arn
+    #   ARN of the stage where the participant has been replicated.
+    #   @return [String]
+    #
+    # @!attribute [rw] participant_id
+    #   Participant ID of the publisher that has been replicated. This is
+    #   assigned by IVS and returned by CreateParticipantToken or the `jti`
+    #   (JWT ID) used to [ create a self signed token][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/ivs/latest/RealTimeUserGuide/getting-started-distribute-tokens.html#getting-started-distribute-tokens-self-signed
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ivs-realtime-2020-07-14/StopParticipantReplicationRequest AWS API Documentation
+    #
+    class StopParticipantReplicationRequest < Struct.new(
+      :source_stage_arn,
+      :destination_stage_arn,
+      :participant_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] access_control_allow_origin
+    #   See [Access-Control-Allow-Origin][1] in the MDN Web Docs.
+    #
+    #
+    #
+    #   [1]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Access-Control-Allow-Origin
+    #   @return [String]
+    #
+    # @!attribute [rw] access_control_expose_headers
+    #   See [Access-Control-Expose-Headers][1] in the MDN Web Docs.
+    #
+    #
+    #
+    #   [1]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Access-Control-Expose-Headers
+    #   @return [String]
+    #
+    # @!attribute [rw] cache_control
+    #   See [Cache-Control][1] in the MDN Web Docs.
+    #
+    #
+    #
+    #   [1]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Cache-Control
+    #   @return [String]
+    #
+    # @!attribute [rw] content_security_policy
+    #   See [Content-Security-Policy][1] in the MDN Web Docs.
+    #
+    #
+    #
+    #   [1]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy
+    #   @return [String]
+    #
+    # @!attribute [rw] strict_transport_security
+    #   See [Strict-Transport-Security][1] in the MDN Web Docs.
+    #
+    #
+    #
+    #   [1]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Strict-Transport-Security
+    #   @return [String]
+    #
+    # @!attribute [rw] x_content_type_options
+    #   See [X-Content-Type-Options][1] in the MDN Web Docs.
+    #
+    #
+    #
+    #   [1]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/X-Content-Type-Options
+    #   @return [String]
+    #
+    # @!attribute [rw] x_frame_options
+    #   See [X-Frame-Options][1] in the MDN Web Docs.
+    #
+    #
+    #
+    #   [1]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/X-Frame-Options
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ivs-realtime-2020-07-14/StopParticipantReplicationResponse AWS API Documentation
+    #
+    class StopParticipantReplicationResponse < Struct.new(
+      :access_control_allow_origin,
+      :access_control_expose_headers,
+      :cache_control,
+      :content_security_policy,
+      :strict_transport_security,
+      :x_content_type_options,
+      :x_frame_options)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # A complex type that describes a location where recorded videos will be
     # stored.
@@ -2998,11 +3526,17 @@ module Aws::IVSRealTime
     #   Stage ARN that needs to be updated.
     #   @return [String]
     #
+    # @!attribute [rw] redundant_ingest
+    #   Indicates whether redundant ingest is enabled for the ingest
+    #   configuration. Default: `false`.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ivs-realtime-2020-07-14/UpdateIngestConfigurationRequest AWS API Documentation
     #
     class UpdateIngestConfigurationRequest < Struct.new(
       :arn,
-      :stage_arn)
+      :stage_arn,
+      :redundant_ingest)
       SENSITIVE = []
       include Aws::Structure
     end

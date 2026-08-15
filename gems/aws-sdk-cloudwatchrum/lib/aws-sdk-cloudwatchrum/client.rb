@@ -95,8 +95,8 @@ module Aws::CloudWatchRUM
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::CloudWatchRUM
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::CloudWatchRUM
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::CloudWatchRUM
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::CloudWatchRUM
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::CloudWatchRUM
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::CloudWatchRUM
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::CloudWatchRUM
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -568,14 +572,14 @@ module Aws::CloudWatchRUM
     #     destination_arn: "DestinationArn",
     #     metric_definitions: [ # required
     #       {
+    #         name: "MetricName", # required
+    #         value_key: "ValueKey",
+    #         unit_label: "UnitLabel",
     #         dimension_keys: {
     #           "DimensionKey" => "DimensionName",
     #         },
     #         event_pattern: "EventPattern",
-    #         name: "MetricName", # required
     #         namespace: "Namespace",
-    #         unit_label: "UnitLabel",
-    #         value_key: "ValueKey",
     #       },
     #     ],
     #   })
@@ -583,24 +587,24 @@ module Aws::CloudWatchRUM
     # @example Response structure
     #
     #   resp.errors #=> Array
-    #   resp.errors[0].error_code #=> String
-    #   resp.errors[0].error_message #=> String
+    #   resp.errors[0].metric_definition.name #=> String
+    #   resp.errors[0].metric_definition.value_key #=> String
+    #   resp.errors[0].metric_definition.unit_label #=> String
     #   resp.errors[0].metric_definition.dimension_keys #=> Hash
     #   resp.errors[0].metric_definition.dimension_keys["DimensionKey"] #=> String
     #   resp.errors[0].metric_definition.event_pattern #=> String
-    #   resp.errors[0].metric_definition.name #=> String
     #   resp.errors[0].metric_definition.namespace #=> String
-    #   resp.errors[0].metric_definition.unit_label #=> String
-    #   resp.errors[0].metric_definition.value_key #=> String
+    #   resp.errors[0].error_code #=> String
+    #   resp.errors[0].error_message #=> String
     #   resp.metric_definitions #=> Array
+    #   resp.metric_definitions[0].metric_definition_id #=> String
+    #   resp.metric_definitions[0].name #=> String
+    #   resp.metric_definitions[0].value_key #=> String
+    #   resp.metric_definitions[0].unit_label #=> String
     #   resp.metric_definitions[0].dimension_keys #=> Hash
     #   resp.metric_definitions[0].dimension_keys["DimensionKey"] #=> String
     #   resp.metric_definitions[0].event_pattern #=> String
-    #   resp.metric_definitions[0].metric_definition_id #=> String
-    #   resp.metric_definitions[0].name #=> String
     #   resp.metric_definitions[0].namespace #=> String
-    #   resp.metric_definitions[0].unit_label #=> String
-    #   resp.metric_definitions[0].value_key #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/rum-2018-05-10/BatchCreateRumMetricDefinitions AWS API Documentation
     #
@@ -661,9 +665,9 @@ module Aws::CloudWatchRUM
     # @example Response structure
     #
     #   resp.errors #=> Array
+    #   resp.errors[0].metric_definition_id #=> String
     #   resp.errors[0].error_code #=> String
     #   resp.errors[0].error_message #=> String
-    #   resp.errors[0].metric_definition_id #=> String
     #   resp.metric_definition_ids #=> Array
     #   resp.metric_definition_ids[0] #=> String
     #
@@ -725,14 +729,14 @@ module Aws::CloudWatchRUM
     # @example Response structure
     #
     #   resp.metric_definitions #=> Array
+    #   resp.metric_definitions[0].metric_definition_id #=> String
+    #   resp.metric_definitions[0].name #=> String
+    #   resp.metric_definitions[0].value_key #=> String
+    #   resp.metric_definitions[0].unit_label #=> String
     #   resp.metric_definitions[0].dimension_keys #=> Hash
     #   resp.metric_definitions[0].dimension_keys["DimensionKey"] #=> String
     #   resp.metric_definitions[0].event_pattern #=> String
-    #   resp.metric_definitions[0].metric_definition_id #=> String
-    #   resp.metric_definitions[0].name #=> String
     #   resp.metric_definitions[0].namespace #=> String
-    #   resp.metric_definitions[0].unit_label #=> String
-    #   resp.metric_definitions[0].value_key #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/rum-2018-05-10/BatchGetRumMetricDefinitions AWS API Documentation
@@ -762,45 +766,8 @@ module Aws::CloudWatchRUM
     # [1]: https://docs.aws.amazon.com/cloudwatchrum/latest/APIReference/API_UpdateAppMonitor.html
     # [2]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-RUM-find-code-snippet.html
     #
-    # @option params [Types::AppMonitorConfiguration] :app_monitor_configuration
-    #   A structure that contains much of the configuration data for the app
-    #   monitor. If you are using Amazon Cognito for authorization, you must
-    #   include this structure in your request, and it must include the ID of
-    #   the Amazon Cognito identity pool to use for authorization. If you
-    #   don't include `AppMonitorConfiguration`, you must set up your own
-    #   authorization method. For more information, see [Authorize your
-    #   application to send data to Amazon Web Services][1].
-    #
-    #   If you omit this argument, the sample rate used for RUM is set to 10%
-    #   of the user sessions.
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-RUM-get-started-authorization.html
-    #
-    # @option params [Types::CustomEvents] :custom_events
-    #   Specifies whether this app monitor allows the web client to define and
-    #   send custom events. If you omit this parameter, custom events are
-    #   `DISABLED`.
-    #
-    #   For more information about custom events, see [Send custom events][1].
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-RUM-custom-events.html
-    #
-    # @option params [Boolean] :cw_log_enabled
-    #   Data collected by RUM is kept by RUM for 30 days and then deleted.
-    #   This parameter specifies whether RUM sends a copy of this telemetry
-    #   data to Amazon CloudWatch Logs in your account. This enables you to
-    #   keep the telemetry data for more than 30 days, but it does incur
-    #   Amazon CloudWatch Logs charges.
-    #
-    #   If you omit this parameter, the default is `false`.
-    #
-    # @option params [Types::DeobfuscationConfiguration] :deobfuscation_configuration
-    #   A structure that contains the configuration for how an app monitor can
-    #   deobfuscate stack traces.
+    # @option params [required, String] :name
+    #   A name for the app monitor.
     #
     # @option params [String] :domain
     #   The top-level internet domain name for which your application has
@@ -810,9 +777,6 @@ module Aws::CloudWatchRUM
     #   List the domain names for which your application has administrative
     #   authority. The `CreateAppMonitor` requires either the domain or the
     #   domain list.
-    #
-    # @option params [required, String] :name
-    #   A name for the app monitor.
     #
     # @option params [Hash<String,String>] :tags
     #   Assigns one or more tags (key-value pairs) to the app monitor.
@@ -832,6 +796,51 @@ module Aws::CloudWatchRUM
     #
     #   [1]: https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html
     #
+    # @option params [Types::AppMonitorConfiguration] :app_monitor_configuration
+    #   A structure that contains much of the configuration data for the app
+    #   monitor. If you are using Amazon Cognito for authorization, you must
+    #   include this structure in your request, and it must include the ID of
+    #   the Amazon Cognito identity pool to use for authorization. If you
+    #   don't include `AppMonitorConfiguration`, you must set up your own
+    #   authorization method. For more information, see [Authorize your
+    #   application to send data to Amazon Web Services][1].
+    #
+    #   If you omit this argument, the sample rate used for RUM is set to 10%
+    #   of the user sessions.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-RUM-get-started-authorization.html
+    #
+    # @option params [Boolean] :cw_log_enabled
+    #   Data collected by RUM is kept by RUM for 30 days and then deleted.
+    #   This parameter specifies whether RUM sends a copy of this telemetry
+    #   data to Amazon CloudWatch Logs in your account. This enables you to
+    #   keep the telemetry data for more than 30 days, but it does incur
+    #   Amazon CloudWatch Logs charges.
+    #
+    #   If you omit this parameter, the default is `false`.
+    #
+    # @option params [Types::CustomEvents] :custom_events
+    #   Specifies whether this app monitor allows the web client to define and
+    #   send custom events. If you omit this parameter, custom events are
+    #   `DISABLED`.
+    #
+    #   For more information about custom events, see [Send custom events][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-RUM-custom-events.html
+    #
+    # @option params [Types::DeobfuscationConfiguration] :deobfuscation_configuration
+    #   A structure that contains the configuration for how an app monitor can
+    #   deobfuscate stack traces.
+    #
+    # @option params [String] :platform
+    #   The platform type for the app monitor. Valid values are `Web` for web
+    #   applications, `Android` for Android applications, and `iOS` for IOS
+    #   applications. If you omit this parameter, the default is `Web`.
+    #
     # @return [Types::CreateAppMonitorResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateAppMonitorResponse#id #id} => String
@@ -839,33 +848,34 @@ module Aws::CloudWatchRUM
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_app_monitor({
-    #     app_monitor_configuration: {
-    #       allow_cookies: false,
-    #       enable_x_ray: false,
-    #       excluded_pages: ["Url"],
-    #       favorite_pages: ["String"],
-    #       guest_role_arn: "Arn",
-    #       identity_pool_id: "IdentityPoolId",
-    #       included_pages: ["Url"],
-    #       session_sample_rate: 1.0,
-    #       telemetries: ["errors"], # accepts errors, performance, http
-    #     },
-    #     custom_events: {
-    #       status: "ENABLED", # accepts ENABLED, DISABLED
-    #     },
-    #     cw_log_enabled: false,
-    #     deobfuscation_configuration: {
-    #       java_script_source_maps: {
-    #         s3_uri: "DeobfuscationS3Uri",
-    #         status: "ENABLED", # required, accepts ENABLED, DISABLED
-    #       },
-    #     },
+    #     name: "AppMonitorName", # required
     #     domain: "AppMonitorDomain",
     #     domain_list: ["AppMonitorDomain"],
-    #     name: "AppMonitorName", # required
     #     tags: {
     #       "TagKey" => "TagValue",
     #     },
+    #     app_monitor_configuration: {
+    #       identity_pool_id: "IdentityPoolId",
+    #       excluded_pages: ["Url"],
+    #       included_pages: ["Url"],
+    #       favorite_pages: ["String"],
+    #       session_sample_rate: 1.0,
+    #       guest_role_arn: "Arn",
+    #       allow_cookies: false,
+    #       telemetries: ["errors"], # accepts errors, performance, http
+    #       enable_x_ray: false,
+    #     },
+    #     cw_log_enabled: false,
+    #     custom_events: {
+    #       status: "ENABLED", # accepts ENABLED, DISABLED
+    #     },
+    #     deobfuscation_configuration: {
+    #       java_script_source_maps: {
+    #         status: "ENABLED", # required, accepts ENABLED, DISABLED
+    #         s3_uri: "DeobfuscationS3Uri",
+    #       },
+    #     },
+    #     platform: "Web", # accepts Web, Android, iOS
     #   })
     #
     # @example Response structure
@@ -995,34 +1005,35 @@ module Aws::CloudWatchRUM
     #
     # @example Response structure
     #
-    #   resp.app_monitor.app_monitor_configuration.allow_cookies #=> Boolean
-    #   resp.app_monitor.app_monitor_configuration.enable_x_ray #=> Boolean
-    #   resp.app_monitor.app_monitor_configuration.excluded_pages #=> Array
-    #   resp.app_monitor.app_monitor_configuration.excluded_pages[0] #=> String
-    #   resp.app_monitor.app_monitor_configuration.favorite_pages #=> Array
-    #   resp.app_monitor.app_monitor_configuration.favorite_pages[0] #=> String
-    #   resp.app_monitor.app_monitor_configuration.guest_role_arn #=> String
-    #   resp.app_monitor.app_monitor_configuration.identity_pool_id #=> String
-    #   resp.app_monitor.app_monitor_configuration.included_pages #=> Array
-    #   resp.app_monitor.app_monitor_configuration.included_pages[0] #=> String
-    #   resp.app_monitor.app_monitor_configuration.session_sample_rate #=> Float
-    #   resp.app_monitor.app_monitor_configuration.telemetries #=> Array
-    #   resp.app_monitor.app_monitor_configuration.telemetries[0] #=> String, one of "errors", "performance", "http"
-    #   resp.app_monitor.created #=> String
-    #   resp.app_monitor.custom_events.status #=> String, one of "ENABLED", "DISABLED"
-    #   resp.app_monitor.data_storage.cw_log.cw_log_enabled #=> Boolean
-    #   resp.app_monitor.data_storage.cw_log.cw_log_group #=> String
-    #   resp.app_monitor.deobfuscation_configuration.java_script_source_maps.s3_uri #=> String
-    #   resp.app_monitor.deobfuscation_configuration.java_script_source_maps.status #=> String, one of "ENABLED", "DISABLED"
+    #   resp.app_monitor.name #=> String
     #   resp.app_monitor.domain #=> String
     #   resp.app_monitor.domain_list #=> Array
     #   resp.app_monitor.domain_list[0] #=> String
     #   resp.app_monitor.id #=> String
+    #   resp.app_monitor.created #=> String
     #   resp.app_monitor.last_modified #=> String
-    #   resp.app_monitor.name #=> String
-    #   resp.app_monitor.state #=> String, one of "CREATED", "DELETING", "ACTIVE"
     #   resp.app_monitor.tags #=> Hash
     #   resp.app_monitor.tags["TagKey"] #=> String
+    #   resp.app_monitor.state #=> String, one of "CREATED", "DELETING", "ACTIVE"
+    #   resp.app_monitor.app_monitor_configuration.identity_pool_id #=> String
+    #   resp.app_monitor.app_monitor_configuration.excluded_pages #=> Array
+    #   resp.app_monitor.app_monitor_configuration.excluded_pages[0] #=> String
+    #   resp.app_monitor.app_monitor_configuration.included_pages #=> Array
+    #   resp.app_monitor.app_monitor_configuration.included_pages[0] #=> String
+    #   resp.app_monitor.app_monitor_configuration.favorite_pages #=> Array
+    #   resp.app_monitor.app_monitor_configuration.favorite_pages[0] #=> String
+    #   resp.app_monitor.app_monitor_configuration.session_sample_rate #=> Float
+    #   resp.app_monitor.app_monitor_configuration.guest_role_arn #=> String
+    #   resp.app_monitor.app_monitor_configuration.allow_cookies #=> Boolean
+    #   resp.app_monitor.app_monitor_configuration.telemetries #=> Array
+    #   resp.app_monitor.app_monitor_configuration.telemetries[0] #=> String, one of "errors", "performance", "http"
+    #   resp.app_monitor.app_monitor_configuration.enable_x_ray #=> Boolean
+    #   resp.app_monitor.data_storage.cw_log.cw_log_enabled #=> Boolean
+    #   resp.app_monitor.data_storage.cw_log.cw_log_group #=> String
+    #   resp.app_monitor.custom_events.status #=> String, one of "ENABLED", "DISABLED"
+    #   resp.app_monitor.deobfuscation_configuration.java_script_source_maps.status #=> String, one of "ENABLED", "DISABLED"
+    #   resp.app_monitor.deobfuscation_configuration.java_script_source_maps.s3_uri #=> String
+    #   resp.app_monitor.platform #=> String, one of "Web", "Android", "iOS"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/rum-2018-05-10/GetAppMonitor AWS API Documentation
     #
@@ -1037,6 +1048,14 @@ module Aws::CloudWatchRUM
     # web application, so that you can do your own processing or analysis of
     # this data.
     #
+    # @option params [required, String] :name
+    #   The name of the app monitor that collected the data that you want to
+    #   retrieve.
+    #
+    # @option params [required, Types::TimeRange] :time_range
+    #   A structure that defines the time range that you want to retrieve
+    #   results from.
+    #
     # @option params [Array<Types::QueryFilter>] :filters
     #   An array of structures that you can use to filter the results to those
     #   that match one or more sets of key-value pairs that you specify.
@@ -1044,17 +1063,9 @@ module Aws::CloudWatchRUM
     # @option params [Integer] :max_results
     #   The maximum number of results to return in one operation.
     #
-    # @option params [required, String] :name
-    #   The name of the app monitor that collected the data that you want to
-    #   retrieve.
-    #
     # @option params [String] :next_token
     #   Use the token returned by the previous operation to request the next
     #   page of results.
-    #
-    # @option params [required, Types::TimeRange] :time_range
-    #   A structure that defines the time range that you want to retrieve
-    #   results from.
     #
     # @return [Types::GetAppMonitorDataResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1066,6 +1077,11 @@ module Aws::CloudWatchRUM
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_app_monitor_data({
+    #     name: "AppMonitorName", # required
+    #     time_range: { # required
+    #       after: 1, # required
+    #       before: 1,
+    #     },
     #     filters: [
     #       {
     #         name: "QueryFilterKey",
@@ -1073,12 +1089,7 @@ module Aws::CloudWatchRUM
     #       },
     #     ],
     #     max_results: 1,
-    #     name: "AppMonitorName", # required
     #     next_token: "Token",
-    #     time_range: { # required
-    #       after: 1, # required
-    #       before: 1,
-    #     },
     #   })
     #
     # @example Response structure
@@ -1141,8 +1152,8 @@ module Aws::CloudWatchRUM
     #
     # @return [Types::ListAppMonitorsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::ListAppMonitorsResponse#app_monitor_summaries #app_monitor_summaries} => Array&lt;Types::AppMonitorSummary&gt;
     #   * {Types::ListAppMonitorsResponse#next_token #next_token} => String
+    #   * {Types::ListAppMonitorsResponse#app_monitor_summaries #app_monitor_summaries} => Array&lt;Types::AppMonitorSummary&gt;
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
     #
@@ -1155,13 +1166,14 @@ module Aws::CloudWatchRUM
     #
     # @example Response structure
     #
-    #   resp.app_monitor_summaries #=> Array
-    #   resp.app_monitor_summaries[0].created #=> String
-    #   resp.app_monitor_summaries[0].id #=> String
-    #   resp.app_monitor_summaries[0].last_modified #=> String
-    #   resp.app_monitor_summaries[0].name #=> String
-    #   resp.app_monitor_summaries[0].state #=> String, one of "CREATED", "DELETING", "ACTIVE"
     #   resp.next_token #=> String
+    #   resp.app_monitor_summaries #=> Array
+    #   resp.app_monitor_summaries[0].name #=> String
+    #   resp.app_monitor_summaries[0].id #=> String
+    #   resp.app_monitor_summaries[0].created #=> String
+    #   resp.app_monitor_summaries[0].last_modified #=> String
+    #   resp.app_monitor_summaries[0].state #=> String, one of "CREATED", "DELETING", "ACTIVE"
+    #   resp.app_monitor_summaries[0].platform #=> String, one of "Web", "Android", "iOS"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/rum-2018-05-10/ListAppMonitors AWS API Documentation
     #
@@ -1331,6 +1343,23 @@ module Aws::CloudWatchRUM
     # Each `PutRumEvents` operation can send a batch of events from one user
     # session.
     #
+    # @option params [required, String] :id
+    #   The ID of the app monitor that is sending this data.
+    #
+    # @option params [required, String] :batch_id
+    #   A unique identifier for this batch of RUM event data.
+    #
+    # @option params [required, Types::AppMonitorDetails] :app_monitor_details
+    #   A structure that contains information about the app monitor that
+    #   collected this telemetry information.
+    #
+    # @option params [required, Types::UserDetails] :user_details
+    #   A structure that contains information about the user session that this
+    #   batch of events was collected from.
+    #
+    # @option params [required, Array<Types::RumEvent>] :rum_events
+    #   An array of structures that contain the telemetry event data.
+    #
     # @option params [String] :alias
     #   If the app monitor uses a resource-based policy that requires
     #   `PutRumEvents` requests to specify a certain alias, specify that alias
@@ -1342,49 +1371,32 @@ module Aws::CloudWatchRUM
     #
     #   [1]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-RUM-resource-policies.html
     #
-    # @option params [required, Types::AppMonitorDetails] :app_monitor_details
-    #   A structure that contains information about the app monitor that
-    #   collected this telemetry information.
-    #
-    # @option params [required, String] :batch_id
-    #   A unique identifier for this batch of RUM event data.
-    #
-    # @option params [required, String] :id
-    #   The ID of the app monitor that is sending this data.
-    #
-    # @option params [required, Array<Types::RumEvent>] :rum_events
-    #   An array of structures that contain the telemetry event data.
-    #
-    # @option params [required, Types::UserDetails] :user_details
-    #   A structure that contains information about the user session that this
-    #   batch of events was collected from.
-    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.put_rum_events({
-    #     alias: "Alias",
+    #     id: "PutRumEventsRequestIdString", # required
+    #     batch_id: "PutRumEventsRequestBatchIdString", # required
     #     app_monitor_details: { # required
-    #       id: "String",
     #       name: "String",
+    #       id: "String",
     #       version: "String",
     #     },
-    #     batch_id: "PutRumEventsRequestBatchIdString", # required
-    #     id: "PutRumEventsRequestIdString", # required
+    #     user_details: { # required
+    #       user_id: "UserDetailsUserIdString",
+    #       session_id: "UserDetailsSessionIdString",
+    #     },
     #     rum_events: [ # required
     #       {
-    #         details: "JsonValue", # required
     #         id: "RumEventIdString", # required
-    #         metadata: "JsonValue",
     #         timestamp: Time.now, # required
     #         type: "String", # required
+    #         metadata: "JsonValue",
+    #         details: "JsonValue", # required
     #       },
     #     ],
-    #     user_details: { # required
-    #       session_id: "UserDetailsSessionIdString",
-    #       user_id: "UserDetailsUserIdString",
-    #     },
+    #     alias: "Alias",
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/rum-2018-05-10/PutRumEvents AWS API Documentation
@@ -1560,6 +1572,18 @@ module Aws::CloudWatchRUM
     # [2]: https://docs.aws.amazon.com/cloudwatchrum/latest/APIReference/API_CreateAppMonitor.html
     # [3]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-RUM-find-code-snippet.html
     #
+    # @option params [required, String] :name
+    #   The name of the app monitor to update.
+    #
+    # @option params [String] :domain
+    #   The top-level internet domain name for which your application has
+    #   administrative authority.
+    #
+    # @option params [Array<String>] :domain_list
+    #   List the domain names for which your application has administrative
+    #   authority. The `UpdateAppMonitor` allows either the domain or the
+    #   domain list.
+    #
     # @option params [Types::AppMonitorConfiguration] :app_monitor_configuration
     #   A structure that contains much of the configuration data for the app
     #   monitor. If you are using Amazon Cognito for authorization, you must
@@ -1573,6 +1597,13 @@ module Aws::CloudWatchRUM
     #
     #   [1]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-RUM-get-started-authorization.html
     #
+    # @option params [Boolean] :cw_log_enabled
+    #   Data collected by RUM is kept by RUM for 30 days and then deleted.
+    #   This parameter specifies whether RUM sends a copy of this telemetry
+    #   data to Amazon CloudWatch Logs in your account. This enables you to
+    #   keep the telemetry data for more than 30 days, but it does incur
+    #   Amazon CloudWatch Logs charges.
+    #
     # @option params [Types::CustomEvents] :custom_events
     #   Specifies whether this app monitor allows the web client to define and
     #   send custom events. The default is for custom events to be `DISABLED`.
@@ -1583,58 +1614,39 @@ module Aws::CloudWatchRUM
     #
     #   [1]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-RUM-custom-events.html
     #
-    # @option params [Boolean] :cw_log_enabled
-    #   Data collected by RUM is kept by RUM for 30 days and then deleted.
-    #   This parameter specifies whether RUM sends a copy of this telemetry
-    #   data to Amazon CloudWatch Logs in your account. This enables you to
-    #   keep the telemetry data for more than 30 days, but it does incur
-    #   Amazon CloudWatch Logs charges.
-    #
     # @option params [Types::DeobfuscationConfiguration] :deobfuscation_configuration
     #   A structure that contains the configuration for how an app monitor can
     #   deobfuscate stack traces.
-    #
-    # @option params [String] :domain
-    #   The top-level internet domain name for which your application has
-    #   administrative authority.
-    #
-    # @option params [Array<String>] :domain_list
-    #   List the domain names for which your application has administrative
-    #   authority. The `UpdateAppMonitor` allows either the domain or the
-    #   domain list.
-    #
-    # @option params [required, String] :name
-    #   The name of the app monitor to update.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_app_monitor({
+    #     name: "AppMonitorName", # required
+    #     domain: "AppMonitorDomain",
+    #     domain_list: ["AppMonitorDomain"],
     #     app_monitor_configuration: {
-    #       allow_cookies: false,
-    #       enable_x_ray: false,
-    #       excluded_pages: ["Url"],
-    #       favorite_pages: ["String"],
-    #       guest_role_arn: "Arn",
     #       identity_pool_id: "IdentityPoolId",
+    #       excluded_pages: ["Url"],
     #       included_pages: ["Url"],
+    #       favorite_pages: ["String"],
     #       session_sample_rate: 1.0,
+    #       guest_role_arn: "Arn",
+    #       allow_cookies: false,
     #       telemetries: ["errors"], # accepts errors, performance, http
+    #       enable_x_ray: false,
     #     },
+    #     cw_log_enabled: false,
     #     custom_events: {
     #       status: "ENABLED", # accepts ENABLED, DISABLED
     #     },
-    #     cw_log_enabled: false,
     #     deobfuscation_configuration: {
     #       java_script_source_maps: {
-    #         s3_uri: "DeobfuscationS3Uri",
     #         status: "ENABLED", # required, accepts ENABLED, DISABLED
+    #         s3_uri: "DeobfuscationS3Uri",
     #       },
     #     },
-    #     domain: "AppMonitorDomain",
-    #     domain_list: ["AppMonitorDomain"],
-    #     name: "AppMonitorName", # required
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/rum-2018-05-10/UpdateAppMonitor AWS API Documentation
@@ -1693,14 +1705,14 @@ module Aws::CloudWatchRUM
     #     destination: "CloudWatch", # required, accepts CloudWatch, Evidently
     #     destination_arn: "DestinationArn",
     #     metric_definition: { # required
+    #       name: "MetricName", # required
+    #       value_key: "ValueKey",
+    #       unit_label: "UnitLabel",
     #       dimension_keys: {
     #         "DimensionKey" => "DimensionName",
     #       },
     #       event_pattern: "EventPattern",
-    #       name: "MetricName", # required
     #       namespace: "Namespace",
-    #       unit_label: "UnitLabel",
-    #       value_key: "ValueKey",
     #     },
     #     metric_definition_id: "MetricDefinitionId", # required
     #   })
@@ -1732,7 +1744,7 @@ module Aws::CloudWatchRUM
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-cloudwatchrum'
-      context[:gem_version] = '1.39.0'
+      context[:gem_version] = '1.60.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

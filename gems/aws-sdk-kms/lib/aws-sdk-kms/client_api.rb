@@ -15,6 +15,7 @@ module Aws::KMS
     include Seahorse::Model
 
     AWSAccountIdType = Shapes::StringShape.new(name: 'AWSAccountIdType')
+    AccountIdType = Shapes::StringShape.new(name: 'AccountIdType')
     AlgorithmSpec = Shapes::StringShape.new(name: 'AlgorithmSpec')
     AliasList = Shapes::ListShape.new(name: 'AliasList')
     AliasListEntry = Shapes::StructureShape.new(name: 'AliasListEntry')
@@ -22,6 +23,8 @@ module Aws::KMS
     AlreadyExistsException = Shapes::StructureShape.new(name: 'AlreadyExistsException')
     ArnType = Shapes::StringShape.new(name: 'ArnType')
     AttestationDocumentType = Shapes::BlobShape.new(name: 'AttestationDocumentType')
+    BackingKeyIdResponseType = Shapes::StringShape.new(name: 'BackingKeyIdResponseType')
+    BackingKeyIdType = Shapes::StringShape.new(name: 'BackingKeyIdType')
     BooleanType = Shapes::BooleanShape.new(name: 'BooleanType')
     CancelKeyDeletionRequest = Shapes::StructureShape.new(name: 'CancelKeyDeletionRequest')
     CancelKeyDeletionResponse = Shapes::StructureShape.new(name: 'CancelKeyDeletionResponse')
@@ -32,6 +35,7 @@ module Aws::KMS
     CloudHsmClusterNotActiveException = Shapes::StructureShape.new(name: 'CloudHsmClusterNotActiveException')
     CloudHsmClusterNotFoundException = Shapes::StructureShape.new(name: 'CloudHsmClusterNotFoundException')
     CloudHsmClusterNotRelatedException = Shapes::StructureShape.new(name: 'CloudHsmClusterNotRelatedException')
+    CloudTrailEventIdType = Shapes::StringShape.new(name: 'CloudTrailEventIdType')
     ConflictException = Shapes::StructureShape.new(name: 'ConflictException')
     ConnectCustomKeyStoreRequest = Shapes::StructureShape.new(name: 'ConnectCustomKeyStoreRequest')
     ConnectCustomKeyStoreResponse = Shapes::StructureShape.new(name: 'ConnectCustomKeyStoreResponse')
@@ -63,6 +67,7 @@ module Aws::KMS
     DeleteCustomKeyStoreRequest = Shapes::StructureShape.new(name: 'DeleteCustomKeyStoreRequest')
     DeleteCustomKeyStoreResponse = Shapes::StructureShape.new(name: 'DeleteCustomKeyStoreResponse')
     DeleteImportedKeyMaterialRequest = Shapes::StructureShape.new(name: 'DeleteImportedKeyMaterialRequest')
+    DeleteImportedKeyMaterialResponse = Shapes::StructureShape.new(name: 'DeleteImportedKeyMaterialResponse')
     DependencyTimeoutException = Shapes::StructureShape.new(name: 'DependencyTimeoutException')
     DeriveSharedSecretRequest = Shapes::StructureShape.new(name: 'DeriveSharedSecretRequest')
     DeriveSharedSecretResponse = Shapes::StructureShape.new(name: 'DeriveSharedSecretResponse')
@@ -76,6 +81,8 @@ module Aws::KMS
     DisabledException = Shapes::StructureShape.new(name: 'DisabledException')
     DisconnectCustomKeyStoreRequest = Shapes::StructureShape.new(name: 'DisconnectCustomKeyStoreRequest')
     DisconnectCustomKeyStoreResponse = Shapes::StructureShape.new(name: 'DisconnectCustomKeyStoreResponse')
+    DryRunModifierList = Shapes::ListShape.new(name: 'DryRunModifierList')
+    DryRunModifierType = Shapes::StringShape.new(name: 'DryRunModifierType')
     DryRunOperationException = Shapes::StructureShape.new(name: 'DryRunOperationException')
     EnableKeyRequest = Shapes::StructureShape.new(name: 'EnableKeyRequest')
     EnableKeyRotationRequest = Shapes::StructureShape.new(name: 'EnableKeyRotationRequest')
@@ -101,6 +108,8 @@ module Aws::KMS
     GenerateMacResponse = Shapes::StructureShape.new(name: 'GenerateMacResponse')
     GenerateRandomRequest = Shapes::StructureShape.new(name: 'GenerateRandomRequest')
     GenerateRandomResponse = Shapes::StructureShape.new(name: 'GenerateRandomResponse')
+    GetKeyLastUsageRequest = Shapes::StructureShape.new(name: 'GetKeyLastUsageRequest')
+    GetKeyLastUsageResponse = Shapes::StructureShape.new(name: 'GetKeyLastUsageResponse')
     GetKeyPolicyRequest = Shapes::StructureShape.new(name: 'GetKeyPolicyRequest')
     GetKeyPolicyResponse = Shapes::StructureShape.new(name: 'GetKeyPolicyResponse')
     GetKeyRotationStatusRequest = Shapes::StructureShape.new(name: 'GetKeyRotationStatusRequest')
@@ -109,6 +118,7 @@ module Aws::KMS
     GetParametersForImportResponse = Shapes::StructureShape.new(name: 'GetParametersForImportResponse')
     GetPublicKeyRequest = Shapes::StructureShape.new(name: 'GetPublicKeyRequest')
     GetPublicKeyResponse = Shapes::StructureShape.new(name: 'GetPublicKeyResponse')
+    GrantConstraintSourceArnType = Shapes::StringShape.new(name: 'GrantConstraintSourceArnType')
     GrantConstraints = Shapes::StructureShape.new(name: 'GrantConstraints')
     GrantIdType = Shapes::StringShape.new(name: 'GrantIdType')
     GrantList = Shapes::ListShape.new(name: 'GrantList')
@@ -120,6 +130,9 @@ module Aws::KMS
     GrantTokenType = Shapes::StringShape.new(name: 'GrantTokenType')
     ImportKeyMaterialRequest = Shapes::StructureShape.new(name: 'ImportKeyMaterialRequest')
     ImportKeyMaterialResponse = Shapes::StructureShape.new(name: 'ImportKeyMaterialResponse')
+    ImportState = Shapes::StringShape.new(name: 'ImportState')
+    ImportType = Shapes::StringShape.new(name: 'ImportType')
+    IncludeKeyMaterial = Shapes::StringShape.new(name: 'IncludeKeyMaterial')
     IncorrectKeyException = Shapes::StructureShape.new(name: 'IncorrectKeyException')
     IncorrectKeyMaterialException = Shapes::StructureShape.new(name: 'IncorrectKeyMaterialException')
     IncorrectTrustAnchorException = Shapes::StructureShape.new(name: 'IncorrectTrustAnchorException')
@@ -139,15 +152,20 @@ module Aws::KMS
     KeyAgreementAlgorithmSpecList = Shapes::ListShape.new(name: 'KeyAgreementAlgorithmSpecList')
     KeyEncryptionMechanism = Shapes::StringShape.new(name: 'KeyEncryptionMechanism')
     KeyIdType = Shapes::StringShape.new(name: 'KeyIdType')
+    KeyLastUsageData = Shapes::StructureShape.new(name: 'KeyLastUsageData')
+    KeyLastUsageTrackingOperation = Shapes::StringShape.new(name: 'KeyLastUsageTrackingOperation')
     KeyList = Shapes::ListShape.new(name: 'KeyList')
     KeyListEntry = Shapes::StructureShape.new(name: 'KeyListEntry')
     KeyManagerType = Shapes::StringShape.new(name: 'KeyManagerType')
+    KeyMaterialDescriptionType = Shapes::StringShape.new(name: 'KeyMaterialDescriptionType')
+    KeyMaterialState = Shapes::StringShape.new(name: 'KeyMaterialState')
     KeyMetadata = Shapes::StructureShape.new(name: 'KeyMetadata')
     KeySpec = Shapes::StringShape.new(name: 'KeySpec')
     KeyState = Shapes::StringShape.new(name: 'KeyState')
     KeyStorePasswordType = Shapes::StringShape.new(name: 'KeyStorePasswordType')
     KeyUnavailableException = Shapes::StructureShape.new(name: 'KeyUnavailableException')
     KeyUsageType = Shapes::StringShape.new(name: 'KeyUsageType')
+    KmsRequestIdType = Shapes::StringShape.new(name: 'KmsRequestIdType')
     LimitExceededException = Shapes::StructureShape.new(name: 'LimitExceededException')
     LimitType = Shapes::IntegerShape.new(name: 'LimitType')
     ListAliasesRequest = Shapes::StructureShape.new(name: 'ListAliasesRequest')
@@ -200,6 +218,7 @@ module Aws::KMS
     RotationsListEntry = Shapes::StructureShape.new(name: 'RotationsListEntry')
     ScheduleKeyDeletionRequest = Shapes::StructureShape.new(name: 'ScheduleKeyDeletionRequest')
     ScheduleKeyDeletionResponse = Shapes::StructureShape.new(name: 'ScheduleKeyDeletionResponse')
+    ServicePrincipalType = Shapes::StringShape.new(name: 'ServicePrincipalType')
     SignRequest = Shapes::StructureShape.new(name: 'SignRequest')
     SignResponse = Shapes::StructureShape.new(name: 'SignResponse')
     SigningAlgorithmSpec = Shapes::StringShape.new(name: 'SigningAlgorithmSpec')
@@ -300,6 +319,7 @@ module Aws::KMS
     CreateCustomKeyStoreRequest.add_member(:xks_proxy_uri_endpoint, Shapes::ShapeRef.new(shape: XksProxyUriEndpointType, location_name: "XksProxyUriEndpoint"))
     CreateCustomKeyStoreRequest.add_member(:xks_proxy_uri_path, Shapes::ShapeRef.new(shape: XksProxyUriPathType, location_name: "XksProxyUriPath"))
     CreateCustomKeyStoreRequest.add_member(:xks_proxy_vpc_endpoint_service_name, Shapes::ShapeRef.new(shape: XksProxyVpcEndpointServiceNameType, location_name: "XksProxyVpcEndpointServiceName"))
+    CreateCustomKeyStoreRequest.add_member(:xks_proxy_vpc_endpoint_service_owner, Shapes::ShapeRef.new(shape: AccountIdType, location_name: "XksProxyVpcEndpointServiceOwner"))
     CreateCustomKeyStoreRequest.add_member(:xks_proxy_authentication_credential, Shapes::ShapeRef.new(shape: XksProxyAuthenticationCredentialType, location_name: "XksProxyAuthenticationCredential"))
     CreateCustomKeyStoreRequest.add_member(:xks_proxy_connectivity, Shapes::ShapeRef.new(shape: XksProxyConnectivityType, location_name: "XksProxyConnectivity"))
     CreateCustomKeyStoreRequest.struct_class = Types::CreateCustomKeyStoreRequest
@@ -308,13 +328,15 @@ module Aws::KMS
     CreateCustomKeyStoreResponse.struct_class = Types::CreateCustomKeyStoreResponse
 
     CreateGrantRequest.add_member(:key_id, Shapes::ShapeRef.new(shape: KeyIdType, required: true, location_name: "KeyId"))
-    CreateGrantRequest.add_member(:grantee_principal, Shapes::ShapeRef.new(shape: PrincipalIdType, required: true, location_name: "GranteePrincipal"))
+    CreateGrantRequest.add_member(:grantee_principal, Shapes::ShapeRef.new(shape: PrincipalIdType, location_name: "GranteePrincipal"))
     CreateGrantRequest.add_member(:retiring_principal, Shapes::ShapeRef.new(shape: PrincipalIdType, location_name: "RetiringPrincipal"))
     CreateGrantRequest.add_member(:operations, Shapes::ShapeRef.new(shape: GrantOperationList, required: true, location_name: "Operations"))
     CreateGrantRequest.add_member(:constraints, Shapes::ShapeRef.new(shape: GrantConstraints, location_name: "Constraints"))
     CreateGrantRequest.add_member(:grant_tokens, Shapes::ShapeRef.new(shape: GrantTokenList, location_name: "GrantTokens"))
     CreateGrantRequest.add_member(:name, Shapes::ShapeRef.new(shape: GrantNameType, location_name: "Name"))
     CreateGrantRequest.add_member(:dry_run, Shapes::ShapeRef.new(shape: NullableBooleanType, location_name: "DryRun"))
+    CreateGrantRequest.add_member(:grantee_service_principal, Shapes::ShapeRef.new(shape: ServicePrincipalType, location_name: "GranteeServicePrincipal"))
+    CreateGrantRequest.add_member(:retiring_service_principal, Shapes::ShapeRef.new(shape: ServicePrincipalType, location_name: "RetiringServicePrincipal"))
     CreateGrantRequest.struct_class = Types::CreateGrantRequest
 
     CreateGrantResponse.add_member(:grant_token, Shapes::ShapeRef.new(shape: GrantTokenType, location_name: "GrantToken"))
@@ -324,7 +346,7 @@ module Aws::KMS
     CreateKeyRequest.add_member(:policy, Shapes::ShapeRef.new(shape: PolicyType, location_name: "Policy"))
     CreateKeyRequest.add_member(:description, Shapes::ShapeRef.new(shape: DescriptionType, location_name: "Description"))
     CreateKeyRequest.add_member(:key_usage, Shapes::ShapeRef.new(shape: KeyUsageType, location_name: "KeyUsage"))
-    CreateKeyRequest.add_member(:customer_master_key_spec, Shapes::ShapeRef.new(shape: CustomerMasterKeySpec, deprecated: true, location_name: "CustomerMasterKeySpec", metadata: {"deprecatedMessage"=>"This parameter has been deprecated. Instead, use the KeySpec parameter."}))
+    CreateKeyRequest.add_member(:customer_master_key_spec, Shapes::ShapeRef.new(shape: CustomerMasterKeySpec, deprecated: true, location_name: "CustomerMasterKeySpec", metadata: {"deprecatedMessage" => "This parameter has been deprecated. Instead, use the KeySpec parameter."}))
     CreateKeyRequest.add_member(:key_spec, Shapes::ShapeRef.new(shape: KeySpec, location_name: "KeySpec"))
     CreateKeyRequest.add_member(:origin, Shapes::ShapeRef.new(shape: OriginType, location_name: "Origin"))
     CreateKeyRequest.add_member(:custom_key_store_id, Shapes::ShapeRef.new(shape: CustomKeyStoreIdType, location_name: "CustomKeyStoreId"))
@@ -362,19 +384,21 @@ module Aws::KMS
     CustomKeyStoresListEntry.add_member(:xks_proxy_configuration, Shapes::ShapeRef.new(shape: XksProxyConfigurationType, location_name: "XksProxyConfiguration"))
     CustomKeyStoresListEntry.struct_class = Types::CustomKeyStoresListEntry
 
-    DecryptRequest.add_member(:ciphertext_blob, Shapes::ShapeRef.new(shape: CiphertextType, required: true, location_name: "CiphertextBlob"))
+    DecryptRequest.add_member(:ciphertext_blob, Shapes::ShapeRef.new(shape: CiphertextType, location_name: "CiphertextBlob"))
     DecryptRequest.add_member(:encryption_context, Shapes::ShapeRef.new(shape: EncryptionContextType, location_name: "EncryptionContext"))
     DecryptRequest.add_member(:grant_tokens, Shapes::ShapeRef.new(shape: GrantTokenList, location_name: "GrantTokens"))
     DecryptRequest.add_member(:key_id, Shapes::ShapeRef.new(shape: KeyIdType, location_name: "KeyId"))
     DecryptRequest.add_member(:encryption_algorithm, Shapes::ShapeRef.new(shape: EncryptionAlgorithmSpec, location_name: "EncryptionAlgorithm"))
     DecryptRequest.add_member(:recipient, Shapes::ShapeRef.new(shape: RecipientInfo, location_name: "Recipient"))
     DecryptRequest.add_member(:dry_run, Shapes::ShapeRef.new(shape: NullableBooleanType, location_name: "DryRun"))
+    DecryptRequest.add_member(:dry_run_modifiers, Shapes::ShapeRef.new(shape: DryRunModifierList, location_name: "DryRunModifiers"))
     DecryptRequest.struct_class = Types::DecryptRequest
 
     DecryptResponse.add_member(:key_id, Shapes::ShapeRef.new(shape: KeyIdType, location_name: "KeyId"))
     DecryptResponse.add_member(:plaintext, Shapes::ShapeRef.new(shape: PlaintextType, location_name: "Plaintext"))
     DecryptResponse.add_member(:encryption_algorithm, Shapes::ShapeRef.new(shape: EncryptionAlgorithmSpec, location_name: "EncryptionAlgorithm"))
     DecryptResponse.add_member(:ciphertext_for_recipient, Shapes::ShapeRef.new(shape: CiphertextType, location_name: "CiphertextForRecipient"))
+    DecryptResponse.add_member(:key_material_id, Shapes::ShapeRef.new(shape: BackingKeyIdType, location_name: "KeyMaterialId"))
     DecryptResponse.struct_class = Types::DecryptResponse
 
     DeleteAliasRequest.add_member(:alias_name, Shapes::ShapeRef.new(shape: AliasNameType, required: true, location_name: "AliasName"))
@@ -386,7 +410,12 @@ module Aws::KMS
     DeleteCustomKeyStoreResponse.struct_class = Types::DeleteCustomKeyStoreResponse
 
     DeleteImportedKeyMaterialRequest.add_member(:key_id, Shapes::ShapeRef.new(shape: KeyIdType, required: true, location_name: "KeyId"))
+    DeleteImportedKeyMaterialRequest.add_member(:key_material_id, Shapes::ShapeRef.new(shape: BackingKeyIdType, location_name: "KeyMaterialId"))
     DeleteImportedKeyMaterialRequest.struct_class = Types::DeleteImportedKeyMaterialRequest
+
+    DeleteImportedKeyMaterialResponse.add_member(:key_id, Shapes::ShapeRef.new(shape: KeyIdType, location_name: "KeyId"))
+    DeleteImportedKeyMaterialResponse.add_member(:key_material_id, Shapes::ShapeRef.new(shape: BackingKeyIdResponseType, location_name: "KeyMaterialId"))
+    DeleteImportedKeyMaterialResponse.struct_class = Types::DeleteImportedKeyMaterialResponse
 
     DependencyTimeoutException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessageType, location_name: "message"))
     DependencyTimeoutException.struct_class = Types::DependencyTimeoutException
@@ -438,6 +467,8 @@ module Aws::KMS
 
     DisconnectCustomKeyStoreResponse.struct_class = Types::DisconnectCustomKeyStoreResponse
 
+    DryRunModifierList.member = Shapes::ShapeRef.new(shape: DryRunModifierType)
+
     DryRunOperationException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessageType, location_name: "message"))
     DryRunOperationException.struct_class = Types::DryRunOperationException
 
@@ -483,6 +514,7 @@ module Aws::KMS
     GenerateDataKeyPairResponse.add_member(:key_id, Shapes::ShapeRef.new(shape: KeyIdType, location_name: "KeyId"))
     GenerateDataKeyPairResponse.add_member(:key_pair_spec, Shapes::ShapeRef.new(shape: DataKeyPairSpec, location_name: "KeyPairSpec"))
     GenerateDataKeyPairResponse.add_member(:ciphertext_for_recipient, Shapes::ShapeRef.new(shape: CiphertextType, location_name: "CiphertextForRecipient"))
+    GenerateDataKeyPairResponse.add_member(:key_material_id, Shapes::ShapeRef.new(shape: BackingKeyIdType, location_name: "KeyMaterialId"))
     GenerateDataKeyPairResponse.struct_class = Types::GenerateDataKeyPairResponse
 
     GenerateDataKeyPairWithoutPlaintextRequest.add_member(:encryption_context, Shapes::ShapeRef.new(shape: EncryptionContextType, location_name: "EncryptionContext"))
@@ -496,6 +528,7 @@ module Aws::KMS
     GenerateDataKeyPairWithoutPlaintextResponse.add_member(:public_key, Shapes::ShapeRef.new(shape: PublicKeyType, location_name: "PublicKey"))
     GenerateDataKeyPairWithoutPlaintextResponse.add_member(:key_id, Shapes::ShapeRef.new(shape: KeyIdType, location_name: "KeyId"))
     GenerateDataKeyPairWithoutPlaintextResponse.add_member(:key_pair_spec, Shapes::ShapeRef.new(shape: DataKeyPairSpec, location_name: "KeyPairSpec"))
+    GenerateDataKeyPairWithoutPlaintextResponse.add_member(:key_material_id, Shapes::ShapeRef.new(shape: BackingKeyIdType, location_name: "KeyMaterialId"))
     GenerateDataKeyPairWithoutPlaintextResponse.struct_class = Types::GenerateDataKeyPairWithoutPlaintextResponse
 
     GenerateDataKeyRequest.add_member(:key_id, Shapes::ShapeRef.new(shape: KeyIdType, required: true, location_name: "KeyId"))
@@ -511,6 +544,7 @@ module Aws::KMS
     GenerateDataKeyResponse.add_member(:plaintext, Shapes::ShapeRef.new(shape: PlaintextType, location_name: "Plaintext"))
     GenerateDataKeyResponse.add_member(:key_id, Shapes::ShapeRef.new(shape: KeyIdType, location_name: "KeyId"))
     GenerateDataKeyResponse.add_member(:ciphertext_for_recipient, Shapes::ShapeRef.new(shape: CiphertextType, location_name: "CiphertextForRecipient"))
+    GenerateDataKeyResponse.add_member(:key_material_id, Shapes::ShapeRef.new(shape: BackingKeyIdType, location_name: "KeyMaterialId"))
     GenerateDataKeyResponse.struct_class = Types::GenerateDataKeyResponse
 
     GenerateDataKeyWithoutPlaintextRequest.add_member(:key_id, Shapes::ShapeRef.new(shape: KeyIdType, required: true, location_name: "KeyId"))
@@ -523,6 +557,7 @@ module Aws::KMS
 
     GenerateDataKeyWithoutPlaintextResponse.add_member(:ciphertext_blob, Shapes::ShapeRef.new(shape: CiphertextType, location_name: "CiphertextBlob"))
     GenerateDataKeyWithoutPlaintextResponse.add_member(:key_id, Shapes::ShapeRef.new(shape: KeyIdType, location_name: "KeyId"))
+    GenerateDataKeyWithoutPlaintextResponse.add_member(:key_material_id, Shapes::ShapeRef.new(shape: BackingKeyIdType, location_name: "KeyMaterialId"))
     GenerateDataKeyWithoutPlaintextResponse.struct_class = Types::GenerateDataKeyWithoutPlaintextResponse
 
     GenerateMacRequest.add_member(:message, Shapes::ShapeRef.new(shape: PlaintextType, required: true, location_name: "Message"))
@@ -545,6 +580,15 @@ module Aws::KMS
     GenerateRandomResponse.add_member(:plaintext, Shapes::ShapeRef.new(shape: PlaintextType, location_name: "Plaintext"))
     GenerateRandomResponse.add_member(:ciphertext_for_recipient, Shapes::ShapeRef.new(shape: CiphertextType, location_name: "CiphertextForRecipient"))
     GenerateRandomResponse.struct_class = Types::GenerateRandomResponse
+
+    GetKeyLastUsageRequest.add_member(:key_id, Shapes::ShapeRef.new(shape: KeyIdType, required: true, location_name: "KeyId"))
+    GetKeyLastUsageRequest.struct_class = Types::GetKeyLastUsageRequest
+
+    GetKeyLastUsageResponse.add_member(:key_id, Shapes::ShapeRef.new(shape: KeyIdType, location_name: "KeyId"))
+    GetKeyLastUsageResponse.add_member(:key_last_usage, Shapes::ShapeRef.new(shape: KeyLastUsageData, location_name: "KeyLastUsage"))
+    GetKeyLastUsageResponse.add_member(:tracking_start_date, Shapes::ShapeRef.new(shape: DateType, location_name: "TrackingStartDate"))
+    GetKeyLastUsageResponse.add_member(:key_creation_date, Shapes::ShapeRef.new(shape: DateType, location_name: "KeyCreationDate"))
+    GetKeyLastUsageResponse.struct_class = Types::GetKeyLastUsageResponse
 
     GetKeyPolicyRequest.add_member(:key_id, Shapes::ShapeRef.new(shape: KeyIdType, required: true, location_name: "KeyId"))
     GetKeyPolicyRequest.add_member(:policy_name, Shapes::ShapeRef.new(shape: PolicyNameType, location_name: "PolicyName"))
@@ -581,7 +625,7 @@ module Aws::KMS
 
     GetPublicKeyResponse.add_member(:key_id, Shapes::ShapeRef.new(shape: KeyIdType, location_name: "KeyId"))
     GetPublicKeyResponse.add_member(:public_key, Shapes::ShapeRef.new(shape: PublicKeyType, location_name: "PublicKey"))
-    GetPublicKeyResponse.add_member(:customer_master_key_spec, Shapes::ShapeRef.new(shape: CustomerMasterKeySpec, deprecated: true, location_name: "CustomerMasterKeySpec", metadata: {"deprecatedMessage"=>"This field has been deprecated. Instead, use the KeySpec field."}))
+    GetPublicKeyResponse.add_member(:customer_master_key_spec, Shapes::ShapeRef.new(shape: CustomerMasterKeySpec, deprecated: true, location_name: "CustomerMasterKeySpec", metadata: {"deprecatedMessage" => "This field has been deprecated. Instead, use the KeySpec field."}))
     GetPublicKeyResponse.add_member(:key_spec, Shapes::ShapeRef.new(shape: KeySpec, location_name: "KeySpec"))
     GetPublicKeyResponse.add_member(:key_usage, Shapes::ShapeRef.new(shape: KeyUsageType, location_name: "KeyUsage"))
     GetPublicKeyResponse.add_member(:encryption_algorithms, Shapes::ShapeRef.new(shape: EncryptionAlgorithmSpecList, location_name: "EncryptionAlgorithms"))
@@ -591,6 +635,7 @@ module Aws::KMS
 
     GrantConstraints.add_member(:encryption_context_subset, Shapes::ShapeRef.new(shape: EncryptionContextType, location_name: "EncryptionContextSubset"))
     GrantConstraints.add_member(:encryption_context_equals, Shapes::ShapeRef.new(shape: EncryptionContextType, location_name: "EncryptionContextEquals"))
+    GrantConstraints.add_member(:source_arn, Shapes::ShapeRef.new(shape: GrantConstraintSourceArnType, location_name: "SourceArn"))
     GrantConstraints.struct_class = Types::GrantConstraints
 
     GrantList.member = Shapes::ShapeRef.new(shape: GrantListEntry)
@@ -604,6 +649,8 @@ module Aws::KMS
     GrantListEntry.add_member(:issuing_account, Shapes::ShapeRef.new(shape: PrincipalIdType, location_name: "IssuingAccount"))
     GrantListEntry.add_member(:operations, Shapes::ShapeRef.new(shape: GrantOperationList, location_name: "Operations"))
     GrantListEntry.add_member(:constraints, Shapes::ShapeRef.new(shape: GrantConstraints, location_name: "Constraints"))
+    GrantListEntry.add_member(:grantee_service_principal, Shapes::ShapeRef.new(shape: ServicePrincipalType, location_name: "GranteeServicePrincipal"))
+    GrantListEntry.add_member(:retiring_service_principal, Shapes::ShapeRef.new(shape: ServicePrincipalType, location_name: "RetiringServicePrincipal"))
     GrantListEntry.struct_class = Types::GrantListEntry
 
     GrantOperationList.member = Shapes::ShapeRef.new(shape: GrantOperation)
@@ -615,8 +662,13 @@ module Aws::KMS
     ImportKeyMaterialRequest.add_member(:encrypted_key_material, Shapes::ShapeRef.new(shape: CiphertextType, required: true, location_name: "EncryptedKeyMaterial"))
     ImportKeyMaterialRequest.add_member(:valid_to, Shapes::ShapeRef.new(shape: DateType, location_name: "ValidTo"))
     ImportKeyMaterialRequest.add_member(:expiration_model, Shapes::ShapeRef.new(shape: ExpirationModelType, location_name: "ExpirationModel"))
+    ImportKeyMaterialRequest.add_member(:import_type, Shapes::ShapeRef.new(shape: ImportType, location_name: "ImportType"))
+    ImportKeyMaterialRequest.add_member(:key_material_description, Shapes::ShapeRef.new(shape: KeyMaterialDescriptionType, location_name: "KeyMaterialDescription"))
+    ImportKeyMaterialRequest.add_member(:key_material_id, Shapes::ShapeRef.new(shape: BackingKeyIdType, location_name: "KeyMaterialId"))
     ImportKeyMaterialRequest.struct_class = Types::ImportKeyMaterialRequest
 
+    ImportKeyMaterialResponse.add_member(:key_id, Shapes::ShapeRef.new(shape: KeyIdType, location_name: "KeyId"))
+    ImportKeyMaterialResponse.add_member(:key_material_id, Shapes::ShapeRef.new(shape: BackingKeyIdType, location_name: "KeyMaterialId"))
     ImportKeyMaterialResponse.struct_class = Types::ImportKeyMaterialResponse
 
     IncorrectKeyException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessageType, location_name: "message"))
@@ -666,6 +718,12 @@ module Aws::KMS
 
     KeyAgreementAlgorithmSpecList.member = Shapes::ShapeRef.new(shape: KeyAgreementAlgorithmSpec)
 
+    KeyLastUsageData.add_member(:operation, Shapes::ShapeRef.new(shape: KeyLastUsageTrackingOperation, location_name: "Operation"))
+    KeyLastUsageData.add_member(:timestamp, Shapes::ShapeRef.new(shape: DateType, location_name: "Timestamp"))
+    KeyLastUsageData.add_member(:cloud_trail_event_id, Shapes::ShapeRef.new(shape: CloudTrailEventIdType, location_name: "CloudTrailEventId"))
+    KeyLastUsageData.add_member(:kms_request_id, Shapes::ShapeRef.new(shape: KmsRequestIdType, location_name: "KmsRequestId"))
+    KeyLastUsageData.struct_class = Types::KeyLastUsageData
+
     KeyList.member = Shapes::ShapeRef.new(shape: KeyListEntry)
 
     KeyListEntry.add_member(:key_id, Shapes::ShapeRef.new(shape: KeyIdType, location_name: "KeyId"))
@@ -687,7 +745,7 @@ module Aws::KMS
     KeyMetadata.add_member(:cloud_hsm_cluster_id, Shapes::ShapeRef.new(shape: CloudHsmClusterIdType, location_name: "CloudHsmClusterId"))
     KeyMetadata.add_member(:expiration_model, Shapes::ShapeRef.new(shape: ExpirationModelType, location_name: "ExpirationModel"))
     KeyMetadata.add_member(:key_manager, Shapes::ShapeRef.new(shape: KeyManagerType, location_name: "KeyManager"))
-    KeyMetadata.add_member(:customer_master_key_spec, Shapes::ShapeRef.new(shape: CustomerMasterKeySpec, deprecated: true, location_name: "CustomerMasterKeySpec", metadata: {"deprecatedMessage"=>"This field has been deprecated. Instead, use the KeySpec field."}))
+    KeyMetadata.add_member(:customer_master_key_spec, Shapes::ShapeRef.new(shape: CustomerMasterKeySpec, deprecated: true, location_name: "CustomerMasterKeySpec", metadata: {"deprecatedMessage" => "This field has been deprecated. Instead, use the KeySpec field."}))
     KeyMetadata.add_member(:key_spec, Shapes::ShapeRef.new(shape: KeySpec, location_name: "KeySpec"))
     KeyMetadata.add_member(:encryption_algorithms, Shapes::ShapeRef.new(shape: EncryptionAlgorithmSpecList, location_name: "EncryptionAlgorithms"))
     KeyMetadata.add_member(:signing_algorithms, Shapes::ShapeRef.new(shape: SigningAlgorithmSpecList, location_name: "SigningAlgorithms"))
@@ -697,6 +755,7 @@ module Aws::KMS
     KeyMetadata.add_member(:pending_deletion_window_in_days, Shapes::ShapeRef.new(shape: PendingWindowInDaysType, location_name: "PendingDeletionWindowInDays"))
     KeyMetadata.add_member(:mac_algorithms, Shapes::ShapeRef.new(shape: MacAlgorithmSpecList, location_name: "MacAlgorithms"))
     KeyMetadata.add_member(:xks_key_configuration, Shapes::ShapeRef.new(shape: XksKeyConfigurationType, location_name: "XksKeyConfiguration"))
+    KeyMetadata.add_member(:current_key_material_id, Shapes::ShapeRef.new(shape: BackingKeyIdType, location_name: "CurrentKeyMaterialId"))
     KeyMetadata.struct_class = Types::KeyMetadata
 
     KeyUnavailableException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessageType, location_name: "message"))
@@ -720,6 +779,7 @@ module Aws::KMS
     ListGrantsRequest.add_member(:key_id, Shapes::ShapeRef.new(shape: KeyIdType, required: true, location_name: "KeyId"))
     ListGrantsRequest.add_member(:grant_id, Shapes::ShapeRef.new(shape: GrantIdType, location_name: "GrantId"))
     ListGrantsRequest.add_member(:grantee_principal, Shapes::ShapeRef.new(shape: PrincipalIdType, location_name: "GranteePrincipal"))
+    ListGrantsRequest.add_member(:grantee_service_principal, Shapes::ShapeRef.new(shape: ServicePrincipalType, location_name: "GranteeServicePrincipal"))
     ListGrantsRequest.struct_class = Types::ListGrantsRequest
 
     ListGrantsResponse.add_member(:grants, Shapes::ShapeRef.new(shape: GrantList, location_name: "Grants"))
@@ -738,6 +798,7 @@ module Aws::KMS
     ListKeyPoliciesResponse.struct_class = Types::ListKeyPoliciesResponse
 
     ListKeyRotationsRequest.add_member(:key_id, Shapes::ShapeRef.new(shape: KeyIdType, required: true, location_name: "KeyId"))
+    ListKeyRotationsRequest.add_member(:include_key_material, Shapes::ShapeRef.new(shape: IncludeKeyMaterial, location_name: "IncludeKeyMaterial"))
     ListKeyRotationsRequest.add_member(:limit, Shapes::ShapeRef.new(shape: LimitType, location_name: "Limit"))
     ListKeyRotationsRequest.add_member(:marker, Shapes::ShapeRef.new(shape: MarkerType, location_name: "Marker"))
     ListKeyRotationsRequest.struct_class = Types::ListKeyRotationsRequest
@@ -768,7 +829,8 @@ module Aws::KMS
 
     ListRetirableGrantsRequest.add_member(:limit, Shapes::ShapeRef.new(shape: LimitType, location_name: "Limit"))
     ListRetirableGrantsRequest.add_member(:marker, Shapes::ShapeRef.new(shape: MarkerType, location_name: "Marker"))
-    ListRetirableGrantsRequest.add_member(:retiring_principal, Shapes::ShapeRef.new(shape: PrincipalIdType, required: true, location_name: "RetiringPrincipal"))
+    ListRetirableGrantsRequest.add_member(:retiring_principal, Shapes::ShapeRef.new(shape: PrincipalIdType, location_name: "RetiringPrincipal"))
+    ListRetirableGrantsRequest.add_member(:retiring_service_principal, Shapes::ShapeRef.new(shape: ServicePrincipalType, location_name: "RetiringServicePrincipal"))
     ListRetirableGrantsRequest.struct_class = Types::ListRetirableGrantsRequest
 
     MacAlgorithmSpecList.member = Shapes::ShapeRef.new(shape: MacAlgorithmSpec)
@@ -798,7 +860,7 @@ module Aws::KMS
     PutKeyPolicyRequest.add_member(:bypass_policy_lockout_safety_check, Shapes::ShapeRef.new(shape: BooleanType, location_name: "BypassPolicyLockoutSafetyCheck"))
     PutKeyPolicyRequest.struct_class = Types::PutKeyPolicyRequest
 
-    ReEncryptRequest.add_member(:ciphertext_blob, Shapes::ShapeRef.new(shape: CiphertextType, required: true, location_name: "CiphertextBlob"))
+    ReEncryptRequest.add_member(:ciphertext_blob, Shapes::ShapeRef.new(shape: CiphertextType, location_name: "CiphertextBlob"))
     ReEncryptRequest.add_member(:source_encryption_context, Shapes::ShapeRef.new(shape: EncryptionContextType, location_name: "SourceEncryptionContext"))
     ReEncryptRequest.add_member(:source_key_id, Shapes::ShapeRef.new(shape: KeyIdType, location_name: "SourceKeyId"))
     ReEncryptRequest.add_member(:destination_key_id, Shapes::ShapeRef.new(shape: KeyIdType, required: true, location_name: "DestinationKeyId"))
@@ -807,6 +869,7 @@ module Aws::KMS
     ReEncryptRequest.add_member(:destination_encryption_algorithm, Shapes::ShapeRef.new(shape: EncryptionAlgorithmSpec, location_name: "DestinationEncryptionAlgorithm"))
     ReEncryptRequest.add_member(:grant_tokens, Shapes::ShapeRef.new(shape: GrantTokenList, location_name: "GrantTokens"))
     ReEncryptRequest.add_member(:dry_run, Shapes::ShapeRef.new(shape: NullableBooleanType, location_name: "DryRun"))
+    ReEncryptRequest.add_member(:dry_run_modifiers, Shapes::ShapeRef.new(shape: DryRunModifierList, location_name: "DryRunModifiers"))
     ReEncryptRequest.struct_class = Types::ReEncryptRequest
 
     ReEncryptResponse.add_member(:ciphertext_blob, Shapes::ShapeRef.new(shape: CiphertextType, location_name: "CiphertextBlob"))
@@ -814,6 +877,8 @@ module Aws::KMS
     ReEncryptResponse.add_member(:key_id, Shapes::ShapeRef.new(shape: KeyIdType, location_name: "KeyId"))
     ReEncryptResponse.add_member(:source_encryption_algorithm, Shapes::ShapeRef.new(shape: EncryptionAlgorithmSpec, location_name: "SourceEncryptionAlgorithm"))
     ReEncryptResponse.add_member(:destination_encryption_algorithm, Shapes::ShapeRef.new(shape: EncryptionAlgorithmSpec, location_name: "DestinationEncryptionAlgorithm"))
+    ReEncryptResponse.add_member(:source_key_material_id, Shapes::ShapeRef.new(shape: BackingKeyIdType, location_name: "SourceKeyMaterialId"))
+    ReEncryptResponse.add_member(:destination_key_material_id, Shapes::ShapeRef.new(shape: BackingKeyIdType, location_name: "DestinationKeyMaterialId"))
     ReEncryptResponse.struct_class = Types::ReEncryptResponse
 
     RecipientInfo.add_member(:key_encryption_algorithm, Shapes::ShapeRef.new(shape: KeyEncryptionMechanism, location_name: "KeyEncryptionAlgorithm"))
@@ -853,6 +918,12 @@ module Aws::KMS
     RotationsList.member = Shapes::ShapeRef.new(shape: RotationsListEntry)
 
     RotationsListEntry.add_member(:key_id, Shapes::ShapeRef.new(shape: KeyIdType, location_name: "KeyId"))
+    RotationsListEntry.add_member(:key_material_id, Shapes::ShapeRef.new(shape: BackingKeyIdType, location_name: "KeyMaterialId"))
+    RotationsListEntry.add_member(:key_material_description, Shapes::ShapeRef.new(shape: KeyMaterialDescriptionType, location_name: "KeyMaterialDescription"))
+    RotationsListEntry.add_member(:import_state, Shapes::ShapeRef.new(shape: ImportState, location_name: "ImportState"))
+    RotationsListEntry.add_member(:key_material_state, Shapes::ShapeRef.new(shape: KeyMaterialState, location_name: "KeyMaterialState"))
+    RotationsListEntry.add_member(:expiration_model, Shapes::ShapeRef.new(shape: ExpirationModelType, location_name: "ExpirationModel"))
+    RotationsListEntry.add_member(:valid_to, Shapes::ShapeRef.new(shape: DateType, location_name: "ValidTo"))
     RotationsListEntry.add_member(:rotation_date, Shapes::ShapeRef.new(shape: DateType, location_name: "RotationDate"))
     RotationsListEntry.add_member(:rotation_type, Shapes::ShapeRef.new(shape: RotationType, location_name: "RotationType"))
     RotationsListEntry.struct_class = Types::RotationsListEntry
@@ -915,6 +986,7 @@ module Aws::KMS
     UpdateCustomKeyStoreRequest.add_member(:xks_proxy_uri_endpoint, Shapes::ShapeRef.new(shape: XksProxyUriEndpointType, location_name: "XksProxyUriEndpoint"))
     UpdateCustomKeyStoreRequest.add_member(:xks_proxy_uri_path, Shapes::ShapeRef.new(shape: XksProxyUriPathType, location_name: "XksProxyUriPath"))
     UpdateCustomKeyStoreRequest.add_member(:xks_proxy_vpc_endpoint_service_name, Shapes::ShapeRef.new(shape: XksProxyVpcEndpointServiceNameType, location_name: "XksProxyVpcEndpointServiceName"))
+    UpdateCustomKeyStoreRequest.add_member(:xks_proxy_vpc_endpoint_service_owner, Shapes::ShapeRef.new(shape: AccountIdType, location_name: "XksProxyVpcEndpointServiceOwner"))
     UpdateCustomKeyStoreRequest.add_member(:xks_proxy_authentication_credential, Shapes::ShapeRef.new(shape: XksProxyAuthenticationCredentialType, location_name: "XksProxyAuthenticationCredential"))
     UpdateCustomKeyStoreRequest.add_member(:xks_proxy_connectivity, Shapes::ShapeRef.new(shape: XksProxyConnectivityType, location_name: "XksProxyConnectivity"))
     UpdateCustomKeyStoreRequest.struct_class = Types::UpdateCustomKeyStoreRequest
@@ -977,6 +1049,7 @@ module Aws::KMS
     XksProxyConfigurationType.add_member(:uri_endpoint, Shapes::ShapeRef.new(shape: XksProxyUriEndpointType, location_name: "UriEndpoint"))
     XksProxyConfigurationType.add_member(:uri_path, Shapes::ShapeRef.new(shape: XksProxyUriPathType, location_name: "UriPath"))
     XksProxyConfigurationType.add_member(:vpc_endpoint_service_name, Shapes::ShapeRef.new(shape: XksProxyVpcEndpointServiceNameType, location_name: "VpcEndpointServiceName"))
+    XksProxyConfigurationType.add_member(:vpc_endpoint_service_owner, Shapes::ShapeRef.new(shape: AccountIdType, location_name: "VpcEndpointServiceOwner"))
     XksProxyConfigurationType.struct_class = Types::XksProxyConfigurationType
 
     XksProxyIncorrectAuthenticationCredentialException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessageType, location_name: "message"))
@@ -1179,7 +1252,7 @@ module Aws::KMS
         o.http_method = "POST"
         o.http_request_uri = "/"
         o.input = Shapes::ShapeRef.new(shape: DeleteImportedKeyMaterialRequest)
-        o.output = Shapes::ShapeRef.new(shape: Shapes::StructureShape.new(struct_class: Aws::EmptyStructure))
+        o.output = Shapes::ShapeRef.new(shape: DeleteImportedKeyMaterialResponse)
         o.errors << Shapes::ShapeRef.new(shape: InvalidArnException)
         o.errors << Shapes::ShapeRef.new(shape: UnsupportedOperationException)
         o.errors << Shapes::ShapeRef.new(shape: DependencyTimeoutException)
@@ -1417,6 +1490,18 @@ module Aws::KMS
         o.errors << Shapes::ShapeRef.new(shape: UnsupportedOperationException)
         o.errors << Shapes::ShapeRef.new(shape: CustomKeyStoreNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: CustomKeyStoreInvalidStateException)
+      end)
+
+      api.add_operation(:get_key_last_usage, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetKeyLastUsage"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: GetKeyLastUsageRequest)
+        o.output = Shapes::ShapeRef.new(shape: GetKeyLastUsageResponse)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidArnException)
+        o.errors << Shapes::ShapeRef.new(shape: DependencyTimeoutException)
+        o.errors << Shapes::ShapeRef.new(shape: KMSInternalException)
       end)
 
       api.add_operation(:get_key_policy, Seahorse::Model::Operation.new.tap do |o|

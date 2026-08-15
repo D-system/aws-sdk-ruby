@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -98,7 +99,7 @@ module Aws
                                    {
                                      agent_id: ::String,
                                      force: bool?
-                                   },
+                                   }
                                  ]
                                ) -> _BatchDeleteAgentsResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchDeleteAgentsResponseSuccess
@@ -136,7 +137,7 @@ module Aws
                            {
                              key: ::String,
                              value: ::String
-                           },
+                           }
                          ]
                        ) -> _CreateTagsResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateTagsResponseSuccess
@@ -160,7 +161,7 @@ module Aws
                            {
                              key: ::String,
                              value: ::String
-                           },
+                           }
                          ]
                        ) -> _DeleteTagsResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteTagsResponseSuccess
@@ -178,7 +179,7 @@ module Aws
                                  name: ::String,
                                  values: Array[::String],
                                  condition: ::String
-                               },
+                               }
                              ],
                              ?max_results: ::Integer,
                              ?next_token: ::String
@@ -244,7 +245,7 @@ module Aws
                                        name: ::String,
                                        values: Array[::String],
                                        condition: ::String
-                                     },
+                                     }
                                    ],
                                    ?max_results: ::Integer,
                                    ?next_token: ::String
@@ -262,7 +263,7 @@ module Aws
                                      {
                                        name: ("IMPORT_TASK_ID" | "STATUS" | "NAME" | "FILE_CLASSIFICATION")?,
                                        values: Array[::String]?
-                                     },
+                                     }
                                    ],
                                    ?max_results: ::Integer,
                                    ?next_token: ::String
@@ -280,7 +281,7 @@ module Aws
                              {
                                name: ::String,
                                values: Array[::String]
-                             },
+                             }
                            ],
                            ?max_results: ::Integer,
                            ?next_token: ::String
@@ -334,7 +335,7 @@ module Aws
                                      name: ::String,
                                      values: Array[::String],
                                      condition: ::String
-                                   },
+                                   }
                                  ],
                                  ?max_results: ::Integer,
                                  ?next_token: ::String,
@@ -342,7 +343,7 @@ module Aws
                                    {
                                      field_name: ::String,
                                      sort_order: ("ASC" | "DESC")?
-                                   },
+                                   }
                                  ]
                                ) -> _ListConfigurationsResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListConfigurationsResponseSuccess
@@ -409,7 +410,7 @@ module Aws
                                    name: ::String,
                                    values: Array[::String],
                                    condition: ::String
-                                 },
+                                 }
                                ],
                                ?start_time: ::Time,
                                ?end_time: ::Time,

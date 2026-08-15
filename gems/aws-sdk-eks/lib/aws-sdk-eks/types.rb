@@ -252,17 +252,22 @@ module Aws::EKS
     #   @return [String]
     #
     # @!attribute [rw] pod_identity_associations
-    #   An array of Pod Identity Assocations owned by the Addon. Each EKS
-    #   Pod Identity association maps a role to a service account in a
-    #   namespace in the cluster.
+    #   An array of EKS Pod Identity associations owned by the add-on. Each
+    #   association maps a role to a service account in a namespace in the
+    #   cluster.
     #
     #   For more information, see [Attach an IAM Role to an Amazon EKS
-    #   add-on using Pod Identity][1] in the *Amazon EKS User Guide*.
+    #   add-on using EKS Pod Identity][1] in the *Amazon EKS User Guide*.
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/eks/latest/userguide/add-ons-iam.html
     #   @return [Array<String>]
+    #
+    # @!attribute [rw] namespace_config
+    #   The namespace configuration for the addon. This specifies the
+    #   Kubernetes namespace where the addon is installed.
+    #   @return [Types::AddonNamespaceConfigResponse]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/Addon AWS API Documentation
     #
@@ -281,7 +286,8 @@ module Aws::EKS
       :owner,
       :marketplace_information,
       :configuration_values,
-      :pod_identity_associations)
+      :pod_identity_associations,
+      :namespace_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -350,6 +356,11 @@ module Aws::EKS
     #   Marketplace.
     #   @return [Types::MarketplaceInformation]
     #
+    # @!attribute [rw] default_namespace
+    #   The default Kubernetes namespace where this addon is typically
+    #   installed if no custom namespace is specified.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/AddonInfo AWS API Documentation
     #
     class AddonInfo < Struct.new(
@@ -358,7 +369,8 @@ module Aws::EKS
       :addon_versions,
       :publisher,
       :owner,
-      :marketplace_information)
+      :marketplace_information,
+      :default_namespace)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -388,13 +400,44 @@ module Aws::EKS
       include Aws::Structure
     end
 
-    # A type of Pod Identity Association owned by an Amazon EKS Add-on.
+    # The namespace configuration request object for specifying a custom
+    # namespace when creating an addon.
     #
-    # Each EKS Pod Identity Association maps a role to a service account in
-    # a namespace in the cluster.
+    # @!attribute [rw] namespace
+    #   The name of the Kubernetes namespace to install the addon in. Must
+    #   be a valid RFC 1123 DNS label.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/AddonNamespaceConfigRequest AWS API Documentation
+    #
+    class AddonNamespaceConfigRequest < Struct.new(
+      :namespace)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The namespace configuration response object containing information
+    # about the namespace where an addon is installed.
+    #
+    # @!attribute [rw] namespace
+    #   The name of the Kubernetes namespace where the addon is installed.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/AddonNamespaceConfigResponse AWS API Documentation
+    #
+    class AddonNamespaceConfigResponse < Struct.new(
+      :namespace)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A type of EKS Pod Identity association owned by an Amazon EKS add-on.
+    #
+    # Each association maps a role to a service account in a namespace in
+    # the cluster.
     #
     # For more information, see [Attach an IAM Role to an Amazon EKS add-on
-    # using Pod Identity][1] in the *Amazon EKS User Guide*.
+    # using EKS Pod Identity][1] in the *Amazon EKS User Guide*.
     #
     #
     #
@@ -417,14 +460,14 @@ module Aws::EKS
       include Aws::Structure
     end
 
-    # Information about how to configure IAM for an Addon.
+    # Information about how to configure IAM for an add-on.
     #
     # @!attribute [rw] service_account
-    #   The Kubernetes Service Account name used by the addon.
+    #   The Kubernetes Service Account name used by the add-on.
     #   @return [String]
     #
     # @!attribute [rw] recommended_managed_policies
-    #   A suggested IAM Policy for the addon.
+    #   A suggested IAM Policy for the add-on.
     #   @return [Array<String>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/AddonPodIdentityConfiguration AWS API Documentation
@@ -447,7 +490,7 @@ module Aws::EKS
     #   @return [Array<String>]
     #
     # @!attribute [rw] compute_types
-    #   Indicates the compute type of the addon version.
+    #   Indicates the compute type of the add-on version.
     #   @return [Array<String>]
     #
     # @!attribute [rw] compatibilities
@@ -459,7 +502,7 @@ module Aws::EKS
     #   @return [Boolean]
     #
     # @!attribute [rw] requires_iam_permissions
-    #   Indicates if the Addon requires IAM Permissions to operate, such as
+    #   Indicates if the add-on requires IAM Permissions to operate, such as
     #   networking permissions.
     #   @return [Boolean]
     #
@@ -472,6 +515,225 @@ module Aws::EKS
       :compatibilities,
       :requires_configuration,
       :requires_iam_permissions)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A constraint specifying the allowed values for a parameter.
+    #
+    # @!attribute [rw] allowed_values
+    #   The list of allowed values.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/AllowedValuesConstraint AWS API Documentation
+    #
+    class AllowedValuesConstraint < Struct.new(
+      :allowed_values)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration for integrating Argo CD with IAM Identity CenterIAM;
+    # Identity Center. This allows you to use your organization's identity
+    # provider for authentication to Argo CD.
+    #
+    # @!attribute [rw] idc_instance_arn
+    #   The Amazon Resource Name (ARN) of the IAM Identity CenterIAM;
+    #   Identity Center instance to use for authentication.
+    #   @return [String]
+    #
+    # @!attribute [rw] idc_region
+    #   The Region where your IAM Identity CenterIAM; Identity Center
+    #   instance is located.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/ArgoCdAwsIdcConfigRequest AWS API Documentation
+    #
+    class ArgoCdAwsIdcConfigRequest < Struct.new(
+      :idc_instance_arn,
+      :idc_region)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The response object containing IAM Identity CenterIAM; Identity Center
+    # configuration details for an Argo CD capability.
+    #
+    # @!attribute [rw] idc_instance_arn
+    #   The Amazon Resource Name (ARN) of the IAM Identity CenterIAM;
+    #   Identity Center instance used for authentication.
+    #   @return [String]
+    #
+    # @!attribute [rw] idc_region
+    #   The Region where the IAM Identity CenterIAM; Identity Center
+    #   instance is located.
+    #   @return [String]
+    #
+    # @!attribute [rw] idc_managed_application_arn
+    #   The Amazon Resource Name (ARN) of the managed application created in
+    #   IAM Identity CenterIAM; Identity Center for this Argo CD capability.
+    #   This application is automatically created and managed by Amazon EKS.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/ArgoCdAwsIdcConfigResponse AWS API Documentation
+    #
+    class ArgoCdAwsIdcConfigResponse < Struct.new(
+      :idc_instance_arn,
+      :idc_region,
+      :idc_managed_application_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration settings for an Argo CD capability. This includes the
+    # Kubernetes namespace, IAM Identity CenterIAM; Identity Center
+    # integration, RBAC role mappings, and network access configuration.
+    #
+    # @!attribute [rw] namespace
+    #   The Kubernetes namespace where Argo CD resources will be created. If
+    #   not specified, the default namespace is used.
+    #   @return [String]
+    #
+    # @!attribute [rw] aws_idc
+    #   Configuration for IAM Identity CenterIAM; Identity Center
+    #   integration. When configured, users can authenticate to Argo CD
+    #   using their IAM Identity CenterIAM; Identity Center credentials.
+    #   @return [Types::ArgoCdAwsIdcConfigRequest]
+    #
+    # @!attribute [rw] rbac_role_mappings
+    #   A list of role mappings that define which IAM Identity CenterIAM;
+    #   Identity Center users or groups have which Argo CD roles. Each
+    #   mapping associates an Argo CD role (`ADMIN`, `EDITOR`, or `VIEWER`)
+    #   with one or more IAM Identity CenterIAM; Identity Center identities.
+    #   @return [Array<Types::ArgoCdRoleMapping>]
+    #
+    # @!attribute [rw] network_access
+    #   Configuration for network access to the Argo CD capability's
+    #   managed API server endpoint. By default, the Argo CD server is
+    #   accessible via a public endpoint. You can optionally specify one or
+    #   more VPC endpoint IDs to enable private connectivity from your VPCs.
+    #   When VPC endpoints are configured, public access is blocked and the
+    #   Argo CD server is only accessible through the specified VPC
+    #   endpoints.
+    #   @return [Types::ArgoCdNetworkAccessConfigRequest]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/ArgoCdConfigRequest AWS API Documentation
+    #
+    class ArgoCdConfigRequest < Struct.new(
+      :namespace,
+      :aws_idc,
+      :rbac_role_mappings,
+      :network_access)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The response object containing Argo CD configuration details,
+    # including the server URL that you use to access the Argo CD web
+    # interface and API.
+    #
+    # @!attribute [rw] namespace
+    #   The Kubernetes namespace where Argo CD resources are monitored by
+    #   your Argo CD Capability.
+    #   @return [String]
+    #
+    # @!attribute [rw] aws_idc
+    #   The IAM Identity CenterIAM; Identity Center integration
+    #   configuration.
+    #   @return [Types::ArgoCdAwsIdcConfigResponse]
+    #
+    # @!attribute [rw] rbac_role_mappings
+    #   The list of role mappings that define which IAM Identity CenterIAM;
+    #   Identity Center users or groups have which Argo CD roles.
+    #   @return [Array<Types::ArgoCdRoleMapping>]
+    #
+    # @!attribute [rw] network_access
+    #   The network access configuration for the Argo CD capability's
+    #   managed API server endpoint. If VPC endpoint IDs are specified,
+    #   public access is blocked and the Argo CD server is only accessible
+    #   through the specified VPC endpoints.
+    #   @return [Types::ArgoCdNetworkAccessConfigResponse]
+    #
+    # @!attribute [rw] server_url
+    #   The URL of the Argo CD server. Use this URL to access the Argo CD
+    #   web interface and API.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/ArgoCdConfigResponse AWS API Documentation
+    #
+    class ArgoCdConfigResponse < Struct.new(
+      :namespace,
+      :aws_idc,
+      :rbac_role_mappings,
+      :network_access,
+      :server_url)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration for network access to the Argo CD capability's managed
+    # API server endpoint. When VPC endpoint IDs are specified, public
+    # access is blocked and the Argo CD server is only accessible through
+    # the specified VPC endpoints.
+    #
+    # @!attribute [rw] vpce_ids
+    #   A list of VPC endpoint IDs to associate with the managed Argo CD API
+    #   server endpoint. Each VPC endpoint provides private connectivity
+    #   from a specific VPC to the Argo CD server. You can specify multiple
+    #   VPC endpoint IDs to enable access from multiple VPCs.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/ArgoCdNetworkAccessConfigRequest AWS API Documentation
+    #
+    class ArgoCdNetworkAccessConfigRequest < Struct.new(
+      :vpce_ids)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The response object containing network access configuration for the
+    # Argo CD capability's managed API server endpoint. If VPC endpoint IDs
+    # are present, public access is blocked and the Argo CD server is only
+    # accessible through the specified VPC endpoints.
+    #
+    # @!attribute [rw] vpce_ids
+    #   The list of VPC endpoint IDs associated with the managed Argo CD API
+    #   server endpoint. Each VPC endpoint provides private connectivity
+    #   from a specific VPC to the Argo CD server.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/ArgoCdNetworkAccessConfigResponse AWS API Documentation
+    #
+    class ArgoCdNetworkAccessConfigResponse < Struct.new(
+      :vpce_ids)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A mapping between an Argo CD role and IAM Identity CenterIAM; Identity
+    # Center identities. This defines which users or groups have specific
+    # permissions in Argo CD.
+    #
+    # @!attribute [rw] role
+    #   The Argo CD role to assign. Valid values are:
+    #
+    #   * `ADMIN` – Full administrative access to Argo CD.
+    #
+    #   * `EDITOR` – Edit access to Argo CD resources.
+    #
+    #   * `VIEWER` – Read-only access to Argo CD resources.
+    #   @return [String]
+    #
+    # @!attribute [rw] identities
+    #   A list of IAM Identity CenterIAM; Identity Center identities (users
+    #   or groups) that should be assigned this Argo CD role.
+    #   @return [Array<Types::SsoIdentity>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/ArgoCdRoleMapping AWS API Documentation
+    #
+    class ArgoCdRoleMapping < Struct.new(
+      :role,
+      :identities)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -704,6 +966,306 @@ module Aws::EKS
       include Aws::Structure
     end
 
+    # @!attribute [rw] name
+    #   The name of the Amazon EKS cluster associated with the update.
+    #   @return [String]
+    #
+    # @!attribute [rw] update_id
+    #   The ID of the update to cancel.
+    #   @return [String]
+    #
+    # @!attribute [rw] client_request_token
+    #   A unique, case-sensitive identifier that you provide to ensure the
+    #   idempotency of the request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/CancelUpdateRequest AWS API Documentation
+    #
+    class CancelUpdateRequest < Struct.new(
+      :name,
+      :update_id,
+      :client_request_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] update
+    #   The full description of the specified update.
+    #   @return [Types::Update]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/CancelUpdateResponse AWS API Documentation
+    #
+    class CancelUpdateResponse < Struct.new(
+      :update)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about the latest cancellation of an update to an
+    # Amazon EKS cluster.
+    #
+    # @!attribute [rw] status
+    #   The current status of the cancellation. Valid values are
+    #   `InProgress`, `Failed`, and `Successful`.
+    #   @return [String]
+    #
+    # @!attribute [rw] reason
+    #   A message providing additional details about the cancellation, such
+    #   as the reason for the cancellation or failure details.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/Cancellation AWS API Documentation
+    #
+    class Cancellation < Struct.new(
+      :status,
+      :reason)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # An object representing a managed capability in an Amazon EKS cluster.
+    # This includes all configuration, status, and health information for
+    # the capability.
+    #
+    # @!attribute [rw] capability_name
+    #   The unique name of the capability within the cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the capability.
+    #   @return [String]
+    #
+    # @!attribute [rw] cluster_name
+    #   The name of the Amazon EKS cluster that contains this capability.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The type of capability. Valid values are `ACK`, `ARGOCD`, or `KRO`.
+    #   @return [String]
+    #
+    # @!attribute [rw] role_arn
+    #   The Amazon Resource Name (ARN) of the IAM role that the capability
+    #   uses to interact with Amazon Web Services services.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the capability. Valid values include:
+    #
+    #   * `CREATING` – The capability is being created.
+    #
+    #   * `ACTIVE` – The capability is running and available.
+    #
+    #   * `UPDATING` – The capability is being updated.
+    #
+    #   * `DELETING` – The capability is being deleted.
+    #
+    #   * `CREATE_FAILED` – The capability creation failed.
+    #
+    #   * `UPDATE_FAILED` – The capability update failed.
+    #
+    #   * `DELETE_FAILED` – The capability deletion failed.
+    #   @return [String]
+    #
+    # @!attribute [rw] version
+    #   The version of the capability software that is currently running.
+    #   @return [String]
+    #
+    # @!attribute [rw] configuration
+    #   The configuration settings for the capability. The structure varies
+    #   depending on the capability type.
+    #   @return [Types::CapabilityConfigurationResponse]
+    #
+    # @!attribute [rw] tags
+    #   The metadata that you apply to a resource to help you categorize and
+    #   organize them. Each tag consists of a key and an optional value. You
+    #   define them.
+    #
+    #   The following basic restrictions apply to tags:
+    #
+    #   * Maximum number of tags per resource – 50
+    #
+    #   * For each resource, each tag key must be unique, and each tag key
+    #     can have only one value.
+    #
+    #   * Maximum key length – 128 Unicode characters in UTF-8
+    #
+    #   * Maximum value length – 256 Unicode characters in UTF-8
+    #
+    #   * If your tagging schema is used across multiple services and
+    #     resources, remember that other services may have restrictions on
+    #     allowed characters. Generally allowed characters are: letters,
+    #     numbers, and spaces representable in UTF-8, and the following
+    #     characters: + - = . \_ : / @.
+    #
+    #   * Tag keys and values are case-sensitive.
+    #
+    #   * Do not use `aws:`, `AWS:`, or any upper or lowercase combination
+    #     of such as a prefix for either keys or values as it is reserved
+    #     for Amazon Web Services use. You cannot edit or delete tag keys or
+    #     values with this prefix. Tags with this prefix do not count
+    #     against your tags per resource limit.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] health
+    #   Health information for the capability, including any issues that may
+    #   be affecting its operation.
+    #   @return [Types::CapabilityHealth]
+    #
+    # @!attribute [rw] created_at
+    #   The Unix epoch timestamp in seconds for when the capability was
+    #   created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] modified_at
+    #   The Unix epoch timestamp in seconds for when the capability was last
+    #   modified.
+    #   @return [Time]
+    #
+    # @!attribute [rw] delete_propagation_policy
+    #   The delete propagation policy for the capability. Currently, the
+    #   only supported value is `RETAIN`, which keeps all resources managed
+    #   by the capability when the capability is deleted.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/Capability AWS API Documentation
+    #
+    class Capability < Struct.new(
+      :capability_name,
+      :arn,
+      :cluster_name,
+      :type,
+      :role_arn,
+      :status,
+      :version,
+      :configuration,
+      :tags,
+      :health,
+      :created_at,
+      :modified_at,
+      :delete_propagation_policy)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration settings for a capability. The structure of this object
+    # varies depending on the capability type.
+    #
+    # @!attribute [rw] argo_cd
+    #   Configuration settings specific to Argo CD capabilities. This field
+    #   is only used when creating or updating an Argo CD capability.
+    #   @return [Types::ArgoCdConfigRequest]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/CapabilityConfigurationRequest AWS API Documentation
+    #
+    class CapabilityConfigurationRequest < Struct.new(
+      :argo_cd)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The response object containing capability configuration details.
+    #
+    # @!attribute [rw] argo_cd
+    #   Configuration settings for an Argo CD capability, including the
+    #   server URL and other Argo CD-specific settings.
+    #   @return [Types::ArgoCdConfigResponse]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/CapabilityConfigurationResponse AWS API Documentation
+    #
+    class CapabilityConfigurationResponse < Struct.new(
+      :argo_cd)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Health information for a capability, including any issues that may be
+    # affecting its operation.
+    #
+    # @!attribute [rw] issues
+    #   A list of issues affecting the capability. If this list is empty,
+    #   the capability is healthy.
+    #   @return [Array<Types::CapabilityIssue>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/CapabilityHealth AWS API Documentation
+    #
+    class CapabilityHealth < Struct.new(
+      :issues)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # An issue affecting a capability's health or operation.
+    #
+    # @!attribute [rw] code
+    #   A code identifying the type of issue. This can be used to
+    #   programmatically handle specific issue types.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   A human-readable message describing the issue and potential
+    #   remediation steps.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/CapabilityIssue AWS API Documentation
+    #
+    class CapabilityIssue < Struct.new(
+      :code,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A summary of a capability, containing basic information without the
+    # full configuration details. This is returned by the `ListCapabilities`
+    # operation.
+    #
+    # @!attribute [rw] capability_name
+    #   The unique name of the capability within the cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the capability.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The type of capability. Valid values are `ACK`, `ARGOCD`, or `KRO`.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the capability.
+    #   @return [String]
+    #
+    # @!attribute [rw] version
+    #   The version of the capability software that is currently running.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_at
+    #   The Unix epoch timestamp in seconds for when the capability was
+    #   created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] modified_at
+    #   The Unix epoch timestamp in seconds for when the capability was last
+    #   modified.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/CapabilitySummary AWS API Documentation
+    #
+    class CapabilitySummary < Struct.new(
+      :capability_name,
+      :arn,
+      :type,
+      :status,
+      :version,
+      :created_at,
+      :modified_at)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # An object representing the `certificate-authority-data` for your
     # cluster.
     #
@@ -927,8 +1489,8 @@ module Aws::EKS
     #   @return [Types::ZonalShiftConfigResponse]
     #
     # @!attribute [rw] remote_network_config
-    #   The configuration in the cluster for EKS Hybrid Nodes. You can't
-    #   change or update this configuration after the cluster is created.
+    #   The configuration in the cluster for EKS Hybrid Nodes. You can add,
+    #   change, or remove this configuration after the cluster is created.
     #   @return [Types::RemoteNetworkConfigResponse]
     #
     # @!attribute [rw] compute_config
@@ -948,6 +1510,31 @@ module Aws::EKS
     #   Services account. For more information, see EKS Auto Mode block
     #   storage capability in the *Amazon EKS User Guide*.
     #   @return [Types::StorageConfigResponse]
+    #
+    # @!attribute [rw] deletion_protection
+    #   The current deletion protection setting for the cluster. When
+    #   `true`, deletion protection is enabled and the cluster cannot be
+    #   deleted until protection is disabled. When `false`, the cluster can
+    #   be deleted normally. This setting only applies to clusters in an
+    #   active state.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] control_plane_scaling_config
+    #   The control plane scaling tier configuration. For more information,
+    #   see EKS Provisioned Control Plane in the Amazon EKS User Guide.
+    #   @return [Types::ControlPlaneScalingConfig]
+    #
+    # @!attribute [rw] kube_api_server_config
+    #   The Kubernetes API server configuration for the cluster.
+    #   @return [Types::KubeApiServerConfigResponse]
+    #
+    # @!attribute [rw] kube_scheduler_config
+    #   The Kubernetes scheduler configuration for the cluster.
+    #   @return [Types::KubeSchedulerConfigResponse]
+    #
+    # @!attribute [rw] kube_controller_manager_config
+    #   The Kubernetes controller manager configuration for the cluster.
+    #   @return [Types::KubeControllerManagerConfigResponse]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/Cluster AWS API Documentation
     #
@@ -977,7 +1564,12 @@ module Aws::EKS
       :zonal_shift_config,
       :remote_network_config,
       :compute_config,
-      :storage_config)
+      :storage_config,
+      :deletion_protection,
+      :control_plane_scaling_config,
+      :kube_api_server_config,
+      :kube_scheduler_config,
+      :kube_controller_manager_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1065,6 +1657,16 @@ module Aws::EKS
     #   The patch version of Kubernetes for this cluster version.
     #   @return [String]
     #
+    # @!attribute [rw] control_plane_scaling_tiers
+    #   The available provisioned control plane scaling tiers and their
+    #   capabilities for this Kubernetes version.
+    #   @return [Array<Types::ControlPlaneScalingTierInfo>]
+    #
+    # @!attribute [rw] control_plane_component_config
+    #   The default control plane component configuration and constraints
+    #   for this Kubernetes version.
+    #   @return [Types::ControlPlaneConfigInfo]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/ClusterVersionInformation AWS API Documentation
     #
     class ClusterVersionInformation < Struct.new(
@@ -1077,7 +1679,9 @@ module Aws::EKS
       :end_of_extended_support_date,
       :status,
       :version_status,
-      :kubernetes_patch_version)
+      :kubernetes_patch_version,
+      :control_plane_scaling_tiers,
+      :control_plane_component_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1228,6 +1832,31 @@ module Aws::EKS
       include Aws::Structure
     end
 
+    # The control plane component configuration defaults and constraints.
+    #
+    # @!attribute [rw] kube_api_server_config
+    #   The Kubernetes API server configuration defaults and constraints.
+    #   @return [Types::KubeApiServerVersionConfig]
+    #
+    # @!attribute [rw] kube_scheduler_config
+    #   The Kubernetes scheduler configuration defaults and constraints.
+    #   @return [Types::KubeSchedulerVersionConfig]
+    #
+    # @!attribute [rw] kube_controller_manager_config
+    #   The Kubernetes controller manager configuration defaults and
+    #   constraints.
+    #   @return [Types::KubeControllerManagerVersionConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/ControlPlaneConfigInfo AWS API Documentation
+    #
+    class ControlPlaneConfigInfo < Struct.new(
+      :kube_api_server_config,
+      :kube_scheduler_config,
+      :kube_controller_manager_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The placement configuration for all the control plane instances of
     # your local Amazon EKS cluster on an Amazon Web Services Outpost. For
     # more information, see [Capacity considerations][1] in the *Amazon EKS
@@ -1242,10 +1871,17 @@ module Aws::EKS
     #   instances. This setting can't be changed after cluster creation.
     #   @return [String]
     #
+    # @!attribute [rw] spread_level
+    #   Optional parameter to specify the placement group spread level for
+    #   control plane instances. If not provided, Amazon EKS will deploy
+    #   control plane instances without a placement group.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/ControlPlanePlacementRequest AWS API Documentation
     #
     class ControlPlanePlacementRequest < Struct.new(
-      :group_name)
+      :group_name,
+      :spread_level)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1264,10 +1900,70 @@ module Aws::EKS
     #   instances.
     #   @return [String]
     #
+    # @!attribute [rw] spread_level
+    #   The spread level used with the placement group for control plane
+    #   instances on your local Amazon EKS cluster on Amazon Web Services
+    #   Outposts.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/ControlPlanePlacementResponse AWS API Documentation
     #
     class ControlPlanePlacementResponse < Struct.new(
-      :group_name)
+      :group_name,
+      :spread_level)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The control plane scaling tier configuration. For more information,
+    # see EKS Provisioned Control Plane in the Amazon EKS User Guide.
+    #
+    # @!attribute [rw] tier
+    #   The control plane scaling tier configuration. Available options are
+    #   `standard`, `tier-xl`, `tier-2xl`, `tier-4xl, or tier-8xl`. For more
+    #   information, see EKS Provisioned Control Plane in the Amazon EKS
+    #   User Guide.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/ControlPlaneScalingConfig AWS API Documentation
+    #
+    class ControlPlaneScalingConfig < Struct.new(
+      :tier)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Information about a provisioned control plane scaling tier.
+    #
+    # @!attribute [rw] tier_name
+    #   The name of the scaling tier.
+    #   @return [String]
+    #
+    # @!attribute [rw] api_request_concurrency
+    #   The maximum API request concurrency supported by this tier.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] pod_scheduling_rate_per_second
+    #   The maximum pod scheduling rate per second supported by this tier.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] cluster_database_size_gb
+    #   The maximum cluster database size in GB supported by this tier.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] control_plane_component_config_overrides
+    #   The control plane component configuration overrides specific to this
+    #   scaling tier.
+    #   @return [Types::ControlPlaneConfigInfo]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/ControlPlaneScalingTierInfo AWS API Documentation
+    #
+    class ControlPlaneScalingTierInfo < Struct.new(
+      :tier_name,
+      :api_request_concurrency,
+      :pod_scheduling_rate_per_second,
+      :cluster_database_size_gb,
+      :control_plane_component_config_overrides)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1525,17 +2221,21 @@ module Aws::EKS
     #   @return [String]
     #
     # @!attribute [rw] pod_identity_associations
-    #   An array of Pod Identity Assocations to be created. Each EKS Pod
-    #   Identity association maps a Kubernetes service account to an IAM
-    #   Role.
+    #   An array of EKS Pod Identity associations to be created. Each
+    #   association maps a Kubernetes service account to an IAM role.
     #
     #   For more information, see [Attach an IAM Role to an Amazon EKS
-    #   add-on using Pod Identity][1] in the *Amazon EKS User Guide*.
+    #   add-on using EKS Pod Identity][1] in the *Amazon EKS User Guide*.
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/eks/latest/userguide/add-ons-iam.html
     #   @return [Array<Types::AddonPodIdentityAssociations>]
+    #
+    # @!attribute [rw] namespace_config
+    #   The namespace configuration for the addon. If specified, this will
+    #   override the default namespace for the addon.
+    #   @return [Types::AddonNamespaceConfigRequest]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/CreateAddonRequest AWS API Documentation
     #
@@ -1548,7 +2248,8 @@ module Aws::EKS
       :client_request_token,
       :tags,
       :configuration_values,
-      :pod_identity_associations)
+      :pod_identity_associations,
+      :namespace_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1566,6 +2267,133 @@ module Aws::EKS
     #
     class CreateAddonResponse < Struct.new(
       :addon)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] capability_name
+    #   A unique name for the capability. The name must be unique within
+    #   your cluster and can contain alphanumeric characters, hyphens, and
+    #   underscores.
+    #   @return [String]
+    #
+    # @!attribute [rw] cluster_name
+    #   The name of the Amazon EKS cluster where you want to create the
+    #   capability.
+    #   @return [String]
+    #
+    # @!attribute [rw] client_request_token
+    #   A unique, case-sensitive identifier that you provide to ensure the
+    #   idempotency of the request. This token is valid for 24 hours after
+    #   creation. If you retry a request with the same client request token
+    #   and the same parameters after the original request has completed
+    #   successfully, the result of the original request is returned.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The type of capability to create. Valid values are:
+    #
+    #   * `ACK` – Amazon Web Services Controllers for Kubernetes (ACK),
+    #     which lets you manage resources directly from Kubernetes.
+    #
+    #   * `ARGOCD` – Argo CD for GitOps-based continuous delivery.
+    #
+    #   * `KRO` – Kube Resource Orchestrator (KRO) for composing and
+    #     managing custom Kubernetes resources.
+    #   @return [String]
+    #
+    # @!attribute [rw] role_arn
+    #   The Amazon Resource Name (ARN) of the IAM role that the capability
+    #   uses to interact with Amazon Web Services services. This role must
+    #   have a trust policy that allows the EKS service principal to assume
+    #   it, and it must have the necessary permissions for the capability
+    #   type you're creating.
+    #
+    #   For ACK capabilities, the role needs permissions to manage the
+    #   resources you want to control through Kubernetes. For Argo CD
+    #   capabilities, the role needs permissions to access Git repositories
+    #   and Secrets Manager. For KRO capabilities, the role needs
+    #   permissions based on the resources you'll be orchestrating.
+    #   @return [String]
+    #
+    # @!attribute [rw] configuration
+    #   The configuration settings for the capability. The structure of this
+    #   object varies depending on the capability type. For Argo CD
+    #   capabilities, you can configure IAM Identity CenterIAM; Identity
+    #   Center integration, RBAC role mappings, and network access settings.
+    #   @return [Types::CapabilityConfigurationRequest]
+    #
+    # @!attribute [rw] tags
+    #   The metadata that you apply to a resource to help you categorize and
+    #   organize them. Each tag consists of a key and an optional value. You
+    #   define them.
+    #
+    #   The following basic restrictions apply to tags:
+    #
+    #   * Maximum number of tags per resource – 50
+    #
+    #   * For each resource, each tag key must be unique, and each tag key
+    #     can have only one value.
+    #
+    #   * Maximum key length – 128 Unicode characters in UTF-8
+    #
+    #   * Maximum value length – 256 Unicode characters in UTF-8
+    #
+    #   * If your tagging schema is used across multiple services and
+    #     resources, remember that other services may have restrictions on
+    #     allowed characters. Generally allowed characters are: letters,
+    #     numbers, and spaces representable in UTF-8, and the following
+    #     characters: + - = . \_ : / @.
+    #
+    #   * Tag keys and values are case-sensitive.
+    #
+    #   * Do not use `aws:`, `AWS:`, or any upper or lowercase combination
+    #     of such as a prefix for either keys or values as it is reserved
+    #     for Amazon Web Services use. You cannot edit or delete tag keys or
+    #     values with this prefix. Tags with this prefix do not count
+    #     against your tags per resource limit.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] delete_propagation_policy
+    #   Specifies how Kubernetes resources managed by the capability should
+    #   be handled when the capability is deleted. Currently, the only
+    #   supported value is `RETAIN` which retains all Kubernetes resources
+    #   managed by the capability when the capability is deleted.
+    #
+    #   Because resources are retained, all Kubernetes resources created by
+    #   the capability should be deleted from the cluster before deleting
+    #   the capability itself. After the capability is deleted, these
+    #   resources become difficult to manage because the controller is no
+    #   longer available.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/CreateCapabilityRequest AWS API Documentation
+    #
+    class CreateCapabilityRequest < Struct.new(
+      :capability_name,
+      :cluster_name,
+      :client_request_token,
+      :type,
+      :role_arn,
+      :configuration,
+      :tags,
+      :delete_propagation_policy)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] capability
+    #   An object containing information about the newly created capability,
+    #   including its name, ARN, status, and configuration.
+    #   @return [Types::Capability]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/CreateCapabilityResponse AWS API Documentation
+    #
+    class CreateCapabilityResponse < Struct.new(
+      :capability)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1680,8 +2508,8 @@ module Aws::EKS
     #   If you set this value to `False` when creating a cluster, the
     #   default networking add-ons will not be installed.
     #
-    #   The default networking addons include vpc-cni, coredns, and
-    #   kube-proxy.
+    #   The default networking add-ons include `vpc-cni`, `coredns`, and
+    #   `kube-proxy`.
     #
     #   Use this option when you plan to install third-party alternative
     #   add-ons or self-manage the default networking add-ons.
@@ -1721,8 +2549,8 @@ module Aws::EKS
     #   @return [Types::ZonalShiftConfigRequest]
     #
     # @!attribute [rw] remote_network_config
-    #   The configuration in the cluster for EKS Hybrid Nodes. You can't
-    #   change or update this configuration after the cluster is created.
+    #   The configuration in the cluster for EKS Hybrid Nodes. You can add,
+    #   change, or remove this configuration after the cluster is created.
     #   @return [Types::RemoteNetworkConfigRequest]
     #
     # @!attribute [rw] compute_config
@@ -1738,6 +2566,30 @@ module Aws::EKS
     #   is enabled, EKS Auto Mode will create and delete EBS volumes in your
     #   Amazon Web Services account.
     #   @return [Types::StorageConfigRequest]
+    #
+    # @!attribute [rw] deletion_protection
+    #   Indicates whether to enable deletion protection for the cluster.
+    #   When enabled, the cluster cannot be deleted unless deletion
+    #   protection is first disabled. This helps prevent accidental cluster
+    #   deletion. Default value is `false`.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] control_plane_scaling_config
+    #   The control plane scaling tier configuration. For more information,
+    #   see EKS Provisioned Control Plane in the Amazon EKS User Guide.
+    #   @return [Types::ControlPlaneScalingConfig]
+    #
+    # @!attribute [rw] kube_api_server_config
+    #   The Kubernetes API server configuration for the new cluster.
+    #   @return [Types::KubeApiServerConfigRequest]
+    #
+    # @!attribute [rw] kube_scheduler_config
+    #   The Kubernetes scheduler configuration for the new cluster.
+    #   @return [Types::KubeSchedulerConfigRequest]
+    #
+    # @!attribute [rw] kube_controller_manager_config
+    #   The Kubernetes controller manager configuration for the new cluster.
+    #   @return [Types::KubeControllerManagerConfigRequest]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/CreateClusterRequest AWS API Documentation
     #
@@ -1758,7 +2610,12 @@ module Aws::EKS
       :zonal_shift_config,
       :remote_network_config,
       :compute_config,
-      :storage_config)
+      :storage_config,
+      :deletion_protection,
+      :control_plane_scaling_config,
+      :kube_api_server_config,
+      :kube_scheduler_config,
+      :kube_controller_manager_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2130,6 +2987,13 @@ module Aws::EKS
     #   [3]: https://docs.aws.amazon.com/eks/latest/userguide/launch-templates.html
     #   @return [String]
     #
+    # @!attribute [rw] warm_pool_config
+    #   The warm pool configuration for the node group. Warm pools maintain
+    #   pre-initialized EC2 instances that can quickly join your cluster
+    #   during scale-out events, improving application scaling performance
+    #   and reducing costs.
+    #   @return [Types::WarmPoolConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/CreateNodegroupRequest AWS API Documentation
     #
     class CreateNodegroupRequest < Struct.new(
@@ -2151,7 +3015,8 @@ module Aws::EKS
       :node_repair_config,
       :capacity_type,
       :version,
-      :release_version)
+      :release_version,
+      :warm_pool_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2169,13 +3034,14 @@ module Aws::EKS
     end
 
     # @!attribute [rw] cluster_name
-    #   The name of the cluster to create the association in.
+    #   The name of the cluster to create the EKS Pod Identity association
+    #   in.
     #   @return [String]
     #
     # @!attribute [rw] namespace
     #   The name of the Kubernetes namespace inside the cluster to create
-    #   the association in. The service account and the pods that use the
-    #   service account must be in this namespace.
+    #   the EKS Pod Identity association in. The service account and the
+    #   Pods that use the service account must be in this namespace.
     #   @return [String]
     #
     # @!attribute [rw] service_account
@@ -2186,7 +3052,7 @@ module Aws::EKS
     # @!attribute [rw] role_arn
     #   The Amazon Resource Name (ARN) of the IAM role to associate with the
     #   service account. The EKS Pod Identity agent manages credentials to
-    #   assume this role for applications in the containers in the pods that
+    #   assume this role for applications in the containers in the Pods that
     #   use this service account.
     #   @return [String]
     #
@@ -2230,6 +3096,73 @@ module Aws::EKS
     #     against your tags per resource limit.
     #   @return [Hash<String,String>]
     #
+    # @!attribute [rw] disable_session_tags
+    #   Disable the automatic sessions tags that are appended by EKS Pod
+    #   Identity.
+    #
+    #   EKS Pod Identity adds a pre-defined set of session tags when it
+    #   assumes the role. You can use these tags to author a single role
+    #   that can work across resources by allowing access to Amazon Web
+    #   Services resources based on matching tags. By default, EKS Pod
+    #   Identity attaches six tags, including tags for cluster name,
+    #   namespace, and service account name. For the list of tags added by
+    #   EKS Pod Identity, see [List of session tags added by EKS Pod
+    #   Identity][1] in the *Amazon EKS User Guide*.
+    #
+    #   Amazon Web Services compresses inline session policies, managed
+    #   policy ARNs, and session tags into a packed binary format that has a
+    #   separate limit. If you receive a `PackedPolicyTooLarge` error
+    #   indicating the packed binary format has exceeded the size limit, you
+    #   can attempt to reduce the size by disabling the session tags added
+    #   by EKS Pod Identity.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/eks/latest/userguide/pod-id-abac.html#pod-id-abac-tags
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] target_role_arn
+    #   The Amazon Resource Name (ARN) of the target IAM role to associate
+    #   with the service account. This role is assumed by using the EKS Pod
+    #   Identity association role, then the credentials for this role are
+    #   injected into the Pod.
+    #
+    #   When you run applications on Amazon EKS, your application might need
+    #   to access Amazon Web Services resources from a different role that
+    #   exists in the same or different Amazon Web Services account. For
+    #   example, your application running in “Account A” might need to
+    #   access resources, such as Amazon S3 buckets in “Account B” or within
+    #   “Account A” itself. You can create a association to access Amazon
+    #   Web Services resources in “Account B” by creating two IAM roles: a
+    #   role in “Account A” and a role in “Account B” (which can be the same
+    #   or different account), each with the necessary trust and permission
+    #   policies. After you provide these roles in the *IAM role* and
+    #   *Target IAM role* fields, EKS will perform role chaining to ensure
+    #   your application gets the required permissions. This means Role A
+    #   will assume Role B, allowing your Pods to securely access resources
+    #   like S3 buckets in the target account.
+    #   @return [String]
+    #
+    # @!attribute [rw] policy
+    #   An optional IAM policy in JSON format (as an escaped string) that
+    #   applies additional restrictions to this pod identity association
+    #   beyond the IAM policies attached to the IAM role. This policy is
+    #   applied as the intersection of the role's policies and this policy,
+    #   allowing you to reduce the permissions that applications in the pods
+    #   can use. Use this policy to enforce least privilege access while
+    #   still leveraging a shared IAM role across multiple applications.
+    #
+    #   **Important considerations**
+    #
+    #   * **Session tags:** When using this policy, `disableSessionTags`
+    #     must be set to `true`.
+    #
+    #   * **Target role permissions:** If you specify both a `TargetRoleArn`
+    #     and a policy, the policy restrictions apply only to the target
+    #     role's permissions, not to the initial role used for assuming the
+    #     target role.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/CreatePodIdentityAssociationRequest AWS API Documentation
     #
     class CreatePodIdentityAssociationRequest < Struct.new(
@@ -2238,7 +3171,10 @@ module Aws::EKS
       :service_account,
       :role_arn,
       :client_request_token,
-      :tags)
+      :tags,
+      :disable_session_tags,
+      :target_role_arn,
+      :policy)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2321,6 +3257,37 @@ module Aws::EKS
     #
     class DeleteAddonResponse < Struct.new(
       :addon)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] cluster_name
+    #   The name of the Amazon EKS cluster that contains the capability you
+    #   want to delete.
+    #   @return [String]
+    #
+    # @!attribute [rw] capability_name
+    #   The name of the capability to delete.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/DeleteCapabilityRequest AWS API Documentation
+    #
+    class DeleteCapabilityRequest < Struct.new(
+      :cluster_name,
+      :capability_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] capability
+    #   An object containing information about the deleted capability,
+    #   including its final status and configuration.
+    #   @return [Types::Capability]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/DeleteCapabilityResponse AWS API Documentation
+    #
+    class DeleteCapabilityResponse < Struct.new(
+      :capability)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2593,9 +3560,9 @@ module Aws::EKS
     #   @return [String]
     #
     # @!attribute [rw] pod_identity_configuration
-    #   The Kubernetes service account name used by the addon, and any
+    #   The Kubernetes service account name used by the add-on, and any
     #   suggested IAM policies. Use this information to create an IAM Role
-    #   for the Addon.
+    #   for the add-on.
     #   @return [Array<Types::AddonPodIdentityConfiguration>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/DescribeAddonConfigurationResponse AWS API Documentation
@@ -2738,6 +3705,39 @@ module Aws::EKS
     class DescribeAddonVersionsResponse < Struct.new(
       :addons,
       :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] cluster_name
+    #   The name of the Amazon EKS cluster that contains the capability you
+    #   want to describe.
+    #   @return [String]
+    #
+    # @!attribute [rw] capability_name
+    #   The name of the capability to describe.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/DescribeCapabilityRequest AWS API Documentation
+    #
+    class DescribeCapabilityRequest < Struct.new(
+      :cluster_name,
+      :capability_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] capability
+    #   An object containing detailed information about the capability,
+    #   including its name, ARN, type, status, version, configuration,
+    #   health status, and timestamps for when it was created and last
+    #   modified.
+    #   @return [Types::Capability]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/DescribeCapabilityResponse AWS API Documentation
+    #
+    class DescribeCapabilityResponse < Struct.new(
+      :capability)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2946,6 +3946,46 @@ module Aws::EKS
     end
 
     # @!attribute [rw] cluster_name
+    #   The name of the cluster associated with the insights refresh
+    #   operation.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/DescribeInsightsRefreshRequest AWS API Documentation
+    #
+    class DescribeInsightsRefreshRequest < Struct.new(
+      :cluster_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] message
+    #   The message associated with the insights refresh operation.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the insights refresh operation.
+    #   @return [String]
+    #
+    # @!attribute [rw] started_at
+    #   The date and time when the insights refresh operation started.
+    #   @return [Time]
+    #
+    # @!attribute [rw] ended_at
+    #   The date and time when the insights refresh operation ended.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/DescribeInsightsRefreshResponse AWS API Documentation
+    #
+    class DescribeInsightsRefreshResponse < Struct.new(
+      :message,
+      :status,
+      :started_at,
+      :ended_at)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] cluster_name
     #   The name of your cluster.
     #   @return [String]
     #
@@ -3028,13 +4068,18 @@ module Aws::EKS
     #   [1]: https://docs.aws.amazon.com/eks/latest/APIReference/API_ListAddons.html
     #   @return [String]
     #
+    # @!attribute [rw] capability_name
+    #   The name of the capability for which you want to describe updates.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/DescribeUpdateRequest AWS API Documentation
     #
     class DescribeUpdateRequest < Struct.new(
       :name,
       :update_id,
       :nodegroup_name,
-      :addon_name)
+      :addon_name,
+      :capability_name)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3113,6 +4158,44 @@ module Aws::EKS
     #
     class DisassociateIdentityProviderConfigResponse < Struct.new(
       :update)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Constraints for a duration parameter.
+    #
+    # @!attribute [rw] min
+    #   The minimum allowed duration value.
+    #   @return [String]
+    #
+    # @!attribute [rw] max
+    #   The maximum allowed duration value.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/DurationConstraints AWS API Documentation
+    #
+    class DurationConstraints < Struct.new(
+      :min,
+      :max)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A duration parameter configuration with default value and constraints.
+    #
+    # @!attribute [rw] default_value
+    #   The default value for the duration parameter.
+    #   @return [String]
+    #
+    # @!attribute [rw] constraints
+    #   The constraints for the duration parameter.
+    #   @return [Types::DurationConstraints]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/DurationParameterConfig AWS API Documentation
+    #
+    class DurationParameterConfig < Struct.new(
+      :default_value,
+      :constraints)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3315,6 +4398,51 @@ module Aws::EKS
       include Aws::Structure
     end
 
+    # The placement configuration for the etcd instances of your local
+    # Amazon EKS cluster on an Amazon Web Services Outpost. For more
+    # information, see [Capacity considerations][1] in the *Amazon EKS User
+    # Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/eks/latest/userguide/eks-outposts-capacity-considerations.html
+    #
+    # @!attribute [rw] spread_level
+    #   Optional parameter to specify the placement group spread level for
+    #   etcd instances. If not provided, Amazon EKS will deploy etcd
+    #   instances without a placement group.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/EtcdPlacementRequest AWS API Documentation
+    #
+    class EtcdPlacementRequest < Struct.new(
+      :spread_level)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The placement configuration for the etcd instances of your local
+    # Amazon EKS cluster on an Amazon Web Services Outpost. For more
+    # information, see [Capacity considerations][1] in the *Amazon EKS User
+    # Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/eks/latest/userguide/eks-outposts-capacity-considerations.html
+    #
+    # @!attribute [rw] spread_level
+    #   The spread level used with the placement group for etcd instances on
+    #   your local Amazon EKS cluster on Amazon Web Services Outposts.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/EtcdPlacementResponse AWS API Documentation
+    #
+    class EtcdPlacementResponse < Struct.new(
+      :spread_level)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # An object representing an Fargate profile.
     #
     # @!attribute [rw] fargate_profile_name
@@ -3441,6 +4569,52 @@ module Aws::EKS
     class FargateProfileSelector < Struct.new(
       :namespace,
       :labels)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The horizontal pod autoscaler controller configuration for the
+    # Kubernetes controller manager.
+    #
+    # @!attribute [rw] horizontal_pod_autoscaler_sync_period
+    #   The interval between each sync of the horizontal pod autoscaler.
+    #   Valid values are single-unit durations such as `15s` or `1m`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/HorizontalPodAutoscalerControllerConfigRequest AWS API Documentation
+    #
+    class HorizontalPodAutoscalerControllerConfigRequest < Struct.new(
+      :horizontal_pod_autoscaler_sync_period)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The horizontal pod autoscaler controller configuration for the
+    # Kubernetes controller manager.
+    #
+    # @!attribute [rw] horizontal_pod_autoscaler_sync_period
+    #   The interval between each sync of the horizontal pod autoscaler.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/HorizontalPodAutoscalerControllerConfigResponse AWS API Documentation
+    #
+    class HorizontalPodAutoscalerControllerConfigResponse < Struct.new(
+      :horizontal_pod_autoscaler_sync_period)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The horizontal pod autoscaler controller version configuration.
+    #
+    # @!attribute [rw] horizontal_pod_autoscaler_sync_period
+    #   The HPA sync period configuration with default value and
+    #   constraints.
+    #   @return [Types::DurationParameterConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/HorizontalPodAutoscalerControllerVersionConfig AWS API Documentation
+    #
+    class HorizontalPodAutoscalerControllerVersionConfig < Struct.new(
+      :horizontal_pod_autoscaler_sync_period)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3699,7 +4873,16 @@ module Aws::EKS
     # The criteria to use for the insights.
     #
     # @!attribute [rw] categories
-    #   The categories to use to filter insights.
+    #   The categories to use to filter insights. The following lists the
+    #   available categories:
+    #
+    #   * `UPGRADE_READINESS`: Amazon EKS identifies issues that could
+    #     impact your ability to upgrade to new versions of Kubernetes.
+    #     These are called upgrade insights.
+    #
+    #   * `MISCONFIGURATION`: Amazon EKS identifies misconfiguration in your
+    #     EKS Hybrid Nodes setup that could impair functionality of your
+    #     cluster or workloads. These are called configuration insights.
     #   @return [Array<String>]
     #
     # @!attribute [rw] kubernetes_versions
@@ -3716,6 +4899,26 @@ module Aws::EKS
       :categories,
       :kubernetes_versions,
       :statuses)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # An integer range constraint specifying minimum and maximum allowed
+    # values.
+    #
+    # @!attribute [rw] min
+    #   The minimum allowed value.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max
+    #   The maximum allowed value.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/IntegerRangeConstraint AWS API Documentation
+    #
+    class IntegerRangeConstraint < Struct.new(
+      :min,
+      :max)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3793,6 +4996,32 @@ module Aws::EKS
       :nodegroup_name,
       :addon_name,
       :subscription_id,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Amazon EKS detected upgrade readiness issues. Call the [
+    # `ListInsights` ][1] API to view detected upgrade blocking issues. Pass
+    # the [ `force` ][2] flag when updating to override upgrade readiness
+    # errors.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/eks/latest/APIReference/API_ListInsights.html
+    # [2]: https://docs.aws.amazon.com/eks/latest/APIReference/API_UpdateClusterVersion.html#API_UpdateClusterVersion_RequestBody
+    #
+    # @!attribute [rw] cluster_name
+    #   The Amazon EKS cluster associated with the exception.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/InvalidStateException AWS API Documentation
+    #
+    class InvalidStateException < Struct.new(
+      :cluster_name,
       :message)
       SENSITIVE = []
       include Aws::Structure
@@ -3893,6 +5122,158 @@ module Aws::EKS
       :code,
       :message,
       :resource_ids)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration for the Kubernetes API server on an Amazon EKS
+    # cluster.
+    #
+    # @!attribute [rw] event_ttl
+    #   The duration that Kubernetes events are retained. Valid values are
+    #   single-unit durations such as `30m` or `1h`.
+    #   @return [String]
+    #
+    # @!attribute [rw] service_node_port_range
+    #   The port range for NodePort services.
+    #   @return [Types::ServiceNodePortRange]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/KubeApiServerConfigRequest AWS API Documentation
+    #
+    class KubeApiServerConfigRequest < Struct.new(
+      :event_ttl,
+      :service_node_port_range)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The Kubernetes API server configuration for an Amazon EKS cluster.
+    #
+    # @!attribute [rw] event_ttl
+    #   The duration that Kubernetes events are retained.
+    #   @return [String]
+    #
+    # @!attribute [rw] service_node_port_range
+    #   The port range for NodePort services.
+    #   @return [Types::ServiceNodePortRange]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/KubeApiServerConfigResponse AWS API Documentation
+    #
+    class KubeApiServerConfigResponse < Struct.new(
+      :event_ttl,
+      :service_node_port_range)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The Kubernetes API server version-specific configuration defaults and
+    # constraints.
+    #
+    # @!attribute [rw] event_ttl
+    #   The event TTL configuration with default value and constraints.
+    #   @return [Types::DurationParameterConfig]
+    #
+    # @!attribute [rw] service_node_port_range
+    #   The service node port range configuration with default value and
+    #   constraints.
+    #   @return [Types::PortRangeParameterConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/KubeApiServerVersionConfig AWS API Documentation
+    #
+    class KubeApiServerVersionConfig < Struct.new(
+      :event_ttl,
+      :service_node_port_range)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration for the Kubernetes controller manager on an Amazon
+    # EKS cluster.
+    #
+    # @!attribute [rw] horizontal_pod_autoscaler_controller_config
+    #   The horizontal pod autoscaler controller configuration.
+    #   @return [Types::HorizontalPodAutoscalerControllerConfigRequest]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/KubeControllerManagerConfigRequest AWS API Documentation
+    #
+    class KubeControllerManagerConfigRequest < Struct.new(
+      :horizontal_pod_autoscaler_controller_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The Kubernetes controller manager configuration for an Amazon EKS
+    # cluster.
+    #
+    # @!attribute [rw] horizontal_pod_autoscaler_controller_config
+    #   The horizontal pod autoscaler controller configuration.
+    #   @return [Types::HorizontalPodAutoscalerControllerConfigResponse]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/KubeControllerManagerConfigResponse AWS API Documentation
+    #
+    class KubeControllerManagerConfigResponse < Struct.new(
+      :horizontal_pod_autoscaler_controller_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The Kubernetes controller manager version-specific configuration
+    # defaults and constraints.
+    #
+    # @!attribute [rw] horizontal_pod_autoscaler_controller_config
+    #   The horizontal pod autoscaler controller configuration with default
+    #   value and constraints.
+    #   @return [Types::HorizontalPodAutoscalerControllerVersionConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/KubeControllerManagerVersionConfig AWS API Documentation
+    #
+    class KubeControllerManagerVersionConfig < Struct.new(
+      :horizontal_pod_autoscaler_controller_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration for the Kubernetes scheduler on an Amazon EKS
+    # cluster.
+    #
+    # @!attribute [rw] node_resources_fit
+    #   The node resource fit scoring configuration for the scheduler.
+    #   @return [Types::NodeResourcesFitConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/KubeSchedulerConfigRequest AWS API Documentation
+    #
+    class KubeSchedulerConfigRequest < Struct.new(
+      :node_resources_fit)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The Kubernetes scheduler configuration for an Amazon EKS cluster.
+    #
+    # @!attribute [rw] node_resources_fit
+    #   The node resource fit scoring configuration for the scheduler.
+    #   @return [Types::NodeResourcesFitConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/KubeSchedulerConfigResponse AWS API Documentation
+    #
+    class KubeSchedulerConfigResponse < Struct.new(
+      :node_resources_fit)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The Kubernetes scheduler version-specific configuration defaults and
+    # constraints.
+    #
+    # @!attribute [rw] node_resources_fit
+    #   The NodeResourcesFit configuration with default value and
+    #   constraints.
+    #   @return [Types::NodeResourcesFitVersionConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/KubeSchedulerVersionConfig AWS API Documentation
+    #
+    class KubeSchedulerVersionConfig < Struct.new(
+      :node_resources_fit)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4362,6 +5743,59 @@ module Aws::EKS
       :principal_arn,
       :next_token,
       :associated_access_policies)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] cluster_name
+    #   The name of the Amazon EKS cluster for which you want to list
+    #   capabilities.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   The `nextToken` value returned from a previous paginated request,
+    #   where `maxResults` was used and the results exceeded the value of
+    #   that parameter. Pagination continues from the end of the previous
+    #   results that returned the `nextToken` value. This value is null when
+    #   there are no more results to return.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return in a single call. To
+    #   retrieve the remaining results, make another call with the returned
+    #   `nextToken` value. If you don't specify a value, the default is 100
+    #   results.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/ListCapabilitiesRequest AWS API Documentation
+    #
+    class ListCapabilitiesRequest < Struct.new(
+      :cluster_name,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] capabilities
+    #   A list of capability summary objects, each containing basic
+    #   information about a capability including its name, ARN, type,
+    #   status, version, and timestamps.
+    #   @return [Array<Types::CapabilitySummary>]
+    #
+    # @!attribute [rw] next_token
+    #   The `nextToken` value to include in a future `ListCapabilities`
+    #   request. When the results of a `ListCapabilities` request exceed
+    #   `maxResults`, you can use this value to retrieve the next page of
+    #   results. This value is null when there are no more results to
+    #   return.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/ListCapabilitiesResponse AWS API Documentation
+    #
+    class ListCapabilitiesResponse < Struct.new(
+      :capabilities,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4885,6 +6319,10 @@ module Aws::EKS
     #   The names of the installed add-ons that have available updates.
     #   @return [String]
     #
+    # @!attribute [rw] capability_name
+    #   The name of the capability for which you want to list updates.
+    #   @return [String]
+    #
     # @!attribute [rw] next_token
     #   The `nextToken` value returned from a previous paginated request,
     #   where `maxResults` was used and the results exceeded the value of
@@ -4915,6 +6353,7 @@ module Aws::EKS
       :name,
       :nodegroup_name,
       :addon_name,
+      :capability_name,
       :next_token,
       :max_results)
       SENSITIVE = []
@@ -5013,10 +6452,118 @@ module Aws::EKS
     #   Node auto repair is disabled by default.
     #   @return [Boolean]
     #
+    # @!attribute [rw] max_unhealthy_node_threshold_count
+    #   Specify a count threshold of unhealthy nodes, above which node auto
+    #   repair actions will stop. When using this, you cannot also set
+    #   `maxUnhealthyNodeThresholdPercentage` at the same time.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max_unhealthy_node_threshold_percentage
+    #   Specify a percentage threshold of unhealthy nodes, above which node
+    #   auto repair actions will stop. When using this, you cannot also set
+    #   `maxUnhealthyNodeThresholdCount` at the same time.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max_parallel_nodes_repaired_count
+    #   Specify the maximum number of nodes that can be repaired
+    #   concurrently or in parallel, expressed as a count of unhealthy
+    #   nodes. This gives you finer-grained control over the pace of node
+    #   replacements. When using this, you cannot also set
+    #   `maxParallelNodesRepairedPercentage` at the same time.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max_parallel_nodes_repaired_percentage
+    #   Specify the maximum number of nodes that can be repaired
+    #   concurrently or in parallel, expressed as a percentage of unhealthy
+    #   nodes. This gives you finer-grained control over the pace of node
+    #   replacements. When using this, you cannot also set
+    #   `maxParallelNodesRepairedCount` at the same time.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] node_repair_config_overrides
+    #   Specify granular overrides for specific repair actions. These
+    #   overrides control the repair action and the repair delay time before
+    #   a node is considered eligible for repair. If you use this, you must
+    #   specify all the values.
+    #   @return [Array<Types::NodeRepairConfigOverrides>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/NodeRepairConfig AWS API Documentation
     #
     class NodeRepairConfig < Struct.new(
-      :enabled)
+      :enabled,
+      :max_unhealthy_node_threshold_count,
+      :max_unhealthy_node_threshold_percentage,
+      :max_parallel_nodes_repaired_count,
+      :max_parallel_nodes_repaired_percentage,
+      :node_repair_config_overrides)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Specify granular overrides for specific repair actions. These
+    # overrides control the repair action and the repair delay time before a
+    # node is considered eligible for repair. If you use this, you must
+    # specify all the values.
+    #
+    # @!attribute [rw] node_monitoring_condition
+    #   Specify an unhealthy condition reported by the node monitoring agent
+    #   that this override would apply to.
+    #   @return [String]
+    #
+    # @!attribute [rw] node_unhealthy_reason
+    #   Specify a reason reported by the node monitoring agent that this
+    #   override would apply to.
+    #   @return [String]
+    #
+    # @!attribute [rw] min_repair_wait_time_mins
+    #   Specify the minimum time in minutes to wait before attempting to
+    #   repair a node with this specific `nodeMonitoringCondition` and
+    #   `nodeUnhealthyReason`.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] repair_action
+    #   Specify the repair action to take for nodes when all of the
+    #   specified conditions are met.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/NodeRepairConfigOverrides AWS API Documentation
+    #
+    class NodeRepairConfigOverrides < Struct.new(
+      :node_monitoring_condition,
+      :node_unhealthy_reason,
+      :min_repair_wait_time_mins,
+      :repair_action)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The NodeResourcesFit plugin configuration for the Kubernetes
+    # scheduler.
+    #
+    # @!attribute [rw] scoring_strategy
+    #   The scoring strategy used to rank nodes during scheduling.
+    #   @return [Types::ScoringStrategy]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/NodeResourcesFitConfig AWS API Documentation
+    #
+    class NodeResourcesFitConfig < Struct.new(
+      :scoring_strategy)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The NodeResourcesFit version configuration with default value and
+    # constraints.
+    #
+    # @!attribute [rw] scoring_strategy
+    #   The scoring strategy configuration with default value and
+    #   constraints.
+    #   @return [Types::ScoringStrategyConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/NodeResourcesFitVersionConfig AWS API Documentation
+    #
+    class NodeResourcesFitVersionConfig < Struct.new(
+      :scoring_strategy)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5160,6 +6707,13 @@ module Aws::EKS
     #   resources.
     #   @return [Hash<String,String>]
     #
+    # @!attribute [rw] warm_pool_config
+    #   The warm pool configuration attached to the node group. Amazon EKS
+    #   manages warm pools throughout the node group lifecycle using the
+    #   `AWSServiceRoleForAmazonEKSNodegroup` service-linked role to create,
+    #   update, and delete warm pool resources.
+    #   @return [Types::WarmPoolConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/Nodegroup AWS API Documentation
     #
     class Nodegroup < Struct.new(
@@ -5186,7 +6740,8 @@ module Aws::EKS
       :update_config,
       :node_repair_config,
       :launch_template,
-      :tags)
+      :tags,
+      :warm_pool_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5554,15 +7109,13 @@ module Aws::EKS
     #   @return [Array<String>]
     #
     # @!attribute [rw] control_plane_instance_type
-    #   The Amazon EC2 instance type that you want to use for your local
-    #   Amazon EKS cluster on Outposts. Choose an instance type based on the
-    #   number of nodes that your cluster will have. For more information,
-    #   see [Capacity considerations][1] in the *Amazon EKS User Guide*.
+    #   The Amazon EC2 instance type for the Kubernetes control plane
+    #   instances of your local Amazon EKS cluster on Amazon Web Services
+    #   Outposts. This instance type applies to all control plane instances
+    #   and cannot be changed after cluster creation.
     #
-    #   The instance type that you specify is used for all Kubernetes
-    #   control plane instances. The instance type can't be changed after
-    #   cluster creation. The control plane is not automatically scaled by
-    #   Amazon EKS.
+    #   For more information, see [Capacity considerations][1] in the
+    #   *Amazon EKS User Guide*.
     #
     #
     #
@@ -5582,12 +7135,32 @@ module Aws::EKS
     #   [1]: https://docs.aws.amazon.com/eks/latest/userguide/eks-outposts-capacity-considerations.html
     #   @return [Types::ControlPlanePlacementRequest]
     #
+    # @!attribute [rw] etcd_instance_type
+    #   The Amazon EC2 instance type for etcd instances of your local Amazon
+    #   EKS cluster on Amazon Web Services Outposts. This instance type
+    #   applies to all etcd instances and cannot be changed after cluster
+    #   creation.
+    #   @return [String]
+    #
+    # @!attribute [rw] etcd_placement
+    #   An object representing the placement configuration for the etcd
+    #   instances of your local Amazon EKS cluster on an Amazon Web Services
+    #   Outpost. For more information, see [Capacity considerations][1] in
+    #   the *Amazon EKS User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/eks/latest/userguide/eks-outposts-capacity-considerations.html
+    #   @return [Types::EtcdPlacementRequest]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/OutpostConfigRequest AWS API Documentation
     #
     class OutpostConfigRequest < Struct.new(
       :outpost_arns,
       :control_plane_instance_type,
-      :control_plane_placement)
+      :control_plane_placement,
+      :etcd_instance_type,
+      :etcd_placement)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5602,8 +7175,10 @@ module Aws::EKS
     #   @return [Array<String>]
     #
     # @!attribute [rw] control_plane_instance_type
-    #   The Amazon EC2 instance type used for the control plane. The
-    #   instance type is the same for all control plane instances.
+    #   The Amazon EC2 instance type for the Kubernetes control plane
+    #   instances of your local Amazon EKS cluster on Amazon Web Services
+    #   Outposts. The instance type is the same for all control plane
+    #   instances.
     #   @return [String]
     #
     # @!attribute [rw] control_plane_placement
@@ -5617,12 +7192,31 @@ module Aws::EKS
     #   [1]: https://docs.aws.amazon.com/eks/latest/userguide/eks-outposts-capacity-considerations.html
     #   @return [Types::ControlPlanePlacementResponse]
     #
+    # @!attribute [rw] etcd_instance_type
+    #   The Amazon EC2 instance type for etcd instances of your local Amazon
+    #   EKS cluster on Amazon Web Services Outposts. The instance type is
+    #   the same for all etcd instances.
+    #   @return [String]
+    #
+    # @!attribute [rw] etcd_placement
+    #   An object representing the placement configuration for the etcd
+    #   instances of your local Amazon EKS cluster on an Amazon Web Services
+    #   Outpost. For more information, see [Capacity considerations][1] in
+    #   the *Amazon EKS User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/eks/latest/userguide/eks-outposts-capacity-considerations.html
+    #   @return [Types::EtcdPlacementResponse]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/OutpostConfigResponse AWS API Documentation
     #
     class OutpostConfigResponse < Struct.new(
       :outpost_arns,
       :control_plane_instance_type,
-      :control_plane_placement)
+      :control_plane_placement,
+      :etcd_instance_type,
+      :etcd_placement)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5637,7 +7231,7 @@ module Aws::EKS
     #
     # @!attribute [rw] namespace
     #   The name of the Kubernetes namespace inside the cluster to create
-    #   the association in. The service account and the pods that use the
+    #   the association in. The service account and the Pods that use the
     #   service account must be in this namespace.
     #   @return [String]
     #
@@ -5649,7 +7243,7 @@ module Aws::EKS
     # @!attribute [rw] role_arn
     #   The Amazon Resource Name (ARN) of the IAM role to associate with the
     #   service account. The EKS Pod Identity agent manages credentials to
-    #   assume this role for applications in the containers in the pods that
+    #   assume this role for applications in the containers in the Pods that
     #   use this service account.
     #   @return [String]
     #
@@ -5698,12 +7292,65 @@ module Aws::EKS
     #   @return [Time]
     #
     # @!attribute [rw] modified_at
-    #   The most recent timestamp that the association was modified at
+    #   The most recent timestamp that the association was modified at.
     #   @return [Time]
     #
     # @!attribute [rw] owner_arn
-    #   If defined, the Pod Identity Association is owned by an Amazon EKS
-    #   Addon.
+    #   If defined, the EKS Pod Identity association is owned by an Amazon
+    #   EKS add-on.
+    #   @return [String]
+    #
+    # @!attribute [rw] disable_session_tags
+    #   The state of the automatic sessions tags. The value of *true*
+    #   disables these tags.
+    #
+    #   EKS Pod Identity adds a pre-defined set of session tags when it
+    #   assumes the role. You can use these tags to author a single role
+    #   that can work across resources by allowing access to Amazon Web
+    #   Services resources based on matching tags. By default, EKS Pod
+    #   Identity attaches six tags, including tags for cluster name,
+    #   namespace, and service account name. For the list of tags added by
+    #   EKS Pod Identity, see [List of session tags added by EKS Pod
+    #   Identity][1] in the *Amazon EKS User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/eks/latest/userguide/pod-id-abac.html#pod-id-abac-tags
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] target_role_arn
+    #   The Amazon Resource Name (ARN) of the target IAM role to associate
+    #   with the service account. This role is assumed by using the EKS Pod
+    #   Identity association role, then the credentials for this role are
+    #   injected into the Pod.
+    #   @return [String]
+    #
+    # @!attribute [rw] external_id
+    #   The unique identifier for this EKS Pod Identity association for a
+    #   target IAM role. You put this value in the trust policy of the
+    #   target role, in a `Condition` to match the `sts.ExternalId`. This
+    #   ensures that the target role can only be assumed by this
+    #   association. This prevents the *confused deputy problem*. For more
+    #   information about the confused deputy problem, see [The confused
+    #   deputy problem][1] in the *IAM User Guide*.
+    #
+    #   If you want to use the same target role with multiple associations
+    #   or other roles, use independent statements in the trust policy to
+    #   allow `sts:AssumeRole` access from each role.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/confused-deputy.html
+    #   @return [String]
+    #
+    # @!attribute [rw] policy
+    #   An optional IAM policy in JSON format (as an escaped string) that
+    #   applies additional restrictions to this pod identity association
+    #   beyond the IAM policies attached to the IAM role. This policy is
+    #   applied as the intersection of the role's policies and this policy,
+    #   allowing you to reduce the permissions that applications in the pods
+    #   can use. Use this policy to enforce least privilege access while
+    #   still leveraging a shared IAM role across multiple applications.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/PodIdentityAssociation AWS API Documentation
@@ -5718,7 +7365,11 @@ module Aws::EKS
       :tags,
       :created_at,
       :modified_at,
-      :owner_arn)
+      :owner_arn,
+      :disable_session_tags,
+      :target_role_arn,
+      :external_id,
+      :policy)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5747,7 +7398,7 @@ module Aws::EKS
     #
     # @!attribute [rw] namespace
     #   The name of the Kubernetes namespace inside the cluster to create
-    #   the association in. The service account and the pods that use the
+    #   the association in. The service account and the Pods that use the
     #   service account must be in this namespace.
     #   @return [String]
     #
@@ -5765,8 +7416,7 @@ module Aws::EKS
     #   @return [String]
     #
     # @!attribute [rw] owner_arn
-    #   If defined, the Pod Identity Association is owned by an Amazon EKS
-    #   Addon.
+    #   If defined, the association is owned by an Amazon EKS add-on.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/PodIdentityAssociationSummary AWS API Documentation
@@ -5778,6 +7428,45 @@ module Aws::EKS
       :association_arn,
       :association_id,
       :owner_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Constraints for a port range parameter.
+    #
+    # @!attribute [rw] min_port
+    #   The constraints for the minimum port value.
+    #   @return [Types::IntegerRangeConstraint]
+    #
+    # @!attribute [rw] max_port
+    #   The constraints for the maximum port value.
+    #   @return [Types::IntegerRangeConstraint]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/PortRangeConstraints AWS API Documentation
+    #
+    class PortRangeConstraints < Struct.new(
+      :min_port,
+      :max_port)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A port range parameter configuration with default value and
+    # constraints.
+    #
+    # @!attribute [rw] default_value
+    #   The default port range value.
+    #   @return [Types::ServiceNodePortRange]
+    #
+    # @!attribute [rw] constraints
+    #   The constraints for the port range parameter.
+    #   @return [Types::PortRangeConstraints]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/PortRangeParameterConfig AWS API Documentation
+    #
+    class PortRangeParameterConfig < Struct.new(
+      :default_value,
+      :constraints)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5895,8 +7584,8 @@ module Aws::EKS
       include Aws::Structure
     end
 
-    # The configuration in the cluster for EKS Hybrid Nodes. You can't
-    # change or update this configuration after the cluster is created.
+    # The configuration in the cluster for EKS Hybrid Nodes. You can add,
+    # change, or remove this configuration after the cluster is created.
     #
     # @!attribute [rw] remote_node_networks
     #   The list of network CIDRs that can contain hybrid nodes.
@@ -5911,7 +7600,7 @@ module Aws::EKS
     #   It must satisfy the following requirements:
     #
     #   * Each block must be within an `IPv4` RFC-1918 network range.
-    #     Minimum allowed size is /24, maximum allowed size is /8.
+    #     Minimum allowed size is /32, maximum allowed size is /8.
     #     Publicly-routable addresses aren't supported.
     #
     #   * Each block cannot overlap with the range of the VPC CIDR blocks
@@ -5949,7 +7638,7 @@ module Aws::EKS
     #   It must satisfy the following requirements:
     #
     #   * Each block must be within an `IPv4` RFC-1918 network range.
-    #     Minimum allowed size is /24, maximum allowed size is /8.
+    #     Minimum allowed size is /32, maximum allowed size is /8.
     #     Publicly-routable addresses aren't supported.
     #
     #   * Each block cannot overlap with the range of the VPC CIDR blocks
@@ -5966,8 +7655,8 @@ module Aws::EKS
       include Aws::Structure
     end
 
-    # The configuration in the cluster for EKS Hybrid Nodes. You can't
-    # change or update this configuration after the cluster is created.
+    # The configuration in the cluster for EKS Hybrid Nodes. You can add,
+    # change, or remove this configuration after the cluster is created.
     #
     # @!attribute [rw] remote_node_networks
     #   The list of network CIDRs that can contain hybrid nodes.
@@ -5999,7 +7688,7 @@ module Aws::EKS
     # It must satisfy the following requirements:
     #
     # * Each block must be within an `IPv4` RFC-1918 network range. Minimum
-    #   allowed size is /24, maximum allowed size is /8. Publicly-routable
+    #   allowed size is /32, maximum allowed size is /8. Publicly-routable
     #   addresses aren't supported.
     #
     # * Each block cannot overlap with the range of the VPC CIDR blocks for
@@ -6032,7 +7721,7 @@ module Aws::EKS
     #   It must satisfy the following requirements:
     #
     #   * Each block must be within an `IPv4` RFC-1918 network range.
-    #     Minimum allowed size is /24, maximum allowed size is /8.
+    #     Minimum allowed size is /32, maximum allowed size is /8.
     #     Publicly-routable addresses aren't supported.
     #
     #   * Each block cannot overlap with the range of the VPC CIDR blocks
@@ -6077,7 +7766,7 @@ module Aws::EKS
     # It must satisfy the following requirements:
     #
     # * Each block must be within an `IPv4` RFC-1918 network range. Minimum
-    #   allowed size is /24, maximum allowed size is /8. Publicly-routable
+    #   allowed size is /32, maximum allowed size is /8. Publicly-routable
     #   addresses aren't supported.
     #
     # * Each block cannot overlap with the range of the VPC CIDR blocks for
@@ -6098,7 +7787,7 @@ module Aws::EKS
     #   It must satisfy the following requirements:
     #
     #   * Each block must be within an `IPv4` RFC-1918 network range.
-    #     Minimum allowed size is /24, maximum allowed size is /8.
+    #     Minimum allowed size is /32, maximum allowed size is /8.
     #     Publicly-routable addresses aren't supported.
     #
     #   * Each block cannot overlap with the range of the VPC CIDR blocks
@@ -6110,6 +7799,25 @@ module Aws::EKS
     #
     class RemotePodNetwork < Struct.new(
       :cidrs)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Constraints for resource weight entries.
+    #
+    # @!attribute [rw] name
+    #   The allowed values for resource names.
+    #   @return [Types::AllowedValuesConstraint]
+    #
+    # @!attribute [rw] weight
+    #   The allowed range for resource weight values.
+    #   @return [Types::IntegerRangeConstraint]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/ResourceConstraints AWS API Documentation
+    #
+    class ResourceConstraints < Struct.new(
+      :name,
+      :weight)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6230,6 +7938,103 @@ module Aws::EKS
       include Aws::Structure
     end
 
+    # A resource weight entry for the scheduler scoring strategy.
+    #
+    # @!attribute [rw] name
+    #   The name of the resource (for example, `cpu` or `memory`).
+    #   @return [String]
+    #
+    # @!attribute [rw] weight
+    #   The weight assigned to the resource for scoring. Must be between 1
+    #   and 100.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/ResourceWeight AWS API Documentation
+    #
+    class ResourceWeight < Struct.new(
+      :name,
+      :weight)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The rollback configuration for the cluster version rollback.
+    #
+    # @!attribute [rw] timeout_minutes
+    #   The length of time in minutes to wait before cancelling the update.
+    #   Timeout is a minimum-bound property, meaning the timeout occurs no
+    #   sooner than the time you specify, but can occur shortly thereafter.
+    #   This value can be between 120 (2 hours) and 10080 (7 days). Default:
+    #   `720` (12 hours) if not specified.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/RollbackConfig AWS API Documentation
+    #
+    class RollbackConfig < Struct.new(
+      :timeout_minutes)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The scoring strategy configuration for the NodeResourcesFit scheduler
+    # plugin.
+    #
+    # @!attribute [rw] type
+    #   The scoring strategy type. Valid values are `LeastAllocated` or
+    #   `MostAllocated`.
+    #   @return [String]
+    #
+    # @!attribute [rw] resources
+    #   The resource weights used for scoring nodes.
+    #   @return [Array<Types::ResourceWeight>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/ScoringStrategy AWS API Documentation
+    #
+    class ScoringStrategy < Struct.new(
+      :type,
+      :resources)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The scoring strategy configuration with default value and constraints.
+    #
+    # @!attribute [rw] default_value
+    #   The default scoring strategy.
+    #   @return [Types::ScoringStrategy]
+    #
+    # @!attribute [rw] constraints
+    #   The constraints for the scoring strategy.
+    #   @return [Types::ScoringStrategyConstraints]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/ScoringStrategyConfig AWS API Documentation
+    #
+    class ScoringStrategyConfig < Struct.new(
+      :default_value,
+      :constraints)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Constraints for the scoring strategy configuration.
+    #
+    # @!attribute [rw] scoring_strategy
+    #   The allowed values for the scoring strategy type.
+    #   @return [Types::AllowedValuesConstraint]
+    #
+    # @!attribute [rw] resources
+    #   The constraints for resource weights.
+    #   @return [Types::ResourceConstraints]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/ScoringStrategyConstraints AWS API Documentation
+    #
+    class ScoringStrategyConstraints < Struct.new(
+      :scoring_strategy,
+      :resources)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # These errors are usually caused by a server-side issue.
     #
     # @!attribute [rw] cluster_name
@@ -6264,6 +8069,25 @@ module Aws::EKS
       include Aws::Structure
     end
 
+    # The port range for Kubernetes NodePort services.
+    #
+    # @!attribute [rw] min_port
+    #   The minimum port number in the range.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max_port
+    #   The maximum port number in the range.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/ServiceNodePortRange AWS API Documentation
+    #
+    class ServiceNodePortRange < Struct.new(
+      :min_port,
+      :max_port)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The service is unavailable. Back off and retry the operation.
     #
     # @!attribute [rw] message
@@ -6274,6 +8098,56 @@ module Aws::EKS
     #
     class ServiceUnavailableException < Struct.new(
       :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # An IAM Identity CenterIAM; Identity Center identity (user or group)
+    # that can be assigned permissions in a capability.
+    #
+    # @!attribute [rw] id
+    #   The unique identifier of the IAM Identity CenterIAM; Identity Center
+    #   user or group.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The type of identity. Valid values are `SSO_USER` or `SSO_GROUP`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/SsoIdentity AWS API Documentation
+    #
+    class SsoIdentity < Struct.new(
+      :id,
+      :type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] cluster_name
+    #   The name of the cluster for the refresh insights operation.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/StartInsightsRefreshRequest AWS API Documentation
+    #
+    class StartInsightsRefreshRequest < Struct.new(
+      :cluster_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] message
+    #   The message associated with the insights refresh operation.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the insights refresh operation.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/StartInsightsRefreshResponse AWS API Documentation
+    #
+    class StartInsightsRefreshResponse < Struct.new(
+      :message,
+      :status)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6367,6 +8241,25 @@ module Aws::EKS
       include Aws::Structure
     end
 
+    # The request or operation couldn't be performed because a service is
+    # throttling requests.
+    #
+    # @!attribute [rw] cluster_name
+    #   The Amazon EKS cluster associated with the exception.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/ThrottlingException AWS API Documentation
+    #
+    class ThrottlingException < Struct.new(
+      :cluster_name,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # At least one of your specified cluster subnets is in an Availability
     # Zone that does not support Amazon EKS. The exception output specifies
     # the supported Availability Zones for your account, from which you can
@@ -6451,6 +8344,11 @@ module Aws::EKS
     #   Any errors associated with a `Failed` update.
     #   @return [Array<Types::ErrorDetail>]
     #
+    # @!attribute [rw] cancellation
+    #   The latest cancellation information for the update. This field is
+    #   present only if any cancellation is attempted for the update.
+    #   @return [Types::Cancellation]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/Update AWS API Documentation
     #
     class Update < Struct.new(
@@ -6459,7 +8357,8 @@ module Aws::EKS
       :type,
       :params,
       :created_at,
-      :errors)
+      :errors,
+      :cancellation)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6632,14 +8531,13 @@ module Aws::EKS
     #   @return [String]
     #
     # @!attribute [rw] pod_identity_associations
-    #   An array of Pod Identity Assocations to be updated. Each EKS Pod
-    #   Identity association maps a Kubernetes service account to an IAM
-    #   Role. If this value is left blank, no change. If an empty array is
-    #   provided, existing Pod Identity Assocations owned by the Addon are
-    #   deleted.
+    #   An array of EKS Pod Identity associations to be updated. Each
+    #   association maps a Kubernetes service account to an IAM role. If
+    #   this value is left blank, no change. If an empty array is provided,
+    #   existing associations owned by the add-on are deleted.
     #
     #   For more information, see [Attach an IAM Role to an Amazon EKS
-    #   add-on using Pod Identity][1] in the *Amazon EKS User Guide*.
+    #   add-on using EKS Pod Identity][1] in the *Amazon EKS User Guide*.
     #
     #
     #
@@ -6673,13 +8571,116 @@ module Aws::EKS
       include Aws::Structure
     end
 
+    # Configuration updates for an Argo CD capability. You only need to
+    # specify the fields you want to update.
+    #
+    # @!attribute [rw] rbac_role_mappings
+    #   Updated RBAC role mappings for the Argo CD capability. You can add,
+    #   update, or remove role mappings.
+    #   @return [Types::UpdateRoleMappings]
+    #
+    # @!attribute [rw] network_access
+    #   Updated network access configuration for the Argo CD capability's
+    #   managed API server endpoint. You can add or remove VPC endpoint
+    #   associations to control which VPCs have private access to the Argo
+    #   CD server.
+    #   @return [Types::ArgoCdNetworkAccessConfigRequest]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/UpdateArgoCdConfig AWS API Documentation
+    #
+    class UpdateArgoCdConfig < Struct.new(
+      :rbac_role_mappings,
+      :network_access)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration updates for a capability. The structure varies depending
+    # on the capability type.
+    #
+    # @!attribute [rw] argo_cd
+    #   Configuration updates specific to Argo CD capabilities.
+    #   @return [Types::UpdateArgoCdConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/UpdateCapabilityConfiguration AWS API Documentation
+    #
+    class UpdateCapabilityConfiguration < Struct.new(
+      :argo_cd)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] cluster_name
+    #   The name of the Amazon EKS cluster that contains the capability you
+    #   want to update configuration for.
+    #   @return [String]
+    #
+    # @!attribute [rw] capability_name
+    #   The name of the capability to update configuration for.
+    #   @return [String]
+    #
+    # @!attribute [rw] role_arn
+    #   The Amazon Resource Name (ARN) of the IAM role that the capability
+    #   uses to interact with Amazon Web Services services. If you specify a
+    #   new role ARN, the capability will start using the new role for all
+    #   subsequent operations.
+    #   @return [String]
+    #
+    # @!attribute [rw] configuration
+    #   The updated configuration settings for the capability. You only need
+    #   to specify the configuration parameters you want to change. For Argo
+    #   CD capabilities, you can update RBAC role mappings and network
+    #   access settings.
+    #   @return [Types::UpdateCapabilityConfiguration]
+    #
+    # @!attribute [rw] client_request_token
+    #   A unique, case-sensitive identifier that you provide to ensure the
+    #   idempotency of the request. This token is valid for 24 hours after
+    #   creation.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @!attribute [rw] delete_propagation_policy
+    #   The updated delete propagation policy for the capability. Currently,
+    #   the only supported value is `RETAIN`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/UpdateCapabilityRequest AWS API Documentation
+    #
+    class UpdateCapabilityRequest < Struct.new(
+      :cluster_name,
+      :capability_name,
+      :role_arn,
+      :configuration,
+      :client_request_token,
+      :delete_propagation_policy)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] update
+    #   An object representing an asynchronous update.
+    #   @return [Types::Update]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/UpdateCapabilityResponse AWS API Documentation
+    #
+    class UpdateCapabilityResponse < Struct.new(
+      :update)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] name
     #   The name of the Amazon EKS cluster to update.
     #   @return [String]
     #
     # @!attribute [rw] resources_vpc_config
-    #   An object representing the VPC configuration to use for an Amazon
-    #   EKS cluster.
+    #   An object representing the VPC configuration to use for the cluster
+    #   update. You can use this parameter to update the control plane
+    #   egress mode, the subnets used by the cluster, the security groups,
+    #   and the endpoint access settings.
     #   @return [Types::VpcConfigRequest]
     #
     # @!attribute [rw] logging
@@ -6761,6 +8762,36 @@ module Aws::EKS
     #   Auto Mode cluster. For example, enable the capability.
     #   @return [Types::StorageConfigRequest]
     #
+    # @!attribute [rw] remote_network_config
+    #   The configuration in the cluster for EKS Hybrid Nodes. You can add,
+    #   change, or remove this configuration after the cluster is created.
+    #   @return [Types::RemoteNetworkConfigRequest]
+    #
+    # @!attribute [rw] deletion_protection
+    #   Specifies whether to enable or disable deletion protection for the
+    #   cluster. When enabled (`true`), the cluster cannot be deleted until
+    #   deletion protection is explicitly disabled. When disabled (`false`),
+    #   the cluster can be deleted normally.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] control_plane_scaling_config
+    #   The control plane scaling tier configuration. For more information,
+    #   see EKS Provisioned Control Plane in the Amazon EKS User Guide.
+    #   @return [Types::ControlPlaneScalingConfig]
+    #
+    # @!attribute [rw] kube_api_server_config
+    #   The Kubernetes API server configuration for the updated cluster.
+    #   @return [Types::KubeApiServerConfigRequest]
+    #
+    # @!attribute [rw] kube_scheduler_config
+    #   The Kubernetes scheduler configuration for the updated cluster.
+    #   @return [Types::KubeSchedulerConfigRequest]
+    #
+    # @!attribute [rw] kube_controller_manager_config
+    #   The Kubernetes controller manager configuration for the updated
+    #   cluster.
+    #   @return [Types::KubeControllerManagerConfigRequest]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/UpdateClusterConfigRequest AWS API Documentation
     #
     class UpdateClusterConfigRequest < Struct.new(
@@ -6773,7 +8804,13 @@ module Aws::EKS
       :zonal_shift_config,
       :compute_config,
       :kubernetes_network_config,
-      :storage_config)
+      :storage_config,
+      :remote_network_config,
+      :deletion_protection,
+      :control_plane_scaling_config,
+      :kube_api_server_config,
+      :kube_scheduler_config,
+      :kube_controller_manager_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6806,12 +8843,23 @@ module Aws::EKS
     #   not need to pass this option.
     #   @return [String]
     #
+    # @!attribute [rw] force
+    #   Set this value to `true` to override upgrade-blocking or
+    #   rollback-blocking readiness checks when updating a cluster.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] rollback_config
+    #   The rollback configuration for the cluster version rollback.
+    #   @return [Types::RollbackConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/UpdateClusterVersionRequest AWS API Documentation
     #
     class UpdateClusterVersionRequest < Struct.new(
       :name,
       :version,
-      :client_request_token)
+      :client_request_token,
+      :force,
+      :rollback_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6923,6 +8971,12 @@ module Aws::EKS
     #   The node auto repair configuration for the node group.
     #   @return [Types::NodeRepairConfig]
     #
+    # @!attribute [rw] warm_pool_config
+    #   The warm pool configuration to apply to the node group. You can use
+    #   this to add a warm pool to an existing node group or modify the
+    #   settings of an existing warm pool.
+    #   @return [Types::WarmPoolConfig]
+    #
     # @!attribute [rw] client_request_token
     #   A unique, case-sensitive identifier that you provide to ensure the
     #   idempotency of the request.
@@ -6941,6 +8995,7 @@ module Aws::EKS
       :scaling_config,
       :update_config,
       :node_repair_config,
+      :warm_pool_config,
       :client_request_token)
       SENSITIVE = []
       include Aws::Structure
@@ -6968,14 +9023,16 @@ module Aws::EKS
     #
     # @!attribute [rw] version
     #   The Kubernetes version to update to. If no version is specified,
-    #   then the Kubernetes version of the node group does not change. You
-    #   can specify the Kubernetes version of the cluster to update the node
-    #   group to the latest AMI version of the cluster's Kubernetes
-    #   version. If you specify `launchTemplate`, and your launch template
-    #   uses a custom AMI, then don't specify `version`, or the node group
-    #   update will fail. For more information about using launch templates
-    #   with Amazon EKS, see [Customizing managed nodes with launch
-    #   templates][1] in the *Amazon EKS User Guide*.
+    #   then the node group will be updated to match the cluster's current
+    #   Kubernetes version, and the latest available AMI for that version
+    #   will be used. You can also specify the Kubernetes version of the
+    #   cluster to update the node group to the latest AMI version of the
+    #   cluster's Kubernetes version. If you specify `launchTemplate`, and
+    #   your launch template uses a custom AMI, then don't specify
+    #   `version`, or the node group update will fail. For more information
+    #   about using launch templates with Amazon EKS, see [Customizing
+    #   managed nodes with launch templates][1] in the *Amazon EKS User
+    #   Guide*.
     #
     #
     #
@@ -7083,7 +9140,7 @@ module Aws::EKS
     #   @return [String]
     #
     # @!attribute [rw] role_arn
-    #   The new IAM role to change the
+    #   The new IAM role to change in the association.
     #   @return [String]
     #
     # @!attribute [rw] client_request_token
@@ -7094,26 +9151,119 @@ module Aws::EKS
     #   not need to pass this option.
     #   @return [String]
     #
+    # @!attribute [rw] disable_session_tags
+    #   Disable the automatic sessions tags that are appended by EKS Pod
+    #   Identity.
+    #
+    #   EKS Pod Identity adds a pre-defined set of session tags when it
+    #   assumes the role. You can use these tags to author a single role
+    #   that can work across resources by allowing access to Amazon Web
+    #   Services resources based on matching tags. By default, EKS Pod
+    #   Identity attaches six tags, including tags for cluster name,
+    #   namespace, and service account name. For the list of tags added by
+    #   EKS Pod Identity, see [List of session tags added by EKS Pod
+    #   Identity][1] in the *Amazon EKS User Guide*.
+    #
+    #   Amazon Web Services compresses inline session policies, managed
+    #   policy ARNs, and session tags into a packed binary format that has a
+    #   separate limit. If you receive a `PackedPolicyTooLarge` error
+    #   indicating the packed binary format has exceeded the size limit, you
+    #   can attempt to reduce the size by disabling the session tags added
+    #   by EKS Pod Identity.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/eks/latest/userguide/pod-id-abac.html#pod-id-abac-tags
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] target_role_arn
+    #   The Amazon Resource Name (ARN) of the target IAM role to associate
+    #   with the service account. This role is assumed by using the EKS Pod
+    #   Identity association role, then the credentials for this role are
+    #   injected into the Pod.
+    #
+    #   When you run applications on Amazon EKS, your application might need
+    #   to access Amazon Web Services resources from a different role that
+    #   exists in the same or different Amazon Web Services account. For
+    #   example, your application running in “Account A” might need to
+    #   access resources, such as buckets in “Account B” or within “Account
+    #   A” itself. You can create a association to access Amazon Web
+    #   Services resources in “Account B” by creating two IAM roles: a role
+    #   in “Account A” and a role in “Account B” (which can be the same or
+    #   different account), each with the necessary trust and permission
+    #   policies. After you provide these roles in the *IAM role* and
+    #   *Target IAM role* fields, EKS will perform role chaining to ensure
+    #   your application gets the required permissions. This means Role A
+    #   will assume Role B, allowing your Pods to securely access resources
+    #   like S3 buckets in the target account.
+    #   @return [String]
+    #
+    # @!attribute [rw] policy
+    #   An optional IAM policy in JSON format (as an escaped string) that
+    #   applies additional restrictions to this pod identity association
+    #   beyond the IAM policies attached to the IAM role. This policy is
+    #   applied as the intersection of the role's policies and this policy,
+    #   allowing you to reduce the permissions that applications in the pods
+    #   can use. Use this policy to enforce least privilege access while
+    #   still leveraging a shared IAM role across multiple applications.
+    #
+    #   **Important considerations**
+    #
+    #   * **Session tags:** When using this policy, `disableSessionTags`
+    #     must be set to `true`.
+    #
+    #   * **Target role permissions:** If you specify both a `TargetRoleArn`
+    #     and a policy, the policy restrictions apply only to the target
+    #     role's permissions, not to the initial role used for assuming the
+    #     target role.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/UpdatePodIdentityAssociationRequest AWS API Documentation
     #
     class UpdatePodIdentityAssociationRequest < Struct.new(
       :cluster_name,
       :association_id,
       :role_arn,
-      :client_request_token)
+      :client_request_token,
+      :disable_session_tags,
+      :target_role_arn,
+      :policy)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # @!attribute [rw] association
-    #   The full description of the EKS Pod Identity association that was
-    #   updated.
+    #   The full description of the association that was updated.
     #   @return [Types::PodIdentityAssociation]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/UpdatePodIdentityAssociationResponse AWS API Documentation
     #
     class UpdatePodIdentityAssociationResponse < Struct.new(
       :association)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Updates to RBAC role mappings for an Argo CD capability. You can add,
+    # update, or remove role mappings in a single operation.
+    #
+    # @!attribute [rw] add_or_update_role_mappings
+    #   A list of role mappings to add or update. If a mapping for the
+    #   specified role already exists, it will be updated with the new
+    #   identities. If it doesn't exist, a new mapping will be created.
+    #   @return [Array<Types::ArgoCdRoleMapping>]
+    #
+    # @!attribute [rw] remove_role_mappings
+    #   A list of role mappings to remove from the RBAC configuration. Each
+    #   mapping specifies an Argo CD role (`ADMIN`, `EDITOR`, or `VIEWER`)
+    #   and the identities to remove from that role.
+    #   @return [Array<Types::ArgoCdRoleMapping>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/UpdateRoleMappings AWS API Documentation
+    #
+    class UpdateRoleMappings < Struct.new(
+      :add_or_update_role_mappings,
+      :remove_role_mappings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7237,8 +9387,10 @@ module Aws::EKS
     #   access, your cluster's Kubernetes API server can only receive
     #   requests from within the cluster VPC. The default value for this
     #   parameter is `true`, which enables public access for your Kubernetes
-    #   API server. For more information, see [Amazon EKS cluster endpoint
-    #   access control][1] in the <i> <i>Amazon EKS User Guide</i> </i>.
+    #   API server. The endpoint domain name and IP address family depends
+    #   on the value of the `ipFamily` for the cluster. For more
+    #   information, see [Cluster API server endpoint][1] in the <i>
+    #   <i>Amazon EKS User Guide</i> </i>.
     #
     #
     #
@@ -7254,8 +9406,8 @@ module Aws::EKS
     #   server. If you disable private access and you have nodes or Fargate
     #   pods in the cluster, then ensure that `publicAccessCidrs` includes
     #   the necessary CIDR blocks for communication with the nodes or
-    #   Fargate pods. For more information, see [Amazon EKS cluster endpoint
-    #   access control][1] in the <i> <i>Amazon EKS User Guide</i> </i>.
+    #   Fargate pods. For more information, see [Cluster API server
+    #   endpoint][1] in the <i> <i>Amazon EKS User Guide</i> </i>.
     #
     #
     #
@@ -7266,16 +9418,41 @@ module Aws::EKS
     #   The CIDR blocks that are allowed access to your cluster's public
     #   Kubernetes API server endpoint. Communication to the endpoint from
     #   addresses outside of the CIDR blocks that you specify is denied. The
-    #   default value is `0.0.0.0/0`. If you've disabled private endpoint
-    #   access, make sure that you specify the necessary CIDR blocks for
-    #   every node and Fargate `Pod` in the cluster. For more information,
-    #   see [Amazon EKS cluster endpoint access control][1] in the <i>
-    #   <i>Amazon EKS User Guide</i> </i>.
+    #   default value is `0.0.0.0/0` and additionally `::/0` for dual-stack
+    #   `IPv6` clusters. If you've disabled private endpoint access, make
+    #   sure that you specify the necessary CIDR blocks for every node and
+    #   Fargate `Pod` in the cluster. For more information, see [Cluster API
+    #   server endpoint][1] in the <i> <i>Amazon EKS User Guide</i> </i>.
+    #
+    #   Note that the public endpoints are dual-stack for only `IPv6`
+    #   clusters that are made after October 2024. You can't add `IPv6`
+    #   CIDR blocks to `IPv4` clusters or `IPv6` clusters that were made
+    #   before October 2024.
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/eks/latest/userguide/cluster-endpoint.html
     #   @return [Array<String>]
+    #
+    # @!attribute [rw] control_plane_egress_mode
+    #   Specifies the control plane egress routing mode for the cluster. If
+    #   the cluster is set to `AWS_MANAGED`, Amazon EKS manages the egress
+    #   path from the control plane and you don't need to configure NAT
+    #   gateways or other routing infrastructure for control plane traffic.
+    #   If the cluster is set to `CUSTOMER_ROUTED`, you manage the egress
+    #   path from the control plane in your VPC subnets. You are responsible
+    #   for ensuring that the control plane can reach required endpoints
+    #   such as webhook servers and OIDC providers. The default value is
+    #   `AWS_MANAGED`. Once set to `CUSTOMER_ROUTED`, this setting cannot be
+    #   changed back to `AWS_MANAGED` on the same cluster.
+    #
+    #   [Learn more about control plane egress routing in the *Amazon EKS
+    #   User Guide*.][1]
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/eks/latest/userguide/control-plane-egress.html
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/VpcConfigRequest AWS API Documentation
     #
@@ -7284,7 +9461,8 @@ module Aws::EKS
       :security_group_ids,
       :endpoint_public_access,
       :endpoint_private_access,
-      :public_access_cidrs)
+      :public_access_cidrs,
+      :control_plane_egress_mode)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7324,9 +9502,8 @@ module Aws::EKS
     #   the internet. If this value is disabled and you have nodes or
     #   Fargate pods in the cluster, then ensure that `publicAccessCidrs`
     #   includes the necessary CIDR blocks for communication with the nodes
-    #   or Fargate pods. For more information, see [Amazon EKS cluster
-    #   endpoint access control][1] in the <i> <i>Amazon EKS User Guide</i>
-    #   </i>.
+    #   or Fargate pods. For more information, see [Cluster API server
+    #   endpoint][1] in the <i> <i>Amazon EKS User Guide</i> </i>.
     #
     #
     #
@@ -7335,8 +9512,38 @@ module Aws::EKS
     #
     # @!attribute [rw] public_access_cidrs
     #   The CIDR blocks that are allowed access to your cluster's public
-    #   Kubernetes API server endpoint.
+    #   Kubernetes API server endpoint. Communication to the endpoint from
+    #   addresses outside of the CIDR blocks that you specify is denied. The
+    #   default value is `0.0.0.0/0` and additionally `::/0` for dual-stack
+    #   `IPv6` clusters. If you've disabled private endpoint access, make
+    #   sure that you specify the necessary CIDR blocks for every node and
+    #   Fargate `Pod` in the cluster. For more information, see [Cluster API
+    #   server endpoint][1] in the <i> <i>Amazon EKS User Guide</i> </i>.
+    #
+    #   Note that the public endpoints are dual-stack for only `IPv6`
+    #   clusters that are made after October 2024. You can't add `IPv6`
+    #   CIDR blocks to `IPv4` clusters or `IPv6` clusters that were made
+    #   before October 2024.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/eks/latest/userguide/cluster-endpoint.html
     #   @return [Array<String>]
+    #
+    # @!attribute [rw] control_plane_egress_mode
+    #   The current control plane egress routing mode for the cluster. If
+    #   the cluster is set to `AWS_MANAGED`, Amazon EKS manages the egress
+    #   path from the control plane. If the cluster is set to
+    #   `CUSTOMER_ROUTED`, you manage the egress path from the control plane
+    #   in your VPC subnets.
+    #
+    #   [Learn more about control plane egress routing in the *Amazon EKS
+    #   User Guide*.][1]
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/eks/latest/userguide/control-plane-egress.html
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/VpcConfigResponse AWS API Documentation
     #
@@ -7347,7 +9554,62 @@ module Aws::EKS
       :vpc_id,
       :endpoint_public_access,
       :endpoint_private_access,
-      :public_access_cidrs)
+      :public_access_cidrs,
+      :control_plane_egress_mode)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration for an Amazon EC2 Auto Scaling warm pool attached to
+    # an Amazon EKS managed node group. Warm pools maintain pre-initialized
+    # EC2 instances alongside your Auto Scaling group that have already
+    # completed the bootup initialization process and can be kept in a
+    # `Stopped`, `Running`, or `Hibernated` state.
+    #
+    # @!attribute [rw] enabled
+    #   Specifies whether to attach warm pools on the managed node group.
+    #   Set to `true` to enable the warm pool, or `false` to disable and
+    #   remove it. If not specified during an update, the current value is
+    #   preserved.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] min_size
+    #   The minimum number of instances to maintain in the warm pool.
+    #   Default: `0`. Size your warm pool based on scaling patterns to
+    #   balance cost and availability. Start with 10-20% of expected peak
+    #   capacity.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max_group_prepared_capacity
+    #   The maximum total number of instances across the warm pool and Auto
+    #   Scaling group combined. This value controls the total prepared
+    #   capacity available for your node group.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] pool_state
+    #   The desired state for warm pool instances. Default: `Stopped`. Valid
+    #   values are `Stopped` (most cost-effective with EBS storage costs
+    #   only), `Running` (fastest transition time with full EC2 costs), and
+    #   `Hibernated` (balance between cost and speed, only supported on
+    #   specific instance types). Warm pool instances in the `Hibernated`
+    #   state are not supported with Bottlerocket AMIs.
+    #   @return [String]
+    #
+    # @!attribute [rw] reuse_on_scale_in
+    #   Indicates whether instances should return to the warm pool during
+    #   scale-in events instead of being terminated. Default: `false`.
+    #   Enable this to reduce costs by reusing instances. This feature is
+    #   not supported for Bottlerocket AMIs.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/WarmPoolConfig AWS API Documentation
+    #
+    class WarmPoolConfig < Struct.new(
+      :enabled,
+      :min_size,
+      :max_group_prepared_capacity,
+      :pool_state,
+      :reuse_on_scale_in)
       SENSITIVE = []
       include Aws::Structure
     end

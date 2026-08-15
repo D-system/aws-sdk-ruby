@@ -32,14 +32,17 @@ module Aws::Connect
   # * {ConflictException}
   # * {ContactFlowNotPublishedException}
   # * {ContactNotFoundException}
+  # * {ContactNotTerminatedException}
   # * {DestinationNotAllowedException}
   # * {DuplicateResourceException}
   # * {IdempotencyException}
   # * {InternalServiceException}
+  # * {InvalidActiveRegionException}
   # * {InvalidContactFlowException}
   # * {InvalidContactFlowModuleException}
   # * {InvalidParameterException}
   # * {InvalidRequestException}
+  # * {InvalidTestCaseException}
   # * {LimitExceededException}
   # * {MaximumResultReturnedException}
   # * {OutboundContactNotPermittedException}
@@ -135,6 +138,21 @@ module Aws::Connect
       end
     end
 
+    class ContactNotTerminatedException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::Connect::Types::ContactNotTerminatedException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+    end
+
     class DestinationNotAllowedException < ServiceError
 
       # @param [Seahorse::Client::RequestContext] context
@@ -185,6 +203,21 @@ module Aws::Connect
       # @param [Seahorse::Client::RequestContext] context
       # @param [String] message
       # @param [Aws::Connect::Types::InternalServiceException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+    end
+
+    class InvalidActiveRegionException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::Connect::Types::InvalidActiveRegionException] data
       def initialize(context, message, data = Aws::EmptyStructure.new)
         super(context, message, data)
       end
@@ -257,6 +290,21 @@ module Aws::Connect
       # @return [String]
       def reason
         @data[:reason]
+      end
+    end
+
+    class InvalidTestCaseException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::Connect::Types::InvalidTestCaseException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def problems
+        @data[:problems]
       end
     end
 

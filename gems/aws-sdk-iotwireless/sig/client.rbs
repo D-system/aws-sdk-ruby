@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -93,7 +94,7 @@ module Aws
                                                           {
                                                             key: ::String,
                                                             value: ::String
-                                                          },
+                                                          }
                                                         ]
                                                       ) -> _AssociateAwsAccountWithPartnerAccountResponseSuccess
                                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _AssociateAwsAccountWithPartnerAccountResponseSuccess
@@ -184,7 +185,7 @@ module Aws
                                   {
                                     key: ::String,
                                     value: ::String
-                                  },
+                                  }
                                 ],
                                 ?client_request_token: ::String
                               ) -> _CreateDestinationResponseSuccess
@@ -223,7 +224,7 @@ module Aws
                                      {
                                        key: ::String,
                                        value: ::String
-                                     },
+                                     }
                                    ],
                                    ?client_request_token: ::String,
                                    ?sidewalk: {
@@ -250,7 +251,7 @@ module Aws
                                  {
                                    key: ::String,
                                    value: ::String
-                                 },
+                                 }
                                ],
                                ?redundancy_percent: ::Integer,
                                ?fragment_size_bytes: ::Integer,
@@ -269,19 +270,12 @@ module Aws
                                     ?name: ::String,
                                     ?description: ::String,
                                     ?client_request_token: ::String,
-                                    lo_ra_wan: {
-                                      rf_region: ("EU868" | "US915" | "AU915" | "AS923-1" | "AS923-2" | "AS923-3" | "AS923-4" | "EU433" | "CN470" | "CN779" | "RU864" | "KR920" | "IN865")?,
-                                      dl_class: ("ClassB" | "ClassC")?,
-                                      participating_gateways: {
-                                        gateway_list: Array[::String]?,
-                                        transmission_interval: ::Integer?
-                                      }?
-                                    },
+                                    lo_ra_wan: Params::lo_ra_wan_multicast,
                                     ?tags: Array[
                                       {
                                         key: ::String,
                                         value: ::String
-                                      },
+                                      }
                                     ]
                                   ) -> _CreateMulticastGroupResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateMulticastGroupResponseSuccess
@@ -306,7 +300,7 @@ module Aws
                                                      {
                                                        key: ::String,
                                                        value: ::String
-                                                     },
+                                                     }
                                                    ],
                                                    ?client_request_token: ::String,
                                                    ?multicast_groups: Array[::String]
@@ -326,13 +320,17 @@ module Aws
                                       dr_min: ::Integer?,
                                       dr_max: ::Integer?,
                                       pr_allowed: bool?,
-                                      ra_allowed: bool?
+                                      ra_allowed: bool?,
+                                      tx_power_index_min: ::Integer?,
+                                      tx_power_index_max: ::Integer?,
+                                      nb_trans_min: ::Integer?,
+                                      nb_trans_max: ::Integer?
                                     },
                                     ?tags: Array[
                                       {
                                         key: ::String,
                                         value: ::String
-                                      },
+                                      }
                                     ],
                                     ?client_request_token: ::String
                                   ) -> _CreateServiceProfileResponseSuccess
@@ -397,7 +395,7 @@ module Aws
                                             f_port: ::Integer?,
                                             type: ("SemtechGeolocation")?,
                                             destination_name: ::String?
-                                          },
+                                          }
                                         ]?
                                       }?
                                     },
@@ -405,11 +403,15 @@ module Aws
                                       {
                                         key: ::String,
                                         value: ::String
-                                      },
+                                      }
                                     ],
                                     ?positioning: ("Enabled" | "Disabled"),
                                     ?sidewalk: {
-                                      device_profile_id: ::String?
+                                      device_profile_id: ::String?,
+                                      positioning: {
+                                        destination_name: ::String?
+                                      }?,
+                                      sidewalk_manufacturing_sn: ::String?
                                     }
                                   ) -> _CreateWirelessDeviceResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateWirelessDeviceResponseSuccess
@@ -427,7 +429,7 @@ module Aws
                                        gateway_eui: ::String?,
                                        rf_region: ::String?,
                                        join_eui_filters: Array[
-                                         Array[::String],
+                                         Array[::String]
                                        ]?,
                                        net_id_filters: Array[::String]?,
                                        sub_bands: Array[::Integer]?,
@@ -441,7 +443,7 @@ module Aws
                                        {
                                          key: ::String,
                                          value: ::String
-                                       },
+                                       }
                                      ],
                                      ?client_request_token: ::String
                                    ) -> _CreateWirelessGatewayResponseSuccess
@@ -491,7 +493,7 @@ module Aws
                                                        {
                                                          key: ::String,
                                                          value: ::String
-                                                       },
+                                                       }
                                                      ]
                                                    ) -> _CreateWirelessGatewayTaskDefinitionResponseSuccess
                                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateWirelessGatewayTaskDefinitionResponseSuccess
@@ -782,12 +784,12 @@ module Aws
                                {
                                  name: ("DeviceId" | "GatewayId")?,
                                  value: ::String?
-                               },
+                               }
                              ]?,
                              aggregation_period: ("OneHour" | "OneDay" | "OneWeek")?,
                              start_timestamp: ::Time?,
                              end_timestamp: ::Time?
-                           },
+                           }
                          ]
                        ) -> _GetMetricsResponseSuccess
                      | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetMetricsResponseSuccess
@@ -884,7 +886,7 @@ module Aws
                                      {
                                        mac_address: ::String,
                                        rss: ::Integer
-                                     },
+                                     }
                                    ],
                                    ?cell_towers: {
                                      gsm: Array[
@@ -908,9 +910,9 @@ module Aws
                                                lac: ::Integer,
                                                geran_cid: ::Integer
                                              }?
-                                           },
+                                           }
                                          ]?
-                                       },
+                                       }
                                      ]?,
                                      wcdma: Array[
                                        {
@@ -931,9 +933,9 @@ module Aws
                                              utran_cid: ::Integer,
                                              rscp: ::Integer?,
                                              path_loss: ::Integer?
-                                           },
+                                           }
                                          ]?
-                                       },
+                                       }
                                      ]?,
                                      tdscdma: Array[
                                        {
@@ -955,9 +957,9 @@ module Aws
                                              utran_cid: ::Integer?,
                                              rscp: ::Integer?,
                                              path_loss: ::Integer?
-                                           },
+                                           }
                                          ]?
-                                       },
+                                       }
                                      ]?,
                                      lte: Array[
                                        {
@@ -980,9 +982,9 @@ module Aws
                                              eutran_cid: ::Integer?,
                                              rsrp: ::Integer?,
                                              rsrq: ::Float?
-                                           },
+                                           }
                                          ]?
-                                       },
+                                       }
                                      ]?,
                                      cdma: Array[
                                        {
@@ -1003,9 +1005,9 @@ module Aws
                                              cdma_channel: ::Integer,
                                              pilot_power: ::Integer?,
                                              base_station_id: ::Integer?
-                                           },
+                                           }
                                          ]?
-                                       },
+                                       }
                                      ]?
                                    },
                                    ?ip: {
@@ -1019,7 +1021,12 @@ module Aws
                                      assist_altitude: ::Float?,
                                      use_2_d_solver: bool?
                                    },
-                                   ?timestamp: ::Time
+                                   ?timestamp: ::Time,
+                                   ?advanced_configuration: {
+                                     wi_fi_cellular: {
+                                       confidence_percent: ::Integer?
+                                     }?
+                                   }
                                  ) ?{ (*untyped) -> void } -> _GetPositionEstimateResponseSuccess
                                | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) ?{ (*untyped) -> void } -> _GetPositionEstimateResponseSuccess
 
@@ -1034,7 +1041,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IoTWireless/Client.html#get_resource_event_configuration-instance_method
       def get_resource_event_configuration: (
                                               identifier: ::String,
-                                              identifier_type: ("PartnerAccountId" | "DevEui" | "FuotaTaskId" | "GatewayEui" | "WirelessDeviceId" | "WirelessGatewayId"),
+                                              identifier_type: ("PartnerAccountId" | "DevEui" | "GatewayEui" | "WirelessDeviceId" | "WirelessGatewayId"),
                                               ?partner_type: ("Sidewalk")
                                             ) -> _GetResourceEventConfigurationResponseSuccess
                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetResourceEventConfigurationResponseSuccess
@@ -1112,6 +1119,7 @@ module Aws
         def id: () -> ::String
         def arn: () -> ::String
         def destination_name: () -> ::String
+        def positioning: () -> ("Enabled" | "Disabled")
         def sidewalk: () -> Types::SidewalkGetStartImportInfo
         def creation_time: () -> ::Time
         def status: () -> ("INITIALIZING" | "INITIALIZED" | "PENDING" | "COMPLETE" | "FAILED" | "DELETING")
@@ -1246,6 +1254,8 @@ module Aws
         include ::Seahorse::Client::_ResponseSuccess[Types::ListDevicesForWirelessDeviceImportTaskResponse]
         def next_token: () -> ::String
         def destination_name: () -> ::String
+        def positioning: () -> ("Enabled" | "Disabled")
+        def sidewalk: () -> Types::SidewalkListDevicesForImportInfo
         def imported_wireless_device_list: () -> ::Array[Types::ImportedWirelessDevice]
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IoTWireless/Client.html#list_devices_for_wireless_device_import_task-instance_method
@@ -1264,7 +1274,7 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IoTWireless/Client.html#list_event_configurations-instance_method
       def list_event_configurations: (
-                                       resource_type: ("FuotaTask" | "SidewalkAccount" | "WirelessDevice" | "WirelessGateway"),
+                                       resource_type: ("SidewalkAccount" | "WirelessDevice" | "WirelessGateway"),
                                        ?max_results: ::Integer,
                                        ?next_token: ::String
                                      ) -> _ListEventConfigurationsResponseSuccess
@@ -1515,7 +1525,7 @@ module Aws
                                                   {
                                                     gateway_id: ::String,
                                                     downlink_frequency: ::Integer
-                                                  },
+                                                  }
                                                 ],
                                                 transmission_interval: ::Integer
                                               }?
@@ -1540,7 +1550,7 @@ module Aws
                                                                          {
                                                                            key: ::String,
                                                                            value: ::String
-                                                                         },
+                                                                         }
                                                                        ]
                                                                      ) -> _StartBulkAssociateWirelessDeviceWithMulticastGroupResponseSuccess
                                                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartBulkAssociateWirelessDeviceWithMulticastGroupResponseSuccess
@@ -1556,7 +1566,7 @@ module Aws
                                                                             {
                                                                               key: ::String,
                                                                               value: ::String
-                                                                            },
+                                                                            }
                                                                           ]
                                                                         ) -> _StartBulkDisassociateWirelessDeviceFromMulticastGroupResponseSuccess
                                                                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartBulkDisassociateWirelessDeviceFromMulticastGroupResponseSuccess
@@ -1603,10 +1613,14 @@ module Aws
                                                         {
                                                           key: ::String,
                                                           value: ::String
-                                                        },
+                                                        }
                                                       ],
+                                                      ?positioning: ("Enabled" | "Disabled"),
                                                       sidewalk: {
-                                                        sidewalk_manufacturing_sn: ::String?
+                                                        sidewalk_manufacturing_sn: ::String?,
+                                                        positioning: {
+                                                          destination_name: ::String?
+                                                        }?
                                                       }
                                                     ) -> _StartSingleWirelessDeviceImportTaskResponseSuccess
                                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartSingleWirelessDeviceImportTaskResponseSuccess
@@ -1624,11 +1638,15 @@ module Aws
                                                  {
                                                    key: ::String,
                                                    value: ::String
-                                                 },
+                                                 }
                                                ],
+                                               ?positioning: ("Enabled" | "Disabled"),
                                                sidewalk: {
                                                  device_creation_file: ::String?,
-                                                 role: ::String?
+                                                 role: ::String?,
+                                                 positioning: {
+                                                   destination_name: ::String?
+                                                 }?
                                                }
                                              ) -> _StartWirelessDeviceImportTaskResponseSuccess
                                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartWirelessDeviceImportTaskResponseSuccess
@@ -1643,7 +1661,7 @@ module Aws
                             {
                               key: ::String,
                               value: ::String
-                            },
+                            }
                           ]
                         ) -> _TagResourceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess
@@ -1748,9 +1766,9 @@ module Aws
                                                        {
                                                          event: ("Fuota"),
                                                          log_level: ("INFO" | "ERROR" | "DISABLED")
-                                                       },
+                                                       }
                                                      ]?
-                                                   },
+                                                   }
                                                  ],
                                                  ?wireless_device_log_options: Array[
                                                    {
@@ -1760,9 +1778,9 @@ module Aws
                                                        {
                                                          event: ("Join" | "Rejoin" | "Uplink_Data" | "Downlink_Data" | "Registration"),
                                                          log_level: ("INFO" | "ERROR" | "DISABLED")
-                                                       },
+                                                       }
                                                      ]?
-                                                   },
+                                                   }
                                                  ],
                                                  ?wireless_gateway_log_options: Array[
                                                    {
@@ -1772,9 +1790,9 @@ module Aws
                                                        {
                                                          event: ("CUPS_Request" | "Certificate"),
                                                          log_level: ("INFO" | "ERROR" | "DISABLED")
-                                                       },
+                                                       }
                                                      ]?
-                                                   },
+                                                   }
                                                  ]
                                                ) -> _UpdateLogLevelsByResourceTypesResponseSuccess
                                              | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateLogLevelsByResourceTypesResponseSuccess
@@ -1798,14 +1816,7 @@ module Aws
                                     id: ::String,
                                     ?name: ::String,
                                     ?description: ::String,
-                                    ?lo_ra_wan: {
-                                      rf_region: ("EU868" | "US915" | "AU915" | "AS923-1" | "AS923-2" | "AS923-3" | "AS923-4" | "EU433" | "CN470" | "CN779" | "RU864" | "KR920" | "IN865")?,
-                                      dl_class: ("ClassB" | "ClassC")?,
-                                      participating_gateways: {
-                                        gateway_list: Array[::String]?,
-                                        transmission_interval: ::Integer?
-                                      }?
-                                    }
+                                    ?lo_ra_wan: Params::lo_ra_wan_multicast
                                   ) -> _UpdateMulticastGroupResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateMulticastGroupResponseSuccess
 
@@ -1860,7 +1871,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IoTWireless/Client.html#update_resource_event_configuration-instance_method
       def update_resource_event_configuration: (
                                                  identifier: ::String,
-                                                 identifier_type: ("PartnerAccountId" | "DevEui" | "FuotaTaskId" | "GatewayEui" | "WirelessDeviceId" | "WirelessGatewayId"),
+                                                 identifier_type: ("PartnerAccountId" | "DevEui" | "GatewayEui" | "WirelessDeviceId" | "WirelessGatewayId"),
                                                  ?partner_type: ("Sidewalk"),
                                                  ?device_registration_state: {
                                                    sidewalk: {
@@ -1935,11 +1946,16 @@ module Aws
                                             f_port: ::Integer?,
                                             type: ("SemtechGeolocation")?,
                                             destination_name: ::String?
-                                          },
+                                          }
                                         ]?
                                       }?
                                     },
-                                    ?positioning: ("Enabled" | "Disabled")
+                                    ?positioning: ("Enabled" | "Disabled"),
+                                    ?sidewalk: {
+                                      positioning: {
+                                        destination_name: ::String?
+                                      }?
+                                    }
                                   ) -> _UpdateWirelessDeviceResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateWirelessDeviceResponseSuccess
 
@@ -1964,7 +1980,7 @@ module Aws
                                      ?name: ::String,
                                      ?description: ::String,
                                      ?join_eui_filters: Array[
-                                       Array[::String],
+                                       Array[::String]
                                      ],
                                      ?net_id_filters: Array[::String],
                                      ?max_eirp: ::Float

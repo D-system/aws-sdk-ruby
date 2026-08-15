@@ -95,8 +95,8 @@ module Aws::CodeCommit
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::CodeCommit
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::CodeCommit
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::CodeCommit
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::CodeCommit
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::CodeCommit
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::CodeCommit
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::CodeCommit
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -2036,6 +2040,99 @@ module Aws::CodeCommit
       req.send_request(options)
     end
 
+    # Returns a structured, line-level diff between two blob versions in a
+    # repository. The diff is returned as an ordered list of hunks, where
+    # each hunk represents a contiguous run of changed lines together with
+    # any surrounding unchanged context lines.
+    #
+    # Results are paginated. Use `MaxResults` and `NextToken` to retrieve
+    # additional pages.
+    #
+    # For the typical usage workflow, see GetDifferences.
+    #
+    # @option params [required, String] :repository_name
+    #   The name of the repository that contains the blobs to compare.
+    #
+    # @option params [required, String] :after_blob_id
+    #   The ID of the "after" (destination) blob in the diff. Typically the
+    #   value of `afterBlob.blobId` from a `Difference` object returned by
+    #   GetDifferences.
+    #
+    # @option params [String] :before_blob_id
+    #   The ID of the "before" (source) blob in the diff. Typically the
+    #   value of `beforeBlob.blobId` from a `Difference` object returned by
+    #   GetDifferences.
+    #
+    #   If you do not specify a value, the operation returns a diff against an
+    #   empty before-state. This is equivalent to treating the file as newly
+    #   added.
+    #
+    # @option params [Integer] :context_lines
+    #   The number of unchanged lines of context to include before and after
+    #   each block of changes in a hunk. Valid values are 0 through 20.
+    #   Defaults to `3`.
+    #
+    # @option params [Boolean] :ignore_whitespace
+    #   Specifies whether to ignore whitespace-only changes when computing the
+    #   diff. When `true`, the operation treats lines that differ only in
+    #   whitespace as unchanged. Defaults to `false`.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of `DiffHunk` entries to return in a single
+    #   response page. Defaults to `100`.
+    #
+    # @option params [String] :next_token
+    #   An enumeration token that returns the next batch of results when
+    #   present in a request.
+    #
+    # @return [Types::GetBlobDifferencesOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetBlobDifferencesOutput#hunks #hunks} => Array&lt;Types::DiffHunk&gt;
+    #   * {Types::GetBlobDifferencesOutput#is_binary #is_binary} => Boolean
+    #   * {Types::GetBlobDifferencesOutput#before_blob_size #before_blob_size} => Integer
+    #   * {Types::GetBlobDifferencesOutput#after_blob_size #after_blob_size} => Integer
+    #   * {Types::GetBlobDifferencesOutput#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_blob_differences({
+    #     repository_name: "RepositoryName", # required
+    #     after_blob_id: "ObjectId", # required
+    #     before_blob_id: "ObjectId",
+    #     context_lines: 1,
+    #     ignore_whitespace: false,
+    #     max_results: 1,
+    #     next_token: "NextToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.hunks #=> Array
+    #   resp.hunks[0].before_start_line #=> Integer
+    #   resp.hunks[0].before_line_count #=> Integer
+    #   resp.hunks[0].after_start_line #=> Integer
+    #   resp.hunks[0].after_line_count #=> Integer
+    #   resp.hunks[0].changes #=> Array
+    #   resp.hunks[0].changes[0].type #=> String, one of "CONTEXT", "ADD", "DELETE"
+    #   resp.hunks[0].changes[0].before_line_number #=> Integer
+    #   resp.hunks[0].changes[0].after_line_number #=> Integer
+    #   resp.hunks[0].changes[0].content #=> String
+    #   resp.is_binary #=> Boolean
+    #   resp.before_blob_size #=> Integer
+    #   resp.after_blob_size #=> Integer
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/codecommit-2015-04-13/GetBlobDifferences AWS API Documentation
+    #
+    # @overload get_blob_differences(params = {})
+    # @param [Hash] params ({})
+    def get_blob_differences(params = {}, options = {})
+      req = build_request(:get_blob_differences, params)
+      req.send_request(options)
+    end
+
     # Returns information about a repository branch, including its name and
     # the last commit ID.
     #
@@ -2392,6 +2489,10 @@ module Aws::CodeCommit
     # Returns information about the differences in a valid commit specifier
     # (such as a branch, tag, HEAD, commit ID, or other fully qualified
     # reference). Results can be limited to a specified path.
+    #
+    # For line-level diff details, pass the `beforeBlob.blobId` and
+    # `afterBlob.blobId` values from a `Difference` object to
+    # GetBlobDifferences.
     #
     # @option params [required, String] :repository_name
     #   The name of the repository where you want to get differences.
@@ -5203,7 +5304,7 @@ module Aws::CodeCommit
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-codecommit'
-      context[:gem_version] = '1.83.0'
+      context[:gem_version] = '1.103.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

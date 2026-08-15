@@ -95,8 +95,8 @@ module Aws::MediaPackageV2
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::MediaPackageV2
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::MediaPackageV2
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::MediaPackageV2
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::MediaPackageV2
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::MediaPackageV2
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::MediaPackageV2
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::MediaPackageV2
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -580,6 +584,24 @@ module Aws::MediaPackageV2
     #   Elemental MediaPackage includes in responses to the CDN. This setting
     #   is valid only when `InputType` is `CMAF`.
     #
+    # @option params [String] :output_locking_mode
+    #   The output locking mode for the channel. This setting is only valid
+    #   when `InputType` is `CMAF`. This value is immutable after channel
+    #   creation. If you don't specify a value, the default is
+    #   `EPOCH_LOCKED`.
+    #
+    #   The allowed values are:
+    #
+    #   * `EPOCH_LOCKED` - The channel uses epoch-locked behavior with
+    #     deterministic sequence numbering and fixed segment boundaries
+    #     aligned to epoch time. This mode supports cross-region
+    #     synchronization and failover.
+    #
+    #   * `NON_EPOCH_LOCKED` - The channel uses non-epoch-locked behavior with
+    #     duration-based segment combining and monotonically increasing
+    #     sequence numbers starting from 0. This mode does not support
+    #     cross-region synchronization or failover.
+    #
     # @option params [Hash<String,String>] :tags
     #   A comma-separated list of tag key:value pairs that you define. For
     #   example:
@@ -602,6 +624,7 @@ module Aws::MediaPackageV2
     #   * {Types::CreateChannelResponse#tags #tags} => Hash&lt;String,String&gt;
     #   * {Types::CreateChannelResponse#input_switch_configuration #input_switch_configuration} => Types::InputSwitchConfiguration
     #   * {Types::CreateChannelResponse#output_header_configuration #output_header_configuration} => Types::OutputHeaderConfiguration
+    #   * {Types::CreateChannelResponse#output_locking_mode #output_locking_mode} => String
     #
     #
     # @example Example: Creating a Channel
@@ -643,6 +666,39 @@ module Aws::MediaPackageV2
     #     }, 
     #   }
     #
+    # @example Example: Creating a CMAF Channel with non-epoch-locked output locking mode
+    #
+    #   resp = client.create_channel({
+    #     channel_group_name: "exampleChannelGroup", 
+    #     channel_name: "exampleCmafChannel", 
+    #     description: "Non-epoch-locked CMAF channel", 
+    #     input_type: "CMAF", 
+    #     output_locking_mode: "NON_EPOCH_LOCKED", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     arn: "arn:aws:mediapackagev2:us-west-2:123456789012:channelGroup/exampleChannelGroup/channel/exampleCmafChannel", 
+    #     channel_group_name: "exampleChannelGroup", 
+    #     channel_name: "exampleCmafChannel", 
+    #     created_at: Time.parse("2022-10-18T09:36:00.00Z"), 
+    #     description: "Non-epoch-locked CMAF channel", 
+    #     etag: "GlfT+dwAyGIR4wuy8nKWl1RDPwSrjQej9qUutLZxoxk=", 
+    #     ingest_endpoints: [
+    #       {
+    #         id: "1", 
+    #         url: "https://abcde-1.ingest.vwxyz.mediapackagev2.us-west-2.amazonaws.com/v1/exampleChannelGroup/exampleCmafChannel", 
+    #       }, 
+    #       {
+    #         id: "2", 
+    #         url: "https://abcde-2.ingest.vwxyz.mediapackagev2.us-west-2.amazonaws.com/v1/exampleChannelGroup/exampleCmafChannel", 
+    #       }, 
+    #     ], 
+    #     input_type: "CMAF", 
+    #     modified_at: Time.parse("2022-10-18T09:36:00.00Z"), 
+    #     output_locking_mode: "NON_EPOCH_LOCKED", 
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_channel({
@@ -653,10 +709,12 @@ module Aws::MediaPackageV2
     #     description: "ResourceDescription",
     #     input_switch_configuration: {
     #       mqcs_input_switching: false,
+    #       preferred_input: 1,
     #     },
     #     output_header_configuration: {
     #       publish_mqcs: false,
     #     },
+    #     output_locking_mode: "EPOCH_LOCKED", # accepts EPOCH_LOCKED, NON_EPOCH_LOCKED
     #     tags: {
     #       "TagKey" => "TagValue",
     #     },
@@ -678,7 +736,9 @@ module Aws::MediaPackageV2
     #   resp.tags #=> Hash
     #   resp.tags["TagKey"] #=> String
     #   resp.input_switch_configuration.mqcs_input_switching #=> Boolean
+    #   resp.input_switch_configuration.preferred_input #=> Integer
     #   resp.output_header_configuration.publish_mqcs #=> Boolean
+    #   resp.output_locking_mode #=> String, one of "EPOCH_LOCKED", "NON_EPOCH_LOCKED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/CreateChannel AWS API Documentation
     #
@@ -1066,8 +1126,29 @@ module Aws::MediaPackageV2
     # @option params [Array<Types::CreateDashManifestConfiguration>] :dash_manifests
     #   A DASH manifest configuration.
     #
+    # @option params [Array<Types::CreateMssManifestConfiguration>] :mss_manifests
+    #   A list of Microsoft Smooth Streaming (MSS) manifest configurations for
+    #   the origin endpoint. You can configure multiple MSS manifests to
+    #   provide different streaming experiences or to support different client
+    #   requirements.
+    #
     # @option params [Types::ForceEndpointErrorConfiguration] :force_endpoint_error_configuration
     #   The failover settings for the endpoint.
+    #
+    # @option params [String] :uri_separator
+    #   The separator character to use in generated URIs for this origin
+    #   endpoint. This setting applies to all manifest types on the endpoint.
+    #   If you don't specify a value, the default is `UNDERSCORE`.
+    #
+    # @option params [String] :stream_name_output_mode
+    #   The output mode for stream names in egress manifests. This setting is
+    #   valid only when the associated channel's `InputType` is `HLS`. You
+    #   can't change the stream name output mode after you create the
+    #   endpoint.
+    #
+    #   `INDEX` uses numeric indices for stream names (for example, 1, 2, 3).
+    #   `PASSTHROUGH_NAME` uses the stream names from the input manifest. If
+    #   you don't specify a value, the default is `INDEX`.
     #
     # @option params [Hash<String,String>] :tags
     #   A comma-separated list of tag key:value pairs that you define. For
@@ -1092,7 +1173,10 @@ module Aws::MediaPackageV2
     #   * {Types::CreateOriginEndpointResponse#hls_manifests #hls_manifests} => Array&lt;Types::GetHlsManifestConfiguration&gt;
     #   * {Types::CreateOriginEndpointResponse#low_latency_hls_manifests #low_latency_hls_manifests} => Array&lt;Types::GetLowLatencyHlsManifestConfiguration&gt;
     #   * {Types::CreateOriginEndpointResponse#dash_manifests #dash_manifests} => Array&lt;Types::GetDashManifestConfiguration&gt;
+    #   * {Types::CreateOriginEndpointResponse#mss_manifests #mss_manifests} => Array&lt;Types::GetMssManifestConfiguration&gt;
     #   * {Types::CreateOriginEndpointResponse#force_endpoint_error_configuration #force_endpoint_error_configuration} => Types::ForceEndpointErrorConfiguration
+    #   * {Types::CreateOriginEndpointResponse#uri_separator #uri_separator} => String
+    #   * {Types::CreateOriginEndpointResponse#stream_name_output_mode #stream_name_output_mode} => String
     #   * {Types::CreateOriginEndpointResponse#etag #etag} => String
     #   * {Types::CreateOriginEndpointResponse#tags #tags} => Hash&lt;String,String&gt;
     #
@@ -1121,6 +1205,7 @@ module Aws::MediaPackageV2
     #         scte_hls: {
     #           ad_marker_hls: "DATERANGE", 
     #         }, 
+    #         uri_path_type: "ROOT", 
     #       }, 
     #       {
     #         child_manifest_name: "exampleManifest2", 
@@ -1130,6 +1215,7 @@ module Aws::MediaPackageV2
     #         scte_hls: {
     #           ad_marker_hls: "DATERANGE", 
     #         }, 
+    #         uri_path_type: "ROOT", 
     #       }, 
     #     ], 
     #     low_latency_hls_manifests: [
@@ -1161,6 +1247,7 @@ module Aws::MediaPackageV2
     #         }, 
     #         key_rotation_interval_seconds: 300, 
     #         speke_key_provider: {
+    #           certificate_arn: "arn:aws:acm:us-west-2:123456789012:certificate/0c6a65f1-7bd3-48ac-be17-f38675def22e", 
     #           drm_systems: [
     #             "CLEAR_KEY_AES_128", 
     #           ], 
@@ -1186,10 +1273,12 @@ module Aws::MediaPackageV2
     #       ts_use_audio_rendition_group: true, 
     #     }, 
     #     startover_window_seconds: 300, 
+    #     stream_name_output_mode: "INDEX", 
     #     tags: {
     #       "key1" => "value1", 
     #       "key2" => "value2", 
     #     }, 
+    #     uri_separator: "UNDERSCORE", 
     #   })
     #
     #   resp.to_h outputs the following:
@@ -1218,6 +1307,7 @@ module Aws::MediaPackageV2
     #         scte_hls: {
     #           ad_marker_hls: "DATERANGE", 
     #         }, 
+    #         uri_path_type: "ROOT", 
     #         url: "https://abcde.egress.vwxyz.mediapackagev2.us-west-2.amazonaws.com/out/v1/exampleChannelGroup/exampleChannel/exampleOriginEndpointTS/exampleManifest1.m3u8", 
     #       }, 
     #       {
@@ -1228,6 +1318,7 @@ module Aws::MediaPackageV2
     #         scte_hls: {
     #           ad_marker_hls: "DATERANGE", 
     #         }, 
+    #         uri_path_type: "ROOT", 
     #         url: "https://abcde.egress.vwxyz.mediapackagev2.us-west-2.amazonaws.com/out/v1/exampleChannelGroup/exampleChannel/exampleOriginEndpointTS/exampleManifest2.m3u8", 
     #       }, 
     #     ], 
@@ -1240,6 +1331,7 @@ module Aws::MediaPackageV2
     #         scte_hls: {
     #           ad_marker_hls: "DATERANGE", 
     #         }, 
+    #         uri_path_type: "LEAF", 
     #         url: "https://abcde.egress.vwxyz.mediapackagev2.us-west-2.amazonaws.com/out/v1/exampleChannelGroup/exampleChannel/exampleOriginEndpointTS/exampleLLManifest1.m3u8", 
     #       }, 
     #       {
@@ -1250,6 +1342,7 @@ module Aws::MediaPackageV2
     #         scte_hls: {
     #           ad_marker_hls: "DATERANGE", 
     #         }, 
+    #         uri_path_type: "LEAF", 
     #         url: "https://abcde.egress.vwxyz.mediapackagev2.us-west-2.amazonaws.com/out/v1/exampleChannelGroup/exampleChannel/exampleOriginEndpointTS/exampleLLManifest2.m3u8", 
     #       }, 
     #     ], 
@@ -1263,6 +1356,7 @@ module Aws::MediaPackageV2
     #         }, 
     #         key_rotation_interval_seconds: 300, 
     #         speke_key_provider: {
+    #           certificate_arn: "arn:aws:acm:us-west-2:123456789012:certificate/0c6a65f1-7bd3-48ac-be17-f38675def22e", 
     #           drm_systems: [
     #             "CLEAR_KEY_AES_128", 
     #           ], 
@@ -1288,10 +1382,12 @@ module Aws::MediaPackageV2
     #       ts_use_audio_rendition_group: true, 
     #     }, 
     #     startover_window_seconds: 300, 
+    #     stream_name_output_mode: "INDEX", 
     #     tags: {
     #       "key1" => "value1", 
     #       "key2" => "value2", 
     #     }, 
+    #     uri_separator: "UNDERSCORE", 
     #   }
     #
     # @example Example: Creating an OriginEndpoint with container type CMAF, and encryption enabled
@@ -1302,7 +1398,29 @@ module Aws::MediaPackageV2
     #     container_type: "CMAF", 
     #     dash_manifests: [
     #       {
+    #         base_urls: [
+    #           {
+    #             dvb_priority: 1, 
+    #             dvb_weight: 3, 
+    #             service_location: "A", 
+    #             url: "http://example.com/", 
+    #           }, 
+    #         ], 
+    #         compactness: "STANDARD", 
     #         drm_signaling: "INDIVIDUAL", 
+    #         dvb_settings: {
+    #           error_metrics: [
+    #             {
+    #               probability: 500, 
+    #               reporting_url: "https://example.com/dvb-errors/errors", 
+    #             }, 
+    #           ], 
+    #           font_download: {
+    #             font_family: "SubtitleDisplay", 
+    #             mime_type: "application/font", 
+    #             url: "https://example.com/fonts/SubtitleDisplay.woff", 
+    #           }, 
+    #         }, 
     #         manifest_name: "exampleDashManifest1", 
     #         manifest_window_seconds: 300, 
     #         min_buffer_time_seconds: 30, 
@@ -1310,14 +1428,53 @@ module Aws::MediaPackageV2
     #         period_triggers: [
     #           "AVAILS", 
     #         ], 
+    #         profiles: [
+    #           "DVB_DASH", 
+    #         ], 
+    #         program_information: {
+    #           copyright: "(c) Example. All rights reserved", 
+    #           language_code: "en", 
+    #           more_information_url: "https://example.com/more-information", 
+    #           source: "exampleSource", 
+    #           title: "exampleTitle", 
+    #         }, 
     #         scte_dash: {
     #           ad_marker_dash: "XML", 
     #         }, 
     #         segment_template_format: "NUMBER_WITH_TIMELINE", 
     #         suggested_presentation_delay_seconds: 2, 
+    #         utc_timing: {
+    #           timing_mode: "HTTP_HEAD", 
+    #           timing_source: "example", 
+    #         }, 
     #       }, 
     #       {
+    #         availability_start_time_configuration: {
+    #           fixed_availability_start_time: Time.parse("2026-04-17T23:00:00.00Z"), 
+    #         }, 
+    #         base_urls: [
+    #           {
+    #             dvb_priority: 2, 
+    #             dvb_weight: 2, 
+    #             service_location: "B", 
+    #             url: "http://example2.com/", 
+    #           }, 
+    #         ], 
+    #         compactness: "STANDARD", 
     #         drm_signaling: "INDIVIDUAL", 
+    #         dvb_settings: {
+    #           error_metrics: [
+    #             {
+    #               probability: 600, 
+    #               reporting_url: "https://example2.com/dvb-errors/errors", 
+    #             }, 
+    #           ], 
+    #           font_download: {
+    #             font_family: "SubtitleDisplay", 
+    #             mime_type: "application/font", 
+    #             url: "https://example.com/fonts/SubtitleDisplay.woff", 
+    #           }, 
+    #         }, 
     #         manifest_name: "exampleDashManifest2", 
     #         manifest_window_seconds: 60, 
     #         min_buffer_time_seconds: 9, 
@@ -1328,11 +1485,25 @@ module Aws::MediaPackageV2
     #           "SOURCE_CHANGES", 
     #           "SOURCE_DISRUPTIONS", 
     #         ], 
+    #         profiles: [
+    #           "DVB_DASH", 
+    #         ], 
+    #         program_information: {
+    #           copyright: "(c) Example. All rights reserved", 
+    #           language_code: "en", 
+    #           more_information_url: "https://example2.com/more-information", 
+    #           source: "exampleSource2", 
+    #           title: "exampleTitle2", 
+    #         }, 
     #         scte_dash: {
     #           ad_marker_dash: "XML", 
     #         }, 
     #         segment_template_format: "NUMBER_WITH_TIMELINE", 
     #         suggested_presentation_delay_seconds: 12, 
+    #         utc_timing: {
+    #           timing_mode: "HTTP_HEAD", 
+    #           timing_source: "example", 
+    #         }, 
     #       }, 
     #     ], 
     #     force_endpoint_error_configuration: {
@@ -1392,6 +1563,7 @@ module Aws::MediaPackageV2
     #         }, 
     #         key_rotation_interval_seconds: 300, 
     #         speke_key_provider: {
+    #           certificate_arn: "arn:aws:acm:us-west-2:123456789012:certificate/0c6a65f1-7bd3-48ac-be17-f38675def22e", 
     #           drm_systems: [
     #             "PLAYREADY", 
     #             "WIDEVINE", 
@@ -1406,6 +1578,7 @@ module Aws::MediaPackageV2
     #         }, 
     #       }, 
     #       include_iframe_only_streams: true, 
+    #       output_timestamp_mode: "REBASED_TO_CHANNEL_START", 
     #       scte: {
     #         scte_filter: [
     #           "SPLICE_INSERT", 
@@ -1420,6 +1593,7 @@ module Aws::MediaPackageV2
     #       "key1" => "value1", 
     #       "key2" => "value2", 
     #     }, 
+    #     uri_separator: "UNDERSCORE", 
     #   })
     #
     #   resp.to_h outputs the following:
@@ -1431,7 +1605,29 @@ module Aws::MediaPackageV2
     #     created_at: Time.parse("2022-10-18T09:36:00.00Z"), 
     #     dash_manifests: [
     #       {
+    #         base_urls: [
+    #           {
+    #             dvb_priority: 1, 
+    #             dvb_weight: 3, 
+    #             service_location: "A", 
+    #             url: "http://example.com/", 
+    #           }, 
+    #         ], 
+    #         compactness: "STANDARD", 
     #         drm_signaling: "INDIVIDUAL", 
+    #         dvb_settings: {
+    #           error_metrics: [
+    #             {
+    #               probability: 500, 
+    #               reporting_url: "https://example.com/dvb-errors/errors", 
+    #             }, 
+    #           ], 
+    #           font_download: {
+    #             font_family: "SubtitleDisplay", 
+    #             mime_type: "application/font", 
+    #             url: "https://example.com/fonts/SubtitleDisplay.woff", 
+    #           }, 
+    #         }, 
     #         manifest_name: "exampleDashManifest1", 
     #         manifest_window_seconds: 300, 
     #         min_buffer_time_seconds: 30, 
@@ -1439,15 +1635,55 @@ module Aws::MediaPackageV2
     #         period_triggers: [
     #           "AVAILS", 
     #         ], 
+    #         profiles: [
+    #           "DVB_DASH", 
+    #         ], 
+    #         program_information: {
+    #           copyright: "(c) Example. All rights reserved", 
+    #           language_code: "en", 
+    #           more_information_url: "https://example.com/more-information", 
+    #           source: "exampleSource", 
+    #           title: "exampleTitle", 
+    #         }, 
     #         scte_dash: {
     #           ad_marker_dash: "XML", 
     #         }, 
     #         segment_template_format: "NUMBER_WITH_TIMELINE", 
     #         suggested_presentation_delay_seconds: 2, 
+    #         uri_path_type: "LEAF", 
     #         url: "https://abcde.egress.vwxyz.mediapackagev2.us-west-2.amazonaws.com/out/v1/exampleChannelGroup/exampleChannel/exampleOriginEndpointCMAF/exampleDashManifest1.mpd", 
+    #         utc_timing: {
+    #           timing_mode: "HTTP_HEAD", 
+    #           timing_source: "example", 
+    #         }, 
     #       }, 
     #       {
+    #         availability_start_time_configuration: {
+    #           fixed_availability_start_time: Time.parse("2026-04-17T23:00:00.00Z"), 
+    #         }, 
+    #         base_urls: [
+    #           {
+    #             dvb_priority: 2, 
+    #             dvb_weight: 2, 
+    #             service_location: "B", 
+    #             url: "http://example2.com/", 
+    #           }, 
+    #         ], 
+    #         compactness: "STANDARD", 
     #         drm_signaling: "INDIVIDUAL", 
+    #         dvb_settings: {
+    #           error_metrics: [
+    #             {
+    #               probability: 600, 
+    #               reporting_url: "https://example2.com/dvb-errors/errors", 
+    #             }, 
+    #           ], 
+    #           font_download: {
+    #             font_family: "SubtitleDisplay", 
+    #             mime_type: "application/font", 
+    #             url: "https://example.com/fonts/SubtitleDisplay.woff", 
+    #           }, 
+    #         }, 
     #         manifest_name: "exampleDashManifest2", 
     #         manifest_window_seconds: 60, 
     #         min_buffer_time_seconds: 9, 
@@ -1458,12 +1694,27 @@ module Aws::MediaPackageV2
     #           "SOURCE_CHANGES", 
     #           "SOURCE_DISRUPTIONS", 
     #         ], 
+    #         profiles: [
+    #           "DVB_DASH", 
+    #         ], 
+    #         program_information: {
+    #           copyright: "(c) Example. All rights reserved", 
+    #           language_code: "en", 
+    #           more_information_url: "https://example2.com/more-information", 
+    #           source: "exampleSource2", 
+    #           title: "exampleTitle2", 
+    #         }, 
     #         scte_dash: {
     #           ad_marker_dash: "XML", 
     #         }, 
     #         segment_template_format: "NUMBER_WITH_TIMELINE", 
     #         suggested_presentation_delay_seconds: 12, 
+    #         uri_path_type: "LEAF", 
     #         url: "https://abcde.egress.vwxyz.mediapackagev2.us-west-2.amazonaws.com/out/v1/exampleChannelGroup/exampleChannel/exampleOriginEndpointCMAF/exampleDashManifest2.mpd", 
+    #         utc_timing: {
+    #           timing_mode: "HTTP_HEAD", 
+    #           timing_source: "example", 
+    #         }, 
     #       }, 
     #     ], 
     #     etag: "GlfT+dwAyGIR4wuy8nKWl1RDPwSrjQej9qUutLZxoxk=", 
@@ -1484,6 +1735,7 @@ module Aws::MediaPackageV2
     #         scte_hls: {
     #           ad_marker_hls: "DATERANGE", 
     #         }, 
+    #         uri_path_type: "LEAF", 
     #         url: "https://abcde.egress.vwxyz.mediapackagev2.us-west-2.amazonaws.com/out/v1/exampleChannelGroup/exampleChannel/exampleOriginEndpointCMAF/exampleManifest1.m3u8", 
     #       }, 
     #       {
@@ -1494,6 +1746,7 @@ module Aws::MediaPackageV2
     #         scte_hls: {
     #           ad_marker_hls: "DATERANGE", 
     #         }, 
+    #         uri_path_type: "LEAF", 
     #         url: "https://abcde.egress.vwxyz.mediapackagev2.us-west-2.amazonaws.com/out/v1/exampleChannelGroup/exampleChannel/exampleOriginEndpointCMAF/exampleManifest2.m3u8", 
     #       }, 
     #     ], 
@@ -1506,6 +1759,7 @@ module Aws::MediaPackageV2
     #         scte_hls: {
     #           ad_marker_hls: "DATERANGE", 
     #         }, 
+    #         uri_path_type: "LEAF", 
     #         url: "https://abcde.egress.vwxyz.mediapackagev2.us-west-2.amazonaws.com/out/v1/exampleChannelGroup/exampleChannel/exampleOriginEndpointCMAF/exampleLLManifest1.m3u8", 
     #       }, 
     #       {
@@ -1516,6 +1770,7 @@ module Aws::MediaPackageV2
     #         scte_hls: {
     #           ad_marker_hls: "DATERANGE", 
     #         }, 
+    #         uri_path_type: "LEAF", 
     #         url: "https://abcde.egress.vwxyz.mediapackagev2.us-west-2.amazonaws.com/out/v1/exampleChannelGroup/exampleChannel/exampleOriginEndpointCMAF/exampleLLManifest2.m3u8", 
     #       }, 
     #     ], 
@@ -1529,6 +1784,7 @@ module Aws::MediaPackageV2
     #         }, 
     #         key_rotation_interval_seconds: 300, 
     #         speke_key_provider: {
+    #           certificate_arn: "arn:aws:acm:us-west-2:123456789012:certificate/0c6a65f1-7bd3-48ac-be17-f38675def22e", 
     #           drm_systems: [
     #             "PLAYREADY", 
     #             "WIDEVINE", 
@@ -1543,6 +1799,7 @@ module Aws::MediaPackageV2
     #         }, 
     #       }, 
     #       include_iframe_only_streams: true, 
+    #       output_timestamp_mode: "REBASED_TO_CHANNEL_START", 
     #       scte: {
     #         scte_filter: [
     #           "SPLICE_INSERT", 
@@ -1557,6 +1814,115 @@ module Aws::MediaPackageV2
     #       "key1" => "value1", 
     #       "key2" => "value2", 
     #     }, 
+    #     uri_separator: "UNDERSCORE", 
+    #   }
+    #
+    # @example Example: Creating an OriginEndpoint with container type ISM, and encryption enabled
+    #
+    #   resp = client.create_origin_endpoint({
+    #     channel_group_name: "exampleChannelGroup", 
+    #     channel_name: "exampleChannel", 
+    #     container_type: "ISM", 
+    #     description: "Description for exampleOriginEndpointISM", 
+    #     force_endpoint_error_configuration: {
+    #       endpoint_error_conditions: [
+    #         "STALE_MANIFEST", 
+    #         "INCOMPLETE_MANIFEST", 
+    #         "MISSING_DRM_KEY", 
+    #         "SLATE_INPUT", 
+    #       ], 
+    #     }, 
+    #     mss_manifests: [
+    #       {
+    #         manifest_layout: "FULL", 
+    #         manifest_name: "exampleMssManifest1", 
+    #         manifest_window_seconds: 60, 
+    #       }, 
+    #     ], 
+    #     origin_endpoint_name: "exampleOriginEndpointISM", 
+    #     segment: {
+    #       encryption: {
+    #         encryption_method: {
+    #           ism_encryption_method: "CENC", 
+    #         }, 
+    #         speke_key_provider: {
+    #           drm_systems: [
+    #             "PLAYREADY", 
+    #           ], 
+    #           encryption_contract_configuration: {
+    #             preset_speke_20_audio: "SHARED", 
+    #             preset_speke_20_video: "SHARED", 
+    #           }, 
+    #           resource_id: "ResourceId", 
+    #           role_arn: "arn:aws:iam::123456789012:role/empRole", 
+    #           url: "https://speke-key-provider.example.com", 
+    #         }, 
+    #       }, 
+    #       segment_duration_seconds: 2, 
+    #       segment_name: "segmentName", 
+    #     }, 
+    #     startover_window_seconds: 300, 
+    #     tags: {
+    #       "key1" => "value1", 
+    #       "key2" => "value2", 
+    #     }, 
+    #     uri_separator: "UNDERSCORE", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     arn: "arn:aws:mediapackagev2:us-west-2:123456789012:channelGroup/exampleChannelGroup/channel/exampleChannel/originEndpoint/exampleOriginEndpointISM", 
+    #     channel_group_name: "exampleChannelGroup", 
+    #     channel_name: "exampleChannel", 
+    #     container_type: "ISM", 
+    #     created_at: Time.parse("2022-10-18T09:36:00.00Z"), 
+    #     description: "Description for exampleOriginEndpointISM", 
+    #     etag: "GlfT+dwAyGIR4wuy8nKWl1RDPwSrjQej9qUutLZxoxk=", 
+    #     force_endpoint_error_configuration: {
+    #       endpoint_error_conditions: [
+    #         "STALE_MANIFEST", 
+    #         "INCOMPLETE_MANIFEST", 
+    #         "MISSING_DRM_KEY", 
+    #         "SLATE_INPUT", 
+    #       ], 
+    #     }, 
+    #     modified_at: Time.parse("2022-10-18T09:36:00.00Z"), 
+    #     mss_manifests: [
+    #       {
+    #         manifest_layout: "FULL", 
+    #         manifest_name: "exampleMssManifest1", 
+    #         manifest_window_seconds: 60, 
+    #         url: "https://abcde.egress.vwxyz.mediapackagev2.us-west-2.amazonaws.com/out/v1/exampleChannelGroup/exampleChannel/exampleOriginEndpointISM/exampleMssManifest1.ism/Manifest", 
+    #       }, 
+    #     ], 
+    #     origin_endpoint_name: "exampleOriginEndpointISM", 
+    #     segment: {
+    #       encryption: {
+    #         encryption_method: {
+    #           ism_encryption_method: "CENC", 
+    #         }, 
+    #         speke_key_provider: {
+    #           drm_systems: [
+    #             "PLAYREADY", 
+    #           ], 
+    #           encryption_contract_configuration: {
+    #             preset_speke_20_audio: "SHARED", 
+    #             preset_speke_20_video: "SHARED", 
+    #           }, 
+    #           resource_id: "ResourceId", 
+    #           role_arn: "arn:aws:iam::123456789012:role/empRole", 
+    #           url: "https://speke-key-provider.example.com", 
+    #         }, 
+    #       }, 
+    #       segment_duration_seconds: 2, 
+    #       segment_name: "segmentName", 
+    #     }, 
+    #     startover_window_seconds: 300, 
+    #     tags: {
+    #       "key1" => "value1", 
+    #       "key2" => "value2", 
+    #     }, 
+    #     uri_separator: "UNDERSCORE", 
     #   }
     #
     # @example Request syntax with placeholder values
@@ -1565,7 +1931,7 @@ module Aws::MediaPackageV2
     #     channel_group_name: "ResourceName", # required
     #     channel_name: "ResourceName", # required
     #     origin_endpoint_name: "ResourceName", # required
-    #     container_type: "TS", # required, accepts TS, CMAF
+    #     container_type: "TS", # required, accepts TS, CMAF, ISM
     #     segment: {
     #       segment_duration_seconds: 1,
     #       segment_name: "SegmentSegmentNameString",
@@ -1573,15 +1939,19 @@ module Aws::MediaPackageV2
     #       include_iframe_only_streams: false,
     #       ts_include_dvb_subtitles: false,
     #       scte: {
-    #         scte_filter: ["SPLICE_INSERT"], # accepts SPLICE_INSERT, BREAK, PROVIDER_ADVERTISEMENT, DISTRIBUTOR_ADVERTISEMENT, PROVIDER_PLACEMENT_OPPORTUNITY, DISTRIBUTOR_PLACEMENT_OPPORTUNITY, PROVIDER_OVERLAY_PLACEMENT_OPPORTUNITY, DISTRIBUTOR_OVERLAY_PLACEMENT_OPPORTUNITY, PROGRAM
+    #         scte_filter: ["SPLICE_INSERT"], # accepts SPLICE_INSERT, BREAK, PROVIDER_ADVERTISEMENT, DISTRIBUTOR_ADVERTISEMENT, PROVIDER_PLACEMENT_OPPORTUNITY, DISTRIBUTOR_PLACEMENT_OPPORTUNITY, PROVIDER_OVERLAY_PLACEMENT_OPPORTUNITY, DISTRIBUTOR_OVERLAY_PLACEMENT_OPPORTUNITY, PROGRAM, CHAPTER, UNSCHEDULED_EVENT, ALTERNATE_CONTENT_OPPORTUNITY, NETWORK, PROVIDER_PROMO, DISTRIBUTOR_PROMO, PROVIDER_AD_BLOCK, DISTRIBUTOR_AD_BLOCK, CONTENT_IDENTIFICATION, CALL_AD_SERVER
+    #         scte_in_segments: "NONE", # accepts NONE, ALL, MATCHES_FILTER
+    #         custom_ad_types: ["PROGRAM"], # accepts PROGRAM, CHAPTER, UNSCHEDULED_EVENT, ALTERNATE_CONTENT_OPPORTUNITY, NETWORK
     #       },
     #       encryption: {
     #         constant_initialization_vector: "EncryptionConstantInitializationVectorString",
     #         encryption_method: { # required
     #           ts_encryption_method: "AES_128", # accepts AES_128, SAMPLE_AES
     #           cmaf_encryption_method: "CENC", # accepts CENC, CBCS
+    #           ism_encryption_method: "CENC", # accepts CENC
     #         },
     #         key_rotation_interval_seconds: 1,
+    #         cmaf_exclude_segment_drm_metadata: false,
     #         speke_key_provider: { # required
     #           encryption_contract_configuration: { # required
     #             preset_speke_20_audio: "PRESET_AUDIO_1", # required, accepts PRESET_AUDIO_1, PRESET_AUDIO_2, PRESET_AUDIO_3, SHARED, UNENCRYPTED
@@ -1591,8 +1961,10 @@ module Aws::MediaPackageV2
     #           drm_systems: ["CLEAR_KEY_AES_128"], # required, accepts CLEAR_KEY_AES_128, FAIRPLAY, PLAYREADY, WIDEVINE, IRDETO
     #           role_arn: "SpekeKeyProviderRoleArnString", # required
     #           url: "SpekeKeyProviderUrlString", # required
+    #           certificate_arn: "SpekeKeyProviderCertificateArnString",
     #         },
     #       },
+    #       output_timestamp_mode: "PASSTHROUGH", # accepts PASSTHROUGH, REBASED_TO_CHANNEL_START
     #     },
     #     client_token: "IdempotencyToken",
     #     description: "ResourceDescription",
@@ -1602,7 +1974,8 @@ module Aws::MediaPackageV2
     #         manifest_name: "ManifestName", # required
     #         child_manifest_name: "ManifestName",
     #         scte_hls: {
-    #           ad_marker_hls: "DATERANGE", # accepts DATERANGE
+    #           ad_marker_hls: "DATERANGE", # accepts DATERANGE, SCTE35_ENHANCED
+    #           scte_in_manifests: "ALL", # accepts ALL, MATCHES_FILTER
     #         },
     #         start_tag: {
     #           time_offset: 1.0, # required
@@ -1612,12 +1985,14 @@ module Aws::MediaPackageV2
     #         program_date_time_interval_seconds: 1,
     #         filter_configuration: {
     #           manifest_filter: "FilterConfigurationManifestFilterString",
+    #           drm_settings: "FilterConfigurationDrmSettingsString",
     #           start: Time.now,
     #           end: Time.now,
     #           time_delay_seconds: 1,
     #           clip_start_time: Time.now,
     #         },
     #         url_encode_child_manifest: false,
+    #         uri_path_type: "LEAF", # accepts LEAF, ROOT
     #       },
     #     ],
     #     low_latency_hls_manifests: [
@@ -1625,7 +2000,8 @@ module Aws::MediaPackageV2
     #         manifest_name: "ManifestName", # required
     #         child_manifest_name: "ManifestName",
     #         scte_hls: {
-    #           ad_marker_hls: "DATERANGE", # accepts DATERANGE
+    #           ad_marker_hls: "DATERANGE", # accepts DATERANGE, SCTE35_ENHANCED
+    #           scte_in_manifests: "ALL", # accepts ALL, MATCHES_FILTER
     #         },
     #         start_tag: {
     #           time_offset: 1.0, # required
@@ -1635,12 +2011,14 @@ module Aws::MediaPackageV2
     #         program_date_time_interval_seconds: 1,
     #         filter_configuration: {
     #           manifest_filter: "FilterConfigurationManifestFilterString",
+    #           drm_settings: "FilterConfigurationDrmSettingsString",
     #           start: Time.now,
     #           end: Time.now,
     #           time_delay_seconds: 1,
     #           clip_start_time: Time.now,
     #         },
     #         url_encode_child_manifest: false,
+    #         uri_path_type: "LEAF", # accepts LEAF, ROOT
     #       },
     #     ],
     #     dash_manifests: [
@@ -1649,6 +2027,7 @@ module Aws::MediaPackageV2
     #         manifest_window_seconds: 1,
     #         filter_configuration: {
     #           manifest_filter: "FilterConfigurationManifestFilterString",
+    #           drm_settings: "FilterConfigurationDrmSettingsString",
     #           start: Time.now,
     #           end: Time.now,
     #           time_delay_seconds: 1,
@@ -1661,17 +2040,75 @@ module Aws::MediaPackageV2
     #         period_triggers: ["AVAILS"], # accepts AVAILS, DRM_KEY_ROTATION, SOURCE_CHANGES, SOURCE_DISRUPTIONS, NONE
     #         scte_dash: {
     #           ad_marker_dash: "BINARY", # accepts BINARY, XML
+    #           scte_in_manifests: "ALL", # accepts ALL, MATCHES_FILTER
     #         },
     #         drm_signaling: "INDIVIDUAL", # accepts INDIVIDUAL, REFERENCED
     #         utc_timing: {
     #           timing_mode: "HTTP_HEAD", # accepts HTTP_HEAD, HTTP_ISO, HTTP_XSDATE, UTC_DIRECT
     #           timing_source: "DashUtcTimingTimingSourceString",
     #         },
+    #         profiles: ["DVB_DASH"], # accepts DVB_DASH
+    #         base_urls: [
+    #           {
+    #             url: "DashBaseUrlUrlString", # required
+    #             service_location: "DashBaseUrlServiceLocationString",
+    #             dvb_priority: 1,
+    #             dvb_weight: 1,
+    #           },
+    #         ],
+    #         program_information: {
+    #           title: "DashProgramInformationTitleString",
+    #           source: "DashProgramInformationSourceString",
+    #           copyright: "DashProgramInformationCopyrightString",
+    #           language_code: "DashProgramInformationLanguageCodeString",
+    #           more_information_url: "DashProgramInformationMoreInformationUrlString",
+    #         },
+    #         dvb_settings: {
+    #           font_download: {
+    #             url: "DashDvbFontDownloadUrlString",
+    #             mime_type: "DashDvbFontDownloadMimeTypeString",
+    #             font_family: "DashDvbFontDownloadFontFamilyString",
+    #           },
+    #           error_metrics: [
+    #             {
+    #               reporting_url: "DashDvbMetricsReportingReportingUrlString", # required
+    #               probability: 1,
+    #             },
+    #           ],
+    #         },
+    #         compactness: "STANDARD", # accepts STANDARD, NONE
+    #         audio_timeline_pattern: "NONE", # accepts NONE, PATTERNED
+    #         subtitle_configuration: {
+    #           ttml_configuration: {
+    #             ttml_profile: "IMSC_1", # required, accepts IMSC_1, EBU_TT_D_101
+    #           },
+    #         },
+    #         uri_path_type: "LEAF", # accepts LEAF, ROOT
+    #         availability_start_time_configuration: {
+    #           fixed_availability_start_time: Time.now,
+    #         },
+    #       },
+    #     ],
+    #     mss_manifests: [
+    #       {
+    #         manifest_name: "ManifestName", # required
+    #         manifest_window_seconds: 1,
+    #         filter_configuration: {
+    #           manifest_filter: "FilterConfigurationManifestFilterString",
+    #           drm_settings: "FilterConfigurationDrmSettingsString",
+    #           start: Time.now,
+    #           end: Time.now,
+    #           time_delay_seconds: 1,
+    #           clip_start_time: Time.now,
+    #         },
+    #         manifest_layout: "FULL", # accepts FULL, COMPACT
     #       },
     #     ],
     #     force_endpoint_error_configuration: {
     #       endpoint_error_conditions: ["STALE_MANIFEST"], # accepts STALE_MANIFEST, INCOMPLETE_MANIFEST, MISSING_DRM_KEY, SLATE_INPUT
     #     },
+    #     uri_separator: "UNDERSCORE", # accepts UNDERSCORE, HYPHEN
+    #     stream_name_output_mode: "INDEX", # accepts INDEX, PASSTHROUGH_NAME
     #     tags: {
     #       "TagKey" => "TagValue",
     #     },
@@ -1683,18 +2120,23 @@ module Aws::MediaPackageV2
     #   resp.channel_group_name #=> String
     #   resp.channel_name #=> String
     #   resp.origin_endpoint_name #=> String
-    #   resp.container_type #=> String, one of "TS", "CMAF"
+    #   resp.container_type #=> String, one of "TS", "CMAF", "ISM"
     #   resp.segment.segment_duration_seconds #=> Integer
     #   resp.segment.segment_name #=> String
     #   resp.segment.ts_use_audio_rendition_group #=> Boolean
     #   resp.segment.include_iframe_only_streams #=> Boolean
     #   resp.segment.ts_include_dvb_subtitles #=> Boolean
     #   resp.segment.scte.scte_filter #=> Array
-    #   resp.segment.scte.scte_filter[0] #=> String, one of "SPLICE_INSERT", "BREAK", "PROVIDER_ADVERTISEMENT", "DISTRIBUTOR_ADVERTISEMENT", "PROVIDER_PLACEMENT_OPPORTUNITY", "DISTRIBUTOR_PLACEMENT_OPPORTUNITY", "PROVIDER_OVERLAY_PLACEMENT_OPPORTUNITY", "DISTRIBUTOR_OVERLAY_PLACEMENT_OPPORTUNITY", "PROGRAM"
+    #   resp.segment.scte.scte_filter[0] #=> String, one of "SPLICE_INSERT", "BREAK", "PROVIDER_ADVERTISEMENT", "DISTRIBUTOR_ADVERTISEMENT", "PROVIDER_PLACEMENT_OPPORTUNITY", "DISTRIBUTOR_PLACEMENT_OPPORTUNITY", "PROVIDER_OVERLAY_PLACEMENT_OPPORTUNITY", "DISTRIBUTOR_OVERLAY_PLACEMENT_OPPORTUNITY", "PROGRAM", "CHAPTER", "UNSCHEDULED_EVENT", "ALTERNATE_CONTENT_OPPORTUNITY", "NETWORK", "PROVIDER_PROMO", "DISTRIBUTOR_PROMO", "PROVIDER_AD_BLOCK", "DISTRIBUTOR_AD_BLOCK", "CONTENT_IDENTIFICATION", "CALL_AD_SERVER"
+    #   resp.segment.scte.scte_in_segments #=> String, one of "NONE", "ALL", "MATCHES_FILTER"
+    #   resp.segment.scte.custom_ad_types #=> Array
+    #   resp.segment.scte.custom_ad_types[0] #=> String, one of "PROGRAM", "CHAPTER", "UNSCHEDULED_EVENT", "ALTERNATE_CONTENT_OPPORTUNITY", "NETWORK"
     #   resp.segment.encryption.constant_initialization_vector #=> String
     #   resp.segment.encryption.encryption_method.ts_encryption_method #=> String, one of "AES_128", "SAMPLE_AES"
     #   resp.segment.encryption.encryption_method.cmaf_encryption_method #=> String, one of "CENC", "CBCS"
+    #   resp.segment.encryption.encryption_method.ism_encryption_method #=> String, one of "CENC"
     #   resp.segment.encryption.key_rotation_interval_seconds #=> Integer
+    #   resp.segment.encryption.cmaf_exclude_segment_drm_metadata #=> Boolean
     #   resp.segment.encryption.speke_key_provider.encryption_contract_configuration.preset_speke_20_audio #=> String, one of "PRESET_AUDIO_1", "PRESET_AUDIO_2", "PRESET_AUDIO_3", "SHARED", "UNENCRYPTED"
     #   resp.segment.encryption.speke_key_provider.encryption_contract_configuration.preset_speke_20_video #=> String, one of "PRESET_VIDEO_1", "PRESET_VIDEO_2", "PRESET_VIDEO_3", "PRESET_VIDEO_4", "PRESET_VIDEO_5", "PRESET_VIDEO_6", "PRESET_VIDEO_7", "PRESET_VIDEO_8", "SHARED", "UNENCRYPTED"
     #   resp.segment.encryption.speke_key_provider.resource_id #=> String
@@ -1702,6 +2144,8 @@ module Aws::MediaPackageV2
     #   resp.segment.encryption.speke_key_provider.drm_systems[0] #=> String, one of "CLEAR_KEY_AES_128", "FAIRPLAY", "PLAYREADY", "WIDEVINE", "IRDETO"
     #   resp.segment.encryption.speke_key_provider.role_arn #=> String
     #   resp.segment.encryption.speke_key_provider.url #=> String
+    #   resp.segment.encryption.speke_key_provider.certificate_arn #=> String
+    #   resp.segment.output_timestamp_mode #=> String, one of "PASSTHROUGH", "REBASED_TO_CHANNEL_START"
     #   resp.created_at #=> Time
     #   resp.modified_at #=> Time
     #   resp.description #=> String
@@ -1712,8 +2156,10 @@ module Aws::MediaPackageV2
     #   resp.hls_manifests[0].child_manifest_name #=> String
     #   resp.hls_manifests[0].manifest_window_seconds #=> Integer
     #   resp.hls_manifests[0].program_date_time_interval_seconds #=> Integer
-    #   resp.hls_manifests[0].scte_hls.ad_marker_hls #=> String, one of "DATERANGE"
+    #   resp.hls_manifests[0].scte_hls.ad_marker_hls #=> String, one of "DATERANGE", "SCTE35_ENHANCED"
+    #   resp.hls_manifests[0].scte_hls.scte_in_manifests #=> String, one of "ALL", "MATCHES_FILTER"
     #   resp.hls_manifests[0].filter_configuration.manifest_filter #=> String
+    #   resp.hls_manifests[0].filter_configuration.drm_settings #=> String
     #   resp.hls_manifests[0].filter_configuration.start #=> Time
     #   resp.hls_manifests[0].filter_configuration.end #=> Time
     #   resp.hls_manifests[0].filter_configuration.time_delay_seconds #=> Integer
@@ -1721,14 +2167,17 @@ module Aws::MediaPackageV2
     #   resp.hls_manifests[0].start_tag.time_offset #=> Float
     #   resp.hls_manifests[0].start_tag.precise #=> Boolean
     #   resp.hls_manifests[0].url_encode_child_manifest #=> Boolean
+    #   resp.hls_manifests[0].uri_path_type #=> String, one of "LEAF", "ROOT"
     #   resp.low_latency_hls_manifests #=> Array
     #   resp.low_latency_hls_manifests[0].manifest_name #=> String
     #   resp.low_latency_hls_manifests[0].url #=> String
     #   resp.low_latency_hls_manifests[0].child_manifest_name #=> String
     #   resp.low_latency_hls_manifests[0].manifest_window_seconds #=> Integer
     #   resp.low_latency_hls_manifests[0].program_date_time_interval_seconds #=> Integer
-    #   resp.low_latency_hls_manifests[0].scte_hls.ad_marker_hls #=> String, one of "DATERANGE"
+    #   resp.low_latency_hls_manifests[0].scte_hls.ad_marker_hls #=> String, one of "DATERANGE", "SCTE35_ENHANCED"
+    #   resp.low_latency_hls_manifests[0].scte_hls.scte_in_manifests #=> String, one of "ALL", "MATCHES_FILTER"
     #   resp.low_latency_hls_manifests[0].filter_configuration.manifest_filter #=> String
+    #   resp.low_latency_hls_manifests[0].filter_configuration.drm_settings #=> String
     #   resp.low_latency_hls_manifests[0].filter_configuration.start #=> Time
     #   resp.low_latency_hls_manifests[0].filter_configuration.end #=> Time
     #   resp.low_latency_hls_manifests[0].filter_configuration.time_delay_seconds #=> Integer
@@ -1736,11 +2185,13 @@ module Aws::MediaPackageV2
     #   resp.low_latency_hls_manifests[0].start_tag.time_offset #=> Float
     #   resp.low_latency_hls_manifests[0].start_tag.precise #=> Boolean
     #   resp.low_latency_hls_manifests[0].url_encode_child_manifest #=> Boolean
+    #   resp.low_latency_hls_manifests[0].uri_path_type #=> String, one of "LEAF", "ROOT"
     #   resp.dash_manifests #=> Array
     #   resp.dash_manifests[0].manifest_name #=> String
     #   resp.dash_manifests[0].url #=> String
     #   resp.dash_manifests[0].manifest_window_seconds #=> Integer
     #   resp.dash_manifests[0].filter_configuration.manifest_filter #=> String
+    #   resp.dash_manifests[0].filter_configuration.drm_settings #=> String
     #   resp.dash_manifests[0].filter_configuration.start #=> Time
     #   resp.dash_manifests[0].filter_configuration.end #=> Time
     #   resp.dash_manifests[0].filter_configuration.time_delay_seconds #=> Integer
@@ -1752,11 +2203,48 @@ module Aws::MediaPackageV2
     #   resp.dash_manifests[0].period_triggers #=> Array
     #   resp.dash_manifests[0].period_triggers[0] #=> String, one of "AVAILS", "DRM_KEY_ROTATION", "SOURCE_CHANGES", "SOURCE_DISRUPTIONS", "NONE"
     #   resp.dash_manifests[0].scte_dash.ad_marker_dash #=> String, one of "BINARY", "XML"
+    #   resp.dash_manifests[0].scte_dash.scte_in_manifests #=> String, one of "ALL", "MATCHES_FILTER"
     #   resp.dash_manifests[0].drm_signaling #=> String, one of "INDIVIDUAL", "REFERENCED"
     #   resp.dash_manifests[0].utc_timing.timing_mode #=> String, one of "HTTP_HEAD", "HTTP_ISO", "HTTP_XSDATE", "UTC_DIRECT"
     #   resp.dash_manifests[0].utc_timing.timing_source #=> String
+    #   resp.dash_manifests[0].profiles #=> Array
+    #   resp.dash_manifests[0].profiles[0] #=> String, one of "DVB_DASH"
+    #   resp.dash_manifests[0].base_urls #=> Array
+    #   resp.dash_manifests[0].base_urls[0].url #=> String
+    #   resp.dash_manifests[0].base_urls[0].service_location #=> String
+    #   resp.dash_manifests[0].base_urls[0].dvb_priority #=> Integer
+    #   resp.dash_manifests[0].base_urls[0].dvb_weight #=> Integer
+    #   resp.dash_manifests[0].program_information.title #=> String
+    #   resp.dash_manifests[0].program_information.source #=> String
+    #   resp.dash_manifests[0].program_information.copyright #=> String
+    #   resp.dash_manifests[0].program_information.language_code #=> String
+    #   resp.dash_manifests[0].program_information.more_information_url #=> String
+    #   resp.dash_manifests[0].dvb_settings.font_download.url #=> String
+    #   resp.dash_manifests[0].dvb_settings.font_download.mime_type #=> String
+    #   resp.dash_manifests[0].dvb_settings.font_download.font_family #=> String
+    #   resp.dash_manifests[0].dvb_settings.error_metrics #=> Array
+    #   resp.dash_manifests[0].dvb_settings.error_metrics[0].reporting_url #=> String
+    #   resp.dash_manifests[0].dvb_settings.error_metrics[0].probability #=> Integer
+    #   resp.dash_manifests[0].compactness #=> String, one of "STANDARD", "NONE"
+    #   resp.dash_manifests[0].audio_timeline_pattern #=> String, one of "NONE", "PATTERNED"
+    #   resp.dash_manifests[0].subtitle_configuration.ttml_configuration.ttml_profile #=> String, one of "IMSC_1", "EBU_TT_D_101"
+    #   resp.dash_manifests[0].uri_path_type #=> String, one of "LEAF", "ROOT"
+    #   resp.dash_manifests[0].availability_start_time_configuration.fixed_availability_start_time #=> Time
+    #   resp.mss_manifests #=> Array
+    #   resp.mss_manifests[0].manifest_name #=> String
+    #   resp.mss_manifests[0].url #=> String
+    #   resp.mss_manifests[0].filter_configuration.manifest_filter #=> String
+    #   resp.mss_manifests[0].filter_configuration.drm_settings #=> String
+    #   resp.mss_manifests[0].filter_configuration.start #=> Time
+    #   resp.mss_manifests[0].filter_configuration.end #=> Time
+    #   resp.mss_manifests[0].filter_configuration.time_delay_seconds #=> Integer
+    #   resp.mss_manifests[0].filter_configuration.clip_start_time #=> Time
+    #   resp.mss_manifests[0].manifest_window_seconds #=> Integer
+    #   resp.mss_manifests[0].manifest_layout #=> String, one of "FULL", "COMPACT"
     #   resp.force_endpoint_error_configuration.endpoint_error_conditions #=> Array
     #   resp.force_endpoint_error_configuration.endpoint_error_conditions[0] #=> String, one of "STALE_MANIFEST", "INCOMPLETE_MANIFEST", "MISSING_DRM_KEY", "SLATE_INPUT"
+    #   resp.uri_separator #=> String, one of "UNDERSCORE", "HYPHEN"
+    #   resp.stream_name_output_mode #=> String, one of "INDEX", "PASSTHROUGH_NAME"
     #   resp.etag #=> String
     #   resp.tags #=> Hash
     #   resp.tags["TagKey"] #=> String
@@ -1995,8 +2483,7 @@ module Aws::MediaPackageV2
     end
 
     # Retrieves the specified channel that's configured in AWS Elemental
-    # MediaPackage, including the origin endpoints that are associated with
-    # it.
+    # MediaPackage.
     #
     # @option params [required, String] :channel_group_name
     #   The name that describes the channel group. The name is the primary
@@ -2023,6 +2510,7 @@ module Aws::MediaPackageV2
     #   * {Types::GetChannelResponse#tags #tags} => Hash&lt;String,String&gt;
     #   * {Types::GetChannelResponse#input_switch_configuration #input_switch_configuration} => Types::InputSwitchConfiguration
     #   * {Types::GetChannelResponse#output_header_configuration #output_header_configuration} => Types::OutputHeaderConfiguration
+    #   * {Types::GetChannelResponse#output_locking_mode #output_locking_mode} => String
     #
     #
     # @example Example: Getting a Channel
@@ -2058,6 +2546,40 @@ module Aws::MediaPackageV2
     #     }, 
     #   }
     #
+    # @example Example: Getting a CMAF Channel with non-epoch-locked output locking mode
+    #
+    #   resp = client.get_channel({
+    #     channel_group_name: "exampleChannelGroup", 
+    #     channel_name: "exampleCmafChannel", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     arn: "arn:aws:mediapackagev2:us-west-2:123456789012:channelGroup/exampleChannelGroup/channel/exampleCmafChannel", 
+    #     channel_group_name: "exampleChannelGroup", 
+    #     channel_name: "exampleCmafChannel", 
+    #     created_at: Time.parse("2022-10-18T09:36:00.00Z"), 
+    #     description: "Non-epoch-locked CMAF channel", 
+    #     etag: "GlfT+dwAyGIR4wuy8nKWl1RDPwSrjQej9qUutLZxoxk=", 
+    #     ingest_endpoints: [
+    #       {
+    #         id: "1", 
+    #         url: "https://abcde-1.ingest.vwxyz.mediapackagev2.us-west-2.amazonaws.com/v1/exampleChannelGroup/exampleCmafChannel", 
+    #       }, 
+    #       {
+    #         id: "2", 
+    #         url: "https://abcde-2.ingest.vwxyz.mediapackagev2.us-west-2.amazonaws.com/v1/exampleChannelGroup/exampleCmafChannel", 
+    #       }, 
+    #     ], 
+    #     input_type: "CMAF", 
+    #     modified_at: Time.parse("2022-10-18T09:36:00.00Z"), 
+    #     output_locking_mode: "NON_EPOCH_LOCKED", 
+    #     tags: {
+    #       "key1" => "value1", 
+    #       "key2" => "value2", 
+    #     }, 
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_channel({
@@ -2082,7 +2604,9 @@ module Aws::MediaPackageV2
     #   resp.tags #=> Hash
     #   resp.tags["TagKey"] #=> String
     #   resp.input_switch_configuration.mqcs_input_switching #=> Boolean
+    #   resp.input_switch_configuration.preferred_input #=> Integer
     #   resp.output_header_configuration.publish_mqcs #=> Boolean
+    #   resp.output_locking_mode #=> String, one of "EPOCH_LOCKED", "NON_EPOCH_LOCKED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/GetChannel AWS API Documentation
     #
@@ -2094,8 +2618,7 @@ module Aws::MediaPackageV2
     end
 
     # Retrieves the specified channel group that's configured in AWS
-    # Elemental MediaPackage, including the channels and origin endpoints
-    # that are associated with it.
+    # Elemental MediaPackage.
     #
     # @option params [required, String] :channel_group_name
     #   The name that describes the channel group. The name is the primary
@@ -2391,7 +2914,10 @@ module Aws::MediaPackageV2
     #   * {Types::GetOriginEndpointResponse#hls_manifests #hls_manifests} => Array&lt;Types::GetHlsManifestConfiguration&gt;
     #   * {Types::GetOriginEndpointResponse#low_latency_hls_manifests #low_latency_hls_manifests} => Array&lt;Types::GetLowLatencyHlsManifestConfiguration&gt;
     #   * {Types::GetOriginEndpointResponse#dash_manifests #dash_manifests} => Array&lt;Types::GetDashManifestConfiguration&gt;
+    #   * {Types::GetOriginEndpointResponse#mss_manifests #mss_manifests} => Array&lt;Types::GetMssManifestConfiguration&gt;
     #   * {Types::GetOriginEndpointResponse#force_endpoint_error_configuration #force_endpoint_error_configuration} => Types::ForceEndpointErrorConfiguration
+    #   * {Types::GetOriginEndpointResponse#uri_separator #uri_separator} => String
+    #   * {Types::GetOriginEndpointResponse#stream_name_output_mode #stream_name_output_mode} => String
     #   * {Types::GetOriginEndpointResponse#etag #etag} => String
     #   * {Types::GetOriginEndpointResponse#tags #tags} => Hash&lt;String,String&gt;
     #
@@ -2430,6 +2956,7 @@ module Aws::MediaPackageV2
     #         scte_hls: {
     #           ad_marker_hls: "DATERANGE", 
     #         }, 
+    #         uri_path_type: "ROOT", 
     #         url: "https://abcde.egress.vwxyz.mediapackagev2.us-west-2.amazonaws.com/out/v1/exampleChannelGroup/exampleChannel/exampleOriginEndpointTS/exampleManifest1.m3u8", 
     #       }, 
     #       {
@@ -2440,6 +2967,7 @@ module Aws::MediaPackageV2
     #         scte_hls: {
     #           ad_marker_hls: "DATERANGE", 
     #         }, 
+    #         uri_path_type: "ROOT", 
     #         url: "https://abcde.egress.vwxyz.mediapackagev2.us-west-2.amazonaws.com/out/v1/exampleChannelGroup/exampleChannel/exampleOriginEndpointTS/exampleManifest2.m3u8", 
     #       }, 
     #     ], 
@@ -2452,6 +2980,7 @@ module Aws::MediaPackageV2
     #         scte_hls: {
     #           ad_marker_hls: "DATERANGE", 
     #         }, 
+    #         uri_path_type: "LEAF", 
     #         url: "https://abcde.egress.vwxyz.mediapackagev2.us-west-2.amazonaws.com/out/v1/exampleChannelGroup/exampleChannel/exampleOriginEndpointTS/exampleLLManifest1.m3u8", 
     #       }, 
     #       {
@@ -2462,6 +2991,7 @@ module Aws::MediaPackageV2
     #         scte_hls: {
     #           ad_marker_hls: "DATERANGE", 
     #         }, 
+    #         uri_path_type: "LEAF", 
     #         url: "https://abcde.egress.vwxyz.mediapackagev2.us-west-2.amazonaws.com/out/v1/exampleChannelGroup/exampleChannel/exampleOriginEndpointTS/exampleLLManifest2.m3u8", 
     #       }, 
     #     ], 
@@ -2475,6 +3005,7 @@ module Aws::MediaPackageV2
     #         }, 
     #         key_rotation_interval_seconds: 300, 
     #         speke_key_provider: {
+    #           certificate_arn: "arn:aws:acm:us-west-2:123456789012:certificate/0c6a65f1-7bd3-48ac-be17-f38675def22e", 
     #           drm_systems: [
     #             "CLEAR_KEY_AES_128", 
     #           ], 
@@ -2504,6 +3035,77 @@ module Aws::MediaPackageV2
     #       "key1" => "value1", 
     #       "key2" => "value2", 
     #     }, 
+    #     uri_separator: "UNDERSCORE", 
+    #   }
+    #
+    # @example Example: Getting an OriginEndpoint with ISM container
+    #
+    #   resp = client.get_origin_endpoint({
+    #     channel_group_name: "exampleChannelGroup", 
+    #     channel_name: "exampleChannel", 
+    #     origin_endpoint_name: "exampleOriginEndpointISM", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     arn: "arn:aws:mediapackagev2:us-west-2:123456789012:channelGroup/exampleChannelGroup/channel/exampleChannel/originEndpoint/exampleOriginEndpointISM", 
+    #     channel_group_name: "exampleChannelGroup", 
+    #     channel_name: "exampleChannel", 
+    #     container_type: "ISM", 
+    #     created_at: Time.parse("2022-10-18T09:36:00.00Z"), 
+    #     description: "Description for exampleOriginEndpointISM", 
+    #     etag: "HmgU+ewBzHJS5xvz9nLXm2SEQxTsjRfk0rVvuMayoyl=", 
+    #     force_endpoint_error_configuration: {
+    #       endpoint_error_conditions: [
+    #         "STALE_MANIFEST", 
+    #         "INCOMPLETE_MANIFEST", 
+    #         "MISSING_DRM_KEY", 
+    #         "SLATE_INPUT", 
+    #       ], 
+    #     }, 
+    #     modified_at: Time.parse("2022-10-18T09:36:00.00Z"), 
+    #     mss_manifests: [
+    #       {
+    #         manifest_layout: "FULL", 
+    #         manifest_name: "exampleMssManifest1", 
+    #         manifest_window_seconds: 60, 
+    #         url: "https://abcde.egress.vwxyz.mediapackagev2.us-west-2.amazonaws.com/out/v1/exampleChannelGroup/exampleChannel/exampleOriginEndpointISM/exampleMssManifest1.ism/Manifest", 
+    #       }, 
+    #       {
+    #         manifest_layout: "COMPACT", 
+    #         manifest_name: "exampleMssManifest2", 
+    #         manifest_window_seconds: 30, 
+    #         url: "https://abcde.egress.vwxyz.mediapackagev2.us-west-2.amazonaws.com/out/v1/exampleChannelGroup/exampleChannel/exampleOriginEndpointISM/exampleMssManifest2.ism/Manifest", 
+    #       }, 
+    #     ], 
+    #     origin_endpoint_name: "exampleOriginEndpointISM", 
+    #     segment: {
+    #       encryption: {
+    #         encryption_method: {
+    #           ism_encryption_method: "CENC", 
+    #         }, 
+    #         speke_key_provider: {
+    #           drm_systems: [
+    #             "PLAYREADY", 
+    #           ], 
+    #           encryption_contract_configuration: {
+    #             preset_speke_20_audio: "SHARED", 
+    #             preset_speke_20_video: "SHARED", 
+    #           }, 
+    #           resource_id: "ResourceId", 
+    #           role_arn: "arn:aws:iam::123456789012:role/empRole", 
+    #           url: "https://speke-key-provider.example.com", 
+    #         }, 
+    #       }, 
+    #       segment_duration_seconds: 2, 
+    #       segment_name: "segmentName", 
+    #     }, 
+    #     startover_window_seconds: 300, 
+    #     tags: {
+    #       "key1" => "value1", 
+    #       "key2" => "value2", 
+    #     }, 
+    #     uri_separator: "UNDERSCORE", 
     #   }
     #
     # @example Request syntax with placeholder values
@@ -2520,18 +3122,23 @@ module Aws::MediaPackageV2
     #   resp.channel_group_name #=> String
     #   resp.channel_name #=> String
     #   resp.origin_endpoint_name #=> String
-    #   resp.container_type #=> String, one of "TS", "CMAF"
+    #   resp.container_type #=> String, one of "TS", "CMAF", "ISM"
     #   resp.segment.segment_duration_seconds #=> Integer
     #   resp.segment.segment_name #=> String
     #   resp.segment.ts_use_audio_rendition_group #=> Boolean
     #   resp.segment.include_iframe_only_streams #=> Boolean
     #   resp.segment.ts_include_dvb_subtitles #=> Boolean
     #   resp.segment.scte.scte_filter #=> Array
-    #   resp.segment.scte.scte_filter[0] #=> String, one of "SPLICE_INSERT", "BREAK", "PROVIDER_ADVERTISEMENT", "DISTRIBUTOR_ADVERTISEMENT", "PROVIDER_PLACEMENT_OPPORTUNITY", "DISTRIBUTOR_PLACEMENT_OPPORTUNITY", "PROVIDER_OVERLAY_PLACEMENT_OPPORTUNITY", "DISTRIBUTOR_OVERLAY_PLACEMENT_OPPORTUNITY", "PROGRAM"
+    #   resp.segment.scte.scte_filter[0] #=> String, one of "SPLICE_INSERT", "BREAK", "PROVIDER_ADVERTISEMENT", "DISTRIBUTOR_ADVERTISEMENT", "PROVIDER_PLACEMENT_OPPORTUNITY", "DISTRIBUTOR_PLACEMENT_OPPORTUNITY", "PROVIDER_OVERLAY_PLACEMENT_OPPORTUNITY", "DISTRIBUTOR_OVERLAY_PLACEMENT_OPPORTUNITY", "PROGRAM", "CHAPTER", "UNSCHEDULED_EVENT", "ALTERNATE_CONTENT_OPPORTUNITY", "NETWORK", "PROVIDER_PROMO", "DISTRIBUTOR_PROMO", "PROVIDER_AD_BLOCK", "DISTRIBUTOR_AD_BLOCK", "CONTENT_IDENTIFICATION", "CALL_AD_SERVER"
+    #   resp.segment.scte.scte_in_segments #=> String, one of "NONE", "ALL", "MATCHES_FILTER"
+    #   resp.segment.scte.custom_ad_types #=> Array
+    #   resp.segment.scte.custom_ad_types[0] #=> String, one of "PROGRAM", "CHAPTER", "UNSCHEDULED_EVENT", "ALTERNATE_CONTENT_OPPORTUNITY", "NETWORK"
     #   resp.segment.encryption.constant_initialization_vector #=> String
     #   resp.segment.encryption.encryption_method.ts_encryption_method #=> String, one of "AES_128", "SAMPLE_AES"
     #   resp.segment.encryption.encryption_method.cmaf_encryption_method #=> String, one of "CENC", "CBCS"
+    #   resp.segment.encryption.encryption_method.ism_encryption_method #=> String, one of "CENC"
     #   resp.segment.encryption.key_rotation_interval_seconds #=> Integer
+    #   resp.segment.encryption.cmaf_exclude_segment_drm_metadata #=> Boolean
     #   resp.segment.encryption.speke_key_provider.encryption_contract_configuration.preset_speke_20_audio #=> String, one of "PRESET_AUDIO_1", "PRESET_AUDIO_2", "PRESET_AUDIO_3", "SHARED", "UNENCRYPTED"
     #   resp.segment.encryption.speke_key_provider.encryption_contract_configuration.preset_speke_20_video #=> String, one of "PRESET_VIDEO_1", "PRESET_VIDEO_2", "PRESET_VIDEO_3", "PRESET_VIDEO_4", "PRESET_VIDEO_5", "PRESET_VIDEO_6", "PRESET_VIDEO_7", "PRESET_VIDEO_8", "SHARED", "UNENCRYPTED"
     #   resp.segment.encryption.speke_key_provider.resource_id #=> String
@@ -2539,6 +3146,8 @@ module Aws::MediaPackageV2
     #   resp.segment.encryption.speke_key_provider.drm_systems[0] #=> String, one of "CLEAR_KEY_AES_128", "FAIRPLAY", "PLAYREADY", "WIDEVINE", "IRDETO"
     #   resp.segment.encryption.speke_key_provider.role_arn #=> String
     #   resp.segment.encryption.speke_key_provider.url #=> String
+    #   resp.segment.encryption.speke_key_provider.certificate_arn #=> String
+    #   resp.segment.output_timestamp_mode #=> String, one of "PASSTHROUGH", "REBASED_TO_CHANNEL_START"
     #   resp.created_at #=> Time
     #   resp.modified_at #=> Time
     #   resp.reset_at #=> Time
@@ -2550,8 +3159,10 @@ module Aws::MediaPackageV2
     #   resp.hls_manifests[0].child_manifest_name #=> String
     #   resp.hls_manifests[0].manifest_window_seconds #=> Integer
     #   resp.hls_manifests[0].program_date_time_interval_seconds #=> Integer
-    #   resp.hls_manifests[0].scte_hls.ad_marker_hls #=> String, one of "DATERANGE"
+    #   resp.hls_manifests[0].scte_hls.ad_marker_hls #=> String, one of "DATERANGE", "SCTE35_ENHANCED"
+    #   resp.hls_manifests[0].scte_hls.scte_in_manifests #=> String, one of "ALL", "MATCHES_FILTER"
     #   resp.hls_manifests[0].filter_configuration.manifest_filter #=> String
+    #   resp.hls_manifests[0].filter_configuration.drm_settings #=> String
     #   resp.hls_manifests[0].filter_configuration.start #=> Time
     #   resp.hls_manifests[0].filter_configuration.end #=> Time
     #   resp.hls_manifests[0].filter_configuration.time_delay_seconds #=> Integer
@@ -2559,14 +3170,17 @@ module Aws::MediaPackageV2
     #   resp.hls_manifests[0].start_tag.time_offset #=> Float
     #   resp.hls_manifests[0].start_tag.precise #=> Boolean
     #   resp.hls_manifests[0].url_encode_child_manifest #=> Boolean
+    #   resp.hls_manifests[0].uri_path_type #=> String, one of "LEAF", "ROOT"
     #   resp.low_latency_hls_manifests #=> Array
     #   resp.low_latency_hls_manifests[0].manifest_name #=> String
     #   resp.low_latency_hls_manifests[0].url #=> String
     #   resp.low_latency_hls_manifests[0].child_manifest_name #=> String
     #   resp.low_latency_hls_manifests[0].manifest_window_seconds #=> Integer
     #   resp.low_latency_hls_manifests[0].program_date_time_interval_seconds #=> Integer
-    #   resp.low_latency_hls_manifests[0].scte_hls.ad_marker_hls #=> String, one of "DATERANGE"
+    #   resp.low_latency_hls_manifests[0].scte_hls.ad_marker_hls #=> String, one of "DATERANGE", "SCTE35_ENHANCED"
+    #   resp.low_latency_hls_manifests[0].scte_hls.scte_in_manifests #=> String, one of "ALL", "MATCHES_FILTER"
     #   resp.low_latency_hls_manifests[0].filter_configuration.manifest_filter #=> String
+    #   resp.low_latency_hls_manifests[0].filter_configuration.drm_settings #=> String
     #   resp.low_latency_hls_manifests[0].filter_configuration.start #=> Time
     #   resp.low_latency_hls_manifests[0].filter_configuration.end #=> Time
     #   resp.low_latency_hls_manifests[0].filter_configuration.time_delay_seconds #=> Integer
@@ -2574,11 +3188,13 @@ module Aws::MediaPackageV2
     #   resp.low_latency_hls_manifests[0].start_tag.time_offset #=> Float
     #   resp.low_latency_hls_manifests[0].start_tag.precise #=> Boolean
     #   resp.low_latency_hls_manifests[0].url_encode_child_manifest #=> Boolean
+    #   resp.low_latency_hls_manifests[0].uri_path_type #=> String, one of "LEAF", "ROOT"
     #   resp.dash_manifests #=> Array
     #   resp.dash_manifests[0].manifest_name #=> String
     #   resp.dash_manifests[0].url #=> String
     #   resp.dash_manifests[0].manifest_window_seconds #=> Integer
     #   resp.dash_manifests[0].filter_configuration.manifest_filter #=> String
+    #   resp.dash_manifests[0].filter_configuration.drm_settings #=> String
     #   resp.dash_manifests[0].filter_configuration.start #=> Time
     #   resp.dash_manifests[0].filter_configuration.end #=> Time
     #   resp.dash_manifests[0].filter_configuration.time_delay_seconds #=> Integer
@@ -2590,11 +3206,48 @@ module Aws::MediaPackageV2
     #   resp.dash_manifests[0].period_triggers #=> Array
     #   resp.dash_manifests[0].period_triggers[0] #=> String, one of "AVAILS", "DRM_KEY_ROTATION", "SOURCE_CHANGES", "SOURCE_DISRUPTIONS", "NONE"
     #   resp.dash_manifests[0].scte_dash.ad_marker_dash #=> String, one of "BINARY", "XML"
+    #   resp.dash_manifests[0].scte_dash.scte_in_manifests #=> String, one of "ALL", "MATCHES_FILTER"
     #   resp.dash_manifests[0].drm_signaling #=> String, one of "INDIVIDUAL", "REFERENCED"
     #   resp.dash_manifests[0].utc_timing.timing_mode #=> String, one of "HTTP_HEAD", "HTTP_ISO", "HTTP_XSDATE", "UTC_DIRECT"
     #   resp.dash_manifests[0].utc_timing.timing_source #=> String
+    #   resp.dash_manifests[0].profiles #=> Array
+    #   resp.dash_manifests[0].profiles[0] #=> String, one of "DVB_DASH"
+    #   resp.dash_manifests[0].base_urls #=> Array
+    #   resp.dash_manifests[0].base_urls[0].url #=> String
+    #   resp.dash_manifests[0].base_urls[0].service_location #=> String
+    #   resp.dash_manifests[0].base_urls[0].dvb_priority #=> Integer
+    #   resp.dash_manifests[0].base_urls[0].dvb_weight #=> Integer
+    #   resp.dash_manifests[0].program_information.title #=> String
+    #   resp.dash_manifests[0].program_information.source #=> String
+    #   resp.dash_manifests[0].program_information.copyright #=> String
+    #   resp.dash_manifests[0].program_information.language_code #=> String
+    #   resp.dash_manifests[0].program_information.more_information_url #=> String
+    #   resp.dash_manifests[0].dvb_settings.font_download.url #=> String
+    #   resp.dash_manifests[0].dvb_settings.font_download.mime_type #=> String
+    #   resp.dash_manifests[0].dvb_settings.font_download.font_family #=> String
+    #   resp.dash_manifests[0].dvb_settings.error_metrics #=> Array
+    #   resp.dash_manifests[0].dvb_settings.error_metrics[0].reporting_url #=> String
+    #   resp.dash_manifests[0].dvb_settings.error_metrics[0].probability #=> Integer
+    #   resp.dash_manifests[0].compactness #=> String, one of "STANDARD", "NONE"
+    #   resp.dash_manifests[0].audio_timeline_pattern #=> String, one of "NONE", "PATTERNED"
+    #   resp.dash_manifests[0].subtitle_configuration.ttml_configuration.ttml_profile #=> String, one of "IMSC_1", "EBU_TT_D_101"
+    #   resp.dash_manifests[0].uri_path_type #=> String, one of "LEAF", "ROOT"
+    #   resp.dash_manifests[0].availability_start_time_configuration.fixed_availability_start_time #=> Time
+    #   resp.mss_manifests #=> Array
+    #   resp.mss_manifests[0].manifest_name #=> String
+    #   resp.mss_manifests[0].url #=> String
+    #   resp.mss_manifests[0].filter_configuration.manifest_filter #=> String
+    #   resp.mss_manifests[0].filter_configuration.drm_settings #=> String
+    #   resp.mss_manifests[0].filter_configuration.start #=> Time
+    #   resp.mss_manifests[0].filter_configuration.end #=> Time
+    #   resp.mss_manifests[0].filter_configuration.time_delay_seconds #=> Integer
+    #   resp.mss_manifests[0].filter_configuration.clip_start_time #=> Time
+    #   resp.mss_manifests[0].manifest_window_seconds #=> Integer
+    #   resp.mss_manifests[0].manifest_layout #=> String, one of "FULL", "COMPACT"
     #   resp.force_endpoint_error_configuration.endpoint_error_conditions #=> Array
     #   resp.force_endpoint_error_configuration.endpoint_error_conditions[0] #=> String, one of "STALE_MANIFEST", "INCOMPLETE_MANIFEST", "MISSING_DRM_KEY", "SLATE_INPUT"
+    #   resp.uri_separator #=> String, one of "UNDERSCORE", "HYPHEN"
+    #   resp.stream_name_output_mode #=> String, one of "INDEX", "PASSTHROUGH_NAME"
     #   resp.etag #=> String
     #   resp.tags #=> Hash
     #   resp.tags["TagKey"] #=> String
@@ -2632,6 +3285,7 @@ module Aws::MediaPackageV2
     #   * {Types::GetOriginEndpointPolicyResponse#channel_name #channel_name} => String
     #   * {Types::GetOriginEndpointPolicyResponse#origin_endpoint_name #origin_endpoint_name} => String
     #   * {Types::GetOriginEndpointPolicyResponse#policy #policy} => String
+    #   * {Types::GetOriginEndpointPolicyResponse#cdn_auth_configuration #cdn_auth_configuration} => Types::CdnAuthConfiguration
     #
     #
     # @example Example: Getting an Origin Endpoint Policy
@@ -2664,6 +3318,9 @@ module Aws::MediaPackageV2
     #   resp.channel_name #=> String
     #   resp.origin_endpoint_name #=> String
     #   resp.policy #=> String
+    #   resp.cdn_auth_configuration.cdn_identifier_secret_arns #=> Array
+    #   resp.cdn_auth_configuration.cdn_identifier_secret_arns[0] #=> String
+    #   resp.cdn_auth_configuration.secrets_role_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/GetOriginEndpointPolicy AWS API Documentation
     #
@@ -2743,8 +3400,7 @@ module Aws::MediaPackageV2
     end
 
     # Retrieves all channels in a specific channel group that are configured
-    # in AWS Elemental MediaPackage, including the origin endpoints that are
-    # associated with it.
+    # in AWS Elemental MediaPackage.
     #
     # @option params [required, String] :channel_group_name
     #   The name that describes the channel group. The name is the primary
@@ -2811,6 +3467,7 @@ module Aws::MediaPackageV2
     #   resp.items[0].modified_at #=> Time
     #   resp.items[0].description #=> String
     #   resp.items[0].input_type #=> String, one of "HLS", "CMAF"
+    #   resp.items[0].output_locking_mode #=> String, one of "EPOCH_LOCKED", "NON_EPOCH_LOCKED"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/ListChannels AWS API Documentation
@@ -2856,6 +3513,310 @@ module Aws::MediaPackageV2
     #   * {Types::ListHarvestJobsResponse#next_token #next_token} => String
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    #
+    # @example Example: ListHarvestJobs: Specify ChannelGroup only
+    #
+    #   resp = client.list_harvest_jobs({
+    #     channel_group_name: "exampleChannelGroup", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     items: [
+    #       {
+    #         arn: "arn:aws:mediapackagev2:us-west-2:123456789012:channelGroup/exampleChannelGroup/channel/exampleChannelName/originEndpoint/exampleOriginEndpointName/harvestJob/HarvestJobName", 
+    #         channel_group_name: "exampleChannelGroup", 
+    #         channel_name: "exampleChannelName", 
+    #         created_at: Time.parse("2024-05-28T09:36:00.00Z"), 
+    #         description: "Example HarvestJob description", 
+    #         destination: {
+    #           s3_destination: {
+    #             bucket_name: "harvestJobS3DestinationBucket", 
+    #             destination_path: "manifests", 
+    #           }, 
+    #         }, 
+    #         etag: "GlfT+dwAyGIR4wuy8nKWl1RDPwSrjQej9qUutLZxoxk=", 
+    #         harvest_job_name: "HarvestJobName", 
+    #         harvested_manifests: {
+    #           dash_manifests: [
+    #             {
+    #               manifest_name: "DashManifest", 
+    #             }, 
+    #           ], 
+    #           hls_manifests: [
+    #             {
+    #               manifest_name: "HlsManifest", 
+    #             }, 
+    #           ], 
+    #           low_latency_hls_manifests: [
+    #             {
+    #               manifest_name: "LowLatencyHlsManifest", 
+    #             }, 
+    #           ], 
+    #         }, 
+    #         modified_at: Time.parse("2024-05-28T09:36:00.00Z"), 
+    #         origin_endpoint_name: "exampleOriginEndpointName", 
+    #         schedule_configuration: {
+    #           end_time: Time.parse("2024-05-28T12:00:00.00Z"), 
+    #           start_time: Time.parse("2024-05-28T06:00:00.00Z"), 
+    #         }, 
+    #         status: "QUEUED", 
+    #       }, 
+    #       {
+    #         arn: "arn:aws:mediapackagev2:us-west-2:123456789012:channelGroup/exampleChannelGroup/channel/exampleChannelName2/originEndpoint/exampleOriginEndpointName2/harvestJob/HarvestJobName2", 
+    #         channel_group_name: "exampleChannelGroup", 
+    #         channel_name: "exampleChannelName2", 
+    #         created_at: Time.parse("2024-05-28T15:30:00.00Z"), 
+    #         description: "Example HarvestJob2 description", 
+    #         destination: {
+    #           s3_destination: {
+    #             bucket_name: "harvestJobS3DestinationBucket", 
+    #             destination_path: "manifests", 
+    #           }, 
+    #         }, 
+    #         etag: "GlfT+dwAyGIR4wuy8nKWl1RDPwSrjQej9qUutLZxoxk=", 
+    #         harvest_job_name: "HarvestJobName2", 
+    #         harvested_manifests: {
+    #           dash_manifests: [
+    #             {
+    #               manifest_name: "DashManifest", 
+    #             }, 
+    #           ], 
+    #           hls_manifests: [
+    #             {
+    #               manifest_name: "HlsManifest", 
+    #             }, 
+    #           ], 
+    #           low_latency_hls_manifests: [
+    #             {
+    #               manifest_name: "LowLatencyHlsManifest", 
+    #             }, 
+    #           ], 
+    #         }, 
+    #         modified_at: Time.parse("2024-05-28T15:30:00.00Z"), 
+    #         origin_endpoint_name: "exampleOriginEndpointName2", 
+    #         schedule_configuration: {
+    #           end_time: Time.parse("2024-05-28T12:00:00.00Z"), 
+    #           start_time: Time.parse("2024-05-28T02:00:00.00Z"), 
+    #         }, 
+    #         status: "IN_PROGRESS", 
+    #       }, 
+    #     ], 
+    #     next_token: "someTokenValue", 
+    #   }
+    #
+    # @example Example: ListHarvestJobs: Specify ChannelGroup, Channel only
+    #
+    #   resp = client.list_harvest_jobs({
+    #     channel_group_name: "exampleChannelGroup", 
+    #     channel_name: "exampleChannelName", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     items: [
+    #       {
+    #         arn: "arn:aws:mediapackagev2:us-west-2:123456789012:channelGroup/exampleChannelGroup/channel/exampleChannelName/originEndpoint/exampleOriginEndpointName/harvestJob/HarvestJobName", 
+    #         channel_group_name: "exampleChannelGroup", 
+    #         channel_name: "exampleChannelName", 
+    #         created_at: Time.parse("2024-05-28T09:36:00.00Z"), 
+    #         description: "Example HarvestJob description", 
+    #         destination: {
+    #           s3_destination: {
+    #             bucket_name: "harvestJobS3DestinationBucket", 
+    #             destination_path: "manifests", 
+    #           }, 
+    #         }, 
+    #         etag: "GlfT+dwAyGIR4wuy8nKWl1RDPwSrjQej9qUutLZxoxk=", 
+    #         harvest_job_name: "HarvestJobName", 
+    #         harvested_manifests: {
+    #           dash_manifests: [
+    #             {
+    #               manifest_name: "DashManifest", 
+    #             }, 
+    #           ], 
+    #           hls_manifests: [
+    #             {
+    #               manifest_name: "HlsManifest", 
+    #             }, 
+    #           ], 
+    #           low_latency_hls_manifests: [
+    #             {
+    #               manifest_name: "LowLatencyHlsManifest", 
+    #             }, 
+    #           ], 
+    #         }, 
+    #         modified_at: Time.parse("2024-05-28T09:36:00.00Z"), 
+    #         origin_endpoint_name: "exampleOriginEndpointName", 
+    #         schedule_configuration: {
+    #           end_time: Time.parse("2024-05-28T12:00:00.00Z"), 
+    #           start_time: Time.parse("2024-05-28T06:00:00.00Z"), 
+    #         }, 
+    #         status: "QUEUED", 
+    #       }, 
+    #       {
+    #         arn: "arn:aws:mediapackagev2:us-west-2:123456789012:channelGroup/exampleChannelGroup/channel/exampleChannelName/originEndpoint/exampleOriginEndpointName2/harvestJob/HarvestJobName2", 
+    #         channel_group_name: "exampleChannelGroup", 
+    #         channel_name: "exampleChannelName", 
+    #         created_at: Time.parse("2024-05-28T15:30:00.00Z"), 
+    #         description: "Example HarvestJob2 description", 
+    #         destination: {
+    #           s3_destination: {
+    #             bucket_name: "harvestJobS3DestinationBucket", 
+    #             destination_path: "manifests", 
+    #           }, 
+    #         }, 
+    #         harvest_job_name: "HarvestJobName2", 
+    #         harvested_manifests: {
+    #           dash_manifests: [
+    #             {
+    #               manifest_name: "DashManifest", 
+    #             }, 
+    #           ], 
+    #           hls_manifests: [
+    #             {
+    #               manifest_name: "HlsManifest", 
+    #             }, 
+    #           ], 
+    #           low_latency_hls_manifests: [
+    #             {
+    #               manifest_name: "LowLatencyHlsManifest", 
+    #             }, 
+    #           ], 
+    #         }, 
+    #         modified_at: Time.parse("2024-05-28T15:30:00.00Z"), 
+    #         origin_endpoint_name: "exampleOriginEndpointName2", 
+    #         schedule_configuration: {
+    #           end_time: Time.parse("2024-05-28T12:00:00.00Z"), 
+    #           start_time: Time.parse("2024-05-28T02:00:00.00Z"), 
+    #         }, 
+    #         status: "IN_PROGRESS", 
+    #       }, 
+    #     ], 
+    #     next_token: "someTokenValue", 
+    #   }
+    #
+    # @example Example: ListHarvestJobs: Specify ChannelGroup, Channel, OriginEndpoint
+    #
+    #   resp = client.list_harvest_jobs({
+    #     channel_group_name: "exampleChannelGroup", 
+    #     channel_name: "exampleChannelName", 
+    #     origin_endpoint_name: "exampleOriginEndpointName", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     items: [
+    #       {
+    #         arn: "arn:aws:mediapackagev2:us-west-2:123456789012:channelGroup/exampleChannelGroup/channel/exampleChannelName/originEndpoint/exampleOriginEndpointName/harvestJob/HarvestJobName", 
+    #         channel_group_name: "exampleChannelGroup", 
+    #         channel_name: "exampleChannelName", 
+    #         created_at: Time.parse("2024-05-28T09:36:00.00Z"), 
+    #         description: "Example HarvestJob description", 
+    #         destination: {
+    #           s3_destination: {
+    #             bucket_name: "harvestJobS3DestinationBucket", 
+    #             destination_path: "manifests", 
+    #           }, 
+    #         }, 
+    #         etag: "GlfT+dwAyGIR4wuy8nKWl1RDPwSrjQej9qUutLZxoxk=", 
+    #         harvest_job_name: "HarvestJobName", 
+    #         harvested_manifests: {
+    #           dash_manifests: [
+    #             {
+    #               manifest_name: "DashManifest", 
+    #             }, 
+    #           ], 
+    #           hls_manifests: [
+    #             {
+    #               manifest_name: "HlsManifest", 
+    #             }, 
+    #           ], 
+    #           low_latency_hls_manifests: [
+    #             {
+    #               manifest_name: "LowLatencyHlsManifest", 
+    #             }, 
+    #           ], 
+    #         }, 
+    #         modified_at: Time.parse("2024-05-28T09:36:00.00Z"), 
+    #         origin_endpoint_name: "exampleOriginEndpointName", 
+    #         schedule_configuration: {
+    #           end_time: Time.parse("2024-05-28T12:00:00.00Z"), 
+    #           start_time: Time.parse("2024-05-28T06:00:00.00Z"), 
+    #         }, 
+    #         status: "QUEUED", 
+    #       }, 
+    #     ], 
+    #     next_token: "someTokenValue", 
+    #   }
+    #
+    # @example Example: ListHarvestJobs: Specify ChannelGroup, Channel, OriginEndpoint + Status filter
+    #
+    #   resp = client.list_harvest_jobs({
+    #     channel_group_name: "exampleChannelGroup", 
+    #     channel_name: "exampleChannelName", 
+    #     origin_endpoint_name: "exampleOriginEndpointName", 
+    #     status: "QUEUED", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     items: [
+    #       {
+    #         arn: "arn:aws:mediapackagev2:us-west-2:123456789012:channelGroup/exampleChannelGroup/channel/exampleChannelName/originEndpoint/exampleOriginEndpointName/harvestJob/HarvestJobName", 
+    #         channel_group_name: "exampleChannelGroup", 
+    #         channel_name: "exampleChannelName", 
+    #         created_at: Time.parse("2024-05-28T09:36:00.00Z"), 
+    #         description: "Example HarvestJob description", 
+    #         destination: {
+    #           s3_destination: {
+    #             bucket_name: "harvestJobS3DestinationBucket", 
+    #             destination_path: "manifests", 
+    #           }, 
+    #         }, 
+    #         etag: "GlfT+dwAyGIR4wuy8nKWl1RDPwSrjQej9qUutLZxoxk=", 
+    #         harvest_job_name: "HarvestJobName", 
+    #         harvested_manifests: {
+    #           dash_manifests: [
+    #             {
+    #               manifest_name: "DashManifest", 
+    #             }, 
+    #           ], 
+    #           hls_manifests: [
+    #             {
+    #               manifest_name: "HlsManifest", 
+    #             }, 
+    #           ], 
+    #           low_latency_hls_manifests: [
+    #             {
+    #               manifest_name: "LowLatencyHlsManifest", 
+    #             }, 
+    #           ], 
+    #         }, 
+    #         modified_at: Time.parse("2024-05-28T09:36:00.00Z"), 
+    #         origin_endpoint_name: "exampleOriginEndpointName", 
+    #         schedule_configuration: {
+    #           end_time: Time.parse("2024-05-28T12:00:00.00Z"), 
+    #           start_time: Time.parse("2024-05-28T06:00:00.00Z"), 
+    #         }, 
+    #         status: "QUEUED", 
+    #       }, 
+    #     ], 
+    #     next_token: "someTokenValue", 
+    #   }
+    #
+    # @example Example: ListHarvestJobs: Empty response
+    #
+    #   resp = client.list_harvest_jobs({
+    #     channel_group_name: "exampleChannelGroup", 
+    #     channel_name: "exampleChannelName", 
+    #     origin_endpoint_name: "exampleOriginEndpointName", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #   }
     #
     # @example Request syntax with placeholder values
     #
@@ -2982,6 +3943,7 @@ module Aws::MediaPackageV2
     #         ], 
     #         modified_at: Time.parse("2022-10-18T09:36:00.00Z"), 
     #         origin_endpoint_name: "exampleOriginEndpointTS", 
+    #         uri_separator: "UNDERSCORE", 
     #       }, 
     #       {
     #         arn: "arn:aws:mediapackagev2:us-west-2:123456789012:channelGroup/exampleChannelGroup/channel/exampleChannel/originEndpoint/exampleOriginEndpointCMAF", 
@@ -3033,6 +3995,36 @@ module Aws::MediaPackageV2
     #         ], 
     #         modified_at: Time.parse("2022-10-18T09:36:00.00Z"), 
     #         origin_endpoint_name: "exampleOriginEndpointCMAF", 
+    #         uri_separator: "UNDERSCORE", 
+    #       }, 
+    #       {
+    #         arn: "arn:aws:mediapackagev2:us-west-2:123456789012:channelGroup/exampleChannelGroup/channel/exampleChannel/originEndpoint/exampleOriginEndpointISM", 
+    #         channel_group_name: "exampleChannelGroup", 
+    #         channel_name: "exampleChannel", 
+    #         container_type: "ISM", 
+    #         created_at: Time.parse("2022-10-18T09:36:00.00Z"), 
+    #         description: "Description for exampleOriginEndpointISM", 
+    #         force_endpoint_error_configuration: {
+    #           endpoint_error_conditions: [
+    #             "STALE_MANIFEST", 
+    #             "INCOMPLETE_MANIFEST", 
+    #             "MISSING_DRM_KEY", 
+    #             "SLATE_INPUT", 
+    #           ], 
+    #         }, 
+    #         modified_at: Time.parse("2022-10-18T09:36:00.00Z"), 
+    #         mss_manifests: [
+    #           {
+    #             manifest_name: "exampleMssManifest1", 
+    #             url: "https://abcde.egress.vwxyz.mediapackagev2.us-west-2.amazonaws.com/out/v1/exampleChannelGroup/exampleChannel/exampleOriginEndpointISM/exampleMssManifest1.ism/Manifest", 
+    #           }, 
+    #           {
+    #             manifest_name: "exampleMssManifest2", 
+    #             url: "https://abcde.egress.vwxyz.mediapackagev2.us-west-2.amazonaws.com/out/v1/exampleChannelGroup/exampleChannel/exampleOriginEndpointISM/exampleMssManifest2.ism/Manifest", 
+    #           }, 
+    #         ], 
+    #         origin_endpoint_name: "exampleOriginEndpointISM", 
+    #         uri_separator: "UNDERSCORE", 
     #       }, 
     #     ], 
     #   }
@@ -3053,7 +4045,7 @@ module Aws::MediaPackageV2
     #   resp.items[0].channel_group_name #=> String
     #   resp.items[0].channel_name #=> String
     #   resp.items[0].origin_endpoint_name #=> String
-    #   resp.items[0].container_type #=> String, one of "TS", "CMAF"
+    #   resp.items[0].container_type #=> String, one of "TS", "CMAF", "ISM"
     #   resp.items[0].description #=> String
     #   resp.items[0].created_at #=> Time
     #   resp.items[0].modified_at #=> Time
@@ -3068,8 +4060,13 @@ module Aws::MediaPackageV2
     #   resp.items[0].dash_manifests #=> Array
     #   resp.items[0].dash_manifests[0].manifest_name #=> String
     #   resp.items[0].dash_manifests[0].url #=> String
+    #   resp.items[0].mss_manifests #=> Array
+    #   resp.items[0].mss_manifests[0].manifest_name #=> String
+    #   resp.items[0].mss_manifests[0].url #=> String
     #   resp.items[0].force_endpoint_error_configuration.endpoint_error_conditions #=> Array
     #   resp.items[0].force_endpoint_error_configuration.endpoint_error_conditions[0] #=> String, one of "STALE_MANIFEST", "INCOMPLETE_MANIFEST", "MISSING_DRM_KEY", "SLATE_INPUT"
+    #   resp.items[0].uri_separator #=> String, one of "UNDERSCORE", "HYPHEN"
+    #   resp.items[0].stream_name_output_mode #=> String, one of "INDEX", "PASSTHROUGH_NAME"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/ListOriginEndpoints AWS API Documentation
@@ -3196,6 +4193,17 @@ module Aws::MediaPackageV2
     # @option params [required, String] :policy
     #   The policy to attach to the specified origin endpoint.
     #
+    # @option params [Types::CdnAuthConfiguration] :cdn_auth_configuration
+    #   The settings for using authorization headers between the MediaPackage
+    #   endpoint and your CDN.
+    #
+    #   For information about CDN authorization, see [CDN authorization in
+    #   Elemental MediaPackage][1] in the MediaPackage user guide.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediapackage/latest/userguide/cdn-auth.html
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     #
@@ -3219,6 +4227,10 @@ module Aws::MediaPackageV2
     #     channel_name: "ResourceName", # required
     #     origin_endpoint_name: "ResourceName", # required
     #     policy: "PolicyText", # required
+    #     cdn_auth_configuration: {
+    #       cdn_identifier_secret_arns: ["CdnIdentifierSecretArn"], # required
+    #       secrets_role_arn: "CdnAuthConfigurationSecretsRoleArnString", # required
+    #     },
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/PutOriginEndpointPolicy AWS API Documentation
@@ -3510,6 +4522,7 @@ module Aws::MediaPackageV2
     #   * {Types::UpdateChannelResponse#tags #tags} => Hash&lt;String,String&gt;
     #   * {Types::UpdateChannelResponse#input_switch_configuration #input_switch_configuration} => Types::InputSwitchConfiguration
     #   * {Types::UpdateChannelResponse#output_header_configuration #output_header_configuration} => Types::OutputHeaderConfiguration
+    #   * {Types::UpdateChannelResponse#output_locking_mode #output_locking_mode} => String
     #
     #
     # @example Example: Updating a Channel
@@ -3546,6 +4559,41 @@ module Aws::MediaPackageV2
     #     }, 
     #   }
     #
+    # @example Example: Updating a CMAF Channel with non-epoch-locked output locking mode
+    #
+    #   resp = client.update_channel({
+    #     channel_group_name: "exampleChannelGroup", 
+    #     channel_name: "exampleCmafChannel", 
+    #     description: "Updated non-epoch-locked CMAF channel", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     arn: "arn:aws:mediapackagev2:us-west-2:123456789012:channelGroup/exampleChannelGroup/channel/exampleCmafChannel", 
+    #     channel_group_name: "exampleChannelGroup", 
+    #     channel_name: "exampleCmafChannel", 
+    #     created_at: Time.parse("2022-10-18T09:36:00.00Z"), 
+    #     description: "Updated non-epoch-locked CMAF channel", 
+    #     etag: "GlfT+dwAyGIR4wuy8nKWl1RDPwSrjQej9qUutLZxoxk=", 
+    #     ingest_endpoints: [
+    #       {
+    #         id: "1", 
+    #         url: "https://abcde-1.ingest.vwxyz.mediapackagev2.us-west-2.amazonaws.com/v1/exampleChannelGroup/exampleCmafChannel", 
+    #       }, 
+    #       {
+    #         id: "2", 
+    #         url: "https://abcde-2.ingest.vwxyz.mediapackagev2.us-west-2.amazonaws.com/v1/exampleChannelGroup/exampleCmafChannel", 
+    #       }, 
+    #     ], 
+    #     input_type: "CMAF", 
+    #     modified_at: Time.parse("2022-10-18T10:36:00.00Z"), 
+    #     output_locking_mode: "NON_EPOCH_LOCKED", 
+    #     tags: {
+    #       "key1" => "value1", 
+    #       "key2" => "value2", 
+    #     }, 
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_channel({
@@ -3555,6 +4603,7 @@ module Aws::MediaPackageV2
     #     description: "ResourceDescription",
     #     input_switch_configuration: {
     #       mqcs_input_switching: false,
+    #       preferred_input: 1,
     #     },
     #     output_header_configuration: {
     #       publish_mqcs: false,
@@ -3577,7 +4626,9 @@ module Aws::MediaPackageV2
     #   resp.tags #=> Hash
     #   resp.tags["TagKey"] #=> String
     #   resp.input_switch_configuration.mqcs_input_switching #=> Boolean
+    #   resp.input_switch_configuration.preferred_input #=> Integer
     #   resp.output_header_configuration.publish_mqcs #=> Boolean
+    #   resp.output_locking_mode #=> String, one of "EPOCH_LOCKED", "NON_EPOCH_LOCKED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/UpdateChannel AWS API Documentation
     #
@@ -3722,8 +4773,24 @@ module Aws::MediaPackageV2
     # @option params [Array<Types::CreateDashManifestConfiguration>] :dash_manifests
     #   A DASH manifest configuration.
     #
+    # @option params [Array<Types::CreateMssManifestConfiguration>] :mss_manifests
+    #   A list of Microsoft Smooth Streaming (MSS) manifest configurations to
+    #   update for the origin endpoint. This replaces the existing MSS
+    #   manifest configurations.
+    #
     # @option params [Types::ForceEndpointErrorConfiguration] :force_endpoint_error_configuration
     #   The failover settings for the endpoint.
+    #
+    # @option params [String] :uri_separator
+    #   The separator character to use in generated URIs for this origin
+    #   endpoint. This setting applies to all manifest types on the endpoint.
+    #   If you don't specify a value in the update request, the current value
+    #   is preserved.
+    #
+    # @option params [String] :stream_name_output_mode
+    #   The output mode for stream names in egress manifests. If you provide a
+    #   value, it must match the current value. You can't change the stream
+    #   name output mode after you create the endpoint.
     #
     # @option params [String] :etag
     #   The expected current Entity Tag (ETag) for the resource. If the
@@ -3744,7 +4811,10 @@ module Aws::MediaPackageV2
     #   * {Types::UpdateOriginEndpointResponse#startover_window_seconds #startover_window_seconds} => Integer
     #   * {Types::UpdateOriginEndpointResponse#hls_manifests #hls_manifests} => Array&lt;Types::GetHlsManifestConfiguration&gt;
     #   * {Types::UpdateOriginEndpointResponse#low_latency_hls_manifests #low_latency_hls_manifests} => Array&lt;Types::GetLowLatencyHlsManifestConfiguration&gt;
+    #   * {Types::UpdateOriginEndpointResponse#mss_manifests #mss_manifests} => Array&lt;Types::GetMssManifestConfiguration&gt;
     #   * {Types::UpdateOriginEndpointResponse#force_endpoint_error_configuration #force_endpoint_error_configuration} => Types::ForceEndpointErrorConfiguration
+    #   * {Types::UpdateOriginEndpointResponse#uri_separator #uri_separator} => String
+    #   * {Types::UpdateOriginEndpointResponse#stream_name_output_mode #stream_name_output_mode} => String
     #   * {Types::UpdateOriginEndpointResponse#etag #etag} => String
     #   * {Types::UpdateOriginEndpointResponse#tags #tags} => Hash&lt;String,String&gt;
     #   * {Types::UpdateOriginEndpointResponse#dash_manifests #dash_manifests} => Array&lt;Types::GetDashManifestConfiguration&gt;
@@ -3774,6 +4844,7 @@ module Aws::MediaPackageV2
     #         scte_hls: {
     #           ad_marker_hls: "DATERANGE", 
     #         }, 
+    #         uri_path_type: "LEAF", 
     #       }, 
     #       {
     #         child_manifest_name: "exampleManifest2", 
@@ -3783,6 +4854,7 @@ module Aws::MediaPackageV2
     #         scte_hls: {
     #           ad_marker_hls: "DATERANGE", 
     #         }, 
+    #         uri_path_type: "LEAF", 
     #       }, 
     #     ], 
     #     low_latency_hls_manifests: [
@@ -3794,6 +4866,7 @@ module Aws::MediaPackageV2
     #         scte_hls: {
     #           ad_marker_hls: "DATERANGE", 
     #         }, 
+    #         uri_path_type: "ROOT", 
     #       }, 
     #       {
     #         child_manifest_name: "exampleLLManifest2", 
@@ -3803,6 +4876,7 @@ module Aws::MediaPackageV2
     #         scte_hls: {
     #           ad_marker_hls: "DATERANGE", 
     #         }, 
+    #         uri_path_type: "ROOT", 
     #       }, 
     #     ], 
     #     origin_endpoint_name: "exampleOriginEndpointTS", 
@@ -3814,6 +4888,7 @@ module Aws::MediaPackageV2
     #         }, 
     #         key_rotation_interval_seconds: 300, 
     #         speke_key_provider: {
+    #           certificate_arn: "arn:aws:acm:us-west-2:123456789012:certificate/0c6a65f1-7bd3-48ac-be17-f38675def22e", 
     #           drm_systems: [
     #             "CLEAR_KEY_AES_128", 
     #           ], 
@@ -3838,6 +4913,7 @@ module Aws::MediaPackageV2
     #       ts_use_audio_rendition_group: true, 
     #     }, 
     #     startover_window_seconds: 600, 
+    #     uri_separator: "HYPHEN", 
     #   })
     #
     #   resp.to_h outputs the following:
@@ -3866,6 +4942,7 @@ module Aws::MediaPackageV2
     #         scte_hls: {
     #           ad_marker_hls: "DATERANGE", 
     #         }, 
+    #         uri_path_type: "LEAF", 
     #         url: "https://abcde.egress.vwxyz.mediapackagev2.us-west-2.amazonaws.com/out/v1/exampleChannelGroup/exampleChannel/exampleOriginEndpointTS/exampleManifest1.m3u8", 
     #       }, 
     #       {
@@ -3876,6 +4953,7 @@ module Aws::MediaPackageV2
     #         scte_hls: {
     #           ad_marker_hls: "DATERANGE", 
     #         }, 
+    #         uri_path_type: "LEAF", 
     #         url: "https://abcde.egress.vwxyz.mediapackagev2.us-west-2.amazonaws.com/out/v1/exampleChannelGroup/exampleChannel/exampleOriginEndpointTS/exampleManifest2.m3u8", 
     #       }, 
     #     ], 
@@ -3888,6 +4966,7 @@ module Aws::MediaPackageV2
     #         scte_hls: {
     #           ad_marker_hls: "DATERANGE", 
     #         }, 
+    #         uri_path_type: "ROOT", 
     #         url: "https://abcde.egress.vwxyz.mediapackagev2.us-west-2.amazonaws.com/out/v1/exampleChannelGroup/exampleChannel/exampleOriginEndpointTS/exampleLLManifest1.m3u8", 
     #       }, 
     #       {
@@ -3898,6 +4977,7 @@ module Aws::MediaPackageV2
     #         scte_hls: {
     #           ad_marker_hls: "DATERANGE", 
     #         }, 
+    #         uri_path_type: "ROOT", 
     #         url: "https://abcde.egress.vwxyz.mediapackagev2.us-west-2.amazonaws.com/out/v1/exampleChannelGroup/exampleChannel/exampleOriginEndpointTS/exampleLLManifest2.m3u8", 
     #       }, 
     #     ], 
@@ -3911,6 +4991,7 @@ module Aws::MediaPackageV2
     #         }, 
     #         key_rotation_interval_seconds: 300, 
     #         speke_key_provider: {
+    #           certificate_arn: "arn:aws:acm:us-west-2:123456789012:certificate/0c6a65f1-7bd3-48ac-be17-f38675def22e", 
     #           drm_systems: [
     #             "CLEAR_KEY_AES_128", 
     #           ], 
@@ -3939,6 +5020,122 @@ module Aws::MediaPackageV2
     #       "key1" => "value1", 
     #       "key2" => "value2", 
     #     }, 
+    #     uri_separator: "HYPHEN", 
+    #   }
+    #
+    # @example Example: Updating an OriginEndpoint with ISM container
+    #
+    #   resp = client.update_origin_endpoint({
+    #     channel_group_name: "exampleChannelGroup", 
+    #     channel_name: "exampleChannel", 
+    #     container_type: "ISM", 
+    #     description: "Updated description for exampleOriginEndpointISM", 
+    #     force_endpoint_error_configuration: {
+    #       endpoint_error_conditions: [
+    #         "STALE_MANIFEST", 
+    #         "INCOMPLETE_MANIFEST", 
+    #         "MISSING_DRM_KEY", 
+    #         "SLATE_INPUT", 
+    #       ], 
+    #     }, 
+    #     mss_manifests: [
+    #       {
+    #         manifest_layout: "FULL", 
+    #         manifest_name: "exampleMssManifest1", 
+    #         manifest_window_seconds: 60, 
+    #       }, 
+    #       {
+    #         manifest_layout: "COMPACT", 
+    #         manifest_name: "exampleMssManifest2", 
+    #         manifest_window_seconds: 30, 
+    #       }, 
+    #     ], 
+    #     origin_endpoint_name: "exampleOriginEndpointISM", 
+    #     segment: {
+    #       encryption: {
+    #         encryption_method: {
+    #           ism_encryption_method: "CENC", 
+    #         }, 
+    #         speke_key_provider: {
+    #           drm_systems: [
+    #             "PLAYREADY", 
+    #           ], 
+    #           encryption_contract_configuration: {
+    #             preset_speke_20_audio: "SHARED", 
+    #             preset_speke_20_video: "SHARED", 
+    #           }, 
+    #           resource_id: "ResourceId", 
+    #           role_arn: "arn:aws:iam::123456789012:role/empRole", 
+    #           url: "https://speke-key-provider.example.com", 
+    #         }, 
+    #       }, 
+    #       segment_duration_seconds: 2, 
+    #       segment_name: "segmentName2", 
+    #     }, 
+    #     startover_window_seconds: 600, 
+    #     uri_separator: "HYPHEN", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     arn: "arn:aws:mediapackagev2:us-west-2:123456789012:channelGroup/exampleChannelGroup/channel/exampleChannel/originEndpoint/exampleOriginEndpointISM", 
+    #     channel_group_name: "exampleChannelGroup", 
+    #     channel_name: "exampleChannel", 
+    #     container_type: "ISM", 
+    #     created_at: Time.parse("2022-10-18T09:36:00.00Z"), 
+    #     description: "Updated description for exampleOriginEndpointISM", 
+    #     etag: "HmgU+ewBzHJS5xvz9nLXm2SEQxTsjRfk0rVvuMayoyl=", 
+    #     force_endpoint_error_configuration: {
+    #       endpoint_error_conditions: [
+    #         "STALE_MANIFEST", 
+    #         "INCOMPLETE_MANIFEST", 
+    #         "MISSING_DRM_KEY", 
+    #         "SLATE_INPUT", 
+    #       ], 
+    #     }, 
+    #     modified_at: Time.parse("2022-10-18T09:37:00.00Z"), 
+    #     mss_manifests: [
+    #       {
+    #         manifest_layout: "FULL", 
+    #         manifest_name: "exampleMssManifest1", 
+    #         manifest_window_seconds: 60, 
+    #         url: "https://abcde.egress.vwxyz.mediapackagev2.us-west-2.amazonaws.com/out/v1/exampleChannelGroup/exampleChannel/exampleOriginEndpointISM/exampleMssManifest1.ism/Manifest", 
+    #       }, 
+    #       {
+    #         manifest_layout: "COMPACT", 
+    #         manifest_name: "exampleMssManifest2", 
+    #         manifest_window_seconds: 30, 
+    #         url: "https://abcde.egress.vwxyz.mediapackagev2.us-west-2.amazonaws.com/out/v1/exampleChannelGroup/exampleChannel/exampleOriginEndpointISM/exampleMssManifest2.ism/Manifest", 
+    #       }, 
+    #     ], 
+    #     origin_endpoint_name: "exampleOriginEndpointISM", 
+    #     segment: {
+    #       encryption: {
+    #         encryption_method: {
+    #           ism_encryption_method: "CENC", 
+    #         }, 
+    #         speke_key_provider: {
+    #           drm_systems: [
+    #             "PLAYREADY", 
+    #           ], 
+    #           encryption_contract_configuration: {
+    #             preset_speke_20_audio: "SHARED", 
+    #             preset_speke_20_video: "SHARED", 
+    #           }, 
+    #           resource_id: "ResourceId", 
+    #           role_arn: "arn:aws:iam::123456789012:role/empRole", 
+    #           url: "https://speke-key-provider.example.com", 
+    #         }, 
+    #       }, 
+    #       segment_duration_seconds: 2, 
+    #       segment_name: "segmentName2", 
+    #     }, 
+    #     startover_window_seconds: 600, 
+    #     tags: {
+    #       "key1" => "value1", 
+    #       "key2" => "value2", 
+    #     }, 
+    #     uri_separator: "HYPHEN", 
     #   }
     #
     # @example Request syntax with placeholder values
@@ -3947,7 +5144,7 @@ module Aws::MediaPackageV2
     #     channel_group_name: "ResourceName", # required
     #     channel_name: "ResourceName", # required
     #     origin_endpoint_name: "ResourceName", # required
-    #     container_type: "TS", # required, accepts TS, CMAF
+    #     container_type: "TS", # required, accepts TS, CMAF, ISM
     #     segment: {
     #       segment_duration_seconds: 1,
     #       segment_name: "SegmentSegmentNameString",
@@ -3955,15 +5152,19 @@ module Aws::MediaPackageV2
     #       include_iframe_only_streams: false,
     #       ts_include_dvb_subtitles: false,
     #       scte: {
-    #         scte_filter: ["SPLICE_INSERT"], # accepts SPLICE_INSERT, BREAK, PROVIDER_ADVERTISEMENT, DISTRIBUTOR_ADVERTISEMENT, PROVIDER_PLACEMENT_OPPORTUNITY, DISTRIBUTOR_PLACEMENT_OPPORTUNITY, PROVIDER_OVERLAY_PLACEMENT_OPPORTUNITY, DISTRIBUTOR_OVERLAY_PLACEMENT_OPPORTUNITY, PROGRAM
+    #         scte_filter: ["SPLICE_INSERT"], # accepts SPLICE_INSERT, BREAK, PROVIDER_ADVERTISEMENT, DISTRIBUTOR_ADVERTISEMENT, PROVIDER_PLACEMENT_OPPORTUNITY, DISTRIBUTOR_PLACEMENT_OPPORTUNITY, PROVIDER_OVERLAY_PLACEMENT_OPPORTUNITY, DISTRIBUTOR_OVERLAY_PLACEMENT_OPPORTUNITY, PROGRAM, CHAPTER, UNSCHEDULED_EVENT, ALTERNATE_CONTENT_OPPORTUNITY, NETWORK, PROVIDER_PROMO, DISTRIBUTOR_PROMO, PROVIDER_AD_BLOCK, DISTRIBUTOR_AD_BLOCK, CONTENT_IDENTIFICATION, CALL_AD_SERVER
+    #         scte_in_segments: "NONE", # accepts NONE, ALL, MATCHES_FILTER
+    #         custom_ad_types: ["PROGRAM"], # accepts PROGRAM, CHAPTER, UNSCHEDULED_EVENT, ALTERNATE_CONTENT_OPPORTUNITY, NETWORK
     #       },
     #       encryption: {
     #         constant_initialization_vector: "EncryptionConstantInitializationVectorString",
     #         encryption_method: { # required
     #           ts_encryption_method: "AES_128", # accepts AES_128, SAMPLE_AES
     #           cmaf_encryption_method: "CENC", # accepts CENC, CBCS
+    #           ism_encryption_method: "CENC", # accepts CENC
     #         },
     #         key_rotation_interval_seconds: 1,
+    #         cmaf_exclude_segment_drm_metadata: false,
     #         speke_key_provider: { # required
     #           encryption_contract_configuration: { # required
     #             preset_speke_20_audio: "PRESET_AUDIO_1", # required, accepts PRESET_AUDIO_1, PRESET_AUDIO_2, PRESET_AUDIO_3, SHARED, UNENCRYPTED
@@ -3973,8 +5174,10 @@ module Aws::MediaPackageV2
     #           drm_systems: ["CLEAR_KEY_AES_128"], # required, accepts CLEAR_KEY_AES_128, FAIRPLAY, PLAYREADY, WIDEVINE, IRDETO
     #           role_arn: "SpekeKeyProviderRoleArnString", # required
     #           url: "SpekeKeyProviderUrlString", # required
+    #           certificate_arn: "SpekeKeyProviderCertificateArnString",
     #         },
     #       },
+    #       output_timestamp_mode: "PASSTHROUGH", # accepts PASSTHROUGH, REBASED_TO_CHANNEL_START
     #     },
     #     description: "ResourceDescription",
     #     startover_window_seconds: 1,
@@ -3983,7 +5186,8 @@ module Aws::MediaPackageV2
     #         manifest_name: "ManifestName", # required
     #         child_manifest_name: "ManifestName",
     #         scte_hls: {
-    #           ad_marker_hls: "DATERANGE", # accepts DATERANGE
+    #           ad_marker_hls: "DATERANGE", # accepts DATERANGE, SCTE35_ENHANCED
+    #           scte_in_manifests: "ALL", # accepts ALL, MATCHES_FILTER
     #         },
     #         start_tag: {
     #           time_offset: 1.0, # required
@@ -3993,12 +5197,14 @@ module Aws::MediaPackageV2
     #         program_date_time_interval_seconds: 1,
     #         filter_configuration: {
     #           manifest_filter: "FilterConfigurationManifestFilterString",
+    #           drm_settings: "FilterConfigurationDrmSettingsString",
     #           start: Time.now,
     #           end: Time.now,
     #           time_delay_seconds: 1,
     #           clip_start_time: Time.now,
     #         },
     #         url_encode_child_manifest: false,
+    #         uri_path_type: "LEAF", # accepts LEAF, ROOT
     #       },
     #     ],
     #     low_latency_hls_manifests: [
@@ -4006,7 +5212,8 @@ module Aws::MediaPackageV2
     #         manifest_name: "ManifestName", # required
     #         child_manifest_name: "ManifestName",
     #         scte_hls: {
-    #           ad_marker_hls: "DATERANGE", # accepts DATERANGE
+    #           ad_marker_hls: "DATERANGE", # accepts DATERANGE, SCTE35_ENHANCED
+    #           scte_in_manifests: "ALL", # accepts ALL, MATCHES_FILTER
     #         },
     #         start_tag: {
     #           time_offset: 1.0, # required
@@ -4016,12 +5223,14 @@ module Aws::MediaPackageV2
     #         program_date_time_interval_seconds: 1,
     #         filter_configuration: {
     #           manifest_filter: "FilterConfigurationManifestFilterString",
+    #           drm_settings: "FilterConfigurationDrmSettingsString",
     #           start: Time.now,
     #           end: Time.now,
     #           time_delay_seconds: 1,
     #           clip_start_time: Time.now,
     #         },
     #         url_encode_child_manifest: false,
+    #         uri_path_type: "LEAF", # accepts LEAF, ROOT
     #       },
     #     ],
     #     dash_manifests: [
@@ -4030,6 +5239,7 @@ module Aws::MediaPackageV2
     #         manifest_window_seconds: 1,
     #         filter_configuration: {
     #           manifest_filter: "FilterConfigurationManifestFilterString",
+    #           drm_settings: "FilterConfigurationDrmSettingsString",
     #           start: Time.now,
     #           end: Time.now,
     #           time_delay_seconds: 1,
@@ -4042,17 +5252,75 @@ module Aws::MediaPackageV2
     #         period_triggers: ["AVAILS"], # accepts AVAILS, DRM_KEY_ROTATION, SOURCE_CHANGES, SOURCE_DISRUPTIONS, NONE
     #         scte_dash: {
     #           ad_marker_dash: "BINARY", # accepts BINARY, XML
+    #           scte_in_manifests: "ALL", # accepts ALL, MATCHES_FILTER
     #         },
     #         drm_signaling: "INDIVIDUAL", # accepts INDIVIDUAL, REFERENCED
     #         utc_timing: {
     #           timing_mode: "HTTP_HEAD", # accepts HTTP_HEAD, HTTP_ISO, HTTP_XSDATE, UTC_DIRECT
     #           timing_source: "DashUtcTimingTimingSourceString",
     #         },
+    #         profiles: ["DVB_DASH"], # accepts DVB_DASH
+    #         base_urls: [
+    #           {
+    #             url: "DashBaseUrlUrlString", # required
+    #             service_location: "DashBaseUrlServiceLocationString",
+    #             dvb_priority: 1,
+    #             dvb_weight: 1,
+    #           },
+    #         ],
+    #         program_information: {
+    #           title: "DashProgramInformationTitleString",
+    #           source: "DashProgramInformationSourceString",
+    #           copyright: "DashProgramInformationCopyrightString",
+    #           language_code: "DashProgramInformationLanguageCodeString",
+    #           more_information_url: "DashProgramInformationMoreInformationUrlString",
+    #         },
+    #         dvb_settings: {
+    #           font_download: {
+    #             url: "DashDvbFontDownloadUrlString",
+    #             mime_type: "DashDvbFontDownloadMimeTypeString",
+    #             font_family: "DashDvbFontDownloadFontFamilyString",
+    #           },
+    #           error_metrics: [
+    #             {
+    #               reporting_url: "DashDvbMetricsReportingReportingUrlString", # required
+    #               probability: 1,
+    #             },
+    #           ],
+    #         },
+    #         compactness: "STANDARD", # accepts STANDARD, NONE
+    #         audio_timeline_pattern: "NONE", # accepts NONE, PATTERNED
+    #         subtitle_configuration: {
+    #           ttml_configuration: {
+    #             ttml_profile: "IMSC_1", # required, accepts IMSC_1, EBU_TT_D_101
+    #           },
+    #         },
+    #         uri_path_type: "LEAF", # accepts LEAF, ROOT
+    #         availability_start_time_configuration: {
+    #           fixed_availability_start_time: Time.now,
+    #         },
+    #       },
+    #     ],
+    #     mss_manifests: [
+    #       {
+    #         manifest_name: "ManifestName", # required
+    #         manifest_window_seconds: 1,
+    #         filter_configuration: {
+    #           manifest_filter: "FilterConfigurationManifestFilterString",
+    #           drm_settings: "FilterConfigurationDrmSettingsString",
+    #           start: Time.now,
+    #           end: Time.now,
+    #           time_delay_seconds: 1,
+    #           clip_start_time: Time.now,
+    #         },
+    #         manifest_layout: "FULL", # accepts FULL, COMPACT
     #       },
     #     ],
     #     force_endpoint_error_configuration: {
     #       endpoint_error_conditions: ["STALE_MANIFEST"], # accepts STALE_MANIFEST, INCOMPLETE_MANIFEST, MISSING_DRM_KEY, SLATE_INPUT
     #     },
+    #     uri_separator: "UNDERSCORE", # accepts UNDERSCORE, HYPHEN
+    #     stream_name_output_mode: "INDEX", # accepts INDEX, PASSTHROUGH_NAME
     #     etag: "EntityTag",
     #   })
     #
@@ -4062,18 +5330,23 @@ module Aws::MediaPackageV2
     #   resp.channel_group_name #=> String
     #   resp.channel_name #=> String
     #   resp.origin_endpoint_name #=> String
-    #   resp.container_type #=> String, one of "TS", "CMAF"
+    #   resp.container_type #=> String, one of "TS", "CMAF", "ISM"
     #   resp.segment.segment_duration_seconds #=> Integer
     #   resp.segment.segment_name #=> String
     #   resp.segment.ts_use_audio_rendition_group #=> Boolean
     #   resp.segment.include_iframe_only_streams #=> Boolean
     #   resp.segment.ts_include_dvb_subtitles #=> Boolean
     #   resp.segment.scte.scte_filter #=> Array
-    #   resp.segment.scte.scte_filter[0] #=> String, one of "SPLICE_INSERT", "BREAK", "PROVIDER_ADVERTISEMENT", "DISTRIBUTOR_ADVERTISEMENT", "PROVIDER_PLACEMENT_OPPORTUNITY", "DISTRIBUTOR_PLACEMENT_OPPORTUNITY", "PROVIDER_OVERLAY_PLACEMENT_OPPORTUNITY", "DISTRIBUTOR_OVERLAY_PLACEMENT_OPPORTUNITY", "PROGRAM"
+    #   resp.segment.scte.scte_filter[0] #=> String, one of "SPLICE_INSERT", "BREAK", "PROVIDER_ADVERTISEMENT", "DISTRIBUTOR_ADVERTISEMENT", "PROVIDER_PLACEMENT_OPPORTUNITY", "DISTRIBUTOR_PLACEMENT_OPPORTUNITY", "PROVIDER_OVERLAY_PLACEMENT_OPPORTUNITY", "DISTRIBUTOR_OVERLAY_PLACEMENT_OPPORTUNITY", "PROGRAM", "CHAPTER", "UNSCHEDULED_EVENT", "ALTERNATE_CONTENT_OPPORTUNITY", "NETWORK", "PROVIDER_PROMO", "DISTRIBUTOR_PROMO", "PROVIDER_AD_BLOCK", "DISTRIBUTOR_AD_BLOCK", "CONTENT_IDENTIFICATION", "CALL_AD_SERVER"
+    #   resp.segment.scte.scte_in_segments #=> String, one of "NONE", "ALL", "MATCHES_FILTER"
+    #   resp.segment.scte.custom_ad_types #=> Array
+    #   resp.segment.scte.custom_ad_types[0] #=> String, one of "PROGRAM", "CHAPTER", "UNSCHEDULED_EVENT", "ALTERNATE_CONTENT_OPPORTUNITY", "NETWORK"
     #   resp.segment.encryption.constant_initialization_vector #=> String
     #   resp.segment.encryption.encryption_method.ts_encryption_method #=> String, one of "AES_128", "SAMPLE_AES"
     #   resp.segment.encryption.encryption_method.cmaf_encryption_method #=> String, one of "CENC", "CBCS"
+    #   resp.segment.encryption.encryption_method.ism_encryption_method #=> String, one of "CENC"
     #   resp.segment.encryption.key_rotation_interval_seconds #=> Integer
+    #   resp.segment.encryption.cmaf_exclude_segment_drm_metadata #=> Boolean
     #   resp.segment.encryption.speke_key_provider.encryption_contract_configuration.preset_speke_20_audio #=> String, one of "PRESET_AUDIO_1", "PRESET_AUDIO_2", "PRESET_AUDIO_3", "SHARED", "UNENCRYPTED"
     #   resp.segment.encryption.speke_key_provider.encryption_contract_configuration.preset_speke_20_video #=> String, one of "PRESET_VIDEO_1", "PRESET_VIDEO_2", "PRESET_VIDEO_3", "PRESET_VIDEO_4", "PRESET_VIDEO_5", "PRESET_VIDEO_6", "PRESET_VIDEO_7", "PRESET_VIDEO_8", "SHARED", "UNENCRYPTED"
     #   resp.segment.encryption.speke_key_provider.resource_id #=> String
@@ -4081,6 +5354,8 @@ module Aws::MediaPackageV2
     #   resp.segment.encryption.speke_key_provider.drm_systems[0] #=> String, one of "CLEAR_KEY_AES_128", "FAIRPLAY", "PLAYREADY", "WIDEVINE", "IRDETO"
     #   resp.segment.encryption.speke_key_provider.role_arn #=> String
     #   resp.segment.encryption.speke_key_provider.url #=> String
+    #   resp.segment.encryption.speke_key_provider.certificate_arn #=> String
+    #   resp.segment.output_timestamp_mode #=> String, one of "PASSTHROUGH", "REBASED_TO_CHANNEL_START"
     #   resp.created_at #=> Time
     #   resp.modified_at #=> Time
     #   resp.description #=> String
@@ -4091,8 +5366,10 @@ module Aws::MediaPackageV2
     #   resp.hls_manifests[0].child_manifest_name #=> String
     #   resp.hls_manifests[0].manifest_window_seconds #=> Integer
     #   resp.hls_manifests[0].program_date_time_interval_seconds #=> Integer
-    #   resp.hls_manifests[0].scte_hls.ad_marker_hls #=> String, one of "DATERANGE"
+    #   resp.hls_manifests[0].scte_hls.ad_marker_hls #=> String, one of "DATERANGE", "SCTE35_ENHANCED"
+    #   resp.hls_manifests[0].scte_hls.scte_in_manifests #=> String, one of "ALL", "MATCHES_FILTER"
     #   resp.hls_manifests[0].filter_configuration.manifest_filter #=> String
+    #   resp.hls_manifests[0].filter_configuration.drm_settings #=> String
     #   resp.hls_manifests[0].filter_configuration.start #=> Time
     #   resp.hls_manifests[0].filter_configuration.end #=> Time
     #   resp.hls_manifests[0].filter_configuration.time_delay_seconds #=> Integer
@@ -4100,14 +5377,17 @@ module Aws::MediaPackageV2
     #   resp.hls_manifests[0].start_tag.time_offset #=> Float
     #   resp.hls_manifests[0].start_tag.precise #=> Boolean
     #   resp.hls_manifests[0].url_encode_child_manifest #=> Boolean
+    #   resp.hls_manifests[0].uri_path_type #=> String, one of "LEAF", "ROOT"
     #   resp.low_latency_hls_manifests #=> Array
     #   resp.low_latency_hls_manifests[0].manifest_name #=> String
     #   resp.low_latency_hls_manifests[0].url #=> String
     #   resp.low_latency_hls_manifests[0].child_manifest_name #=> String
     #   resp.low_latency_hls_manifests[0].manifest_window_seconds #=> Integer
     #   resp.low_latency_hls_manifests[0].program_date_time_interval_seconds #=> Integer
-    #   resp.low_latency_hls_manifests[0].scte_hls.ad_marker_hls #=> String, one of "DATERANGE"
+    #   resp.low_latency_hls_manifests[0].scte_hls.ad_marker_hls #=> String, one of "DATERANGE", "SCTE35_ENHANCED"
+    #   resp.low_latency_hls_manifests[0].scte_hls.scte_in_manifests #=> String, one of "ALL", "MATCHES_FILTER"
     #   resp.low_latency_hls_manifests[0].filter_configuration.manifest_filter #=> String
+    #   resp.low_latency_hls_manifests[0].filter_configuration.drm_settings #=> String
     #   resp.low_latency_hls_manifests[0].filter_configuration.start #=> Time
     #   resp.low_latency_hls_manifests[0].filter_configuration.end #=> Time
     #   resp.low_latency_hls_manifests[0].filter_configuration.time_delay_seconds #=> Integer
@@ -4115,8 +5395,22 @@ module Aws::MediaPackageV2
     #   resp.low_latency_hls_manifests[0].start_tag.time_offset #=> Float
     #   resp.low_latency_hls_manifests[0].start_tag.precise #=> Boolean
     #   resp.low_latency_hls_manifests[0].url_encode_child_manifest #=> Boolean
+    #   resp.low_latency_hls_manifests[0].uri_path_type #=> String, one of "LEAF", "ROOT"
+    #   resp.mss_manifests #=> Array
+    #   resp.mss_manifests[0].manifest_name #=> String
+    #   resp.mss_manifests[0].url #=> String
+    #   resp.mss_manifests[0].filter_configuration.manifest_filter #=> String
+    #   resp.mss_manifests[0].filter_configuration.drm_settings #=> String
+    #   resp.mss_manifests[0].filter_configuration.start #=> Time
+    #   resp.mss_manifests[0].filter_configuration.end #=> Time
+    #   resp.mss_manifests[0].filter_configuration.time_delay_seconds #=> Integer
+    #   resp.mss_manifests[0].filter_configuration.clip_start_time #=> Time
+    #   resp.mss_manifests[0].manifest_window_seconds #=> Integer
+    #   resp.mss_manifests[0].manifest_layout #=> String, one of "FULL", "COMPACT"
     #   resp.force_endpoint_error_configuration.endpoint_error_conditions #=> Array
     #   resp.force_endpoint_error_configuration.endpoint_error_conditions[0] #=> String, one of "STALE_MANIFEST", "INCOMPLETE_MANIFEST", "MISSING_DRM_KEY", "SLATE_INPUT"
+    #   resp.uri_separator #=> String, one of "UNDERSCORE", "HYPHEN"
+    #   resp.stream_name_output_mode #=> String, one of "INDEX", "PASSTHROUGH_NAME"
     #   resp.etag #=> String
     #   resp.tags #=> Hash
     #   resp.tags["TagKey"] #=> String
@@ -4125,6 +5419,7 @@ module Aws::MediaPackageV2
     #   resp.dash_manifests[0].url #=> String
     #   resp.dash_manifests[0].manifest_window_seconds #=> Integer
     #   resp.dash_manifests[0].filter_configuration.manifest_filter #=> String
+    #   resp.dash_manifests[0].filter_configuration.drm_settings #=> String
     #   resp.dash_manifests[0].filter_configuration.start #=> Time
     #   resp.dash_manifests[0].filter_configuration.end #=> Time
     #   resp.dash_manifests[0].filter_configuration.time_delay_seconds #=> Integer
@@ -4136,9 +5431,33 @@ module Aws::MediaPackageV2
     #   resp.dash_manifests[0].period_triggers #=> Array
     #   resp.dash_manifests[0].period_triggers[0] #=> String, one of "AVAILS", "DRM_KEY_ROTATION", "SOURCE_CHANGES", "SOURCE_DISRUPTIONS", "NONE"
     #   resp.dash_manifests[0].scte_dash.ad_marker_dash #=> String, one of "BINARY", "XML"
+    #   resp.dash_manifests[0].scte_dash.scte_in_manifests #=> String, one of "ALL", "MATCHES_FILTER"
     #   resp.dash_manifests[0].drm_signaling #=> String, one of "INDIVIDUAL", "REFERENCED"
     #   resp.dash_manifests[0].utc_timing.timing_mode #=> String, one of "HTTP_HEAD", "HTTP_ISO", "HTTP_XSDATE", "UTC_DIRECT"
     #   resp.dash_manifests[0].utc_timing.timing_source #=> String
+    #   resp.dash_manifests[0].profiles #=> Array
+    #   resp.dash_manifests[0].profiles[0] #=> String, one of "DVB_DASH"
+    #   resp.dash_manifests[0].base_urls #=> Array
+    #   resp.dash_manifests[0].base_urls[0].url #=> String
+    #   resp.dash_manifests[0].base_urls[0].service_location #=> String
+    #   resp.dash_manifests[0].base_urls[0].dvb_priority #=> Integer
+    #   resp.dash_manifests[0].base_urls[0].dvb_weight #=> Integer
+    #   resp.dash_manifests[0].program_information.title #=> String
+    #   resp.dash_manifests[0].program_information.source #=> String
+    #   resp.dash_manifests[0].program_information.copyright #=> String
+    #   resp.dash_manifests[0].program_information.language_code #=> String
+    #   resp.dash_manifests[0].program_information.more_information_url #=> String
+    #   resp.dash_manifests[0].dvb_settings.font_download.url #=> String
+    #   resp.dash_manifests[0].dvb_settings.font_download.mime_type #=> String
+    #   resp.dash_manifests[0].dvb_settings.font_download.font_family #=> String
+    #   resp.dash_manifests[0].dvb_settings.error_metrics #=> Array
+    #   resp.dash_manifests[0].dvb_settings.error_metrics[0].reporting_url #=> String
+    #   resp.dash_manifests[0].dvb_settings.error_metrics[0].probability #=> Integer
+    #   resp.dash_manifests[0].compactness #=> String, one of "STANDARD", "NONE"
+    #   resp.dash_manifests[0].audio_timeline_pattern #=> String, one of "NONE", "PATTERNED"
+    #   resp.dash_manifests[0].subtitle_configuration.ttml_configuration.ttml_profile #=> String, one of "IMSC_1", "EBU_TT_D_101"
+    #   resp.dash_manifests[0].uri_path_type #=> String, one of "LEAF", "ROOT"
+    #   resp.dash_manifests[0].availability_start_time_configuration.fixed_availability_start_time #=> Time
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/UpdateOriginEndpoint AWS API Documentation
     #
@@ -4167,7 +5486,7 @@ module Aws::MediaPackageV2
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-mediapackagev2'
-      context[:gem_version] = '1.37.0'
+      context[:gem_version] = '1.70.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

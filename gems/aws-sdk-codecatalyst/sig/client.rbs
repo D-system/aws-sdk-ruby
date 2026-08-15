@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -106,7 +107,7 @@ module Aws
                                       {
                                         repository_name: ::String,
                                         branch_name: ::String?
-                                      },
+                                      }
                                     ],
                                     ?client_token: ::String,
                                     ?alias: ::String,
@@ -114,7 +115,7 @@ module Aws
                                       {
                                         runtime: ::String?,
                                         name: ::String?
-                                      },
+                                      }
                                     ],
                                     instance_type: ("dev.standard1.small" | "dev.standard1.medium" | "dev.standard1.large" | "dev.standard1.xlarge"),
                                     ?inactivity_timeout_minutes: ::Integer,
@@ -426,7 +427,7 @@ module Aws
                                        key: ::String,
                                        values: Array[::String],
                                        comparison_operator: ::String?
-                                     },
+                                     }
                                    ],
                                    ?next_token: ::String,
                                    ?max_results: ::Integer
@@ -464,7 +465,7 @@ module Aws
                                key: ("hasAccessTo" | "name"),
                                values: Array[::String],
                                comparison_operator: ("EQ" | "GT" | "GE" | "LT" | "LE" | "BEGINS_WITH")?
-                             },
+                             }
                            ]
                          ) -> _ListProjectsResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListProjectsResponseSuccess
@@ -523,7 +524,7 @@ module Aws
                                 ?max_results: ::Integer,
                                 ?sort_by: Array[
                                   {
-                                  },
+                                  }
                                 ]
                               ) -> _ListWorkflowRunsResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListWorkflowRunsResponseSuccess
@@ -541,7 +542,7 @@ module Aws
                             ?max_results: ::Integer,
                             ?sort_by: Array[
                               {
-                              },
+                              }
                             ]
                           ) -> _ListWorkflowsResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListWorkflowsResponseSuccess
@@ -562,7 +563,7 @@ module Aws
                                      {
                                        runtime: ::String?,
                                        name: ::String?
-                                     },
+                                     }
                                    ],
                                    ?instance_type: ("dev.standard1.small" | "dev.standard1.medium" | "dev.standard1.large" | "dev.standard1.xlarge"),
                                    ?inactivity_timeout_minutes: ::Integer
@@ -660,7 +661,7 @@ module Aws
                                       {
                                         runtime: ::String?,
                                         name: ::String?
-                                      },
+                                      }
                                     ],
                                     ?instance_type: ("dev.standard1.small" | "dev.standard1.medium" | "dev.standard1.large" | "dev.standard1.xlarge"),
                                     ?inactivity_timeout_minutes: ::Integer,

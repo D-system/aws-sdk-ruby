@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -108,7 +109,7 @@ module Aws
                                              provider: {
                                                key_arn: ::String?
                                              }?
-                                           },
+                                           }
                                          ],
                                          ?client_request_token: ::String
                                        ) -> _AssociateEncryptionConfigResponseSuccess
@@ -136,6 +137,18 @@ module Aws
                                                 ?client_request_token: ::String
                                               ) -> _AssociateIdentityProviderConfigResponseSuccess
                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _AssociateIdentityProviderConfigResponseSuccess
+
+      interface _CancelUpdateResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CancelUpdateResponse]
+        def update: () -> Types::Update
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EKS/Client.html#cancel_update-instance_method
+      def cancel_update: (
+                           name: ::String,
+                           update_id: ::String,
+                           ?client_request_token: ::String
+                         ) -> _CancelUpdateResponseSuccess
+                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CancelUpdateResponseSuccess
 
       interface _CreateAccessEntryResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateAccessEntryResponse]
@@ -171,10 +184,52 @@ module Aws
                             {
                               service_account: ::String,
                               role_arn: ::String
-                            },
-                          ]
+                            }
+                          ],
+                          ?namespace_config: {
+                            namespace: ::String?
+                          }
                         ) -> _CreateAddonResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateAddonResponseSuccess
+
+      interface _CreateCapabilityResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateCapabilityResponse]
+        def capability: () -> Types::Capability
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EKS/Client.html#create_capability-instance_method
+      def create_capability: (
+                               capability_name: ::String,
+                               cluster_name: ::String,
+                               ?client_request_token: ::String,
+                               type: ("ACK" | "KRO" | "ARGOCD"),
+                               role_arn: ::String,
+                               ?configuration: {
+                                 argo_cd: {
+                                   namespace: ::String?,
+                                   aws_idc: {
+                                     idc_instance_arn: ::String,
+                                     idc_region: ::String?
+                                   },
+                                   rbac_role_mappings: Array[
+                                     {
+                                       role: ("ADMIN" | "EDITOR" | "VIEWER"),
+                                       identities: Array[
+                                         {
+                                           id: ::String,
+                                           type: ("SSO_USER" | "SSO_GROUP")
+                                         }
+                                       ]
+                                     }
+                                   ]?,
+                                   network_access: {
+                                     vpce_ids: Array[::String]?
+                                   }?
+                                 }?
+                               },
+                               ?tags: Hash[::String, ::String],
+                               delete_propagation_policy: ("RETAIN")
+                             ) -> _CreateCapabilityResponseSuccess
+                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateCapabilityResponseSuccess
 
       interface _CreateClusterResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateClusterResponse]
@@ -185,13 +240,7 @@ module Aws
                             name: ::String,
                             ?version: ::String,
                             role_arn: ::String,
-                            resources_vpc_config: {
-                              subnet_ids: Array[::String]?,
-                              security_group_ids: Array[::String]?,
-                              endpoint_public_access: bool?,
-                              endpoint_private_access: bool?,
-                              public_access_cidrs: Array[::String]?
-                            },
+                            resources_vpc_config: Params::vpc_config_request,
                             ?kubernetes_network_config: {
                               service_ipv_4_cidr: ::String?,
                               ip_family: ("ipv4" | "ipv6")?,
@@ -204,7 +253,7 @@ module Aws
                                 {
                                   types: Array[("api" | "audit" | "authenticator" | "controllerManager" | "scheduler")]?,
                                   enabled: bool?
-                                },
+                                }
                               ]?
                             },
                             ?client_request_token: ::String,
@@ -215,13 +264,18 @@ module Aws
                                 provider: {
                                   key_arn: ::String?
                                 }?
-                              },
+                              }
                             ],
                             ?outpost_config: {
                               outpost_arns: Array[::String],
                               control_plane_instance_type: ::String,
                               control_plane_placement: {
-                                group_name: ::String?
+                                group_name: ::String?,
+                                spread_level: ("host" | "rack")?
+                              }?,
+                              etcd_instance_type: ::String?,
+                              etcd_placement: {
+                                spread_level: ("host" | "rack")?
                               }?
                             },
                             ?access_config: {
@@ -235,18 +289,7 @@ module Aws
                             ?zonal_shift_config: {
                               enabled: bool?
                             },
-                            ?remote_network_config: {
-                              remote_node_networks: Array[
-                                {
-                                  cidrs: Array[::String]?
-                                },
-                              ]?,
-                              remote_pod_networks: Array[
-                                {
-                                  cidrs: Array[::String]?
-                                },
-                              ]?
-                            },
+                            ?remote_network_config: Params::remote_network_config_request,
                             ?compute_config: {
                               enabled: bool?,
                               node_pools: Array[::String]?,
@@ -255,6 +298,23 @@ module Aws
                             ?storage_config: {
                               block_storage: {
                                 enabled: bool?
+                              }?
+                            },
+                            ?deletion_protection: bool,
+                            ?control_plane_scaling_config: {
+                              tier: ("standard" | "tier-xl" | "tier-2xl" | "tier-4xl" | "tier-8xl")?
+                            },
+                            ?kube_api_server_config: {
+                              event_ttl: ::String?,
+                              service_node_port_range: {
+                                min_port: ::Integer?,
+                                max_port: ::Integer?
+                              }?
+                            },
+                            ?kube_scheduler_config: Params::kube_scheduler_config_request,
+                            ?kube_controller_manager_config: {
+                              horizontal_pod_autoscaler_controller_config: {
+                                horizontal_pod_autoscaler_sync_period: ::String?
                               }?
                             }
                           ) -> _CreateClusterResponseSuccess
@@ -293,7 +353,7 @@ module Aws
                                       {
                                         namespace: ::String?,
                                         labels: Hash[::String, ::String]?
-                                      },
+                                      }
                                     ],
                                     ?client_request_token: ::String,
                                     ?tags: Hash[::String, ::String]
@@ -316,7 +376,7 @@ module Aws
                               ?disk_size: ::Integer,
                               subnets: Array[::String],
                               ?instance_types: Array[::String],
-                              ?ami_type: ("AL2_x86_64" | "AL2_x86_64_GPU" | "AL2_ARM_64" | "CUSTOM" | "BOTTLEROCKET_ARM_64" | "BOTTLEROCKET_x86_64" | "BOTTLEROCKET_ARM_64_NVIDIA" | "BOTTLEROCKET_x86_64_NVIDIA" | "WINDOWS_CORE_2019_x86_64" | "WINDOWS_FULL_2019_x86_64" | "WINDOWS_CORE_2022_x86_64" | "WINDOWS_FULL_2022_x86_64" | "AL2023_x86_64_STANDARD" | "AL2023_ARM_64_STANDARD" | "AL2023_x86_64_NEURON" | "AL2023_x86_64_NVIDIA"),
+                              ?ami_type: ("AL2_x86_64" | "AL2_x86_64_GPU" | "AL2_ARM_64" | "CUSTOM" | "BOTTLEROCKET_ARM_64" | "BOTTLEROCKET_x86_64" | "BOTTLEROCKET_ARM_64_FIPS" | "BOTTLEROCKET_x86_64_FIPS" | "BOTTLEROCKET_ARM_64_NVIDIA" | "BOTTLEROCKET_x86_64_NVIDIA" | "BOTTLEROCKET_ARM_64_NVIDIA_FIPS" | "BOTTLEROCKET_x86_64_NVIDIA_FIPS" | "WINDOWS_CORE_2019_x86_64" | "WINDOWS_FULL_2019_x86_64" | "WINDOWS_CORE_2022_x86_64" | "WINDOWS_FULL_2022_x86_64" | "WINDOWS_CORE_2025_x86_64" | "WINDOWS_FULL_2025_x86_64" | "AL2023_x86_64_STANDARD" | "AL2023_ARM_64_STANDARD" | "AL2023_x86_64_NEURON" | "AL2023_x86_64_NVIDIA" | "AL2023_ARM_64_NVIDIA"),
                               ?remote_access: {
                                 ec2_ssh_key: ::String?,
                                 source_security_groups: Array[::String]?
@@ -328,7 +388,7 @@ module Aws
                                   key: ::String?,
                                   value: ::String?,
                                   effect: ("NO_SCHEDULE" | "NO_EXECUTE" | "PREFER_NO_SCHEDULE")?
-                                },
+                                }
                               ],
                               ?tags: Hash[::String, ::String],
                               ?client_request_token: ::String,
@@ -342,12 +402,17 @@ module Aws
                                 max_unavailable_percentage: ::Integer?,
                                 update_strategy: ("DEFAULT" | "MINIMAL")?
                               },
-                              ?node_repair_config: {
-                                enabled: bool?
-                              },
+                              ?node_repair_config: Params::node_repair_config,
                               ?capacity_type: ("ON_DEMAND" | "SPOT" | "CAPACITY_BLOCK"),
                               ?version: ::String,
-                              ?release_version: ::String
+                              ?release_version: ::String,
+                              ?warm_pool_config: {
+                                enabled: bool?,
+                                min_size: ::Integer?,
+                                max_group_prepared_capacity: ::Integer?,
+                                pool_state: ("STOPPED" | "RUNNING" | "HIBERNATED")?,
+                                reuse_on_scale_in: bool?
+                              }
                             ) -> _CreateNodegroupResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateNodegroupResponseSuccess
 
@@ -362,7 +427,10 @@ module Aws
                                              service_account: ::String,
                                              role_arn: ::String,
                                              ?client_request_token: ::String,
-                                             ?tags: Hash[::String, ::String]
+                                             ?tags: Hash[::String, ::String],
+                                             ?disable_session_tags: bool,
+                                             ?target_role_arn: ::String,
+                                             ?policy: ::String
                                            ) -> _CreatePodIdentityAssociationResponseSuccess
                                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreatePodIdentityAssociationResponseSuccess
 
@@ -387,6 +455,17 @@ module Aws
                           ?preserve: bool
                         ) -> _DeleteAddonResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteAddonResponseSuccess
+
+      interface _DeleteCapabilityResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteCapabilityResponse]
+        def capability: () -> Types::Capability
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EKS/Client.html#delete_capability-instance_method
+      def delete_capability: (
+                               cluster_name: ::String,
+                               capability_name: ::String
+                             ) -> _DeleteCapabilityResponseSuccess
+                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteCapabilityResponseSuccess
 
       interface _DeleteClusterResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DeleteClusterResponse]
@@ -504,6 +583,17 @@ module Aws
                                    ) -> _DescribeAddonVersionsResponseSuccess
                                  | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeAddonVersionsResponseSuccess
 
+      interface _DescribeCapabilityResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DescribeCapabilityResponse]
+        def capability: () -> Types::Capability
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EKS/Client.html#describe_capability-instance_method
+      def describe_capability: (
+                                 cluster_name: ::String,
+                                 capability_name: ::String
+                               ) -> _DescribeCapabilityResponseSuccess
+                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeCapabilityResponseSuccess
+
       interface _DescribeClusterResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DescribeClusterResponse]
         def cluster: () -> Types::Cluster
@@ -578,6 +668,19 @@ module Aws
                             ) -> _DescribeInsightResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeInsightResponseSuccess
 
+      interface _DescribeInsightsRefreshResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DescribeInsightsRefreshResponse]
+        def message: () -> ::String
+        def status: () -> ("IN_PROGRESS" | "FAILED" | "COMPLETED")
+        def started_at: () -> ::Time
+        def ended_at: () -> ::Time
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EKS/Client.html#describe_insights_refresh-instance_method
+      def describe_insights_refresh: (
+                                       cluster_name: ::String
+                                     ) -> _DescribeInsightsRefreshResponseSuccess
+                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeInsightsRefreshResponseSuccess
+
       interface _DescribeNodegroupResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DescribeNodegroupResponse]
         def nodegroup: () -> Types::Nodegroup
@@ -609,7 +712,8 @@ module Aws
                              name: ::String,
                              update_id: ::String,
                              ?nodegroup_name: ::String,
-                             ?addon_name: ::String
+                             ?addon_name: ::String,
+                             ?capability_name: ::String
                            ) -> _DescribeUpdateResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeUpdateResponseSuccess
 
@@ -694,6 +798,19 @@ module Aws
                                            ) -> _ListAssociatedAccessPoliciesResponseSuccess
                                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListAssociatedAccessPoliciesResponseSuccess
 
+      interface _ListCapabilitiesResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListCapabilitiesResponse]
+        def capabilities: () -> ::Array[Types::CapabilitySummary]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EKS/Client.html#list_capabilities-instance_method
+      def list_capabilities: (
+                               cluster_name: ::String,
+                               ?next_token: ::String,
+                               ?max_results: ::Integer
+                             ) -> _ListCapabilitiesResponseSuccess
+                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListCapabilitiesResponseSuccess
+
       interface _ListClustersResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListClustersResponse]
         def clusters: () -> ::Array[::String]
@@ -755,7 +872,7 @@ module Aws
       def list_insights: (
                            cluster_name: ::String,
                            ?filter: {
-                             categories: Array[("UPGRADE_READINESS")]?,
+                             categories: Array[("UPGRADE_READINESS" | "MISCONFIGURATION" | "ROLLBACK_READINESS")]?,
                              kubernetes_versions: Array[::String]?,
                              statuses: Array[("PASSING" | "WARNING" | "ERROR" | "UNKNOWN")]?
                            },
@@ -812,6 +929,7 @@ module Aws
                           name: ::String,
                           ?nodegroup_name: ::String,
                           ?addon_name: ::String,
+                          ?capability_name: ::String,
                           ?next_token: ::String,
                           ?max_results: ::Integer
                         ) -> _ListUpdatesResponseSuccess
@@ -832,6 +950,17 @@ module Aws
                               ?tags: Hash[::String, ::String]
                             ) -> _RegisterClusterResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RegisterClusterResponseSuccess
+
+      interface _StartInsightsRefreshResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StartInsightsRefreshResponse]
+        def message: () -> ::String
+        def status: () -> ("IN_PROGRESS" | "FAILED" | "COMPLETED")
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EKS/Client.html#start_insights_refresh-instance_method
+      def start_insights_refresh: (
+                                    cluster_name: ::String
+                                  ) -> _StartInsightsRefreshResponseSuccess
+                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartInsightsRefreshResponseSuccess
 
       interface _TagResourceResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::TagResourceResponse]
@@ -884,10 +1013,55 @@ module Aws
                             {
                               service_account: ::String,
                               role_arn: ::String
-                            },
+                            }
                           ]
                         ) -> _UpdateAddonResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateAddonResponseSuccess
+
+      interface _UpdateCapabilityResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateCapabilityResponse]
+        def update: () -> Types::Update
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EKS/Client.html#update_capability-instance_method
+      def update_capability: (
+                               cluster_name: ::String,
+                               capability_name: ::String,
+                               ?role_arn: ::String,
+                               ?configuration: {
+                                 argo_cd: {
+                                   rbac_role_mappings: {
+                                     add_or_update_role_mappings: Array[
+                                       {
+                                         role: ("ADMIN" | "EDITOR" | "VIEWER"),
+                                         identities: Array[
+                                           {
+                                             id: ::String,
+                                             type: ("SSO_USER" | "SSO_GROUP")
+                                           }
+                                         ]
+                                       }
+                                     ]?,
+                                     remove_role_mappings: Array[
+                                       {
+                                         role: ("ADMIN" | "EDITOR" | "VIEWER"),
+                                         identities: Array[
+                                           {
+                                             id: ::String,
+                                             type: ("SSO_USER" | "SSO_GROUP")
+                                           }
+                                         ]
+                                       }
+                                     ]?
+                                   }?,
+                                   network_access: {
+                                     vpce_ids: Array[::String]?
+                                   }?
+                                 }?
+                               },
+                               ?client_request_token: ::String,
+                               ?delete_propagation_policy: ("RETAIN")
+                             ) -> _UpdateCapabilityResponseSuccess
+                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateCapabilityResponseSuccess
 
       interface _UpdateClusterConfigResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::UpdateClusterConfigResponse]
@@ -896,19 +1070,13 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EKS/Client.html#update_cluster_config-instance_method
       def update_cluster_config: (
                                    name: ::String,
-                                   ?resources_vpc_config: {
-                                     subnet_ids: Array[::String]?,
-                                     security_group_ids: Array[::String]?,
-                                     endpoint_public_access: bool?,
-                                     endpoint_private_access: bool?,
-                                     public_access_cidrs: Array[::String]?
-                                   },
+                                   ?resources_vpc_config: Params::vpc_config_request,
                                    ?logging: {
                                      cluster_logging: Array[
                                        {
                                          types: Array[("api" | "audit" | "authenticator" | "controllerManager" | "scheduler")]?,
                                          enabled: bool?
-                                       },
+                                       }
                                      ]?
                                    },
                                    ?client_request_token: ::String,
@@ -937,6 +1105,24 @@ module Aws
                                      block_storage: {
                                        enabled: bool?
                                      }?
+                                   },
+                                   ?remote_network_config: Params::remote_network_config_request,
+                                   ?deletion_protection: bool,
+                                   ?control_plane_scaling_config: {
+                                     tier: ("standard" | "tier-xl" | "tier-2xl" | "tier-4xl" | "tier-8xl")?
+                                   },
+                                   ?kube_api_server_config: {
+                                     event_ttl: ::String?,
+                                     service_node_port_range: {
+                                       min_port: ::Integer?,
+                                       max_port: ::Integer?
+                                     }?
+                                   },
+                                   ?kube_scheduler_config: Params::kube_scheduler_config_request,
+                                   ?kube_controller_manager_config: {
+                                     horizontal_pod_autoscaler_controller_config: {
+                                       horizontal_pod_autoscaler_sync_period: ::String?
+                                     }?
                                    }
                                  ) -> _UpdateClusterConfigResponseSuccess
                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateClusterConfigResponseSuccess
@@ -949,7 +1135,11 @@ module Aws
       def update_cluster_version: (
                                     name: ::String,
                                     version: ::String,
-                                    ?client_request_token: ::String
+                                    ?client_request_token: ::String,
+                                    ?force: bool,
+                                    ?rollback_config: {
+                                      timeout_minutes: ::Integer?
+                                    }
                                   ) -> _UpdateClusterVersionResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateClusterVersionResponseSuccess
 
@@ -983,14 +1173,14 @@ module Aws
                                            key: ::String?,
                                            value: ::String?,
                                            effect: ("NO_SCHEDULE" | "NO_EXECUTE" | "PREFER_NO_SCHEDULE")?
-                                         },
+                                         }
                                        ]?,
                                        remove_taints: Array[
                                          {
                                            key: ::String?,
                                            value: ::String?,
                                            effect: ("NO_SCHEDULE" | "NO_EXECUTE" | "PREFER_NO_SCHEDULE")?
-                                         },
+                                         }
                                        ]?
                                      },
                                      ?scaling_config: {
@@ -1003,8 +1193,13 @@ module Aws
                                        max_unavailable_percentage: ::Integer?,
                                        update_strategy: ("DEFAULT" | "MINIMAL")?
                                      },
-                                     ?node_repair_config: {
-                                       enabled: bool?
+                                     ?node_repair_config: Params::node_repair_config,
+                                     ?warm_pool_config: {
+                                       enabled: bool?,
+                                       min_size: ::Integer?,
+                                       max_group_prepared_capacity: ::Integer?,
+                                       pool_state: ("STOPPED" | "RUNNING" | "HIBERNATED")?,
+                                       reuse_on_scale_in: bool?
                                      },
                                      ?client_request_token: ::String
                                    ) -> _UpdateNodegroupConfigResponseSuccess
@@ -1039,7 +1234,10 @@ module Aws
                                              cluster_name: ::String,
                                              association_id: ::String,
                                              ?role_arn: ::String,
-                                             ?client_request_token: ::String
+                                             ?client_request_token: ::String,
+                                             ?disable_session_tags: bool,
+                                             ?target_role_arn: ::String,
+                                             ?policy: ::String
                                            ) -> _UpdatePodIdentityAssociationResponseSuccess
                                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdatePodIdentityAssociationResponseSuccess
 

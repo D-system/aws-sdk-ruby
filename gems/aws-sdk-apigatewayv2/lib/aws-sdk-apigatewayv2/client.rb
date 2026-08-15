@@ -95,8 +95,8 @@ module Aws::ApiGatewayV2
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::ApiGatewayV2
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::ApiGatewayV2
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::ApiGatewayV2
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::ApiGatewayV2
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::ApiGatewayV2
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::ApiGatewayV2
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::ApiGatewayV2
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -498,6 +502,9 @@ module Aws::ApiGatewayV2
     #
     # @option params [Boolean] :disable_execute_api_endpoint
     #
+    # @option params [String] :ip_address_type
+    #   The IP address types that can invoke the API.
+    #
     # @option params [required, String] :name
     #   A string with a length between \[1-128\].
     #
@@ -543,6 +550,7 @@ module Aws::ApiGatewayV2
     #   * {Types::CreateApiResponse#disable_schema_validation #disable_schema_validation} => Boolean
     #   * {Types::CreateApiResponse#disable_execute_api_endpoint #disable_execute_api_endpoint} => Boolean
     #   * {Types::CreateApiResponse#import_info #import_info} => Array&lt;String&gt;
+    #   * {Types::CreateApiResponse#ip_address_type #ip_address_type} => String
     #   * {Types::CreateApiResponse#name #name} => String
     #   * {Types::CreateApiResponse#protocol_type #protocol_type} => String
     #   * {Types::CreateApiResponse#route_selection_expression #route_selection_expression} => String
@@ -566,6 +574,7 @@ module Aws::ApiGatewayV2
     #     description: "StringWithLengthBetween0And1024",
     #     disable_schema_validation: false,
     #     disable_execute_api_endpoint: false,
+    #     ip_address_type: "ipv4", # accepts ipv4, dualstack
     #     name: "StringWithLengthBetween1And128", # required
     #     protocol_type: "WEBSOCKET", # required, accepts WEBSOCKET, HTTP
     #     route_key: "SelectionKey",
@@ -599,6 +608,7 @@ module Aws::ApiGatewayV2
     #   resp.disable_execute_api_endpoint #=> Boolean
     #   resp.import_info #=> Array
     #   resp.import_info[0] #=> String
+    #   resp.ip_address_type #=> String, one of "ipv4", "dualstack"
     #   resp.name #=> String
     #   resp.protocol_type #=> String, one of "WEBSOCKET", "HTTP"
     #   resp.route_selection_expression #=> String
@@ -828,6 +838,9 @@ module Aws::ApiGatewayV2
     #   client and the server. Clients must present a trusted certificate to
     #   access your API.
     #
+    # @option params [String] :routing_mode
+    #   The routing mode API Gateway uses to route traffic to your APIs.
+    #
     # @option params [Hash<String,String>] :tags
     #   Represents a collection of tags associated with the resource.
     #
@@ -835,8 +848,10 @@ module Aws::ApiGatewayV2
     #
     #   * {Types::CreateDomainNameResponse#api_mapping_selection_expression #api_mapping_selection_expression} => String
     #   * {Types::CreateDomainNameResponse#domain_name #domain_name} => String
+    #   * {Types::CreateDomainNameResponse#domain_name_arn #domain_name_arn} => String
     #   * {Types::CreateDomainNameResponse#domain_name_configurations #domain_name_configurations} => Array&lt;Types::DomainNameConfiguration&gt;
     #   * {Types::CreateDomainNameResponse#mutual_tls_authentication #mutual_tls_authentication} => Types::MutualTlsAuthentication
+    #   * {Types::CreateDomainNameResponse#routing_mode #routing_mode} => String
     #   * {Types::CreateDomainNameResponse#tags #tags} => Hash&lt;String,String&gt;
     #
     # @example Request syntax with placeholder values
@@ -853,6 +868,7 @@ module Aws::ApiGatewayV2
     #         domain_name_status_message: "__string",
     #         endpoint_type: "REGIONAL", # accepts REGIONAL, EDGE
     #         hosted_zone_id: "__string",
+    #         ip_address_type: "ipv4", # accepts ipv4, dualstack
     #         security_policy: "TLS_1_0", # accepts TLS_1_0, TLS_1_2
     #         ownership_verification_certificate_arn: "Arn",
     #       },
@@ -861,6 +877,7 @@ module Aws::ApiGatewayV2
     #       truststore_uri: "UriWithLengthBetween1And2048",
     #       truststore_version: "StringWithLengthBetween1And64",
     #     },
+    #     routing_mode: "API_MAPPING_ONLY", # accepts API_MAPPING_ONLY, ROUTING_RULE_ONLY, ROUTING_RULE_THEN_API_MAPPING
     #     tags: {
     #       "__string" => "StringWithLengthBetween1And1600",
     #     },
@@ -870,6 +887,7 @@ module Aws::ApiGatewayV2
     #
     #   resp.api_mapping_selection_expression #=> String
     #   resp.domain_name #=> String
+    #   resp.domain_name_arn #=> String
     #   resp.domain_name_configurations #=> Array
     #   resp.domain_name_configurations[0].api_gateway_domain_name #=> String
     #   resp.domain_name_configurations[0].certificate_arn #=> String
@@ -879,12 +897,14 @@ module Aws::ApiGatewayV2
     #   resp.domain_name_configurations[0].domain_name_status_message #=> String
     #   resp.domain_name_configurations[0].endpoint_type #=> String, one of "REGIONAL", "EDGE"
     #   resp.domain_name_configurations[0].hosted_zone_id #=> String
+    #   resp.domain_name_configurations[0].ip_address_type #=> String, one of "ipv4", "dualstack"
     #   resp.domain_name_configurations[0].security_policy #=> String, one of "TLS_1_0", "TLS_1_2"
     #   resp.domain_name_configurations[0].ownership_verification_certificate_arn #=> String
     #   resp.mutual_tls_authentication.truststore_uri #=> String
     #   resp.mutual_tls_authentication.truststore_version #=> String
     #   resp.mutual_tls_authentication.truststore_warnings #=> Array
     #   resp.mutual_tls_authentication.truststore_warnings[0] #=> String
+    #   resp.routing_mode #=> String, one of "API_MAPPING_ONLY", "ROUTING_RULE_ONLY", "ROUTING_RULE_THEN_API_MAPPING"
     #   resp.tags #=> Hash
     #   resp.tags["__string"] #=> String
     #
@@ -949,18 +969,18 @@ module Aws::ApiGatewayV2
     #   parameters are a key-value map specifying parameters that are passed
     #   to AWS\_PROXY integrations. You can provide static values, or map
     #   request data, stage variables, or context variables that are evaluated
-    #   at runtime. To learn more, see [Working with AWS service integrations
-    #   for HTTP APIs][1].
+    #   at runtime. To learn more, see [Working with Amazon Web Services
+    #   service integrations for HTTP APIs][1].
     #
     #   For HTTP API integrations without a specified integrationSubtype
     #   request parameters are a key-value map specifying how to transform
     #   HTTP requests before sending them to the backend. The key should
     #   follow the pattern
-    #   &lt;action&gt;:&lt;header\|querystring\|path&gt;.&lt;location&gt;
-    #   where action can be append, overwrite or remove. For values, you can
-    #   provide static values, or map request data, stage variables, or
-    #   context variables that are evaluated at runtime. To learn more, see
-    #   [Transforming API requests and responses][2].
+    #   &lt;action>:&lt;header\|querystring\|path>.&lt;location> where action
+    #   can be append, overwrite or remove. For values, you can provide static
+    #   values, or map request data, stage variables, or context variables
+    #   that are evaluated at runtime. To learn more, see [Transforming API
+    #   requests and responses][2].
     #
     #
     #
@@ -1118,18 +1138,18 @@ module Aws::ApiGatewayV2
     #   parameters are a key-value map specifying parameters that are passed
     #   to AWS\_PROXY integrations. You can provide static values, or map
     #   request data, stage variables, or context variables that are evaluated
-    #   at runtime. To learn more, see [Working with AWS service integrations
-    #   for HTTP APIs][1].
+    #   at runtime. To learn more, see [Working with Amazon Web Services
+    #   service integrations for HTTP APIs][1].
     #
     #   For HTTP API integrations without a specified integrationSubtype
     #   request parameters are a key-value map specifying how to transform
     #   HTTP requests before sending them to the backend. The key should
     #   follow the pattern
-    #   &lt;action&gt;:&lt;header\|querystring\|path&gt;.&lt;location&gt;
-    #   where action can be append, overwrite or remove. For values, you can
-    #   provide static values, or map request data, stage variables, or
-    #   context variables that are evaluated at runtime. To learn more, see
-    #   [Transforming API requests and responses][2].
+    #   &lt;action>:&lt;header\|querystring\|path>.&lt;location> where action
+    #   can be append, overwrite or remove. For values, you can provide static
+    #   values, or map request data, stage variables, or context variables
+    #   that are evaluated at runtime. To learn more, see [Transforming API
+    #   requests and responses][2].
     #
     #
     #
@@ -1241,6 +1261,289 @@ module Aws::ApiGatewayV2
       req.send_request(options)
     end
 
+    # Creates a portal.
+    #
+    # @option params [required, Types::Authorization] :authorization
+    #   Represents an authorization configuration for a portal.
+    #
+    # @option params [required, Types::EndpointConfigurationRequest] :endpoint_configuration
+    #   Represents an endpoint configuration.
+    #
+    # @option params [Array<String>] :included_portal_product_arns
+    #
+    # @option params [String] :logo_uri
+    #
+    # @option params [required, Types::PortalContent] :portal_content
+    #   Contains the content that is visible to portal consumers including the
+    #   themes, display names, and description.
+    #
+    # @option params [String] :rum_app_monitor_name
+    #
+    # @option params [Hash<String,String>] :tags
+    #   Represents a collection of tags associated with the resource.
+    #
+    # @return [Types::CreatePortalResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreatePortalResponse#authorization #authorization} => Types::Authorization
+    #   * {Types::CreatePortalResponse#endpoint_configuration #endpoint_configuration} => Types::EndpointConfigurationResponse
+    #   * {Types::CreatePortalResponse#included_portal_product_arns #included_portal_product_arns} => Array&lt;String&gt;
+    #   * {Types::CreatePortalResponse#last_modified #last_modified} => Time
+    #   * {Types::CreatePortalResponse#last_published #last_published} => Time
+    #   * {Types::CreatePortalResponse#last_published_description #last_published_description} => String
+    #   * {Types::CreatePortalResponse#portal_arn #portal_arn} => String
+    #   * {Types::CreatePortalResponse#portal_content #portal_content} => Types::PortalContent
+    #   * {Types::CreatePortalResponse#portal_id #portal_id} => String
+    #   * {Types::CreatePortalResponse#publish_status #publish_status} => String
+    #   * {Types::CreatePortalResponse#rum_app_monitor_name #rum_app_monitor_name} => String
+    #   * {Types::CreatePortalResponse#status_exception #status_exception} => Types::StatusException
+    #   * {Types::CreatePortalResponse#tags #tags} => Hash&lt;String,String&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_portal({
+    #     authorization: { # required
+    #       cognito_config: {
+    #         app_client_id: "__stringMin1Max256", # required
+    #         user_pool_arn: "__stringMin20Max2048", # required
+    #         user_pool_domain: "__stringMin20Max2048", # required
+    #       },
+    #       none: {
+    #       },
+    #     },
+    #     endpoint_configuration: { # required
+    #       acm_managed: {
+    #         certificate_arn: "__stringMin10Max2048", # required
+    #         domain_name: "__stringMin3Max256", # required
+    #       },
+    #       none: {
+    #       },
+    #     },
+    #     included_portal_product_arns: ["__stringMin20Max2048"],
+    #     logo_uri: "__stringMin0Max1092",
+    #     portal_content: { # required
+    #       description: "__stringMin0Max1024",
+    #       display_name: "__stringMin3Max255", # required
+    #       theme: { # required
+    #         custom_colors: { # required
+    #           accent_color: "__stringMin1Max16", # required
+    #           background_color: "__stringMin1Max16", # required
+    #           error_validation_color: "__stringMin1Max16", # required
+    #           header_color: "__stringMin1Max16", # required
+    #           navigation_color: "__stringMin1Max16", # required
+    #           text_color: "__stringMin1Max16", # required
+    #         },
+    #         logo_last_uploaded: Time.now,
+    #       },
+    #     },
+    #     rum_app_monitor_name: "__stringMin0Max255",
+    #     tags: {
+    #       "__string" => "StringWithLengthBetween1And1600",
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.authorization.cognito_config.app_client_id #=> String
+    #   resp.authorization.cognito_config.user_pool_arn #=> String
+    #   resp.authorization.cognito_config.user_pool_domain #=> String
+    #   resp.endpoint_configuration.certificate_arn #=> String
+    #   resp.endpoint_configuration.domain_name #=> String
+    #   resp.endpoint_configuration.portal_default_domain_name #=> String
+    #   resp.endpoint_configuration.portal_domain_hosted_zone_id #=> String
+    #   resp.included_portal_product_arns #=> Array
+    #   resp.included_portal_product_arns[0] #=> String
+    #   resp.last_modified #=> Time
+    #   resp.last_published #=> Time
+    #   resp.last_published_description #=> String
+    #   resp.portal_arn #=> String
+    #   resp.portal_content.description #=> String
+    #   resp.portal_content.display_name #=> String
+    #   resp.portal_content.theme.custom_colors.accent_color #=> String
+    #   resp.portal_content.theme.custom_colors.background_color #=> String
+    #   resp.portal_content.theme.custom_colors.error_validation_color #=> String
+    #   resp.portal_content.theme.custom_colors.header_color #=> String
+    #   resp.portal_content.theme.custom_colors.navigation_color #=> String
+    #   resp.portal_content.theme.custom_colors.text_color #=> String
+    #   resp.portal_content.theme.logo_last_uploaded #=> Time
+    #   resp.portal_id #=> String
+    #   resp.publish_status #=> String, one of "PUBLISHED", "PUBLISH_IN_PROGRESS", "PUBLISH_FAILED", "DISABLE_IN_PROGRESS", "DISABLE_FAILED", "DISABLED"
+    #   resp.rum_app_monitor_name #=> String
+    #   resp.status_exception.exception #=> String
+    #   resp.status_exception.message #=> String
+    #   resp.tags #=> Hash
+    #   resp.tags["__string"] #=> String
+    #
+    # @overload create_portal(params = {})
+    # @param [Hash] params ({})
+    def create_portal(params = {}, options = {})
+      req = build_request(:create_portal, params)
+      req.send_request(options)
+    end
+
+    # Creates a new portal product.
+    #
+    # @option params [String] :description
+    #
+    # @option params [required, String] :display_name
+    #
+    # @option params [Hash<String,String>] :tags
+    #   Represents a collection of tags associated with the resource.
+    #
+    # @return [Types::CreatePortalProductResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreatePortalProductResponse#description #description} => String
+    #   * {Types::CreatePortalProductResponse#display_name #display_name} => String
+    #   * {Types::CreatePortalProductResponse#display_order #display_order} => Types::DisplayOrder
+    #   * {Types::CreatePortalProductResponse#last_modified #last_modified} => Time
+    #   * {Types::CreatePortalProductResponse#portal_product_arn #portal_product_arn} => String
+    #   * {Types::CreatePortalProductResponse#portal_product_id #portal_product_id} => String
+    #   * {Types::CreatePortalProductResponse#tags #tags} => Hash&lt;String,String&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_portal_product({
+    #     description: "__stringMin0Max1024",
+    #     display_name: "__stringMin1Max255", # required
+    #     tags: {
+    #       "__string" => "StringWithLengthBetween1And1600",
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.description #=> String
+    #   resp.display_name #=> String
+    #   resp.display_order.contents #=> Array
+    #   resp.display_order.contents[0].product_rest_endpoint_page_arns #=> Array
+    #   resp.display_order.contents[0].product_rest_endpoint_page_arns[0] #=> String
+    #   resp.display_order.contents[0].section_name #=> String
+    #   resp.display_order.overview_page_arn #=> String
+    #   resp.display_order.product_page_arns #=> Array
+    #   resp.display_order.product_page_arns[0] #=> String
+    #   resp.last_modified #=> Time
+    #   resp.portal_product_arn #=> String
+    #   resp.portal_product_id #=> String
+    #   resp.tags #=> Hash
+    #   resp.tags["__string"] #=> String
+    #
+    # @overload create_portal_product(params = {})
+    # @param [Hash] params ({})
+    def create_portal_product(params = {}, options = {})
+      req = build_request(:create_portal_product, params)
+      req.send_request(options)
+    end
+
+    # Creates a new product page for a portal product.
+    #
+    # @option params [required, Types::DisplayContent] :display_content
+    #   The content of the product page.
+    #
+    # @option params [required, String] :portal_product_id
+    #
+    # @return [Types::CreateProductPageResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateProductPageResponse#display_content #display_content} => Types::DisplayContent
+    #   * {Types::CreateProductPageResponse#last_modified #last_modified} => Time
+    #   * {Types::CreateProductPageResponse#product_page_arn #product_page_arn} => String
+    #   * {Types::CreateProductPageResponse#product_page_id #product_page_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_product_page({
+    #     display_content: { # required
+    #       body: "__stringMin1Max32768", # required
+    #       title: "__stringMin1Max255", # required
+    #     },
+    #     portal_product_id: "__string", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.display_content.body #=> String
+    #   resp.display_content.title #=> String
+    #   resp.last_modified #=> Time
+    #   resp.product_page_arn #=> String
+    #   resp.product_page_id #=> String
+    #
+    # @overload create_product_page(params = {})
+    # @param [Hash] params ({})
+    def create_product_page(params = {}, options = {})
+      req = build_request(:create_product_page, params)
+      req.send_request(options)
+    end
+
+    # Creates a product REST endpoint page for a portal product.
+    #
+    # @option params [Types::EndpointDisplayContent] :display_content
+    #   Represents the endpoint display content.
+    #
+    # @option params [required, String] :portal_product_id
+    #
+    # @option params [required, Types::RestEndpointIdentifier] :rest_endpoint_identifier
+    #   The REST API endpoint identifier.
+    #
+    # @option params [String] :try_it_state
+    #   Represents the try it state for a product REST endpoint page.
+    #
+    # @return [Types::CreateProductRestEndpointPageResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateProductRestEndpointPageResponse#display_content #display_content} => Types::EndpointDisplayContentResponse
+    #   * {Types::CreateProductRestEndpointPageResponse#last_modified #last_modified} => Time
+    #   * {Types::CreateProductRestEndpointPageResponse#product_rest_endpoint_page_arn #product_rest_endpoint_page_arn} => String
+    #   * {Types::CreateProductRestEndpointPageResponse#product_rest_endpoint_page_id #product_rest_endpoint_page_id} => String
+    #   * {Types::CreateProductRestEndpointPageResponse#rest_endpoint_identifier #rest_endpoint_identifier} => Types::RestEndpointIdentifier
+    #   * {Types::CreateProductRestEndpointPageResponse#status #status} => String
+    #   * {Types::CreateProductRestEndpointPageResponse#status_exception #status_exception} => Types::StatusException
+    #   * {Types::CreateProductRestEndpointPageResponse#try_it_state #try_it_state} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_product_rest_endpoint_page({
+    #     display_content: {
+    #       none: {
+    #       },
+    #       overrides: {
+    #         body: "__stringMin1Max32768",
+    #         endpoint: "__stringMin1Max1024",
+    #         operation_name: "__stringMin1Max255",
+    #       },
+    #     },
+    #     portal_product_id: "__string", # required
+    #     rest_endpoint_identifier: { # required
+    #       identifier_parts: {
+    #         method: "__stringMin1Max20", # required
+    #         path: "__stringMin1Max4096", # required
+    #         rest_api_id: "__stringMin1Max50", # required
+    #         stage: "__stringMin1Max128", # required
+    #       },
+    #     },
+    #     try_it_state: "ENABLED", # accepts ENABLED, DISABLED
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.display_content.body #=> String
+    #   resp.display_content.endpoint #=> String
+    #   resp.display_content.operation_name #=> String
+    #   resp.last_modified #=> Time
+    #   resp.product_rest_endpoint_page_arn #=> String
+    #   resp.product_rest_endpoint_page_id #=> String
+    #   resp.rest_endpoint_identifier.identifier_parts.method #=> String
+    #   resp.rest_endpoint_identifier.identifier_parts.path #=> String
+    #   resp.rest_endpoint_identifier.identifier_parts.rest_api_id #=> String
+    #   resp.rest_endpoint_identifier.identifier_parts.stage #=> String
+    #   resp.status #=> String, one of "AVAILABLE", "IN_PROGRESS", "FAILED"
+    #   resp.status_exception.exception #=> String
+    #   resp.status_exception.message #=> String
+    #   resp.try_it_state #=> String, one of "ENABLED", "DISABLED"
+    #
+    # @overload create_product_rest_endpoint_page(params = {})
+    # @param [Hash] params ({})
+    def create_product_rest_endpoint_page(params = {}, options = {})
+      req = build_request(:create_product_rest_endpoint_page, params)
+      req.send_request(options)
+    end
+
     # Creates a Route for an API.
     #
     # @option params [required, String] :api_id
@@ -1259,10 +1562,11 @@ module Aws::ApiGatewayV2
     #
     # @option params [String] :authorization_type
     #   The authorization type. For WebSocket APIs, valid values are NONE for
-    #   open access, AWS\_IAM for using AWS IAM permissions, and CUSTOM for
-    #   using a Lambda authorizer. For HTTP APIs, valid values are NONE for
-    #   open access, JWT for using JSON Web Tokens, AWS\_IAM for using AWS IAM
-    #   permissions, and CUSTOM for using a Lambda authorizer.
+    #   open access, AWS\_IAM for using Amazon Web Services IAM permissions,
+    #   and CUSTOM for using a Lambda authorizer. For HTTP APIs, valid values
+    #   are NONE for open access, JWT for using JSON Web Tokens, AWS\_IAM for
+    #   using Amazon Web Services IAM permissions, and CUSTOM for using a
+    #   Lambda authorizer.
     #
     # @option params [String] :authorizer_id
     #   The identifier.
@@ -1439,6 +1743,84 @@ module Aws::ApiGatewayV2
     # @param [Hash] params ({})
     def create_route_response(params = {}, options = {})
       req = build_request(:create_route_response, params)
+      req.send_request(options)
+    end
+
+    # Create a routing rule.
+    #
+    # @option params [required, Array<Types::RoutingRuleAction>] :actions
+    #
+    # @option params [required, Array<Types::RoutingRuleCondition>] :conditions
+    #
+    # @option params [required, String] :domain_name
+    #
+    # @option params [String] :domain_name_id
+    #
+    # @option params [required, Integer] :priority
+    #   The order in which API Gateway evaluates a rule. Priority is evaluated
+    #   from the lowest value to the highest value. Rules can't have the same
+    #   priority. Priority values 1-1,000,000 are supported.
+    #
+    # @return [Types::CreateRoutingRuleResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateRoutingRuleResponse#actions #actions} => Array&lt;Types::RoutingRuleAction&gt;
+    #   * {Types::CreateRoutingRuleResponse#conditions #conditions} => Array&lt;Types::RoutingRuleCondition&gt;
+    #   * {Types::CreateRoutingRuleResponse#priority #priority} => Integer
+    #   * {Types::CreateRoutingRuleResponse#routing_rule_arn #routing_rule_arn} => String
+    #   * {Types::CreateRoutingRuleResponse#routing_rule_id #routing_rule_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_routing_rule({
+    #     actions: [ # required
+    #       {
+    #         invoke_api: { # required
+    #           api_id: "Id", # required
+    #           stage: "StringWithLengthBetween1And128", # required
+    #           strip_base_path: false,
+    #         },
+    #       },
+    #     ],
+    #     conditions: [ # required
+    #       {
+    #         match_base_paths: {
+    #           any_of: ["SelectionKey"], # required
+    #         },
+    #         match_headers: {
+    #           any_of: [ # required
+    #             {
+    #               header: "SelectionKey", # required
+    #               value_glob: "SelectionExpression", # required
+    #             },
+    #           ],
+    #         },
+    #       },
+    #     ],
+    #     domain_name: "__string", # required
+    #     domain_name_id: "__string",
+    #     priority: 1, # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.actions #=> Array
+    #   resp.actions[0].invoke_api.api_id #=> String
+    #   resp.actions[0].invoke_api.stage #=> String
+    #   resp.actions[0].invoke_api.strip_base_path #=> Boolean
+    #   resp.conditions #=> Array
+    #   resp.conditions[0].match_base_paths.any_of #=> Array
+    #   resp.conditions[0].match_base_paths.any_of[0] #=> String
+    #   resp.conditions[0].match_headers.any_of #=> Array
+    #   resp.conditions[0].match_headers.any_of[0].header #=> String
+    #   resp.conditions[0].match_headers.any_of[0].value_glob #=> String
+    #   resp.priority #=> Integer
+    #   resp.routing_rule_arn #=> String
+    #   resp.routing_rule_id #=> String
+    #
+    # @overload create_routing_rule(params = {})
+    # @param [Hash] params ({})
+    def create_routing_rule(params = {}, options = {})
+      req = build_request(:create_routing_rule, params)
       req.send_request(options)
     end
 
@@ -1839,6 +2221,107 @@ module Aws::ApiGatewayV2
       req.send_request(options)
     end
 
+    # Deletes a portal.
+    #
+    # @option params [required, String] :portal_id
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_portal({
+    #     portal_id: "__string", # required
+    #   })
+    #
+    # @overload delete_portal(params = {})
+    # @param [Hash] params ({})
+    def delete_portal(params = {}, options = {})
+      req = build_request(:delete_portal, params)
+      req.send_request(options)
+    end
+
+    # Deletes a portal product.
+    #
+    # @option params [required, String] :portal_product_id
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_portal_product({
+    #     portal_product_id: "__string", # required
+    #   })
+    #
+    # @overload delete_portal_product(params = {})
+    # @param [Hash] params ({})
+    def delete_portal_product(params = {}, options = {})
+      req = build_request(:delete_portal_product, params)
+      req.send_request(options)
+    end
+
+    # Deletes the sharing policy for a portal product.
+    #
+    # @option params [required, String] :portal_product_id
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_portal_product_sharing_policy({
+    #     portal_product_id: "__string", # required
+    #   })
+    #
+    # @overload delete_portal_product_sharing_policy(params = {})
+    # @param [Hash] params ({})
+    def delete_portal_product_sharing_policy(params = {}, options = {})
+      req = build_request(:delete_portal_product_sharing_policy, params)
+      req.send_request(options)
+    end
+
+    # Deletes a product page of a portal product.
+    #
+    # @option params [required, String] :portal_product_id
+    #
+    # @option params [required, String] :product_page_id
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_product_page({
+    #     portal_product_id: "__string", # required
+    #     product_page_id: "__string", # required
+    #   })
+    #
+    # @overload delete_product_page(params = {})
+    # @param [Hash] params ({})
+    def delete_product_page(params = {}, options = {})
+      req = build_request(:delete_product_page, params)
+      req.send_request(options)
+    end
+
+    # Deletes a product REST endpoint page.
+    #
+    # @option params [required, String] :portal_product_id
+    #
+    # @option params [required, String] :product_rest_endpoint_page_id
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_product_rest_endpoint_page({
+    #     portal_product_id: "__string", # required
+    #     product_rest_endpoint_page_id: "__string", # required
+    #   })
+    #
+    # @overload delete_product_rest_endpoint_page(params = {})
+    # @param [Hash] params ({})
+    def delete_product_rest_endpoint_page(params = {}, options = {})
+      req = build_request(:delete_product_rest_endpoint_page, params)
+      req.send_request(options)
+    end
+
     # Deletes a Route.
     #
     # @option params [required, String] :api_id
@@ -1861,7 +2344,7 @@ module Aws::ApiGatewayV2
       req.send_request(options)
     end
 
-    # Deletes a route request parameter.
+    # Deletes a route request parameter. Supported only for WebSocket APIs.
     #
     # @option params [required, String] :api_id
     #
@@ -1933,6 +2416,31 @@ module Aws::ApiGatewayV2
     # @param [Hash] params ({})
     def delete_route_settings(params = {}, options = {})
       req = build_request(:delete_route_settings, params)
+      req.send_request(options)
+    end
+
+    # Deletes a routing rule.
+    #
+    # @option params [required, String] :domain_name
+    #
+    # @option params [String] :domain_name_id
+    #
+    # @option params [required, String] :routing_rule_id
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_routing_rule({
+    #     domain_name: "__string", # required
+    #     domain_name_id: "__string",
+    #     routing_rule_id: "__string", # required
+    #   })
+    #
+    # @overload delete_routing_rule(params = {})
+    # @param [Hash] params ({})
+    def delete_routing_rule(params = {}, options = {})
+      req = build_request(:delete_routing_rule, params)
       req.send_request(options)
     end
 
@@ -2018,6 +2526,25 @@ module Aws::ApiGatewayV2
       req.send_request(options)
     end
 
+    # Deletes the publication of a portal portal.
+    #
+    # @option params [required, String] :portal_id
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.disable_portal({
+    #     portal_id: "__string", # required
+    #   })
+    #
+    # @overload disable_portal(params = {})
+    # @param [Hash] params ({})
+    def disable_portal(params = {}, options = {})
+      req = build_request(:disable_portal, params)
+      req.send_request(options)
+    end
+
     # Resets all authorizer cache entries for the specified stage. Supported
     # only for HTTP API Lambda authorizers.
     #
@@ -2057,6 +2584,7 @@ module Aws::ApiGatewayV2
     #   * {Types::GetApiResponse#disable_schema_validation #disable_schema_validation} => Boolean
     #   * {Types::GetApiResponse#disable_execute_api_endpoint #disable_execute_api_endpoint} => Boolean
     #   * {Types::GetApiResponse#import_info #import_info} => Array&lt;String&gt;
+    #   * {Types::GetApiResponse#ip_address_type #ip_address_type} => String
     #   * {Types::GetApiResponse#name #name} => String
     #   * {Types::GetApiResponse#protocol_type #protocol_type} => String
     #   * {Types::GetApiResponse#route_selection_expression #route_selection_expression} => String
@@ -2092,6 +2620,7 @@ module Aws::ApiGatewayV2
     #   resp.disable_execute_api_endpoint #=> Boolean
     #   resp.import_info #=> Array
     #   resp.import_info[0] #=> String
+    #   resp.ip_address_type #=> String, one of "ipv4", "dualstack"
     #   resp.name #=> String
     #   resp.protocol_type #=> String, one of "WEBSOCKET", "HTTP"
     #   resp.route_selection_expression #=> String
@@ -2220,6 +2749,7 @@ module Aws::ApiGatewayV2
     #   resp.items[0].disable_execute_api_endpoint #=> Boolean
     #   resp.items[0].import_info #=> Array
     #   resp.items[0].import_info[0] #=> String
+    #   resp.items[0].ip_address_type #=> String, one of "ipv4", "dualstack"
     #   resp.items[0].name #=> String
     #   resp.items[0].protocol_type #=> String, one of "WEBSOCKET", "HTTP"
     #   resp.items[0].route_selection_expression #=> String
@@ -2420,8 +2950,10 @@ module Aws::ApiGatewayV2
     #
     #   * {Types::GetDomainNameResponse#api_mapping_selection_expression #api_mapping_selection_expression} => String
     #   * {Types::GetDomainNameResponse#domain_name #domain_name} => String
+    #   * {Types::GetDomainNameResponse#domain_name_arn #domain_name_arn} => String
     #   * {Types::GetDomainNameResponse#domain_name_configurations #domain_name_configurations} => Array&lt;Types::DomainNameConfiguration&gt;
     #   * {Types::GetDomainNameResponse#mutual_tls_authentication #mutual_tls_authentication} => Types::MutualTlsAuthentication
+    #   * {Types::GetDomainNameResponse#routing_mode #routing_mode} => String
     #   * {Types::GetDomainNameResponse#tags #tags} => Hash&lt;String,String&gt;
     #
     # @example Request syntax with placeholder values
@@ -2434,6 +2966,7 @@ module Aws::ApiGatewayV2
     #
     #   resp.api_mapping_selection_expression #=> String
     #   resp.domain_name #=> String
+    #   resp.domain_name_arn #=> String
     #   resp.domain_name_configurations #=> Array
     #   resp.domain_name_configurations[0].api_gateway_domain_name #=> String
     #   resp.domain_name_configurations[0].certificate_arn #=> String
@@ -2443,12 +2976,14 @@ module Aws::ApiGatewayV2
     #   resp.domain_name_configurations[0].domain_name_status_message #=> String
     #   resp.domain_name_configurations[0].endpoint_type #=> String, one of "REGIONAL", "EDGE"
     #   resp.domain_name_configurations[0].hosted_zone_id #=> String
+    #   resp.domain_name_configurations[0].ip_address_type #=> String, one of "ipv4", "dualstack"
     #   resp.domain_name_configurations[0].security_policy #=> String, one of "TLS_1_0", "TLS_1_2"
     #   resp.domain_name_configurations[0].ownership_verification_certificate_arn #=> String
     #   resp.mutual_tls_authentication.truststore_uri #=> String
     #   resp.mutual_tls_authentication.truststore_version #=> String
     #   resp.mutual_tls_authentication.truststore_warnings #=> Array
     #   resp.mutual_tls_authentication.truststore_warnings[0] #=> String
+    #   resp.routing_mode #=> String, one of "API_MAPPING_ONLY", "ROUTING_RULE_ONLY", "ROUTING_RULE_THEN_API_MAPPING"
     #   resp.tags #=> Hash
     #   resp.tags["__string"] #=> String
     #
@@ -2459,7 +2994,7 @@ module Aws::ApiGatewayV2
       req.send_request(options)
     end
 
-    # Gets the domain names for an AWS account.
+    # Gets the domain names for an Amazon Web Services account.
     #
     # @option params [String] :max_results
     #
@@ -2482,6 +3017,7 @@ module Aws::ApiGatewayV2
     #   resp.items #=> Array
     #   resp.items[0].api_mapping_selection_expression #=> String
     #   resp.items[0].domain_name #=> String
+    #   resp.items[0].domain_name_arn #=> String
     #   resp.items[0].domain_name_configurations #=> Array
     #   resp.items[0].domain_name_configurations[0].api_gateway_domain_name #=> String
     #   resp.items[0].domain_name_configurations[0].certificate_arn #=> String
@@ -2491,12 +3027,14 @@ module Aws::ApiGatewayV2
     #   resp.items[0].domain_name_configurations[0].domain_name_status_message #=> String
     #   resp.items[0].domain_name_configurations[0].endpoint_type #=> String, one of "REGIONAL", "EDGE"
     #   resp.items[0].domain_name_configurations[0].hosted_zone_id #=> String
+    #   resp.items[0].domain_name_configurations[0].ip_address_type #=> String, one of "ipv4", "dualstack"
     #   resp.items[0].domain_name_configurations[0].security_policy #=> String, one of "TLS_1_0", "TLS_1_2"
     #   resp.items[0].domain_name_configurations[0].ownership_verification_certificate_arn #=> String
     #   resp.items[0].mutual_tls_authentication.truststore_uri #=> String
     #   resp.items[0].mutual_tls_authentication.truststore_version #=> String
     #   resp.items[0].mutual_tls_authentication.truststore_warnings #=> Array
     #   resp.items[0].mutual_tls_authentication.truststore_warnings[0] #=> String
+    #   resp.items[0].routing_mode #=> String, one of "API_MAPPING_ONLY", "ROUTING_RULE_ONLY", "ROUTING_RULE_THEN_API_MAPPING"
     #   resp.items[0].tags #=> Hash
     #   resp.items[0].tags["__string"] #=> String
     #   resp.next_token #=> String
@@ -2824,6 +3362,244 @@ module Aws::ApiGatewayV2
       req.send_request(options)
     end
 
+    # Gets a portal.
+    #
+    # @option params [required, String] :portal_id
+    #
+    # @return [Types::GetPortalResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetPortalResponse#authorization #authorization} => Types::Authorization
+    #   * {Types::GetPortalResponse#endpoint_configuration #endpoint_configuration} => Types::EndpointConfigurationResponse
+    #   * {Types::GetPortalResponse#included_portal_product_arns #included_portal_product_arns} => Array&lt;String&gt;
+    #   * {Types::GetPortalResponse#last_modified #last_modified} => Time
+    #   * {Types::GetPortalResponse#last_published #last_published} => Time
+    #   * {Types::GetPortalResponse#last_published_description #last_published_description} => String
+    #   * {Types::GetPortalResponse#portal_arn #portal_arn} => String
+    #   * {Types::GetPortalResponse#portal_content #portal_content} => Types::PortalContent
+    #   * {Types::GetPortalResponse#portal_id #portal_id} => String
+    #   * {Types::GetPortalResponse#preview #preview} => Types::Preview
+    #   * {Types::GetPortalResponse#publish_status #publish_status} => String
+    #   * {Types::GetPortalResponse#rum_app_monitor_name #rum_app_monitor_name} => String
+    #   * {Types::GetPortalResponse#status_exception #status_exception} => Types::StatusException
+    #   * {Types::GetPortalResponse#tags #tags} => Hash&lt;String,String&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_portal({
+    #     portal_id: "__string", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.authorization.cognito_config.app_client_id #=> String
+    #   resp.authorization.cognito_config.user_pool_arn #=> String
+    #   resp.authorization.cognito_config.user_pool_domain #=> String
+    #   resp.endpoint_configuration.certificate_arn #=> String
+    #   resp.endpoint_configuration.domain_name #=> String
+    #   resp.endpoint_configuration.portal_default_domain_name #=> String
+    #   resp.endpoint_configuration.portal_domain_hosted_zone_id #=> String
+    #   resp.included_portal_product_arns #=> Array
+    #   resp.included_portal_product_arns[0] #=> String
+    #   resp.last_modified #=> Time
+    #   resp.last_published #=> Time
+    #   resp.last_published_description #=> String
+    #   resp.portal_arn #=> String
+    #   resp.portal_content.description #=> String
+    #   resp.portal_content.display_name #=> String
+    #   resp.portal_content.theme.custom_colors.accent_color #=> String
+    #   resp.portal_content.theme.custom_colors.background_color #=> String
+    #   resp.portal_content.theme.custom_colors.error_validation_color #=> String
+    #   resp.portal_content.theme.custom_colors.header_color #=> String
+    #   resp.portal_content.theme.custom_colors.navigation_color #=> String
+    #   resp.portal_content.theme.custom_colors.text_color #=> String
+    #   resp.portal_content.theme.logo_last_uploaded #=> Time
+    #   resp.portal_id #=> String
+    #   resp.preview.preview_status #=> String, one of "PREVIEW_IN_PROGRESS", "PREVIEW_FAILED", "PREVIEW_READY"
+    #   resp.preview.preview_url #=> String
+    #   resp.preview.status_exception.exception #=> String
+    #   resp.preview.status_exception.message #=> String
+    #   resp.publish_status #=> String, one of "PUBLISHED", "PUBLISH_IN_PROGRESS", "PUBLISH_FAILED", "DISABLE_IN_PROGRESS", "DISABLE_FAILED", "DISABLED"
+    #   resp.rum_app_monitor_name #=> String
+    #   resp.status_exception.exception #=> String
+    #   resp.status_exception.message #=> String
+    #   resp.tags #=> Hash
+    #   resp.tags["__string"] #=> String
+    #
+    # @overload get_portal(params = {})
+    # @param [Hash] params ({})
+    def get_portal(params = {}, options = {})
+      req = build_request(:get_portal, params)
+      req.send_request(options)
+    end
+
+    # Gets a portal product.
+    #
+    # @option params [required, String] :portal_product_id
+    #
+    # @option params [String] :resource_owner_account_id
+    #
+    # @return [Types::GetPortalProductResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetPortalProductResponse#description #description} => String
+    #   * {Types::GetPortalProductResponse#display_name #display_name} => String
+    #   * {Types::GetPortalProductResponse#display_order #display_order} => Types::DisplayOrder
+    #   * {Types::GetPortalProductResponse#last_modified #last_modified} => Time
+    #   * {Types::GetPortalProductResponse#portal_product_arn #portal_product_arn} => String
+    #   * {Types::GetPortalProductResponse#portal_product_id #portal_product_id} => String
+    #   * {Types::GetPortalProductResponse#tags #tags} => Hash&lt;String,String&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_portal_product({
+    #     portal_product_id: "__string", # required
+    #     resource_owner_account_id: "__string",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.description #=> String
+    #   resp.display_name #=> String
+    #   resp.display_order.contents #=> Array
+    #   resp.display_order.contents[0].product_rest_endpoint_page_arns #=> Array
+    #   resp.display_order.contents[0].product_rest_endpoint_page_arns[0] #=> String
+    #   resp.display_order.contents[0].section_name #=> String
+    #   resp.display_order.overview_page_arn #=> String
+    #   resp.display_order.product_page_arns #=> Array
+    #   resp.display_order.product_page_arns[0] #=> String
+    #   resp.last_modified #=> Time
+    #   resp.portal_product_arn #=> String
+    #   resp.portal_product_id #=> String
+    #   resp.tags #=> Hash
+    #   resp.tags["__string"] #=> String
+    #
+    # @overload get_portal_product(params = {})
+    # @param [Hash] params ({})
+    def get_portal_product(params = {}, options = {})
+      req = build_request(:get_portal_product, params)
+      req.send_request(options)
+    end
+
+    # Gets the sharing policy for a portal product.
+    #
+    # @option params [required, String] :portal_product_id
+    #
+    # @return [Types::GetPortalProductSharingPolicyResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetPortalProductSharingPolicyResponse#policy_document #policy_document} => String
+    #   * {Types::GetPortalProductSharingPolicyResponse#portal_product_id #portal_product_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_portal_product_sharing_policy({
+    #     portal_product_id: "__string", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.policy_document #=> String
+    #   resp.portal_product_id #=> String
+    #
+    # @overload get_portal_product_sharing_policy(params = {})
+    # @param [Hash] params ({})
+    def get_portal_product_sharing_policy(params = {}, options = {})
+      req = build_request(:get_portal_product_sharing_policy, params)
+      req.send_request(options)
+    end
+
+    # Gets a product page of a portal product.
+    #
+    # @option params [required, String] :portal_product_id
+    #
+    # @option params [required, String] :product_page_id
+    #
+    # @option params [String] :resource_owner_account_id
+    #
+    # @return [Types::GetProductPageResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetProductPageResponse#display_content #display_content} => Types::DisplayContent
+    #   * {Types::GetProductPageResponse#last_modified #last_modified} => Time
+    #   * {Types::GetProductPageResponse#product_page_arn #product_page_arn} => String
+    #   * {Types::GetProductPageResponse#product_page_id #product_page_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_product_page({
+    #     portal_product_id: "__string", # required
+    #     product_page_id: "__string", # required
+    #     resource_owner_account_id: "__string",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.display_content.body #=> String
+    #   resp.display_content.title #=> String
+    #   resp.last_modified #=> Time
+    #   resp.product_page_arn #=> String
+    #   resp.product_page_id #=> String
+    #
+    # @overload get_product_page(params = {})
+    # @param [Hash] params ({})
+    def get_product_page(params = {}, options = {})
+      req = build_request(:get_product_page, params)
+      req.send_request(options)
+    end
+
+    # Gets a product REST endpoint page.
+    #
+    # @option params [String] :include_raw_display_content
+    #
+    # @option params [required, String] :portal_product_id
+    #
+    # @option params [required, String] :product_rest_endpoint_page_id
+    #
+    # @option params [String] :resource_owner_account_id
+    #
+    # @return [Types::GetProductRestEndpointPageResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetProductRestEndpointPageResponse#display_content #display_content} => Types::EndpointDisplayContentResponse
+    #   * {Types::GetProductRestEndpointPageResponse#last_modified #last_modified} => Time
+    #   * {Types::GetProductRestEndpointPageResponse#product_rest_endpoint_page_arn #product_rest_endpoint_page_arn} => String
+    #   * {Types::GetProductRestEndpointPageResponse#product_rest_endpoint_page_id #product_rest_endpoint_page_id} => String
+    #   * {Types::GetProductRestEndpointPageResponse#raw_display_content #raw_display_content} => String
+    #   * {Types::GetProductRestEndpointPageResponse#rest_endpoint_identifier #rest_endpoint_identifier} => Types::RestEndpointIdentifier
+    #   * {Types::GetProductRestEndpointPageResponse#status #status} => String
+    #   * {Types::GetProductRestEndpointPageResponse#status_exception #status_exception} => Types::StatusException
+    #   * {Types::GetProductRestEndpointPageResponse#try_it_state #try_it_state} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_product_rest_endpoint_page({
+    #     include_raw_display_content: "__string",
+    #     portal_product_id: "__string", # required
+    #     product_rest_endpoint_page_id: "__string", # required
+    #     resource_owner_account_id: "__string",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.display_content.body #=> String
+    #   resp.display_content.endpoint #=> String
+    #   resp.display_content.operation_name #=> String
+    #   resp.last_modified #=> Time
+    #   resp.product_rest_endpoint_page_arn #=> String
+    #   resp.product_rest_endpoint_page_id #=> String
+    #   resp.raw_display_content #=> String
+    #   resp.rest_endpoint_identifier.identifier_parts.method #=> String
+    #   resp.rest_endpoint_identifier.identifier_parts.path #=> String
+    #   resp.rest_endpoint_identifier.identifier_parts.rest_api_id #=> String
+    #   resp.rest_endpoint_identifier.identifier_parts.stage #=> String
+    #   resp.status #=> String, one of "AVAILABLE", "IN_PROGRESS", "FAILED"
+    #   resp.status_exception.exception #=> String
+    #   resp.status_exception.message #=> String
+    #   resp.try_it_state #=> String, one of "ENABLED", "DISABLED"
+    #
+    # @overload get_product_rest_endpoint_page(params = {})
+    # @param [Hash] params ({})
+    def get_product_rest_endpoint_page(params = {}, options = {})
+      req = build_request(:get_product_rest_endpoint_page, params)
+      req.send_request(options)
+    end
+
     # Gets a Route.
     #
     # @option params [required, String] :api_id
@@ -3009,6 +3785,53 @@ module Aws::ApiGatewayV2
     # @param [Hash] params ({})
     def get_routes(params = {}, options = {})
       req = build_request(:get_routes, params)
+      req.send_request(options)
+    end
+
+    # Gets a routing rule.
+    #
+    # @option params [required, String] :domain_name
+    #
+    # @option params [String] :domain_name_id
+    #
+    # @option params [required, String] :routing_rule_id
+    #
+    # @return [Types::GetRoutingRuleResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetRoutingRuleResponse#actions #actions} => Array&lt;Types::RoutingRuleAction&gt;
+    #   * {Types::GetRoutingRuleResponse#conditions #conditions} => Array&lt;Types::RoutingRuleCondition&gt;
+    #   * {Types::GetRoutingRuleResponse#priority #priority} => Integer
+    #   * {Types::GetRoutingRuleResponse#routing_rule_arn #routing_rule_arn} => String
+    #   * {Types::GetRoutingRuleResponse#routing_rule_id #routing_rule_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_routing_rule({
+    #     domain_name: "__string", # required
+    #     domain_name_id: "__string",
+    #     routing_rule_id: "__string", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.actions #=> Array
+    #   resp.actions[0].invoke_api.api_id #=> String
+    #   resp.actions[0].invoke_api.stage #=> String
+    #   resp.actions[0].invoke_api.strip_base_path #=> Boolean
+    #   resp.conditions #=> Array
+    #   resp.conditions[0].match_base_paths.any_of #=> Array
+    #   resp.conditions[0].match_base_paths.any_of[0] #=> String
+    #   resp.conditions[0].match_headers.any_of #=> Array
+    #   resp.conditions[0].match_headers.any_of[0].header #=> String
+    #   resp.conditions[0].match_headers.any_of[0].value_glob #=> String
+    #   resp.priority #=> Integer
+    #   resp.routing_rule_arn #=> String
+    #   resp.routing_rule_id #=> String
+    #
+    # @overload get_routing_rule(params = {})
+    # @param [Hash] params ({})
+    def get_routing_rule(params = {}, options = {})
+      req = build_request(:get_routing_rule, params)
       req.send_request(options)
     end
 
@@ -3269,6 +4092,7 @@ module Aws::ApiGatewayV2
     #   * {Types::ImportApiResponse#disable_schema_validation #disable_schema_validation} => Boolean
     #   * {Types::ImportApiResponse#disable_execute_api_endpoint #disable_execute_api_endpoint} => Boolean
     #   * {Types::ImportApiResponse#import_info #import_info} => Array&lt;String&gt;
+    #   * {Types::ImportApiResponse#ip_address_type #ip_address_type} => String
     #   * {Types::ImportApiResponse#name #name} => String
     #   * {Types::ImportApiResponse#protocol_type #protocol_type} => String
     #   * {Types::ImportApiResponse#route_selection_expression #route_selection_expression} => String
@@ -3306,6 +4130,7 @@ module Aws::ApiGatewayV2
     #   resp.disable_execute_api_endpoint #=> Boolean
     #   resp.import_info #=> Array
     #   resp.import_info[0] #=> String
+    #   resp.ip_address_type #=> String, one of "ipv4", "dualstack"
     #   resp.name #=> String
     #   resp.protocol_type #=> String, one of "WEBSOCKET", "HTTP"
     #   resp.route_selection_expression #=> String
@@ -3319,6 +4144,402 @@ module Aws::ApiGatewayV2
     # @param [Hash] params ({})
     def import_api(params = {}, options = {})
       req = build_request(:import_api, params)
+      req.send_request(options)
+    end
+
+    # Lists portal products.
+    #
+    # @option params [String] :max_results
+    #
+    # @option params [String] :next_token
+    #
+    # @option params [String] :resource_owner
+    #
+    # @return [Types::ListPortalProductsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListPortalProductsResponse#items #items} => Array&lt;Types::PortalProductSummary&gt;
+    #   * {Types::ListPortalProductsResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_portal_products({
+    #     max_results: "__string",
+    #     next_token: "__string",
+    #     resource_owner: "__string",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.items #=> Array
+    #   resp.items[0].description #=> String
+    #   resp.items[0].display_name #=> String
+    #   resp.items[0].last_modified #=> Time
+    #   resp.items[0].portal_product_arn #=> String
+    #   resp.items[0].portal_product_id #=> String
+    #   resp.items[0].tags #=> Hash
+    #   resp.items[0].tags["__string"] #=> String
+    #   resp.next_token #=> String
+    #
+    # @overload list_portal_products(params = {})
+    # @param [Hash] params ({})
+    def list_portal_products(params = {}, options = {})
+      req = build_request(:list_portal_products, params)
+      req.send_request(options)
+    end
+
+    # Lists portals.
+    #
+    # @option params [String] :max_results
+    #
+    # @option params [String] :next_token
+    #
+    # @return [Types::ListPortalsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListPortalsResponse#items #items} => Array&lt;Types::PortalSummary&gt;
+    #   * {Types::ListPortalsResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_portals({
+    #     max_results: "__string",
+    #     next_token: "__string",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.items #=> Array
+    #   resp.items[0].authorization.cognito_config.app_client_id #=> String
+    #   resp.items[0].authorization.cognito_config.user_pool_arn #=> String
+    #   resp.items[0].authorization.cognito_config.user_pool_domain #=> String
+    #   resp.items[0].endpoint_configuration.certificate_arn #=> String
+    #   resp.items[0].endpoint_configuration.domain_name #=> String
+    #   resp.items[0].endpoint_configuration.portal_default_domain_name #=> String
+    #   resp.items[0].endpoint_configuration.portal_domain_hosted_zone_id #=> String
+    #   resp.items[0].included_portal_product_arns #=> Array
+    #   resp.items[0].included_portal_product_arns[0] #=> String
+    #   resp.items[0].last_modified #=> Time
+    #   resp.items[0].last_published #=> Time
+    #   resp.items[0].last_published_description #=> String
+    #   resp.items[0].portal_arn #=> String
+    #   resp.items[0].portal_content.description #=> String
+    #   resp.items[0].portal_content.display_name #=> String
+    #   resp.items[0].portal_content.theme.custom_colors.accent_color #=> String
+    #   resp.items[0].portal_content.theme.custom_colors.background_color #=> String
+    #   resp.items[0].portal_content.theme.custom_colors.error_validation_color #=> String
+    #   resp.items[0].portal_content.theme.custom_colors.header_color #=> String
+    #   resp.items[0].portal_content.theme.custom_colors.navigation_color #=> String
+    #   resp.items[0].portal_content.theme.custom_colors.text_color #=> String
+    #   resp.items[0].portal_content.theme.logo_last_uploaded #=> Time
+    #   resp.items[0].portal_id #=> String
+    #   resp.items[0].preview.preview_status #=> String, one of "PREVIEW_IN_PROGRESS", "PREVIEW_FAILED", "PREVIEW_READY"
+    #   resp.items[0].preview.preview_url #=> String
+    #   resp.items[0].preview.status_exception.exception #=> String
+    #   resp.items[0].preview.status_exception.message #=> String
+    #   resp.items[0].publish_status #=> String, one of "PUBLISHED", "PUBLISH_IN_PROGRESS", "PUBLISH_FAILED", "DISABLE_IN_PROGRESS", "DISABLE_FAILED", "DISABLED"
+    #   resp.items[0].rum_app_monitor_name #=> String
+    #   resp.items[0].status_exception.exception #=> String
+    #   resp.items[0].status_exception.message #=> String
+    #   resp.items[0].tags #=> Hash
+    #   resp.items[0].tags["__string"] #=> String
+    #   resp.next_token #=> String
+    #
+    # @overload list_portals(params = {})
+    # @param [Hash] params ({})
+    def list_portals(params = {}, options = {})
+      req = build_request(:list_portals, params)
+      req.send_request(options)
+    end
+
+    # Lists the product pages for a portal product.
+    #
+    # @option params [String] :max_results
+    #
+    # @option params [String] :next_token
+    #
+    # @option params [required, String] :portal_product_id
+    #
+    # @option params [String] :resource_owner_account_id
+    #
+    # @return [Types::ListProductPagesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListProductPagesResponse#items #items} => Array&lt;Types::ProductPageSummaryNoBody&gt;
+    #   * {Types::ListProductPagesResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_product_pages({
+    #     max_results: "__string",
+    #     next_token: "__string",
+    #     portal_product_id: "__string", # required
+    #     resource_owner_account_id: "__string",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.items #=> Array
+    #   resp.items[0].last_modified #=> Time
+    #   resp.items[0].page_title #=> String
+    #   resp.items[0].product_page_arn #=> String
+    #   resp.items[0].product_page_id #=> String
+    #   resp.next_token #=> String
+    #
+    # @overload list_product_pages(params = {})
+    # @param [Hash] params ({})
+    def list_product_pages(params = {}, options = {})
+      req = build_request(:list_product_pages, params)
+      req.send_request(options)
+    end
+
+    # Lists the product REST endpoint pages of a portal product.
+    #
+    # @option params [String] :max_results
+    #
+    # @option params [String] :next_token
+    #
+    # @option params [required, String] :portal_product_id
+    #
+    # @option params [String] :resource_owner_account_id
+    #
+    # @return [Types::ListProductRestEndpointPagesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListProductRestEndpointPagesResponse#items #items} => Array&lt;Types::ProductRestEndpointPageSummaryNoBody&gt;
+    #   * {Types::ListProductRestEndpointPagesResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_product_rest_endpoint_pages({
+    #     max_results: "__string",
+    #     next_token: "__string",
+    #     portal_product_id: "__string", # required
+    #     resource_owner_account_id: "__string",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.items #=> Array
+    #   resp.items[0].endpoint #=> String
+    #   resp.items[0].last_modified #=> Time
+    #   resp.items[0].operation_name #=> String
+    #   resp.items[0].product_rest_endpoint_page_arn #=> String
+    #   resp.items[0].product_rest_endpoint_page_id #=> String
+    #   resp.items[0].rest_endpoint_identifier.identifier_parts.method #=> String
+    #   resp.items[0].rest_endpoint_identifier.identifier_parts.path #=> String
+    #   resp.items[0].rest_endpoint_identifier.identifier_parts.rest_api_id #=> String
+    #   resp.items[0].rest_endpoint_identifier.identifier_parts.stage #=> String
+    #   resp.items[0].status #=> String, one of "AVAILABLE", "IN_PROGRESS", "FAILED"
+    #   resp.items[0].status_exception.exception #=> String
+    #   resp.items[0].status_exception.message #=> String
+    #   resp.items[0].try_it_state #=> String, one of "ENABLED", "DISABLED"
+    #   resp.next_token #=> String
+    #
+    # @overload list_product_rest_endpoint_pages(params = {})
+    # @param [Hash] params ({})
+    def list_product_rest_endpoint_pages(params = {}, options = {})
+      req = build_request(:list_product_rest_endpoint_pages, params)
+      req.send_request(options)
+    end
+
+    # Lists routing rules.
+    #
+    # @option params [required, String] :domain_name
+    #
+    # @option params [String] :domain_name_id
+    #
+    # @option params [Integer] :max_results
+    #
+    # @option params [String] :next_token
+    #
+    # @return [Types::ListRoutingRulesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListRoutingRulesResponse#next_token #next_token} => String
+    #   * {Types::ListRoutingRulesResponse#routing_rules #routing_rules} => Array&lt;Types::RoutingRule&gt;
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_routing_rules({
+    #     domain_name: "__string", # required
+    #     domain_name_id: "__string",
+    #     max_results: 1,
+    #     next_token: "__string",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.next_token #=> String
+    #   resp.routing_rules #=> Array
+    #   resp.routing_rules[0].actions #=> Array
+    #   resp.routing_rules[0].actions[0].invoke_api.api_id #=> String
+    #   resp.routing_rules[0].actions[0].invoke_api.stage #=> String
+    #   resp.routing_rules[0].actions[0].invoke_api.strip_base_path #=> Boolean
+    #   resp.routing_rules[0].conditions #=> Array
+    #   resp.routing_rules[0].conditions[0].match_base_paths.any_of #=> Array
+    #   resp.routing_rules[0].conditions[0].match_base_paths.any_of[0] #=> String
+    #   resp.routing_rules[0].conditions[0].match_headers.any_of #=> Array
+    #   resp.routing_rules[0].conditions[0].match_headers.any_of[0].header #=> String
+    #   resp.routing_rules[0].conditions[0].match_headers.any_of[0].value_glob #=> String
+    #   resp.routing_rules[0].priority #=> Integer
+    #   resp.routing_rules[0].routing_rule_arn #=> String
+    #   resp.routing_rules[0].routing_rule_id #=> String
+    #
+    # @overload list_routing_rules(params = {})
+    # @param [Hash] params ({})
+    def list_routing_rules(params = {}, options = {})
+      req = build_request(:list_routing_rules, params)
+      req.send_request(options)
+    end
+
+    # Creates a portal preview.
+    #
+    # @option params [required, String] :portal_id
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.preview_portal({
+    #     portal_id: "__string", # required
+    #   })
+    #
+    # @overload preview_portal(params = {})
+    # @param [Hash] params ({})
+    def preview_portal(params = {}, options = {})
+      req = build_request(:preview_portal, params)
+      req.send_request(options)
+    end
+
+    # Publishes a portal.
+    #
+    # @option params [String] :description
+    #
+    # @option params [required, String] :portal_id
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.publish_portal({
+    #     description: "__stringMin0Max1024",
+    #     portal_id: "__string", # required
+    #   })
+    #
+    # @overload publish_portal(params = {})
+    # @param [Hash] params ({})
+    def publish_portal(params = {}, options = {})
+      req = build_request(:publish_portal, params)
+      req.send_request(options)
+    end
+
+    # Updates the sharing policy for a portal product.
+    #
+    # @option params [required, String] :policy_document
+    #
+    # @option params [required, String] :portal_product_id
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.put_portal_product_sharing_policy({
+    #     policy_document: "__stringMin1Max307200", # required
+    #     portal_product_id: "__string", # required
+    #   })
+    #
+    # @overload put_portal_product_sharing_policy(params = {})
+    # @param [Hash] params ({})
+    def put_portal_product_sharing_policy(params = {}, options = {})
+      req = build_request(:put_portal_product_sharing_policy, params)
+      req.send_request(options)
+    end
+
+    # Replaces an existing routing rule. When you replace an existing
+    # routing rule, the RoutingRuleId isn't changed.
+    #
+    # @option params [required, Array<Types::RoutingRuleAction>] :actions
+    #
+    # @option params [required, Array<Types::RoutingRuleCondition>] :conditions
+    #
+    # @option params [required, String] :domain_name
+    #
+    # @option params [String] :domain_name_id
+    #
+    # @option params [required, Integer] :priority
+    #   The order in which API Gateway evaluates a rule. Priority is evaluated
+    #   from the lowest value to the highest value. Rules can't have the same
+    #   priority. Priority values 1-1,000,000 are supported.
+    #
+    # @option params [required, String] :routing_rule_id
+    #
+    # @return [Types::PutRoutingRuleResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::PutRoutingRuleResponse#actions #actions} => Array&lt;Types::RoutingRuleAction&gt;
+    #   * {Types::PutRoutingRuleResponse#conditions #conditions} => Array&lt;Types::RoutingRuleCondition&gt;
+    #   * {Types::PutRoutingRuleResponse#priority #priority} => Integer
+    #   * {Types::PutRoutingRuleResponse#routing_rule_arn #routing_rule_arn} => String
+    #   * {Types::PutRoutingRuleResponse#routing_rule_id #routing_rule_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.put_routing_rule({
+    #     actions: [ # required
+    #       {
+    #         invoke_api: { # required
+    #           api_id: "Id", # required
+    #           stage: "StringWithLengthBetween1And128", # required
+    #           strip_base_path: false,
+    #         },
+    #       },
+    #     ],
+    #     conditions: [ # required
+    #       {
+    #         match_base_paths: {
+    #           any_of: ["SelectionKey"], # required
+    #         },
+    #         match_headers: {
+    #           any_of: [ # required
+    #             {
+    #               header: "SelectionKey", # required
+    #               value_glob: "SelectionExpression", # required
+    #             },
+    #           ],
+    #         },
+    #       },
+    #     ],
+    #     domain_name: "__string", # required
+    #     domain_name_id: "__string",
+    #     priority: 1, # required
+    #     routing_rule_id: "__string", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.actions #=> Array
+    #   resp.actions[0].invoke_api.api_id #=> String
+    #   resp.actions[0].invoke_api.stage #=> String
+    #   resp.actions[0].invoke_api.strip_base_path #=> Boolean
+    #   resp.conditions #=> Array
+    #   resp.conditions[0].match_base_paths.any_of #=> Array
+    #   resp.conditions[0].match_base_paths.any_of[0] #=> String
+    #   resp.conditions[0].match_headers.any_of #=> Array
+    #   resp.conditions[0].match_headers.any_of[0].header #=> String
+    #   resp.conditions[0].match_headers.any_of[0].value_glob #=> String
+    #   resp.priority #=> Integer
+    #   resp.routing_rule_arn #=> String
+    #   resp.routing_rule_id #=> String
+    #
+    # @overload put_routing_rule(params = {})
+    # @param [Hash] params ({})
+    def put_routing_rule(params = {}, options = {})
+      req = build_request(:put_routing_rule, params)
       req.send_request(options)
     end
 
@@ -3344,6 +4565,7 @@ module Aws::ApiGatewayV2
     #   * {Types::ReimportApiResponse#disable_schema_validation #disable_schema_validation} => Boolean
     #   * {Types::ReimportApiResponse#disable_execute_api_endpoint #disable_execute_api_endpoint} => Boolean
     #   * {Types::ReimportApiResponse#import_info #import_info} => Array&lt;String&gt;
+    #   * {Types::ReimportApiResponse#ip_address_type #ip_address_type} => String
     #   * {Types::ReimportApiResponse#name #name} => String
     #   * {Types::ReimportApiResponse#protocol_type #protocol_type} => String
     #   * {Types::ReimportApiResponse#route_selection_expression #route_selection_expression} => String
@@ -3382,6 +4604,7 @@ module Aws::ApiGatewayV2
     #   resp.disable_execute_api_endpoint #=> Boolean
     #   resp.import_info #=> Array
     #   resp.import_info[0] #=> String
+    #   resp.ip_address_type #=> String, one of "ipv4", "dualstack"
     #   resp.name #=> String
     #   resp.protocol_type #=> String, one of "WEBSOCKET", "HTTP"
     #   resp.route_selection_expression #=> String
@@ -3475,6 +4698,9 @@ module Aws::ApiGatewayV2
     #
     # @option params [Boolean] :disable_execute_api_endpoint
     #
+    # @option params [String] :ip_address_type
+    #   The IP address types that can invoke the API.
+    #
     # @option params [String] :name
     #   A string with a length between \[1-128\].
     #
@@ -3514,6 +4740,7 @@ module Aws::ApiGatewayV2
     #   * {Types::UpdateApiResponse#disable_schema_validation #disable_schema_validation} => Boolean
     #   * {Types::UpdateApiResponse#disable_execute_api_endpoint #disable_execute_api_endpoint} => Boolean
     #   * {Types::UpdateApiResponse#import_info #import_info} => Array&lt;String&gt;
+    #   * {Types::UpdateApiResponse#ip_address_type #ip_address_type} => String
     #   * {Types::UpdateApiResponse#name #name} => String
     #   * {Types::UpdateApiResponse#protocol_type #protocol_type} => String
     #   * {Types::UpdateApiResponse#route_selection_expression #route_selection_expression} => String
@@ -3538,6 +4765,7 @@ module Aws::ApiGatewayV2
     #     description: "StringWithLengthBetween0And1024",
     #     disable_schema_validation: false,
     #     disable_execute_api_endpoint: false,
+    #     ip_address_type: "ipv4", # accepts ipv4, dualstack
     #     name: "StringWithLengthBetween1And128",
     #     route_key: "SelectionKey",
     #     route_selection_expression: "SelectionExpression",
@@ -3567,6 +4795,7 @@ module Aws::ApiGatewayV2
     #   resp.disable_execute_api_endpoint #=> Boolean
     #   resp.import_info #=> Array
     #   resp.import_info[0] #=> String
+    #   resp.ip_address_type #=> String, one of "ipv4", "dualstack"
     #   resp.name #=> String
     #   resp.protocol_type #=> String, one of "WEBSOCKET", "HTTP"
     #   resp.route_selection_expression #=> String
@@ -3800,12 +5029,17 @@ module Aws::ApiGatewayV2
     #   client and the server. Clients must present a trusted certificate to
     #   access your API.
     #
+    # @option params [String] :routing_mode
+    #   The routing mode API Gateway uses to route traffic to your APIs.
+    #
     # @return [Types::UpdateDomainNameResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::UpdateDomainNameResponse#api_mapping_selection_expression #api_mapping_selection_expression} => String
     #   * {Types::UpdateDomainNameResponse#domain_name #domain_name} => String
+    #   * {Types::UpdateDomainNameResponse#domain_name_arn #domain_name_arn} => String
     #   * {Types::UpdateDomainNameResponse#domain_name_configurations #domain_name_configurations} => Array&lt;Types::DomainNameConfiguration&gt;
     #   * {Types::UpdateDomainNameResponse#mutual_tls_authentication #mutual_tls_authentication} => Types::MutualTlsAuthentication
+    #   * {Types::UpdateDomainNameResponse#routing_mode #routing_mode} => String
     #   * {Types::UpdateDomainNameResponse#tags #tags} => Hash&lt;String,String&gt;
     #
     # @example Request syntax with placeholder values
@@ -3822,6 +5056,7 @@ module Aws::ApiGatewayV2
     #         domain_name_status_message: "__string",
     #         endpoint_type: "REGIONAL", # accepts REGIONAL, EDGE
     #         hosted_zone_id: "__string",
+    #         ip_address_type: "ipv4", # accepts ipv4, dualstack
     #         security_policy: "TLS_1_0", # accepts TLS_1_0, TLS_1_2
     #         ownership_verification_certificate_arn: "Arn",
     #       },
@@ -3830,12 +5065,14 @@ module Aws::ApiGatewayV2
     #       truststore_uri: "UriWithLengthBetween1And2048",
     #       truststore_version: "StringWithLengthBetween1And64",
     #     },
+    #     routing_mode: "API_MAPPING_ONLY", # accepts API_MAPPING_ONLY, ROUTING_RULE_ONLY, ROUTING_RULE_THEN_API_MAPPING
     #   })
     #
     # @example Response structure
     #
     #   resp.api_mapping_selection_expression #=> String
     #   resp.domain_name #=> String
+    #   resp.domain_name_arn #=> String
     #   resp.domain_name_configurations #=> Array
     #   resp.domain_name_configurations[0].api_gateway_domain_name #=> String
     #   resp.domain_name_configurations[0].certificate_arn #=> String
@@ -3845,12 +5082,14 @@ module Aws::ApiGatewayV2
     #   resp.domain_name_configurations[0].domain_name_status_message #=> String
     #   resp.domain_name_configurations[0].endpoint_type #=> String, one of "REGIONAL", "EDGE"
     #   resp.domain_name_configurations[0].hosted_zone_id #=> String
+    #   resp.domain_name_configurations[0].ip_address_type #=> String, one of "ipv4", "dualstack"
     #   resp.domain_name_configurations[0].security_policy #=> String, one of "TLS_1_0", "TLS_1_2"
     #   resp.domain_name_configurations[0].ownership_verification_certificate_arn #=> String
     #   resp.mutual_tls_authentication.truststore_uri #=> String
     #   resp.mutual_tls_authentication.truststore_version #=> String
     #   resp.mutual_tls_authentication.truststore_warnings #=> Array
     #   resp.mutual_tls_authentication.truststore_warnings[0] #=> String
+    #   resp.routing_mode #=> String, one of "API_MAPPING_ONLY", "ROUTING_RULE_ONLY", "ROUTING_RULE_THEN_API_MAPPING"
     #   resp.tags #=> Hash
     #   resp.tags["__string"] #=> String
     #
@@ -3917,18 +5156,18 @@ module Aws::ApiGatewayV2
     #   parameters are a key-value map specifying parameters that are passed
     #   to AWS\_PROXY integrations. You can provide static values, or map
     #   request data, stage variables, or context variables that are evaluated
-    #   at runtime. To learn more, see [Working with AWS service integrations
-    #   for HTTP APIs][1].
+    #   at runtime. To learn more, see [Working with Amazon Web Services
+    #   service integrations for HTTP APIs][1].
     #
     #   For HTTP API integrations without a specified integrationSubtype
     #   request parameters are a key-value map specifying how to transform
     #   HTTP requests before sending them to the backend. The key should
     #   follow the pattern
-    #   &lt;action&gt;:&lt;header\|querystring\|path&gt;.&lt;location&gt;
-    #   where action can be append, overwrite or remove. For values, you can
-    #   provide static values, or map request data, stage variables, or
-    #   context variables that are evaluated at runtime. To learn more, see
-    #   [Transforming API requests and responses][2].
+    #   &lt;action>:&lt;header\|querystring\|path>.&lt;location> where action
+    #   can be append, overwrite or remove. For values, you can provide static
+    #   values, or map request data, stage variables, or context variables
+    #   that are evaluated at runtime. To learn more, see [Transforming API
+    #   requests and responses][2].
     #
     #
     #
@@ -4089,18 +5328,18 @@ module Aws::ApiGatewayV2
     #   parameters are a key-value map specifying parameters that are passed
     #   to AWS\_PROXY integrations. You can provide static values, or map
     #   request data, stage variables, or context variables that are evaluated
-    #   at runtime. To learn more, see [Working with AWS service integrations
-    #   for HTTP APIs][1].
+    #   at runtime. To learn more, see [Working with Amazon Web Services
+    #   service integrations for HTTP APIs][1].
     #
     #   For HTTP API integrations without a specified integrationSubtype
     #   request parameters are a key-value map specifying how to transform
     #   HTTP requests before sending them to the backend. The key should
     #   follow the pattern
-    #   &lt;action&gt;:&lt;header\|querystring\|path&gt;.&lt;location&gt;
-    #   where action can be append, overwrite or remove. For values, you can
-    #   provide static values, or map request data, stage variables, or
-    #   context variables that are evaluated at runtime. To learn more, see
-    #   [Transforming API requests and responses][2].
+    #   &lt;action>:&lt;header\|querystring\|path>.&lt;location> where action
+    #   can be append, overwrite or remove. For values, you can provide static
+    #   values, or map request data, stage variables, or context variables
+    #   that are evaluated at runtime. To learn more, see [Transforming API
+    #   requests and responses][2].
     #
     #
     #
@@ -4216,6 +5455,296 @@ module Aws::ApiGatewayV2
       req.send_request(options)
     end
 
+    # Updates a portal.
+    #
+    # @option params [Types::Authorization] :authorization
+    #   Represents an authorization configuration for a portal.
+    #
+    # @option params [Types::EndpointConfigurationRequest] :endpoint_configuration
+    #   Represents an endpoint configuration.
+    #
+    # @option params [Array<String>] :included_portal_product_arns
+    #
+    # @option params [String] :logo_uri
+    #
+    # @option params [Types::PortalContent] :portal_content
+    #   Contains the content that is visible to portal consumers including the
+    #   themes, display names, and description.
+    #
+    # @option params [required, String] :portal_id
+    #
+    # @option params [String] :rum_app_monitor_name
+    #
+    # @return [Types::UpdatePortalResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdatePortalResponse#authorization #authorization} => Types::Authorization
+    #   * {Types::UpdatePortalResponse#endpoint_configuration #endpoint_configuration} => Types::EndpointConfigurationResponse
+    #   * {Types::UpdatePortalResponse#included_portal_product_arns #included_portal_product_arns} => Array&lt;String&gt;
+    #   * {Types::UpdatePortalResponse#last_modified #last_modified} => Time
+    #   * {Types::UpdatePortalResponse#last_published #last_published} => Time
+    #   * {Types::UpdatePortalResponse#last_published_description #last_published_description} => String
+    #   * {Types::UpdatePortalResponse#portal_arn #portal_arn} => String
+    #   * {Types::UpdatePortalResponse#portal_content #portal_content} => Types::PortalContent
+    #   * {Types::UpdatePortalResponse#portal_id #portal_id} => String
+    #   * {Types::UpdatePortalResponse#preview #preview} => Types::Preview
+    #   * {Types::UpdatePortalResponse#publish_status #publish_status} => String
+    #   * {Types::UpdatePortalResponse#rum_app_monitor_name #rum_app_monitor_name} => String
+    #   * {Types::UpdatePortalResponse#status_exception #status_exception} => Types::StatusException
+    #   * {Types::UpdatePortalResponse#tags #tags} => Hash&lt;String,String&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_portal({
+    #     authorization: {
+    #       cognito_config: {
+    #         app_client_id: "__stringMin1Max256", # required
+    #         user_pool_arn: "__stringMin20Max2048", # required
+    #         user_pool_domain: "__stringMin20Max2048", # required
+    #       },
+    #       none: {
+    #       },
+    #     },
+    #     endpoint_configuration: {
+    #       acm_managed: {
+    #         certificate_arn: "__stringMin10Max2048", # required
+    #         domain_name: "__stringMin3Max256", # required
+    #       },
+    #       none: {
+    #       },
+    #     },
+    #     included_portal_product_arns: ["__stringMin20Max2048"],
+    #     logo_uri: "__stringMin0Max1092",
+    #     portal_content: {
+    #       description: "__stringMin0Max1024",
+    #       display_name: "__stringMin3Max255", # required
+    #       theme: { # required
+    #         custom_colors: { # required
+    #           accent_color: "__stringMin1Max16", # required
+    #           background_color: "__stringMin1Max16", # required
+    #           error_validation_color: "__stringMin1Max16", # required
+    #           header_color: "__stringMin1Max16", # required
+    #           navigation_color: "__stringMin1Max16", # required
+    #           text_color: "__stringMin1Max16", # required
+    #         },
+    #         logo_last_uploaded: Time.now,
+    #       },
+    #     },
+    #     portal_id: "__string", # required
+    #     rum_app_monitor_name: "__stringMin0Max255",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.authorization.cognito_config.app_client_id #=> String
+    #   resp.authorization.cognito_config.user_pool_arn #=> String
+    #   resp.authorization.cognito_config.user_pool_domain #=> String
+    #   resp.endpoint_configuration.certificate_arn #=> String
+    #   resp.endpoint_configuration.domain_name #=> String
+    #   resp.endpoint_configuration.portal_default_domain_name #=> String
+    #   resp.endpoint_configuration.portal_domain_hosted_zone_id #=> String
+    #   resp.included_portal_product_arns #=> Array
+    #   resp.included_portal_product_arns[0] #=> String
+    #   resp.last_modified #=> Time
+    #   resp.last_published #=> Time
+    #   resp.last_published_description #=> String
+    #   resp.portal_arn #=> String
+    #   resp.portal_content.description #=> String
+    #   resp.portal_content.display_name #=> String
+    #   resp.portal_content.theme.custom_colors.accent_color #=> String
+    #   resp.portal_content.theme.custom_colors.background_color #=> String
+    #   resp.portal_content.theme.custom_colors.error_validation_color #=> String
+    #   resp.portal_content.theme.custom_colors.header_color #=> String
+    #   resp.portal_content.theme.custom_colors.navigation_color #=> String
+    #   resp.portal_content.theme.custom_colors.text_color #=> String
+    #   resp.portal_content.theme.logo_last_uploaded #=> Time
+    #   resp.portal_id #=> String
+    #   resp.preview.preview_status #=> String, one of "PREVIEW_IN_PROGRESS", "PREVIEW_FAILED", "PREVIEW_READY"
+    #   resp.preview.preview_url #=> String
+    #   resp.preview.status_exception.exception #=> String
+    #   resp.preview.status_exception.message #=> String
+    #   resp.publish_status #=> String, one of "PUBLISHED", "PUBLISH_IN_PROGRESS", "PUBLISH_FAILED", "DISABLE_IN_PROGRESS", "DISABLE_FAILED", "DISABLED"
+    #   resp.rum_app_monitor_name #=> String
+    #   resp.status_exception.exception #=> String
+    #   resp.status_exception.message #=> String
+    #   resp.tags #=> Hash
+    #   resp.tags["__string"] #=> String
+    #
+    # @overload update_portal(params = {})
+    # @param [Hash] params ({})
+    def update_portal(params = {}, options = {})
+      req = build_request(:update_portal, params)
+      req.send_request(options)
+    end
+
+    # Updates the portal product.
+    #
+    # @option params [String] :description
+    #
+    # @option params [String] :display_name
+    #
+    # @option params [Types::DisplayOrder] :display_order
+    #   The display order.
+    #
+    # @option params [required, String] :portal_product_id
+    #
+    # @return [Types::UpdatePortalProductResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdatePortalProductResponse#description #description} => String
+    #   * {Types::UpdatePortalProductResponse#display_name #display_name} => String
+    #   * {Types::UpdatePortalProductResponse#display_order #display_order} => Types::DisplayOrder
+    #   * {Types::UpdatePortalProductResponse#last_modified #last_modified} => Time
+    #   * {Types::UpdatePortalProductResponse#portal_product_arn #portal_product_arn} => String
+    #   * {Types::UpdatePortalProductResponse#portal_product_id #portal_product_id} => String
+    #   * {Types::UpdatePortalProductResponse#tags #tags} => Hash&lt;String,String&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_portal_product({
+    #     description: "__stringMin0Max1024",
+    #     display_name: "__stringMin1Max255",
+    #     display_order: {
+    #       contents: [
+    #         {
+    #           product_rest_endpoint_page_arns: ["__stringMin20Max2048"], # required
+    #           section_name: "__string", # required
+    #         },
+    #       ],
+    #       overview_page_arn: "__stringMin20Max2048",
+    #       product_page_arns: ["__stringMin20Max2048"],
+    #     },
+    #     portal_product_id: "__string", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.description #=> String
+    #   resp.display_name #=> String
+    #   resp.display_order.contents #=> Array
+    #   resp.display_order.contents[0].product_rest_endpoint_page_arns #=> Array
+    #   resp.display_order.contents[0].product_rest_endpoint_page_arns[0] #=> String
+    #   resp.display_order.contents[0].section_name #=> String
+    #   resp.display_order.overview_page_arn #=> String
+    #   resp.display_order.product_page_arns #=> Array
+    #   resp.display_order.product_page_arns[0] #=> String
+    #   resp.last_modified #=> Time
+    #   resp.portal_product_arn #=> String
+    #   resp.portal_product_id #=> String
+    #   resp.tags #=> Hash
+    #   resp.tags["__string"] #=> String
+    #
+    # @overload update_portal_product(params = {})
+    # @param [Hash] params ({})
+    def update_portal_product(params = {}, options = {})
+      req = build_request(:update_portal_product, params)
+      req.send_request(options)
+    end
+
+    # Updates a product page of a portal product.
+    #
+    # @option params [Types::DisplayContent] :display_content
+    #   The content of the product page.
+    #
+    # @option params [required, String] :portal_product_id
+    #
+    # @option params [required, String] :product_page_id
+    #
+    # @return [Types::UpdateProductPageResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateProductPageResponse#display_content #display_content} => Types::DisplayContent
+    #   * {Types::UpdateProductPageResponse#last_modified #last_modified} => Time
+    #   * {Types::UpdateProductPageResponse#product_page_arn #product_page_arn} => String
+    #   * {Types::UpdateProductPageResponse#product_page_id #product_page_id} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_product_page({
+    #     display_content: {
+    #       body: "__stringMin1Max32768", # required
+    #       title: "__stringMin1Max255", # required
+    #     },
+    #     portal_product_id: "__string", # required
+    #     product_page_id: "__string", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.display_content.body #=> String
+    #   resp.display_content.title #=> String
+    #   resp.last_modified #=> Time
+    #   resp.product_page_arn #=> String
+    #   resp.product_page_id #=> String
+    #
+    # @overload update_product_page(params = {})
+    # @param [Hash] params ({})
+    def update_product_page(params = {}, options = {})
+      req = build_request(:update_product_page, params)
+      req.send_request(options)
+    end
+
+    # Updates a product REST endpoint page.
+    #
+    # @option params [Types::EndpointDisplayContent] :display_content
+    #   Represents the endpoint display content.
+    #
+    # @option params [required, String] :portal_product_id
+    #
+    # @option params [required, String] :product_rest_endpoint_page_id
+    #
+    # @option params [String] :try_it_state
+    #   Represents the try it state for a product REST endpoint page.
+    #
+    # @return [Types::UpdateProductRestEndpointPageResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateProductRestEndpointPageResponse#display_content #display_content} => Types::EndpointDisplayContentResponse
+    #   * {Types::UpdateProductRestEndpointPageResponse#last_modified #last_modified} => Time
+    #   * {Types::UpdateProductRestEndpointPageResponse#product_rest_endpoint_page_arn #product_rest_endpoint_page_arn} => String
+    #   * {Types::UpdateProductRestEndpointPageResponse#product_rest_endpoint_page_id #product_rest_endpoint_page_id} => String
+    #   * {Types::UpdateProductRestEndpointPageResponse#rest_endpoint_identifier #rest_endpoint_identifier} => Types::RestEndpointIdentifier
+    #   * {Types::UpdateProductRestEndpointPageResponse#status #status} => String
+    #   * {Types::UpdateProductRestEndpointPageResponse#status_exception #status_exception} => Types::StatusException
+    #   * {Types::UpdateProductRestEndpointPageResponse#try_it_state #try_it_state} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_product_rest_endpoint_page({
+    #     display_content: {
+    #       none: {
+    #       },
+    #       overrides: {
+    #         body: "__stringMin1Max32768",
+    #         endpoint: "__stringMin1Max1024",
+    #         operation_name: "__stringMin1Max255",
+    #       },
+    #     },
+    #     portal_product_id: "__string", # required
+    #     product_rest_endpoint_page_id: "__string", # required
+    #     try_it_state: "ENABLED", # accepts ENABLED, DISABLED
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.display_content.body #=> String
+    #   resp.display_content.endpoint #=> String
+    #   resp.display_content.operation_name #=> String
+    #   resp.last_modified #=> Time
+    #   resp.product_rest_endpoint_page_arn #=> String
+    #   resp.product_rest_endpoint_page_id #=> String
+    #   resp.rest_endpoint_identifier.identifier_parts.method #=> String
+    #   resp.rest_endpoint_identifier.identifier_parts.path #=> String
+    #   resp.rest_endpoint_identifier.identifier_parts.rest_api_id #=> String
+    #   resp.rest_endpoint_identifier.identifier_parts.stage #=> String
+    #   resp.status #=> String, one of "AVAILABLE", "IN_PROGRESS", "FAILED"
+    #   resp.status_exception.exception #=> String
+    #   resp.status_exception.message #=> String
+    #   resp.try_it_state #=> String, one of "ENABLED", "DISABLED"
+    #
+    # @overload update_product_rest_endpoint_page(params = {})
+    # @param [Hash] params ({})
+    def update_product_rest_endpoint_page(params = {}, options = {})
+      req = build_request(:update_product_rest_endpoint_page, params)
+      req.send_request(options)
+    end
+
     # Updates a Route.
     #
     # @option params [required, String] :api_id
@@ -4234,10 +5763,11 @@ module Aws::ApiGatewayV2
     #
     # @option params [String] :authorization_type
     #   The authorization type. For WebSocket APIs, valid values are NONE for
-    #   open access, AWS\_IAM for using AWS IAM permissions, and CUSTOM for
-    #   using a Lambda authorizer. For HTTP APIs, valid values are NONE for
-    #   open access, JWT for using JSON Web Tokens, AWS\_IAM for using AWS IAM
-    #   permissions, and CUSTOM for using a Lambda authorizer.
+    #   open access, AWS\_IAM for using Amazon Web Services IAM permissions,
+    #   and CUSTOM for using a Lambda authorizer. For HTTP APIs, valid values
+    #   are NONE for open access, JWT for using JSON Web Tokens, AWS\_IAM for
+    #   using Amazon Web Services IAM permissions, and CUSTOM for using a
+    #   Lambda authorizer.
     #
     # @option params [String] :authorizer_id
     #   The identifier.
@@ -4605,7 +6135,7 @@ module Aws::ApiGatewayV2
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-apigatewayv2'
-      context[:gem_version] = '1.72.0'
+      context[:gem_version] = '1.96.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

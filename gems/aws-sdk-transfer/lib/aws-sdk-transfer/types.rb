@@ -23,6 +23,29 @@ module Aws::Transfer
       include Aws::Structure
     end
 
+    # Contains the configuration details for asynchronous Message
+    # Disposition Notification (MDN) responses in AS2 connectors. This
+    # configuration specifies where asynchronous MDN responses should be
+    # sent and which servers should handle them.
+    #
+    # @!attribute [rw] url
+    #   The URL endpoint where asynchronous MDN responses should be sent.
+    #   @return [String]
+    #
+    # @!attribute [rw] server_ids
+    #   A list of server identifiers that can handle asynchronous MDN
+    #   responses. You can specify between 1 and 10 server IDs.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/As2AsyncMdnConnectorConfig AWS API Documentation
+    #
+    class As2AsyncMdnConnectorConfig < Struct.new(
+      :url,
+      :server_ids)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains the details for an AS2 connector object. The connector object
     # is used for AS2 outbound processes, to connect the Transfer Family
     # customer with the trading partner.
@@ -72,10 +95,13 @@ module Aws::Transfer
     #   @return [String]
     #
     # @!attribute [rw] mdn_response
-    #   Used for outbound requests (from an Transfer Family server to a
+    #   Used for outbound requests (from an Transfer Family connector to a
     #   partner AS2 server) to determine whether the partner response for
     #   transfers is synchronous or asynchronous. Specify either of the
     #   following values:
+    #
+    #   * `ASYNC`: The system expects an asynchronous MDN response,
+    #     confirming that the file was transferred successfully (or not).
     #
     #   * `SYNC`: The system expects a synchronous MDN response, confirming
     #     that the file was transferred successfully (or not).
@@ -127,6 +153,13 @@ module Aws::Transfer
     #   when you create an AS2 connector by calling the API directly.
     #   @return [String]
     #
+    # @!attribute [rw] async_mdn_config
+    #   Configuration settings for asynchronous Message Disposition
+    #   Notification (MDN) responses. This allows you to configure where
+    #   asynchronous MDN responses should be sent and which servers should
+    #   handle them.
+    #   @return [Types::As2AsyncMdnConnectorConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/As2ConnectorConfig AWS API Documentation
     #
     class As2ConnectorConfig < Struct.new(
@@ -139,8 +172,9 @@ module Aws::Transfer
       :mdn_signing_algorithm,
       :mdn_response,
       :basic_auth_secret_id,
-      :preserve_content_type)
-      SENSITIVE = []
+      :preserve_content_type,
+      :async_mdn_config)
+      SENSITIVE = [:message_subject]
       include Aws::Structure
     end
 
@@ -157,6 +191,32 @@ module Aws::Transfer
       :message)
       SENSITIVE = []
       include Aws::Structure
+    end
+
+    # Configuration structure that defines how traffic is routed from the
+    # connector to the SFTP server. Contains VPC Lattice settings when using
+    # VPC\_LATTICE egress type for private connectivity through customer
+    # VPCs.
+    #
+    # @note ConnectorEgressConfig is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @!attribute [rw] vpc_lattice
+    #   VPC\_LATTICE configuration for routing connector traffic through
+    #   customer VPCs. Enables private connectivity to SFTP servers without
+    #   requiring public internet access or complex network configurations.
+    #   @return [Types::ConnectorVpcLatticeEgressConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/ConnectorEgressConfig AWS API Documentation
+    #
+    class ConnectorEgressConfig < Struct.new(
+      :vpc_lattice,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class VpcLattice < ConnectorEgressConfig; end
+      class Unknown < ConnectorEgressConfig; end
     end
 
     # A structure that contains the details for files transferred using an
@@ -188,6 +248,33 @@ module Aws::Transfer
       :status_code,
       :failure_code,
       :failure_message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # VPC\_LATTICE egress configuration that specifies the Resource
+    # Configuration ARN and port for connecting to SFTP servers through
+    # customer VPCs. Requires a valid Resource Configuration with
+    # appropriate network access.
+    #
+    # @!attribute [rw] resource_configuration_arn
+    #   ARN of the VPC\_LATTICE Resource Configuration that defines the
+    #   target SFTP server location. Must point to a valid Resource
+    #   Configuration in the customer's VPC with appropriate network
+    #   connectivity to the SFTP server.
+    #   @return [String]
+    #
+    # @!attribute [rw] port_number
+    #   Port number for connecting to the SFTP server through VPC\_LATTICE.
+    #   Defaults to 22 if not specified. Must match the port on which the
+    #   target SFTP server is listening.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/ConnectorVpcLatticeEgressConfig AWS API Documentation
+    #
+    class ConnectorVpcLatticeEgressConfig < Struct.new(
+      :resource_configuration_arn,
+      :port_number)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -262,8 +349,8 @@ module Aws::Transfer
     #
     #   A `HomeDirectory` example is `/bucket_name/home/mydirectory`.
     #
-    #   <note markdown="1"> The `HomeDirectory` parameter is only used if `HomeDirectoryType` is
-    #   set to `PATH`.
+    #   <note markdown="1"> You can use the `HomeDirectory` parameter for `HomeDirectoryType`
+    #   when it is set to either `PATH` or `LOGICAL`.
     #
     #    </note>
     #   @return [String]
@@ -567,6 +654,11 @@ module Aws::Transfer
 
     # @!attribute [rw] url
     #   The URL of the partner's AS2 or SFTP endpoint.
+    #
+    #   When creating AS2 connectors or service-managed SFTP connectors
+    #   (connectors without egress configuration), you must provide a URL to
+    #   specify the remote server endpoint. For VPC Lattice type connectors,
+    #   the URL must be null.
     #   @return [String]
     #
     # @!attribute [rw] as_2_config
@@ -631,6 +723,20 @@ module Aws::Transfer
     #   Specifies the name of the security policy for the connector.
     #   @return [String]
     #
+    # @!attribute [rw] egress_config
+    #   Specifies the egress configuration for the connector, which
+    #   determines how traffic is routed from the connector to the SFTP
+    #   server. When set to VPC, enables routing through customer VPCs using
+    #   VPC\_LATTICE for private connectivity.
+    #   @return [Types::ConnectorEgressConfig]
+    #
+    # @!attribute [rw] ip_address_type
+    #   Specifies the IP address type for the connector's network
+    #   connections. When set to `IPV4`, the connector uses IPv4 addresses
+    #   only. When set to `DUALSTACK`, the connector supports both IPv4 and
+    #   IPv6 addresses, with IPv6 preferred when available.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/CreateConnectorRequest AWS API Documentation
     #
     class CreateConnectorRequest < Struct.new(
@@ -640,7 +746,9 @@ module Aws::Transfer
       :logging_role,
       :tags,
       :sftp_config,
-      :security_policy_name)
+      :security_policy_name,
+      :egress_config,
+      :ip_address_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -878,7 +986,7 @@ module Aws::Transfer
     # @!attribute [rw] logging_role
     #   The Amazon Resource Name (ARN) of the Identity and Access Management
     #   (IAM) role that allows a server to turn on Amazon CloudWatch logging
-    #   for Amazon S3 or Amazon EFSevents. When set, you can view user
+    #   for Amazon S3 or Amazon EFS events. When set, you can view user
     #   activity in your CloudWatch logs.
     #   @return [String]
     #
@@ -944,6 +1052,14 @@ module Aws::Transfer
     # @!attribute [rw] protocol_details
     #   The protocol settings that are configured for your server.
     #
+    #   <note markdown="1"> Avoid placing Network Load Balancers (NLBs) or NAT gateways in front
+    #   of Transfer Family servers, as this increases costs and can cause
+    #   performance issues, including reduced connection limits for FTPS.
+    #   For more details, see [ Avoid placing NLBs and NATs in front of
+    #   Transfer Family][1].
+    #
+    #    </note>
+    #
     #   * To indicate passive mode (for FTP and FTPS protocols), use the
     #     `PassiveIp` parameter. Enter a single dotted-quad IPv4 address,
     #     such as the external IP address of a firewall, router, or load
@@ -965,6 +1081,10 @@ module Aws::Transfer
     #
     #   * `As2Transports` indicates the transport method for the AS2
     #     messages. Currently, only HTTP is supported.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/transfer/latest/userguide/infrastructure-security.html#nlb-considerations
     #   @return [Types::ProtocolDetails]
     #
     # @!attribute [rw] security_policy_name
@@ -1008,13 +1128,42 @@ module Aws::Transfer
     #
     # @!attribute [rw] s3_storage_options
     #   Specifies whether or not performance for your Amazon S3 directories
-    #   is optimized. This is disabled by default.
+    #   is optimized.
+    #
+    #   * If using the console, this is enabled by default.
+    #
+    #   * If using the API or CLI, this is disabled by default.
     #
     #   By default, home directory mappings have a `TYPE` of `DIRECTORY`. If
     #   you enable this option, you would then need to explicitly set the
     #   `HomeDirectoryMapEntry` `Type` to `FILE` if you want a mapping to
     #   have a file target.
     #   @return [Types::S3StorageOptions]
+    #
+    # @!attribute [rw] ip_address_type
+    #   Specifies whether to use IPv4 only, or to use dual-stack (IPv4 and
+    #   IPv6) for your Transfer Family endpoint. The default value is
+    #   `IPV4`.
+    #
+    #   The `IpAddressType` parameter has the following limitations:
+    #
+    #    * It cannot be changed while the server is online. You must stop
+    #   the
+    #     server before modifying this parameter.
+    #
+    #   * It cannot be updated to `DUALSTACK` if the server has
+    #     `AddressAllocationIds` specified.
+    #
+    #   <note markdown="1"> When using `DUALSTACK` as the `IpAddressType`, you cannot set the
+    #   `AddressAllocationIds` parameter for the [EndpointDetails][1] for
+    #   the server.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/transfer/latest/APIReference/API_EndpointDetails.html
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/CreateServerRequest AWS API Documentation
     #
@@ -1035,7 +1184,8 @@ module Aws::Transfer
       :tags,
       :workflow_details,
       :structured_log_destinations,
-      :s3_storage_options)
+      :s3_storage_options,
+      :ip_address_type)
       SENSITIVE = [:host_key]
       include Aws::Structure
     end
@@ -1058,8 +1208,8 @@ module Aws::Transfer
     #
     #   A `HomeDirectory` example is `/bucket_name/home/mydirectory`.
     #
-    #   <note markdown="1"> The `HomeDirectory` parameter is only used if `HomeDirectoryType` is
-    #   set to `PATH`.
+    #   <note markdown="1"> You can use the `HomeDirectory` parameter for `HomeDirectoryType`
+    #   when it is set to either `PATH` or `LOGICAL`.
     #
     #    </note>
     #   @return [String]
@@ -1231,12 +1381,26 @@ module Aws::Transfer
     # @!attribute [rw] identity_provider_details
     #   You can provide a structure that contains the details for the
     #   identity provider to use with your web app.
+    #
+    #   For more details about this parameter, see [Configure your identity
+    #   provider for Transfer Family web apps][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/transfer/latest/userguide/webapp-identity-center.html
     #   @return [Types::WebAppIdentityProviderDetails]
     #
     # @!attribute [rw] access_endpoint
     #   The `AccessEndpoint` is the URL that you provide to your users for
     #   them to interact with the Transfer Family web app. You can specify a
     #   custom URL or use the default value.
+    #
+    #   Before you enter a custom URL for this parameter, follow the steps
+    #   described in [Update your access endpoint with a custom URL][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/transfer/latest/userguide/webapp-customize.html
     #   @return [String]
     #
     # @!attribute [rw] web_app_units
@@ -1248,13 +1412,28 @@ module Aws::Transfer
     #   Key-value pairs that can be used to group and search for web apps.
     #   @return [Array<Types::Tag>]
     #
+    # @!attribute [rw] web_app_endpoint_policy
+    #   Setting for the type of endpoint policy for the web app. The default
+    #   value is `STANDARD`.
+    #
+    #   If you are creating the web app in an Amazon Web Services GovCloud
+    #   (US) Region, you can set this parameter to `FIPS`.
+    #   @return [String]
+    #
+    # @!attribute [rw] endpoint_details
+    #   The endpoint configuration for the web app. You can specify whether
+    #   the web app endpoint is publicly accessible or hosted within a VPC.
+    #   @return [Types::WebAppEndpointDetails]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/CreateWebAppRequest AWS API Documentation
     #
     class CreateWebAppRequest < Struct.new(
       :identity_provider_details,
       :access_endpoint,
       :web_app_units,
-      :tags)
+      :tags,
+      :web_app_endpoint_policy,
+      :endpoint_details)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1374,6 +1553,26 @@ module Aws::Transfer
       :status_files_directory,
       :temporary_files_directory)
       SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents a custom HTTP header that can be included in AS2 messages.
+    # Each header consists of a key-value pair.
+    #
+    # @!attribute [rw] key
+    #   The name of the custom HTTP header.
+    #   @return [String]
+    #
+    # @!attribute [rw] value
+    #   The value of the custom HTTP header.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/CustomHttpHeader AWS API Documentation
+    #
+    class CustomHttpHeader < Struct.new(
+      :key,
+      :value)
+      SENSITIVE = [:key, :value]
       include Aws::Structure
     end
 
@@ -2102,8 +2301,8 @@ module Aws::Transfer
     #
     #   A `HomeDirectory` example is `/bucket_name/home/mydirectory`.
     #
-    #   <note markdown="1"> The `HomeDirectory` parameter is only used if `HomeDirectoryType` is
-    #   set to `PATH`.
+    #   <note markdown="1"> You can use the `HomeDirectory` parameter for `HomeDirectoryType`
+    #   when it is set to either `PATH` or `LOGICAL`.
     #
     #    </note>
     #   @return [String]
@@ -2371,8 +2570,17 @@ module Aws::Transfer
     #   @return [String]
     #
     # @!attribute [rw] status
-    #   Currently, the only available status is `ACTIVE`: all other values
-    #   are reserved for future use.
+    #   A certificate's status can be either `ACTIVE` or `INACTIVE`.
+    #
+    #   You can set `ActiveDate` and `InactiveDate` in the
+    #   `UpdateCertificate` call. If you set values for these parameters,
+    #   those values are used to determine whether the certificate has a
+    #   status of `ACTIVE` or `INACTIVE`.
+    #
+    #   If you don't set values for `ActiveDate` and `InactiveDate`, we use
+    #   the `NotBefore` and `NotAfter` date as specified on the X509
+    #   certificate to determine when a certificate is active and when it is
+    #   inactive.
     #   @return [String]
     #
     # @!attribute [rw] certificate
@@ -2385,11 +2593,14 @@ module Aws::Transfer
     #
     # @!attribute [rw] active_date
     #   An optional date that specifies when the certificate becomes active.
+    #   If you do not specify a value, `ActiveDate` takes the same value as
+    #   `NotBeforeDate`, which is specified by the CA.
     #   @return [Time]
     #
     # @!attribute [rw] inactive_date
     #   An optional date that specifies when the certificate becomes
-    #   inactive.
+    #   inactive. If you do not specify a value, `InactiveDate` takes the
+    #   same value as `NotAfterDate`, which is specified by the CA.
     #   @return [Time]
     #
     # @!attribute [rw] serial
@@ -2453,6 +2664,11 @@ module Aws::Transfer
     #
     # @!attribute [rw] url
     #   The URL of the partner's AS2 or SFTP endpoint.
+    #
+    #   When creating AS2 connectors or service-managed SFTP connectors
+    #   (connectors without egress configuration), you must provide a URL to
+    #   specify the remote server endpoint. For VPC Lattice type connectors,
+    #   the URL must be null.
     #   @return [String]
     #
     # @!attribute [rw] as_2_config
@@ -2521,6 +2737,40 @@ module Aws::Transfer
     #   The text name of the security policy for the specified connector.
     #   @return [String]
     #
+    # @!attribute [rw] egress_config
+    #   Current egress configuration of the connector, showing how traffic
+    #   is routed to the SFTP server. Contains VPC Lattice settings when
+    #   using VPC\_LATTICE egress type.
+    #
+    #   When using the VPC\_LATTICE egress type, Transfer Family uses a
+    #   managed Service Network to simplify the resource sharing process.
+    #   @return [Types::DescribedConnectorEgressConfig]
+    #
+    # @!attribute [rw] egress_type
+    #   Type of egress configuration for the connector. SERVICE\_MANAGED
+    #   uses Transfer Family managed NAT gateways, while VPC\_LATTICE routes
+    #   traffic through customer VPCs using VPC Lattice.
+    #   @return [String]
+    #
+    # @!attribute [rw] error_message
+    #   Error message providing details when the connector is in ERRORED
+    #   status. Contains information to help troubleshoot connector creation
+    #   or operation failures.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   Current status of the connector. PENDING indicates creation/update
+    #   in progress, ACTIVE means ready for operations, and ERRORED
+    #   indicates a failure requiring attention.
+    #   @return [String]
+    #
+    # @!attribute [rw] ip_address_type
+    #   IP address type for the connector's network connections. When set
+    #   to `IPV4`, the connector uses IPv4 addresses only. When set to
+    #   `DUALSTACK`, the connector supports both IPv4 and IPv6 addresses,
+    #   with IPv6 preferred when available.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/DescribedConnector AWS API Documentation
     #
     class DescribedConnector < Struct.new(
@@ -2533,7 +2783,62 @@ module Aws::Transfer
       :tags,
       :sftp_config,
       :service_managed_egress_ip_addresses,
-      :security_policy_name)
+      :security_policy_name,
+      :egress_config,
+      :egress_type,
+      :error_message,
+      :status,
+      :ip_address_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Response structure containing the current egress configuration details
+    # for the connector. Shows how traffic is currently routed from the
+    # connector to the SFTP server.
+    #
+    # @note DescribedConnectorEgressConfig is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of DescribedConnectorEgressConfig corresponding to the set member.
+    #
+    # @!attribute [rw] vpc_lattice
+    #   VPC\_LATTICE configuration details in the response, showing the
+    #   current Resource Configuration ARN and port settings for VPC-based
+    #   connectivity.
+    #   @return [Types::DescribedConnectorVpcLatticeEgressConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/DescribedConnectorEgressConfig AWS API Documentation
+    #
+    class DescribedConnectorEgressConfig < Struct.new(
+      :vpc_lattice,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class VpcLattice < DescribedConnectorEgressConfig; end
+      class Unknown < DescribedConnectorEgressConfig; end
+    end
+
+    # VPC\_LATTICE egress configuration details in the response, containing
+    # the Resource Configuration ARN and port number currently configured
+    # for the connector.
+    #
+    # @!attribute [rw] resource_configuration_arn
+    #   ARN of the VPC\_LATTICE Resource Configuration currently used by the
+    #   connector. This Resource Configuration defines the network path to
+    #   the SFTP server through the customer's VPC.
+    #   @return [String]
+    #
+    # @!attribute [rw] port_number
+    #   Port number currently configured for SFTP connections through
+    #   VPC\_LATTICE. Shows the port on which the connector attempts to
+    #   connect to the target SFTP server.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/DescribedConnectorVpcLatticeEgressConfig AWS API Documentation
+    #
+    class DescribedConnectorVpcLatticeEgressConfig < Struct.new(
+      :resource_configuration_arn,
+      :port_number)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2832,6 +3137,14 @@ module Aws::Transfer
     # @!attribute [rw] protocol_details
     #   The protocol settings that are configured for your server.
     #
+    #   <note markdown="1"> Avoid placing Network Load Balancers (NLBs) or NAT gateways in front
+    #   of Transfer Family servers, as this increases costs and can cause
+    #   performance issues, including reduced connection limits for FTPS.
+    #   For more details, see [ Avoid placing NLBs and NATs in front of
+    #   Transfer Family][1].
+    #
+    #    </note>
+    #
     #   * To indicate passive mode (for FTP and FTPS protocols), use the
     #     `PassiveIp` parameter. Enter a single dotted-quad IPv4 address,
     #     such as the external IP address of a firewall, router, or load
@@ -2853,6 +3166,10 @@ module Aws::Transfer
     #
     #   * `As2Transports` indicates the transport method for the AS2
     #     messages. Currently, only HTTP is supported.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/transfer/latest/userguide/infrastructure-security.html#nlb-considerations
     #   @return [Types::ProtocolDetails]
     #
     # @!attribute [rw] domain
@@ -2915,7 +3232,7 @@ module Aws::Transfer
     # @!attribute [rw] logging_role
     #   The Amazon Resource Name (ARN) of the Identity and Access Management
     #   (IAM) role that allows a server to turn on Amazon CloudWatch logging
-    #   for Amazon S3 or Amazon EFSevents. When set, you can view user
+    #   for Amazon S3 or Amazon EFS events. When set, you can view user
     #   activity in your CloudWatch logs.
     #   @return [String]
     #
@@ -3042,7 +3359,11 @@ module Aws::Transfer
     #
     # @!attribute [rw] s3_storage_options
     #   Specifies whether or not performance for your Amazon S3 directories
-    #   is optimized. This is disabled by default.
+    #   is optimized.
+    #
+    #   * If using the console, this is enabled by default.
+    #
+    #   * If using the API or CLI, this is disabled by default.
     #
     #   By default, home directory mappings have a `TYPE` of `DIRECTORY`. If
     #   you enable this option, you would then need to explicitly set the
@@ -3059,6 +3380,31 @@ module Aws::Transfer
     #   server. Additionally, if you update an existing server and add the
     #   AS2 protocol, static IP addresses are assigned as well.
     #   @return [Array<String>]
+    #
+    # @!attribute [rw] ip_address_type
+    #   Specifies whether to use IPv4 only, or to use dual-stack (IPv4 and
+    #   IPv6) for your Transfer Family endpoint. The default value is
+    #   `IPV4`.
+    #
+    #   The `IpAddressType` parameter has the following limitations:
+    #
+    #    * It cannot be changed while the server is online. You must stop
+    #   the
+    #     server before modifying this parameter.
+    #
+    #   * It cannot be updated to `DUALSTACK` if the server has
+    #     `AddressAllocationIds` specified.
+    #
+    #   <note markdown="1"> When using `DUALSTACK` as the `IpAddressType`, you cannot set the
+    #   `AddressAllocationIds` parameter for the [EndpointDetails][1] for
+    #   the server.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/transfer/latest/APIReference/API_EndpointDetails.html
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/DescribedServer AWS API Documentation
     #
@@ -3084,7 +3430,8 @@ module Aws::Transfer
       :workflow_details,
       :structured_log_destinations,
       :s3_storage_options,
-      :as_2_service_managed_egress_ip_addresses)
+      :as_2_service_managed_egress_ip_addresses,
+      :ip_address_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3102,8 +3449,8 @@ module Aws::Transfer
     #
     #   A `HomeDirectory` example is `/bucket_name/home/mydirectory`.
     #
-    #   <note markdown="1"> The `HomeDirectory` parameter is only used if `HomeDirectoryType` is
-    #   set to `PATH`.
+    #   <note markdown="1"> You can use the `HomeDirectory` parameter for `HomeDirectoryType`
+    #   when it is set to either `PATH` or `LOGICAL`.
     #
     #    </note>
     #   @return [String]
@@ -3176,6 +3523,13 @@ module Aws::Transfer
     # @!attribute [rw] ssh_public_keys
     #   Specifies the public key portion of the Secure Shell (SSH) keys
     #   stored for the described user.
+    #
+    #   <note markdown="1"> To delete the public key body, set its value to zero keys, as shown
+    #   here:
+    #
+    #    `SshPublicKeys: []`
+    #
+    #    </note>
     #   @return [Array<Types::SshPublicKey>]
     #
     # @!attribute [rw] tags
@@ -3244,6 +3598,26 @@ module Aws::Transfer
     #   Tags are metadata attached to web apps for any purpose.
     #   @return [Array<Types::Tag>]
     #
+    # @!attribute [rw] web_app_endpoint_policy
+    #   Setting for the type of endpoint policy for the web app. The default
+    #   value is `STANDARD`.
+    #
+    #   If your web app was created in an Amazon Web Services GovCloud (US)
+    #   Region, the value of this parameter can be `FIPS`, which indicates
+    #   the web app endpoint is FIPS-compliant.
+    #   @return [String]
+    #
+    # @!attribute [rw] endpoint_type
+    #   The type of endpoint hosting the web app. Valid values are `PUBLIC`
+    #   for publicly accessible endpoints and `VPC` for VPC-hosted endpoints
+    #   that provide network isolation.
+    #   @return [String]
+    #
+    # @!attribute [rw] described_endpoint_details
+    #   The endpoint configuration details for the web app, including VPC
+    #   settings if the endpoint is hosted within a VPC.
+    #   @return [Types::DescribedWebAppEndpointDetails]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/DescribedWebApp AWS API Documentation
     #
     class DescribedWebApp < Struct.new(
@@ -3253,7 +3627,10 @@ module Aws::Transfer
       :access_endpoint,
       :web_app_endpoint,
       :web_app_units,
-      :tags)
+      :tags,
+      :web_app_endpoint_policy,
+      :endpoint_type,
+      :described_endpoint_details)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3279,7 +3656,7 @@ module Aws::Transfer
     #   @return [String]
     #
     # @!attribute [rw] favicon_file
-    #   Returns a icon file data string (in base64 encoding).
+    #   Returns an icon file data string (in base64 encoding).
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/DescribedWebAppCustomization AWS API Documentation
@@ -3292,6 +3669,30 @@ module Aws::Transfer
       :favicon_file)
       SENSITIVE = [:logo_file, :favicon_file]
       include Aws::Structure
+    end
+
+    # Contains the endpoint configuration details for a web app, including
+    # VPC configuration when the endpoint is hosted within a VPC.
+    #
+    # @note DescribedWebAppEndpointDetails is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of DescribedWebAppEndpointDetails corresponding to the set member.
+    #
+    # @!attribute [rw] vpc
+    #   The VPC configuration details when the web app endpoint is hosted
+    #   within a VPC. This includes the VPC ID, subnet IDs, and VPC endpoint
+    #   ID.
+    #   @return [Types::DescribedWebAppVpcConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/DescribedWebAppEndpointDetails AWS API Documentation
+    #
+    class DescribedWebAppEndpointDetails < Struct.new(
+      :vpc,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Vpc < DescribedWebAppEndpointDetails; end
+      class Unknown < DescribedWebAppEndpointDetails; end
     end
 
     # Returns a structure that contains the identity provider details for
@@ -3316,6 +3717,34 @@ module Aws::Transfer
 
       class IdentityCenterConfig < DescribedWebAppIdentityProviderDetails; end
       class Unknown < DescribedWebAppIdentityProviderDetails; end
+    end
+
+    # Contains the VPC configuration details for a web app endpoint,
+    # including the VPC identifier, subnet IDs, and VPC endpoint ID used for
+    # hosting the endpoint.
+    #
+    # @!attribute [rw] subnet_ids
+    #   The list of subnet IDs within the VPC where the web app endpoint is
+    #   deployed. These subnets must be in the same VPC and provide network
+    #   connectivity for the endpoint.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] vpc_id
+    #   The identifier of the VPC where the web app endpoint is hosted.
+    #   @return [String]
+    #
+    # @!attribute [rw] vpc_endpoint_id
+    #   The identifier of the VPC endpoint created for the web app.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/DescribedWebAppVpcConfig AWS API Documentation
+    #
+    class DescribedWebAppVpcConfig < Struct.new(
+      :subnet_ids,
+      :vpc_id,
+      :vpc_endpoint_id)
+      SENSITIVE = []
+      include Aws::Structure
     end
 
     # Describes the properties of the specified workflow
@@ -3438,6 +3867,10 @@ module Aws::Transfer
     #
     #   * Call the `UpdateServer` API to set or change this parameter.
     #
+    #   * You can't set address allocation IDs for servers that have an
+    #     `IpAddressType` set to `DUALSTACK` You can only set this property
+    #     if `IpAddressType` is set to `IPV4`.
+    #
     #    </note>
     #
     #
@@ -3481,7 +3914,15 @@ module Aws::Transfer
     #   A list of security groups IDs that are available to attach to your
     #   server's endpoint.
     #
-    #   <note markdown="1"> This property can only be set when `EndpointType` is set to `VPC`.
+    #   <note markdown="1"> While `SecurityGroupIds` appears in the response syntax for
+    #   consistency with `CreateServer` and `UpdateServer` operations, this
+    #   field is not populated in `DescribeServer` responses. Security
+    #   groups are managed at the VPC endpoint level and can be modified
+    #   outside of the Transfer Family service. To retrieve current security
+    #   group information, use the EC2 `DescribeVpcEndpoints` API with the
+    #   `VpcEndpointId` returned in the response.
+    #
+    #    This property can only be set when `EndpointType` is set to `VPC`.
     #
     #    You can edit the `SecurityGroupIds` property in the
     #   [UpdateServer][1] API only if you are changing the `EndpointType`
@@ -3775,6 +4216,13 @@ module Aws::Transfer
     #
     #   * For the SDK, specify the raw content of a certificate file. For
     #     example, `` --certificate "`cat encryption-cert.pem`" ``.
+    #
+    #   <note markdown="1"> You can provide both the certificate and its chain in this
+    #   parameter, without needing to use the `CertificateChain` parameter.
+    #   If you use this parameter for both the certificate and its chain, do
+    #   not use the `CertificateChain` parameter.
+    #
+    #    </note>
     #   @return [String]
     #
     # @!attribute [rw] certificate_chain
@@ -3783,8 +4231,8 @@ module Aws::Transfer
     #   @return [String]
     #
     # @!attribute [rw] private_key
-    #   * For the CLI, provide a file path for a private key in URI
-    #     format.For example, `--private-key file://encryption-key.pem`.
+    #   * For the CLI, provide a file path for a private key in URI format.
+    #     For example, `--private-key file://encryption-key.pem`.
     #     Alternatively, you can provide the raw content of the private key
     #     file.
     #
@@ -3794,11 +4242,14 @@ module Aws::Transfer
     #
     # @!attribute [rw] active_date
     #   An optional date that specifies when the certificate becomes active.
+    #   If you do not specify a value, `ActiveDate` takes the same value as
+    #   `NotBeforeDate`, which is specified by the CA.
     #   @return [Time]
     #
     # @!attribute [rw] inactive_date
     #   An optional date that specifies when the certificate becomes
-    #   inactive.
+    #   inactive. If you do not specify a value, `InactiveDate` takes the
+    #   same value as `NotAfterDate`, which is specified by the CA.
     #   @return [Time]
     #
     # @!attribute [rw] description
@@ -4679,8 +5130,8 @@ module Aws::Transfer
     #
     #   A `HomeDirectory` example is `/bucket_name/home/mydirectory`.
     #
-    #   <note markdown="1"> The `HomeDirectory` parameter is only used if `HomeDirectoryType` is
-    #   set to `PATH`.
+    #   <note markdown="1"> You can use the `HomeDirectory` parameter for `HomeDirectoryType`
+    #   when it is set to either `PATH` or `LOGICAL`.
     #
     #    </note>
     #   @return [String]
@@ -4822,11 +5273,14 @@ module Aws::Transfer
     #
     # @!attribute [rw] active_date
     #   An optional date that specifies when the certificate becomes active.
+    #   If you do not specify a value, `ActiveDate` takes the same value as
+    #   `NotBeforeDate`, which is specified by the CA.
     #   @return [Time]
     #
     # @!attribute [rw] inactive_date
     #   An optional date that specifies when the certificate becomes
-    #   inactive.
+    #   inactive. If you do not specify a value, `InactiveDate` takes the
+    #   same value as `NotAfterDate`, which is specified by the CA.
     #   @return [Time]
     #
     # @!attribute [rw] type
@@ -4867,6 +5321,11 @@ module Aws::Transfer
     #
     # @!attribute [rw] url
     #   The URL of the partner's AS2 or SFTP endpoint.
+    #
+    #   When creating AS2 connectors or service-managed SFTP connectors
+    #   (connectors without egress configuration), you must provide a URL to
+    #   specify the remote server endpoint. For VPC Lattice type connectors,
+    #   the URL must be null.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/ListedConnector AWS API Documentation
@@ -5052,7 +5511,7 @@ module Aws::Transfer
     # @!attribute [rw] logging_role
     #   The Amazon Resource Name (ARN) of the Identity and Access Management
     #   (IAM) role that allows a server to turn on Amazon CloudWatch logging
-    #   for Amazon S3 or Amazon EFSevents. When set, you can view user
+    #   for Amazon S3 or Amazon EFS events. When set, you can view user
     #   activity in your CloudWatch logs.
     #   @return [String]
     #
@@ -5106,8 +5565,8 @@ module Aws::Transfer
     #
     #   A `HomeDirectory` example is `/bucket_name/home/mydirectory`.
     #
-    #   <note markdown="1"> The `HomeDirectory` parameter is only used if `HomeDirectoryType` is
-    #   set to `PATH`.
+    #   <note markdown="1"> You can use the `HomeDirectory` parameter for `HomeDirectoryType`
+    #   when it is set to either `PATH` or `LOGICAL`.
     #
     #    </note>
     #   @return [String]
@@ -5196,13 +5655,20 @@ module Aws::Transfer
     #   on CloudFront.
     #   @return [String]
     #
+    # @!attribute [rw] endpoint_type
+    #   The type of endpoint hosting the web app. Valid values are `PUBLIC`
+    #   for publicly accessible endpoints and `VPC` for VPC-hosted
+    #   endpoints.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/ListedWebApp AWS API Documentation
     #
     class ListedWebApp < Struct.new(
       :arn,
       :web_app_id,
       :access_endpoint,
-      :web_app_endpoint)
+      :web_app_endpoint,
+      :endpoint_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5237,7 +5703,7 @@ module Aws::Transfer
     # @!attribute [rw] logging_role
     #   The Amazon Resource Name (ARN) of the Identity and Access Management
     #   (IAM) role that allows a server to turn on Amazon CloudWatch logging
-    #   for Amazon S3 or Amazon EFSevents. When set, you can view user
+    #   for Amazon S3 or Amazon EFS events. When set, you can view user
     #   activity in your CloudWatch logs.
     #   @return [String]
     #
@@ -5303,6 +5769,18 @@ module Aws::Transfer
     #   [Configuring your FTPS server behind a firewall or NAT with Transfer
     #   Family][1].
     #
+    #    Additionally, avoid placing Network Load Balancers (NLBs) or NAT
+    #   gateways in front of Transfer Family servers. This configuration
+    #   increases costs and can cause performance issues. When NLBs or NATs
+    #   are in the communication path, Transfer Family cannot accurately
+    #   recognize client IP addresses, which impacts connection sharding and
+    #   limits FTPS servers to only 300 simultaneous connections instead of
+    #   10,000. If you must use an NLB, use port 21 for health checks and
+    #   enable TLS session resumption by setting `TlsSessionResumptionMode =
+    #   ENFORCED`. For optimal performance, migrate to VPC endpoints with
+    #   Elastic IP addresses instead of using NLBs. For more details, see [
+    #   Avoid placing NLBs and NATs in front of Transfer Family][2].
+    #
     #    </note>
     #
     #   *Special values*
@@ -5326,6 +5804,7 @@ module Aws::Transfer
     #
     #
     #   [1]: http://aws.amazon.com/blogs/storage/configuring-your-ftps-server-behind-a-firewall-or-nat-with-aws-transfer-family/
+    #   [2]: https://docs.aws.amazon.com/transfer/latest/userguide/infrastructure-security.html#nlb-considerations
     #   @return [String]
     #
     # @!attribute [rw] tls_session_resumption_mode
@@ -5521,7 +6000,11 @@ module Aws::Transfer
     #
     # @!attribute [rw] directory_listing_optimization
     #   Specifies whether or not performance for your Amazon S3 directories
-    #   is optimized. This is disabled by default.
+    #   is optimized.
+    #
+    #   * If using the console, this is enabled by default.
+    #
+    #   * If using the API or CLI, this is disabled by default.
     #
     #   By default, home directory mappings have a `TYPE` of `DIRECTORY`. If
     #   you enable this option, you would then need to explicitly set the
@@ -5623,20 +6106,17 @@ module Aws::Transfer
     # object is used for transferring files to and from a partner's SFTP
     # server.
     #
-    # <note markdown="1"> Because the `SftpConnectorConfig` data type is used for both creating
-    # and updating SFTP connectors, its parameters, `TrustedHostKeys` and
-    # `UserSecretId` are marked as not required. This is a bit misleading,
-    # as they are not required when you are updating an existing SFTP
-    # connector, but *are required* when you are creating a new SFTP
-    # connector.
-    #
-    #  </note>
-    #
     # @!attribute [rw] user_secret_id
     #   The identifier for the secret (in Amazon Web Services Secrets
     #   Manager) that contains the SFTP user's private key, password, or
     #   both. The identifier must be the Amazon Resource Name (ARN) of the
     #   secret.
+    #
+    #   <note markdown="1"> * Required when creating an SFTP connector
+    #
+    #   * Optional when updating an existing SFTP connector
+    #
+    #    </note>
     #   @return [String]
     #
     # @!attribute [rw] trusted_host_keys
@@ -5644,6 +6124,19 @@ module Aws::Transfer
     #   identify the external server to which you are connecting. You can
     #   use the `ssh-keyscan` command against the SFTP server to retrieve
     #   the necessary key.
+    #
+    #   <note markdown="1"> `TrustedHostKeys` is optional for `CreateConnector`. If not
+    #   provided, you can use `TestConnection` to retrieve the server host
+    #   key during the initial connection attempt, and subsequently update
+    #   the connector with the observed host key.
+    #
+    #    </note>
+    #
+    #   When creating connectors with egress config (VPC\_LATTICE type
+    #   connectors), since host name is not something we can verify, the
+    #   only accepted trusted host key format is `key-type key-body` without
+    #   the host name. For example: `ssh-rsa
+    #   AAAAB3Nza...<long-string-for-public-key>`
     #
     #   The three standard SSH public key format elements are `<key type>`,
     #   `<body base64>`, and an optional `<comment>`, with spaces between
@@ -5667,18 +6160,58 @@ module Aws::Transfer
     #
     #   This prints the public host key to standard output.
     #
-    #   `ftp.host.com ssh-rsa AAAAB3Nza...<long-string-for-public-key`
+    #   `ftp.host.com ssh-rsa AAAAB3Nza...<long-string-for-public-key>`
     #
     #   Copy and paste this string into the `TrustedHostKeys` field for the
     #   `create-connector` command or into the **Trusted host keys** field
     #   in the console.
+    #
+    #   For VPC Lattice type connectors (VPC\_LATTICE), remove the hostname
+    #   from the key and use only the `key-type key-body` format. In this
+    #   example, it should be: `ssh-rsa
+    #   AAAAB3Nza...<long-string-for-public-key>`
     #   @return [Array<String>]
+    #
+    # @!attribute [rw] max_concurrent_connections
+    #   Specify the number of concurrent connections that your connector
+    #   creates to the remote server. The default value is `1`. The maximum
+    #   values is `5`.
+    #
+    #   <note markdown="1"> If you are using the Amazon Web Services Management Console, the
+    #   default value is `5`.
+    #
+    #    </note>
+    #
+    #   This parameter specifies the number of active connections that your
+    #   connector can establish with the remote server at the same time.
+    #   Increasing this value can enhance connector performance when
+    #   transferring large file batches by enabling parallel operations.
+    #   @return [Integer]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/SftpConnectorConfig AWS API Documentation
     #
     class SftpConnectorConfig < Struct.new(
       :user_secret_id,
-      :trusted_host_keys)
+      :trusted_host_keys,
+      :max_concurrent_connections)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains the details for an SFTP connector connection.
+    #
+    # @!attribute [rw] host_key
+    #   The SSH public key of the remote SFTP server. This is returned
+    #   during the initial connection attempt when you call
+    #   `TestConnection`. It allows you to retrieve the valid server host
+    #   key to update the connector when you are unable to obtain it in
+    #   advance.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/SftpConnectorConnectionDetails AWS API Documentation
+    #
+    class SftpConnectorConnectionDetails < Struct.new(
+      :host_key)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5799,6 +6332,12 @@ module Aws::Transfer
     #   SFTP user's home directory.
     #   @return [String]
     #
+    # @!attribute [rw] custom_http_headers
+    #   An array of key-value pairs that represent custom HTTP headers to
+    #   include in AS2 messages. These headers are added to the AS2 message
+    #   when sending files to your trading partner.
+    #   @return [Array<Types::CustomHttpHeader>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/StartFileTransferRequest AWS API Documentation
     #
     class StartFileTransferRequest < Struct.new(
@@ -5806,8 +6345,9 @@ module Aws::Transfer
       :send_file_paths,
       :retrieve_file_paths,
       :local_directory_path,
-      :remote_directory_path)
-      SENSITIVE = []
+      :remote_directory_path,
+      :custom_http_headers)
+      SENSITIVE = [:custom_http_headers]
       include Aws::Structure
     end
 
@@ -5819,6 +6359,71 @@ module Aws::Transfer
     #
     class StartFileTransferResponse < Struct.new(
       :transfer_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] connector_id
+    #   The unique identifier for the connector.
+    #   @return [String]
+    #
+    # @!attribute [rw] delete_path
+    #   The absolute path of the file or directory to delete. You can only
+    #   specify one path per call to this operation.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/StartRemoteDeleteRequest AWS API Documentation
+    #
+    class StartRemoteDeleteRequest < Struct.new(
+      :connector_id,
+      :delete_path)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] delete_id
+    #   Returns a unique identifier for the delete operation.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/StartRemoteDeleteResponse AWS API Documentation
+    #
+    class StartRemoteDeleteResponse < Struct.new(
+      :delete_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] connector_id
+    #   The unique identifier for the connector.
+    #   @return [String]
+    #
+    # @!attribute [rw] source_path
+    #   The absolute path of the file or directory to move or rename. You
+    #   can only specify one path per call to this operation.
+    #   @return [String]
+    #
+    # @!attribute [rw] target_path
+    #   The absolute path for the target of the move/rename operation.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/StartRemoteMoveRequest AWS API Documentation
+    #
+    class StartRemoteMoveRequest < Struct.new(
+      :connector_id,
+      :source_path,
+      :target_path)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] move_id
+    #   Returns a unique identifier for the move/rename operation.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/StartRemoteMoveResponse AWS API Documentation
+    #
+    class StartRemoteMoveResponse < Struct.new(
+      :move_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5967,12 +6572,17 @@ module Aws::Transfer
     #     matches the `ssh-keyscan` output.
     #   @return [String]
     #
+    # @!attribute [rw] sftp_connection_details
+    #   Structure that contains the SFTP connector host key.
+    #   @return [Types::SftpConnectorConnectionDetails]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/TestConnectionResponse AWS API Documentation
     #
     class TestConnectionResponse < Struct.new(
       :connector_id,
       :status,
-      :status_message)
+      :status_message,
+      :sftp_connection_details)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6094,8 +6704,8 @@ module Aws::Transfer
     #
     #   A `HomeDirectory` example is `/bucket_name/home/mydirectory`.
     #
-    #   <note markdown="1"> The `HomeDirectory` parameter is only used if `HomeDirectoryType` is
-    #   set to `PATH`.
+    #   <note markdown="1"> You can use the `HomeDirectory` parameter for `HomeDirectoryType`
+    #   when it is set to either `PATH` or `LOGICAL`.
     #
     #    </note>
     #   @return [String]
@@ -6405,11 +7015,14 @@ module Aws::Transfer
     #
     # @!attribute [rw] active_date
     #   An optional date that specifies when the certificate becomes active.
+    #   If you do not specify a value, `ActiveDate` takes the same value as
+    #   `NotBeforeDate`, which is specified by the CA.
     #   @return [Time]
     #
     # @!attribute [rw] inactive_date
     #   An optional date that specifies when the certificate becomes
-    #   inactive.
+    #   inactive. If you do not specify a value, `InactiveDate` takes the
+    #   same value as `NotAfterDate`, which is specified by the CA.
     #   @return [Time]
     #
     # @!attribute [rw] description
@@ -6440,12 +7053,42 @@ module Aws::Transfer
       include Aws::Structure
     end
 
+    # Structure for updating the egress configuration of an existing
+    # connector. Allows modification of how traffic is routed from the
+    # connector to the SFTP server, including VPC\_LATTICE settings.
+    #
+    # @note UpdateConnectorEgressConfig is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @!attribute [rw] vpc_lattice
+    #   VPC\_LATTICE configuration updates for the connector. Use this to
+    #   modify the Resource Configuration ARN or port number for VPC-based
+    #   connectivity.
+    #   @return [Types::UpdateConnectorVpcLatticeEgressConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/UpdateConnectorEgressConfig AWS API Documentation
+    #
+    class UpdateConnectorEgressConfig < Struct.new(
+      :vpc_lattice,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class VpcLattice < UpdateConnectorEgressConfig; end
+      class Unknown < UpdateConnectorEgressConfig; end
+    end
+
     # @!attribute [rw] connector_id
     #   The unique identifier for the connector.
     #   @return [String]
     #
     # @!attribute [rw] url
     #   The URL of the partner's AS2 or SFTP endpoint.
+    #
+    #   When creating AS2 connectors or service-managed SFTP connectors
+    #   (connectors without egress configuration), you must provide a URL to
+    #   specify the remote server endpoint. For VPC Lattice type connectors,
+    #   the URL must be null.
     #   @return [String]
     #
     # @!attribute [rw] as_2_config
@@ -6505,6 +7148,19 @@ module Aws::Transfer
     #   Specifies the name of the security policy for the connector.
     #   @return [String]
     #
+    # @!attribute [rw] egress_config
+    #   Updates the egress configuration for the connector, allowing you to
+    #   modify how traffic is routed from the connector to the SFTP server.
+    #   Changes to VPC configuration may require connector restart.
+    #   @return [Types::UpdateConnectorEgressConfig]
+    #
+    # @!attribute [rw] ip_address_type
+    #   Specifies the IP address type for the connector's network
+    #   connections. When set to `IPV4`, the connector uses IPv4 addresses
+    #   only. When set to `DUALSTACK`, the connector supports both IPv4 and
+    #   IPv6 addresses, with IPv6 preferred when available.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/UpdateConnectorRequest AWS API Documentation
     #
     class UpdateConnectorRequest < Struct.new(
@@ -6514,7 +7170,9 @@ module Aws::Transfer
       :access_role,
       :logging_role,
       :sftp_config,
-      :security_policy_name)
+      :security_policy_name,
+      :egress_config,
+      :ip_address_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6528,6 +7186,31 @@ module Aws::Transfer
     #
     class UpdateConnectorResponse < Struct.new(
       :connector_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # VPC\_LATTICE egress configuration updates for modifying how the
+    # connector routes traffic through customer VPCs. Changes to these
+    # settings may require connector restart to take effect.
+    #
+    # @!attribute [rw] resource_configuration_arn
+    #   Updated ARN of the VPC\_LATTICE Resource Configuration. Use this to
+    #   change the target SFTP server location or modify the network path
+    #   through the customer's VPC infrastructure.
+    #   @return [String]
+    #
+    # @!attribute [rw] port_number
+    #   Updated port number for SFTP connections through VPC\_LATTICE.
+    #   Change this if the target SFTP server port has been modified or if
+    #   connecting to a different server endpoint.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/UpdateConnectorVpcLatticeEgressConfig AWS API Documentation
+    #
+    class UpdateConnectorVpcLatticeEgressConfig < Struct.new(
+      :resource_configuration_arn,
+      :port_number)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6648,6 +7331,14 @@ module Aws::Transfer
     # @!attribute [rw] protocol_details
     #   The protocol settings that are configured for your server.
     #
+    #   <note markdown="1"> Avoid placing Network Load Balancers (NLBs) or NAT gateways in front
+    #   of Transfer Family servers, as this increases costs and can cause
+    #   performance issues, including reduced connection limits for FTPS.
+    #   For more details, see [ Avoid placing NLBs and NATs in front of
+    #   Transfer Family][1].
+    #
+    #    </note>
+    #
     #   * To indicate passive mode (for FTP and FTPS protocols), use the
     #     `PassiveIp` parameter. Enter a single dotted-quad IPv4 address,
     #     such as the external IP address of a firewall, router, or load
@@ -6669,6 +7360,10 @@ module Aws::Transfer
     #
     #   * `As2Transports` indicates the transport method for the AS2
     #     messages. Currently, only HTTP is supported.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/transfer/latest/userguide/infrastructure-security.html#nlb-considerations
     #   @return [Types::ProtocolDetails]
     #
     # @!attribute [rw] endpoint_details
@@ -6756,7 +7451,7 @@ module Aws::Transfer
     # @!attribute [rw] logging_role
     #   The Amazon Resource Name (ARN) of the Identity and Access Management
     #   (IAM) role that allows a server to turn on Amazon CloudWatch logging
-    #   for Amazon S3 or Amazon EFSevents. When set, you can view user
+    #   for Amazon S3 or Amazon EFS events. When set, you can view user
     #   activity in your CloudWatch logs.
     #   @return [String]
     #
@@ -6867,13 +7562,65 @@ module Aws::Transfer
     #
     # @!attribute [rw] s3_storage_options
     #   Specifies whether or not performance for your Amazon S3 directories
-    #   is optimized. This is disabled by default.
+    #   is optimized.
+    #
+    #   * If using the console, this is enabled by default.
+    #
+    #   * If using the API or CLI, this is disabled by default.
     #
     #   By default, home directory mappings have a `TYPE` of `DIRECTORY`. If
     #   you enable this option, you would then need to explicitly set the
     #   `HomeDirectoryMapEntry` `Type` to `FILE` if you want a mapping to
     #   have a file target.
     #   @return [Types::S3StorageOptions]
+    #
+    # @!attribute [rw] ip_address_type
+    #   Specifies whether to use IPv4 only, or to use dual-stack (IPv4 and
+    #   IPv6) for your Transfer Family endpoint. The default value is
+    #   `IPV4`.
+    #
+    #   The `IpAddressType` parameter has the following limitations:
+    #
+    #    * It cannot be changed while the server is online. You must stop
+    #   the
+    #     server before modifying this parameter.
+    #
+    #   * It cannot be updated to `DUALSTACK` if the server has
+    #     `AddressAllocationIds` specified.
+    #
+    #   <note markdown="1"> When using `DUALSTACK` as the `IpAddressType`, you cannot set the
+    #   `AddressAllocationIds` parameter for the [EndpointDetails][1] for
+    #   the server.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/transfer/latest/APIReference/API_EndpointDetails.html
+    #   @return [String]
+    #
+    # @!attribute [rw] identity_provider_type
+    #   The mode of authentication for a server. The default value is
+    #   `SERVICE_MANAGED`, which allows you to store and access user
+    #   credentials within the Transfer Family service.
+    #
+    #   Use `AWS_DIRECTORY_SERVICE` to provide access to Active Directory
+    #   groups in Directory Service for Microsoft Active Directory or
+    #   Microsoft Active Directory in your on-premises environment or in
+    #   Amazon Web Services using AD Connector. This option also requires
+    #   you to provide a Directory ID by using the `IdentityProviderDetails`
+    #   parameter.
+    #
+    #   Use the `API_GATEWAY` value to integrate with an identity provider
+    #   of your choosing. The `API_GATEWAY` setting requires you to provide
+    #   an Amazon API Gateway endpoint URL to call for authentication by
+    #   using the `IdentityProviderDetails` parameter.
+    #
+    #   Use the `AWS_LAMBDA` value to directly use an Lambda function as
+    #   your identity provider. If you choose this value, you must specify
+    #   the ARN for the Lambda function in the `Function` parameter for the
+    #   `IdentityProviderDetails` data type.
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/UpdateServerRequest AWS API Documentation
     #
@@ -6892,7 +7639,9 @@ module Aws::Transfer
       :server_id,
       :workflow_details,
       :structured_log_destinations,
-      :s3_storage_options)
+      :s3_storage_options,
+      :ip_address_type,
+      :identity_provider_type)
       SENSITIVE = [:host_key]
       include Aws::Structure
     end
@@ -6916,8 +7665,8 @@ module Aws::Transfer
     #
     #   A `HomeDirectory` example is `/bucket_name/home/mydirectory`.
     #
-    #   <note markdown="1"> The `HomeDirectory` parameter is only used if `HomeDirectoryType` is
-    #   set to `PATH`.
+    #   <note markdown="1"> You can use the `HomeDirectory` parameter for `HomeDirectoryType`
+    #   when it is set to either `PATH` or `LOGICAL`.
     #
     #    </note>
     #   @return [String]
@@ -7080,7 +7829,7 @@ module Aws::Transfer
     #   @return [String]
     #
     # @!attribute [rw] favicon_file
-    #   Specify icon file data string (in base64 encoding).
+    #   Specify an icon file data string (in base64 encoding).
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/UpdateWebAppCustomizationRequest AWS API Documentation
@@ -7104,6 +7853,29 @@ module Aws::Transfer
       :web_app_id)
       SENSITIVE = []
       include Aws::Structure
+    end
+
+    # Contains the endpoint configuration details for updating a web app,
+    # including VPC settings for endpoints hosted within a VPC.
+    #
+    # @note UpdateWebAppEndpointDetails is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @!attribute [rw] vpc
+    #   The VPC configuration details for updating a web app endpoint hosted
+    #   within a VPC. This includes the subnet IDs for endpoint deployment.
+    #   @return [Types::UpdateWebAppVpcConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/UpdateWebAppEndpointDetails AWS API Documentation
+    #
+    class UpdateWebAppEndpointDetails < Struct.new(
+      :vpc,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Vpc < UpdateWebAppEndpointDetails; end
+      class Unknown < UpdateWebAppEndpointDetails; end
     end
 
     # A structure that describes the values to use for the IAM Identity
@@ -7163,13 +7935,19 @@ module Aws::Transfer
     #   or the user sessions on your web app.
     #   @return [Types::WebAppUnits]
     #
+    # @!attribute [rw] endpoint_details
+    #   The updated endpoint configuration for the web app. You can modify
+    #   the endpoint type and VPC configuration settings.
+    #   @return [Types::UpdateWebAppEndpointDetails]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/UpdateWebAppRequest AWS API Documentation
     #
     class UpdateWebAppRequest < Struct.new(
       :web_app_id,
       :identity_provider_details,
       :access_endpoint,
-      :web_app_units)
+      :web_app_units,
+      :endpoint_details)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7182,6 +7960,30 @@ module Aws::Transfer
     #
     class UpdateWebAppResponse < Struct.new(
       :web_app_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains the VPC configuration settings for updating a web app
+    # endpoint, including the subnet IDs where the endpoint should be
+    # deployed.
+    #
+    # @!attribute [rw] subnet_ids
+    #   The list of subnet IDs within the VPC where the web app endpoint
+    #   should be deployed during the update operation.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] ip_address_type
+    #   The IP address type for the web app's VPC endpoint. This determines
+    #   whether the endpoint is accessible over IPv4 only, or over both IPv4
+    #   and IPv6.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/UpdateWebAppVpcConfig AWS API Documentation
+    #
+    class UpdateWebAppVpcConfig < Struct.new(
+      :subnet_ids,
+      :ip_address_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7211,6 +8013,28 @@ module Aws::Transfer
       :session_id)
       SENSITIVE = []
       include Aws::Structure
+    end
+
+    # Contains the endpoint configuration for a web app, including VPC
+    # settings when the endpoint is hosted within a VPC.
+    #
+    # @note WebAppEndpointDetails is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @!attribute [rw] vpc
+    #   The VPC configuration for hosting the web app endpoint within a VPC.
+    #   @return [Types::WebAppVpcConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/WebAppEndpointDetails AWS API Documentation
+    #
+    class WebAppEndpointDetails < Struct.new(
+      :vpc,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Vpc < WebAppEndpointDetails; end
+      class Unknown < WebAppEndpointDetails; end
     end
 
     # A union that contains the `IdentityCenterConfig` object.
@@ -7263,6 +8087,43 @@ module Aws::Transfer
 
       class Provisioned < WebAppUnits; end
       class Unknown < WebAppUnits; end
+    end
+
+    # Contains the VPC configuration settings for hosting a web app
+    # endpoint, including the VPC ID, subnet IDs, and security group IDs for
+    # access control.
+    #
+    # @!attribute [rw] subnet_ids
+    #   The list of subnet IDs within the VPC where the web app endpoint
+    #   will be deployed. These subnets must be in the same VPC specified in
+    #   the VpcId parameter.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] vpc_id
+    #   The identifier of the VPC where the web app endpoint will be hosted.
+    #   @return [String]
+    #
+    # @!attribute [rw] security_group_ids
+    #   The list of security group IDs that control access to the web app
+    #   endpoint. These security groups determine which sources can access
+    #   the endpoint based on IP addresses and port configurations.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] ip_address_type
+    #   The IP address type for the web app's VPC endpoint. This determines
+    #   whether the endpoint is accessible over IPv4 only, or over both IPv4
+    #   and IPv6.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/WebAppVpcConfig AWS API Documentation
+    #
+    class WebAppVpcConfig < Struct.new(
+      :subnet_ids,
+      :vpc_id,
+      :security_group_ids,
+      :ip_address_type)
+      SENSITIVE = []
+      include Aws::Structure
     end
 
     # Specifies the workflow ID for the workflow to assign and the execution

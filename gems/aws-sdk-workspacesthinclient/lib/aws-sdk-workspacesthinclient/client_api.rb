@@ -107,6 +107,7 @@ module Aws::WorkSpacesThinClient
     UpdateEnvironmentResponse = Shapes::StructureShape.new(name: 'UpdateEnvironmentResponse')
     UpdateSoftwareSetRequest = Shapes::StructureShape.new(name: 'UpdateSoftwareSetRequest')
     UpdateSoftwareSetResponse = Shapes::StructureShape.new(name: 'UpdateSoftwareSetResponse')
+    UserId = Shapes::StringShape.new(name: 'UserId')
     ValidationException = Shapes::StructureShape.new(name: 'ValidationException')
     ValidationExceptionField = Shapes::StructureShape.new(name: 'ValidationExceptionField')
     ValidationExceptionFieldList = Shapes::ListShape.new(name: 'ValidationExceptionFieldList')
@@ -128,7 +129,7 @@ module Aws::WorkSpacesThinClient
     CreateEnvironmentRequest.add_member(:software_set_update_mode, Shapes::ShapeRef.new(shape: SoftwareSetUpdateMode, location_name: "softwareSetUpdateMode"))
     CreateEnvironmentRequest.add_member(:desired_software_set_id, Shapes::ShapeRef.new(shape: SoftwareSetId, location_name: "desiredSoftwareSetId"))
     CreateEnvironmentRequest.add_member(:kms_key_arn, Shapes::ShapeRef.new(shape: KmsKeyArn, location_name: "kmsKeyArn"))
-    CreateEnvironmentRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateEnvironmentRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateEnvironmentRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagsMap, location_name: "tags"))
     CreateEnvironmentRequest.add_member(:device_creation_tags, Shapes::ShapeRef.new(shape: DeviceCreationTagsMap, location_name: "deviceCreationTags"))
     CreateEnvironmentRequest.struct_class = Types::CreateEnvironmentRequest
@@ -139,20 +140,20 @@ module Aws::WorkSpacesThinClient
     DayOfWeekList.member = Shapes::ShapeRef.new(shape: DayOfWeek)
 
     DeleteDeviceRequest.add_member(:id, Shapes::ShapeRef.new(shape: DeviceId, required: true, location: "uri", location_name: "id"))
-    DeleteDeviceRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    DeleteDeviceRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     DeleteDeviceRequest.struct_class = Types::DeleteDeviceRequest
 
     DeleteDeviceResponse.struct_class = Types::DeleteDeviceResponse
 
     DeleteEnvironmentRequest.add_member(:id, Shapes::ShapeRef.new(shape: EnvironmentId, required: true, location: "uri", location_name: "id"))
-    DeleteEnvironmentRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    DeleteEnvironmentRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     DeleteEnvironmentRequest.struct_class = Types::DeleteEnvironmentRequest
 
     DeleteEnvironmentResponse.struct_class = Types::DeleteEnvironmentResponse
 
     DeregisterDeviceRequest.add_member(:id, Shapes::ShapeRef.new(shape: DeviceId, required: true, location: "uri", location_name: "id"))
     DeregisterDeviceRequest.add_member(:target_device_status, Shapes::ShapeRef.new(shape: TargetDeviceStatus, location_name: "targetDeviceStatus"))
-    DeregisterDeviceRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    DeregisterDeviceRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     DeregisterDeviceRequest.struct_class = Types::DeregisterDeviceRequest
 
     DeregisterDeviceResponse.struct_class = Types::DeregisterDeviceResponse
@@ -177,7 +178,7 @@ module Aws::WorkSpacesThinClient
     Device.add_member(:updated_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "updatedAt"))
     Device.add_member(:arn, Shapes::ShapeRef.new(shape: Arn, location_name: "arn"))
     Device.add_member(:kms_key_arn, Shapes::ShapeRef.new(shape: KmsKeyArn, location_name: "kmsKeyArn"))
-    Device.add_member(:tags, Shapes::ShapeRef.new(shape: TagsMap, location_name: "tags"))
+    Device.add_member(:last_user_id, Shapes::ShapeRef.new(shape: UserId, location_name: "lastUserId"))
     Device.struct_class = Types::Device
 
     DeviceCreationTagsMap.key = Shapes::ShapeRef.new(shape: DeviceCreationTagKey)
@@ -200,6 +201,7 @@ module Aws::WorkSpacesThinClient
     DeviceSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "createdAt"))
     DeviceSummary.add_member(:updated_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "updatedAt"))
     DeviceSummary.add_member(:arn, Shapes::ShapeRef.new(shape: Arn, location_name: "arn"))
+    DeviceSummary.add_member(:last_user_id, Shapes::ShapeRef.new(shape: UserId, location_name: "lastUserId"))
     DeviceSummary.struct_class = Types::DeviceSummary
 
     Environment.add_member(:id, Shapes::ShapeRef.new(shape: EnvironmentId, location_name: "id"))
@@ -220,7 +222,6 @@ module Aws::WorkSpacesThinClient
     Environment.add_member(:updated_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "updatedAt"))
     Environment.add_member(:arn, Shapes::ShapeRef.new(shape: Arn, location_name: "arn"))
     Environment.add_member(:kms_key_arn, Shapes::ShapeRef.new(shape: KmsKeyArn, location_name: "kmsKeyArn"))
-    Environment.add_member(:tags, Shapes::ShapeRef.new(shape: TagsMap, location_name: "tags"))
     Environment.add_member(:device_creation_tags, Shapes::ShapeRef.new(shape: DeviceCreationTagsMap, location_name: "deviceCreationTags"))
     Environment.struct_class = Types::Environment
 
@@ -328,7 +329,6 @@ module Aws::WorkSpacesThinClient
     SoftwareSet.add_member(:validation_status, Shapes::ShapeRef.new(shape: SoftwareSetValidationStatus, location_name: "validationStatus"))
     SoftwareSet.add_member(:software, Shapes::ShapeRef.new(shape: SoftwareList, location_name: "software"))
     SoftwareSet.add_member(:arn, Shapes::ShapeRef.new(shape: Arn, location_name: "arn"))
-    SoftwareSet.add_member(:tags, Shapes::ShapeRef.new(shape: TagsMap, location_name: "tags"))
     SoftwareSet.struct_class = Types::SoftwareSet
 
     SoftwareSetList.member = Shapes::ShapeRef.new(shape: SoftwareSetSummary)
@@ -435,9 +435,9 @@ module Aws::WorkSpacesThinClient
         o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
-        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
       end)
 
@@ -452,9 +452,9 @@ module Aws::WorkSpacesThinClient
         o.output = Shapes::ShapeRef.new(shape: DeleteDeviceResponse)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
-        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
       end)
 
@@ -469,9 +469,9 @@ module Aws::WorkSpacesThinClient
         o.output = Shapes::ShapeRef.new(shape: DeleteEnvironmentResponse)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
-        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
       end)
 
@@ -486,9 +486,9 @@ module Aws::WorkSpacesThinClient
         o.output = Shapes::ShapeRef.new(shape: DeregisterDeviceResponse)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
-        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
       end)
 
@@ -630,9 +630,9 @@ module Aws::WorkSpacesThinClient
         o.output = Shapes::ShapeRef.new(shape: TagResourceResponse)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
-        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
       end)
 
@@ -647,9 +647,9 @@ module Aws::WorkSpacesThinClient
         o.output = Shapes::ShapeRef.new(shape: UntagResourceResponse)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
-        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
       end)
 
@@ -680,6 +680,7 @@ module Aws::WorkSpacesThinClient
         o.output = Shapes::ShapeRef.new(shape: UpdateEnvironmentResponse)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)

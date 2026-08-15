@@ -51,7 +51,6 @@ module AwsSdkCodeGenerator
 
     # @return [Enumerable<String<path>, String<code>>]
     def source_files(options = {})
-
       prefix = options.fetch(:prefix, @service.gem_name)
       codegenerated_plugins = codegen_plugins(prefix)
 
@@ -73,13 +72,13 @@ module AwsSdkCodeGenerator
 
         codegenerated_plugins.each { |p| y.yield(p.path, p.source) }
 
-        y.yield("#{prefix}/client.rb", client_class(codegenerated_plugins))
-        if @service.protocol_settings['h2'] == 'eventstream'
-          y.yield("#{prefix}/async_client.rb", async_client_class(codegenerated_plugins))
+        unless @service.h2_required_setting?
+          y.yield("#{prefix}/client.rb", client_class(codegenerated_plugins))
+          y.yield("#{prefix}/resource.rb", root_resource_class)
         end
+        y.yield("#{prefix}/async_client.rb", async_client_class(codegenerated_plugins)) if @service.h2_setting?
         y.yield("#{prefix}/errors.rb", errors_module)
         y.yield("#{prefix}/waiters.rb", waiters_module) if @waiters
-        y.yield("#{prefix}/resource.rb", root_resource_class)
 
         unless @service.legacy_endpoints?
           y.yield("#{prefix}/endpoint_parameters.rb", endpoint_parameters)
@@ -114,34 +113,40 @@ module AwsSdkCodeGenerator
       Enumerator.new do |y|
         prefix = options.fetch(:prefix, '')
         codegenerated_plugins = codegen_plugins(prefix)
-        client_class = Views::RBS::ClientClass.new(
-          service_name: @service.name,
-          codegenerated_plugins: codegenerated_plugins,
-          aws_sdk_core_lib_path: @aws_sdk_core_lib_path,
-          legacy_endpoints: @service.legacy_endpoints?,
-          signature_version: @service.signature_version,
-          api: @service.api,
-          waiters: @service.waiters,
-          protocol: @service.protocol,
-          add_plugins: @service.add_plugins,
-          remove_plugins: @service.remove_plugins,
-        )
-        y.yield("#{prefix}/client.rbs", client_class.render)
-        y.yield("#{prefix}/errors.rbs", Views::RBS::ErrorsModule.new(
-          service: @service
-        ).render)
-        y.yield("#{prefix}/resource.rbs", Views::RBS::RootResourceClass.new(
-          service_name: @service.name,
-          client_class: client_class,
-          api: @service.api,
-          resources: @service.resources,
-          paginators: @service.paginators,
-        ).render)
-        y.yield("#{prefix}/waiters.rbs", Views::RBS::WaitersModule.new(
-          service_name: @service.name,
-          api: @service.api,
-          waiters: @service.waiters,
-        ).render)
+        type_alias_collector = RBS::InputTypeAliasCollector.new(api: @service.api)
+        aliased_shapes = type_alias_collector.shapes_to_alias
+        if aliased_shapes.any?
+          y.yield("#{prefix}/params.rbs", Views::RBS::Params.new(
+            service_name: @service.name,
+            api: @service.api,
+            aliased_shapes: aliased_shapes
+          ).render)
+        end
+        unless @service.h2_required_setting?
+          client_class = client_class_rbs(codegenerated_plugins, aliased_shapes)
+          y.yield("#{prefix}/client.rbs", client_class.render)
+          y.yield("#{prefix}/resource.rbs", Views::RBS::RootResourceClass.new(
+            service_name: @service.name,
+            client_class: client_class,
+            api: @service.api,
+            resources: @service.resources,
+            paginators: @service.paginators
+          ).render)
+        end
+        if @service.h2_setting?
+          y.yield("#{prefix}/async_client.rbs", async_client_class_rbs(
+            codegenerated_plugins,
+            aliased_shapes
+          ).render)
+        end
+        y.yield("#{prefix}/errors.rbs", Views::RBS::ErrorsModule.new(service: @service).render)
+        if @waiters
+          y.yield("#{prefix}/waiters.rbs", Views::RBS::WaitersModule.new(
+            service_name: @service.name,
+            api: @service.api,
+            waiters: @service.waiters,
+          ).render)
+        end
         y.yield("#{prefix}/types.rbs", Views::RBS::TypesModule.new(
           service: @service
         ).render)
@@ -206,6 +211,23 @@ module AwsSdkCodeGenerator
       ).render
     end
 
+    def client_class_rbs(codegenerated_plugins, aliased_shapes)
+      Views::RBS::ClientClass.new(
+        service_name: @service.name,
+        codegenerated_plugins: codegenerated_plugins,
+        aws_sdk_core_lib_path: @aws_sdk_core_lib_path,
+        legacy_endpoints: @service.legacy_endpoints?,
+        signature_version: @service.signature_version,
+        api: @service.api,
+        waiters: @service.waiters,
+        protocol: @service.protocol,
+        add_plugins: @service.add_plugins,
+        remove_plugins: @service.remove_plugins,
+        protocol_settings: @service.protocol_settings,
+        aliased_shapes: aliased_shapes
+      )
+    end
+
     def async_client_class(codegenerated_plugins)
       Views::AsyncClientClass.new(
         service_identifier: @service.identifier,
@@ -224,6 +246,23 @@ module AwsSdkCodeGenerator
         codegenerated_plugins: codegenerated_plugins,
         async_client: true
       ).render
+    end
+
+    def async_client_class_rbs(codegenerated_plugins, aliased_shapes)
+      Views::RBS::AsyncClientClass.new(
+        service_name: @service.name,
+        codegenerated_plugins: codegenerated_plugins,
+        aws_sdk_core_lib_path: @aws_sdk_core_lib_path,
+        legacy_endpoints: @service.legacy_endpoints?,
+        signature_version: @service.signature_version,
+        api: @service.api,
+        protocol: @service.protocol,
+        add_plugins: @service.add_plugins,
+        remove_plugins: @service.remove_plugins,
+        protocol_settings: @service.protocol_settings,
+        async_client: true,
+        aliased_shapes: aliased_shapes
+      )
     end
 
     def errors_module

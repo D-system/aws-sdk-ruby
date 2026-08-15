@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -77,6 +78,26 @@ module Aws
                   | (?Hash[Symbol, untyped]) -> instance
 
 
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IAM/Client.html#accept_delegation_request-instance_method
+      def accept_delegation_request: (
+                                       delegation_request_id: ::String
+                                     ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+
+      interface _AcquireRoleResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::AcquireRoleResponse]
+        def role: () -> Types::Role
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IAM/Client.html#acquire_role-instance_method
+      def acquire_role: (
+                          template_arn: ::String,
+                          ?template_minor_version: ::Integer,
+                          ?replacement_values: Hash[::String, {
+                              values: Array[::String]
+                            }]
+                        ) -> _AcquireRoleResponseSuccess
+                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _AcquireRoleResponseSuccess
+
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IAM/Client.html#add_client_id_to_open_id_connect_provider-instance_method
       def add_client_id_to_open_id_connect_provider: (
                                                        open_id_connect_provider_arn: ::String,
@@ -97,6 +118,12 @@ module Aws
                                user_name: ::String
                              ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IAM/Client.html#associate_delegation_request-instance_method
+      def associate_delegation_request: (
+                                          delegation_request_id: ::String
+                                        ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IAM/Client.html#attach_group_policy-instance_method
       def attach_group_policy: (
@@ -142,6 +169,34 @@ module Aws
                                 ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
+      interface _CreateDelegationRequestResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateDelegationRequestResponse]
+        def console_deep_link: () -> ::String
+        def delegation_request_id: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IAM/Client.html#create_delegation_request-instance_method
+      def create_delegation_request: (
+                                       ?owner_account_id: ::String,
+                                       description: ::String,
+                                       permissions: {
+                                         policy_template_arn: ::String?,
+                                         parameters: Array[
+                                           {
+                                             name: ::String?,
+                                             values: Array[::String]?,
+                                             type: ("string" | "stringList")?
+                                           }
+                                         ]?
+                                       },
+                                       ?request_message: ::String,
+                                       requestor_workflow_id: ::String,
+                                       ?redirect_url: ::String,
+                                       notification_channel: ::String,
+                                       session_duration: ::Integer,
+                                       ?only_send_by_owner: bool
+                                     ) -> _CreateDelegationRequestResponseSuccess
+                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateDelegationRequestResponseSuccess
+
       interface _CreateGroupResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateGroupResponse]
         def group: () -> Types::Group
@@ -165,7 +220,7 @@ module Aws
                                        {
                                          key: ::String,
                                          value: ::String
-                                       },
+                                       }
                                      ]
                                    ) -> _CreateInstanceProfileResponseSuccess
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateInstanceProfileResponseSuccess
@@ -196,7 +251,7 @@ module Aws
                                                {
                                                  key: ::String,
                                                  value: ::String
-                                               },
+                                               }
                                              ]
                                            ) -> _CreateOpenIDConnectProviderResponseSuccess
                                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateOpenIDConnectProviderResponseSuccess
@@ -215,7 +270,7 @@ module Aws
                              {
                                key: ::String,
                                value: ::String
-                             },
+                             }
                            ]
                          ) -> _CreatePolicyResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreatePolicyResponseSuccess
@@ -248,7 +303,7 @@ module Aws
                            {
                              key: ::String,
                              value: ::String
-                           },
+                           }
                          ]
                        ) -> _CreateRoleResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateRoleResponseSuccess
@@ -266,7 +321,7 @@ module Aws
                                     {
                                       key: ::String,
                                       value: ::String
-                                    },
+                                    }
                                   ],
                                   ?assertion_encryption_mode: ("Required" | "Allowed"),
                                   ?add_private_key: ::String
@@ -292,7 +347,8 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IAM/Client.html#create_service_specific_credential-instance_method
       def create_service_specific_credential: (
                                                 user_name: ::String,
-                                                service_name: ::String
+                                                service_name: ::String,
+                                                ?credential_age_days: ::Integer
                                               ) -> _CreateServiceSpecificCredentialResponseSuccess
                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateServiceSpecificCredentialResponseSuccess
 
@@ -309,7 +365,7 @@ module Aws
                            {
                              key: ::String,
                              value: ::String
-                           },
+                           }
                          ]
                        ) -> _CreateUserResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateUserResponseSuccess
@@ -326,7 +382,7 @@ module Aws
                                          {
                                            key: ::String,
                                            value: ::String
-                                         },
+                                         }
                                        ]
                                      ) -> _CreateVirtualMFADeviceResponseSuccess
                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateVirtualMFADeviceResponseSuccess
@@ -527,6 +583,10 @@ module Aws
                                                ) -> _DisableOrganizationsRootSessionsResponseSuccess
                                              | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DisableOrganizationsRootSessionsResponseSuccess
 
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IAM/Client.html#disable_outbound_web_identity_federation-instance_method
+      def disable_outbound_web_identity_federation: () -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+                                                  | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IAM/Client.html#enable_mfa_device-instance_method
       def enable_mfa_device: (
                                user_name: ::String,
@@ -555,6 +615,14 @@ module Aws
       def enable_organizations_root_sessions: (
                                               ) -> _EnableOrganizationsRootSessionsResponseSuccess
                                             | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _EnableOrganizationsRootSessionsResponseSuccess
+
+      interface _EnableOutboundWebIdentityFederationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::EnableOutboundWebIdentityFederationResponse]
+        def issuer_identifier: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IAM/Client.html#enable_outbound_web_identity_federation-instance_method
+      def enable_outbound_web_identity_federation: () -> _EnableOutboundWebIdentityFederationResponseSuccess
+                                                 | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _EnableOutboundWebIdentityFederationResponseSuccess
 
       interface _GenerateCredentialReportResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GenerateCredentialReportResponse]
@@ -623,9 +691,18 @@ module Aws
       def get_account_password_policy: () -> _GetAccountPasswordPolicyResponseSuccess
                                      | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetAccountPasswordPolicyResponseSuccess
 
+      interface _GetAccountPropertiesResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetAccountPropertiesResponse]
+        def properties: () -> ::Hash[::String, ::String]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IAM/Client.html#get_account_properties-instance_method
+      def get_account_properties: (
+                                  ) -> _GetAccountPropertiesResponseSuccess
+                                | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetAccountPropertiesResponseSuccess
+
       interface _GetAccountSummaryResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetAccountSummaryResponse]
-        def summary_map: () -> ::Hash[("Users" | "UsersQuota" | "Groups" | "GroupsQuota" | "ServerCertificates" | "ServerCertificatesQuota" | "UserPolicySizeQuota" | "GroupPolicySizeQuota" | "GroupsPerUserQuota" | "SigningCertificatesPerUserQuota" | "AccessKeysPerUserQuota" | "MFADevices" | "MFADevicesInUse" | "AccountMFAEnabled" | "AccountAccessKeysPresent" | "AccountPasswordPresent" | "AccountSigningCertificatesPresent" | "AttachedPoliciesPerGroupQuota" | "AttachedPoliciesPerRoleQuota" | "AttachedPoliciesPerUserQuota" | "Policies" | "PoliciesQuota" | "PolicySizeQuota" | "PolicyVersionsInUse" | "PolicyVersionsInUseQuota" | "VersionsPerPolicyQuota" | "GlobalEndpointTokenVersion"), ::Integer]
+        def summary_map: () -> ::Hash[("Users" | "UsersQuota" | "Groups" | "GroupsQuota" | "ServerCertificates" | "ServerCertificatesQuota" | "UserPolicySizeQuota" | "GroupPolicySizeQuota" | "GroupsPerUserQuota" | "SigningCertificatesPerUserQuota" | "AccessKeysPerUserQuota" | "MFADevices" | "MFADevicesInUse" | "AccountMFAEnabled" | "AccountAccessKeysPresent" | "AccountPasswordPresent" | "AccountSigningCertificatesPresent" | "AttachedPoliciesPerGroupQuota" | "AttachedPoliciesPerRoleQuota" | "AttachedPoliciesPerUserQuota" | "Policies" | "PoliciesQuota" | "PolicySizeQuota" | "PolicyVersionsInUse" | "PolicyVersionsInUseQuota" | "VersionsPerPolicyQuota" | "GlobalEndpointTokenVersion" | "AssumeRolePolicySizeQuota" | "InstanceProfiles" | "InstanceProfilesQuota" | "Providers" | "RolePolicySizeQuota" | "Roles" | "RolesQuota"), ::Integer]
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IAM/Client.html#get_account_summary-instance_method
       def get_account_summary: () -> _GetAccountSummaryResponseSuccess
@@ -662,6 +739,19 @@ module Aws
       def get_credential_report: () -> _GetCredentialReportResponseSuccess
                                | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetCredentialReportResponseSuccess
 
+      interface _GetDelegationRequestResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetDelegationRequestResponse]
+        def delegation_request: () -> Types::DelegationRequest
+        def permission_check_status: () -> ("COMPLETE" | "IN_PROGRESS" | "FAILED")
+        def permission_check_result: () -> ("ALLOWED" | "DENIED" | "UNSURE")
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IAM/Client.html#get_delegation_request-instance_method
+      def get_delegation_request: (
+                                    delegation_request_id: ::String,
+                                    ?delegation_permission_check: bool
+                                  ) -> _GetDelegationRequestResponseSuccess
+                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetDelegationRequestResponseSuccess
+
       interface _GetGroupResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetGroupResponse]
         def group: () -> Types::Group
@@ -689,6 +779,19 @@ module Aws
                               policy_name: ::String
                             ) -> _GetGroupPolicyResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetGroupPolicyResponseSuccess
+
+      interface _GetHumanReadableSummaryResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetHumanReadableSummaryResponse]
+        def summary_content: () -> ::String
+        def locale: () -> ::String
+        def summary_state: () -> ("AVAILABLE" | "NOT_AVAILABLE" | "NOT_SUPPORTED" | "FAILED")
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IAM/Client.html#get_human_readable_summary-instance_method
+      def get_human_readable_summary: (
+                                        entity_arn: ::String,
+                                        ?locale: ::String
+                                      ) -> _GetHumanReadableSummaryResponseSuccess
+                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetHumanReadableSummaryResponseSuccess
 
       interface _GetInstanceProfileResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetInstanceProfileResponse]
@@ -759,6 +862,15 @@ module Aws
                                            ) -> _GetOrganizationsAccessReportResponseSuccess
                                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetOrganizationsAccessReportResponseSuccess
 
+      interface _GetOutboundWebIdentityFederationInfoResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetOutboundWebIdentityFederationInfoResponse]
+        def issuer_identifier: () -> ::String
+        def jwt_vending_enabled: () -> bool
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IAM/Client.html#get_outbound_web_identity_federation_info-instance_method
+      def get_outbound_web_identity_federation_info: () -> _GetOutboundWebIdentityFederationInfoResponseSuccess
+                                                   | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetOutboundWebIdentityFederationInfoResponseSuccess
+
       interface _GetPolicyResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetPolicyResponse]
         def policy: () -> Types::Policy
@@ -802,6 +914,17 @@ module Aws
                              policy_name: ::String
                            ) -> _GetRolePolicyResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetRolePolicyResponseSuccess
+
+      interface _GetRoleTemplateVersionResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetRoleTemplateVersionResponse]
+        def role_template_version: () -> Types::RoleTemplateVersion
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IAM/Client.html#get_role_template_version-instance_method
+      def get_role_template_version: (
+                                       template_arn: ::String,
+                                       ?minor_version: ::Integer
+                                     ) -> _GetRoleTemplateVersionResponseSuccess
+                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetRoleTemplateVersionResponseSuccess
 
       interface _GetSAMLProviderResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetSAMLProviderResponse]
@@ -982,6 +1105,20 @@ module Aws
                                          ?max_items: ::Integer
                                        ) -> _ListAttachedUserPoliciesResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListAttachedUserPoliciesResponseSuccess
+
+      interface _ListDelegationRequestsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListDelegationRequestsResponse]
+        def delegation_requests: () -> ::Array[Types::DelegationRequest]
+        def marker: () -> ::String
+        def is_truncated: () -> bool
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IAM/Client.html#list_delegation_requests-instance_method
+      def list_delegation_requests: (
+                                      ?owner_id: ::String,
+                                      ?marker: ::String,
+                                      ?max_items: ::Integer
+                                    ) -> _ListDelegationRequestsResponseSuccess
+                                  | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListDelegationRequestsResponseSuccess
 
       interface _ListEntitiesForPolicyResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListEntitiesForPolicyResponse]
@@ -1316,11 +1453,16 @@ module Aws
       interface _ListServiceSpecificCredentialsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListServiceSpecificCredentialsResponse]
         def service_specific_credentials: () -> ::Array[Types::ServiceSpecificCredentialMetadata]
+        def marker: () -> ::String
+        def is_truncated: () -> bool
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IAM/Client.html#list_service_specific_credentials-instance_method
       def list_service_specific_credentials: (
                                                ?user_name: ::String,
-                                               ?service_name: ::String
+                                               ?service_name: ::String,
+                                               ?all_users: bool,
+                                               ?marker: ::String,
+                                               ?max_items: ::Integer
                                              ) -> _ListServiceSpecificCredentialsResponseSuccess
                                            | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListServiceSpecificCredentialsResponseSuccess
 
@@ -1394,6 +1536,15 @@ module Aws
                                     ) -> _ListVirtualMFADevicesResponseSuccess
                                   | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListVirtualMFADevicesResponseSuccess
 
+      interface _PutAccountPropertiesResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::PutAccountPropertiesResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IAM/Client.html#put_account_properties-instance_method
+      def put_account_properties: (
+                                    properties: Hash[::String, ::String]
+                                  ) -> _PutAccountPropertiesResponseSuccess
+                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutAccountPropertiesResponseSuccess
+
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IAM/Client.html#put_group_policy-instance_method
       def put_group_policy: (
                               group_name: ::String,
@@ -1431,6 +1582,13 @@ module Aws
                              policy_document: ::String
                            ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IAM/Client.html#reject_delegation_request-instance_method
+      def reject_delegation_request: (
+                                       delegation_request_id: ::String,
+                                       ?notes: ::String
+                                     ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IAM/Client.html#remove_client_id_from_open_id_connect_provider-instance_method
       def remove_client_id_from_open_id_connect_provider: (
@@ -1473,6 +1631,12 @@ module Aws
                              ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IAM/Client.html#send_delegation_token-instance_method
+      def send_delegation_token: (
+                                   delegation_request_id: ::String
+                                 ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IAM/Client.html#set_default_policy_version-instance_method
       def set_default_policy_version: (
                                         policy_arn: ::String,
@@ -1496,6 +1660,11 @@ module Aws
       def simulate_custom_policy: (
                                     policy_input_list: Array[::String],
                                     ?permissions_boundary_policy_input_list: Array[::String],
+                                    ?ordered_organization_policy_input_list: Array[
+                                      {
+                                        service_control_policy_input_list: Array[::String]?
+                                      }
+                                    ],
                                     action_names: Array[::String],
                                     ?resource_arns: Array[::String],
                                     ?resource_policy: ::String,
@@ -1506,7 +1675,7 @@ module Aws
                                         context_key_name: ::String?,
                                         context_key_values: Array[::String]?,
                                         context_key_type: ("string" | "stringList" | "numeric" | "numericList" | "boolean" | "booleanList" | "ip" | "ipList" | "binary" | "binaryList" | "date" | "dateList")?
-                                      },
+                                      }
                                     ],
                                     ?resource_handling_option: ::String,
                                     ?max_items: ::Integer,
@@ -1525,6 +1694,17 @@ module Aws
                                        policy_source_arn: ::String,
                                        ?policy_input_list: Array[::String],
                                        ?permissions_boundary_policy_input_list: Array[::String],
+                                       ?policy_exclusion_list: Array[
+                                         {
+                                           policy_type: ("inline" | "aws-managed" | "user-managed" | "permission-boundary" | "scp" | "rcp")?,
+                                           policy_arn: ::String?,
+                                           inline_policy_identifier: {
+                                             policy_name: ::String,
+                                             attachment_type: ("user" | "group" | "role"),
+                                             attachment_name: ::String
+                                           }?
+                                         }
+                                       ],
                                        action_names: Array[::String],
                                        ?resource_arns: Array[::String],
                                        ?resource_policy: ::String,
@@ -1535,7 +1715,7 @@ module Aws
                                            context_key_name: ::String?,
                                            context_key_values: Array[::String]?,
                                            context_key_type: ("string" | "stringList" | "numeric" | "numericList" | "boolean" | "booleanList" | "ip" | "ipList" | "binary" | "binaryList" | "date" | "dateList")?
-                                         },
+                                         }
                                        ],
                                        ?resource_handling_option: ::String,
                                        ?max_items: ::Integer,
@@ -1550,7 +1730,7 @@ module Aws
                                     {
                                       key: ::String,
                                       value: ::String
-                                    },
+                                    }
                                   ]
                                 ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
@@ -1562,7 +1742,7 @@ module Aws
                               {
                                 key: ::String,
                                 value: ::String
-                              },
+                              }
                             ]
                           ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
@@ -1574,7 +1754,7 @@ module Aws
                                             {
                                               key: ::String,
                                               value: ::String
-                                            },
+                                            }
                                           ]
                                         ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
@@ -1586,7 +1766,7 @@ module Aws
                           {
                             key: ::String,
                             value: ::String
-                          },
+                          }
                         ]
                       ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
@@ -1598,7 +1778,7 @@ module Aws
                         {
                           key: ::String,
                           value: ::String
-                        },
+                        }
                       ]
                     ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
@@ -1610,7 +1790,7 @@ module Aws
                                  {
                                    key: ::String,
                                    value: ::String
-                                 },
+                                 }
                                ]
                              ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
@@ -1622,7 +1802,7 @@ module Aws
                                       {
                                         key: ::String,
                                         value: ::String
-                                      },
+                                      }
                                     ]
                                   ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
@@ -1634,7 +1814,7 @@ module Aws
                         {
                           key: ::String,
                           value: ::String
-                        },
+                        }
                       ]
                     ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
@@ -1699,7 +1879,7 @@ module Aws
       def update_access_key: (
                                ?user_name: ::String,
                                access_key_id: ::String,
-                               status: ("Active" | "Inactive")
+                               status: ("Active" | "Inactive" | "Expired")
                              ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
@@ -1721,6 +1901,13 @@ module Aws
       def update_assume_role_policy: (
                                        role_name: ::String,
                                        policy_document: ::String
+                                     ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IAM/Client.html#update_delegation_request-instance_method
+      def update_delegation_request: (
+                                       delegation_request_id: ::String,
+                                       ?notes: ::String
                                      ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
@@ -1787,7 +1974,7 @@ module Aws
       def update_ssh_public_key: (
                                    user_name: ::String,
                                    ssh_public_key_id: ::String,
-                                   status: ("Active" | "Inactive")
+                                   status: ("Active" | "Inactive" | "Expired")
                                  ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
@@ -1803,7 +1990,7 @@ module Aws
       def update_service_specific_credential: (
                                                 ?user_name: ::String,
                                                 service_specific_credential_id: ::String,
-                                                status: ("Active" | "Inactive")
+                                                status: ("Active" | "Inactive" | "Expired")
                                               ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
@@ -1811,7 +1998,7 @@ module Aws
       def update_signing_certificate: (
                                         ?user_name: ::String,
                                         certificate_id: ::String,
-                                        status: ("Active" | "Inactive")
+                                        status: ("Active" | "Inactive" | "Expired")
                                       ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
@@ -1850,7 +2037,7 @@ module Aws
                                          {
                                            key: ::String,
                                            value: ::String
-                                         },
+                                         }
                                        ]
                                      ) -> _UploadServerCertificateResponseSuccess
                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UploadServerCertificateResponseSuccess

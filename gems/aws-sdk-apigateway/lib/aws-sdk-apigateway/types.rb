@@ -862,7 +862,7 @@ module Aws::APIGateway
     #
     # @!attribute [rw] endpoint_configuration
     #   The endpoint configuration of this DomainName showing the endpoint
-    #   types of the domain name.
+    #   types and IP address types of the domain name.
     #   @return [Types::EndpointConfiguration]
     #
     # @!attribute [rw] tags
@@ -873,7 +873,13 @@ module Aws::APIGateway
     #
     # @!attribute [rw] security_policy
     #   The Transport Layer Security (TLS) version + cipher suite for this
-    #   DomainName. The valid values are `TLS_1_0` and `TLS_1_2`.
+    #   DomainName.
+    #   @return [String]
+    #
+    # @!attribute [rw] endpoint_access_mode
+    #   The endpoint access mode of the DomainName. Only available for
+    #   DomainNames that use security policies that start with
+    #   `SecurityPolicy_`.
     #   @return [String]
     #
     # @!attribute [rw] mutual_tls_authentication
@@ -896,6 +902,12 @@ module Aws::APIGateway
     #   configuration. Supported only for private custom domain names.
     #   @return [String]
     #
+    # @!attribute [rw] routing_mode
+    #   The routing mode for this domain name. The routing mode determines
+    #   how API Gateway sends traffic from your custom domain name to your
+    #   private APIs.
+    #   @return [String]
+    #
     class CreateDomainNameRequest < Struct.new(
       :domain_name,
       :certificate_name,
@@ -908,9 +920,11 @@ module Aws::APIGateway
       :endpoint_configuration,
       :tags,
       :security_policy,
+      :endpoint_access_mode,
       :mutual_tls_authentication,
       :ownership_verification_certificate_arn,
-      :policy)
+      :policy,
+      :routing_mode)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1042,7 +1056,7 @@ module Aws::APIGateway
     #
     # @!attribute [rw] endpoint_configuration
     #   The endpoint configuration of this RestApi showing the endpoint
-    #   types of the API.
+    #   types and IP address types of the API.
     #   @return [Types::EndpointConfiguration]
     #
     # @!attribute [rw] policy
@@ -1064,6 +1078,16 @@ module Aws::APIGateway
     #   your API, disable the default endpoint
     #   @return [Boolean]
     #
+    # @!attribute [rw] security_policy
+    #   The Transport Layer Security (TLS) version + cipher suite for this
+    #   RestApi.
+    #   @return [String]
+    #
+    # @!attribute [rw] endpoint_access_mode
+    #   The endpoint access mode of the RestApi. Only available for RestApis
+    #   that use security policies that start with `SecurityPolicy_`.
+    #   @return [String]
+    #
     class CreateRestApiRequest < Struct.new(
       :name,
       :description,
@@ -1075,7 +1099,9 @@ module Aws::APIGateway
       :endpoint_configuration,
       :policy,
       :tags,
-      :disable_execute_api_endpoint)
+      :disable_execute_api_endpoint,
+      :security_policy,
+      :endpoint_access_mode)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1900,8 +1926,7 @@ module Aws::APIGateway
     #   @return [String]
     #
     # @!attribute [rw] domain_name_arn
-    #   The ARN of the domain name. Supported only for private custom domain
-    #   names.
+    #   The ARN of the domain name.
     #   @return [String]
     #
     # @!attribute [rw] certificate_name
@@ -1962,7 +1987,7 @@ module Aws::APIGateway
     #
     # @!attribute [rw] endpoint_configuration
     #   The endpoint configuration of this DomainName showing the endpoint
-    #   types of the domain name.
+    #   types and IP address types of the domain name.
     #   @return [Types::EndpointConfiguration]
     #
     # @!attribute [rw] domain_name_status
@@ -1979,7 +2004,11 @@ module Aws::APIGateway
     #
     # @!attribute [rw] security_policy
     #   The Transport Layer Security (TLS) version + cipher suite for this
-    #   DomainName. The valid values are `TLS_1_0` and `TLS_1_2`.
+    #   DomainName.
+    #   @return [String]
+    #
+    # @!attribute [rw] endpoint_access_mode
+    #   The endpoint access mode of the DomainName.
     #   @return [String]
     #
     # @!attribute [rw] tags
@@ -2015,6 +2044,12 @@ module Aws::APIGateway
     #   configuration. Supported only for private custom domain names.
     #   @return [String]
     #
+    # @!attribute [rw] routing_mode
+    #   The routing mode for this domain name. The routing mode determines
+    #   how API Gateway sends traffic from your custom domain name to your
+    #   private APIs.
+    #   @return [String]
+    #
     class DomainName < Struct.new(
       :domain_name,
       :domain_name_id,
@@ -2032,11 +2067,13 @@ module Aws::APIGateway
       :domain_name_status,
       :domain_name_status_message,
       :security_policy,
+      :endpoint_access_mode,
       :tags,
       :mutual_tls_authentication,
       :ownership_verification_certificate_arn,
       :management_policy,
-      :policy)
+      :policy,
+      :routing_mode)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2109,7 +2146,8 @@ module Aws::APIGateway
     end
 
     # The endpoint configuration to indicate the types of endpoints an API
-    # (RestApi) or its custom domain name (DomainName) has.
+    # (RestApi) or its custom domain name (DomainName) has and the IP
+    # address types that can invoke it.
     #
     # @!attribute [rw] types
     #   A list of endpoint types of an API (RestApi) or its custom domain
@@ -2119,6 +2157,14 @@ module Aws::APIGateway
     #   API, the endpoint type is `PRIVATE`.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] ip_address_type
+    #   The IP address types that can invoke an API (RestApi) or a
+    #   DomainName. Use `ipv4` to allow only IPv4 addresses to invoke an API
+    #   or DomainName, or use `dualstack` to allow both IPv4 and IPv6
+    #   addresses to invoke an API or a DomainName. For the `PRIVATE`
+    #   endpoint type, only `dualstack` is supported.
+    #   @return [String]
+    #
     # @!attribute [rw] vpc_endpoint_ids
     #   A list of VpcEndpointIds of an API (RestApi) against which to create
     #   Route53 ALIASes. It is only supported for `PRIVATE` endpoint type.
@@ -2126,6 +2172,7 @@ module Aws::APIGateway
     #
     class EndpointConfiguration < Struct.new(
       :types,
+      :ip_address_type,
       :vpc_endpoint_ids)
       SENSITIVE = []
       include Aws::Structure
@@ -3578,7 +3625,8 @@ module Aws::APIGateway
     #
     # @!attribute [rw] timeout_in_millis
     #   Custom timeout between 50 and 29,000 milliseconds. The default value
-    #   is 29,000 milliseconds or 29 seconds.
+    #   is 29,000 milliseconds or 29 seconds. You can increase the default
+    #   value to longer than 29 seconds for Regional or private APIs only.
     #   @return [Integer]
     #
     # @!attribute [rw] cache_namespace
@@ -3602,6 +3650,14 @@ module Aws::APIGateway
     #   Specifies the TLS configuration for an integration.
     #   @return [Types::TlsConfig]
     #
+    # @!attribute [rw] response_transfer_mode
+    #   The response transfer mode of the integration.
+    #   @return [String]
+    #
+    # @!attribute [rw] integration_target
+    #   The ALB or NLB listener to send the request to.
+    #   @return [String]
+    #
     class Integration < Struct.new(
       :type,
       :http_method,
@@ -3617,7 +3673,9 @@ module Aws::APIGateway
       :cache_namespace,
       :cache_key_parameters,
       :integration_responses,
-      :tls_config)
+      :tls_config,
+      :response_transfer_mode,
+      :integration_target)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4274,12 +4332,21 @@ module Aws::APIGateway
     #
     # @!attribute [rw] timeout_in_millis
     #   Custom timeout between 50 and 29,000 milliseconds. The default value
-    #   is 29,000 milliseconds or 29 seconds.
+    #   is 29,000 milliseconds or 29 seconds. You can increase the default
+    #   value to longer than 29 seconds for Regional or private APIs only.
     #   @return [Integer]
     #
     # @!attribute [rw] tls_config
     #   Specifies the TLS configuration for an integration.
     #   @return [Types::TlsConfig]
+    #
+    # @!attribute [rw] response_transfer_mode
+    #   The response transfer mode of the integration.
+    #   @return [String]
+    #
+    # @!attribute [rw] integration_target
+    #   The ALB or NLB listener to send the request to.
+    #   @return [String]
     #
     class PutIntegrationRequest < Struct.new(
       :rest_api_id,
@@ -4298,7 +4365,9 @@ module Aws::APIGateway
       :cache_key_parameters,
       :content_handling,
       :timeout_in_millis,
-      :tls_config)
+      :tls_config,
+      :response_transfer_mode,
+      :integration_target)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4739,7 +4808,7 @@ module Aws::APIGateway
     #
     # @!attribute [rw] endpoint_configuration
     #   The endpoint configuration of this RestApi showing the endpoint
-    #   types of the API.
+    #   types and IP address types of the API.
     #   @return [Types::EndpointConfiguration]
     #
     # @!attribute [rw] policy
@@ -4764,6 +4833,24 @@ module Aws::APIGateway
     #   The API's root resource ID.
     #   @return [String]
     #
+    # @!attribute [rw] security_policy
+    #   The Transport Layer Security (TLS) version + cipher suite for this
+    #   RestApi.
+    #   @return [String]
+    #
+    # @!attribute [rw] endpoint_access_mode
+    #   The endpoint access mode of the RestApi.
+    #   @return [String]
+    #
+    # @!attribute [rw] api_status
+    #   The ApiStatus of the RestApi.
+    #   @return [String]
+    #
+    # @!attribute [rw] api_status_message
+    #   The status message of the RestApi. When the status message is
+    #   `UPDATING` you can still invoke it.
+    #   @return [String]
+    #
     class RestApi < Struct.new(
       :id,
       :name,
@@ -4778,7 +4865,11 @@ module Aws::APIGateway
       :policy,
       :tags,
       :disable_execute_api_endpoint,
-      :root_resource_id)
+      :root_resource_id,
+      :security_policy,
+      :endpoint_access_mode,
+      :api_status,
+      :api_status_message)
       SENSITIVE = []
       include Aws::Structure
     end

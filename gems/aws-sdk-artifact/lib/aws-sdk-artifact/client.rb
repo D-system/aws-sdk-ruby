@@ -95,8 +95,8 @@ module Aws::Artifact
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::Artifact
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::Artifact
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::Artifact
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::Artifact
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::Artifact
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::Artifact
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::Artifact
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -470,6 +474,157 @@ module Aws::Artifact
 
     # @!group API Operations
 
+    # Create a new compliance inquiry.
+    #
+    # @option params [required, String] :name
+    #   Title of the inquiry.
+    #
+    # @option params [required, Types::InquiryContent] :inquiry_content
+    #   Content for creating a compliance inquiry - either a single query or
+    #   file content.
+    #
+    # @option params [String] :client_token
+    #   Idempotency token for the request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @option params [String] :support_mode
+    #   Support mode for inquiry processing. Only supported for file upload
+    #   mode. Defaults to AI\_ONLY if not specified.
+    #
+    # @option params [Hash<String,String>] :tags
+    #   Tags to associate with the compliance inquiry resource.
+    #
+    # @return [Types::CreateComplianceInquiryResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateComplianceInquiryResponse#compliance_inquiry_summary #compliance_inquiry_summary} => Types::InquirySummary
+    #   * {Types::CreateComplianceInquiryResponse#tags #tags} => Hash&lt;String,String&gt;
+    #
+    #
+    # @example Example: Invoke CreateComplianceInquiry operation
+    #
+    #   # Creates a compliance inquiry with a single text query.
+    #
+    #   resp = client.create_compliance_inquiry({
+    #     name: "My Compliance Inquiry", 
+    #     client_token: "unique-client-token-1234", 
+    #     inquiry_content: {
+    #       query: "Is my workload compliant with SOC 2?", 
+    #     }, 
+    #     support_mode: "AI_ONLY", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     compliance_inquiry_summary: {
+    #       name: "My Compliance Inquiry", 
+    #       arn: "arn:aws:artifact:us-east-1:123456789012:compliance-inquiry/compliance-inquiry-abcdef0123456789", 
+    #       created_at: Time.parse("2026-03-24T12:00:00Z"), 
+    #       id: "compliance-inquiry-abcdef0123456789", 
+    #       input_source: "TEXT", 
+    #       status: "PROCESSING", 
+    #       status_message: "Compliance inquiry processing is in-progress.", 
+    #     }, 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_compliance_inquiry({
+    #     name: "InquiryName", # required
+    #     inquiry_content: { # required
+    #       query: "LongStringAttribute",
+    #       file_content: {
+    #         file_sections: ["ShortStringAttribute"],
+    #         content: "data", # required
+    #       },
+    #     },
+    #     client_token: "IdempotentClientToken",
+    #     support_mode: "AI_ONLY", # accepts AI_ONLY, FULL_SUPPORT
+    #     tags: {
+    #       "TagKey" => "TagValue",
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.compliance_inquiry_summary.arn #=> String
+    #   resp.compliance_inquiry_summary.name #=> String
+    #   resp.compliance_inquiry_summary.id #=> String
+    #   resp.compliance_inquiry_summary.status #=> String, one of "PROCESSING", "HUMAN_REVIEW", "COMPLETED", "FAILED"
+    #   resp.compliance_inquiry_summary.status_message #=> String, one of "Compliance inquiry processing is complete.", "Malware was detected on the file. Provide a new file and try again.", "Compliance inquiry processing is in-progress.", "An internal error occurred while processing the inquiry. Try again at a later time.", "Human review is in progress.", "Compliance inquiry processing is complete. One or more queries encountered errors during processing."
+    #   resp.compliance_inquiry_summary.input_source #=> String, one of "TEXT", "FILE"
+    #   resp.compliance_inquiry_summary.created_at #=> Time
+    #   resp.tags #=> Hash
+    #   resp.tags["TagKey"] #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/artifact-2018-05-10/CreateComplianceInquiry AWS API Documentation
+    #
+    # @overload create_compliance_inquiry(params = {})
+    # @param [Hash] params ({})
+    def create_compliance_inquiry(params = {}, options = {})
+      req = build_request(:create_compliance_inquiry, params)
+      req.send_request(options)
+    end
+
+    # Export a compliance inquiry report.
+    #
+    # @option params [required, String] :compliance_inquiry_id
+    #   Unique resource ID for the compliance inquiry.
+    #
+    # @option params [Array<Integer>] :query_identifiers
+    #   List of query identifiers to include in the export.
+    #
+    # @option params [Boolean] :include_citations
+    #   When true, include citations in the exported document.
+    #
+    # @return [Types::ExportComplianceInquiryResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ExportComplianceInquiryResponse#document_presigned_url #document_presigned_url} => String
+    #   * {Types::ExportComplianceInquiryResponse#tags #tags} => Hash&lt;String,String&gt;
+    #
+    #
+    # @example Example: Invoke ExportComplianceInquiry operation
+    #
+    #   # Exports a compliance inquiry report.
+    #
+    #   resp = client.export_compliance_inquiry({
+    #     compliance_inquiry_id: "compliance-inquiry-abcdef0123456789", 
+    #     include_citations: true, 
+    #     query_identifiers: [
+    #       1, 
+    #       2, 
+    #     ], 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     document_presigned_url: "https://s3.us-east-1.amazonaws.com/artifact-bucket/export.pdf?X-Amz-Signature=example", 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.export_compliance_inquiry({
+    #     compliance_inquiry_id: "InquiryId", # required
+    #     query_identifiers: [1],
+    #     include_citations: false,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.document_presigned_url #=> String
+    #   resp.tags #=> Hash
+    #   resp.tags["TagKey"] #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/artifact-2018-05-10/ExportComplianceInquiry AWS API Documentation
+    #
+    # @overload export_compliance_inquiry(params = {})
+    # @param [Hash] params ({})
+    def export_compliance_inquiry(params = {}, options = {})
+      req = build_request(:export_compliance_inquiry, params)
+      req.send_request(options)
+    end
+
     # Get the account settings for Artifact.
     #
     # @return [Types::GetAccountSettingsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
@@ -501,6 +656,69 @@ module Aws::Artifact
     # @param [Hash] params ({})
     def get_account_settings(params = {}, options = {})
       req = build_request(:get_account_settings, params)
+      req.send_request(options)
+    end
+
+    # Get the metadata for a single compliance inquiry.
+    #
+    # @option params [required, String] :compliance_inquiry_id
+    #   Unique resource ID for the compliance inquiry.
+    #
+    # @return [Types::GetComplianceInquiryMetadataResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetComplianceInquiryMetadataResponse#compliance_inquiry_detail #compliance_inquiry_detail} => Types::InquiryDetail
+    #   * {Types::GetComplianceInquiryMetadataResponse#tags #tags} => Hash&lt;String,String&gt;
+    #
+    #
+    # @example Example: Invoke GetComplianceInquiryMetadata operation
+    #
+    #   # Gets metadata for a compliance inquiry.
+    #
+    #   resp = client.get_compliance_inquiry_metadata({
+    #     compliance_inquiry_id: "compliance-inquiry-abcdef0123456789", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     compliance_inquiry_detail: {
+    #       name: "My Compliance Inquiry", 
+    #       arn: "arn:aws:artifact:us-east-1:123456789012:compliance-inquiry/compliance-inquiry-abcdef0123456789", 
+    #       created_at: Time.parse("2026-03-24T12:00:00Z"), 
+    #       id: "compliance-inquiry-abcdef0123456789", 
+    #       input_source: "TEXT", 
+    #       status: "COMPLETED", 
+    #       status_message: "Compliance inquiry processing is complete.", 
+    #       support_mode: "AI_ONLY", 
+    #       updated_at: Time.parse("2026-03-24T12:05:00Z"), 
+    #     }, 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_compliance_inquiry_metadata({
+    #     compliance_inquiry_id: "InquiryId", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.compliance_inquiry_detail.arn #=> String
+    #   resp.compliance_inquiry_detail.name #=> String
+    #   resp.compliance_inquiry_detail.id #=> String
+    #   resp.compliance_inquiry_detail.status #=> String, one of "PROCESSING", "HUMAN_REVIEW", "COMPLETED", "FAILED"
+    #   resp.compliance_inquiry_detail.status_message #=> String, one of "Compliance inquiry processing is complete.", "Malware was detected on the file. Provide a new file and try again.", "Compliance inquiry processing is in-progress.", "An internal error occurred while processing the inquiry. Try again at a later time.", "Human review is in progress.", "Compliance inquiry processing is complete. One or more queries encountered errors during processing."
+    #   resp.compliance_inquiry_detail.input_source #=> String, one of "TEXT", "FILE"
+    #   resp.compliance_inquiry_detail.created_at #=> Time
+    #   resp.compliance_inquiry_detail.updated_at #=> Time
+    #   resp.compliance_inquiry_detail.support_mode #=> String, one of "AI_ONLY", "FULL_SUPPORT"
+    #   resp.tags #=> Hash
+    #   resp.tags["TagKey"] #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/artifact-2018-05-10/GetComplianceInquiryMetadata AWS API Documentation
+    #
+    # @overload get_compliance_inquiry_metadata(params = {})
+    # @param [Hash] params ({})
+    def get_compliance_inquiry_metadata(params = {}, options = {})
+      req = build_request(:get_compliance_inquiry_metadata, params)
       req.send_request(options)
     end
 
@@ -689,6 +907,159 @@ module Aws::Artifact
       req.send_request(options)
     end
 
+    # List available compliance inquiries.
+    #
+    # @option params [Integer] :max_results
+    #   Maximum number of resources to return in the paginated response.
+    #
+    # @option params [String] :next_token
+    #   Pagination token to request the next page of resources.
+    #
+    # @return [Types::ListComplianceInquiriesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListComplianceInquiriesResponse#compliance_inquiries #compliance_inquiries} => Array&lt;Types::InquirySummary&gt;
+    #   * {Types::ListComplianceInquiriesResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    #
+    # @example Example: Invoke ListComplianceInquiries operation
+    #
+    #   # Lists all compliance inquiries.
+    #
+    #   resp = client.list_compliance_inquiries({
+    #     max_results: 10, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     compliance_inquiries: [
+    #       {
+    #         name: "My Compliance Inquiry", 
+    #         arn: "arn:aws:artifact:us-east-1:123456789012:compliance-inquiry/compliance-inquiry-abcdef0123456789", 
+    #         created_at: Time.parse("2026-03-24T12:00:00Z"), 
+    #         id: "compliance-inquiry-abcdef0123456789", 
+    #         input_source: "TEXT", 
+    #         status: "COMPLETED", 
+    #         status_message: "Compliance inquiry processing is complete.", 
+    #       }, 
+    #     ], 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_compliance_inquiries({
+    #     max_results: 1,
+    #     next_token: "NextTokenAttribute",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.compliance_inquiries #=> Array
+    #   resp.compliance_inquiries[0].arn #=> String
+    #   resp.compliance_inquiries[0].name #=> String
+    #   resp.compliance_inquiries[0].id #=> String
+    #   resp.compliance_inquiries[0].status #=> String, one of "PROCESSING", "HUMAN_REVIEW", "COMPLETED", "FAILED"
+    #   resp.compliance_inquiries[0].status_message #=> String, one of "Compliance inquiry processing is complete.", "Malware was detected on the file. Provide a new file and try again.", "Compliance inquiry processing is in-progress.", "An internal error occurred while processing the inquiry. Try again at a later time.", "Human review is in progress.", "Compliance inquiry processing is complete. One or more queries encountered errors during processing."
+    #   resp.compliance_inquiries[0].input_source #=> String, one of "TEXT", "FILE"
+    #   resp.compliance_inquiries[0].created_at #=> Time
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/artifact-2018-05-10/ListComplianceInquiries AWS API Documentation
+    #
+    # @overload list_compliance_inquiries(params = {})
+    # @param [Hash] params ({})
+    def list_compliance_inquiries(params = {}, options = {})
+      req = build_request(:list_compliance_inquiries, params)
+      req.send_request(options)
+    end
+
+    # List queries within a compliance inquiry.
+    #
+    # @option params [required, String] :compliance_inquiry_id
+    #   Unique resource ID for the compliance inquiry.
+    #
+    # @option params [Integer] :max_results
+    #   Maximum number of resources to return in the paginated response.
+    #
+    # @option params [String] :next_token
+    #   Pagination token to request the next page of resources.
+    #
+    # @return [Types::ListComplianceInquiryQueriesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListComplianceInquiryQueriesResponse#queries #queries} => Array&lt;Types::QuerySummary&gt;
+    #   * {Types::ListComplianceInquiryQueriesResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    #
+    # @example Example: Invoke ListComplianceInquiryQueries operation
+    #
+    #   # Lists queries within a compliance inquiry.
+    #
+    #   resp = client.list_compliance_inquiry_queries({
+    #     compliance_inquiry_id: "compliance-inquiry-abcdef0123456789", 
+    #     max_results: 10, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     queries: [
+    #       {
+    #         citations: [
+    #           {
+    #             source_content: "Relevant compliance content...", 
+    #             source_label: "SOC 2 Type II Report", 
+    #             source_link: "https://example.com/soc2", 
+    #           }, 
+    #         ], 
+    #         created_at: Time.parse("2026-03-24T12:00:00Z"), 
+    #         query: "Is my workload compliant with SOC 2?", 
+    #         query_identifier: 1, 
+    #         response: "Based on the available compliance documentation...", 
+    #         review_type: "AI", 
+    #         status: "COMPLETED", 
+    #         status_message: "Query processing is complete.", 
+    #       }, 
+    #     ], 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_compliance_inquiry_queries({
+    #     compliance_inquiry_id: "InquiryId", # required
+    #     max_results: 1,
+    #     next_token: "NextTokenAttribute",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.queries #=> Array
+    #   resp.queries[0].query_identifier #=> Integer
+    #   resp.queries[0].query #=> String
+    #   resp.queries[0].response #=> String
+    #   resp.queries[0].review_type #=> String, one of "HUMAN", "AI"
+    #   resp.queries[0].citations #=> Array
+    #   resp.queries[0].citations[0].source_label #=> String
+    #   resp.queries[0].citations[0].source_content #=> String
+    #   resp.queries[0].citations[0].source_link #=> String
+    #   resp.queries[0].status #=> String, one of "PROCESSING", "COMPLETED", "FAILED"
+    #   resp.queries[0].status_message #=> String, one of "Query processing is complete.", "Query processing is in-progress.", "An internal error occurred while processing the query. Try again at a later time.", "Query is pending human review.", "Query contains restricted or unsupported content."
+    #   resp.queries[0].created_at #=> Time
+    #   resp.queries[0].updated_response_versions #=> Array
+    #   resp.queries[0].updated_response_versions[0].response_text #=> String
+    #   resp.queries[0].updated_response_versions[0].timestamp #=> Time
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/artifact-2018-05-10/ListComplianceInquiryQueries AWS API Documentation
+    #
+    # @overload list_compliance_inquiry_queries(params = {})
+    # @param [Hash] params ({})
+    def list_compliance_inquiry_queries(params = {}, options = {})
+      req = build_request(:list_compliance_inquiry_queries, params)
+      req.send_request(options)
+    end
+
     # List active customer-agreements applicable to calling identity.
     #
     # @option params [Integer] :max_results
@@ -773,6 +1144,92 @@ module Aws::Artifact
       req.send_request(options)
     end
 
+    # List available report versions for a given report.
+    #
+    # @option params [required, String] :report_id
+    #   Unique resource ID for the report resource.
+    #
+    # @option params [Integer] :max_results
+    #   Maximum number of resources to return in the paginated response.
+    #
+    # @option params [String] :next_token
+    #   Pagination token to request the next page of resources.
+    #
+    # @return [Types::ListReportVersionsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListReportVersionsResponse#reports #reports} => Array&lt;Types::ReportSummary&gt;
+    #   * {Types::ListReportVersionsResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    #
+    # @example Example: Invoke ListReportVersions operation
+    #
+    #   # The ListReportVersions operation returns a collection of report versions
+    #   # for a given resource.
+    #
+    #   resp = client.list_report_versions({
+    #     report_id: "report-abcdef0123456789", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     next_token: "gPFEGk7CF4wS901w7ppYclt7gPFEGk7CF4wS901w7ppYclt7gPFEGk7CF4wS901w7ppYclt7", 
+    #     reports: [
+    #       {
+    #         version: 1, 
+    #         name: "name", 
+    #         arn: "arn:aws:artifact:us-east-1::report:report-abcdef0123456789:1", 
+    #         category: "category", 
+    #         company_name: "companyName", 
+    #         description: "description", 
+    #         id: "report-abcdef0123456789", 
+    #         period_end: Time.parse("2022-04-01T20:32:04Z"), 
+    #         period_start: Time.parse("2022-04-01T20:32:04Z"), 
+    #         product_name: "productName", 
+    #         series: "series", 
+    #         state: "PUBLISHED", 
+    #       }, 
+    #     ], 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_report_versions({
+    #     report_id: "ReportId", # required
+    #     max_results: 1,
+    #     next_token: "NextTokenAttribute",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.reports #=> Array
+    #   resp.reports[0].id #=> String
+    #   resp.reports[0].name #=> String
+    #   resp.reports[0].state #=> String, one of "PUBLISHED", "UNPUBLISHED"
+    #   resp.reports[0].arn #=> String
+    #   resp.reports[0].version #=> Integer
+    #   resp.reports[0].upload_state #=> String, one of "PROCESSING", "COMPLETE", "FAILED", "FAULT"
+    #   resp.reports[0].description #=> String
+    #   resp.reports[0].period_start #=> Time
+    #   resp.reports[0].period_end #=> Time
+    #   resp.reports[0].series #=> String
+    #   resp.reports[0].category #=> String
+    #   resp.reports[0].company_name #=> String
+    #   resp.reports[0].product_name #=> String
+    #   resp.reports[0].status_message #=> String
+    #   resp.reports[0].acceptance_type #=> String, one of "PASSTHROUGH", "EXPLICIT"
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/artifact-2018-05-10/ListReportVersions AWS API Documentation
+    #
+    # @overload list_report_versions(params = {})
+    # @param [Hash] params ({})
+    def list_report_versions(params = {}, options = {})
+      req = build_request(:list_report_versions, params)
+      req.send_request(options)
+    end
+
     # List available reports.
     #
     # @option params [Integer] :max_results
@@ -853,6 +1310,35 @@ module Aws::Artifact
       req.send_request(options)
     end
 
+    # List tags for a resource.
+    #
+    # @option params [required, String] :resource_arn
+    #   The Amazon Resource Name (ARN) of the resource.
+    #
+    # @return [Types::ListTagsForResourceResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListTagsForResourceResponse#tags #tags} => Hash&lt;String,String&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_tags_for_resource({
+    #     resource_arn: "LongStringAttribute", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.tags #=> Hash
+    #   resp.tags["TagKey"] #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/artifact-2018-05-10/ListTagsForResource AWS API Documentation
+    #
+    # @overload list_tags_for_resource(params = {})
+    # @param [Hash] params ({})
+    def list_tags_for_resource(params = {}, options = {})
+      req = build_request(:list_tags_for_resource, params)
+      req.send_request(options)
+    end
+
     # Put the account settings for Artifact.
     #
     # @option params [String] :notification_subscription_status
@@ -897,6 +1383,121 @@ module Aws::Artifact
       req.send_request(options)
     end
 
+    # Submits feedback on a compliance inquiry response.
+    #
+    # @option params [required, String] :compliance_inquiry_id
+    #   The unique identifier for the compliance inquiry.
+    #
+    # @option params [Integer] :query_identifier
+    #   The sequential identifier of the query to provide feedback on.
+    #
+    # @option params [required, String] :rating
+    #   The rating for the feedback. Valid values are THUMBS\_UP and
+    #   THUMBS\_DOWN.
+    #
+    # @option params [Integer] :response_revision_id
+    #   The response revision ID. Use this value to prevent submitting
+    #   feedback on a stale response.
+    #
+    # @option params [Array<String>] :reason_codes
+    #   The reason codes that describe why you rated the response. Valid
+    #   values are OTHER, PARTIAL\_RESPONSE, and IRRELEVANT\_RESPONSE.
+    #
+    # @option params [String] :comment
+    #   An optional comment for the feedback.
+    #
+    # @option params [String] :client_token
+    #   A unique, case-sensitive identifier to ensure that the operation
+    #   completes no more than one time. If this token matches a previous
+    #   request, the service ignores the request, but does not return an
+    #   error.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @return [Types::PutComplianceInquiryFeedbackResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::PutComplianceInquiryFeedbackResponse#submitted_at #submitted_at} => Time
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.put_compliance_inquiry_feedback({
+    #     compliance_inquiry_id: "InquiryId", # required
+    #     query_identifier: 1,
+    #     rating: "THUMBS_UP", # required, accepts THUMBS_UP, THUMBS_DOWN
+    #     response_revision_id: 1,
+    #     reason_codes: ["OTHER"], # accepts OTHER, PARTIAL_RESPONSE, IRRELEVANT_RESPONSE
+    #     comment: "FeedbackCommentAttribute",
+    #     client_token: "IdempotentClientToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.submitted_at #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/artifact-2018-05-10/PutComplianceInquiryFeedback AWS API Documentation
+    #
+    # @overload put_compliance_inquiry_feedback(params = {})
+    # @param [Hash] params ({})
+    def put_compliance_inquiry_feedback(params = {}, options = {})
+      req = build_request(:put_compliance_inquiry_feedback, params)
+      req.send_request(options)
+    end
+
+    # Add tags to a resource.
+    #
+    # @option params [required, String] :resource_arn
+    #   The Amazon Resource Name (ARN) of the resource.
+    #
+    # @option params [required, Hash<String,String>] :tags
+    #   Tags to add to the resource.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.tag_resource({
+    #     resource_arn: "LongStringAttribute", # required
+    #     tags: { # required
+    #       "TagKey" => "TagValue",
+    #     },
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/artifact-2018-05-10/TagResource AWS API Documentation
+    #
+    # @overload tag_resource(params = {})
+    # @param [Hash] params ({})
+    def tag_resource(params = {}, options = {})
+      req = build_request(:tag_resource, params)
+      req.send_request(options)
+    end
+
+    # Remove tags from a resource.
+    #
+    # @option params [required, String] :resource_arn
+    #   The Amazon Resource Name (ARN) of the resource.
+    #
+    # @option params [required, Array<String>] :tag_keys
+    #   Tag keys to remove from the resource.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.untag_resource({
+    #     resource_arn: "LongStringAttribute", # required
+    #     tag_keys: ["TagKey"], # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/artifact-2018-05-10/UntagResource AWS API Documentation
+    #
+    # @overload untag_resource(params = {})
+    # @param [Hash] params ({})
+    def untag_resource(params = {}, options = {})
+      req = build_request(:untag_resource, params)
+      req.send_request(options)
+    end
+
     # @!endgroup
 
     # @param params ({})
@@ -915,7 +1516,7 @@ module Aws::Artifact
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-artifact'
-      context[:gem_version] = '1.19.0'
+      context[:gem_version] = '1.41.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

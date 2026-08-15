@@ -23,6 +23,9 @@ module Aws
       class ExpiredTokenException < ::Aws::Errors::ServiceError
         def message: () -> ::String
       end
+      class IdempotencyConflictException < ::Aws::Errors::ServiceError
+        def message: () -> ::String
+      end
       class InternalServiceErrorException < ::Aws::Errors::ServiceError
         def message: () -> ::String
       end
@@ -30,6 +33,9 @@ module Aws
         def message: () -> ::String
       end
       class InvalidEndpointRegionException < ::Aws::Errors::ServiceError
+        def message: () -> ::String
+      end
+      class InvalidLicenseException < ::Aws::Errors::ServiceError
         def message: () -> ::String
       end
       class InvalidProductCodeException < ::Aws::Errors::ServiceError

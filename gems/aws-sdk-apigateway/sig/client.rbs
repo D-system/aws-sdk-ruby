@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -101,7 +102,7 @@ module Aws
                               {
                                 rest_api_id: ::String?,
                                 stage_name: ::String?
-                              },
+                              }
                             ],
                             ?customer_id: ::String,
                             ?tags: Hash[::String, ::String]
@@ -227,14 +228,16 @@ module Aws
         def distribution_domain_name: () -> ::String
         def distribution_hosted_zone_id: () -> ::String
         def endpoint_configuration: () -> Types::EndpointConfiguration
-        def domain_name_status: () -> ("AVAILABLE" | "UPDATING" | "PENDING" | "PENDING_CERTIFICATE_REIMPORT" | "PENDING_OWNERSHIP_VERIFICATION")
+        def domain_name_status: () -> ("AVAILABLE" | "UPDATING" | "PENDING" | "PENDING_CERTIFICATE_REIMPORT" | "PENDING_OWNERSHIP_VERIFICATION" | "FAILED")
         def domain_name_status_message: () -> ::String
-        def security_policy: () -> ("TLS_1_0" | "TLS_1_2")
+        def security_policy: () -> ("TLS_1_0" | "TLS_1_2" | "SecurityPolicy_TLS13_1_3_2025_09" | "SecurityPolicy_TLS13_1_3_FIPS_2025_09" | "SecurityPolicy_TLS13_1_2_PFS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_FIPS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_FIPS_PFS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_2021_06" | "SecurityPolicy_TLS13_2025_EDGE" | "SecurityPolicy_TLS12_PFS_2025_EDGE" | "SecurityPolicy_TLS12_2018_EDGE")
+        def endpoint_access_mode: () -> ("BASIC" | "STRICT")
         def tags: () -> ::Hash[::String, ::String]
         def mutual_tls_authentication: () -> Types::MutualTlsAuthentication
         def ownership_verification_certificate_arn: () -> ::String
         def management_policy: () -> ::String
         def policy: () -> ::String
+        def routing_mode: () -> ("BASE_PATH_MAPPING_ONLY" | "ROUTING_RULE_ONLY" | "ROUTING_RULE_THEN_BASE_PATH_MAPPING")
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/APIGateway/Client.html#create_domain_name-instance_method
       def create_domain_name: (
@@ -248,16 +251,19 @@ module Aws
                                 ?regional_certificate_arn: ::String,
                                 ?endpoint_configuration: {
                                   types: Array[("REGIONAL" | "EDGE" | "PRIVATE")]?,
+                                  ip_address_type: ("ipv4" | "dualstack")?,
                                   vpc_endpoint_ids: Array[::String]?
                                 },
                                 ?tags: Hash[::String, ::String],
-                                ?security_policy: ("TLS_1_0" | "TLS_1_2"),
+                                ?security_policy: ("TLS_1_0" | "TLS_1_2" | "SecurityPolicy_TLS13_1_3_2025_09" | "SecurityPolicy_TLS13_1_3_FIPS_2025_09" | "SecurityPolicy_TLS13_1_2_PFS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_FIPS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_FIPS_PFS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_2021_06" | "SecurityPolicy_TLS13_2025_EDGE" | "SecurityPolicy_TLS12_PFS_2025_EDGE" | "SecurityPolicy_TLS12_2018_EDGE"),
+                                ?endpoint_access_mode: ("BASIC" | "STRICT"),
                                 ?mutual_tls_authentication: {
                                   truststore_uri: ::String?,
                                   truststore_version: ::String?
                                 },
                                 ?ownership_verification_certificate_arn: ::String,
-                                ?policy: ::String
+                                ?policy: ::String,
+                                ?routing_mode: ("BASE_PATH_MAPPING_ONLY" | "ROUTING_RULE_ONLY" | "ROUTING_RULE_THEN_BASE_PATH_MAPPING")
                               ) -> _CreateDomainNameResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateDomainNameResponseSuccess
 
@@ -344,6 +350,10 @@ module Aws
         def tags: () -> ::Hash[::String, ::String]
         def disable_execute_api_endpoint: () -> bool
         def root_resource_id: () -> ::String
+        def security_policy: () -> ("TLS_1_0" | "TLS_1_2" | "SecurityPolicy_TLS13_1_3_2025_09" | "SecurityPolicy_TLS13_1_3_FIPS_2025_09" | "SecurityPolicy_TLS13_1_2_PFS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_FIPS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_FIPS_PFS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_2021_06" | "SecurityPolicy_TLS13_2025_EDGE" | "SecurityPolicy_TLS12_PFS_2025_EDGE" | "SecurityPolicy_TLS12_2018_EDGE")
+        def endpoint_access_mode: () -> ("BASIC" | "STRICT")
+        def api_status: () -> ("UPDATING" | "AVAILABLE" | "PENDING" | "FAILED")
+        def api_status_message: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/APIGateway/Client.html#create_rest_api-instance_method
       def create_rest_api: (
@@ -356,11 +366,14 @@ module Aws
                              ?api_key_source: ("HEADER" | "AUTHORIZER"),
                              ?endpoint_configuration: {
                                types: Array[("REGIONAL" | "EDGE" | "PRIVATE")]?,
+                               ip_address_type: ("ipv4" | "dualstack")?,
                                vpc_endpoint_ids: Array[::String]?
                              },
                              ?policy: ::String,
                              ?tags: Hash[::String, ::String],
-                             ?disable_execute_api_endpoint: bool
+                             ?disable_execute_api_endpoint: bool,
+                             ?security_policy: ("TLS_1_0" | "TLS_1_2" | "SecurityPolicy_TLS13_1_3_2025_09" | "SecurityPolicy_TLS13_1_3_FIPS_2025_09" | "SecurityPolicy_TLS13_1_2_PFS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_FIPS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_FIPS_PFS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_2021_06" | "SecurityPolicy_TLS13_2025_EDGE" | "SecurityPolicy_TLS12_PFS_2025_EDGE" | "SecurityPolicy_TLS12_2018_EDGE"),
+                             ?endpoint_access_mode: ("BASIC" | "STRICT")
                            ) -> _CreateRestApiResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateRestApiResponseSuccess
 
@@ -428,7 +441,7 @@ module Aws
                                        burst_limit: ::Integer?,
                                        rate_limit: ::Float?
                                      }]?
-                                 },
+                                 }
                                ],
                                ?throttle: {
                                  burst_limit: ::Integer?,
@@ -897,14 +910,16 @@ module Aws
         def distribution_domain_name: () -> ::String
         def distribution_hosted_zone_id: () -> ::String
         def endpoint_configuration: () -> Types::EndpointConfiguration
-        def domain_name_status: () -> ("AVAILABLE" | "UPDATING" | "PENDING" | "PENDING_CERTIFICATE_REIMPORT" | "PENDING_OWNERSHIP_VERIFICATION")
+        def domain_name_status: () -> ("AVAILABLE" | "UPDATING" | "PENDING" | "PENDING_CERTIFICATE_REIMPORT" | "PENDING_OWNERSHIP_VERIFICATION" | "FAILED")
         def domain_name_status_message: () -> ::String
-        def security_policy: () -> ("TLS_1_0" | "TLS_1_2")
+        def security_policy: () -> ("TLS_1_0" | "TLS_1_2" | "SecurityPolicy_TLS13_1_3_2025_09" | "SecurityPolicy_TLS13_1_3_FIPS_2025_09" | "SecurityPolicy_TLS13_1_2_PFS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_FIPS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_FIPS_PFS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_2021_06" | "SecurityPolicy_TLS13_2025_EDGE" | "SecurityPolicy_TLS12_PFS_2025_EDGE" | "SecurityPolicy_TLS12_2018_EDGE")
+        def endpoint_access_mode: () -> ("BASIC" | "STRICT")
         def tags: () -> ::Hash[::String, ::String]
         def mutual_tls_authentication: () -> Types::MutualTlsAuthentication
         def ownership_verification_certificate_arn: () -> ::String
         def management_policy: () -> ::String
         def policy: () -> ::String
+        def routing_mode: () -> ("BASE_PATH_MAPPING_ONLY" | "ROUTING_RULE_ONLY" | "ROUTING_RULE_THEN_BASE_PATH_MAPPING")
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/APIGateway/Client.html#get_domain_name-instance_method
       def get_domain_name: (
@@ -1000,6 +1015,8 @@ module Aws
         def cache_key_parameters: () -> ::Array[::String]
         def integration_responses: () -> ::Hash[::String, Types::IntegrationResponse]
         def tls_config: () -> Types::TlsConfig
+        def response_transfer_mode: () -> ("BUFFERED" | "STREAM")
+        def integration_target: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/APIGateway/Client.html#get_integration-instance_method
       def get_integration: (
@@ -1176,6 +1193,10 @@ module Aws
         def tags: () -> ::Hash[::String, ::String]
         def disable_execute_api_endpoint: () -> bool
         def root_resource_id: () -> ::String
+        def security_policy: () -> ("TLS_1_0" | "TLS_1_2" | "SecurityPolicy_TLS13_1_3_2025_09" | "SecurityPolicy_TLS13_1_3_FIPS_2025_09" | "SecurityPolicy_TLS13_1_2_PFS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_FIPS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_FIPS_PFS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_2021_06" | "SecurityPolicy_TLS13_2025_EDGE" | "SecurityPolicy_TLS12_PFS_2025_EDGE" | "SecurityPolicy_TLS12_2018_EDGE")
+        def endpoint_access_mode: () -> ("BASIC" | "STRICT")
+        def api_status: () -> ("UPDATING" | "AVAILABLE" | "PENDING" | "FAILED")
+        def api_status_message: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/APIGateway/Client.html#get_rest_api-instance_method
       def get_rest_api: (
@@ -1433,6 +1454,10 @@ module Aws
         def tags: () -> ::Hash[::String, ::String]
         def disable_execute_api_endpoint: () -> bool
         def root_resource_id: () -> ::String
+        def security_policy: () -> ("TLS_1_0" | "TLS_1_2" | "SecurityPolicy_TLS13_1_3_2025_09" | "SecurityPolicy_TLS13_1_3_FIPS_2025_09" | "SecurityPolicy_TLS13_1_2_PFS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_FIPS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_FIPS_PFS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_2021_06" | "SecurityPolicy_TLS13_2025_EDGE" | "SecurityPolicy_TLS12_PFS_2025_EDGE" | "SecurityPolicy_TLS12_2018_EDGE")
+        def endpoint_access_mode: () -> ("BASIC" | "STRICT")
+        def api_status: () -> ("UPDATING" | "AVAILABLE" | "PENDING" | "FAILED")
+        def api_status_message: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/APIGateway/Client.html#import_rest_api-instance_method
       def import_rest_api: (
@@ -1477,6 +1502,8 @@ module Aws
         def cache_key_parameters: () -> ::Array[::String]
         def integration_responses: () -> ::Hash[::String, Types::IntegrationResponse]
         def tls_config: () -> Types::TlsConfig
+        def response_transfer_mode: () -> ("BUFFERED" | "STREAM")
+        def integration_target: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/APIGateway/Client.html#put_integration-instance_method
       def put_integration: (
@@ -1498,7 +1525,9 @@ module Aws
                              ?timeout_in_millis: ::Integer,
                              ?tls_config: {
                                insecure_skip_verification: bool?
-                             }
+                             },
+                             ?response_transfer_mode: ("BUFFERED" | "STREAM"),
+                             ?integration_target: ::String
                            ) -> _PutIntegrationResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutIntegrationResponseSuccess
 
@@ -1586,6 +1615,10 @@ module Aws
         def tags: () -> ::Hash[::String, ::String]
         def disable_execute_api_endpoint: () -> bool
         def root_resource_id: () -> ::String
+        def security_policy: () -> ("TLS_1_0" | "TLS_1_2" | "SecurityPolicy_TLS13_1_3_2025_09" | "SecurityPolicy_TLS13_1_3_FIPS_2025_09" | "SecurityPolicy_TLS13_1_2_PFS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_FIPS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_FIPS_PFS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_2021_06" | "SecurityPolicy_TLS13_2025_EDGE" | "SecurityPolicy_TLS12_PFS_2025_EDGE" | "SecurityPolicy_TLS12_2018_EDGE")
+        def endpoint_access_mode: () -> ("BASIC" | "STRICT")
+        def api_status: () -> ("UPDATING" | "AVAILABLE" | "PENDING" | "FAILED")
+        def api_status_message: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/APIGateway/Client.html#put_rest_api-instance_method
       def put_rest_api: (
@@ -1679,7 +1712,7 @@ module Aws
                                 path: ::String?,
                                 value: ::String?,
                                 from: ::String?
-                              },
+                              }
                             ]
                           ) -> _UpdateAccountResponseSuccess
                         | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateAccountResponseSuccess
@@ -1706,7 +1739,7 @@ module Aws
                                 path: ::String?,
                                 value: ::String?,
                                 from: ::String?
-                              },
+                              }
                             ]
                           ) -> _UpdateApiKeyResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateApiKeyResponseSuccess
@@ -1734,7 +1767,7 @@ module Aws
                                    path: ::String?,
                                    value: ::String?,
                                    from: ::String?
-                                 },
+                                 }
                                ]
                              ) -> _UpdateAuthorizerResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateAuthorizerResponseSuccess
@@ -1756,7 +1789,7 @@ module Aws
                                           path: ::String?,
                                           value: ::String?,
                                           from: ::String?
-                                        },
+                                        }
                                       ]
                                     ) -> _UpdateBasePathMappingResponseSuccess
                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateBasePathMappingResponseSuccess
@@ -1779,7 +1812,7 @@ module Aws
                                            path: ::String?,
                                            value: ::String?,
                                            from: ::String?
-                                         },
+                                         }
                                        ]
                                      ) -> _UpdateClientCertificateResponseSuccess
                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateClientCertificateResponseSuccess
@@ -1801,7 +1834,7 @@ module Aws
                                    path: ::String?,
                                    value: ::String?,
                                    from: ::String?
-                                 },
+                                 }
                                ]
                              ) -> _UpdateDeploymentResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateDeploymentResponseSuccess
@@ -1822,7 +1855,7 @@ module Aws
                                            path: ::String?,
                                            value: ::String?,
                                            from: ::String?
-                                         },
+                                         }
                                        ]
                                      ) -> _UpdateDocumentationPartResponseSuccess
                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateDocumentationPartResponseSuccess
@@ -1843,7 +1876,7 @@ module Aws
                                               path: ::String?,
                                               value: ::String?,
                                               from: ::String?
-                                            },
+                                            }
                                           ]
                                         ) -> _UpdateDocumentationVersionResponseSuccess
                                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateDocumentationVersionResponseSuccess
@@ -1863,14 +1896,16 @@ module Aws
         def distribution_domain_name: () -> ::String
         def distribution_hosted_zone_id: () -> ::String
         def endpoint_configuration: () -> Types::EndpointConfiguration
-        def domain_name_status: () -> ("AVAILABLE" | "UPDATING" | "PENDING" | "PENDING_CERTIFICATE_REIMPORT" | "PENDING_OWNERSHIP_VERIFICATION")
+        def domain_name_status: () -> ("AVAILABLE" | "UPDATING" | "PENDING" | "PENDING_CERTIFICATE_REIMPORT" | "PENDING_OWNERSHIP_VERIFICATION" | "FAILED")
         def domain_name_status_message: () -> ::String
-        def security_policy: () -> ("TLS_1_0" | "TLS_1_2")
+        def security_policy: () -> ("TLS_1_0" | "TLS_1_2" | "SecurityPolicy_TLS13_1_3_2025_09" | "SecurityPolicy_TLS13_1_3_FIPS_2025_09" | "SecurityPolicy_TLS13_1_2_PFS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_FIPS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_FIPS_PFS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_2021_06" | "SecurityPolicy_TLS13_2025_EDGE" | "SecurityPolicy_TLS12_PFS_2025_EDGE" | "SecurityPolicy_TLS12_2018_EDGE")
+        def endpoint_access_mode: () -> ("BASIC" | "STRICT")
         def tags: () -> ::Hash[::String, ::String]
         def mutual_tls_authentication: () -> Types::MutualTlsAuthentication
         def ownership_verification_certificate_arn: () -> ::String
         def management_policy: () -> ::String
         def policy: () -> ::String
+        def routing_mode: () -> ("BASE_PATH_MAPPING_ONLY" | "ROUTING_RULE_ONLY" | "ROUTING_RULE_THEN_BASE_PATH_MAPPING")
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/APIGateway/Client.html#update_domain_name-instance_method
       def update_domain_name: (
@@ -1882,7 +1917,7 @@ module Aws
                                     path: ::String?,
                                     value: ::String?,
                                     from: ::String?
-                                  },
+                                  }
                                 ]
                               ) -> _UpdateDomainNameResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateDomainNameResponseSuccess
@@ -1905,7 +1940,7 @@ module Aws
                                          path: ::String?,
                                          value: ::String?,
                                          from: ::String?
-                                       },
+                                       }
                                      ]
                                    ) -> _UpdateGatewayResponseResponseSuccess
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateGatewayResponseResponseSuccess
@@ -1927,6 +1962,8 @@ module Aws
         def cache_key_parameters: () -> ::Array[::String]
         def integration_responses: () -> ::Hash[::String, Types::IntegrationResponse]
         def tls_config: () -> Types::TlsConfig
+        def response_transfer_mode: () -> ("BUFFERED" | "STREAM")
+        def integration_target: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/APIGateway/Client.html#update_integration-instance_method
       def update_integration: (
@@ -1939,7 +1976,7 @@ module Aws
                                     path: ::String?,
                                     value: ::String?,
                                     from: ::String?
-                                  },
+                                  }
                                 ]
                               ) -> _UpdateIntegrationResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateIntegrationResponseSuccess
@@ -1964,7 +2001,7 @@ module Aws
                                              path: ::String?,
                                              value: ::String?,
                                              from: ::String?
-                                           },
+                                           }
                                          ]
                                        ) -> _UpdateIntegrationResponseResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateIntegrationResponseResponseSuccess
@@ -1994,7 +2031,7 @@ module Aws
                                path: ::String?,
                                value: ::String?,
                                from: ::String?
-                             },
+                             }
                            ]
                          ) -> _UpdateMethodResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateMethodResponseSuccess
@@ -2017,7 +2054,7 @@ module Aws
                                         path: ::String?,
                                         value: ::String?,
                                         from: ::String?
-                                      },
+                                      }
                                     ]
                                   ) -> _UpdateMethodResponseResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateMethodResponseResponseSuccess
@@ -2040,7 +2077,7 @@ module Aws
                               path: ::String?,
                               value: ::String?,
                               from: ::String?
-                            },
+                            }
                           ]
                         ) -> _UpdateModelResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateModelResponseSuccess
@@ -2062,7 +2099,7 @@ module Aws
                                           path: ::String?,
                                           value: ::String?,
                                           from: ::String?
-                                        },
+                                        }
                                       ]
                                     ) -> _UpdateRequestValidatorResponseSuccess
                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateRequestValidatorResponseSuccess
@@ -2085,7 +2122,7 @@ module Aws
                                  path: ::String?,
                                  value: ::String?,
                                  from: ::String?
-                               },
+                               }
                              ]
                            ) -> _UpdateResourceResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateResourceResponseSuccess
@@ -2106,6 +2143,10 @@ module Aws
         def tags: () -> ::Hash[::String, ::String]
         def disable_execute_api_endpoint: () -> bool
         def root_resource_id: () -> ::String
+        def security_policy: () -> ("TLS_1_0" | "TLS_1_2" | "SecurityPolicy_TLS13_1_3_2025_09" | "SecurityPolicy_TLS13_1_3_FIPS_2025_09" | "SecurityPolicy_TLS13_1_2_PFS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_FIPS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_FIPS_PFS_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_PQ_2025_09" | "SecurityPolicy_TLS13_1_2_2021_06" | "SecurityPolicy_TLS13_2025_EDGE" | "SecurityPolicy_TLS12_PFS_2025_EDGE" | "SecurityPolicy_TLS12_2018_EDGE")
+        def endpoint_access_mode: () -> ("BASIC" | "STRICT")
+        def api_status: () -> ("UPDATING" | "AVAILABLE" | "PENDING" | "FAILED")
+        def api_status_message: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/APIGateway/Client.html#update_rest_api-instance_method
       def update_rest_api: (
@@ -2116,7 +2157,7 @@ module Aws
                                  path: ::String?,
                                  value: ::String?,
                                  from: ::String?
-                               },
+                               }
                              ]
                            ) -> _UpdateRestApiResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateRestApiResponseSuccess
@@ -2151,7 +2192,7 @@ module Aws
                               path: ::String?,
                               value: ::String?,
                               from: ::String?
-                            },
+                            }
                           ]
                         ) -> _UpdateStageResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateStageResponseSuccess
@@ -2174,7 +2215,7 @@ module Aws
                               path: ::String?,
                               value: ::String?,
                               from: ::String?
-                            },
+                            }
                           ]
                         ) -> _UpdateUsageResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateUsageResponseSuccess
@@ -2199,7 +2240,7 @@ module Aws
                                    path: ::String?,
                                    value: ::String?,
                                    from: ::String?
-                                 },
+                                 }
                                ]
                              ) -> _UpdateUsagePlanResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateUsagePlanResponseSuccess
@@ -2223,7 +2264,7 @@ module Aws
                                  path: ::String?,
                                  value: ::String?,
                                  from: ::String?
-                               },
+                               }
                              ]
                            ) -> _UpdateVpcLinkResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateVpcLinkResponseSuccess

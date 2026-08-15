@@ -14,28 +14,369 @@ module Aws::ObservabilityAdmin
       SENSITIVE: []
     end
 
+    class ActionCondition
+      attr_accessor action: ("ALLOW" | "BLOCK" | "COUNT" | "CAPTCHA" | "CHALLENGE" | "EXCLUDED_AS_COUNT")
+      SENSITIVE: []
+    end
+
+    class AdvancedEventSelector
+      attr_accessor name: ::String
+      attr_accessor field_selectors: ::Array[Types::AdvancedFieldSelector]
+      SENSITIVE: []
+    end
+
+    class AdvancedFieldSelector
+      attr_accessor field: ::String
+      attr_accessor equals: ::Array[::String]
+      attr_accessor starts_with: ::Array[::String]
+      attr_accessor ends_with: ::Array[::String]
+      attr_accessor not_equals: ::Array[::String]
+      attr_accessor not_starts_with: ::Array[::String]
+      attr_accessor not_ends_with: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class CentralizationRule
+      attr_accessor source: Types::CentralizationRuleSource
+      attr_accessor destination: Types::CentralizationRuleDestination
+      SENSITIVE: []
+    end
+
+    class CentralizationRuleDestination
+      attr_accessor region: ::String
+      attr_accessor account: ::String
+      attr_accessor destination_logs_configuration: Types::DestinationLogsConfiguration
+      attr_accessor destination_metrics_configuration: Types::DestinationMetricsConfiguration
+      SENSITIVE: []
+    end
+
+    class CentralizationRuleSource
+      attr_accessor regions: ::Array[::String]
+      attr_accessor scope: ::String
+      attr_accessor source_logs_configuration: Types::SourceLogsConfiguration
+      attr_accessor source_metrics_configuration: Types::SourceMetricsConfiguration
+      SENSITIVE: []
+    end
+
+    class CentralizationRuleSummary
+      attr_accessor rule_name: ::String
+      attr_accessor rule_arn: ::String
+      attr_accessor creator_account_id: ::String
+      attr_accessor created_time_stamp: ::Integer
+      attr_accessor created_region: ::String
+      attr_accessor last_update_time_stamp: ::Integer
+      attr_accessor rule_health: ("Healthy" | "Unhealthy" | "Provisioning")
+      attr_accessor failure_reason: ("TRUSTED_ACCESS_NOT_ENABLED" | "DESTINATION_ACCOUNT_NOT_IN_ORGANIZATION" | "INTERNAL_SERVER_ERROR")
+      attr_accessor tag_propagation_status: ("Healthy" | "Unhealthy")
+      attr_accessor tag_propagation_failure_reason: ("RoleNotAssumable" | "RoleLacksPermissions")
+      attr_accessor destination_account_id: ::String
+      attr_accessor destination_region: ::String
+      SENSITIVE: []
+    end
+
+    class CloudtrailParameters
+      attr_accessor advanced_event_selectors: ::Array[Types::AdvancedEventSelector]
+      SENSITIVE: []
+    end
+
+    class Condition
+      attr_accessor action_condition: Types::ActionCondition
+      attr_accessor label_name_condition: Types::LabelNameCondition
+      SENSITIVE: []
+    end
+
+    class ConfigurationSummary
+      attr_accessor sources: ::Array[Types::Source]
+      attr_accessor data_sources: ::Array[Types::DataSource]
+      attr_accessor processors: ::Array[::String]
+      attr_accessor processor_count: ::Integer
+      attr_accessor sinks: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class ConflictException
+      attr_accessor message: ::String
+      attr_accessor resource_id: ::String
+      attr_accessor resource_type: ::String
+      SENSITIVE: []
+    end
+
+    class CreateCentralizationRuleForOrganizationInput
+      attr_accessor rule_name: ::String
+      attr_accessor rule: Types::CentralizationRule
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class CreateCentralizationRuleForOrganizationOutput
+      attr_accessor rule_arn: ::String
+      SENSITIVE: []
+    end
+
+    class CreateS3TableIntegrationInput
+      attr_accessor encryption: Types::Encryption
+      attr_accessor role_arn: ::String
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class CreateS3TableIntegrationOutput
+      attr_accessor arn: ::String
+      SENSITIVE: []
+    end
+
+    class CreateTelemetryPipelineInput
+      attr_accessor name: ::String
+      attr_accessor configuration: Types::TelemetryPipelineConfiguration
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class CreateTelemetryPipelineOutput
+      attr_accessor arn: ::String
+      SENSITIVE: []
+    end
+
+    class CreateTelemetryRuleForOrganizationInput
+      attr_accessor rule_name: ::String
+      attr_accessor rule: Types::TelemetryRule
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class CreateTelemetryRuleForOrganizationOutput
+      attr_accessor rule_arn: ::String
+      SENSITIVE: []
+    end
+
+    class CreateTelemetryRuleInput
+      attr_accessor rule_name: ::String
+      attr_accessor rule: Types::TelemetryRule
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class CreateTelemetryRuleOutput
+      attr_accessor rule_arn: ::String
+      SENSITIVE: []
+    end
+
+    class DataSource
+      attr_accessor name: ::String
+      attr_accessor type: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteCentralizationRuleForOrganizationInput
+      attr_accessor rule_identifier: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteS3TableIntegrationInput
+      attr_accessor arn: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteTelemetryPipelineInput
+      attr_accessor pipeline_identifier: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteTelemetryPipelineOutput < Aws::EmptyStructure
+    end
+
+    class DeleteTelemetryRuleForOrganizationInput
+      attr_accessor rule_identifier: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteTelemetryRuleInput
+      attr_accessor rule_identifier: ::String
+      SENSITIVE: []
+    end
+
+    class DestinationLogsConfiguration
+      attr_accessor logs_encryption_configuration: Types::LogsEncryptionConfiguration
+      attr_accessor backup_configuration: Types::LogsBackupConfiguration
+      attr_accessor log_group_name_configuration: Types::LogGroupNameConfiguration
+      attr_accessor tag_propagation_configuration: Types::TagPropagationConfiguration
+      SENSITIVE: []
+    end
+
+    class DestinationMetricsConfiguration
+      attr_accessor backup_configuration: Types::MetricsBackupConfiguration
+      SENSITIVE: []
+    end
+
+    class ELBLoadBalancerLoggingParameters
+      attr_accessor output_format: ("plain" | "json")
+      attr_accessor field_delimiter: ::String
+      SENSITIVE: []
+    end
+
+    class Encryption
+      attr_accessor sse_algorithm: ("aws:kms" | "AES256")
+      attr_accessor kms_key_arn: ::String
+      SENSITIVE: []
+    end
+
+    class FieldToMatch
+      attr_accessor single_header: Types::SingleHeader
+      attr_accessor uri_path: ::String
+      attr_accessor query_string: ::String
+      attr_accessor method: ::String
+      SENSITIVE: []
+    end
+
+    class Filter
+      attr_accessor behavior: ("KEEP" | "DROP")
+      attr_accessor requirement: ("MEETS_ALL" | "MEETS_ANY")
+      attr_accessor conditions: ::Array[Types::Condition]
+      SENSITIVE: []
+    end
+
+    class GetCentralizationRuleForOrganizationInput
+      attr_accessor rule_identifier: ::String
+      SENSITIVE: []
+    end
+
+    class GetCentralizationRuleForOrganizationOutput
+      attr_accessor rule_name: ::String
+      attr_accessor rule_arn: ::String
+      attr_accessor creator_account_id: ::String
+      attr_accessor created_time_stamp: ::Integer
+      attr_accessor created_region: ::String
+      attr_accessor last_update_time_stamp: ::Integer
+      attr_accessor rule_health: ("Healthy" | "Unhealthy" | "Provisioning")
+      attr_accessor failure_reason: ("TRUSTED_ACCESS_NOT_ENABLED" | "DESTINATION_ACCOUNT_NOT_IN_ORGANIZATION" | "INTERNAL_SERVER_ERROR")
+      attr_accessor tag_propagation_status: ("Healthy" | "Unhealthy")
+      attr_accessor tag_propagation_failure_reason: ("RoleNotAssumable" | "RoleLacksPermissions")
+      attr_accessor centralization_rule: Types::CentralizationRule
+      SENSITIVE: []
+    end
+
+    class GetS3TableIntegrationInput
+      attr_accessor arn: ::String
+      SENSITIVE: []
+    end
+
+    class GetS3TableIntegrationOutput
+      attr_accessor arn: ::String
+      attr_accessor role_arn: ::String
+      attr_accessor status: ("ACTIVE" | "DELETING")
+      attr_accessor encryption: Types::Encryption
+      attr_accessor destination_table_bucket_arn: ::String
+      attr_accessor created_time_stamp: ::Integer
+      SENSITIVE: []
+    end
+
+    class GetTelemetryEnrichmentStatusOutput
+      attr_accessor status: ("Running" | "Stopped" | "Impaired")
+      attr_accessor aws_resource_explorer_managed_view_arn: ::String
+      SENSITIVE: []
+    end
+
     class GetTelemetryEvaluationStatusForOrganizationOutput
       attr_accessor status: ("NOT_STARTED" | "STARTING" | "FAILED_START" | "RUNNING" | "STOPPING" | "FAILED_STOP" | "STOPPED")
       attr_accessor failure_reason: ::String
+      attr_accessor home_region: ::String
+      attr_accessor region_statuses: ::Array[Types::RegionStatus]
       SENSITIVE: []
     end
 
     class GetTelemetryEvaluationStatusOutput
       attr_accessor status: ("NOT_STARTED" | "STARTING" | "FAILED_START" | "RUNNING" | "STOPPING" | "FAILED_STOP" | "STOPPED")
       attr_accessor failure_reason: ::String
+      attr_accessor home_region: ::String
+      attr_accessor region_statuses: ::Array[Types::RegionStatus]
+      SENSITIVE: []
+    end
+
+    class GetTelemetryPipelineInput
+      attr_accessor pipeline_identifier: ::String
+      SENSITIVE: []
+    end
+
+    class GetTelemetryPipelineOutput
+      attr_accessor pipeline: Types::TelemetryPipeline
+      SENSITIVE: []
+    end
+
+    class GetTelemetryRuleForOrganizationInput
+      attr_accessor rule_identifier: ::String
+      SENSITIVE: []
+    end
+
+    class GetTelemetryRuleForOrganizationOutput
+      attr_accessor rule_name: ::String
+      attr_accessor rule_arn: ::String
+      attr_accessor created_time_stamp: ::Integer
+      attr_accessor last_update_time_stamp: ::Integer
+      attr_accessor telemetry_rule: Types::TelemetryRule
+      attr_accessor home_region: ::String
+      attr_accessor is_replicated: bool
+      attr_accessor region_statuses: ::Array[Types::RegionStatus]
+      SENSITIVE: []
+    end
+
+    class GetTelemetryRuleInput
+      attr_accessor rule_identifier: ::String
+      SENSITIVE: []
+    end
+
+    class GetTelemetryRuleOutput
+      attr_accessor rule_name: ::String
+      attr_accessor rule_arn: ::String
+      attr_accessor created_time_stamp: ::Integer
+      attr_accessor last_update_time_stamp: ::Integer
+      attr_accessor telemetry_rule: Types::TelemetryRule
+      attr_accessor home_region: ::String
+      attr_accessor is_replicated: bool
+      attr_accessor region_statuses: ::Array[Types::RegionStatus]
+      SENSITIVE: []
+    end
+
+    class IntegrationSummary
+      attr_accessor arn: ::String
+      attr_accessor status: ("ACTIVE" | "DELETING")
       SENSITIVE: []
     end
 
     class InternalServerException
       attr_accessor message: ::String
       attr_accessor amzn_error_type: ::String
+      attr_accessor retry_after_seconds: ::Integer
+      SENSITIVE: []
+    end
+
+    class InvalidStateException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class LabelNameCondition
+      attr_accessor label_name: ::String
+      SENSITIVE: []
+    end
+
+    class ListCentralizationRulesForOrganizationInput
+      attr_accessor rule_name_prefix: ::String
+      attr_accessor all_regions: bool
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListCentralizationRulesForOrganizationOutput
+      attr_accessor centralization_rule_summaries: ::Array[Types::CentralizationRuleSummary]
+      attr_accessor next_token: ::String
       SENSITIVE: []
     end
 
     class ListResourceTelemetryForOrganizationInput
       attr_accessor account_identifiers: ::Array[::String]
       attr_accessor resource_identifier_prefix: ::String
-      attr_accessor resource_types: ::Array[("AWS::EC2::Instance" | "AWS::EC2::VPC" | "AWS::Lambda::Function")]
+      attr_accessor resource_types: ::Array[("AWS::EC2::Instance" | "AWS::EC2::VPC" | "AWS::Lambda::Function" | "AWS::CloudTrail" | "AWS::EKS::Cluster" | "AWS::WAFv2::WebACL" | "AWS::ElasticLoadBalancingV2::LoadBalancer" | "AWS::Route53Resolver::ResolverEndpoint" | "AWS::BedrockAgentCore::Runtime" | "AWS::BedrockAgentCore::Browser" | "AWS::BedrockAgentCore::CodeInterpreter" | "AWS::BedrockAgentCore::Gateway" | "AWS::BedrockAgentCore::Memory" | "AWS::BedrockAgentCore::WorkloadIdentity" | "AWS::SecurityHub::Hub" | "AWS::CloudFront::Distribution" | "AWS::SecurityHub::HubV2" | "AWS::CloudWatch::OTelEnrichment" | "AWS::MSK::Cluster" | "AWS::S3::Bucket" | "AWS::Bedrock::KnowledgeBase")]
       attr_accessor telemetry_configuration_state: ::Hash[("Logs" | "Metrics" | "Traces"), ("Enabled" | "Disabled" | "NotApplicable")]
       attr_accessor resource_tags: ::Hash[::String, ::String]
       attr_accessor max_results: ::Integer
@@ -51,7 +392,7 @@ module Aws::ObservabilityAdmin
 
     class ListResourceTelemetryInput
       attr_accessor resource_identifier_prefix: ::String
-      attr_accessor resource_types: ::Array[("AWS::EC2::Instance" | "AWS::EC2::VPC" | "AWS::Lambda::Function")]
+      attr_accessor resource_types: ::Array[("AWS::EC2::Instance" | "AWS::EC2::VPC" | "AWS::Lambda::Function" | "AWS::CloudTrail" | "AWS::EKS::Cluster" | "AWS::WAFv2::WebACL" | "AWS::ElasticLoadBalancingV2::LoadBalancer" | "AWS::Route53Resolver::ResolverEndpoint" | "AWS::BedrockAgentCore::Runtime" | "AWS::BedrockAgentCore::Browser" | "AWS::BedrockAgentCore::CodeInterpreter" | "AWS::BedrockAgentCore::Gateway" | "AWS::BedrockAgentCore::Memory" | "AWS::BedrockAgentCore::WorkloadIdentity" | "AWS::SecurityHub::Hub" | "AWS::CloudFront::Distribution" | "AWS::SecurityHub::HubV2" | "AWS::CloudWatch::OTelEnrichment" | "AWS::MSK::Cluster" | "AWS::S3::Bucket" | "AWS::Bedrock::KnowledgeBase")]
       attr_accessor telemetry_configuration_state: ::Hash[("Logs" | "Metrics" | "Traces"), ("Enabled" | "Disabled" | "NotApplicable")]
       attr_accessor resource_tags: ::Hash[::String, ::String]
       attr_accessor max_results: ::Integer
@@ -65,18 +406,388 @@ module Aws::ObservabilityAdmin
       SENSITIVE: []
     end
 
+    class ListS3TableIntegrationsInput
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListS3TableIntegrationsOutput
+      attr_accessor integration_summaries: ::Array[Types::IntegrationSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListTagsForResourceInput
+      attr_accessor resource_arn: ::String
+      SENSITIVE: []
+    end
+
+    class ListTagsForResourceOutput
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class ListTelemetryPipelinesInput
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListTelemetryPipelinesOutput
+      attr_accessor pipeline_summaries: ::Array[Types::TelemetryPipelineSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListTelemetryRulesForOrganizationInput
+      attr_accessor rule_name_prefix: ::String
+      attr_accessor source_account_ids: ::Array[::String]
+      attr_accessor source_organization_unit_ids: ::Array[::String]
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListTelemetryRulesForOrganizationOutput
+      attr_accessor telemetry_rule_summaries: ::Array[Types::TelemetryRuleSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListTelemetryRulesInput
+      attr_accessor rule_name_prefix: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListTelemetryRulesOutput
+      attr_accessor telemetry_rule_summaries: ::Array[Types::TelemetryRuleSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class LogDeliveryParameters
+      attr_accessor log_types: ::Array[("APPLICATION_LOGS" | "USAGE_LOGS" | "SECURITY_FINDING_LOGS" | "ACCESS_LOGS" | "CONNECTION_LOGS" | "S3_SERVER_ACCESS_LOGS" | "ALB_ACCESS_LOGS" | "ALB_CONNECTION_LOGS" | "ALB_HEALTH_CHECK_LOGS")]
+      SENSITIVE: []
+    end
+
+    class LogGroupNameConfiguration
+      attr_accessor log_group_name_pattern: ::String
+      SENSITIVE: []
+    end
+
+    class LoggingFilter
+      attr_accessor filters: ::Array[Types::Filter]
+      attr_accessor default_behavior: ("KEEP" | "DROP")
+      SENSITIVE: []
+    end
+
+    class LogsBackupConfiguration
+      attr_accessor region: ::String
+      attr_accessor kms_key_arn: ::String
+      SENSITIVE: []
+    end
+
+    class LogsEncryptionConfiguration
+      attr_accessor encryption_strategy: ("CUSTOMER_MANAGED" | "AWS_OWNED")
+      attr_accessor kms_key_arn: ::String
+      attr_accessor encryption_conflict_resolution_strategy: ("ALLOW" | "SKIP")
+      attr_accessor encryption_scope: ("ENCRYPTED_SOURCE_ONLY" | "NEW_DESTINATION_LOG_GROUPS")
+      SENSITIVE: []
+    end
+
+    class MetricsBackupConfiguration
+      attr_accessor region: ::String
+      SENSITIVE: []
+    end
+
+    class MskMonitoringParameters
+      attr_accessor enhanced_monitoring: ("DEFAULT" | "PER_BROKER" | "PER_TOPIC_PER_BROKER" | "PER_TOPIC_PER_PARTITION")
+      SENSITIVE: []
+    end
+
+    class PipelineOutput
+      attr_accessor record: Types::Record
+      attr_accessor error: Types::PipelineOutputError
+      SENSITIVE: []
+    end
+
+    class PipelineOutputError
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class Record
+      attr_accessor data: ::String
+      attr_accessor type: ("STRING" | "JSON")
+      SENSITIVE: []
+    end
+
+    class RegionStatus
+      attr_accessor region: ::String
+      attr_accessor status: ::String
+      attr_accessor failure_reason: ::String
+      attr_accessor rule_arn: ::String
+      SENSITIVE: []
+    end
+
+    class ResourceNotFoundException
+      attr_accessor message: ::String
+      attr_accessor resource_id: ::String
+      attr_accessor resource_type: ::String
+      SENSITIVE: []
+    end
+
+    class ServiceQuotaExceededException
+      attr_accessor message: ::String
+      attr_accessor resource_id: ::String
+      attr_accessor resource_type: ::String
+      attr_accessor service_code: ::String
+      attr_accessor quota_code: ::String
+      attr_accessor amzn_error_type: ::String
+      SENSITIVE: []
+    end
+
+    class SingleHeader
+      attr_accessor name: ::String
+      SENSITIVE: []
+    end
+
+    class Source
+      attr_accessor type: ::String
+      SENSITIVE: []
+    end
+
+    class SourceLogsConfiguration
+      attr_accessor log_group_selection_criteria: ::String
+      attr_accessor data_source_selection_criteria: ::String
+      attr_accessor encrypted_log_group_strategy: ("ALLOW" | "SKIP")
+      SENSITIVE: []
+    end
+
+    class SourceMetricsConfiguration
+      attr_accessor metrics_selection_criteria: ::String
+      SENSITIVE: []
+    end
+
+    class StartTelemetryEnrichmentOutput
+      attr_accessor status: ("Running" | "Stopped" | "Impaired")
+      attr_accessor aws_resource_explorer_managed_view_arn: ::String
+      SENSITIVE: []
+    end
+
+    class StartTelemetryEvaluationForOrganizationInput
+      attr_accessor regions: ::Array[::String]
+      attr_accessor all_regions: bool
+      SENSITIVE: []
+    end
+
+    class StartTelemetryEvaluationInput
+      attr_accessor regions: ::Array[::String]
+      attr_accessor all_regions: bool
+      SENSITIVE: []
+    end
+
+    class StopTelemetryEnrichmentOutput
+      attr_accessor status: ("Running" | "Stopped" | "Impaired")
+      SENSITIVE: []
+    end
+
+    class TagPropagationConfiguration
+      attr_accessor destination_role_arn: ::String
+      attr_accessor tag_conflict_resolution_strategy: ("IN_SYNC" | "ADD_ONLY" | "UPDATE_SYNC")
+      SENSITIVE: []
+    end
+
+    class TagResourceInput
+      attr_accessor resource_arn: ::String
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
     class TelemetryConfiguration
       attr_accessor account_identifier: ::String
       attr_accessor telemetry_configuration_state: ::Hash[("Logs" | "Metrics" | "Traces"), ("Enabled" | "Disabled" | "NotApplicable")]
-      attr_accessor resource_type: ("AWS::EC2::Instance" | "AWS::EC2::VPC" | "AWS::Lambda::Function")
+      attr_accessor resource_type: ("AWS::EC2::Instance" | "AWS::EC2::VPC" | "AWS::Lambda::Function" | "AWS::CloudTrail" | "AWS::EKS::Cluster" | "AWS::WAFv2::WebACL" | "AWS::ElasticLoadBalancingV2::LoadBalancer" | "AWS::Route53Resolver::ResolverEndpoint" | "AWS::BedrockAgentCore::Runtime" | "AWS::BedrockAgentCore::Browser" | "AWS::BedrockAgentCore::CodeInterpreter" | "AWS::BedrockAgentCore::Gateway" | "AWS::BedrockAgentCore::Memory" | "AWS::BedrockAgentCore::WorkloadIdentity" | "AWS::SecurityHub::Hub" | "AWS::CloudFront::Distribution" | "AWS::SecurityHub::HubV2" | "AWS::CloudWatch::OTelEnrichment" | "AWS::MSK::Cluster" | "AWS::S3::Bucket" | "AWS::Bedrock::KnowledgeBase")
       attr_accessor resource_identifier: ::String
       attr_accessor resource_tags: ::Hash[::String, ::String]
       attr_accessor last_update_time_stamp: ::Integer
+      attr_accessor telemetry_source_type: ("VPC_FLOW_LOGS" | "ROUTE53_RESOLVER_QUERY_LOGS" | "EKS_AUDIT_LOGS" | "EKS_AUTHENTICATOR_LOGS" | "EKS_CONTROLLER_MANAGER_LOGS" | "EKS_SCHEDULER_LOGS" | "EKS_API_LOGS")
+      SENSITIVE: []
+    end
+
+    class TelemetryDestinationConfiguration
+      attr_accessor destination_type: ("cloud-watch-logs")
+      attr_accessor destination_pattern: ::String
+      attr_accessor retention_in_days: ::Integer
+      attr_accessor vpc_flow_log_parameters: Types::VPCFlowLogParameters
+      attr_accessor cloudtrail_parameters: Types::CloudtrailParameters
+      attr_accessor elb_load_balancer_logging_parameters: Types::ELBLoadBalancerLoggingParameters
+      attr_accessor waf_logging_parameters: Types::WAFLoggingParameters
+      attr_accessor log_delivery_parameters: Types::LogDeliveryParameters
+      attr_accessor msk_monitoring_parameters: Types::MskMonitoringParameters
+      attr_accessor kms_key_arn: ::String
+      SENSITIVE: []
+    end
+
+    class TelemetryPipeline
+      attr_accessor created_time_stamp: ::Integer
+      attr_accessor last_update_time_stamp: ::Integer
+      attr_accessor arn: ::String
+      attr_accessor name: ::String
+      attr_accessor configuration: Types::TelemetryPipelineConfiguration
+      attr_accessor status: ("CREATING" | "ACTIVE" | "UPDATING" | "DELETING" | "CREATE_FAILED" | "UPDATE_FAILED")
+      attr_accessor status_reason: Types::TelemetryPipelineStatusReason
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class TelemetryPipelineConfiguration
+      attr_accessor body: ::String
+      SENSITIVE: []
+    end
+
+    class TelemetryPipelineStatusReason
+      attr_accessor description: ::String
+      SENSITIVE: []
+    end
+
+    class TelemetryPipelineSummary
+      attr_accessor created_time_stamp: ::Integer
+      attr_accessor last_update_time_stamp: ::Integer
+      attr_accessor arn: ::String
+      attr_accessor name: ::String
+      attr_accessor status: ("CREATING" | "ACTIVE" | "UPDATING" | "DELETING" | "CREATE_FAILED" | "UPDATE_FAILED")
+      attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor configuration_summary: Types::ConfigurationSummary
+      SENSITIVE: []
+    end
+
+    class TelemetryRule
+      attr_accessor resource_type: ("AWS::EC2::Instance" | "AWS::EC2::VPC" | "AWS::Lambda::Function" | "AWS::CloudTrail" | "AWS::EKS::Cluster" | "AWS::WAFv2::WebACL" | "AWS::ElasticLoadBalancingV2::LoadBalancer" | "AWS::Route53Resolver::ResolverEndpoint" | "AWS::BedrockAgentCore::Runtime" | "AWS::BedrockAgentCore::Browser" | "AWS::BedrockAgentCore::CodeInterpreter" | "AWS::BedrockAgentCore::Gateway" | "AWS::BedrockAgentCore::Memory" | "AWS::BedrockAgentCore::WorkloadIdentity" | "AWS::SecurityHub::Hub" | "AWS::CloudFront::Distribution" | "AWS::SecurityHub::HubV2" | "AWS::CloudWatch::OTelEnrichment" | "AWS::MSK::Cluster" | "AWS::S3::Bucket" | "AWS::Bedrock::KnowledgeBase")
+      attr_accessor telemetry_type: ("Logs" | "Metrics" | "Traces")
+      attr_accessor telemetry_source_types: ::Array[("VPC_FLOW_LOGS" | "ROUTE53_RESOLVER_QUERY_LOGS" | "EKS_AUDIT_LOGS" | "EKS_AUTHENTICATOR_LOGS" | "EKS_CONTROLLER_MANAGER_LOGS" | "EKS_SCHEDULER_LOGS" | "EKS_API_LOGS")]
+      attr_accessor destination_configuration: Types::TelemetryDestinationConfiguration
+      attr_accessor scope: ::String
+      attr_accessor selection_criteria: ::String
+      attr_accessor allow_field_updates: bool
+      attr_accessor regions: ::Array[::String]
+      attr_accessor all_regions: bool
+      SENSITIVE: []
+    end
+
+    class TelemetryRuleSummary
+      attr_accessor rule_name: ::String
+      attr_accessor rule_arn: ::String
+      attr_accessor created_time_stamp: ::Integer
+      attr_accessor last_update_time_stamp: ::Integer
+      attr_accessor resource_type: ("AWS::EC2::Instance" | "AWS::EC2::VPC" | "AWS::Lambda::Function" | "AWS::CloudTrail" | "AWS::EKS::Cluster" | "AWS::WAFv2::WebACL" | "AWS::ElasticLoadBalancingV2::LoadBalancer" | "AWS::Route53Resolver::ResolverEndpoint" | "AWS::BedrockAgentCore::Runtime" | "AWS::BedrockAgentCore::Browser" | "AWS::BedrockAgentCore::CodeInterpreter" | "AWS::BedrockAgentCore::Gateway" | "AWS::BedrockAgentCore::Memory" | "AWS::BedrockAgentCore::WorkloadIdentity" | "AWS::SecurityHub::Hub" | "AWS::CloudFront::Distribution" | "AWS::SecurityHub::HubV2" | "AWS::CloudWatch::OTelEnrichment" | "AWS::MSK::Cluster" | "AWS::S3::Bucket" | "AWS::Bedrock::KnowledgeBase")
+      attr_accessor telemetry_type: ("Logs" | "Metrics" | "Traces")
+      attr_accessor telemetry_source_types: ::Array[("VPC_FLOW_LOGS" | "ROUTE53_RESOLVER_QUERY_LOGS" | "EKS_AUDIT_LOGS" | "EKS_AUTHENTICATOR_LOGS" | "EKS_CONTROLLER_MANAGER_LOGS" | "EKS_SCHEDULER_LOGS" | "EKS_API_LOGS")]
+      SENSITIVE: []
+    end
+
+    class TestTelemetryPipelineInput
+      attr_accessor records: ::Array[Types::Record]
+      attr_accessor configuration: Types::TelemetryPipelineConfiguration
+      attr_accessor signal_type: ("LOG" | "METRIC")
+      SENSITIVE: []
+    end
+
+    class TestTelemetryPipelineOutput
+      attr_accessor results: ::Array[Types::PipelineOutput]
+      SENSITIVE: []
+    end
+
+    class TooManyRequestsException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class UntagResourceInput
+      attr_accessor resource_arn: ::String
+      attr_accessor tag_keys: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class UpdateCentralizationRuleForOrganizationInput
+      attr_accessor rule_identifier: ::String
+      attr_accessor rule: Types::CentralizationRule
+      SENSITIVE: []
+    end
+
+    class UpdateCentralizationRuleForOrganizationOutput
+      attr_accessor rule_arn: ::String
+      SENSITIVE: []
+    end
+
+    class UpdateTelemetryPipelineInput
+      attr_accessor pipeline_identifier: ::String
+      attr_accessor configuration: Types::TelemetryPipelineConfiguration
+      SENSITIVE: []
+    end
+
+    class UpdateTelemetryPipelineOutput < Aws::EmptyStructure
+    end
+
+    class UpdateTelemetryRuleForOrganizationInput
+      attr_accessor rule_identifier: ::String
+      attr_accessor rule: Types::TelemetryRule
+      SENSITIVE: []
+    end
+
+    class UpdateTelemetryRuleForOrganizationOutput
+      attr_accessor rule_arn: ::String
+      SENSITIVE: []
+    end
+
+    class UpdateTelemetryRuleInput
+      attr_accessor rule_identifier: ::String
+      attr_accessor rule: Types::TelemetryRule
+      SENSITIVE: []
+    end
+
+    class UpdateTelemetryRuleOutput
+      attr_accessor rule_arn: ::String
+      SENSITIVE: []
+    end
+
+    class VPCFlowLogParameters
+      attr_accessor log_format: ::String
+      attr_accessor traffic_type: ::String
+      attr_accessor max_aggregation_interval: ::Integer
+      SENSITIVE: []
+    end
+
+    class ValidateTelemetryPipelineConfigurationInput
+      attr_accessor configuration: Types::TelemetryPipelineConfiguration
+      SENSITIVE: []
+    end
+
+    class ValidateTelemetryPipelineConfigurationOutput
+      attr_accessor errors: ::Array[Types::ValidationError]
+      SENSITIVE: []
+    end
+
+    class ValidationError
+      attr_accessor message: ::String
+      attr_accessor reason: ::String
+      attr_accessor field_map: ::Hash[::String, ::String]
       SENSITIVE: []
     end
 
     class ValidationException
       attr_accessor message: ::String
+      attr_accessor errors: ::Array[Types::ValidationError]
+      SENSITIVE: []
+    end
+
+    class WAFLoggingParameters
+      attr_accessor redacted_fields: ::Array[Types::FieldToMatch]
+      attr_accessor logging_filter: Types::LoggingFilter
+      attr_accessor log_type: ("WAF_LOGS")
       SENSITIVE: []
     end
   end

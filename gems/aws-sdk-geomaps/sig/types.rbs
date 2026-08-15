@@ -64,7 +64,7 @@ module Aws::GeoMaps
       attr_accessor style: ("Satellite" | "Standard")
       attr_accessor width: ::Integer
       attr_accessor zoom: ::Float
-      SENSITIVE: [:key]
+      SENSITIVE: [:bounding_box, :bounded_positions, :center, :compact_overlay, :geo_json_overlay, :height, :key, :padding, :political_view, :radius, :width, :zoom]
     end
 
     class GetStaticMapResponse
@@ -80,8 +80,13 @@ module Aws::GeoMaps
       attr_accessor style: ("Standard" | "Monochrome" | "Hybrid" | "Satellite")
       attr_accessor color_scheme: ("Light" | "Dark")
       attr_accessor political_view: ::String
+      attr_accessor terrain: ("Hillshade" | "Terrain3D")
+      attr_accessor contour_density: ("Low" | "Medium" | "High")
+      attr_accessor traffic: ("All" | "Congestion")
+      attr_accessor travel_modes: ::Array[("Transit" | "Truck")]
+      attr_accessor buildings: ("Buildings3D")
       attr_accessor key: ::String
-      SENSITIVE: [:key]
+      SENSITIVE: [:political_view, :key]
     end
 
     class GetStyleDescriptorResponse
@@ -93,12 +98,13 @@ module Aws::GeoMaps
     end
 
     class GetTileRequest
+      attr_accessor additional_features: ::Array[("ContourLines" | "Hillshade" | "Logistics" | "Transit")]
       attr_accessor tileset: ::String
       attr_accessor z: ::String
       attr_accessor x: ::String
       attr_accessor y: ::String
       attr_accessor key: ::String
-      SENSITIVE: [:key]
+      SENSITIVE: [:z, :x, :y, :key]
     end
 
     class GetTileResponse
@@ -111,6 +117,11 @@ module Aws::GeoMaps
     end
 
     class InternalServerException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class ResourceNotFoundException
       attr_accessor message: ::String
       SENSITIVE: []
     end

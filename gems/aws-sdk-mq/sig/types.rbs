@@ -22,6 +22,7 @@ module Aws::MQ
     class BadRequestException
       attr_accessor error_attribute: ::String
       attr_accessor message: ::String
+      attr_accessor resource_share_errors: ::Array[Types::ResourceShareError]
       SENSITIVE: []
     end
 
@@ -76,7 +77,7 @@ module Aws::MQ
 
     class Configuration
       attr_accessor arn: ::String
-      attr_accessor authentication_strategy: ("SIMPLE" | "LDAP")
+      attr_accessor authentication_strategy: ("SIMPLE" | "LDAP" | "CONFIG_MANAGED")
       attr_accessor created: ::Time
       attr_accessor description: ::String
       attr_accessor engine_type: ("ACTIVEMQ" | "RABBITMQ")
@@ -111,11 +112,12 @@ module Aws::MQ
     class ConflictException
       attr_accessor error_attribute: ::String
       attr_accessor message: ::String
+      attr_accessor resource_share_errors: ::Array[Types::ResourceShareError]
       SENSITIVE: []
     end
 
     class CreateBrokerInput
-      attr_accessor authentication_strategy: ("SIMPLE" | "LDAP")
+      attr_accessor authentication_strategy: ("SIMPLE" | "LDAP" | "CONFIG_MANAGED")
       attr_accessor auto_minor_version_upgrade: bool
       attr_accessor broker_name: ::String
       attr_accessor configuration: Types::ConfigurationId
@@ -132,6 +134,7 @@ module Aws::MQ
       attr_accessor maintenance_window_start_time: Types::WeeklyStartTime
       attr_accessor publicly_accessible: bool
       attr_accessor security_groups: ::Array[::String]
+      attr_accessor storage_size: ::Integer
       attr_accessor storage_type: ("EBS" | "EFS")
       attr_accessor subnet_ids: ::Array[::String]
       attr_accessor tags: ::Hash[::String, ::String]
@@ -146,7 +149,7 @@ module Aws::MQ
     end
 
     class CreateBrokerRequest
-      attr_accessor authentication_strategy: ("SIMPLE" | "LDAP")
+      attr_accessor authentication_strategy: ("SIMPLE" | "LDAP" | "CONFIG_MANAGED")
       attr_accessor auto_minor_version_upgrade: bool
       attr_accessor broker_name: ::String
       attr_accessor configuration: Types::ConfigurationId
@@ -161,6 +164,7 @@ module Aws::MQ
       attr_accessor maintenance_window_start_time: Types::WeeklyStartTime
       attr_accessor publicly_accessible: bool
       attr_accessor security_groups: ::Array[::String]
+      attr_accessor storage_size: ::Integer
       attr_accessor storage_type: ("EBS" | "EFS")
       attr_accessor subnet_ids: ::Array[::String]
       attr_accessor tags: ::Hash[::String, ::String]
@@ -177,7 +181,7 @@ module Aws::MQ
     end
 
     class CreateConfigurationInput
-      attr_accessor authentication_strategy: ("SIMPLE" | "LDAP")
+      attr_accessor authentication_strategy: ("SIMPLE" | "LDAP" | "CONFIG_MANAGED")
       attr_accessor engine_type: ("ACTIVEMQ" | "RABBITMQ")
       attr_accessor engine_version: ::String
       attr_accessor name: ::String
@@ -187,7 +191,7 @@ module Aws::MQ
 
     class CreateConfigurationOutput
       attr_accessor arn: ::String
-      attr_accessor authentication_strategy: ("SIMPLE" | "LDAP")
+      attr_accessor authentication_strategy: ("SIMPLE" | "LDAP" | "CONFIG_MANAGED")
       attr_accessor created: ::Time
       attr_accessor id: ::String
       attr_accessor latest_revision: Types::ConfigurationRevision
@@ -196,7 +200,7 @@ module Aws::MQ
     end
 
     class CreateConfigurationRequest
-      attr_accessor authentication_strategy: ("SIMPLE" | "LDAP")
+      attr_accessor authentication_strategy: ("SIMPLE" | "LDAP" | "CONFIG_MANAGED")
       attr_accessor engine_type: ("ACTIVEMQ" | "RABBITMQ")
       attr_accessor engine_version: ::String
       attr_accessor name: ::String
@@ -206,7 +210,7 @@ module Aws::MQ
 
     class CreateConfigurationResponse
       attr_accessor arn: ::String
-      attr_accessor authentication_strategy: ("SIMPLE" | "LDAP")
+      attr_accessor authentication_strategy: ("SIMPLE" | "LDAP" | "CONFIG_MANAGED")
       attr_accessor created: ::Time
       attr_accessor id: ::String
       attr_accessor latest_revision: Types::ConfigurationRevision
@@ -268,6 +272,21 @@ module Aws::MQ
       SENSITIVE: []
     end
 
+    class DeleteConfigurationOutput
+      attr_accessor configuration_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteConfigurationRequest
+      attr_accessor configuration_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteConfigurationResponse
+      attr_accessor configuration_id: ::String
+      SENSITIVE: []
+    end
+
     class DeleteTagsRequest
       attr_accessor resource_arn: ::String
       attr_accessor tag_keys: ::Array[::String]
@@ -315,7 +334,7 @@ module Aws::MQ
 
     class DescribeBrokerOutput
       attr_accessor actions_required: ::Array[Types::ActionRequired]
-      attr_accessor authentication_strategy: ("SIMPLE" | "LDAP")
+      attr_accessor authentication_strategy: ("SIMPLE" | "LDAP" | "CONFIG_MANAGED")
       attr_accessor auto_minor_version_upgrade: bool
       attr_accessor broker_arn: ::String
       attr_accessor broker_id: ::String
@@ -334,15 +353,17 @@ module Aws::MQ
       attr_accessor ldap_server_metadata: Types::LdapServerMetadataOutput
       attr_accessor logs: Types::LogsSummary
       attr_accessor maintenance_window_start_time: Types::WeeklyStartTime
-      attr_accessor pending_authentication_strategy: ("SIMPLE" | "LDAP")
+      attr_accessor pending_authentication_strategy: ("SIMPLE" | "LDAP" | "CONFIG_MANAGED")
       attr_accessor pending_data_replication_metadata: Types::DataReplicationMetadataOutput
       attr_accessor pending_data_replication_mode: ("NONE" | "CRDR")
       attr_accessor pending_engine_version: ::String
       attr_accessor pending_host_instance_type: ::String
       attr_accessor pending_ldap_server_metadata: Types::LdapServerMetadataOutput
       attr_accessor pending_security_groups: ::Array[::String]
+      attr_accessor pending_storage_size: ::Integer
       attr_accessor publicly_accessible: bool
       attr_accessor security_groups: ::Array[::String]
+      attr_accessor storage_size: ::Integer
       attr_accessor storage_type: ("EBS" | "EFS")
       attr_accessor subnet_ids: ::Array[::String]
       attr_accessor tags: ::Hash[::String, ::String]
@@ -357,7 +378,7 @@ module Aws::MQ
 
     class DescribeBrokerResponse
       attr_accessor actions_required: ::Array[Types::ActionRequired]
-      attr_accessor authentication_strategy: ("SIMPLE" | "LDAP")
+      attr_accessor authentication_strategy: ("SIMPLE" | "LDAP" | "CONFIG_MANAGED")
       attr_accessor auto_minor_version_upgrade: bool
       attr_accessor broker_arn: ::String
       attr_accessor broker_id: ::String
@@ -374,13 +395,15 @@ module Aws::MQ
       attr_accessor ldap_server_metadata: Types::LdapServerMetadataOutput
       attr_accessor logs: Types::LogsSummary
       attr_accessor maintenance_window_start_time: Types::WeeklyStartTime
-      attr_accessor pending_authentication_strategy: ("SIMPLE" | "LDAP")
+      attr_accessor pending_authentication_strategy: ("SIMPLE" | "LDAP" | "CONFIG_MANAGED")
       attr_accessor pending_engine_version: ::String
       attr_accessor pending_host_instance_type: ::String
       attr_accessor pending_ldap_server_metadata: Types::LdapServerMetadataOutput
       attr_accessor pending_security_groups: ::Array[::String]
+      attr_accessor pending_storage_size: ::Integer
       attr_accessor publicly_accessible: bool
       attr_accessor security_groups: ::Array[::String]
+      attr_accessor storage_size: ::Integer
       attr_accessor storage_type: ("EBS" | "EFS")
       attr_accessor subnet_ids: ::Array[::String]
       attr_accessor tags: ::Hash[::String, ::String]
@@ -399,7 +422,7 @@ module Aws::MQ
 
     class DescribeConfigurationResponse
       attr_accessor arn: ::String
-      attr_accessor authentication_strategy: ("SIMPLE" | "LDAP")
+      attr_accessor authentication_strategy: ("SIMPLE" | "LDAP" | "CONFIG_MANAGED")
       attr_accessor created: ::Time
       attr_accessor description: ::String
       attr_accessor engine_type: ("ACTIVEMQ" | "RABBITMQ")
@@ -430,6 +453,25 @@ module Aws::MQ
       attr_accessor created: ::Time
       attr_accessor data: ::String
       attr_accessor description: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeSharedResourcesOutput
+      attr_accessor next_token: ::String
+      attr_accessor shared_resources: ::Array[Types::SharedResource]
+      SENSITIVE: []
+    end
+
+    class DescribeSharedResourcesRequest
+      attr_accessor broker_id: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeSharedResourcesResponse
+      attr_accessor next_token: ::String
+      attr_accessor shared_resources: ::Array[Types::SharedResource]
       SENSITIVE: []
     end
 
@@ -473,18 +515,21 @@ module Aws::MQ
     class Error
       attr_accessor error_attribute: ::String
       attr_accessor message: ::String
+      attr_accessor resource_share_errors: ::Array[Types::ResourceShareError]
       SENSITIVE: []
     end
 
     class ForbiddenException
       attr_accessor error_attribute: ::String
       attr_accessor message: ::String
+      attr_accessor resource_share_errors: ::Array[Types::ResourceShareError]
       SENSITIVE: []
     end
 
     class InternalServerErrorException
       attr_accessor error_attribute: ::String
       attr_accessor message: ::String
+      attr_accessor resource_share_errors: ::Array[Types::ResourceShareError]
       SENSITIVE: []
     end
 
@@ -629,6 +674,7 @@ module Aws::MQ
     class NotFoundException
       attr_accessor error_attribute: ::String
       attr_accessor message: ::String
+      attr_accessor resource_share_errors: ::Array[Types::ResourceShareError]
       SENSITIVE: []
     end
 
@@ -667,10 +713,33 @@ module Aws::MQ
     class RebootBrokerResponse < Aws::EmptyStructure
     end
 
+    class ResourceShareError
+      attr_accessor error_code: ::String
+      attr_accessor resource_share_arn: ::String
+      attr_accessor status: ::String
+      SENSITIVE: []
+    end
+
     class SanitizationWarning
       attr_accessor attribute_name: ::String
       attr_accessor element_name: ::String
       attr_accessor reason: ("DISALLOWED_ELEMENT_REMOVED" | "DISALLOWED_ATTRIBUTE_REMOVED" | "INVALID_ATTRIBUTE_VALUE_REMOVED")
+      SENSITIVE: []
+    end
+
+    class SharedResource
+      attr_accessor dns_names: ::Array[::String]
+      attr_accessor error: Types::SharedResourceError
+      attr_accessor resource_arn: ::String
+      attr_accessor resource_share_arns: ::Array[::String]
+      attr_accessor status: ("AVAILABLE" | "SETUP_IN_PROGRESS" | "DELETION_IN_PROGRESS" | "PENDING_CREATE" | "PENDING_DELETE" | "ERROR")
+      attr_accessor type: ("RESOURCE_SHARE" | "RESOURCE")
+      SENSITIVE: []
+    end
+
+    class SharedResourceError
+      attr_accessor code: ("QUOTA_EXCEEDED" | "SHARE_NOT_FOUND" | "INVITE_FAILED" | "SETUP_INCOMPLETE" | "INTERNAL_ERROR" | "AZ_MISMATCH" | "RESOURCE_CONFIGURATION_NOT_FOUND")
+      attr_accessor message: ::String
       SENSITIVE: []
     end
 
@@ -682,11 +751,12 @@ module Aws::MQ
     class UnauthorizedException
       attr_accessor error_attribute: ::String
       attr_accessor message: ::String
+      attr_accessor resource_share_errors: ::Array[Types::ResourceShareError]
       SENSITIVE: []
     end
 
     class UpdateBrokerInput
-      attr_accessor authentication_strategy: ("SIMPLE" | "LDAP")
+      attr_accessor authentication_strategy: ("SIMPLE" | "LDAP" | "CONFIG_MANAGED")
       attr_accessor auto_minor_version_upgrade: bool
       attr_accessor configuration: Types::ConfigurationId
       attr_accessor data_replication_mode: ("NONE" | "CRDR")
@@ -695,12 +765,14 @@ module Aws::MQ
       attr_accessor ldap_server_metadata: Types::LdapServerMetadataInput
       attr_accessor logs: Types::Logs
       attr_accessor maintenance_window_start_time: Types::WeeklyStartTime
+      attr_accessor resource_share_arns: ::Array[::String]
       attr_accessor security_groups: ::Array[::String]
+      attr_accessor storage_size: ::Integer
       SENSITIVE: []
     end
 
     class UpdateBrokerOutput
-      attr_accessor authentication_strategy: ("SIMPLE" | "LDAP")
+      attr_accessor authentication_strategy: ("SIMPLE" | "LDAP" | "CONFIG_MANAGED")
       attr_accessor auto_minor_version_upgrade: bool
       attr_accessor broker_id: ::String
       attr_accessor configuration: Types::ConfigurationId
@@ -713,12 +785,14 @@ module Aws::MQ
       attr_accessor maintenance_window_start_time: Types::WeeklyStartTime
       attr_accessor pending_data_replication_metadata: Types::DataReplicationMetadataOutput
       attr_accessor pending_data_replication_mode: ("NONE" | "CRDR")
+      attr_accessor resource_share_arns: ::Array[::String]
       attr_accessor security_groups: ::Array[::String]
+      attr_accessor storage_size: ::Integer
       SENSITIVE: []
     end
 
     class UpdateBrokerRequest
-      attr_accessor authentication_strategy: ("SIMPLE" | "LDAP")
+      attr_accessor authentication_strategy: ("SIMPLE" | "LDAP" | "CONFIG_MANAGED")
       attr_accessor auto_minor_version_upgrade: bool
       attr_accessor broker_id: ::String
       attr_accessor configuration: Types::ConfigurationId
@@ -727,13 +801,15 @@ module Aws::MQ
       attr_accessor ldap_server_metadata: Types::LdapServerMetadataInput
       attr_accessor logs: Types::Logs
       attr_accessor maintenance_window_start_time: Types::WeeklyStartTime
+      attr_accessor resource_share_arns: ::Array[::String]
       attr_accessor security_groups: ::Array[::String]
+      attr_accessor storage_size: ::Integer
       attr_accessor data_replication_mode: ("NONE" | "CRDR")
       SENSITIVE: []
     end
 
     class UpdateBrokerResponse
-      attr_accessor authentication_strategy: ("SIMPLE" | "LDAP")
+      attr_accessor authentication_strategy: ("SIMPLE" | "LDAP" | "CONFIG_MANAGED")
       attr_accessor auto_minor_version_upgrade: bool
       attr_accessor broker_id: ::String
       attr_accessor configuration: Types::ConfigurationId
@@ -742,11 +818,13 @@ module Aws::MQ
       attr_accessor ldap_server_metadata: Types::LdapServerMetadataOutput
       attr_accessor logs: Types::Logs
       attr_accessor maintenance_window_start_time: Types::WeeklyStartTime
+      attr_accessor resource_share_arns: ::Array[::String]
       attr_accessor security_groups: ::Array[::String]
       attr_accessor data_replication_metadata: Types::DataReplicationMetadataOutput
       attr_accessor data_replication_mode: ("NONE" | "CRDR")
       attr_accessor pending_data_replication_metadata: Types::DataReplicationMetadataOutput
       attr_accessor pending_data_replication_mode: ("NONE" | "CRDR")
+      attr_accessor storage_size: ::Integer
       SENSITIVE: []
     end
 

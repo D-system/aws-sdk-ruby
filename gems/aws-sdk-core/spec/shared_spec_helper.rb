@@ -8,7 +8,8 @@ $LOAD_PATH.unshift(File.expand_path('../../../aws-partitions/lib',  __FILE__))
 
 require 'webmock/rspec'
 
-require_relative './sigv4_helper'
+require_relative './auth_helper'
+require_relative './login_credentials_helper'
 
 # Prevent the SDK unit tests from loading actual credentials while under test.
 # By default the SDK attempts to load credentials from:
@@ -19,7 +20,8 @@ require_relative './sigv4_helper'
 #
 RSpec.configure do |config|
   # Module to help check service signing
-  config.include Sigv4Helper
+  config.include AuthHelper
+  config.include LoginCredentialsHelper
 
   config.before(:each) do
     # Clear the current ENV to avoid loading credentials.
@@ -29,10 +31,8 @@ RSpec.configure do |config|
     allow(Dir).to receive(:home).and_raise(ArgumentError)
 
     # disable instance profile credentials
-    token_path = '/latest/api/token'
-    path = '/latest/meta-data/iam/security-credentials/'
-    stub_request(:get, "http://169.254.169.254#{path}").to_raise(SocketError)
-    stub_request(:put, "http://169.254.169.254#{token_path}").to_raise(SocketError)
+    stub_request(:put, 'http://169.254.169.254/latest/api/token').to_raise(SocketError)
+    stub_request(:get, 'http://169.254.169.254/latest/meta-data/iam/security-credentials/').to_raise(SocketError)
     allow_any_instance_of(Aws::InstanceProfileCredentials).to receive(:warn)
 
     Aws.shared_config.fresh
@@ -50,6 +50,14 @@ RSpec.configure do |config|
     example.call
 
     Thread.report_on_exception = current_value if current_value
+  end
+
+  config.around(:each, :suppress_warning) do |example|
+    original = $VERBOSE
+    $VERBOSE = nil
+    example.run
+  ensure
+    $VERBOSE = original
   end
 
   if defined?(JRUBY_VERSION)

@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -87,75 +88,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EMR/Client.html#add_instance_fleet-instance_method
       def add_instance_fleet: (
                                 cluster_id: ::String,
-                                instance_fleet: {
-                                  name: ::String?,
-                                  instance_fleet_type: ("MASTER" | "CORE" | "TASK"),
-                                  target_on_demand_capacity: ::Integer?,
-                                  target_spot_capacity: ::Integer?,
-                                  instance_type_configs: Array[
-                                    {
-                                      instance_type: ::String,
-                                      weighted_capacity: ::Integer?,
-                                      bid_price: ::String?,
-                                      bid_price_as_percentage_of_on_demand_price: ::Float?,
-                                      ebs_configuration: {
-                                        ebs_block_device_configs: Array[
-                                          {
-                                            volume_specification: {
-                                              volume_type: ::String,
-                                              iops: ::Integer?,
-                                              size_in_gb: ::Integer,
-                                              throughput: ::Integer?
-                                            },
-                                            volumes_per_instance: ::Integer?
-                                          },
-                                        ]?,
-                                        ebs_optimized: bool?
-                                      }?,
-                                      configurations: Array[
-                                        {
-                                          classification: ::String?,
-                                          configurations: untyped?,
-                                          properties: Hash[::String, ::String]?
-                                        },
-                                      ]?,
-                                      custom_ami_id: ::String?,
-                                      priority: ::Float?
-                                    },
-                                  ]?,
-                                  launch_specifications: {
-                                    spot_specification: {
-                                      timeout_duration_minutes: ::Integer,
-                                      timeout_action: ("SWITCH_TO_ON_DEMAND" | "TERMINATE_CLUSTER"),
-                                      block_duration_minutes: ::Integer?,
-                                      allocation_strategy: ("capacity-optimized" | "price-capacity-optimized" | "lowest-price" | "diversified" | "capacity-optimized-prioritized")?
-                                    }?,
-                                    on_demand_specification: {
-                                      allocation_strategy: ("lowest-price" | "prioritized"),
-                                      capacity_reservation_options: {
-                                        usage_strategy: ("use-capacity-reservations-first")?,
-                                        capacity_reservation_preference: ("open" | "none")?,
-                                        capacity_reservation_resource_group_arn: ::String?
-                                      }?
-                                    }?
-                                  }?,
-                                  resize_specifications: {
-                                    spot_resize_specification: {
-                                      timeout_duration_minutes: ::Integer?,
-                                      allocation_strategy: ("capacity-optimized" | "price-capacity-optimized" | "lowest-price" | "diversified" | "capacity-optimized-prioritized")?
-                                    }?,
-                                    on_demand_resize_specification: {
-                                      timeout_duration_minutes: ::Integer?,
-                                      allocation_strategy: ("lowest-price" | "prioritized")?,
-                                      capacity_reservation_options: {
-                                        usage_strategy: ("use-capacity-reservations-first")?,
-                                        capacity_reservation_preference: ("open" | "none")?,
-                                        capacity_reservation_resource_group_arn: ::String?
-                                      }?
-                                    }?
-                                  }?,
-                                  context: ::String?
-                                }
+                                instance_fleet: Params::instance_fleet_config
                               ) -> _AddInstanceFleetResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _AddInstanceFleetResponseSuccess
 
@@ -168,74 +101,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EMR/Client.html#add_instance_groups-instance_method
       def add_instance_groups: (
                                  instance_groups: Array[
-                                   {
-                                     name: ::String?,
-                                     market: ("ON_DEMAND" | "SPOT")?,
-                                     instance_role: ("MASTER" | "CORE" | "TASK"),
-                                     bid_price: ::String?,
-                                     instance_type: ::String,
-                                     instance_count: ::Integer,
-                                     configurations: Array[
-                                       {
-                                         classification: ::String?,
-                                         configurations: untyped?,
-                                         properties: Hash[::String, ::String]?
-                                       },
-                                     ]?,
-                                     ebs_configuration: {
-                                       ebs_block_device_configs: Array[
-                                         {
-                                           volume_specification: {
-                                             volume_type: ::String,
-                                             iops: ::Integer?,
-                                             size_in_gb: ::Integer,
-                                             throughput: ::Integer?
-                                           },
-                                           volumes_per_instance: ::Integer?
-                                         },
-                                       ]?,
-                                       ebs_optimized: bool?
-                                     }?,
-                                     auto_scaling_policy: {
-                                       constraints: {
-                                         min_capacity: ::Integer,
-                                         max_capacity: ::Integer
-                                       },
-                                       rules: Array[
-                                         {
-                                           name: ::String,
-                                           description: ::String?,
-                                           action: {
-                                             market: ("ON_DEMAND" | "SPOT")?,
-                                             simple_scaling_policy_configuration: {
-                                               adjustment_type: ("CHANGE_IN_CAPACITY" | "PERCENT_CHANGE_IN_CAPACITY" | "EXACT_CAPACITY")?,
-                                               scaling_adjustment: ::Integer,
-                                               cool_down: ::Integer?
-                                             }
-                                           },
-                                           trigger: {
-                                             cloud_watch_alarm_definition: {
-                                               comparison_operator: ("GREATER_THAN_OR_EQUAL" | "GREATER_THAN" | "LESS_THAN" | "LESS_THAN_OR_EQUAL"),
-                                               evaluation_periods: ::Integer?,
-                                               metric_name: ::String,
-                                               namespace: ::String?,
-                                               period: ::Integer,
-                                               statistic: ("SAMPLE_COUNT" | "AVERAGE" | "SUM" | "MINIMUM" | "MAXIMUM")?,
-                                               threshold: ::Float,
-                                               unit: ("NONE" | "SECONDS" | "MICRO_SECONDS" | "MILLI_SECONDS" | "BYTES" | "KILO_BYTES" | "MEGA_BYTES" | "GIGA_BYTES" | "TERA_BYTES" | "BITS" | "KILO_BITS" | "MEGA_BITS" | "GIGA_BITS" | "TERA_BITS" | "PERCENT" | "COUNT" | "BYTES_PER_SECOND" | "KILO_BYTES_PER_SECOND" | "MEGA_BYTES_PER_SECOND" | "GIGA_BYTES_PER_SECOND" | "TERA_BYTES_PER_SECOND" | "BITS_PER_SECOND" | "KILO_BITS_PER_SECOND" | "MEGA_BITS_PER_SECOND" | "GIGA_BITS_PER_SECOND" | "TERA_BITS_PER_SECOND" | "COUNT_PER_SECOND")?,
-                                               dimensions: Array[
-                                                 {
-                                                   key: ::String?,
-                                                   value: ::String?
-                                                 },
-                                               ]?
-                                             }
-                                           }
-                                         },
-                                       ]
-                                     }?,
-                                     custom_ami_id: ::String?
-                                   },
+                                   Params::instance_group_config
                                  ],
                                  job_flow_id: ::String
                                ) -> _AddInstanceGroupsResponseSuccess
@@ -249,21 +115,7 @@ module Aws
       def add_job_flow_steps: (
                                 job_flow_id: ::String,
                                 steps: Array[
-                                  {
-                                    name: ::String,
-                                    action_on_failure: ("TERMINATE_JOB_FLOW" | "TERMINATE_CLUSTER" | "CANCEL_AND_WAIT" | "CONTINUE")?,
-                                    hadoop_jar_step: {
-                                      properties: Array[
-                                        {
-                                          key: ::String?,
-                                          value: ::String?
-                                        },
-                                      ]?,
-                                      jar: ::String,
-                                      main_class: ::String?,
-                                      args: Array[::String]?
-                                    }
-                                  },
+                                  Params::step_config
                                 ],
                                 ?execution_role_arn: ::String
                               ) -> _AddJobFlowStepsResponseSuccess
@@ -279,8 +131,9 @@ module Aws
                         {
                           key: ::String?,
                           value: ::String?
-                        },
-                      ]
+                        }
+                      ],
+                      ?cluster_id: ::String
                     ) -> _AddTagsResponseSuccess
                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _AddTagsResponseSuccess
 
@@ -295,6 +148,28 @@ module Aws
                           ?step_cancellation_option: ("SEND_INTERRUPT" | "TERMINATE_PROCESS")
                         ) -> _CancelStepsResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CancelStepsResponseSuccess
+
+      interface _CreatePersistentAppUIResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreatePersistentAppUIOutput]
+        def persistent_app_ui_id: () -> ::String
+        def runtime_role_enabled_cluster: () -> bool
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EMR/Client.html#create_persistent_app_ui-instance_method
+      def create_persistent_app_ui: (
+                                      target_resource_arn: ::String,
+                                      ?emr_containers_config: {
+                                        job_run_id: ::String?
+                                      },
+                                      ?tags: Array[
+                                        {
+                                          key: ::String?,
+                                          value: ::String?
+                                        }
+                                      ],
+                                      ?x_referer: ::String,
+                                      ?profiler_type: ("SHS" | "TEZUI" | "YTS")
+                                    ) -> _CreatePersistentAppUIResponseSuccess
+                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreatePersistentAppUIResponseSuccess
 
       interface _CreateSecurityConfigurationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateSecurityConfigurationOutput]
@@ -331,7 +206,7 @@ module Aws
                              {
                                key: ::String?,
                                value: ::String?
-                             },
+                             }
                            ],
                            ?trusted_identity_propagation_enabled: bool,
                            ?idc_user_assignment: ("REQUIRED" | "OPTIONAL"),
@@ -406,6 +281,16 @@ module Aws
                                          notebook_execution_id: ::String
                                        ) -> _DescribeNotebookExecutionResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeNotebookExecutionResponseSuccess
+
+      interface _DescribePersistentAppUIResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DescribePersistentAppUIOutput]
+        def persistent_app_ui: () -> Types::PersistentAppUI
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EMR/Client.html#describe_persistent_app_ui-instance_method
+      def describe_persistent_app_ui: (
+                                        persistent_app_ui_id: ::String
+                                      ) -> _DescribePersistentAppUIResponseSuccess
+                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribePersistentAppUIResponseSuccess
 
       interface _DescribeReleaseLabelResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DescribeReleaseLabelOutput]
@@ -496,6 +381,61 @@ module Aws
                                         cluster_id: ::String
                                       ) -> _GetManagedScalingPolicyResponseSuccess
                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetManagedScalingPolicyResponseSuccess
+
+      interface _GetOnClusterAppUIPresignedURLResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetOnClusterAppUIPresignedURLOutput]
+        def presigned_url_ready: () -> bool
+        def presigned_url: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EMR/Client.html#get_on_cluster_app_ui_presigned_url-instance_method
+      def get_on_cluster_app_ui_presigned_url: (
+                                                 cluster_id: ::String,
+                                                 ?on_cluster_app_ui_type: ("SparkHistoryServer" | "YarnTimelineService" | "TezUI" | "ApplicationMaster" | "JobHistoryServer" | "ResourceManager"),
+                                                 ?application_id: ::String,
+                                                 ?dry_run: bool,
+                                                 ?execution_role_arn: ::String
+                                               ) -> _GetOnClusterAppUIPresignedURLResponseSuccess
+                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetOnClusterAppUIPresignedURLResponseSuccess
+
+      interface _GetPersistentAppUIPresignedURLResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetPersistentAppUIPresignedURLOutput]
+        def presigned_url_ready: () -> bool
+        def presigned_url: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EMR/Client.html#get_persistent_app_ui_presigned_url-instance_method
+      def get_persistent_app_ui_presigned_url: (
+                                                 persistent_app_ui_id: ::String,
+                                                 ?persistent_app_ui_type: ("SHS" | "TEZ" | "YTS"),
+                                                 ?application_id: ::String,
+                                                 ?auth_proxy_call: bool,
+                                                 ?execution_role_arn: ::String
+                                               ) -> _GetPersistentAppUIPresignedURLResponseSuccess
+                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetPersistentAppUIPresignedURLResponseSuccess
+
+      interface _GetSessionResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetSessionOutput]
+        def session: () -> Types::Session
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EMR/Client.html#get_session-instance_method
+      def get_session: (
+                         cluster_id: ::String,
+                         session_id: ::String
+                       ) -> _GetSessionResponseSuccess
+                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetSessionResponseSuccess
+
+      interface _GetSessionEndpointResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetSessionEndpointOutput]
+        def endpoint: () -> ::String
+        def auth_token: () -> ::String
+        def auth_token_expiration_time: () -> ::Time
+        def credentials: () -> Types::Credentials
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EMR/Client.html#get_session_endpoint-instance_method
+      def get_session_endpoint: (
+                                  cluster_id: ::String,
+                                  session_id: ::String
+                                ) -> _GetSessionEndpointResponseSuccess
+                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetSessionEndpointResponseSuccess
 
       interface _GetStudioSessionMappingResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetStudioSessionMappingOutput]
@@ -620,6 +560,20 @@ module Aws
                                         ) -> _ListSecurityConfigurationsResponseSuccess
                                       | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListSecurityConfigurationsResponseSuccess
 
+      interface _ListSessionsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListSessionsOutput]
+        def sessions: () -> ::Array[Types::Session]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EMR/Client.html#list_sessions-instance_method
+      def list_sessions: (
+                           cluster_id: ::String,
+                           ?session_states: Array[("SUBMITTED" | "STARTING" | "STARTED" | "IDLE" | "BUSY" | "TERMINATING" | "TERMINATED" | "FAILED")],
+                           ?next_token: ::String,
+                           ?max_results: ::Integer
+                         ) -> _ListSessionsResponseSuccess
+                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListSessionsResponseSuccess
+
       interface _ListStepsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListStepsOutput]
         def steps: () -> ::Array[Types::StepSummary]
@@ -673,11 +627,13 @@ module Aws
       interface _ModifyClusterResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ModifyClusterOutput]
         def step_concurrency_level: () -> ::Integer
+        def extended_support: () -> bool
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EMR/Client.html#modify_cluster-instance_method
       def modify_cluster: (
                             cluster_id: ::String,
-                            ?step_concurrency_level: ::Integer
+                            ?step_concurrency_level: ::Integer,
+                            ?extended_support: bool
                           ) -> _ModifyClusterResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ModifyClusterResponseSuccess
 
@@ -688,51 +644,9 @@ module Aws
                                      instance_fleet_id: ::String,
                                      target_on_demand_capacity: ::Integer?,
                                      target_spot_capacity: ::Integer?,
-                                     resize_specifications: {
-                                       spot_resize_specification: {
-                                         timeout_duration_minutes: ::Integer?,
-                                         allocation_strategy: ("capacity-optimized" | "price-capacity-optimized" | "lowest-price" | "diversified" | "capacity-optimized-prioritized")?
-                                       }?,
-                                       on_demand_resize_specification: {
-                                         timeout_duration_minutes: ::Integer?,
-                                         allocation_strategy: ("lowest-price" | "prioritized")?,
-                                         capacity_reservation_options: {
-                                           usage_strategy: ("use-capacity-reservations-first")?,
-                                           capacity_reservation_preference: ("open" | "none")?,
-                                           capacity_reservation_resource_group_arn: ::String?
-                                         }?
-                                       }?
-                                     }?,
+                                     resize_specifications: Params::instance_fleet_resizing_specifications?,
                                      instance_type_configs: Array[
-                                       {
-                                         instance_type: ::String,
-                                         weighted_capacity: ::Integer?,
-                                         bid_price: ::String?,
-                                         bid_price_as_percentage_of_on_demand_price: ::Float?,
-                                         ebs_configuration: {
-                                           ebs_block_device_configs: Array[
-                                             {
-                                               volume_specification: {
-                                                 volume_type: ::String,
-                                                 iops: ::Integer?,
-                                                 size_in_gb: ::Integer,
-                                                 throughput: ::Integer?
-                                               },
-                                               volumes_per_instance: ::Integer?
-                                             },
-                                           ]?,
-                                           ebs_optimized: bool?
-                                         }?,
-                                         configurations: Array[
-                                           {
-                                             classification: ::String?,
-                                             configurations: untyped?,
-                                             properties: Hash[::String, ::String]?
-                                           },
-                                         ]?,
-                                         custom_ami_id: ::String?,
-                                         priority: ::Float?
-                                       },
+                                       Params::instance_type_config
                                      ]?,
                                      context: ::String?
                                    }
@@ -761,9 +675,9 @@ module Aws
                                             classification: ::String?,
                                             configurations: untyped?,
                                             properties: Hash[::String, ::String]?
-                                          },
+                                          }
                                         ]?
-                                      },
+                                      }
                                     ]
                                   ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                 | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
@@ -779,44 +693,7 @@ module Aws
       def put_auto_scaling_policy: (
                                      cluster_id: ::String,
                                      instance_group_id: ::String,
-                                     auto_scaling_policy: {
-                                       constraints: {
-                                         min_capacity: ::Integer,
-                                         max_capacity: ::Integer
-                                       },
-                                       rules: Array[
-                                         {
-                                           name: ::String,
-                                           description: ::String?,
-                                           action: {
-                                             market: ("ON_DEMAND" | "SPOT")?,
-                                             simple_scaling_policy_configuration: {
-                                               adjustment_type: ("CHANGE_IN_CAPACITY" | "PERCENT_CHANGE_IN_CAPACITY" | "EXACT_CAPACITY")?,
-                                               scaling_adjustment: ::Integer,
-                                               cool_down: ::Integer?
-                                             }
-                                           },
-                                           trigger: {
-                                             cloud_watch_alarm_definition: {
-                                               comparison_operator: ("GREATER_THAN_OR_EQUAL" | "GREATER_THAN" | "LESS_THAN" | "LESS_THAN_OR_EQUAL"),
-                                               evaluation_periods: ::Integer?,
-                                               metric_name: ::String,
-                                               namespace: ::String?,
-                                               period: ::Integer,
-                                               statistic: ("SAMPLE_COUNT" | "AVERAGE" | "SUM" | "MINIMUM" | "MAXIMUM")?,
-                                               threshold: ::Float,
-                                               unit: ("NONE" | "SECONDS" | "MICRO_SECONDS" | "MILLI_SECONDS" | "BYTES" | "KILO_BYTES" | "MEGA_BYTES" | "GIGA_BYTES" | "TERA_BYTES" | "BITS" | "KILO_BITS" | "MEGA_BITS" | "GIGA_BITS" | "TERA_BITS" | "PERCENT" | "COUNT" | "BYTES_PER_SECOND" | "KILO_BYTES_PER_SECOND" | "MEGA_BYTES_PER_SECOND" | "GIGA_BYTES_PER_SECOND" | "TERA_BYTES_PER_SECOND" | "BITS_PER_SECOND" | "KILO_BITS_PER_SECOND" | "MEGA_BITS_PER_SECOND" | "GIGA_BITS_PER_SECOND" | "TERA_BITS_PER_SECOND" | "COUNT_PER_SECOND")?,
-                                               dimensions: Array[
-                                                 {
-                                                   key: ::String?,
-                                                   value: ::String?
-                                                 },
-                                               ]?
-                                             }
-                                           }
-                                         },
-                                       ]
-                                     }
+                                     auto_scaling_policy: Params::auto_scaling_policy
                                    ) -> _PutAutoScalingPolicyResponseSuccess
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutAutoScalingPolicyResponseSuccess
 
@@ -843,7 +720,7 @@ module Aws
                                                        {
                                                          min_range: ::Integer,
                                                          max_range: ::Integer?
-                                                       },
+                                                       }
                                                      ]?
                                                    }
                                                  ) -> _PutBlockPublicAccessConfigurationResponseSuccess
@@ -855,17 +732,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EMR/Client.html#put_managed_scaling_policy-instance_method
       def put_managed_scaling_policy: (
                                         cluster_id: ::String,
-                                        managed_scaling_policy: {
-                                          compute_limits: {
-                                            unit_type: ("InstanceFleetUnits" | "Instances" | "VCPU"),
-                                            minimum_capacity_units: ::Integer,
-                                            maximum_capacity_units: ::Integer,
-                                            maximum_on_demand_capacity_units: ::Integer?,
-                                            maximum_core_capacity_units: ::Integer?
-                                          }?,
-                                          utilization_performance_index: ::Integer?,
-                                          scaling_strategy: ("DEFAULT" | "ADVANCED")?
-                                        }
+                                        managed_scaling_policy: Params::managed_scaling_policy
                                       ) -> _PutManagedScalingPolicyResponseSuccess
                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutManagedScalingPolicyResponseSuccess
 
@@ -903,7 +770,8 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EMR/Client.html#remove_tags-instance_method
       def remove_tags: (
                          resource_id: ::String,
-                         tag_keys: Array[::String]
+                         tag_keys: Array[::String],
+                         ?cluster_id: ::String
                        ) -> _RemoveTagsResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RemoveTagsResponseSuccess
 
@@ -925,145 +793,10 @@ module Aws
                             slave_instance_type: ::String?,
                             instance_count: ::Integer?,
                             instance_groups: Array[
-                              {
-                                name: ::String?,
-                                market: ("ON_DEMAND" | "SPOT")?,
-                                instance_role: ("MASTER" | "CORE" | "TASK"),
-                                bid_price: ::String?,
-                                instance_type: ::String,
-                                instance_count: ::Integer,
-                                configurations: Array[
-                                  {
-                                    classification: ::String?,
-                                    configurations: untyped?,
-                                    properties: Hash[::String, ::String]?
-                                  },
-                                ]?,
-                                ebs_configuration: {
-                                  ebs_block_device_configs: Array[
-                                    {
-                                      volume_specification: {
-                                        volume_type: ::String,
-                                        iops: ::Integer?,
-                                        size_in_gb: ::Integer,
-                                        throughput: ::Integer?
-                                      },
-                                      volumes_per_instance: ::Integer?
-                                    },
-                                  ]?,
-                                  ebs_optimized: bool?
-                                }?,
-                                auto_scaling_policy: {
-                                  constraints: {
-                                    min_capacity: ::Integer,
-                                    max_capacity: ::Integer
-                                  },
-                                  rules: Array[
-                                    {
-                                      name: ::String,
-                                      description: ::String?,
-                                      action: {
-                                        market: ("ON_DEMAND" | "SPOT")?,
-                                        simple_scaling_policy_configuration: {
-                                          adjustment_type: ("CHANGE_IN_CAPACITY" | "PERCENT_CHANGE_IN_CAPACITY" | "EXACT_CAPACITY")?,
-                                          scaling_adjustment: ::Integer,
-                                          cool_down: ::Integer?
-                                        }
-                                      },
-                                      trigger: {
-                                        cloud_watch_alarm_definition: {
-                                          comparison_operator: ("GREATER_THAN_OR_EQUAL" | "GREATER_THAN" | "LESS_THAN" | "LESS_THAN_OR_EQUAL"),
-                                          evaluation_periods: ::Integer?,
-                                          metric_name: ::String,
-                                          namespace: ::String?,
-                                          period: ::Integer,
-                                          statistic: ("SAMPLE_COUNT" | "AVERAGE" | "SUM" | "MINIMUM" | "MAXIMUM")?,
-                                          threshold: ::Float,
-                                          unit: ("NONE" | "SECONDS" | "MICRO_SECONDS" | "MILLI_SECONDS" | "BYTES" | "KILO_BYTES" | "MEGA_BYTES" | "GIGA_BYTES" | "TERA_BYTES" | "BITS" | "KILO_BITS" | "MEGA_BITS" | "GIGA_BITS" | "TERA_BITS" | "PERCENT" | "COUNT" | "BYTES_PER_SECOND" | "KILO_BYTES_PER_SECOND" | "MEGA_BYTES_PER_SECOND" | "GIGA_BYTES_PER_SECOND" | "TERA_BYTES_PER_SECOND" | "BITS_PER_SECOND" | "KILO_BITS_PER_SECOND" | "MEGA_BITS_PER_SECOND" | "GIGA_BITS_PER_SECOND" | "TERA_BITS_PER_SECOND" | "COUNT_PER_SECOND")?,
-                                          dimensions: Array[
-                                            {
-                                              key: ::String?,
-                                              value: ::String?
-                                            },
-                                          ]?
-                                        }
-                                      }
-                                    },
-                                  ]
-                                }?,
-                                custom_ami_id: ::String?
-                              },
+                              Params::instance_group_config
                             ]?,
                             instance_fleets: Array[
-                              {
-                                name: ::String?,
-                                instance_fleet_type: ("MASTER" | "CORE" | "TASK"),
-                                target_on_demand_capacity: ::Integer?,
-                                target_spot_capacity: ::Integer?,
-                                instance_type_configs: Array[
-                                  {
-                                    instance_type: ::String,
-                                    weighted_capacity: ::Integer?,
-                                    bid_price: ::String?,
-                                    bid_price_as_percentage_of_on_demand_price: ::Float?,
-                                    ebs_configuration: {
-                                      ebs_block_device_configs: Array[
-                                        {
-                                          volume_specification: {
-                                            volume_type: ::String,
-                                            iops: ::Integer?,
-                                            size_in_gb: ::Integer,
-                                            throughput: ::Integer?
-                                          },
-                                          volumes_per_instance: ::Integer?
-                                        },
-                                      ]?,
-                                      ebs_optimized: bool?
-                                    }?,
-                                    configurations: Array[
-                                      {
-                                        classification: ::String?,
-                                        configurations: untyped?,
-                                        properties: Hash[::String, ::String]?
-                                      },
-                                    ]?,
-                                    custom_ami_id: ::String?,
-                                    priority: ::Float?
-                                  },
-                                ]?,
-                                launch_specifications: {
-                                  spot_specification: {
-                                    timeout_duration_minutes: ::Integer,
-                                    timeout_action: ("SWITCH_TO_ON_DEMAND" | "TERMINATE_CLUSTER"),
-                                    block_duration_minutes: ::Integer?,
-                                    allocation_strategy: ("capacity-optimized" | "price-capacity-optimized" | "lowest-price" | "diversified" | "capacity-optimized-prioritized")?
-                                  }?,
-                                  on_demand_specification: {
-                                    allocation_strategy: ("lowest-price" | "prioritized"),
-                                    capacity_reservation_options: {
-                                      usage_strategy: ("use-capacity-reservations-first")?,
-                                      capacity_reservation_preference: ("open" | "none")?,
-                                      capacity_reservation_resource_group_arn: ::String?
-                                    }?
-                                  }?
-                                }?,
-                                resize_specifications: {
-                                  spot_resize_specification: {
-                                    timeout_duration_minutes: ::Integer?,
-                                    allocation_strategy: ("capacity-optimized" | "price-capacity-optimized" | "lowest-price" | "diversified" | "capacity-optimized-prioritized")?
-                                  }?,
-                                  on_demand_resize_specification: {
-                                    timeout_duration_minutes: ::Integer?,
-                                    allocation_strategy: ("lowest-price" | "prioritized")?,
-                                    capacity_reservation_options: {
-                                      usage_strategy: ("use-capacity-reservations-first")?,
-                                      capacity_reservation_preference: ("open" | "none")?,
-                                      capacity_reservation_resource_group_arn: ::String?
-                                    }?
-                                  }?
-                                }?,
-                                context: ::String?
-                              },
+                              Params::instance_fleet_config
                             ]?,
                             ec2_key_name: ::String?,
                             placement: {
@@ -1083,22 +816,9 @@ module Aws
                             additional_slave_security_groups: Array[::String]?
                           },
                           ?steps: Array[
-                            {
-                              name: ::String,
-                              action_on_failure: ("TERMINATE_JOB_FLOW" | "TERMINATE_CLUSTER" | "CANCEL_AND_WAIT" | "CONTINUE")?,
-                              hadoop_jar_step: {
-                                properties: Array[
-                                  {
-                                    key: ::String?,
-                                    value: ::String?
-                                  },
-                                ]?,
-                                jar: ::String,
-                                main_class: ::String?,
-                                args: Array[::String]?
-                              }
-                            },
+                            Params::step_config
                           ],
+                          ?step_execution_role_arn: ::String,
                           ?bootstrap_actions: Array[
                             {
                               name: ::String,
@@ -1106,14 +826,14 @@ module Aws
                                 path: ::String,
                                 args: Array[::String]?
                               }
-                            },
+                            }
                           ],
                           ?supported_products: Array[::String],
                           ?new_supported_products: Array[
                             {
                               name: ::String?,
                               args: Array[::String]?
-                            },
+                            }
                           ],
                           ?applications: Array[
                             {
@@ -1121,14 +841,14 @@ module Aws
                               version: ::String?,
                               args: Array[::String]?,
                               additional_info: Hash[::String, ::String]?
-                            },
+                            }
                           ],
                           ?configurations: Array[
                             {
                               classification: ::String?,
                               configurations: untyped?,
                               properties: Hash[::String, ::String]?
-                            },
+                            }
                           ],
                           ?visible_to_all_users: bool,
                           ?job_flow_role: ::String,
@@ -1137,7 +857,7 @@ module Aws
                             {
                               key: ::String?,
                               value: ::String?
-                            },
+                            }
                           ],
                           ?security_configuration: ::String,
                           ?auto_scaling_role: ::String,
@@ -1153,29 +873,33 @@ module Aws
                             ad_domain_join_password: ::String?
                           },
                           ?step_concurrency_level: ::Integer,
-                          ?managed_scaling_policy: {
-                            compute_limits: {
-                              unit_type: ("InstanceFleetUnits" | "Instances" | "VCPU"),
-                              minimum_capacity_units: ::Integer,
-                              maximum_capacity_units: ::Integer,
-                              maximum_on_demand_capacity_units: ::Integer?,
-                              maximum_core_capacity_units: ::Integer?
-                            }?,
-                            utilization_performance_index: ::Integer?,
-                            scaling_strategy: ("DEFAULT" | "ADVANCED")?
-                          },
+                          ?managed_scaling_policy: Params::managed_scaling_policy,
                           ?placement_group_configs: Array[
                             {
                               instance_role: ("MASTER" | "CORE" | "TASK"),
                               placement_strategy: ("SPREAD" | "PARTITION" | "CLUSTER" | "NONE")?
-                            },
+                            }
                           ],
                           ?auto_termination_policy: {
                             idle_timeout: ::Integer?
                           },
                           ?os_release_label: ::String,
                           ?ebs_root_volume_iops: ::Integer,
-                          ?ebs_root_volume_throughput: ::Integer
+                          ?ebs_root_volume_throughput: ::Integer,
+                          ?extended_support: bool,
+                          ?monitoring_configuration: {
+                            cloud_watch_log_configuration: {
+                              enabled: bool,
+                              log_group_name: ::String?,
+                              log_stream_name_prefix: ::String?,
+                              encryption_key_arn: ::String?,
+                              log_types: Hash[::String, Array[::String]]?
+                            }?,
+                            s3_logging_configuration: {
+                              log_type_upload_policy: Hash[("system-logs" | "application-logs" | "persistent-ui-logs"), ("emr-managed" | "on-customer-s3only" | "disabled")]?
+                            }?
+                          },
+                          ?session_enabled: bool
                         ) -> _RunJobFlowResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RunJobFlowResponseSuccess
 
@@ -1229,7 +953,7 @@ module Aws
                                         {
                                           key: ::String?,
                                           value: ::String?
-                                        },
+                                        }
                                       ],
                                       ?notebook_s3_location: {
                                         bucket: ::String?,
@@ -1244,6 +968,56 @@ module Aws
                                     ) -> _StartNotebookExecutionResponseSuccess
                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartNotebookExecutionResponseSuccess
 
+      interface _StartSessionResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StartSessionOutput]
+        def id: () -> ::String
+        def cluster_id: () -> ::String
+        def arn: () -> ::String
+        def account_id: () -> ::String
+        def state: () -> ("SUBMITTED" | "STARTING" | "STARTED" | "IDLE" | "BUSY" | "TERMINATING" | "TERMINATED" | "FAILED")
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EMR/Client.html#start_session-instance_method
+      def start_session: (
+                           ?name: ::String,
+                           cluster_id: ::String,
+                           ?execution_role_arn: ::String,
+                           ?engine_configurations: Array[
+                             {
+                               classification: ::String?,
+                               configurations: untyped?,
+                               properties: Hash[::String, ::String]?
+                             }
+                           ],
+                           ?monitoring_configuration: {
+                             cloud_watch_logging_configuration: {
+                               enabled: bool?,
+                               log_group: ::String?,
+                               log_stream_name_prefix: ::String?,
+                               encryption_key_arn: ::String?,
+                               log_types: Hash[::String, Array[::String]]?
+                             }?,
+                             managed_logging_configuration: {
+                               enabled: bool?,
+                               encryption_key_arn: ::String?
+                             }?,
+                             s3_logging_configuration: {
+                               enabled: bool?,
+                               log_uri: ::String?,
+                               encryption_key_arn: ::String?,
+                               log_types: Hash[::String, Array[::String]]?
+                             }?
+                           },
+                           ?session_idle_timeout_in_minutes: ::Integer,
+                           ?client_request_token: ::String,
+                           ?tags: Array[
+                             {
+                               key: ::String?,
+                               value: ::String?
+                             }
+                           ]
+                         ) -> _StartSessionResponseSuccess
+                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartSessionResponseSuccess
+
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EMR/Client.html#stop_notebook_execution-instance_method
       def stop_notebook_execution: (
                                      notebook_execution_id: ::String
@@ -1255,6 +1029,19 @@ module Aws
                                  job_flow_ids: Array[::String]
                                ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+
+      interface _TerminateSessionResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::TerminateSessionOutput]
+        def cluster_id: () -> ::String
+        def session_id: () -> ::String
+        def state: () -> ("SUBMITTED" | "STARTING" | "STARTED" | "IDLE" | "BUSY" | "TERMINATING" | "TERMINATED" | "FAILED")
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EMR/Client.html#terminate_session-instance_method
+      def terminate_session: (
+                               cluster_id: ::String,
+                               session_id: ::String
+                             ) -> _TerminateSessionResponseSuccess
+                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TerminateSessionResponseSuccess
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EMR/Client.html#update_studio-instance_method
       def update_studio: (

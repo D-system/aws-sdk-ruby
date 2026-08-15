@@ -406,6 +406,83 @@ module Aws::Omics
       include Aws::Structure
     end
 
+    # A summary of a batch returned by `ListBatch`.
+    #
+    # @!attribute [rw] id
+    #   The batch identifier.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The batch name.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current batch status.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_at
+    #   The timestamp when the batch was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] total_runs
+    #   The total number of runs in the batch.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] workflow_id
+    #   The identifier of the workflow used for the batch.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/BatchListItem AWS API Documentation
+    #
+    class BatchListItem < Struct.new(
+      :id,
+      :name,
+      :status,
+      :created_at,
+      :total_runs,
+      :workflow_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A union type representing per-run configurations for the batch.
+    # Specify exactly one of the following members.
+    #
+    # @note BatchRunSettings is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @!attribute [rw] inline_settings
+    #   A list of per-run configurations provided inline in the request.
+    #   Each entry must include a unique `runSettingId`. Supports up to 100
+    #   entries. For batches with more than 100 runs, use `s3UriSettings`.
+    #   @return [Array<Types::InlineSetting>]
+    #
+    # @!attribute [rw] s3_uri_settings
+    #   An Amazon S3 URI pointing to a JSON file containing per-run
+    #   configurations. The file must be a JSON array in the same format as
+    #   `inlineSettings`. Supports up to 100,000 run configurations. The
+    #   maximum file size is 6 GB.
+    #
+    #   The IAM service role in `roleArn` must have read access to this S3
+    #   object. HealthOmics validates access to the file during the
+    #   synchronous API call and records the file's ETag. If the file is
+    #   modified after submission, the batch fails.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/BatchRunSettings AWS API Documentation
+    #
+    class BatchRunSettings < Struct.new(
+      :inline_settings,
+      :s3_uri_settings,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class InlineSettings < BatchRunSettings; end
+      class S3UriSettings < BatchRunSettings; end
+      class Unknown < BatchRunSettings; end
+    end
+
     # @!attribute [rw] job_id
     #   The job's ID.
     #   @return [String]
@@ -421,6 +498,22 @@ module Aws::Omics
     # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/CancelAnnotationImportResponse AWS API Documentation
     #
     class CancelAnnotationImportResponse < Aws::EmptyStructure; end
+
+    # @!attribute [rw] batch_id
+    #   The identifier portion of the run batch ARN.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/CancelRunBatchRequest AWS API Documentation
+    #
+    class CancelRunBatchRequest < Struct.new(
+      :batch_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/CancelRunBatchResponse AWS API Documentation
+    #
+    class CancelRunBatchResponse < Aws::EmptyStructure; end
 
     # @!attribute [rw] id
     #   The run's ID.
@@ -511,6 +604,64 @@ module Aws::Omics
       include Aws::Structure
     end
 
+    # Minimal details for a configuration resource.
+    #
+    # @!attribute [rw] name
+    #   User-friendly name for the configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] arn
+    #   Unique resource identifier for the configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] uuid
+    #   Unique identifier for the configuration.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/ConfigurationDetails AWS API Documentation
+    #
+    class ConfigurationDetails < Struct.new(
+      :name,
+      :arn,
+      :uuid)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration list item with summary information.
+    #
+    # @!attribute [rw] arn
+    #   Unique resource identifier for the configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   User-friendly name for the configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   Description for the configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   Current configuration status.
+    #   @return [String]
+    #
+    # @!attribute [rw] creation_time
+    #   Configuration creation timestamp.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/ConfigurationListItem AWS API Documentation
+    #
+    class ConfigurationListItem < Struct.new(
+      :arn,
+      :name,
+      :description,
+      :status,
+      :creation_time)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The request cannot be applied to the target resource in its current
     # state.
     #
@@ -521,6 +672,34 @@ module Aws::Omics
     #
     class ConflictException < Struct.new(
       :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Use a container registry map to specify mappings between the ECR
+    # private repository and one or more upstream registries. For more
+    # information, see [Container images][1] in the *Amazon Web Services
+    # HealthOmics User Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/omics/latest/dev/workflows-ecr.html
+    #
+    # @!attribute [rw] registry_mappings
+    #   Mapping that provides the ECR repository path where upstream
+    #   container images are pulled and synchronized.
+    #   @return [Array<Types::RegistryMapping>]
+    #
+    # @!attribute [rw] image_mappings
+    #   Image mappings specify path mappings between the ECR private
+    #   repository and their corresponding external repositories.
+    #   @return [Array<Types::ImageMapping>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/ContainerRegistryMap AWS API Documentation
+    #
+    class ContainerRegistryMap < Struct.new(
+      :registry_mappings,
+      :image_mappings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -697,6 +876,90 @@ module Aws::Omics
       :name,
       :status,
       :creation_time)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] name
+    #   User-friendly name for the configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   Optional description for the configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] run_configurations
+    #   Required run-specific configurations.
+    #   @return [Types::RunConfigurations]
+    #
+    # @!attribute [rw] tags
+    #   Optional tags for the configuration.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] request_id
+    #   Optional request idempotency token. If not specified, a universally
+    #   unique identifier (UUID) will be automatically generated for the
+    #   request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/CreateConfigurationRequest AWS API Documentation
+    #
+    class CreateConfigurationRequest < Struct.new(
+      :name,
+      :description,
+      :run_configurations,
+      :tags,
+      :request_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   Unique resource identifier for the configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] uuid
+    #   Unique identifier for the configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   User-friendly name for the configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   Description for the configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] run_configurations
+    #   Run-specific configurations.
+    #   @return [Types::RunConfigurationsResponse]
+    #
+    # @!attribute [rw] status
+    #   Current configuration status.
+    #   @return [String]
+    #
+    # @!attribute [rw] creation_time
+    #   Configuration creation timestamp.
+    #   @return [Time]
+    #
+    # @!attribute [rw] tags
+    #   Tags for the configuration.
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/CreateConfigurationResponse AWS API Documentation
+    #
+    class CreateConfigurationResponse < Struct.new(
+      :arn,
+      :uuid,
+      :name,
+      :description,
+      :run_configurations,
+      :status,
+      :creation_time,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -912,8 +1175,8 @@ module Aws::Omics
     #   CACHE\_ON\_FAILURE. When you start a run that uses this cache, you
     #   can override the default cache behavior.
     #
-    #   For more information, see [Run cache behavior][1] in the AWS
-    #   HealthOmics User Guide.
+    #   For more information, see [Run cache behavior][1] in the *Amazon Web
+    #   Services HealthOmics User Guide*.
     #
     #
     #
@@ -935,8 +1198,8 @@ module Aws::Omics
     #
     # @!attribute [rw] request_id
     #   A unique request token, to ensure idempotency. If you don't specify
-    #   a token, HealthOmics automatically generates a universally unique
-    #   identifier (UUID) for the request.
+    #   a token, Amazon Web Services HealthOmics automatically generates a
+    #   universally unique identifier (UUID) for the request.
     #
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.
@@ -947,9 +1210,9 @@ module Aws::Omics
     #   @return [Hash<String,String>]
     #
     # @!attribute [rw] cache_bucket_owner_id
-    #   The AWS account ID of the expected owner of the S3 bucket for the
-    #   run cache. If not provided, your account ID is set as the owner of
-    #   the bucket.
+    #   The Amazon Web Services account ID of the expected owner of the S3
+    #   bucket for the run cache. If not provided, your account ID is set as
+    #   the owner of the bucket.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/CreateRunCacheRequest AWS API Documentation
@@ -1077,12 +1340,12 @@ module Aws::Omics
     #   @return [Types::SseConfig]
     #
     # @!attribute [rw] tags
-    #   Tags for the store.
+    #   Tags for the store. You can configure up to 50 tags.
     #   @return [Hash<String,String>]
     #
     # @!attribute [rw] client_token
-    #   To ensure that requests don't run multiple times, specify a unique
-    #   token for each request.
+    #   An idempotency token used to dedupe retry requests so that duplicate
+    #   runs are not created.
     #
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.
@@ -1090,20 +1353,31 @@ module Aws::Omics
     #
     # @!attribute [rw] fallback_location
     #   An S3 location that is used to store files that have failed a direct
-    #   upload.
+    #   upload. You can add or change the `fallbackLocation` after creating
+    #   a sequence store. This is not required if you are uploading files
+    #   from a different S3 bucket.
     #   @return [String]
     #
     # @!attribute [rw] e_tag_algorithm_family
-    #   The ETag algorithm family to use for ingested read sets.
+    #   The ETag algorithm family to use for ingested read sets. The default
+    #   value is MD5up. For more information on ETags, see [ETags and data
+    #   provenance][1] in the *Amazon Web Services HealthOmics User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/omics/latest/dev/etags-and-provenance.html
     #   @return [String]
     #
     # @!attribute [rw] propagated_set_level_tags
     #   The tags keys to propagate to the S3 objects associated with read
-    #   sets in the sequence store.
+    #   sets in the sequence store. These tags can be used as input to add
+    #   metadata to your read sets.
     #   @return [Array<String>]
     #
     # @!attribute [rw] s3_access_config
-    #   S3 access configuration parameters
+    #   S3 access configuration parameters. This specifies the parameters
+    #   needed to access logs stored in S3 buckets. The S3 bucket must be in
+    #   the same region and account as the sequence store.
     #   @return [Types::S3AccessConfig]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/CreateSequenceStoreRequest AWS API Documentation
@@ -1139,7 +1413,8 @@ module Aws::Omics
     #   @return [String]
     #
     # @!attribute [rw] sse_config
-    #   The store's SSE settings.
+    #   Server-side encryption (SSE) settings for the store. This contains
+    #   the KMS key ARN that is used to encrypt read set objects.
     #   @return [Types::SseConfig]
     #
     # @!attribute [rw] creation_time
@@ -1301,7 +1576,9 @@ module Aws::Omics
     end
 
     # @!attribute [rw] name
-    #   A name for the workflow.
+    #   Name (optional but highly recommended) for the workflow to locate
+    #   relevant information in the CloudWatch logs and Amazon Web Services
+    #   HealthOmics console.
     #   @return [String]
     #
     # @!attribute [rw] description
@@ -1309,36 +1586,80 @@ module Aws::Omics
     #   @return [String]
     #
     # @!attribute [rw] engine
-    #   An engine for the workflow.
+    #   The workflow engine for the workflow. By default, Amazon Web
+    #   Services HealthOmics detects the engine automatically from your
+    #   workflow definition. Provide a value if you have workflow definition
+    #   files from more than one engine in your zip file, or to use WDL
+    #   lenient.
+    #
+    #   WDL lenient is designed to handle workflows migrated from Cromwell.
+    #   It supports customer Cromwell directives and some non-conformant
+    #   logic. For details, see [Implicit type conversion in WDL lenient][1]
+    #   in the *Amazon Web Services HealthOmics User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/omics/latest/dev/workflow-wdl-type-conversion.html
     #   @return [String]
     #
     # @!attribute [rw] definition_zip
-    #   A ZIP archive for the workflow.
+    #   A ZIP archive containing the main workflow definition file and
+    #   dependencies that it imports for the workflow. You can use a file
+    #   with a ://fileb prefix instead of the Base64 string. For more
+    #   information, see [Workflow definition requirements][1] in the
+    #   *Amazon Web Services HealthOmics User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/omics/latest/dev/workflow-defn-requirements.html
     #   @return [String]
     #
     # @!attribute [rw] definition_uri
-    #   The URI of a definition for the workflow.
+    #   The S3 URI of a definition for the workflow. The S3 bucket must be
+    #   in the same region as the workflow.
     #   @return [String]
     #
     # @!attribute [rw] main
-    #   The path of the main definition file for the workflow.
+    #   The path of the main definition file for the workflow. This
+    #   parameter is not required if the ZIP archive contains only one
+    #   workflow definition file, or if the main definition file is named
+    #   “main”. An example path is: `workflow-definition/main-file.wdl`.
     #   @return [String]
     #
     # @!attribute [rw] parameter_template
-    #   A parameter template for the workflow.
+    #   A parameter template for the workflow. If this field is blank,
+    #   Amazon Web Services HealthOmics will automatically parse the
+    #   parameter template values from your workflow definition file. To
+    #   override these service generated default values, provide a parameter
+    #   template. To view an example of a parameter template, see [Parameter
+    #   template files][1] in the *Amazon Web Services HealthOmics User
+    #   Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/omics/latest/dev/parameter-templates.html
     #   @return [Hash<String,Types::WorkflowParameter>]
     #
     # @!attribute [rw] storage_capacity
-    #   The default storage capacity for the workflow runs, in gibibytes.
+    #   The default static storage capacity (in gibibytes) for runs that use
+    #   this workflow or workflow version. The `storageCapacity` can be
+    #   overwritten at run time. The storage capacity is not required for
+    #   runs with a `DYNAMIC` storage type.
     #   @return [Integer]
     #
     # @!attribute [rw] tags
-    #   Tags for the workflow.
+    #   Tags for the workflow. You can define up to 50 tags for the
+    #   workflow. For more information, see [Adding a tag][1] in the *Amazon
+    #   Web Services HealthOmics User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/omics/latest/dev/add-a-tag.html
     #   @return [Hash<String,String>]
     #
     # @!attribute [rw] request_id
-    #   To ensure that requests don't run multiple times, specify a unique
-    #   ID for each request.
+    #   An idempotency token to ensure that duplicate workflows are not
+    #   created when Amazon Web Services HealthOmics submits retry requests.
     #
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.
@@ -1346,6 +1667,78 @@ module Aws::Omics
     #
     # @!attribute [rw] accelerators
     #   The computational accelerator specified to run the workflow.
+    #   @return [String]
+    #
+    # @!attribute [rw] storage_type
+    #   The default storage type for runs that use this workflow. The
+    #   `storageType` can be overridden at run time. `DYNAMIC` storage
+    #   dynamically scales the storage up or down, based on file system
+    #   utilization. `STATIC` storage allocates a fixed amount of storage.
+    #   For more information about dynamic and static storage types, see
+    #   [Run storage types][1] in the *Amazon Web Services HealthOmics User
+    #   Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/omics/latest/dev/workflows-run-types.html
+    #   @return [String]
+    #
+    # @!attribute [rw] container_registry_map
+    #   (Optional) Use a container registry map to specify mappings between
+    #   the ECR private repository and one or more upstream registries. For
+    #   more information, see [Container images][1] in the *Amazon Web
+    #   Services HealthOmics User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/omics/latest/dev/workflows-ecr.html
+    #   @return [Types::ContainerRegistryMap]
+    #
+    # @!attribute [rw] container_registry_map_uri
+    #   (Optional) URI of the S3 location for the registry mapping file.
+    #   @return [String]
+    #
+    # @!attribute [rw] readme_markdown
+    #   The markdown content for the workflow's README file. This provides
+    #   documentation and usage information for users of the workflow.
+    #   @return [String]
+    #
+    # @!attribute [rw] parameter_template_path
+    #   The path to the workflow parameter template JSON file within the
+    #   repository. This file defines the input parameters for runs that use
+    #   this workflow. If not specified, the workflow will be created
+    #   without a parameter template.
+    #   @return [String]
+    #
+    # @!attribute [rw] readme_path
+    #   The path to the workflow README markdown file within the repository.
+    #   This file provides documentation and usage information for the
+    #   workflow. If not specified, the `README.md` file from the root
+    #   directory of the repository will be used.
+    #   @return [String]
+    #
+    # @!attribute [rw] definition_repository
+    #   The repository information for the workflow definition. This allows
+    #   you to source your workflow definition directly from a code
+    #   repository.
+    #   @return [Types::DefinitionRepository]
+    #
+    # @!attribute [rw] workflow_bucket_owner_id
+    #   The Amazon Web Services account ID of the expected owner of the S3
+    #   bucket that contains the workflow definition. If not specified, the
+    #   service skips the validation.
+    #   @return [String]
+    #
+    # @!attribute [rw] readme_uri
+    #   The S3 URI of the README file for the workflow. This file provides
+    #   documentation and usage information for the workflow. Requirements
+    #   include:
+    #
+    #   * The S3 URI must begin with `s3://USER-OWNED-BUCKET/`
+    #
+    #   * The requester must have access to the S3 bucket and object.
+    #
+    #   * The max README content length is 500 KiB.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/CreateWorkflowRequest AWS API Documentation
@@ -1361,7 +1754,16 @@ module Aws::Omics
       :storage_capacity,
       :tags,
       :request_id,
-      :accelerators)
+      :accelerators,
+      :storage_type,
+      :container_registry_map,
+      :container_registry_map_uri,
+      :readme_markdown,
+      :parameter_template_path,
+      :readme_path,
+      :definition_repository,
+      :workflow_bucket_owner_id,
+      :readme_uri)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1382,13 +1784,467 @@ module Aws::Omics
     #   The workflow's tags.
     #   @return [Hash<String,String>]
     #
+    # @!attribute [rw] uuid
+    #   The universally unique identifier (UUID) value for this workflow.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/CreateWorkflowResponse AWS API Documentation
     #
     class CreateWorkflowResponse < Struct.new(
       :arn,
       :id,
       :status,
-      :tags)
+      :tags,
+      :uuid)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] workflow_id
+    #   The ID of the workflow where you are creating the new version. The
+    #   `workflowId` is not the UUID.
+    #   @return [String]
+    #
+    # @!attribute [rw] version_name
+    #   A name for the workflow version. Provide a version name that is
+    #   unique for this workflow. You cannot change the name after
+    #   HealthOmics creates the version.
+    #
+    #   The version name must start with a letter or number and it can
+    #   include upper-case and lower-case letters, numbers, hyphens, periods
+    #   and underscores. The maximum length is 64 characters. You can use a
+    #   simple naming scheme, such as version1, version2, version3. You can
+    #   also match your workflow versions with your own internal versioning
+    #   conventions, such as 2.7.0, 2.7.1, 2.7.2.
+    #   @return [String]
+    #
+    # @!attribute [rw] definition_zip
+    #   A ZIP archive containing the main workflow definition file and
+    #   dependencies that it imports for this workflow version. You can use
+    #   a file with a ://fileb prefix instead of the Base64 string. For more
+    #   information, see Workflow definition requirements in the *Amazon Web
+    #   Services HealthOmics User Guide*.
+    #   @return [String]
+    #
+    # @!attribute [rw] definition_uri
+    #   The S3 URI of a definition for this workflow version. The S3 bucket
+    #   must be in the same region as this workflow version.
+    #   @return [String]
+    #
+    # @!attribute [rw] accelerators
+    #   The computational accelerator for this workflow version.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A description for this workflow version.
+    #   @return [String]
+    #
+    # @!attribute [rw] engine
+    #   The workflow engine for this workflow version. This is only required
+    #   if you have workflow definition files from more than one engine in
+    #   your zip file. Otherwise, the service can detect the engine
+    #   automatically from your workflow definition.
+    #   @return [String]
+    #
+    # @!attribute [rw] main
+    #   The path of the main definition file for this workflow version. This
+    #   parameter is not required if the ZIP archive contains only one
+    #   workflow definition file, or if the main definition file is named
+    #   “main”. An example path is: `workflow-definition/main-file.wdl`.
+    #   @return [String]
+    #
+    # @!attribute [rw] parameter_template
+    #   A parameter template for this workflow version. If this field is
+    #   blank, Amazon Web Services HealthOmics will automatically parse the
+    #   parameter template values from your workflow definition file. To
+    #   override these service generated default values, provide a parameter
+    #   template. To view an example of a parameter template, see [Parameter
+    #   template files][1] in the *Amazon Web Services HealthOmics User
+    #   Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/omics/latest/dev/parameter-templates.html
+    #   @return [Hash<String,Types::WorkflowParameter>]
+    #
+    # @!attribute [rw] request_id
+    #   An idempotency token to ensure that duplicate workflows are not
+    #   created when Amazon Web Services HealthOmics submits retry requests.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @!attribute [rw] storage_type
+    #   The default storage type for runs that use this workflow version.
+    #   The `storageType` can be overridden at run time. `DYNAMIC` storage
+    #   dynamically scales the storage up or down, based on file system
+    #   utilization. STATIC storage allocates a fixed amount of storage. For
+    #   more information about dynamic and static storage types, see [Run
+    #   storage types][1] in the *Amazon Web Services HealthOmics User
+    #   Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/omics/latest/dev/workflows-run-types.html
+    #   @return [String]
+    #
+    # @!attribute [rw] storage_capacity
+    #   The default static storage capacity (in gibibytes) for runs that use
+    #   this workflow version. The `storageCapacity` can be overwritten at
+    #   run time. The storage capacity is not required for runs with a
+    #   `DYNAMIC` storage type.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] tags
+    #   Tags for this workflow version. You can define up to 50 tags for the
+    #   workflow. For more information, see [Adding a tag][1] in the *Amazon
+    #   Web Services HealthOmics User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/omics/latest/dev/add-a-tag.html
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] workflow_bucket_owner_id
+    #   Amazon Web Services Id of the owner of the S3 bucket that contains
+    #   the workflow definition. You need to specify this parameter if your
+    #   account is not the bucket owner.
+    #   @return [String]
+    #
+    # @!attribute [rw] container_registry_map
+    #   (Optional) Use a container registry map to specify mappings between
+    #   the ECR private repository and one or more upstream registries. For
+    #   more information, see [Container images][1] in the *Amazon Web
+    #   Services HealthOmics User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/omics/latest/dev/workflows-ecr.html
+    #   @return [Types::ContainerRegistryMap]
+    #
+    # @!attribute [rw] container_registry_map_uri
+    #   (Optional) URI of the S3 location for the registry mapping file.
+    #   @return [String]
+    #
+    # @!attribute [rw] readme_markdown
+    #   The markdown content for the workflow version's README file. This
+    #   provides documentation and usage information for users of this
+    #   specific workflow version.
+    #   @return [String]
+    #
+    # @!attribute [rw] parameter_template_path
+    #   The path to the workflow version parameter template JSON file within
+    #   the repository. This file defines the input parameters for runs that
+    #   use this workflow version. If not specified, the workflow version
+    #   will be created without a parameter template.
+    #   @return [String]
+    #
+    # @!attribute [rw] readme_path
+    #   The path to the workflow version README markdown file within the
+    #   repository. This file provides documentation and usage information
+    #   for the workflow. If not specified, the `README.md` file from the
+    #   root directory of the repository will be used.
+    #   @return [String]
+    #
+    # @!attribute [rw] definition_repository
+    #   The repository information for the workflow version definition. This
+    #   allows you to source your workflow version definition directly from
+    #   a code repository.
+    #   @return [Types::DefinitionRepository]
+    #
+    # @!attribute [rw] readme_uri
+    #   The S3 URI of the README file for the workflow version. This file
+    #   provides documentation and usage information for the workflow
+    #   version. Requirements include:
+    #
+    #   * The S3 URI must begin with `s3://USER-OWNED-BUCKET/`
+    #
+    #   * The requester must have access to the S3 bucket and object.
+    #
+    #   * The max README content length is 500 KiB.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/CreateWorkflowVersionRequest AWS API Documentation
+    #
+    class CreateWorkflowVersionRequest < Struct.new(
+      :workflow_id,
+      :version_name,
+      :definition_zip,
+      :definition_uri,
+      :accelerators,
+      :description,
+      :engine,
+      :main,
+      :parameter_template,
+      :request_id,
+      :storage_type,
+      :storage_capacity,
+      :tags,
+      :workflow_bucket_owner_id,
+      :container_registry_map,
+      :container_registry_map_uri,
+      :readme_markdown,
+      :parameter_template_path,
+      :readme_path,
+      :definition_repository,
+      :readme_uri)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   ARN of the workflow version.
+    #   @return [String]
+    #
+    # @!attribute [rw] workflow_id
+    #   The workflow's ID.
+    #   @return [String]
+    #
+    # @!attribute [rw] version_name
+    #   The workflow version name.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The workflow version status.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   The workflow version's tags.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] uuid
+    #   The universally unique identifier (UUID) value for this workflow
+    #   version.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/CreateWorkflowVersionResponse AWS API Documentation
+    #
+    class CreateWorkflowVersionResponse < Struct.new(
+      :arn,
+      :workflow_id,
+      :version_name,
+      :status,
+      :tags,
+      :uuid)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Shared configuration applied to all runs in a batch. Fields specified
+    # in a per-run `InlineSetting` entry override the corresponding fields
+    # in this object for that run. The `parameters` and `runTags` fields are
+    # merged rather than replaced — run-specific values take precedence when
+    # keys overlap.
+    #
+    # @!attribute [rw] workflow_id
+    #   The identifier of the workflow to run.
+    #   @return [String]
+    #
+    # @!attribute [rw] workflow_type
+    #   The type of the originating workflow. Batch runs are not supported
+    #   with `READY2RUN` workflows.
+    #   @return [String]
+    #
+    # @!attribute [rw] role_arn
+    #   The IAM role ARN that grants HealthOmics permissions to access
+    #   required AWS resources such as Amazon S3 and CloudWatch. The role
+    #   must have the same permissions required for individual `StartRun`
+    #   calls.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   An optional user-friendly name applied to each workflow run. Can be
+    #   overridden per run.
+    #   @return [String]
+    #
+    # @!attribute [rw] cache_id
+    #   The identifier of the run cache to associate with the runs.
+    #   @return [String]
+    #
+    # @!attribute [rw] cache_behavior
+    #   The cache behavior for the runs. Requires `cacheId` to be set.
+    #   @return [String]
+    #
+    # @!attribute [rw] run_group_id
+    #   The ID of the run group to contain all workflow runs in the batch.
+    #   @return [String]
+    #
+    # @!attribute [rw] priority
+    #   An integer priority for the workflow runs. Higher values correspond
+    #   to higher priority. A value of 0 corresponds to the lowest priority.
+    #   Can be overridden per run.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] parameters
+    #   Workflow parameter names and values shared across all runs. Merged
+    #   with per-run parameters; run-specific values take precedence when
+    #   keys overlap. Can be overridden per run.
+    #   @return [Hash,Array,String,Numeric,Boolean]
+    #
+    # @!attribute [rw] storage_capacity
+    #   The filesystem size in gibibytes (GiB) provisioned for each workflow
+    #   run and shared by all tasks in that run. Defaults to 1200 GiB if not
+    #   specified.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] output_uri
+    #   The destination S3 URI for workflow outputs. Must begin with
+    #   `s3://`. The `roleArn` must grant write permissions to this bucket.
+    #   Can be overridden per run.
+    #   @return [String]
+    #
+    # @!attribute [rw] log_level
+    #   The verbosity level for CloudWatch Logs emitted during each run.
+    #   @return [String]
+    #
+    # @!attribute [rw] run_tags
+    #   AWS tags to associate with each workflow run. Merged with per-run
+    #   `runTags`; run-specific values take precedence when keys overlap.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] retention_mode
+    #   The retention behavior for runs after completion.
+    #   @return [String]
+    #
+    # @!attribute [rw] storage_type
+    #   The storage type for the workflow runs.
+    #   @return [String]
+    #
+    # @!attribute [rw] workflow_owner_id
+    #   The AWS account ID of the workflow owner, used for cross-account
+    #   workflow sharing.
+    #   @return [String]
+    #
+    # @!attribute [rw] output_bucket_owner_id
+    #   The expected AWS account ID of the owner of the output S3 bucket.
+    #   Can be overridden per run.
+    #   @return [String]
+    #
+    # @!attribute [rw] workflow_version_name
+    #   The version name of the specified workflow.
+    #   @return [String]
+    #
+    # @!attribute [rw] networking_mode
+    #   Optional configuration for run networking behavior. If not
+    #   specified, this will default to RESTRICTED.
+    #   @return [String]
+    #
+    # @!attribute [rw] configuration_name
+    #   Optional configuration name to use for the workflow run.
+    #   @return [String]
+    #
+    # @!attribute [rw] engine_settings
+    #   Engine-specific settings for the workflow run. Use this field to
+    #   specify configuration options that are specific to the workflow
+    #   engine (for example, Nextflow profiles).
+    #   @return [Hash,Array,String,Numeric,Boolean]
+    #
+    # @!attribute [rw] scratch_storage_mode
+    #   Optional configuration for enabling scratch ephemeral storage
+    #   mounted at /tmp. If not specified, this will default to SHARED. This
+    #   configuration is applicable only for CPU tasks. For tasks using
+    #   GPUs, scratch storage is always LOCAL.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/DefaultRunSetting AWS API Documentation
+    #
+    class DefaultRunSetting < Struct.new(
+      :workflow_id,
+      :workflow_type,
+      :role_arn,
+      :name,
+      :cache_id,
+      :cache_behavior,
+      :run_group_id,
+      :priority,
+      :parameters,
+      :storage_capacity,
+      :output_uri,
+      :log_level,
+      :run_tags,
+      :retention_mode,
+      :storage_type,
+      :workflow_owner_id,
+      :output_bucket_owner_id,
+      :workflow_version_name,
+      :networking_mode,
+      :configuration_name,
+      :engine_settings,
+      :scratch_storage_mode)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about a source code repository that hosts the
+    # workflow definition files.
+    #
+    # @!attribute [rw] connection_arn
+    #   The Amazon Resource Name (ARN) of the connection to the source code
+    #   repository.
+    #   @return [String]
+    #
+    # @!attribute [rw] full_repository_id
+    #   The full repository identifier, including the repository owner and
+    #   name. For example, 'repository-owner/repository-name'.
+    #   @return [String]
+    #
+    # @!attribute [rw] source_reference
+    #   The source reference for the repository, such as a branch name, tag,
+    #   or commit ID.
+    #   @return [Types::SourceReference]
+    #
+    # @!attribute [rw] exclude_file_patterns
+    #   A list of file patterns to exclude when retrieving the workflow
+    #   definition from the repository.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/DefinitionRepository AWS API Documentation
+    #
+    class DefinitionRepository < Struct.new(
+      :connection_arn,
+      :full_repository_id,
+      :source_reference,
+      :exclude_file_patterns)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains detailed information about the source code repository that
+    # hosts the workflow definition files.
+    #
+    # @!attribute [rw] connection_arn
+    #   The Amazon Resource Name (ARN) of the connection to the source code
+    #   repository.
+    #   @return [String]
+    #
+    # @!attribute [rw] full_repository_id
+    #   The full repository identifier, including the repository owner and
+    #   name. For example, 'repository-owner/repository-name'.
+    #   @return [String]
+    #
+    # @!attribute [rw] source_reference
+    #   The source reference for the repository, such as a branch name, tag,
+    #   or commit ID.
+    #   @return [Types::SourceReference]
+    #
+    # @!attribute [rw] provider_type
+    #   The provider type of the source code repository, such as Bitbucket,
+    #   GitHub, GitHubEnterpriseServer, GitLab, and GitLabSelfManaged.
+    #   @return [String]
+    #
+    # @!attribute [rw] provider_endpoint
+    #   The endpoint URL of the source code repository provider.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/DefinitionRepositoryDetails AWS API Documentation
+    #
+    class DefinitionRepositoryDetails < Struct.new(
+      :connection_arn,
+      :full_repository_id,
+      :source_reference,
+      :provider_type,
+      :provider_endpoint)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1459,6 +2315,30 @@ module Aws::Omics
       include Aws::Structure
     end
 
+    # @!attribute [rw] batch_id
+    #   The identifier portion of the run batch ARN.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/DeleteBatchRequest AWS API Documentation
+    #
+    class DeleteBatchRequest < Struct.new(
+      :batch_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] name
+    #   Configuration name to delete.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/DeleteConfigurationRequest AWS API Documentation
+    #
+    class DeleteConfigurationRequest < Struct.new(
+      :name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] id
     #   The reference's ID.
     #   @return [String]
@@ -1495,6 +2375,22 @@ module Aws::Omics
     # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/DeleteReferenceStoreResponse AWS API Documentation
     #
     class DeleteReferenceStoreResponse < Aws::EmptyStructure; end
+
+    # @!attribute [rw] batch_id
+    #   The identifier portion of the run batch ARN.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/DeleteRunBatchRequest AWS API Documentation
+    #
+    class DeleteRunBatchRequest < Struct.new(
+      :batch_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/DeleteRunBatchResponse AWS API Documentation
+    #
+    class DeleteRunBatchResponse < Aws::EmptyStructure; end
 
     # @!attribute [rw] id
     #   Run cache identifier for the cache you want to delete.
@@ -1625,6 +2521,23 @@ module Aws::Omics
     #
     class DeleteWorkflowRequest < Struct.new(
       :id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] workflow_id
+    #   The workflow's ID.
+    #   @return [String]
+    #
+    # @!attribute [rw] version_name
+    #   The workflow version name.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/DeleteWorkflowVersionRequest AWS API Documentation
+    #
+    class DeleteWorkflowVersionRequest < Struct.new(
+      :workflow_id,
+      :version_name)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2108,6 +3021,169 @@ module Aws::Omics
       :version_options,
       :status_message,
       :version_size_bytes)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] batch_id
+    #   The identifier portion of the run batch ARN.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/GetBatchRequest AWS API Documentation
+    #
+    class GetBatchRequest < Struct.new(
+      :batch_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] id
+    #   The identifier portion of the run batch ARN.
+    #   @return [String]
+    #
+    # @!attribute [rw] arn
+    #   The unique ARN of the run batch.
+    #   @return [String]
+    #
+    # @!attribute [rw] uuid
+    #   The universally unique identifier (UUID) for the run batch.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The optional user-friendly name of the batch.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the run batch. Possible values: `CREATING`
+    #   (initial setup), `PENDING` (ready to submit runs), `SUBMITTING`
+    #   (submitting runs), `INPROGRESS` (runs executing), `STOPPING`
+    #   (cancellation in progress), `PROCESSED` (all runs completed),
+    #   `CANCELLED` (batch cancelled), `FAILED` (batch failed),
+    #   `RUNS_DELETING` (deleting runs), `RUNS_DELETED` (runs deleted).
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   AWS tags associated with the run batch.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] total_runs
+    #   The total number of runs in the batch.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] default_run_setting
+    #   The shared configuration applied to all runs in the batch. See
+    #   `DefaultRunSetting`.
+    #   @return [Types::DefaultRunSetting]
+    #
+    # @!attribute [rw] submission_summary
+    #   A summary of run submission outcomes. See `SubmissionSummary`.
+    #   @return [Types::SubmissionSummary]
+    #
+    # @!attribute [rw] run_summary
+    #   A summary of run execution states. Run execution counts are
+    #   eventually consistent and may lag behind actual run states. Final
+    #   counts are accurate once the batch reaches `PROCESSED` status. See
+    #   `RunSummary`.
+    #   @return [Types::RunSummary]
+    #
+    # @!attribute [rw] creation_time
+    #   The timestamp when the batch was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] submitted_time
+    #   The timestamp when all run submissions completed.
+    #   @return [Time]
+    #
+    # @!attribute [rw] processed_time
+    #   The timestamp when all run executions completed.
+    #   @return [Time]
+    #
+    # @!attribute [rw] failed_time
+    #   The timestamp when the batch transitioned to a `FAILED` status.
+    #   @return [Time]
+    #
+    # @!attribute [rw] failure_reason
+    #   A description of the batch failure. Present only when status is
+    #   `FAILED`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/GetBatchResponse AWS API Documentation
+    #
+    class GetBatchResponse < Struct.new(
+      :id,
+      :arn,
+      :uuid,
+      :name,
+      :status,
+      :tags,
+      :total_runs,
+      :default_run_setting,
+      :submission_summary,
+      :run_summary,
+      :creation_time,
+      :submitted_time,
+      :processed_time,
+      :failed_time,
+      :failure_reason)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] name
+    #   Configuration name to retrieve.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/GetConfigurationRequest AWS API Documentation
+    #
+    class GetConfigurationRequest < Struct.new(
+      :name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   Unique resource identifier for the configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] uuid
+    #   Unique identifier for the configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   User-friendly name for the configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   Description for the configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] run_configurations
+    #   Run-specific configurations.
+    #   @return [Types::RunConfigurationsResponse]
+    #
+    # @!attribute [rw] status
+    #   Current configuration status.
+    #   @return [String]
+    #
+    # @!attribute [rw] creation_time
+    #   Configuration creation timestamp.
+    #   @return [Time]
+    #
+    # @!attribute [rw] tags
+    #   Tags for the configuration.
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/GetConfigurationResponse AWS API Documentation
+    #
+    class GetConfigurationResponse < Struct.new(
+      :arn,
+      :uuid,
+      :name,
+      :description,
+      :run_configurations,
+      :status,
+      :creation_time,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2857,7 +3933,9 @@ module Aws::Omics
     #   @return [String]
     #
     # @!attribute [rw] engine_version
-    #   The workflow engine version.
+    #   The actual Nextflow engine version that Amazon Web Services
+    #   HealthOmics used for the run. The other workflow definition
+    #   languages don't provide a value for this field.
     #   @return [String]
     #
     # @!attribute [rw] status
@@ -2886,6 +3964,10 @@ module Aws::Omics
     #
     # @!attribute [rw] run_group_id
     #   The run's group ID.
+    #   @return [String]
+    #
+    # @!attribute [rw] batch_id
+    #   The run's batch ID.
     #   @return [String]
     #
     # @!attribute [rw] priority
@@ -2978,6 +4060,38 @@ module Aws::Omics
     #   The ID of the workflow owner.
     #   @return [String]
     #
+    # @!attribute [rw] workflow_version_name
+    #   The workflow version name.
+    #   @return [String]
+    #
+    # @!attribute [rw] workflow_uuid
+    #   The universally unique identifier (UUID) value for the workflow.
+    #   @return [String]
+    #
+    # @!attribute [rw] networking_mode
+    #   Configuration for run networking behavior. If absent, this will
+    #   default to RESTRICTED.
+    #   @return [String]
+    #
+    # @!attribute [rw] scratch_storage_mode
+    #   Optional configuration for enabling scratch ephemeral storage
+    #   mounted at /tmp. If absent, this will default to SHARED. This
+    #   configuration is applicable only for CPU tasks. For tasks using
+    #   GPUs, scratch storage is always LOCAL.
+    #   @return [String]
+    #
+    # @!attribute [rw] configuration
+    #   Configuration details for the workflow run.
+    #   @return [Types::ConfigurationDetails]
+    #
+    # @!attribute [rw] vpc_config
+    #   VPC configuration for the workflow run.
+    #   @return [Types::VpcConfigResponse]
+    #
+    # @!attribute [rw] engine_settings
+    #   The engine-specific settings for the workflow run.
+    #   @return [Hash,Array,String,Numeric,Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/GetRunResponse AWS API Documentation
     #
     class GetRunResponse < Struct.new(
@@ -2993,6 +4107,7 @@ module Aws::Omics
       :role_arn,
       :name,
       :run_group_id,
+      :batch_id,
       :priority,
       :definition,
       :digest,
@@ -3014,7 +4129,14 @@ module Aws::Omics
       :uuid,
       :run_output_uri,
       :storage_type,
-      :workflow_owner_id)
+      :workflow_owner_id,
+      :workflow_version_name,
+      :workflow_uuid,
+      :networking_mode,
+      :scratch_storage_mode,
+      :configuration,
+      :vpc_config,
+      :engine_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3053,8 +4175,8 @@ module Aws::Omics
     #   @return [Integer]
     #
     # @!attribute [rw] cache_hit
-    #   Set to true if AWS HealthOmics found a matching entry in the run
-    #   cache for this task.
+    #   Set to true if Amazon Web Services HealthOmics found a matching
+    #   entry in the run cache for this task.
     #   @return [Boolean]
     #
     # @!attribute [rw] cache_s3_uri
@@ -3097,6 +4219,14 @@ module Aws::Omics
     #   The reason a task has failed.
     #   @return [String]
     #
+    # @!attribute [rw] image_details
+    #   Details about the container image that this task uses.
+    #   @return [Types::ImageDetails]
+    #
+    # @!attribute [rw] uuid
+    #   The universally unique identifier (UUID) for the workflow task.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/GetRunTaskResponse AWS API Documentation
     #
     class GetRunTaskResponse < Struct.new(
@@ -3114,7 +4244,9 @@ module Aws::Omics
       :log_stream,
       :gpus,
       :instance_type,
-      :failure_reason)
+      :failure_reason,
+      :image_details,
+      :uuid)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3136,7 +4268,8 @@ module Aws::Omics
     #   @return [String]
     #
     # @!attribute [rw] store_id
-    #   The AWS-generated Sequence Store or Reference Store ID.
+    #   The Amazon Web Services-generated Sequence Store or Reference Store
+    #   ID.
     #   @return [String]
     #
     # @!attribute [rw] store_type
@@ -3500,7 +4633,8 @@ module Aws::Omics
     #   @return [Hash<String,Types::WorkflowParameter>]
     #
     # @!attribute [rw] storage_capacity
-    #   The workflow's default run storage capacity in gibibytes.
+    #   The default static storage capacity (in gibibytes) for runs that use
+    #   this workflow or workflow version.
     #   @return [Integer]
     #
     # @!attribute [rw] creation_time
@@ -3516,12 +4650,53 @@ module Aws::Omics
     #   @return [Hash<String,String>]
     #
     # @!attribute [rw] metadata
-    #   Gets metadata for workflow.
+    #   Gets metadata for the workflow.
     #   @return [Hash<String,String>]
     #
     # @!attribute [rw] accelerators
     #   The computational accelerator specified to run the workflow.
     #   @return [String]
+    #
+    # @!attribute [rw] storage_type
+    #   The default storage type for runs using this workflow.
+    #   @return [String]
+    #
+    # @!attribute [rw] uuid
+    #   The universally unique identifier (UUID) value for this workflow.
+    #   @return [String]
+    #
+    # @!attribute [rw] container_registry_map
+    #   The registry map that this workflow is using.
+    #   @return [Types::ContainerRegistryMap]
+    #
+    # @!attribute [rw] readme
+    #   The README content for the workflow, providing documentation and
+    #   usage information.
+    #   @return [String]
+    #
+    # @!attribute [rw] definition_repository_details
+    #   Details about the source code repository that hosts the workflow
+    #   definition files.
+    #   @return [Types::DefinitionRepositoryDetails]
+    #
+    # @!attribute [rw] readme_path
+    #   The path to the workflow README markdown file within the repository.
+    #   This file provides documentation and usage information for the
+    #   workflow. If not specified, the `README.md` file from the root
+    #   directory of the repository will be used.
+    #   @return [String]
+    #
+    # @!attribute [rw] profiles
+    #   The list of Nextflow profiles that are available for this workflow.
+    #   Profiles allow you to select predefined configuration settings at
+    #   runtime.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] profile_parameter_templates
+    #   A mapping of profile names to their parameter templates. Each
+    #   profile defines its own set of parameters that you can use when
+    #   starting a run with that profile.
+    #   @return [Hash<String,Hash<String,Types::WorkflowParameter>>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/GetWorkflowResponse AWS API Documentation
     #
@@ -3542,7 +4717,249 @@ module Aws::Omics
       :status_message,
       :tags,
       :metadata,
-      :accelerators)
+      :accelerators,
+      :storage_type,
+      :uuid,
+      :container_registry_map,
+      :readme,
+      :definition_repository_details,
+      :readme_path,
+      :profiles,
+      :profile_parameter_templates)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] workflow_id
+    #   The workflow's ID. The `workflowId` is not the UUID.
+    #   @return [String]
+    #
+    # @!attribute [rw] version_name
+    #   The workflow version name.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The workflow's type.
+    #   @return [String]
+    #
+    # @!attribute [rw] export
+    #   The export format for the workflow.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] workflow_owner_id
+    #   The 12-digit account ID of the workflow owner. The workflow owner ID
+    #   can be retrieved using the `GetShare` API operation. If you are the
+    #   workflow owner, you do not need to include this ID.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/GetWorkflowVersionRequest AWS API Documentation
+    #
+    class GetWorkflowVersionRequest < Struct.new(
+      :workflow_id,
+      :version_name,
+      :type,
+      :export,
+      :workflow_owner_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   ARN of the workflow version.
+    #   @return [String]
+    #
+    # @!attribute [rw] workflow_id
+    #   The workflow's ID.
+    #   @return [String]
+    #
+    # @!attribute [rw] version_name
+    #   The workflow version name.
+    #   @return [String]
+    #
+    # @!attribute [rw] accelerators
+    #   The accelerator for this workflow version.
+    #   @return [String]
+    #
+    # @!attribute [rw] creation_time
+    #   When the workflow version was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] description
+    #   Description of the workflow version.
+    #   @return [String]
+    #
+    # @!attribute [rw] definition
+    #   Definition of the workflow version.
+    #   @return [String]
+    #
+    # @!attribute [rw] digest
+    #   The workflow version's digest.
+    #   @return [String]
+    #
+    # @!attribute [rw] engine
+    #   The workflow engine for this workflow version.
+    #   @return [String]
+    #
+    # @!attribute [rw] main
+    #   The path of the main definition file for the workflow.
+    #   @return [String]
+    #
+    # @!attribute [rw] metadata
+    #   The metadata for the workflow version.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] parameter_template
+    #   The parameter template for the workflow version.
+    #   @return [Hash<String,Types::WorkflowParameter>]
+    #
+    # @!attribute [rw] status
+    #   The workflow version status
+    #   @return [String]
+    #
+    # @!attribute [rw] status_message
+    #   The workflow version status message
+    #   @return [String]
+    #
+    # @!attribute [rw] storage_type
+    #   The default storage type for the run.
+    #   @return [String]
+    #
+    # @!attribute [rw] storage_capacity
+    #   The default run storage capacity for static storage.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] type
+    #   The workflow version type
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   The workflow version tags
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] uuid
+    #   The universally unique identifier (UUID) value for this workflow
+    #   version
+    #   @return [String]
+    #
+    # @!attribute [rw] workflow_bucket_owner_id
+    #   Amazon Web Services Id of the owner of the bucket.
+    #   @return [String]
+    #
+    # @!attribute [rw] container_registry_map
+    #   The registry map that this workflow version uses.
+    #   @return [Types::ContainerRegistryMap]
+    #
+    # @!attribute [rw] readme
+    #   The README content for the workflow version, providing documentation
+    #   and usage information specific to this version.
+    #   @return [String]
+    #
+    # @!attribute [rw] definition_repository_details
+    #   Details about the source code repository that hosts the workflow
+    #   version definition files.
+    #   @return [Types::DefinitionRepositoryDetails]
+    #
+    # @!attribute [rw] readme_path
+    #   The path to the workflow version README markdown file within the
+    #   repository. This file provides documentation and usage information
+    #   for the workflow. If not specified, the `README.md` file from the
+    #   root directory of the repository will be used.
+    #   @return [String]
+    #
+    # @!attribute [rw] profiles
+    #   The list of Nextflow profiles that are available for this workflow
+    #   version. Profiles allow you to select predefined configuration
+    #   settings at runtime.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] profile_parameter_templates
+    #   A mapping of profile names to their parameter templates. Each
+    #   profile defines its own set of parameters that you can use when
+    #   starting a run with that profile.
+    #   @return [Hash<String,Hash<String,Types::WorkflowParameter>>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/GetWorkflowVersionResponse AWS API Documentation
+    #
+    class GetWorkflowVersionResponse < Struct.new(
+      :arn,
+      :workflow_id,
+      :version_name,
+      :accelerators,
+      :creation_time,
+      :description,
+      :definition,
+      :digest,
+      :engine,
+      :main,
+      :metadata,
+      :parameter_template,
+      :status,
+      :status_message,
+      :storage_type,
+      :storage_capacity,
+      :type,
+      :tags,
+      :uuid,
+      :workflow_bucket_owner_id,
+      :container_registry_map,
+      :readme,
+      :definition_repository_details,
+      :readme_path,
+      :profiles,
+      :profile_parameter_templates)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Information about the container image used for a task.
+    #
+    # @!attribute [rw] image
+    #   The URI of the container image.
+    #   @return [String]
+    #
+    # @!attribute [rw] image_digest
+    #   The container image digest. If the image URI was transformed, this
+    #   will be the digest of the container image referenced by the
+    #   transformed URI.
+    #   @return [String]
+    #
+    # @!attribute [rw] source_image
+    #   URI of the source registry. If the URI is from a third-party
+    #   registry, Amazon Web Services HealthOmics transforms the URI to the
+    #   corresponding ECR path, using the pull-through cache mapping rules.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/ImageDetails AWS API Documentation
+    #
+    class ImageDetails < Struct.new(
+      :image,
+      :image_digest,
+      :source_image)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Specifies image mappings that workflow tasks can use. For example, you
+    # can replace all the task references of a public image to use an
+    # equivalent image in your private ECR repository. You can use image
+    # mappings with upstream registries that don't support pull through
+    # cache. You need to manually synchronize the upstream registry with
+    # your private repository.
+    #
+    # @!attribute [rw] source_image
+    #   Specifies the URI of the source image in the upstream registry.
+    #   @return [String]
+    #
+    # @!attribute [rw] destination_image
+    #   Specifies the URI of the corresponding image in the private ECR
+    #   registry.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/ImageMapping AWS API Documentation
+    #
+    class ImageMapping < Struct.new(
+      :source_image,
+      :destination_image)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3786,6 +5203,65 @@ module Aws::Omics
       include Aws::Structure
     end
 
+    # A per-run configuration that overrides or merges with fields from
+    # `DefaultRunSetting` for a specific run.
+    #
+    # @!attribute [rw] run_setting_id
+    #   A customer-provided unique identifier for this run configuration
+    #   within the batch. After submission, use `ListRunsInBatch` to map
+    #   each `runSettingId` to the HealthOmics-generated `runId`.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   An optional user-friendly name for this run.
+    #   @return [String]
+    #
+    # @!attribute [rw] output_uri
+    #   Override the destination S3 URI for this run's outputs.
+    #   @return [String]
+    #
+    # @!attribute [rw] priority
+    #   Override the priority for this run.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] parameters
+    #   Per-run workflow parameters. Merged with
+    #   `defaultRunSetting.parameters`; values in this object take
+    #   precedence when keys overlap.
+    #   @return [Hash,Array,String,Numeric,Boolean]
+    #
+    # @!attribute [rw] output_bucket_owner_id
+    #   The expected AWS account ID of the owner of the output S3 bucket for
+    #   this run.
+    #   @return [String]
+    #
+    # @!attribute [rw] run_tags
+    #   Per-run AWS tags. Merged with `defaultRunSetting.runTags`; values in
+    #   this object take precedence when keys overlap.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] engine_settings
+    #   Per-run engine-specific settings. Use this field to specify
+    #   configuration options that are specific to the workflow engine (for
+    #   example, Nextflow profiles). Overrides
+    #   `defaultRunSetting.engineSettings` for this run.
+    #   @return [Hash,Array,String,Numeric,Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/InlineSetting AWS API Documentation
+    #
+    class InlineSetting < Struct.new(
+      :run_setting_id,
+      :name,
+      :output_uri,
+      :priority,
+      :parameters,
+      :output_bucket_owner_id,
+      :run_tags,
+      :engine_settings)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # An unexpected error occurred. Try the request again.
     #
     # @!attribute [rw] message
@@ -3980,6 +5456,91 @@ module Aws::Omics
     #
     class ListAnnotationStoresResponse < Struct.new(
       :annotation_stores,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] max_items
+    #   The maximum number of batches to return. If not specified, defaults
+    #   to 100.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] starting_token
+    #   A pagination token returned from a prior `ListBatch` call.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   Filter batches by status.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   Filter batches by name.
+    #   @return [String]
+    #
+    # @!attribute [rw] run_group_id
+    #   Filter batches by run group ID.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/ListBatchRequest AWS API Documentation
+    #
+    class ListBatchRequest < Struct.new(
+      :max_items,
+      :starting_token,
+      :status,
+      :name,
+      :run_group_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] items
+    #   A list of batch summary objects. See `BatchListItem`.
+    #   @return [Array<Types::BatchListItem>]
+    #
+    # @!attribute [rw] next_token
+    #   A pagination token to retrieve the next page of results. Absent when
+    #   no further results are available.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/ListBatchResponse AWS API Documentation
+    #
+    class ListBatchResponse < Struct.new(
+      :items,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] max_results
+    #   Maximum number of results to return.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] starting_token
+    #   Pagination token for retrieving next page of results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/ListConfigurationsRequest AWS API Documentation
+    #
+    class ListConfigurationsRequest < Struct.new(
+      :max_results,
+      :starting_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] items
+    #   List of configuration items.
+    #   @return [Array<Types::ConfigurationListItem>]
+    #
+    # @!attribute [rw] next_token
+    #   Token for retrieving next page of results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/ListConfigurationsResponse AWS API Documentation
+    #
+    class ListConfigurationsResponse < Struct.new(
+      :items,
       :next_token)
       SENSITIVE = []
       include Aws::Structure
@@ -4519,12 +6080,71 @@ module Aws::Omics
       include Aws::Structure
     end
 
+    # @!attribute [rw] batch_id
+    #   The identifier portion of the run batch ARN.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_items
+    #   The maximum number of runs to return.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] starting_token
+    #   A pagination token returned from a prior `ListRunsInBatch` call.
+    #   @return [String]
+    #
+    # @!attribute [rw] submission_status
+    #   Filter runs by submission status.
+    #   @return [String]
+    #
+    # @!attribute [rw] run_setting_id
+    #   Filter runs by the customer-provided run setting ID.
+    #   @return [String]
+    #
+    # @!attribute [rw] run_id
+    #   Filter runs by the HealthOmics-generated run ID.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/ListRunsInBatchRequest AWS API Documentation
+    #
+    class ListRunsInBatchRequest < Struct.new(
+      :batch_id,
+      :max_items,
+      :starting_token,
+      :submission_status,
+      :run_setting_id,
+      :run_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] runs
+    #   A list of run entries in the batch. See `RunBatchListItem`.
+    #   @return [Array<Types::RunBatchListItem>]
+    #
+    # @!attribute [rw] next_token
+    #   A pagination token to retrieve the next page of results. Absent when
+    #   the last run has been returned.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/ListRunsInBatchResponse AWS API Documentation
+    #
+    class ListRunsInBatchResponse < Struct.new(
+      :runs,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] name
     #   Filter the list by run name.
     #   @return [String]
     #
     # @!attribute [rw] run_group_id
     #   Filter the list by run group ID.
+    #   @return [String]
+    #
+    # @!attribute [rw] batch_id
+    #   Filter by batch ID.
     #   @return [String]
     #
     # @!attribute [rw] starting_token
@@ -4545,6 +6165,7 @@ module Aws::Omics
     class ListRunsRequest < Struct.new(
       :name,
       :run_group_id,
+      :batch_id,
       :starting_token,
       :max_results,
       :status)
@@ -4804,6 +6425,58 @@ module Aws::Omics
       include Aws::Structure
     end
 
+    # @!attribute [rw] workflow_id
+    #   The workflow's ID. The `workflowId` is not the UUID.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The workflow type.
+    #   @return [String]
+    #
+    # @!attribute [rw] workflow_owner_id
+    #   The 12-digit account ID of the workflow owner. The workflow owner ID
+    #   can be retrieved using the `GetShare` API operation. If you are the
+    #   workflow owner, you do not need to include this ID.
+    #   @return [String]
+    #
+    # @!attribute [rw] starting_token
+    #   Specify the pagination token from a previous request to retrieve the
+    #   next page of results.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of workflows to return in one page of results.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/ListWorkflowVersionsRequest AWS API Documentation
+    #
+    class ListWorkflowVersionsRequest < Struct.new(
+      :workflow_id,
+      :type,
+      :workflow_owner_id,
+      :starting_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] items
+    #   A list of workflow version items.
+    #   @return [Array<Types::WorkflowVersionListItem>]
+    #
+    # @!attribute [rw] next_token
+    #   A pagination token that's included if more results are available.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/ListWorkflowVersionsResponse AWS API Documentation
+    #
+    class ListWorkflowVersionsResponse < Struct.new(
+      :items,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] type
     #   Filter the list by workflow type.
     #   @return [String]
@@ -4950,7 +6623,8 @@ module Aws::Omics
     #   @return [String]
     #
     # @!attribute [rw] store_id
-    #   The AWS-generated Sequence Store or Reference Store ID.
+    #   The Amazon Web Services-generated Sequence Store or Reference Store
+    #   ID.
     #   @return [String]
     #
     # @!attribute [rw] store_type
@@ -5486,6 +7160,38 @@ module Aws::Omics
       include Aws::Structure
     end
 
+    # If you are using the ECR pull through cache feature, the registry
+    # mapping maps between the ECR repository and the upstream registry
+    # where container images are pulled and synchronized.
+    #
+    # @!attribute [rw] upstream_registry_url
+    #   The URI of the upstream registry.
+    #   @return [String]
+    #
+    # @!attribute [rw] ecr_repository_prefix
+    #   The repository prefix to use in the ECR private repository.
+    #   @return [String]
+    #
+    # @!attribute [rw] upstream_repository_prefix
+    #   The repository prefix of the corresponding repository in the
+    #   upstream registry.
+    #   @return [String]
+    #
+    # @!attribute [rw] ecr_account_id
+    #   Account ID of the account that owns the upstream container image.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/RegistryMapping AWS API Documentation
+    #
+    class RegistryMapping < Struct.new(
+      :upstream_registry_url,
+      :ecr_repository_prefix,
+      :upstream_repository_prefix,
+      :ecr_account_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The request timed out.
     #
     # @!attribute [rw] message
@@ -5508,6 +7214,55 @@ module Aws::Omics
     #
     class ResourceNotFoundException < Struct.new(
       :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A single run entry returned by `ListRunsInBatch`.
+    #
+    # @!attribute [rw] run_setting_id
+    #   The customer-provided identifier for the run configuration. Use this
+    #   to correlate results back to the input configuration provided in
+    #   `inlineSettings` or `s3UriSettings`.
+    #   @return [String]
+    #
+    # @!attribute [rw] run_id
+    #   The HealthOmics-generated identifier for the workflow run. Empty if
+    #   submission failed.
+    #   @return [String]
+    #
+    # @!attribute [rw] run_internal_uuid
+    #   The universally unique identifier (UUID) for the run.
+    #   @return [String]
+    #
+    # @!attribute [rw] run_arn
+    #   The unique ARN of the workflow run.
+    #   @return [String]
+    #
+    # @!attribute [rw] submission_status
+    #   The submission outcome for this run.
+    #   @return [String]
+    #
+    # @!attribute [rw] submission_failure_reason
+    #   The error category for a failed submission. See the run-level
+    #   failure table in the HealthOmics User Guide for details on each
+    #   value.
+    #   @return [String]
+    #
+    # @!attribute [rw] submission_failure_message
+    #   A detailed message describing the submission failure.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/RunBatchListItem AWS API Documentation
+    #
+    class RunBatchListItem < Struct.new(
+      :run_setting_id,
+      :run_id,
+      :run_internal_uuid,
+      :run_arn,
+      :submission_status,
+      :submission_failure_reason,
+      :submission_failure_message)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5553,6 +7308,34 @@ module Aws::Omics
       :id,
       :name,
       :status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Run-specific configuration settings.
+    #
+    # @!attribute [rw] vpc_config
+    #   VPC configuration for workflow runs.
+    #   @return [Types::VpcConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/RunConfigurations AWS API Documentation
+    #
+    class RunConfigurations < Struct.new(
+      :vpc_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Run-specific configuration settings with computed values.
+    #
+    # @!attribute [rw] vpc_config
+    #   VPC configuration for workflow runs with computed VPC ID.
+    #   @return [Types::VpcConfigResponse]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/RunConfigurationsResponse AWS API Documentation
+    #
+    class RunConfigurationsResponse < Struct.new(
+      :vpc_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5624,6 +7407,10 @@ module Aws::Omics
     #   The run's workflow ID.
     #   @return [String]
     #
+    # @!attribute [rw] batch_id
+    #   The run's batch ID.
+    #   @return [String]
+    #
     # @!attribute [rw] name
     #   The run's name.
     #   @return [String]
@@ -5654,6 +7441,14 @@ module Aws::Omics
     #   The run's storage type.
     #   @return [String]
     #
+    # @!attribute [rw] workflow_version_name
+    #   The name of the workflow version.
+    #   @return [String]
+    #
+    # @!attribute [rw] workflow_name
+    #   The name of the workflow.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/RunListItem AWS API Documentation
     #
     class RunListItem < Struct.new(
@@ -5661,13 +7456,16 @@ module Aws::Omics
       :id,
       :status,
       :workflow_id,
+      :batch_id,
       :name,
       :priority,
       :storage_capacity,
       :creation_time,
       :start_time,
       :stop_time,
-      :storage_type)
+      :storage_type,
+      :workflow_version_name,
+      :workflow_name)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5687,6 +7485,55 @@ module Aws::Omics
     class RunLogLocation < Struct.new(
       :engine_log_stream,
       :run_log_stream)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A summary of the runs in a batch.
+    #
+    # @!attribute [rw] pending_run_count
+    #   The number of pending runs.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] starting_run_count
+    #   The number of starting runs.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] running_run_count
+    #   The number of running runs.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] stopping_run_count
+    #   The number of stopping runs.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] completed_run_count
+    #   The number of completed runs.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] deleted_run_count
+    #   The number of deleted runs.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] failed_run_count
+    #   The number of failed runs.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] cancelled_run_count
+    #   The number of cancelled runs.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/RunSummary AWS API Documentation
+    #
+    class RunSummary < Struct.new(
+      :pending_run_count,
+      :starting_run_count,
+      :running_run_count,
+      :stopping_run_count,
+      :completed_run_count,
+      :deleted_run_count,
+      :failed_run_count,
+      :cancelled_run_count)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5953,6 +7800,27 @@ module Aws::Omics
     class SourceFiles < Struct.new(
       :source1,
       :source2)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about the source reference in a code repository,
+    # such as a branch, tag, or commit.
+    #
+    # @!attribute [rw] type
+    #   The type of source reference, such as branch, tag, or commit.
+    #   @return [String]
+    #
+    # @!attribute [rw] value
+    #   The value of the source reference, such as the branch name, tag
+    #   name, or commit ID.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/SourceReference AWS API Documentation
+    #
+    class SourceReference < Struct.new(
+      :type,
+      :value)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6362,12 +8230,88 @@ module Aws::Omics
       include Aws::Structure
     end
 
+    # @!attribute [rw] batch_name
+    #   An optional user-friendly name for the run batch.
+    #   @return [String]
+    #
+    # @!attribute [rw] request_id
+    #   A client token used to deduplicate retry requests and prevent
+    #   duplicate batches from being created.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   AWS tags to associate with the batch resource. These tags are not
+    #   inherited by individual runs. To tag individual runs, use
+    #   `defaultRunSetting.runTags`.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] default_run_setting
+    #   Shared configuration applied to all runs in the batch. See
+    #   `DefaultRunSetting`.
+    #   @return [Types::DefaultRunSetting]
+    #
+    # @!attribute [rw] batch_run_settings
+    #   The individual run configurations. Specify exactly one of
+    #   `inlineSettings` or `s3UriSettings`. See `BatchRunSettings`.
+    #   @return [Types::BatchRunSettings]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/StartRunBatchRequest AWS API Documentation
+    #
+    class StartRunBatchRequest < Struct.new(
+      :batch_name,
+      :request_id,
+      :tags,
+      :default_run_setting,
+      :batch_run_settings)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] id
+    #   The identifier portion of the run batch ARN.
+    #   @return [String]
+    #
+    # @!attribute [rw] arn
+    #   The unique ARN of the run batch.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The initial status of the run batch. Returns `CREATING` while the
+    #   batch is being initialized.
+    #   @return [String]
+    #
+    # @!attribute [rw] uuid
+    #   The universally unique identifier (UUID) for the run batch.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   AWS tags associated with the run batch.
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/StartRunBatchResponse AWS API Documentation
+    #
+    class StartRunBatchResponse < Struct.new(
+      :id,
+      :arn,
+      :status,
+      :uuid,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] workflow_id
-    #   The run's workflow ID.
+    #   The run's workflow ID. The `workflowId` is not the UUID.
     #   @return [String]
     #
     # @!attribute [rw] workflow_type
-    #   The run's workflow type.
+    #   The run's workflow type. The `workflowType` must be specified if
+    #   you are running a `READY2RUN` workflow. If you are running a
+    #   `PRIVATE` workflow (default), you do not need to include the
+    #   workflow type.
     #   @return [String]
     #
     # @!attribute [rw] run_id
@@ -6375,11 +8319,17 @@ module Aws::Omics
     #   @return [String]
     #
     # @!attribute [rw] role_arn
-    #   A service role for the run.
+    #   A service role for the run. The `roleArn` requires access to Amazon
+    #   Web Services HealthOmics, S3, Cloudwatch logs, and EC2. An example
+    #   `roleArn` is
+    #   `arn:aws:iam::123456789012:role/omics-service-role-serviceRole-W8O1XMPL7QZ`.
+    #   In this example, the AWS account ID is `123456789012` and the role
+    #   name is `omics-service-role-serviceRole-W8O1XMPL7QZ`.
     #   @return [String]
     #
     # @!attribute [rw] name
-    #   A name for the run.
+    #   A name for the run. This is recommended to view and organize runs in
+    #   the Amazon Web Services HealthOmics console and CloudWatch logs.
     #   @return [String]
     #
     # @!attribute [rw] cache_id
@@ -6391,7 +8341,8 @@ module Aws::Omics
     #   The cache behavior for the run. You specify this value if you want
     #   to override the default behavior for the cache. You had set the
     #   default value when you created the cache. For more information, see
-    #   [Run cache behavior][1] in the AWS HealthOmics User Guide.
+    #   [Run cache behavior][1] in the *Amazon Web Services HealthOmics User
+    #   Guide*.
     #
     #
     #
@@ -6399,25 +8350,46 @@ module Aws::Omics
     #   @return [String]
     #
     # @!attribute [rw] run_group_id
-    #   The run's group ID.
+    #   The run's group ID. Use a run group to cap the compute resources
+    #   (and number of concurrent runs) for the runs that you add to the run
+    #   group.
     #   @return [String]
     #
     # @!attribute [rw] priority
-    #   A priority for the run.
+    #   Use the run priority (highest: 1) to establish the order of runs in
+    #   a run group when you start a run. If multiple runs share the same
+    #   priority, the run that was initiated first will have the higher
+    #   priority. Runs that do not belong to a run group can be assigned a
+    #   priority. The priorities of these runs are ranked among other runs
+    #   that are not in a run group. For more information, see [Run
+    #   priority][1] in the *Amazon Web Services HealthOmics User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/omics/latest/dev/creating-run-groups.html#run-priority
     #   @return [Integer]
     #
     # @!attribute [rw] parameters
-    #   Parameters for the run.
+    #   Parameters for the run. The run needs all required parameters and
+    #   can include optional parameters. The run cannot include any
+    #   parameters that are not defined in the parameter template. To
+    #   retrieve parameters from the run, use the GetRun API operation.
     #   @return [Hash,Array,String,Numeric,Boolean]
     #
     # @!attribute [rw] storage_capacity
-    #   A storage capacity for the run in gibibytes. This field is not
-    #   required if the storage type is dynamic (the system ignores any
-    #   value that you enter).
+    #   The `STATIC` storage capacity (in gibibytes, GiB) for this run. The
+    #   default run storage capacity is 1200 GiB. If your requested storage
+    #   capacity is unavailable, the system rounds up the value to the
+    #   nearest 1200 GiB multiple. If the requested storage capacity is
+    #   still unavailable, the system rounds up the value to the nearest
+    #   2400 GiB multiple. This field is not required if the storage type is
+    #   `DYNAMIC` (the system ignores any value that you enter).
     #   @return [Integer]
     #
     # @!attribute [rw] output_uri
-    #   An output URI for the run.
+    #   An output S3 URI for the run. The S3 bucket must be in the same
+    #   region as the workflow. The role ARN must have permission to write
+    #   to this S3 bucket.
     #   @return [String]
     #
     # @!attribute [rw] log_level
@@ -6425,30 +8397,38 @@ module Aws::Omics
     #   @return [String]
     #
     # @!attribute [rw] tags
-    #   Tags for the run.
+    #   Tags for the run. You can add up to 50 tags per run. For more
+    #   information, see [Adding a tag][1] in the *Amazon Web Services
+    #   HealthOmics User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/omics/latest/dev/add-a-tag.html
     #   @return [Hash<String,String>]
     #
     # @!attribute [rw] request_id
-    #   To ensure that requests don't run multiple times, specify a unique
-    #   ID for each request.
+    #   An idempotency token used to dedupe retry requests so that duplicate
+    #   runs are not created.
     #
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.
     #   @return [String]
     #
     # @!attribute [rw] retention_mode
-    #   The retention mode for the run. The default value is RETAIN.
+    #   The retention mode for the run. The default value is `RETAIN`.
     #
-    #   HealthOmics stores a fixed number of runs that are available to the
-    #   console and API. In the default mode (RETAIN), you need to remove
-    #   runs manually when the number of run exceeds the maximum. If you set
-    #   the retention mode to `REMOVE`, HealthOmics automatically removes
-    #   runs (that have mode set to REMOVE) when the number of run exceeds
-    #   the maximum. All run logs are available in CloudWatch logs, if you
-    #   need information about a run that is no longer available to the API.
+    #   Amazon Web Services HealthOmics stores a fixed number of runs that
+    #   are available to the console and API. In the default mode
+    #   (`RETAIN`), you need to remove runs manually when the number of run
+    #   exceeds the maximum. If you set the retention mode to `REMOVE`,
+    #   Amazon Web Services HealthOmics automatically removes runs (that
+    #   have mode set to `REMOVE`) when the number of run exceeds the
+    #   maximum. All run logs are available in CloudWatch logs, if you need
+    #   information about a run that is no longer available to the API.
     #
     #   For more information about retention mode, see [Specifying run
-    #   retention mode][1] in the *AWS HealthOmics User Guide*.
+    #   retention mode][1] in the *Amazon Web Services HealthOmics User
+    #   Guide*.
     #
     #
     #
@@ -6456,15 +8436,59 @@ module Aws::Omics
     #   @return [String]
     #
     # @!attribute [rw] storage_type
-    #   The run's storage type. By default, the run uses STATIC storage
-    #   type, which allocates a fixed amount of storage. If you set the
-    #   storage type to DYNAMIC, HealthOmics dynamically scales the storage
-    #   up or down, based on file system utilization.
+    #   The storage type for the run. If you set the storage type to
+    #   `DYNAMIC`, Amazon Web Services HealthOmics dynamically scales the
+    #   storage up or down, based on file system utilization. By default,
+    #   the run uses `STATIC` storage type, which allocates a fixed amount
+    #   of storage. For more information about `DYNAMIC` and `STATIC`
+    #   storage, see [Run storage types][1] in the *Amazon Web Services
+    #   HealthOmics User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/omics/latest/dev/workflows-run-types.html
     #   @return [String]
     #
     # @!attribute [rw] workflow_owner_id
-    #   The ID of the workflow owner.
+    #   The 12-digit account ID of the workflow owner that is used for
+    #   running a shared workflow. The workflow owner ID can be retrieved
+    #   using the `GetShare` API operation. If you are the workflow owner,
+    #   you do not need to include this ID.
     #   @return [String]
+    #
+    # @!attribute [rw] workflow_version_name
+    #   The name of the workflow version. Use workflow versions to track and
+    #   organize changes to the workflow. If your workflow has multiple
+    #   versions, the run uses the default version unless you specify a
+    #   version name. To learn more, see [Workflow versioning][1] in the
+    #   *Amazon Web Services HealthOmics User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/omics/latest/dev/workflow-versions.html
+    #   @return [String]
+    #
+    # @!attribute [rw] networking_mode
+    #   Optional configuration for run networking behavior. If not
+    #   specified, this will default to RESTRICTED.
+    #   @return [String]
+    #
+    # @!attribute [rw] scratch_storage_mode
+    #   Optional configuration for enabling scratch ephemeral storage
+    #   mounted at /tmp. If not specified, this will default to SHARED. This
+    #   configuration is applicable only for CPU tasks. For tasks using
+    #   GPUs, scratch storage is always LOCAL.
+    #   @return [String]
+    #
+    # @!attribute [rw] configuration_name
+    #   Optional configuration name to use for the workflow run.
+    #   @return [String]
+    #
+    # @!attribute [rw] engine_settings
+    #   Engine-specific settings for the workflow run. Use this field to
+    #   specify configuration options that are specific to the workflow
+    #   engine (for example, Nextflow profiles).
+    #   @return [Hash,Array,String,Numeric,Boolean]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/StartRunRequest AWS API Documentation
     #
@@ -6486,7 +8510,12 @@ module Aws::Omics
       :request_id,
       :retention_mode,
       :storage_type,
-      :workflow_owner_id)
+      :workflow_owner_id,
+      :workflow_version_name,
+      :networking_mode,
+      :scratch_storage_mode,
+      :configuration_name,
+      :engine_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6515,6 +8544,14 @@ module Aws::Omics
     #   The destination for workflow outputs.
     #   @return [String]
     #
+    # @!attribute [rw] configuration
+    #   Configuration details for the workflow run.
+    #   @return [Types::ConfigurationDetails]
+    #
+    # @!attribute [rw] networking_mode
+    #   Networking mode for the workflow run.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/StartRunResponse AWS API Documentation
     #
     class StartRunResponse < Struct.new(
@@ -6523,7 +8560,9 @@ module Aws::Omics
       :status,
       :tags,
       :uuid,
-      :run_output_uri)
+      :run_output_uri,
+      :configuration,
+      :networking_mode)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6595,6 +8634,50 @@ module Aws::Omics
       class Unknown < StoreOptions; end
     end
 
+    # A summary of the submissions in a batch.
+    #
+    # @!attribute [rw] successful_start_submission_count
+    #   The number of successful start submissions.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] failed_start_submission_count
+    #   The number of failed start submissions.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] pending_start_submission_count
+    #   The number of pending start submissions.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] successful_cancel_submission_count
+    #   The number of successful cancel submissions.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] failed_cancel_submission_count
+    #   The number of failed cancel submissions.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] successful_delete_submission_count
+    #   The number of successful delete submissions.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] failed_delete_submission_count
+    #   The number of failed delete submissions.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/SubmissionSummary AWS API Documentation
+    #
+    class SubmissionSummary < Struct.new(
+      :successful_start_submission_count,
+      :failed_start_submission_count,
+      :pending_start_submission_count,
+      :successful_cancel_submission_count,
+      :failed_cancel_submission_count,
+      :successful_delete_submission_count,
+      :failed_delete_submission_count)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] resource_arn
     #   The resource's ARN.
     #   @return [String]
@@ -6635,8 +8718,8 @@ module Aws::Omics
     #   @return [Integer]
     #
     # @!attribute [rw] cache_hit
-    #   Set to true if AWS HealthOmics found a matching entry in the run
-    #   cache for this task.
+    #   Set to true if Amazon Web Services HealthOmics found a matching
+    #   entry in the run cache for this task.
     #   @return [Boolean]
     #
     # @!attribute [rw] cache_s3_uri
@@ -6668,6 +8751,10 @@ module Aws::Omics
     #   The instance type for a task.
     #   @return [String]
     #
+    # @!attribute [rw] uuid
+    #   The universally unique identifier (UUID) for the workflow task.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/TaskListItem AWS API Documentation
     #
     class TaskListItem < Struct.new(
@@ -6682,7 +8769,8 @@ module Aws::Omics
       :start_time,
       :stop_time,
       :gpus,
-      :instance_type)
+      :instance_type,
+      :uuid)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7178,12 +9266,90 @@ module Aws::Omics
     #   A description for the workflow.
     #   @return [String]
     #
+    # @!attribute [rw] storage_type
+    #   The default storage type for runs that use this workflow. STATIC
+    #   storage allocates a fixed amount of storage. DYNAMIC storage
+    #   dynamically scales the storage up or down, based on file system
+    #   utilization. For more information about static and dynamic storage,
+    #   see [Running workflows][1] in the *Amazon Web Services HealthOmics
+    #   User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/omics/latest/dev/Using-workflows.html
+    #   @return [String]
+    #
+    # @!attribute [rw] storage_capacity
+    #   The default static storage capacity (in gibibytes) for runs that use
+    #   this workflow or workflow version.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] readme_markdown
+    #   The markdown content for the workflow's README file. This provides
+    #   documentation and usage information for users of the workflow.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/UpdateWorkflowRequest AWS API Documentation
     #
     class UpdateWorkflowRequest < Struct.new(
       :id,
       :name,
-      :description)
+      :description,
+      :storage_type,
+      :storage_capacity,
+      :readme_markdown)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] workflow_id
+    #   The workflow's ID. The `workflowId` is not the UUID.
+    #   @return [String]
+    #
+    # @!attribute [rw] version_name
+    #   The name of the workflow version.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   Description of the workflow version.
+    #   @return [String]
+    #
+    # @!attribute [rw] storage_type
+    #   The default storage type for runs that use this workflow version.
+    #   The `storageType` can be overridden at run time. `DYNAMIC` storage
+    #   dynamically scales the storage up or down, based on file system
+    #   utilization. STATIC storage allocates a fixed amount of storage. For
+    #   more information about dynamic and static storage types, see [Run
+    #   storage types][1] in the <i>in the <i>Amazon Web Services
+    #   HealthOmics User Guide</i> </i>.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/omics/latest/dev/workflows-run-types.html
+    #   @return [String]
+    #
+    # @!attribute [rw] storage_capacity
+    #   The default static storage capacity (in gibibytes) for runs that use
+    #   this workflow version. The `storageCapacity` can be overwritten at
+    #   run time. The storage capacity is not required for runs with a
+    #   `DYNAMIC` storage type.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] readme_markdown
+    #   The markdown content for the workflow version's README file. This
+    #   provides documentation and usage information for users of this
+    #   specific workflow version.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/UpdateWorkflowVersionRequest AWS API Documentation
+    #
+    class UpdateWorkflowVersionRequest < Struct.new(
+      :workflow_id,
+      :version_name,
+      :description,
+      :storage_type,
+      :storage_capacity,
+      :readme_markdown)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7464,6 +9630,49 @@ module Aws::Omics
       class Unknown < VersionOptions; end
     end
 
+    # VPC configuration for workflow runs.
+    #
+    # @!attribute [rw] security_group_ids
+    #   List of security group IDs. Maximum of 5 security groups allowed.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] subnet_ids
+    #   List of subnet IDs. Maximum of 16 subnets allowed.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/VpcConfig AWS API Documentation
+    #
+    class VpcConfig < Struct.new(
+      :security_group_ids,
+      :subnet_ids)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # VPC configuration for workflow runs with computed VPC ID.
+    #
+    # @!attribute [rw] security_group_ids
+    #   List of security group IDs.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] subnet_ids
+    #   List of subnet IDs.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] vpc_id
+    #   VPC ID computed from the provided subnet IDs.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/VpcConfigResponse AWS API Documentation
+    #
+    class VpcConfigResponse < Struct.new(
+      :security_group_ids,
+      :subnet_ids,
+      :vpc_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # A workflow.
     #
     # @!attribute [rw] arn
@@ -7530,6 +9739,60 @@ module Aws::Omics
     class WorkflowParameter < Struct.new(
       :description,
       :optional)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A list of workflow version items.
+    #
+    # @!attribute [rw] arn
+    #   ARN of the workflow version.
+    #   @return [String]
+    #
+    # @!attribute [rw] workflow_id
+    #   The workflow's ID.
+    #   @return [String]
+    #
+    # @!attribute [rw] version_name
+    #   The name of the workflow version.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   The description of the workflow version.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the workflow version.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The type of the workflow version.
+    #   @return [String]
+    #
+    # @!attribute [rw] digest
+    #   The digist of the workflow version.
+    #   @return [String]
+    #
+    # @!attribute [rw] creation_time
+    #   The creation time of the workflow version.
+    #   @return [Time]
+    #
+    # @!attribute [rw] metadata
+    #   Metadata for the workflow version.
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/WorkflowVersionListItem AWS API Documentation
+    #
+    class WorkflowVersionListItem < Struct.new(
+      :arn,
+      :workflow_id,
+      :version_name,
+      :description,
+      :status,
+      :type,
+      :digest,
+      :creation_time,
+      :metadata)
       SENSITIVE = []
       include Aws::Structure
     end

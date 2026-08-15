@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -78,6 +79,29 @@ module Aws
                   | (?Hash[Symbol, untyped]) -> instance
 
 
+      interface _AddKeyReplicationRegionsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::AddKeyReplicationRegionsOutput]
+        def key: () -> Types::Key
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/PaymentCryptography/Client.html#add_key_replication_regions-instance_method
+      def add_key_replication_regions: (
+                                         key_identifier: ::String,
+                                         replication_regions: Array[::String]
+                                       ) -> _AddKeyReplicationRegionsResponseSuccess
+                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _AddKeyReplicationRegionsResponseSuccess
+
+      interface _AssociateMpaTeamResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::AssociateMpaTeamOutput]
+        def mpa_team_association: () -> Types::MpaTeamAssociation
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/PaymentCryptography/Client.html#associate_mpa_team-instance_method
+      def associate_mpa_team: (
+                                action: ("IMPORT_ROOT_PUBLIC_KEY_CERTIFICATE"),
+                                mpa_team_arn: ::String,
+                                ?requester_comment: ::String
+                              ) -> _AssociateMpaTeamResponseSuccess
+                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _AssociateMpaTeamResponseSuccess
+
       interface _CreateAliasResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateAliasOutput]
         def alias: () -> Types::Alias
@@ -95,31 +119,18 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/PaymentCryptography/Client.html#create_key-instance_method
       def create_key: (
-                        key_attributes: {
-                          key_usage: ("TR31_B0_BASE_DERIVATION_KEY" | "TR31_C0_CARD_VERIFICATION_KEY" | "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY" | "TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION" | "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS" | "TR31_E1_EMV_MKEY_CONFIDENTIALITY" | "TR31_E2_EMV_MKEY_INTEGRITY" | "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS" | "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION" | "TR31_E6_EMV_MKEY_OTHER" | "TR31_K0_KEY_ENCRYPTION_KEY" | "TR31_K1_KEY_BLOCK_PROTECTION_KEY" | "TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT" | "TR31_M3_ISO_9797_3_MAC_KEY" | "TR31_M1_ISO_9797_1_MAC_KEY" | "TR31_M6_ISO_9797_5_CMAC_KEY" | "TR31_M7_HMAC_KEY" | "TR31_P0_PIN_ENCRYPTION_KEY" | "TR31_P1_PIN_GENERATION_KEY" | "TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE" | "TR31_V1_IBM3624_PIN_VERIFICATION_KEY" | "TR31_V2_VISA_PIN_VERIFICATION_KEY" | "TR31_K2_TR34_ASYMMETRIC_KEY"),
-                          key_class: ("SYMMETRIC_KEY" | "ASYMMETRIC_KEY_PAIR" | "PRIVATE_KEY" | "PUBLIC_KEY"),
-                          key_algorithm: ("TDES_2KEY" | "TDES_3KEY" | "AES_128" | "AES_192" | "AES_256" | "RSA_2048" | "RSA_3072" | "RSA_4096" | "ECC_NIST_P256" | "ECC_NIST_P384"),
-                          key_modes_of_use: {
-                            encrypt: bool?,
-                            decrypt: bool?,
-                            wrap: bool?,
-                            unwrap: bool?,
-                            generate: bool?,
-                            sign: bool?,
-                            verify: bool?,
-                            derive_key: bool?,
-                            no_restrictions: bool?
-                          }
-                        },
-                        ?key_check_value_algorithm: ("CMAC" | "ANSI_X9_24"),
+                        key_attributes: Params::key_attributes,
+                        ?key_check_value_algorithm: ("CMAC" | "ANSI_X9_24" | "HMAC" | "SHA_1"),
                         exportable: bool,
                         ?enabled: bool,
                         ?tags: Array[
                           {
                             key: ::String,
                             value: ::String
-                          },
-                        ]
+                          }
+                        ],
+                        ?derive_key_usage: ("TR31_B0_BASE_DERIVATION_KEY" | "TR31_C0_CARD_VERIFICATION_KEY" | "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY" | "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS" | "TR31_E1_EMV_MKEY_CONFIDENTIALITY" | "TR31_E2_EMV_MKEY_INTEGRITY" | "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS" | "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION" | "TR31_E6_EMV_MKEY_OTHER" | "TR31_K0_KEY_ENCRYPTION_KEY" | "TR31_K1_KEY_BLOCK_PROTECTION_KEY" | "TR31_M3_ISO_9797_3_MAC_KEY" | "TR31_M1_ISO_9797_1_MAC_KEY" | "TR31_M6_ISO_9797_5_CMAC_KEY" | "TR31_M7_HMAC_KEY" | "TR31_P0_PIN_ENCRYPTION_KEY" | "TR31_P1_PIN_GENERATION_KEY" | "TR31_V1_IBM3624_PIN_VERIFICATION_KEY" | "TR31_V2_VISA_PIN_VERIFICATION_KEY"),
+                        ?replication_regions: Array[::String]
                       ) -> _CreateKeyResponseSuccess
                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateKeyResponseSuccess
 
@@ -143,6 +154,46 @@ module Aws
                       ) -> _DeleteKeyResponseSuccess
                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteKeyResponseSuccess
 
+      interface _DeleteResourcePolicyResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteResourcePolicyOutput]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/PaymentCryptography/Client.html#delete_resource_policy-instance_method
+      def delete_resource_policy: (
+                                    resource_arn: ::String
+                                  ) -> _DeleteResourcePolicyResponseSuccess
+                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteResourcePolicyResponseSuccess
+
+      interface _DisableDefaultKeyReplicationRegionsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DisableDefaultKeyReplicationRegionsOutput]
+        def enabled_replication_regions: () -> ::Array[::String]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/PaymentCryptography/Client.html#disable_default_key_replication_regions-instance_method
+      def disable_default_key_replication_regions: (
+                                                     replication_regions: Array[::String]
+                                                   ) -> _DisableDefaultKeyReplicationRegionsResponseSuccess
+                                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DisableDefaultKeyReplicationRegionsResponseSuccess
+
+      interface _DisassociateMpaTeamResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DisassociateMpaTeamOutput]
+        def mpa_team_association: () -> Types::MpaTeamAssociation
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/PaymentCryptography/Client.html#disassociate_mpa_team-instance_method
+      def disassociate_mpa_team: (
+                                   action: ("IMPORT_ROOT_PUBLIC_KEY_CERTIFICATE"),
+                                   ?requester_comment: ::String
+                                 ) -> _DisassociateMpaTeamResponseSuccess
+                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DisassociateMpaTeamResponseSuccess
+
+      interface _EnableDefaultKeyReplicationRegionsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::EnableDefaultKeyReplicationRegionsOutput]
+        def enabled_replication_regions: () -> ::Array[::String]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/PaymentCryptography/Client.html#enable_default_key_replication_regions-instance_method
+      def enable_default_key_replication_regions: (
+                                                    replication_regions: Array[::String]
+                                                  ) -> _EnableDefaultKeyReplicationRegionsResponseSuccess
+                                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _EnableDefaultKeyReplicationRegionsResponseSuccess
+
       interface _ExportKeyResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ExportKeyOutput]
         def wrapped_key: () -> Types::WrappedKey
@@ -152,50 +203,38 @@ module Aws
                         key_material: {
                           tr_31_key_block: {
                             wrapping_key_identifier: ::String,
-                            key_block_headers: {
-                              key_modes_of_use: {
-                                encrypt: bool?,
-                                decrypt: bool?,
-                                wrap: bool?,
-                                unwrap: bool?,
-                                generate: bool?,
-                                sign: bool?,
-                                verify: bool?,
-                                derive_key: bool?,
-                                no_restrictions: bool?
-                              }?,
-                              key_exportability: ("EXPORTABLE" | "NON_EXPORTABLE" | "SENSITIVE")?,
-                              key_version: ::String?,
-                              optional_blocks: Hash[::String, ::String]?
-                            }?
+                            key_block_headers: Params::key_block_headers?
                           }?,
                           tr_34_key_block: {
                             certificate_authority_public_key_identifier: ::String,
                             wrapping_key_certificate: ::String,
-                            export_token: ::String,
+                            export_token: ::String?,
+                            signing_key_identifier: ::String?,
+                            signing_key_certificate: ::String?,
                             key_block_format: ("X9_TR34_2012"),
                             random_nonce: ::String?,
-                            key_block_headers: {
-                              key_modes_of_use: {
-                                encrypt: bool?,
-                                decrypt: bool?,
-                                wrap: bool?,
-                                unwrap: bool?,
-                                generate: bool?,
-                                sign: bool?,
-                                verify: bool?,
-                                derive_key: bool?,
-                                no_restrictions: bool?
-                              }?,
-                              key_exportability: ("EXPORTABLE" | "NON_EXPORTABLE" | "SENSITIVE")?,
-                              key_version: ::String?,
-                              optional_blocks: Hash[::String, ::String]?
-                            }?
+                            key_block_headers: Params::key_block_headers?
                           }?,
                           key_cryptogram: {
                             certificate_authority_public_key_identifier: ::String,
                             wrapping_key_certificate: ::String,
                             wrapping_spec: ("RSA_OAEP_SHA_256" | "RSA_OAEP_SHA_512")?
+                          }?,
+                          diffie_hellman_tr_31_key_block: {
+                            private_key_identifier: ::String,
+                            certificate_authority_public_key_identifier: ::String,
+                            public_key_certificate: ::String,
+                            derive_key_algorithm: ("TDES_2KEY" | "TDES_3KEY" | "AES_128" | "AES_192" | "AES_256" | "HMAC_SHA256" | "HMAC_SHA384" | "HMAC_SHA512" | "HMAC_SHA224"),
+                            key_derivation_function: ("NIST_SP800" | "ANSI_X963"),
+                            key_derivation_hash_algorithm: ("SHA_256" | "SHA_384" | "SHA_512"),
+                            derivation_data: {
+                              shared_information: ::String?
+                            },
+                            key_block_headers: Params::key_block_headers?
+                          }?,
+                          as_2805_key_cryptogram: {
+                            wrapping_key_identifier: ::String,
+                            as_2805_key_variant: ("TERMINAL_MAJOR_KEY_VARIANT_00" | "PIN_ENCRYPTION_KEY_VARIANT_28" | "MESSAGE_AUTHENTICATION_KEY_VARIANT_24" | "DATA_ENCRYPTION_KEY_VARIANT_22")
                           }?
                         },
                         export_key_identifier: ::String,
@@ -203,7 +242,7 @@ module Aws
                           export_dukpt_initial_key: {
                             key_serial_number: ::String
                           }?,
-                          key_check_value_algorithm: ("CMAC" | "ANSI_X9_24")?
+                          key_check_value_algorithm: ("CMAC" | "ANSI_X9_24" | "HMAC" | "SHA_1")?
                         }
                       ) -> _ExportKeyResponseSuccess
                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ExportKeyResponseSuccess
@@ -218,6 +257,35 @@ module Aws
                      ) -> _GetAliasResponseSuccess
                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetAliasResponseSuccess
 
+      interface _GetCertificateSigningRequestResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetCertificateSigningRequestOutput]
+        def certificate_signing_request: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/PaymentCryptography/Client.html#get_certificate_signing_request-instance_method
+      def get_certificate_signing_request: (
+                                             key_identifier: ::String,
+                                             signing_algorithm: ("SHA224" | "SHA256" | "SHA384" | "SHA512"),
+                                             certificate_subject: {
+                                               common_name: ::String,
+                                               organization_unit: ::String?,
+                                               organization: ::String?,
+                                               city: ::String?,
+                                               country: ::String?,
+                                               state_or_province: ::String?,
+                                               email_address: ::String?
+                                             }
+                                           ) -> _GetCertificateSigningRequestResponseSuccess
+                                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetCertificateSigningRequestResponseSuccess
+
+      interface _GetDefaultKeyReplicationRegionsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetDefaultKeyReplicationRegionsOutput]
+        def enabled_replication_regions: () -> ::Array[::String]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/PaymentCryptography/Client.html#get_default_key_replication_regions-instance_method
+      def get_default_key_replication_regions: (
+                                               ) -> _GetDefaultKeyReplicationRegionsResponseSuccess
+                                             | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetDefaultKeyReplicationRegionsResponseSuccess
+
       interface _GetKeyResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetKeyOutput]
         def key: () -> Types::Key
@@ -228,18 +296,29 @@ module Aws
                    ) -> _GetKeyResponseSuccess
                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetKeyResponseSuccess
 
+      interface _GetMpaTeamAssociationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetMpaTeamAssociationOutput]
+        def mpa_team_association: () -> Types::MpaTeamAssociation
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/PaymentCryptography/Client.html#get_mpa_team_association-instance_method
+      def get_mpa_team_association: (
+                                      action: ("IMPORT_ROOT_PUBLIC_KEY_CERTIFICATE")
+                                    ) -> _GetMpaTeamAssociationResponseSuccess
+                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetMpaTeamAssociationResponseSuccess
+
       interface _GetParametersForExportResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetParametersForExportOutput]
         def signing_key_certificate: () -> ::String
         def signing_key_certificate_chain: () -> ::String
-        def signing_key_algorithm: () -> ("TDES_2KEY" | "TDES_3KEY" | "AES_128" | "AES_192" | "AES_256" | "RSA_2048" | "RSA_3072" | "RSA_4096" | "ECC_NIST_P256" | "ECC_NIST_P384")
+        def signing_key_algorithm: () -> ("TDES_2KEY" | "TDES_3KEY" | "AES_128" | "AES_192" | "AES_256" | "HMAC_SHA256" | "HMAC_SHA384" | "HMAC_SHA512" | "HMAC_SHA224" | "RSA_2048" | "RSA_3072" | "RSA_4096" | "ECC_NIST_P256" | "ECC_NIST_P384" | "ECC_NIST_P521")
         def export_token: () -> ::String
         def parameters_valid_until_timestamp: () -> ::Time
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/PaymentCryptography/Client.html#get_parameters_for_export-instance_method
       def get_parameters_for_export: (
                                        key_material_type: ("TR34_KEY_BLOCK" | "TR31_KEY_BLOCK" | "ROOT_PUBLIC_KEY_CERTIFICATE" | "TRUSTED_PUBLIC_KEY_CERTIFICATE" | "KEY_CRYPTOGRAM"),
-                                       signing_key_algorithm: ("TDES_2KEY" | "TDES_3KEY" | "AES_128" | "AES_192" | "AES_256" | "RSA_2048" | "RSA_3072" | "RSA_4096" | "ECC_NIST_P256" | "ECC_NIST_P384")
+                                       signing_key_algorithm: ("TDES_2KEY" | "TDES_3KEY" | "AES_128" | "AES_192" | "AES_256" | "HMAC_SHA256" | "HMAC_SHA384" | "HMAC_SHA512" | "HMAC_SHA224" | "RSA_2048" | "RSA_3072" | "RSA_4096" | "ECC_NIST_P256" | "ECC_NIST_P384" | "ECC_NIST_P521"),
+                                       ?reuse_last_generated_token: bool
                                      ) -> _GetParametersForExportResponseSuccess
                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetParametersForExportResponseSuccess
 
@@ -247,14 +326,15 @@ module Aws
         include ::Seahorse::Client::_ResponseSuccess[Types::GetParametersForImportOutput]
         def wrapping_key_certificate: () -> ::String
         def wrapping_key_certificate_chain: () -> ::String
-        def wrapping_key_algorithm: () -> ("TDES_2KEY" | "TDES_3KEY" | "AES_128" | "AES_192" | "AES_256" | "RSA_2048" | "RSA_3072" | "RSA_4096" | "ECC_NIST_P256" | "ECC_NIST_P384")
+        def wrapping_key_algorithm: () -> ("TDES_2KEY" | "TDES_3KEY" | "AES_128" | "AES_192" | "AES_256" | "HMAC_SHA256" | "HMAC_SHA384" | "HMAC_SHA512" | "HMAC_SHA224" | "RSA_2048" | "RSA_3072" | "RSA_4096" | "ECC_NIST_P256" | "ECC_NIST_P384" | "ECC_NIST_P521")
         def import_token: () -> ::String
         def parameters_valid_until_timestamp: () -> ::Time
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/PaymentCryptography/Client.html#get_parameters_for_import-instance_method
       def get_parameters_for_import: (
                                        key_material_type: ("TR34_KEY_BLOCK" | "TR31_KEY_BLOCK" | "ROOT_PUBLIC_KEY_CERTIFICATE" | "TRUSTED_PUBLIC_KEY_CERTIFICATE" | "KEY_CRYPTOGRAM"),
-                                       wrapping_key_algorithm: ("TDES_2KEY" | "TDES_3KEY" | "AES_128" | "AES_192" | "AES_256" | "RSA_2048" | "RSA_3072" | "RSA_4096" | "ECC_NIST_P256" | "ECC_NIST_P384")
+                                       wrapping_key_algorithm: ("TDES_2KEY" | "TDES_3KEY" | "AES_128" | "AES_192" | "AES_256" | "HMAC_SHA256" | "HMAC_SHA384" | "HMAC_SHA512" | "HMAC_SHA224" | "RSA_2048" | "RSA_3072" | "RSA_4096" | "ECC_NIST_P256" | "ECC_NIST_P384" | "ECC_NIST_P521"),
+                                       ?reuse_last_generated_token: bool
                                      ) -> _GetParametersForImportResponseSuccess
                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetParametersForImportResponseSuccess
 
@@ -269,6 +349,17 @@ module Aws
                                       ) -> _GetPublicKeyCertificateResponseSuccess
                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetPublicKeyCertificateResponseSuccess
 
+      interface _GetResourcePolicyResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetResourcePolicyOutput]
+        def resource_arn: () -> ::String
+        def policy: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/PaymentCryptography/Client.html#get_resource_policy-instance_method
+      def get_resource_policy: (
+                                 resource_arn: ::String
+                               ) -> _GetResourcePolicyResponseSuccess
+                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetResourcePolicyResponseSuccess
+
       interface _ImportKeyResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ImportKeyOutput]
         def key: () -> Types::Key
@@ -277,41 +368,11 @@ module Aws
       def import_key: (
                         key_material: {
                           root_certificate_public_key: {
-                            key_attributes: {
-                              key_usage: ("TR31_B0_BASE_DERIVATION_KEY" | "TR31_C0_CARD_VERIFICATION_KEY" | "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY" | "TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION" | "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS" | "TR31_E1_EMV_MKEY_CONFIDENTIALITY" | "TR31_E2_EMV_MKEY_INTEGRITY" | "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS" | "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION" | "TR31_E6_EMV_MKEY_OTHER" | "TR31_K0_KEY_ENCRYPTION_KEY" | "TR31_K1_KEY_BLOCK_PROTECTION_KEY" | "TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT" | "TR31_M3_ISO_9797_3_MAC_KEY" | "TR31_M1_ISO_9797_1_MAC_KEY" | "TR31_M6_ISO_9797_5_CMAC_KEY" | "TR31_M7_HMAC_KEY" | "TR31_P0_PIN_ENCRYPTION_KEY" | "TR31_P1_PIN_GENERATION_KEY" | "TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE" | "TR31_V1_IBM3624_PIN_VERIFICATION_KEY" | "TR31_V2_VISA_PIN_VERIFICATION_KEY" | "TR31_K2_TR34_ASYMMETRIC_KEY"),
-                              key_class: ("SYMMETRIC_KEY" | "ASYMMETRIC_KEY_PAIR" | "PRIVATE_KEY" | "PUBLIC_KEY"),
-                              key_algorithm: ("TDES_2KEY" | "TDES_3KEY" | "AES_128" | "AES_192" | "AES_256" | "RSA_2048" | "RSA_3072" | "RSA_4096" | "ECC_NIST_P256" | "ECC_NIST_P384"),
-                              key_modes_of_use: {
-                                encrypt: bool?,
-                                decrypt: bool?,
-                                wrap: bool?,
-                                unwrap: bool?,
-                                generate: bool?,
-                                sign: bool?,
-                                verify: bool?,
-                                derive_key: bool?,
-                                no_restrictions: bool?
-                              }
-                            },
+                            key_attributes: Params::key_attributes,
                             public_key_certificate: ::String
                           }?,
                           trusted_certificate_public_key: {
-                            key_attributes: {
-                              key_usage: ("TR31_B0_BASE_DERIVATION_KEY" | "TR31_C0_CARD_VERIFICATION_KEY" | "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY" | "TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION" | "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS" | "TR31_E1_EMV_MKEY_CONFIDENTIALITY" | "TR31_E2_EMV_MKEY_INTEGRITY" | "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS" | "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION" | "TR31_E6_EMV_MKEY_OTHER" | "TR31_K0_KEY_ENCRYPTION_KEY" | "TR31_K1_KEY_BLOCK_PROTECTION_KEY" | "TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT" | "TR31_M3_ISO_9797_3_MAC_KEY" | "TR31_M1_ISO_9797_1_MAC_KEY" | "TR31_M6_ISO_9797_5_CMAC_KEY" | "TR31_M7_HMAC_KEY" | "TR31_P0_PIN_ENCRYPTION_KEY" | "TR31_P1_PIN_GENERATION_KEY" | "TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE" | "TR31_V1_IBM3624_PIN_VERIFICATION_KEY" | "TR31_V2_VISA_PIN_VERIFICATION_KEY" | "TR31_K2_TR34_ASYMMETRIC_KEY"),
-                              key_class: ("SYMMETRIC_KEY" | "ASYMMETRIC_KEY_PAIR" | "PRIVATE_KEY" | "PUBLIC_KEY"),
-                              key_algorithm: ("TDES_2KEY" | "TDES_3KEY" | "AES_128" | "AES_192" | "AES_256" | "RSA_2048" | "RSA_3072" | "RSA_4096" | "ECC_NIST_P256" | "ECC_NIST_P384"),
-                              key_modes_of_use: {
-                                encrypt: bool?,
-                                decrypt: bool?,
-                                wrap: bool?,
-                                unwrap: bool?,
-                                generate: bool?,
-                                sign: bool?,
-                                verify: bool?,
-                                derive_key: bool?,
-                                no_restrictions: bool?
-                              }
-                            },
+                            key_attributes: Params::key_attributes,
                             public_key_certificate: ::String,
                             certificate_authority_public_key_identifier: ::String
                           }?,
@@ -322,42 +383,51 @@ module Aws
                           tr_34_key_block: {
                             certificate_authority_public_key_identifier: ::String,
                             signing_key_certificate: ::String,
-                            import_token: ::String,
+                            import_token: ::String?,
+                            wrapping_key_identifier: ::String?,
+                            wrapping_key_certificate: ::String?,
                             wrapped_key_block: ::String,
                             key_block_format: ("X9_TR34_2012"),
                             random_nonce: ::String?
                           }?,
                           key_cryptogram: {
-                            key_attributes: {
-                              key_usage: ("TR31_B0_BASE_DERIVATION_KEY" | "TR31_C0_CARD_VERIFICATION_KEY" | "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY" | "TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION" | "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS" | "TR31_E1_EMV_MKEY_CONFIDENTIALITY" | "TR31_E2_EMV_MKEY_INTEGRITY" | "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS" | "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION" | "TR31_E6_EMV_MKEY_OTHER" | "TR31_K0_KEY_ENCRYPTION_KEY" | "TR31_K1_KEY_BLOCK_PROTECTION_KEY" | "TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT" | "TR31_M3_ISO_9797_3_MAC_KEY" | "TR31_M1_ISO_9797_1_MAC_KEY" | "TR31_M6_ISO_9797_5_CMAC_KEY" | "TR31_M7_HMAC_KEY" | "TR31_P0_PIN_ENCRYPTION_KEY" | "TR31_P1_PIN_GENERATION_KEY" | "TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE" | "TR31_V1_IBM3624_PIN_VERIFICATION_KEY" | "TR31_V2_VISA_PIN_VERIFICATION_KEY" | "TR31_K2_TR34_ASYMMETRIC_KEY"),
-                              key_class: ("SYMMETRIC_KEY" | "ASYMMETRIC_KEY_PAIR" | "PRIVATE_KEY" | "PUBLIC_KEY"),
-                              key_algorithm: ("TDES_2KEY" | "TDES_3KEY" | "AES_128" | "AES_192" | "AES_256" | "RSA_2048" | "RSA_3072" | "RSA_4096" | "ECC_NIST_P256" | "ECC_NIST_P384"),
-                              key_modes_of_use: {
-                                encrypt: bool?,
-                                decrypt: bool?,
-                                wrap: bool?,
-                                unwrap: bool?,
-                                generate: bool?,
-                                sign: bool?,
-                                verify: bool?,
-                                derive_key: bool?,
-                                no_restrictions: bool?
-                              }
-                            },
+                            key_attributes: Params::key_attributes,
                             exportable: bool,
                             wrapped_key_cryptogram: ::String,
                             import_token: ::String,
                             wrapping_spec: ("RSA_OAEP_SHA_256" | "RSA_OAEP_SHA_512")?
+                          }?,
+                          diffie_hellman_tr_31_key_block: {
+                            private_key_identifier: ::String,
+                            certificate_authority_public_key_identifier: ::String,
+                            public_key_certificate: ::String,
+                            derive_key_algorithm: ("TDES_2KEY" | "TDES_3KEY" | "AES_128" | "AES_192" | "AES_256" | "HMAC_SHA256" | "HMAC_SHA384" | "HMAC_SHA512" | "HMAC_SHA224"),
+                            key_derivation_function: ("NIST_SP800" | "ANSI_X963"),
+                            key_derivation_hash_algorithm: ("SHA_256" | "SHA_384" | "SHA_512"),
+                            derivation_data: {
+                              shared_information: ::String?
+                            },
+                            wrapped_key_block: ::String
+                          }?,
+                          as_2805_key_cryptogram: {
+                            as_2805_key_variant: ("TERMINAL_MAJOR_KEY_VARIANT_00" | "PIN_ENCRYPTION_KEY_VARIANT_28" | "MESSAGE_AUTHENTICATION_KEY_VARIANT_24" | "DATA_ENCRYPTION_KEY_VARIANT_22"),
+                            key_modes_of_use: Params::key_modes_of_use,
+                            key_algorithm: ("TDES_2KEY" | "TDES_3KEY" | "AES_128" | "AES_192" | "AES_256" | "HMAC_SHA256" | "HMAC_SHA384" | "HMAC_SHA512" | "HMAC_SHA224" | "RSA_2048" | "RSA_3072" | "RSA_4096" | "ECC_NIST_P256" | "ECC_NIST_P384" | "ECC_NIST_P521"),
+                            exportable: bool,
+                            wrapping_key_identifier: ::String,
+                            wrapped_key_cryptogram: ::String
                           }?
                         },
-                        ?key_check_value_algorithm: ("CMAC" | "ANSI_X9_24"),
+                        ?key_check_value_algorithm: ("CMAC" | "ANSI_X9_24" | "HMAC" | "SHA_1"),
                         ?enabled: bool,
                         ?tags: Array[
                           {
                             key: ::String,
                             value: ::String
-                          },
-                        ]
+                          }
+                        ],
+                        ?replication_regions: Array[::String],
+                        ?requester_comment: ::String
                       ) -> _ImportKeyResponseSuccess
                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ImportKeyResponseSuccess
 
@@ -400,6 +470,29 @@ module Aws
                                   ) -> _ListTagsForResourceResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListTagsForResourceResponseSuccess
 
+      interface _PutResourcePolicyResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::PutResourcePolicyOutput]
+        def resource_arn: () -> ::String
+        def policy: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/PaymentCryptography/Client.html#put_resource_policy-instance_method
+      def put_resource_policy: (
+                                 resource_arn: ::String,
+                                 policy: ::String
+                               ) -> _PutResourcePolicyResponseSuccess
+                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutResourcePolicyResponseSuccess
+
+      interface _RemoveKeyReplicationRegionsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::RemoveKeyReplicationRegionsOutput]
+        def key: () -> Types::Key
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/PaymentCryptography/Client.html#remove_key_replication_regions-instance_method
+      def remove_key_replication_regions: (
+                                            key_identifier: ::String,
+                                            replication_regions: Array[::String]
+                                          ) -> _RemoveKeyReplicationRegionsResponseSuccess
+                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RemoveKeyReplicationRegionsResponseSuccess
+
       interface _RestoreKeyResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::RestoreKeyOutput]
         def key: () -> Types::Key
@@ -440,7 +533,7 @@ module Aws
                             {
                               key: ::String,
                               value: ::String
-                            },
+                            }
                           ]
                         ) -> _TagResourceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess

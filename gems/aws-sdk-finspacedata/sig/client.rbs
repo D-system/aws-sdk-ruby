@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -145,22 +146,11 @@ module Aws
                               dataset_permissions: Array[
                                 {
                                   permission: ::String?
-                                },
+                                }
                               ]?
                             },
                             ?alias: ::String,
-                            ?schema_definition: {
-                              tabular_schema_config: {
-                                columns: Array[
-                                  {
-                                    data_type: ("STRING" | "CHAR" | "INTEGER" | "TINYINT" | "SMALLINT" | "BIGINT" | "FLOAT" | "DOUBLE" | "DATE" | "DATETIME" | "BOOLEAN" | "BINARY")?,
-                                    column_name: ::String?,
-                                    column_description: ::String?
-                                  },
-                                ]?,
-                                primary_key_columns: Array[::String]?
-                              }?
-                            }
+                            ?schema_definition: Params::schema_union
                           ) -> _CreateDatasetResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateDatasetResponseSuccess
 
@@ -508,18 +498,7 @@ module Aws
                             kind: ("TABULAR" | "NON_TABULAR"),
                             ?dataset_description: ::String,
                             ?alias: ::String,
-                            ?schema_definition: {
-                              tabular_schema_config: {
-                                columns: Array[
-                                  {
-                                    data_type: ("STRING" | "CHAR" | "INTEGER" | "TINYINT" | "SMALLINT" | "BIGINT" | "FLOAT" | "DOUBLE" | "DATE" | "DATETIME" | "BOOLEAN" | "BINARY")?,
-                                    column_name: ::String?,
-                                    column_description: ::String?
-                                  },
-                                ]?,
-                                primary_key_columns: Array[::String]?
-                              }?
-                            }
+                            ?schema_definition: Params::schema_union
                           ) -> _UpdateDatasetResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateDatasetResponseSuccess
 

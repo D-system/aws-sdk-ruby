@@ -62,14 +62,239 @@ module Aws::SocialMessaging
     #   The status code for the response.
     #   @return [Integer]
     #
+    # @!attribute [rw] linked_whats_app_business_account_id
+    #   The ID of the WhatsApp Business Account that was linked to your
+    #   Amazon Web Services account.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/AssociateWhatsAppBusinessAccountOutput AWS API Documentation
     #
     class AssociateWhatsAppBusinessAccountOutput < Struct.new(
       :signup_callback_result,
-      :status_code)
+      :status_code,
+      :linked_whats_app_business_account_id)
       SENSITIVE = []
       include Aws::Structure
     end
+
+    # @!attribute [rw] id
+    #   The ID of the WhatsApp Business Account to create a dataset for,
+    #   formatted as `waba-01234567890123456789012345678901`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/CreateWhatsAppDatasetInput AWS API Documentation
+    #
+    class CreateWhatsAppDatasetInput < Struct.new(
+      :id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] dataset_id
+    #   The Meta-generated dataset ID, a numeric string of 10 to 20 digits.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/CreateWhatsAppDatasetOutput AWS API Documentation
+    #
+    class CreateWhatsAppDatasetOutput < Struct.new(
+      :dataset_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] id
+    #   The ID of the WhatsApp Business Account to associate with this Flow.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_name
+    #   The name of the Flow. Must be unique within the WhatsApp Business
+    #   Account.
+    #   @return [String]
+    #
+    # @!attribute [rw] categories
+    #   The categories that classify the business purpose of the Flow. At
+    #   least one category is required.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] flow_json
+    #   The Flow JSON definition that describes the screens, components, and
+    #   logic of the Flow. Maximum size is 10 MB.
+    #   @return [String]
+    #
+    # @!attribute [rw] publish
+    #   Set to `true` to publish the Flow immediately after creation.
+    #   Requires a valid `flowJson` that passes Meta's validation.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] clone_flow_id
+    #   The ID of an existing Flow within the same WhatsApp Business Account
+    #   to clone.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/CreateWhatsAppFlowInput AWS API Documentation
+    #
+    class CreateWhatsAppFlowInput < Struct.new(
+      :id,
+      :flow_name,
+      :categories,
+      :flow_json,
+      :publish,
+      :clone_flow_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] flow_id
+    #   The unique identifier assigned to the Flow by Meta.
+    #   @return [String]
+    #
+    # @!attribute [rw] validation_errors
+    #   A list of validation errors returned by Meta, if any. Validation
+    #   errors must be resolved before the Flow can be published.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/CreateWhatsAppFlowOutput AWS API Documentation
+    #
+    class CreateWhatsAppFlowOutput < Struct.new(
+      :flow_id,
+      :validation_errors)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] meta_library_template
+    #   The template configuration from Meta's library, including
+    #   customizations for buttons and body text.
+    #   @return [Types::MetaLibraryTemplate]
+    #
+    # @!attribute [rw] id
+    #   The ID of the WhatsApp Business Account to associate with this
+    #   template.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/CreateWhatsAppMessageTemplateFromLibraryInput AWS API Documentation
+    #
+    class CreateWhatsAppMessageTemplateFromLibraryInput < Struct.new(
+      :meta_library_template,
+      :id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] meta_template_id
+    #   The numeric ID assigned to the template by Meta.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_status
+    #   The status of the created template (for example, PENDING or
+    #   APPROVED).
+    #   @return [String]
+    #
+    # @!attribute [rw] category
+    #   The category of the template (for example, UTILITY or MARKETING).
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/CreateWhatsAppMessageTemplateFromLibraryOutput AWS API Documentation
+    #
+    class CreateWhatsAppMessageTemplateFromLibraryOutput < Struct.new(
+      :meta_template_id,
+      :template_status,
+      :category)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] template_definition
+    #   The complete template definition as a JSON blob.
+    #   @return [String]
+    #
+    # @!attribute [rw] id
+    #   The ID of the WhatsApp Business Account to associate with this
+    #   template.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/CreateWhatsAppMessageTemplateInput AWS API Documentation
+    #
+    class CreateWhatsAppMessageTemplateInput < Struct.new(
+      :template_definition,
+      :id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] id
+    #   The ID of the WhatsApp Business Account associated with this media
+    #   upload.
+    #   @return [String]
+    #
+    # @!attribute [rw] source_s3_file
+    #   Contains information for the S3 bucket that contains media files.
+    #   @return [Types::S3File]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/CreateWhatsAppMessageTemplateMediaInput AWS API Documentation
+    #
+    class CreateWhatsAppMessageTemplateMediaInput < Struct.new(
+      :id,
+      :source_s3_file)
+      SENSITIVE = [:source_s3_file]
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] meta_header_handle
+    #   The handle assigned to the uploaded media by Meta, used to reference
+    #   the media in templates.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/CreateWhatsAppMessageTemplateMediaOutput AWS API Documentation
+    #
+    class CreateWhatsAppMessageTemplateMediaOutput < Struct.new(
+      :meta_header_handle)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] meta_template_id
+    #   The numeric ID assigned to the template by Meta.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_status
+    #   The status of the created template, such as PENDING or APPROVED..
+    #   @return [String]
+    #
+    # @!attribute [rw] category
+    #   The category of the template, such as UTILITY or MARKETING.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/CreateWhatsAppMessageTemplateOutput AWS API Documentation
+    #
+    class CreateWhatsAppMessageTemplateOutput < Struct.new(
+      :meta_template_id,
+      :template_status,
+      :category)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] id
+    #   The ID of the WhatsApp Business Account associated with this Flow.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_id
+    #   The unique identifier of the Flow to delete.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/DeleteWhatsAppFlowInput AWS API Documentation
+    #
+    class DeleteWhatsAppFlowInput < Struct.new(
+      :id,
+      :flow_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/DeleteWhatsAppFlowOutput AWS API Documentation
+    #
+    class DeleteWhatsAppFlowOutput < Aws::EmptyStructure; end
 
     # @!attribute [rw] media_id
     #   The unique identifier of the media file to delete. Use the `mediaId`
@@ -88,7 +313,7 @@ module Aws::SocialMessaging
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/social-messaging/latest/APIReference/API_GetLinkedWhatsAppBusinessAccountPhoneNumber.html
+    #   [1]: https://docs.aws.amazon.com/social-messaging/latest/APIReference/API_GetLinkedWhatsAppBusinessAccount.html
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/DeleteWhatsAppMessageMediaInput AWS API Documentation
@@ -112,6 +337,38 @@ module Aws::SocialMessaging
       include Aws::Structure
     end
 
+    # @!attribute [rw] meta_template_id
+    #   The numeric ID of the template assigned by Meta.
+    #   @return [String]
+    #
+    # @!attribute [rw] delete_all_languages
+    #   If true, deletes all language versions of the template.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] id
+    #   The ID of the WhatsApp Business Account associated with this
+    #   template.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_name
+    #   The name of the template to delete.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/DeleteWhatsAppMessageTemplateInput AWS API Documentation
+    #
+    class DeleteWhatsAppMessageTemplateInput < Struct.new(
+      :meta_template_id,
+      :delete_all_languages,
+      :id,
+      :template_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/DeleteWhatsAppMessageTemplateOutput AWS API Documentation
+    #
+    class DeleteWhatsAppMessageTemplateOutput < Aws::EmptyStructure; end
+
     # Thrown when performing an action because a dependency would be broken.
     #
     # @!attribute [rw] message
@@ -124,6 +381,27 @@ module Aws::SocialMessaging
       SENSITIVE = []
       include Aws::Structure
     end
+
+    # @!attribute [rw] id
+    #   The ID of the WhatsApp Business Account associated with this Flow.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_id
+    #   The unique identifier of the Flow to deprecate.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/DeprecateWhatsAppFlowInput AWS API Documentation
+    #
+    class DeprecateWhatsAppFlowInput < Struct.new(
+      :id,
+      :flow_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/DeprecateWhatsAppFlowOutput AWS API Documentation
+    #
+    class DeprecateWhatsAppFlowOutput < Aws::EmptyStructure; end
 
     # @!attribute [rw] id
     #   The unique identifier of your WhatsApp Business Account. WABA
@@ -189,7 +467,7 @@ module Aws::SocialMessaging
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/social-messaging/latest/APIReference/API_GetLinkedWhatsAppBusinessAccountPhoneNumber.html
+    #   [1]: https://docs.aws.amazon.com/social-messaging/latest/APIReference/API_GetLinkedWhatsAppBusinessAccount.html
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/GetLinkedWhatsAppBusinessAccountPhoneNumberInput AWS API Documentation
@@ -218,6 +496,134 @@ module Aws::SocialMessaging
       include Aws::Structure
     end
 
+    # @!attribute [rw] id
+    #   The ID of the WhatsApp Business Account associated with this Flow.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_id
+    #   The unique identifier of the Flow to retrieve.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/GetWhatsAppFlowInput AWS API Documentation
+    #
+    class GetWhatsAppFlowInput < Struct.new(
+      :id,
+      :flow_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] flow_id
+    #   The unique identifier of the Flow.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_name
+    #   The name of the Flow.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_status
+    #   The lifecycle status of the Flow. Valid values are DRAFT, PUBLISHED,
+    #   DEPRECATED, BLOCKED, and THROTTLED.
+    #   @return [String]
+    #
+    # @!attribute [rw] categories
+    #   The categories that classify the business purpose of the Flow.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] validation_errors
+    #   A list of validation errors from Meta, if any.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] json_version
+    #   The version of the Flow JSON schema used by this Flow (for example,
+    #   7.3).
+    #   @return [String]
+    #
+    # @!attribute [rw] data_api_version
+    #   The data API version for data exchange endpoint Flows.
+    #   @return [String]
+    #
+    # @!attribute [rw] endpoint_uri
+    #   The endpoint URI for data exchange Flows, if configured.
+    #   @return [String]
+    #
+    # @!attribute [rw] preview
+    #   The preview URL and its expiration timestamp for testing the Flow.
+    #   @return [Types::MetaFlowPreviewInfo]
+    #
+    # @!attribute [rw] whats_app_business_account
+    #   The WhatsApp Business Account information from Meta associated with
+    #   this Flow.
+    #   @return [Types::MetaFlowWhatsAppBusinessAccountInfo]
+    #
+    # @!attribute [rw] application
+    #   The Meta application information associated with this Flow.
+    #   @return [Types::MetaFlowApplicationInfo]
+    #
+    # @!attribute [rw] health_status
+    #   The health status information for this Flow from Meta.
+    #   @return [Types::MetaFlowHealthStatus]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/GetWhatsAppFlowOutput AWS API Documentation
+    #
+    class GetWhatsAppFlowOutput < Struct.new(
+      :flow_id,
+      :flow_name,
+      :flow_status,
+      :categories,
+      :validation_errors,
+      :json_version,
+      :data_api_version,
+      :endpoint_uri,
+      :preview,
+      :whats_app_business_account,
+      :application,
+      :health_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] id
+    #   The ID of the WhatsApp Business Account associated with this Flow.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_id
+    #   The unique identifier of the Flow to preview.
+    #   @return [String]
+    #
+    # @!attribute [rw] invalidate
+    #   Set to `true` to force generation of a new preview URL. Use this if
+    #   the previous URL has been compromised or you want a fresh expiration
+    #   period.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/GetWhatsAppFlowPreviewInput AWS API Documentation
+    #
+    class GetWhatsAppFlowPreviewInput < Struct.new(
+      :id,
+      :flow_id,
+      :invalidate)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] flow_id
+    #   The unique identifier of the Flow.
+    #   @return [String]
+    #
+    # @!attribute [rw] preview
+    #   The preview URL and its expiration timestamp.
+    #   @return [Types::MetaFlowPreviewInfo]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/GetWhatsAppFlowPreviewOutput AWS API Documentation
+    #
+    class GetWhatsAppFlowPreviewOutput < Struct.new(
+      :flow_id,
+      :preview)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] media_id
     #   The unique identifier for the media file.
     #   @return [String]
@@ -230,7 +636,7 @@ module Aws::SocialMessaging
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/social-messaging/latest/APIReference/API_GetLinkedWhatsAppBusinessAccountPhoneNumber.html
+    #   [1]: https://docs.aws.amazon.com/social-messaging/latest/APIReference/API_GetLinkedWhatsAppBusinessAccount.html
     #   @return [String]
     #
     # @!attribute [rw] metadata_only
@@ -262,7 +668,7 @@ module Aws::SocialMessaging
     #   @return [String]
     #
     # @!attribute [rw] file_size
-    #   The file size of the media, in KB.
+    #   The size of the media file, in KB.
     #   @return [Integer]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/GetWhatsAppMessageMediaOutput AWS API Documentation
@@ -270,6 +676,51 @@ module Aws::SocialMessaging
     class GetWhatsAppMessageMediaOutput < Struct.new(
       :mime_type,
       :file_size)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] meta_template_id
+    #   The numeric ID of the template assigned by Meta.
+    #   @return [String]
+    #
+    # @!attribute [rw] id
+    #   The ID of the WhatsApp Business Account associated with this
+    #   template.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_name
+    #   The name of the message template. Use together with
+    #   `templateLanguageCode` as an alternative to `metaTemplateId` to
+    #   identify a template.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_language_code
+    #   The language code of the message template (for example, `en` or
+    #   `en_US`). Use together with `templateName` as an alternative to
+    #   `metaTemplateId` to identify a template.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/GetWhatsAppMessageTemplateInput AWS API Documentation
+    #
+    class GetWhatsAppMessageTemplateInput < Struct.new(
+      :meta_template_id,
+      :id,
+      :template_name,
+      :template_language_code)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] template
+    #   The complete template definition as a JSON string (maximum 6000
+    #   characters).
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/GetWhatsAppMessageTemplateOutput AWS API Documentation
+    #
+    class GetWhatsAppMessageTemplateOutput < Struct.new(
+      :template)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -296,6 +747,139 @@ module Aws::SocialMessaging
     # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/InvalidParametersException AWS API Documentation
     #
     class InvalidParametersException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration options for customizing the body content of a template
+    # from Meta's library.
+    #
+    # @!attribute [rw] add_contact_number
+    #   When true, includes a contact number in the template body.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] add_learn_more_link
+    #   When true, includes a "learn more" link in the template body.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] add_security_recommendation
+    #   When true, includes security recommendations in the template body.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] add_track_package_link
+    #   When true, includes a package tracking link in the template body.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] code_expiration_minutes
+    #   The number of minutes until a verification code or OTP expires.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/LibraryTemplateBodyInputs AWS API Documentation
+    #
+    class LibraryTemplateBodyInputs < Struct.new(
+      :add_contact_number,
+      :add_learn_more_link,
+      :add_security_recommendation,
+      :add_track_package_link,
+      :code_expiration_minutes)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration options for customizing buttons in a template from
+    # Meta's library.
+    #
+    # @!attribute [rw] type
+    #   The type of button (for example, QUICK\_REPLY, CALL, or URL).
+    #   @return [String]
+    #
+    # @!attribute [rw] phone_number
+    #   The phone number in E.164 format for CALL-type buttons.
+    #   @return [String]
+    #
+    # @!attribute [rw] url
+    #   The URL with dynamic parameters for URL-type buttons.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] otp_type
+    #   The type of one-time password for OTP buttons.
+    #   @return [String]
+    #
+    # @!attribute [rw] zero_tap_terms_accepted
+    #   When true, indicates acceptance of zero-tap terms for the button.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] supported_apps
+    #   List of supported applications for this button type.
+    #   @return [Array<Hash<String,String>>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/LibraryTemplateButtonInput AWS API Documentation
+    #
+    class LibraryTemplateButtonInput < Struct.new(
+      :type,
+      :phone_number,
+      :url,
+      :otp_type,
+      :zero_tap_terms_accepted,
+      :supported_apps)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines a button in a template from Meta's library.
+    #
+    # @!attribute [rw] type
+    #   The type of button (for example, QUICK\_REPLY, CALL, or URL).
+    #   @return [String]
+    #
+    # @!attribute [rw] text
+    #   The text displayed on the button (maximum 40 characters).
+    #   @return [String]
+    #
+    # @!attribute [rw] phone_number
+    #   The phone number in E.164 format for CALL-type buttons.
+    #   @return [String]
+    #
+    # @!attribute [rw] url
+    #   The URL for URL-type buttons.
+    #   @return [String]
+    #
+    # @!attribute [rw] otp_type
+    #   The type of one-time password for OTP buttons.
+    #   @return [String]
+    #
+    # @!attribute [rw] zero_tap_terms_accepted
+    #   When true, indicates acceptance of zero-tap terms for the button.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] supported_apps
+    #   List of supported applications for this button type.
+    #   @return [Array<Hash<String,String>>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/LibraryTemplateButtonList AWS API Documentation
+    #
+    class LibraryTemplateButtonList < Struct.new(
+      :type,
+      :text,
+      :phone_number,
+      :url,
+      :otp_type,
+      :zero_tap_terms_accepted,
+      :supported_apps)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The request was denied because it would exceed one or more service
+    # quotas or limits.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/LimitExceededException AWS API Documentation
+    #
+    class LimitExceededException < Struct.new(
       :message)
       SENSITIVE = []
       include Aws::Structure
@@ -332,6 +916,19 @@ module Aws::SocialMessaging
     #   The event destinations for the linked WhatsApp Business Account.
     #   @return [Array<Types::WhatsAppBusinessAccountEventDestination>]
     #
+    # @!attribute [rw] marketing_messages_onboarding_status
+    #   The onboarding status for the Marketing Messages API. This value is
+    #   fetched from Meta and indicates whether the WhatsApp Business
+    #   Account is onboarded for Meta's Marketing Messages API.
+    #   @return [String]
+    #
+    # @!attribute [rw] dataset_id
+    #   The Meta Conversions API dataset ID associated with this WhatsApp
+    #   Business Account. This value is a numeric string of 10 to 20 digits.
+    #   This field is not present when no dataset has been created for this
+    #   account.
+    #   @return [String]
+    #
     # @!attribute [rw] phone_numbers
     #   The phone numbers associated with the Linked WhatsApp Business
     #   Account.
@@ -347,6 +944,8 @@ module Aws::SocialMessaging
       :link_date,
       :waba_name,
       :event_destinations,
+      :marketing_messages_onboarding_status,
+      :dataset_id,
       :phone_numbers)
       SENSITIVE = []
       include Aws::Structure
@@ -413,6 +1012,19 @@ module Aws::SocialMessaging
     #   The event destinations for the linked WhatsApp Business Account.
     #   @return [Array<Types::WhatsAppBusinessAccountEventDestination>]
     #
+    # @!attribute [rw] marketing_messages_onboarding_status
+    #   The onboarding status for the Marketing Messages API. This value is
+    #   fetched from Meta and indicates whether the WhatsApp Business
+    #   Account is onboarded for Meta's Marketing Messages API.
+    #   @return [String]
+    #
+    # @!attribute [rw] dataset_id
+    #   The Meta Conversions API dataset ID associated with this WhatsApp
+    #   Business Account. This value is a numeric string of 10 to 20 digits.
+    #   This field is not present when no dataset has been created for this
+    #   account.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/LinkedWhatsAppBusinessAccountSummary AWS API Documentation
     #
     class LinkedWhatsAppBusinessAccountSummary < Struct.new(
@@ -422,7 +1034,9 @@ module Aws::SocialMessaging
       :registration_status,
       :link_date,
       :waba_name,
-      :event_destinations)
+      :event_destinations,
+      :marketing_messages_onboarding_status,
+      :dataset_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -492,6 +1106,471 @@ module Aws::SocialMessaging
       include Aws::Structure
     end
 
+    # @!attribute [rw] id
+    #   The ID of the WhatsApp Business Account associated with this Flow.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_id
+    #   The unique identifier of the Flow whose assets to list.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   The token for the next page of results.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per page.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/ListWhatsAppFlowAssetsInput AWS API Documentation
+    #
+    class ListWhatsAppFlowAssetsInput < Struct.new(
+      :id,
+      :flow_id,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] flow_assets
+    #   A list of Flow assets with download URLs.
+    #   @return [Array<Types::MetaFlowAsset>]
+    #
+    # @!attribute [rw] next_token
+    #   The token to retrieve the next page of results, if any.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/ListWhatsAppFlowAssetsOutput AWS API Documentation
+    #
+    class ListWhatsAppFlowAssetsOutput < Struct.new(
+      :flow_assets,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] id
+    #   The ID of the WhatsApp Business Account to list Flows for.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   The token for the next page of results.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per page.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/ListWhatsAppFlowsInput AWS API Documentation
+    #
+    class ListWhatsAppFlowsInput < Struct.new(
+      :id,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] flows
+    #   A list of Flow summaries.
+    #   @return [Array<Types::MetaFlowSummary>]
+    #
+    # @!attribute [rw] next_token
+    #   The token to retrieve the next page of results, if any.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/ListWhatsAppFlowsOutput AWS API Documentation
+    #
+    class ListWhatsAppFlowsOutput < Struct.new(
+      :flows,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] id
+    #   The ID of the WhatsApp Business Account to list templates for.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   The token for the next page of results.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per page (1-100).
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/ListWhatsAppMessageTemplatesInput AWS API Documentation
+    #
+    class ListWhatsAppMessageTemplatesInput < Struct.new(
+      :id,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] templates
+    #   A list of template summaries.
+    #   @return [Array<Types::TemplateSummary>]
+    #
+    # @!attribute [rw] next_token
+    #   The token to retrieve the next page of results, if any.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/ListWhatsAppMessageTemplatesOutput AWS API Documentation
+    #
+    class ListWhatsAppMessageTemplatesOutput < Struct.new(
+      :templates,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   The token for the next page of results.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per page (1-100).
+    #   @return [Integer]
+    #
+    # @!attribute [rw] id
+    #   The ID of the WhatsApp Business Account to list library templates
+    #   for.
+    #   @return [String]
+    #
+    # @!attribute [rw] filters
+    #   Map of filters to apply (searchKey, topic, usecase, industry,
+    #   language).
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/ListWhatsAppTemplateLibraryInput AWS API Documentation
+    #
+    class ListWhatsAppTemplateLibraryInput < Struct.new(
+      :next_token,
+      :max_results,
+      :id,
+      :filters)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] meta_library_templates
+    #   A list of templates from Meta's library.
+    #   @return [Array<Types::MetaLibraryTemplateDefinition>]
+    #
+    # @!attribute [rw] next_token
+    #   The token to retrieve the next page of results, if any.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/ListWhatsAppTemplateLibraryOutput AWS API Documentation
+    #
+    class ListWhatsAppTemplateLibraryOutput < Struct.new(
+      :meta_library_templates,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains the Meta application metadata associated with a WhatsApp
+    # Flow.
+    #
+    # @!attribute [rw] link
+    #   The URL link for the Meta application.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the Meta application.
+    #   @return [String]
+    #
+    # @!attribute [rw] id
+    #   The unique identifier of the Meta application.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/MetaFlowApplicationInfo AWS API Documentation
+    #
+    class MetaFlowApplicationInfo < Struct.new(
+      :link,
+      :name,
+      :id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents a single asset file associated with a WhatsApp Flow,
+    # including a presigned download URL.
+    #
+    # @!attribute [rw] name
+    #   The filename of the asset (for example, flow.json).
+    #   @return [String]
+    #
+    # @!attribute [rw] asset_type
+    #   The type of asset. Currently the only supported value is FLOW\_JSON.
+    #   @return [String]
+    #
+    # @!attribute [rw] download_url
+    #   A presigned URL from Meta for downloading the asset. The URL expires
+    #   after a short period.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/MetaFlowAsset AWS API Documentation
+    #
+    class MetaFlowAsset < Struct.new(
+      :name,
+      :asset_type,
+      :download_url)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents a single entity in the health status check for a WhatsApp
+    # Flow.
+    #
+    # @!attribute [rw] entity_type
+    #   The type of entity (for example, FLOW, WABA, BUSINESS, or APP).
+    #   @return [String]
+    #
+    # @!attribute [rw] id
+    #   The unique identifier of the entity.
+    #   @return [String]
+    #
+    # @!attribute [rw] can_send_message
+    #   The messaging availability status for this entity (for example,
+    #   AVAILABLE, LIMITED, or BLOCKED).
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/MetaFlowHealthEntity AWS API Documentation
+    #
+    class MetaFlowHealthEntity < Struct.new(
+      :entity_type,
+      :id,
+      :can_send_message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains the overall health status and per-entity breakdown for a
+    # WhatsApp Flow.
+    #
+    # @!attribute [rw] can_send_message
+    #   The overall messaging availability status (for example, AVAILABLE,
+    #   LIMITED, or BLOCKED).
+    #   @return [String]
+    #
+    # @!attribute [rw] entities
+    #   A list of health status entities with per-entity availability
+    #   information.
+    #   @return [Array<Types::MetaFlowHealthEntity>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/MetaFlowHealthStatus AWS API Documentation
+    #
+    class MetaFlowHealthStatus < Struct.new(
+      :can_send_message,
+      :entities)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains the preview URL for testing a WhatsApp Flow and its
+    # expiration timestamp.
+    #
+    # @!attribute [rw] preview_url
+    #   The web URL for previewing the Flow. Can be shared with stakeholders
+    #   for review.
+    #   @return [String]
+    #
+    # @!attribute [rw] expires_at
+    #   The timestamp when the preview URL expires.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/MetaFlowPreviewInfo AWS API Documentation
+    #
+    class MetaFlowPreviewInfo < Struct.new(
+      :preview_url,
+      :expires_at)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains summary information about a WhatsApp Flow, including its ID,
+    # name, status, and categories.
+    #
+    # @!attribute [rw] flow_id
+    #   The unique identifier of the Flow assigned by Meta.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_name
+    #   The name of the Flow.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_status
+    #   The lifecycle status of the Flow (DRAFT, PUBLISHED, DEPRECATED,
+    #   BLOCKED, or THROTTLED).
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_categories
+    #   The categories that classify the business purpose of the Flow.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] validation_errors
+    #   A list of validation errors from Meta, if any.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/MetaFlowSummary AWS API Documentation
+    #
+    class MetaFlowSummary < Struct.new(
+      :flow_id,
+      :flow_name,
+      :flow_status,
+      :flow_categories,
+      :validation_errors)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains WhatsApp Business Account metadata associated with a Flow, as
+    # returned by Meta.
+    #
+    # @!attribute [rw] id
+    #   The WhatsApp Business Account ID from Meta.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the WhatsApp Business Account.
+    #   @return [String]
+    #
+    # @!attribute [rw] currency
+    #   The currency code for the WhatsApp Business Account (for example,
+    #   USD).
+    #   @return [String]
+    #
+    # @!attribute [rw] timezone_id
+    #   The timezone ID for the WhatsApp Business Account.
+    #   @return [String]
+    #
+    # @!attribute [rw] message_template_namespace
+    #   The message template namespace for the WhatsApp Business Account.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/MetaFlowWhatsAppBusinessAccountInfo AWS API Documentation
+    #
+    class MetaFlowWhatsAppBusinessAccountInfo < Struct.new(
+      :id,
+      :name,
+      :currency,
+      :timezone_id,
+      :message_template_namespace)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents a template from Meta's library with customization options.
+    #
+    # @!attribute [rw] template_name
+    #   The name to assign to the template.
+    #   @return [String]
+    #
+    # @!attribute [rw] library_template_name
+    #   The name of the template in Meta's library.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_category
+    #   The category of the template (for example, UTILITY or MARKETING).
+    #   @return [String]
+    #
+    # @!attribute [rw] template_language
+    #   The language code for the template (for example, en\_US).
+    #   @return [String]
+    #
+    # @!attribute [rw] library_template_button_inputs
+    #   Button customizations for the template.
+    #   @return [Array<Types::LibraryTemplateButtonInput>]
+    #
+    # @!attribute [rw] library_template_body_inputs
+    #   Body text customizations for the template.
+    #   @return [Types::LibraryTemplateBodyInputs]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/MetaLibraryTemplate AWS API Documentation
+    #
+    class MetaLibraryTemplate < Struct.new(
+      :template_name,
+      :library_template_name,
+      :template_category,
+      :template_language,
+      :library_template_button_inputs,
+      :library_template_body_inputs)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines the complete structure and content of a template in Meta's
+    # library.
+    #
+    # @!attribute [rw] template_name
+    #   The name of the template.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_language
+    #   The language code for the template (for example, en\_US).
+    #   @return [String]
+    #
+    # @!attribute [rw] template_category
+    #   The category of the template (for example, UTILITY or MARKETING).
+    #   @return [String]
+    #
+    # @!attribute [rw] template_topic
+    #   The topic or subject matter of the template.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_use_case
+    #   The intended use case for the template.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_industry
+    #   The industries the template is designed for.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] template_header
+    #   The header text of the template.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_body
+    #   The body text of the template.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_buttons
+    #   The buttons included in the template.
+    #   @return [Array<Types::LibraryTemplateButtonList>]
+    #
+    # @!attribute [rw] template_id
+    #   The ID of the template in Meta's library.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_body_example_params
+    #   Example parameter values for the template body, used to demonstrate
+    #   how dynamic content appears in the template.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/MetaLibraryTemplateDefinition AWS API Documentation
+    #
+    class MetaLibraryTemplateDefinition < Struct.new(
+      :template_name,
+      :template_language,
+      :template_category,
+      :template_topic,
+      :template_use_case,
+      :template_industry,
+      :template_header,
+      :template_body,
+      :template_buttons,
+      :template_id,
+      :template_body_example_params)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] origination_phone_number_id
     #   The ID of the phone number to associate with the WhatsApp media
     #   file. The phone number identifiers are formatted as
@@ -500,7 +1579,7 @@ module Aws::SocialMessaging
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/social-messaging/latest/APIReference/API_GetLinkedWhatsAppBusinessAccountPhoneNumber.html
+    #   [1]: https://docs.aws.amazon.com/social-messaging/latest/APIReference/API_GetLinkedWhatsAppBusinessAccount.html
     #   @return [String]
     #
     # @!attribute [rw] source_s3_presigned_url
@@ -532,6 +1611,27 @@ module Aws::SocialMessaging
       SENSITIVE = []
       include Aws::Structure
     end
+
+    # @!attribute [rw] id
+    #   The ID of the WhatsApp Business Account associated with this Flow.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_id
+    #   The unique identifier of the Flow to publish.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/PublishWhatsAppFlowInput AWS API Documentation
+    #
+    class PublishWhatsAppFlowInput < Struct.new(
+      :id,
+      :flow_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/PublishWhatsAppFlowOutput AWS API Documentation
+    #
+    class PublishWhatsAppFlowOutput < Aws::EmptyStructure; end
 
     # @!attribute [rw] id
     #   The unique identifier of your WhatsApp Business Account. WABA
@@ -583,7 +1683,16 @@ module Aws::SocialMessaging
     #   @return [String]
     #
     # @!attribute [rw] key
-    #   The object key of the media file.
+    #   The S3 key prefix that defines the storage location of your media
+    #   files. The prefix works like a folder path in S3, and is combined
+    #   with the WhatsApp mediaId to create the final file path.
+    #
+    #   For example, if a media file's WhatsApp mediaId is `123.ogg`, and
+    #   the key is `audio/example.ogg`, the final file path is
+    #   `audio/example.ogg123.ogg`.
+    #
+    #   For the same mediaId, a key of `audio/` results in the file path
+    #   `audio/123.ogg`.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/S3File AWS API Documentation
@@ -627,6 +1736,46 @@ module Aws::SocialMessaging
       include Aws::Structure
     end
 
+    # @!attribute [rw] id
+    #   The ID of the WhatsApp Business Account associated with the dataset,
+    #   formatted as `waba-01234567890123456789012345678901`.
+    #   @return [String]
+    #
+    # @!attribute [rw] dataset_id
+    #   The Meta-generated dataset ID to send the event to.
+    #   @return [String]
+    #
+    # @!attribute [rw] event_data
+    #   The raw Meta Conversions API event payload as a JSON blob. See
+    #   [Meta's server event parameters][1] for the supported format.
+    #
+    #
+    #
+    #   [1]: https://developers.facebook.com/docs/marketing-api/conversions-api/parameters/server-event
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/SendWhatsAppConversionEventInput AWS API Documentation
+    #
+    class SendWhatsAppConversionEventInput < Struct.new(
+      :id,
+      :dataset_id,
+      :event_data)
+      SENSITIVE = [:event_data]
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] request_id
+    #   The unique identifier for the conversion event request.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/SendWhatsAppConversionEventOutput AWS API Documentation
+    #
+    class SendWhatsAppConversionEventOutput < Struct.new(
+      :request_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] origination_phone_number_id
     #   The ID of the phone number used to send the WhatsApp message. If you
     #   are sending a media file only the `originationPhoneNumberId` used to
@@ -636,7 +1785,7 @@ module Aws::SocialMessaging
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/social-messaging/latest/APIReference/API_GetLinkedWhatsAppBusinessAccountPhoneNumber.html
+    #   [1]: https://docs.aws.amazon.com/social-messaging/latest/APIReference/API_GetLinkedWhatsAppBusinessAccount.html
     #   @return [String]
     #
     # @!attribute [rw] message
@@ -731,6 +1880,46 @@ module Aws::SocialMessaging
       include Aws::Structure
     end
 
+    # Provides a summary of a WhatsApp message template's key attributes.
+    #
+    # @!attribute [rw] template_name
+    #   The name of the template.
+    #   @return [String]
+    #
+    # @!attribute [rw] meta_template_id
+    #   The numeric ID assigned to the template by Meta.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_status
+    #   The current status of the template (for example, APPROVED, PENDING,
+    #   or REJECTED).
+    #   @return [String]
+    #
+    # @!attribute [rw] template_quality_score
+    #   The quality score assigned to the template by Meta.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_language
+    #   The language code of the template (for example, en\_US).
+    #   @return [String]
+    #
+    # @!attribute [rw] template_category
+    #   The category of the template (for example, UTILITY or MARKETING).
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/TemplateSummary AWS API Documentation
+    #
+    class TemplateSummary < Struct.new(
+      :template_name,
+      :meta_template_id,
+      :template_status,
+      :template_quality_score,
+      :template_language,
+      :template_category)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The request was denied due to request throttling.
     #
     # @!attribute [rw] message
@@ -773,6 +1962,132 @@ module Aws::SocialMessaging
       include Aws::Structure
     end
 
+    # @!attribute [rw] id
+    #   The ID of the WhatsApp Business Account associated with this Flow.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_id
+    #   The unique identifier of the Flow whose assets to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_json
+    #   The updated Flow JSON definition. Maximum size is 10 MB.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/UpdateWhatsAppFlowAssetsInput AWS API Documentation
+    #
+    class UpdateWhatsAppFlowAssetsInput < Struct.new(
+      :id,
+      :flow_id,
+      :flow_json)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] validation_errors
+    #   A list of validation errors returned by Meta, if any. Validation
+    #   errors must be resolved before the Flow can be published.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/UpdateWhatsAppFlowAssetsOutput AWS API Documentation
+    #
+    class UpdateWhatsAppFlowAssetsOutput < Struct.new(
+      :validation_errors)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] id
+    #   The ID of the WhatsApp Business Account associated with this Flow.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_id
+    #   The unique identifier of the Flow to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_name
+    #   The updated name for the Flow.
+    #   @return [String]
+    #
+    # @!attribute [rw] categories
+    #   The updated categories for the Flow.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/UpdateWhatsAppFlowInput AWS API Documentation
+    #
+    class UpdateWhatsAppFlowInput < Struct.new(
+      :id,
+      :flow_id,
+      :flow_name,
+      :categories)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/UpdateWhatsAppFlowOutput AWS API Documentation
+    #
+    class UpdateWhatsAppFlowOutput < Aws::EmptyStructure; end
+
+    # @!attribute [rw] id
+    #   The ID of the WhatsApp Business Account associated with this
+    #   template.
+    #   @return [String]
+    #
+    # @!attribute [rw] meta_template_id
+    #   The numeric ID of the template assigned by Meta.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_name
+    #   The name of the message template. Use together with
+    #   `templateLanguageCode` as an alternative to `metaTemplateId` to
+    #   identify a template.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_language_code
+    #   The language code of the message template (for example, `en` or
+    #   `en_US`). Use together with `templateName` as an alternative to
+    #   `metaTemplateId` to identify a template.
+    #   @return [String]
+    #
+    # @!attribute [rw] parameter_format
+    #   The format specification for parameters in the template, this can be
+    #   either 'named' or 'positional'.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_category
+    #   The new category for the template (for example, UTILITY or
+    #   MARKETING).
+    #   @return [String]
+    #
+    # @!attribute [rw] template_components
+    #   The updated components of the template as a JSON blob (maximum 3000
+    #   characters).
+    #   @return [String]
+    #
+    # @!attribute [rw] cta_url_link_tracking_opted_out
+    #   When true, disables click tracking for call-to-action URL buttons in
+    #   the template.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/UpdateWhatsAppMessageTemplateInput AWS API Documentation
+    #
+    class UpdateWhatsAppMessageTemplateInput < Struct.new(
+      :id,
+      :meta_template_id,
+      :template_name,
+      :template_language_code,
+      :parameter_format,
+      :template_category,
+      :template_components,
+      :cta_url_link_tracking_opted_out)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/UpdateWhatsAppMessageTemplateOutput AWS API Documentation
+    #
+    class UpdateWhatsAppMessageTemplateOutput < Aws::EmptyStructure; end
+
     # The request contains an invalid parameter value.
     #
     # @!attribute [rw] message
@@ -791,12 +2106,13 @@ module Aws::SocialMessaging
     # @!attribute [rw] id
     #   The unique identifier of the originating phone number associated
     #   with the media. Phone number identifiers are formatted as
-    #   `phone-number-id-01234567890123456789012345678901`. Use
-    #   [GetLinkedWhatsAppBusinessAccount][1] to find a phone number's id.
+    #   `phone-number-id-01234567890123456789012345678901`. Use the
+    #   [GetLinkedWhatsAppBusinessAccount][1] API action to find a phone
+    #   number's id.
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/social-messaging/latest/APIReference/API_GetLinkedWhatsAppBusinessAccountPhoneNumber.html
+    #   [1]: https://docs.aws.amazon.com/social-messaging/latest/APIReference/API_GetLinkedWhatsAppBusinessAccount.html
     #   @return [String]
     #
     # @!attribute [rw] two_factor_pin
@@ -947,6 +2263,11 @@ module Aws::SocialMessaging
     #   The quality rating of the phone number.
     #   @return [String]
     #
+    # @!attribute [rw] data_localization_region
+    #   The geographic region where the WhatsApp phone number's data is
+    #   stored and processed.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/WhatsAppPhoneNumberDetail AWS API Documentation
     #
     class WhatsAppPhoneNumberDetail < Struct.new(
@@ -956,7 +2277,8 @@ module Aws::SocialMessaging
       :meta_phone_number_id,
       :display_phone_number_name,
       :display_phone_number,
-      :quality_rating)
+      :quality_rating,
+      :data_localization_region)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -993,6 +2315,11 @@ module Aws::SocialMessaging
     #   The quality rating of the phone number. This is from Meta.
     #   @return [String]
     #
+    # @!attribute [rw] data_localization_region
+    #   The geographic region where the WhatsApp phone number's data is
+    #   stored and processed.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/WhatsAppPhoneNumberSummary AWS API Documentation
     #
     class WhatsAppPhoneNumberSummary < Struct.new(
@@ -1002,7 +2329,8 @@ module Aws::SocialMessaging
       :meta_phone_number_id,
       :display_phone_number_name,
       :display_phone_number,
-      :quality_rating)
+      :quality_rating,
+      :data_localization_region)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1050,10 +2378,16 @@ module Aws::SocialMessaging
     #   `accessToken` value is provided by Meta.
     #   @return [String]
     #
+    # @!attribute [rw] callback_url
+    #   The URL where WhatsApp will send callback notifications for this
+    #   account.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/socialmessaging-2024-01-01/WhatsAppSignupCallback AWS API Documentation
     #
     class WhatsAppSignupCallback < Struct.new(
-      :access_token)
+      :access_token,
+      :callback_url)
       SENSITIVE = []
       include Aws::Structure
     end

@@ -91,10 +91,46 @@ module Aws::S3Tables
     #   The name for the table bucket.
     #   @return [String]
     #
+    # @!attribute [rw] encryption_configuration
+    #   The encryption configuration to use for the table bucket. This
+    #   configuration specifies the default encryption settings that will be
+    #   applied to all tables created in this bucket unless overridden at
+    #   the table level. The configuration includes the encryption algorithm
+    #   and, if using SSE-KMS, the KMS key to use.
+    #   @return [Types::EncryptionConfiguration]
+    #
+    # @!attribute [rw] storage_class_configuration
+    #   The default storage class configuration for the table bucket. This
+    #   configuration will be applied to all new tables created in this
+    #   bucket unless overridden at the table level. If not specified, the
+    #   service default storage class will be used.
+    #   @return [Types::StorageClassConfiguration]
+    #
+    # @!attribute [rw] tags
+    #   A map of user-defined tags that you would like to apply to the table
+    #   bucket that you are creating. A tag is a key-value pair that you
+    #   apply to your resources. Tags can help you organize and control
+    #   access to resources. For more information, see [Tagging for cost
+    #   allocation or attribute-based access control (ABAC)][1].
+    #
+    #   <note markdown="1"> You must have the `s3tables:TagResource` permission in addition to
+    #   `s3tables:CreateTableBucket` permisson to create a table bucket with
+    #   tags.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/tagging.html
+    #   @return [Hash<String,String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/CreateTableBucketRequest AWS API Documentation
     #
     class CreateTableBucketRequest < Struct.new(
-      :name)
+      :name,
+      :encryption_configuration,
+      :storage_class_configuration,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -132,6 +168,46 @@ module Aws::S3Tables
     #   The metadata for the table.
     #   @return [Types::TableMetadata]
     #
+    # @!attribute [rw] encryption_configuration
+    #   The encryption configuration to use for the table. This
+    #   configuration specifies the encryption algorithm and, if using
+    #   SSE-KMS, the KMS key to use for encrypting the table.
+    #
+    #   <note markdown="1"> If you choose SSE-KMS encryption you must grant the S3 Tables
+    #   maintenance principal access to your KMS key. For more information,
+    #   see [Permissions requirements for S3 Tables SSE-KMS encryption][1].
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-tables-kms-permissions.html
+    #   @return [Types::EncryptionConfiguration]
+    #
+    # @!attribute [rw] storage_class_configuration
+    #   The storage class configuration for the table. If not specified, the
+    #   table inherits the storage class configuration from its table
+    #   bucket. Specify this parameter to override the bucket's default
+    #   storage class for this table.
+    #   @return [Types::StorageClassConfiguration]
+    #
+    # @!attribute [rw] tags
+    #   A map of user-defined tags that you would like to apply to the table
+    #   that you are creating. A tag is a key-value pair that you apply to
+    #   your resources. Tags can help you organize, track costs for, and
+    #   control access to resources. For more information, see [Tagging for
+    #   cost allocation or attribute-based access control (ABAC)][1].
+    #
+    #   <note markdown="1"> You must have the `s3tables:TagResource` permission in addition to
+    #   `s3tables:CreateTable` permission to create a table with tags.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/tagging.html
+    #   @return [Hash<String,String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/CreateTableRequest AWS API Documentation
     #
     class CreateTableRequest < Struct.new(
@@ -139,7 +215,10 @@ module Aws::S3Tables
       :namespace,
       :name,
       :format,
-      :metadata)
+      :metadata,
+      :encryption_configuration,
+      :storage_class_configuration,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -183,10 +262,53 @@ module Aws::S3Tables
     #   The Amazon Resource Name (ARN) of the table bucket.
     #   @return [String]
     #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/DeleteTableBucketEncryptionRequest AWS API Documentation
+    #
+    class DeleteTableBucketEncryptionRequest < Struct.new(
+      :table_bucket_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] table_bucket_arn
+    #   The Amazon Resource Name (ARN) of the table bucket.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/DeleteTableBucketMetricsConfigurationRequest AWS API Documentation
+    #
+    class DeleteTableBucketMetricsConfigurationRequest < Struct.new(
+      :table_bucket_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] table_bucket_arn
+    #   The Amazon Resource Name (ARN) of the table bucket.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/DeleteTableBucketPolicyRequest AWS API Documentation
     #
     class DeleteTableBucketPolicyRequest < Struct.new(
       :table_bucket_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] table_bucket_arn
+    #   The Amazon Resource Name (ARN) of the table bucket.
+    #   @return [String]
+    #
+    # @!attribute [rw] version_token
+    #   A version token from a previous GetTableBucketReplication call. Use
+    #   this token to ensure you're deleting the expected version of the
+    #   configuration.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/DeleteTableBucketReplicationRequest AWS API Documentation
+    #
+    class DeleteTableBucketReplicationRequest < Struct.new(
+      :table_bucket_arn,
+      :version_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -226,6 +348,25 @@ module Aws::S3Tables
       include Aws::Structure
     end
 
+    # @!attribute [rw] table_arn
+    #   The Amazon Resource Name (ARN) of the table.
+    #   @return [String]
+    #
+    # @!attribute [rw] version_token
+    #   A version token from a previous GetTableReplication call. Use this
+    #   token to ensure you're deleting the expected version of the
+    #   configuration.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/DeleteTableReplicationRequest AWS API Documentation
+    #
+    class DeleteTableReplicationRequest < Struct.new(
+      :table_arn,
+      :version_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] table_bucket_arn
     #   The Amazon Resource Name (ARN) of the table bucket that contains the
     #   table.
@@ -250,6 +391,37 @@ module Aws::S3Tables
       :namespace,
       :name,
       :version_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration specifying how data should be encrypted. This structure
+    # defines the encryption algorithm and optional KMS key to be used for
+    # server-side encryption.
+    #
+    # @!attribute [rw] sse_algorithm
+    #   The server-side encryption algorithm to use. Valid values are
+    #   `AES256` for S3-managed encryption keys, or `aws:kms` for Amazon Web
+    #   Services KMS-managed encryption keys. If you choose SSE-KMS
+    #   encryption you must grant the S3 Tables maintenance principal access
+    #   to your KMS key. For more information, see [Permissions requirements
+    #   for S3 Tables SSE-KMS encryption][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-tables-kms-permissions.html
+    #   @return [String]
+    #
+    # @!attribute [rw] kms_key_arn
+    #   The Amazon Resource Name (ARN) of the KMS key to use for encryption.
+    #   This field is required only when `sseAlgorithm` is set to `aws:kms`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/EncryptionConfiguration AWS API Documentation
+    #
+    class EncryptionConfiguration < Struct.new(
+      :sse_algorithm,
+      :kms_key_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -300,13 +472,47 @@ module Aws::S3Tables
     #   The ID of the account that owns the namespcace.
     #   @return [String]
     #
+    # @!attribute [rw] namespace_id
+    #   The unique identifier of the namespace.
+    #   @return [String]
+    #
+    # @!attribute [rw] table_bucket_id
+    #   The unique identifier of the table bucket containing this namespace.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/GetNamespaceResponse AWS API Documentation
     #
     class GetNamespaceResponse < Struct.new(
       :namespace,
       :created_at,
       :created_by,
-      :owner_account_id)
+      :owner_account_id,
+      :namespace_id,
+      :table_bucket_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] table_bucket_arn
+    #   The Amazon Resource Name (ARN) of the table bucket.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/GetTableBucketEncryptionRequest AWS API Documentation
+    #
+    class GetTableBucketEncryptionRequest < Struct.new(
+      :table_bucket_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] encryption_configuration
+    #   The encryption configuration for the table bucket.
+    #   @return [Types::EncryptionConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/GetTableBucketEncryptionResponse AWS API Documentation
+    #
+    class GetTableBucketEncryptionResponse < Struct.new(
+      :encryption_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -346,6 +552,35 @@ module Aws::S3Tables
     #   The Amazon Resource Name (ARN) of the table bucket.
     #   @return [String]
     #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/GetTableBucketMetricsConfigurationRequest AWS API Documentation
+    #
+    class GetTableBucketMetricsConfigurationRequest < Struct.new(
+      :table_bucket_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] table_bucket_arn
+    #   The Amazon Resource Name (ARN) of the table bucket.
+    #   @return [String]
+    #
+    # @!attribute [rw] id
+    #   The unique identifier of the metrics configuration.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/GetTableBucketMetricsConfigurationResponse AWS API Documentation
+    #
+    class GetTableBucketMetricsConfigurationResponse < Struct.new(
+      :table_bucket_arn,
+      :id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] table_bucket_arn
+    #   The Amazon Resource Name (ARN) of the table bucket.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/GetTableBucketPolicyRequest AWS API Documentation
     #
     class GetTableBucketPolicyRequest < Struct.new(
@@ -362,6 +597,38 @@ module Aws::S3Tables
     #
     class GetTableBucketPolicyResponse < Struct.new(
       :resource_policy)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] table_bucket_arn
+    #   The Amazon Resource Name (ARN) of the table bucket.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/GetTableBucketReplicationRequest AWS API Documentation
+    #
+    class GetTableBucketReplicationRequest < Struct.new(
+      :table_bucket_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] version_token
+    #   A version token that represents the current state of the replication
+    #   configuration. Use this token when updating the configuration to
+    #   ensure consistency.
+    #   @return [String]
+    #
+    # @!attribute [rw] configuration
+    #   The replication configuration for the table bucket, including the
+    #   IAM role and replication rules.
+    #   @return [Types::TableBucketReplicationConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/GetTableBucketReplicationResponse AWS API Documentation
+    #
+    class GetTableBucketReplicationResponse < Struct.new(
+      :version_token,
+      :configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -394,13 +661,82 @@ module Aws::S3Tables
     #   The date and time the table bucket was created.
     #   @return [Time]
     #
+    # @!attribute [rw] table_bucket_id
+    #   The unique identifier of the table bucket.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The type of the table bucket.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/GetTableBucketResponse AWS API Documentation
     #
     class GetTableBucketResponse < Struct.new(
       :arn,
       :name,
       :owner_account_id,
-      :created_at)
+      :created_at,
+      :table_bucket_id,
+      :type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] table_bucket_arn
+    #   The Amazon Resource Name (ARN) of the table bucket.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/GetTableBucketStorageClassRequest AWS API Documentation
+    #
+    class GetTableBucketStorageClassRequest < Struct.new(
+      :table_bucket_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] storage_class_configuration
+    #   The storage class configuration for the table bucket.
+    #   @return [Types::StorageClassConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/GetTableBucketStorageClassResponse AWS API Documentation
+    #
+    class GetTableBucketStorageClassResponse < Struct.new(
+      :storage_class_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] table_bucket_arn
+    #   The Amazon Resource Name (ARN) of the table bucket containing the
+    #   table.
+    #   @return [String]
+    #
+    # @!attribute [rw] namespace
+    #   The namespace associated with the table.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the table.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/GetTableEncryptionRequest AWS API Documentation
+    #
+    class GetTableEncryptionRequest < Struct.new(
+      :table_bucket_arn,
+      :namespace,
+      :name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] encryption_configuration
+    #   The encryption configuration for the table.
+    #   @return [Types::EncryptionConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/GetTableEncryptionResponse AWS API Documentation
+    #
+    class GetTableEncryptionResponse < Struct.new(
+      :encryption_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -449,11 +785,12 @@ module Aws::S3Tables
     #   @return [String]
     #
     # @!attribute [rw] namespace
-    #   The name of the namespace the table is associated with.     </p>
+    #   The name of the namespace the table is associated with.
     #   @return [String]
     #
     # @!attribute [rw] name
-    #   The name of the maintenance job.
+    #   The name of the table containing the maintenance job status you want
+    #   to check.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/GetTableMaintenanceJobStatusRequest AWS API Documentation
@@ -562,6 +899,135 @@ module Aws::S3Tables
       include Aws::Structure
     end
 
+    # @!attribute [rw] table_arn
+    #   The Amazon Resource Name (ARN) of the table.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/GetTableRecordExpirationConfigurationRequest AWS API Documentation
+    #
+    class GetTableRecordExpirationConfigurationRequest < Struct.new(
+      :table_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] configuration
+    #   The record expiration configuration for the table, including the
+    #   status and retention settings.
+    #   @return [Types::TableRecordExpirationConfigurationValue]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/GetTableRecordExpirationConfigurationResponse AWS API Documentation
+    #
+    class GetTableRecordExpirationConfigurationResponse < Struct.new(
+      :configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] table_arn
+    #   The Amazon Resource Name (ARN) of the table.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/GetTableRecordExpirationJobStatusRequest AWS API Documentation
+    #
+    class GetTableRecordExpirationJobStatusRequest < Struct.new(
+      :table_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] status
+    #   The current status of the most recent expiration job.
+    #   @return [String]
+    #
+    # @!attribute [rw] last_run_timestamp
+    #   The timestamp when the expiration job was last executed.
+    #   @return [Time]
+    #
+    # @!attribute [rw] failure_message
+    #   If the job failed, this field contains an error message describing
+    #   the failure reason.
+    #   @return [String]
+    #
+    # @!attribute [rw] metrics
+    #   Metrics about the most recent expiration job execution, including
+    #   the number of records and files deleted.
+    #   @return [Types::TableRecordExpirationJobMetrics]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/GetTableRecordExpirationJobStatusResponse AWS API Documentation
+    #
+    class GetTableRecordExpirationJobStatusResponse < Struct.new(
+      :status,
+      :last_run_timestamp,
+      :failure_message,
+      :metrics)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] table_arn
+    #   The Amazon Resource Name (ARN) of the table.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/GetTableReplicationRequest AWS API Documentation
+    #
+    class GetTableReplicationRequest < Struct.new(
+      :table_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] version_token
+    #   A version token that represents the current state of the table's
+    #   replication configuration. Use this token when updating the
+    #   configuration to ensure consistency.
+    #   @return [String]
+    #
+    # @!attribute [rw] configuration
+    #   The replication configuration for the table, including the IAM role
+    #   and replication rules.
+    #   @return [Types::TableReplicationConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/GetTableReplicationResponse AWS API Documentation
+    #
+    class GetTableReplicationResponse < Struct.new(
+      :version_token,
+      :configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] table_arn
+    #   The Amazon Resource Name (ARN) of the table.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/GetTableReplicationStatusRequest AWS API Documentation
+    #
+    class GetTableReplicationStatusRequest < Struct.new(
+      :table_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] source_table_arn
+    #   The Amazon Resource Name (ARN) of the source table being replicated.
+    #   @return [String]
+    #
+    # @!attribute [rw] destinations
+    #   An array of status information for each replication destination,
+    #   including the current state, last successful update, and any error
+    #   messages.
+    #   @return [Array<Types::ReplicationDestinationStatusModel>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/GetTableReplicationStatusResponse AWS API Documentation
+    #
+    class GetTableReplicationStatusResponse < Struct.new(
+      :source_table_arn,
+      :destinations)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] table_bucket_arn
     #   The Amazon Resource Name (ARN) of the table bucket associated with
     #   the table.
@@ -575,12 +1041,17 @@ module Aws::S3Tables
     #   The name of the table.
     #   @return [String]
     #
+    # @!attribute [rw] table_arn
+    #   The Amazon Resource Name (ARN) of the table.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/GetTableRequest AWS API Documentation
     #
     class GetTableRequest < Struct.new(
       :table_bucket_arn,
       :namespace,
-      :name)
+      :name,
+      :table_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -600,6 +1071,10 @@ module Aws::S3Tables
     # @!attribute [rw] namespace
     #   The namespace associated with the table.
     #   @return [Array<String>]
+    #
+    # @!attribute [rw] namespace_id
+    #   The unique identifier of the namespace containing this table.
+    #   @return [String]
     #
     # @!attribute [rw] version_token
     #   The version token of the table.
@@ -641,6 +1116,15 @@ module Aws::S3Tables
     #   The format of the table.
     #   @return [String]
     #
+    # @!attribute [rw] table_bucket_id
+    #   The unique identifier of the table bucket containing this table.
+    #   @return [String]
+    #
+    # @!attribute [rw] managed_table_information
+    #   If this table is managed by S3 Tables, contains additional
+    #   information such as replication details.
+    #   @return [Types::ManagedTableInformation]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/GetTableResponse AWS API Documentation
     #
     class GetTableResponse < Struct.new(
@@ -648,6 +1132,7 @@ module Aws::S3Tables
       :type,
       :table_arn,
       :namespace,
+      :namespace_id,
       :version_token,
       :metadata_location,
       :warehouse_location,
@@ -657,7 +1142,44 @@ module Aws::S3Tables
       :modified_at,
       :modified_by,
       :owner_account_id,
-      :format)
+      :format,
+      :table_bucket_id,
+      :managed_table_information)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] table_bucket_arn
+    #   The Amazon Resource Name (ARN) of the table bucket that contains the
+    #   table.
+    #   @return [String]
+    #
+    # @!attribute [rw] namespace
+    #   The namespace associated with the table.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the table.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/GetTableStorageClassRequest AWS API Documentation
+    #
+    class GetTableStorageClassRequest < Struct.new(
+      :table_bucket_arn,
+      :namespace,
+      :name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] storage_class_configuration
+    #   The storage class configuration for the table.
+    #   @return [Types::StorageClassConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/GetTableStorageClassResponse AWS API Documentation
+    #
+    class GetTableStorageClassResponse < Struct.new(
+      :storage_class_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -668,10 +1190,16 @@ module Aws::S3Tables
     #   The target file size for the table in MB.
     #   @return [Integer]
     #
+    # @!attribute [rw] strategy
+    #   The compaction strategy to use for the table. This determines how
+    #   files are selected and combined during compaction operations.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/IcebergCompactionSettings AWS API Documentation
     #
     class IcebergCompactionSettings < Struct.new(
-      :target_file_size_mb)
+      :target_file_size_mb,
+      :strategy)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -679,13 +1207,111 @@ module Aws::S3Tables
     # Contains details about the metadata for an Iceberg table.
     #
     # @!attribute [rw] schema
-    #   The schema for an Iceberg table.
+    #   The schema for an Iceberg table. Use this property to define table
+    #   schemas with primitive types only. For schemas that include nested
+    #   or complex types such as `struct`, `list`, or `map`, use `schemaV2`
+    #   instead.
     #   @return [Types::IcebergSchema]
+    #
+    # @!attribute [rw] schema_v2
+    #   The schema for an Iceberg table using the V2 format. Use this
+    #   property to define table schemas that include nested or complex data
+    #   types such as `struct`, `list`, or `map`, in addition to primitive
+    #   types. For schemas with only primitive types, you can use either
+    #   `schema` or `schemaV2`.
+    #   @return [Types::IcebergSchemaV2]
+    #
+    # @!attribute [rw] partition_spec
+    #   The partition specification for the Iceberg table. Partitioning
+    #   organizes data into separate files based on the values of one or
+    #   more fields, which can improve query performance by reducing the
+    #   amount of data scanned. Each partition field applies a transform
+    #   (such as identity, year, month, or bucket) to a single field.
+    #   @return [Types::IcebergPartitionSpec]
+    #
+    # @!attribute [rw] write_order
+    #   The sort order for the Iceberg table. Sort order defines how data is
+    #   sorted within data files, which can improve query performance by
+    #   enabling more efficient data skipping and filtering.
+    #   @return [Types::IcebergSortOrder]
+    #
+    # @!attribute [rw] properties
+    #   A map of custom configuration properties for the Iceberg table.
+    #   @return [Hash<String,String>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/IcebergMetadata AWS API Documentation
     #
     class IcebergMetadata < Struct.new(
-      :schema)
+      :schema,
+      :schema_v2,
+      :partition_spec,
+      :write_order,
+      :properties)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines a single partition field in an Iceberg partition
+    # specification.
+    #
+    # @!attribute [rw] source_id
+    #   The ID of the source schema field to partition by. This must
+    #   reference a valid field ID from the table schema.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] transform
+    #   The partition transform to apply to the source field. Supported
+    #   transforms include `identity`, `year`, `month`, `day`, `hour`,
+    #   `bucket`, and `truncate`. For more information, see the [Apache
+    #   Iceberg partition transforms documentation][1].
+    #
+    #
+    #
+    #   [1]: https://iceberg.apache.org/spec/#partition-transforms
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name for this partition field. This name is used in the
+    #   partitioned file paths.
+    #   @return [String]
+    #
+    # @!attribute [rw] field_id
+    #   An optional unique identifier for this partition field. If not
+    #   specified, S3 Tables automatically assigns a field ID.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/IcebergPartitionField AWS API Documentation
+    #
+    class IcebergPartitionField < Struct.new(
+      :source_id,
+      :transform,
+      :name,
+      :field_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines how data in an Iceberg table is partitioned. Partitioning
+    # helps optimize query performance by organizing data into separate
+    # files based on field values. Each partition field specifies a
+    # transform to apply to a source field.
+    #
+    # @!attribute [rw] fields
+    #   The list of partition fields that define how the table data is
+    #   partitioned. Each field specifies a source field and a transform to
+    #   apply. This field is required if `partitionSpec` is provided.
+    #   @return [Array<Types::IcebergPartitionField>]
+    #
+    # @!attribute [rw] spec_id
+    #   The unique identifier for this partition specification. If not
+    #   specified, defaults to `0`.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/IcebergPartitionSpec AWS API Documentation
+    #
+    class IcebergPartitionSpec < Struct.new(
+      :fields,
+      :spec_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -700,6 +1326,46 @@ module Aws::S3Tables
     #
     class IcebergSchema < Struct.new(
       :fields)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains details about the schema for an Iceberg table using the V2
+    # format. This schema format supports nested and complex data types such
+    # as `struct`, `list`, and `map`, in addition to primitive types.
+    #
+    # @!attribute [rw] type
+    #   The type of the top-level schema, which is always a `struct` type as
+    #   defined in the [Apache Iceberg specification][1]. This value must be
+    #   `struct`.
+    #
+    #
+    #
+    #   [1]: https://iceberg.apache.org/spec/#schemas-and-data-types
+    #   @return [String]
+    #
+    # @!attribute [rw] fields
+    #   The schema fields for the table. Each field defines a column in the
+    #   table, including its name, type, and whether it is required.
+    #   @return [Array<Types::SchemaV2Field>]
+    #
+    # @!attribute [rw] schema_id
+    #   An optional unique identifier for the schema. Schema IDs are used by
+    #   Apache Iceberg to track schema evolution.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] identifier_field_ids
+    #   A list of field IDs that are used as the identifier fields for the
+    #   table. Identifier fields uniquely identify a row in the table.
+    #   @return [Array<Integer>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/IcebergSchemaV2 AWS API Documentation
+    #
+    class IcebergSchemaV2 < Struct.new(
+      :type,
+      :fields,
+      :schema_id,
+      :identifier_field_ids)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -727,17 +1393,77 @@ module Aws::S3Tables
       include Aws::Structure
     end
 
+    # Defines a single sort field in an Iceberg sort order specification.
+    #
+    # @!attribute [rw] source_id
+    #   The ID of the source schema field to sort by. This must reference a
+    #   valid field ID from the table schema.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] transform
+    #   The transform to apply to the source field before sorting. Use
+    #   `identity` to sort by the field value directly, or specify other
+    #   transforms as needed.
+    #   @return [String]
+    #
+    # @!attribute [rw] direction
+    #   The sort direction. Valid values are `asc` for ascending order or
+    #   `desc` for descending order.
+    #   @return [String]
+    #
+    # @!attribute [rw] null_order
+    #   Specifies how null values are ordered. Valid values are
+    #   `nulls-first` to place nulls before non-null values, or `nulls-last`
+    #   to place nulls after non-null values.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/IcebergSortField AWS API Documentation
+    #
+    class IcebergSortField < Struct.new(
+      :source_id,
+      :transform,
+      :direction,
+      :null_order)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines the sort order for data within an Iceberg table. Sorting data
+    # can improve query performance by enabling more efficient data
+    # skipping.
+    #
+    # @!attribute [rw] order_id
+    #   The unique identifier for this sort order. If not specified,
+    #   defaults to `1`. The order ID is used by Apache Iceberg to track
+    #   sort order evolution.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] fields
+    #   The list of sort fields that define how data is sorted within files.
+    #   Each field specifies a source field, sort direction, and null
+    #   ordering. This field is required if `writeOrder` is provided.
+    #   @return [Array<Types::IcebergSortField>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/IcebergSortOrder AWS API Documentation
+    #
+    class IcebergSortOrder < Struct.new(
+      :order_id,
+      :fields)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains details about the unreferenced file removal settings for an
     # Iceberg table bucket.
     #
     # @!attribute [rw] unreferenced_days
     #   The number of days an object has to be unreferenced before it is
-    #   marked as non-current.      </p>
+    #   marked as non-current.
     #   @return [Integer]
     #
     # @!attribute [rw] non_current_days
     #   The number of days an object has to be non-current before it is
-    #   deleted.     </p>
+    #   deleted.
     #   @return [Integer]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/IcebergUnreferencedFileRemovalSettings AWS API Documentation
@@ -758,6 +1484,26 @@ module Aws::S3Tables
     #
     class InternalServerErrorException < Struct.new(
       :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about the most recent successful replication
+    # update to a destination.
+    #
+    # @!attribute [rw] metadata_location
+    #   The S3 location of the metadata that was successfully replicated.
+    #   @return [String]
+    #
+    # @!attribute [rw] timestamp
+    #   The timestamp when the replication update completed successfully.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/LastSuccessfulReplicatedUpdate AWS API Documentation
+    #
+    class LastSuccessfulReplicatedUpdate < Struct.new(
+      :metadata_location,
+      :timestamp)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -824,12 +1570,17 @@ module Aws::S3Tables
     #   The maximum number of table buckets to return in the list.
     #   @return [Integer]
     #
+    # @!attribute [rw] type
+    #   The type of table buckets to filter by in the list.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/ListTableBucketsRequest AWS API Documentation
     #
     class ListTableBucketsRequest < Struct.new(
       :prefix,
       :continuation_token,
-      :max_buckets)
+      :max_buckets,
+      :type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -905,6 +1656,74 @@ module Aws::S3Tables
       include Aws::Structure
     end
 
+    # @!attribute [rw] resource_arn
+    #   The Amazon Resource Name (ARN) of the Amazon S3 Tables resource that
+    #   you want to list tags for. The tagged resource can be a table bucket
+    #   or a table. For a list of all S3 resources that support tagging, see
+    #   [Managing tags for Amazon S3 resources][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/tagging.html#manage-tags
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/ListTagsForResourceRequest AWS API Documentation
+    #
+    class ListTagsForResourceRequest < Struct.new(
+      :resource_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] tags
+    #   The user-defined tags that are applied to the resource. For more
+    #   information, see [Tagging for cost allocation or attribute-based
+    #   access control (ABAC)][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/tagging.html
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/ListTagsForResourceResponse AWS API Documentation
+    #
+    class ListTagsForResourceResponse < Struct.new(
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about tables that are managed by S3 Tables,
+    # including replication information for replica tables.
+    #
+    # @!attribute [rw] replication_information
+    #   If this table is a replica, contains information about the source
+    #   table from which it is replicated.
+    #   @return [Types::ReplicationInformation]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/ManagedTableInformation AWS API Documentation
+    #
+    class ManagedTableInformation < Struct.new(
+      :replication_information)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The requested operation is not allowed on this resource. This may
+    # occur when attempting to modify a resource that is managed by a
+    # service or has restrictions that prevent the operation.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/MethodNotAllowedException AWS API Documentation
+    #
+    class MethodNotAllowedException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains details about a namespace.
     #
     # @!attribute [rw] namespace
@@ -923,13 +1742,24 @@ module Aws::S3Tables
     #   The ID of the account that owns the namespace.
     #   @return [String]
     #
+    # @!attribute [rw] namespace_id
+    #   The system-assigned unique identifier for the namespace.
+    #   @return [String]
+    #
+    # @!attribute [rw] table_bucket_id
+    #   The system-assigned unique identifier for the table bucket that
+    #   contains this namespace.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/NamespaceSummary AWS API Documentation
     #
     class NamespaceSummary < Struct.new(
       :namespace,
       :created_at,
       :created_by,
-      :owner_account_id)
+      :owner_account_id,
+      :namespace_id,
+      :table_bucket_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -944,6 +1774,23 @@ module Aws::S3Tables
     #
     class NotFoundException < Struct.new(
       :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] table_bucket_arn
+    #   The Amazon Resource Name (ARN) of the table bucket.
+    #   @return [String]
+    #
+    # @!attribute [rw] encryption_configuration
+    #   The encryption configuration to apply to the table bucket.
+    #   @return [Types::EncryptionConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/PutTableBucketEncryptionRequest AWS API Documentation
+    #
+    class PutTableBucketEncryptionRequest < Struct.new(
+      :table_bucket_arn,
+      :encryption_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -976,6 +1823,18 @@ module Aws::S3Tables
     #   The Amazon Resource Name (ARN) of the table bucket.
     #   @return [String]
     #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/PutTableBucketMetricsConfigurationRequest AWS API Documentation
+    #
+    class PutTableBucketMetricsConfigurationRequest < Struct.new(
+      :table_bucket_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] table_bucket_arn
+    #   The Amazon Resource Name (ARN) of the table bucket.
+    #   @return [String]
+    #
     # @!attribute [rw] resource_policy
     #   The `JSON` that defines the policy.
     #   @return [String]
@@ -990,6 +1849,68 @@ module Aws::S3Tables
     end
 
     # @!attribute [rw] table_bucket_arn
+    #   The Amazon Resource Name (ARN) of the source table bucket.
+    #   @return [String]
+    #
+    # @!attribute [rw] version_token
+    #   A version token from a previous GetTableBucketReplication call. Use
+    #   this token to ensure you're updating the expected version of the
+    #   configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] configuration
+    #   The replication configuration to apply, including the IAM role and
+    #   replication rules.
+    #   @return [Types::TableBucketReplicationConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/PutTableBucketReplicationRequest AWS API Documentation
+    #
+    class PutTableBucketReplicationRequest < Struct.new(
+      :table_bucket_arn,
+      :version_token,
+      :configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] version_token
+    #   A new version token representing the updated replication
+    #   configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the replication configuration operation.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/PutTableBucketReplicationResponse AWS API Documentation
+    #
+    class PutTableBucketReplicationResponse < Struct.new(
+      :version_token,
+      :status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] table_bucket_arn
+    #   The Amazon Resource Name (ARN) of the table bucket.
+    #   @return [String]
+    #
+    # @!attribute [rw] storage_class_configuration
+    #   The storage class configuration to apply to the table bucket. This
+    #   configuration will serve as the default for new tables created in
+    #   this bucket.
+    #   @return [Types::StorageClassConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/PutTableBucketStorageClassRequest AWS API Documentation
+    #
+    class PutTableBucketStorageClassRequest < Struct.new(
+      :table_bucket_arn,
+      :storage_class_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] table_bucket_arn
     #   The Amazon Resource Name (ARN) of the table associated with the
     #   maintenance configuration.
     #   @return [String]
@@ -999,7 +1920,7 @@ module Aws::S3Tables
     #   @return [String]
     #
     # @!attribute [rw] name
-    #   The name of the maintenance configuration.
+    #   The name of the table.
     #   @return [String]
     #
     # @!attribute [rw] type
@@ -1050,6 +1971,67 @@ module Aws::S3Tables
       include Aws::Structure
     end
 
+    # @!attribute [rw] table_arn
+    #   The Amazon Resource Name (ARN) of the table.
+    #   @return [String]
+    #
+    # @!attribute [rw] value
+    #   The record expiration configuration to apply to the table, including
+    #   the status (`enabled` or `disabled`) and retention period in days.
+    #   @return [Types::TableRecordExpirationConfigurationValue]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/PutTableRecordExpirationConfigurationRequest AWS API Documentation
+    #
+    class PutTableRecordExpirationConfigurationRequest < Struct.new(
+      :table_arn,
+      :value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] table_arn
+    #   The Amazon Resource Name (ARN) of the source table.
+    #   @return [String]
+    #
+    # @!attribute [rw] version_token
+    #   A version token from a previous GetTableReplication call. Use this
+    #   token to ensure you're updating the expected version of the
+    #   configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] configuration
+    #   The replication configuration to apply to the table, including the
+    #   IAM role and replication rules.
+    #   @return [Types::TableReplicationConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/PutTableReplicationRequest AWS API Documentation
+    #
+    class PutTableReplicationRequest < Struct.new(
+      :table_arn,
+      :version_token,
+      :configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] version_token
+    #   A new version token representing the updated replication
+    #   configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the replication configuration operation.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/PutTableReplicationResponse AWS API Documentation
+    #
+    class PutTableReplicationResponse < Struct.new(
+      :version_token,
+      :status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] table_bucket_arn
     #   The Amazon Resource Name (ARN) of the table bucket.
     #   @return [String]
@@ -1087,7 +2069,82 @@ module Aws::S3Tables
       include Aws::Structure
     end
 
+    # Specifies a destination table bucket for replication.
+    #
+    # @!attribute [rw] destination_table_bucket_arn
+    #   The Amazon Resource Name (ARN) of the destination table bucket where
+    #   tables will be replicated.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/ReplicationDestination AWS API Documentation
+    #
+    class ReplicationDestination < Struct.new(
+      :destination_table_bucket_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains status information for a replication destination, including
+    # the current replication state, last successful update, and any error
+    # messages.
+    #
+    # @!attribute [rw] replication_status
+    #   The current status of replication to this destination.
+    #   @return [String]
+    #
+    # @!attribute [rw] destination_table_bucket_arn
+    #   The Amazon Resource Name (ARN) of the destination table bucket.
+    #   @return [String]
+    #
+    # @!attribute [rw] destination_table_arn
+    #   The Amazon Resource Name (ARN) of the destination table.
+    #   @return [String]
+    #
+    # @!attribute [rw] last_successful_replicated_update
+    #   Information about the most recent successful replication update to
+    #   this destination.
+    #   @return [Types::LastSuccessfulReplicatedUpdate]
+    #
+    # @!attribute [rw] failure_message
+    #   If replication has failed, this field contains an error message
+    #   describing the failure reason.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/ReplicationDestinationStatusModel AWS API Documentation
+    #
+    class ReplicationDestinationStatusModel < Struct.new(
+      :replication_status,
+      :destination_table_bucket_arn,
+      :destination_table_arn,
+      :last_successful_replicated_update,
+      :failure_message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about the source of a replicated table.
+    #
+    # @!attribute [rw] source_table_arn
+    #   The Amazon Resource Name (ARN) of the source table from which this
+    #   table is replicated.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/ReplicationInformation AWS API Documentation
+    #
+    class ReplicationInformation < Struct.new(
+      :source_table_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains details about a schema field.
+    #
+    # @!attribute [rw] id
+    #   An optional unique identifier for the schema field. Field IDs are
+    #   used by Apache Iceberg to track schema evolution and maintain
+    #   compatibility across schema changes. If not specified, S3 Tables
+    #   automatically assigns field IDs.
+    #   @return [Integer]
     #
     # @!attribute [rw] name
     #   The name of the field.
@@ -1113,9 +2170,78 @@ module Aws::S3Tables
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/SchemaField AWS API Documentation
     #
     class SchemaField < Struct.new(
+      :id,
       :name,
       :type,
       :required)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains details about a schema field in the V2 format. This field
+    # format supports nested and complex data types such as `struct`,
+    # `list`, and `map`, in addition to primitive types.
+    #
+    # @!attribute [rw] id
+    #   The unique identifier for the schema field. Field IDs are used by
+    #   Apache Iceberg to track schema evolution and maintain compatibility
+    #   across schema changes.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] name
+    #   The name of the field.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The data type of the field. This can be a primitive type string such
+    #   as `boolean`, `int`, `long`, `float`, `double`, `string`, `binary`,
+    #   `date`, `timestamp`, or `timestamptz`, or a complex type represented
+    #   as a JSON object for nested types such as `struct`, `list`, or
+    #   `map`. For more information, see the [Apache Iceberg schemas and
+    #   data types documentation][1].
+    #
+    #
+    #
+    #   [1]: https://iceberg.apache.org/spec/#schemas-and-data-types
+    #   @return [Hash,Array,String,Numeric,Boolean]
+    #
+    # @!attribute [rw] required
+    #   A Boolean value that specifies whether values are required for each
+    #   row in this field. If this is `true`, the field does not allow null
+    #   values.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] doc
+    #   An optional description of the field.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/SchemaV2Field AWS API Documentation
+    #
+    class SchemaV2Field < Struct.new(
+      :id,
+      :name,
+      :type,
+      :required,
+      :doc)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration details for the storage class of tables or table
+    # buckets. This allows you to optimize storage costs by selecting the
+    # appropriate storage class based on your access patterns and
+    # performance requirements.
+    #
+    # @!attribute [rw] storage_class
+    #   The storage class for the table or table bucket. Valid values
+    #   include storage classes optimized for different access patterns and
+    #   cost profiles.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/StorageClassConfiguration AWS API Documentation
+    #
+    class StorageClassConfiguration < Struct.new(
+      :storage_class)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1164,6 +2290,45 @@ module Aws::S3Tables
       class Unknown < TableBucketMaintenanceSettings; end
     end
 
+    # The replication configuration for a table bucket. This configuration
+    # defines how tables in the source bucket are replicated to destination
+    # table buckets, including the IAM role used for replication.
+    #
+    # @!attribute [rw] role
+    #   The Amazon Resource Name (ARN) of the IAM role that S3 Tables
+    #   assumes to replicate tables on your behalf.
+    #   @return [String]
+    #
+    # @!attribute [rw] rules
+    #   An array of replication rules that define which tables to replicate
+    #   and where to replicate them.
+    #   @return [Array<Types::TableBucketReplicationRule>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/TableBucketReplicationConfiguration AWS API Documentation
+    #
+    class TableBucketReplicationConfiguration < Struct.new(
+      :role,
+      :rules)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines a rule for replicating tables from a source table bucket to
+    # one or more destination table buckets.
+    #
+    # @!attribute [rw] destinations
+    #   An array of destination table buckets where tables should be
+    #   replicated.
+    #   @return [Array<Types::ReplicationDestination>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/TableBucketReplicationRule AWS API Documentation
+    #
+    class TableBucketReplicationRule < Struct.new(
+      :destinations)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains details about a table bucket.
     #
     # @!attribute [rw] arn
@@ -1182,19 +2347,28 @@ module Aws::S3Tables
     #   The date and time the table bucket was created at.
     #   @return [Time]
     #
+    # @!attribute [rw] table_bucket_id
+    #   The system-assigned unique identifier for the table bucket.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The type of the table bucket.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/TableBucketSummary AWS API Documentation
     #
     class TableBucketSummary < Struct.new(
       :arn,
       :name,
       :owner_account_id,
-      :created_at)
+      :created_at,
+      :table_bucket_id,
+      :type)
       SENSITIVE = []
       include Aws::Structure
     end
 
-    # Contains the values that define a maintenance configuration for a
-    # table.
+    # The values that define a maintenance configuration for a table.
     #
     # @!attribute [rw] status
     #   The status of the maintenance configuration.
@@ -1290,6 +2464,111 @@ module Aws::S3Tables
       class Unknown < TableMetadata; end
     end
 
+    # The expiration configuration settings for records in a table, and the
+    # status of the configuration. If the status of the configuration is
+    # enabled, records expire and are automatically removed after the number
+    # of days specified in the record expiration settings for the table.
+    #
+    # @!attribute [rw] status
+    #   The status of the expiration settings for records in the table.
+    #   @return [String]
+    #
+    # @!attribute [rw] settings
+    #   The expiration settings for records in the table.
+    #   @return [Types::TableRecordExpirationSettings]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/TableRecordExpirationConfigurationValue AWS API Documentation
+    #
+    class TableRecordExpirationConfigurationValue < Struct.new(
+      :status,
+      :settings)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Provides metrics for the record expiration job that most recently ran
+    # for a table. The metrics provide insight into the amount of data that
+    # was removed when the job ran.
+    #
+    # @!attribute [rw] deleted_data_files
+    #   The total number of data files that were removed when the job ran.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] deleted_records
+    #   The total number of records that were removed when the job ran.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] removed_files_size
+    #   The total size (in bytes) of the data files that were removed when
+    #   the job ran.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/TableRecordExpirationJobMetrics AWS API Documentation
+    #
+    class TableRecordExpirationJobMetrics < Struct.new(
+      :deleted_data_files,
+      :deleted_records,
+      :removed_files_size)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The record expiration setting that specifies when records expire and
+    # are automatically removed from a table.
+    #
+    # @!attribute [rw] days
+    #   If you enable record expiration for a table, you can specify the
+    #   number of days to retain your table records. For example, to retain
+    #   your table records for one year, set this value to `365`.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/TableRecordExpirationSettings AWS API Documentation
+    #
+    class TableRecordExpirationSettings < Struct.new(
+      :days)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The replication configuration for an individual table. This
+    # configuration defines how the table is replicated to destination
+    # tables.
+    #
+    # @!attribute [rw] role
+    #   The Amazon Resource Name (ARN) of the IAM role that S3 Tables
+    #   assumes to replicate the table on your behalf.
+    #   @return [String]
+    #
+    # @!attribute [rw] rules
+    #   An array of replication rules that define where this table should be
+    #   replicated.
+    #   @return [Array<Types::TableReplicationRule>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/TableReplicationConfiguration AWS API Documentation
+    #
+    class TableReplicationConfiguration < Struct.new(
+      :role,
+      :rules)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines a rule for replicating a table to one or more destination
+    # tables.
+    #
+    # @!attribute [rw] destinations
+    #   An array of destination table buckets where this table should be
+    #   replicated.
+    #   @return [Array<Types::ReplicationDestination>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/TableReplicationRule AWS API Documentation
+    #
+    class TableReplicationRule < Struct.new(
+      :destinations)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains details about a table.
     #
     # @!attribute [rw] namespace
@@ -1316,6 +2595,20 @@ module Aws::S3Tables
     #   The date and time the table was last modified at.
     #   @return [Time]
     #
+    # @!attribute [rw] managed_by_service
+    #   The Amazon Web Services service managing this table, if applicable.
+    #   For example, a replicated table is managed by the S3 Tables
+    #   replication service.
+    #   @return [String]
+    #
+    # @!attribute [rw] namespace_id
+    #   The unique identifier for the namespace that contains this table.
+    #   @return [String]
+    #
+    # @!attribute [rw] table_bucket_id
+    #   The unique identifier for the table bucket that contains this table.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/TableSummary AWS API Documentation
     #
     class TableSummary < Struct.new(
@@ -1324,10 +2617,47 @@ module Aws::S3Tables
       :type,
       :table_arn,
       :created_at,
-      :modified_at)
+      :modified_at,
+      :managed_by_service,
+      :namespace_id,
+      :table_bucket_id)
       SENSITIVE = []
       include Aws::Structure
     end
+
+    # @!attribute [rw] resource_arn
+    #   The Amazon Resource Name (ARN) of the Amazon S3 Tables resource that
+    #   you're applying tags to. The tagged resource can be a table bucket
+    #   or a table. For a list of all S3 resources that support tagging, see
+    #   [Managing tags for Amazon S3 resources][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/tagging.html#manage-tags
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   The user-defined tag that you want to add to the specified S3 Tables
+    #   resource. For more information, see [Tagging for cost allocation or
+    #   attribute-based access control (ABAC)][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/tagging.html
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/TagResourceRequest AWS API Documentation
+    #
+    class TagResourceRequest < Struct.new(
+      :resource_arn,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/TagResourceResponse AWS API Documentation
+    #
+    class TagResourceResponse < Aws::EmptyStructure; end
 
     # The limit on the number of requests per second was exceeded.
     #
@@ -1341,6 +2671,40 @@ module Aws::S3Tables
       SENSITIVE = []
       include Aws::Structure
     end
+
+    # @!attribute [rw] resource_arn
+    #   The Amazon Resource Name (ARN) of the Amazon S3 Tables resource that
+    #   you're removing tags from. The tagged resource can be a table
+    #   bucket or a table. For a list of all S3 resources that support
+    #   tagging, see [Managing tags for Amazon S3 resources][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/tagging.html#manage-tags
+    #   @return [String]
+    #
+    # @!attribute [rw] tag_keys
+    #   The array of tag keys that you're removing from the S3 Tables
+    #   resource. For more information, see [Tagging for cost allocation or
+    #   attribute-based access control (ABAC)][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/tagging.html
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/UntagResourceRequest AWS API Documentation
+    #
+    class UntagResourceRequest < Struct.new(
+      :resource_arn,
+      :tag_keys)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/UntagResourceResponse AWS API Documentation
+    #
+    class UntagResourceResponse < Aws::EmptyStructure; end
 
     # @!attribute [rw] table_bucket_arn
     #   The Amazon Resource Name (ARN) of the table bucket.

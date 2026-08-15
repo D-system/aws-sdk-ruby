@@ -26,8 +26,8 @@
       "errors":[
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ConflictException"},
         {"shape":"ValidationException"},
+        {"shape":"ConflictException"},
         {"shape":"TooManyTagsException"},
         {"shape":"ServiceQuotaExceededException"}
       ]
@@ -43,8 +43,8 @@
       "errors":[
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ConflictException"},
         {"shape":"ValidationException"},
+        {"shape":"ConflictException"},
         {"shape":"AccessDeniedException"},
         {"shape":"ThrottlingException"}
       ]
@@ -77,9 +77,28 @@
       "output":{"shape":"CreateNamespaceResponse"},
       "errors":[
         {"shape":"InternalServerException"},
-        {"shape":"ConflictException"},
         {"shape":"ValidationException"},
+        {"shape":"ConflictException"},
         {"shape":"TooManyTagsException"}
+      ],
+      "idempotent":true
+    },
+    "CreateReservation":{
+      "name":"CreateReservation",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"CreateReservationRequest"},
+      "output":{"shape":"CreateReservationResponse"},
+      "errors":[
+        {"shape":"InternalServerException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ValidationException"},
+        {"shape":"ConflictException"},
+        {"shape":"TooManyTagsException"},
+        {"shape":"ServiceQuotaExceededException"},
+        {"shape":"ThrottlingException"}
       ],
       "idempotent":true
     },
@@ -94,8 +113,8 @@
       "errors":[
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ConflictException"},
-        {"shape":"ValidationException"}
+        {"shape":"ValidationException"},
+        {"shape":"ConflictException"}
       ],
       "idempotent":true
     },
@@ -110,8 +129,8 @@
       "errors":[
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ConflictException"},
         {"shape":"ValidationException"},
+        {"shape":"ConflictException"},
         {"shape":"TooManyTagsException"},
         {"shape":"ServiceQuotaExceededException"}
       ],
@@ -146,8 +165,8 @@
       "errors":[
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ConflictException"},
         {"shape":"ValidationException"},
+        {"shape":"ConflictException"},
         {"shape":"ServiceQuotaExceededException"}
       ],
       "idempotent":true
@@ -164,8 +183,8 @@
         {"shape":"InternalServerException"},
         {"shape":"InsufficientCapacityException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ConflictException"},
         {"shape":"ValidationException"},
+        {"shape":"ConflictException"},
         {"shape":"TooManyTagsException"},
         {"shape":"Ipv6CidrBlockNotFoundException"}
       ],
@@ -182,8 +201,8 @@
       "errors":[
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ConflictException"},
         {"shape":"ValidationException"},
+        {"shape":"ConflictException"},
         {"shape":"AccessDeniedException"},
         {"shape":"ThrottlingException"}
       ]
@@ -215,8 +234,8 @@
       "errors":[
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ConflictException"},
-        {"shape":"ValidationException"}
+        {"shape":"ValidationException"},
+        {"shape":"ConflictException"}
       ],
       "idempotent":true
     },
@@ -260,8 +279,8 @@
       "errors":[
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ConflictException"},
-        {"shape":"ValidationException"}
+        {"shape":"ValidationException"},
+        {"shape":"ConflictException"}
       ],
       "idempotent":true
     },
@@ -293,8 +312,8 @@
       "errors":[
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ConflictException"},
-        {"shape":"ValidationException"}
+        {"shape":"ValidationException"},
+        {"shape":"ConflictException"}
       ],
       "idempotent":true
     },
@@ -309,8 +328,8 @@
       "errors":[
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ConflictException"},
-        {"shape":"ValidationException"}
+        {"shape":"ValidationException"},
+        {"shape":"ConflictException"}
       ],
       "idempotent":true
     },
@@ -339,8 +358,8 @@
       "errors":[
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ConflictException"},
         {"shape":"ValidationException"},
+        {"shape":"ConflictException"},
         {"shape":"AccessDeniedException"},
         {"shape":"ThrottlingException"}
       ]
@@ -358,6 +377,24 @@
         {"shape":"ResourceNotFoundException"},
         {"shape":"ConflictException"},
         {"shape":"ValidationException"}
+      ]
+    },
+    "GetIdentityCenterAuthToken":{
+      "name":"GetIdentityCenterAuthToken",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"GetIdentityCenterAuthTokenRequest"},
+      "output":{"shape":"GetIdentityCenterAuthTokenResponse"},
+      "errors":[
+        {"shape":"InternalServerException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ValidationException"},
+        {"shape":"ConflictException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"DryRunException"},
+        {"shape":"ThrottlingException"}
       ]
     },
     "GetNamespace":{
@@ -385,8 +422,38 @@
       "errors":[
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ConflictException"},
-        {"shape":"ValidationException"}
+        {"shape":"ValidationException"},
+        {"shape":"ConflictException"}
+      ]
+    },
+    "GetReservation":{
+      "name":"GetReservation",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"GetReservationRequest"},
+      "output":{"shape":"GetReservationResponse"},
+      "errors":[
+        {"shape":"InternalServerException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ValidationException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
+    "GetReservationOffering":{
+      "name":"GetReservationOffering",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"GetReservationOfferingRequest"},
+      "output":{"shape":"GetReservationOfferingResponse"},
+      "errors":[
+        {"shape":"InternalServerException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ValidationException"},
+        {"shape":"ThrottlingException"}
       ]
     },
     "GetResourcePolicy":{
@@ -455,9 +522,10 @@
       "errors":[
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ConflictException"},
         {"shape":"ValidationException"},
+        {"shape":"ConflictException"},
         {"shape":"AccessDeniedException"},
+        {"shape":"DryRunException"},
         {"shape":"ThrottlingException"}
       ]
     },
@@ -472,8 +540,8 @@
       "errors":[
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ConflictException"},
-        {"shape":"ValidationException"}
+        {"shape":"ValidationException"},
+        {"shape":"ConflictException"}
       ]
     },
     "GetWorkgroup":{
@@ -560,6 +628,34 @@
         {"shape":"ValidationException"}
       ]
     },
+    "ListReservationOfferings":{
+      "name":"ListReservationOfferings",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ListReservationOfferingsRequest"},
+      "output":{"shape":"ListReservationOfferingsResponse"},
+      "errors":[
+        {"shape":"InternalServerException"},
+        {"shape":"ValidationException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
+    "ListReservations":{
+      "name":"ListReservations",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ListReservationsRequest"},
+      "output":{"shape":"ListReservationsResponse"},
+      "errors":[
+        {"shape":"InternalServerException"},
+        {"shape":"ValidationException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
     "ListScheduledActions":{
       "name":"ListScheduledActions",
       "http":{
@@ -570,8 +666,8 @@
       "output":{"shape":"ListScheduledActionsResponse"},
       "errors":[
         {"shape":"InternalServerException"},
-        {"shape":"InvalidPaginationException"},
         {"shape":"ResourceNotFoundException"},
+        {"shape":"InvalidPaginationException"},
         {"shape":"ValidationException"}
       ]
     },
@@ -585,10 +681,10 @@
       "output":{"shape":"ListSnapshotCopyConfigurationsResponse"},
       "errors":[
         {"shape":"InternalServerException"},
-        {"shape":"InvalidPaginationException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ConflictException"},
-        {"shape":"ValidationException"}
+        {"shape":"InvalidPaginationException"},
+        {"shape":"ValidationException"},
+        {"shape":"ConflictException"}
       ]
     },
     "ListSnapshots":{
@@ -614,8 +710,8 @@
       "input":{"shape":"ListTableRestoreStatusRequest"},
       "output":{"shape":"ListTableRestoreStatusResponse"},
       "errors":[
-        {"shape":"InvalidPaginationException"},
         {"shape":"ResourceNotFoundException"},
+        {"shape":"InvalidPaginationException"},
         {"shape":"ValidationException"}
       ]
     },
@@ -660,10 +756,10 @@
       "output":{"shape":"ListUsageLimitsResponse"},
       "errors":[
         {"shape":"InternalServerException"},
-        {"shape":"InvalidPaginationException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ConflictException"},
-        {"shape":"ValidationException"}
+        {"shape":"InvalidPaginationException"},
+        {"shape":"ValidationException"},
+        {"shape":"ConflictException"}
       ]
     },
     "ListWorkgroups":{
@@ -690,8 +786,8 @@
       "errors":[
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ConflictException"},
         {"shape":"ValidationException"},
+        {"shape":"ConflictException"},
         {"shape":"ServiceQuotaExceededException"}
       ]
     },
@@ -706,8 +802,8 @@
       "errors":[
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ConflictException"},
-        {"shape":"ValidationException"}
+        {"shape":"ValidationException"},
+        {"shape":"ConflictException"}
       ]
     },
     "RestoreFromSnapshot":{
@@ -721,8 +817,8 @@
       "errors":[
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ConflictException"},
         {"shape":"ValidationException"},
+        {"shape":"ConflictException"},
         {"shape":"ServiceQuotaExceededException"}
       ],
       "idempotent":true
@@ -738,8 +834,8 @@
       "errors":[
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ConflictException"},
-        {"shape":"ValidationException"}
+        {"shape":"ValidationException"},
+        {"shape":"ConflictException"}
       ]
     },
     "RestoreTableFromSnapshot":{
@@ -753,8 +849,8 @@
       "errors":[
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ConflictException"},
-        {"shape":"ValidationException"}
+        {"shape":"ValidationException"},
+        {"shape":"ConflictException"}
       ]
     },
     "TagResource":{
@@ -799,8 +895,8 @@
       "errors":[
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ConflictException"},
         {"shape":"ValidationException"},
+        {"shape":"ConflictException"},
         {"shape":"AccessDeniedException"},
         {"shape":"ThrottlingException"}
       ]
@@ -821,6 +917,22 @@
         {"shape":"AccessDeniedException"}
       ]
     },
+    "UpdateLakehouseConfiguration":{
+      "name":"UpdateLakehouseConfiguration",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"UpdateLakehouseConfigurationRequest"},
+      "output":{"shape":"UpdateLakehouseConfigurationResponse"},
+      "errors":[
+        {"shape":"InternalServerException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ConflictException"},
+        {"shape":"ValidationException"},
+        {"shape":"DryRunException"}
+      ]
+    },
     "UpdateNamespace":{
       "name":"UpdateNamespace",
       "http":{
@@ -832,8 +944,8 @@
       "errors":[
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ConflictException"},
-        {"shape":"ValidationException"}
+        {"shape":"ValidationException"},
+        {"shape":"ConflictException"}
       ]
     },
     "UpdateScheduledAction":{
@@ -847,8 +959,8 @@
       "errors":[
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ConflictException"},
-        {"shape":"ValidationException"}
+        {"shape":"ValidationException"},
+        {"shape":"ConflictException"}
       ],
       "idempotent":true
     },
@@ -863,8 +975,8 @@
       "errors":[
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ConflictException"},
-        {"shape":"ValidationException"}
+        {"shape":"ValidationException"},
+        {"shape":"ConflictException"}
       ]
     },
     "UpdateSnapshotCopyConfiguration":{
@@ -894,8 +1006,8 @@
       "errors":[
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ConflictException"},
-        {"shape":"ValidationException"}
+        {"shape":"ValidationException"},
+        {"shape":"ConflictException"}
       ]
     },
     "UpdateWorkgroup":{
@@ -910,8 +1022,8 @@
         {"shape":"InternalServerException"},
         {"shape":"InsufficientCapacityException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"ConflictException"},
         {"shape":"ValidationException"},
+        {"shape":"ConflictException"},
         {"shape":"Ipv6CidrBlockNotFoundException"}
       ]
     }
@@ -951,6 +1063,14 @@
       "type":"boolean",
       "box":true
     },
+    "Capacity":{"type":"integer"},
+    "CatalogNameString":{
+      "type":"string",
+      "max":64,
+      "min":1,
+      "pattern":"^[a-z0-9_-]*[a-z]+[a-z0-9_-]*$"
+    },
+    "Charge":{"type":"double"},
     "ConfigParameter":{
       "type":"structure",
       "members":{
@@ -1054,6 +1174,32 @@
       "type":"structure",
       "members":{
         "namespace":{"shape":"Namespace"}
+      }
+    },
+    "CreateReservationRequest":{
+      "type":"structure",
+      "required":[
+        "capacity",
+        "offeringId"
+      ],
+      "members":{
+        "capacity":{"shape":"Capacity"},
+        "clientToken":{
+          "shape":"String",
+          "idempotencyToken":true
+        },
+        "offeringId":{"shape":"CreateReservationRequestOfferingIdString"}
+      }
+    },
+    "CreateReservationRequestOfferingIdString":{
+      "type":"string",
+      "max":64,
+      "min":1
+    },
+    "CreateReservationResponse":{
+      "type":"structure",
+      "members":{
+        "reservation":{"shape":"Reservation"}
       }
     },
     "CreateScheduledActionRequest":{
@@ -1166,6 +1312,7 @@
         "baseCapacity":{"shape":"Integer"},
         "configParameters":{"shape":"ConfigParameterList"},
         "enhancedVpcRouting":{"shape":"Boolean"},
+        "extraComputeForAutomaticOptimization":{"shape":"Boolean"},
         "ipAddressType":{"shape":"IpAddressType"},
         "maxCapacity":{"shape":"Integer"},
         "namespaceName":{"shape":"NamespaceName"},
@@ -1185,6 +1332,7 @@
         "workgroup":{"shape":"Workgroup"}
       }
     },
+    "CurrencyCode":{"type":"string"},
     "CustomDomainCertificateArnString":{
       "type":"string",
       "max":2048,
@@ -1219,8 +1367,7 @@
     },
     "DeleteCustomDomainAssociationResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteEndpointAccessRequest":{
       "type":"structure",
@@ -1260,8 +1407,7 @@
     },
     "DeleteResourcePolicyResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteScheduledActionRequest":{
       "type":"structure",
@@ -1334,6 +1480,15 @@
       "type":"double",
       "box":true
     },
+    "DryRunException":{
+      "type":"structure",
+      "required":["message"],
+      "members":{
+        "message":{"shape":"String"}
+      },
+      "exception":true
+    },
+    "Duration":{"type":"integer"},
     "Endpoint":{
       "type":"structure",
       "members":{
@@ -1412,6 +1567,21 @@
         "endpoint":{"shape":"EndpointAccess"}
       }
     },
+    "GetIdentityCenterAuthTokenRequest":{
+      "type":"structure",
+      "required":["workgroupNames"],
+      "members":{
+        "workgroupNames":{"shape":"WorkgroupNameList"}
+      }
+    },
+    "GetIdentityCenterAuthTokenResponse":{
+      "type":"structure",
+      "members":{
+        "expirationTime":{"shape":"SyntheticTimestamp_date_time"},
+        "token":{"shape":"String"}
+      },
+      "sensitive":true
+    },
     "GetNamespaceRequest":{
       "type":"structure",
       "required":["namespaceName"],
@@ -1437,6 +1607,44 @@
       "type":"structure",
       "members":{
         "recoveryPoint":{"shape":"RecoveryPoint"}
+      }
+    },
+    "GetReservationOfferingRequest":{
+      "type":"structure",
+      "required":["offeringId"],
+      "members":{
+        "offeringId":{"shape":"GetReservationOfferingRequestOfferingIdString"}
+      }
+    },
+    "GetReservationOfferingRequestOfferingIdString":{
+      "type":"string",
+      "max":64,
+      "min":1
+    },
+    "GetReservationOfferingResponse":{
+      "type":"structure",
+      "required":["reservationOffering"],
+      "members":{
+        "reservationOffering":{"shape":"ReservationOffering"}
+      }
+    },
+    "GetReservationRequest":{
+      "type":"structure",
+      "required":["reservationId"],
+      "members":{
+        "reservationId":{"shape":"GetReservationRequestReservationIdString"}
+      }
+    },
+    "GetReservationRequestReservationIdString":{
+      "type":"string",
+      "max":64,
+      "min":1
+    },
+    "GetReservationResponse":{
+      "type":"structure",
+      "required":["reservation"],
+      "members":{
+        "reservation":{"shape":"Reservation"}
       }
     },
     "GetResourcePolicyRequest":{
@@ -1581,6 +1789,20 @@
       "exception":true
     },
     "KmsKeyId":{"type":"string"},
+    "LakehouseIdcRegistration":{
+      "type":"string",
+      "enum":[
+        "Associate",
+        "Disassociate"
+      ]
+    },
+    "LakehouseRegistration":{
+      "type":"string",
+      "enum":[
+        "Register",
+        "Deregister"
+      ]
+    },
     "ListCustomDomainAssociationsRequest":{
       "type":"structure",
       "members":{
@@ -1691,6 +1913,48 @@
       "members":{
         "nextToken":{"shape":"String"},
         "recoveryPoints":{"shape":"RecoveryPointList"}
+      }
+    },
+    "ListReservationOfferingsRequest":{
+      "type":"structure",
+      "members":{
+        "maxResults":{"shape":"ListReservationOfferingsRequestMaxResultsInteger"},
+        "nextToken":{"shape":"PaginationToken"}
+      }
+    },
+    "ListReservationOfferingsRequestMaxResultsInteger":{
+      "type":"integer",
+      "box":true,
+      "max":100,
+      "min":1
+    },
+    "ListReservationOfferingsResponse":{
+      "type":"structure",
+      "required":["reservationOfferingsList"],
+      "members":{
+        "nextToken":{"shape":"PaginationToken"},
+        "reservationOfferingsList":{"shape":"ReservationOfferingsList"}
+      }
+    },
+    "ListReservationsRequest":{
+      "type":"structure",
+      "members":{
+        "maxResults":{"shape":"ListReservationsRequestMaxResultsInteger"},
+        "nextToken":{"shape":"PaginationToken"}
+      }
+    },
+    "ListReservationsRequestMaxResultsInteger":{
+      "type":"integer",
+      "box":true,
+      "max":100,
+      "min":1
+    },
+    "ListReservationsResponse":{
+      "type":"structure",
+      "required":["reservationsList"],
+      "members":{
+        "nextToken":{"shape":"PaginationToken"},
+        "reservationsList":{"shape":"ReservationsList"}
       }
     },
     "ListScheduledActionsRequest":{
@@ -1914,11 +2178,13 @@
         "adminPasswordSecretArn":{"shape":"String"},
         "adminPasswordSecretKmsKeyId":{"shape":"KmsKeyId"},
         "adminUsername":{"shape":"DbUser"},
+        "catalogArn":{"shape":"String"},
         "creationDate":{"shape":"SyntheticTimestamp_date_time"},
         "dbName":{"shape":"String"},
         "defaultIamRoleArn":{"shape":"String"},
         "iamRoles":{"shape":"IamRoleArnList"},
         "kmsKeyId":{"shape":"String"},
+        "lakehouseRegistrationStatus":{"shape":"String"},
         "logExports":{"shape":"LogExportList"},
         "namespaceArn":{"shape":"String"},
         "namespaceId":{"shape":"String"},
@@ -1961,6 +2227,18 @@
     "NextInvocationsList":{
       "type":"list",
       "member":{"shape":"Timestamp"}
+    },
+    "OfferingId":{
+      "type":"string",
+      "max":64,
+      "min":1
+    },
+    "OfferingType":{
+      "type":"string",
+      "enum":[
+        "ALL_UPFRONT",
+        "NO_UPFRONT"
+      ]
     },
     "OwnerAccount":{
       "type":"string",
@@ -2032,6 +2310,47 @@
       "max":1024,
       "min":1
     },
+    "Reservation":{
+      "type":"structure",
+      "members":{
+        "capacity":{"shape":"Capacity"},
+        "endDate":{"shape":"SyntheticTimestamp_date_time"},
+        "offering":{"shape":"ReservationOffering"},
+        "reservationArn":{"shape":"ReservationArn"},
+        "reservationId":{"shape":"ReservationId"},
+        "startDate":{"shape":"SyntheticTimestamp_date_time"},
+        "status":{"shape":"Status"}
+      }
+    },
+    "ReservationArn":{
+      "type":"string",
+      "max":128,
+      "min":1
+    },
+    "ReservationId":{
+      "type":"string",
+      "max":64,
+      "min":1
+    },
+    "ReservationOffering":{
+      "type":"structure",
+      "members":{
+        "currencyCode":{"shape":"CurrencyCode"},
+        "duration":{"shape":"Duration"},
+        "hourlyCharge":{"shape":"Charge"},
+        "offeringId":{"shape":"OfferingId"},
+        "offeringType":{"shape":"OfferingType"},
+        "upfrontCharge":{"shape":"Charge"}
+      }
+    },
+    "ReservationOfferingsList":{
+      "type":"list",
+      "member":{"shape":"ReservationOffering"}
+    },
+    "ReservationsList":{
+      "type":"list",
+      "member":{"shape":"Reservation"}
+    },
     "ResourceNotFoundException":{
       "type":"structure",
       "required":["message"],
@@ -2056,6 +2375,7 @@
         "workgroupName"
       ],
       "members":{
+        "maintainIntegration":{"shape":"Boolean"},
         "namespaceName":{"shape":"NamespaceName"},
         "recoveryPointId":{"shape":"String"},
         "workgroupName":{"shape":"WorkgroupName"}
@@ -2076,6 +2396,7 @@
       ],
       "members":{
         "adminPasswordSecretKmsKeyId":{"shape":"KmsKeyId"},
+        "maintainIntegration":{"shape":"Boolean"},
         "manageAdminPassword":{"shape":"Boolean"},
         "namespaceName":{"shape":"NamespaceName"},
         "ownerAccount":{"shape":"String"},
@@ -2287,6 +2608,11 @@
         "DISABLED"
       ]
     },
+    "Status":{
+      "type":"string",
+      "max":16,
+      "min":1
+    },
     "String":{"type":"string"},
     "SubnetId":{"type":"string"},
     "SubnetIdList":{
@@ -2363,8 +2689,7 @@
     },
     "TagResourceResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "TagValue":{
       "type":"string",
@@ -2419,8 +2744,7 @@
     },
     "UntagResourceResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "UpdateCustomDomainAssociationRequest":{
       "type":"structure",
@@ -2456,6 +2780,27 @@
       "type":"structure",
       "members":{
         "endpoint":{"shape":"EndpointAccess"}
+      }
+    },
+    "UpdateLakehouseConfigurationRequest":{
+      "type":"structure",
+      "required":["namespaceName"],
+      "members":{
+        "catalogName":{"shape":"CatalogNameString"},
+        "dryRun":{"shape":"Boolean"},
+        "lakehouseIdcApplicationArn":{"shape":"String"},
+        "lakehouseIdcRegistration":{"shape":"LakehouseIdcRegistration"},
+        "lakehouseRegistration":{"shape":"LakehouseRegistration"},
+        "namespaceName":{"shape":"NamespaceName"}
+      }
+    },
+    "UpdateLakehouseConfigurationResponse":{
+      "type":"structure",
+      "members":{
+        "catalogArn":{"shape":"String"},
+        "lakehouseIdcApplicationArn":{"shape":"String"},
+        "lakehouseRegistrationStatus":{"shape":"String"},
+        "namespaceName":{"shape":"NamespaceName"}
       }
     },
     "UpdateNamespaceRequest":{
@@ -2562,6 +2907,7 @@
         "baseCapacity":{"shape":"Integer"},
         "configParameters":{"shape":"ConfigParameterList"},
         "enhancedVpcRouting":{"shape":"Boolean"},
+        "extraComputeForAutomaticOptimization":{"shape":"Boolean"},
         "ipAddressType":{"shape":"IpAddressType"},
         "maxCapacity":{"shape":"Integer"},
         "port":{"shape":"Integer"},
@@ -2673,6 +3019,7 @@
         "customDomainName":{"shape":"CustomDomainName"},
         "endpoint":{"shape":"Endpoint"},
         "enhancedVpcRouting":{"shape":"Boolean"},
+        "extraComputeForAutomaticOptimization":{"shape":"Boolean"},
         "ipAddressType":{"shape":"IpAddressType"},
         "maxCapacity":{"shape":"Integer"},
         "namespaceName":{"shape":"String"},
@@ -2700,6 +3047,12 @@
       "max":64,
       "min":3,
       "pattern":"^[a-z0-9-]+$"
+    },
+    "WorkgroupNameList":{
+      "type":"list",
+      "member":{"shape":"WorkgroupName"},
+      "max":20,
+      "min":1
     },
     "WorkgroupStatus":{
       "type":"string",

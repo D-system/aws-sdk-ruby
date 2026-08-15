@@ -10,32 +10,44 @@
 begin
   require 'http/2'
 rescue LoadError; end
-require 'aws-sdk-core/plugins/credentials_configuration.rb'
-require 'aws-sdk-core/plugins/logging.rb'
-require 'aws-sdk-core/plugins/param_converter.rb'
-require 'aws-sdk-core/plugins/param_validator.rb'
-require 'aws-sdk-core/plugins/user_agent.rb'
-require 'aws-sdk-core/plugins/helpful_socket_errors.rb'
-require 'aws-sdk-core/plugins/retry_errors.rb'
-require 'aws-sdk-core/plugins/global_configuration.rb'
-require 'aws-sdk-core/plugins/regional_endpoint.rb'
-require 'aws-sdk-core/plugins/stub_responses.rb'
-require 'aws-sdk-core/plugins/idempotency_token.rb'
-require 'aws-sdk-core/plugins/invocation_id.rb'
-require 'aws-sdk-core/plugins/jsonvalue_converter.rb'
-require 'aws-sdk-core/plugins/http_checksum.rb'
-require 'aws-sdk-core/plugins/checksum_algorithm.rb'
-require 'aws-sdk-core/plugins/request_compression.rb'
-require 'aws-sdk-core/plugins/defaults_mode.rb'
-require 'aws-sdk-core/plugins/recursion_detection.rb'
-require 'aws-sdk-core/plugins/telemetry.rb'
-require 'aws-sdk-core/plugins/sign.rb'
-require 'aws-sdk-core/plugins/protocols/rest_json.rb'
-require 'aws-sdk-core/plugins/event_stream_configuration.rb'
+require 'aws-sdk-core/plugins/credentials_configuration'
+require 'aws-sdk-core/plugins/logging'
+require 'aws-sdk-core/plugins/param_converter'
+require 'aws-sdk-core/plugins/param_validator'
+require 'aws-sdk-core/plugins/user_agent'
+require 'aws-sdk-core/plugins/helpful_socket_errors'
+require 'aws-sdk-core/plugins/retry_errors'
+require 'aws-sdk-core/plugins/global_configuration'
+require 'aws-sdk-core/plugins/regional_endpoint'
+require 'aws-sdk-core/plugins/stub_responses'
+require 'aws-sdk-core/plugins/idempotency_token'
+require 'aws-sdk-core/plugins/invocation_id'
+require 'aws-sdk-core/plugins/jsonvalue_converter'
+require 'aws-sdk-core/plugins/http_checksum'
+require 'aws-sdk-core/plugins/checksum_algorithm'
+require 'aws-sdk-core/plugins/request_compression'
+require 'aws-sdk-core/plugins/defaults_mode'
+require 'aws-sdk-core/plugins/recursion_detection'
+require 'aws-sdk-core/plugins/telemetry'
+require 'aws-sdk-core/plugins/sign'
+require 'aws-sdk-core/plugins/protocols/rest_json'
+require 'aws-sdk-core/plugins/event_stream_configuration'
 
 Aws::Plugins::GlobalConfiguration.add_identifier(:qbusiness)
 
 module Aws::QBusiness
+  # An API async client for QBusiness.  To construct an async client, you need to configure a `:region` and `:credentials`.
+  #
+  #     async_client = Aws::QBusiness::AsyncClient.new(
+  #       region: region_name,
+  #       credentials: credentials,
+  #       # ...
+  #     )
+  #
+  # For details on configuring region and credentials see
+  # the [developer guide](/sdk-for-ruby/v3/developer-guide/setup-config.html).
+  #
+  # See {#initialize} for a full list of supported configuration options.
   class AsyncClient < Seahorse::Client::AsyncBase
 
     include Aws::AsyncClientStubs
@@ -68,9 +80,16 @@ module Aws::QBusiness
     add_plugin(Aws::Plugins::EventStreamConfiguration)
     add_plugin(Aws::QBusiness::Plugins::Endpoints)
 
+    # @overload initialize(options)
+    #   @param [Hash] options
+    #
+    #   @option options [Array<Seahorse::Client::Plugin>] :plugins ([]])
+    #     A list of plugins to apply to the client. Each plugin is either a
+    #     class name or an instance of a plugin class.
+    #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -98,22 +117,24 @@ module Aws::QBusiness
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -137,12 +158,17 @@ module Aws::QBusiness
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :convert_params (true)
     #     When `true`, an attempt is made to coerce request parameters into
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -194,8 +220,8 @@ module Aws::QBusiness
     #     When an EventStream or Proc object is provided, it will be used as callback for each chunk of event stream response received along the way.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -257,17 +283,15 @@ module Aws::QBusiness
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -308,8 +332,8 @@ module Aws::QBusiness
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -415,96 +439,107 @@ module Aws::QBusiness
     #   * {Types::ChatOutput#output_stream #output_stream} => Types::ChatOutputStream
     #
     # @example Bi-directional EventStream Operation Example
+    #   # You can signal input events after the initial request is established. Events
+    #   # will be sent to the stream immediately once the stream connection is
+    #   # established successfully.
     #
-    #   You can signal input events after the initial request is established. Events
-    #   will be sent to the stream immediately once the stream connection is
-    #   established successfully.
+    #   # To signal events, you can call the #signal methods from an
+    #   # Aws::QBusiness::EventStreams::ChatInputStream object.
+    #   # You must signal events before calling #wait or #join! on the async response.
+    #   input_stream = Aws::QBusiness::EventStreams::ChatInputStream.new
     #
-    #   To signal events, you can call the #signal methods from an Aws::QBusiness::EventStreams::ChatInputStream
-    #   object. You must signal events before calling #wait or #join! on the async response.
-    #
-    #     input_stream = Aws::QBusiness::EventStreams::ChatInputStream.new
-    #
-    #     async_resp = client.chat(
-    #       # params input
-    #       input_event_stream_handler: input_stream) do |out_stream|
-    #
-    #       # register callbacks for events
-    #       out_stream.on_text_event_event do |event|
-    #         event # => Aws::QBusiness::Types::textEvent
-    #       end
-    #       out_stream.on_metadata_event_event do |event|
-    #         event # => Aws::QBusiness::Types::metadataEvent
-    #       end
-    #       out_stream.on_action_review_event_event do |event|
-    #         event # => Aws::QBusiness::Types::actionReviewEvent
-    #       end
-    #       out_stream.on_failed_attachment_event_event do |event|
-    #         event # => Aws::QBusiness::Types::failedAttachmentEvent
-    #       end
-    #       out_stream.on_auth_challenge_request_event_event do |event|
-    #         event # => Aws::QBusiness::Types::authChallengeRequestEvent
-    #       end
-    #
-    #     end
-    #     # => Aws::Seahorse::Client::AsyncResponse
-    #
-    #     # signal events
-    #     input_stream.signal_configuration_event_event( ... )
-    #     input_stream.signal_text_event_event( ... )
-    #     input_stream.signal_attachment_event_event( ... )
-    #     input_stream.signal_action_execution_event_event( ... )
-    #     input_stream.signal_end_of_input_event_event( ... )
-    #     input_stream.signal_auth_challenge_response_event_event( ... )
-    #
-    #     # make sure to signal :end_stream at the end
-    #     input_stream.signal_end_stream
-    #
-    #     # wait until stream is closed before finalizing the sync response
-    #     resp = async_resp.wait
-    #     # Or close the stream and finalize sync response immediately
-    #     # resp = async_resp.join!
-    #
-    #   You can also provide an Aws::QBusiness::EventStreams::ChatOutputStream object to register callbacks
-    #   before initializing the request instead of processing from the request block.
-    #
-    #     output_stream = Aws::QBusiness::EventStreams::ChatOutputStream.new
-    #     # register callbacks for output events
-    #     output_stream.on_text_event_event do |event|
+    #   async_resp = client.chat(
+    #     # params input
+    #     input_event_stream_handler: input_stream
+    #   ) do |out_stream|
+    #     # register callbacks for events
+    #     out_stream.on_text_event_event do |event|
     #       event # => Aws::QBusiness::Types::textEvent
     #     end
-    #     output_stream.on_metadata_event_event do |event|
+    #     out_stream.on_metadata_event_event do |event|
     #       event # => Aws::QBusiness::Types::metadataEvent
     #     end
-    #     output_stream.on_action_review_event_event do |event|
+    #     out_stream.on_action_review_event_event do |event|
     #       event # => Aws::QBusiness::Types::actionReviewEvent
     #     end
-    #     output_stream.on_failed_attachment_event_event do |event|
+    #     out_stream.on_failed_attachment_event_event do |event|
     #       event # => Aws::QBusiness::Types::failedAttachmentEvent
     #     end
-    #     output_stream.on_auth_challenge_request_event_event do |event|
+    #     out_stream.on_auth_challenge_request_event_event do |event|
     #       event # => Aws::QBusiness::Types::authChallengeRequestEvent
     #     end
-    #     output_stream.on_error_event do |event|
-    #       # catch unmodeled error event in the stream
-    #       raise event
-    #       # => Aws::Errors::EventError
-    #       # event.event_type => :error
-    #       # event.error_code => String
-    #       # event.error_message => String
-    #     end
+    #   end
+    #   # => Aws::Seahorse::Client::AsyncResponse
     #
-    #     async_resp = client.chat (
-    #       # params input
-    #       input_event_stream_handler: input_stream
-    #       output_event_stream_handler: output_stream
-    #     )
+    #   # signal events
+    #   input_stream.signal_configuration_event_event(
+    #     # ...
+    #   )
+    #   input_stream.signal_text_event_event(
+    #     # ...
+    #   )
+    #   input_stream.signal_attachment_event_event(
+    #     # ...
+    #   )
+    #   input_stream.signal_action_execution_event_event(
+    #     # ...
+    #   )
+    #   input_stream.signal_end_of_input_event_event(
+    #     # ...
+    #   )
+    #   input_stream.signal_auth_challenge_response_event_event(
+    #     # ...
+    #   )
     #
-    #     resp = async_resp.join!
+    #   # make sure to signal :end_stream at the end
+    #   input_stream.signal_end_stream
     #
-    #   You can also iterate through events after the response is complete.
+    #   # wait until stream is closed before finalizing the sync response
+    #   resp = async_resp.wait
     #
-    #   Events are available at resp.output_stream # => Enumerator
+    #   # Or close the stream and finalize sync response immediately
+    #   resp = async_resp.join!
+    #
+    #   # You can also provide an Aws::QBusiness::EventStreams::ChatOutputStream object
+    #   # to register callbacks before initializing the request instead of processing
+    #   # from the request block.
+    #   output_stream = Aws::QBusiness::EventStreams::ChatOutputStream.new
+    #
+    #   # register callbacks for output events
+    #   output_stream.on_text_event_event do |event|
+    #     event # => Aws::QBusiness::Types::textEvent
+    #   end
+    #   output_stream.on_metadata_event_event do |event|
+    #     event # => Aws::QBusiness::Types::metadataEvent
+    #   end
+    #   output_stream.on_action_review_event_event do |event|
+    #     event # => Aws::QBusiness::Types::actionReviewEvent
+    #   end
+    #   output_stream.on_failed_attachment_event_event do |event|
+    #     event # => Aws::QBusiness::Types::failedAttachmentEvent
+    #   end
+    #   output_stream.on_auth_challenge_request_event_event do |event|
+    #     event # => Aws::QBusiness::Types::authChallengeRequestEvent
+    #   end
+    #   output_stream.on_error_event do |event|
+    #     # catch unmodeled error event in the stream
+    #     raise event
+    #     # => Aws::Errors::EventError
+    #     # event.event_type => :error
+    #     # event.error_code => String
+    #     # event.error_message => String
+    #   end
+    #
+    #   async_resp = client.chat(
+    #     # params input
+    #     input_event_stream_handler: input_stream,
+    #     output_event_stream_handler: output_stream
+    #   )
+    #   resp = async_resp.join!
+    #
+    #   # You can also iterate through events after the response is complete.
+    #   # Events are available at
+    #   resp.output_stream # => Enumerator
     #
     # @example Request syntax with placeholder values
     #
@@ -524,17 +559,18 @@ module Aws::QBusiness
     #
     # @example Response structure
     #
-    #   All events are available at resp.output_stream:
+    #   # All events are available at resp.output_stream:
     #   resp.output_stream #=> Enumerator
     #   resp.output_stream.event_types #=> [:text_event, :metadata_event, :action_review_event, :failed_attachment_event, :auth_challenge_request_event]
     #
-    #   For :text_event event available at #on_text_event_event callback and response eventstream enumerator:
+    #   # For :text_event event available at #on_text_event_event callback and response eventstream enumerator:
+    #   event.system_message_type #=> String, one of "RESPONSE", "GROUNDED_RESPONSE"
     #   event.conversation_id #=> String
     #   event.user_message_id #=> String
     #   event.system_message_id #=> String
     #   event.system_message #=> String
     #
-    #   For :metadata_event event available at #on_metadata_event_event callback and response eventstream enumerator:
+    #   # For :metadata_event event available at #on_metadata_event_event callback and response eventstream enumerator:
     #   event.conversation_id #=> String
     #   event.user_message_id #=> String
     #   event.system_message_id #=> String
@@ -562,9 +598,12 @@ module Aws::QBusiness
     #   event.source_attributions[0].text_message_segments[0].source_details.video_source_details.start_time_milliseconds #=> Integer
     #   event.source_attributions[0].text_message_segments[0].source_details.video_source_details.end_time_milliseconds #=> Integer
     #   event.source_attributions[0].text_message_segments[0].source_details.video_source_details.video_extraction_type #=> String, one of "TRANSCRIPT", "SUMMARY"
+    #   event.source_attributions[0].document_id #=> String
+    #   event.source_attributions[0].index_id #=> String
+    #   event.source_attributions[0].datasource_id #=> String
     #   event.final_text_message #=> String
     #
-    #   For :action_review_event event available at #on_action_review_event_event callback and response eventstream enumerator:
+    #   # For :action_review_event event available at #on_action_review_event_event callback and response eventstream enumerator:
     #   event.conversation_id #=> String
     #   event.user_message_id #=> String
     #   event.system_message_id #=> String
@@ -580,7 +619,7 @@ module Aws::QBusiness
     #   event.payload["ActionPayloadFieldKey"].required #=> Boolean
     #   event.payload_field_name_separator #=> String
     #
-    #   For :failed_attachment_event event available at #on_failed_attachment_event_event callback and response eventstream enumerator:
+    #   # For :failed_attachment_event event available at #on_failed_attachment_event_event callback and response eventstream enumerator:
     #   event.conversation_id #=> String
     #   event.user_message_id #=> String
     #   event.system_message_id #=> String
@@ -591,7 +630,7 @@ module Aws::QBusiness
     #   event.attachment.attachment_id #=> String
     #   event.attachment.conversation_id #=> String
     #
-    #   For :auth_challenge_request_event event available at #on_auth_challenge_request_event_event callback and response eventstream enumerator:
+    #   # For :auth_challenge_request_event event available at #on_auth_challenge_request_event_event callback and response eventstream enumerator:
     #   event.authorization_url #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qbusiness-2023-11-27/Chat AWS API Documentation
@@ -642,7 +681,7 @@ module Aws::QBusiness
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-qbusiness'
-      context[:gem_version] = '1.33.0'
+      context[:gem_version] = '1.61.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

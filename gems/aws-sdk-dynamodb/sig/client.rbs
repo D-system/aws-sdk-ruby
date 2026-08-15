@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -91,10 +92,10 @@ module Aws
                                      statements: Array[
                                        {
                                          statement: ::String,
-                                         parameters: Array[untyped]?,
+                                         parameters: Array[Params::attribute_value]?,
                                          consistent_read: bool?,
                                          return_values_on_condition_check_failure: ("ALL_OLD" | "NONE")?
-                                       },
+                                       }
                                      ],
                                      ?return_consumed_capacity: ("INDEXES" | "TOTAL" | "NONE")
                                    ) -> _BatchExecuteStatementResponseSuccess
@@ -110,7 +111,7 @@ module Aws
       def batch_get_item: (
                             request_items: Hash[::String, {
                                 keys: Array[
-                                  Hash[::String, untyped],
+                                  Hash[::String, Params::attribute_value]
                                 ],
                                 attributes_to_get: Array[::String]?,
                                 consistent_read: bool?,
@@ -132,12 +133,12 @@ module Aws
                               request_items: Hash[::String, Array[
                                   {
                                     put_request: {
-                                      item: Hash[::String, untyped]
+                                      item: Hash[::String, Params::attribute_value]
                                     }?,
                                     delete_request: {
-                                      key: Hash[::String, untyped]
+                                      key: Hash[::String, Params::attribute_value]
                                     }?
-                                  },
+                                  }
                                 ]],
                               ?return_consumed_capacity: ("INDEXES" | "TOTAL" | "NONE"),
                               ?return_item_collection_metrics: ("SIZE" | "NONE")
@@ -165,7 +166,7 @@ module Aws
                                  replication_group: Array[
                                    {
                                      region_name: ::String?
-                                   },
+                                   }
                                  ]
                                ) -> _CreateGlobalTableResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateGlobalTableResponseSuccess
@@ -176,60 +177,24 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DynamoDB/Client.html#create_table-instance_method
       def create_table: (
-                          attribute_definitions: Array[
+                          ?attribute_definitions: Array[
                             {
                               attribute_name: ::String,
                               attribute_type: ("S" | "N" | "B")
-                            },
+                            }
                           ],
                           table_name: ::String,
-                          key_schema: Array[
+                          ?key_schema: Array[
                             {
                               attribute_name: ::String,
                               key_type: ("HASH" | "RANGE")
-                            },
+                            }
                           ],
                           ?local_secondary_indexes: Array[
-                            {
-                              index_name: ::String,
-                              key_schema: Array[
-                                {
-                                  attribute_name: ::String,
-                                  key_type: ("HASH" | "RANGE")
-                                },
-                              ],
-                              projection: {
-                                projection_type: ("ALL" | "KEYS_ONLY" | "INCLUDE")?,
-                                non_key_attributes: Array[::String]?
-                              }
-                            },
+                            Params::local_secondary_index
                           ],
                           ?global_secondary_indexes: Array[
-                            {
-                              index_name: ::String,
-                              key_schema: Array[
-                                {
-                                  attribute_name: ::String,
-                                  key_type: ("HASH" | "RANGE")
-                                },
-                              ],
-                              projection: {
-                                projection_type: ("ALL" | "KEYS_ONLY" | "INCLUDE")?,
-                                non_key_attributes: Array[::String]?
-                              },
-                              provisioned_throughput: {
-                                read_capacity_units: ::Integer,
-                                write_capacity_units: ::Integer
-                              }?,
-                              on_demand_throughput: {
-                                max_read_request_units: ::Integer?,
-                                max_write_request_units: ::Integer?
-                              }?,
-                              warm_throughput: {
-                                read_units_per_second: ::Integer?,
-                                write_units_per_second: ::Integer?
-                              }?
-                            },
+                            Params::global_secondary_index
                           ],
                           ?billing_mode: ("PROVISIONED" | "PAY_PER_REQUEST"),
                           ?provisioned_throughput: {
@@ -249,7 +214,7 @@ module Aws
                             {
                               key: ::String,
                               value: ::String
-                            },
+                            }
                           ],
                           ?table_class: ("STANDARD" | "STANDARD_INFREQUENT_ACCESS"),
                           ?deletion_protection_enabled: bool,
@@ -261,7 +226,12 @@ module Aws
                           ?on_demand_throughput: {
                             max_read_request_units: ::Integer?,
                             max_write_request_units: ::Integer?
-                          }
+                          },
+                          ?global_table_source_arn: ::String,
+                          ?global_table_settings_replication_mode: ("ENABLED" | "DISABLED" | "ENABLED_WITH_OVERRIDES"),
+                          ?vector_indexes: Array[
+                            Params::vector_index
+                          ]
                         ) -> _CreateTableResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateTableResponseSuccess
 
@@ -284,20 +254,15 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DynamoDB/Client.html#delete_item-instance_method
       def delete_item: (
                          table_name: ::String,
-                         key: Hash[::String, untyped],
-                         ?expected: Hash[::String, {
-                             value: untyped?,
-                             exists: bool?,
-                             comparison_operator: ("EQ" | "NE" | "IN" | "LE" | "LT" | "GE" | "GT" | "BETWEEN" | "NOT_NULL" | "NULL" | "CONTAINS" | "NOT_CONTAINS" | "BEGINS_WITH")?,
-                             attribute_value_list: Array[untyped]?
-                           }],
+                         key: Hash[::String, Params::attribute_value],
+                         ?expected: Hash[::String, Params::expected_attribute_value],
                          ?conditional_operator: ("AND" | "OR"),
                          ?return_values: ("NONE" | "ALL_OLD" | "UPDATED_OLD" | "ALL_NEW" | "UPDATED_NEW"),
                          ?return_consumed_capacity: ("INDEXES" | "TOTAL" | "NONE"),
                          ?return_item_collection_metrics: ("SIZE" | "NONE"),
                          ?condition_expression: ::String,
                          ?expression_attribute_names: Hash[::String, ::String],
-                         ?expression_attribute_values: Hash[::String, untyped],
+                         ?expression_attribute_values: Hash[::String, Params::attribute_value],
                          ?return_values_on_condition_check_failure: ("ALL_OLD" | "NONE")
                        ) -> _DeleteItemResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteItemResponseSuccess
@@ -351,6 +316,7 @@ module Aws
         def contributor_insights_status: () -> ("ENABLING" | "ENABLED" | "DISABLING" | "DISABLED" | "FAILED")
         def last_update_date_time: () -> ::Time
         def failure_exception: () -> Types::FailureException
+        def contributor_insights_mode: () -> ("ACCESSED_AND_THROTTLED_KEYS" | "THROTTLED_KEYS")
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DynamoDB/Client.html#describe_contributor_insights-instance_method
       def describe_contributor_insights: (
@@ -506,7 +472,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DynamoDB/Client.html#execute_statement-instance_method
       def execute_statement: (
                                statement: ::String,
-                               ?parameters: Array[untyped],
+                               ?parameters: Array[Params::attribute_value],
                                ?consistent_read: bool,
                                ?next_token: ::String,
                                ?return_consumed_capacity: ("INDEXES" | "TOTAL" | "NONE"),
@@ -525,9 +491,9 @@ module Aws
                                  transact_statements: Array[
                                    {
                                      statement: ::String,
-                                     parameters: Array[untyped]?,
+                                     parameters: Array[Params::attribute_value]?,
                                      return_values_on_condition_check_failure: ("ALL_OLD" | "NONE")?
-                                   },
+                                   }
                                  ],
                                  ?client_request_token: ::String,
                                  ?return_consumed_capacity: ("INDEXES" | "TOTAL" | "NONE")
@@ -566,7 +532,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DynamoDB/Client.html#get_item-instance_method
       def get_item: (
                       table_name: ::String,
-                      key: Hash[::String, untyped],
+                      key: Hash[::String, Params::attribute_value],
                       ?attributes_to_get: Array[::String],
                       ?consistent_read: bool,
                       ?return_consumed_capacity: ("INDEXES" | "TOTAL" | "NONE"),
@@ -612,13 +578,13 @@ module Aws
                               {
                                 attribute_name: ::String,
                                 attribute_type: ("S" | "N" | "B")
-                              },
+                              }
                             ],
                             key_schema: Array[
                               {
                                 attribute_name: ::String,
                                 key_type: ("HASH" | "RANGE")
-                              },
+                              }
                             ],
                             billing_mode: ("PROVISIONED" | "PAY_PER_REQUEST")?,
                             provisioned_throughput: {
@@ -635,31 +601,10 @@ module Aws
                               kms_master_key_id: ::String?
                             }?,
                             global_secondary_indexes: Array[
-                              {
-                                index_name: ::String,
-                                key_schema: Array[
-                                  {
-                                    attribute_name: ::String,
-                                    key_type: ("HASH" | "RANGE")
-                                  },
-                                ],
-                                projection: {
-                                  projection_type: ("ALL" | "KEYS_ONLY" | "INCLUDE")?,
-                                  non_key_attributes: Array[::String]?
-                                },
-                                provisioned_throughput: {
-                                  read_capacity_units: ::Integer,
-                                  write_capacity_units: ::Integer
-                                }?,
-                                on_demand_throughput: {
-                                  max_read_request_units: ::Integer?,
-                                  max_write_request_units: ::Integer?
-                                }?,
-                                warm_throughput: {
-                                  read_units_per_second: ::Integer?,
-                                  write_units_per_second: ::Integer?
-                                }?
-                              },
+                              Params::global_secondary_index
+                            ]?,
+                            vector_indexes: Array[
+                              Params::vector_index
                             ]?
                           }
                         ) -> _ImportTableResponseSuccess
@@ -766,20 +711,15 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DynamoDB/Client.html#put_item-instance_method
       def put_item: (
                       table_name: ::String,
-                      item: Hash[::String, untyped],
-                      ?expected: Hash[::String, {
-                          value: untyped?,
-                          exists: bool?,
-                          comparison_operator: ("EQ" | "NE" | "IN" | "LE" | "LT" | "GE" | "GT" | "BETWEEN" | "NOT_NULL" | "NULL" | "CONTAINS" | "NOT_CONTAINS" | "BEGINS_WITH")?,
-                          attribute_value_list: Array[untyped]?
-                        }],
+                      item: Hash[::String, Params::attribute_value],
+                      ?expected: Hash[::String, Params::expected_attribute_value],
                       ?return_values: ("NONE" | "ALL_OLD" | "UPDATED_OLD" | "ALL_NEW" | "UPDATED_NEW"),
                       ?return_consumed_capacity: ("INDEXES" | "TOTAL" | "NONE"),
                       ?return_item_collection_metrics: ("SIZE" | "NONE"),
                       ?conditional_operator: ("AND" | "OR"),
                       ?condition_expression: ::String,
                       ?expression_attribute_names: Hash[::String, ::String],
-                      ?expression_attribute_values: Hash[::String, untyped],
+                      ?expression_attribute_values: Hash[::String, Params::attribute_value],
                       ?return_values_on_condition_check_failure: ("ALL_OLD" | "NONE")
                     ) -> _PutItemResponseSuccess
                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutItemResponseSuccess
@@ -813,23 +753,17 @@ module Aws
                    ?attributes_to_get: Array[::String],
                    ?limit: ::Integer,
                    ?consistent_read: bool,
-                   ?key_conditions: Hash[::String, {
-                       attribute_value_list: Array[untyped]?,
-                       comparison_operator: ("EQ" | "NE" | "IN" | "LE" | "LT" | "GE" | "GT" | "BETWEEN" | "NOT_NULL" | "NULL" | "CONTAINS" | "NOT_CONTAINS" | "BEGINS_WITH")
-                     }],
-                   ?query_filter: Hash[::String, {
-                       attribute_value_list: Array[untyped]?,
-                       comparison_operator: ("EQ" | "NE" | "IN" | "LE" | "LT" | "GE" | "GT" | "BETWEEN" | "NOT_NULL" | "NULL" | "CONTAINS" | "NOT_CONTAINS" | "BEGINS_WITH")
-                     }],
+                   ?key_conditions: Hash[::String, Params::condition],
+                   ?query_filter: Hash[::String, Params::condition],
                    ?conditional_operator: ("AND" | "OR"),
                    ?scan_index_forward: bool,
-                   ?exclusive_start_key: Hash[::String, untyped],
+                   ?exclusive_start_key: Hash[::String, Params::attribute_value],
                    ?return_consumed_capacity: ("INDEXES" | "TOTAL" | "NONE"),
                    ?projection_expression: ::String,
                    ?filter_expression: ::String,
                    ?key_condition_expression: ::String,
                    ?expression_attribute_names: Hash[::String, ::String],
-                   ?expression_attribute_values: Hash[::String, untyped]
+                   ?expression_attribute_values: Hash[::String, Params::attribute_value]
                  ) -> _QueryResponseSuccess
                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _QueryResponseSuccess
 
@@ -843,46 +777,10 @@ module Aws
                                        backup_arn: ::String,
                                        ?billing_mode_override: ("PROVISIONED" | "PAY_PER_REQUEST"),
                                        ?global_secondary_index_override: Array[
-                                         {
-                                           index_name: ::String,
-                                           key_schema: Array[
-                                             {
-                                               attribute_name: ::String,
-                                               key_type: ("HASH" | "RANGE")
-                                             },
-                                           ],
-                                           projection: {
-                                             projection_type: ("ALL" | "KEYS_ONLY" | "INCLUDE")?,
-                                             non_key_attributes: Array[::String]?
-                                           },
-                                           provisioned_throughput: {
-                                             read_capacity_units: ::Integer,
-                                             write_capacity_units: ::Integer
-                                           }?,
-                                           on_demand_throughput: {
-                                             max_read_request_units: ::Integer?,
-                                             max_write_request_units: ::Integer?
-                                           }?,
-                                           warm_throughput: {
-                                             read_units_per_second: ::Integer?,
-                                             write_units_per_second: ::Integer?
-                                           }?
-                                         },
+                                         Params::global_secondary_index
                                        ],
                                        ?local_secondary_index_override: Array[
-                                         {
-                                           index_name: ::String,
-                                           key_schema: Array[
-                                             {
-                                               attribute_name: ::String,
-                                               key_type: ("HASH" | "RANGE")
-                                             },
-                                           ],
-                                           projection: {
-                                             projection_type: ("ALL" | "KEYS_ONLY" | "INCLUDE")?,
-                                             non_key_attributes: Array[::String]?
-                                           }
-                                         },
+                                         Params::local_secondary_index
                                        ],
                                        ?provisioned_throughput_override: {
                                          read_capacity_units: ::Integer,
@@ -896,7 +794,10 @@ module Aws
                                          enabled: bool?,
                                          sse_type: ("AES256" | "KMS")?,
                                          kms_master_key_id: ::String?
-                                       }
+                                       },
+                                       ?vector_index_override: Array[
+                                         Params::vector_index
+                                       ]
                                      ) -> _RestoreTableFromBackupResponseSuccess
                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RestoreTableFromBackupResponseSuccess
 
@@ -913,46 +814,10 @@ module Aws
                                             ?restore_date_time: ::Time,
                                             ?billing_mode_override: ("PROVISIONED" | "PAY_PER_REQUEST"),
                                             ?global_secondary_index_override: Array[
-                                              {
-                                                index_name: ::String,
-                                                key_schema: Array[
-                                                  {
-                                                    attribute_name: ::String,
-                                                    key_type: ("HASH" | "RANGE")
-                                                  },
-                                                ],
-                                                projection: {
-                                                  projection_type: ("ALL" | "KEYS_ONLY" | "INCLUDE")?,
-                                                  non_key_attributes: Array[::String]?
-                                                },
-                                                provisioned_throughput: {
-                                                  read_capacity_units: ::Integer,
-                                                  write_capacity_units: ::Integer
-                                                }?,
-                                                on_demand_throughput: {
-                                                  max_read_request_units: ::Integer?,
-                                                  max_write_request_units: ::Integer?
-                                                }?,
-                                                warm_throughput: {
-                                                  read_units_per_second: ::Integer?,
-                                                  write_units_per_second: ::Integer?
-                                                }?
-                                              },
+                                              Params::global_secondary_index
                                             ],
                                             ?local_secondary_index_override: Array[
-                                              {
-                                                index_name: ::String,
-                                                key_schema: Array[
-                                                  {
-                                                    attribute_name: ::String,
-                                                    key_type: ("HASH" | "RANGE")
-                                                  },
-                                                ],
-                                                projection: {
-                                                  projection_type: ("ALL" | "KEYS_ONLY" | "INCLUDE")?,
-                                                  non_key_attributes: Array[::String]?
-                                                }
-                                              },
+                                              Params::local_secondary_index
                                             ],
                                             ?provisioned_throughput_override: {
                                               read_capacity_units: ::Integer,
@@ -966,7 +831,10 @@ module Aws
                                               enabled: bool?,
                                               sse_type: ("AES256" | "KMS")?,
                                               kms_master_key_id: ::String?
-                                            }
+                                            },
+                                            ?vector_index_override: Array[
+                                              Params::vector_index
+                                            ]
                                           ) -> _RestoreTableToPointInTimeResponseSuccess
                                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RestoreTableToPointInTimeResponseSuccess
 
@@ -985,22 +853,38 @@ module Aws
                   ?attributes_to_get: Array[::String],
                   ?limit: ::Integer,
                   ?select: ("ALL_ATTRIBUTES" | "ALL_PROJECTED_ATTRIBUTES" | "SPECIFIC_ATTRIBUTES" | "COUNT"),
-                  ?scan_filter: Hash[::String, {
-                      attribute_value_list: Array[untyped]?,
-                      comparison_operator: ("EQ" | "NE" | "IN" | "LE" | "LT" | "GE" | "GT" | "BETWEEN" | "NOT_NULL" | "NULL" | "CONTAINS" | "NOT_CONTAINS" | "BEGINS_WITH")
-                    }],
+                  ?scan_filter: Hash[::String, Params::condition],
                   ?conditional_operator: ("AND" | "OR"),
-                  ?exclusive_start_key: Hash[::String, untyped],
+                  ?exclusive_start_key: Hash[::String, Params::attribute_value],
                   ?return_consumed_capacity: ("INDEXES" | "TOTAL" | "NONE"),
                   ?total_segments: ::Integer,
                   ?segment: ::Integer,
                   ?projection_expression: ::String,
                   ?filter_expression: ::String,
                   ?expression_attribute_names: Hash[::String, ::String],
-                  ?expression_attribute_values: Hash[::String, untyped],
+                  ?expression_attribute_values: Hash[::String, Params::attribute_value],
                   ?consistent_read: bool
                 ) -> _ScanResponseSuccess
               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ScanResponseSuccess
+
+      interface _SearchVectorsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::SearchVectorsOutput]
+        def consumed_capacity: () -> Types::VectorCapacity
+        def search_results: () -> ::Array[Types::SearchResultItem]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DynamoDB/Client.html#search_vectors-instance_method
+      def search_vectors: (
+                            table_name: ::String,
+                            index_name: ::String,
+                            ?return_consumed_capacity: ("INDEXES" | "TOTAL" | "NONE"),
+                            ?expression_attribute_names: Hash[::String, ::String],
+                            ?expression_attribute_values: Hash[::String, Params::attribute_value],
+                            ?projection_expression: ::String,
+                            search_vector: Array[Params::attribute_value],
+                            ?search_condition_expression: ::String,
+                            top_k: ::Integer
+                          ) -> _SearchVectorsResponseSuccess
+                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _SearchVectorsResponseSuccess
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DynamoDB/Client.html#tag_resource-instance_method
       def tag_resource: (
@@ -1009,7 +893,7 @@ module Aws
                             {
                               key: ::String,
                               value: ::String
-                            },
+                            }
                           ]
                         ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
@@ -1024,12 +908,12 @@ module Aws
                                 transact_items: Array[
                                   {
                                     get: {
-                                      key: Hash[::String, untyped],
+                                      key: Hash[::String, Params::attribute_value],
                                       table_name: ::String,
                                       projection_expression: ::String?,
                                       expression_attribute_names: Hash[::String, ::String]?
                                     }
-                                  },
+                                  }
                                 ],
                                 ?return_consumed_capacity: ("INDEXES" | "TOTAL" | "NONE")
                               ) -> _TransactGetItemsResponseSuccess
@@ -1045,39 +929,39 @@ module Aws
                                   transact_items: Array[
                                     {
                                       condition_check: {
-                                        key: Hash[::String, untyped],
+                                        key: Hash[::String, Params::attribute_value],
                                         table_name: ::String,
                                         condition_expression: ::String,
                                         expression_attribute_names: Hash[::String, ::String]?,
-                                        expression_attribute_values: Hash[::String, untyped]?,
+                                        expression_attribute_values: Hash[::String, Params::attribute_value]?,
                                         return_values_on_condition_check_failure: ("ALL_OLD" | "NONE")?
                                       }?,
                                       put: {
-                                        item: Hash[::String, untyped],
+                                        item: Hash[::String, Params::attribute_value],
                                         table_name: ::String,
                                         condition_expression: ::String?,
                                         expression_attribute_names: Hash[::String, ::String]?,
-                                        expression_attribute_values: Hash[::String, untyped]?,
+                                        expression_attribute_values: Hash[::String, Params::attribute_value]?,
                                         return_values_on_condition_check_failure: ("ALL_OLD" | "NONE")?
                                       }?,
                                       delete: {
-                                        key: Hash[::String, untyped],
+                                        key: Hash[::String, Params::attribute_value],
                                         table_name: ::String,
                                         condition_expression: ::String?,
                                         expression_attribute_names: Hash[::String, ::String]?,
-                                        expression_attribute_values: Hash[::String, untyped]?,
+                                        expression_attribute_values: Hash[::String, Params::attribute_value]?,
                                         return_values_on_condition_check_failure: ("ALL_OLD" | "NONE")?
                                       }?,
                                       update: {
-                                        key: Hash[::String, untyped],
+                                        key: Hash[::String, Params::attribute_value],
                                         update_expression: ::String,
                                         table_name: ::String,
                                         condition_expression: ::String?,
                                         expression_attribute_names: Hash[::String, ::String]?,
-                                        expression_attribute_values: Hash[::String, untyped]?,
+                                        expression_attribute_values: Hash[::String, Params::attribute_value]?,
                                         return_values_on_condition_check_failure: ("ALL_OLD" | "NONE")?
                                       }?
-                                    },
+                                    }
                                   ],
                                   ?return_consumed_capacity: ("INDEXES" | "TOTAL" | "NONE"),
                                   ?return_item_collection_metrics: ("SIZE" | "NONE"),
@@ -1111,12 +995,14 @@ module Aws
         def table_name: () -> ::String
         def index_name: () -> ::String
         def contributor_insights_status: () -> ("ENABLING" | "ENABLED" | "DISABLING" | "DISABLED" | "FAILED")
+        def contributor_insights_mode: () -> ("ACCESSED_AND_THROTTLED_KEYS" | "THROTTLED_KEYS")
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DynamoDB/Client.html#update_contributor_insights-instance_method
       def update_contributor_insights: (
                                          table_name: ::String,
                                          ?index_name: ::String,
-                                         contributor_insights_action: ("ENABLE" | "DISABLE")
+                                         contributor_insights_action: ("ENABLE" | "DISABLE"),
+                                         ?contributor_insights_mode: ("ACCESSED_AND_THROTTLED_KEYS" | "THROTTLED_KEYS")
                                        ) -> _UpdateContributorInsightsResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateContributorInsightsResponseSuccess
 
@@ -1135,7 +1021,7 @@ module Aws
                                      delete: {
                                        region_name: ::String
                                      }?
-                                   },
+                                   }
                                  ]
                                ) -> _UpdateGlobalTableResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateGlobalTableResponseSuccess
@@ -1150,84 +1036,28 @@ module Aws
                                           global_table_name: ::String,
                                           ?global_table_billing_mode: ("PROVISIONED" | "PAY_PER_REQUEST"),
                                           ?global_table_provisioned_write_capacity_units: ::Integer,
-                                          ?global_table_provisioned_write_capacity_auto_scaling_settings_update: {
-                                            minimum_units: ::Integer?,
-                                            maximum_units: ::Integer?,
-                                            auto_scaling_disabled: bool?,
-                                            auto_scaling_role_arn: ::String?,
-                                            scaling_policy_update: {
-                                              policy_name: ::String?,
-                                              target_tracking_scaling_policy_configuration: {
-                                                disable_scale_in: bool?,
-                                                scale_in_cooldown: ::Integer?,
-                                                scale_out_cooldown: ::Integer?,
-                                                target_value: ::Float
-                                              }
-                                            }?
-                                          },
+                                          ?global_table_provisioned_write_capacity_auto_scaling_settings_update: Params::auto_scaling_settings_update,
                                           ?global_table_global_secondary_index_settings_update: Array[
                                             {
                                               index_name: ::String,
                                               provisioned_write_capacity_units: ::Integer?,
-                                              provisioned_write_capacity_auto_scaling_settings_update: {
-                                                minimum_units: ::Integer?,
-                                                maximum_units: ::Integer?,
-                                                auto_scaling_disabled: bool?,
-                                                auto_scaling_role_arn: ::String?,
-                                                scaling_policy_update: {
-                                                  policy_name: ::String?,
-                                                  target_tracking_scaling_policy_configuration: {
-                                                    disable_scale_in: bool?,
-                                                    scale_in_cooldown: ::Integer?,
-                                                    scale_out_cooldown: ::Integer?,
-                                                    target_value: ::Float
-                                                  }
-                                                }?
-                                              }?
-                                            },
+                                              provisioned_write_capacity_auto_scaling_settings_update: Params::auto_scaling_settings_update?
+                                            }
                                           ],
                                           ?replica_settings_update: Array[
                                             {
                                               region_name: ::String,
                                               replica_provisioned_read_capacity_units: ::Integer?,
-                                              replica_provisioned_read_capacity_auto_scaling_settings_update: {
-                                                minimum_units: ::Integer?,
-                                                maximum_units: ::Integer?,
-                                                auto_scaling_disabled: bool?,
-                                                auto_scaling_role_arn: ::String?,
-                                                scaling_policy_update: {
-                                                  policy_name: ::String?,
-                                                  target_tracking_scaling_policy_configuration: {
-                                                    disable_scale_in: bool?,
-                                                    scale_in_cooldown: ::Integer?,
-                                                    scale_out_cooldown: ::Integer?,
-                                                    target_value: ::Float
-                                                  }
-                                                }?
-                                              }?,
+                                              replica_provisioned_read_capacity_auto_scaling_settings_update: Params::auto_scaling_settings_update?,
                                               replica_global_secondary_index_settings_update: Array[
                                                 {
                                                   index_name: ::String,
                                                   provisioned_read_capacity_units: ::Integer?,
-                                                  provisioned_read_capacity_auto_scaling_settings_update: {
-                                                    minimum_units: ::Integer?,
-                                                    maximum_units: ::Integer?,
-                                                    auto_scaling_disabled: bool?,
-                                                    auto_scaling_role_arn: ::String?,
-                                                    scaling_policy_update: {
-                                                      policy_name: ::String?,
-                                                      target_tracking_scaling_policy_configuration: {
-                                                        disable_scale_in: bool?,
-                                                        scale_in_cooldown: ::Integer?,
-                                                        scale_out_cooldown: ::Integer?,
-                                                        target_value: ::Float
-                                                      }
-                                                    }?
-                                                  }?
-                                                },
+                                                  provisioned_read_capacity_auto_scaling_settings_update: Params::auto_scaling_settings_update?
+                                                }
                                               ]?,
                                               replica_table_class: ("STANDARD" | "STANDARD_INFREQUENT_ACCESS")?
-                                            },
+                                            }
                                           ]
                                         ) -> _UpdateGlobalTableSettingsResponseSuccess
                                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateGlobalTableSettingsResponseSuccess
@@ -1241,17 +1071,12 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DynamoDB/Client.html#update_item-instance_method
       def update_item: (
                          table_name: ::String,
-                         key: Hash[::String, untyped],
+                         key: Hash[::String, Params::attribute_value],
                          ?attribute_updates: Hash[::String, {
-                             value: untyped?,
+                             value: Params::attribute_value?,
                              action: ("ADD" | "PUT" | "DELETE")?
                            }],
-                         ?expected: Hash[::String, {
-                             value: untyped?,
-                             exists: bool?,
-                             comparison_operator: ("EQ" | "NE" | "IN" | "LE" | "LT" | "GE" | "GT" | "BETWEEN" | "NOT_NULL" | "NULL" | "CONTAINS" | "NOT_CONTAINS" | "BEGINS_WITH")?,
-                             attribute_value_list: Array[untyped]?
-                           }],
+                         ?expected: Hash[::String, Params::expected_attribute_value],
                          ?conditional_operator: ("AND" | "OR"),
                          ?return_values: ("NONE" | "ALL_OLD" | "UPDATED_OLD" | "ALL_NEW" | "UPDATED_NEW"),
                          ?return_consumed_capacity: ("INDEXES" | "TOTAL" | "NONE"),
@@ -1259,7 +1084,7 @@ module Aws
                          ?update_expression: ::String,
                          ?condition_expression: ::String,
                          ?expression_attribute_names: Hash[::String, ::String],
-                         ?expression_attribute_values: Hash[::String, untyped],
+                         ?expression_attribute_values: Hash[::String, Params::attribute_value],
                          ?return_values_on_condition_check_failure: ("ALL_OLD" | "NONE")
                        ) -> _UpdateItemResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateItemResponseSuccess
@@ -1291,7 +1116,7 @@ module Aws
                             {
                               attribute_name: ::String,
                               attribute_type: ("S" | "N" | "B")
-                            },
+                            }
                           ],
                           table_name: ::String,
                           ?billing_mode: ("PROVISIONED" | "PAY_PER_REQUEST"),
@@ -1322,7 +1147,7 @@ module Aws
                                   {
                                     attribute_name: ::String,
                                     key_type: ("HASH" | "RANGE")
-                                  },
+                                  }
                                 ],
                                 projection: {
                                   projection_type: ("ALL" | "KEYS_ONLY" | "INCLUDE")?,
@@ -1344,7 +1169,7 @@ module Aws
                               delete: {
                                 index_name: ::String
                               }?
-                            },
+                            }
                           ],
                           ?stream_specification: {
                             stream_enabled: bool,
@@ -1367,15 +1192,7 @@ module Aws
                                   max_read_request_units: ::Integer?
                                 }?,
                                 global_secondary_indexes: Array[
-                                  {
-                                    index_name: ::String,
-                                    provisioned_throughput_override: {
-                                      read_capacity_units: ::Integer?
-                                    }?,
-                                    on_demand_throughput_override: {
-                                      max_read_request_units: ::Integer?
-                                    }?
-                                  },
+                                  Params::replica_global_secondary_index
                                 ]?,
                                 table_class_override: ("STANDARD" | "STANDARD_INFREQUENT_ACCESS")?
                               }?,
@@ -1389,26 +1206,28 @@ module Aws
                                   max_read_request_units: ::Integer?
                                 }?,
                                 global_secondary_indexes: Array[
-                                  {
-                                    index_name: ::String,
-                                    provisioned_throughput_override: {
-                                      read_capacity_units: ::Integer?
-                                    }?,
-                                    on_demand_throughput_override: {
-                                      max_read_request_units: ::Integer?
-                                    }?
-                                  },
+                                  Params::replica_global_secondary_index
                                 ]?,
                                 table_class_override: ("STANDARD" | "STANDARD_INFREQUENT_ACCESS")?
                               }?,
                               delete: {
                                 region_name: ::String
                               }?
-                            },
+                            }
                           ],
                           ?table_class: ("STANDARD" | "STANDARD_INFREQUENT_ACCESS"),
                           ?deletion_protection_enabled: bool,
                           ?multi_region_consistency: ("EVENTUAL" | "STRONG"),
+                          ?global_table_witness_updates: Array[
+                            {
+                              create: {
+                                region_name: ::String
+                              }?,
+                              delete: {
+                                region_name: ::String
+                              }?
+                            }
+                          ],
                           ?on_demand_throughput: {
                             max_read_request_units: ::Integer?,
                             max_write_request_units: ::Integer?
@@ -1416,7 +1235,33 @@ module Aws
                           ?warm_throughput: {
                             read_units_per_second: ::Integer?,
                             write_units_per_second: ::Integer?
-                          }
+                          },
+                          ?global_table_settings_replication_mode: ("ENABLED" | "DISABLED" | "ENABLED_WITH_OVERRIDES"),
+                          ?vector_index_updates: Array[
+                            {
+                              create: {
+                                index_name: ::String,
+                                vector_attribute: {
+                                  attribute_name: ::String
+                                },
+                                search_schema: Array[
+                                  {
+                                    attribute_name: ::String,
+                                    search_schema_element_type: ("HASH" | "INLINE_FILTER")
+                                  }
+                                ]?,
+                                projection: {
+                                  projection_type: ("ALL" | "KEYS_ONLY" | "INCLUDE")?,
+                                  non_key_attributes: Array[::String]?
+                                },
+                                dimensions: ::Integer,
+                                distance_function: ("COSINE" | "DOT_PRODUCT" | "EUCLIDEAN")
+                              }?,
+                              delete: {
+                                index_name: ::String
+                              }?
+                            }
+                          ]
                         ) -> _UpdateTableResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateTableResponseSuccess
 
@@ -1429,78 +1274,22 @@ module Aws
                                                ?global_secondary_index_updates: Array[
                                                  {
                                                    index_name: ::String?,
-                                                   provisioned_write_capacity_auto_scaling_update: {
-                                                     minimum_units: ::Integer?,
-                                                     maximum_units: ::Integer?,
-                                                     auto_scaling_disabled: bool?,
-                                                     auto_scaling_role_arn: ::String?,
-                                                     scaling_policy_update: {
-                                                       policy_name: ::String?,
-                                                       target_tracking_scaling_policy_configuration: {
-                                                         disable_scale_in: bool?,
-                                                         scale_in_cooldown: ::Integer?,
-                                                         scale_out_cooldown: ::Integer?,
-                                                         target_value: ::Float
-                                                       }
-                                                     }?
-                                                   }?
-                                                 },
+                                                   provisioned_write_capacity_auto_scaling_update: Params::auto_scaling_settings_update?
+                                                 }
                                                ],
                                                table_name: ::String,
-                                               ?provisioned_write_capacity_auto_scaling_update: {
-                                                 minimum_units: ::Integer?,
-                                                 maximum_units: ::Integer?,
-                                                 auto_scaling_disabled: bool?,
-                                                 auto_scaling_role_arn: ::String?,
-                                                 scaling_policy_update: {
-                                                   policy_name: ::String?,
-                                                   target_tracking_scaling_policy_configuration: {
-                                                     disable_scale_in: bool?,
-                                                     scale_in_cooldown: ::Integer?,
-                                                     scale_out_cooldown: ::Integer?,
-                                                     target_value: ::Float
-                                                   }
-                                                 }?
-                                               },
+                                               ?provisioned_write_capacity_auto_scaling_update: Params::auto_scaling_settings_update,
                                                ?replica_updates: Array[
                                                  {
                                                    region_name: ::String,
                                                    replica_global_secondary_index_updates: Array[
                                                      {
                                                        index_name: ::String?,
-                                                       provisioned_read_capacity_auto_scaling_update: {
-                                                         minimum_units: ::Integer?,
-                                                         maximum_units: ::Integer?,
-                                                         auto_scaling_disabled: bool?,
-                                                         auto_scaling_role_arn: ::String?,
-                                                         scaling_policy_update: {
-                                                           policy_name: ::String?,
-                                                           target_tracking_scaling_policy_configuration: {
-                                                             disable_scale_in: bool?,
-                                                             scale_in_cooldown: ::Integer?,
-                                                             scale_out_cooldown: ::Integer?,
-                                                             target_value: ::Float
-                                                           }
-                                                         }?
-                                                       }?
-                                                     },
+                                                       provisioned_read_capacity_auto_scaling_update: Params::auto_scaling_settings_update?
+                                                     }
                                                    ]?,
-                                                   replica_provisioned_read_capacity_auto_scaling_update: {
-                                                     minimum_units: ::Integer?,
-                                                     maximum_units: ::Integer?,
-                                                     auto_scaling_disabled: bool?,
-                                                     auto_scaling_role_arn: ::String?,
-                                                     scaling_policy_update: {
-                                                       policy_name: ::String?,
-                                                       target_tracking_scaling_policy_configuration: {
-                                                         disable_scale_in: bool?,
-                                                         scale_in_cooldown: ::Integer?,
-                                                         scale_out_cooldown: ::Integer?,
-                                                         target_value: ::Float
-                                                       }
-                                                     }?
-                                                   }?
-                                                 },
+                                                   replica_provisioned_read_capacity_auto_scaling_update: Params::auto_scaling_settings_update?
+                                                 }
                                                ]
                                              ) -> _UpdateTableReplicaAutoScalingResponseSuccess
                                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateTableReplicaAutoScalingResponseSuccess
@@ -1520,7 +1309,24 @@ module Aws
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateTimeToLiveResponseSuccess
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DynamoDB/Client.html#wait_until-instance_method
-      def wait_until: (:table_exists waiter_name, 
+      def wait_until: (:contributor_insights_enabled waiter_name, 
+                    table_name: ::String,
+                    ?index_name: ::String
+                  ) -> Client::_DescribeContributorInsightsResponseSuccess
+                    | (:contributor_insights_enabled waiter_name, Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> Client::_DescribeContributorInsightsResponseSuccess
+                    | (:export_completed waiter_name, 
+                    export_arn: ::String
+                  ) -> Client::_DescribeExportResponseSuccess
+                    | (:export_completed waiter_name, Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> Client::_DescribeExportResponseSuccess
+                    | (:import_completed waiter_name, 
+                    import_arn: ::String
+                  ) -> Client::_DescribeImportResponseSuccess
+                    | (:import_completed waiter_name, Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> Client::_DescribeImportResponseSuccess
+                    | (:kinesis_streaming_destination_active waiter_name, 
+                    table_name: ::String
+                  ) -> Client::_DescribeKinesisStreamingDestinationResponseSuccess
+                    | (:kinesis_streaming_destination_active waiter_name, Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> Client::_DescribeKinesisStreamingDestinationResponseSuccess
+                    | (:table_exists waiter_name, 
                     table_name: ::String
                   ) -> Client::_DescribeTableResponseSuccess
                     | (:table_exists waiter_name, Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> Client::_DescribeTableResponseSuccess

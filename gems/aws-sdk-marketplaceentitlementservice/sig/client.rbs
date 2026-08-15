@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -86,7 +87,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/MarketplaceEntitlementService/Client.html#get_entitlements-instance_method
       def get_entitlements: (
                               product_code: ::String,
-                              ?filter: Hash[("CUSTOMER_IDENTIFIER" | "DIMENSION"), Array[::String]],
+                              ?filter: Hash[("CUSTOMER_IDENTIFIER" | "DIMENSION" | "CUSTOMER_AWS_ACCOUNT_ID" | "LICENSE_ARN"), Array[::String]],
                               ?next_token: ::String,
                               ?max_results: ::Integer
                             ) -> _GetEntitlementsResponseSuccess

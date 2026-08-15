@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -90,7 +91,7 @@ module Aws
                                         {
                                           target_type: ::String?,
                                           target_address: ::String?
-                                        },
+                                        }
                                       ],
                                       detail_type: ("BASIC" | "FULL"),
                                       ?client_request_token: ::String,
@@ -150,7 +151,7 @@ module Aws
                                 {
                                   name: ("RESOURCE_TYPE" | "SERVICE_NAME"),
                                   value: ::String
-                                },
+                                }
                               ],
                               ?next_token: ::String,
                               ?max_results: ::Integer
@@ -168,7 +169,7 @@ module Aws
                                        {
                                          name: ("EVENT_TYPE_ID" | "CREATED_BY" | "RESOURCE" | "TARGET_ADDRESS"),
                                          value: ::String
-                                       },
+                                       }
                                      ],
                                      ?next_token: ::String,
                                      ?max_results: ::Integer
@@ -196,7 +197,7 @@ module Aws
                             {
                               name: ("TARGET_TYPE" | "TARGET_ADDRESS" | "TARGET_STATUS"),
                               value: ::String
-                            },
+                            }
                           ],
                           ?next_token: ::String,
                           ?max_results: ::Integer
@@ -263,7 +264,7 @@ module Aws
                                         {
                                           target_type: ::String?,
                                           target_address: ::String?
-                                        },
+                                        }
                                       ],
                                       ?detail_type: ("BASIC" | "FULL")
                                     ) -> _UpdateNotificationRuleResponseSuccess

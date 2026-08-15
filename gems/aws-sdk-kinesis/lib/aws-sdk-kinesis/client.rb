@@ -97,8 +97,8 @@ module Aws::Kinesis
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -126,22 +126,24 @@ module Aws::Kinesis
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -169,6 +171,11 @@ module Aws::Kinesis
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -194,7 +201,7 @@ module Aws::Kinesis
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -202,8 +209,7 @@ module Aws::Kinesis
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -265,8 +271,8 @@ module Aws::Kinesis
     #     When an EventStream or Proc object is provided, it will be used as callback for each chunk of event stream response received along the way.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -328,17 +334,15 @@ module Aws::Kinesis
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -386,8 +390,8 @@ module Aws::Kinesis
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -508,10 +512,15 @@ module Aws::Kinesis
     #   The name of the stream.
     #
     # @option params [required, Hash<String,String>] :tags
-    #   A set of up to 10 key-value pairs to use to create the tags.
+    #   A set of up to 50 key-value pairs to use to create the tags. A tag
+    #   consists of a required key and an optional value. You can add up to 50
+    #   tags per resource.
     #
     # @option params [String] :stream_arn
     #   The ARN of the stream.
+    #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
@@ -523,6 +532,7 @@ module Aws::Kinesis
     #       "TagKey" => "TagValue",
     #     },
     #     stream_arn: "StreamARN",
+    #     stream_id: "StreamId",
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/AddTagsToStream AWS API Documentation
@@ -545,13 +555,22 @@ module Aws::Kinesis
     # planning and automatically scale to handle gigabytes of write and read
     # throughput per minute. With the on-demand mode, Kinesis Data Streams
     # automatically manages the shards in order to provide the necessary
-    # throughput. For the data streams with a provisioned mode, you must
-    # specify the number of shards for the data stream. Each shard can
-    # support reads up to five transactions per second, up to a maximum data
-    # read total of 2 MiB per second. Each shard can support writes up to
-    # 1,000 records per second, up to a maximum data write total of 1 MiB
-    # per second. If the amount of data input increases or decreases, you
-    # can add or remove shards.
+    # throughput.
+    #
+    # If you'd still like to proactively scale your on-demand data stream’s
+    # capacity, you can unlock the warm throughput feature for on-demand
+    # data streams by enabling `MinimumThroughputBillingCommitment` for your
+    # account. Once your account has `MinimumThroughputBillingCommitment`
+    # enabled, you can specify the warm throughput in MiB per second that
+    # your stream can support in writes.
+    #
+    # For the data streams with a provisioned mode, you must specify the
+    # number of shards for the data stream. Each shard can support reads up
+    # to five transactions per second, up to a maximum data read total of 2
+    # MiB per second. Each shard can support writes up to 1,000 records per
+    # second, up to a maximum data write total of 1 MiB per second. If the
+    # amount of data input increases or decreases, you can add or remove
+    # shards.
     #
     # The stream name identifies the stream. The name is scoped to the
     # Amazon Web Services account used by the application. It is also scoped
@@ -573,10 +592,10 @@ module Aws::Kinesis
     #
     # * Create more shards than are authorized for your account.
     #
-    # For the default shard limit for an Amazon Web Services account, see
-    # [Amazon Kinesis Data Streams Limits][1] in the *Amazon Kinesis Data
-    # Streams Developer Guide*. To increase this limit, [contact Amazon Web
-    # Services Support][2].
+    # For the default shard or on-demand throughput limits for an Amazon Web
+    # Services account, see [Amazon Kinesis Data Streams Limits][1] in the
+    # *Amazon Kinesis Data Streams Developer Guide*. To increase this limit,
+    # [contact Amazon Web Services Support][2].
     #
     # You can use DescribeStreamSummary to check the stream status, which is
     # returned in `StreamStatus`.
@@ -584,11 +603,13 @@ module Aws::Kinesis
     # CreateStream has a limit of five transactions per second per account.
     #
     # You can add tags to the stream when making a `CreateStream` request by
-    # setting the `Tags` parameter. If you pass `Tags` parameter, in
-    # addition to having `kinesis:createStream` permission, you must also
-    # have `kinesis:addTagsToStream` permission for the stream that will be
-    # created. Tags will take effect from the `CREATING` status of the
-    # stream.
+    # setting the `Tags` parameter. If you pass the `Tags` parameter, in
+    # addition to having the `kinesis:CreateStream` permission, you must
+    # also have the `kinesis:AddTagsToStream` permission for the stream that
+    # will be created. The `kinesis:TagResource` permission won’t work to
+    # tag streams on creation. Tags will take effect from the `CREATING`
+    # status of the stream, but you can't make any updates to the tags
+    # until the stream is in `ACTIVE` state.
     #
     #
     #
@@ -614,7 +635,17 @@ module Aws::Kinesis
     #   and a **provisioned** capacity mode for your data streams.
     #
     # @option params [Hash<String,String>] :tags
-    #   A set of up to 10 key-value pairs to use to create the tags.
+    #   A set of up to 50 key-value pairs to use to create the tags. A tag
+    #   consists of a required key and an optional value.
+    #
+    # @option params [Integer] :warm_throughput_mi_bps
+    #   The target warm throughput in MB/s that the stream should be scaled to
+    #   handle. This represents the throughput capacity that will be
+    #   immediately available for write operations.
+    #
+    # @option params [Integer] :max_record_size_in_ki_b
+    #   The maximum record size of a single record in kibibyte (KiB) that you
+    #   can write to, and read from a stream.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
@@ -629,6 +660,8 @@ module Aws::Kinesis
     #     tags: {
     #       "TagKey" => "TagValue",
     #     },
+    #     warm_throughput_mi_bps: 1,
+    #     max_record_size_in_ki_b: 1,
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/CreateStream AWS API Documentation
@@ -664,6 +697,9 @@ module Aws::Kinesis
     # @option params [String] :stream_arn
     #   The ARN of the stream.
     #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
@@ -672,6 +708,7 @@ module Aws::Kinesis
     #     stream_name: "StreamName",
     #     retention_period_hours: 1, # required
     #     stream_arn: "StreamARN",
+    #     stream_id: "StreamId",
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/DecreaseStreamRetentionPeriod AWS API Documentation
@@ -694,12 +731,16 @@ module Aws::Kinesis
     # @option params [required, String] :resource_arn
     #   The Amazon Resource Name (ARN) of the data stream or consumer.
     #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_resource_policy({
     #     resource_arn: "ResourceARN", # required
+    #     stream_id: "StreamId",
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/DeleteResourcePolicy AWS API Documentation
@@ -749,6 +790,9 @@ module Aws::Kinesis
     # @option params [String] :stream_arn
     #   The ARN of the stream.
     #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
@@ -757,6 +801,7 @@ module Aws::Kinesis
     #     stream_name: "StreamName",
     #     enforce_consumer_deletion: false,
     #     stream_arn: "StreamARN",
+    #     stream_id: "StreamId",
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/DeleteStream AWS API Documentation
@@ -799,6 +844,9 @@ module Aws::Kinesis
     #   registered with a given data stream. The description of a consumer
     #   contains its ARN.
     #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
@@ -807,6 +855,7 @@ module Aws::Kinesis
     #     stream_arn: "StreamARN",
     #     consumer_name: "ConsumerName",
     #     consumer_arn: "ConsumerARN",
+    #     stream_id: "StreamId",
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/DeregisterStreamConsumer AWS API Documentation
@@ -815,6 +864,34 @@ module Aws::Kinesis
     # @param [Hash] params ({})
     def deregister_stream_consumer(params = {}, options = {})
       req = build_request(:deregister_stream_consumer, params)
+      req.send_request(options)
+    end
+
+    # Describes the account-level settings for Amazon Kinesis Data Streams.
+    # This operation returns information about the minimum throughput
+    # billing commitments and other account-level configurations.
+    #
+    # This API has a call limit of 5 transactions per second (TPS) for each
+    # Amazon Web Services account. TPS over 5 will initiate the
+    # `LimitExceededException`.
+    #
+    # @return [Types::DescribeAccountSettingsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DescribeAccountSettingsOutput#minimum_throughput_billing_commitment #minimum_throughput_billing_commitment} => Types::MinimumThroughputBillingCommitmentOutput
+    #
+    # @example Response structure
+    #
+    #   resp.minimum_throughput_billing_commitment.status #=> String, one of "ENABLED", "DISABLED", "ENABLED_UNTIL_EARLIEST_ALLOWED_END"
+    #   resp.minimum_throughput_billing_commitment.started_at #=> Time
+    #   resp.minimum_throughput_billing_commitment.ended_at #=> Time
+    #   resp.minimum_throughput_billing_commitment.earliest_allowed_end_at #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/DescribeAccountSettings AWS API Documentation
+    #
+    # @overload describe_account_settings(params = {})
+    # @param [Hash] params ({})
+    def describe_account_settings(params = {}, options = {})
+      req = build_request(:describe_account_settings, params)
       req.send_request(options)
     end
 
@@ -909,6 +986,9 @@ module Aws::Kinesis
     # @option params [String] :stream_arn
     #   The ARN of the stream.
     #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
     # @return [Types::DescribeStreamOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::DescribeStreamOutput#stream_description #stream_description} => Types::StreamDescription
@@ -922,6 +1002,7 @@ module Aws::Kinesis
     #     limit: 1,
     #     exclusive_start_shard_id: "ShardId",
     #     stream_arn: "StreamARN",
+    #     stream_id: "StreamId",
     #   })
     #
     # @example Response structure
@@ -994,6 +1075,9 @@ module Aws::Kinesis
     #   The ARN returned by Kinesis Data Streams when you registered the
     #   consumer.
     #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
     # @return [Types::DescribeStreamConsumerOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::DescribeStreamConsumerOutput#consumer_description #consumer_description} => Types::ConsumerDescription
@@ -1004,6 +1088,7 @@ module Aws::Kinesis
     #     stream_arn: "StreamARN",
     #     consumer_name: "ConsumerName",
     #     consumer_arn: "ConsumerARN",
+    #     stream_id: "StreamId",
     #   })
     #
     # @example Response structure
@@ -1045,6 +1130,9 @@ module Aws::Kinesis
     # @option params [String] :stream_arn
     #   The ARN of the stream.
     #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
     # @return [Types::DescribeStreamSummaryOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::DescribeStreamSummaryOutput#stream_description_summary #stream_description_summary} => Types::StreamDescriptionSummary
@@ -1054,12 +1142,14 @@ module Aws::Kinesis
     #   resp = client.describe_stream_summary({
     #     stream_name: "StreamName",
     #     stream_arn: "StreamARN",
+    #     stream_id: "StreamId",
     #   })
     #
     # @example Response structure
     #
     #   resp.stream_description_summary.stream_name #=> String
     #   resp.stream_description_summary.stream_arn #=> String
+    #   resp.stream_description_summary.stream_id #=> String
     #   resp.stream_description_summary.stream_status #=> String, one of "CREATING", "DELETING", "ACTIVE", "UPDATING"
     #   resp.stream_description_summary.stream_mode_details.stream_mode #=> String, one of "PROVISIONED", "ON_DEMAND"
     #   resp.stream_description_summary.retention_period_hours #=> Integer
@@ -1071,6 +1161,9 @@ module Aws::Kinesis
     #   resp.stream_description_summary.key_id #=> String
     #   resp.stream_description_summary.open_shard_count #=> Integer
     #   resp.stream_description_summary.consumer_count #=> Integer
+    #   resp.stream_description_summary.warm_throughput.target_mi_bps #=> Integer
+    #   resp.stream_description_summary.warm_throughput.current_mi_bps #=> Integer
+    #   resp.stream_description_summary.max_record_size_in_ki_b #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/DescribeStreamSummary AWS API Documentation
     #
@@ -1126,6 +1219,9 @@ module Aws::Kinesis
     # @option params [String] :stream_arn
     #   The ARN of the stream.
     #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
     # @return [Types::EnhancedMonitoringOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::EnhancedMonitoringOutput#stream_name #stream_name} => String
@@ -1139,6 +1235,7 @@ module Aws::Kinesis
     #     stream_name: "StreamName",
     #     shard_level_metrics: ["IncomingBytes"], # required, accepts IncomingBytes, IncomingRecords, OutgoingBytes, OutgoingRecords, WriteProvisionedThroughputExceeded, ReadProvisionedThroughputExceeded, IteratorAgeMilliseconds, ALL
     #     stream_arn: "StreamARN",
+    #     stream_id: "StreamId",
     #   })
     #
     # @example Response structure
@@ -1204,6 +1301,9 @@ module Aws::Kinesis
     # @option params [String] :stream_arn
     #   The ARN of the stream.
     #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
     # @return [Types::EnhancedMonitoringOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::EnhancedMonitoringOutput#stream_name #stream_name} => String
@@ -1217,6 +1317,7 @@ module Aws::Kinesis
     #     stream_name: "StreamName",
     #     shard_level_metrics: ["IncomingBytes"], # required, accepts IncomingBytes, IncomingRecords, OutgoingBytes, OutgoingRecords, WriteProvisionedThroughputExceeded, ReadProvisionedThroughputExceeded, IteratorAgeMilliseconds, ALL
     #     stream_arn: "StreamARN",
+    #     stream_id: "StreamId",
     #   })
     #
     # @example Response structure
@@ -1325,6 +1426,9 @@ module Aws::Kinesis
     # @option params [String] :stream_arn
     #   The ARN of the stream.
     #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
     # @return [Types::GetRecordsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::GetRecordsOutput#records #records} => Array&lt;Types::Record&gt;
@@ -1338,6 +1442,7 @@ module Aws::Kinesis
     #     shard_iterator: "ShardIterator", # required
     #     limit: 1,
     #     stream_arn: "StreamARN",
+    #     stream_id: "StreamId",
     #   })
     #
     # @example Response structure
@@ -1377,6 +1482,9 @@ module Aws::Kinesis
     # @option params [required, String] :resource_arn
     #   The Amazon Resource Name (ARN) of the data stream or consumer.
     #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
     # @return [Types::GetResourcePolicyOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::GetResourcePolicyOutput#policy #policy} => String
@@ -1385,6 +1493,7 @@ module Aws::Kinesis
     #
     #   resp = client.get_resource_policy({
     #     resource_arn: "ResourceARN", # required
+    #     stream_id: "StreamId",
     #   })
     #
     # @example Response structure
@@ -1501,6 +1610,9 @@ module Aws::Kinesis
     # @option params [String] :stream_arn
     #   The ARN of the stream.
     #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
     # @return [Types::GetShardIteratorOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::GetShardIteratorOutput#shard_iterator #shard_iterator} => String
@@ -1514,6 +1626,7 @@ module Aws::Kinesis
     #     starting_sequence_number: "SequenceNumber",
     #     timestamp: Time.now,
     #     stream_arn: "StreamARN",
+    #     stream_id: "StreamId",
     #   })
     #
     # @example Response structure
@@ -1559,6 +1672,9 @@ module Aws::Kinesis
     # @option params [String] :stream_arn
     #   The ARN of the stream.
     #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
@@ -1567,6 +1683,7 @@ module Aws::Kinesis
     #     stream_name: "StreamName",
     #     retention_period_hours: 1, # required
     #     stream_arn: "StreamARN",
+    #     stream_id: "StreamId",
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/IncreaseStreamRetentionPeriod AWS API Documentation
@@ -1692,6 +1809,9 @@ module Aws::Kinesis
     # @option params [String] :stream_arn
     #   The ARN of the stream.
     #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
     # @return [Types::ListShardsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::ListShardsOutput#shards #shards} => Array&lt;Types::Shard&gt;
@@ -1711,6 +1831,7 @@ module Aws::Kinesis
     #       timestamp: Time.now,
     #     },
     #     stream_arn: "StreamARN",
+    #     stream_id: "StreamId",
     #   })
     #
     # @example Response structure
@@ -1789,6 +1910,9 @@ module Aws::Kinesis
     #   You can't specify this parameter if you specify the NextToken
     #   parameter.
     #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
     # @return [Types::ListStreamConsumersOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::ListStreamConsumersOutput#consumers #consumers} => Array&lt;Types::Consumer&gt;
@@ -1803,6 +1927,7 @@ module Aws::Kinesis
     #     next_token: "NextToken",
     #     max_results: 1,
     #     stream_creation_timestamp: Time.now,
+    #     stream_id: "StreamId",
     #   })
     #
     # @example Response structure
@@ -1891,6 +2016,50 @@ module Aws::Kinesis
       req.send_request(options)
     end
 
+    # List all tags added to the specified Kinesis resource. Each tag is a
+    # label consisting of a user-defined key and value. Tags can help you
+    # manage, identify, organize, search for, and filter resources.
+    #
+    # For more information about tagging Kinesis resources, see [Tag your
+    # Amazon Kinesis Data Streams resources][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/streams/latest/dev/tagging.html
+    #
+    # @option params [required, String] :resource_arn
+    #   The Amazon Resource Name (ARN) of the Kinesis resource for which to
+    #   list tags.
+    #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
+    # @return [Types::ListTagsForResourceOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListTagsForResourceOutput#tags #tags} => Array&lt;Types::Tag&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_tags_for_resource({
+    #     resource_arn: "ResourceARN", # required
+    #     stream_id: "StreamId",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.tags #=> Array
+    #   resp.tags[0].key #=> String
+    #   resp.tags[0].value #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/ListTagsForResource AWS API Documentation
+    #
+    # @overload list_tags_for_resource(params = {})
+    # @param [Hash] params ({})
+    def list_tags_for_resource(params = {}, options = {})
+      req = build_request(:list_tags_for_resource, params)
+      req.send_request(options)
+    end
+
     # Lists the tags for the specified Kinesis data stream. This operation
     # has a limit of five transactions per second per account.
     #
@@ -1917,6 +2086,9 @@ module Aws::Kinesis
     # @option params [String] :stream_arn
     #   The ARN of the stream.
     #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
     # @return [Types::ListTagsForStreamOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::ListTagsForStreamOutput#tags #tags} => Array&lt;Types::Tag&gt;
@@ -1929,6 +2101,7 @@ module Aws::Kinesis
     #     exclusive_start_tag_key: "TagKey",
     #     limit: 1,
     #     stream_arn: "StreamARN",
+    #     stream_id: "StreamId",
     #   })
     #
     # @example Response structure
@@ -2013,6 +2186,9 @@ module Aws::Kinesis
     # @option params [String] :stream_arn
     #   The ARN of the stream.
     #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
@@ -2022,6 +2198,7 @@ module Aws::Kinesis
     #     shard_to_merge: "ShardId", # required
     #     adjacent_shard_to_merge: "ShardId", # required
     #     stream_arn: "StreamARN",
+    #     stream_id: "StreamId",
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/MergeShards AWS API Documentation
@@ -2037,7 +2214,7 @@ module Aws::Kinesis
     # `PutRecord` to send data into the stream for real-time ingestion and
     # subsequent processing, one record at a time. Each shard can support
     # writes up to 1,000 records per second, up to a maximum data write
-    # total of 1 MiB per second.
+    # total of 10 MiB per second.
     #
     # <note markdown="1"> When invoking this API, you must use either the `StreamARN` or the
     # `StreamName` parameter, or both. It is recommended that you use the
@@ -2100,7 +2277,7 @@ module Aws::Kinesis
     #   The data blob to put into the record, which is base64-encoded when the
     #   blob is serialized. When the data blob (the payload before
     #   base64-encoding) is added to the partition key size, the total size
-    #   must not exceed the maximum record size (1 MiB).
+    #   must not exceed the maximum record size (10 MiB).
     #
     # @option params [required, String] :partition_key
     #   Determines which shard in the stream the data record is assigned to.
@@ -2128,6 +2305,9 @@ module Aws::Kinesis
     # @option params [String] :stream_arn
     #   The ARN of the stream.
     #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
     # @return [Types::PutRecordOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::PutRecordOutput#shard_id #shard_id} => String
@@ -2143,6 +2323,7 @@ module Aws::Kinesis
     #     explicit_hash_key: "HashKey",
     #     sequence_number_for_ordering: "SequenceNumber",
     #     stream_arn: "StreamARN",
+    #     stream_id: "StreamId",
     #   })
     #
     # @example Response structure
@@ -2171,10 +2352,10 @@ module Aws::Kinesis
     #  </note>
     #
     # Each `PutRecords` request can support up to 500 records. Each record
-    # in the request can be as large as 1 MiB, up to a limit of 5 MiB for
+    # in the request can be as large as 10 MiB, up to a limit of 10 MiB for
     # the entire request, including partition keys. Each shard can support
     # writes up to 1,000 records per second, up to a maximum data write
-    # total of 1 MiB per second.
+    # total of 1 MB per second.
     #
     # You must specify the name of the stream that captures, stores, and
     # transports the data; and an array of request `Records`, with each
@@ -2256,6 +2437,9 @@ module Aws::Kinesis
     # @option params [String] :stream_arn
     #   The ARN of the stream.
     #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
     # @return [Types::PutRecordsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::PutRecordsOutput#failed_record_count #failed_record_count} => Integer
@@ -2274,6 +2458,7 @@ module Aws::Kinesis
     #     ],
     #     stream_name: "StreamName",
     #     stream_arn: "StreamARN",
+    #     stream_id: "StreamId",
     #   })
     #
     # @example Response structure
@@ -2323,6 +2508,9 @@ module Aws::Kinesis
     # @option params [required, String] :resource_arn
     #   The Amazon Resource Name (ARN) of the data stream or consumer.
     #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
     # @option params [required, String] :policy
     #   Details of the resource policy. It must include the identity of the
     #   principal and the actions allowed on this resource. This is formatted
@@ -2334,6 +2522,7 @@ module Aws::Kinesis
     #
     #   resp = client.put_resource_policy({
     #     resource_arn: "ResourceARN", # required
+    #     stream_id: "StreamId",
     #     policy: "Policy", # required
     #   })
     #
@@ -2353,8 +2542,19 @@ module Aws::Kinesis
     # unaffected by the total number of consumers that read from the same
     # stream.
     #
-    # You can register up to 20 consumers per stream. A given consumer can
-    # only be registered with one stream at a time.
+    # You can add tags to the registered consumer when making a
+    # `RegisterStreamConsumer` request by setting the `Tags` parameter. If
+    # you pass the `Tags` parameter, in addition to having the
+    # `kinesis:RegisterStreamConsumer` permission, you must also have the
+    # `kinesis:TagResource` permission for the consumer that will be
+    # registered. Tags will take effect from the `CREATING` status of the
+    # consumer.
+    #
+    # With On-demand Advantage streams, you can register up to 50 consumers
+    # per stream to use Enhanced Fan-out. With On-demand Standard and
+    # Provisioned streams, you can register up to 20 consumers per stream to
+    # use Enhanced Fan-out. A given consumer can only be registered with one
+    # stream at a time.
     #
     # For an example of how to use this operation, see [Enhanced Fan-Out
     # Using the Kinesis Data Streams API][1].
@@ -2383,6 +2583,13 @@ module Aws::Kinesis
     #   name. However, consumer names don't have to be unique across data
     #   streams.
     #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
+    # @option params [Hash<String,String>] :tags
+    #   A set of up to 50 key-value pairs. A tag consists of a required key
+    #   and an optional value.
+    #
     # @return [Types::RegisterStreamConsumerOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::RegisterStreamConsumerOutput#consumer #consumer} => Types::Consumer
@@ -2392,6 +2599,10 @@ module Aws::Kinesis
     #   resp = client.register_stream_consumer({
     #     stream_arn: "StreamARN", # required
     #     consumer_name: "ConsumerName", # required
+    #     stream_id: "StreamId",
+    #     tags: {
+    #       "TagKey" => "TagValue",
+    #     },
     #   })
     #
     # @example Response structure
@@ -2434,6 +2645,9 @@ module Aws::Kinesis
     # @option params [String] :stream_arn
     #   The ARN of the stream.
     #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
@@ -2442,6 +2656,7 @@ module Aws::Kinesis
     #     stream_name: "StreamName",
     #     tag_keys: ["TagKey"], # required
     #     stream_arn: "StreamARN",
+    #     stream_id: "StreamId",
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/RemoveTagsFromStream AWS API Documentation
@@ -2537,6 +2752,9 @@ module Aws::Kinesis
     # @option params [String] :stream_arn
     #   The ARN of the stream.
     #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
@@ -2546,6 +2764,7 @@ module Aws::Kinesis
     #     shard_to_split: "ShardId", # required
     #     new_starting_hash_key: "HashKey", # required
     #     stream_arn: "StreamARN",
+    #     stream_id: "StreamId",
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/SplitShard AWS API Documentation
@@ -2613,6 +2832,9 @@ module Aws::Kinesis
     # @option params [String] :stream_arn
     #   The ARN of the stream.
     #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
@@ -2622,6 +2844,7 @@ module Aws::Kinesis
     #     encryption_type: "NONE", # required, accepts NONE, KMS
     #     key_id: "KeyId", # required
     #     stream_arn: "StreamARN",
+    #     stream_id: "StreamId",
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/StartStreamEncryption AWS API Documentation
@@ -2690,6 +2913,9 @@ module Aws::Kinesis
     # @option params [String] :stream_arn
     #   The ARN of the stream.
     #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
@@ -2699,6 +2925,7 @@ module Aws::Kinesis
     #     encryption_type: "NONE", # required, accepts NONE, KMS
     #     key_id: "KeyId", # required
     #     stream_arn: "StreamARN",
+    #     stream_id: "StreamId",
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/StopStreamEncryption AWS API Documentation
@@ -2707,6 +2934,166 @@ module Aws::Kinesis
     # @param [Hash] params ({})
     def stop_stream_encryption(params = {}, options = {})
       req = build_request(:stop_stream_encryption, params)
+      req.send_request(options)
+    end
+
+    # Adds or updates tags for the specified Kinesis resource. Each tag is a
+    # label consisting of a user-defined key and value. Tags can help you
+    # manage, identify, organize, search for, and filter resources. You can
+    # assign up to 50 tags to a Kinesis resource.
+    #
+    # @option params [required, Hash<String,String>] :tags
+    #   An array of tags to be added to the Kinesis resource. A tag consists
+    #   of a required key and an optional value. You can add up to 50 tags per
+    #   resource.
+    #
+    #   Tags may only contain Unicode letters, digits, white space, or these
+    #   symbols: \_ . : / = + - @.
+    #
+    # @option params [required, String] :resource_arn
+    #   The Amazon Resource Name (ARN) of the Kinesis resource to which to add
+    #   tags.
+    #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.tag_resource({
+    #     tags: { # required
+    #       "TagKey" => "TagValue",
+    #     },
+    #     resource_arn: "ResourceARN", # required
+    #     stream_id: "StreamId",
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/TagResource AWS API Documentation
+    #
+    # @overload tag_resource(params = {})
+    # @param [Hash] params ({})
+    def tag_resource(params = {}, options = {})
+      req = build_request(:tag_resource, params)
+      req.send_request(options)
+    end
+
+    # Removes tags from the specified Kinesis resource. Removed tags are
+    # deleted and can't be recovered after this operation completes
+    # successfully.
+    #
+    # @option params [required, Array<String>] :tag_keys
+    #   A list of tag key-value pairs. Existing tags of the resource whose
+    #   keys are members of this list will be removed from the Kinesis
+    #   resource.
+    #
+    # @option params [required, String] :resource_arn
+    #   The Amazon Resource Name (ARN) of the Kinesis resource from which to
+    #   remove tags.
+    #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.untag_resource({
+    #     tag_keys: ["TagKey"], # required
+    #     resource_arn: "ResourceARN", # required
+    #     stream_id: "StreamId",
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/UntagResource AWS API Documentation
+    #
+    # @overload untag_resource(params = {})
+    # @param [Hash] params ({})
+    def untag_resource(params = {}, options = {})
+      req = build_request(:untag_resource, params)
+      req.send_request(options)
+    end
+
+    # Updates the account-level settings for Amazon Kinesis Data Streams.
+    #
+    # Updating account settings is a synchronous operation. Upon receiving
+    # the request, Kinesis Data Streams will return immediately with your
+    # account’s updated settings.
+    #
+    # **API limits**
+    #
+    # * Certain account configurations have minimum commitment windows.
+    #   Attempting to update your settings prior to the end of the minimum
+    #   commitment window might have certain restrictions.
+    #
+    # * This API has a call limit of 5 transactions per second (TPS) for
+    #   each Amazon Web Services account. TPS over 5 will initiate the
+    #   `LimitExceededException`.
+    #
+    # @option params [required, Types::MinimumThroughputBillingCommitmentInput] :minimum_throughput_billing_commitment
+    #   Specifies the minimum throughput billing commitment configuration for
+    #   your account.
+    #
+    # @return [Types::UpdateAccountSettingsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateAccountSettingsOutput#minimum_throughput_billing_commitment #minimum_throughput_billing_commitment} => Types::MinimumThroughputBillingCommitmentOutput
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_account_settings({
+    #     minimum_throughput_billing_commitment: { # required
+    #       status: "ENABLED", # required, accepts ENABLED, DISABLED
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.minimum_throughput_billing_commitment.status #=> String, one of "ENABLED", "DISABLED", "ENABLED_UNTIL_EARLIEST_ALLOWED_END"
+    #   resp.minimum_throughput_billing_commitment.started_at #=> Time
+    #   resp.minimum_throughput_billing_commitment.ended_at #=> Time
+    #   resp.minimum_throughput_billing_commitment.earliest_allowed_end_at #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/UpdateAccountSettings AWS API Documentation
+    #
+    # @overload update_account_settings(params = {})
+    # @param [Hash] params ({})
+    def update_account_settings(params = {}, options = {})
+      req = build_request(:update_account_settings, params)
+      req.send_request(options)
+    end
+
+    # This allows you to update the `MaxRecordSize` of a single record that
+    # you can write to, and read from a stream. You can ingest and digest
+    # single records up to 10240 KiB.
+    #
+    # @option params [String] :stream_arn
+    #   The Amazon Resource Name (ARN) of the stream for the `MaxRecordSize`
+    #   update.
+    #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
+    # @option params [required, Integer] :max_record_size_in_ki_b
+    #   The maximum record size of a single record in KiB that you can write
+    #   to, and read from a stream. Specify a value between 1024 and 10240 KiB
+    #   (1 to 10 MiB). If you specify a value that is out of this range,
+    #   `UpdateMaxRecordSize` sends back an `ValidationException` message.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_max_record_size({
+    #     stream_arn: "StreamARN",
+    #     stream_id: "StreamId",
+    #     max_record_size_in_ki_b: 1, # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/UpdateMaxRecordSize AWS API Documentation
+    #
+    # @overload update_max_record_size(params = {})
+    # @param [Hash] params ({})
+    def update_max_record_size(params = {}, options = {})
+      req = build_request(:update_max_record_size, params)
       req.send_request(options)
     end
 
@@ -2793,6 +3180,9 @@ module Aws::Kinesis
     # @option params [String] :stream_arn
     #   The ARN of the stream.
     #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
     # @return [Types::UpdateShardCountOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::UpdateShardCountOutput#stream_name #stream_name} => String
@@ -2807,6 +3197,7 @@ module Aws::Kinesis
     #     target_shard_count: 1, # required
     #     scaling_type: "UNIFORM_SCALING", # required, accepts UNIFORM_SCALING
     #     stream_arn: "StreamARN",
+    #     stream_id: "StreamId",
     #   })
     #
     # @example Response structure
@@ -2829,9 +3220,19 @@ module Aws::Kinesis
     # Data Streams, you can choose between an **on-demand** capacity mode
     # and a **provisioned** capacity mode for your data stream.
     #
+    # If you'd still like to proactively scale your on-demand data stream’s
+    # capacity, you can unlock the warm throughput feature for on-demand
+    # data streams by enabling `MinimumThroughputBillingCommitment` for your
+    # account. Once your account has `MinimumThroughputBillingCommitment`
+    # enabled, you can specify the warm throughput in MiB per second that
+    # your stream can support in writes.
+    #
     # @option params [required, String] :stream_arn
     #   Specifies the ARN of the data stream whose capacity mode you want to
     #   update.
+    #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
     #
     # @option params [required, Types::StreamModeDetails] :stream_mode_details
     #   Specifies the capacity mode to which you want to set your data stream.
@@ -2839,15 +3240,23 @@ module Aws::Kinesis
     #   **on-demand** capacity mode and a **provisioned** capacity mode for
     #   your data streams.
     #
+    # @option params [Integer] :warm_throughput_mi_bps
+    #   The target warm throughput in MB/s that the stream should be scaled to
+    #   handle. This represents the throughput capacity that will be
+    #   immediately available for write operations. This field is only valid
+    #   when the stream mode is being updated to on-demand.
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_stream_mode({
     #     stream_arn: "StreamARN", # required
+    #     stream_id: "StreamId",
     #     stream_mode_details: { # required
     #       stream_mode: "PROVISIONED", # required, accepts PROVISIONED, ON_DEMAND
     #     },
+    #     warm_throughput_mi_bps: 1,
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/UpdateStreamMode AWS API Documentation
@@ -2856,6 +3265,95 @@ module Aws::Kinesis
     # @param [Hash] params ({})
     def update_stream_mode(params = {}, options = {})
       req = build_request(:update_stream_mode, params)
+      req.send_request(options)
+    end
+
+    # Updates the warm throughput configuration for the specified Amazon
+    # Kinesis Data Streams on-demand data stream. This operation allows you
+    # to proactively scale your on-demand data stream to a specified
+    # throughput level, enabling better performance for sudden traffic
+    # spikes.
+    #
+    # <note markdown="1"> When invoking this API, you must use either the `StreamARN` or the
+    # `StreamName` parameter, or both. It is recommended that you use the
+    # `StreamARN` input parameter when you invoke this API.
+    #
+    #  </note>
+    #
+    # Updating the warm throughput is an asynchronous operation. Upon
+    # receiving the request, Kinesis Data Streams returns immediately and
+    # sets the status of the stream to `UPDATING`. After the update is
+    # complete, Kinesis Data Streams sets the status of the stream back to
+    # `ACTIVE`. Depending on the size of the stream, the scaling action
+    # could take a few minutes to complete. You can continue to read and
+    # write data to your stream while its status is `UPDATING`.
+    #
+    # This operation is only supported for data streams with the on-demand
+    # capacity mode in accounts that have
+    # `MinimumThroughputBillingCommitment` enabled. Provisioned capacity
+    # mode streams do not support warm throughput configuration.
+    #
+    # This operation has the following default limits. By default, you
+    # cannot do the following:
+    #
+    # * Scale to more than 10 GiBps for an on-demand stream.
+    #
+    # * This API has a call limit of 5 transactions per second (TPS) for
+    #   each Amazon Web Services account. TPS over 5 will initiate the
+    #   `LimitExceededException`.
+    #
+    # For the default limits for an Amazon Web Services account, see
+    # [Streams Limits][1] in the *Amazon Kinesis Data Streams Developer
+    # Guide*. To request an increase in the call rate limit, the shard limit
+    # for this API, or your overall shard limit, use the [limits form][2].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/kinesis/latest/dev/service-sizes-and-limits.html
+    # [2]: https://console.aws.amazon.com/support/v1#/case/create?issueType=service-limit-increase&amp;limitType=service-code-kinesis
+    #
+    # @option params [String] :stream_arn
+    #   The ARN of the stream to be updated.
+    #
+    # @option params [String] :stream_name
+    #   The name of the stream to be updated.
+    #
+    # @option params [String] :stream_id
+    #   Not Implemented. Reserved for future use.
+    #
+    # @option params [required, Integer] :warm_throughput_mi_bps
+    #   The target warm throughput in MB/s that the stream should be scaled to
+    #   handle. This represents the throughput capacity that will be
+    #   immediately available for write operations.
+    #
+    # @return [Types::UpdateStreamWarmThroughputOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateStreamWarmThroughputOutput#stream_arn #stream_arn} => String
+    #   * {Types::UpdateStreamWarmThroughputOutput#stream_name #stream_name} => String
+    #   * {Types::UpdateStreamWarmThroughputOutput#warm_throughput #warm_throughput} => Types::WarmThroughputObject
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_stream_warm_throughput({
+    #     stream_arn: "StreamARN",
+    #     stream_name: "StreamName",
+    #     stream_id: "StreamId",
+    #     warm_throughput_mi_bps: 1, # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.stream_arn #=> String
+    #   resp.stream_name #=> String
+    #   resp.warm_throughput.target_mi_bps #=> Integer
+    #   resp.warm_throughput.current_mi_bps #=> Integer
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/UpdateStreamWarmThroughput AWS API Documentation
+    #
+    # @overload update_stream_warm_throughput(params = {})
+    # @param [Hash] params ({})
+    def update_stream_warm_throughput(params = {}, options = {})
+      req = build_request(:update_stream_warm_throughput, params)
       req.send_request(options)
     end
 
@@ -2877,7 +3375,7 @@ module Aws::Kinesis
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-kinesis'
-      context[:gem_version] = '1.75.0'
+      context[:gem_version] = '1.103.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

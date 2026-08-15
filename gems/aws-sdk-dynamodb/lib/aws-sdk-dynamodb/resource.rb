@@ -247,14 +247,14 @@ module Aws::DynamoDB
     # @example Request syntax with placeholder values
     #
     #   table = dynamo_db.create_table({
-    #     attribute_definitions: [ # required
+    #     attribute_definitions: [
     #       {
     #         attribute_name: "KeySchemaAttributeName", # required
     #         attribute_type: "S", # required, accepts S, N, B
     #       },
     #     ],
     #     table_name: "TableArn", # required
-    #     key_schema: [ # required
+    #     key_schema: [
     #       {
     #         attribute_name: "KeySchemaAttributeName", # required
     #         key_type: "HASH", # required, accepts HASH, RANGE
@@ -333,15 +333,37 @@ module Aws::DynamoDB
     #       max_read_request_units: 1,
     #       max_write_request_units: 1,
     #     },
+    #     global_table_source_arn: "TableArn",
+    #     global_table_settings_replication_mode: "ENABLED", # accepts ENABLED, DISABLED, ENABLED_WITH_OVERRIDES
+    #     vector_indexes: [
+    #       {
+    #         index_name: "IndexName", # required
+    #         vector_attribute: { # required
+    #           attribute_name: "VectorAttributeName", # required
+    #         },
+    #         search_schema: [
+    #           {
+    #             attribute_name: "AttributeName", # required
+    #             search_schema_element_type: "HASH", # required, accepts HASH, INLINE_FILTER
+    #           },
+    #         ],
+    #         projection: { # required
+    #           projection_type: "ALL", # accepts ALL, KEYS_ONLY, INCLUDE
+    #           non_key_attributes: ["NonKeyAttributeName"],
+    #         },
+    #         dimensions: 1, # required
+    #         distance_function: "COSINE", # required, accepts COSINE, DOT_PRODUCT, EUCLIDEAN
+    #       },
+    #     ],
     #   })
     # @param [Hash] options ({})
-    # @option options [required, Array<Types::AttributeDefinition>] :attribute_definitions
+    # @option options [Array<Types::AttributeDefinition>] :attribute_definitions
     #   An array of attributes that describe the key schema for the table and
     #   indexes.
     # @option options [required, String] :table_name
     #   The name of the table to create. You can also provide the Amazon
     #   Resource Name (ARN) of the table in this parameter.
-    # @option options [required, Array<Types::KeySchemaElement>] :key_schema
+    # @option options [Array<Types::KeySchemaElement>] :key_schema
     #   Specifies the attributes that make up the primary key for a table or
     #   an index. The attributes in `KeySchema` must also be defined in the
     #   `AttributeDefinitions` array. For more information, see [Data
@@ -422,7 +444,11 @@ module Aws::DynamoDB
     #       attributes provided in `NonKeyAttributes`, summed across all of
     #       the secondary indexes, must not exceed 100. If you project the
     #       same attribute into two different indexes, this counts as two
-    #       distinct attributes when determining the total.
+    #       distinct attributes when determining the total. This limit only
+    #       applies when you specify the ProjectionType of `INCLUDE`. You
+    #       still can specify the ProjectionType of `ALL` to project all
+    #       attributes from the source table, even if the table has more than
+    #       100 attributes.
     # @option options [Array<Types::GlobalSecondaryIndex>] :global_secondary_indexes
     #   One or more global secondary indexes (the maximum is 20) to be created
     #   on the table. Each global secondary index in the array includes the
@@ -434,7 +460,8 @@ module Aws::DynamoDB
     #
     #
     #   * `KeySchema` - Specifies the key schema for the global secondary
-    #     index.
+    #     index. Each global secondary index supports up to 4 partition keys
+    #     and up to 4 sort keys.
     #
     #   * `Projection` - Specifies attributes that are copied (projected) from
     #     the table into the index. These are in addition to the primary key
@@ -457,7 +484,11 @@ module Aws::DynamoDB
     #       attributes provided in `NonKeyAttributes`, summed across all of
     #       the secondary indexes, must not exceed 100. If you project the
     #       same attribute into two different indexes, this counts as two
-    #       distinct attributes when determining the total.
+    #       distinct attributes when determining the total. This limit only
+    #       applies when you specify the ProjectionType of `INCLUDE`. You
+    #       still can specify the ProjectionType of `ALL` to project all
+    #       attributes from the source table, even if the table has more than
+    #       100 attributes.
     #   * `ProvisionedThroughput` - The provisioned throughput settings for
     #     the global secondary index, consisting of read and write capacity
     #     units.
@@ -465,18 +496,19 @@ module Aws::DynamoDB
     #   Controls how you are charged for read and write throughput and how you
     #   manage capacity. This setting can be changed later.
     #
-    #   * `PROVISIONED` - We recommend using `PROVISIONED` for predictable
-    #     workloads. `PROVISIONED` sets the billing mode to [Provisioned
-    #     capacity mode][1].
+    #   * `PAY_PER_REQUEST` - We recommend using `PAY_PER_REQUEST` for most
+    #     DynamoDB workloads. `PAY_PER_REQUEST` sets the billing mode to
+    #     [On-demand capacity mode][1].
     #
-    #   * `PAY_PER_REQUEST` - We recommend using `PAY_PER_REQUEST` for
-    #     unpredictable workloads. `PAY_PER_REQUEST` sets the billing mode to
-    #     [On-demand capacity mode][2].
+    #   * `PROVISIONED` - We recommend using `PROVISIONED` for steady
+    #     workloads with predictable growth where capacity requirements can be
+    #     reliably forecasted. `PROVISIONED` sets the billing mode to
+    #     [Provisioned capacity mode][2].
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/provisioned-capacity-mode.html
-    #   [2]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/on-demand-capacity-mode.html
+    #   [1]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/on-demand-capacity-mode.html
+    #   [2]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/provisioned-capacity-mode.html
     # @option options [Types::ProvisionedThroughput] :provisioned_throughput
     #   Represents the provisioned throughput settings for a specified table
     #   or index. The settings can be modified using the `UpdateTable`
@@ -559,6 +591,39 @@ module Aws::DynamoDB
     #   Sets the maximum number of read and write units for the specified
     #   table in on-demand capacity mode. If you use this parameter, you must
     #   specify `MaxReadRequestUnits`, `MaxWriteRequestUnits`, or both.
+    # @option options [String] :global_table_source_arn
+    #   The Amazon Resource Name (ARN) of the source table used for the
+    #   creation of a multi-account global table.
+    # @option options [String] :global_table_settings_replication_mode
+    #   Controls the settings synchronization mode for the global table. For
+    #   multi-account global tables, this parameter is required and the only
+    #   supported value is ENABLED. For same-account global tables, this
+    #   parameter is set to ENABLED\_WITH\_OVERRIDES.
+    # @option options [Array<Types::VectorIndex>] :vector_indexes
+    #   One or more vector indexes to be created on the table. Each vector
+    #   index enables similarity search on a vector attribute. Each element in
+    #   the list consists of:
+    #
+    #   * `IndexName` - The name of the vector index. Must be unique within
+    #     the table.
+    #
+    #   * `VectorAttribute` - The attribute that contains vector embeddings.
+    #     If multiple vector indexes reference the same attribute, they must
+    #     all use the same number of dimensions.
+    #
+    #   * `Dimensions` - The number of dimensions in each vector.
+    #
+    #   * `DistanceFunction` - The distance function used to calculate
+    #     similarity. Valid values: `COSINE`, `EUCLIDEAN`, `DOT_PRODUCT`.
+    #
+    #   * `Projection` - Specifies attributes that are copied (projected) from
+    #     the table into the vector index. The total number of projected
+    #     non-key attributes is shared across the vector attribute (counts as
+    #     1) and `INLINE_FILTER` search schema elements (each counts as 1).
+    #     `HASH` search schema elements do not count toward this limit.
+    #
+    #   * `SearchSchema` - (Optional) Defines the partition key (`HASH`) and
+    #     inline filter (`INLINE_FILTER`) attributes for the vector index.
     # @return [Table]
     def create_table(options = {})
       resp = Aws::Plugins::UserAgent.metric('RESOURCE_MODEL') do

@@ -4,16 +4,15 @@ require 'json'
 
 module BuildTools
   class ServiceEnumerator
-
     include Enumerable
 
     MANIFEST_PATH = File.expand_path('../../services.json', __FILE__)
 
     # Minimum `aws-sdk-core` version for new gem builds
-    MINIMUM_CORE_VERSION = "3.216.0"
+    MINIMUM_CORE_VERSION = "3.254.0"
 
     # Minimum `aws-sdk-core` version for new S3 gem builds
-    MINIMUM_CORE_VERSION_S3 = "3.216.0"
+    MINIMUM_CORE_VERSION_S3 = "3.254.1"
 
     EVENTSTREAM_PLUGIN = "Aws::Plugins::EventStreamConfiguration"
 
@@ -40,6 +39,10 @@ module BuildTools
 
     def each(&block)
       services.values.each(&block)
+    end
+
+    def reset
+      @services = nil
     end
 
     private
@@ -136,7 +139,7 @@ module BuildTools
       end
 
       gems_dir = File.expand_path('../../gems', __FILE__)
-      prefix = %w[sts sso ssooidc].include?(gem) ? ["#{gems_dir}/aws-sdk-core/lib/aws-sdk-#{gem}"] :
+      prefix = %w[sts sso ssooidc signin].include?(gem) ? ["#{gems_dir}/aws-sdk-core/lib/aws-sdk-#{gem}"] :
         ["#{gems_dir}/aws-sdk-#{gem}/lib/aws-sdk-#{gem}"]
       (prefix + parts).join('/') + '.rb'
     end
@@ -186,5 +189,4 @@ module BuildTools
   end
 
   Services = ServiceEnumerator.new
-
 end

@@ -42,7 +42,7 @@ module Aws::S3
       @object_key
     end
 
-    # Container for the bucket owner's display name and ID.
+    # Container for the bucket owner's ID.
     # @return [Types::Owner]
     def owner
       data[:owner]
@@ -55,11 +55,17 @@ module Aws::S3
     end
 
     # If present, indicates that the requester was successfully charged for
-    # the request.
+    # the request. For more information, see [Using Requester Pays buckets
+    # for storage transfers and usage][1] in the *Amazon Simple Storage
+    # Service user guide*.
     #
     # <note markdown="1"> This functionality is not supported for directory buckets.
     #
     #  </note>
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/RequesterPaysBuckets.html
     # @return [String]
     def request_charged
       data[:request_charged]
@@ -229,7 +235,7 @@ module Aws::S3
     #       },
     #     },
     #     content_md5: "ContentMD5",
-    #     checksum_algorithm: "CRC32", # accepts CRC32, CRC32C, SHA1, SHA256, CRC64NVME
+    #     checksum_algorithm: "CRC32", # accepts CRC32, CRC32C, SHA1, SHA256, CRC64NVME, SHA512, MD5, XXHASH64, XXHASH3, XXHASH128
     #     grant_full_control: "GrantFullControl",
     #     grant_read: "GrantRead",
     #     grant_read_acp: "GrantReadACP",
@@ -304,10 +310,10 @@ module Aws::S3
     #   Confirms that the requester knows that they will be charged for the
     #   request. Bucket owners need not specify this parameter in their
     #   requests. If either the source or destination S3 bucket has Requester
-    #   Pays enabled, the requester will pay for corresponding charges to copy
-    #   the object. For information about downloading objects from Requester
-    #   Pays buckets, see [Downloading Objects in Requester Pays Buckets][1]
-    #   in the *Amazon S3 User Guide*.
+    #   Pays enabled, the requester will pay for the corresponding charges.
+    #   For information about downloading objects from Requester Pays buckets,
+    #   see [Downloading Objects in Requester Pays Buckets][1] in the *Amazon
+    #   S3 User Guide*.
     #
     #   <note markdown="1"> This functionality is not supported for directory buckets.
     #

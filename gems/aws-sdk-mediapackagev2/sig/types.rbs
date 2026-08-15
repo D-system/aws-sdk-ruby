@@ -25,6 +25,12 @@ module Aws::MediaPackageV2
     class CancelHarvestJobResponse < Aws::EmptyStructure
     end
 
+    class CdnAuthConfiguration
+      attr_accessor cdn_identifier_secret_arns: ::Array[::String]
+      attr_accessor secrets_role_arn: ::String
+      SENSITIVE: []
+    end
+
     class ChannelGroupListConfiguration
       attr_accessor channel_group_name: ::String
       attr_accessor arn: ::String
@@ -42,6 +48,7 @@ module Aws::MediaPackageV2
       attr_accessor modified_at: ::Time
       attr_accessor description: ::String
       attr_accessor input_type: ("HLS" | "CMAF")
+      attr_accessor output_locking_mode: ("EPOCH_LOCKED" | "NON_EPOCH_LOCKED")
       SENSITIVE: []
     end
 
@@ -79,6 +86,7 @@ module Aws::MediaPackageV2
       attr_accessor description: ::String
       attr_accessor input_switch_configuration: Types::InputSwitchConfiguration
       attr_accessor output_header_configuration: Types::OutputHeaderConfiguration
+      attr_accessor output_locking_mode: ("EPOCH_LOCKED" | "NON_EPOCH_LOCKED")
       attr_accessor tags: ::Hash[::String, ::String]
       SENSITIVE: []
     end
@@ -96,6 +104,7 @@ module Aws::MediaPackageV2
       attr_accessor tags: ::Hash[::String, ::String]
       attr_accessor input_switch_configuration: Types::InputSwitchConfiguration
       attr_accessor output_header_configuration: Types::OutputHeaderConfiguration
+      attr_accessor output_locking_mode: ("EPOCH_LOCKED" | "NON_EPOCH_LOCKED")
       SENSITIVE: []
     end
 
@@ -111,6 +120,15 @@ module Aws::MediaPackageV2
       attr_accessor scte_dash: Types::ScteDash
       attr_accessor drm_signaling: ("INDIVIDUAL" | "REFERENCED")
       attr_accessor utc_timing: Types::DashUtcTiming
+      attr_accessor profiles: ::Array[("DVB_DASH")]
+      attr_accessor base_urls: ::Array[Types::DashBaseUrl]
+      attr_accessor program_information: Types::DashProgramInformation
+      attr_accessor dvb_settings: Types::DashDvbSettings
+      attr_accessor compactness: ("STANDARD" | "NONE")
+      attr_accessor audio_timeline_pattern: ("NONE" | "PATTERNED")
+      attr_accessor subtitle_configuration: Types::DashSubtitleConfiguration
+      attr_accessor uri_path_type: ("LEAF" | "ROOT")
+      attr_accessor availability_start_time_configuration: Types::DashAvailabilityStartTimeConfiguration
       SENSITIVE: []
     end
 
@@ -156,6 +174,7 @@ module Aws::MediaPackageV2
       attr_accessor program_date_time_interval_seconds: ::Integer
       attr_accessor filter_configuration: Types::FilterConfiguration
       attr_accessor url_encode_child_manifest: bool
+      attr_accessor uri_path_type: ("LEAF" | "ROOT")
       SENSITIVE: []
     end
 
@@ -168,6 +187,15 @@ module Aws::MediaPackageV2
       attr_accessor program_date_time_interval_seconds: ::Integer
       attr_accessor filter_configuration: Types::FilterConfiguration
       attr_accessor url_encode_child_manifest: bool
+      attr_accessor uri_path_type: ("LEAF" | "ROOT")
+      SENSITIVE: []
+    end
+
+    class CreateMssManifestConfiguration
+      attr_accessor manifest_name: ::String
+      attr_accessor manifest_window_seconds: ::Integer
+      attr_accessor filter_configuration: Types::FilterConfiguration
+      attr_accessor manifest_layout: ("FULL" | "COMPACT")
       SENSITIVE: []
     end
 
@@ -175,7 +203,7 @@ module Aws::MediaPackageV2
       attr_accessor channel_group_name: ::String
       attr_accessor channel_name: ::String
       attr_accessor origin_endpoint_name: ::String
-      attr_accessor container_type: ("TS" | "CMAF")
+      attr_accessor container_type: ("TS" | "CMAF" | "ISM")
       attr_accessor segment: Types::Segment
       attr_accessor client_token: ::String
       attr_accessor description: ::String
@@ -183,7 +211,10 @@ module Aws::MediaPackageV2
       attr_accessor hls_manifests: ::Array[Types::CreateHlsManifestConfiguration]
       attr_accessor low_latency_hls_manifests: ::Array[Types::CreateLowLatencyHlsManifestConfiguration]
       attr_accessor dash_manifests: ::Array[Types::CreateDashManifestConfiguration]
+      attr_accessor mss_manifests: ::Array[Types::CreateMssManifestConfiguration]
       attr_accessor force_endpoint_error_configuration: Types::ForceEndpointErrorConfiguration
+      attr_accessor uri_separator: ("UNDERSCORE" | "HYPHEN")
+      attr_accessor stream_name_output_mode: ("INDEX" | "PASSTHROUGH_NAME")
       attr_accessor tags: ::Hash[::String, ::String]
       SENSITIVE: []
     end
@@ -193,7 +224,7 @@ module Aws::MediaPackageV2
       attr_accessor channel_group_name: ::String
       attr_accessor channel_name: ::String
       attr_accessor origin_endpoint_name: ::String
-      attr_accessor container_type: ("TS" | "CMAF")
+      attr_accessor container_type: ("TS" | "CMAF" | "ISM")
       attr_accessor segment: Types::Segment
       attr_accessor created_at: ::Time
       attr_accessor modified_at: ::Time
@@ -202,9 +233,69 @@ module Aws::MediaPackageV2
       attr_accessor hls_manifests: ::Array[Types::GetHlsManifestConfiguration]
       attr_accessor low_latency_hls_manifests: ::Array[Types::GetLowLatencyHlsManifestConfiguration]
       attr_accessor dash_manifests: ::Array[Types::GetDashManifestConfiguration]
+      attr_accessor mss_manifests: ::Array[Types::GetMssManifestConfiguration]
       attr_accessor force_endpoint_error_configuration: Types::ForceEndpointErrorConfiguration
+      attr_accessor uri_separator: ("UNDERSCORE" | "HYPHEN")
+      attr_accessor stream_name_output_mode: ("INDEX" | "PASSTHROUGH_NAME")
       attr_accessor etag: ::String
       attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class DashAvailabilityStartTimeConfiguration
+      attr_accessor fixed_availability_start_time: ::Time
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class FixedAvailabilityStartTime < DashAvailabilityStartTimeConfiguration
+      end
+      class Unknown < DashAvailabilityStartTimeConfiguration
+      end
+    end
+
+    class DashBaseUrl
+      attr_accessor url: ::String
+      attr_accessor service_location: ::String
+      attr_accessor dvb_priority: ::Integer
+      attr_accessor dvb_weight: ::Integer
+      SENSITIVE: []
+    end
+
+    class DashDvbFontDownload
+      attr_accessor url: ::String
+      attr_accessor mime_type: ::String
+      attr_accessor font_family: ::String
+      SENSITIVE: []
+    end
+
+    class DashDvbMetricsReporting
+      attr_accessor reporting_url: ::String
+      attr_accessor probability: ::Integer
+      SENSITIVE: []
+    end
+
+    class DashDvbSettings
+      attr_accessor font_download: Types::DashDvbFontDownload
+      attr_accessor error_metrics: ::Array[Types::DashDvbMetricsReporting]
+      SENSITIVE: []
+    end
+
+    class DashProgramInformation
+      attr_accessor title: ::String
+      attr_accessor source: ::String
+      attr_accessor copyright: ::String
+      attr_accessor language_code: ::String
+      attr_accessor more_information_url: ::String
+      SENSITIVE: []
+    end
+
+    class DashSubtitleConfiguration
+      attr_accessor ttml_configuration: Types::DashTtmlConfiguration
+      SENSITIVE: []
+    end
+
+    class DashTtmlConfiguration
+      attr_accessor ttml_profile: ("IMSC_1" | "EBU_TT_D_101")
       SENSITIVE: []
     end
 
@@ -269,6 +360,7 @@ module Aws::MediaPackageV2
       attr_accessor constant_initialization_vector: ::String
       attr_accessor encryption_method: Types::EncryptionMethod
       attr_accessor key_rotation_interval_seconds: ::Integer
+      attr_accessor cmaf_exclude_segment_drm_metadata: bool
       attr_accessor speke_key_provider: Types::SpekeKeyProvider
       SENSITIVE: []
     end
@@ -282,11 +374,13 @@ module Aws::MediaPackageV2
     class EncryptionMethod
       attr_accessor ts_encryption_method: ("AES_128" | "SAMPLE_AES")
       attr_accessor cmaf_encryption_method: ("CENC" | "CBCS")
+      attr_accessor ism_encryption_method: ("CENC")
       SENSITIVE: []
     end
 
     class FilterConfiguration
       attr_accessor manifest_filter: ::String
+      attr_accessor drm_settings: ::String
       attr_accessor start: ::Time
       attr_accessor end: ::Time
       attr_accessor time_delay_seconds: ::Integer
@@ -349,6 +443,7 @@ module Aws::MediaPackageV2
       attr_accessor tags: ::Hash[::String, ::String]
       attr_accessor input_switch_configuration: Types::InputSwitchConfiguration
       attr_accessor output_header_configuration: Types::OutputHeaderConfiguration
+      attr_accessor output_locking_mode: ("EPOCH_LOCKED" | "NON_EPOCH_LOCKED")
       SENSITIVE: []
     end
 
@@ -365,6 +460,15 @@ module Aws::MediaPackageV2
       attr_accessor scte_dash: Types::ScteDash
       attr_accessor drm_signaling: ("INDIVIDUAL" | "REFERENCED")
       attr_accessor utc_timing: Types::DashUtcTiming
+      attr_accessor profiles: ::Array[("DVB_DASH")]
+      attr_accessor base_urls: ::Array[Types::DashBaseUrl]
+      attr_accessor program_information: Types::DashProgramInformation
+      attr_accessor dvb_settings: Types::DashDvbSettings
+      attr_accessor compactness: ("STANDARD" | "NONE")
+      attr_accessor audio_timeline_pattern: ("NONE" | "PATTERNED")
+      attr_accessor subtitle_configuration: Types::DashSubtitleConfiguration
+      attr_accessor uri_path_type: ("LEAF" | "ROOT")
+      attr_accessor availability_start_time_configuration: Types::DashAvailabilityStartTimeConfiguration
       SENSITIVE: []
     end
 
@@ -405,6 +509,7 @@ module Aws::MediaPackageV2
       attr_accessor filter_configuration: Types::FilterConfiguration
       attr_accessor start_tag: Types::StartTag
       attr_accessor url_encode_child_manifest: bool
+      attr_accessor uri_path_type: ("LEAF" | "ROOT")
       SENSITIVE: []
     end
 
@@ -418,6 +523,16 @@ module Aws::MediaPackageV2
       attr_accessor filter_configuration: Types::FilterConfiguration
       attr_accessor start_tag: Types::StartTag
       attr_accessor url_encode_child_manifest: bool
+      attr_accessor uri_path_type: ("LEAF" | "ROOT")
+      SENSITIVE: []
+    end
+
+    class GetMssManifestConfiguration
+      attr_accessor manifest_name: ::String
+      attr_accessor url: ::String
+      attr_accessor filter_configuration: Types::FilterConfiguration
+      attr_accessor manifest_window_seconds: ::Integer
+      attr_accessor manifest_layout: ("FULL" | "COMPACT")
       SENSITIVE: []
     end
 
@@ -433,6 +548,7 @@ module Aws::MediaPackageV2
       attr_accessor channel_name: ::String
       attr_accessor origin_endpoint_name: ::String
       attr_accessor policy: ::String
+      attr_accessor cdn_auth_configuration: Types::CdnAuthConfiguration
       SENSITIVE: []
     end
 
@@ -448,7 +564,7 @@ module Aws::MediaPackageV2
       attr_accessor channel_group_name: ::String
       attr_accessor channel_name: ::String
       attr_accessor origin_endpoint_name: ::String
-      attr_accessor container_type: ("TS" | "CMAF")
+      attr_accessor container_type: ("TS" | "CMAF" | "ISM")
       attr_accessor segment: Types::Segment
       attr_accessor created_at: ::Time
       attr_accessor modified_at: ::Time
@@ -458,7 +574,10 @@ module Aws::MediaPackageV2
       attr_accessor hls_manifests: ::Array[Types::GetHlsManifestConfiguration]
       attr_accessor low_latency_hls_manifests: ::Array[Types::GetLowLatencyHlsManifestConfiguration]
       attr_accessor dash_manifests: ::Array[Types::GetDashManifestConfiguration]
+      attr_accessor mss_manifests: ::Array[Types::GetMssManifestConfiguration]
       attr_accessor force_endpoint_error_configuration: Types::ForceEndpointErrorConfiguration
+      attr_accessor uri_separator: ("UNDERSCORE" | "HYPHEN")
+      attr_accessor stream_name_output_mode: ("INDEX" | "PASSTHROUGH_NAME")
       attr_accessor etag: ::String
       attr_accessor tags: ::Hash[::String, ::String]
       SENSITIVE: []
@@ -518,6 +637,7 @@ module Aws::MediaPackageV2
 
     class InputSwitchConfiguration
       attr_accessor mqcs_input_switching: bool
+      attr_accessor preferred_input: ::Integer
       SENSITIVE: []
     end
 
@@ -587,6 +707,12 @@ module Aws::MediaPackageV2
       SENSITIVE: []
     end
 
+    class ListMssManifestConfiguration
+      attr_accessor manifest_name: ::String
+      attr_accessor url: ::String
+      SENSITIVE: []
+    end
+
     class ListOriginEndpointsRequest
       attr_accessor channel_group_name: ::String
       attr_accessor channel_name: ::String
@@ -616,14 +742,17 @@ module Aws::MediaPackageV2
       attr_accessor channel_group_name: ::String
       attr_accessor channel_name: ::String
       attr_accessor origin_endpoint_name: ::String
-      attr_accessor container_type: ("TS" | "CMAF")
+      attr_accessor container_type: ("TS" | "CMAF" | "ISM")
       attr_accessor description: ::String
       attr_accessor created_at: ::Time
       attr_accessor modified_at: ::Time
       attr_accessor hls_manifests: ::Array[Types::ListHlsManifestConfiguration]
       attr_accessor low_latency_hls_manifests: ::Array[Types::ListLowLatencyHlsManifestConfiguration]
       attr_accessor dash_manifests: ::Array[Types::ListDashManifestConfiguration]
+      attr_accessor mss_manifests: ::Array[Types::ListMssManifestConfiguration]
       attr_accessor force_endpoint_error_configuration: Types::ForceEndpointErrorConfiguration
+      attr_accessor uri_separator: ("UNDERSCORE" | "HYPHEN")
+      attr_accessor stream_name_output_mode: ("INDEX" | "PASSTHROUGH_NAME")
       SENSITIVE: []
     end
 
@@ -647,6 +776,7 @@ module Aws::MediaPackageV2
       attr_accessor channel_name: ::String
       attr_accessor origin_endpoint_name: ::String
       attr_accessor policy: ::String
+      attr_accessor cdn_auth_configuration: Types::CdnAuthConfiguration
       SENSITIVE: []
     end
 
@@ -696,17 +826,21 @@ module Aws::MediaPackageV2
     end
 
     class Scte
-      attr_accessor scte_filter: ::Array[("SPLICE_INSERT" | "BREAK" | "PROVIDER_ADVERTISEMENT" | "DISTRIBUTOR_ADVERTISEMENT" | "PROVIDER_PLACEMENT_OPPORTUNITY" | "DISTRIBUTOR_PLACEMENT_OPPORTUNITY" | "PROVIDER_OVERLAY_PLACEMENT_OPPORTUNITY" | "DISTRIBUTOR_OVERLAY_PLACEMENT_OPPORTUNITY" | "PROGRAM")]
+      attr_accessor scte_filter: ::Array[("SPLICE_INSERT" | "BREAK" | "PROVIDER_ADVERTISEMENT" | "DISTRIBUTOR_ADVERTISEMENT" | "PROVIDER_PLACEMENT_OPPORTUNITY" | "DISTRIBUTOR_PLACEMENT_OPPORTUNITY" | "PROVIDER_OVERLAY_PLACEMENT_OPPORTUNITY" | "DISTRIBUTOR_OVERLAY_PLACEMENT_OPPORTUNITY" | "PROGRAM" | "CHAPTER" | "UNSCHEDULED_EVENT" | "ALTERNATE_CONTENT_OPPORTUNITY" | "NETWORK" | "PROVIDER_PROMO" | "DISTRIBUTOR_PROMO" | "PROVIDER_AD_BLOCK" | "DISTRIBUTOR_AD_BLOCK" | "CONTENT_IDENTIFICATION" | "CALL_AD_SERVER")]
+      attr_accessor scte_in_segments: ("NONE" | "ALL" | "MATCHES_FILTER")
+      attr_accessor custom_ad_types: ::Array[("PROGRAM" | "CHAPTER" | "UNSCHEDULED_EVENT" | "ALTERNATE_CONTENT_OPPORTUNITY" | "NETWORK")]
       SENSITIVE: []
     end
 
     class ScteDash
       attr_accessor ad_marker_dash: ("BINARY" | "XML")
+      attr_accessor scte_in_manifests: ("ALL" | "MATCHES_FILTER")
       SENSITIVE: []
     end
 
     class ScteHls
-      attr_accessor ad_marker_hls: ("DATERANGE")
+      attr_accessor ad_marker_hls: ("DATERANGE" | "SCTE35_ENHANCED")
+      attr_accessor scte_in_manifests: ("ALL" | "MATCHES_FILTER")
       SENSITIVE: []
     end
 
@@ -718,6 +852,7 @@ module Aws::MediaPackageV2
       attr_accessor ts_include_dvb_subtitles: bool
       attr_accessor scte: Types::Scte
       attr_accessor encryption: Types::Encryption
+      attr_accessor output_timestamp_mode: ("PASSTHROUGH" | "REBASED_TO_CHANNEL_START")
       SENSITIVE: []
     end
 
@@ -732,6 +867,7 @@ module Aws::MediaPackageV2
       attr_accessor drm_systems: ::Array[("CLEAR_KEY_AES_128" | "FAIRPLAY" | "PLAYREADY" | "WIDEVINE" | "IRDETO")]
       attr_accessor role_arn: ::String
       attr_accessor url: ::String
+      attr_accessor certificate_arn: ::String
       SENSITIVE: []
     end
 
@@ -800,6 +936,7 @@ module Aws::MediaPackageV2
       attr_accessor tags: ::Hash[::String, ::String]
       attr_accessor input_switch_configuration: Types::InputSwitchConfiguration
       attr_accessor output_header_configuration: Types::OutputHeaderConfiguration
+      attr_accessor output_locking_mode: ("EPOCH_LOCKED" | "NON_EPOCH_LOCKED")
       SENSITIVE: []
     end
 
@@ -807,14 +944,17 @@ module Aws::MediaPackageV2
       attr_accessor channel_group_name: ::String
       attr_accessor channel_name: ::String
       attr_accessor origin_endpoint_name: ::String
-      attr_accessor container_type: ("TS" | "CMAF")
+      attr_accessor container_type: ("TS" | "CMAF" | "ISM")
       attr_accessor segment: Types::Segment
       attr_accessor description: ::String
       attr_accessor startover_window_seconds: ::Integer
       attr_accessor hls_manifests: ::Array[Types::CreateHlsManifestConfiguration]
       attr_accessor low_latency_hls_manifests: ::Array[Types::CreateLowLatencyHlsManifestConfiguration]
       attr_accessor dash_manifests: ::Array[Types::CreateDashManifestConfiguration]
+      attr_accessor mss_manifests: ::Array[Types::CreateMssManifestConfiguration]
       attr_accessor force_endpoint_error_configuration: Types::ForceEndpointErrorConfiguration
+      attr_accessor uri_separator: ("UNDERSCORE" | "HYPHEN")
+      attr_accessor stream_name_output_mode: ("INDEX" | "PASSTHROUGH_NAME")
       attr_accessor etag: ::String
       SENSITIVE: []
     end
@@ -824,7 +964,7 @@ module Aws::MediaPackageV2
       attr_accessor channel_group_name: ::String
       attr_accessor channel_name: ::String
       attr_accessor origin_endpoint_name: ::String
-      attr_accessor container_type: ("TS" | "CMAF")
+      attr_accessor container_type: ("TS" | "CMAF" | "ISM")
       attr_accessor segment: Types::Segment
       attr_accessor created_at: ::Time
       attr_accessor modified_at: ::Time
@@ -832,7 +972,10 @@ module Aws::MediaPackageV2
       attr_accessor startover_window_seconds: ::Integer
       attr_accessor hls_manifests: ::Array[Types::GetHlsManifestConfiguration]
       attr_accessor low_latency_hls_manifests: ::Array[Types::GetLowLatencyHlsManifestConfiguration]
+      attr_accessor mss_manifests: ::Array[Types::GetMssManifestConfiguration]
       attr_accessor force_endpoint_error_configuration: Types::ForceEndpointErrorConfiguration
+      attr_accessor uri_separator: ("UNDERSCORE" | "HYPHEN")
+      attr_accessor stream_name_output_mode: ("INDEX" | "PASSTHROUGH_NAME")
       attr_accessor etag: ::String
       attr_accessor tags: ::Hash[::String, ::String]
       attr_accessor dash_manifests: ::Array[Types::GetDashManifestConfiguration]
@@ -841,7 +984,7 @@ module Aws::MediaPackageV2
 
     class ValidationException
       attr_accessor message: ::String
-      attr_accessor validation_exception_type: ("CONTAINER_TYPE_IMMUTABLE" | "INVALID_PAGINATION_TOKEN" | "INVALID_PAGINATION_MAX_RESULTS" | "INVALID_POLICY" | "INVALID_ROLE_ARN" | "MANIFEST_NAME_COLLISION" | "ENCRYPTION_METHOD_CONTAINER_TYPE_MISMATCH" | "CENC_IV_INCOMPATIBLE" | "ENCRYPTION_CONTRACT_WITHOUT_AUDIO_RENDITION_INCOMPATIBLE" | "ENCRYPTION_CONTRACT_UNENCRYPTED" | "ENCRYPTION_CONTRACT_SHARED" | "NUM_MANIFESTS_LOW" | "NUM_MANIFESTS_HIGH" | "MANIFEST_DRM_SYSTEMS_INCOMPATIBLE" | "DRM_SYSTEMS_ENCRYPTION_METHOD_INCOMPATIBLE" | "ROLE_ARN_NOT_ASSUMABLE" | "ROLE_ARN_LENGTH_OUT_OF_RANGE" | "ROLE_ARN_INVALID_FORMAT" | "URL_INVALID" | "URL_SCHEME" | "URL_USER_INFO" | "URL_PORT" | "URL_UNKNOWN_HOST" | "URL_LOCAL_ADDRESS" | "URL_LOOPBACK_ADDRESS" | "URL_LINK_LOCAL_ADDRESS" | "URL_MULTICAST_ADDRESS" | "MEMBER_INVALID" | "MEMBER_MISSING" | "MEMBER_MIN_VALUE" | "MEMBER_MAX_VALUE" | "MEMBER_MIN_LENGTH" | "MEMBER_MAX_LENGTH" | "MEMBER_INVALID_ENUM_VALUE" | "MEMBER_DOES_NOT_MATCH_PATTERN" | "INVALID_MANIFEST_FILTER" | "INVALID_TIME_DELAY_SECONDS" | "END_TIME_EARLIER_THAN_START_TIME" | "TS_CONTAINER_TYPE_WITH_DASH_MANIFEST" | "DIRECT_MODE_WITH_TIMING_SOURCE" | "NONE_MODE_WITH_TIMING_SOURCE" | "TIMING_SOURCE_MISSING" | "UPDATE_PERIOD_SMALLER_THAN_SEGMENT_DURATION" | "PERIOD_TRIGGERS_NONE_SPECIFIED_WITH_ADDITIONAL_VALUES" | "DRM_SIGNALING_MISMATCH_SEGMENT_ENCRYPTION_STATUS" | "ONLY_CMAF_INPUT_TYPE_ALLOW_FORCE_ENDPOINT_ERROR_CONFIGURATION" | "SOURCE_DISRUPTIONS_ENABLED_INCORRECTLY" | "HARVESTED_MANIFEST_HAS_START_END_FILTER_CONFIGURATION" | "HARVESTED_MANIFEST_NOT_FOUND_ON_ENDPOINT" | "TOO_MANY_IN_PROGRESS_HARVEST_JOBS" | "HARVEST_JOB_INELIGIBLE_FOR_CANCELLATION" | "INVALID_HARVEST_JOB_DURATION" | "HARVEST_JOB_S3_DESTINATION_MISSING_OR_INCOMPLETE" | "HARVEST_JOB_UNABLE_TO_WRITE_TO_S3_DESTINATION" | "HARVEST_JOB_CUSTOMER_ENDPOINT_READ_ACCESS_DENIED" | "CLIP_START_TIME_WITH_START_OR_END" | "START_TAG_TIME_OFFSET_INVALID" | "ONLY_CMAF_INPUT_TYPE_ALLOW_MQCS_INPUT_SWITCHING" | "ONLY_CMAF_INPUT_TYPE_ALLOW_MQCS_OUTPUT_CONFIGURATION")
+      attr_accessor validation_exception_type: ("CONTAINER_TYPE_IMMUTABLE" | "INVALID_PAGINATION_TOKEN" | "INVALID_PAGINATION_MAX_RESULTS" | "INVALID_POLICY" | "INVALID_ROLE_ARN" | "MANIFEST_NAME_COLLISION" | "ENCRYPTION_METHOD_CONTAINER_TYPE_MISMATCH" | "CENC_IV_INCOMPATIBLE" | "ENCRYPTION_CONTRACT_WITHOUT_AUDIO_RENDITION_INCOMPATIBLE" | "ENCRYPTION_CONTRACT_WITH_ISM_CONTAINER_INCOMPATIBLE" | "ENCRYPTION_CONTRACT_UNENCRYPTED" | "ENCRYPTION_CONTRACT_SHARED" | "NUM_MANIFESTS_LOW" | "NUM_MANIFESTS_HIGH" | "MANIFEST_DRM_SYSTEMS_INCOMPATIBLE" | "DRM_SYSTEMS_ENCRYPTION_METHOD_INCOMPATIBLE" | "ROLE_ARN_NOT_ASSUMABLE" | "ROLE_ARN_LENGTH_OUT_OF_RANGE" | "ROLE_ARN_INVALID_FORMAT" | "URL_INVALID" | "URL_SCHEME" | "URL_USER_INFO" | "URL_PORT" | "URL_UNKNOWN_HOST" | "URL_LOCAL_ADDRESS" | "URL_LOOPBACK_ADDRESS" | "URL_LINK_LOCAL_ADDRESS" | "URL_MULTICAST_ADDRESS" | "MEMBER_INVALID" | "MEMBER_MISSING" | "MEMBER_MIN_VALUE" | "MEMBER_MAX_VALUE" | "MEMBER_MIN_LENGTH" | "MEMBER_MAX_LENGTH" | "MEMBER_INVALID_ENUM_VALUE" | "MEMBER_DOES_NOT_MATCH_PATTERN" | "INVALID_MANIFEST_FILTER" | "INVALID_DRM_SETTINGS" | "INVALID_TIME_DELAY_SECONDS" | "END_TIME_EARLIER_THAN_START_TIME" | "TS_CONTAINER_TYPE_WITH_DASH_MANIFEST" | "DIRECT_MODE_WITH_TIMING_SOURCE" | "NONE_MODE_WITH_TIMING_SOURCE" | "TIMING_SOURCE_MISSING" | "UPDATE_PERIOD_SMALLER_THAN_SEGMENT_DURATION" | "PERIOD_TRIGGERS_NONE_SPECIFIED_WITH_ADDITIONAL_VALUES" | "DRM_SIGNALING_MISMATCH_SEGMENT_ENCRYPTION_STATUS" | "ONLY_CMAF_INPUT_TYPE_ALLOW_FORCE_ENDPOINT_ERROR_CONFIGURATION" | "SOURCE_DISRUPTIONS_ENABLED_INCORRECTLY" | "HARVESTED_MANIFEST_HAS_START_END_FILTER_CONFIGURATION" | "HARVESTED_MANIFEST_NOT_FOUND_ON_ENDPOINT" | "TOO_MANY_IN_PROGRESS_HARVEST_JOBS" | "HARVEST_JOB_INELIGIBLE_FOR_CANCELLATION" | "INVALID_HARVEST_JOB_DURATION" | "HARVEST_JOB_S3_DESTINATION_MISSING_OR_INCOMPLETE" | "HARVEST_JOB_UNABLE_TO_WRITE_TO_S3_DESTINATION" | "HARVEST_JOB_CUSTOMER_ENDPOINT_READ_ACCESS_DENIED" | "CLIP_START_TIME_WITH_START_OR_END" | "START_TAG_TIME_OFFSET_INVALID" | "INCOMPATIBLE_DASH_PROFILE_DVB_DASH_CONFIGURATION" | "DASH_DVB_ATTRIBUTES_WITHOUT_DVB_DASH_PROFILE" | "INCOMPATIBLE_DASH_COMPACTNESS_CONFIGURATION" | "INCOMPATIBLE_XML_ENCODING" | "CMAF_EXCLUDE_SEGMENT_DRM_METADATA_INCOMPATIBLE_CONTAINER_TYPE" | "ONLY_CMAF_INPUT_TYPE_ALLOW_MQCS_INPUT_SWITCHING" | "ONLY_CMAF_INPUT_TYPE_ALLOW_MQCS_OUTPUT_CONFIGURATION" | "ONLY_CMAF_INPUT_TYPE_ALLOW_PREFERRED_INPUT_CONFIGURATION" | "TS_CONTAINER_TYPE_WITH_MSS_MANIFEST" | "CMAF_CONTAINER_TYPE_WITH_MSS_MANIFEST" | "ISM_CONTAINER_TYPE_WITH_HLS_MANIFEST" | "ISM_CONTAINER_TYPE_WITH_LL_HLS_MANIFEST" | "ISM_CONTAINER_TYPE_WITH_DASH_MANIFEST" | "ISM_CONTAINER_TYPE_WITH_SCTE" | "ISM_CONTAINER_WITH_KEY_ROTATION" | "BATCH_GET_SECRET_VALUE_DENIED" | "GET_SECRET_VALUE_DENIED" | "DESCRIBE_SECRET_DENIED" | "INVALID_SECRET_FORMAT" | "SECRET_IS_NOT_ONE_KEY_VALUE_PAIR" | "INVALID_SECRET_KEY" | "INVALID_SECRET_VALUE" | "SECRET_ARN_RESOURCE_NOT_FOUND" | "DECRYPT_SECRET_FAILED" | "TOO_MANY_SECRETS" | "DUPLICATED_SECRET" | "MALFORMED_SECRET_ARN" | "SECRET_FROM_DIFFERENT_ACCOUNT" | "SECRET_FROM_DIFFERENT_REGION" | "INVALID_SECRET" | "RESOURCE_NOT_IN_SAME_REGION" | "CERTIFICATE_RESOURCE_NOT_FOUND" | "CERTIFICATE_ACCESS_DENIED" | "DESCRIBE_CERTIFICATE_FAILED" | "INVALID_CERTIFICATE_STATUS" | "INVALID_CERTIFICATE_KEY_ALGORITHM" | "INVALID_CERTIFICATE_SIGNATURE_ALGORITHM" | "MISSING_CERTIFICATE_DOMAIN_NAME" | "INVALID_ARN" | "SCTE_IN_MANIFESTS_INVALID_CONFIGURATION" | "CUSTOM_AD_TYPES_INVALID_CONFIGURATION" | "ONLY_CMAF_INPUT_TYPE_ALLOW_OUTPUT_LOCKING_MODE" | "ONLY_NON_EPOCH_LOCKED_ALLOW_OUTPUT_TIMESTAMP_MODE" | "OUTPUT_TIMESTAMP_MODE_IMMUTABLE" | "NON_EPOCH_LOCKED_WITH_FORCE_ENDPOINT_ERROR_CONFIGURATION" | "ONLY_HLS_INPUT_TYPE_ALLOW_STREAM_NAME_OUTPUT_MODE" | "STREAM_NAME_OUTPUT_MODE_IMMUTABLE")
       SENSITIVE: []
     end
   end

@@ -90,6 +90,15 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EC2/Image.html#source_image_region-instance_method
       def source_image_region: () -> ::String
 
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EC2/Image.html#free_tier_eligible-instance_method
+      def free_tier_eligible: () -> bool
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EC2/Image.html#public_ssm_parameter_name-instance_method
+      def public_ssm_parameter_name: () -> ::String
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EC2/Image.html#image_watermarks-instance_method
+      def image_watermarks: () -> ::Array[Types::ImageWatermark]
+
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EC2/Image.html#image_location-instance_method
       def image_location: () -> ::String
 
@@ -150,7 +159,7 @@ module Aws
                            {
                              key: ::String?,
                              value: ::String?
-                           },
+                           }
                          ]
                        ) -> Tag::Collection
                      | (?Hash[Symbol, untyped]) -> Tag::Collection
@@ -162,13 +171,14 @@ module Aws
                            {
                              key: ::String?,
                              value: ::String?
-                           },
+                           }
                          ]
                        ) -> Tag::Collection
                      | (?Hash[Symbol, untyped]) -> Tag::Collection
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EC2/Image.html#deregister-instance_method
       def deregister: (
+                        ?delete_associated_snapshots: bool,
                         ?dry_run: bool
                       ) -> Types::DeregisterImageResult
                     | (?Hash[Symbol, untyped]) -> Types::DeregisterImageResult
@@ -191,7 +201,7 @@ module Aws
                                     organizational_unit_arn: ::String?,
                                     user_id: ::String?,
                                     group: ("all")?
-                                  },
+                                  }
                                 ]?,
                                 remove: Array[
                                   {
@@ -199,7 +209,7 @@ module Aws
                                     organizational_unit_arn: ::String?,
                                     user_id: ::String?,
                                     group: ("all")?
-                                  },
+                                  }
                                 ]?
                               },
                               ?operation_type: ("add" | "remove"),

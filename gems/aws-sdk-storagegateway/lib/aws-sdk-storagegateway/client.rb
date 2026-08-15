@@ -95,8 +95,8 @@ module Aws::StorageGateway
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::StorageGateway
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::StorageGateway
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::StorageGateway
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::StorageGateway
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::StorageGateway
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::StorageGateway
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::StorageGateway
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -1070,7 +1074,7 @@ module Aws::StorageGateway
     #
     # @option params [required, String] :network_interface_id
     #   The network interface of the gateway on which to expose the iSCSI
-    #   target. Only IPv4 addresses are accepted. Use
+    #   target. Accepts IPv4 and IPv6 addresses. Use
     #   DescribeGatewayInformation to get a list of the network interfaces
     #   available on a gateway.
     #
@@ -1308,7 +1312,7 @@ module Aws::StorageGateway
     #
     # @option params [required, String] :network_interface_id
     #   The network interface of the gateway on which to expose the iSCSI
-    #   target. Only IPv4 addresses are accepted. Use
+    #   target. Accepts IPv4 and IPv6 addresses. Use
     #   DescribeGatewayInformation to get a list of the network interfaces
     #   available on a gateway.
     #
@@ -1528,7 +1532,8 @@ module Aws::StorageGateway
     #
     # @option params [Array<String>] :client_list
     #   The list of clients that are allowed to access the S3 File Gateway.
-    #   The list must contain either valid IP addresses or valid CIDR blocks.
+    #   The list must contain either valid IPv4/IPv6 addresses or valid CIDR
+    #   blocks.
     #
     # @option params [String] :squash
     #   A value that maps a user to anonymous user.
@@ -1666,7 +1671,7 @@ module Aws::StorageGateway
     #     location_arn: "LocationARN", # required
     #     default_storage_class: "StorageClass",
     #     object_acl: "private", # accepts private, public-read, public-read-write, authenticated-read, bucket-owner-read, bucket-owner-full-control, aws-exec-read
-    #     client_list: ["IPV4AddressCIDR"],
+    #     client_list: ["Ipv4OrIpv6AddressCIDR"],
     #     squash: "Squash",
     #     read_only: false,
     #     guess_mime_type_enabled: false,
@@ -2310,7 +2315,7 @@ module Aws::StorageGateway
     #
     # @option params [required, String] :network_interface_id
     #   The network interface of the gateway on which to expose the iSCSI
-    #   target. Only IPv4 addresses are accepted. Use
+    #   target. Accepts IPv4 and IPv6 addresses. Use
     #   DescribeGatewayInformation to get a list of the network interfaces
     #   available on a gateway.
     #
@@ -4063,7 +4068,7 @@ module Aws::StorageGateway
     #
     #   resp.gateway_arn #=> String
     #   resp.domain_name #=> String
-    #   resp.active_directory_status #=> String, one of "ACCESS_DENIED", "DETACHED", "JOINED", "JOINING", "NETWORK_ERROR", "TIMEOUT", "UNKNOWN_ERROR"
+    #   resp.active_directory_status #=> String, one of "ACCESS_DENIED", "DETACHED", "JOINED", "JOINING", "NETWORK_ERROR", "TIMEOUT", "UNKNOWN_ERROR", "INSUFFICIENT_PERMISSIONS"
     #   resp.smb_guest_password_set #=> Boolean
     #   resp.smb_security_strategy #=> String, one of "ClientSpecified", "MandatorySigning", "MandatoryEncryption", "MandatoryEncryptionNoAes128"
     #   resp.file_shares_visible #=> Boolean
@@ -5033,9 +5038,16 @@ module Aws::StorageGateway
     #   domain.
     #
     # @option params [Array<String>] :domain_controllers
-    #   List of IPv4 addresses, NetBIOS names, or host names of your domain
+    #   List of IP addresses, NetBIOS names, or host names of your domain
     #   server. If you need to specify the port number include it after the
     #   colon (“:”). For example, `mydc.mydomain.com:389`.
+    #
+    #   <note markdown="1"> S3 File Gateway supports IPv6 addresses in addition to IPv4 and other
+    #   existing formats.
+    #
+    #    FSx File Gateway does not support IPv6.
+    #
+    #    </note>
     #
     # @option params [Integer] :timeout_in_seconds
     #   Specifies the time in seconds, in which the `JoinDomain` operation
@@ -5072,7 +5084,7 @@ module Aws::StorageGateway
     # @example Response structure
     #
     #   resp.gateway_arn #=> String
-    #   resp.active_directory_status #=> String, one of "ACCESS_DENIED", "DETACHED", "JOINED", "JOINING", "NETWORK_ERROR", "TIMEOUT", "UNKNOWN_ERROR"
+    #   resp.active_directory_status #=> String, one of "ACCESS_DENIED", "DETACHED", "JOINED", "JOINING", "NETWORK_ERROR", "TIMEOUT", "UNKNOWN_ERROR", "INSUFFICIENT_PERMISSIONS"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/JoinDomain AWS API Documentation
     #
@@ -5139,6 +5151,8 @@ module Aws::StorageGateway
     #
     #   * {Types::ListCacheReportsOutput#cache_report_list #cache_report_list} => Array&lt;Types::CacheReportInfo&gt;
     #   * {Types::ListCacheReportsOutput#marker #marker} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
     #
     # @example Request syntax with placeholder values
     #
@@ -6457,8 +6471,9 @@ module Aws::StorageGateway
     # The following requirements must be met to successfully generate a
     # cache report:
     #
-    # * You must have permissions to list the entire Amazon S3 bucket
-    #   associated with the specified file share.
+    # * You must have `s3:PutObject` and `s3:AbortMultipartUpload`
+    #   permissions for the Amazon S3 bucket where you want to store the
+    #   cache report.
     #
     # * No other cache reports can currently be in-progress for the
     #   specified file share.
@@ -6482,7 +6497,8 @@ module Aws::StorageGateway
     #   S3.
     #
     # @option params [required, String] :location_arn
-    #   The ARN of the Amazon S3 bucket where the cache report will be saved.
+    #   The ARN of the Amazon S3 bucket where you want to save the cache
+    #   report.
     #
     #   <note markdown="1"> We do not recommend saving the cache report to the same Amazon S3
     #   bucket for which you are generating the report.
@@ -6492,8 +6508,8 @@ module Aws::StorageGateway
     #    </note>
     #
     # @option params [required, String] :bucket_region
-    #   The Amazon Web Services Region of the Amazon S3 bucket associated with
-    #   the file share for which you want to generate the cache report.
+    #   The Amazon Web Services Region of the Amazon S3 bucket where you want
+    #   to save the cache report.
     #
     # @option params [String] :vpc_endpoint_dns_name
     #   The DNS name of the VPC endpoint associated with the Amazon S3 where
@@ -7272,7 +7288,8 @@ module Aws::StorageGateway
     #
     # @option params [Array<String>] :client_list
     #   The list of clients that are allowed to access the S3 File Gateway.
-    #   The list must contain either valid IP addresses or valid CIDR blocks.
+    #   The list must contain either valid IPv4/IPv6 addresses or valid CIDR
+    #   blocks.
     #
     # @option params [String] :squash
     #   The user mapped to anonymous user.
@@ -7376,7 +7393,7 @@ module Aws::StorageGateway
     #     },
     #     default_storage_class: "StorageClass",
     #     object_acl: "private", # accepts private, public-read, public-read-write, authenticated-read, bucket-owner-read, bucket-owner-full-control, aws-exec-read
-    #     client_list: ["IPV4AddressCIDR"],
+    #     client_list: ["Ipv4OrIpv6AddressCIDR"],
     #     squash: "Squash",
     #     read_only: false,
     #     guess_mime_type_enabled: false,
@@ -7967,7 +7984,7 @@ module Aws::StorageGateway
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-storagegateway'
-      context[:gem_version] = '1.106.0'
+      context[:gem_version] = '1.129.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

@@ -1538,6 +1538,58 @@ module Aws::LexModelsV2
       include Aws::Structure
     end
 
+    # Configuration that plays background filler audio during
+    # speech-to-speech interactions to mask processing delays and improve
+    # the perceived responsiveness of the bot.
+    #
+    # Audio filler requires `unifiedSpeechSettings` (speech-to-speech) to be
+    # enabled on the bot locale when `enabled` is `true`.
+    #
+    # @!attribute [rw] enabled
+    #   Specifies whether audio filler playback is enabled for the bot
+    #   locale. Set to `true` to play filler audio while Amazon Lex
+    #   processes a user utterance. Set to `false` to disable filler audio.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] audio_type
+    #   The identifier of the audio filler to play while Amazon Lex
+    #   processes the user's input. This field is required when `enabled`
+    #   is `true`.
+    #   @return [String]
+    #
+    # @!attribute [rw] start_delay_in_milliseconds
+    #   The time, in milliseconds, to wait after the end of the user's
+    #   utterance before starting audio filler playback. Valid range is
+    #   `500` to `5000` milliseconds. If not specified, Amazon Lex uses a
+    #   default of `2500` milliseconds.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] minimum_play_duration_in_milliseconds
+    #   The minimum time, in milliseconds, that audio filler plays once it
+    #   has started, even if the bot response becomes ready sooner. Valid
+    #   range is `1000` to `5000` milliseconds. If not specified, Amazon Lex
+    #   uses a default of `3000` milliseconds.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] response_delivery_delay_in_milliseconds
+    #   The silent delay, in milliseconds, inserted between the end of audio
+    #   filler playback and the start of the bot's response. Valid range is
+    #   `200` to `1000` milliseconds. If not specified, Amazon Lex uses a
+    #   default of `500` milliseconds.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/AudioFillerSettings AWS API Documentation
+    #
+    class AudioFillerSettings < Struct.new(
+      :enabled,
+      :audio_type,
+      :start_delay_in_milliseconds,
+      :minimum_play_duration_in_milliseconds,
+      :response_delivery_delay_in_milliseconds)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The location of audio log files collected when conversation logging is
     # enabled for a bot.
     #
@@ -2097,6 +2149,66 @@ module Aws::LexModelsV2
       include Aws::Structure
     end
 
+    # Contains summary information about a historical bot analysis
+    # execution.
+    #
+    # @!attribute [rw] bot_analyzer_status
+    #   The status of the historical analysis execution.
+    #
+    #   Valid Values: `Processing | Available | Failed | Stopping | Stopped`
+    #   @return [String]
+    #
+    # @!attribute [rw] creation_date_time
+    #   The date and time when the analysis was initiated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] bot_analyzer_request_id
+    #   The unique identifier for the analysis request.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/BotAnalyzerHistorySummary AWS API Documentation
+    #
+    class BotAnalyzerHistorySummary < Struct.new(
+      :bot_analyzer_status,
+      :creation_date_time,
+      :bot_analyzer_request_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains a recommendation for bot optimization identified by the Bot
+    # Analyzer.
+    #
+    # @!attribute [rw] issue_location
+    #   The location information for the identified issue within the bot
+    #   configuration.
+    #   @return [Types::IssueLocation]
+    #
+    # @!attribute [rw] priority
+    #   The priority level of the recommendation.
+    #
+    #   Valid Values: `High | Medium | Low`
+    #   @return [String]
+    #
+    # @!attribute [rw] issue_description
+    #   A detailed description of the identified configuration issue.
+    #   @return [String]
+    #
+    # @!attribute [rw] proposed_fix
+    #   The recommended solution to address the identified issue.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/BotAnalyzerRecommendation AWS API Documentation
+    #
+    class BotAnalyzerRecommendation < Struct.new(
+      :issue_location,
+      :priority,
+      :issue_description,
+      :proposed_fix)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Provides the identity of a the bot that was exported.
     #
     # @!attribute [rw] bot_id
@@ -2161,6 +2273,11 @@ module Aws::LexModelsV2
     #   Lex handles special cases of securing the data for your bot.
     #   @return [Types::DataPrivacy]
     #
+    # @!attribute [rw] error_log_settings
+    #   Allows you to configure destinations where error logs will be
+    #   published during the bot import process.
+    #   @return [Types::ErrorLogSettings]
+    #
     # @!attribute [rw] idle_session_ttl_in_seconds
     #   The time, in seconds, that Amazon Lex should keep information about
     #   a user's conversation with the bot.
@@ -2191,6 +2308,7 @@ module Aws::LexModelsV2
       :bot_name,
       :role_arn,
       :data_privacy,
+      :error_log_settings,
       :idle_session_ttl_in_seconds,
       :bot_tags,
       :test_bot_alias_tags)
@@ -2331,6 +2449,29 @@ module Aws::LexModelsV2
     #   * `generative`
     #   @return [Types::VoiceSettings]
     #
+    # @!attribute [rw] speech_recognition_settings
+    #   Speech-to-text settings to apply when importing the bot locale
+    #   configuration.
+    #   @return [Types::SpeechRecognitionSettings]
+    #
+    # @!attribute [rw] speech_detection_sensitivity
+    #   The sensitivity level for voice activity detection (VAD) in the bot
+    #   locale. This setting helps optimize speech recognition accuracy by
+    #   adjusting how the system responds to background noise during voice
+    #   interactions.
+    #   @return [String]
+    #
+    # @!attribute [rw] unified_speech_settings
+    #   Unified speech settings to apply when importing the bot locale
+    #   configuration.
+    #   @return [Types::UnifiedSpeechSettings]
+    #
+    # @!attribute [rw] audio_filler_settings
+    #   Audio filler settings to apply when importing the bot locale
+    #   configuration. Audio filler requires `unifiedSpeechSettings`
+    #   (speech-to-speech) to be enabled when `enabled` is `true`.
+    #   @return [Types::AudioFillerSettings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/BotLocaleImportSpecification AWS API Documentation
     #
     class BotLocaleImportSpecification < Struct.new(
@@ -2338,7 +2479,11 @@ module Aws::LexModelsV2
       :bot_version,
       :locale_id,
       :nlu_intent_confidence_threshold,
-      :voice_settings)
+      :voice_settings,
+      :speech_recognition_settings,
+      :speech_detection_sensitivity,
+      :unified_speech_settings,
+      :audio_filler_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3496,10 +3641,33 @@ module Aws::LexModelsV2
     #   with the user.
     #   @return [Types::VoiceSettings]
     #
+    # @!attribute [rw] unified_speech_settings
+    #   Unified speech settings to configure for the new bot locale.
+    #   @return [Types::UnifiedSpeechSettings]
+    #
+    # @!attribute [rw] audio_filler_settings
+    #   Audio filler settings to configure for the new bot locale. When
+    #   enabled, Amazon Lex plays a brief background audio filler during
+    #   speech-to-speech interactions to mask processing delays. Requires
+    #   `unifiedSpeechSettings` (speech-to-speech) to be configured on the
+    #   bot locale.
+    #   @return [Types::AudioFillerSettings]
+    #
+    # @!attribute [rw] speech_recognition_settings
+    #   Speech-to-text settings to configure for the new bot locale.
+    #   @return [Types::SpeechRecognitionSettings]
+    #
     # @!attribute [rw] generative_ai_settings
     #   Contains specifications about the generative AI capabilities from
     #   Amazon Bedrock that you can turn on for your bot.
     #   @return [Types::GenerativeAISettings]
+    #
+    # @!attribute [rw] speech_detection_sensitivity
+    #   The sensitivity level for voice activity detection (VAD) in the bot
+    #   locale. This setting helps optimize speech recognition accuracy by
+    #   adjusting how the system responds to background noise during voice
+    #   interactions.
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/CreateBotLocaleRequest AWS API Documentation
     #
@@ -3510,7 +3678,11 @@ module Aws::LexModelsV2
       :description,
       :nlu_intent_confidence_threshold,
       :voice_settings,
-      :generative_ai_settings)
+      :unified_speech_settings,
+      :audio_filler_settings,
+      :speech_recognition_settings,
+      :generative_ai_settings,
+      :speech_detection_sensitivity)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3545,6 +3717,18 @@ module Aws::LexModelsV2
     #   with the user.
     #   @return [Types::VoiceSettings]
     #
+    # @!attribute [rw] unified_speech_settings
+    #   The unified speech settings configured for the created bot locale.
+    #   @return [Types::UnifiedSpeechSettings]
+    #
+    # @!attribute [rw] audio_filler_settings
+    #   The audio filler settings configured for the created bot locale.
+    #   @return [Types::AudioFillerSettings]
+    #
+    # @!attribute [rw] speech_recognition_settings
+    #   The speech-to-text settings configured for the created bot locale.
+    #   @return [Types::SpeechRecognitionSettings]
+    #
     # @!attribute [rw] bot_locale_status
     #   The status of the bot.
     #
@@ -3571,6 +3755,11 @@ module Aws::LexModelsV2
     #   Amazon Bedrock that you can turn on for your bot.
     #   @return [Types::GenerativeAISettings]
     #
+    # @!attribute [rw] speech_detection_sensitivity
+    #   The sensitivity level for voice activity detection (VAD) that was
+    #   specified for the bot locale.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/CreateBotLocaleResponse AWS API Documentation
     #
     class CreateBotLocaleResponse < Struct.new(
@@ -3581,9 +3770,13 @@ module Aws::LexModelsV2
       :description,
       :nlu_intent_confidence_threshold,
       :voice_settings,
+      :unified_speech_settings,
+      :audio_filler_settings,
+      :speech_recognition_settings,
       :bot_locale_status,
       :creation_date_time,
-      :generative_ai_settings)
+      :generative_ai_settings,
+      :speech_detection_sensitivity)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3692,6 +3885,10 @@ module Aws::LexModelsV2
     #   The list of bot members in a network to be created.
     #   @return [Array<Types::BotMember>]
     #
+    # @!attribute [rw] error_log_settings
+    #   Specifies the configuration for error logging during bot creation.
+    #   @return [Types::ErrorLogSettings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/CreateBotRequest AWS API Documentation
     #
     class CreateBotRequest < Struct.new(
@@ -3703,7 +3900,8 @@ module Aws::LexModelsV2
       :bot_tags,
       :test_bot_alias_tags,
       :bot_type,
-      :bot_members)
+      :bot_members,
+      :error_log_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3760,6 +3958,11 @@ module Aws::LexModelsV2
     #   The list of bots in a network that was created.
     #   @return [Array<Types::BotMember>]
     #
+    # @!attribute [rw] error_log_settings
+    #   Specifies configuration settings for delivering error logs to
+    #   Cloudwatch Logs in an Amazon Lex bot response.
+    #   @return [Types::ErrorLogSettings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/CreateBotResponse AWS API Documentation
     #
     class CreateBotResponse < Struct.new(
@@ -3774,7 +3977,8 @@ module Aws::LexModelsV2
       :bot_tags,
       :test_bot_alias_tags,
       :bot_type,
-      :bot_members)
+      :bot_members,
+      :error_log_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3915,6 +4119,14 @@ module Aws::LexModelsV2
     #   intent.
     #   @return [String]
     #
+    # @!attribute [rw] intent_display_name
+    #   A display name for the intent. If configured, This name will be
+    #   shown to users during Intent Disambiguation instead of the intent
+    #   name. Display names should be user-friendly, descriptive and match
+    #   the intent's purpose to improve user experience during
+    #   disambiguation.
+    #   @return [String]
+    #
     # @!attribute [rw] description
     #   A description of the intent. Use the description to help identify
     #   the intent in lists.
@@ -4041,10 +4253,16 @@ module Aws::LexModelsV2
     #   specify the `kendraConfiguration` field.
     #   @return [Types::QnAIntentConfiguration]
     #
+    # @!attribute [rw] q_in_connect_intent_configuration
+    #   Qinconnect intent configuration details for the create intent
+    #   request.
+    #   @return [Types::QInConnectIntentConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/CreateIntentRequest AWS API Documentation
     #
     class CreateIntentRequest < Struct.new(
       :intent_name,
+      :intent_display_name,
       :description,
       :parent_intent_signature,
       :sample_utterances,
@@ -4059,7 +4277,8 @@ module Aws::LexModelsV2
       :bot_version,
       :locale_id,
       :initial_response_setting,
-      :qn_a_intent_configuration)
+      :qn_a_intent_configuration,
+      :q_in_connect_intent_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4070,6 +4289,10 @@ module Aws::LexModelsV2
     #
     # @!attribute [rw] intent_name
     #   The name specified for the intent.
+    #   @return [String]
+    #
+    # @!attribute [rw] intent_display_name
+    #   The display name specified for the intent.
     #   @return [String]
     #
     # @!attribute [rw] description
@@ -4139,11 +4362,17 @@ module Aws::LexModelsV2
     #   `Amazon.QnAIntent`.
     #   @return [Types::QnAIntentConfiguration]
     #
+    # @!attribute [rw] q_in_connect_intent_configuration
+    #   Qinconnect intent configuration details for the create intent
+    #   response.
+    #   @return [Types::QInConnectIntentConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/CreateIntentResponse AWS API Documentation
     #
     class CreateIntentResponse < Struct.new(
       :intent_id,
       :intent_name,
+      :intent_display_name,
       :description,
       :parent_intent_signature,
       :sample_utterances,
@@ -4159,7 +4388,8 @@ module Aws::LexModelsV2
       :locale_id,
       :creation_date_time,
       :initial_response_setting,
-      :qn_a_intent_configuration)
+      :qn_a_intent_configuration,
+      :q_in_connect_intent_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4958,6 +5188,28 @@ module Aws::LexModelsV2
       include Aws::Structure
     end
 
+    # Configuration settings for integrating Deepgram speech-to-text models
+    # with Amazon Lex.
+    #
+    # @!attribute [rw] api_token_secret_arn
+    #   The Amazon Resource Name (ARN) of the Secrets Manager secret that
+    #   contains the Deepgram API token.
+    #   @return [String]
+    #
+    # @!attribute [rw] model_id
+    #   The identifier of the Deepgram speech-to-text model to use for
+    #   processing speech input.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/DeepgramSpeechModelConfig AWS API Documentation
+    #
+    class DeepgramSpeechModelConfig < Struct.new(
+      :api_token_secret_arn,
+      :model_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # A set of actions that Amazon Lex should run if none of the other
     # conditions are met.
     #
@@ -5030,6 +5282,28 @@ module Aws::LexModelsV2
       SENSITIVE = []
       include Aws::Structure
     end
+
+    # @!attribute [rw] bot_id
+    #   The unique identifier of the bot.
+    #   @return [String]
+    #
+    # @!attribute [rw] bot_analyzer_request_id
+    #   The unique identifier of the analysis request whose recommendations
+    #   should be deleted.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/DeleteBotAnalyzerRecommendationRequest AWS API Documentation
+    #
+    class DeleteBotAnalyzerRecommendationRequest < Struct.new(
+      :bot_id,
+      :bot_analyzer_request_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/DeleteBotAnalyzerRecommendationResponse AWS API Documentation
+    #
+    class DeleteBotAnalyzerRecommendationResponse < Aws::EmptyStructure; end
 
     # @!attribute [rw] bot_id
     #   The unique identifier of the bot that contains the locale.
@@ -5693,6 +5967,83 @@ module Aws::LexModelsV2
     end
 
     # @!attribute [rw] bot_id
+    #   The unique identifier of the bot.
+    #   @return [String]
+    #
+    # @!attribute [rw] bot_analyzer_request_id
+    #   The unique identifier of the analysis request.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   If the response from a previous request was truncated, the
+    #   `nextToken` value is used to retrieve the next page of
+    #   recommendations.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of recommendations to return in the response. The
+    #   default is 5.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/DescribeBotAnalyzerRecommendationRequest AWS API Documentation
+    #
+    class DescribeBotAnalyzerRecommendationRequest < Struct.new(
+      :bot_id,
+      :bot_analyzer_request_id,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] bot_id
+    #   The unique identifier of the bot.
+    #   @return [String]
+    #
+    # @!attribute [rw] bot_version
+    #   The version of the bot that was analyzed.
+    #   @return [String]
+    #
+    # @!attribute [rw] locale_id
+    #   The locale identifier of the bot locale that was analyzed.
+    #   @return [String]
+    #
+    # @!attribute [rw] bot_analyzer_status
+    #   The current status of the analysis.
+    #
+    #   Valid Values: `Processing | Available | Failed | Stopping | Stopped`
+    #   @return [String]
+    #
+    # @!attribute [rw] creation_date_time
+    #   The date and time when the analysis was initiated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] bot_analyzer_recommendation_list
+    #   A list of recommendations for optimizing your bot configuration.
+    #   Each recommendation includes the issue location, priority,
+    #   description, and proposed fix.
+    #   @return [Array<Types::BotAnalyzerRecommendation>]
+    #
+    # @!attribute [rw] next_token
+    #   If the response is truncated, this token can be used in a subsequent
+    #   request to retrieve the next page of recommendations.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/DescribeBotAnalyzerRecommendationResponse AWS API Documentation
+    #
+    class DescribeBotAnalyzerRecommendationResponse < Struct.new(
+      :bot_id,
+      :bot_version,
+      :locale_id,
+      :bot_analyzer_status,
+      :creation_date_time,
+      :bot_analyzer_recommendation_list,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] bot_id
     #   The identifier of the bot associated with the locale.
     #   @return [String]
     #
@@ -5751,6 +6102,18 @@ module Aws::LexModelsV2
     #   the user.
     #   @return [Types::VoiceSettings]
     #
+    # @!attribute [rw] unified_speech_settings
+    #   The unified speech settings configured for the bot locale.
+    #   @return [Types::UnifiedSpeechSettings]
+    #
+    # @!attribute [rw] audio_filler_settings
+    #   The audio filler settings configured for the bot locale.
+    #   @return [Types::AudioFillerSettings]
+    #
+    # @!attribute [rw] speech_recognition_settings
+    #   The speech-to-text settings configured for the bot locale.
+    #   @return [Types::SpeechRecognitionSettings]
+    #
     # @!attribute [rw] intents_count
     #   The number of intents defined for the locale.
     #   @return [Integer]
@@ -5796,6 +6159,11 @@ module Aws::LexModelsV2
     #   your bot locale.
     #   @return [Types::GenerativeAISettings]
     #
+    # @!attribute [rw] speech_detection_sensitivity
+    #   The sensitivity level for voice activity detection (VAD) configured
+    #   for the bot locale.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/DescribeBotLocaleResponse AWS API Documentation
     #
     class DescribeBotLocaleResponse < Struct.new(
@@ -5806,6 +6174,9 @@ module Aws::LexModelsV2
       :description,
       :nlu_intent_confidence_threshold,
       :voice_settings,
+      :unified_speech_settings,
+      :audio_filler_settings,
+      :speech_recognition_settings,
       :intents_count,
       :slot_types_count,
       :bot_locale_status,
@@ -5815,7 +6186,8 @@ module Aws::LexModelsV2
       :last_build_submitted_date_time,
       :bot_locale_history_events,
       :recommended_actions,
-      :generative_ai_settings)
+      :generative_ai_settings,
+      :speech_detection_sensitivity)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6136,6 +6508,12 @@ module Aws::LexModelsV2
     #   the bot couldn't be built.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] error_log_settings
+    #   Contains the configuration for error logging that specifies where
+    #   and how bot errors are recorded, including destinations like
+    #   CloudWatch Logs.
+    #   @return [Types::ErrorLogSettings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/DescribeBotResponse AWS API Documentation
     #
     class DescribeBotResponse < Struct.new(
@@ -6150,7 +6528,8 @@ module Aws::LexModelsV2
       :last_updated_date_time,
       :bot_type,
       :bot_members,
-      :failure_reasons)
+      :failure_reasons,
+      :error_log_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6489,6 +6868,10 @@ module Aws::LexModelsV2
     #   The name specified for the intent.
     #   @return [String]
     #
+    # @!attribute [rw] intent_display_name
+    #   The display name specified for the intent.
+    #   @return [String]
+    #
     # @!attribute [rw] description
     #   The description of the intent.
     #   @return [String]
@@ -6569,11 +6952,17 @@ module Aws::LexModelsV2
     #   Details about the configuration of the built-in `Amazon.QnAIntent`.
     #   @return [Types::QnAIntentConfiguration]
     #
+    # @!attribute [rw] q_in_connect_intent_configuration
+    #   Qinconnect intent configuration details for the describe intent
+    #   response.
+    #   @return [Types::QInConnectIntentConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/DescribeIntentResponse AWS API Documentation
     #
     class DescribeIntentResponse < Struct.new(
       :intent_id,
       :intent_name,
+      :intent_display_name,
       :description,
       :parent_intent_signature,
       :sample_utterances,
@@ -6591,7 +6980,8 @@ module Aws::LexModelsV2
       :creation_date_time,
       :last_updated_date_time,
       :initial_response_setting,
-      :qn_a_intent_configuration)
+      :qn_a_intent_configuration,
+      :q_in_connect_intent_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7328,6 +7718,21 @@ module Aws::LexModelsV2
       :bot_locale_export_password,
       :associated_transcripts_password)
       SENSITIVE = [:bot_locale_export_password, :associated_transcripts_password]
+      include Aws::Structure
+    end
+
+    # Settings parameters for the error logs, whether it is enabled or
+    # disabled.
+    #
+    # @!attribute [rw] enabled
+    #   Settings parameters for the error logs, when it is enabled.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/ErrorLogSettings AWS API Documentation
+    #
+    class ErrorLogSettings < Struct.new(
+      :enabled)
+      SENSITIVE = []
       include Aws::Structure
     end
 
@@ -8332,6 +8737,42 @@ module Aws::LexModelsV2
       include Aws::Structure
     end
 
+    # Configures the Intent Disambiguation feature that helps resolve
+    # ambiguous user inputs when multiple intents could match. When enabled,
+    # the system presents clarifying questions to users, helping them
+    # specify their exact intent for improved conversation accuracy.
+    #
+    # @!attribute [rw] enabled
+    #   Determines whether the Intent Disambiguation feature is enabled.
+    #   When set to `true`, Amazon Lex will present disambiguation options
+    #   to users when multiple intents could match their input, with the
+    #   default being `false`.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] max_disambiguation_intents
+    #   Specifies the maximum number of intent options (2-5) to present to
+    #   users when disambiguation is needed. This setting determines how
+    #   many intent options will be shown to users when the system detects
+    #   ambiguous input. The default value is 3.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] custom_disambiguation_message
+    #   Provides a custom message that will be displayed before presenting
+    #   the disambiguation options to users. This message helps set the
+    #   context for users and can be customized to match your bot's tone
+    #   and brand. If not specified, a default message will be used.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/IntentDisambiguationSettings AWS API Documentation
+    #
+    class IntentDisambiguationSettings < Struct.new(
+      :enabled,
+      :max_disambiguation_intents,
+      :custom_disambiguation_message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Filters the response from the `ListIntents` operation.
     #
     # @!attribute [rw] name
@@ -8467,6 +8908,10 @@ module Aws::LexModelsV2
     #   The name of the intent.
     #   @return [String]
     #
+    # @!attribute [rw] intent_display_name
+    #   The display name of the intent.
+    #   @return [String]
+    #
     # @!attribute [rw] description
     #   The description of the intent.
     #   @return [String]
@@ -8495,6 +8940,7 @@ module Aws::LexModelsV2
     class IntentSummary < Struct.new(
       :intent_id,
       :intent_name,
+      :intent_display_name,
       :description,
       :parent_intent_signature,
       :input_contexts,
@@ -8528,6 +8974,31 @@ module Aws::LexModelsV2
     #
     class InvokedIntentSample < Struct.new(
       :intent_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Specifies the location of an identified issue within the bot
+    # configuration.
+    #
+    # @!attribute [rw] bot_locale
+    #   The locale identifier where the issue was found.
+    #   @return [String]
+    #
+    # @!attribute [rw] intent_id
+    #   The intent identifier where the issue was found, if applicable.
+    #   @return [String]
+    #
+    # @!attribute [rw] slot_id
+    #   The slot identifier where the issue was found, if applicable.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/IssueLocation AWS API Documentation
+    #
+    class IssueLocation < Struct.new(
+      :bot_locale,
+      :intent_id,
+      :slot_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -8875,6 +9346,77 @@ module Aws::LexModelsV2
       :bot_alias_summaries,
       :next_token,
       :bot_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] bot_id
+    #   The unique identifier of the bot.
+    #   @return [String]
+    #
+    # @!attribute [rw] locale_id
+    #   The locale identifier to filter the history. If not specified,
+    #   returns history for all locales.
+    #   @return [String]
+    #
+    # @!attribute [rw] bot_version
+    #   The bot version to filter the history. If not specified, defaults to
+    #   `DRAFT`.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   If the response from a previous request was truncated, the
+    #   `nextToken` value is used to retrieve the next page of history
+    #   entries.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of history entries to return in the response. The
+    #   default is 10.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/ListBotAnalyzerHistoryRequest AWS API Documentation
+    #
+    class ListBotAnalyzerHistoryRequest < Struct.new(
+      :bot_id,
+      :locale_id,
+      :bot_version,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] bot_id
+    #   The unique identifier of the bot.
+    #   @return [String]
+    #
+    # @!attribute [rw] locale_id
+    #   The locale identifier used to filter the history.
+    #   @return [String]
+    #
+    # @!attribute [rw] bot_version
+    #   The bot version used to filter the history.
+    #   @return [String]
+    #
+    # @!attribute [rw] bot_analyzer_history_list
+    #   A list of historical analysis executions, ordered by creation date
+    #   with the most recent first.
+    #   @return [Array<Types::BotAnalyzerHistorySummary>]
+    #
+    # @!attribute [rw] next_token
+    #   If the response is truncated, this token can be used in a subsequent
+    #   request to retrieve the next page of history entries.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/ListBotAnalyzerHistoryResponse AWS API Documentation
+    #
+    class ListBotAnalyzerHistoryResponse < Struct.new(
+      :bot_id,
+      :locale_id,
+      :bot_version,
+      :bot_analyzer_history_list,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -11144,6 +11686,40 @@ module Aws::LexModelsV2
       include Aws::Structure
     end
 
+    # Configures the Assisted Natural Language Understanding (NLU) feature
+    # for your bot. This specification determines whether enhanced intent
+    # recognition and utterance understanding capabilities are active.
+    #
+    # @!attribute [rw] enabled
+    #   Determines whether the Assisted NLU feature is enabled for the bot.
+    #   When set to `true`, Amazon Lex uses advanced models to improve
+    #   intent recognition and slot resolution, with the default being
+    #   `false`.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] assisted_nlu_mode
+    #   Specifies the mode for Assisted NLU operation. Use `Primary` to make
+    #   Assisted NLU the primary intent recognition method, or `Fallback` to
+    #   use it only when standard NLU confidence is low.
+    #   @return [String]
+    #
+    # @!attribute [rw] intent_disambiguation_settings
+    #   An object containing specifications for the Intent Disambiguation
+    #   feature within the Assisted NLU settings. These settings determine
+    #   how the bot handles ambiguous user inputs that could match multiple
+    #   intents.
+    #   @return [Types::IntentDisambiguationSettings]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/NluImprovementSpecification AWS API Documentation
+    #
+    class NluImprovementSpecification < Struct.new(
+      :enabled,
+      :assisted_nlu_mode,
+      :intent_disambiguation_settings)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Determines whether Amazon Lex obscures slot values in conversation
     # logs.
     #
@@ -11570,6 +12146,35 @@ module Aws::LexModelsV2
       include Aws::Structure
     end
 
+    # The configuration details of the Qinconnect assistant.
+    #
+    # @!attribute [rw] assistant_arn
+    #   The assistant Arn details of the Qinconnect assistant configuration.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/QInConnectAssistantConfiguration AWS API Documentation
+    #
+    class QInConnectAssistantConfiguration < Struct.new(
+      :assistant_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration details of the Qinconnect intent.
+    #
+    # @!attribute [rw] q_in_connect_assistant_configuration
+    #   The Qinconnect assistant configuration details of the Qinconnect
+    #   intent.
+    #   @return [Types::QInConnectAssistantConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/QInConnectIntentConfiguration AWS API Documentation
+    #
+    class QInConnectIntentConfiguration < Struct.new(
+      :q_in_connect_assistant_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Details about the the configuration of the built-in
     # `Amazon.QnAIntent`.
     #
@@ -11833,10 +12438,17 @@ module Aws::LexModelsV2
     #   feature.
     #   @return [Types::SlotResolutionImprovementSpecification]
     #
+    # @!attribute [rw] nlu_improvement
+    #   An object containing specifications for the Assisted NLU feature
+    #   within the bot's runtime settings. These settings determine how the
+    #   bot processes and interprets user utterances during conversations.
+    #   @return [Types::NluImprovementSpecification]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/RuntimeSettings AWS API Documentation
     #
     class RuntimeSettings < Struct.new(
-      :slot_resolution_improvement)
+      :slot_resolution_improvement,
+      :nlu_improvement)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -12864,6 +13476,137 @@ module Aws::LexModelsV2
       include Aws::Structure
     end
 
+    # Configuration for a foundation model used for speech synthesis and
+    # recognition capabilities.
+    #
+    # @!attribute [rw] model_arn
+    #   The Amazon Resource Name (ARN) of the foundation model used for
+    #   speech processing.
+    #   @return [String]
+    #
+    # @!attribute [rw] voice_id
+    #   The identifier of the voice to use for speech synthesis with the
+    #   foundation model.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/SpeechFoundationModel AWS API Documentation
+    #
+    class SpeechFoundationModel < Struct.new(
+      :model_arn,
+      :voice_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration settings that define which speech-to-text model to use
+    # for processing speech input.
+    #
+    # @!attribute [rw] deepgram_config
+    #   Configuration settings for using Deepgram as the speech-to-text
+    #   provider.
+    #   @return [Types::DeepgramSpeechModelConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/SpeechModelConfig AWS API Documentation
+    #
+    class SpeechModelConfig < Struct.new(
+      :deepgram_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Settings that control how Amazon Lex processes and recognizes speech
+    # input from users.
+    #
+    # @!attribute [rw] speech_model_preference
+    #   The speech-to-text model to use.
+    #   @return [String]
+    #
+    # @!attribute [rw] speech_model_config
+    #   Configuration settings for the selected speech-to-text model.
+    #   @return [Types::SpeechModelConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/SpeechRecognitionSettings AWS API Documentation
+    #
+    class SpeechRecognitionSettings < Struct.new(
+      :speech_model_preference,
+      :speech_model_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] bot_id
+    #   The unique identifier of the bot to analyze.
+    #   @return [String]
+    #
+    # @!attribute [rw] analysis_scope
+    #   The scope of analysis to perform. Currently only `BotLocale` scope
+    #   is supported.
+    #
+    #   Valid Values: `BotLocale`
+    #   @return [String]
+    #
+    # @!attribute [rw] locale_id
+    #   The locale identifier for the bot locale to analyze. Required when
+    #   `analysisScope` is `BotLocale`.
+    #   @return [String]
+    #
+    # @!attribute [rw] bot_version
+    #   The version of the bot to analyze. Defaults to `DRAFT` if not
+    #   specified.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/StartBotAnalyzerRequest AWS API Documentation
+    #
+    class StartBotAnalyzerRequest < Struct.new(
+      :bot_id,
+      :analysis_scope,
+      :locale_id,
+      :bot_version)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] bot_id
+    #   The unique identifier of the bot being analyzed.
+    #   @return [String]
+    #
+    # @!attribute [rw] bot_version
+    #   The version of the bot being analyzed.
+    #   @return [String]
+    #
+    # @!attribute [rw] locale_id
+    #   The locale identifier of the bot locale being analyzed.
+    #   @return [String]
+    #
+    # @!attribute [rw] bot_analyzer_status
+    #   The current status of the analysis. The initial status is
+    #   `Processing`.
+    #
+    #   Valid Values: `Processing | Available | Failed | Stopping | Stopped`
+    #   @return [String]
+    #
+    # @!attribute [rw] bot_analyzer_request_id
+    #   A unique identifier for this analysis request. Use this identifier
+    #   to check the status and retrieve results.
+    #   @return [String]
+    #
+    # @!attribute [rw] creation_date_time
+    #   The date and time when the analysis was initiated.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/StartBotAnalyzerResponse AWS API Documentation
+    #
+    class StartBotAnalyzerResponse < Struct.new(
+      :bot_id,
+      :bot_version,
+      :locale_id,
+      :bot_analyzer_status,
+      :bot_analyzer_request_id,
+      :creation_date_time)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] bot_id
     #   The unique identifier of the bot containing the bot recommendation.
     #   @return [String]
@@ -13308,6 +14051,58 @@ module Aws::LexModelsV2
       :frequency_in_seconds,
       :timeout_in_seconds,
       :allow_interrupt)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] bot_id
+    #   The unique identifier of the bot.
+    #   @return [String]
+    #
+    # @!attribute [rw] bot_analyzer_request_id
+    #   The unique identifier of the analysis request to stop.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/StopBotAnalyzerRequest AWS API Documentation
+    #
+    class StopBotAnalyzerRequest < Struct.new(
+      :bot_id,
+      :bot_analyzer_request_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] bot_id
+    #   The unique identifier of the bot.
+    #   @return [String]
+    #
+    # @!attribute [rw] bot_version
+    #   The version of the bot.
+    #   @return [String]
+    #
+    # @!attribute [rw] locale_id
+    #   The locale identifier of the bot locale.
+    #   @return [String]
+    #
+    # @!attribute [rw] bot_analyzer_status
+    #   The updated status of the analysis. The status will be `Stopping`
+    #   and will eventually transition to `Stopped`.
+    #
+    #   Valid Values: `Processing | Available | Failed | Stopping | Stopped`
+    #   @return [String]
+    #
+    # @!attribute [rw] bot_analyzer_request_id
+    #   The unique identifier of the analysis request.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/StopBotAnalyzerResponse AWS API Documentation
+    #
+    class StopBotAnalyzerResponse < Struct.new(
+      :bot_id,
+      :bot_version,
+      :locale_id,
+      :bot_analyzer_status,
+      :bot_analyzer_request_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -14158,6 +14953,22 @@ module Aws::LexModelsV2
       include Aws::Structure
     end
 
+    # Unified configuration settings that combine speech recognition and
+    # synthesis capabilities.
+    #
+    # @!attribute [rw] speech_foundation_model
+    #   The foundation model configuration to use for unified speech
+    #   processing capabilities.
+    #   @return [Types::SpeechFoundationModel]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/UnifiedSpeechSettings AWS API Documentation
+    #
+    class UnifiedSpeechSettings < Struct.new(
+      :speech_foundation_model)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] resource_arn
     #   The Amazon Resource Name (ARN) of the resource to remove the tags
     #   from.
@@ -14330,12 +15141,33 @@ module Aws::LexModelsV2
     #   interaction with the user.
     #   @return [Types::VoiceSettings]
     #
+    # @!attribute [rw] unified_speech_settings
+    #   Updated unified speech settings to apply to the bot locale.
+    #   @return [Types::UnifiedSpeechSettings]
+    #
+    # @!attribute [rw] audio_filler_settings
+    #   Updated audio filler settings to apply to the bot locale. When
+    #   enabled, requires `unifiedSpeechSettings` (speech-to-speech) to be
+    #   configured on the bot locale.
+    #   @return [Types::AudioFillerSettings]
+    #
+    # @!attribute [rw] speech_recognition_settings
+    #   Updated speech-to-text settings to apply to the bot locale.
+    #   @return [Types::SpeechRecognitionSettings]
+    #
     # @!attribute [rw] generative_ai_settings
     #   Contains settings for generative AI features powered by Amazon
     #   Bedrock for your bot locale. Use this object to turn generative AI
     #   features on and off. Pricing may differ if you turn a feature on.
     #   For more information, see LINK.
     #   @return [Types::GenerativeAISettings]
+    #
+    # @!attribute [rw] speech_detection_sensitivity
+    #   The new sensitivity level for voice activity detection (VAD) in the
+    #   bot locale. This setting helps optimize speech recognition accuracy
+    #   by adjusting how the system responds to background noise during
+    #   voice interactions.
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/UpdateBotLocaleRequest AWS API Documentation
     #
@@ -14346,7 +15178,11 @@ module Aws::LexModelsV2
       :description,
       :nlu_intent_confidence_threshold,
       :voice_settings,
-      :generative_ai_settings)
+      :unified_speech_settings,
+      :audio_filler_settings,
+      :speech_recognition_settings,
+      :generative_ai_settings,
+      :speech_detection_sensitivity)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -14382,6 +15218,18 @@ module Aws::LexModelsV2
     #   user.
     #   @return [Types::VoiceSettings]
     #
+    # @!attribute [rw] unified_speech_settings
+    #   The updated unified speech settings for the bot locale.
+    #   @return [Types::UnifiedSpeechSettings]
+    #
+    # @!attribute [rw] audio_filler_settings
+    #   The updated audio filler settings for the bot locale.
+    #   @return [Types::AudioFillerSettings]
+    #
+    # @!attribute [rw] speech_recognition_settings
+    #   The updated speech-to-text settings for the bot locale.
+    #   @return [Types::SpeechRecognitionSettings]
+    #
     # @!attribute [rw] bot_locale_status
     #   The current status of the locale. When the bot status is `Built` the
     #   locale is ready for use.
@@ -14410,6 +15258,11 @@ module Aws::LexModelsV2
     #   Bedrock for your bot locale.
     #   @return [Types::GenerativeAISettings]
     #
+    # @!attribute [rw] speech_detection_sensitivity
+    #   The updated sensitivity level for voice activity detection (VAD) in
+    #   the bot locale.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/UpdateBotLocaleResponse AWS API Documentation
     #
     class UpdateBotLocaleResponse < Struct.new(
@@ -14420,12 +15273,16 @@ module Aws::LexModelsV2
       :description,
       :nlu_intent_confidence_threshold,
       :voice_settings,
+      :unified_speech_settings,
+      :audio_filler_settings,
+      :speech_recognition_settings,
       :bot_locale_status,
       :failure_reasons,
       :creation_date_time,
       :last_updated_date_time,
       :recommended_actions,
-      :generative_ai_settings)
+      :generative_ai_settings,
+      :speech_detection_sensitivity)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -14588,6 +15445,12 @@ module Aws::LexModelsV2
     #   action.
     #   @return [Array<Types::BotMember>]
     #
+    # @!attribute [rw] error_log_settings
+    #   Allows you to modify how Amazon Lex logs errors during bot
+    #   interactions, including destinations for error logs and the types of
+    #   errors to be captured.
+    #   @return [Types::ErrorLogSettings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/UpdateBotRequest AWS API Documentation
     #
     class UpdateBotRequest < Struct.new(
@@ -14598,7 +15461,8 @@ module Aws::LexModelsV2
       :data_privacy,
       :idle_session_ttl_in_seconds,
       :bot_type,
-      :bot_members)
+      :bot_members,
+      :error_log_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -14651,6 +15515,11 @@ module Aws::LexModelsV2
     #   The list of bot members in the network that was updated.
     #   @return [Array<Types::BotMember>]
     #
+    # @!attribute [rw] error_log_settings
+    #   Settings for managing error logs within the response of an update
+    #   bot operation.
+    #   @return [Types::ErrorLogSettings]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/UpdateBotResponse AWS API Documentation
     #
     class UpdateBotResponse < Struct.new(
@@ -14664,7 +15533,8 @@ module Aws::LexModelsV2
       :creation_date_time,
       :last_updated_date_time,
       :bot_type,
-      :bot_members)
+      :bot_members,
+      :error_log_settings)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -14733,6 +15603,10 @@ module Aws::LexModelsV2
     #
     # @!attribute [rw] intent_name
     #   The new name for the intent.
+    #   @return [String]
+    #
+    # @!attribute [rw] intent_display_name
+    #   The new display name for the intent.
     #   @return [String]
     #
     # @!attribute [rw] description
@@ -14817,11 +15691,17 @@ module Aws::LexModelsV2
     #   specify the `kendraConfiguration` field.
     #   @return [Types::QnAIntentConfiguration]
     #
+    # @!attribute [rw] q_in_connect_intent_configuration
+    #   Qinconnect intent configuration details for the update intent
+    #   request.
+    #   @return [Types::QInConnectIntentConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/UpdateIntentRequest AWS API Documentation
     #
     class UpdateIntentRequest < Struct.new(
       :intent_id,
       :intent_name,
+      :intent_display_name,
       :description,
       :parent_intent_signature,
       :sample_utterances,
@@ -14837,7 +15717,8 @@ module Aws::LexModelsV2
       :bot_version,
       :locale_id,
       :initial_response_setting,
-      :qn_a_intent_configuration)
+      :qn_a_intent_configuration,
+      :q_in_connect_intent_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -14848,6 +15729,10 @@ module Aws::LexModelsV2
     #
     # @!attribute [rw] intent_name
     #   The updated name of the intent.
+    #   @return [String]
+    #
+    # @!attribute [rw] intent_display_name
+    #   The updated display name of the intent.
     #   @return [String]
     #
     # @!attribute [rw] description
@@ -14932,11 +15817,17 @@ module Aws::LexModelsV2
     #   Details about the configuration of the built-in `Amazon.QnAIntent`.
     #   @return [Types::QnAIntentConfiguration]
     #
+    # @!attribute [rw] q_in_connect_intent_configuration
+    #   Qinconnect intent configuration details for the update intent
+    #   response.
+    #   @return [Types::QInConnectIntentConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/UpdateIntentResponse AWS API Documentation
     #
     class UpdateIntentResponse < Struct.new(
       :intent_id,
       :intent_name,
+      :intent_display_name,
       :description,
       :parent_intent_signature,
       :sample_utterances,
@@ -14954,7 +15845,8 @@ module Aws::LexModelsV2
       :creation_date_time,
       :last_updated_date_time,
       :initial_response_setting,
-      :qn_a_intent_configuration)
+      :qn_a_intent_configuration,
+      :q_in_connect_intent_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -15946,10 +16838,6 @@ module Aws::LexModelsV2
     #
     # * `generative`
     #
-    # @!attribute [rw] voice_id
-    #   The identifier of the Amazon Polly voice to use.
-    #   @return [String]
-    #
     # @!attribute [rw] engine
     #   Indicates the type of Amazon Polly voice that Amazon Lex should use
     #   for voice interaction with the user. For more information, see the [
@@ -15963,11 +16851,15 @@ module Aws::LexModelsV2
     #   [1]: https://docs.aws.amazon.com/polly/latest/dg/API_SynthesizeSpeech.html#polly-SynthesizeSpeech-request-Engine
     #   @return [String]
     #
+    # @!attribute [rw] voice_id
+    #   The identifier of the Amazon Polly voice to use.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/models.lex.v2-2020-08-07/VoiceSettings AWS API Documentation
     #
     class VoiceSettings < Struct.new(
-      :voice_id,
-      :engine)
+      :engine,
+      :voice_id)
       SENSITIVE = []
       include Aws::Structure
     end

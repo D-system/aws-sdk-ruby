@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -122,7 +123,7 @@ module Aws
                                                     type_configuration_arn: ::String?,
                                                     type: ("RESOURCE" | "MODULE" | "HOOK")?,
                                                     type_name: ::String?
-                                                  },
+                                                  }
                                                 ]
                                               ) -> _BatchDescribeTypeConfigurationsResponseSuccess
                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchDescribeTypeConfigurationsResponseSuccess
@@ -163,7 +164,7 @@ module Aws
                                    parameter_value: ::String?,
                                    use_previous_value: bool?,
                                    resolved_value: ::String?
-                                 },
+                                 }
                                ],
                                ?capabilities: Array[("CAPABILITY_IAM" | "CAPABILITY_NAMED_IAM" | "CAPABILITY_AUTO_EXPAND")],
                                ?resource_types: Array[::String],
@@ -173,7 +174,7 @@ module Aws
                                    {
                                      arn: ::String,
                                      type: ::String
-                                   },
+                                   }
                                  ]?,
                                  monitoring_time_in_minutes: ::Integer?
                                },
@@ -182,7 +183,7 @@ module Aws
                                  {
                                    key: ::String,
                                    value: ::String
-                                 },
+                                 }
                                ],
                                change_set_name: ::String,
                                ?client_token: ::String,
@@ -193,11 +194,17 @@ module Aws
                                    resource_type: ::String,
                                    logical_resource_id: ::String,
                                    resource_identifier: Hash[::String, ::String]
-                                 },
+                                 }
                                ],
                                ?include_nested_stacks: bool,
                                ?on_stack_failure: ("DO_NOTHING" | "ROLLBACK" | "DELETE"),
-                               ?import_existing_resources: bool
+                               ?import_existing_resources: bool,
+                               ?deployment_mode: ("REVERT_DRIFT"),
+                               ?deployment_config: {
+                                 mode: ("STANDARD" | "EXPRESS")?,
+                                 disable_rollback: bool?
+                               },
+                               ?disable_validation: bool
                              ) -> _CreateChangeSetResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateChangeSetResponseSuccess
 
@@ -212,7 +219,7 @@ module Aws
                                            resource_type: ::String,
                                            logical_resource_id: ::String?,
                                            resource_identifier: Hash[::String, ::String]
-                                         },
+                                         }
                                        ],
                                        generated_template_name: ::String,
                                        ?stack_name: ::String,
@@ -226,6 +233,7 @@ module Aws
       interface _CreateStackResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateStackOutput]
         def stack_id: () -> ::String
+        def operation_id: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudFormation/Client.html#create_stack-instance_method
       def create_stack: (
@@ -238,7 +246,7 @@ module Aws
                               parameter_value: ::String?,
                               use_previous_value: bool?,
                               resolved_value: ::String?
-                            },
+                            }
                           ],
                           ?disable_rollback: bool,
                           ?rollback_configuration: {
@@ -246,7 +254,7 @@ module Aws
                               {
                                 arn: ::String,
                                 type: ::String
-                              },
+                              }
                             ]?,
                             monitoring_time_in_minutes: ::Integer?
                           },
@@ -262,11 +270,16 @@ module Aws
                             {
                               key: ::String,
                               value: ::String
-                            },
+                            }
                           ],
                           ?client_request_token: ::String,
                           ?enable_termination_protection: bool,
-                          ?retain_except_on_create: bool
+                          ?retain_except_on_create: bool,
+                          ?deployment_config: {
+                            mode: ("STANDARD" | "EXPRESS")?,
+                            disable_rollback: bool?
+                          },
+                          ?disable_validation: bool
                         ) -> _CreateStackResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateStackResponseSuccess
 
@@ -291,17 +304,9 @@ module Aws
                                         parameter_value: ::String?,
                                         use_previous_value: bool?,
                                         resolved_value: ::String?
-                                      },
+                                      }
                                     ],
-                                    ?operation_preferences: {
-                                      region_concurrency_type: ("SEQUENTIAL" | "PARALLEL")?,
-                                      region_order: Array[::String]?,
-                                      failure_tolerance_count: ::Integer?,
-                                      failure_tolerance_percentage: ::Integer?,
-                                      max_concurrent_count: ::Integer?,
-                                      max_concurrent_percentage: ::Integer?,
-                                      concurrency_mode: ("STRICT_FAILURE_TOLERANCE" | "SOFT_FAILURE_TOLERANCE")?
-                                    },
+                                    ?operation_preferences: Params::stack_set_operation_preferences,
                                     ?operation_id: ::String,
                                     ?call_as: ("SELF" | "DELEGATED_ADMIN")
                                   ) -> _CreateStackInstancesResponseSuccess
@@ -325,14 +330,14 @@ module Aws
                                          stack_name: ::String,
                                          logical_resource_id: ::String
                                        }
-                                     },
+                                     }
                                    ],
                                    stack_definitions: Array[
                                      {
                                        stack_name: ::String?,
                                        template_body: ::String?,
                                        template_url: ::String?
-                                     },
+                                     }
                                    ]
                                  ) -> _CreateStackRefactorResponseSuccess
                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateStackRefactorResponseSuccess
@@ -354,21 +359,22 @@ module Aws
                                   parameter_value: ::String?,
                                   use_previous_value: bool?,
                                   resolved_value: ::String?
-                                },
+                                }
                               ],
                               ?capabilities: Array[("CAPABILITY_IAM" | "CAPABILITY_NAMED_IAM" | "CAPABILITY_AUTO_EXPAND")],
                               ?tags: Array[
                                 {
                                   key: ::String,
                                   value: ::String
-                                },
+                                }
                               ],
                               ?administration_role_arn: ::String,
                               ?execution_role_name: ::String,
                               ?permission_model: ("SERVICE_MANAGED" | "SELF_MANAGED"),
                               ?auto_deployment: {
                                 enabled: bool?,
-                                retain_stacks_on_account_removal: bool?
+                                retain_stacks_on_account_removal: bool?,
+                                depends_on: Array[::String]?
                               },
                               ?call_as: ("SELF" | "DELEGATED_ADMIN"),
                               ?client_request_token: ::String,
@@ -419,7 +425,11 @@ module Aws
                           ?retain_resources: Array[::String],
                           ?role_arn: ::String,
                           ?client_request_token: ::String,
-                          ?deletion_mode: ("STANDARD" | "FORCE_DELETE_STACK")
+                          ?deletion_mode: ("STANDARD" | "FORCE_DELETE_STACK"),
+                          ?deployment_config: {
+                            mode: ("STANDARD" | "EXPRESS")?,
+                            disable_rollback: bool?
+                          }
                         ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
@@ -438,15 +448,7 @@ module Aws
                                       account_filter_type: ("NONE" | "INTERSECTION" | "DIFFERENCE" | "UNION")?
                                     },
                                     regions: Array[::String],
-                                    ?operation_preferences: {
-                                      region_concurrency_type: ("SEQUENTIAL" | "PARALLEL")?,
-                                      region_order: Array[::String]?,
-                                      failure_tolerance_count: ::Integer?,
-                                      failure_tolerance_percentage: ::Integer?,
-                                      max_concurrent_count: ::Integer?,
-                                      max_concurrent_percentage: ::Integer?,
-                                      concurrency_mode: ("STRICT_FAILURE_TOLERANCE" | "SOFT_FAILURE_TOLERANCE")?
-                                    },
+                                    ?operation_preferences: Params::stack_set_operation_preferences,
                                     retain_stacks: bool,
                                     ?operation_id: ::String,
                                     ?call_as: ("SELF" | "DELEGATED_ADMIN")
@@ -498,6 +500,7 @@ module Aws
         def execution_status: () -> ("UNAVAILABLE" | "AVAILABLE" | "EXECUTE_IN_PROGRESS" | "EXECUTE_COMPLETE" | "EXECUTE_FAILED" | "OBSOLETE")
         def status: () -> ("CREATE_PENDING" | "CREATE_IN_PROGRESS" | "CREATE_COMPLETE" | "DELETE_PENDING" | "DELETE_IN_PROGRESS" | "DELETE_COMPLETE" | "DELETE_FAILED" | "FAILED")
         def status_reason: () -> ::String
+        def stack_drift_status: () -> ("DRIFTED" | "IN_SYNC" | "UNKNOWN" | "NOT_CHECKED")
         def notification_arns: () -> ::Array[::String]
         def rollback_configuration: () -> Types::RollbackConfiguration
         def capabilities: () -> ::Array[("CAPABILITY_IAM" | "CAPABILITY_NAMED_IAM" | "CAPABILITY_AUTO_EXPAND")]
@@ -509,6 +512,8 @@ module Aws
         def root_change_set_id: () -> ::String
         def on_stack_failure: () -> ("DO_NOTHING" | "ROLLBACK" | "DELETE")
         def import_existing_resources: () -> bool
+        def deployment_mode: () -> ("REVERT_DRIFT")
+        def deployment_config: () -> Types::DeploymentConfig
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudFormation/Client.html#describe_change_set-instance_method
       def describe_change_set: (
@@ -537,6 +542,23 @@ module Aws
                                        ?logical_resource_id: ::String
                                      ) -> _DescribeChangeSetHooksResponseSuccess
                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeChangeSetHooksResponseSuccess
+
+      interface _DescribeEventsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DescribeEventsOutput]
+        def operation_events: () -> ::Array[Types::OperationEvent]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudFormation/Client.html#describe_events-instance_method
+      def describe_events: (
+                             ?stack_name: ::String,
+                             ?change_set_name: ::String,
+                             ?operation_id: ::String,
+                             ?filters: {
+                               failed_events: bool?
+                             },
+                             ?next_token: ::String
+                           ) -> _DescribeEventsResponseSuccess
+                         | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeEventsResponseSuccess
 
       interface _DescribeGeneratedTemplateResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DescribeGeneratedTemplateOutput]
@@ -592,6 +614,7 @@ module Aws
         def resource_types: () -> ::Array[::String]
         def resources_scanned: () -> ::Integer
         def resources_read: () -> ::Integer
+        def scan_filters: () -> ::Array[Types::ScanFilter]
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudFormation/Client.html#describe_resource_scan-instance_method
       def describe_resource_scan: (
@@ -622,10 +645,10 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudFormation/Client.html#describe_stack_events-instance_method
       def describe_stack_events: (
-                                   ?stack_name: ::String,
+                                   stack_name: ::String,
                                    ?next_token: ::String
                                  ) -> _DescribeStackEventsResponseSuccess
-                               | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeStackEventsResponseSuccess
+                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeStackEventsResponseSuccess
 
       interface _DescribeStackInstanceResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DescribeStackInstanceOutput]
@@ -675,7 +698,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudFormation/Client.html#describe_stack_resource_drifts-instance_method
       def describe_stack_resource_drifts: (
                                             stack_name: ::String,
-                                            ?stack_resource_drift_status_filters: Array[("IN_SYNC" | "MODIFIED" | "DELETED" | "NOT_CHECKED")],
+                                            ?stack_resource_drift_status_filters: Array[("IN_SYNC" | "MODIFIED" | "DELETED" | "NOT_CHECKED" | "UNKNOWN" | "UNSUPPORTED")],
                                             ?next_token: ::String,
                                             ?max_results: ::Integer
                                           ) -> _DescribeStackResourceDriftsResponseSuccess
@@ -811,15 +834,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudFormation/Client.html#detect_stack_set_drift-instance_method
       def detect_stack_set_drift: (
                                     stack_set_name: ::String,
-                                    ?operation_preferences: {
-                                      region_concurrency_type: ("SEQUENTIAL" | "PARALLEL")?,
-                                      region_order: Array[::String]?,
-                                      failure_tolerance_count: ::Integer?,
-                                      failure_tolerance_percentage: ::Integer?,
-                                      max_concurrent_count: ::Integer?,
-                                      max_concurrent_percentage: ::Integer?,
-                                      concurrency_mode: ("STRICT_FAILURE_TOLERANCE" | "SOFT_FAILURE_TOLERANCE")?
-                                    },
+                                    ?operation_preferences: Params::stack_set_operation_preferences,
                                     ?operation_id: ::String,
                                     ?call_as: ("SELF" | "DELEGATED_ADMIN")
                                   ) -> _DetectStackSetDriftResponseSuccess
@@ -839,7 +854,7 @@ module Aws
                                         parameter_value: ::String?,
                                         use_previous_value: bool?,
                                         resolved_value: ::String?
-                                      },
+                                      }
                                     ]
                                   ) -> _EstimateTemplateCostResponseSuccess
                                 | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _EstimateTemplateCostResponseSuccess
@@ -874,6 +889,28 @@ module Aws
                                     generated_template_name: ::String
                                   ) -> _GetGeneratedTemplateResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetGeneratedTemplateResponseSuccess
+
+      interface _GetHookResultResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetHookResultOutput]
+        def hook_result_id: () -> ::String
+        def invocation_point: () -> ("PRE_PROVISION")
+        def failure_mode: () -> ("FAIL" | "WARN")
+        def type_name: () -> ::String
+        def original_type_name: () -> ::String
+        def type_version_id: () -> ::String
+        def type_configuration_version_id: () -> ::String
+        def type_arn: () -> ::String
+        def status: () -> ("HOOK_IN_PROGRESS" | "HOOK_COMPLETE_SUCCEEDED" | "HOOK_COMPLETE_FAILED" | "HOOK_FAILED")
+        def hook_status_reason: () -> ::String
+        def invoked_at: () -> ::Time
+        def target: () -> Types::HookTarget
+        def annotations: () -> ::Array[Types::Annotation]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudFormation/Client.html#get_hook_result-instance_method
+      def get_hook_result: (
+                             ?hook_result_id: ::String
+                           ) -> _GetHookResultResponseSuccess
+                         | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetHookResultResponseSuccess
 
       interface _GetStackPolicyResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetStackPolicyOutput]
@@ -934,15 +971,7 @@ module Aws
                                         ?stack_ids: Array[::String],
                                         ?stack_ids_url: ::String,
                                         ?organizational_unit_ids: Array[::String],
-                                        ?operation_preferences: {
-                                          region_concurrency_type: ("SEQUENTIAL" | "PARALLEL")?,
-                                          region_order: Array[::String]?,
-                                          failure_tolerance_count: ::Integer?,
-                                          failure_tolerance_percentage: ::Integer?,
-                                          max_concurrent_count: ::Integer?,
-                                          max_concurrent_percentage: ::Integer?,
-                                          concurrency_mode: ("STRICT_FAILURE_TOLERANCE" | "SOFT_FAILURE_TOLERANCE")?
-                                        },
+                                        ?operation_preferences: Params::stack_set_operation_preferences,
                                         ?operation_id: ::String,
                                         ?call_as: ("SELF" | "DELEGATED_ADMIN")
                                       ) -> _ImportStacksToStackSetResponseSuccess
@@ -992,11 +1021,13 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudFormation/Client.html#list_hook_results-instance_method
       def list_hook_results: (
-                               target_type: ("CHANGE_SET" | "STACK" | "RESOURCE" | "CLOUD_CONTROL"),
-                               target_id: ::String,
+                               ?target_type: ("CHANGE_SET" | "STACK" | "RESOURCE" | "CLOUD_CONTROL"),
+                               ?target_id: ::String,
+                               ?type_arn: ::String,
+                               ?status: ("HOOK_IN_PROGRESS" | "HOOK_COMPLETE_SUCCEEDED" | "HOOK_COMPLETE_FAILED" | "HOOK_FAILED"),
                                ?next_token: ::String
                              ) -> _ListHookResultsResponseSuccess
-                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListHookResultsResponseSuccess
+                           | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListHookResultsResponseSuccess
 
       interface _ListImportsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListImportsOutput]
@@ -1022,7 +1053,7 @@ module Aws
                                                     {
                                                       resource_type: ::String,
                                                       resource_identifier: Hash[::String, ::String]
-                                                    },
+                                                    }
                                                   ],
                                                   ?next_token: ::String,
                                                   ?max_results: ::Integer
@@ -1054,7 +1085,8 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudFormation/Client.html#list_resource_scans-instance_method
       def list_resource_scans: (
                                  ?next_token: ::String,
-                                 ?max_results: ::Integer
+                                 ?max_results: ::Integer,
+                                 ?scan_type_filter: ("FULL" | "PARTIAL")
                                ) -> _ListResourceScansResponseSuccess
                              | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListResourceScansResponseSuccess
 
@@ -1068,7 +1100,7 @@ module Aws
                                                  stack_set_name: ::String,
                                                  ?next_token: ::String,
                                                  ?max_results: ::Integer,
-                                                 ?stack_instance_resource_drift_statuses: Array[("IN_SYNC" | "MODIFIED" | "DELETED" | "NOT_CHECKED")],
+                                                 ?stack_instance_resource_drift_statuses: Array[("IN_SYNC" | "MODIFIED" | "DELETED" | "NOT_CHECKED" | "UNKNOWN" | "UNSUPPORTED")],
                                                  stack_instance_account: ::String,
                                                  stack_instance_region: ::String,
                                                  operation_id: ::String,
@@ -1090,7 +1122,7 @@ module Aws
                                     {
                                       name: ("DETAILED_STATUS" | "LAST_OPERATION_ID" | "DRIFT_STATUS")?,
                                       values: ::String?
-                                    },
+                                    }
                                   ],
                                   ?stack_instance_account: ::String,
                                   ?stack_instance_region: ::String,
@@ -1166,7 +1198,7 @@ module Aws
                                                 {
                                                   name: ("OPERATION_RESULT_STATUS")?,
                                                   values: ::String?
-                                                },
+                                                }
                                               ]
                                             ) -> _ListStackSetOperationResultsResponseSuccess
                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListStackSetOperationResultsResponseSuccess
@@ -1325,13 +1357,18 @@ module Aws
       interface _RollbackStackResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::RollbackStackOutput]
         def stack_id: () -> ::String
+        def operation_id: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudFormation/Client.html#rollback_stack-instance_method
       def rollback_stack: (
                             stack_name: ::String,
                             ?role_arn: ::String,
                             ?client_request_token: ::String,
-                            ?retain_except_on_create: bool
+                            ?retain_except_on_create: bool,
+                            ?deployment_config: {
+                              mode: ("STANDARD" | "EXPRESS")?,
+                              disable_rollback: bool?
+                            }
                           ) -> _RollbackStackResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RollbackStackResponseSuccess
 
@@ -1384,7 +1421,12 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudFormation/Client.html#start_resource_scan-instance_method
       def start_resource_scan: (
-                                 ?client_request_token: ::String
+                                 ?client_request_token: ::String,
+                                 ?scan_filters: Array[
+                                   {
+                                     types: Array[::String]?
+                                   }
+                                 ]
                                ) -> _StartResourceScanResponseSuccess
                              | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartResourceScanResponseSuccess
 
@@ -1426,7 +1468,7 @@ module Aws
                                            resource_type: ::String,
                                            logical_resource_id: ::String?,
                                            resource_identifier: Hash[::String, ::String]
-                                         },
+                                         }
                                        ],
                                        ?remove_resources: Array[::String],
                                        ?refresh_all_resources: bool,
@@ -1440,6 +1482,7 @@ module Aws
       interface _UpdateStackResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::UpdateStackOutput]
         def stack_id: () -> ::String
+        def operation_id: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudFormation/Client.html#update_stack-instance_method
       def update_stack: (
@@ -1455,7 +1498,7 @@ module Aws
                               parameter_value: ::String?,
                               use_previous_value: bool?,
                               resolved_value: ::String?
-                            },
+                            }
                           ],
                           ?capabilities: Array[("CAPABILITY_IAM" | "CAPABILITY_NAMED_IAM" | "CAPABILITY_AUTO_EXPAND")],
                           ?resource_types: Array[::String],
@@ -1465,7 +1508,7 @@ module Aws
                               {
                                 arn: ::String,
                                 type: ::String
-                              },
+                              }
                             ]?,
                             monitoring_time_in_minutes: ::Integer?
                           },
@@ -1476,11 +1519,16 @@ module Aws
                             {
                               key: ::String,
                               value: ::String
-                            },
+                            }
                           ],
                           ?disable_rollback: bool,
                           ?client_request_token: ::String,
-                          ?retain_except_on_create: bool
+                          ?retain_except_on_create: bool,
+                          ?deployment_config: {
+                            mode: ("STANDARD" | "EXPRESS")?,
+                            disable_rollback: bool?
+                          },
+                          ?disable_validation: bool
                         ) -> _UpdateStackResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateStackResponseSuccess
 
@@ -1505,17 +1553,9 @@ module Aws
                                         parameter_value: ::String?,
                                         use_previous_value: bool?,
                                         resolved_value: ::String?
-                                      },
+                                      }
                                     ],
-                                    ?operation_preferences: {
-                                      region_concurrency_type: ("SEQUENTIAL" | "PARALLEL")?,
-                                      region_order: Array[::String]?,
-                                      failure_tolerance_count: ::Integer?,
-                                      failure_tolerance_percentage: ::Integer?,
-                                      max_concurrent_count: ::Integer?,
-                                      max_concurrent_percentage: ::Integer?,
-                                      concurrency_mode: ("STRICT_FAILURE_TOLERANCE" | "SOFT_FAILURE_TOLERANCE")?
-                                    },
+                                    ?operation_preferences: Params::stack_set_operation_preferences,
                                     ?operation_id: ::String,
                                     ?call_as: ("SELF" | "DELEGATED_ADMIN")
                                   ) -> _UpdateStackInstancesResponseSuccess
@@ -1538,24 +1578,16 @@ module Aws
                                   parameter_value: ::String?,
                                   use_previous_value: bool?,
                                   resolved_value: ::String?
-                                },
+                                }
                               ],
                               ?capabilities: Array[("CAPABILITY_IAM" | "CAPABILITY_NAMED_IAM" | "CAPABILITY_AUTO_EXPAND")],
                               ?tags: Array[
                                 {
                                   key: ::String,
                                   value: ::String
-                                },
+                                }
                               ],
-                              ?operation_preferences: {
-                                region_concurrency_type: ("SEQUENTIAL" | "PARALLEL")?,
-                                region_order: Array[::String]?,
-                                failure_tolerance_count: ::Integer?,
-                                failure_tolerance_percentage: ::Integer?,
-                                max_concurrent_count: ::Integer?,
-                                max_concurrent_percentage: ::Integer?,
-                                concurrency_mode: ("STRICT_FAILURE_TOLERANCE" | "SOFT_FAILURE_TOLERANCE")?
-                              },
+                              ?operation_preferences: Params::stack_set_operation_preferences,
                               ?administration_role_arn: ::String,
                               ?execution_role_name: ::String,
                               ?deployment_targets: {
@@ -1567,7 +1599,8 @@ module Aws
                               ?permission_model: ("SERVICE_MANAGED" | "SELF_MANAGED"),
                               ?auto_deployment: {
                                 enabled: bool?,
-                                retain_stacks_on_account_removal: bool?
+                                retain_stacks_on_account_removal: bool?,
+                                depends_on: Array[::String]?
                               },
                               ?operation_id: ::String,
                               ?accounts: Array[::String],

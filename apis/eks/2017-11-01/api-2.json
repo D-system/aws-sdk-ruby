@@ -44,7 +44,8 @@
         {"shape":"ServerException"},
         {"shape":"ResourceInUseException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"InvalidRequestException"}
+        {"shape":"InvalidRequestException"},
+        {"shape":"ThrottlingException"}
       ]
     },
     "AssociateIdentityProviderConfig":{
@@ -61,7 +62,27 @@
         {"shape":"ServerException"},
         {"shape":"ResourceInUseException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"InvalidRequestException"}
+        {"shape":"InvalidRequestException"},
+        {"shape":"ThrottlingException"}
+      ]
+    },
+    "CancelUpdate":{
+      "name":"CancelUpdate",
+      "http":{
+        "method":"POST",
+        "requestUri":"/clusters/{name}/updates/{updateId}/cancel-update"
+      },
+      "input":{"shape":"CancelUpdateRequest"},
+      "output":{"shape":"CancelUpdateResponse"},
+      "errors":[
+        {"shape":"InvalidParameterException"},
+        {"shape":"ClientException"},
+        {"shape":"ServerException"},
+        {"shape":"ResourceInUseException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InvalidRequestException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"InvalidStateException"}
       ]
     },
     "CreateAccessEntry":{
@@ -95,6 +116,24 @@
         {"shape":"ResourceNotFoundException"},
         {"shape":"ResourceInUseException"},
         {"shape":"ClientException"},
+        {"shape":"ServerException"}
+      ]
+    },
+    "CreateCapability":{
+      "name":"CreateCapability",
+      "http":{
+        "method":"POST",
+        "requestUri":"/clusters/{name}/capabilities"
+      },
+      "input":{"shape":"CreateCapabilityRequest"},
+      "output":{"shape":"CreateCapabilityResponse"},
+      "errors":[
+        {"shape":"InvalidParameterException"},
+        {"shape":"InvalidRequestException"},
+        {"shape":"ResourceLimitExceededException"},
+        {"shape":"ResourceInUseException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"ThrottlingException"},
         {"shape":"ServerException"}
       ]
     },
@@ -214,6 +253,22 @@
         {"shape":"ServerException"}
       ]
     },
+    "DeleteCapability":{
+      "name":"DeleteCapability",
+      "http":{
+        "method":"DELETE",
+        "requestUri":"/clusters/{name}/capabilities/{capabilityName}"
+      },
+      "input":{"shape":"DeleteCapabilityRequest"},
+      "output":{"shape":"DeleteCapabilityResponse"},
+      "errors":[
+        {"shape":"InvalidParameterException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ResourceInUseException"},
+        {"shape":"ServerException"}
+      ]
+    },
     "DeleteCluster":{
       "name":"DeleteCluster",
       "http":{
@@ -227,7 +282,8 @@
         {"shape":"ResourceNotFoundException"},
         {"shape":"ClientException"},
         {"shape":"ServerException"},
-        {"shape":"ServiceUnavailableException"}
+        {"shape":"ServiceUnavailableException"},
+        {"shape":"InvalidRequestException"}
       ]
     },
     "DeleteEksAnywhereSubscription":{
@@ -367,6 +423,21 @@
         {"shape":"InvalidParameterException"}
       ]
     },
+    "DescribeCapability":{
+      "name":"DescribeCapability",
+      "http":{
+        "method":"GET",
+        "requestUri":"/clusters/{name}/capabilities/{capabilityName}"
+      },
+      "input":{"shape":"DescribeCapabilityRequest"},
+      "output":{"shape":"DescribeCapabilityResponse"},
+      "errors":[
+        {"shape":"InvalidParameterException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ServerException"}
+      ]
+    },
     "DescribeCluster":{
       "name":"DescribeCluster",
       "http":{
@@ -457,6 +528,21 @@
         {"shape":"InvalidParameterException"}
       ]
     },
+    "DescribeInsightsRefresh":{
+      "name":"DescribeInsightsRefresh",
+      "http":{
+        "method":"GET",
+        "requestUri":"/clusters/{name}/insights-refresh"
+      },
+      "input":{"shape":"DescribeInsightsRefreshRequest"},
+      "output":{"shape":"DescribeInsightsRefreshResponse"},
+      "errors":[
+        {"shape":"ServerException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InvalidRequestException"},
+        {"shape":"InvalidParameterException"}
+      ]
+    },
     "DescribeNodegroup":{
       "name":"DescribeNodegroup",
       "http":{
@@ -531,7 +617,8 @@
         {"shape":"ServerException"},
         {"shape":"ResourceInUseException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"InvalidRequestException"}
+        {"shape":"InvalidRequestException"},
+        {"shape":"ThrottlingException"}
       ]
     },
     "ListAccessEntries":{
@@ -589,6 +676,19 @@
         {"shape":"ServerException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"InvalidRequestException"}
+      ]
+    },
+    "ListCapabilities":{
+      "name":"ListCapabilities",
+      "http":{
+        "method":"GET",
+        "requestUri":"/clusters/{name}/capabilities"
+      },
+      "input":{"shape":"ListCapabilitiesRequest"},
+      "output":{"shape":"ListCapabilitiesResponse"},
+      "errors":[
+        {"shape":"InvalidParameterException"},
+        {"shape":"ServerException"}
       ]
     },
     "ListClusters":{
@@ -745,6 +845,21 @@
         {"shape":"ResourcePropagationDelayException"}
       ]
     },
+    "StartInsightsRefresh":{
+      "name":"StartInsightsRefresh",
+      "http":{
+        "method":"POST",
+        "requestUri":"/clusters/{name}/insights-refresh"
+      },
+      "input":{"shape":"StartInsightsRefreshRequest"},
+      "output":{"shape":"StartInsightsRefreshResponse"},
+      "errors":[
+        {"shape":"ServerException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InvalidRequestException"},
+        {"shape":"InvalidParameterException"}
+      ]
+    },
     "TagResource":{
       "name":"TagResource",
       "http":{
@@ -803,6 +918,22 @@
         {"shape":"ServerException"}
       ]
     },
+    "UpdateCapability":{
+      "name":"UpdateCapability",
+      "http":{
+        "method":"POST",
+        "requestUri":"/clusters/{name}/capabilities/{capabilityName}"
+      },
+      "input":{"shape":"UpdateCapabilityRequest"},
+      "output":{"shape":"UpdateCapabilityResponse"},
+      "errors":[
+        {"shape":"InvalidParameterException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ResourceInUseException"},
+        {"shape":"ServerException"}
+      ]
+    },
     "UpdateClusterConfig":{
       "name":"UpdateClusterConfig",
       "http":{
@@ -817,7 +948,8 @@
         {"shape":"ServerException"},
         {"shape":"ResourceInUseException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"InvalidRequestException"}
+        {"shape":"InvalidRequestException"},
+        {"shape":"ThrottlingException"}
       ]
     },
     "UpdateClusterVersion":{
@@ -834,7 +966,9 @@
         {"shape":"ServerException"},
         {"shape":"ResourceInUseException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"InvalidRequestException"}
+        {"shape":"InvalidRequestException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"InvalidStateException"}
       ]
     },
     "UpdateEksAnywhereSubscription":{
@@ -913,16 +1047,23 @@
         "CUSTOM",
         "BOTTLEROCKET_ARM_64",
         "BOTTLEROCKET_x86_64",
+        "BOTTLEROCKET_ARM_64_FIPS",
+        "BOTTLEROCKET_x86_64_FIPS",
         "BOTTLEROCKET_ARM_64_NVIDIA",
         "BOTTLEROCKET_x86_64_NVIDIA",
+        "BOTTLEROCKET_ARM_64_NVIDIA_FIPS",
+        "BOTTLEROCKET_x86_64_NVIDIA_FIPS",
         "WINDOWS_CORE_2019_x86_64",
         "WINDOWS_FULL_2019_x86_64",
         "WINDOWS_CORE_2022_x86_64",
         "WINDOWS_FULL_2022_x86_64",
+        "WINDOWS_CORE_2025_x86_64",
+        "WINDOWS_FULL_2025_x86_64",
         "AL2023_x86_64_STANDARD",
         "AL2023_ARM_64_STANDARD",
         "AL2023_x86_64_NEURON",
-        "AL2023_x86_64_NVIDIA"
+        "AL2023_x86_64_NVIDIA",
+        "AL2023_ARM_64_NVIDIA"
       ]
     },
     "AccessConfigResponse":{
@@ -1001,7 +1142,8 @@
         "owner":{"shape":"String"},
         "marketplaceInformation":{"shape":"MarketplaceInformation"},
         "configurationValues":{"shape":"String"},
-        "podIdentityAssociations":{"shape":"StringList"}
+        "podIdentityAssociations":{"shape":"StringList"},
+        "namespaceConfig":{"shape":"AddonNamespaceConfigResponse"}
       }
     },
     "AddonCompatibilityDetail":{
@@ -1029,7 +1171,8 @@
         "addonVersions":{"shape":"AddonVersionInfoList"},
         "publisher":{"shape":"String"},
         "owner":{"shape":"String"},
-        "marketplaceInformation":{"shape":"MarketplaceInformation"}
+        "marketplaceInformation":{"shape":"MarketplaceInformation"},
+        "defaultNamespace":{"shape":"String"}
       }
     },
     "AddonIssue":{
@@ -1058,6 +1201,18 @@
     "AddonIssueList":{
       "type":"list",
       "member":{"shape":"AddonIssue"}
+    },
+    "AddonNamespaceConfigRequest":{
+      "type":"structure",
+      "members":{
+        "namespace":{"shape":"namespace"}
+      }
+    },
+    "AddonNamespaceConfigResponse":{
+      "type":"structure",
+      "members":{
+        "namespace":{"shape":"namespace"}
+      }
     },
     "AddonPodIdentityAssociations":{
       "type":"structure",
@@ -1116,6 +1271,88 @@
     "Addons":{
       "type":"list",
       "member":{"shape":"AddonInfo"}
+    },
+    "AllowedValuesConstraint":{
+      "type":"structure",
+      "members":{
+        "allowedValues":{"shape":"AllowedValuesList"}
+      }
+    },
+    "AllowedValuesList":{
+      "type":"list",
+      "member":{"shape":"String"},
+      "max":20
+    },
+    "ArgoCdAwsIdcConfigRequest":{
+      "type":"structure",
+      "required":["idcInstanceArn"],
+      "members":{
+        "idcInstanceArn":{"shape":"String"},
+        "idcRegion":{"shape":"String"}
+      }
+    },
+    "ArgoCdAwsIdcConfigResponse":{
+      "type":"structure",
+      "members":{
+        "idcInstanceArn":{"shape":"String"},
+        "idcRegion":{"shape":"String"},
+        "idcManagedApplicationArn":{"shape":"String"}
+      }
+    },
+    "ArgoCdConfigRequest":{
+      "type":"structure",
+      "required":["awsIdc"],
+      "members":{
+        "namespace":{"shape":"String"},
+        "awsIdc":{"shape":"ArgoCdAwsIdcConfigRequest"},
+        "rbacRoleMappings":{"shape":"ArgoCdRoleMappingList"},
+        "networkAccess":{"shape":"ArgoCdNetworkAccessConfigRequest"}
+      }
+    },
+    "ArgoCdConfigResponse":{
+      "type":"structure",
+      "members":{
+        "namespace":{"shape":"String"},
+        "awsIdc":{"shape":"ArgoCdAwsIdcConfigResponse"},
+        "rbacRoleMappings":{"shape":"ArgoCdRoleMappingList"},
+        "networkAccess":{"shape":"ArgoCdNetworkAccessConfigResponse"},
+        "serverUrl":{"shape":"String"}
+      }
+    },
+    "ArgoCdNetworkAccessConfigRequest":{
+      "type":"structure",
+      "members":{
+        "vpceIds":{"shape":"StringList"}
+      }
+    },
+    "ArgoCdNetworkAccessConfigResponse":{
+      "type":"structure",
+      "members":{
+        "vpceIds":{"shape":"StringList"}
+      }
+    },
+    "ArgoCdRole":{
+      "type":"string",
+      "enum":[
+        "ADMIN",
+        "EDITOR",
+        "VIEWER"
+      ]
+    },
+    "ArgoCdRoleMapping":{
+      "type":"structure",
+      "required":[
+        "role",
+        "identities"
+      ],
+      "members":{
+        "role":{"shape":"ArgoCdRole"},
+        "identities":{"shape":"SsoIdentityList"}
+      }
+    },
+    "ArgoCdRoleMappingList":{
+      "type":"list",
+      "member":{"shape":"ArgoCdRoleMapping"}
     },
     "AssociateAccessPolicyRequest":{
       "type":"structure",
@@ -1254,6 +1491,144 @@
       "type":"integer",
       "box":true
     },
+    "CancelUpdateRequest":{
+      "type":"structure",
+      "required":[
+        "name",
+        "updateId"
+      ],
+      "members":{
+        "name":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"name"
+        },
+        "updateId":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"updateId"
+        },
+        "clientRequestToken":{
+          "shape":"String",
+          "idempotencyToken":true
+        }
+      }
+    },
+    "CancelUpdateResponse":{
+      "type":"structure",
+      "members":{
+        "update":{"shape":"Update"}
+      }
+    },
+    "Cancellation":{
+      "type":"structure",
+      "members":{
+        "status":{"shape":"CancellationStatus"},
+        "reason":{"shape":"String"}
+      }
+    },
+    "CancellationStatus":{
+      "type":"string",
+      "enum":[
+        "InProgress",
+        "Failed",
+        "Successful"
+      ]
+    },
+    "Capability":{
+      "type":"structure",
+      "members":{
+        "capabilityName":{"shape":"String"},
+        "arn":{"shape":"String"},
+        "clusterName":{"shape":"String"},
+        "type":{"shape":"CapabilityType"},
+        "roleArn":{"shape":"String"},
+        "status":{"shape":"CapabilityStatus"},
+        "version":{"shape":"String"},
+        "configuration":{"shape":"CapabilityConfigurationResponse"},
+        "tags":{"shape":"TagMap"},
+        "health":{"shape":"CapabilityHealth"},
+        "createdAt":{"shape":"Timestamp"},
+        "modifiedAt":{"shape":"Timestamp"},
+        "deletePropagationPolicy":{"shape":"CapabilityDeletePropagationPolicy"}
+      }
+    },
+    "CapabilityConfigurationRequest":{
+      "type":"structure",
+      "members":{
+        "argoCd":{"shape":"ArgoCdConfigRequest"}
+      }
+    },
+    "CapabilityConfigurationResponse":{
+      "type":"structure",
+      "members":{
+        "argoCd":{"shape":"ArgoCdConfigResponse"}
+      }
+    },
+    "CapabilityDeletePropagationPolicy":{
+      "type":"string",
+      "enum":["RETAIN"]
+    },
+    "CapabilityHealth":{
+      "type":"structure",
+      "members":{
+        "issues":{"shape":"CapabilityIssueList"}
+      }
+    },
+    "CapabilityIssue":{
+      "type":"structure",
+      "members":{
+        "code":{"shape":"CapabilityIssueCode"},
+        "message":{"shape":"String"}
+      }
+    },
+    "CapabilityIssueCode":{
+      "type":"string",
+      "enum":[
+        "AccessDenied",
+        "ClusterUnreachable"
+      ]
+    },
+    "CapabilityIssueList":{
+      "type":"list",
+      "member":{"shape":"CapabilityIssue"}
+    },
+    "CapabilityStatus":{
+      "type":"string",
+      "enum":[
+        "CREATING",
+        "CREATE_FAILED",
+        "UPDATING",
+        "DELETING",
+        "DELETE_FAILED",
+        "ACTIVE",
+        "DEGRADED"
+      ]
+    },
+    "CapabilitySummary":{
+      "type":"structure",
+      "members":{
+        "capabilityName":{"shape":"String"},
+        "arn":{"shape":"String"},
+        "type":{"shape":"CapabilityType"},
+        "status":{"shape":"CapabilityStatus"},
+        "version":{"shape":"String"},
+        "createdAt":{"shape":"Timestamp"},
+        "modifiedAt":{"shape":"Timestamp"}
+      }
+    },
+    "CapabilitySummaryList":{
+      "type":"list",
+      "member":{"shape":"CapabilitySummary"}
+    },
+    "CapabilityType":{
+      "type":"string",
+      "enum":[
+        "ACK",
+        "KRO",
+        "ARGOCD"
+      ]
+    },
     "Capacity":{
       "type":"integer",
       "box":true,
@@ -1269,7 +1644,11 @@
     },
     "Category":{
       "type":"string",
-      "enum":["UPGRADE_READINESS"]
+      "enum":[
+        "UPGRADE_READINESS",
+        "MISCONFIGURATION",
+        "ROLLBACK_READINESS"
+      ]
     },
     "CategoryList":{
       "type":"list",
@@ -1333,7 +1712,12 @@
         "zonalShiftConfig":{"shape":"ZonalShiftConfigResponse"},
         "remoteNetworkConfig":{"shape":"RemoteNetworkConfigResponse"},
         "computeConfig":{"shape":"ComputeConfigResponse"},
-        "storageConfig":{"shape":"StorageConfigResponse"}
+        "storageConfig":{"shape":"StorageConfigResponse"},
+        "deletionProtection":{"shape":"BoxedBoolean"},
+        "controlPlaneScalingConfig":{"shape":"ControlPlaneScalingConfig"},
+        "kubeApiServerConfig":{"shape":"KubeApiServerConfigResponse"},
+        "kubeSchedulerConfig":{"shape":"KubeSchedulerConfigResponse"},
+        "kubeControllerManagerConfig":{"shape":"KubeControllerManagerConfigResponse"}
       }
     },
     "ClusterHealth":{
@@ -1407,7 +1791,9 @@
         "endOfExtendedSupportDate":{"shape":"Timestamp"},
         "status":{"shape":"ClusterVersionStatus"},
         "versionStatus":{"shape":"VersionStatus"},
-        "kubernetesPatchVersion":{"shape":"String"}
+        "kubernetesPatchVersion":{"shape":"String"},
+        "controlPlaneScalingTiers":{"shape":"ControlPlaneScalingTierList"},
+        "controlPlaneComponentConfig":{"shape":"ControlPlaneConfigInfo"}
       }
     },
     "ClusterVersionList":{
@@ -1485,17 +1871,56 @@
         "roleArn":{"shape":"String"}
       }
     },
+    "ControlPlaneConfigInfo":{
+      "type":"structure",
+      "members":{
+        "kubeApiServerConfig":{"shape":"KubeApiServerVersionConfig"},
+        "kubeSchedulerConfig":{"shape":"KubeSchedulerVersionConfig"},
+        "kubeControllerManagerConfig":{"shape":"KubeControllerManagerVersionConfig"}
+      }
+    },
+    "ControlPlaneEgressModeType":{
+      "type":"string",
+      "enum":[
+        "AWS_MANAGED",
+        "CUSTOMER_ROUTED",
+        "CUSTOMER_ISOLATED"
+      ]
+    },
     "ControlPlanePlacementRequest":{
       "type":"structure",
       "members":{
-        "groupName":{"shape":"String"}
+        "groupName":{"shape":"String"},
+        "spreadLevel":{"shape":"SpreadLevel"}
       }
     },
     "ControlPlanePlacementResponse":{
       "type":"structure",
       "members":{
-        "groupName":{"shape":"String"}
+        "groupName":{"shape":"String"},
+        "spreadLevel":{"shape":"SpreadLevel"}
       }
+    },
+    "ControlPlaneScalingConfig":{
+      "type":"structure",
+      "members":{
+        "tier":{"shape":"ProvisionedControlPlaneTier"}
+      }
+    },
+    "ControlPlaneScalingTierInfo":{
+      "type":"structure",
+      "members":{
+        "tierName":{"shape":"String"},
+        "apiRequestConcurrency":{"shape":"BoxedInteger"},
+        "podSchedulingRatePerSecond":{"shape":"BoxedInteger"},
+        "clusterDatabaseSizeGb":{"shape":"BoxedInteger"},
+        "controlPlaneComponentConfigOverrides":{"shape":"ControlPlaneConfigInfo"}
+      }
+    },
+    "ControlPlaneScalingTierList":{
+      "type":"list",
+      "member":{"shape":"ControlPlaneScalingTierInfo"},
+      "max":10
     },
     "CreateAccessConfigRequest":{
       "type":"structure",
@@ -1555,13 +1980,47 @@
         },
         "tags":{"shape":"TagMap"},
         "configurationValues":{"shape":"String"},
-        "podIdentityAssociations":{"shape":"AddonPodIdentityAssociationsList"}
+        "podIdentityAssociations":{"shape":"AddonPodIdentityAssociationsList"},
+        "namespaceConfig":{"shape":"AddonNamespaceConfigRequest"}
       }
     },
     "CreateAddonResponse":{
       "type":"structure",
       "members":{
         "addon":{"shape":"Addon"}
+      }
+    },
+    "CreateCapabilityRequest":{
+      "type":"structure",
+      "required":[
+        "capabilityName",
+        "clusterName",
+        "type",
+        "roleArn",
+        "deletePropagationPolicy"
+      ],
+      "members":{
+        "capabilityName":{"shape":"String"},
+        "clusterName":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"name"
+        },
+        "clientRequestToken":{
+          "shape":"String",
+          "idempotencyToken":true
+        },
+        "type":{"shape":"CapabilityType"},
+        "roleArn":{"shape":"String"},
+        "configuration":{"shape":"CapabilityConfigurationRequest"},
+        "tags":{"shape":"TagMap"},
+        "deletePropagationPolicy":{"shape":"CapabilityDeletePropagationPolicy"}
+      }
+    },
+    "CreateCapabilityResponse":{
+      "type":"structure",
+      "members":{
+        "capability":{"shape":"Capability"}
       }
     },
     "CreateClusterRequest":{
@@ -1591,7 +2050,12 @@
         "zonalShiftConfig":{"shape":"ZonalShiftConfigRequest"},
         "remoteNetworkConfig":{"shape":"RemoteNetworkConfigRequest"},
         "computeConfig":{"shape":"ComputeConfigRequest"},
-        "storageConfig":{"shape":"StorageConfigRequest"}
+        "storageConfig":{"shape":"StorageConfigRequest"},
+        "deletionProtection":{"shape":"BoxedBoolean"},
+        "controlPlaneScalingConfig":{"shape":"ControlPlaneScalingConfig"},
+        "kubeApiServerConfig":{"shape":"KubeApiServerConfigRequest"},
+        "kubeSchedulerConfig":{"shape":"KubeSchedulerConfigRequest"},
+        "kubeControllerManagerConfig":{"shape":"KubeControllerManagerConfigRequest"}
       }
     },
     "CreateClusterResponse":{
@@ -1689,7 +2153,8 @@
         "nodeRepairConfig":{"shape":"NodeRepairConfig"},
         "capacityType":{"shape":"CapacityTypes"},
         "version":{"shape":"String"},
-        "releaseVersion":{"shape":"String"}
+        "releaseVersion":{"shape":"String"},
+        "warmPoolConfig":{"shape":"WarmPoolConfig"}
       }
     },
     "CreateNodegroupResponse":{
@@ -1719,7 +2184,10 @@
           "shape":"String",
           "idempotencyToken":true
         },
-        "tags":{"shape":"TagMap"}
+        "tags":{"shape":"TagMap"},
+        "disableSessionTags":{"shape":"BoxedBoolean"},
+        "targetRoleArn":{"shape":"String"},
+        "policy":{"shape":"String"}
       }
     },
     "CreatePodIdentityAssociationResponse":{
@@ -1749,8 +2217,7 @@
     },
     "DeleteAccessEntryResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteAddonRequest":{
       "type":"structure",
@@ -1780,6 +2247,31 @@
       "type":"structure",
       "members":{
         "addon":{"shape":"Addon"}
+      }
+    },
+    "DeleteCapabilityRequest":{
+      "type":"structure",
+      "required":[
+        "clusterName",
+        "capabilityName"
+      ],
+      "members":{
+        "clusterName":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"name"
+        },
+        "capabilityName":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"capabilityName"
+        }
+      }
+    },
+    "DeleteCapabilityResponse":{
+      "type":"structure",
+      "members":{
+        "capability":{"shape":"Capability"}
       }
     },
     "DeleteClusterRequest":{
@@ -2053,6 +2545,31 @@
         "nextToken":{"shape":"String"}
       }
     },
+    "DescribeCapabilityRequest":{
+      "type":"structure",
+      "required":[
+        "clusterName",
+        "capabilityName"
+      ],
+      "members":{
+        "clusterName":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"name"
+        },
+        "capabilityName":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"capabilityName"
+        }
+      }
+    },
+    "DescribeCapabilityResponse":{
+      "type":"structure",
+      "members":{
+        "capability":{"shape":"Capability"}
+      }
+    },
     "DescribeClusterRequest":{
       "type":"structure",
       "required":["name"],
@@ -2219,6 +2736,26 @@
         "insight":{"shape":"Insight"}
       }
     },
+    "DescribeInsightsRefreshRequest":{
+      "type":"structure",
+      "required":["clusterName"],
+      "members":{
+        "clusterName":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"name"
+        }
+      }
+    },
+    "DescribeInsightsRefreshResponse":{
+      "type":"structure",
+      "members":{
+        "message":{"shape":"String"},
+        "status":{"shape":"InsightsRefreshStatus"},
+        "startedAt":{"shape":"Timestamp"},
+        "endedAt":{"shape":"Timestamp"}
+      }
+    },
     "DescribeNodegroupRequest":{
       "type":"structure",
       "required":[
@@ -2295,6 +2832,11 @@
           "shape":"String",
           "location":"querystring",
           "locationName":"addonName"
+        },
+        "capabilityName":{
+          "shape":"String",
+          "location":"querystring",
+          "locationName":"capabilityName"
         }
       }
     },
@@ -2331,8 +2873,7 @@
     },
     "DisassociateAccessPolicyResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DisassociateIdentityProviderConfigRequest":{
       "type":"structure",
@@ -2357,6 +2898,20 @@
       "type":"structure",
       "members":{
         "update":{"shape":"Update"}
+      }
+    },
+    "DurationConstraints":{
+      "type":"structure",
+      "members":{
+        "min":{"shape":"String"},
+        "max":{"shape":"String"}
+      }
+    },
+    "DurationParameterConfig":{
+      "type":"structure",
+      "members":{
+        "defaultValue":{"shape":"String"},
+        "constraints":{"shape":"DurationConstraints"}
       }
     },
     "EksAnywhereSubscription":{
@@ -2469,6 +3024,18 @@
       "type":"list",
       "member":{"shape":"ErrorDetail"}
     },
+    "EtcdPlacementRequest":{
+      "type":"structure",
+      "members":{
+        "spreadLevel":{"shape":"SpreadLevel"}
+      }
+    },
+    "EtcdPlacementResponse":{
+      "type":"structure",
+      "members":{
+        "spreadLevel":{"shape":"SpreadLevel"}
+      }
+    },
     "FargateProfile":{
       "type":"structure",
       "members":{
@@ -2542,6 +3109,24 @@
       "box":true,
       "max":100,
       "min":1
+    },
+    "HorizontalPodAutoscalerControllerConfigRequest":{
+      "type":"structure",
+      "members":{
+        "horizontalPodAutoscalerSyncPeriod":{"shape":"String"}
+      }
+    },
+    "HorizontalPodAutoscalerControllerConfigResponse":{
+      "type":"structure",
+      "members":{
+        "horizontalPodAutoscalerSyncPeriod":{"shape":"String"}
+      }
+    },
+    "HorizontalPodAutoscalerControllerVersionConfig":{
+      "type":"structure",
+      "members":{
+        "horizontalPodAutoscalerSyncPeriod":{"shape":"DurationParameterConfig"}
+      }
     },
     "Identity":{
       "type":"structure",
@@ -2655,7 +3240,22 @@
         "statuses":{"shape":"InsightStatusValueList"}
       }
     },
+    "InsightsRefreshStatus":{
+      "type":"string",
+      "enum":[
+        "IN_PROGRESS",
+        "FAILED",
+        "COMPLETED"
+      ]
+    },
     "Integer":{"type":"integer"},
+    "IntegerRangeConstraint":{
+      "type":"structure",
+      "members":{
+        "min":{"shape":"BoxedInteger"},
+        "max":{"shape":"BoxedInteger"}
+      }
+    },
     "InvalidParameterException":{
       "type":"structure",
       "members":{
@@ -2681,6 +3281,15 @@
       "error":{"httpStatusCode":400},
       "exception":true
     },
+    "InvalidStateException":{
+      "type":"structure",
+      "members":{
+        "clusterName":{"shape":"String"},
+        "message":{"shape":"String"}
+      },
+      "error":{"httpStatusCode":400},
+      "exception":true
+    },
     "IpFamily":{
       "type":"string",
       "enum":[
@@ -2699,6 +3308,63 @@
     "IssueList":{
       "type":"list",
       "member":{"shape":"Issue"}
+    },
+    "KubeApiServerConfigRequest":{
+      "type":"structure",
+      "members":{
+        "eventTtl":{"shape":"String"},
+        "serviceNodePortRange":{"shape":"ServiceNodePortRange"}
+      }
+    },
+    "KubeApiServerConfigResponse":{
+      "type":"structure",
+      "members":{
+        "eventTtl":{"shape":"String"},
+        "serviceNodePortRange":{"shape":"ServiceNodePortRange"}
+      }
+    },
+    "KubeApiServerVersionConfig":{
+      "type":"structure",
+      "members":{
+        "eventTtl":{"shape":"DurationParameterConfig"},
+        "serviceNodePortRange":{"shape":"PortRangeParameterConfig"}
+      }
+    },
+    "KubeControllerManagerConfigRequest":{
+      "type":"structure",
+      "members":{
+        "horizontalPodAutoscalerControllerConfig":{"shape":"HorizontalPodAutoscalerControllerConfigRequest"}
+      }
+    },
+    "KubeControllerManagerConfigResponse":{
+      "type":"structure",
+      "members":{
+        "horizontalPodAutoscalerControllerConfig":{"shape":"HorizontalPodAutoscalerControllerConfigResponse"}
+      }
+    },
+    "KubeControllerManagerVersionConfig":{
+      "type":"structure",
+      "members":{
+        "horizontalPodAutoscalerControllerConfig":{"shape":"HorizontalPodAutoscalerControllerVersionConfig"}
+      }
+    },
+    "KubeSchedulerConfigRequest":{
+      "type":"structure",
+      "members":{
+        "nodeResourcesFit":{"shape":"NodeResourcesFitConfig"}
+      }
+    },
+    "KubeSchedulerConfigResponse":{
+      "type":"structure",
+      "members":{
+        "nodeResourcesFit":{"shape":"NodeResourcesFitConfig"}
+      }
+    },
+    "KubeSchedulerVersionConfig":{
+      "type":"structure",
+      "members":{
+        "nodeResourcesFit":{"shape":"NodeResourcesFitVersionConfig"}
+      }
     },
     "KubernetesNetworkConfigRequest":{
       "type":"structure",
@@ -2879,6 +3545,40 @@
         "principalArn":{"shape":"String"},
         "nextToken":{"shape":"String"},
         "associatedAccessPolicies":{"shape":"AssociatedAccessPoliciesList"}
+      }
+    },
+    "ListCapabilitiesRequest":{
+      "type":"structure",
+      "required":["clusterName"],
+      "members":{
+        "clusterName":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"name"
+        },
+        "nextToken":{
+          "shape":"String",
+          "location":"querystring",
+          "locationName":"nextToken"
+        },
+        "maxResults":{
+          "shape":"ListCapabilitiesRequestMaxResults",
+          "location":"querystring",
+          "locationName":"maxResults"
+        }
+      }
+    },
+    "ListCapabilitiesRequestMaxResults":{
+      "type":"integer",
+      "box":true,
+      "max":100,
+      "min":1
+    },
+    "ListCapabilitiesResponse":{
+      "type":"structure",
+      "members":{
+        "capabilities":{"shape":"CapabilitySummaryList"},
+        "nextToken":{"shape":"String"}
       }
     },
     "ListClustersRequest":{
@@ -3150,6 +3850,11 @@
           "location":"querystring",
           "locationName":"addonName"
         },
+        "capabilityName":{
+          "shape":"String",
+          "location":"querystring",
+          "locationName":"capabilityName"
+        },
         "nextToken":{
           "shape":"String",
           "location":"querystring",
@@ -3216,7 +3921,37 @@
     "NodeRepairConfig":{
       "type":"structure",
       "members":{
-        "enabled":{"shape":"BoxedBoolean"}
+        "enabled":{"shape":"BoxedBoolean"},
+        "maxUnhealthyNodeThresholdCount":{"shape":"NonZeroInteger"},
+        "maxUnhealthyNodeThresholdPercentage":{"shape":"PercentCapacity"},
+        "maxParallelNodesRepairedCount":{"shape":"NonZeroInteger"},
+        "maxParallelNodesRepairedPercentage":{"shape":"PercentCapacity"},
+        "nodeRepairConfigOverrides":{"shape":"NodeRepairConfigOverridesList"}
+      }
+    },
+    "NodeRepairConfigOverrides":{
+      "type":"structure",
+      "members":{
+        "nodeMonitoringCondition":{"shape":"String"},
+        "nodeUnhealthyReason":{"shape":"String"},
+        "minRepairWaitTimeMins":{"shape":"NonZeroInteger"},
+        "repairAction":{"shape":"RepairAction"}
+      }
+    },
+    "NodeRepairConfigOverridesList":{
+      "type":"list",
+      "member":{"shape":"NodeRepairConfigOverrides"}
+    },
+    "NodeResourcesFitConfig":{
+      "type":"structure",
+      "members":{
+        "scoringStrategy":{"shape":"ScoringStrategy"}
+      }
+    },
+    "NodeResourcesFitVersionConfig":{
+      "type":"structure",
+      "members":{
+        "scoringStrategy":{"shape":"ScoringStrategyConfig"}
       }
     },
     "Nodegroup":{
@@ -3245,7 +3980,8 @@
         "updateConfig":{"shape":"NodegroupUpdateConfig"},
         "nodeRepairConfig":{"shape":"NodeRepairConfig"},
         "launchTemplate":{"shape":"LaunchTemplateSpecification"},
-        "tags":{"shape":"TagMap"}
+        "tags":{"shape":"TagMap"},
+        "warmPoolConfig":{"shape":"WarmPoolConfig"}
       }
     },
     "NodegroupHealth":{
@@ -3400,7 +4136,9 @@
       "members":{
         "outpostArns":{"shape":"StringList"},
         "controlPlaneInstanceType":{"shape":"String"},
-        "controlPlanePlacement":{"shape":"ControlPlanePlacementRequest"}
+        "controlPlanePlacement":{"shape":"ControlPlanePlacementRequest"},
+        "etcdInstanceType":{"shape":"String"},
+        "etcdPlacement":{"shape":"EtcdPlacementRequest"}
       }
     },
     "OutpostConfigResponse":{
@@ -3412,7 +4150,9 @@
       "members":{
         "outpostArns":{"shape":"StringList"},
         "controlPlaneInstanceType":{"shape":"String"},
-        "controlPlanePlacement":{"shape":"ControlPlanePlacementResponse"}
+        "controlPlanePlacement":{"shape":"ControlPlanePlacementResponse"},
+        "etcdInstanceType":{"shape":"String"},
+        "etcdPlacement":{"shape":"EtcdPlacementResponse"}
       }
     },
     "PercentCapacity":{
@@ -3433,7 +4173,11 @@
         "tags":{"shape":"TagMap"},
         "createdAt":{"shape":"Timestamp"},
         "modifiedAt":{"shape":"Timestamp"},
-        "ownerArn":{"shape":"String"}
+        "ownerArn":{"shape":"String"},
+        "disableSessionTags":{"shape":"BoxedBoolean"},
+        "targetRoleArn":{"shape":"String"},
+        "externalId":{"shape":"String"},
+        "policy":{"shape":"String"}
       }
     },
     "PodIdentityAssociationSummaries":{
@@ -3451,11 +4195,35 @@
         "ownerArn":{"shape":"String"}
       }
     },
+    "PortRangeConstraints":{
+      "type":"structure",
+      "members":{
+        "minPort":{"shape":"IntegerRangeConstraint"},
+        "maxPort":{"shape":"IntegerRangeConstraint"}
+      }
+    },
+    "PortRangeParameterConfig":{
+      "type":"structure",
+      "members":{
+        "defaultValue":{"shape":"ServiceNodePortRange"},
+        "constraints":{"shape":"PortRangeConstraints"}
+      }
+    },
     "Provider":{
       "type":"structure",
       "members":{
         "keyArn":{"shape":"String"}
       }
+    },
+    "ProvisionedControlPlaneTier":{
+      "type":"string",
+      "enum":[
+        "standard",
+        "tier-xl",
+        "tier-2xl",
+        "tier-4xl",
+        "tier-8xl"
+      ]
     },
     "RegisterClusterRequest":{
       "type":"structure",
@@ -3522,6 +4290,14 @@
       "member":{"shape":"RemotePodNetwork"},
       "max":1
     },
+    "RepairAction":{
+      "type":"string",
+      "enum":[
+        "Replace",
+        "Reboot",
+        "NoAction"
+      ]
+    },
     "ResolveConflicts":{
       "type":"string",
       "enum":[
@@ -3529,6 +4305,13 @@
         "NONE",
         "PRESERVE"
       ]
+    },
+    "ResourceConstraints":{
+      "type":"structure",
+      "members":{
+        "name":{"shape":"AllowedValuesConstraint"},
+        "weight":{"shape":"IntegerRangeConstraint"}
+      }
     },
     "ResourceInUseException":{
       "type":"structure",
@@ -3573,10 +4356,67 @@
       "error":{"httpStatusCode":428},
       "exception":true
     },
+    "ResourceWeight":{
+      "type":"structure",
+      "members":{
+        "name":{"shape":"ResourceWeightName"},
+        "weight":{"shape":"ResourceWeightValue"}
+      }
+    },
+    "ResourceWeightList":{
+      "type":"list",
+      "member":{"shape":"ResourceWeight"},
+      "max":100
+    },
+    "ResourceWeightName":{
+      "type":"string",
+      "max":253,
+      "min":1
+    },
+    "ResourceWeightValue":{
+      "type":"integer",
+      "box":true,
+      "max":100,
+      "min":1
+    },
     "RoleArn":{
       "type":"string",
       "max":255,
       "min":1
+    },
+    "RollbackConfig":{
+      "type":"structure",
+      "members":{
+        "timeoutMinutes":{"shape":"BoxedInteger"}
+      }
+    },
+    "ScoringStrategy":{
+      "type":"structure",
+      "members":{
+        "type":{"shape":"ScoringStrategyType"},
+        "resources":{"shape":"ResourceWeightList"}
+      }
+    },
+    "ScoringStrategyConfig":{
+      "type":"structure",
+      "members":{
+        "defaultValue":{"shape":"ScoringStrategy"},
+        "constraints":{"shape":"ScoringStrategyConstraints"}
+      }
+    },
+    "ScoringStrategyConstraints":{
+      "type":"structure",
+      "members":{
+        "scoringStrategy":{"shape":"AllowedValuesConstraint"},
+        "resources":{"shape":"ResourceConstraints"}
+      }
+    },
+    "ScoringStrategyType":{
+      "type":"string",
+      "enum":[
+        "LeastAllocated",
+        "MostAllocated"
+      ]
     },
     "ServerException":{
       "type":"structure",
@@ -3591,6 +4431,13 @@
       "exception":true,
       "fault":true
     },
+    "ServiceNodePortRange":{
+      "type":"structure",
+      "members":{
+        "minPort":{"shape":"Integer"},
+        "maxPort":{"shape":"Integer"}
+      }
+    },
     "ServiceUnavailableException":{
       "type":"structure",
       "members":{
@@ -3599,6 +4446,53 @@
       "error":{"httpStatusCode":503},
       "exception":true,
       "fault":true
+    },
+    "SpreadLevel":{
+      "type":"string",
+      "enum":[
+        "host",
+        "rack"
+      ]
+    },
+    "SsoIdentity":{
+      "type":"structure",
+      "required":[
+        "id",
+        "type"
+      ],
+      "members":{
+        "id":{"shape":"String"},
+        "type":{"shape":"SsoIdentityType"}
+      }
+    },
+    "SsoIdentityList":{
+      "type":"list",
+      "member":{"shape":"SsoIdentity"}
+    },
+    "SsoIdentityType":{
+      "type":"string",
+      "enum":[
+        "SSO_USER",
+        "SSO_GROUP"
+      ]
+    },
+    "StartInsightsRefreshRequest":{
+      "type":"structure",
+      "required":["clusterName"],
+      "members":{
+        "clusterName":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"name"
+        }
+      }
+    },
+    "StartInsightsRefreshResponse":{
+      "type":"structure",
+      "members":{
+        "message":{"shape":"String"},
+        "status":{"shape":"InsightsRefreshStatus"}
+      }
     },
     "StorageConfigRequest":{
       "type":"structure",
@@ -3659,8 +4553,7 @@
     },
     "TagResourceResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "TagValue":{
       "type":"string",
@@ -3681,6 +4574,15 @@
         "NO_EXECUTE",
         "PREFER_NO_SCHEDULE"
       ]
+    },
+    "ThrottlingException":{
+      "type":"structure",
+      "members":{
+        "clusterName":{"shape":"String"},
+        "message":{"shape":"String"}
+      },
+      "error":{"httpStatusCode":429},
+      "exception":true
     },
     "Timestamp":{"type":"timestamp"},
     "UnsupportedAvailabilityZoneException":{
@@ -3715,8 +4617,7 @@
     },
     "UntagResourceResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "Update":{
       "type":"structure",
@@ -3726,7 +4627,8 @@
         "type":{"shape":"UpdateType"},
         "params":{"shape":"UpdateParams"},
         "createdAt":{"shape":"Timestamp"},
-        "errors":{"shape":"ErrorDetails"}
+        "errors":{"shape":"ErrorDetails"},
+        "cancellation":{"shape":"Cancellation"}
       }
     },
     "UpdateAccessConfigRequest":{
@@ -3800,6 +4702,51 @@
         "update":{"shape":"Update"}
       }
     },
+    "UpdateArgoCdConfig":{
+      "type":"structure",
+      "members":{
+        "rbacRoleMappings":{"shape":"UpdateRoleMappings"},
+        "networkAccess":{"shape":"ArgoCdNetworkAccessConfigRequest"}
+      }
+    },
+    "UpdateCapabilityConfiguration":{
+      "type":"structure",
+      "members":{
+        "argoCd":{"shape":"UpdateArgoCdConfig"}
+      }
+    },
+    "UpdateCapabilityRequest":{
+      "type":"structure",
+      "required":[
+        "clusterName",
+        "capabilityName"
+      ],
+      "members":{
+        "clusterName":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"name"
+        },
+        "capabilityName":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"capabilityName"
+        },
+        "roleArn":{"shape":"String"},
+        "configuration":{"shape":"UpdateCapabilityConfiguration"},
+        "clientRequestToken":{
+          "shape":"String",
+          "idempotencyToken":true
+        },
+        "deletePropagationPolicy":{"shape":"CapabilityDeletePropagationPolicy"}
+      }
+    },
+    "UpdateCapabilityResponse":{
+      "type":"structure",
+      "members":{
+        "update":{"shape":"Update"}
+      }
+    },
     "UpdateClusterConfigRequest":{
       "type":"structure",
       "required":["name"],
@@ -3820,7 +4767,13 @@
         "zonalShiftConfig":{"shape":"ZonalShiftConfigRequest"},
         "computeConfig":{"shape":"ComputeConfigRequest"},
         "kubernetesNetworkConfig":{"shape":"KubernetesNetworkConfigRequest"},
-        "storageConfig":{"shape":"StorageConfigRequest"}
+        "storageConfig":{"shape":"StorageConfigRequest"},
+        "remoteNetworkConfig":{"shape":"RemoteNetworkConfigRequest"},
+        "deletionProtection":{"shape":"BoxedBoolean"},
+        "controlPlaneScalingConfig":{"shape":"ControlPlaneScalingConfig"},
+        "kubeApiServerConfig":{"shape":"KubeApiServerConfigRequest"},
+        "kubeSchedulerConfig":{"shape":"KubeSchedulerConfigRequest"},
+        "kubeControllerManagerConfig":{"shape":"KubeControllerManagerConfigRequest"}
       }
     },
     "UpdateClusterConfigResponse":{
@@ -3845,7 +4798,9 @@
         "clientRequestToken":{
           "shape":"String",
           "idempotencyToken":true
-        }
+        },
+        "force":{"shape":"Boolean"},
+        "rollbackConfig":{"shape":"RollbackConfig"}
       }
     },
     "UpdateClusterVersionResponse":{
@@ -3908,6 +4863,7 @@
         "scalingConfig":{"shape":"NodegroupScalingConfig"},
         "updateConfig":{"shape":"NodegroupUpdateConfig"},
         "nodeRepairConfig":{"shape":"NodeRepairConfig"},
+        "warmPoolConfig":{"shape":"WarmPoolConfig"},
         "clientRequestToken":{
           "shape":"String",
           "idempotencyToken":true
@@ -3997,7 +4953,26 @@
         "ZonalShiftConfig",
         "ComputeConfig",
         "StorageConfig",
-        "KubernetesNetworkConfig"
+        "KubernetesNetworkConfig",
+        "RemoteNetworkConfig",
+        "DeletionProtection",
+        "NodeRepairConfig",
+        "RoleArn",
+        "RoleMappingsToAddOrUpdate",
+        "RoleMappingsToRemove",
+        "NetworkAccess",
+        "VendedLogs",
+        "UpdatedTier",
+        "PreviousTier",
+        "WarmPoolEnabled",
+        "WarmPoolMaxGroupPreparedCapacity",
+        "WarmPoolMinSize",
+        "WarmPoolState",
+        "WarmPoolReuseOnScaleIn",
+        "ControlPlaneEgressMode",
+        "KubeApiServerConfig",
+        "KubeSchedulerConfig",
+        "KubeControllerManagerConfig"
       ]
     },
     "UpdateParams":{
@@ -4025,13 +5000,23 @@
         "clientRequestToken":{
           "shape":"String",
           "idempotencyToken":true
-        }
+        },
+        "disableSessionTags":{"shape":"BoxedBoolean"},
+        "targetRoleArn":{"shape":"String"},
+        "policy":{"shape":"String"}
       }
     },
     "UpdatePodIdentityAssociationResponse":{
       "type":"structure",
       "members":{
         "association":{"shape":"PodIdentityAssociation"}
+      }
+    },
+    "UpdateRoleMappings":{
+      "type":"structure",
+      "members":{
+        "addOrUpdateRoleMappings":{"shape":"ArgoCdRoleMappingList"},
+        "removeRoleMappings":{"shape":"ArgoCdRoleMappingList"}
       }
     },
     "UpdateStatus":{
@@ -4065,7 +5050,15 @@
         "AccessConfigUpdate",
         "UpgradePolicyUpdate",
         "ZonalShiftConfigUpdate",
-        "AutoModeUpdate"
+        "AutoModeUpdate",
+        "RemoteNetworkConfigUpdate",
+        "DeletionProtectionUpdate",
+        "CapabilityUpdate",
+        "ControlPlaneScalingConfigUpdate",
+        "VendedLogsUpdate",
+        "ControlPlaneEgressUpdate",
+        "VersionRollback",
+        "ControlPlaneComponentConfigUpdate"
       ]
     },
     "UpgradePolicyRequest":{
@@ -4095,7 +5088,8 @@
         "securityGroupIds":{"shape":"StringList"},
         "endpointPublicAccess":{"shape":"BoxedBoolean"},
         "endpointPrivateAccess":{"shape":"BoxedBoolean"},
-        "publicAccessCidrs":{"shape":"StringList"}
+        "publicAccessCidrs":{"shape":"StringList"},
+        "controlPlaneEgressMode":{"shape":"ControlPlaneEgressModeType"}
       }
     },
     "VpcConfigResponse":{
@@ -4107,8 +5101,27 @@
         "vpcId":{"shape":"String"},
         "endpointPublicAccess":{"shape":"Boolean"},
         "endpointPrivateAccess":{"shape":"Boolean"},
-        "publicAccessCidrs":{"shape":"StringList"}
+        "publicAccessCidrs":{"shape":"StringList"},
+        "controlPlaneEgressMode":{"shape":"ControlPlaneEgressModeType"}
       }
+    },
+    "WarmPoolConfig":{
+      "type":"structure",
+      "members":{
+        "enabled":{"shape":"BoxedBoolean"},
+        "minSize":{"shape":"ZeroCapacity"},
+        "maxGroupPreparedCapacity":{"shape":"BoxedInteger"},
+        "poolState":{"shape":"WarmPoolState"},
+        "reuseOnScaleIn":{"shape":"BoxedBoolean"}
+      }
+    },
+    "WarmPoolState":{
+      "type":"string",
+      "enum":[
+        "STOPPED",
+        "RUNNING",
+        "HIBERNATED"
+      ]
     },
     "ZeroCapacity":{
       "type":"integer",
@@ -4153,6 +5166,11 @@
       "type":"map",
       "key":{"shape":"labelKey"},
       "value":{"shape":"labelValue"}
+    },
+    "namespace":{
+      "type":"string",
+      "max":63,
+      "min":1
     },
     "requiredClaimsKey":{
       "type":"string",

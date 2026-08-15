@@ -1,6 +1,196 @@
 Unreleased Changes
 ------------------
 
+1.79.0 (2026-08-13)
+------------------
+
+* Feature - This release adds support for minimum aggregation thresholds and comparison controls to the Custom analysis rule type.
+
+1.78.0 (2026-08-11)
+------------------
+
+* Feature - Adds support for exporting redacted query execution logs in AWS Clean Rooms
+
+1.77.0 (2026-07-27)
+------------------
+
+* Feature - This release adds support for the CR.8X worker type for SQL (32 vCPU)
+
+1.76.0 (2026-07-09)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.75.0 (2026-06-30)
+------------------
+
+* Feature - Adds support for intermediate tables in AWS Clean Rooms collaborations.
+
+1.74.0 (2026-05-26)
+------------------
+
+* Feature - Adding new BDD representation of endpoint ruleset
+
+1.73.0 (2026-05-21)
+------------------
+
+* Feature - Collaboration creators can update payment configurations without recreating the collaboration. When multiple payer candidates are configured for a cost type, analysis runners can specify the actual payer at submission time, providing granular control over billing.
+
+1.72.0 (2026-05-19)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.71.0 (2026-05-13)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.70.0 (2026-04-17)
+------------------
+
+* Feature - This release adds support for configurable spark properties for Cleanrooms PySpark workloads.
+
+1.69.0 (2026-03-18)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.68.0 (2026-02-18)
+------------------
+
+* Feature - This release adds support for federated catalogs in Athena-sourced configured tables.
+
+1.67.0 (2026-01-16)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.66.0 (2026-01-15)
+------------------
+
+* Feature - This release adds support for parameters in PySpark analysis templates.
+
+1.65.0 (2026-01-08)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.64.0 (2026-01-05)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.63.0 (2026-01-02)
+------------------
+
+* Feature - Added support for publishing detailed metrics to CloudWatch for operational monitoring of collaborations, including query performance and resource utilization.
+
+1.62.0 (2025-12-18)
+------------------
+
+* Feature - Adding support for collaboration change requests requiring an approval workflow. Adding support for change requests that grant or revoke results receiver ability and modifying auto approved change types in an existing collaboration.
+
+1.61.0 (2025-12-01)
+------------------
+
+* Feature - AWS Clean Rooms now supports privacy-enhancing synthetic dataset generation for custom ML training.
+
+1.60.0 (2025-11-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.59.0 (2025-10-30)
+------------------
+
+* Feature - Added support for advanced Spark configurations to optimize SQL performance
+
+1.58.0 (2025-10-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.57.0 (2025-10-03)
+------------------
+
+* Feature - Added support for reading data sources across regions, and results delivery to allowedlisted regions.
+
+1.56.0 (2025-10-01)
+------------------
+
+* Feature - This release introduces data access budgets to control how many times a table can be used for queries and jobs in a collaboration.
+
+1.55.0 (2025-09-23)
+------------------
+
+* Feature - Added support for running incremental ID mapping for rule-based workflows.
+
+1.54.0 (2025-09-04)
+------------------
+
+* Feature - Add support for configurable compute sizes for PySpark jobs.
+
+1.53.0 (2025-09-03)
+------------------
+
+* Feature - Added support for adding new data provider members to an existing collaboration.
+
+1.52.0 (2025-08-26)
+------------------
+
+* Feature - Remove incorrect endpoint tests
+
+1.51.0 (2025-08-19)
+------------------
+
+* Feature - Support error message configuration for analysis templates
+
+1.50.0 (2025-08-04)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.49.0 (2025-07-31)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.48.0 (2025-07-29)
+------------------
+
+* Feature - This feature provides the ability to update the table reference and allowed columns on an existing configured table.
+
+1.47.0 (2025-07-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.46.0 (2025-06-02)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.45.0 (2025-05-12)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.44.0 (2025-05-01)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.43.0 (2025-04-30)
+------------------
+
+* Feature - This release adds support for ProtectedQuery results to be delivered to more than one collaboration member via the new distribute output configuration in StartProtectedQuery.
+
+1.42.0 (2025-04-01)
+------------------
+
+* Feature - This release adds support for updating the analytics engine of a collaboration.
+
 1.41.0 (2025-03-18)
 ------------------
 

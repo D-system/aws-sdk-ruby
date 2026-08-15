@@ -28,7 +28,8 @@
         {"shape":"InternalServerException"},
         {"shape":"AccessDeniedException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "GetRecommendation":{
       "name":"GetRecommendation",
@@ -44,7 +45,24 @@
         {"shape":"AccessDeniedException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
+    },
+    "ListEfficiencyMetrics":{
+      "name":"ListEfficiencyMetrics",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ListEfficiencyMetricsRequest"},
+      "output":{"shape":"ListEfficiencyMetricsResponse"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"InternalServerException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"ThrottlingException"}
+      ],
+      "readonly":true
     },
     "ListEnrollmentStatuses":{
       "name":"ListEnrollmentStatuses",
@@ -59,7 +77,8 @@
         {"shape":"InternalServerException"},
         {"shape":"AccessDeniedException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "ListRecommendationSummaries":{
       "name":"ListRecommendationSummaries",
@@ -74,7 +93,8 @@
         {"shape":"InternalServerException"},
         {"shape":"AccessDeniedException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "ListRecommendations":{
       "name":"ListRecommendations",
@@ -89,7 +109,8 @@
         {"shape":"InternalServerException"},
         {"shape":"AccessDeniedException"},
         {"shape":"ThrottlingException"}
-      ]
+      ],
+      "readonly":true
     },
     "UpdateEnrollmentStatus":{
       "name":"UpdateEnrollmentStatus",
@@ -180,6 +201,19 @@
         "LowestPrice"
       ]
     },
+    "AuroraDbClusterStorage":{
+      "type":"structure",
+      "members":{
+        "configuration":{"shape":"AuroraDbClusterStorageConfiguration"},
+        "costCalculation":{"shape":"ResourceCostCalculation"}
+      }
+    },
+    "AuroraDbClusterStorageConfiguration":{
+      "type":"structure",
+      "members":{
+        "storageType":{"shape":"String"}
+      }
+    },
     "BlockStoragePerformanceConfiguration":{
       "type":"structure",
       "members":{
@@ -223,9 +257,42 @@
         "dbInstanceClass":{"shape":"String"}
       }
     },
+    "DocumentDbCluster":{
+      "type":"structure",
+      "members":{
+        "costCalculation":{"shape":"ResourceCostCalculation"}
+      }
+    },
     "Double":{
       "type":"double",
       "box":true
+    },
+    "DynamoDbReservedCapacity":{
+      "type":"structure",
+      "members":{
+        "configuration":{"shape":"DynamoDbReservedCapacityConfiguration"},
+        "costCalculation":{"shape":"ReservedInstancesCostCalculation"}
+      }
+    },
+    "DynamoDbReservedCapacityConfiguration":{
+      "type":"structure",
+      "members":{
+        "accountScope":{"shape":"String"},
+        "service":{"shape":"String"},
+        "term":{"shape":"String"},
+        "paymentOption":{"shape":"String"},
+        "reservedInstancesRegion":{"shape":"String"},
+        "upfrontCost":{"shape":"String"},
+        "monthlyRecurringCost":{"shape":"String"},
+        "numberOfCapacityUnitsToPurchase":{"shape":"String"},
+        "capacityUnits":{"shape":"String"}
+      }
+    },
+    "DynamoDbTable":{
+      "type":"structure",
+      "members":{
+        "costCalculation":{"shape":"ResourceCostCalculation"}
+      }
     },
     "EbsVolume":{
       "type":"structure",
@@ -308,20 +375,20 @@
       "members":{
         "accountScope":{"shape":"String"},
         "service":{"shape":"String"},
-        "normalizedUnitsToPurchase":{"shape":"String"},
         "term":{"shape":"String"},
         "paymentOption":{"shape":"String"},
+        "reservedInstancesRegion":{"shape":"String"},
+        "upfrontCost":{"shape":"String"},
+        "monthlyRecurringCost":{"shape":"String"},
+        "normalizedUnitsToPurchase":{"shape":"String"},
         "numberOfInstancesToPurchase":{"shape":"String"},
         "offeringClass":{"shape":"String"},
         "instanceFamily":{"shape":"String"},
         "instanceType":{"shape":"String"},
-        "reservedInstancesRegion":{"shape":"String"},
         "currentGeneration":{"shape":"String"},
         "platform":{"shape":"String"},
         "tenancy":{"shape":"String"},
-        "sizeFlexEligible":{"shape":"Boolean"},
-        "upfrontCost":{"shape":"String"},
-        "monthlyRecurringCost":{"shape":"String"}
+        "sizeFlexEligible":{"shape":"Boolean"}
       }
     },
     "EcsService":{
@@ -337,6 +404,24 @@
         "compute":{"shape":"ComputeConfiguration"}
       }
     },
+    "EfficiencyMetricsByGroup":{
+      "type":"structure",
+      "members":{
+        "metricsByTime":{"shape":"MetricsByTimeList"},
+        "group":{"shape":"String"},
+        "message":{"shape":"String"}
+      }
+    },
+    "EfficiencyMetricsByGroupList":{
+      "type":"list",
+      "member":{"shape":"EfficiencyMetricsByGroup"}
+    },
+    "ElastiCacheCluster":{
+      "type":"structure",
+      "members":{
+        "costCalculation":{"shape":"ResourceCostCalculation"}
+      }
+    },
     "ElastiCacheReservedInstances":{
       "type":"structure",
       "members":{
@@ -349,17 +434,17 @@
       "members":{
         "accountScope":{"shape":"String"},
         "service":{"shape":"String"},
-        "normalizedUnitsToPurchase":{"shape":"String"},
         "term":{"shape":"String"},
         "paymentOption":{"shape":"String"},
+        "reservedInstancesRegion":{"shape":"String"},
+        "upfrontCost":{"shape":"String"},
+        "monthlyRecurringCost":{"shape":"String"},
+        "normalizedUnitsToPurchase":{"shape":"String"},
         "numberOfInstancesToPurchase":{"shape":"String"},
         "instanceFamily":{"shape":"String"},
         "instanceType":{"shape":"String"},
-        "reservedInstancesRegion":{"shape":"String"},
         "currentGeneration":{"shape":"String"},
-        "sizeFlexEligible":{"shape":"Boolean"},
-        "upfrontCost":{"shape":"String"},
-        "monthlyRecurringCost":{"shape":"String"}
+        "sizeFlexEligible":{"shape":"Boolean"}
       }
     },
     "EnrollmentStatus":{
@@ -395,14 +480,14 @@
     },
     "GetPreferencesRequest":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "GetPreferencesResponse":{
       "type":"structure",
       "members":{
         "savingsEstimationMode":{"shape":"SavingsEstimationMode"},
-        "memberAccountDiscountVisibility":{"shape":"MemberAccountDiscountVisibility"}
+        "memberAccountDiscountVisibility":{"shape":"MemberAccountDiscountVisibility"},
+        "preferredCommitment":{"shape":"PreferredCommitment"}
       }
     },
     "GetRecommendationRequest":{
@@ -439,6 +524,13 @@
         "recommendedResourceDetails":{"shape":"ResourceDetails"},
         "tags":{"shape":"TagList"}
       }
+    },
+    "GranularityType":{
+      "type":"string",
+      "enum":[
+        "Daily",
+        "Monthly"
+      ]
     },
     "ImplementationEffort":{
       "type":"string",
@@ -486,6 +578,34 @@
       "type":"structure",
       "members":{
         "compute":{"shape":"ComputeConfiguration"}
+      }
+    },
+    "ListEfficiencyMetricsRequest":{
+      "type":"structure",
+      "required":[
+        "granularity",
+        "timePeriod"
+      ],
+      "members":{
+        "groupBy":{"shape":"String"},
+        "granularity":{"shape":"GranularityType"},
+        "timePeriod":{"shape":"TimePeriod"},
+        "maxResults":{"shape":"ListEfficiencyMetricsRequestMaxResultsInteger"},
+        "orderBy":{"shape":"OrderBy"},
+        "nextToken":{"shape":"String"}
+      }
+    },
+    "ListEfficiencyMetricsRequestMaxResultsInteger":{
+      "type":"integer",
+      "box":true,
+      "max":1000,
+      "min":0
+    },
+    "ListEfficiencyMetricsResponse":{
+      "type":"structure",
+      "members":{
+        "efficiencyMetricsByGroup":{"shape":"EfficiencyMetricsByGroupList"},
+        "nextToken":{"shape":"String"}
       }
     },
     "ListEnrollmentStatusesRequest":{
@@ -556,6 +676,10 @@
         "nextToken":{"shape":"String"}
       }
     },
+    "Long":{
+      "type":"long",
+      "box":true
+    },
     "MaxResults":{
       "type":"integer",
       "box":true,
@@ -569,6 +693,50 @@
         "None"
       ]
     },
+    "MemoryDbCluster":{
+      "type":"structure",
+      "members":{
+        "costCalculation":{"shape":"ResourceCostCalculation"}
+      }
+    },
+    "MemoryDbReservedInstances":{
+      "type":"structure",
+      "members":{
+        "configuration":{"shape":"MemoryDbReservedInstancesConfiguration"},
+        "costCalculation":{"shape":"ReservedInstancesCostCalculation"}
+      }
+    },
+    "MemoryDbReservedInstancesConfiguration":{
+      "type":"structure",
+      "members":{
+        "accountScope":{"shape":"String"},
+        "service":{"shape":"String"},
+        "term":{"shape":"String"},
+        "paymentOption":{"shape":"String"},
+        "reservedInstancesRegion":{"shape":"String"},
+        "upfrontCost":{"shape":"String"},
+        "monthlyRecurringCost":{"shape":"String"},
+        "normalizedUnitsToPurchase":{"shape":"String"},
+        "numberOfInstancesToPurchase":{"shape":"String"},
+        "instanceType":{"shape":"String"},
+        "instanceFamily":{"shape":"String"},
+        "sizeFlexEligible":{"shape":"Boolean"},
+        "currentGeneration":{"shape":"String"}
+      }
+    },
+    "MetricsByTime":{
+      "type":"structure",
+      "members":{
+        "score":{"shape":"Double"},
+        "savings":{"shape":"Double"},
+        "spend":{"shape":"Double"},
+        "timestamp":{"shape":"String"}
+      }
+    },
+    "MetricsByTimeList":{
+      "type":"list",
+      "member":{"shape":"MetricsByTime"}
+    },
     "MixedInstanceConfiguration":{
       "type":"structure",
       "members":{
@@ -578,6 +746,21 @@
     "MixedInstanceConfigurationList":{
       "type":"list",
       "member":{"shape":"MixedInstanceConfiguration"}
+    },
+    "NatGateway":{
+      "type":"structure",
+      "members":{
+        "configuration":{"shape":"NatGatewayConfiguration"},
+        "costCalculation":{"shape":"ResourceCostCalculation"}
+      }
+    },
+    "NatGatewayConfiguration":{
+      "type":"structure",
+      "members":{
+        "activeConnectionCount":{"shape":"Long"},
+        "packetsInFromSource":{"shape":"Long"},
+        "packetsInFromDestination":{"shape":"Long"}
+      }
     },
     "OpenSearchReservedInstances":{
       "type":"structure",
@@ -591,16 +774,16 @@
       "members":{
         "accountScope":{"shape":"String"},
         "service":{"shape":"String"},
-        "normalizedUnitsToPurchase":{"shape":"String"},
         "term":{"shape":"String"},
         "paymentOption":{"shape":"String"},
+        "reservedInstancesRegion":{"shape":"String"},
+        "upfrontCost":{"shape":"String"},
+        "monthlyRecurringCost":{"shape":"String"},
+        "normalizedUnitsToPurchase":{"shape":"String"},
         "numberOfInstancesToPurchase":{"shape":"String"},
         "instanceType":{"shape":"String"},
-        "reservedInstancesRegion":{"shape":"String"},
         "currentGeneration":{"shape":"String"},
-        "sizeFlexEligible":{"shape":"Boolean"},
-        "upfrontCost":{"shape":"String"},
-        "monthlyRecurringCost":{"shape":"String"}
+        "sizeFlexEligible":{"shape":"Boolean"}
       }
     },
     "Order":{
@@ -615,6 +798,21 @@
       "members":{
         "dimension":{"shape":"String"},
         "order":{"shape":"Order"}
+      }
+    },
+    "PaymentOption":{
+      "type":"string",
+      "enum":[
+        "AllUpfront",
+        "PartialUpfront",
+        "NoUpfront"
+      ]
+    },
+    "PreferredCommitment":{
+      "type":"structure",
+      "members":{
+        "term":{"shape":"Term"},
+        "paymentOption":{"shape":"PaymentOption"}
       }
     },
     "PrimitiveBoolean":{"type":"boolean"},
@@ -659,17 +857,17 @@
       "members":{
         "accountScope":{"shape":"String"},
         "service":{"shape":"String"},
-        "normalizedUnitsToPurchase":{"shape":"String"},
         "term":{"shape":"String"},
         "paymentOption":{"shape":"String"},
+        "reservedInstancesRegion":{"shape":"String"},
+        "upfrontCost":{"shape":"String"},
+        "monthlyRecurringCost":{"shape":"String"},
+        "normalizedUnitsToPurchase":{"shape":"String"},
         "numberOfInstancesToPurchase":{"shape":"String"},
         "instanceFamily":{"shape":"String"},
         "instanceType":{"shape":"String"},
-        "reservedInstancesRegion":{"shape":"String"},
         "sizeFlexEligible":{"shape":"Boolean"},
         "currentGeneration":{"shape":"String"},
-        "upfrontCost":{"shape":"String"},
-        "monthlyRecurringCost":{"shape":"String"},
         "licenseModel":{"shape":"String"},
         "databaseEdition":{"shape":"String"},
         "databaseEngine":{"shape":"String"},
@@ -736,17 +934,17 @@
       "members":{
         "accountScope":{"shape":"String"},
         "service":{"shape":"String"},
-        "normalizedUnitsToPurchase":{"shape":"String"},
         "term":{"shape":"String"},
         "paymentOption":{"shape":"String"},
+        "reservedInstancesRegion":{"shape":"String"},
+        "upfrontCost":{"shape":"String"},
+        "monthlyRecurringCost":{"shape":"String"},
+        "normalizedUnitsToPurchase":{"shape":"String"},
         "numberOfInstancesToPurchase":{"shape":"String"},
         "instanceFamily":{"shape":"String"},
         "instanceType":{"shape":"String"},
-        "reservedInstancesRegion":{"shape":"String"},
         "sizeFlexEligible":{"shape":"Boolean"},
-        "currentGeneration":{"shape":"String"},
-        "upfrontCost":{"shape":"String"},
-        "monthlyRecurringCost":{"shape":"String"}
+        "currentGeneration":{"shape":"String"}
       }
     },
     "RegionList":{
@@ -800,7 +998,17 @@
         "computeSavingsPlans":{"shape":"ComputeSavingsPlans"},
         "sageMakerSavingsPlans":{"shape":"SageMakerSavingsPlans"},
         "rdsDbInstance":{"shape":"RdsDbInstance"},
-        "rdsDbInstanceStorage":{"shape":"RdsDbInstanceStorage"}
+        "rdsDbInstanceStorage":{"shape":"RdsDbInstanceStorage"},
+        "auroraDbClusterStorage":{"shape":"AuroraDbClusterStorage"},
+        "dynamoDbReservedCapacity":{"shape":"DynamoDbReservedCapacity"},
+        "memoryDbReservedInstances":{"shape":"MemoryDbReservedInstances"},
+        "natGateway":{"shape":"NatGateway"},
+        "dynamoDbTable":{"shape":"DynamoDbTable"},
+        "elastiCacheCluster":{"shape":"ElastiCacheCluster"},
+        "memoryDbCluster":{"shape":"MemoryDbCluster"},
+        "documentDbCluster":{"shape":"DocumentDbCluster"},
+        "workSpaces":{"shape":"WorkSpaces"},
+        "sageMakerEndpoint":{"shape":"SageMakerEndpoint"}
       },
       "union":true
     },
@@ -848,7 +1056,17 @@
         "RedshiftReservedInstances",
         "ElastiCacheReservedInstances",
         "RdsDbInstanceStorage",
-        "RdsDbInstance"
+        "RdsDbInstance",
+        "AuroraDbClusterStorage",
+        "DynamoDbReservedCapacity",
+        "MemoryDbReservedInstances",
+        "NatGateway",
+        "DynamoDBTable",
+        "ElastiCacheCluster",
+        "MemoryDBCluster",
+        "DocumentDBCluster",
+        "WorkSpaces",
+        "SageMakerEndpoint"
       ]
     },
     "ResourceTypeList":{
@@ -856,6 +1074,12 @@
       "member":{"shape":"ResourceType"},
       "max":100,
       "min":1
+    },
+    "SageMakerEndpoint":{
+      "type":"structure",
+      "members":{
+        "costCalculation":{"shape":"ResourceCostCalculation"}
+      }
     },
     "SageMakerSavingsPlans":{
       "type":"structure",
@@ -939,12 +1163,30 @@
       "max":100,
       "min":1
     },
+    "Term":{
+      "type":"string",
+      "enum":[
+        "OneYear",
+        "ThreeYears"
+      ]
+    },
     "ThrottlingException":{
       "type":"structure",
       "members":{
         "message":{"shape":"String"}
       },
       "exception":true
+    },
+    "TimePeriod":{
+      "type":"structure",
+      "required":[
+        "start",
+        "end"
+      ],
+      "members":{
+        "start":{"shape":"String"},
+        "end":{"shape":"String"}
+      }
     },
     "Timestamp":{"type":"timestamp"},
     "UpdateEnrollmentStatusRequest":{
@@ -965,14 +1207,16 @@
       "type":"structure",
       "members":{
         "savingsEstimationMode":{"shape":"SavingsEstimationMode"},
-        "memberAccountDiscountVisibility":{"shape":"MemberAccountDiscountVisibility"}
+        "memberAccountDiscountVisibility":{"shape":"MemberAccountDiscountVisibility"},
+        "preferredCommitment":{"shape":"PreferredCommitment"}
       }
     },
     "UpdatePreferencesResponse":{
       "type":"structure",
       "members":{
         "savingsEstimationMode":{"shape":"SavingsEstimationMode"},
-        "memberAccountDiscountVisibility":{"shape":"MemberAccountDiscountVisibility"}
+        "memberAccountDiscountVisibility":{"shape":"MemberAccountDiscountVisibility"},
+        "preferredCommitment":{"shape":"PreferredCommitment"}
       }
     },
     "Usage":{
@@ -1020,6 +1264,12 @@
         "FieldValidationFailed",
         "Other"
       ]
+    },
+    "WorkSpaces":{
+      "type":"structure",
+      "members":{
+        "costCalculation":{"shape":"ResourceCostCalculation"}
+      }
     }
   }
 }

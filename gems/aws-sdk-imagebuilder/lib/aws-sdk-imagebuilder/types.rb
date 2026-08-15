@@ -10,6 +10,19 @@
 module Aws::Imagebuilder
   module Types
 
+    # You do not have permissions to perform the requested operation.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/AccessDeniedException AWS API Documentation
+    #
+    class AccessDeniedException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains counts of vulnerability findings from image scans that run
     # when you create new Image Builder images, or build new versions of
     # existing images. The vulnerability counts are grouped by severity
@@ -144,7 +157,14 @@ module Aws::Imagebuilder
     #   @return [Hash<String,String>]
     #
     # @!attribute [rw] kms_key_id
-    #   The KMS key identifier used to encrypt the distributed image.
+    #   The Amazon Resource Name (ARN) that uniquely identifies the KMS key
+    #   used to encrypt the distributed image. This can be either the Key
+    #   ARN or the Alias ARN. For more information, see [Key identifiers
+    #   (KeyId)][1] in the *Key Management Service Developer Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN
     #   @return [String]
     #
     # @!attribute [rw] launch_permission
@@ -161,6 +181,22 @@ module Aws::Imagebuilder
       :ami_tags,
       :kms_key_id,
       :launch_permission)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines the rules by which an image pipeline is automatically disabled
+    # when it fails.
+    #
+    # @!attribute [rw] failure_count
+    #   The number of consecutive scheduled image pipeline executions that
+    #   must fail before Image Builder automatically disables the pipeline.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/AutoDisablePolicy AWS API Documentation
+    #
+    class AutoDisablePolicy < Struct.new(
+      :failure_count)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -215,7 +251,8 @@ module Aws::Imagebuilder
     #   @return [String]
     #
     # @!attribute [rw] image_build_version_arn
-    #   The ARN of the image whose creation this request canceled.
+    #   The Amazon Resource Name (ARN) of the image whose creation this
+    #   request canceled.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/CancelImageCreationResponse AWS API Documentation
@@ -341,7 +378,14 @@ module Aws::Imagebuilder
     #   @return [String]
     #
     # @!attribute [rw] kms_key_id
-    #   The KMS key identifier used to encrypt the component.
+    #   The KMS key identifier used to encrypt the component. This can be
+    #   either the Key ARN or the Alias ARN. For more information, see [Key
+    #   identifiers (KeyId)][1] in the *Key Management Service Developer
+    #   Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN
     #   @return [String]
     #
     # @!attribute [rw] encrypted
@@ -812,8 +856,15 @@ module Aws::Imagebuilder
     #   @return [String]
     #
     # @!attribute [rw] kms_key_id
-    #   Identifies which KMS key is used to encrypt the container image for
-    #   distribution to the target Region.
+    #   The Amazon Resource Name (ARN) that uniquely identifies which KMS
+    #   key is used to encrypt the container image for distribution to the
+    #   target Region. This can be either the Key ARN or the Alias ARN. For
+    #   more information, see [Key identifiers (KeyId)][1] in the *Key
+    #   Management Service Developer Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN
     #   @return [String]
     #
     # @!attribute [rw] encrypted
@@ -821,7 +872,9 @@ module Aws::Imagebuilder
     #   @return [Boolean]
     #
     # @!attribute [rw] parent_image
-    #   The base image for the container recipe.
+    #   The base image for customizations specified in the container recipe.
+    #   This can contain an Image Builder image resource ARN or a container
+    #   image URI, for example `amazonlinux:latest`.
     #   @return [String]
     #
     # @!attribute [rw] date_created
@@ -894,6 +947,16 @@ module Aws::Imagebuilder
     #   The date when this container recipe was created.
     #   @return [String]
     #
+    # @!attribute [rw] instance_image
+    #   The base image for a container build and test instance. This can
+    #   contain an AMI ID or it can specify an Amazon Web Services Systems
+    #   Manager (SSM) Parameter Store Parameter, prefixed by `ssm:`,
+    #   followed by the parameter name or ARN.
+    #
+    #   If not specified, Image Builder uses the appropriate ECS-optimized
+    #   AMI as a base image.
+    #   @return [String]
+    #
     # @!attribute [rw] tags
     #   Tags that are attached to the container recipe.
     #   @return [Hash<String,String>]
@@ -908,6 +971,7 @@ module Aws::Imagebuilder
       :owner,
       :parent_image,
       :date_created,
+      :instance_image,
       :tags)
       SENSITIVE = []
       include Aws::Structure
@@ -976,7 +1040,14 @@ module Aws::Imagebuilder
     #   @return [String]
     #
     # @!attribute [rw] kms_key_id
-    #   The ID of the KMS key that is used to encrypt this component.
+    #   The Amazon Resource Name (ARN) that uniquely identifies the KMS key
+    #   used to encrypt this component. This can be either the Key ARN or
+    #   the Alias ARN. For more information, see [Key identifiers
+    #   (KeyId)][1] in the *Key Management Service Developer Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN
     #   @return [String]
     #
     # @!attribute [rw] tags
@@ -996,6 +1067,13 @@ module Aws::Imagebuilder
     #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/APIReference/Run_Instance_Idempotency.html
     #   @return [String]
     #
+    # @!attribute [rw] dry_run
+    #   Validates the required permissions for the operation and the request
+    #   parameters, without actually making the request, and provides an
+    #   error response. Upon a successful request, the error response is
+    #   `DryRunOperationException`.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/CreateComponentRequest AWS API Documentation
     #
     class CreateComponentRequest < Struct.new(
@@ -1009,7 +1087,8 @@ module Aws::Imagebuilder
       :uri,
       :kms_key_id,
       :tags,
-      :client_token)
+      :client_token,
+      :dry_run)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1027,12 +1106,18 @@ module Aws::Imagebuilder
     #   created.
     #   @return [String]
     #
+    # @!attribute [rw] latest_version_references
+    #   The resource ARNs with different wildcard variations of semantic
+    #   versioning.
+    #   @return [Types::LatestVersionReferences]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/CreateComponentResponse AWS API Documentation
     #
     class CreateComponentResponse < Struct.new(
       :request_id,
       :client_token,
-      :component_build_version_arn)
+      :component_build_version_arn,
+      :latest_version_references)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1071,9 +1156,7 @@ module Aws::Imagebuilder
     #   @return [String]
     #
     # @!attribute [rw] components
-    #   Components for build and test that are included in the container
-    #   recipe. Recipes require a minimum of one build component, and can
-    #   have a maximum of 20 build and test components in any combination.
+    #   The components included in the container recipe.
     #   @return [Array<Types::ComponentConfiguration>]
     #
     # @!attribute [rw] instance_configuration
@@ -1117,7 +1200,15 @@ module Aws::Imagebuilder
     #   @return [Types::TargetContainerRepository]
     #
     # @!attribute [rw] kms_key_id
-    #   Identifies which KMS key is used to encrypt the Dockerfile template.
+    #   The Amazon Resource Name (ARN) that uniquely identifies which KMS
+    #   key is used to encrypt the Dockerfile template. This can be either
+    #   the Key ARN or the Alias ARN. For more information, see [Key
+    #   identifiers (KeyId)][1] in the *Key Management Service Developer
+    #   Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN
     #   @return [String]
     #
     # @!attribute [rw] client_token
@@ -1169,12 +1260,18 @@ module Aws::Imagebuilder
     #   the request created.
     #   @return [String]
     #
+    # @!attribute [rw] latest_version_references
+    #   The resource ARNs with different wildcard variations of semantic
+    #   versioning.
+    #   @return [Types::LatestVersionReferences]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/CreateContainerRecipeResponse AWS API Documentation
     #
     class CreateContainerRecipeResponse < Struct.new(
       :request_id,
       :client_token,
-      :container_recipe_arn)
+      :container_recipe_arn,
+      :latest_version_references)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1295,6 +1392,10 @@ module Aws::Imagebuilder
     #   The tags of the image pipeline.
     #   @return [Hash<String,String>]
     #
+    # @!attribute [rw] image_tags
+    #   The tags to be applied to the images produced by this pipeline.
+    #   @return [Hash<String,String>]
+    #
     # @!attribute [rw] client_token
     #   Unique, case-sensitive identifier you provide to ensure idempotency
     #   of the request. For more information, see [Ensuring idempotency][1]
@@ -1321,6 +1422,15 @@ module Aws::Imagebuilder
     #   that grants Image Builder access to perform workflow actions.
     #   @return [String]
     #
+    # @!attribute [rw] logging_configuration
+    #   Specifies the logging configuration for the image pipeline. Use this
+    #   to define custom CloudWatch Logs log groups for your pipeline
+    #   execution logs and image build logs. The service manages log groups
+    #   with names starting with `/aws/imagebuilder/` using the
+    #   service-linked role. For custom log group names outside of this
+    #   prefix, you must also provide an `executionRole`.
+    #   @return [Types::PipelineLoggingConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/CreateImagePipelineRequest AWS API Documentation
     #
     class CreateImagePipelineRequest < Struct.new(
@@ -1335,10 +1445,12 @@ module Aws::Imagebuilder
       :schedule,
       :status,
       :tags,
+      :image_tags,
       :client_token,
       :image_scanning_configuration,
       :workflows,
-      :execution_role)
+      :execution_role,
+      :logging_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1400,14 +1512,22 @@ module Aws::Imagebuilder
     #   @return [Array<Types::ComponentConfiguration>]
     #
     # @!attribute [rw] parent_image
-    #   The base image of the image recipe. The value of the string can be
-    #   the ARN of the base image or an AMI ID. The format for the ARN
-    #   follows this example:
-    #   `arn:aws:imagebuilder:us-west-2:aws:image/windows-server-2016-english-full-base-x86/x.x.x`.
-    #   You can provide the specific version that you want to use, or you
-    #   can use a wildcard in all of the fields. If you enter an AMI ID for
-    #   the string value, you must have access to the AMI, and the AMI must
-    #   be in the same Region in which you are using Image Builder.
+    #   The base image for customizations specified in the image recipe. You
+    #   can specify the parent image using one of the following options:
+    #
+    #   * AMI ID
+    #
+    #   * Image Builder image Amazon Resource Name (ARN)
+    #
+    #   * Amazon Web Services Systems Manager (SSM) Parameter Store
+    #     Parameter, prefixed by `ssm:`, followed by the parameter name or
+    #     ARN.
+    #
+    #   * Amazon Web Services Marketplace product ID
+    #
+    #   If you enter an AMI ID or an SSM parameter that contains the AMI ID,
+    #   you must have access to the AMI, and the AMI must be in the source
+    #   Region.
     #   @return [String]
     #
     # @!attribute [rw] block_device_mappings
@@ -1426,6 +1546,23 @@ module Aws::Imagebuilder
     #   Specify additional settings and launch scripts for your build
     #   instances.
     #   @return [Types::AdditionalInstanceConfiguration]
+    #
+    # @!attribute [rw] ami_tags
+    #   Tags that are applied to the AMI that Image Builder creates during
+    #   the Build phase prior to image distribution.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] ami_watermarks
+    #   The AMI watermark names to attach to the output AMI from this
+    #   recipe. AMI watermarks are lineage markers. They automatically
+    #   propagate to derivative AMIs when the source AMI is copied or
+    #   distributed across Regions or accounts.
+    #
+    #   <note markdown="1"> AMI watermarks are supported only for image recipes. AMIs with
+    #   watermarks cannot be made public.
+    #
+    #    </note>
+    #   @return [Array<String>]
     #
     # @!attribute [rw] client_token
     #   Unique, case-sensitive identifier you provide to ensure idempotency
@@ -1452,6 +1589,8 @@ module Aws::Imagebuilder
       :tags,
       :working_directory,
       :additional_instance_configuration,
+      :ami_tags,
+      :ami_watermarks,
       :client_token)
       SENSITIVE = []
       include Aws::Structure
@@ -1470,12 +1609,18 @@ module Aws::Imagebuilder
     #   by this request.
     #   @return [String]
     #
+    # @!attribute [rw] latest_version_references
+    #   The resource ARNs with different wildcard variations of semantic
+    #   versioning.
+    #   @return [Types::LatestVersionReferences]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/CreateImageRecipeResponse AWS API Documentation
     #
     class CreateImageRecipeResponse < Struct.new(
       :request_id,
       :client_token,
-      :image_recipe_arn)
+      :image_recipe_arn,
+      :latest_version_references)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1542,6 +1687,10 @@ module Aws::Imagebuilder
     #   that grants Image Builder access to perform workflow actions.
     #   @return [String]
     #
+    # @!attribute [rw] logging_configuration
+    #   Define logging configuration for the image build process.
+    #   @return [Types::ImageLoggingConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/CreateImageRequest AWS API Documentation
     #
     class CreateImageRequest < Struct.new(
@@ -1555,7 +1704,8 @@ module Aws::Imagebuilder
       :client_token,
       :image_scanning_configuration,
       :workflows,
-      :execution_role)
+      :execution_role,
+      :logging_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1573,12 +1723,18 @@ module Aws::Imagebuilder
     #   created.
     #   @return [String]
     #
+    # @!attribute [rw] latest_version_references
+    #   The resource ARNs with different wildcard variations of semantic
+    #   versioning.
+    #   @return [Types::LatestVersionReferences]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/CreateImageResponse AWS API Documentation
     #
     class CreateImageResponse < Struct.new(
       :request_id,
       :client_token,
-      :image_build_version_arn)
+      :image_build_version_arn,
+      :latest_version_references)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1854,8 +2010,14 @@ module Aws::Imagebuilder
     #   @return [String]
     #
     # @!attribute [rw] kms_key_id
-    #   The ID of the KMS key that is used to encrypt this workflow
-    #   resource.
+    #   The Amazon Resource Name (ARN) that uniquely identifies the KMS key
+    #   used to encrypt this workflow resource. This can be either the Key
+    #   ARN or the Alias ARN. For more information, see [Key identifiers
+    #   (KeyId)][1] in the *Key Management Service Developer Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN
     #   @return [String]
     #
     # @!attribute [rw] tags
@@ -1880,6 +2042,13 @@ module Aws::Imagebuilder
     #   is responsible.
     #   @return [String]
     #
+    # @!attribute [rw] dry_run
+    #   Validates the required permissions for the operation and the request
+    #   parameters, without actually making the request, and provides an
+    #   error response. Upon a successful request, the error response is
+    #   `DryRunOperationException`.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/CreateWorkflowRequest AWS API Documentation
     #
     class CreateWorkflowRequest < Struct.new(
@@ -1892,7 +2061,8 @@ module Aws::Imagebuilder
       :kms_key_id,
       :tags,
       :client_token,
-      :type)
+      :type,
+      :dry_run)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1906,11 +2076,17 @@ module Aws::Imagebuilder
     #   request created.
     #   @return [String]
     #
+    # @!attribute [rw] latest_version_references
+    #   The resource ARNs with different wildcard variations of semantic
+    #   versioning.
+    #   @return [Types::LatestVersionReferences]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/CreateWorkflowResponse AWS API Documentation
     #
     class CreateWorkflowResponse < Struct.new(
       :client_token,
-      :workflow_build_version_arn)
+      :workflow_build_version_arn,
+      :latest_version_references)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2034,7 +2210,8 @@ module Aws::Imagebuilder
     #   @return [String]
     #
     # @!attribute [rw] component_build_version_arn
-    #   The ARN of the component build version that this request deleted.
+    #   The Amazon Resource Name (ARN) of the component build version that
+    #   this request deleted.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/DeleteComponentResponse AWS API Documentation
@@ -2184,8 +2361,8 @@ module Aws::Imagebuilder
     #   @return [String]
     #
     # @!attribute [rw] image_build_version_arn
-    #   The ARN of the Image Builder image resource that this request
-    #   deleted.
+    #   The Amazon Resource Name (ARN) of the Image Builder image resource
+    #   that this request deleted.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/DeleteImageResponse AWS API Documentation
@@ -2242,7 +2419,8 @@ module Aws::Imagebuilder
     end
 
     # @!attribute [rw] lifecycle_policy_arn
-    #   The ARN of the lifecycle policy that was deleted.
+    #   The Amazon Resource Name (ARN) of the lifecycle policy that was
+    #   deleted.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/DeleteLifecyclePolicyResponse AWS API Documentation
@@ -2266,13 +2444,84 @@ module Aws::Imagebuilder
     end
 
     # @!attribute [rw] workflow_build_version_arn
-    #   The ARN of the workflow resource that this request deleted.
+    #   The Amazon Resource Name (ARN) of the workflow resource that this
+    #   request deleted.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/DeleteWorkflowResponse AWS API Documentation
     #
     class DeleteWorkflowResponse < Struct.new(
       :workflow_build_version_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] source_image
+    #   The source image to distribute. Specify an AMI identifier, SSM
+    #   parameter path, or Image Builder image Amazon Resource Name (ARN).
+    #   When you specify an Image Builder image Amazon Resource Name (ARN),
+    #   the image must be in the `AVAILABLE` state.
+    #   @return [String]
+    #
+    # @!attribute [rw] distribution_configuration_arn
+    #   The Amazon Resource Name (ARN) of the distribution configuration.
+    #   The configuration defines target Regions, accounts, and AMI
+    #   settings. The distribution configuration must be in the same Region
+    #   as this operation.
+    #   @return [String]
+    #
+    # @!attribute [rw] execution_role
+    #   The name or Amazon Resource Name (ARN) of the IAM role that Image
+    #   Builder assumes to distribute the image.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   The tags to apply to the distributed image.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] client_token
+    #   Unique, case-sensitive identifier you provide to ensure idempotency
+    #   of the request. For more information, see [Ensuring idempotency][1]
+    #   in the *Amazon EC2 API Reference*.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/APIReference/Run_Instance_Idempotency.html
+    #   @return [String]
+    #
+    # @!attribute [rw] logging_configuration
+    #   The logging configuration for the distribution.
+    #   @return [Types::ImageLoggingConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/DistributeImageRequest AWS API Documentation
+    #
+    class DistributeImageRequest < Struct.new(
+      :source_image,
+      :distribution_configuration_arn,
+      :execution_role,
+      :tags,
+      :client_token,
+      :logging_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] client_token
+    #   The client token that uniquely identifies the request.
+    #   @return [String]
+    #
+    # @!attribute [rw] image_build_version_arn
+    #   The Amazon Resource Name (ARN) of the image to be distributed.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/DistributeImageResponse AWS API Documentation
+    #
+    class DistributeImageResponse < Struct.new(
+      :client_token,
+      :image_build_version_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2314,6 +2563,12 @@ module Aws::Imagebuilder
     #   distribution.
     #   @return [Array<Types::FastLaunchConfiguration>]
     #
+    # @!attribute [rw] ssm_parameter_configurations
+    #   Contains settings to update Amazon Web Services Systems Manager
+    #   (SSM) Parameter Store Parameters with output AMI IDs from the build
+    #   by target Region.
+    #   @return [Array<Types::SsmParameterConfiguration>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/Distribution AWS API Documentation
     #
     class Distribution < Struct.new(
@@ -2323,7 +2578,8 @@ module Aws::Imagebuilder
       :license_configuration_arns,
       :launch_template_configurations,
       :s3_export_configuration,
-      :fast_launch_configurations)
+      :fast_launch_configurations,
+      :ssm_parameter_configurations)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2422,6 +2678,21 @@ module Aws::Imagebuilder
       include Aws::Structure
     end
 
+    # The dry run operation of the resource was successful, and no resources
+    # or mutations were actually performed due to the dry run flag in the
+    # request.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/DryRunOperationException AWS API Documentation
+    #
+    class DryRunOperationException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Amazon EBS-specific block device mapping specifications.
     #
     # @!attribute [rw] encrypted
@@ -2437,7 +2708,14 @@ module Aws::Imagebuilder
     #   @return [Integer]
     #
     # @!attribute [rw] kms_key_id
-    #   Use to configure the KMS key to use when encrypting the device.
+    #   The Amazon Resource Name (ARN) that uniquely identifies the KMS key
+    #   to use when encrypting the device. This can be either the Key ARN or
+    #   the Alias ARN. For more information, see [Key identifiers
+    #   (KeyId)][1] in the *Key Management Service Developer Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN
     #   @return [String]
     #
     # @!attribute [rw] snapshot_id
@@ -2675,11 +2953,17 @@ module Aws::Imagebuilder
     #   The component object specified in the request.
     #   @return [Types::Component]
     #
+    # @!attribute [rw] latest_version_references
+    #   The resource ARNs with different wildcard variations of semantic
+    #   versioning.
+    #   @return [Types::LatestVersionReferences]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/GetComponentResponse AWS API Documentation
     #
     class GetComponentResponse < Struct.new(
       :request_id,
-      :component)
+      :component,
+      :latest_version_references)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2734,11 +3018,17 @@ module Aws::Imagebuilder
     #   The container recipe object that is returned.
     #   @return [Types::ContainerRecipe]
     #
+    # @!attribute [rw] latest_version_references
+    #   The resource ARNs with different wildcard variations of semantic
+    #   versioning.
+    #   @return [Types::LatestVersionReferences]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/GetContainerRecipeResponse AWS API Documentation
     #
     class GetContainerRecipeResponse < Struct.new(
       :request_id,
-      :container_recipe)
+      :container_recipe,
+      :latest_version_references)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2884,11 +3174,17 @@ module Aws::Imagebuilder
     #   The image recipe object.
     #   @return [Types::ImageRecipe]
     #
+    # @!attribute [rw] latest_version_references
+    #   The resource ARNs with different wildcard variations of semantic
+    #   versioning.
+    #   @return [Types::LatestVersionReferences]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/GetImageRecipeResponse AWS API Documentation
     #
     class GetImageRecipeResponse < Struct.new(
       :request_id,
-      :image_recipe)
+      :image_recipe,
+      :latest_version_references)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2913,11 +3209,17 @@ module Aws::Imagebuilder
     #   The image object.
     #   @return [Types::Image]
     #
+    # @!attribute [rw] latest_version_references
+    #   The resource ARNs with different wildcard variations of semantic
+    #   versioning.
+    #   @return [Types::LatestVersionReferences]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/GetImageResponse AWS API Documentation
     #
     class GetImageResponse < Struct.new(
       :request_id,
-      :image)
+      :image,
+      :latest_version_references)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2996,7 +3298,8 @@ module Aws::Imagebuilder
     end
 
     # @!attribute [rw] lifecycle_policy
-    #   The ARN of the image lifecycle policy resource that was returned.
+    #   The Amazon Resource Name (ARN) of the image lifecycle policy
+    #   resource that was returned.
     #   @return [Types::LifecyclePolicy]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/GetLifecyclePolicyResponse AWS API Documentation
@@ -3178,10 +3481,16 @@ module Aws::Imagebuilder
     #   The workflow resource specified in the request.
     #   @return [Types::Workflow]
     #
+    # @!attribute [rw] latest_version_references
+    #   The resource ARNs with different wildcard variations of semantic
+    #   versioning.
+    #   @return [Types::LatestVersionReferences]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/GetWorkflowResponse AWS API Documentation
     #
     class GetWorkflowResponse < Struct.new(
-      :workflow)
+      :workflow,
+      :latest_version_references)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3318,10 +3627,11 @@ module Aws::Imagebuilder
       include Aws::Structure
     end
 
-    # An Image Builder image. You must specify exactly one recipe for the
-    # image – either a container recipe (`containerRecipe`), which creates a
-    # container image, or an image recipe (`imageRecipe`), which creates an
-    # AMI.
+    # An Image Builder image resource that keeps track of all of the
+    # settings used to create, configure, and distribute output for that
+    # image. You must specify exactly one recipe for the image – either a
+    # container recipe (`containerRecipe`), which creates a container image,
+    # or an image recipe (`imageRecipe`), which creates an AMI.
     #
     # @!attribute [rw] arn
     #   The Amazon Resource Name (ARN) of the image.
@@ -3491,6 +3801,12 @@ module Aws::Imagebuilder
     #   image.
     #   @return [Array<Types::WorkflowConfiguration>]
     #
+    # @!attribute [rw] logging_configuration
+    #   The logging configuration that's defined for the image. Image
+    #   Builder uses the defined settings to direct execution log output
+    #   during image creation.
+    #   @return [Types::ImageLoggingConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/Image AWS API Documentation
     #
     class Image < Struct.new(
@@ -3519,7 +3835,8 @@ module Aws::Imagebuilder
       :deprecation_time,
       :lifecycle_execution_id,
       :execution_role,
-      :workflows)
+      :workflows,
+      :logging_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3542,6 +3859,24 @@ module Aws::Imagebuilder
     class ImageAggregation < Struct.new(
       :image_build_version_arn,
       :severity_counts)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The logging configuration that's defined for the image. Image Builder
+    # uses the defined settings to direct execution log output during image
+    # creation.
+    #
+    # @!attribute [rw] log_group_name
+    #   The log group name that Image Builder uses for image creation. If
+    #   not specified, the log group name defaults to
+    #   `/aws/imagebuilder/image-name`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/ImageLoggingConfiguration AWS API Documentation
+    #
+    class ImageLoggingConfiguration < Struct.new(
+      :log_group_name)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3637,6 +3972,11 @@ module Aws::Imagebuilder
     #   This is no longer supported, and does not return a value.
     #   @return [String]
     #
+    # @!attribute [rw] last_run_status
+    #   The status of the last image that this pipeline built, such as
+    #   `BUILDING`, `TESTING`, `FAILED`, or `AVAILABLE`.
+    #   @return [String]
+    #
     # @!attribute [rw] date_next_run
     #   The next date when the pipeline is scheduled to run.
     #   @return [String]
@@ -3649,6 +3989,10 @@ module Aws::Imagebuilder
     #   Contains settings for vulnerability scans.
     #   @return [Types::ImageScanningConfiguration]
     #
+    # @!attribute [rw] image_tags
+    #   The tags to be applied to the images produced by this pipeline.
+    #   @return [Hash<String,String>]
+    #
     # @!attribute [rw] execution_role
     #   The name or Amazon Resource Name (ARN) for the IAM role you create
     #   that grants Image Builder access to perform workflow actions.
@@ -3657,6 +4001,35 @@ module Aws::Imagebuilder
     # @!attribute [rw] workflows
     #   Contains the workflows that run for the image pipeline.
     #   @return [Array<Types::WorkflowConfiguration>]
+    #
+    # @!attribute [rw] logging_configuration
+    #   Defines logging configuration for the output image.
+    #   @return [Types::PipelineLoggingConfiguration]
+    #
+    # @!attribute [rw] consecutive_failures
+    #   Image Builder tracks the number of consecutive failures for
+    #   scheduled pipeline executions and takes one of the following actions
+    #   each time it runs on a schedule:
+    #
+    #   * If the pipeline execution is successful, the number of consecutive
+    #     failures resets to zero.
+    #
+    #   * If the pipeline execution fails, Image Builder increments the
+    #     number of consecutive failures. If the failure count exceeds the
+    #     limit defined in the `AutoDisablePolicy`, Image Builder disables
+    #     the pipeline.
+    #
+    #   The consecutive failure count is also reset to zero under the
+    #   following conditions:
+    #
+    #   * The pipeline runs manually and succeeds.
+    #
+    #   * The pipeline configuration is updated.
+    #
+    #   If the pipeline runs manually and fails, the count remains the same.
+    #   The next scheduled run continues to increment where it left off
+    #   before.
+    #   @return [Integer]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/ImagePipeline AWS API Documentation
     #
@@ -3676,11 +4049,15 @@ module Aws::Imagebuilder
       :date_created,
       :date_updated,
       :date_last_run,
+      :last_run_status,
       :date_next_run,
       :tags,
       :image_scanning_configuration,
+      :image_tags,
       :execution_role,
-      :workflows)
+      :workflows,
+      :logging_configuration,
+      :consecutive_failures)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3745,7 +4122,18 @@ module Aws::Imagebuilder
     #   @return [Array<Types::ComponentConfiguration>]
     #
     # @!attribute [rw] parent_image
-    #   The base image of the image recipe.
+    #   The base image for customizations specified in the image recipe. You
+    #   can specify the parent image using one of the following options:
+    #
+    #   * AMI ID
+    #
+    #   * Image Builder image Amazon Resource Name (ARN)
+    #
+    #   * Amazon Web Services Systems Manager (SSM) Parameter Store
+    #     Parameter, prefixed by `ssm:`, followed by the parameter name or
+    #     ARN.
+    #
+    #   * Amazon Web Services Marketplace product ID
     #   @return [String]
     #
     # @!attribute [rw] block_device_mappings
@@ -3773,6 +4161,17 @@ module Aws::Imagebuilder
     #   from your AMI.
     #   @return [Types::AdditionalInstanceConfiguration]
     #
+    # @!attribute [rw] ami_tags
+    #   Tags that are applied to the AMI that Image Builder creates during
+    #   the Build phase prior to image distribution.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] ami_watermarks
+    #   The AMI watermark names attached to the output AMI from this recipe.
+    #   AMI watermarks are lineage markers that automatically propagate to
+    #   derivative AMIs when the source AMI is copied or distributed.
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/ImageRecipe AWS API Documentation
     #
     class ImageRecipe < Struct.new(
@@ -3789,7 +4188,9 @@ module Aws::Imagebuilder
       :date_created,
       :tags,
       :working_directory,
-      :additional_instance_configuration)
+      :additional_instance_configuration,
+      :ami_tags,
+      :ami_watermarks)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4120,6 +4521,10 @@ module Aws::Imagebuilder
     #   action on the image.
     #   @return [String]
     #
+    # @!attribute [rw] logging_configuration
+    #   The logging configuration that's defined for the image.
+    #   @return [Types::ImageLoggingConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/ImageSummary AWS API Documentation
     #
     class ImageSummary < Struct.new(
@@ -4137,7 +4542,8 @@ module Aws::Imagebuilder
       :build_type,
       :image_source,
       :deprecation_time,
-      :lifecycle_execution_id)
+      :lifecycle_execution_id,
+      :logging_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4344,7 +4750,14 @@ module Aws::Imagebuilder
     #   @return [String]
     #
     # @!attribute [rw] kms_key_id
-    #   The ID of the KMS key that should be used to encrypt this component.
+    #   The Amazon Resource Name (ARN) that uniquely identifies the KMS key
+    #   used to encrypt this component. This can be either the Key ARN or
+    #   the Alias ARN. For more information, see [Key identifiers
+    #   (KeyId)][1] in the *Key Management Service Developer Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN
     #   @return [String]
     #
     # @!attribute [rw] tags
@@ -4445,9 +4858,21 @@ module Aws::Imagebuilder
     #   The `uri` of the ISO disk file that's stored in Amazon S3.
     #   @return [String]
     #
+    # @!attribute [rw] logging_configuration
+    #   Define logging configuration for the image build process.
+    #   @return [Types::ImageLoggingConfiguration]
+    #
     # @!attribute [rw] tags
     #   Tags that are attached to image resources created from the import.
     #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] register_image_options
+    #   Configures Secure Boot and UEFI settings for the imported image.
+    #   @return [Types::RegisterImageOptions]
+    #
+    # @!attribute [rw] windows_configuration
+    #   Specifies Windows settings for ISO imports.
+    #   @return [Types::WindowsConfiguration]
     #
     # @!attribute [rw] client_token
     #   Unique, case-sensitive identifier you provide to ensure idempotency
@@ -4473,7 +4898,10 @@ module Aws::Imagebuilder
       :execution_role,
       :infrastructure_configuration_arn,
       :uri,
+      :logging_configuration,
       :tags,
+      :register_image_options,
+      :windows_configuration,
       :client_token)
       SENSITIVE = []
       include Aws::Structure
@@ -4543,6 +4971,10 @@ module Aws::Imagebuilder
     #   as the base image for your recipe.
     #   @return [String]
     #
+    # @!attribute [rw] logging_configuration
+    #   Define logging configuration for the image build process.
+    #   @return [Types::ImageLoggingConfiguration]
+    #
     # @!attribute [rw] tags
     #   Tags that are attached to the import resources.
     #   @return [Hash<String,String>]
@@ -4569,6 +5001,7 @@ module Aws::Imagebuilder
       :platform,
       :os_version,
       :vm_import_task_id,
+      :logging_configuration,
       :tags,
       :client_token)
       SENSITIVE = []
@@ -4814,9 +5247,13 @@ module Aws::Imagebuilder
     # an instance used for building and testing container images.
     #
     # @!attribute [rw] image
-    #   The AMI ID to use as the base image for a container build and test
-    #   instance. If not specified, Image Builder will use the appropriate
-    #   ECS-optimized AMI as a base image.
+    #   The base image for a container build and test instance. This can
+    #   contain an AMI ID or it can specify an Amazon Web Services Systems
+    #   Manager (SSM) Parameter Store Parameter, prefixed by `ssm:`,
+    #   followed by the parameter name or ARN.
+    #
+    #   If not specified, Image Builder uses the appropriate ECS-optimized
+    #   AMI as a base image.
     #   @return [String]
     #
     # @!attribute [rw] block_device_mappings
@@ -4955,6 +5392,40 @@ module Aws::Imagebuilder
     #
     class InvalidVersionNumberException < Struct.new(
       :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The resource ARNs with different wildcard variations of semantic
+    # versioning.
+    #
+    # @!attribute [rw] latest_version_arn
+    #   The latest version Amazon Resource Name (ARN) of the Image Builder
+    #   resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] latest_major_version_arn
+    #   The latest version Amazon Resource Name (ARN) with the same `major`
+    #   version of the Image Builder resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] latest_minor_version_arn
+    #   The latest version Amazon Resource Name (ARN) with the same `minor`
+    #   version of the Image Builder resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] latest_patch_version_arn
+    #   The latest version Amazon Resource Name (ARN) with the same `patch`
+    #   version of the Image Builder resource.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/LatestVersionReferences AWS API Documentation
+    #
+    class LatestVersionReferences < Struct.new(
+      :latest_version_arn,
+      :latest_major_version_arn,
+      :latest_minor_version_arn,
+      :latest_patch_version_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5629,7 +6100,7 @@ module Aws::Imagebuilder
     #   @return [String]
     #
     # @!attribute [rw] max_results
-    #   The maximum items to return in a request.
+    #   Specify the maximum number of items to return in a request.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
@@ -5701,7 +6172,7 @@ module Aws::Imagebuilder
     #   @return [Boolean]
     #
     # @!attribute [rw] max_results
-    #   The maximum items to return in a request.
+    #   Specify the maximum number of items to return in a request.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
@@ -5771,7 +6242,7 @@ module Aws::Imagebuilder
     #   @return [Array<Types::Filter>]
     #
     # @!attribute [rw] max_results
-    #   The maximum items to return in a request.
+    #   Specify the maximum number of items to return in a request.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
@@ -5820,7 +6291,7 @@ module Aws::Imagebuilder
     #   @return [Array<Types::Filter>]
     #
     # @!attribute [rw] max_results
-    #   The maximum items to return in a request.
+    #   Specify the maximum number of items to return in a request.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
@@ -5883,7 +6354,7 @@ module Aws::Imagebuilder
     #   @return [Array<Types::Filter>]
     #
     # @!attribute [rw] max_results
-    #   The maximum items to return in a request.
+    #   Specify the maximum number of items to return in a request.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
@@ -5933,7 +6404,7 @@ module Aws::Imagebuilder
     #   @return [String]
     #
     # @!attribute [rw] max_results
-    #   The maximum items to return in a request.
+    #   Specify the maximum number of items to return in a request.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
@@ -5990,7 +6461,7 @@ module Aws::Imagebuilder
     #   @return [Array<Types::Filter>]
     #
     # @!attribute [rw] max_results
-    #   The maximum items to return in a request.
+    #   Specify the maximum number of items to return in a request.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
@@ -6051,7 +6522,7 @@ module Aws::Imagebuilder
     #   @return [Array<Types::Filter>]
     #
     # @!attribute [rw] max_results
-    #   The maximum items to return in a request.
+    #   Specify the maximum number of items to return in a request.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
@@ -6095,11 +6566,10 @@ module Aws::Imagebuilder
     end
 
     # @!attribute [rw] owner
-    #   The owner defines which image recipes you want to list. By default,
-    #   this request will only show image recipes owned by your account. You
-    #   can use this field to specify if you want to view image recipes
-    #   owned by yourself, by Amazon, or those image recipes that have been
-    #   shared with you by other customers.
+    #   You can specify the recipe owner to filter results by that owner. By
+    #   default, this request will only show image recipes owned by your
+    #   account. To filter by a different owner, specify one of the `Valid
+    #   Values` that are listed for this parameter.
     #   @return [String]
     #
     # @!attribute [rw] filters
@@ -6113,7 +6583,7 @@ module Aws::Imagebuilder
     #   @return [Array<Types::Filter>]
     #
     # @!attribute [rw] max_results
-    #   The maximum items to return in a request.
+    #   Specify the maximum number of items to return in a request.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
@@ -6137,7 +6607,10 @@ module Aws::Imagebuilder
     #   @return [String]
     #
     # @!attribute [rw] image_recipe_summary_list
-    #   The list of image pipelines.
+    #   A list of `ImageRecipeSummary` objects that contain identifying
+    #   characteristics for the image recipe, such as the name, the Amazon
+    #   Resource Name (ARN), and the date created, along with other key
+    #   details.
     #   @return [Array<Types::ImageRecipeSummary>]
     #
     # @!attribute [rw] next_token
@@ -6243,7 +6716,7 @@ module Aws::Imagebuilder
     #   @return [Array<Types::ImageScanFindingsFilter>]
     #
     # @!attribute [rw] max_results
-    #   The maximum items to return in a request.
+    #   Specify the maximum number of items to return in a request.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
@@ -6314,7 +6787,7 @@ module Aws::Imagebuilder
     #   @return [Boolean]
     #
     # @!attribute [rw] max_results
-    #   The maximum items to return in a request.
+    #   Specify the maximum number of items to return in a request.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
@@ -6381,7 +6854,7 @@ module Aws::Imagebuilder
     #   @return [Array<Types::Filter>]
     #
     # @!attribute [rw] max_results
-    #   The maximum items to return in a request.
+    #   Specify the maximum number of items to return in a request.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
@@ -6441,7 +6914,7 @@ module Aws::Imagebuilder
     #   @return [String]
     #
     # @!attribute [rw] max_results
-    #   The maximum items to return in a request.
+    #   Specify the maximum number of items to return in a request.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
@@ -6492,7 +6965,7 @@ module Aws::Imagebuilder
     end
 
     # @!attribute [rw] max_results
-    #   The maximum items to return in a request.
+    #   Specify the maximum number of items to return in a request.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
@@ -6541,7 +7014,7 @@ module Aws::Imagebuilder
     #   @return [Array<Types::Filter>]
     #
     # @!attribute [rw] max_results
-    #   The maximum items to return in a request.
+    #   Specify the maximum number of items to return in a request.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
@@ -6606,7 +7079,7 @@ module Aws::Imagebuilder
     end
 
     # @!attribute [rw] max_results
-    #   The maximum items to return in a request.
+    #   Specify the maximum number of items to return in a request.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
@@ -6650,7 +7123,7 @@ module Aws::Imagebuilder
     #   @return [String]
     #
     # @!attribute [rw] max_results
-    #   The maximum items to return in a request.
+    #   Specify the maximum number of items to return in a request.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
@@ -6690,7 +7163,7 @@ module Aws::Imagebuilder
     end
 
     # @!attribute [rw] max_results
-    #   The maximum items to return in a request.
+    #   Specify the maximum number of items to return in a request.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
@@ -6723,8 +7196,8 @@ module Aws::Imagebuilder
     #   @return [Array<Types::WorkflowExecutionMetadata>]
     #
     # @!attribute [rw] image_build_version_arn
-    #   The resource ARN of the image build version for which you requested
-    #   a list of workflow runtime details.
+    #   The resource Amazon Resource Name (ARN) of the image build version
+    #   for which you requested a list of workflow runtime details.
     #   @return [String]
     #
     # @!attribute [rw] message
@@ -6751,7 +7224,7 @@ module Aws::Imagebuilder
     end
 
     # @!attribute [rw] max_results
-    #   The maximum items to return in a request.
+    #   Specify the maximum number of items to return in a request.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
@@ -6784,8 +7257,9 @@ module Aws::Imagebuilder
     #   @return [Array<Types::WorkflowStepMetadata>]
     #
     # @!attribute [rw] workflow_build_version_arn
-    #   The build version ARN for the Image Builder workflow resource that
-    #   defines the steps for this runtime instance of the workflow.
+    #   The build version Amazon Resource Name (ARN) for the Image Builder
+    #   workflow resource that defines the steps for this runtime instance
+    #   of the workflow.
     #   @return [String]
     #
     # @!attribute [rw] workflow_execution_id
@@ -6794,8 +7268,8 @@ module Aws::Imagebuilder
     #   @return [String]
     #
     # @!attribute [rw] image_build_version_arn
-    #   The image build version resource ARN that's associated with the
-    #   specified runtime instance of the workflow.
+    #   The image build version resource Amazon Resource Name (ARN) that's
+    #   associated with the specified runtime instance of the workflow.
     #   @return [String]
     #
     # @!attribute [rw] message
@@ -6837,7 +7311,7 @@ module Aws::Imagebuilder
     #   @return [Boolean]
     #
     # @!attribute [rw] max_results
-    #   The maximum items to return in a request.
+    #   Specify the maximum number of items to return in a request.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
@@ -6971,6 +7445,36 @@ module Aws::Imagebuilder
       :vendor_created_at,
       :vendor_updated_at,
       :reference_urls)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The logging configuration that's defined for pipeline execution.
+    #
+    # @!attribute [rw] image_log_group_name
+    #   Specifies the CloudWatch Logs log group name for image build logs.
+    #   The log group name can contain alphanumeric characters, hyphens,
+    #   underscores, forward slashes, and periods, up to 512 characters. Log
+    #   group names not starting with `/aws/imagebuilder/` require an
+    #   `executionRole` with CloudWatch Logs write permissions. If not
+    #   specified, defaults to `/aws/imagebuilder/image-name`.
+    #   @return [String]
+    #
+    # @!attribute [rw] pipeline_log_group_name
+    #   Specifies the CloudWatch Logs log group name for pipeline execution
+    #   logs. The log group name can contain alphanumeric characters,
+    #   hyphens, underscores, forward slashes, and periods, up to 512
+    #   characters. Log group names not starting with `/aws/imagebuilder/`
+    #   require an `executionRole` with CloudWatch Logs write permissions.
+    #   If not specified, defaults to
+    #   `/aws/imagebuilder/pipeline/pipeline-name`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/PipelineLoggingConfiguration AWS API Documentation
+    #
+    class PipelineLoggingConfiguration < Struct.new(
+      :image_log_group_name,
+      :pipeline_log_group_name)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7193,6 +7697,44 @@ module Aws::Imagebuilder
       include Aws::Structure
     end
 
+    # Controls Secure Boot and UEFI data settings for the resulting image
+    # during ISO imports. For more information, see [UEFI Secure Boot for
+    # Amazon EC2 instances][1] in the <i> <i>Amazon EC2 User Guide</i> </i>.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/uefi-secure-boot.html
+    #
+    # @!attribute [rw] secure_boot_enabled
+    #   Specifies whether Secure Boot is enabled for the output AMI. The
+    #   default value is `true`. To disable Secure Boot for custom unsigned
+    #   drivers, set this value to `false`.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] uefi_data
+    #   A Base64-encoded representation of the non-volatile UEFI variable
+    #   store. You can specify this parameter only when `secureBootEnabled`
+    #   is `true` or unspecified. You can inspect and modify the UEFI data
+    #   by using the [python-uefivars tool on GitHub][1].
+    #
+    #   For more information, see [UEFI variables for Amazon EC2
+    #   instances][2].
+    #
+    #
+    #
+    #   [1]: https://github.com/awslabs/python-uefivars
+    #   [2]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/uefi-variables.html
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/RegisterImageOptions AWS API Documentation
+    #
+    class RegisterImageOptions < Struct.new(
+      :secure_boot_enabled,
+      :uefi_data)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Information about how to remediate a finding.
     #
     # @!attribute [rw] recommendation
@@ -7342,6 +7884,49 @@ module Aws::Imagebuilder
       include Aws::Structure
     end
 
+    # @!attribute [rw] image_build_version_arn
+    #   The source image Amazon Resource Name (ARN) to retry.
+    #   @return [String]
+    #
+    # @!attribute [rw] client_token
+    #   Unique, case-sensitive identifier you provide to ensure idempotency
+    #   of the request. For more information, see [Ensuring idempotency][1]
+    #   in the *Amazon EC2 API Reference*.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/APIReference/Run_Instance_Idempotency.html
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/RetryImageRequest AWS API Documentation
+    #
+    class RetryImageRequest < Struct.new(
+      :image_build_version_arn,
+      :client_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] client_token
+    #   The client token that uniquely identifies the request.
+    #   @return [String]
+    #
+    # @!attribute [rw] image_build_version_arn
+    #   The ARN of the image to be retried.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/RetryImageResponse AWS API Documentation
+    #
+    class RetryImageResponse < Struct.new(
+      :client_token,
+      :image_build_version_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Properties that configure export from your build instance to a
     # compatible file format for your VM.
     #
@@ -7450,12 +8035,18 @@ module Aws::Imagebuilder
     #   [1]: https://docs.aws.amazon.com/imagebuilder/latest/APIReference/API_CreateComponent.html
     #   @return [String]
     #
+    # @!attribute [rw] auto_disable_policy
+    #   The policy that configures when Image Builder should automatically
+    #   disable a pipeline that is failing.
+    #   @return [Types::AutoDisablePolicy]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/Schedule AWS API Documentation
     #
     class Schedule < Struct.new(
       :schedule_expression,
       :timezone,
-      :pipeline_execution_start_condition)
+      :pipeline_execution_start_condition,
+      :auto_disable_policy)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7465,17 +8056,23 @@ module Aws::Imagebuilder
     #   @return [String]
     #
     # @!attribute [rw] image_build_version_arn
-    #   The Amazon Resource Name (ARN) of the image build version to send
-    #   action for.
+    #   The Amazon Resource Name (ARN) of the image build version associated
+    #   with the workflow step execution. This value must match the image
+    #   that owns the waiting step. If the ARN does not correspond to the
+    #   image running the workflow, then the request fails with a validation
+    #   error.
     #   @return [String]
     #
     # @!attribute [rw] action
-    #   The action for the image creation process to take while a workflow
-    #   `WaitForAction` step waits for an asynchronous action to complete.
+    #   The action to perform on the paused workflow step. The workflow step
+    #   must be in a waiting state to accept an action. The request fails if
+    #   the step has already timed out or been actioned.
     #   @return [String]
     #
     # @!attribute [rw] reason
-    #   The reason why this action is sent.
+    #   The reason for the action. This value is stored with the step
+    #   execution record and is accessible in subsequent workflow steps via
+    #   step output references.
     #   @return [String]
     #
     # @!attribute [rw] client_token
@@ -7604,6 +8201,36 @@ module Aws::Imagebuilder
       include Aws::Structure
     end
 
+    # Configuration for a single Parameter in the Amazon Web Services
+    # Systems Manager (SSM) Parameter Store in a given Region.
+    #
+    # @!attribute [rw] ami_account_id
+    #   Specify the account that will own the Parameter in a given Region.
+    #   During distribution, this account must be specified in distribution
+    #   settings as a target account for the Region.
+    #   @return [String]
+    #
+    # @!attribute [rw] parameter_name
+    #   This is the name of the Parameter in the target Region or account.
+    #   The image distribution creates the Parameter if it doesn't already
+    #   exist. Otherwise, it updates the parameter.
+    #   @return [String]
+    #
+    # @!attribute [rw] data_type
+    #   The data type specifies what type of value the Parameter contains.
+    #   We recommend that you use data type `aws:ec2:image`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/SsmParameterConfiguration AWS API Documentation
+    #
+    class SsmParameterConfiguration < Struct.new(
+      :ami_account_id,
+      :parameter_name,
+      :data_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] image_pipeline_arn
     #   The Amazon Resource Name (ARN) of the image pipeline that you want
     #   to manually invoke.
@@ -7622,11 +8249,17 @@ module Aws::Imagebuilder
     #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/APIReference/Run_Instance_Idempotency.html
     #   @return [String]
     #
+    # @!attribute [rw] tags
+    #   Specify tags for Image Builder to apply to the image resource
+    #   that's created When it starts pipeline execution.
+    #   @return [Hash<String,String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/StartImagePipelineExecutionRequest AWS API Documentation
     #
     class StartImagePipelineExecutionRequest < Struct.new(
       :image_pipeline_arn,
-      :client_token)
+      :client_token,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7655,12 +8288,17 @@ module Aws::Imagebuilder
     end
 
     # @!attribute [rw] resource_arn
-    #   The ARN of the Image Builder resource that is updated. The state
-    #   update might also impact associated resources.
+    #   The Amazon Resource Name (ARN) of the image build version to update.
+    #   The image must be in one of these terminal states: `AVAILABLE`,
+    #   `DEPRECATED`, `DISABLED`, `FAILED`, or `CANCELLED`. Images with
+    #   `FAILED` or `CANCELLED` status can transition only to `DELETED`.
     #   @return [String]
     #
     # @!attribute [rw] state
-    #   Indicates the lifecycle action to take for this request.
+    #   Specifies the lifecycle action to take for this request. For
+    #   AMI-based images, valid values are `AVAILABLE`, `DEPRECATED`,
+    #   `DISABLED`, and `DELETED`. For container-based images, only
+    #   `DELETED` is supported.
     #   @return [Types::ResourceState]
     #
     # @!attribute [rw] execution_role
@@ -7669,7 +8307,14 @@ module Aws::Imagebuilder
     #   @return [String]
     #
     # @!attribute [rw] include_resources
-    #   A list of image resources to update state for.
+    #   Specifies which image resources to include in the state update. When
+    #   specified, the lifecycle action applies to underlying resources.
+    #   These resources include AMIs, snapshots, and containers in addition
+    #   to the Image Builder image resource. Requires `executionRole` to
+    #   also be specified. To delete an image and its underlying resources,
+    #   you must specify `includeResources`. To delete only the Image
+    #   Builder image record without affecting underlying resources, use the
+    #   `DeleteImage` API instead.
     #   @return [Types::ResourceStateUpdateIncludeResources]
     #
     # @!attribute [rw] exclusion_rules
@@ -7678,8 +8323,9 @@ module Aws::Imagebuilder
     #   @return [Types::ResourceStateUpdateExclusionRules]
     #
     # @!attribute [rw] update_at
-    #   The timestamp that indicates when resources are updated by a
-    #   lifecycle action.
+    #   Specifies the timestamp when the state transition takes effect. Use
+    #   this parameter only when the target status is `DEPRECATED`. The
+    #   value must be a future time.
     #   @return [Time]
     #
     # @!attribute [rw] client_token
@@ -7715,8 +8361,8 @@ module Aws::Imagebuilder
     #   @return [String]
     #
     # @!attribute [rw] resource_arn
-    #   The requested ARN of the Image Builder resource for the asynchronous
-    #   update.
+    #   The requested Amazon Resource Name (ARN) of the Image Builder
+    #   resource for the asynchronous update.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/StartResourceStateUpdateResponse AWS API Documentation
@@ -7736,7 +8382,10 @@ module Aws::Imagebuilder
     #   final build image, prior to creating the new AMI. If this is set to
     #   true, then the agent is removed from the final image. If it's set
     #   to false, then the agent is left in, so that it is included in the
-    #   new AMI. The default value is false.
+    #   new AMI. default value is false.
+    #
+    #   The default behavior of uninstallAfterBuild is to remove the SSM
+    #   Agent if it was installed by EC2 Image Builder
     #   @return [Boolean]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/SystemsManagerAgent AWS API Documentation
@@ -7785,6 +8434,19 @@ module Aws::Imagebuilder
     class TargetContainerRepository < Struct.new(
       :service,
       :repository_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # You have attempted too many requests for the specific operation.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/TooManyRequestsException AWS API Documentation
+    #
+    class TooManyRequestsException < Struct.new(
+      :message)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7941,10 +8603,19 @@ module Aws::Imagebuilder
     #   Contains the workflows to run for the pipeline.
     #   @return [Array<Types::WorkflowConfiguration>]
     #
+    # @!attribute [rw] logging_configuration
+    #   Update logging configuration for the output image that's created
+    #   when the pipeline runs.
+    #   @return [Types::PipelineLoggingConfiguration]
+    #
     # @!attribute [rw] execution_role
     #   The name or Amazon Resource Name (ARN) for the IAM role you create
     #   that grants Image Builder access to perform workflow actions.
     #   @return [String]
+    #
+    # @!attribute [rw] image_tags
+    #   The tags to be applied to the images produced by this pipeline.
+    #   @return [Hash<String,String>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/UpdateImagePipelineRequest AWS API Documentation
     #
@@ -7962,7 +8633,9 @@ module Aws::Imagebuilder
       :client_token,
       :image_scanning_configuration,
       :workflows,
-      :execution_role)
+      :logging_configuration,
+      :execution_role,
+      :image_tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -8191,7 +8864,8 @@ module Aws::Imagebuilder
     end
 
     # @!attribute [rw] lifecycle_policy_arn
-    #   The ARN of the image lifecycle policy resource that was updated.
+    #   The Amazon Resource Name (ARN) of the image lifecycle policy
+    #   resource that was updated.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/UpdateLifecyclePolicyResponse AWS API Documentation
@@ -8285,6 +8959,24 @@ module Aws::Imagebuilder
       include Aws::Structure
     end
 
+    # Windows-specific configuration settings for an ISO import, including
+    # the edition to install from a multi-edition Windows ISO file.
+    #
+    # @!attribute [rw] image_index
+    #   The 1-based index that specifies which Windows edition to install
+    #   from a multi-edition Windows ISO file. A Windows ISO can contain a
+    #   `.wim` file with multiple image indexes, each representing a
+    #   different edition.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/WindowsConfiguration AWS API Documentation
+    #
+    class WindowsConfiguration < Struct.new(
+      :image_index)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Defines a process that Image Builder uses to build and test images
     # during the image creation process.
     #
@@ -8330,7 +9022,14 @@ module Aws::Imagebuilder
     #   @return [String]
     #
     # @!attribute [rw] kms_key_id
-    #   The KMS key identifier used to encrypt the workflow resource.
+    #   The KMS key identifier used to encrypt the workflow resource. This
+    #   can be either the Key ARN or the Alias ARN. For more information,
+    #   see [Key identifiers (KeyId)][1] in the *Key Management Service
+    #   Developer Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN
     #   @return [String]
     #
     # @!attribute [rw] date_created
@@ -8462,6 +9161,10 @@ module Aws::Imagebuilder
     #   at runtime.
     #   @return [String]
     #
+    # @!attribute [rw] retried
+    #   Indicates retry status for this runtime instance of the workflow.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/WorkflowExecutionMetadata AWS API Documentation
     #
     class WorkflowExecutionMetadata < Struct.new(
@@ -8476,7 +9179,8 @@ module Aws::Imagebuilder
       :total_steps_skipped,
       :start_time,
       :end_time,
-      :parallel_group)
+      :parallel_group,
+      :retried)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -8570,7 +9274,7 @@ module Aws::Imagebuilder
     #   @return [String]
     #
     # @!attribute [rw] workflow_build_version_arn
-    #   The ARN of the workflow resource that ran.
+    #   The Amazon Resource Name (ARN) of the workflow resource that ran.
     #   @return [String]
     #
     # @!attribute [rw] name

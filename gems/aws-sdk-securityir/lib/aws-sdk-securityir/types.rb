@@ -11,6 +11,7 @@ module Aws::SecurityIR
   module Types
 
     # @!attribute [rw] message
+    #   The ID of the resource which lead to the access denial.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/security-ir-2018-05-10/AccessDeniedException AWS API Documentation
@@ -29,6 +30,13 @@ module Aws::SecurityIR
     # @!attribute [rw] account_ids
     #   Optional element to query the membership relationship status to a
     #   provided list of account IDs.
+    #
+    #   <note markdown="1"> AWS account ID's may appear less than 12 characters and need to be
+    #   zero-prepended. An example would be `123123123` which is nine
+    #   digits, and with zero-prepend would be `000123123123`. Not
+    #   zero-prepending to 12 digits could result in errors.
+    #
+    #    </note>
     #   @return [Array<String>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/security-ir-2018-05-10/BatchGetMemberAccountDetailsRequest AWS API Documentation
@@ -46,7 +54,7 @@ module Aws::SecurityIR
     #   @return [Array<Types::GetMembershipAccountDetailItem>]
     #
     # @!attribute [rw] errors
-    #   The response element providing errors messages for requests to
+    #   The response element providing error messages for requests to
     #   GetMembershipAccountDetails.
     #   @return [Array<Types::GetMembershipAccountDetailError>]
     #
@@ -135,6 +143,31 @@ module Aws::SecurityIR
       include Aws::Structure
     end
 
+    # Represents a single metadata entry associated with a case. Each entry
+    # consists of a key-value pair that provides additional contextual
+    # information about the case, such as classification tags, custom
+    # attributes, or system-generated properties.
+    #
+    # @!attribute [rw] key
+    #   The identifier for the metadata field. This key uniquely identifies
+    #   the type of metadata being stored, such as "severity",
+    #   "category", or "assignee".
+    #   @return [String]
+    #
+    # @!attribute [rw] value
+    #   The value associated with the metadata key. This contains the actual
+    #   data for the metadata field identified by the key.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/security-ir-2018-05-10/CaseMetadataEntry AWS API Documentation
+    #
+    class CaseMetadataEntry < Struct.new(
+      :key,
+      :value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] case_id
     #   Required element used in combination with CloseCase to identify the
     #   case ID to close.
@@ -150,13 +183,13 @@ module Aws::SecurityIR
 
     # @!attribute [rw] case_status
     #   A response element providing responses for requests to CloseCase.
-    #   This element responds with the case status following the action.
+    #   This element responds `Closed ` if successful.
     #   @return [String]
     #
     # @!attribute [rw] closed_date
     #   A response element providing responses for requests to CloseCase.
-    #   This element responds with the case closure date following the
-    #   action.
+    #   This element responds with the ISO-8601 formatted timestamp of the
+    #   moment when the case was closed.
     #   @return [Time]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/security-ir-2018-05-10/CloseCaseResponse AWS API Documentation
@@ -169,14 +202,15 @@ module Aws::SecurityIR
     end
 
     # @!attribute [rw] message
+    #   The exception message.
     #   @return [String]
     #
     # @!attribute [rw] resource_id
-    #   Element providing the ID of the resource affected.
+    #   The ID of the conflicting resource.
     #   @return [String]
     #
     # @!attribute [rw] resource_type
-    #   Element providing the type of the resource affected.
+    #   The type of the conflicting resource.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/security-ir-2018-05-10/ConflictException AWS API Documentation
@@ -195,7 +229,13 @@ module Aws::SecurityIR
     #   @return [String]
     #
     # @!attribute [rw] client_token
-    #   An optional element used in combination with CreateCaseComment.
+    #   <note markdown="1"> The `clientToken` field is an idempotency key
+    #   used to ensure that
+    #   repeated attempts for a single action will be ignored by the server
+    #   during retries. A caller supplied unique ID (typically a UUID)
+    #   should be provided.
+    #
+    #    </note>
     #
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.
@@ -229,7 +269,13 @@ module Aws::SecurityIR
     end
 
     # @!attribute [rw] client_token
-    #   Required element used in combination with CreateCase.
+    #   <note markdown="1"> The `clientToken` field is an idempotency key
+    #   used to ensure that
+    #   repeated attempts for a single action will be ignored by the server
+    #   during retries. A caller supplied unique ID (typically a UUID)
+    #   should be provided.
+    #
+    #    </note>
     #
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.
@@ -237,8 +283,7 @@ module Aws::SecurityIR
     #
     # @!attribute [rw] resolver_type
     #   Required element used in combination with CreateCase to identify the
-    #   resolver type. Available resolvers include self-supported \|
-    #   aws-supported.
+    #   resolver type.
     #   @return [String]
     #
     # @!attribute [rw] title
@@ -247,8 +292,9 @@ module Aws::SecurityIR
     #   @return [String]
     #
     # @!attribute [rw] description
-    #   Required element used in combination with CreateCase to provide a
-    #   description for the new case.
+    #   Required element used in combination with CreateCase
+    #
+    #   to provide a description for the new case.
     #   @return [String]
     #
     # @!attribute [rw] engagement_type
@@ -265,6 +311,13 @@ module Aws::SecurityIR
     # @!attribute [rw] impacted_accounts
     #   Required element used in combination with CreateCase to provide a
     #   list of impacted accounts.
+    #
+    #   <note markdown="1"> AWS account ID's may appear less than 12 characters and need to be
+    #   zero-prepended. An example would be `123123123` which is nine
+    #   digits, and with zero-prepend would be `000123123123`. Not
+    #   zero-prepending to 12 digits could result in errors.
+    #
+    #    </note>
     #   @return [Array<String>]
     #
     # @!attribute [rw] watchers
@@ -326,19 +379,25 @@ module Aws::SecurityIR
     end
 
     # @!attribute [rw] client_token
-    #   An optional element used in combination with CreateMembership.
+    #   <note markdown="1"> The `clientToken` field is an idempotency key
+    #   used to ensure that
+    #   repeated attempts for a single action will be ignored by the server
+    #   during retries. A caller supplied unique ID (typically a UUID)
+    #   should be provided.
+    #
+    #    </note>
     #
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.
     #   @return [String]
     #
     # @!attribute [rw] membership_name
-    #   Required element use in combination with CreateMembership to create
+    #   Required element used in combination with CreateMembership to create
     #   a name for the membership.
     #   @return [String]
     #
     # @!attribute [rw] incident_response_team
-    #   Required element use in combination with CreateMembership to add
+    #   Required element used in combination with CreateMembership to add
     #   customer incident response team members and trusted partners to the
     #   membership.
     #   @return [Array<Types::IncidentResponder>]
@@ -352,6 +411,25 @@ module Aws::SecurityIR
     #   Optional element for customer configured tags.
     #   @return [Hash<String,String>]
     #
+    # @!attribute [rw] cover_entire_organization
+    #   The `coverEntireOrganization` parameter is a boolean flag that
+    #   determines whether the membership should be applied to the entire
+    #   Amazon Web Services Organization. When set to true, the membership
+    #   will be created for all accounts within the organization. When set
+    #   to false, the membership will only be created for specified
+    #   accounts.
+    #
+    #   This parameter is optional. If not specified, the default value is
+    #   false.
+    #
+    #   * If set to *true*: The membership will automatically include all
+    #     existing and future accounts in the Amazon Web Services
+    #     Organization.
+    #
+    #   * If set to *false*: The membership will only apply to explicitly
+    #     specified accounts.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/security-ir-2018-05-10/CreateMembershipRequest AWS API Documentation
     #
     class CreateMembershipRequest < Struct.new(
@@ -359,7 +437,8 @@ module Aws::SecurityIR
       :membership_name,
       :incident_response_team,
       :opt_in_features,
-      :tags)
+      :tags,
+      :cover_entire_organization)
       SENSITIVE = [:membership_name]
       include Aws::Structure
     end
@@ -411,7 +490,7 @@ module Aws::SecurityIR
 
     # @!attribute [rw] case_id
     #   Required element for GetCaseAttachmentUploadUrl to identify the case
-    #   ID for uploading an attachment to.
+    #   ID for uploading an attachment.
     #   @return [String]
     #
     # @!attribute [rw] file_name
@@ -421,11 +500,17 @@ module Aws::SecurityIR
     #
     # @!attribute [rw] content_length
     #   Required element for GetCaseAttachmentUploadUrl to identify the size
-    #   od the file attachment.
+    #   of the file attachment.
     #   @return [Integer]
     #
     # @!attribute [rw] client_token
-    #   Optional element for customer provided token.
+    #   <note markdown="1"> The `clientToken` field is an idempotency key
+    #   used to ensure that
+    #   repeated attempts for a single action will be ignored by the server
+    #   during retries. A caller supplied unique ID (typically a UUID)
+    #   should be provided.
+    #
+    #    </note>
     #
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.
@@ -443,7 +528,7 @@ module Aws::SecurityIR
     end
 
     # @!attribute [rw] attachment_presigned_url
-    #   Response element providing the Amazon S3 presigned UTL to upload the
+    #   Response element providing the Amazon S3 presigned URL to upload the
     #   attachment.
     #   @return [String]
     #
@@ -513,8 +598,8 @@ module Aws::SecurityIR
     #   @return [Array<Types::ThreatActorIp>]
     #
     # @!attribute [rw] pending_action
-    #   Response element for GetCase that provides identifies the case is
-    #   waiting on customer input.
+    #   Response element for GetCase that identifies the case is waiting on
+    #   customer input.
     #   @return [String]
     #
     # @!attribute [rw] impacted_accounts
@@ -544,7 +629,7 @@ module Aws::SecurityIR
     #
     # @!attribute [rw] resolver_type
     #   Response element for GetCase that provides the current resolver
-    #   types. Options include ` self-supported | AWS-supported`.
+    #   types.
     #   @return [String]
     #
     # @!attribute [rw] impacted_services
@@ -561,6 +646,10 @@ module Aws::SecurityIR
     #   Response element for GetCase that provides the date a specified case
     #   was closed.
     #   @return [Time]
+    #
+    # @!attribute [rw] case_metadata
+    #   Case response metadata
+    #   @return [Array<Types::CaseMetadataEntry>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/security-ir-2018-05-10/GetCaseResponse AWS API Documentation
     #
@@ -583,7 +672,8 @@ module Aws::SecurityIR
       :resolver_type,
       :impacted_services,
       :case_attachments,
-      :closed_date)
+      :closed_date,
+      :case_metadata)
       SENSITIVE = [:title, :description]
       include Aws::Structure
     end
@@ -645,13 +735,13 @@ module Aws::SecurityIR
     #   @return [String]
     #
     # @!attribute [rw] account_id
-    #   Response element for GetMembership that provides the configured
-    #   account for managing the membership.
+    #   Response element for GetMembership that provides the account
+    #   configured to manage the membership.
     #   @return [String]
     #
     # @!attribute [rw] region
-    #   Response element for GetMembership that provides the configured
-    #   region for managing the membership.
+    #   Response element for GetMembership that provides the region
+    #   configured to manage the membership.
     #   @return [String]
     #
     # @!attribute [rw] membership_name
@@ -698,6 +788,20 @@ module Aws::SecurityIR
     #   features have been enabled.
     #   @return [Array<Types::OptInFeature>]
     #
+    # @!attribute [rw] membership_accounts_configurations
+    #   The `membershipAccountsConfigurations` field contains the
+    #   configuration details for member accounts within the Amazon Web
+    #   Services Organizations membership structure.
+    #
+    #   This field returns a structure containing information about:
+    #
+    #   * Account configurations for member accounts
+    #
+    #   * Membership settings and preferences
+    #
+    #   * Account-level permissions and roles
+    #   @return [Types::MembershipAccountsConfigurations]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/security-ir-2018-05-10/GetMembershipResponse AWS API Documentation
     #
     class GetMembershipResponse < Struct.new(
@@ -712,7 +816,8 @@ module Aws::SecurityIR
       :customer_type,
       :number_of_accounts_covered,
       :incident_response_team,
-      :opt_in_features)
+      :opt_in_features,
+      :membership_accounts_configurations)
       SENSITIVE = [:membership_name]
       include Aws::Structure
     end
@@ -737,22 +842,26 @@ module Aws::SecurityIR
     # @!attribute [rw] email
     #   @return [String]
     #
+    # @!attribute [rw] communication_preferences
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/security-ir-2018-05-10/IncidentResponder AWS API Documentation
     #
     class IncidentResponder < Struct.new(
       :name,
       :job_title,
-      :email)
+      :email,
+      :communication_preferences)
       SENSITIVE = [:name, :job_title, :email]
       include Aws::Structure
     end
 
     # @!attribute [rw] message
+    #   The exception message.
     #   @return [String]
     #
     # @!attribute [rw] retry_after_seconds
-    #   Element providing advice to clients on when the call can be safely
-    #   retried.
+    #   The number of seconds after which to retry the request.
     #   @return [Integer]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/security-ir-2018-05-10/InternalServerException AWS API Documentation
@@ -765,6 +874,7 @@ module Aws::SecurityIR
     end
 
     # @!attribute [rw] message
+    #   The exception message.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/security-ir-2018-05-10/InvalidTokenException AWS API Documentation
@@ -775,8 +885,101 @@ module Aws::SecurityIR
       include Aws::Structure
     end
 
+    # Represents an investigation action performed within a case. This
+    # structure captures the details of an automated or manual
+    # investigation, including its status, results, and user feedback.
+    #
+    # @!attribute [rw] investigation_id
+    #   The unique identifier for this investigation action. This ID is used
+    #   to track and reference the specific investigation throughout its
+    #   lifecycle.
+    #   @return [String]
+    #
+    # @!attribute [rw] action_type
+    #   The type of investigation action being performed. This categorizes
+    #   the investigation method or approach used in the case.
+    #   @return [String]
+    #
+    # @!attribute [rw] title
+    #   Human-readable summary of the investigation focus. This provides a
+    #   brief description of what the investigation is examining or
+    #   analyzing.
+    #   @return [String]
+    #
+    # @!attribute [rw] content
+    #   Detailed investigation results in rich markdown format. This field
+    #   contains the comprehensive findings, analysis, and conclusions from
+    #   the investigation.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current execution status of the investigation. This indicates
+    #   whether the investigation is pending, in progress, completed, or
+    #   failed.
+    #   @return [String]
+    #
+    # @!attribute [rw] last_updated
+    #   ISO 8601 timestamp of the most recent status update. This indicates
+    #   when the investigation was last modified or when its status last
+    #   changed.
+    #   @return [Time]
+    #
+    # @!attribute [rw] feedback
+    #   User feedback for this investigation result. This contains the
+    #   user's assessment and comments about the quality and usefulness of
+    #   the investigation findings.
+    #   @return [Types::InvestigationFeedback]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/security-ir-2018-05-10/InvestigationAction AWS API Documentation
+    #
+    class InvestigationAction < Struct.new(
+      :investigation_id,
+      :action_type,
+      :title,
+      :content,
+      :status,
+      :last_updated,
+      :feedback)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents user feedback for an investigation result. This structure
+    # captures the user's evaluation of the investigation's quality,
+    # usefulness, and any additional comments.
+    #
+    # @!attribute [rw] usefulness
+    #   User assessment of the investigation result's quality and
+    #   helpfulness. This rating indicates how valuable the investigation
+    #   findings were in addressing the case.
+    #   @return [String]
+    #
+    # @!attribute [rw] comment
+    #   Optional user comments providing additional context about the
+    #   investigation feedback. This allows users to explain their rating or
+    #   provide suggestions for improvement.
+    #   @return [String]
+    #
+    # @!attribute [rw] submitted_at
+    #   ISO 8601 timestamp when the feedback was submitted. This records
+    #   when the user provided their assessment of the investigation
+    #   results.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/security-ir-2018-05-10/InvestigationFeedback AWS API Documentation
+    #
+    class InvestigationFeedback < Struct.new(
+      :usefulness,
+      :comment,
+      :submitted_at)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] next_token
-    #   Optional element for a customer provided token.
+    #   An optional string that, if supplied, must be copied from the output
+    #   of a previous call to ListCaseEdits. When provided in this manner,
+    #   the API fetches the next page of results.
     #   @return [String]
     #
     # @!attribute [rw] max_results
@@ -800,12 +1003,13 @@ module Aws::SecurityIR
     end
 
     # @!attribute [rw] next_token
-    #   Optional element.
+    #   An optional string that, if supplied on subsequent calls to
+    #   ListCaseEdits, allows the API to fetch the next page of results.
     #   @return [String]
     #
     # @!attribute [rw] items
-    #   Response element for ListCaseEdits that includes the action,
-    #   eventtimestamp, message, and principal for the response.
+    #   Response element for ListCaseEdits that includes the action, event
+    #   timestamp, message, and principal for the response.
     #   @return [Array<Types::CaseEditItem>]
     #
     # @!attribute [rw] total
@@ -871,7 +1075,9 @@ module Aws::SecurityIR
     end
 
     # @!attribute [rw] next_token
-    #   Optional element.
+    #   An optional string that, if supplied, must be copied from the output
+    #   of a previous call to ListCases. When provided in this manner, the
+    #   API fetches the next page of results.
     #   @return [String]
     #
     # @!attribute [rw] max_results
@@ -888,7 +1094,8 @@ module Aws::SecurityIR
     end
 
     # @!attribute [rw] next_token
-    #   Optional element.
+    #   An optional string that, if supplied on subsequent calls to
+    #   ListCases, allows the API to fetch the next page of results.
     #   @return [String]
     #
     # @!attribute [rw] items
@@ -945,7 +1152,9 @@ module Aws::SecurityIR
     end
 
     # @!attribute [rw] next_token
-    #   Optional element.
+    #   An optional string that, if supplied, must be copied from the output
+    #   of a previous call to ListComments. When provided in this manner,
+    #   the API fetches the next page of results.
     #   @return [String]
     #
     # @!attribute [rw] max_results
@@ -967,7 +1176,8 @@ module Aws::SecurityIR
     end
 
     # @!attribute [rw] next_token
-    #   Optional request elements.
+    #   An optional string that, if supplied on subsequent calls to
+    #   ListComments, allows the API to fetch the next page of results.
     #   @return [String]
     #
     # @!attribute [rw] items
@@ -987,6 +1197,49 @@ module Aws::SecurityIR
       :next_token,
       :items,
       :total)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   Investigation performed by an agent for a security incident request
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   Investigation performed by an agent for a security incident request,
+    #   returning max results
+    #   @return [Integer]
+    #
+    # @!attribute [rw] case_id
+    #   Investigation performed by an agent for a security incident per
+    #   caseID
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/security-ir-2018-05-10/ListInvestigationsRequest AWS API Documentation
+    #
+    class ListInvestigationsRequest < Struct.new(
+      :next_token,
+      :max_results,
+      :case_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   Investigation performed by an agent for a security incident for next
+    #   Token
+    #   @return [String]
+    #
+    # @!attribute [rw] investigation_actions
+    #   Investigation performed by an agent for a security incid…Unique
+    #   identifier for the specific investigation&gt;
+    #   @return [Array<Types::InvestigationAction>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/security-ir-2018-05-10/ListInvestigationsResponse AWS API Documentation
+    #
+    class ListInvestigationsResponse < Struct.new(
+      :next_token,
+      :investigation_actions)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1019,7 +1272,9 @@ module Aws::SecurityIR
     end
 
     # @!attribute [rw] next_token
-    #   Optional element.
+    #   An optional string that, if supplied, must be copied from the output
+    #   of a previous call to ListMemberships. When provided in this manner,
+    #   the API fetches the next page of results.
     #   @return [String]
     #
     # @!attribute [rw] max_results
@@ -1037,7 +1292,8 @@ module Aws::SecurityIR
     end
 
     # @!attribute [rw] next_token
-    #   Optional element.
+    #   An optional string that, if supplied on subsequent calls to
+    #   ListMemberships, allows the API to fetch the next page of results.
     #   @return [String]
     #
     # @!attribute [rw] items
@@ -1081,6 +1337,114 @@ module Aws::SecurityIR
       include Aws::Structure
     end
 
+    # The `MembershipAccountsConfigurations` structure defines the
+    # configuration settings for managing membership accounts withinAmazon
+    # Web Services.
+    #
+    # This structure contains settings that determine how member accounts
+    # are configured and managed within your organization, including:
+    #
+    # * Account configuration preferences
+    #
+    # * Membership validation rules
+    #
+    # * Account access settings
+    #
+    # You can use this structure to define and maintain standardized
+    # configurations across multiple member accounts in your organization.
+    #
+    # @!attribute [rw] cover_entire_organization
+    #   The `coverEntireOrganization` field is a boolean value that
+    #   determines whether the membership configuration applies to all
+    #   accounts within an Amazon Web Services Organization.
+    #
+    #   When set to `true`, the configuration will be applied across all
+    #   accounts in the organization. When set to `false`, the configuration
+    #   will only apply to specifically designated accounts under the AWS
+    #   Organizational Units specificied.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] organizational_units
+    #   A list of organizational unit IDs that follow the pattern
+    #   `ou-[0-9a-z]{4,32}-[a-z0-9]{8,32}`. These IDs represent the
+    #   organizational units within an Amazon Web Services Organizations
+    #   structure that are covered by the membership.
+    #
+    #   Each organizational unit ID in the list must:
+    #
+    #   * Begin with the prefix 'ou-'
+    #
+    #   * Contain between 4 and 32 alphanumeric characters in the first
+    #     segment
+    #
+    #   * Contain between 8 and 32 alphanumeric characters in the second
+    #     segment
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/security-ir-2018-05-10/MembershipAccountsConfigurations AWS API Documentation
+    #
+    class MembershipAccountsConfigurations < Struct.new(
+      :cover_entire_organization,
+      :organizational_units)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The `MembershipAccountsConfigurationsUpdate`structure represents the
+    # configuration updates for member accounts within an Amazon Web
+    # Services organization.
+    #
+    # This structure is used to modify existing account configurations and
+    # settings for members in the organization. When applying updates,
+    # ensure all required fields are properly specified to maintain account
+    # consistency.
+    #
+    # Key considerations when using this structure:
+    #
+    # * All configuration changes are validated before being applied
+    #
+    # * Updates are processed asynchronously in the background
+    #
+    # * Configuration changes may take several minutes to propagate across
+    #   all affected accounts
+    #
+    # @!attribute [rw] cover_entire_organization
+    #   The `coverEntireOrganization` field is a boolean value that
+    #   determines whether the membership configuration should be applied
+    #   across the entire Amazon Web Services Organization.
+    #
+    #   When set to `true`, the configuration will be applied to all
+    #   accounts within the organization. When set to `false`, the
+    #   configuration will only apply to specifically designated accounts.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] organizational_units_to_add
+    #   A list of organizational unit IDs to add to the membership
+    #   configuration. Each organizational unit ID must match the pattern
+    #   `ou-[0-9a-z]{4,32}-[a-z0-9]{8,32}`.
+    #
+    #   The list must contain between 1 and 5 organizational unit IDs.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] organizational_units_to_remove
+    #   A list of organizational unit IDs to remove from the membership
+    #   configuration. Each organizational unit ID must match the pattern
+    #   `ou-[0-9a-z]{4,32}-[a-z0-9]{8,32}`.
+    #
+    #   The list must contain between 1 and 5 organizational unit IDs per
+    #   invocation of the API request.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/security-ir-2018-05-10/MembershipAccountsConfigurationsUpdate AWS API Documentation
+    #
+    class MembershipAccountsConfigurationsUpdate < Struct.new(
+      :cover_entire_organization,
+      :organizational_units_to_add,
+      :organizational_units_to_remove)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] feature_name
     #   @return [String]
     #
@@ -1097,6 +1461,7 @@ module Aws::SecurityIR
     end
 
     # @!attribute [rw] message
+    #   The exception message.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/security-ir-2018-05-10/ResourceNotFoundException AWS API Documentation
@@ -1108,6 +1473,7 @@ module Aws::SecurityIR
     end
 
     # @!attribute [rw] message
+    #   The exception message.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/security-ir-2018-05-10/SecurityIncidentResponseNotActiveException AWS API Documentation
@@ -1118,23 +1484,57 @@ module Aws::SecurityIR
       include Aws::Structure
     end
 
+    # @!attribute [rw] case_id
+    #   Send feedback based on request caseID
+    #   @return [String]
+    #
+    # @!attribute [rw] result_id
+    #   Send feedback based on request result ID
+    #   @return [String]
+    #
+    # @!attribute [rw] usefulness
+    #   Required enum value indicating user assessment of result q.....
+    #   @return [String]
+    #
+    # @!attribute [rw] comment
+    #   Send feedback based on request comments
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/security-ir-2018-05-10/SendFeedbackRequest AWS API Documentation
+    #
+    class SendFeedbackRequest < Struct.new(
+      :case_id,
+      :result_id,
+      :usefulness,
+      :comment)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/security-ir-2018-05-10/SendFeedbackResponse AWS API Documentation
+    #
+    class SendFeedbackResponse < Aws::EmptyStructure; end
+
     # @!attribute [rw] message
+    #   The exception message.
     #   @return [String]
     #
     # @!attribute [rw] resource_id
-    #   Element that provides the ID of the resource affected.
+    #   The ID of the requested resource which lead to the service quota
+    #   exception.
     #   @return [String]
     #
     # @!attribute [rw] resource_type
-    #   Element that provides the type of the resource affected.
+    #   The type of the requested resource which lead to the service quota
+    #   exception.
     #   @return [String]
     #
     # @!attribute [rw] service_code
-    #   Element that provides the originating service who made the call.
+    #   The service code of the quota.
     #   @return [String]
     #
     # @!attribute [rw] quota_code
-    #   Element that provides the quota that was exceeded.
+    #   The code of the quota.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/security-ir-2018-05-10/ServiceQuotaExceededException AWS API Documentation
@@ -1188,19 +1588,19 @@ module Aws::SecurityIR
     end
 
     # @!attribute [rw] message
+    #   The exception message.
     #   @return [String]
     #
     # @!attribute [rw] service_code
-    #   Element providing the service code of the originating service.
+    #   The service code of the exception.
     #   @return [String]
     #
     # @!attribute [rw] quota_code
-    #   Element providing the quota of the originating service.
+    #   The quota code of the exception.
     #   @return [String]
     #
     # @!attribute [rw] retry_after_seconds
-    #   Element providing advice to clients on when the call can be safely
-    #   retried.
+    #   The number of seconds after which to retry the request.
     #   @return [Integer]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/security-ir-2018-05-10/ThrottlingException AWS API Documentation
@@ -1353,12 +1753,30 @@ module Aws::SecurityIR
     # @!attribute [rw] impacted_accounts_to_add
     #   Optional element for UpdateCase to provide content to add accounts
     #   impacted.
+    #
+    #   <note markdown="1"> AWS account ID's may appear less than 12 characters and need to be
+    #   zero-prepended. An example would be `123123123` which is nine
+    #   digits, and with zero-prepend would be `000123123123`. Not
+    #   zero-prepending to 12 digits could result in errors.
+    #
+    #    </note>
     #   @return [Array<String>]
     #
     # @!attribute [rw] impacted_accounts_to_delete
     #   Optional element for UpdateCase to provide content to add accounts
     #   impacted.
+    #
+    #   <note markdown="1"> AWS account ID's may appear less than 12 characters and need to be
+    #   zero-prepended. An example would be `123123123` which is nine
+    #   digits, and with zero-prepend would be `000123123123`. Not
+    #   zero-prepending to 12 digits could result in errors.
+    #
+    #    </note>
     #   @return [Array<String>]
+    #
+    # @!attribute [rw] case_metadata
+    #   Update the case request with case metadata
+    #   @return [Array<Types::CaseMetadataEntry>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/security-ir-2018-05-10/UpdateCaseRequest AWS API Documentation
     #
@@ -1378,7 +1796,8 @@ module Aws::SecurityIR
       :impacted_aws_regions_to_add,
       :impacted_aws_regions_to_delete,
       :impacted_accounts_to_add,
-      :impacted_accounts_to_delete)
+      :impacted_accounts_to_delete,
+      :case_metadata)
       SENSITIVE = [:title, :description]
       include Aws::Structure
     end
@@ -1438,13 +1857,40 @@ module Aws::SecurityIR
     #   features for the service.
     #   @return [Array<Types::OptInFeature>]
     #
+    # @!attribute [rw] membership_accounts_configurations_update
+    #   The `membershipAccountsConfigurationsUpdate` field in the
+    #   `UpdateMembershipRequest` structure allows you to update the
+    #   configuration settings for accounts within a membership.
+    #
+    #   This field is optional and contains a structure of type
+    #   `MembershipAccountsConfigurationsUpdate ` that specifies the updated
+    #   account configurations for the membership.
+    #   @return [Types::MembershipAccountsConfigurationsUpdate]
+    #
+    # @!attribute [rw] undo_membership_cancellation
+    #   The `undoMembershipCancellation` parameter is a boolean flag that
+    #   indicates whether to reverse a previously requested membership
+    #   cancellation. When set to true, this will revoke the cancellation
+    #   request and maintain the membership status.
+    #
+    #   This parameter is optional and can be used in scenarios where you
+    #   need to restore a membership that was marked for cancellation but
+    #   hasn't been fully terminated yet.
+    #
+    #   * If set to `true`, the cancellation request will be revoked
+    #
+    #   * If set to `false` the service will throw a ValidationException.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/security-ir-2018-05-10/UpdateMembershipRequest AWS API Documentation
     #
     class UpdateMembershipRequest < Struct.new(
       :membership_id,
       :membership_name,
       :incident_response_team,
-      :opt_in_features)
+      :opt_in_features,
+      :membership_accounts_configurations_update,
+      :undo_membership_cancellation)
       SENSITIVE = [:membership_name]
       include Aws::Structure
     end
@@ -1498,15 +1944,15 @@ module Aws::SecurityIR
     end
 
     # @!attribute [rw] message
+    #   The exception message.
     #   @return [String]
     #
     # @!attribute [rw] reason
-    #   Element that provides the reason the request failed validation.
+    #   The reason for the exception.
     #   @return [String]
     #
     # @!attribute [rw] field_list
-    #   Element that provides the list of field(s) that caused the error, if
-    #   applicable.
+    #   The fields which lead to the exception.
     #   @return [Array<Types::ValidationExceptionField>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/security-ir-2018-05-10/ValidationException AWS API Documentation

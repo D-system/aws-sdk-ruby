@@ -95,8 +95,8 @@ module Aws::PCS
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::PCS
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::PCS
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::PCS
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::PCS
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::PCS
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::PCS
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::PCS
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -477,16 +481,15 @@ module Aws::PCS
 
     # @!group API Operations
 
-    # Creates a cluster in your account. Amazon Web Services PCS creates the
-    # cluster controller in a service-owned account. The cluster controller
-    # communicates with the cluster resources in your account. The subnets
-    # and security groups for the cluster must already exist before you use
-    # this API action.
+    # Creates a cluster in your account. PCS creates the cluster controller
+    # in a service-owned account. The cluster controller communicates with
+    # the cluster resources in your account. The subnets and security groups
+    # for the cluster must already exist before you use this API action.
     #
-    # <note markdown="1"> It takes time for Amazon Web Services PCS to create the cluster. The
-    # cluster is in a `Creating` state until it is ready to use. There can
-    # only be 1 cluster in a `Creating` state per Amazon Web Services Region
-    # per Amazon Web Services account. `CreateCluster` fails with a
+    # <note markdown="1"> It takes time for PCS to create the cluster. The cluster is in a
+    # `Creating` state until it is ready to use. There can only be 1 cluster
+    # in a `Creating` state per Amazon Web Services Region per Amazon Web
+    # Services account. `CreateCluster` fails with a
     # `ServiceQuotaExceededException` if there is already a cluster in a
     # `Creating` state.
     #
@@ -548,6 +551,7 @@ module Aws::PCS
     #     networking: { # required
     #       subnet_ids: ["SubnetId"],
     #       security_group_ids: ["SecurityGroupId"],
+    #       network_type: "IPV4", # accepts IPV4, IPV6
     #     },
     #     slurm_configuration: {
     #       scale_down_idle_time_in_seconds: 1,
@@ -557,6 +561,25 @@ module Aws::PCS
     #           parameter_value: "String", # required
     #         },
     #       ],
+    #       slurmdbd_custom_settings: [
+    #         {
+    #           parameter_name: "String", # required
+    #           parameter_value: "String", # required
+    #         },
+    #       ],
+    #       cgroup_custom_settings: [
+    #         {
+    #           parameter_name: "String", # required
+    #           parameter_value: "String", # required
+    #         },
+    #       ],
+    #       accounting: {
+    #         default_purge_time_in_days: 1,
+    #         mode: "STANDARD", # required, accepts STANDARD, NONE
+    #       },
+    #       slurm_rest: {
+    #         mode: "STANDARD", # required, accepts STANDARD, NONE
+    #       },
     #     },
     #     client_token: "SBClientToken",
     #     tags: {
@@ -569,7 +592,7 @@ module Aws::PCS
     #   resp.cluster.name #=> String
     #   resp.cluster.id #=> String
     #   resp.cluster.arn #=> String
-    #   resp.cluster.status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "CREATE_FAILED", "DELETE_FAILED", "UPDATE_FAILED"
+    #   resp.cluster.status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "CREATE_FAILED", "DELETE_FAILED", "UPDATE_FAILED", "SUSPENDING", "SUSPENDED", "RESUMING"
     #   resp.cluster.created_at #=> Time
     #   resp.cluster.modified_at #=> Time
     #   resp.cluster.scheduler.type #=> String, one of "SLURM"
@@ -579,16 +602,29 @@ module Aws::PCS
     #   resp.cluster.slurm_configuration.slurm_custom_settings #=> Array
     #   resp.cluster.slurm_configuration.slurm_custom_settings[0].parameter_name #=> String
     #   resp.cluster.slurm_configuration.slurm_custom_settings[0].parameter_value #=> String
+    #   resp.cluster.slurm_configuration.slurmdbd_custom_settings #=> Array
+    #   resp.cluster.slurm_configuration.slurmdbd_custom_settings[0].parameter_name #=> String
+    #   resp.cluster.slurm_configuration.slurmdbd_custom_settings[0].parameter_value #=> String
+    #   resp.cluster.slurm_configuration.cgroup_custom_settings #=> Array
+    #   resp.cluster.slurm_configuration.cgroup_custom_settings[0].parameter_name #=> String
+    #   resp.cluster.slurm_configuration.cgroup_custom_settings[0].parameter_value #=> String
     #   resp.cluster.slurm_configuration.auth_key.secret_arn #=> String
     #   resp.cluster.slurm_configuration.auth_key.secret_version #=> String
+    #   resp.cluster.slurm_configuration.jwt_auth.jwt_key.secret_arn #=> String
+    #   resp.cluster.slurm_configuration.jwt_auth.jwt_key.secret_version #=> String
+    #   resp.cluster.slurm_configuration.accounting.default_purge_time_in_days #=> Integer
+    #   resp.cluster.slurm_configuration.accounting.mode #=> String, one of "STANDARD", "NONE"
+    #   resp.cluster.slurm_configuration.slurm_rest.mode #=> String, one of "STANDARD", "NONE"
     #   resp.cluster.networking.subnet_ids #=> Array
     #   resp.cluster.networking.subnet_ids[0] #=> String
     #   resp.cluster.networking.security_group_ids #=> Array
     #   resp.cluster.networking.security_group_ids[0] #=> String
+    #   resp.cluster.networking.network_type #=> String, one of "IPV4", "IPV6"
     #   resp.cluster.endpoints #=> Array
-    #   resp.cluster.endpoints[0].type #=> String, one of "SLURMCTLD", "SLURMDBD"
+    #   resp.cluster.endpoints[0].type #=> String, one of "SLURMCTLD", "SLURMDBD", "SLURMRESTD"
     #   resp.cluster.endpoints[0].private_ip_address #=> String
     #   resp.cluster.endpoints[0].public_ip_address #=> String
+    #   resp.cluster.endpoints[0].ipv6_address #=> String
     #   resp.cluster.endpoints[0].port #=> String
     #   resp.cluster.error_info #=> Array
     #   resp.cluster.error_info[0].code #=> String
@@ -604,17 +640,16 @@ module Aws::PCS
     end
 
     # Creates a managed set of compute nodes. You associate a compute node
-    # group with a cluster through 1 or more Amazon Web Services PCS queues
-    # or as part of the login fleet. A compute node group includes the
-    # definition of the compute properties and lifecycle management. Amazon
-    # Web Services PCS uses the information you provide to this API action
-    # to launch compute nodes in your account. You can only specify subnets
-    # in the same Amazon VPC as your cluster. You receive billing charges
-    # for the compute nodes that Amazon Web Services PCS launches in your
-    # account. You must already have a launch template before you call this
-    # API. For more information, see [Launch an instance from a launch
-    # template][1] in the *Amazon Elastic Compute Cloud User Guide for Linux
-    # Instances*.
+    # group with a cluster through 1 or more PCS queues or as part of the
+    # login fleet. A compute node group includes the definition of the
+    # compute properties and lifecycle management. PCS uses the information
+    # you provide to this API action to launch compute nodes in your
+    # account. You can only specify subnets in the same Amazon VPC as your
+    # cluster. You receive billing charges for the compute nodes that PCS
+    # launches in your account. You must already have a launch template
+    # before you call this API. For more information, see [Launch an
+    # instance from a launch template][1] in the *Amazon Elastic Compute
+    # Cloud User Guide for Linux Instances*.
     #
     #
     #
@@ -627,50 +662,57 @@ module Aws::PCS
     #   A name to identify the cluster. Example: `MyCluster`
     #
     # @option params [String] :ami_id
-    #   The ID of the Amazon Machine Image (AMI) that Amazon Web Services PCS
-    #   uses to launch compute nodes (Amazon EC2 instances). If you don't
-    #   provide this value, Amazon Web Services PCS uses the AMI ID specified
-    #   in the custom launch template.
+    #   The ID of the Amazon Machine Image (AMI) that PCS uses to launch
+    #   compute nodes (Amazon EC2 instances). If you don't provide this
+    #   value, PCS uses the AMI ID specified in the custom launch template.
     #
     # @option params [required, Array<String>] :subnet_ids
     #   The list of subnet IDs where the compute node group launches
     #   instances. Subnets must be in the same VPC as the cluster.
     #
     # @option params [String] :purchase_option
-    #   Specifies how EC2 instances are purchased on your behalf. Amazon Web
-    #   Services PCS supports On-Demand and Spot instances. For more
-    #   information, see [Instance purchasing options][1] in the *Amazon
-    #   Elastic Compute Cloud User Guide*. If you don't provide this option,
-    #   it defaults to On-Demand.
+    #   Specifies how EC2 instances are purchased on your behalf. PCS supports
+    #   On-Demand Instances, Spot Instances, Interruptible Capacity
+    #   Reservations, On-Demand Capacity Reservations, and Amazon EC2 Capacity
+    #   Blocks for ML. For more information, see [Amazon EC2 billing and
+    #   purchasing options][1] in the *Amazon Elastic Compute Cloud User
+    #   Guide*. For more information about PCS support for Capacity Blocks,
+    #   see [Using Amazon EC2 Capacity Blocks for ML with PCS][2] in the *PCS
+    #   User Guide*. For more information about PCS support for interruptible
+    #   capacity reservations, see [Using I-ODCRs with PCS][3] in the *PCS
+    #   User Guide*. Choose On-Demand if you plan to use an On-Demand Capacity
+    #   Reservation (ODCR). For more information, see [Using ODCRs with
+    #   PCS][4]. If you don't provide this option, it defaults to On-Demand.
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-purchasing-options.html
+    #   [2]: https://docs.aws.amazon.com/pcs/latest/userguide/capacity-blocks.html
+    #   [3]: https://docs.aws.amazon.com/pcs/latest/userguide/capacity-reservations-iodcr.html
+    #   [4]: https://docs.aws.amazon.com/pcs/latest/userguide/capacity-reservations-odcr.html
     #
     # @option params [required, Types::CustomLaunchTemplate] :custom_launch_template
-    #   An Amazon EC2 launch template Amazon Web Services PCS uses to launch
-    #   compute nodes.
+    #   An Amazon EC2 launch template PCS uses to launch compute nodes.
     #
     # @option params [required, String] :iam_instance_profile_arn
     #   The Amazon Resource Name (ARN) of the IAM instance profile used to
     #   pass an IAM role when launching EC2 instances. The role contained in
     #   your instance profile must have the
-    #   `pcs:RegisterComputeNodeGroupInstance` permission. The resource
-    #   identifier of the ARN must start with `AWSPCS` or it must have
-    #   `/aws-pcs/` in its path.
+    #   `pcs:RegisterComputeNodeGroupInstance` permission and the role name
+    #   must start with `AWSPCS` or must have the path `/aws-pcs/`. For more
+    #   information, see [IAM instance profiles for PCS][1] in the *PCS User
+    #   Guide*.
     #
-    #   **Examples**
     #
-    #   * `arn:aws:iam::111122223333:instance-profile/AWSPCS-example-role-1`
     #
-    #   * `arn:aws:iam::111122223333:instance-profile/aws-pcs/example-role-2`
+    #   [1]: https://docs.aws.amazon.com/pcs/latest/userguide/security-instance-profiles.html
     #
     # @option params [required, Types::ScalingConfigurationRequest] :scaling_configuration
     #   Specifies the boundaries of the compute node group auto scaling.
     #
     # @option params [required, Array<Types::InstanceConfig>] :instance_configs
-    #   A list of EC2 instance configurations that Amazon Web Services PCS can
-    #   provision in the compute node group.
+    #   A list of EC2 instance configurations that PCS can provision in the
+    #   compute node group.
     #
     # @option params [Types::SpotOptions] :spot_options
     #   Additional configuration when you specify `SPOT` as the
@@ -678,6 +720,12 @@ module Aws::PCS
     #
     # @option params [Types::ComputeNodeGroupSlurmConfigurationRequest] :slurm_configuration
     #   Additional options related to the Slurm scheduler.
+    #
+    # @option params [Types::NodeLifecycleActionsRequest] :node_lifecycle_actions
+    #   The lifecycle actions to run on compute nodes in the compute node
+    #   group. Use lifecycle actions to run custom scripts at defined stages
+    #   of a compute node's lifecycle, such as when a compute node finishes
+    #   bootstrapping or becomes ready to accept jobs.
     #
     # @option params [String] :client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
@@ -706,7 +754,7 @@ module Aws::PCS
     #     compute_node_group_name: "ComputeNodeGroupName", # required
     #     ami_id: "AmiId",
     #     subnet_ids: ["String"], # required
-    #     purchase_option: "ONDEMAND", # accepts ONDEMAND, SPOT
+    #     purchase_option: "ONDEMAND", # accepts ONDEMAND, SPOT, CAPACITY_BLOCK, INTERRUPTIBLE_CAPACITY_RESERVATION
     #     custom_launch_template: { # required
     #       id: "String", # required
     #       version: "String", # required
@@ -725,12 +773,44 @@ module Aws::PCS
     #       allocation_strategy: "lowest-price", # accepts lowest-price, capacity-optimized, price-capacity-optimized
     #     },
     #     slurm_configuration: {
+    #       scale_down_idle_time_in_seconds: 1,
     #       slurm_custom_settings: [
     #         {
     #           parameter_name: "String", # required
     #           parameter_value: "String", # required
     #         },
     #       ],
+    #     },
+    #     node_lifecycle_actions: {
+    #       stages: { # required
+    #         node_bootstrapped: [
+    #           {
+    #             name: "NodeLifecycleScriptNameString", # required
+    #             script_source: { # required
+    #               script_location: "ScriptSourceScriptLocationString", # required
+    #               s3_version_id: "ScriptSourceS3VersionIdString",
+    #               checksum: "ScriptSourceChecksumString",
+    #             },
+    #             arguments: ["NodeLifecycleScriptArgument"],
+    #             on_error: "TERMINATE", # accepts TERMINATE, STOP_SEQUENCE, CONTINUE
+    #             execution_policy: "FIRST_BOOT_ONLY", # accepts FIRST_BOOT_ONLY, EVERY_BOOT
+    #           },
+    #         ],
+    #         node_ready: [
+    #           {
+    #             name: "NodeLifecycleScriptNameString", # required
+    #             script_source: { # required
+    #               script_location: "ScriptSourceScriptLocationString", # required
+    #               s3_version_id: "ScriptSourceS3VersionIdString",
+    #               checksum: "ScriptSourceChecksumString",
+    #             },
+    #             arguments: ["NodeLifecycleScriptArgument"],
+    #             on_error: "TERMINATE", # accepts TERMINATE, STOP_SEQUENCE, CONTINUE
+    #             execution_policy: "FIRST_BOOT_ONLY", # accepts FIRST_BOOT_ONLY, EVERY_BOOT
+    #           },
+    #         ],
+    #       },
+    #       script_caching_policy: "CACHE_ONCE", # accepts CACHE_ONCE, REFRESH_ON_REBOOT
     #     },
     #     client_token: "SBClientToken",
     #     tags: {
@@ -746,11 +826,11 @@ module Aws::PCS
     #   resp.compute_node_group.cluster_id #=> String
     #   resp.compute_node_group.created_at #=> Time
     #   resp.compute_node_group.modified_at #=> Time
-    #   resp.compute_node_group.status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "CREATE_FAILED", "DELETE_FAILED", "UPDATE_FAILED", "DELETED"
+    #   resp.compute_node_group.status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "CREATE_FAILED", "DELETE_FAILED", "UPDATE_FAILED", "DELETED", "SUSPENDING", "SUSPENDED", "RESUMING"
     #   resp.compute_node_group.ami_id #=> String
     #   resp.compute_node_group.subnet_ids #=> Array
     #   resp.compute_node_group.subnet_ids[0] #=> String
-    #   resp.compute_node_group.purchase_option #=> String, one of "ONDEMAND", "SPOT"
+    #   resp.compute_node_group.purchase_option #=> String, one of "ONDEMAND", "SPOT", "CAPACITY_BLOCK", "INTERRUPTIBLE_CAPACITY_RESERVATION"
     #   resp.compute_node_group.custom_launch_template.id #=> String
     #   resp.compute_node_group.custom_launch_template.version #=> String
     #   resp.compute_node_group.iam_instance_profile_arn #=> String
@@ -759,9 +839,29 @@ module Aws::PCS
     #   resp.compute_node_group.instance_configs #=> Array
     #   resp.compute_node_group.instance_configs[0].instance_type #=> String
     #   resp.compute_node_group.spot_options.allocation_strategy #=> String, one of "lowest-price", "capacity-optimized", "price-capacity-optimized"
+    #   resp.compute_node_group.slurm_configuration.scale_down_idle_time_in_seconds #=> Integer
     #   resp.compute_node_group.slurm_configuration.slurm_custom_settings #=> Array
     #   resp.compute_node_group.slurm_configuration.slurm_custom_settings[0].parameter_name #=> String
     #   resp.compute_node_group.slurm_configuration.slurm_custom_settings[0].parameter_value #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_bootstrapped #=> Array
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_bootstrapped[0].name #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_bootstrapped[0].script_source.script_location #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_bootstrapped[0].script_source.s3_version_id #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_bootstrapped[0].script_source.checksum #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_bootstrapped[0].arguments #=> Array
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_bootstrapped[0].arguments[0] #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_bootstrapped[0].on_error #=> String, one of "TERMINATE", "STOP_SEQUENCE", "CONTINUE"
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_bootstrapped[0].execution_policy #=> String, one of "FIRST_BOOT_ONLY", "EVERY_BOOT"
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_ready #=> Array
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_ready[0].name #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_ready[0].script_source.script_location #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_ready[0].script_source.s3_version_id #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_ready[0].script_source.checksum #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_ready[0].arguments #=> Array
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_ready[0].arguments[0] #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_ready[0].on_error #=> String, one of "TERMINATE", "STOP_SEQUENCE", "CONTINUE"
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_ready[0].execution_policy #=> String, one of "FIRST_BOOT_ONLY", "EVERY_BOOT"
+    #   resp.compute_node_group.node_lifecycle_actions.script_caching_policy #=> String, one of "CACHE_ONCE", "REFRESH_ON_REBOOT"
     #   resp.compute_node_group.error_info #=> Array
     #   resp.compute_node_group.error_info[0].code #=> String
     #   resp.compute_node_group.error_info[0].message #=> String
@@ -788,6 +888,9 @@ module Aws::PCS
     # @option params [Array<Types::ComputeNodeGroupConfiguration>] :compute_node_group_configurations
     #   The list of compute node group configurations to associate with the
     #   queue. Queues assign jobs to associated compute node groups.
+    #
+    # @option params [Types::QueueSlurmConfigurationRequest] :slurm_configuration
+    #   Additional options related to the Slurm scheduler.
     #
     # @option params [String] :client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
@@ -819,6 +922,14 @@ module Aws::PCS
     #         compute_node_group_id: "String",
     #       },
     #     ],
+    #     slurm_configuration: {
+    #       slurm_custom_settings: [
+    #         {
+    #           parameter_name: "String", # required
+    #           parameter_value: "String", # required
+    #         },
+    #       ],
+    #     },
     #     client_token: "SBClientToken",
     #     tags: {
     #       "TagKey" => "TagValue",
@@ -833,9 +944,12 @@ module Aws::PCS
     #   resp.queue.cluster_id #=> String
     #   resp.queue.created_at #=> Time
     #   resp.queue.modified_at #=> Time
-    #   resp.queue.status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "CREATE_FAILED", "DELETE_FAILED", "UPDATE_FAILED"
+    #   resp.queue.status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "CREATE_FAILED", "DELETE_FAILED", "UPDATE_FAILED", "SUSPENDING", "SUSPENDED", "RESUMING"
     #   resp.queue.compute_node_group_configurations #=> Array
     #   resp.queue.compute_node_group_configurations[0].compute_node_group_id #=> String
+    #   resp.queue.slurm_configuration.slurm_custom_settings #=> Array
+    #   resp.queue.slurm_configuration.slurm_custom_settings[0].parameter_name #=> String
+    #   resp.queue.slurm_configuration.slurm_custom_settings[0].parameter_value #=> String
     #   resp.queue.error_info #=> Array
     #   resp.queue.error_info[0].code #=> String
     #   resp.queue.error_info[0].message #=> String
@@ -927,8 +1041,8 @@ module Aws::PCS
     end
 
     # Deletes a job queue. If the compute node group associated with this
-    # queue isn't associated with any other queues, Amazon Web Services PCS
-    # terminates all the compute nodes for this queue.
+    # queue isn't associated with any other queues, PCS terminates all the
+    # compute nodes for this queue.
     #
     # @option params [required, String] :cluster_identifier
     #   The name or ID of the cluster of the queue.
@@ -972,7 +1086,7 @@ module Aws::PCS
     # for communication with the scheduler, and provisioning status.
     #
     # @option params [required, String] :cluster_identifier
-    #   The name or ID of the cluster of the queue.
+    #   The name or ID of the cluster.
     #
     # @return [Types::GetClusterResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -989,7 +1103,7 @@ module Aws::PCS
     #   resp.cluster.name #=> String
     #   resp.cluster.id #=> String
     #   resp.cluster.arn #=> String
-    #   resp.cluster.status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "CREATE_FAILED", "DELETE_FAILED", "UPDATE_FAILED"
+    #   resp.cluster.status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "CREATE_FAILED", "DELETE_FAILED", "UPDATE_FAILED", "SUSPENDING", "SUSPENDED", "RESUMING"
     #   resp.cluster.created_at #=> Time
     #   resp.cluster.modified_at #=> Time
     #   resp.cluster.scheduler.type #=> String, one of "SLURM"
@@ -999,16 +1113,29 @@ module Aws::PCS
     #   resp.cluster.slurm_configuration.slurm_custom_settings #=> Array
     #   resp.cluster.slurm_configuration.slurm_custom_settings[0].parameter_name #=> String
     #   resp.cluster.slurm_configuration.slurm_custom_settings[0].parameter_value #=> String
+    #   resp.cluster.slurm_configuration.slurmdbd_custom_settings #=> Array
+    #   resp.cluster.slurm_configuration.slurmdbd_custom_settings[0].parameter_name #=> String
+    #   resp.cluster.slurm_configuration.slurmdbd_custom_settings[0].parameter_value #=> String
+    #   resp.cluster.slurm_configuration.cgroup_custom_settings #=> Array
+    #   resp.cluster.slurm_configuration.cgroup_custom_settings[0].parameter_name #=> String
+    #   resp.cluster.slurm_configuration.cgroup_custom_settings[0].parameter_value #=> String
     #   resp.cluster.slurm_configuration.auth_key.secret_arn #=> String
     #   resp.cluster.slurm_configuration.auth_key.secret_version #=> String
+    #   resp.cluster.slurm_configuration.jwt_auth.jwt_key.secret_arn #=> String
+    #   resp.cluster.slurm_configuration.jwt_auth.jwt_key.secret_version #=> String
+    #   resp.cluster.slurm_configuration.accounting.default_purge_time_in_days #=> Integer
+    #   resp.cluster.slurm_configuration.accounting.mode #=> String, one of "STANDARD", "NONE"
+    #   resp.cluster.slurm_configuration.slurm_rest.mode #=> String, one of "STANDARD", "NONE"
     #   resp.cluster.networking.subnet_ids #=> Array
     #   resp.cluster.networking.subnet_ids[0] #=> String
     #   resp.cluster.networking.security_group_ids #=> Array
     #   resp.cluster.networking.security_group_ids[0] #=> String
+    #   resp.cluster.networking.network_type #=> String, one of "IPV4", "IPV6"
     #   resp.cluster.endpoints #=> Array
-    #   resp.cluster.endpoints[0].type #=> String, one of "SLURMCTLD", "SLURMDBD"
+    #   resp.cluster.endpoints[0].type #=> String, one of "SLURMCTLD", "SLURMDBD", "SLURMRESTD"
     #   resp.cluster.endpoints[0].private_ip_address #=> String
     #   resp.cluster.endpoints[0].public_ip_address #=> String
+    #   resp.cluster.endpoints[0].ipv6_address #=> String
     #   resp.cluster.endpoints[0].port #=> String
     #   resp.cluster.error_info #=> Array
     #   resp.cluster.error_info[0].code #=> String
@@ -1052,11 +1179,11 @@ module Aws::PCS
     #   resp.compute_node_group.cluster_id #=> String
     #   resp.compute_node_group.created_at #=> Time
     #   resp.compute_node_group.modified_at #=> Time
-    #   resp.compute_node_group.status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "CREATE_FAILED", "DELETE_FAILED", "UPDATE_FAILED", "DELETED"
+    #   resp.compute_node_group.status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "CREATE_FAILED", "DELETE_FAILED", "UPDATE_FAILED", "DELETED", "SUSPENDING", "SUSPENDED", "RESUMING"
     #   resp.compute_node_group.ami_id #=> String
     #   resp.compute_node_group.subnet_ids #=> Array
     #   resp.compute_node_group.subnet_ids[0] #=> String
-    #   resp.compute_node_group.purchase_option #=> String, one of "ONDEMAND", "SPOT"
+    #   resp.compute_node_group.purchase_option #=> String, one of "ONDEMAND", "SPOT", "CAPACITY_BLOCK", "INTERRUPTIBLE_CAPACITY_RESERVATION"
     #   resp.compute_node_group.custom_launch_template.id #=> String
     #   resp.compute_node_group.custom_launch_template.version #=> String
     #   resp.compute_node_group.iam_instance_profile_arn #=> String
@@ -1065,9 +1192,29 @@ module Aws::PCS
     #   resp.compute_node_group.instance_configs #=> Array
     #   resp.compute_node_group.instance_configs[0].instance_type #=> String
     #   resp.compute_node_group.spot_options.allocation_strategy #=> String, one of "lowest-price", "capacity-optimized", "price-capacity-optimized"
+    #   resp.compute_node_group.slurm_configuration.scale_down_idle_time_in_seconds #=> Integer
     #   resp.compute_node_group.slurm_configuration.slurm_custom_settings #=> Array
     #   resp.compute_node_group.slurm_configuration.slurm_custom_settings[0].parameter_name #=> String
     #   resp.compute_node_group.slurm_configuration.slurm_custom_settings[0].parameter_value #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_bootstrapped #=> Array
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_bootstrapped[0].name #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_bootstrapped[0].script_source.script_location #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_bootstrapped[0].script_source.s3_version_id #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_bootstrapped[0].script_source.checksum #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_bootstrapped[0].arguments #=> Array
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_bootstrapped[0].arguments[0] #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_bootstrapped[0].on_error #=> String, one of "TERMINATE", "STOP_SEQUENCE", "CONTINUE"
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_bootstrapped[0].execution_policy #=> String, one of "FIRST_BOOT_ONLY", "EVERY_BOOT"
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_ready #=> Array
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_ready[0].name #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_ready[0].script_source.script_location #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_ready[0].script_source.s3_version_id #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_ready[0].script_source.checksum #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_ready[0].arguments #=> Array
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_ready[0].arguments[0] #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_ready[0].on_error #=> String, one of "TERMINATE", "STOP_SEQUENCE", "CONTINUE"
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_ready[0].execution_policy #=> String, one of "FIRST_BOOT_ONLY", "EVERY_BOOT"
+    #   resp.compute_node_group.node_lifecycle_actions.script_caching_policy #=> String, one of "CACHE_ONCE", "REFRESH_ON_REBOOT"
     #   resp.compute_node_group.error_info #=> Array
     #   resp.compute_node_group.error_info[0].code #=> String
     #   resp.compute_node_group.error_info[0].message #=> String
@@ -1109,9 +1256,12 @@ module Aws::PCS
     #   resp.queue.cluster_id #=> String
     #   resp.queue.created_at #=> Time
     #   resp.queue.modified_at #=> Time
-    #   resp.queue.status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "CREATE_FAILED", "DELETE_FAILED", "UPDATE_FAILED"
+    #   resp.queue.status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "CREATE_FAILED", "DELETE_FAILED", "UPDATE_FAILED", "SUSPENDING", "SUSPENDED", "RESUMING"
     #   resp.queue.compute_node_group_configurations #=> Array
     #   resp.queue.compute_node_group_configurations[0].compute_node_group_id #=> String
+    #   resp.queue.slurm_configuration.slurm_custom_settings #=> Array
+    #   resp.queue.slurm_configuration.slurm_custom_settings[0].parameter_name #=> String
+    #   resp.queue.slurm_configuration.slurm_custom_settings[0].parameter_value #=> String
     #   resp.queue.error_info #=> Array
     #   resp.queue.error_info[0].code #=> String
     #   resp.queue.error_info[0].message #=> String
@@ -1163,7 +1313,7 @@ module Aws::PCS
     #   resp.clusters[0].arn #=> String
     #   resp.clusters[0].created_at #=> Time
     #   resp.clusters[0].modified_at #=> Time
-    #   resp.clusters[0].status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "CREATE_FAILED", "DELETE_FAILED", "UPDATE_FAILED"
+    #   resp.clusters[0].status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "CREATE_FAILED", "DELETE_FAILED", "UPDATE_FAILED", "SUSPENDING", "SUSPENDED", "RESUMING"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/ListClusters AWS API Documentation
@@ -1218,7 +1368,7 @@ module Aws::PCS
     #   resp.compute_node_groups[0].cluster_id #=> String
     #   resp.compute_node_groups[0].created_at #=> Time
     #   resp.compute_node_groups[0].modified_at #=> Time
-    #   resp.compute_node_groups[0].status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "CREATE_FAILED", "DELETE_FAILED", "UPDATE_FAILED", "DELETED"
+    #   resp.compute_node_groups[0].status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "CREATE_FAILED", "DELETE_FAILED", "UPDATE_FAILED", "DELETED", "SUSPENDING", "SUSPENDED", "RESUMING"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/ListComputeNodeGroups AWS API Documentation
@@ -1273,7 +1423,7 @@ module Aws::PCS
     #   resp.queues[0].cluster_id #=> String
     #   resp.queues[0].created_at #=> Time
     #   resp.queues[0].modified_at #=> Time
-    #   resp.queues[0].status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "CREATE_FAILED", "DELETE_FAILED", "UPDATE_FAILED"
+    #   resp.queues[0].status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "CREATE_FAILED", "DELETE_FAILED", "UPDATE_FAILED", "SUSPENDING", "SUSPENDED", "RESUMING"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/ListQueues AWS API Documentation
@@ -1285,7 +1435,7 @@ module Aws::PCS
       req.send_request(options)
     end
 
-    # Returns a list of all tags on an Amazon Web Services PCS resource.
+    # Returns a list of all tags on an PCS resource.
     #
     # @option params [required, String] :resource_arn
     #   The Amazon Resource Name (ARN) of the resource for which to list tags.
@@ -1316,8 +1466,8 @@ module Aws::PCS
 
     # This API action isn't intended for you to use.
     #
-    # Amazon Web Services PCS uses this API action to register the compute
-    # nodes it launches in your account.
+    #  PCS uses this API action to register the compute nodes it launches in
+    # your account.
     #
     # @option params [required, String] :cluster_identifier
     #   The name or ID of the cluster to register the compute node group
@@ -1331,6 +1481,10 @@ module Aws::PCS
     #   * {Types::RegisterComputeNodeGroupInstanceResponse#node_id #node_id} => String
     #   * {Types::RegisterComputeNodeGroupInstanceResponse#shared_secret #shared_secret} => String
     #   * {Types::RegisterComputeNodeGroupInstanceResponse#endpoints #endpoints} => Array&lt;Types::Endpoint&gt;
+    #   * {Types::RegisterComputeNodeGroupInstanceResponse#cluster_name #cluster_name} => String
+    #   * {Types::RegisterComputeNodeGroupInstanceResponse#compute_node_group_id #compute_node_group_id} => String
+    #   * {Types::RegisterComputeNodeGroupInstanceResponse#compute_node_group_name #compute_node_group_name} => String
+    #   * {Types::RegisterComputeNodeGroupInstanceResponse#node_lifecycle_actions #node_lifecycle_actions} => Types::NodeLifecycleActions
     #
     # @example Request syntax with placeholder values
     #
@@ -1344,10 +1498,33 @@ module Aws::PCS
     #   resp.node_id #=> String
     #   resp.shared_secret #=> String
     #   resp.endpoints #=> Array
-    #   resp.endpoints[0].type #=> String, one of "SLURMCTLD", "SLURMDBD"
+    #   resp.endpoints[0].type #=> String, one of "SLURMCTLD", "SLURMDBD", "SLURMRESTD"
     #   resp.endpoints[0].private_ip_address #=> String
     #   resp.endpoints[0].public_ip_address #=> String
+    #   resp.endpoints[0].ipv6_address #=> String
     #   resp.endpoints[0].port #=> String
+    #   resp.cluster_name #=> String
+    #   resp.compute_node_group_id #=> String
+    #   resp.compute_node_group_name #=> String
+    #   resp.node_lifecycle_actions.stages.node_bootstrapped #=> Array
+    #   resp.node_lifecycle_actions.stages.node_bootstrapped[0].name #=> String
+    #   resp.node_lifecycle_actions.stages.node_bootstrapped[0].script_source.script_location #=> String
+    #   resp.node_lifecycle_actions.stages.node_bootstrapped[0].script_source.s3_version_id #=> String
+    #   resp.node_lifecycle_actions.stages.node_bootstrapped[0].script_source.checksum #=> String
+    #   resp.node_lifecycle_actions.stages.node_bootstrapped[0].arguments #=> Array
+    #   resp.node_lifecycle_actions.stages.node_bootstrapped[0].arguments[0] #=> String
+    #   resp.node_lifecycle_actions.stages.node_bootstrapped[0].on_error #=> String, one of "TERMINATE", "STOP_SEQUENCE", "CONTINUE"
+    #   resp.node_lifecycle_actions.stages.node_bootstrapped[0].execution_policy #=> String, one of "FIRST_BOOT_ONLY", "EVERY_BOOT"
+    #   resp.node_lifecycle_actions.stages.node_ready #=> Array
+    #   resp.node_lifecycle_actions.stages.node_ready[0].name #=> String
+    #   resp.node_lifecycle_actions.stages.node_ready[0].script_source.script_location #=> String
+    #   resp.node_lifecycle_actions.stages.node_ready[0].script_source.s3_version_id #=> String
+    #   resp.node_lifecycle_actions.stages.node_ready[0].script_source.checksum #=> String
+    #   resp.node_lifecycle_actions.stages.node_ready[0].arguments #=> Array
+    #   resp.node_lifecycle_actions.stages.node_ready[0].arguments[0] #=> String
+    #   resp.node_lifecycle_actions.stages.node_ready[0].on_error #=> String, one of "TERMINATE", "STOP_SEQUENCE", "CONTINUE"
+    #   resp.node_lifecycle_actions.stages.node_ready[0].execution_policy #=> String, one of "FIRST_BOOT_ONLY", "EVERY_BOOT"
+    #   resp.node_lifecycle_actions.script_caching_policy #=> String, one of "CACHE_ONCE", "REFRESH_ON_REBOOT"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/RegisterComputeNodeGroupInstance AWS API Documentation
     #
@@ -1358,11 +1535,11 @@ module Aws::PCS
       req.send_request(options)
     end
 
-    # Adds or edits tags on an Amazon Web Services PCS resource. Each tag
-    # consists of a tag key and a tag value. The tag key and tag value are
-    # case-sensitive strings. The tag value can be an empty (null) string.
-    # To add a tag, specify a new tag key and a tag value. To edit a tag,
-    # specify an existing tag key and a new tag value.
+    # Adds or edits tags on an PCS resource. Each tag consists of a tag key
+    # and a tag value. The tag key and tag value are case-sensitive strings.
+    # The tag value can be an empty (null) string. To add a tag, specify a
+    # new tag key and a tag value. To edit a tag, specify an existing tag
+    # key and a new tag value.
     #
     # @option params [required, String] :resource_arn
     #   The Amazon Resource Name (ARN) of the resource.
@@ -1391,9 +1568,8 @@ module Aws::PCS
       req.send_request(options)
     end
 
-    # Deletes tags from an Amazon Web Services PCS resource. To delete a
-    # tag, specify the tag key and the Amazon Resource Name (ARN) of the
-    # Amazon Web Services PCS resource.
+    # Deletes tags from an PCS resource. To delete a tag, specify the tag
+    # key and the Amazon Resource Name (ARN) of the PCS resource.
     #
     # @option params [required, String] :resource_arn
     #   The Amazon Resource Name (ARN) of the resource.
@@ -1420,6 +1596,143 @@ module Aws::PCS
       req.send_request(options)
     end
 
+    # Updates a cluster configuration. You can update the scheduler version,
+    # modify scheduler settings, and update accounting configuration for an
+    # existing cluster. For more information about updating the scheduler
+    # version, see [Updating the scheduler version on a cluster][1] in the
+    # *PCS User Guide*.
+    #
+    # <note markdown="1"> You can only update clusters that are in `ACTIVE`, `UPDATE_FAILED`, or
+    # `SUSPENDED` state. All associated resources (queues and compute node
+    # groups) must be in `ACTIVE` state before you can update the cluster.
+    #
+    #  </note>
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/pcs/latest/userguide/working-with_clusters_version_update.html
+    #
+    # @option params [required, String] :cluster_identifier
+    #   The name or ID of the cluster to update.
+    #
+    # @option params [String] :client_token
+    #   A unique, case-sensitive identifier that you provide to ensure the
+    #   idempotency of the request. Idempotency ensures that an API request
+    #   completes only once. With an idempotent request, if the original
+    #   request completes successfully, the subsequent retries with the same
+    #   client token return the result from the original successful request
+    #   and they have no additional effect. If you don't specify a client
+    #   token, the CLI and SDK automatically generate 1 for you.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @option params [Types::UpdateClusterSlurmConfigurationRequest] :slurm_configuration
+    #   Additional options related to the Slurm scheduler.
+    #
+    # @option params [Types::UpdateSchedulerRequest] :scheduler
+    #   The scheduler configuration to update for the cluster. Use this to
+    #   update the scheduler version. For more information, see [Updating the
+    #   scheduler version on a cluster][1] in the *PCS User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/pcs/latest/userguide/working-with_clusters_version_update.html
+    #
+    # @return [Types::UpdateClusterResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateClusterResponse#cluster #cluster} => Types::Cluster
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_cluster({
+    #     cluster_identifier: "ClusterIdentifier", # required
+    #     client_token: "SBClientToken",
+    #     slurm_configuration: {
+    #       scale_down_idle_time_in_seconds: 1,
+    #       slurm_custom_settings: [
+    #         {
+    #           parameter_name: "String", # required
+    #           parameter_value: "String", # required
+    #         },
+    #       ],
+    #       slurmdbd_custom_settings: [
+    #         {
+    #           parameter_name: "String", # required
+    #           parameter_value: "String", # required
+    #         },
+    #       ],
+    #       cgroup_custom_settings: [
+    #         {
+    #           parameter_name: "String", # required
+    #           parameter_value: "String", # required
+    #         },
+    #       ],
+    #       accounting: {
+    #         default_purge_time_in_days: 1,
+    #         mode: "STANDARD", # accepts STANDARD, NONE
+    #       },
+    #       slurm_rest: {
+    #         mode: "STANDARD", # accepts STANDARD, NONE
+    #       },
+    #     },
+    #     scheduler: {
+    #       version: "String", # required
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.cluster.name #=> String
+    #   resp.cluster.id #=> String
+    #   resp.cluster.arn #=> String
+    #   resp.cluster.status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "CREATE_FAILED", "DELETE_FAILED", "UPDATE_FAILED", "SUSPENDING", "SUSPENDED", "RESUMING"
+    #   resp.cluster.created_at #=> Time
+    #   resp.cluster.modified_at #=> Time
+    #   resp.cluster.scheduler.type #=> String, one of "SLURM"
+    #   resp.cluster.scheduler.version #=> String
+    #   resp.cluster.size #=> String, one of "SMALL", "MEDIUM", "LARGE"
+    #   resp.cluster.slurm_configuration.scale_down_idle_time_in_seconds #=> Integer
+    #   resp.cluster.slurm_configuration.slurm_custom_settings #=> Array
+    #   resp.cluster.slurm_configuration.slurm_custom_settings[0].parameter_name #=> String
+    #   resp.cluster.slurm_configuration.slurm_custom_settings[0].parameter_value #=> String
+    #   resp.cluster.slurm_configuration.slurmdbd_custom_settings #=> Array
+    #   resp.cluster.slurm_configuration.slurmdbd_custom_settings[0].parameter_name #=> String
+    #   resp.cluster.slurm_configuration.slurmdbd_custom_settings[0].parameter_value #=> String
+    #   resp.cluster.slurm_configuration.cgroup_custom_settings #=> Array
+    #   resp.cluster.slurm_configuration.cgroup_custom_settings[0].parameter_name #=> String
+    #   resp.cluster.slurm_configuration.cgroup_custom_settings[0].parameter_value #=> String
+    #   resp.cluster.slurm_configuration.auth_key.secret_arn #=> String
+    #   resp.cluster.slurm_configuration.auth_key.secret_version #=> String
+    #   resp.cluster.slurm_configuration.jwt_auth.jwt_key.secret_arn #=> String
+    #   resp.cluster.slurm_configuration.jwt_auth.jwt_key.secret_version #=> String
+    #   resp.cluster.slurm_configuration.accounting.default_purge_time_in_days #=> Integer
+    #   resp.cluster.slurm_configuration.accounting.mode #=> String, one of "STANDARD", "NONE"
+    #   resp.cluster.slurm_configuration.slurm_rest.mode #=> String, one of "STANDARD", "NONE"
+    #   resp.cluster.networking.subnet_ids #=> Array
+    #   resp.cluster.networking.subnet_ids[0] #=> String
+    #   resp.cluster.networking.security_group_ids #=> Array
+    #   resp.cluster.networking.security_group_ids[0] #=> String
+    #   resp.cluster.networking.network_type #=> String, one of "IPV4", "IPV6"
+    #   resp.cluster.endpoints #=> Array
+    #   resp.cluster.endpoints[0].type #=> String, one of "SLURMCTLD", "SLURMDBD", "SLURMRESTD"
+    #   resp.cluster.endpoints[0].private_ip_address #=> String
+    #   resp.cluster.endpoints[0].public_ip_address #=> String
+    #   resp.cluster.endpoints[0].ipv6_address #=> String
+    #   resp.cluster.endpoints[0].port #=> String
+    #   resp.cluster.error_info #=> Array
+    #   resp.cluster.error_info[0].code #=> String
+    #   resp.cluster.error_info[0].message #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/UpdateCluster AWS API Documentation
+    #
+    # @overload update_cluster(params = {})
+    # @param [Hash] params ({})
+    def update_cluster(params = {}, options = {})
+      req = build_request(:update_cluster, params)
+      req.send_request(options)
+    end
+
     # Updates a compute node group. You can update many of the fields
     # related to your compute node group including the configurations for
     # networking, compute nodes, and settings specific to your scheduler
@@ -1432,28 +1745,37 @@ module Aws::PCS
     #   The name or ID of the compute node group.
     #
     # @option params [String] :ami_id
-    #   The ID of the Amazon Machine Image (AMI) that Amazon Web Services PCS
-    #   uses to launch instances. If not provided, Amazon Web Services PCS
-    #   uses the AMI ID specified in the custom launch template.
+    #   The ID of the Amazon Machine Image (AMI) that PCS uses to launch
+    #   instances. If not provided, PCS uses the AMI ID specified in the
+    #   custom launch template.
     #
     # @option params [Array<String>] :subnet_ids
     #   The list of subnet IDs where the compute node group provisions
     #   instances. The subnets must be in the same VPC as the cluster.
     #
     # @option params [Types::CustomLaunchTemplate] :custom_launch_template
-    #   An Amazon EC2 launch template Amazon Web Services PCS uses to launch
-    #   compute nodes.
+    #   An Amazon EC2 launch template PCS uses to launch compute nodes.
     #
     # @option params [String] :purchase_option
-    #   Specifies how EC2 instances are purchased on your behalf. Amazon Web
-    #   Services PCS supports On-Demand and Spot instances. For more
-    #   information, see [Instance purchasing options][1] in the *Amazon
-    #   Elastic Compute Cloud User Guide*. If you don't provide this option,
-    #   it defaults to On-Demand.
+    #   Specifies how EC2 instances are purchased on your behalf. PCS supports
+    #   On-Demand Instances, Spot Instances, Interruptible Capacity
+    #   Reservations, On-Demand Capacity Reservations, and Amazon EC2 Capacity
+    #   Blocks for ML. For more information, see [Amazon EC2 billing and
+    #   purchasing options][1] in the *Amazon Elastic Compute Cloud User
+    #   Guide*. For more information about PCS support for Capacity Blocks,
+    #   see [Using Amazon EC2 Capacity Blocks for ML with PCS][2] in the *PCS
+    #   User Guide*. For more information about PCS support for interruptible
+    #   capacity reservations, see [Using I-ODCRs with PCS][3] in the *PCS
+    #   User Guide*. Choose On-Demand if you plan to use an On-Demand Capacity
+    #   Reservation (ODCR). For more information, see [Using ODCRs with
+    #   PCS][4]. If you don't provide this option, it defaults to On-Demand.
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-purchasing-options.html
+    #   [2]: https://docs.aws.amazon.com/pcs/latest/userguide/capacity-blocks.html
+    #   [3]: https://docs.aws.amazon.com/pcs/latest/userguide/capacity-reservations-iodcr.html
+    #   [4]: https://docs.aws.amazon.com/pcs/latest/userguide/capacity-reservations-odcr.html
     #
     # @option params [Types::SpotOptions] :spot_options
     #   Additional configuration when you specify `SPOT` as the
@@ -1466,18 +1788,23 @@ module Aws::PCS
     #   The Amazon Resource Name (ARN) of the IAM instance profile used to
     #   pass an IAM role when launching EC2 instances. The role contained in
     #   your instance profile must have the
-    #   `pcs:RegisterComputeNodeGroupInstance` permission. The resource
-    #   identifier of the ARN must start with `AWSPCS` or it must have
-    #   `/aws-pcs/` in its path.
+    #   `pcs:RegisterComputeNodeGroupInstance` permission and the role name
+    #   must start with `AWSPCS` or must have the path `/aws-pcs/`. For more
+    #   information, see [IAM instance profiles for PCS][1] in the *PCS User
+    #   Guide*.
     #
-    #   **Examples**
     #
-    #   * `arn:aws:iam::111122223333:instance-profile/AWSPCS-example-role-1`
     #
-    #   * `arn:aws:iam::111122223333:instance-profile/aws-pcs/example-role-2`
+    #   [1]: https://docs.aws.amazon.com/pcs/latest/userguide/security-instance-profiles.html
     #
     # @option params [Types::UpdateComputeNodeGroupSlurmConfigurationRequest] :slurm_configuration
     #   Additional options related to the Slurm scheduler.
+    #
+    # @option params [Types::UpdateNodeLifecycleActionsRequest] :node_lifecycle_actions
+    #   The lifecycle actions to run on compute nodes in the compute node
+    #   group. Use lifecycle actions to run custom scripts at defined stages
+    #   of a compute node's lifecycle, such as when a compute node finishes
+    #   bootstrapping or becomes ready to accept jobs.
     #
     # @option params [String] :client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
@@ -1506,7 +1833,7 @@ module Aws::PCS
     #       id: "String", # required
     #       version: "String", # required
     #     },
-    #     purchase_option: "ONDEMAND", # accepts ONDEMAND, SPOT
+    #     purchase_option: "ONDEMAND", # accepts ONDEMAND, SPOT, CAPACITY_BLOCK, INTERRUPTIBLE_CAPACITY_RESERVATION
     #     spot_options: {
     #       allocation_strategy: "lowest-price", # accepts lowest-price, capacity-optimized, price-capacity-optimized
     #     },
@@ -1516,12 +1843,44 @@ module Aws::PCS
     #     },
     #     iam_instance_profile_arn: "InstanceProfileArn",
     #     slurm_configuration: {
+    #       scale_down_idle_time_in_seconds: 1,
     #       slurm_custom_settings: [
     #         {
     #           parameter_name: "String", # required
     #           parameter_value: "String", # required
     #         },
     #       ],
+    #     },
+    #     node_lifecycle_actions: {
+    #       stages: { # required
+    #         node_bootstrapped: [
+    #           {
+    #             name: "NodeLifecycleScriptNameString", # required
+    #             script_source: { # required
+    #               script_location: "ScriptSourceScriptLocationString", # required
+    #               s3_version_id: "ScriptSourceS3VersionIdString",
+    #               checksum: "ScriptSourceChecksumString",
+    #             },
+    #             arguments: ["NodeLifecycleScriptArgument"],
+    #             on_error: "TERMINATE", # accepts TERMINATE, STOP_SEQUENCE, CONTINUE
+    #             execution_policy: "FIRST_BOOT_ONLY", # accepts FIRST_BOOT_ONLY, EVERY_BOOT
+    #           },
+    #         ],
+    #         node_ready: [
+    #           {
+    #             name: "NodeLifecycleScriptNameString", # required
+    #             script_source: { # required
+    #               script_location: "ScriptSourceScriptLocationString", # required
+    #               s3_version_id: "ScriptSourceS3VersionIdString",
+    #               checksum: "ScriptSourceChecksumString",
+    #             },
+    #             arguments: ["NodeLifecycleScriptArgument"],
+    #             on_error: "TERMINATE", # accepts TERMINATE, STOP_SEQUENCE, CONTINUE
+    #             execution_policy: "FIRST_BOOT_ONLY", # accepts FIRST_BOOT_ONLY, EVERY_BOOT
+    #           },
+    #         ],
+    #       },
+    #       script_caching_policy: "CACHE_ONCE", # accepts CACHE_ONCE, REFRESH_ON_REBOOT
     #     },
     #     client_token: "SBClientToken",
     #   })
@@ -1534,11 +1893,11 @@ module Aws::PCS
     #   resp.compute_node_group.cluster_id #=> String
     #   resp.compute_node_group.created_at #=> Time
     #   resp.compute_node_group.modified_at #=> Time
-    #   resp.compute_node_group.status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "CREATE_FAILED", "DELETE_FAILED", "UPDATE_FAILED", "DELETED"
+    #   resp.compute_node_group.status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "CREATE_FAILED", "DELETE_FAILED", "UPDATE_FAILED", "DELETED", "SUSPENDING", "SUSPENDED", "RESUMING"
     #   resp.compute_node_group.ami_id #=> String
     #   resp.compute_node_group.subnet_ids #=> Array
     #   resp.compute_node_group.subnet_ids[0] #=> String
-    #   resp.compute_node_group.purchase_option #=> String, one of "ONDEMAND", "SPOT"
+    #   resp.compute_node_group.purchase_option #=> String, one of "ONDEMAND", "SPOT", "CAPACITY_BLOCK", "INTERRUPTIBLE_CAPACITY_RESERVATION"
     #   resp.compute_node_group.custom_launch_template.id #=> String
     #   resp.compute_node_group.custom_launch_template.version #=> String
     #   resp.compute_node_group.iam_instance_profile_arn #=> String
@@ -1547,9 +1906,29 @@ module Aws::PCS
     #   resp.compute_node_group.instance_configs #=> Array
     #   resp.compute_node_group.instance_configs[0].instance_type #=> String
     #   resp.compute_node_group.spot_options.allocation_strategy #=> String, one of "lowest-price", "capacity-optimized", "price-capacity-optimized"
+    #   resp.compute_node_group.slurm_configuration.scale_down_idle_time_in_seconds #=> Integer
     #   resp.compute_node_group.slurm_configuration.slurm_custom_settings #=> Array
     #   resp.compute_node_group.slurm_configuration.slurm_custom_settings[0].parameter_name #=> String
     #   resp.compute_node_group.slurm_configuration.slurm_custom_settings[0].parameter_value #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_bootstrapped #=> Array
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_bootstrapped[0].name #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_bootstrapped[0].script_source.script_location #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_bootstrapped[0].script_source.s3_version_id #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_bootstrapped[0].script_source.checksum #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_bootstrapped[0].arguments #=> Array
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_bootstrapped[0].arguments[0] #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_bootstrapped[0].on_error #=> String, one of "TERMINATE", "STOP_SEQUENCE", "CONTINUE"
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_bootstrapped[0].execution_policy #=> String, one of "FIRST_BOOT_ONLY", "EVERY_BOOT"
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_ready #=> Array
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_ready[0].name #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_ready[0].script_source.script_location #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_ready[0].script_source.s3_version_id #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_ready[0].script_source.checksum #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_ready[0].arguments #=> Array
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_ready[0].arguments[0] #=> String
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_ready[0].on_error #=> String, one of "TERMINATE", "STOP_SEQUENCE", "CONTINUE"
+    #   resp.compute_node_group.node_lifecycle_actions.stages.node_ready[0].execution_policy #=> String, one of "FIRST_BOOT_ONLY", "EVERY_BOOT"
+    #   resp.compute_node_group.node_lifecycle_actions.script_caching_policy #=> String, one of "CACHE_ONCE", "REFRESH_ON_REBOOT"
     #   resp.compute_node_group.error_info #=> Array
     #   resp.compute_node_group.error_info[0].code #=> String
     #   resp.compute_node_group.error_info[0].message #=> String
@@ -1575,6 +1954,9 @@ module Aws::PCS
     # @option params [Array<Types::ComputeNodeGroupConfiguration>] :compute_node_group_configurations
     #   The list of compute node group configurations to associate with the
     #   queue. Queues assign jobs to associated compute node groups.
+    #
+    # @option params [Types::UpdateQueueSlurmConfigurationRequest] :slurm_configuration
+    #   Additional options related to the Slurm scheduler.
     #
     # @option params [String] :client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
@@ -1602,6 +1984,14 @@ module Aws::PCS
     #         compute_node_group_id: "String",
     #       },
     #     ],
+    #     slurm_configuration: {
+    #       slurm_custom_settings: [
+    #         {
+    #           parameter_name: "String", # required
+    #           parameter_value: "String", # required
+    #         },
+    #       ],
+    #     },
     #     client_token: "SBClientToken",
     #   })
     #
@@ -1613,9 +2003,12 @@ module Aws::PCS
     #   resp.queue.cluster_id #=> String
     #   resp.queue.created_at #=> Time
     #   resp.queue.modified_at #=> Time
-    #   resp.queue.status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "CREATE_FAILED", "DELETE_FAILED", "UPDATE_FAILED"
+    #   resp.queue.status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "CREATE_FAILED", "DELETE_FAILED", "UPDATE_FAILED", "SUSPENDING", "SUSPENDED", "RESUMING"
     #   resp.queue.compute_node_group_configurations #=> Array
     #   resp.queue.compute_node_group_configurations[0].compute_node_group_id #=> String
+    #   resp.queue.slurm_configuration.slurm_custom_settings #=> Array
+    #   resp.queue.slurm_configuration.slurm_custom_settings[0].parameter_name #=> String
+    #   resp.queue.slurm_configuration.slurm_custom_settings[0].parameter_value #=> String
     #   resp.queue.error_info #=> Array
     #   resp.queue.error_info[0].code #=> String
     #   resp.queue.error_info[0].message #=> String
@@ -1647,7 +2040,7 @@ module Aws::PCS
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-pcs'
-      context[:gem_version] = '1.14.0'
+      context[:gem_version] = '1.52.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

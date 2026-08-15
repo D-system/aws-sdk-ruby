@@ -1,6 +1,261 @@
 Unreleased Changes
 ------------------
 
+1.195.0 (2026-08-12)
+------------------
+
+* Feature - Added APIs for DLP with Microsoft Purview (manage configs with label enforcement across Spaces, Chat, Knowledge Bases), Approval Workflows (CRUD for policies on asset sharing for Agents, Knowledge Bases, Spaces), and Limits Management (limit profiles for index storage and agent hours per user).
+
+1.194.0 (2026-07-31)
+------------------
+
+* Feature - Adding TopicV2 management APIs, adding possibility to use Topics in Analysis
+
+1.193.0 (2026-07-27)
+------------------
+
+* Feature - Added new Governance fields to Custom Permissions API to support Deny By Default functionality.
+
+1.192.0 (2026-07-23)
+------------------
+
+* Feature - Added new capabilities to custom permissions profiles to control access to Amazon Quick through the browser extension and Microsoft Word, Outlook, Excel, and PowerPoint add-ins.
+
+1.191.0 (2026-07-20)
+------------------
+
+* Feature - Adds support for custom permissions for Triggers, allowing administrators to control user access to Schedule, Inbound Email and Quick Event triggers.
+
+1.190.0 (2026-07-10)
+------------------
+
+* Feature - Provides CreateKnowledgeBase and UpdateKnowledgeBase APIs
+
+1.189.0 (2026-07-09)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.188.0 (2026-07-01)
+------------------
+
+* Feature - Adding support for FileSource PhysicalTables.  This adds support for datasets with file sources.
+
+1.187.0 (2026-06-22)
+------------------
+
+* Feature - Updated the Amazon Quick Spaces API to remove unsupported SPACE and ARTIFACT values from the SpaceQuickSightResourceType enum.
+
+1.186.0 (2026-06-05)
+------------------
+
+* Feature - Adds support for Knowledge Base APIs and Index Capacity API
+
+1.185.0 (2026-06-01)
+------------------
+
+* Feature - This release adds public APIs for Amazon QuickSight Spaces, Agents, and Flows. Spaces APIs enable management of curated resource collections. Agents APIs provide lifecycle control over AI-powered agents that leverage Spaces. Flows APIs add CRUDL APIs for automated workflows.
+
+1.184.0 (2026-05-29)
+------------------
+
+* Feature - Adds support for creating, updating, describing, listing, and deleting an OAuthClientApplication resource, a new quicksight resource that allows customers to store OAuth configurations to connect to their databases via 3 Legged OAuth.
+
+1.183.0 (2026-05-21)
+------------------
+
+* Feature - Adding new BDD representation of endpoint ruleset
+
+1.182.0 (2026-05-19)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.181.0 (2026-05-18)
+------------------
+
+* Feature - Support for dataset enrichment and geo spatial in new data preparation experience
+
+1.180.0 (2026-05-13)
+------------------
+
+* Feature - Adds five new custom permission option for Quick Apps so that these capabilities can be controlled by public SDK and CLI.
+
+1.179.0 (2026-05-01)
+------------------
+
+* Feature - Add IdentityProviderCACertificatesBundleS3Uri for private CA certs with OAuth datasources. 256-char limit for FontFamily in themes. ControlTitleFormatText on all 13 filters. ControlTitleFontConfiguration. ContextRegion for cross-region identity context. Story,scenario in CreateCustomCapability API.
+
+1.178.0 (2026-04-17)
+------------------
+
+* Feature - Public release of dashboard customization summary, S3 Tables data source type, Athena cross-account connector, custom sorting for controls, and AI-powered analysis generation.
+
+1.177.0 (2026-03-31)
+------------------
+
+* Feature - Adds StartAutomationJob and DescribeAutomationJob APIs for automation jobs. Adds three custom permission capabilities that allow admins to control whether users can manage Spaces and chat agents. Adds an OAuthClientCredentials structure to provide OAuth 2.0 client credentials inline to data sources.
+
+1.176.0 (2026-03-18)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.175.0 (2026-03-13)
+------------------
+
+* Feature - The change adds a new capability named ManageSharedFolders in Custom Permissions
+
+1.174.0 (2026-03-04)
+------------------
+
+* Feature - Added several new values for Capabilities, increased visual limit per sheet from previous limit to 75, renamed Quick Suite to Quick in several places.
+
+1.173.0 (2026-02-23)
+------------------
+
+* Feature - Adds support for SEMISTRUCT to InputColumn Type
+
+1.172.0 (2026-01-30)
+------------------
+
+* Feature - Improve SessionTag usage guidelines in the GenerateEmbedURLForAnonymousUser API documentation. Update the GetIdentityContext document with the region support context.
+
+1.171.0 (2026-01-21)
+------------------
+
+* Feature - Added documentation and model for sheet layout groups - allows sheet elements to be grouped, Added documentation and the feature enables admins to have granular control over connectors under actions, Updated API documentation for PDF Export in Snapshot Export APIs
+
+1.170.0 (2026-01-16)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.169.0 (2026-01-08)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.168.0 (2026-01-05)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.167.0 (2025-12-29)
+------------------
+
+* Feature - This release adds support for quick users to be able to perform role upgrades on their own. Additionally it allows admins to make this feature admin or auto approval along with new self upgrade capability that can be restricted by Admins.
+
+1.166.0 (2025-12-11)
+------------------
+
+* Feature - This release adds new GetIdentityContext API, Dashboard customization options for tables and pivot tables, Visual styling options- borders and decals, map GeocodingPreferences, KeyPairCredentials for DataSourceCredentials. Snapshot APIs now support registered users. Parameters limit increased to 400
+
+1.165.0 (2025-11-21)
+------------------
+
+* Feature - Amazon Quick Suite now supports QuickChat as an embedding type when calling the GenerateEmbedUrlForRegisteredUser API, enabling developers to embed conversational AI agents directly into their applications.
+
+1.164.0 (2025-11-20)
+------------------
+
+* Feature - Introducing comprehensive theme styling controls. New features include border customization (radius, width, color), flexible padding controls, background styling for cards and sheets, centralized typography management, and visual-level override support across layouts.
+
+1.163.0 (2025-11-06)
+------------------
+
+* Feature - Support for New Data Prep Experience
+
+1.162.0 (2025-10-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.161.0 (2025-10-09)
+------------------
+
+* Feature - This release adds support for ActionConnector and Flow, which are new resources associated with Amazon Quick Suite. Additional updates include expanded Data Source options, further branding customization, and new capabilities that can be restricted by Admins.
+
+1.160.0 (2025-10-06)
+------------------
+
+* Feature - Documentation improvements for QuickSight API documentation to clarify that delete operation APIs are global.
+
+1.159.0 (2025-09-30)
+------------------
+
+* Feature - added warnings to a few CLI pages
+
+1.158.0 (2025-09-11)
+------------------
+
+* Feature - This release adds support for Account level custom permissions, additional Dashboard Options, and Null support for Q&A.
+
+1.157.0 (2025-08-28)
+------------------
+
+* Feature - Remove incorrect endpoint tests
+
+1.156.0 (2025-08-26)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.155.0 (2025-08-11)
+------------------
+
+* Feature - Add RowAxisDisplayOptions and ColumnAxisDisplayOptions to HeatMapConfiguration, add Actions to PluginVisual, increase limit for CalculatedFields list
+
+1.154.0 (2025-08-04)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.153.0 (2025-07-31)
+------------------
+
+* Feature - Added Impala connector support
+
+1.152.0 (2025-07-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.151.0 (2025-07-15)
+------------------
+
+* Feature - Introduced custom instructions for topics.
+
+1.150.0 (2025-06-30)
+------------------
+
+* Feature - Introduced custom permission capabilities for reporting content. Added menu option in exploration to preserve configuration data when textbox menu option is used. Added support for Athena trusted identity propagation.
+
+1.149.0 (2025-06-02)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.148.0 (2025-05-12)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.147.0 (2025-05-01)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.146.0 (2025-04-10)
+------------------
+
+* Feature - Add support to analysis and sheet level highlighting in QuickSight.
+
+1.145.0 (2025-03-28)
+------------------
+
+* Feature - RLS permission dataset with userAs: RLS_RULES flag, Q in QuickSight/Threshold Alerts/Schedules/Snapshots in QS embedding, toggle dataset refresh email alerts via API, transposed table with options: column width, type and index, toggle Q&A on dashboards, Oracle Service Name when creating data source.
+
 1.144.0 (2025-02-18)
 ------------------
 

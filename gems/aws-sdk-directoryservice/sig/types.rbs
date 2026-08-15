@@ -8,6 +8,12 @@
 module Aws::DirectoryService
   module Types
 
+    class ADAssessmentLimitExceededException
+      attr_accessor message: ::String
+      attr_accessor request_id: ::String
+      SENSITIVE: []
+    end
+
     class AcceptSharedDirectoryRequest
       attr_accessor shared_directory_id: ::String
       SENSITIVE: []
@@ -51,6 +57,63 @@ module Aws::DirectoryService
     end
 
     class AddTagsToResourceResult < Aws::EmptyStructure
+    end
+
+    class Assessment
+      attr_accessor assessment_id: ::String
+      attr_accessor directory_id: ::String
+      attr_accessor dns_name: ::String
+      attr_accessor start_time: ::Time
+      attr_accessor last_update_date_time: ::Time
+      attr_accessor status: ::String
+      attr_accessor status_code: ::String
+      attr_accessor status_reason: ::String
+      attr_accessor customer_dns_ips: ::Array[::String]
+      attr_accessor vpc_id: ::String
+      attr_accessor subnet_ids: ::Array[::String]
+      attr_accessor security_group_ids: ::Array[::String]
+      attr_accessor self_managed_instance_ids: ::Array[::String]
+      attr_accessor report_type: ::String
+      attr_accessor version: ::String
+      SENSITIVE: []
+    end
+
+    class AssessmentConfiguration
+      attr_accessor customer_dns_ips: ::Array[::String]
+      attr_accessor dns_name: ::String
+      attr_accessor vpc_settings: Types::DirectoryVpcSettings
+      attr_accessor instance_ids: ::Array[::String]
+      attr_accessor security_group_ids: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class AssessmentReport
+      attr_accessor domain_controller_ip: ::String
+      attr_accessor validations: ::Array[Types::AssessmentValidation]
+      SENSITIVE: []
+    end
+
+    class AssessmentSummary
+      attr_accessor assessment_id: ::String
+      attr_accessor directory_id: ::String
+      attr_accessor dns_name: ::String
+      attr_accessor start_time: ::Time
+      attr_accessor last_update_date_time: ::Time
+      attr_accessor status: ::String
+      attr_accessor customer_dns_ips: ::Array[::String]
+      attr_accessor report_type: ::String
+      SENSITIVE: []
+    end
+
+    class AssessmentValidation
+      attr_accessor category: ::String
+      attr_accessor name: ::String
+      attr_accessor status: ::String
+      attr_accessor status_code: ::String
+      attr_accessor status_reason: ::String
+      attr_accessor start_time: ::Time
+      attr_accessor last_update_date_time: ::Time
+      SENSITIVE: []
     end
 
     class Attribute
@@ -147,6 +210,7 @@ module Aws::DirectoryService
     class ConditionalForwarder
       attr_accessor remote_domain_name: ::String
       attr_accessor dns_ip_addrs: ::Array[::String]
+      attr_accessor dns_ipv_6_addrs: ::Array[::String]
       attr_accessor replication_scope: ("Domain")
       SENSITIVE: []
     end
@@ -159,6 +223,7 @@ module Aws::DirectoryService
       attr_accessor size: ("Small" | "Large")
       attr_accessor connect_settings: Types::DirectoryConnectSettings
       attr_accessor tags: ::Array[Types::Tag]
+      attr_accessor network_type: ("Dual-stack" | "IPv4" | "IPv6")
       SENSITIVE: [:password]
     end
 
@@ -197,6 +262,7 @@ module Aws::DirectoryService
       attr_accessor directory_id: ::String
       attr_accessor remote_domain_name: ::String
       attr_accessor dns_ip_addrs: ::Array[::String]
+      attr_accessor dns_ipv_6_addrs: ::Array[::String]
       SENSITIVE: []
     end
 
@@ -211,10 +277,23 @@ module Aws::DirectoryService
       attr_accessor size: ("Small" | "Large")
       attr_accessor vpc_settings: Types::DirectoryVpcSettings
       attr_accessor tags: ::Array[Types::Tag]
+      attr_accessor network_type: ("Dual-stack" | "IPv4" | "IPv6")
       SENSITIVE: [:password]
     end
 
     class CreateDirectoryResult
+      attr_accessor directory_id: ::String
+      SENSITIVE: []
+    end
+
+    class CreateHybridADRequest
+      attr_accessor secret_arn: ::String
+      attr_accessor assessment_id: ::String
+      attr_accessor tags: ::Array[Types::Tag]
+      SENSITIVE: []
+    end
+
+    class CreateHybridADResult
       attr_accessor directory_id: ::String
       SENSITIVE: []
     end
@@ -234,8 +313,9 @@ module Aws::DirectoryService
       attr_accessor password: ::String
       attr_accessor description: ::String
       attr_accessor vpc_settings: Types::DirectoryVpcSettings
-      attr_accessor edition: ("Enterprise" | "Standard")
+      attr_accessor edition: ("Enterprise" | "Standard" | "Hybrid")
       attr_accessor tags: ::Array[Types::Tag]
+      attr_accessor network_type: ("Dual-stack" | "IPv4" | "IPv6")
       SENSITIVE: [:password]
     end
 
@@ -262,12 +342,23 @@ module Aws::DirectoryService
       attr_accessor trust_direction: ("One-Way: Outgoing" | "One-Way: Incoming" | "Two-Way")
       attr_accessor trust_type: ("Forest" | "External")
       attr_accessor conditional_forwarder_ip_addrs: ::Array[::String]
+      attr_accessor conditional_forwarder_ipv_6_addrs: ::Array[::String]
       attr_accessor selective_auth: ("Enabled" | "Disabled")
       SENSITIVE: [:trust_password]
     end
 
     class CreateTrustResult
       attr_accessor trust_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteADAssessmentRequest
+      attr_accessor assessment_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteADAssessmentResult
+      attr_accessor assessment_id: ::String
       SENSITIVE: []
     end
 
@@ -335,6 +426,31 @@ module Aws::DirectoryService
     end
 
     class DeregisterEventTopicResult < Aws::EmptyStructure
+    end
+
+    class DescribeADAssessmentRequest
+      attr_accessor assessment_id: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeADAssessmentResult
+      attr_accessor assessment: Types::Assessment
+      attr_accessor assessment_reports: ::Array[Types::AssessmentReport]
+      SENSITIVE: []
+    end
+
+    class DescribeCAEnrollmentPolicyRequest
+      attr_accessor directory_id: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeCAEnrollmentPolicyResult
+      attr_accessor directory_id: ::String
+      attr_accessor pca_connector_arn: ::String
+      attr_accessor ca_enrollment_policy_status: ("InProgress" | "Success" | "Failed" | "Disabling" | "Disabled" | "Impaired")
+      attr_accessor last_updated_date_time: ::Time
+      attr_accessor ca_enrollment_policy_status_reason: ::String
+      SENSITIVE: []
     end
 
     class DescribeCertificateRequest
@@ -418,6 +534,19 @@ module Aws::DirectoryService
 
     class DescribeEventTopicsResult
       attr_accessor event_topics: ::Array[Types::EventTopic]
+      SENSITIVE: []
+    end
+
+    class DescribeHybridADUpdateRequest
+      attr_accessor directory_id: ::String
+      attr_accessor update_type: ("SelfManagedInstances" | "HybridAdministratorAccount")
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeHybridADUpdateResult
+      attr_accessor update_activities: Types::HybridUpdateActivities
+      attr_accessor next_token: ::String
       SENSITIVE: []
     end
 
@@ -506,7 +635,7 @@ module Aws::DirectoryService
 
     class DescribeUpdateDirectoryRequest
       attr_accessor directory_id: ::String
-      attr_accessor update_type: ("OS")
+      attr_accessor update_type: ("OS" | "NETWORK" | "SIZE")
       attr_accessor region_name: ::String
       attr_accessor next_token: ::String
       SENSITIVE: []
@@ -534,6 +663,7 @@ module Aws::DirectoryService
       attr_accessor vpc_id: ::String
       attr_accessor subnet_ids: ::Array[::String]
       attr_accessor customer_dns_ips: ::Array[::String]
+      attr_accessor customer_dns_ips_v6: ::Array[::String]
       attr_accessor customer_user_name: ::String
       SENSITIVE: []
     end
@@ -545,6 +675,7 @@ module Aws::DirectoryService
       attr_accessor security_group_id: ::String
       attr_accessor availability_zones: ::Array[::String]
       attr_accessor connect_ips: ::Array[::String]
+      attr_accessor connect_ips_v6: ::Array[::String]
       SENSITIVE: []
     end
 
@@ -553,11 +684,12 @@ module Aws::DirectoryService
       attr_accessor name: ::String
       attr_accessor short_name: ::String
       attr_accessor size: ("Small" | "Large")
-      attr_accessor edition: ("Enterprise" | "Standard")
+      attr_accessor edition: ("Enterprise" | "Standard" | "Hybrid")
       attr_accessor alias: ::String
       attr_accessor access_url: ::String
       attr_accessor description: ::String
       attr_accessor dns_ip_addrs: ::Array[::String]
+      attr_accessor dns_ipv_6_addrs: ::Array[::String]
       attr_accessor stage: ("Requested" | "Creating" | "Created" | "Active" | "Inoperable" | "Impaired" | "Restoring" | "RestoreFailed" | "Deleting" | "Deleted" | "Failed" | "Updating")
       attr_accessor share_status: ("Shared" | "PendingAcceptance" | "Rejected" | "Rejecting" | "RejectFailed" | "Sharing" | "ShareFailed" | "Deleted" | "Deleting")
       attr_accessor share_method: ("ORGANIZATIONS" | "HANDSHAKE")
@@ -575,6 +707,8 @@ module Aws::DirectoryService
       attr_accessor owner_directory_description: Types::OwnerDirectoryDescription
       attr_accessor regions_info: Types::RegionsInfo
       attr_accessor os_version: ("SERVER_2012" | "SERVER_2019")
+      attr_accessor hybrid_settings: Types::HybridSettingsDescription
+      attr_accessor network_type: ("Dual-stack" | "IPv4" | "IPv6")
       SENSITIVE: [:share_notes]
     end
 
@@ -615,6 +749,11 @@ module Aws::DirectoryService
       SENSITIVE: []
     end
 
+    class DirectorySizeUpdateSettings
+      attr_accessor directory_size: ("Small" | "Large")
+      SENSITIVE: []
+    end
+
     class DirectoryUnavailableException
       attr_accessor message: ::String
       attr_accessor request_id: ::String
@@ -633,6 +772,20 @@ module Aws::DirectoryService
       attr_accessor security_group_id: ::String
       attr_accessor availability_zones: ::Array[::String]
       SENSITIVE: []
+    end
+
+    class DisableAlreadyInProgressException
+      attr_accessor message: ::String
+      attr_accessor request_id: ::String
+      SENSITIVE: []
+    end
+
+    class DisableCAEnrollmentPolicyRequest
+      attr_accessor directory_id: ::String
+      SENSITIVE: []
+    end
+
+    class DisableCAEnrollmentPolicyResult < Aws::EmptyStructure
     end
 
     class DisableClientAuthenticationRequest
@@ -683,6 +836,7 @@ module Aws::DirectoryService
       attr_accessor directory_id: ::String
       attr_accessor domain_controller_id: ::String
       attr_accessor dns_ip_addr: ::String
+      attr_accessor dns_ipv_6_addr: ::String
       attr_accessor vpc_id: ::String
       attr_accessor subnet_id: ::String
       attr_accessor availability_zone: ::String
@@ -697,6 +851,21 @@ module Aws::DirectoryService
       attr_accessor message: ::String
       attr_accessor request_id: ::String
       SENSITIVE: []
+    end
+
+    class EnableAlreadyInProgressException
+      attr_accessor message: ::String
+      attr_accessor request_id: ::String
+      SENSITIVE: []
+    end
+
+    class EnableCAEnrollmentPolicyRequest
+      attr_accessor directory_id: ::String
+      attr_accessor pca_connector_arn: ::String
+      SENSITIVE: []
+    end
+
+    class EnableCAEnrollmentPolicyResult < Aws::EmptyStructure
     end
 
     class EnableClientAuthenticationRequest
@@ -783,6 +952,47 @@ module Aws::DirectoryService
       SENSITIVE: []
     end
 
+    class HybridAdministratorAccountUpdate
+      attr_accessor secret_arn: ::String
+      SENSITIVE: []
+    end
+
+    class HybridCustomerInstancesSettings
+      attr_accessor customer_dns_ips: ::Array[::String]
+      attr_accessor instance_ids: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class HybridSettingsDescription
+      attr_accessor self_managed_dns_ip_addrs: ::Array[::String]
+      attr_accessor self_managed_instance_ids: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class HybridUpdateActivities
+      attr_accessor self_managed_instances: ::Array[Types::HybridUpdateInfoEntry]
+      attr_accessor hybrid_administrator_account: ::Array[Types::HybridUpdateInfoEntry]
+      SENSITIVE: []
+    end
+
+    class HybridUpdateInfoEntry
+      attr_accessor status: ("Updated" | "Updating" | "UpdateFailed")
+      attr_accessor status_reason: ::String
+      attr_accessor initiated_by: ::String
+      attr_accessor new_value: Types::HybridUpdateValue
+      attr_accessor previous_value: Types::HybridUpdateValue
+      attr_accessor start_time: ::Time
+      attr_accessor last_updated_date_time: ::Time
+      attr_accessor assessment_id: ::String
+      SENSITIVE: []
+    end
+
+    class HybridUpdateValue
+      attr_accessor instance_ids: ::Array[::String]
+      attr_accessor dns_ips: ::Array[::String]
+      SENSITIVE: []
+    end
+
     class IncompatibleSettingsException
       attr_accessor message: ::String
       attr_accessor request_id: ::String
@@ -839,6 +1049,7 @@ module Aws::DirectoryService
 
     class IpRoute
       attr_accessor cidr_ip: ::String
+      attr_accessor cidr_ipv_6: ::String
       attr_accessor description: ::String
       SENSITIVE: []
     end
@@ -846,6 +1057,7 @@ module Aws::DirectoryService
     class IpRouteInfo
       attr_accessor directory_id: ::String
       attr_accessor cidr_ip: ::String
+      attr_accessor cidr_ipv_6: ::String
       attr_accessor ip_route_status_msg: ("Adding" | "Added" | "Removing" | "Removed" | "AddFailed" | "RemoveFailed")
       attr_accessor added_date_time: ::Time
       attr_accessor ip_route_status_reason: ::String
@@ -863,6 +1075,19 @@ module Aws::DirectoryService
       attr_accessor ldaps_status: ("Enabling" | "Enabled" | "EnableFailed" | "Disabled")
       attr_accessor ldaps_status_reason: ::String
       attr_accessor last_updated_date_time: ::Time
+      SENSITIVE: []
+    end
+
+    class ListADAssessmentsRequest
+      attr_accessor directory_id: ::String
+      attr_accessor next_token: ::String
+      attr_accessor limit: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListADAssessmentsResult
+      attr_accessor assessments: ::Array[Types::AssessmentSummary]
+      attr_accessor next_token: ::String
       SENSITIVE: []
     end
 
@@ -938,6 +1163,12 @@ module Aws::DirectoryService
       SENSITIVE: []
     end
 
+    class NetworkUpdateSettings
+      attr_accessor network_type: ("Dual-stack" | "IPv4" | "IPv6")
+      attr_accessor customer_dns_ips_v6: ::Array[::String]
+      SENSITIVE: []
+    end
+
     class NoAvailableCertificateException
       attr_accessor message: ::String
       attr_accessor request_id: ::String
@@ -959,14 +1190,17 @@ module Aws::DirectoryService
       attr_accessor directory_id: ::String
       attr_accessor account_id: ::String
       attr_accessor dns_ip_addrs: ::Array[::String]
+      attr_accessor dns_ipv_6_addrs: ::Array[::String]
       attr_accessor vpc_settings: Types::DirectoryVpcSettingsDescription
       attr_accessor radius_settings: Types::RadiusSettings
       attr_accessor radius_status: ("Creating" | "Completed" | "Failed")
+      attr_accessor network_type: ("Dual-stack" | "IPv4" | "IPv6")
       SENSITIVE: []
     end
 
     class RadiusSettings
       attr_accessor radius_servers: ::Array[::String]
+      attr_accessor radius_servers_ipv_6: ::Array[::String]
       attr_accessor radius_port: ::Integer
       attr_accessor radius_timeout: ::Integer
       attr_accessor radius_retries: ::Integer
@@ -1037,6 +1271,7 @@ module Aws::DirectoryService
     class RemoveIpRoutesRequest
       attr_accessor directory_id: ::String
       attr_accessor cidr_ips: ::Array[::String]
+      attr_accessor cidr_ipv_6s: ::Array[::String]
       SENSITIVE: []
     end
 
@@ -1177,6 +1412,17 @@ module Aws::DirectoryService
       SENSITIVE: []
     end
 
+    class StartADAssessmentRequest
+      attr_accessor assessment_configuration: Types::AssessmentConfiguration
+      attr_accessor directory_id: ::String
+      SENSITIVE: []
+    end
+
+    class StartADAssessmentResult
+      attr_accessor assessment_id: ::String
+      SENSITIVE: []
+    end
+
     class StartSchemaExtensionRequest
       attr_accessor directory_id: ::String
       attr_accessor create_snapshot_before_schema_extension: bool
@@ -1250,6 +1496,7 @@ module Aws::DirectoryService
       attr_accessor directory_id: ::String
       attr_accessor remote_domain_name: ::String
       attr_accessor dns_ip_addrs: ::Array[::String]
+      attr_accessor dns_ipv_6_addrs: ::Array[::String]
       SENSITIVE: []
     end
 
@@ -1258,13 +1505,28 @@ module Aws::DirectoryService
 
     class UpdateDirectorySetupRequest
       attr_accessor directory_id: ::String
-      attr_accessor update_type: ("OS")
+      attr_accessor update_type: ("OS" | "NETWORK" | "SIZE")
       attr_accessor os_update_settings: Types::OSUpdateSettings
+      attr_accessor directory_size_update_settings: Types::DirectorySizeUpdateSettings
+      attr_accessor network_update_settings: Types::NetworkUpdateSettings
       attr_accessor create_snapshot_before_update: bool
       SENSITIVE: []
     end
 
     class UpdateDirectorySetupResult < Aws::EmptyStructure
+    end
+
+    class UpdateHybridADRequest
+      attr_accessor directory_id: ::String
+      attr_accessor hybrid_administrator_account_update: Types::HybridAdministratorAccountUpdate
+      attr_accessor self_managed_instances_settings: Types::HybridCustomerInstancesSettings
+      SENSITIVE: []
+    end
+
+    class UpdateHybridADResult
+      attr_accessor directory_id: ::String
+      attr_accessor assessment_id: ::String
+      SENSITIVE: []
     end
 
     class UpdateInfoEntry

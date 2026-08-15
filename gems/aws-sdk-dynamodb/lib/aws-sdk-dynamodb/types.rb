@@ -1133,6 +1133,10 @@ module Aws::DynamoDB
     #   * `TableName` - The table that consumed the provisioned throughput.
     #
     #   * `CapacityUnits` - The total number of capacity units consumed.
+    #
+    #   If the table has vector indexes, each element also includes a
+    #   `VectorIndexes` field with `VectorWriteRequestBytes` consumed for
+    #   each affected vector index.
     #   @return [Array<Types::ConsumedCapacity>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/BatchWriteItemOutput AWS API Documentation
@@ -1522,7 +1526,7 @@ module Aws::DynamoDB
       include Aws::Structure
     end
 
-    # A condition specified in the operation could not be evaluated.
+    # A condition specified in the operation failed to be evaluated.
     #
     # @!attribute [rw] message
     #   The conditional request failed.
@@ -1585,6 +1589,13 @@ module Aws::DynamoDB
     #   the operation.
     #   @return [Hash<String,Types::Capacity>]
     #
+    # @!attribute [rw] vector_indexes
+    #   The amount of throughput consumed on each vector index affected by
+    #   the operation. Each entry contains `VectorWriteRequestBytes` (for
+    #   write operations) or `VectorSearchRequestBytes` (for search
+    #   operations).
+    #   @return [Hash<String,Types::VectorCapacity>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/ConsumedCapacity AWS API Documentation
     #
     class ConsumedCapacity < Struct.new(
@@ -1594,7 +1605,8 @@ module Aws::DynamoDB
       :write_capacity_units,
       :table,
       :local_secondary_indexes,
-      :global_secondary_indexes)
+      :global_secondary_indexes,
+      :vector_indexes)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1649,12 +1661,19 @@ module Aws::DynamoDB
     #   table and index, if applicable.
     #   @return [String]
     #
+    # @!attribute [rw] contributor_insights_mode
+    #   Indicates the current mode of CloudWatch Contributor Insights,
+    #   specifying whether it tracks all access and throttled events or
+    #   throttled events only for the DynamoDB table or index.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/ContributorInsightsSummary AWS API Documentation
     #
     class ContributorInsightsSummary < Struct.new(
       :table_name,
       :index_name,
-      :contributor_insights_status)
+      :contributor_insights_status,
+      :contributor_insights_mode)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1697,7 +1716,8 @@ module Aws::DynamoDB
     #   @return [String]
     #
     # @!attribute [rw] key_schema
-    #   The key schema for the global secondary index.
+    #   The key schema for the global secondary index. Global secondary
+    #   index supports up to 4 partition and up to 4 sort keys.
     #   @return [Array<Types::KeySchemaElement>]
     #
     # @!attribute [rw] projection
@@ -1722,7 +1742,9 @@ module Aws::DynamoDB
     # @!attribute [rw] on_demand_throughput
     #   The maximum number of read and write units for the global secondary
     #   index being created. If you use this parameter, you must specify
-    #   `MaxReadRequestUnits`, `MaxWriteRequestUnits`, or both.
+    #   `MaxReadRequestUnits`, `MaxWriteRequestUnits`, or both. You must use
+    #   either `OnDemand Throughput` or `ProvisionedThroughput` based on
+    #   your table's capacity mode.
     #   @return [Types::OnDemandThroughput]
     #
     # @!attribute [rw] warm_throughput
@@ -1768,6 +1790,33 @@ module Aws::DynamoDB
     #
     class CreateGlobalTableOutput < Struct.new(
       :global_table_description)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Specifies the action to add a new witness Region to a MRSC global
+    # table. A MRSC global table can be configured with either three
+    # replicas, or with two replicas and one witness.
+    #
+    # @!attribute [rw] region_name
+    #   The Amazon Web Services Region name to be added as a witness Region
+    #   for the MRSC global table. The witness must be in a different Region
+    #   than the replicas and within the same Region set:
+    #
+    #   * US Region set: US East (N. Virginia), US East (Ohio), US West
+    #     (Oregon)
+    #
+    #   * EU Region set: Europe (Ireland), Europe (London), Europe (Paris),
+    #     Europe (Frankfurt)
+    #
+    #   * AP Region set: Asia Pacific (Tokyo), Asia Pacific (Seoul), Asia
+    #     Pacific (Osaka)
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/CreateGlobalTableWitnessGroupMemberAction AWS API Documentation
+    #
+    class CreateGlobalTableWitnessGroupMemberAction < Struct.new(
+      :region_name)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1931,6 +1980,10 @@ module Aws::DynamoDB
     #       across all of the secondary indexes, must not exceed 100. If you
     #       project the same attribute into two different indexes, this
     #       counts as two distinct attributes when determining the total.
+    #       This limit only applies when you specify the ProjectionType of
+    #       `INCLUDE`. You still can specify the ProjectionType of `ALL` to
+    #       project all attributes from the source table, even if the table
+    #       has more than 100 attributes.
     #   @return [Array<Types::LocalSecondaryIndex>]
     #
     # @!attribute [rw] global_secondary_indexes
@@ -1944,7 +1997,8 @@ module Aws::DynamoDB
     #
     #
     #   * `KeySchema` - Specifies the key schema for the global secondary
-    #     index.
+    #     index. Each global secondary index supports up to 4 partition keys
+    #     and up to 4 sort keys.
     #
     #   * `Projection` - Specifies attributes that are copied (projected)
     #     from the table into the index. These are in addition to the
@@ -1969,6 +2023,10 @@ module Aws::DynamoDB
     #       across all of the secondary indexes, must not exceed 100. If you
     #       project the same attribute into two different indexes, this
     #       counts as two distinct attributes when determining the total.
+    #       This limit only applies when you specify the ProjectionType of
+    #       `INCLUDE`. You still can specify the ProjectionType of `ALL` to
+    #       project all attributes from the source table, even if the table
+    #       has more than 100 attributes.
     #   * `ProvisionedThroughput` - The provisioned throughput settings for
     #     the global secondary index, consisting of read and write capacity
     #     units.
@@ -1978,18 +2036,19 @@ module Aws::DynamoDB
     #   Controls how you are charged for read and write throughput and how
     #   you manage capacity. This setting can be changed later.
     #
-    #   * `PROVISIONED` - We recommend using `PROVISIONED` for predictable
-    #     workloads. `PROVISIONED` sets the billing mode to [Provisioned
-    #     capacity mode][1].
+    #   * `PAY_PER_REQUEST` - We recommend using `PAY_PER_REQUEST` for most
+    #     DynamoDB workloads. `PAY_PER_REQUEST` sets the billing mode to
+    #     [On-demand capacity mode][1].
     #
-    #   * `PAY_PER_REQUEST` - We recommend using `PAY_PER_REQUEST` for
-    #     unpredictable workloads. `PAY_PER_REQUEST` sets the billing mode
-    #     to [On-demand capacity mode][2].
+    #   * `PROVISIONED` - We recommend using `PROVISIONED` for steady
+    #     workloads with predictable growth where capacity requirements can
+    #     be reliably forecasted. `PROVISIONED` sets the billing mode to
+    #     [Provisioned capacity mode][2].
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/provisioned-capacity-mode.html
-    #   [2]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/on-demand-capacity-mode.html
+    #   [1]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/on-demand-capacity-mode.html
+    #   [2]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/provisioned-capacity-mode.html
     #   @return [String]
     #
     # @!attribute [rw] provisioned_throughput
@@ -2092,6 +2151,46 @@ module Aws::DynamoDB
     #   must specify `MaxReadRequestUnits`, `MaxWriteRequestUnits`, or both.
     #   @return [Types::OnDemandThroughput]
     #
+    # @!attribute [rw] global_table_source_arn
+    #   The Amazon Resource Name (ARN) of the source table used for the
+    #   creation of a multi-account global table.
+    #   @return [String]
+    #
+    # @!attribute [rw] global_table_settings_replication_mode
+    #   Controls the settings synchronization mode for the global table. For
+    #   multi-account global tables, this parameter is required and the only
+    #   supported value is ENABLED. For same-account global tables, this
+    #   parameter is set to ENABLED\_WITH\_OVERRIDES.
+    #   @return [String]
+    #
+    # @!attribute [rw] vector_indexes
+    #   One or more vector indexes to be created on the table. Each vector
+    #   index enables similarity search on a vector attribute. Each element
+    #   in the list consists of:
+    #
+    #   * `IndexName` - The name of the vector index. Must be unique within
+    #     the table.
+    #
+    #   * `VectorAttribute` - The attribute that contains vector embeddings.
+    #     If multiple vector indexes reference the same attribute, they must
+    #     all use the same number of dimensions.
+    #
+    #   * `Dimensions` - The number of dimensions in each vector.
+    #
+    #   * `DistanceFunction` - The distance function used to calculate
+    #     similarity. Valid values: `COSINE`, `EUCLIDEAN`, `DOT_PRODUCT`.
+    #
+    #   * `Projection` - Specifies attributes that are copied (projected)
+    #     from the table into the vector index. The total number of
+    #     projected non-key attributes is shared across the vector attribute
+    #     (counts as 1) and `INLINE_FILTER` search schema elements (each
+    #     counts as 1). `HASH` search schema elements do not count toward
+    #     this limit.
+    #
+    #   * `SearchSchema` - (Optional) Defines the partition key (`HASH`) and
+    #     inline filter (`INLINE_FILTER`) attributes for the vector index.
+    #   @return [Array<Types::VectorIndex>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/CreateTableInput AWS API Documentation
     #
     class CreateTableInput < Struct.new(
@@ -2109,7 +2208,10 @@ module Aws::DynamoDB
       :deletion_protection_enabled,
       :warm_throughput,
       :resource_policy,
-      :on_demand_throughput)
+      :on_demand_throughput,
+      :global_table_source_arn,
+      :global_table_settings_replication_mode,
+      :vector_indexes)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2124,6 +2226,50 @@ module Aws::DynamoDB
     #
     class CreateTableOutput < Struct.new(
       :table_description)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A new vector index to be added to a table.
+    #
+    # @!attribute [rw] index_name
+    #   The name of the vector index. Must be unique within the table.
+    #   @return [String]
+    #
+    # @!attribute [rw] vector_attribute
+    #   The attribute that contains vector embeddings. If multiple vector
+    #   indexes reference the same attribute, they must all use the same
+    #   number of dimensions.
+    #   @return [Types::VectorAttributeDefinition]
+    #
+    # @!attribute [rw] search_schema
+    #   The partition key and inline filter attribute definitions for the
+    #   vector index.
+    #   @return [Array<Types::SearchSchemaElement>]
+    #
+    # @!attribute [rw] projection
+    #   Specifies attributes that are copied (projected) from the table into
+    #   the vector index.
+    #   @return [Types::Projection]
+    #
+    # @!attribute [rw] dimensions
+    #   The number of dimensions in each vector.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] distance_function
+    #   The distance function used to calculate similarity. Valid values:
+    #   `COSINE`, `EUCLIDEAN`, `DOT_PRODUCT`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/CreateVectorIndexAction AWS API Documentation
+    #
+    class CreateVectorIndexAction < Struct.new(
+      :index_name,
+      :vector_attribute,
+      :search_schema,
+      :projection,
+      :dimensions,
+      :distance_function)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2234,6 +2380,24 @@ module Aws::DynamoDB
     #
     class DeleteGlobalSecondaryIndexAction < Struct.new(
       :index_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Specifies the action to remove a witness Region from a MRSC global
+    # table. You cannot delete a single witness from a MRSC global table -
+    # you must delete both a replica and the witness together. The deletion
+    # of both a witness and replica converts the remaining replica to a
+    # single-Region DynamoDB table.
+    #
+    # @!attribute [rw] region_name
+    #   The witness Region name to be removed from the MRSC global table.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/DeleteGlobalTableWitnessGroupMemberAction AWS API Documentation
+    #
+    class DeleteGlobalTableWitnessGroupMemberAction < Struct.new(
+      :region_name)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2475,6 +2639,10 @@ module Aws::DynamoDB
     #   information, see [Provisioned capacity mode][1] in the *Amazon
     #   DynamoDB Developer Guide*.
     #
+    #   If the table has vector indexes, the response includes a
+    #   `VectorIndexes` field with `VectorWriteRequestBytes` consumed for
+    #   each affected vector index.
+    #
     #
     #
     #   [1]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/provisioned-capacity-mode.html
@@ -2632,6 +2800,20 @@ module Aws::DynamoDB
       include Aws::Structure
     end
 
+    # A vector index to be removed from a table.
+    #
+    # @!attribute [rw] index_name
+    #   The name of the vector index to delete.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/DeleteVectorIndexAction AWS API Documentation
+    #
+    class DeleteVectorIndexAction < Struct.new(
+      :index_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] backup_arn
     #   The Amazon Resource Name (ARN) associated with the backup.
     #   @return [String]
@@ -2743,6 +2925,12 @@ module Aws::DynamoDB
     #     Contributor Insights rules. Please retry request.
     #   @return [Types::FailureException]
     #
+    # @!attribute [rw] contributor_insights_mode
+    #   The mode of CloudWatch Contributor Insights for DynamoDB that
+    #   determines which events are emitted. Can be set to track all access
+    #   and throttled events or throttled events only.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/DescribeContributorInsightsOutput AWS API Documentation
     #
     class DescribeContributorInsightsOutput < Struct.new(
@@ -2751,7 +2939,8 @@ module Aws::DynamoDB
       :contributor_insights_rule_list,
       :contributor_insights_status,
       :last_update_date_time,
-      :failure_exception)
+      :failure_exception,
+      :contributor_insights_mode)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3726,7 +3915,7 @@ module Aws::DynamoDB
     #
     #   If you submit a request with the same client token but a change in
     #   other parameters within the 8-hour idempotency window, DynamoDB
-    #   returns an `ImportConflictException`.
+    #   returns an `ExportConflictException`.
     #
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.
@@ -4110,7 +4299,8 @@ module Aws::DynamoDB
     #
     # @!attribute [rw] provisioned_throughput
     #   Represents the provisioned throughput settings for the specified
-    #   global secondary index.
+    #   global secondary index. You must use either `OnDemandThroughput` or
+    #   `ProvisionedThroughput` based on your table's capacity mode.
     #
     #   For current minimum and maximum provisioned throughput values, see
     #   [Service, Account, and Table Quotas][1] in the *Amazon DynamoDB
@@ -4124,7 +4314,9 @@ module Aws::DynamoDB
     # @!attribute [rw] on_demand_throughput
     #   The maximum number of read and write units for the specified global
     #   secondary index. If you use this parameter, you must specify
-    #   `MaxReadRequestUnits`, `MaxWriteRequestUnits`, or both.
+    #   `MaxReadRequestUnits`, `MaxWriteRequestUnits`, or both. You must use
+    #   either `OnDemandThroughput` or `ProvisionedThroughput` based on your
+    #   table's capacity mode.
     #   @return [Types::OnDemandThroughput]
     #
     # @!attribute [rw] warm_throughput
@@ -4540,6 +4732,55 @@ module Aws::DynamoDB
       include Aws::Structure
     end
 
+    # Represents the properties of a witness Region in a MRSC global table.
+    #
+    # @!attribute [rw] region_name
+    #   The name of the Amazon Web Services Region that serves as a witness
+    #   for the MRSC global table.
+    #   @return [String]
+    #
+    # @!attribute [rw] witness_status
+    #   The current status of the witness Region in the MRSC global table.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/GlobalTableWitnessDescription AWS API Documentation
+    #
+    class GlobalTableWitnessDescription < Struct.new(
+      :region_name,
+      :witness_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents one of the following:
+    #
+    # * A new witness to be added to a new global table.
+    #
+    # * An existing witness to be removed from an existing global table.
+    #
+    # You can configure one witness per MRSC global table.
+    #
+    # @!attribute [rw] create
+    #   Specifies a witness Region to be added to a new MRSC global table.
+    #   The witness must be added when creating the MRSC global table.
+    #   @return [Types::CreateGlobalTableWitnessGroupMemberAction]
+    #
+    # @!attribute [rw] delete
+    #   Specifies a witness Region to be removed from an existing global
+    #   table. Must be done in conjunction with removing a replica. The
+    #   deletion of both a witness and replica converts the remaining
+    #   replica to a single-Region DynamoDB table.
+    #   @return [Types::DeleteGlobalTableWitnessGroupMemberAction]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/GlobalTableWitnessGroupUpdate AWS API Documentation
+    #
+    class GlobalTableWitnessGroupUpdate < Struct.new(
+      :create,
+      :delete)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # DynamoDB rejected the request because you retried a request with a
     # different payload but with an idempotent token that was already used.
     #
@@ -4618,8 +4859,7 @@ module Aws::DynamoDB
     #   @return [Time]
     #
     # @!attribute [rw] end_time
-    #   The time at which this import task ended. (Does this include the
-    #   successful complete creation of the table it was imported to?)
+    #   The time at which this import task ended.
     #   @return [Time]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/ImportSummary AWS API Documentation
@@ -4844,6 +5084,18 @@ module Aws::DynamoDB
     #   The view type that was chosen for the export. Valid values are
     #   `NEW_AND_OLD_IMAGES` and `NEW_IMAGES`. The default value is
     #   `NEW_AND_OLD_IMAGES`.
+    #
+    #   `NEW_AND_OLD_IMAGES` exports both the new and old images of each
+    #   changed item, while `NEW_IMAGES` exports only the new (latest)
+    #   image. The view type you choose determines the structure of each
+    #   item in the output for `insert`, `update`, and `delete` operations.
+    #   For details and examples of how each view type shapes the export
+    #   output, see [DynamoDB table export output format][1] in the *Amazon
+    #   DynamoDB Developer Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/S3DataExport.Output.html
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/IncrementalExportSpecification AWS API Documentation
@@ -5857,8 +6109,7 @@ module Aws::DynamoDB
     #   The number of preceding days for which continuous backups are taken
     #   and maintained. Your table data is only recoverable to any
     #   point-in-time from within the configured recovery period. This
-    #   parameter is optional. If no value is provided, the value will
-    #   default to 35.
+    #   parameter is optional.
     #   @return [Integer]
     #
     # @!attribute [rw] earliest_restorable_date_time
@@ -5960,10 +6211,14 @@ module Aws::DynamoDB
     #   Represents the non-key attribute names which will be projected into
     #   the index.
     #
-    #   For local secondary indexes, the total count of `NonKeyAttributes`
-    #   summed across all of the local secondary indexes, must not exceed
-    #   100. If you project the same attribute into two different indexes,
-    #   this counts as two distinct attributes when determining the total.
+    #   For global and local secondary indexes, the total count of
+    #   `NonKeyAttributes` summed across all of the secondary indexes, must
+    #   not exceed 100. If you project the same attribute into two different
+    #   indexes, this counts as two distinct attributes when determining the
+    #   total. This limit only applies when you specify the ProjectionType
+    #   of `INCLUDE`. You still can specify the ProjectionType of `ALL` to
+    #   project all attributes from the source table, even if the table has
+    #   more than 100 attributes.
     #   @return [Array<String>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/Projection AWS API Documentation
@@ -5975,9 +6230,9 @@ module Aws::DynamoDB
       include Aws::Structure
     end
 
-    # Represents the provisioned throughput settings for a specified table
-    # or index. The settings can be modified using the `UpdateTable`
-    # operation.
+    # Represents the provisioned throughput settings for the specified
+    # global secondary index. You must use `ProvisionedThroughput` or
+    # `OnDemandThroughput` based on your table’s capacity mode.
     #
     # For current minimum and maximum provisioned throughput values, see
     # [Service, Account, and Table Quotas][1] in the *Amazon DynamoDB
@@ -6055,11 +6310,19 @@ module Aws::DynamoDB
     #   consistent reads require less effort than strongly consistent reads,
     #   so a setting of 50 `ReadCapacityUnits` per second provides 100
     #   eventually consistent `ReadCapacityUnits` per second.
+    #
+    #   For a table or global secondary index that uses on-demand capacity
+    #   mode (`PAY_PER_REQUEST`), this value is `0`, because on-demand mode
+    #   does not use provisioned throughput.
     #   @return [Integer]
     #
     # @!attribute [rw] write_capacity_units
     #   The maximum number of writes consumed per second before DynamoDB
     #   returns a `ThrottlingException`.
+    #
+    #   For a table or global secondary index that uses on-demand capacity
+    #   mode (`PAY_PER_REQUEST`), this value is `0`, because on-demand mode
+    #   does not use provisioned throughput.
     #   @return [Integer]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/ProvisionedThroughputDescription AWS API Documentation
@@ -6074,25 +6337,39 @@ module Aws::DynamoDB
       include Aws::Structure
     end
 
-    # Your request rate is too high. The Amazon Web Services SDKs for
-    # DynamoDB automatically retry requests that receive this exception.
-    # Your request is eventually successful, unless your retry queue is too
-    # large to finish. Reduce the frequency of requests and use exponential
-    # backoff. For more information, go to [Error Retries and Exponential
-    # Backoff][1] in the *Amazon DynamoDB Developer Guide*.
+    # The request was denied due to request throttling. For detailed
+    # information about why the request was throttled and the ARN of the
+    # impacted resource, find the [ThrottlingReason][1] field in the
+    # returned exception. The Amazon Web Services SDKs for DynamoDB
+    # automatically retry requests that receive this exception. Your request
+    # is eventually successful, unless your retry queue is too large to
+    # finish. Reduce the frequency of requests and use exponential backoff.
+    # For more information, go to [Error Retries and Exponential Backoff][2]
+    # in the *Amazon DynamoDB Developer Guide*.
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Programming.Errors.html#Programming.Errors.RetryAndBackoff
+    # [1]: https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_ThrottlingReason.html
+    # [2]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Programming.Errors.html#Programming.Errors.RetryAndBackoff
     #
     # @!attribute [rw] message
     #   You exceeded your maximum allowed provisioned throughput.
     #   @return [String]
     #
+    # @!attribute [rw] throttling_reasons
+    #   A list of [ThrottlingReason][1] that provide detailed diagnostic
+    #   information about why the request was throttled.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_ThrottlingReason.html
+    #   @return [Array<Types::ThrottlingReason>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/ProvisionedThroughputExceededException AWS API Documentation
     #
     class ProvisionedThroughputExceededException < Struct.new(
-      :message)
+      :message,
+      :throttling_reasons)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6183,6 +6460,19 @@ module Aws::DynamoDB
     #   If you specify any attributes that are part of an index key, then
     #   the data types for those attributes must match those of the schema
     #   in the table's attribute definition.
+    #
+    #   If the table has vector indexes, the following validations apply to
+    #   write operations. A violation of any of these constraints results in
+    #   a `ValidationException`:
+    #
+    #   * The vector attribute must be a list of numbers with dimensions
+    #     matching the index configuration.
+    #
+    #   * Vector values must fit in 32-bit IEEE-754 floating point format
+    #     (f32).
+    #
+    #   * Partition key and inline filter attributes defined in the search
+    #     schema must have data types matching the index schema definition.
     #
     #   Empty String and Binary attribute values are allowed. Attribute
     #   values of type String and Binary must have a length greater than
@@ -6420,6 +6710,10 @@ module Aws::DynamoDB
     #   `ReturnConsumedCapacity` parameter was specified. For more
     #   information, see [Capacity unity consumption for write
     #   operations][1] in the *Amazon DynamoDB Developer Guide*.
+    #
+    #   If the table has vector indexes, the response includes a
+    #   `VectorIndexes` field with `VectorWriteRequestBytes` consumed for
+    #   each affected vector index.
     #
     #
     #
@@ -7188,6 +7482,10 @@ module Aws::DynamoDB
     #      </note>
     #   @return [String]
     #
+    # @!attribute [rw] replica_arn
+    #   The Amazon Resource Name (ARN) of the global table replica.
+    #   @return [String]
+    #
     # @!attribute [rw] replica_status_description
     #   Detailed information about the replica status.
     #   @return [String]
@@ -7229,11 +7527,27 @@ module Aws::DynamoDB
     #   Contains details of the table class.
     #   @return [Types::TableClassSummary]
     #
+    # @!attribute [rw] global_table_settings_replication_mode
+    #   Indicates one of the settings synchronization modes for the global
+    #   table replica:
+    #
+    #   * `ENABLED`: Indicates that the settings synchronization mode for
+    #     the global table replica is enabled.
+    #
+    #   * `DISABLED`: Indicates that the settings synchronization mode for
+    #     the global table replica is disabled.
+    #
+    #   * `ENABLED_WITH_OVERRIDES`: This mode is set by default for a same
+    #     account global table. Indicates that certain global table settings
+    #     can be overridden.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/ReplicaDescription AWS API Documentation
     #
     class ReplicaDescription < Struct.new(
       :region_name,
       :replica_status,
+      :replica_arn,
       :replica_status_description,
       :replica_status_percent_progress,
       :kms_master_key_id,
@@ -7242,7 +7556,8 @@ module Aws::DynamoDB
       :warm_throughput,
       :global_secondary_indexes,
       :replica_inaccessible_date_time,
-      :replica_table_class_summary)
+      :replica_table_class_summary,
+      :global_table_settings_replication_mode)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7664,21 +7979,34 @@ module Aws::DynamoDB
       include Aws::Structure
     end
 
-    # Throughput exceeds the current throughput quota for your account.
-    # Please contact [Amazon Web Services Support][1] to request a quota
-    # increase.
+    # Throughput exceeds the current throughput quota for your account. For
+    # detailed information about why the request was throttled and the ARN
+    # of the impacted resource, find the [ThrottlingReason][1] field in the
+    # returned exception. Contact [Amazon Web Services Support][2] to
+    # request a quota increase.
     #
     #
     #
-    # [1]: https://aws.amazon.com/support
+    # [1]: https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_ThrottlingReason.html
+    # [2]: https://aws.amazon.com/support
     #
     # @!attribute [rw] message
     #   @return [String]
     #
+    # @!attribute [rw] throttling_reasons
+    #   A list of [ThrottlingReason][1] that provide detailed diagnostic
+    #   information about why the request was throttled.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_ThrottlingReason.html
+    #   @return [Array<Types::ThrottlingReason>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/RequestLimitExceeded AWS API Documentation
     #
     class RequestLimitExceeded < Struct.new(
-      :message)
+      :message,
+      :throttling_reasons)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7791,6 +8119,13 @@ module Aws::DynamoDB
     #   The new server-side encryption settings for the restored table.
     #   @return [Types::SSESpecification]
     #
+    # @!attribute [rw] vector_index_override
+    #   The vector indexes for the restored table. If not specified, all
+    #   vector indexes from the backup are restored. The indexes provided
+    #   must match existing vector indexes from the backup. You can choose
+    #   to exclude some or all of the vector indexes at the time of restore.
+    #   @return [Array<Types::VectorIndex>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/RestoreTableFromBackupInput AWS API Documentation
     #
     class RestoreTableFromBackupInput < Struct.new(
@@ -7801,7 +8136,8 @@ module Aws::DynamoDB
       :local_secondary_index_override,
       :provisioned_throughput_override,
       :on_demand_throughput_override,
-      :sse_specification_override)
+      :sse_specification_override,
+      :vector_index_override)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7849,6 +8185,12 @@ module Aws::DynamoDB
     #   List of global secondary indexes for the restored table. The indexes
     #   provided should match existing secondary indexes. You can choose to
     #   exclude some or all of the indexes at the time of restore.
+    #
+    #   The `WarmThroughput` setting is not supported on global secondary
+    #   indexes when you use `RestoreTableToPointInTime`. Although
+    #   `WarmThroughput` appears in the shared index definition, including
+    #   it in a `GlobalSecondaryIndexOverride` entry causes the request to
+    #   fail with a validation error.
     #   @return [Array<Types::GlobalSecondaryIndex>]
     #
     # @!attribute [rw] local_secondary_index_override
@@ -7871,6 +8213,14 @@ module Aws::DynamoDB
     #   The new server-side encryption settings for the restored table.
     #   @return [Types::SSESpecification]
     #
+    # @!attribute [rw] vector_index_override
+    #   The vector indexes for the restored table. If not specified, all
+    #   vector indexes from the source table are restored. The indexes
+    #   provided must match existing vector indexes from the source table.
+    #   You can choose to exclude some or all of the vector indexes at the
+    #   time of restore.
+    #   @return [Array<Types::VectorIndex>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/RestoreTableToPointInTimeInput AWS API Documentation
     #
     class RestoreTableToPointInTimeInput < Struct.new(
@@ -7884,7 +8234,8 @@ module Aws::DynamoDB
       :local_secondary_index_override,
       :provisioned_throughput_override,
       :on_demand_throughput_override,
-      :sse_specification_override)
+      :sse_specification_override,
+      :vector_index_override)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -8431,6 +8782,165 @@ module Aws::DynamoDB
       include Aws::Structure
     end
 
+    # A single result from a `SearchVectors` operation.
+    #
+    # @!attribute [rw] item
+    #   A map of attribute names to `AttributeValue` objects, representing
+    #   the projected attributes of the item returned by the vector search.
+    #   @return [Hash<String,Types::AttributeValue>]
+    #
+    # @!attribute [rw] score
+    #   The similarity score for this item relative to the search vector.
+    #   The interpretation depends on the distance function configured for
+    #   the vector index.
+    #   @return [Float]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/SearchResultItem AWS API Documentation
+    #
+    class SearchResultItem < Struct.new(
+      :item,
+      :score)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # An element in the search schema of a vector index.
+    #
+    # @!attribute [rw] attribute_name
+    #   The name of the attribute.
+    #   @return [String]
+    #
+    # @!attribute [rw] search_schema_element_type
+    #   The role of the attribute in the search schema. Valid values:
+    #
+    #   * `HASH` - A partition key that partitions the vector index for
+    #     independent scaling. When specified, you must provide this
+    #     attribute's value in the `SearchConditionExpression`.
+    #
+    #   * `INLINE_FILTER` - An attribute projected into the vector index for
+    #     filtering at the storage layer during search. Inline filters are
+    #     optional in the `SearchConditionExpression`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/SearchSchemaElement AWS API Documentation
+    #
+    class SearchSchemaElement < Struct.new(
+      :attribute_name,
+      :search_schema_element_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] table_name
+    #   The name or Amazon Resource Name (ARN) of the table containing the
+    #   vector index.
+    #   @return [String]
+    #
+    # @!attribute [rw] index_name
+    #   The name of the vector index to search. The index must be in the
+    #   `ACTIVE` state.
+    #   @return [String]
+    #
+    # @!attribute [rw] return_consumed_capacity
+    #   Determines the level of detail about either provisioned or on-demand
+    #   throughput consumption that is returned in the response:
+    #
+    #   * `INDEXES` - The response includes the aggregate `ConsumedCapacity`
+    #     for the operation, together with `ConsumedCapacity` for each table
+    #     and secondary index that was accessed.
+    #
+    #     Note that some operations, such as `GetItem` and `BatchGetItem`,
+    #     do not access any indexes at all. In these cases, specifying
+    #     `INDEXES` will only return `ConsumedCapacity` information for
+    #     table(s).
+    #
+    #   * `TOTAL` - The response includes only the aggregate
+    #     `ConsumedCapacity` for the operation.
+    #
+    #   * `NONE` - No `ConsumedCapacity` details are included in the
+    #     response.
+    #   @return [String]
+    #
+    # @!attribute [rw] expression_attribute_names
+    #   One or more substitution tokens for attribute names in an
+    #   expression. Use the `#` character in an expression to dereference an
+    #   attribute name.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] expression_attribute_values
+    #   One or more values that can be substituted in an expression. Use the
+    #   `:` character in an expression to dereference an attribute value.
+    #   @return [Hash<String,Types::AttributeValue>]
+    #
+    # @!attribute [rw] projection_expression
+    #   A string that identifies one or more attributes to retrieve from the
+    #   index. Separate attribute names with commas. If not specified, the
+    #   operation returns all attributes projected into the vector index.
+    #
+    #   Only attributes projected into the vector index can be retrieved.
+    #   @return [String]
+    #
+    # @!attribute [rw] search_vector
+    #   The search vector to compare against the indexed vectors. Each
+    #   element is a 32-bit IEEE-754 floating point number, provided in
+    #   DynamoDB list format.
+    #
+    #   The number of dimensions must match the number of dimensions
+    #   configured for the vector index.
+    #   @return [Array<Types::AttributeValue>]
+    #
+    # @!attribute [rw] search_condition_expression
+    #   A condition expression used to filter the vector search results. The
+    #   expression can reference attributes defined in the vector index
+    #   search schema, including `HASH` and `INLINE_FILTER` key elements.
+    #
+    #   Only the equality operator (`=`) is supported for `HASH` attributes.
+    #   Comparison and range operators are supported for `INLINE_FILTER`
+    #   attributes. Only top-level attributes from the search schema can be
+    #   referenced.
+    #   @return [String]
+    #
+    # @!attribute [rw] top_k
+    #   The number of most similar results to return.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/SearchVectorsInput AWS API Documentation
+    #
+    class SearchVectorsInput < Struct.new(
+      :table_name,
+      :index_name,
+      :return_consumed_capacity,
+      :expression_attribute_names,
+      :expression_attribute_values,
+      :projection_expression,
+      :search_vector,
+      :search_condition_expression,
+      :top_k)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] consumed_capacity
+    #   The capacity units consumed by the `SearchVectors` operation.
+    #   Contains `VectorSearchRequestBytes`, which represents the vector
+    #   search capacity consumed.
+    #   @return [Types::VectorCapacity]
+    #
+    # @!attribute [rw] search_results
+    #   A list of items returned by the vector similarity search, sorted by
+    #   similarity with the most similar item first. Each item contains the
+    #   projected attributes and a similarity score.
+    #   @return [Array<Types::SearchResultItem>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/SearchVectorsOutput AWS API Documentation
+    #
+    class SearchVectorsOutput < Struct.new(
+      :consumed_capacity,
+      :search_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains the details of the table when the backup was created.
     #
     # @!attribute [rw] table_name
@@ -8531,6 +9041,12 @@ module Aws::DynamoDB
     #   when the backup was created.
     #   @return [Types::SSEDescription]
     #
+    # @!attribute [rw] vector_indexes
+    #   The vector index properties for the table at the time the backup was
+    #   created, including the index name, vector attribute, dimensions,
+    #   distance function, search schema, and projection.
+    #   @return [Array<Types::VectorIndexInfo>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/SourceTableFeatureDetails AWS API Documentation
     #
     class SourceTableFeatureDetails < Struct.new(
@@ -8538,7 +9054,8 @@ module Aws::DynamoDB
       :global_secondary_indexes,
       :stream_description,
       :time_to_live_description,
-      :sse_description)
+      :sse_description,
+      :vector_indexes)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -8663,9 +9180,9 @@ module Aws::DynamoDB
     #   @return [String]
     #
     # @!attribute [rw] provisioned_throughput
-    #   Represents the provisioned throughput settings for a specified table
-    #   or index. The settings can be modified using the `UpdateTable`
-    #   operation.
+    #   Represents the provisioned throughput settings for the specified
+    #   global secondary index. You must use `ProvisionedThroughput` or
+    #   `OnDemandThroughput` based on your table’s capacity mode.
     #
     #   For current minimum and maximum provisioned throughput values, see
     #   [Service, Account, and Table Quotas][1] in the *Amazon DynamoDB
@@ -8691,6 +9208,11 @@ module Aws::DynamoDB
     #   part of the import operation.
     #   @return [Array<Types::GlobalSecondaryIndex>]
     #
+    # @!attribute [rw] vector_indexes
+    #   The vector indexes of the table to be created as part of the import
+    #   operation.
+    #   @return [Array<Types::VectorIndex>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/TableCreationParameters AWS API Documentation
     #
     class TableCreationParameters < Struct.new(
@@ -8701,7 +9223,8 @@ module Aws::DynamoDB
       :provisioned_throughput,
       :on_demand_throughput,
       :sse_specification,
-      :global_secondary_indexes)
+      :global_secondary_indexes,
+      :vector_indexes)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -8811,7 +9334,8 @@ module Aws::DynamoDB
     #   @return [String]
     #
     # @!attribute [rw] table_id
-    #   Unique identifier for the table for which the backup was created.
+    #   A unique identifier for the table, in UUID format, generated by
+    #   DynamoDB when the table is created.
     #   @return [String]
     #
     # @!attribute [rw] billing_mode_summary
@@ -8855,6 +9379,10 @@ module Aws::DynamoDB
     #       across all of the secondary indexes, must not exceed 100. If you
     #       project the same attribute into two different indexes, this
     #       counts as two distinct attributes when determining the total.
+    #       This limit only applies when you specify the ProjectionType of
+    #       `INCLUDE`. You still can specify the ProjectionType of `ALL` to
+    #       project all attributes from the source table, even if the table
+    #       has more than 100 attributes.
     #   * `IndexSizeBytes` - Represents the total size of the index, in
     #     bytes. DynamoDB updates this value approximately every six hours.
     #     Recent changes might not be reflected in this value.
@@ -8932,6 +9460,10 @@ module Aws::DynamoDB
     #       across all of the secondary indexes, must not exceed 100. If you
     #       project the same attribute into two different indexes, this
     #       counts as two distinct attributes when determining the total.
+    #       This limit only applies when you specify the ProjectionType of
+    #       `INCLUDE`. You still can specify the ProjectionType of `ALL` to
+    #       project all attributes from the source table, even if the table
+    #       has more than 100 attributes.
     #   * `ProvisionedThroughput` - The provisioned throughput settings for
     #     the global secondary index, consisting of read and write capacity
     #     units, along with data about increases and decreases.
@@ -8977,6 +9509,26 @@ module Aws::DynamoDB
     #   Represents replicas of the table.
     #   @return [Array<Types::ReplicaDescription>]
     #
+    # @!attribute [rw] global_table_witnesses
+    #   The witness Region and its current status in the MRSC global table.
+    #   Only one witness Region can be configured per MRSC global table.
+    #   @return [Array<Types::GlobalTableWitnessDescription>]
+    #
+    # @!attribute [rw] global_table_settings_replication_mode
+    #   Indicates one of the settings synchronization modes for the global
+    #   table:
+    #
+    #   * `ENABLED`: Indicates that the settings synchronization mode for
+    #     the global table is enabled.
+    #
+    #   * `DISABLED`: Indicates that the settings synchronization mode for
+    #     the global table is disabled.
+    #
+    #   * `ENABLED_WITH_OVERRIDES`: This mode is set by default for a same
+    #     account global table. Indicates that certain global table settings
+    #     can be overridden.
+    #   @return [String]
+    #
     # @!attribute [rw] restore_summary
     #   Contains details for the restore.
     #   @return [Types::RestoreSummary]
@@ -9013,25 +9565,58 @@ module Aws::DynamoDB
     #   Indicates one of the following consistency modes for a global table:
     #
     #   * `EVENTUAL`: Indicates that the global table is configured for
-    #     multi-Region eventual consistency.
+    #     multi-Region eventual consistency (MREC).
     #
     #   * `STRONG`: Indicates that the global table is configured for
-    #     multi-Region strong consistency (preview).
-    #
-    #     <note markdown="1"> Multi-Region strong consistency (MRSC) is a new DynamoDB global
-    #     tables capability currently available in preview mode. For more
-    #     information, see [Global tables multi-Region strong
-    #     consistency][1].
-    #
-    #      </note>
+    #     multi-Region strong consistency (MRSC).
     #
     #   If you don't specify this field, the global table consistency mode
-    #   defaults to `EVENTUAL`.
+    #   defaults to `EVENTUAL`. For more information about global tables
+    #   consistency modes, see [ Consistency modes][1] in DynamoDB developer
+    #   guide.
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/PreviewFeatures.html#multi-region-strong-consistency-gt
+    #   [1]: https://docs.aws.amazon.com/V2globaltables_HowItWorks.html#V2globaltables_HowItWorks.consistency-modes
     #   @return [String]
+    #
+    # @!attribute [rw] vector_indexes
+    #   The vector indexes, if any, on the table. Each element is composed
+    #   of:
+    #
+    #   * `IndexName` - The name of the vector index.
+    #
+    #   * `IndexStatus` - The current status of the vector index:
+    #     `CREATING`, `ACTIVE`, or `DELETING`.
+    #
+    #   * `Backfilling` - Specifies whether the index is currently
+    #     backfilling. During backfill, `SearchVectors` operations might
+    #     return incomplete results.
+    #
+    #   * `VectorAttribute` - The attribute that contains vector embeddings.
+    #
+    #   * `Dimensions` - The number of dimensions in each vector.
+    #
+    #   * `DistanceFunction` - The distance function used to calculate
+    #     similarity (`COSINE`, `EUCLIDEAN`, or `DOT_PRODUCT`).
+    #
+    #   * `SearchSchema` - The partition key and inline filter attributes
+    #     for the vector index.
+    #
+    #   * `Projection` - Specifies attributes that are copied (projected)
+    #     from the table into the vector index.
+    #
+    #   * `IndexArn` - The Amazon Resource Name (ARN) that uniquely
+    #     identifies the index.
+    #
+    #   * `IndexSizeBytes` - The total size of the vector index, in bytes.
+    #     Amazon DynamoDB updates this value approximately every six hours.
+    #     Recent changes might not be reflected in this value.
+    #
+    #   * `ItemCount` - The number of items indexed in the vector index.
+    #     Amazon DynamoDB updates this value approximately every six hours.
+    #     Recent changes might not be reflected in this value.
+    #   @return [Array<Types::VectorIndexDescription>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/TableDescription AWS API Documentation
     #
@@ -9054,6 +9639,8 @@ module Aws::DynamoDB
       :latest_stream_arn,
       :global_table_version,
       :replicas,
+      :global_table_witnesses,
+      :global_table_settings_replication_mode,
       :restore_summary,
       :sse_description,
       :archival_summary,
@@ -9061,7 +9648,8 @@ module Aws::DynamoDB
       :deletion_protection_enabled,
       :on_demand_throughput,
       :warm_throughput,
-      :multi_region_consistency)
+      :multi_region_consistency,
+      :vector_indexes)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -9096,7 +9684,9 @@ module Aws::DynamoDB
     end
 
     # Represents the warm throughput value (in read units per second and
-    # write units per second) of the base table.
+    # write units per second) of the table. Warm throughput is applicable
+    # for DynamoDB Standard-IA tables and specifies the minimum provisioned
+    # capacity maintained for immediate data access.
     #
     # @!attribute [rw] read_units_per_second
     #   Represents the base table's warm throughput value in read units per
@@ -9109,7 +9699,7 @@ module Aws::DynamoDB
     #   @return [Integer]
     #
     # @!attribute [rw] status
-    #   Represents warm throughput value of the base table..
+    #   Represents warm throughput value of the base table.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/TableWarmThroughputDescription AWS API Documentation
@@ -9172,6 +9762,101 @@ module Aws::DynamoDB
     class TagResourceInput < Struct.new(
       :resource_arn,
       :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The request was denied due to request throttling. For detailed
+    # information about why the request was throttled and the ARN of the
+    # impacted resource, find the [ThrottlingReason][1] field in the
+    # returned exception.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_ThrottlingReason.html
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @!attribute [rw] throttling_reasons
+    #   A list of [ThrottlingReason][1] that provide detailed diagnostic
+    #   information about why the request was throttled.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_ThrottlingReason.html
+    #   @return [Array<Types::ThrottlingReason>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/ThrottlingException AWS API Documentation
+    #
+    class ThrottlingException < Struct.new(
+      :message,
+      :throttling_reasons)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents the specific reason why a DynamoDB request was throttled
+    # and the ARN of the impacted resource. This helps identify exactly what
+    # resource is being throttled, what type of operation caused it, and why
+    # the throttling occurred.
+    #
+    # @!attribute [rw] reason
+    #   The reason for throttling. The throttling reason follows a specific
+    #   format: `ResourceType+OperationType+LimitType`:
+    #
+    #   * Resource Type (What is being throttled): Table or Index
+    #
+    #   * Operation Type (What kind of operation): Read or Write
+    #
+    #   * Limit Type (Why the throttling occurred):
+    #
+    #     * `ProvisionedThroughputExceeded`: The request rate is exceeding
+    #       the [provisioned throughput capacity][1] (read or write capacity
+    #       units) configured for a table or a global secondary index (GSI)
+    #       in provisioned capacity mode.
+    #
+    #     * `AccountLimitExceeded`: The request rate has caused a table or
+    #       global secondary index (GSI) in on-demand mode to exceed the
+    #       [per-table account-level service quotas][2] for read/write
+    #       throughput in the current Amazon Web Services Region.
+    #
+    #     * `KeyRangeThroughputExceeded`: The request rate directed at a
+    #       specific partition key value has exceeded the [internal
+    #       partition-level throughput limits][3], indicating uneven access
+    #       patterns across the table's or GSI's key space.
+    #
+    #     * `MaxOnDemandThroughputExceeded`: The request rate has exceeded
+    #       the [configured maximum throughput limits][4] set for a table or
+    #       index in on-demand capacity mode.
+    #
+    #   Examples of complete throttling reasons:
+    #
+    #   * TableReadProvisionedThroughputExceeded
+    #
+    #   * IndexWriteAccountLimitExceeded
+    #
+    #   This helps identify exactly what resource is being throttled, what
+    #   type of operation caused it, and why the throttling occurred.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/provisioned-capacity-mode.html
+    #   [2]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/ServiceQuotas.html#default-limits-throughput
+    #   [3]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-partition-key-design.html
+    #   [4]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/on-demand-capacity-mode-max-throughput.html
+    #   @return [String]
+    #
+    # @!attribute [rw] resource
+    #   The Amazon Resource Name (ARN) of the DynamoDB table or index that
+    #   experienced the throttling event.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/ThrottlingReason AWS API Documentation
+    #
+    class ThrottlingReason < Struct.new(
+      :reason,
+      :resource)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -9393,6 +10078,10 @@ module Aws::DynamoDB
     #   The capacity units consumed by the entire `TransactWriteItems`
     #   operation. The values of the list are ordered according to the
     #   ordering of the `TransactItems` request parameter.
+    #
+    #   If the table has vector indexes, each element also includes a
+    #   `VectorIndexes` field with `VectorWriteRequestBytes` consumed for
+    #   each affected vector index.
     #   @return [Array<Types::ConsumedCapacity>]
     #
     # @!attribute [rw] item_collection_metrics
@@ -9454,11 +10143,13 @@ module Aws::DynamoDB
     #
     # * There is a user error, such as an invalid data format.
     #
-    # <note markdown="1"> If using Java, DynamoDB lists the cancellation reasons on the
-    # `CancellationReasons` property. This property is not set for other
-    # languages. Transaction cancellation reasons are ordered in the order
-    # of requested items, if an item has no error it will have `None` code
-    # and `Null` message.
+    # <note markdown="1"> DynamoDB lists the cancellation reasons on the `CancellationReasons`
+    # property. Transaction cancellation reasons are ordered in the order of
+    # requested items, if an item has no error it will have `None` code and
+    # `Null` message. The `None` code is returned as the literal string
+    # `"None"`, not a null or absent value; the message field is omitted
+    # entirely for an item that has no error. This is important to note when
+    # using an SDK that surfaces the code as an optional or nullable type.
     #
     #  </note>
     #
@@ -9770,12 +10461,18 @@ module Aws::DynamoDB
     #   Represents the contributor insights action.
     #   @return [String]
     #
+    # @!attribute [rw] contributor_insights_mode
+    #   Specifies whether to track all access and throttled events or
+    #   throttled events only for the DynamoDB table or index.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/UpdateContributorInsightsInput AWS API Documentation
     #
     class UpdateContributorInsightsInput < Struct.new(
       :table_name,
       :index_name,
-      :contributor_insights_action)
+      :contributor_insights_action,
+      :contributor_insights_mode)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -9792,12 +10489,19 @@ module Aws::DynamoDB
     #   The status of contributor insights
     #   @return [String]
     #
+    # @!attribute [rw] contributor_insights_mode
+    #   The updated mode of CloudWatch Contributor Insights that determines
+    #   whether to monitor all access and throttled events or to track
+    #   throttled events exclusively.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/UpdateContributorInsightsOutput AWS API Documentation
     #
     class UpdateContributorInsightsOutput < Struct.new(
       :table_name,
       :index_name,
-      :contributor_insights_status)
+      :contributor_insights_status,
+      :contributor_insights_mode)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -10115,9 +10819,7 @@ module Aws::DynamoDB
     #       Both sets must have the same primitive data type. For example,
     #       if the existing data type is a set of strings, the `Value` must
     #       also be a set of strings.
-    #     The `ADD` action only supports Number and set data types. In
-    #     addition, `ADD` can only be used on top-level attributes, not
-    #     nested attributes.
+    #     The `ADD` action only supports Number and set data types.
     #
     #   * `DELETE` - Deletes an element from a set.
     #
@@ -10127,9 +10829,7 @@ module Aws::DynamoDB
     #     final attribute value is `[b]`. Specifying an empty set is an
     #     error.
     #
-    #     The `DELETE` action only supports set data types. In addition,
-    #     `DELETE` can only be used on top-level attributes, not nested
-    #     attributes.
+    #     The `DELETE` action only supports set data types.
     #
     #   You can have many actions in a single expression, such as the
     #   following: `SET a=:value1, b=:value2 DELETE :value3, :value4,
@@ -10297,6 +10997,10 @@ module Aws::DynamoDB
     #   `ReturnConsumedCapacity` parameter was specified. For more
     #   information, see [Capacity unity consumption for write
     #   operations][1] in the *Amazon DynamoDB Developer Guide*.
+    #
+    #   If the table has vector indexes, the response includes a
+    #   `VectorIndexes` field with `VectorWriteRequestBytes` consumed for
+    #   each affected vector index.
     #
     #
     #
@@ -10471,18 +11175,19 @@ module Aws::DynamoDB
     #   the consumed read and write capacity of your table and global
     #   secondary indexes over the past 30 minutes.
     #
-    #   * `PROVISIONED` - We recommend using `PROVISIONED` for predictable
-    #     workloads. `PROVISIONED` sets the billing mode to [Provisioned
-    #     capacity mode][1].
+    #   * `PAY_PER_REQUEST` - We recommend using `PAY_PER_REQUEST` for most
+    #     DynamoDB workloads. `PAY_PER_REQUEST` sets the billing mode to
+    #     [On-demand capacity mode][1].
     #
-    #   * `PAY_PER_REQUEST` - We recommend using `PAY_PER_REQUEST` for
-    #     unpredictable workloads. `PAY_PER_REQUEST` sets the billing mode
-    #     to [On-demand capacity mode][2].
+    #   * `PROVISIONED` - We recommend using `PROVISIONED` for steady
+    #     workloads with predictable growth where capacity requirements can
+    #     be reliably forecasted. `PROVISIONED` sets the billing mode to
+    #     [Provisioned capacity mode][2].
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/provisioned-capacity-mode.html
-    #   [2]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/on-demand-capacity-mode.html
+    #   [1]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/on-demand-capacity-mode.html
+    #   [2]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/provisioned-capacity-mode.html
     #   @return [String]
     #
     # @!attribute [rw] provisioned_throughput
@@ -10529,11 +11234,6 @@ module Aws::DynamoDB
     # @!attribute [rw] replica_updates
     #   A list of replica update actions (create, delete, or update) for the
     #   table.
-    #
-    #   <note markdown="1"> For global tables, this property only applies to global tables using
-    #   Version 2019.11.21 (Current version).
-    #
-    #    </note>
     #   @return [Array<Types::ReplicationGroupUpdate>]
     #
     # @!attribute [rw] table_class
@@ -10555,28 +11255,45 @@ module Aws::DynamoDB
     #   You can specify one of the following consistency modes:
     #
     #   * `EVENTUAL`: Configures a new global table for multi-Region
-    #     eventual consistency. This is the default consistency mode for
-    #     global tables.
+    #     eventual consistency (MREC). This is the default consistency mode
+    #     for global tables.
     #
     #   * `STRONG`: Configures a new global table for multi-Region strong
-    #     consistency (preview).
+    #     consistency (MRSC).
     #
-    #     <note markdown="1"> Multi-Region strong consistency (MRSC) is a new DynamoDB global
-    #     tables capability currently available in preview mode. For more
-    #     information, see [Global tables multi-Region strong
-    #     consistency][3].
-    #
-    #      </note>
-    #
-    #   If you don't specify this parameter, the global table consistency
-    #   mode defaults to `EVENTUAL`.
+    #   If you don't specify this field, the global table consistency mode
+    #   defaults to `EVENTUAL`. For more information about global tables
+    #   consistency modes, see [ Consistency modes][3] in DynamoDB developer
+    #   guide.
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_ReplicationGroupUpdate.html#DDB-Type-ReplicationGroupUpdate-Create
-    #   [2]: https://docs.aws.amazon.com/https:/docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_UpdateTable.html#DDB-UpdateTable-request-ReplicaUpdates
-    #   [3]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/PreviewFeatures.html#multi-region-strong-consistency-gt
+    #   [2]: https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_UpdateTable.html#DDB-UpdateTable-request-ReplicaUpdates
+    #   [3]: https://docs.aws.amazon.com/V2globaltables_HowItWorks.html#V2globaltables_HowItWorks.consistency-modes
     #   @return [String]
+    #
+    # @!attribute [rw] global_table_witness_updates
+    #   A list of witness updates for a MRSC global table. A witness
+    #   provides a cost-effective alternative to a full replica in a MRSC
+    #   global table by maintaining replicated change data written to global
+    #   table replicas. You cannot perform read or write operations on a
+    #   witness. For each witness, you can request one action:
+    #
+    #   * `Create` - add a new witness to the global table.
+    #
+    #   * `Delete` - remove a witness from the global table.
+    #
+    #   You can create or delete only one witness per `UpdateTable`
+    #   operation.
+    #
+    #   For more information, see [Multi-Region strong consistency
+    #   (MRSC)][1] in the Amazon DynamoDB Developer Guide
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/V2globaltables_HowItWorks.html#V2globaltables_HowItWorks.consistency-modes
+    #   @return [Array<Types::GlobalTableWitnessGroupUpdate>]
     #
     # @!attribute [rw] on_demand_throughput
     #   Updates the maximum number of read and write units for the specified
@@ -10588,6 +11305,29 @@ module Aws::DynamoDB
     #   Represents the warm throughput (in read units per second and write
     #   units per second) for updating a table.
     #   @return [Types::WarmThroughput]
+    #
+    # @!attribute [rw] global_table_settings_replication_mode
+    #   Controls the settings replication mode for a global table replica.
+    #   This attribute can be defined using UpdateTable operation only on a
+    #   regional table with values:
+    #
+    #   * `ENABLED`: Defines settings replication on a regional table to be
+    #     used as a source table for creating Multi-Account Global Table.
+    #
+    #   * `DISABLED`: Remove settings replication on a regional table.
+    #     Settings replication needs to be defined to ENABLED again in order
+    #     to create a Multi-Account Global Table using this table.
+    #   @return [String]
+    #
+    # @!attribute [rw] vector_index_updates
+    #   A list of vector indexes to be added to or removed from the table.
+    #   You can add or remove one vector index for each `UpdateTable`
+    #   operation.
+    #
+    #   To add a vector index, specify `IndexName`, `VectorAttribute`,
+    #   `Dimensions`, `DistanceFunction`, and `Projection`. To remove a
+    #   vector index, specify only the `IndexName`.
+    #   @return [Array<Types::VectorIndexUpdate>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/UpdateTableInput AWS API Documentation
     #
@@ -10603,8 +11343,11 @@ module Aws::DynamoDB
       :table_class,
       :deletion_protection_enabled,
       :multi_region_consistency,
+      :global_table_witness_updates,
       :on_demand_throughput,
-      :warm_throughput)
+      :warm_throughput,
+      :global_table_settings_replication_mode,
+      :vector_index_updates)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -10696,6 +11439,230 @@ module Aws::DynamoDB
     #
     class UpdateTimeToLiveOutput < Struct.new(
       :time_to_live_specification)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The definition of a vector attribute for a vector index.
+    #
+    # @!attribute [rw] attribute_name
+    #   The name of the vector attribute.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/VectorAttributeDefinition AWS API Documentation
+    #
+    class VectorAttributeDefinition < Struct.new(
+      :attribute_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The consumed capacity for vector index operations, including vector
+    # search request bytes and vector write request bytes.
+    #
+    # @!attribute [rw] vector_search_request_bytes
+    #   The number of vector search request bytes consumed by a
+    #   `SearchVectors` operation.
+    #   @return [Float]
+    #
+    # @!attribute [rw] vector_write_request_bytes
+    #   The number of vector write request bytes consumed when writing to a
+    #   vector index. Reported for write operations that modify attributes
+    #   indexed by a vector index.
+    #   @return [Float]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/VectorCapacity AWS API Documentation
+    #
+    class VectorCapacity < Struct.new(
+      :vector_search_request_bytes,
+      :vector_write_request_bytes)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains the configuration settings for a vector index, including the
+    # index name, vector attribute, dimensions, distance function, search
+    # schema, and projection.
+    #
+    # @!attribute [rw] index_name
+    #   The name of the vector index.
+    #   @return [String]
+    #
+    # @!attribute [rw] vector_attribute
+    #   The vector attribute configuration for the index.
+    #   @return [Types::VectorAttributeDefinition]
+    #
+    # @!attribute [rw] search_schema
+    #   The search schema that defines partition key and inline filter
+    #   attributes for the vector index.
+    #   @return [Array<Types::SearchSchemaElement>]
+    #
+    # @!attribute [rw] projection
+    #   Specifies attributes that are copied (projected) from the table into
+    #   the vector index.
+    #   @return [Types::Projection]
+    #
+    # @!attribute [rw] dimensions
+    #   The number of dimensions in each vector.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] distance_function
+    #   The distance function used to calculate similarity between vectors.
+    #   Valid values: `COSINE`, `EUCLIDEAN`, `DOT_PRODUCT`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/VectorIndex AWS API Documentation
+    #
+    class VectorIndex < Struct.new(
+      :index_name,
+      :vector_attribute,
+      :search_schema,
+      :projection,
+      :dimensions,
+      :distance_function)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains the current state and configuration of a vector index,
+    # including its status, size, item count, and the settings specified
+    # when the index was created.
+    #
+    # @!attribute [rw] index_name
+    #   The name of the vector index.
+    #   @return [String]
+    #
+    # @!attribute [rw] search_schema
+    #   The search schema that defines partition key and inline filter
+    #   attributes for the vector index.
+    #   @return [Array<Types::SearchSchemaElement>]
+    #
+    # @!attribute [rw] projection
+    #   Specifies attributes that are copied (projected) from the table into
+    #   the vector index.
+    #   @return [Types::Projection]
+    #
+    # @!attribute [rw] vector_attribute
+    #   The vector attribute configuration for the index.
+    #   @return [Types::VectorAttributeDefinition]
+    #
+    # @!attribute [rw] dimensions
+    #   The number of dimensions in each vector.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] distance_function
+    #   The distance function used to calculate similarity between vectors.
+    #   @return [String]
+    #
+    # @!attribute [rw] index_status
+    #   The current state of the vector index:
+    #
+    #   * `CREATING` - The index is being created.
+    #
+    #   * `ACTIVE` - The index is ready for use.
+    #
+    #   * `DELETING` - The index is being deleted.
+    #   @return [String]
+    #
+    # @!attribute [rw] backfilling
+    #   Specifies whether the index is currently backfilling. During
+    #   backfill, `SearchVectors` operations might return incomplete
+    #   results.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] index_size_bytes
+    #   The total size of the vector index, in bytes. Amazon DynamoDB
+    #   updates this value approximately every six hours. Recent changes
+    #   might not be reflected in this value.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] item_count
+    #   The number of items indexed in the vector index. Amazon DynamoDB
+    #   updates this value approximately every six hours. Recent changes
+    #   might not be reflected in this value.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] index_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the vector
+    #   index.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/VectorIndexDescription AWS API Documentation
+    #
+    class VectorIndexDescription < Struct.new(
+      :index_name,
+      :search_schema,
+      :projection,
+      :vector_attribute,
+      :dimensions,
+      :distance_function,
+      :index_status,
+      :backfilling,
+      :index_size_bytes,
+      :item_count,
+      :index_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains the configuration of a vector index as it existed at the time
+    # a backup was created.
+    #
+    # @!attribute [rw] index_name
+    #   The name of the vector index.
+    #   @return [String]
+    #
+    # @!attribute [rw] vector_attribute
+    #   The vector attribute configuration for the index.
+    #   @return [Types::VectorAttributeDefinition]
+    #
+    # @!attribute [rw] search_schema
+    #   The search schema that defines partition key and inline filter
+    #   attributes for the vector index.
+    #   @return [Array<Types::SearchSchemaElement>]
+    #
+    # @!attribute [rw] projection
+    #   Specifies attributes that are copied (projected) from the table into
+    #   the vector index.
+    #   @return [Types::Projection]
+    #
+    # @!attribute [rw] dimensions
+    #   The number of dimensions in each vector.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] distance_function
+    #   The distance function used to calculate similarity between vectors.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/VectorIndexInfo AWS API Documentation
+    #
+    class VectorIndexInfo < Struct.new(
+      :index_name,
+      :vector_attribute,
+      :search_schema,
+      :projection,
+      :dimensions,
+      :distance_function)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A vector index to be added to or removed from a table.
+    #
+    # @!attribute [rw] create
+    #   The configuration for creating a new vector index on the table.
+    #   @return [Types::CreateVectorIndexAction]
+    #
+    # @!attribute [rw] delete
+    #   The configuration for deleting an existing vector index from the
+    #   table.
+    #   @return [Types::DeleteVectorIndexAction]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/VectorIndexUpdate AWS API Documentation
+    #
+    class VectorIndexUpdate < Struct.new(
+      :create,
+      :delete)
       SENSITIVE = []
       include Aws::Structure
     end

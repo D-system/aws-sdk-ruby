@@ -22,7 +22,7 @@ module Aws
       def state: () -> ("pending" | "available" | "deleting" | "deleted")
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EC2/PlacementGroup.html#strategy-instance_method
-      def strategy: () -> ("cluster" | "spread" | "partition")
+      def strategy: () -> ("cluster" | "spread" | "partition" | "precision-time")
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EC2/PlacementGroup.html#partition_count-instance_method
       def partition_count: () -> ::Integer
@@ -38,6 +38,15 @@ module Aws
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EC2/PlacementGroup.html#spread_level-instance_method
       def spread_level: () -> ("host" | "rack")
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EC2/PlacementGroup.html#linked_group_id-instance_method
+      def linked_group_id: () -> ::String
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EC2/PlacementGroup.html#operator-instance_method
+      def operator: () -> Types::OperatorResponse
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EC2/PlacementGroup.html#parent_group_id-instance_method
+      def parent_group_id: () -> ::String
 
       def client: () -> Client
 
@@ -61,12 +70,13 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/EC2/PlacementGroup.html#instances-instance_method
       def instances: (
                        ?instance_ids: Array[::String],
+                       ?include_managed_resources: bool,
                        ?dry_run: bool,
                        ?filters: Array[
                          {
                            name: ::String?,
                            values: Array[::String]?
-                         },
+                         }
                        ]
                      ) -> Instance::Collection
                    | (?Hash[Symbol, untyped]) -> Instance::Collection

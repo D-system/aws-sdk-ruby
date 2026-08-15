@@ -184,103 +184,69 @@ module Aws::CostExplorer
     #   @return [String]
     #
     # @!attribute [rw] monitor_type
-    #   The possible type values.
+    #   The type of the monitor.
+    #
+    #   Set this to `DIMENSIONAL` for an Amazon Web Services managed
+    #   monitor. Amazon Web Services managed monitors automatically track up
+    #   to the top 5,000 values by cost within a dimension of your choosing.
+    #   Each dimension value is evaluated independently. If you start
+    #   incurring cost in a new value of your chosen dimension, it will
+    #   automatically be analyzed by an Amazon Web Services managed monitor.
+    #
+    #   Set this to `CUSTOM` for a customer managed monitor. Customer
+    #   managed monitors let you select specific dimension values that get
+    #   monitored in aggregate.
+    #
+    #   For more information about monitor types, see [Monitor types][1] in
+    #   the *Billing and Cost Management User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/cost-management/latest/userguide/getting-started-ad.html#monitor-type-def
     #   @return [String]
     #
     # @!attribute [rw] monitor_dimension
-    #   The dimensions to evaluate.
+    #   For customer managed monitors, do not specify this field.
+    #
+    #   For Amazon Web Services managed monitors, this field controls which
+    #   cost dimension is automatically analyzed by the monitor. For `TAG`
+    #   and `COST_CATEGORY ` dimensions, you must also specify
+    #   MonitorSpecification to configure the specific tag or cost category
+    #   key to analyze.
     #   @return [String]
     #
     # @!attribute [rw] monitor_specification
-    #   Use `Expression` to filter in various Cost Explorer APIs.
+    #   An [Expression][1] object used to control what costs the monitor
+    #   analyzes for anomalies.
     #
-    #   Not all `Expression` types are supported in each API. Refer to the
-    #   documentation for each specific API to see what is supported.
+    #   For Amazon Web Services managed monitors:
     #
-    #   There are two patterns:
+    #   * If MonitorDimension is `SERVICE` or `LINKED_ACCOUNT`, do not
+    #     specify this field
     #
-    #   * Simple dimension values.
+    #   * If MonitorDimension is `TAG`, set this field to `{ "Tags": {
+    #     "Key": "your tag key" } }`
     #
-    #     * There are three types of simple dimension values:
-    #       `CostCategories`, `Tags`, and `Dimensions`.
+    #   * If MonitorDimension is `COST_CATEGORY`, set this field to `{
+    #     "CostCategories": { "Key": "your cost category key" } }`
     #
-    #       * Specify the `CostCategories` field to define a filter that
-    #         acts on Cost Categories.
+    #   For customer managed monitors:
     #
-    #       * Specify the `Tags` field to define a filter that acts on Cost
-    #         Allocation Tags.
+    #   * To track linked accounts, set this field to `{ "Dimensions": {
+    #     "Key": "LINKED_ACCOUNT", "Values": [ "your list of up to 10
+    #     account IDs" ] } } `
     #
-    #       * Specify the `Dimensions` field to define a filter that acts on
-    #         the [ `DimensionValues` ][1].
-    #     * For each filter type, you can set the dimension name and values
-    #       for the filters that you plan to use.
+    #   * To track cost allocation tags, set this field to `{ "Tags": {
+    #     "Key": "your tag key", "Values": [ "your list of up to 10 tag
+    #     values" ] } } `
     #
-    #       * For example, you can filter for `REGION==us-east-1 OR
-    #         REGION==us-west-1`. For `GetRightsizingRecommendation`, the
-    #         Region is a full name (for example, `REGION==US East (N.
-    #         Virginia)`.
-    #
-    #       * The corresponding `Expression` for this example is as follows:
-    #         `{ "Dimensions": { "Key": "REGION", "Values": [ "us-east-1",
-    #         "us-west-1" ] } }`
-    #
-    #       * As shown in the previous example, lists of dimension values
-    #         are combined with `OR` when applying the filter.
-    #     * You can also set different match options to further control how
-    #       the filter behaves. Not all APIs support match options. Refer to
-    #       the documentation for each specific API to see what is
-    #       supported.
-    #
-    #       * For example, you can filter for linked account names that
-    #         start with "a".
-    #
-    #       * The corresponding `Expression` for this example is as follows:
-    #         `{ "Dimensions": { "Key": "LINKED_ACCOUNT_NAME",
-    #         "MatchOptions": [ "STARTS_WITH" ], "Values": [ "a" ] } }`
-    #   * Compound `Expression` types with logical operations.
-    #
-    #     * You can use multiple `Expression` types and the logical
-    #       operators `AND/OR/NOT` to create a list of one or more
-    #       `Expression` objects. By doing this, you can filter by more
-    #       advanced options.
-    #
-    #     * For example, you can filter by `((REGION == us-east-1 OR REGION
-    #       == us-west-1) OR (TAG.Type == Type1)) AND (USAGE_TYPE !=
-    #       DataTransfer)`.
-    #
-    #     * The corresponding `Expression` for this example is as follows:
-    #       `{ "And": [ {"Or": [ {"Dimensions": { "Key": "REGION", "Values":
-    #       [ "us-east-1", "us-west-1" ] }}, {"Tags": { "Key": "TagName",
-    #       "Values": ["Value1"] } } ]}, {"Not": {"Dimensions": { "Key":
-    #       "USAGE_TYPE", "Values": ["DataTransfer"] }}} ] } `
-    #     <note markdown="1"> Because each `Expression` can have only one operator, the service
-    #     returns an error if more than one is specified. The following
-    #     example shows an `Expression` object that creates an error: ` {
-    #     "And": [ ... ], "Dimensions": { "Key": "USAGE_TYPE", "Values": [
-    #     "DataTransfer" ] } } `
-    #
-    #      The following is an example of the corresponding error message:
-    #     `"Expression has more than one roots. Only one root operator is
-    #     allowed for each expression: And, Or, Not, Dimensions, Tags,
-    #     CostCategories"`
-    #
-    #      </note>
-    #
-    #   <note markdown="1"> For the `GetRightsizingRecommendation` action, a combination of OR
-    #   and NOT isn't supported. OR isn't supported between different
-    #   dimensions, or dimensions and tags. NOT operators aren't supported.
-    #   Dimensions are also limited to `LINKED_ACCOUNT`, `REGION`, or
-    #   `RIGHTSIZING_TYPE`.
-    #
-    #    For the `GetReservationPurchaseRecommendation` action, only NOT is
-    #   supported. AND and OR aren't supported. Dimensions are limited to
-    #   `LINKED_ACCOUNT`.
-    #
-    #    </note>
+    #   * To track cost categories, set this field to`{ "CostCategories": {
+    #     "Key": "your cost category key", "Values": [ "your cost category
+    #     value" ] } } `
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_DimensionValues.html
+    #   [1]: https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_Expression.html
     #   @return [Types::Expression]
     #
     # @!attribute [rw] dimensional_value_count
@@ -482,6 +448,20 @@ module Aws::CostExplorer
       include Aws::Structure
     end
 
+    # The billing view status must be `HEALTHY` to perform this action. Try
+    # again when the status is `HEALTHY`.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ce-2017-10-25/BillingViewHealthStatusException AWS API Documentation
+    #
+    class BillingViewHealthStatusException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The configuration for the commitment purchase analysis.
     #
     # @!attribute [rw] savings_plans_purchase_analysis_configuration
@@ -492,6 +472,39 @@ module Aws::CostExplorer
     #
     class CommitmentPurchaseAnalysisConfiguration < Struct.new(
       :savings_plans_purchase_analysis_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains cost or usage metric values for comparing two time periods.
+    # Each value includes amounts for the baseline and comparison time
+    # periods, their difference, and the unit of measurement.
+    #
+    # @!attribute [rw] baseline_time_period_amount
+    #   The numeric value for the baseline time period measurement.
+    #   @return [String]
+    #
+    # @!attribute [rw] comparison_time_period_amount
+    #   The numeric value for the comparison time period measurement.
+    #   @return [String]
+    #
+    # @!attribute [rw] difference
+    #   The calculated difference between `ComparisonTimePeriodAmount` and
+    #   `BaselineTimePeriodAmount`.
+    #   @return [String]
+    #
+    # @!attribute [rw] unit
+    #   The unit of measurement applicable to all numeric values in this
+    #   comparison.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ce-2017-10-25/ComparisonMetricValue AWS API Documentation
+    #
+    class ComparisonMetricValue < Struct.new(
+      :baseline_time_period_amount,
+      :comparison_time_period_amount,
+      :difference,
+      :unit)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -591,38 +604,146 @@ module Aws::CostExplorer
       include Aws::Structure
     end
 
+    # Represents a comparison of cost and usage metrics between two time
+    # periods.
+    #
+    # @!attribute [rw] cost_and_usage_selector
+    #   Use `Expression` to filter in various Cost Explorer APIs.
+    #
+    #   Not all `Expression` types are supported in each API. Refer to the
+    #   documentation for each specific API to see what is supported.
+    #
+    #   There are two patterns:
+    #
+    #   * Simple dimension values.
+    #
+    #     * There are three types of simple dimension values:
+    #       `CostCategories`, `Tags`, and `Dimensions`.
+    #
+    #       * Specify the `CostCategories` field to define a filter that
+    #         acts on Cost Categories.
+    #
+    #       * Specify the `Tags` field to define a filter that acts on Cost
+    #         Allocation Tags.
+    #
+    #       * Specify the `Dimensions` field to define a filter that acts on
+    #         the [ `DimensionValues` ][1].
+    #     * For each filter type, you can set the dimension name and values
+    #       for the filters that you plan to use.
+    #
+    #       * For example, you can filter for `REGION==us-east-1 OR
+    #         REGION==us-west-1`. For `GetRightsizingRecommendation`, the
+    #         Region is a full name (for example, `REGION==US East (N.
+    #         Virginia)`.
+    #
+    #       * The corresponding `Expression` for this example is as follows:
+    #         `{ "Dimensions": { "Key": "REGION", "Values": [ "us-east-1",
+    #         "us-west-1" ] } }`
+    #
+    #       * As shown in the previous example, lists of dimension values
+    #         are combined with `OR` when applying the filter.
+    #     * You can also set different match options to further control how
+    #       the filter behaves. Not all APIs support match options. Refer to
+    #       the documentation for each specific API to see what is
+    #       supported.
+    #
+    #       * For example, you can filter for linked account names that
+    #         start with "a".
+    #
+    #       * The corresponding `Expression` for this example is as follows:
+    #         `{ "Dimensions": { "Key": "LINKED_ACCOUNT_NAME",
+    #         "MatchOptions": [ "STARTS_WITH" ], "Values": [ "a" ] } }`
+    #   * Compound `Expression` types with logical operations.
+    #
+    #     * You can use multiple `Expression` types and the logical
+    #       operators `AND/OR/NOT` to create a list of one or more
+    #       `Expression` objects. By doing this, you can filter by more
+    #       advanced options.
+    #
+    #     * For example, you can filter by `((REGION == us-east-1 OR REGION
+    #       == us-west-1) OR (TAG.Type == Type1)) AND (USAGE_TYPE !=
+    #       DataTransfer)`.
+    #
+    #     * The corresponding `Expression` for this example is as follows:
+    #       `{ "And": [ {"Or": [ {"Dimensions": { "Key": "REGION", "Values":
+    #       [ "us-east-1", "us-west-1" ] }}, {"Tags": { "Key": "TagName",
+    #       "Values": ["Value1"] } } ]}, {"Not": {"Dimensions": { "Key":
+    #       "USAGE_TYPE", "Values": ["DataTransfer"] }}} ] } `
+    #     <note markdown="1"> Because each `Expression` can have only one operator, the service
+    #     returns an error if more than one is specified. The following
+    #     example shows an `Expression` object that creates an error: ` {
+    #     "And": [ ... ], "Dimensions": { "Key": "USAGE_TYPE", "Values": [
+    #     "DataTransfer" ] } } `
+    #
+    #      The following is an example of the corresponding error message:
+    #     `"Expression has more than one roots. Only one root operator is
+    #     allowed for each expression: And, Or, Not, Dimensions, Tags,
+    #     CostCategories"`
+    #
+    #      </note>
+    #
+    #   <note markdown="1"> For the `GetRightsizingRecommendation` action, a combination of OR
+    #   and NOT isn't supported. OR isn't supported between different
+    #   dimensions, or dimensions and tags. NOT operators aren't supported.
+    #   Dimensions are also limited to `LINKED_ACCOUNT`, `REGION`, or
+    #   `RIGHTSIZING_TYPE`.
+    #
+    #    For the `GetReservationPurchaseRecommendation` action, only NOT is
+    #   supported. AND and OR aren't supported. Dimensions are limited to
+    #   `LINKED_ACCOUNT`.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_DimensionValues.html
+    #   @return [Types::Expression]
+    #
+    # @!attribute [rw] metrics
+    #   A mapping of metric names to their comparison values.
+    #   @return [Hash<String,Types::ComparisonMetricValue>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ce-2017-10-25/CostAndUsageComparison AWS API Documentation
+    #
+    class CostAndUsageComparison < Struct.new(
+      :cost_and_usage_selector,
+      :metrics)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The structure of Cost Categories. This includes detailed metadata and
     # the set of rules for the `CostCategory` object.
     #
     # @!attribute [rw] cost_category_arn
-    #   The unique identifier for your Cost Category.
+    #   The unique identifier for your cost category.
     #   @return [String]
     #
     # @!attribute [rw] effective_start
-    #   The effective start date of your Cost Category.
+    #   The effective start date of your cost category.
     #   @return [String]
     #
     # @!attribute [rw] effective_end
-    #   The effective end date of your Cost Category.
+    #   The effective end date of your cost category.
     #   @return [String]
     #
     # @!attribute [rw] name
-    #   The unique name of the Cost Category.
+    #   The unique name of the cost category.
     #   @return [String]
     #
     # @!attribute [rw] rule_version
-    #   The rule schema version in this particular Cost Category.
+    #   The rule schema version in this particular cost category.
     #   @return [String]
     #
     # @!attribute [rw] rules
     #   The rules are processed in order. If there are multiple rules that
     #   match the line item, then the first rule to match is used to
-    #   determine that Cost Category value.
+    #   determine that cost category value.
     #   @return [Array<Types::CostCategoryRule>]
     #
     # @!attribute [rw] split_charge_rules
     #   The split charge rules that are used to allocate your charges
-    #   between your Cost Category values.
+    #   between your cost category values.
     #   @return [Array<Types::CostCategorySplitChargeRule>]
     #
     # @!attribute [rw] processing_status
@@ -700,31 +821,31 @@ module Aws::CostExplorer
       include Aws::Structure
     end
 
-    # A reference to a Cost Category containing only enough information to
+    # A reference to a cost category containing only enough information to
     # identify the Cost Category.
     #
-    # You can use this information to retrieve the full Cost Category
+    # You can use this information to retrieve the full cost category
     # information using `DescribeCostCategory`.
     #
     # @!attribute [rw] cost_category_arn
-    #   The unique identifier for your Cost Category.
+    #   The unique identifier for your cost category.
     #   @return [String]
     #
     # @!attribute [rw] name
-    #   The unique name of the Cost Category.
+    #   The unique name of the cost category.
     #   @return [String]
     #
     # @!attribute [rw] effective_start
-    #   The Cost Category's effective start date.
+    #   The cost category's effective start date.
     #   @return [String]
     #
     # @!attribute [rw] effective_end
-    #   The Cost Category's effective end date.
+    #   The cost category's effective end date.
     #   @return [String]
     #
     # @!attribute [rw] number_of_rules
-    #   The number of rules that are associated with a specific Cost
-    #   Category.
+    #   The number of rules that are associated with a specific cost
+    #   category.
     #   @return [Integer]
     #
     # @!attribute [rw] processing_status
@@ -740,6 +861,10 @@ module Aws::CostExplorer
     #   The default value for the cost category.
     #   @return [String]
     #
+    # @!attribute [rw] supported_resource_types
+    #   The resource types supported by a specific cost category.
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ce-2017-10-25/CostCategoryReference AWS API Documentation
     #
     class CostCategoryReference < Struct.new(
@@ -750,14 +875,40 @@ module Aws::CostExplorer
       :number_of_rules,
       :processing_status,
       :values,
-      :default_value)
+      :default_value,
+      :supported_resource_types)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A reference to a cost category association that contains information
+    # on an associated resource.
+    #
+    # @!attribute [rw] resource_arn
+    #   The unique identifier for an associated resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] cost_category_name
+    #   The unique name of the cost category.
+    #   @return [String]
+    #
+    # @!attribute [rw] cost_category_arn
+    #   The unique identifier for your cost category.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ce-2017-10-25/CostCategoryResourceAssociation AWS API Documentation
+    #
+    class CostCategoryResourceAssociation < Struct.new(
+      :resource_arn,
+      :cost_category_name,
+      :cost_category_arn)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # Rules are processed in order. If there are multiple rules that match
     # the line item, then the first rule to match is used to determine that
-    # Cost Category value.
+    # cost category value.
     #
     # @!attribute [rw] value
     #   The default value for the cost category.
@@ -770,7 +921,7 @@ module Aws::CostExplorer
     #   `RECORD_TYPE`, `LINKED_ACCOUNT_NAME`, `REGION`, and `USAGE_TYPE`.
     #
     #   `RECORD_TYPE` is a dimension used for Cost Explorer APIs, and is
-    #   also supported for Cost Category expressions. This dimension uses
+    #   also supported for cost category expressions. This dimension uses
     #   different terms, depending on whether you're using the console or
     #   API/JSON editor. For a detailed comparison, see [Term
     #   Comparisons][2] in the *Billing and Cost Management User Guide*.
@@ -809,18 +960,18 @@ module Aws::CostExplorer
       include Aws::Structure
     end
 
-    # Use the split charge rule to split the cost of one Cost Category value
+    # Use the split charge rule to split the cost of one cost category value
     # across several other target values.
     #
     # @!attribute [rw] source
-    #   The Cost Category value that you want to split. That value can't be
+    #   The cost category value that you want to split. That value can't be
     #   used as a source or a target in other split charge rules. To
     #   indicate uncategorized costs, you can use an empty string as the
     #   source.
     #   @return [String]
     #
     # @!attribute [rw] targets
-    #   The Cost Category values that you want to split costs across. These
+    #   The cost category values that you want to split costs across. These
     #   values can't be used as a source in other split charge rules.
     #   @return [Array<String>]
     #
@@ -883,11 +1034,11 @@ module Aws::CostExplorer
     # it filters on resources without the given Cost Categories key.
     #
     # @!attribute [rw] key
-    #   The unique name of the Cost Category.
+    #   The unique name of the cost category.
     #   @return [String]
     #
     # @!attribute [rw] values
-    #   The specific value of the Cost Category.
+    #   The specific value of the cost category.
     #   @return [Array<String>]
     #
     # @!attribute [rw] match_options
@@ -903,6 +1054,155 @@ module Aws::CostExplorer
       :key,
       :values,
       :match_options)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents a collection of cost drivers and their associated metrics
+    # for cost comparison analysis.
+    #
+    # @!attribute [rw] cost_selector
+    #   Use `Expression` to filter in various Cost Explorer APIs.
+    #
+    #   Not all `Expression` types are supported in each API. Refer to the
+    #   documentation for each specific API to see what is supported.
+    #
+    #   There are two patterns:
+    #
+    #   * Simple dimension values.
+    #
+    #     * There are three types of simple dimension values:
+    #       `CostCategories`, `Tags`, and `Dimensions`.
+    #
+    #       * Specify the `CostCategories` field to define a filter that
+    #         acts on Cost Categories.
+    #
+    #       * Specify the `Tags` field to define a filter that acts on Cost
+    #         Allocation Tags.
+    #
+    #       * Specify the `Dimensions` field to define a filter that acts on
+    #         the [ `DimensionValues` ][1].
+    #     * For each filter type, you can set the dimension name and values
+    #       for the filters that you plan to use.
+    #
+    #       * For example, you can filter for `REGION==us-east-1 OR
+    #         REGION==us-west-1`. For `GetRightsizingRecommendation`, the
+    #         Region is a full name (for example, `REGION==US East (N.
+    #         Virginia)`.
+    #
+    #       * The corresponding `Expression` for this example is as follows:
+    #         `{ "Dimensions": { "Key": "REGION", "Values": [ "us-east-1",
+    #         "us-west-1" ] } }`
+    #
+    #       * As shown in the previous example, lists of dimension values
+    #         are combined with `OR` when applying the filter.
+    #     * You can also set different match options to further control how
+    #       the filter behaves. Not all APIs support match options. Refer to
+    #       the documentation for each specific API to see what is
+    #       supported.
+    #
+    #       * For example, you can filter for linked account names that
+    #         start with "a".
+    #
+    #       * The corresponding `Expression` for this example is as follows:
+    #         `{ "Dimensions": { "Key": "LINKED_ACCOUNT_NAME",
+    #         "MatchOptions": [ "STARTS_WITH" ], "Values": [ "a" ] } }`
+    #   * Compound `Expression` types with logical operations.
+    #
+    #     * You can use multiple `Expression` types and the logical
+    #       operators `AND/OR/NOT` to create a list of one or more
+    #       `Expression` objects. By doing this, you can filter by more
+    #       advanced options.
+    #
+    #     * For example, you can filter by `((REGION == us-east-1 OR REGION
+    #       == us-west-1) OR (TAG.Type == Type1)) AND (USAGE_TYPE !=
+    #       DataTransfer)`.
+    #
+    #     * The corresponding `Expression` for this example is as follows:
+    #       `{ "And": [ {"Or": [ {"Dimensions": { "Key": "REGION", "Values":
+    #       [ "us-east-1", "us-west-1" ] }}, {"Tags": { "Key": "TagName",
+    #       "Values": ["Value1"] } } ]}, {"Not": {"Dimensions": { "Key":
+    #       "USAGE_TYPE", "Values": ["DataTransfer"] }}} ] } `
+    #     <note markdown="1"> Because each `Expression` can have only one operator, the service
+    #     returns an error if more than one is specified. The following
+    #     example shows an `Expression` object that creates an error: ` {
+    #     "And": [ ... ], "Dimensions": { "Key": "USAGE_TYPE", "Values": [
+    #     "DataTransfer" ] } } `
+    #
+    #      The following is an example of the corresponding error message:
+    #     `"Expression has more than one roots. Only one root operator is
+    #     allowed for each expression: And, Or, Not, Dimensions, Tags,
+    #     CostCategories"`
+    #
+    #      </note>
+    #
+    #   <note markdown="1"> For the `GetRightsizingRecommendation` action, a combination of OR
+    #   and NOT isn't supported. OR isn't supported between different
+    #   dimensions, or dimensions and tags. NOT operators aren't supported.
+    #   Dimensions are also limited to `LINKED_ACCOUNT`, `REGION`, or
+    #   `RIGHTSIZING_TYPE`.
+    #
+    #    For the `GetReservationPurchaseRecommendation` action, only NOT is
+    #   supported. AND and OR aren't supported. Dimensions are limited to
+    #   `LINKED_ACCOUNT`.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_DimensionValues.html
+    #   @return [Types::Expression]
+    #
+    # @!attribute [rw] metrics
+    #   A mapping of metric names to their comparison values.
+    #   @return [Hash<String,Types::ComparisonMetricValue>]
+    #
+    # @!attribute [rw] cost_drivers
+    #   An array of cost drivers, each representing a cost difference
+    #   between the baseline and comparison time periods. Each entry also
+    #   includes a metric delta (for example, usage change) that contributed
+    #   to the cost variance, along with the identifier and type of change.
+    #   @return [Array<Types::CostDriver>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ce-2017-10-25/CostComparisonDriver AWS API Documentation
+    #
+    class CostComparisonDriver < Struct.new(
+      :cost_selector,
+      :metrics,
+      :cost_drivers)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents factors that contribute to cost variations between the
+    # baseline and comparison time periods, including the type of driver, an
+    # identifier of the driver, and associated metrics.
+    #
+    # @!attribute [rw] type
+    #   The category or classification of the cost driver.
+    #
+    #   Values include: BUNDLED\_DISCOUNT, CREDIT, OUT\_OF\_CYCLE\_CHARGE,
+    #   REFUND, RECURRING\_RESERVATION\_FEE, RESERVATION\_USAGE,
+    #   RI\_VOLUME\_DISCOUNT, SAVINGS\_PLAN\_USAGE,
+    #   SAVINGS\_PLAN\_RECURRING\_FEE, SUPPORT\_FEE, TAX,
+    #   UPFRONT\_RESERVATION\_FEE, USAGE\_CHANGE, COMMITMENT
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The specific identifier of the cost driver.
+    #   @return [String]
+    #
+    # @!attribute [rw] metrics
+    #   A mapping of metric names to their comparison values, measuring the
+    #   impact of this cost driver.
+    #   @return [Hash<String,Types::ComparisonMetricValue>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ce-2017-10-25/CostDriver AWS API Documentation
+    #
+    class CostDriver < Struct.new(
+      :type,
+      :name,
+      :metrics)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1164,22 +1464,22 @@ module Aws::CostExplorer
     end
 
     # @!attribute [rw] name
-    #   The unique name of the Cost Category.
+    #   The unique name of the cost category.
     #   @return [String]
     #
     # @!attribute [rw] effective_start
-    #   The Cost Category's effective start date. It can only be a billing
+    #   The cost category's effective start date. It can only be a billing
     #   start date (first day of the month). If the date isn't provided,
     #   it's the first day of the current month. Dates can't be before the
     #   previous twelve months, or in the future.
     #   @return [String]
     #
     # @!attribute [rw] rule_version
-    #   The rule schema version in this particular Cost Category.
+    #   The rule schema version in this particular cost category.
     #   @return [String]
     #
     # @!attribute [rw] rules
-    #   The Cost Category rules used to categorize costs. For more
+    #   The cost category rules used to categorize costs. For more
     #   information, see [CostCategoryRule][1].
     #
     #
@@ -1193,7 +1493,7 @@ module Aws::CostExplorer
     #
     # @!attribute [rw] split_charge_rules
     #   The split charge rules used to allocate your charges between your
-    #   Cost Category values.
+    #   cost category values.
     #   @return [Array<Types::CostCategorySplitChargeRule>]
     #
     # @!attribute [rw] resource_tags
@@ -1243,11 +1543,11 @@ module Aws::CostExplorer
     end
 
     # @!attribute [rw] cost_category_arn
-    #   The unique identifier for your newly created Cost Category.
+    #   The unique identifier for your newly created cost category.
     #   @return [String]
     #
     # @!attribute [rw] effective_start
-    #   The Cost Category's effective start date. It can only be a billing
+    #   The cost category's effective start date. It can only be a billing
     #   start date (first day of the month).
     #   @return [String]
     #
@@ -1406,7 +1706,7 @@ module Aws::CostExplorer
     class DeleteAnomalySubscriptionResponse < Aws::EmptyStructure; end
 
     # @!attribute [rw] cost_category_arn
-    #   The unique identifier for your Cost Category.
+    #   The unique identifier for your cost category.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ce-2017-10-25/DeleteCostCategoryDefinitionRequest AWS API Documentation
@@ -1418,13 +1718,13 @@ module Aws::CostExplorer
     end
 
     # @!attribute [rw] cost_category_arn
-    #   The unique identifier for your Cost Category.
+    #   The unique identifier for your cost category.
     #   @return [String]
     #
     # @!attribute [rw] effective_end
-    #   The effective end date of the Cost Category as a result of deleting
-    #   it. No costs after this date is categorized by the deleted Cost
-    #   Category.
+    #   The effective end date of the cost category as a result of deleting
+    #   it. No costs after this date is categorized by the deleted cost
+    #   category.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ce-2017-10-25/DeleteCostCategoryDefinitionResponse AWS API Documentation
@@ -1437,11 +1737,11 @@ module Aws::CostExplorer
     end
 
     # @!attribute [rw] cost_category_arn
-    #   The unique identifier for your Cost Category.
+    #   The unique identifier for your cost category.
     #   @return [String]
     #
     # @!attribute [rw] effective_on
-    #   The date when the Cost Category was effective.
+    #   The date when the cost category was effective.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ce-2017-10-25/DescribeCostCategoryDefinitionRequest AWS API Documentation
@@ -1477,7 +1777,7 @@ module Aws::CostExplorer
     #   Not all dimensions are supported in each API. Refer to the
     #   documentation for each specific API to see what is supported.
     #
-    #   `LINK_ACCOUNT_NAME` and `SERVICE_CODE` can only be used in
+    #   `LINKED_ACCOUNT_NAME` and `SERVICE_CODE` can only be used in
     #   [CostCategoryRule][1].
     #
     #   `ANOMALY_TOTAL_IMPACT_ABSOLUTE` and
@@ -1498,8 +1798,8 @@ module Aws::CostExplorer
     # @!attribute [rw] match_options
     #   The match options that you can use to filter your results.
     #
-    #   `MatchOptions` is only applicable for actions related to Cost
-    #   Category and Anomaly Subscriptions. Refer to the documentation for
+    #   `MatchOptions` is only applicable for actions related to cost
+    #   category and Anomaly Subscriptions. Refer to the documentation for
     #   each specific API to see what is supported.
     #
     #   The default values for `MatchOptions` are `EQUALS` and
@@ -2336,6 +2636,182 @@ module Aws::CostExplorer
       include Aws::Structure
     end
 
+    # @!attribute [rw] billing_view_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies a specific
+    #   billing view. The ARN is used to specify which particular billing
+    #   view you want to interact with or retrieve information from when
+    #   making API calls related to Amazon Web Services Billing and Cost
+    #   Management features. The BillingViewArn can be retrieved by calling
+    #   the ListBillingViews API.
+    #   @return [String]
+    #
+    # @!attribute [rw] baseline_time_period
+    #   The reference time period for comparison. This time period serves as
+    #   the baseline against which other cost and usage data will be
+    #   compared. The interval must start and end on the first day of a
+    #   month, with a duration of exactly one month.
+    #   @return [Types::DateInterval]
+    #
+    # @!attribute [rw] comparison_time_period
+    #   The comparison time period for analysis. This time period's cost
+    #   and usage data will be compared against the baseline time period.
+    #   The interval must start and end on the first day of a month, with a
+    #   duration of exactly one month.
+    #   @return [Types::DateInterval]
+    #
+    # @!attribute [rw] metric_for_comparison
+    #   The cost and usage metric to compare. Valid values are
+    #   `AmortizedCost`, `BlendedCost`, `NetAmortizedCost`,
+    #   `NetUnblendedCost`, `NormalizedUsageAmount`, `UnblendedCost`, and
+    #   `UsageQuantity`.
+    #   @return [String]
+    #
+    # @!attribute [rw] filter
+    #   Use `Expression` to filter in various Cost Explorer APIs.
+    #
+    #   Not all `Expression` types are supported in each API. Refer to the
+    #   documentation for each specific API to see what is supported.
+    #
+    #   There are two patterns:
+    #
+    #   * Simple dimension values.
+    #
+    #     * There are three types of simple dimension values:
+    #       `CostCategories`, `Tags`, and `Dimensions`.
+    #
+    #       * Specify the `CostCategories` field to define a filter that
+    #         acts on Cost Categories.
+    #
+    #       * Specify the `Tags` field to define a filter that acts on Cost
+    #         Allocation Tags.
+    #
+    #       * Specify the `Dimensions` field to define a filter that acts on
+    #         the [ `DimensionValues` ][1].
+    #     * For each filter type, you can set the dimension name and values
+    #       for the filters that you plan to use.
+    #
+    #       * For example, you can filter for `REGION==us-east-1 OR
+    #         REGION==us-west-1`. For `GetRightsizingRecommendation`, the
+    #         Region is a full name (for example, `REGION==US East (N.
+    #         Virginia)`.
+    #
+    #       * The corresponding `Expression` for this example is as follows:
+    #         `{ "Dimensions": { "Key": "REGION", "Values": [ "us-east-1",
+    #         "us-west-1" ] } }`
+    #
+    #       * As shown in the previous example, lists of dimension values
+    #         are combined with `OR` when applying the filter.
+    #     * You can also set different match options to further control how
+    #       the filter behaves. Not all APIs support match options. Refer to
+    #       the documentation for each specific API to see what is
+    #       supported.
+    #
+    #       * For example, you can filter for linked account names that
+    #         start with "a".
+    #
+    #       * The corresponding `Expression` for this example is as follows:
+    #         `{ "Dimensions": { "Key": "LINKED_ACCOUNT_NAME",
+    #         "MatchOptions": [ "STARTS_WITH" ], "Values": [ "a" ] } }`
+    #   * Compound `Expression` types with logical operations.
+    #
+    #     * You can use multiple `Expression` types and the logical
+    #       operators `AND/OR/NOT` to create a list of one or more
+    #       `Expression` objects. By doing this, you can filter by more
+    #       advanced options.
+    #
+    #     * For example, you can filter by `((REGION == us-east-1 OR REGION
+    #       == us-west-1) OR (TAG.Type == Type1)) AND (USAGE_TYPE !=
+    #       DataTransfer)`.
+    #
+    #     * The corresponding `Expression` for this example is as follows:
+    #       `{ "And": [ {"Or": [ {"Dimensions": { "Key": "REGION", "Values":
+    #       [ "us-east-1", "us-west-1" ] }}, {"Tags": { "Key": "TagName",
+    #       "Values": ["Value1"] } } ]}, {"Not": {"Dimensions": { "Key":
+    #       "USAGE_TYPE", "Values": ["DataTransfer"] }}} ] } `
+    #     <note markdown="1"> Because each `Expression` can have only one operator, the service
+    #     returns an error if more than one is specified. The following
+    #     example shows an `Expression` object that creates an error: ` {
+    #     "And": [ ... ], "Dimensions": { "Key": "USAGE_TYPE", "Values": [
+    #     "DataTransfer" ] } } `
+    #
+    #      The following is an example of the corresponding error message:
+    #     `"Expression has more than one roots. Only one root operator is
+    #     allowed for each expression: And, Or, Not, Dimensions, Tags,
+    #     CostCategories"`
+    #
+    #      </note>
+    #
+    #   <note markdown="1"> For the `GetRightsizingRecommendation` action, a combination of OR
+    #   and NOT isn't supported. OR isn't supported between different
+    #   dimensions, or dimensions and tags. NOT operators aren't supported.
+    #   Dimensions are also limited to `LINKED_ACCOUNT`, `REGION`, or
+    #   `RIGHTSIZING_TYPE`.
+    #
+    #    For the `GetReservationPurchaseRecommendation` action, only NOT is
+    #   supported. AND and OR aren't supported. Dimensions are limited to
+    #   `LINKED_ACCOUNT`.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_DimensionValues.html
+    #   @return [Types::Expression]
+    #
+    # @!attribute [rw] group_by
+    #   You can group results using the attributes `DIMENSION`, `TAG`, and
+    #   `COST_CATEGORY`.
+    #   @return [Array<Types::GroupDefinition>]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results that are returned for the request.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_page_token
+    #   The token to retrieve the next set of paginated results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ce-2017-10-25/GetCostAndUsageComparisonsRequest AWS API Documentation
+    #
+    class GetCostAndUsageComparisonsRequest < Struct.new(
+      :billing_view_arn,
+      :baseline_time_period,
+      :comparison_time_period,
+      :metric_for_comparison,
+      :filter,
+      :group_by,
+      :max_results,
+      :next_page_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] cost_and_usage_comparisons
+    #   An array of comparison results showing cost and usage metrics
+    #   between `BaselineTimePeriod` and `ComparisonTimePeriod`.
+    #   @return [Array<Types::CostAndUsageComparison>]
+    #
+    # @!attribute [rw] total_cost_and_usage
+    #   A summary of the total cost and usage, comparing amounts between
+    #   `BaselineTimePeriod` and `ComparisonTimePeriod` and their
+    #   differences. This total represents the aggregate total across all
+    #   paginated results, if the response spans multiple pages.
+    #   @return [Hash<String,Types::ComparisonMetricValue>]
+    #
+    # @!attribute [rw] next_page_token
+    #   The token to retrieve the next set of paginated results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ce-2017-10-25/GetCostAndUsageComparisonsResponse AWS API Documentation
+    #
+    class GetCostAndUsageComparisonsResponse < Struct.new(
+      :cost_and_usage_comparisons,
+      :total_cost_and_usage,
+      :next_page_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] time_period
     #   Sets the start date and end date for retrieving Amazon Web Services
     #   costs. The start date is inclusive, but the end date is exclusive.
@@ -2607,9 +3083,9 @@ module Aws::CostExplorer
     #   The value that you want to search the filter values for.
     #
     #   If you don't specify a `CostCategoryName`, `SearchString` is used
-    #   to filter Cost Category names that match the `SearchString` pattern.
+    #   to filter cost category names that match the `SearchString` pattern.
     #   If you specify a `CostCategoryName`, `SearchString` is used to
-    #   filter Cost Category values that match the `SearchString` pattern.
+    #   filter cost category values that match the `SearchString` pattern.
     #   @return [String]
     #
     # @!attribute [rw] time_period
@@ -2617,7 +3093,7 @@ module Aws::CostExplorer
     #   @return [Types::DateInterval]
     #
     # @!attribute [rw] cost_category_name
-    #   The unique name of the Cost Category.
+    #   The unique name of the cost category.
     #   @return [String]
     #
     # @!attribute [rw] filter
@@ -2789,11 +3265,11 @@ module Aws::CostExplorer
     #   @return [String]
     #
     # @!attribute [rw] cost_category_names
-    #   The names of the Cost Categories.
+    #   The names of the cost categories.
     #   @return [Array<String>]
     #
     # @!attribute [rw] cost_category_values
-    #   The Cost Category values.
+    #   The cost category values.
     #
     #   If the `CostCategoryName` key isn't specified in the request, the
     #   `CostCategoryValues` fields aren't returned.
@@ -2815,6 +3291,176 @@ module Aws::CostExplorer
       :cost_category_values,
       :return_size,
       :total_size)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] billing_view_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies a specific
+    #   billing view. The ARN is used to specify which particular billing
+    #   view you want to interact with or retrieve information from when
+    #   making API calls related to Amazon Web Services Billing and Cost
+    #   Management features. The BillingViewArn can be retrieved by calling
+    #   the ListBillingViews API.
+    #   @return [String]
+    #
+    # @!attribute [rw] baseline_time_period
+    #   The reference time period for comparison. This time period serves as
+    #   the baseline against which other cost and usage data will be
+    #   compared. The interval must start and end on the first day of a
+    #   month, with a duration of exactly one month.
+    #   @return [Types::DateInterval]
+    #
+    # @!attribute [rw] comparison_time_period
+    #   The comparison time period for analysis. This time period's cost
+    #   and usage data will be compared against the baseline time period.
+    #   The interval must start and end on the first day of a month, with a
+    #   duration of exactly one month.
+    #   @return [Types::DateInterval]
+    #
+    # @!attribute [rw] metric_for_comparison
+    #   The cost and usage metric to compare. Valid values are
+    #   `AmortizedCost`, `BlendedCost`, `NetAmortizedCost`,
+    #   `NetUnblendedCost`, `NormalizedUsageAmount`, `UnblendedCost`, and
+    #   `UsageQuantity`.
+    #   @return [String]
+    #
+    # @!attribute [rw] filter
+    #   Use `Expression` to filter in various Cost Explorer APIs.
+    #
+    #   Not all `Expression` types are supported in each API. Refer to the
+    #   documentation for each specific API to see what is supported.
+    #
+    #   There are two patterns:
+    #
+    #   * Simple dimension values.
+    #
+    #     * There are three types of simple dimension values:
+    #       `CostCategories`, `Tags`, and `Dimensions`.
+    #
+    #       * Specify the `CostCategories` field to define a filter that
+    #         acts on Cost Categories.
+    #
+    #       * Specify the `Tags` field to define a filter that acts on Cost
+    #         Allocation Tags.
+    #
+    #       * Specify the `Dimensions` field to define a filter that acts on
+    #         the [ `DimensionValues` ][1].
+    #     * For each filter type, you can set the dimension name and values
+    #       for the filters that you plan to use.
+    #
+    #       * For example, you can filter for `REGION==us-east-1 OR
+    #         REGION==us-west-1`. For `GetRightsizingRecommendation`, the
+    #         Region is a full name (for example, `REGION==US East (N.
+    #         Virginia)`.
+    #
+    #       * The corresponding `Expression` for this example is as follows:
+    #         `{ "Dimensions": { "Key": "REGION", "Values": [ "us-east-1",
+    #         "us-west-1" ] } }`
+    #
+    #       * As shown in the previous example, lists of dimension values
+    #         are combined with `OR` when applying the filter.
+    #     * You can also set different match options to further control how
+    #       the filter behaves. Not all APIs support match options. Refer to
+    #       the documentation for each specific API to see what is
+    #       supported.
+    #
+    #       * For example, you can filter for linked account names that
+    #         start with "a".
+    #
+    #       * The corresponding `Expression` for this example is as follows:
+    #         `{ "Dimensions": { "Key": "LINKED_ACCOUNT_NAME",
+    #         "MatchOptions": [ "STARTS_WITH" ], "Values": [ "a" ] } }`
+    #   * Compound `Expression` types with logical operations.
+    #
+    #     * You can use multiple `Expression` types and the logical
+    #       operators `AND/OR/NOT` to create a list of one or more
+    #       `Expression` objects. By doing this, you can filter by more
+    #       advanced options.
+    #
+    #     * For example, you can filter by `((REGION == us-east-1 OR REGION
+    #       == us-west-1) OR (TAG.Type == Type1)) AND (USAGE_TYPE !=
+    #       DataTransfer)`.
+    #
+    #     * The corresponding `Expression` for this example is as follows:
+    #       `{ "And": [ {"Or": [ {"Dimensions": { "Key": "REGION", "Values":
+    #       [ "us-east-1", "us-west-1" ] }}, {"Tags": { "Key": "TagName",
+    #       "Values": ["Value1"] } } ]}, {"Not": {"Dimensions": { "Key":
+    #       "USAGE_TYPE", "Values": ["DataTransfer"] }}} ] } `
+    #     <note markdown="1"> Because each `Expression` can have only one operator, the service
+    #     returns an error if more than one is specified. The following
+    #     example shows an `Expression` object that creates an error: ` {
+    #     "And": [ ... ], "Dimensions": { "Key": "USAGE_TYPE", "Values": [
+    #     "DataTransfer" ] } } `
+    #
+    #      The following is an example of the corresponding error message:
+    #     `"Expression has more than one roots. Only one root operator is
+    #     allowed for each expression: And, Or, Not, Dimensions, Tags,
+    #     CostCategories"`
+    #
+    #      </note>
+    #
+    #   <note markdown="1"> For the `GetRightsizingRecommendation` action, a combination of OR
+    #   and NOT isn't supported. OR isn't supported between different
+    #   dimensions, or dimensions and tags. NOT operators aren't supported.
+    #   Dimensions are also limited to `LINKED_ACCOUNT`, `REGION`, or
+    #   `RIGHTSIZING_TYPE`.
+    #
+    #    For the `GetReservationPurchaseRecommendation` action, only NOT is
+    #   supported. AND and OR aren't supported. Dimensions are limited to
+    #   `LINKED_ACCOUNT`.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_DimensionValues.html
+    #   @return [Types::Expression]
+    #
+    # @!attribute [rw] group_by
+    #   You can group results using the attributes `DIMENSION`, `TAG`, and
+    #   `COST_CATEGORY`. Note that `SERVICE` and `USAGE_TYPE` dimensions are
+    #   automatically included in the cost comparison drivers analysis.
+    #   @return [Array<Types::GroupDefinition>]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results that are returned for the request.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_page_token
+    #   The token to retrieve the next set of paginated results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ce-2017-10-25/GetCostComparisonDriversRequest AWS API Documentation
+    #
+    class GetCostComparisonDriversRequest < Struct.new(
+      :billing_view_arn,
+      :baseline_time_period,
+      :comparison_time_period,
+      :metric_for_comparison,
+      :filter,
+      :group_by,
+      :max_results,
+      :next_page_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] cost_comparison_drivers
+    #   An array of comparison results showing factors that drive
+    #   significant cost differences between `BaselineTimePeriod` and
+    #   `ComparisonTimePeriod`.
+    #   @return [Array<Types::CostComparisonDriver>]
+    #
+    # @!attribute [rw] next_page_token
+    #   The token to retrieve the next set of paginated results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ce-2017-10-25/GetCostComparisonDriversResponse AWS API Documentation
+    #
+    class GetCostComparisonDriversResponse < Struct.new(
+      :cost_comparison_drivers,
+      :next_page_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2849,7 +3495,7 @@ module Aws::CostExplorer
     #
     # @!attribute [rw] granularity
     #   How granular you want the forecast to be. You can get 3 months of
-    #   `DAILY` forecasts or 12 months of `MONTHLY` forecasts.
+    #   `DAILY` forecasts or 18 months of `MONTHLY` forecasts.
     #
     #   The `GetCostForecast` operation supports only `DAILY` and `MONTHLY`
     #   granularities.
@@ -2865,8 +3511,6 @@ module Aws::CostExplorer
     #   * `INSTANCE_TYPE`
     #
     #   * `LINKED_ACCOUNT`
-    #
-    #   * `LINKED_ACCOUNT_NAME`
     #
     #   * `OPERATION`
     #
@@ -4773,7 +5417,7 @@ module Aws::CostExplorer
     #
     # @!attribute [rw] granularity
     #   How granular you want the forecast to be. You can get 3 months of
-    #   `DAILY` forecasts or 12 months of `MONTHLY` forecasts.
+    #   `DAILY` forecasts or 18 months of `MONTHLY` forecasts.
     #
     #   The `GetUsageForecast` operation supports only `DAILY` and `MONTHLY`
     #   granularities.
@@ -5181,7 +5825,7 @@ module Aws::CostExplorer
     end
 
     # @!attribute [rw] effective_on
-    #   The date when the Cost Category was effective.
+    #   The date when the cost category was effective.
     #   @return [String]
     #
     # @!attribute [rw] next_token
@@ -5194,18 +5838,28 @@ module Aws::CostExplorer
     #   The number of entries a paginated response contains.
     #   @return [Integer]
     #
+    # @!attribute [rw] supported_resource_types
+    #   Filter cost category definitions that are supported by given
+    #   resource types based on the latest version. If the filter is
+    #   present, the result only includes Cost Categories that supports
+    #   input resource type. If the filter isn't provided, no filtering is
+    #   applied. The valid values are `billing:rispgroupsharing` and
+    #   `billing:billingview`.
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ce-2017-10-25/ListCostCategoryDefinitionsRequest AWS API Documentation
     #
     class ListCostCategoryDefinitionsRequest < Struct.new(
       :effective_on,
       :next_token,
-      :max_results)
+      :max_results,
+      :supported_resource_types)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # @!attribute [rw] cost_category_references
-    #   A reference to a Cost Category that contains enough information to
+    #   A reference to a cost category that contains enough information to
     #   identify the Cost Category.
     #   @return [Array<Types::CostCategoryReference>]
     #
@@ -5219,6 +5873,50 @@ module Aws::CostExplorer
     #
     class ListCostCategoryDefinitionsResponse < Struct.new(
       :cost_category_references,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] cost_category_arn
+    #   The unique identifier for your cost category.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   The token to retrieve the next set of results. Amazon Web Services
+    #   provides the token when the response from a previous call has more
+    #   results than the maximum page size.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The number of entries a paginated response contains.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ce-2017-10-25/ListCostCategoryResourceAssociationsRequest AWS API Documentation
+    #
+    class ListCostCategoryResourceAssociationsRequest < Struct.new(
+      :cost_category_arn,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] cost_category_resource_associations
+    #   A reference to a cost category association that contains information
+    #   on an associated resource.
+    #   @return [Array<Types::CostCategoryResourceAssociation>]
+    #
+    # @!attribute [rw] next_token
+    #   The token to retrieve the next set of results. Amazon Web Services
+    #   provides the token when the response from a previous call has more
+    #   results than the maximum page size.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/ce-2017-10-25/ListCostCategoryResourceAssociationsResponse AWS API Documentation
+    #
+    class ListCostCategoryResourceAssociationsResponse < Struct.new(
+      :cost_category_resource_associations,
       :next_token)
       SENSITIVE = []
       include Aws::Structure
@@ -5473,6 +6171,11 @@ module Aws::CostExplorer
     #   Determines whether the recommended reservation is size flexible.
     #   @return [Boolean]
     #
+    # @!attribute [rw] deployment_model
+    #   Determines whether the recommendation is for a reservation for RDS
+    #   Custom.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ce-2017-10-25/RDSInstanceDetails AWS API Documentation
     #
     class RDSInstanceDetails < Struct.new(
@@ -5484,7 +6187,8 @@ module Aws::CostExplorer
       :deployment_option,
       :license_model,
       :current_generation,
-      :size_flex_eligible)
+      :size_flex_eligible,
+      :deployment_model)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6679,6 +7383,14 @@ module Aws::CostExplorer
     #   The time period associated with the analysis.
     #   @return [Types::DateInterval]
     #
+    # @!attribute [rw] savings_plans_target_coverage
+    #   Specifies the target Savings Plans coverage as a percentage from
+    #   `10` to `100`. This field is required when `AnalysisType` is
+    #   `TARGET_AVERAGE_COVERAGE`. It defines the target average hourly
+    #   coverage that the recommended Savings Plans commitment should
+    #   achieve over the lookback period.
+    #   @return [Integer]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ce-2017-10-25/SavingsPlansPurchaseAnalysisConfiguration AWS API Documentation
     #
     class SavingsPlansPurchaseAnalysisConfiguration < Struct.new(
@@ -6687,7 +7399,8 @@ module Aws::CostExplorer
       :analysis_type,
       :savings_plans_to_add,
       :savings_plans_to_exclude,
-      :look_back_time_period)
+      :look_back_time_period,
+      :savings_plans_target_coverage)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7480,8 +8193,8 @@ module Aws::CostExplorer
     #
     # @!attribute [rw] match_options
     #   The match options that you can use to filter your results.
-    #   `MatchOptions` is only applicable for actions related to Cost
-    #   Category. The default values for `MatchOptions` are `EQUALS` and
+    #   `MatchOptions` is only applicable for actions related to cost
+    #   category. The default values for `MatchOptions` are `EQUALS` and
     #   `CASE_SENSITIVE`.
     #   @return [Array<String>]
     #
@@ -7865,18 +8578,18 @@ module Aws::CostExplorer
     end
 
     # @!attribute [rw] cost_category_arn
-    #   The unique identifier for your Cost Category.
+    #   The unique identifier for your cost category.
     #   @return [String]
     #
     # @!attribute [rw] effective_start
-    #   The Cost Category's effective start date. It can only be a billing
+    #   The cost category's effective start date. It can only be a billing
     #   start date (first day of the month). If the date isn't provided,
     #   it's the first day of the current month. Dates can't be before the
     #   previous twelve months, or in the future.
     #   @return [String]
     #
     # @!attribute [rw] rule_version
-    #   The rule schema version in this particular Cost Category.
+    #   The rule schema version in this particular cost category.
     #   @return [String]
     #
     # @!attribute [rw] rules
@@ -7894,7 +8607,7 @@ module Aws::CostExplorer
     #
     # @!attribute [rw] split_charge_rules
     #   The split charge rules used to allocate your charges between your
-    #   Cost Category values.
+    #   cost category values.
     #   @return [Array<Types::CostCategorySplitChargeRule>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/ce-2017-10-25/UpdateCostCategoryDefinitionRequest AWS API Documentation
@@ -7911,11 +8624,11 @@ module Aws::CostExplorer
     end
 
     # @!attribute [rw] cost_category_arn
-    #   The unique identifier for your Cost Category.
+    #   The unique identifier for your cost category.
     #   @return [String]
     #
     # @!attribute [rw] effective_start
-    #   The Cost Category's effective start date. It can only be a billing
+    #   The cost category's effective start date. It can only be a billing
     #   start date (first day of the month).
     #   @return [String]
     #

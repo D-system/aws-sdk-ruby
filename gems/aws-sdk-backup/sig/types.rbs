@@ -14,6 +14,13 @@ module Aws::Backup
       SENSITIVE: []
     end
 
+    class AggregatedScanResult
+      attr_accessor failed_scan: bool
+      attr_accessor findings: ::Array[("MALWARE")]
+      attr_accessor last_computed: ::Time
+      SENSITIVE: []
+    end
+
     class AlreadyExistsException
       attr_accessor code: ::String
       attr_accessor message: ::String
@@ -24,12 +31,24 @@ module Aws::Backup
       SENSITIVE: []
     end
 
+    class AssociateBackupVaultMpaApprovalTeamInput
+      attr_accessor backup_vault_name: ::String
+      attr_accessor mpa_approval_team_arn: ::String
+      attr_accessor requester_comment: ::String
+      SENSITIVE: [:requester_comment]
+    end
+
     class BackupJob
       attr_accessor account_id: ::String
       attr_accessor backup_job_id: ::String
       attr_accessor backup_vault_name: ::String
       attr_accessor backup_vault_arn: ::String
+      attr_accessor vault_type: ::String
+      attr_accessor vault_lock_state: ::String
       attr_accessor recovery_point_arn: ::String
+      attr_accessor recovery_point_lifecycle: Types::Lifecycle
+      attr_accessor encryption_key_arn: ::String
+      attr_accessor is_encrypted: bool
       attr_accessor resource_arn: ::String
       attr_accessor creation_date: ::Time
       attr_accessor completion_date: ::Time
@@ -69,6 +88,7 @@ module Aws::Backup
       attr_accessor backup_plan_name: ::String
       attr_accessor rules: ::Array[Types::BackupRule]
       attr_accessor advanced_backup_settings: ::Array[Types::AdvancedBackupSetting]
+      attr_accessor scan_settings: ::Array[Types::ScanSetting]
       SENSITIVE: []
     end
 
@@ -76,6 +96,7 @@ module Aws::Backup
       attr_accessor backup_plan_name: ::String
       attr_accessor rules: ::Array[Types::BackupRuleInput]
       attr_accessor advanced_backup_settings: ::Array[Types::AdvancedBackupSetting]
+      attr_accessor scan_settings: ::Array[Types::ScanSetting]
       SENSITIVE: []
     end
 
@@ -101,6 +122,7 @@ module Aws::Backup
     class BackupRule
       attr_accessor rule_name: ::String
       attr_accessor target_backup_vault_name: ::String
+      attr_accessor target_logically_air_gapped_backup_vault_arn: ::String
       attr_accessor schedule_expression: ::String
       attr_accessor start_window_minutes: ::Integer
       attr_accessor completion_window_minutes: ::Integer
@@ -111,12 +133,14 @@ module Aws::Backup
       attr_accessor enable_continuous_backup: bool
       attr_accessor schedule_expression_timezone: ::String
       attr_accessor index_actions: ::Array[Types::IndexAction]
+      attr_accessor scan_actions: ::Array[Types::ScanAction]
       SENSITIVE: [:recovery_point_tags]
     end
 
     class BackupRuleInput
       attr_accessor rule_name: ::String
       attr_accessor target_backup_vault_name: ::String
+      attr_accessor target_logically_air_gapped_backup_vault_arn: ::String
       attr_accessor schedule_expression: ::String
       attr_accessor start_window_minutes: ::Integer
       attr_accessor completion_window_minutes: ::Integer
@@ -126,6 +150,7 @@ module Aws::Backup
       attr_accessor enable_continuous_backup: bool
       attr_accessor schedule_expression_timezone: ::String
       attr_accessor index_actions: ::Array[Types::IndexAction]
+      attr_accessor scan_actions: ::Array[Types::ScanAction]
       SENSITIVE: [:recovery_point_tags]
     end
 
@@ -152,7 +177,7 @@ module Aws::Backup
     class BackupVaultListMember
       attr_accessor backup_vault_name: ::String
       attr_accessor backup_vault_arn: ::String
-      attr_accessor vault_type: ("BACKUP_VAULT" | "LOGICALLY_AIR_GAPPED_BACKUP_VAULT")
+      attr_accessor vault_type: ("BACKUP_VAULT" | "LOGICALLY_AIR_GAPPED_BACKUP_VAULT" | "RESTORE_ACCESS_BACKUP_VAULT")
       attr_accessor vault_state: ("CREATING" | "AVAILABLE" | "FAILED")
       attr_accessor creation_date: ::Time
       attr_accessor encryption_key_arn: ::String
@@ -162,6 +187,7 @@ module Aws::Backup
       attr_accessor min_retention_days: ::Integer
       attr_accessor max_retention_days: ::Integer
       attr_accessor lock_date: ::Time
+      attr_accessor encryption_key_type: ("AWS_OWNED_KMS_KEY" | "CUSTOMER_MANAGED_KMS_KEY")
       SENSITIVE: []
     end
 
@@ -235,7 +261,11 @@ module Aws::Backup
       attr_accessor source_backup_vault_arn: ::String
       attr_accessor source_recovery_point_arn: ::String
       attr_accessor destination_backup_vault_arn: ::String
+      attr_accessor destination_vault_type: ::String
+      attr_accessor destination_vault_lock_state: ::String
       attr_accessor destination_recovery_point_arn: ::String
+      attr_accessor destination_encryption_key_arn: ::String
+      attr_accessor destination_recovery_point_lifecycle: Types::Lifecycle
       attr_accessor resource_arn: ::String
       attr_accessor creation_date: ::Time
       attr_accessor completion_date: ::Time
@@ -244,6 +274,7 @@ module Aws::Backup
       attr_accessor backup_size_in_bytes: ::Integer
       attr_accessor iam_role_arn: ::String
       attr_accessor created_by: Types::RecoveryPointCreator
+      attr_accessor created_by_backup_job_id: ::String
       attr_accessor resource_type: ::String
       attr_accessor parent_job_id: ::String
       attr_accessor is_parent: bool
@@ -264,6 +295,21 @@ module Aws::Backup
       attr_accessor count: ::Integer
       attr_accessor start_time: ::Time
       attr_accessor end_time: ::Time
+      SENSITIVE: []
+    end
+
+    class CreateBackupAccessPointRequest
+      attr_accessor access_point_metadata: ::Hash[::String, ::String]
+      attr_accessor access_point_policy: ::String
+      attr_accessor name: ::String
+      attr_accessor recovery_point_arn: ::String
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: [:access_point_metadata, :tags]
+    end
+
+    class CreateBackupAccessPointResponse
+      attr_accessor access_point_arn: ::String
+      attr_accessor status: ("AVAILABLE" | "CREATING" | "DELETING" | "DISASSOCIATED" | "DISASSOCIATING" | "EXPIRED" | "FAILED")
       SENSITIVE: []
     end
 
@@ -353,6 +399,7 @@ module Aws::Backup
       attr_accessor creator_request_id: ::String
       attr_accessor min_retention_days: ::Integer
       attr_accessor max_retention_days: ::Integer
+      attr_accessor encryption_key_arn: ::String
       SENSITIVE: [:backup_vault_tags]
     end
 
@@ -378,6 +425,23 @@ module Aws::Backup
       attr_accessor report_plan_name: ::String
       attr_accessor report_plan_arn: ::String
       attr_accessor creation_time: ::Time
+      SENSITIVE: []
+    end
+
+    class CreateRestoreAccessBackupVaultInput
+      attr_accessor source_backup_vault_arn: ::String
+      attr_accessor backup_vault_name: ::String
+      attr_accessor backup_vault_tags: ::Hash[::String, ::String]
+      attr_accessor creator_request_id: ::String
+      attr_accessor requester_comment: ::String
+      SENSITIVE: [:backup_vault_tags, :requester_comment]
+    end
+
+    class CreateRestoreAccessBackupVaultOutput
+      attr_accessor restore_access_backup_vault_arn: ::String
+      attr_accessor vault_state: ("CREATING" | "AVAILABLE" | "FAILED")
+      attr_accessor restore_access_backup_vault_name: ::String
+      attr_accessor creation_date: ::Time
       SENSITIVE: []
     end
 
@@ -410,9 +474,28 @@ module Aws::Backup
       SENSITIVE: []
     end
 
+    class CreateTieringConfigurationInput
+      attr_accessor tiering_configuration: Types::TieringConfigurationInputForCreate
+      attr_accessor tiering_configuration_tags: ::Hash[::String, ::String]
+      attr_accessor creator_request_id: ::String
+      SENSITIVE: [:tiering_configuration_tags]
+    end
+
+    class CreateTieringConfigurationOutput
+      attr_accessor tiering_configuration_arn: ::String
+      attr_accessor tiering_configuration_name: ::String
+      attr_accessor creation_time: ::Time
+      SENSITIVE: []
+    end
+
     class DateRange
       attr_accessor from_date: ::Time
       attr_accessor to_date: ::Time
+      SENSITIVE: []
+    end
+
+    class DeleteBackupAccessPointInput
+      attr_accessor access_point_arn: ::String
       SENSITIVE: []
     end
 
@@ -482,12 +565,40 @@ module Aws::Backup
       SENSITIVE: []
     end
 
+    class DeleteTieringConfigurationInput
+      attr_accessor tiering_configuration_name: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteTieringConfigurationOutput < Aws::EmptyStructure
+    end
+
     class DependencyFailureException
       attr_accessor code: ::String
       attr_accessor message: ::String
       attr_accessor type: ::String
       attr_accessor context: ::String
       SENSITIVE: []
+    end
+
+    class DescribeBackupAccessPointInput
+      attr_accessor access_point_arn: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeBackupAccessPointResponse
+      attr_accessor access_point_arn: ::String
+      attr_accessor access_point_metadata: ::Hash[::String, ::String]
+      attr_accessor backup_vault_arn: ::String
+      attr_accessor backup_vault_name: ::String
+      attr_accessor creation_time: ::Time
+      attr_accessor name: ::String
+      attr_accessor recovery_point_arn: ::String
+      attr_accessor resource_arn: ::String
+      attr_accessor resource_type: ::String
+      attr_accessor status: ("AVAILABLE" | "CREATING" | "DELETING" | "DISASSOCIATED" | "DISASSOCIATING" | "EXPIRED" | "FAILED")
+      attr_accessor status_message: ::String
+      SENSITIVE: [:access_point_metadata]
     end
 
     class DescribeBackupJobInput
@@ -499,8 +610,13 @@ module Aws::Backup
       attr_accessor account_id: ::String
       attr_accessor backup_job_id: ::String
       attr_accessor backup_vault_name: ::String
+      attr_accessor recovery_point_lifecycle: Types::Lifecycle
       attr_accessor backup_vault_arn: ::String
+      attr_accessor vault_type: ::String
+      attr_accessor vault_lock_state: ::String
       attr_accessor recovery_point_arn: ::String
+      attr_accessor encryption_key_arn: ::String
+      attr_accessor is_encrypted: bool
       attr_accessor resource_arn: ::String
       attr_accessor creation_date: ::Time
       attr_accessor completion_date: ::Time
@@ -535,7 +651,7 @@ module Aws::Backup
     class DescribeBackupVaultOutput
       attr_accessor backup_vault_name: ::String
       attr_accessor backup_vault_arn: ::String
-      attr_accessor vault_type: ("BACKUP_VAULT" | "LOGICALLY_AIR_GAPPED_BACKUP_VAULT")
+      attr_accessor vault_type: ("BACKUP_VAULT" | "LOGICALLY_AIR_GAPPED_BACKUP_VAULT" | "RESTORE_ACCESS_BACKUP_VAULT")
       attr_accessor vault_state: ("CREATING" | "AVAILABLE" | "FAILED")
       attr_accessor encryption_key_arn: ::String
       attr_accessor creation_date: ::Time
@@ -545,6 +661,11 @@ module Aws::Backup
       attr_accessor min_retention_days: ::Integer
       attr_accessor max_retention_days: ::Integer
       attr_accessor lock_date: ::Time
+      attr_accessor source_backup_vault_arn: ::String
+      attr_accessor mpa_approval_team_arn: ::String
+      attr_accessor mpa_session_arn: ::String
+      attr_accessor latest_mpa_approval_team_update: Types::LatestMpaApprovalTeamUpdate
+      attr_accessor encryption_key_type: ("AWS_OWNED_KMS_KEY" | "CUSTOMER_MANAGED_KMS_KEY")
       SENSITIVE: []
     end
 
@@ -618,9 +739,10 @@ module Aws::Backup
       attr_accessor resource_type: ::String
       attr_accessor created_by: Types::RecoveryPointCreator
       attr_accessor iam_role_arn: ::String
-      attr_accessor status: ("COMPLETED" | "PARTIAL" | "DELETING" | "EXPIRED")
+      attr_accessor status: ("COMPLETED" | "PARTIAL" | "DELETING" | "EXPIRED" | "AVAILABLE" | "STOPPED" | "CREATING")
       attr_accessor status_message: ::String
       attr_accessor creation_date: ::Time
+      attr_accessor initiation_date: ::Time
       attr_accessor completion_date: ::Time
       attr_accessor backup_size_in_bytes: ::Integer
       attr_accessor calculated_lifecycle: Types::CalculatedLifecycle
@@ -633,9 +755,11 @@ module Aws::Backup
       attr_accessor composite_member_identifier: ::String
       attr_accessor is_parent: bool
       attr_accessor resource_name: ::String
-      attr_accessor vault_type: ("BACKUP_VAULT" | "LOGICALLY_AIR_GAPPED_BACKUP_VAULT")
+      attr_accessor vault_type: ("BACKUP_VAULT" | "LOGICALLY_AIR_GAPPED_BACKUP_VAULT" | "RESTORE_ACCESS_BACKUP_VAULT")
       attr_accessor index_status: ("PENDING" | "ACTIVE" | "FAILED" | "DELETING")
       attr_accessor index_status_message: ::String
+      attr_accessor encryption_key_type: ("AWS_OWNED_KMS_KEY" | "CUSTOMER_MANAGED_KMS_KEY")
+      attr_accessor scan_results: ::Array[Types::ScanResult]
       SENSITIVE: []
     end
 
@@ -677,6 +801,8 @@ module Aws::Backup
       attr_accessor account_id: ::String
       attr_accessor restore_job_id: ::String
       attr_accessor recovery_point_arn: ::String
+      attr_accessor source_resource_arn: ::String
+      attr_accessor backup_vault_arn: ::String
       attr_accessor creation_date: ::Time
       attr_accessor completion_date: ::Time
       attr_accessor status: ("PENDING" | "RUNNING" | "COMPLETED" | "ABORTED" | "FAILED")
@@ -693,7 +819,46 @@ module Aws::Backup
       attr_accessor validation_status_message: ::String
       attr_accessor deletion_status: ("DELETING" | "FAILED" | "SUCCESSFUL")
       attr_accessor deletion_status_message: ::String
+      attr_accessor is_parent: bool
+      attr_accessor parent_job_id: ::String
       SENSITIVE: []
+    end
+
+    class DescribeScanJobInput
+      attr_accessor scan_job_id: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeScanJobOutput
+      attr_accessor account_id: ::String
+      attr_accessor backup_vault_arn: ::String
+      attr_accessor backup_vault_name: ::String
+      attr_accessor completion_date: ::Time
+      attr_accessor continuous_scan_end_time: ::Time
+      attr_accessor continuous_scan_start_time: ::Time
+      attr_accessor created_by: Types::ScanJobCreator
+      attr_accessor creation_date: ::Time
+      attr_accessor iam_role_arn: ::String
+      attr_accessor malware_scanner: ("GUARDDUTY")
+      attr_accessor recovery_point_arn: ::String
+      attr_accessor resource_arn: ::String
+      attr_accessor resource_name: ::String
+      attr_accessor resource_type: ("EBS" | "EC2" | "S3")
+      attr_accessor scan_base_recovery_point_arn: ::String
+      attr_accessor scan_id: ::String
+      attr_accessor scan_job_id: ::String
+      attr_accessor scan_mode: ("FULL_SCAN" | "INCREMENTAL_SCAN")
+      attr_accessor scan_result: Types::ScanResultInfo
+      attr_accessor scanner_role_arn: ::String
+      attr_accessor state: ("CANCELED" | "COMPLETED" | "COMPLETED_WITH_ISSUES" | "CREATED" | "FAILED" | "RUNNING")
+      attr_accessor status_message: ::String
+      SENSITIVE: []
+    end
+
+    class DisassociateBackupVaultMpaApprovalTeamInput
+      attr_accessor backup_vault_name: ::String
+      attr_accessor requester_comment: ::String
+      SENSITIVE: [:requester_comment]
     end
 
     class DisassociateRecoveryPointFromParentInput
@@ -758,6 +923,7 @@ module Aws::Backup
     class GetBackupPlanInput
       attr_accessor backup_plan_id: ::String
       attr_accessor version_id: ::String
+      attr_accessor max_scheduled_runs_preview: ::Integer
       SENSITIVE: []
     end
 
@@ -771,6 +937,7 @@ module Aws::Backup
       attr_accessor deletion_date: ::Time
       attr_accessor last_execution_date: ::Time
       attr_accessor advanced_backup_settings: ::Array[Types::AdvancedBackupSetting]
+      attr_accessor scheduled_runs_preview: ::Array[Types::ScheduledPlanExecutionMember]
       SENSITIVE: []
     end
 
@@ -810,7 +977,7 @@ module Aws::Backup
       attr_accessor backup_vault_name: ::String
       attr_accessor backup_vault_arn: ::String
       attr_accessor sns_topic_arn: ::String
-      attr_accessor backup_vault_events: ::Array[("BACKUP_JOB_STARTED" | "BACKUP_JOB_COMPLETED" | "BACKUP_JOB_SUCCESSFUL" | "BACKUP_JOB_FAILED" | "BACKUP_JOB_EXPIRED" | "RESTORE_JOB_STARTED" | "RESTORE_JOB_COMPLETED" | "RESTORE_JOB_SUCCESSFUL" | "RESTORE_JOB_FAILED" | "COPY_JOB_STARTED" | "COPY_JOB_SUCCESSFUL" | "COPY_JOB_FAILED" | "RECOVERY_POINT_MODIFIED" | "BACKUP_PLAN_CREATED" | "BACKUP_PLAN_MODIFIED" | "S3_BACKUP_OBJECT_FAILED" | "S3_RESTORE_OBJECT_FAILED")]
+      attr_accessor backup_vault_events: ::Array[("BACKUP_JOB_STARTED" | "BACKUP_JOB_COMPLETED" | "BACKUP_JOB_SUCCESSFUL" | "BACKUP_JOB_FAILED" | "BACKUP_JOB_EXPIRED" | "RESTORE_JOB_STARTED" | "RESTORE_JOB_COMPLETED" | "RESTORE_JOB_SUCCESSFUL" | "RESTORE_JOB_FAILED" | "COPY_JOB_STARTED" | "COPY_JOB_SUCCESSFUL" | "COPY_JOB_FAILED" | "RECOVERY_POINT_MODIFIED" | "BACKUP_PLAN_CREATED" | "BACKUP_PLAN_MODIFIED" | "S3_BACKUP_OBJECT_FAILED" | "S3_RESTORE_OBJECT_FAILED" | "CONTINUOUS_BACKUP_INTERRUPTED" | "RECOVERY_POINT_INDEX_COMPLETED" | "RECOVERY_POINT_INDEX_DELETED" | "RECOVERY_POINT_INDEXING_FAILED" | "EKS_RESTORE_OBJECT_FAILED" | "EKS_RESTORE_OBJECT_SKIPPED" | "EKS_BACKUP_OBJECT_FAILED" | "ACCESS_POINT_AVAILABLE" | "ACCESS_POINT_CREATION_FAILED" | "ACCESS_POINT_DELETED" | "ACCESS_POINT_DELETION_FAILED" | "ACCESS_POINT_EXPIRED" | "ACCESS_POINT_DISASSOCIATED")]
       SENSITIVE: []
     end
 
@@ -830,6 +997,23 @@ module Aws::Backup
       attr_accessor cancellation_date: ::Time
       attr_accessor retain_record_until: ::Time
       attr_accessor recovery_point_selection: Types::RecoveryPointSelection
+      SENSITIVE: []
+    end
+
+    class GetPITRMalwareScanResultsInput
+      attr_accessor recovery_point_arn: ::String
+      attr_accessor backup_vault_name: ::String
+      attr_accessor scan_end_time: ::Time
+      attr_accessor malware_scanner: ("GUARDDUTY")
+      SENSITIVE: []
+    end
+
+    class GetPITRMalwareScanResultsOutput
+      attr_accessor scan_end_time: ::Time
+      attr_accessor scan_result: Types::ScanResultInfo
+      attr_accessor last_scan_job_time: ::Time
+      attr_accessor scan_id: ::String
+      attr_accessor scan_mode: ("FULL_SCAN" | "INCREMENTAL_SCAN")
       SENSITIVE: []
     end
 
@@ -916,6 +1100,16 @@ module Aws::Backup
       SENSITIVE: []
     end
 
+    class GetTieringConfigurationInput
+      attr_accessor tiering_configuration_name: ::String
+      SENSITIVE: []
+    end
+
+    class GetTieringConfigurationOutput
+      attr_accessor tiering_configuration: Types::TieringConfiguration
+      SENSITIVE: []
+    end
+
     class IndexAction
       attr_accessor resource_types: ::Array[::String]
       SENSITIVE: []
@@ -964,6 +1158,24 @@ module Aws::Backup
       SENSITIVE: []
     end
 
+    class LatestMpaApprovalTeamUpdate
+      attr_accessor mpa_session_arn: ::String
+      attr_accessor status: ("PENDING" | "APPROVED" | "FAILED")
+      attr_accessor status_message: ::String
+      attr_accessor initiation_date: ::Time
+      attr_accessor expiry_date: ::Time
+      SENSITIVE: []
+    end
+
+    class LatestRevokeRequest
+      attr_accessor mpa_session_arn: ::String
+      attr_accessor status: ("PENDING" | "FAILED")
+      attr_accessor status_message: ::String
+      attr_accessor initiation_date: ::Time
+      attr_accessor expiry_date: ::Time
+      SENSITIVE: []
+    end
+
     class LegalHold
       attr_accessor title: ::String
       attr_accessor status: ("CREATING" | "ACTIVE" | "CANCELING" | "CANCELED")
@@ -979,6 +1191,7 @@ module Aws::Backup
       attr_accessor move_to_cold_storage_after_days: ::Integer
       attr_accessor delete_after_days: ::Integer
       attr_accessor opt_in_to_archive_for_supported_resources: bool
+      attr_accessor delete_after_event: ("DELETE_AFTER_COPY")
       SENSITIVE: []
     end
 
@@ -987,6 +1200,59 @@ module Aws::Backup
       attr_accessor message: ::String
       attr_accessor type: ::String
       attr_accessor context: ::String
+      SENSITIVE: []
+    end
+
+    class ListAccessPointsMember
+      attr_accessor access_point_arn: ::String
+      attr_accessor access_point_metadata: ::Hash[::String, ::String]
+      attr_accessor backup_vault_arn: ::String
+      attr_accessor backup_vault_name: ::String
+      attr_accessor creation_time: ::Time
+      attr_accessor name: ::String
+      attr_accessor recovery_point_arn: ::String
+      attr_accessor resource_arn: ::String
+      attr_accessor resource_type: ::String
+      attr_accessor status: ("AVAILABLE" | "CREATING" | "DELETING" | "DISASSOCIATED" | "DISASSOCIATING" | "EXPIRED" | "FAILED")
+      attr_accessor status_message: ::String
+      SENSITIVE: [:access_point_metadata]
+    end
+
+    class ListBackupAccessPointsByRecoveryPointRequest
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      attr_accessor recovery_point_arn: ::String
+      SENSITIVE: []
+    end
+
+    class ListBackupAccessPointsByRecoveryPointResponse
+      attr_accessor backup_access_points: ::Array[Types::ListAccessPointsMember]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListBackupAccessPointsByResourceRequest
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      attr_accessor resource_arn: ::String
+      SENSITIVE: []
+    end
+
+    class ListBackupAccessPointsByResourceResponse
+      attr_accessor backup_access_points: ::Array[Types::ListAccessPointsMember]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListBackupAccessPointsRequest
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListBackupAccessPointsResponse
+      attr_accessor backup_access_points: ::Array[Types::ListAccessPointsMember]
+      attr_accessor next_token: ::String
       SENSITIVE: []
     end
 
@@ -1083,7 +1349,7 @@ module Aws::Backup
     end
 
     class ListBackupVaultsInput
-      attr_accessor by_vault_type: ("BACKUP_VAULT" | "LOGICALLY_AIR_GAPPED_BACKUP_VAULT")
+      attr_accessor by_vault_type: ("BACKUP_VAULT" | "LOGICALLY_AIR_GAPPED_BACKUP_VAULT" | "RESTORE_ACCESS_BACKUP_VAULT")
       attr_accessor by_shared: bool
       attr_accessor next_token: ::String
       attr_accessor max_results: ::Integer
@@ -1128,6 +1394,7 @@ module Aws::Backup
       attr_accessor by_complete_after: ::Time
       attr_accessor by_parent_job_id: ::String
       attr_accessor by_message_category: ::String
+      attr_accessor by_source_recovery_point_arn: ::String
       SENSITIVE: []
     end
 
@@ -1279,6 +1546,19 @@ module Aws::Backup
       SENSITIVE: []
     end
 
+    class ListRestoreAccessBackupVaultsInput
+      attr_accessor backup_vault_name: ::String
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListRestoreAccessBackupVaultsOutput
+      attr_accessor next_token: ::String
+      attr_accessor restore_access_backup_vaults: ::Array[Types::RestoreAccessBackupVaultListMember]
+      SENSITIVE: []
+    end
+
     class ListRestoreJobSummariesInput
       attr_accessor account_id: ::String
       attr_accessor state: ("CREATED" | "PENDING" | "RUNNING" | "ABORTED" | "COMPLETED" | "FAILED" | "AGGREGATE_ALL" | "ANY")
@@ -1323,6 +1603,7 @@ module Aws::Backup
       attr_accessor by_complete_before: ::Time
       attr_accessor by_complete_after: ::Time
       attr_accessor by_restore_testing_plan_arn: ::String
+      attr_accessor by_parent_job_id: ::String
       SENSITIVE: []
     end
 
@@ -1357,6 +1638,47 @@ module Aws::Backup
       SENSITIVE: []
     end
 
+    class ListScanJobSummariesInput
+      attr_accessor account_id: ::String
+      attr_accessor resource_type: ::String
+      attr_accessor malware_scanner: ("GUARDDUTY")
+      attr_accessor scan_result_status: ("NO_THREATS_FOUND" | "THREATS_FOUND" | "UNKNOWN")
+      attr_accessor state: ("CREATED" | "COMPLETED" | "COMPLETED_WITH_ISSUES" | "RUNNING" | "FAILED" | "CANCELED" | "AGGREGATE_ALL" | "ANY")
+      attr_accessor aggregation_period: ("ONE_DAY" | "SEVEN_DAYS" | "FOURTEEN_DAYS")
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListScanJobSummariesOutput
+      attr_accessor scan_job_summaries: ::Array[Types::ScanJobSummary]
+      attr_accessor aggregation_period: ::String
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListScanJobsInput
+      attr_accessor by_account_id: ::String
+      attr_accessor by_backup_vault_name: ::String
+      attr_accessor by_complete_after: ::Time
+      attr_accessor by_complete_before: ::Time
+      attr_accessor by_malware_scanner: ("GUARDDUTY")
+      attr_accessor by_recovery_point_arn: ::String
+      attr_accessor by_resource_arn: ::String
+      attr_accessor by_resource_type: ("EBS" | "EC2" | "S3")
+      attr_accessor by_scan_result_status: ("NO_THREATS_FOUND" | "THREATS_FOUND" | "UNKNOWN")
+      attr_accessor by_state: ("CANCELED" | "COMPLETED" | "COMPLETED_WITH_ISSUES" | "CREATED" | "FAILED" | "RUNNING")
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListScanJobsOutput
+      attr_accessor next_token: ::String
+      attr_accessor scan_jobs: ::Array[Types::ScanJob]
+      SENSITIVE: []
+    end
+
     class ListTagsInput
       attr_accessor resource_arn: ::String
       attr_accessor next_token: ::String
@@ -1368,6 +1690,18 @@ module Aws::Backup
       attr_accessor next_token: ::String
       attr_accessor tags: ::Hash[::String, ::String]
       SENSITIVE: [:tags]
+    end
+
+    class ListTieringConfigurationsInput
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListTieringConfigurationsOutput
+      attr_accessor tiering_configurations: ::Array[Types::TieringConfigurationsListMember]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
     end
 
     class MissingParameterValueException
@@ -1411,7 +1745,7 @@ module Aws::Backup
     class PutBackupVaultNotificationsInput
       attr_accessor backup_vault_name: ::String
       attr_accessor sns_topic_arn: ::String
-      attr_accessor backup_vault_events: ::Array[("BACKUP_JOB_STARTED" | "BACKUP_JOB_COMPLETED" | "BACKUP_JOB_SUCCESSFUL" | "BACKUP_JOB_FAILED" | "BACKUP_JOB_EXPIRED" | "RESTORE_JOB_STARTED" | "RESTORE_JOB_COMPLETED" | "RESTORE_JOB_SUCCESSFUL" | "RESTORE_JOB_FAILED" | "COPY_JOB_STARTED" | "COPY_JOB_SUCCESSFUL" | "COPY_JOB_FAILED" | "RECOVERY_POINT_MODIFIED" | "BACKUP_PLAN_CREATED" | "BACKUP_PLAN_MODIFIED" | "S3_BACKUP_OBJECT_FAILED" | "S3_RESTORE_OBJECT_FAILED")]
+      attr_accessor backup_vault_events: ::Array[("BACKUP_JOB_STARTED" | "BACKUP_JOB_COMPLETED" | "BACKUP_JOB_SUCCESSFUL" | "BACKUP_JOB_FAILED" | "BACKUP_JOB_EXPIRED" | "RESTORE_JOB_STARTED" | "RESTORE_JOB_COMPLETED" | "RESTORE_JOB_SUCCESSFUL" | "RESTORE_JOB_FAILED" | "COPY_JOB_STARTED" | "COPY_JOB_SUCCESSFUL" | "COPY_JOB_FAILED" | "RECOVERY_POINT_MODIFIED" | "BACKUP_PLAN_CREATED" | "BACKUP_PLAN_MODIFIED" | "S3_BACKUP_OBJECT_FAILED" | "S3_RESTORE_OBJECT_FAILED" | "CONTINUOUS_BACKUP_INTERRUPTED" | "RECOVERY_POINT_INDEX_COMPLETED" | "RECOVERY_POINT_INDEX_DELETED" | "RECOVERY_POINT_INDEXING_FAILED" | "EKS_RESTORE_OBJECT_FAILED" | "EKS_RESTORE_OBJECT_SKIPPED" | "EKS_BACKUP_OBJECT_FAILED" | "ACCESS_POINT_AVAILABLE" | "ACCESS_POINT_CREATION_FAILED" | "ACCESS_POINT_DELETED" | "ACCESS_POINT_DELETION_FAILED" | "ACCESS_POINT_EXPIRED" | "ACCESS_POINT_DISASSOCIATED")]
       SENSITIVE: []
     end
 
@@ -1431,9 +1765,10 @@ module Aws::Backup
       attr_accessor resource_type: ::String
       attr_accessor created_by: Types::RecoveryPointCreator
       attr_accessor iam_role_arn: ::String
-      attr_accessor status: ("COMPLETED" | "PARTIAL" | "DELETING" | "EXPIRED")
+      attr_accessor status: ("COMPLETED" | "PARTIAL" | "DELETING" | "EXPIRED" | "AVAILABLE" | "STOPPED" | "CREATING")
       attr_accessor status_message: ::String
       attr_accessor creation_date: ::Time
+      attr_accessor initiation_date: ::Time
       attr_accessor completion_date: ::Time
       attr_accessor backup_size_in_bytes: ::Integer
       attr_accessor calculated_lifecycle: Types::CalculatedLifecycle
@@ -1445,16 +1780,18 @@ module Aws::Backup
       attr_accessor composite_member_identifier: ::String
       attr_accessor is_parent: bool
       attr_accessor resource_name: ::String
-      attr_accessor vault_type: ("BACKUP_VAULT" | "LOGICALLY_AIR_GAPPED_BACKUP_VAULT")
+      attr_accessor vault_type: ("BACKUP_VAULT" | "LOGICALLY_AIR_GAPPED_BACKUP_VAULT" | "RESTORE_ACCESS_BACKUP_VAULT")
       attr_accessor index_status: ("PENDING" | "ACTIVE" | "FAILED" | "DELETING")
       attr_accessor index_status_message: ::String
+      attr_accessor encryption_key_type: ("AWS_OWNED_KMS_KEY" | "CUSTOMER_MANAGED_KMS_KEY")
+      attr_accessor aggregated_scan_result: Types::AggregatedScanResult
       SENSITIVE: []
     end
 
     class RecoveryPointByResource
       attr_accessor recovery_point_arn: ::String
       attr_accessor creation_date: ::Time
-      attr_accessor status: ("COMPLETED" | "PARTIAL" | "DELETING" | "EXPIRED")
+      attr_accessor status: ("COMPLETED" | "PARTIAL" | "DELETING" | "EXPIRED" | "AVAILABLE" | "STOPPED" | "CREATING")
       attr_accessor status_message: ::String
       attr_accessor encryption_key_arn: ::String
       attr_accessor backup_size_bytes: ::Integer
@@ -1462,17 +1799,23 @@ module Aws::Backup
       attr_accessor is_parent: bool
       attr_accessor parent_recovery_point_arn: ::String
       attr_accessor resource_name: ::String
-      attr_accessor vault_type: ("BACKUP_VAULT" | "LOGICALLY_AIR_GAPPED_BACKUP_VAULT")
+      attr_accessor vault_type: ("BACKUP_VAULT" | "LOGICALLY_AIR_GAPPED_BACKUP_VAULT" | "RESTORE_ACCESS_BACKUP_VAULT")
       attr_accessor index_status: ("PENDING" | "ACTIVE" | "FAILED" | "DELETING")
       attr_accessor index_status_message: ::String
+      attr_accessor encryption_key_type: ("AWS_OWNED_KMS_KEY" | "CUSTOMER_MANAGED_KMS_KEY")
+      attr_accessor aggregated_scan_result: Types::AggregatedScanResult
       SENSITIVE: []
     end
 
     class RecoveryPointCreator
       attr_accessor backup_plan_id: ::String
       attr_accessor backup_plan_arn: ::String
+      attr_accessor backup_plan_name: ::String
       attr_accessor backup_plan_version: ::String
       attr_accessor backup_rule_id: ::String
+      attr_accessor backup_rule_name: ::String
+      attr_accessor backup_rule_cron: ::String
+      attr_accessor backup_rule_timezone: ::String
       SENSITIVE: []
     end
 
@@ -1547,6 +1890,22 @@ module Aws::Backup
       SENSITIVE: []
     end
 
+    class ResourceSelection
+      attr_accessor resources: ::Array[::String]
+      attr_accessor tiering_down_settings_in_days: ::Integer
+      attr_accessor resource_type: ::String
+      SENSITIVE: []
+    end
+
+    class RestoreAccessBackupVaultListMember
+      attr_accessor restore_access_backup_vault_arn: ::String
+      attr_accessor creation_date: ::Time
+      attr_accessor approval_date: ::Time
+      attr_accessor vault_state: ("CREATING" | "AVAILABLE" | "FAILED")
+      attr_accessor latest_revoke_request: Types::LatestRevokeRequest
+      SENSITIVE: []
+    end
+
     class RestoreJobCreator
       attr_accessor restore_testing_plan_arn: ::String
       SENSITIVE: []
@@ -1567,6 +1926,8 @@ module Aws::Backup
       attr_accessor account_id: ::String
       attr_accessor restore_job_id: ::String
       attr_accessor recovery_point_arn: ::String
+      attr_accessor source_resource_arn: ::String
+      attr_accessor backup_vault_arn: ::String
       attr_accessor creation_date: ::Time
       attr_accessor completion_date: ::Time
       attr_accessor status: ("PENDING" | "RUNNING" | "COMPLETED" | "ABORTED" | "FAILED")
@@ -1578,6 +1939,8 @@ module Aws::Backup
       attr_accessor created_resource_arn: ::String
       attr_accessor resource_type: ::String
       attr_accessor recovery_point_creation_date: ::Time
+      attr_accessor is_parent: bool
+      attr_accessor parent_job_id: ::String
       attr_accessor created_by: Types::RestoreJobCreator
       attr_accessor validation_status: ("FAILED" | "SUCCESSFUL" | "TIMED_OUT" | "VALIDATING")
       attr_accessor validation_status_message: ::String
@@ -1682,6 +2045,93 @@ module Aws::Backup
       SENSITIVE: [:restore_metadata_overrides]
     end
 
+    class RevokeRestoreAccessBackupVaultInput
+      attr_accessor backup_vault_name: ::String
+      attr_accessor restore_access_backup_vault_arn: ::String
+      attr_accessor requester_comment: ::String
+      SENSITIVE: [:requester_comment]
+    end
+
+    class ScanAction
+      attr_accessor malware_scanner: ("GUARDDUTY")
+      attr_accessor scan_mode: ("FULL_SCAN" | "INCREMENTAL_SCAN")
+      SENSITIVE: []
+    end
+
+    class ScanJob
+      attr_accessor account_id: ::String
+      attr_accessor backup_vault_arn: ::String
+      attr_accessor backup_vault_name: ::String
+      attr_accessor completion_date: ::Time
+      attr_accessor continuous_scan_end_time: ::Time
+      attr_accessor continuous_scan_start_time: ::Time
+      attr_accessor created_by: Types::ScanJobCreator
+      attr_accessor creation_date: ::Time
+      attr_accessor iam_role_arn: ::String
+      attr_accessor malware_scanner: ("GUARDDUTY")
+      attr_accessor recovery_point_arn: ::String
+      attr_accessor resource_arn: ::String
+      attr_accessor resource_name: ::String
+      attr_accessor resource_type: ("EBS" | "EC2" | "S3")
+      attr_accessor scan_base_recovery_point_arn: ::String
+      attr_accessor scan_id: ::String
+      attr_accessor scan_job_id: ::String
+      attr_accessor scan_mode: ("FULL_SCAN" | "INCREMENTAL_SCAN")
+      attr_accessor scan_result: Types::ScanResultInfo
+      attr_accessor scanner_role_arn: ::String
+      attr_accessor state: ("CANCELED" | "COMPLETED" | "COMPLETED_WITH_ISSUES" | "CREATED" | "FAILED" | "RUNNING")
+      attr_accessor status_message: ::String
+      SENSITIVE: []
+    end
+
+    class ScanJobCreator
+      attr_accessor backup_plan_arn: ::String
+      attr_accessor backup_plan_id: ::String
+      attr_accessor backup_plan_version: ::String
+      attr_accessor backup_rule_id: ::String
+      SENSITIVE: []
+    end
+
+    class ScanJobSummary
+      attr_accessor region: ::String
+      attr_accessor account_id: ::String
+      attr_accessor state: ("CREATED" | "COMPLETED" | "COMPLETED_WITH_ISSUES" | "RUNNING" | "FAILED" | "CANCELED" | "AGGREGATE_ALL" | "ANY")
+      attr_accessor resource_type: ::String
+      attr_accessor count: ::Integer
+      attr_accessor start_time: ::Time
+      attr_accessor end_time: ::Time
+      attr_accessor malware_scanner: ("GUARDDUTY")
+      attr_accessor scan_result_status: ("NO_THREATS_FOUND" | "THREATS_FOUND" | "UNKNOWN")
+      SENSITIVE: []
+    end
+
+    class ScanResult
+      attr_accessor malware_scanner: ("GUARDDUTY")
+      attr_accessor scan_job_state: ("COMPLETED" | "COMPLETED_WITH_ISSUES" | "FAILED" | "CANCELED")
+      attr_accessor last_scan_timestamp: ::Time
+      attr_accessor findings: ::Array[("MALWARE")]
+      SENSITIVE: []
+    end
+
+    class ScanResultInfo
+      attr_accessor scan_result_status: ("NO_THREATS_FOUND" | "THREATS_FOUND" | "UNKNOWN")
+      SENSITIVE: []
+    end
+
+    class ScanSetting
+      attr_accessor malware_scanner: ("GUARDDUTY")
+      attr_accessor resource_types: ::Array[::String]
+      attr_accessor scanner_role_arn: ::String
+      SENSITIVE: []
+    end
+
+    class ScheduledPlanExecutionMember
+      attr_accessor execution_time: ::Time
+      attr_accessor rule_id: ::String
+      attr_accessor rule_execution_type: ("CONTINUOUS" | "SNAPSHOTS" | "CONTINUOUS_AND_SNAPSHOTS")
+      SENSITIVE: []
+    end
+
     class ServiceUnavailableException
       attr_accessor code: ::String
       attr_accessor message: ::String
@@ -1692,6 +2142,7 @@ module Aws::Backup
 
     class StartBackupJobInput
       attr_accessor backup_vault_name: ::String
+      attr_accessor logically_air_gapped_backup_vault_arn: ::String
       attr_accessor resource_arn: ::String
       attr_accessor iam_role_arn: ::String
       attr_accessor idempotency_token: ::String
@@ -1755,6 +2206,25 @@ module Aws::Backup
       SENSITIVE: []
     end
 
+    class StartScanJobInput
+      attr_accessor backup_vault_name: ::String
+      attr_accessor continuous_scan_end_time: ::Time
+      attr_accessor iam_role_arn: ::String
+      attr_accessor idempotency_token: ::String
+      attr_accessor malware_scanner: ("GUARDDUTY")
+      attr_accessor recovery_point_arn: ::String
+      attr_accessor scan_base_recovery_point_arn: ::String
+      attr_accessor scan_mode: ("FULL_SCAN" | "INCREMENTAL_SCAN")
+      attr_accessor scanner_role_arn: ::String
+      SENSITIVE: []
+    end
+
+    class StartScanJobOutput
+      attr_accessor creation_date: ::Time
+      attr_accessor scan_job_id: ::String
+      SENSITIVE: []
+    end
+
     class StopBackupJobInput
       attr_accessor backup_job_id: ::String
       SENSITIVE: []
@@ -1764,6 +2234,39 @@ module Aws::Backup
       attr_accessor resource_arn: ::String
       attr_accessor tags: ::Hash[::String, ::String]
       SENSITIVE: [:tags]
+    end
+
+    class TieringConfiguration
+      attr_accessor tiering_configuration_name: ::String
+      attr_accessor tiering_configuration_arn: ::String
+      attr_accessor backup_vault_name: ::String
+      attr_accessor resource_selection: ::Array[Types::ResourceSelection]
+      attr_accessor creator_request_id: ::String
+      attr_accessor creation_time: ::Time
+      attr_accessor last_updated_time: ::Time
+      SENSITIVE: []
+    end
+
+    class TieringConfigurationInputForCreate
+      attr_accessor tiering_configuration_name: ::String
+      attr_accessor backup_vault_name: ::String
+      attr_accessor resource_selection: ::Array[Types::ResourceSelection]
+      SENSITIVE: []
+    end
+
+    class TieringConfigurationInputForUpdate
+      attr_accessor resource_selection: ::Array[Types::ResourceSelection]
+      attr_accessor backup_vault_name: ::String
+      SENSITIVE: []
+    end
+
+    class TieringConfigurationsListMember
+      attr_accessor tiering_configuration_arn: ::String
+      attr_accessor tiering_configuration_name: ::String
+      attr_accessor backup_vault_name: ::String
+      attr_accessor creation_time: ::Time
+      attr_accessor last_updated_time: ::Time
+      SENSITIVE: []
     end
 
     class UntagResourceInput
@@ -1784,6 +2287,7 @@ module Aws::Backup
       attr_accessor creation_date: ::Time
       attr_accessor version_id: ::String
       attr_accessor advanced_backup_settings: ::Array[Types::AdvancedBackupSetting]
+      attr_accessor scan_settings: ::Array[Types::ScanSetting]
       SENSITIVE: []
     end
 
@@ -1887,6 +2391,20 @@ module Aws::Backup
       attr_accessor restore_testing_plan_name: ::String
       attr_accessor restore_testing_selection_name: ::String
       attr_accessor update_time: ::Time
+      SENSITIVE: []
+    end
+
+    class UpdateTieringConfigurationInput
+      attr_accessor tiering_configuration_name: ::String
+      attr_accessor tiering_configuration: Types::TieringConfigurationInputForUpdate
+      SENSITIVE: []
+    end
+
+    class UpdateTieringConfigurationOutput
+      attr_accessor tiering_configuration_arn: ::String
+      attr_accessor tiering_configuration_name: ::String
+      attr_accessor creation_time: ::Time
+      attr_accessor last_updated_time: ::Time
       SENSITIVE: []
     end
   end

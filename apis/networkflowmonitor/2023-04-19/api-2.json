@@ -62,6 +62,7 @@
       "output":{"shape":"DeleteMonitorOutput"},
       "errors":[
         {"shape":"ResourceNotFoundException"},
+        {"shape":"ConflictException"},
         {"shape":"ValidationException"},
         {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"},
@@ -81,6 +82,7 @@
       "errors":[
         {"shape":"ServiceQuotaExceededException"},
         {"shape":"ResourceNotFoundException"},
+        {"shape":"ConflictException"},
         {"shape":"ValidationException"},
         {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"},
@@ -103,7 +105,8 @@
         {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"},
         {"shape":"InternalServerException"}
-      ]
+      ],
+      "readonly":true
     },
     "GetQueryResultsMonitorTopContributors":{
       "name":"GetQueryResultsMonitorTopContributors",
@@ -121,7 +124,8 @@
         {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"},
         {"shape":"InternalServerException"}
-      ]
+      ],
+      "readonly":true
     },
     "GetQueryResultsWorkloadInsightsTopContributors":{
       "name":"GetQueryResultsWorkloadInsightsTopContributors",
@@ -139,7 +143,8 @@
         {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"},
         {"shape":"InternalServerException"}
-      ]
+      ],
+      "readonly":true
     },
     "GetQueryResultsWorkloadInsightsTopContributorsData":{
       "name":"GetQueryResultsWorkloadInsightsTopContributorsData",
@@ -157,7 +162,8 @@
         {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"},
         {"shape":"InternalServerException"}
-      ]
+      ],
+      "readonly":true
     },
     "GetQueryStatusMonitorTopContributors":{
       "name":"GetQueryStatusMonitorTopContributors",
@@ -174,7 +180,8 @@
         {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"},
         {"shape":"InternalServerException"}
-      ]
+      ],
+      "readonly":true
     },
     "GetQueryStatusWorkloadInsightsTopContributors":{
       "name":"GetQueryStatusWorkloadInsightsTopContributors",
@@ -191,7 +198,8 @@
         {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"},
         {"shape":"InternalServerException"}
-      ]
+      ],
+      "readonly":true
     },
     "GetQueryStatusWorkloadInsightsTopContributorsData":{
       "name":"GetQueryStatusWorkloadInsightsTopContributorsData",
@@ -208,7 +216,8 @@
         {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"},
         {"shape":"InternalServerException"}
-      ]
+      ],
+      "readonly":true
     },
     "GetScope":{
       "name":"GetScope",
@@ -226,7 +235,8 @@
         {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"},
         {"shape":"InternalServerException"}
-      ]
+      ],
+      "readonly":true
     },
     "ListMonitors":{
       "name":"ListMonitors",
@@ -242,7 +252,8 @@
         {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"},
         {"shape":"InternalServerException"}
-      ]
+      ],
+      "readonly":true
     },
     "ListScopes":{
       "name":"ListScopes",
@@ -259,7 +270,8 @@
         {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"},
         {"shape":"InternalServerException"}
-      ]
+      ],
+      "readonly":true
     },
     "ListTagsForResource":{
       "name":"ListTagsForResource",
@@ -277,7 +289,8 @@
         {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"},
         {"shape":"InternalServerException"}
-      ]
+      ],
+      "readonly":true
     },
     "StartQueryMonitorTopContributors":{
       "name":"StartQueryMonitorTopContributors",
@@ -311,7 +324,8 @@
         {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"},
         {"shape":"InternalServerException"}
-      ]
+      ],
+      "readonly":true
     },
     "StartQueryWorkloadInsightsTopContributorsData":{
       "name":"StartQueryWorkloadInsightsTopContributorsData",
@@ -328,7 +342,8 @@
         {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"},
         {"shape":"InternalServerException"}
-      ]
+      ],
+      "readonly":true
     },
     "StopQueryMonitorTopContributors":{
       "name":"StopQueryMonitorTopContributors",
@@ -363,7 +378,8 @@
         {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"},
         {"shape":"InternalServerException"}
-      ]
+      ],
+      "readonly":true
     },
     "StopQueryWorkloadInsightsTopContributorsData":{
       "name":"StopQueryWorkloadInsightsTopContributorsData",
@@ -380,7 +396,8 @@
         {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"},
         {"shape":"InternalServerException"}
-      ]
+      ],
+      "readonly":true
     },
     "TagResource":{
       "name":"TagResource",
@@ -450,6 +467,7 @@
       "errors":[
         {"shape":"ServiceQuotaExceededException"},
         {"shape":"ResourceNotFoundException"},
+        {"shape":"ConflictException"},
         {"shape":"ValidationException"},
         {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"},
@@ -588,8 +606,7 @@
     },
     "DeleteMonitorOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteScopeInput":{
       "type":"structure",
@@ -604,8 +621,7 @@
     },
     "DeleteScopeOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DestinationCategory":{
       "type":"string",
@@ -615,7 +631,8 @@
         "INTER_VPC",
         "UNCLASSIFIED",
         "AMAZON_S3",
-        "AMAZON_DYNAMODB"
+        "AMAZON_DYNAMODB",
+        "INTER_REGION"
       ]
     },
     "Double":{
@@ -1051,7 +1068,9 @@
       "enum":[
         "AWS::EC2::VPC",
         "AWS::AvailabilityZone",
-        "AWS::EC2::Subnet"
+        "AWS::EC2::Subnet",
+        "AWS::Region",
+        "AWS::EKS::Cluster"
       ]
     },
     "MonitorLocalResources":{
@@ -1084,7 +1103,8 @@
         "AWS::EC2::VPC",
         "AWS::AvailabilityZone",
         "AWS::EC2::Subnet",
-        "AWS::AWSService"
+        "AWS::AWSService",
+        "AWS::Region"
       ]
     },
     "MonitorRemoteResources":{
@@ -1181,7 +1201,9 @@
       "enum":[
         "SUCCEEDED",
         "IN_PROGRESS",
-        "FAILED"
+        "FAILED",
+        "DEACTIVATING",
+        "DEACTIVATED"
       ]
     },
     "ScopeSummary":{
@@ -1319,8 +1341,7 @@
     },
     "StopQueryMonitorTopContributorsOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "StopQueryWorkloadInsightsTopContributorsDataInput":{
       "type":"structure",
@@ -1343,8 +1364,7 @@
     },
     "StopQueryWorkloadInsightsTopContributorsDataOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "StopQueryWorkloadInsightsTopContributorsInput":{
       "type":"structure",
@@ -1367,8 +1387,7 @@
     },
     "StopQueryWorkloadInsightsTopContributorsOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "String":{"type":"string"},
     "SubnetArn":{"type":"string"},
@@ -1415,8 +1434,7 @@
     },
     "TagResourceOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "TagValue":{
       "type":"string",
@@ -1506,8 +1524,7 @@
     },
     "UntagResourceOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "UpdateMonitorInput":{
       "type":"structure",

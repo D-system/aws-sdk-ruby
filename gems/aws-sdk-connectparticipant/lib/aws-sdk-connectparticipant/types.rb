@@ -59,6 +59,41 @@ module Aws::ConnectParticipant
       include Aws::Structure
     end
 
+    # The attendee information, including attendee ID and join token.
+    #
+    # @!attribute [rw] attendee_id
+    #   The Amazon Chime SDK attendee ID.
+    #   @return [String]
+    #
+    # @!attribute [rw] join_token
+    #   The join token used by the Amazon Chime SDK attendee.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectparticipant-2018-09-07/Attendee AWS API Documentation
+    #
+    class Attendee < Struct.new(
+      :attendee_id,
+      :join_token)
+      SENSITIVE = [:join_token]
+      include Aws::Structure
+    end
+
+    # Has audio-specific configurations as the operating parameter for Echo
+    # Reduction.
+    #
+    # @!attribute [rw] echo_reduction
+    #   Makes echo reduction available to clients who connect to the
+    #   meeting.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectparticipant-2018-09-07/AudioFeatures AWS API Documentation
+    #
+    class AudioFeatures < Struct.new(
+      :echo_reduction)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] session_id
     #   The `sessionId` provided in the `authenticationInitiated` event.
     #   @return [String]
@@ -196,11 +231,18 @@ module Aws::ConnectParticipant
     #   authentication token associated with the participant's connection.
     #   @return [Types::ConnectionCredentials]
     #
+    # @!attribute [rw] web_rtc_connection
+    #   Creates the participant's WebRTC connection data required for the
+    #   client application (mobile application or website) to connect to the
+    #   call.
+    #   @return [Types::WebRTCConnection]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectparticipant-2018-09-07/CreateParticipantConnectionResponse AWS API Documentation
     #
     class CreateParticipantConnectionResponse < Struct.new(
       :websocket,
-      :connection_credentials)
+      :connection_credentials,
+      :web_rtc_connection)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -527,6 +569,21 @@ module Aws::ConnectParticipant
       include Aws::Structure
     end
 
+    # The configuration settings of the features available to a meeting.
+    #
+    # @!attribute [rw] audio
+    #   The configuration settings for the audio features available to a
+    #   meeting.
+    #   @return [Types::AudioFeatures]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectparticipant-2018-09-07/MeetingFeaturesConfiguration AWS API Documentation
+    #
+    class MeetingFeaturesConfiguration < Struct.new(
+      :audio)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Contains metadata related to a message.
     #
     # @!attribute [rw] message_id
@@ -539,11 +596,30 @@ module Aws::ConnectParticipant
     #   recipients.
     #   @return [Array<Types::Receipt>]
     #
+    # @!attribute [rw] message_processing_status
+    #   The status of Message Processing for the message.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectparticipant-2018-09-07/MessageMetadata AWS API Documentation
     #
     class MessageMetadata < Struct.new(
       :message_id,
-      :receipts)
+      :receipts,
+      :message_processing_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains metadata for chat messages.
+    #
+    # @!attribute [rw] message_processing_status
+    #   The status of Message Processing for the message.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectparticipant-2018-09-07/MessageProcessingMetadata AWS API Documentation
+    #
+    class MessageProcessingMetadata < Struct.new(
+      :message_processing_status)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -582,7 +658,7 @@ module Aws::ConnectParticipant
     #   @return [String]
     #
     # @!attribute [rw] resource_type
-    #   The type of Amazon Connect resource.
+    #   The type of Connect Customer resource.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectparticipant-2018-09-07/ResourceNotFoundException AWS API Documentation
@@ -601,7 +677,7 @@ module Aws::ConnectParticipant
     #   * application/vnd.amazonaws.connect.event.typing
     #
     #   * application/vnd.amazonaws.connect.event.connection.acknowledged
-    #     (will be deprecated on December 31, 2024)
+    #     (is no longer maintained since December 31, 2024)
     #
     #   * application/vnd.amazonaws.connect.event.message.delivered
     #
@@ -668,9 +744,21 @@ module Aws::ConnectParticipant
     end
 
     # @!attribute [rw] content_type
-    #   The type of the content. Supported types are `text/plain`,
+    #   The type of the content. Possible types are `text/plain`,
     #   `text/markdown`, `application/json`, and
     #   `application/vnd.amazonaws.connect.message.interactive.response`.
+    #
+    #   Supported types on the contact are configured through
+    #   `SupportedMessagingContentTypes` on [StartChatContact][1] and
+    #   [StartOutboundChatContact][2].
+    #
+    #   For Apple Messages for Business, SMS, and WhatsApp Business
+    #   Messaging contacts, only `text/plain` is supported.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/connect/latest/APIReference/API_StartChatContact.html
+    #   [2]: https://docs.aws.amazon.com/connect/latest/APIReference/API_StartOutboundChatContact.html
     #   @return [String]
     #
     # @!attribute [rw] content
@@ -727,11 +815,16 @@ module Aws::ConnectParticipant
     #   example, 2019-11-08T02:41:28.172Z.
     #   @return [String]
     #
+    # @!attribute [rw] message_metadata
+    #   Contains metadata for the message.
+    #   @return [Types::MessageProcessingMetadata]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectparticipant-2018-09-07/SendMessageResponse AWS API Documentation
     #
     class SendMessageResponse < Struct.new(
       :id,
-      :absolute_time)
+      :absolute_time,
+      :message_metadata)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -961,6 +1054,80 @@ module Aws::ConnectParticipant
       :template,
       :actions)
       SENSITIVE = [:input_schema, :template, :actions]
+      include Aws::Structure
+    end
+
+    # Creates the participant’s WebRTC connection data required for the
+    # client application (mobile or web) to connect to the call.
+    #
+    # @!attribute [rw] attendee
+    #   The attendee information, including attendee ID and join token.
+    #   @return [Types::Attendee]
+    #
+    # @!attribute [rw] meeting
+    #   A meeting created using the Amazon Chime SDK.
+    #   @return [Types::WebRTCMeeting]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectparticipant-2018-09-07/WebRTCConnection AWS API Documentation
+    #
+    class WebRTCConnection < Struct.new(
+      :attendee,
+      :meeting)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A set of endpoints used by clients to connect to the media service
+    # group for an Amazon Chime SDK meeting.
+    #
+    # @!attribute [rw] audio_host_url
+    #   The audio host URL.
+    #   @return [String]
+    #
+    # @!attribute [rw] audio_fallback_url
+    #   The audio fallback URL.
+    #   @return [String]
+    #
+    # @!attribute [rw] signaling_url
+    #   The signaling URL.
+    #   @return [String]
+    #
+    # @!attribute [rw] event_ingestion_url
+    #   The event ingestion URL to which you send client meeting events.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectparticipant-2018-09-07/WebRTCMediaPlacement AWS API Documentation
+    #
+    class WebRTCMediaPlacement < Struct.new(
+      :audio_host_url,
+      :audio_fallback_url,
+      :signaling_url,
+      :event_ingestion_url)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A meeting created using the Amazon Chime SDK.
+    #
+    # @!attribute [rw] media_placement
+    #   The media placement for the meeting.
+    #   @return [Types::WebRTCMediaPlacement]
+    #
+    # @!attribute [rw] meeting_features
+    #   The configuration settings of the features available to a meeting.
+    #   @return [Types::MeetingFeaturesConfiguration]
+    #
+    # @!attribute [rw] meeting_id
+    #   The Amazon Chime SDK meeting ID.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectparticipant-2018-09-07/WebRTCMeeting AWS API Documentation
+    #
+    class WebRTCMeeting < Struct.new(
+      :media_placement,
+      :meeting_features,
+      :meeting_id)
+      SENSITIVE = []
       include Aws::Structure
     end
 

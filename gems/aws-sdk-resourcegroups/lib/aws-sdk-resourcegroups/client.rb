@@ -95,8 +95,8 @@ module Aws::ResourceGroups
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::ResourceGroups
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::ResourceGroups
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::ResourceGroups
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::ResourceGroups
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::ResourceGroups
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::ResourceGroups
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::ResourceGroups
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -898,6 +902,7 @@ module Aws::ResourceGroups
     #   * {Types::GetTagSyncTaskOutput#task_arn #task_arn} => String
     #   * {Types::GetTagSyncTaskOutput#tag_key #tag_key} => String
     #   * {Types::GetTagSyncTaskOutput#tag_value #tag_value} => String
+    #   * {Types::GetTagSyncTaskOutput#resource_query #resource_query} => Types::ResourceQuery
     #   * {Types::GetTagSyncTaskOutput#role_arn #role_arn} => String
     #   * {Types::GetTagSyncTaskOutput#status #status} => String
     #   * {Types::GetTagSyncTaskOutput#error_message #error_message} => String
@@ -916,6 +921,8 @@ module Aws::ResourceGroups
     #   resp.task_arn #=> String
     #   resp.tag_key #=> String
     #   resp.tag_value #=> String
+    #   resp.resource_query.type #=> String, one of "TAG_FILTERS_1_0", "CLOUDFORMATION_STACK_1_0"
+    #   resp.resource_query.query #=> String
     #   resp.role_arn #=> String
     #   resp.status #=> String, one of "ACTIVE", "ERROR"
     #   resp.error_message #=> String
@@ -1244,7 +1251,7 @@ module Aws::ResourceGroups
     #
     #     * `AWS::AppRegistry::Application`
     #
-    #     * `AWS::AppRegistry::ApplicationResourceGroups`
+    #     * `AWS::AppRegistry::ApplicationResourceGroup`
     #
     #     * `AWS::CloudFormation::Stack`
     #
@@ -1376,6 +1383,8 @@ module Aws::ResourceGroups
     #   resp.tag_sync_tasks[0].task_arn #=> String
     #   resp.tag_sync_tasks[0].tag_key #=> String
     #   resp.tag_sync_tasks[0].tag_value #=> String
+    #   resp.tag_sync_tasks[0].resource_query.type #=> String, one of "TAG_FILTERS_1_0", "CLOUDFORMATION_STACK_1_0"
+    #   resp.tag_sync_tasks[0].resource_query.query #=> String
     #   resp.tag_sync_tasks[0].role_arn #=> String
     #   resp.tag_sync_tasks[0].status #=> String, one of "ACTIVE", "ERROR"
     #   resp.tag_sync_tasks[0].error_message #=> String
@@ -1532,7 +1541,15 @@ module Aws::ResourceGroups
     end
 
     # Creates a new tag-sync task to onboard and sync resources tagged with
-    # a specific tag key-value pair to an application.
+    # a specific tag key-value pair to an application. To start a tag-sync
+    # task, you need a [resource tagging role][1]. The resource tagging role
+    # grants permissions to tag and untag applications resources and must
+    # include a trust policy that allows Resource Groups to assume the role
+    # and perform resource tagging tasks on your behalf.
+    #
+    # For instructions on creating a tag-sync task, see [Create a tag-sync
+    # using the Resource Groups API][2] in the *Amazon Web Services Service
+    # Catalog AppRegistry Administrator Guide*.
     #
     # **Minimum permissions**
     #
@@ -1544,19 +1561,71 @@ module Aws::ResourceGroups
     #
     # * `iam:PassRole` on the role provided in the request
     #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/servicecatalog/latest/arguide/app-tag-sync.html#tag-sync-role
+    # [2]: https://docs.aws.amazon.com/servicecatalog/latest/arguide/app-tag-sync.html#create-tag-sync
+    #
     # @option params [required, String] :group
     #   The Amazon resource name (ARN) or name of the application group for
     #   which you want to create a tag-sync task.
     #
-    # @option params [required, String] :tag_key
+    # @option params [String] :tag_key
     #   The tag key. Resources tagged with this tag key-value pair will be
     #   added to the application. If a resource with this tag is later
     #   untagged, the tag-sync task removes the resource from the application.
     #
-    # @option params [required, String] :tag_value
+    #   When using the `TagKey` parameter, you must also specify the
+    #   `TagValue` parameter. If you specify a tag key-value pair, you can't
+    #   use the `ResourceQuery` parameter.
+    #
+    # @option params [String] :tag_value
     #   The tag value. Resources tagged with this tag key-value pair will be
     #   added to the application. If a resource with this tag is later
     #   untagged, the tag-sync task removes the resource from the application.
+    #
+    #   When using the `TagValue` parameter, you must also specify the
+    #   `TagKey` parameter. If you specify a tag key-value pair, you can't
+    #   use the `ResourceQuery` parameter.
+    #
+    # @option params [Types::ResourceQuery] :resource_query
+    #   The query you can use to create the tag-sync task. With this method,
+    #   all resources matching the query are added to the specified
+    #   application group. A `ResourceQuery` specifies both a query `Type` and
+    #   a `Query` string as JSON string objects. For more information on
+    #   defining a resource query for a tag-sync task, see the tag-based query
+    #   type in [ Types of resource group queries][1] in *Resource Groups User
+    #   Guide*.
+    #
+    #   When using the `ResourceQuery` parameter, you cannot use the `TagKey`
+    #   and `TagValue` parameters.
+    #
+    #   When you combine all of the elements together into a single string,
+    #   any double quotes that are embedded inside another double quote pair
+    #   must be escaped by preceding the embedded double quote with a
+    #   backslash character (\\). For example, a complete `ResourceQuery`
+    #   parameter must be formatted like the following CLI parameter example:
+    #
+    #   `--resource-query
+    #   '{"Type":"TAG_FILTERS_1_0","Query":"{"ResourceTypeFilters":["AWS::AllSupported"],"TagFilters":[{"Key":"Stage","Values":["Test"]}]}"}'`
+    #
+    #   In the preceding example, all of the double quote characters in the
+    #   value part of the `Query` element must be escaped because the value
+    #   itself is surrounded by double quotes. For more information, see
+    #   [Quoting strings][2] in the *Command Line Interface User Guide*.
+    #
+    #   For the complete list of resource types that you can use in the array
+    #   value for `ResourceTypeFilters`, see [Resources you can use with
+    #   Resource Groups and Tag Editor][3] in the *Resource Groups User
+    #   Guide*. For example:
+    #
+    #   `"ResourceTypeFilters":["AWS::S3::Bucket", "AWS::EC2::Instance"]`
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/ARG/latest/userguide/gettingstarted-query.html#getting_started-query_types
+    #   [2]: https://docs.aws.amazon.com/cli/latest/userguide/cli-usage-parameters-quoting-strings.html
+    #   [3]: https://docs.aws.amazon.com/ARG/latest/userguide/supported-resources.html
     #
     # @option params [required, String] :role_arn
     #   The Amazon resource name (ARN) of the role assumed by the service to
@@ -1569,14 +1638,19 @@ module Aws::ResourceGroups
     #   * {Types::StartTagSyncTaskOutput#task_arn #task_arn} => String
     #   * {Types::StartTagSyncTaskOutput#tag_key #tag_key} => String
     #   * {Types::StartTagSyncTaskOutput#tag_value #tag_value} => String
+    #   * {Types::StartTagSyncTaskOutput#resource_query #resource_query} => Types::ResourceQuery
     #   * {Types::StartTagSyncTaskOutput#role_arn #role_arn} => String
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.start_tag_sync_task({
     #     group: "GroupStringV2", # required
-    #     tag_key: "TagKey", # required
-    #     tag_value: "TagValue", # required
+    #     tag_key: "TagKey",
+    #     tag_value: "TagValue",
+    #     resource_query: {
+    #       type: "TAG_FILTERS_1_0", # required, accepts TAG_FILTERS_1_0, CLOUDFORMATION_STACK_1_0
+    #       query: "Query", # required
+    #     },
     #     role_arn: "RoleArn", # required
     #   })
     #
@@ -1587,6 +1661,8 @@ module Aws::ResourceGroups
     #   resp.task_arn #=> String
     #   resp.tag_key #=> String
     #   resp.tag_value #=> String
+    #   resp.resource_query.type #=> String, one of "TAG_FILTERS_1_0", "CLOUDFORMATION_STACK_1_0"
+    #   resp.resource_query.query #=> String
     #   resp.role_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/resource-groups-2017-11-27/StartTagSyncTask AWS API Documentation
@@ -1945,7 +2021,7 @@ module Aws::ResourceGroups
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-resourcegroups'
-      context[:gem_version] = '1.79.0'
+      context[:gem_version] = '1.100.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

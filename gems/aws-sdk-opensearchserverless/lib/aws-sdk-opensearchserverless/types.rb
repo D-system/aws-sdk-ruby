@@ -131,6 +131,42 @@ module Aws::OpenSearchServerless
     end
 
     # @!attribute [rw] ids
+    #   A list of collection group IDs. You can't provide names and IDs in
+    #   the same request.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] names
+    #   A list of collection group names. You can't provide names and IDs
+    #   in the same request.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/BatchGetCollectionGroupRequest AWS API Documentation
+    #
+    class BatchGetCollectionGroupRequest < Struct.new(
+      :ids,
+      :names)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] collection_group_details
+    #   Details about each collection group.
+    #   @return [Array<Types::CollectionGroupDetail>]
+    #
+    # @!attribute [rw] collection_group_error_details
+    #   Error information for the request.
+    #   @return [Array<Types::CollectionGroupErrorDetail>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/BatchGetCollectionGroupResponse AWS API Documentation
+    #
+    class BatchGetCollectionGroupResponse < Struct.new(
+      :collection_group_details,
+      :collection_group_error_details)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ids
     #   A list of collection IDs. You can't provide names and IDs in the
     #   same request. The ID is part of the collection endpoint. You can
     #   also retrieve it using the [ListCollections][1] API.
@@ -261,6 +297,26 @@ module Aws::OpenSearchServerless
       include Aws::Structure
     end
 
+    # Capacity details for an OpenSearch Serverless collection group,
+    # including the current capacity and autoscaling status.
+    #
+    # @!attribute [rw] capacity_in_ocu
+    #   The current capacity in OpenSearch Compute Units (OCUs).
+    #   @return [Float]
+    #
+    # @!attribute [rw] autoscaling_status
+    #   The current autoscaling status for the collection group.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/CapacityDetails AWS API Documentation
+    #
+    class CapacityDetails < Struct.new(
+      :capacity_in_ocu,
+      :autoscaling_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The maximum capacity limits for all OpenSearch Serverless collections,
     # in OpenSearch Compute Units (OCUs). These limits are used to scale
     # your collections based on the current workload. For more information,
@@ -288,7 +344,8 @@ module Aws::OpenSearchServerless
     end
 
     # Details about each OpenSearch Serverless collection, including the
-    # collection endpoint and the OpenSearch Dashboards endpoint.
+    # collection endpoint, the OpenSearch Dashboards endpoint, and
+    # FIPS-compliant endpoints for federal government workloads.
     #
     # @!attribute [rw] id
     #   A unique identifier for the collection.
@@ -323,6 +380,16 @@ module Aws::OpenSearchServerless
     #   Details about an OpenSearch Serverless collection.
     #   @return [String]
     #
+    # @!attribute [rw] deletion_protection
+    #   Indicates whether deletion protection is `ENABLED` or `DISABLED` for
+    #   the collection.
+    #   @return [String]
+    #
+    # @!attribute [rw] vector_options
+    #   Configuration options for vector search capabilities in the
+    #   collection.
+    #   @return [Types::VectorOptions]
+    #
     # @!attribute [rw] created_date
     #   The Epoch time when the collection was created.
     #   @return [Integer]
@@ -340,12 +407,23 @@ module Aws::OpenSearchServerless
     #   Collection-specific endpoint used to access OpenSearch Dashboards.
     #   @return [String]
     #
+    # @!attribute [rw] fips_endpoints
+    #   FIPS-compliant endpoints for the collection. These endpoints use
+    #   FIPS 140-3 validated cryptographic modules and are required for
+    #   federal government workloads that must comply with FedRAMP security
+    #   standards.
+    #   @return [Types::FipsEndpoints]
+    #
     # @!attribute [rw] failure_code
     #   A failure code associated with the request.
     #   @return [String]
     #
     # @!attribute [rw] failure_message
     #   A message associated with the failure code.
+    #   @return [String]
+    #
+    # @!attribute [rw] collection_group_name
+    #   The name of the collection group that contains this collection.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/CollectionDetail AWS API Documentation
@@ -359,12 +437,16 @@ module Aws::OpenSearchServerless
       :arn,
       :kms_key_arn,
       :standby_replicas,
+      :deletion_protection,
+      :vector_options,
       :created_date,
       :last_modified_date,
       :collection_endpoint,
       :dashboard_endpoint,
+      :fips_endpoints,
       :failure_code,
-      :failure_message)
+      :failure_message,
+      :collection_group_name)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -412,11 +494,193 @@ module Aws::OpenSearchServerless
     #   The current status of the collection.
     #   @return [String]
     #
+    # @!attribute [rw] collection_group_name
+    #   The name of the collection group to filter by.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/CollectionFilters AWS API Documentation
     #
     class CollectionFilters < Struct.new(
       :name,
-      :status)
+      :status,
+      :collection_group_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Capacity limits for a collection group. These limits define the
+    # minimum and maximum OpenSearch Compute Units (OCUs) for indexing and
+    # search operations that can be used by collections in the group.
+    #
+    # @!attribute [rw] max_indexing_capacity_in_ocu
+    #   The maximum indexing capacity for collections in the group.
+    #   @return [Float]
+    #
+    # @!attribute [rw] max_search_capacity_in_ocu
+    #   The maximum search capacity for collections in the group.
+    #   @return [Float]
+    #
+    # @!attribute [rw] min_indexing_capacity_in_ocu
+    #   The minimum indexing capacity for collections in the group.
+    #   @return [Float]
+    #
+    # @!attribute [rw] min_search_capacity_in_ocu
+    #   The minimum search capacity for collections in the group.
+    #   @return [Float]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/CollectionGroupCapacityLimits AWS API Documentation
+    #
+    class CollectionGroupCapacityLimits < Struct.new(
+      :max_indexing_capacity_in_ocu,
+      :max_search_capacity_in_ocu,
+      :min_indexing_capacity_in_ocu,
+      :min_search_capacity_in_ocu)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details about a collection group.
+    #
+    # @!attribute [rw] id
+    #   The unique identifier of the collection group.
+    #   @return [String]
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the collection group.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the collection group.
+    #   @return [String]
+    #
+    # @!attribute [rw] standby_replicas
+    #   Indicates whether standby replicas are used for the collection
+    #   group.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   The description of the collection group.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   A map of key-value pairs associated with the collection group.
+    #   @return [Array<Types::Tag>]
+    #
+    # @!attribute [rw] created_date
+    #   The Epoch time when the collection group was created.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] capacity_limits
+    #   The capacity limits for the collection group, in OpenSearch Compute
+    #   Units (OCUs).
+    #   @return [Types::CollectionGroupCapacityLimits]
+    #
+    # @!attribute [rw] current_capacity
+    #   Current search and indexing capacity for the collection group.
+    #   @return [Types::CurrentCapacity]
+    #
+    # @!attribute [rw] number_of_collections
+    #   The number of collections associated with the collection group.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] generation
+    #   The generation of Amazon OpenSearch Serverless for the collection
+    #   group.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/CollectionGroupDetail AWS API Documentation
+    #
+    class CollectionGroupDetail < Struct.new(
+      :id,
+      :arn,
+      :name,
+      :standby_replicas,
+      :description,
+      :tags,
+      :created_date,
+      :capacity_limits,
+      :current_capacity,
+      :number_of_collections,
+      :generation)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Error details for a collection group operation.
+    #
+    # @!attribute [rw] id
+    #   If the request contains collection group IDs, the response includes
+    #   the IDs provided in the request.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   If the request contains collection group names, the response
+    #   includes the names provided in the request.
+    #   @return [String]
+    #
+    # @!attribute [rw] error_message
+    #   A description of the error. For example, `The specified Collection
+    #   Group is not found.`
+    #   @return [String]
+    #
+    # @!attribute [rw] error_code
+    #   The error code for the request. For example, `NOT_FOUND`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/CollectionGroupErrorDetail AWS API Documentation
+    #
+    class CollectionGroupErrorDetail < Struct.new(
+      :id,
+      :name,
+      :error_message,
+      :error_code)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Summary information about a collection group.
+    #
+    # @!attribute [rw] id
+    #   The unique identifier of the collection group.
+    #   @return [String]
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the collection group.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the collection group.
+    #   @return [String]
+    #
+    # @!attribute [rw] number_of_collections
+    #   The number of collections within the collection group.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] created_date
+    #   The Epoch time when the collection group was created.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] capacity_limits
+    #   Capacity limits for a collection group. These limits define the
+    #   minimum and maximum OpenSearch Compute Units (OCUs) for indexing and
+    #   search operations that can be used by collections in the group.
+    #   @return [Types::CollectionGroupCapacityLimits]
+    #
+    # @!attribute [rw] generation
+    #   The generation of Amazon OpenSearch Serverless for the collection
+    #   group.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/CollectionGroupSummary AWS API Documentation
+    #
+    class CollectionGroupSummary < Struct.new(
+      :id,
+      :arn,
+      :name,
+      :number_of_collections,
+      :created_date,
+      :capacity_limits,
+      :generation)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -439,20 +703,32 @@ module Aws::OpenSearchServerless
     #   The Amazon Resource Name (ARN) of the collection.
     #   @return [String]
     #
+    # @!attribute [rw] kms_key_arn
+    #   The ARN of the Amazon Web Services Key Management Service key used
+    #   to encrypt the collection.
+    #   @return [String]
+    #
+    # @!attribute [rw] collection_group_name
+    #   The name of the collection group that contains this collection.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/CollectionSummary AWS API Documentation
     #
     class CollectionSummary < Struct.new(
       :id,
       :name,
       :status,
-      :arn)
+      :arn,
+      :kms_key_arn,
+      :collection_group_name)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # When creating a resource, thrown when a resource with the same name
     # already exists or is being created. When deleting a resource, thrown
-    # when the resource is not in the ACTIVE or FAILED state.
+    # when the resource is not in the ACTIVE, FAILED, or UPDATE\_FAILED
+    # state.
     #
     # @!attribute [rw] message
     #   @return [String]
@@ -549,6 +825,16 @@ module Aws::OpenSearchServerless
     #   Creates details about an OpenSearch Serverless collection.
     #   @return [String]
     #
+    # @!attribute [rw] deletion_protection
+    #   Indicates whether deletion protection is `ENABLED` or `DISABLED` for
+    #   the collection.
+    #   @return [String]
+    #
+    # @!attribute [rw] vector_options
+    #   Configuration options for vector search capabilities in the
+    #   collection.
+    #   @return [Types::VectorOptions]
+    #
     # @!attribute [rw] created_date
     #   The Epoch time when the collection was created.
     #   @return [Integer]
@@ -556,6 +842,10 @@ module Aws::OpenSearchServerless
     # @!attribute [rw] last_modified_date
     #   The date and time when the collection was last modified.
     #   @return [Integer]
+    #
+    # @!attribute [rw] collection_group_name
+    #   The name of the collection group that contains this collection.
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/CreateCollectionDetail AWS API Documentation
     #
@@ -568,8 +858,131 @@ module Aws::OpenSearchServerless
       :arn,
       :kms_key_arn,
       :standby_replicas,
+      :deletion_protection,
+      :vector_options,
       :created_date,
-      :last_modified_date)
+      :last_modified_date,
+      :collection_group_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details about the created collection group.
+    #
+    # @!attribute [rw] id
+    #   The unique identifier of the collection group.
+    #   @return [String]
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the collection group.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the collection group.
+    #   @return [String]
+    #
+    # @!attribute [rw] standby_replicas
+    #   Indicates whether standby replicas are used for the collection
+    #   group.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   The description of the collection group.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   A map of key-value pairs associated with the collection group.
+    #   @return [Array<Types::Tag>]
+    #
+    # @!attribute [rw] created_date
+    #   The Epoch time when the collection group was created.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] capacity_limits
+    #   The capacity limits for the collection group, in OpenSearch Compute
+    #   Units (OCUs).
+    #   @return [Types::CollectionGroupCapacityLimits]
+    #
+    # @!attribute [rw] generation
+    #   The generation of Amazon OpenSearch Serverless for the collection
+    #   group.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/CreateCollectionGroupDetail AWS API Documentation
+    #
+    class CreateCollectionGroupDetail < Struct.new(
+      :id,
+      :arn,
+      :name,
+      :standby_replicas,
+      :description,
+      :tags,
+      :created_date,
+      :capacity_limits,
+      :generation)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] name
+    #   The name of the collection group.
+    #   @return [String]
+    #
+    # @!attribute [rw] standby_replicas
+    #   Indicates whether standby replicas should be used for a collection
+    #   group.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A description of the collection group.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   An arbitrary set of tags (key–value pairs) to associate with the
+    #   OpenSearch Serverless collection group.
+    #   @return [Array<Types::Tag>]
+    #
+    # @!attribute [rw] capacity_limits
+    #   The capacity limits for the collection group, in OpenSearch Compute
+    #   Units (OCUs). These limits control the maximum and minimum capacity
+    #   for collections within the group.
+    #   @return [Types::CollectionGroupCapacityLimits]
+    #
+    # @!attribute [rw] generation
+    #   The generation of Amazon OpenSearch Serverless for the collection
+    #   group. Valid values are `CLASSIC` and `NEXTGEN`.
+    #   @return [String]
+    #
+    # @!attribute [rw] client_token
+    #   Unique, case-sensitive identifier to ensure idempotency of the
+    #   request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/CreateCollectionGroupRequest AWS API Documentation
+    #
+    class CreateCollectionGroupRequest < Struct.new(
+      :name,
+      :standby_replicas,
+      :description,
+      :tags,
+      :capacity_limits,
+      :generation,
+      :client_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] create_collection_group_detail
+    #   Details about the created collection group.
+    #   @return [Types::CreateCollectionGroupDetail]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/CreateCollectionGroupResponse AWS API Documentation
+    #
+    class CreateCollectionGroupResponse < Struct.new(
+      :create_collection_group_detail)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -595,6 +1008,24 @@ module Aws::OpenSearchServerless
     #   Indicates whether standby replicas should be used for a collection.
     #   @return [String]
     #
+    # @!attribute [rw] vector_options
+    #   Configuration options for vector search capabilities in the
+    #   collection.
+    #   @return [Types::VectorOptions]
+    #
+    # @!attribute [rw] collection_group_name
+    #   The name of the collection group to associate with the collection.
+    #   @return [String]
+    #
+    # @!attribute [rw] encryption_config
+    #   Encryption settings for the collection.
+    #   @return [Types::EncryptionConfig]
+    #
+    # @!attribute [rw] deletion_protection
+    #   Indicates whether to enable deletion protection for the collection.
+    #   When set to `ENABLED`, the collection cannot be deleted.
+    #   @return [String]
+    #
     # @!attribute [rw] client_token
     #   Unique, case-sensitive identifier to ensure idempotency of the
     #   request.
@@ -611,6 +1042,10 @@ module Aws::OpenSearchServerless
       :description,
       :tags,
       :standby_replicas,
+      :vector_options,
+      :collection_group_name,
+      :encryption_config,
+      :deletion_protection,
       :client_token)
       SENSITIVE = []
       include Aws::Structure
@@ -655,6 +1090,35 @@ module Aws::OpenSearchServerless
       SENSITIVE = []
       include Aws::Structure
     end
+
+    # @!attribute [rw] id
+    #   The unique identifier of the collection in which to create the
+    #   index.
+    #   @return [String]
+    #
+    # @!attribute [rw] index_name
+    #   The name of the index to create. Index names must be lowercase and
+    #   can't begin with underscores (\_) or hyphens (-).
+    #   @return [String]
+    #
+    # @!attribute [rw] index_schema
+    #   The JSON schema definition for the index, including field mappings
+    #   and settings.
+    #   @return [Hash,Array,String,Numeric,Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/CreateIndexRequest AWS API Documentation
+    #
+    class CreateIndexRequest < Struct.new(
+      :id,
+      :index_name,
+      :index_schema)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/CreateIndexResponse AWS API Documentation
+    #
+    class CreateIndexResponse < Aws::EmptyStructure; end
 
     # @!attribute [rw] type
     #   The type of lifecycle policy.
@@ -718,15 +1182,21 @@ module Aws::OpenSearchServerless
     #   @return [String]
     #
     # @!attribute [rw] saml_options
-    #   Describes SAML options in in the form of a key-value map. This field
-    #   is required if you specify `saml` for the `type` parameter.
+    #   Describes SAML options in the form of a key-value map. This field is
+    #   required if you specify `SAML` for the `type` parameter.
     #   @return [Types::SamlConfigOptions]
     #
     # @!attribute [rw] iam_identity_center_options
     #   Describes IAM Identity Center options in the form of a key-value
-    #   map. This field is required if you specify iamidentitycenter for the
-    #   type parameter.
+    #   map. This field is required if you specify `iamidentitycenter` for
+    #   the `type` parameter.
     #   @return [Types::CreateIamIdentityCenterConfigOptions]
+    #
+    # @!attribute [rw] iam_federation_options
+    #   Describes IAM federation options in the form of a key-value map.
+    #   This field is required if you specify `iamFederation` for the `type`
+    #   parameter.
+    #   @return [Types::IamFederationConfigOptions]
     #
     # @!attribute [rw] client_token
     #   Unique, case-sensitive identifier to ensure idempotency of the
@@ -744,6 +1214,7 @@ module Aws::OpenSearchServerless
       :description,
       :saml_options,
       :iam_identity_center_options,
+      :iam_federation_options,
       :client_token)
       SENSITIVE = []
       include Aws::Structure
@@ -891,6 +1362,26 @@ module Aws::OpenSearchServerless
       include Aws::Structure
     end
 
+    # Current search and indexing capacity for an OpenSearch Serverless
+    # collection group. Measured in OpenSearch Compute Units (OCUs).
+    #
+    # @!attribute [rw] search
+    #   The search capacity for the collection group.
+    #   @return [Types::CapacityDetails]
+    #
+    # @!attribute [rw] indexing
+    #   The indexing capacity for the collection group.
+    #   @return [Types::CapacityDetails]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/CurrentCapacity AWS API Documentation
+    #
+    class CurrentCapacity < Struct.new(
+      :search,
+      :indexing)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] type
     #   The type of policy.
     #   @return [String]
@@ -935,15 +1426,46 @@ module Aws::OpenSearchServerless
     #   The current status of the collection.
     #   @return [String]
     #
+    # @!attribute [rw] deletion_protection
+    #   Indicates whether deletion protection is `ENABLED` or `DISABLED` for
+    #   the collection.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/DeleteCollectionDetail AWS API Documentation
     #
     class DeleteCollectionDetail < Struct.new(
       :id,
       :name,
-      :status)
+      :status,
+      :deletion_protection)
       SENSITIVE = []
       include Aws::Structure
     end
+
+    # @!attribute [rw] id
+    #   The unique identifier of the collection group to delete.
+    #   @return [String]
+    #
+    # @!attribute [rw] client_token
+    #   Unique, case-sensitive identifier to ensure idempotency of the
+    #   request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/DeleteCollectionGroupRequest AWS API Documentation
+    #
+    class DeleteCollectionGroupRequest < Struct.new(
+      :id,
+      :client_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/DeleteCollectionGroupResponse AWS API Documentation
+    #
+    class DeleteCollectionGroupResponse < Aws::EmptyStructure; end
 
     # @!attribute [rw] id
     #   The unique identifier of the collection. For example,
@@ -983,6 +1505,28 @@ module Aws::OpenSearchServerless
       SENSITIVE = []
       include Aws::Structure
     end
+
+    # @!attribute [rw] id
+    #   The unique identifier of the collection containing the index to
+    #   delete.
+    #   @return [String]
+    #
+    # @!attribute [rw] index_name
+    #   The name of the index to delete.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/DeleteIndexRequest AWS API Documentation
+    #
+    class DeleteIndexRequest < Struct.new(
+      :id,
+      :index_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/DeleteIndexResponse AWS API Documentation
+    #
+    class DeleteIndexResponse < Aws::EmptyStructure; end
 
     # @!attribute [rw] type
     #   The type of lifecycle policy.
@@ -1202,6 +1746,55 @@ module Aws::OpenSearchServerless
       include Aws::Structure
     end
 
+    # Encryption settings for a collection.
+    #
+    # @!attribute [rw] a_ws_owned_key
+    #   Indicates whether to use an Amazon Web Services-owned key for
+    #   encryption.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] kms_key_arn
+    #   The ARN of the Amazon Web Services Key Management Service key used
+    #   to encrypt the collection.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/EncryptionConfig AWS API Documentation
+    #
+    class EncryptionConfig < Struct.new(
+      :a_ws_owned_key,
+      :kms_key_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # FIPS-compliant endpoint URLs for an OpenSearch Serverless collection.
+    # These endpoints ensure all data transmission uses FIPS 140-3 validated
+    # cryptographic implementations, meeting federal security requirements
+    # for government workloads.
+    #
+    # @!attribute [rw] collection_endpoint
+    #   FIPS-compliant collection endpoint used to submit index, search, and
+    #   data upload requests to an OpenSearch Serverless collection. This
+    #   endpoint uses FIPS 140-3 validated cryptography and is required for
+    #   federal government workloads.
+    #   @return [String]
+    #
+    # @!attribute [rw] dashboard_endpoint
+    #   FIPS-compliant endpoint used to access OpenSearch Dashboards. This
+    #   endpoint uses FIPS 140-3 validated cryptography and is required for
+    #   federal government workloads that need dashboard visualization
+    #   capabilities.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/FipsEndpoints AWS API Documentation
+    #
+    class FipsEndpoints < Struct.new(
+      :collection_endpoint,
+      :dashboard_endpoint)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] type
     #   Tye type of policy. Currently, the only supported value is `data`.
     #   @return [String]
@@ -1245,6 +1838,36 @@ module Aws::OpenSearchServerless
     #
     class GetAccountSettingsResponse < Struct.new(
       :account_settings_detail)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] id
+    #   The unique identifier of the collection containing the index.
+    #   @return [String]
+    #
+    # @!attribute [rw] index_name
+    #   The name of the index to retrieve information about.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/GetIndexRequest AWS API Documentation
+    #
+    class GetIndexRequest < Struct.new(
+      :id,
+      :index_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] index_schema
+    #   The JSON schema definition for the index, including field mappings
+    #   and settings.
+    #   @return [Hash,Array,String,Numeric,Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/GetIndexResponse AWS API Documentation
+    #
+    class GetIndexResponse < Struct.new(
+      :index_schema)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1337,6 +1960,32 @@ module Aws::OpenSearchServerless
     #
     class GetSecurityPolicyResponse < Struct.new(
       :security_policy_detail)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Describes IAM federation options for an OpenSearch Serverless security
+    # configuration in the form of a key-value map. These options define how
+    # OpenSearch Serverless integrates with external identity providers
+    # using federation.
+    #
+    # @!attribute [rw] group_attribute
+    #   The group attribute for this IAM federation integration. This
+    #   attribute is used to map identity provider groups to OpenSearch
+    #   Serverless permissions.
+    #   @return [String]
+    #
+    # @!attribute [rw] user_attribute
+    #   The user attribute for this IAM federation integration. This
+    #   attribute is used to identify users in the federated authentication
+    #   process.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/IamFederationConfigOptions AWS API Documentation
+    #
+    class IamFederationConfigOptions < Struct.new(
+      :group_attribute,
+      :user_attribute)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1614,6 +2263,47 @@ module Aws::OpenSearchServerless
     #
     class ListAccessPoliciesResponse < Struct.new(
       :access_policy_summaries,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   If your initial `ListCollectionGroups` operation returns a
+    #   `nextToken`, you can include the returned `nextToken` in subsequent
+    #   `ListCollectionGroups` operations, which returns results in the next
+    #   page.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return. Default is 20. You can use
+    #   `nextToken` to get the next page of results.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/ListCollectionGroupsRequest AWS API Documentation
+    #
+    class ListCollectionGroupsRequest < Struct.new(
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] collection_group_summaries
+    #   Details about each collection group.
+    #   @return [Array<Types::CollectionGroupSummary>]
+    #
+    # @!attribute [rw] next_token
+    #   When `nextToken` is returned, there are more results available. The
+    #   value of `nextToken` is a unique pagination token for each page.
+    #   Make the call again using the returned token to retrieve the next
+    #   page.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/ListCollectionGroupsResponse AWS API Documentation
+    #
+    class ListCollectionGroupsResponse < Struct.new(
+      :collection_group_summaries,
       :next_token)
       SENSITIVE = []
       include Aws::Structure
@@ -1938,8 +2628,8 @@ module Aws::OpenSearchServerless
     #   @return [String]
     #
     # @!attribute [rw] open_search_serverless_entity_id
-    #   Custom entity id attribute to override default entity id for this
-    #   saml integration.
+    #   Custom entity ID attribute to override the default entity ID for
+    #   this SAML integration.
     #   @return [String]
     #
     # @!attribute [rw] session_timeout
@@ -1986,6 +2676,12 @@ module Aws::OpenSearchServerless
     #   map.
     #   @return [Types::IamIdentityCenterConfigOptions]
     #
+    # @!attribute [rw] iam_federation_options
+    #   Describes IAM federation options in the form of a key-value map.
+    #   Contains configuration details about how OpenSearch Serverless
+    #   integrates with external identity providers through federation.
+    #   @return [Types::IamFederationConfigOptions]
+    #
     # @!attribute [rw] created_date
     #   The date the configuration was created.
     #   @return [Integer]
@@ -2003,6 +2699,7 @@ module Aws::OpenSearchServerless
       :description,
       :saml_options,
       :iam_identity_center_options,
+      :iam_federation_options,
       :created_date,
       :last_modified_date)
       SENSITIVE = []
@@ -2376,6 +3073,11 @@ module Aws::OpenSearchServerless
     #   The description of the collection.
     #   @return [String]
     #
+    # @!attribute [rw] vector_options
+    #   Configuration options for vector search capabilities in the
+    #   collection.
+    #   @return [Types::VectorOptions]
+    #
     # @!attribute [rw] arn
     #   The Amazon Resource Name (ARN) of the collection.
     #   @return [String]
@@ -2388,6 +3090,11 @@ module Aws::OpenSearchServerless
     #   The date and time when the collection was last modified.
     #   @return [Integer]
     #
+    # @!attribute [rw] deletion_protection
+    #   Indicates whether deletion protection is `ENABLED` or `DISABLED` for
+    #   the collection.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/UpdateCollectionDetail AWS API Documentation
     #
     class UpdateCollectionDetail < Struct.new(
@@ -2396,9 +3103,106 @@ module Aws::OpenSearchServerless
       :status,
       :type,
       :description,
+      :vector_options,
       :arn,
       :created_date,
-      :last_modified_date)
+      :last_modified_date,
+      :deletion_protection)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details about the updated collection group.
+    #
+    # @!attribute [rw] id
+    #   The unique identifier of the collection group.
+    #   @return [String]
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the collection group.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the collection group.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   The description of the collection group.
+    #   @return [String]
+    #
+    # @!attribute [rw] capacity_limits
+    #   The capacity limits for the collection group, in OpenSearch Compute
+    #   Units (OCUs).
+    #   @return [Types::CollectionGroupCapacityLimits]
+    #
+    # @!attribute [rw] created_date
+    #   The Epoch time when the collection group was created.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] last_modified_date
+    #   The date and time when the collection group was last modified.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] generation
+    #   The generation of Amazon OpenSearch Serverless for the collection
+    #   group.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/UpdateCollectionGroupDetail AWS API Documentation
+    #
+    class UpdateCollectionGroupDetail < Struct.new(
+      :id,
+      :arn,
+      :name,
+      :description,
+      :capacity_limits,
+      :created_date,
+      :last_modified_date,
+      :generation)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] id
+    #   The unique identifier of the collection group to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A new description for the collection group.
+    #   @return [String]
+    #
+    # @!attribute [rw] capacity_limits
+    #   Updated capacity limits for the collection group, in OpenSearch
+    #   Compute Units (OCUs).
+    #   @return [Types::CollectionGroupCapacityLimits]
+    #
+    # @!attribute [rw] client_token
+    #   Unique, case-sensitive identifier to ensure idempotency of the
+    #   request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/UpdateCollectionGroupRequest AWS API Documentation
+    #
+    class UpdateCollectionGroupRequest < Struct.new(
+      :id,
+      :description,
+      :capacity_limits,
+      :client_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] update_collection_group_detail
+    #   Details about the updated collection group.
+    #   @return [Types::UpdateCollectionGroupDetail]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/UpdateCollectionGroupResponse AWS API Documentation
+    #
+    class UpdateCollectionGroupResponse < Struct.new(
+      :update_collection_group_detail)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2409,6 +3213,16 @@ module Aws::OpenSearchServerless
     #
     # @!attribute [rw] description
     #   A description of the collection.
+    #   @return [String]
+    #
+    # @!attribute [rw] vector_options
+    #   Configuration options for vector search capabilities in the
+    #   collection.
+    #   @return [Types::VectorOptions]
+    #
+    # @!attribute [rw] deletion_protection
+    #   Indicates whether to enable or disable deletion protection for the
+    #   collection. When set to `ENABLED`, the collection cannot be deleted.
     #   @return [String]
     #
     # @!attribute [rw] client_token
@@ -2424,6 +3238,8 @@ module Aws::OpenSearchServerless
     class UpdateCollectionRequest < Struct.new(
       :id,
       :description,
+      :vector_options,
+      :deletion_protection,
       :client_token)
       SENSITIVE = []
       include Aws::Structure
@@ -2462,6 +3278,34 @@ module Aws::OpenSearchServerless
       SENSITIVE = []
       include Aws::Structure
     end
+
+    # @!attribute [rw] id
+    #   The unique identifier of the collection containing the index to
+    #   update.
+    #   @return [String]
+    #
+    # @!attribute [rw] index_name
+    #   The name of the index to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] index_schema
+    #   The updated JSON schema definition for the index, including field
+    #   mappings and settings.
+    #   @return [Hash,Array,String,Numeric,Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/UpdateIndexRequest AWS API Documentation
+    #
+    class UpdateIndexRequest < Struct.new(
+      :id,
+      :index_name,
+      :index_schema)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/UpdateIndexResponse AWS API Documentation
+    #
+    class UpdateIndexResponse < Aws::EmptyStructure; end
 
     # @!attribute [rw] type
     #   The type of lifecycle policy.
@@ -2542,6 +3386,12 @@ module Aws::OpenSearchServerless
     #   map.
     #   @return [Types::UpdateIamIdentityCenterConfigOptions]
     #
+    # @!attribute [rw] iam_federation_options
+    #   Describes IAM federation options in the form of a key-value map for
+    #   updating an existing security configuration. Use this field to
+    #   modify IAM federation settings for the security configuration.
+    #   @return [Types::IamFederationConfigOptions]
+    #
     # @!attribute [rw] client_token
     #   Unique, case-sensitive identifier to ensure idempotency of the
     #   request.
@@ -2558,6 +3408,7 @@ module Aws::OpenSearchServerless
       :description,
       :saml_options,
       :iam_identity_center_options_updates,
+      :iam_federation_options,
       :client_token)
       SENSITIVE = []
       include Aws::Structure
@@ -2737,6 +3588,22 @@ module Aws::OpenSearchServerless
     #
     class ValidationException < Struct.new(
       :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration options for vector search capabilities in an OpenSearch
+    # Serverless collection.
+    #
+    # @!attribute [rw] serverless_vector_acceleration
+    #   Specifies whether serverless vector acceleration is enabled for the
+    #   collection.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/opensearchserverless-2021-11-01/VectorOptions AWS API Documentation
+    #
+    class VectorOptions < Struct.new(
+      :serverless_vector_acceleration)
       SENSITIVE = []
       include Aws::Structure
     end

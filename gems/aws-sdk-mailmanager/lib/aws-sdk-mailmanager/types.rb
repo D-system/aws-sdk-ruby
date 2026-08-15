@@ -47,20 +47,20 @@ module Aws::MailManager
 
     # An Add On instance represents a specific configuration of an Add On.
     #
-    # @!attribute [rw] addon_instance_arn
-    #   The Amazon Resource Name (ARN) of the Add On instance.
-    #   @return [String]
-    #
     # @!attribute [rw] addon_instance_id
     #   The unique ID of the Add On instance.
+    #   @return [String]
+    #
+    # @!attribute [rw] addon_subscription_id
+    #   The subscription ID for the instance.
     #   @return [String]
     #
     # @!attribute [rw] addon_name
     #   The name of the Add On for the instance.
     #   @return [String]
     #
-    # @!attribute [rw] addon_subscription_id
-    #   The subscription ID for the instance.
+    # @!attribute [rw] addon_instance_arn
+    #   The Amazon Resource Name (ARN) of the Add On instance.
     #   @return [String]
     #
     # @!attribute [rw] created_timestamp
@@ -70,10 +70,10 @@ module Aws::MailManager
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/AddonInstance AWS API Documentation
     #
     class AddonInstance < Struct.new(
-      :addon_instance_arn,
       :addon_instance_id,
-      :addon_name,
       :addon_subscription_id,
+      :addon_name,
+      :addon_instance_arn,
       :created_timestamp)
       SENSITIVE = []
       include Aws::Structure
@@ -81,6 +81,10 @@ module Aws::MailManager
 
     # A subscription for an Add On representing the acceptance of its terms
     # of use and additional pricing.
+    #
+    # @!attribute [rw] addon_subscription_id
+    #   The unique ID of the Add On subscription.
+    #   @return [String]
     #
     # @!attribute [rw] addon_name
     #   The name of the Add On.
@@ -90,10 +94,6 @@ module Aws::MailManager
     #   The Amazon Resource Name (ARN) of the Add On subscription.
     #   @return [String]
     #
-    # @!attribute [rw] addon_subscription_id
-    #   The unique ID of the Add On subscription.
-    #   @return [String]
-    #
     # @!attribute [rw] created_timestamp
     #   The timestamp of when the Add On subscription was created.
     #   @return [Time]
@@ -101,9 +101,9 @@ module Aws::MailManager
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/AddonSubscription AWS API Documentation
     #
     class AddonSubscription < Struct.new(
+      :addon_subscription_id,
       :addon_name,
       :addon_subscription_arn,
-      :addon_subscription_id,
       :created_timestamp)
       SENSITIVE = []
       include Aws::Structure
@@ -126,12 +126,12 @@ module Aws::MailManager
     # An address list contains a list of emails and domains that are used in
     # MailManager Ingress endpoints and Rules for email management.
     #
-    # @!attribute [rw] address_list_arn
-    #   The Amazon Resource Name (ARN) of the address list.
-    #   @return [String]
-    #
     # @!attribute [rw] address_list_id
     #   The identifier of the address list.
+    #   @return [String]
+    #
+    # @!attribute [rw] address_list_arn
+    #   The Amazon Resource Name (ARN) of the address list.
     #   @return [String]
     #
     # @!attribute [rw] address_list_name
@@ -149,8 +149,8 @@ module Aws::MailManager
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/AddressList AWS API Documentation
     #
     class AddressList < Struct.new(
-      :address_list_arn,
       :address_list_id,
+      :address_list_arn,
       :address_list_name,
       :created_timestamp,
       :last_updated_timestamp)
@@ -285,26 +285,26 @@ module Aws::MailManager
     #
     # @note ArchiveFilterCondition is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of ArchiveFilterCondition corresponding to the set member.
     #
-    # @!attribute [rw] boolean_expression
-    #   A boolean expression to evaluate against email attributes.
-    #   @return [Types::ArchiveBooleanExpression]
-    #
     # @!attribute [rw] string_expression
     #   A string expression to evaluate against email attributes.
     #   @return [Types::ArchiveStringExpression]
     #
+    # @!attribute [rw] boolean_expression
+    #   A boolean expression to evaluate against email attributes.
+    #   @return [Types::ArchiveBooleanExpression]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/ArchiveFilterCondition AWS API Documentation
     #
     class ArchiveFilterCondition < Struct.new(
-      :boolean_expression,
       :string_expression,
+      :boolean_expression,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
       include Aws::Structure::Union
 
-      class BooleanExpression < ArchiveFilterCondition; end
       class StringExpression < ArchiveFilterCondition; end
+      class BooleanExpression < ArchiveFilterCondition; end
       class Unknown < ArchiveFilterCondition; end
     end
 
@@ -399,6 +399,57 @@ module Aws::MailManager
       class Unknown < ArchiveStringToEvaluate; end
     end
 
+    # The action to send a bounce response for the email. When executed,
+    # this action generates a non-delivery report (bounce) back to the
+    # sender.
+    #
+    # @!attribute [rw] action_failure_policy
+    #   A policy that states what to do in the case of failure. The action
+    #   will fail if there are configuration errors. For example, the caller
+    #   does not have the permissions to call the SendBounce API.
+    #   @return [String]
+    #
+    # @!attribute [rw] role_arn
+    #   The Amazon Resource Name (ARN) of the IAM role to use to send the
+    #   bounce message.
+    #   @return [String]
+    #
+    # @!attribute [rw] sender
+    #   The sender email address of the bounce message.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_code
+    #   The enhanced status code for the bounce, in the format of x.y.z
+    #   (e.g. 5.1.1).
+    #   @return [String]
+    #
+    # @!attribute [rw] smtp_reply_code
+    #   The SMTP reply code for the bounce, as defined by RFC 5321.
+    #   @return [String]
+    #
+    # @!attribute [rw] diagnostic_message
+    #   The diagnostic message included in the Diagnostic-Code header of the
+    #   bounce.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   The human-readable text to include in the bounce message.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/BounceAction AWS API Documentation
+    #
+    class BounceAction < Struct.new(
+      :action_failure_policy,
+      :role_arn,
+      :sender,
+      :status_code,
+      :smtp_reply_code,
+      :diagnostic_message,
+      :message)
+      SENSITIVE = [:sender, :diagnostic_message, :message]
+      include Aws::Structure
+    end
+
     # The request configuration has conflicts. For details, see the
     # accompanying error message.
     #
@@ -413,18 +464,18 @@ module Aws::MailManager
       include Aws::Structure
     end
 
-    # @!attribute [rw] addon_subscription_id
-    #   The unique ID of a previously created subscription that an Add On
-    #   instance is created for. You can only have one instance per
-    #   subscription.
-    #   @return [String]
-    #
     # @!attribute [rw] client_token
     #   A unique token that Amazon SES uses to recognize subsequent retries
     #   of the same request.
     #
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.
+    #   @return [String]
+    #
+    # @!attribute [rw] addon_subscription_id
+    #   The unique ID of a previously created subscription that an Add On
+    #   instance is created for. You can only have one instance per
+    #   subscription.
     #   @return [String]
     #
     # @!attribute [rw] tags
@@ -436,8 +487,8 @@ module Aws::MailManager
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/CreateAddonInstanceRequest AWS API Documentation
     #
     class CreateAddonInstanceRequest < Struct.new(
-      :addon_subscription_id,
       :client_token,
+      :addon_subscription_id,
       :tags)
       SENSITIVE = []
       include Aws::Structure
@@ -455,17 +506,17 @@ module Aws::MailManager
       include Aws::Structure
     end
 
-    # @!attribute [rw] addon_name
-    #   The name of the Add On to subscribe to. You can only have one
-    #   subscription for each Add On name.
-    #   @return [String]
-    #
     # @!attribute [rw] client_token
     #   A unique token that Amazon SES uses to recognize subsequent retries
     #   of the same request.
     #
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.
+    #   @return [String]
+    #
+    # @!attribute [rw] addon_name
+    #   The name of the Add On to subscribe to. You can only have one
+    #   subscription for each Add On name.
     #   @return [String]
     #
     # @!attribute [rw] tags
@@ -477,8 +528,8 @@ module Aws::MailManager
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/CreateAddonSubscriptionRequest AWS API Documentation
     #
     class CreateAddonSubscriptionRequest < Struct.new(
-      :addon_name,
       :client_token,
+      :addon_name,
       :tags)
       SENSITIVE = []
       include Aws::Structure
@@ -496,11 +547,6 @@ module Aws::MailManager
       include Aws::Structure
     end
 
-    # @!attribute [rw] address_list_id
-    #   The unique identifier of the address list for importing addresses
-    #   to.
-    #   @return [String]
-    #
     # @!attribute [rw] client_token
     #   A unique token that Amazon SES uses to recognize subsequent retries
     #   of the same request.
@@ -509,21 +555,26 @@ module Aws::MailManager
     #   not need to pass this option.
     #   @return [String]
     #
-    # @!attribute [rw] import_data_format
-    #   The format of the input for an import job.
-    #   @return [Types::ImportDataFormat]
+    # @!attribute [rw] address_list_id
+    #   The unique identifier of the address list for importing addresses
+    #   to.
+    #   @return [String]
     #
     # @!attribute [rw] name
     #   A user-friendly name for the import job.
     #   @return [String]
     #
+    # @!attribute [rw] import_data_format
+    #   The format of the input for an import job.
+    #   @return [Types::ImportDataFormat]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/CreateAddressListImportJobRequest AWS API Documentation
     #
     class CreateAddressListImportJobRequest < Struct.new(
-      :address_list_id,
       :client_token,
-      :import_data_format,
-      :name)
+      :address_list_id,
+      :name,
+      :import_data_format)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -545,16 +596,16 @@ module Aws::MailManager
       include Aws::Structure
     end
 
-    # @!attribute [rw] address_list_name
-    #   A user-friendly name for the address list.
-    #   @return [String]
-    #
     # @!attribute [rw] client_token
     #   A unique token that Amazon SES uses to recognize subsequent retries
     #   of the same request.
     #
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.
+    #   @return [String]
+    #
+    # @!attribute [rw] address_list_name
+    #   A user-friendly name for the address list.
     #   @return [String]
     #
     # @!attribute [rw] tags
@@ -566,8 +617,8 @@ module Aws::MailManager
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/CreateAddressListRequest AWS API Documentation
     #
     class CreateAddressListRequest < Struct.new(
-      :address_list_name,
       :client_token,
+      :address_list_name,
       :tags)
       SENSITIVE = []
       include Aws::Structure
@@ -587,10 +638,6 @@ module Aws::MailManager
 
     # The request to create a new email archive.
     #
-    # @!attribute [rw] archive_name
-    #   A unique name for the new archive.
-    #   @return [String]
-    #
     # @!attribute [rw] client_token
     #   A unique token Amazon SES uses to recognize retries of this request.
     #
@@ -598,15 +645,19 @@ module Aws::MailManager
     #   not need to pass this option.
     #   @return [String]
     #
-    # @!attribute [rw] kms_key_arn
-    #   The Amazon Resource Name (ARN) of the KMS key for encrypting emails
-    #   in the archive.
+    # @!attribute [rw] archive_name
+    #   A unique name for the new archive.
     #   @return [String]
     #
     # @!attribute [rw] retention
     #   The period for retaining emails in the archive before automatic
     #   deletion.
     #   @return [Types::ArchiveRetention]
+    #
+    # @!attribute [rw] kms_key_arn
+    #   The Amazon Resource Name (ARN) of the KMS key for encrypting emails
+    #   in the archive.
+    #   @return [String]
     #
     # @!attribute [rw] tags
     #   The tags used to organize, track, or control access for the
@@ -617,10 +668,10 @@ module Aws::MailManager
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/CreateArchiveRequest AWS API Documentation
     #
     class CreateArchiveRequest < Struct.new(
-      :archive_name,
       :client_token,
-      :kms_key_arn,
+      :archive_name,
       :retention,
+      :kms_key_arn,
       :tags)
       SENSITIVE = []
       include Aws::Structure
@@ -648,18 +699,39 @@ module Aws::MailManager
     #   not need to pass this option.
     #   @return [String]
     #
-    # @!attribute [rw] ingress_point_configuration
-    #   If you choose an Authenticated ingress endpoint, you must configure
-    #   either an SMTP password or a secret ARN.
-    #   @return [Types::IngressPointConfiguration]
-    #
     # @!attribute [rw] ingress_point_name
     #   A user friendly name for an ingress endpoint resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The type of the ingress endpoint to create.
     #   @return [String]
     #
     # @!attribute [rw] rule_set_id
     #   The identifier of an existing rule set that you attach to an ingress
     #   endpoint resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] traffic_policy_id
+    #   The identifier of an existing traffic policy that you attach to an
+    #   ingress endpoint resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] ingress_point_configuration
+    #   If you choose an Authenticated ingress endpoint, you must configure
+    #   either an SMTP password or a secret ARN.
+    #   @return [Types::IngressPointConfiguration]
+    #
+    # @!attribute [rw] network_configuration
+    #   Specifies the network configuration for the ingress point. This
+    #   allows you to create an IPv4-only, Dual-Stack, or PrivateLink type
+    #   of ingress point. If not specified, the default network type is
+    #   IPv4-only.
+    #   @return [Types::NetworkConfiguration]
+    #
+    # @!attribute [rw] tls_policy
+    #   The Transport Layer Security (TLS) policy for the ingress point. The
+    #   FIPS value is only valid in US and Canada regions.
     #   @return [String]
     #
     # @!attribute [rw] tags
@@ -668,25 +740,18 @@ module Aws::MailManager
     #   "key2":"value2"} }.
     #   @return [Array<Types::Tag>]
     #
-    # @!attribute [rw] traffic_policy_id
-    #   The identifier of an existing traffic policy that you attach to an
-    #   ingress endpoint resource.
-    #   @return [String]
-    #
-    # @!attribute [rw] type
-    #   The type of the ingress endpoint to create.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/CreateIngressPointRequest AWS API Documentation
     #
     class CreateIngressPointRequest < Struct.new(
       :client_token,
-      :ingress_point_configuration,
       :ingress_point_name,
+      :type,
       :rule_set_id,
-      :tags,
       :traffic_policy_id,
-      :type)
+      :ingress_point_configuration,
+      :network_configuration,
+      :tls_policy,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -703,11 +768,6 @@ module Aws::MailManager
       include Aws::Structure
     end
 
-    # @!attribute [rw] authentication
-    #   Authentication for the relay destination server—specify the
-    #   secretARN where the SMTP credentials are stored.
-    #   @return [Types::RelayAuthentication]
-    #
     # @!attribute [rw] client_token
     #   A unique token that Amazon SES uses to recognize subsequent retries
     #   of the same request.
@@ -728,6 +788,11 @@ module Aws::MailManager
     #   The destination relay server port.
     #   @return [Integer]
     #
+    # @!attribute [rw] authentication
+    #   Authentication for the relay destination server—specify the
+    #   secretARN where the SMTP credentials are stored.
+    #   @return [Types::RelayAuthentication]
+    #
     # @!attribute [rw] tags
     #   The tags used to organize, track, or control access for the
     #   resource. For example, \{ "tags": \{"key1":"value1",
@@ -737,11 +802,11 @@ module Aws::MailManager
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/CreateRelayRequest AWS API Documentation
     #
     class CreateRelayRequest < Struct.new(
-      :authentication,
       :client_token,
       :relay_name,
       :server_name,
       :server_port,
+      :authentication,
       :tags)
       SENSITIVE = []
       include Aws::Structure
@@ -813,6 +878,14 @@ module Aws::MailManager
     #   not need to pass this option.
     #   @return [String]
     #
+    # @!attribute [rw] traffic_policy_name
+    #   A user-friendly name for the traffic policy resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] policy_statements
+    #   Conditional statements for filtering email traffic.
+    #   @return [Array<Types::PolicyStatement>]
+    #
     # @!attribute [rw] default_action
     #   Default action instructs the traﬃc policy to either Allow or Deny
     #   (block) messages that fall outside of (or not addressed by) the
@@ -824,29 +897,21 @@ module Aws::MailManager
     #   this traffic policy—anything larger will be blocked.
     #   @return [Integer]
     #
-    # @!attribute [rw] policy_statements
-    #   Conditional statements for filtering email traffic.
-    #   @return [Array<Types::PolicyStatement>]
-    #
     # @!attribute [rw] tags
     #   The tags used to organize, track, or control access for the
     #   resource. For example, \{ "tags": \{"key1":"value1",
     #   "key2":"value2"} }.
     #   @return [Array<Types::Tag>]
     #
-    # @!attribute [rw] traffic_policy_name
-    #   A user-friendly name for the traffic policy resource.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/CreateTrafficPolicyRequest AWS API Documentation
     #
     class CreateTrafficPolicyRequest < Struct.new(
       :client_token,
+      :traffic_policy_name,
+      :policy_statements,
       :default_action,
       :max_message_size_bytes,
-      :policy_statements,
-      :tags,
-      :traffic_policy_name)
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1036,7 +1101,7 @@ module Aws::MailManager
     #   A policy that states what to do in the case of failure. The action
     #   will fail if there are configuration errors. For example, the
     #   specified application has been deleted or the role lacks necessary
-    #   permissions to call the qbusiness:BatchPutDocument API.
+    #   permissions to call the `qbusiness:BatchPutDocument` API.
     #   @return [String]
     #
     # @!attribute [rw] application_id
@@ -1053,7 +1118,8 @@ module Aws::MailManager
     # @!attribute [rw] role_arn
     #   The Amazon Resource Name (ARN) of the IAM Role to use while
     #   delivering to Amazon Q Business. This role must have access to the
-    #   qbusiness:BatchPutDocument API for the given application and index.
+    #   `qbusiness:BatchPutDocument` API for the given application and
+    #   index.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/DeliverToQBusinessAction AWS API Documentation
@@ -1067,20 +1133,20 @@ module Aws::MailManager
       include Aws::Structure
     end
 
-    # @!attribute [rw] address
-    #   The address to be removed from the address list.
-    #   @return [String]
-    #
     # @!attribute [rw] address_list_id
     #   The unique identifier of the address list to remove the address
     #   from.
     #   @return [String]
     #
+    # @!attribute [rw] address
+    #   The address to be removed from the address list.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/DeregisterMemberFromAddressListRequest AWS API Documentation
     #
     class DeregisterMemberFromAddressListRequest < Struct.new(
-      :address,
-      :address_list_id)
+      :address_list_id,
+      :address)
       SENSITIVE = [:address]
       include Aws::Structure
     end
@@ -1101,12 +1167,12 @@ module Aws::MailManager
 
     # The SMTP envelope information of the email.
     #
-    # @!attribute [rw] from
-    #   The RCPT FROM given by the host from which the email was received.
-    #   @return [String]
-    #
     # @!attribute [rw] helo
     #   The HELO used by the host from which the email was received.
+    #   @return [String]
+    #
+    # @!attribute [rw] from
+    #   The RCPT FROM given by the host from which the email was received.
     #   @return [String]
     #
     # @!attribute [rw] to
@@ -1117,8 +1183,8 @@ module Aws::MailManager
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/Envelope AWS API Documentation
     #
     class Envelope < Struct.new(
-      :from,
       :helo,
+      :from,
       :to)
       SENSITIVE = []
       include Aws::Structure
@@ -1149,29 +1215,29 @@ module Aws::MailManager
 
     # The current status of an archive export job.
     #
+    # @!attribute [rw] submission_timestamp
+    #   The timestamp of when the export job was submitted.
+    #   @return [Time]
+    #
     # @!attribute [rw] completion_timestamp
     #   The timestamp of when the export job completed (if finished).
     #   @return [Time]
-    #
-    # @!attribute [rw] error_message
-    #   An error message if the export job failed.
-    #   @return [String]
     #
     # @!attribute [rw] state
     #   The current state of the export job.
     #   @return [String]
     #
-    # @!attribute [rw] submission_timestamp
-    #   The timestamp of when the export job was submitted.
-    #   @return [Time]
+    # @!attribute [rw] error_message
+    #   An error message if the export job failed.
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/ExportStatus AWS API Documentation
     #
     class ExportStatus < Struct.new(
+      :submission_timestamp,
       :completion_timestamp,
-      :error_message,
       :state,
-      :submission_timestamp)
+      :error_message)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1207,8 +1273,8 @@ module Aws::MailManager
       include Aws::Structure
     end
 
-    # @!attribute [rw] addon_instance_arn
-    #   The Amazon Resource Name (ARN) of the Add On instance.
+    # @!attribute [rw] addon_subscription_id
+    #   The subscription ID associated to the instance.
     #   @return [String]
     #
     # @!attribute [rw] addon_name
@@ -1216,8 +1282,8 @@ module Aws::MailManager
     #   the instance.
     #   @return [String]
     #
-    # @!attribute [rw] addon_subscription_id
-    #   The subscription ID associated to the instance.
+    # @!attribute [rw] addon_instance_arn
+    #   The Amazon Resource Name (ARN) of the Add On instance.
     #   @return [String]
     #
     # @!attribute [rw] created_timestamp
@@ -1227,9 +1293,9 @@ module Aws::MailManager
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/GetAddonInstanceResponse AWS API Documentation
     #
     class GetAddonInstanceResponse < Struct.new(
-      :addon_instance_arn,
-      :addon_name,
       :addon_subscription_id,
+      :addon_name,
+      :addon_instance_arn,
       :created_timestamp)
       SENSITIVE = []
       include Aws::Structure
@@ -1281,22 +1347,26 @@ module Aws::MailManager
       include Aws::Structure
     end
 
-    # @!attribute [rw] address_list_id
-    #   The unique identifier of the address list the import job was created
-    #   for.
+    # @!attribute [rw] job_id
+    #   The identifier of the import job.
     #   @return [String]
     #
-    # @!attribute [rw] completed_timestamp
-    #   The timestamp of when the import job was completed.
-    #   @return [Time]
-    #
-    # @!attribute [rw] created_timestamp
-    #   The timestamp of when the import job was created.
-    #   @return [Time]
-    #
-    # @!attribute [rw] error
-    #   The reason for failure of an import job.
+    # @!attribute [rw] name
+    #   A user-friendly name for the import job.
     #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the import job.
+    #   @return [String]
+    #
+    # @!attribute [rw] pre_signed_url
+    #   The pre-signed URL target for uploading the input file.
+    #   @return [String]
+    #
+    # @!attribute [rw] imported_items_count
+    #   The number of input addresses successfully imported into the address
+    #   list.
+    #   @return [Integer]
     #
     # @!attribute [rw] failed_items_count
     #   The number of input addresses that failed to be imported into the
@@ -1307,46 +1377,42 @@ module Aws::MailManager
     #   The format of the input for an import job.
     #   @return [Types::ImportDataFormat]
     #
-    # @!attribute [rw] imported_items_count
-    #   The number of input addresses successfully imported into the address
-    #   list.
-    #   @return [Integer]
-    #
-    # @!attribute [rw] job_id
-    #   The identifier of the import job.
+    # @!attribute [rw] address_list_id
+    #   The unique identifier of the address list the import job was created
+    #   for.
     #   @return [String]
     #
-    # @!attribute [rw] name
-    #   A user-friendly name for the import job.
-    #   @return [String]
-    #
-    # @!attribute [rw] pre_signed_url
-    #   The pre-signed URL target for uploading the input file.
-    #   @return [String]
+    # @!attribute [rw] created_timestamp
+    #   The timestamp of when the import job was created.
+    #   @return [Time]
     #
     # @!attribute [rw] start_timestamp
     #   The timestamp of when the import job was started.
     #   @return [Time]
     #
-    # @!attribute [rw] status
-    #   The status of the import job.
+    # @!attribute [rw] completed_timestamp
+    #   The timestamp of when the import job was completed.
+    #   @return [Time]
+    #
+    # @!attribute [rw] error
+    #   The reason for failure of an import job.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/GetAddressListImportJobResponse AWS API Documentation
     #
     class GetAddressListImportJobResponse < Struct.new(
-      :address_list_id,
-      :completed_timestamp,
-      :created_timestamp,
-      :error,
-      :failed_items_count,
-      :import_data_format,
-      :imported_items_count,
       :job_id,
       :name,
+      :status,
       :pre_signed_url,
+      :imported_items_count,
+      :failed_items_count,
+      :import_data_format,
+      :address_list_id,
+      :created_timestamp,
       :start_timestamp,
-      :status)
+      :completed_timestamp,
+      :error)
       SENSITIVE = [:pre_signed_url]
       include Aws::Structure
     end
@@ -1363,12 +1429,12 @@ module Aws::MailManager
       include Aws::Structure
     end
 
-    # @!attribute [rw] address_list_arn
-    #   The Amazon Resource Name (ARN) of the address list resource.
-    #   @return [String]
-    #
     # @!attribute [rw] address_list_id
     #   The identifier of the address list resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] address_list_arn
+    #   The Amazon Resource Name (ARN) of the address list resource.
     #   @return [String]
     #
     # @!attribute [rw] address_list_name
@@ -1386,8 +1452,8 @@ module Aws::MailManager
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/GetAddressListResponse AWS API Documentation
     #
     class GetAddressListResponse < Struct.new(
-      :address_list_arn,
       :address_list_id,
+      :address_list_arn,
       :address_list_name,
       :created_timestamp,
       :last_updated_timestamp)
@@ -1415,10 +1481,6 @@ module Aws::MailManager
     #   The identifier of the archive the email export was performed from.
     #   @return [String]
     #
-    # @!attribute [rw] export_destination_configuration
-    #   Where the exported emails are being delivered.
-    #   @return [Types::ExportDestinationConfiguration]
-    #
     # @!attribute [rw] filters
     #   The criteria used to filter emails included in the export.
     #   @return [Types::ArchiveFilters]
@@ -1427,28 +1489,32 @@ module Aws::MailManager
     #   The start of the timestamp range the exported emails cover.
     #   @return [Time]
     #
+    # @!attribute [rw] to_timestamp
+    #   The end of the date range the exported emails cover.
+    #   @return [Time]
+    #
     # @!attribute [rw] max_results
     #   The maximum number of email items included in the export.
     #   @return [Integer]
+    #
+    # @!attribute [rw] export_destination_configuration
+    #   Where the exported emails are being delivered.
+    #   @return [Types::ExportDestinationConfiguration]
     #
     # @!attribute [rw] status
     #   The current status of the export job.
     #   @return [Types::ExportStatus]
     #
-    # @!attribute [rw] to_timestamp
-    #   The end of the date range the exported emails cover.
-    #   @return [Time]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/GetArchiveExportResponse AWS API Documentation
     #
     class GetArchiveExportResponse < Struct.new(
       :archive_id,
-      :export_destination_configuration,
       :filters,
       :from_timestamp,
+      :to_timestamp,
       :max_results,
-      :status,
-      :to_timestamp)
+      :export_destination_configuration,
+      :status)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1501,10 +1567,6 @@ module Aws::MailManager
     # The response containing details about the requested archived email
     # message.
     #
-    # @!attribute [rw] envelope
-    #   The SMTP envelope information of the email.
-    #   @return [Types::Envelope]
-    #
     # @!attribute [rw] message_download_link
     #   A pre-signed URL to temporarily download the full message content.
     #   @return [String]
@@ -1513,12 +1575,16 @@ module Aws::MailManager
     #   The metadata about the email.
     #   @return [Types::Metadata]
     #
+    # @!attribute [rw] envelope
+    #   The SMTP envelope information of the email.
+    #   @return [Types::Envelope]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/GetArchiveMessageResponse AWS API Documentation
     #
     class GetArchiveMessageResponse < Struct.new(
-      :envelope,
       :message_download_link,
-      :metadata)
+      :metadata,
+      :envelope)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1539,16 +1605,16 @@ module Aws::MailManager
 
     # The response containing details of the requested archive.
     #
-    # @!attribute [rw] archive_arn
-    #   The Amazon Resource Name (ARN) of the archive.
-    #   @return [String]
-    #
     # @!attribute [rw] archive_id
     #   The unique identifier of the archive.
     #   @return [String]
     #
     # @!attribute [rw] archive_name
     #   The unique name assigned to the archive.
+    #   @return [String]
+    #
+    # @!attribute [rw] archive_arn
+    #   The Amazon Resource Name (ARN) of the archive.
     #   @return [String]
     #
     # @!attribute [rw] archive_state
@@ -1561,8 +1627,16 @@ module Aws::MailManager
     #     can be made in this state.
     #   @return [String]
     #
+    # @!attribute [rw] retention
+    #   The retention period for emails in this archive.
+    #   @return [Types::ArchiveRetention]
+    #
     # @!attribute [rw] created_timestamp
     #   The timestamp of when the archive was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] last_updated_timestamp
+    #   The timestamp of when the archive was modified.
     #   @return [Time]
     #
     # @!attribute [rw] kms_key_arn
@@ -1570,25 +1644,17 @@ module Aws::MailManager
     #   archive.
     #   @return [String]
     #
-    # @!attribute [rw] last_updated_timestamp
-    #   The timestamp of when the archive was modified.
-    #   @return [Time]
-    #
-    # @!attribute [rw] retention
-    #   The retention period for emails in this archive.
-    #   @return [Types::ArchiveRetention]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/GetArchiveResponse AWS API Documentation
     #
     class GetArchiveResponse < Struct.new(
-      :archive_arn,
       :archive_id,
       :archive_name,
+      :archive_arn,
       :archive_state,
+      :retention,
       :created_timestamp,
-      :kms_key_arn,
       :last_updated_timestamp,
-      :retention)
+      :kms_key_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1621,6 +1687,10 @@ module Aws::MailManager
     #   The start timestamp of the range the searched emails cover.
     #   @return [Time]
     #
+    # @!attribute [rw] to_timestamp
+    #   The end timestamp of the range the searched emails cover.
+    #   @return [Time]
+    #
     # @!attribute [rw] max_results
     #   The maximum number of search results to return.
     #   @return [Integer]
@@ -1629,19 +1699,15 @@ module Aws::MailManager
     #   The current status of the search job.
     #   @return [Types::SearchStatus]
     #
-    # @!attribute [rw] to_timestamp
-    #   The end timestamp of the range the searched emails cover.
-    #   @return [Time]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/GetArchiveSearchResponse AWS API Documentation
     #
     class GetArchiveSearchResponse < Struct.new(
       :archive_id,
       :filters,
       :from_timestamp,
+      :to_timestamp,
       :max_results,
-      :status,
-      :to_timestamp)
+      :status)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1679,32 +1745,20 @@ module Aws::MailManager
     #   The identifier of an ingress endpoint.
     #   @return [String]
     #
+    # @!attribute [rw] include_trust_store_contents
+    #   Whether to include the trust store contents in the response. Use
+    #   INCLUDE to retrieve trust store certificate and CRL contents.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/GetIngressPointRequest AWS API Documentation
     #
     class GetIngressPointRequest < Struct.new(
-      :ingress_point_id)
+      :ingress_point_id,
+      :include_trust_store_contents)
       SENSITIVE = []
       include Aws::Structure
     end
 
-    # @!attribute [rw] a_record
-    #   The DNS A Record that identifies your ingress endpoint. Configure
-    #   your DNS Mail Exchange (MX) record with this value to route emails
-    #   to Mail Manager.
-    #   @return [String]
-    #
-    # @!attribute [rw] created_timestamp
-    #   The timestamp of when the ingress endpoint was created.
-    #   @return [Time]
-    #
-    # @!attribute [rw] ingress_point_arn
-    #   The Amazon Resource Name (ARN) of the ingress endpoint resource.
-    #   @return [String]
-    #
-    # @!attribute [rw] ingress_point_auth_configuration
-    #   The authentication configuration of the ingress endpoint resource.
-    #   @return [Types::IngressPointAuthConfiguration]
-    #
     # @!attribute [rw] ingress_point_id
     #   The identifier of an ingress endpoint resource.
     #   @return [String]
@@ -1713,17 +1767,27 @@ module Aws::MailManager
     #   A user friendly name for the ingress endpoint.
     #   @return [String]
     #
-    # @!attribute [rw] last_updated_timestamp
-    #   The timestamp of when the ingress endpoint was last updated.
-    #   @return [Time]
-    #
-    # @!attribute [rw] rule_set_id
-    #   The identifier of a rule set resource associated with the ingress
-    #   endpoint.
+    # @!attribute [rw] ingress_point_arn
+    #   The Amazon Resource Name (ARN) of the ingress endpoint resource.
     #   @return [String]
     #
     # @!attribute [rw] status
     #   The status of the ingress endpoint resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The type of ingress endpoint.
+    #   @return [String]
+    #
+    # @!attribute [rw] a_record
+    #   The DNS A Record that identifies your ingress endpoint. Configure
+    #   your DNS Mail Exchange (MX) record with this value to route emails
+    #   to Mail Manager.
+    #   @return [String]
+    #
+    # @!attribute [rw] rule_set_id
+    #   The identifier of a rule set resource associated with the ingress
+    #   endpoint.
     #   @return [String]
     #
     # @!attribute [rw] traffic_policy_id
@@ -1731,42 +1795,61 @@ module Aws::MailManager
     #   ingress endpoint.
     #   @return [String]
     #
-    # @!attribute [rw] type
-    #   The type of ingress endpoint.
+    # @!attribute [rw] ingress_point_auth_configuration
+    #   The authentication configuration of the ingress endpoint resource.
+    #   @return [Types::IngressPointAuthConfiguration]
+    #
+    # @!attribute [rw] network_configuration
+    #   The network configuration for the ingress point.
+    #   @return [Types::NetworkConfiguration]
+    #
+    # @!attribute [rw] tls_policy
+    #   The selected Transport Layer Security (TLS) policy of the ingress
+    #   point.
     #   @return [String]
+    #
+    # @!attribute [rw] created_timestamp
+    #   The timestamp of when the ingress endpoint was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] last_updated_timestamp
+    #   The timestamp of when the ingress endpoint was last updated.
+    #   @return [Time]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/GetIngressPointResponse AWS API Documentation
     #
     class GetIngressPointResponse < Struct.new(
-      :a_record,
-      :created_timestamp,
-      :ingress_point_arn,
-      :ingress_point_auth_configuration,
       :ingress_point_id,
       :ingress_point_name,
-      :last_updated_timestamp,
-      :rule_set_id,
+      :ingress_point_arn,
       :status,
+      :type,
+      :a_record,
+      :rule_set_id,
       :traffic_policy_id,
-      :type)
+      :ingress_point_auth_configuration,
+      :network_configuration,
+      :tls_policy,
+      :created_timestamp,
+      :last_updated_timestamp)
       SENSITIVE = []
       include Aws::Structure
     end
 
-    # @!attribute [rw] address
-    #   The address to be retrieved from the address list.
-    #   @return [String]
-    #
     # @!attribute [rw] address_list_id
     #   The unique identifier of the address list to retrieve the address
     #   from.
     #   @return [String]
     #
+    # @!attribute [rw] address
+    #   The address to be retrieved from the address list.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/GetMemberOfAddressListRequest AWS API Documentation
     #
     class GetMemberOfAddressListRequest < Struct.new(
-      :address,
-      :address_list_id)
+      :address_list_id,
+      :address)
       SENSITIVE = [:address]
       include Aws::Structure
     end
@@ -1800,25 +1883,12 @@ module Aws::MailManager
       include Aws::Structure
     end
 
-    # @!attribute [rw] authentication
-    #   The authentication attribute—contains the secret ARN where the
-    #   customer relay server credentials are stored.
-    #   @return [Types::RelayAuthentication]
-    #
-    # @!attribute [rw] created_timestamp
-    #   The timestamp of when the relay was created.
-    #   @return [Time]
-    #
-    # @!attribute [rw] last_modified_timestamp
-    #   The timestamp of when relay was last updated.
-    #   @return [Time]
+    # @!attribute [rw] relay_id
+    #   The unique relay identifier.
+    #   @return [String]
     #
     # @!attribute [rw] relay_arn
     #   The Amazon Resource Name (ARN) of the relay.
-    #   @return [String]
-    #
-    # @!attribute [rw] relay_id
-    #   The unique relay identifier.
     #   @return [String]
     #
     # @!attribute [rw] relay_name
@@ -1833,17 +1903,30 @@ module Aws::MailManager
     #   The destination relay server port.
     #   @return [Integer]
     #
+    # @!attribute [rw] authentication
+    #   The authentication attribute—contains the secret ARN where the
+    #   customer relay server credentials are stored.
+    #   @return [Types::RelayAuthentication]
+    #
+    # @!attribute [rw] created_timestamp
+    #   The timestamp of when the relay was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] last_modified_timestamp
+    #   The timestamp of when relay was last updated.
+    #   @return [Time]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/GetRelayResponse AWS API Documentation
     #
     class GetRelayResponse < Struct.new(
-      :authentication,
-      :created_timestamp,
-      :last_modified_timestamp,
-      :relay_arn,
       :relay_id,
+      :relay_arn,
       :relay_name,
       :server_name,
-      :server_port)
+      :server_port,
+      :authentication,
+      :created_timestamp,
+      :last_modified_timestamp)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1860,6 +1943,18 @@ module Aws::MailManager
       include Aws::Structure
     end
 
+    # @!attribute [rw] rule_set_id
+    #   The identifier of the rule set resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] rule_set_arn
+    #   The Amazon Resource Name (ARN) of the rule set resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] rule_set_name
+    #   A user-friendly name for the rule set resource.
+    #   @return [String]
+    #
     # @!attribute [rw] created_date
     #   The date of when then rule set was created.
     #   @return [Time]
@@ -1868,18 +1963,6 @@ module Aws::MailManager
     #   The date of when the rule set was last modified.
     #   @return [Time]
     #
-    # @!attribute [rw] rule_set_arn
-    #   The Amazon Resource Name (ARN) of the rule set resource.
-    #   @return [String]
-    #
-    # @!attribute [rw] rule_set_id
-    #   The identifier of the rule set resource.
-    #   @return [String]
-    #
-    # @!attribute [rw] rule_set_name
-    #   A user-friendly name for the rule set resource.
-    #   @return [String]
-    #
     # @!attribute [rw] rules
     #   The rules contained in the rule set.
     #   @return [Array<Types::Rule>]
@@ -1887,11 +1970,11 @@ module Aws::MailManager
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/GetRuleSetResponse AWS API Documentation
     #
     class GetRuleSetResponse < Struct.new(
+      :rule_set_id,
+      :rule_set_arn,
+      :rule_set_name,
       :created_date,
       :last_modification_date,
-      :rule_set_arn,
-      :rule_set_id,
-      :rule_set_name,
       :rules)
       SENSITIVE = []
       include Aws::Structure
@@ -1909,50 +1992,50 @@ module Aws::MailManager
       include Aws::Structure
     end
 
-    # @!attribute [rw] created_timestamp
-    #   The timestamp of when the traffic policy was created.
-    #   @return [Time]
-    #
-    # @!attribute [rw] default_action
-    #   The default action of the traffic policy.
-    #   @return [String]
-    #
-    # @!attribute [rw] last_updated_timestamp
-    #   The timestamp of when the traffic policy was last updated.
-    #   @return [Time]
-    #
-    # @!attribute [rw] max_message_size_bytes
-    #   The maximum message size in bytes of email which is allowed in by
-    #   this traffic policy—anything larger will be blocked.
-    #   @return [Integer]
-    #
-    # @!attribute [rw] policy_statements
-    #   The list of conditions which are in the traffic policy resource.
-    #   @return [Array<Types::PolicyStatement>]
-    #
-    # @!attribute [rw] traffic_policy_arn
-    #   The Amazon Resource Name (ARN) of the traffic policy resource.
+    # @!attribute [rw] traffic_policy_name
+    #   A user-friendly name for the traffic policy resource.
     #   @return [String]
     #
     # @!attribute [rw] traffic_policy_id
     #   The identifier of the traffic policy resource.
     #   @return [String]
     #
-    # @!attribute [rw] traffic_policy_name
-    #   A user-friendly name for the traffic policy resource.
+    # @!attribute [rw] traffic_policy_arn
+    #   The Amazon Resource Name (ARN) of the traffic policy resource.
     #   @return [String]
+    #
+    # @!attribute [rw] policy_statements
+    #   The list of conditions which are in the traffic policy resource.
+    #   @return [Array<Types::PolicyStatement>]
+    #
+    # @!attribute [rw] max_message_size_bytes
+    #   The maximum message size in bytes of email which is allowed in by
+    #   this traffic policy—anything larger will be blocked.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] default_action
+    #   The default action of the traffic policy.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_timestamp
+    #   The timestamp of when the traffic policy was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] last_updated_timestamp
+    #   The timestamp of when the traffic policy was last updated.
+    #   @return [Time]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/GetTrafficPolicyResponse AWS API Documentation
     #
     class GetTrafficPolicyResponse < Struct.new(
-      :created_timestamp,
-      :default_action,
-      :last_updated_timestamp,
-      :max_message_size_bytes,
-      :policy_statements,
-      :traffic_policy_arn,
+      :traffic_policy_name,
       :traffic_policy_id,
-      :traffic_policy_name)
+      :traffic_policy_arn,
+      :policy_statements,
+      :max_message_size_bytes,
+      :default_action,
+      :created_timestamp,
+      :last_updated_timestamp)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1975,22 +2058,26 @@ module Aws::MailManager
 
     # Details about an import job.
     #
-    # @!attribute [rw] address_list_id
-    #   The unique identifier of the address list the import job was created
-    #   for.
+    # @!attribute [rw] job_id
+    #   The identifier of the import job.
     #   @return [String]
     #
-    # @!attribute [rw] completed_timestamp
-    #   The timestamp of when the import job was completed.
-    #   @return [Time]
-    #
-    # @!attribute [rw] created_timestamp
-    #   The timestamp of when the import job was created.
-    #   @return [Time]
-    #
-    # @!attribute [rw] error
-    #   The reason for failure of an import job.
+    # @!attribute [rw] name
+    #   A user-friendly name for the import job.
     #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the import job.
+    #   @return [String]
+    #
+    # @!attribute [rw] pre_signed_url
+    #   The pre-signed URL target for uploading the input file.
+    #   @return [String]
+    #
+    # @!attribute [rw] imported_items_count
+    #   The number of addresses in the input that were successfully imported
+    #   into the address list.
+    #   @return [Integer]
     #
     # @!attribute [rw] failed_items_count
     #   The number of addresses in the input that failed to get imported
@@ -2001,46 +2088,42 @@ module Aws::MailManager
     #   The format of the input for the import job.
     #   @return [Types::ImportDataFormat]
     #
-    # @!attribute [rw] imported_items_count
-    #   The number of addresses in the input that were successfully imported
-    #   into the address list.
-    #   @return [Integer]
-    #
-    # @!attribute [rw] job_id
-    #   The identifier of the import job.
+    # @!attribute [rw] address_list_id
+    #   The unique identifier of the address list the import job was created
+    #   for.
     #   @return [String]
     #
-    # @!attribute [rw] name
-    #   A user-friendly name for the import job.
-    #   @return [String]
-    #
-    # @!attribute [rw] pre_signed_url
-    #   The pre-signed URL target for uploading the input file.
-    #   @return [String]
+    # @!attribute [rw] created_timestamp
+    #   The timestamp of when the import job was created.
+    #   @return [Time]
     #
     # @!attribute [rw] start_timestamp
     #   The timestamp of when the import job was started.
     #   @return [Time]
     #
-    # @!attribute [rw] status
-    #   The status of the import job.
+    # @!attribute [rw] completed_timestamp
+    #   The timestamp of when the import job was completed.
+    #   @return [Time]
+    #
+    # @!attribute [rw] error
+    #   The reason for failure of an import job.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/ImportJob AWS API Documentation
     #
     class ImportJob < Struct.new(
-      :address_list_id,
-      :completed_timestamp,
-      :created_timestamp,
-      :error,
-      :failed_items_count,
-      :import_data_format,
-      :imported_items_count,
       :job_id,
       :name,
+      :status,
       :pre_signed_url,
+      :imported_items_count,
+      :failed_items_count,
+      :import_data_format,
+      :address_list_id,
+      :created_timestamp,
       :start_timestamp,
-      :status)
+      :completed_timestamp,
+      :error)
       SENSITIVE = [:pre_signed_url]
       include Aws::Structure
     end
@@ -2166,42 +2249,86 @@ module Aws::MailManager
       include Aws::Structure
     end
 
+    # The union type representing the allowed types for the left hand side
+    # of an IPv6 condition.
+    #
+    # @!attribute [rw] evaluate
+    #   The left hand side argument of an IPv6 condition expression.
+    #   @return [Types::IngressIpv6ToEvaluate]
+    #
+    # @!attribute [rw] operator
+    #   The matching operator for an IPv6 condition expression.
+    #   @return [String]
+    #
+    # @!attribute [rw] values
+    #   The right hand side argument of an IPv6 condition expression.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/IngressIpv6Expression AWS API Documentation
+    #
+    class IngressIpv6Expression < Struct.new(
+      :evaluate,
+      :operator,
+      :values)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The structure for an IPv6 based condition matching on the incoming
+    # mail.
+    #
+    # @note IngressIpv6ToEvaluate is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note IngressIpv6ToEvaluate is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of IngressIpv6ToEvaluate corresponding to the set member.
+    #
+    # @!attribute [rw] attribute
+    #   An enum type representing the allowed attribute types for an IPv6
+    #   condition.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/IngressIpv6ToEvaluate AWS API Documentation
+    #
+    class IngressIpv6ToEvaluate < Struct.new(
+      :attribute,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Attribute < IngressIpv6ToEvaluate; end
+      class Unknown < IngressIpv6ToEvaluate; end
+    end
+
     # The address lists and the address list attribute value that is
     # evaluated in a policy statement's conditional expression to either
     # deny or block the incoming email.
-    #
-    # @!attribute [rw] address_lists
-    #   The address lists that will be used for evaluation.
-    #   @return [Array<String>]
     #
     # @!attribute [rw] attribute
     #   The email attribute that needs to be evaluated against the address
     #   list.
     #   @return [String]
     #
+    # @!attribute [rw] address_lists
+    #   The address lists that will be used for evaluation.
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/IngressIsInAddressList AWS API Documentation
     #
     class IngressIsInAddressList < Struct.new(
-      :address_lists,
-      :attribute)
+      :attribute,
+      :address_lists)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # The structure of an ingress endpoint resource.
     #
-    # @!attribute [rw] a_record
-    #   The DNS A Record that identifies your ingress endpoint. Configure
-    #   your DNS Mail Exchange (MX) record with this value to route emails
-    #   to Mail Manager.
+    # @!attribute [rw] ingress_point_name
+    #   A user friendly name for the ingress endpoint resource.
     #   @return [String]
     #
     # @!attribute [rw] ingress_point_id
     #   The identifier of the ingress endpoint resource.
-    #   @return [String]
-    #
-    # @!attribute [rw] ingress_point_name
-    #   A user friendly name for the ingress endpoint resource.
     #   @return [String]
     #
     # @!attribute [rw] status
@@ -2212,14 +2339,20 @@ module Aws::MailManager
     #   The type of ingress endpoint resource.
     #   @return [String]
     #
+    # @!attribute [rw] a_record
+    #   The DNS A Record that identifies your ingress endpoint. Configure
+    #   your DNS Mail Exchange (MX) record with this value to route emails
+    #   to Mail Manager.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/IngressPoint AWS API Documentation
     #
     class IngressPoint < Struct.new(
-      :a_record,
-      :ingress_point_id,
       :ingress_point_name,
+      :ingress_point_id,
       :status,
-      :type)
+      :type,
+      :a_record)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2236,11 +2369,17 @@ module Aws::MailManager
     #   the ingress endpoint resource.
     #   @return [String]
     #
+    # @!attribute [rw] tls_auth_configuration
+    #   The mutual TLS authentication configuration for the ingress endpoint
+    #   resource.
+    #   @return [Types::TlsAuthConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/IngressPointAuthConfiguration AWS API Documentation
     #
     class IngressPointAuthConfiguration < Struct.new(
       :ingress_point_password_configuration,
-      :secret_arn)
+      :secret_arn,
+      :tls_auth_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2249,51 +2388,58 @@ module Aws::MailManager
     #
     # @note IngressPointConfiguration is a union - when making an API calls you must set exactly one of the members.
     #
-    # @!attribute [rw] secret_arn
-    #   The SecretsManager::Secret ARN of the ingress endpoint resource.
-    #   @return [String]
-    #
     # @!attribute [rw] smtp_password
     #   The password of the ingress endpoint resource.
     #   @return [String]
     #
+    # @!attribute [rw] secret_arn
+    #   The SecretsManager::Secret ARN of the ingress endpoint resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] tls_auth_configuration
+    #   The mutual TLS authentication configuration of the ingress endpoint
+    #   resource.
+    #   @return [Types::TlsAuthConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/IngressPointConfiguration AWS API Documentation
     #
     class IngressPointConfiguration < Struct.new(
-      :secret_arn,
       :smtp_password,
+      :secret_arn,
+      :tls_auth_configuration,
       :unknown)
       SENSITIVE = [:smtp_password]
       include Aws::Structure
       include Aws::Structure::Union
 
-      class SecretArn < IngressPointConfiguration; end
       class SmtpPassword < IngressPointConfiguration; end
+      class SecretArn < IngressPointConfiguration; end
+      class TlsAuthConfiguration < IngressPointConfiguration; end
       class Unknown < IngressPointConfiguration; end
     end
 
     # The password configuration of the ingress endpoint resource.
-    #
-    # @!attribute [rw] previous_smtp_password_expiry_timestamp
-    #   The previous password expiry timestamp of the ingress endpoint
-    #   resource.
-    #   @return [Time]
-    #
-    # @!attribute [rw] previous_smtp_password_version
-    #   The previous password version of the ingress endpoint resource.
-    #   @return [String]
     #
     # @!attribute [rw] smtp_password_version
     #   The current password expiry timestamp of the ingress endpoint
     #   resource.
     #   @return [String]
     #
+    # @!attribute [rw] previous_smtp_password_version
+    #   The previous password version of the ingress endpoint resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] previous_smtp_password_expiry_timestamp
+    #   The previous password expiry timestamp of the ingress endpoint
+    #   resource.
+    #   @return [Time]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/IngressPointPasswordConfiguration AWS API Documentation
     #
     class IngressPointPasswordConfiguration < Struct.new(
-      :previous_smtp_password_expiry_timestamp,
+      :smtp_password_version,
       :previous_smtp_password_version,
-      :smtp_password_version)
+      :previous_smtp_password_expiry_timestamp)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2330,28 +2476,28 @@ module Aws::MailManager
     #
     # @note IngressStringToEvaluate is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of IngressStringToEvaluate corresponding to the set member.
     #
-    # @!attribute [rw] analysis
-    #   The structure type for a string condition stating the Add On ARN and
-    #   its returned value.
-    #   @return [Types::IngressAnalysis]
-    #
     # @!attribute [rw] attribute
     #   The enum type representing the allowed attribute types for a string
     #   condition.
     #   @return [String]
     #
+    # @!attribute [rw] analysis
+    #   The structure type for a string condition stating the Add On ARN and
+    #   its returned value.
+    #   @return [Types::IngressAnalysis]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/IngressStringToEvaluate AWS API Documentation
     #
     class IngressStringToEvaluate < Struct.new(
-      :analysis,
       :attribute,
+      :analysis,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
       include Aws::Structure::Union
 
-      class Analysis < IngressStringToEvaluate; end
       class Attribute < IngressStringToEvaluate; end
+      class Analysis < IngressStringToEvaluate; end
       class Unknown < IngressStringToEvaluate; end
     end
 
@@ -2403,6 +2549,48 @@ module Aws::MailManager
 
       class Attribute < IngressTlsProtocolToEvaluate; end
       class Unknown < IngressTlsProtocolToEvaluate; end
+    end
+
+    # The action to invoke an Amazon Web Services Lambda function for
+    # processing the email.
+    #
+    # @!attribute [rw] action_failure_policy
+    #   A policy that states what to do in the case of failure. The action
+    #   will fail if there are configuration errors. For example, the Amazon
+    #   Web Services Lambda function no longer exists.
+    #   @return [String]
+    #
+    # @!attribute [rw] function_arn
+    #   The Amazon Resource Name (ARN) of the Lambda function to invoke.
+    #   @return [String]
+    #
+    # @!attribute [rw] invocation_type
+    #   The invocation type of the Lambda function. Use EVENT for
+    #   asynchronous invocation or REQUEST\_RESPONSE for synchronous
+    #   invocation.
+    #   @return [String]
+    #
+    # @!attribute [rw] role_arn
+    #   The Amazon Resource Name (ARN) of the IAM role to use to invoke the
+    #   Lambda function.
+    #   @return [String]
+    #
+    # @!attribute [rw] retry_time_minutes
+    #   The maximum time in minutes that the email processing can be retried
+    #   if the Lambda invocation fails. The maximum value is 2160 minutes
+    #   (36 hours).
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/InvokeLambdaAction AWS API Documentation
+    #
+    class InvokeLambdaAction < Struct.new(
+      :action_failure_policy,
+      :function_arn,
+      :invocation_type,
+      :role_arn,
+      :retry_time_minutes)
+      SENSITIVE = []
+      include Aws::Structure
     end
 
     # @!attribute [rw] next_token
@@ -2644,19 +2832,19 @@ module Aws::MailManager
     # The response containing a list of archive search jobs and their
     # statuses.
     #
-    # @!attribute [rw] next_token
-    #   If present, use to retrieve the next page of results.
-    #   @return [String]
-    #
     # @!attribute [rw] searches
     #   The list of search job identifiers and statuses.
     #   @return [Array<Types::SearchSummary>]
     #
+    # @!attribute [rw] next_token
+    #   If present, use to retrieve the next page of results.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/ListArchiveSearchesResponse AWS API Documentation
     #
     class ListArchiveSearchesResponse < Struct.new(
-      :next_token,
-      :searches)
+      :searches,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2702,22 +2890,22 @@ module Aws::MailManager
       include Aws::Structure
     end
 
+    # @!attribute [rw] page_size
+    #   The maximum number of ingress endpoint resources that are returned
+    #   per call. You can use NextToken to obtain further ingress endpoints.
+    #   @return [Integer]
+    #
     # @!attribute [rw] next_token
     #   If you received a pagination token from a previous call to this API,
     #   you can provide it here to continue paginating through the next page
     #   of results.
     #   @return [String]
     #
-    # @!attribute [rw] page_size
-    #   The maximum number of ingress endpoint resources that are returned
-    #   per call. You can use NextToken to obtain further ingress endpoints.
-    #   @return [Integer]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/ListIngressPointsRequest AWS API Documentation
     #
     class ListIngressPointsRequest < Struct.new(
-      :next_token,
-      :page_size)
+      :page_size,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2791,40 +2979,40 @@ module Aws::MailManager
       include Aws::Structure
     end
 
+    # @!attribute [rw] page_size
+    #   The number of relays to be returned in one request.
+    #   @return [Integer]
+    #
     # @!attribute [rw] next_token
     #   If you received a pagination token from a previous call to this API,
     #   you can provide it here to continue paginating through the next page
     #   of results.
     #   @return [String]
     #
-    # @!attribute [rw] page_size
-    #   The number of relays to be returned in one request.
-    #   @return [Integer]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/ListRelaysRequest AWS API Documentation
     #
     class ListRelaysRequest < Struct.new(
-      :next_token,
-      :page_size)
+      :page_size,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # @!attribute [rw] relays
+    #   The list of returned relays.
+    #   @return [Array<Types::Relay>]
+    #
     # @!attribute [rw] next_token
     #   If NextToken is returned, there are more results available. The
     #   value of NextToken is a unique pagination token for each page. Make
     #   the call again using the returned token to retrieve the next page.
     #   @return [String]
     #
-    # @!attribute [rw] relays
-    #   The list of returned relays.
-    #   @return [Array<Types::Relay>]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/ListRelaysResponse AWS API Documentation
     #
     class ListRelaysResponse < Struct.new(
-      :next_token,
-      :relays)
+      :relays,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2849,21 +3037,21 @@ module Aws::MailManager
       include Aws::Structure
     end
 
+    # @!attribute [rw] rule_sets
+    #   The list of rule sets.
+    #   @return [Array<Types::RuleSet>]
+    #
     # @!attribute [rw] next_token
     #   If NextToken is returned, there are more results available. The
     #   value of NextToken is a unique pagination token for each page. Make
     #   the call again using the returned token to retrieve the next page.
     #   @return [String]
     #
-    # @!attribute [rw] rule_sets
-    #   The list of rule sets.
-    #   @return [Array<Types::RuleSet>]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/ListRuleSetsResponse AWS API Documentation
     #
     class ListRuleSetsResponse < Struct.new(
-      :next_token,
-      :rule_sets)
+      :rule_sets,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2895,46 +3083,50 @@ module Aws::MailManager
       include Aws::Structure
     end
 
+    # @!attribute [rw] page_size
+    #   The maximum number of traffic policy resources that are returned per
+    #   call. You can use NextToken to obtain further traffic policies.
+    #   @return [Integer]
+    #
     # @!attribute [rw] next_token
     #   If you received a pagination token from a previous call to this API,
     #   you can provide it here to continue paginating through the next page
     #   of results.
     #   @return [String]
     #
-    # @!attribute [rw] page_size
-    #   The maximum number of traffic policy resources that are returned per
-    #   call. You can use NextToken to obtain further traffic policies.
-    #   @return [Integer]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/ListTrafficPoliciesRequest AWS API Documentation
     #
     class ListTrafficPoliciesRequest < Struct.new(
-      :next_token,
-      :page_size)
+      :page_size,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # @!attribute [rw] traffic_policies
+    #   The list of traffic policies.
+    #   @return [Array<Types::TrafficPolicy>]
+    #
     # @!attribute [rw] next_token
     #   If NextToken is returned, there are more results available. The
     #   value of NextToken is a unique pagination token for each page. Make
     #   the call again using the returned token to retrieve the next page.
     #   @return [String]
     #
-    # @!attribute [rw] traffic_policies
-    #   The list of traffic policies.
-    #   @return [Array<Types::TrafficPolicy>]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/ListTrafficPoliciesResponse AWS API Documentation
     #
     class ListTrafficPoliciesResponse < Struct.new(
-      :next_token,
-      :traffic_policies)
+      :traffic_policies,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # The textual body content of an email message.
+    #
+    # @!attribute [rw] text
+    #   The plain text body content of the message.
+    #   @return [String]
     #
     # @!attribute [rw] html
     #   The HTML body content of the message.
@@ -2944,29 +3136,29 @@ module Aws::MailManager
     #   A flag indicating if the email was malformed.
     #   @return [Boolean]
     #
-    # @!attribute [rw] text
-    #   The plain text body content of the message.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/MessageBody AWS API Documentation
     #
     class MessageBody < Struct.new(
+      :text,
       :html,
-      :message_malformed,
-      :text)
+      :message_malformed)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # The metadata about the email.
     #
-    # @!attribute [rw] configuration_set
-    #   The name of the configuration set used when sent through a
-    #   configuration set with archiving enabled.
-    #   @return [String]
+    # @!attribute [rw] timestamp
+    #   The timestamp of when the email was received.
+    #   @return [Time]
     #
     # @!attribute [rw] ingress_point_id
     #   The ID of the ingress endpoint through which the email was received.
+    #   @return [String]
+    #
+    # @!attribute [rw] traffic_policy_id
+    #   The ID of the traffic policy that was in effect when the email was
+    #   received.
     #   @return [String]
     #
     # @!attribute [rw] rule_set_id
@@ -2981,31 +3173,6 @@ module Aws::MailManager
     #   The IP address of the host from which the email was received.
     #   @return [String]
     #
-    # @!attribute [rw] sending_method
-    #   The name of the API call used when sent through a configuration set
-    #   with archiving enabled.
-    #   @return [String]
-    #
-    # @!attribute [rw] sending_pool
-    #   The name of the dedicated IP pool used when sent through a
-    #   configuration set with archiving enabled.
-    #   @return [String]
-    #
-    # @!attribute [rw] source_arn
-    #   Specifies the archived email source, identified by either a Rule
-    #   Set's ARN with an Archive action, or a Configuration Set's Archive
-    #   ARN.
-    #   @return [String]
-    #
-    # @!attribute [rw] source_identity
-    #   The identity name used to authorize the sending action when sent
-    #   through a configuration set with archiving enabled.
-    #   @return [String]
-    #
-    # @!attribute [rw] timestamp
-    #   The timestamp of when the email was received.
-    #   @return [Time]
-    #
     # @!attribute [rw] tls_cipher_suite
     #   The TLS cipher suite used to communicate with the host from which
     #   the email was received.
@@ -3016,29 +3183,80 @@ module Aws::MailManager
     #   email was received.
     #   @return [String]
     #
-    # @!attribute [rw] traffic_policy_id
-    #   The ID of the traffic policy that was in effect when the email was
-    #   received.
+    # @!attribute [rw] sending_method
+    #   The name of the API call used when sent through a configuration set
+    #   with archiving enabled.
+    #   @return [String]
+    #
+    # @!attribute [rw] source_identity
+    #   The identity name used to authorize the sending action when sent
+    #   through a configuration set with archiving enabled.
+    #   @return [String]
+    #
+    # @!attribute [rw] sending_pool
+    #   The name of the dedicated IP pool used when sent through a
+    #   configuration set with archiving enabled.
+    #   @return [String]
+    #
+    # @!attribute [rw] configuration_set
+    #   The name of the configuration set used when sent through a
+    #   configuration set with archiving enabled.
+    #   @return [String]
+    #
+    # @!attribute [rw] source_arn
+    #   Specifies the archived email source, identified by either a Rule
+    #   Set's ARN with an Archive action, or a Configuration Set's Archive
+    #   ARN.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/Metadata AWS API Documentation
     #
     class Metadata < Struct.new(
-      :configuration_set,
+      :timestamp,
       :ingress_point_id,
+      :traffic_policy_id,
       :rule_set_id,
       :sender_hostname,
       :sender_ip_address,
-      :sending_method,
-      :sending_pool,
-      :source_arn,
-      :source_identity,
-      :timestamp,
       :tls_cipher_suite,
       :tls_protocol,
-      :traffic_policy_id)
+      :sending_method,
+      :source_identity,
+      :sending_pool,
+      :configuration_set,
+      :source_arn)
       SENSITIVE = [:sender_ip_address]
       include Aws::Structure
+    end
+
+    # The network type (IPv4-only, Dual-Stack, PrivateLink) of the ingress
+    # endpoint resource.
+    #
+    # @note NetworkConfiguration is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note NetworkConfiguration is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of NetworkConfiguration corresponding to the set member.
+    #
+    # @!attribute [rw] public_network_configuration
+    #   Specifies the network configuration for the public ingress point.
+    #   @return [Types::PublicNetworkConfiguration]
+    #
+    # @!attribute [rw] private_network_configuration
+    #   Specifies the network configuration for the private ingress point.
+    #   @return [Types::PrivateNetworkConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/NetworkConfiguration AWS API Documentation
+    #
+    class NetworkConfiguration < Struct.new(
+      :public_network_configuration,
+      :private_network_configuration,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class PublicNetworkConfiguration < NetworkConfiguration; end
+      class PrivateNetworkConfiguration < NetworkConfiguration; end
+      class Unknown < NetworkConfiguration; end
     end
 
     # Explicitly indicate that the relay destination server does not require
@@ -3057,11 +3275,11 @@ module Aws::MailManager
     #
     # @note PolicyCondition is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of PolicyCondition corresponding to the set member.
     #
-    # @!attribute [rw] boolean_expression
-    #   This represents a boolean type condition matching on the incoming
-    #   mail. It performs the boolean operation configured in 'Operator'
+    # @!attribute [rw] string_expression
+    #   This represents a string based condition matching on the incoming
+    #   mail. It performs the string operation configured in 'Operator'
     #   and evaluates the 'Protocol' object against the 'Value'.
-    #   @return [Types::IngressBooleanExpression]
+    #   @return [Types::IngressStringExpression]
     #
     # @!attribute [rw] ip_expression
     #   This represents an IP based condition matching on the incoming mail.
@@ -3069,11 +3287,11 @@ module Aws::MailManager
     #   the 'Protocol' object against the 'Value'.
     #   @return [Types::IngressIpv4Expression]
     #
-    # @!attribute [rw] string_expression
-    #   This represents a string based condition matching on the incoming
-    #   mail. It performs the string operation configured in 'Operator'
-    #   and evaluates the 'Protocol' object against the 'Value'.
-    #   @return [Types::IngressStringExpression]
+    # @!attribute [rw] ipv_6_expression
+    #   This represents an IPv6 based condition matching on the incoming
+    #   mail. It performs the operation configured in 'Operator' and
+    #   evaluates the 'Protocol' object against the 'Value'.
+    #   @return [Types::IngressIpv6Expression]
     #
     # @!attribute [rw] tls_expression
     #   This represents a TLS based condition matching on the incoming mail.
@@ -3081,60 +3299,98 @@ module Aws::MailManager
     #   the 'Protocol' object against the 'Value'.
     #   @return [Types::IngressTlsProtocolExpression]
     #
+    # @!attribute [rw] boolean_expression
+    #   This represents a boolean type condition matching on the incoming
+    #   mail. It performs the boolean operation configured in 'Operator'
+    #   and evaluates the 'Protocol' object against the 'Value'.
+    #   @return [Types::IngressBooleanExpression]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/PolicyCondition AWS API Documentation
     #
     class PolicyCondition < Struct.new(
-      :boolean_expression,
-      :ip_expression,
       :string_expression,
+      :ip_expression,
+      :ipv_6_expression,
       :tls_expression,
+      :boolean_expression,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
       include Aws::Structure::Union
 
-      class BooleanExpression < PolicyCondition; end
-      class IpExpression < PolicyCondition; end
       class StringExpression < PolicyCondition; end
+      class IpExpression < PolicyCondition; end
+      class Ipv6Expression < PolicyCondition; end
       class TlsExpression < PolicyCondition; end
+      class BooleanExpression < PolicyCondition; end
       class Unknown < PolicyCondition; end
     end
 
     # The structure containing traffic policy conditions and actions.
-    #
-    # @!attribute [rw] action
-    #   The action that informs a traffic policy resource to either allow or
-    #   block the email if it matches a condition in the policy statement.
-    #   @return [String]
     #
     # @!attribute [rw] conditions
     #   The list of conditions to apply to incoming messages for filtering
     #   email traffic.
     #   @return [Array<Types::PolicyCondition>]
     #
+    # @!attribute [rw] action
+    #   The action that informs a traffic policy resource to either allow or
+    #   block the email if it matches a condition in the policy statement.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/PolicyStatement AWS API Documentation
     #
     class PolicyStatement < Struct.new(
-      :action,
-      :conditions)
+      :conditions,
+      :action)
       SENSITIVE = []
       include Aws::Structure
     end
 
-    # @!attribute [rw] address
-    #   The address to be added to the address list.
+    # Specifies the network configuration for the private ingress point.
+    #
+    # @!attribute [rw] vpc_endpoint_id
+    #   The identifier of the VPC endpoint to associate with this private
+    #   ingress point.
     #   @return [String]
     #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/PrivateNetworkConfiguration AWS API Documentation
+    #
+    class PrivateNetworkConfiguration < Struct.new(
+      :vpc_endpoint_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Specifies the network configuration for the public ingress point.
+    #
+    # @!attribute [rw] ip_type
+    #   The IP address type for the public ingress point. Valid values are
+    #   IPV4 and DUAL\_STACK.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/PublicNetworkConfiguration AWS API Documentation
+    #
+    class PublicNetworkConfiguration < Struct.new(
+      :ip_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] address_list_id
     #   The unique identifier of the address list where the address should
     #   be added.
     #   @return [String]
     #
+    # @!attribute [rw] address
+    #   The address to be added to the address list.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/RegisterMemberToAddressListRequest AWS API Documentation
     #
     class RegisterMemberToAddressListRequest < Struct.new(
-      :address,
-      :address_list_id)
+      :address_list_id,
+      :address)
       SENSITIVE = [:address]
       include Aws::Structure
     end
@@ -3146,10 +3402,6 @@ module Aws::MailManager
     # The relay resource that can be used as a rule to relay receiving
     # emails to the destination relay server.
     #
-    # @!attribute [rw] last_modified_timestamp
-    #   The timestamp of when the relay was last modified.
-    #   @return [Time]
-    #
     # @!attribute [rw] relay_id
     #   The unique relay identifier.
     #   @return [String]
@@ -3158,12 +3410,16 @@ module Aws::MailManager
     #   The unique relay name.
     #   @return [String]
     #
+    # @!attribute [rw] last_modified_timestamp
+    #   The timestamp of when the relay was last modified.
+    #   @return [Time]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/Relay AWS API Documentation
     #
     class Relay < Struct.new(
-      :last_modified_timestamp,
       :relay_id,
-      :relay_name)
+      :relay_name,
+      :last_modified_timestamp)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3176,22 +3432,22 @@ module Aws::MailManager
     #   specified relay has been deleted.
     #   @return [String]
     #
-    # @!attribute [rw] mail_from
-    #   This action specifies whether to preserve or replace original mail
-    #   from address while relaying received emails to a destination server.
-    #   @return [String]
-    #
     # @!attribute [rw] relay
     #   The identifier of the relay resource to be used when relaying an
     #   email.
+    #   @return [String]
+    #
+    # @!attribute [rw] mail_from
+    #   This action specifies whether to preserve or replace original mail
+    #   from address while relaying received emails to a destination server.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/RelayAction AWS API Documentation
     #
     class RelayAction < Struct.new(
       :action_failure_policy,
-      :mail_from,
-      :relay)
+      :relay,
+      :mail_from)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3205,28 +3461,28 @@ module Aws::MailManager
     #
     # @note RelayAuthentication is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of RelayAuthentication corresponding to the set member.
     #
-    # @!attribute [rw] no_authentication
-    #   Keep an empty structure if the relay destination server does not
-    #   require SMTP credential authentication.
-    #   @return [Types::NoAuthentication]
-    #
     # @!attribute [rw] secret_arn
     #   The ARN of the secret created in secrets manager where the relay
     #   server's SMTP credentials are stored.
     #   @return [String]
     #
+    # @!attribute [rw] no_authentication
+    #   Keep an empty structure if the relay destination server does not
+    #   require SMTP credential authentication.
+    #   @return [Types::NoAuthentication]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/RelayAuthentication AWS API Documentation
     #
     class RelayAuthentication < Struct.new(
-      :no_authentication,
       :secret_arn,
+      :no_authentication,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
       include Aws::Structure::Union
 
-      class NoAuthentication < RelayAuthentication; end
       class SecretArn < RelayAuthentication; end
+      class NoAuthentication < RelayAuthentication; end
       class Unknown < RelayAuthentication; end
     end
 
@@ -3269,71 +3525,44 @@ module Aws::MailManager
     #   The unique identifier of the archived message.
     #   @return [String]
     #
-    # @!attribute [rw] cc
-    #   The email addresses in the CC header.
-    #   @return [String]
+    # @!attribute [rw] received_timestamp
+    #   The timestamp of when the email was received.
+    #   @return [Time]
     #
     # @!attribute [rw] date
     #   The date the email was sent.
     #   @return [String]
     #
-    # @!attribute [rw] envelope
-    #   The SMTP envelope information of the email.
-    #   @return [Types::Envelope]
+    # @!attribute [rw] to
+    #   The email addresses in the To header.
+    #   @return [String]
     #
     # @!attribute [rw] from
     #   The email address of the sender.
     #   @return [String]
     #
-    # @!attribute [rw] has_attachments
-    #   A flag indicating if the email has attachments.
-    #   @return [Boolean]
-    #
-    # @!attribute [rw] in_reply_to
-    #   The email message ID this is a reply to.
-    #   @return [String]
-    #
-    # @!attribute [rw] ingress_point_id
-    #   The ID of the ingress endpoint through which the email was received.
-    #   @return [String]
-    #
-    # @!attribute [rw] message_id
-    #   The unique message ID of the email.
-    #   @return [String]
-    #
-    # @!attribute [rw] received_headers
-    #   The received headers from the email delivery path.
-    #   @return [Array<String>]
-    #
-    # @!attribute [rw] received_timestamp
-    #   The timestamp of when the email was received.
-    #   @return [Time]
-    #
-    # @!attribute [rw] sender_hostname
-    #   The name of the host from which the email was received.
-    #   @return [String]
-    #
-    # @!attribute [rw] sender_ip_address
-    #   * Mail archived with Mail Manager: The IP address of the client that
-    #     connects to the ingress endpoint.
-    #
-    #   * Mail sent through a configuration set with the archiving option
-    #     enabled: The IP address of the client that makes the SendEmail API
-    #     call.
-    #   @return [String]
-    #
-    # @!attribute [rw] source_arn
-    #   Specifies the archived email source, identified by either a Rule
-    #   Set's ARN with an Archive action, or a Configuration Set's Archive
-    #   ARN.
+    # @!attribute [rw] cc
+    #   The email addresses in the CC header.
     #   @return [String]
     #
     # @!attribute [rw] subject
     #   The subject header value of the email.
     #   @return [String]
     #
-    # @!attribute [rw] to
-    #   The email addresses in the To header.
+    # @!attribute [rw] message_id
+    #   The unique message ID of the email.
+    #   @return [String]
+    #
+    # @!attribute [rw] has_attachments
+    #   A flag indicating if the email has attachments.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] received_headers
+    #   The received headers from the email delivery path.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] in_reply_to
+    #   The email message ID this is a reply to.
     #   @return [String]
     #
     # @!attribute [rw] x_mailer
@@ -3348,28 +3577,55 @@ module Aws::MailManager
     #   The priority level of the email.
     #   @return [String]
     #
+    # @!attribute [rw] ingress_point_id
+    #   The ID of the ingress endpoint through which the email was received.
+    #   @return [String]
+    #
+    # @!attribute [rw] sender_hostname
+    #   The name of the host from which the email was received.
+    #   @return [String]
+    #
+    # @!attribute [rw] sender_ip_address
+    #   * Mail archived with Mail Manager: The IP address of the client that
+    #     connects to the ingress endpoint.
+    #
+    #   * Mail sent through a configuration set with the archiving option
+    #     enabled: The IP address of the client that makes the SendEmail API
+    #     call.
+    #   @return [String]
+    #
+    # @!attribute [rw] envelope
+    #   The SMTP envelope information of the email.
+    #   @return [Types::Envelope]
+    #
+    # @!attribute [rw] source_arn
+    #   Specifies the archived email source, identified by either a Rule
+    #   Set's ARN with an Archive action, or a Configuration Set's Archive
+    #   ARN.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/Row AWS API Documentation
     #
     class Row < Struct.new(
       :archived_message_id,
-      :cc,
-      :date,
-      :envelope,
-      :from,
-      :has_attachments,
-      :in_reply_to,
-      :ingress_point_id,
-      :message_id,
-      :received_headers,
       :received_timestamp,
-      :sender_hostname,
-      :sender_ip_address,
-      :source_arn,
-      :subject,
+      :date,
       :to,
+      :from,
+      :cc,
+      :subject,
+      :message_id,
+      :has_attachments,
+      :received_headers,
+      :in_reply_to,
       :x_mailer,
       :x_original_mailer,
-      :x_priority)
+      :x_priority,
+      :ingress_point_id,
+      :sender_hostname,
+      :sender_ip_address,
+      :envelope,
+      :source_arn)
       SENSITIVE = [:sender_ip_address]
       include Aws::Structure
     end
@@ -3382,10 +3638,9 @@ module Aws::MailManager
     # conditions" are provided, the rule applies if the email does not
     # match the evaluation of the "unless conditions".
     #
-    # @!attribute [rw] actions
-    #   The list of actions to execute when the conditions match the
-    #   incoming email, and none of the "unless conditions" match.
-    #   @return [Array<Types::RuleAction>]
+    # @!attribute [rw] name
+    #   The user-friendly name of the rule.
+    #   @return [String]
     #
     # @!attribute [rw] conditions
     #   The conditions of this rule. All conditions must match the email for
@@ -3393,23 +3648,24 @@ module Aws::MailManager
     #   all emails match, but are still subject to any "unless conditions"
     #   @return [Array<Types::RuleCondition>]
     #
-    # @!attribute [rw] name
-    #   The user-friendly name of the rule.
-    #   @return [String]
-    #
     # @!attribute [rw] unless
     #   The "unless conditions" of this rule. None of the conditions can
     #   match the email for the actions to be executed. If any of these
     #   conditions do match the email, then the actions are not executed.
     #   @return [Array<Types::RuleCondition>]
     #
+    # @!attribute [rw] actions
+    #   The list of actions to execute when the conditions match the
+    #   incoming email, and none of the "unless conditions" match.
+    #   @return [Array<Types::RuleAction>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/Rule AWS API Documentation
     #
     class Rule < Struct.new(
-      :actions,
-      :conditions,
       :name,
-      :unless)
+      :conditions,
+      :unless,
+      :actions)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3421,15 +3677,36 @@ module Aws::MailManager
     #
     # @note RuleAction is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of RuleAction corresponding to the set member.
     #
-    # @!attribute [rw] add_header
-    #   This action adds a header. This can be used to add arbitrary email
-    #   headers.
-    #   @return [Types::AddHeaderAction]
+    # @!attribute [rw] drop
+    #   This action terminates the evaluation of rules in the rule set.
+    #   @return [Types::DropAction]
+    #
+    # @!attribute [rw] relay
+    #   This action relays the email to another SMTP server.
+    #   @return [Types::RelayAction]
     #
     # @!attribute [rw] archive
     #   This action archives the email. This can be used to deliver an email
     #   to an archive.
     #   @return [Types::ArchiveAction]
+    #
+    # @!attribute [rw] write_to_s3
+    #   This action writes the MIME content of the email to an S3 bucket.
+    #   @return [Types::S3Action]
+    #
+    # @!attribute [rw] send
+    #   This action sends the email to the internet.
+    #   @return [Types::SendAction]
+    #
+    # @!attribute [rw] add_header
+    #   This action adds a header. This can be used to add arbitrary email
+    #   headers.
+    #   @return [Types::AddHeaderAction]
+    #
+    # @!attribute [rw] replace_recipient
+    #   The action replaces certain or all recipients with a different set
+    #   of recipients.
+    #   @return [Types::ReplaceRecipientAction]
     #
     # @!attribute [rw] deliver_to_mailbox
     #   This action delivers an email to a WorkMail mailbox.
@@ -3440,53 +3717,51 @@ module Aws::MailManager
     #   for ingestion into its knowledge base.
     #   @return [Types::DeliverToQBusinessAction]
     #
-    # @!attribute [rw] drop
-    #   This action terminates the evaluation of rules in the rule set.
-    #   @return [Types::DropAction]
+    # @!attribute [rw] publish_to_sns
+    #   This action publishes the email content to an Amazon SNS topic.
+    #   @return [Types::SnsAction]
     #
-    # @!attribute [rw] relay
-    #   This action relays the email to another SMTP server.
-    #   @return [Types::RelayAction]
+    # @!attribute [rw] bounce
+    #   This action sends a bounce response for the email.
+    #   @return [Types::BounceAction]
     #
-    # @!attribute [rw] replace_recipient
-    #   The action replaces certain or all recipients with a different set
-    #   of recipients.
-    #   @return [Types::ReplaceRecipientAction]
-    #
-    # @!attribute [rw] send
-    #   This action sends the email to the internet.
-    #   @return [Types::SendAction]
-    #
-    # @!attribute [rw] write_to_s3
-    #   This action writes the MIME content of the email to an S3 bucket.
-    #   @return [Types::S3Action]
+    # @!attribute [rw] invoke_lambda
+    #   This action invokes an Amazon Web Services Lambda function to
+    #   process the email.
+    #   @return [Types::InvokeLambdaAction]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/RuleAction AWS API Documentation
     #
     class RuleAction < Struct.new(
-      :add_header,
-      :archive,
-      :deliver_to_mailbox,
-      :deliver_to_q_business,
       :drop,
       :relay,
-      :replace_recipient,
-      :send,
+      :archive,
       :write_to_s3,
+      :send,
+      :add_header,
+      :replace_recipient,
+      :deliver_to_mailbox,
+      :deliver_to_q_business,
+      :publish_to_sns,
+      :bounce,
+      :invoke_lambda,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
       include Aws::Structure::Union
 
-      class AddHeader < RuleAction; end
-      class Archive < RuleAction; end
-      class DeliverToMailbox < RuleAction; end
-      class DeliverToQBusiness < RuleAction; end
       class Drop < RuleAction; end
       class Relay < RuleAction; end
-      class ReplaceRecipient < RuleAction; end
-      class Send < RuleAction; end
+      class Archive < RuleAction; end
       class WriteToS3 < RuleAction; end
+      class Send < RuleAction; end
+      class AddHeader < RuleAction; end
+      class ReplaceRecipient < RuleAction; end
+      class DeliverToMailbox < RuleAction; end
+      class DeliverToQBusiness < RuleAction; end
+      class PublishToSns < RuleAction; end
+      class Bounce < RuleAction; end
+      class InvokeLambda < RuleAction; end
       class Unknown < RuleAction; end
     end
 
@@ -3516,15 +3791,15 @@ module Aws::MailManager
     #
     # @note RuleBooleanToEvaluate is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of RuleBooleanToEvaluate corresponding to the set member.
     #
-    # @!attribute [rw] analysis
-    #   The Add On ARN and its returned value to evaluate in a boolean
-    #   condition expression.
-    #   @return [Types::Analysis]
-    #
     # @!attribute [rw] attribute
     #   The boolean type representing the allowed attribute types for an
     #   email.
     #   @return [String]
+    #
+    # @!attribute [rw] analysis
+    #   The Add On ARN and its returned value to evaluate in a boolean
+    #   condition expression.
+    #   @return [Types::Analysis]
     #
     # @!attribute [rw] is_in_address_list
     #   The structure representing the address lists and address list
@@ -3534,16 +3809,16 @@ module Aws::MailManager
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/RuleBooleanToEvaluate AWS API Documentation
     #
     class RuleBooleanToEvaluate < Struct.new(
-      :analysis,
       :attribute,
+      :analysis,
       :is_in_address_list,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
       include Aws::Structure::Union
 
-      class Analysis < RuleBooleanToEvaluate; end
       class Attribute < RuleBooleanToEvaluate; end
+      class Analysis < RuleBooleanToEvaluate; end
       class IsInAddressList < RuleBooleanToEvaluate; end
       class Unknown < RuleBooleanToEvaluate; end
     end
@@ -3559,48 +3834,48 @@ module Aws::MailManager
     #   The condition applies to a boolean expression passed in this field.
     #   @return [Types::RuleBooleanExpression]
     #
-    # @!attribute [rw] dmarc_expression
-    #   The condition applies to a DMARC policy expression passed in this
-    #   field.
-    #   @return [Types::RuleDmarcExpression]
+    # @!attribute [rw] string_expression
+    #   The condition applies to a string expression passed in this field.
+    #   @return [Types::RuleStringExpression]
+    #
+    # @!attribute [rw] number_expression
+    #   The condition applies to a number expression passed in this field.
+    #   @return [Types::RuleNumberExpression]
     #
     # @!attribute [rw] ip_expression
     #   The condition applies to an IP address expression passed in this
     #   field.
     #   @return [Types::RuleIpExpression]
     #
-    # @!attribute [rw] number_expression
-    #   The condition applies to a number expression passed in this field.
-    #   @return [Types::RuleNumberExpression]
-    #
-    # @!attribute [rw] string_expression
-    #   The condition applies to a string expression passed in this field.
-    #   @return [Types::RuleStringExpression]
-    #
     # @!attribute [rw] verdict_expression
     #   The condition applies to a verdict expression passed in this field.
     #   @return [Types::RuleVerdictExpression]
+    #
+    # @!attribute [rw] dmarc_expression
+    #   The condition applies to a DMARC policy expression passed in this
+    #   field.
+    #   @return [Types::RuleDmarcExpression]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/RuleCondition AWS API Documentation
     #
     class RuleCondition < Struct.new(
       :boolean_expression,
-      :dmarc_expression,
-      :ip_expression,
-      :number_expression,
       :string_expression,
+      :number_expression,
+      :ip_expression,
       :verdict_expression,
+      :dmarc_expression,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
       include Aws::Structure::Union
 
       class BooleanExpression < RuleCondition; end
-      class DmarcExpression < RuleCondition; end
-      class IpExpression < RuleCondition; end
-      class NumberExpression < RuleCondition; end
       class StringExpression < RuleCondition; end
+      class NumberExpression < RuleCondition; end
+      class IpExpression < RuleCondition; end
       class VerdictExpression < RuleCondition; end
+      class DmarcExpression < RuleCondition; end
       class Unknown < RuleCondition; end
     end
 
@@ -3687,20 +3962,20 @@ module Aws::MailManager
     # The structure type for a boolean condition that provides the address
     # lists and address list attribute to evaluate.
     #
-    # @!attribute [rw] address_lists
-    #   The address lists that will be used for evaluation.
-    #   @return [Array<String>]
-    #
     # @!attribute [rw] attribute
     #   The email attribute that needs to be evaluated against the address
     #   list.
     #   @return [String]
     #
+    # @!attribute [rw] address_lists
+    #   The address lists that will be used for evaluation.
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/RuleIsInAddressList AWS API Documentation
     #
     class RuleIsInAddressList < Struct.new(
-      :address_lists,
-      :attribute)
+      :attribute,
+      :address_lists)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3756,10 +4031,6 @@ module Aws::MailManager
     # A rule set contains a list of rules that are evaluated in order. Each
     # rule is evaluated sequentially for each email.
     #
-    # @!attribute [rw] last_modification_date
-    #   The last modification date of the rule set.
-    #   @return [Time]
-    #
     # @!attribute [rw] rule_set_id
     #   The identifier of the rule set.
     #   @return [String]
@@ -3768,12 +4039,16 @@ module Aws::MailManager
     #   A user-friendly name for the rule set.
     #   @return [String]
     #
+    # @!attribute [rw] last_modification_date
+    #   The last modification date of the rule set.
+    #   @return [Time]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/RuleSet AWS API Documentation
     #
     class RuleSet < Struct.new(
-      :last_modification_date,
       :rule_set_id,
-      :rule_set_name)
+      :rule_set_name,
+      :last_modification_date)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3805,7 +4080,7 @@ module Aws::MailManager
       :evaluate,
       :operator,
       :values)
-      SENSITIVE = []
+      SENSITIVE = [:values]
       include Aws::Structure
     end
 
@@ -3814,11 +4089,6 @@ module Aws::MailManager
     # @note RuleStringToEvaluate is a union - when making an API calls you must set exactly one of the members.
     #
     # @note RuleStringToEvaluate is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of RuleStringToEvaluate corresponding to the set member.
-    #
-    # @!attribute [rw] analysis
-    #   The Add On ARN and its returned value to evaluate in a string
-    #   condition expression.
-    #   @return [Types::Analysis]
     #
     # @!attribute [rw] attribute
     #   The email attribute to evaluate in a string condition expression.
@@ -3829,20 +4099,32 @@ module Aws::MailManager
     #   expression.
     #   @return [String]
     #
+    # @!attribute [rw] analysis
+    #   The Add On ARN and its returned value to evaluate in a string
+    #   condition expression.
+    #   @return [Types::Analysis]
+    #
+    # @!attribute [rw] client_certificate_attribute
+    #   The client certificate attribute to evaluate in a string condition
+    #   expression.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/RuleStringToEvaluate AWS API Documentation
     #
     class RuleStringToEvaluate < Struct.new(
-      :analysis,
       :attribute,
       :mime_header_attribute,
+      :analysis,
+      :client_certificate_attribute,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
       include Aws::Structure::Union
 
-      class Analysis < RuleStringToEvaluate; end
       class Attribute < RuleStringToEvaluate; end
       class MimeHeaderAttribute < RuleStringToEvaluate; end
+      class Analysis < RuleStringToEvaluate; end
+      class ClientCertificateAttribute < RuleStringToEvaluate; end
       class Unknown < RuleStringToEvaluate; end
     end
 
@@ -3881,28 +4163,28 @@ module Aws::MailManager
     #
     # @note RuleVerdictToEvaluate is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of RuleVerdictToEvaluate corresponding to the set member.
     #
-    # @!attribute [rw] analysis
-    #   The Add On ARN and its returned value to evaluate in a verdict
-    #   condition expression.
-    #   @return [Types::Analysis]
-    #
     # @!attribute [rw] attribute
     #   The email verdict attribute to evaluate in a string verdict
     #   expression.
     #   @return [String]
     #
+    # @!attribute [rw] analysis
+    #   The Add On ARN and its returned value to evaluate in a verdict
+    #   condition expression.
+    #   @return [Types::Analysis]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/RuleVerdictToEvaluate AWS API Documentation
     #
     class RuleVerdictToEvaluate < Struct.new(
-      :analysis,
       :attribute,
+      :analysis,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
       include Aws::Structure::Union
 
-      class Analysis < RuleVerdictToEvaluate; end
       class Attribute < RuleVerdictToEvaluate; end
+      class Analysis < RuleVerdictToEvaluate; end
       class Unknown < RuleVerdictToEvaluate; end
     end
 
@@ -3979,29 +4261,29 @@ module Aws::MailManager
 
     # The current status of an archive search job.
     #
+    # @!attribute [rw] submission_timestamp
+    #   The timestamp of when the search was submitted.
+    #   @return [Time]
+    #
     # @!attribute [rw] completion_timestamp
     #   The timestamp of when the search completed (if finished).
     #   @return [Time]
-    #
-    # @!attribute [rw] error_message
-    #   An error message if the search failed.
-    #   @return [String]
     #
     # @!attribute [rw] state
     #   The current state of the search job.
     #   @return [String]
     #
-    # @!attribute [rw] submission_timestamp
-    #   The timestamp of when the search was submitted.
-    #   @return [Time]
+    # @!attribute [rw] error_message
+    #   An error message if the search failed.
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/SearchStatus AWS API Documentation
     #
     class SearchStatus < Struct.new(
+      :submission_timestamp,
       :completion_timestamp,
-      :error_message,
       :state,
-      :submission_timestamp)
+      :error_message)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4060,6 +4342,55 @@ module Aws::MailManager
       include Aws::Structure
     end
 
+    # The action to publish the email content to an Amazon SNS topic. When
+    # executed, this action will send the email as a notification to the
+    # specified SNS topic.
+    #
+    # @!attribute [rw] action_failure_policy
+    #   A policy that states what to do in the case of failure. The action
+    #   will fail if there are configuration errors. For example, specified
+    #   SNS topic has been deleted or the role lacks necessary permissions
+    #   to call the `sns:Publish` API.
+    #   @return [String]
+    #
+    # @!attribute [rw] topic_arn
+    #   The Amazon Resource Name (ARN) of the Amazon SNS Topic to which
+    #   notification for the email received will be published.
+    #   @return [String]
+    #
+    # @!attribute [rw] role_arn
+    #   The Amazon Resource Name (ARN) of the IAM Role to use while writing
+    #   to Amazon SNS. This role must have access to the `sns:Publish` API
+    #   for the given topic.
+    #   @return [String]
+    #
+    # @!attribute [rw] encoding
+    #   The encoding to use for the email within the Amazon SNS
+    #   notification. The default value is `UTF-8`. Use `BASE64` if you need
+    #   to preserve all special characters, especially when the original
+    #   message uses a different encoding format.
+    #   @return [String]
+    #
+    # @!attribute [rw] payload_type
+    #   The expected payload type within the Amazon SNS notification.
+    #   `CONTENT` attempts to publish the full email content with 20KB of
+    #   headers content. `HEADERS` extracts up to 100KB of header content to
+    #   include in the notification, email content will not be included to
+    #   the notification. The default value is `CONTENT`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/SnsAction AWS API Documentation
+    #
+    class SnsAction < Struct.new(
+      :action_failure_policy,
+      :topic_arn,
+      :role_arn,
+      :encoding,
+      :payload_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] job_id
     #   The identifier of the import job that needs to be started.
     #   @return [String]
@@ -4082,10 +4413,6 @@ module Aws::MailManager
     #   The identifier of the archive to export emails from.
     #   @return [String]
     #
-    # @!attribute [rw] export_destination_configuration
-    #   Details on where to deliver the exported email data.
-    #   @return [Types::ExportDestinationConfiguration]
-    #
     # @!attribute [rw] filters
     #   Criteria to filter which emails are included in the export.
     #   @return [Types::ArchiveFilters]
@@ -4094,28 +4421,32 @@ module Aws::MailManager
     #   The start of the timestamp range to include emails from.
     #   @return [Time]
     #
-    # @!attribute [rw] include_metadata
-    #   Whether to include message metadata as JSON files in the export.
-    #   @return [Boolean]
+    # @!attribute [rw] to_timestamp
+    #   The end of the timestamp range to include emails from.
+    #   @return [Time]
     #
     # @!attribute [rw] max_results
     #   The maximum number of email items to include in the export.
     #   @return [Integer]
     #
-    # @!attribute [rw] to_timestamp
-    #   The end of the timestamp range to include emails from.
-    #   @return [Time]
+    # @!attribute [rw] export_destination_configuration
+    #   Details on where to deliver the exported email data.
+    #   @return [Types::ExportDestinationConfiguration]
+    #
+    # @!attribute [rw] include_metadata
+    #   Whether to include message metadata as JSON files in the export.
+    #   @return [Boolean]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/StartArchiveExportRequest AWS API Documentation
     #
     class StartArchiveExportRequest < Struct.new(
       :archive_id,
-      :export_destination_configuration,
       :filters,
       :from_timestamp,
-      :include_metadata,
+      :to_timestamp,
       :max_results,
-      :to_timestamp)
+      :export_destination_configuration,
+      :include_metadata)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4148,13 +4479,13 @@ module Aws::MailManager
     #   The start timestamp of the range to search emails from.
     #   @return [Time]
     #
-    # @!attribute [rw] max_results
-    #   The maximum number of search results to return.
-    #   @return [Integer]
-    #
     # @!attribute [rw] to_timestamp
     #   The end timestamp of the range to search emails from.
     #   @return [Time]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of search results to return.
+    #   @return [Integer]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/StartArchiveSearchRequest AWS API Documentation
     #
@@ -4162,8 +4493,8 @@ module Aws::MailManager
       :archive_id,
       :filters,
       :from_timestamp,
-      :max_results,
-      :to_timestamp)
+      :to_timestamp,
+      :max_results)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4303,8 +4634,30 @@ module Aws::MailManager
       include Aws::Structure
     end
 
+    # The mutual TLS authentication configuration for an ingress endpoint.
+    #
+    # @!attribute [rw] trust_store
+    #   The trust store configuration for mutual TLS authentication.
+    #   @return [Types::TrustStore]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/TlsAuthConfiguration AWS API Documentation
+    #
+    class TlsAuthConfiguration < Struct.new(
+      :trust_store)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The structure of a traffic policy resource which is a container for
     # policy statements.
+    #
+    # @!attribute [rw] traffic_policy_name
+    #   A user-friendly name of the traffic policy resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] traffic_policy_id
+    #   The identifier of the traffic policy resource.
+    #   @return [String]
     #
     # @!attribute [rw] default_action
     #   Default action instructs the traﬃc policy to either Allow or Deny
@@ -4312,21 +4665,43 @@ module Aws::MailManager
     #   conditions of your policy statements
     #   @return [String]
     #
-    # @!attribute [rw] traffic_policy_id
-    #   The identifier of the traffic policy resource.
-    #   @return [String]
-    #
-    # @!attribute [rw] traffic_policy_name
-    #   A user-friendly name of the traffic policy resource.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/TrafficPolicy AWS API Documentation
     #
     class TrafficPolicy < Struct.new(
-      :default_action,
+      :traffic_policy_name,
       :traffic_policy_id,
-      :traffic_policy_name)
+      :default_action)
       SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The trust store used for mutual TLS authentication. It contains the
+    # certificate authority (CA) certificates and optional certificate
+    # revocation list (CRL).
+    #
+    # @!attribute [rw] ca_content
+    #   The PEM-encoded certificate authority (CA) certificates bundle for
+    #   the trust store.
+    #   @return [String]
+    #
+    # @!attribute [rw] crl_content
+    #   The PEM-encoded certificate revocation lists (CRLs) for the trust
+    #   store. There can be one CRL per certificate authority (CA) in the
+    #   trust store.
+    #   @return [String]
+    #
+    # @!attribute [rw] kms_key_arn
+    #   The Amazon Resource Name (ARN) of the KMS key used to encrypt the
+    #   trust store contents.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/TrustStore AWS API Documentation
+    #
+    class TrustStore < Struct.new(
+      :ca_content,
+      :crl_content,
+      :kms_key_arn)
+      SENSITIVE = [:ca_content, :crl_content]
       include Aws::Structure
     end
 
@@ -4386,11 +4761,6 @@ module Aws::MailManager
     #
     class UpdateArchiveResponse < Aws::EmptyStructure; end
 
-    # @!attribute [rw] ingress_point_configuration
-    #   If you choose an Authenticated ingress endpoint, you must configure
-    #   either an SMTP password or a secret ARN.
-    #   @return [Types::IngressPointConfiguration]
-    #
     # @!attribute [rw] ingress_point_id
     #   The identifier for the ingress endpoint you want to update.
     #   @return [String]
@@ -4399,13 +4769,13 @@ module Aws::MailManager
     #   A user friendly name for the ingress endpoint resource.
     #   @return [String]
     #
+    # @!attribute [rw] status_to_update
+    #   The update status of an ingress endpoint.
+    #   @return [String]
+    #
     # @!attribute [rw] rule_set_id
     #   The identifier of an existing rule set that you attach to an ingress
     #   endpoint resource.
-    #   @return [String]
-    #
-    # @!attribute [rw] status_to_update
-    #   The update status of an ingress endpoint.
     #   @return [String]
     #
     # @!attribute [rw] traffic_policy_id
@@ -4413,15 +4783,27 @@ module Aws::MailManager
     #   ingress endpoint resource.
     #   @return [String]
     #
+    # @!attribute [rw] ingress_point_configuration
+    #   If you choose an Authenticated ingress endpoint, you must configure
+    #   either an SMTP password or a secret ARN.
+    #   @return [Types::IngressPointConfiguration]
+    #
+    # @!attribute [rw] tls_policy
+    #   The Transport Layer Security (TLS) policy for the ingress point.
+    #   Valid values are REQUIRED, OPTIONAL. Only ingress endpoints using
+    #   REQUIRED or OPTIONAL as TlsPolicy can be updated.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/UpdateIngressPointRequest AWS API Documentation
     #
     class UpdateIngressPointRequest < Struct.new(
-      :ingress_point_configuration,
       :ingress_point_id,
       :ingress_point_name,
-      :rule_set_id,
       :status_to_update,
-      :traffic_policy_id)
+      :rule_set_id,
+      :traffic_policy_id,
+      :ingress_point_configuration,
+      :tls_policy)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4430,11 +4812,6 @@ module Aws::MailManager
     #
     class UpdateIngressPointResponse < Aws::EmptyStructure; end
 
-    # @!attribute [rw] authentication
-    #   Authentication for the relay destination server—specify the
-    #   secretARN where the SMTP credentials are stored.
-    #   @return [Types::RelayAuthentication]
-    #
     # @!attribute [rw] relay_id
     #   The unique relay identifier.
     #   @return [String]
@@ -4451,14 +4828,19 @@ module Aws::MailManager
     #   The destination relay server port.
     #   @return [Integer]
     #
+    # @!attribute [rw] authentication
+    #   Authentication for the relay destination server—specify the
+    #   secretARN where the SMTP credentials are stored.
+    #   @return [Types::RelayAuthentication]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/UpdateRelayRequest AWS API Documentation
     #
     class UpdateRelayRequest < Struct.new(
-      :authentication,
       :relay_id,
       :relay_name,
       :server_name,
-      :server_port)
+      :server_port,
+      :authentication)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4494,6 +4876,18 @@ module Aws::MailManager
     #
     class UpdateRuleSetResponse < Aws::EmptyStructure; end
 
+    # @!attribute [rw] traffic_policy_id
+    #   The identifier of the traffic policy that you want to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] traffic_policy_name
+    #   A user-friendly name for the traffic policy resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] policy_statements
+    #   The list of conditions to be updated for filtering email traffic.
+    #   @return [Array<Types::PolicyStatement>]
+    #
     # @!attribute [rw] default_action
     #   Default action instructs the traﬃc policy to either Allow or Deny
     #   (block) messages that fall outside of (or not addressed by) the
@@ -4505,26 +4899,14 @@ module Aws::MailManager
     #   this traffic policy—anything larger will be blocked.
     #   @return [Integer]
     #
-    # @!attribute [rw] policy_statements
-    #   The list of conditions to be updated for filtering email traffic.
-    #   @return [Array<Types::PolicyStatement>]
-    #
-    # @!attribute [rw] traffic_policy_id
-    #   The identifier of the traffic policy that you want to update.
-    #   @return [String]
-    #
-    # @!attribute [rw] traffic_policy_name
-    #   A user-friendly name for the traffic policy resource.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mailmanager-2023-10-17/UpdateTrafficPolicyRequest AWS API Documentation
     #
     class UpdateTrafficPolicyRequest < Struct.new(
-      :default_action,
-      :max_message_size_bytes,
-      :policy_statements,
       :traffic_policy_id,
-      :traffic_policy_name)
+      :traffic_policy_name,
+      :policy_statements,
+      :default_action,
+      :max_message_size_bytes)
       SENSITIVE = []
       include Aws::Structure
     end

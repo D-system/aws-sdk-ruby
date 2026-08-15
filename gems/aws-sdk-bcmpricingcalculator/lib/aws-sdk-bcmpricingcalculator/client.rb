@@ -95,8 +95,8 @@ module Aws::BCMPricingCalculator
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::BCMPricingCalculator
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::BCMPricingCalculator
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::BCMPricingCalculator
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::BCMPricingCalculator
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::BCMPricingCalculator
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::BCMPricingCalculator
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::BCMPricingCalculator
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -1330,6 +1334,9 @@ module Aws::BCMPricingCalculator
     #   * {Types::CreateBillEstimateResponse#cost_summary #cost_summary} => Types::BillEstimateCostSummary
     #   * {Types::CreateBillEstimateResponse#created_at #created_at} => Time
     #   * {Types::CreateBillEstimateResponse#expires_at #expires_at} => Time
+    #   * {Types::CreateBillEstimateResponse#group_sharing_preference #group_sharing_preference} => String
+    #   * {Types::CreateBillEstimateResponse#cost_category_group_sharing_preference_arn #cost_category_group_sharing_preference_arn} => String
+    #   * {Types::CreateBillEstimateResponse#cost_category_group_sharing_preference_effective_date #cost_category_group_sharing_preference_effective_date} => Time
     #
     # @example Request syntax with placeholder values
     #
@@ -1361,6 +1368,9 @@ module Aws::BCMPricingCalculator
     #   resp.cost_summary.service_cost_differences["String"].estimated_cost.currency #=> String, one of "USD"
     #   resp.created_at #=> Time
     #   resp.expires_at #=> Time
+    #   resp.group_sharing_preference #=> String, one of "OPEN", "PRIORITIZED", "RESTRICTED"
+    #   resp.cost_category_group_sharing_preference_arn #=> String
+    #   resp.cost_category_group_sharing_preference_effective_date #=> Time
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/bcm-pricing-calculator-2024-06-19/CreateBillEstimate AWS API Documentation
     #
@@ -1387,6 +1397,14 @@ module Aws::BCMPricingCalculator
     # @option params [Hash<String,String>] :tags
     #   The tags to apply to the bill scenario.
     #
+    # @option params [String] :group_sharing_preference
+    #   The setting for the reserved instance and savings plan group sharing
+    #   used in this estimate.
+    #
+    # @option params [String] :cost_category_group_sharing_preference_arn
+    #   The arn of the cost category used in the reserved and prioritized
+    #   group sharing.
+    #
     # @return [Types::CreateBillScenarioResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateBillScenarioResponse#id #id} => String
@@ -1396,6 +1414,8 @@ module Aws::BCMPricingCalculator
     #   * {Types::CreateBillScenarioResponse#created_at #created_at} => Time
     #   * {Types::CreateBillScenarioResponse#expires_at #expires_at} => Time
     #   * {Types::CreateBillScenarioResponse#failure_message #failure_message} => String
+    #   * {Types::CreateBillScenarioResponse#group_sharing_preference #group_sharing_preference} => String
+    #   * {Types::CreateBillScenarioResponse#cost_category_group_sharing_preference_arn #cost_category_group_sharing_preference_arn} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -1405,6 +1425,8 @@ module Aws::BCMPricingCalculator
     #     tags: {
     #       "ResourceTagKey" => "ResourceTagValue",
     #     },
+    #     group_sharing_preference: "OPEN", # accepts OPEN, PRIORITIZED, RESTRICTED
+    #     cost_category_group_sharing_preference_arn: "CostCategoryArn",
     #   })
     #
     # @example Response structure
@@ -1413,10 +1435,12 @@ module Aws::BCMPricingCalculator
     #   resp.name #=> String
     #   resp.bill_interval.start #=> Time
     #   resp.bill_interval.end #=> Time
-    #   resp.status #=> String, one of "READY", "LOCKED", "FAILED"
+    #   resp.status #=> String, one of "READY", "LOCKED", "FAILED", "STALE"
     #   resp.created_at #=> Time
     #   resp.expires_at #=> Time
     #   resp.failure_message #=> String
+    #   resp.group_sharing_preference #=> String, one of "OPEN", "PRIORITIZED", "RESTRICTED"
+    #   resp.cost_category_group_sharing_preference_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/bcm-pricing-calculator-2024-06-19/CreateBillScenario AWS API Documentation
     #
@@ -1464,7 +1488,7 @@ module Aws::BCMPricingCalculator
     #   resp = client.create_workload_estimate({
     #     name: "WorkloadEstimateName", # required
     #     client_token: "ClientToken",
-    #     rate_type: "BEFORE_DISCOUNTS", # accepts BEFORE_DISCOUNTS, AFTER_DISCOUNTS
+    #     rate_type: "BEFORE_DISCOUNTS", # accepts BEFORE_DISCOUNTS, AFTER_DISCOUNTS, AFTER_DISCOUNTS_AND_COMMITMENTS
     #     tags: {
     #       "ResourceTagKey" => "ResourceTagValue",
     #     },
@@ -1476,7 +1500,7 @@ module Aws::BCMPricingCalculator
     #   resp.name #=> String
     #   resp.created_at #=> Time
     #   resp.expires_at #=> Time
-    #   resp.rate_type #=> String, one of "BEFORE_DISCOUNTS", "AFTER_DISCOUNTS"
+    #   resp.rate_type #=> String, one of "BEFORE_DISCOUNTS", "AFTER_DISCOUNTS", "AFTER_DISCOUNTS_AND_COMMITMENTS"
     #   resp.rate_timestamp #=> Time
     #   resp.status #=> String, one of "UPDATING", "VALID", "INVALID", "ACTION_NEEDED"
     #   resp.total_cost #=> Float
@@ -1573,6 +1597,9 @@ module Aws::BCMPricingCalculator
     #   * {Types::GetBillEstimateResponse#cost_summary #cost_summary} => Types::BillEstimateCostSummary
     #   * {Types::GetBillEstimateResponse#created_at #created_at} => Time
     #   * {Types::GetBillEstimateResponse#expires_at #expires_at} => Time
+    #   * {Types::GetBillEstimateResponse#group_sharing_preference #group_sharing_preference} => String
+    #   * {Types::GetBillEstimateResponse#cost_category_group_sharing_preference_arn #cost_category_group_sharing_preference_arn} => String
+    #   * {Types::GetBillEstimateResponse#cost_category_group_sharing_preference_effective_date #cost_category_group_sharing_preference_effective_date} => Time
     #
     # @example Request syntax with placeholder values
     #
@@ -1599,6 +1626,9 @@ module Aws::BCMPricingCalculator
     #   resp.cost_summary.service_cost_differences["String"].estimated_cost.currency #=> String, one of "USD"
     #   resp.created_at #=> Time
     #   resp.expires_at #=> Time
+    #   resp.group_sharing_preference #=> String, one of "OPEN", "PRIORITIZED", "RESTRICTED"
+    #   resp.cost_category_group_sharing_preference_arn #=> String
+    #   resp.cost_category_group_sharing_preference_effective_date #=> Time
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/bcm-pricing-calculator-2024-06-19/GetBillEstimate AWS API Documentation
     #
@@ -1623,6 +1653,8 @@ module Aws::BCMPricingCalculator
     #   * {Types::GetBillScenarioResponse#created_at #created_at} => Time
     #   * {Types::GetBillScenarioResponse#expires_at #expires_at} => Time
     #   * {Types::GetBillScenarioResponse#failure_message #failure_message} => String
+    #   * {Types::GetBillScenarioResponse#group_sharing_preference #group_sharing_preference} => String
+    #   * {Types::GetBillScenarioResponse#cost_category_group_sharing_preference_arn #cost_category_group_sharing_preference_arn} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -1636,10 +1668,12 @@ module Aws::BCMPricingCalculator
     #   resp.name #=> String
     #   resp.bill_interval.start #=> Time
     #   resp.bill_interval.end #=> Time
-    #   resp.status #=> String, one of "READY", "LOCKED", "FAILED"
+    #   resp.status #=> String, one of "READY", "LOCKED", "FAILED", "STALE"
     #   resp.created_at #=> Time
     #   resp.expires_at #=> Time
     #   resp.failure_message #=> String
+    #   resp.group_sharing_preference #=> String, one of "OPEN", "PRIORITIZED", "RESTRICTED"
+    #   resp.cost_category_group_sharing_preference_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/bcm-pricing-calculator-2024-06-19/GetBillScenario AWS API Documentation
     #
@@ -1650,20 +1684,22 @@ module Aws::BCMPricingCalculator
       req.send_request(options)
     end
 
-    # Retrieves the current preferences for the Amazon Web Services Cost
-    # Explorer service.
+    # Retrieves the current preferences for Pricing Calculator.
     #
     # @return [Types::GetPreferencesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::GetPreferencesResponse#management_account_rate_type_selections #management_account_rate_type_selections} => Array&lt;String&gt;
     #   * {Types::GetPreferencesResponse#member_account_rate_type_selections #member_account_rate_type_selections} => Array&lt;String&gt;
+    #   * {Types::GetPreferencesResponse#standalone_account_rate_type_selections #standalone_account_rate_type_selections} => Array&lt;String&gt;
     #
     # @example Response structure
     #
     #   resp.management_account_rate_type_selections #=> Array
-    #   resp.management_account_rate_type_selections[0] #=> String, one of "BEFORE_DISCOUNTS", "AFTER_DISCOUNTS"
+    #   resp.management_account_rate_type_selections[0] #=> String, one of "BEFORE_DISCOUNTS", "AFTER_DISCOUNTS", "AFTER_DISCOUNTS_AND_COMMITMENTS"
     #   resp.member_account_rate_type_selections #=> Array
-    #   resp.member_account_rate_type_selections[0] #=> String, one of "BEFORE_DISCOUNTS", "AFTER_DISCOUNTS"
+    #   resp.member_account_rate_type_selections[0] #=> String, one of "BEFORE_DISCOUNTS", "AFTER_DISCOUNTS", "AFTER_DISCOUNTS_AND_COMMITMENTS"
+    #   resp.standalone_account_rate_type_selections #=> Array
+    #   resp.standalone_account_rate_type_selections[0] #=> String, one of "BEFORE_DISCOUNTS", "AFTER_DISCOUNTS", "AFTER_DISCOUNTS_AND_COMMITMENTS"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/bcm-pricing-calculator-2024-06-19/GetPreferences AWS API Documentation
     #
@@ -1704,7 +1740,7 @@ module Aws::BCMPricingCalculator
     #   resp.name #=> String
     #   resp.created_at #=> Time
     #   resp.expires_at #=> Time
-    #   resp.rate_type #=> String, one of "BEFORE_DISCOUNTS", "AFTER_DISCOUNTS"
+    #   resp.rate_type #=> String, one of "BEFORE_DISCOUNTS", "AFTER_DISCOUNTS", "AFTER_DISCOUNTS_AND_COMMITMENTS"
     #   resp.rate_timestamp #=> Time
     #   resp.status #=> String, one of "UPDATING", "VALID", "INVALID", "ACTION_NEEDED"
     #   resp.total_cost #=> Float
@@ -2218,7 +2254,7 @@ module Aws::BCMPricingCalculator
     #   resp = client.list_bill_scenarios({
     #     filters: [
     #       {
-    #         name: "STATUS", # required, accepts STATUS, NAME
+    #         name: "STATUS", # required, accepts STATUS, NAME, GROUP_SHARING_PREFERENCE, COST_CATEGORY_ARN
     #         values: ["String"], # required
     #         match_option: "EQUALS", # accepts EQUALS, STARTS_WITH, CONTAINS
     #       },
@@ -2242,10 +2278,12 @@ module Aws::BCMPricingCalculator
     #   resp.items[0].name #=> String
     #   resp.items[0].bill_interval.start #=> Time
     #   resp.items[0].bill_interval.end #=> Time
-    #   resp.items[0].status #=> String, one of "READY", "LOCKED", "FAILED"
+    #   resp.items[0].status #=> String, one of "READY", "LOCKED", "FAILED", "STALE"
     #   resp.items[0].created_at #=> Time
     #   resp.items[0].expires_at #=> Time
     #   resp.items[0].failure_message #=> String
+    #   resp.items[0].group_sharing_preference #=> String, one of "OPEN", "PRIORITIZED", "RESTRICTED"
+    #   resp.items[0].cost_category_group_sharing_preference_arn #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/bcm-pricing-calculator-2024-06-19/ListBillScenarios AWS API Documentation
@@ -2428,7 +2466,7 @@ module Aws::BCMPricingCalculator
     #   resp.items[0].name #=> String
     #   resp.items[0].created_at #=> Time
     #   resp.items[0].expires_at #=> Time
-    #   resp.items[0].rate_type #=> String, one of "BEFORE_DISCOUNTS", "AFTER_DISCOUNTS"
+    #   resp.items[0].rate_type #=> String, one of "BEFORE_DISCOUNTS", "AFTER_DISCOUNTS", "AFTER_DISCOUNTS_AND_COMMITMENTS"
     #   resp.items[0].rate_timestamp #=> Time
     #   resp.items[0].status #=> String, one of "UPDATING", "VALID", "INVALID", "ACTION_NEEDED"
     #   resp.items[0].total_cost #=> Float
@@ -2520,6 +2558,9 @@ module Aws::BCMPricingCalculator
     #   * {Types::UpdateBillEstimateResponse#cost_summary #cost_summary} => Types::BillEstimateCostSummary
     #   * {Types::UpdateBillEstimateResponse#created_at #created_at} => Time
     #   * {Types::UpdateBillEstimateResponse#expires_at #expires_at} => Time
+    #   * {Types::UpdateBillEstimateResponse#group_sharing_preference #group_sharing_preference} => String
+    #   * {Types::UpdateBillEstimateResponse#cost_category_group_sharing_preference_arn #cost_category_group_sharing_preference_arn} => String
+    #   * {Types::UpdateBillEstimateResponse#cost_category_group_sharing_preference_effective_date #cost_category_group_sharing_preference_effective_date} => Time
     #
     # @example Request syntax with placeholder values
     #
@@ -2548,6 +2589,9 @@ module Aws::BCMPricingCalculator
     #   resp.cost_summary.service_cost_differences["String"].estimated_cost.currency #=> String, one of "USD"
     #   resp.created_at #=> Time
     #   resp.expires_at #=> Time
+    #   resp.group_sharing_preference #=> String, one of "OPEN", "PRIORITIZED", "RESTRICTED"
+    #   resp.cost_category_group_sharing_preference_arn #=> String
+    #   resp.cost_category_group_sharing_preference_effective_date #=> Time
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/bcm-pricing-calculator-2024-06-19/UpdateBillEstimate AWS API Documentation
     #
@@ -2569,6 +2613,14 @@ module Aws::BCMPricingCalculator
     # @option params [Time,DateTime,Date,Integer,String] :expires_at
     #   The new expiration date for the bill scenario.
     #
+    # @option params [String] :group_sharing_preference
+    #   The setting for the reserved instance and savings plan group sharing
+    #   used in this estimate.
+    #
+    # @option params [String] :cost_category_group_sharing_preference_arn
+    #   The arn of the cost category used in the reserved and prioritized
+    #   group sharing.
+    #
     # @return [Types::UpdateBillScenarioResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::UpdateBillScenarioResponse#id #id} => String
@@ -2578,6 +2630,8 @@ module Aws::BCMPricingCalculator
     #   * {Types::UpdateBillScenarioResponse#created_at #created_at} => Time
     #   * {Types::UpdateBillScenarioResponse#expires_at #expires_at} => Time
     #   * {Types::UpdateBillScenarioResponse#failure_message #failure_message} => String
+    #   * {Types::UpdateBillScenarioResponse#group_sharing_preference #group_sharing_preference} => String
+    #   * {Types::UpdateBillScenarioResponse#cost_category_group_sharing_preference_arn #cost_category_group_sharing_preference_arn} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -2585,6 +2639,8 @@ module Aws::BCMPricingCalculator
     #     identifier: "ResourceId", # required
     #     name: "BillScenarioName",
     #     expires_at: Time.now,
+    #     group_sharing_preference: "OPEN", # accepts OPEN, PRIORITIZED, RESTRICTED
+    #     cost_category_group_sharing_preference_arn: "CostCategoryArn",
     #   })
     #
     # @example Response structure
@@ -2593,10 +2649,12 @@ module Aws::BCMPricingCalculator
     #   resp.name #=> String
     #   resp.bill_interval.start #=> Time
     #   resp.bill_interval.end #=> Time
-    #   resp.status #=> String, one of "READY", "LOCKED", "FAILED"
+    #   resp.status #=> String, one of "READY", "LOCKED", "FAILED", "STALE"
     #   resp.created_at #=> Time
     #   resp.expires_at #=> Time
     #   resp.failure_message #=> String
+    #   resp.group_sharing_preference #=> String, one of "OPEN", "PRIORITIZED", "RESTRICTED"
+    #   resp.cost_category_group_sharing_preference_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/bcm-pricing-calculator-2024-06-19/UpdateBillScenario AWS API Documentation
     #
@@ -2607,8 +2665,7 @@ module Aws::BCMPricingCalculator
       req.send_request(options)
     end
 
-    # Updates the preferences for the Amazon Web Services Cost Explorer
-    # service.
+    # Updates the preferences for Pricing Calculator.
     #
     # @option params [Array<String>] :management_account_rate_type_selections
     #   The updated preferred rate types for the management account.
@@ -2616,24 +2673,31 @@ module Aws::BCMPricingCalculator
     # @option params [Array<String>] :member_account_rate_type_selections
     #   The updated preferred rate types for member accounts.
     #
+    # @option params [Array<String>] :standalone_account_rate_type_selections
+    #   The updated preferred rate types for a standalone account.
+    #
     # @return [Types::UpdatePreferencesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::UpdatePreferencesResponse#management_account_rate_type_selections #management_account_rate_type_selections} => Array&lt;String&gt;
     #   * {Types::UpdatePreferencesResponse#member_account_rate_type_selections #member_account_rate_type_selections} => Array&lt;String&gt;
+    #   * {Types::UpdatePreferencesResponse#standalone_account_rate_type_selections #standalone_account_rate_type_selections} => Array&lt;String&gt;
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_preferences({
-    #     management_account_rate_type_selections: ["BEFORE_DISCOUNTS"], # accepts BEFORE_DISCOUNTS, AFTER_DISCOUNTS
-    #     member_account_rate_type_selections: ["BEFORE_DISCOUNTS"], # accepts BEFORE_DISCOUNTS, AFTER_DISCOUNTS
+    #     management_account_rate_type_selections: ["BEFORE_DISCOUNTS"], # accepts BEFORE_DISCOUNTS, AFTER_DISCOUNTS, AFTER_DISCOUNTS_AND_COMMITMENTS
+    #     member_account_rate_type_selections: ["BEFORE_DISCOUNTS"], # accepts BEFORE_DISCOUNTS, AFTER_DISCOUNTS, AFTER_DISCOUNTS_AND_COMMITMENTS
+    #     standalone_account_rate_type_selections: ["BEFORE_DISCOUNTS"], # accepts BEFORE_DISCOUNTS, AFTER_DISCOUNTS, AFTER_DISCOUNTS_AND_COMMITMENTS
     #   })
     #
     # @example Response structure
     #
     #   resp.management_account_rate_type_selections #=> Array
-    #   resp.management_account_rate_type_selections[0] #=> String, one of "BEFORE_DISCOUNTS", "AFTER_DISCOUNTS"
+    #   resp.management_account_rate_type_selections[0] #=> String, one of "BEFORE_DISCOUNTS", "AFTER_DISCOUNTS", "AFTER_DISCOUNTS_AND_COMMITMENTS"
     #   resp.member_account_rate_type_selections #=> Array
-    #   resp.member_account_rate_type_selections[0] #=> String, one of "BEFORE_DISCOUNTS", "AFTER_DISCOUNTS"
+    #   resp.member_account_rate_type_selections[0] #=> String, one of "BEFORE_DISCOUNTS", "AFTER_DISCOUNTS", "AFTER_DISCOUNTS_AND_COMMITMENTS"
+    #   resp.standalone_account_rate_type_selections #=> Array
+    #   resp.standalone_account_rate_type_selections[0] #=> String, one of "BEFORE_DISCOUNTS", "AFTER_DISCOUNTS", "AFTER_DISCOUNTS_AND_COMMITMENTS"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/bcm-pricing-calculator-2024-06-19/UpdatePreferences AWS API Documentation
     #
@@ -2682,7 +2746,7 @@ module Aws::BCMPricingCalculator
     #   resp.name #=> String
     #   resp.created_at #=> Time
     #   resp.expires_at #=> Time
-    #   resp.rate_type #=> String, one of "BEFORE_DISCOUNTS", "AFTER_DISCOUNTS"
+    #   resp.rate_type #=> String, one of "BEFORE_DISCOUNTS", "AFTER_DISCOUNTS", "AFTER_DISCOUNTS_AND_COMMITMENTS"
     #   resp.rate_timestamp #=> Time
     #   resp.status #=> String, one of "UPDATING", "VALID", "INVALID", "ACTION_NEEDED"
     #   resp.total_cost #=> Float
@@ -2716,7 +2780,7 @@ module Aws::BCMPricingCalculator
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-bcmpricingcalculator'
-      context[:gem_version] = '1.6.0'
+      context[:gem_version] = '1.32.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

@@ -17,6 +17,7 @@ module Aws::SecurityIR
     AWSAccountId = Shapes::StringShape.new(name: 'AWSAccountId')
     AWSAccountIds = Shapes::ListShape.new(name: 'AWSAccountIds')
     AccessDeniedException = Shapes::StructureShape.new(name: 'AccessDeniedException')
+    ActionType = Shapes::StringShape.new(name: 'ActionType')
     Arn = Shapes::StringShape.new(name: 'Arn')
     AttachmentId = Shapes::StringShape.new(name: 'AttachmentId')
     AwsRegion = Shapes::StringShape.new(name: 'AwsRegion')
@@ -36,6 +37,10 @@ module Aws::SecurityIR
     CaseEditItems = Shapes::ListShape.new(name: 'CaseEditItems')
     CaseEditMessage = Shapes::StringShape.new(name: 'CaseEditMessage')
     CaseId = Shapes::StringShape.new(name: 'CaseId')
+    CaseMetadata = Shapes::ListShape.new(name: 'CaseMetadata')
+    CaseMetadataEntry = Shapes::StructureShape.new(name: 'CaseMetadataEntry')
+    CaseMetadataEntryKeyString = Shapes::StringShape.new(name: 'CaseMetadataEntryKeyString')
+    CaseMetadataEntryValueString = Shapes::StringShape.new(name: 'CaseMetadataEntryValueString')
     CaseStatus = Shapes::StringShape.new(name: 'CaseStatus')
     CaseTitle = Shapes::StringShape.new(name: 'CaseTitle')
     CloseCaseRequest = Shapes::StructureShape.new(name: 'CloseCaseRequest')
@@ -43,6 +48,8 @@ module Aws::SecurityIR
     ClosureCode = Shapes::StringShape.new(name: 'ClosureCode')
     CommentBody = Shapes::StringShape.new(name: 'CommentBody')
     CommentId = Shapes::StringShape.new(name: 'CommentId')
+    CommunicationPreferences = Shapes::ListShape.new(name: 'CommunicationPreferences')
+    CommunicationType = Shapes::StringShape.new(name: 'CommunicationType')
     ConflictException = Shapes::StructureShape.new(name: 'ConflictException')
     ContentLength = Shapes::IntegerShape.new(name: 'ContentLength')
     CreateCaseCommentRequest = Shapes::StructureShape.new(name: 'CreateCaseCommentRequest')
@@ -57,6 +64,8 @@ module Aws::SecurityIR
     CustomerType = Shapes::StringShape.new(name: 'CustomerType')
     EmailAddress = Shapes::StringShape.new(name: 'EmailAddress')
     EngagementType = Shapes::StringShape.new(name: 'EngagementType')
+    ExecutionStatus = Shapes::StringShape.new(name: 'ExecutionStatus')
+    FeedbackComment = Shapes::StringShape.new(name: 'FeedbackComment')
     FileName = Shapes::StringShape.new(name: 'FileName')
     GetCaseAttachmentDownloadUrlRequest = Shapes::StructureShape.new(name: 'GetCaseAttachmentDownloadUrlRequest')
     GetCaseAttachmentDownloadUrlResponse = Shapes::StructureShape.new(name: 'GetCaseAttachmentDownloadUrlResponse')
@@ -82,6 +91,12 @@ module Aws::SecurityIR
     Integer = Shapes::IntegerShape.new(name: 'Integer')
     InternalServerException = Shapes::StructureShape.new(name: 'InternalServerException')
     InvalidTokenException = Shapes::StructureShape.new(name: 'InvalidTokenException')
+    InvestigationAction = Shapes::StructureShape.new(name: 'InvestigationAction')
+    InvestigationActionList = Shapes::ListShape.new(name: 'InvestigationActionList')
+    InvestigationContent = Shapes::StringShape.new(name: 'InvestigationContent')
+    InvestigationFeedback = Shapes::StructureShape.new(name: 'InvestigationFeedback')
+    InvestigationId = Shapes::StringShape.new(name: 'InvestigationId')
+    InvestigationTitle = Shapes::StringShape.new(name: 'InvestigationTitle')
     JobTitle = Shapes::StringShape.new(name: 'JobTitle')
     ListCaseEditsRequest = Shapes::StructureShape.new(name: 'ListCaseEditsRequest')
     ListCaseEditsRequestMaxResultsInteger = Shapes::IntegerShape.new(name: 'ListCaseEditsRequestMaxResultsInteger')
@@ -99,6 +114,10 @@ module Aws::SecurityIR
     ListCommentsRequestMaxResultsInteger = Shapes::IntegerShape.new(name: 'ListCommentsRequestMaxResultsInteger')
     ListCommentsRequestNextTokenString = Shapes::StringShape.new(name: 'ListCommentsRequestNextTokenString')
     ListCommentsResponse = Shapes::StructureShape.new(name: 'ListCommentsResponse')
+    ListInvestigationsRequest = Shapes::StructureShape.new(name: 'ListInvestigationsRequest')
+    ListInvestigationsRequestMaxResultsInteger = Shapes::IntegerShape.new(name: 'ListInvestigationsRequestMaxResultsInteger')
+    ListInvestigationsRequestNextTokenString = Shapes::StringShape.new(name: 'ListInvestigationsRequestNextTokenString')
+    ListInvestigationsResponse = Shapes::StructureShape.new(name: 'ListInvestigationsResponse')
     ListMembershipItem = Shapes::StructureShape.new(name: 'ListMembershipItem')
     ListMembershipItems = Shapes::ListShape.new(name: 'ListMembershipItems')
     ListMembershipsRequest = Shapes::StructureShape.new(name: 'ListMembershipsRequest')
@@ -110,6 +129,10 @@ module Aws::SecurityIR
     Long = Shapes::IntegerShape.new(name: 'Long')
     MembershipAccountRelationshipStatus = Shapes::StringShape.new(name: 'MembershipAccountRelationshipStatus')
     MembershipAccountRelationshipType = Shapes::StringShape.new(name: 'MembershipAccountRelationshipType')
+    MembershipAccountsConfigurations = Shapes::StructureShape.new(name: 'MembershipAccountsConfigurations')
+    MembershipAccountsConfigurationsUpdate = Shapes::StructureShape.new(name: 'MembershipAccountsConfigurationsUpdate')
+    MembershipAccountsConfigurationsUpdateOrganizationalUnitsToAddList = Shapes::ListShape.new(name: 'MembershipAccountsConfigurationsUpdateOrganizationalUnitsToAddList')
+    MembershipAccountsConfigurationsUpdateOrganizationalUnitsToRemoveList = Shapes::ListShape.new(name: 'MembershipAccountsConfigurationsUpdateOrganizationalUnitsToRemoveList')
     MembershipArn = Shapes::StringShape.new(name: 'MembershipArn')
     MembershipId = Shapes::StringShape.new(name: 'MembershipId')
     MembershipName = Shapes::StringShape.new(name: 'MembershipName')
@@ -117,13 +140,18 @@ module Aws::SecurityIR
     OptInFeature = Shapes::StructureShape.new(name: 'OptInFeature')
     OptInFeatureName = Shapes::StringShape.new(name: 'OptInFeatureName')
     OptInFeatures = Shapes::ListShape.new(name: 'OptInFeatures')
+    OrganizationalUnitId = Shapes::StringShape.new(name: 'OrganizationalUnitId')
+    OrganizationalUnits = Shapes::ListShape.new(name: 'OrganizationalUnits')
     PendingAction = Shapes::StringShape.new(name: 'PendingAction')
     PersonName = Shapes::StringShape.new(name: 'PersonName')
     PrincipalId = Shapes::StringShape.new(name: 'PrincipalId')
     ResolverType = Shapes::StringShape.new(name: 'ResolverType')
     ResourceNotFoundException = Shapes::StructureShape.new(name: 'ResourceNotFoundException')
+    ResultId = Shapes::StringShape.new(name: 'ResultId')
     SecurityIncidentResponseNotActiveException = Shapes::StructureShape.new(name: 'SecurityIncidentResponseNotActiveException')
     SelfManagedCaseStatus = Shapes::StringShape.new(name: 'SelfManagedCaseStatus')
+    SendFeedbackRequest = Shapes::StructureShape.new(name: 'SendFeedbackRequest')
+    SendFeedbackResponse = Shapes::StructureShape.new(name: 'SendFeedbackResponse')
     ServiceQuotaExceededException = Shapes::StructureShape.new(name: 'ServiceQuotaExceededException')
     String = Shapes::StringShape.new(name: 'String')
     TagKey = Shapes::StringShape.new(name: 'TagKey')
@@ -149,6 +177,7 @@ module Aws::SecurityIR
     UpdateResolverTypeRequest = Shapes::StructureShape.new(name: 'UpdateResolverTypeRequest')
     UpdateResolverTypeResponse = Shapes::StructureShape.new(name: 'UpdateResolverTypeResponse')
     Url = Shapes::StringShape.new(name: 'Url')
+    UsefulnessRating = Shapes::StringShape.new(name: 'UsefulnessRating')
     UserAgent = Shapes::StringShape.new(name: 'UserAgent')
     ValidationException = Shapes::StructureShape.new(name: 'ValidationException')
     ValidationExceptionField = Shapes::StructureShape.new(name: 'ValidationExceptionField')
@@ -193,6 +222,12 @@ module Aws::SecurityIR
 
     CaseEditItems.member = Shapes::ShapeRef.new(shape: CaseEditItem)
 
+    CaseMetadata.member = Shapes::ShapeRef.new(shape: CaseMetadataEntry)
+
+    CaseMetadataEntry.add_member(:key, Shapes::ShapeRef.new(shape: CaseMetadataEntryKeyString, required: true, location_name: "key"))
+    CaseMetadataEntry.add_member(:value, Shapes::ShapeRef.new(shape: CaseMetadataEntryValueString, required: true, location_name: "value"))
+    CaseMetadataEntry.struct_class = Types::CaseMetadataEntry
+
     CloseCaseRequest.add_member(:case_id, Shapes::ShapeRef.new(shape: CaseId, required: true, location: "uri", location_name: "caseId"))
     CloseCaseRequest.struct_class = Types::CloseCaseRequest
 
@@ -200,20 +235,22 @@ module Aws::SecurityIR
     CloseCaseResponse.add_member(:closed_date, Shapes::ShapeRef.new(shape: Timestamp, location_name: "closedDate"))
     CloseCaseResponse.struct_class = Types::CloseCaseResponse
 
+    CommunicationPreferences.member = Shapes::ShapeRef.new(shape: CommunicationType)
+
     ConflictException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
     ConflictException.add_member(:resource_id, Shapes::ShapeRef.new(shape: String, required: true, location_name: "resourceId"))
     ConflictException.add_member(:resource_type, Shapes::ShapeRef.new(shape: String, required: true, location_name: "resourceType"))
     ConflictException.struct_class = Types::ConflictException
 
     CreateCaseCommentRequest.add_member(:case_id, Shapes::ShapeRef.new(shape: CaseId, required: true, location: "uri", location_name: "caseId"))
-    CreateCaseCommentRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: CreateCaseCommentRequestClientTokenString, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateCaseCommentRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: CreateCaseCommentRequestClientTokenString, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateCaseCommentRequest.add_member(:body, Shapes::ShapeRef.new(shape: CommentBody, required: true, location_name: "body"))
     CreateCaseCommentRequest.struct_class = Types::CreateCaseCommentRequest
 
     CreateCaseCommentResponse.add_member(:comment_id, Shapes::ShapeRef.new(shape: CommentId, required: true, location_name: "commentId"))
     CreateCaseCommentResponse.struct_class = Types::CreateCaseCommentResponse
 
-    CreateCaseRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: CreateCaseRequestClientTokenString, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateCaseRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: CreateCaseRequestClientTokenString, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateCaseRequest.add_member(:resolver_type, Shapes::ShapeRef.new(shape: ResolverType, required: true, location_name: "resolverType"))
     CreateCaseRequest.add_member(:title, Shapes::ShapeRef.new(shape: CaseTitle, required: true, location_name: "title"))
     CreateCaseRequest.add_member(:description, Shapes::ShapeRef.new(shape: CaseDescription, required: true, location_name: "description"))
@@ -230,11 +267,12 @@ module Aws::SecurityIR
     CreateCaseResponse.add_member(:case_id, Shapes::ShapeRef.new(shape: CaseId, required: true, location_name: "caseId"))
     CreateCaseResponse.struct_class = Types::CreateCaseResponse
 
-    CreateMembershipRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: CreateMembershipRequestClientTokenString, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateMembershipRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: CreateMembershipRequestClientTokenString, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateMembershipRequest.add_member(:membership_name, Shapes::ShapeRef.new(shape: MembershipName, required: true, location_name: "membershipName"))
     CreateMembershipRequest.add_member(:incident_response_team, Shapes::ShapeRef.new(shape: IncidentResponseTeam, required: true, location_name: "incidentResponseTeam"))
     CreateMembershipRequest.add_member(:opt_in_features, Shapes::ShapeRef.new(shape: OptInFeatures, location_name: "optInFeatures"))
     CreateMembershipRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
+    CreateMembershipRequest.add_member(:cover_entire_organization, Shapes::ShapeRef.new(shape: Boolean, location_name: "coverEntireOrganization"))
     CreateMembershipRequest.struct_class = Types::CreateMembershipRequest
 
     CreateMembershipResponse.add_member(:membership_id, Shapes::ShapeRef.new(shape: MembershipId, required: true, location_name: "membershipId"))
@@ -250,7 +288,7 @@ module Aws::SecurityIR
     GetCaseAttachmentUploadUrlRequest.add_member(:case_id, Shapes::ShapeRef.new(shape: CaseId, required: true, location: "uri", location_name: "caseId"))
     GetCaseAttachmentUploadUrlRequest.add_member(:file_name, Shapes::ShapeRef.new(shape: FileName, required: true, location_name: "fileName"))
     GetCaseAttachmentUploadUrlRequest.add_member(:content_length, Shapes::ShapeRef.new(shape: ContentLength, required: true, location_name: "contentLength"))
-    GetCaseAttachmentUploadUrlRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: GetCaseAttachmentUploadUrlRequestClientTokenString, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    GetCaseAttachmentUploadUrlRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: GetCaseAttachmentUploadUrlRequestClientTokenString, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     GetCaseAttachmentUploadUrlRequest.struct_class = Types::GetCaseAttachmentUploadUrlRequest
 
     GetCaseAttachmentUploadUrlResponse.add_member(:attachment_presigned_url, Shapes::ShapeRef.new(shape: Url, required: true, location_name: "attachmentPresignedUrl"))
@@ -278,6 +316,7 @@ module Aws::SecurityIR
     GetCaseResponse.add_member(:impacted_services, Shapes::ShapeRef.new(shape: ImpactedServicesList, location_name: "impactedServices"))
     GetCaseResponse.add_member(:case_attachments, Shapes::ShapeRef.new(shape: CaseAttachmentsList, location_name: "caseAttachments"))
     GetCaseResponse.add_member(:closed_date, Shapes::ShapeRef.new(shape: Timestamp, location_name: "closedDate"))
+    GetCaseResponse.add_member(:case_metadata, Shapes::ShapeRef.new(shape: CaseMetadata, location_name: "caseMetadata"))
     GetCaseResponse.struct_class = Types::GetCaseResponse
 
     GetMembershipAccountDetailError.add_member(:account_id, Shapes::ShapeRef.new(shape: AWSAccountId, required: true, location_name: "accountId"))
@@ -309,6 +348,7 @@ module Aws::SecurityIR
     GetMembershipResponse.add_member(:number_of_accounts_covered, Shapes::ShapeRef.new(shape: Long, location_name: "numberOfAccountsCovered"))
     GetMembershipResponse.add_member(:incident_response_team, Shapes::ShapeRef.new(shape: IncidentResponseTeam, location_name: "incidentResponseTeam"))
     GetMembershipResponse.add_member(:opt_in_features, Shapes::ShapeRef.new(shape: OptInFeatures, location_name: "optInFeatures"))
+    GetMembershipResponse.add_member(:membership_accounts_configurations, Shapes::ShapeRef.new(shape: MembershipAccountsConfigurations, location_name: "membershipAccountsConfigurations"))
     GetMembershipResponse.struct_class = Types::GetMembershipResponse
 
     ImpactedAccounts.member = Shapes::ShapeRef.new(shape: AWSAccountId)
@@ -323,6 +363,7 @@ module Aws::SecurityIR
     IncidentResponder.add_member(:name, Shapes::ShapeRef.new(shape: IncidentResponderName, required: true, location_name: "name"))
     IncidentResponder.add_member(:job_title, Shapes::ShapeRef.new(shape: JobTitle, required: true, location_name: "jobTitle"))
     IncidentResponder.add_member(:email, Shapes::ShapeRef.new(shape: EmailAddress, required: true, location_name: "email"))
+    IncidentResponder.add_member(:communication_preferences, Shapes::ShapeRef.new(shape: CommunicationPreferences, location_name: "communicationPreferences"))
     IncidentResponder.struct_class = Types::IncidentResponder
 
     IncidentResponseTeam.member = Shapes::ShapeRef.new(shape: IncidentResponder)
@@ -333,6 +374,22 @@ module Aws::SecurityIR
 
     InvalidTokenException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
     InvalidTokenException.struct_class = Types::InvalidTokenException
+
+    InvestigationAction.add_member(:investigation_id, Shapes::ShapeRef.new(shape: InvestigationId, required: true, location_name: "investigationId"))
+    InvestigationAction.add_member(:action_type, Shapes::ShapeRef.new(shape: ActionType, required: true, location_name: "actionType"))
+    InvestigationAction.add_member(:title, Shapes::ShapeRef.new(shape: InvestigationTitle, required: true, location_name: "title"))
+    InvestigationAction.add_member(:content, Shapes::ShapeRef.new(shape: InvestigationContent, required: true, location_name: "content"))
+    InvestigationAction.add_member(:status, Shapes::ShapeRef.new(shape: ExecutionStatus, required: true, location_name: "status"))
+    InvestigationAction.add_member(:last_updated, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "lastUpdated"))
+    InvestigationAction.add_member(:feedback, Shapes::ShapeRef.new(shape: InvestigationFeedback, location_name: "feedback"))
+    InvestigationAction.struct_class = Types::InvestigationAction
+
+    InvestigationActionList.member = Shapes::ShapeRef.new(shape: InvestigationAction)
+
+    InvestigationFeedback.add_member(:usefulness, Shapes::ShapeRef.new(shape: UsefulnessRating, location_name: "usefulness"))
+    InvestigationFeedback.add_member(:comment, Shapes::ShapeRef.new(shape: FeedbackComment, location_name: "comment"))
+    InvestigationFeedback.add_member(:submitted_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "submittedAt"))
+    InvestigationFeedback.struct_class = Types::InvestigationFeedback
 
     ListCaseEditsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: ListCaseEditsRequestNextTokenString, location_name: "nextToken"))
     ListCaseEditsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: ListCaseEditsRequestMaxResultsInteger, location_name: "maxResults"))
@@ -387,6 +444,15 @@ module Aws::SecurityIR
     ListCommentsResponse.add_member(:total, Shapes::ShapeRef.new(shape: Integer, location_name: "total"))
     ListCommentsResponse.struct_class = Types::ListCommentsResponse
 
+    ListInvestigationsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: ListInvestigationsRequestNextTokenString, location: "querystring", location_name: "nextToken"))
+    ListInvestigationsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: ListInvestigationsRequestMaxResultsInteger, location: "querystring", location_name: "maxResults"))
+    ListInvestigationsRequest.add_member(:case_id, Shapes::ShapeRef.new(shape: CaseId, required: true, location: "uri", location_name: "caseId"))
+    ListInvestigationsRequest.struct_class = Types::ListInvestigationsRequest
+
+    ListInvestigationsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: String, location_name: "nextToken"))
+    ListInvestigationsResponse.add_member(:investigation_actions, Shapes::ShapeRef.new(shape: InvestigationActionList, required: true, location_name: "investigationActions"))
+    ListInvestigationsResponse.struct_class = Types::ListInvestigationsResponse
+
     ListMembershipItem.add_member(:membership_id, Shapes::ShapeRef.new(shape: MembershipId, required: true, location_name: "membershipId"))
     ListMembershipItem.add_member(:account_id, Shapes::ShapeRef.new(shape: AWSAccountId, location_name: "accountId"))
     ListMembershipItem.add_member(:region, Shapes::ShapeRef.new(shape: AwsRegion, location_name: "region"))
@@ -410,17 +476,40 @@ module Aws::SecurityIR
     ListTagsForResourceOutput.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, required: true, location_name: "tags"))
     ListTagsForResourceOutput.struct_class = Types::ListTagsForResourceOutput
 
+    MembershipAccountsConfigurations.add_member(:cover_entire_organization, Shapes::ShapeRef.new(shape: Boolean, location_name: "coverEntireOrganization"))
+    MembershipAccountsConfigurations.add_member(:organizational_units, Shapes::ShapeRef.new(shape: OrganizationalUnits, location_name: "organizationalUnits"))
+    MembershipAccountsConfigurations.struct_class = Types::MembershipAccountsConfigurations
+
+    MembershipAccountsConfigurationsUpdate.add_member(:cover_entire_organization, Shapes::ShapeRef.new(shape: Boolean, location_name: "coverEntireOrganization"))
+    MembershipAccountsConfigurationsUpdate.add_member(:organizational_units_to_add, Shapes::ShapeRef.new(shape: MembershipAccountsConfigurationsUpdateOrganizationalUnitsToAddList, location_name: "organizationalUnitsToAdd"))
+    MembershipAccountsConfigurationsUpdate.add_member(:organizational_units_to_remove, Shapes::ShapeRef.new(shape: MembershipAccountsConfigurationsUpdateOrganizationalUnitsToRemoveList, location_name: "organizationalUnitsToRemove"))
+    MembershipAccountsConfigurationsUpdate.struct_class = Types::MembershipAccountsConfigurationsUpdate
+
+    MembershipAccountsConfigurationsUpdateOrganizationalUnitsToAddList.member = Shapes::ShapeRef.new(shape: OrganizationalUnitId)
+
+    MembershipAccountsConfigurationsUpdateOrganizationalUnitsToRemoveList.member = Shapes::ShapeRef.new(shape: OrganizationalUnitId)
+
     OptInFeature.add_member(:feature_name, Shapes::ShapeRef.new(shape: OptInFeatureName, required: true, location_name: "featureName"))
     OptInFeature.add_member(:is_enabled, Shapes::ShapeRef.new(shape: Boolean, required: true, location_name: "isEnabled"))
     OptInFeature.struct_class = Types::OptInFeature
 
     OptInFeatures.member = Shapes::ShapeRef.new(shape: OptInFeature)
 
+    OrganizationalUnits.member = Shapes::ShapeRef.new(shape: OrganizationalUnitId)
+
     ResourceNotFoundException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
     ResourceNotFoundException.struct_class = Types::ResourceNotFoundException
 
     SecurityIncidentResponseNotActiveException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
     SecurityIncidentResponseNotActiveException.struct_class = Types::SecurityIncidentResponseNotActiveException
+
+    SendFeedbackRequest.add_member(:case_id, Shapes::ShapeRef.new(shape: CaseId, required: true, location: "uri", location_name: "caseId"))
+    SendFeedbackRequest.add_member(:result_id, Shapes::ShapeRef.new(shape: ResultId, required: true, location: "uri", location_name: "resultId"))
+    SendFeedbackRequest.add_member(:usefulness, Shapes::ShapeRef.new(shape: UsefulnessRating, required: true, location_name: "usefulness"))
+    SendFeedbackRequest.add_member(:comment, Shapes::ShapeRef.new(shape: FeedbackComment, location_name: "comment"))
+    SendFeedbackRequest.struct_class = Types::SendFeedbackRequest
+
+    SendFeedbackResponse.struct_class = Types::SendFeedbackResponse
 
     ServiceQuotaExceededException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
     ServiceQuotaExceededException.add_member(:resource_id, Shapes::ShapeRef.new(shape: String, required: true, location_name: "resourceId"))
@@ -483,6 +572,7 @@ module Aws::SecurityIR
     UpdateCaseRequest.add_member(:impacted_aws_regions_to_delete, Shapes::ShapeRef.new(shape: ImpactedAwsRegionList, location_name: "impactedAwsRegionsToDelete"))
     UpdateCaseRequest.add_member(:impacted_accounts_to_add, Shapes::ShapeRef.new(shape: ImpactedAccounts, location_name: "impactedAccountsToAdd"))
     UpdateCaseRequest.add_member(:impacted_accounts_to_delete, Shapes::ShapeRef.new(shape: ImpactedAccounts, location_name: "impactedAccountsToDelete"))
+    UpdateCaseRequest.add_member(:case_metadata, Shapes::ShapeRef.new(shape: CaseMetadata, location_name: "caseMetadata"))
     UpdateCaseRequest.struct_class = Types::UpdateCaseRequest
 
     UpdateCaseResponse.struct_class = Types::UpdateCaseResponse
@@ -498,6 +588,8 @@ module Aws::SecurityIR
     UpdateMembershipRequest.add_member(:membership_name, Shapes::ShapeRef.new(shape: MembershipName, location_name: "membershipName"))
     UpdateMembershipRequest.add_member(:incident_response_team, Shapes::ShapeRef.new(shape: IncidentResponseTeam, location_name: "incidentResponseTeam"))
     UpdateMembershipRequest.add_member(:opt_in_features, Shapes::ShapeRef.new(shape: OptInFeatures, location_name: "optInFeatures"))
+    UpdateMembershipRequest.add_member(:membership_accounts_configurations_update, Shapes::ShapeRef.new(shape: MembershipAccountsConfigurationsUpdate, location_name: "membershipAccountsConfigurationsUpdate"))
+    UpdateMembershipRequest.add_member(:undo_membership_cancellation, Shapes::ShapeRef.new(shape: Boolean, location_name: "undoMembershipCancellation"))
     UpdateMembershipRequest.struct_class = Types::UpdateMembershipRequest
 
     UpdateMembershipResponse.struct_class = Types::UpdateMembershipResponse
@@ -559,9 +651,9 @@ module Aws::SecurityIR
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: SecurityIncidentResponseNotActiveException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
-        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: InvalidTokenException)
       end)
 
@@ -576,9 +668,9 @@ module Aws::SecurityIR
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: SecurityIncidentResponseNotActiveException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
-        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: InvalidTokenException)
       end)
 
@@ -593,9 +685,9 @@ module Aws::SecurityIR
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: SecurityIncidentResponseNotActiveException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
-        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: InvalidTokenException)
       end)
 
@@ -610,9 +702,9 @@ module Aws::SecurityIR
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: SecurityIncidentResponseNotActiveException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
-        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: InvalidTokenException)
       end)
 
@@ -627,9 +719,9 @@ module Aws::SecurityIR
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: SecurityIncidentResponseNotActiveException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
-        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: InvalidTokenException)
       end)
 
@@ -644,9 +736,9 @@ module Aws::SecurityIR
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: SecurityIncidentResponseNotActiveException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
-        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: InvalidTokenException)
       end)
 
@@ -661,9 +753,9 @@ module Aws::SecurityIR
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: SecurityIncidentResponseNotActiveException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
-        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: InvalidTokenException)
       end)
 
@@ -678,9 +770,9 @@ module Aws::SecurityIR
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: SecurityIncidentResponseNotActiveException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
-        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: InvalidTokenException)
       end)
 
@@ -695,9 +787,9 @@ module Aws::SecurityIR
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: SecurityIncidentResponseNotActiveException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
-        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: InvalidTokenException)
       end)
 
@@ -712,9 +804,9 @@ module Aws::SecurityIR
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: SecurityIncidentResponseNotActiveException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
-        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: InvalidTokenException)
       end)
 
@@ -729,9 +821,9 @@ module Aws::SecurityIR
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: SecurityIncidentResponseNotActiveException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
-        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: InvalidTokenException)
         o[:pager] = Aws::Pager.new(
           limit_key: "max_results",
@@ -752,9 +844,9 @@ module Aws::SecurityIR
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: SecurityIncidentResponseNotActiveException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
-        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: InvalidTokenException)
         o[:pager] = Aws::Pager.new(
           limit_key: "max_results",
@@ -775,9 +867,32 @@ module Aws::SecurityIR
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: SecurityIncidentResponseNotActiveException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidTokenException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:list_investigations, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListInvestigations"
+        o.http_method = "GET"
+        o.http_request_uri = "/v1/cases/{caseId}/list-investigations"
+        o.input = Shapes::ShapeRef.new(shape: ListInvestigationsRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListInvestigationsResponse)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: SecurityIncidentResponseNotActiveException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InvalidTokenException)
         o[:pager] = Aws::Pager.new(
           limit_key: "max_results",
@@ -798,9 +913,9 @@ module Aws::SecurityIR
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: SecurityIncidentResponseNotActiveException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
-        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: InvalidTokenException)
         o[:pager] = Aws::Pager.new(
           limit_key: "max_results",
@@ -822,8 +937,25 @@ module Aws::SecurityIR
         o.errors << Shapes::ShapeRef.new(shape: SecurityIncidentResponseNotActiveException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
-        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidTokenException)
+      end)
+
+      api.add_operation(:send_feedback, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "SendFeedback"
+        o.http_method = "POST"
+        o.http_request_uri = "/v1/cases/{caseId}/feedback/{resultId}/send-feedback"
+        o.input = Shapes::ShapeRef.new(shape: SendFeedbackRequest)
+        o.output = Shapes::ShapeRef.new(shape: SendFeedbackResponse)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: SecurityIncidentResponseNotActiveException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: InvalidTokenException)
       end)
 
@@ -839,8 +971,8 @@ module Aws::SecurityIR
         o.errors << Shapes::ShapeRef.new(shape: SecurityIncidentResponseNotActiveException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
-        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: InvalidTokenException)
       end)
 
@@ -856,8 +988,8 @@ module Aws::SecurityIR
         o.errors << Shapes::ShapeRef.new(shape: SecurityIncidentResponseNotActiveException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
-        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: InvalidTokenException)
       end)
 
@@ -872,9 +1004,9 @@ module Aws::SecurityIR
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: SecurityIncidentResponseNotActiveException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
-        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: InvalidTokenException)
       end)
 
@@ -889,9 +1021,9 @@ module Aws::SecurityIR
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: SecurityIncidentResponseNotActiveException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
-        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: InvalidTokenException)
       end)
 
@@ -906,9 +1038,9 @@ module Aws::SecurityIR
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: SecurityIncidentResponseNotActiveException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
-        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: InvalidTokenException)
       end)
 
@@ -923,9 +1055,9 @@ module Aws::SecurityIR
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: SecurityIncidentResponseNotActiveException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
-        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: InvalidTokenException)
       end)
 
@@ -940,9 +1072,9 @@ module Aws::SecurityIR
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: SecurityIncidentResponseNotActiveException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
-        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: InvalidTokenException)
       end)
     end

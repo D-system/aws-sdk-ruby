@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -489,7 +490,7 @@ module Aws
                                   field: ("NAME"),
                                   operator: ("EQUALS"),
                                   value: ::String
-                                },
+                                }
                               ]
                             }
                           ) -> _SearchContentResponseSuccess
@@ -513,7 +514,7 @@ module Aws
                                           name: ::String,
                                           operator: ("EQUALS" | "PREFIX"),
                                           values: Array[::String]?
-                                        },
+                                        }
                                       ]?,
                                       order_on_field: {
                                         name: ::String,
@@ -526,7 +527,7 @@ module Aws
                                           operator: ("CONTAINS" | "CONTAINS_AND_PREFIX"),
                                           priority: ("HIGH" | "MEDIUM" | "LOW")?,
                                           values: Array[::String]
-                                        },
+                                        }
                                       ]?
                                     }
                                   ) -> _SearchQuickResponsesResponseSuccess
@@ -548,7 +549,7 @@ module Aws
                                    field: ("NAME"),
                                    operator: ("EQUALS"),
                                    value: ::String
-                                 },
+                                 }
                                ]
                              }
                            ) -> _SearchSessionsResponseSuccess

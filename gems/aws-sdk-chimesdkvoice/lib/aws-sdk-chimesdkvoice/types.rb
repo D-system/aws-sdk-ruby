@@ -528,11 +528,15 @@ module Aws::ChimeSDKVoice
     #   Lists the Voice Connectors that inbound calls are routed to.
     #   @return [Array<Types::VoiceConnectorItem>]
     #
+    # @!attribute [rw] call_distribution_type
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/CreateVoiceConnectorGroupRequest AWS API Documentation
     #
     class CreateVoiceConnectorGroupRequest < Struct.new(
       :name,
-      :voice_connector_items)
+      :voice_connector_items,
+      :call_distribution_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -567,25 +571,30 @@ module Aws::ChimeSDKVoice
     #   @return [Array<Types::Tag>]
     #
     # @!attribute [rw] integration_type
-    #   The connectors for use with Amazon Connect.
+    #   The connectors for use with Connect Customer.
     #
     #   The following options are available:
     #
     #   * `CONNECT_CALL_TRANSFER_CONNECTOR` - Enables enterprises to
-    #     integrate Amazon Connect with other voice systems to directly
+    #     integrate Connect Customer with other voice systems to directly
     #     transfer voice calls and metadata without using the public
-    #     telephone network. They can use Amazon Connect telephony and
+    #     telephone network. They can use Connect Customer telephony and
     #     Interactive Voice Response (IVR) with their existing voice systems
     #     to modernize the IVR experience of their existing contact center
     #     and their enterprise and branch voice systems. Additionally,
-    #     enterprises migrating their contact center to Amazon Connect can
+    #     enterprises migrating their contact center to Connect Customer can
     #     start with Connect telephony and IVR for immediate modernization
     #     ahead of agent migration.
     #
+    #     <note markdown="1"> This integration is a gated feature. Please reach out to your
+    #     account team to discuss this feature with a Connect Specialist.
+    #
+    #      </note>
+    #
     #   * `CONNECT_ANALYTICS_CONNECTOR` - Enables enterprises to integrate
-    #     Amazon Connect with other voice systems for real-time and
-    #     post-call analytics. They can use Amazon Connect Contact Lens with
-    #     their existing voice systems to provides call recordings,
+    #     Connect Customer with other voice systems for real-time and
+    #     post-call analytics. They can use Connect Customer Contact Lens
+    #     with their existing voice systems to provides call recordings,
     #     conversational analytics (including contact transcript, sensitive
     #     data redaction, content categorization, theme detection, sentiment
     #     analysis, real-time alerts, and post-contact summary), and agent
@@ -593,9 +602,13 @@ module Aws::ChimeSDKVoice
     #     evaluation, supervisor review) with a rich user experience to
     #     display, search and filter customer interactions, and programmatic
     #     access to data streams and the data lake. Additionally,
-    #     enterprises migrating their contact center to Amazon Connect can
+    #     enterprises migrating their contact center to Connect Customer can
     #     start with Contact Lens analytics and performance insights ahead
     #     of agent migration.
+    #   @return [String]
+    #
+    # @!attribute [rw] network_type
+    #   The type of network for the Voice Connector.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/CreateVoiceConnectorRequest AWS API Documentation
@@ -605,7 +618,8 @@ module Aws::ChimeSDKVoice
       :aws_region,
       :require_encryption,
       :tags,
-      :integration_type)
+      :integration_type,
+      :network_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2222,6 +2236,9 @@ module Aws::ChimeSDKVoice
     #   The phone number, in E.164 format.
     #   @return [String]
     #
+    # @!attribute [rw] phone_number_arn
+    #   @return [String]
+    #
     # @!attribute [rw] country
     #   The phone number's country. Format: ISO 3166-1 alpha-2.
     #   @return [String]
@@ -2279,6 +2296,7 @@ module Aws::ChimeSDKVoice
     class PhoneNumber < Struct.new(
       :phone_number_id,
       :e164_phone_number,
+      :phone_number_arn,
       :country,
       :type,
       :product_type,
@@ -2442,6 +2460,12 @@ module Aws::ChimeSDKVoice
     #   The updated phone number order time stamp, in ISO 8601 format.
     #   @return [Time]
     #
+    # @!attribute [rw] foc_date
+    #   The Firm Order Commitment (FOC) date for phone number porting
+    #   orders. This field is null if a phone number order is not a porting
+    #   order.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/PhoneNumberOrder AWS API Documentation
     #
     class PhoneNumberOrder < Struct.new(
@@ -2451,7 +2475,8 @@ module Aws::ChimeSDKVoice
       :order_type,
       :ordered_phone_numbers,
       :created_timestamp,
-      :updated_timestamp)
+      :updated_timestamp,
+      :foc_date)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3834,12 +3859,16 @@ module Aws::ChimeSDKVoice
     #   group.
     #   @return [Array<Types::VoiceConnectorItem>]
     #
+    # @!attribute [rw] call_distribution_type
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/UpdateVoiceConnectorGroupRequest AWS API Documentation
     #
     class UpdateVoiceConnectorGroupRequest < Struct.new(
       :voice_connector_group_id,
       :name,
-      :voice_connector_items)
+      :voice_connector_items,
+      :call_distribution_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4076,7 +4105,11 @@ module Aws::ChimeSDKVoice
     #   @return [String]
     #
     # @!attribute [rw] integration_type
-    #   The connectors for use with Amazon Connect.
+    #   The connectors for use with Connect Customer.
+    #   @return [String]
+    #
+    # @!attribute [rw] network_type
+    #   The type of network for the Voice Connector.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/VoiceConnector AWS API Documentation
@@ -4090,7 +4123,8 @@ module Aws::ChimeSDKVoice
       :created_timestamp,
       :updated_timestamp,
       :voice_connector_arn,
-      :integration_type)
+      :integration_type,
+      :network_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4126,6 +4160,9 @@ module Aws::ChimeSDKVoice
     #   The ARN of the Voice Connector group.
     #   @return [String]
     #
+    # @!attribute [rw] call_distribution_type
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/VoiceConnectorGroup AWS API Documentation
     #
     class VoiceConnectorGroup < Struct.new(
@@ -4134,7 +4171,8 @@ module Aws::ChimeSDKVoice
       :voice_connector_items,
       :created_timestamp,
       :updated_timestamp,
-      :voice_connector_group_arn)
+      :voice_connector_group_arn,
+      :call_distribution_type)
       SENSITIVE = []
       include Aws::Structure
     end

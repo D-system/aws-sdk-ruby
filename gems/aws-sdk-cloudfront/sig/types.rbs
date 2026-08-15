@@ -51,6 +51,8 @@ module Aws::CloudFront
       attr_accessor name: ::String
       attr_accessor status: ::String
       attr_accessor arn: ::String
+      attr_accessor ip_address_type: ("ipv4" | "ipv6" | "dualstack")
+      attr_accessor ipam_config: Types::IpamConfig
       attr_accessor anycast_ips: ::Array[::String]
       attr_accessor ip_count: ::Integer
       attr_accessor last_modified_time: ::Time
@@ -74,12 +76,43 @@ module Aws::CloudFront
       attr_accessor arn: ::String
       attr_accessor ip_count: ::Integer
       attr_accessor last_modified_time: ::Time
+      attr_accessor ip_address_type: ("ipv4" | "ipv6" | "dualstack")
+      attr_accessor etag: ::String
+      attr_accessor ipam_config: Types::IpamConfig
       SENSITIVE: []
     end
 
     class AssociateAliasRequest
       attr_accessor target_distribution_id: ::String
       attr_accessor alias: ::String
+      SENSITIVE: []
+    end
+
+    class AssociateDistributionTenantWebACLRequest
+      attr_accessor id: ::String
+      attr_accessor web_acl_arn: ::String
+      attr_accessor if_match: ::String
+      SENSITIVE: []
+    end
+
+    class AssociateDistributionTenantWebACLResult
+      attr_accessor id: ::String
+      attr_accessor web_acl_arn: ::String
+      attr_accessor etag: ::String
+      SENSITIVE: []
+    end
+
+    class AssociateDistributionWebACLRequest
+      attr_accessor id: ::String
+      attr_accessor web_acl_arn: ::String
+      attr_accessor if_match: ::String
+      SENSITIVE: []
+    end
+
+    class AssociateDistributionWebACLResult
+      attr_accessor id: ::String
+      attr_accessor web_acl_arn: ::String
+      attr_accessor etag: ::String
       SENSITIVE: []
     end
 
@@ -91,6 +124,25 @@ module Aws::CloudFront
     class CNAMEAlreadyExists
       attr_accessor message: ::String
       SENSITIVE: []
+    end
+
+    class CaCertificatesBundleS3Location
+      attr_accessor bucket: ::String
+      attr_accessor key: ::String
+      attr_accessor region: ::String
+      attr_accessor version: ::String
+      SENSITIVE: []
+    end
+
+    class CaCertificatesBundleSource
+      attr_accessor ca_certificates_bundle_s3_location: Types::CaCertificatesBundleS3Location
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class CaCertificatesBundleS3Location < CaCertificatesBundleSource
+      end
+      class Unknown < CaCertificatesBundleSource
+      end
     end
 
     class CacheBehavior
@@ -182,6 +234,11 @@ module Aws::CloudFront
       SENSITIVE: []
     end
 
+    class CacheTagConfig
+      attr_accessor header_name: ::String
+      SENSITIVE: []
+    end
+
     class CachedMethods
       attr_accessor quantity: ::Integer
       attr_accessor items: ::Array[("GET" | "HEAD" | "POST" | "PUT" | "PATCH" | "OPTIONS" | "DELETE")]
@@ -200,6 +257,11 @@ module Aws::CloudFront
 
     class CannotUpdateEntityWhileInUse
       attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class Certificate
+      attr_accessor arn: ::String
       SENSITIVE: []
     end
 
@@ -255,6 +317,68 @@ module Aws::CloudFront
       attr_accessor max_items: ::Integer
       attr_accessor quantity: ::Integer
       attr_accessor items: ::Array[Types::ConflictingAlias]
+      SENSITIVE: []
+    end
+
+    class ConnectionFunctionAssociation
+      attr_accessor id: ::String
+      SENSITIVE: []
+    end
+
+    class ConnectionFunctionSummary
+      attr_accessor name: ::String
+      attr_accessor id: ::String
+      attr_accessor connection_function_config: Types::FunctionConfig
+      attr_accessor connection_function_arn: ::String
+      attr_accessor status: ::String
+      attr_accessor stage: ("DEVELOPMENT" | "LIVE")
+      attr_accessor created_time: ::Time
+      attr_accessor last_modified_time: ::Time
+      SENSITIVE: []
+    end
+
+    class ConnectionFunctionTestResult
+      attr_accessor connection_function_summary: Types::ConnectionFunctionSummary
+      attr_accessor compute_utilization: ::String
+      attr_accessor connection_function_execution_logs: ::Array[::String]
+      attr_accessor connection_function_error_message: ::String
+      attr_accessor connection_function_output: ::String
+      SENSITIVE: [:connection_function_execution_logs, :connection_function_error_message, :connection_function_output]
+    end
+
+    class ConnectionGroup
+      attr_accessor id: ::String
+      attr_accessor name: ::String
+      attr_accessor arn: ::String
+      attr_accessor created_time: ::Time
+      attr_accessor last_modified_time: ::Time
+      attr_accessor tags: Types::Tags
+      attr_accessor ipv_6_enabled: bool
+      attr_accessor routing_endpoint: ::String
+      attr_accessor anycast_ip_list_id: ::String
+      attr_accessor status: ::String
+      attr_accessor enabled: bool
+      attr_accessor is_default: bool
+      SENSITIVE: []
+    end
+
+    class ConnectionGroupAssociationFilter
+      attr_accessor anycast_ip_list_id: ::String
+      SENSITIVE: []
+    end
+
+    class ConnectionGroupSummary
+      attr_accessor id: ::String
+      attr_accessor name: ::String
+      attr_accessor arn: ::String
+      attr_accessor routing_endpoint: ::String
+      attr_accessor created_time: ::Time
+      attr_accessor last_modified_time: ::Time
+      attr_accessor etag: ::String
+      attr_accessor anycast_ip_list_id: ::String
+      attr_accessor enabled: bool
+      attr_accessor status: ::String
+      attr_accessor is_default: bool
       SENSITIVE: []
     end
 
@@ -358,6 +482,8 @@ module Aws::CloudFront
       attr_accessor name: ::String
       attr_accessor ip_count: ::Integer
       attr_accessor tags: Types::Tags
+      attr_accessor ip_address_type: ("ipv4" | "ipv6" | "dualstack")
+      attr_accessor ipam_cidr_configs: ::Array[Types::IpamCidrConfig]
       SENSITIVE: []
     end
 
@@ -391,6 +517,36 @@ module Aws::CloudFront
       SENSITIVE: []
     end
 
+    class CreateConnectionFunctionRequest
+      attr_accessor name: ::String
+      attr_accessor connection_function_config: Types::FunctionConfig
+      attr_accessor connection_function_code: ::String
+      attr_accessor tags: Types::Tags
+      SENSITIVE: [:connection_function_code]
+    end
+
+    class CreateConnectionFunctionResult
+      attr_accessor connection_function_summary: Types::ConnectionFunctionSummary
+      attr_accessor location: ::String
+      attr_accessor etag: ::String
+      SENSITIVE: []
+    end
+
+    class CreateConnectionGroupRequest
+      attr_accessor name: ::String
+      attr_accessor ipv_6_enabled: bool
+      attr_accessor tags: Types::Tags
+      attr_accessor anycast_ip_list_id: ::String
+      attr_accessor enabled: bool
+      SENSITIVE: []
+    end
+
+    class CreateConnectionGroupResult
+      attr_accessor connection_group: Types::ConnectionGroup
+      attr_accessor etag: ::String
+      SENSITIVE: []
+    end
+
     class CreateContinuousDeploymentPolicyRequest
       attr_accessor continuous_deployment_policy_config: Types::ContinuousDeploymentPolicyConfig
       SENSITIVE: []
@@ -411,6 +567,25 @@ module Aws::CloudFront
     class CreateDistributionResult
       attr_accessor distribution: Types::Distribution
       attr_accessor location: ::String
+      attr_accessor etag: ::String
+      SENSITIVE: []
+    end
+
+    class CreateDistributionTenantRequest
+      attr_accessor distribution_id: ::String
+      attr_accessor name: ::String
+      attr_accessor domains: ::Array[Types::DomainItem]
+      attr_accessor tags: Types::Tags
+      attr_accessor customizations: Types::Customizations
+      attr_accessor parameters: ::Array[Types::Parameter]
+      attr_accessor connection_group_id: ::String
+      attr_accessor managed_certificate_request: Types::ManagedCertificateRequest
+      attr_accessor enabled: bool
+      SENSITIVE: []
+    end
+
+    class CreateDistributionTenantResult
+      attr_accessor distribution_tenant: Types::DistributionTenant
       attr_accessor etag: ::String
       SENSITIVE: []
     end
@@ -455,6 +630,7 @@ module Aws::CloudFront
       attr_accessor name: ::String
       attr_accessor function_config: Types::FunctionConfig
       attr_accessor function_code: ::String
+      attr_accessor tags: Types::Tags
       SENSITIVE: [:function_code]
     end
 
@@ -462,6 +638,18 @@ module Aws::CloudFront
       attr_accessor function_summary: Types::FunctionSummary
       attr_accessor location: ::String
       attr_accessor etag: ::String
+      SENSITIVE: []
+    end
+
+    class CreateInvalidationForDistributionTenantRequest
+      attr_accessor id: ::String
+      attr_accessor invalidation_batch: Types::InvalidationBatch
+      SENSITIVE: []
+    end
+
+    class CreateInvalidationForDistributionTenantResult
+      attr_accessor location: ::String
+      attr_accessor invalidation: Types::Invalidation
       SENSITIVE: []
     end
 
@@ -493,6 +681,7 @@ module Aws::CloudFront
       attr_accessor name: ::String
       attr_accessor comment: ::String
       attr_accessor import_source: Types::ImportSource
+      attr_accessor tags: Types::Tags
       SENSITIVE: []
     end
 
@@ -599,6 +788,20 @@ module Aws::CloudFront
       SENSITIVE: []
     end
 
+    class CreateTrustStoreRequest
+      attr_accessor name: ::String
+      attr_accessor ca_certificates_bundle_source: Types::CaCertificatesBundleSource
+      attr_accessor use_client_certificate_ocsp_endpoint: bool
+      attr_accessor tags: Types::Tags
+      SENSITIVE: []
+    end
+
+    class CreateTrustStoreResult
+      attr_accessor trust_store: Types::TrustStore
+      attr_accessor etag: ::String
+      SENSITIVE: []
+    end
+
     class CreateVpcOriginRequest
       attr_accessor vpc_origin_endpoint_config: Types::VpcOriginEndpointConfig
       attr_accessor tags: Types::Tags
@@ -639,6 +842,15 @@ module Aws::CloudFront
       attr_accessor origin_ssl_protocols: Types::OriginSslProtocols
       attr_accessor origin_read_timeout: ::Integer
       attr_accessor origin_keepalive_timeout: ::Integer
+      attr_accessor ip_address_type: ("ipv4" | "ipv6" | "dualstack")
+      attr_accessor origin_mtls_config: Types::OriginMtlsConfig
+      SENSITIVE: []
+    end
+
+    class Customizations
+      attr_accessor web_acl: Types::WebAclCustomization
+      attr_accessor certificate: Types::Certificate
+      attr_accessor geo_restrictions: Types::GeoRestrictionCustomization
       SENSITIVE: []
     end
 
@@ -683,6 +895,18 @@ module Aws::CloudFront
       SENSITIVE: []
     end
 
+    class DeleteConnectionFunctionRequest
+      attr_accessor id: ::String
+      attr_accessor if_match: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteConnectionGroupRequest
+      attr_accessor id: ::String
+      attr_accessor if_match: ::String
+      SENSITIVE: []
+    end
+
     class DeleteContinuousDeploymentPolicyRequest
       attr_accessor id: ::String
       attr_accessor if_match: ::String
@@ -690,6 +914,12 @@ module Aws::CloudFront
     end
 
     class DeleteDistributionRequest
+      attr_accessor id: ::String
+      attr_accessor if_match: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteDistributionTenantRequest
       attr_accessor id: ::String
       attr_accessor if_match: ::String
       SENSITIVE: []
@@ -757,6 +987,11 @@ module Aws::CloudFront
       SENSITIVE: []
     end
 
+    class DeleteResourcePolicyRequest
+      attr_accessor resource_arn: ::String
+      SENSITIVE: []
+    end
+
     class DeleteResponseHeadersPolicyRequest
       attr_accessor id: ::String
       attr_accessor if_match: ::String
@@ -764,6 +999,12 @@ module Aws::CloudFront
     end
 
     class DeleteStreamingDistributionRequest
+      attr_accessor id: ::String
+      attr_accessor if_match: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteTrustStoreRequest
       attr_accessor id: ::String
       attr_accessor if_match: ::String
       SENSITIVE: []
@@ -777,6 +1018,18 @@ module Aws::CloudFront
 
     class DeleteVpcOriginResult
       attr_accessor vpc_origin: Types::VpcOrigin
+      attr_accessor etag: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeConnectionFunctionRequest
+      attr_accessor identifier: ::String
+      attr_accessor stage: ("DEVELOPMENT" | "LIVE")
+      SENSITIVE: []
+    end
+
+    class DescribeConnectionFunctionResult
+      attr_accessor connection_function_summary: Types::ConnectionFunctionSummary
       attr_accessor etag: ::String
       SENSITIVE: []
     end
@@ -800,6 +1053,30 @@ module Aws::CloudFront
 
     class DescribeKeyValueStoreResult
       attr_accessor key_value_store: Types::KeyValueStore
+      attr_accessor etag: ::String
+      SENSITIVE: []
+    end
+
+    class DisassociateDistributionTenantWebACLRequest
+      attr_accessor id: ::String
+      attr_accessor if_match: ::String
+      SENSITIVE: []
+    end
+
+    class DisassociateDistributionTenantWebACLResult
+      attr_accessor id: ::String
+      attr_accessor etag: ::String
+      SENSITIVE: []
+    end
+
+    class DisassociateDistributionWebACLRequest
+      attr_accessor id: ::String
+      attr_accessor if_match: ::String
+      SENSITIVE: []
+    end
+
+    class DisassociateDistributionWebACLResult
+      attr_accessor id: ::String
       attr_accessor etag: ::String
       SENSITIVE: []
     end
@@ -834,7 +1111,7 @@ module Aws::CloudFront
       attr_accessor custom_error_responses: Types::CustomErrorResponses
       attr_accessor comment: ::String
       attr_accessor logging: Types::LoggingConfig
-      attr_accessor price_class: ("PriceClass_100" | "PriceClass_200" | "PriceClass_All")
+      attr_accessor price_class: ("PriceClass_100" | "PriceClass_200" | "PriceClass_All" | "None")
       attr_accessor enabled: bool
       attr_accessor viewer_certificate: Types::ViewerCertificate
       attr_accessor restrictions: Types::Restrictions
@@ -844,6 +1121,11 @@ module Aws::CloudFront
       attr_accessor continuous_deployment_policy_id: ::String
       attr_accessor staging: bool
       attr_accessor anycast_ip_list_id: ::String
+      attr_accessor tenant_config: Types::TenantConfig
+      attr_accessor connection_mode: ("direct" | "tenant-only")
+      attr_accessor viewer_mtls_config: Types::ViewerMtlsConfig
+      attr_accessor connection_function_association: Types::ConnectionFunctionAssociation
+      attr_accessor cache_tag_config: Types::CacheTagConfig
       SENSITIVE: [:comment]
     end
 
@@ -863,6 +1145,22 @@ module Aws::CloudFront
       SENSITIVE: []
     end
 
+    class DistributionIdOwner
+      attr_accessor distribution_id: ::String
+      attr_accessor owner_account_id: ::String
+      SENSITIVE: []
+    end
+
+    class DistributionIdOwnerList
+      attr_accessor marker: ::String
+      attr_accessor next_marker: ::String
+      attr_accessor max_items: ::Integer
+      attr_accessor is_truncated: bool
+      attr_accessor quantity: ::Integer
+      attr_accessor items: ::Array[Types::DistributionIdOwner]
+      SENSITIVE: []
+    end
+
     class DistributionList
       attr_accessor marker: ::String
       attr_accessor next_marker: ::String
@@ -878,9 +1176,16 @@ module Aws::CloudFront
       SENSITIVE: []
     end
 
+    class DistributionResourceId
+      attr_accessor distribution_id: ::String
+      attr_accessor distribution_tenant_id: ::String
+      SENSITIVE: []
+    end
+
     class DistributionSummary
       attr_accessor id: ::String
       attr_accessor arn: ::String
+      attr_accessor etag: ::String
       attr_accessor status: ::String
       attr_accessor last_modified_time: ::Time
       attr_accessor domain_name: ::String
@@ -891,7 +1196,7 @@ module Aws::CloudFront
       attr_accessor cache_behaviors: Types::CacheBehaviors
       attr_accessor custom_error_responses: Types::CustomErrorResponses
       attr_accessor comment: ::String
-      attr_accessor price_class: ("PriceClass_100" | "PriceClass_200" | "PriceClass_All")
+      attr_accessor price_class: ("PriceClass_100" | "PriceClass_200" | "PriceClass_All" | "None")
       attr_accessor enabled: bool
       attr_accessor viewer_certificate: Types::ViewerCertificate
       attr_accessor restrictions: Types::Restrictions
@@ -900,7 +1205,75 @@ module Aws::CloudFront
       attr_accessor is_ipv6_enabled: bool
       attr_accessor alias_icp_recordals: ::Array[Types::AliasICPRecordal]
       attr_accessor staging: bool
+      attr_accessor connection_mode: ("direct" | "tenant-only")
       attr_accessor anycast_ip_list_id: ::String
+      attr_accessor viewer_mtls_config: Types::ViewerMtlsConfig
+      attr_accessor connection_function_association: Types::ConnectionFunctionAssociation
+      SENSITIVE: [:comment]
+    end
+
+    class DistributionTenant
+      attr_accessor id: ::String
+      attr_accessor distribution_id: ::String
+      attr_accessor name: ::String
+      attr_accessor arn: ::String
+      attr_accessor domains: ::Array[Types::DomainResult]
+      attr_accessor tags: Types::Tags
+      attr_accessor customizations: Types::Customizations
+      attr_accessor parameters: ::Array[Types::Parameter]
+      attr_accessor connection_group_id: ::String
+      attr_accessor created_time: ::Time
+      attr_accessor last_modified_time: ::Time
+      attr_accessor enabled: bool
+      attr_accessor status: ::String
+      SENSITIVE: []
+    end
+
+    class DistributionTenantAssociationFilter
+      attr_accessor distribution_id: ::String
+      attr_accessor connection_group_id: ::String
+      SENSITIVE: []
+    end
+
+    class DistributionTenantSummary
+      attr_accessor id: ::String
+      attr_accessor distribution_id: ::String
+      attr_accessor name: ::String
+      attr_accessor arn: ::String
+      attr_accessor domains: ::Array[Types::DomainResult]
+      attr_accessor connection_group_id: ::String
+      attr_accessor customizations: Types::Customizations
+      attr_accessor created_time: ::Time
+      attr_accessor last_modified_time: ::Time
+      attr_accessor etag: ::String
+      attr_accessor enabled: bool
+      attr_accessor status: ::String
+      SENSITIVE: []
+    end
+
+    class DnsConfiguration
+      attr_accessor domain: ::String
+      attr_accessor status: ("valid-configuration" | "invalid-configuration" | "unknown-configuration")
+      attr_accessor reason: ::String
+      SENSITIVE: []
+    end
+
+    class DomainConflict
+      attr_accessor domain: ::String
+      attr_accessor resource_type: ("distribution" | "distribution-tenant")
+      attr_accessor resource_id: ::String
+      attr_accessor account_id: ::String
+      SENSITIVE: []
+    end
+
+    class DomainItem
+      attr_accessor domain: ::String
+      SENSITIVE: []
+    end
+
+    class DomainResult
+      attr_accessor domain: ::String
+      attr_accessor status: ("active" | "inactive")
       SENSITIVE: []
     end
 
@@ -1111,6 +1484,12 @@ module Aws::CloudFront
       SENSITIVE: []
     end
 
+    class GeoRestrictionCustomization
+      attr_accessor restriction_type: ("blacklist" | "whitelist" | "none")
+      attr_accessor locations: ::Array[::String]
+      SENSITIVE: []
+    end
+
     class GetAnycastIpListRequest
       attr_accessor id: ::String
       SENSITIVE: []
@@ -1166,6 +1545,41 @@ module Aws::CloudFront
       SENSITIVE: []
     end
 
+    class GetConnectionFunctionRequest
+      attr_accessor identifier: ::String
+      attr_accessor stage: ("DEVELOPMENT" | "LIVE")
+      SENSITIVE: []
+    end
+
+    class GetConnectionFunctionResult
+      attr_accessor connection_function_code: ::String
+      attr_accessor etag: ::String
+      attr_accessor content_type: ::String
+      SENSITIVE: [:connection_function_code]
+    end
+
+    class GetConnectionGroupByRoutingEndpointRequest
+      attr_accessor routing_endpoint: ::String
+      SENSITIVE: []
+    end
+
+    class GetConnectionGroupByRoutingEndpointResult
+      attr_accessor connection_group: Types::ConnectionGroup
+      attr_accessor etag: ::String
+      SENSITIVE: []
+    end
+
+    class GetConnectionGroupRequest
+      attr_accessor identifier: ::String
+      SENSITIVE: []
+    end
+
+    class GetConnectionGroupResult
+      attr_accessor connection_group: Types::ConnectionGroup
+      attr_accessor etag: ::String
+      SENSITIVE: []
+    end
+
     class GetContinuousDeploymentPolicyConfigRequest
       attr_accessor id: ::String
       SENSITIVE: []
@@ -1206,6 +1620,28 @@ module Aws::CloudFront
 
     class GetDistributionResult
       attr_accessor distribution: Types::Distribution
+      attr_accessor etag: ::String
+      SENSITIVE: []
+    end
+
+    class GetDistributionTenantByDomainRequest
+      attr_accessor domain: ::String
+      SENSITIVE: []
+    end
+
+    class GetDistributionTenantByDomainResult
+      attr_accessor distribution_tenant: Types::DistributionTenant
+      attr_accessor etag: ::String
+      SENSITIVE: []
+    end
+
+    class GetDistributionTenantRequest
+      attr_accessor identifier: ::String
+      SENSITIVE: []
+    end
+
+    class GetDistributionTenantResult
+      attr_accessor distribution_tenant: Types::DistributionTenant
       attr_accessor etag: ::String
       SENSITIVE: []
     end
@@ -1267,6 +1703,17 @@ module Aws::CloudFront
       SENSITIVE: [:function_code]
     end
 
+    class GetInvalidationForDistributionTenantRequest
+      attr_accessor distribution_tenant_id: ::String
+      attr_accessor id: ::String
+      SENSITIVE: []
+    end
+
+    class GetInvalidationForDistributionTenantResult
+      attr_accessor invalidation: Types::Invalidation
+      SENSITIVE: []
+    end
+
     class GetInvalidationRequest
       attr_accessor distribution_id: ::String
       attr_accessor id: ::String
@@ -1297,6 +1744,16 @@ module Aws::CloudFront
     class GetKeyGroupResult
       attr_accessor key_group: Types::KeyGroup
       attr_accessor etag: ::String
+      SENSITIVE: []
+    end
+
+    class GetManagedCertificateDetailsRequest
+      attr_accessor identifier: ::String
+      SENSITIVE: []
+    end
+
+    class GetManagedCertificateDetailsResult
+      attr_accessor managed_certificate_details: Types::ManagedCertificateDetails
       SENSITIVE: []
     end
 
@@ -1387,6 +1844,17 @@ module Aws::CloudFront
       SENSITIVE: []
     end
 
+    class GetResourcePolicyRequest
+      attr_accessor resource_arn: ::String
+      SENSITIVE: []
+    end
+
+    class GetResourcePolicyResult
+      attr_accessor resource_arn: ::String
+      attr_accessor policy_document: ::String
+      SENSITIVE: []
+    end
+
     class GetResponseHeadersPolicyConfigRequest
       attr_accessor id: ::String
       SENSITIVE: []
@@ -1427,6 +1895,17 @@ module Aws::CloudFront
 
     class GetStreamingDistributionResult
       attr_accessor streaming_distribution: Types::StreamingDistribution
+      attr_accessor etag: ::String
+      SENSITIVE: []
+    end
+
+    class GetTrustStoreRequest
+      attr_accessor identifier: ::String
+      SENSITIVE: []
+    end
+
+    class GetTrustStoreResult
+      attr_accessor trust_store: Types::TrustStore
       attr_accessor etag: ::String
       SENSITIVE: []
     end
@@ -1485,6 +1964,11 @@ module Aws::CloudFront
     end
 
     class InvalidArgument
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class InvalidAssociation
       attr_accessor message: ::String
       SENSITIVE: []
     end
@@ -1645,6 +2129,20 @@ module Aws::CloudFront
       SENSITIVE: []
     end
 
+    class IpamCidrConfig
+      attr_accessor cidr: ::String
+      attr_accessor ipam_pool_arn: ::String
+      attr_accessor anycast_ip: ::String
+      attr_accessor status: ("provisioned" | "failed-provision" | "provisioning" | "deprovisioned" | "failed-deprovision" | "deprovisioning" | "advertised" | "failed-advertise" | "advertising" | "withdrawn" | "failed-withdraw" | "withdrawing")
+      SENSITIVE: []
+    end
+
+    class IpamConfig
+      attr_accessor quantity: ::Integer
+      attr_accessor ipam_cidr_configs: ::Array[Types::IpamCidrConfig]
+      SENSITIVE: []
+    end
+
     class KGKeyPairIds
       attr_accessor key_group_id: ::String
       attr_accessor key_pair_ids: Types::KeyPairIds
@@ -1784,6 +2282,32 @@ module Aws::CloudFront
       SENSITIVE: []
     end
 
+    class ListConnectionFunctionsRequest
+      attr_accessor marker: ::String
+      attr_accessor max_items: ::Integer
+      attr_accessor stage: ("DEVELOPMENT" | "LIVE")
+      SENSITIVE: []
+    end
+
+    class ListConnectionFunctionsResult
+      attr_accessor next_marker: ::String
+      attr_accessor connection_functions: ::Array[Types::ConnectionFunctionSummary]
+      SENSITIVE: []
+    end
+
+    class ListConnectionGroupsRequest
+      attr_accessor association_filter: Types::ConnectionGroupAssociationFilter
+      attr_accessor marker: ::String
+      attr_accessor max_items: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListConnectionGroupsResult
+      attr_accessor next_marker: ::String
+      attr_accessor connection_groups: ::Array[Types::ConnectionGroupSummary]
+      SENSITIVE: []
+    end
+
     class ListContinuousDeploymentPoliciesRequest
       attr_accessor marker: ::String
       attr_accessor max_items: ::Integer
@@ -1792,6 +2316,33 @@ module Aws::CloudFront
 
     class ListContinuousDeploymentPoliciesResult
       attr_accessor continuous_deployment_policy_list: Types::ContinuousDeploymentPolicyList
+      SENSITIVE: []
+    end
+
+    class ListDistributionTenantsByCustomizationRequest
+      attr_accessor web_acl_arn: ::String
+      attr_accessor certificate_arn: ::String
+      attr_accessor marker: ::String
+      attr_accessor max_items: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListDistributionTenantsByCustomizationResult
+      attr_accessor next_marker: ::String
+      attr_accessor distribution_tenant_list: ::Array[Types::DistributionTenantSummary]
+      SENSITIVE: []
+    end
+
+    class ListDistributionTenantsRequest
+      attr_accessor association_filter: Types::DistributionTenantAssociationFilter
+      attr_accessor marker: ::String
+      attr_accessor max_items: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListDistributionTenantsResult
+      attr_accessor next_marker: ::String
+      attr_accessor distribution_tenant_list: ::Array[Types::DistributionTenantSummary]
       SENSITIVE: []
     end
 
@@ -1819,6 +2370,30 @@ module Aws::CloudFront
       SENSITIVE: []
     end
 
+    class ListDistributionsByConnectionFunctionRequest
+      attr_accessor marker: ::String
+      attr_accessor max_items: ::Integer
+      attr_accessor connection_function_identifier: ::String
+      SENSITIVE: []
+    end
+
+    class ListDistributionsByConnectionFunctionResult
+      attr_accessor distribution_list: Types::DistributionList
+      SENSITIVE: []
+    end
+
+    class ListDistributionsByConnectionModeRequest
+      attr_accessor marker: ::String
+      attr_accessor max_items: ::Integer
+      attr_accessor connection_mode: ("direct" | "tenant-only")
+      SENSITIVE: []
+    end
+
+    class ListDistributionsByConnectionModeResult
+      attr_accessor distribution_list: Types::DistributionList
+      SENSITIVE: []
+    end
+
     class ListDistributionsByKeyGroupRequest
       attr_accessor marker: ::String
       attr_accessor max_items: ::Integer
@@ -1840,6 +2415,18 @@ module Aws::CloudFront
 
     class ListDistributionsByOriginRequestPolicyIdResult
       attr_accessor distribution_id_list: Types::DistributionIdList
+      SENSITIVE: []
+    end
+
+    class ListDistributionsByOwnedResourceRequest
+      attr_accessor resource_arn: ::String
+      attr_accessor marker: ::String
+      attr_accessor max_items: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListDistributionsByOwnedResourceResult
+      attr_accessor distribution_list: Types::DistributionIdOwnerList
       SENSITIVE: []
     end
 
@@ -1865,6 +2452,18 @@ module Aws::CloudFront
 
     class ListDistributionsByResponseHeadersPolicyIdResult
       attr_accessor distribution_id_list: Types::DistributionIdList
+      SENSITIVE: []
+    end
+
+    class ListDistributionsByTrustStoreRequest
+      attr_accessor trust_store_identifier: ::String
+      attr_accessor marker: ::String
+      attr_accessor max_items: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListDistributionsByTrustStoreResult
+      attr_accessor distribution_list: Types::DistributionList
       SENSITIVE: []
     end
 
@@ -1903,6 +2502,20 @@ module Aws::CloudFront
       SENSITIVE: []
     end
 
+    class ListDomainConflictsRequest
+      attr_accessor domain: ::String
+      attr_accessor domain_control_validation_resource: Types::DistributionResourceId
+      attr_accessor max_items: ::Integer
+      attr_accessor marker: ::String
+      SENSITIVE: []
+    end
+
+    class ListDomainConflictsResult
+      attr_accessor domain_conflicts: ::Array[Types::DomainConflict]
+      attr_accessor next_marker: ::String
+      SENSITIVE: []
+    end
+
     class ListFieldLevelEncryptionConfigsRequest
       attr_accessor marker: ::String
       attr_accessor max_items: ::Integer
@@ -1934,6 +2547,18 @@ module Aws::CloudFront
 
     class ListFunctionsResult
       attr_accessor function_list: Types::FunctionList
+      SENSITIVE: []
+    end
+
+    class ListInvalidationsForDistributionTenantRequest
+      attr_accessor id: ::String
+      attr_accessor marker: ::String
+      attr_accessor max_items: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListInvalidationsForDistributionTenantResult
+      attr_accessor invalidation_list: Types::InvalidationList
       SENSITIVE: []
     end
 
@@ -2050,6 +2675,18 @@ module Aws::CloudFront
       SENSITIVE: []
     end
 
+    class ListTrustStoresRequest
+      attr_accessor marker: ::String
+      attr_accessor max_items: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListTrustStoresResult
+      attr_accessor next_marker: ::String
+      attr_accessor trust_store_list: ::Array[Types::TrustStoreSummary]
+      SENSITIVE: []
+    end
+
     class ListVpcOriginsRequest
       attr_accessor marker: ::String
       attr_accessor max_items: ::Integer
@@ -2066,6 +2703,21 @@ module Aws::CloudFront
       attr_accessor include_cookies: bool
       attr_accessor bucket: ::String
       attr_accessor prefix: ::String
+      SENSITIVE: []
+    end
+
+    class ManagedCertificateDetails
+      attr_accessor certificate_arn: ::String
+      attr_accessor certificate_status: ("pending-validation" | "issued" | "inactive" | "expired" | "validation-timed-out" | "revoked" | "failed")
+      attr_accessor validation_token_host: ("cloudfront" | "self-hosted")
+      attr_accessor validation_token_details: ::Array[Types::ValidationTokenDetail]
+      SENSITIVE: []
+    end
+
+    class ManagedCertificateRequest
+      attr_accessor validation_token_host: ("cloudfront" | "self-hosted")
+      attr_accessor primary_domain_name: ::String
+      attr_accessor certificate_transparency_logging_preference: ("enabled" | "disabled")
       SENSITIVE: []
     end
 
@@ -2179,6 +2831,7 @@ module Aws::CloudFront
       attr_accessor vpc_origin_config: Types::VpcOriginConfig
       attr_accessor connection_attempts: ::Integer
       attr_accessor connection_timeout: ::Integer
+      attr_accessor response_completion_timeout: ::Integer
       attr_accessor origin_shield: Types::OriginShield
       attr_accessor origin_access_control_id: ::String
       SENSITIVE: []
@@ -2265,6 +2918,11 @@ module Aws::CloudFront
       SENSITIVE: []
     end
 
+    class OriginMtlsConfig
+      attr_accessor client_certificate_arn: ::String
+      SENSITIVE: []
+    end
+
     class OriginRequestPolicy
       attr_accessor id: ::String
       attr_accessor last_modified_time: ::Time
@@ -2341,6 +2999,23 @@ module Aws::CloudFront
       SENSITIVE: []
     end
 
+    class Parameter
+      attr_accessor name: ::String
+      attr_accessor value: ::String
+      SENSITIVE: []
+    end
+
+    class ParameterDefinition
+      attr_accessor name: ::String
+      attr_accessor definition: Types::ParameterDefinitionSchema
+      SENSITIVE: []
+    end
+
+    class ParameterDefinitionSchema
+      attr_accessor string_schema: Types::StringSchemaConfig
+      SENSITIVE: []
+    end
+
     class ParametersInCacheKeyAndForwardedToOrigin
       attr_accessor enable_accept_encoding_gzip: bool
       attr_accessor enable_accept_encoding_brotli: bool
@@ -2403,6 +3078,17 @@ module Aws::CloudFront
       SENSITIVE: []
     end
 
+    class PublishConnectionFunctionRequest
+      attr_accessor id: ::String
+      attr_accessor if_match: ::String
+      SENSITIVE: []
+    end
+
+    class PublishConnectionFunctionResult
+      attr_accessor connection_function_summary: Types::ConnectionFunctionSummary
+      SENSITIVE: []
+    end
+
     class PublishFunctionRequest
       attr_accessor name: ::String
       attr_accessor if_match: ::String
@@ -2411,6 +3097,17 @@ module Aws::CloudFront
 
     class PublishFunctionResult
       attr_accessor function_summary: Types::FunctionSummary
+      SENSITIVE: []
+    end
+
+    class PutResourcePolicyRequest
+      attr_accessor resource_arn: ::String
+      attr_accessor policy_document: ::String
+      SENSITIVE: []
+    end
+
+    class PutResourcePolicyResult
+      attr_accessor resource_arn: ::String
       SENSITIVE: []
     end
 
@@ -2488,6 +3185,11 @@ module Aws::CloudFront
     end
 
     class ResourceInUse
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class ResourceNotDisabled
       attr_accessor message: ::String
       SENSITIVE: []
     end
@@ -2661,6 +3363,7 @@ module Aws::CloudFront
 
     class S3OriginConfig
       attr_accessor origin_access_identity: ::String
+      attr_accessor origin_read_timeout: ::Integer
       SENSITIVE: []
     end
 
@@ -2716,7 +3419,7 @@ module Aws::CloudFront
       attr_accessor comment: ::String
       attr_accessor logging: Types::StreamingLoggingConfig
       attr_accessor trusted_signers: Types::TrustedSigners
-      attr_accessor price_class: ("PriceClass_100" | "PriceClass_200" | "PriceClass_All")
+      attr_accessor price_class: ("PriceClass_100" | "PriceClass_200" | "PriceClass_All" | "None")
       attr_accessor enabled: bool
       SENSITIVE: []
     end
@@ -2752,7 +3455,7 @@ module Aws::CloudFront
       attr_accessor aliases: Types::Aliases
       attr_accessor trusted_signers: Types::TrustedSigners
       attr_accessor comment: ::String
-      attr_accessor price_class: ("PriceClass_100" | "PriceClass_200" | "PriceClass_All")
+      attr_accessor price_class: ("PriceClass_100" | "PriceClass_200" | "PriceClass_All" | "None")
       attr_accessor enabled: bool
       SENSITIVE: []
     end
@@ -2762,6 +3465,13 @@ module Aws::CloudFront
       attr_accessor bucket: ::String
       attr_accessor prefix: ::String
       SENSITIVE: []
+    end
+
+    class StringSchemaConfig
+      attr_accessor comment: ::String
+      attr_accessor default_value: ::String
+      attr_accessor required: bool
+      SENSITIVE: [:comment]
     end
 
     class Tag
@@ -2783,6 +3493,24 @@ module Aws::CloudFront
 
     class Tags
       attr_accessor items: ::Array[Types::Tag]
+      SENSITIVE: []
+    end
+
+    class TenantConfig
+      attr_accessor parameter_definitions: ::Array[Types::ParameterDefinition]
+      SENSITIVE: []
+    end
+
+    class TestConnectionFunctionRequest
+      attr_accessor id: ::String
+      attr_accessor if_match: ::String
+      attr_accessor stage: ("DEVELOPMENT" | "LIVE")
+      attr_accessor connection_object: ::String
+      SENSITIVE: [:connection_object]
+    end
+
+    class TestConnectionFunctionResult
+      attr_accessor connection_function_test_result: Types::ConnectionFunctionTestResult
       SENSITIVE: []
     end
 
@@ -3080,6 +3808,37 @@ module Aws::CloudFront
       SENSITIVE: []
     end
 
+    class TrustStore
+      attr_accessor id: ::String
+      attr_accessor arn: ::String
+      attr_accessor name: ::String
+      attr_accessor status: ("pending" | "active" | "failed")
+      attr_accessor number_of_ca_certificates: ::Integer
+      attr_accessor last_modified_time: ::Time
+      attr_accessor reason: ::String
+      attr_accessor use_client_certificate_ocsp_endpoint: bool
+      SENSITIVE: []
+    end
+
+    class TrustStoreConfig
+      attr_accessor trust_store_id: ::String
+      attr_accessor advertise_trust_store_ca_names: bool
+      attr_accessor ignore_certificate_expiry: bool
+      SENSITIVE: []
+    end
+
+    class TrustStoreSummary
+      attr_accessor id: ::String
+      attr_accessor arn: ::String
+      attr_accessor name: ::String
+      attr_accessor status: ("pending" | "active" | "failed")
+      attr_accessor number_of_ca_certificates: ::Integer
+      attr_accessor last_modified_time: ::Time
+      attr_accessor reason: ::String
+      attr_accessor etag: ::String
+      SENSITIVE: []
+    end
+
     class TrustedKeyGroupDoesNotExist
       attr_accessor message: ::String
       SENSITIVE: []
@@ -3115,6 +3874,20 @@ module Aws::CloudFront
       SENSITIVE: []
     end
 
+    class UpdateAnycastIpListRequest
+      attr_accessor id: ::String
+      attr_accessor ip_address_type: ("ipv4" | "ipv6" | "dualstack")
+      attr_accessor ipam_cidr_configs: ::Array[Types::IpamCidrConfig]
+      attr_accessor if_match: ::String
+      SENSITIVE: []
+    end
+
+    class UpdateAnycastIpListResult
+      attr_accessor anycast_ip_list: Types::AnycastIpList
+      attr_accessor etag: ::String
+      SENSITIVE: []
+    end
+
     class UpdateCachePolicyRequest
       attr_accessor cache_policy_config: Types::CachePolicyConfig
       attr_accessor id: ::String
@@ -3137,6 +3910,35 @@ module Aws::CloudFront
 
     class UpdateCloudFrontOriginAccessIdentityResult
       attr_accessor cloud_front_origin_access_identity: Types::CloudFrontOriginAccessIdentity
+      attr_accessor etag: ::String
+      SENSITIVE: []
+    end
+
+    class UpdateConnectionFunctionRequest
+      attr_accessor id: ::String
+      attr_accessor if_match: ::String
+      attr_accessor connection_function_config: Types::FunctionConfig
+      attr_accessor connection_function_code: ::String
+      SENSITIVE: [:connection_function_code]
+    end
+
+    class UpdateConnectionFunctionResult
+      attr_accessor connection_function_summary: Types::ConnectionFunctionSummary
+      attr_accessor etag: ::String
+      SENSITIVE: []
+    end
+
+    class UpdateConnectionGroupRequest
+      attr_accessor id: ::String
+      attr_accessor ipv_6_enabled: bool
+      attr_accessor if_match: ::String
+      attr_accessor anycast_ip_list_id: ::String
+      attr_accessor enabled: bool
+      SENSITIVE: []
+    end
+
+    class UpdateConnectionGroupResult
+      attr_accessor connection_group: Types::ConnectionGroup
       attr_accessor etag: ::String
       SENSITIVE: []
     end
@@ -3167,6 +3969,25 @@ module Aws::CloudFront
       SENSITIVE: []
     end
 
+    class UpdateDistributionTenantRequest
+      attr_accessor id: ::String
+      attr_accessor distribution_id: ::String
+      attr_accessor domains: ::Array[Types::DomainItem]
+      attr_accessor customizations: Types::Customizations
+      attr_accessor parameters: ::Array[Types::Parameter]
+      attr_accessor connection_group_id: ::String
+      attr_accessor if_match: ::String
+      attr_accessor managed_certificate_request: Types::ManagedCertificateRequest
+      attr_accessor enabled: bool
+      SENSITIVE: []
+    end
+
+    class UpdateDistributionTenantResult
+      attr_accessor distribution_tenant: Types::DistributionTenant
+      attr_accessor etag: ::String
+      SENSITIVE: []
+    end
+
     class UpdateDistributionWithStagingConfigRequest
       attr_accessor id: ::String
       attr_accessor staging_distribution_id: ::String
@@ -3176,6 +3997,20 @@ module Aws::CloudFront
 
     class UpdateDistributionWithStagingConfigResult
       attr_accessor distribution: Types::Distribution
+      attr_accessor etag: ::String
+      SENSITIVE: []
+    end
+
+    class UpdateDomainAssociationRequest
+      attr_accessor domain: ::String
+      attr_accessor target_resource: Types::DistributionResourceId
+      attr_accessor if_match: ::String
+      SENSITIVE: []
+    end
+
+    class UpdateDomainAssociationResult
+      attr_accessor domain: ::String
+      attr_accessor resource_id: ::String
       attr_accessor etag: ::String
       SENSITIVE: []
     end
@@ -3325,6 +4160,20 @@ module Aws::CloudFront
       SENSITIVE: []
     end
 
+    class UpdateTrustStoreRequest
+      attr_accessor id: ::String
+      attr_accessor ca_certificates_bundle_source: Types::CaCertificatesBundleSource
+      attr_accessor use_client_certificate_ocsp_endpoint: bool
+      attr_accessor if_match: ::String
+      SENSITIVE: []
+    end
+
+    class UpdateTrustStoreResult
+      attr_accessor trust_store: Types::TrustStore
+      attr_accessor etag: ::String
+      SENSITIVE: []
+    end
+
     class UpdateVpcOriginRequest
       attr_accessor vpc_origin_endpoint_config: Types::VpcOriginEndpointConfig
       attr_accessor id: ::String
@@ -3338,20 +4187,45 @@ module Aws::CloudFront
       SENSITIVE: []
     end
 
+    class ValidationTokenDetail
+      attr_accessor domain: ::String
+      attr_accessor redirect_to: ::String
+      attr_accessor redirect_from: ::String
+      SENSITIVE: []
+    end
+
+    class VerifyDnsConfigurationRequest
+      attr_accessor domain: ::String
+      attr_accessor identifier: ::String
+      SENSITIVE: []
+    end
+
+    class VerifyDnsConfigurationResult
+      attr_accessor dns_configuration_list: ::Array[Types::DnsConfiguration]
+      SENSITIVE: []
+    end
+
     class ViewerCertificate
       attr_accessor cloud_front_default_certificate: bool
       attr_accessor iam_certificate_id: ::String
       attr_accessor acm_certificate_arn: ::String
       attr_accessor ssl_support_method: ("sni-only" | "vip" | "static-ip")
-      attr_accessor minimum_protocol_version: ("SSLv3" | "TLSv1" | "TLSv1_2016" | "TLSv1.1_2016" | "TLSv1.2_2018" | "TLSv1.2_2019" | "TLSv1.2_2021")
+      attr_accessor minimum_protocol_version: ("SSLv3" | "TLSv1" | "TLSv1_2016" | "TLSv1.1_2016" | "TLSv1.2_2018" | "TLSv1.2_2019" | "TLSv1.2_2021" | "TLSv1.3_2025" | "TLSv1.2_2025")
       attr_accessor certificate: ::String
       attr_accessor certificate_source: ("cloudfront" | "iam" | "acm")
+      SENSITIVE: []
+    end
+
+    class ViewerMtlsConfig
+      attr_accessor mode: ("required" | "optional" | "passthrough")
+      attr_accessor trust_store_config: Types::TrustStoreConfig
       SENSITIVE: []
     end
 
     class VpcOrigin
       attr_accessor id: ::String
       attr_accessor arn: ::String
+      attr_accessor account_id: ::String
       attr_accessor status: ::String
       attr_accessor created_time: ::Time
       attr_accessor last_modified_time: ::Time
@@ -3361,6 +4235,7 @@ module Aws::CloudFront
 
     class VpcOriginConfig
       attr_accessor vpc_origin_id: ::String
+      attr_accessor owner_account_id: ::String
       attr_accessor origin_read_timeout: ::Integer
       attr_accessor origin_keepalive_timeout: ::Integer
       SENSITIVE: []
@@ -3393,7 +4268,14 @@ module Aws::CloudFront
       attr_accessor created_time: ::Time
       attr_accessor last_modified_time: ::Time
       attr_accessor arn: ::String
+      attr_accessor account_id: ::String
       attr_accessor origin_endpoint_arn: ::String
+      SENSITIVE: []
+    end
+
+    class WebAclCustomization
+      attr_accessor action: ("override" | "disable")
+      attr_accessor arn: ::String
       SENSITIVE: []
     end
   end

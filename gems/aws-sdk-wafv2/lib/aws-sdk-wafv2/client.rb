@@ -95,8 +95,8 @@ module Aws::WAFV2
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::WAFV2
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::WAFV2
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::WAFV2
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::WAFV2
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::WAFV2
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::WAFV2
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::WAFV2
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -553,6 +557,13 @@ module Aws::WAFV2
     #     `arn:partition:ec2:region:account-id:verified-access-instance/instance-id
     #     `
     #
+    #   * For an Amplify application:
+    #     `arn:partition:amplify:region:account-id:apps/app-id `
+    #
+    #   * For an Amazon Bedrock AgentCore Gateway:
+    #     `arn:partition:bedrock-agentcore:region:account-id:gateway/gateway-id
+    #     `
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
@@ -590,7 +601,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -683,7 +694,13 @@ module Aws::WAFV2
     #             text_transformations: [ # required
     #               {
     #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
+    #               },
+    #             ],
+    #             pre_parse_text_transformations: [
+    #               {
+    #                 priority: 1, # required
+    #                 type: "NONE", # required, accepts NONE, URL_DECODE, URL_DECODE_UNI, COMBINE_DUPLICATE_QUERY_ARGS_BY_COMMA, REPLACE_SEMICOLONS_WITH_AMPERSANDS
     #               },
     #             ],
     #             positional_constraint: "EXACTLY", # required, accepts EXACTLY, STARTS_WITH, ENDS_WITH, CONTAINS, CONTAINS_WORD
@@ -753,7 +770,13 @@ module Aws::WAFV2
     #             text_transformations: [ # required
     #               {
     #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
+    #               },
+    #             ],
+    #             pre_parse_text_transformations: [
+    #               {
+    #                 priority: 1, # required
+    #                 type: "NONE", # required, accepts NONE, URL_DECODE, URL_DECODE_UNI, COMBINE_DUPLICATE_QUERY_ARGS_BY_COMMA, REPLACE_SEMICOLONS_WITH_AMPERSANDS
     #               },
     #             ],
     #             sensitivity_level: "LOW", # accepts LOW, HIGH
@@ -823,7 +846,13 @@ module Aws::WAFV2
     #             text_transformations: [ # required
     #               {
     #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
+    #               },
+    #             ],
+    #             pre_parse_text_transformations: [
+    #               {
+    #                 priority: 1, # required
+    #                 type: "NONE", # required, accepts NONE, URL_DECODE, URL_DECODE_UNI, COMBINE_DUPLICATE_QUERY_ARGS_BY_COMMA, REPLACE_SEMICOLONS_WITH_AMPERSANDS
     #               },
     #             ],
     #           },
@@ -894,7 +923,13 @@ module Aws::WAFV2
     #             text_transformations: [ # required
     #               {
     #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
+    #               },
+    #             ],
+    #             pre_parse_text_transformations: [
+    #               {
+    #                 priority: 1, # required
+    #                 type: "NONE", # required, accepts NONE, URL_DECODE, URL_DECODE_UNI, COMBINE_DUPLICATE_QUERY_ARGS_BY_COMMA, REPLACE_SEMICOLONS_WITH_AMPERSANDS
     #               },
     #             ],
     #           },
@@ -967,6 +1002,9 @@ module Aws::WAFV2
     #                         },
     #                       ],
     #                     },
+    #                   },
+    #                   monetize: {
+    #                     price_multiplier: "PriceMultiplier",
     #                   },
     #                 },
     #               },
@@ -1046,7 +1084,13 @@ module Aws::WAFV2
     #             text_transformations: [ # required
     #               {
     #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
+    #               },
+    #             ],
+    #             pre_parse_text_transformations: [
+    #               {
+    #                 priority: 1, # required
+    #                 type: "NONE", # required, accepts NONE, URL_DECODE, URL_DECODE_UNI, COMBINE_DUPLICATE_QUERY_ARGS_BY_COMMA, REPLACE_SEMICOLONS_WITH_AMPERSANDS
     #               },
     #             ],
     #           },
@@ -1068,7 +1112,7 @@ module Aws::WAFV2
     #                   text_transformations: [ # required
     #                     {
     #                       priority: 1, # required
-    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
     #                     },
     #                   ],
     #                 },
@@ -1077,7 +1121,7 @@ module Aws::WAFV2
     #                   text_transformations: [ # required
     #                     {
     #                       priority: 1, # required
-    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
     #                     },
     #                   ],
     #                 },
@@ -1086,7 +1130,7 @@ module Aws::WAFV2
     #                   text_transformations: [ # required
     #                     {
     #                       priority: 1, # required
-    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
     #                     },
     #                   ],
     #                 },
@@ -1094,7 +1138,7 @@ module Aws::WAFV2
     #                   text_transformations: [ # required
     #                     {
     #                       priority: 1, # required
-    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
     #                     },
     #                   ],
     #                 },
@@ -1111,7 +1155,7 @@ module Aws::WAFV2
     #                   text_transformations: [ # required
     #                     {
     #                       priority: 1, # required
-    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
     #                     },
     #                   ],
     #                 },
@@ -1120,6 +1164,8 @@ module Aws::WAFV2
     #                 },
     #                 ja4_fingerprint: {
     #                   fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
+    #                 },
+    #                 asn: {
     #                 },
     #               },
     #             ],
@@ -1249,6 +1295,20 @@ module Aws::WAFV2
     #                   },
     #                   enable_regex_in_path: false,
     #                 },
+    #                 aws_managed_rules_anti_d_do_s_rule_set: {
+    #                   client_side_action_config: { # required
+    #                     challenge: { # required
+    #                       usage_of_action: "ENABLED", # required, accepts ENABLED, DISABLED
+    #                       sensitivity: "LOW", # accepts LOW, MEDIUM, HIGH
+    #                       exempt_uri_regular_expressions: [
+    #                         {
+    #                           regex_string: "RegexPatternString",
+    #                         },
+    #                       ],
+    #                     },
+    #                   },
+    #                   sensitivity_to_block: "LOW", # accepts LOW, MEDIUM, HIGH
+    #                 },
     #               },
     #             ],
     #             rule_action_overrides: [
@@ -1306,6 +1366,9 @@ module Aws::WAFV2
     #                         },
     #                       ],
     #                     },
+    #                   },
+    #                   monetize: {
+    #                     price_multiplier: "PriceMultiplier",
     #                   },
     #                 },
     #               },
@@ -1381,9 +1444,22 @@ module Aws::WAFV2
     #             text_transformations: [ # required
     #               {
     #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
     #               },
     #             ],
+    #             pre_parse_text_transformations: [
+    #               {
+    #                 priority: 1, # required
+    #                 type: "NONE", # required, accepts NONE, URL_DECODE, URL_DECODE_UNI, COMBINE_DUPLICATE_QUERY_ARGS_BY_COMMA, REPLACE_SEMICOLONS_WITH_AMPERSANDS
+    #               },
+    #             ],
+    #           },
+    #           asn_match_statement: {
+    #             asn_list: [1], # required
+    #             forwarded_ip_config: {
+    #               header_name: "ForwardedIPHeaderName", # required
+    #               fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
+    #             },
     #           },
     #         },
     #         action: {
@@ -1438,6 +1514,9 @@ module Aws::WAFV2
     #                 },
     #               ],
     #             },
+    #           },
+    #           monetize: {
+    #             price_multiplier: "PriceMultiplier",
     #           },
     #         },
     #         override_action: {
@@ -1509,7 +1588,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -1563,7 +1642,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -1671,7 +1750,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -1744,7 +1823,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -1809,6 +1888,10 @@ module Aws::WAFV2
     #
     #   [1]: https://docs.aws.amazon.com/waf/latest/developerguide/waf-custom-request-response.html
     #   [2]: https://docs.aws.amazon.com/waf/latest/developerguide/limits.html
+    #
+    # @option params [Types::MonetizationConfig] :monetization_config
+    #   The monetization configuration for the rule group. Provide this when
+    #   any rule in the rule group uses the `Monetize` action.
     #
     # @return [Types::CreateRuleGroupResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1892,7 +1975,13 @@ module Aws::WAFV2
     #             text_transformations: [ # required
     #               {
     #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
+    #               },
+    #             ],
+    #             pre_parse_text_transformations: [
+    #               {
+    #                 priority: 1, # required
+    #                 type: "NONE", # required, accepts NONE, URL_DECODE, URL_DECODE_UNI, COMBINE_DUPLICATE_QUERY_ARGS_BY_COMMA, REPLACE_SEMICOLONS_WITH_AMPERSANDS
     #               },
     #             ],
     #             positional_constraint: "EXACTLY", # required, accepts EXACTLY, STARTS_WITH, ENDS_WITH, CONTAINS, CONTAINS_WORD
@@ -1962,7 +2051,13 @@ module Aws::WAFV2
     #             text_transformations: [ # required
     #               {
     #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
+    #               },
+    #             ],
+    #             pre_parse_text_transformations: [
+    #               {
+    #                 priority: 1, # required
+    #                 type: "NONE", # required, accepts NONE, URL_DECODE, URL_DECODE_UNI, COMBINE_DUPLICATE_QUERY_ARGS_BY_COMMA, REPLACE_SEMICOLONS_WITH_AMPERSANDS
     #               },
     #             ],
     #             sensitivity_level: "LOW", # accepts LOW, HIGH
@@ -2032,7 +2127,13 @@ module Aws::WAFV2
     #             text_transformations: [ # required
     #               {
     #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
+    #               },
+    #             ],
+    #             pre_parse_text_transformations: [
+    #               {
+    #                 priority: 1, # required
+    #                 type: "NONE", # required, accepts NONE, URL_DECODE, URL_DECODE_UNI, COMBINE_DUPLICATE_QUERY_ARGS_BY_COMMA, REPLACE_SEMICOLONS_WITH_AMPERSANDS
     #               },
     #             ],
     #           },
@@ -2103,7 +2204,13 @@ module Aws::WAFV2
     #             text_transformations: [ # required
     #               {
     #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
+    #               },
+    #             ],
+    #             pre_parse_text_transformations: [
+    #               {
+    #                 priority: 1, # required
+    #                 type: "NONE", # required, accepts NONE, URL_DECODE, URL_DECODE_UNI, COMBINE_DUPLICATE_QUERY_ARGS_BY_COMMA, REPLACE_SEMICOLONS_WITH_AMPERSANDS
     #               },
     #             ],
     #           },
@@ -2176,6 +2283,9 @@ module Aws::WAFV2
     #                         },
     #                       ],
     #                     },
+    #                   },
+    #                   monetize: {
+    #                     price_multiplier: "PriceMultiplier",
     #                   },
     #                 },
     #               },
@@ -2255,7 +2365,13 @@ module Aws::WAFV2
     #             text_transformations: [ # required
     #               {
     #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
+    #               },
+    #             ],
+    #             pre_parse_text_transformations: [
+    #               {
+    #                 priority: 1, # required
+    #                 type: "NONE", # required, accepts NONE, URL_DECODE, URL_DECODE_UNI, COMBINE_DUPLICATE_QUERY_ARGS_BY_COMMA, REPLACE_SEMICOLONS_WITH_AMPERSANDS
     #               },
     #             ],
     #           },
@@ -2277,7 +2393,7 @@ module Aws::WAFV2
     #                   text_transformations: [ # required
     #                     {
     #                       priority: 1, # required
-    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
     #                     },
     #                   ],
     #                 },
@@ -2286,7 +2402,7 @@ module Aws::WAFV2
     #                   text_transformations: [ # required
     #                     {
     #                       priority: 1, # required
-    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
     #                     },
     #                   ],
     #                 },
@@ -2295,7 +2411,7 @@ module Aws::WAFV2
     #                   text_transformations: [ # required
     #                     {
     #                       priority: 1, # required
-    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
     #                     },
     #                   ],
     #                 },
@@ -2303,7 +2419,7 @@ module Aws::WAFV2
     #                   text_transformations: [ # required
     #                     {
     #                       priority: 1, # required
-    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
     #                     },
     #                   ],
     #                 },
@@ -2320,7 +2436,7 @@ module Aws::WAFV2
     #                   text_transformations: [ # required
     #                     {
     #                       priority: 1, # required
-    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
     #                     },
     #                   ],
     #                 },
@@ -2329,6 +2445,8 @@ module Aws::WAFV2
     #                 },
     #                 ja4_fingerprint: {
     #                   fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
+    #                 },
+    #                 asn: {
     #                 },
     #               },
     #             ],
@@ -2458,6 +2576,20 @@ module Aws::WAFV2
     #                   },
     #                   enable_regex_in_path: false,
     #                 },
+    #                 aws_managed_rules_anti_d_do_s_rule_set: {
+    #                   client_side_action_config: { # required
+    #                     challenge: { # required
+    #                       usage_of_action: "ENABLED", # required, accepts ENABLED, DISABLED
+    #                       sensitivity: "LOW", # accepts LOW, MEDIUM, HIGH
+    #                       exempt_uri_regular_expressions: [
+    #                         {
+    #                           regex_string: "RegexPatternString",
+    #                         },
+    #                       ],
+    #                     },
+    #                   },
+    #                   sensitivity_to_block: "LOW", # accepts LOW, MEDIUM, HIGH
+    #                 },
     #               },
     #             ],
     #             rule_action_overrides: [
@@ -2515,6 +2647,9 @@ module Aws::WAFV2
     #                         },
     #                       ],
     #                     },
+    #                   },
+    #                   monetize: {
+    #                     price_multiplier: "PriceMultiplier",
     #                   },
     #                 },
     #               },
@@ -2590,9 +2725,22 @@ module Aws::WAFV2
     #             text_transformations: [ # required
     #               {
     #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
     #               },
     #             ],
+    #             pre_parse_text_transformations: [
+    #               {
+    #                 priority: 1, # required
+    #                 type: "NONE", # required, accepts NONE, URL_DECODE, URL_DECODE_UNI, COMBINE_DUPLICATE_QUERY_ARGS_BY_COMMA, REPLACE_SEMICOLONS_WITH_AMPERSANDS
+    #               },
+    #             ],
+    #           },
+    #           asn_match_statement: {
+    #             asn_list: [1], # required
+    #             forwarded_ip_config: {
+    #               header_name: "ForwardedIPHeaderName", # required
+    #               fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
+    #             },
     #           },
     #         },
     #         action: {
@@ -2648,6 +2796,9 @@ module Aws::WAFV2
     #               ],
     #             },
     #           },
+    #           monetize: {
+    #             price_multiplier: "PriceMultiplier",
+    #           },
     #         },
     #         override_action: {
     #           count: {
@@ -2702,6 +2853,23 @@ module Aws::WAFV2
     #         content: "ResponseContent", # required
     #       },
     #     },
+    #     monetization_config: {
+    #       crypto_config: {
+    #         payment_networks: [ # required
+    #           {
+    #             chain: "BASE", # required, accepts BASE, SOLANA, BASE_SEPOLIA, SOLANA_DEVNET
+    #             wallet_address: "WalletAddress", # required
+    #             prices: [ # required
+    #               {
+    #                 amount: "PriceAmount", # required
+    #                 currency: "USDC", # required, accepts USDC
+    #               },
+    #             ],
+    #           },
+    #         ],
+    #       },
+    #       currency_mode: "REAL", # accepts REAL, TEST
+    #     },
     #   })
     #
     # @example Response structure
@@ -2733,8 +2901,9 @@ module Aws::WAFV2
     # one or more Amazon Web Services resources to protect. The resource
     # types include Amazon CloudFront distribution, Amazon API Gateway REST
     # API, Application Load Balancer, AppSync GraphQL API, Amazon Cognito
-    # user pool, App Runner service, and Amazon Web Services Verified Access
-    # instance.
+    # user pool, App Runner service, Amplify application, Amazon Web
+    # Services Verified Access instance, and Amazon Bedrock AgentCore
+    # Gateway.
     #
     # @option params [required, String] :name
     #   The name of the web ACL. You cannot change the name of a web ACL after
@@ -2742,7 +2911,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -2851,953 +3020,27 @@ module Aws::WAFV2
     #
     #   [1]: http://aws.amazon.com/waf/pricing/
     #
+    # @option params [Types::OnSourceDDoSProtectionConfig] :on_source_d_do_s_protection_config
+    #   Specifies the type of DDoS protection to apply to web request data for
+    #   a web ACL. For most scenarios, it is recommended to use the default
+    #   protection level, `ACTIVE_UNDER_DDOS`. If a web ACL is associated with
+    #   multiple Application Load Balancers, the changes you make to DDoS
+    #   protection in that web ACL will apply to all associated Application
+    #   Load Balancers.
+    #
+    # @option params [Types::ApplicationConfig] :application_config
+    #   Configures the ability for the WAF console to store and retrieve
+    #   application attributes during the web ACL creation process.
+    #   Application attributes help WAF give recommendations for protection
+    #   packs.
+    #
+    # @option params [Types::MonetizationConfig] :monetization_config
+    #   The monetization configuration for the web ACL. Provide this when any
+    #   rule in the web ACL uses the `Monetize` action.
+    #
     # @return [Types::CreateWebACLResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateWebACLResponse#summary #summary} => Types::WebACLSummary
-    #
-    # @example Request syntax with placeholder values
-    #
-    #   resp = client.create_web_acl({
-    #     name: "EntityName", # required
-    #     scope: "CLOUDFRONT", # required, accepts CLOUDFRONT, REGIONAL
-    #     default_action: { # required
-    #       block: {
-    #         custom_response: {
-    #           response_code: 1, # required
-    #           custom_response_body_key: "EntityName",
-    #           response_headers: [
-    #             {
-    #               name: "CustomHTTPHeaderName", # required
-    #               value: "CustomHTTPHeaderValue", # required
-    #             },
-    #           ],
-    #         },
-    #       },
-    #       allow: {
-    #         custom_request_handling: {
-    #           insert_headers: [ # required
-    #             {
-    #               name: "CustomHTTPHeaderName", # required
-    #               value: "CustomHTTPHeaderValue", # required
-    #             },
-    #           ],
-    #         },
-    #       },
-    #     },
-    #     description: "EntityDescription",
-    #     rules: [
-    #       {
-    #         name: "EntityName", # required
-    #         priority: 1, # required
-    #         statement: { # required
-    #           byte_match_statement: {
-    #             search_string: "data", # required
-    #             field_to_match: { # required
-    #               single_header: {
-    #                 name: "FieldToMatchData", # required
-    #               },
-    #               single_query_argument: {
-    #                 name: "FieldToMatchData", # required
-    #               },
-    #               all_query_arguments: {
-    #               },
-    #               uri_path: {
-    #               },
-    #               query_string: {
-    #               },
-    #               body: {
-    #                 oversize_handling: "CONTINUE", # accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               method: {
-    #               },
-    #               json_body: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_paths: ["JsonPointerPath"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 invalid_fallback_behavior: "MATCH", # accepts MATCH, NO_MATCH, EVALUATE_AS_STRING
-    #                 oversize_handling: "CONTINUE", # accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               headers: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_headers: ["FieldToMatchData"],
-    #                   excluded_headers: ["FieldToMatchData"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               cookies: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_cookies: ["SingleCookieName"],
-    #                   excluded_cookies: ["SingleCookieName"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               header_order: {
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               ja3_fingerprint: {
-    #                 fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #               },
-    #               ja4_fingerprint: {
-    #                 fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #               },
-    #               uri_fragment: {
-    #                 fallback_behavior: "MATCH", # accepts MATCH, NO_MATCH
-    #               },
-    #             },
-    #             text_transformations: [ # required
-    #               {
-    #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
-    #               },
-    #             ],
-    #             positional_constraint: "EXACTLY", # required, accepts EXACTLY, STARTS_WITH, ENDS_WITH, CONTAINS, CONTAINS_WORD
-    #           },
-    #           sqli_match_statement: {
-    #             field_to_match: { # required
-    #               single_header: {
-    #                 name: "FieldToMatchData", # required
-    #               },
-    #               single_query_argument: {
-    #                 name: "FieldToMatchData", # required
-    #               },
-    #               all_query_arguments: {
-    #               },
-    #               uri_path: {
-    #               },
-    #               query_string: {
-    #               },
-    #               body: {
-    #                 oversize_handling: "CONTINUE", # accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               method: {
-    #               },
-    #               json_body: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_paths: ["JsonPointerPath"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 invalid_fallback_behavior: "MATCH", # accepts MATCH, NO_MATCH, EVALUATE_AS_STRING
-    #                 oversize_handling: "CONTINUE", # accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               headers: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_headers: ["FieldToMatchData"],
-    #                   excluded_headers: ["FieldToMatchData"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               cookies: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_cookies: ["SingleCookieName"],
-    #                   excluded_cookies: ["SingleCookieName"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               header_order: {
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               ja3_fingerprint: {
-    #                 fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #               },
-    #               ja4_fingerprint: {
-    #                 fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #               },
-    #               uri_fragment: {
-    #                 fallback_behavior: "MATCH", # accepts MATCH, NO_MATCH
-    #               },
-    #             },
-    #             text_transformations: [ # required
-    #               {
-    #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
-    #               },
-    #             ],
-    #             sensitivity_level: "LOW", # accepts LOW, HIGH
-    #           },
-    #           xss_match_statement: {
-    #             field_to_match: { # required
-    #               single_header: {
-    #                 name: "FieldToMatchData", # required
-    #               },
-    #               single_query_argument: {
-    #                 name: "FieldToMatchData", # required
-    #               },
-    #               all_query_arguments: {
-    #               },
-    #               uri_path: {
-    #               },
-    #               query_string: {
-    #               },
-    #               body: {
-    #                 oversize_handling: "CONTINUE", # accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               method: {
-    #               },
-    #               json_body: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_paths: ["JsonPointerPath"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 invalid_fallback_behavior: "MATCH", # accepts MATCH, NO_MATCH, EVALUATE_AS_STRING
-    #                 oversize_handling: "CONTINUE", # accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               headers: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_headers: ["FieldToMatchData"],
-    #                   excluded_headers: ["FieldToMatchData"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               cookies: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_cookies: ["SingleCookieName"],
-    #                   excluded_cookies: ["SingleCookieName"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               header_order: {
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               ja3_fingerprint: {
-    #                 fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #               },
-    #               ja4_fingerprint: {
-    #                 fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #               },
-    #               uri_fragment: {
-    #                 fallback_behavior: "MATCH", # accepts MATCH, NO_MATCH
-    #               },
-    #             },
-    #             text_transformations: [ # required
-    #               {
-    #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
-    #               },
-    #             ],
-    #           },
-    #           size_constraint_statement: {
-    #             field_to_match: { # required
-    #               single_header: {
-    #                 name: "FieldToMatchData", # required
-    #               },
-    #               single_query_argument: {
-    #                 name: "FieldToMatchData", # required
-    #               },
-    #               all_query_arguments: {
-    #               },
-    #               uri_path: {
-    #               },
-    #               query_string: {
-    #               },
-    #               body: {
-    #                 oversize_handling: "CONTINUE", # accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               method: {
-    #               },
-    #               json_body: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_paths: ["JsonPointerPath"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 invalid_fallback_behavior: "MATCH", # accepts MATCH, NO_MATCH, EVALUATE_AS_STRING
-    #                 oversize_handling: "CONTINUE", # accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               headers: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_headers: ["FieldToMatchData"],
-    #                   excluded_headers: ["FieldToMatchData"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               cookies: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_cookies: ["SingleCookieName"],
-    #                   excluded_cookies: ["SingleCookieName"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               header_order: {
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               ja3_fingerprint: {
-    #                 fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #               },
-    #               ja4_fingerprint: {
-    #                 fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #               },
-    #               uri_fragment: {
-    #                 fallback_behavior: "MATCH", # accepts MATCH, NO_MATCH
-    #               },
-    #             },
-    #             comparison_operator: "EQ", # required, accepts EQ, NE, LE, LT, GE, GT
-    #             size: 1, # required
-    #             text_transformations: [ # required
-    #               {
-    #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
-    #               },
-    #             ],
-    #           },
-    #           geo_match_statement: {
-    #             country_codes: ["AF"], # accepts AF, AX, AL, DZ, AS, AD, AO, AI, AQ, AG, AR, AM, AW, AU, AT, AZ, BS, BH, BD, BB, BY, BE, BZ, BJ, BM, BT, BO, BQ, BA, BW, BV, BR, IO, BN, BG, BF, BI, KH, CM, CA, CV, KY, CF, TD, CL, CN, CX, CC, CO, KM, CG, CD, CK, CR, CI, HR, CU, CW, CY, CZ, DK, DJ, DM, DO, EC, EG, SV, GQ, ER, EE, ET, FK, FO, FJ, FI, FR, GF, PF, TF, GA, GM, GE, DE, GH, GI, GR, GL, GD, GP, GU, GT, GG, GN, GW, GY, HT, HM, VA, HN, HK, HU, IS, IN, ID, IR, IQ, IE, IM, IL, IT, JM, JP, JE, JO, KZ, KE, KI, KP, KR, KW, KG, LA, LV, LB, LS, LR, LY, LI, LT, LU, MO, MK, MG, MW, MY, MV, ML, MT, MH, MQ, MR, MU, YT, MX, FM, MD, MC, MN, ME, MS, MA, MZ, MM, NA, NR, NP, NL, NC, NZ, NI, NE, NG, NU, NF, MP, NO, OM, PK, PW, PS, PA, PG, PY, PE, PH, PN, PL, PT, PR, QA, RE, RO, RU, RW, BL, SH, KN, LC, MF, PM, VC, WS, SM, ST, SA, SN, RS, SC, SL, SG, SX, SK, SI, SB, SO, ZA, GS, SS, ES, LK, SD, SR, SJ, SZ, SE, CH, SY, TW, TJ, TZ, TH, TL, TG, TK, TO, TT, TN, TR, TM, TC, TV, UG, UA, AE, GB, US, UM, UY, UZ, VU, VE, VN, VG, VI, WF, EH, YE, ZM, ZW, XK
-    #             forwarded_ip_config: {
-    #               header_name: "ForwardedIPHeaderName", # required
-    #               fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #             },
-    #           },
-    #           rule_group_reference_statement: {
-    #             arn: "ResourceArn", # required
-    #             excluded_rules: [
-    #               {
-    #                 name: "EntityName", # required
-    #               },
-    #             ],
-    #             rule_action_overrides: [
-    #               {
-    #                 name: "EntityName", # required
-    #                 action_to_use: { # required
-    #                   block: {
-    #                     custom_response: {
-    #                       response_code: 1, # required
-    #                       custom_response_body_key: "EntityName",
-    #                       response_headers: [
-    #                         {
-    #                           name: "CustomHTTPHeaderName", # required
-    #                           value: "CustomHTTPHeaderValue", # required
-    #                         },
-    #                       ],
-    #                     },
-    #                   },
-    #                   allow: {
-    #                     custom_request_handling: {
-    #                       insert_headers: [ # required
-    #                         {
-    #                           name: "CustomHTTPHeaderName", # required
-    #                           value: "CustomHTTPHeaderValue", # required
-    #                         },
-    #                       ],
-    #                     },
-    #                   },
-    #                   count: {
-    #                     custom_request_handling: {
-    #                       insert_headers: [ # required
-    #                         {
-    #                           name: "CustomHTTPHeaderName", # required
-    #                           value: "CustomHTTPHeaderValue", # required
-    #                         },
-    #                       ],
-    #                     },
-    #                   },
-    #                   captcha: {
-    #                     custom_request_handling: {
-    #                       insert_headers: [ # required
-    #                         {
-    #                           name: "CustomHTTPHeaderName", # required
-    #                           value: "CustomHTTPHeaderValue", # required
-    #                         },
-    #                       ],
-    #                     },
-    #                   },
-    #                   challenge: {
-    #                     custom_request_handling: {
-    #                       insert_headers: [ # required
-    #                         {
-    #                           name: "CustomHTTPHeaderName", # required
-    #                           value: "CustomHTTPHeaderValue", # required
-    #                         },
-    #                       ],
-    #                     },
-    #                   },
-    #                 },
-    #               },
-    #             ],
-    #           },
-    #           ip_set_reference_statement: {
-    #             arn: "ResourceArn", # required
-    #             ip_set_forwarded_ip_config: {
-    #               header_name: "ForwardedIPHeaderName", # required
-    #               fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #               position: "FIRST", # required, accepts FIRST, LAST, ANY
-    #             },
-    #           },
-    #           regex_pattern_set_reference_statement: {
-    #             arn: "ResourceArn", # required
-    #             field_to_match: { # required
-    #               single_header: {
-    #                 name: "FieldToMatchData", # required
-    #               },
-    #               single_query_argument: {
-    #                 name: "FieldToMatchData", # required
-    #               },
-    #               all_query_arguments: {
-    #               },
-    #               uri_path: {
-    #               },
-    #               query_string: {
-    #               },
-    #               body: {
-    #                 oversize_handling: "CONTINUE", # accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               method: {
-    #               },
-    #               json_body: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_paths: ["JsonPointerPath"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 invalid_fallback_behavior: "MATCH", # accepts MATCH, NO_MATCH, EVALUATE_AS_STRING
-    #                 oversize_handling: "CONTINUE", # accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               headers: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_headers: ["FieldToMatchData"],
-    #                   excluded_headers: ["FieldToMatchData"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               cookies: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_cookies: ["SingleCookieName"],
-    #                   excluded_cookies: ["SingleCookieName"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               header_order: {
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               ja3_fingerprint: {
-    #                 fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #               },
-    #               ja4_fingerprint: {
-    #                 fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #               },
-    #               uri_fragment: {
-    #                 fallback_behavior: "MATCH", # accepts MATCH, NO_MATCH
-    #               },
-    #             },
-    #             text_transformations: [ # required
-    #               {
-    #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
-    #               },
-    #             ],
-    #           },
-    #           rate_based_statement: {
-    #             limit: 1, # required
-    #             evaluation_window_sec: 1,
-    #             aggregate_key_type: "IP", # required, accepts IP, FORWARDED_IP, CUSTOM_KEYS, CONSTANT
-    #             scope_down_statement: {
-    #               # recursive Statement
-    #             },
-    #             forwarded_ip_config: {
-    #               header_name: "ForwardedIPHeaderName", # required
-    #               fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #             },
-    #             custom_keys: [
-    #               {
-    #                 header: {
-    #                   name: "FieldToMatchData", # required
-    #                   text_transformations: [ # required
-    #                     {
-    #                       priority: 1, # required
-    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
-    #                     },
-    #                   ],
-    #                 },
-    #                 cookie: {
-    #                   name: "FieldToMatchData", # required
-    #                   text_transformations: [ # required
-    #                     {
-    #                       priority: 1, # required
-    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
-    #                     },
-    #                   ],
-    #                 },
-    #                 query_argument: {
-    #                   name: "FieldToMatchData", # required
-    #                   text_transformations: [ # required
-    #                     {
-    #                       priority: 1, # required
-    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
-    #                     },
-    #                   ],
-    #                 },
-    #                 query_string: {
-    #                   text_transformations: [ # required
-    #                     {
-    #                       priority: 1, # required
-    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
-    #                     },
-    #                   ],
-    #                 },
-    #                 http_method: {
-    #                 },
-    #                 forwarded_ip: {
-    #                 },
-    #                 ip: {
-    #                 },
-    #                 label_namespace: {
-    #                   namespace: "LabelNamespace", # required
-    #                 },
-    #                 uri_path: {
-    #                   text_transformations: [ # required
-    #                     {
-    #                       priority: 1, # required
-    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
-    #                     },
-    #                   ],
-    #                 },
-    #                 ja3_fingerprint: {
-    #                   fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #                 },
-    #                 ja4_fingerprint: {
-    #                   fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #                 },
-    #               },
-    #             ],
-    #           },
-    #           and_statement: {
-    #             statements: [ # required
-    #               {
-    #                 # recursive Statement
-    #               },
-    #             ],
-    #           },
-    #           or_statement: {
-    #             statements: [ # required
-    #               {
-    #                 # recursive Statement
-    #               },
-    #             ],
-    #           },
-    #           not_statement: {
-    #             statement: { # required
-    #               # recursive Statement
-    #             },
-    #           },
-    #           managed_rule_group_statement: {
-    #             vendor_name: "VendorName", # required
-    #             name: "EntityName", # required
-    #             version: "VersionKeyString",
-    #             excluded_rules: [
-    #               {
-    #                 name: "EntityName", # required
-    #               },
-    #             ],
-    #             scope_down_statement: {
-    #               # recursive Statement
-    #             },
-    #             managed_rule_group_configs: [
-    #               {
-    #                 login_path: "LoginPathString",
-    #                 payload_type: "JSON", # accepts JSON, FORM_ENCODED
-    #                 username_field: {
-    #                   identifier: "FieldIdentifier", # required
-    #                 },
-    #                 password_field: {
-    #                   identifier: "FieldIdentifier", # required
-    #                 },
-    #                 aws_managed_rules_bot_control_rule_set: {
-    #                   inspection_level: "COMMON", # required, accepts COMMON, TARGETED
-    #                   enable_machine_learning: false,
-    #                 },
-    #                 aws_managed_rules_atp_rule_set: {
-    #                   login_path: "String", # required
-    #                   request_inspection: {
-    #                     payload_type: "JSON", # required, accepts JSON, FORM_ENCODED
-    #                     username_field: { # required
-    #                       identifier: "FieldIdentifier", # required
-    #                     },
-    #                     password_field: { # required
-    #                       identifier: "FieldIdentifier", # required
-    #                     },
-    #                   },
-    #                   response_inspection: {
-    #                     status_code: {
-    #                       success_codes: [1], # required
-    #                       failure_codes: [1], # required
-    #                     },
-    #                     header: {
-    #                       name: "ResponseInspectionHeaderName", # required
-    #                       success_values: ["SuccessValue"], # required
-    #                       failure_values: ["FailureValue"], # required
-    #                     },
-    #                     body_contains: {
-    #                       success_strings: ["SuccessValue"], # required
-    #                       failure_strings: ["FailureValue"], # required
-    #                     },
-    #                     json: {
-    #                       identifier: "FieldIdentifier", # required
-    #                       success_values: ["SuccessValue"], # required
-    #                       failure_values: ["FailureValue"], # required
-    #                     },
-    #                   },
-    #                   enable_regex_in_path: false,
-    #                 },
-    #                 aws_managed_rules_acfp_rule_set: {
-    #                   creation_path: "CreationPathString", # required
-    #                   registration_page_path: "RegistrationPagePathString", # required
-    #                   request_inspection: { # required
-    #                     payload_type: "JSON", # required, accepts JSON, FORM_ENCODED
-    #                     username_field: {
-    #                       identifier: "FieldIdentifier", # required
-    #                     },
-    #                     password_field: {
-    #                       identifier: "FieldIdentifier", # required
-    #                     },
-    #                     email_field: {
-    #                       identifier: "FieldIdentifier", # required
-    #                     },
-    #                     phone_number_fields: [
-    #                       {
-    #                         identifier: "FieldIdentifier", # required
-    #                       },
-    #                     ],
-    #                     address_fields: [
-    #                       {
-    #                         identifier: "FieldIdentifier", # required
-    #                       },
-    #                     ],
-    #                   },
-    #                   response_inspection: {
-    #                     status_code: {
-    #                       success_codes: [1], # required
-    #                       failure_codes: [1], # required
-    #                     },
-    #                     header: {
-    #                       name: "ResponseInspectionHeaderName", # required
-    #                       success_values: ["SuccessValue"], # required
-    #                       failure_values: ["FailureValue"], # required
-    #                     },
-    #                     body_contains: {
-    #                       success_strings: ["SuccessValue"], # required
-    #                       failure_strings: ["FailureValue"], # required
-    #                     },
-    #                     json: {
-    #                       identifier: "FieldIdentifier", # required
-    #                       success_values: ["SuccessValue"], # required
-    #                       failure_values: ["FailureValue"], # required
-    #                     },
-    #                   },
-    #                   enable_regex_in_path: false,
-    #                 },
-    #               },
-    #             ],
-    #             rule_action_overrides: [
-    #               {
-    #                 name: "EntityName", # required
-    #                 action_to_use: { # required
-    #                   block: {
-    #                     custom_response: {
-    #                       response_code: 1, # required
-    #                       custom_response_body_key: "EntityName",
-    #                       response_headers: [
-    #                         {
-    #                           name: "CustomHTTPHeaderName", # required
-    #                           value: "CustomHTTPHeaderValue", # required
-    #                         },
-    #                       ],
-    #                     },
-    #                   },
-    #                   allow: {
-    #                     custom_request_handling: {
-    #                       insert_headers: [ # required
-    #                         {
-    #                           name: "CustomHTTPHeaderName", # required
-    #                           value: "CustomHTTPHeaderValue", # required
-    #                         },
-    #                       ],
-    #                     },
-    #                   },
-    #                   count: {
-    #                     custom_request_handling: {
-    #                       insert_headers: [ # required
-    #                         {
-    #                           name: "CustomHTTPHeaderName", # required
-    #                           value: "CustomHTTPHeaderValue", # required
-    #                         },
-    #                       ],
-    #                     },
-    #                   },
-    #                   captcha: {
-    #                     custom_request_handling: {
-    #                       insert_headers: [ # required
-    #                         {
-    #                           name: "CustomHTTPHeaderName", # required
-    #                           value: "CustomHTTPHeaderValue", # required
-    #                         },
-    #                       ],
-    #                     },
-    #                   },
-    #                   challenge: {
-    #                     custom_request_handling: {
-    #                       insert_headers: [ # required
-    #                         {
-    #                           name: "CustomHTTPHeaderName", # required
-    #                           value: "CustomHTTPHeaderValue", # required
-    #                         },
-    #                       ],
-    #                     },
-    #                   },
-    #                 },
-    #               },
-    #             ],
-    #           },
-    #           label_match_statement: {
-    #             scope: "LABEL", # required, accepts LABEL, NAMESPACE
-    #             key: "LabelMatchKey", # required
-    #           },
-    #           regex_match_statement: {
-    #             regex_string: "RegexPatternString", # required
-    #             field_to_match: { # required
-    #               single_header: {
-    #                 name: "FieldToMatchData", # required
-    #               },
-    #               single_query_argument: {
-    #                 name: "FieldToMatchData", # required
-    #               },
-    #               all_query_arguments: {
-    #               },
-    #               uri_path: {
-    #               },
-    #               query_string: {
-    #               },
-    #               body: {
-    #                 oversize_handling: "CONTINUE", # accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               method: {
-    #               },
-    #               json_body: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_paths: ["JsonPointerPath"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 invalid_fallback_behavior: "MATCH", # accepts MATCH, NO_MATCH, EVALUATE_AS_STRING
-    #                 oversize_handling: "CONTINUE", # accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               headers: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_headers: ["FieldToMatchData"],
-    #                   excluded_headers: ["FieldToMatchData"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               cookies: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_cookies: ["SingleCookieName"],
-    #                   excluded_cookies: ["SingleCookieName"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               header_order: {
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               ja3_fingerprint: {
-    #                 fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #               },
-    #               ja4_fingerprint: {
-    #                 fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #               },
-    #               uri_fragment: {
-    #                 fallback_behavior: "MATCH", # accepts MATCH, NO_MATCH
-    #               },
-    #             },
-    #             text_transformations: [ # required
-    #               {
-    #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
-    #               },
-    #             ],
-    #           },
-    #         },
-    #         action: {
-    #           block: {
-    #             custom_response: {
-    #               response_code: 1, # required
-    #               custom_response_body_key: "EntityName",
-    #               response_headers: [
-    #                 {
-    #                   name: "CustomHTTPHeaderName", # required
-    #                   value: "CustomHTTPHeaderValue", # required
-    #                 },
-    #               ],
-    #             },
-    #           },
-    #           allow: {
-    #             custom_request_handling: {
-    #               insert_headers: [ # required
-    #                 {
-    #                   name: "CustomHTTPHeaderName", # required
-    #                   value: "CustomHTTPHeaderValue", # required
-    #                 },
-    #               ],
-    #             },
-    #           },
-    #           count: {
-    #             custom_request_handling: {
-    #               insert_headers: [ # required
-    #                 {
-    #                   name: "CustomHTTPHeaderName", # required
-    #                   value: "CustomHTTPHeaderValue", # required
-    #                 },
-    #               ],
-    #             },
-    #           },
-    #           captcha: {
-    #             custom_request_handling: {
-    #               insert_headers: [ # required
-    #                 {
-    #                   name: "CustomHTTPHeaderName", # required
-    #                   value: "CustomHTTPHeaderValue", # required
-    #                 },
-    #               ],
-    #             },
-    #           },
-    #           challenge: {
-    #             custom_request_handling: {
-    #               insert_headers: [ # required
-    #                 {
-    #                   name: "CustomHTTPHeaderName", # required
-    #                   value: "CustomHTTPHeaderValue", # required
-    #                 },
-    #               ],
-    #             },
-    #           },
-    #         },
-    #         override_action: {
-    #           count: {
-    #             custom_request_handling: {
-    #               insert_headers: [ # required
-    #                 {
-    #                   name: "CustomHTTPHeaderName", # required
-    #                   value: "CustomHTTPHeaderValue", # required
-    #                 },
-    #               ],
-    #             },
-    #           },
-    #           none: {
-    #           },
-    #         },
-    #         rule_labels: [
-    #           {
-    #             name: "LabelName", # required
-    #           },
-    #         ],
-    #         visibility_config: { # required
-    #           sampled_requests_enabled: false, # required
-    #           cloud_watch_metrics_enabled: false, # required
-    #           metric_name: "MetricName", # required
-    #         },
-    #         captcha_config: {
-    #           immunity_time_property: {
-    #             immunity_time: 1, # required
-    #           },
-    #         },
-    #         challenge_config: {
-    #           immunity_time_property: {
-    #             immunity_time: 1, # required
-    #           },
-    #         },
-    #       },
-    #     ],
-    #     visibility_config: { # required
-    #       sampled_requests_enabled: false, # required
-    #       cloud_watch_metrics_enabled: false, # required
-    #       metric_name: "MetricName", # required
-    #     },
-    #     data_protection_config: {
-    #       data_protections: [ # required
-    #         {
-    #           field: { # required
-    #             field_type: "SINGLE_HEADER", # required, accepts SINGLE_HEADER, SINGLE_COOKIE, SINGLE_QUERY_ARGUMENT, QUERY_STRING, BODY
-    #             field_keys: ["FieldToProtectKeyName"],
-    #           },
-    #           action: "SUBSTITUTION", # required, accepts SUBSTITUTION, HASH
-    #           exclude_rule_match_details: false,
-    #           exclude_rate_based_details: false,
-    #         },
-    #       ],
-    #     },
-    #     tags: [
-    #       {
-    #         key: "TagKey", # required
-    #         value: "TagValue", # required
-    #       },
-    #     ],
-    #     custom_response_bodies: {
-    #       "EntityName" => {
-    #         content_type: "TEXT_PLAIN", # required, accepts TEXT_PLAIN, TEXT_HTML, APPLICATION_JSON
-    #         content: "ResponseContent", # required
-    #       },
-    #     },
-    #     captcha_config: {
-    #       immunity_time_property: {
-    #         immunity_time: 1, # required
-    #       },
-    #     },
-    #     challenge_config: {
-    #       immunity_time_property: {
-    #         immunity_time: 1, # required
-    #       },
-    #     },
-    #     token_domains: ["TokenDomain"],
-    #     association_config: {
-    #       request_body: {
-    #         "CLOUDFRONT" => {
-    #           default_size_inspection_limit: "KB_16", # required, accepts KB_16, KB_32, KB_48, KB_64
-    #         },
-    #       },
-    #     },
-    #   })
     #
     # @example Response structure
     #
@@ -3823,7 +3066,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -3905,7 +3148,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -3973,11 +3216,18 @@ module Aws::WAFV2
     #   Amazon Web Services services][1] in the *Amazon Security Lake user
     #   guide*.
     #
+    #   The log scope `CLOUDWATCH_TELEMETRY_RULE_MANAGED` indicates a
+    #   configuration that is managed through Amazon CloudWatch Logs for
+    #   telemetry data collection and analysis. For information, see [What is
+    #   Amazon CloudWatch Logs ?][2] in the *Amazon CloudWatch Logs user
+    #   guide*.
+    #
     #   Default: `CUSTOMER`
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/security-lake/latest/userguide/internal-sources.html
+    #   [2]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
@@ -3986,7 +3236,7 @@ module Aws::WAFV2
     #   resp = client.delete_logging_configuration({
     #     resource_arn: "ResourceArn", # required
     #     log_type: "WAF_LOGS", # accepts WAF_LOGS
-    #     log_scope: "CUSTOMER", # accepts CUSTOMER, SECURITY_LAKE
+    #     log_scope: "CUSTOMER", # accepts CUSTOMER, SECURITY_LAKE, CLOUDWATCH_TELEMETRY_RULE_MANAGED
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/DeleteLoggingConfiguration AWS API Documentation
@@ -4033,7 +3283,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -4086,7 +3336,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -4168,7 +3418,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -4219,7 +3469,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -4270,7 +3520,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -4326,7 +3576,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -4384,6 +3634,7 @@ module Aws::WAFV2
     #   resp.rules[0].action.challenge.custom_request_handling.insert_headers #=> Array
     #   resp.rules[0].action.challenge.custom_request_handling.insert_headers[0].name #=> String
     #   resp.rules[0].action.challenge.custom_request_handling.insert_headers[0].value #=> String
+    #   resp.rules[0].action.monetize.price_multiplier #=> String
     #   resp.label_namespace #=> String
     #   resp.available_labels #=> Array
     #   resp.available_labels[0].name #=> String
@@ -4444,6 +3695,13 @@ module Aws::WAFV2
     #
     #   * For an Amazon Web Services Verified Access instance:
     #     `arn:partition:ec2:region:account-id:verified-access-instance/instance-id
+    #     `
+    #
+    #   * For an Amplify application:
+    #     `arn:partition:amplify:region:account-id:apps/app-id `
+    #
+    #   * For an Amazon Bedrock AgentCore Gateway:
+    #     `arn:partition:bedrock-agentcore:region:account-id:gateway/gateway-id
     #     `
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
@@ -4523,7 +3781,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -4571,7 +3829,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -4642,11 +3900,18 @@ module Aws::WAFV2
     #   Amazon Web Services services][1] in the *Amazon Security Lake user
     #   guide*.
     #
+    #   The log scope `CLOUDWATCH_TELEMETRY_RULE_MANAGED` indicates a
+    #   configuration that is managed through Amazon CloudWatch Logs for
+    #   telemetry data collection and analysis. For information, see [What is
+    #   Amazon CloudWatch Logs ?][2] in the *Amazon CloudWatch Logs user
+    #   guide*.
+    #
     #   Default: `CUSTOMER`
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/security-lake/latest/userguide/internal-sources.html
+    #   [2]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html
     #
     # @return [Types::GetLoggingConfigurationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -4657,7 +3922,7 @@ module Aws::WAFV2
     #   resp = client.get_logging_configuration({
     #     resource_arn: "ResourceArn", # required
     #     log_type: "WAF_LOGS", # accepts WAF_LOGS
-    #     log_scope: "CUSTOMER", # accepts CUSTOMER, SECURITY_LAKE
+    #     log_scope: "CUSTOMER", # accepts CUSTOMER, SECURITY_LAKE, CLOUDWATCH_TELEMETRY_RULE_MANAGED
     #   })
     #
     # @example Response structure
@@ -4695,11 +3960,11 @@ module Aws::WAFV2
     #   resp.logging_configuration.logging_filter.filters[0].behavior #=> String, one of "KEEP", "DROP"
     #   resp.logging_configuration.logging_filter.filters[0].requirement #=> String, one of "MEETS_ALL", "MEETS_ANY"
     #   resp.logging_configuration.logging_filter.filters[0].conditions #=> Array
-    #   resp.logging_configuration.logging_filter.filters[0].conditions[0].action_condition.action #=> String, one of "ALLOW", "BLOCK", "COUNT", "CAPTCHA", "CHALLENGE", "EXCLUDED_AS_COUNT"
+    #   resp.logging_configuration.logging_filter.filters[0].conditions[0].action_condition.action #=> String, one of "ALLOW", "BLOCK", "COUNT", "CAPTCHA", "CHALLENGE", "MONETIZE", "EXCLUDED_AS_COUNT"
     #   resp.logging_configuration.logging_filter.filters[0].conditions[0].label_name_condition.label_name #=> String
     #   resp.logging_configuration.logging_filter.default_behavior #=> String, one of "KEEP", "DROP"
     #   resp.logging_configuration.log_type #=> String, one of "WAF_LOGS"
-    #   resp.logging_configuration.log_scope #=> String, one of "CUSTOMER", "SECURITY_LAKE"
+    #   resp.logging_configuration.log_scope #=> String, one of "CUSTOMER", "SECURITY_LAKE", "CLOUDWATCH_TELEMETRY_RULE_MANAGED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/GetLoggingConfiguration AWS API Documentation
     #
@@ -4732,7 +3997,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -4889,7 +4154,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -4960,7 +4225,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -5007,6 +4272,265 @@ module Aws::WAFV2
       req.send_request(options)
     end
 
+    # Retrieves ranked monetization statistics. Use the `StatisticType`
+    # parameter to specify the ranking: `TOP_SOURCES_BY_REVENUE` for top
+    # sources by revenue, or `TOP_PATHS_BY_REVENUE` for top content paths by
+    # revenue. This operation is only available for `CLOUDFRONT` scope. The
+    # maximum supported time window is 90 days. When no `CurrencyMode`
+    # filter is provided, results default to `REAL`. To retrieve test data,
+    # include a `CurrencyMode` filter with the value `TEST`.
+    #
+    # @option params [required, String] :statistic_type
+    #   `TOP_SOURCES_BY_REVENUE` ranks revenue from AI bot traffic, grouped by
+    #   the dimension you specify in the `GroupBy` parameter (`NAME`,
+    #   `CATEGORY`, `INTENT`, `ORGANIZATION`, or `WEBACL`); `GroupBy` is
+    #   required for this statistic type. `TOP_PATHS_BY_REVENUE` ranks revenue
+    #   by path.
+    #
+    # @option params [required, Types::TimeWindow] :time_window
+    #   The time range for the query. Specify start and end timestamps.
+    #
+    # @option params [required, String] :scope
+    #   Specifies whether this is for a Amazon CloudFront distribution
+    #   (`CLOUDFRONT`) or for a regional application (`REGIONAL`).
+    #
+    # @option params [required, String] :currency
+    #   The currency for the revenue amounts in the response.
+    #
+    # @option params [String] :group_by
+    #   The dimension to group results by: `NAME`, `CATEGORY`, `INTENT`,
+    #   `ORGANIZATION`, or `WEBACL`. Required when `StatisticType` is
+    #   `TOP_SOURCES_BY_REVENUE`. Not required for `TOP_PATHS_BY_REVENUE`,
+    #   where results are grouped by content path. If `StatisticType` is
+    #   `TOP_SOURCES_BY_REVENUE` and `GroupBy` is omitted, the request is
+    #   rejected with a `WAFInvalidParameterException`.
+    #
+    # @option params [Array<Types::MonetizationFilter>] :filters
+    #   Optional filters to narrow the results.
+    #
+    # @option params [String] :next_marker
+    #   When you get a paginated response, this marker indicates that
+    #   additional results are available. Use it in a subsequent request to
+    #   retrieve the next page of results.
+    #
+    # @option params [Integer] :limit
+    #   The maximum number of results to return.
+    #
+    # @option params [String] :sort_by
+    #   The field to sort results by: `REVENUE`, `PERCENTAGE`, or `NAME`.
+    #
+    # @option params [String] :sort_order
+    #   The sort order: `ASC` for ascending or `DESC` for descending.
+    #
+    # @return [Types::GetRevenueStatisticsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetRevenueStatisticsResponse#source_statistics #source_statistics} => Array&lt;Types::SourceStatistics&gt;
+    #   * {Types::GetRevenueStatisticsResponse#revenue_path_statistics #revenue_path_statistics} => Array&lt;Types::RevenuePathStatistics&gt;
+    #   * {Types::GetRevenueStatisticsResponse#next_marker #next_marker} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_revenue_statistics({
+    #     statistic_type: "TOP_SOURCES_BY_REVENUE", # required, accepts TOP_SOURCES_BY_REVENUE, TOP_PATHS_BY_REVENUE
+    #     time_window: { # required
+    #       start_time: Time.now, # required
+    #       end_time: Time.now, # required
+    #     },
+    #     scope: "CLOUDFRONT", # required, accepts CLOUDFRONT, REGIONAL
+    #     currency: "USDC", # required, accepts USDC
+    #     group_by: "NAME", # accepts NAME, CATEGORY, INTENT, ORGANIZATION, WEBACL
+    #     filters: [
+    #       {
+    #         name: "MonetizationFilterName", # required
+    #         values: ["MonetizationFilterValue"], # required
+    #       },
+    #     ],
+    #     next_marker: "NextMarker",
+    #     limit: 1,
+    #     sort_by: "REVENUE", # accepts REVENUE, PERCENTAGE, NAME
+    #     sort_order: "ASC", # accepts ASC, DESC
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.source_statistics #=> Array
+    #   resp.source_statistics[0].source_name #=> String
+    #   resp.source_statistics[0].percentage #=> Float
+    #   resp.source_statistics[0].amount #=> String
+    #   resp.source_statistics[0].request_count #=> Integer
+    #   resp.source_statistics[0].source_category #=> String
+    #   resp.source_statistics[0].intent #=> String
+    #   resp.source_statistics[0].organization #=> String
+    #   resp.source_statistics[0].verified #=> Boolean
+    #   resp.source_statistics[0].group_by_value #=> String
+    #   resp.revenue_path_statistics #=> Array
+    #   resp.revenue_path_statistics[0].path #=> String
+    #   resp.revenue_path_statistics[0].percentage #=> Float
+    #   resp.revenue_path_statistics[0].amount #=> String
+    #   resp.revenue_path_statistics[0].request_count #=> Integer
+    #   resp.next_marker #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/GetRevenueStatistics AWS API Documentation
+    #
+    # @overload get_revenue_statistics(params = {})
+    # @param [Hash] params ({})
+    def get_revenue_statistics(params = {}, options = {})
+      req = build_request(:get_revenue_statistics, params)
+      req.send_request(options)
+    end
+
+    # Retrieves a summary of monetization revenue for the specified time
+    # window. Returns total revenue, revenue by verification tier, total
+    # settlements, and total HTTP 402 responses served. This operation is
+    # only available for `CLOUDFRONT` scope. The maximum supported time
+    # window is 90 days. When no `CurrencyMode` filter is provided, results
+    # default to `REAL`. To retrieve test data, include a `CurrencyMode`
+    # filter with the value `TEST`.
+    #
+    # @option params [required, Types::TimeWindow] :time_window
+    #   The time range for the revenue summary query. Specify start and end
+    #   timestamps.
+    #
+    # @option params [required, String] :scope
+    #   Specifies whether this is for a Amazon CloudFront distribution
+    #   (`CLOUDFRONT`) or for a regional application (`REGIONAL`). AI bot
+    #   monetization is only available for `CLOUDFRONT` scope.
+    #
+    # @option params [required, String] :currency
+    #   The currency for the revenue amounts in the response. Currently only
+    #   `USDC` is supported.
+    #
+    # @option params [Array<Types::MonetizationFilter>] :filters
+    #   Optional filters to narrow the results. You can filter by source name,
+    #   category, organization, intent, verified status, content path, web ACL
+    #   ARN, or currency mode.
+    #
+    # @return [Types::GetRevenueStatisticsSummaryResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetRevenueStatisticsSummaryResponse#revenue_breakdown #revenue_breakdown} => Types::RevenueBreakdown
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_revenue_statistics_summary({
+    #     time_window: { # required
+    #       start_time: Time.now, # required
+    #       end_time: Time.now, # required
+    #     },
+    #     scope: "CLOUDFRONT", # required, accepts CLOUDFRONT, REGIONAL
+    #     currency: "USDC", # required, accepts USDC
+    #     filters: [
+    #       {
+    #         name: "MonetizationFilterName", # required
+    #         values: ["MonetizationFilterValue"], # required
+    #       },
+    #     ],
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.revenue_breakdown.total_amount #=> String
+    #   resp.revenue_breakdown.verified_amount #=> String
+    #   resp.revenue_breakdown.unverified_amount #=> String
+    #   resp.revenue_breakdown.currency #=> String, one of "USDC"
+    #   resp.revenue_breakdown.total_settled #=> Integer
+    #   resp.revenue_breakdown.total_monetize_served #=> Integer
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/GetRevenueStatisticsSummary AWS API Documentation
+    #
+    # @overload get_revenue_statistics_summary(params = {})
+    # @param [Hash] params ({})
+    def get_revenue_statistics_summary(params = {}, options = {})
+      req = build_request(:get_revenue_statistics_summary, params)
+      req.send_request(options)
+    end
+
+    # Retrieves time series data for monetization revenue. Returns data
+    # points aggregated at the specified interval for the given time window.
+    # This operation is only available for `CLOUDFRONT` scope. The maximum
+    # supported time window is 90 days. When no `CurrencyMode` filter is
+    # provided, results default to `REAL`. To retrieve test data, include a
+    # `CurrencyMode` filter with the value `TEST`.
+    #
+    # @option params [required, String] :statistic_type
+    #   The type of time series data to retrieve: `DATE_HISTOGRAM` for revenue
+    #   over time, or `PAYMENT_TRAFFIC` for payment traffic patterns.
+    #
+    # @option params [required, Types::TimeWindow] :time_window
+    #   The time range for the query. Specify start and end timestamps.
+    #
+    # @option params [required, String] :scope
+    #   Specifies whether this is for a Amazon CloudFront distribution
+    #   (`CLOUDFRONT`) or for a regional application (`REGIONAL`).
+    #
+    # @option params [required, String] :interval
+    #   The time interval for aggregating data points: `MINUTELY`,
+    #   `FIVE_MINUTELY`, `HOURLY`, or `DAILY`.
+    #
+    # @option params [required, String] :currency
+    #   The currency for the amounts in the response.
+    #
+    # @option params [String] :group_by
+    #   The dimension to group results by.
+    #
+    # @option params [Array<Types::MonetizationFilter>] :filters
+    #   Optional filters to narrow the results.
+    #
+    # @option params [Integer] :limit
+    #   The maximum number of data points to return. Minimum: 1. Maximum:
+    #   10000.
+    #
+    # @option params [String] :next_marker
+    #   When you get a paginated response, this marker indicates that
+    #   additional results are available.
+    #
+    # @return [Types::GetRevenueStatisticsTimeSeriesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetRevenueStatisticsTimeSeriesResponse#data_points #data_points} => Array&lt;Types::DataPointEntry&gt;
+    #   * {Types::GetRevenueStatisticsTimeSeriesResponse#next_marker #next_marker} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_revenue_statistics_time_series({
+    #     statistic_type: "DATE_HISTOGRAM", # required, accepts DATE_HISTOGRAM, PAYMENT_TRAFFIC
+    #     time_window: { # required
+    #       start_time: Time.now, # required
+    #       end_time: Time.now, # required
+    #     },
+    #     scope: "CLOUDFRONT", # required, accepts CLOUDFRONT, REGIONAL
+    #     interval: "MINUTELY", # required, accepts MINUTELY, FIVE_MINUTELY, HOURLY, DAILY
+    #     currency: "USDC", # required, accepts USDC
+    #     group_by: "NAME", # accepts NAME, CATEGORY, INTENT, ORGANIZATION, WEBACL
+    #     filters: [
+    #       {
+    #         name: "MonetizationFilterName", # required
+    #         values: ["MonetizationFilterValue"], # required
+    #       },
+    #     ],
+    #     limit: 1,
+    #     next_marker: "NextMarker",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.data_points #=> Array
+    #   resp.data_points[0].date #=> Time
+    #   resp.data_points[0].monetize_served_count #=> Integer
+    #   resp.data_points[0].settled_count #=> Integer
+    #   resp.data_points[0].total_amount #=> String
+    #   resp.data_points[0].category #=> String
+    #   resp.data_points[0].intent #=> String
+    #   resp.data_points[0].group_by_value #=> String
+    #   resp.next_marker #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/GetRevenueStatisticsTimeSeries AWS API Documentation
+    #
+    # @overload get_revenue_statistics_time_series(params = {})
+    # @param [Hash] params ({})
+    def get_revenue_statistics_time_series(params = {}, options = {})
+      req = build_request(:get_revenue_statistics_time_series, params)
+      req.send_request(options)
+    end
+
     # Retrieves the specified RuleGroup.
     #
     # @option params [String] :name
@@ -5015,7 +4539,7 @@ module Aws::WAFV2
     #
     # @option params [String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -5084,7 +4608,10 @@ module Aws::WAFV2
     #   resp.rule_group.rules[0].statement.byte_match_statement.field_to_match.uri_fragment.fallback_behavior #=> String, one of "MATCH", "NO_MATCH"
     #   resp.rule_group.rules[0].statement.byte_match_statement.text_transformations #=> Array
     #   resp.rule_group.rules[0].statement.byte_match_statement.text_transformations[0].priority #=> Integer
-    #   resp.rule_group.rules[0].statement.byte_match_statement.text_transformations[0].type #=> String, one of "NONE", "COMPRESS_WHITE_SPACE", "HTML_ENTITY_DECODE", "LOWERCASE", "CMD_LINE", "URL_DECODE", "BASE64_DECODE", "HEX_DECODE", "MD5", "REPLACE_COMMENTS", "ESCAPE_SEQ_DECODE", "SQL_HEX_DECODE", "CSS_DECODE", "JS_DECODE", "NORMALIZE_PATH", "NORMALIZE_PATH_WIN", "REMOVE_NULLS", "REPLACE_NULLS", "BASE64_DECODE_EXT", "URL_DECODE_UNI", "UTF8_TO_UNICODE"
+    #   resp.rule_group.rules[0].statement.byte_match_statement.text_transformations[0].type #=> String, one of "NONE", "COMPRESS_WHITE_SPACE", "HTML_ENTITY_DECODE", "LOWERCASE", "CMD_LINE", "URL_DECODE", "BASE64_DECODE", "HEX_DECODE", "MD5", "REPLACE_COMMENTS", "ESCAPE_SEQ_DECODE", "SQL_HEX_DECODE", "CSS_DECODE", "JS_DECODE", "NORMALIZE_PATH", "NORMALIZE_PATH_WIN", "REMOVE_NULLS", "REPLACE_NULLS", "BASE64_DECODE_EXT", "URL_DECODE_UNI", "UTF8_TO_UNICODE", "REMOVE_WHITESPACE", "TRIM", "TRIM_LEFT", "TRIM_RIGHT", "REMOVE_COMMENTS_CHAR", "UPPERCASE", "CMD_LINE_WIN", "CMD_LINE_UNIX", "JS_DECODE_EXT", "SHA256"
+    #   resp.rule_group.rules[0].statement.byte_match_statement.pre_parse_text_transformations #=> Array
+    #   resp.rule_group.rules[0].statement.byte_match_statement.pre_parse_text_transformations[0].priority #=> Integer
+    #   resp.rule_group.rules[0].statement.byte_match_statement.pre_parse_text_transformations[0].type #=> String, one of "NONE", "URL_DECODE", "URL_DECODE_UNI", "COMBINE_DUPLICATE_QUERY_ARGS_BY_COMMA", "REPLACE_SEMICOLONS_WITH_AMPERSANDS"
     #   resp.rule_group.rules[0].statement.byte_match_statement.positional_constraint #=> String, one of "EXACTLY", "STARTS_WITH", "ENDS_WITH", "CONTAINS", "CONTAINS_WORD"
     #   resp.rule_group.rules[0].statement.sqli_match_statement.field_to_match.single_header.name #=> String
     #   resp.rule_group.rules[0].statement.sqli_match_statement.field_to_match.single_query_argument.name #=> String
@@ -5112,7 +4639,10 @@ module Aws::WAFV2
     #   resp.rule_group.rules[0].statement.sqli_match_statement.field_to_match.uri_fragment.fallback_behavior #=> String, one of "MATCH", "NO_MATCH"
     #   resp.rule_group.rules[0].statement.sqli_match_statement.text_transformations #=> Array
     #   resp.rule_group.rules[0].statement.sqli_match_statement.text_transformations[0].priority #=> Integer
-    #   resp.rule_group.rules[0].statement.sqli_match_statement.text_transformations[0].type #=> String, one of "NONE", "COMPRESS_WHITE_SPACE", "HTML_ENTITY_DECODE", "LOWERCASE", "CMD_LINE", "URL_DECODE", "BASE64_DECODE", "HEX_DECODE", "MD5", "REPLACE_COMMENTS", "ESCAPE_SEQ_DECODE", "SQL_HEX_DECODE", "CSS_DECODE", "JS_DECODE", "NORMALIZE_PATH", "NORMALIZE_PATH_WIN", "REMOVE_NULLS", "REPLACE_NULLS", "BASE64_DECODE_EXT", "URL_DECODE_UNI", "UTF8_TO_UNICODE"
+    #   resp.rule_group.rules[0].statement.sqli_match_statement.text_transformations[0].type #=> String, one of "NONE", "COMPRESS_WHITE_SPACE", "HTML_ENTITY_DECODE", "LOWERCASE", "CMD_LINE", "URL_DECODE", "BASE64_DECODE", "HEX_DECODE", "MD5", "REPLACE_COMMENTS", "ESCAPE_SEQ_DECODE", "SQL_HEX_DECODE", "CSS_DECODE", "JS_DECODE", "NORMALIZE_PATH", "NORMALIZE_PATH_WIN", "REMOVE_NULLS", "REPLACE_NULLS", "BASE64_DECODE_EXT", "URL_DECODE_UNI", "UTF8_TO_UNICODE", "REMOVE_WHITESPACE", "TRIM", "TRIM_LEFT", "TRIM_RIGHT", "REMOVE_COMMENTS_CHAR", "UPPERCASE", "CMD_LINE_WIN", "CMD_LINE_UNIX", "JS_DECODE_EXT", "SHA256"
+    #   resp.rule_group.rules[0].statement.sqli_match_statement.pre_parse_text_transformations #=> Array
+    #   resp.rule_group.rules[0].statement.sqli_match_statement.pre_parse_text_transformations[0].priority #=> Integer
+    #   resp.rule_group.rules[0].statement.sqli_match_statement.pre_parse_text_transformations[0].type #=> String, one of "NONE", "URL_DECODE", "URL_DECODE_UNI", "COMBINE_DUPLICATE_QUERY_ARGS_BY_COMMA", "REPLACE_SEMICOLONS_WITH_AMPERSANDS"
     #   resp.rule_group.rules[0].statement.sqli_match_statement.sensitivity_level #=> String, one of "LOW", "HIGH"
     #   resp.rule_group.rules[0].statement.xss_match_statement.field_to_match.single_header.name #=> String
     #   resp.rule_group.rules[0].statement.xss_match_statement.field_to_match.single_query_argument.name #=> String
@@ -5140,7 +4670,10 @@ module Aws::WAFV2
     #   resp.rule_group.rules[0].statement.xss_match_statement.field_to_match.uri_fragment.fallback_behavior #=> String, one of "MATCH", "NO_MATCH"
     #   resp.rule_group.rules[0].statement.xss_match_statement.text_transformations #=> Array
     #   resp.rule_group.rules[0].statement.xss_match_statement.text_transformations[0].priority #=> Integer
-    #   resp.rule_group.rules[0].statement.xss_match_statement.text_transformations[0].type #=> String, one of "NONE", "COMPRESS_WHITE_SPACE", "HTML_ENTITY_DECODE", "LOWERCASE", "CMD_LINE", "URL_DECODE", "BASE64_DECODE", "HEX_DECODE", "MD5", "REPLACE_COMMENTS", "ESCAPE_SEQ_DECODE", "SQL_HEX_DECODE", "CSS_DECODE", "JS_DECODE", "NORMALIZE_PATH", "NORMALIZE_PATH_WIN", "REMOVE_NULLS", "REPLACE_NULLS", "BASE64_DECODE_EXT", "URL_DECODE_UNI", "UTF8_TO_UNICODE"
+    #   resp.rule_group.rules[0].statement.xss_match_statement.text_transformations[0].type #=> String, one of "NONE", "COMPRESS_WHITE_SPACE", "HTML_ENTITY_DECODE", "LOWERCASE", "CMD_LINE", "URL_DECODE", "BASE64_DECODE", "HEX_DECODE", "MD5", "REPLACE_COMMENTS", "ESCAPE_SEQ_DECODE", "SQL_HEX_DECODE", "CSS_DECODE", "JS_DECODE", "NORMALIZE_PATH", "NORMALIZE_PATH_WIN", "REMOVE_NULLS", "REPLACE_NULLS", "BASE64_DECODE_EXT", "URL_DECODE_UNI", "UTF8_TO_UNICODE", "REMOVE_WHITESPACE", "TRIM", "TRIM_LEFT", "TRIM_RIGHT", "REMOVE_COMMENTS_CHAR", "UPPERCASE", "CMD_LINE_WIN", "CMD_LINE_UNIX", "JS_DECODE_EXT", "SHA256"
+    #   resp.rule_group.rules[0].statement.xss_match_statement.pre_parse_text_transformations #=> Array
+    #   resp.rule_group.rules[0].statement.xss_match_statement.pre_parse_text_transformations[0].priority #=> Integer
+    #   resp.rule_group.rules[0].statement.xss_match_statement.pre_parse_text_transformations[0].type #=> String, one of "NONE", "URL_DECODE", "URL_DECODE_UNI", "COMBINE_DUPLICATE_QUERY_ARGS_BY_COMMA", "REPLACE_SEMICOLONS_WITH_AMPERSANDS"
     #   resp.rule_group.rules[0].statement.size_constraint_statement.field_to_match.single_header.name #=> String
     #   resp.rule_group.rules[0].statement.size_constraint_statement.field_to_match.single_query_argument.name #=> String
     #   resp.rule_group.rules[0].statement.size_constraint_statement.field_to_match.body.oversize_handling #=> String, one of "CONTINUE", "MATCH", "NO_MATCH"
@@ -5169,7 +4702,10 @@ module Aws::WAFV2
     #   resp.rule_group.rules[0].statement.size_constraint_statement.size #=> Integer
     #   resp.rule_group.rules[0].statement.size_constraint_statement.text_transformations #=> Array
     #   resp.rule_group.rules[0].statement.size_constraint_statement.text_transformations[0].priority #=> Integer
-    #   resp.rule_group.rules[0].statement.size_constraint_statement.text_transformations[0].type #=> String, one of "NONE", "COMPRESS_WHITE_SPACE", "HTML_ENTITY_DECODE", "LOWERCASE", "CMD_LINE", "URL_DECODE", "BASE64_DECODE", "HEX_DECODE", "MD5", "REPLACE_COMMENTS", "ESCAPE_SEQ_DECODE", "SQL_HEX_DECODE", "CSS_DECODE", "JS_DECODE", "NORMALIZE_PATH", "NORMALIZE_PATH_WIN", "REMOVE_NULLS", "REPLACE_NULLS", "BASE64_DECODE_EXT", "URL_DECODE_UNI", "UTF8_TO_UNICODE"
+    #   resp.rule_group.rules[0].statement.size_constraint_statement.text_transformations[0].type #=> String, one of "NONE", "COMPRESS_WHITE_SPACE", "HTML_ENTITY_DECODE", "LOWERCASE", "CMD_LINE", "URL_DECODE", "BASE64_DECODE", "HEX_DECODE", "MD5", "REPLACE_COMMENTS", "ESCAPE_SEQ_DECODE", "SQL_HEX_DECODE", "CSS_DECODE", "JS_DECODE", "NORMALIZE_PATH", "NORMALIZE_PATH_WIN", "REMOVE_NULLS", "REPLACE_NULLS", "BASE64_DECODE_EXT", "URL_DECODE_UNI", "UTF8_TO_UNICODE", "REMOVE_WHITESPACE", "TRIM", "TRIM_LEFT", "TRIM_RIGHT", "REMOVE_COMMENTS_CHAR", "UPPERCASE", "CMD_LINE_WIN", "CMD_LINE_UNIX", "JS_DECODE_EXT", "SHA256"
+    #   resp.rule_group.rules[0].statement.size_constraint_statement.pre_parse_text_transformations #=> Array
+    #   resp.rule_group.rules[0].statement.size_constraint_statement.pre_parse_text_transformations[0].priority #=> Integer
+    #   resp.rule_group.rules[0].statement.size_constraint_statement.pre_parse_text_transformations[0].type #=> String, one of "NONE", "URL_DECODE", "URL_DECODE_UNI", "COMBINE_DUPLICATE_QUERY_ARGS_BY_COMMA", "REPLACE_SEMICOLONS_WITH_AMPERSANDS"
     #   resp.rule_group.rules[0].statement.geo_match_statement.country_codes #=> Array
     #   resp.rule_group.rules[0].statement.geo_match_statement.country_codes[0] #=> String, one of "AF", "AX", "AL", "DZ", "AS", "AD", "AO", "AI", "AQ", "AG", "AR", "AM", "AW", "AU", "AT", "AZ", "BS", "BH", "BD", "BB", "BY", "BE", "BZ", "BJ", "BM", "BT", "BO", "BQ", "BA", "BW", "BV", "BR", "IO", "BN", "BG", "BF", "BI", "KH", "CM", "CA", "CV", "KY", "CF", "TD", "CL", "CN", "CX", "CC", "CO", "KM", "CG", "CD", "CK", "CR", "CI", "HR", "CU", "CW", "CY", "CZ", "DK", "DJ", "DM", "DO", "EC", "EG", "SV", "GQ", "ER", "EE", "ET", "FK", "FO", "FJ", "FI", "FR", "GF", "PF", "TF", "GA", "GM", "GE", "DE", "GH", "GI", "GR", "GL", "GD", "GP", "GU", "GT", "GG", "GN", "GW", "GY", "HT", "HM", "VA", "HN", "HK", "HU", "IS", "IN", "ID", "IR", "IQ", "IE", "IM", "IL", "IT", "JM", "JP", "JE", "JO", "KZ", "KE", "KI", "KP", "KR", "KW", "KG", "LA", "LV", "LB", "LS", "LR", "LY", "LI", "LT", "LU", "MO", "MK", "MG", "MW", "MY", "MV", "ML", "MT", "MH", "MQ", "MR", "MU", "YT", "MX", "FM", "MD", "MC", "MN", "ME", "MS", "MA", "MZ", "MM", "NA", "NR", "NP", "NL", "NC", "NZ", "NI", "NE", "NG", "NU", "NF", "MP", "NO", "OM", "PK", "PW", "PS", "PA", "PG", "PY", "PE", "PH", "PN", "PL", "PT", "PR", "QA", "RE", "RO", "RU", "RW", "BL", "SH", "KN", "LC", "MF", "PM", "VC", "WS", "SM", "ST", "SA", "SN", "RS", "SC", "SL", "SG", "SX", "SK", "SI", "SB", "SO", "ZA", "GS", "SS", "ES", "LK", "SD", "SR", "SJ", "SZ", "SE", "CH", "SY", "TW", "TJ", "TZ", "TH", "TL", "TG", "TK", "TO", "TT", "TN", "TR", "TM", "TC", "TV", "UG", "UA", "AE", "GB", "US", "UM", "UY", "UZ", "VU", "VE", "VN", "VG", "VI", "WF", "EH", "YE", "ZM", "ZW", "XK"
     #   resp.rule_group.rules[0].statement.geo_match_statement.forwarded_ip_config.header_name #=> String
@@ -5196,6 +4732,7 @@ module Aws::WAFV2
     #   resp.rule_group.rules[0].statement.rule_group_reference_statement.rule_action_overrides[0].action_to_use.challenge.custom_request_handling.insert_headers #=> Array
     #   resp.rule_group.rules[0].statement.rule_group_reference_statement.rule_action_overrides[0].action_to_use.challenge.custom_request_handling.insert_headers[0].name #=> String
     #   resp.rule_group.rules[0].statement.rule_group_reference_statement.rule_action_overrides[0].action_to_use.challenge.custom_request_handling.insert_headers[0].value #=> String
+    #   resp.rule_group.rules[0].statement.rule_group_reference_statement.rule_action_overrides[0].action_to_use.monetize.price_multiplier #=> String
     #   resp.rule_group.rules[0].statement.ip_set_reference_statement.arn #=> String
     #   resp.rule_group.rules[0].statement.ip_set_reference_statement.ip_set_forwarded_ip_config.header_name #=> String
     #   resp.rule_group.rules[0].statement.ip_set_reference_statement.ip_set_forwarded_ip_config.fallback_behavior #=> String, one of "MATCH", "NO_MATCH"
@@ -5227,7 +4764,10 @@ module Aws::WAFV2
     #   resp.rule_group.rules[0].statement.regex_pattern_set_reference_statement.field_to_match.uri_fragment.fallback_behavior #=> String, one of "MATCH", "NO_MATCH"
     #   resp.rule_group.rules[0].statement.regex_pattern_set_reference_statement.text_transformations #=> Array
     #   resp.rule_group.rules[0].statement.regex_pattern_set_reference_statement.text_transformations[0].priority #=> Integer
-    #   resp.rule_group.rules[0].statement.regex_pattern_set_reference_statement.text_transformations[0].type #=> String, one of "NONE", "COMPRESS_WHITE_SPACE", "HTML_ENTITY_DECODE", "LOWERCASE", "CMD_LINE", "URL_DECODE", "BASE64_DECODE", "HEX_DECODE", "MD5", "REPLACE_COMMENTS", "ESCAPE_SEQ_DECODE", "SQL_HEX_DECODE", "CSS_DECODE", "JS_DECODE", "NORMALIZE_PATH", "NORMALIZE_PATH_WIN", "REMOVE_NULLS", "REPLACE_NULLS", "BASE64_DECODE_EXT", "URL_DECODE_UNI", "UTF8_TO_UNICODE"
+    #   resp.rule_group.rules[0].statement.regex_pattern_set_reference_statement.text_transformations[0].type #=> String, one of "NONE", "COMPRESS_WHITE_SPACE", "HTML_ENTITY_DECODE", "LOWERCASE", "CMD_LINE", "URL_DECODE", "BASE64_DECODE", "HEX_DECODE", "MD5", "REPLACE_COMMENTS", "ESCAPE_SEQ_DECODE", "SQL_HEX_DECODE", "CSS_DECODE", "JS_DECODE", "NORMALIZE_PATH", "NORMALIZE_PATH_WIN", "REMOVE_NULLS", "REPLACE_NULLS", "BASE64_DECODE_EXT", "URL_DECODE_UNI", "UTF8_TO_UNICODE", "REMOVE_WHITESPACE", "TRIM", "TRIM_LEFT", "TRIM_RIGHT", "REMOVE_COMMENTS_CHAR", "UPPERCASE", "CMD_LINE_WIN", "CMD_LINE_UNIX", "JS_DECODE_EXT", "SHA256"
+    #   resp.rule_group.rules[0].statement.regex_pattern_set_reference_statement.pre_parse_text_transformations #=> Array
+    #   resp.rule_group.rules[0].statement.regex_pattern_set_reference_statement.pre_parse_text_transformations[0].priority #=> Integer
+    #   resp.rule_group.rules[0].statement.regex_pattern_set_reference_statement.pre_parse_text_transformations[0].type #=> String, one of "NONE", "URL_DECODE", "URL_DECODE_UNI", "COMBINE_DUPLICATE_QUERY_ARGS_BY_COMMA", "REPLACE_SEMICOLONS_WITH_AMPERSANDS"
     #   resp.rule_group.rules[0].statement.rate_based_statement.limit #=> Integer
     #   resp.rule_group.rules[0].statement.rate_based_statement.evaluation_window_sec #=> Integer
     #   resp.rule_group.rules[0].statement.rate_based_statement.aggregate_key_type #=> String, one of "IP", "FORWARDED_IP", "CUSTOM_KEYS", "CONSTANT"
@@ -5238,22 +4778,22 @@ module Aws::WAFV2
     #   resp.rule_group.rules[0].statement.rate_based_statement.custom_keys[0].header.name #=> String
     #   resp.rule_group.rules[0].statement.rate_based_statement.custom_keys[0].header.text_transformations #=> Array
     #   resp.rule_group.rules[0].statement.rate_based_statement.custom_keys[0].header.text_transformations[0].priority #=> Integer
-    #   resp.rule_group.rules[0].statement.rate_based_statement.custom_keys[0].header.text_transformations[0].type #=> String, one of "NONE", "COMPRESS_WHITE_SPACE", "HTML_ENTITY_DECODE", "LOWERCASE", "CMD_LINE", "URL_DECODE", "BASE64_DECODE", "HEX_DECODE", "MD5", "REPLACE_COMMENTS", "ESCAPE_SEQ_DECODE", "SQL_HEX_DECODE", "CSS_DECODE", "JS_DECODE", "NORMALIZE_PATH", "NORMALIZE_PATH_WIN", "REMOVE_NULLS", "REPLACE_NULLS", "BASE64_DECODE_EXT", "URL_DECODE_UNI", "UTF8_TO_UNICODE"
+    #   resp.rule_group.rules[0].statement.rate_based_statement.custom_keys[0].header.text_transformations[0].type #=> String, one of "NONE", "COMPRESS_WHITE_SPACE", "HTML_ENTITY_DECODE", "LOWERCASE", "CMD_LINE", "URL_DECODE", "BASE64_DECODE", "HEX_DECODE", "MD5", "REPLACE_COMMENTS", "ESCAPE_SEQ_DECODE", "SQL_HEX_DECODE", "CSS_DECODE", "JS_DECODE", "NORMALIZE_PATH", "NORMALIZE_PATH_WIN", "REMOVE_NULLS", "REPLACE_NULLS", "BASE64_DECODE_EXT", "URL_DECODE_UNI", "UTF8_TO_UNICODE", "REMOVE_WHITESPACE", "TRIM", "TRIM_LEFT", "TRIM_RIGHT", "REMOVE_COMMENTS_CHAR", "UPPERCASE", "CMD_LINE_WIN", "CMD_LINE_UNIX", "JS_DECODE_EXT", "SHA256"
     #   resp.rule_group.rules[0].statement.rate_based_statement.custom_keys[0].cookie.name #=> String
     #   resp.rule_group.rules[0].statement.rate_based_statement.custom_keys[0].cookie.text_transformations #=> Array
     #   resp.rule_group.rules[0].statement.rate_based_statement.custom_keys[0].cookie.text_transformations[0].priority #=> Integer
-    #   resp.rule_group.rules[0].statement.rate_based_statement.custom_keys[0].cookie.text_transformations[0].type #=> String, one of "NONE", "COMPRESS_WHITE_SPACE", "HTML_ENTITY_DECODE", "LOWERCASE", "CMD_LINE", "URL_DECODE", "BASE64_DECODE", "HEX_DECODE", "MD5", "REPLACE_COMMENTS", "ESCAPE_SEQ_DECODE", "SQL_HEX_DECODE", "CSS_DECODE", "JS_DECODE", "NORMALIZE_PATH", "NORMALIZE_PATH_WIN", "REMOVE_NULLS", "REPLACE_NULLS", "BASE64_DECODE_EXT", "URL_DECODE_UNI", "UTF8_TO_UNICODE"
+    #   resp.rule_group.rules[0].statement.rate_based_statement.custom_keys[0].cookie.text_transformations[0].type #=> String, one of "NONE", "COMPRESS_WHITE_SPACE", "HTML_ENTITY_DECODE", "LOWERCASE", "CMD_LINE", "URL_DECODE", "BASE64_DECODE", "HEX_DECODE", "MD5", "REPLACE_COMMENTS", "ESCAPE_SEQ_DECODE", "SQL_HEX_DECODE", "CSS_DECODE", "JS_DECODE", "NORMALIZE_PATH", "NORMALIZE_PATH_WIN", "REMOVE_NULLS", "REPLACE_NULLS", "BASE64_DECODE_EXT", "URL_DECODE_UNI", "UTF8_TO_UNICODE", "REMOVE_WHITESPACE", "TRIM", "TRIM_LEFT", "TRIM_RIGHT", "REMOVE_COMMENTS_CHAR", "UPPERCASE", "CMD_LINE_WIN", "CMD_LINE_UNIX", "JS_DECODE_EXT", "SHA256"
     #   resp.rule_group.rules[0].statement.rate_based_statement.custom_keys[0].query_argument.name #=> String
     #   resp.rule_group.rules[0].statement.rate_based_statement.custom_keys[0].query_argument.text_transformations #=> Array
     #   resp.rule_group.rules[0].statement.rate_based_statement.custom_keys[0].query_argument.text_transformations[0].priority #=> Integer
-    #   resp.rule_group.rules[0].statement.rate_based_statement.custom_keys[0].query_argument.text_transformations[0].type #=> String, one of "NONE", "COMPRESS_WHITE_SPACE", "HTML_ENTITY_DECODE", "LOWERCASE", "CMD_LINE", "URL_DECODE", "BASE64_DECODE", "HEX_DECODE", "MD5", "REPLACE_COMMENTS", "ESCAPE_SEQ_DECODE", "SQL_HEX_DECODE", "CSS_DECODE", "JS_DECODE", "NORMALIZE_PATH", "NORMALIZE_PATH_WIN", "REMOVE_NULLS", "REPLACE_NULLS", "BASE64_DECODE_EXT", "URL_DECODE_UNI", "UTF8_TO_UNICODE"
+    #   resp.rule_group.rules[0].statement.rate_based_statement.custom_keys[0].query_argument.text_transformations[0].type #=> String, one of "NONE", "COMPRESS_WHITE_SPACE", "HTML_ENTITY_DECODE", "LOWERCASE", "CMD_LINE", "URL_DECODE", "BASE64_DECODE", "HEX_DECODE", "MD5", "REPLACE_COMMENTS", "ESCAPE_SEQ_DECODE", "SQL_HEX_DECODE", "CSS_DECODE", "JS_DECODE", "NORMALIZE_PATH", "NORMALIZE_PATH_WIN", "REMOVE_NULLS", "REPLACE_NULLS", "BASE64_DECODE_EXT", "URL_DECODE_UNI", "UTF8_TO_UNICODE", "REMOVE_WHITESPACE", "TRIM", "TRIM_LEFT", "TRIM_RIGHT", "REMOVE_COMMENTS_CHAR", "UPPERCASE", "CMD_LINE_WIN", "CMD_LINE_UNIX", "JS_DECODE_EXT", "SHA256"
     #   resp.rule_group.rules[0].statement.rate_based_statement.custom_keys[0].query_string.text_transformations #=> Array
     #   resp.rule_group.rules[0].statement.rate_based_statement.custom_keys[0].query_string.text_transformations[0].priority #=> Integer
-    #   resp.rule_group.rules[0].statement.rate_based_statement.custom_keys[0].query_string.text_transformations[0].type #=> String, one of "NONE", "COMPRESS_WHITE_SPACE", "HTML_ENTITY_DECODE", "LOWERCASE", "CMD_LINE", "URL_DECODE", "BASE64_DECODE", "HEX_DECODE", "MD5", "REPLACE_COMMENTS", "ESCAPE_SEQ_DECODE", "SQL_HEX_DECODE", "CSS_DECODE", "JS_DECODE", "NORMALIZE_PATH", "NORMALIZE_PATH_WIN", "REMOVE_NULLS", "REPLACE_NULLS", "BASE64_DECODE_EXT", "URL_DECODE_UNI", "UTF8_TO_UNICODE"
+    #   resp.rule_group.rules[0].statement.rate_based_statement.custom_keys[0].query_string.text_transformations[0].type #=> String, one of "NONE", "COMPRESS_WHITE_SPACE", "HTML_ENTITY_DECODE", "LOWERCASE", "CMD_LINE", "URL_DECODE", "BASE64_DECODE", "HEX_DECODE", "MD5", "REPLACE_COMMENTS", "ESCAPE_SEQ_DECODE", "SQL_HEX_DECODE", "CSS_DECODE", "JS_DECODE", "NORMALIZE_PATH", "NORMALIZE_PATH_WIN", "REMOVE_NULLS", "REPLACE_NULLS", "BASE64_DECODE_EXT", "URL_DECODE_UNI", "UTF8_TO_UNICODE", "REMOVE_WHITESPACE", "TRIM", "TRIM_LEFT", "TRIM_RIGHT", "REMOVE_COMMENTS_CHAR", "UPPERCASE", "CMD_LINE_WIN", "CMD_LINE_UNIX", "JS_DECODE_EXT", "SHA256"
     #   resp.rule_group.rules[0].statement.rate_based_statement.custom_keys[0].label_namespace.namespace #=> String
     #   resp.rule_group.rules[0].statement.rate_based_statement.custom_keys[0].uri_path.text_transformations #=> Array
     #   resp.rule_group.rules[0].statement.rate_based_statement.custom_keys[0].uri_path.text_transformations[0].priority #=> Integer
-    #   resp.rule_group.rules[0].statement.rate_based_statement.custom_keys[0].uri_path.text_transformations[0].type #=> String, one of "NONE", "COMPRESS_WHITE_SPACE", "HTML_ENTITY_DECODE", "LOWERCASE", "CMD_LINE", "URL_DECODE", "BASE64_DECODE", "HEX_DECODE", "MD5", "REPLACE_COMMENTS", "ESCAPE_SEQ_DECODE", "SQL_HEX_DECODE", "CSS_DECODE", "JS_DECODE", "NORMALIZE_PATH", "NORMALIZE_PATH_WIN", "REMOVE_NULLS", "REPLACE_NULLS", "BASE64_DECODE_EXT", "URL_DECODE_UNI", "UTF8_TO_UNICODE"
+    #   resp.rule_group.rules[0].statement.rate_based_statement.custom_keys[0].uri_path.text_transformations[0].type #=> String, one of "NONE", "COMPRESS_WHITE_SPACE", "HTML_ENTITY_DECODE", "LOWERCASE", "CMD_LINE", "URL_DECODE", "BASE64_DECODE", "HEX_DECODE", "MD5", "REPLACE_COMMENTS", "ESCAPE_SEQ_DECODE", "SQL_HEX_DECODE", "CSS_DECODE", "JS_DECODE", "NORMALIZE_PATH", "NORMALIZE_PATH_WIN", "REMOVE_NULLS", "REPLACE_NULLS", "BASE64_DECODE_EXT", "URL_DECODE_UNI", "UTF8_TO_UNICODE", "REMOVE_WHITESPACE", "TRIM", "TRIM_LEFT", "TRIM_RIGHT", "REMOVE_COMMENTS_CHAR", "UPPERCASE", "CMD_LINE_WIN", "CMD_LINE_UNIX", "JS_DECODE_EXT", "SHA256"
     #   resp.rule_group.rules[0].statement.rate_based_statement.custom_keys[0].ja3_fingerprint.fallback_behavior #=> String, one of "MATCH", "NO_MATCH"
     #   resp.rule_group.rules[0].statement.rate_based_statement.custom_keys[0].ja4_fingerprint.fallback_behavior #=> String, one of "MATCH", "NO_MATCH"
     #   resp.rule_group.rules[0].statement.and_statement.statements #=> Array
@@ -5326,6 +4866,11 @@ module Aws::WAFV2
     #   resp.rule_group.rules[0].statement.managed_rule_group_statement.managed_rule_group_configs[0].aws_managed_rules_acfp_rule_set.response_inspection.json.failure_values #=> Array
     #   resp.rule_group.rules[0].statement.managed_rule_group_statement.managed_rule_group_configs[0].aws_managed_rules_acfp_rule_set.response_inspection.json.failure_values[0] #=> String
     #   resp.rule_group.rules[0].statement.managed_rule_group_statement.managed_rule_group_configs[0].aws_managed_rules_acfp_rule_set.enable_regex_in_path #=> Boolean
+    #   resp.rule_group.rules[0].statement.managed_rule_group_statement.managed_rule_group_configs[0].aws_managed_rules_anti_d_do_s_rule_set.client_side_action_config.challenge.usage_of_action #=> String, one of "ENABLED", "DISABLED"
+    #   resp.rule_group.rules[0].statement.managed_rule_group_statement.managed_rule_group_configs[0].aws_managed_rules_anti_d_do_s_rule_set.client_side_action_config.challenge.sensitivity #=> String, one of "LOW", "MEDIUM", "HIGH"
+    #   resp.rule_group.rules[0].statement.managed_rule_group_statement.managed_rule_group_configs[0].aws_managed_rules_anti_d_do_s_rule_set.client_side_action_config.challenge.exempt_uri_regular_expressions #=> Array
+    #   resp.rule_group.rules[0].statement.managed_rule_group_statement.managed_rule_group_configs[0].aws_managed_rules_anti_d_do_s_rule_set.client_side_action_config.challenge.exempt_uri_regular_expressions[0].regex_string #=> String
+    #   resp.rule_group.rules[0].statement.managed_rule_group_statement.managed_rule_group_configs[0].aws_managed_rules_anti_d_do_s_rule_set.sensitivity_to_block #=> String, one of "LOW", "MEDIUM", "HIGH"
     #   resp.rule_group.rules[0].statement.managed_rule_group_statement.rule_action_overrides #=> Array
     #   resp.rule_group.rules[0].statement.managed_rule_group_statement.rule_action_overrides[0].name #=> String
     #   resp.rule_group.rules[0].statement.managed_rule_group_statement.rule_action_overrides[0].action_to_use.block.custom_response.response_code #=> Integer
@@ -5345,6 +4890,7 @@ module Aws::WAFV2
     #   resp.rule_group.rules[0].statement.managed_rule_group_statement.rule_action_overrides[0].action_to_use.challenge.custom_request_handling.insert_headers #=> Array
     #   resp.rule_group.rules[0].statement.managed_rule_group_statement.rule_action_overrides[0].action_to_use.challenge.custom_request_handling.insert_headers[0].name #=> String
     #   resp.rule_group.rules[0].statement.managed_rule_group_statement.rule_action_overrides[0].action_to_use.challenge.custom_request_handling.insert_headers[0].value #=> String
+    #   resp.rule_group.rules[0].statement.managed_rule_group_statement.rule_action_overrides[0].action_to_use.monetize.price_multiplier #=> String
     #   resp.rule_group.rules[0].statement.label_match_statement.scope #=> String, one of "LABEL", "NAMESPACE"
     #   resp.rule_group.rules[0].statement.label_match_statement.key #=> String
     #   resp.rule_group.rules[0].statement.regex_match_statement.regex_string #=> String
@@ -5374,7 +4920,14 @@ module Aws::WAFV2
     #   resp.rule_group.rules[0].statement.regex_match_statement.field_to_match.uri_fragment.fallback_behavior #=> String, one of "MATCH", "NO_MATCH"
     #   resp.rule_group.rules[0].statement.regex_match_statement.text_transformations #=> Array
     #   resp.rule_group.rules[0].statement.regex_match_statement.text_transformations[0].priority #=> Integer
-    #   resp.rule_group.rules[0].statement.regex_match_statement.text_transformations[0].type #=> String, one of "NONE", "COMPRESS_WHITE_SPACE", "HTML_ENTITY_DECODE", "LOWERCASE", "CMD_LINE", "URL_DECODE", "BASE64_DECODE", "HEX_DECODE", "MD5", "REPLACE_COMMENTS", "ESCAPE_SEQ_DECODE", "SQL_HEX_DECODE", "CSS_DECODE", "JS_DECODE", "NORMALIZE_PATH", "NORMALIZE_PATH_WIN", "REMOVE_NULLS", "REPLACE_NULLS", "BASE64_DECODE_EXT", "URL_DECODE_UNI", "UTF8_TO_UNICODE"
+    #   resp.rule_group.rules[0].statement.regex_match_statement.text_transformations[0].type #=> String, one of "NONE", "COMPRESS_WHITE_SPACE", "HTML_ENTITY_DECODE", "LOWERCASE", "CMD_LINE", "URL_DECODE", "BASE64_DECODE", "HEX_DECODE", "MD5", "REPLACE_COMMENTS", "ESCAPE_SEQ_DECODE", "SQL_HEX_DECODE", "CSS_DECODE", "JS_DECODE", "NORMALIZE_PATH", "NORMALIZE_PATH_WIN", "REMOVE_NULLS", "REPLACE_NULLS", "BASE64_DECODE_EXT", "URL_DECODE_UNI", "UTF8_TO_UNICODE", "REMOVE_WHITESPACE", "TRIM", "TRIM_LEFT", "TRIM_RIGHT", "REMOVE_COMMENTS_CHAR", "UPPERCASE", "CMD_LINE_WIN", "CMD_LINE_UNIX", "JS_DECODE_EXT", "SHA256"
+    #   resp.rule_group.rules[0].statement.regex_match_statement.pre_parse_text_transformations #=> Array
+    #   resp.rule_group.rules[0].statement.regex_match_statement.pre_parse_text_transformations[0].priority #=> Integer
+    #   resp.rule_group.rules[0].statement.regex_match_statement.pre_parse_text_transformations[0].type #=> String, one of "NONE", "URL_DECODE", "URL_DECODE_UNI", "COMBINE_DUPLICATE_QUERY_ARGS_BY_COMMA", "REPLACE_SEMICOLONS_WITH_AMPERSANDS"
+    #   resp.rule_group.rules[0].statement.asn_match_statement.asn_list #=> Array
+    #   resp.rule_group.rules[0].statement.asn_match_statement.asn_list[0] #=> Integer
+    #   resp.rule_group.rules[0].statement.asn_match_statement.forwarded_ip_config.header_name #=> String
+    #   resp.rule_group.rules[0].statement.asn_match_statement.forwarded_ip_config.fallback_behavior #=> String, one of "MATCH", "NO_MATCH"
     #   resp.rule_group.rules[0].action.block.custom_response.response_code #=> Integer
     #   resp.rule_group.rules[0].action.block.custom_response.custom_response_body_key #=> String
     #   resp.rule_group.rules[0].action.block.custom_response.response_headers #=> Array
@@ -5392,6 +4945,7 @@ module Aws::WAFV2
     #   resp.rule_group.rules[0].action.challenge.custom_request_handling.insert_headers #=> Array
     #   resp.rule_group.rules[0].action.challenge.custom_request_handling.insert_headers[0].name #=> String
     #   resp.rule_group.rules[0].action.challenge.custom_request_handling.insert_headers[0].value #=> String
+    #   resp.rule_group.rules[0].action.monetize.price_multiplier #=> String
     #   resp.rule_group.rules[0].override_action.count.custom_request_handling.insert_headers #=> Array
     #   resp.rule_group.rules[0].override_action.count.custom_request_handling.insert_headers[0].name #=> String
     #   resp.rule_group.rules[0].override_action.count.custom_request_handling.insert_headers[0].value #=> String
@@ -5413,6 +4967,13 @@ module Aws::WAFV2
     #   resp.rule_group.available_labels[0].name #=> String
     #   resp.rule_group.consumed_labels #=> Array
     #   resp.rule_group.consumed_labels[0].name #=> String
+    #   resp.rule_group.monetization_config.crypto_config.payment_networks #=> Array
+    #   resp.rule_group.monetization_config.crypto_config.payment_networks[0].chain #=> String, one of "BASE", "SOLANA", "BASE_SEPOLIA", "SOLANA_DEVNET"
+    #   resp.rule_group.monetization_config.crypto_config.payment_networks[0].wallet_address #=> String
+    #   resp.rule_group.monetization_config.crypto_config.payment_networks[0].prices #=> Array
+    #   resp.rule_group.monetization_config.crypto_config.payment_networks[0].prices[0].amount #=> String
+    #   resp.rule_group.monetization_config.crypto_config.payment_networks[0].prices[0].currency #=> String, one of "USDC"
+    #   resp.rule_group.monetization_config.currency_mode #=> String, one of "REAL", "TEST"
     #   resp.lock_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/GetRuleGroup AWS API Documentation
@@ -5447,7 +5008,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -5533,15 +5094,140 @@ module Aws::WAFV2
       req.send_request(options)
     end
 
+    # Retrieves aggregated statistics about the top URI paths accessed by
+    # bot traffic for a specified web ACL and time window. You can use this
+    # operation to analyze which paths on your web application receive the
+    # most bot traffic and identify the specific bots accessing those paths.
+    # The operation supports filtering by bot category, organization, or
+    # name, and allows you to drill down into specific path prefixes to view
+    # detailed URI-level statistics.
+    #
+    # @option params [required, String] :web_acl_arn
+    #   The Amazon Resource Name (ARN) of the web ACL for which you want to
+    #   retrieve path statistics.
+    #
+    # @option params [required, String] :scope
+    #   Specifies whether the web ACL is for an Amazon Web Services CloudFront
+    #   distribution or for a regional application. A regional application can
+    #   be an Application Load Balancer, an AppSync GraphQL API, an Amazon
+    #   Cognito user pool, an Amazon Web Services App Runner service, or an
+    #   Amazon Web Services Verified Access instance.
+    #
+    # @option params [String] :uri_path_prefix
+    #   A URI path prefix to filter the results. When you specify this
+    #   parameter, the operation returns statistics for individual URIs within
+    #   the specified path prefix. For example, if you specify `/api`, the
+    #   response includes statistics for paths like `/api/v1/users` and
+    #   `/api/v2/orders`. If you don't specify this parameter, the operation
+    #   returns top-level path statistics.
+    #
+    # @option params [required, Types::TimeWindow] :time_window
+    #   The time window for which you want to retrieve path statistics. The
+    #   time window must be within the data retention period for your web ACL.
+    #
+    # @option params [String] :bot_category
+    #   Filters the results to include only traffic from bots in the specified
+    #   category. For example, you can filter by `ai` to see only AI crawler
+    #   traffic, or `search_engine` to see only search engine bot traffic.
+    #   When you apply this filter, the `Source` field is populated in the
+    #   response.
+    #
+    # @option params [String] :bot_organization
+    #   Filters the results to include only traffic from bots belonging to the
+    #   specified organization. For example, you can filter by `openai` or
+    #   `google`. When you apply this filter, the `Source` field is populated
+    #   in the response.
+    #
+    # @option params [String] :bot_name
+    #   Filters the results to include only traffic from the specified bot.
+    #   For example, you can filter by `gptbot` or `googlebot`. When you apply
+    #   this filter, the `Source` field is populated in the response.
+    #
+    # @option params [required, Integer] :limit
+    #   The maximum number of path statistics to return. Valid values are 1 to
+    #   100.
+    #
+    # @option params [required, Integer] :number_of_top_traffic_bots_per_path
+    #   The maximum number of top bots to include in the statistics for each
+    #   path. Valid values are 1 to 10.
+    #
+    # @option params [String] :next_marker
+    #   When you request a list of objects with a `Limit` setting, if the
+    #   number of objects that are still available for retrieval exceeds the
+    #   limit, WAF returns a `NextMarker` value in the response. To retrieve
+    #   the next batch of objects, provide the marker from the prior call in
+    #   your next request.
+    #
+    # @return [Types::GetTopPathStatisticsByTrafficResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetTopPathStatisticsByTrafficResponse#path_statistics #path_statistics} => Array&lt;Types::PathStatistics&gt;
+    #   * {Types::GetTopPathStatisticsByTrafficResponse#total_request_count #total_request_count} => Integer
+    #   * {Types::GetTopPathStatisticsByTrafficResponse#next_marker #next_marker} => String
+    #   * {Types::GetTopPathStatisticsByTrafficResponse#top_categories #top_categories} => Array&lt;Types::PathStatistics&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_top_path_statistics_by_traffic({
+    #     web_acl_arn: "ResourceArn", # required
+    #     scope: "CLOUDFRONT", # required, accepts CLOUDFRONT, REGIONAL
+    #     uri_path_prefix: "UriPathPrefixString",
+    #     time_window: { # required
+    #       start_time: Time.now, # required
+    #       end_time: Time.now, # required
+    #     },
+    #     bot_category: "FilterString",
+    #     bot_organization: "FilterString",
+    #     bot_name: "FilterString",
+    #     limit: 1, # required
+    #     number_of_top_traffic_bots_per_path: 1, # required
+    #     next_marker: "NextMarker",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.path_statistics #=> Array
+    #   resp.path_statistics[0].source.bot_category #=> String
+    #   resp.path_statistics[0].source.bot_organization #=> String
+    #   resp.path_statistics[0].source.bot_name #=> String
+    #   resp.path_statistics[0].path #=> String
+    #   resp.path_statistics[0].request_count #=> Integer
+    #   resp.path_statistics[0].percentage #=> Float
+    #   resp.path_statistics[0].top_bots #=> Array
+    #   resp.path_statistics[0].top_bots[0].bot_name #=> String
+    #   resp.path_statistics[0].top_bots[0].request_count #=> Integer
+    #   resp.path_statistics[0].top_bots[0].percentage #=> Float
+    #   resp.total_request_count #=> Integer
+    #   resp.next_marker #=> String
+    #   resp.top_categories #=> Array
+    #   resp.top_categories[0].source.bot_category #=> String
+    #   resp.top_categories[0].source.bot_organization #=> String
+    #   resp.top_categories[0].source.bot_name #=> String
+    #   resp.top_categories[0].path #=> String
+    #   resp.top_categories[0].request_count #=> Integer
+    #   resp.top_categories[0].percentage #=> Float
+    #   resp.top_categories[0].top_bots #=> Array
+    #   resp.top_categories[0].top_bots[0].bot_name #=> String
+    #   resp.top_categories[0].top_bots[0].request_count #=> Integer
+    #   resp.top_categories[0].top_bots[0].percentage #=> Float
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/GetTopPathStatisticsByTraffic AWS API Documentation
+    #
+    # @overload get_top_path_statistics_by_traffic(params = {})
+    # @param [Hash] params ({})
+    def get_top_path_statistics_by_traffic(params = {}, options = {})
+      req = build_request(:get_top_path_statistics_by_traffic, params)
+      req.send_request(options)
+    end
+
     # Retrieves the specified WebACL.
     #
-    # @option params [required, String] :name
+    # @option params [String] :name
     #   The name of the web ACL. You cannot change the name of a web ACL after
     #   you create it.
     #
-    # @option params [required, String] :scope
+    # @option params [String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -5551,10 +5237,14 @@ module Aws::WAFV2
     #
     #   * API and SDKs - For all calls, use the Region endpoint us-east-1.
     #
-    # @option params [required, String] :id
+    # @option params [String] :id
     #   The unique identifier for the web ACL. This ID is returned in the
     #   responses to create and list commands. You provide it to operations
     #   like update and delete.
+    #
+    # @option params [String] :arn
+    #   The Amazon Resource Name (ARN) of the web ACL that you want to
+    #   retrieve.
     #
     # @return [Types::GetWebACLResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -5565,9 +5255,10 @@ module Aws::WAFV2
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_web_acl({
-    #     name: "EntityName", # required
-    #     scope: "CLOUDFRONT", # required, accepts CLOUDFRONT, REGIONAL
-    #     id: "EntityId", # required
+    #     name: "EntityName",
+    #     scope: "CLOUDFRONT", # accepts CLOUDFRONT, REGIONAL
+    #     id: "EntityId",
+    #     arn: "ResourceArn",
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/GetWebACL AWS API Documentation
@@ -5630,6 +5321,13 @@ module Aws::WAFV2
     #     `arn:partition:ec2:region:account-id:verified-access-instance/instance-id
     #     `
     #
+    #   * For an Amplify application:
+    #     `arn:partition:amplify:region:account-id:apps/app-id `
+    #
+    #   * For an Amazon Bedrock AgentCore Gateway:
+    #     `arn:partition:bedrock-agentcore:region:account-id:gateway/gateway-id
+    #     `
+    #
     # @return [Types::GetWebACLForResourceResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::GetWebACLForResourceResponse#web_acl #web_acl} => Types::WebACL
@@ -5665,7 +5363,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -5735,7 +5433,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -5798,7 +5496,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -5857,7 +5555,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -5916,7 +5614,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -5950,11 +5648,18 @@ module Aws::WAFV2
     #   Amazon Web Services services][1] in the *Amazon Security Lake user
     #   guide*.
     #
+    #   The log scope `CLOUDWATCH_TELEMETRY_RULE_MANAGED` indicates a
+    #   configuration that is managed through Amazon CloudWatch Logs for
+    #   telemetry data collection and analysis. For information, see [What is
+    #   Amazon CloudWatch Logs ?][2] in the *Amazon CloudWatch Logs user
+    #   guide*.
+    #
     #   Default: `CUSTOMER`
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/security-lake/latest/userguide/internal-sources.html
+    #   [2]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html
     #
     # @return [Types::ListLoggingConfigurationsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -5967,7 +5672,7 @@ module Aws::WAFV2
     #     scope: "CLOUDFRONT", # required, accepts CLOUDFRONT, REGIONAL
     #     next_marker: "NextMarker",
     #     limit: 1,
-    #     log_scope: "CUSTOMER", # accepts CUSTOMER, SECURITY_LAKE
+    #     log_scope: "CUSTOMER", # accepts CUSTOMER, SECURITY_LAKE, CLOUDWATCH_TELEMETRY_RULE_MANAGED
     #   })
     #
     # @example Response structure
@@ -6006,11 +5711,11 @@ module Aws::WAFV2
     #   resp.logging_configurations[0].logging_filter.filters[0].behavior #=> String, one of "KEEP", "DROP"
     #   resp.logging_configurations[0].logging_filter.filters[0].requirement #=> String, one of "MEETS_ALL", "MEETS_ANY"
     #   resp.logging_configurations[0].logging_filter.filters[0].conditions #=> Array
-    #   resp.logging_configurations[0].logging_filter.filters[0].conditions[0].action_condition.action #=> String, one of "ALLOW", "BLOCK", "COUNT", "CAPTCHA", "CHALLENGE", "EXCLUDED_AS_COUNT"
+    #   resp.logging_configurations[0].logging_filter.filters[0].conditions[0].action_condition.action #=> String, one of "ALLOW", "BLOCK", "COUNT", "CAPTCHA", "CHALLENGE", "MONETIZE", "EXCLUDED_AS_COUNT"
     #   resp.logging_configurations[0].logging_filter.filters[0].conditions[0].label_name_condition.label_name #=> String
     #   resp.logging_configurations[0].logging_filter.default_behavior #=> String, one of "KEEP", "DROP"
     #   resp.logging_configurations[0].log_type #=> String, one of "WAF_LOGS"
-    #   resp.logging_configurations[0].log_scope #=> String, one of "CUSTOMER", "SECURITY_LAKE"
+    #   resp.logging_configurations[0].log_scope #=> String, one of "CUSTOMER", "SECURITY_LAKE", "CLOUDWATCH_TELEMETRY_RULE_MANAGED"
     #   resp.next_marker #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/ListLoggingConfigurations AWS API Documentation
@@ -6037,7 +5742,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -6156,7 +5861,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -6260,7 +5965,7 @@ module Aws::WAFV2
     #
     #   resp = client.list_resources_for_web_acl({
     #     web_acl_arn: "ResourceArn", # required
-    #     resource_type: "APPLICATION_LOAD_BALANCER", # accepts APPLICATION_LOAD_BALANCER, API_GATEWAY, APPSYNC, COGNITO_USER_POOL, APP_RUNNER_SERVICE, VERIFIED_ACCESS_INSTANCE
+    #     resource_type: "APPLICATION_LOAD_BALANCER", # accepts APPLICATION_LOAD_BALANCER, API_GATEWAY, APPSYNC, COGNITO_USER_POOL, APP_RUNNER_SERVICE, VERIFIED_ACCESS_INSTANCE, AMPLIFY, AGENTCORE_GATEWAY
     #   })
     #
     # @example Response structure
@@ -6282,7 +5987,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -6334,6 +6039,100 @@ module Aws::WAFV2
     # @param [Hash] params ({})
     def list_rule_groups(params = {}, options = {})
       req = build_request(:list_rule_groups, params)
+      req.send_request(options)
+    end
+
+    # Retrieves individual settlement transaction records for monetization.
+    # Each record represents a single payment transaction between a client
+    # and your protected resource. This operation is only available for
+    # `CLOUDFRONT` scope. The maximum supported time window is 90 days. When
+    # no `CurrencyMode` filter is provided, results default to `REAL`. To
+    # retrieve test data, include a `CurrencyMode` filter with the value
+    # `TEST`.
+    #
+    # @option params [required, Types::TimeWindow] :time_window
+    #   The time range for the query. Specify start and end timestamps.
+    #
+    # @option params [required, String] :scope
+    #   Specifies whether this is for a Amazon CloudFront distribution
+    #   (`CLOUDFRONT`) or for a regional application (`REGIONAL`).
+    #
+    # @option params [required, String] :currency
+    #   The currency for the amounts in the response.
+    #
+    # @option params [Array<Types::MonetizationFilter>] :filters
+    #   Optional filters to narrow the results. You can filter by payer
+    #   address, status, source name, network, or other settlement fields.
+    #
+    # @option params [String] :sort_by
+    #   The field to sort settlement records by: `TIMESTAMP`, `AMOUNT`,
+    #   `NAME`, or `STATUS`.
+    #
+    # @option params [String] :sort_order
+    #   The sort order: `ASC` for ascending or `DESC` for descending.
+    #
+    # @option params [Integer] :limit
+    #   The maximum number of settlement records to return. Minimum: 1.
+    #   Maximum: 100.
+    #
+    # @option params [String] :next_marker
+    #   When you get a paginated response, this marker indicates that
+    #   additional results are available.
+    #
+    # @return [Types::ListSettlementRecordsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListSettlementRecordsResponse#settlements #settlements} => Array&lt;Types::SettlementRecord&gt;
+    #   * {Types::ListSettlementRecordsResponse#next_marker #next_marker} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_settlement_records({
+    #     time_window: { # required
+    #       start_time: Time.now, # required
+    #       end_time: Time.now, # required
+    #     },
+    #     scope: "CLOUDFRONT", # required, accepts CLOUDFRONT, REGIONAL
+    #     currency: "USDC", # required, accepts USDC
+    #     filters: [
+    #       {
+    #         name: "MonetizationFilterName", # required
+    #         values: ["MonetizationFilterValue"], # required
+    #       },
+    #     ],
+    #     sort_by: "TIMESTAMP", # accepts TIMESTAMP, AMOUNT, NAME, STATUS
+    #     sort_order: "ASC", # accepts ASC, DESC
+    #     limit: 1,
+    #     next_marker: "NextMarker",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.settlements #=> Array
+    #   resp.settlements[0].timestamp #=> Time
+    #   resp.settlements[0].payer_address #=> String
+    #   resp.settlements[0].wallet_address #=> String
+    #   resp.settlements[0].status #=> String, one of "SETTLED", "PENDING", "FAILED", "SERVICE_ERROR", "SKIPPED_ORIGIN_ERROR", "DUPLICATE"
+    #   resp.settlements[0].amount #=> String
+    #   resp.settlements[0].currency #=> String, one of "USDC"
+    #   resp.settlements[0].network #=> String
+    #   resp.settlements[0].transaction_id #=> String
+    #   resp.settlements[0].request_id #=> String
+    #   resp.settlements[0].source_name #=> String
+    #   resp.settlements[0].organization #=> String
+    #   resp.settlements[0].source_category #=> String
+    #   resp.settlements[0].intent #=> String
+    #   resp.settlements[0].verified #=> Boolean
+    #   resp.settlements[0].content_path #=> String
+    #   resp.settlements[0].web_acl_arn #=> String
+    #   resp.settlements[0].request_timestamp #=> Time
+    #   resp.next_marker #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/ListSettlementRecords AWS API Documentation
+    #
+    # @overload list_settlement_records(params = {})
+    # @param [Hash] params ({})
+    def list_settlement_records(params = {}, options = {})
+      req = build_request(:list_settlement_records, params)
       req.send_request(options)
     end
 
@@ -6399,7 +6198,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -6595,7 +6394,7 @@ module Aws::WAFV2
     #             conditions: [ # required
     #               {
     #                 action_condition: {
-    #                   action: "ALLOW", # required, accepts ALLOW, BLOCK, COUNT, CAPTCHA, CHALLENGE, EXCLUDED_AS_COUNT
+    #                   action: "ALLOW", # required, accepts ALLOW, BLOCK, COUNT, CAPTCHA, CHALLENGE, MONETIZE, EXCLUDED_AS_COUNT
     #                 },
     #                 label_name_condition: {
     #                   label_name: "LabelName", # required
@@ -6607,7 +6406,7 @@ module Aws::WAFV2
     #         default_behavior: "KEEP", # required, accepts KEEP, DROP
     #       },
     #       log_type: "WAF_LOGS", # accepts WAF_LOGS
-    #       log_scope: "CUSTOMER", # accepts CUSTOMER, SECURITY_LAKE
+    #       log_scope: "CUSTOMER", # accepts CUSTOMER, SECURITY_LAKE, CLOUDWATCH_TELEMETRY_RULE_MANAGED
     #     },
     #   })
     #
@@ -6646,11 +6445,11 @@ module Aws::WAFV2
     #   resp.logging_configuration.logging_filter.filters[0].behavior #=> String, one of "KEEP", "DROP"
     #   resp.logging_configuration.logging_filter.filters[0].requirement #=> String, one of "MEETS_ALL", "MEETS_ANY"
     #   resp.logging_configuration.logging_filter.filters[0].conditions #=> Array
-    #   resp.logging_configuration.logging_filter.filters[0].conditions[0].action_condition.action #=> String, one of "ALLOW", "BLOCK", "COUNT", "CAPTCHA", "CHALLENGE", "EXCLUDED_AS_COUNT"
+    #   resp.logging_configuration.logging_filter.filters[0].conditions[0].action_condition.action #=> String, one of "ALLOW", "BLOCK", "COUNT", "CAPTCHA", "CHALLENGE", "MONETIZE", "EXCLUDED_AS_COUNT"
     #   resp.logging_configuration.logging_filter.filters[0].conditions[0].label_name_condition.label_name #=> String
     #   resp.logging_configuration.logging_filter.default_behavior #=> String, one of "KEEP", "DROP"
     #   resp.logging_configuration.log_type #=> String, one of "WAF_LOGS"
-    #   resp.logging_configuration.log_scope #=> String, one of "CUSTOMER", "SECURITY_LAKE"
+    #   resp.logging_configuration.log_scope #=> String, one of "CUSTOMER", "SECURITY_LAKE", "CLOUDWATCH_TELEMETRY_RULE_MANAGED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/wafv2-2019-07-29/PutLoggingConfiguration AWS API Documentation
     #
@@ -6697,7 +6496,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -6949,7 +6748,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -7072,7 +6871,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -7187,7 +6986,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -7302,7 +7101,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -7358,6 +7157,10 @@ module Aws::WAFV2
     #
     #   [1]: https://docs.aws.amazon.com/waf/latest/developerguide/waf-custom-request-response.html
     #   [2]: https://docs.aws.amazon.com/waf/latest/developerguide/limits.html
+    #
+    # @option params [Types::MonetizationConfig] :monetization_config
+    #   The monetization configuration for the rule group. Provide this when
+    #   any rule in the rule group uses the `Monetize` action.
     #
     # @return [Types::UpdateRuleGroupResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -7441,7 +7244,13 @@ module Aws::WAFV2
     #             text_transformations: [ # required
     #               {
     #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
+    #               },
+    #             ],
+    #             pre_parse_text_transformations: [
+    #               {
+    #                 priority: 1, # required
+    #                 type: "NONE", # required, accepts NONE, URL_DECODE, URL_DECODE_UNI, COMBINE_DUPLICATE_QUERY_ARGS_BY_COMMA, REPLACE_SEMICOLONS_WITH_AMPERSANDS
     #               },
     #             ],
     #             positional_constraint: "EXACTLY", # required, accepts EXACTLY, STARTS_WITH, ENDS_WITH, CONTAINS, CONTAINS_WORD
@@ -7511,7 +7320,13 @@ module Aws::WAFV2
     #             text_transformations: [ # required
     #               {
     #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
+    #               },
+    #             ],
+    #             pre_parse_text_transformations: [
+    #               {
+    #                 priority: 1, # required
+    #                 type: "NONE", # required, accepts NONE, URL_DECODE, URL_DECODE_UNI, COMBINE_DUPLICATE_QUERY_ARGS_BY_COMMA, REPLACE_SEMICOLONS_WITH_AMPERSANDS
     #               },
     #             ],
     #             sensitivity_level: "LOW", # accepts LOW, HIGH
@@ -7581,7 +7396,13 @@ module Aws::WAFV2
     #             text_transformations: [ # required
     #               {
     #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
+    #               },
+    #             ],
+    #             pre_parse_text_transformations: [
+    #               {
+    #                 priority: 1, # required
+    #                 type: "NONE", # required, accepts NONE, URL_DECODE, URL_DECODE_UNI, COMBINE_DUPLICATE_QUERY_ARGS_BY_COMMA, REPLACE_SEMICOLONS_WITH_AMPERSANDS
     #               },
     #             ],
     #           },
@@ -7652,7 +7473,13 @@ module Aws::WAFV2
     #             text_transformations: [ # required
     #               {
     #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
+    #               },
+    #             ],
+    #             pre_parse_text_transformations: [
+    #               {
+    #                 priority: 1, # required
+    #                 type: "NONE", # required, accepts NONE, URL_DECODE, URL_DECODE_UNI, COMBINE_DUPLICATE_QUERY_ARGS_BY_COMMA, REPLACE_SEMICOLONS_WITH_AMPERSANDS
     #               },
     #             ],
     #           },
@@ -7725,6 +7552,9 @@ module Aws::WAFV2
     #                         },
     #                       ],
     #                     },
+    #                   },
+    #                   monetize: {
+    #                     price_multiplier: "PriceMultiplier",
     #                   },
     #                 },
     #               },
@@ -7804,7 +7634,13 @@ module Aws::WAFV2
     #             text_transformations: [ # required
     #               {
     #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
+    #               },
+    #             ],
+    #             pre_parse_text_transformations: [
+    #               {
+    #                 priority: 1, # required
+    #                 type: "NONE", # required, accepts NONE, URL_DECODE, URL_DECODE_UNI, COMBINE_DUPLICATE_QUERY_ARGS_BY_COMMA, REPLACE_SEMICOLONS_WITH_AMPERSANDS
     #               },
     #             ],
     #           },
@@ -7826,7 +7662,7 @@ module Aws::WAFV2
     #                   text_transformations: [ # required
     #                     {
     #                       priority: 1, # required
-    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
     #                     },
     #                   ],
     #                 },
@@ -7835,7 +7671,7 @@ module Aws::WAFV2
     #                   text_transformations: [ # required
     #                     {
     #                       priority: 1, # required
-    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
     #                     },
     #                   ],
     #                 },
@@ -7844,7 +7680,7 @@ module Aws::WAFV2
     #                   text_transformations: [ # required
     #                     {
     #                       priority: 1, # required
-    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
     #                     },
     #                   ],
     #                 },
@@ -7852,7 +7688,7 @@ module Aws::WAFV2
     #                   text_transformations: [ # required
     #                     {
     #                       priority: 1, # required
-    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
     #                     },
     #                   ],
     #                 },
@@ -7869,7 +7705,7 @@ module Aws::WAFV2
     #                   text_transformations: [ # required
     #                     {
     #                       priority: 1, # required
-    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
     #                     },
     #                   ],
     #                 },
@@ -7878,6 +7714,8 @@ module Aws::WAFV2
     #                 },
     #                 ja4_fingerprint: {
     #                   fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
+    #                 },
+    #                 asn: {
     #                 },
     #               },
     #             ],
@@ -8007,6 +7845,20 @@ module Aws::WAFV2
     #                   },
     #                   enable_regex_in_path: false,
     #                 },
+    #                 aws_managed_rules_anti_d_do_s_rule_set: {
+    #                   client_side_action_config: { # required
+    #                     challenge: { # required
+    #                       usage_of_action: "ENABLED", # required, accepts ENABLED, DISABLED
+    #                       sensitivity: "LOW", # accepts LOW, MEDIUM, HIGH
+    #                       exempt_uri_regular_expressions: [
+    #                         {
+    #                           regex_string: "RegexPatternString",
+    #                         },
+    #                       ],
+    #                     },
+    #                   },
+    #                   sensitivity_to_block: "LOW", # accepts LOW, MEDIUM, HIGH
+    #                 },
     #               },
     #             ],
     #             rule_action_overrides: [
@@ -8064,6 +7916,9 @@ module Aws::WAFV2
     #                         },
     #                       ],
     #                     },
+    #                   },
+    #                   monetize: {
+    #                     price_multiplier: "PriceMultiplier",
     #                   },
     #                 },
     #               },
@@ -8139,9 +7994,22 @@ module Aws::WAFV2
     #             text_transformations: [ # required
     #               {
     #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
+    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE, REMOVE_WHITESPACE, TRIM, TRIM_LEFT, TRIM_RIGHT, REMOVE_COMMENTS_CHAR, UPPERCASE, CMD_LINE_WIN, CMD_LINE_UNIX, JS_DECODE_EXT, SHA256
     #               },
     #             ],
+    #             pre_parse_text_transformations: [
+    #               {
+    #                 priority: 1, # required
+    #                 type: "NONE", # required, accepts NONE, URL_DECODE, URL_DECODE_UNI, COMBINE_DUPLICATE_QUERY_ARGS_BY_COMMA, REPLACE_SEMICOLONS_WITH_AMPERSANDS
+    #               },
+    #             ],
+    #           },
+    #           asn_match_statement: {
+    #             asn_list: [1], # required
+    #             forwarded_ip_config: {
+    #               header_name: "ForwardedIPHeaderName", # required
+    #               fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
+    #             },
     #           },
     #         },
     #         action: {
@@ -8197,6 +8065,9 @@ module Aws::WAFV2
     #               ],
     #             },
     #           },
+    #           monetize: {
+    #             price_multiplier: "PriceMultiplier",
+    #           },
     #         },
     #         override_action: {
     #           count: {
@@ -8246,6 +8117,23 @@ module Aws::WAFV2
     #         content: "ResponseContent", # required
     #       },
     #     },
+    #     monetization_config: {
+    #       crypto_config: {
+    #         payment_networks: [ # required
+    #           {
+    #             chain: "BASE", # required, accepts BASE, SOLANA, BASE_SEPOLIA, SOLANA_DEVNET
+    #             wallet_address: "WalletAddress", # required
+    #             prices: [ # required
+    #               {
+    #                 amount: "PriceAmount", # required
+    #                 currency: "USDC", # required, accepts USDC
+    #               },
+    #             ],
+    #           },
+    #         ],
+    #       },
+    #       currency_mode: "REAL", # accepts REAL, TEST
+    #     },
     #   })
     #
     # @example Response structure
@@ -8289,8 +8177,9 @@ module Aws::WAFV2
     # one or more Amazon Web Services resources to protect. The resource
     # types include Amazon CloudFront distribution, Amazon API Gateway REST
     # API, Application Load Balancer, AppSync GraphQL API, Amazon Cognito
-    # user pool, App Runner service, and Amazon Web Services Verified Access
-    # instance.
+    # user pool, App Runner service, Amplify application, Amazon Web
+    # Services Verified Access instance, and Amazon Bedrock AgentCore
+    # Gateway.
     #
     # **Temporary inconsistencies during updates**
     #
@@ -8323,7 +8212,7 @@ module Aws::WAFV2
     #
     # @option params [required, String] :scope
     #   Specifies whether this is for a global resource type, such as a Amazon
-    #   CloudFront distribution.
+    #   CloudFront distribution. For an Amplify application, use `CLOUDFRONT`.
     #
     #   To work with CloudFront, you must also specify the Region US East (N.
     #   Virginia) as follows:
@@ -8444,949 +8333,35 @@ module Aws::WAFV2
     #
     #   [1]: http://aws.amazon.com/waf/pricing/
     #
+    # @option params [Types::OnSourceDDoSProtectionConfig] :on_source_d_do_s_protection_config
+    #   Specifies the type of DDoS protection to apply to web request data for
+    #   a web ACL. For most scenarios, it is recommended to use the default
+    #   protection level, `ACTIVE_UNDER_DDOS`. If a web ACL is associated with
+    #   multiple Application Load Balancers, the changes you make to DDoS
+    #   protection in that web ACL will apply to all associated Application
+    #   Load Balancers.
+    #
+    # @option params [Types::ApplicationConfig] :application_config
+    #   Configures the ability for the WAF console to store and retrieve
+    #   application attributes. Application attributes help WAF give
+    #   recommendations for protection packs.
+    #
+    #   When using `UpdateWebACL`, `ApplicationConfig` follows these rules:
+    #
+    #   * If you omit `ApplicationConfig` from the request, all existing
+    #     entries in the web ACL are retained.
+    #
+    #   * If you include `ApplicationConfig`, entries must match the existing
+    #     values exactly. Any attempt to modify existing entries will result
+    #     in an error.
+    #
+    # @option params [Types::MonetizationConfig] :monetization_config
+    #   The monetization configuration for the web ACL. Provide this when any
+    #   rule in the web ACL uses the `Monetize` action.
+    #
     # @return [Types::UpdateWebACLResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::UpdateWebACLResponse#next_lock_token #next_lock_token} => String
-    #
-    # @example Request syntax with placeholder values
-    #
-    #   resp = client.update_web_acl({
-    #     name: "EntityName", # required
-    #     scope: "CLOUDFRONT", # required, accepts CLOUDFRONT, REGIONAL
-    #     id: "EntityId", # required
-    #     default_action: { # required
-    #       block: {
-    #         custom_response: {
-    #           response_code: 1, # required
-    #           custom_response_body_key: "EntityName",
-    #           response_headers: [
-    #             {
-    #               name: "CustomHTTPHeaderName", # required
-    #               value: "CustomHTTPHeaderValue", # required
-    #             },
-    #           ],
-    #         },
-    #       },
-    #       allow: {
-    #         custom_request_handling: {
-    #           insert_headers: [ # required
-    #             {
-    #               name: "CustomHTTPHeaderName", # required
-    #               value: "CustomHTTPHeaderValue", # required
-    #             },
-    #           ],
-    #         },
-    #       },
-    #     },
-    #     description: "EntityDescription",
-    #     rules: [
-    #       {
-    #         name: "EntityName", # required
-    #         priority: 1, # required
-    #         statement: { # required
-    #           byte_match_statement: {
-    #             search_string: "data", # required
-    #             field_to_match: { # required
-    #               single_header: {
-    #                 name: "FieldToMatchData", # required
-    #               },
-    #               single_query_argument: {
-    #                 name: "FieldToMatchData", # required
-    #               },
-    #               all_query_arguments: {
-    #               },
-    #               uri_path: {
-    #               },
-    #               query_string: {
-    #               },
-    #               body: {
-    #                 oversize_handling: "CONTINUE", # accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               method: {
-    #               },
-    #               json_body: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_paths: ["JsonPointerPath"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 invalid_fallback_behavior: "MATCH", # accepts MATCH, NO_MATCH, EVALUATE_AS_STRING
-    #                 oversize_handling: "CONTINUE", # accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               headers: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_headers: ["FieldToMatchData"],
-    #                   excluded_headers: ["FieldToMatchData"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               cookies: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_cookies: ["SingleCookieName"],
-    #                   excluded_cookies: ["SingleCookieName"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               header_order: {
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               ja3_fingerprint: {
-    #                 fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #               },
-    #               ja4_fingerprint: {
-    #                 fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #               },
-    #               uri_fragment: {
-    #                 fallback_behavior: "MATCH", # accepts MATCH, NO_MATCH
-    #               },
-    #             },
-    #             text_transformations: [ # required
-    #               {
-    #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
-    #               },
-    #             ],
-    #             positional_constraint: "EXACTLY", # required, accepts EXACTLY, STARTS_WITH, ENDS_WITH, CONTAINS, CONTAINS_WORD
-    #           },
-    #           sqli_match_statement: {
-    #             field_to_match: { # required
-    #               single_header: {
-    #                 name: "FieldToMatchData", # required
-    #               },
-    #               single_query_argument: {
-    #                 name: "FieldToMatchData", # required
-    #               },
-    #               all_query_arguments: {
-    #               },
-    #               uri_path: {
-    #               },
-    #               query_string: {
-    #               },
-    #               body: {
-    #                 oversize_handling: "CONTINUE", # accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               method: {
-    #               },
-    #               json_body: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_paths: ["JsonPointerPath"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 invalid_fallback_behavior: "MATCH", # accepts MATCH, NO_MATCH, EVALUATE_AS_STRING
-    #                 oversize_handling: "CONTINUE", # accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               headers: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_headers: ["FieldToMatchData"],
-    #                   excluded_headers: ["FieldToMatchData"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               cookies: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_cookies: ["SingleCookieName"],
-    #                   excluded_cookies: ["SingleCookieName"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               header_order: {
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               ja3_fingerprint: {
-    #                 fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #               },
-    #               ja4_fingerprint: {
-    #                 fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #               },
-    #               uri_fragment: {
-    #                 fallback_behavior: "MATCH", # accepts MATCH, NO_MATCH
-    #               },
-    #             },
-    #             text_transformations: [ # required
-    #               {
-    #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
-    #               },
-    #             ],
-    #             sensitivity_level: "LOW", # accepts LOW, HIGH
-    #           },
-    #           xss_match_statement: {
-    #             field_to_match: { # required
-    #               single_header: {
-    #                 name: "FieldToMatchData", # required
-    #               },
-    #               single_query_argument: {
-    #                 name: "FieldToMatchData", # required
-    #               },
-    #               all_query_arguments: {
-    #               },
-    #               uri_path: {
-    #               },
-    #               query_string: {
-    #               },
-    #               body: {
-    #                 oversize_handling: "CONTINUE", # accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               method: {
-    #               },
-    #               json_body: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_paths: ["JsonPointerPath"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 invalid_fallback_behavior: "MATCH", # accepts MATCH, NO_MATCH, EVALUATE_AS_STRING
-    #                 oversize_handling: "CONTINUE", # accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               headers: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_headers: ["FieldToMatchData"],
-    #                   excluded_headers: ["FieldToMatchData"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               cookies: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_cookies: ["SingleCookieName"],
-    #                   excluded_cookies: ["SingleCookieName"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               header_order: {
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               ja3_fingerprint: {
-    #                 fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #               },
-    #               ja4_fingerprint: {
-    #                 fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #               },
-    #               uri_fragment: {
-    #                 fallback_behavior: "MATCH", # accepts MATCH, NO_MATCH
-    #               },
-    #             },
-    #             text_transformations: [ # required
-    #               {
-    #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
-    #               },
-    #             ],
-    #           },
-    #           size_constraint_statement: {
-    #             field_to_match: { # required
-    #               single_header: {
-    #                 name: "FieldToMatchData", # required
-    #               },
-    #               single_query_argument: {
-    #                 name: "FieldToMatchData", # required
-    #               },
-    #               all_query_arguments: {
-    #               },
-    #               uri_path: {
-    #               },
-    #               query_string: {
-    #               },
-    #               body: {
-    #                 oversize_handling: "CONTINUE", # accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               method: {
-    #               },
-    #               json_body: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_paths: ["JsonPointerPath"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 invalid_fallback_behavior: "MATCH", # accepts MATCH, NO_MATCH, EVALUATE_AS_STRING
-    #                 oversize_handling: "CONTINUE", # accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               headers: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_headers: ["FieldToMatchData"],
-    #                   excluded_headers: ["FieldToMatchData"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               cookies: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_cookies: ["SingleCookieName"],
-    #                   excluded_cookies: ["SingleCookieName"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               header_order: {
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               ja3_fingerprint: {
-    #                 fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #               },
-    #               ja4_fingerprint: {
-    #                 fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #               },
-    #               uri_fragment: {
-    #                 fallback_behavior: "MATCH", # accepts MATCH, NO_MATCH
-    #               },
-    #             },
-    #             comparison_operator: "EQ", # required, accepts EQ, NE, LE, LT, GE, GT
-    #             size: 1, # required
-    #             text_transformations: [ # required
-    #               {
-    #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
-    #               },
-    #             ],
-    #           },
-    #           geo_match_statement: {
-    #             country_codes: ["AF"], # accepts AF, AX, AL, DZ, AS, AD, AO, AI, AQ, AG, AR, AM, AW, AU, AT, AZ, BS, BH, BD, BB, BY, BE, BZ, BJ, BM, BT, BO, BQ, BA, BW, BV, BR, IO, BN, BG, BF, BI, KH, CM, CA, CV, KY, CF, TD, CL, CN, CX, CC, CO, KM, CG, CD, CK, CR, CI, HR, CU, CW, CY, CZ, DK, DJ, DM, DO, EC, EG, SV, GQ, ER, EE, ET, FK, FO, FJ, FI, FR, GF, PF, TF, GA, GM, GE, DE, GH, GI, GR, GL, GD, GP, GU, GT, GG, GN, GW, GY, HT, HM, VA, HN, HK, HU, IS, IN, ID, IR, IQ, IE, IM, IL, IT, JM, JP, JE, JO, KZ, KE, KI, KP, KR, KW, KG, LA, LV, LB, LS, LR, LY, LI, LT, LU, MO, MK, MG, MW, MY, MV, ML, MT, MH, MQ, MR, MU, YT, MX, FM, MD, MC, MN, ME, MS, MA, MZ, MM, NA, NR, NP, NL, NC, NZ, NI, NE, NG, NU, NF, MP, NO, OM, PK, PW, PS, PA, PG, PY, PE, PH, PN, PL, PT, PR, QA, RE, RO, RU, RW, BL, SH, KN, LC, MF, PM, VC, WS, SM, ST, SA, SN, RS, SC, SL, SG, SX, SK, SI, SB, SO, ZA, GS, SS, ES, LK, SD, SR, SJ, SZ, SE, CH, SY, TW, TJ, TZ, TH, TL, TG, TK, TO, TT, TN, TR, TM, TC, TV, UG, UA, AE, GB, US, UM, UY, UZ, VU, VE, VN, VG, VI, WF, EH, YE, ZM, ZW, XK
-    #             forwarded_ip_config: {
-    #               header_name: "ForwardedIPHeaderName", # required
-    #               fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #             },
-    #           },
-    #           rule_group_reference_statement: {
-    #             arn: "ResourceArn", # required
-    #             excluded_rules: [
-    #               {
-    #                 name: "EntityName", # required
-    #               },
-    #             ],
-    #             rule_action_overrides: [
-    #               {
-    #                 name: "EntityName", # required
-    #                 action_to_use: { # required
-    #                   block: {
-    #                     custom_response: {
-    #                       response_code: 1, # required
-    #                       custom_response_body_key: "EntityName",
-    #                       response_headers: [
-    #                         {
-    #                           name: "CustomHTTPHeaderName", # required
-    #                           value: "CustomHTTPHeaderValue", # required
-    #                         },
-    #                       ],
-    #                     },
-    #                   },
-    #                   allow: {
-    #                     custom_request_handling: {
-    #                       insert_headers: [ # required
-    #                         {
-    #                           name: "CustomHTTPHeaderName", # required
-    #                           value: "CustomHTTPHeaderValue", # required
-    #                         },
-    #                       ],
-    #                     },
-    #                   },
-    #                   count: {
-    #                     custom_request_handling: {
-    #                       insert_headers: [ # required
-    #                         {
-    #                           name: "CustomHTTPHeaderName", # required
-    #                           value: "CustomHTTPHeaderValue", # required
-    #                         },
-    #                       ],
-    #                     },
-    #                   },
-    #                   captcha: {
-    #                     custom_request_handling: {
-    #                       insert_headers: [ # required
-    #                         {
-    #                           name: "CustomHTTPHeaderName", # required
-    #                           value: "CustomHTTPHeaderValue", # required
-    #                         },
-    #                       ],
-    #                     },
-    #                   },
-    #                   challenge: {
-    #                     custom_request_handling: {
-    #                       insert_headers: [ # required
-    #                         {
-    #                           name: "CustomHTTPHeaderName", # required
-    #                           value: "CustomHTTPHeaderValue", # required
-    #                         },
-    #                       ],
-    #                     },
-    #                   },
-    #                 },
-    #               },
-    #             ],
-    #           },
-    #           ip_set_reference_statement: {
-    #             arn: "ResourceArn", # required
-    #             ip_set_forwarded_ip_config: {
-    #               header_name: "ForwardedIPHeaderName", # required
-    #               fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #               position: "FIRST", # required, accepts FIRST, LAST, ANY
-    #             },
-    #           },
-    #           regex_pattern_set_reference_statement: {
-    #             arn: "ResourceArn", # required
-    #             field_to_match: { # required
-    #               single_header: {
-    #                 name: "FieldToMatchData", # required
-    #               },
-    #               single_query_argument: {
-    #                 name: "FieldToMatchData", # required
-    #               },
-    #               all_query_arguments: {
-    #               },
-    #               uri_path: {
-    #               },
-    #               query_string: {
-    #               },
-    #               body: {
-    #                 oversize_handling: "CONTINUE", # accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               method: {
-    #               },
-    #               json_body: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_paths: ["JsonPointerPath"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 invalid_fallback_behavior: "MATCH", # accepts MATCH, NO_MATCH, EVALUATE_AS_STRING
-    #                 oversize_handling: "CONTINUE", # accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               headers: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_headers: ["FieldToMatchData"],
-    #                   excluded_headers: ["FieldToMatchData"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               cookies: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_cookies: ["SingleCookieName"],
-    #                   excluded_cookies: ["SingleCookieName"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               header_order: {
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               ja3_fingerprint: {
-    #                 fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #               },
-    #               ja4_fingerprint: {
-    #                 fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #               },
-    #               uri_fragment: {
-    #                 fallback_behavior: "MATCH", # accepts MATCH, NO_MATCH
-    #               },
-    #             },
-    #             text_transformations: [ # required
-    #               {
-    #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
-    #               },
-    #             ],
-    #           },
-    #           rate_based_statement: {
-    #             limit: 1, # required
-    #             evaluation_window_sec: 1,
-    #             aggregate_key_type: "IP", # required, accepts IP, FORWARDED_IP, CUSTOM_KEYS, CONSTANT
-    #             scope_down_statement: {
-    #               # recursive Statement
-    #             },
-    #             forwarded_ip_config: {
-    #               header_name: "ForwardedIPHeaderName", # required
-    #               fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #             },
-    #             custom_keys: [
-    #               {
-    #                 header: {
-    #                   name: "FieldToMatchData", # required
-    #                   text_transformations: [ # required
-    #                     {
-    #                       priority: 1, # required
-    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
-    #                     },
-    #                   ],
-    #                 },
-    #                 cookie: {
-    #                   name: "FieldToMatchData", # required
-    #                   text_transformations: [ # required
-    #                     {
-    #                       priority: 1, # required
-    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
-    #                     },
-    #                   ],
-    #                 },
-    #                 query_argument: {
-    #                   name: "FieldToMatchData", # required
-    #                   text_transformations: [ # required
-    #                     {
-    #                       priority: 1, # required
-    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
-    #                     },
-    #                   ],
-    #                 },
-    #                 query_string: {
-    #                   text_transformations: [ # required
-    #                     {
-    #                       priority: 1, # required
-    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
-    #                     },
-    #                   ],
-    #                 },
-    #                 http_method: {
-    #                 },
-    #                 forwarded_ip: {
-    #                 },
-    #                 ip: {
-    #                 },
-    #                 label_namespace: {
-    #                   namespace: "LabelNamespace", # required
-    #                 },
-    #                 uri_path: {
-    #                   text_transformations: [ # required
-    #                     {
-    #                       priority: 1, # required
-    #                       type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
-    #                     },
-    #                   ],
-    #                 },
-    #                 ja3_fingerprint: {
-    #                   fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #                 },
-    #                 ja4_fingerprint: {
-    #                   fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #                 },
-    #               },
-    #             ],
-    #           },
-    #           and_statement: {
-    #             statements: [ # required
-    #               {
-    #                 # recursive Statement
-    #               },
-    #             ],
-    #           },
-    #           or_statement: {
-    #             statements: [ # required
-    #               {
-    #                 # recursive Statement
-    #               },
-    #             ],
-    #           },
-    #           not_statement: {
-    #             statement: { # required
-    #               # recursive Statement
-    #             },
-    #           },
-    #           managed_rule_group_statement: {
-    #             vendor_name: "VendorName", # required
-    #             name: "EntityName", # required
-    #             version: "VersionKeyString",
-    #             excluded_rules: [
-    #               {
-    #                 name: "EntityName", # required
-    #               },
-    #             ],
-    #             scope_down_statement: {
-    #               # recursive Statement
-    #             },
-    #             managed_rule_group_configs: [
-    #               {
-    #                 login_path: "LoginPathString",
-    #                 payload_type: "JSON", # accepts JSON, FORM_ENCODED
-    #                 username_field: {
-    #                   identifier: "FieldIdentifier", # required
-    #                 },
-    #                 password_field: {
-    #                   identifier: "FieldIdentifier", # required
-    #                 },
-    #                 aws_managed_rules_bot_control_rule_set: {
-    #                   inspection_level: "COMMON", # required, accepts COMMON, TARGETED
-    #                   enable_machine_learning: false,
-    #                 },
-    #                 aws_managed_rules_atp_rule_set: {
-    #                   login_path: "String", # required
-    #                   request_inspection: {
-    #                     payload_type: "JSON", # required, accepts JSON, FORM_ENCODED
-    #                     username_field: { # required
-    #                       identifier: "FieldIdentifier", # required
-    #                     },
-    #                     password_field: { # required
-    #                       identifier: "FieldIdentifier", # required
-    #                     },
-    #                   },
-    #                   response_inspection: {
-    #                     status_code: {
-    #                       success_codes: [1], # required
-    #                       failure_codes: [1], # required
-    #                     },
-    #                     header: {
-    #                       name: "ResponseInspectionHeaderName", # required
-    #                       success_values: ["SuccessValue"], # required
-    #                       failure_values: ["FailureValue"], # required
-    #                     },
-    #                     body_contains: {
-    #                       success_strings: ["SuccessValue"], # required
-    #                       failure_strings: ["FailureValue"], # required
-    #                     },
-    #                     json: {
-    #                       identifier: "FieldIdentifier", # required
-    #                       success_values: ["SuccessValue"], # required
-    #                       failure_values: ["FailureValue"], # required
-    #                     },
-    #                   },
-    #                   enable_regex_in_path: false,
-    #                 },
-    #                 aws_managed_rules_acfp_rule_set: {
-    #                   creation_path: "CreationPathString", # required
-    #                   registration_page_path: "RegistrationPagePathString", # required
-    #                   request_inspection: { # required
-    #                     payload_type: "JSON", # required, accepts JSON, FORM_ENCODED
-    #                     username_field: {
-    #                       identifier: "FieldIdentifier", # required
-    #                     },
-    #                     password_field: {
-    #                       identifier: "FieldIdentifier", # required
-    #                     },
-    #                     email_field: {
-    #                       identifier: "FieldIdentifier", # required
-    #                     },
-    #                     phone_number_fields: [
-    #                       {
-    #                         identifier: "FieldIdentifier", # required
-    #                       },
-    #                     ],
-    #                     address_fields: [
-    #                       {
-    #                         identifier: "FieldIdentifier", # required
-    #                       },
-    #                     ],
-    #                   },
-    #                   response_inspection: {
-    #                     status_code: {
-    #                       success_codes: [1], # required
-    #                       failure_codes: [1], # required
-    #                     },
-    #                     header: {
-    #                       name: "ResponseInspectionHeaderName", # required
-    #                       success_values: ["SuccessValue"], # required
-    #                       failure_values: ["FailureValue"], # required
-    #                     },
-    #                     body_contains: {
-    #                       success_strings: ["SuccessValue"], # required
-    #                       failure_strings: ["FailureValue"], # required
-    #                     },
-    #                     json: {
-    #                       identifier: "FieldIdentifier", # required
-    #                       success_values: ["SuccessValue"], # required
-    #                       failure_values: ["FailureValue"], # required
-    #                     },
-    #                   },
-    #                   enable_regex_in_path: false,
-    #                 },
-    #               },
-    #             ],
-    #             rule_action_overrides: [
-    #               {
-    #                 name: "EntityName", # required
-    #                 action_to_use: { # required
-    #                   block: {
-    #                     custom_response: {
-    #                       response_code: 1, # required
-    #                       custom_response_body_key: "EntityName",
-    #                       response_headers: [
-    #                         {
-    #                           name: "CustomHTTPHeaderName", # required
-    #                           value: "CustomHTTPHeaderValue", # required
-    #                         },
-    #                       ],
-    #                     },
-    #                   },
-    #                   allow: {
-    #                     custom_request_handling: {
-    #                       insert_headers: [ # required
-    #                         {
-    #                           name: "CustomHTTPHeaderName", # required
-    #                           value: "CustomHTTPHeaderValue", # required
-    #                         },
-    #                       ],
-    #                     },
-    #                   },
-    #                   count: {
-    #                     custom_request_handling: {
-    #                       insert_headers: [ # required
-    #                         {
-    #                           name: "CustomHTTPHeaderName", # required
-    #                           value: "CustomHTTPHeaderValue", # required
-    #                         },
-    #                       ],
-    #                     },
-    #                   },
-    #                   captcha: {
-    #                     custom_request_handling: {
-    #                       insert_headers: [ # required
-    #                         {
-    #                           name: "CustomHTTPHeaderName", # required
-    #                           value: "CustomHTTPHeaderValue", # required
-    #                         },
-    #                       ],
-    #                     },
-    #                   },
-    #                   challenge: {
-    #                     custom_request_handling: {
-    #                       insert_headers: [ # required
-    #                         {
-    #                           name: "CustomHTTPHeaderName", # required
-    #                           value: "CustomHTTPHeaderValue", # required
-    #                         },
-    #                       ],
-    #                     },
-    #                   },
-    #                 },
-    #               },
-    #             ],
-    #           },
-    #           label_match_statement: {
-    #             scope: "LABEL", # required, accepts LABEL, NAMESPACE
-    #             key: "LabelMatchKey", # required
-    #           },
-    #           regex_match_statement: {
-    #             regex_string: "RegexPatternString", # required
-    #             field_to_match: { # required
-    #               single_header: {
-    #                 name: "FieldToMatchData", # required
-    #               },
-    #               single_query_argument: {
-    #                 name: "FieldToMatchData", # required
-    #               },
-    #               all_query_arguments: {
-    #               },
-    #               uri_path: {
-    #               },
-    #               query_string: {
-    #               },
-    #               body: {
-    #                 oversize_handling: "CONTINUE", # accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               method: {
-    #               },
-    #               json_body: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_paths: ["JsonPointerPath"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 invalid_fallback_behavior: "MATCH", # accepts MATCH, NO_MATCH, EVALUATE_AS_STRING
-    #                 oversize_handling: "CONTINUE", # accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               headers: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_headers: ["FieldToMatchData"],
-    #                   excluded_headers: ["FieldToMatchData"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               cookies: {
-    #                 match_pattern: { # required
-    #                   all: {
-    #                   },
-    #                   included_cookies: ["SingleCookieName"],
-    #                   excluded_cookies: ["SingleCookieName"],
-    #                 },
-    #                 match_scope: "ALL", # required, accepts ALL, KEY, VALUE
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               header_order: {
-    #                 oversize_handling: "CONTINUE", # required, accepts CONTINUE, MATCH, NO_MATCH
-    #               },
-    #               ja3_fingerprint: {
-    #                 fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #               },
-    #               ja4_fingerprint: {
-    #                 fallback_behavior: "MATCH", # required, accepts MATCH, NO_MATCH
-    #               },
-    #               uri_fragment: {
-    #                 fallback_behavior: "MATCH", # accepts MATCH, NO_MATCH
-    #               },
-    #             },
-    #             text_transformations: [ # required
-    #               {
-    #                 priority: 1, # required
-    #                 type: "NONE", # required, accepts NONE, COMPRESS_WHITE_SPACE, HTML_ENTITY_DECODE, LOWERCASE, CMD_LINE, URL_DECODE, BASE64_DECODE, HEX_DECODE, MD5, REPLACE_COMMENTS, ESCAPE_SEQ_DECODE, SQL_HEX_DECODE, CSS_DECODE, JS_DECODE, NORMALIZE_PATH, NORMALIZE_PATH_WIN, REMOVE_NULLS, REPLACE_NULLS, BASE64_DECODE_EXT, URL_DECODE_UNI, UTF8_TO_UNICODE
-    #               },
-    #             ],
-    #           },
-    #         },
-    #         action: {
-    #           block: {
-    #             custom_response: {
-    #               response_code: 1, # required
-    #               custom_response_body_key: "EntityName",
-    #               response_headers: [
-    #                 {
-    #                   name: "CustomHTTPHeaderName", # required
-    #                   value: "CustomHTTPHeaderValue", # required
-    #                 },
-    #               ],
-    #             },
-    #           },
-    #           allow: {
-    #             custom_request_handling: {
-    #               insert_headers: [ # required
-    #                 {
-    #                   name: "CustomHTTPHeaderName", # required
-    #                   value: "CustomHTTPHeaderValue", # required
-    #                 },
-    #               ],
-    #             },
-    #           },
-    #           count: {
-    #             custom_request_handling: {
-    #               insert_headers: [ # required
-    #                 {
-    #                   name: "CustomHTTPHeaderName", # required
-    #                   value: "CustomHTTPHeaderValue", # required
-    #                 },
-    #               ],
-    #             },
-    #           },
-    #           captcha: {
-    #             custom_request_handling: {
-    #               insert_headers: [ # required
-    #                 {
-    #                   name: "CustomHTTPHeaderName", # required
-    #                   value: "CustomHTTPHeaderValue", # required
-    #                 },
-    #               ],
-    #             },
-    #           },
-    #           challenge: {
-    #             custom_request_handling: {
-    #               insert_headers: [ # required
-    #                 {
-    #                   name: "CustomHTTPHeaderName", # required
-    #                   value: "CustomHTTPHeaderValue", # required
-    #                 },
-    #               ],
-    #             },
-    #           },
-    #         },
-    #         override_action: {
-    #           count: {
-    #             custom_request_handling: {
-    #               insert_headers: [ # required
-    #                 {
-    #                   name: "CustomHTTPHeaderName", # required
-    #                   value: "CustomHTTPHeaderValue", # required
-    #                 },
-    #               ],
-    #             },
-    #           },
-    #           none: {
-    #           },
-    #         },
-    #         rule_labels: [
-    #           {
-    #             name: "LabelName", # required
-    #           },
-    #         ],
-    #         visibility_config: { # required
-    #           sampled_requests_enabled: false, # required
-    #           cloud_watch_metrics_enabled: false, # required
-    #           metric_name: "MetricName", # required
-    #         },
-    #         captcha_config: {
-    #           immunity_time_property: {
-    #             immunity_time: 1, # required
-    #           },
-    #         },
-    #         challenge_config: {
-    #           immunity_time_property: {
-    #             immunity_time: 1, # required
-    #           },
-    #         },
-    #       },
-    #     ],
-    #     visibility_config: { # required
-    #       sampled_requests_enabled: false, # required
-    #       cloud_watch_metrics_enabled: false, # required
-    #       metric_name: "MetricName", # required
-    #     },
-    #     data_protection_config: {
-    #       data_protections: [ # required
-    #         {
-    #           field: { # required
-    #             field_type: "SINGLE_HEADER", # required, accepts SINGLE_HEADER, SINGLE_COOKIE, SINGLE_QUERY_ARGUMENT, QUERY_STRING, BODY
-    #             field_keys: ["FieldToProtectKeyName"],
-    #           },
-    #           action: "SUBSTITUTION", # required, accepts SUBSTITUTION, HASH
-    #           exclude_rule_match_details: false,
-    #           exclude_rate_based_details: false,
-    #         },
-    #       ],
-    #     },
-    #     lock_token: "LockToken", # required
-    #     custom_response_bodies: {
-    #       "EntityName" => {
-    #         content_type: "TEXT_PLAIN", # required, accepts TEXT_PLAIN, TEXT_HTML, APPLICATION_JSON
-    #         content: "ResponseContent", # required
-    #       },
-    #     },
-    #     captcha_config: {
-    #       immunity_time_property: {
-    #         immunity_time: 1, # required
-    #       },
-    #     },
-    #     challenge_config: {
-    #       immunity_time_property: {
-    #         immunity_time: 1, # required
-    #       },
-    #     },
-    #     token_domains: ["TokenDomain"],
-    #     association_config: {
-    #       request_body: {
-    #         "CLOUDFRONT" => {
-    #           default_size_inspection_limit: "KB_16", # required, accepts KB_16, KB_32, KB_48, KB_64
-    #         },
-    #       },
-    #     },
-    #   })
     #
     # @example Response structure
     #
@@ -9419,7 +8394,7 @@ module Aws::WAFV2
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-wafv2'
-      context[:gem_version] = '1.105.0'
+      context[:gem_version] = '1.136.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

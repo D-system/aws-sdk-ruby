@@ -264,6 +264,8 @@ module Aws::RDS
     #
     #   * `db2-ae`
     #
+    #   * `db2-ce`
+    #
     #   * `db2-se`
     #
     #   * `mariadb`
@@ -386,7 +388,7 @@ module Aws::RDS
     #         option_settings: [
     #           {
     #             name: "String",
-    #             value: "String",
+    #             value: "PotentiallySensitiveOptionSettingValue",
     #             default_value: "String",
     #             description: "String",
     #             apply_type: "String",

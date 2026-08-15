@@ -97,8 +97,8 @@ module Aws::Lambda
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -126,22 +126,24 @@ module Aws::Lambda
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -169,6 +171,11 @@ module Aws::Lambda
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -194,7 +201,7 @@ module Aws::Lambda
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -202,8 +209,7 @@ module Aws::Lambda
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -265,8 +271,8 @@ module Aws::Lambda
     #     When an EventStream or Proc object is provided, it will be used as callback for each chunk of event stream response received along the way.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -328,17 +334,15 @@ module Aws::Lambda
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -379,8 +383,8 @@ module Aws::Lambda
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -639,6 +643,21 @@ module Aws::Lambda
     #   Note that Lambda configures the comparison using the `StringLike`
     #   operator.
     #
+    # @option params [String] :function_url_auth_type
+    #   The type of authentication that your function URL uses. Set to
+    #   `AWS_IAM` if you want to restrict access to authenticated users only.
+    #   Set to `NONE` if you want to bypass IAM authentication to create a
+    #   public endpoint. For more information, see [Control access to Lambda
+    #   function URLs][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/lambda/latest/dg/urls-auth.html
+    #
+    # @option params [Boolean] :invoked_via_function_url
+    #   Indicates whether the permission applies when the function is invoked
+    #   through a function URL.
+    #
     # @option params [String] :source_account
     #   For Amazon Web Services service, the ID of the Amazon Web Services
     #   account that owns the resource. Use this together with `SourceArn` to
@@ -662,17 +681,6 @@ module Aws::Lambda
     #   The identifier for your organization in Organizations. Use this to
     #   grant permissions to all the Amazon Web Services accounts under this
     #   organization.
-    #
-    # @option params [String] :function_url_auth_type
-    #   The type of authentication that your function URL uses. Set to
-    #   `AWS_IAM` if you want to restrict access to authenticated users only.
-    #   Set to `NONE` if you want to bypass IAM authentication to create a
-    #   public endpoint. For more information, see [Security and auth model
-    #   for Lambda function URLs][1].
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/lambda/latest/dg/urls-auth.html
     #
     # @return [Types::AddPermissionResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -717,17 +725,18 @@ module Aws::Lambda
     # @example Request syntax with placeholder values
     #
     #   resp = client.add_permission({
-    #     function_name: "FunctionName", # required
+    #     function_name: "NamespacedFunctionName", # required
     #     statement_id: "StatementId", # required
     #     action: "Action", # required
     #     principal: "Principal", # required
     #     source_arn: "Arn",
+    #     function_url_auth_type: "NONE", # accepts NONE, AWS_IAM
+    #     invoked_via_function_url: false,
     #     source_account: "SourceOwner",
     #     event_source_token: "EventSourceToken",
-    #     qualifier: "Qualifier",
+    #     qualifier: "NumericLatestPublishedOrAliasQualifier",
     #     revision_id: "String",
     #     principal_org_id: "PrincipalOrgID",
-    #     function_url_auth_type: "NONE", # accepts NONE, AWS_IAM
     #   })
     #
     # @example Response structure
@@ -740,6 +749,144 @@ module Aws::Lambda
     # @param [Hash] params ({})
     def add_permission(params = {}, options = {})
       req = build_request(:add_permission, params)
+      req.send_request(options)
+    end
+
+    # Saves the progress of a [durable function][1] execution during
+    # runtime. This API is used by the Lambda durable functions SDK to
+    # checkpoint completed steps and schedule asynchronous operations. You
+    # typically don't need to call this API directly as the SDK handles
+    # checkpointing automatically.
+    #
+    # Each checkpoint operation consumes the current checkpoint token and
+    # returns a new one for the next checkpoint. This ensures that
+    # checkpoints are applied in the correct order and prevents duplicate or
+    # out-of-order state updates.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/lambda/latest/dg/durable-functions.html
+    #
+    # @option params [required, String] :durable_execution_arn
+    #   The Amazon Resource Name (ARN) of the durable execution.
+    #
+    # @option params [required, String] :checkpoint_token
+    #   A unique token that identifies the current checkpoint state. This
+    #   token is provided by the Lambda runtime and must be used to ensure
+    #   checkpoints are applied in the correct order. Each checkpoint
+    #   operation consumes this token and returns a new one.
+    #
+    # @option params [Array<Types::OperationUpdate>] :updates
+    #   An array of state updates to apply during this checkpoint. Each update
+    #   represents a change to the execution state, such as completing a step,
+    #   starting a callback, or scheduling a timer. Updates are applied
+    #   atomically as part of the checkpoint operation.
+    #
+    # @option params [String] :client_token
+    #   An optional idempotency token to ensure that duplicate checkpoint
+    #   requests are handled correctly. If provided, Lambda uses this token to
+    #   detect and handle duplicate requests within a 15-minute window.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @return [Types::CheckpointDurableExecutionResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CheckpointDurableExecutionResponse#checkpoint_token #checkpoint_token} => String
+    #   * {Types::CheckpointDurableExecutionResponse#new_execution_state #new_execution_state} => Types::CheckpointUpdatedExecutionState
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.checkpoint_durable_execution({
+    #     durable_execution_arn: "DurableExecutionArn", # required
+    #     checkpoint_token: "CheckpointToken", # required
+    #     updates: [
+    #       {
+    #         id: "OperationId", # required
+    #         parent_id: "OperationId",
+    #         name: "OperationName",
+    #         type: "EXECUTION", # required, accepts EXECUTION, CONTEXT, STEP, WAIT, CALLBACK, CHAINED_INVOKE
+    #         sub_type: "OperationSubType",
+    #         action: "START", # required, accepts START, SUCCEED, FAIL, RETRY, CANCEL
+    #         payload: "OperationPayload",
+    #         error: {
+    #           error_message: "ErrorMessage",
+    #           error_type: "ErrorType",
+    #           error_data: "ErrorData",
+    #           stack_trace: ["StackTraceEntry"],
+    #         },
+    #         context_options: {
+    #           replay_children: false,
+    #         },
+    #         step_options: {
+    #           next_attempt_delay_seconds: 1,
+    #         },
+    #         wait_options: {
+    #           wait_seconds: 1,
+    #         },
+    #         callback_options: {
+    #           timeout_seconds: 1,
+    #           heartbeat_timeout_seconds: 1,
+    #         },
+    #         chained_invoke_options: {
+    #           function_name: "NamespacedFunctionName", # required
+    #           tenant_id: "TenantId",
+    #         },
+    #       },
+    #     ],
+    #     client_token: "ClientToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.checkpoint_token #=> String
+    #   resp.new_execution_state.operations #=> Array
+    #   resp.new_execution_state.operations[0].id #=> String
+    #   resp.new_execution_state.operations[0].parent_id #=> String
+    #   resp.new_execution_state.operations[0].name #=> String
+    #   resp.new_execution_state.operations[0].type #=> String, one of "EXECUTION", "CONTEXT", "STEP", "WAIT", "CALLBACK", "CHAINED_INVOKE"
+    #   resp.new_execution_state.operations[0].sub_type #=> String
+    #   resp.new_execution_state.operations[0].start_timestamp #=> Time
+    #   resp.new_execution_state.operations[0].end_timestamp #=> Time
+    #   resp.new_execution_state.operations[0].status #=> String, one of "STARTED", "PENDING", "READY", "SUCCEEDED", "FAILED", "CANCELLED", "TIMED_OUT", "STOPPED"
+    #   resp.new_execution_state.operations[0].execution_details.input_payload #=> String
+    #   resp.new_execution_state.operations[0].context_details.replay_children #=> Boolean
+    #   resp.new_execution_state.operations[0].context_details.result #=> String
+    #   resp.new_execution_state.operations[0].context_details.error.error_message #=> String
+    #   resp.new_execution_state.operations[0].context_details.error.error_type #=> String
+    #   resp.new_execution_state.operations[0].context_details.error.error_data #=> String
+    #   resp.new_execution_state.operations[0].context_details.error.stack_trace #=> Array
+    #   resp.new_execution_state.operations[0].context_details.error.stack_trace[0] #=> String
+    #   resp.new_execution_state.operations[0].step_details.attempt #=> Integer
+    #   resp.new_execution_state.operations[0].step_details.next_attempt_timestamp #=> Time
+    #   resp.new_execution_state.operations[0].step_details.result #=> String
+    #   resp.new_execution_state.operations[0].step_details.error.error_message #=> String
+    #   resp.new_execution_state.operations[0].step_details.error.error_type #=> String
+    #   resp.new_execution_state.operations[0].step_details.error.error_data #=> String
+    #   resp.new_execution_state.operations[0].step_details.error.stack_trace #=> Array
+    #   resp.new_execution_state.operations[0].step_details.error.stack_trace[0] #=> String
+    #   resp.new_execution_state.operations[0].wait_details.scheduled_end_timestamp #=> Time
+    #   resp.new_execution_state.operations[0].callback_details.callback_id #=> String
+    #   resp.new_execution_state.operations[0].callback_details.result #=> String
+    #   resp.new_execution_state.operations[0].callback_details.error.error_message #=> String
+    #   resp.new_execution_state.operations[0].callback_details.error.error_type #=> String
+    #   resp.new_execution_state.operations[0].callback_details.error.error_data #=> String
+    #   resp.new_execution_state.operations[0].callback_details.error.stack_trace #=> Array
+    #   resp.new_execution_state.operations[0].callback_details.error.stack_trace[0] #=> String
+    #   resp.new_execution_state.operations[0].chained_invoke_details.result #=> String
+    #   resp.new_execution_state.operations[0].chained_invoke_details.error.error_message #=> String
+    #   resp.new_execution_state.operations[0].chained_invoke_details.error.error_type #=> String
+    #   resp.new_execution_state.operations[0].chained_invoke_details.error.error_data #=> String
+    #   resp.new_execution_state.operations[0].chained_invoke_details.error.stack_trace #=> Array
+    #   resp.new_execution_state.operations[0].chained_invoke_details.error.stack_trace[0] #=> String
+    #   resp.new_execution_state.next_marker #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/CheckpointDurableExecution AWS API Documentation
+    #
+    # @overload checkpoint_durable_execution(params = {})
+    # @param [Hash] params ({})
+    def checkpoint_durable_execution(params = {}, options = {})
+      req = build_request(:checkpoint_durable_execution, params)
       req.send_request(options)
     end
 
@@ -821,7 +968,7 @@ module Aws::Lambda
     #   resp = client.create_alias({
     #     function_name: "FunctionName", # required
     #     name: "Alias", # required
-    #     function_version: "Version", # required
+    #     function_version: "VersionWithLatestPublished", # required
     #     description: "Description",
     #     routing_config: {
     #       additional_version_weights: {
@@ -846,6 +993,130 @@ module Aws::Lambda
     # @param [Hash] params ({})
     def create_alias(params = {}, options = {})
       req = build_request(:create_alias, params)
+      req.send_request(options)
+    end
+
+    # Creates a capacity provider that manages compute resources for Lambda
+    # functions
+    #
+    # @option params [required, String] :capacity_provider_name
+    #   The name of the capacity provider.
+    #
+    # @option params [required, Types::CapacityProviderVpcConfig] :vpc_config
+    #   The VPC configuration for the capacity provider, including subnet IDs
+    #   and security group IDs where compute instances will be launched.
+    #
+    # @option params [required, Types::CapacityProviderPermissionsConfig] :permissions_config
+    #   The permissions configuration that specifies the IAM role ARN used by
+    #   the capacity provider to manage compute resources.
+    #
+    # @option params [Types::InstanceRequirements] :instance_requirements
+    #   The instance requirements that specify the compute instance
+    #   characteristics, including architectures and allowed or excluded
+    #   instance types.
+    #
+    # @option params [Types::CapacityProviderScalingConfig] :capacity_provider_scaling_config
+    #   The scaling configuration that defines how the capacity provider
+    #   scales compute instances, including maximum vCPU count and scaling
+    #   policies.
+    #
+    # @option params [String] :kms_key_arn
+    #   The ARN of the KMS key used to encrypt data associated with the
+    #   capacity provider.
+    #
+    # @option params [Hash<String,String>] :tags
+    #   A list of tags to associate with the capacity provider.
+    #
+    # @option params [Types::PropagateTags] :propagate_tags
+    #   The tag propagation configuration for the capacity provider. Specifies
+    #   tags to apply to managed resources at launch.
+    #
+    # @option params [Types::CapacityProviderTelemetryConfig] :telemetry_config
+    #   The telemetry configuration for the capacity provider. Specifies
+    #   logging settings for managed resources.
+    #
+    # @return [Types::CreateCapacityProviderResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateCapacityProviderResponse#capacity_provider #capacity_provider} => Types::CapacityProvider
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_capacity_provider({
+    #     capacity_provider_name: "CapacityProviderName", # required
+    #     vpc_config: { # required
+    #       subnet_ids: ["SubnetId"], # required
+    #       security_group_ids: ["SecurityGroupId"], # required
+    #     },
+    #     permissions_config: { # required
+    #       capacity_provider_operator_role_arn: "RoleArn", # required
+    #     },
+    #     instance_requirements: {
+    #       architectures: ["x86_64"], # accepts x86_64, arm64
+    #       allowed_instance_types: ["InstanceType"],
+    #       excluded_instance_types: ["InstanceType"],
+    #     },
+    #     capacity_provider_scaling_config: {
+    #       max_v_cpu_count: 1,
+    #       scaling_mode: "Auto", # accepts Auto, Manual
+    #       scaling_policies: [
+    #         {
+    #           predefined_metric_type: "LambdaCapacityProviderAverageCPUUtilization", # required, accepts LambdaCapacityProviderAverageCPUUtilization
+    #           target_value: 1.0, # required
+    #         },
+    #       ],
+    #     },
+    #     kms_key_arn: "KMSKeyArnNonEmpty",
+    #     tags: {
+    #       "TagKey" => "TagValue",
+    #     },
+    #     propagate_tags: {
+    #       mode: "None", # accepts None, Explicit
+    #       explicit_tags: {
+    #         "TagKey" => "TagValue",
+    #       },
+    #     },
+    #     telemetry_config: {
+    #       logging_config: {
+    #         system_log_level: "DEBUG", # accepts DEBUG, INFO, WARN
+    #         log_group: "LogGroup",
+    #       },
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.capacity_provider.capacity_provider_arn #=> String
+    #   resp.capacity_provider.state #=> String, one of "Pending", "Active", "Failed", "Deleting"
+    #   resp.capacity_provider.vpc_config.subnet_ids #=> Array
+    #   resp.capacity_provider.vpc_config.subnet_ids[0] #=> String
+    #   resp.capacity_provider.vpc_config.security_group_ids #=> Array
+    #   resp.capacity_provider.vpc_config.security_group_ids[0] #=> String
+    #   resp.capacity_provider.permissions_config.capacity_provider_operator_role_arn #=> String
+    #   resp.capacity_provider.instance_requirements.architectures #=> Array
+    #   resp.capacity_provider.instance_requirements.architectures[0] #=> String, one of "x86_64", "arm64"
+    #   resp.capacity_provider.instance_requirements.allowed_instance_types #=> Array
+    #   resp.capacity_provider.instance_requirements.allowed_instance_types[0] #=> String
+    #   resp.capacity_provider.instance_requirements.excluded_instance_types #=> Array
+    #   resp.capacity_provider.instance_requirements.excluded_instance_types[0] #=> String
+    #   resp.capacity_provider.capacity_provider_scaling_config.max_v_cpu_count #=> Integer
+    #   resp.capacity_provider.capacity_provider_scaling_config.scaling_mode #=> String, one of "Auto", "Manual"
+    #   resp.capacity_provider.capacity_provider_scaling_config.scaling_policies #=> Array
+    #   resp.capacity_provider.capacity_provider_scaling_config.scaling_policies[0].predefined_metric_type #=> String, one of "LambdaCapacityProviderAverageCPUUtilization"
+    #   resp.capacity_provider.capacity_provider_scaling_config.scaling_policies[0].target_value #=> Float
+    #   resp.capacity_provider.kms_key_arn #=> String
+    #   resp.capacity_provider.last_modified #=> Time
+    #   resp.capacity_provider.propagate_tags.mode #=> String, one of "None", "Explicit"
+    #   resp.capacity_provider.propagate_tags.explicit_tags #=> Hash
+    #   resp.capacity_provider.propagate_tags.explicit_tags["TagKey"] #=> String
+    #   resp.capacity_provider.telemetry_config.logging_config.system_log_level #=> String, one of "DEBUG", "INFO", "WARN"
+    #   resp.capacity_provider.telemetry_config.logging_config.log_group #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/CreateCapacityProvider AWS API Documentation
+    #
+    # @overload create_capacity_provider(params = {})
+    # @param [Hash] params ({})
+    def create_capacity_provider(params = {}, options = {})
+      req = build_request(:create_capacity_provider, params)
       req.send_request(options)
     end
 
@@ -929,8 +1200,8 @@ module Aws::Lambda
     #
     # * [ Amazon DocumentDB][7]
     #
-    # The following error handling options are available only for DynamoDB
-    # and Kinesis event sources:
+    # The following error handling options are available for stream sources
+    # (DynamoDB, Kinesis, Amazon MSK, and self-managed Apache Kafka):
     #
     # * `BisectBatchOnFunctionError` – If the function returns an error,
     #   split the batch in two and retry.
@@ -943,33 +1214,34 @@ module Aws::Lambda
     #   of retries. The default value is infinite (-1). When set to infinite
     #   (-1), failed records are retried until the record expires.
     #
+    # * `OnFailure` – Send discarded records to an Amazon SQS queue, Amazon
+    #   SNS topic, Kafka topic, or Amazon S3 bucket. For more information,
+    #   see [Adding a destination][8].
+    #
+    # The following option is available only for DynamoDB and Kinesis event
+    # sources:
+    #
     # * `ParallelizationFactor` – Process multiple batches from each shard
     #   concurrently.
-    #
-    # For stream sources (DynamoDB, Kinesis, Amazon MSK, and self-managed
-    # Apache Kafka), the following option is also available:
-    #
-    # * `DestinationConfig` – Send discarded records to an Amazon SQS queue,
-    #   Amazon SNS topic, or Amazon S3 bucket.
     #
     # ^
     #
     # For information about which configuration parameters apply to each
     # event source, see the following topics.
     #
-    # * [ Amazon DynamoDB Streams][8]
+    # * [ Amazon DynamoDB Streams][9]
     #
-    # * [ Amazon Kinesis][9]
+    # * [ Amazon Kinesis][10]
     #
-    # * [ Amazon SQS][10]
+    # * [ Amazon SQS][11]
     #
-    # * [ Amazon MQ and RabbitMQ][11]
+    # * [ Amazon MQ and RabbitMQ][12]
     #
-    # * [ Amazon MSK][12]
+    # * [ Amazon MSK][13]
     #
-    # * [ Apache Kafka][13]
+    # * [ Apache Kafka][14]
     #
-    # * [ Amazon DocumentDB][14]
+    # * [ Amazon DocumentDB][15]
     #
     #
     #
@@ -980,13 +1252,14 @@ module Aws::Lambda
     # [5]: https://docs.aws.amazon.com/lambda/latest/dg/with-msk.html
     # [6]: https://docs.aws.amazon.com/lambda/latest/dg/kafka-smaa.html
     # [7]: https://docs.aws.amazon.com/lambda/latest/dg/with-documentdb.html
-    # [8]: https://docs.aws.amazon.com/lambda/latest/dg/with-ddb.html#services-ddb-params
-    # [9]: https://docs.aws.amazon.com/lambda/latest/dg/with-kinesis.html#services-kinesis-params
-    # [10]: https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#services-sqs-params
-    # [11]: https://docs.aws.amazon.com/lambda/latest/dg/with-mq.html#services-mq-params
-    # [12]: https://docs.aws.amazon.com/lambda/latest/dg/with-msk.html#services-msk-parms
-    # [13]: https://docs.aws.amazon.com/lambda/latest/dg/with-kafka.html#services-kafka-parms
-    # [14]: https://docs.aws.amazon.com/lambda/latest/dg/with-documentdb.html#docdb-configuration
+    # [8]: https://docs.aws.amazon.com/lambda/latest/dg/invocation-async-retain-records.html#invocation-async-destinations
+    # [9]: https://docs.aws.amazon.com/lambda/latest/dg/with-ddb.html#services-ddb-params
+    # [10]: https://docs.aws.amazon.com/lambda/latest/dg/with-kinesis.html#services-kinesis-params
+    # [11]: https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#services-sqs-params
+    # [12]: https://docs.aws.amazon.com/lambda/latest/dg/with-mq.html#services-mq-params
+    # [13]: https://docs.aws.amazon.com/lambda/latest/dg/with-msk.html#services-msk-parms
+    # [14]: https://docs.aws.amazon.com/lambda/latest/dg/with-kafka.html#services-kafka-parms
+    # [15]: https://docs.aws.amazon.com/lambda/latest/dg/with-documentdb.html#docdb-configuration
     #
     # @option params [String] :event_source_arn
     #   The Amazon Resource Name (ARN) of the event source.
@@ -1065,6 +1338,42 @@ module Aws::Lambda
     #
     #   [1]: https://docs.aws.amazon.com/lambda/latest/dg/invocation-eventfiltering.html
     #
+    # @option params [String] :kms_key_arn
+    #   The ARN of the Key Management Service (KMS) customer managed key that
+    #   Lambda uses to encrypt your function's [filter criteria][1]. By
+    #   default, Lambda does not encrypt your filter criteria object. Specify
+    #   this property to encrypt data using your own customer managed key.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/lambda/latest/dg/invocation-eventfiltering.html#filtering-basics
+    #
+    # @option params [Types::EventSourceMappingMetricsConfig] :metrics_config
+    #   The metrics configuration for your event source. For more information,
+    #   see [Event source mapping metrics][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/lambda/latest/dg/monitoring-metrics-types.html#event-source-mapping-metrics
+    #
+    # @option params [Types::EventSourceMappingLoggingConfig] :logging_config
+    #   (Amazon MSK, and self-managed Apache Kafka only) The logging
+    #   configuration for your event source. For more information, see [Event
+    #   source mapping logging][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/lambda/latest/dg/esm-logging.html
+    #
+    # @option params [Types::ScalingConfig] :scaling_config
+    #   (Amazon SQS only) The scaling configuration for the event source. For
+    #   more information, see [Configuring maximum concurrency for Amazon SQS
+    #   event sources][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#events-sqs-max-concurrency
+    #
     # @option params [Integer] :maximum_batching_window_in_seconds
     #   The maximum amount of time, in seconds, that Lambda spends gathering
     #   records before invoking the function. You can configure
@@ -1099,23 +1408,24 @@ module Aws::Lambda
     #   start reading. `StartingPositionTimestamp` cannot be in the future.
     #
     # @option params [Types::DestinationConfig] :destination_config
-    #   (Kinesis, DynamoDB Streams, Amazon MSK, and self-managed Kafka only) A
-    #   configuration object that specifies the destination of an event after
-    #   Lambda processes it.
+    #   (Kinesis, DynamoDB Streams, Amazon MSK, and self-managed Apache Kafka)
+    #   A configuration object that specifies the destination of an event
+    #   after Lambda processes it.
     #
     # @option params [Integer] :maximum_record_age_in_seconds
-    #   (Kinesis and DynamoDB Streams only) Discard records older than the
-    #   specified age. The default value is infinite (-1).
+    #   (Kinesis, DynamoDB Streams, Amazon MSK, and self-managed Apache Kafka)
+    #   Discard records older than the specified age. The default value is
+    #   infinite (-1).
     #
     # @option params [Boolean] :bisect_batch_on_function_error
-    #   (Kinesis and DynamoDB Streams only) If the function returns an error,
-    #   split the batch in two and retry.
+    #   (Kinesis, DynamoDB Streams, Amazon MSK, and self-managed Apache Kafka)
+    #   If the function returns an error, split the batch in two and retry.
     #
     # @option params [Integer] :maximum_retry_attempts
-    #   (Kinesis and DynamoDB Streams only) Discard records after the
-    #   specified number of retries. The default value is infinite (-1). When
-    #   set to infinite (-1), failed records are retried until the record
-    #   expires.
+    #   (Kinesis, DynamoDB Streams, Amazon MSK, and self-managed Apache Kafka)
+    #   Discard records after the specified number of retries. The default
+    #   value is infinite (-1). When set to infinite (-1), failed records are
+    #   retried until the record expires.
     #
     # @option params [Hash<String,String>] :tags
     #   A list of tags to apply to the event source mapping.
@@ -1139,8 +1449,9 @@ module Aws::Lambda
     #   The self-managed Apache Kafka cluster to receive records from.
     #
     # @option params [Array<String>] :function_response_types
-    #   (Kinesis, DynamoDB Streams, and Amazon SQS) A list of current response
-    #   type enums applied to the event source mapping.
+    #   (Kinesis, DynamoDB Streams, Amazon MSK, self-managed Apache Kafka, and
+    #   Amazon SQS) A list of current response type enums applied to the event
+    #   source mapping.
     #
     # @option params [Types::AmazonManagedKafkaEventSourceConfig] :amazon_managed_kafka_event_source_config
     #   Specific configuration settings for an Amazon Managed Streaming for
@@ -1150,40 +1461,13 @@ module Aws::Lambda
     #   Specific configuration settings for a self-managed Apache Kafka event
     #   source.
     #
-    # @option params [Types::ScalingConfig] :scaling_config
-    #   (Amazon SQS only) The scaling configuration for the event source. For
-    #   more information, see [Configuring maximum concurrency for Amazon SQS
-    #   event sources][1].
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#events-sqs-max-concurrency
-    #
     # @option params [Types::DocumentDBEventSourceConfig] :document_db_event_source_config
     #   Specific configuration settings for a DocumentDB event source.
     #
-    # @option params [String] :kms_key_arn
-    #   The ARN of the Key Management Service (KMS) customer managed key that
-    #   Lambda uses to encrypt your function's [filter criteria][1]. By
-    #   default, Lambda does not encrypt your filter criteria object. Specify
-    #   this property to encrypt data using your own customer managed key.
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/lambda/latest/dg/invocation-eventfiltering.html#filtering-basics
-    #
-    # @option params [Types::EventSourceMappingMetricsConfig] :metrics_config
-    #   The metrics configuration for your event source. For more information,
-    #   see [Event source mapping metrics][1].
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/lambda/latest/dg/monitoring-metrics-types.html#event-source-mapping-metrics
-    #
     # @option params [Types::ProvisionedPollerConfig] :provisioned_poller_config
-    #   (Amazon MSK and self-managed Apache Kafka only) The provisioned mode
-    #   configuration for the event source. For more information, see
-    #   [provisioned mode][1].
+    #   (Amazon SQS, Amazon MSK, and self-managed Apache Kafka only) The
+    #   provisioned mode configuration for the event source. For more
+    #   information, see [provisioned mode][1].
     #
     #
     #
@@ -1199,6 +1483,11 @@ module Aws::Lambda
     #   * {Types::EventSourceMappingConfiguration#parallelization_factor #parallelization_factor} => Integer
     #   * {Types::EventSourceMappingConfiguration#event_source_arn #event_source_arn} => String
     #   * {Types::EventSourceMappingConfiguration#filter_criteria #filter_criteria} => Types::FilterCriteria
+    #   * {Types::EventSourceMappingConfiguration#filter_criteria_error #filter_criteria_error} => Types::FilterCriteriaError
+    #   * {Types::EventSourceMappingConfiguration#kms_key_arn #kms_key_arn} => String
+    #   * {Types::EventSourceMappingConfiguration#metrics_config #metrics_config} => Types::EventSourceMappingMetricsConfig
+    #   * {Types::EventSourceMappingConfiguration#logging_config #logging_config} => Types::EventSourceMappingLoggingConfig
+    #   * {Types::EventSourceMappingConfiguration#scaling_config #scaling_config} => Types::ScalingConfig
     #   * {Types::EventSourceMappingConfiguration#function_arn #function_arn} => String
     #   * {Types::EventSourceMappingConfiguration#last_modified #last_modified} => Time
     #   * {Types::EventSourceMappingConfiguration#last_processing_result #last_processing_result} => String
@@ -1216,12 +1505,8 @@ module Aws::Lambda
     #   * {Types::EventSourceMappingConfiguration#function_response_types #function_response_types} => Array&lt;String&gt;
     #   * {Types::EventSourceMappingConfiguration#amazon_managed_kafka_event_source_config #amazon_managed_kafka_event_source_config} => Types::AmazonManagedKafkaEventSourceConfig
     #   * {Types::EventSourceMappingConfiguration#self_managed_kafka_event_source_config #self_managed_kafka_event_source_config} => Types::SelfManagedKafkaEventSourceConfig
-    #   * {Types::EventSourceMappingConfiguration#scaling_config #scaling_config} => Types::ScalingConfig
     #   * {Types::EventSourceMappingConfiguration#document_db_event_source_config #document_db_event_source_config} => Types::DocumentDBEventSourceConfig
-    #   * {Types::EventSourceMappingConfiguration#kms_key_arn #kms_key_arn} => String
-    #   * {Types::EventSourceMappingConfiguration#filter_criteria_error #filter_criteria_error} => Types::FilterCriteriaError
     #   * {Types::EventSourceMappingConfiguration#event_source_mapping_arn #event_source_mapping_arn} => String
-    #   * {Types::EventSourceMappingConfiguration#metrics_config #metrics_config} => Types::EventSourceMappingMetricsConfig
     #   * {Types::EventSourceMappingConfiguration#provisioned_poller_config #provisioned_poller_config} => Types::ProvisionedPollerConfig
     #
     #
@@ -1250,7 +1535,7 @@ module Aws::Lambda
     #
     #   resp = client.create_event_source_mapping({
     #     event_source_arn: "Arn",
-    #     function_name: "FunctionName", # required
+    #     function_name: "NamespacedFunctionName", # required
     #     enabled: false,
     #     batch_size: 1,
     #     filter_criteria: {
@@ -1259,6 +1544,16 @@ module Aws::Lambda
     #           pattern: "Pattern",
     #         },
     #       ],
+    #     },
+    #     kms_key_arn: "KMSKeyArn",
+    #     metrics_config: {
+    #       metrics: ["EventCount"], # accepts EventCount, ErrorCount, KafkaMetrics
+    #     },
+    #     logging_config: {
+    #       system_log_level: "DEBUG", # accepts DEBUG, INFO, WARN
+    #     },
+    #     scaling_config: {
+    #       maximum_concurrency: 1,
     #     },
     #     maximum_batching_window_in_seconds: 1,
     #     parallelization_factor: 1,
@@ -1295,25 +1590,49 @@ module Aws::Lambda
     #     function_response_types: ["ReportBatchItemFailures"], # accepts ReportBatchItemFailures
     #     amazon_managed_kafka_event_source_config: {
     #       consumer_group_id: "URI",
+    #       schema_registry_config: {
+    #         schema_registry_uri: "SchemaRegistryUri",
+    #         event_record_format: "JSON", # accepts JSON, SOURCE
+    #         access_configs: [
+    #           {
+    #             type: "BASIC_AUTH", # accepts BASIC_AUTH, CLIENT_CERTIFICATE_TLS_AUTH, SERVER_ROOT_CA_CERTIFICATE
+    #             uri: "Arn",
+    #           },
+    #         ],
+    #         schema_validation_configs: [
+    #           {
+    #             attribute: "KEY", # accepts KEY, VALUE
+    #           },
+    #         ],
+    #       },
     #     },
     #     self_managed_kafka_event_source_config: {
     #       consumer_group_id: "URI",
-    #     },
-    #     scaling_config: {
-    #       maximum_concurrency: 1,
+    #       schema_registry_config: {
+    #         schema_registry_uri: "SchemaRegistryUri",
+    #         event_record_format: "JSON", # accepts JSON, SOURCE
+    #         access_configs: [
+    #           {
+    #             type: "BASIC_AUTH", # accepts BASIC_AUTH, CLIENT_CERTIFICATE_TLS_AUTH, SERVER_ROOT_CA_CERTIFICATE
+    #             uri: "Arn",
+    #           },
+    #         ],
+    #         schema_validation_configs: [
+    #           {
+    #             attribute: "KEY", # accepts KEY, VALUE
+    #           },
+    #         ],
+    #       },
     #     },
     #     document_db_event_source_config: {
     #       database_name: "DatabaseName",
     #       collection_name: "CollectionName",
     #       full_document: "UpdateLookup", # accepts UpdateLookup, Default
     #     },
-    #     kms_key_arn: "KMSKeyArn",
-    #     metrics_config: {
-    #       metrics: ["EventCount"], # accepts EventCount
-    #     },
     #     provisioned_poller_config: {
     #       minimum_pollers: 1,
     #       maximum_pollers: 1,
+    #       poller_group_name: "ProvisionedPollerGroupName",
     #     },
     #   })
     #
@@ -1328,6 +1647,13 @@ module Aws::Lambda
     #   resp.event_source_arn #=> String
     #   resp.filter_criteria.filters #=> Array
     #   resp.filter_criteria.filters[0].pattern #=> String
+    #   resp.filter_criteria_error.error_code #=> String
+    #   resp.filter_criteria_error.message #=> String
+    #   resp.kms_key_arn #=> String
+    #   resp.metrics_config.metrics #=> Array
+    #   resp.metrics_config.metrics[0] #=> String, one of "EventCount", "ErrorCount", "KafkaMetrics"
+    #   resp.logging_config.system_log_level #=> String, one of "DEBUG", "INFO", "WARN"
+    #   resp.scaling_config.maximum_concurrency #=> Integer
     #   resp.function_arn #=> String
     #   resp.last_modified #=> Time
     #   resp.last_processing_result #=> String
@@ -1352,19 +1678,28 @@ module Aws::Lambda
     #   resp.function_response_types #=> Array
     #   resp.function_response_types[0] #=> String, one of "ReportBatchItemFailures"
     #   resp.amazon_managed_kafka_event_source_config.consumer_group_id #=> String
+    #   resp.amazon_managed_kafka_event_source_config.schema_registry_config.schema_registry_uri #=> String
+    #   resp.amazon_managed_kafka_event_source_config.schema_registry_config.event_record_format #=> String, one of "JSON", "SOURCE"
+    #   resp.amazon_managed_kafka_event_source_config.schema_registry_config.access_configs #=> Array
+    #   resp.amazon_managed_kafka_event_source_config.schema_registry_config.access_configs[0].type #=> String, one of "BASIC_AUTH", "CLIENT_CERTIFICATE_TLS_AUTH", "SERVER_ROOT_CA_CERTIFICATE"
+    #   resp.amazon_managed_kafka_event_source_config.schema_registry_config.access_configs[0].uri #=> String
+    #   resp.amazon_managed_kafka_event_source_config.schema_registry_config.schema_validation_configs #=> Array
+    #   resp.amazon_managed_kafka_event_source_config.schema_registry_config.schema_validation_configs[0].attribute #=> String, one of "KEY", "VALUE"
     #   resp.self_managed_kafka_event_source_config.consumer_group_id #=> String
-    #   resp.scaling_config.maximum_concurrency #=> Integer
+    #   resp.self_managed_kafka_event_source_config.schema_registry_config.schema_registry_uri #=> String
+    #   resp.self_managed_kafka_event_source_config.schema_registry_config.event_record_format #=> String, one of "JSON", "SOURCE"
+    #   resp.self_managed_kafka_event_source_config.schema_registry_config.access_configs #=> Array
+    #   resp.self_managed_kafka_event_source_config.schema_registry_config.access_configs[0].type #=> String, one of "BASIC_AUTH", "CLIENT_CERTIFICATE_TLS_AUTH", "SERVER_ROOT_CA_CERTIFICATE"
+    #   resp.self_managed_kafka_event_source_config.schema_registry_config.access_configs[0].uri #=> String
+    #   resp.self_managed_kafka_event_source_config.schema_registry_config.schema_validation_configs #=> Array
+    #   resp.self_managed_kafka_event_source_config.schema_registry_config.schema_validation_configs[0].attribute #=> String, one of "KEY", "VALUE"
     #   resp.document_db_event_source_config.database_name #=> String
     #   resp.document_db_event_source_config.collection_name #=> String
     #   resp.document_db_event_source_config.full_document #=> String, one of "UpdateLookup", "Default"
-    #   resp.kms_key_arn #=> String
-    #   resp.filter_criteria_error.error_code #=> String
-    #   resp.filter_criteria_error.message #=> String
     #   resp.event_source_mapping_arn #=> String
-    #   resp.metrics_config.metrics #=> Array
-    #   resp.metrics_config.metrics[0] #=> String, one of "EventCount"
     #   resp.provisioned_poller_config.minimum_pollers #=> Integer
     #   resp.provisioned_poller_config.maximum_pollers #=> Integer
+    #   resp.provisioned_poller_config.poller_group_name #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/CreateEventSourceMapping AWS API Documentation
     #
@@ -1525,6 +1860,9 @@ module Aws::Lambda
     #   Set to true to publish the first version of the function during
     #   creation.
     #
+    # @option params [String] :publish_to
+    #   Specifies where to publish the function version or configuration.
+    #
     # @option params [Types::VpcConfig] :vpc_config
     #   For network connectivity to Amazon Web Services resources in a VPC,
     #   specify a list of security groups and subnets in the VPC. When you
@@ -1607,7 +1945,14 @@ module Aws::Lambda
     #   [1]: https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html
     #
     # @option params [Array<Types::FileSystemConfig>] :file_system_configs
-    #   Connection settings for an Amazon EFS file system.
+    #   Connection settings for an Amazon EFS file system or an Amazon S3
+    #   Files file system.
+    #
+    # @option params [String] :code_signing_config_arn
+    #   To enable code signing for this function, specify the ARN of a
+    #   code-signing configuration. A code-signing configuration includes a
+    #   set of signing profiles, which define the trusted publishers for this
+    #   function.
     #
     # @option params [Types::ImageConfig] :image_config
     #   Container image [configuration values][1] that override the values in
@@ -1616,12 +1961,6 @@ module Aws::Lambda
     #
     #
     #   [1]: https://docs.aws.amazon.com/lambda/latest/dg/images-create.html#images-parms
-    #
-    # @option params [String] :code_signing_config_arn
-    #   To enable code signing for this function, specify the ARN of a
-    #   code-signing configuration. A code-signing configuration includes a
-    #   set of signing profiles, which define the trusted publishers for this
-    #   function.
     #
     # @option params [Array<String>] :architectures
     #   The instruction set architecture that the function supports. Enter a
@@ -1646,6 +1985,20 @@ module Aws::Lambda
     #
     # @option params [Types::LoggingConfig] :logging_config
     #   The function's Amazon CloudWatch Logs configuration settings.
+    #
+    # @option params [Types::TenancyConfig] :tenancy_config
+    #   Configuration for multi-tenant applications that use Lambda functions.
+    #   Defines tenant isolation settings and resource allocations. Required
+    #   for functions supporting multiple tenants.
+    #
+    # @option params [Types::CapacityProviderConfig] :capacity_provider_config
+    #   Configuration for the capacity provider that manages compute resources
+    #   for Lambda functions.
+    #
+    # @option params [Types::DurableConfig] :durable_config
+    #   Configuration settings for durable functions. Enables creating
+    #   functions with durability that can remember their state and continue
+    #   execution even after interruptions.
     #
     # @return [Types::FunctionConfiguration] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1676,15 +2029,19 @@ module Aws::Lambda
     #   * {Types::FunctionConfiguration#last_update_status_reason #last_update_status_reason} => String
     #   * {Types::FunctionConfiguration#last_update_status_reason_code #last_update_status_reason_code} => String
     #   * {Types::FunctionConfiguration#file_system_configs #file_system_configs} => Array&lt;Types::FileSystemConfig&gt;
-    #   * {Types::FunctionConfiguration#package_type #package_type} => String
-    #   * {Types::FunctionConfiguration#image_config_response #image_config_response} => Types::ImageConfigResponse
     #   * {Types::FunctionConfiguration#signing_profile_version_arn #signing_profile_version_arn} => String
     #   * {Types::FunctionConfiguration#signing_job_arn #signing_job_arn} => String
+    #   * {Types::FunctionConfiguration#package_type #package_type} => String
+    #   * {Types::FunctionConfiguration#image_config_response #image_config_response} => Types::ImageConfigResponse
     #   * {Types::FunctionConfiguration#architectures #architectures} => Array&lt;String&gt;
     #   * {Types::FunctionConfiguration#ephemeral_storage #ephemeral_storage} => Types::EphemeralStorage
     #   * {Types::FunctionConfiguration#snap_start #snap_start} => Types::SnapStartResponse
     #   * {Types::FunctionConfiguration#runtime_version_config #runtime_version_config} => Types::RuntimeVersionConfig
     #   * {Types::FunctionConfiguration#logging_config #logging_config} => Types::LoggingConfig
+    #   * {Types::FunctionConfiguration#tenancy_config #tenancy_config} => Types::TenancyConfig
+    #   * {Types::FunctionConfiguration#capacity_provider_config #capacity_provider_config} => Types::CapacityProviderConfig
+    #   * {Types::FunctionConfiguration#config_sha_256 #config_sha_256} => String
+    #   * {Types::FunctionConfiguration#durable_config #durable_config} => Types::DurableConfig
     #
     #
     # @example Example: To create a function
@@ -1698,6 +2055,10 @@ module Aws::Lambda
     #       s3_key: "function.zip", 
     #     }, 
     #     description: "Process image objects from Amazon S3.", 
+    #     durable_config: {
+    #       execution_timeout: 31622400, 
+    #       retention_period_in_days: 30, 
+    #     }, 
     #     environment: {
     #       variables: {
     #         "BUCKET" => "my-bucket-1xpuxmplzrlbh", 
@@ -1725,6 +2086,10 @@ module Aws::Lambda
     #     code_sha_256: "YFgDgEKG3ugvF1+pX64gV6tu9qNuIYNUdgJm8nCxsm4=", 
     #     code_size: 5797206, 
     #     description: "Process image objects from Amazon S3.", 
+    #     durable_config: {
+    #       execution_timeout: 31622400, 
+    #       retention_period_in_days: 30, 
+    #     }, 
     #     environment: {
     #       variables: {
     #         "BUCKET" => "my-bucket-1xpuxmplzrlbh", 
@@ -1753,7 +2118,7 @@ module Aws::Lambda
     #
     #   resp = client.create_function({
     #     function_name: "FunctionName", # required
-    #     runtime: "nodejs", # accepts nodejs, nodejs4.3, nodejs6.10, nodejs8.10, nodejs10.x, nodejs12.x, nodejs14.x, nodejs16.x, java8, java8.al2, java11, python2.7, python3.6, python3.7, python3.8, python3.9, dotnetcore1.0, dotnetcore2.0, dotnetcore2.1, dotnetcore3.1, dotnet6, dotnet8, nodejs4.3-edge, go1.x, ruby2.5, ruby2.7, provided, provided.al2, nodejs18.x, python3.10, java17, ruby3.2, ruby3.3, ruby3.4, python3.11, nodejs20.x, provided.al2023, python3.12, java21, python3.13, nodejs22.x
+    #     runtime: "nodejs", # accepts nodejs, nodejs4.3, nodejs6.10, nodejs8.10, nodejs10.x, nodejs12.x, nodejs14.x, nodejs16.x, nodejs18.x, nodejs20.x, nodejs22.x, nodejs24.x, java8, java8.al2, java11, java17, java21, java25, python2.7, python3.6, python3.7, python3.8, python3.9, python3.10, python3.11, python3.12, python3.13, python3.14, dotnetcore1.0, dotnetcore2.0, dotnetcore2.1, dotnetcore3.1, dotnet6, dotnet8, dotnet10, nodejs4.3-edge, go1.x, ruby2.5, ruby2.7, ruby3.2, ruby3.3, ruby3.4, ruby4.0, provided, provided.al2, provided.al2023, nodejs26.x, python3.15, java8.al2023, java11.al2023, java17.al2023
     #     role: "RoleArn", # required
     #     handler: "Handler",
     #     code: { # required
@@ -1761,6 +2126,7 @@ module Aws::Lambda
     #       s3_bucket: "S3Bucket",
     #       s3_key: "S3Key",
     #       s3_object_version: "S3ObjectVersion",
+    #       s3_object_storage_mode: "COPY", # accepts COPY, REFERENCE
     #       image_uri: "String",
     #       source_kms_key_arn: "KMSKeyArn",
     #     },
@@ -1768,6 +2134,7 @@ module Aws::Lambda
     #     timeout: 1,
     #     memory_size: 1,
     #     publish: false,
+    #     publish_to: "LATEST_PUBLISHED", # accepts LATEST_PUBLISHED
     #     vpc_config: {
     #       subnet_ids: ["SubnetId"],
     #       security_group_ids: ["SecurityGroupId"],
@@ -1796,12 +2163,12 @@ module Aws::Lambda
     #         local_mount_path: "LocalMountPath", # required
     #       },
     #     ],
+    #     code_signing_config_arn: "CodeSigningConfigArn",
     #     image_config: {
     #       entry_point: ["String"],
     #       command: ["String"],
     #       working_directory: "WorkingDirectory",
     #     },
-    #     code_signing_config_arn: "CodeSigningConfigArn",
     #     architectures: ["x86_64"], # accepts x86_64, arm64
     #     ephemeral_storage: {
     #       size: 1, # required
@@ -1815,13 +2182,28 @@ module Aws::Lambda
     #       system_log_level: "DEBUG", # accepts DEBUG, INFO, WARN
     #       log_group: "LogGroup",
     #     },
+    #     tenancy_config: {
+    #       tenant_isolation_mode: "PER_TENANT", # required, accepts PER_TENANT
+    #     },
+    #     capacity_provider_config: {
+    #       lambda_managed_instances_capacity_provider_config: { # required
+    #         capacity_provider_arn: "CapacityProviderArn", # required
+    #         per_execution_environment_max_concurrency: 1,
+    #         execution_environment_memory_gi_b_per_v_cpu: 1.0,
+    #       },
+    #     },
+    #     durable_config: {
+    #       kms_key_arn: "KMSKeyArn",
+    #       retention_period_in_days: 1,
+    #       execution_timeout: 1,
+    #     },
     #   })
     #
     # @example Response structure
     #
     #   resp.function_name #=> String
     #   resp.function_arn #=> String
-    #   resp.runtime #=> String, one of "nodejs", "nodejs4.3", "nodejs6.10", "nodejs8.10", "nodejs10.x", "nodejs12.x", "nodejs14.x", "nodejs16.x", "java8", "java8.al2", "java11", "python2.7", "python3.6", "python3.7", "python3.8", "python3.9", "dotnetcore1.0", "dotnetcore2.0", "dotnetcore2.1", "dotnetcore3.1", "dotnet6", "dotnet8", "nodejs4.3-edge", "go1.x", "ruby2.5", "ruby2.7", "provided", "provided.al2", "nodejs18.x", "python3.10", "java17", "ruby3.2", "ruby3.3", "ruby3.4", "python3.11", "nodejs20.x", "provided.al2023", "python3.12", "java21", "python3.13", "nodejs22.x"
+    #   resp.runtime #=> String, one of "nodejs", "nodejs4.3", "nodejs6.10", "nodejs8.10", "nodejs10.x", "nodejs12.x", "nodejs14.x", "nodejs16.x", "nodejs18.x", "nodejs20.x", "nodejs22.x", "nodejs24.x", "java8", "java8.al2", "java11", "java17", "java21", "java25", "python2.7", "python3.6", "python3.7", "python3.8", "python3.9", "python3.10", "python3.11", "python3.12", "python3.13", "python3.14", "dotnetcore1.0", "dotnetcore2.0", "dotnetcore2.1", "dotnetcore3.1", "dotnet6", "dotnet8", "dotnet10", "nodejs4.3-edge", "go1.x", "ruby2.5", "ruby2.7", "ruby3.2", "ruby3.3", "ruby3.4", "ruby4.0", "provided", "provided.al2", "provided.al2023", "nodejs26.x", "python3.15", "java8.al2023", "java11.al2023", "java17.al2023"
     #   resp.role #=> String
     #   resp.handler #=> String
     #   resp.code_size #=> Integer
@@ -1851,15 +2233,17 @@ module Aws::Lambda
     #   resp.layers[0].code_size #=> Integer
     #   resp.layers[0].signing_profile_version_arn #=> String
     #   resp.layers[0].signing_job_arn #=> String
-    #   resp.state #=> String, one of "Pending", "Active", "Inactive", "Failed"
+    #   resp.state #=> String, one of "Pending", "Active", "Inactive", "Failed", "Deactivating", "Deactivated", "ActiveNonInvocable", "Deleting"
     #   resp.state_reason #=> String
-    #   resp.state_reason_code #=> String, one of "Idle", "Creating", "Restoring", "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError"
+    #   resp.state_reason_code #=> String, one of "Idle", "Creating", "Restoring", "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError", "ServiceQuotaExceededException", "VcpuLimitExceeded", "CapacityProviderScalingLimitExceeded", "InsufficientCapacity", "EC2RequestLimitExceeded", "FunctionError.InitTimeout", "FunctionError.RuntimeInitError", "FunctionError.ExtensionInitError", "FunctionError.InvalidEntryPoint", "FunctionError.InvalidWorkingDirectory", "FunctionError.PermissionDenied", "FunctionError.TooManyExtensions", "FunctionError.InitResourceExhausted", "DisallowedByVpcEncryptionControl", "DrainingDurableExecutions", "DependencyError"
     #   resp.last_update_status #=> String, one of "Successful", "Failed", "InProgress"
     #   resp.last_update_status_reason #=> String
-    #   resp.last_update_status_reason_code #=> String, one of "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError"
+    #   resp.last_update_status_reason_code #=> String, one of "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError", "ServiceQuotaExceededException", "VcpuLimitExceeded", "CapacityProviderScalingLimitExceeded", "InsufficientCapacity", "EC2RequestLimitExceeded", "FunctionError.InitTimeout", "FunctionError.RuntimeInitError", "FunctionError.ExtensionInitError", "FunctionError.InvalidEntryPoint", "FunctionError.InvalidWorkingDirectory", "FunctionError.PermissionDenied", "FunctionError.TooManyExtensions", "FunctionError.InitResourceExhausted", "DisallowedByVpcEncryptionControl", "DependencyError"
     #   resp.file_system_configs #=> Array
     #   resp.file_system_configs[0].arn #=> String
     #   resp.file_system_configs[0].local_mount_path #=> String
+    #   resp.signing_profile_version_arn #=> String
+    #   resp.signing_job_arn #=> String
     #   resp.package_type #=> String, one of "Zip", "Image"
     #   resp.image_config_response.image_config.entry_point #=> Array
     #   resp.image_config_response.image_config.entry_point[0] #=> String
@@ -1868,8 +2252,6 @@ module Aws::Lambda
     #   resp.image_config_response.image_config.working_directory #=> String
     #   resp.image_config_response.error.error_code #=> String
     #   resp.image_config_response.error.message #=> String
-    #   resp.signing_profile_version_arn #=> String
-    #   resp.signing_job_arn #=> String
     #   resp.architectures #=> Array
     #   resp.architectures[0] #=> String, one of "x86_64", "arm64"
     #   resp.ephemeral_storage.size #=> Integer
@@ -1882,6 +2264,14 @@ module Aws::Lambda
     #   resp.logging_config.application_log_level #=> String, one of "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"
     #   resp.logging_config.system_log_level #=> String, one of "DEBUG", "INFO", "WARN"
     #   resp.logging_config.log_group #=> String
+    #   resp.tenancy_config.tenant_isolation_mode #=> String, one of "PER_TENANT"
+    #   resp.capacity_provider_config.lambda_managed_instances_capacity_provider_config.capacity_provider_arn #=> String
+    #   resp.capacity_provider_config.lambda_managed_instances_capacity_provider_config.per_execution_environment_max_concurrency #=> Integer
+    #   resp.capacity_provider_config.lambda_managed_instances_capacity_provider_config.execution_environment_memory_gi_b_per_v_cpu #=> Float
+    #   resp.config_sha_256 #=> String
+    #   resp.durable_config.kms_key_arn #=> String
+    #   resp.durable_config.retention_period_in_days #=> Integer
+    #   resp.durable_config.execution_timeout #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/CreateFunction AWS API Documentation
     #
@@ -1918,8 +2308,8 @@ module Aws::Lambda
     #   The type of authentication that your function URL uses. Set to
     #   `AWS_IAM` if you want to restrict access to authenticated users only.
     #   Set to `NONE` if you want to bypass IAM authentication to create a
-    #   public endpoint. For more information, see [Security and auth model
-    #   for Lambda function URLs][1].
+    #   public endpoint. For more information, see [Control access to Lambda
+    #   function URLs][1].
     #
     #
     #
@@ -1944,12 +2334,7 @@ module Aws::Lambda
     #   * `RESPONSE_STREAM` – Your function streams payload results as they
     #     become available. Lambda invokes your function using the
     #     `InvokeWithResponseStream` API operation. The maximum response
-    #     payload size is 20 MB, however, you can [request a quota
-    #     increase][1].
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/servicequotas/latest/userguide/request-quota-increase.html
+    #     payload size is 200 MB.
     #
     # @return [Types::CreateFunctionUrlConfigResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1963,7 +2348,7 @@ module Aws::Lambda
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_function_url_config({
-    #     function_name: "FunctionName", # required
+    #     function_name: "FunctionUrlFunctionName", # required
     #     qualifier: "FunctionUrlQualifier",
     #     auth_type: "NONE", # required, accepts NONE, AWS_IAM
     #     cors: {
@@ -2056,6 +2441,59 @@ module Aws::Lambda
       req.send_request(options)
     end
 
+    # Deletes a capacity provider. You cannot delete a capacity provider
+    # that is currently being used by Lambda functions.
+    #
+    # @option params [required, String] :capacity_provider_name
+    #   The name of the capacity provider to delete.
+    #
+    # @return [Types::DeleteCapacityProviderResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DeleteCapacityProviderResponse#capacity_provider #capacity_provider} => Types::CapacityProvider
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_capacity_provider({
+    #     capacity_provider_name: "CapacityProviderName", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.capacity_provider.capacity_provider_arn #=> String
+    #   resp.capacity_provider.state #=> String, one of "Pending", "Active", "Failed", "Deleting"
+    #   resp.capacity_provider.vpc_config.subnet_ids #=> Array
+    #   resp.capacity_provider.vpc_config.subnet_ids[0] #=> String
+    #   resp.capacity_provider.vpc_config.security_group_ids #=> Array
+    #   resp.capacity_provider.vpc_config.security_group_ids[0] #=> String
+    #   resp.capacity_provider.permissions_config.capacity_provider_operator_role_arn #=> String
+    #   resp.capacity_provider.instance_requirements.architectures #=> Array
+    #   resp.capacity_provider.instance_requirements.architectures[0] #=> String, one of "x86_64", "arm64"
+    #   resp.capacity_provider.instance_requirements.allowed_instance_types #=> Array
+    #   resp.capacity_provider.instance_requirements.allowed_instance_types[0] #=> String
+    #   resp.capacity_provider.instance_requirements.excluded_instance_types #=> Array
+    #   resp.capacity_provider.instance_requirements.excluded_instance_types[0] #=> String
+    #   resp.capacity_provider.capacity_provider_scaling_config.max_v_cpu_count #=> Integer
+    #   resp.capacity_provider.capacity_provider_scaling_config.scaling_mode #=> String, one of "Auto", "Manual"
+    #   resp.capacity_provider.capacity_provider_scaling_config.scaling_policies #=> Array
+    #   resp.capacity_provider.capacity_provider_scaling_config.scaling_policies[0].predefined_metric_type #=> String, one of "LambdaCapacityProviderAverageCPUUtilization"
+    #   resp.capacity_provider.capacity_provider_scaling_config.scaling_policies[0].target_value #=> Float
+    #   resp.capacity_provider.kms_key_arn #=> String
+    #   resp.capacity_provider.last_modified #=> Time
+    #   resp.capacity_provider.propagate_tags.mode #=> String, one of "None", "Explicit"
+    #   resp.capacity_provider.propagate_tags.explicit_tags #=> Hash
+    #   resp.capacity_provider.propagate_tags.explicit_tags["TagKey"] #=> String
+    #   resp.capacity_provider.telemetry_config.logging_config.system_log_level #=> String, one of "DEBUG", "INFO", "WARN"
+    #   resp.capacity_provider.telemetry_config.logging_config.log_group #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/DeleteCapacityProvider AWS API Documentation
+    #
+    # @overload delete_capacity_provider(params = {})
+    # @param [Hash] params ({})
+    def delete_capacity_provider(params = {}, options = {})
+      req = build_request(:delete_capacity_provider, params)
+      req.send_request(options)
+    end
+
     # Deletes the code signing configuration. You can delete the code
     # signing configuration only if no function is using it.
     #
@@ -2102,6 +2540,11 @@ module Aws::Lambda
     #   * {Types::EventSourceMappingConfiguration#parallelization_factor #parallelization_factor} => Integer
     #   * {Types::EventSourceMappingConfiguration#event_source_arn #event_source_arn} => String
     #   * {Types::EventSourceMappingConfiguration#filter_criteria #filter_criteria} => Types::FilterCriteria
+    #   * {Types::EventSourceMappingConfiguration#filter_criteria_error #filter_criteria_error} => Types::FilterCriteriaError
+    #   * {Types::EventSourceMappingConfiguration#kms_key_arn #kms_key_arn} => String
+    #   * {Types::EventSourceMappingConfiguration#metrics_config #metrics_config} => Types::EventSourceMappingMetricsConfig
+    #   * {Types::EventSourceMappingConfiguration#logging_config #logging_config} => Types::EventSourceMappingLoggingConfig
+    #   * {Types::EventSourceMappingConfiguration#scaling_config #scaling_config} => Types::ScalingConfig
     #   * {Types::EventSourceMappingConfiguration#function_arn #function_arn} => String
     #   * {Types::EventSourceMappingConfiguration#last_modified #last_modified} => Time
     #   * {Types::EventSourceMappingConfiguration#last_processing_result #last_processing_result} => String
@@ -2119,12 +2562,8 @@ module Aws::Lambda
     #   * {Types::EventSourceMappingConfiguration#function_response_types #function_response_types} => Array&lt;String&gt;
     #   * {Types::EventSourceMappingConfiguration#amazon_managed_kafka_event_source_config #amazon_managed_kafka_event_source_config} => Types::AmazonManagedKafkaEventSourceConfig
     #   * {Types::EventSourceMappingConfiguration#self_managed_kafka_event_source_config #self_managed_kafka_event_source_config} => Types::SelfManagedKafkaEventSourceConfig
-    #   * {Types::EventSourceMappingConfiguration#scaling_config #scaling_config} => Types::ScalingConfig
     #   * {Types::EventSourceMappingConfiguration#document_db_event_source_config #document_db_event_source_config} => Types::DocumentDBEventSourceConfig
-    #   * {Types::EventSourceMappingConfiguration#kms_key_arn #kms_key_arn} => String
-    #   * {Types::EventSourceMappingConfiguration#filter_criteria_error #filter_criteria_error} => Types::FilterCriteriaError
     #   * {Types::EventSourceMappingConfiguration#event_source_mapping_arn #event_source_mapping_arn} => String
-    #   * {Types::EventSourceMappingConfiguration#metrics_config #metrics_config} => Types::EventSourceMappingMetricsConfig
     #   * {Types::EventSourceMappingConfiguration#provisioned_poller_config #provisioned_poller_config} => Types::ProvisionedPollerConfig
     #
     #
@@ -2141,7 +2580,7 @@ module Aws::Lambda
     #     batch_size: 5, 
     #     event_source_arn: "arn:aws:sqs:us-west-2:123456789012:my-queue", 
     #     function_arn: "arn:aws:lambda:us-east-2:123456789012:function:my-function", 
-    #     last_modified: Time.parse("${timestamp}"), 
+    #     last_modified: Time.parse("2016-11-21T19:49:20.006Z"), 
     #     state: "Enabled", 
     #     state_transition_reason: "USER_INITIATED", 
     #     uuid: "14e0db71-xmpl-4eb5-b481-8945cf9d10c2", 
@@ -2150,7 +2589,7 @@ module Aws::Lambda
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_event_source_mapping({
-    #     uuid: "String", # required
+    #     uuid: "UUIDString", # required
     #   })
     #
     # @example Response structure
@@ -2164,6 +2603,13 @@ module Aws::Lambda
     #   resp.event_source_arn #=> String
     #   resp.filter_criteria.filters #=> Array
     #   resp.filter_criteria.filters[0].pattern #=> String
+    #   resp.filter_criteria_error.error_code #=> String
+    #   resp.filter_criteria_error.message #=> String
+    #   resp.kms_key_arn #=> String
+    #   resp.metrics_config.metrics #=> Array
+    #   resp.metrics_config.metrics[0] #=> String, one of "EventCount", "ErrorCount", "KafkaMetrics"
+    #   resp.logging_config.system_log_level #=> String, one of "DEBUG", "INFO", "WARN"
+    #   resp.scaling_config.maximum_concurrency #=> Integer
     #   resp.function_arn #=> String
     #   resp.last_modified #=> Time
     #   resp.last_processing_result #=> String
@@ -2188,19 +2634,28 @@ module Aws::Lambda
     #   resp.function_response_types #=> Array
     #   resp.function_response_types[0] #=> String, one of "ReportBatchItemFailures"
     #   resp.amazon_managed_kafka_event_source_config.consumer_group_id #=> String
+    #   resp.amazon_managed_kafka_event_source_config.schema_registry_config.schema_registry_uri #=> String
+    #   resp.amazon_managed_kafka_event_source_config.schema_registry_config.event_record_format #=> String, one of "JSON", "SOURCE"
+    #   resp.amazon_managed_kafka_event_source_config.schema_registry_config.access_configs #=> Array
+    #   resp.amazon_managed_kafka_event_source_config.schema_registry_config.access_configs[0].type #=> String, one of "BASIC_AUTH", "CLIENT_CERTIFICATE_TLS_AUTH", "SERVER_ROOT_CA_CERTIFICATE"
+    #   resp.amazon_managed_kafka_event_source_config.schema_registry_config.access_configs[0].uri #=> String
+    #   resp.amazon_managed_kafka_event_source_config.schema_registry_config.schema_validation_configs #=> Array
+    #   resp.amazon_managed_kafka_event_source_config.schema_registry_config.schema_validation_configs[0].attribute #=> String, one of "KEY", "VALUE"
     #   resp.self_managed_kafka_event_source_config.consumer_group_id #=> String
-    #   resp.scaling_config.maximum_concurrency #=> Integer
+    #   resp.self_managed_kafka_event_source_config.schema_registry_config.schema_registry_uri #=> String
+    #   resp.self_managed_kafka_event_source_config.schema_registry_config.event_record_format #=> String, one of "JSON", "SOURCE"
+    #   resp.self_managed_kafka_event_source_config.schema_registry_config.access_configs #=> Array
+    #   resp.self_managed_kafka_event_source_config.schema_registry_config.access_configs[0].type #=> String, one of "BASIC_AUTH", "CLIENT_CERTIFICATE_TLS_AUTH", "SERVER_ROOT_CA_CERTIFICATE"
+    #   resp.self_managed_kafka_event_source_config.schema_registry_config.access_configs[0].uri #=> String
+    #   resp.self_managed_kafka_event_source_config.schema_registry_config.schema_validation_configs #=> Array
+    #   resp.self_managed_kafka_event_source_config.schema_registry_config.schema_validation_configs[0].attribute #=> String, one of "KEY", "VALUE"
     #   resp.document_db_event_source_config.database_name #=> String
     #   resp.document_db_event_source_config.collection_name #=> String
     #   resp.document_db_event_source_config.full_document #=> String, one of "UpdateLookup", "Default"
-    #   resp.kms_key_arn #=> String
-    #   resp.filter_criteria_error.error_code #=> String
-    #   resp.filter_criteria_error.message #=> String
     #   resp.event_source_mapping_arn #=> String
-    #   resp.metrics_config.metrics #=> Array
-    #   resp.metrics_config.metrics[0] #=> String, one of "EventCount"
     #   resp.provisioned_poller_config.minimum_pollers #=> Integer
     #   resp.provisioned_poller_config.maximum_pollers #=> Integer
+    #   resp.provisioned_poller_config.poller_group_name #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/DeleteEventSourceMapping AWS API Documentation
     #
@@ -2215,6 +2670,11 @@ module Aws::Lambda
     # the `Qualifier` parameter. Otherwise, all versions and aliases are
     # deleted. This doesn't require the user to have explicit permissions
     # for DeleteAlias.
+    #
+    # <note markdown="1"> A deleted Lambda function cannot be recovered. Ensure that you specify
+    # the correct function name and version before deleting.
+    #
+    #  </note>
     #
     # To delete Lambda event source mappings that invoke a function, use
     # DeleteEventSourceMapping. For Amazon Web Services services and
@@ -2242,7 +2702,9 @@ module Aws::Lambda
     #   Specify a version to delete. You can't delete a version that an alias
     #   references.
     #
-    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    # @return [Types::DeleteFunctionResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DeleteFunctionResponse#status_code #status_code} => Integer
     #
     #
     # @example Example: To delete a version of a Lambda function
@@ -2257,9 +2719,13 @@ module Aws::Lambda
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_function({
-    #     function_name: "FunctionName", # required
-    #     qualifier: "Qualifier",
+    #     function_name: "NamespacedFunctionName", # required
+    #     qualifier: "NumericLatestPublishedOrAliasQualifier",
     #   })
+    #
+    # @example Response structure
+    #
+    #   resp.status_code #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/DeleteFunction AWS API Documentation
     #
@@ -2292,7 +2758,7 @@ module Aws::Lambda
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_function_code_signing_config({
-    #     function_name: "FunctionName", # required
+    #     function_name: "NamespacedFunctionName", # required
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/DeleteFunctionCodeSigningConfig AWS API Documentation
@@ -2389,8 +2855,8 @@ module Aws::Lambda
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_function_event_invoke_config({
-    #     function_name: "FunctionName", # required
-    #     qualifier: "Qualifier",
+    #     function_name: "NamespacedFunctionName", # required
+    #     qualifier: "NumericLatestPublishedOrAliasQualifier",
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/DeleteFunctionEventInvokeConfig AWS API Documentation
@@ -2429,7 +2895,7 @@ module Aws::Lambda
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_function_url_config({
-    #     function_name: "FunctionName", # required
+    #     function_name: "FunctionUrlFunctionName", # required
     #     qualifier: "FunctionUrlQualifier",
     #   })
     #
@@ -2665,6 +3131,59 @@ module Aws::Lambda
       req.send_request(options)
     end
 
+    # Retrieves information about a specific capacity provider, including
+    # its configuration, state, and associated resources.
+    #
+    # @option params [required, String] :capacity_provider_name
+    #   The name of the capacity provider to retrieve.
+    #
+    # @return [Types::GetCapacityProviderResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetCapacityProviderResponse#capacity_provider #capacity_provider} => Types::CapacityProvider
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_capacity_provider({
+    #     capacity_provider_name: "CapacityProviderName", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.capacity_provider.capacity_provider_arn #=> String
+    #   resp.capacity_provider.state #=> String, one of "Pending", "Active", "Failed", "Deleting"
+    #   resp.capacity_provider.vpc_config.subnet_ids #=> Array
+    #   resp.capacity_provider.vpc_config.subnet_ids[0] #=> String
+    #   resp.capacity_provider.vpc_config.security_group_ids #=> Array
+    #   resp.capacity_provider.vpc_config.security_group_ids[0] #=> String
+    #   resp.capacity_provider.permissions_config.capacity_provider_operator_role_arn #=> String
+    #   resp.capacity_provider.instance_requirements.architectures #=> Array
+    #   resp.capacity_provider.instance_requirements.architectures[0] #=> String, one of "x86_64", "arm64"
+    #   resp.capacity_provider.instance_requirements.allowed_instance_types #=> Array
+    #   resp.capacity_provider.instance_requirements.allowed_instance_types[0] #=> String
+    #   resp.capacity_provider.instance_requirements.excluded_instance_types #=> Array
+    #   resp.capacity_provider.instance_requirements.excluded_instance_types[0] #=> String
+    #   resp.capacity_provider.capacity_provider_scaling_config.max_v_cpu_count #=> Integer
+    #   resp.capacity_provider.capacity_provider_scaling_config.scaling_mode #=> String, one of "Auto", "Manual"
+    #   resp.capacity_provider.capacity_provider_scaling_config.scaling_policies #=> Array
+    #   resp.capacity_provider.capacity_provider_scaling_config.scaling_policies[0].predefined_metric_type #=> String, one of "LambdaCapacityProviderAverageCPUUtilization"
+    #   resp.capacity_provider.capacity_provider_scaling_config.scaling_policies[0].target_value #=> Float
+    #   resp.capacity_provider.kms_key_arn #=> String
+    #   resp.capacity_provider.last_modified #=> Time
+    #   resp.capacity_provider.propagate_tags.mode #=> String, one of "None", "Explicit"
+    #   resp.capacity_provider.propagate_tags.explicit_tags #=> Hash
+    #   resp.capacity_provider.propagate_tags.explicit_tags["TagKey"] #=> String
+    #   resp.capacity_provider.telemetry_config.logging_config.system_log_level #=> String, one of "DEBUG", "INFO", "WARN"
+    #   resp.capacity_provider.telemetry_config.logging_config.log_group #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/GetCapacityProvider AWS API Documentation
+    #
+    # @overload get_capacity_provider(params = {})
+    # @param [Hash] params ({})
+    def get_capacity_provider(params = {}, options = {})
+      req = build_request(:get_capacity_provider, params)
+      req.send_request(options)
+    end
+
     # Returns information about the specified code signing configuration.
     #
     # @option params [required, String] :code_signing_config_arn
@@ -2699,6 +3218,358 @@ module Aws::Lambda
       req.send_request(options)
     end
 
+    # Retrieves detailed information about a specific [durable
+    # execution][1], including its current status, input payload, result or
+    # error information, and execution metadata such as start time and usage
+    # statistics.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/lambda/latest/dg/durable-functions.html
+    #
+    # @option params [required, String] :durable_execution_arn
+    #   The Amazon Resource Name (ARN) of the durable execution.
+    #
+    # @option params [Boolean] :include_execution_data
+    #   Specifies whether to include execution data such as input payload,
+    #   result, and error information in the response. Set to `false` for a
+    #   more compact response that includes only execution metadata. The
+    #   default value is set to `true`.
+    #
+    # @return [Types::GetDurableExecutionResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetDurableExecutionResponse#durable_execution_arn #durable_execution_arn} => String
+    #   * {Types::GetDurableExecutionResponse#durable_execution_name #durable_execution_name} => String
+    #   * {Types::GetDurableExecutionResponse#function_arn #function_arn} => String
+    #   * {Types::GetDurableExecutionResponse#input_payload #input_payload} => String
+    #   * {Types::GetDurableExecutionResponse#result #result} => String
+    #   * {Types::GetDurableExecutionResponse#error #error} => Types::ErrorObject
+    #   * {Types::GetDurableExecutionResponse#start_timestamp #start_timestamp} => Time
+    #   * {Types::GetDurableExecutionResponse#status #status} => String
+    #   * {Types::GetDurableExecutionResponse#end_timestamp #end_timestamp} => Time
+    #   * {Types::GetDurableExecutionResponse#version #version} => String
+    #   * {Types::GetDurableExecutionResponse#trace_header #trace_header} => Types::TraceHeader
+    #   * {Types::GetDurableExecutionResponse#execution_data_included #execution_data_included} => Boolean
+    #   * {Types::GetDurableExecutionResponse#durable_config #durable_config} => Types::DurableConfig
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_durable_execution({
+    #     durable_execution_arn: "DurableExecutionArn", # required
+    #     include_execution_data: false,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.durable_execution_arn #=> String
+    #   resp.durable_execution_name #=> String
+    #   resp.function_arn #=> String
+    #   resp.input_payload #=> String
+    #   resp.result #=> String
+    #   resp.error.error_message #=> String
+    #   resp.error.error_type #=> String
+    #   resp.error.error_data #=> String
+    #   resp.error.stack_trace #=> Array
+    #   resp.error.stack_trace[0] #=> String
+    #   resp.start_timestamp #=> Time
+    #   resp.status #=> String, one of "RUNNING", "SUCCEEDED", "FAILED", "TIMED_OUT", "STOPPED"
+    #   resp.end_timestamp #=> Time
+    #   resp.version #=> String
+    #   resp.trace_header.x_amzn_trace_id #=> String
+    #   resp.execution_data_included #=> Boolean
+    #   resp.durable_config.kms_key_arn #=> String
+    #   resp.durable_config.retention_period_in_days #=> Integer
+    #   resp.durable_config.execution_timeout #=> Integer
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/GetDurableExecution AWS API Documentation
+    #
+    # @overload get_durable_execution(params = {})
+    # @param [Hash] params ({})
+    def get_durable_execution(params = {}, options = {})
+      req = build_request(:get_durable_execution, params)
+      req.send_request(options)
+    end
+
+    # Retrieves the execution history for a [durable execution][1], showing
+    # all the steps, callbacks, and events that occurred during the
+    # execution. This provides a detailed audit trail of the execution's
+    # progress over time.
+    #
+    # The history is available while the execution is running and for a
+    # retention period after it completes (1-90 days, default 30 days). You
+    # can control whether to include execution data such as step results and
+    # callback payloads.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/lambda/latest/dg/durable-functions.html
+    #
+    # @option params [required, String] :durable_execution_arn
+    #   The Amazon Resource Name (ARN) of the durable execution.
+    #
+    # @option params [Boolean] :include_execution_data
+    #   Specifies whether to include execution data such as step results and
+    #   callback payloads in the history events. Set to `true` to include
+    #   data, or `false` to exclude it for a more compact response. The
+    #   default is `true`.
+    #
+    # @option params [Integer] :max_items
+    #   The maximum number of history events to return per call. You can use
+    #   `Marker` to retrieve additional pages of results. The default is 100
+    #   and the maximum allowed is 1000. A value of 0 uses the default.
+    #
+    # @option params [String] :marker
+    #   If `NextMarker` was returned from a previous request, use this value
+    #   to retrieve the next page of results. Each pagination token expires
+    #   after 24 hours.
+    #
+    # @option params [Boolean] :reverse_order
+    #   When set to `true`, returns the history events in reverse
+    #   chronological order (newest first). By default, events are returned in
+    #   chronological order (oldest first).
+    #
+    # @return [Types::GetDurableExecutionHistoryResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetDurableExecutionHistoryResponse#events #events} => Array&lt;Types::Event&gt;
+    #   * {Types::GetDurableExecutionHistoryResponse#next_marker #next_marker} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_durable_execution_history({
+    #     durable_execution_arn: "DurableExecutionArn", # required
+    #     include_execution_data: false,
+    #     max_items: 1,
+    #     marker: "String",
+    #     reverse_order: false,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.events #=> Array
+    #   resp.events[0].event_type #=> String, one of "ExecutionStarted", "ExecutionSucceeded", "ExecutionFailed", "ExecutionTimedOut", "ExecutionStopped", "ContextStarted", "ContextSucceeded", "ContextFailed", "WaitStarted", "WaitSucceeded", "WaitCancelled", "StepStarted", "StepSucceeded", "StepFailed", "ChainedInvokeStarted", "ChainedInvokeSucceeded", "ChainedInvokeFailed", "ChainedInvokeTimedOut", "ChainedInvokeStopped", "CallbackStarted", "CallbackSucceeded", "CallbackFailed", "CallbackTimedOut", "InvocationCompleted"
+    #   resp.events[0].sub_type #=> String
+    #   resp.events[0].event_id #=> Integer
+    #   resp.events[0].id #=> String
+    #   resp.events[0].name #=> String
+    #   resp.events[0].event_timestamp #=> Time
+    #   resp.events[0].parent_id #=> String
+    #   resp.events[0].execution_started_details.input.payload #=> String
+    #   resp.events[0].execution_started_details.input.truncated #=> Boolean
+    #   resp.events[0].execution_started_details.execution_timeout #=> Integer
+    #   resp.events[0].execution_succeeded_details.result.payload #=> String
+    #   resp.events[0].execution_succeeded_details.result.truncated #=> Boolean
+    #   resp.events[0].execution_failed_details.error.payload.error_message #=> String
+    #   resp.events[0].execution_failed_details.error.payload.error_type #=> String
+    #   resp.events[0].execution_failed_details.error.payload.error_data #=> String
+    #   resp.events[0].execution_failed_details.error.payload.stack_trace #=> Array
+    #   resp.events[0].execution_failed_details.error.payload.stack_trace[0] #=> String
+    #   resp.events[0].execution_failed_details.error.truncated #=> Boolean
+    #   resp.events[0].execution_timed_out_details.error.payload.error_message #=> String
+    #   resp.events[0].execution_timed_out_details.error.payload.error_type #=> String
+    #   resp.events[0].execution_timed_out_details.error.payload.error_data #=> String
+    #   resp.events[0].execution_timed_out_details.error.payload.stack_trace #=> Array
+    #   resp.events[0].execution_timed_out_details.error.payload.stack_trace[0] #=> String
+    #   resp.events[0].execution_timed_out_details.error.truncated #=> Boolean
+    #   resp.events[0].execution_stopped_details.error.payload.error_message #=> String
+    #   resp.events[0].execution_stopped_details.error.payload.error_type #=> String
+    #   resp.events[0].execution_stopped_details.error.payload.error_data #=> String
+    #   resp.events[0].execution_stopped_details.error.payload.stack_trace #=> Array
+    #   resp.events[0].execution_stopped_details.error.payload.stack_trace[0] #=> String
+    #   resp.events[0].execution_stopped_details.error.truncated #=> Boolean
+    #   resp.events[0].context_succeeded_details.result.payload #=> String
+    #   resp.events[0].context_succeeded_details.result.truncated #=> Boolean
+    #   resp.events[0].context_failed_details.error.payload.error_message #=> String
+    #   resp.events[0].context_failed_details.error.payload.error_type #=> String
+    #   resp.events[0].context_failed_details.error.payload.error_data #=> String
+    #   resp.events[0].context_failed_details.error.payload.stack_trace #=> Array
+    #   resp.events[0].context_failed_details.error.payload.stack_trace[0] #=> String
+    #   resp.events[0].context_failed_details.error.truncated #=> Boolean
+    #   resp.events[0].wait_started_details.duration #=> Integer
+    #   resp.events[0].wait_started_details.scheduled_end_timestamp #=> Time
+    #   resp.events[0].wait_succeeded_details.duration #=> Integer
+    #   resp.events[0].wait_cancelled_details.error.payload.error_message #=> String
+    #   resp.events[0].wait_cancelled_details.error.payload.error_type #=> String
+    #   resp.events[0].wait_cancelled_details.error.payload.error_data #=> String
+    #   resp.events[0].wait_cancelled_details.error.payload.stack_trace #=> Array
+    #   resp.events[0].wait_cancelled_details.error.payload.stack_trace[0] #=> String
+    #   resp.events[0].wait_cancelled_details.error.truncated #=> Boolean
+    #   resp.events[0].step_succeeded_details.result.payload #=> String
+    #   resp.events[0].step_succeeded_details.result.truncated #=> Boolean
+    #   resp.events[0].step_succeeded_details.retry_details.current_attempt #=> Integer
+    #   resp.events[0].step_succeeded_details.retry_details.next_attempt_delay_seconds #=> Integer
+    #   resp.events[0].step_failed_details.error.payload.error_message #=> String
+    #   resp.events[0].step_failed_details.error.payload.error_type #=> String
+    #   resp.events[0].step_failed_details.error.payload.error_data #=> String
+    #   resp.events[0].step_failed_details.error.payload.stack_trace #=> Array
+    #   resp.events[0].step_failed_details.error.payload.stack_trace[0] #=> String
+    #   resp.events[0].step_failed_details.error.truncated #=> Boolean
+    #   resp.events[0].step_failed_details.retry_details.current_attempt #=> Integer
+    #   resp.events[0].step_failed_details.retry_details.next_attempt_delay_seconds #=> Integer
+    #   resp.events[0].chained_invoke_started_details.function_name #=> String
+    #   resp.events[0].chained_invoke_started_details.tenant_id #=> String
+    #   resp.events[0].chained_invoke_started_details.input.payload #=> String
+    #   resp.events[0].chained_invoke_started_details.input.truncated #=> Boolean
+    #   resp.events[0].chained_invoke_started_details.executed_version #=> String
+    #   resp.events[0].chained_invoke_started_details.durable_execution_arn #=> String
+    #   resp.events[0].chained_invoke_succeeded_details.result.payload #=> String
+    #   resp.events[0].chained_invoke_succeeded_details.result.truncated #=> Boolean
+    #   resp.events[0].chained_invoke_failed_details.error.payload.error_message #=> String
+    #   resp.events[0].chained_invoke_failed_details.error.payload.error_type #=> String
+    #   resp.events[0].chained_invoke_failed_details.error.payload.error_data #=> String
+    #   resp.events[0].chained_invoke_failed_details.error.payload.stack_trace #=> Array
+    #   resp.events[0].chained_invoke_failed_details.error.payload.stack_trace[0] #=> String
+    #   resp.events[0].chained_invoke_failed_details.error.truncated #=> Boolean
+    #   resp.events[0].chained_invoke_timed_out_details.error.payload.error_message #=> String
+    #   resp.events[0].chained_invoke_timed_out_details.error.payload.error_type #=> String
+    #   resp.events[0].chained_invoke_timed_out_details.error.payload.error_data #=> String
+    #   resp.events[0].chained_invoke_timed_out_details.error.payload.stack_trace #=> Array
+    #   resp.events[0].chained_invoke_timed_out_details.error.payload.stack_trace[0] #=> String
+    #   resp.events[0].chained_invoke_timed_out_details.error.truncated #=> Boolean
+    #   resp.events[0].chained_invoke_stopped_details.error.payload.error_message #=> String
+    #   resp.events[0].chained_invoke_stopped_details.error.payload.error_type #=> String
+    #   resp.events[0].chained_invoke_stopped_details.error.payload.error_data #=> String
+    #   resp.events[0].chained_invoke_stopped_details.error.payload.stack_trace #=> Array
+    #   resp.events[0].chained_invoke_stopped_details.error.payload.stack_trace[0] #=> String
+    #   resp.events[0].chained_invoke_stopped_details.error.truncated #=> Boolean
+    #   resp.events[0].callback_started_details.callback_id #=> String
+    #   resp.events[0].callback_started_details.heartbeat_timeout #=> Integer
+    #   resp.events[0].callback_started_details.timeout #=> Integer
+    #   resp.events[0].callback_succeeded_details.result.payload #=> String
+    #   resp.events[0].callback_succeeded_details.result.truncated #=> Boolean
+    #   resp.events[0].callback_failed_details.error.payload.error_message #=> String
+    #   resp.events[0].callback_failed_details.error.payload.error_type #=> String
+    #   resp.events[0].callback_failed_details.error.payload.error_data #=> String
+    #   resp.events[0].callback_failed_details.error.payload.stack_trace #=> Array
+    #   resp.events[0].callback_failed_details.error.payload.stack_trace[0] #=> String
+    #   resp.events[0].callback_failed_details.error.truncated #=> Boolean
+    #   resp.events[0].callback_timed_out_details.error.payload.error_message #=> String
+    #   resp.events[0].callback_timed_out_details.error.payload.error_type #=> String
+    #   resp.events[0].callback_timed_out_details.error.payload.error_data #=> String
+    #   resp.events[0].callback_timed_out_details.error.payload.stack_trace #=> Array
+    #   resp.events[0].callback_timed_out_details.error.payload.stack_trace[0] #=> String
+    #   resp.events[0].callback_timed_out_details.error.truncated #=> Boolean
+    #   resp.events[0].invocation_completed_details.start_timestamp #=> Time
+    #   resp.events[0].invocation_completed_details.end_timestamp #=> Time
+    #   resp.events[0].invocation_completed_details.request_id #=> String
+    #   resp.events[0].invocation_completed_details.error.payload.error_message #=> String
+    #   resp.events[0].invocation_completed_details.error.payload.error_type #=> String
+    #   resp.events[0].invocation_completed_details.error.payload.error_data #=> String
+    #   resp.events[0].invocation_completed_details.error.payload.stack_trace #=> Array
+    #   resp.events[0].invocation_completed_details.error.payload.stack_trace[0] #=> String
+    #   resp.events[0].invocation_completed_details.error.truncated #=> Boolean
+    #   resp.next_marker #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/GetDurableExecutionHistory AWS API Documentation
+    #
+    # @overload get_durable_execution_history(params = {})
+    # @param [Hash] params ({})
+    def get_durable_execution_history(params = {}, options = {})
+      req = build_request(:get_durable_execution_history, params)
+      req.send_request(options)
+    end
+
+    # Retrieves the current execution state required for the replay process
+    # during [durable function][1] execution. This API is used by the Lambda
+    # durable functions SDK to get state information needed for replay. You
+    # typically don't need to call this API directly as the SDK handles
+    # state management automatically.
+    #
+    # The response contains operations ordered by start sequence number in
+    # ascending order. Completed operations with children don't include
+    # child operation details since they don't need to be replayed.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/lambda/latest/dg/durable-functions.html
+    #
+    # @option params [required, String] :durable_execution_arn
+    #   The Amazon Resource Name (ARN) of the durable execution.
+    #
+    # @option params [required, String] :checkpoint_token
+    #   A checkpoint token that identifies the current state of the execution.
+    #   This token is provided by the Lambda runtime and ensures that state
+    #   retrieval is consistent with the current execution context.
+    #
+    # @option params [String] :marker
+    #   If `NextMarker` was returned from a previous request, use this value
+    #   to retrieve the next page of operations. Each pagination token expires
+    #   after 24 hours.
+    #
+    # @option params [Integer] :max_items
+    #   The maximum number of operations to return per call. You can use
+    #   `Marker` to retrieve additional pages of results. The default is 100
+    #   and the maximum allowed is 1000. A value of 0 uses the default.
+    #
+    # @return [Types::GetDurableExecutionStateResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetDurableExecutionStateResponse#operations #operations} => Array&lt;Types::Operation&gt;
+    #   * {Types::GetDurableExecutionStateResponse#next_marker #next_marker} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_durable_execution_state({
+    #     durable_execution_arn: "DurableExecutionArn", # required
+    #     checkpoint_token: "CheckpointToken", # required
+    #     marker: "String",
+    #     max_items: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.operations #=> Array
+    #   resp.operations[0].id #=> String
+    #   resp.operations[0].parent_id #=> String
+    #   resp.operations[0].name #=> String
+    #   resp.operations[0].type #=> String, one of "EXECUTION", "CONTEXT", "STEP", "WAIT", "CALLBACK", "CHAINED_INVOKE"
+    #   resp.operations[0].sub_type #=> String
+    #   resp.operations[0].start_timestamp #=> Time
+    #   resp.operations[0].end_timestamp #=> Time
+    #   resp.operations[0].status #=> String, one of "STARTED", "PENDING", "READY", "SUCCEEDED", "FAILED", "CANCELLED", "TIMED_OUT", "STOPPED"
+    #   resp.operations[0].execution_details.input_payload #=> String
+    #   resp.operations[0].context_details.replay_children #=> Boolean
+    #   resp.operations[0].context_details.result #=> String
+    #   resp.operations[0].context_details.error.error_message #=> String
+    #   resp.operations[0].context_details.error.error_type #=> String
+    #   resp.operations[0].context_details.error.error_data #=> String
+    #   resp.operations[0].context_details.error.stack_trace #=> Array
+    #   resp.operations[0].context_details.error.stack_trace[0] #=> String
+    #   resp.operations[0].step_details.attempt #=> Integer
+    #   resp.operations[0].step_details.next_attempt_timestamp #=> Time
+    #   resp.operations[0].step_details.result #=> String
+    #   resp.operations[0].step_details.error.error_message #=> String
+    #   resp.operations[0].step_details.error.error_type #=> String
+    #   resp.operations[0].step_details.error.error_data #=> String
+    #   resp.operations[0].step_details.error.stack_trace #=> Array
+    #   resp.operations[0].step_details.error.stack_trace[0] #=> String
+    #   resp.operations[0].wait_details.scheduled_end_timestamp #=> Time
+    #   resp.operations[0].callback_details.callback_id #=> String
+    #   resp.operations[0].callback_details.result #=> String
+    #   resp.operations[0].callback_details.error.error_message #=> String
+    #   resp.operations[0].callback_details.error.error_type #=> String
+    #   resp.operations[0].callback_details.error.error_data #=> String
+    #   resp.operations[0].callback_details.error.stack_trace #=> Array
+    #   resp.operations[0].callback_details.error.stack_trace[0] #=> String
+    #   resp.operations[0].chained_invoke_details.result #=> String
+    #   resp.operations[0].chained_invoke_details.error.error_message #=> String
+    #   resp.operations[0].chained_invoke_details.error.error_type #=> String
+    #   resp.operations[0].chained_invoke_details.error.error_data #=> String
+    #   resp.operations[0].chained_invoke_details.error.stack_trace #=> Array
+    #   resp.operations[0].chained_invoke_details.error.stack_trace[0] #=> String
+    #   resp.next_marker #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/GetDurableExecutionState AWS API Documentation
+    #
+    # @overload get_durable_execution_state(params = {})
+    # @param [Hash] params ({})
+    def get_durable_execution_state(params = {}, options = {})
+      req = build_request(:get_durable_execution_state, params)
+      req.send_request(options)
+    end
+
     # Returns details about an event source mapping. You can get the
     # identifier of a mapping from the output of ListEventSourceMappings.
     #
@@ -2715,6 +3586,11 @@ module Aws::Lambda
     #   * {Types::EventSourceMappingConfiguration#parallelization_factor #parallelization_factor} => Integer
     #   * {Types::EventSourceMappingConfiguration#event_source_arn #event_source_arn} => String
     #   * {Types::EventSourceMappingConfiguration#filter_criteria #filter_criteria} => Types::FilterCriteria
+    #   * {Types::EventSourceMappingConfiguration#filter_criteria_error #filter_criteria_error} => Types::FilterCriteriaError
+    #   * {Types::EventSourceMappingConfiguration#kms_key_arn #kms_key_arn} => String
+    #   * {Types::EventSourceMappingConfiguration#metrics_config #metrics_config} => Types::EventSourceMappingMetricsConfig
+    #   * {Types::EventSourceMappingConfiguration#logging_config #logging_config} => Types::EventSourceMappingLoggingConfig
+    #   * {Types::EventSourceMappingConfiguration#scaling_config #scaling_config} => Types::ScalingConfig
     #   * {Types::EventSourceMappingConfiguration#function_arn #function_arn} => String
     #   * {Types::EventSourceMappingConfiguration#last_modified #last_modified} => Time
     #   * {Types::EventSourceMappingConfiguration#last_processing_result #last_processing_result} => String
@@ -2732,12 +3608,8 @@ module Aws::Lambda
     #   * {Types::EventSourceMappingConfiguration#function_response_types #function_response_types} => Array&lt;String&gt;
     #   * {Types::EventSourceMappingConfiguration#amazon_managed_kafka_event_source_config #amazon_managed_kafka_event_source_config} => Types::AmazonManagedKafkaEventSourceConfig
     #   * {Types::EventSourceMappingConfiguration#self_managed_kafka_event_source_config #self_managed_kafka_event_source_config} => Types::SelfManagedKafkaEventSourceConfig
-    #   * {Types::EventSourceMappingConfiguration#scaling_config #scaling_config} => Types::ScalingConfig
     #   * {Types::EventSourceMappingConfiguration#document_db_event_source_config #document_db_event_source_config} => Types::DocumentDBEventSourceConfig
-    #   * {Types::EventSourceMappingConfiguration#kms_key_arn #kms_key_arn} => String
-    #   * {Types::EventSourceMappingConfiguration#filter_criteria_error #filter_criteria_error} => Types::FilterCriteriaError
     #   * {Types::EventSourceMappingConfiguration#event_source_mapping_arn #event_source_mapping_arn} => String
-    #   * {Types::EventSourceMappingConfiguration#metrics_config #metrics_config} => Types::EventSourceMappingMetricsConfig
     #   * {Types::EventSourceMappingConfiguration#provisioned_poller_config #provisioned_poller_config} => Types::ProvisionedPollerConfig
     #
     #
@@ -2758,7 +3630,7 @@ module Aws::Lambda
     #     }, 
     #     event_source_arn: "arn:aws:sqs:us-east-2:123456789012:mySQSqueue", 
     #     function_arn: "arn:aws:lambda:us-east-2:123456789012:function:myFunction", 
-    #     last_modified: Time.parse("${timestamp}"), 
+    #     last_modified: Time.parse("2016-11-21T19:49:20.006Z"), 
     #     last_processing_result: "No records processed", 
     #     maximum_record_age_in_seconds: 604800, 
     #     maximum_retry_attempts: 10000, 
@@ -2770,7 +3642,7 @@ module Aws::Lambda
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_event_source_mapping({
-    #     uuid: "String", # required
+    #     uuid: "UUIDString", # required
     #   })
     #
     # @example Response structure
@@ -2784,6 +3656,13 @@ module Aws::Lambda
     #   resp.event_source_arn #=> String
     #   resp.filter_criteria.filters #=> Array
     #   resp.filter_criteria.filters[0].pattern #=> String
+    #   resp.filter_criteria_error.error_code #=> String
+    #   resp.filter_criteria_error.message #=> String
+    #   resp.kms_key_arn #=> String
+    #   resp.metrics_config.metrics #=> Array
+    #   resp.metrics_config.metrics[0] #=> String, one of "EventCount", "ErrorCount", "KafkaMetrics"
+    #   resp.logging_config.system_log_level #=> String, one of "DEBUG", "INFO", "WARN"
+    #   resp.scaling_config.maximum_concurrency #=> Integer
     #   resp.function_arn #=> String
     #   resp.last_modified #=> Time
     #   resp.last_processing_result #=> String
@@ -2808,19 +3687,28 @@ module Aws::Lambda
     #   resp.function_response_types #=> Array
     #   resp.function_response_types[0] #=> String, one of "ReportBatchItemFailures"
     #   resp.amazon_managed_kafka_event_source_config.consumer_group_id #=> String
+    #   resp.amazon_managed_kafka_event_source_config.schema_registry_config.schema_registry_uri #=> String
+    #   resp.amazon_managed_kafka_event_source_config.schema_registry_config.event_record_format #=> String, one of "JSON", "SOURCE"
+    #   resp.amazon_managed_kafka_event_source_config.schema_registry_config.access_configs #=> Array
+    #   resp.amazon_managed_kafka_event_source_config.schema_registry_config.access_configs[0].type #=> String, one of "BASIC_AUTH", "CLIENT_CERTIFICATE_TLS_AUTH", "SERVER_ROOT_CA_CERTIFICATE"
+    #   resp.amazon_managed_kafka_event_source_config.schema_registry_config.access_configs[0].uri #=> String
+    #   resp.amazon_managed_kafka_event_source_config.schema_registry_config.schema_validation_configs #=> Array
+    #   resp.amazon_managed_kafka_event_source_config.schema_registry_config.schema_validation_configs[0].attribute #=> String, one of "KEY", "VALUE"
     #   resp.self_managed_kafka_event_source_config.consumer_group_id #=> String
-    #   resp.scaling_config.maximum_concurrency #=> Integer
+    #   resp.self_managed_kafka_event_source_config.schema_registry_config.schema_registry_uri #=> String
+    #   resp.self_managed_kafka_event_source_config.schema_registry_config.event_record_format #=> String, one of "JSON", "SOURCE"
+    #   resp.self_managed_kafka_event_source_config.schema_registry_config.access_configs #=> Array
+    #   resp.self_managed_kafka_event_source_config.schema_registry_config.access_configs[0].type #=> String, one of "BASIC_AUTH", "CLIENT_CERTIFICATE_TLS_AUTH", "SERVER_ROOT_CA_CERTIFICATE"
+    #   resp.self_managed_kafka_event_source_config.schema_registry_config.access_configs[0].uri #=> String
+    #   resp.self_managed_kafka_event_source_config.schema_registry_config.schema_validation_configs #=> Array
+    #   resp.self_managed_kafka_event_source_config.schema_registry_config.schema_validation_configs[0].attribute #=> String, one of "KEY", "VALUE"
     #   resp.document_db_event_source_config.database_name #=> String
     #   resp.document_db_event_source_config.collection_name #=> String
     #   resp.document_db_event_source_config.full_document #=> String, one of "UpdateLookup", "Default"
-    #   resp.kms_key_arn #=> String
-    #   resp.filter_criteria_error.error_code #=> String
-    #   resp.filter_criteria_error.message #=> String
     #   resp.event_source_mapping_arn #=> String
-    #   resp.metrics_config.metrics #=> Array
-    #   resp.metrics_config.metrics[0] #=> String, one of "EventCount"
     #   resp.provisioned_poller_config.minimum_pollers #=> Integer
     #   resp.provisioned_poller_config.maximum_pollers #=> Integer
+    #   resp.provisioned_poller_config.poller_group_name #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/GetEventSourceMapping AWS API Documentation
     #
@@ -2885,6 +3773,10 @@ module Aws::Lambda
     #       code_sha_256: "YFgDgEKG3ugvF1+pX64gV6tu9qNuIYNUdgJm8nCxsm4=", 
     #       code_size: 5797206, 
     #       description: "Process image objects from Amazon S3.", 
+    #       durable_config: {
+    #         execution_timeout: 31622400, 
+    #         retention_period_in_days: 30, 
+    #       }, 
     #       environment: {
     #         variables: {
     #           "BUCKET" => "my-bucket-1xpuxmplzrlbh", 
@@ -2917,14 +3809,14 @@ module Aws::Lambda
     #
     #   resp = client.get_function({
     #     function_name: "NamespacedFunctionName", # required
-    #     qualifier: "Qualifier",
+    #     qualifier: "NumericLatestPublishedOrAliasQualifier",
     #   })
     #
     # @example Response structure
     #
     #   resp.configuration.function_name #=> String
     #   resp.configuration.function_arn #=> String
-    #   resp.configuration.runtime #=> String, one of "nodejs", "nodejs4.3", "nodejs6.10", "nodejs8.10", "nodejs10.x", "nodejs12.x", "nodejs14.x", "nodejs16.x", "java8", "java8.al2", "java11", "python2.7", "python3.6", "python3.7", "python3.8", "python3.9", "dotnetcore1.0", "dotnetcore2.0", "dotnetcore2.1", "dotnetcore3.1", "dotnet6", "dotnet8", "nodejs4.3-edge", "go1.x", "ruby2.5", "ruby2.7", "provided", "provided.al2", "nodejs18.x", "python3.10", "java17", "ruby3.2", "ruby3.3", "ruby3.4", "python3.11", "nodejs20.x", "provided.al2023", "python3.12", "java21", "python3.13", "nodejs22.x"
+    #   resp.configuration.runtime #=> String, one of "nodejs", "nodejs4.3", "nodejs6.10", "nodejs8.10", "nodejs10.x", "nodejs12.x", "nodejs14.x", "nodejs16.x", "nodejs18.x", "nodejs20.x", "nodejs22.x", "nodejs24.x", "java8", "java8.al2", "java11", "java17", "java21", "java25", "python2.7", "python3.6", "python3.7", "python3.8", "python3.9", "python3.10", "python3.11", "python3.12", "python3.13", "python3.14", "dotnetcore1.0", "dotnetcore2.0", "dotnetcore2.1", "dotnetcore3.1", "dotnet6", "dotnet8", "dotnet10", "nodejs4.3-edge", "go1.x", "ruby2.5", "ruby2.7", "ruby3.2", "ruby3.3", "ruby3.4", "ruby4.0", "provided", "provided.al2", "provided.al2023", "nodejs26.x", "python3.15", "java8.al2023", "java11.al2023", "java17.al2023"
     #   resp.configuration.role #=> String
     #   resp.configuration.handler #=> String
     #   resp.configuration.code_size #=> Integer
@@ -2954,15 +3846,17 @@ module Aws::Lambda
     #   resp.configuration.layers[0].code_size #=> Integer
     #   resp.configuration.layers[0].signing_profile_version_arn #=> String
     #   resp.configuration.layers[0].signing_job_arn #=> String
-    #   resp.configuration.state #=> String, one of "Pending", "Active", "Inactive", "Failed"
+    #   resp.configuration.state #=> String, one of "Pending", "Active", "Inactive", "Failed", "Deactivating", "Deactivated", "ActiveNonInvocable", "Deleting"
     #   resp.configuration.state_reason #=> String
-    #   resp.configuration.state_reason_code #=> String, one of "Idle", "Creating", "Restoring", "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError"
+    #   resp.configuration.state_reason_code #=> String, one of "Idle", "Creating", "Restoring", "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError", "ServiceQuotaExceededException", "VcpuLimitExceeded", "CapacityProviderScalingLimitExceeded", "InsufficientCapacity", "EC2RequestLimitExceeded", "FunctionError.InitTimeout", "FunctionError.RuntimeInitError", "FunctionError.ExtensionInitError", "FunctionError.InvalidEntryPoint", "FunctionError.InvalidWorkingDirectory", "FunctionError.PermissionDenied", "FunctionError.TooManyExtensions", "FunctionError.InitResourceExhausted", "DisallowedByVpcEncryptionControl", "DrainingDurableExecutions", "DependencyError"
     #   resp.configuration.last_update_status #=> String, one of "Successful", "Failed", "InProgress"
     #   resp.configuration.last_update_status_reason #=> String
-    #   resp.configuration.last_update_status_reason_code #=> String, one of "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError"
+    #   resp.configuration.last_update_status_reason_code #=> String, one of "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError", "ServiceQuotaExceededException", "VcpuLimitExceeded", "CapacityProviderScalingLimitExceeded", "InsufficientCapacity", "EC2RequestLimitExceeded", "FunctionError.InitTimeout", "FunctionError.RuntimeInitError", "FunctionError.ExtensionInitError", "FunctionError.InvalidEntryPoint", "FunctionError.InvalidWorkingDirectory", "FunctionError.PermissionDenied", "FunctionError.TooManyExtensions", "FunctionError.InitResourceExhausted", "DisallowedByVpcEncryptionControl", "DependencyError"
     #   resp.configuration.file_system_configs #=> Array
     #   resp.configuration.file_system_configs[0].arn #=> String
     #   resp.configuration.file_system_configs[0].local_mount_path #=> String
+    #   resp.configuration.signing_profile_version_arn #=> String
+    #   resp.configuration.signing_job_arn #=> String
     #   resp.configuration.package_type #=> String, one of "Zip", "Image"
     #   resp.configuration.image_config_response.image_config.entry_point #=> Array
     #   resp.configuration.image_config_response.image_config.entry_point[0] #=> String
@@ -2971,8 +3865,6 @@ module Aws::Lambda
     #   resp.configuration.image_config_response.image_config.working_directory #=> String
     #   resp.configuration.image_config_response.error.error_code #=> String
     #   resp.configuration.image_config_response.error.message #=> String
-    #   resp.configuration.signing_profile_version_arn #=> String
-    #   resp.configuration.signing_job_arn #=> String
     #   resp.configuration.architectures #=> Array
     #   resp.configuration.architectures[0] #=> String, one of "x86_64", "arm64"
     #   resp.configuration.ephemeral_storage.size #=> Integer
@@ -2985,11 +3877,24 @@ module Aws::Lambda
     #   resp.configuration.logging_config.application_log_level #=> String, one of "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"
     #   resp.configuration.logging_config.system_log_level #=> String, one of "DEBUG", "INFO", "WARN"
     #   resp.configuration.logging_config.log_group #=> String
+    #   resp.configuration.tenancy_config.tenant_isolation_mode #=> String, one of "PER_TENANT"
+    #   resp.configuration.capacity_provider_config.lambda_managed_instances_capacity_provider_config.capacity_provider_arn #=> String
+    #   resp.configuration.capacity_provider_config.lambda_managed_instances_capacity_provider_config.per_execution_environment_max_concurrency #=> Integer
+    #   resp.configuration.capacity_provider_config.lambda_managed_instances_capacity_provider_config.execution_environment_memory_gi_b_per_v_cpu #=> Float
+    #   resp.configuration.config_sha_256 #=> String
+    #   resp.configuration.durable_config.kms_key_arn #=> String
+    #   resp.configuration.durable_config.retention_period_in_days #=> Integer
+    #   resp.configuration.durable_config.execution_timeout #=> Integer
     #   resp.code.repository_type #=> String
     #   resp.code.location #=> String
     #   resp.code.image_uri #=> String
     #   resp.code.resolved_image_uri #=> String
+    #   resp.code.resolved_s3_object.s3_bucket #=> String
+    #   resp.code.resolved_s3_object.s3_key #=> String
+    #   resp.code.resolved_s3_object.s3_object_version #=> String
     #   resp.code.source_kms_key_arn #=> String
+    #   resp.code.error.error_code #=> String
+    #   resp.code.error.message #=> String
     #   resp.tags #=> Hash
     #   resp.tags["TagKey"] #=> String
     #   resp.tags_error.error_code #=> String
@@ -3037,7 +3942,7 @@ module Aws::Lambda
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_function_code_signing_config({
-    #     function_name: "FunctionName", # required
+    #     function_name: "NamespacedFunctionName", # required
     #   })
     #
     # @example Response structure
@@ -3167,15 +4072,19 @@ module Aws::Lambda
     #   * {Types::FunctionConfiguration#last_update_status_reason #last_update_status_reason} => String
     #   * {Types::FunctionConfiguration#last_update_status_reason_code #last_update_status_reason_code} => String
     #   * {Types::FunctionConfiguration#file_system_configs #file_system_configs} => Array&lt;Types::FileSystemConfig&gt;
-    #   * {Types::FunctionConfiguration#package_type #package_type} => String
-    #   * {Types::FunctionConfiguration#image_config_response #image_config_response} => Types::ImageConfigResponse
     #   * {Types::FunctionConfiguration#signing_profile_version_arn #signing_profile_version_arn} => String
     #   * {Types::FunctionConfiguration#signing_job_arn #signing_job_arn} => String
+    #   * {Types::FunctionConfiguration#package_type #package_type} => String
+    #   * {Types::FunctionConfiguration#image_config_response #image_config_response} => Types::ImageConfigResponse
     #   * {Types::FunctionConfiguration#architectures #architectures} => Array&lt;String&gt;
     #   * {Types::FunctionConfiguration#ephemeral_storage #ephemeral_storage} => Types::EphemeralStorage
     #   * {Types::FunctionConfiguration#snap_start #snap_start} => Types::SnapStartResponse
     #   * {Types::FunctionConfiguration#runtime_version_config #runtime_version_config} => Types::RuntimeVersionConfig
     #   * {Types::FunctionConfiguration#logging_config #logging_config} => Types::LoggingConfig
+    #   * {Types::FunctionConfiguration#tenancy_config #tenancy_config} => Types::TenancyConfig
+    #   * {Types::FunctionConfiguration#capacity_provider_config #capacity_provider_config} => Types::CapacityProviderConfig
+    #   * {Types::FunctionConfiguration#config_sha_256 #config_sha_256} => String
+    #   * {Types::FunctionConfiguration#durable_config #durable_config} => Types::DurableConfig
     #
     #
     # @example Example: To get a Lambda function's event source mapping
@@ -3192,6 +4101,10 @@ module Aws::Lambda
     #     code_sha_256: "YFgDgEKG3ugvF1+pX64gV6tu9qNuIYNUdgJm8nCxsm4=", 
     #     code_size: 5797206, 
     #     description: "Process image objects from Amazon S3.", 
+    #     durable_config: {
+    #       execution_timeout: 31622400, 
+    #       retention_period_in_days: 30, 
+    #     }, 
     #     environment: {
     #       variables: {
     #         "BUCKET" => "my-bucket-1xpuxmplzrlbh", 
@@ -3220,14 +4133,14 @@ module Aws::Lambda
     #
     #   resp = client.get_function_configuration({
     #     function_name: "NamespacedFunctionName", # required
-    #     qualifier: "Qualifier",
+    #     qualifier: "NumericLatestPublishedOrAliasQualifier",
     #   })
     #
     # @example Response structure
     #
     #   resp.function_name #=> String
     #   resp.function_arn #=> String
-    #   resp.runtime #=> String, one of "nodejs", "nodejs4.3", "nodejs6.10", "nodejs8.10", "nodejs10.x", "nodejs12.x", "nodejs14.x", "nodejs16.x", "java8", "java8.al2", "java11", "python2.7", "python3.6", "python3.7", "python3.8", "python3.9", "dotnetcore1.0", "dotnetcore2.0", "dotnetcore2.1", "dotnetcore3.1", "dotnet6", "dotnet8", "nodejs4.3-edge", "go1.x", "ruby2.5", "ruby2.7", "provided", "provided.al2", "nodejs18.x", "python3.10", "java17", "ruby3.2", "ruby3.3", "ruby3.4", "python3.11", "nodejs20.x", "provided.al2023", "python3.12", "java21", "python3.13", "nodejs22.x"
+    #   resp.runtime #=> String, one of "nodejs", "nodejs4.3", "nodejs6.10", "nodejs8.10", "nodejs10.x", "nodejs12.x", "nodejs14.x", "nodejs16.x", "nodejs18.x", "nodejs20.x", "nodejs22.x", "nodejs24.x", "java8", "java8.al2", "java11", "java17", "java21", "java25", "python2.7", "python3.6", "python3.7", "python3.8", "python3.9", "python3.10", "python3.11", "python3.12", "python3.13", "python3.14", "dotnetcore1.0", "dotnetcore2.0", "dotnetcore2.1", "dotnetcore3.1", "dotnet6", "dotnet8", "dotnet10", "nodejs4.3-edge", "go1.x", "ruby2.5", "ruby2.7", "ruby3.2", "ruby3.3", "ruby3.4", "ruby4.0", "provided", "provided.al2", "provided.al2023", "nodejs26.x", "python3.15", "java8.al2023", "java11.al2023", "java17.al2023"
     #   resp.role #=> String
     #   resp.handler #=> String
     #   resp.code_size #=> Integer
@@ -3257,15 +4170,17 @@ module Aws::Lambda
     #   resp.layers[0].code_size #=> Integer
     #   resp.layers[0].signing_profile_version_arn #=> String
     #   resp.layers[0].signing_job_arn #=> String
-    #   resp.state #=> String, one of "Pending", "Active", "Inactive", "Failed"
+    #   resp.state #=> String, one of "Pending", "Active", "Inactive", "Failed", "Deactivating", "Deactivated", "ActiveNonInvocable", "Deleting"
     #   resp.state_reason #=> String
-    #   resp.state_reason_code #=> String, one of "Idle", "Creating", "Restoring", "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError"
+    #   resp.state_reason_code #=> String, one of "Idle", "Creating", "Restoring", "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError", "ServiceQuotaExceededException", "VcpuLimitExceeded", "CapacityProviderScalingLimitExceeded", "InsufficientCapacity", "EC2RequestLimitExceeded", "FunctionError.InitTimeout", "FunctionError.RuntimeInitError", "FunctionError.ExtensionInitError", "FunctionError.InvalidEntryPoint", "FunctionError.InvalidWorkingDirectory", "FunctionError.PermissionDenied", "FunctionError.TooManyExtensions", "FunctionError.InitResourceExhausted", "DisallowedByVpcEncryptionControl", "DrainingDurableExecutions", "DependencyError"
     #   resp.last_update_status #=> String, one of "Successful", "Failed", "InProgress"
     #   resp.last_update_status_reason #=> String
-    #   resp.last_update_status_reason_code #=> String, one of "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError"
+    #   resp.last_update_status_reason_code #=> String, one of "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError", "ServiceQuotaExceededException", "VcpuLimitExceeded", "CapacityProviderScalingLimitExceeded", "InsufficientCapacity", "EC2RequestLimitExceeded", "FunctionError.InitTimeout", "FunctionError.RuntimeInitError", "FunctionError.ExtensionInitError", "FunctionError.InvalidEntryPoint", "FunctionError.InvalidWorkingDirectory", "FunctionError.PermissionDenied", "FunctionError.TooManyExtensions", "FunctionError.InitResourceExhausted", "DisallowedByVpcEncryptionControl", "DependencyError"
     #   resp.file_system_configs #=> Array
     #   resp.file_system_configs[0].arn #=> String
     #   resp.file_system_configs[0].local_mount_path #=> String
+    #   resp.signing_profile_version_arn #=> String
+    #   resp.signing_job_arn #=> String
     #   resp.package_type #=> String, one of "Zip", "Image"
     #   resp.image_config_response.image_config.entry_point #=> Array
     #   resp.image_config_response.image_config.entry_point[0] #=> String
@@ -3274,8 +4189,6 @@ module Aws::Lambda
     #   resp.image_config_response.image_config.working_directory #=> String
     #   resp.image_config_response.error.error_code #=> String
     #   resp.image_config_response.error.message #=> String
-    #   resp.signing_profile_version_arn #=> String
-    #   resp.signing_job_arn #=> String
     #   resp.architectures #=> Array
     #   resp.architectures[0] #=> String, one of "x86_64", "arm64"
     #   resp.ephemeral_storage.size #=> Integer
@@ -3288,6 +4201,14 @@ module Aws::Lambda
     #   resp.logging_config.application_log_level #=> String, one of "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"
     #   resp.logging_config.system_log_level #=> String, one of "DEBUG", "INFO", "WARN"
     #   resp.logging_config.log_group #=> String
+    #   resp.tenancy_config.tenant_isolation_mode #=> String, one of "PER_TENANT"
+    #   resp.capacity_provider_config.lambda_managed_instances_capacity_provider_config.capacity_provider_arn #=> String
+    #   resp.capacity_provider_config.lambda_managed_instances_capacity_provider_config.per_execution_environment_max_concurrency #=> Integer
+    #   resp.capacity_provider_config.lambda_managed_instances_capacity_provider_config.execution_environment_memory_gi_b_per_v_cpu #=> Float
+    #   resp.config_sha_256 #=> String
+    #   resp.durable_config.kms_key_arn #=> String
+    #   resp.durable_config.retention_period_in_days #=> Integer
+    #   resp.durable_config.execution_timeout #=> Integer
     #
     #
     # The following waiters are defined for this operation (see {Client#wait_until} for detailed usage):
@@ -3360,7 +4281,7 @@ module Aws::Lambda
     #       }, 
     #     }, 
     #     function_arn: "arn:aws:lambda:us-east-2:123456789012:function:my-function:BLUE", 
-    #     last_modified: Time.parse("${timestamp}"), 
+    #     last_modified: Time.parse("2016-11-21T19:49:20.006Z"), 
     #     maximum_event_age_in_seconds: 3600, 
     #     maximum_retry_attempts: 0, 
     #   }
@@ -3368,8 +4289,8 @@ module Aws::Lambda
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_function_event_invoke_config({
-    #     function_name: "FunctionName", # required
-    #     qualifier: "Qualifier",
+    #     function_name: "NamespacedFunctionName", # required
+    #     qualifier: "NumericLatestPublishedOrAliasQualifier",
     #   })
     #
     # @example Response structure
@@ -3397,6 +4318,7 @@ module Aws::Lambda
     # [1]: https://docs.aws.amazon.com/lambda/latest/dg/invocation-recursion.html
     #
     # @option params [required, String] :function_name
+    #   The name of the function.
     #
     # @return [Types::GetFunctionRecursionConfigResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -3418,6 +4340,46 @@ module Aws::Lambda
     # @param [Hash] params ({})
     def get_function_recursion_config(params = {}, options = {})
       req = build_request(:get_function_recursion_config, params)
+      req.send_request(options)
+    end
+
+    # Retrieves the scaling configuration for a Lambda Managed Instances
+    # function.
+    #
+    # @option params [required, String] :function_name
+    #   The name or ARN of the Lambda function.
+    #
+    # @option params [required, String] :qualifier
+    #   Specify a version or alias to get the scaling configuration for a
+    #   published version of the function.
+    #
+    # @return [Types::GetFunctionScalingConfigResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetFunctionScalingConfigResponse#function_arn #function_arn} => String
+    #   * {Types::GetFunctionScalingConfigResponse#applied_function_scaling_config #applied_function_scaling_config} => Types::FunctionScalingConfig
+    #   * {Types::GetFunctionScalingConfigResponse#requested_function_scaling_config #requested_function_scaling_config} => Types::FunctionScalingConfig
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_function_scaling_config({
+    #     function_name: "UnqualifiedFunctionName", # required
+    #     qualifier: "PublishedFunctionQualifier", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.function_arn #=> String
+    #   resp.applied_function_scaling_config.min_execution_environments #=> Integer
+    #   resp.applied_function_scaling_config.max_execution_environments #=> Integer
+    #   resp.requested_function_scaling_config.min_execution_environments #=> Integer
+    #   resp.requested_function_scaling_config.max_execution_environments #=> Integer
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/GetFunctionScalingConfig AWS API Documentation
+    #
+    # @overload get_function_scaling_config(params = {})
+    # @param [Hash] params ({})
+    def get_function_scaling_config(params = {}, options = {})
+      req = build_request(:get_function_scaling_config, params)
       req.send_request(options)
     end
 
@@ -3454,7 +4416,7 @@ module Aws::Lambda
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_function_url_config({
-    #     function_name: "FunctionName", # required
+    #     function_name: "FunctionUrlFunctionName", # required
     #     qualifier: "FunctionUrlQualifier",
     #   })
     #
@@ -3507,9 +4469,9 @@ module Aws::Lambda
     #   * {Types::GetLayerVersionResponse#description #description} => String
     #   * {Types::GetLayerVersionResponse#created_date #created_date} => Time
     #   * {Types::GetLayerVersionResponse#version #version} => Integer
+    #   * {Types::GetLayerVersionResponse#compatible_architectures #compatible_architectures} => Array&lt;String&gt;
     #   * {Types::GetLayerVersionResponse#compatible_runtimes #compatible_runtimes} => Array&lt;String&gt;
     #   * {Types::GetLayerVersionResponse#license_info #license_info} => String
-    #   * {Types::GetLayerVersionResponse#compatible_architectures #compatible_architectures} => Array&lt;String&gt;
     #
     #
     # @example Example: To get information about a Lambda layer version
@@ -3554,16 +4516,19 @@ module Aws::Lambda
     #   resp.content.code_size #=> Integer
     #   resp.content.signing_profile_version_arn #=> String
     #   resp.content.signing_job_arn #=> String
+    #   resp.content.resolved_s3_object.s3_bucket #=> String
+    #   resp.content.resolved_s3_object.s3_key #=> String
+    #   resp.content.resolved_s3_object.s3_object_version #=> String
     #   resp.layer_arn #=> String
     #   resp.layer_version_arn #=> String
     #   resp.description #=> String
     #   resp.created_date #=> Time
     #   resp.version #=> Integer
-    #   resp.compatible_runtimes #=> Array
-    #   resp.compatible_runtimes[0] #=> String, one of "nodejs", "nodejs4.3", "nodejs6.10", "nodejs8.10", "nodejs10.x", "nodejs12.x", "nodejs14.x", "nodejs16.x", "java8", "java8.al2", "java11", "python2.7", "python3.6", "python3.7", "python3.8", "python3.9", "dotnetcore1.0", "dotnetcore2.0", "dotnetcore2.1", "dotnetcore3.1", "dotnet6", "dotnet8", "nodejs4.3-edge", "go1.x", "ruby2.5", "ruby2.7", "provided", "provided.al2", "nodejs18.x", "python3.10", "java17", "ruby3.2", "ruby3.3", "ruby3.4", "python3.11", "nodejs20.x", "provided.al2023", "python3.12", "java21", "python3.13", "nodejs22.x"
-    #   resp.license_info #=> String
     #   resp.compatible_architectures #=> Array
     #   resp.compatible_architectures[0] #=> String, one of "x86_64", "arm64"
+    #   resp.compatible_runtimes #=> Array
+    #   resp.compatible_runtimes[0] #=> String, one of "nodejs", "nodejs4.3", "nodejs6.10", "nodejs8.10", "nodejs10.x", "nodejs12.x", "nodejs14.x", "nodejs16.x", "nodejs18.x", "nodejs20.x", "nodejs22.x", "nodejs24.x", "java8", "java8.al2", "java11", "java17", "java21", "java25", "python2.7", "python3.6", "python3.7", "python3.8", "python3.9", "python3.10", "python3.11", "python3.12", "python3.13", "python3.14", "dotnetcore1.0", "dotnetcore2.0", "dotnetcore2.1", "dotnetcore3.1", "dotnet6", "dotnet8", "dotnet10", "nodejs4.3-edge", "go1.x", "ruby2.5", "ruby2.7", "ruby3.2", "ruby3.3", "ruby3.4", "ruby4.0", "provided", "provided.al2", "provided.al2023", "nodejs26.x", "python3.15", "java8.al2023", "java11.al2023", "java17.al2023"
+    #   resp.license_info #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/GetLayerVersion AWS API Documentation
     #
@@ -3592,9 +4557,9 @@ module Aws::Lambda
     #   * {Types::GetLayerVersionResponse#description #description} => String
     #   * {Types::GetLayerVersionResponse#created_date #created_date} => Time
     #   * {Types::GetLayerVersionResponse#version #version} => Integer
+    #   * {Types::GetLayerVersionResponse#compatible_architectures #compatible_architectures} => Array&lt;String&gt;
     #   * {Types::GetLayerVersionResponse#compatible_runtimes #compatible_runtimes} => Array&lt;String&gt;
     #   * {Types::GetLayerVersionResponse#license_info #license_info} => String
-    #   * {Types::GetLayerVersionResponse#compatible_architectures #compatible_architectures} => Array&lt;String&gt;
     #
     #
     # @example Example: To get information about a Lambda layer version
@@ -3635,16 +4600,19 @@ module Aws::Lambda
     #   resp.content.code_size #=> Integer
     #   resp.content.signing_profile_version_arn #=> String
     #   resp.content.signing_job_arn #=> String
+    #   resp.content.resolved_s3_object.s3_bucket #=> String
+    #   resp.content.resolved_s3_object.s3_key #=> String
+    #   resp.content.resolved_s3_object.s3_object_version #=> String
     #   resp.layer_arn #=> String
     #   resp.layer_version_arn #=> String
     #   resp.description #=> String
     #   resp.created_date #=> Time
     #   resp.version #=> Integer
-    #   resp.compatible_runtimes #=> Array
-    #   resp.compatible_runtimes[0] #=> String, one of "nodejs", "nodejs4.3", "nodejs6.10", "nodejs8.10", "nodejs10.x", "nodejs12.x", "nodejs14.x", "nodejs16.x", "java8", "java8.al2", "java11", "python2.7", "python3.6", "python3.7", "python3.8", "python3.9", "dotnetcore1.0", "dotnetcore2.0", "dotnetcore2.1", "dotnetcore3.1", "dotnet6", "dotnet8", "nodejs4.3-edge", "go1.x", "ruby2.5", "ruby2.7", "provided", "provided.al2", "nodejs18.x", "python3.10", "java17", "ruby3.2", "ruby3.3", "ruby3.4", "python3.11", "nodejs20.x", "provided.al2023", "python3.12", "java21", "python3.13", "nodejs22.x"
-    #   resp.license_info #=> String
     #   resp.compatible_architectures #=> Array
     #   resp.compatible_architectures[0] #=> String, one of "x86_64", "arm64"
+    #   resp.compatible_runtimes #=> Array
+    #   resp.compatible_runtimes[0] #=> String, one of "nodejs", "nodejs4.3", "nodejs6.10", "nodejs8.10", "nodejs10.x", "nodejs12.x", "nodejs14.x", "nodejs16.x", "nodejs18.x", "nodejs20.x", "nodejs22.x", "nodejs24.x", "java8", "java8.al2", "java11", "java17", "java21", "java25", "python2.7", "python3.6", "python3.7", "python3.8", "python3.9", "python3.10", "python3.11", "python3.12", "python3.13", "python3.14", "dotnetcore1.0", "dotnetcore2.0", "dotnetcore2.1", "dotnetcore3.1", "dotnet6", "dotnet8", "dotnet10", "nodejs4.3-edge", "go1.x", "ruby2.5", "ruby2.7", "ruby3.2", "ruby3.3", "ruby3.4", "ruby4.0", "provided", "provided.al2", "provided.al2023", "nodejs26.x", "python3.15", "java8.al2023", "java11.al2023", "java17.al2023"
+    #   resp.license_info #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/GetLayerVersionByArn AWS API Documentation
     #
@@ -3746,7 +4714,7 @@ module Aws::Lambda
     #
     #   resp = client.get_policy({
     #     function_name: "NamespacedFunctionName", # required
-    #     qualifier: "Qualifier",
+    #     qualifier: "NumericLatestPublishedOrAliasQualifier",
     #   })
     #
     # @example Response structure
@@ -3891,21 +4859,21 @@ module Aws::Lambda
     # @return [Types::GetRuntimeManagementConfigResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::GetRuntimeManagementConfigResponse#update_runtime_on #update_runtime_on} => String
-    #   * {Types::GetRuntimeManagementConfigResponse#runtime_version_arn #runtime_version_arn} => String
     #   * {Types::GetRuntimeManagementConfigResponse#function_arn #function_arn} => String
+    #   * {Types::GetRuntimeManagementConfigResponse#runtime_version_arn #runtime_version_arn} => String
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_runtime_management_config({
     #     function_name: "NamespacedFunctionName", # required
-    #     qualifier: "Qualifier",
+    #     qualifier: "NumericLatestPublishedOrAliasQualifier",
     #   })
     #
     # @example Response structure
     #
     #   resp.update_runtime_on #=> String, one of "Auto", "Manual", "FunctionUpdate"
-    #   resp.runtime_version_arn #=> String
     #   resp.function_arn #=> String
+    #   resp.runtime_version_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/GetRuntimeManagementConfig AWS API Documentation
     #
@@ -3922,6 +4890,9 @@ module Aws::Lambda
     # `RequestResponse`). To invoke a function asynchronously, set
     # `InvocationType` to `Event`. Lambda passes the `ClientContext` object
     # to your function for synchronous invocations only.
+    #
+    # For synchronous invocations, the maximum payload size is 6 MB. For
+    # asynchronous invocations, the maximum payload size is 1 MB.
     #
     # For [synchronous invocation][1], details about the function response,
     # including errors, are included in the response body and headers. For
@@ -4014,8 +4985,24 @@ module Aws::Lambda
     #   `ClientContext` object to your function for synchronous invocations
     #   only.
     #
+    # @option params [String] :durable_execution_name
+    #   A unique name for the durable execution. If you invoke a durable
+    #   function using a name that already exists with the same payload,
+    #   Lambda returns the existing execution instead of creating a duplicate.
+    #   If the payload differs, Lambda returns a
+    #   `DurableExecutionAlreadyStartedException` error.
+    #
+    #   If not specified, Lambda generates a unique identifier automatically.
+    #   For more information, see [Execution names][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/lambda/latest/dg/durable-execution-idempotency.html#durable-idempotency-execution-names
+    #
     # @option params [String, StringIO, File] :payload
     #   The JSON that you want to provide to your Lambda function as input.
+    #   The maximum payload size is 6 MB for synchronous invocations and 1 MB
+    #   for asynchronous invocations.
     #
     #   You can enter the JSON directly. For example, `--payload '{ "key":
     #   "value" }'`. You can also specify a file path. For example, `--payload
@@ -4025,6 +5012,9 @@ module Aws::Lambda
     #   Specify a version or alias to invoke a published version of the
     #   function.
     #
+    # @option params [String] :tenant_id
+    #   The identifier of the tenant in a multi-tenant Lambda function.
+    #
     # @return [Types::InvocationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::InvocationResponse#status_code #status_code} => Integer
@@ -4032,6 +5022,7 @@ module Aws::Lambda
     #   * {Types::InvocationResponse#log_result #log_result} => String
     #   * {Types::InvocationResponse#payload #payload} => String
     #   * {Types::InvocationResponse#executed_version #executed_version} => String
+    #   * {Types::InvocationResponse#durable_execution_arn #durable_execution_arn} => String
     #
     #
     # @example Example: To invoke a Lambda function
@@ -4039,7 +5030,9 @@ module Aws::Lambda
     #   # The following example invokes version 1 of a function named my-function with an empty event payload.
     #
     #   resp = client.invoke({
+    #     durable_execution_name: "myExecution", 
     #     function_name: "my-function", 
+    #     invocation_type: "Event", 
     #     payload: "{}", 
     #     qualifier: "1", 
     #   })
@@ -4074,8 +5067,10 @@ module Aws::Lambda
     #     invocation_type: "Event", # accepts Event, RequestResponse, DryRun
     #     log_type: "None", # accepts None, Tail
     #     client_context: "String",
+    #     durable_execution_name: "DurableExecutionName",
     #     payload: "data",
-    #     qualifier: "Qualifier",
+    #     qualifier: "NumericLatestPublishedOrAliasQualifier",
+    #     tenant_id: "TenantId",
     #   })
     #
     # @example Response structure
@@ -4085,6 +5080,7 @@ module Aws::Lambda
     #   resp.log_result #=> String
     #   resp.payload #=> String
     #   resp.executed_version #=> String
+    #   resp.durable_execution_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/Invoke AWS API Documentation
     #
@@ -4095,11 +5091,20 @@ module Aws::Lambda
       req.send_request(options)
     end
 
-    # For asynchronous function invocation, use Invoke.
+    # <note markdown="1"> For asynchronous function invocation, use Invoke.
     #
-    # Invokes a function asynchronously.
+    #  </note>
     #
-    # <note markdown="1"> If you do use the InvokeAsync action, note that it doesn't support
+    #  Invokes a function asynchronously.
+    #
+    #  <note markdown="1"> The payload limit is 256KB. For larger payloads,
+    # for up to 1MB, use
+    # Invoke.
+    #
+    #  </note>
+    #
+    #  <note markdown="1"> If you do use the InvokeAsync action, note that
+    # it doesn't support
     # the use of X-Ray active tracing. Trace ID is not propagated to the
     # function, even if X-Ray active tracing is turned on.
     #
@@ -4191,17 +5196,6 @@ module Aws::Lambda
     #   The length constraint applies only to the full ARN. If you specify
     #   only the function name, it is limited to 64 characters in length.
     #
-    # @option params [String] :invocation_type
-    #   Use one of the following options:
-    #
-    #   * `RequestResponse` (default) – Invoke the function synchronously.
-    #     Keep the connection open until the function returns a response or
-    #     times out. The API operation response includes the function response
-    #     and additional data.
-    #
-    #   * `DryRun` – Validate parameter values and verify that the IAM user or
-    #     role has permission to invoke the function.
-    #
     # @option params [String] :log_type
     #   Set to `Tail` to include the execution log in the response. Applies to
     #   synchronously invoked functions only.
@@ -4220,6 +5214,20 @@ module Aws::Lambda
     #   "value" }'`. You can also specify a file path. For example, `--payload
     #   file://payload.json`.
     #
+    # @option params [String] :tenant_id
+    #   The identifier of the tenant in a multi-tenant Lambda function.
+    #
+    # @option params [String] :invocation_type
+    #   Use one of the following options:
+    #
+    #   * `RequestResponse` (default) – Invoke the function synchronously.
+    #     Keep the connection open until the function returns a response or
+    #     times out. The API operation response includes the function response
+    #     and additional data.
+    #
+    #   * `DryRun` – Validate parameter values and verify that the IAM user or
+    #     role has permission to invoke the function.
+    #
     # @return [Types::InvokeWithResponseStreamResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::InvokeWithResponseStreamResponse#status_code #status_code} => Integer
@@ -4229,119 +5237,126 @@ module Aws::Lambda
     #
     # @example EventStream Operation Example
     #
-    #   You can process the event once it arrives immediately, or wait until the
-    #   full response is complete and iterate through the eventstream enumerator.
+    #   # You can process the event once it arrives immediately, or wait until the
+    #   # full response is complete and iterate through the eventstream enumerator.
     #
-    #   To interact with event immediately, you need to register #invoke_with_response_stream
-    #   with callbacks. Callbacks can be registered for specific events or for all
-    #   events, including error events.
+    #   # To interact with event immediately, you need to register invoke_with_response_stream
+    #   # with callbacks. Callbacks can be registered for specific events or for all
+    #   # events, including error events.
     #
-    #   Callbacks can be passed into the `:event_stream_handler` option or within a
-    #   block statement attached to the #invoke_with_response_stream call directly. Hybrid
-    #   pattern of both is also supported.
+    #   # Callbacks can be passed into the `:event_stream_handler` option or within a
+    #   # block statement attached to the #invoke_with_response_stream call directly. Hybrid
+    #   # pattern of both is also supported.
     #
-    #   `:event_stream_handler` option takes in either a Proc object or
-    #   Aws::Lambda::EventStreams::InvokeWithResponseStreamResponseEvent object.
+    #   # `:event_stream_handler` option takes in either a Proc object or
+    #   # Aws::Lambda::EventStreams::InvokeWithResponseStreamResponseEvent object.
     #
-    #   Usage pattern a): Callbacks with a block attached to #invoke_with_response_stream
-    #     Example for registering callbacks for all event types and an error event
-    #
-    #     client.invoke_with_response_stream( # params input# ) do |stream|
-    #       stream.on_error_event do |event|
-    #         # catch unmodeled error event in the stream
-    #         raise event
-    #         # => Aws::Errors::EventError
-    #         # event.event_type => :error
-    #         # event.error_code => String
-    #         # event.error_message => String
-    #       end
-    #
-    #       stream.on_event do |event|
-    #         # process all events arrive
-    #         puts event.event_type
-    #         ...
-    #       end
-    #
+    #   # Usage pattern a): Callbacks with a block attached to #invoke_with_response_stream
+    #   # Example for registering callbacks for all event types and an error event
+    #   client.invoke_with_response_stream(
+    #     # params input
+    #   ) do |stream|
+    #     stream.on_error_event do |event|
+    #       # catch unmodeled error event in the stream
+    #       raise event
+    #       # => Aws::Errors::EventError
+    #       # event.event_type => :error
+    #       # event.error_code => String
+    #       # event.error_message => String
     #     end
     #
-    #   Usage pattern b): Pass in `:event_stream_handler` for #invoke_with_response_stream
-    #
-    #     1) Create a Aws::Lambda::EventStreams::InvokeWithResponseStreamResponseEvent object
-    #     Example for registering callbacks with specific events
-    #
-    #       handler = Aws::Lambda::EventStreams::InvokeWithResponseStreamResponseEvent.new
-    #       handler.on_payload_chunk_event do |event|
-    #         event # => Aws::Lambda::Types::PayloadChunk
-    #       end
-    #       handler.on_invoke_complete_event do |event|
-    #         event # => Aws::Lambda::Types::InvokeComplete
-    #       end
-    #
-    #     client.invoke_with_response_stream( # params input #, event_stream_handler: handler)
-    #
-    #     2) Use a Ruby Proc object
-    #     Example for registering callbacks with specific events
-    #
-    #     handler = Proc.new do |stream|
-    #       stream.on_payload_chunk_event do |event|
-    #         event # => Aws::Lambda::Types::PayloadChunk
-    #       end
-    #       stream.on_invoke_complete_event do |event|
-    #         event # => Aws::Lambda::Types::InvokeComplete
-    #       end
+    #     stream.on_event do |event|
+    #       # process all events arrive
+    #       puts event.event_type
+    #       # ...
     #     end
+    #   end
     #
-    #     client.invoke_with_response_stream( # params input #, event_stream_handler: handler)
+    #   # Usage pattern b): Pass in `:event_stream_handler` for #invoke_with_response_stream
+    #   #  1) Create a Aws::Lambda::EventStreams::InvokeWithResponseStreamResponseEvent object
+    #   #  Example for registering callbacks with specific events
     #
-    #   Usage pattern c): Hybrid pattern of a) and b)
+    #   handler = Aws::Lambda::EventStreams::InvokeWithResponseStreamResponseEvent.new
+    #   handler.on_payload_chunk_event do |event|
+    #     event # => Aws::Lambda::Types::PayloadChunk
+    #   end
+    #   handler.on_invoke_complete_event do |event|
+    #     event # => Aws::Lambda::Types::InvokeComplete
+    #   end
     #
-    #       handler = Aws::Lambda::EventStreams::InvokeWithResponseStreamResponseEvent.new
-    #       handler.on_payload_chunk_event do |event|
-    #         event # => Aws::Lambda::Types::PayloadChunk
-    #       end
-    #       handler.on_invoke_complete_event do |event|
-    #         event # => Aws::Lambda::Types::InvokeComplete
-    #       end
+    #   client.invoke_with_response_stream(
+    #     # params inputs
+    #     event_stream_handler: handler
+    #   )
     #
-    #     client.invoke_with_response_stream( # params input #, event_stream_handler: handler) do |stream|
-    #       stream.on_error_event do |event|
-    #         # catch unmodeled error event in the stream
-    #         raise event
-    #         # => Aws::Errors::EventError
-    #         # event.event_type => :error
-    #         # event.error_code => String
-    #         # event.error_message => String
-    #       end
+    #   #  2) Use a Ruby Proc object
+    #   #  Example for registering callbacks with specific events
+    #   handler = Proc.new do |stream|
+    #     stream.on_payload_chunk_event do |event|
+    #       event # => Aws::Lambda::Types::PayloadChunk
     #     end
+    #     stream.on_invoke_complete_event do |event|
+    #       event # => Aws::Lambda::Types::InvokeComplete
+    #     end
+    #   end
     #
-    #   You can also iterate through events after the response complete.
+    #   client.invoke_with_response_stream(
+    #     # params inputs
+    #     event_stream_handler: handler
+    #   )
     #
-    #   Events are available at resp.event_stream # => Enumerator
-    #   For parameter input example, please refer to following request syntax
+    #   #  Usage pattern c): Hybrid pattern of a) and b)
+    #   handler = Aws::Lambda::EventStreams::InvokeWithResponseStreamResponseEvent.new
+    #   handler.on_payload_chunk_event do |event|
+    #     event # => Aws::Lambda::Types::PayloadChunk
+    #   end
+    #   handler.on_invoke_complete_event do |event|
+    #     event # => Aws::Lambda::Types::InvokeComplete
+    #   end
+    #
+    #   client.invoke_with_response_stream(
+    #     # params input
+    #     event_stream_handler: handler
+    #   ) do |stream|
+    #     stream.on_error_event do |event|
+    #       # catch unmodeled error event in the stream
+    #       raise event
+    #       # => Aws::Errors::EventError
+    #       # event.event_type => :error
+    #       # event.error_code => String
+    #       # event.error_message => String
+    #     end
+    #   end
+    #
+    #   # You can also iterate through events after the response complete.
+    #   # Events are available at
+    #   resp.event_stream # => Enumerator
+    #   # For parameter input example, please refer to following request syntax.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.invoke_with_response_stream({
     #     function_name: "NamespacedFunctionName", # required
-    #     invocation_type: "RequestResponse", # accepts RequestResponse, DryRun
     #     log_type: "None", # accepts None, Tail
     #     client_context: "String",
-    #     qualifier: "Qualifier",
+    #     qualifier: "NumericLatestPublishedOrAliasQualifier",
     #     payload: "data",
+    #     tenant_id: "TenantId",
+    #     invocation_type: "RequestResponse", # accepts RequestResponse, DryRun
     #   })
     #
     # @example Response structure
     #
     #   resp.status_code #=> Integer
     #   resp.executed_version #=> String
-    #   All events are available at resp.event_stream:
+    #   # All events are available at resp.event_stream:
     #   resp.event_stream #=> Enumerator
     #   resp.event_stream.event_types #=> [:payload_chunk, :invoke_complete]
     #
-    #   For :payload_chunk event available at #on_payload_chunk_event callback and response eventstream enumerator:
+    #   # For :payload_chunk event available at #on_payload_chunk_event callback and response eventstream enumerator:
     #   event.payload #=> String
     #
-    #   For :invoke_complete event available at #on_invoke_complete_event callback and response eventstream enumerator:
+    #   # For :invoke_complete event available at #on_invoke_complete_event callback and response eventstream enumerator:
     #   event.error_code #=> String
     #   event.error_details #=> String
     #   event.log_result #=> String
@@ -4452,7 +5467,7 @@ module Aws::Lambda
     #
     #   resp = client.list_aliases({
     #     function_name: "FunctionName", # required
-    #     function_version: "Version",
+    #     function_version: "VersionWithLatestPublished",
     #     marker: "String",
     #     max_items: 1,
     #   })
@@ -4475,6 +5490,72 @@ module Aws::Lambda
     # @param [Hash] params ({})
     def list_aliases(params = {}, options = {})
       req = build_request(:list_aliases, params)
+      req.send_request(options)
+    end
+
+    # Returns a list of capacity providers in your account.
+    #
+    # @option params [String] :state
+    #   Filter capacity providers by their current state.
+    #
+    # @option params [String] :marker
+    #   Specify the pagination token that's returned by a previous request to
+    #   retrieve the next page of results.
+    #
+    # @option params [Integer] :max_items
+    #   The maximum number of capacity providers to return.
+    #
+    # @return [Types::ListCapacityProvidersResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListCapacityProvidersResponse#capacity_providers #capacity_providers} => Array&lt;Types::CapacityProvider&gt;
+    #   * {Types::ListCapacityProvidersResponse#next_marker #next_marker} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_capacity_providers({
+    #     state: "Pending", # accepts Pending, Active, Failed, Deleting
+    #     marker: "String",
+    #     max_items: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.capacity_providers #=> Array
+    #   resp.capacity_providers[0].capacity_provider_arn #=> String
+    #   resp.capacity_providers[0].state #=> String, one of "Pending", "Active", "Failed", "Deleting"
+    #   resp.capacity_providers[0].vpc_config.subnet_ids #=> Array
+    #   resp.capacity_providers[0].vpc_config.subnet_ids[0] #=> String
+    #   resp.capacity_providers[0].vpc_config.security_group_ids #=> Array
+    #   resp.capacity_providers[0].vpc_config.security_group_ids[0] #=> String
+    #   resp.capacity_providers[0].permissions_config.capacity_provider_operator_role_arn #=> String
+    #   resp.capacity_providers[0].instance_requirements.architectures #=> Array
+    #   resp.capacity_providers[0].instance_requirements.architectures[0] #=> String, one of "x86_64", "arm64"
+    #   resp.capacity_providers[0].instance_requirements.allowed_instance_types #=> Array
+    #   resp.capacity_providers[0].instance_requirements.allowed_instance_types[0] #=> String
+    #   resp.capacity_providers[0].instance_requirements.excluded_instance_types #=> Array
+    #   resp.capacity_providers[0].instance_requirements.excluded_instance_types[0] #=> String
+    #   resp.capacity_providers[0].capacity_provider_scaling_config.max_v_cpu_count #=> Integer
+    #   resp.capacity_providers[0].capacity_provider_scaling_config.scaling_mode #=> String, one of "Auto", "Manual"
+    #   resp.capacity_providers[0].capacity_provider_scaling_config.scaling_policies #=> Array
+    #   resp.capacity_providers[0].capacity_provider_scaling_config.scaling_policies[0].predefined_metric_type #=> String, one of "LambdaCapacityProviderAverageCPUUtilization"
+    #   resp.capacity_providers[0].capacity_provider_scaling_config.scaling_policies[0].target_value #=> Float
+    #   resp.capacity_providers[0].kms_key_arn #=> String
+    #   resp.capacity_providers[0].last_modified #=> Time
+    #   resp.capacity_providers[0].propagate_tags.mode #=> String, one of "None", "Explicit"
+    #   resp.capacity_providers[0].propagate_tags.explicit_tags #=> Hash
+    #   resp.capacity_providers[0].propagate_tags.explicit_tags["TagKey"] #=> String
+    #   resp.capacity_providers[0].telemetry_config.logging_config.system_log_level #=> String, one of "DEBUG", "INFO", "WARN"
+    #   resp.capacity_providers[0].telemetry_config.logging_config.log_group #=> String
+    #   resp.next_marker #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/ListCapacityProviders AWS API Documentation
+    #
+    # @overload list_capacity_providers(params = {})
+    # @param [Hash] params ({})
+    def list_capacity_providers(params = {}, options = {})
+      req = build_request(:list_capacity_providers, params)
       req.send_request(options)
     end
 
@@ -4525,6 +5606,90 @@ module Aws::Lambda
     # @param [Hash] params ({})
     def list_code_signing_configs(params = {}, options = {})
       req = build_request(:list_code_signing_configs, params)
+      req.send_request(options)
+    end
+
+    # Returns a list of [durable executions][1] for a specified Lambda
+    # function. You can filter the results by execution name, status, and
+    # start time range. This API supports pagination for large result sets.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/lambda/latest/dg/durable-functions.html
+    #
+    # @option params [required, String] :function_name
+    #   The name or ARN of the Lambda function. You can specify a function
+    #   name, a partial ARN, or a full ARN.
+    #
+    # @option params [String] :qualifier
+    #   The function version or alias. If not specified, lists executions for
+    #   the $LATEST version.
+    #
+    # @option params [String] :durable_execution_name
+    #   Filter executions by name. Only executions with names that matches
+    #   this string are returned.
+    #
+    # @option params [Array<String>] :statuses
+    #   Filter executions by status. Valid values: RUNNING, SUCCEEDED, FAILED,
+    #   TIMED\_OUT, STOPPED.
+    #
+    # @option params [Time,DateTime,Date,Integer,String] :started_after
+    #   Filter executions that started after this timestamp (ISO 8601 format).
+    #
+    # @option params [Time,DateTime,Date,Integer,String] :started_before
+    #   Filter executions that started before this timestamp (ISO 8601
+    #   format).
+    #
+    # @option params [Boolean] :reverse_order
+    #   Set to true to return results in chronological order (oldest first).
+    #   Default is false.
+    #
+    # @option params [String] :marker
+    #   Pagination token from a previous request to continue retrieving
+    #   results.
+    #
+    # @option params [Integer] :max_items
+    #   Maximum number of executions to return (1-1000). Default is 100.
+    #
+    # @return [Types::ListDurableExecutionsByFunctionResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListDurableExecutionsByFunctionResponse#durable_executions #durable_executions} => Array&lt;Types::Execution&gt;
+    #   * {Types::ListDurableExecutionsByFunctionResponse#next_marker #next_marker} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_durable_executions_by_function({
+    #     function_name: "NamespacedFunctionName", # required
+    #     qualifier: "NumericLatestPublishedOrAliasQualifier",
+    #     durable_execution_name: "DurableExecutionName",
+    #     statuses: ["RUNNING"], # accepts RUNNING, SUCCEEDED, FAILED, TIMED_OUT, STOPPED
+    #     started_after: Time.now,
+    #     started_before: Time.now,
+    #     reverse_order: false,
+    #     marker: "String",
+    #     max_items: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.durable_executions #=> Array
+    #   resp.durable_executions[0].durable_execution_arn #=> String
+    #   resp.durable_executions[0].durable_execution_name #=> String
+    #   resp.durable_executions[0].function_arn #=> String
+    #   resp.durable_executions[0].status #=> String, one of "RUNNING", "SUCCEEDED", "FAILED", "TIMED_OUT", "STOPPED"
+    #   resp.durable_executions[0].start_timestamp #=> Time
+    #   resp.durable_executions[0].end_timestamp #=> Time
+    #   resp.durable_executions[0].kms_key_arn #=> String
+    #   resp.next_marker #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/ListDurableExecutionsByFunction AWS API Documentation
+    #
+    # @overload list_durable_executions_by_function(params = {})
+    # @param [Hash] params ({})
+    def list_durable_executions_by_function(params = {}, options = {})
+      req = build_request(:list_durable_executions_by_function, params)
       req.send_request(options)
     end
 
@@ -4614,7 +5779,7 @@ module Aws::Lambda
     #
     #   resp = client.list_event_source_mappings({
     #     event_source_arn: "Arn",
-    #     function_name: "FunctionName",
+    #     function_name: "NamespacedFunctionName",
     #     marker: "String",
     #     max_items: 1,
     #   })
@@ -4632,6 +5797,13 @@ module Aws::Lambda
     #   resp.event_source_mappings[0].event_source_arn #=> String
     #   resp.event_source_mappings[0].filter_criteria.filters #=> Array
     #   resp.event_source_mappings[0].filter_criteria.filters[0].pattern #=> String
+    #   resp.event_source_mappings[0].filter_criteria_error.error_code #=> String
+    #   resp.event_source_mappings[0].filter_criteria_error.message #=> String
+    #   resp.event_source_mappings[0].kms_key_arn #=> String
+    #   resp.event_source_mappings[0].metrics_config.metrics #=> Array
+    #   resp.event_source_mappings[0].metrics_config.metrics[0] #=> String, one of "EventCount", "ErrorCount", "KafkaMetrics"
+    #   resp.event_source_mappings[0].logging_config.system_log_level #=> String, one of "DEBUG", "INFO", "WARN"
+    #   resp.event_source_mappings[0].scaling_config.maximum_concurrency #=> Integer
     #   resp.event_source_mappings[0].function_arn #=> String
     #   resp.event_source_mappings[0].last_modified #=> Time
     #   resp.event_source_mappings[0].last_processing_result #=> String
@@ -4656,19 +5828,28 @@ module Aws::Lambda
     #   resp.event_source_mappings[0].function_response_types #=> Array
     #   resp.event_source_mappings[0].function_response_types[0] #=> String, one of "ReportBatchItemFailures"
     #   resp.event_source_mappings[0].amazon_managed_kafka_event_source_config.consumer_group_id #=> String
+    #   resp.event_source_mappings[0].amazon_managed_kafka_event_source_config.schema_registry_config.schema_registry_uri #=> String
+    #   resp.event_source_mappings[0].amazon_managed_kafka_event_source_config.schema_registry_config.event_record_format #=> String, one of "JSON", "SOURCE"
+    #   resp.event_source_mappings[0].amazon_managed_kafka_event_source_config.schema_registry_config.access_configs #=> Array
+    #   resp.event_source_mappings[0].amazon_managed_kafka_event_source_config.schema_registry_config.access_configs[0].type #=> String, one of "BASIC_AUTH", "CLIENT_CERTIFICATE_TLS_AUTH", "SERVER_ROOT_CA_CERTIFICATE"
+    #   resp.event_source_mappings[0].amazon_managed_kafka_event_source_config.schema_registry_config.access_configs[0].uri #=> String
+    #   resp.event_source_mappings[0].amazon_managed_kafka_event_source_config.schema_registry_config.schema_validation_configs #=> Array
+    #   resp.event_source_mappings[0].amazon_managed_kafka_event_source_config.schema_registry_config.schema_validation_configs[0].attribute #=> String, one of "KEY", "VALUE"
     #   resp.event_source_mappings[0].self_managed_kafka_event_source_config.consumer_group_id #=> String
-    #   resp.event_source_mappings[0].scaling_config.maximum_concurrency #=> Integer
+    #   resp.event_source_mappings[0].self_managed_kafka_event_source_config.schema_registry_config.schema_registry_uri #=> String
+    #   resp.event_source_mappings[0].self_managed_kafka_event_source_config.schema_registry_config.event_record_format #=> String, one of "JSON", "SOURCE"
+    #   resp.event_source_mappings[0].self_managed_kafka_event_source_config.schema_registry_config.access_configs #=> Array
+    #   resp.event_source_mappings[0].self_managed_kafka_event_source_config.schema_registry_config.access_configs[0].type #=> String, one of "BASIC_AUTH", "CLIENT_CERTIFICATE_TLS_AUTH", "SERVER_ROOT_CA_CERTIFICATE"
+    #   resp.event_source_mappings[0].self_managed_kafka_event_source_config.schema_registry_config.access_configs[0].uri #=> String
+    #   resp.event_source_mappings[0].self_managed_kafka_event_source_config.schema_registry_config.schema_validation_configs #=> Array
+    #   resp.event_source_mappings[0].self_managed_kafka_event_source_config.schema_registry_config.schema_validation_configs[0].attribute #=> String, one of "KEY", "VALUE"
     #   resp.event_source_mappings[0].document_db_event_source_config.database_name #=> String
     #   resp.event_source_mappings[0].document_db_event_source_config.collection_name #=> String
     #   resp.event_source_mappings[0].document_db_event_source_config.full_document #=> String, one of "UpdateLookup", "Default"
-    #   resp.event_source_mappings[0].kms_key_arn #=> String
-    #   resp.event_source_mappings[0].filter_criteria_error.error_code #=> String
-    #   resp.event_source_mappings[0].filter_criteria_error.message #=> String
     #   resp.event_source_mappings[0].event_source_mapping_arn #=> String
-    #   resp.event_source_mappings[0].metrics_config.metrics #=> Array
-    #   resp.event_source_mappings[0].metrics_config.metrics[0] #=> String, one of "EventCount"
     #   resp.event_source_mappings[0].provisioned_poller_config.minimum_pollers #=> Integer
     #   resp.event_source_mappings[0].provisioned_poller_config.maximum_pollers #=> Integer
+    #   resp.event_source_mappings[0].provisioned_poller_config.poller_group_name #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/ListEventSourceMappings AWS API Documentation
     #
@@ -4744,7 +5925,7 @@ module Aws::Lambda
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_function_event_invoke_configs({
-    #     function_name: "FunctionName", # required
+    #     function_name: "NamespacedFunctionName", # required
     #     marker: "String",
     #     max_items: 1,
     #   })
@@ -4805,7 +5986,7 @@ module Aws::Lambda
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_function_url_configs({
-    #     function_name: "FunctionName", # required
+    #     function_name: "FunctionUrlFunctionName", # required
     #     marker: "String",
     #     max_items: 1,
     #   })
@@ -4837,6 +6018,52 @@ module Aws::Lambda
     # @param [Hash] params ({})
     def list_function_url_configs(params = {}, options = {})
       req = build_request(:list_function_url_configs, params)
+      req.send_request(options)
+    end
+
+    # Returns a list of function versions that are configured to use a
+    # specific capacity provider.
+    #
+    # @option params [required, String] :capacity_provider_name
+    #   The name of the capacity provider to list function versions for.
+    #
+    # @option params [String] :marker
+    #   Specify the pagination token that's returned by a previous request to
+    #   retrieve the next page of results.
+    #
+    # @option params [Integer] :max_items
+    #   The maximum number of function versions to return in the response.
+    #
+    # @return [Types::ListFunctionVersionsByCapacityProviderResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListFunctionVersionsByCapacityProviderResponse#capacity_provider_arn #capacity_provider_arn} => String
+    #   * {Types::ListFunctionVersionsByCapacityProviderResponse#function_versions #function_versions} => Array&lt;Types::FunctionVersionsByCapacityProviderListItem&gt;
+    #   * {Types::ListFunctionVersionsByCapacityProviderResponse#next_marker #next_marker} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_function_versions_by_capacity_provider({
+    #     capacity_provider_name: "CapacityProviderName", # required
+    #     marker: "String",
+    #     max_items: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.capacity_provider_arn #=> String
+    #   resp.function_versions #=> Array
+    #   resp.function_versions[0].function_arn #=> String
+    #   resp.function_versions[0].state #=> String, one of "Pending", "Active", "Inactive", "Failed", "Deactivating", "Deactivated", "ActiveNonInvocable", "Deleting"
+    #   resp.next_marker #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/ListFunctionVersionsByCapacityProvider AWS API Documentation
+    #
+    # @overload list_function_versions_by_capacity_provider(params = {})
+    # @param [Hash] params ({})
+    def list_function_versions_by_capacity_provider(params = {}, options = {})
+      req = build_request(:list_function_versions_by_capacity_provider, params)
       req.send_request(options)
     end
 
@@ -4914,6 +6141,10 @@ module Aws::Lambda
     #         code_sha_256: "sU0cJ2/hOZevwV/lTxCuQqK3gDZP3i8gUoqUUVRmY6E=", 
     #         code_size: 266, 
     #         description: "", 
+    #         durable_config: {
+    #           execution_timeout: 31622400, 
+    #           retention_period_in_days: 30, 
+    #         }, 
     #         function_arn: "arn:aws:lambda:us-west-2:123456789012:function:my-function", 
     #         function_name: "my-function", 
     #         handler: "index.handler", 
@@ -4954,7 +6185,7 @@ module Aws::Lambda
     #   resp.functions #=> Array
     #   resp.functions[0].function_name #=> String
     #   resp.functions[0].function_arn #=> String
-    #   resp.functions[0].runtime #=> String, one of "nodejs", "nodejs4.3", "nodejs6.10", "nodejs8.10", "nodejs10.x", "nodejs12.x", "nodejs14.x", "nodejs16.x", "java8", "java8.al2", "java11", "python2.7", "python3.6", "python3.7", "python3.8", "python3.9", "dotnetcore1.0", "dotnetcore2.0", "dotnetcore2.1", "dotnetcore3.1", "dotnet6", "dotnet8", "nodejs4.3-edge", "go1.x", "ruby2.5", "ruby2.7", "provided", "provided.al2", "nodejs18.x", "python3.10", "java17", "ruby3.2", "ruby3.3", "ruby3.4", "python3.11", "nodejs20.x", "provided.al2023", "python3.12", "java21", "python3.13", "nodejs22.x"
+    #   resp.functions[0].runtime #=> String, one of "nodejs", "nodejs4.3", "nodejs6.10", "nodejs8.10", "nodejs10.x", "nodejs12.x", "nodejs14.x", "nodejs16.x", "nodejs18.x", "nodejs20.x", "nodejs22.x", "nodejs24.x", "java8", "java8.al2", "java11", "java17", "java21", "java25", "python2.7", "python3.6", "python3.7", "python3.8", "python3.9", "python3.10", "python3.11", "python3.12", "python3.13", "python3.14", "dotnetcore1.0", "dotnetcore2.0", "dotnetcore2.1", "dotnetcore3.1", "dotnet6", "dotnet8", "dotnet10", "nodejs4.3-edge", "go1.x", "ruby2.5", "ruby2.7", "ruby3.2", "ruby3.3", "ruby3.4", "ruby4.0", "provided", "provided.al2", "provided.al2023", "nodejs26.x", "python3.15", "java8.al2023", "java11.al2023", "java17.al2023"
     #   resp.functions[0].role #=> String
     #   resp.functions[0].handler #=> String
     #   resp.functions[0].code_size #=> Integer
@@ -4984,15 +6215,17 @@ module Aws::Lambda
     #   resp.functions[0].layers[0].code_size #=> Integer
     #   resp.functions[0].layers[0].signing_profile_version_arn #=> String
     #   resp.functions[0].layers[0].signing_job_arn #=> String
-    #   resp.functions[0].state #=> String, one of "Pending", "Active", "Inactive", "Failed"
+    #   resp.functions[0].state #=> String, one of "Pending", "Active", "Inactive", "Failed", "Deactivating", "Deactivated", "ActiveNonInvocable", "Deleting"
     #   resp.functions[0].state_reason #=> String
-    #   resp.functions[0].state_reason_code #=> String, one of "Idle", "Creating", "Restoring", "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError"
+    #   resp.functions[0].state_reason_code #=> String, one of "Idle", "Creating", "Restoring", "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError", "ServiceQuotaExceededException", "VcpuLimitExceeded", "CapacityProviderScalingLimitExceeded", "InsufficientCapacity", "EC2RequestLimitExceeded", "FunctionError.InitTimeout", "FunctionError.RuntimeInitError", "FunctionError.ExtensionInitError", "FunctionError.InvalidEntryPoint", "FunctionError.InvalidWorkingDirectory", "FunctionError.PermissionDenied", "FunctionError.TooManyExtensions", "FunctionError.InitResourceExhausted", "DisallowedByVpcEncryptionControl", "DrainingDurableExecutions", "DependencyError"
     #   resp.functions[0].last_update_status #=> String, one of "Successful", "Failed", "InProgress"
     #   resp.functions[0].last_update_status_reason #=> String
-    #   resp.functions[0].last_update_status_reason_code #=> String, one of "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError"
+    #   resp.functions[0].last_update_status_reason_code #=> String, one of "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError", "ServiceQuotaExceededException", "VcpuLimitExceeded", "CapacityProviderScalingLimitExceeded", "InsufficientCapacity", "EC2RequestLimitExceeded", "FunctionError.InitTimeout", "FunctionError.RuntimeInitError", "FunctionError.ExtensionInitError", "FunctionError.InvalidEntryPoint", "FunctionError.InvalidWorkingDirectory", "FunctionError.PermissionDenied", "FunctionError.TooManyExtensions", "FunctionError.InitResourceExhausted", "DisallowedByVpcEncryptionControl", "DependencyError"
     #   resp.functions[0].file_system_configs #=> Array
     #   resp.functions[0].file_system_configs[0].arn #=> String
     #   resp.functions[0].file_system_configs[0].local_mount_path #=> String
+    #   resp.functions[0].signing_profile_version_arn #=> String
+    #   resp.functions[0].signing_job_arn #=> String
     #   resp.functions[0].package_type #=> String, one of "Zip", "Image"
     #   resp.functions[0].image_config_response.image_config.entry_point #=> Array
     #   resp.functions[0].image_config_response.image_config.entry_point[0] #=> String
@@ -5001,8 +6234,6 @@ module Aws::Lambda
     #   resp.functions[0].image_config_response.image_config.working_directory #=> String
     #   resp.functions[0].image_config_response.error.error_code #=> String
     #   resp.functions[0].image_config_response.error.message #=> String
-    #   resp.functions[0].signing_profile_version_arn #=> String
-    #   resp.functions[0].signing_job_arn #=> String
     #   resp.functions[0].architectures #=> Array
     #   resp.functions[0].architectures[0] #=> String, one of "x86_64", "arm64"
     #   resp.functions[0].ephemeral_storage.size #=> Integer
@@ -5015,6 +6246,14 @@ module Aws::Lambda
     #   resp.functions[0].logging_config.application_log_level #=> String, one of "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"
     #   resp.functions[0].logging_config.system_log_level #=> String, one of "DEBUG", "INFO", "WARN"
     #   resp.functions[0].logging_config.log_group #=> String
+    #   resp.functions[0].tenancy_config.tenant_isolation_mode #=> String, one of "PER_TENANT"
+    #   resp.functions[0].capacity_provider_config.lambda_managed_instances_capacity_provider_config.capacity_provider_arn #=> String
+    #   resp.functions[0].capacity_provider_config.lambda_managed_instances_capacity_provider_config.per_execution_environment_max_concurrency #=> Integer
+    #   resp.functions[0].capacity_provider_config.lambda_managed_instances_capacity_provider_config.execution_environment_memory_gi_b_per_v_cpu #=> Float
+    #   resp.functions[0].config_sha_256 #=> String
+    #   resp.functions[0].durable_config.kms_key_arn #=> String
+    #   resp.functions[0].durable_config.retention_period_in_days #=> Integer
+    #   resp.functions[0].durable_config.execution_timeout #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/ListFunctions AWS API Documentation
     #
@@ -5080,6 +6319,13 @@ module Aws::Lambda
     # [1]: https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html
     # [2]: https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html
     #
+    # @option params [String] :compatible_architecture
+    #   The compatible [instruction set architecture][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/lambda/latest/dg/foundation-arch.html
+    #
     # @option params [String] :compatible_runtime
     #   A runtime identifier.
     #
@@ -5102,13 +6348,6 @@ module Aws::Lambda
     #
     # @option params [Integer] :max_items
     #   The maximum number of versions to return.
-    #
-    # @option params [String] :compatible_architecture
-    #   The compatible [instruction set architecture][1].
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/lambda/latest/dg/foundation-arch.html
     #
     # @return [Types::ListLayerVersionsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -5153,11 +6392,11 @@ module Aws::Lambda
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_layer_versions({
-    #     compatible_runtime: "nodejs", # accepts nodejs, nodejs4.3, nodejs6.10, nodejs8.10, nodejs10.x, nodejs12.x, nodejs14.x, nodejs16.x, java8, java8.al2, java11, python2.7, python3.6, python3.7, python3.8, python3.9, dotnetcore1.0, dotnetcore2.0, dotnetcore2.1, dotnetcore3.1, dotnet6, dotnet8, nodejs4.3-edge, go1.x, ruby2.5, ruby2.7, provided, provided.al2, nodejs18.x, python3.10, java17, ruby3.2, ruby3.3, ruby3.4, python3.11, nodejs20.x, provided.al2023, python3.12, java21, python3.13, nodejs22.x
+    #     compatible_architecture: "x86_64", # accepts x86_64, arm64
+    #     compatible_runtime: "nodejs", # accepts nodejs, nodejs4.3, nodejs6.10, nodejs8.10, nodejs10.x, nodejs12.x, nodejs14.x, nodejs16.x, nodejs18.x, nodejs20.x, nodejs22.x, nodejs24.x, java8, java8.al2, java11, java17, java21, java25, python2.7, python3.6, python3.7, python3.8, python3.9, python3.10, python3.11, python3.12, python3.13, python3.14, dotnetcore1.0, dotnetcore2.0, dotnetcore2.1, dotnetcore3.1, dotnet6, dotnet8, dotnet10, nodejs4.3-edge, go1.x, ruby2.5, ruby2.7, ruby3.2, ruby3.3, ruby3.4, ruby4.0, provided, provided.al2, provided.al2023, nodejs26.x, python3.15, java8.al2023, java11.al2023, java17.al2023
     #     layer_name: "LayerName", # required
     #     marker: "String",
     #     max_items: 1,
-    #     compatible_architecture: "x86_64", # accepts x86_64, arm64
     #   })
     #
     # @example Response structure
@@ -5168,11 +6407,11 @@ module Aws::Lambda
     #   resp.layer_versions[0].version #=> Integer
     #   resp.layer_versions[0].description #=> String
     #   resp.layer_versions[0].created_date #=> Time
-    #   resp.layer_versions[0].compatible_runtimes #=> Array
-    #   resp.layer_versions[0].compatible_runtimes[0] #=> String, one of "nodejs", "nodejs4.3", "nodejs6.10", "nodejs8.10", "nodejs10.x", "nodejs12.x", "nodejs14.x", "nodejs16.x", "java8", "java8.al2", "java11", "python2.7", "python3.6", "python3.7", "python3.8", "python3.9", "dotnetcore1.0", "dotnetcore2.0", "dotnetcore2.1", "dotnetcore3.1", "dotnet6", "dotnet8", "nodejs4.3-edge", "go1.x", "ruby2.5", "ruby2.7", "provided", "provided.al2", "nodejs18.x", "python3.10", "java17", "ruby3.2", "ruby3.3", "ruby3.4", "python3.11", "nodejs20.x", "provided.al2023", "python3.12", "java21", "python3.13", "nodejs22.x"
-    #   resp.layer_versions[0].license_info #=> String
     #   resp.layer_versions[0].compatible_architectures #=> Array
     #   resp.layer_versions[0].compatible_architectures[0] #=> String, one of "x86_64", "arm64"
+    #   resp.layer_versions[0].compatible_runtimes #=> Array
+    #   resp.layer_versions[0].compatible_runtimes[0] #=> String, one of "nodejs", "nodejs4.3", "nodejs6.10", "nodejs8.10", "nodejs10.x", "nodejs12.x", "nodejs14.x", "nodejs16.x", "nodejs18.x", "nodejs20.x", "nodejs22.x", "nodejs24.x", "java8", "java8.al2", "java11", "java17", "java21", "java25", "python2.7", "python3.6", "python3.7", "python3.8", "python3.9", "python3.10", "python3.11", "python3.12", "python3.13", "python3.14", "dotnetcore1.0", "dotnetcore2.0", "dotnetcore2.1", "dotnetcore3.1", "dotnet6", "dotnet8", "dotnet10", "nodejs4.3-edge", "go1.x", "ruby2.5", "ruby2.7", "ruby3.2", "ruby3.3", "ruby3.4", "ruby4.0", "provided", "provided.al2", "provided.al2023", "nodejs26.x", "python3.15", "java8.al2023", "java11.al2023", "java17.al2023"
+    #   resp.layer_versions[0].license_info #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/ListLayerVersions AWS API Documentation
     #
@@ -5195,6 +6434,13 @@ module Aws::Lambda
     # [2]: https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html
     # [3]: https://docs.aws.amazon.com/lambda/latest/dg/foundation-arch.html
     #
+    # @option params [String] :compatible_architecture
+    #   The compatible [instruction set architecture][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/lambda/latest/dg/foundation-arch.html
+    #
     # @option params [String] :compatible_runtime
     #   A runtime identifier.
     #
@@ -5214,13 +6460,6 @@ module Aws::Lambda
     #
     # @option params [Integer] :max_items
     #   The maximum number of layers to return.
-    #
-    # @option params [String] :compatible_architecture
-    #   The compatible [instruction set architecture][1].
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/lambda/latest/dg/foundation-arch.html
     #
     # @return [Types::ListLayersResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -5261,10 +6500,10 @@ module Aws::Lambda
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_layers({
-    #     compatible_runtime: "nodejs", # accepts nodejs, nodejs4.3, nodejs6.10, nodejs8.10, nodejs10.x, nodejs12.x, nodejs14.x, nodejs16.x, java8, java8.al2, java11, python2.7, python3.6, python3.7, python3.8, python3.9, dotnetcore1.0, dotnetcore2.0, dotnetcore2.1, dotnetcore3.1, dotnet6, dotnet8, nodejs4.3-edge, go1.x, ruby2.5, ruby2.7, provided, provided.al2, nodejs18.x, python3.10, java17, ruby3.2, ruby3.3, ruby3.4, python3.11, nodejs20.x, provided.al2023, python3.12, java21, python3.13, nodejs22.x
+    #     compatible_architecture: "x86_64", # accepts x86_64, arm64
+    #     compatible_runtime: "nodejs", # accepts nodejs, nodejs4.3, nodejs6.10, nodejs8.10, nodejs10.x, nodejs12.x, nodejs14.x, nodejs16.x, nodejs18.x, nodejs20.x, nodejs22.x, nodejs24.x, java8, java8.al2, java11, java17, java21, java25, python2.7, python3.6, python3.7, python3.8, python3.9, python3.10, python3.11, python3.12, python3.13, python3.14, dotnetcore1.0, dotnetcore2.0, dotnetcore2.1, dotnetcore3.1, dotnet6, dotnet8, dotnet10, nodejs4.3-edge, go1.x, ruby2.5, ruby2.7, ruby3.2, ruby3.3, ruby3.4, ruby4.0, provided, provided.al2, provided.al2023, nodejs26.x, python3.15, java8.al2023, java11.al2023, java17.al2023
     #     marker: "String",
     #     max_items: 1,
-    #     compatible_architecture: "x86_64", # accepts x86_64, arm64
     #   })
     #
     # @example Response structure
@@ -5277,11 +6516,11 @@ module Aws::Lambda
     #   resp.layers[0].latest_matching_version.version #=> Integer
     #   resp.layers[0].latest_matching_version.description #=> String
     #   resp.layers[0].latest_matching_version.created_date #=> Time
-    #   resp.layers[0].latest_matching_version.compatible_runtimes #=> Array
-    #   resp.layers[0].latest_matching_version.compatible_runtimes[0] #=> String, one of "nodejs", "nodejs4.3", "nodejs6.10", "nodejs8.10", "nodejs10.x", "nodejs12.x", "nodejs14.x", "nodejs16.x", "java8", "java8.al2", "java11", "python2.7", "python3.6", "python3.7", "python3.8", "python3.9", "dotnetcore1.0", "dotnetcore2.0", "dotnetcore2.1", "dotnetcore3.1", "dotnet6", "dotnet8", "nodejs4.3-edge", "go1.x", "ruby2.5", "ruby2.7", "provided", "provided.al2", "nodejs18.x", "python3.10", "java17", "ruby3.2", "ruby3.3", "ruby3.4", "python3.11", "nodejs20.x", "provided.al2023", "python3.12", "java21", "python3.13", "nodejs22.x"
-    #   resp.layers[0].latest_matching_version.license_info #=> String
     #   resp.layers[0].latest_matching_version.compatible_architectures #=> Array
     #   resp.layers[0].latest_matching_version.compatible_architectures[0] #=> String, one of "x86_64", "arm64"
+    #   resp.layers[0].latest_matching_version.compatible_runtimes #=> Array
+    #   resp.layers[0].latest_matching_version.compatible_runtimes[0] #=> String, one of "nodejs", "nodejs4.3", "nodejs6.10", "nodejs8.10", "nodejs10.x", "nodejs12.x", "nodejs14.x", "nodejs16.x", "nodejs18.x", "nodejs20.x", "nodejs22.x", "nodejs24.x", "java8", "java8.al2", "java11", "java17", "java21", "java25", "python2.7", "python3.6", "python3.7", "python3.8", "python3.9", "python3.10", "python3.11", "python3.12", "python3.13", "python3.14", "dotnetcore1.0", "dotnetcore2.0", "dotnetcore2.1", "dotnetcore3.1", "dotnet6", "dotnet8", "dotnet10", "nodejs4.3-edge", "go1.x", "ruby2.5", "ruby2.7", "ruby3.2", "ruby3.3", "ruby3.4", "ruby4.0", "provided", "provided.al2", "provided.al2023", "nodejs26.x", "python3.15", "java8.al2023", "java11.al2023", "java17.al2023"
+    #   resp.layers[0].latest_matching_version.license_info #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/ListLayers AWS API Documentation
     #
@@ -5491,6 +6730,10 @@ module Aws::Lambda
     #         code_sha_256: "YFgDgEKG3ugvF1+pX64gV6tu9qNuIYNUdgJm8nCxsm4=", 
     #         code_size: 5797206, 
     #         description: "Process image objects from Amazon S3.", 
+    #         durable_config: {
+    #           execution_timeout: 31622400, 
+    #           retention_period_in_days: 30, 
+    #         }, 
     #         environment: {
     #           variables: {
     #             "BUCKET" => "my-bucket-1xpuxmplzrlbh", 
@@ -5516,6 +6759,10 @@ module Aws::Lambda
     #         code_sha_256: "YFgDgEKG3ugvF1+pX64gV6tu9qNuIYNUdgJm8nCxsm4=", 
     #         code_size: 5797206, 
     #         description: "Process image objects from Amazon S3.", 
+    #         durable_config: {
+    #           execution_timeout: 31622400, 
+    #           retention_period_in_days: 30, 
+    #         }, 
     #         environment: {
     #           variables: {
     #             "BUCKET" => "my-bucket-1xpuxmplzrlbh", 
@@ -5554,7 +6801,7 @@ module Aws::Lambda
     #   resp.versions #=> Array
     #   resp.versions[0].function_name #=> String
     #   resp.versions[0].function_arn #=> String
-    #   resp.versions[0].runtime #=> String, one of "nodejs", "nodejs4.3", "nodejs6.10", "nodejs8.10", "nodejs10.x", "nodejs12.x", "nodejs14.x", "nodejs16.x", "java8", "java8.al2", "java11", "python2.7", "python3.6", "python3.7", "python3.8", "python3.9", "dotnetcore1.0", "dotnetcore2.0", "dotnetcore2.1", "dotnetcore3.1", "dotnet6", "dotnet8", "nodejs4.3-edge", "go1.x", "ruby2.5", "ruby2.7", "provided", "provided.al2", "nodejs18.x", "python3.10", "java17", "ruby3.2", "ruby3.3", "ruby3.4", "python3.11", "nodejs20.x", "provided.al2023", "python3.12", "java21", "python3.13", "nodejs22.x"
+    #   resp.versions[0].runtime #=> String, one of "nodejs", "nodejs4.3", "nodejs6.10", "nodejs8.10", "nodejs10.x", "nodejs12.x", "nodejs14.x", "nodejs16.x", "nodejs18.x", "nodejs20.x", "nodejs22.x", "nodejs24.x", "java8", "java8.al2", "java11", "java17", "java21", "java25", "python2.7", "python3.6", "python3.7", "python3.8", "python3.9", "python3.10", "python3.11", "python3.12", "python3.13", "python3.14", "dotnetcore1.0", "dotnetcore2.0", "dotnetcore2.1", "dotnetcore3.1", "dotnet6", "dotnet8", "dotnet10", "nodejs4.3-edge", "go1.x", "ruby2.5", "ruby2.7", "ruby3.2", "ruby3.3", "ruby3.4", "ruby4.0", "provided", "provided.al2", "provided.al2023", "nodejs26.x", "python3.15", "java8.al2023", "java11.al2023", "java17.al2023"
     #   resp.versions[0].role #=> String
     #   resp.versions[0].handler #=> String
     #   resp.versions[0].code_size #=> Integer
@@ -5584,15 +6831,17 @@ module Aws::Lambda
     #   resp.versions[0].layers[0].code_size #=> Integer
     #   resp.versions[0].layers[0].signing_profile_version_arn #=> String
     #   resp.versions[0].layers[0].signing_job_arn #=> String
-    #   resp.versions[0].state #=> String, one of "Pending", "Active", "Inactive", "Failed"
+    #   resp.versions[0].state #=> String, one of "Pending", "Active", "Inactive", "Failed", "Deactivating", "Deactivated", "ActiveNonInvocable", "Deleting"
     #   resp.versions[0].state_reason #=> String
-    #   resp.versions[0].state_reason_code #=> String, one of "Idle", "Creating", "Restoring", "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError"
+    #   resp.versions[0].state_reason_code #=> String, one of "Idle", "Creating", "Restoring", "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError", "ServiceQuotaExceededException", "VcpuLimitExceeded", "CapacityProviderScalingLimitExceeded", "InsufficientCapacity", "EC2RequestLimitExceeded", "FunctionError.InitTimeout", "FunctionError.RuntimeInitError", "FunctionError.ExtensionInitError", "FunctionError.InvalidEntryPoint", "FunctionError.InvalidWorkingDirectory", "FunctionError.PermissionDenied", "FunctionError.TooManyExtensions", "FunctionError.InitResourceExhausted", "DisallowedByVpcEncryptionControl", "DrainingDurableExecutions", "DependencyError"
     #   resp.versions[0].last_update_status #=> String, one of "Successful", "Failed", "InProgress"
     #   resp.versions[0].last_update_status_reason #=> String
-    #   resp.versions[0].last_update_status_reason_code #=> String, one of "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError"
+    #   resp.versions[0].last_update_status_reason_code #=> String, one of "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError", "ServiceQuotaExceededException", "VcpuLimitExceeded", "CapacityProviderScalingLimitExceeded", "InsufficientCapacity", "EC2RequestLimitExceeded", "FunctionError.InitTimeout", "FunctionError.RuntimeInitError", "FunctionError.ExtensionInitError", "FunctionError.InvalidEntryPoint", "FunctionError.InvalidWorkingDirectory", "FunctionError.PermissionDenied", "FunctionError.TooManyExtensions", "FunctionError.InitResourceExhausted", "DisallowedByVpcEncryptionControl", "DependencyError"
     #   resp.versions[0].file_system_configs #=> Array
     #   resp.versions[0].file_system_configs[0].arn #=> String
     #   resp.versions[0].file_system_configs[0].local_mount_path #=> String
+    #   resp.versions[0].signing_profile_version_arn #=> String
+    #   resp.versions[0].signing_job_arn #=> String
     #   resp.versions[0].package_type #=> String, one of "Zip", "Image"
     #   resp.versions[0].image_config_response.image_config.entry_point #=> Array
     #   resp.versions[0].image_config_response.image_config.entry_point[0] #=> String
@@ -5601,8 +6850,6 @@ module Aws::Lambda
     #   resp.versions[0].image_config_response.image_config.working_directory #=> String
     #   resp.versions[0].image_config_response.error.error_code #=> String
     #   resp.versions[0].image_config_response.error.message #=> String
-    #   resp.versions[0].signing_profile_version_arn #=> String
-    #   resp.versions[0].signing_job_arn #=> String
     #   resp.versions[0].architectures #=> Array
     #   resp.versions[0].architectures[0] #=> String, one of "x86_64", "arm64"
     #   resp.versions[0].ephemeral_storage.size #=> Integer
@@ -5615,6 +6862,14 @@ module Aws::Lambda
     #   resp.versions[0].logging_config.application_log_level #=> String, one of "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"
     #   resp.versions[0].logging_config.system_log_level #=> String, one of "DEBUG", "INFO", "WARN"
     #   resp.versions[0].logging_config.log_group #=> String
+    #   resp.versions[0].tenancy_config.tenant_isolation_mode #=> String, one of "PER_TENANT"
+    #   resp.versions[0].capacity_provider_config.lambda_managed_instances_capacity_provider_config.capacity_provider_arn #=> String
+    #   resp.versions[0].capacity_provider_config.lambda_managed_instances_capacity_provider_config.per_execution_environment_max_concurrency #=> Integer
+    #   resp.versions[0].capacity_provider_config.lambda_managed_instances_capacity_provider_config.execution_environment_memory_gi_b_per_v_cpu #=> Float
+    #   resp.versions[0].config_sha_256 #=> String
+    #   resp.versions[0].durable_config.kms_key_arn #=> String
+    #   resp.versions[0].durable_config.retention_period_in_days #=> Integer
+    #   resp.versions[0].durable_config.execution_timeout #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/ListVersionsByFunction AWS API Documentation
     #
@@ -5645,6 +6900,13 @@ module Aws::Lambda
     # @option params [required, Types::LayerVersionContentInput] :content
     #   The function layer archive.
     #
+    # @option params [Array<String>] :compatible_architectures
+    #   A list of compatible [instruction set architectures][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/lambda/latest/dg/foundation-arch.html
+    #
     # @option params [Array<String>] :compatible_runtimes
     #   A list of compatible [function runtimes][1]. Used for filtering with
     #   ListLayers and ListLayerVersions.
@@ -5671,13 +6933,6 @@ module Aws::Lambda
     #
     #   [1]: https://spdx.org/licenses/
     #
-    # @option params [Array<String>] :compatible_architectures
-    #   A list of compatible [instruction set architectures][1].
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/lambda/latest/dg/foundation-arch.html
-    #
     # @return [Types::PublishLayerVersionResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::PublishLayerVersionResponse#content #content} => Types::LayerVersionContentOutput
@@ -5686,9 +6941,9 @@ module Aws::Lambda
     #   * {Types::PublishLayerVersionResponse#description #description} => String
     #   * {Types::PublishLayerVersionResponse#created_date #created_date} => Time
     #   * {Types::PublishLayerVersionResponse#version #version} => Integer
+    #   * {Types::PublishLayerVersionResponse#compatible_architectures #compatible_architectures} => Array&lt;String&gt;
     #   * {Types::PublishLayerVersionResponse#compatible_runtimes #compatible_runtimes} => Array&lt;String&gt;
     #   * {Types::PublishLayerVersionResponse#license_info #license_info} => String
-    #   * {Types::PublishLayerVersionResponse#compatible_architectures #compatible_architectures} => Array&lt;String&gt;
     #
     #
     # @example Example: To create a Lambda layer version
@@ -5738,11 +6993,12 @@ module Aws::Lambda
     #       s3_bucket: "S3Bucket",
     #       s3_key: "S3Key",
     #       s3_object_version: "S3ObjectVersion",
+    #       s3_object_storage_mode: "COPY", # accepts COPY, REFERENCE
     #       zip_file: "data",
     #     },
-    #     compatible_runtimes: ["nodejs"], # accepts nodejs, nodejs4.3, nodejs6.10, nodejs8.10, nodejs10.x, nodejs12.x, nodejs14.x, nodejs16.x, java8, java8.al2, java11, python2.7, python3.6, python3.7, python3.8, python3.9, dotnetcore1.0, dotnetcore2.0, dotnetcore2.1, dotnetcore3.1, dotnet6, dotnet8, nodejs4.3-edge, go1.x, ruby2.5, ruby2.7, provided, provided.al2, nodejs18.x, python3.10, java17, ruby3.2, ruby3.3, ruby3.4, python3.11, nodejs20.x, provided.al2023, python3.12, java21, python3.13, nodejs22.x
-    #     license_info: "LicenseInfo",
     #     compatible_architectures: ["x86_64"], # accepts x86_64, arm64
+    #     compatible_runtimes: ["nodejs"], # accepts nodejs, nodejs4.3, nodejs6.10, nodejs8.10, nodejs10.x, nodejs12.x, nodejs14.x, nodejs16.x, nodejs18.x, nodejs20.x, nodejs22.x, nodejs24.x, java8, java8.al2, java11, java17, java21, java25, python2.7, python3.6, python3.7, python3.8, python3.9, python3.10, python3.11, python3.12, python3.13, python3.14, dotnetcore1.0, dotnetcore2.0, dotnetcore2.1, dotnetcore3.1, dotnet6, dotnet8, dotnet10, nodejs4.3-edge, go1.x, ruby2.5, ruby2.7, ruby3.2, ruby3.3, ruby3.4, ruby4.0, provided, provided.al2, provided.al2023, nodejs26.x, python3.15, java8.al2023, java11.al2023, java17.al2023
+    #     license_info: "LicenseInfo",
     #   })
     #
     # @example Response structure
@@ -5752,16 +7008,19 @@ module Aws::Lambda
     #   resp.content.code_size #=> Integer
     #   resp.content.signing_profile_version_arn #=> String
     #   resp.content.signing_job_arn #=> String
+    #   resp.content.resolved_s3_object.s3_bucket #=> String
+    #   resp.content.resolved_s3_object.s3_key #=> String
+    #   resp.content.resolved_s3_object.s3_object_version #=> String
     #   resp.layer_arn #=> String
     #   resp.layer_version_arn #=> String
     #   resp.description #=> String
     #   resp.created_date #=> Time
     #   resp.version #=> Integer
-    #   resp.compatible_runtimes #=> Array
-    #   resp.compatible_runtimes[0] #=> String, one of "nodejs", "nodejs4.3", "nodejs6.10", "nodejs8.10", "nodejs10.x", "nodejs12.x", "nodejs14.x", "nodejs16.x", "java8", "java8.al2", "java11", "python2.7", "python3.6", "python3.7", "python3.8", "python3.9", "dotnetcore1.0", "dotnetcore2.0", "dotnetcore2.1", "dotnetcore3.1", "dotnet6", "dotnet8", "nodejs4.3-edge", "go1.x", "ruby2.5", "ruby2.7", "provided", "provided.al2", "nodejs18.x", "python3.10", "java17", "ruby3.2", "ruby3.3", "ruby3.4", "python3.11", "nodejs20.x", "provided.al2023", "python3.12", "java21", "python3.13", "nodejs22.x"
-    #   resp.license_info #=> String
     #   resp.compatible_architectures #=> Array
     #   resp.compatible_architectures[0] #=> String, one of "x86_64", "arm64"
+    #   resp.compatible_runtimes #=> Array
+    #   resp.compatible_runtimes[0] #=> String, one of "nodejs", "nodejs4.3", "nodejs6.10", "nodejs8.10", "nodejs10.x", "nodejs12.x", "nodejs14.x", "nodejs16.x", "nodejs18.x", "nodejs20.x", "nodejs22.x", "nodejs24.x", "java8", "java8.al2", "java11", "java17", "java21", "java25", "python2.7", "python3.6", "python3.7", "python3.8", "python3.9", "python3.10", "python3.11", "python3.12", "python3.13", "python3.14", "dotnetcore1.0", "dotnetcore2.0", "dotnetcore2.1", "dotnetcore3.1", "dotnet6", "dotnet8", "dotnet10", "nodejs4.3-edge", "go1.x", "ruby2.5", "ruby2.7", "ruby3.2", "ruby3.3", "ruby3.4", "ruby4.0", "provided", "provided.al2", "provided.al2023", "nodejs26.x", "python3.15", "java8.al2023", "java11.al2023", "java17.al2023"
+    #   resp.license_info #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/PublishLayerVersion AWS API Documentation
     #
@@ -5819,6 +7078,9 @@ module Aws::Lambda
     #   specified. Use this option to avoid publishing a version if the
     #   function configuration has changed since you last updated it.
     #
+    # @option params [String] :publish_to
+    #   Specifies where to publish the function version or configuration.
+    #
     # @return [Types::FunctionConfiguration] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::FunctionConfiguration#function_name #function_name} => String
@@ -5848,15 +7110,19 @@ module Aws::Lambda
     #   * {Types::FunctionConfiguration#last_update_status_reason #last_update_status_reason} => String
     #   * {Types::FunctionConfiguration#last_update_status_reason_code #last_update_status_reason_code} => String
     #   * {Types::FunctionConfiguration#file_system_configs #file_system_configs} => Array&lt;Types::FileSystemConfig&gt;
-    #   * {Types::FunctionConfiguration#package_type #package_type} => String
-    #   * {Types::FunctionConfiguration#image_config_response #image_config_response} => Types::ImageConfigResponse
     #   * {Types::FunctionConfiguration#signing_profile_version_arn #signing_profile_version_arn} => String
     #   * {Types::FunctionConfiguration#signing_job_arn #signing_job_arn} => String
+    #   * {Types::FunctionConfiguration#package_type #package_type} => String
+    #   * {Types::FunctionConfiguration#image_config_response #image_config_response} => Types::ImageConfigResponse
     #   * {Types::FunctionConfiguration#architectures #architectures} => Array&lt;String&gt;
     #   * {Types::FunctionConfiguration#ephemeral_storage #ephemeral_storage} => Types::EphemeralStorage
     #   * {Types::FunctionConfiguration#snap_start #snap_start} => Types::SnapStartResponse
     #   * {Types::FunctionConfiguration#runtime_version_config #runtime_version_config} => Types::RuntimeVersionConfig
     #   * {Types::FunctionConfiguration#logging_config #logging_config} => Types::LoggingConfig
+    #   * {Types::FunctionConfiguration#tenancy_config #tenancy_config} => Types::TenancyConfig
+    #   * {Types::FunctionConfiguration#capacity_provider_config #capacity_provider_config} => Types::CapacityProviderConfig
+    #   * {Types::FunctionConfiguration#config_sha_256 #config_sha_256} => String
+    #   * {Types::FunctionConfiguration#durable_config #durable_config} => Types::DurableConfig
     #
     #
     # @example Example: To publish a version of a Lambda function
@@ -5905,13 +7171,14 @@ module Aws::Lambda
     #     code_sha_256: "String",
     #     description: "Description",
     #     revision_id: "String",
+    #     publish_to: "LATEST_PUBLISHED", # accepts LATEST_PUBLISHED
     #   })
     #
     # @example Response structure
     #
     #   resp.function_name #=> String
     #   resp.function_arn #=> String
-    #   resp.runtime #=> String, one of "nodejs", "nodejs4.3", "nodejs6.10", "nodejs8.10", "nodejs10.x", "nodejs12.x", "nodejs14.x", "nodejs16.x", "java8", "java8.al2", "java11", "python2.7", "python3.6", "python3.7", "python3.8", "python3.9", "dotnetcore1.0", "dotnetcore2.0", "dotnetcore2.1", "dotnetcore3.1", "dotnet6", "dotnet8", "nodejs4.3-edge", "go1.x", "ruby2.5", "ruby2.7", "provided", "provided.al2", "nodejs18.x", "python3.10", "java17", "ruby3.2", "ruby3.3", "ruby3.4", "python3.11", "nodejs20.x", "provided.al2023", "python3.12", "java21", "python3.13", "nodejs22.x"
+    #   resp.runtime #=> String, one of "nodejs", "nodejs4.3", "nodejs6.10", "nodejs8.10", "nodejs10.x", "nodejs12.x", "nodejs14.x", "nodejs16.x", "nodejs18.x", "nodejs20.x", "nodejs22.x", "nodejs24.x", "java8", "java8.al2", "java11", "java17", "java21", "java25", "python2.7", "python3.6", "python3.7", "python3.8", "python3.9", "python3.10", "python3.11", "python3.12", "python3.13", "python3.14", "dotnetcore1.0", "dotnetcore2.0", "dotnetcore2.1", "dotnetcore3.1", "dotnet6", "dotnet8", "dotnet10", "nodejs4.3-edge", "go1.x", "ruby2.5", "ruby2.7", "ruby3.2", "ruby3.3", "ruby3.4", "ruby4.0", "provided", "provided.al2", "provided.al2023", "nodejs26.x", "python3.15", "java8.al2023", "java11.al2023", "java17.al2023"
     #   resp.role #=> String
     #   resp.handler #=> String
     #   resp.code_size #=> Integer
@@ -5941,15 +7208,17 @@ module Aws::Lambda
     #   resp.layers[0].code_size #=> Integer
     #   resp.layers[0].signing_profile_version_arn #=> String
     #   resp.layers[0].signing_job_arn #=> String
-    #   resp.state #=> String, one of "Pending", "Active", "Inactive", "Failed"
+    #   resp.state #=> String, one of "Pending", "Active", "Inactive", "Failed", "Deactivating", "Deactivated", "ActiveNonInvocable", "Deleting"
     #   resp.state_reason #=> String
-    #   resp.state_reason_code #=> String, one of "Idle", "Creating", "Restoring", "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError"
+    #   resp.state_reason_code #=> String, one of "Idle", "Creating", "Restoring", "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError", "ServiceQuotaExceededException", "VcpuLimitExceeded", "CapacityProviderScalingLimitExceeded", "InsufficientCapacity", "EC2RequestLimitExceeded", "FunctionError.InitTimeout", "FunctionError.RuntimeInitError", "FunctionError.ExtensionInitError", "FunctionError.InvalidEntryPoint", "FunctionError.InvalidWorkingDirectory", "FunctionError.PermissionDenied", "FunctionError.TooManyExtensions", "FunctionError.InitResourceExhausted", "DisallowedByVpcEncryptionControl", "DrainingDurableExecutions", "DependencyError"
     #   resp.last_update_status #=> String, one of "Successful", "Failed", "InProgress"
     #   resp.last_update_status_reason #=> String
-    #   resp.last_update_status_reason_code #=> String, one of "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError"
+    #   resp.last_update_status_reason_code #=> String, one of "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError", "ServiceQuotaExceededException", "VcpuLimitExceeded", "CapacityProviderScalingLimitExceeded", "InsufficientCapacity", "EC2RequestLimitExceeded", "FunctionError.InitTimeout", "FunctionError.RuntimeInitError", "FunctionError.ExtensionInitError", "FunctionError.InvalidEntryPoint", "FunctionError.InvalidWorkingDirectory", "FunctionError.PermissionDenied", "FunctionError.TooManyExtensions", "FunctionError.InitResourceExhausted", "DisallowedByVpcEncryptionControl", "DependencyError"
     #   resp.file_system_configs #=> Array
     #   resp.file_system_configs[0].arn #=> String
     #   resp.file_system_configs[0].local_mount_path #=> String
+    #   resp.signing_profile_version_arn #=> String
+    #   resp.signing_job_arn #=> String
     #   resp.package_type #=> String, one of "Zip", "Image"
     #   resp.image_config_response.image_config.entry_point #=> Array
     #   resp.image_config_response.image_config.entry_point[0] #=> String
@@ -5958,8 +7227,6 @@ module Aws::Lambda
     #   resp.image_config_response.image_config.working_directory #=> String
     #   resp.image_config_response.error.error_code #=> String
     #   resp.image_config_response.error.message #=> String
-    #   resp.signing_profile_version_arn #=> String
-    #   resp.signing_job_arn #=> String
     #   resp.architectures #=> Array
     #   resp.architectures[0] #=> String, one of "x86_64", "arm64"
     #   resp.ephemeral_storage.size #=> Integer
@@ -5972,6 +7239,14 @@ module Aws::Lambda
     #   resp.logging_config.application_log_level #=> String, one of "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"
     #   resp.logging_config.system_log_level #=> String, one of "DEBUG", "INFO", "WARN"
     #   resp.logging_config.log_group #=> String
+    #   resp.tenancy_config.tenant_isolation_mode #=> String, one of "PER_TENANT"
+    #   resp.capacity_provider_config.lambda_managed_instances_capacity_provider_config.capacity_provider_arn #=> String
+    #   resp.capacity_provider_config.lambda_managed_instances_capacity_provider_config.per_execution_environment_max_concurrency #=> Integer
+    #   resp.capacity_provider_config.lambda_managed_instances_capacity_provider_config.execution_environment_memory_gi_b_per_v_cpu #=> Float
+    #   resp.config_sha_256 #=> String
+    #   resp.durable_config.kms_key_arn #=> String
+    #   resp.durable_config.retention_period_in_days #=> Integer
+    #   resp.durable_config.execution_timeout #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/PublishVersion AWS API Documentation
     #
@@ -6013,7 +7288,7 @@ module Aws::Lambda
     #
     #   resp = client.put_function_code_signing_config({
     #     code_signing_config_arn: "CodeSigningConfigArn", # required
-    #     function_name: "FunctionName", # required
+    #     function_name: "NamespacedFunctionName", # required
     #   })
     #
     # @example Response structure
@@ -6213,7 +7488,7 @@ module Aws::Lambda
     #       }, 
     #     }, 
     #     function_arn: "arn:aws:lambda:us-east-2:123456789012:function:my-function:$LATEST", 
-    #     last_modified: Time.parse("${timestamp}"), 
+    #     last_modified: Time.parse("2016-11-21T19:49:20.006Z"), 
     #     maximum_event_age_in_seconds: 3600, 
     #     maximum_retry_attempts: 0, 
     #   }
@@ -6221,8 +7496,8 @@ module Aws::Lambda
     # @example Request syntax with placeholder values
     #
     #   resp = client.put_function_event_invoke_config({
-    #     function_name: "FunctionName", # required
-    #     qualifier: "Qualifier",
+    #     function_name: "NamespacedFunctionName", # required
+    #     qualifier: "NumericLatestPublishedOrAliasQualifier",
     #     maximum_retry_attempts: 1,
     #     maximum_event_age_in_seconds: 1,
     #     destination_config: {
@@ -6338,6 +7613,51 @@ module Aws::Lambda
       req.send_request(options)
     end
 
+    # Sets the scaling configuration for a Lambda Managed Instances
+    # function. The scaling configuration defines the minimum and maximum
+    # number of execution environments that can be provisioned for the
+    # function, allowing you to control scaling behavior and resource
+    # allocation.
+    #
+    # @option params [required, String] :function_name
+    #   The name or ARN of the Lambda function.
+    #
+    # @option params [required, String] :qualifier
+    #   Specify a version or alias to set the scaling configuration for a
+    #   published version of the function.
+    #
+    # @option params [Types::FunctionScalingConfig] :function_scaling_config
+    #   The scaling configuration to apply to the function, including minimum
+    #   and maximum execution environment limits.
+    #
+    # @return [Types::PutFunctionScalingConfigResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::PutFunctionScalingConfigResponse#function_state #function_state} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.put_function_scaling_config({
+    #     function_name: "UnqualifiedFunctionName", # required
+    #     qualifier: "PublishedFunctionQualifier", # required
+    #     function_scaling_config: {
+    #       min_execution_environments: 1,
+    #       max_execution_environments: 1,
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.function_state #=> String, one of "Pending", "Active", "Inactive", "Failed", "Deactivating", "Deactivated", "ActiveNonInvocable", "Deleting"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/PutFunctionScalingConfig AWS API Documentation
+    #
+    # @overload put_function_scaling_config(params = {})
+    # @param [Hash] params ({})
+    def put_function_scaling_config(params = {}, options = {})
+      req = build_request(:put_function_scaling_config, params)
+      req.send_request(options)
+    end
+
     # Adds a provisioned concurrency configuration to a function's alias or
     # version.
     #
@@ -6366,8 +7686,8 @@ module Aws::Lambda
     # @return [Types::PutProvisionedConcurrencyConfigResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::PutProvisionedConcurrencyConfigResponse#requested_provisioned_concurrent_executions #requested_provisioned_concurrent_executions} => Integer
-    #   * {Types::PutProvisionedConcurrencyConfigResponse#available_provisioned_concurrent_executions #available_provisioned_concurrent_executions} => Integer
     #   * {Types::PutProvisionedConcurrencyConfigResponse#allocated_provisioned_concurrent_executions #allocated_provisioned_concurrent_executions} => Integer
+    #   * {Types::PutProvisionedConcurrencyConfigResponse#available_provisioned_concurrent_executions #available_provisioned_concurrent_executions} => Integer
     #   * {Types::PutProvisionedConcurrencyConfigResponse#status #status} => String
     #   * {Types::PutProvisionedConcurrencyConfigResponse#status_reason #status_reason} => String
     #   * {Types::PutProvisionedConcurrencyConfigResponse#last_modified #last_modified} => Time
@@ -6402,8 +7722,8 @@ module Aws::Lambda
     # @example Response structure
     #
     #   resp.requested_provisioned_concurrent_executions #=> Integer
-    #   resp.available_provisioned_concurrent_executions #=> Integer
     #   resp.allocated_provisioned_concurrent_executions #=> Integer
+    #   resp.available_provisioned_concurrent_executions #=> Integer
     #   resp.status #=> String, one of "IN_PROGRESS", "READY", "FAILED"
     #   resp.status_reason #=> String
     #   resp.last_modified #=> Time
@@ -6489,8 +7809,8 @@ module Aws::Lambda
     # @example Request syntax with placeholder values
     #
     #   resp = client.put_runtime_management_config({
-    #     function_name: "FunctionName", # required
-    #     qualifier: "Qualifier",
+    #     function_name: "NamespacedFunctionName", # required
+    #     qualifier: "NumericLatestPublishedOrAliasQualifier",
     #     update_runtime_on: "Auto", # required, accepts Auto, Manual, FunctionUpdate
     #     runtime_version_arn: "RuntimeVersionArn",
     #   })
@@ -6613,9 +7933,9 @@ module Aws::Lambda
     # @example Request syntax with placeholder values
     #
     #   resp = client.remove_permission({
-    #     function_name: "FunctionName", # required
+    #     function_name: "NamespacedFunctionName", # required
     #     statement_id: "NamespacedStatementId", # required
-    #     qualifier: "Qualifier",
+    #     qualifier: "NumericLatestPublishedOrAliasQualifier",
     #     revision_id: "String",
     #   })
     #
@@ -6625,6 +7945,135 @@ module Aws::Lambda
     # @param [Hash] params ({})
     def remove_permission(params = {}, options = {})
       req = build_request(:remove_permission, params)
+      req.send_request(options)
+    end
+
+    # Sends a failure response for a callback operation in a durable
+    # execution. Use this API when an external system cannot complete a
+    # callback operation successfully.
+    #
+    # @option params [required, String] :callback_id
+    #   The unique identifier for the callback operation.
+    #
+    # @option params [Types::ErrorObject] :error
+    #   Error details describing why the callback operation failed.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.send_durable_execution_callback_failure({
+    #     callback_id: "CallbackId", # required
+    #     error: {
+    #       error_message: "ErrorMessage",
+    #       error_type: "ErrorType",
+    #       error_data: "ErrorData",
+    #       stack_trace: ["StackTraceEntry"],
+    #     },
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/SendDurableExecutionCallbackFailure AWS API Documentation
+    #
+    # @overload send_durable_execution_callback_failure(params = {})
+    # @param [Hash] params ({})
+    def send_durable_execution_callback_failure(params = {}, options = {})
+      req = build_request(:send_durable_execution_callback_failure, params)
+      req.send_request(options)
+    end
+
+    # Sends a heartbeat signal for a long-running callback operation to
+    # prevent timeout. Use this API to extend the callback timeout period
+    # while the external operation is still in progress.
+    #
+    # @option params [required, String] :callback_id
+    #   The unique identifier for the callback operation.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.send_durable_execution_callback_heartbeat({
+    #     callback_id: "CallbackId", # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/SendDurableExecutionCallbackHeartbeat AWS API Documentation
+    #
+    # @overload send_durable_execution_callback_heartbeat(params = {})
+    # @param [Hash] params ({})
+    def send_durable_execution_callback_heartbeat(params = {}, options = {})
+      req = build_request(:send_durable_execution_callback_heartbeat, params)
+      req.send_request(options)
+    end
+
+    # Sends a successful completion response for a callback operation in a
+    # durable execution. Use this API when an external system has
+    # successfully completed a callback operation.
+    #
+    # @option params [required, String] :callback_id
+    #   The unique identifier for the callback operation.
+    #
+    # @option params [String, StringIO, File] :result
+    #   The result data from the successful callback operation. Maximum size
+    #   is 256 KB.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.send_durable_execution_callback_success({
+    #     callback_id: "CallbackId", # required
+    #     result: "data",
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/SendDurableExecutionCallbackSuccess AWS API Documentation
+    #
+    # @overload send_durable_execution_callback_success(params = {})
+    # @param [Hash] params ({})
+    def send_durable_execution_callback_success(params = {}, options = {})
+      req = build_request(:send_durable_execution_callback_success, params)
+      req.send_request(options)
+    end
+
+    # Stops a running [durable execution][1]. The execution transitions to
+    # STOPPED status and cannot be resumed. Any in-progress operations are
+    # terminated.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/lambda/latest/dg/durable-functions.html
+    #
+    # @option params [required, String] :durable_execution_arn
+    #   The Amazon Resource Name (ARN) of the durable execution.
+    #
+    # @option params [Types::ErrorObject] :error
+    #   Optional error details explaining why the execution is being stopped.
+    #
+    # @return [Types::StopDurableExecutionResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::StopDurableExecutionResponse#stop_timestamp #stop_timestamp} => Time
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.stop_durable_execution({
+    #     durable_execution_arn: "DurableExecutionArn", # required
+    #     error: {
+    #       error_message: "ErrorMessage",
+    #       error_type: "ErrorType",
+    #       error_data: "ErrorData",
+    #       stack_trace: ["StackTraceEntry"],
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.stop_timestamp #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/StopDurableExecution AWS API Documentation
+    #
+    # @overload stop_durable_execution(params = {})
+    # @param [Hash] params ({})
+    def stop_durable_execution(params = {}, options = {})
+      req = build_request(:stop_durable_execution, params)
       req.send_request(options)
     end
 
@@ -6803,7 +8252,7 @@ module Aws::Lambda
     #   resp = client.update_alias({
     #     function_name: "FunctionName", # required
     #     name: "Alias", # required
-    #     function_version: "Version",
+    #     function_version: "VersionWithLatestPublished",
     #     description: "Description",
     #     routing_config: {
     #       additional_version_weights: {
@@ -6829,6 +8278,90 @@ module Aws::Lambda
     # @param [Hash] params ({})
     def update_alias(params = {}, options = {})
       req = build_request(:update_alias, params)
+      req.send_request(options)
+    end
+
+    # Updates the configuration of an existing capacity provider.
+    #
+    # @option params [required, String] :capacity_provider_name
+    #   The name of the capacity provider to update.
+    #
+    # @option params [Types::CapacityProviderScalingConfig] :capacity_provider_scaling_config
+    #   The updated scaling configuration for the capacity provider.
+    #
+    # @option params [Types::PropagateTags] :propagate_tags
+    #   Configuration for tag propagation to managed resources launched by the
+    #   capacity provider.
+    #
+    # @option params [Types::CapacityProviderTelemetryConfig] :telemetry_config
+    #   The updated telemetry configuration for the capacity provider.
+    #
+    # @return [Types::UpdateCapacityProviderResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateCapacityProviderResponse#capacity_provider #capacity_provider} => Types::CapacityProvider
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_capacity_provider({
+    #     capacity_provider_name: "CapacityProviderName", # required
+    #     capacity_provider_scaling_config: {
+    #       max_v_cpu_count: 1,
+    #       scaling_mode: "Auto", # accepts Auto, Manual
+    #       scaling_policies: [
+    #         {
+    #           predefined_metric_type: "LambdaCapacityProviderAverageCPUUtilization", # required, accepts LambdaCapacityProviderAverageCPUUtilization
+    #           target_value: 1.0, # required
+    #         },
+    #       ],
+    #     },
+    #     propagate_tags: {
+    #       mode: "None", # accepts None, Explicit
+    #       explicit_tags: {
+    #         "TagKey" => "TagValue",
+    #       },
+    #     },
+    #     telemetry_config: {
+    #       logging_config: {
+    #         system_log_level: "DEBUG", # accepts DEBUG, INFO, WARN
+    #         log_group: "LogGroup",
+    #       },
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.capacity_provider.capacity_provider_arn #=> String
+    #   resp.capacity_provider.state #=> String, one of "Pending", "Active", "Failed", "Deleting"
+    #   resp.capacity_provider.vpc_config.subnet_ids #=> Array
+    #   resp.capacity_provider.vpc_config.subnet_ids[0] #=> String
+    #   resp.capacity_provider.vpc_config.security_group_ids #=> Array
+    #   resp.capacity_provider.vpc_config.security_group_ids[0] #=> String
+    #   resp.capacity_provider.permissions_config.capacity_provider_operator_role_arn #=> String
+    #   resp.capacity_provider.instance_requirements.architectures #=> Array
+    #   resp.capacity_provider.instance_requirements.architectures[0] #=> String, one of "x86_64", "arm64"
+    #   resp.capacity_provider.instance_requirements.allowed_instance_types #=> Array
+    #   resp.capacity_provider.instance_requirements.allowed_instance_types[0] #=> String
+    #   resp.capacity_provider.instance_requirements.excluded_instance_types #=> Array
+    #   resp.capacity_provider.instance_requirements.excluded_instance_types[0] #=> String
+    #   resp.capacity_provider.capacity_provider_scaling_config.max_v_cpu_count #=> Integer
+    #   resp.capacity_provider.capacity_provider_scaling_config.scaling_mode #=> String, one of "Auto", "Manual"
+    #   resp.capacity_provider.capacity_provider_scaling_config.scaling_policies #=> Array
+    #   resp.capacity_provider.capacity_provider_scaling_config.scaling_policies[0].predefined_metric_type #=> String, one of "LambdaCapacityProviderAverageCPUUtilization"
+    #   resp.capacity_provider.capacity_provider_scaling_config.scaling_policies[0].target_value #=> Float
+    #   resp.capacity_provider.kms_key_arn #=> String
+    #   resp.capacity_provider.last_modified #=> Time
+    #   resp.capacity_provider.propagate_tags.mode #=> String, one of "None", "Explicit"
+    #   resp.capacity_provider.propagate_tags.explicit_tags #=> Hash
+    #   resp.capacity_provider.propagate_tags.explicit_tags["TagKey"] #=> String
+    #   resp.capacity_provider.telemetry_config.logging_config.system_log_level #=> String, one of "DEBUG", "INFO", "WARN"
+    #   resp.capacity_provider.telemetry_config.logging_config.log_group #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/UpdateCapacityProvider AWS API Documentation
+    #
+    # @overload update_capacity_provider(params = {})
+    # @param [Hash] params ({})
+    def update_capacity_provider(params = {}, options = {})
+      req = build_request(:update_capacity_provider, params)
       req.send_request(options)
     end
 
@@ -6905,8 +8438,8 @@ module Aws::Lambda
     #
     # * [ Amazon DocumentDB][7]
     #
-    # The following error handling options are available only for DynamoDB
-    # and Kinesis event sources:
+    # The following error handling options are available for stream sources
+    # (DynamoDB, Kinesis, Amazon MSK, and self-managed Apache Kafka):
     #
     # * `BisectBatchOnFunctionError` – If the function returns an error,
     #   split the batch in two and retry.
@@ -6919,33 +8452,34 @@ module Aws::Lambda
     #   of retries. The default value is infinite (-1). When set to infinite
     #   (-1), failed records are retried until the record expires.
     #
+    # * `OnFailure` – Send discarded records to an Amazon SQS queue, Amazon
+    #   SNS topic, Kafka topic, or Amazon S3 bucket. For more information,
+    #   see [Adding a destination][8].
+    #
+    # The following option is available only for DynamoDB and Kinesis event
+    # sources:
+    #
     # * `ParallelizationFactor` – Process multiple batches from each shard
     #   concurrently.
-    #
-    # For stream sources (DynamoDB, Kinesis, Amazon MSK, and self-managed
-    # Apache Kafka), the following option is also available:
-    #
-    # * `DestinationConfig` – Send discarded records to an Amazon SQS queue,
-    #   Amazon SNS topic, or Amazon S3 bucket.
     #
     # ^
     #
     # For information about which configuration parameters apply to each
     # event source, see the following topics.
     #
-    # * [ Amazon DynamoDB Streams][8]
+    # * [ Amazon DynamoDB Streams][9]
     #
-    # * [ Amazon Kinesis][9]
+    # * [ Amazon Kinesis][10]
     #
-    # * [ Amazon SQS][10]
+    # * [ Amazon SQS][11]
     #
-    # * [ Amazon MQ and RabbitMQ][11]
+    # * [ Amazon MQ and RabbitMQ][12]
     #
-    # * [ Amazon MSK][12]
+    # * [ Amazon MSK][13]
     #
-    # * [ Apache Kafka][13]
+    # * [ Apache Kafka][14]
     #
-    # * [ Amazon DocumentDB][14]
+    # * [ Amazon DocumentDB][15]
     #
     #
     #
@@ -6956,13 +8490,14 @@ module Aws::Lambda
     # [5]: https://docs.aws.amazon.com/lambda/latest/dg/with-msk.html
     # [6]: https://docs.aws.amazon.com/lambda/latest/dg/kafka-smaa.html
     # [7]: https://docs.aws.amazon.com/lambda/latest/dg/with-documentdb.html
-    # [8]: https://docs.aws.amazon.com/lambda/latest/dg/with-ddb.html#services-ddb-params
-    # [9]: https://docs.aws.amazon.com/lambda/latest/dg/with-kinesis.html#services-kinesis-params
-    # [10]: https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#services-sqs-params
-    # [11]: https://docs.aws.amazon.com/lambda/latest/dg/with-mq.html#services-mq-params
-    # [12]: https://docs.aws.amazon.com/lambda/latest/dg/with-msk.html#services-msk-parms
-    # [13]: https://docs.aws.amazon.com/lambda/latest/dg/with-kafka.html#services-kafka-parms
-    # [14]: https://docs.aws.amazon.com/lambda/latest/dg/with-documentdb.html#docdb-configuration
+    # [8]: https://docs.aws.amazon.com/lambda/latest/dg/invocation-async-retain-records.html#invocation-async-destinations
+    # [9]: https://docs.aws.amazon.com/lambda/latest/dg/with-ddb.html#services-ddb-params
+    # [10]: https://docs.aws.amazon.com/lambda/latest/dg/with-kinesis.html#services-kinesis-params
+    # [11]: https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#services-sqs-params
+    # [12]: https://docs.aws.amazon.com/lambda/latest/dg/with-mq.html#services-mq-params
+    # [13]: https://docs.aws.amazon.com/lambda/latest/dg/with-msk.html#services-msk-parms
+    # [14]: https://docs.aws.amazon.com/lambda/latest/dg/with-kafka.html#services-kafka-parms
+    # [15]: https://docs.aws.amazon.com/lambda/latest/dg/with-documentdb.html#docdb-configuration
     #
     # @option params [required, String] :uuid
     #   The identifier of the event source mapping.
@@ -7022,6 +8557,38 @@ module Aws::Lambda
     #
     #   [1]: https://docs.aws.amazon.com/lambda/latest/dg/invocation-eventfiltering.html
     #
+    # @option params [String] :kms_key_arn
+    #   The ARN of the Key Management Service (KMS) customer managed key that
+    #   Lambda uses to encrypt your function's [filter criteria][1]. By
+    #   default, Lambda does not encrypt your filter criteria object. Specify
+    #   this property to encrypt data using your own customer managed key.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/lambda/latest/dg/invocation-eventfiltering.html#filtering-basics
+    #
+    # @option params [Types::EventSourceMappingMetricsConfig] :metrics_config
+    #   The metrics configuration for your event source. For more information,
+    #   see [Event source mapping metrics][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/lambda/latest/dg/monitoring-metrics-types.html#event-source-mapping-metrics
+    #
+    # @option params [Types::EventSourceMappingLoggingConfig] :logging_config
+    #   (Amazon MSK, and self-managed Apache Kafka only) The logging
+    #   configuration for your event source. Use this configuration object to
+    #   define the level of logs for your event source mapping.
+    #
+    # @option params [Types::ScalingConfig] :scaling_config
+    #   (Amazon SQS only) The scaling configuration for the event source. For
+    #   more information, see [Configuring maximum concurrency for Amazon SQS
+    #   event sources][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#events-sqs-max-concurrency
+    #
     # @option params [Integer] :maximum_batching_window_in_seconds
     #   The maximum amount of time, in seconds, that Lambda spends gathering
     #   records before invoking the function. You can configure
@@ -7041,76 +8608,59 @@ module Aws::Lambda
     #   when you set `BatchSize` to a value greater than 10, you must set
     #   `MaximumBatchingWindowInSeconds` to at least 1.
     #
-    # @option params [Types::DestinationConfig] :destination_config
-    #   (Kinesis, DynamoDB Streams, Amazon MSK, and self-managed Kafka only) A
-    #   configuration object that specifies the destination of an event after
-    #   Lambda processes it.
-    #
-    # @option params [Integer] :maximum_record_age_in_seconds
-    #   (Kinesis and DynamoDB Streams only) Discard records older than the
-    #   specified age. The default value is infinite (-1).
-    #
-    # @option params [Boolean] :bisect_batch_on_function_error
-    #   (Kinesis and DynamoDB Streams only) If the function returns an error,
-    #   split the batch in two and retry.
-    #
-    # @option params [Integer] :maximum_retry_attempts
-    #   (Kinesis and DynamoDB Streams only) Discard records after the
-    #   specified number of retries. The default value is infinite (-1). When
-    #   set to infinite (-1), failed records are retried until the record
-    #   expires.
-    #
     # @option params [Integer] :parallelization_factor
     #   (Kinesis and DynamoDB Streams only) The number of batches to process
     #   from each shard concurrently.
     #
-    # @option params [Array<Types::SourceAccessConfiguration>] :source_access_configurations
-    #   An array of authentication protocols or VPC components required to
-    #   secure your event source.
+    # @option params [Types::DestinationConfig] :destination_config
+    #   (Kinesis, DynamoDB Streams, Amazon MSK, and self-managed Apache Kafka)
+    #   A configuration object that specifies the destination of an event
+    #   after Lambda processes it.
+    #
+    # @option params [Integer] :maximum_record_age_in_seconds
+    #   (Kinesis, DynamoDB Streams, Amazon MSK, and self-managed Apache Kafka)
+    #   Discard records older than the specified age. The default value is
+    #   infinite (-1).
+    #
+    # @option params [Boolean] :bisect_batch_on_function_error
+    #   (Kinesis, DynamoDB Streams, Amazon MSK, and self-managed Apache Kafka)
+    #   If the function returns an error, split the batch in two and retry.
+    #
+    # @option params [Integer] :maximum_retry_attempts
+    #   (Kinesis, DynamoDB Streams, Amazon MSK, and self-managed Apache Kafka)
+    #   Discard records after the specified number of retries. The default
+    #   value is infinite (-1). When set to infinite (-1), failed records are
+    #   retried until the record expires.
     #
     # @option params [Integer] :tumbling_window_in_seconds
     #   (Kinesis and DynamoDB Streams only) The duration in seconds of a
     #   processing window for DynamoDB and Kinesis Streams event sources. A
     #   value of 0 seconds indicates no tumbling window.
     #
+    # @option params [Array<Types::SourceAccessConfiguration>] :source_access_configurations
+    #   An array of authentication protocols or VPC components required to
+    #   secure your event source.
+    #
     # @option params [Array<String>] :function_response_types
-    #   (Kinesis, DynamoDB Streams, and Amazon SQS) A list of current response
-    #   type enums applied to the event source mapping.
+    #   (Kinesis, DynamoDB Streams, Amazon MSK, self-managed Apache Kafka, and
+    #   Amazon SQS) A list of current response type enums applied to the event
+    #   source mapping.
     #
-    # @option params [Types::ScalingConfig] :scaling_config
-    #   (Amazon SQS only) The scaling configuration for the event source. For
-    #   more information, see [Configuring maximum concurrency for Amazon SQS
-    #   event sources][1].
+    # @option params [Types::AmazonManagedKafkaEventSourceConfig] :amazon_managed_kafka_event_source_config
+    #   Specific configuration settings for an Amazon Managed Streaming for
+    #   Apache Kafka (Amazon MSK) event source.
     #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#events-sqs-max-concurrency
+    # @option params [Types::SelfManagedKafkaEventSourceConfig] :self_managed_kafka_event_source_config
+    #   Specific configuration settings for a self-managed Apache Kafka event
+    #   source.
     #
     # @option params [Types::DocumentDBEventSourceConfig] :document_db_event_source_config
     #   Specific configuration settings for a DocumentDB event source.
     #
-    # @option params [String] :kms_key_arn
-    #   The ARN of the Key Management Service (KMS) customer managed key that
-    #   Lambda uses to encrypt your function's [filter criteria][1]. By
-    #   default, Lambda does not encrypt your filter criteria object. Specify
-    #   this property to encrypt data using your own customer managed key.
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/lambda/latest/dg/invocation-eventfiltering.html#filtering-basics
-    #
-    # @option params [Types::EventSourceMappingMetricsConfig] :metrics_config
-    #   The metrics configuration for your event source. For more information,
-    #   see [Event source mapping metrics][1].
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/lambda/latest/dg/monitoring-metrics-types.html#event-source-mapping-metrics
-    #
     # @option params [Types::ProvisionedPollerConfig] :provisioned_poller_config
-    #   (Amazon MSK and self-managed Apache Kafka only) The provisioned mode
-    #   configuration for the event source. For more information, see
-    #   [provisioned mode][1].
+    #   (Amazon SQS, Amazon MSK, and self-managed Apache Kafka only) The
+    #   provisioned mode configuration for the event source. For more
+    #   information, see [provisioned mode][1].
     #
     #
     #
@@ -7126,6 +8676,11 @@ module Aws::Lambda
     #   * {Types::EventSourceMappingConfiguration#parallelization_factor #parallelization_factor} => Integer
     #   * {Types::EventSourceMappingConfiguration#event_source_arn #event_source_arn} => String
     #   * {Types::EventSourceMappingConfiguration#filter_criteria #filter_criteria} => Types::FilterCriteria
+    #   * {Types::EventSourceMappingConfiguration#filter_criteria_error #filter_criteria_error} => Types::FilterCriteriaError
+    #   * {Types::EventSourceMappingConfiguration#kms_key_arn #kms_key_arn} => String
+    #   * {Types::EventSourceMappingConfiguration#metrics_config #metrics_config} => Types::EventSourceMappingMetricsConfig
+    #   * {Types::EventSourceMappingConfiguration#logging_config #logging_config} => Types::EventSourceMappingLoggingConfig
+    #   * {Types::EventSourceMappingConfiguration#scaling_config #scaling_config} => Types::ScalingConfig
     #   * {Types::EventSourceMappingConfiguration#function_arn #function_arn} => String
     #   * {Types::EventSourceMappingConfiguration#last_modified #last_modified} => Time
     #   * {Types::EventSourceMappingConfiguration#last_processing_result #last_processing_result} => String
@@ -7143,12 +8698,8 @@ module Aws::Lambda
     #   * {Types::EventSourceMappingConfiguration#function_response_types #function_response_types} => Array&lt;String&gt;
     #   * {Types::EventSourceMappingConfiguration#amazon_managed_kafka_event_source_config #amazon_managed_kafka_event_source_config} => Types::AmazonManagedKafkaEventSourceConfig
     #   * {Types::EventSourceMappingConfiguration#self_managed_kafka_event_source_config #self_managed_kafka_event_source_config} => Types::SelfManagedKafkaEventSourceConfig
-    #   * {Types::EventSourceMappingConfiguration#scaling_config #scaling_config} => Types::ScalingConfig
     #   * {Types::EventSourceMappingConfiguration#document_db_event_source_config #document_db_event_source_config} => Types::DocumentDBEventSourceConfig
-    #   * {Types::EventSourceMappingConfiguration#kms_key_arn #kms_key_arn} => String
-    #   * {Types::EventSourceMappingConfiguration#filter_criteria_error #filter_criteria_error} => Types::FilterCriteriaError
     #   * {Types::EventSourceMappingConfiguration#event_source_mapping_arn #event_source_mapping_arn} => String
-    #   * {Types::EventSourceMappingConfiguration#metrics_config #metrics_config} => Types::EventSourceMappingMetricsConfig
     #   * {Types::EventSourceMappingConfiguration#provisioned_poller_config #provisioned_poller_config} => Types::ProvisionedPollerConfig
     #
     #
@@ -7160,7 +8711,7 @@ module Aws::Lambda
     #     batch_size: 123, 
     #     enabled: true, 
     #     function_name: "myFunction", 
-    #     uuid: "1234xCy789012", 
+    #     uuid: "a1b2c3d4-5678-90ab-cdef-11111EXAMPLE", 
     #   })
     #
     #   resp.to_h outputs the following:
@@ -7168,18 +8719,18 @@ module Aws::Lambda
     #     batch_size: 123, 
     #     event_source_arn: "arn:aws:s3:::examplebucket/*", 
     #     function_arn: "arn:aws:lambda:us-west-2:123456789012:function:myFunction", 
-    #     last_modified: Time.parse("2016-11-21T19:49:20.006+0000"), 
+    #     last_modified: Time.parse("2016-11-21T19:49:20.006Z"), 
     #     last_processing_result: "", 
     #     state: "", 
     #     state_transition_reason: "", 
-    #     uuid: "1234xCy789012", 
+    #     uuid: "a1b2c3d4-5678-90ab-cdef-11111EXAMPLE", 
     #   }
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_event_source_mapping({
-    #     uuid: "String", # required
-    #     function_name: "FunctionName",
+    #     uuid: "UUIDString", # required
+    #     function_name: "NamespacedFunctionName",
     #     enabled: false,
     #     batch_size: 1,
     #     filter_criteria: {
@@ -7189,7 +8740,18 @@ module Aws::Lambda
     #         },
     #       ],
     #     },
+    #     kms_key_arn: "KMSKeyArn",
+    #     metrics_config: {
+    #       metrics: ["EventCount"], # accepts EventCount, ErrorCount, KafkaMetrics
+    #     },
+    #     logging_config: {
+    #       system_log_level: "DEBUG", # accepts DEBUG, INFO, WARN
+    #     },
+    #     scaling_config: {
+    #       maximum_concurrency: 1,
+    #     },
     #     maximum_batching_window_in_seconds: 1,
+    #     parallelization_factor: 1,
     #     destination_config: {
     #       on_success: {
     #         destination: "DestinationArn",
@@ -7201,30 +8763,59 @@ module Aws::Lambda
     #     maximum_record_age_in_seconds: 1,
     #     bisect_batch_on_function_error: false,
     #     maximum_retry_attempts: 1,
-    #     parallelization_factor: 1,
+    #     tumbling_window_in_seconds: 1,
     #     source_access_configurations: [
     #       {
     #         type: "BASIC_AUTH", # accepts BASIC_AUTH, VPC_SUBNET, VPC_SECURITY_GROUP, SASL_SCRAM_512_AUTH, SASL_SCRAM_256_AUTH, VIRTUAL_HOST, CLIENT_CERTIFICATE_TLS_AUTH, SERVER_ROOT_CA_CERTIFICATE
     #         uri: "URI",
     #       },
     #     ],
-    #     tumbling_window_in_seconds: 1,
     #     function_response_types: ["ReportBatchItemFailures"], # accepts ReportBatchItemFailures
-    #     scaling_config: {
-    #       maximum_concurrency: 1,
+    #     amazon_managed_kafka_event_source_config: {
+    #       consumer_group_id: "URI",
+    #       schema_registry_config: {
+    #         schema_registry_uri: "SchemaRegistryUri",
+    #         event_record_format: "JSON", # accepts JSON, SOURCE
+    #         access_configs: [
+    #           {
+    #             type: "BASIC_AUTH", # accepts BASIC_AUTH, CLIENT_CERTIFICATE_TLS_AUTH, SERVER_ROOT_CA_CERTIFICATE
+    #             uri: "Arn",
+    #           },
+    #         ],
+    #         schema_validation_configs: [
+    #           {
+    #             attribute: "KEY", # accepts KEY, VALUE
+    #           },
+    #         ],
+    #       },
+    #     },
+    #     self_managed_kafka_event_source_config: {
+    #       consumer_group_id: "URI",
+    #       schema_registry_config: {
+    #         schema_registry_uri: "SchemaRegistryUri",
+    #         event_record_format: "JSON", # accepts JSON, SOURCE
+    #         access_configs: [
+    #           {
+    #             type: "BASIC_AUTH", # accepts BASIC_AUTH, CLIENT_CERTIFICATE_TLS_AUTH, SERVER_ROOT_CA_CERTIFICATE
+    #             uri: "Arn",
+    #           },
+    #         ],
+    #         schema_validation_configs: [
+    #           {
+    #             attribute: "KEY", # accepts KEY, VALUE
+    #           },
+    #         ],
+    #       },
     #     },
     #     document_db_event_source_config: {
     #       database_name: "DatabaseName",
     #       collection_name: "CollectionName",
     #       full_document: "UpdateLookup", # accepts UpdateLookup, Default
     #     },
-    #     kms_key_arn: "KMSKeyArn",
-    #     metrics_config: {
-    #       metrics: ["EventCount"], # accepts EventCount
-    #     },
     #     provisioned_poller_config: {
     #       minimum_pollers: 1,
     #       maximum_pollers: 1,
+    #       poller_group_name: "ProvisionedPollerGroupName",
     #     },
     #   })
     #
@@ -7239,6 +8830,13 @@ module Aws::Lambda
     #   resp.event_source_arn #=> String
     #   resp.filter_criteria.filters #=> Array
     #   resp.filter_criteria.filters[0].pattern #=> String
+    #   resp.filter_criteria_error.error_code #=> String
+    #   resp.filter_criteria_error.message #=> String
+    #   resp.kms_key_arn #=> String
+    #   resp.metrics_config.metrics #=> Array
+    #   resp.metrics_config.metrics[0] #=> String, one of "EventCount", "ErrorCount", "KafkaMetrics"
+    #   resp.logging_config.system_log_level #=> String, one of "DEBUG", "INFO", "WARN"
+    #   resp.scaling_config.maximum_concurrency #=> Integer
     #   resp.function_arn #=> String
     #   resp.last_modified #=> Time
     #   resp.last_processing_result #=> String
@@ -7263,19 +8861,28 @@ module Aws::Lambda
     #   resp.function_response_types #=> Array
     #   resp.function_response_types[0] #=> String, one of "ReportBatchItemFailures"
     #   resp.amazon_managed_kafka_event_source_config.consumer_group_id #=> String
+    #   resp.amazon_managed_kafka_event_source_config.schema_registry_config.schema_registry_uri #=> String
+    #   resp.amazon_managed_kafka_event_source_config.schema_registry_config.event_record_format #=> String, one of "JSON", "SOURCE"
+    #   resp.amazon_managed_kafka_event_source_config.schema_registry_config.access_configs #=> Array
+    #   resp.amazon_managed_kafka_event_source_config.schema_registry_config.access_configs[0].type #=> String, one of "BASIC_AUTH", "CLIENT_CERTIFICATE_TLS_AUTH", "SERVER_ROOT_CA_CERTIFICATE"
+    #   resp.amazon_managed_kafka_event_source_config.schema_registry_config.access_configs[0].uri #=> String
+    #   resp.amazon_managed_kafka_event_source_config.schema_registry_config.schema_validation_configs #=> Array
+    #   resp.amazon_managed_kafka_event_source_config.schema_registry_config.schema_validation_configs[0].attribute #=> String, one of "KEY", "VALUE"
     #   resp.self_managed_kafka_event_source_config.consumer_group_id #=> String
-    #   resp.scaling_config.maximum_concurrency #=> Integer
+    #   resp.self_managed_kafka_event_source_config.schema_registry_config.schema_registry_uri #=> String
+    #   resp.self_managed_kafka_event_source_config.schema_registry_config.event_record_format #=> String, one of "JSON", "SOURCE"
+    #   resp.self_managed_kafka_event_source_config.schema_registry_config.access_configs #=> Array
+    #   resp.self_managed_kafka_event_source_config.schema_registry_config.access_configs[0].type #=> String, one of "BASIC_AUTH", "CLIENT_CERTIFICATE_TLS_AUTH", "SERVER_ROOT_CA_CERTIFICATE"
+    #   resp.self_managed_kafka_event_source_config.schema_registry_config.access_configs[0].uri #=> String
+    #   resp.self_managed_kafka_event_source_config.schema_registry_config.schema_validation_configs #=> Array
+    #   resp.self_managed_kafka_event_source_config.schema_registry_config.schema_validation_configs[0].attribute #=> String, one of "KEY", "VALUE"
     #   resp.document_db_event_source_config.database_name #=> String
     #   resp.document_db_event_source_config.collection_name #=> String
     #   resp.document_db_event_source_config.full_document #=> String, one of "UpdateLookup", "Default"
-    #   resp.kms_key_arn #=> String
-    #   resp.filter_criteria_error.error_code #=> String
-    #   resp.filter_criteria_error.message #=> String
     #   resp.event_source_mapping_arn #=> String
-    #   resp.metrics_config.metrics #=> Array
-    #   resp.metrics_config.metrics[0] #=> String, one of "EventCount"
     #   resp.provisioned_poller_config.minimum_pollers #=> Integer
     #   resp.provisioned_poller_config.maximum_pollers #=> Integer
+    #   resp.provisioned_poller_config.poller_group_name #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/UpdateEventSourceMapping AWS API Documentation
     #
@@ -7351,14 +8958,31 @@ module Aws::Lambda
     #   For versioned objects, the version of the deployment package object to
     #   use.
     #
+    # @option params [String] :s3_object_storage_mode
+    #   Specifies how the deployment package is stored. Valid values:
+    #
+    #   * `COPY` (default) – Uploads a copy of your deployment package to
+    #     Lambda.
+    #
+    #   * `REFERENCE` – Lambda references the deployment package from the
+    #     specified Amazon S3 bucket.
+    #
     # @option params [String] :image_uri
     #   URI of a container image in the Amazon ECR registry. Do not use for a
     #   function defined with a .zip file archive.
+    #
+    # @option params [Array<String>] :architectures
+    #   The instruction set architecture that the function supports. Enter a
+    #   string array with one of the valid values (arm64 or x86\_64). The
+    #   default value is `x86_64`.
     #
     # @option params [Boolean] :publish
     #   Set to true to publish a new version of the function after updating
     #   the code. This has the same effect as calling PublishVersion
     #   separately.
+    #
+    # @option params [String] :publish_to
+    #   Specifies where to publish the function version or configuration.
     #
     # @option params [Boolean] :dry_run
     #   Set to true to validate the request parameters and access permissions
@@ -7368,11 +8992,6 @@ module Aws::Lambda
     #   Update the function only if the revision ID matches the ID that's
     #   specified. Use this option to avoid modifying a function that has
     #   changed since you last read it.
-    #
-    # @option params [Array<String>] :architectures
-    #   The instruction set architecture that the function supports. Enter a
-    #   string array with one of the valid values (arm64 or x86\_64). The
-    #   default value is `x86_64`.
     #
     # @option params [String] :source_kms_key_arn
     #   The ARN of the Key Management Service (KMS) customer managed key
@@ -7409,15 +9028,19 @@ module Aws::Lambda
     #   * {Types::FunctionConfiguration#last_update_status_reason #last_update_status_reason} => String
     #   * {Types::FunctionConfiguration#last_update_status_reason_code #last_update_status_reason_code} => String
     #   * {Types::FunctionConfiguration#file_system_configs #file_system_configs} => Array&lt;Types::FileSystemConfig&gt;
-    #   * {Types::FunctionConfiguration#package_type #package_type} => String
-    #   * {Types::FunctionConfiguration#image_config_response #image_config_response} => Types::ImageConfigResponse
     #   * {Types::FunctionConfiguration#signing_profile_version_arn #signing_profile_version_arn} => String
     #   * {Types::FunctionConfiguration#signing_job_arn #signing_job_arn} => String
+    #   * {Types::FunctionConfiguration#package_type #package_type} => String
+    #   * {Types::FunctionConfiguration#image_config_response #image_config_response} => Types::ImageConfigResponse
     #   * {Types::FunctionConfiguration#architectures #architectures} => Array&lt;String&gt;
     #   * {Types::FunctionConfiguration#ephemeral_storage #ephemeral_storage} => Types::EphemeralStorage
     #   * {Types::FunctionConfiguration#snap_start #snap_start} => Types::SnapStartResponse
     #   * {Types::FunctionConfiguration#runtime_version_config #runtime_version_config} => Types::RuntimeVersionConfig
     #   * {Types::FunctionConfiguration#logging_config #logging_config} => Types::LoggingConfig
+    #   * {Types::FunctionConfiguration#tenancy_config #tenancy_config} => Types::TenancyConfig
+    #   * {Types::FunctionConfiguration#capacity_provider_config #capacity_provider_config} => Types::CapacityProviderConfig
+    #   * {Types::FunctionConfiguration#config_sha_256 #config_sha_256} => String
+    #   * {Types::FunctionConfiguration#durable_config #durable_config} => Types::DurableConfig
     #
     #
     # @example Example: To update a Lambda function's code
@@ -7459,11 +9082,13 @@ module Aws::Lambda
     #     s3_bucket: "S3Bucket",
     #     s3_key: "S3Key",
     #     s3_object_version: "S3ObjectVersion",
+    #     s3_object_storage_mode: "COPY", # accepts COPY, REFERENCE
     #     image_uri: "String",
+    #     architectures: ["x86_64"], # accepts x86_64, arm64
     #     publish: false,
+    #     publish_to: "LATEST_PUBLISHED", # accepts LATEST_PUBLISHED
     #     dry_run: false,
     #     revision_id: "String",
-    #     architectures: ["x86_64"], # accepts x86_64, arm64
     #     source_kms_key_arn: "KMSKeyArn",
     #   })
     #
@@ -7471,7 +9096,7 @@ module Aws::Lambda
     #
     #   resp.function_name #=> String
     #   resp.function_arn #=> String
-    #   resp.runtime #=> String, one of "nodejs", "nodejs4.3", "nodejs6.10", "nodejs8.10", "nodejs10.x", "nodejs12.x", "nodejs14.x", "nodejs16.x", "java8", "java8.al2", "java11", "python2.7", "python3.6", "python3.7", "python3.8", "python3.9", "dotnetcore1.0", "dotnetcore2.0", "dotnetcore2.1", "dotnetcore3.1", "dotnet6", "dotnet8", "nodejs4.3-edge", "go1.x", "ruby2.5", "ruby2.7", "provided", "provided.al2", "nodejs18.x", "python3.10", "java17", "ruby3.2", "ruby3.3", "ruby3.4", "python3.11", "nodejs20.x", "provided.al2023", "python3.12", "java21", "python3.13", "nodejs22.x"
+    #   resp.runtime #=> String, one of "nodejs", "nodejs4.3", "nodejs6.10", "nodejs8.10", "nodejs10.x", "nodejs12.x", "nodejs14.x", "nodejs16.x", "nodejs18.x", "nodejs20.x", "nodejs22.x", "nodejs24.x", "java8", "java8.al2", "java11", "java17", "java21", "java25", "python2.7", "python3.6", "python3.7", "python3.8", "python3.9", "python3.10", "python3.11", "python3.12", "python3.13", "python3.14", "dotnetcore1.0", "dotnetcore2.0", "dotnetcore2.1", "dotnetcore3.1", "dotnet6", "dotnet8", "dotnet10", "nodejs4.3-edge", "go1.x", "ruby2.5", "ruby2.7", "ruby3.2", "ruby3.3", "ruby3.4", "ruby4.0", "provided", "provided.al2", "provided.al2023", "nodejs26.x", "python3.15", "java8.al2023", "java11.al2023", "java17.al2023"
     #   resp.role #=> String
     #   resp.handler #=> String
     #   resp.code_size #=> Integer
@@ -7501,15 +9126,17 @@ module Aws::Lambda
     #   resp.layers[0].code_size #=> Integer
     #   resp.layers[0].signing_profile_version_arn #=> String
     #   resp.layers[0].signing_job_arn #=> String
-    #   resp.state #=> String, one of "Pending", "Active", "Inactive", "Failed"
+    #   resp.state #=> String, one of "Pending", "Active", "Inactive", "Failed", "Deactivating", "Deactivated", "ActiveNonInvocable", "Deleting"
     #   resp.state_reason #=> String
-    #   resp.state_reason_code #=> String, one of "Idle", "Creating", "Restoring", "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError"
+    #   resp.state_reason_code #=> String, one of "Idle", "Creating", "Restoring", "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError", "ServiceQuotaExceededException", "VcpuLimitExceeded", "CapacityProviderScalingLimitExceeded", "InsufficientCapacity", "EC2RequestLimitExceeded", "FunctionError.InitTimeout", "FunctionError.RuntimeInitError", "FunctionError.ExtensionInitError", "FunctionError.InvalidEntryPoint", "FunctionError.InvalidWorkingDirectory", "FunctionError.PermissionDenied", "FunctionError.TooManyExtensions", "FunctionError.InitResourceExhausted", "DisallowedByVpcEncryptionControl", "DrainingDurableExecutions", "DependencyError"
     #   resp.last_update_status #=> String, one of "Successful", "Failed", "InProgress"
     #   resp.last_update_status_reason #=> String
-    #   resp.last_update_status_reason_code #=> String, one of "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError"
+    #   resp.last_update_status_reason_code #=> String, one of "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError", "ServiceQuotaExceededException", "VcpuLimitExceeded", "CapacityProviderScalingLimitExceeded", "InsufficientCapacity", "EC2RequestLimitExceeded", "FunctionError.InitTimeout", "FunctionError.RuntimeInitError", "FunctionError.ExtensionInitError", "FunctionError.InvalidEntryPoint", "FunctionError.InvalidWorkingDirectory", "FunctionError.PermissionDenied", "FunctionError.TooManyExtensions", "FunctionError.InitResourceExhausted", "DisallowedByVpcEncryptionControl", "DependencyError"
     #   resp.file_system_configs #=> Array
     #   resp.file_system_configs[0].arn #=> String
     #   resp.file_system_configs[0].local_mount_path #=> String
+    #   resp.signing_profile_version_arn #=> String
+    #   resp.signing_job_arn #=> String
     #   resp.package_type #=> String, one of "Zip", "Image"
     #   resp.image_config_response.image_config.entry_point #=> Array
     #   resp.image_config_response.image_config.entry_point[0] #=> String
@@ -7518,8 +9145,6 @@ module Aws::Lambda
     #   resp.image_config_response.image_config.working_directory #=> String
     #   resp.image_config_response.error.error_code #=> String
     #   resp.image_config_response.error.message #=> String
-    #   resp.signing_profile_version_arn #=> String
-    #   resp.signing_job_arn #=> String
     #   resp.architectures #=> Array
     #   resp.architectures[0] #=> String, one of "x86_64", "arm64"
     #   resp.ephemeral_storage.size #=> Integer
@@ -7532,6 +9157,14 @@ module Aws::Lambda
     #   resp.logging_config.application_log_level #=> String, one of "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"
     #   resp.logging_config.system_log_level #=> String, one of "DEBUG", "INFO", "WARN"
     #   resp.logging_config.log_group #=> String
+    #   resp.tenancy_config.tenant_isolation_mode #=> String, one of "PER_TENANT"
+    #   resp.capacity_provider_config.lambda_managed_instances_capacity_provider_config.capacity_provider_arn #=> String
+    #   resp.capacity_provider_config.lambda_managed_instances_capacity_provider_config.per_execution_environment_max_concurrency #=> Integer
+    #   resp.capacity_provider_config.lambda_managed_instances_capacity_provider_config.execution_environment_memory_gi_b_per_v_cpu #=> Float
+    #   resp.config_sha_256 #=> String
+    #   resp.durable_config.kms_key_arn #=> String
+    #   resp.durable_config.retention_period_in_days #=> Integer
+    #   resp.durable_config.execution_timeout #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/UpdateFunctionCode AWS API Documentation
     #
@@ -7713,7 +9346,8 @@ module Aws::Lambda
     #   [1]: https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html
     #
     # @option params [Array<Types::FileSystemConfig>] :file_system_configs
-    #   Connection settings for an Amazon EFS file system.
+    #   Connection settings for an Amazon EFS file system or an Amazon S3
+    #   Files file system.
     #
     # @option params [Types::ImageConfig] :image_config
     #   [Container image configuration values][1] that override the values in
@@ -7741,6 +9375,21 @@ module Aws::Lambda
     #
     # @option params [Types::LoggingConfig] :logging_config
     #   The function's Amazon CloudWatch Logs configuration settings.
+    #
+    # @option params [Types::CapacityProviderConfig] :capacity_provider_config
+    #   Configuration for the capacity provider that manages compute resources
+    #   for Lambda functions.
+    #
+    # @option params [Types::DurableConfig] :durable_config
+    #   Configuration settings for [durable functions][1], including execution
+    #   timeout, retention period for execution history, and an optional ARN
+    #   of the Key Management Service (KMS) customer managed key that is used
+    #   to encrypt your durable execution's payload data, including input,
+    #   output, and error payloads.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/lambda/latest/dg/durable-functions.html
     #
     # @return [Types::FunctionConfiguration] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -7771,15 +9420,19 @@ module Aws::Lambda
     #   * {Types::FunctionConfiguration#last_update_status_reason #last_update_status_reason} => String
     #   * {Types::FunctionConfiguration#last_update_status_reason_code #last_update_status_reason_code} => String
     #   * {Types::FunctionConfiguration#file_system_configs #file_system_configs} => Array&lt;Types::FileSystemConfig&gt;
-    #   * {Types::FunctionConfiguration#package_type #package_type} => String
-    #   * {Types::FunctionConfiguration#image_config_response #image_config_response} => Types::ImageConfigResponse
     #   * {Types::FunctionConfiguration#signing_profile_version_arn #signing_profile_version_arn} => String
     #   * {Types::FunctionConfiguration#signing_job_arn #signing_job_arn} => String
+    #   * {Types::FunctionConfiguration#package_type #package_type} => String
+    #   * {Types::FunctionConfiguration#image_config_response #image_config_response} => Types::ImageConfigResponse
     #   * {Types::FunctionConfiguration#architectures #architectures} => Array&lt;String&gt;
     #   * {Types::FunctionConfiguration#ephemeral_storage #ephemeral_storage} => Types::EphemeralStorage
     #   * {Types::FunctionConfiguration#snap_start #snap_start} => Types::SnapStartResponse
     #   * {Types::FunctionConfiguration#runtime_version_config #runtime_version_config} => Types::RuntimeVersionConfig
     #   * {Types::FunctionConfiguration#logging_config #logging_config} => Types::LoggingConfig
+    #   * {Types::FunctionConfiguration#tenancy_config #tenancy_config} => Types::TenancyConfig
+    #   * {Types::FunctionConfiguration#capacity_provider_config #capacity_provider_config} => Types::CapacityProviderConfig
+    #   * {Types::FunctionConfiguration#config_sha_256 #config_sha_256} => String
+    #   * {Types::FunctionConfiguration#durable_config #durable_config} => Types::DurableConfig
     #
     #
     # @example Example: To update a Lambda function's configuration
@@ -7788,6 +9441,10 @@ module Aws::Lambda
     #   # my-function.
     #
     #   resp = client.update_function_configuration({
+    #     durable_config: {
+    #       execution_timeout: 3600, 
+    #       retention_period_in_days: 45, 
+    #     }, 
     #     function_name: "my-function", 
     #     memory_size: 256, 
     #   })
@@ -7797,6 +9454,10 @@ module Aws::Lambda
     #     code_sha_256: "PFn4S+er27qk+UuZSTKEQfNKG/XNn7QJs90mJgq6oH8=", 
     #     code_size: 308, 
     #     description: "", 
+    #     durable_config: {
+    #       execution_timeout: 3600, 
+    #       retention_period_in_days: 45, 
+    #     }, 
     #     function_arn: "arn:aws:lambda:us-east-2:123456789012:function:my-function", 
     #     function_name: "my-function", 
     #     handler: "index.handler", 
@@ -7831,7 +9492,7 @@ module Aws::Lambda
     #         "EnvironmentVariableName" => "EnvironmentVariableValue",
     #       },
     #     },
-    #     runtime: "nodejs", # accepts nodejs, nodejs4.3, nodejs6.10, nodejs8.10, nodejs10.x, nodejs12.x, nodejs14.x, nodejs16.x, java8, java8.al2, java11, python2.7, python3.6, python3.7, python3.8, python3.9, dotnetcore1.0, dotnetcore2.0, dotnetcore2.1, dotnetcore3.1, dotnet6, dotnet8, nodejs4.3-edge, go1.x, ruby2.5, ruby2.7, provided, provided.al2, nodejs18.x, python3.10, java17, ruby3.2, ruby3.3, ruby3.4, python3.11, nodejs20.x, provided.al2023, python3.12, java21, python3.13, nodejs22.x
+    #     runtime: "nodejs", # accepts nodejs, nodejs4.3, nodejs6.10, nodejs8.10, nodejs10.x, nodejs12.x, nodejs14.x, nodejs16.x, nodejs18.x, nodejs20.x, nodejs22.x, nodejs24.x, java8, java8.al2, java11, java17, java21, java25, python2.7, python3.6, python3.7, python3.8, python3.9, python3.10, python3.11, python3.12, python3.13, python3.14, dotnetcore1.0, dotnetcore2.0, dotnetcore2.1, dotnetcore3.1, dotnet6, dotnet8, dotnet10, nodejs4.3-edge, go1.x, ruby2.5, ruby2.7, ruby3.2, ruby3.3, ruby3.4, ruby4.0, provided, provided.al2, provided.al2023, nodejs26.x, python3.15, java8.al2023, java11.al2023, java17.al2023
     #     dead_letter_config: {
     #       target_arn: "ResourceArn",
     #     },
@@ -7864,13 +9525,25 @@ module Aws::Lambda
     #       system_log_level: "DEBUG", # accepts DEBUG, INFO, WARN
     #       log_group: "LogGroup",
     #     },
+    #     capacity_provider_config: {
+    #       lambda_managed_instances_capacity_provider_config: { # required
+    #         capacity_provider_arn: "CapacityProviderArn", # required
+    #         per_execution_environment_max_concurrency: 1,
+    #         execution_environment_memory_gi_b_per_v_cpu: 1.0,
+    #       },
+    #     },
+    #     durable_config: {
+    #       kms_key_arn: "KMSKeyArn",
+    #       retention_period_in_days: 1,
+    #       execution_timeout: 1,
+    #     },
     #   })
     #
     # @example Response structure
     #
     #   resp.function_name #=> String
     #   resp.function_arn #=> String
-    #   resp.runtime #=> String, one of "nodejs", "nodejs4.3", "nodejs6.10", "nodejs8.10", "nodejs10.x", "nodejs12.x", "nodejs14.x", "nodejs16.x", "java8", "java8.al2", "java11", "python2.7", "python3.6", "python3.7", "python3.8", "python3.9", "dotnetcore1.0", "dotnetcore2.0", "dotnetcore2.1", "dotnetcore3.1", "dotnet6", "dotnet8", "nodejs4.3-edge", "go1.x", "ruby2.5", "ruby2.7", "provided", "provided.al2", "nodejs18.x", "python3.10", "java17", "ruby3.2", "ruby3.3", "ruby3.4", "python3.11", "nodejs20.x", "provided.al2023", "python3.12", "java21", "python3.13", "nodejs22.x"
+    #   resp.runtime #=> String, one of "nodejs", "nodejs4.3", "nodejs6.10", "nodejs8.10", "nodejs10.x", "nodejs12.x", "nodejs14.x", "nodejs16.x", "nodejs18.x", "nodejs20.x", "nodejs22.x", "nodejs24.x", "java8", "java8.al2", "java11", "java17", "java21", "java25", "python2.7", "python3.6", "python3.7", "python3.8", "python3.9", "python3.10", "python3.11", "python3.12", "python3.13", "python3.14", "dotnetcore1.0", "dotnetcore2.0", "dotnetcore2.1", "dotnetcore3.1", "dotnet6", "dotnet8", "dotnet10", "nodejs4.3-edge", "go1.x", "ruby2.5", "ruby2.7", "ruby3.2", "ruby3.3", "ruby3.4", "ruby4.0", "provided", "provided.al2", "provided.al2023", "nodejs26.x", "python3.15", "java8.al2023", "java11.al2023", "java17.al2023"
     #   resp.role #=> String
     #   resp.handler #=> String
     #   resp.code_size #=> Integer
@@ -7900,15 +9573,17 @@ module Aws::Lambda
     #   resp.layers[0].code_size #=> Integer
     #   resp.layers[0].signing_profile_version_arn #=> String
     #   resp.layers[0].signing_job_arn #=> String
-    #   resp.state #=> String, one of "Pending", "Active", "Inactive", "Failed"
+    #   resp.state #=> String, one of "Pending", "Active", "Inactive", "Failed", "Deactivating", "Deactivated", "ActiveNonInvocable", "Deleting"
     #   resp.state_reason #=> String
-    #   resp.state_reason_code #=> String, one of "Idle", "Creating", "Restoring", "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError"
+    #   resp.state_reason_code #=> String, one of "Idle", "Creating", "Restoring", "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError", "ServiceQuotaExceededException", "VcpuLimitExceeded", "CapacityProviderScalingLimitExceeded", "InsufficientCapacity", "EC2RequestLimitExceeded", "FunctionError.InitTimeout", "FunctionError.RuntimeInitError", "FunctionError.ExtensionInitError", "FunctionError.InvalidEntryPoint", "FunctionError.InvalidWorkingDirectory", "FunctionError.PermissionDenied", "FunctionError.TooManyExtensions", "FunctionError.InitResourceExhausted", "DisallowedByVpcEncryptionControl", "DrainingDurableExecutions", "DependencyError"
     #   resp.last_update_status #=> String, one of "Successful", "Failed", "InProgress"
     #   resp.last_update_status_reason #=> String
-    #   resp.last_update_status_reason_code #=> String, one of "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError"
+    #   resp.last_update_status_reason_code #=> String, one of "EniLimitExceeded", "InsufficientRolePermissions", "InvalidConfiguration", "InternalError", "SubnetOutOfIPAddresses", "InvalidSubnet", "InvalidSecurityGroup", "ImageDeleted", "ImageAccessDenied", "InvalidImage", "KMSKeyAccessDenied", "KMSKeyNotFound", "InvalidStateKMSKey", "DisabledKMSKey", "EFSIOError", "EFSMountConnectivityError", "EFSMountFailure", "EFSMountTimeout", "InvalidRuntime", "InvalidZipFileException", "FunctionError", "ServiceQuotaExceededException", "VcpuLimitExceeded", "CapacityProviderScalingLimitExceeded", "InsufficientCapacity", "EC2RequestLimitExceeded", "FunctionError.InitTimeout", "FunctionError.RuntimeInitError", "FunctionError.ExtensionInitError", "FunctionError.InvalidEntryPoint", "FunctionError.InvalidWorkingDirectory", "FunctionError.PermissionDenied", "FunctionError.TooManyExtensions", "FunctionError.InitResourceExhausted", "DisallowedByVpcEncryptionControl", "DependencyError"
     #   resp.file_system_configs #=> Array
     #   resp.file_system_configs[0].arn #=> String
     #   resp.file_system_configs[0].local_mount_path #=> String
+    #   resp.signing_profile_version_arn #=> String
+    #   resp.signing_job_arn #=> String
     #   resp.package_type #=> String, one of "Zip", "Image"
     #   resp.image_config_response.image_config.entry_point #=> Array
     #   resp.image_config_response.image_config.entry_point[0] #=> String
@@ -7917,8 +9592,6 @@ module Aws::Lambda
     #   resp.image_config_response.image_config.working_directory #=> String
     #   resp.image_config_response.error.error_code #=> String
     #   resp.image_config_response.error.message #=> String
-    #   resp.signing_profile_version_arn #=> String
-    #   resp.signing_job_arn #=> String
     #   resp.architectures #=> Array
     #   resp.architectures[0] #=> String, one of "x86_64", "arm64"
     #   resp.ephemeral_storage.size #=> Integer
@@ -7931,6 +9604,14 @@ module Aws::Lambda
     #   resp.logging_config.application_log_level #=> String, one of "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"
     #   resp.logging_config.system_log_level #=> String, one of "DEBUG", "INFO", "WARN"
     #   resp.logging_config.log_group #=> String
+    #   resp.tenancy_config.tenant_isolation_mode #=> String, one of "PER_TENANT"
+    #   resp.capacity_provider_config.lambda_managed_instances_capacity_provider_config.capacity_provider_arn #=> String
+    #   resp.capacity_provider_config.lambda_managed_instances_capacity_provider_config.per_execution_environment_max_concurrency #=> Integer
+    #   resp.capacity_provider_config.lambda_managed_instances_capacity_provider_config.execution_environment_memory_gi_b_per_v_cpu #=> Float
+    #   resp.config_sha_256 #=> String
+    #   resp.durable_config.kms_key_arn #=> String
+    #   resp.durable_config.retention_period_in_days #=> Integer
+    #   resp.durable_config.execution_timeout #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/UpdateFunctionConfiguration AWS API Documentation
     #
@@ -8037,8 +9718,8 @@ module Aws::Lambda
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_function_event_invoke_config({
-    #     function_name: "FunctionName", # required
-    #     qualifier: "Qualifier",
+    #     function_name: "NamespacedFunctionName", # required
+    #     qualifier: "NumericLatestPublishedOrAliasQualifier",
     #     maximum_retry_attempts: 1,
     #     maximum_event_age_in_seconds: 1,
     #     destination_config: {
@@ -8093,8 +9774,8 @@ module Aws::Lambda
     #   The type of authentication that your function URL uses. Set to
     #   `AWS_IAM` if you want to restrict access to authenticated users only.
     #   Set to `NONE` if you want to bypass IAM authentication to create a
-    #   public endpoint. For more information, see [Security and auth model
-    #   for Lambda function URLs][1].
+    #   public endpoint. For more information, see [Control access to Lambda
+    #   function URLs][1].
     #
     #
     #
@@ -8119,12 +9800,7 @@ module Aws::Lambda
     #   * `RESPONSE_STREAM` – Your function streams payload results as they
     #     become available. Lambda invokes your function using the
     #     `InvokeWithResponseStream` API operation. The maximum response
-    #     payload size is 20 MB, however, you can [request a quota
-    #     increase][1].
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/servicequotas/latest/userguide/request-quota-increase.html
+    #     payload size is 200 MB.
     #
     # @return [Types::UpdateFunctionUrlConfigResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -8139,7 +9815,7 @@ module Aws::Lambda
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_function_url_config({
-    #     function_name: "FunctionName", # required
+    #     function_name: "FunctionUrlFunctionName", # required
     #     qualifier: "FunctionUrlQualifier",
     #     auth_type: "NONE", # accepts NONE, AWS_IAM
     #     cors: {
@@ -8199,7 +9875,7 @@ module Aws::Lambda
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-lambda'
-      context[:gem_version] = '1.148.0'
+      context[:gem_version] = '1.192.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

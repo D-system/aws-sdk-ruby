@@ -95,8 +95,8 @@ module Aws::NeptuneGraph
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::NeptuneGraph
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::NeptuneGraph
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::NeptuneGraph
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::NeptuneGraph
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::NeptuneGraph
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::NeptuneGraph
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::NeptuneGraph
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -662,7 +666,7 @@ module Aws::NeptuneGraph
     #   resp.id #=> String
     #   resp.name #=> String
     #   resp.arn #=> String
-    #   resp.status #=> String, one of "CREATING", "AVAILABLE", "DELETING", "RESETTING", "UPDATING", "SNAPSHOTTING", "FAILED", "IMPORTING"
+    #   resp.status #=> String, one of "CREATING", "AVAILABLE", "DELETING", "RESETTING", "UPDATING", "SNAPSHOTTING", "FAILED", "IMPORTING", "STARTING", "STOPPING", "STOPPED"
     #   resp.status_reason #=> String
     #   resp.create_time #=> Time
     #   resp.provisioned_memory #=> Integer
@@ -915,9 +919,9 @@ module Aws::NeptuneGraph
       req.send_request(options)
     end
 
-    # Create a private graph endpoint to allow private access from to the
-    # graph from within a VPC. You can attach security groups to the private
-    # graph endpoint.
+    # Create a private graph endpoint to allow private access to the graph
+    # from within a VPC. You can attach security groups to the private graph
+    # endpoint.
     #
     # <note markdown="1"> VPC endpoint charges apply.
     #
@@ -933,7 +937,7 @@ module Aws::NeptuneGraph
     #   Subnets in which private graph endpoint ENIs are created.
     #
     # @option params [Array<String>] :vpc_security_group_ids
-    #   Security groups to be attached to the private graph endpoint..
+    #   Security groups to be attached to the private graph endpoint.
     #
     # @return [Types::CreatePrivateGraphEndpointOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1010,7 +1014,7 @@ module Aws::NeptuneGraph
     #   resp.id #=> String
     #   resp.name #=> String
     #   resp.arn #=> String
-    #   resp.status #=> String, one of "CREATING", "AVAILABLE", "DELETING", "RESETTING", "UPDATING", "SNAPSHOTTING", "FAILED", "IMPORTING"
+    #   resp.status #=> String, one of "CREATING", "AVAILABLE", "DELETING", "RESETTING", "UPDATING", "SNAPSHOTTING", "FAILED", "IMPORTING", "STARTING", "STOPPING", "STOPPED"
     #   resp.status_reason #=> String
     #   resp.create_time #=> Time
     #   resp.provisioned_memory #=> Integer
@@ -1032,7 +1036,7 @@ module Aws::NeptuneGraph
       req.send_request(options)
     end
 
-    # Deletes the specifed graph snapshot.
+    # Deletes the specified graph snapshot.
     #
     # @option params [required, String] :snapshot_identifier
     #   ID of the graph snapshot to be deleted.
@@ -1286,7 +1290,7 @@ module Aws::NeptuneGraph
     #   resp.id #=> String
     #   resp.name #=> String
     #   resp.arn #=> String
-    #   resp.status #=> String, one of "CREATING", "AVAILABLE", "DELETING", "RESETTING", "UPDATING", "SNAPSHOTTING", "FAILED", "IMPORTING"
+    #   resp.status #=> String, one of "CREATING", "AVAILABLE", "DELETING", "RESETTING", "UPDATING", "SNAPSHOTTING", "FAILED", "IMPORTING", "STARTING", "STOPPING", "STOPPED"
     #   resp.status_reason #=> String
     #   resp.create_time #=> Time
     #   resp.provisioned_memory #=> Integer
@@ -1304,6 +1308,7 @@ module Aws::NeptuneGraph
     #
     #   * graph_available
     #   * graph_deleted
+    #   * graph_stopped
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-graph-2023-11-29/GetGraph AWS API Documentation
     #
@@ -1723,7 +1728,7 @@ module Aws::NeptuneGraph
     #   resp.graphs[0].id #=> String
     #   resp.graphs[0].name #=> String
     #   resp.graphs[0].arn #=> String
-    #   resp.graphs[0].status #=> String, one of "CREATING", "AVAILABLE", "DELETING", "RESETTING", "UPDATING", "SNAPSHOTTING", "FAILED", "IMPORTING"
+    #   resp.graphs[0].status #=> String, one of "CREATING", "AVAILABLE", "DELETING", "RESETTING", "UPDATING", "SNAPSHOTTING", "FAILED", "IMPORTING", "STARTING", "STOPPING", "STOPPED"
     #   resp.graphs[0].provisioned_memory #=> Integer
     #   resp.graphs[0].public_connectivity #=> Boolean
     #   resp.graphs[0].endpoint #=> String
@@ -1960,7 +1965,7 @@ module Aws::NeptuneGraph
     #   resp.id #=> String
     #   resp.name #=> String
     #   resp.arn #=> String
-    #   resp.status #=> String, one of "CREATING", "AVAILABLE", "DELETING", "RESETTING", "UPDATING", "SNAPSHOTTING", "FAILED", "IMPORTING"
+    #   resp.status #=> String, one of "CREATING", "AVAILABLE", "DELETING", "RESETTING", "UPDATING", "SNAPSHOTTING", "FAILED", "IMPORTING", "STARTING", "STOPPING", "STOPPED"
     #   resp.status_reason #=> String
     #   resp.create_time #=> Time
     #   resp.provisioned_memory #=> Integer
@@ -2059,7 +2064,7 @@ module Aws::NeptuneGraph
     #   resp.id #=> String
     #   resp.name #=> String
     #   resp.arn #=> String
-    #   resp.status #=> String, one of "CREATING", "AVAILABLE", "DELETING", "RESETTING", "UPDATING", "SNAPSHOTTING", "FAILED", "IMPORTING"
+    #   resp.status #=> String, one of "CREATING", "AVAILABLE", "DELETING", "RESETTING", "UPDATING", "SNAPSHOTTING", "FAILED", "IMPORTING", "STARTING", "STOPPING", "STOPPED"
     #   resp.status_reason #=> String
     #   resp.create_time #=> Time
     #   resp.provisioned_memory #=> Integer
@@ -2191,6 +2196,62 @@ module Aws::NeptuneGraph
       req.send_request(options)
     end
 
+    # Starts the specific graph.
+    #
+    # @option params [required, String] :graph_identifier
+    #   The unique identifier of the Neptune Analytics graph.
+    #
+    # @return [Types::StartGraphOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::StartGraphOutput#id #id} => String
+    #   * {Types::StartGraphOutput#name #name} => String
+    #   * {Types::StartGraphOutput#arn #arn} => String
+    #   * {Types::StartGraphOutput#status #status} => String
+    #   * {Types::StartGraphOutput#status_reason #status_reason} => String
+    #   * {Types::StartGraphOutput#create_time #create_time} => Time
+    #   * {Types::StartGraphOutput#provisioned_memory #provisioned_memory} => Integer
+    #   * {Types::StartGraphOutput#endpoint #endpoint} => String
+    #   * {Types::StartGraphOutput#public_connectivity #public_connectivity} => Boolean
+    #   * {Types::StartGraphOutput#vector_search_configuration #vector_search_configuration} => Types::VectorSearchConfiguration
+    #   * {Types::StartGraphOutput#replica_count #replica_count} => Integer
+    #   * {Types::StartGraphOutput#kms_key_identifier #kms_key_identifier} => String
+    #   * {Types::StartGraphOutput#source_snapshot_id #source_snapshot_id} => String
+    #   * {Types::StartGraphOutput#deletion_protection #deletion_protection} => Boolean
+    #   * {Types::StartGraphOutput#build_number #build_number} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.start_graph({
+    #     graph_identifier: "GraphIdentifier", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.id #=> String
+    #   resp.name #=> String
+    #   resp.arn #=> String
+    #   resp.status #=> String, one of "CREATING", "AVAILABLE", "DELETING", "RESETTING", "UPDATING", "SNAPSHOTTING", "FAILED", "IMPORTING", "STARTING", "STOPPING", "STOPPED"
+    #   resp.status_reason #=> String
+    #   resp.create_time #=> Time
+    #   resp.provisioned_memory #=> Integer
+    #   resp.endpoint #=> String
+    #   resp.public_connectivity #=> Boolean
+    #   resp.vector_search_configuration.dimension #=> Integer
+    #   resp.replica_count #=> Integer
+    #   resp.kms_key_identifier #=> String
+    #   resp.source_snapshot_id #=> String
+    #   resp.deletion_protection #=> Boolean
+    #   resp.build_number #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-graph-2023-11-29/StartGraph AWS API Documentation
+    #
+    # @overload start_graph(params = {})
+    # @param [Hash] params ({})
+    def start_graph(params = {}, options = {})
+      req = build_request(:start_graph, params)
+      req.send_request(options)
+    end
+
     # Import data into existing Neptune Analytics graph from Amazon Simple
     # Storage Service (S3). The graph needs to be empty and in the AVAILABLE
     # state.
@@ -2211,7 +2272,7 @@ module Aws::NeptuneGraph
     # @option params [String] :format
     #   Specifies the format of Amazon S3 data to be imported. Valid values
     #   are CSV, which identifies the Gremlin CSV format or OPENCYPHER, which
-    #   identies the openCypher load format.
+    #   identifies the openCypher load format.
     #
     # @option params [String] :parquet_type
     #   The parquet type of the import task.
@@ -2284,6 +2345,62 @@ module Aws::NeptuneGraph
     # @param [Hash] params ({})
     def start_import_task(params = {}, options = {})
       req = build_request(:start_import_task, params)
+      req.send_request(options)
+    end
+
+    # Stops the specific graph.
+    #
+    # @option params [required, String] :graph_identifier
+    #   The unique identifier of the Neptune Analytics graph.
+    #
+    # @return [Types::StopGraphOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::StopGraphOutput#id #id} => String
+    #   * {Types::StopGraphOutput#name #name} => String
+    #   * {Types::StopGraphOutput#arn #arn} => String
+    #   * {Types::StopGraphOutput#status #status} => String
+    #   * {Types::StopGraphOutput#status_reason #status_reason} => String
+    #   * {Types::StopGraphOutput#create_time #create_time} => Time
+    #   * {Types::StopGraphOutput#provisioned_memory #provisioned_memory} => Integer
+    #   * {Types::StopGraphOutput#endpoint #endpoint} => String
+    #   * {Types::StopGraphOutput#public_connectivity #public_connectivity} => Boolean
+    #   * {Types::StopGraphOutput#vector_search_configuration #vector_search_configuration} => Types::VectorSearchConfiguration
+    #   * {Types::StopGraphOutput#replica_count #replica_count} => Integer
+    #   * {Types::StopGraphOutput#kms_key_identifier #kms_key_identifier} => String
+    #   * {Types::StopGraphOutput#source_snapshot_id #source_snapshot_id} => String
+    #   * {Types::StopGraphOutput#deletion_protection #deletion_protection} => Boolean
+    #   * {Types::StopGraphOutput#build_number #build_number} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.stop_graph({
+    #     graph_identifier: "GraphIdentifier", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.id #=> String
+    #   resp.name #=> String
+    #   resp.arn #=> String
+    #   resp.status #=> String, one of "CREATING", "AVAILABLE", "DELETING", "RESETTING", "UPDATING", "SNAPSHOTTING", "FAILED", "IMPORTING", "STARTING", "STOPPING", "STOPPED"
+    #   resp.status_reason #=> String
+    #   resp.create_time #=> Time
+    #   resp.provisioned_memory #=> Integer
+    #   resp.endpoint #=> String
+    #   resp.public_connectivity #=> Boolean
+    #   resp.vector_search_configuration.dimension #=> Integer
+    #   resp.replica_count #=> Integer
+    #   resp.kms_key_identifier #=> String
+    #   resp.source_snapshot_id #=> String
+    #   resp.deletion_protection #=> Boolean
+    #   resp.build_number #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-graph-2023-11-29/StopGraph AWS API Documentation
+    #
+    # @overload stop_graph(params = {})
+    # @param [Hash] params ({})
+    def stop_graph(params = {}, options = {})
+      req = build_request(:stop_graph, params)
       req.send_request(options)
     end
 
@@ -2408,7 +2525,7 @@ module Aws::NeptuneGraph
     #   resp.id #=> String
     #   resp.name #=> String
     #   resp.arn #=> String
-    #   resp.status #=> String, one of "CREATING", "AVAILABLE", "DELETING", "RESETTING", "UPDATING", "SNAPSHOTTING", "FAILED", "IMPORTING"
+    #   resp.status #=> String, one of "CREATING", "AVAILABLE", "DELETING", "RESETTING", "UPDATING", "SNAPSHOTTING", "FAILED", "IMPORTING", "STARTING", "STOPPING", "STOPPED"
     #   resp.status_reason #=> String
     #   resp.create_time #=> Time
     #   resp.provisioned_memory #=> Integer
@@ -2448,7 +2565,7 @@ module Aws::NeptuneGraph
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-neptunegraph'
-      context[:gem_version] = '1.31.0'
+      context[:gem_version] = '1.53.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 
@@ -2522,6 +2639,7 @@ module Aws::NeptuneGraph
     # | graph_deleted                    | {Client#get_graph}                  | 60       | 60            |
     # | graph_snapshot_available         | {Client#get_graph_snapshot}         | 60       | 120           |
     # | graph_snapshot_deleted           | {Client#get_graph_snapshot}         | 60       | 60            |
+    # | graph_stopped                    | {Client#get_graph}                  | 20       | 90            |
     # | import_task_cancelled            | {Client#get_import_task}            | 60       | 60            |
     # | import_task_successful           | {Client#get_import_task}            | 60       | 480           |
     # | private_graph_endpoint_available | {Client#get_private_graph_endpoint} | 10       | 180           |
@@ -2582,6 +2700,7 @@ module Aws::NeptuneGraph
         graph_deleted: Waiters::GraphDeleted,
         graph_snapshot_available: Waiters::GraphSnapshotAvailable,
         graph_snapshot_deleted: Waiters::GraphSnapshotDeleted,
+        graph_stopped: Waiters::GraphStopped,
         import_task_cancelled: Waiters::ImportTaskCancelled,
         import_task_successful: Waiters::ImportTaskSuccessful,
         private_graph_endpoint_available: Waiters::PrivateGraphEndpointAvailable,

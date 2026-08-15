@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -108,8 +109,8 @@ module Aws
 
       interface _CreateUserResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateUserResponse]
-        def user_id: () -> ::String
         def identity_store_id: () -> ::String
+        def user_id: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IdentityStore/Client.html#create_user-instance_method
       def create_user: (
@@ -131,7 +132,7 @@ module Aws
                              value: ::String?,
                              type: ::String?,
                              primary: bool?
-                           },
+                           }
                          ],
                          ?addresses: Array[
                            {
@@ -143,20 +144,38 @@ module Aws
                              formatted: ::String?,
                              type: ::String?,
                              primary: bool?
-                           },
+                           }
                          ],
                          ?phone_numbers: Array[
                            {
                              value: ::String?,
                              type: ::String?,
                              primary: bool?
-                           },
+                           }
                          ],
                          ?user_type: ::String,
                          ?title: ::String,
                          ?preferred_language: ::String,
                          ?locale: ::String,
-                         ?timezone: ::String
+                         ?timezone: ::String,
+                         ?photos: Array[
+                           {
+                             value: ::String,
+                             type: ::String?,
+                             display: ::String?,
+                             primary: bool?
+                           }
+                         ],
+                         ?website: ::String,
+                         ?birthdate: ::String,
+                         ?roles: Array[
+                           {
+                             value: ::String?,
+                             type: ::String?,
+                             primary: bool?
+                           }
+                         ],
+                         ?extensions: Hash[::String, untyped]
                        ) -> _CreateUserResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateUserResponseSuccess
 
@@ -196,6 +215,10 @@ module Aws
         def display_name: () -> ::String
         def external_ids: () -> ::Array[Types::ExternalId]
         def description: () -> ::String
+        def created_at: () -> ::Time
+        def updated_at: () -> ::Time
+        def created_by: () -> ::String
+        def updated_by: () -> ::String
         def identity_store_id: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IdentityStore/Client.html#describe_group-instance_method
@@ -211,6 +234,10 @@ module Aws
         def membership_id: () -> ::String
         def group_id: () -> ::String
         def member_id: () -> Types::MemberId
+        def created_at: () -> ::Time
+        def updated_at: () -> ::Time
+        def created_by: () -> ::String
+        def updated_by: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IdentityStore/Client.html#describe_group_membership-instance_method
       def describe_group_membership: (
@@ -221,8 +248,9 @@ module Aws
 
       interface _DescribeUserResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DescribeUserResponse]
-        def user_name: () -> ::String
+        def identity_store_id: () -> ::String
         def user_id: () -> ::String
+        def user_name: () -> ::String
         def external_ids: () -> ::Array[Types::ExternalId]
         def name: () -> Types::Name
         def display_name: () -> ::String
@@ -236,12 +264,22 @@ module Aws
         def preferred_language: () -> ::String
         def locale: () -> ::String
         def timezone: () -> ::String
-        def identity_store_id: () -> ::String
+        def user_status: () -> ("ENABLED" | "DISABLED")
+        def photos: () -> ::Array[Types::Photo]
+        def website: () -> ::String
+        def birthdate: () -> ::String
+        def roles: () -> ::Array[Types::Role]
+        def created_at: () -> ::Time
+        def created_by: () -> ::String
+        def updated_at: () -> ::Time
+        def updated_by: () -> ::String
+        def extensions: () -> ::Hash[::String, untyped]
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IdentityStore/Client.html#describe_user-instance_method
       def describe_user: (
                            identity_store_id: ::String,
-                           user_id: ::String
+                           user_id: ::String,
+                           ?extensions: Array[::String]
                          ) -> _DescribeUserResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeUserResponseSuccess
 
@@ -253,16 +291,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IdentityStore/Client.html#get_group_id-instance_method
       def get_group_id: (
                           identity_store_id: ::String,
-                          alternate_identifier: {
-                            external_id: {
-                              issuer: ::String,
-                              id: ::String
-                            }?,
-                            unique_attribute: {
-                              attribute_path: ::String,
-                              attribute_value: untyped
-                            }?
-                          }
+                          alternate_identifier: Params::alternate_identifier
                         ) -> _GetGroupIdResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetGroupIdResponseSuccess
 
@@ -283,22 +312,13 @@ module Aws
 
       interface _GetUserIdResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetUserIdResponse]
-        def user_id: () -> ::String
         def identity_store_id: () -> ::String
+        def user_id: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IdentityStore/Client.html#get_user_id-instance_method
       def get_user_id: (
                          identity_store_id: ::String,
-                         alternate_identifier: {
-                           external_id: {
-                             issuer: ::String,
-                             id: ::String
-                           }?,
-                           unique_attribute: {
-                             attribute_path: ::String,
-                             attribute_value: untyped
-                           }?
-                         }
+                         alternate_identifier: Params::alternate_identifier
                        ) -> _GetUserIdResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetUserIdResponseSuccess
 
@@ -360,7 +380,7 @@ module Aws
                            {
                              attribute_path: ::String,
                              attribute_value: ::String
-                           },
+                           }
                          ]
                        ) -> _ListGroupsResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListGroupsResponseSuccess
@@ -373,13 +393,14 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/IdentityStore/Client.html#list_users-instance_method
       def list_users: (
                         identity_store_id: ::String,
+                        ?extensions: Array[::String],
                         ?max_results: ::Integer,
                         ?next_token: ::String,
                         ?filters: Array[
                           {
                             attribute_path: ::String,
                             attribute_value: ::String
-                          },
+                          }
                         ]
                       ) -> _ListUsersResponseSuccess
                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListUsersResponseSuccess
@@ -395,7 +416,7 @@ module Aws
                             {
                               attribute_path: ::String,
                               attribute_value: untyped?
-                            },
+                            }
                           ]
                         ) -> _UpdateGroupResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateGroupResponseSuccess
@@ -411,7 +432,7 @@ module Aws
                            {
                              attribute_path: ::String,
                              attribute_value: untyped?
-                           },
+                           }
                          ]
                        ) -> _UpdateUserResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateUserResponseSuccess

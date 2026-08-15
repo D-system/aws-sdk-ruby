@@ -203,6 +203,28 @@ module Aws::TranscribeStreamingService
       include Aws::Structure
     end
 
+    # The language code that represents the language identified in your
+    # audio, including the associated confidence score.
+    #
+    # @!attribute [rw] language_code
+    #   The language code of the identified language.
+    #   @return [String]
+    #
+    # @!attribute [rw] score
+    #   The confidence score associated with the identified language code.
+    #   Confidence scores are values between zero and one; larger values
+    #   indicate a higher confidence in the identified language.
+    #   @return [Float]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/transcribe-streaming-2017-10-26/CallAnalyticsLanguageWithScore AWS API Documentation
+    #
+    class CallAnalyticsLanguageWithScore < Struct.new(
+      :language_code,
+      :score)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Provides information on any `TranscriptFilterType` categories that
     # matched your transcription output. Matches are identified for each
     # segment upon completion of that segment.
@@ -353,12 +375,30 @@ module Aws::TranscribeStreamingService
     #   summary. The default is `HISTORY_AND_PHYSICAL`.
     #
     #   * HISTORY\_AND\_PHYSICAL: Provides summaries for key sections of the
-    #     clinical documentation. Sections include Chief Complaint, History
-    #     of Present Illness, Review of Systems, Past Medical History,
-    #     Assessment, and Plan.
+    #     clinical documentation. Examples of sections include Chief
+    #     Complaint, History of Present Illness, Review of Systems, Past
+    #     Medical History, Assessment, and Plan.
     #
     #   * GIRPP: Provides summaries based on the patients progress toward
-    #     goals. Sections include Goal, Intervention, Response, Progress,
+    #     goals. Examples of sections include Goal, Intervention, Response,
+    #     Progress, and Plan.
+    #
+    #   * BIRP: Focuses on the patient's behavioral patterns and responses.
+    #     Examples of sections include Behavior, Intervention, Response, and
+    #     Plan.
+    #
+    #   * SIRP: Emphasizes the situational context of therapy. Examples of
+    #     sections include Situation, Intervention, Response, and Plan.
+    #
+    #   * DAP: Provides a simplified format for clinical documentation.
+    #     Examples of sections include Data, Assessment, and Plan.
+    #
+    #   * BEHAVIORAL\_SOAP: Behavioral health focused documentation format.
+    #     Examples of sections include Subjective, Objective, Assessment,
+    #     and Plan.
+    #
+    #   * PHYSICAL\_SOAP: Physical health focused documentation format.
+    #     Examples of sections include Subjective, Objective, Assessment,
     #     and Plan.
     #   @return [String]
     #
@@ -423,13 +463,13 @@ module Aws::TranscribeStreamingService
     # stability score, and start and end times.
     #
     # @!attribute [rw] start_time
-    #   The start time, in milliseconds, of the utterance that was
-    #   identified as PII.
+    #   The start time of the utterance that was identified as PII in
+    #   seconds, with millisecond precision (e.g., 1.056)
     #   @return [Float]
     #
     # @!attribute [rw] end_time
-    #   The end time, in milliseconds, of the utterance that was identified
-    #   as PII.
+    #   The end time of the utterance that was identified as PII in seconds,
+    #   with millisecond precision (e.g., 1.056)
     #   @return [Float]
     #
     # @!attribute [rw] category
@@ -527,11 +567,13 @@ module Aws::TranscribeStreamingService
     # type, and start and end times.
     #
     # @!attribute [rw] start_time
-    #   The start time, in milliseconds, of the transcribed item.
+    #   The start time of the transcribed item in seconds, with millisecond
+    #   precision (e.g., 1.056)
     #   @return [Float]
     #
     # @!attribute [rw] end_time
-    #   The end time, in milliseconds, of the transcribed item.
+    #   The end time of the transcribed item in seconds, with millisecond
+    #   precision (e.g., 1.056)
     #   @return [Float]
     #
     # @!attribute [rw] type
@@ -609,9 +651,12 @@ module Aws::TranscribeStreamingService
       include Aws::Structure
     end
 
-    # Your client has exceeded one of the Amazon Transcribe limits. This is
-    # typically the audio length limit. Break your audio stream into smaller
-    # chunks and try your request again.
+    # Your client has exceeded one of the Amazon Transcribe limits,
+    # typically the concurrent stream service quota. This error can also
+    # occur if a stream exceeds the maximum session duration. In rare cases,
+    # this error can also occur if you increase your number of concurrent
+    # streams too quickly. Reduce your number of concurrent streams and try
+    # your request again using an exponential backoff strategy.
     #
     # @!attribute [rw] message
     #   @return [String]
@@ -659,13 +704,13 @@ module Aws::TranscribeStreamingService
     # and start and end times.
     #
     # @!attribute [rw] start_time
-    #   The start time, in milliseconds, of the utterance that was
-    #   identified as PHI.
+    #   The start time, in seconds, of the utterance that was identified as
+    #   PHI.
     #   @return [Float]
     #
     # @!attribute [rw] end_time
-    #   The end time, in milliseconds, of the utterance that was identified
-    #   as PHI.
+    #   The end time, in seconds, of the utterance that was identified as
+    #   PHI.
     #   @return [Float]
     #
     # @!attribute [rw] category
@@ -702,11 +747,11 @@ module Aws::TranscribeStreamingService
     # type, and start and end times.
     #
     # @!attribute [rw] start_time
-    #   The start time, in milliseconds, of the transcribed item.
+    #   The start time, in seconds, of the transcribed item.
     #   @return [Float]
     #
     # @!attribute [rw] end_time
-    #   The end time, in milliseconds, of the transcribed item.
+    #   The end time, in seconds, of the transcribed item.
     #   @return [Float]
     #
     # @!attribute [rw] type
@@ -758,11 +803,11 @@ module Aws::TranscribeStreamingService
     #   @return [String]
     #
     # @!attribute [rw] start_time
-    #   The start time, in milliseconds, of the `Result`.
+    #   The start time, in seconds, of the `Result`.
     #   @return [Float]
     #
     # @!attribute [rw] end_time
-    #   The end time, in milliseconds, of the `Result`.
+    #   The end time, in seconds, of the `Result`.
     #   @return [Float]
     #
     # @!attribute [rw] is_partial
@@ -927,6 +972,11 @@ module Aws::TranscribeStreamingService
     #   Specify settings for post-stream analytics.
     #   @return [Types::MedicalScribePostStreamAnalyticsSettings]
     #
+    # @!attribute [rw] medical_scribe_context
+    #   The `MedicalScribeContext` object that contains contextual
+    #   information used to generate customized clinical notes.
+    #   @return [Types::MedicalScribeContext]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/transcribe-streaming-2017-10-26/MedicalScribeConfigurationEvent AWS API Documentation
     #
     class MedicalScribeConfigurationEvent < Struct.new(
@@ -937,7 +987,25 @@ module Aws::TranscribeStreamingService
       :channel_definitions,
       :encryption_settings,
       :post_stream_analytics_settings,
+      :medical_scribe_context,
       :event_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The `MedicalScribeContext` object that contains contextual information
+    # which is used during clinical note generation to add relevant context
+    # to the note.
+    #
+    # @!attribute [rw] patient_context
+    #   Contains patient-specific information used to customize the clinical
+    #   note generation.
+    #   @return [Types::MedicalScribePatientContext]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/transcribe-streaming-2017-10-26/MedicalScribeContext AWS API Documentation
+    #
+    class MedicalScribeContext < Struct.new(
+      :patient_context)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1007,6 +1075,21 @@ module Aws::TranscribeStreamingService
       :kms_encryption_context,
       :kms_key_id)
       SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains patient-specific information.
+    #
+    # @!attribute [rw] pronouns
+    #   The patient's preferred pronouns that the user wants to provide as
+    #   a context for clinical note generation .
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/transcribe-streaming-2017-10-26/MedicalScribePatientContext AWS API Documentation
+    #
+    class MedicalScribePatientContext < Struct.new(
+      :pronouns)
+      SENSITIVE = [:pronouns]
       include Aws::Structure
     end
 
@@ -1161,6 +1244,11 @@ module Aws::TranscribeStreamingService
     #   session.
     #   @return [Types::MedicalScribePostStreamAnalyticsResult]
     #
+    # @!attribute [rw] medical_scribe_context_provided
+    #   Indicates whether the `MedicalScribeContext` object was provided
+    #   when the stream was started.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/transcribe-streaming-2017-10-26/MedicalScribeStreamDetails AWS API Documentation
     #
     class MedicalScribeStreamDetails < Struct.new(
@@ -1178,7 +1266,8 @@ module Aws::TranscribeStreamingService
       :encryption_settings,
       :stream_status,
       :post_stream_analytics_settings,
-      :post_stream_analytics_result)
+      :post_stream_analytics_result,
+      :medical_scribe_context_provided)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1490,11 +1579,13 @@ module Aws::TranscribeStreamingService
     #   @return [String]
     #
     # @!attribute [rw] start_time
-    #   The start time, in milliseconds, of the `Result`.
+    #   The start time of the `Result` in seconds, with millisecond
+    #   precision (e.g., 1.056).
     #   @return [Float]
     #
     # @!attribute [rw] end_time
-    #   The end time, in milliseconds, of the `Result`.
+    #   The end time of the `Result` in seconds, with millisecond precision
+    #   (e.g., 1.056).
     #   @return [Float]
     #
     # @!attribute [rw] is_partial
@@ -1670,6 +1761,96 @@ module Aws::TranscribeStreamingService
     #   [1]: https://docs.aws.amazon.com/transcribe/latest/dg/custom-language-models.html
     #   @return [String]
     #
+    # @!attribute [rw] identify_language
+    #   Enables automatic language identification for your Call Analytics
+    #   transcription.
+    #
+    #   If you include `IdentifyLanguage`, you must include a list of
+    #   language codes, using `LanguageOptions`, that you think may be
+    #   present in your audio stream. You must provide a minimum of two
+    #   language selections.
+    #
+    #   You can also include a preferred language using `PreferredLanguage`.
+    #   Adding a preferred language can help Amazon Transcribe identify the
+    #   language faster than if you omit this parameter.
+    #
+    #   Note that you must include either `LanguageCode` or
+    #   `IdentifyLanguage` in your request. If you include both parameters,
+    #   your transcription job fails.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] language_options
+    #   Specify two or more language codes that represent the languages you
+    #   think may be present in your media.
+    #
+    #   Including language options can improve the accuracy of language
+    #   identification.
+    #
+    #   If you include `LanguageOptions` in your request, you must also
+    #   include `IdentifyLanguage`.
+    #
+    #   For a list of languages supported with Call Analytics streaming,
+    #   refer to the [Supported languages][1] table.
+    #
+    #   You can only include one language dialect per language per stream.
+    #   For example, you cannot include `en-US` and `en-AU` in the same
+    #   request.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/transcribe/latest/dg/supported-languages.html
+    #   @return [String]
+    #
+    # @!attribute [rw] preferred_language
+    #   Specify a preferred language from the subset of languages codes you
+    #   specified in `LanguageOptions`.
+    #
+    #   You can only use this parameter if you've included
+    #   `IdentifyLanguage` and `LanguageOptions` in your request.
+    #   @return [String]
+    #
+    # @!attribute [rw] vocabulary_names
+    #   Specify the names of the custom vocabularies that you want to use
+    #   when processing your Call Analytics transcription. Note that
+    #   vocabulary names are case sensitive.
+    #
+    #   If the custom vocabulary's language doesn't match the identified
+    #   media language, it won't be applied to the transcription.
+    #
+    #   This parameter is only intended for use **with** the
+    #   `IdentifyLanguage` parameter. If you're **not** including
+    #   `IdentifyLanguage` in your request and want to use a custom
+    #   vocabulary with your transcription, use the `VocabularyName`
+    #   parameter instead.
+    #
+    #   For more information, see [Custom vocabularies][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/transcribe/latest/dg/custom-vocabulary.html
+    #   @return [String]
+    #
+    # @!attribute [rw] vocabulary_filter_names
+    #   Specify the names of the custom vocabulary filters that you want to
+    #   use when processing your Call Analytics transcription. Note that
+    #   vocabulary filter names are case sensitive.
+    #
+    #   These filters serve to customize the transcript output.
+    #
+    #   This parameter is only intended for use **with** the
+    #   `IdentifyLanguage` parameter. If you're **not** including
+    #   `IdentifyLanguage` in your request and want to use a custom
+    #   vocabulary filter with your transcription, use the
+    #   `VocabularyFilterName` parameter instead.
+    #
+    #   For more information, see [Using vocabulary filtering with unwanted
+    #   words][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/transcribe/latest/dg/vocabulary-filtering.html
+    #   @return [String]
+    #
     # @!attribute [rw] enable_partial_results_stabilization
     #   Enables partial result stabilization for your transcription. Partial
     #   result stabilization can reduce latency in your output, but may
@@ -1767,6 +1948,11 @@ module Aws::TranscribeStreamingService
       :vocabulary_filter_name,
       :vocabulary_filter_method,
       :language_model_name,
+      :identify_language,
+      :language_options,
+      :preferred_language,
+      :vocabulary_names,
+      :vocabulary_filter_names,
       :enable_partial_results_stabilization,
       :partial_results_stability,
       :content_identification_type,
@@ -1825,6 +2011,31 @@ module Aws::TranscribeStreamingService
     #   your Call Analytics request.
     #   @return [String]
     #
+    # @!attribute [rw] identify_language
+    #   Shows whether automatic language identification was enabled for your
+    #   Call Analytics transcription.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] language_options
+    #   Provides the language codes that you specified in your Call
+    #   Analytics request.
+    #   @return [String]
+    #
+    # @!attribute [rw] preferred_language
+    #   Provides the preferred language that you specified in your Call
+    #   Analytics request.
+    #   @return [String]
+    #
+    # @!attribute [rw] vocabulary_names
+    #   Provides the names of the custom vocabularies that you specified in
+    #   your Call Analytics request.
+    #   @return [String]
+    #
+    # @!attribute [rw] vocabulary_filter_names
+    #   Provides the names of the custom vocabulary filters that you
+    #   specified in your Call Analytics request.
+    #   @return [String]
+    #
     # @!attribute [rw] enable_partial_results_stabilization
     #   Shows whether partial results stabilization was enabled for your
     #   Call Analytics transcription.
@@ -1862,6 +2073,11 @@ module Aws::TranscribeStreamingService
       :vocabulary_filter_name,
       :vocabulary_filter_method,
       :language_model_name,
+      :identify_language,
+      :language_options,
+      :preferred_language,
+      :vocabulary_names,
+      :vocabulary_filter_names,
       :enable_partial_results_stabilization,
       :partial_results_stability,
       :content_identification_type,
@@ -2418,7 +2634,9 @@ module Aws::TranscribeStreamingService
     #   Values must be comma-separated and can include: `ADDRESS`,
     #   `BANK_ACCOUNT_NUMBER`, `BANK_ROUTING`, `CREDIT_DEBIT_CVV`,
     #   `CREDIT_DEBIT_EXPIRY`, `CREDIT_DEBIT_NUMBER`, `EMAIL`, `NAME`,
-    #   `PHONE`, `PIN`, `SSN`, or `ALL`.
+    #   `PHONE`, `PIN`, `SSN`, `AGE`, `DATE_TIME`, `LICENSE_PLATE`,
+    #   `PASSPORT_NUMBER`, `PASSWORD`, `USERNAME`,
+    #   `VEHICLE_IDENTIFICATION_NUMBER`, or `ALL`.
     #
     #   Note that if you include `PiiEntityTypes` in your request, you must
     #   also include `ContentIdentificationType` or `ContentRedactionType`.
@@ -2564,6 +2782,31 @@ module Aws::TranscribeStreamingService
     #   [1]: https://docs.aws.amazon.com/transcribe/latest/dg/vocabulary-filtering.html
     #   @return [String]
     #
+    # @!attribute [rw] session_resume_window
+    #   Specify the time window, in minutes, during which your transcription
+    #   session can be resumed, measured from the stream start time. This
+    #   optional parameter accepts integer values from 1 to 300 (5 hours).
+    #
+    #   For example, if your stream starts at 1 PM and you specify a
+    #   `SessionResumeWindow` of 30 minutes, you can reconnect to the
+    #   session as many times as you want until 1:30 PM.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] transcript_format
+    #   Specify how numbers, dates, and other alphanumeric entities are
+    #   rendered in your transcription results.
+    #
+    #   * `WRITTEN` renders these entities in their standard written form
+    #     (for example, `$50`, `10:30 AM`, and `101`).
+    #
+    #   * `SPOKEN` renders these entities as words, exactly as they were
+    #     spoken (for example, `fifty dollars`, `ten thirty a m`, and `one
+    #     oh one`).
+    #
+    #   If you don't specify a value, Amazon Transcribe uses `WRITTEN` by
+    #   default.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/transcribe-streaming-2017-10-26/StartStreamTranscriptionRequest AWS API Documentation
     #
     class StartStreamTranscriptionRequest < Struct.new(
@@ -2589,7 +2832,9 @@ module Aws::TranscribeStreamingService
       :preferred_language,
       :identify_multiple_languages,
       :vocabulary_names,
-      :vocabulary_filter_names)
+      :vocabulary_filter_names,
+      :session_resume_window,
+      :transcript_format)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2701,6 +2946,15 @@ module Aws::TranscribeStreamingService
     #   specified in your request.
     #   @return [String]
     #
+    # @!attribute [rw] session_resume_window
+    #   Provides the session resume window, in minutes, that you specified
+    #   in your request.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] transcript_format
+    #   Provides the transcript format that you specified in your request.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/transcribe-streaming-2017-10-26/StartStreamTranscriptionResponse AWS API Documentation
     #
     class StartStreamTranscriptionResponse < Struct.new(
@@ -2727,7 +2981,9 @@ module Aws::TranscribeStreamingService
       :preferred_language,
       :identify_multiple_languages,
       :vocabulary_names,
-      :vocabulary_filter_names)
+      :vocabulary_filter_names,
+      :session_resume_window,
+      :transcript_format)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2853,6 +3109,16 @@ module Aws::TranscribeStreamingService
     #   Provides the issue that was detected in the specified segment.
     #   @return [Array<Types::IssueDetected>]
     #
+    # @!attribute [rw] language_code
+    #   The language code that represents the language spoken in your audio
+    #   stream.
+    #   @return [String]
+    #
+    # @!attribute [rw] language_identification
+    #   The language code of the dominant language identified in your
+    #   stream.
+    #   @return [Array<Types::CallAnalyticsLanguageWithScore>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/transcribe-streaming-2017-10-26/UtteranceEvent AWS API Documentation
     #
     class UtteranceEvent < Struct.new(
@@ -2866,6 +3132,8 @@ module Aws::TranscribeStreamingService
       :entities,
       :sentiment,
       :issues_detected,
+      :language_code,
+      :language_identification,
       :event_type)
       SENSITIVE = []
       include Aws::Structure

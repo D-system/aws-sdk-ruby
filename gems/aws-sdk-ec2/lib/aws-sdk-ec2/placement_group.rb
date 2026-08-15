@@ -79,6 +79,24 @@ module Aws::EC2
       data[:spread_level]
     end
 
+    # Reserved for future use.
+    # @return [String]
+    def linked_group_id
+      data[:linked_group_id]
+    end
+
+    # The service provider that manages the Placement Group.
+    # @return [Types::OperatorResponse]
+    def operator
+      data[:operator]
+    end
+
+    # The ID of the parent placement group.
+    # @return [String]
+    def parent_group_id
+      data[:parent_group_id]
+    end
+
     # @!endgroup
 
     # @return [Client]
@@ -243,6 +261,7 @@ module Aws::EC2
     #
     #   instances = placement_group.instances({
     #     instance_ids: ["InstanceId"],
+    #     include_managed_resources: false,
     #     dry_run: false,
     #     filters: [
     #       {
@@ -256,6 +275,11 @@ module Aws::EC2
     #   The instance IDs.
     #
     #   Default: Describes all your instances.
+    # @option options [Boolean] :include_managed_resources
+    #   Indicates whether to include managed resources in the output. If this
+    #   parameter is set to `true`, the output includes resources that are
+    #   managed by Amazon Web Services services, even if managed resource
+    #   visibility is set to hidden.
     # @option options [Boolean] :dry_run
     #   Checks whether you have the required permissions for the operation,
     #   without actually making the request, and provides an error response.
@@ -271,6 +295,9 @@ module Aws::EC2
     #     `arm64`).
     #
     #   * `availability-zone` - The Availability Zone of the instance.
+    #
+    #   * `availability-zone-id` - The ID of the Availability Zone of the
+    #     instance.
     #
     #   * `block-device-mapping.attach-time` - The attach time for an EBS
     #     volume mapped to the instance, for example,
@@ -598,15 +625,16 @@ module Aws::EC2
     #
     #   * `platform-details` - The platform (`Linux/UNIX` \| `Red Hat BYOL
     #     Linux` \| ` Red Hat Enterprise Linux` \| `Red Hat Enterprise Linux
-    #     with HA` \| `Red Hat Enterprise Linux with SQL Server Standard and
-    #     HA` \| `Red Hat Enterprise Linux with SQL Server Enterprise and HA`
-    #     \| `Red Hat Enterprise Linux with SQL Server Standard` \| `Red Hat
-    #     Enterprise Linux with SQL Server Web` \| `Red Hat Enterprise Linux
-    #     with SQL Server Enterprise` \| `SQL Server Enterprise` \| `SQL
-    #     Server Standard` \| `SQL Server Web` \| `SUSE Linux` \| `Ubuntu Pro`
-    #     \| `Windows` \| `Windows BYOL` \| `Windows with SQL Server
-    #     Enterprise` \| `Windows with SQL Server Standard` \| `Windows with
-    #     SQL Server Web`).
+    #     with HA` \| `Red Hat Enterprise Linux with High Availability` \|
+    #     `Red Hat Enterprise Linux with SQL Server Standard and HA` \| `Red
+    #     Hat Enterprise Linux with SQL Server Enterprise and HA` \| `Red Hat
+    #     Enterprise Linux with SQL Server Standard` \| `Red Hat Enterprise
+    #     Linux with SQL Server Web` \| `Red Hat Enterprise Linux with SQL
+    #     Server Enterprise` \| `SQL Server Enterprise` \| `SQL Server
+    #     Standard` \| `SQL Server Web` \| `SUSE Linux` \| `Ubuntu Pro` \|
+    #     `Windows` \| `Windows BYOL` \| `Windows with SQL Server Enterprise`
+    #     \| `Windows with SQL Server Standard` \| `Windows with SQL Server
+    #     Web`).
     #
     #   * `private-dns-name` - The private IPv4 DNS name of the instance.
     #

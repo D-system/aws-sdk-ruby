@@ -10,10 +10,14 @@
 module Aws::MediaPackageV2
   module Types
 
-    # You don't have permissions to perform the requested operation. The
-    # user or role that is making the request must have at least one IAM
-    # permissions policy attached that grants the required permissions. For
-    # more information, see Access Management in the IAM User Guide.
+    # Access is denied because either you don't have permissions to perform
+    # the requested operation or MediaPackage is getting throttling errors
+    # with CDN authorization. The user or role that is making the request
+    # must have at least one IAM permissions policy attached that grants the
+    # required permissions. For more information, see Access Management in
+    # the IAM User Guide. Or, if you're using CDN authorization, you will
+    # receive this exception if MediaPackage receives a throttling error
+    # from Secrets Manager.
     #
     # @!attribute [rw] message
     #   @return [String]
@@ -66,6 +70,27 @@ module Aws::MediaPackageV2
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/CancelHarvestJobResponse AWS API Documentation
     #
     class CancelHarvestJobResponse < Aws::EmptyStructure; end
+
+    # The settings to enable CDN authorization headers in MediaPackage.
+    #
+    # @!attribute [rw] cdn_identifier_secret_arns
+    #   The ARN for the secret in Secrets Manager that your CDN uses for
+    #   authorization to access the endpoint.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] secrets_role_arn
+    #   The ARN for the IAM role that gives MediaPackage read access to
+    #   Secrets Manager and KMS for CDN authorization.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/CdnAuthConfiguration AWS API Documentation
+    #
+    class CdnAuthConfiguration < Struct.new(
+      :cdn_identifier_secret_arns,
+      :secrets_role_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # The configuration of the channel group.
     #
@@ -149,6 +174,20 @@ module Aws::MediaPackageV2
     #     segments with optional DASH manifests).
     #   @return [String]
     #
+    # @!attribute [rw] output_locking_mode
+    #   The output locking mode configured for the channel.
+    #
+    #   The allowed values are:
+    #
+    #   * `EPOCH_LOCKED` - The channel uses epoch-locked behavior with
+    #     deterministic sequence numbering and fixed segment boundaries
+    #     aligned to epoch time.
+    #
+    #   * `NON_EPOCH_LOCKED` - The channel uses non-epoch-locked behavior
+    #     with duration-based segment combining and monotonically increasing
+    #     sequence numbers starting from 0.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/ChannelListConfiguration AWS API Documentation
     #
     class ChannelListConfiguration < Struct.new(
@@ -158,7 +197,8 @@ module Aws::MediaPackageV2
       :created_at,
       :modified_at,
       :description,
-      :input_type)
+      :input_type,
+      :output_locking_mode)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -326,6 +366,25 @@ module Aws::MediaPackageV2
     #   setting is valid only when `InputType` is `CMAF`.
     #   @return [Types::OutputHeaderConfiguration]
     #
+    # @!attribute [rw] output_locking_mode
+    #   The output locking mode for the channel. This setting is only valid
+    #   when `InputType` is `CMAF`. This value is immutable after channel
+    #   creation. If you don't specify a value, the default is
+    #   `EPOCH_LOCKED`.
+    #
+    #   The allowed values are:
+    #
+    #   * `EPOCH_LOCKED` - The channel uses epoch-locked behavior with
+    #     deterministic sequence numbering and fixed segment boundaries
+    #     aligned to epoch time. This mode supports cross-region
+    #     synchronization and failover.
+    #
+    #   * `NON_EPOCH_LOCKED` - The channel uses non-epoch-locked behavior
+    #     with duration-based segment combining and monotonically increasing
+    #     sequence numbers starting from 0. This mode does not support
+    #     cross-region synchronization or failover.
+    #   @return [String]
+    #
     # @!attribute [rw] tags
     #   A comma-separated list of tag key:value pairs that you define. For
     #   example:
@@ -345,6 +404,7 @@ module Aws::MediaPackageV2
       :description,
       :input_switch_configuration,
       :output_header_configuration,
+      :output_locking_mode,
       :tags)
       SENSITIVE = []
       include Aws::Structure
@@ -419,6 +479,20 @@ module Aws::MediaPackageV2
     #   setting is valid only when `InputType` is `CMAF`.
     #   @return [Types::OutputHeaderConfiguration]
     #
+    # @!attribute [rw] output_locking_mode
+    #   The output locking mode configured for the channel.
+    #
+    #   The allowed values are:
+    #
+    #   * `EPOCH_LOCKED` - The channel uses epoch-locked behavior with
+    #     deterministic sequence numbering and fixed segment boundaries
+    #     aligned to epoch time.
+    #
+    #   * `NON_EPOCH_LOCKED` - The channel uses non-epoch-locked behavior
+    #     with duration-based segment combining and monotonically increasing
+    #     sequence numbers starting from 0.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/CreateChannelResponse AWS API Documentation
     #
     class CreateChannelResponse < Struct.new(
@@ -433,7 +507,8 @@ module Aws::MediaPackageV2
       :etag,
       :tags,
       :input_switch_configuration,
-      :output_header_configuration)
+      :output_header_configuration,
+      :output_locking_mode)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -514,6 +589,77 @@ module Aws::MediaPackageV2
     #   Presentation Description (MPD).
     #   @return [Types::DashUtcTiming]
     #
+    # @!attribute [rw] profiles
+    #   The profile that the output is compliant with.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] base_urls
+    #   The base URLs to use for retrieving segments.
+    #   @return [Array<Types::DashBaseUrl>]
+    #
+    # @!attribute [rw] program_information
+    #   Details about the content that you want MediaPackage to pass through
+    #   in the manifest to the playback device.
+    #   @return [Types::DashProgramInformation]
+    #
+    # @!attribute [rw] dvb_settings
+    #   For endpoints that use the DVB-DASH profile only. The font download
+    #   and error reporting information that you want MediaPackage to pass
+    #   through to the manifest.
+    #   @return [Types::DashDvbSettings]
+    #
+    # @!attribute [rw] compactness
+    #   The layout of the DASH manifest that MediaPackage produces.
+    #   `STANDARD` indicates a default manifest, which is compacted. `NONE`
+    #   indicates a full manifest.
+    #
+    #   For information about compactness, see [DASH manifest
+    #   compactness][1] in the *Elemental MediaPackage v2 User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediapackage/latest/userguide/compacted.html
+    #   @return [String]
+    #
+    # @!attribute [rw] audio_timeline_pattern
+    #   How MediaPackage represents the audio timeline in the DASH manifest.
+    #   This setting applies DASH Segment Duration Patternization, as
+    #   defined in the MPEG-DASH specification, to audio adaptation sets.
+    #   When set to `PATTERNED`, MediaPackage uses a pattern-based segment
+    #   template for audio, which reduces manifest size by expressing
+    #   repeating segment durations as a pattern instead of listing each
+    #   segment individually. When set to `NONE`, the manifest contains an
+    #   explicit timeline that lists each audio segment.
+    #
+    #   Valid values: `NONE` \| `PATTERNED`
+    #
+    #   For information about audio timeline patterns, see [DASH audio
+    #   timeline pattern][1] in the *Elemental MediaPackage v2 User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediapackage/latest/userguide/dash-audio-timeline-pattern.html
+    #   @return [String]
+    #
+    # @!attribute [rw] subtitle_configuration
+    #   The configuration for DASH subtitles.
+    #   @return [Types::DashSubtitleConfiguration]
+    #
+    # @!attribute [rw] uri_path_type
+    #   The type of path to use in manifest URIs. `LEAF` uses leaf-relative
+    #   paths (for example, `index_1.mpd`). `ROOT` uses root-relative paths
+    #   that include the full path from root (for example,
+    #   `/out/v1/channel-group/channel/endpoint/index_1.mpd`). If you don't
+    #   specify a value, the default is `LEAF`.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_start_time_configuration
+    #   The configuration for the DASH `availabilityStartTime` attribute of
+    #   the Media Presentation Description (MPD). If you don't specify a
+    #   value, MediaPackage uses the default availability start time of
+    #   `2024-01-01T00:00:00Z`.
+    #   @return [Types::DashAvailabilityStartTimeConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/CreateDashManifestConfiguration AWS API Documentation
     #
     class CreateDashManifestConfiguration < Struct.new(
@@ -527,7 +673,16 @@ module Aws::MediaPackageV2
       :period_triggers,
       :scte_dash,
       :drm_signaling,
-      :utc_timing)
+      :utc_timing,
+      :profiles,
+      :base_urls,
+      :program_information,
+      :dvb_settings,
+      :compactness,
+      :audio_timeline_pattern,
+      :subtitle_configuration,
+      :uri_path_type,
+      :availability_start_time_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -753,6 +908,14 @@ module Aws::MediaPackageV2
     #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_sigv.html
     #   @return [Boolean]
     #
+    # @!attribute [rw] uri_path_type
+    #   The type of path to use in manifest URIs. `LEAF` uses leaf-relative
+    #   paths (for example, `index_1.m3u8`). `ROOT` uses root-relative paths
+    #   that include the full path from root (for example,
+    #   `/out/v1/channel-group/channel/endpoint/index_1.m3u8`). If you
+    #   don't specify a value, the default is `LEAF`.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/CreateHlsManifestConfiguration AWS API Documentation
     #
     class CreateHlsManifestConfiguration < Struct.new(
@@ -763,7 +926,8 @@ module Aws::MediaPackageV2
       :manifest_window_seconds,
       :program_date_time_interval_seconds,
       :filter_configuration,
-      :url_encode_child_manifest)
+      :url_encode_child_manifest,
+      :uri_path_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -834,6 +998,14 @@ module Aws::MediaPackageV2
     #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_sigv.html
     #   @return [Boolean]
     #
+    # @!attribute [rw] uri_path_type
+    #   The type of path to use in manifest URIs. `LEAF` uses leaf-relative
+    #   paths (for example, `index_1.m3u8`). `ROOT` uses root-relative paths
+    #   that include the full path from root (for example,
+    #   `/out/v1/channel-group/channel/endpoint/index_1.m3u8`). If you
+    #   don't specify a value, the default is `LEAF`.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/CreateLowLatencyHlsManifestConfiguration AWS API Documentation
     #
     class CreateLowLatencyHlsManifestConfiguration < Struct.new(
@@ -844,7 +1016,52 @@ module Aws::MediaPackageV2
       :manifest_window_seconds,
       :program_date_time_interval_seconds,
       :filter_configuration,
-      :url_encode_child_manifest)
+      :url_encode_child_manifest,
+      :uri_path_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration parameters for creating a Microsoft Smooth Streaming
+    # (MSS) manifest. MSS is a streaming media format developed by Microsoft
+    # that delivers adaptive bitrate streaming content to compatible players
+    # and devices.
+    #
+    # @!attribute [rw] manifest_name
+    #   A short string that's appended to the endpoint URL to create a
+    #   unique path to this MSS manifest. The manifest name must be unique
+    #   within the origin endpoint and can contain letters, numbers,
+    #   hyphens, and underscores.
+    #   @return [String]
+    #
+    # @!attribute [rw] manifest_window_seconds
+    #   The total duration (in seconds) of the manifest window. This
+    #   determines how much content is available in the manifest at any
+    #   given time. The manifest window slides forward as new segments
+    #   become available, maintaining a consistent duration of content. The
+    #   minimum value is 30 seconds.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] filter_configuration
+    #   Filter configuration includes settings for manifest filtering, start
+    #   and end times, and time delay that apply to all of your egress
+    #   requests for this manifest.
+    #   @return [Types::FilterConfiguration]
+    #
+    # @!attribute [rw] manifest_layout
+    #   Determines the layout format of the MSS manifest. This controls how
+    #   the manifest is structured and presented to client players,
+    #   affecting compatibility with different MSS-compatible devices and
+    #   applications.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/CreateMssManifestConfiguration AWS API Documentation
+    #
+    class CreateMssManifestConfiguration < Struct.new(
+      :manifest_name,
+      :manifest_window_seconds,
+      :filter_configuration,
+      :manifest_layout)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -912,9 +1129,34 @@ module Aws::MediaPackageV2
     #   A DASH manifest configuration.
     #   @return [Array<Types::CreateDashManifestConfiguration>]
     #
+    # @!attribute [rw] mss_manifests
+    #   A list of Microsoft Smooth Streaming (MSS) manifest configurations
+    #   for the origin endpoint. You can configure multiple MSS manifests to
+    #   provide different streaming experiences or to support different
+    #   client requirements.
+    #   @return [Array<Types::CreateMssManifestConfiguration>]
+    #
     # @!attribute [rw] force_endpoint_error_configuration
     #   The failover settings for the endpoint.
     #   @return [Types::ForceEndpointErrorConfiguration]
+    #
+    # @!attribute [rw] uri_separator
+    #   The separator character to use in generated URIs for this origin
+    #   endpoint. This setting applies to all manifest types on the
+    #   endpoint. If you don't specify a value, the default is
+    #   `UNDERSCORE`.
+    #   @return [String]
+    #
+    # @!attribute [rw] stream_name_output_mode
+    #   The output mode for stream names in egress manifests. This setting
+    #   is valid only when the associated channel's `InputType` is `HLS`.
+    #   You can't change the stream name output mode after you create the
+    #   endpoint.
+    #
+    #   `INDEX` uses numeric indices for stream names (for example, 1, 2,
+    #   3). `PASSTHROUGH_NAME` uses the stream names from the input
+    #   manifest. If you don't specify a value, the default is `INDEX`.
+    #   @return [String]
     #
     # @!attribute [rw] tags
     #   A comma-separated list of tag key:value pairs that you define. For
@@ -939,7 +1181,10 @@ module Aws::MediaPackageV2
       :hls_manifests,
       :low_latency_hls_manifests,
       :dash_manifests,
+      :mss_manifests,
       :force_endpoint_error_configuration,
+      :uri_separator,
+      :stream_name_output_mode,
       :tags)
       SENSITIVE = []
       include Aws::Structure
@@ -1006,9 +1251,24 @@ module Aws::MediaPackageV2
     #   A DASH manifest configuration.
     #   @return [Array<Types::GetDashManifestConfiguration>]
     #
+    # @!attribute [rw] mss_manifests
+    #   The Microsoft Smooth Streaming (MSS) manifest configurations that
+    #   were created for this origin endpoint.
+    #   @return [Array<Types::GetMssManifestConfiguration>]
+    #
     # @!attribute [rw] force_endpoint_error_configuration
     #   The failover settings for the endpoint.
     #   @return [Types::ForceEndpointErrorConfiguration]
+    #
+    # @!attribute [rw] uri_separator
+    #   The separator character used in generated URIs for this origin
+    #   endpoint.
+    #   @return [String]
+    #
+    # @!attribute [rw] stream_name_output_mode
+    #   The output mode for stream names in egress manifests for this origin
+    #   endpoint.
+    #   @return [String]
     #
     # @!attribute [rw] etag
     #   The current Entity Tag (ETag) associated with this resource. The
@@ -1037,9 +1297,229 @@ module Aws::MediaPackageV2
       :hls_manifests,
       :low_latency_hls_manifests,
       :dash_manifests,
+      :mss_manifests,
       :force_endpoint_error_configuration,
+      :uri_separator,
+      :stream_name_output_mode,
       :etag,
       :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration for the DASH `availabilityStartTime` attribute of
+    # the Media Presentation Description (MPD). Use this configuration to
+    # set a custom availability start time for your DASH manifest.
+    #
+    # @note DashAvailabilityStartTimeConfiguration is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note DashAvailabilityStartTimeConfiguration is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of DashAvailabilityStartTimeConfiguration corresponding to the set member.
+    #
+    # @!attribute [rw] fixed_availability_start_time
+    #   The fixed availability start time for the DASH manifest, in ISO 8601
+    #   date-time format. The value must have hourly granularity, meaning
+    #   that the minutes, seconds, and fractional seconds must be zero. The
+    #   value must be on or after `2024-01-01T00:00:00Z` and must be at
+    #   least 14 days before the current time.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/DashAvailabilityStartTimeConfiguration AWS API Documentation
+    #
+    class DashAvailabilityStartTimeConfiguration < Struct.new(
+      :fixed_availability_start_time,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class FixedAvailabilityStartTime < DashAvailabilityStartTimeConfiguration; end
+      class Unknown < DashAvailabilityStartTimeConfiguration; end
+    end
+
+    # The base URLs to use for retrieving segments. You can specify multiple
+    # locations and indicate the priority and weight for when each should be
+    # used, for use in mutli-CDN workflows.
+    #
+    # @!attribute [rw] url
+    #   A source location for segments.
+    #   @return [String]
+    #
+    # @!attribute [rw] service_location
+    #   The name of the source location.
+    #   @return [String]
+    #
+    # @!attribute [rw] dvb_priority
+    #   For use with DVB-DASH profiles only. The priority of this location
+    #   for servings segments. The lower the number, the higher the
+    #   priority.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] dvb_weight
+    #   For use with DVB-DASH profiles only. The weighting for source
+    #   locations that have the same priority.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/DashBaseUrl AWS API Documentation
+    #
+    class DashBaseUrl < Struct.new(
+      :url,
+      :service_location,
+      :dvb_priority,
+      :dvb_weight)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # For use with DVB-DASH profiles only. The settings for font downloads
+    # that you want Elemental MediaPackage to pass through to the manifest.
+    #
+    # @!attribute [rw] url
+    #   The URL for downloading fonts for subtitles.
+    #   @return [String]
+    #
+    # @!attribute [rw] mime_type
+    #   The `mimeType` of the resource that's at the font download URL.
+    #
+    #   For information about font MIME types, see the [MPEG-DASH Profile
+    #   for Transport of ISO BMFF Based DVB Services over IP Based
+    #   Networks][1] document.
+    #
+    #
+    #
+    #   [1]: https://dvb.org/wp-content/uploads/2021/06/A168r4_MPEG-DASH-Profile-for-Transport-of-ISO-BMFF-Based-DVB-Services_Draft-ts_103-285-v140_November_2021.pdf
+    #   @return [String]
+    #
+    # @!attribute [rw] font_family
+    #   The `fontFamily` name for subtitles, as described in [EBU-TT-D
+    #   Subtitling Distribution Format][1].
+    #
+    #
+    #
+    #   [1]: https://tech.ebu.ch/publications/tech3380
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/DashDvbFontDownload AWS API Documentation
+    #
+    class DashDvbFontDownload < Struct.new(
+      :url,
+      :mime_type,
+      :font_family)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # For use with DVB-DASH profiles only. The settings for error reporting
+    # from the playback device that you want Elemental MediaPackage to pass
+    # through to the manifest.
+    #
+    # @!attribute [rw] reporting_url
+    #   The URL where playback devices send error reports.
+    #   @return [String]
+    #
+    # @!attribute [rw] probability
+    #   The number of playback devices per 1000 that will send error reports
+    #   to the reporting URL. This represents the probability that a
+    #   playback device will be a reporting player for this session.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/DashDvbMetricsReporting AWS API Documentation
+    #
+    class DashDvbMetricsReporting < Struct.new(
+      :reporting_url,
+      :probability)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # For endpoints that use the DVB-DASH profile only. The font download
+    # and error reporting information that you want MediaPackage to pass
+    # through to the manifest.
+    #
+    # @!attribute [rw] font_download
+    #   Subtitle font settings.
+    #   @return [Types::DashDvbFontDownload]
+    #
+    # @!attribute [rw] error_metrics
+    #   Playback device error reporting settings.
+    #   @return [Array<Types::DashDvbMetricsReporting>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/DashDvbSettings AWS API Documentation
+    #
+    class DashDvbSettings < Struct.new(
+      :font_download,
+      :error_metrics)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details about the content that you want MediaPackage to pass through
+    # in the manifest to the playback device.
+    #
+    # @!attribute [rw] title
+    #   The title for the manifest.
+    #   @return [String]
+    #
+    # @!attribute [rw] source
+    #   Information about the content provider.
+    #   @return [String]
+    #
+    # @!attribute [rw] copyright
+    #   A copyright statement about the content.
+    #   @return [String]
+    #
+    # @!attribute [rw] language_code
+    #   The language code for this manifest.
+    #   @return [String]
+    #
+    # @!attribute [rw] more_information_url
+    #   An absolute URL that contains more information about this content.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/DashProgramInformation AWS API Documentation
+    #
+    class DashProgramInformation < Struct.new(
+      :title,
+      :source,
+      :copyright,
+      :language_code,
+      :more_information_url)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration for DASH subtitles.
+    #
+    # @!attribute [rw] ttml_configuration
+    #   Settings for TTML subtitles.
+    #   @return [Types::DashTtmlConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/DashSubtitleConfiguration AWS API Documentation
+    #
+    class DashSubtitleConfiguration < Struct.new(
+      :ttml_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The settings for TTML subtitles.
+    #
+    # @!attribute [rw] ttml_profile
+    #   The profile that MediaPackage uses when signaling subtitles in the
+    #   manifest. `IMSC` is the default profile. `EBU-TT-D` produces
+    #   subtitles that are compliant with the EBU-TT-D TTML profile.
+    #   MediaPackage passes through subtitle styles to the manifest. For
+    #   more information about EBU-TT-D subtitles, see [EBU-TT-D Subtitling
+    #   Distribution Format][1].
+    #
+    #
+    #
+    #   [1]: https://tech.ebu.ch/publications/tech3380
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/DashTtmlConfiguration AWS API Documentation
+    #
+    class DashTtmlConfiguration < Struct.new(
+      :ttml_profile)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1240,6 +1720,29 @@ module Aws::MediaPackageV2
     #   every thirty minutes: `1800`
     #   @return [Integer]
     #
+    # @!attribute [rw] cmaf_exclude_segment_drm_metadata
+    #   Excludes SEIG and SGPD boxes from segment metadata in CMAF
+    #   containers.
+    #
+    #   When set to `true`, MediaPackage omits these DRM metadata boxes from
+    #   CMAF segments, which can improve compatibility with certain devices
+    #   and players that don't support these boxes.
+    #
+    #   Important considerations:
+    #
+    #   * This setting only affects CMAF container formats
+    #
+    #   * Key rotation can still be handled through media playlist signaling
+    #
+    #   * PSSH and TENC boxes remain unaffected
+    #
+    #   * Default behavior is preserved when this setting is disabled
+    #
+    #   Valid values: `true` \| `false`
+    #
+    #   Default: `false`
+    #   @return [Boolean]
+    #
     # @!attribute [rw] speke_key_provider
     #   The parameters for the SPEKE key provider.
     #   @return [Types::SpekeKeyProvider]
@@ -1250,6 +1753,7 @@ module Aws::MediaPackageV2
       :constant_initialization_vector,
       :encryption_method,
       :key_rotation_interval_seconds,
+      :cmaf_exclude_segment_drm_metadata,
       :speke_key_provider)
       SENSITIVE = []
       include Aws::Structure
@@ -1351,11 +1855,18 @@ module Aws::MediaPackageV2
     #   The encryption method to use.
     #   @return [String]
     #
+    # @!attribute [rw] ism_encryption_method
+    #   The encryption method used for Microsoft Smooth Streaming (MSS)
+    #   content. This specifies how the MSS segments are encrypted to
+    #   protect the content during delivery to client players.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/EncryptionMethod AWS API Documentation
     #
     class EncryptionMethod < Struct.new(
       :ts_encryption_method,
-      :cmaf_encryption_method)
+      :cmaf_encryption_method,
+      :ism_encryption_method)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1369,6 +1880,13 @@ module Aws::MediaPackageV2
     #   manifest egress requests. When you include a manifest filter, note
     #   that you cannot use an identical manifest filter query parameter for
     #   this manifest's endpoint URL.
+    #   @return [String]
+    #
+    # @!attribute [rw] drm_settings
+    #   Optionally specify one or more DRM settings for all of your manifest
+    #   egress requests. When you include a DRM setting, note that you
+    #   cannot use an identical DRM setting query parameter for this
+    #   manifest's endpoint URL.
     #   @return [String]
     #
     # @!attribute [rw] start
@@ -1401,6 +1919,7 @@ module Aws::MediaPackageV2
     #
     class FilterConfiguration < Struct.new(
       :manifest_filter,
+      :drm_settings,
       :start,
       :end,
       :time_delay_seconds,
@@ -1643,6 +2162,20 @@ module Aws::MediaPackageV2
     #   setting is valid only when `InputType` is `CMAF`.
     #   @return [Types::OutputHeaderConfiguration]
     #
+    # @!attribute [rw] output_locking_mode
+    #   The output locking mode configured for the channel.
+    #
+    #   The allowed values are:
+    #
+    #   * `EPOCH_LOCKED` - The channel uses epoch-locked behavior with
+    #     deterministic sequence numbering and fixed segment boundaries
+    #     aligned to epoch time.
+    #
+    #   * `NON_EPOCH_LOCKED` - The channel uses non-epoch-locked behavior
+    #     with duration-based segment combining and monotonically increasing
+    #     sequence numbers starting from 0.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/GetChannelResponse AWS API Documentation
     #
     class GetChannelResponse < Struct.new(
@@ -1658,7 +2191,8 @@ module Aws::MediaPackageV2
       :etag,
       :tags,
       :input_switch_configuration,
-      :output_header_configuration)
+      :output_header_configuration,
+      :output_locking_mode)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1741,6 +2275,55 @@ module Aws::MediaPackageV2
     #   Presentation Description (MPD).
     #   @return [Types::DashUtcTiming]
     #
+    # @!attribute [rw] profiles
+    #   The profile that the output is compliant with.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] base_urls
+    #   The base URL to use for retrieving segments.
+    #   @return [Array<Types::DashBaseUrl>]
+    #
+    # @!attribute [rw] program_information
+    #   Details about the content that you want MediaPackage to pass through
+    #   in the manifest to the playback device.
+    #   @return [Types::DashProgramInformation]
+    #
+    # @!attribute [rw] dvb_settings
+    #   For endpoints that use the DVB-DASH profile only. The font download
+    #   and error reporting information that you want MediaPackage to pass
+    #   through to the manifest.
+    #   @return [Types::DashDvbSettings]
+    #
+    # @!attribute [rw] compactness
+    #   The layout of the DASH manifest that MediaPackage produces.
+    #   `STANDARD` indicates a default manifest, which is compacted. `NONE`
+    #   indicates a full manifest.
+    #   @return [String]
+    #
+    # @!attribute [rw] audio_timeline_pattern
+    #   How MediaPackage represents the audio timeline in the DASH manifest,
+    #   using DASH Segment Duration Patternization for audio adaptation
+    #   sets. `PATTERNED` indicates that MediaPackage uses a pattern-based
+    #   segment template for audio, reducing manifest size. `NONE` indicates
+    #   that the manifest contains an explicit timeline for each audio
+    #   segment.
+    #   @return [String]
+    #
+    # @!attribute [rw] subtitle_configuration
+    #   The configuration for DASH subtitles.
+    #   @return [Types::DashSubtitleConfiguration]
+    #
+    # @!attribute [rw] uri_path_type
+    #   The type of path used in manifest URIs. `LEAF` indicates
+    #   leaf-relative paths. `ROOT` indicates root-relative paths that
+    #   include the full path from root.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_start_time_configuration
+    #   The configuration for the DASH `availabilityStartTime` attribute of
+    #   the Media Presentation Description (MPD).
+    #   @return [Types::DashAvailabilityStartTimeConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/GetDashManifestConfiguration AWS API Documentation
     #
     class GetDashManifestConfiguration < Struct.new(
@@ -1755,7 +2338,16 @@ module Aws::MediaPackageV2
       :period_triggers,
       :scte_dash,
       :drm_signaling,
-      :utc_timing)
+      :utc_timing,
+      :profiles,
+      :base_urls,
+      :program_information,
+      :dvb_settings,
+      :compactness,
+      :audio_timeline_pattern,
+      :subtitle_configuration,
+      :uri_path_type,
+      :availability_start_time_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1948,6 +2540,12 @@ module Aws::MediaPackageV2
     #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_sigv.html
     #   @return [Boolean]
     #
+    # @!attribute [rw] uri_path_type
+    #   The type of path used in manifest URIs. `LEAF` indicates
+    #   leaf-relative paths. `ROOT` indicates root-relative paths that
+    #   include the full path from root.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/GetHlsManifestConfiguration AWS API Documentation
     #
     class GetHlsManifestConfiguration < Struct.new(
@@ -1959,7 +2557,8 @@ module Aws::MediaPackageV2
       :scte_hls,
       :filter_configuration,
       :start_tag,
-      :url_encode_child_manifest)
+      :url_encode_child_manifest,
+      :uri_path_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2034,6 +2633,12 @@ module Aws::MediaPackageV2
     #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_sigv.html
     #   @return [Boolean]
     #
+    # @!attribute [rw] uri_path_type
+    #   The type of path used in manifest URIs. `LEAF` indicates
+    #   leaf-relative paths. `ROOT` indicates root-relative paths that
+    #   include the full path from root.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/GetLowLatencyHlsManifestConfiguration AWS API Documentation
     #
     class GetLowLatencyHlsManifestConfiguration < Struct.new(
@@ -2045,7 +2650,53 @@ module Aws::MediaPackageV2
       :scte_hls,
       :filter_configuration,
       :start_tag,
-      :url_encode_child_manifest)
+      :url_encode_child_manifest,
+      :uri_path_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration details for a Microsoft Smooth Streaming (MSS) manifest
+    # associated with an origin endpoint. This includes all the settings and
+    # properties that define how the MSS content is packaged and delivered.
+    #
+    # @!attribute [rw] manifest_name
+    #   The name of the MSS manifest. This name is appended to the origin
+    #   endpoint URL to create the unique path for accessing this specific
+    #   MSS manifest.
+    #   @return [String]
+    #
+    # @!attribute [rw] url
+    #   The complete URL for accessing the MSS manifest. Client players use
+    #   this URL to retrieve the manifest and begin streaming the Microsoft
+    #   Smooth Streaming content.
+    #   @return [String]
+    #
+    # @!attribute [rw] filter_configuration
+    #   Filter configuration includes settings for manifest filtering, start
+    #   and end times, and time delay that apply to all of your egress
+    #   requests for this manifest.
+    #   @return [Types::FilterConfiguration]
+    #
+    # @!attribute [rw] manifest_window_seconds
+    #   The duration (in seconds) of the manifest window. This represents
+    #   the total amount of content available in the manifest at any given
+    #   time.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] manifest_layout
+    #   The layout format of the MSS manifest, which determines how the
+    #   manifest is structured for client compatibility.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/GetMssManifestConfiguration AWS API Documentation
+    #
+    class GetMssManifestConfiguration < Struct.new(
+      :manifest_name,
+      :url,
+      :filter_configuration,
+      :manifest_window_seconds,
+      :manifest_layout)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2100,13 +2751,26 @@ module Aws::MediaPackageV2
     #   The policy assigned to the origin endpoint.
     #   @return [String]
     #
+    # @!attribute [rw] cdn_auth_configuration
+    #   The settings for using authorization headers between the
+    #   MediaPackage endpoint and your CDN.
+    #
+    #   For information about CDN authorization, see [CDN authorization in
+    #   Elemental MediaPackage][1] in the MediaPackage user guide.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediapackage/latest/userguide/cdn-auth.html
+    #   @return [Types::CdnAuthConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/GetOriginEndpointPolicyResponse AWS API Documentation
     #
     class GetOriginEndpointPolicyResponse < Struct.new(
       :channel_group_name,
       :channel_name,
       :origin_endpoint_name,
-      :policy)
+      :policy,
+      :cdn_auth_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2204,9 +2868,24 @@ module Aws::MediaPackageV2
     #   A DASH manifest configuration.
     #   @return [Array<Types::GetDashManifestConfiguration>]
     #
+    # @!attribute [rw] mss_manifests
+    #   The Microsoft Smooth Streaming (MSS) manifest configurations
+    #   associated with this origin endpoint.
+    #   @return [Array<Types::GetMssManifestConfiguration>]
+    #
     # @!attribute [rw] force_endpoint_error_configuration
     #   The failover settings for the endpoint.
     #   @return [Types::ForceEndpointErrorConfiguration]
+    #
+    # @!attribute [rw] uri_separator
+    #   The separator character used in generated URIs for this origin
+    #   endpoint.
+    #   @return [String]
+    #
+    # @!attribute [rw] stream_name_output_mode
+    #   The output mode for stream names in egress manifests for this origin
+    #   endpoint.
+    #   @return [String]
     #
     # @!attribute [rw] etag
     #   The current Entity Tag (ETag) associated with this resource. The
@@ -2236,7 +2915,10 @@ module Aws::MediaPackageV2
       :hls_manifests,
       :low_latency_hls_manifests,
       :dash_manifests,
+      :mss_manifests,
       :force_endpoint_error_configuration,
+      :uri_separator,
+      :stream_name_output_mode,
       :etag,
       :tags)
       SENSITIVE = []
@@ -2435,14 +3117,23 @@ module Aws::MediaPackageV2
     #
     # @!attribute [rw] mqcs_input_switching
     #   When true, AWS Elemental MediaPackage performs input switching based
-    #   on the MQCS. Default is true. This setting is valid only when
+    #   on the MQCS. Default is false. This setting is valid only when
     #   `InputType` is `CMAF`.
     #   @return [Boolean]
+    #
+    # @!attribute [rw] preferred_input
+    #   For CMAF inputs, indicates which input MediaPackage should prefer
+    #   when both inputs have equal MQCS scores. Select `1` to prefer the
+    #   first ingest endpoint, or `2` to prefer the second ingest endpoint.
+    #   If you don't specify a preferred input, MediaPackage uses its
+    #   default switching behavior when MQCS scores are equal.
+    #   @return [Integer]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/InputSwitchConfiguration AWS API Documentation
     #
     class InputSwitchConfiguration < Struct.new(
-      :mqcs_input_switching)
+      :mqcs_input_switching,
+      :preferred_input)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2699,6 +3390,27 @@ module Aws::MediaPackageV2
       include Aws::Structure
     end
 
+    # Summary information about a Microsoft Smooth Streaming (MSS) manifest
+    # configuration. This provides key details about the MSS manifest
+    # without including all configuration parameters.
+    #
+    # @!attribute [rw] manifest_name
+    #   The name of the MSS manifest configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] url
+    #   The URL for accessing the MSS manifest.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/ListMssManifestConfiguration AWS API Documentation
+    #
+    class ListMssManifestConfiguration < Struct.new(
+      :manifest_name,
+      :url)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] channel_group_name
     #   The name that describes the channel group. The name is the primary
     #   identifier for the channel group, and must be unique for your
@@ -2829,9 +3541,25 @@ module Aws::MediaPackageV2
     #   A DASH manifest configuration.
     #   @return [Array<Types::ListDashManifestConfiguration>]
     #
+    # @!attribute [rw] mss_manifests
+    #   A list of Microsoft Smooth Streaming (MSS) manifest configurations
+    #   associated with the origin endpoint. Each configuration represents a
+    #   different MSS streaming option available from this endpoint.
+    #   @return [Array<Types::ListMssManifestConfiguration>]
+    #
     # @!attribute [rw] force_endpoint_error_configuration
     #   The failover settings for the endpoint.
     #   @return [Types::ForceEndpointErrorConfiguration]
+    #
+    # @!attribute [rw] uri_separator
+    #   The separator character used in generated URIs for this origin
+    #   endpoint.
+    #   @return [String]
+    #
+    # @!attribute [rw] stream_name_output_mode
+    #   The output mode for stream names in egress manifests for this origin
+    #   endpoint.
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/OriginEndpointListConfiguration AWS API Documentation
     #
@@ -2847,7 +3575,10 @@ module Aws::MediaPackageV2
       :hls_manifests,
       :low_latency_hls_manifests,
       :dash_manifests,
-      :force_endpoint_error_configuration)
+      :mss_manifests,
+      :force_endpoint_error_configuration,
+      :uri_separator,
+      :stream_name_output_mode)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2920,13 +3651,26 @@ module Aws::MediaPackageV2
     #   The policy to attach to the specified origin endpoint.
     #   @return [String]
     #
+    # @!attribute [rw] cdn_auth_configuration
+    #   The settings for using authorization headers between the
+    #   MediaPackage endpoint and your CDN.
+    #
+    #   For information about CDN authorization, see [CDN authorization in
+    #   Elemental MediaPackage][1] in the MediaPackage user guide.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediapackage/latest/userguide/cdn-auth.html
+    #   @return [Types::CdnAuthConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/PutOriginEndpointPolicyRequest AWS API Documentation
     #
     class PutOriginEndpointPolicyRequest < Struct.new(
       :channel_group_name,
       :channel_name,
       :origin_endpoint_name,
-      :policy)
+      :policy,
+      :cdn_auth_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3088,10 +3832,40 @@ module Aws::MediaPackageV2
     #   in the output.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] scte_in_segments
+    #   Controls whether SCTE-35 messages are included in segment files.
+    #
+    #   * None – SCTE-35 messages are not included in segments (default)
+    #
+    #   * All – SCTE-35 messages are embedded in segment data
+    #
+    #   * MatchesFilter – SCTE-35 messages which match the ScteFilter are
+    #     embedded in segment data
+    #
+    #   For DASH manifests, when set to `All` or `MatchesFilter`, an
+    #   `InbandEventStream` tag signals that SCTE messages are present in
+    #   segments. This setting works independently of manifest ad markers.
+    #   @return [String]
+    #
+    # @!attribute [rw] custom_ad_types
+    #   A list of additional non-Ad SCTE-35 event types to treat as
+    #   advertisements. When configured, events matching these types produce
+    #   ad markers (such as `SCTE35-OUT` and `SCTE35-IN` in HLS DATERANGE
+    #   tags) in manifests.
+    #
+    #   Valid values: `PROGRAM` \| `CHAPTER` \| `UNSCHEDULED_EVENT` \|
+    #   `ALTERNATE_CONTENT_OPPORTUNITY` \| `NETWORK`
+    #
+    #   If you don't specify any values, the default is empty (only default
+    #   ad types are used).
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/Scte AWS API Documentation
     #
     class Scte < Struct.new(
-      :scte_filter)
+      :scte_filter,
+      :scte_in_segments,
+      :custom_ad_types)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3112,10 +3886,19 @@ module Aws::MediaPackageV2
     #   * `XML` - The SCTE marker is expressed fully in XML.
     #   @return [String]
     #
+    # @!attribute [rw] scte_in_manifests
+    #   Controls which SCTE-35 events appear in DASH manifests. `ALL`
+    #   includes all non-implicit SCTE-35 events. `MATCHES_FILTER` includes
+    #   only events whose type matches the configured `ScteFilter`.
+    #
+    #   If you don't specify a value, the default is `ALL`.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/ScteDash AWS API Documentation
     #
     class ScteDash < Struct.new(
-      :ad_marker_dash)
+      :ad_marker_dash,
+      :scte_in_manifests)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3131,23 +3914,34 @@ module Aws::MediaPackageV2
     #
     #   Value description:
     #
+    #   * SCTE35\_ENHANCED - Generate industry-standard CUE tag ad markers
+    #     in HLS manifests based on SCTE-35 input messages from the input
+    #     stream.
+    #
     #   * DATERANGE - Insert EXT-X-DATERANGE tags to signal ad and program
     #     transition events in TS and CMAF manifests. If you use DATERANGE,
     #     you must set a programDateTimeIntervalSeconds value of 1 or
     #     higher. To learn more about DATERANGE, see [SCTE-35 Ad Marker
     #     EXT-X-DATERANGE][1].
     #
-    #   ^
-    #
     #
     #
     #   [1]: http://docs.aws.amazon.com/mediapackage/latest/ug/scte-35-ad-marker-ext-x-daterange.html
     #   @return [String]
     #
+    # @!attribute [rw] scte_in_manifests
+    #   Controls which SCTE-35 events appear in HLS manifests. `ALL`
+    #   includes all non-implicit SCTE-35 events. `MATCHES_FILTER` includes
+    #   only events whose type matches the configured `ScteFilter`.
+    #
+    #   If you don't specify a value, the default is `ALL`.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/ScteHls AWS API Documentation
     #
     class ScteHls < Struct.new(
-      :ad_marker_hls)
+      :ad_marker_hls,
+      :scte_in_manifests)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3199,6 +3993,22 @@ module Aws::MediaPackageV2
     #   The parameters for encrypting content.
     #   @return [Types::Encryption]
     #
+    # @!attribute [rw] output_timestamp_mode
+    #   The output timestamp mode for the origin endpoint's segments. This
+    #   setting is only configurable on channels with `OutputLockingMode`
+    #   set to `NON_EPOCH_LOCKED`. This value is immutable after endpoint
+    #   creation. If you don't specify a value, the default is
+    #   `PASSTHROUGH`.
+    #
+    #   The allowed values are:
+    #
+    #   * `PASSTHROUGH` - Output PTS (Presentation Timestamp) values pass
+    #     through unchanged from the input.
+    #
+    #   * `REBASED_TO_CHANNEL_START` - Output PTS is rebased relative to the
+    #     channel start time.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/Segment AWS API Documentation
     #
     class Segment < Struct.new(
@@ -3208,7 +4018,8 @@ module Aws::MediaPackageV2
       :include_iframe_only_streams,
       :ts_include_dvb_subtitles,
       :scte,
-      :encryption)
+      :encryption,
+      :output_timestamp_mode)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3274,6 +4085,13 @@ module Aws::MediaPackageV2
     #   `https://1wm2dx1f33.execute-api.us-west-2.amazonaws.com/SpekeSample/copyProtection`
     #   @return [String]
     #
+    # @!attribute [rw] certificate_arn
+    #   The ARN for the certificate that you imported to Amazon Web Services
+    #   Certificate Manager to add content key encryption to this endpoint.
+    #   For this feature to work, your DRM key provider must support content
+    #   key encryption.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/SpekeKeyProvider AWS API Documentation
     #
     class SpekeKeyProvider < Struct.new(
@@ -3281,7 +4099,8 @@ module Aws::MediaPackageV2
       :resource_id,
       :drm_systems,
       :role_arn,
-      :url)
+      :url,
+      :certificate_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3563,6 +4382,21 @@ module Aws::MediaPackageV2
     #   setting is valid only when `InputType` is `CMAF`.
     #   @return [Types::OutputHeaderConfiguration]
     #
+    # @!attribute [rw] output_locking_mode
+    #   The output locking mode configured for the channel. This value is
+    #   immutable after channel creation.
+    #
+    #   The allowed values are:
+    #
+    #   * `EPOCH_LOCKED` - The channel uses epoch-locked behavior with
+    #     deterministic sequence numbering and fixed segment boundaries
+    #     aligned to epoch time.
+    #
+    #   * `NON_EPOCH_LOCKED` - The channel uses non-epoch-locked behavior
+    #     with duration-based segment combining and monotonically increasing
+    #     sequence numbers starting from 0.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediapackagev2-2022-12-25/UpdateChannelResponse AWS API Documentation
     #
     class UpdateChannelResponse < Struct.new(
@@ -3577,7 +4411,8 @@ module Aws::MediaPackageV2
       :etag,
       :tags,
       :input_switch_configuration,
-      :output_header_configuration)
+      :output_header_configuration,
+      :output_locking_mode)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3635,9 +4470,28 @@ module Aws::MediaPackageV2
     #   A DASH manifest configuration.
     #   @return [Array<Types::CreateDashManifestConfiguration>]
     #
+    # @!attribute [rw] mss_manifests
+    #   A list of Microsoft Smooth Streaming (MSS) manifest configurations
+    #   to update for the origin endpoint. This replaces the existing MSS
+    #   manifest configurations.
+    #   @return [Array<Types::CreateMssManifestConfiguration>]
+    #
     # @!attribute [rw] force_endpoint_error_configuration
     #   The failover settings for the endpoint.
     #   @return [Types::ForceEndpointErrorConfiguration]
+    #
+    # @!attribute [rw] uri_separator
+    #   The separator character to use in generated URIs for this origin
+    #   endpoint. This setting applies to all manifest types on the
+    #   endpoint. If you don't specify a value in the update request, the
+    #   current value is preserved.
+    #   @return [String]
+    #
+    # @!attribute [rw] stream_name_output_mode
+    #   The output mode for stream names in egress manifests. If you provide
+    #   a value, it must match the current value. You can't change the
+    #   stream name output mode after you create the endpoint.
+    #   @return [String]
     #
     # @!attribute [rw] etag
     #   The expected current Entity Tag (ETag) for the resource. If the
@@ -3658,7 +4512,10 @@ module Aws::MediaPackageV2
       :hls_manifests,
       :low_latency_hls_manifests,
       :dash_manifests,
+      :mss_manifests,
       :force_endpoint_error_configuration,
+      :uri_separator,
+      :stream_name_output_mode,
       :etag)
       SENSITIVE = []
       include Aws::Structure
@@ -3721,9 +4578,24 @@ module Aws::MediaPackageV2
     #   A low-latency HLS manifest configuration.
     #   @return [Array<Types::GetLowLatencyHlsManifestConfiguration>]
     #
+    # @!attribute [rw] mss_manifests
+    #   The updated Microsoft Smooth Streaming (MSS) manifest configurations
+    #   for this origin endpoint.
+    #   @return [Array<Types::GetMssManifestConfiguration>]
+    #
     # @!attribute [rw] force_endpoint_error_configuration
     #   The failover settings for the endpoint.
     #   @return [Types::ForceEndpointErrorConfiguration]
+    #
+    # @!attribute [rw] uri_separator
+    #   The separator character used in generated URIs for this origin
+    #   endpoint.
+    #   @return [String]
+    #
+    # @!attribute [rw] stream_name_output_mode
+    #   The output mode for stream names in egress manifests for this origin
+    #   endpoint.
+    #   @return [String]
     #
     # @!attribute [rw] etag
     #   The current Entity Tag (ETag) associated with this resource. The
@@ -3755,7 +4627,10 @@ module Aws::MediaPackageV2
       :startover_window_seconds,
       :hls_manifests,
       :low_latency_hls_manifests,
+      :mss_manifests,
       :force_endpoint_error_configuration,
+      :uri_separator,
+      :stream_name_output_mode,
       :etag,
       :tags,
       :dash_manifests)

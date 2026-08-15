@@ -360,9 +360,9 @@ module Aws::WorkSpacesThinClient
     #   used to encrypt the device.
     #   @return [String]
     #
-    # @!attribute [rw] tags
-    #   The tag keys and optional values for the resource.
-    #   @return [Hash<String,String>]
+    # @!attribute [rw] last_user_id
+    #   The user ID of the most recent session on the device.
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/workspaces-thin-client-2023-08-22/Device AWS API Documentation
     #
@@ -387,8 +387,8 @@ module Aws::WorkSpacesThinClient
       :updated_at,
       :arn,
       :kms_key_arn,
-      :tags)
-      SENSITIVE = [:name, :tags]
+      :last_user_id)
+      SENSITIVE = [:name, :last_user_id]
       include Aws::Structure
     end
 
@@ -456,6 +456,10 @@ module Aws::WorkSpacesThinClient
     #   The Amazon Resource Name (ARN) of the device.
     #   @return [String]
     #
+    # @!attribute [rw] last_user_id
+    #   The user ID of the most recent session on the device.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/workspaces-thin-client-2023-08-22/DeviceSummary AWS API Documentation
     #
     class DeviceSummary < Struct.new(
@@ -473,8 +477,9 @@ module Aws::WorkSpacesThinClient
       :last_posture_at,
       :created_at,
       :updated_at,
-      :arn)
-      SENSITIVE = [:name]
+      :arn,
+      :last_user_id)
+      SENSITIVE = [:name, :last_user_id]
       include Aws::Structure
     end
 
@@ -557,10 +562,6 @@ module Aws::WorkSpacesThinClient
     #   used to encrypt the environment.
     #   @return [String]
     #
-    # @!attribute [rw] tags
-    #   The tag keys and optional values for the resource.
-    #   @return [Hash<String,String>]
-    #
     # @!attribute [rw] device_creation_tags
     #   The tag keys and optional values for the newly created devices for
     #   this environment.
@@ -587,9 +588,8 @@ module Aws::WorkSpacesThinClient
       :updated_at,
       :arn,
       :kms_key_arn,
-      :tags,
       :device_creation_tags)
-      SENSITIVE = [:name, :desktop_endpoint, :tags, :device_creation_tags]
+      SENSITIVE = [:name, :desktop_endpoint, :activation_code, :device_creation_tags]
       include Aws::Structure
     end
 
@@ -671,7 +671,7 @@ module Aws::WorkSpacesThinClient
       :created_at,
       :updated_at,
       :arn)
-      SENSITIVE = [:name, :desktop_endpoint]
+      SENSITIVE = [:name, :desktop_endpoint, :activation_code]
       include Aws::Structure
     end
 
@@ -1095,10 +1095,6 @@ module Aws::WorkSpacesThinClient
     #   The Amazon Resource Name (ARN) of the software set.
     #   @return [String]
     #
-    # @!attribute [rw] tags
-    #   The tag keys and optional values for the resource.
-    #   @return [Hash<String,String>]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/workspaces-thin-client-2023-08-22/SoftwareSet AWS API Documentation
     #
     class SoftwareSet < Struct.new(
@@ -1108,9 +1104,8 @@ module Aws::WorkSpacesThinClient
       :supported_until,
       :validation_status,
       :software,
-      :arn,
-      :tags)
-      SENSITIVE = [:tags]
+      :arn)
+      SENSITIVE = []
       include Aws::Structure
     end
 

@@ -64,10 +64,15 @@ module Aws::SSOAdmin
     # @!attribute [rw] message
     #   @return [String]
     #
+    # @!attribute [rw] reason
+    #   The reason for the access denied exception.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/AccessDeniedException AWS API Documentation
     #
     class AccessDeniedException < Struct.new(
-      :message)
+      :message,
+      :reason)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -91,6 +96,10 @@ module Aws::SSOAdmin
     #   *Amazon Web Services General Reference*.
     #   @return [String]
     #
+    # @!attribute [rw] principal_type
+    #   The entity type for which the assignment will be created.
+    #   @return [String]
+    #
     # @!attribute [rw] principal_id
     #   An identifier for an object in IAM Identity Center, such as a user
     #   or group. PrincipalIds are GUIDs (For example,
@@ -100,17 +109,13 @@ module Aws::SSOAdmin
     #   Reference](/singlesignon/latest/IdentityStoreAPIReference/welcome.html).
     #   @return [String]
     #
-    # @!attribute [rw] principal_type
-    #   The entity type for which the assignment will be created.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/AccountAssignment AWS API Documentation
     #
     class AccountAssignment < Struct.new(
       :account_id,
       :permission_set_arn,
-      :principal_id,
-      :principal_type)
+      :principal_type,
+      :principal_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -150,33 +155,8 @@ module Aws::SSOAdmin
     # The status of the creation or deletion operation of an assignment that
     # a principal needs to access an account.
     #
-    # @!attribute [rw] created_date
-    #   The date that the permission set was created.
-    #   @return [Time]
-    #
-    # @!attribute [rw] failure_reason
-    #   The message that contains an error or exception in case of an
-    #   operation failure.
-    #   @return [String]
-    #
-    # @!attribute [rw] permission_set_arn
-    #   The ARN of the permission set. For more information about ARNs, see
-    #   [Amazon Resource Names (ARNs) and Amazon Web Services Service
-    #   Namespaces](/general/latest/gr/aws-arns-and-namespaces.html) in the
-    #   *Amazon Web Services General Reference*.
-    #   @return [String]
-    #
-    # @!attribute [rw] principal_id
-    #   An identifier for an object in IAM Identity Center, such as a user
-    #   or group. PrincipalIds are GUIDs (For example,
-    #   f81d4fae-7dec-11d0-a765-00a0c91e6bf6). For more information about
-    #   PrincipalIds in IAM Identity Center, see the [IAM Identity Center
-    #   Identity Store API
-    #   Reference](/singlesignon/latest/IdentityStoreAPIReference/welcome.html).
-    #   @return [String]
-    #
-    # @!attribute [rw] principal_type
-    #   The entity type for which the assignment will be created.
+    # @!attribute [rw] status
+    #   The status of the permission set provisioning process.
     #   @return [String]
     #
     # @!attribute [rw] request_id
@@ -184,8 +164,9 @@ module Aws::SSOAdmin
     #   by the universally unique identifier (UUID) workflow.
     #   @return [String]
     #
-    # @!attribute [rw] status
-    #   The status of the permission set provisioning process.
+    # @!attribute [rw] failure_reason
+    #   The message that contains an error or exception in case of an
+    #   operation failure.
     #   @return [String]
     #
     # @!attribute [rw] target_id
@@ -197,42 +178,101 @@ module Aws::SSOAdmin
     #   The entity type for which the assignment will be created.
     #   @return [String]
     #
+    # @!attribute [rw] permission_set_arn
+    #   The ARN of the permission set. For more information about ARNs, see
+    #   [Amazon Resource Names (ARNs) and Amazon Web Services Service
+    #   Namespaces](/general/latest/gr/aws-arns-and-namespaces.html) in the
+    #   *Amazon Web Services General Reference*.
+    #   @return [String]
+    #
+    # @!attribute [rw] principal_type
+    #   The entity type for which the assignment will be created.
+    #   @return [String]
+    #
+    # @!attribute [rw] principal_id
+    #   An identifier for an object in IAM Identity Center, such as a user
+    #   or group. PrincipalIds are GUIDs (For example,
+    #   f81d4fae-7dec-11d0-a765-00a0c91e6bf6). For more information about
+    #   PrincipalIds in IAM Identity Center, see the [IAM Identity Center
+    #   Identity Store API
+    #   Reference](/singlesignon/latest/IdentityStoreAPIReference/welcome.html).
+    #   @return [String]
+    #
+    # @!attribute [rw] created_date
+    #   The date that the permission set was created.
+    #   @return [Time]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/AccountAssignmentOperationStatus AWS API Documentation
     #
     class AccountAssignmentOperationStatus < Struct.new(
-      :created_date,
-      :failure_reason,
-      :permission_set_arn,
-      :principal_id,
-      :principal_type,
-      :request_id,
       :status,
+      :request_id,
+      :failure_reason,
       :target_id,
-      :target_type)
+      :target_type,
+      :permission_set_arn,
+      :principal_type,
+      :principal_id,
+      :created_date)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # Provides information about the AccountAssignment creation request.
     #
-    # @!attribute [rw] created_date
-    #   The date that the permission set was created.
-    #   @return [Time]
+    # @!attribute [rw] status
+    #   The status of the permission set provisioning process.
+    #   @return [String]
     #
     # @!attribute [rw] request_id
     #   The identifier for tracking the request operation that is generated
     #   by the universally unique identifier (UUID) workflow.
     #   @return [String]
     #
-    # @!attribute [rw] status
-    #   The status of the permission set provisioning process.
-    #   @return [String]
+    # @!attribute [rw] created_date
+    #   The date that the permission set was created.
+    #   @return [Time]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/AccountAssignmentOperationStatusMetadata AWS API Documentation
     #
     class AccountAssignmentOperationStatusMetadata < Struct.new(
-      :created_date,
+      :status,
       :request_id,
+      :created_date)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] instance_arn
+    #   The Amazon Resource Name (ARN) of the IAM Identity Center instance
+    #   to replicate to the target Region.
+    #   @return [String]
+    #
+    # @!attribute [rw] region_name
+    #   The name of the Amazon Web Services Region to add to the IAM
+    #   Identity Center instance. The Region name must be 1-32 characters
+    #   long and follow the pattern of Amazon Web Services Region names (for
+    #   example, us-east-1).
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/AddRegionRequest AWS API Documentation
+    #
+    class AddRegionRequest < Struct.new(
+      :instance_arn,
+      :region_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] status
+    #   The status of the Region after the Add operation. The status is
+    #   ADDING when the asynchronous workflow is in progress and changes to
+    #   ACTIVE when complete.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/AddRegionResponse AWS API Documentation
+    #
+    class AddRegionResponse < Struct.new(
       :status)
       SENSITIVE = []
       include Aws::Structure
@@ -240,10 +280,6 @@ module Aws::SSOAdmin
 
     # A structure that describes an application that uses IAM Identity
     # Center for access management.
-    #
-    # @!attribute [rw] application_account
-    #   The Amazon Web Services account ID number of the application.
-    #   @return [String]
     #
     # @!attribute [rw] application_arn
     #   The ARN of the application.
@@ -253,12 +289,12 @@ module Aws::SSOAdmin
     #   The ARN of the application provider for this application.
     #   @return [String]
     #
-    # @!attribute [rw] created_date
-    #   The date and time when the application was originally created.
-    #   @return [Time]
+    # @!attribute [rw] name
+    #   The name of the application.
+    #   @return [String]
     #
-    # @!attribute [rw] description
-    #   The description of the application.
+    # @!attribute [rw] application_account
+    #   The Amazon Web Services account ID number of the application.
     #   @return [String]
     #
     # @!attribute [rw] instance_arn
@@ -266,8 +302,14 @@ module Aws::SSOAdmin
     #   with this application.
     #   @return [String]
     #
-    # @!attribute [rw] name
-    #   The name of the application.
+    # @!attribute [rw] identity_store_arn
+    #   The ARN of the identity store that is connected to the instance of
+    #   IAM Identity Center.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the application in this instance of IAM
+    #   Identity Center.
     #   @return [String]
     #
     # @!attribute [rw] portal_options
@@ -275,23 +317,33 @@ module Aws::SSOAdmin
     #   associated with this application.
     #   @return [Types::PortalOptions]
     #
-    # @!attribute [rw] status
-    #   The current status of the application in this instance of IAM
-    #   Identity Center.
+    # @!attribute [rw] description
+    #   The description of the application.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_date
+    #   The date and time when the application was originally created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] created_from
+    #   The Amazon Web Services Region where the application was created in
+    #   IAM Identity Center.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/Application AWS API Documentation
     #
     class Application < Struct.new(
-      :application_account,
       :application_arn,
       :application_provider_arn,
-      :created_date,
-      :description,
-      :instance_arn,
       :name,
+      :application_account,
+      :instance_arn,
+      :identity_store_arn,
+      :status,
       :portal_options,
-      :status)
+      :description,
+      :created_date,
+      :created_from)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -355,15 +407,15 @@ module Aws::SSOAdmin
     #   The ARN of the application provider.
     #   @return [String]
     #
-    # @!attribute [rw] display_data
-    #   A structure that describes how IAM Identity Center represents the
-    #   application provider in the portal.
-    #   @return [Types::DisplayData]
-    #
     # @!attribute [rw] federation_protocol
     #   The protocol that the application provider uses to perform
     #   federation.
     #   @return [String]
+    #
+    # @!attribute [rw] display_data
+    #   A structure that describes how IAM Identity Center represents the
+    #   application provider in the portal.
+    #   @return [Types::DisplayData]
     #
     # @!attribute [rw] resource_server_config
     #   A structure that describes the application provider's resource
@@ -374,19 +426,13 @@ module Aws::SSOAdmin
     #
     class ApplicationProvider < Struct.new(
       :application_provider_arn,
-      :display_data,
       :federation_protocol,
+      :display_data,
       :resource_server_config)
       SENSITIVE = []
       include Aws::Structure
     end
 
-    # @!attribute [rw] customer_managed_policy_reference
-    #   Specifies the name and path of a customer managed policy. You must
-    #   have an IAM policy that matches the name and path in each Amazon Web
-    #   Services account where you want to deploy your permission set.
-    #   @return [Types::CustomerManagedPolicyReference]
-    #
     # @!attribute [rw] instance_arn
     #   The ARN of the IAM Identity Center instance under which the
     #   operation will be executed.
@@ -396,12 +442,18 @@ module Aws::SSOAdmin
     #   The ARN of the `PermissionSet`.
     #   @return [String]
     #
+    # @!attribute [rw] customer_managed_policy_reference
+    #   Specifies the name and path of a customer managed policy. You must
+    #   have an IAM policy that matches the name and path in each Amazon Web
+    #   Services account where you want to deploy your permission set.
+    #   @return [Types::CustomerManagedPolicyReference]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/AttachCustomerManagedPolicyReferenceToPermissionSetRequest AWS API Documentation
     #
     class AttachCustomerManagedPolicyReferenceToPermissionSetRequest < Struct.new(
-      :customer_managed_policy_reference,
       :instance_arn,
-      :permission_set_arn)
+      :permission_set_arn,
+      :customer_managed_policy_reference)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -418,22 +470,22 @@ module Aws::SSOAdmin
     #   *Amazon Web Services General Reference*.
     #   @return [String]
     #
-    # @!attribute [rw] managed_policy_arn
-    #   The Amazon Web Services managed policy ARN to be attached to a
-    #   permission set.
-    #   @return [String]
-    #
     # @!attribute [rw] permission_set_arn
     #   The ARN of the PermissionSet that the managed policy should be
     #   attached to.
+    #   @return [String]
+    #
+    # @!attribute [rw] managed_policy_arn
+    #   The Amazon Web Services managed policy ARN to be attached to a
+    #   permission set.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/AttachManagedPolicyToPermissionSetRequest AWS API Documentation
     #
     class AttachManagedPolicyToPermissionSetRequest < Struct.new(
       :instance_arn,
-      :managed_policy_arn,
-      :permission_set_arn)
+      :permission_set_arn,
+      :managed_policy_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -442,8 +494,12 @@ module Aws::SSOAdmin
     #
     class AttachManagedPolicyToPermissionSetResponse < Aws::EmptyStructure; end
 
-    # A structure that stores the details of the Amazon Web Services managed
-    # policy.
+    # A structure that stores a list of managed policy ARNs that describe
+    # the associated Amazon Web Services managed policy.
+    #
+    # @!attribute [rw] name
+    #   The name of the Amazon Web Services managed policy.
+    #   @return [String]
     #
     # @!attribute [rw] arn
     #   The ARN of the Amazon Web Services managed policy. For more
@@ -453,15 +509,11 @@ module Aws::SSOAdmin
     #   *Amazon Web Services General Reference*.
     #   @return [String]
     #
-    # @!attribute [rw] name
-    #   The name of the Amazon Web Services managed policy.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/AttachedManagedPolicy AWS API Documentation
     #
     class AttachedManagedPolicy < Struct.new(
-      :arn,
-      :name)
+      :name,
+      :arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -492,20 +544,20 @@ module Aws::SSOAdmin
 
     # A structure that describes an authentication method and its type.
     #
+    # @!attribute [rw] authentication_method_type
+    #   The type of authentication that is used by this method.
+    #   @return [String]
+    #
     # @!attribute [rw] authentication_method
     #   A structure that describes an authentication method. The contents of
     #   this structure is determined by the `AuthenticationMethodType`.
     #   @return [Types::AuthenticationMethod]
     #
-    # @!attribute [rw] authentication_method_type
-    #   The type of authentication that is used by this method.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/AuthenticationMethodItem AWS API Documentation
     #
     class AuthenticationMethodItem < Struct.new(
-      :authentication_method,
-      :authentication_method_type)
+      :authentication_method_type,
+      :authentication_method)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -516,6 +568,11 @@ module Aws::SSOAdmin
     # @!attribute [rw] redirect_uris
     #   A list of URIs that are valid locations to redirect a user's
     #   browser after the user is authorized.
+    #
+    #   <note markdown="1"> RedirectUris is required when the grant type is
+    #   `authorization_code`.
+    #
+    #    </note>
     #   @return [Array<String>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/AuthorizationCodeGrant AWS API Documentation
@@ -529,20 +586,20 @@ module Aws::SSOAdmin
     # A structure that describes a trusted token issuer and associates it
     # with a set of authorized audiences.
     #
+    # @!attribute [rw] trusted_token_issuer_arn
+    #   The ARN of the trusted token issuer.
+    #   @return [String]
+    #
     # @!attribute [rw] authorized_audiences
     #   An array list of authorized audiences, or applications, that can
     #   consume the tokens generated by the associated trusted token issuer.
     #   @return [Array<String>]
     #
-    # @!attribute [rw] trusted_token_issuer_arn
-    #   The ARN of the trusted token issuer.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/AuthorizedTokenIssuer AWS API Documentation
     #
     class AuthorizedTokenIssuer < Struct.new(
-      :authorized_audiences,
-      :trusted_token_issuer_arn)
+      :trusted_token_issuer_arn,
+      :authorized_audiences)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -572,9 +629,22 @@ module Aws::SSOAdmin
     #   *Amazon Web Services General Reference*.
     #   @return [String]
     #
+    # @!attribute [rw] target_id
+    #   TargetID is an Amazon Web Services account identifier, (For example,
+    #   123456789012).
+    #   @return [String]
+    #
+    # @!attribute [rw] target_type
+    #   The entity type for which the assignment will be created.
+    #   @return [String]
+    #
     # @!attribute [rw] permission_set_arn
     #   The ARN of the permission set that the admin wants to grant the
     #   principal access to.
+    #   @return [String]
+    #
+    # @!attribute [rw] principal_type
+    #   The entity type for which the assignment will be created.
     #   @return [String]
     #
     # @!attribute [rw] principal_id
@@ -586,28 +656,15 @@ module Aws::SSOAdmin
     #   Reference](/singlesignon/latest/IdentityStoreAPIReference/welcome.html).
     #   @return [String]
     #
-    # @!attribute [rw] principal_type
-    #   The entity type for which the assignment will be created.
-    #   @return [String]
-    #
-    # @!attribute [rw] target_id
-    #   TargetID is an Amazon Web Services account identifier, (For example,
-    #   123456789012).
-    #   @return [String]
-    #
-    # @!attribute [rw] target_type
-    #   The entity type for which the assignment will be created.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/CreateAccountAssignmentRequest AWS API Documentation
     #
     class CreateAccountAssignmentRequest < Struct.new(
       :instance_arn,
-      :permission_set_arn,
-      :principal_id,
-      :principal_type,
       :target_id,
-      :target_type)
+      :target_type,
+      :permission_set_arn,
+      :principal_type,
+      :principal_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -625,8 +682,7 @@ module Aws::SSOAdmin
     end
 
     # @!attribute [rw] application_arn
-    #   The ARN of the application provider under which the operation will
-    #   run.
+    #   The ARN of the application for which the assignment is created.
     #   @return [String]
     #
     # @!attribute [rw] principal_id
@@ -634,8 +690,11 @@ module Aws::SSOAdmin
     #   or group. PrincipalIds are GUIDs (For example,
     #   f81d4fae-7dec-11d0-a765-00a0c91e6bf6). For more information about
     #   PrincipalIds in IAM Identity Center, see the [IAM Identity Center
-    #   Identity Store API
-    #   Reference](/singlesignon/latest/IdentityStoreAPIReference/welcome.html).
+    #   Identity Store API Reference][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/singlesignon/latest/IdentityStoreAPIReference/welcome.html
     #   @return [String]
     #
     # @!attribute [rw] principal_type
@@ -656,9 +715,38 @@ module Aws::SSOAdmin
     #
     class CreateApplicationAssignmentResponse < Aws::EmptyStructure; end
 
+    # @!attribute [rw] instance_arn
+    #   The ARN of the instance of IAM Identity Center under which the
+    #   operation will run. For more information about ARNs, see [Amazon
+    #   Resource Names (ARNs) and Amazon Web Services Service
+    #   Namespaces](/general/latest/gr/aws-arns-and-namespaces.html) in the
+    #   *Amazon Web Services General Reference*.
+    #   @return [String]
+    #
     # @!attribute [rw] application_provider_arn
     #   The ARN of the application provider under which the operation will
     #   run.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the .
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   The description of the .
+    #   @return [String]
+    #
+    # @!attribute [rw] portal_options
+    #   A structure that describes the options for the portal associated
+    #   with an application.
+    #   @return [Types::PortalOptions]
+    #
+    # @!attribute [rw] tags
+    #   Specifies tags to be attached to the application.
+    #   @return [Array<Types::Tag>]
+    #
+    # @!attribute [rw] status
+    #   Specifies whether the application is enabled or disabled.
     #   @return [String]
     #
     # @!attribute [rw] client_token
@@ -684,8 +772,23 @@ module Aws::SSOAdmin
     #   [1]: https://wikipedia.org/wiki/Universally_unique_identifier
     #   @return [String]
     #
-    # @!attribute [rw] description
-    #   The description of the .
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/CreateApplicationRequest AWS API Documentation
+    #
+    class CreateApplicationRequest < Struct.new(
+      :instance_arn,
+      :application_provider_arn,
+      :name,
+      :description,
+      :portal_options,
+      :tags,
+      :status,
+      :client_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] application_arn
+    #   Specifies the ARN of the application.
     #   @return [String]
     #
     # @!attribute [rw] instance_arn
@@ -696,50 +799,26 @@ module Aws::SSOAdmin
     #   *Amazon Web Services General Reference*.
     #   @return [String]
     #
-    # @!attribute [rw] name
-    #   The name of the .
-    #   @return [String]
-    #
-    # @!attribute [rw] portal_options
-    #   A structure that describes the options for the portal associated
-    #   with an application.
-    #   @return [Types::PortalOptions]
-    #
-    # @!attribute [rw] status
-    #   Specifies whether the application is enabled or disabled.
-    #   @return [String]
-    #
-    # @!attribute [rw] tags
-    #   Specifies tags to be attached to the application.
-    #   @return [Array<Types::Tag>]
-    #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/CreateApplicationRequest AWS API Documentation
-    #
-    class CreateApplicationRequest < Struct.new(
-      :application_provider_arn,
-      :client_token,
-      :description,
-      :instance_arn,
-      :name,
-      :portal_options,
-      :status,
-      :tags)
-      SENSITIVE = []
-      include Aws::Structure
-    end
-
-    # @!attribute [rw] application_arn
-    #   Specifies the ARN of the application.
+    # @!attribute [rw] identity_store_arn
+    #   The ARN of the identity store that is connected to the instance of
+    #   IAM Identity Center.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/CreateApplicationResponse AWS API Documentation
     #
     class CreateApplicationResponse < Struct.new(
-      :application_arn)
+      :application_arn,
+      :instance_arn,
+      :identity_store_arn)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # @!attribute [rw] instance_arn
+    #   The ARN of the IAM Identity Center instance under which the
+    #   operation will be executed.
+    #   @return [String]
+    #
     # @!attribute [rw] instance_access_control_attribute_configuration
     #   Specifies the IAM Identity Center identity store attributes to add
     #   to your ABAC configuration. When using an external identity provider
@@ -751,16 +830,11 @@ module Aws::SSOAdmin
     #   Center identity store.
     #   @return [Types::InstanceAccessControlAttributeConfiguration]
     #
-    # @!attribute [rw] instance_arn
-    #   The ARN of the IAM Identity Center instance under which the
-    #   operation will be executed.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/CreateInstanceAccessControlAttributeConfigurationRequest AWS API Documentation
     #
     class CreateInstanceAccessControlAttributeConfigurationRequest < Struct.new(
-      :instance_access_control_attribute_configuration,
-      :instance_arn)
+      :instance_arn,
+      :instance_access_control_attribute_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -769,6 +843,10 @@ module Aws::SSOAdmin
     #
     class CreateInstanceAccessControlAttributeConfigurationResponse < Aws::EmptyStructure; end
 
+    # @!attribute [rw] name
+    #   The name of the instance of IAM Identity Center.
+    #   @return [String]
+    #
     # @!attribute [rw] client_token
     #   Specifies a unique, case-sensitive ID that you provide to ensure the
     #   idempotency of the request. This lets you safely retry the request
@@ -792,10 +870,6 @@ module Aws::SSOAdmin
     #   [1]: https://wikipedia.org/wiki/Universally_unique_identifier
     #   @return [String]
     #
-    # @!attribute [rw] name
-    #   The name of the instance of IAM Identity Center.
-    #   @return [String]
-    #
     # @!attribute [rw] tags
     #   Specifies tags to be attached to the instance of IAM Identity
     #   Center.
@@ -804,8 +878,8 @@ module Aws::SSOAdmin
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/CreateInstanceRequest AWS API Documentation
     #
     class CreateInstanceRequest < Struct.new(
-      :client_token,
       :name,
+      :client_token,
       :tags)
       SENSITIVE = []
       include Aws::Structure
@@ -829,6 +903,10 @@ module Aws::SSOAdmin
       include Aws::Structure
     end
 
+    # @!attribute [rw] name
+    #   The name of the PermissionSet.
+    #   @return [String]
+    #
     # @!attribute [rw] description
     #   The description of the PermissionSet.
     #   @return [String]
@@ -841,18 +919,14 @@ module Aws::SSOAdmin
     #   *Amazon Web Services General Reference*.
     #   @return [String]
     #
-    # @!attribute [rw] name
-    #   The name of the PermissionSet.
+    # @!attribute [rw] session_duration
+    #   The length of time that the application user sessions are valid in
+    #   the ISO-8601 standard.
     #   @return [String]
     #
     # @!attribute [rw] relay_state
     #   Used to redirect users within the application during the federation
     #   authentication process.
-    #   @return [String]
-    #
-    # @!attribute [rw] session_duration
-    #   The length of time that the application user sessions are valid in
-    #   the ISO-8601 standard.
     #   @return [String]
     #
     # @!attribute [rw] tags
@@ -862,11 +936,11 @@ module Aws::SSOAdmin
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/CreatePermissionSetRequest AWS API Documentation
     #
     class CreatePermissionSetRequest < Struct.new(
+      :name,
       :description,
       :instance_arn,
-      :name,
-      :relay_state,
       :session_duration,
+      :relay_state,
       :tags)
       SENSITIVE = []
       include Aws::Structure
@@ -884,6 +958,25 @@ module Aws::SSOAdmin
       include Aws::Structure
     end
 
+    # @!attribute [rw] instance_arn
+    #   Specifies the ARN of the instance of IAM Identity Center to contain
+    #   the new trusted token issuer configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   Specifies the name of the new trusted token issuer configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] trusted_token_issuer_type
+    #   Specifies the type of the new trusted token issuer.
+    #   @return [String]
+    #
+    # @!attribute [rw] trusted_token_issuer_configuration
+    #   Specifies settings that apply to the new trusted token issuer
+    #   configuration. The settings that are available depend on what
+    #   `TrustedTokenIssuerType` you specify.
+    #   @return [Types::TrustedTokenIssuerConfiguration]
+    #
     # @!attribute [rw] client_token
     #   Specifies a unique, case-sensitive ID that you provide to ensure the
     #   idempotency of the request. This lets you safely retry the request
@@ -907,39 +1000,20 @@ module Aws::SSOAdmin
     #   [1]: https://wikipedia.org/wiki/Universally_unique_identifier
     #   @return [String]
     #
-    # @!attribute [rw] instance_arn
-    #   Specifies the ARN of the instance of IAM Identity Center to contain
-    #   the new trusted token issuer configuration.
-    #   @return [String]
-    #
-    # @!attribute [rw] name
-    #   Specifies the name of the new trusted token issuer configuration.
-    #   @return [String]
-    #
     # @!attribute [rw] tags
     #   Specifies tags to be attached to the new trusted token issuer
     #   configuration.
     #   @return [Array<Types::Tag>]
     #
-    # @!attribute [rw] trusted_token_issuer_configuration
-    #   Specifies settings that apply to the new trusted token issuer
-    #   configuration. The settings that are available depend on what
-    #   `TrustedTokenIssuerType` you specify.
-    #   @return [Types::TrustedTokenIssuerConfiguration]
-    #
-    # @!attribute [rw] trusted_token_issuer_type
-    #   Specifies the type of the new trusted token issuer.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/CreateTrustedTokenIssuerRequest AWS API Documentation
     #
     class CreateTrustedTokenIssuerRequest < Struct.new(
-      :client_token,
       :instance_arn,
       :name,
-      :tags,
+      :trusted_token_issuer_type,
       :trusted_token_issuer_configuration,
-      :trusted_token_issuer_type)
+      :client_token,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -993,8 +1067,21 @@ module Aws::SSOAdmin
     #   *Amazon Web Services General Reference*.
     #   @return [String]
     #
+    # @!attribute [rw] target_id
+    #   TargetID is an Amazon Web Services account identifier, (For example,
+    #   123456789012).
+    #   @return [String]
+    #
+    # @!attribute [rw] target_type
+    #   The entity type for which the assignment will be deleted.
+    #   @return [String]
+    #
     # @!attribute [rw] permission_set_arn
     #   The ARN of the permission set that will be used to remove access.
+    #   @return [String]
+    #
+    # @!attribute [rw] principal_type
+    #   The entity type for which the assignment will be deleted.
     #   @return [String]
     #
     # @!attribute [rw] principal_id
@@ -1006,28 +1093,15 @@ module Aws::SSOAdmin
     #   Reference](/singlesignon/latest/IdentityStoreAPIReference/welcome.html).
     #   @return [String]
     #
-    # @!attribute [rw] principal_type
-    #   The entity type for which the assignment will be deleted.
-    #   @return [String]
-    #
-    # @!attribute [rw] target_id
-    #   TargetID is an Amazon Web Services account identifier, (For example,
-    #   123456789012).
-    #   @return [String]
-    #
-    # @!attribute [rw] target_type
-    #   The entity type for which the assignment will be deleted.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/DeleteAccountAssignmentRequest AWS API Documentation
     #
     class DeleteAccountAssignmentRequest < Struct.new(
       :instance_arn,
-      :permission_set_arn,
-      :principal_id,
-      :principal_type,
       :target_id,
-      :target_type)
+      :target_type,
+      :permission_set_arn,
+      :principal_type,
+      :principal_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1072,8 +1146,11 @@ module Aws::SSOAdmin
     #   or group. PrincipalIds are GUIDs (For example,
     #   f81d4fae-7dec-11d0-a765-00a0c91e6bf6). For more information about
     #   PrincipalIds in IAM Identity Center, see the [IAM Identity Center
-    #   Identity Store API
-    #   Reference](/singlesignon/latest/IdentityStoreAPIReference/welcome.html).
+    #   Identity Store API Reference][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/singlesignon/latest/IdentityStoreAPIReference/welcome.html
     #   @return [String]
     #
     # @!attribute [rw] principal_type
@@ -1272,10 +1349,6 @@ module Aws::SSOAdmin
     #
     class DeleteTrustedTokenIssuerResponse < Aws::EmptyStructure; end
 
-    # @!attribute [rw] account_assignment_creation_request_id
-    #   The identifier that is used to track the request operation progress.
-    #   @return [String]
-    #
     # @!attribute [rw] instance_arn
     #   The ARN of the IAM Identity Center instance under which the
     #   operation will be executed. For more information about ARNs, see
@@ -1284,11 +1357,15 @@ module Aws::SSOAdmin
     #   *Amazon Web Services General Reference*.
     #   @return [String]
     #
+    # @!attribute [rw] account_assignment_creation_request_id
+    #   The identifier that is used to track the request operation progress.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/DescribeAccountAssignmentCreationStatusRequest AWS API Documentation
     #
     class DescribeAccountAssignmentCreationStatusRequest < Struct.new(
-      :account_assignment_creation_request_id,
-      :instance_arn)
+      :instance_arn,
+      :account_assignment_creation_request_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1305,10 +1382,6 @@ module Aws::SSOAdmin
       include Aws::Structure
     end
 
-    # @!attribute [rw] account_assignment_deletion_request_id
-    #   The identifier that is used to track the request operation progress.
-    #   @return [String]
-    #
     # @!attribute [rw] instance_arn
     #   The ARN of the IAM Identity Center instance under which the
     #   operation will be executed. For more information about ARNs, see
@@ -1317,11 +1390,15 @@ module Aws::SSOAdmin
     #   *Amazon Web Services General Reference*.
     #   @return [String]
     #
+    # @!attribute [rw] account_assignment_deletion_request_id
+    #   The identifier that is used to track the request operation progress.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/DescribeAccountAssignmentDeletionStatusRequest AWS API Documentation
     #
     class DescribeAccountAssignmentDeletionStatusRequest < Struct.new(
-      :account_assignment_deletion_request_id,
-      :instance_arn)
+      :instance_arn,
+      :account_assignment_deletion_request_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1350,8 +1427,11 @@ module Aws::SSOAdmin
     #   or group. PrincipalIds are GUIDs (For example,
     #   f81d4fae-7dec-11d0-a765-00a0c91e6bf6). For more information about
     #   PrincipalIds in IAM Identity Center, see the [IAM Identity Center
-    #   Identity Store API
-    #   Reference](/singlesignon/latest/IdentityStoreAPIReference/welcome.html).
+    #   Identity Store API Reference][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/singlesignon/latest/IdentityStoreAPIReference/welcome.html
     #   @return [String]
     #
     # @!attribute [rw] principal_type
@@ -1368,11 +1448,8 @@ module Aws::SSOAdmin
       include Aws::Structure
     end
 
-    # @!attribute [rw] application_arn
-    #   Specifies the ARN of the application. For more information about
-    #   ARNs, see [Amazon Resource Names (ARNs) and Amazon Web Services
-    #   Service Namespaces](/general/latest/gr/aws-arns-and-namespaces.html)
-    #   in the *Amazon Web Services General Reference*.
+    # @!attribute [rw] principal_type
+    #   The entity type for which the assignment will be created.
     #   @return [String]
     #
     # @!attribute [rw] principal_id
@@ -1380,20 +1457,26 @@ module Aws::SSOAdmin
     #   or group. PrincipalIds are GUIDs (For example,
     #   f81d4fae-7dec-11d0-a765-00a0c91e6bf6). For more information about
     #   PrincipalIds in IAM Identity Center, see the [IAM Identity Center
-    #   Identity Store API
-    #   Reference](/singlesignon/latest/IdentityStoreAPIReference/welcome.html).
+    #   Identity Store API Reference][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/singlesignon/latest/IdentityStoreAPIReference/welcome.html
     #   @return [String]
     #
-    # @!attribute [rw] principal_type
-    #   The entity type for which the assignment will be created.
+    # @!attribute [rw] application_arn
+    #   Specifies the ARN of the application. For more information about
+    #   ARNs, see [Amazon Resource Names (ARNs) and Amazon Web Services
+    #   Service Namespaces](/general/latest/gr/aws-arns-and-namespaces.html)
+    #   in the *Amazon Web Services General Reference*.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/DescribeApplicationAssignmentResponse AWS API Documentation
     #
     class DescribeApplicationAssignmentResponse < Struct.new(
-      :application_arn,
+      :principal_type,
       :principal_id,
-      :principal_type)
+      :application_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1415,14 +1498,14 @@ module Aws::SSOAdmin
     #   The ARN of the application provider.
     #   @return [String]
     #
+    # @!attribute [rw] federation_protocol
+    #   The protocol used to federate to the application provider.
+    #   @return [String]
+    #
     # @!attribute [rw] display_data
     #   A structure with details about the display data for the application
     #   provider.
     #   @return [Types::DisplayData]
-    #
-    # @!attribute [rw] federation_protocol
-    #   The protocol used to federate to the application provider.
-    #   @return [String]
     #
     # @!attribute [rw] resource_server_config
     #   A structure with details about the receiving application.
@@ -1432,8 +1515,8 @@ module Aws::SSOAdmin
     #
     class DescribeApplicationProviderResponse < Struct.new(
       :application_provider_arn,
-      :display_data,
       :federation_protocol,
+      :display_data,
       :resource_server_config)
       SENSITIVE = []
       include Aws::Structure
@@ -1454,10 +1537,6 @@ module Aws::SSOAdmin
       include Aws::Structure
     end
 
-    # @!attribute [rw] application_account
-    #   The account ID.
-    #   @return [String]
-    #
     # @!attribute [rw] application_arn
     #   Specifies the ARN of the application.
     #   @return [String]
@@ -1467,12 +1546,12 @@ module Aws::SSOAdmin
     #   run.
     #   @return [String]
     #
-    # @!attribute [rw] created_date
-    #   The date the application was created.
-    #   @return [Time]
+    # @!attribute [rw] name
+    #   The application name.
+    #   @return [String]
     #
-    # @!attribute [rw] description
-    #   The description of the .
+    # @!attribute [rw] application_account
+    #   The account ID.
     #   @return [String]
     #
     # @!attribute [rw] instance_arn
@@ -1483,8 +1562,13 @@ module Aws::SSOAdmin
     #   *Amazon Web Services General Reference*.
     #   @return [String]
     #
-    # @!attribute [rw] name
-    #   The application name.
+    # @!attribute [rw] identity_store_arn
+    #   The ARN of the identity store that is connected to the instance of
+    #   IAM Identity Center.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   Specifies whether the application is enabled or disabled.
     #   @return [String]
     #
     # @!attribute [rw] portal_options
@@ -1492,22 +1576,33 @@ module Aws::SSOAdmin
     #   with an application.
     #   @return [Types::PortalOptions]
     #
-    # @!attribute [rw] status
-    #   Specifies whether the application is enabled or disabled.
+    # @!attribute [rw] description
+    #   The description of the .
+    #   @return [String]
+    #
+    # @!attribute [rw] created_date
+    #   The date the application was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] created_from
+    #   The Amazon Web Services Region where the application was created in
+    #   IAM Identity Center.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/DescribeApplicationResponse AWS API Documentation
     #
     class DescribeApplicationResponse < Struct.new(
-      :application_account,
       :application_arn,
       :application_provider_arn,
-      :created_date,
-      :description,
-      :instance_arn,
       :name,
+      :application_account,
+      :instance_arn,
+      :identity_store_arn,
+      :status,
       :portal_options,
-      :status)
+      :description,
+      :created_date,
+      :created_from)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1525,11 +1620,6 @@ module Aws::SSOAdmin
       include Aws::Structure
     end
 
-    # @!attribute [rw] instance_access_control_attribute_configuration
-    #   Gets the list of IAM Identity Center identity store attributes that
-    #   have been added to your ABAC configuration.
-    #   @return [Types::InstanceAccessControlAttributeConfiguration]
-    #
     # @!attribute [rw] status
     #   The status of the attribute configuration process.
     #   @return [String]
@@ -1539,12 +1629,17 @@ module Aws::SSOAdmin
     #   attribute.
     #   @return [String]
     #
+    # @!attribute [rw] instance_access_control_attribute_configuration
+    #   Gets the list of IAM Identity Center identity store attributes that
+    #   have been added to your ABAC configuration.
+    #   @return [Types::InstanceAccessControlAttributeConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/DescribeInstanceAccessControlAttributeConfigurationResponse AWS API Documentation
     #
     class DescribeInstanceAccessControlAttributeConfigurationResponse < Struct.new(
-      :instance_access_control_attribute_configuration,
       :status,
-      :status_reason)
+      :status_reason,
+      :instance_access_control_attribute_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1562,15 +1657,6 @@ module Aws::SSOAdmin
       include Aws::Structure
     end
 
-    # @!attribute [rw] created_date
-    #   The date the instance was created.
-    #   @return [Time]
-    #
-    # @!attribute [rw] identity_store_id
-    #   The identifier of the identity store that is connected to the
-    #   instance of IAM Identity Center.
-    #   @return [String]
-    #
     # @!attribute [rw] instance_arn
     #   The ARN of the instance of IAM Identity Center under which the
     #   operation will run. For more information about ARNs, see [Amazon
@@ -1579,8 +1665,9 @@ module Aws::SSOAdmin
     #   *Amazon Web Services General Reference*.
     #   @return [String]
     #
-    # @!attribute [rw] name
-    #   Specifies the instance name.
+    # @!attribute [rw] identity_store_id
+    #   The identifier of the identity store that is connected to the
+    #   instance of IAM Identity Center.
     #   @return [String]
     #
     # @!attribute [rw] owner_account_id
@@ -1588,19 +1675,51 @@ module Aws::SSOAdmin
     #   instance was created.
     #   @return [String]
     #
+    # @!attribute [rw] name
+    #   Specifies the instance name.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_date
+    #   The date the instance was created.
+    #   @return [Time]
+    #
     # @!attribute [rw] status
     #   The status of the instance.
     #   @return [String]
     #
+    # @!attribute [rw] status_reason
+    #   Provides additional context about the current status of the IAM
+    #   Identity Center instance. This field is particularly useful when an
+    #   instance is in a non-ACTIVE state, such as CREATE\_FAILED. When an
+    #   instance fails to create or update, this field contains information
+    #   about the cause, which may include issues with KMS key
+    #   configuration, permission problems with the specified KMS key, or
+    #   service-related errors.
+    #   @return [String]
+    #
+    # @!attribute [rw] encryption_configuration_details
+    #   Contains the encryption configuration for your IAM Identity Center
+    #   instance, including the encryption status, KMS key type, and KMS key
+    #   ARN.
+    #   @return [Types::EncryptionConfigurationDetails]
+    #
+    # @!attribute [rw] permission_sets_enabled
+    #   Indicates whether permission sets are enabled for this Identity
+    #   Center instance.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/DescribeInstanceResponse AWS API Documentation
     #
     class DescribeInstanceResponse < Struct.new(
-      :created_date,
-      :identity_store_id,
       :instance_arn,
-      :name,
+      :identity_store_id,
       :owner_account_id,
-      :status)
+      :name,
+      :created_date,
+      :status,
+      :status_reason,
+      :encryption_configuration_details,
+      :permission_sets_enabled)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1672,6 +1791,64 @@ module Aws::SSOAdmin
       include Aws::Structure
     end
 
+    # @!attribute [rw] instance_arn
+    #   The Amazon Resource Name (ARN) of the IAM Identity Center instance.
+    #   @return [String]
+    #
+    # @!attribute [rw] region_name
+    #   The name of the Amazon Web Services Region to retrieve information
+    #   about. The Region name must be 1-32 characters long and follow the
+    #   pattern of Amazon Web Services Region names (for example,
+    #   us-east-1).
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/DescribeRegionRequest AWS API Documentation
+    #
+    class DescribeRegionRequest < Struct.new(
+      :instance_arn,
+      :region_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] region_name
+    #   The Amazon Web Services Region name.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the Region. Valid values are ACTIVE (Region is
+    #   operational), ADDING (Region replication workflow is in progress),
+    #   or REMOVING (Region removal workflow is in progress).
+    #   @return [String]
+    #
+    # @!attribute [rw] added_date
+    #   The timestamp when the Region was added to the IAM Identity Center
+    #   instance. For the primary Region, this is the IAM Identity Center
+    #   instance creation time.
+    #   @return [Time]
+    #
+    # @!attribute [rw] is_primary_region
+    #   Indicates whether this is the primary Region where the IAM Identity
+    #   Center instance was originally enabled. For more information on the
+    #   difference between the primary Region and additional Regions, see
+    #   [IAM Identity Center User Guide][1]
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/singlesignon/latest/userguide/multi-region-iam-identity-center.html
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/DescribeRegionResponse AWS API Documentation
+    #
+    class DescribeRegionResponse < Struct.new(
+      :region_name,
+      :status,
+      :added_date,
+      :is_primary_region)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] trusted_token_issuer_arn
     #   Specifies the ARN of the trusted token issuer configuration that you
     #   want details about.
@@ -1685,12 +1862,16 @@ module Aws::SSOAdmin
       include Aws::Structure
     end
 
+    # @!attribute [rw] trusted_token_issuer_arn
+    #   The ARN of the trusted token issuer configuration.
+    #   @return [String]
+    #
     # @!attribute [rw] name
     #   The name of the trusted token issuer configuration.
     #   @return [String]
     #
-    # @!attribute [rw] trusted_token_issuer_arn
-    #   The ARN of the trusted token issuer configuration.
+    # @!attribute [rw] trusted_token_issuer_type
+    #   The type of the trusted token issuer.
     #   @return [String]
     #
     # @!attribute [rw] trusted_token_issuer_configuration
@@ -1698,27 +1879,17 @@ module Aws::SSOAdmin
     #   token issuer.
     #   @return [Types::TrustedTokenIssuerConfiguration]
     #
-    # @!attribute [rw] trusted_token_issuer_type
-    #   The type of the trusted token issuer.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/DescribeTrustedTokenIssuerResponse AWS API Documentation
     #
     class DescribeTrustedTokenIssuerResponse < Struct.new(
-      :name,
       :trusted_token_issuer_arn,
-      :trusted_token_issuer_configuration,
-      :trusted_token_issuer_type)
+      :name,
+      :trusted_token_issuer_type,
+      :trusted_token_issuer_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
 
-    # @!attribute [rw] customer_managed_policy_reference
-    #   Specifies the name and path of a customer managed policy. You must
-    #   have an IAM policy that matches the name and path in each Amazon Web
-    #   Services account where you want to deploy your permission set.
-    #   @return [Types::CustomerManagedPolicyReference]
-    #
     # @!attribute [rw] instance_arn
     #   The ARN of the IAM Identity Center instance under which the
     #   operation will be executed.
@@ -1728,12 +1899,18 @@ module Aws::SSOAdmin
     #   The ARN of the `PermissionSet`.
     #   @return [String]
     #
+    # @!attribute [rw] customer_managed_policy_reference
+    #   Specifies the name and path of a customer managed policy. You must
+    #   have an IAM policy that matches the name and path in each Amazon Web
+    #   Services account where you want to deploy your permission set.
+    #   @return [Types::CustomerManagedPolicyReference]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/DetachCustomerManagedPolicyReferenceFromPermissionSetRequest AWS API Documentation
     #
     class DetachCustomerManagedPolicyReferenceFromPermissionSetRequest < Struct.new(
-      :customer_managed_policy_reference,
       :instance_arn,
-      :permission_set_arn)
+      :permission_set_arn,
+      :customer_managed_policy_reference)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1750,22 +1927,22 @@ module Aws::SSOAdmin
     #   *Amazon Web Services General Reference*.
     #   @return [String]
     #
-    # @!attribute [rw] managed_policy_arn
-    #   The Amazon Web Services managed policy ARN to be detached from a
-    #   permission set.
-    #   @return [String]
-    #
     # @!attribute [rw] permission_set_arn
     #   The ARN of the PermissionSet from which the policy should be
     #   detached.
+    #   @return [String]
+    #
+    # @!attribute [rw] managed_policy_arn
+    #   The Amazon Web Services managed policy ARN to be detached from a
+    #   permission set.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/DetachManagedPolicyFromPermissionSetRequest AWS API Documentation
     #
     class DetachManagedPolicyFromPermissionSetRequest < Struct.new(
       :instance_arn,
-      :managed_policy_arn,
-      :permission_set_arn)
+      :permission_set_arn,
+      :managed_policy_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1777,11 +1954,6 @@ module Aws::SSOAdmin
     # A structure that describes how the portal represents an application
     # provider.
     #
-    # @!attribute [rw] description
-    #   The description of the application provider that appears in the
-    #   portal.
-    #   @return [String]
-    #
     # @!attribute [rw] display_name
     #   The name of the application provider that appears in the portal.
     #   @return [String]
@@ -1791,12 +1963,75 @@ module Aws::SSOAdmin
     #   provider.
     #   @return [String]
     #
+    # @!attribute [rw] description
+    #   The description of the application provider that appears in the
+    #   portal.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/DisplayData AWS API Documentation
     #
     class DisplayData < Struct.new(
-      :description,
       :display_name,
-      :icon_url)
+      :icon_url,
+      :description)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A structure that specifies the KMS key type and KMS key ARN used to
+    # encrypt data in your IAM Identity Center instance.
+    #
+    # @!attribute [rw] key_type
+    #   The type of KMS key used for encryption.
+    #   @return [String]
+    #
+    # @!attribute [rw] kms_key_arn
+    #   The ARN of the KMS key used to encrypt data. Required when KeyType
+    #   is CUSTOMER\_MANAGED\_KEY. Cannot be specified when KeyType is
+    #   AWS\_OWNED\_KMS\_KEY.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/EncryptionConfiguration AWS API Documentation
+    #
+    class EncryptionConfiguration < Struct.new(
+      :key_type,
+      :kms_key_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The encryption configuration of your IAM Identity Center instance,
+    # including the key type, KMS key ARN, and current encryption status.
+    #
+    # @!attribute [rw] key_type
+    #   The type of KMS key used for encryption.
+    #   @return [String]
+    #
+    # @!attribute [rw] kms_key_arn
+    #   The ARN of the KMS key currently used to encrypt data in your IAM
+    #   Identity Center instance.
+    #   @return [String]
+    #
+    # @!attribute [rw] encryption_status
+    #   The current status of encryption configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] encryption_status_reason
+    #   Provides additional context about the current encryption status.
+    #   This field is particularly useful when the encryption status is
+    #   UPDATE\_FAILED. When encryption configuration update fails, this
+    #   field contains information about the cause, which may include KMS
+    #   key access issues, key not found errors, invalid key configuration,
+    #   key in an invalid state, or a disabled key.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/EncryptionConfigurationDetails AWS API Documentation
+    #
+    class EncryptionConfigurationDetails < Struct.new(
+      :key_type,
+      :kms_key_arn,
+      :encryption_status,
+      :encryption_status_reason)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1820,20 +2055,20 @@ module Aws::SSOAdmin
       include Aws::Structure
     end
 
-    # @!attribute [rw] authorized_targets
-    #   An array of authorized targets associated with this access scope.
-    #   @return [Array<String>]
-    #
     # @!attribute [rw] scope
     #   The name of the access scope that can be used with the authorized
     #   targets.
     #   @return [String]
     #
+    # @!attribute [rw] authorized_targets
+    #   An array of authorized targets associated with this access scope.
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/GetApplicationAccessScopeResponse AWS API Documentation
     #
     class GetApplicationAccessScopeResponse < Struct.new(
-      :authorized_targets,
-      :scope)
+      :scope,
+      :authorized_targets)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1928,6 +2163,31 @@ module Aws::SSOAdmin
     #
     class GetApplicationGrantResponse < Struct.new(
       :grant)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] application_arn
+    #   The Amazon Resource Name (ARN) of the application for which to
+    #   retrieve the session configuration.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/GetApplicationSessionConfigurationRequest AWS API Documentation
+    #
+    class GetApplicationSessionConfigurationRequest < Struct.new(
+      :application_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] user_background_session_application_status
+    #   The status of user background sessions for the application.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/GetApplicationSessionConfigurationResponse AWS API Documentation
+    #
+    class GetApplicationSessionConfigurationResponse < Struct.new(
+      :user_background_session_application_status)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2048,19 +2308,19 @@ module Aws::SSOAdmin
 
     # A structure that defines a single grant and its configuration.
     #
-    # @!attribute [rw] grant
-    #   The configuration structure for the selected grant.
-    #   @return [Types::Grant]
-    #
     # @!attribute [rw] grant_type
     #   The type of the selected grant.
     #   @return [String]
     #
+    # @!attribute [rw] grant
+    #   The configuration structure for the selected grant.
+    #   @return [Types::Grant]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/GrantItem AWS API Documentation
     #
     class GrantItem < Struct.new(
-      :grant,
-      :grant_type)
+      :grant_type,
+      :grant)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2097,15 +2357,6 @@ module Aws::SSOAdmin
 
     # Provides information about the IAM Identity Center instance.
     #
-    # @!attribute [rw] created_date
-    #   The date and time that the Identity Center instance was created.
-    #   @return [Time]
-    #
-    # @!attribute [rw] identity_store_id
-    #   The identifier of the identity store that is connected to the
-    #   Identity Center instance.
-    #   @return [String]
-    #
     # @!attribute [rw] instance_arn
     #   The ARN of the Identity Center instance under which the operation
     #   will be executed. For more information about ARNs, see [Amazon
@@ -2114,8 +2365,9 @@ module Aws::SSOAdmin
     #   *Amazon Web Services General Reference*.
     #   @return [String]
     #
-    # @!attribute [rw] name
-    #   The name of the Identity Center instance.
+    # @!attribute [rw] identity_store_id
+    #   The identifier of the identity store that is connected to the
+    #   Identity Center instance.
     #   @return [String]
     #
     # @!attribute [rw] owner_account_id
@@ -2123,19 +2375,49 @@ module Aws::SSOAdmin
     #   Identity Center instance.
     #   @return [String]
     #
+    # @!attribute [rw] name
+    #   The name of the Identity Center instance.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_date
+    #   The date and time that the Identity Center instance was created.
+    #   @return [Time]
+    #
     # @!attribute [rw] status
     #   The current status of this Identity Center instance.
     #   @return [String]
     #
+    # @!attribute [rw] status_reason
+    #   Provides additional context about the current status of the IAM
+    #   Identity Center instance. This field is particularly useful when an
+    #   instance is in a non-ACTIVE state, such as CREATE\_FAILED. When an
+    #   instance creation fails, this field contains information about the
+    #   cause, which may include issues with KMS key configuration or
+    #   insufficient permissions.
+    #   @return [String]
+    #
+    # @!attribute [rw] primary_region
+    #   The primary Region where the IAM Identity Center instance was
+    #   originally enabled. The primary Region cannot be removed.
+    #   @return [String]
+    #
+    # @!attribute [rw] regions
+    #   The list of Regions enabled in the IAM Identity Center instance,
+    #   including Regions with ACTIVE, ADDING, or REMOVING status.
+    #   @return [Array<Types::RegionMetadata>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/InstanceMetadata AWS API Documentation
     #
     class InstanceMetadata < Struct.new(
-      :created_date,
-      :identity_store_id,
       :instance_arn,
-      :name,
+      :identity_store_id,
       :owner_account_id,
-      :status)
+      :name,
+      :created_date,
+      :status,
+      :status_reason,
+      :primary_region,
+      :regions)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2155,11 +2437,22 @@ module Aws::SSOAdmin
     end
 
     # A structure that defines configuration settings for an application
-    # that supports the JWT Bearer Token Authorization Grant.
+    # that supports the JWT Bearer Token Authorization Grant. The
+    # `AuthorizedAudience` field is the aud claim. For more information, see
+    # [RFC 7523][1].
+    #
+    #
+    #
+    # [1]: https://datatracker.ietf.org/doc/html/rfc7523
     #
     # @!attribute [rw] authorized_token_issuers
     #   A list of allowed token issuers trusted by the Identity Center
     #   instances for this application.
+    #
+    #   <note markdown="1"> `AuthorizedTokenIssuers` is required when the grant type is
+    #   `JwtBearerGrant`.
+    #
+    #    </note>
     #   @return [Array<Types::AuthorizedTokenIssuer>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/JwtBearerGrant AWS API Documentation
@@ -2170,10 +2463,6 @@ module Aws::SSOAdmin
       include Aws::Structure
     end
 
-    # @!attribute [rw] filter
-    #   Filters results based on the passed attribute value.
-    #   @return [Types::OperationStatusFilter]
-    #
     # @!attribute [rw] instance_arn
     #   The ARN of the IAM Identity Center instance under which the
     #   operation will be executed. For more information about ARNs, see
@@ -2191,13 +2480,17 @@ module Aws::SSOAdmin
     #   Use the output of previous API calls to make subsequent calls.
     #   @return [String]
     #
+    # @!attribute [rw] filter
+    #   Filters results based on the passed attribute value.
+    #   @return [Types::OperationStatusFilter]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/ListAccountAssignmentCreationStatusRequest AWS API Documentation
     #
     class ListAccountAssignmentCreationStatusRequest < Struct.new(
-      :filter,
       :instance_arn,
       :max_results,
-      :next_token)
+      :next_token,
+      :filter)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2220,10 +2513,6 @@ module Aws::SSOAdmin
       include Aws::Structure
     end
 
-    # @!attribute [rw] filter
-    #   Filters results based on the passed attribute value.
-    #   @return [Types::OperationStatusFilter]
-    #
     # @!attribute [rw] instance_arn
     #   The ARN of the IAM Identity Center instance under which the
     #   operation will be executed. For more information about ARNs, see
@@ -2241,13 +2530,17 @@ module Aws::SSOAdmin
     #   Use the output of previous API calls to make subsequent calls.
     #   @return [String]
     #
+    # @!attribute [rw] filter
+    #   Filters results based on the passed attribute value.
+    #   @return [Types::OperationStatusFilter]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/ListAccountAssignmentDeletionStatusRequest AWS API Documentation
     #
     class ListAccountAssignmentDeletionStatusRequest < Struct.new(
-      :filter,
       :instance_arn,
       :max_results,
-      :next_token)
+      :next_token,
+      :filter)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2285,14 +2578,31 @@ module Aws::SSOAdmin
       include Aws::Structure
     end
 
+    # @!attribute [rw] instance_arn
+    #   Specifies the ARN of the instance of IAM Identity Center that
+    #   contains the principal.
+    #   @return [String]
+    #
+    # @!attribute [rw] principal_id
+    #   Specifies the principal for which you want to retrieve the list of
+    #   account assignments.
+    #   @return [String]
+    #
+    # @!attribute [rw] principal_type
+    #   Specifies the type of the principal.
+    #   @return [String]
+    #
     # @!attribute [rw] filter
     #   Specifies an Amazon Web Services account ID number. Results are
     #   filtered to only those that match this ID number.
     #   @return [Types::ListAccountAssignmentsFilter]
     #
-    # @!attribute [rw] instance_arn
-    #   Specifies the ARN of the instance of IAM Identity Center that
-    #   contains the principal.
+    # @!attribute [rw] next_token
+    #   Specifies that you want to receive the next page of results. Valid
+    #   only if you received a `NextToken` response in the previous request.
+    #   If you did, it indicates that more output is available. Set this
+    #   parameter to the value provided by the previous call's `NextToken`
+    #   response to request the next page of results.
     #   @return [String]
     #
     # @!attribute [rw] max_results
@@ -2307,32 +2617,15 @@ module Aws::SSOAdmin
     #   the results.
     #   @return [Integer]
     #
-    # @!attribute [rw] next_token
-    #   Specifies that you want to receive the next page of results. Valid
-    #   only if you received a `NextToken` response in the previous request.
-    #   If you did, it indicates that more output is available. Set this
-    #   parameter to the value provided by the previous call's `NextToken`
-    #   response to request the next page of results.
-    #   @return [String]
-    #
-    # @!attribute [rw] principal_id
-    #   Specifies the principal for which you want to retrieve the list of
-    #   account assignments.
-    #   @return [String]
-    #
-    # @!attribute [rw] principal_type
-    #   Specifies the type of the principal.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/ListAccountAssignmentsForPrincipalRequest AWS API Documentation
     #
     class ListAccountAssignmentsForPrincipalRequest < Struct.new(
-      :filter,
       :instance_arn,
-      :max_results,
-      :next_token,
       :principal_id,
-      :principal_type)
+      :principal_type,
+      :filter,
+      :next_token,
+      :max_results)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2359,17 +2652,21 @@ module Aws::SSOAdmin
       include Aws::Structure
     end
 
-    # @!attribute [rw] account_id
-    #   The identifier of the Amazon Web Services account from which to list
-    #   the assignments.
-    #   @return [String]
-    #
     # @!attribute [rw] instance_arn
     #   The ARN of the IAM Identity Center instance under which the
     #   operation will be executed. For more information about ARNs, see
     #   [Amazon Resource Names (ARNs) and Amazon Web Services Service
     #   Namespaces](/general/latest/gr/aws-arns-and-namespaces.html) in the
     #   *Amazon Web Services General Reference*.
+    #   @return [String]
+    #
+    # @!attribute [rw] account_id
+    #   The identifier of the Amazon Web Services account from which to list
+    #   the assignments.
+    #   @return [String]
+    #
+    # @!attribute [rw] permission_set_arn
+    #   The ARN of the permission set from which to list assignments.
     #   @return [String]
     #
     # @!attribute [rw] max_results
@@ -2381,18 +2678,14 @@ module Aws::SSOAdmin
     #   Use the output of previous API calls to make subsequent calls.
     #   @return [String]
     #
-    # @!attribute [rw] permission_set_arn
-    #   The ARN of the permission set from which to list assignments.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/ListAccountAssignmentsRequest AWS API Documentation
     #
     class ListAccountAssignmentsRequest < Struct.new(
-      :account_id,
       :instance_arn,
+      :account_id,
+      :permission_set_arn,
       :max_results,
-      :next_token,
-      :permission_set_arn)
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2424,15 +2717,6 @@ module Aws::SSOAdmin
     #   *Amazon Web Services General Reference*.
     #   @return [String]
     #
-    # @!attribute [rw] max_results
-    #   The maximum number of results to display for the PermissionSet.
-    #   @return [Integer]
-    #
-    # @!attribute [rw] next_token
-    #   The pagination token for the list API. Initially the value is null.
-    #   Use the output of previous API calls to make subsequent calls.
-    #   @return [String]
-    #
     # @!attribute [rw] permission_set_arn
     #   The ARN of the PermissionSet from which the associated Amazon Web
     #   Services accounts will be listed.
@@ -2443,14 +2727,23 @@ module Aws::SSOAdmin
     #   account.
     #   @return [String]
     #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to display for the PermissionSet.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   The pagination token for the list API. Initially the value is null.
+    #   Use the output of previous API calls to make subsequent calls.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/ListAccountsForProvisionedPermissionSetRequest AWS API Documentation
     #
     class ListAccountsForProvisionedPermissionSetRequest < Struct.new(
       :instance_arn,
-      :max_results,
-      :next_token,
       :permission_set_arn,
-      :provisioning_status)
+      :provisioning_status,
+      :max_results,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2507,6 +2800,11 @@ module Aws::SSOAdmin
       include Aws::Structure
     end
 
+    # @!attribute [rw] scopes
+    #   An array list of access scopes and their authorized targets that are
+    #   associated with the application.
+    #   @return [Array<Types::ScopeDetails>]
+    #
     # @!attribute [rw] next_token
     #   If present, this value indicates that more output is available than
     #   is included in the current response. Use this value in the
@@ -2516,16 +2814,11 @@ module Aws::SSOAdmin
     #   that this is the last page of results.
     #   @return [String]
     #
-    # @!attribute [rw] scopes
-    #   An array list of access scopes and their authorized targets that are
-    #   associated with the application.
-    #   @return [Array<Types::ScopeDetails>]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/ListApplicationAccessScopesResponse AWS API Documentation
     #
     class ListApplicationAccessScopesResponse < Struct.new(
-      :next_token,
-      :scopes)
+      :scopes,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2544,14 +2837,32 @@ module Aws::SSOAdmin
       include Aws::Structure
     end
 
+    # @!attribute [rw] instance_arn
+    #   Specifies the instance of IAM Identity Center that contains
+    #   principal and applications.
+    #   @return [String]
+    #
+    # @!attribute [rw] principal_id
+    #   Specifies the unique identifier of the principal for which you want
+    #   to retrieve its assignments.
+    #   @return [String]
+    #
+    # @!attribute [rw] principal_type
+    #   Specifies the type of the principal for which you want to retrieve
+    #   its assignments.
+    #   @return [String]
+    #
     # @!attribute [rw] filter
     #   Filters the output to include only assignments associated with the
     #   application that has the specified ARN.
     #   @return [Types::ListApplicationAssignmentsFilter]
     #
-    # @!attribute [rw] instance_arn
-    #   Specifies the instance of IAM Identity Center that contains
-    #   principal and applications.
+    # @!attribute [rw] next_token
+    #   Specifies that you want to receive the next page of results. Valid
+    #   only if you received a `NextToken` response in the previous request.
+    #   If you did, it indicates that more output is available. Set this
+    #   parameter to the value provided by the previous call's `NextToken`
+    #   response to request the next page of results.
     #   @return [String]
     #
     # @!attribute [rw] max_results
@@ -2566,33 +2877,15 @@ module Aws::SSOAdmin
     #   the results.
     #   @return [Integer]
     #
-    # @!attribute [rw] next_token
-    #   Specifies that you want to receive the next page of results. Valid
-    #   only if you received a `NextToken` response in the previous request.
-    #   If you did, it indicates that more output is available. Set this
-    #   parameter to the value provided by the previous call's `NextToken`
-    #   response to request the next page of results.
-    #   @return [String]
-    #
-    # @!attribute [rw] principal_id
-    #   Specifies the unique identifier of the principal for which you want
-    #   to retrieve its assignments.
-    #   @return [String]
-    #
-    # @!attribute [rw] principal_type
-    #   Specifies the type of the principal for which you want to retrieve
-    #   its assignments.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/ListApplicationAssignmentsForPrincipalRequest AWS API Documentation
     #
     class ListApplicationAssignmentsForPrincipalRequest < Struct.new(
-      :filter,
       :instance_arn,
-      :max_results,
-      :next_token,
       :principal_id,
-      :principal_type)
+      :principal_type,
+      :filter,
+      :next_token,
+      :max_results)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2836,10 +3129,6 @@ module Aws::SSOAdmin
       include Aws::Structure
     end
 
-    # @!attribute [rw] filter
-    #   Filters response results.
-    #   @return [Types::ListApplicationsFilter]
-    #
     # @!attribute [rw] instance_arn
     #   The ARN of the IAM Identity Center application under which the
     #   operation will run. For more information about ARNs, see [Amazon
@@ -2868,13 +3157,17 @@ module Aws::SSOAdmin
     #   response to request the next page of results.
     #   @return [String]
     #
+    # @!attribute [rw] filter
+    #   Filters response results.
+    #   @return [Types::ListApplicationsFilter]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/ListApplicationsRequest AWS API Documentation
     #
     class ListApplicationsRequest < Struct.new(
-      :filter,
       :instance_arn,
       :max_results,
-      :next_token)
+      :next_token,
+      :filter)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2906,6 +3199,10 @@ module Aws::SSOAdmin
     #   operation will be executed.
     #   @return [String]
     #
+    # @!attribute [rw] permission_set_arn
+    #   The ARN of the `PermissionSet`.
+    #   @return [String]
+    #
     # @!attribute [rw] max_results
     #   The maximum number of results to display for the list call.
     #   @return [Integer]
@@ -2915,17 +3212,13 @@ module Aws::SSOAdmin
     #   Use the output of previous API calls to make subsequent calls.
     #   @return [String]
     #
-    # @!attribute [rw] permission_set_arn
-    #   The ARN of the `PermissionSet`.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/ListCustomerManagedPolicyReferencesInPermissionSetRequest AWS API Documentation
     #
     class ListCustomerManagedPolicyReferencesInPermissionSetRequest < Struct.new(
       :instance_arn,
+      :permission_set_arn,
       :max_results,
-      :next_token,
-      :permission_set_arn)
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2994,6 +3287,10 @@ module Aws::SSOAdmin
     #   *Amazon Web Services General Reference*.
     #   @return [String]
     #
+    # @!attribute [rw] permission_set_arn
+    #   The ARN of the PermissionSet whose managed policies will be listed.
+    #   @return [String]
+    #
     # @!attribute [rw] max_results
     #   The maximum number of results to display for the PermissionSet.
     #   @return [Integer]
@@ -3003,17 +3300,13 @@ module Aws::SSOAdmin
     #   Use the output of previous API calls to make subsequent calls.
     #   @return [String]
     #
-    # @!attribute [rw] permission_set_arn
-    #   The ARN of the PermissionSet whose managed policies will be listed.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/ListManagedPoliciesInPermissionSetRequest AWS API Documentation
     #
     class ListManagedPoliciesInPermissionSetRequest < Struct.new(
       :instance_arn,
+      :permission_set_arn,
       :max_results,
-      :next_token,
-      :permission_set_arn)
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3036,10 +3329,6 @@ module Aws::SSOAdmin
       include Aws::Structure
     end
 
-    # @!attribute [rw] filter
-    #   Filters results based on the passed attribute value.
-    #   @return [Types::OperationStatusFilter]
-    #
     # @!attribute [rw] instance_arn
     #   The ARN of the IAM Identity Center instance under which the
     #   operation will be executed. For more information about ARNs, see
@@ -3057,40 +3346,39 @@ module Aws::SSOAdmin
     #   Use the output of previous API calls to make subsequent calls.
     #   @return [String]
     #
+    # @!attribute [rw] filter
+    #   Filters results based on the passed attribute value.
+    #   @return [Types::OperationStatusFilter]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/ListPermissionSetProvisioningStatusRequest AWS API Documentation
     #
     class ListPermissionSetProvisioningStatusRequest < Struct.new(
-      :filter,
       :instance_arn,
       :max_results,
+      :next_token,
+      :filter)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] permission_sets_provisioning_status
+    #   The status object for the permission set provisioning operation.
+    #   @return [Array<Types::PermissionSetProvisioningStatusMetadata>]
+    #
+    # @!attribute [rw] next_token
+    #   The pagination token for the list API. Initially the value is null.
+    #   Use the output of previous API calls to make subsequent calls.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/ListPermissionSetProvisioningStatusResponse AWS API Documentation
+    #
+    class ListPermissionSetProvisioningStatusResponse < Struct.new(
+      :permission_sets_provisioning_status,
       :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
 
-    # @!attribute [rw] next_token
-    #   The pagination token for the list API. Initially the value is null.
-    #   Use the output of previous API calls to make subsequent calls.
-    #   @return [String]
-    #
-    # @!attribute [rw] permission_sets_provisioning_status
-    #   The status object for the permission set provisioning operation.
-    #   @return [Array<Types::PermissionSetProvisioningStatusMetadata>]
-    #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/ListPermissionSetProvisioningStatusResponse AWS API Documentation
-    #
-    class ListPermissionSetProvisioningStatusResponse < Struct.new(
-      :next_token,
-      :permission_sets_provisioning_status)
-      SENSITIVE = []
-      include Aws::Structure
-    end
-
-    # @!attribute [rw] account_id
-    #   The identifier of the Amazon Web Services account from which to list
-    #   the assignments.
-    #   @return [String]
-    #
     # @!attribute [rw] instance_arn
     #   The ARN of the IAM Identity Center instance under which the
     #   operation will be executed. For more information about ARNs, see
@@ -3099,27 +3387,32 @@ module Aws::SSOAdmin
     #   *Amazon Web Services General Reference*.
     #   @return [String]
     #
-    # @!attribute [rw] max_results
-    #   The maximum number of results to display for the assignment.
-    #   @return [Integer]
-    #
-    # @!attribute [rw] next_token
-    #   The pagination token for the list API. Initially the value is null.
-    #   Use the output of previous API calls to make subsequent calls.
+    # @!attribute [rw] account_id
+    #   The identifier of the Amazon Web Services account from which to list
+    #   the assignments.
     #   @return [String]
     #
     # @!attribute [rw] provisioning_status
     #   The status object for the permission set provisioning operation.
     #   @return [String]
     #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to display for the assignment.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   The pagination token for the list API. Initially the value is null.
+    #   Use the output of previous API calls to make subsequent calls.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/ListPermissionSetsProvisionedToAccountRequest AWS API Documentation
     #
     class ListPermissionSetsProvisionedToAccountRequest < Struct.new(
-      :account_id,
       :instance_arn,
+      :account_id,
+      :provisioning_status,
       :max_results,
-      :next_token,
-      :provisioning_status)
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3150,8 +3443,50 @@ module Aws::SSOAdmin
     #   *Amazon Web Services General Reference*.
     #   @return [String]
     #
+    # @!attribute [rw] next_token
+    #   The pagination token for the list API. Initially the value is null.
+    #   Use the output of previous API calls to make subsequent calls.
+    #   @return [String]
+    #
     # @!attribute [rw] max_results
     #   The maximum number of results to display for the assignment.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/ListPermissionSetsRequest AWS API Documentation
+    #
+    class ListPermissionSetsRequest < Struct.new(
+      :instance_arn,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] permission_sets
+    #   Defines the level of access on an Amazon Web Services account.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] next_token
+    #   The pagination token for the list API. Initially the value is null.
+    #   Use the output of previous API calls to make subsequent calls.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/ListPermissionSetsResponse AWS API Documentation
+    #
+    class ListPermissionSetsResponse < Struct.new(
+      :permission_sets,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] instance_arn
+    #   The Amazon Resource Name (ARN) of the IAM Identity Center instance.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return in a single call. Default is
+    #   100.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
@@ -3159,9 +3494,9 @@ module Aws::SSOAdmin
     #   Use the output of previous API calls to make subsequent calls.
     #   @return [String]
     #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/ListPermissionSetsRequest AWS API Documentation
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/ListRegionsRequest AWS API Documentation
     #
-    class ListPermissionSetsRequest < Struct.new(
+    class ListRegionsRequest < Struct.new(
       :instance_arn,
       :max_results,
       :next_token)
@@ -3169,20 +3504,21 @@ module Aws::SSOAdmin
       include Aws::Structure
     end
 
+    # @!attribute [rw] regions
+    #   The list of Regions enabled in the IAM Identity Center instance,
+    #   including Regions with ACTIVE, ADDING, or REMOVING status.
+    #   @return [Array<Types::RegionMetadata>]
+    #
     # @!attribute [rw] next_token
-    #   The pagination token for the list API. Initially the value is null.
-    #   Use the output of previous API calls to make subsequent calls.
+    #   The pagination token to be used in subsequent calls. If the value is
+    #   null, then there are no more entries.
     #   @return [String]
     #
-    # @!attribute [rw] permission_sets
-    #   Defines the level of access on an Amazon Web Services account.
-    #   @return [Array<String>]
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/ListRegionsResponse AWS API Documentation
     #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/ListPermissionSetsResponse AWS API Documentation
-    #
-    class ListPermissionSetsResponse < Struct.new(
-      :next_token,
-      :permission_sets)
+    class ListRegionsResponse < Struct.new(
+      :regions,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3195,39 +3531,39 @@ module Aws::SSOAdmin
     #   *Amazon Web Services General Reference*.
     #   @return [String]
     #
+    # @!attribute [rw] resource_arn
+    #   The ARN of the resource with the tags to be listed.
+    #   @return [String]
+    #
     # @!attribute [rw] next_token
     #   The pagination token for the list API. Initially the value is null.
     #   Use the output of previous API calls to make subsequent calls.
-    #   @return [String]
-    #
-    # @!attribute [rw] resource_arn
-    #   The ARN of the resource with the tags to be listed.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/ListTagsForResourceRequest AWS API Documentation
     #
     class ListTagsForResourceRequest < Struct.new(
       :instance_arn,
-      :next_token,
-      :resource_arn)
+      :resource_arn,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # @!attribute [rw] tags
+    #   A set of key-value pairs that are used to manage the resource.
+    #   @return [Array<Types::Tag>]
+    #
     # @!attribute [rw] next_token
     #   The pagination token for the list API. Initially the value is null.
     #   Use the output of previous API calls to make subsequent calls.
     #   @return [String]
     #
-    # @!attribute [rw] tags
-    #   A set of key-value pairs that are used to manage the resource.
-    #   @return [Array<Types::Tag>]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/ListTagsForResourceResponse AWS API Documentation
     #
     class ListTagsForResourceResponse < Struct.new(
-      :next_token,
-      :tags)
+      :tags,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3267,6 +3603,10 @@ module Aws::SSOAdmin
       include Aws::Structure
     end
 
+    # @!attribute [rw] trusted_token_issuers
+    #   An array list of the trusted token issuer configurations.
+    #   @return [Array<Types::TrustedTokenIssuerMetadata>]
+    #
     # @!attribute [rw] next_token
     #   If present, this value indicates that more output is available than
     #   is included in the current response. Use this value in the
@@ -3276,21 +3616,23 @@ module Aws::SSOAdmin
     #   that this is the last page of results.
     #   @return [String]
     #
-    # @!attribute [rw] trusted_token_issuers
-    #   An array list of the trusted token issuer configurations.
-    #   @return [Array<Types::TrustedTokenIssuerMetadata>]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/ListTrustedTokenIssuersResponse AWS API Documentation
     #
     class ListTrustedTokenIssuersResponse < Struct.new(
-      :next_token,
-      :trusted_token_issuers)
+      :trusted_token_issuers,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # A structure that describes configuration settings for a trusted token
     # issuer that supports OpenID Connect (OIDC) and JSON Web Tokens (JWTs).
+    #
+    # @!attribute [rw] issuer_url
+    #   The URL that IAM Identity Center uses for OpenID Discovery. OpenID
+    #   Discovery is used to obtain the information required to verify the
+    #   tokens that the trusted token issuer generates.
+    #   @return [String]
     #
     # @!attribute [rw] claim_attribute_path
     #   The path of the source attribute in the JWT from the trusted token
@@ -3307,12 +3649,6 @@ module Aws::SSOAdmin
     #   token issuer token is exchanged for an IAM Identity Center token.
     #   @return [String]
     #
-    # @!attribute [rw] issuer_url
-    #   The URL that IAM Identity Center uses for OpenID Discovery. OpenID
-    #   Discovery is used to obtain the information required to verify the
-    #   tokens that the trusted token issuer generates.
-    #   @return [String]
-    #
     # @!attribute [rw] jwks_retrieval_option
     #   The method that the trusted token issuer can use to retrieve the
     #   JSON Web Key Set used to verify a JWT.
@@ -3321,9 +3657,9 @@ module Aws::SSOAdmin
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/OidcJwtConfiguration AWS API Documentation
     #
     class OidcJwtConfiguration < Struct.new(
+      :issuer_url,
       :claim_attribute_path,
       :identity_store_attribute_path,
-      :issuer_url,
       :jwks_retrieval_option)
       SENSITIVE = []
       include Aws::Structure
@@ -3379,14 +3715,6 @@ module Aws::SSOAdmin
 
     # An entity that contains IAM policies.
     #
-    # @!attribute [rw] created_date
-    #   The date that the permission set was created.
-    #   @return [Time]
-    #
-    # @!attribute [rw] description
-    #   The description of the PermissionSet.
-    #   @return [String]
-    #
     # @!attribute [rw] name
     #   The name of the permission set.
     #   @return [String]
@@ -3398,25 +3726,33 @@ module Aws::SSOAdmin
     #   *Amazon Web Services General Reference*.
     #   @return [String]
     #
-    # @!attribute [rw] relay_state
-    #   Used to redirect users within the application during the federation
-    #   authentication process.
+    # @!attribute [rw] description
+    #   The description of the PermissionSet.
     #   @return [String]
+    #
+    # @!attribute [rw] created_date
+    #   The date that the permission set was created.
+    #   @return [Time]
     #
     # @!attribute [rw] session_duration
     #   The length of time that the application user sessions are valid for
     #   in the ISO-8601 standard.
     #   @return [String]
     #
+    # @!attribute [rw] relay_state
+    #   Used to redirect users within the application during the federation
+    #   authentication process.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/PermissionSet AWS API Documentation
     #
     class PermissionSet < Struct.new(
-      :created_date,
-      :description,
       :name,
       :permission_set_arn,
-      :relay_state,
-      :session_duration)
+      :description,
+      :created_date,
+      :session_duration,
+      :relay_state)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3424,18 +3760,18 @@ module Aws::SSOAdmin
     # A structure that is used to provide the status of the provisioning
     # operation for a specified permission set.
     #
+    # @!attribute [rw] status
+    #   The status of the permission set provisioning process.
+    #   @return [String]
+    #
+    # @!attribute [rw] request_id
+    #   The identifier for tracking the request operation that is generated
+    #   by the universally unique identifier (UUID) workflow.
+    #   @return [String]
+    #
     # @!attribute [rw] account_id
     #   The identifier of the Amazon Web Services account from which to list
     #   the assignments.
-    #   @return [String]
-    #
-    # @!attribute [rw] created_date
-    #   The date that the permission set was created.
-    #   @return [Time]
-    #
-    # @!attribute [rw] failure_reason
-    #   The message that contains an error or exception in case of an
-    #   operation failure.
     #   @return [String]
     #
     # @!attribute [rw] permission_set_arn
@@ -3446,49 +3782,49 @@ module Aws::SSOAdmin
     #   *Amazon Web Services General Reference*.
     #   @return [String]
     #
-    # @!attribute [rw] request_id
-    #   The identifier for tracking the request operation that is generated
-    #   by the universally unique identifier (UUID) workflow.
+    # @!attribute [rw] failure_reason
+    #   The message that contains an error or exception in case of an
+    #   operation failure.
     #   @return [String]
     #
-    # @!attribute [rw] status
-    #   The status of the permission set provisioning process.
-    #   @return [String]
+    # @!attribute [rw] created_date
+    #   The date that the permission set was created.
+    #   @return [Time]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/PermissionSetProvisioningStatus AWS API Documentation
     #
     class PermissionSetProvisioningStatus < Struct.new(
-      :account_id,
-      :created_date,
-      :failure_reason,
-      :permission_set_arn,
+      :status,
       :request_id,
-      :status)
+      :account_id,
+      :permission_set_arn,
+      :failure_reason,
+      :created_date)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # Provides information about the permission set provisioning status.
     #
-    # @!attribute [rw] created_date
-    #   The date that the permission set was created.
-    #   @return [Time]
+    # @!attribute [rw] status
+    #   The status of the permission set provisioning process.
+    #   @return [String]
     #
     # @!attribute [rw] request_id
     #   The identifier for tracking the request operation that is generated
     #   by the universally unique identifier (UUID) workflow.
     #   @return [String]
     #
-    # @!attribute [rw] status
-    #   The status of the permission set provisioning process.
-    #   @return [String]
+    # @!attribute [rw] created_date
+    #   The date that the permission set was created.
+    #   @return [Time]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/PermissionSetProvisioningStatusMetadata AWS API Documentation
     #
     class PermissionSetProvisioningStatusMetadata < Struct.new(
-      :created_date,
+      :status,
       :request_id,
-      :status)
+      :created_date)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3597,9 +3933,9 @@ module Aws::SSOAdmin
       include Aws::Structure
     end
 
-    # @!attribute [rw] application_arn
-    #   Specifies the ARN of the application with the access scope with the
-    #   targets to add or update.
+    # @!attribute [rw] scope
+    #   Specifies the name of the access scope to be associated with the
+    #   specified targets.
     #   @return [String]
     #
     # @!attribute [rw] authorized_targets
@@ -3607,17 +3943,17 @@ module Aws::SSOAdmin
     #   targets for this access scope.
     #   @return [Array<String>]
     #
-    # @!attribute [rw] scope
-    #   Specifies the name of the access scope to be associated with the
-    #   specified targets.
+    # @!attribute [rw] application_arn
+    #   Specifies the ARN of the application with the access scope with the
+    #   targets to add or update.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/PutApplicationAccessScopeRequest AWS API Documentation
     #
     class PutApplicationAccessScopeRequest < Struct.new(
-      :application_arn,
+      :scope,
       :authorized_targets,
-      :scope)
+      :application_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3658,23 +3994,23 @@ module Aws::SSOAdmin
     #   to add or update.
     #   @return [String]
     #
+    # @!attribute [rw] authentication_method_type
+    #   Specifies the type of the authentication method that you want to add
+    #   or update.
+    #   @return [String]
+    #
     # @!attribute [rw] authentication_method
     #   Specifies a structure that describes the authentication method to
     #   add or update. The structure type you provide is determined by the
     #   `AuthenticationMethodType` parameter.
     #   @return [Types::AuthenticationMethod]
     #
-    # @!attribute [rw] authentication_method_type
-    #   Specifies the type of the authentication method that you want to add
-    #   or update.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/PutApplicationAuthenticationMethodRequest AWS API Documentation
     #
     class PutApplicationAuthenticationMethodRequest < Struct.new(
       :application_arn,
-      :authentication_method,
-      :authentication_method_type)
+      :authentication_method_type,
+      :authentication_method)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3683,28 +4019,46 @@ module Aws::SSOAdmin
     #   Specifies the ARN of the application to update.
     #   @return [String]
     #
-    # @!attribute [rw] grant
-    #   Specifies a structure that describes the grant to update.
-    #   @return [Types::Grant]
-    #
     # @!attribute [rw] grant_type
     #   Specifies the type of grant to update.
     #   @return [String]
+    #
+    # @!attribute [rw] grant
+    #   Specifies a structure that describes the grant to update.
+    #   @return [Types::Grant]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/PutApplicationGrantRequest AWS API Documentation
     #
     class PutApplicationGrantRequest < Struct.new(
       :application_arn,
-      :grant,
-      :grant_type)
+      :grant_type,
+      :grant)
       SENSITIVE = []
       include Aws::Structure
     end
 
-    # @!attribute [rw] inline_policy
-    #   The inline policy to attach to a PermissionSet.
+    # @!attribute [rw] application_arn
+    #   The Amazon Resource Name (ARN) of the application for which to
+    #   update the session configuration.
     #   @return [String]
     #
+    # @!attribute [rw] user_background_session_application_status
+    #   The status of user background sessions for the application.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/PutApplicationSessionConfigurationRequest AWS API Documentation
+    #
+    class PutApplicationSessionConfigurationRequest < Struct.new(
+      :application_arn,
+      :user_background_session_application_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/PutApplicationSessionConfigurationResponse AWS API Documentation
+    #
+    class PutApplicationSessionConfigurationResponse < Aws::EmptyStructure; end
+
     # @!attribute [rw] instance_arn
     #   The ARN of the IAM Identity Center instance under which the
     #   operation will be executed. For more information about ARNs, see
@@ -3717,12 +4071,16 @@ module Aws::SSOAdmin
     #   The ARN of the permission set.
     #   @return [String]
     #
+    # @!attribute [rw] inline_policy
+    #   The inline policy to attach to a PermissionSet.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/PutInlinePolicyToPermissionSetRequest AWS API Documentation
     #
     class PutInlinePolicyToPermissionSetRequest < Struct.new(
-      :inline_policy,
       :instance_arn,
-      :permission_set_arn)
+      :permission_set_arn,
+      :inline_policy)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3760,7 +4118,12 @@ module Aws::SSOAdmin
     class PutPermissionsBoundaryToPermissionSetResponse < Aws::EmptyStructure; end
 
     # A structure that defines configuration settings for an application
-    # that supports the OAuth 2.0 Refresh Token Grant.
+    # that supports the OAuth 2.0 Refresh Token Grant. For more, see [RFC
+    # 6749][1].
+    #
+    #
+    #
+    # [1]: https://datatracker.ietf.org/doc/html/rfc6749#section-1.5
     #
     # @api private
     #
@@ -3768,15 +4131,91 @@ module Aws::SSOAdmin
     #
     class RefreshTokenGrant < Aws::EmptyStructure; end
 
+    # Contains information about an enabled Region of an IAM Identity Center
+    # instance, including the Region name, status, date added, and whether
+    # it is the primary Region.
+    #
+    # @!attribute [rw] region_name
+    #   The Amazon Web Services Region name.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the Region. Valid values are ACTIVE (Region is
+    #   operational), ADDING (Region extension workflow is in progress), or
+    #   REMOVING (Region removal workflow is in progress).
+    #   @return [String]
+    #
+    # @!attribute [rw] added_date
+    #   The timestamp when the Region was added to the IAM Identity Center
+    #   instance. For the primary Region, this is the instance creation
+    #   time.
+    #   @return [Time]
+    #
+    # @!attribute [rw] is_primary_region
+    #   Indicates whether this is the primary Region where the IAM Identity
+    #   Center instance was originally enabled. The primary Region cannot be
+    #   removed.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/RegionMetadata AWS API Documentation
+    #
+    class RegionMetadata < Struct.new(
+      :region_name,
+      :status,
+      :added_date,
+      :is_primary_region)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] instance_arn
+    #   The Amazon Resource Name (ARN) of the IAM Identity Center instance.
+    #   @return [String]
+    #
+    # @!attribute [rw] region_name
+    #   The name of the Amazon Web Services Region to remove from the IAM
+    #   Identity Center instance. The Region name must be 1-32 characters
+    #   long and follow the pattern of Amazon Web Services Region names (for
+    #   example, us-east-1). The primary Region cannot be removed.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/RemoveRegionRequest AWS API Documentation
+    #
+    class RemoveRegionRequest < Struct.new(
+      :instance_arn,
+      :region_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] status
+    #   The status of the Region after the remove operation. The status is
+    #   REMOVING when the asynchronous workflow is in progress. The Region
+    #   record is deleted when the workflow completes.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/RemoveRegionResponse AWS API Documentation
+    #
+    class RemoveRegionResponse < Struct.new(
+      :status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Indicates that a requested resource is not found.
     #
     # @!attribute [rw] message
     #   @return [String]
     #
+    # @!attribute [rw] reason
+    #   The reason for the resource not found exception.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/ResourceNotFoundException AWS API Documentation
     #
     class ResourceNotFoundException < Struct.new(
-      :message)
+      :message,
+      :reason)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3799,19 +4238,19 @@ module Aws::SSOAdmin
     # A structure that describes details for an IAM Identity Center access
     # scope that is associated with a resource server.
     #
-    # @!attribute [rw] detailed_title
-    #   The title of an access scope for a resource server.
-    #   @return [String]
-    #
     # @!attribute [rw] long_description
     #   The description of an access scope for a resource server.
+    #   @return [String]
+    #
+    # @!attribute [rw] detailed_title
+    #   The title of an access scope for a resource server.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/ResourceServerScopeDetails AWS API Documentation
     #
     class ResourceServerScopeDetails < Struct.new(
-      :detailed_title,
-      :long_description)
+      :long_description,
+      :detailed_title)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3819,19 +4258,19 @@ module Aws::SSOAdmin
     # A structure that describes an IAM Identity Center access scope and its
     # authorized targets.
     #
-    # @!attribute [rw] authorized_targets
-    #   An array list of ARNs of applications.
-    #   @return [Array<String>]
-    #
     # @!attribute [rw] scope
     #   The name of the access scope.
     #   @return [String]
     #
+    # @!attribute [rw] authorized_targets
+    #   An array list of ARNs of applications.
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/ScopeDetails AWS API Documentation
     #
     class ScopeDetails < Struct.new(
-      :authorized_targets,
-      :scope)
+      :scope,
+      :authorized_targets)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3853,12 +4292,6 @@ module Aws::SSOAdmin
     # A structure that describes the sign-in options for an application
     # portal.
     #
-    # @!attribute [rw] application_url
-    #   The URL that accepts authentication requests for an application.
-    #   This is a required parameter if the `Origin` parameter is
-    #   `APPLICATION`.
-    #   @return [String]
-    #
     # @!attribute [rw] origin
     #   This determines how IAM Identity Center navigates the user to the
     #   target application. It can be one of the following values:
@@ -3871,11 +4304,17 @@ module Aws::SSOAdmin
     #     SAML-based application.
     #   @return [String]
     #
+    # @!attribute [rw] application_url
+    #   The URL that accepts authentication requests for an application.
+    #   This is a required parameter if the `Origin` parameter is
+    #   `APPLICATION`.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/SignInOptions AWS API Documentation
     #
     class SignInOptions < Struct.new(
-      :application_url,
-      :origin)
+      :origin,
+      :application_url)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3938,16 +4377,26 @@ module Aws::SSOAdmin
     # @!attribute [rw] message
     #   @return [String]
     #
+    # @!attribute [rw] reason
+    #   The reason for the throttling exception.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/ThrottlingException AWS API Documentation
     #
     class ThrottlingException < Struct.new(
-      :message)
+      :message,
+      :reason)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # A structure that defines configuration settings for an application
-    # that supports the OAuth 2.0 Token Exchange Grant.
+    # that supports the OAuth 2.0 Token Exchange Grant. For more
+    # information, see [RFC 8693][1].
+    #
+    #
+    #
+    # [1]: https://datatracker.ietf.org/doc/html/rfc8693
     #
     # @api private
     #
@@ -3984,14 +4433,14 @@ module Aws::SSOAdmin
 
     # A structure that describes a trusted token issuer.
     #
-    # @!attribute [rw] name
-    #   The name of the trusted token issuer configuration in the instance
-    #   of IAM Identity Center.
-    #   @return [String]
-    #
     # @!attribute [rw] trusted_token_issuer_arn
     #   The ARN of the trusted token issuer configuration in the instance of
     #   IAM Identity Center.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the trusted token issuer configuration in the instance
+    #   of IAM Identity Center.
     #   @return [String]
     #
     # @!attribute [rw] trusted_token_issuer_type
@@ -4001,8 +4450,8 @@ module Aws::SSOAdmin
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/TrustedTokenIssuerMetadata AWS API Documentation
     #
     class TrustedTokenIssuerMetadata < Struct.new(
-      :name,
       :trusted_token_issuer_arn,
+      :name,
       :trusted_token_issuer_type)
       SENSITIVE = []
       include Aws::Structure
@@ -4086,12 +4535,16 @@ module Aws::SSOAdmin
     #   in the *Amazon Web Services General Reference*.
     #   @return [String]
     #
+    # @!attribute [rw] name
+    #   Specifies the updated name for the application.
+    #   @return [String]
+    #
     # @!attribute [rw] description
     #   The description of the .
     #   @return [String]
     #
-    # @!attribute [rw] name
-    #   Specifies the updated name for the application.
+    # @!attribute [rw] status
+    #   Specifies whether the application is enabled or disabled.
     #   @return [String]
     #
     # @!attribute [rw] portal_options
@@ -4099,18 +4552,14 @@ module Aws::SSOAdmin
     #   with an application.
     #   @return [Types::UpdateApplicationPortalOptions]
     #
-    # @!attribute [rw] status
-    #   Specifies whether the application is enabled or disabled.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/UpdateApplicationRequest AWS API Documentation
     #
     class UpdateApplicationRequest < Struct.new(
       :application_arn,
-      :description,
       :name,
-      :portal_options,
-      :status)
+      :description,
+      :status,
+      :portal_options)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4119,20 +4568,20 @@ module Aws::SSOAdmin
     #
     class UpdateApplicationResponse < Aws::EmptyStructure; end
 
-    # @!attribute [rw] instance_access_control_attribute_configuration
-    #   Updates the attributes for your ABAC configuration.
-    #   @return [Types::InstanceAccessControlAttributeConfiguration]
-    #
     # @!attribute [rw] instance_arn
     #   The ARN of the IAM Identity Center instance under which the
     #   operation will be executed.
     #   @return [String]
     #
+    # @!attribute [rw] instance_access_control_attribute_configuration
+    #   Updates the attributes for your ABAC configuration.
+    #   @return [Types::InstanceAccessControlAttributeConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/UpdateInstanceAccessControlAttributeConfigurationRequest AWS API Documentation
     #
     class UpdateInstanceAccessControlAttributeConfigurationRequest < Struct.new(
-      :instance_access_control_attribute_configuration,
-      :instance_arn)
+      :instance_arn,
+      :instance_access_control_attribute_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4141,6 +4590,10 @@ module Aws::SSOAdmin
     #
     class UpdateInstanceAccessControlAttributeConfigurationResponse < Aws::EmptyStructure; end
 
+    # @!attribute [rw] name
+    #   Updates the instance name.
+    #   @return [String]
+    #
     # @!attribute [rw] instance_arn
     #   The ARN of the instance of IAM Identity Center under which the
     #   operation will run. For more information about ARNs, see [Amazon
@@ -4149,15 +4602,32 @@ module Aws::SSOAdmin
     #   *Amazon Web Services General Reference*.
     #   @return [String]
     #
-    # @!attribute [rw] name
-    #   Updates the instance name.
-    #   @return [String]
+    # @!attribute [rw] encryption_configuration
+    #   Specifies the encryption configuration for your IAM Identity Center
+    #   instance. You can use this to configure customer managed KMS keys or
+    #   Amazon Web Services owned KMS keys for encrypting your instance
+    #   data.
+    #   @return [Types::EncryptionConfiguration]
+    #
+    # @!attribute [rw] permission_sets_enabled
+    #   Enables permission sets for this Identity Center instance. The only
+    #   accepted value is `true `. After permission sets are enabled, they
+    #   cannot be disabled.
+    #
+    #   <note markdown="1"> You can't set `EncryptionConfiguration` and `PermissionSetsEnabled`
+    #   in the same request. To configure both, make two separate
+    #   `UpdateInstance` calls. These calls can be made in parallel.
+    #
+    #    </note>
+    #   @return [Boolean]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/UpdateInstanceRequest AWS API Documentation
     #
     class UpdateInstanceRequest < Struct.new(
+      :name,
       :instance_arn,
-      :name)
+      :encryption_configuration,
+      :permission_sets_enabled)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4166,10 +4636,6 @@ module Aws::SSOAdmin
     #
     class UpdateInstanceResponse < Aws::EmptyStructure; end
 
-    # @!attribute [rw] description
-    #   The description of the PermissionSet.
-    #   @return [String]
-    #
     # @!attribute [rw] instance_arn
     #   The ARN of the IAM Identity Center instance under which the
     #   operation will be executed. For more information about ARNs, see
@@ -4182,9 +4648,8 @@ module Aws::SSOAdmin
     #   The ARN of the permission set.
     #   @return [String]
     #
-    # @!attribute [rw] relay_state
-    #   Used to redirect users within the application during the federation
-    #   authentication process.
+    # @!attribute [rw] description
+    #   The description of the PermissionSet.
     #   @return [String]
     #
     # @!attribute [rw] session_duration
@@ -4192,14 +4657,19 @@ module Aws::SSOAdmin
     #   in the ISO-8601 standard.
     #   @return [String]
     #
+    # @!attribute [rw] relay_state
+    #   Used to redirect users within the application during the federation
+    #   authentication process.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/UpdatePermissionSetRequest AWS API Documentation
     #
     class UpdatePermissionSetRequest < Struct.new(
-      :description,
       :instance_arn,
       :permission_set_arn,
-      :relay_state,
-      :session_duration)
+      :description,
+      :session_duration,
+      :relay_state)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4208,14 +4678,14 @@ module Aws::SSOAdmin
     #
     class UpdatePermissionSetResponse < Aws::EmptyStructure; end
 
-    # @!attribute [rw] name
-    #   Specifies the updated name to be applied to the trusted token issuer
-    #   configuration.
-    #   @return [String]
-    #
     # @!attribute [rw] trusted_token_issuer_arn
     #   Specifies the ARN of the trusted token issuer configuration that you
     #   want to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   Specifies the updated name to be applied to the trusted token issuer
+    #   configuration.
     #   @return [String]
     #
     # @!attribute [rw] trusted_token_issuer_configuration
@@ -4228,8 +4698,8 @@ module Aws::SSOAdmin
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/UpdateTrustedTokenIssuerRequest AWS API Documentation
     #
     class UpdateTrustedTokenIssuerRequest < Struct.new(
-      :name,
       :trusted_token_issuer_arn,
+      :name,
       :trusted_token_issuer_configuration)
       SENSITIVE = []
       include Aws::Structure
@@ -4244,10 +4714,15 @@ module Aws::SSOAdmin
     # @!attribute [rw] message
     #   @return [String]
     #
+    # @!attribute [rw] reason
+    #   The reason for the validation exception.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/ValidationException AWS API Documentation
     #
     class ValidationException < Struct.new(
-      :message)
+      :message,
+      :reason)
       SENSITIVE = []
       include Aws::Structure
     end

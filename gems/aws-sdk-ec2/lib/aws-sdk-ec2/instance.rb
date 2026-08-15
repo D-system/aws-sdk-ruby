@@ -177,6 +177,17 @@ module Aws::EC2
       data[:cpu_options]
     end
 
+    # The ID of the Capacity Block.
+    #
+    # <note markdown="1"> For P5 instances, a Capacity Block ID refers to a group of instances.
+    # For Trn2u instances, a capacity block ID refers to an EC2 UltraServer.
+    #
+    #  </note>
+    # @return [String]
+    def capacity_block_id
+      data[:capacity_block_id]
+    end
+
     # The ID of the Capacity Reservation.
     # @return [String]
     def capacity_reservation_id
@@ -319,6 +330,12 @@ module Aws::EC2
       data[:operator]
     end
 
+    # The secondary interfaces for the instance.
+    # @return [Array<Types::InstanceSecondaryInterface>]
+    def secondary_interfaces
+      data[:secondary_interfaces]
+    end
+
     # The ID of the AMI used to launch the instance.
     # @return [String]
     def image_id
@@ -345,9 +362,14 @@ module Aws::EC2
       data[:private_dns_name]
     end
 
-    # \[IPv4 only\] The public DNS name assigned to the instance. This name
-    # is not available until the instance enters the `running` state. This
-    # name is only available if you've enabled DNS hostnames for your VPC.
+    # The public DNS name assigned to the instance. This name is not
+    # available until the instance enters the `running` state. This name is
+    # only available if you've enabled DNS hostnames for your VPC. The
+    # format of this name depends on the [public hostname type][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/hostname-types.html#public-hostnames
     # @return [String]
     def public_dns_name
       data[:public_dns_name]
@@ -717,6 +739,7 @@ module Aws::EC2
     #   instance.attach_volume({
     #     device: "String", # required
     #     volume_id: "VolumeId", # required
+    #     ebs_card_index: 1,
     #     dry_run: false,
     #   })
     # @param [Hash] options ({})
@@ -725,6 +748,9 @@ module Aws::EC2
     # @option options [required, String] :volume_id
     #   The ID of the EBS volume. The volume and instance must be within the
     #   same Availability Zone.
+    # @option options [Integer] :ebs_card_index
+    #   The index of the EBS card. Some instance types support multiple EBS
+    #   cards. The default EBS card index is 0.
     # @option options [Boolean] :dry_run
     #   Checks whether you have the required permissions for the action,
     #   without actually making the request, and provides an error response.
@@ -769,7 +795,7 @@ module Aws::EC2
     #   image = instance.create_image({
     #     tag_specifications: [
     #       {
-    #         resource_type: "capacity-reservation", # accepts capacity-reservation, client-vpn-endpoint, customer-gateway, carrier-gateway, coip-pool, declarative-policies-report, dedicated-host, dhcp-options, egress-only-internet-gateway, elastic-ip, elastic-gpu, export-image-task, export-instance-task, fleet, fpga-image, host-reservation, image, import-image-task, import-snapshot-task, instance, instance-event-window, internet-gateway, ipam, ipam-pool, ipam-scope, ipv4pool-ec2, ipv6pool-ec2, key-pair, launch-template, local-gateway, local-gateway-route-table, local-gateway-virtual-interface, local-gateway-virtual-interface-group, local-gateway-route-table-vpc-association, local-gateway-route-table-virtual-interface-group-association, natgateway, network-acl, network-interface, network-insights-analysis, network-insights-path, network-insights-access-scope, network-insights-access-scope-analysis, placement-group, prefix-list, replace-root-volume-task, reserved-instances, route-table, security-group, security-group-rule, snapshot, spot-fleet-request, spot-instances-request, subnet, subnet-cidr-reservation, traffic-mirror-filter, traffic-mirror-session, traffic-mirror-target, transit-gateway, transit-gateway-attachment, transit-gateway-connect-peer, transit-gateway-multicast-domain, transit-gateway-policy-table, transit-gateway-route-table, transit-gateway-route-table-announcement, volume, vpc, vpc-endpoint, vpc-endpoint-connection, vpc-endpoint-service, vpc-endpoint-service-permission, vpc-peering-connection, vpn-connection, vpn-gateway, vpc-flow-log, capacity-reservation-fleet, traffic-mirror-filter-rule, vpc-endpoint-connection-device-type, verified-access-instance, verified-access-group, verified-access-endpoint, verified-access-policy, verified-access-trust-provider, vpn-connection-device-type, vpc-block-public-access-exclusion, ipam-resource-discovery, ipam-resource-discovery-association, instance-connect-endpoint, verified-access-endpoint-target, ipam-external-resource-verification-token
+    #         resource_type: "capacity-reservation", # accepts capacity-reservation, client-vpn-endpoint, customer-gateway, carrier-gateway, coip-pool, declarative-policies-report, dedicated-host, dhcp-options, egress-only-internet-gateway, elastic-ip, elastic-gpu, export-image-task, export-instance-task, fleet, fpga-image, host-reservation, image, image-usage-report, import-image-task, import-snapshot-task, instance, instance-event-window, internet-gateway, ipam, ipam-pool, ipam-scope, ipv4pool-ec2, ipv6pool-ec2, key-pair, launch-template, local-gateway, local-gateway-route-table, local-gateway-virtual-interface, local-gateway-virtual-interface-group, local-gateway-route-table-vpc-association, local-gateway-route-table-virtual-interface-group-association, natgateway, network-acl, network-interface, network-insights-analysis, network-insights-path, network-insights-access-scope, network-insights-access-scope-analysis, outpost-lag, placement-group, prefix-list, replace-root-volume-task, reserved-instances, route-table, security-group, security-group-rule, service-link-virtual-interface, snapshot, spot-fleet-request, spot-instances-request, subnet, subnet-cidr-reservation, traffic-mirror-filter, traffic-mirror-session, traffic-mirror-target, transit-gateway, transit-gateway-attachment, transit-gateway-connect-peer, transit-gateway-multicast-domain, transit-gateway-policy-table, transit-gateway-metering-policy, transit-gateway-route-table, transit-gateway-route-table-announcement, volume, vpc, vpc-endpoint, vpc-endpoint-connection, vpc-endpoint-service, vpc-endpoint-service-permission, vpc-peering-connection, vpn-connection, vpn-gateway, vpc-flow-log, capacity-reservation-fleet, traffic-mirror-filter-rule, vpc-endpoint-connection-device-type, verified-access-instance, verified-access-group, verified-access-endpoint, verified-access-policy, verified-access-trust-provider, vpn-connection-device-type, vpc-block-public-access-exclusion, vpc-encryption-control, route-server, route-server-endpoint, route-server-peer, ipam-resource-discovery, ipam-resource-discovery-association, instance-connect-endpoint, verified-access-endpoint-target, ipam-external-resource-verification-token, capacity-block, mac-modification-task, ipam-prefix-list-resolver, ipam-policy, ipam-prefix-list-resolver-target, ipam-internet-registry-association, secondary-interface, secondary-network, secondary-subnet, capacity-manager-data-export, vpn-concentrator, ipam-pool-allocation, capacity-reservation-cancellation-quote, application-status-check
     #         tags: [
     #           {
     #             key: "String",
@@ -778,9 +804,10 @@ module Aws::EC2
     #         ],
     #       },
     #     ],
+    #     snapshot_location: "regional", # accepts regional, local
     #     dry_run: false,
-    #     name: "String", # required
-    #     description: "String",
+    #     name: "ImageNameRequest", # required
+    #     description: "ImageDescriptionRequest",
     #     no_reboot: false,
     #     block_device_mappings: [
     #       {
@@ -793,7 +820,11 @@ module Aws::EC2
     #           kms_key_id: "String",
     #           throughput: 1,
     #           outpost_arn: "String",
+    #           availability_zone: "String",
     #           encrypted: false,
+    #           volume_initialization_rate: 1,
+    #           availability_zone_id: "String",
+    #           ebs_card_index: 1,
     #         },
     #         no_device: "String",
     #         device_name: "String",
@@ -821,6 +852,21 @@ module Aws::EC2
     #
     #
     #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CreateTags.html
+    # @option options [String] :snapshot_location
+    #   <note markdown="1"> Only supported for instances in Local Zones. If the source instance is
+    #   not in a Local Zone, omit this parameter.
+    #
+    #    </note>
+    #
+    #   The Amazon S3 location where the snapshots will be stored.
+    #
+    #   * To create local snapshots in the same Local Zone as the source
+    #     instance, specify `local`.
+    #
+    #   * To create regional snapshots in the parent Region of the Local Zone,
+    #     specify `regional` or omit this parameter.
+    #
+    #   Default: `regional`
     # @option options [Boolean] :dry_run
     #   Checks whether you have the required permissions for the action,
     #   without actually making the request, and provides an error response.
@@ -862,7 +908,7 @@ module Aws::EC2
     #     snapshots. To create an AMI with volumes or snapshots that have a
     #     different encryption status (for example, where the source volume
     #     and snapshots are unencrypted, and you want to create an AMI with
-    #     encrypted volumes or snapshots), use the CopyImage action.
+    #     encrypted volumes or snapshots), copy the image instead.
     #
     #   * The only option that can be changed for existing mappings or
     #     snapshots is `DeleteOnTermination`.
@@ -1054,12 +1100,15 @@ module Aws::EC2
     #     source_dest_check: {
     #       value: false,
     #     },
+    #     enclave_options: {
+    #       enabled: false,
+    #     },
     #     disable_api_stop: {
     #       value: false,
     #     },
     #     dry_run: false,
     #     attribute: "instanceType", # accepts instanceType, kernel, ramdisk, userData, disableApiTermination, instanceInitiatedShutdownBehavior, rootDeviceName, blockDeviceMapping, productCodes, sourceDestCheck, groupSet, ebsOptimized, sriovNetSupport, enaSupport, enclaveOptions, disableApiStop
-    #     value: "String",
+    #     value: "ModifyInstanceAttributeValue",
     #     block_device_mappings: [
     #       {
     #         device_name: "String",
@@ -1098,6 +1147,14 @@ module Aws::EC2
     #   enabled; otherwise, they are disabled. The default value is `true`.
     #   You must disable source/destination checks if the instance runs
     #   services such as network address translation, routing, or firewalls.
+    # @option options [Types::EnclaveOptionsRequest] :enclave_options
+    #   Enables or disables the instance for Amazon Web Services Nitro
+    #   Enclaves. For more information, see the [Amazon Web Services Nitro
+    #   Enclaves User Guide][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/enclaves/latest/user/nitro-enclave.html
     # @option options [Types::AttributeBooleanValue] :disable_api_stop
     #   Indicates whether an instance is enabled for stop protection. For more
     #   information, see [Enable stop protection for your instance][1].
@@ -1115,6 +1172,14 @@ module Aws::EC2
     # @option options [String] :attribute
     #   The name of the attribute to modify.
     #
+    #   <note markdown="1"> When changing the instance type: If the original instance type is
+    #   configured for configurable bandwidth, and the desired instance type
+    #   doesn't support configurable bandwidth, first set the existing
+    #   bandwidth configuration to `default` using the
+    #   ModifyInstanceNetworkPerformanceOptions operation.
+    #
+    #    </note>
+    #
     #   You can modify the following attributes only: `disableApiTermination`
     #   \| `instanceType` \| `kernel` \| `ramdisk` \|
     #   `instanceInitiatedShutdownBehavior` \| `blockDeviceMapping` \|
@@ -1131,7 +1196,7 @@ module Aws::EC2
     #   value is specified for `DeleteOnTermination`, the default is `true`
     #   and the volume is deleted when the instance is terminated. You can't
     #   modify the `DeleteOnTermination` attribute for volumes that are
-    #   attached to Fargate tasks.
+    #   attached to Amazon Web Services-managed resources.
     #
     #   To add instance store volumes to an Amazon EBS-backed instance, you
     #   must add them when you launch the instance. For more information, see
@@ -1171,7 +1236,7 @@ module Aws::EC2
     #
     #
     #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/UserProvidedKernels.html
-    # @option options [Types::BlobAttributeValue] :user_data
+    # @option options [Types::SecureBlobAttributeValue] :user_data
     #   Changes the instance's user data to the specified value. User data
     #   must be base64-encoded. Depending on the tool or SDK that you're
     #   using, the base64-encoding might be performed for you. For more
@@ -1459,6 +1524,7 @@ module Aws::EC2
     #
     #   instance.stop({
     #     hibernate: false,
+    #     skip_os_shutdown: false,
     #     dry_run: false,
     #     force: false,
     #   })
@@ -1466,7 +1532,7 @@ module Aws::EC2
     # @option options [Boolean] :hibernate
     #   Hibernates the instance if the instance was enabled for hibernation at
     #   launch. If the instance cannot hibernate successfully, a normal
-    #   shutdown occurs. For more information, see [Hibernate your
+    #   shutdown occurs. For more information, see [Hibernate your Amazon EC2
     #   instance][1] in the *Amazon EC2 User Guide*.
     #
     #   Default: `false`
@@ -1474,18 +1540,37 @@ module Aws::EC2
     #
     #
     #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Hibernate.html
+    # @option options [Boolean] :skip_os_shutdown
+    #   Specifies whether to bypass the graceful OS shutdown process when the
+    #   instance is stopped.
+    #
+    #   Bypassing the graceful OS shutdown might result in data loss or
+    #   corruption (for example, memory contents not flushed to disk or loss
+    #   of in-flight IOs) or skipped shutdown scripts.
+    #
+    #   Default: `false`
     # @option options [Boolean] :dry_run
     #   Checks whether you have the required permissions for the operation,
     #   without actually making the request, and provides an error response.
     #   If you have the required permissions, the error response is
     #   `DryRunOperation`. Otherwise, it is `UnauthorizedOperation`.
     # @option options [Boolean] :force
-    #   Forces the instances to stop. The instances do not have an opportunity
-    #   to flush file system caches or file system metadata. If you use this
-    #   option, you must perform file system check and repair procedures. This
-    #   option is not recommended for Windows instances.
+    #   Forces the instance to stop. The instance will first attempt a
+    #   graceful shutdown, which includes flushing file system caches and
+    #   metadata. If the graceful shutdown fails to complete within the
+    #   timeout period, the instance shuts down forcibly without flushing the
+    #   file system caches and metadata.
+    #
+    #   After using this option, you must perform file system check and repair
+    #   procedures. This option is not recommended for Windows instances. For
+    #   more information, see [Troubleshoot Amazon EC2 instance stop
+    #   issues][1] in the *Amazon EC2 User Guide*.
     #
     #   Default: `false`
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/TroubleshootingInstancesStopping.html
     # @return [Types::StopInstancesResult]
     def stop(options = {})
       options = Aws::Util.deep_merge(options, instance_ids: [@id])
@@ -1498,9 +1583,22 @@ module Aws::EC2
     # @example Request syntax with placeholder values
     #
     #   instance.terminate({
+    #     force: false,
+    #     skip_os_shutdown: false,
     #     dry_run: false,
     #   })
     # @param [Hash] options ({})
+    # @option options [Boolean] :force
+    #   Forces the instances to terminate. The instance will first attempt a
+    #   graceful shutdown, which includes flushing file system caches and
+    #   metadata. If the graceful shutdown fails to complete within the
+    #   timeout period, the instance shuts down forcibly without flushing the
+    #   file system caches and metadata.
+    # @option options [Boolean] :skip_os_shutdown
+    #   Specifies whether to bypass the graceful OS shutdown process when the
+    #   instance is terminated.
+    #
+    #   Default: `false`
     # @option options [Boolean] :dry_run
     #   Checks whether you have the required permissions for the operation,
     #   without actually making the request, and provides an error response.
@@ -1614,6 +1712,7 @@ module Aws::EC2
     #
     #   volumes = instance.volumes({
     #     volume_ids: ["VolumeId"],
+    #     include_managed_resources: false,
     #     dry_run: false,
     #     filters: [
     #       {
@@ -1626,6 +1725,11 @@ module Aws::EC2
     # @option options [Array<String>] :volume_ids
     #   The volume IDs. If not specified, then all volumes are included in the
     #   response.
+    # @option options [Boolean] :include_managed_resources
+    #   Indicates whether to include managed resources in the output. If this
+    #   parameter is set to `true`, the output includes resources that are
+    #   managed by Amazon Web Services services, even if managed resource
+    #   visibility is set to hidden.
     # @option options [Boolean] :dry_run
     #   Checks whether you have the required permissions for the action,
     #   without actually making the request, and provides an error response.
@@ -1651,6 +1755,9 @@ module Aws::EC2
     #
     #   * `availability-zone` - The Availability Zone in which the volume was
     #     created.
+    #
+    #   * `availability-zone-id` - The ID of the Availability Zone in which
+    #     the volume was created.
     #
     #   * `create-time` - The time stamp when the volume was created.
     #
@@ -2026,6 +2133,7 @@ module Aws::EC2
       #
       #   instance.batch_stop({
       #     hibernate: false,
+      #     skip_os_shutdown: false,
       #     dry_run: false,
       #     force: false,
       #   })
@@ -2033,7 +2141,7 @@ module Aws::EC2
       # @option options [Boolean] :hibernate
       #   Hibernates the instance if the instance was enabled for hibernation at
       #   launch. If the instance cannot hibernate successfully, a normal
-      #   shutdown occurs. For more information, see [Hibernate your
+      #   shutdown occurs. For more information, see [Hibernate your Amazon EC2
       #   instance][1] in the *Amazon EC2 User Guide*.
       #
       #   Default: `false`
@@ -2041,18 +2149,37 @@ module Aws::EC2
       #
       #
       #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Hibernate.html
+      # @option options [Boolean] :skip_os_shutdown
+      #   Specifies whether to bypass the graceful OS shutdown process when the
+      #   instance is stopped.
+      #
+      #   Bypassing the graceful OS shutdown might result in data loss or
+      #   corruption (for example, memory contents not flushed to disk or loss
+      #   of in-flight IOs) or skipped shutdown scripts.
+      #
+      #   Default: `false`
       # @option options [Boolean] :dry_run
       #   Checks whether you have the required permissions for the operation,
       #   without actually making the request, and provides an error response.
       #   If you have the required permissions, the error response is
       #   `DryRunOperation`. Otherwise, it is `UnauthorizedOperation`.
       # @option options [Boolean] :force
-      #   Forces the instances to stop. The instances do not have an opportunity
-      #   to flush file system caches or file system metadata. If you use this
-      #   option, you must perform file system check and repair procedures. This
-      #   option is not recommended for Windows instances.
+      #   Forces the instance to stop. The instance will first attempt a
+      #   graceful shutdown, which includes flushing file system caches and
+      #   metadata. If the graceful shutdown fails to complete within the
+      #   timeout period, the instance shuts down forcibly without flushing the
+      #   file system caches and metadata.
+      #
+      #   After using this option, you must perform file system check and repair
+      #   procedures. This option is not recommended for Windows instances. For
+      #   more information, see [Troubleshoot Amazon EC2 instance stop
+      #   issues][1] in the *Amazon EC2 User Guide*.
       #
       #   Default: `false`
+      #
+      #
+      #
+      #   [1]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/TroubleshootingInstancesStopping.html
       # @return [void]
       def batch_stop(options = {})
         batch_enum.each do |batch|
@@ -2071,9 +2198,22 @@ module Aws::EC2
       # @example Request syntax with placeholder values
       #
       #   instance.batch_terminate!({
+      #     force: false,
+      #     skip_os_shutdown: false,
       #     dry_run: false,
       #   })
       # @param options ({})
+      # @option options [Boolean] :force
+      #   Forces the instances to terminate. The instance will first attempt a
+      #   graceful shutdown, which includes flushing file system caches and
+      #   metadata. If the graceful shutdown fails to complete within the
+      #   timeout period, the instance shuts down forcibly without flushing the
+      #   file system caches and metadata.
+      # @option options [Boolean] :skip_os_shutdown
+      #   Specifies whether to bypass the graceful OS shutdown process when the
+      #   instance is terminated.
+      #
+      #   Default: `false`
       # @option options [Boolean] :dry_run
       #   Checks whether you have the required permissions for the operation,
       #   without actually making the request, and provides an error response.

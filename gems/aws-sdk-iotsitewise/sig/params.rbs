@@ -1,0 +1,210 @@
+# WARNING ABOUT GENERATED CODE
+#
+# This file is generated. See the contributing guide for more information:
+# https://github.com/aws/aws-sdk-ruby/blob/version-3/CONTRIBUTING.md
+#
+# WARNING ABOUT GENERATED CODE
+
+module Aws
+  module IoTSiteWise
+    module Params
+      type identity = {
+      user: {
+        id: ::String
+      }?,
+      group: {
+        id: ::String
+      }?,
+      iam_user: {
+        arn: ::String
+      }?,
+      iam_role: {
+        arn: ::String
+      }?
+    }
+
+      type resource = {
+      portal: {
+        id: ::String
+      }?,
+      project: {
+        id: ::String
+      }?
+    }
+
+      type transform = {
+      expression: ::String,
+      variables: Array[
+        Params::expression_variable
+      ],
+      processing_config: {
+        compute_location: ("EDGE" | "CLOUD"),
+        forwarding_config: {
+          state: ("DISABLED" | "ENABLED")
+        }?
+      }?
+    }
+
+      type metric = {
+      expression: ::String?,
+      variables: Array[
+        Params::expression_variable
+      ]?,
+      window: {
+        tumbling: {
+          interval: ::String,
+          offset: ::String?
+        }?
+      },
+      processing_config: {
+        compute_location: ("EDGE" | "CLOUD")
+      }?
+    }
+
+      type property_type = {
+      attribute: {
+        default_value: ::String?
+      }?,
+      measurement: {
+        processing_config: {
+          forwarding_config: {
+            state: ("DISABLED" | "ENABLED")
+          }
+        }?
+      }?,
+      transform: Params::transform?,
+      metric: Params::metric?
+    }
+
+      type asset_model_property_definition = {
+      id: ::String?,
+      external_id: ::String?,
+      name: ::String,
+      data_type: ("STRING" | "INTEGER" | "DOUBLE" | "BOOLEAN" | "STRUCT" | "VIDEO" | "ANNOTATION" | "JSON"),
+      data_type_spec: ::String?,
+      unit: ::String?,
+      type: Params::property_type
+    }
+
+      type variable_value = {
+      property_id: ::String?,
+      hierarchy_id: ::String?,
+      property_path: Array[
+        {
+          id: ::String?,
+          name: ::String?
+        }
+      ]?
+    }
+
+      type expression_variable = {
+      name: ::String,
+      value: Params::variable_value
+    }
+
+      type file_format = {
+      csv: {
+        column_names: Array[("ALIAS" | "ASSET_ID" | "PROPERTY_ID" | "DATA_TYPE" | "TIMESTAMP_SECONDS" | "TIMESTAMP_NANO_OFFSET" | "QUALITY" | "VALUE")]
+      }?,
+      parquet: {
+      }?,
+      mp4: {
+      }?,
+      annotation: {
+      }?
+    }
+
+      type computation_model_data_binding_value = {
+      asset_model_property: {
+        asset_model_id: ::String,
+        property_id: ::String
+      }?,
+      asset_property: {
+        asset_id: ::String,
+        property_id: ::String
+      }?,
+      list: Array[
+        {
+          asset_model_property: {
+            asset_model_id: ::String,
+            property_id: ::String
+          }?,
+          asset_property: {
+            asset_id: ::String,
+            property_id: ::String
+          }?,
+          list: untyped?
+        }
+      ]?
+    }
+
+      type session_config = {
+      session_start_timestamp: {
+        time_in_seconds: ::Integer,
+        offset_in_nanos: ::Integer?
+      },
+      session_end_timestamp: {
+        time_in_seconds: ::Integer,
+        offset_in_nanos: ::Integer?
+      }
+    }
+
+      type dataset_config = {
+      session: Params::session_config?
+    }
+
+      type dataset_source = {
+      source_type: ("KENDRA" | "SITEWISE"),
+      source_format: ("KNOWLEDGE_BASE" | "TIMESERIES"),
+      source_detail: {
+        kendra: {
+          knowledge_base_arn: ::String,
+          role_arn: ::String
+        }?
+      }?
+    }
+
+      type trim_settings = {
+      start_time: {
+        time_in_seconds: ::Integer,
+        offset_in_nanos: ::Integer?
+      },
+      end_time: {
+        time_in_seconds: ::Integer,
+        offset_in_nanos: ::Integer?
+      }
+    }
+
+      type container_task_configuration = {
+      ecr_uri: ::String,
+      task_execution_role: ::String,
+      processing_type: ("GENERIC_COMPUTE_PROCESSING" | "HARDWARE_ACCELERATED_PROCESSING"),
+      processing_unit: ("UNITS_2" | "UNITS_4" | "UNITS_8" | "UNITS_12" | "UNITS_16" | "UNITS_24" | "UNITS_32" | "UNITS_36" | "UNITS_48" | "UNITS_60" | "UNITS_64" | "UNITS_72" | "UNITS_84" | "UNITS_96"),
+      command: Array[::String]?,
+      timeout_seconds: ::Integer?,
+      environment_variables: Hash[::String, ::String]?
+    }
+
+      type task_configuration = {
+      container_task_configuration: Params::container_task_configuration?
+    }
+
+      type asset_model_property = {
+      id: ::String?,
+      external_id: ::String?,
+      name: ::String,
+      data_type: ("STRING" | "INTEGER" | "DOUBLE" | "BOOLEAN" | "STRUCT" | "VIDEO" | "ANNOTATION" | "JSON"),
+      data_type_spec: ::String?,
+      unit: ::String?,
+      type: Params::property_type,
+      path: Array[
+        {
+          id: ::String?,
+          name: ::String?
+        }
+      ]?
+    }
+
+    end
+  end
+end

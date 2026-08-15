@@ -147,6 +147,7 @@ module Aws::EventBridge
     ErrorCode = Shapes::StringShape.new(name: 'ErrorCode')
     ErrorMessage = Shapes::StringShape.new(name: 'ErrorMessage')
     EventBus = Shapes::StructureShape.new(name: 'EventBus')
+    EventBusArn = Shapes::StringShape.new(name: 'EventBusArn')
     EventBusDescription = Shapes::StringShape.new(name: 'EventBusDescription')
     EventBusList = Shapes::ListShape.new(name: 'EventBusList')
     EventBusName = Shapes::StringShape.new(name: 'EventBusName')
@@ -173,6 +174,7 @@ module Aws::EventBridge
     HttpsEndpoint = Shapes::StringShape.new(name: 'HttpsEndpoint')
     IamRoleArn = Shapes::StringShape.new(name: 'IamRoleArn')
     IllegalStatusException = Shapes::StructureShape.new(name: 'IllegalStatusException')
+    IncludeDetail = Shapes::StringShape.new(name: 'IncludeDetail')
     InputTransformer = Shapes::StructureShape.new(name: 'InputTransformer')
     InputTransformerPathKey = Shapes::StringShape.new(name: 'InputTransformerPathKey')
     Integer = Shapes::IntegerShape.new(name: 'Integer')
@@ -182,6 +184,7 @@ module Aws::EventBridge
     KinesisParameters = Shapes::StructureShape.new(name: 'KinesisParameters')
     KmsKeyIdentifier = Shapes::StringShape.new(name: 'KmsKeyIdentifier')
     LaunchType = Shapes::StringShape.new(name: 'LaunchType')
+    Level = Shapes::StringShape.new(name: 'Level')
     LimitExceededException = Shapes::StructureShape.new(name: 'LimitExceededException')
     LimitMax100 = Shapes::IntegerShape.new(name: 'LimitMax100')
     LimitMin1 = Shapes::IntegerShape.new(name: 'LimitMin1')
@@ -211,6 +214,7 @@ module Aws::EventBridge
     ListTagsForResourceResponse = Shapes::StructureShape.new(name: 'ListTagsForResourceResponse')
     ListTargetsByRuleRequest = Shapes::StructureShape.new(name: 'ListTargetsByRuleRequest')
     ListTargetsByRuleResponse = Shapes::StructureShape.new(name: 'ListTargetsByRuleResponse')
+    LogConfig = Shapes::StructureShape.new(name: 'LogConfig')
     Long = Shapes::IntegerShape.new(name: 'Long')
     ManagedBy = Shapes::StringShape.new(name: 'ManagedBy')
     ManagedRuleException = Shapes::StructureShape.new(name: 'ManagedRuleException')
@@ -387,7 +391,7 @@ module Aws::EventBridge
     AppSyncParameters.struct_class = Types::AppSyncParameters
 
     Archive.add_member(:archive_name, Shapes::ShapeRef.new(shape: ArchiveName, location_name: "ArchiveName"))
-    Archive.add_member(:event_source_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "EventSourceArn"))
+    Archive.add_member(:event_source_arn, Shapes::ShapeRef.new(shape: EventBusArn, location_name: "EventSourceArn"))
     Archive.add_member(:state, Shapes::ShapeRef.new(shape: ArchiveState, location_name: "State"))
     Archive.add_member(:state_reason, Shapes::ShapeRef.new(shape: ArchiveStateReason, location_name: "StateReason"))
     Archive.add_member(:retention_days, Shapes::ShapeRef.new(shape: RetentionDays, location_name: "RetentionDays"))
@@ -518,10 +522,11 @@ module Aws::EventBridge
     CreateApiDestinationResponse.struct_class = Types::CreateApiDestinationResponse
 
     CreateArchiveRequest.add_member(:archive_name, Shapes::ShapeRef.new(shape: ArchiveName, required: true, location_name: "ArchiveName"))
-    CreateArchiveRequest.add_member(:event_source_arn, Shapes::ShapeRef.new(shape: Arn, required: true, location_name: "EventSourceArn"))
+    CreateArchiveRequest.add_member(:event_source_arn, Shapes::ShapeRef.new(shape: EventBusArn, required: true, location_name: "EventSourceArn"))
     CreateArchiveRequest.add_member(:description, Shapes::ShapeRef.new(shape: ArchiveDescription, location_name: "Description"))
     CreateArchiveRequest.add_member(:event_pattern, Shapes::ShapeRef.new(shape: EventPattern, location_name: "EventPattern"))
     CreateArchiveRequest.add_member(:retention_days, Shapes::ShapeRef.new(shape: RetentionDays, location_name: "RetentionDays"))
+    CreateArchiveRequest.add_member(:kms_key_identifier, Shapes::ShapeRef.new(shape: KmsKeyIdentifier, location_name: "KmsKeyIdentifier"))
     CreateArchiveRequest.struct_class = Types::CreateArchiveRequest
 
     CreateArchiveResponse.add_member(:archive_arn, Shapes::ShapeRef.new(shape: ArchiveArn, location_name: "ArchiveArn"))
@@ -560,6 +565,7 @@ module Aws::EventBridge
     CreateConnectionRequest.add_member(:authorization_type, Shapes::ShapeRef.new(shape: ConnectionAuthorizationType, required: true, location_name: "AuthorizationType"))
     CreateConnectionRequest.add_member(:auth_parameters, Shapes::ShapeRef.new(shape: CreateConnectionAuthRequestParameters, required: true, location_name: "AuthParameters"))
     CreateConnectionRequest.add_member(:invocation_connectivity_parameters, Shapes::ShapeRef.new(shape: ConnectivityResourceParameters, location_name: "InvocationConnectivityParameters"))
+    CreateConnectionRequest.add_member(:kms_key_identifier, Shapes::ShapeRef.new(shape: KmsKeyIdentifier, location_name: "KmsKeyIdentifier"))
     CreateConnectionRequest.struct_class = Types::CreateConnectionRequest
 
     CreateConnectionResponse.add_member(:connection_arn, Shapes::ShapeRef.new(shape: ConnectionArn, location_name: "ConnectionArn"))
@@ -590,6 +596,7 @@ module Aws::EventBridge
     CreateEventBusRequest.add_member(:description, Shapes::ShapeRef.new(shape: EventBusDescription, location_name: "Description"))
     CreateEventBusRequest.add_member(:kms_key_identifier, Shapes::ShapeRef.new(shape: KmsKeyIdentifier, location_name: "KmsKeyIdentifier"))
     CreateEventBusRequest.add_member(:dead_letter_config, Shapes::ShapeRef.new(shape: DeadLetterConfig, location_name: "DeadLetterConfig"))
+    CreateEventBusRequest.add_member(:log_config, Shapes::ShapeRef.new(shape: LogConfig, location_name: "LogConfig"))
     CreateEventBusRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
     CreateEventBusRequest.struct_class = Types::CreateEventBusRequest
 
@@ -597,6 +604,7 @@ module Aws::EventBridge
     CreateEventBusResponse.add_member(:description, Shapes::ShapeRef.new(shape: EventBusDescription, location_name: "Description"))
     CreateEventBusResponse.add_member(:kms_key_identifier, Shapes::ShapeRef.new(shape: KmsKeyIdentifier, location_name: "KmsKeyIdentifier"))
     CreateEventBusResponse.add_member(:dead_letter_config, Shapes::ShapeRef.new(shape: DeadLetterConfig, location_name: "DeadLetterConfig"))
+    CreateEventBusResponse.add_member(:log_config, Shapes::ShapeRef.new(shape: LogConfig, location_name: "LogConfig"))
     CreateEventBusResponse.struct_class = Types::CreateEventBusResponse
 
     CreatePartnerEventSourceRequest.add_member(:name, Shapes::ShapeRef.new(shape: EventSourceName, required: true, location_name: "Name"))
@@ -679,11 +687,12 @@ module Aws::EventBridge
 
     DescribeArchiveResponse.add_member(:archive_arn, Shapes::ShapeRef.new(shape: ArchiveArn, location_name: "ArchiveArn"))
     DescribeArchiveResponse.add_member(:archive_name, Shapes::ShapeRef.new(shape: ArchiveName, location_name: "ArchiveName"))
-    DescribeArchiveResponse.add_member(:event_source_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "EventSourceArn"))
+    DescribeArchiveResponse.add_member(:event_source_arn, Shapes::ShapeRef.new(shape: EventBusArn, location_name: "EventSourceArn"))
     DescribeArchiveResponse.add_member(:description, Shapes::ShapeRef.new(shape: ArchiveDescription, location_name: "Description"))
     DescribeArchiveResponse.add_member(:event_pattern, Shapes::ShapeRef.new(shape: EventPattern, location_name: "EventPattern"))
     DescribeArchiveResponse.add_member(:state, Shapes::ShapeRef.new(shape: ArchiveState, location_name: "State"))
     DescribeArchiveResponse.add_member(:state_reason, Shapes::ShapeRef.new(shape: ArchiveStateReason, location_name: "StateReason"))
+    DescribeArchiveResponse.add_member(:kms_key_identifier, Shapes::ShapeRef.new(shape: KmsKeyIdentifier, location_name: "KmsKeyIdentifier"))
     DescribeArchiveResponse.add_member(:retention_days, Shapes::ShapeRef.new(shape: RetentionDays, location_name: "RetentionDays"))
     DescribeArchiveResponse.add_member(:size_bytes, Shapes::ShapeRef.new(shape: Long, location_name: "SizeBytes"))
     DescribeArchiveResponse.add_member(:event_count, Shapes::ShapeRef.new(shape: Long, location_name: "EventCount"))
@@ -708,6 +717,7 @@ module Aws::EventBridge
     DescribeConnectionResponse.add_member(:state_reason, Shapes::ShapeRef.new(shape: ConnectionStateReason, location_name: "StateReason"))
     DescribeConnectionResponse.add_member(:authorization_type, Shapes::ShapeRef.new(shape: ConnectionAuthorizationType, location_name: "AuthorizationType"))
     DescribeConnectionResponse.add_member(:secret_arn, Shapes::ShapeRef.new(shape: SecretsManagerSecretArn, location_name: "SecretArn"))
+    DescribeConnectionResponse.add_member(:kms_key_identifier, Shapes::ShapeRef.new(shape: KmsKeyIdentifier, location_name: "KmsKeyIdentifier"))
     DescribeConnectionResponse.add_member(:auth_parameters, Shapes::ShapeRef.new(shape: ConnectionAuthResponseParameters, location_name: "AuthParameters"))
     DescribeConnectionResponse.add_member(:creation_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "CreationTime"))
     DescribeConnectionResponse.add_member(:last_modified_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "LastModifiedTime"))
@@ -742,6 +752,7 @@ module Aws::EventBridge
     DescribeEventBusResponse.add_member(:kms_key_identifier, Shapes::ShapeRef.new(shape: KmsKeyIdentifier, location_name: "KmsKeyIdentifier"))
     DescribeEventBusResponse.add_member(:dead_letter_config, Shapes::ShapeRef.new(shape: DeadLetterConfig, location_name: "DeadLetterConfig"))
     DescribeEventBusResponse.add_member(:policy, Shapes::ShapeRef.new(shape: String, location_name: "Policy"))
+    DescribeEventBusResponse.add_member(:log_config, Shapes::ShapeRef.new(shape: LogConfig, location_name: "LogConfig"))
     DescribeEventBusResponse.add_member(:creation_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "CreationTime"))
     DescribeEventBusResponse.add_member(:last_modified_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "LastModifiedTime"))
     DescribeEventBusResponse.struct_class = Types::DescribeEventBusResponse
@@ -772,7 +783,7 @@ module Aws::EventBridge
     DescribeReplayResponse.add_member(:description, Shapes::ShapeRef.new(shape: ReplayDescription, location_name: "Description"))
     DescribeReplayResponse.add_member(:state, Shapes::ShapeRef.new(shape: ReplayState, location_name: "State"))
     DescribeReplayResponse.add_member(:state_reason, Shapes::ShapeRef.new(shape: ReplayStateReason, location_name: "StateReason"))
-    DescribeReplayResponse.add_member(:event_source_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "EventSourceArn"))
+    DescribeReplayResponse.add_member(:event_source_arn, Shapes::ShapeRef.new(shape: ArchiveArn, location_name: "EventSourceArn"))
     DescribeReplayResponse.add_member(:destination, Shapes::ShapeRef.new(shape: ReplayDestination, location_name: "Destination"))
     DescribeReplayResponse.add_member(:event_start_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "EventStartTime"))
     DescribeReplayResponse.add_member(:event_end_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "EventEndTime"))
@@ -905,7 +916,7 @@ module Aws::EventBridge
     ListApiDestinationsResponse.struct_class = Types::ListApiDestinationsResponse
 
     ListArchivesRequest.add_member(:name_prefix, Shapes::ShapeRef.new(shape: ArchiveName, location_name: "NamePrefix"))
-    ListArchivesRequest.add_member(:event_source_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "EventSourceArn"))
+    ListArchivesRequest.add_member(:event_source_arn, Shapes::ShapeRef.new(shape: EventBusArn, location_name: "EventSourceArn"))
     ListArchivesRequest.add_member(:state, Shapes::ShapeRef.new(shape: ArchiveState, location_name: "State"))
     ListArchivesRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "NextToken"))
     ListArchivesRequest.add_member(:limit, Shapes::ShapeRef.new(shape: LimitMax100, location_name: "Limit"))
@@ -973,7 +984,7 @@ module Aws::EventBridge
 
     ListReplaysRequest.add_member(:name_prefix, Shapes::ShapeRef.new(shape: ReplayName, location_name: "NamePrefix"))
     ListReplaysRequest.add_member(:state, Shapes::ShapeRef.new(shape: ReplayState, location_name: "State"))
-    ListReplaysRequest.add_member(:event_source_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "EventSourceArn"))
+    ListReplaysRequest.add_member(:event_source_arn, Shapes::ShapeRef.new(shape: ArchiveArn, location_name: "EventSourceArn"))
     ListReplaysRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "NextToken"))
     ListReplaysRequest.add_member(:limit, Shapes::ShapeRef.new(shape: LimitMax100, location_name: "Limit"))
     ListReplaysRequest.struct_class = Types::ListReplaysRequest
@@ -1018,6 +1029,10 @@ module Aws::EventBridge
     ListTargetsByRuleResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "NextToken"))
     ListTargetsByRuleResponse.struct_class = Types::ListTargetsByRuleResponse
 
+    LogConfig.add_member(:include_detail, Shapes::ShapeRef.new(shape: IncludeDetail, location_name: "IncludeDetail"))
+    LogConfig.add_member(:level, Shapes::ShapeRef.new(shape: Level, location_name: "Level"))
+    LogConfig.struct_class = Types::LogConfig
+
     ManagedRuleException.struct_class = Types::ManagedRuleException
 
     NetworkConfiguration.add_member(:awsvpc_configuration, Shapes::ShapeRef.new(shape: AwsVpcConfiguration, location_name: "awsvpcConfiguration"))
@@ -1059,7 +1074,7 @@ module Aws::EventBridge
     Primary.struct_class = Types::Primary
 
     PutEventsRequest.add_member(:entries, Shapes::ShapeRef.new(shape: PutEventsRequestEntryList, required: true, location_name: "Entries"))
-    PutEventsRequest.add_member(:endpoint_id, Shapes::ShapeRef.new(shape: EndpointId, location_name: "EndpointId", metadata: {"contextParam"=>{"name"=>"EndpointId"}}))
+    PutEventsRequest.add_member(:endpoint_id, Shapes::ShapeRef.new(shape: EndpointId, location_name: "EndpointId", metadata: {"contextParam" => {"name" => "EndpointId"}}))
     PutEventsRequest.struct_class = Types::PutEventsRequest
 
     PutEventsRequestEntry.add_member(:time, Shapes::ShapeRef.new(shape: EventTime, location_name: "Time"))
@@ -1179,7 +1194,7 @@ module Aws::EventBridge
     RemoveTargetsResultEntryList.member = Shapes::ShapeRef.new(shape: RemoveTargetsResultEntry)
 
     Replay.add_member(:replay_name, Shapes::ShapeRef.new(shape: ReplayName, location_name: "ReplayName"))
-    Replay.add_member(:event_source_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "EventSourceArn"))
+    Replay.add_member(:event_source_arn, Shapes::ShapeRef.new(shape: ArchiveArn, location_name: "EventSourceArn"))
     Replay.add_member(:state, Shapes::ShapeRef.new(shape: ReplayState, location_name: "State"))
     Replay.add_member(:state_reason, Shapes::ShapeRef.new(shape: ReplayStateReason, location_name: "StateReason"))
     Replay.add_member(:event_start_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "EventStartTime"))
@@ -1256,7 +1271,7 @@ module Aws::EventBridge
 
     StartReplayRequest.add_member(:replay_name, Shapes::ShapeRef.new(shape: ReplayName, required: true, location_name: "ReplayName"))
     StartReplayRequest.add_member(:description, Shapes::ShapeRef.new(shape: ReplayDescription, location_name: "Description"))
-    StartReplayRequest.add_member(:event_source_arn, Shapes::ShapeRef.new(shape: Arn, required: true, location_name: "EventSourceArn"))
+    StartReplayRequest.add_member(:event_source_arn, Shapes::ShapeRef.new(shape: ArchiveArn, required: true, location_name: "EventSourceArn"))
     StartReplayRequest.add_member(:event_start_time, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "EventStartTime"))
     StartReplayRequest.add_member(:event_end_time, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "EventEndTime"))
     StartReplayRequest.add_member(:destination, Shapes::ShapeRef.new(shape: ReplayDestination, required: true, location_name: "Destination"))
@@ -1343,6 +1358,7 @@ module Aws::EventBridge
     UpdateArchiveRequest.add_member(:description, Shapes::ShapeRef.new(shape: ArchiveDescription, location_name: "Description"))
     UpdateArchiveRequest.add_member(:event_pattern, Shapes::ShapeRef.new(shape: EventPattern, location_name: "EventPattern"))
     UpdateArchiveRequest.add_member(:retention_days, Shapes::ShapeRef.new(shape: RetentionDays, location_name: "RetentionDays"))
+    UpdateArchiveRequest.add_member(:kms_key_identifier, Shapes::ShapeRef.new(shape: KmsKeyIdentifier, location_name: "KmsKeyIdentifier"))
     UpdateArchiveRequest.struct_class = Types::UpdateArchiveRequest
 
     UpdateArchiveResponse.add_member(:archive_arn, Shapes::ShapeRef.new(shape: ArchiveArn, location_name: "ArchiveArn"))
@@ -1381,6 +1397,7 @@ module Aws::EventBridge
     UpdateConnectionRequest.add_member(:authorization_type, Shapes::ShapeRef.new(shape: ConnectionAuthorizationType, location_name: "AuthorizationType"))
     UpdateConnectionRequest.add_member(:auth_parameters, Shapes::ShapeRef.new(shape: UpdateConnectionAuthRequestParameters, location_name: "AuthParameters"))
     UpdateConnectionRequest.add_member(:invocation_connectivity_parameters, Shapes::ShapeRef.new(shape: ConnectivityResourceParameters, location_name: "InvocationConnectivityParameters"))
+    UpdateConnectionRequest.add_member(:kms_key_identifier, Shapes::ShapeRef.new(shape: KmsKeyIdentifier, location_name: "KmsKeyIdentifier"))
     UpdateConnectionRequest.struct_class = Types::UpdateConnectionRequest
 
     UpdateConnectionResponse.add_member(:connection_arn, Shapes::ShapeRef.new(shape: ConnectionArn, location_name: "ConnectionArn"))
@@ -1413,6 +1430,7 @@ module Aws::EventBridge
     UpdateEventBusRequest.add_member(:kms_key_identifier, Shapes::ShapeRef.new(shape: KmsKeyIdentifier, location_name: "KmsKeyIdentifier"))
     UpdateEventBusRequest.add_member(:description, Shapes::ShapeRef.new(shape: EventBusDescription, location_name: "Description"))
     UpdateEventBusRequest.add_member(:dead_letter_config, Shapes::ShapeRef.new(shape: DeadLetterConfig, location_name: "DeadLetterConfig"))
+    UpdateEventBusRequest.add_member(:log_config, Shapes::ShapeRef.new(shape: LogConfig, location_name: "LogConfig"))
     UpdateEventBusRequest.struct_class = Types::UpdateEventBusRequest
 
     UpdateEventBusResponse.add_member(:arn, Shapes::ShapeRef.new(shape: String, location_name: "Arn"))
@@ -1420,6 +1438,7 @@ module Aws::EventBridge
     UpdateEventBusResponse.add_member(:kms_key_identifier, Shapes::ShapeRef.new(shape: KmsKeyIdentifier, location_name: "KmsKeyIdentifier"))
     UpdateEventBusResponse.add_member(:description, Shapes::ShapeRef.new(shape: EventBusDescription, location_name: "Description"))
     UpdateEventBusResponse.add_member(:dead_letter_config, Shapes::ShapeRef.new(shape: DeadLetterConfig, location_name: "DeadLetterConfig"))
+    UpdateEventBusResponse.add_member(:log_config, Shapes::ShapeRef.new(shape: LogConfig, location_name: "LogConfig"))
     UpdateEventBusResponse.struct_class = Types::UpdateEventBusResponse
 
 

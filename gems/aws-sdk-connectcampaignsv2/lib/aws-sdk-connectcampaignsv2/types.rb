@@ -10,6 +10,36 @@
 module Aws::ConnectCampaignsV2
   module Types
 
+    # Configuration for abandonment-rate-based dialer throttling.
+    #
+    # @!attribute [rw] target_rate
+    #   Target abandonment rate.
+    #   @return [Float]
+    #
+    # @!attribute [rw] connection_start_point
+    #   Event from which connectionThresholdSeconds is measured.
+    #   @return [String]
+    #
+    # @!attribute [rw] connection_threshold_seconds
+    #   Seconds after connectionStartPoint before a contact counts as
+    #   abandoned.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] evaluation_window
+    #   Rolling window over which abandonmentRate is computed.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/AbandonmentRatePacingConfig AWS API Documentation
+    #
+    class AbandonmentRatePacingConfig < Struct.new(
+      :target_rate,
+      :connection_start_point,
+      :connection_threshold_seconds,
+      :evaluation_window)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # You do not have sufficient access to perform this action.
     #
     # @!attribute [rw] message
@@ -78,6 +108,10 @@ module Aws::ConnectCampaignsV2
     #   Campaign Channel Subtype config
     #   @return [Types::ChannelSubtypeConfig]
     #
+    # @!attribute [rw] type
+    #   The type of campaign externally exposed in APIs.
+    #   @return [String]
+    #
     # @!attribute [rw] source
     #   Source of the campaign
     #   @return [Types::Source]
@@ -89,6 +123,10 @@ module Aws::ConnectCampaignsV2
     # @!attribute [rw] schedule
     #   Campaign schedule
     #   @return [Types::Schedule]
+    #
+    # @!attribute [rw] entry_limits_config
+    #   Campaign entry limits config
+    #   @return [Types::EntryLimitsConfig]
     #
     # @!attribute [rw] communication_time_config
     #   Campaign communication time config
@@ -110,9 +148,11 @@ module Aws::ConnectCampaignsV2
       :name,
       :connect_instance_id,
       :channel_subtype_config,
+      :type,
       :source,
       :connect_campaign_flow_arn,
       :schedule,
+      :entry_limits_config,
       :communication_time_config,
       :communication_limits_override,
       :tags)
@@ -156,9 +196,17 @@ module Aws::ConnectCampaignsV2
     #   Channel subtype list
     #   @return [Array<String>]
     #
+    # @!attribute [rw] type
+    #   The type of campaign externally exposed in APIs.
+    #   @return [String]
+    #
     # @!attribute [rw] schedule
     #   Campaign schedule
     #   @return [Types::Schedule]
+    #
+    # @!attribute [rw] entry_limits_config
+    #   Campaign entry limits config
+    #   @return [Types::EntryLimitsConfig]
     #
     # @!attribute [rw] connect_campaign_flow_arn
     #   Amazon Resource Names(ARN)
@@ -172,8 +220,24 @@ module Aws::ConnectCampaignsV2
       :name,
       :connect_instance_id,
       :channel_subtypes,
+      :type,
       :schedule,
+      :entry_limits_config,
       :connect_campaign_flow_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Additional metadata related to the event trigger context
+    #
+    # @!attribute [rw] web_notification_context
+    #   Context metadata for the web notification type channel
+    #   @return [Types::WebNotificationContext]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/ChannelContext AWS API Documentation
+    #
+    class ChannelContext < Struct.new(
+      :web_notification_context)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -192,12 +256,17 @@ module Aws::ConnectCampaignsV2
     #   Email Channel Subtype config
     #   @return [Types::EmailChannelSubtypeConfig]
     #
+    # @!attribute [rw] whats_app
+    #   WhatsApp Channel Subtype config
+    #   @return [Types::WhatsAppChannelSubtypeConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/ChannelSubtypeConfig AWS API Documentation
     #
     class ChannelSubtypeConfig < Struct.new(
       :telephony,
       :sms,
-      :email)
+      :email,
+      :whats_app)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -218,12 +287,17 @@ module Aws::ConnectCampaignsV2
     #   Parameters for the Email Channel Subtype
     #   @return [Types::EmailChannelSubtypeParameters]
     #
+    # @!attribute [rw] whats_app
+    #   Parameters for the WhatsApp Channel Subtype
+    #   @return [Types::WhatsAppChannelSubtypeParameters]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/ChannelSubtypeParameters AWS API Documentation
     #
     class ChannelSubtypeParameters < Struct.new(
       :telephony,
       :sms,
       :email,
+      :whats_app,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
@@ -232,6 +306,7 @@ module Aws::ConnectCampaignsV2
       class Telephony < ChannelSubtypeParameters; end
       class Sms < ChannelSubtypeParameters; end
       class Email < ChannelSubtypeParameters; end
+      class WhatsApp < ChannelSubtypeParameters; end
       class Unknown < ChannelSubtypeParameters; end
     end
 
@@ -289,10 +364,15 @@ module Aws::ConnectCampaignsV2
     #   Communication limits
     #   @return [Types::CommunicationLimits]
     #
+    # @!attribute [rw] instance_limits_handling
+    #   Instance limits handling
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/CommunicationLimitsConfig AWS API Documentation
     #
     class CommunicationLimitsConfig < Struct.new(
-      :all_channel_subtypes)
+      :all_channel_subtypes,
+      :instance_limits_handling)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -315,13 +395,18 @@ module Aws::ConnectCampaignsV2
     #   Time window config
     #   @return [Types::TimeWindow]
     #
+    # @!attribute [rw] whats_app
+    #   Time window config
+    #   @return [Types::TimeWindow]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/CommunicationTimeConfig AWS API Documentation
     #
     class CommunicationTimeConfig < Struct.new(
       :local_time_zone_config,
       :telephony,
       :sms,
-      :email)
+      :email,
+      :whats_app)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -360,6 +445,10 @@ module Aws::ConnectCampaignsV2
     #   Campaign Channel Subtype config
     #   @return [Types::ChannelSubtypeConfig]
     #
+    # @!attribute [rw] type
+    #   The type of campaign externally exposed in APIs.
+    #   @return [String]
+    #
     # @!attribute [rw] source
     #   Source of the campaign
     #   @return [Types::Source]
@@ -371,6 +460,10 @@ module Aws::ConnectCampaignsV2
     # @!attribute [rw] schedule
     #   Campaign schedule
     #   @return [Types::Schedule]
+    #
+    # @!attribute [rw] entry_limits_config
+    #   Campaign entry limits config
+    #   @return [Types::EntryLimitsConfig]
     #
     # @!attribute [rw] communication_time_config
     #   Campaign communication time config
@@ -390,9 +483,11 @@ module Aws::ConnectCampaignsV2
       :name,
       :connect_instance_id,
       :channel_subtype_config,
+      :type,
       :source,
       :connect_campaign_flow_arn,
       :schedule,
+      :entry_limits_config,
       :communication_time_config,
       :communication_limits_override,
       :tags)
@@ -529,6 +624,20 @@ module Aws::ConnectCampaignsV2
     class DeleteCampaignCommunicationTimeRequest < Struct.new(
       :id,
       :config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The request for DeleteCampaignEntryLimits API.
+    #
+    # @!attribute [rw] id
+    #   Identifier representing a Campaign
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/DeleteCampaignEntryLimitsRequest AWS API Documentation
+    #
+    class DeleteCampaignEntryLimitsRequest < Struct.new(
+      :id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -758,6 +867,28 @@ module Aws::ConnectCampaignsV2
       include Aws::Structure
     end
 
+    # Campaign entry limits config
+    #
+    # @!attribute [rw] max_entry_count
+    #   Maximum number of times a participant can enter the campaign. A
+    #   value of 0 indicates unlimited entries. Values of 1 or greater
+    #   specify the exact number of entries allowed.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] min_entry_interval
+    #   Minimum time interval that must pass before a participant can enter
+    #   the campaign again.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/EntryLimitsConfig AWS API Documentation
+    #
+    class EntryLimitsConfig < Struct.new(
+      :max_entry_count,
+      :min_entry_interval)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Event trigger of the campaign
     #
     # @!attribute [rw] customer_profiles_domain_arn
@@ -768,6 +899,25 @@ module Aws::ConnectCampaignsV2
     #
     class EventTrigger < Struct.new(
       :customer_profiles_domain_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Event trigger context data
+    #
+    # @!attribute [rw] source_event
+    #   Source event object for event triggers
+    #   @return [String]
+    #
+    # @!attribute [rw] channel_context
+    #   Additional metadata related to the event trigger context
+    #   @return [Types::ChannelContext]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/EventTriggerContext AWS API Documentation
+    #
+    class EventTriggerContext < Struct.new(
+      :source_event,
+      :channel_context)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -931,6 +1081,34 @@ module Aws::ConnectCampaignsV2
       include Aws::Structure
     end
 
+    # The request for GetInstanceCommunicationLimits API.
+    #
+    # @!attribute [rw] connect_instance_id
+    #   Amazon Connect Instance Id
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/GetInstanceCommunicationLimitsRequest AWS API Documentation
+    #
+    class GetInstanceCommunicationLimitsRequest < Struct.new(
+      :connect_instance_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The response for GetInstanceCommunicationLimits API.
+    #
+    # @!attribute [rw] communication_limits_config
+    #   Instance Communication limits config
+    #   @return [Types::InstanceCommunicationLimitsConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/GetInstanceCommunicationLimitsResponse AWS API Documentation
+    #
+    class GetInstanceCommunicationLimitsResponse < Struct.new(
+      :communication_limits_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The request for GetInstanceOnboardingJobStatus API.
     #
     # @!attribute [rw] connect_instance_id
@@ -955,6 +1133,20 @@ module Aws::ConnectCampaignsV2
     #
     class GetInstanceOnboardingJobStatusResponse < Struct.new(
       :connect_instance_onboarding_job_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Instance Communication limits config
+    #
+    # @!attribute [rw] all_channel_subtypes
+    #   Communication limits
+    #   @return [Types::CommunicationLimits]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/InstanceCommunicationLimitsConfig AWS API Documentation
+    #
+    class InstanceCommunicationLimitsConfig < Struct.new(
+      :all_channel_subtypes)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1042,11 +1234,16 @@ module Aws::ConnectCampaignsV2
     #   Q Connect integration config
     #   @return [Types::QConnectIntegrationConfig]
     #
+    # @!attribute [rw] lambda
+    #   Lambda integration config
+    #   @return [Types::LambdaIntegrationConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/IntegrationConfig AWS API Documentation
     #
     class IntegrationConfig < Struct.new(
       :customer_profiles,
       :q_connect,
+      :lambda,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
@@ -1054,6 +1251,7 @@ module Aws::ConnectCampaignsV2
 
       class CustomerProfiles < IntegrationConfig; end
       class QConnect < IntegrationConfig; end
+      class Lambda < IntegrationConfig; end
       class Unknown < IntegrationConfig; end
     end
 
@@ -1069,11 +1267,16 @@ module Aws::ConnectCampaignsV2
     #   Q Connect integration identifier
     #   @return [Types::QConnectIntegrationIdentifier]
     #
+    # @!attribute [rw] lambda
+    #   Lambda integration identifier
+    #   @return [Types::LambdaIntegrationIdentifier]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/IntegrationIdentifier AWS API Documentation
     #
     class IntegrationIdentifier < Struct.new(
       :customer_profiles,
       :q_connect,
+      :lambda,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
@@ -1081,6 +1284,7 @@ module Aws::ConnectCampaignsV2
 
       class CustomerProfiles < IntegrationIdentifier; end
       class QConnect < IntegrationIdentifier; end
+      class Lambda < IntegrationIdentifier; end
       class Unknown < IntegrationIdentifier; end
     end
 
@@ -1096,11 +1300,16 @@ module Aws::ConnectCampaignsV2
     #   Q Connect integration summary
     #   @return [Types::QConnectIntegrationSummary]
     #
+    # @!attribute [rw] lambda
+    #   Lambda integration summary
+    #   @return [Types::LambdaIntegrationSummary]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/IntegrationSummary AWS API Documentation
     #
     class IntegrationSummary < Struct.new(
       :customer_profiles,
       :q_connect,
+      :lambda,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
@@ -1108,6 +1317,7 @@ module Aws::ConnectCampaignsV2
 
       class CustomerProfiles < IntegrationSummary; end
       class QConnect < IntegrationSummary; end
+      class Lambda < IntegrationSummary; end
       class Unknown < IntegrationSummary; end
     end
 
@@ -1172,6 +1382,48 @@ module Aws::ConnectCampaignsV2
     class InvalidStateException < Struct.new(
       :message,
       :x_amz_error_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Lambda integration config
+    #
+    # @!attribute [rw] function_arn
+    #   Lambda ARN for integration with Connect instances
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/LambdaIntegrationConfig AWS API Documentation
+    #
+    class LambdaIntegrationConfig < Struct.new(
+      :function_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Lambda integration identifier
+    #
+    # @!attribute [rw] function_arn
+    #   Lambda ARN for integration with Connect instances
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/LambdaIntegrationIdentifier AWS API Documentation
+    #
+    class LambdaIntegrationIdentifier < Struct.new(
+      :function_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Lambda integration summary
+    #
+    # @!attribute [rw] function_arn
+    #   Lambda ARN for integration with Connect instances
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/LambdaIntegrationSummary AWS API Documentation
+    #
+    class LambdaIntegrationSummary < Struct.new(
+      :function_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1300,11 +1552,16 @@ module Aws::ConnectCampaignsV2
     #   Local TimeZone Detection method list
     #   @return [Array<String>]
     #
+    # @!attribute [rw] local_time_zone_detection_scope
+    #   Local TimeZone Detection scope.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/LocalTimeZoneConfig AWS API Documentation
     #
     class LocalTimeZoneConfig < Struct.new(
       :default_time_zone,
-      :local_time_zone_detection)
+      :local_time_zone_detection,
+      :local_time_zone_detection_scope)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1357,6 +1614,29 @@ module Aws::ConnectCampaignsV2
       include Aws::Structure
     end
 
+    # Pacing constraint the dialer may enforce.
+    #
+    # @note PacingStrategy is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note PacingStrategy is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of PacingStrategy corresponding to the set member.
+    #
+    # @!attribute [rw] abandonment_rate
+    #   Configuration for abandonment-rate-based dialer throttling.
+    #   @return [Types::AbandonmentRatePacingConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/PacingStrategy AWS API Documentation
+    #
+    class PacingStrategy < Struct.new(
+      :abandonment_rate,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class AbandonmentRate < PacingStrategy; end
+      class Unknown < PacingStrategy; end
+    end
+
     # The request for PauseCampaign API.
     #
     # @!attribute [rw] id
@@ -1377,10 +1657,39 @@ module Aws::ConnectCampaignsV2
     #   The bandwidth allocation of a queue resource.
     #   @return [Float]
     #
+    # @!attribute [rw] pacing_strategies
+    #   Pacing strategies the dialer enforces simultaneously.
+    #   @return [Array<Types::PacingStrategy>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/PredictiveConfig AWS API Documentation
     #
     class PredictiveConfig < Struct.new(
-      :bandwidth_allocation)
+      :bandwidth_allocation,
+      :pacing_strategies)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Preview config
+    #
+    # @!attribute [rw] bandwidth_allocation
+    #   The bandwidth allocation of a queue resource.
+    #   @return [Float]
+    #
+    # @!attribute [rw] timeout_config
+    #   Timeout Config for preview contacts.
+    #   @return [Types::TimeoutConfig]
+    #
+    # @!attribute [rw] agent_actions
+    #   Actions that can be performed by agent during preview phase.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/PreviewConfig AWS API Documentation
+    #
+    class PreviewConfig < Struct.new(
+      :bandwidth_allocation,
+      :timeout_config,
+      :agent_actions)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1400,12 +1709,17 @@ module Aws::ConnectCampaignsV2
     #   Timestamp with no UTC offset or timezone
     #   @return [Time]
     #
+    # @!attribute [rw] event_trigger_context
+    #   Event trigger context data
+    #   @return [Types::EventTriggerContext]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/ProfileOutboundRequest AWS API Documentation
     #
     class ProfileOutboundRequest < Struct.new(
       :client_token,
       :profile_id,
-      :expiration_time)
+      :expiration_time,
+      :event_trigger_context)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1439,6 +1753,25 @@ module Aws::ConnectCampaignsV2
     class PutConnectInstanceIntegrationRequest < Struct.new(
       :connect_instance_id,
       :integration_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The request for PutInstanceCommunicationLimits API.
+    #
+    # @!attribute [rw] connect_instance_id
+    #   Amazon Connect Instance Id
+    #   @return [String]
+    #
+    # @!attribute [rw] communication_limits_config
+    #   Instance Communication limits config
+    #   @return [Types::InstanceCommunicationLimitsConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/PutInstanceCommunicationLimitsRequest AWS API Documentation
+    #
+    class PutInstanceCommunicationLimitsRequest < Struct.new(
+      :connect_instance_id,
+      :communication_limits_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2009,13 +2342,18 @@ module Aws::ConnectCampaignsV2
     #   Answering Machine Detection config
     #   @return [Types::AnswerMachineDetectionConfig]
     #
+    # @!attribute [rw] ring_timeout
+    #   Ring timeout for outbound calls
+    #   @return [Integer]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/TelephonyChannelSubtypeParameters AWS API Documentation
     #
     class TelephonyChannelSubtypeParameters < Struct.new(
       :destination_phone_number,
       :attributes,
       :connect_source_phone_number,
-      :answer_machine_detection_config)
+      :answer_machine_detection_config,
+      :ring_timeout)
       SENSITIVE = [:destination_phone_number, :attributes]
       include Aws::Structure
     end
@@ -2036,12 +2374,17 @@ module Aws::ConnectCampaignsV2
     #   Answering Machine Detection config
     #   @return [Types::AnswerMachineDetectionConfig]
     #
+    # @!attribute [rw] ring_timeout
+    #   Ring timeout for outbound calls
+    #   @return [Integer]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/TelephonyOutboundConfig AWS API Documentation
     #
     class TelephonyOutboundConfig < Struct.new(
       :connect_contact_flow_id,
       :connect_source_phone_number,
-      :answer_machine_detection_config)
+      :answer_machine_detection_config,
+      :ring_timeout)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2064,12 +2407,17 @@ module Aws::ConnectCampaignsV2
     #   Agentless config
     #   @return [Types::AgentlessConfig]
     #
+    # @!attribute [rw] preview
+    #   Preview config
+    #   @return [Types::PreviewConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/TelephonyOutboundMode AWS API Documentation
     #
     class TelephonyOutboundMode < Struct.new(
       :progressive,
       :predictive,
       :agentless,
+      :preview,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
@@ -2078,6 +2426,7 @@ module Aws::ConnectCampaignsV2
       class Progressive < TelephonyOutboundMode; end
       class Predictive < TelephonyOutboundMode; end
       class Agentless < TelephonyOutboundMode; end
+      class Preview < TelephonyOutboundMode; end
       class Unknown < TelephonyOutboundMode; end
     end
 
@@ -2134,6 +2483,20 @@ module Aws::ConnectCampaignsV2
     class TimeWindow < Struct.new(
       :open_hours,
       :restricted_periods)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Timeout Config for preview contacts.
+    #
+    # @!attribute [rw] duration_in_seconds
+    #   Timeout duration for a preview contact in seconds.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/TimeoutConfig AWS API Documentation
+    #
+    class TimeoutConfig < Struct.new(
+      :duration_in_seconds)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2210,6 +2573,25 @@ module Aws::ConnectCampaignsV2
     class UpdateCampaignCommunicationTimeRequest < Struct.new(
       :id,
       :communication_time_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The request for UpdateCampaignEntryLimits API.
+    #
+    # @!attribute [rw] id
+    #   Identifier representing a Campaign
+    #   @return [String]
+    #
+    # @!attribute [rw] entry_limits_config
+    #   Campaign entry limits config
+    #   @return [Types::EntryLimitsConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/UpdateCampaignEntryLimitsRequest AWS API Documentation
+    #
+    class UpdateCampaignEntryLimitsRequest < Struct.new(
+      :id,
+      :entry_limits_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2308,6 +2690,123 @@ module Aws::ConnectCampaignsV2
       :x_amz_error_type)
       SENSITIVE = []
       include Aws::Structure
+    end
+
+    # Context metadata for the web notification type channel
+    #
+    # @!attribute [rw] session_id
+    #   Session Id for web notification event trigger
+    #   @return [String]
+    #
+    # @!attribute [rw] browser_id
+    #   Browser Id for web notification event trigger
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/WebNotificationContext AWS API Documentation
+    #
+    class WebNotificationContext < Struct.new(
+      :session_id,
+      :browser_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # WhatsApp Channel Subtype config
+    #
+    # @!attribute [rw] capacity
+    #   Allocates outbound capacity for the specific channel subtype of this
+    #   campaign between multiple active campaigns
+    #   @return [Float]
+    #
+    # @!attribute [rw] outbound_mode
+    #   WhatsApp Outbound Mode
+    #   @return [Types::WhatsAppOutboundMode]
+    #
+    # @!attribute [rw] default_outbound_config
+    #   Default WhatsApp Outbound config
+    #   @return [Types::WhatsAppOutboundConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/WhatsAppChannelSubtypeConfig AWS API Documentation
+    #
+    class WhatsAppChannelSubtypeConfig < Struct.new(
+      :capacity,
+      :outbound_mode,
+      :default_outbound_config)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Parameters for the WhatsApp Channel Subtype
+    #
+    # @!attribute [rw] destination_phone_number
+    #   The phone number of the customer, in E.164 format.
+    #   @return [String]
+    #
+    # @!attribute [rw] connect_source_phone_number_arn
+    #   Amazon Resource Names(ARN)
+    #   @return [String]
+    #
+    # @!attribute [rw] template_arn
+    #   Amazon Resource Names(ARN)
+    #   @return [String]
+    #
+    # @!attribute [rw] template_parameters
+    #   A custom key-value pair using an attribute map. The attributes are
+    #   standard Amazon Connect attributes, and can be accessed in contact
+    #   flows just like any other contact attributes.
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/WhatsAppChannelSubtypeParameters AWS API Documentation
+    #
+    class WhatsAppChannelSubtypeParameters < Struct.new(
+      :destination_phone_number,
+      :connect_source_phone_number_arn,
+      :template_arn,
+      :template_parameters)
+      SENSITIVE = [:destination_phone_number, :template_parameters]
+      include Aws::Structure
+    end
+
+    # Default WhatsApp Outbound config
+    #
+    # @!attribute [rw] connect_source_phone_number_arn
+    #   Amazon Resource Names(ARN)
+    #   @return [String]
+    #
+    # @!attribute [rw] wisdom_template_arn
+    #   Amazon Resource Names(ARN)
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/WhatsAppOutboundConfig AWS API Documentation
+    #
+    class WhatsAppOutboundConfig < Struct.new(
+      :connect_source_phone_number_arn,
+      :wisdom_template_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # WhatsApp Outbound Mode
+    #
+    # @note WhatsAppOutboundMode is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note WhatsAppOutboundMode is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of WhatsAppOutboundMode corresponding to the set member.
+    #
+    # @!attribute [rw] agentless
+    #   Agentless config
+    #   @return [Types::AgentlessConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/connectcampaignsv2-2024-04-23/WhatsAppOutboundMode AWS API Documentation
+    #
+    class WhatsAppOutboundMode < Struct.new(
+      :agentless,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Agentless < WhatsAppOutboundMode; end
+      class Unknown < WhatsAppOutboundMode; end
     end
 
   end

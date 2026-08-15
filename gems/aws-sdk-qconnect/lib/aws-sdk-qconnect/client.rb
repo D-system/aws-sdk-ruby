@@ -95,8 +95,8 @@ module Aws::QConnect
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::QConnect
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::QConnect
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::QConnect
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::QConnect
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::QConnect
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::QConnect
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::QConnect
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -517,10 +521,6 @@ module Aws::QConnect
 
     # Creates an Amazon Q in Connect AI Agent.
     #
-    # @option params [required, String] :assistant_id
-    #   The identifier of the Amazon Q in Connect assistant. Can be either the
-    #   ID or the ARN. URLs cannot contain the ARN.
-    #
     # @option params [String] :client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
     #   idempotency of the request. If not provided, the Amazon Web Services
@@ -534,23 +534,27 @@ module Aws::QConnect
     #
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #
-    # @option params [required, Types::AIAgentConfiguration] :configuration
-    #   The configuration of the AI Agent.
-    #
-    # @option params [String] :description
-    #   The description of the AI Agent.
+    # @option params [required, String] :assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either the
+    #   ID or the ARN. URLs cannot contain the ARN.
     #
     # @option params [required, String] :name
     #   The name of the AI Agent.
     #
-    # @option params [Hash<String,String>] :tags
-    #   The tags used to organize, track, or control access for this resource.
-    #
     # @option params [required, String] :type
     #   The type of the AI Agent.
     #
+    # @option params [required, Types::AIAgentConfiguration] :configuration
+    #   The configuration of the AI Agent.
+    #
     # @option params [required, String] :visibility_status
     #   The visibility status of the AI Agent.
+    #
+    # @option params [Hash<String,String>] :tags
+    #   The tags used to organize, track, or control access for this resource.
+    #
+    # @option params [String] :description
+    #   The description of the AI Agent.
     #
     # @return [Types::CreateAIAgentResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -559,62 +563,25 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_ai_agent({
-    #     assistant_id: "UuidOrArn", # required
     #     client_token: "ClientToken",
+    #     assistant_id: "UuidOrArn", # required
+    #     name: "Name", # required
+    #     type: "MANUAL_SEARCH", # required, accepts MANUAL_SEARCH, ANSWER_RECOMMENDATION, SELF_SERVICE, EMAIL_RESPONSE, EMAIL_OVERVIEW, EMAIL_GENERATIVE_ANSWER, ORCHESTRATION, NOTE_TAKING, CASE_SUMMARIZATION
     #     configuration: { # required
-    #       answer_recommendation_ai_agent_configuration: {
-    #         answer_generation_ai_guardrail_id: "UuidWithQualifier",
-    #         answer_generation_ai_prompt_id: "UuidWithQualifier",
-    #         association_configurations: [
-    #           {
-    #             association_configuration_data: {
-    #               knowledge_base_association_configuration_data: {
-    #                 content_tag_filter: {
-    #                   and_conditions: [
-    #                     {
-    #                       key: "TagKey", # required
-    #                       value: "TagValue",
-    #                     },
-    #                   ],
-    #                   or_conditions: [
-    #                     {
-    #                       and_conditions: [
-    #                         {
-    #                           key: "TagKey", # required
-    #                           value: "TagValue",
-    #                         },
-    #                       ],
-    #                       tag_condition: {
-    #                         key: "TagKey", # required
-    #                         value: "TagValue",
-    #                       },
-    #                     },
-    #                   ],
-    #                   tag_condition: {
-    #                     key: "TagKey", # required
-    #                     value: "TagValue",
-    #                   },
-    #                 },
-    #                 max_results: 1,
-    #                 override_knowledge_base_search_type: "HYBRID", # accepts HYBRID, SEMANTIC
-    #               },
-    #             },
-    #             association_id: "Uuid",
-    #             association_type: "KNOWLEDGE_BASE", # accepts KNOWLEDGE_BASE
-    #           },
-    #         ],
-    #         intent_labeling_generation_ai_prompt_id: "UuidWithQualifier",
-    #         locale: "NonEmptyString",
-    #         query_reformulation_ai_prompt_id: "UuidWithQualifier",
-    #       },
     #       manual_search_ai_agent_configuration: {
-    #         answer_generation_ai_guardrail_id: "UuidWithQualifier",
     #         answer_generation_ai_prompt_id: "UuidWithQualifier",
+    #         answer_generation_ai_guardrail_id: "UuidWithQualifier",
     #         association_configurations: [
     #           {
+    #             association_id: "Uuid",
+    #             association_type: "KNOWLEDGE_BASE", # accepts KNOWLEDGE_BASE
     #             association_configuration_data: {
     #               knowledge_base_association_configuration_data: {
     #                 content_tag_filter: {
+    #                   tag_condition: {
+    #                     key: "TagKey", # required
+    #                     value: "TagValue",
+    #                   },
     #                   and_conditions: [
     #                     {
     #                       key: "TagKey", # required
@@ -635,27 +602,76 @@ module Aws::QConnect
     #                       },
     #                     },
     #                   ],
-    #                   tag_condition: {
-    #                     key: "TagKey", # required
-    #                     value: "TagValue",
-    #                   },
     #                 },
     #                 max_results: 1,
     #                 override_knowledge_base_search_type: "HYBRID", # accepts HYBRID, SEMANTIC
     #               },
     #             },
-    #             association_id: "Uuid",
-    #             association_type: "KNOWLEDGE_BASE", # accepts KNOWLEDGE_BASE
     #           },
     #         ],
     #         locale: "NonEmptyString",
+    #       },
+    #       answer_recommendation_ai_agent_configuration: {
+    #         intent_labeling_generation_ai_prompt_id: "UuidWithQualifier",
+    #         query_reformulation_ai_prompt_id: "UuidWithQualifier",
+    #         answer_generation_ai_prompt_id: "UuidWithQualifier",
+    #         answer_generation_ai_guardrail_id: "UuidWithQualifier",
+    #         association_configurations: [
+    #           {
+    #             association_id: "Uuid",
+    #             association_type: "KNOWLEDGE_BASE", # accepts KNOWLEDGE_BASE
+    #             association_configuration_data: {
+    #               knowledge_base_association_configuration_data: {
+    #                 content_tag_filter: {
+    #                   tag_condition: {
+    #                     key: "TagKey", # required
+    #                     value: "TagValue",
+    #                   },
+    #                   and_conditions: [
+    #                     {
+    #                       key: "TagKey", # required
+    #                       value: "TagValue",
+    #                     },
+    #                   ],
+    #                   or_conditions: [
+    #                     {
+    #                       and_conditions: [
+    #                         {
+    #                           key: "TagKey", # required
+    #                           value: "TagValue",
+    #                         },
+    #                       ],
+    #                       tag_condition: {
+    #                         key: "TagKey", # required
+    #                         value: "TagValue",
+    #                       },
+    #                     },
+    #                   ],
+    #                 },
+    #                 max_results: 1,
+    #                 override_knowledge_base_search_type: "HYBRID", # accepts HYBRID, SEMANTIC
+    #               },
+    #             },
+    #           },
+    #         ],
+    #         locale: "NonEmptyString",
+    #         suggested_messages: ["NonEmptySensitiveString"],
     #       },
     #       self_service_ai_agent_configuration: {
+    #         self_service_pre_processing_ai_prompt_id: "UuidWithQualifier",
+    #         self_service_answer_generation_ai_prompt_id: "UuidWithQualifier",
+    #         self_service_ai_guardrail_id: "UuidWithQualifier",
     #         association_configurations: [
     #           {
+    #             association_id: "Uuid",
+    #             association_type: "KNOWLEDGE_BASE", # accepts KNOWLEDGE_BASE
     #             association_configuration_data: {
     #               knowledge_base_association_configuration_data: {
     #                 content_tag_filter: {
+    #                   tag_condition: {
+    #                     key: "TagKey", # required
+    #                     value: "TagValue",
+    #                   },
     #                   and_conditions: [
     #                     {
     #                       key: "TagKey", # required
@@ -676,63 +692,187 @@ module Aws::QConnect
     #                       },
     #                     },
     #                   ],
-    #                   tag_condition: {
-    #                     key: "TagKey", # required
-    #                     value: "TagValue",
-    #                   },
     #                 },
     #                 max_results: 1,
     #                 override_knowledge_base_search_type: "HYBRID", # accepts HYBRID, SEMANTIC
     #               },
     #             },
-    #             association_id: "Uuid",
-    #             association_type: "KNOWLEDGE_BASE", # accepts KNOWLEDGE_BASE
     #           },
     #         ],
-    #         self_service_ai_guardrail_id: "UuidWithQualifier",
-    #         self_service_answer_generation_ai_prompt_id: "UuidWithQualifier",
-    #         self_service_pre_processing_ai_prompt_id: "UuidWithQualifier",
+    #       },
+    #       email_response_ai_agent_configuration: {
+    #         email_response_ai_prompt_id: "UuidWithQualifier",
+    #         email_query_reformulation_ai_prompt_id: "UuidWithQualifier",
+    #         locale: "NonEmptyString",
+    #         association_configurations: [
+    #           {
+    #             association_id: "Uuid",
+    #             association_type: "KNOWLEDGE_BASE", # accepts KNOWLEDGE_BASE
+    #             association_configuration_data: {
+    #               knowledge_base_association_configuration_data: {
+    #                 content_tag_filter: {
+    #                   tag_condition: {
+    #                     key: "TagKey", # required
+    #                     value: "TagValue",
+    #                   },
+    #                   and_conditions: [
+    #                     {
+    #                       key: "TagKey", # required
+    #                       value: "TagValue",
+    #                     },
+    #                   ],
+    #                   or_conditions: [
+    #                     {
+    #                       and_conditions: [
+    #                         {
+    #                           key: "TagKey", # required
+    #                           value: "TagValue",
+    #                         },
+    #                       ],
+    #                       tag_condition: {
+    #                         key: "TagKey", # required
+    #                         value: "TagValue",
+    #                       },
+    #                     },
+    #                   ],
+    #                 },
+    #                 max_results: 1,
+    #                 override_knowledge_base_search_type: "HYBRID", # accepts HYBRID, SEMANTIC
+    #               },
+    #             },
+    #           },
+    #         ],
+    #       },
+    #       email_overview_ai_agent_configuration: {
+    #         email_overview_ai_prompt_id: "UuidWithQualifier",
+    #         locale: "NonEmptyString",
+    #       },
+    #       email_generative_answer_ai_agent_configuration: {
+    #         email_generative_answer_ai_prompt_id: "UuidWithQualifier",
+    #         email_query_reformulation_ai_prompt_id: "UuidWithQualifier",
+    #         locale: "NonEmptyString",
+    #         association_configurations: [
+    #           {
+    #             association_id: "Uuid",
+    #             association_type: "KNOWLEDGE_BASE", # accepts KNOWLEDGE_BASE
+    #             association_configuration_data: {
+    #               knowledge_base_association_configuration_data: {
+    #                 content_tag_filter: {
+    #                   tag_condition: {
+    #                     key: "TagKey", # required
+    #                     value: "TagValue",
+    #                   },
+    #                   and_conditions: [
+    #                     {
+    #                       key: "TagKey", # required
+    #                       value: "TagValue",
+    #                     },
+    #                   ],
+    #                   or_conditions: [
+    #                     {
+    #                       and_conditions: [
+    #                         {
+    #                           key: "TagKey", # required
+    #                           value: "TagValue",
+    #                         },
+    #                       ],
+    #                       tag_condition: {
+    #                         key: "TagKey", # required
+    #                         value: "TagValue",
+    #                       },
+    #                     },
+    #                   ],
+    #                 },
+    #                 max_results: 1,
+    #                 override_knowledge_base_search_type: "HYBRID", # accepts HYBRID, SEMANTIC
+    #               },
+    #             },
+    #           },
+    #         ],
+    #       },
+    #       orchestration_ai_agent_configuration: {
+    #         orchestration_ai_prompt_id: "UuidWithQualifier", # required
+    #         orchestration_ai_guardrail_id: "UuidWithQualifier",
+    #         tool_configurations: [
+    #           {
+    #             tool_name: "NonEmptyString", # required
+    #             tool_type: "MODEL_CONTEXT_PROTOCOL", # required, accepts MODEL_CONTEXT_PROTOCOL, RETURN_TO_CONTROL, CONSTANT
+    #             title: "NonEmptySensitiveString",
+    #             tool_id: "NonEmptyString",
+    #             description: "NonEmptySensitiveString",
+    #             instruction: {
+    #               instruction: "String",
+    #               examples: ["String"],
+    #             },
+    #             override_input_values: [
+    #               {
+    #                 json_path: "NonEmptyString", # required
+    #                 value: { # required
+    #                   constant: {
+    #                     type: "STRING", # required, accepts STRING, NUMBER, JSON_STRING
+    #                     value: "NonEmptySensitiveString", # required
+    #                   },
+    #                 },
+    #               },
+    #             ],
+    #             output_filters: [
+    #               {
+    #                 json_path: "NonEmptyString", # required
+    #                 output_configuration: {
+    #                   output_variable_name_override: "NonEmptyString",
+    #                   session_data_namespace: "NonEmptyString",
+    #                 },
+    #               },
+    #             ],
+    #             input_schema: {
+    #             },
+    #             output_schema: {
+    #             },
+    #             annotations: {
+    #               title: "String",
+    #               destructive_hint: false,
+    #             },
+    #             user_interaction_configuration: {
+    #               is_user_confirmation_required: false,
+    #             },
+    #           },
+    #         ],
+    #         connect_instance_arn: "GenericArn",
+    #         locale: "NonEmptyString",
+    #       },
+    #       note_taking_ai_agent_configuration: {
+    #         note_taking_ai_prompt_id: "UuidWithQualifier",
+    #         note_taking_ai_guardrail_id: "UuidWithQualifier",
+    #         locale: "NonEmptyString",
+    #       },
+    #       case_summarization_ai_agent_configuration: {
+    #         case_summarization_ai_prompt_id: "UuidWithQualifier",
+    #         case_summarization_ai_guardrail_id: "UuidWithQualifier",
+    #         locale: "NonEmptyString",
     #       },
     #     },
-    #     description: "Description",
-    #     name: "Name", # required
+    #     visibility_status: "SAVED", # required, accepts SAVED, PUBLISHED
     #     tags: {
     #       "TagKey" => "TagValue",
     #     },
-    #     type: "MANUAL_SEARCH", # required, accepts MANUAL_SEARCH, ANSWER_RECOMMENDATION, SELF_SERVICE
-    #     visibility_status: "SAVED", # required, accepts SAVED, PUBLISHED
+    #     description: "Description",
     #   })
     #
     # @example Response structure
     #
-    #   resp.ai_agent.ai_agent_arn #=> String
-    #   resp.ai_agent.ai_agent_id #=> String
-    #   resp.ai_agent.assistant_arn #=> String
     #   resp.ai_agent.assistant_id #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.answer_generation_ai_guardrail_id #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.answer_generation_ai_prompt_id #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations #=> Array
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions #=> Array
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions #=> Array
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].key #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_id #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.intent_labeling_generation_ai_prompt_id #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.locale #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.query_reformulation_ai_prompt_id #=> String
-    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.answer_generation_ai_guardrail_id #=> String
+    #   resp.ai_agent.assistant_arn #=> String
+    #   resp.ai_agent.ai_agent_id #=> String
+    #   resp.ai_agent.ai_agent_arn #=> String
+    #   resp.ai_agent.name #=> String
+    #   resp.ai_agent.type #=> String, one of "MANUAL_SEARCH", "ANSWER_RECOMMENDATION", "SELF_SERVICE", "EMAIL_RESPONSE", "EMAIL_OVERVIEW", "EMAIL_GENERATIVE_ANSWER", "ORCHESTRATION", "NOTE_TAKING", "CASE_SUMMARIZATION"
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.answer_generation_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.answer_generation_ai_guardrail_id #=> String
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
@@ -742,14 +882,40 @@ module Aws::QConnect
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
-    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
-    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
-    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_id #=> String
-    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.intent_labeling_generation_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.query_reformulation_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.answer_generation_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.answer_generation_ai_guardrail_id #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions #=> Array
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions #=> Array
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].key #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.suggested_messages #=> Array
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.suggested_messages[0] #=> String
+    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.self_service_pre_processing_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.self_service_answer_generation_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.self_service_ai_guardrail_id #=> String
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
@@ -759,24 +925,85 @@ module Aws::QConnect
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
-    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
-    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
-    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_id #=> String
-    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
-    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.self_service_ai_guardrail_id #=> String
-    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.self_service_answer_generation_ai_prompt_id #=> String
-    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.self_service_pre_processing_ai_prompt_id #=> String
-    #   resp.ai_agent.description #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.email_response_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.email_query_reformulation_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions #=> Array
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions #=> Array
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].key #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
+    #   resp.ai_agent.configuration.email_overview_ai_agent_configuration.email_overview_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.email_overview_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.email_generative_answer_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.email_query_reformulation_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions #=> Array
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions #=> Array
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].key #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.orchestration_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.orchestration_ai_guardrail_id #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations #=> Array
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].tool_name #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].tool_type #=> String, one of "MODEL_CONTEXT_PROTOCOL", "RETURN_TO_CONTROL", "CONSTANT"
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].title #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].tool_id #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].description #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].instruction.instruction #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].instruction.examples #=> Array
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].instruction.examples[0] #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].override_input_values #=> Array
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].override_input_values[0].json_path #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].override_input_values[0].value.constant.type #=> String, one of "STRING", "NUMBER", "JSON_STRING"
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].override_input_values[0].value.constant.value #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].output_filters #=> Array
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].output_filters[0].json_path #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].output_filters[0].output_configuration.output_variable_name_override #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].output_filters[0].output_configuration.session_data_namespace #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].annotations.title #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].annotations.destructive_hint #=> Boolean
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].user_interaction_configuration.is_user_confirmation_required #=> Boolean
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.connect_instance_arn #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent.configuration.note_taking_ai_agent_configuration.note_taking_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.note_taking_ai_agent_configuration.note_taking_ai_guardrail_id #=> String
+    #   resp.ai_agent.configuration.note_taking_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent.configuration.case_summarization_ai_agent_configuration.case_summarization_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.case_summarization_ai_agent_configuration.case_summarization_ai_guardrail_id #=> String
+    #   resp.ai_agent.configuration.case_summarization_ai_agent_configuration.locale #=> String
     #   resp.ai_agent.modified_time #=> Time
-    #   resp.ai_agent.name #=> String
-    #   resp.ai_agent.origin #=> String, one of "SYSTEM", "CUSTOMER"
-    #   resp.ai_agent.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
+    #   resp.ai_agent.description #=> String
+    #   resp.ai_agent.visibility_status #=> String, one of "SAVED", "PUBLISHED"
     #   resp.ai_agent.tags #=> Hash
     #   resp.ai_agent.tags["TagKey"] #=> String
-    #   resp.ai_agent.type #=> String, one of "MANUAL_SEARCH", "ANSWER_RECOMMENDATION", "SELF_SERVICE"
-    #   resp.ai_agent.visibility_status #=> String, one of "SAVED", "PUBLISHED"
+    #   resp.ai_agent.origin #=> String, one of "SYSTEM", "CUSTOMER"
+    #   resp.ai_agent.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CreateAIAgent AWS API Documentation
     #
@@ -789,12 +1016,20 @@ module Aws::QConnect
 
     # Creates and Amazon Q in Connect AI Agent version.
     #
-    # @option params [required, String] :ai_agent_id
-    #   The identifier of the Amazon Q in Connect AI Agent.
-    #
     # @option params [required, String] :assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either the
     #   ID or the ARN. URLs cannot contain the ARN.
+    #
+    # @option params [required, String] :ai_agent_id
+    #   The identifier of the Amazon Q in Connect AI Agent.
+    #
+    # @option params [Time,DateTime,Date,Integer,String] :modified_time
+    #   The modification time of the AI Agent should be tracked for version
+    #   creation. This field should be specified to avoid version creation
+    #   when simultaneous update to the underlying AI Agent are possible. The
+    #   value should be the modifiedTime returned from the request to create
+    #   or update an AI Agent so that version creation can fail if an update
+    #   to the AI Agent post the specified modification time has been made.
     #
     # @option params [String] :client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
@@ -809,14 +1044,6 @@ module Aws::QConnect
     #
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #
-    # @option params [Time,DateTime,Date,Integer,String] :modified_time
-    #   The modification time of the AI Agent should be tracked for version
-    #   creation. This field should be specified to avoid version creation
-    #   when simultaneous update to the underlying AI Agent are possible. The
-    #   value should be the modifiedTime returned from the request to create
-    #   or update an AI Agent so that version creation can fail if an update
-    #   to the AI Agent post the specified modification time has been made.
-    #
     # @return [Types::CreateAIAgentVersionResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateAIAgentVersionResponse#ai_agent #ai_agent} => Types::AIAgentData
@@ -825,42 +1052,27 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_ai_agent_version({
-    #     ai_agent_id: "UuidOrArnOrEitherWithQualifier", # required
     #     assistant_id: "UuidOrArn", # required
-    #     client_token: "ClientToken",
+    #     ai_agent_id: "UuidOrArnOrEitherWithQualifier", # required
     #     modified_time: Time.now,
+    #     client_token: "ClientToken",
     #   })
     #
     # @example Response structure
     #
-    #   resp.ai_agent.ai_agent_arn #=> String
-    #   resp.ai_agent.ai_agent_id #=> String
-    #   resp.ai_agent.assistant_arn #=> String
     #   resp.ai_agent.assistant_id #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.answer_generation_ai_guardrail_id #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.answer_generation_ai_prompt_id #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations #=> Array
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions #=> Array
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions #=> Array
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].key #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_id #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.intent_labeling_generation_ai_prompt_id #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.locale #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.query_reformulation_ai_prompt_id #=> String
-    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.answer_generation_ai_guardrail_id #=> String
+    #   resp.ai_agent.assistant_arn #=> String
+    #   resp.ai_agent.ai_agent_id #=> String
+    #   resp.ai_agent.ai_agent_arn #=> String
+    #   resp.ai_agent.name #=> String
+    #   resp.ai_agent.type #=> String, one of "MANUAL_SEARCH", "ANSWER_RECOMMENDATION", "SELF_SERVICE", "EMAIL_RESPONSE", "EMAIL_OVERVIEW", "EMAIL_GENERATIVE_ANSWER", "ORCHESTRATION", "NOTE_TAKING", "CASE_SUMMARIZATION"
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.answer_generation_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.answer_generation_ai_guardrail_id #=> String
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
@@ -870,14 +1082,40 @@ module Aws::QConnect
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
-    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
-    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
-    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_id #=> String
-    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.intent_labeling_generation_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.query_reformulation_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.answer_generation_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.answer_generation_ai_guardrail_id #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions #=> Array
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions #=> Array
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].key #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.suggested_messages #=> Array
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.suggested_messages[0] #=> String
+    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.self_service_pre_processing_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.self_service_answer_generation_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.self_service_ai_guardrail_id #=> String
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
@@ -887,24 +1125,85 @@ module Aws::QConnect
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
-    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
-    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
-    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_id #=> String
-    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
-    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.self_service_ai_guardrail_id #=> String
-    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.self_service_answer_generation_ai_prompt_id #=> String
-    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.self_service_pre_processing_ai_prompt_id #=> String
-    #   resp.ai_agent.description #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.email_response_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.email_query_reformulation_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions #=> Array
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions #=> Array
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].key #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
+    #   resp.ai_agent.configuration.email_overview_ai_agent_configuration.email_overview_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.email_overview_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.email_generative_answer_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.email_query_reformulation_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions #=> Array
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions #=> Array
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].key #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.orchestration_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.orchestration_ai_guardrail_id #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations #=> Array
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].tool_name #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].tool_type #=> String, one of "MODEL_CONTEXT_PROTOCOL", "RETURN_TO_CONTROL", "CONSTANT"
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].title #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].tool_id #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].description #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].instruction.instruction #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].instruction.examples #=> Array
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].instruction.examples[0] #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].override_input_values #=> Array
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].override_input_values[0].json_path #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].override_input_values[0].value.constant.type #=> String, one of "STRING", "NUMBER", "JSON_STRING"
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].override_input_values[0].value.constant.value #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].output_filters #=> Array
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].output_filters[0].json_path #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].output_filters[0].output_configuration.output_variable_name_override #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].output_filters[0].output_configuration.session_data_namespace #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].annotations.title #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].annotations.destructive_hint #=> Boolean
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].user_interaction_configuration.is_user_confirmation_required #=> Boolean
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.connect_instance_arn #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent.configuration.note_taking_ai_agent_configuration.note_taking_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.note_taking_ai_agent_configuration.note_taking_ai_guardrail_id #=> String
+    #   resp.ai_agent.configuration.note_taking_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent.configuration.case_summarization_ai_agent_configuration.case_summarization_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.case_summarization_ai_agent_configuration.case_summarization_ai_guardrail_id #=> String
+    #   resp.ai_agent.configuration.case_summarization_ai_agent_configuration.locale #=> String
     #   resp.ai_agent.modified_time #=> Time
-    #   resp.ai_agent.name #=> String
-    #   resp.ai_agent.origin #=> String, one of "SYSTEM", "CUSTOMER"
-    #   resp.ai_agent.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
+    #   resp.ai_agent.description #=> String
+    #   resp.ai_agent.visibility_status #=> String, one of "SAVED", "PUBLISHED"
     #   resp.ai_agent.tags #=> Hash
     #   resp.ai_agent.tags["TagKey"] #=> String
-    #   resp.ai_agent.type #=> String, one of "MANUAL_SEARCH", "ANSWER_RECOMMENDATION", "SELF_SERVICE"
-    #   resp.ai_agent.visibility_status #=> String, one of "SAVED", "PUBLISHED"
+    #   resp.ai_agent.origin #=> String, one of "SYSTEM", "CUSTOMER"
+    #   resp.ai_agent.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
     #   resp.version_number #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CreateAIAgentVersion AWS API Documentation
@@ -918,16 +1217,6 @@ module Aws::QConnect
 
     # Creates an Amazon Q in Connect AI Guardrail.
     #
-    # @option params [required, String] :assistant_id
-    #   The identifier of the Amazon Q in Connect assistant. Can be either the
-    #   ID or the ARN. URLs cannot contain the ARN.
-    #
-    # @option params [required, String] :blocked_input_messaging
-    #   The message to return when the AI Guardrail blocks a prompt.
-    #
-    # @option params [required, String] :blocked_outputs_messaging
-    #   The message to return when the AI Guardrail blocks a model response.
-    #
     # @option params [String] :client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
     #   idempotency of the request. If not provided, the Amazon Web Services
@@ -941,33 +1230,43 @@ module Aws::QConnect
     #
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #
+    # @option params [required, String] :assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either the
+    #   ID or the ARN. URLs cannot contain the ARN.
+    #
+    # @option params [required, String] :name
+    #   The name of the AI Guardrail.
+    #
+    # @option params [required, String] :blocked_input_messaging
+    #   The message to return when the AI Guardrail blocks a prompt.
+    #
+    # @option params [required, String] :blocked_outputs_messaging
+    #   The message to return when the AI Guardrail blocks a model response.
+    #
+    # @option params [required, String] :visibility_status
+    #   The visibility status of the AI Guardrail.
+    #
+    # @option params [String] :description
+    #   A description of the AI Guardrail.
+    #
+    # @option params [Types::AIGuardrailTopicPolicyConfig] :topic_policy_config
+    #   The topic policies to configure for the AI Guardrail.
+    #
     # @option params [Types::AIGuardrailContentPolicyConfig] :content_policy_config
     #   The content filter policies to configure for the AI Guardrail.
+    #
+    # @option params [Types::AIGuardrailWordPolicyConfig] :word_policy_config
+    #   The word policy you configure for the AI Guardrail.
+    #
+    # @option params [Types::AIGuardrailSensitiveInformationPolicyConfig] :sensitive_information_policy_config
+    #   The sensitive information policy to configure for the AI Guardrail.
     #
     # @option params [Types::AIGuardrailContextualGroundingPolicyConfig] :contextual_grounding_policy_config
     #   The contextual grounding policy configuration used to create an AI
     #   Guardrail.
     #
-    # @option params [String] :description
-    #   A description of the AI Guardrail.
-    #
-    # @option params [required, String] :name
-    #   The name of the AI Guardrail.
-    #
-    # @option params [Types::AIGuardrailSensitiveInformationPolicyConfig] :sensitive_information_policy_config
-    #   The sensitive information policy to configure for the AI Guardrail.
-    #
     # @option params [Hash<String,String>] :tags
     #   The tags used to organize, track, or control access for this resource.
-    #
-    # @option params [Types::AIGuardrailTopicPolicyConfig] :topic_policy_config
-    #   The topic policies to configure for the AI Guardrail.
-    #
-    # @option params [required, String] :visibility_status
-    #   The visibility status of the AI Guardrail.
-    #
-    # @option params [Types::AIGuardrailWordPolicyConfig] :word_policy_config
-    #   The word policy you configure for the AI Guardrail.
     #
     # @return [Types::CreateAIGuardrailResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -976,113 +1275,113 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_ai_guardrail({
+    #     client_token: "ClientToken",
     #     assistant_id: "UuidOrArn", # required
+    #     name: "Name", # required
     #     blocked_input_messaging: "AIGuardrailBlockedMessaging", # required
     #     blocked_outputs_messaging: "AIGuardrailBlockedMessaging", # required
-    #     client_token: "ClientToken",
+    #     visibility_status: "SAVED", # required, accepts SAVED, PUBLISHED
+    #     description: "AIGuardrailDescription",
+    #     topic_policy_config: {
+    #       topics_config: [ # required
+    #         {
+    #           name: "GuardrailTopicName", # required
+    #           definition: "GuardrailTopicDefinition", # required
+    #           examples: ["GuardrailTopicExample"],
+    #           type: "DENY", # required, accepts DENY
+    #         },
+    #       ],
+    #     },
     #     content_policy_config: {
     #       filters_config: [ # required
     #         {
+    #           type: "SEXUAL", # required, accepts SEXUAL, VIOLENCE, HATE, INSULTS, MISCONDUCT, PROMPT_ATTACK
     #           input_strength: "NONE", # required, accepts NONE, LOW, MEDIUM, HIGH
     #           output_strength: "NONE", # required, accepts NONE, LOW, MEDIUM, HIGH
-    #           type: "SEXUAL", # required, accepts SEXUAL, VIOLENCE, HATE, INSULTS, MISCONDUCT, PROMPT_ATTACK
+    #         },
+    #       ],
+    #     },
+    #     word_policy_config: {
+    #       words_config: [
+    #         {
+    #           text: "GuardrailWordText", # required
+    #         },
+    #       ],
+    #       managed_word_lists_config: [
+    #         {
+    #           type: "PROFANITY", # required, accepts PROFANITY
+    #         },
+    #       ],
+    #     },
+    #     sensitive_information_policy_config: {
+    #       pii_entities_config: [
+    #         {
+    #           type: "ADDRESS", # required, accepts ADDRESS, AGE, AWS_ACCESS_KEY, AWS_SECRET_KEY, CA_HEALTH_NUMBER, CA_SOCIAL_INSURANCE_NUMBER, CREDIT_DEBIT_CARD_CVV, CREDIT_DEBIT_CARD_EXPIRY, CREDIT_DEBIT_CARD_NUMBER, DRIVER_ID, EMAIL, INTERNATIONAL_BANK_ACCOUNT_NUMBER, IP_ADDRESS, LICENSE_PLATE, MAC_ADDRESS, NAME, PASSWORD, PHONE, PIN, SWIFT_CODE, UK_NATIONAL_HEALTH_SERVICE_NUMBER, UK_NATIONAL_INSURANCE_NUMBER, UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER, URL, USERNAME, US_BANK_ACCOUNT_NUMBER, US_BANK_ROUTING_NUMBER, US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER, US_PASSPORT_NUMBER, US_SOCIAL_SECURITY_NUMBER, VEHICLE_IDENTIFICATION_NUMBER
+    #           action: "BLOCK", # required, accepts BLOCK, ANONYMIZE
+    #         },
+    #       ],
+    #       regexes_config: [
+    #         {
+    #           name: "GuardrailRegexName", # required
+    #           description: "GuardrailRegexDescription",
+    #           pattern: "GuardrailRegexPattern", # required
+    #           action: "BLOCK", # required, accepts BLOCK, ANONYMIZE
     #         },
     #       ],
     #     },
     #     contextual_grounding_policy_config: {
     #       filters_config: [ # required
     #         {
-    #           threshold: 1.0, # required
     #           type: "GROUNDING", # required, accepts GROUNDING, RELEVANCE
-    #         },
-    #       ],
-    #     },
-    #     description: "AIGuardrailDescription",
-    #     name: "Name", # required
-    #     sensitive_information_policy_config: {
-    #       pii_entities_config: [
-    #         {
-    #           action: "BLOCK", # required, accepts BLOCK, ANONYMIZE
-    #           type: "ADDRESS", # required, accepts ADDRESS, AGE, AWS_ACCESS_KEY, AWS_SECRET_KEY, CA_HEALTH_NUMBER, CA_SOCIAL_INSURANCE_NUMBER, CREDIT_DEBIT_CARD_CVV, CREDIT_DEBIT_CARD_EXPIRY, CREDIT_DEBIT_CARD_NUMBER, DRIVER_ID, EMAIL, INTERNATIONAL_BANK_ACCOUNT_NUMBER, IP_ADDRESS, LICENSE_PLATE, MAC_ADDRESS, NAME, PASSWORD, PHONE, PIN, SWIFT_CODE, UK_NATIONAL_HEALTH_SERVICE_NUMBER, UK_NATIONAL_INSURANCE_NUMBER, UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER, URL, USERNAME, US_BANK_ACCOUNT_NUMBER, US_BANK_ROUTING_NUMBER, US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER, US_PASSPORT_NUMBER, US_SOCIAL_SECURITY_NUMBER, VEHICLE_IDENTIFICATION_NUMBER
-    #         },
-    #       ],
-    #       regexes_config: [
-    #         {
-    #           action: "BLOCK", # required, accepts BLOCK, ANONYMIZE
-    #           description: "GuardrailRegexDescription",
-    #           name: "GuardrailRegexName", # required
-    #           pattern: "GuardrailRegexPattern", # required
+    #           threshold: 1.0, # required
     #         },
     #       ],
     #     },
     #     tags: {
     #       "TagKey" => "TagValue",
     #     },
-    #     topic_policy_config: {
-    #       topics_config: [ # required
-    #         {
-    #           definition: "GuardrailTopicDefinition", # required
-    #           examples: ["GuardrailTopicExample"],
-    #           name: "GuardrailTopicName", # required
-    #           type: "DENY", # required, accepts DENY
-    #         },
-    #       ],
-    #     },
-    #     visibility_status: "SAVED", # required, accepts SAVED, PUBLISHED
-    #     word_policy_config: {
-    #       managed_word_lists_config: [
-    #         {
-    #           type: "PROFANITY", # required, accepts PROFANITY
-    #         },
-    #       ],
-    #       words_config: [
-    #         {
-    #           text: "GuardrailWordText", # required
-    #         },
-    #       ],
-    #     },
     #   })
     #
     # @example Response structure
     #
+    #   resp.ai_guardrail.assistant_id #=> String
+    #   resp.ai_guardrail.assistant_arn #=> String
     #   resp.ai_guardrail.ai_guardrail_arn #=> String
     #   resp.ai_guardrail.ai_guardrail_id #=> String
-    #   resp.ai_guardrail.assistant_arn #=> String
-    #   resp.ai_guardrail.assistant_id #=> String
+    #   resp.ai_guardrail.name #=> String
+    #   resp.ai_guardrail.visibility_status #=> String, one of "SAVED", "PUBLISHED"
     #   resp.ai_guardrail.blocked_input_messaging #=> String
     #   resp.ai_guardrail.blocked_outputs_messaging #=> String
-    #   resp.ai_guardrail.content_policy_config.filters_config #=> Array
-    #   resp.ai_guardrail.content_policy_config.filters_config[0].input_strength #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH"
-    #   resp.ai_guardrail.content_policy_config.filters_config[0].output_strength #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH"
-    #   resp.ai_guardrail.content_policy_config.filters_config[0].type #=> String, one of "SEXUAL", "VIOLENCE", "HATE", "INSULTS", "MISCONDUCT", "PROMPT_ATTACK"
-    #   resp.ai_guardrail.contextual_grounding_policy_config.filters_config #=> Array
-    #   resp.ai_guardrail.contextual_grounding_policy_config.filters_config[0].threshold #=> Float
-    #   resp.ai_guardrail.contextual_grounding_policy_config.filters_config[0].type #=> String, one of "GROUNDING", "RELEVANCE"
     #   resp.ai_guardrail.description #=> String
-    #   resp.ai_guardrail.modified_time #=> Time
-    #   resp.ai_guardrail.name #=> String
-    #   resp.ai_guardrail.sensitive_information_policy_config.pii_entities_config #=> Array
-    #   resp.ai_guardrail.sensitive_information_policy_config.pii_entities_config[0].action #=> String, one of "BLOCK", "ANONYMIZE"
-    #   resp.ai_guardrail.sensitive_information_policy_config.pii_entities_config[0].type #=> String, one of "ADDRESS", "AGE", "AWS_ACCESS_KEY", "AWS_SECRET_KEY", "CA_HEALTH_NUMBER", "CA_SOCIAL_INSURANCE_NUMBER", "CREDIT_DEBIT_CARD_CVV", "CREDIT_DEBIT_CARD_EXPIRY", "CREDIT_DEBIT_CARD_NUMBER", "DRIVER_ID", "EMAIL", "INTERNATIONAL_BANK_ACCOUNT_NUMBER", "IP_ADDRESS", "LICENSE_PLATE", "MAC_ADDRESS", "NAME", "PASSWORD", "PHONE", "PIN", "SWIFT_CODE", "UK_NATIONAL_HEALTH_SERVICE_NUMBER", "UK_NATIONAL_INSURANCE_NUMBER", "UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER", "URL", "USERNAME", "US_BANK_ACCOUNT_NUMBER", "US_BANK_ROUTING_NUMBER", "US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER", "US_PASSPORT_NUMBER", "US_SOCIAL_SECURITY_NUMBER", "VEHICLE_IDENTIFICATION_NUMBER"
-    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config #=> Array
-    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].action #=> String, one of "BLOCK", "ANONYMIZE"
-    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].description #=> String
-    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].name #=> String
-    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].pattern #=> String
-    #   resp.ai_guardrail.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
-    #   resp.ai_guardrail.tags #=> Hash
-    #   resp.ai_guardrail.tags["TagKey"] #=> String
     #   resp.ai_guardrail.topic_policy_config.topics_config #=> Array
+    #   resp.ai_guardrail.topic_policy_config.topics_config[0].name #=> String
     #   resp.ai_guardrail.topic_policy_config.topics_config[0].definition #=> String
     #   resp.ai_guardrail.topic_policy_config.topics_config[0].examples #=> Array
     #   resp.ai_guardrail.topic_policy_config.topics_config[0].examples[0] #=> String
-    #   resp.ai_guardrail.topic_policy_config.topics_config[0].name #=> String
     #   resp.ai_guardrail.topic_policy_config.topics_config[0].type #=> String, one of "DENY"
-    #   resp.ai_guardrail.visibility_status #=> String, one of "SAVED", "PUBLISHED"
-    #   resp.ai_guardrail.word_policy_config.managed_word_lists_config #=> Array
-    #   resp.ai_guardrail.word_policy_config.managed_word_lists_config[0].type #=> String, one of "PROFANITY"
+    #   resp.ai_guardrail.content_policy_config.filters_config #=> Array
+    #   resp.ai_guardrail.content_policy_config.filters_config[0].type #=> String, one of "SEXUAL", "VIOLENCE", "HATE", "INSULTS", "MISCONDUCT", "PROMPT_ATTACK"
+    #   resp.ai_guardrail.content_policy_config.filters_config[0].input_strength #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH"
+    #   resp.ai_guardrail.content_policy_config.filters_config[0].output_strength #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH"
     #   resp.ai_guardrail.word_policy_config.words_config #=> Array
     #   resp.ai_guardrail.word_policy_config.words_config[0].text #=> String
+    #   resp.ai_guardrail.word_policy_config.managed_word_lists_config #=> Array
+    #   resp.ai_guardrail.word_policy_config.managed_word_lists_config[0].type #=> String, one of "PROFANITY"
+    #   resp.ai_guardrail.sensitive_information_policy_config.pii_entities_config #=> Array
+    #   resp.ai_guardrail.sensitive_information_policy_config.pii_entities_config[0].type #=> String, one of "ADDRESS", "AGE", "AWS_ACCESS_KEY", "AWS_SECRET_KEY", "CA_HEALTH_NUMBER", "CA_SOCIAL_INSURANCE_NUMBER", "CREDIT_DEBIT_CARD_CVV", "CREDIT_DEBIT_CARD_EXPIRY", "CREDIT_DEBIT_CARD_NUMBER", "DRIVER_ID", "EMAIL", "INTERNATIONAL_BANK_ACCOUNT_NUMBER", "IP_ADDRESS", "LICENSE_PLATE", "MAC_ADDRESS", "NAME", "PASSWORD", "PHONE", "PIN", "SWIFT_CODE", "UK_NATIONAL_HEALTH_SERVICE_NUMBER", "UK_NATIONAL_INSURANCE_NUMBER", "UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER", "URL", "USERNAME", "US_BANK_ACCOUNT_NUMBER", "US_BANK_ROUTING_NUMBER", "US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER", "US_PASSPORT_NUMBER", "US_SOCIAL_SECURITY_NUMBER", "VEHICLE_IDENTIFICATION_NUMBER"
+    #   resp.ai_guardrail.sensitive_information_policy_config.pii_entities_config[0].action #=> String, one of "BLOCK", "ANONYMIZE"
+    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config #=> Array
+    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].name #=> String
+    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].description #=> String
+    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].pattern #=> String
+    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].action #=> String, one of "BLOCK", "ANONYMIZE"
+    #   resp.ai_guardrail.contextual_grounding_policy_config.filters_config #=> Array
+    #   resp.ai_guardrail.contextual_grounding_policy_config.filters_config[0].type #=> String, one of "GROUNDING", "RELEVANCE"
+    #   resp.ai_guardrail.contextual_grounding_policy_config.filters_config[0].threshold #=> Float
+    #   resp.ai_guardrail.tags #=> Hash
+    #   resp.ai_guardrail.tags["TagKey"] #=> String
+    #   resp.ai_guardrail.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
+    #   resp.ai_guardrail.modified_time #=> Time
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CreateAIGuardrail AWS API Documentation
     #
@@ -1095,12 +1394,15 @@ module Aws::QConnect
 
     # Creates an Amazon Q in Connect AI Guardrail version.
     #
-    # @option params [required, String] :ai_guardrail_id
-    #   The identifier of the Amazon Q in Connect AI Guardrail.
-    #
     # @option params [required, String] :assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either the
     #   ID or the ARN. URLs cannot contain the ARN.
+    #
+    # @option params [required, String] :ai_guardrail_id
+    #   The identifier of the Amazon Q in Connect AI Guardrail.
+    #
+    # @option params [Time,DateTime,Date,Integer,String] :modified_time
+    #   The time the AI Guardrail was last modified.
     #
     # @option params [String] :client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
@@ -1115,9 +1417,6 @@ module Aws::QConnect
     #
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #
-    # @option params [Time,DateTime,Date,Integer,String] :modified_time
-    #   The time the AI Guardrail was last modified.
-    #
     # @return [Types::CreateAIGuardrailVersionResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateAIGuardrailVersionResponse#ai_guardrail #ai_guardrail} => Types::AIGuardrailData
@@ -1126,52 +1425,52 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_ai_guardrail_version({
-    #     ai_guardrail_id: "UuidOrArnOrEitherWithQualifier", # required
     #     assistant_id: "UuidOrArn", # required
-    #     client_token: "ClientToken",
+    #     ai_guardrail_id: "UuidOrArnOrEitherWithQualifier", # required
     #     modified_time: Time.now,
+    #     client_token: "ClientToken",
     #   })
     #
     # @example Response structure
     #
+    #   resp.ai_guardrail.assistant_id #=> String
+    #   resp.ai_guardrail.assistant_arn #=> String
     #   resp.ai_guardrail.ai_guardrail_arn #=> String
     #   resp.ai_guardrail.ai_guardrail_id #=> String
-    #   resp.ai_guardrail.assistant_arn #=> String
-    #   resp.ai_guardrail.assistant_id #=> String
+    #   resp.ai_guardrail.name #=> String
+    #   resp.ai_guardrail.visibility_status #=> String, one of "SAVED", "PUBLISHED"
     #   resp.ai_guardrail.blocked_input_messaging #=> String
     #   resp.ai_guardrail.blocked_outputs_messaging #=> String
-    #   resp.ai_guardrail.content_policy_config.filters_config #=> Array
-    #   resp.ai_guardrail.content_policy_config.filters_config[0].input_strength #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH"
-    #   resp.ai_guardrail.content_policy_config.filters_config[0].output_strength #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH"
-    #   resp.ai_guardrail.content_policy_config.filters_config[0].type #=> String, one of "SEXUAL", "VIOLENCE", "HATE", "INSULTS", "MISCONDUCT", "PROMPT_ATTACK"
-    #   resp.ai_guardrail.contextual_grounding_policy_config.filters_config #=> Array
-    #   resp.ai_guardrail.contextual_grounding_policy_config.filters_config[0].threshold #=> Float
-    #   resp.ai_guardrail.contextual_grounding_policy_config.filters_config[0].type #=> String, one of "GROUNDING", "RELEVANCE"
     #   resp.ai_guardrail.description #=> String
-    #   resp.ai_guardrail.modified_time #=> Time
-    #   resp.ai_guardrail.name #=> String
-    #   resp.ai_guardrail.sensitive_information_policy_config.pii_entities_config #=> Array
-    #   resp.ai_guardrail.sensitive_information_policy_config.pii_entities_config[0].action #=> String, one of "BLOCK", "ANONYMIZE"
-    #   resp.ai_guardrail.sensitive_information_policy_config.pii_entities_config[0].type #=> String, one of "ADDRESS", "AGE", "AWS_ACCESS_KEY", "AWS_SECRET_KEY", "CA_HEALTH_NUMBER", "CA_SOCIAL_INSURANCE_NUMBER", "CREDIT_DEBIT_CARD_CVV", "CREDIT_DEBIT_CARD_EXPIRY", "CREDIT_DEBIT_CARD_NUMBER", "DRIVER_ID", "EMAIL", "INTERNATIONAL_BANK_ACCOUNT_NUMBER", "IP_ADDRESS", "LICENSE_PLATE", "MAC_ADDRESS", "NAME", "PASSWORD", "PHONE", "PIN", "SWIFT_CODE", "UK_NATIONAL_HEALTH_SERVICE_NUMBER", "UK_NATIONAL_INSURANCE_NUMBER", "UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER", "URL", "USERNAME", "US_BANK_ACCOUNT_NUMBER", "US_BANK_ROUTING_NUMBER", "US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER", "US_PASSPORT_NUMBER", "US_SOCIAL_SECURITY_NUMBER", "VEHICLE_IDENTIFICATION_NUMBER"
-    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config #=> Array
-    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].action #=> String, one of "BLOCK", "ANONYMIZE"
-    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].description #=> String
-    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].name #=> String
-    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].pattern #=> String
-    #   resp.ai_guardrail.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
-    #   resp.ai_guardrail.tags #=> Hash
-    #   resp.ai_guardrail.tags["TagKey"] #=> String
     #   resp.ai_guardrail.topic_policy_config.topics_config #=> Array
+    #   resp.ai_guardrail.topic_policy_config.topics_config[0].name #=> String
     #   resp.ai_guardrail.topic_policy_config.topics_config[0].definition #=> String
     #   resp.ai_guardrail.topic_policy_config.topics_config[0].examples #=> Array
     #   resp.ai_guardrail.topic_policy_config.topics_config[0].examples[0] #=> String
-    #   resp.ai_guardrail.topic_policy_config.topics_config[0].name #=> String
     #   resp.ai_guardrail.topic_policy_config.topics_config[0].type #=> String, one of "DENY"
-    #   resp.ai_guardrail.visibility_status #=> String, one of "SAVED", "PUBLISHED"
-    #   resp.ai_guardrail.word_policy_config.managed_word_lists_config #=> Array
-    #   resp.ai_guardrail.word_policy_config.managed_word_lists_config[0].type #=> String, one of "PROFANITY"
+    #   resp.ai_guardrail.content_policy_config.filters_config #=> Array
+    #   resp.ai_guardrail.content_policy_config.filters_config[0].type #=> String, one of "SEXUAL", "VIOLENCE", "HATE", "INSULTS", "MISCONDUCT", "PROMPT_ATTACK"
+    #   resp.ai_guardrail.content_policy_config.filters_config[0].input_strength #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH"
+    #   resp.ai_guardrail.content_policy_config.filters_config[0].output_strength #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH"
     #   resp.ai_guardrail.word_policy_config.words_config #=> Array
     #   resp.ai_guardrail.word_policy_config.words_config[0].text #=> String
+    #   resp.ai_guardrail.word_policy_config.managed_word_lists_config #=> Array
+    #   resp.ai_guardrail.word_policy_config.managed_word_lists_config[0].type #=> String, one of "PROFANITY"
+    #   resp.ai_guardrail.sensitive_information_policy_config.pii_entities_config #=> Array
+    #   resp.ai_guardrail.sensitive_information_policy_config.pii_entities_config[0].type #=> String, one of "ADDRESS", "AGE", "AWS_ACCESS_KEY", "AWS_SECRET_KEY", "CA_HEALTH_NUMBER", "CA_SOCIAL_INSURANCE_NUMBER", "CREDIT_DEBIT_CARD_CVV", "CREDIT_DEBIT_CARD_EXPIRY", "CREDIT_DEBIT_CARD_NUMBER", "DRIVER_ID", "EMAIL", "INTERNATIONAL_BANK_ACCOUNT_NUMBER", "IP_ADDRESS", "LICENSE_PLATE", "MAC_ADDRESS", "NAME", "PASSWORD", "PHONE", "PIN", "SWIFT_CODE", "UK_NATIONAL_HEALTH_SERVICE_NUMBER", "UK_NATIONAL_INSURANCE_NUMBER", "UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER", "URL", "USERNAME", "US_BANK_ACCOUNT_NUMBER", "US_BANK_ROUTING_NUMBER", "US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER", "US_PASSPORT_NUMBER", "US_SOCIAL_SECURITY_NUMBER", "VEHICLE_IDENTIFICATION_NUMBER"
+    #   resp.ai_guardrail.sensitive_information_policy_config.pii_entities_config[0].action #=> String, one of "BLOCK", "ANONYMIZE"
+    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config #=> Array
+    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].name #=> String
+    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].description #=> String
+    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].pattern #=> String
+    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].action #=> String, one of "BLOCK", "ANONYMIZE"
+    #   resp.ai_guardrail.contextual_grounding_policy_config.filters_config #=> Array
+    #   resp.ai_guardrail.contextual_grounding_policy_config.filters_config[0].type #=> String, one of "GROUNDING", "RELEVANCE"
+    #   resp.ai_guardrail.contextual_grounding_policy_config.filters_config[0].threshold #=> Float
+    #   resp.ai_guardrail.tags #=> Hash
+    #   resp.ai_guardrail.tags["TagKey"] #=> String
+    #   resp.ai_guardrail.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
+    #   resp.ai_guardrail.modified_time #=> Time
     #   resp.version_number #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CreateAIGuardrailVersion AWS API Documentation
@@ -1185,13 +1484,6 @@ module Aws::QConnect
 
     # Creates an Amazon Q in Connect AI Prompt.
     #
-    # @option params [required, String] :api_format
-    #   The API Format of the AI Prompt.
-    #
-    # @option params [required, String] :assistant_id
-    #   The identifier of the Amazon Q in Connect assistant. Can be either the
-    #   ID or the ARN. URLs cannot contain the ARN.
-    #
     # @option params [String] :client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
     #   idempotency of the request. If not provided, the Amazon Web Services
@@ -1205,30 +1497,55 @@ module Aws::QConnect
     #
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #
-    # @option params [String] :description
-    #   The description of the AI Prompt.
-    #
-    # @option params [required, String] :model_id
-    #   The identifier of the model used for this AI Prompt. Model Ids
-    #   supported are: `anthropic.claude-3-haiku-20240307-v1:0`
+    # @option params [required, String] :assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either the
+    #   ID or the ARN. URLs cannot contain the ARN.
     #
     # @option params [required, String] :name
     #   The name of the AI Prompt.
     #
-    # @option params [Hash<String,String>] :tags
-    #   The tags used to organize, track, or control access for this resource.
+    # @option params [required, String] :type
+    #   The type of this AI Prompt.
     #
     # @option params [required, Types::AIPromptTemplateConfiguration] :template_configuration
     #   The configuration of the prompt template for this AI Prompt.
     #
+    # @option params [required, String] :visibility_status
+    #   The visibility status of the AI Prompt.
+    #
     # @option params [required, String] :template_type
     #   The type of the prompt template for this AI Prompt.
     #
-    # @option params [required, String] :type
-    #   The type of this AI Prompt.
+    # @option params [required, String] :model_id
+    #   The identifier of the model used for this AI Prompt.
     #
-    # @option params [required, String] :visibility_status
-    #   The visibility status of the AI Prompt.
+    #   <note markdown="1"> For information about which models are supported in each Amazon Web
+    #   Services Region, see [Supported models for system/custom prompts][1].
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/connect/latest/adminguide/create-ai-prompts.html#cli-create-aiprompt
+    #
+    # @option params [required, String] :api_format
+    #   The API Format of the AI Prompt.
+    #
+    #   Recommended values: `MESSAGES | TEXT_COMPLETIONS`
+    #
+    #   <note markdown="1"> The values `ANTHROPIC_CLAUDE_MESSAGES |
+    #   ANTHROPIC_CLAUDE_TEXT_COMPLETIONS` will be deprecated.
+    #
+    #    </note>
+    #
+    # @option params [Hash<String,String>] :tags
+    #   The tags used to organize, track, or control access for this resource.
+    #
+    # @option params [String] :description
+    #   The description of the AI Prompt.
+    #
+    # @option params [Types::AIPromptInferenceConfiguration] :inference_configuration
+    #   The inference configuration for the AI Prompt being created.
     #
     # @return [Types::CreateAIPromptResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1237,44 +1554,54 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_ai_prompt({
-    #     api_format: "ANTHROPIC_CLAUDE_MESSAGES", # required, accepts ANTHROPIC_CLAUDE_MESSAGES, ANTHROPIC_CLAUDE_TEXT_COMPLETIONS
-    #     assistant_id: "UuidOrArn", # required
     #     client_token: "ClientToken",
-    #     description: "Description",
-    #     model_id: "AIPromptModelIdentifier", # required
+    #     assistant_id: "UuidOrArn", # required
     #     name: "Name", # required
-    #     tags: {
-    #       "TagKey" => "TagValue",
-    #     },
+    #     type: "ANSWER_GENERATION", # required, accepts ANSWER_GENERATION, INTENT_LABELING_GENERATION, QUERY_REFORMULATION, SELF_SERVICE_PRE_PROCESSING, SELF_SERVICE_ANSWER_GENERATION, EMAIL_RESPONSE, EMAIL_OVERVIEW, EMAIL_GENERATIVE_ANSWER, EMAIL_QUERY_REFORMULATION, ORCHESTRATION, NOTE_TAKING, CASE_SUMMARIZATION
     #     template_configuration: { # required
     #       text_full_ai_prompt_edit_template_configuration: {
     #         text: "TextAIPrompt", # required
     #       },
     #     },
-    #     template_type: "TEXT", # required, accepts TEXT
-    #     type: "ANSWER_GENERATION", # required, accepts ANSWER_GENERATION, INTENT_LABELING_GENERATION, QUERY_REFORMULATION, SELF_SERVICE_PRE_PROCESSING, SELF_SERVICE_ANSWER_GENERATION
     #     visibility_status: "SAVED", # required, accepts SAVED, PUBLISHED
+    #     template_type: "TEXT", # required, accepts TEXT
+    #     model_id: "AIPromptModelIdentifier", # required
+    #     api_format: "ANTHROPIC_CLAUDE_MESSAGES", # required, accepts ANTHROPIC_CLAUDE_MESSAGES, ANTHROPIC_CLAUDE_TEXT_COMPLETIONS, MESSAGES, TEXT_COMPLETIONS
+    #     tags: {
+    #       "TagKey" => "TagValue",
+    #     },
+    #     description: "Description",
+    #     inference_configuration: {
+    #       temperature: 1.0,
+    #       top_p: 1.0,
+    #       top_k: 1,
+    #       max_tokens_to_sample: 1,
+    #     },
     #   })
     #
     # @example Response structure
     #
-    #   resp.ai_prompt.ai_prompt_arn #=> String
-    #   resp.ai_prompt.ai_prompt_id #=> String
-    #   resp.ai_prompt.api_format #=> String, one of "ANTHROPIC_CLAUDE_MESSAGES", "ANTHROPIC_CLAUDE_TEXT_COMPLETIONS"
-    #   resp.ai_prompt.assistant_arn #=> String
     #   resp.ai_prompt.assistant_id #=> String
-    #   resp.ai_prompt.description #=> String
-    #   resp.ai_prompt.model_id #=> String
-    #   resp.ai_prompt.modified_time #=> Time
+    #   resp.ai_prompt.assistant_arn #=> String
+    #   resp.ai_prompt.ai_prompt_id #=> String
+    #   resp.ai_prompt.ai_prompt_arn #=> String
     #   resp.ai_prompt.name #=> String
-    #   resp.ai_prompt.origin #=> String, one of "SYSTEM", "CUSTOMER"
-    #   resp.ai_prompt.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
+    #   resp.ai_prompt.type #=> String, one of "ANSWER_GENERATION", "INTENT_LABELING_GENERATION", "QUERY_REFORMULATION", "SELF_SERVICE_PRE_PROCESSING", "SELF_SERVICE_ANSWER_GENERATION", "EMAIL_RESPONSE", "EMAIL_OVERVIEW", "EMAIL_GENERATIVE_ANSWER", "EMAIL_QUERY_REFORMULATION", "ORCHESTRATION", "NOTE_TAKING", "CASE_SUMMARIZATION"
+    #   resp.ai_prompt.template_type #=> String, one of "TEXT"
+    #   resp.ai_prompt.model_id #=> String
+    #   resp.ai_prompt.api_format #=> String, one of "ANTHROPIC_CLAUDE_MESSAGES", "ANTHROPIC_CLAUDE_TEXT_COMPLETIONS", "MESSAGES", "TEXT_COMPLETIONS"
+    #   resp.ai_prompt.template_configuration.text_full_ai_prompt_edit_template_configuration.text #=> String
+    #   resp.ai_prompt.inference_configuration.temperature #=> Float
+    #   resp.ai_prompt.inference_configuration.top_p #=> Float
+    #   resp.ai_prompt.inference_configuration.top_k #=> Integer
+    #   resp.ai_prompt.inference_configuration.max_tokens_to_sample #=> Integer
+    #   resp.ai_prompt.modified_time #=> Time
+    #   resp.ai_prompt.description #=> String
+    #   resp.ai_prompt.visibility_status #=> String, one of "SAVED", "PUBLISHED"
     #   resp.ai_prompt.tags #=> Hash
     #   resp.ai_prompt.tags["TagKey"] #=> String
-    #   resp.ai_prompt.template_configuration.text_full_ai_prompt_edit_template_configuration.text #=> String
-    #   resp.ai_prompt.template_type #=> String, one of "TEXT"
-    #   resp.ai_prompt.type #=> String, one of "ANSWER_GENERATION", "INTENT_LABELING_GENERATION", "QUERY_REFORMULATION", "SELF_SERVICE_PRE_PROCESSING", "SELF_SERVICE_ANSWER_GENERATION"
-    #   resp.ai_prompt.visibility_status #=> String, one of "SAVED", "PUBLISHED"
+    #   resp.ai_prompt.origin #=> String, one of "SYSTEM", "CUSTOMER"
+    #   resp.ai_prompt.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CreateAIPrompt AWS API Documentation
     #
@@ -1287,12 +1614,15 @@ module Aws::QConnect
 
     # Creates an Amazon Q in Connect AI Prompt version.
     #
-    # @option params [required, String] :ai_prompt_id
-    #   The identifier of the Amazon Q in Connect AI prompt.
-    #
     # @option params [required, String] :assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either the
     #   ID or the ARN. URLs cannot contain the ARN.
+    #
+    # @option params [required, String] :ai_prompt_id
+    #   The identifier of the Amazon Q in Connect AI prompt.
+    #
+    # @option params [Time,DateTime,Date,Integer,String] :modified_time
+    #   The time the AI Prompt was last modified.
     #
     # @option params [String] :client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
@@ -1307,9 +1637,6 @@ module Aws::QConnect
     #
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #
-    # @option params [Time,DateTime,Date,Integer,String] :modified_time
-    #   The time the AI Prompt was last modified.
-    #
     # @return [Types::CreateAIPromptVersionResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateAIPromptVersionResponse#ai_prompt #ai_prompt} => Types::AIPromptData
@@ -1318,31 +1645,35 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_ai_prompt_version({
-    #     ai_prompt_id: "UuidOrArnOrEitherWithQualifier", # required
     #     assistant_id: "UuidOrArn", # required
-    #     client_token: "ClientToken",
+    #     ai_prompt_id: "UuidOrArnOrEitherWithQualifier", # required
     #     modified_time: Time.now,
+    #     client_token: "ClientToken",
     #   })
     #
     # @example Response structure
     #
-    #   resp.ai_prompt.ai_prompt_arn #=> String
-    #   resp.ai_prompt.ai_prompt_id #=> String
-    #   resp.ai_prompt.api_format #=> String, one of "ANTHROPIC_CLAUDE_MESSAGES", "ANTHROPIC_CLAUDE_TEXT_COMPLETIONS"
-    #   resp.ai_prompt.assistant_arn #=> String
     #   resp.ai_prompt.assistant_id #=> String
-    #   resp.ai_prompt.description #=> String
-    #   resp.ai_prompt.model_id #=> String
-    #   resp.ai_prompt.modified_time #=> Time
+    #   resp.ai_prompt.assistant_arn #=> String
+    #   resp.ai_prompt.ai_prompt_id #=> String
+    #   resp.ai_prompt.ai_prompt_arn #=> String
     #   resp.ai_prompt.name #=> String
-    #   resp.ai_prompt.origin #=> String, one of "SYSTEM", "CUSTOMER"
-    #   resp.ai_prompt.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
+    #   resp.ai_prompt.type #=> String, one of "ANSWER_GENERATION", "INTENT_LABELING_GENERATION", "QUERY_REFORMULATION", "SELF_SERVICE_PRE_PROCESSING", "SELF_SERVICE_ANSWER_GENERATION", "EMAIL_RESPONSE", "EMAIL_OVERVIEW", "EMAIL_GENERATIVE_ANSWER", "EMAIL_QUERY_REFORMULATION", "ORCHESTRATION", "NOTE_TAKING", "CASE_SUMMARIZATION"
+    #   resp.ai_prompt.template_type #=> String, one of "TEXT"
+    #   resp.ai_prompt.model_id #=> String
+    #   resp.ai_prompt.api_format #=> String, one of "ANTHROPIC_CLAUDE_MESSAGES", "ANTHROPIC_CLAUDE_TEXT_COMPLETIONS", "MESSAGES", "TEXT_COMPLETIONS"
+    #   resp.ai_prompt.template_configuration.text_full_ai_prompt_edit_template_configuration.text #=> String
+    #   resp.ai_prompt.inference_configuration.temperature #=> Float
+    #   resp.ai_prompt.inference_configuration.top_p #=> Float
+    #   resp.ai_prompt.inference_configuration.top_k #=> Integer
+    #   resp.ai_prompt.inference_configuration.max_tokens_to_sample #=> Integer
+    #   resp.ai_prompt.modified_time #=> Time
+    #   resp.ai_prompt.description #=> String
+    #   resp.ai_prompt.visibility_status #=> String, one of "SAVED", "PUBLISHED"
     #   resp.ai_prompt.tags #=> Hash
     #   resp.ai_prompt.tags["TagKey"] #=> String
-    #   resp.ai_prompt.template_configuration.text_full_ai_prompt_edit_template_configuration.text #=> String
-    #   resp.ai_prompt.template_type #=> String, one of "TEXT"
-    #   resp.ai_prompt.type #=> String, one of "ANSWER_GENERATION", "INTENT_LABELING_GENERATION", "QUERY_REFORMULATION", "SELF_SERVICE_PRE_PROCESSING", "SELF_SERVICE_ANSWER_GENERATION"
-    #   resp.ai_prompt.visibility_status #=> String, one of "SAVED", "PUBLISHED"
+    #   resp.ai_prompt.origin #=> String, one of "SYSTEM", "CUSTOMER"
+    #   resp.ai_prompt.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
     #   resp.version_number #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CreateAIPromptVersion AWS API Documentation
@@ -1369,11 +1700,17 @@ module Aws::QConnect
     #
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #
+    # @option params [required, String] :name
+    #   The name of the assistant.
+    #
+    # @option params [required, String] :type
+    #   The type of assistant.
+    #
     # @option params [String] :description
     #   The description of the assistant.
     #
-    # @option params [required, String] :name
-    #   The name of the assistant.
+    # @option params [Hash<String,String>] :tags
+    #   The tags used to organize, track, or control access for this resource.
     #
     # @option params [Types::ServerSideEncryptionConfiguration] :server_side_encryption_configuration
     #   The configuration information for the customer managed key used for
@@ -1395,12 +1732,6 @@ module Aws::QConnect
     #
     #   [1]: https://docs.aws.amazon.com/connect/latest/adminguide/enable-q.html
     #
-    # @option params [Hash<String,String>] :tags
-    #   The tags used to organize, track, or control access for this resource.
-    #
-    # @option params [required, String] :type
-    #   The type of assistant.
-    #
     # @return [Types::CreateAssistantResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateAssistantResponse#assistant #assistant} => Types::AssistantData
@@ -1409,32 +1740,35 @@ module Aws::QConnect
     #
     #   resp = client.create_assistant({
     #     client_token: "ClientToken",
-    #     description: "Description",
     #     name: "Name", # required
-    #     server_side_encryption_configuration: {
-    #       kms_key_id: "NonEmptyString",
-    #     },
+    #     type: "AGENT", # required, accepts AGENT
+    #     description: "Description",
     #     tags: {
     #       "TagKey" => "TagValue",
     #     },
-    #     type: "AGENT", # required, accepts AGENT
+    #     server_side_encryption_configuration: {
+    #       kms_key_id: "NonEmptyString",
+    #     },
     #   })
     #
     # @example Response structure
     #
-    #   resp.assistant.ai_agent_configuration #=> Hash
-    #   resp.assistant.ai_agent_configuration["AIAgentType"].ai_agent_id #=> String
-    #   resp.assistant.assistant_arn #=> String
     #   resp.assistant.assistant_id #=> String
-    #   resp.assistant.capability_configuration.type #=> String, one of "V1", "V2"
-    #   resp.assistant.description #=> String
-    #   resp.assistant.integration_configuration.topic_integration_arn #=> String
+    #   resp.assistant.assistant_arn #=> String
     #   resp.assistant.name #=> String
-    #   resp.assistant.server_side_encryption_configuration.kms_key_id #=> String
+    #   resp.assistant.type #=> String, one of "AGENT"
     #   resp.assistant.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
+    #   resp.assistant.description #=> String
     #   resp.assistant.tags #=> Hash
     #   resp.assistant.tags["TagKey"] #=> String
-    #   resp.assistant.type #=> String, one of "AGENT"
+    #   resp.assistant.server_side_encryption_configuration.kms_key_id #=> String
+    #   resp.assistant.integration_configuration.topic_integration_arn #=> String
+    #   resp.assistant.capability_configuration.type #=> String, one of "V1", "V2"
+    #   resp.assistant.ai_agent_configuration #=> Hash
+    #   resp.assistant.ai_agent_configuration["AIAgentType"].ai_agent_id #=> String
+    #   resp.assistant.orchestrator_configuration_list #=> Array
+    #   resp.assistant.orchestrator_configuration_list[0].ai_agent_id #=> String
+    #   resp.assistant.orchestrator_configuration_list[0].orchestrator_use_case #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CreateAssistant AWS API Documentation
     #
@@ -1453,11 +1787,11 @@ module Aws::QConnect
     #   The identifier of the Amazon Q in Connect assistant. Can be either the
     #   ID or the ARN. URLs cannot contain the ARN.
     #
-    # @option params [required, Types::AssistantAssociationInputData] :association
-    #   The identifier of the associated resource.
-    #
     # @option params [required, String] :association_type
     #   The type of association.
+    #
+    # @option params [required, Types::AssistantAssociationInputData] :association
+    #   The identifier of the associated resource.
     #
     # @option params [String] :client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
@@ -1483,10 +1817,14 @@ module Aws::QConnect
     #
     #   resp = client.create_assistant_association({
     #     assistant_id: "UuidOrArn", # required
+    #     association_type: "KNOWLEDGE_BASE", # required, accepts KNOWLEDGE_BASE, EXTERNAL_BEDROCK_KNOWLEDGE_BASE
     #     association: { # required
     #       knowledge_base_id: "Uuid",
+    #       external_bedrock_knowledge_base_config: {
+    #         bedrock_knowledge_base_arn: "BedrockKnowledgeBaseArn", # required
+    #         access_role_arn: "AccessRoleArn", # required
+    #       },
     #     },
-    #     association_type: "KNOWLEDGE_BASE", # required, accepts KNOWLEDGE_BASE
     #     client_token: "ClientToken",
     #     tags: {
     #       "TagKey" => "TagValue",
@@ -1495,13 +1833,15 @@ module Aws::QConnect
     #
     # @example Response structure
     #
-    #   resp.assistant_association.assistant_arn #=> String
-    #   resp.assistant_association.assistant_association_arn #=> String
     #   resp.assistant_association.assistant_association_id #=> String
+    #   resp.assistant_association.assistant_association_arn #=> String
     #   resp.assistant_association.assistant_id #=> String
-    #   resp.assistant_association.association_data.knowledge_base_association.knowledge_base_arn #=> String
+    #   resp.assistant_association.assistant_arn #=> String
+    #   resp.assistant_association.association_type #=> String, one of "KNOWLEDGE_BASE", "EXTERNAL_BEDROCK_KNOWLEDGE_BASE"
     #   resp.assistant_association.association_data.knowledge_base_association.knowledge_base_id #=> String
-    #   resp.assistant_association.association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.assistant_association.association_data.knowledge_base_association.knowledge_base_arn #=> String
+    #   resp.assistant_association.association_data.external_bedrock_knowledge_base_config.bedrock_knowledge_base_arn #=> String
+    #   resp.assistant_association.association_data.external_bedrock_knowledge_base_config.access_role_arn #=> String
     #   resp.assistant_association.tags #=> Hash
     #   resp.assistant_association.tags["TagKey"] #=> String
     #
@@ -1521,6 +1861,42 @@ module Aws::QConnect
     #
     # [1]: https://docs.aws.amazon.com/amazon-q-connect/latest/APIReference/API_StartContentUpload.html
     #
+    # @option params [required, String] :knowledge_base_id
+    #   The identifier of the knowledge base. This should not be a
+    #   QUICK\_RESPONSES type knowledge base. Can be either the ID or the ARN.
+    #   URLs cannot contain the ARN.
+    #
+    # @option params [required, String] :name
+    #   The name of the content. Each piece of content in a knowledge base
+    #   must have a unique name. You can retrieve a piece of content using
+    #   only its knowledge base and its name with the [SearchContent][1] API.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/amazon-q-connect/latest/APIReference/API_SearchContent.html
+    #
+    # @option params [String] :title
+    #   The title of the content. If not set, the title is equal to the name.
+    #
+    # @option params [String] :override_link_out_uri
+    #   The URI you want to use for the article. If the knowledge base has a
+    #   templateUri, setting this argument overrides it for this piece of
+    #   content.
+    #
+    # @option params [Hash<String,String>] :metadata
+    #   A key/value map to store attributes without affecting tagging or
+    #   recommendations. For example, when synchronizing data between an
+    #   external system and Amazon Q in Connect, you can store an external
+    #   version identifier as metadata to utilize for determining drift.
+    #
+    # @option params [required, String] :upload_id
+    #   A pointer to the uploaded asset. This value is returned by
+    #   [StartContentUpload][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/amazon-q-connect/latest/APIReference/API_StartContentUpload.html
+    #
     # @option params [String] :client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
     #   idempotency of the request. If not provided, the Amazon Web Services
@@ -1534,44 +1910,8 @@ module Aws::QConnect
     #
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #
-    # @option params [required, String] :knowledge_base_id
-    #   The identifier of the knowledge base. This should not be a
-    #   QUICK\_RESPONSES type knowledge base. Can be either the ID or the ARN.
-    #   URLs cannot contain the ARN.
-    #
-    # @option params [Hash<String,String>] :metadata
-    #   A key/value map to store attributes without affecting tagging or
-    #   recommendations. For example, when synchronizing data between an
-    #   external system and Amazon Q in Connect, you can store an external
-    #   version identifier as metadata to utilize for determining drift.
-    #
-    # @option params [required, String] :name
-    #   The name of the content. Each piece of content in a knowledge base
-    #   must have a unique name. You can retrieve a piece of content using
-    #   only its knowledge base and its name with the [SearchContent][1] API.
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/amazon-q-connect/latest/APIReference/API_SearchContent.html
-    #
-    # @option params [String] :override_link_out_uri
-    #   The URI you want to use for the article. If the knowledge base has a
-    #   templateUri, setting this argument overrides it for this piece of
-    #   content.
-    #
     # @option params [Hash<String,String>] :tags
     #   The tags used to organize, track, or control access for this resource.
-    #
-    # @option params [String] :title
-    #   The title of the content. If not set, the title is equal to the name.
-    #
-    # @option params [required, String] :upload_id
-    #   A pointer to the uploaded asset. This value is returned by
-    #   [StartContentUpload][1].
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/amazon-q-connect/latest/APIReference/API_StartContentUpload.html
     #
     # @return [Types::CreateContentResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1580,36 +1920,36 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_content({
-    #     client_token: "NonEmptyString",
     #     knowledge_base_id: "UuidOrArn", # required
+    #     name: "Name", # required
+    #     title: "ContentTitle",
+    #     override_link_out_uri: "Uri",
     #     metadata: {
     #       "NonEmptyString" => "NonEmptyString",
     #     },
-    #     name: "Name", # required
-    #     override_link_out_uri: "Uri",
+    #     upload_id: "UploadId", # required
+    #     client_token: "NonEmptyString",
     #     tags: {
     #       "TagKey" => "TagValue",
     #     },
-    #     title: "ContentTitle",
-    #     upload_id: "UploadId", # required
     #   })
     #
     # @example Response structure
     #
     #   resp.content.content_arn #=> String
     #   resp.content.content_id #=> String
-    #   resp.content.content_type #=> String
     #   resp.content.knowledge_base_arn #=> String
     #   resp.content.knowledge_base_id #=> String
-    #   resp.content.link_out_uri #=> String
-    #   resp.content.metadata #=> Hash
-    #   resp.content.metadata["NonEmptyString"] #=> String
     #   resp.content.name #=> String
     #   resp.content.revision_id #=> String
+    #   resp.content.title #=> String
+    #   resp.content.content_type #=> String
     #   resp.content.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED", "UPDATE_FAILED"
+    #   resp.content.metadata #=> Hash
+    #   resp.content.metadata["NonEmptyString"] #=> String
     #   resp.content.tags #=> Hash
     #   resp.content.tags["TagKey"] #=> String
-    #   resp.content.title #=> String
+    #   resp.content.link_out_uri #=> String
     #   resp.content.url #=> String
     #   resp.content.url_expiry #=> Time
     #
@@ -1648,12 +1988,6 @@ module Aws::QConnect
     # [1]: https://docs.aws.amazon.com/connect/latest/adminguide/step-by-step-guided-experiences.html
     # [2]: https://docs.aws.amazon.com/connect/latest/adminguide/integrate-q-with-guides.html
     #
-    # @option params [required, Types::ContentAssociationContents] :association
-    #   The identifier of the associated resource.
-    #
-    # @option params [required, String] :association_type
-    #   The type of association.
-    #
     # @option params [String] :client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
     #   idempotency of the request. If not provided, the Amazon Web Services
@@ -1667,11 +2001,17 @@ module Aws::QConnect
     #
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #
+    # @option params [required, String] :knowledge_base_id
+    #   The identifier of the knowledge base.
+    #
     # @option params [required, String] :content_id
     #   The identifier of the content.
     #
-    # @option params [required, String] :knowledge_base_id
-    #   The identifier of the knowledge base.
+    # @option params [required, String] :association_type
+    #   The type of association.
+    #
+    # @option params [required, Types::ContentAssociationContents] :association
+    #   The identifier of the associated resource.
     #
     # @option params [Hash<String,String>] :tags
     #   The tags used to organize, track, or control access for this resource.
@@ -1683,15 +2023,15 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_content_association({
+    #     client_token: "ClientToken",
+    #     knowledge_base_id: "UuidOrArn", # required
+    #     content_id: "UuidOrArn", # required
+    #     association_type: "AMAZON_CONNECT_GUIDE", # required, accepts AMAZON_CONNECT_GUIDE
     #     association: { # required
     #       amazon_connect_guide_association: {
     #         flow_id: "GenericArn",
     #       },
     #     },
-    #     association_type: "AMAZON_CONNECT_GUIDE", # required, accepts AMAZON_CONNECT_GUIDE
-    #     client_token: "ClientToken",
-    #     content_id: "UuidOrArn", # required
-    #     knowledge_base_id: "UuidOrArn", # required
     #     tags: {
     #       "TagKey" => "TagValue",
     #     },
@@ -1699,14 +2039,14 @@ module Aws::QConnect
     #
     # @example Response structure
     #
-    #   resp.content_association.association_data.amazon_connect_guide_association.flow_id #=> String
-    #   resp.content_association.association_type #=> String, one of "AMAZON_CONNECT_GUIDE"
-    #   resp.content_association.content_arn #=> String
-    #   resp.content_association.content_association_arn #=> String
-    #   resp.content_association.content_association_id #=> String
-    #   resp.content_association.content_id #=> String
-    #   resp.content_association.knowledge_base_arn #=> String
     #   resp.content_association.knowledge_base_id #=> String
+    #   resp.content_association.knowledge_base_arn #=> String
+    #   resp.content_association.content_id #=> String
+    #   resp.content_association.content_arn #=> String
+    #   resp.content_association.content_association_id #=> String
+    #   resp.content_association.content_association_arn #=> String
+    #   resp.content_association.association_type #=> String, one of "AMAZON_CONNECT_GUIDE"
+    #   resp.content_association.association_data.amazon_connect_guide_association.flow_id #=> String
     #   resp.content_association.tags #=> Hash
     #   resp.content_association.tags["TagKey"] #=> String
     #
@@ -1760,19 +2100,23 @@ module Aws::QConnect
     #
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #
-    # @option params [String] :description
-    #   The description.
+    # @option params [required, String] :name
+    #   The name of the knowledge base.
     #
     # @option params [required, String] :knowledge_base_type
     #   The type of knowledge base. Only CUSTOM knowledge bases allow you to
     #   upload your own content. EXTERNAL knowledge bases support integrations
     #   with third-party systems whose content is synchronized automatically.
     #
-    # @option params [required, String] :name
-    #   The name of the knowledge base.
+    # @option params [Types::SourceConfiguration] :source_configuration
+    #   The source of the knowledge base content. Only set this argument for
+    #   EXTERNAL or Managed knowledge bases.
     #
     # @option params [Types::RenderingConfiguration] :rendering_configuration
     #   Information about how to render the content.
+    #
+    # @option params [Types::VectorIngestionConfiguration] :vector_ingestion_configuration
+    #   Contains details about how to ingest the documents in a data source.
     #
     # @option params [Types::ServerSideEncryptionConfiguration] :server_side_encryption_configuration
     #   The configuration information for the customer managed key used for
@@ -1791,15 +2135,11 @@ module Aws::QConnect
     #
     #   [1]: https://docs.aws.amazon.com/connect/latest/adminguide/enable-q.html
     #
-    # @option params [Types::SourceConfiguration] :source_configuration
-    #   The source of the knowledge base content. Only set this argument for
-    #   EXTERNAL or Managed knowledge bases.
+    # @option params [String] :description
+    #   The description.
     #
     # @option params [Hash<String,String>] :tags
     #   The tags used to organize, track, or control access for this resource.
-    #
-    # @option params [Types::VectorIngestionConfiguration] :vector_ingestion_configuration
-    #   Contains details about how to ingest the documents in a data source.
     #
     # @return [Types::CreateKnowledgeBaseResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1809,15 +2149,8 @@ module Aws::QConnect
     #
     #   resp = client.create_knowledge_base({
     #     client_token: "NonEmptyString",
-    #     description: "Description",
-    #     knowledge_base_type: "EXTERNAL", # required, accepts EXTERNAL, CUSTOM, QUICK_RESPONSES, MESSAGE_TEMPLATES, MANAGED
     #     name: "Name", # required
-    #     rendering_configuration: {
-    #       template_uri: "Uri",
-    #     },
-    #     server_side_encryption_configuration: {
-    #       kms_key_id: "NonEmptyString",
-    #     },
+    #     knowledge_base_type: "EXTERNAL", # required, accepts EXTERNAL, CUSTOM, QUICK_RESPONSES, MESSAGE_TEMPLATES, MANAGED
     #     source_configuration: {
     #       app_integrations: {
     #         app_integration_arn: "GenericArn", # required
@@ -1825,12 +2158,6 @@ module Aws::QConnect
     #       },
     #       managed_source_configuration: {
     #         web_crawler_configuration: {
-    #           crawler_limits: {
-    #             rate_limit: 1,
-    #           },
-    #           exclusion_filters: ["UrlFilterPattern"],
-    #           inclusion_filters: ["UrlFilterPattern"],
-    #           scope: "HOST_ONLY", # accepts HOST_ONLY, SUBDOMAINS
     #           url_configuration: { # required
     #             seed_urls: [
     #               {
@@ -1838,11 +2165,17 @@ module Aws::QConnect
     #               },
     #             ],
     #           },
+    #           crawler_limits: {
+    #             rate_limit: 1,
+    #           },
+    #           inclusion_filters: ["UrlFilterPattern"],
+    #           exclusion_filters: ["UrlFilterPattern"],
+    #           scope: "HOST_ONLY", # accepts HOST_ONLY, SUBDOMAINS
     #         },
     #       },
     #     },
-    #     tags: {
-    #       "TagKey" => "TagValue",
+    #     rendering_configuration: {
+    #       template_uri: "Uri",
     #     },
     #     vector_ingestion_configuration: {
     #       chunking_configuration: {
@@ -1860,62 +2193,69 @@ module Aws::QConnect
     #           overlap_tokens: 1, # required
     #         },
     #         semantic_chunking_configuration: {
-    #           breakpoint_percentile_threshold: 1, # required
-    #           buffer_size: 1, # required
     #           max_tokens: 1, # required
+    #           buffer_size: 1, # required
+    #           breakpoint_percentile_threshold: 1, # required
     #         },
     #       },
     #       parsing_configuration: {
+    #         parsing_strategy: "BEDROCK_FOUNDATION_MODEL", # required, accepts BEDROCK_FOUNDATION_MODEL
     #         bedrock_foundation_model_configuration: {
     #           model_arn: "BedrockModelArnForParsing", # required
     #           parsing_prompt: {
     #             parsing_prompt_text: "ParsingPromptText", # required
     #           },
     #         },
-    #         parsing_strategy: "BEDROCK_FOUNDATION_MODEL", # required, accepts BEDROCK_FOUNDATION_MODEL
     #       },
+    #     },
+    #     server_side_encryption_configuration: {
+    #       kms_key_id: "NonEmptyString",
+    #     },
+    #     description: "Description",
+    #     tags: {
+    #       "TagKey" => "TagValue",
     #     },
     #   })
     #
     # @example Response structure
     #
-    #   resp.knowledge_base.description #=> String
-    #   resp.knowledge_base.ingestion_failure_reasons #=> Array
-    #   resp.knowledge_base.ingestion_failure_reasons[0] #=> String
-    #   resp.knowledge_base.ingestion_status #=> String, one of "SYNC_FAILED", "SYNCING_IN_PROGRESS", "SYNC_SUCCESS", "CREATE_IN_PROGRESS"
-    #   resp.knowledge_base.knowledge_base_arn #=> String
     #   resp.knowledge_base.knowledge_base_id #=> String
-    #   resp.knowledge_base.knowledge_base_type #=> String, one of "EXTERNAL", "CUSTOM", "QUICK_RESPONSES", "MESSAGE_TEMPLATES", "MANAGED"
-    #   resp.knowledge_base.last_content_modification_time #=> Time
+    #   resp.knowledge_base.knowledge_base_arn #=> String
     #   resp.knowledge_base.name #=> String
-    #   resp.knowledge_base.rendering_configuration.template_uri #=> String
-    #   resp.knowledge_base.server_side_encryption_configuration.kms_key_id #=> String
-    #   resp.knowledge_base.source_configuration.app_integrations.app_integration_arn #=> String
-    #   resp.knowledge_base.source_configuration.app_integrations.object_fields #=> Array
-    #   resp.knowledge_base.source_configuration.app_integrations.object_fields[0] #=> String
-    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.crawler_limits.rate_limit #=> Integer
-    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.exclusion_filters #=> Array
-    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.exclusion_filters[0] #=> String
-    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.inclusion_filters #=> Array
-    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.inclusion_filters[0] #=> String
-    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.scope #=> String, one of "HOST_ONLY", "SUBDOMAINS"
-    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.url_configuration.seed_urls #=> Array
-    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.url_configuration.seed_urls[0].url #=> String
+    #   resp.knowledge_base.knowledge_base_type #=> String, one of "EXTERNAL", "CUSTOM", "QUICK_RESPONSES", "MESSAGE_TEMPLATES", "MANAGED"
     #   resp.knowledge_base.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
-    #   resp.knowledge_base.tags #=> Hash
-    #   resp.knowledge_base.tags["TagKey"] #=> String
+    #   resp.knowledge_base.last_content_modification_time #=> Time
     #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.chunking_strategy #=> String, one of "FIXED_SIZE", "NONE", "HIERARCHICAL", "SEMANTIC"
     #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.fixed_size_chunking_configuration.max_tokens #=> Integer
     #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.fixed_size_chunking_configuration.overlap_percentage #=> Integer
     #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.hierarchical_chunking_configuration.level_configurations #=> Array
     #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.hierarchical_chunking_configuration.level_configurations[0].max_tokens #=> Integer
     #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.hierarchical_chunking_configuration.overlap_tokens #=> Integer
-    #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.semantic_chunking_configuration.breakpoint_percentile_threshold #=> Integer
-    #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.semantic_chunking_configuration.buffer_size #=> Integer
     #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.semantic_chunking_configuration.max_tokens #=> Integer
+    #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.semantic_chunking_configuration.buffer_size #=> Integer
+    #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.semantic_chunking_configuration.breakpoint_percentile_threshold #=> Integer
+    #   resp.knowledge_base.vector_ingestion_configuration.parsing_configuration.parsing_strategy #=> String, one of "BEDROCK_FOUNDATION_MODEL"
     #   resp.knowledge_base.vector_ingestion_configuration.parsing_configuration.bedrock_foundation_model_configuration.model_arn #=> String
     #   resp.knowledge_base.vector_ingestion_configuration.parsing_configuration.bedrock_foundation_model_configuration.parsing_prompt.parsing_prompt_text #=> String
-    #   resp.knowledge_base.vector_ingestion_configuration.parsing_configuration.parsing_strategy #=> String, one of "BEDROCK_FOUNDATION_MODEL"
+    #   resp.knowledge_base.source_configuration.app_integrations.app_integration_arn #=> String
+    #   resp.knowledge_base.source_configuration.app_integrations.object_fields #=> Array
+    #   resp.knowledge_base.source_configuration.app_integrations.object_fields[0] #=> String
+    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.url_configuration.seed_urls #=> Array
+    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.url_configuration.seed_urls[0].url #=> String
+    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.crawler_limits.rate_limit #=> Integer
+    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.inclusion_filters #=> Array
+    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.inclusion_filters[0] #=> String
+    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.exclusion_filters #=> Array
+    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.exclusion_filters[0] #=> String
+    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.scope #=> String, one of "HOST_ONLY", "SUBDOMAINS"
+    #   resp.knowledge_base.rendering_configuration.template_uri #=> String
+    #   resp.knowledge_base.server_side_encryption_configuration.kms_key_id #=> String
+    #   resp.knowledge_base.description #=> String
+    #   resp.knowledge_base.tags #=> Hash
+    #   resp.knowledge_base.tags["TagKey"] #=> String
+    #   resp.knowledge_base.ingestion_status #=> String, one of "SYNC_FAILED", "SYNCING_IN_PROGRESS", "SYNC_SUCCESS", "CREATE_IN_PROGRESS"
+    #   resp.knowledge_base.ingestion_failure_reasons #=> Array
+    #   resp.knowledge_base.ingestion_failure_reasons[0] #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CreateKnowledgeBase AWS API Documentation
     #
@@ -1932,8 +2272,42 @@ module Aws::QConnect
     # after creation. After the message template is created, you can use the
     # `$LATEST` qualifier to reference the created message template.
     #
+    # @option params [required, String] :knowledge_base_id
+    #   The identifier of the knowledge base. Can be either the ID or the ARN.
+    #   URLs cannot contain the ARN.
+    #
+    # @option params [String] :name
+    #   The name of the message template.
+    #
+    # @option params [Types::MessageTemplateContentProvider] :content
+    #   The content of the message template.
+    #
+    # @option params [String] :description
+    #   The description of the message template.
+    #
     # @option params [required, String] :channel_subtype
     #   The channel subtype this message template applies to.
+    #
+    # @option params [String] :language
+    #   The language code value for the language in which the quick response
+    #   is written. The supported language codes include `de_DE`, `en_US`,
+    #   `es_ES`, `fr_FR`, `id_ID`, `it_IT`, `ja_JP`, `ko_KR`, `pt_BR`,
+    #   `zh_CN`, `zh_TW`
+    #
+    # @option params [Types::MessageTemplateSourceConfiguration] :source_configuration
+    #   The source configuration of the message template. Only set this
+    #   argument for WHATSAPP channel subtype.
+    #
+    # @option params [Types::MessageTemplateAttributes] :default_attributes
+    #   An object that specifies the default values to use for variables in
+    #   the message template. This object contains different categories of
+    #   key-value pairs. Each key defines a variable or placeholder in the
+    #   message template. The corresponding value defines the default value
+    #   for that variable.
+    #
+    # @option params [Types::GroupingConfiguration] :grouping_configuration
+    #   The configuration information of the grouping of Amazon Q in Connect
+    #   users.
     #
     # @option params [String] :client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
@@ -1948,36 +2322,6 @@ module Aws::QConnect
     #
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #
-    # @option params [required, Types::MessageTemplateContentProvider] :content
-    #   The content of the message template.
-    #
-    # @option params [Types::MessageTemplateAttributes] :default_attributes
-    #   An object that specifies the default values to use for variables in
-    #   the message template. This object contains different categories of
-    #   key-value pairs. Each key defines a variable or placeholder in the
-    #   message template. The corresponding value defines the default value
-    #   for that variable.
-    #
-    # @option params [String] :description
-    #   The description of the message template.
-    #
-    # @option params [Types::GroupingConfiguration] :grouping_configuration
-    #   The configuration information of the grouping of Amazon Q in Connect
-    #   users.
-    #
-    # @option params [required, String] :knowledge_base_id
-    #   The identifier of the knowledge base. Can be either the ID or the ARN.
-    #   URLs cannot contain the ARN.
-    #
-    # @option params [String] :language
-    #   The language code value for the language in which the quick response
-    #   is written. The supported language codes include `de_DE`, `en_US`,
-    #   `es_ES`, `fr_FR`, `id_ID`, `it_IT`, `ja_JP`, `ko_KR`, `pt_BR`,
-    #   `zh_CN`, `zh_TW`
-    #
-    # @option params [required, String] :name
-    #   The name of the message template.
-    #
     # @option params [Hash<String,String>] :tags
     #   The tags used to organize, track, or control access for this resource.
     #
@@ -1988,15 +2332,16 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_message_template({
-    #     channel_subtype: "EMAIL", # required, accepts EMAIL, SMS
-    #     client_token: "ClientToken",
-    #     content: { # required
+    #     knowledge_base_id: "UuidOrArn", # required
+    #     name: "Name",
+    #     content: {
     #       email: {
+    #         subject: "NonEmptyUnlimitedString",
     #         body: {
-    #           html: {
+    #           plain_text: {
     #             content: "NonEmptyUnlimitedString",
     #           },
-    #           plain_text: {
+    #           html: {
     #             content: "NonEmptyUnlimitedString",
     #           },
     #         },
@@ -2006,7 +2351,6 @@ module Aws::QConnect
     #             value: "EmailHeaderValue",
     #           },
     #         ],
-    #         subject: "NonEmptyUnlimitedString",
     #       },
     #       sms: {
     #         body: {
@@ -2015,95 +2359,165 @@ module Aws::QConnect
     #           },
     #         },
     #       },
+    #       whats_app: {
+    #         data: "WhatsAppMessageTemplateContentData",
+    #       },
+    #       push: {
+    #         adm: {
+    #           title: "NonEmptyUnlimitedString",
+    #           body: {
+    #             content: "NonEmptyUnlimitedString",
+    #           },
+    #           action: "OPEN_APP", # accepts OPEN_APP, DEEP_LINK, URL
+    #           sound: "NonEmptyUnlimitedString",
+    #           url: "NonEmptyUnlimitedString",
+    #           image_url: "NonEmptyUnlimitedString",
+    #           image_icon_url: "NonEmptyUnlimitedString",
+    #           small_image_icon_url: "NonEmptyUnlimitedString",
+    #           raw_content: {
+    #             content: "NonEmptyUnlimitedString",
+    #           },
+    #         },
+    #         apns: {
+    #           title: "NonEmptyUnlimitedString",
+    #           body: {
+    #             content: "NonEmptyUnlimitedString",
+    #           },
+    #           action: "OPEN_APP", # accepts OPEN_APP, DEEP_LINK, URL
+    #           sound: "NonEmptyUnlimitedString",
+    #           url: "NonEmptyUnlimitedString",
+    #           media_url: "NonEmptyUnlimitedString",
+    #           raw_content: {
+    #             content: "NonEmptyUnlimitedString",
+    #           },
+    #         },
+    #         fcm: {
+    #           title: "NonEmptyUnlimitedString",
+    #           body: {
+    #             content: "NonEmptyUnlimitedString",
+    #           },
+    #           action: "OPEN_APP", # accepts OPEN_APP, DEEP_LINK, URL
+    #           sound: "NonEmptyUnlimitedString",
+    #           url: "NonEmptyUnlimitedString",
+    #           image_url: "NonEmptyUnlimitedString",
+    #           image_icon_url: "NonEmptyUnlimitedString",
+    #           small_image_icon_url: "NonEmptyUnlimitedString",
+    #           raw_content: {
+    #             content: "NonEmptyUnlimitedString",
+    #           },
+    #         },
+    #         baidu: {
+    #           title: "NonEmptyUnlimitedString",
+    #           body: {
+    #             content: "NonEmptyUnlimitedString",
+    #           },
+    #           action: "OPEN_APP", # accepts OPEN_APP, DEEP_LINK, URL
+    #           sound: "NonEmptyUnlimitedString",
+    #           url: "NonEmptyUnlimitedString",
+    #           image_url: "NonEmptyUnlimitedString",
+    #           image_icon_url: "NonEmptyUnlimitedString",
+    #           small_image_icon_url: "NonEmptyUnlimitedString",
+    #           raw_content: {
+    #             content: "NonEmptyUnlimitedString",
+    #           },
+    #         },
+    #       },
+    #     },
+    #     description: "Description",
+    #     channel_subtype: "EMAIL", # required, accepts EMAIL, SMS, WHATSAPP, PUSH
+    #     language: "LanguageCode",
+    #     source_configuration: {
+    #       whats_app: {
+    #         business_account_id: "WhatsAppBusinessAccountId", # required
+    #         template_id: "WhatsAppMessageTemplateId", # required
+    #         components: ["WhatsAppMessageTemplateComponent"],
+    #       },
     #     },
     #     default_attributes: {
+    #       system_attributes: {
+    #         name: "MessageTemplateAttributeValue",
+    #         customer_endpoint: {
+    #           address: "MessageTemplateAttributeValue",
+    #         },
+    #         system_endpoint: {
+    #           address: "MessageTemplateAttributeValue",
+    #         },
+    #       },
     #       agent_attributes: {
     #         first_name: "MessageTemplateAttributeValue",
     #         last_name: "MessageTemplateAttributeValue",
     #       },
-    #       custom_attributes: {
-    #         "MessageTemplateAttributeKey" => "MessageTemplateAttributeValue",
-    #       },
     #       customer_profile_attributes: {
+    #         profile_id: "MessageTemplateAttributeValue",
+    #         profile_arn: "MessageTemplateAttributeValue",
+    #         first_name: "MessageTemplateAttributeValue",
+    #         middle_name: "MessageTemplateAttributeValue",
+    #         last_name: "MessageTemplateAttributeValue",
     #         account_number: "MessageTemplateAttributeValue",
+    #         email_address: "MessageTemplateAttributeValue",
+    #         phone_number: "MessageTemplateAttributeValue",
     #         additional_information: "MessageTemplateAttributeValue",
+    #         party_type: "MessageTemplateAttributeValue",
+    #         business_name: "MessageTemplateAttributeValue",
+    #         birth_date: "MessageTemplateAttributeValue",
+    #         gender: "MessageTemplateAttributeValue",
+    #         mobile_phone_number: "MessageTemplateAttributeValue",
+    #         home_phone_number: "MessageTemplateAttributeValue",
+    #         business_phone_number: "MessageTemplateAttributeValue",
+    #         business_email_address: "MessageTemplateAttributeValue",
     #         address1: "MessageTemplateAttributeValue",
     #         address2: "MessageTemplateAttributeValue",
     #         address3: "MessageTemplateAttributeValue",
     #         address4: "MessageTemplateAttributeValue",
-    #         billing_address_1: "MessageTemplateAttributeValue",
-    #         billing_address_2: "MessageTemplateAttributeValue",
-    #         billing_address_3: "MessageTemplateAttributeValue",
-    #         billing_address_4: "MessageTemplateAttributeValue",
-    #         billing_city: "MessageTemplateAttributeValue",
-    #         billing_country: "MessageTemplateAttributeValue",
-    #         billing_county: "MessageTemplateAttributeValue",
-    #         billing_postal_code: "MessageTemplateAttributeValue",
-    #         billing_province: "MessageTemplateAttributeValue",
-    #         billing_state: "MessageTemplateAttributeValue",
-    #         birth_date: "MessageTemplateAttributeValue",
-    #         business_email_address: "MessageTemplateAttributeValue",
-    #         business_name: "MessageTemplateAttributeValue",
-    #         business_phone_number: "MessageTemplateAttributeValue",
     #         city: "MessageTemplateAttributeValue",
-    #         country: "MessageTemplateAttributeValue",
     #         county: "MessageTemplateAttributeValue",
-    #         custom: {
-    #           "MessageTemplateAttributeKey" => "MessageTemplateAttributeValue",
-    #         },
-    #         email_address: "MessageTemplateAttributeValue",
-    #         first_name: "MessageTemplateAttributeValue",
-    #         gender: "MessageTemplateAttributeValue",
-    #         home_phone_number: "MessageTemplateAttributeValue",
-    #         last_name: "MessageTemplateAttributeValue",
-    #         mailing_address_1: "MessageTemplateAttributeValue",
-    #         mailing_address_2: "MessageTemplateAttributeValue",
-    #         mailing_address_3: "MessageTemplateAttributeValue",
-    #         mailing_address_4: "MessageTemplateAttributeValue",
-    #         mailing_city: "MessageTemplateAttributeValue",
-    #         mailing_country: "MessageTemplateAttributeValue",
-    #         mailing_county: "MessageTemplateAttributeValue",
-    #         mailing_postal_code: "MessageTemplateAttributeValue",
-    #         mailing_province: "MessageTemplateAttributeValue",
-    #         mailing_state: "MessageTemplateAttributeValue",
-    #         middle_name: "MessageTemplateAttributeValue",
-    #         mobile_phone_number: "MessageTemplateAttributeValue",
-    #         party_type: "MessageTemplateAttributeValue",
-    #         phone_number: "MessageTemplateAttributeValue",
+    #         country: "MessageTemplateAttributeValue",
     #         postal_code: "MessageTemplateAttributeValue",
-    #         profile_arn: "MessageTemplateAttributeValue",
-    #         profile_id: "MessageTemplateAttributeValue",
     #         province: "MessageTemplateAttributeValue",
+    #         state: "MessageTemplateAttributeValue",
     #         shipping_address_1: "MessageTemplateAttributeValue",
     #         shipping_address_2: "MessageTemplateAttributeValue",
     #         shipping_address_3: "MessageTemplateAttributeValue",
     #         shipping_address_4: "MessageTemplateAttributeValue",
     #         shipping_city: "MessageTemplateAttributeValue",
-    #         shipping_country: "MessageTemplateAttributeValue",
     #         shipping_county: "MessageTemplateAttributeValue",
+    #         shipping_country: "MessageTemplateAttributeValue",
     #         shipping_postal_code: "MessageTemplateAttributeValue",
     #         shipping_province: "MessageTemplateAttributeValue",
     #         shipping_state: "MessageTemplateAttributeValue",
-    #         state: "MessageTemplateAttributeValue",
+    #         mailing_address_1: "MessageTemplateAttributeValue",
+    #         mailing_address_2: "MessageTemplateAttributeValue",
+    #         mailing_address_3: "MessageTemplateAttributeValue",
+    #         mailing_address_4: "MessageTemplateAttributeValue",
+    #         mailing_city: "MessageTemplateAttributeValue",
+    #         mailing_county: "MessageTemplateAttributeValue",
+    #         mailing_country: "MessageTemplateAttributeValue",
+    #         mailing_postal_code: "MessageTemplateAttributeValue",
+    #         mailing_province: "MessageTemplateAttributeValue",
+    #         mailing_state: "MessageTemplateAttributeValue",
+    #         billing_address_1: "MessageTemplateAttributeValue",
+    #         billing_address_2: "MessageTemplateAttributeValue",
+    #         billing_address_3: "MessageTemplateAttributeValue",
+    #         billing_address_4: "MessageTemplateAttributeValue",
+    #         billing_city: "MessageTemplateAttributeValue",
+    #         billing_county: "MessageTemplateAttributeValue",
+    #         billing_country: "MessageTemplateAttributeValue",
+    #         billing_postal_code: "MessageTemplateAttributeValue",
+    #         billing_province: "MessageTemplateAttributeValue",
+    #         billing_state: "MessageTemplateAttributeValue",
+    #         custom: {
+    #           "MessageTemplateAttributeKey" => "MessageTemplateAttributeValue",
+    #         },
     #       },
-    #       system_attributes: {
-    #         customer_endpoint: {
-    #           address: "MessageTemplateAttributeValue",
-    #         },
-    #         name: "MessageTemplateAttributeValue",
-    #         system_endpoint: {
-    #           address: "MessageTemplateAttributeValue",
-    #         },
+    #       custom_attributes: {
+    #         "MessageTemplateAttributeKey" => "MessageTemplateAttributeValue",
     #       },
     #     },
-    #     description: "Description",
     #     grouping_configuration: {
     #       criteria: "GroupingCriteria",
     #       values: ["GroupingValue"],
     #     },
-    #     knowledge_base_id: "UuidOrArn", # required
-    #     language: "LanguageCode",
-    #     name: "Name", # required
+    #     client_token: "ClientToken",
     #     tags: {
     #       "TagKey" => "TagValue",
     #     },
@@ -2111,96 +2525,140 @@ module Aws::QConnect
     #
     # @example Response structure
     #
-    #   resp.message_template.attribute_types #=> Array
-    #   resp.message_template.attribute_types[0] #=> String, one of "SYSTEM", "AGENT", "CUSTOMER_PROFILE", "CUSTOM"
-    #   resp.message_template.channel_subtype #=> String, one of "EMAIL", "SMS"
-    #   resp.message_template.content.email.body.html.content #=> String
+    #   resp.message_template.message_template_arn #=> String
+    #   resp.message_template.message_template_id #=> String
+    #   resp.message_template.knowledge_base_arn #=> String
+    #   resp.message_template.knowledge_base_id #=> String
+    #   resp.message_template.name #=> String
+    #   resp.message_template.channel #=> String
+    #   resp.message_template.channel_subtype #=> String, one of "EMAIL", "SMS", "WHATSAPP", "PUSH"
+    #   resp.message_template.created_time #=> Time
+    #   resp.message_template.last_modified_time #=> Time
+    #   resp.message_template.last_modified_by #=> String
+    #   resp.message_template.content.email.subject #=> String
     #   resp.message_template.content.email.body.plain_text.content #=> String
+    #   resp.message_template.content.email.body.html.content #=> String
     #   resp.message_template.content.email.headers #=> Array
     #   resp.message_template.content.email.headers[0].name #=> String
     #   resp.message_template.content.email.headers[0].value #=> String
-    #   resp.message_template.content.email.subject #=> String
     #   resp.message_template.content.sms.body.plain_text.content #=> String
-    #   resp.message_template.created_time #=> Time
+    #   resp.message_template.content.whats_app.data #=> String
+    #   resp.message_template.content.push.adm.title #=> String
+    #   resp.message_template.content.push.adm.body.content #=> String
+    #   resp.message_template.content.push.adm.action #=> String, one of "OPEN_APP", "DEEP_LINK", "URL"
+    #   resp.message_template.content.push.adm.sound #=> String
+    #   resp.message_template.content.push.adm.url #=> String
+    #   resp.message_template.content.push.adm.image_url #=> String
+    #   resp.message_template.content.push.adm.image_icon_url #=> String
+    #   resp.message_template.content.push.adm.small_image_icon_url #=> String
+    #   resp.message_template.content.push.adm.raw_content.content #=> String
+    #   resp.message_template.content.push.apns.title #=> String
+    #   resp.message_template.content.push.apns.body.content #=> String
+    #   resp.message_template.content.push.apns.action #=> String, one of "OPEN_APP", "DEEP_LINK", "URL"
+    #   resp.message_template.content.push.apns.sound #=> String
+    #   resp.message_template.content.push.apns.url #=> String
+    #   resp.message_template.content.push.apns.media_url #=> String
+    #   resp.message_template.content.push.apns.raw_content.content #=> String
+    #   resp.message_template.content.push.fcm.title #=> String
+    #   resp.message_template.content.push.fcm.body.content #=> String
+    #   resp.message_template.content.push.fcm.action #=> String, one of "OPEN_APP", "DEEP_LINK", "URL"
+    #   resp.message_template.content.push.fcm.sound #=> String
+    #   resp.message_template.content.push.fcm.url #=> String
+    #   resp.message_template.content.push.fcm.image_url #=> String
+    #   resp.message_template.content.push.fcm.image_icon_url #=> String
+    #   resp.message_template.content.push.fcm.small_image_icon_url #=> String
+    #   resp.message_template.content.push.fcm.raw_content.content #=> String
+    #   resp.message_template.content.push.baidu.title #=> String
+    #   resp.message_template.content.push.baidu.body.content #=> String
+    #   resp.message_template.content.push.baidu.action #=> String, one of "OPEN_APP", "DEEP_LINK", "URL"
+    #   resp.message_template.content.push.baidu.sound #=> String
+    #   resp.message_template.content.push.baidu.url #=> String
+    #   resp.message_template.content.push.baidu.image_url #=> String
+    #   resp.message_template.content.push.baidu.image_icon_url #=> String
+    #   resp.message_template.content.push.baidu.small_image_icon_url #=> String
+    #   resp.message_template.content.push.baidu.raw_content.content #=> String
+    #   resp.message_template.description #=> String
+    #   resp.message_template.language #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.business_account_id #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.template_id #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.name #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.language #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.components #=> Array
+    #   resp.message_template.source_configuration_summary.whats_app.components[0] #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.status #=> String, one of "VALID", "INVALID", "REJECTED"
+    #   resp.message_template.source_configuration_summary.whats_app.status_reason #=> String
+    #   resp.message_template.grouping_configuration.criteria #=> String
+    #   resp.message_template.grouping_configuration.values #=> Array
+    #   resp.message_template.grouping_configuration.values[0] #=> String
+    #   resp.message_template.default_attributes.system_attributes.name #=> String
+    #   resp.message_template.default_attributes.system_attributes.customer_endpoint.address #=> String
+    #   resp.message_template.default_attributes.system_attributes.system_endpoint.address #=> String
     #   resp.message_template.default_attributes.agent_attributes.first_name #=> String
     #   resp.message_template.default_attributes.agent_attributes.last_name #=> String
-    #   resp.message_template.default_attributes.custom_attributes #=> Hash
-    #   resp.message_template.default_attributes.custom_attributes["MessageTemplateAttributeKey"] #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.profile_id #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.profile_arn #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.first_name #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.middle_name #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.last_name #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.account_number #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.email_address #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.phone_number #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.additional_information #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.party_type #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.business_name #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.birth_date #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.gender #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mobile_phone_number #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.home_phone_number #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.business_phone_number #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.business_email_address #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.address1 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.address2 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.address3 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.address4 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_1 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_2 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_3 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_4 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_city #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_country #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_county #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_postal_code #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_province #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_state #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.birth_date #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.business_email_address #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.business_name #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.business_phone_number #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.city #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.country #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.county #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.custom #=> Hash
-    #   resp.message_template.default_attributes.customer_profile_attributes.custom["MessageTemplateAttributeKey"] #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.email_address #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.first_name #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.gender #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.home_phone_number #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.last_name #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_1 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_2 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_3 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_4 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_city #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_country #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_county #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_postal_code #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_province #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_state #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.middle_name #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mobile_phone_number #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.party_type #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.phone_number #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.country #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.postal_code #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.profile_arn #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.profile_id #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.province #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.state #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_address_1 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_address_2 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_address_3 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_address_4 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_city #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.shipping_country #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_county #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.shipping_country #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_postal_code #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_province #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_state #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.state #=> String
-    #   resp.message_template.default_attributes.system_attributes.customer_endpoint.address #=> String
-    #   resp.message_template.default_attributes.system_attributes.name #=> String
-    #   resp.message_template.default_attributes.system_attributes.system_endpoint.address #=> String
-    #   resp.message_template.description #=> String
-    #   resp.message_template.grouping_configuration.criteria #=> String
-    #   resp.message_template.grouping_configuration.values #=> Array
-    #   resp.message_template.grouping_configuration.values[0] #=> String
-    #   resp.message_template.knowledge_base_arn #=> String
-    #   resp.message_template.knowledge_base_id #=> String
-    #   resp.message_template.language #=> String
-    #   resp.message_template.last_modified_by #=> String
-    #   resp.message_template.last_modified_time #=> Time
-    #   resp.message_template.message_template_arn #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_1 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_2 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_3 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_4 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_city #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_county #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_country #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_postal_code #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_province #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_state #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_1 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_2 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_3 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_4 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_city #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_county #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_country #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_postal_code #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_province #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_state #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.custom #=> Hash
+    #   resp.message_template.default_attributes.customer_profile_attributes.custom["MessageTemplateAttributeKey"] #=> String
+    #   resp.message_template.default_attributes.custom_attributes #=> Hash
+    #   resp.message_template.default_attributes.custom_attributes["MessageTemplateAttributeKey"] #=> String
+    #   resp.message_template.attribute_types #=> Array
+    #   resp.message_template.attribute_types[0] #=> String, one of "SYSTEM", "AGENT", "CUSTOMER_PROFILE", "CUSTOM"
     #   resp.message_template.message_template_content_sha_256 #=> String
-    #   resp.message_template.message_template_id #=> String
-    #   resp.message_template.name #=> String
     #   resp.message_template.tags #=> Hash
     #   resp.message_template.tags["TagKey"] #=> String
     #
@@ -2221,6 +2679,21 @@ module Aws::QConnect
     # pre-signed Amazon S3 URL returned in response to download the uploaded
     # file.
     #
+    # @option params [required, String] :knowledge_base_id
+    #   The identifier of the knowledge base. Can be either the ID or the ARN.
+    #   URLs cannot contain the ARN.
+    #
+    # @option params [required, String] :message_template_id
+    #   The identifier of the message template. Can be either the ID or the
+    #   ARN. It cannot contain any qualifier.
+    #
+    # @option params [required, String] :content_disposition
+    #   The presentation information for the attachment file.
+    #
+    # @option params [required, String] :name
+    #   The name of the attachment file being uploaded. The name should
+    #   include the file extension.
+    #
     # @option params [required, String] :body
     #   The body of the attachment file being uploaded. It should be encoded
     #   using base64 encoding.
@@ -2235,21 +2708,6 @@ module Aws::QConnect
     #
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #
-    # @option params [required, String] :content_disposition
-    #   The presentation information for the attachment file.
-    #
-    # @option params [required, String] :knowledge_base_id
-    #   The identifier of the knowledge base. Can be either the ID or the ARN.
-    #   URLs cannot contain the ARN.
-    #
-    # @option params [required, String] :message_template_id
-    #   The identifier of the message template. Can be either the ID or the
-    #   ARN. It cannot contain any qualifier.
-    #
-    # @option params [required, String] :name
-    #   The name of the attachment file being uploaded. The name should
-    #   include the file extension.
-    #
     # @return [Types::CreateMessageTemplateAttachmentResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateMessageTemplateAttachmentResponse#attachment #attachment} => Types::MessageTemplateAttachment
@@ -2257,22 +2715,22 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_message_template_attachment({
-    #     body: "NonEmptyUnlimitedString", # required
-    #     client_token: "ClientToken",
-    #     content_disposition: "ATTACHMENT", # required, accepts ATTACHMENT
     #     knowledge_base_id: "UuidOrArn", # required
     #     message_template_id: "UuidOrArnOrEitherWithQualifier", # required
+    #     content_disposition: "ATTACHMENT", # required, accepts ATTACHMENT
     #     name: "AttachmentFileName", # required
+    #     body: "NonEmptyUnlimitedString", # required
+    #     client_token: "ClientToken",
     #   })
     #
     # @example Response structure
     #
-    #   resp.attachment.attachment_id #=> String
     #   resp.attachment.content_disposition #=> String, one of "ATTACHMENT"
     #   resp.attachment.name #=> String
     #   resp.attachment.uploaded_time #=> Time
     #   resp.attachment.url #=> String
     #   resp.attachment.url_expiry #=> Time
+    #   resp.attachment.attachment_id #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CreateMessageTemplateAttachment AWS API Documentation
     #
@@ -2300,6 +2758,10 @@ module Aws::QConnect
     #   The identifier of the knowledge base. Can be either the ID or the ARN.
     #   URLs cannot contain the ARN.
     #
+    # @option params [required, String] :message_template_id
+    #   The identifier of the message template. Can be either the ID or the
+    #   ARN. It cannot contain any qualifier.
+    #
     # @option params [String] :message_template_content_sha_256
     #   The checksum value of the message template content that is referenced
     #   by the `$LATEST` qualifier. It can be returned in
@@ -2309,10 +2771,6 @@ module Aws::QConnect
     #   will be created based on the message template content that is
     #   referenced by the `$LATEST` qualifier by default.
     #
-    # @option params [required, String] :message_template_id
-    #   The identifier of the message template. Can be either the ID or the
-    #   ARN. It cannot contain any qualifier.
-    #
     # @return [Types::CreateMessageTemplateVersionResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateMessageTemplateVersionResponse#message_template #message_template} => Types::ExtendedMessageTemplateData
@@ -2321,113 +2779,157 @@ module Aws::QConnect
     #
     #   resp = client.create_message_template_version({
     #     knowledge_base_id: "UuidOrArn", # required
-    #     message_template_content_sha_256: "MessageTemplateContentSha256",
     #     message_template_id: "UuidOrArnOrEitherWithQualifier", # required
+    #     message_template_content_sha_256: "MessageTemplateContentSha256",
     #   })
     #
     # @example Response structure
     #
-    #   resp.message_template.attachments #=> Array
-    #   resp.message_template.attachments[0].attachment_id #=> String
-    #   resp.message_template.attachments[0].content_disposition #=> String, one of "ATTACHMENT"
-    #   resp.message_template.attachments[0].name #=> String
-    #   resp.message_template.attachments[0].uploaded_time #=> Time
-    #   resp.message_template.attachments[0].url #=> String
-    #   resp.message_template.attachments[0].url_expiry #=> Time
-    #   resp.message_template.attribute_types #=> Array
-    #   resp.message_template.attribute_types[0] #=> String, one of "SYSTEM", "AGENT", "CUSTOMER_PROFILE", "CUSTOM"
-    #   resp.message_template.channel_subtype #=> String, one of "EMAIL", "SMS"
-    #   resp.message_template.content.email.body.html.content #=> String
+    #   resp.message_template.message_template_arn #=> String
+    #   resp.message_template.message_template_id #=> String
+    #   resp.message_template.knowledge_base_arn #=> String
+    #   resp.message_template.knowledge_base_id #=> String
+    #   resp.message_template.name #=> String
+    #   resp.message_template.channel #=> String
+    #   resp.message_template.channel_subtype #=> String, one of "EMAIL", "SMS", "WHATSAPP", "PUSH"
+    #   resp.message_template.created_time #=> Time
+    #   resp.message_template.last_modified_time #=> Time
+    #   resp.message_template.last_modified_by #=> String
+    #   resp.message_template.content.email.subject #=> String
     #   resp.message_template.content.email.body.plain_text.content #=> String
+    #   resp.message_template.content.email.body.html.content #=> String
     #   resp.message_template.content.email.headers #=> Array
     #   resp.message_template.content.email.headers[0].name #=> String
     #   resp.message_template.content.email.headers[0].value #=> String
-    #   resp.message_template.content.email.subject #=> String
     #   resp.message_template.content.sms.body.plain_text.content #=> String
-    #   resp.message_template.created_time #=> Time
+    #   resp.message_template.content.whats_app.data #=> String
+    #   resp.message_template.content.push.adm.title #=> String
+    #   resp.message_template.content.push.adm.body.content #=> String
+    #   resp.message_template.content.push.adm.action #=> String, one of "OPEN_APP", "DEEP_LINK", "URL"
+    #   resp.message_template.content.push.adm.sound #=> String
+    #   resp.message_template.content.push.adm.url #=> String
+    #   resp.message_template.content.push.adm.image_url #=> String
+    #   resp.message_template.content.push.adm.image_icon_url #=> String
+    #   resp.message_template.content.push.adm.small_image_icon_url #=> String
+    #   resp.message_template.content.push.adm.raw_content.content #=> String
+    #   resp.message_template.content.push.apns.title #=> String
+    #   resp.message_template.content.push.apns.body.content #=> String
+    #   resp.message_template.content.push.apns.action #=> String, one of "OPEN_APP", "DEEP_LINK", "URL"
+    #   resp.message_template.content.push.apns.sound #=> String
+    #   resp.message_template.content.push.apns.url #=> String
+    #   resp.message_template.content.push.apns.media_url #=> String
+    #   resp.message_template.content.push.apns.raw_content.content #=> String
+    #   resp.message_template.content.push.fcm.title #=> String
+    #   resp.message_template.content.push.fcm.body.content #=> String
+    #   resp.message_template.content.push.fcm.action #=> String, one of "OPEN_APP", "DEEP_LINK", "URL"
+    #   resp.message_template.content.push.fcm.sound #=> String
+    #   resp.message_template.content.push.fcm.url #=> String
+    #   resp.message_template.content.push.fcm.image_url #=> String
+    #   resp.message_template.content.push.fcm.image_icon_url #=> String
+    #   resp.message_template.content.push.fcm.small_image_icon_url #=> String
+    #   resp.message_template.content.push.fcm.raw_content.content #=> String
+    #   resp.message_template.content.push.baidu.title #=> String
+    #   resp.message_template.content.push.baidu.body.content #=> String
+    #   resp.message_template.content.push.baidu.action #=> String, one of "OPEN_APP", "DEEP_LINK", "URL"
+    #   resp.message_template.content.push.baidu.sound #=> String
+    #   resp.message_template.content.push.baidu.url #=> String
+    #   resp.message_template.content.push.baidu.image_url #=> String
+    #   resp.message_template.content.push.baidu.image_icon_url #=> String
+    #   resp.message_template.content.push.baidu.small_image_icon_url #=> String
+    #   resp.message_template.content.push.baidu.raw_content.content #=> String
+    #   resp.message_template.description #=> String
+    #   resp.message_template.language #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.business_account_id #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.template_id #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.name #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.language #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.components #=> Array
+    #   resp.message_template.source_configuration_summary.whats_app.components[0] #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.status #=> String, one of "VALID", "INVALID", "REJECTED"
+    #   resp.message_template.source_configuration_summary.whats_app.status_reason #=> String
+    #   resp.message_template.grouping_configuration.criteria #=> String
+    #   resp.message_template.grouping_configuration.values #=> Array
+    #   resp.message_template.grouping_configuration.values[0] #=> String
+    #   resp.message_template.default_attributes.system_attributes.name #=> String
+    #   resp.message_template.default_attributes.system_attributes.customer_endpoint.address #=> String
+    #   resp.message_template.default_attributes.system_attributes.system_endpoint.address #=> String
     #   resp.message_template.default_attributes.agent_attributes.first_name #=> String
     #   resp.message_template.default_attributes.agent_attributes.last_name #=> String
-    #   resp.message_template.default_attributes.custom_attributes #=> Hash
-    #   resp.message_template.default_attributes.custom_attributes["MessageTemplateAttributeKey"] #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.profile_id #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.profile_arn #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.first_name #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.middle_name #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.last_name #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.account_number #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.email_address #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.phone_number #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.additional_information #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.party_type #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.business_name #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.birth_date #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.gender #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mobile_phone_number #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.home_phone_number #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.business_phone_number #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.business_email_address #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.address1 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.address2 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.address3 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.address4 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_1 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_2 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_3 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_4 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_city #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_country #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_county #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_postal_code #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_province #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_state #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.birth_date #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.business_email_address #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.business_name #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.business_phone_number #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.city #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.country #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.county #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.custom #=> Hash
-    #   resp.message_template.default_attributes.customer_profile_attributes.custom["MessageTemplateAttributeKey"] #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.email_address #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.first_name #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.gender #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.home_phone_number #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.last_name #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_1 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_2 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_3 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_4 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_city #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_country #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_county #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_postal_code #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_province #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_state #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.middle_name #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mobile_phone_number #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.party_type #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.phone_number #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.country #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.postal_code #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.profile_arn #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.profile_id #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.province #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.state #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_address_1 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_address_2 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_address_3 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_address_4 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_city #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.shipping_country #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_county #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.shipping_country #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_postal_code #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_province #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_state #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.state #=> String
-    #   resp.message_template.default_attributes.system_attributes.customer_endpoint.address #=> String
-    #   resp.message_template.default_attributes.system_attributes.name #=> String
-    #   resp.message_template.default_attributes.system_attributes.system_endpoint.address #=> String
-    #   resp.message_template.description #=> String
-    #   resp.message_template.grouping_configuration.criteria #=> String
-    #   resp.message_template.grouping_configuration.values #=> Array
-    #   resp.message_template.grouping_configuration.values[0] #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_1 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_2 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_3 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_4 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_city #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_county #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_country #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_postal_code #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_province #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_state #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_1 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_2 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_3 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_4 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_city #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_county #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_country #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_postal_code #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_province #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_state #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.custom #=> Hash
+    #   resp.message_template.default_attributes.customer_profile_attributes.custom["MessageTemplateAttributeKey"] #=> String
+    #   resp.message_template.default_attributes.custom_attributes #=> Hash
+    #   resp.message_template.default_attributes.custom_attributes["MessageTemplateAttributeKey"] #=> String
+    #   resp.message_template.attribute_types #=> Array
+    #   resp.message_template.attribute_types[0] #=> String, one of "SYSTEM", "AGENT", "CUSTOMER_PROFILE", "CUSTOM"
+    #   resp.message_template.attachments #=> Array
+    #   resp.message_template.attachments[0].content_disposition #=> String, one of "ATTACHMENT"
+    #   resp.message_template.attachments[0].name #=> String
+    #   resp.message_template.attachments[0].uploaded_time #=> Time
+    #   resp.message_template.attachments[0].url #=> String
+    #   resp.message_template.attachments[0].url_expiry #=> Time
+    #   resp.message_template.attachments[0].attachment_id #=> String
     #   resp.message_template.is_active #=> Boolean
-    #   resp.message_template.knowledge_base_arn #=> String
-    #   resp.message_template.knowledge_base_id #=> String
-    #   resp.message_template.language #=> String
-    #   resp.message_template.last_modified_by #=> String
-    #   resp.message_template.last_modified_time #=> Time
-    #   resp.message_template.message_template_arn #=> String
+    #   resp.message_template.version_number #=> Integer
     #   resp.message_template.message_template_content_sha_256 #=> String
-    #   resp.message_template.message_template_id #=> String
-    #   resp.message_template.name #=> String
     #   resp.message_template.tags #=> Hash
     #   resp.message_template.tags["TagKey"] #=> String
-    #   resp.message_template.version_number #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CreateMessageTemplateVersion AWS API Documentation
     #
@@ -2440,8 +2942,47 @@ module Aws::QConnect
 
     # Creates an Amazon Q in Connect quick response.
     #
+    # @option params [required, String] :knowledge_base_id
+    #   The identifier of the knowledge base. Can be either the ID or the ARN.
+    #   URLs cannot contain the ARN.
+    #
+    # @option params [required, String] :name
+    #   The name of the quick response.
+    #
+    # @option params [required, Types::QuickResponseDataProvider] :content
+    #   The content of the quick response.
+    #
+    # @option params [String] :content_type
+    #   The media type of the quick response content.
+    #
+    #   * Use `application/x.quickresponse;format=plain` for a quick response
+    #     written in plain text.
+    #
+    #   * Use `application/x.quickresponse;format=markdown` for a quick
+    #     response written in richtext.
+    #
+    # @option params [Types::GroupingConfiguration] :grouping_configuration
+    #   The configuration information of the user groups that the quick
+    #   response is accessible to.
+    #
+    # @option params [String] :description
+    #   The description of the quick response.
+    #
+    # @option params [String] :shortcut_key
+    #   The shortcut key of the quick response. The value should be unique
+    #   across the knowledge base.
+    #
+    # @option params [Boolean] :is_active
+    #   Whether the quick response is active.
+    #
     # @option params [Array<String>] :channels
     #   The Amazon Connect channels this quick response applies to.
+    #
+    # @option params [String] :language
+    #   The language code value for the language in which the quick response
+    #   is written. The supported language codes include `de_DE`, `en_US`,
+    #   `es_ES`, `fr_FR`, `id_ID`, `it_IT`, `ja_JP`, `ko_KR`, `pt_BR`,
+    #   `zh_CN`, `zh_TW`
     #
     # @option params [String] :client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
@@ -2456,45 +2997,6 @@ module Aws::QConnect
     #
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #
-    # @option params [required, Types::QuickResponseDataProvider] :content
-    #   The content of the quick response.
-    #
-    # @option params [String] :content_type
-    #   The media type of the quick response content.
-    #
-    #   * Use `application/x.quickresponse;format=plain` for a quick response
-    #     written in plain text.
-    #
-    #   * Use `application/x.quickresponse;format=markdown` for a quick
-    #     response written in richtext.
-    #
-    # @option params [String] :description
-    #   The description of the quick response.
-    #
-    # @option params [Types::GroupingConfiguration] :grouping_configuration
-    #   The configuration information of the user groups that the quick
-    #   response is accessible to.
-    #
-    # @option params [Boolean] :is_active
-    #   Whether the quick response is active.
-    #
-    # @option params [required, String] :knowledge_base_id
-    #   The identifier of the knowledge base. Can be either the ID or the ARN.
-    #   URLs cannot contain the ARN.
-    #
-    # @option params [String] :language
-    #   The language code value for the language in which the quick response
-    #   is written. The supported language codes include `de_DE`, `en_US`,
-    #   `es_ES`, `fr_FR`, `id_ID`, `it_IT`, `ja_JP`, `ko_KR`, `pt_BR`,
-    #   `zh_CN`, `zh_TW`
-    #
-    # @option params [required, String] :name
-    #   The name of the quick response.
-    #
-    # @option params [String] :shortcut_key
-    #   The shortcut key of the quick response. The value should be unique
-    #   across the knowledge base.
-    #
     # @option params [Hash<String,String>] :tags
     #   The tags used to organize, track, or control access for this resource.
     #
@@ -2505,22 +3007,22 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_quick_response({
-    #     channels: ["Channel"],
-    #     client_token: "NonEmptyString",
+    #     knowledge_base_id: "UuidOrArn", # required
+    #     name: "QuickResponseName", # required
     #     content: { # required
     #       content: "QuickResponseContent",
     #     },
     #     content_type: "QuickResponseType",
-    #     description: "QuickResponseDescription",
     #     grouping_configuration: {
     #       criteria: "GroupingCriteria",
     #       values: ["GroupingValue"],
     #     },
-    #     is_active: false,
-    #     knowledge_base_id: "UuidOrArn", # required
-    #     language: "LanguageCode",
-    #     name: "QuickResponseName", # required
+    #     description: "QuickResponseDescription",
     #     shortcut_key: "ShortCutKey",
+    #     is_active: false,
+    #     channels: ["Channel"],
+    #     language: "LanguageCode",
+    #     client_token: "NonEmptyString",
     #     tags: {
     #       "TagKey" => "TagValue",
     #     },
@@ -2528,27 +3030,27 @@ module Aws::QConnect
     #
     # @example Response structure
     #
-    #   resp.quick_response.channels #=> Array
-    #   resp.quick_response.channels[0] #=> String
+    #   resp.quick_response.quick_response_arn #=> String
+    #   resp.quick_response.quick_response_id #=> String
+    #   resp.quick_response.knowledge_base_arn #=> String
+    #   resp.quick_response.knowledge_base_id #=> String
+    #   resp.quick_response.name #=> String
     #   resp.quick_response.content_type #=> String
-    #   resp.quick_response.contents.markdown.content #=> String
-    #   resp.quick_response.contents.plain_text.content #=> String
+    #   resp.quick_response.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "CREATED", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED", "UPDATE_IN_PROGRESS", "UPDATE_FAILED"
     #   resp.quick_response.created_time #=> Time
+    #   resp.quick_response.last_modified_time #=> Time
+    #   resp.quick_response.contents.plain_text.content #=> String
+    #   resp.quick_response.contents.markdown.content #=> String
     #   resp.quick_response.description #=> String
     #   resp.quick_response.grouping_configuration.criteria #=> String
     #   resp.quick_response.grouping_configuration.values #=> Array
     #   resp.quick_response.grouping_configuration.values[0] #=> String
-    #   resp.quick_response.is_active #=> Boolean
-    #   resp.quick_response.knowledge_base_arn #=> String
-    #   resp.quick_response.knowledge_base_id #=> String
-    #   resp.quick_response.language #=> String
-    #   resp.quick_response.last_modified_by #=> String
-    #   resp.quick_response.last_modified_time #=> Time
-    #   resp.quick_response.name #=> String
-    #   resp.quick_response.quick_response_arn #=> String
-    #   resp.quick_response.quick_response_id #=> String
     #   resp.quick_response.shortcut_key #=> String
-    #   resp.quick_response.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "CREATED", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED", "UPDATE_IN_PROGRESS", "UPDATE_FAILED"
+    #   resp.quick_response.last_modified_by #=> String
+    #   resp.quick_response.is_active #=> Boolean
+    #   resp.quick_response.channels #=> Array
+    #   resp.quick_response.channels[0] #=> String
+    #   resp.quick_response.language #=> String
     #   resp.quick_response.tags #=> Hash
     #   resp.quick_response.tags["TagKey"] #=> String
     #
@@ -2566,15 +3068,6 @@ module Aws::QConnect
     # Connect session for each contact on which Amazon Q in Connect is
     # enabled.
     #
-    # @option params [Hash<String,Types::AIAgentConfigurationData>] :ai_agent_configuration
-    #   The configuration of the AI Agents (mapped by AI Agent Type to AI
-    #   Agent version) that should be used by Amazon Q in Connect for this
-    #   Session.
-    #
-    # @option params [required, String] :assistant_id
-    #   The identifier of the Amazon Q in Connect assistant. Can be either the
-    #   ID or the ARN. URLs cannot contain the ARN.
-    #
     # @option params [String] :client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
     #   idempotency of the request. If not provided, the Amazon Web Services
@@ -2588,17 +3081,37 @@ module Aws::QConnect
     #
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #
-    # @option params [String] :description
-    #   The description.
+    # @option params [required, String] :assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either the
+    #   ID or the ARN. URLs cannot contain the ARN.
     #
     # @option params [required, String] :name
     #   The name of the session.
     #
-    # @option params [Types::TagFilter] :tag_filter
-    #   An object that can be used to specify Tag conditions.
+    # @option params [String] :description
+    #   The description.
     #
     # @option params [Hash<String,String>] :tags
     #   The tags used to organize, track, or control access for this resource.
+    #
+    # @option params [Types::TagFilter] :tag_filter
+    #   An object that can be used to specify Tag conditions.
+    #
+    # @option params [Hash<String,Types::AIAgentConfigurationData>] :ai_agent_configuration
+    #   The configuration of the AI Agents (mapped by AI Agent Type to AI
+    #   Agent version) that should be used by Amazon Q in Connect for this
+    #   Session.
+    #
+    # @option params [String] :contact_arn
+    #   The Amazon Resource Name (ARN) of the email contact in Amazon Connect.
+    #   Used to retrieve email content and establish session context for
+    #   AI-powered email assistance.
+    #
+    # @option params [Array<Types::OrchestratorConfigurationEntry>] :orchestrator_configuration_list
+    #   The list of orchestrator configurations for the session being created.
+    #
+    # @option params [Boolean] :remove_orchestrator_configuration_list
+    #   The list of orchestrator configurations to remove from the session.
     #
     # @return [Types::CreateSessionResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -2607,16 +3120,18 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_session({
-    #     ai_agent_configuration: {
-    #       "MANUAL_SEARCH" => {
-    #         ai_agent_id: "UuidWithQualifier", # required
-    #       },
-    #     },
-    #     assistant_id: "UuidOrArn", # required
     #     client_token: "ClientToken",
-    #     description: "Description",
+    #     assistant_id: "UuidOrArn", # required
     #     name: "Name", # required
+    #     description: "Description",
+    #     tags: {
+    #       "TagKey" => "TagValue",
+    #     },
     #     tag_filter: {
+    #       tag_condition: {
+    #         key: "TagKey", # required
+    #         value: "TagValue",
+    #       },
     #       and_conditions: [
     #         {
     #           key: "TagKey", # required
@@ -2637,25 +3152,33 @@ module Aws::QConnect
     #           },
     #         },
     #       ],
-    #       tag_condition: {
-    #         key: "TagKey", # required
-    #         value: "TagValue",
+    #     },
+    #     ai_agent_configuration: {
+    #       "MANUAL_SEARCH" => {
+    #         ai_agent_id: "UuidWithQualifier", # required
     #       },
     #     },
-    #     tags: {
-    #       "TagKey" => "TagValue",
-    #     },
+    #     contact_arn: "GenericArn",
+    #     orchestrator_configuration_list: [
+    #       {
+    #         ai_agent_id: "UuidOrArnOrEitherWithQualifier",
+    #         orchestrator_use_case: "NonEmptyString", # required
+    #       },
+    #     ],
+    #     remove_orchestrator_configuration_list: false,
     #   })
     #
     # @example Response structure
     #
-    #   resp.session.ai_agent_configuration #=> Hash
-    #   resp.session.ai_agent_configuration["AIAgentType"].ai_agent_id #=> String
-    #   resp.session.description #=> String
-    #   resp.session.integration_configuration.topic_integration_arn #=> String
-    #   resp.session.name #=> String
     #   resp.session.session_arn #=> String
     #   resp.session.session_id #=> String
+    #   resp.session.name #=> String
+    #   resp.session.description #=> String
+    #   resp.session.tags #=> Hash
+    #   resp.session.tags["TagKey"] #=> String
+    #   resp.session.integration_configuration.topic_integration_arn #=> String
+    #   resp.session.tag_filter.tag_condition.key #=> String
+    #   resp.session.tag_filter.tag_condition.value #=> String
     #   resp.session.tag_filter.and_conditions #=> Array
     #   resp.session.tag_filter.and_conditions[0].key #=> String
     #   resp.session.tag_filter.and_conditions[0].value #=> String
@@ -2665,10 +3188,12 @@ module Aws::QConnect
     #   resp.session.tag_filter.or_conditions[0].and_conditions[0].value #=> String
     #   resp.session.tag_filter.or_conditions[0].tag_condition.key #=> String
     #   resp.session.tag_filter.or_conditions[0].tag_condition.value #=> String
-    #   resp.session.tag_filter.tag_condition.key #=> String
-    #   resp.session.tag_filter.tag_condition.value #=> String
-    #   resp.session.tags #=> Hash
-    #   resp.session.tags["TagKey"] #=> String
+    #   resp.session.ai_agent_configuration #=> Hash
+    #   resp.session.ai_agent_configuration["AIAgentType"].ai_agent_id #=> String
+    #   resp.session.origin #=> String, one of "SYSTEM", "CUSTOMER"
+    #   resp.session.orchestrator_configuration_list #=> Array
+    #   resp.session.orchestrator_configuration_list[0].ai_agent_id #=> String
+    #   resp.session.orchestrator_configuration_list[0].orchestrator_use_case #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CreateSession AWS API Documentation
     #
@@ -2725,12 +3250,12 @@ module Aws::QConnect
 
     # Deletes an Amazon Q in Connect AI Agent.
     #
-    # @option params [required, String] :ai_agent_id
-    #   The identifier of the Amazon Q in Connect AI Agent. Can be either the
-    #   ID or the ARN. URLs cannot contain the ARN.
-    #
     # @option params [required, String] :assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either the
+    #   ID or the ARN. URLs cannot contain the ARN.
+    #
+    # @option params [required, String] :ai_agent_id
+    #   The identifier of the Amazon Q in Connect AI Agent. Can be either the
     #   ID or the ARN. URLs cannot contain the ARN.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
@@ -2738,8 +3263,8 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_ai_agent({
-    #     ai_agent_id: "UuidOrArnOrEitherWithQualifier", # required
     #     assistant_id: "UuidOrArn", # required
+    #     ai_agent_id: "UuidOrArnOrEitherWithQualifier", # required
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/DeleteAIAgent AWS API Documentation
@@ -2753,12 +3278,12 @@ module Aws::QConnect
 
     # Deletes an Amazon Q in Connect AI Agent Version.
     #
-    # @option params [required, String] :ai_agent_id
-    #   The identifier of the Amazon Q in Connect AI Agent. Can be either the
-    #   ID or the ARN. URLs cannot contain the ARN.
-    #
     # @option params [required, String] :assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either the
+    #   ID or the ARN. URLs cannot contain the ARN.
+    #
+    # @option params [required, String] :ai_agent_id
+    #   The identifier of the Amazon Q in Connect AI Agent. Can be either the
     #   ID or the ARN. URLs cannot contain the ARN.
     #
     # @option params [required, Integer] :version_number
@@ -2769,8 +3294,8 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_ai_agent_version({
-    #     ai_agent_id: "UuidOrArnOrEitherWithQualifier", # required
     #     assistant_id: "UuidOrArn", # required
+    #     ai_agent_id: "UuidOrArnOrEitherWithQualifier", # required
     #     version_number: 1, # required
     #   })
     #
@@ -2785,21 +3310,21 @@ module Aws::QConnect
 
     # Deletes an Amazon Q in Connect AI Guardrail.
     #
-    # @option params [required, String] :ai_guardrail_id
-    #   The identifier of the Amazon Q in Connect AI Guardrail. Can be either
-    #   the ID or the ARN. URLs cannot contain the ARN.
-    #
     # @option params [required, String] :assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either the
     #   ID or the ARN. URLs cannot contain the ARN.
+    #
+    # @option params [required, String] :ai_guardrail_id
+    #   The identifier of the Amazon Q in Connect AI Guardrail. Can be either
+    #   the ID or the ARN. URLs cannot contain the ARN.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_ai_guardrail({
-    #     ai_guardrail_id: "UuidOrArnOrEitherWithQualifier", # required
     #     assistant_id: "UuidOrArn", # required
+    #     ai_guardrail_id: "UuidOrArnOrEitherWithQualifier", # required
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/DeleteAIGuardrail AWS API Documentation
@@ -2813,12 +3338,12 @@ module Aws::QConnect
 
     # Delete and Amazon Q in Connect AI Guardrail version.
     #
-    # @option params [required, String] :ai_guardrail_id
-    #   The identifier of the Amazon Q in Connect AI Guardrail.
-    #
     # @option params [required, String] :assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either the
     #   ID or the ARN. URLs cannot contain the ARN.
+    #
+    # @option params [required, String] :ai_guardrail_id
+    #   The identifier of the Amazon Q in Connect AI Guardrail.
     #
     # @option params [required, Integer] :version_number
     #   The version number of the AI Guardrail version to be deleted.
@@ -2828,8 +3353,8 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_ai_guardrail_version({
-    #     ai_guardrail_id: "UuidOrArnOrEitherWithQualifier", # required
     #     assistant_id: "UuidOrArn", # required
+    #     ai_guardrail_id: "UuidOrArnOrEitherWithQualifier", # required
     #     version_number: 1, # required
     #   })
     #
@@ -2844,12 +3369,12 @@ module Aws::QConnect
 
     # Deletes an Amazon Q in Connect AI Prompt.
     #
-    # @option params [required, String] :ai_prompt_id
-    #   The identifier of the Amazon Q in Connect AI prompt. Can be either the
-    #   ID or the ARN. URLs cannot contain the ARN.
-    #
     # @option params [required, String] :assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either the
+    #   ID or the ARN. URLs cannot contain the ARN.
+    #
+    # @option params [required, String] :ai_prompt_id
+    #   The identifier of the Amazon Q in Connect AI prompt. Can be either the
     #   ID or the ARN. URLs cannot contain the ARN.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
@@ -2857,8 +3382,8 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_ai_prompt({
-    #     ai_prompt_id: "UuidOrArnOrEitherWithQualifier", # required
     #     assistant_id: "UuidOrArn", # required
+    #     ai_prompt_id: "UuidOrArnOrEitherWithQualifier", # required
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/DeleteAIPrompt AWS API Documentation
@@ -2872,12 +3397,12 @@ module Aws::QConnect
 
     # Delete and Amazon Q in Connect AI Prompt version.
     #
-    # @option params [required, String] :ai_prompt_id
-    #   The identifier of the Amazon Q in Connect AI prompt.
-    #
     # @option params [required, String] :assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either the
     #   ID or the ARN. URLs cannot contain the ARN.
+    #
+    # @option params [required, String] :ai_prompt_id
+    #   The identifier of the Amazon Q in Connect AI prompt.
     #
     # @option params [required, Integer] :version_number
     #   The version number of the AI Prompt version to be deleted.
@@ -2887,8 +3412,8 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_ai_prompt_version({
-    #     ai_prompt_id: "UuidOrArnOrEitherWithQualifier", # required
     #     assistant_id: "UuidOrArn", # required
+    #     ai_prompt_id: "UuidOrArnOrEitherWithQualifier", # required
     #     version_number: 1, # required
     #   })
     #
@@ -2954,21 +3479,21 @@ module Aws::QConnect
 
     # Deletes the content.
     #
-    # @option params [required, String] :content_id
-    #   The identifier of the content. Can be either the ID or the ARN. URLs
-    #   cannot contain the ARN.
-    #
     # @option params [required, String] :knowledge_base_id
     #   The identifier of the knowledge base. Can be either the ID or the ARN.
     #   URLs cannot contain the ARN.
+    #
+    # @option params [required, String] :content_id
+    #   The identifier of the content. Can be either the ID or the ARN. URLs
+    #   cannot contain the ARN.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_content({
-    #     content_id: "UuidOrArn", # required
     #     knowledge_base_id: "UuidOrArn", # required
+    #     content_id: "UuidOrArn", # required
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/DeleteContent AWS API Documentation
@@ -2990,24 +3515,24 @@ module Aws::QConnect
     #
     # [1]: https://docs.aws.amazon.com/connect/latest/adminguide/integrate-q-with-guides.html
     #
-    # @option params [required, String] :content_association_id
-    #   The identifier of the content association. Can be either the ID or the
-    #   ARN. URLs cannot contain the ARN.
+    # @option params [required, String] :knowledge_base_id
+    #   The identifier of the knowledge base.
     #
     # @option params [required, String] :content_id
     #   The identifier of the content.
     #
-    # @option params [required, String] :knowledge_base_id
-    #   The identifier of the knowledge base.
+    # @option params [required, String] :content_association_id
+    #   The identifier of the content association. Can be either the ID or the
+    #   ARN. URLs cannot contain the ARN.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_content_association({
-    #     content_association_id: "UuidOrArn", # required
-    #     content_id: "UuidOrArn", # required
     #     knowledge_base_id: "UuidOrArn", # required
+    #     content_id: "UuidOrArn", # required
+    #     content_association_id: "UuidOrArn", # required
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/DeleteContentAssociation AWS API Documentation
@@ -3021,19 +3546,19 @@ module Aws::QConnect
 
     # Deletes the quick response import job.
     #
-    # @option params [required, String] :import_job_id
-    #   The identifier of the import job to be deleted.
-    #
     # @option params [required, String] :knowledge_base_id
     #   The identifier of the knowledge base.
+    #
+    # @option params [required, String] :import_job_id
+    #   The identifier of the import job to be deleted.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_import_job({
-    #     import_job_id: "Uuid", # required
     #     knowledge_base_id: "UuidOrArn", # required
+    #     import_job_id: "Uuid", # required
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/DeleteImportJob AWS API Documentation
@@ -3121,9 +3646,6 @@ module Aws::QConnect
     # template that is referenced by `$LATEST` qualifier. Attachments on
     # available message template versions will remain unchanged.
     #
-    # @option params [required, String] :attachment_id
-    #   The identifier of the attachment file.
-    #
     # @option params [required, String] :knowledge_base_id
     #   The identifier of the knowledge base. Can be either the ID or the ARN.
     #   URLs cannot contain the ARN.
@@ -3132,14 +3654,17 @@ module Aws::QConnect
     #   The identifier of the message template. Can be either the ID or the
     #   ARN. It cannot contain any qualifier.
     #
+    # @option params [required, String] :attachment_id
+    #   The identifier of the attachment file.
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_message_template_attachment({
-    #     attachment_id: "Uuid", # required
     #     knowledge_base_id: "UuidOrArn", # required
     #     message_template_id: "UuidOrArnOrEitherWithQualifier", # required
+    #     attachment_id: "Uuid", # required
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/DeleteMessageTemplateAttachment AWS API Documentation
@@ -3180,14 +3705,14 @@ module Aws::QConnect
 
     # Gets an Amazon Q in Connect AI Agent.
     #
+    # @option params [required, String] :assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either the
+    #   ID or the ARN. URLs cannot contain the ARN.
+    #
     # @option params [required, String] :ai_agent_id
     #   The identifier of the Amazon Q in Connect AI Agent (with or without a
     #   version qualifier). Can be either the ID or the ARN. URLs cannot
     #   contain the ARN.
-    #
-    # @option params [required, String] :assistant_id
-    #   The identifier of the Amazon Q in Connect assistant. Can be either the
-    #   ID or the ARN. URLs cannot contain the ARN.
     #
     # @return [Types::GetAIAgentResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -3197,40 +3722,25 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_ai_agent({
-    #     ai_agent_id: "UuidOrArnOrEitherWithQualifier", # required
     #     assistant_id: "UuidOrArn", # required
+    #     ai_agent_id: "UuidOrArnOrEitherWithQualifier", # required
     #   })
     #
     # @example Response structure
     #
-    #   resp.ai_agent.ai_agent_arn #=> String
-    #   resp.ai_agent.ai_agent_id #=> String
-    #   resp.ai_agent.assistant_arn #=> String
     #   resp.ai_agent.assistant_id #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.answer_generation_ai_guardrail_id #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.answer_generation_ai_prompt_id #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations #=> Array
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions #=> Array
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions #=> Array
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].key #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_id #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.intent_labeling_generation_ai_prompt_id #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.locale #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.query_reformulation_ai_prompt_id #=> String
-    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.answer_generation_ai_guardrail_id #=> String
+    #   resp.ai_agent.assistant_arn #=> String
+    #   resp.ai_agent.ai_agent_id #=> String
+    #   resp.ai_agent.ai_agent_arn #=> String
+    #   resp.ai_agent.name #=> String
+    #   resp.ai_agent.type #=> String, one of "MANUAL_SEARCH", "ANSWER_RECOMMENDATION", "SELF_SERVICE", "EMAIL_RESPONSE", "EMAIL_OVERVIEW", "EMAIL_GENERATIVE_ANSWER", "ORCHESTRATION", "NOTE_TAKING", "CASE_SUMMARIZATION"
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.answer_generation_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.answer_generation_ai_guardrail_id #=> String
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
@@ -3240,14 +3750,40 @@ module Aws::QConnect
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
-    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
-    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
-    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_id #=> String
-    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.intent_labeling_generation_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.query_reformulation_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.answer_generation_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.answer_generation_ai_guardrail_id #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions #=> Array
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions #=> Array
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].key #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.suggested_messages #=> Array
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.suggested_messages[0] #=> String
+    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.self_service_pre_processing_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.self_service_answer_generation_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.self_service_ai_guardrail_id #=> String
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
@@ -3257,24 +3793,85 @@ module Aws::QConnect
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
-    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
-    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
-    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_id #=> String
-    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
-    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.self_service_ai_guardrail_id #=> String
-    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.self_service_answer_generation_ai_prompt_id #=> String
-    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.self_service_pre_processing_ai_prompt_id #=> String
-    #   resp.ai_agent.description #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.email_response_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.email_query_reformulation_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions #=> Array
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions #=> Array
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].key #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
+    #   resp.ai_agent.configuration.email_overview_ai_agent_configuration.email_overview_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.email_overview_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.email_generative_answer_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.email_query_reformulation_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions #=> Array
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions #=> Array
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].key #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.orchestration_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.orchestration_ai_guardrail_id #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations #=> Array
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].tool_name #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].tool_type #=> String, one of "MODEL_CONTEXT_PROTOCOL", "RETURN_TO_CONTROL", "CONSTANT"
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].title #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].tool_id #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].description #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].instruction.instruction #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].instruction.examples #=> Array
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].instruction.examples[0] #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].override_input_values #=> Array
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].override_input_values[0].json_path #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].override_input_values[0].value.constant.type #=> String, one of "STRING", "NUMBER", "JSON_STRING"
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].override_input_values[0].value.constant.value #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].output_filters #=> Array
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].output_filters[0].json_path #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].output_filters[0].output_configuration.output_variable_name_override #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].output_filters[0].output_configuration.session_data_namespace #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].annotations.title #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].annotations.destructive_hint #=> Boolean
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].user_interaction_configuration.is_user_confirmation_required #=> Boolean
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.connect_instance_arn #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent.configuration.note_taking_ai_agent_configuration.note_taking_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.note_taking_ai_agent_configuration.note_taking_ai_guardrail_id #=> String
+    #   resp.ai_agent.configuration.note_taking_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent.configuration.case_summarization_ai_agent_configuration.case_summarization_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.case_summarization_ai_agent_configuration.case_summarization_ai_guardrail_id #=> String
+    #   resp.ai_agent.configuration.case_summarization_ai_agent_configuration.locale #=> String
     #   resp.ai_agent.modified_time #=> Time
-    #   resp.ai_agent.name #=> String
-    #   resp.ai_agent.origin #=> String, one of "SYSTEM", "CUSTOMER"
-    #   resp.ai_agent.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
+    #   resp.ai_agent.description #=> String
+    #   resp.ai_agent.visibility_status #=> String, one of "SAVED", "PUBLISHED"
     #   resp.ai_agent.tags #=> Hash
     #   resp.ai_agent.tags["TagKey"] #=> String
-    #   resp.ai_agent.type #=> String, one of "MANUAL_SEARCH", "ANSWER_RECOMMENDATION", "SELF_SERVICE"
-    #   resp.ai_agent.visibility_status #=> String, one of "SAVED", "PUBLISHED"
+    #   resp.ai_agent.origin #=> String, one of "SYSTEM", "CUSTOMER"
+    #   resp.ai_agent.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
     #   resp.version_number #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GetAIAgent AWS API Documentation
@@ -3288,12 +3885,12 @@ module Aws::QConnect
 
     # Gets the Amazon Q in Connect AI Guardrail.
     #
-    # @option params [required, String] :ai_guardrail_id
-    #   The identifier of the Amazon Q in Connect AI Guardrail.
-    #
     # @option params [required, String] :assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either the
     #   ID or the ARN. URLs cannot contain the ARN.
+    #
+    # @option params [required, String] :ai_guardrail_id
+    #   The identifier of the Amazon Q in Connect AI Guardrail.
     #
     # @return [Types::GetAIGuardrailResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -3303,50 +3900,50 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_ai_guardrail({
-    #     ai_guardrail_id: "UuidOrArnOrEitherWithQualifier", # required
     #     assistant_id: "UuidOrArn", # required
+    #     ai_guardrail_id: "UuidOrArnOrEitherWithQualifier", # required
     #   })
     #
     # @example Response structure
     #
+    #   resp.ai_guardrail.assistant_id #=> String
+    #   resp.ai_guardrail.assistant_arn #=> String
     #   resp.ai_guardrail.ai_guardrail_arn #=> String
     #   resp.ai_guardrail.ai_guardrail_id #=> String
-    #   resp.ai_guardrail.assistant_arn #=> String
-    #   resp.ai_guardrail.assistant_id #=> String
+    #   resp.ai_guardrail.name #=> String
+    #   resp.ai_guardrail.visibility_status #=> String, one of "SAVED", "PUBLISHED"
     #   resp.ai_guardrail.blocked_input_messaging #=> String
     #   resp.ai_guardrail.blocked_outputs_messaging #=> String
-    #   resp.ai_guardrail.content_policy_config.filters_config #=> Array
-    #   resp.ai_guardrail.content_policy_config.filters_config[0].input_strength #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH"
-    #   resp.ai_guardrail.content_policy_config.filters_config[0].output_strength #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH"
-    #   resp.ai_guardrail.content_policy_config.filters_config[0].type #=> String, one of "SEXUAL", "VIOLENCE", "HATE", "INSULTS", "MISCONDUCT", "PROMPT_ATTACK"
-    #   resp.ai_guardrail.contextual_grounding_policy_config.filters_config #=> Array
-    #   resp.ai_guardrail.contextual_grounding_policy_config.filters_config[0].threshold #=> Float
-    #   resp.ai_guardrail.contextual_grounding_policy_config.filters_config[0].type #=> String, one of "GROUNDING", "RELEVANCE"
     #   resp.ai_guardrail.description #=> String
-    #   resp.ai_guardrail.modified_time #=> Time
-    #   resp.ai_guardrail.name #=> String
-    #   resp.ai_guardrail.sensitive_information_policy_config.pii_entities_config #=> Array
-    #   resp.ai_guardrail.sensitive_information_policy_config.pii_entities_config[0].action #=> String, one of "BLOCK", "ANONYMIZE"
-    #   resp.ai_guardrail.sensitive_information_policy_config.pii_entities_config[0].type #=> String, one of "ADDRESS", "AGE", "AWS_ACCESS_KEY", "AWS_SECRET_KEY", "CA_HEALTH_NUMBER", "CA_SOCIAL_INSURANCE_NUMBER", "CREDIT_DEBIT_CARD_CVV", "CREDIT_DEBIT_CARD_EXPIRY", "CREDIT_DEBIT_CARD_NUMBER", "DRIVER_ID", "EMAIL", "INTERNATIONAL_BANK_ACCOUNT_NUMBER", "IP_ADDRESS", "LICENSE_PLATE", "MAC_ADDRESS", "NAME", "PASSWORD", "PHONE", "PIN", "SWIFT_CODE", "UK_NATIONAL_HEALTH_SERVICE_NUMBER", "UK_NATIONAL_INSURANCE_NUMBER", "UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER", "URL", "USERNAME", "US_BANK_ACCOUNT_NUMBER", "US_BANK_ROUTING_NUMBER", "US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER", "US_PASSPORT_NUMBER", "US_SOCIAL_SECURITY_NUMBER", "VEHICLE_IDENTIFICATION_NUMBER"
-    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config #=> Array
-    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].action #=> String, one of "BLOCK", "ANONYMIZE"
-    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].description #=> String
-    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].name #=> String
-    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].pattern #=> String
-    #   resp.ai_guardrail.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
-    #   resp.ai_guardrail.tags #=> Hash
-    #   resp.ai_guardrail.tags["TagKey"] #=> String
     #   resp.ai_guardrail.topic_policy_config.topics_config #=> Array
+    #   resp.ai_guardrail.topic_policy_config.topics_config[0].name #=> String
     #   resp.ai_guardrail.topic_policy_config.topics_config[0].definition #=> String
     #   resp.ai_guardrail.topic_policy_config.topics_config[0].examples #=> Array
     #   resp.ai_guardrail.topic_policy_config.topics_config[0].examples[0] #=> String
-    #   resp.ai_guardrail.topic_policy_config.topics_config[0].name #=> String
     #   resp.ai_guardrail.topic_policy_config.topics_config[0].type #=> String, one of "DENY"
-    #   resp.ai_guardrail.visibility_status #=> String, one of "SAVED", "PUBLISHED"
-    #   resp.ai_guardrail.word_policy_config.managed_word_lists_config #=> Array
-    #   resp.ai_guardrail.word_policy_config.managed_word_lists_config[0].type #=> String, one of "PROFANITY"
+    #   resp.ai_guardrail.content_policy_config.filters_config #=> Array
+    #   resp.ai_guardrail.content_policy_config.filters_config[0].type #=> String, one of "SEXUAL", "VIOLENCE", "HATE", "INSULTS", "MISCONDUCT", "PROMPT_ATTACK"
+    #   resp.ai_guardrail.content_policy_config.filters_config[0].input_strength #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH"
+    #   resp.ai_guardrail.content_policy_config.filters_config[0].output_strength #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH"
     #   resp.ai_guardrail.word_policy_config.words_config #=> Array
     #   resp.ai_guardrail.word_policy_config.words_config[0].text #=> String
+    #   resp.ai_guardrail.word_policy_config.managed_word_lists_config #=> Array
+    #   resp.ai_guardrail.word_policy_config.managed_word_lists_config[0].type #=> String, one of "PROFANITY"
+    #   resp.ai_guardrail.sensitive_information_policy_config.pii_entities_config #=> Array
+    #   resp.ai_guardrail.sensitive_information_policy_config.pii_entities_config[0].type #=> String, one of "ADDRESS", "AGE", "AWS_ACCESS_KEY", "AWS_SECRET_KEY", "CA_HEALTH_NUMBER", "CA_SOCIAL_INSURANCE_NUMBER", "CREDIT_DEBIT_CARD_CVV", "CREDIT_DEBIT_CARD_EXPIRY", "CREDIT_DEBIT_CARD_NUMBER", "DRIVER_ID", "EMAIL", "INTERNATIONAL_BANK_ACCOUNT_NUMBER", "IP_ADDRESS", "LICENSE_PLATE", "MAC_ADDRESS", "NAME", "PASSWORD", "PHONE", "PIN", "SWIFT_CODE", "UK_NATIONAL_HEALTH_SERVICE_NUMBER", "UK_NATIONAL_INSURANCE_NUMBER", "UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER", "URL", "USERNAME", "US_BANK_ACCOUNT_NUMBER", "US_BANK_ROUTING_NUMBER", "US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER", "US_PASSPORT_NUMBER", "US_SOCIAL_SECURITY_NUMBER", "VEHICLE_IDENTIFICATION_NUMBER"
+    #   resp.ai_guardrail.sensitive_information_policy_config.pii_entities_config[0].action #=> String, one of "BLOCK", "ANONYMIZE"
+    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config #=> Array
+    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].name #=> String
+    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].description #=> String
+    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].pattern #=> String
+    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].action #=> String, one of "BLOCK", "ANONYMIZE"
+    #   resp.ai_guardrail.contextual_grounding_policy_config.filters_config #=> Array
+    #   resp.ai_guardrail.contextual_grounding_policy_config.filters_config[0].type #=> String, one of "GROUNDING", "RELEVANCE"
+    #   resp.ai_guardrail.contextual_grounding_policy_config.filters_config[0].threshold #=> Float
+    #   resp.ai_guardrail.tags #=> Hash
+    #   resp.ai_guardrail.tags["TagKey"] #=> String
+    #   resp.ai_guardrail.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
+    #   resp.ai_guardrail.modified_time #=> Time
     #   resp.version_number #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GetAIGuardrail AWS API Documentation
@@ -3360,12 +3957,12 @@ module Aws::QConnect
 
     # Gets and Amazon Q in Connect AI Prompt.
     #
-    # @option params [required, String] :ai_prompt_id
-    #   The identifier of the Amazon Q in Connect AI prompt.
-    #
     # @option params [required, String] :assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either the
     #   ID or the ARN. URLs cannot contain the ARN.
+    #
+    # @option params [required, String] :ai_prompt_id
+    #   The identifier of the Amazon Q in Connect AI prompt.
     #
     # @return [Types::GetAIPromptResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -3375,29 +3972,33 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_ai_prompt({
-    #     ai_prompt_id: "UuidOrArnOrEitherWithQualifier", # required
     #     assistant_id: "UuidOrArn", # required
+    #     ai_prompt_id: "UuidOrArnOrEitherWithQualifier", # required
     #   })
     #
     # @example Response structure
     #
-    #   resp.ai_prompt.ai_prompt_arn #=> String
-    #   resp.ai_prompt.ai_prompt_id #=> String
-    #   resp.ai_prompt.api_format #=> String, one of "ANTHROPIC_CLAUDE_MESSAGES", "ANTHROPIC_CLAUDE_TEXT_COMPLETIONS"
-    #   resp.ai_prompt.assistant_arn #=> String
     #   resp.ai_prompt.assistant_id #=> String
-    #   resp.ai_prompt.description #=> String
-    #   resp.ai_prompt.model_id #=> String
-    #   resp.ai_prompt.modified_time #=> Time
+    #   resp.ai_prompt.assistant_arn #=> String
+    #   resp.ai_prompt.ai_prompt_id #=> String
+    #   resp.ai_prompt.ai_prompt_arn #=> String
     #   resp.ai_prompt.name #=> String
-    #   resp.ai_prompt.origin #=> String, one of "SYSTEM", "CUSTOMER"
-    #   resp.ai_prompt.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
+    #   resp.ai_prompt.type #=> String, one of "ANSWER_GENERATION", "INTENT_LABELING_GENERATION", "QUERY_REFORMULATION", "SELF_SERVICE_PRE_PROCESSING", "SELF_SERVICE_ANSWER_GENERATION", "EMAIL_RESPONSE", "EMAIL_OVERVIEW", "EMAIL_GENERATIVE_ANSWER", "EMAIL_QUERY_REFORMULATION", "ORCHESTRATION", "NOTE_TAKING", "CASE_SUMMARIZATION"
+    #   resp.ai_prompt.template_type #=> String, one of "TEXT"
+    #   resp.ai_prompt.model_id #=> String
+    #   resp.ai_prompt.api_format #=> String, one of "ANTHROPIC_CLAUDE_MESSAGES", "ANTHROPIC_CLAUDE_TEXT_COMPLETIONS", "MESSAGES", "TEXT_COMPLETIONS"
+    #   resp.ai_prompt.template_configuration.text_full_ai_prompt_edit_template_configuration.text #=> String
+    #   resp.ai_prompt.inference_configuration.temperature #=> Float
+    #   resp.ai_prompt.inference_configuration.top_p #=> Float
+    #   resp.ai_prompt.inference_configuration.top_k #=> Integer
+    #   resp.ai_prompt.inference_configuration.max_tokens_to_sample #=> Integer
+    #   resp.ai_prompt.modified_time #=> Time
+    #   resp.ai_prompt.description #=> String
+    #   resp.ai_prompt.visibility_status #=> String, one of "SAVED", "PUBLISHED"
     #   resp.ai_prompt.tags #=> Hash
     #   resp.ai_prompt.tags["TagKey"] #=> String
-    #   resp.ai_prompt.template_configuration.text_full_ai_prompt_edit_template_configuration.text #=> String
-    #   resp.ai_prompt.template_type #=> String, one of "TEXT"
-    #   resp.ai_prompt.type #=> String, one of "ANSWER_GENERATION", "INTENT_LABELING_GENERATION", "QUERY_REFORMULATION", "SELF_SERVICE_PRE_PROCESSING", "SELF_SERVICE_ANSWER_GENERATION"
-    #   resp.ai_prompt.visibility_status #=> String, one of "SAVED", "PUBLISHED"
+    #   resp.ai_prompt.origin #=> String, one of "SYSTEM", "CUSTOMER"
+    #   resp.ai_prompt.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
     #   resp.version_number #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GetAIPrompt AWS API Documentation
@@ -3427,19 +4028,22 @@ module Aws::QConnect
     #
     # @example Response structure
     #
-    #   resp.assistant.ai_agent_configuration #=> Hash
-    #   resp.assistant.ai_agent_configuration["AIAgentType"].ai_agent_id #=> String
-    #   resp.assistant.assistant_arn #=> String
     #   resp.assistant.assistant_id #=> String
-    #   resp.assistant.capability_configuration.type #=> String, one of "V1", "V2"
-    #   resp.assistant.description #=> String
-    #   resp.assistant.integration_configuration.topic_integration_arn #=> String
+    #   resp.assistant.assistant_arn #=> String
     #   resp.assistant.name #=> String
-    #   resp.assistant.server_side_encryption_configuration.kms_key_id #=> String
+    #   resp.assistant.type #=> String, one of "AGENT"
     #   resp.assistant.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
+    #   resp.assistant.description #=> String
     #   resp.assistant.tags #=> Hash
     #   resp.assistant.tags["TagKey"] #=> String
-    #   resp.assistant.type #=> String, one of "AGENT"
+    #   resp.assistant.server_side_encryption_configuration.kms_key_id #=> String
+    #   resp.assistant.integration_configuration.topic_integration_arn #=> String
+    #   resp.assistant.capability_configuration.type #=> String, one of "V1", "V2"
+    #   resp.assistant.ai_agent_configuration #=> Hash
+    #   resp.assistant.ai_agent_configuration["AIAgentType"].ai_agent_id #=> String
+    #   resp.assistant.orchestrator_configuration_list #=> Array
+    #   resp.assistant.orchestrator_configuration_list[0].ai_agent_id #=> String
+    #   resp.assistant.orchestrator_configuration_list[0].orchestrator_use_case #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GetAssistant AWS API Documentation
     #
@@ -3473,13 +4077,15 @@ module Aws::QConnect
     #
     # @example Response structure
     #
-    #   resp.assistant_association.assistant_arn #=> String
-    #   resp.assistant_association.assistant_association_arn #=> String
     #   resp.assistant_association.assistant_association_id #=> String
+    #   resp.assistant_association.assistant_association_arn #=> String
     #   resp.assistant_association.assistant_id #=> String
-    #   resp.assistant_association.association_data.knowledge_base_association.knowledge_base_arn #=> String
+    #   resp.assistant_association.assistant_arn #=> String
+    #   resp.assistant_association.association_type #=> String, one of "KNOWLEDGE_BASE", "EXTERNAL_BEDROCK_KNOWLEDGE_BASE"
     #   resp.assistant_association.association_data.knowledge_base_association.knowledge_base_id #=> String
-    #   resp.assistant_association.association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.assistant_association.association_data.knowledge_base_association.knowledge_base_arn #=> String
+    #   resp.assistant_association.association_data.external_bedrock_knowledge_base_config.bedrock_knowledge_base_arn #=> String
+    #   resp.assistant_association.association_data.external_bedrock_knowledge_base_config.access_role_arn #=> String
     #   resp.assistant_association.tags #=> Hash
     #   resp.assistant_association.tags["TagKey"] #=> String
     #
@@ -3518,18 +4124,18 @@ module Aws::QConnect
     #
     #   resp.content.content_arn #=> String
     #   resp.content.content_id #=> String
-    #   resp.content.content_type #=> String
     #   resp.content.knowledge_base_arn #=> String
     #   resp.content.knowledge_base_id #=> String
-    #   resp.content.link_out_uri #=> String
-    #   resp.content.metadata #=> Hash
-    #   resp.content.metadata["NonEmptyString"] #=> String
     #   resp.content.name #=> String
     #   resp.content.revision_id #=> String
+    #   resp.content.title #=> String
+    #   resp.content.content_type #=> String
     #   resp.content.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED", "UPDATE_FAILED"
+    #   resp.content.metadata #=> Hash
+    #   resp.content.metadata["NonEmptyString"] #=> String
     #   resp.content.tags #=> Hash
     #   resp.content.tags["TagKey"] #=> String
-    #   resp.content.title #=> String
+    #   resp.content.link_out_uri #=> String
     #   resp.content.url #=> String
     #   resp.content.url_expiry #=> Time
     #
@@ -3552,15 +4158,15 @@ module Aws::QConnect
     #
     # [1]: https://docs.aws.amazon.com/connect/latest/adminguide/integrate-q-with-guides.html
     #
-    # @option params [required, String] :content_association_id
-    #   The identifier of the content association. Can be either the ID or the
-    #   ARN. URLs cannot contain the ARN.
+    # @option params [required, String] :knowledge_base_id
+    #   The identifier of the knowledge base.
     #
     # @option params [required, String] :content_id
     #   The identifier of the content.
     #
-    # @option params [required, String] :knowledge_base_id
-    #   The identifier of the knowledge base.
+    # @option params [required, String] :content_association_id
+    #   The identifier of the content association. Can be either the ID or the
+    #   ARN. URLs cannot contain the ARN.
     #
     # @return [Types::GetContentAssociationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -3569,21 +4175,21 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_content_association({
-    #     content_association_id: "UuidOrArn", # required
-    #     content_id: "UuidOrArn", # required
     #     knowledge_base_id: "UuidOrArn", # required
+    #     content_id: "UuidOrArn", # required
+    #     content_association_id: "UuidOrArn", # required
     #   })
     #
     # @example Response structure
     #
-    #   resp.content_association.association_data.amazon_connect_guide_association.flow_id #=> String
-    #   resp.content_association.association_type #=> String, one of "AMAZON_CONNECT_GUIDE"
-    #   resp.content_association.content_arn #=> String
-    #   resp.content_association.content_association_arn #=> String
-    #   resp.content_association.content_association_id #=> String
-    #   resp.content_association.content_id #=> String
-    #   resp.content_association.knowledge_base_arn #=> String
     #   resp.content_association.knowledge_base_id #=> String
+    #   resp.content_association.knowledge_base_arn #=> String
+    #   resp.content_association.content_id #=> String
+    #   resp.content_association.content_arn #=> String
+    #   resp.content_association.content_association_id #=> String
+    #   resp.content_association.content_association_arn #=> String
+    #   resp.content_association.association_type #=> String, one of "AMAZON_CONNECT_GUIDE"
+    #   resp.content_association.association_data.amazon_connect_guide_association.flow_id #=> String
     #   resp.content_association.tags #=> Hash
     #   resp.content_association.tags["TagKey"] #=> String
     #
@@ -3621,17 +4227,17 @@ module Aws::QConnect
     #
     #   resp.content_summary.content_arn #=> String
     #   resp.content_summary.content_id #=> String
-    #   resp.content_summary.content_type #=> String
     #   resp.content_summary.knowledge_base_arn #=> String
     #   resp.content_summary.knowledge_base_id #=> String
-    #   resp.content_summary.metadata #=> Hash
-    #   resp.content_summary.metadata["NonEmptyString"] #=> String
     #   resp.content_summary.name #=> String
     #   resp.content_summary.revision_id #=> String
+    #   resp.content_summary.title #=> String
+    #   resp.content_summary.content_type #=> String
     #   resp.content_summary.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED", "UPDATE_FAILED"
+    #   resp.content_summary.metadata #=> Hash
+    #   resp.content_summary.metadata["NonEmptyString"] #=> String
     #   resp.content_summary.tags #=> Hash
     #   resp.content_summary.tags["TagKey"] #=> String
-    #   resp.content_summary.title #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GetContentSummary AWS API Documentation
     #
@@ -3663,21 +4269,21 @@ module Aws::QConnect
     #
     # @example Response structure
     #
-    #   resp.import_job.created_time #=> Time
-    #   resp.import_job.external_source_configuration.configuration.connect_configuration.instance_id #=> String
-    #   resp.import_job.external_source_configuration.source #=> String, one of "AMAZON_CONNECT"
-    #   resp.import_job.failed_record_report #=> String
     #   resp.import_job.import_job_id #=> String
-    #   resp.import_job.import_job_type #=> String, one of "QUICK_RESPONSES"
-    #   resp.import_job.knowledge_base_arn #=> String
     #   resp.import_job.knowledge_base_id #=> String
+    #   resp.import_job.upload_id #=> String
+    #   resp.import_job.knowledge_base_arn #=> String
+    #   resp.import_job.import_job_type #=> String, one of "QUICK_RESPONSES"
+    #   resp.import_job.status #=> String, one of "START_IN_PROGRESS", "FAILED", "COMPLETE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
+    #   resp.import_job.url #=> String
+    #   resp.import_job.failed_record_report #=> String
+    #   resp.import_job.url_expiry #=> Time
+    #   resp.import_job.created_time #=> Time
     #   resp.import_job.last_modified_time #=> Time
     #   resp.import_job.metadata #=> Hash
     #   resp.import_job.metadata["NonEmptyString"] #=> String
-    #   resp.import_job.status #=> String, one of "START_IN_PROGRESS", "FAILED", "COMPLETE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
-    #   resp.import_job.upload_id #=> String
-    #   resp.import_job.url #=> String
-    #   resp.import_job.url_expiry #=> Time
+    #   resp.import_job.external_source_configuration.source #=> String, one of "AMAZON_CONNECT"
+    #   resp.import_job.external_source_configuration.configuration.connect_configuration.instance_id #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GetImportJob AWS API Documentation
     #
@@ -3706,43 +4312,43 @@ module Aws::QConnect
     #
     # @example Response structure
     #
-    #   resp.knowledge_base.description #=> String
-    #   resp.knowledge_base.ingestion_failure_reasons #=> Array
-    #   resp.knowledge_base.ingestion_failure_reasons[0] #=> String
-    #   resp.knowledge_base.ingestion_status #=> String, one of "SYNC_FAILED", "SYNCING_IN_PROGRESS", "SYNC_SUCCESS", "CREATE_IN_PROGRESS"
-    #   resp.knowledge_base.knowledge_base_arn #=> String
     #   resp.knowledge_base.knowledge_base_id #=> String
-    #   resp.knowledge_base.knowledge_base_type #=> String, one of "EXTERNAL", "CUSTOM", "QUICK_RESPONSES", "MESSAGE_TEMPLATES", "MANAGED"
-    #   resp.knowledge_base.last_content_modification_time #=> Time
+    #   resp.knowledge_base.knowledge_base_arn #=> String
     #   resp.knowledge_base.name #=> String
-    #   resp.knowledge_base.rendering_configuration.template_uri #=> String
-    #   resp.knowledge_base.server_side_encryption_configuration.kms_key_id #=> String
-    #   resp.knowledge_base.source_configuration.app_integrations.app_integration_arn #=> String
-    #   resp.knowledge_base.source_configuration.app_integrations.object_fields #=> Array
-    #   resp.knowledge_base.source_configuration.app_integrations.object_fields[0] #=> String
-    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.crawler_limits.rate_limit #=> Integer
-    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.exclusion_filters #=> Array
-    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.exclusion_filters[0] #=> String
-    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.inclusion_filters #=> Array
-    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.inclusion_filters[0] #=> String
-    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.scope #=> String, one of "HOST_ONLY", "SUBDOMAINS"
-    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.url_configuration.seed_urls #=> Array
-    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.url_configuration.seed_urls[0].url #=> String
+    #   resp.knowledge_base.knowledge_base_type #=> String, one of "EXTERNAL", "CUSTOM", "QUICK_RESPONSES", "MESSAGE_TEMPLATES", "MANAGED"
     #   resp.knowledge_base.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
-    #   resp.knowledge_base.tags #=> Hash
-    #   resp.knowledge_base.tags["TagKey"] #=> String
+    #   resp.knowledge_base.last_content_modification_time #=> Time
     #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.chunking_strategy #=> String, one of "FIXED_SIZE", "NONE", "HIERARCHICAL", "SEMANTIC"
     #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.fixed_size_chunking_configuration.max_tokens #=> Integer
     #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.fixed_size_chunking_configuration.overlap_percentage #=> Integer
     #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.hierarchical_chunking_configuration.level_configurations #=> Array
     #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.hierarchical_chunking_configuration.level_configurations[0].max_tokens #=> Integer
     #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.hierarchical_chunking_configuration.overlap_tokens #=> Integer
-    #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.semantic_chunking_configuration.breakpoint_percentile_threshold #=> Integer
-    #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.semantic_chunking_configuration.buffer_size #=> Integer
     #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.semantic_chunking_configuration.max_tokens #=> Integer
+    #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.semantic_chunking_configuration.buffer_size #=> Integer
+    #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.semantic_chunking_configuration.breakpoint_percentile_threshold #=> Integer
+    #   resp.knowledge_base.vector_ingestion_configuration.parsing_configuration.parsing_strategy #=> String, one of "BEDROCK_FOUNDATION_MODEL"
     #   resp.knowledge_base.vector_ingestion_configuration.parsing_configuration.bedrock_foundation_model_configuration.model_arn #=> String
     #   resp.knowledge_base.vector_ingestion_configuration.parsing_configuration.bedrock_foundation_model_configuration.parsing_prompt.parsing_prompt_text #=> String
-    #   resp.knowledge_base.vector_ingestion_configuration.parsing_configuration.parsing_strategy #=> String, one of "BEDROCK_FOUNDATION_MODEL"
+    #   resp.knowledge_base.source_configuration.app_integrations.app_integration_arn #=> String
+    #   resp.knowledge_base.source_configuration.app_integrations.object_fields #=> Array
+    #   resp.knowledge_base.source_configuration.app_integrations.object_fields[0] #=> String
+    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.url_configuration.seed_urls #=> Array
+    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.url_configuration.seed_urls[0].url #=> String
+    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.crawler_limits.rate_limit #=> Integer
+    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.inclusion_filters #=> Array
+    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.inclusion_filters[0] #=> String
+    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.exclusion_filters #=> Array
+    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.exclusion_filters[0] #=> String
+    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.scope #=> String, one of "HOST_ONLY", "SUBDOMAINS"
+    #   resp.knowledge_base.rendering_configuration.template_uri #=> String
+    #   resp.knowledge_base.server_side_encryption_configuration.kms_key_id #=> String
+    #   resp.knowledge_base.description #=> String
+    #   resp.knowledge_base.tags #=> Hash
+    #   resp.knowledge_base.tags["TagKey"] #=> String
+    #   resp.knowledge_base.ingestion_status #=> String, one of "SYNC_FAILED", "SYNCING_IN_PROGRESS", "SYNC_SUCCESS", "CREATE_IN_PROGRESS"
+    #   resp.knowledge_base.ingestion_failure_reasons #=> Array
+    #   resp.knowledge_base.ingestion_failure_reasons[0] #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GetKnowledgeBase AWS API Documentation
     #
@@ -3760,13 +4366,13 @@ module Aws::QConnect
     # `$LATEST`. If it is not supplied, then `$LATEST` is assumed
     # implicitly.
     #
-    # @option params [required, String] :knowledge_base_id
-    #   The identifier of the knowledge base. Can be either the ID or the ARN.
-    #   URLs cannot contain the ARN.
-    #
     # @option params [required, String] :message_template_id
     #   The identifier of the message template. Can be either the ID or the
     #   ARN.
+    #
+    # @option params [required, String] :knowledge_base_id
+    #   The identifier of the knowledge base. Can be either the ID or the ARN.
+    #   URLs cannot contain the ARN.
     #
     # @return [Types::GetMessageTemplateResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -3775,113 +4381,157 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_message_template({
-    #     knowledge_base_id: "UuidOrArn", # required
     #     message_template_id: "UuidOrArnOrEitherWithQualifier", # required
+    #     knowledge_base_id: "UuidOrArn", # required
     #   })
     #
     # @example Response structure
     #
-    #   resp.message_template.attachments #=> Array
-    #   resp.message_template.attachments[0].attachment_id #=> String
-    #   resp.message_template.attachments[0].content_disposition #=> String, one of "ATTACHMENT"
-    #   resp.message_template.attachments[0].name #=> String
-    #   resp.message_template.attachments[0].uploaded_time #=> Time
-    #   resp.message_template.attachments[0].url #=> String
-    #   resp.message_template.attachments[0].url_expiry #=> Time
-    #   resp.message_template.attribute_types #=> Array
-    #   resp.message_template.attribute_types[0] #=> String, one of "SYSTEM", "AGENT", "CUSTOMER_PROFILE", "CUSTOM"
-    #   resp.message_template.channel_subtype #=> String, one of "EMAIL", "SMS"
-    #   resp.message_template.content.email.body.html.content #=> String
+    #   resp.message_template.message_template_arn #=> String
+    #   resp.message_template.message_template_id #=> String
+    #   resp.message_template.knowledge_base_arn #=> String
+    #   resp.message_template.knowledge_base_id #=> String
+    #   resp.message_template.name #=> String
+    #   resp.message_template.channel #=> String
+    #   resp.message_template.channel_subtype #=> String, one of "EMAIL", "SMS", "WHATSAPP", "PUSH"
+    #   resp.message_template.created_time #=> Time
+    #   resp.message_template.last_modified_time #=> Time
+    #   resp.message_template.last_modified_by #=> String
+    #   resp.message_template.content.email.subject #=> String
     #   resp.message_template.content.email.body.plain_text.content #=> String
+    #   resp.message_template.content.email.body.html.content #=> String
     #   resp.message_template.content.email.headers #=> Array
     #   resp.message_template.content.email.headers[0].name #=> String
     #   resp.message_template.content.email.headers[0].value #=> String
-    #   resp.message_template.content.email.subject #=> String
     #   resp.message_template.content.sms.body.plain_text.content #=> String
-    #   resp.message_template.created_time #=> Time
+    #   resp.message_template.content.whats_app.data #=> String
+    #   resp.message_template.content.push.adm.title #=> String
+    #   resp.message_template.content.push.adm.body.content #=> String
+    #   resp.message_template.content.push.adm.action #=> String, one of "OPEN_APP", "DEEP_LINK", "URL"
+    #   resp.message_template.content.push.adm.sound #=> String
+    #   resp.message_template.content.push.adm.url #=> String
+    #   resp.message_template.content.push.adm.image_url #=> String
+    #   resp.message_template.content.push.adm.image_icon_url #=> String
+    #   resp.message_template.content.push.adm.small_image_icon_url #=> String
+    #   resp.message_template.content.push.adm.raw_content.content #=> String
+    #   resp.message_template.content.push.apns.title #=> String
+    #   resp.message_template.content.push.apns.body.content #=> String
+    #   resp.message_template.content.push.apns.action #=> String, one of "OPEN_APP", "DEEP_LINK", "URL"
+    #   resp.message_template.content.push.apns.sound #=> String
+    #   resp.message_template.content.push.apns.url #=> String
+    #   resp.message_template.content.push.apns.media_url #=> String
+    #   resp.message_template.content.push.apns.raw_content.content #=> String
+    #   resp.message_template.content.push.fcm.title #=> String
+    #   resp.message_template.content.push.fcm.body.content #=> String
+    #   resp.message_template.content.push.fcm.action #=> String, one of "OPEN_APP", "DEEP_LINK", "URL"
+    #   resp.message_template.content.push.fcm.sound #=> String
+    #   resp.message_template.content.push.fcm.url #=> String
+    #   resp.message_template.content.push.fcm.image_url #=> String
+    #   resp.message_template.content.push.fcm.image_icon_url #=> String
+    #   resp.message_template.content.push.fcm.small_image_icon_url #=> String
+    #   resp.message_template.content.push.fcm.raw_content.content #=> String
+    #   resp.message_template.content.push.baidu.title #=> String
+    #   resp.message_template.content.push.baidu.body.content #=> String
+    #   resp.message_template.content.push.baidu.action #=> String, one of "OPEN_APP", "DEEP_LINK", "URL"
+    #   resp.message_template.content.push.baidu.sound #=> String
+    #   resp.message_template.content.push.baidu.url #=> String
+    #   resp.message_template.content.push.baidu.image_url #=> String
+    #   resp.message_template.content.push.baidu.image_icon_url #=> String
+    #   resp.message_template.content.push.baidu.small_image_icon_url #=> String
+    #   resp.message_template.content.push.baidu.raw_content.content #=> String
+    #   resp.message_template.description #=> String
+    #   resp.message_template.language #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.business_account_id #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.template_id #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.name #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.language #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.components #=> Array
+    #   resp.message_template.source_configuration_summary.whats_app.components[0] #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.status #=> String, one of "VALID", "INVALID", "REJECTED"
+    #   resp.message_template.source_configuration_summary.whats_app.status_reason #=> String
+    #   resp.message_template.grouping_configuration.criteria #=> String
+    #   resp.message_template.grouping_configuration.values #=> Array
+    #   resp.message_template.grouping_configuration.values[0] #=> String
+    #   resp.message_template.default_attributes.system_attributes.name #=> String
+    #   resp.message_template.default_attributes.system_attributes.customer_endpoint.address #=> String
+    #   resp.message_template.default_attributes.system_attributes.system_endpoint.address #=> String
     #   resp.message_template.default_attributes.agent_attributes.first_name #=> String
     #   resp.message_template.default_attributes.agent_attributes.last_name #=> String
-    #   resp.message_template.default_attributes.custom_attributes #=> Hash
-    #   resp.message_template.default_attributes.custom_attributes["MessageTemplateAttributeKey"] #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.profile_id #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.profile_arn #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.first_name #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.middle_name #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.last_name #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.account_number #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.email_address #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.phone_number #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.additional_information #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.party_type #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.business_name #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.birth_date #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.gender #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mobile_phone_number #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.home_phone_number #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.business_phone_number #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.business_email_address #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.address1 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.address2 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.address3 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.address4 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_1 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_2 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_3 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_4 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_city #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_country #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_county #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_postal_code #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_province #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_state #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.birth_date #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.business_email_address #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.business_name #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.business_phone_number #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.city #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.country #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.county #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.custom #=> Hash
-    #   resp.message_template.default_attributes.customer_profile_attributes.custom["MessageTemplateAttributeKey"] #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.email_address #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.first_name #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.gender #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.home_phone_number #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.last_name #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_1 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_2 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_3 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_4 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_city #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_country #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_county #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_postal_code #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_province #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_state #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.middle_name #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mobile_phone_number #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.party_type #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.phone_number #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.country #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.postal_code #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.profile_arn #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.profile_id #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.province #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.state #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_address_1 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_address_2 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_address_3 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_address_4 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_city #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.shipping_country #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_county #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.shipping_country #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_postal_code #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_province #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_state #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.state #=> String
-    #   resp.message_template.default_attributes.system_attributes.customer_endpoint.address #=> String
-    #   resp.message_template.default_attributes.system_attributes.name #=> String
-    #   resp.message_template.default_attributes.system_attributes.system_endpoint.address #=> String
-    #   resp.message_template.description #=> String
-    #   resp.message_template.grouping_configuration.criteria #=> String
-    #   resp.message_template.grouping_configuration.values #=> Array
-    #   resp.message_template.grouping_configuration.values[0] #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_1 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_2 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_3 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_4 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_city #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_county #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_country #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_postal_code #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_province #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_state #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_1 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_2 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_3 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_4 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_city #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_county #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_country #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_postal_code #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_province #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_state #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.custom #=> Hash
+    #   resp.message_template.default_attributes.customer_profile_attributes.custom["MessageTemplateAttributeKey"] #=> String
+    #   resp.message_template.default_attributes.custom_attributes #=> Hash
+    #   resp.message_template.default_attributes.custom_attributes["MessageTemplateAttributeKey"] #=> String
+    #   resp.message_template.attribute_types #=> Array
+    #   resp.message_template.attribute_types[0] #=> String, one of "SYSTEM", "AGENT", "CUSTOMER_PROFILE", "CUSTOM"
+    #   resp.message_template.attachments #=> Array
+    #   resp.message_template.attachments[0].content_disposition #=> String, one of "ATTACHMENT"
+    #   resp.message_template.attachments[0].name #=> String
+    #   resp.message_template.attachments[0].uploaded_time #=> Time
+    #   resp.message_template.attachments[0].url #=> String
+    #   resp.message_template.attachments[0].url_expiry #=> Time
+    #   resp.message_template.attachments[0].attachment_id #=> String
     #   resp.message_template.is_active #=> Boolean
-    #   resp.message_template.knowledge_base_arn #=> String
-    #   resp.message_template.knowledge_base_id #=> String
-    #   resp.message_template.language #=> String
-    #   resp.message_template.last_modified_by #=> String
-    #   resp.message_template.last_modified_time #=> Time
-    #   resp.message_template.message_template_arn #=> String
+    #   resp.message_template.version_number #=> Integer
     #   resp.message_template.message_template_content_sha_256 #=> String
-    #   resp.message_template.message_template_id #=> String
-    #   resp.message_template.name #=> String
     #   resp.message_template.tags #=> Hash
     #   resp.message_template.tags["TagKey"] #=> String
-    #   resp.message_template.version_number #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GetMessageTemplate AWS API Documentation
     #
@@ -3897,45 +4547,58 @@ module Aws::QConnect
     # @option params [required, String] :assistant_id
     #   The identifier of the Amazon Q in Connect assistant.
     #
+    # @option params [required, String] :session_id
+    #   The identifier of the Amazon Q in Connect session.
+    #
     # @option params [required, String] :next_message_token
     #   The token for the next message. Use the value returned in the
     #   SendMessage or previous response in the next request to retrieve the
     #   next message.
     #
-    # @option params [required, String] :session_id
-    #   The identifier of the Amazon Q in Connect session.
-    #
     # @return [Types::GetNextMessageResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::GetNextMessageResponse#conversation_session_data #conversation_session_data} => Array&lt;Types::RuntimeSessionData&gt;
+    #   * {Types::GetNextMessageResponse#type #type} => String
+    #   * {Types::GetNextMessageResponse#response #response} => Types::MessageOutput
+    #   * {Types::GetNextMessageResponse#request_message_id #request_message_id} => String
     #   * {Types::GetNextMessageResponse#conversation_state #conversation_state} => Types::ConversationState
     #   * {Types::GetNextMessageResponse#next_message_token #next_message_token} => String
-    #   * {Types::GetNextMessageResponse#request_message_id #request_message_id} => String
-    #   * {Types::GetNextMessageResponse#response #response} => Types::MessageOutput
-    #   * {Types::GetNextMessageResponse#type #type} => String
+    #   * {Types::GetNextMessageResponse#conversation_session_data #conversation_session_data} => Array&lt;Types::RuntimeSessionData&gt;
+    #   * {Types::GetNextMessageResponse#chunked_response_terminated #chunked_response_terminated} => Boolean
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_next_message({
     #     assistant_id: "UuidOrArn", # required
-    #     next_message_token: "NextToken", # required
     #     session_id: "UuidOrArn", # required
+    #     next_message_token: "NextToken", # required
     #   })
     #
     # @example Response structure
     #
-    #   resp.conversation_session_data #=> Array
-    #   resp.conversation_session_data[0].key #=> String
-    #   resp.conversation_session_data[0].value.string_value #=> String
-    #   resp.conversation_state.reason #=> String, one of "SUCCESS", "FAILED", "REJECTED"
-    #   resp.conversation_state.status #=> String, one of "CLOSED", "READY", "PROCESSING"
-    #   resp.next_message_token #=> String
-    #   resp.request_message_id #=> String
+    #   resp.type #=> String, one of "TEXT", "TOOL_USE_RESULT"
+    #   resp.response.value.text.value #=> String
+    #   resp.response.value.text.citations #=> Array
+    #   resp.response.value.text.citations[0].content_id #=> String
+    #   resp.response.value.text.citations[0].title #=> String
+    #   resp.response.value.text.citations[0].knowledge_base_id #=> String
+    #   resp.response.value.text.citations[0].citation_span.begin_offset_inclusive #=> Integer
+    #   resp.response.value.text.citations[0].citation_span.end_offset_exclusive #=> Integer
+    #   resp.response.value.text.citations[0].source_url #=> String
+    #   resp.response.value.text.citations[0].reference_type #=> String, one of "WEB_CRAWLER", "KNOWLEDGE_BASE", "BEDROCK_KB_S3", "BEDROCK_KB_WEB", "BEDROCK_KB_CONFLUENCE", "BEDROCK_KB_SALESFORCE", "BEDROCK_KB_SHAREPOINT", "BEDROCK_KB_KENDRA", "BEDROCK_KB_CUSTOM_DOCUMENT", "BEDROCK_KB_SQL"
+    #   resp.response.value.text.ai_guardrail_assessment.blocked #=> Boolean
+    #   resp.response.value.tool_use_result.tool_use_id #=> String
+    #   resp.response.value.tool_use_result.tool_name #=> String
     #   resp.response.message_id #=> String
     #   resp.response.participant #=> String, one of "CUSTOMER", "AGENT", "BOT"
     #   resp.response.timestamp #=> Time
-    #   resp.response.value.text.value #=> String
-    #   resp.type #=> String, one of "TEXT"
+    #   resp.request_message_id #=> String
+    #   resp.conversation_state.status #=> String, one of "CLOSED", "READY", "PROCESSING"
+    #   resp.conversation_state.reason #=> String, one of "SUCCESS", "FAILED", "REJECTED"
+    #   resp.next_message_token #=> String
+    #   resp.conversation_session_data #=> Array
+    #   resp.conversation_session_data[0].key #=> String
+    #   resp.conversation_session_data[0].value.string_value #=> String
+    #   resp.chunked_response_terminated #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GetNextMessage AWS API Documentation
     #
@@ -3948,12 +4611,12 @@ module Aws::QConnect
 
     # Retrieves the quick response.
     #
+    # @option params [required, String] :quick_response_id
+    #   The identifier of the quick response.
+    #
     # @option params [required, String] :knowledge_base_id
     #   The identifier of the knowledge base. This should be a
     #   QUICK\_RESPONSES type knowledge base.
-    #
-    # @option params [required, String] :quick_response_id
-    #   The identifier of the quick response.
     #
     # @return [Types::GetQuickResponseResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -3962,33 +4625,33 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_quick_response({
-    #     knowledge_base_id: "UuidOrArn", # required
     #     quick_response_id: "UuidOrArn", # required
+    #     knowledge_base_id: "UuidOrArn", # required
     #   })
     #
     # @example Response structure
     #
-    #   resp.quick_response.channels #=> Array
-    #   resp.quick_response.channels[0] #=> String
+    #   resp.quick_response.quick_response_arn #=> String
+    #   resp.quick_response.quick_response_id #=> String
+    #   resp.quick_response.knowledge_base_arn #=> String
+    #   resp.quick_response.knowledge_base_id #=> String
+    #   resp.quick_response.name #=> String
     #   resp.quick_response.content_type #=> String
-    #   resp.quick_response.contents.markdown.content #=> String
-    #   resp.quick_response.contents.plain_text.content #=> String
+    #   resp.quick_response.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "CREATED", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED", "UPDATE_IN_PROGRESS", "UPDATE_FAILED"
     #   resp.quick_response.created_time #=> Time
+    #   resp.quick_response.last_modified_time #=> Time
+    #   resp.quick_response.contents.plain_text.content #=> String
+    #   resp.quick_response.contents.markdown.content #=> String
     #   resp.quick_response.description #=> String
     #   resp.quick_response.grouping_configuration.criteria #=> String
     #   resp.quick_response.grouping_configuration.values #=> Array
     #   resp.quick_response.grouping_configuration.values[0] #=> String
-    #   resp.quick_response.is_active #=> Boolean
-    #   resp.quick_response.knowledge_base_arn #=> String
-    #   resp.quick_response.knowledge_base_id #=> String
-    #   resp.quick_response.language #=> String
-    #   resp.quick_response.last_modified_by #=> String
-    #   resp.quick_response.last_modified_time #=> Time
-    #   resp.quick_response.name #=> String
-    #   resp.quick_response.quick_response_arn #=> String
-    #   resp.quick_response.quick_response_id #=> String
     #   resp.quick_response.shortcut_key #=> String
-    #   resp.quick_response.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "CREATED", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED", "UPDATE_IN_PROGRESS", "UPDATE_FAILED"
+    #   resp.quick_response.last_modified_by #=> String
+    #   resp.quick_response.is_active #=> Boolean
+    #   resp.quick_response.channels #=> Array
+    #   resp.quick_response.channels[0] #=> String
+    #   resp.quick_response.language #=> String
     #   resp.quick_response.tags #=> Hash
     #   resp.quick_response.tags["TagKey"] #=> String
     #
@@ -4007,7 +4670,7 @@ module Aws::QConnect
     # in Connect JavaScript library (amazon-q-connectjs) into your
     # applications.
     #
-    # Retrieves recommendations for the specified session. To avoid
+    #  Retrieves recommendations for the specified session. To avoid
     # retrieving the same recommendations in subsequent calls, use
     # [NotifyRecommendationsReceived][1]. This API supports long-polling
     # behavior with the `waitTimeSeconds` parameter. Short poll is the
@@ -4024,12 +4687,12 @@ module Aws::QConnect
     #   The identifier of the Amazon Q in Connect assistant. Can be either the
     #   ID or the ARN. URLs cannot contain the ARN.
     #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to return per page.
-    #
     # @option params [required, String] :session_id
     #   The identifier of the session. Can be either the ID or the ARN. URLs
     #   cannot contain the ARN.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return per page.
     #
     # @option params [Integer] :wait_time_seconds
     #   The duration (in seconds) for which the call waits for a
@@ -4037,6 +4700,14 @@ module Aws::QConnect
     #   recommendation is available, the call returns sooner than
     #   `WaitTimeSeconds`. If no messages are available and the wait time
     #   expires, the call returns successfully with an empty list.
+    #
+    # @option params [String] :next_chunk_token
+    #   The token for the next set of chunks. Use the value returned in the
+    #   previous response in the next request to retrieve the next set of
+    #   chunks.
+    #
+    # @option params [String] :recommendation_type
+    #   The type of recommendation being requested.
     #
     # @return [Types::GetRecommendationsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -4047,78 +4718,101 @@ module Aws::QConnect
     #
     #   resp = client.get_recommendations({
     #     assistant_id: "UuidOrArn", # required
-    #     max_results: 1,
     #     session_id: "UuidOrArn", # required
+    #     max_results: 1,
     #     wait_time_seconds: 1,
+    #     next_chunk_token: "NextToken",
+    #     recommendation_type: "KNOWLEDGE_CONTENT", # accepts KNOWLEDGE_CONTENT, GENERATIVE_RESPONSE, GENERATIVE_ANSWER, DETECTED_INTENT, GENERATIVE_ANSWER_CHUNK, BLOCKED_GENERATIVE_ANSWER_CHUNK, INTENT_ANSWER_CHUNK, BLOCKED_INTENT_ANSWER_CHUNK, EMAIL_RESPONSE_CHUNK, EMAIL_OVERVIEW_CHUNK, EMAIL_GENERATIVE_ANSWER_CHUNK, CASE_SUMMARIZATION_CHUNK, BLOCKED_CASE_SUMMARIZATION_CHUNK, SUGGESTED_MESSAGE, NOTES_CHUNK, BLOCKED_NOTES_CHUNK
     #   })
     #
     # @example Response structure
     #
     #   resp.recommendations #=> Array
-    #   resp.recommendations[0].data.details.content_data.ranking_data.relevance_level #=> String, one of "HIGH", "MEDIUM", "LOW"
-    #   resp.recommendations[0].data.details.content_data.ranking_data.relevance_score #=> Float
-    #   resp.recommendations[0].data.details.content_data.text_data.excerpt.highlights #=> Array
-    #   resp.recommendations[0].data.details.content_data.text_data.excerpt.highlights[0].begin_offset_inclusive #=> Integer
-    #   resp.recommendations[0].data.details.content_data.text_data.excerpt.highlights[0].end_offset_exclusive #=> Integer
-    #   resp.recommendations[0].data.details.content_data.text_data.excerpt.text #=> String
-    #   resp.recommendations[0].data.details.content_data.text_data.title.highlights #=> Array
-    #   resp.recommendations[0].data.details.content_data.text_data.title.highlights[0].begin_offset_inclusive #=> Integer
-    #   resp.recommendations[0].data.details.content_data.text_data.title.highlights[0].end_offset_exclusive #=> Integer
-    #   resp.recommendations[0].data.details.content_data.text_data.title.text #=> String
-    #   resp.recommendations[0].data.details.generative_data.completion #=> String
-    #   resp.recommendations[0].data.details.generative_data.ranking_data.relevance_level #=> String, one of "HIGH", "MEDIUM", "LOW"
-    #   resp.recommendations[0].data.details.generative_data.ranking_data.relevance_score #=> Float
-    #   resp.recommendations[0].data.details.generative_data.references #=> Array
-    #   resp.recommendations[0].data.details.generative_data.references[0] #=> Types::DataSummary
-    #   resp.recommendations[0].data.details.intent_detected_data.intent #=> String
-    #   resp.recommendations[0].data.details.intent_detected_data.intent_id #=> String
-    #   resp.recommendations[0].data.details.source_content_data.citation_span.begin_offset_inclusive #=> Integer
-    #   resp.recommendations[0].data.details.source_content_data.citation_span.end_offset_exclusive #=> Integer
-    #   resp.recommendations[0].data.details.source_content_data.id #=> String
-    #   resp.recommendations[0].data.details.source_content_data.ranking_data.relevance_level #=> String, one of "HIGH", "MEDIUM", "LOW"
-    #   resp.recommendations[0].data.details.source_content_data.ranking_data.relevance_score #=> Float
-    #   resp.recommendations[0].data.details.source_content_data.text_data.excerpt.highlights #=> Array
-    #   resp.recommendations[0].data.details.source_content_data.text_data.excerpt.highlights[0].begin_offset_inclusive #=> Integer
-    #   resp.recommendations[0].data.details.source_content_data.text_data.excerpt.highlights[0].end_offset_exclusive #=> Integer
-    #   resp.recommendations[0].data.details.source_content_data.text_data.excerpt.text #=> String
-    #   resp.recommendations[0].data.details.source_content_data.text_data.title.highlights #=> Array
-    #   resp.recommendations[0].data.details.source_content_data.text_data.title.highlights[0].begin_offset_inclusive #=> Integer
-    #   resp.recommendations[0].data.details.source_content_data.text_data.title.highlights[0].end_offset_exclusive #=> Integer
-    #   resp.recommendations[0].data.details.source_content_data.text_data.title.text #=> String
-    #   resp.recommendations[0].data.details.source_content_data.type #=> String, one of "KNOWLEDGE_CONTENT"
-    #   resp.recommendations[0].data.reference.content_reference.content_arn #=> String
-    #   resp.recommendations[0].data.reference.content_reference.content_id #=> String
-    #   resp.recommendations[0].data.reference.content_reference.knowledge_base_arn #=> String
-    #   resp.recommendations[0].data.reference.content_reference.knowledge_base_id #=> String
-    #   resp.recommendations[0].data.reference.content_reference.reference_type #=> String, one of "WEB_CRAWLER", "KNOWLEDGE_BASE"
-    #   resp.recommendations[0].data.reference.content_reference.source_url #=> String
-    #   resp.recommendations[0].data.reference.generative_reference.generation_id #=> String
-    #   resp.recommendations[0].data.reference.generative_reference.model_id #=> String
-    #   resp.recommendations[0].document.content_reference.content_arn #=> String
-    #   resp.recommendations[0].document.content_reference.content_id #=> String
+    #   resp.recommendations[0].recommendation_id #=> String
     #   resp.recommendations[0].document.content_reference.knowledge_base_arn #=> String
     #   resp.recommendations[0].document.content_reference.knowledge_base_id #=> String
-    #   resp.recommendations[0].document.content_reference.reference_type #=> String, one of "WEB_CRAWLER", "KNOWLEDGE_BASE"
+    #   resp.recommendations[0].document.content_reference.content_arn #=> String
+    #   resp.recommendations[0].document.content_reference.content_id #=> String
     #   resp.recommendations[0].document.content_reference.source_url #=> String
-    #   resp.recommendations[0].document.excerpt.highlights #=> Array
-    #   resp.recommendations[0].document.excerpt.highlights[0].begin_offset_inclusive #=> Integer
-    #   resp.recommendations[0].document.excerpt.highlights[0].end_offset_exclusive #=> Integer
-    #   resp.recommendations[0].document.excerpt.text #=> String
+    #   resp.recommendations[0].document.content_reference.reference_type #=> String, one of "WEB_CRAWLER", "KNOWLEDGE_BASE", "BEDROCK_KB_S3", "BEDROCK_KB_WEB", "BEDROCK_KB_CONFLUENCE", "BEDROCK_KB_SALESFORCE", "BEDROCK_KB_SHAREPOINT", "BEDROCK_KB_KENDRA", "BEDROCK_KB_CUSTOM_DOCUMENT", "BEDROCK_KB_SQL"
+    #   resp.recommendations[0].document.title.text #=> String
     #   resp.recommendations[0].document.title.highlights #=> Array
     #   resp.recommendations[0].document.title.highlights[0].begin_offset_inclusive #=> Integer
     #   resp.recommendations[0].document.title.highlights[0].end_offset_exclusive #=> Integer
-    #   resp.recommendations[0].document.title.text #=> String
-    #   resp.recommendations[0].recommendation_id #=> String
-    #   resp.recommendations[0].relevance_level #=> String, one of "HIGH", "MEDIUM", "LOW"
+    #   resp.recommendations[0].document.excerpt.text #=> String
+    #   resp.recommendations[0].document.excerpt.highlights #=> Array
+    #   resp.recommendations[0].document.excerpt.highlights[0].begin_offset_inclusive #=> Integer
+    #   resp.recommendations[0].document.excerpt.highlights[0].end_offset_exclusive #=> Integer
     #   resp.recommendations[0].relevance_score #=> Float
-    #   resp.recommendations[0].type #=> String, one of "KNOWLEDGE_CONTENT", "GENERATIVE_RESPONSE", "GENERATIVE_ANSWER", "DETECTED_INTENT"
+    #   resp.recommendations[0].relevance_level #=> String, one of "HIGH", "MEDIUM", "LOW"
+    #   resp.recommendations[0].type #=> String, one of "KNOWLEDGE_CONTENT", "GENERATIVE_RESPONSE", "GENERATIVE_ANSWER", "DETECTED_INTENT", "GENERATIVE_ANSWER_CHUNK", "BLOCKED_GENERATIVE_ANSWER_CHUNK", "INTENT_ANSWER_CHUNK", "BLOCKED_INTENT_ANSWER_CHUNK", "EMAIL_RESPONSE_CHUNK", "EMAIL_OVERVIEW_CHUNK", "EMAIL_GENERATIVE_ANSWER_CHUNK", "CASE_SUMMARIZATION_CHUNK", "BLOCKED_CASE_SUMMARIZATION_CHUNK", "SUGGESTED_MESSAGE", "NOTES_CHUNK", "BLOCKED_NOTES_CHUNK"
+    #   resp.recommendations[0].data.reference.content_reference.knowledge_base_arn #=> String
+    #   resp.recommendations[0].data.reference.content_reference.knowledge_base_id #=> String
+    #   resp.recommendations[0].data.reference.content_reference.content_arn #=> String
+    #   resp.recommendations[0].data.reference.content_reference.content_id #=> String
+    #   resp.recommendations[0].data.reference.content_reference.source_url #=> String
+    #   resp.recommendations[0].data.reference.content_reference.reference_type #=> String, one of "WEB_CRAWLER", "KNOWLEDGE_BASE", "BEDROCK_KB_S3", "BEDROCK_KB_WEB", "BEDROCK_KB_CONFLUENCE", "BEDROCK_KB_SALESFORCE", "BEDROCK_KB_SHAREPOINT", "BEDROCK_KB_KENDRA", "BEDROCK_KB_CUSTOM_DOCUMENT", "BEDROCK_KB_SQL"
+    #   resp.recommendations[0].data.reference.generative_reference.model_id #=> String
+    #   resp.recommendations[0].data.reference.generative_reference.generation_id #=> String
+    #   resp.recommendations[0].data.reference.suggested_message_reference.ai_agent_id #=> String
+    #   resp.recommendations[0].data.reference.suggested_message_reference.ai_agent_arn #=> String
+    #   resp.recommendations[0].data.details.content_data.text_data.title.text #=> String
+    #   resp.recommendations[0].data.details.content_data.text_data.title.highlights #=> Array
+    #   resp.recommendations[0].data.details.content_data.text_data.title.highlights[0].begin_offset_inclusive #=> Integer
+    #   resp.recommendations[0].data.details.content_data.text_data.title.highlights[0].end_offset_exclusive #=> Integer
+    #   resp.recommendations[0].data.details.content_data.text_data.excerpt.text #=> String
+    #   resp.recommendations[0].data.details.content_data.text_data.excerpt.highlights #=> Array
+    #   resp.recommendations[0].data.details.content_data.text_data.excerpt.highlights[0].begin_offset_inclusive #=> Integer
+    #   resp.recommendations[0].data.details.content_data.text_data.excerpt.highlights[0].end_offset_exclusive #=> Integer
+    #   resp.recommendations[0].data.details.content_data.ranking_data.relevance_score #=> Float
+    #   resp.recommendations[0].data.details.content_data.ranking_data.relevance_level #=> String, one of "HIGH", "MEDIUM", "LOW"
+    #   resp.recommendations[0].data.details.generative_data.completion #=> String
+    #   resp.recommendations[0].data.details.generative_data.references #=> Array
+    #   resp.recommendations[0].data.details.generative_data.references[0] #=> Types::DataSummary
+    #   resp.recommendations[0].data.details.generative_data.ranking_data.relevance_score #=> Float
+    #   resp.recommendations[0].data.details.generative_data.ranking_data.relevance_level #=> String, one of "HIGH", "MEDIUM", "LOW"
+    #   resp.recommendations[0].data.details.intent_detected_data.intent #=> String
+    #   resp.recommendations[0].data.details.intent_detected_data.intent_id #=> String
+    #   resp.recommendations[0].data.details.intent_detected_data.relevance_level #=> String, one of "HIGH", "MEDIUM", "LOW"
+    #   resp.recommendations[0].data.details.source_content_data.id #=> String
+    #   resp.recommendations[0].data.details.source_content_data.type #=> String, one of "KNOWLEDGE_CONTENT"
+    #   resp.recommendations[0].data.details.source_content_data.text_data.title.text #=> String
+    #   resp.recommendations[0].data.details.source_content_data.text_data.title.highlights #=> Array
+    #   resp.recommendations[0].data.details.source_content_data.text_data.title.highlights[0].begin_offset_inclusive #=> Integer
+    #   resp.recommendations[0].data.details.source_content_data.text_data.title.highlights[0].end_offset_exclusive #=> Integer
+    #   resp.recommendations[0].data.details.source_content_data.text_data.excerpt.text #=> String
+    #   resp.recommendations[0].data.details.source_content_data.text_data.excerpt.highlights #=> Array
+    #   resp.recommendations[0].data.details.source_content_data.text_data.excerpt.highlights[0].begin_offset_inclusive #=> Integer
+    #   resp.recommendations[0].data.details.source_content_data.text_data.excerpt.highlights[0].end_offset_exclusive #=> Integer
+    #   resp.recommendations[0].data.details.source_content_data.ranking_data.relevance_score #=> Float
+    #   resp.recommendations[0].data.details.source_content_data.ranking_data.relevance_level #=> String, one of "HIGH", "MEDIUM", "LOW"
+    #   resp.recommendations[0].data.details.source_content_data.citation_span.begin_offset_inclusive #=> Integer
+    #   resp.recommendations[0].data.details.source_content_data.citation_span.end_offset_exclusive #=> Integer
+    #   resp.recommendations[0].data.details.generative_chunk_data.completion #=> String
+    #   resp.recommendations[0].data.details.generative_chunk_data.references #=> Array
+    #   resp.recommendations[0].data.details.generative_chunk_data.references[0] #=> Types::DataSummary
+    #   resp.recommendations[0].data.details.generative_chunk_data.next_chunk_token #=> String
+    #   resp.recommendations[0].data.details.email_response_chunk_data.completion #=> String
+    #   resp.recommendations[0].data.details.email_response_chunk_data.next_chunk_token #=> String
+    #   resp.recommendations[0].data.details.email_overview_chunk_data.completion #=> String
+    #   resp.recommendations[0].data.details.email_overview_chunk_data.next_chunk_token #=> String
+    #   resp.recommendations[0].data.details.email_generative_answer_chunk_data.completion #=> String
+    #   resp.recommendations[0].data.details.email_generative_answer_chunk_data.references #=> Array
+    #   resp.recommendations[0].data.details.email_generative_answer_chunk_data.references[0] #=> Types::DataSummary
+    #   resp.recommendations[0].data.details.email_generative_answer_chunk_data.next_chunk_token #=> String
+    #   resp.recommendations[0].data.details.case_summarization_chunk_data.completion #=> String
+    #   resp.recommendations[0].data.details.case_summarization_chunk_data.next_chunk_token #=> String
+    #   resp.recommendations[0].data.details.suggested_message_data.message_text #=> String
+    #   resp.recommendations[0].data.details.notes_data.completion #=> String
+    #   resp.recommendations[0].data.details.notes_chunk_data.completion #=> String
+    #   resp.recommendations[0].data.details.notes_chunk_data.next_chunk_token #=> String
     #   resp.triggers #=> Array
-    #   resp.triggers[0].data.query.text #=> String
     #   resp.triggers[0].id #=> String
+    #   resp.triggers[0].type #=> String, one of "QUERY", "GENERATIVE"
+    #   resp.triggers[0].source #=> String, one of "ISSUE_DETECTION", "RULE_EVALUATION", "OTHER"
+    #   resp.triggers[0].data.query.text #=> String
     #   resp.triggers[0].recommendation_ids #=> Array
     #   resp.triggers[0].recommendation_ids[0] #=> String
-    #   resp.triggers[0].source #=> String, one of "ISSUE_DETECTION", "RULE_EVALUATION", "OTHER"
-    #   resp.triggers[0].type #=> String, one of "QUERY", "GENERATIVE"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GetRecommendations AWS API Documentation
     #
@@ -4152,13 +4846,15 @@ module Aws::QConnect
     #
     # @example Response structure
     #
-    #   resp.session.ai_agent_configuration #=> Hash
-    #   resp.session.ai_agent_configuration["AIAgentType"].ai_agent_id #=> String
-    #   resp.session.description #=> String
-    #   resp.session.integration_configuration.topic_integration_arn #=> String
-    #   resp.session.name #=> String
     #   resp.session.session_arn #=> String
     #   resp.session.session_id #=> String
+    #   resp.session.name #=> String
+    #   resp.session.description #=> String
+    #   resp.session.tags #=> Hash
+    #   resp.session.tags["TagKey"] #=> String
+    #   resp.session.integration_configuration.topic_integration_arn #=> String
+    #   resp.session.tag_filter.tag_condition.key #=> String
+    #   resp.session.tag_filter.tag_condition.value #=> String
     #   resp.session.tag_filter.and_conditions #=> Array
     #   resp.session.tag_filter.and_conditions[0].key #=> String
     #   resp.session.tag_filter.and_conditions[0].value #=> String
@@ -4168,10 +4864,12 @@ module Aws::QConnect
     #   resp.session.tag_filter.or_conditions[0].and_conditions[0].value #=> String
     #   resp.session.tag_filter.or_conditions[0].tag_condition.key #=> String
     #   resp.session.tag_filter.or_conditions[0].tag_condition.value #=> String
-    #   resp.session.tag_filter.tag_condition.key #=> String
-    #   resp.session.tag_filter.tag_condition.value #=> String
-    #   resp.session.tags #=> Hash
-    #   resp.session.tags["TagKey"] #=> String
+    #   resp.session.ai_agent_configuration #=> Hash
+    #   resp.session.ai_agent_configuration["AIAgentType"].ai_agent_id #=> String
+    #   resp.session.origin #=> String, one of "SYSTEM", "CUSTOMER"
+    #   resp.session.orchestrator_configuration_list #=> Array
+    #   resp.session.orchestrator_configuration_list[0].ai_agent_id #=> String
+    #   resp.session.orchestrator_configuration_list[0].orchestrator_use_case #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GetSession AWS API Documentation
     #
@@ -4184,21 +4882,21 @@ module Aws::QConnect
 
     # List AI Agent versions.
     #
-    # @option params [required, String] :ai_agent_id
-    #   The identifier of the Amazon Q in Connect AI Agent for which versions
-    #   are to be listed.
-    #
     # @option params [required, String] :assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either the
     #   ID or the ARN. URLs cannot contain the ARN.
     #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to return per page.
+    # @option params [required, String] :ai_agent_id
+    #   The identifier of the Amazon Q in Connect AI Agent for which versions
+    #   are to be listed.
     #
     # @option params [String] :next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return per page.
     #
     # @option params [String] :origin
     #   The origin of the AI Agent versions to be listed. `SYSTEM` for a
@@ -4215,44 +4913,31 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_ai_agent_versions({
-    #     ai_agent_id: "UuidOrArnOrEitherWithQualifier", # required
     #     assistant_id: "UuidOrArn", # required
-    #     max_results: 1,
+    #     ai_agent_id: "UuidOrArnOrEitherWithQualifier", # required
     #     next_token: "NextToken",
+    #     max_results: 1,
     #     origin: "SYSTEM", # accepts SYSTEM, CUSTOMER
     #   })
     #
     # @example Response structure
     #
     #   resp.ai_agent_version_summaries #=> Array
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.ai_agent_arn #=> String
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.ai_agent_id #=> String
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.assistant_arn #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.name #=> String
     #   resp.ai_agent_version_summaries[0].ai_agent_summary.assistant_id #=> String
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.answer_generation_ai_guardrail_id #=> String
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.answer_generation_ai_prompt_id #=> String
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations #=> Array
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions #=> Array
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions #=> Array
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].key #=> String
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_id #=> String
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.intent_labeling_generation_ai_prompt_id #=> String
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.locale #=> String
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.query_reformulation_ai_prompt_id #=> String
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.manual_search_ai_agent_configuration.answer_generation_ai_guardrail_id #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.assistant_arn #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.ai_agent_id #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.type #=> String, one of "MANUAL_SEARCH", "ANSWER_RECOMMENDATION", "SELF_SERVICE", "EMAIL_RESPONSE", "EMAIL_OVERVIEW", "EMAIL_GENERATIVE_ANSWER", "ORCHESTRATION", "NOTE_TAKING", "CASE_SUMMARIZATION"
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.ai_agent_arn #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.modified_time #=> Time
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.visibility_status #=> String, one of "SAVED", "PUBLISHED"
     #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.manual_search_ai_agent_configuration.answer_generation_ai_prompt_id #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.manual_search_ai_agent_configuration.answer_generation_ai_guardrail_id #=> String
     #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.manual_search_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
     #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
     #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
     #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
@@ -4262,14 +4947,40 @@ module Aws::QConnect
     #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
     #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
     #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
     #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
     #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_id #=> String
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
     #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.manual_search_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.intent_labeling_generation_ai_prompt_id #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.query_reformulation_ai_prompt_id #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.answer_generation_ai_prompt_id #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.answer_generation_ai_guardrail_id #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions #=> Array
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions #=> Array
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].key #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.suggested_messages #=> Array
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.answer_recommendation_ai_agent_configuration.suggested_messages[0] #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.self_service_ai_agent_configuration.self_service_pre_processing_ai_prompt_id #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.self_service_ai_agent_configuration.self_service_answer_generation_ai_prompt_id #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.self_service_ai_agent_configuration.self_service_ai_guardrail_id #=> String
     #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.self_service_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.self_service_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.self_service_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
     #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
     #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
     #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
@@ -4279,24 +4990,83 @@ module Aws::QConnect
     #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
     #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
     #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
     #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
     #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.self_service_ai_agent_configuration.association_configurations[0].association_id #=> String
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.self_service_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.self_service_ai_agent_configuration.self_service_ai_guardrail_id #=> String
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.self_service_ai_agent_configuration.self_service_answer_generation_ai_prompt_id #=> String
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.self_service_ai_agent_configuration.self_service_pre_processing_ai_prompt_id #=> String
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.description #=> String
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.modified_time #=> Time
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.name #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_response_ai_agent_configuration.email_response_ai_prompt_id #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_response_ai_agent_configuration.email_query_reformulation_ai_prompt_id #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_response_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_response_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_response_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_response_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions #=> Array
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions #=> Array
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].key #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_overview_ai_agent_configuration.email_overview_ai_prompt_id #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_overview_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_generative_answer_ai_agent_configuration.email_generative_answer_ai_prompt_id #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_generative_answer_ai_agent_configuration.email_query_reformulation_ai_prompt_id #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_generative_answer_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_generative_answer_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions #=> Array
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions #=> Array
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].key #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.orchestration_ai_agent_configuration.orchestration_ai_prompt_id #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.orchestration_ai_agent_configuration.orchestration_ai_guardrail_id #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.orchestration_ai_agent_configuration.tool_configurations #=> Array
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.orchestration_ai_agent_configuration.tool_configurations[0].tool_name #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.orchestration_ai_agent_configuration.tool_configurations[0].tool_type #=> String, one of "MODEL_CONTEXT_PROTOCOL", "RETURN_TO_CONTROL", "CONSTANT"
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.orchestration_ai_agent_configuration.tool_configurations[0].title #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.orchestration_ai_agent_configuration.tool_configurations[0].tool_id #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.orchestration_ai_agent_configuration.tool_configurations[0].description #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.orchestration_ai_agent_configuration.tool_configurations[0].instruction.instruction #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.orchestration_ai_agent_configuration.tool_configurations[0].instruction.examples #=> Array
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.orchestration_ai_agent_configuration.tool_configurations[0].instruction.examples[0] #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.orchestration_ai_agent_configuration.tool_configurations[0].override_input_values #=> Array
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.orchestration_ai_agent_configuration.tool_configurations[0].override_input_values[0].json_path #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.orchestration_ai_agent_configuration.tool_configurations[0].override_input_values[0].value.constant.type #=> String, one of "STRING", "NUMBER", "JSON_STRING"
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.orchestration_ai_agent_configuration.tool_configurations[0].override_input_values[0].value.constant.value #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.orchestration_ai_agent_configuration.tool_configurations[0].output_filters #=> Array
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.orchestration_ai_agent_configuration.tool_configurations[0].output_filters[0].json_path #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.orchestration_ai_agent_configuration.tool_configurations[0].output_filters[0].output_configuration.output_variable_name_override #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.orchestration_ai_agent_configuration.tool_configurations[0].output_filters[0].output_configuration.session_data_namespace #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.orchestration_ai_agent_configuration.tool_configurations[0].annotations.title #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.orchestration_ai_agent_configuration.tool_configurations[0].annotations.destructive_hint #=> Boolean
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.orchestration_ai_agent_configuration.tool_configurations[0].user_interaction_configuration.is_user_confirmation_required #=> Boolean
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.orchestration_ai_agent_configuration.connect_instance_arn #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.orchestration_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.note_taking_ai_agent_configuration.note_taking_ai_prompt_id #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.note_taking_ai_agent_configuration.note_taking_ai_guardrail_id #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.note_taking_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.case_summarization_ai_agent_configuration.case_summarization_ai_prompt_id #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.case_summarization_ai_agent_configuration.case_summarization_ai_guardrail_id #=> String
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.configuration.case_summarization_ai_agent_configuration.locale #=> String
     #   resp.ai_agent_version_summaries[0].ai_agent_summary.origin #=> String, one of "SYSTEM", "CUSTOMER"
+    #   resp.ai_agent_version_summaries[0].ai_agent_summary.description #=> String
     #   resp.ai_agent_version_summaries[0].ai_agent_summary.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
     #   resp.ai_agent_version_summaries[0].ai_agent_summary.tags #=> Hash
     #   resp.ai_agent_version_summaries[0].ai_agent_summary.tags["TagKey"] #=> String
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.type #=> String, one of "MANUAL_SEARCH", "ANSWER_RECOMMENDATION", "SELF_SERVICE"
-    #   resp.ai_agent_version_summaries[0].ai_agent_summary.visibility_status #=> String, one of "SAVED", "PUBLISHED"
     #   resp.ai_agent_version_summaries[0].version_number #=> Integer
     #   resp.next_token #=> String
     #
@@ -4315,13 +5085,13 @@ module Aws::QConnect
     #   The identifier of the Amazon Q in Connect assistant. Can be either the
     #   ID or the ARN. URLs cannot contain the ARN.
     #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to return per page.
-    #
     # @option params [String] :next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return per page.
     #
     # @option params [String] :origin
     #   The origin of the AI Agents to be listed. `SYSTEM` for a default AI
@@ -4339,42 +5109,29 @@ module Aws::QConnect
     #
     #   resp = client.list_ai_agents({
     #     assistant_id: "UuidOrArn", # required
-    #     max_results: 1,
     #     next_token: "NextToken",
+    #     max_results: 1,
     #     origin: "SYSTEM", # accepts SYSTEM, CUSTOMER
     #   })
     #
     # @example Response structure
     #
     #   resp.ai_agent_summaries #=> Array
-    #   resp.ai_agent_summaries[0].ai_agent_arn #=> String
-    #   resp.ai_agent_summaries[0].ai_agent_id #=> String
-    #   resp.ai_agent_summaries[0].assistant_arn #=> String
+    #   resp.ai_agent_summaries[0].name #=> String
     #   resp.ai_agent_summaries[0].assistant_id #=> String
-    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.answer_generation_ai_guardrail_id #=> String
-    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.answer_generation_ai_prompt_id #=> String
-    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations #=> Array
-    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
-    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
-    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
-    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions #=> Array
-    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions #=> Array
-    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].key #=> String
-    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
-    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
-    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
-    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
-    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
-    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
-    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
-    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_id #=> String
-    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
-    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.intent_labeling_generation_ai_prompt_id #=> String
-    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.locale #=> String
-    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.query_reformulation_ai_prompt_id #=> String
-    #   resp.ai_agent_summaries[0].configuration.manual_search_ai_agent_configuration.answer_generation_ai_guardrail_id #=> String
+    #   resp.ai_agent_summaries[0].assistant_arn #=> String
+    #   resp.ai_agent_summaries[0].ai_agent_id #=> String
+    #   resp.ai_agent_summaries[0].type #=> String, one of "MANUAL_SEARCH", "ANSWER_RECOMMENDATION", "SELF_SERVICE", "EMAIL_RESPONSE", "EMAIL_OVERVIEW", "EMAIL_GENERATIVE_ANSWER", "ORCHESTRATION", "NOTE_TAKING", "CASE_SUMMARIZATION"
+    #   resp.ai_agent_summaries[0].ai_agent_arn #=> String
+    #   resp.ai_agent_summaries[0].modified_time #=> Time
+    #   resp.ai_agent_summaries[0].visibility_status #=> String, one of "SAVED", "PUBLISHED"
     #   resp.ai_agent_summaries[0].configuration.manual_search_ai_agent_configuration.answer_generation_ai_prompt_id #=> String
+    #   resp.ai_agent_summaries[0].configuration.manual_search_ai_agent_configuration.answer_generation_ai_guardrail_id #=> String
     #   resp.ai_agent_summaries[0].configuration.manual_search_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent_summaries[0].configuration.manual_search_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent_summaries[0].configuration.manual_search_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent_summaries[0].configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent_summaries[0].configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
     #   resp.ai_agent_summaries[0].configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
     #   resp.ai_agent_summaries[0].configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
     #   resp.ai_agent_summaries[0].configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
@@ -4384,14 +5141,40 @@ module Aws::QConnect
     #   resp.ai_agent_summaries[0].configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
     #   resp.ai_agent_summaries[0].configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
     #   resp.ai_agent_summaries[0].configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
-    #   resp.ai_agent_summaries[0].configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
-    #   resp.ai_agent_summaries[0].configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
     #   resp.ai_agent_summaries[0].configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
     #   resp.ai_agent_summaries[0].configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
-    #   resp.ai_agent_summaries[0].configuration.manual_search_ai_agent_configuration.association_configurations[0].association_id #=> String
-    #   resp.ai_agent_summaries[0].configuration.manual_search_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
     #   resp.ai_agent_summaries[0].configuration.manual_search_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.intent_labeling_generation_ai_prompt_id #=> String
+    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.query_reformulation_ai_prompt_id #=> String
+    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.answer_generation_ai_prompt_id #=> String
+    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.answer_generation_ai_guardrail_id #=> String
+    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
+    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
+    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
+    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
+    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions #=> Array
+    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions #=> Array
+    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].key #=> String
+    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
+    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
+    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
+    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
+    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
+    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.suggested_messages #=> Array
+    #   resp.ai_agent_summaries[0].configuration.answer_recommendation_ai_agent_configuration.suggested_messages[0] #=> String
+    #   resp.ai_agent_summaries[0].configuration.self_service_ai_agent_configuration.self_service_pre_processing_ai_prompt_id #=> String
+    #   resp.ai_agent_summaries[0].configuration.self_service_ai_agent_configuration.self_service_answer_generation_ai_prompt_id #=> String
+    #   resp.ai_agent_summaries[0].configuration.self_service_ai_agent_configuration.self_service_ai_guardrail_id #=> String
     #   resp.ai_agent_summaries[0].configuration.self_service_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent_summaries[0].configuration.self_service_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent_summaries[0].configuration.self_service_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent_summaries[0].configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent_summaries[0].configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
     #   resp.ai_agent_summaries[0].configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
     #   resp.ai_agent_summaries[0].configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
     #   resp.ai_agent_summaries[0].configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
@@ -4401,24 +5184,83 @@ module Aws::QConnect
     #   resp.ai_agent_summaries[0].configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
     #   resp.ai_agent_summaries[0].configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
     #   resp.ai_agent_summaries[0].configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
-    #   resp.ai_agent_summaries[0].configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
-    #   resp.ai_agent_summaries[0].configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
     #   resp.ai_agent_summaries[0].configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
     #   resp.ai_agent_summaries[0].configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
-    #   resp.ai_agent_summaries[0].configuration.self_service_ai_agent_configuration.association_configurations[0].association_id #=> String
-    #   resp.ai_agent_summaries[0].configuration.self_service_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
-    #   resp.ai_agent_summaries[0].configuration.self_service_ai_agent_configuration.self_service_ai_guardrail_id #=> String
-    #   resp.ai_agent_summaries[0].configuration.self_service_ai_agent_configuration.self_service_answer_generation_ai_prompt_id #=> String
-    #   resp.ai_agent_summaries[0].configuration.self_service_ai_agent_configuration.self_service_pre_processing_ai_prompt_id #=> String
-    #   resp.ai_agent_summaries[0].description #=> String
-    #   resp.ai_agent_summaries[0].modified_time #=> Time
-    #   resp.ai_agent_summaries[0].name #=> String
+    #   resp.ai_agent_summaries[0].configuration.email_response_ai_agent_configuration.email_response_ai_prompt_id #=> String
+    #   resp.ai_agent_summaries[0].configuration.email_response_ai_agent_configuration.email_query_reformulation_ai_prompt_id #=> String
+    #   resp.ai_agent_summaries[0].configuration.email_response_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent_summaries[0].configuration.email_response_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent_summaries[0].configuration.email_response_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent_summaries[0].configuration.email_response_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent_summaries[0].configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent_summaries[0].configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
+    #   resp.ai_agent_summaries[0].configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
+    #   resp.ai_agent_summaries[0].configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
+    #   resp.ai_agent_summaries[0].configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
+    #   resp.ai_agent_summaries[0].configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions #=> Array
+    #   resp.ai_agent_summaries[0].configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions #=> Array
+    #   resp.ai_agent_summaries[0].configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].key #=> String
+    #   resp.ai_agent_summaries[0].configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
+    #   resp.ai_agent_summaries[0].configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
+    #   resp.ai_agent_summaries[0].configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
+    #   resp.ai_agent_summaries[0].configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
+    #   resp.ai_agent_summaries[0].configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
+    #   resp.ai_agent_summaries[0].configuration.email_overview_ai_agent_configuration.email_overview_ai_prompt_id #=> String
+    #   resp.ai_agent_summaries[0].configuration.email_overview_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent_summaries[0].configuration.email_generative_answer_ai_agent_configuration.email_generative_answer_ai_prompt_id #=> String
+    #   resp.ai_agent_summaries[0].configuration.email_generative_answer_ai_agent_configuration.email_query_reformulation_ai_prompt_id #=> String
+    #   resp.ai_agent_summaries[0].configuration.email_generative_answer_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent_summaries[0].configuration.email_generative_answer_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent_summaries[0].configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent_summaries[0].configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent_summaries[0].configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent_summaries[0].configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
+    #   resp.ai_agent_summaries[0].configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
+    #   resp.ai_agent_summaries[0].configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
+    #   resp.ai_agent_summaries[0].configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
+    #   resp.ai_agent_summaries[0].configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions #=> Array
+    #   resp.ai_agent_summaries[0].configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions #=> Array
+    #   resp.ai_agent_summaries[0].configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].key #=> String
+    #   resp.ai_agent_summaries[0].configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
+    #   resp.ai_agent_summaries[0].configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
+    #   resp.ai_agent_summaries[0].configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
+    #   resp.ai_agent_summaries[0].configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
+    #   resp.ai_agent_summaries[0].configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
+    #   resp.ai_agent_summaries[0].configuration.orchestration_ai_agent_configuration.orchestration_ai_prompt_id #=> String
+    #   resp.ai_agent_summaries[0].configuration.orchestration_ai_agent_configuration.orchestration_ai_guardrail_id #=> String
+    #   resp.ai_agent_summaries[0].configuration.orchestration_ai_agent_configuration.tool_configurations #=> Array
+    #   resp.ai_agent_summaries[0].configuration.orchestration_ai_agent_configuration.tool_configurations[0].tool_name #=> String
+    #   resp.ai_agent_summaries[0].configuration.orchestration_ai_agent_configuration.tool_configurations[0].tool_type #=> String, one of "MODEL_CONTEXT_PROTOCOL", "RETURN_TO_CONTROL", "CONSTANT"
+    #   resp.ai_agent_summaries[0].configuration.orchestration_ai_agent_configuration.tool_configurations[0].title #=> String
+    #   resp.ai_agent_summaries[0].configuration.orchestration_ai_agent_configuration.tool_configurations[0].tool_id #=> String
+    #   resp.ai_agent_summaries[0].configuration.orchestration_ai_agent_configuration.tool_configurations[0].description #=> String
+    #   resp.ai_agent_summaries[0].configuration.orchestration_ai_agent_configuration.tool_configurations[0].instruction.instruction #=> String
+    #   resp.ai_agent_summaries[0].configuration.orchestration_ai_agent_configuration.tool_configurations[0].instruction.examples #=> Array
+    #   resp.ai_agent_summaries[0].configuration.orchestration_ai_agent_configuration.tool_configurations[0].instruction.examples[0] #=> String
+    #   resp.ai_agent_summaries[0].configuration.orchestration_ai_agent_configuration.tool_configurations[0].override_input_values #=> Array
+    #   resp.ai_agent_summaries[0].configuration.orchestration_ai_agent_configuration.tool_configurations[0].override_input_values[0].json_path #=> String
+    #   resp.ai_agent_summaries[0].configuration.orchestration_ai_agent_configuration.tool_configurations[0].override_input_values[0].value.constant.type #=> String, one of "STRING", "NUMBER", "JSON_STRING"
+    #   resp.ai_agent_summaries[0].configuration.orchestration_ai_agent_configuration.tool_configurations[0].override_input_values[0].value.constant.value #=> String
+    #   resp.ai_agent_summaries[0].configuration.orchestration_ai_agent_configuration.tool_configurations[0].output_filters #=> Array
+    #   resp.ai_agent_summaries[0].configuration.orchestration_ai_agent_configuration.tool_configurations[0].output_filters[0].json_path #=> String
+    #   resp.ai_agent_summaries[0].configuration.orchestration_ai_agent_configuration.tool_configurations[0].output_filters[0].output_configuration.output_variable_name_override #=> String
+    #   resp.ai_agent_summaries[0].configuration.orchestration_ai_agent_configuration.tool_configurations[0].output_filters[0].output_configuration.session_data_namespace #=> String
+    #   resp.ai_agent_summaries[0].configuration.orchestration_ai_agent_configuration.tool_configurations[0].annotations.title #=> String
+    #   resp.ai_agent_summaries[0].configuration.orchestration_ai_agent_configuration.tool_configurations[0].annotations.destructive_hint #=> Boolean
+    #   resp.ai_agent_summaries[0].configuration.orchestration_ai_agent_configuration.tool_configurations[0].user_interaction_configuration.is_user_confirmation_required #=> Boolean
+    #   resp.ai_agent_summaries[0].configuration.orchestration_ai_agent_configuration.connect_instance_arn #=> String
+    #   resp.ai_agent_summaries[0].configuration.orchestration_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent_summaries[0].configuration.note_taking_ai_agent_configuration.note_taking_ai_prompt_id #=> String
+    #   resp.ai_agent_summaries[0].configuration.note_taking_ai_agent_configuration.note_taking_ai_guardrail_id #=> String
+    #   resp.ai_agent_summaries[0].configuration.note_taking_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent_summaries[0].configuration.case_summarization_ai_agent_configuration.case_summarization_ai_prompt_id #=> String
+    #   resp.ai_agent_summaries[0].configuration.case_summarization_ai_agent_configuration.case_summarization_ai_guardrail_id #=> String
+    #   resp.ai_agent_summaries[0].configuration.case_summarization_ai_agent_configuration.locale #=> String
     #   resp.ai_agent_summaries[0].origin #=> String, one of "SYSTEM", "CUSTOMER"
+    #   resp.ai_agent_summaries[0].description #=> String
     #   resp.ai_agent_summaries[0].status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
     #   resp.ai_agent_summaries[0].tags #=> Hash
     #   resp.ai_agent_summaries[0].tags["TagKey"] #=> String
-    #   resp.ai_agent_summaries[0].type #=> String, one of "MANUAL_SEARCH", "ANSWER_RECOMMENDATION", "SELF_SERVICE"
-    #   resp.ai_agent_summaries[0].visibility_status #=> String, one of "SAVED", "PUBLISHED"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListAIAgents AWS API Documentation
@@ -4432,21 +5274,21 @@ module Aws::QConnect
 
     # Lists AI Guardrail versions.
     #
-    # @option params [required, String] :ai_guardrail_id
-    #   The identifier of the Amazon Q in Connect AI Guardrail for which
-    #   versions are to be listed.
-    #
     # @option params [required, String] :assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either the
     #   ID or the ARN. URLs cannot contain the ARN.
     #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to return per page.
+    # @option params [required, String] :ai_guardrail_id
+    #   The identifier of the Amazon Q in Connect AI Guardrail for which
+    #   versions are to be listed.
     #
     # @option params [String] :next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return per page.
     #
     # @return [Types::ListAIGuardrailVersionsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -4458,26 +5300,26 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_ai_guardrail_versions({
-    #     ai_guardrail_id: "UuidOrArnOrEitherWithQualifier", # required
     #     assistant_id: "UuidOrArn", # required
-    #     max_results: 1,
+    #     ai_guardrail_id: "UuidOrArnOrEitherWithQualifier", # required
     #     next_token: "NextToken",
+    #     max_results: 1,
     #   })
     #
     # @example Response structure
     #
     #   resp.ai_guardrail_version_summaries #=> Array
-    #   resp.ai_guardrail_version_summaries[0].ai_guardrail_summary.ai_guardrail_arn #=> String
-    #   resp.ai_guardrail_version_summaries[0].ai_guardrail_summary.ai_guardrail_id #=> String
-    #   resp.ai_guardrail_version_summaries[0].ai_guardrail_summary.assistant_arn #=> String
-    #   resp.ai_guardrail_version_summaries[0].ai_guardrail_summary.assistant_id #=> String
-    #   resp.ai_guardrail_version_summaries[0].ai_guardrail_summary.description #=> String
-    #   resp.ai_guardrail_version_summaries[0].ai_guardrail_summary.modified_time #=> Time
     #   resp.ai_guardrail_version_summaries[0].ai_guardrail_summary.name #=> String
+    #   resp.ai_guardrail_version_summaries[0].ai_guardrail_summary.assistant_id #=> String
+    #   resp.ai_guardrail_version_summaries[0].ai_guardrail_summary.assistant_arn #=> String
+    #   resp.ai_guardrail_version_summaries[0].ai_guardrail_summary.ai_guardrail_id #=> String
+    #   resp.ai_guardrail_version_summaries[0].ai_guardrail_summary.ai_guardrail_arn #=> String
+    #   resp.ai_guardrail_version_summaries[0].ai_guardrail_summary.modified_time #=> Time
+    #   resp.ai_guardrail_version_summaries[0].ai_guardrail_summary.visibility_status #=> String, one of "SAVED", "PUBLISHED"
+    #   resp.ai_guardrail_version_summaries[0].ai_guardrail_summary.description #=> String
     #   resp.ai_guardrail_version_summaries[0].ai_guardrail_summary.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
     #   resp.ai_guardrail_version_summaries[0].ai_guardrail_summary.tags #=> Hash
     #   resp.ai_guardrail_version_summaries[0].ai_guardrail_summary.tags["TagKey"] #=> String
-    #   resp.ai_guardrail_version_summaries[0].ai_guardrail_summary.visibility_status #=> String, one of "SAVED", "PUBLISHED"
     #   resp.ai_guardrail_version_summaries[0].version_number #=> Integer
     #   resp.next_token #=> String
     #
@@ -4497,13 +5339,13 @@ module Aws::QConnect
     #   The identifier of the Amazon Q in Connect assistant. Can be either the
     #   ID or the ARN. URLs cannot contain the ARN.
     #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to return per page.
-    #
     # @option params [String] :next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return per page.
     #
     # @return [Types::ListAIGuardrailsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -4516,24 +5358,24 @@ module Aws::QConnect
     #
     #   resp = client.list_ai_guardrails({
     #     assistant_id: "UuidOrArn", # required
-    #     max_results: 1,
     #     next_token: "NextToken",
+    #     max_results: 1,
     #   })
     #
     # @example Response structure
     #
     #   resp.ai_guardrail_summaries #=> Array
-    #   resp.ai_guardrail_summaries[0].ai_guardrail_arn #=> String
-    #   resp.ai_guardrail_summaries[0].ai_guardrail_id #=> String
-    #   resp.ai_guardrail_summaries[0].assistant_arn #=> String
-    #   resp.ai_guardrail_summaries[0].assistant_id #=> String
-    #   resp.ai_guardrail_summaries[0].description #=> String
-    #   resp.ai_guardrail_summaries[0].modified_time #=> Time
     #   resp.ai_guardrail_summaries[0].name #=> String
+    #   resp.ai_guardrail_summaries[0].assistant_id #=> String
+    #   resp.ai_guardrail_summaries[0].assistant_arn #=> String
+    #   resp.ai_guardrail_summaries[0].ai_guardrail_id #=> String
+    #   resp.ai_guardrail_summaries[0].ai_guardrail_arn #=> String
+    #   resp.ai_guardrail_summaries[0].modified_time #=> Time
+    #   resp.ai_guardrail_summaries[0].visibility_status #=> String, one of "SAVED", "PUBLISHED"
+    #   resp.ai_guardrail_summaries[0].description #=> String
     #   resp.ai_guardrail_summaries[0].status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
     #   resp.ai_guardrail_summaries[0].tags #=> Hash
     #   resp.ai_guardrail_summaries[0].tags["TagKey"] #=> String
-    #   resp.ai_guardrail_summaries[0].visibility_status #=> String, one of "SAVED", "PUBLISHED"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListAIGuardrails AWS API Documentation
@@ -4547,21 +5389,21 @@ module Aws::QConnect
 
     # Lists AI Prompt versions.
     #
-    # @option params [required, String] :ai_prompt_id
-    #   The identifier of the Amazon Q in Connect AI prompt for which versions
-    #   are to be listed.
-    #
     # @option params [required, String] :assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either the
     #   ID or the ARN. URLs cannot contain the ARN.
     #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to return per page.
+    # @option params [required, String] :ai_prompt_id
+    #   The identifier of the Amazon Q in Connect AI prompt for which versions
+    #   are to be listed.
     #
     # @option params [String] :next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return per page.
     #
     # @option params [String] :origin
     #   The origin of the AI Prompt versions to be listed. `SYSTEM` for a
@@ -4578,32 +5420,32 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_ai_prompt_versions({
-    #     ai_prompt_id: "UuidOrArnOrEitherWithQualifier", # required
     #     assistant_id: "UuidOrArn", # required
-    #     max_results: 1,
+    #     ai_prompt_id: "UuidOrArnOrEitherWithQualifier", # required
     #     next_token: "NextToken",
+    #     max_results: 1,
     #     origin: "SYSTEM", # accepts SYSTEM, CUSTOMER
     #   })
     #
     # @example Response structure
     #
     #   resp.ai_prompt_version_summaries #=> Array
-    #   resp.ai_prompt_version_summaries[0].ai_prompt_summary.ai_prompt_arn #=> String
-    #   resp.ai_prompt_version_summaries[0].ai_prompt_summary.ai_prompt_id #=> String
-    #   resp.ai_prompt_version_summaries[0].ai_prompt_summary.api_format #=> String, one of "ANTHROPIC_CLAUDE_MESSAGES", "ANTHROPIC_CLAUDE_TEXT_COMPLETIONS"
-    #   resp.ai_prompt_version_summaries[0].ai_prompt_summary.assistant_arn #=> String
-    #   resp.ai_prompt_version_summaries[0].ai_prompt_summary.assistant_id #=> String
-    #   resp.ai_prompt_version_summaries[0].ai_prompt_summary.description #=> String
-    #   resp.ai_prompt_version_summaries[0].ai_prompt_summary.model_id #=> String
-    #   resp.ai_prompt_version_summaries[0].ai_prompt_summary.modified_time #=> Time
     #   resp.ai_prompt_version_summaries[0].ai_prompt_summary.name #=> String
+    #   resp.ai_prompt_version_summaries[0].ai_prompt_summary.assistant_id #=> String
+    #   resp.ai_prompt_version_summaries[0].ai_prompt_summary.assistant_arn #=> String
+    #   resp.ai_prompt_version_summaries[0].ai_prompt_summary.ai_prompt_id #=> String
+    #   resp.ai_prompt_version_summaries[0].ai_prompt_summary.type #=> String, one of "ANSWER_GENERATION", "INTENT_LABELING_GENERATION", "QUERY_REFORMULATION", "SELF_SERVICE_PRE_PROCESSING", "SELF_SERVICE_ANSWER_GENERATION", "EMAIL_RESPONSE", "EMAIL_OVERVIEW", "EMAIL_GENERATIVE_ANSWER", "EMAIL_QUERY_REFORMULATION", "ORCHESTRATION", "NOTE_TAKING", "CASE_SUMMARIZATION"
+    #   resp.ai_prompt_version_summaries[0].ai_prompt_summary.ai_prompt_arn #=> String
+    #   resp.ai_prompt_version_summaries[0].ai_prompt_summary.modified_time #=> Time
+    #   resp.ai_prompt_version_summaries[0].ai_prompt_summary.template_type #=> String, one of "TEXT"
+    #   resp.ai_prompt_version_summaries[0].ai_prompt_summary.model_id #=> String
+    #   resp.ai_prompt_version_summaries[0].ai_prompt_summary.api_format #=> String, one of "ANTHROPIC_CLAUDE_MESSAGES", "ANTHROPIC_CLAUDE_TEXT_COMPLETIONS", "MESSAGES", "TEXT_COMPLETIONS"
+    #   resp.ai_prompt_version_summaries[0].ai_prompt_summary.visibility_status #=> String, one of "SAVED", "PUBLISHED"
     #   resp.ai_prompt_version_summaries[0].ai_prompt_summary.origin #=> String, one of "SYSTEM", "CUSTOMER"
+    #   resp.ai_prompt_version_summaries[0].ai_prompt_summary.description #=> String
     #   resp.ai_prompt_version_summaries[0].ai_prompt_summary.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
     #   resp.ai_prompt_version_summaries[0].ai_prompt_summary.tags #=> Hash
     #   resp.ai_prompt_version_summaries[0].ai_prompt_summary.tags["TagKey"] #=> String
-    #   resp.ai_prompt_version_summaries[0].ai_prompt_summary.template_type #=> String, one of "TEXT"
-    #   resp.ai_prompt_version_summaries[0].ai_prompt_summary.type #=> String, one of "ANSWER_GENERATION", "INTENT_LABELING_GENERATION", "QUERY_REFORMULATION", "SELF_SERVICE_PRE_PROCESSING", "SELF_SERVICE_ANSWER_GENERATION"
-    #   resp.ai_prompt_version_summaries[0].ai_prompt_summary.visibility_status #=> String, one of "SAVED", "PUBLISHED"
     #   resp.ai_prompt_version_summaries[0].version_number #=> Integer
     #   resp.next_token #=> String
     #
@@ -4622,13 +5464,13 @@ module Aws::QConnect
     #   The identifier of the Amazon Q in Connect assistant. Can be either the
     #   ID or the ARN. URLs cannot contain the ARN.
     #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to return per page.
-    #
     # @option params [String] :next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return per page.
     #
     # @option params [String] :origin
     #   The origin of the AI Prompts to be listed. `SYSTEM` for a default AI
@@ -4646,30 +5488,30 @@ module Aws::QConnect
     #
     #   resp = client.list_ai_prompts({
     #     assistant_id: "UuidOrArn", # required
-    #     max_results: 1,
     #     next_token: "NextToken",
+    #     max_results: 1,
     #     origin: "SYSTEM", # accepts SYSTEM, CUSTOMER
     #   })
     #
     # @example Response structure
     #
     #   resp.ai_prompt_summaries #=> Array
-    #   resp.ai_prompt_summaries[0].ai_prompt_arn #=> String
-    #   resp.ai_prompt_summaries[0].ai_prompt_id #=> String
-    #   resp.ai_prompt_summaries[0].api_format #=> String, one of "ANTHROPIC_CLAUDE_MESSAGES", "ANTHROPIC_CLAUDE_TEXT_COMPLETIONS"
-    #   resp.ai_prompt_summaries[0].assistant_arn #=> String
-    #   resp.ai_prompt_summaries[0].assistant_id #=> String
-    #   resp.ai_prompt_summaries[0].description #=> String
-    #   resp.ai_prompt_summaries[0].model_id #=> String
-    #   resp.ai_prompt_summaries[0].modified_time #=> Time
     #   resp.ai_prompt_summaries[0].name #=> String
+    #   resp.ai_prompt_summaries[0].assistant_id #=> String
+    #   resp.ai_prompt_summaries[0].assistant_arn #=> String
+    #   resp.ai_prompt_summaries[0].ai_prompt_id #=> String
+    #   resp.ai_prompt_summaries[0].type #=> String, one of "ANSWER_GENERATION", "INTENT_LABELING_GENERATION", "QUERY_REFORMULATION", "SELF_SERVICE_PRE_PROCESSING", "SELF_SERVICE_ANSWER_GENERATION", "EMAIL_RESPONSE", "EMAIL_OVERVIEW", "EMAIL_GENERATIVE_ANSWER", "EMAIL_QUERY_REFORMULATION", "ORCHESTRATION", "NOTE_TAKING", "CASE_SUMMARIZATION"
+    #   resp.ai_prompt_summaries[0].ai_prompt_arn #=> String
+    #   resp.ai_prompt_summaries[0].modified_time #=> Time
+    #   resp.ai_prompt_summaries[0].template_type #=> String, one of "TEXT"
+    #   resp.ai_prompt_summaries[0].model_id #=> String
+    #   resp.ai_prompt_summaries[0].api_format #=> String, one of "ANTHROPIC_CLAUDE_MESSAGES", "ANTHROPIC_CLAUDE_TEXT_COMPLETIONS", "MESSAGES", "TEXT_COMPLETIONS"
+    #   resp.ai_prompt_summaries[0].visibility_status #=> String, one of "SAVED", "PUBLISHED"
     #   resp.ai_prompt_summaries[0].origin #=> String, one of "SYSTEM", "CUSTOMER"
+    #   resp.ai_prompt_summaries[0].description #=> String
     #   resp.ai_prompt_summaries[0].status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
     #   resp.ai_prompt_summaries[0].tags #=> Hash
     #   resp.ai_prompt_summaries[0].tags["TagKey"] #=> String
-    #   resp.ai_prompt_summaries[0].template_type #=> String, one of "TEXT"
-    #   resp.ai_prompt_summaries[0].type #=> String, one of "ANSWER_GENERATION", "INTENT_LABELING_GENERATION", "QUERY_REFORMULATION", "SELF_SERVICE_PRE_PROCESSING", "SELF_SERVICE_ANSWER_GENERATION"
-    #   resp.ai_prompt_summaries[0].visibility_status #=> String, one of "SAVED", "PUBLISHED"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListAIPrompts AWS API Documentation
@@ -4683,17 +5525,17 @@ module Aws::QConnect
 
     # Lists information about assistant associations.
     #
-    # @option params [required, String] :assistant_id
-    #   The identifier of the Amazon Q in Connect assistant. Can be either the
-    #   ID or the ARN. URLs cannot contain the ARN.
-    #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to return per page.
-    #
     # @option params [String] :next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return per page.
+    #
+    # @option params [required, String] :assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either the
+    #   ID or the ARN. URLs cannot contain the ARN.
     #
     # @return [Types::ListAssistantAssociationsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -4705,21 +5547,23 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_assistant_associations({
-    #     assistant_id: "UuidOrArn", # required
-    #     max_results: 1,
     #     next_token: "NextToken",
+    #     max_results: 1,
+    #     assistant_id: "UuidOrArn", # required
     #   })
     #
     # @example Response structure
     #
     #   resp.assistant_association_summaries #=> Array
-    #   resp.assistant_association_summaries[0].assistant_arn #=> String
-    #   resp.assistant_association_summaries[0].assistant_association_arn #=> String
     #   resp.assistant_association_summaries[0].assistant_association_id #=> String
+    #   resp.assistant_association_summaries[0].assistant_association_arn #=> String
     #   resp.assistant_association_summaries[0].assistant_id #=> String
-    #   resp.assistant_association_summaries[0].association_data.knowledge_base_association.knowledge_base_arn #=> String
+    #   resp.assistant_association_summaries[0].assistant_arn #=> String
+    #   resp.assistant_association_summaries[0].association_type #=> String, one of "KNOWLEDGE_BASE", "EXTERNAL_BEDROCK_KNOWLEDGE_BASE"
     #   resp.assistant_association_summaries[0].association_data.knowledge_base_association.knowledge_base_id #=> String
-    #   resp.assistant_association_summaries[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.assistant_association_summaries[0].association_data.knowledge_base_association.knowledge_base_arn #=> String
+    #   resp.assistant_association_summaries[0].association_data.external_bedrock_knowledge_base_config.bedrock_knowledge_base_arn #=> String
+    #   resp.assistant_association_summaries[0].association_data.external_bedrock_knowledge_base_config.access_role_arn #=> String
     #   resp.assistant_association_summaries[0].tags #=> Hash
     #   resp.assistant_association_summaries[0].tags["TagKey"] #=> String
     #   resp.next_token #=> String
@@ -4735,13 +5579,13 @@ module Aws::QConnect
 
     # Lists information about assistants.
     #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to return per page.
-    #
     # @option params [String] :next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return per page.
     #
     # @return [Types::ListAssistantsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -4753,26 +5597,29 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_assistants({
-    #     max_results: 1,
     #     next_token: "NextToken",
+    #     max_results: 1,
     #   })
     #
     # @example Response structure
     #
     #   resp.assistant_summaries #=> Array
-    #   resp.assistant_summaries[0].ai_agent_configuration #=> Hash
-    #   resp.assistant_summaries[0].ai_agent_configuration["AIAgentType"].ai_agent_id #=> String
-    #   resp.assistant_summaries[0].assistant_arn #=> String
     #   resp.assistant_summaries[0].assistant_id #=> String
-    #   resp.assistant_summaries[0].capability_configuration.type #=> String, one of "V1", "V2"
-    #   resp.assistant_summaries[0].description #=> String
-    #   resp.assistant_summaries[0].integration_configuration.topic_integration_arn #=> String
+    #   resp.assistant_summaries[0].assistant_arn #=> String
     #   resp.assistant_summaries[0].name #=> String
-    #   resp.assistant_summaries[0].server_side_encryption_configuration.kms_key_id #=> String
+    #   resp.assistant_summaries[0].type #=> String, one of "AGENT"
     #   resp.assistant_summaries[0].status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
+    #   resp.assistant_summaries[0].description #=> String
     #   resp.assistant_summaries[0].tags #=> Hash
     #   resp.assistant_summaries[0].tags["TagKey"] #=> String
-    #   resp.assistant_summaries[0].type #=> String, one of "AGENT"
+    #   resp.assistant_summaries[0].server_side_encryption_configuration.kms_key_id #=> String
+    #   resp.assistant_summaries[0].integration_configuration.topic_integration_arn #=> String
+    #   resp.assistant_summaries[0].capability_configuration.type #=> String, one of "V1", "V2"
+    #   resp.assistant_summaries[0].ai_agent_configuration #=> Hash
+    #   resp.assistant_summaries[0].ai_agent_configuration["AIAgentType"].ai_agent_id #=> String
+    #   resp.assistant_summaries[0].orchestrator_configuration_list #=> Array
+    #   resp.assistant_summaries[0].orchestrator_configuration_list[0].ai_agent_id #=> String
+    #   resp.assistant_summaries[0].orchestrator_configuration_list[0].orchestrator_use_case #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListAssistants AWS API Documentation
@@ -4794,19 +5641,19 @@ module Aws::QConnect
     #
     # [1]: https://docs.aws.amazon.com/connect/latest/adminguide/integrate-q-with-guides.html
     #
-    # @option params [required, String] :content_id
-    #   The identifier of the content.
-    #
-    # @option params [required, String] :knowledge_base_id
-    #   The identifier of the knowledge base.
-    #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to return per page.
-    #
     # @option params [String] :next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return per page.
+    #
+    # @option params [required, String] :knowledge_base_id
+    #   The identifier of the knowledge base.
+    #
+    # @option params [required, String] :content_id
+    #   The identifier of the content.
     #
     # @return [Types::ListContentAssociationsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -4818,23 +5665,23 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_content_associations({
-    #     content_id: "UuidOrArn", # required
-    #     knowledge_base_id: "UuidOrArn", # required
-    #     max_results: 1,
     #     next_token: "NextToken",
+    #     max_results: 1,
+    #     knowledge_base_id: "UuidOrArn", # required
+    #     content_id: "UuidOrArn", # required
     #   })
     #
     # @example Response structure
     #
     #   resp.content_association_summaries #=> Array
-    #   resp.content_association_summaries[0].association_data.amazon_connect_guide_association.flow_id #=> String
-    #   resp.content_association_summaries[0].association_type #=> String, one of "AMAZON_CONNECT_GUIDE"
-    #   resp.content_association_summaries[0].content_arn #=> String
-    #   resp.content_association_summaries[0].content_association_arn #=> String
-    #   resp.content_association_summaries[0].content_association_id #=> String
-    #   resp.content_association_summaries[0].content_id #=> String
-    #   resp.content_association_summaries[0].knowledge_base_arn #=> String
     #   resp.content_association_summaries[0].knowledge_base_id #=> String
+    #   resp.content_association_summaries[0].knowledge_base_arn #=> String
+    #   resp.content_association_summaries[0].content_id #=> String
+    #   resp.content_association_summaries[0].content_arn #=> String
+    #   resp.content_association_summaries[0].content_association_id #=> String
+    #   resp.content_association_summaries[0].content_association_arn #=> String
+    #   resp.content_association_summaries[0].association_type #=> String, one of "AMAZON_CONNECT_GUIDE"
+    #   resp.content_association_summaries[0].association_data.amazon_connect_guide_association.flow_id #=> String
     #   resp.content_association_summaries[0].tags #=> Hash
     #   resp.content_association_summaries[0].tags["TagKey"] #=> String
     #   resp.next_token #=> String
@@ -4850,18 +5697,18 @@ module Aws::QConnect
 
     # Lists the content.
     #
-    # @option params [required, String] :knowledge_base_id
-    #   The identifier of the knowledge base. This should not be a
-    #   QUICK\_RESPONSES type knowledge base. Can be either the ID or the ARN.
-    #   URLs cannot contain the ARN.
-    #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to return per page.
-    #
     # @option params [String] :next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return per page.
+    #
+    # @option params [required, String] :knowledge_base_id
+    #   The identifier of the knowledge base. This should not be a
+    #   QUICK\_RESPONSES type knowledge base. Can be either the ID or the ARN.
+    #   URLs cannot contain the ARN.
     #
     # @return [Types::ListContentsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -4873,9 +5720,9 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_contents({
-    #     knowledge_base_id: "UuidOrArn", # required
-    #     max_results: 1,
     #     next_token: "NextToken",
+    #     max_results: 1,
+    #     knowledge_base_id: "UuidOrArn", # required
     #   })
     #
     # @example Response structure
@@ -4883,17 +5730,17 @@ module Aws::QConnect
     #   resp.content_summaries #=> Array
     #   resp.content_summaries[0].content_arn #=> String
     #   resp.content_summaries[0].content_id #=> String
-    #   resp.content_summaries[0].content_type #=> String
     #   resp.content_summaries[0].knowledge_base_arn #=> String
     #   resp.content_summaries[0].knowledge_base_id #=> String
-    #   resp.content_summaries[0].metadata #=> Hash
-    #   resp.content_summaries[0].metadata["NonEmptyString"] #=> String
     #   resp.content_summaries[0].name #=> String
     #   resp.content_summaries[0].revision_id #=> String
+    #   resp.content_summaries[0].title #=> String
+    #   resp.content_summaries[0].content_type #=> String
     #   resp.content_summaries[0].status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED", "UPDATE_FAILED"
+    #   resp.content_summaries[0].metadata #=> Hash
+    #   resp.content_summaries[0].metadata["NonEmptyString"] #=> String
     #   resp.content_summaries[0].tags #=> Hash
     #   resp.content_summaries[0].tags["TagKey"] #=> String
-    #   resp.content_summaries[0].title #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListContents AWS API Documentation
@@ -4907,17 +5754,17 @@ module Aws::QConnect
 
     # Lists information about import jobs.
     #
-    # @option params [required, String] :knowledge_base_id
-    #   The identifier of the knowledge base. Can be either the ID or the ARN.
-    #   URLs cannot contain the ARN.
-    #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to return per page.
-    #
     # @option params [String] :next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return per page.
+    #
+    # @option params [required, String] :knowledge_base_id
+    #   The identifier of the knowledge base. Can be either the ID or the ARN.
+    #   URLs cannot contain the ARN.
     #
     # @return [Types::ListImportJobsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -4929,26 +5776,26 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_import_jobs({
-    #     knowledge_base_id: "UuidOrArn", # required
-    #     max_results: 1,
     #     next_token: "NonEmptyString",
+    #     max_results: 1,
+    #     knowledge_base_id: "UuidOrArn", # required
     #   })
     #
     # @example Response structure
     #
     #   resp.import_job_summaries #=> Array
-    #   resp.import_job_summaries[0].created_time #=> Time
-    #   resp.import_job_summaries[0].external_source_configuration.configuration.connect_configuration.instance_id #=> String
-    #   resp.import_job_summaries[0].external_source_configuration.source #=> String, one of "AMAZON_CONNECT"
     #   resp.import_job_summaries[0].import_job_id #=> String
-    #   resp.import_job_summaries[0].import_job_type #=> String, one of "QUICK_RESPONSES"
-    #   resp.import_job_summaries[0].knowledge_base_arn #=> String
     #   resp.import_job_summaries[0].knowledge_base_id #=> String
+    #   resp.import_job_summaries[0].upload_id #=> String
+    #   resp.import_job_summaries[0].knowledge_base_arn #=> String
+    #   resp.import_job_summaries[0].import_job_type #=> String, one of "QUICK_RESPONSES"
+    #   resp.import_job_summaries[0].status #=> String, one of "START_IN_PROGRESS", "FAILED", "COMPLETE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
+    #   resp.import_job_summaries[0].created_time #=> Time
     #   resp.import_job_summaries[0].last_modified_time #=> Time
     #   resp.import_job_summaries[0].metadata #=> Hash
     #   resp.import_job_summaries[0].metadata["NonEmptyString"] #=> String
-    #   resp.import_job_summaries[0].status #=> String, one of "START_IN_PROGRESS", "FAILED", "COMPLETE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
-    #   resp.import_job_summaries[0].upload_id #=> String
+    #   resp.import_job_summaries[0].external_source_configuration.source #=> String, one of "AMAZON_CONNECT"
+    #   resp.import_job_summaries[0].external_source_configuration.configuration.connect_configuration.instance_id #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListImportJobs AWS API Documentation
@@ -4962,13 +5809,13 @@ module Aws::QConnect
 
     # Lists the knowledge bases.
     #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to return per page.
-    #
     # @option params [String] :next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return per page.
     #
     # @return [Types::ListKnowledgeBasesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -4980,46 +5827,46 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_knowledge_bases({
-    #     max_results: 1,
     #     next_token: "NonEmptyString",
+    #     max_results: 1,
     #   })
     #
     # @example Response structure
     #
     #   resp.knowledge_base_summaries #=> Array
-    #   resp.knowledge_base_summaries[0].description #=> String
-    #   resp.knowledge_base_summaries[0].knowledge_base_arn #=> String
     #   resp.knowledge_base_summaries[0].knowledge_base_id #=> String
-    #   resp.knowledge_base_summaries[0].knowledge_base_type #=> String, one of "EXTERNAL", "CUSTOM", "QUICK_RESPONSES", "MESSAGE_TEMPLATES", "MANAGED"
+    #   resp.knowledge_base_summaries[0].knowledge_base_arn #=> String
     #   resp.knowledge_base_summaries[0].name #=> String
-    #   resp.knowledge_base_summaries[0].rendering_configuration.template_uri #=> String
-    #   resp.knowledge_base_summaries[0].server_side_encryption_configuration.kms_key_id #=> String
+    #   resp.knowledge_base_summaries[0].knowledge_base_type #=> String, one of "EXTERNAL", "CUSTOM", "QUICK_RESPONSES", "MESSAGE_TEMPLATES", "MANAGED"
+    #   resp.knowledge_base_summaries[0].status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
     #   resp.knowledge_base_summaries[0].source_configuration.app_integrations.app_integration_arn #=> String
     #   resp.knowledge_base_summaries[0].source_configuration.app_integrations.object_fields #=> Array
     #   resp.knowledge_base_summaries[0].source_configuration.app_integrations.object_fields[0] #=> String
-    #   resp.knowledge_base_summaries[0].source_configuration.managed_source_configuration.web_crawler_configuration.crawler_limits.rate_limit #=> Integer
-    #   resp.knowledge_base_summaries[0].source_configuration.managed_source_configuration.web_crawler_configuration.exclusion_filters #=> Array
-    #   resp.knowledge_base_summaries[0].source_configuration.managed_source_configuration.web_crawler_configuration.exclusion_filters[0] #=> String
-    #   resp.knowledge_base_summaries[0].source_configuration.managed_source_configuration.web_crawler_configuration.inclusion_filters #=> Array
-    #   resp.knowledge_base_summaries[0].source_configuration.managed_source_configuration.web_crawler_configuration.inclusion_filters[0] #=> String
-    #   resp.knowledge_base_summaries[0].source_configuration.managed_source_configuration.web_crawler_configuration.scope #=> String, one of "HOST_ONLY", "SUBDOMAINS"
     #   resp.knowledge_base_summaries[0].source_configuration.managed_source_configuration.web_crawler_configuration.url_configuration.seed_urls #=> Array
     #   resp.knowledge_base_summaries[0].source_configuration.managed_source_configuration.web_crawler_configuration.url_configuration.seed_urls[0].url #=> String
-    #   resp.knowledge_base_summaries[0].status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
-    #   resp.knowledge_base_summaries[0].tags #=> Hash
-    #   resp.knowledge_base_summaries[0].tags["TagKey"] #=> String
+    #   resp.knowledge_base_summaries[0].source_configuration.managed_source_configuration.web_crawler_configuration.crawler_limits.rate_limit #=> Integer
+    #   resp.knowledge_base_summaries[0].source_configuration.managed_source_configuration.web_crawler_configuration.inclusion_filters #=> Array
+    #   resp.knowledge_base_summaries[0].source_configuration.managed_source_configuration.web_crawler_configuration.inclusion_filters[0] #=> String
+    #   resp.knowledge_base_summaries[0].source_configuration.managed_source_configuration.web_crawler_configuration.exclusion_filters #=> Array
+    #   resp.knowledge_base_summaries[0].source_configuration.managed_source_configuration.web_crawler_configuration.exclusion_filters[0] #=> String
+    #   resp.knowledge_base_summaries[0].source_configuration.managed_source_configuration.web_crawler_configuration.scope #=> String, one of "HOST_ONLY", "SUBDOMAINS"
     #   resp.knowledge_base_summaries[0].vector_ingestion_configuration.chunking_configuration.chunking_strategy #=> String, one of "FIXED_SIZE", "NONE", "HIERARCHICAL", "SEMANTIC"
     #   resp.knowledge_base_summaries[0].vector_ingestion_configuration.chunking_configuration.fixed_size_chunking_configuration.max_tokens #=> Integer
     #   resp.knowledge_base_summaries[0].vector_ingestion_configuration.chunking_configuration.fixed_size_chunking_configuration.overlap_percentage #=> Integer
     #   resp.knowledge_base_summaries[0].vector_ingestion_configuration.chunking_configuration.hierarchical_chunking_configuration.level_configurations #=> Array
     #   resp.knowledge_base_summaries[0].vector_ingestion_configuration.chunking_configuration.hierarchical_chunking_configuration.level_configurations[0].max_tokens #=> Integer
     #   resp.knowledge_base_summaries[0].vector_ingestion_configuration.chunking_configuration.hierarchical_chunking_configuration.overlap_tokens #=> Integer
-    #   resp.knowledge_base_summaries[0].vector_ingestion_configuration.chunking_configuration.semantic_chunking_configuration.breakpoint_percentile_threshold #=> Integer
-    #   resp.knowledge_base_summaries[0].vector_ingestion_configuration.chunking_configuration.semantic_chunking_configuration.buffer_size #=> Integer
     #   resp.knowledge_base_summaries[0].vector_ingestion_configuration.chunking_configuration.semantic_chunking_configuration.max_tokens #=> Integer
+    #   resp.knowledge_base_summaries[0].vector_ingestion_configuration.chunking_configuration.semantic_chunking_configuration.buffer_size #=> Integer
+    #   resp.knowledge_base_summaries[0].vector_ingestion_configuration.chunking_configuration.semantic_chunking_configuration.breakpoint_percentile_threshold #=> Integer
+    #   resp.knowledge_base_summaries[0].vector_ingestion_configuration.parsing_configuration.parsing_strategy #=> String, one of "BEDROCK_FOUNDATION_MODEL"
     #   resp.knowledge_base_summaries[0].vector_ingestion_configuration.parsing_configuration.bedrock_foundation_model_configuration.model_arn #=> String
     #   resp.knowledge_base_summaries[0].vector_ingestion_configuration.parsing_configuration.bedrock_foundation_model_configuration.parsing_prompt.parsing_prompt_text #=> String
-    #   resp.knowledge_base_summaries[0].vector_ingestion_configuration.parsing_configuration.parsing_strategy #=> String, one of "BEDROCK_FOUNDATION_MODEL"
+    #   resp.knowledge_base_summaries[0].rendering_configuration.template_uri #=> String
+    #   resp.knowledge_base_summaries[0].server_side_encryption_configuration.kms_key_id #=> String
+    #   resp.knowledge_base_summaries[0].description #=> String
+    #   resp.knowledge_base_summaries[0].tags #=> Hash
+    #   resp.knowledge_base_summaries[0].tags["TagKey"] #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListKnowledgeBases AWS API Documentation
@@ -5038,9 +5885,6 @@ module Aws::QConnect
     #   The identifier of the knowledge base. Can be either the ID or the ARN.
     #   URLs cannot contain the ARN.
     #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to return per page.
-    #
     # @option params [required, String] :message_template_id
     #   The identifier of the message template. Can be either the ID or the
     #   ARN. It cannot contain any qualifier.
@@ -5049,6 +5893,9 @@ module Aws::QConnect
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return per page.
     #
     # @return [Types::ListMessageTemplateVersionsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -5061,21 +5908,22 @@ module Aws::QConnect
     #
     #   resp = client.list_message_template_versions({
     #     knowledge_base_id: "UuidOrArn", # required
-    #     max_results: 1,
     #     message_template_id: "UuidOrArnOrEitherWithQualifier", # required
     #     next_token: "NextToken",
+    #     max_results: 1,
     #   })
     #
     # @example Response structure
     #
     #   resp.message_template_version_summaries #=> Array
-    #   resp.message_template_version_summaries[0].channel_subtype #=> String, one of "EMAIL", "SMS"
-    #   resp.message_template_version_summaries[0].is_active #=> Boolean
-    #   resp.message_template_version_summaries[0].knowledge_base_arn #=> String
-    #   resp.message_template_version_summaries[0].knowledge_base_id #=> String
     #   resp.message_template_version_summaries[0].message_template_arn #=> String
     #   resp.message_template_version_summaries[0].message_template_id #=> String
+    #   resp.message_template_version_summaries[0].knowledge_base_arn #=> String
+    #   resp.message_template_version_summaries[0].knowledge_base_id #=> String
     #   resp.message_template_version_summaries[0].name #=> String
+    #   resp.message_template_version_summaries[0].channel #=> String
+    #   resp.message_template_version_summaries[0].channel_subtype #=> String, one of "EMAIL", "SMS", "WHATSAPP", "PUSH"
+    #   resp.message_template_version_summaries[0].is_active #=> Boolean
     #   resp.message_template_version_summaries[0].version_number #=> Integer
     #   resp.next_token #=> String
     #
@@ -5091,17 +5939,17 @@ module Aws::QConnect
     # Lists all the available Amazon Q in Connect message templates for the
     # specified knowledge base.
     #
-    # @option params [required, String] :knowledge_base_id
-    #   The identifier of the knowledge base. Can be either the ID or the ARN.
-    #   URLs cannot contain the ARN.
-    #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to return per page.
-    #
     # @option params [String] :next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return per page.
+    #
+    # @option params [required, String] :knowledge_base_id
+    #   The identifier of the knowledge base. Can be either the ID or the ARN.
+    #   URLs cannot contain the ARN.
     #
     # @return [Types::ListMessageTemplatesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -5113,25 +5961,30 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_message_templates({
-    #     knowledge_base_id: "UuidOrArn", # required
-    #     max_results: 1,
     #     next_token: "NextToken",
+    #     max_results: 1,
+    #     knowledge_base_id: "UuidOrArn", # required
     #   })
     #
     # @example Response structure
     #
     #   resp.message_template_summaries #=> Array
-    #   resp.message_template_summaries[0].active_version_number #=> Integer
-    #   resp.message_template_summaries[0].channel_subtype #=> String, one of "EMAIL", "SMS"
-    #   resp.message_template_summaries[0].created_time #=> Time
-    #   resp.message_template_summaries[0].description #=> String
-    #   resp.message_template_summaries[0].knowledge_base_arn #=> String
-    #   resp.message_template_summaries[0].knowledge_base_id #=> String
-    #   resp.message_template_summaries[0].last_modified_by #=> String
-    #   resp.message_template_summaries[0].last_modified_time #=> Time
     #   resp.message_template_summaries[0].message_template_arn #=> String
     #   resp.message_template_summaries[0].message_template_id #=> String
+    #   resp.message_template_summaries[0].knowledge_base_arn #=> String
+    #   resp.message_template_summaries[0].knowledge_base_id #=> String
     #   resp.message_template_summaries[0].name #=> String
+    #   resp.message_template_summaries[0].channel #=> String
+    #   resp.message_template_summaries[0].channel_subtype #=> String, one of "EMAIL", "SMS", "WHATSAPP", "PUSH"
+    #   resp.message_template_summaries[0].created_time #=> Time
+    #   resp.message_template_summaries[0].last_modified_time #=> Time
+    #   resp.message_template_summaries[0].last_modified_by #=> String
+    #   resp.message_template_summaries[0].source_configuration.whats_app.business_account_id #=> String
+    #   resp.message_template_summaries[0].source_configuration.whats_app.template_id #=> String
+    #   resp.message_template_summaries[0].source_configuration.whats_app.components #=> Array
+    #   resp.message_template_summaries[0].source_configuration.whats_app.components[0] #=> String
+    #   resp.message_template_summaries[0].active_version_number #=> Integer
+    #   resp.message_template_summaries[0].description #=> String
     #   resp.message_template_summaries[0].tags #=> Hash
     #   resp.message_template_summaries[0].tags["TagKey"] #=> String
     #   resp.next_token #=> String
@@ -5150,16 +6003,19 @@ module Aws::QConnect
     # @option params [required, String] :assistant_id
     #   The identifier of the Amazon Q in Connect assistant.
     #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to return per page.
+    # @option params [required, String] :session_id
+    #   The identifier of the Amazon Q in Connect session.
     #
     # @option params [String] :next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
     #
-    # @option params [required, String] :session_id
-    #   The identifier of the Amazon Q in Connect session.
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return per page.
+    #
+    # @option params [String] :filter
+    #   The filter criteria for listing messages.
     #
     # @return [Types::ListMessagesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -5172,18 +6028,30 @@ module Aws::QConnect
     #
     #   resp = client.list_messages({
     #     assistant_id: "UuidOrArn", # required
-    #     max_results: 1,
-    #     next_token: "NextToken",
     #     session_id: "UuidOrArn", # required
+    #     next_token: "NextToken",
+    #     max_results: 1,
+    #     filter: "ALL", # accepts ALL, TEXT_ONLY
     #   })
     #
     # @example Response structure
     #
     #   resp.messages #=> Array
+    #   resp.messages[0].value.text.value #=> String
+    #   resp.messages[0].value.text.citations #=> Array
+    #   resp.messages[0].value.text.citations[0].content_id #=> String
+    #   resp.messages[0].value.text.citations[0].title #=> String
+    #   resp.messages[0].value.text.citations[0].knowledge_base_id #=> String
+    #   resp.messages[0].value.text.citations[0].citation_span.begin_offset_inclusive #=> Integer
+    #   resp.messages[0].value.text.citations[0].citation_span.end_offset_exclusive #=> Integer
+    #   resp.messages[0].value.text.citations[0].source_url #=> String
+    #   resp.messages[0].value.text.citations[0].reference_type #=> String, one of "WEB_CRAWLER", "KNOWLEDGE_BASE", "BEDROCK_KB_S3", "BEDROCK_KB_WEB", "BEDROCK_KB_CONFLUENCE", "BEDROCK_KB_SALESFORCE", "BEDROCK_KB_SHAREPOINT", "BEDROCK_KB_KENDRA", "BEDROCK_KB_CUSTOM_DOCUMENT", "BEDROCK_KB_SQL"
+    #   resp.messages[0].value.text.ai_guardrail_assessment.blocked #=> Boolean
+    #   resp.messages[0].value.tool_use_result.tool_use_id #=> String
+    #   resp.messages[0].value.tool_use_result.tool_name #=> String
     #   resp.messages[0].message_id #=> String
     #   resp.messages[0].participant #=> String, one of "CUSTOMER", "AGENT", "BOT"
     #   resp.messages[0].timestamp #=> Time
-    #   resp.messages[0].value.text.value #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListMessages AWS API Documentation
@@ -5195,55 +6063,120 @@ module Aws::QConnect
       req.send_request(options)
     end
 
-    # Lists information about quick response.
+    # Lists the models available to an Amazon Q in Connect assistant in the
+    # assistant's Amazon Web Services Region. The available models are
+    # determined by the region of the specified assistant.
     #
-    # @option params [required, String] :knowledge_base_id
-    #   The identifier of the knowledge base. Can be either the ID or the ARN.
-    #   URLs cannot contain the ARN.
+    # @option params [required, String] :assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either the
+    #   ID or the ARN. URLs cannot contain the ARN. The assistant's region
+    #   determines which models are available.
     #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to return per page.
+    # @option params [String] :ai_prompt_type
+    #   The type of the AI Prompt to filter models by. When specified, only
+    #   models that support the given AI Prompt type are returned.
+    #
+    # @option params [String] :model_lifecycle
+    #   The lifecycle status of models to filter by. When specified, only
+    #   models with the given lifecycle status are returned.
     #
     # @option params [String] :next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
     #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return per page.
+    #
+    # @return [Types::ListModelsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListModelsResponse#model_summaries #model_summaries} => Array&lt;Types::ModelSummary&gt;
+    #   * {Types::ListModelsResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_models({
+    #     assistant_id: "UuidOrArn", # required
+    #     ai_prompt_type: "ANSWER_GENERATION", # accepts ANSWER_GENERATION, INTENT_LABELING_GENERATION, QUERY_REFORMULATION, SELF_SERVICE_PRE_PROCESSING, SELF_SERVICE_ANSWER_GENERATION, EMAIL_RESPONSE, EMAIL_OVERVIEW, EMAIL_GENERATIVE_ANSWER, EMAIL_QUERY_REFORMULATION, ORCHESTRATION, NOTE_TAKING, CASE_SUMMARIZATION
+    #     model_lifecycle: "ACTIVE", # accepts ACTIVE, LEGACY
+    #     next_token: "NextToken",
+    #     max_results: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.model_summaries #=> Array
+    #   resp.model_summaries[0].model_id #=> String
+    #   resp.model_summaries[0].display_name #=> String
+    #   resp.model_summaries[0].cross_region_status #=> String, one of "NONE", "REGIONAL", "GLOBAL"
+    #   resp.model_summaries[0].supports_prompt_caching #=> Boolean
+    #   resp.model_summaries[0].supported_ai_prompt_types #=> Array
+    #   resp.model_summaries[0].supported_ai_prompt_types[0] #=> String, one of "ANSWER_GENERATION", "INTENT_LABELING_GENERATION", "QUERY_REFORMULATION", "SELF_SERVICE_PRE_PROCESSING", "SELF_SERVICE_ANSWER_GENERATION", "EMAIL_RESPONSE", "EMAIL_OVERVIEW", "EMAIL_GENERATIVE_ANSWER", "EMAIL_QUERY_REFORMULATION", "ORCHESTRATION", "NOTE_TAKING", "CASE_SUMMARIZATION"
+    #   resp.model_summaries[0].model_lifecycle #=> String, one of "ACTIVE", "LEGACY"
+    #   resp.model_summaries[0].legacy_timestamp #=> Time
+    #   resp.model_summaries[0].end_of_life_timestamp #=> Time
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListModels AWS API Documentation
+    #
+    # @overload list_models(params = {})
+    # @param [Hash] params ({})
+    def list_models(params = {}, options = {})
+      req = build_request(:list_models, params)
+      req.send_request(options)
+    end
+
+    # Lists information about quick response.
+    #
+    # @option params [String] :next_token
+    #   The token for the next set of results. Use the value returned in the
+    #   previous response in the next request to retrieve the next set of
+    #   results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return per page.
+    #
+    # @option params [required, String] :knowledge_base_id
+    #   The identifier of the knowledge base. Can be either the ID or the ARN.
+    #   URLs cannot contain the ARN.
+    #
     # @return [Types::ListQuickResponsesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::ListQuickResponsesResponse#next_token #next_token} => String
     #   * {Types::ListQuickResponsesResponse#quick_response_summaries #quick_response_summaries} => Array&lt;Types::QuickResponseSummary&gt;
+    #   * {Types::ListQuickResponsesResponse#next_token #next_token} => String
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_quick_responses({
-    #     knowledge_base_id: "UuidOrArn", # required
-    #     max_results: 1,
     #     next_token: "NonEmptyString",
+    #     max_results: 1,
+    #     knowledge_base_id: "UuidOrArn", # required
     #   })
     #
     # @example Response structure
     #
-    #   resp.next_token #=> String
     #   resp.quick_response_summaries #=> Array
-    #   resp.quick_response_summaries[0].channels #=> Array
-    #   resp.quick_response_summaries[0].channels[0] #=> String
-    #   resp.quick_response_summaries[0].content_type #=> String
-    #   resp.quick_response_summaries[0].created_time #=> Time
-    #   resp.quick_response_summaries[0].description #=> String
-    #   resp.quick_response_summaries[0].is_active #=> Boolean
-    #   resp.quick_response_summaries[0].knowledge_base_arn #=> String
-    #   resp.quick_response_summaries[0].knowledge_base_id #=> String
-    #   resp.quick_response_summaries[0].last_modified_by #=> String
-    #   resp.quick_response_summaries[0].last_modified_time #=> Time
-    #   resp.quick_response_summaries[0].name #=> String
     #   resp.quick_response_summaries[0].quick_response_arn #=> String
     #   resp.quick_response_summaries[0].quick_response_id #=> String
+    #   resp.quick_response_summaries[0].knowledge_base_arn #=> String
+    #   resp.quick_response_summaries[0].knowledge_base_id #=> String
+    #   resp.quick_response_summaries[0].name #=> String
+    #   resp.quick_response_summaries[0].content_type #=> String
     #   resp.quick_response_summaries[0].status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "CREATED", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED", "UPDATE_IN_PROGRESS", "UPDATE_FAILED"
+    #   resp.quick_response_summaries[0].created_time #=> Time
+    #   resp.quick_response_summaries[0].last_modified_time #=> Time
+    #   resp.quick_response_summaries[0].description #=> String
+    #   resp.quick_response_summaries[0].last_modified_by #=> String
+    #   resp.quick_response_summaries[0].is_active #=> Boolean
+    #   resp.quick_response_summaries[0].channels #=> Array
+    #   resp.quick_response_summaries[0].channels[0] #=> String
     #   resp.quick_response_summaries[0].tags #=> Hash
     #   resp.quick_response_summaries[0].tags["TagKey"] #=> String
+    #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListQuickResponses AWS API Documentation
     #
@@ -5251,6 +6184,156 @@ module Aws::QConnect
     # @param [Hash] params ({})
     def list_quick_responses(params = {}, options = {})
       req = build_request(:list_quick_responses, params)
+      req.send_request(options)
+    end
+
+    # Retrieves AI agent execution traces for a session, providing granular
+    # visibility into agent orchestration flows, LLM interactions, and tool
+    # invocations.
+    #
+    # @option params [required, String] :assistant_id
+    #   UUID or ARN of the Connect AI Assistant resource
+    #
+    # @option params [required, String] :session_id
+    #   UUID or ARN of the Connect AI Session resource
+    #
+    # @option params [String] :next_token
+    #   Pagination token for retrieving the next page of results
+    #
+    # @option params [Integer] :max_results
+    #   Maximum number of spans to return per page
+    #
+    # @return [Types::ListSpansResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListSpansResponse#spans #spans} => Array&lt;Types::Span&gt;
+    #   * {Types::ListSpansResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_spans({
+    #     assistant_id: "UuidOrArn", # required
+    #     session_id: "UuidOrArn", # required
+    #     next_token: "NextToken",
+    #     max_results: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.spans #=> Array
+    #   resp.spans[0].span_id #=> String
+    #   resp.spans[0].assistant_id #=> String
+    #   resp.spans[0].session_id #=> String
+    #   resp.spans[0].parent_span_id #=> String
+    #   resp.spans[0].span_name #=> String
+    #   resp.spans[0].span_type #=> String, one of "CLIENT", "SERVER", "INTERNAL"
+    #   resp.spans[0].start_timestamp #=> Time
+    #   resp.spans[0].end_timestamp #=> Time
+    #   resp.spans[0].status #=> String, one of "OK", "ERROR", "TIMEOUT"
+    #   resp.spans[0].status_description #=> String
+    #   resp.spans[0].request_id #=> String
+    #   resp.spans[0].origin_request_id #=> String
+    #   resp.spans[0].attributes.operation_name #=> String
+    #   resp.spans[0].attributes.provider_name #=> String
+    #   resp.spans[0].attributes.error_type #=> String
+    #   resp.spans[0].attributes.agent_id #=> String
+    #   resp.spans[0].attributes.instance_arn #=> String
+    #   resp.spans[0].attributes.contact_id #=> String
+    #   resp.spans[0].attributes.initial_contact_id #=> String
+    #   resp.spans[0].attributes.session_name #=> String
+    #   resp.spans[0].attributes.ai_agent_arn #=> String
+    #   resp.spans[0].attributes.ai_agent_type #=> String, one of "MANUAL_SEARCH", "ANSWER_RECOMMENDATION", "SELF_SERVICE", "EMAIL_RESPONSE", "EMAIL_OVERVIEW", "EMAIL_GENERATIVE_ANSWER", "ORCHESTRATION", "NOTE_TAKING", "CASE_SUMMARIZATION"
+    #   resp.spans[0].attributes.ai_agent_name #=> String
+    #   resp.spans[0].attributes.ai_agent_id #=> String
+    #   resp.spans[0].attributes.ai_agent_version #=> Integer
+    #   resp.spans[0].attributes.ai_agent_invoker #=> String
+    #   resp.spans[0].attributes.ai_agent_orchestrator_use_case #=> String
+    #   resp.spans[0].attributes.request_model #=> String
+    #   resp.spans[0].attributes.request_max_tokens #=> Integer
+    #   resp.spans[0].attributes.temperature #=> Float
+    #   resp.spans[0].attributes.top_p #=> Float
+    #   resp.spans[0].attributes.response_model #=> String
+    #   resp.spans[0].attributes.response_finish_reasons #=> Array
+    #   resp.spans[0].attributes.response_finish_reasons[0] #=> String
+    #   resp.spans[0].attributes.usage_input_tokens #=> Integer
+    #   resp.spans[0].attributes.usage_output_tokens #=> Integer
+    #   resp.spans[0].attributes.usage_total_tokens #=> Integer
+    #   resp.spans[0].attributes.cache_read_input_tokens #=> Integer
+    #   resp.spans[0].attributes.cache_write_input_tokens #=> Integer
+    #   resp.spans[0].attributes.input_messages #=> Array
+    #   resp.spans[0].attributes.input_messages[0].message_id #=> String
+    #   resp.spans[0].attributes.input_messages[0].participant #=> String, one of "CUSTOMER", "AGENT", "BOT"
+    #   resp.spans[0].attributes.input_messages[0].timestamp #=> Time
+    #   resp.spans[0].attributes.input_messages[0].values #=> Array
+    #   resp.spans[0].attributes.input_messages[0].values[0].text.value #=> String
+    #   resp.spans[0].attributes.input_messages[0].values[0].text.citations #=> Array
+    #   resp.spans[0].attributes.input_messages[0].values[0].text.citations[0].content_id #=> String
+    #   resp.spans[0].attributes.input_messages[0].values[0].text.citations[0].title #=> String
+    #   resp.spans[0].attributes.input_messages[0].values[0].text.citations[0].knowledge_base_id #=> String
+    #   resp.spans[0].attributes.input_messages[0].values[0].text.citations[0].knowledge_base_arn #=> String
+    #   resp.spans[0].attributes.input_messages[0].values[0].text.ai_guardrail_assessment.blocked #=> Boolean
+    #   resp.spans[0].attributes.input_messages[0].values[0].tool_use.tool_use_id #=> String
+    #   resp.spans[0].attributes.input_messages[0].values[0].tool_use.name #=> String
+    #   resp.spans[0].attributes.input_messages[0].values[0].tool_result.tool_use_id #=> String
+    #   resp.spans[0].attributes.input_messages[0].values[0].tool_result.values #=> Types::SpanMessageValueList
+    #   resp.spans[0].attributes.input_messages[0].values[0].tool_result.error #=> String
+    #   resp.spans[0].attributes.input_messages[0].values[0].reasoning.value #=> String
+    #   resp.spans[0].attributes.output_messages #=> Array
+    #   resp.spans[0].attributes.output_messages[0].message_id #=> String
+    #   resp.spans[0].attributes.output_messages[0].participant #=> String, one of "CUSTOMER", "AGENT", "BOT"
+    #   resp.spans[0].attributes.output_messages[0].timestamp #=> Time
+    #   resp.spans[0].attributes.output_messages[0].values #=> Array
+    #   resp.spans[0].attributes.output_messages[0].values[0].text.value #=> String
+    #   resp.spans[0].attributes.output_messages[0].values[0].text.citations #=> Array
+    #   resp.spans[0].attributes.output_messages[0].values[0].text.citations[0].content_id #=> String
+    #   resp.spans[0].attributes.output_messages[0].values[0].text.citations[0].title #=> String
+    #   resp.spans[0].attributes.output_messages[0].values[0].text.citations[0].knowledge_base_id #=> String
+    #   resp.spans[0].attributes.output_messages[0].values[0].text.citations[0].knowledge_base_arn #=> String
+    #   resp.spans[0].attributes.output_messages[0].values[0].text.ai_guardrail_assessment.blocked #=> Boolean
+    #   resp.spans[0].attributes.output_messages[0].values[0].tool_use.tool_use_id #=> String
+    #   resp.spans[0].attributes.output_messages[0].values[0].tool_use.name #=> String
+    #   resp.spans[0].attributes.output_messages[0].values[0].tool_result.tool_use_id #=> String
+    #   resp.spans[0].attributes.output_messages[0].values[0].tool_result.values #=> Types::SpanMessageValueList
+    #   resp.spans[0].attributes.output_messages[0].values[0].tool_result.error #=> String
+    #   resp.spans[0].attributes.output_messages[0].values[0].reasoning.value #=> String
+    #   resp.spans[0].attributes.system_instructions #=> Array
+    #   resp.spans[0].attributes.system_instructions[0].text.value #=> String
+    #   resp.spans[0].attributes.system_instructions[0].text.citations #=> Array
+    #   resp.spans[0].attributes.system_instructions[0].text.citations[0].content_id #=> String
+    #   resp.spans[0].attributes.system_instructions[0].text.citations[0].title #=> String
+    #   resp.spans[0].attributes.system_instructions[0].text.citations[0].knowledge_base_id #=> String
+    #   resp.spans[0].attributes.system_instructions[0].text.citations[0].knowledge_base_arn #=> String
+    #   resp.spans[0].attributes.system_instructions[0].text.ai_guardrail_assessment.blocked #=> Boolean
+    #   resp.spans[0].attributes.system_instructions[0].tool_use.tool_use_id #=> String
+    #   resp.spans[0].attributes.system_instructions[0].tool_use.name #=> String
+    #   resp.spans[0].attributes.system_instructions[0].tool_result.tool_use_id #=> String
+    #   resp.spans[0].attributes.system_instructions[0].tool_result.values #=> Types::SpanMessageValueList
+    #   resp.spans[0].attributes.system_instructions[0].tool_result.error #=> String
+    #   resp.spans[0].attributes.system_instructions[0].reasoning.value #=> String
+    #   resp.spans[0].attributes.prompt_arn #=> String
+    #   resp.spans[0].attributes.prompt_id #=> String
+    #   resp.spans[0].attributes.prompt_type #=> String, one of "ANSWER_GENERATION", "INTENT_LABELING_GENERATION", "QUERY_REFORMULATION", "SELF_SERVICE_PRE_PROCESSING", "SELF_SERVICE_ANSWER_GENERATION", "EMAIL_RESPONSE", "EMAIL_OVERVIEW", "EMAIL_GENERATIVE_ANSWER", "EMAIL_QUERY_REFORMULATION", "ORCHESTRATION", "NOTE_TAKING", "CASE_SUMMARIZATION"
+    #   resp.spans[0].attributes.prompt_name #=> String
+    #   resp.spans[0].attributes.prompt_version #=> Integer
+    #   resp.spans[0].attributes.time_to_first_token_ms #=> Integer
+    #   resp.spans[0].attributes.guardrail_assessments #=> Array
+    #   resp.spans[0].attributes.guardrail_assessments[0].guardrail_id #=> String
+    #   resp.spans[0].attributes.guardrail_assessments[0].guardrail_name #=> String
+    #   resp.spans[0].attributes.guardrail_assessments[0].source #=> String, one of "INPUT", "OUTPUT"
+    #   resp.spans[0].attributes.guardrail_assessments[0].action #=> String, one of "NONE", "BLOCKED", "MASKED"
+    #   resp.spans[0].attributes.guardrail_assessments[0].policies #=> Array
+    #   resp.spans[0].attributes.guardrail_assessments[0].policies[0].policy_type #=> String, one of "CONTENT_FILTER", "TOPIC", "WORD", "SENSITIVE_INFORMATION_PII", "SENSITIVE_INFORMATION_REGEX", "CONTEXTUAL_GROUNDING"
+    #   resp.spans[0].attributes.guardrail_assessments[0].policies[0].action #=> String, one of "NONE", "BLOCKED", "MASKED"
+    #   resp.spans[0].attributes.guardrail_assessments[0].policies[0].details #=> String
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListSpans AWS API Documentation
+    #
+    # @overload list_spans(params = {})
+    # @param [Hash] params ({})
+    def list_spans(params = {}, options = {})
+      req = build_request(:list_spans, params)
       req.send_request(options)
     end
 
@@ -5296,33 +6379,33 @@ module Aws::QConnect
     #   The identifier of the Amazon Q in Connect assistant. Can be either the
     #   ID or the ARN. URLs cannot contain the ARN.
     #
-    # @option params [required, Array<String>] :recommendation_ids
-    #   The identifiers of the recommendations.
-    #
     # @option params [required, String] :session_id
     #   The identifier of the session. Can be either the ID or the ARN. URLs
     #   cannot contain the ARN.
     #
+    # @option params [required, Array<String>] :recommendation_ids
+    #   The identifiers of the recommendations.
+    #
     # @return [Types::NotifyRecommendationsReceivedResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::NotifyRecommendationsReceivedResponse#errors #errors} => Array&lt;Types::NotifyRecommendationsReceivedError&gt;
     #   * {Types::NotifyRecommendationsReceivedResponse#recommendation_ids #recommendation_ids} => Array&lt;String&gt;
+    #   * {Types::NotifyRecommendationsReceivedResponse#errors #errors} => Array&lt;Types::NotifyRecommendationsReceivedError&gt;
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.notify_recommendations_received({
     #     assistant_id: "UuidOrArn", # required
-    #     recommendation_ids: ["RecommendationId"], # required
     #     session_id: "UuidOrArn", # required
+    #     recommendation_ids: ["RecommendationId"], # required
     #   })
     #
     # @example Response structure
     #
-    #   resp.errors #=> Array
-    #   resp.errors[0].message #=> String
-    #   resp.errors[0].recommendation_id #=> String
     #   resp.recommendation_ids #=> Array
     #   resp.recommendation_ids[0] #=> String
+    #   resp.errors #=> Array
+    #   resp.errors[0].recommendation_id #=> String
+    #   resp.errors[0].message #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/NotifyRecommendationsReceived AWS API Documentation
     #
@@ -5339,43 +6422,43 @@ module Aws::QConnect
     # @option params [required, String] :assistant_id
     #   The identifier of the Amazon Q in Connect assistant.
     #
-    # @option params [required, Types::ContentFeedbackData] :content_feedback
-    #   Information about the feedback provided.
-    #
     # @option params [required, String] :target_id
     #   The identifier of the feedback target.
     #
     # @option params [required, String] :target_type
     #   The type of the feedback target.
     #
+    # @option params [required, Types::ContentFeedbackData] :content_feedback
+    #   Information about the feedback provided.
+    #
     # @return [Types::PutFeedbackResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::PutFeedbackResponse#assistant_arn #assistant_arn} => String
     #   * {Types::PutFeedbackResponse#assistant_id #assistant_id} => String
-    #   * {Types::PutFeedbackResponse#content_feedback #content_feedback} => Types::ContentFeedbackData
+    #   * {Types::PutFeedbackResponse#assistant_arn #assistant_arn} => String
     #   * {Types::PutFeedbackResponse#target_id #target_id} => String
     #   * {Types::PutFeedbackResponse#target_type #target_type} => String
+    #   * {Types::PutFeedbackResponse#content_feedback #content_feedback} => Types::ContentFeedbackData
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.put_feedback({
     #     assistant_id: "UuidOrArn", # required
+    #     target_id: "Uuid", # required
+    #     target_type: "RECOMMENDATION", # required, accepts RECOMMENDATION, RESULT, MESSAGE
     #     content_feedback: { # required
     #       generative_content_feedback_data: {
     #         relevance: "HELPFUL", # required, accepts HELPFUL, NOT_HELPFUL
     #       },
     #     },
-    #     target_id: "Uuid", # required
-    #     target_type: "RECOMMENDATION", # required, accepts RECOMMENDATION, RESULT
     #   })
     #
     # @example Response structure
     #
-    #   resp.assistant_arn #=> String
     #   resp.assistant_id #=> String
-    #   resp.content_feedback.generative_content_feedback_data.relevance #=> String, one of "HELPFUL", "NOT_HELPFUL"
+    #   resp.assistant_arn #=> String
     #   resp.target_id #=> String
-    #   resp.target_type #=> String, one of "RECOMMENDATION", "RESULT"
+    #   resp.target_type #=> String, one of "RECOMMENDATION", "RESULT", "MESSAGE"
+    #   resp.content_feedback.generative_content_feedback_data.relevance #=> String, one of "HELPFUL", "NOT_HELPFUL"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/PutFeedback AWS API Documentation
     #
@@ -5392,7 +6475,7 @@ module Aws::QConnect
     # in Connect JavaScript library (amazon-q-connectjs) into your
     # applications.
     #
-    # Performs a manual search against the specified assistant. To retrieve
+    #  Performs a manual search against the specified assistant. To retrieve
     # recommendations for an assistant, use [GetRecommendations][1].
     #
     #
@@ -5403,18 +6486,20 @@ module Aws::QConnect
     #   The identifier of the Amazon Q in Connect assistant. Can be either the
     #   ID or the ARN. URLs cannot contain the ARN.
     #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to return per page.
+    # @option params [String] :query_text
+    #   The text to search for.
     #
     # @option params [String] :next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
     #
-    # @option params [String] :override_knowledge_base_search_type
-    #   The search type to be used against the Knowledge Base for this
-    #   request. The values can be `SEMANTIC` which uses vector embeddings or
-    #   `HYBRID` which use vector embeddings and raw text.
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return per page.
+    #
+    # @option params [String] :session_id
+    #   The identifier of the Amazon Q in Connect session. Can be either the
+    #   ID or the ARN. URLs cannot contain the ARN.
     #
     # @option params [Array<Types::QueryCondition>] :query_condition
     #   Information about how to query content.
@@ -5422,17 +6507,15 @@ module Aws::QConnect
     # @option params [Types::QueryInputData] :query_input_data
     #   Information about the query.
     #
-    # @option params [String] :query_text
-    #   The text to search for.
-    #
-    # @option params [String] :session_id
-    #   The identifier of the Amazon Q in Connect session. Can be either the
-    #   ID or the ARN. URLs cannot contain the ARN.
+    # @option params [String] :override_knowledge_base_search_type
+    #   The search type to be used against the Knowledge Base for this
+    #   request. The values can be `SEMANTIC` which uses vector embeddings or
+    #   `HYBRID` which use vector embeddings and raw text.
     #
     # @return [Types::QueryAssistantResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::QueryAssistantResponse#next_token #next_token} => String
     #   * {Types::QueryAssistantResponse#results #results} => Array&lt;Types::ResultData&gt;
+    #   * {Types::QueryAssistantResponse#next_token #next_token} => String
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
     #
@@ -5440,90 +6523,114 @@ module Aws::QConnect
     #
     #   resp = client.query_assistant({
     #     assistant_id: "UuidOrArn", # required
-    #     max_results: 1,
+    #     query_text: "QueryText",
     #     next_token: "NextToken",
-    #     override_knowledge_base_search_type: "HYBRID", # accepts HYBRID, SEMANTIC
+    #     max_results: 1,
+    #     session_id: "UuidOrArn",
     #     query_condition: [
     #       {
     #         single: {
-    #           comparator: "EQUALS", # required, accepts EQUALS
     #           field: "RESULT_TYPE", # required, accepts RESULT_TYPE
+    #           comparator: "EQUALS", # required, accepts EQUALS
     #           value: "NonEmptyString", # required
     #         },
     #       },
     #     ],
     #     query_input_data: {
-    #       intent_input_data: {
-    #         intent_id: "Uuid", # required
-    #       },
     #       query_text_input_data: {
     #         text: "QueryText", # required
     #       },
+    #       intent_input_data: {
+    #         intent_id: "Uuid", # required
+    #       },
+    #       case_summarization_input_data: {
+    #         case_arn: "CaseArn", # required
+    #       },
     #     },
-    #     query_text: "QueryText",
-    #     session_id: "UuidOrArn",
+    #     override_knowledge_base_search_type: "HYBRID", # accepts HYBRID, SEMANTIC
     #   })
     #
     # @example Response structure
     #
-    #   resp.next_token #=> String
     #   resp.results #=> Array
-    #   resp.results[0].data.details.content_data.ranking_data.relevance_level #=> String, one of "HIGH", "MEDIUM", "LOW"
-    #   resp.results[0].data.details.content_data.ranking_data.relevance_score #=> Float
-    #   resp.results[0].data.details.content_data.text_data.excerpt.highlights #=> Array
-    #   resp.results[0].data.details.content_data.text_data.excerpt.highlights[0].begin_offset_inclusive #=> Integer
-    #   resp.results[0].data.details.content_data.text_data.excerpt.highlights[0].end_offset_exclusive #=> Integer
-    #   resp.results[0].data.details.content_data.text_data.excerpt.text #=> String
-    #   resp.results[0].data.details.content_data.text_data.title.highlights #=> Array
-    #   resp.results[0].data.details.content_data.text_data.title.highlights[0].begin_offset_inclusive #=> Integer
-    #   resp.results[0].data.details.content_data.text_data.title.highlights[0].end_offset_exclusive #=> Integer
-    #   resp.results[0].data.details.content_data.text_data.title.text #=> String
-    #   resp.results[0].data.details.generative_data.completion #=> String
-    #   resp.results[0].data.details.generative_data.ranking_data.relevance_level #=> String, one of "HIGH", "MEDIUM", "LOW"
-    #   resp.results[0].data.details.generative_data.ranking_data.relevance_score #=> Float
-    #   resp.results[0].data.details.generative_data.references #=> Array
-    #   resp.results[0].data.details.generative_data.references[0] #=> Types::DataSummary
-    #   resp.results[0].data.details.intent_detected_data.intent #=> String
-    #   resp.results[0].data.details.intent_detected_data.intent_id #=> String
-    #   resp.results[0].data.details.source_content_data.citation_span.begin_offset_inclusive #=> Integer
-    #   resp.results[0].data.details.source_content_data.citation_span.end_offset_exclusive #=> Integer
-    #   resp.results[0].data.details.source_content_data.id #=> String
-    #   resp.results[0].data.details.source_content_data.ranking_data.relevance_level #=> String, one of "HIGH", "MEDIUM", "LOW"
-    #   resp.results[0].data.details.source_content_data.ranking_data.relevance_score #=> Float
-    #   resp.results[0].data.details.source_content_data.text_data.excerpt.highlights #=> Array
-    #   resp.results[0].data.details.source_content_data.text_data.excerpt.highlights[0].begin_offset_inclusive #=> Integer
-    #   resp.results[0].data.details.source_content_data.text_data.excerpt.highlights[0].end_offset_exclusive #=> Integer
-    #   resp.results[0].data.details.source_content_data.text_data.excerpt.text #=> String
-    #   resp.results[0].data.details.source_content_data.text_data.title.highlights #=> Array
-    #   resp.results[0].data.details.source_content_data.text_data.title.highlights[0].begin_offset_inclusive #=> Integer
-    #   resp.results[0].data.details.source_content_data.text_data.title.highlights[0].end_offset_exclusive #=> Integer
-    #   resp.results[0].data.details.source_content_data.text_data.title.text #=> String
-    #   resp.results[0].data.details.source_content_data.type #=> String, one of "KNOWLEDGE_CONTENT"
-    #   resp.results[0].data.reference.content_reference.content_arn #=> String
-    #   resp.results[0].data.reference.content_reference.content_id #=> String
-    #   resp.results[0].data.reference.content_reference.knowledge_base_arn #=> String
-    #   resp.results[0].data.reference.content_reference.knowledge_base_id #=> String
-    #   resp.results[0].data.reference.content_reference.reference_type #=> String, one of "WEB_CRAWLER", "KNOWLEDGE_BASE"
-    #   resp.results[0].data.reference.content_reference.source_url #=> String
-    #   resp.results[0].data.reference.generative_reference.generation_id #=> String
-    #   resp.results[0].data.reference.generative_reference.model_id #=> String
-    #   resp.results[0].document.content_reference.content_arn #=> String
-    #   resp.results[0].document.content_reference.content_id #=> String
+    #   resp.results[0].result_id #=> String
     #   resp.results[0].document.content_reference.knowledge_base_arn #=> String
     #   resp.results[0].document.content_reference.knowledge_base_id #=> String
-    #   resp.results[0].document.content_reference.reference_type #=> String, one of "WEB_CRAWLER", "KNOWLEDGE_BASE"
+    #   resp.results[0].document.content_reference.content_arn #=> String
+    #   resp.results[0].document.content_reference.content_id #=> String
     #   resp.results[0].document.content_reference.source_url #=> String
-    #   resp.results[0].document.excerpt.highlights #=> Array
-    #   resp.results[0].document.excerpt.highlights[0].begin_offset_inclusive #=> Integer
-    #   resp.results[0].document.excerpt.highlights[0].end_offset_exclusive #=> Integer
-    #   resp.results[0].document.excerpt.text #=> String
+    #   resp.results[0].document.content_reference.reference_type #=> String, one of "WEB_CRAWLER", "KNOWLEDGE_BASE", "BEDROCK_KB_S3", "BEDROCK_KB_WEB", "BEDROCK_KB_CONFLUENCE", "BEDROCK_KB_SALESFORCE", "BEDROCK_KB_SHAREPOINT", "BEDROCK_KB_KENDRA", "BEDROCK_KB_CUSTOM_DOCUMENT", "BEDROCK_KB_SQL"
+    #   resp.results[0].document.title.text #=> String
     #   resp.results[0].document.title.highlights #=> Array
     #   resp.results[0].document.title.highlights[0].begin_offset_inclusive #=> Integer
     #   resp.results[0].document.title.highlights[0].end_offset_exclusive #=> Integer
-    #   resp.results[0].document.title.text #=> String
+    #   resp.results[0].document.excerpt.text #=> String
+    #   resp.results[0].document.excerpt.highlights #=> Array
+    #   resp.results[0].document.excerpt.highlights[0].begin_offset_inclusive #=> Integer
+    #   resp.results[0].document.excerpt.highlights[0].end_offset_exclusive #=> Integer
     #   resp.results[0].relevance_score #=> Float
-    #   resp.results[0].result_id #=> String
-    #   resp.results[0].type #=> String, one of "KNOWLEDGE_CONTENT", "INTENT_ANSWER", "GENERATIVE_ANSWER"
+    #   resp.results[0].data.reference.content_reference.knowledge_base_arn #=> String
+    #   resp.results[0].data.reference.content_reference.knowledge_base_id #=> String
+    #   resp.results[0].data.reference.content_reference.content_arn #=> String
+    #   resp.results[0].data.reference.content_reference.content_id #=> String
+    #   resp.results[0].data.reference.content_reference.source_url #=> String
+    #   resp.results[0].data.reference.content_reference.reference_type #=> String, one of "WEB_CRAWLER", "KNOWLEDGE_BASE", "BEDROCK_KB_S3", "BEDROCK_KB_WEB", "BEDROCK_KB_CONFLUENCE", "BEDROCK_KB_SALESFORCE", "BEDROCK_KB_SHAREPOINT", "BEDROCK_KB_KENDRA", "BEDROCK_KB_CUSTOM_DOCUMENT", "BEDROCK_KB_SQL"
+    #   resp.results[0].data.reference.generative_reference.model_id #=> String
+    #   resp.results[0].data.reference.generative_reference.generation_id #=> String
+    #   resp.results[0].data.reference.suggested_message_reference.ai_agent_id #=> String
+    #   resp.results[0].data.reference.suggested_message_reference.ai_agent_arn #=> String
+    #   resp.results[0].data.details.content_data.text_data.title.text #=> String
+    #   resp.results[0].data.details.content_data.text_data.title.highlights #=> Array
+    #   resp.results[0].data.details.content_data.text_data.title.highlights[0].begin_offset_inclusive #=> Integer
+    #   resp.results[0].data.details.content_data.text_data.title.highlights[0].end_offset_exclusive #=> Integer
+    #   resp.results[0].data.details.content_data.text_data.excerpt.text #=> String
+    #   resp.results[0].data.details.content_data.text_data.excerpt.highlights #=> Array
+    #   resp.results[0].data.details.content_data.text_data.excerpt.highlights[0].begin_offset_inclusive #=> Integer
+    #   resp.results[0].data.details.content_data.text_data.excerpt.highlights[0].end_offset_exclusive #=> Integer
+    #   resp.results[0].data.details.content_data.ranking_data.relevance_score #=> Float
+    #   resp.results[0].data.details.content_data.ranking_data.relevance_level #=> String, one of "HIGH", "MEDIUM", "LOW"
+    #   resp.results[0].data.details.generative_data.completion #=> String
+    #   resp.results[0].data.details.generative_data.references #=> Array
+    #   resp.results[0].data.details.generative_data.references[0] #=> Types::DataSummary
+    #   resp.results[0].data.details.generative_data.ranking_data.relevance_score #=> Float
+    #   resp.results[0].data.details.generative_data.ranking_data.relevance_level #=> String, one of "HIGH", "MEDIUM", "LOW"
+    #   resp.results[0].data.details.intent_detected_data.intent #=> String
+    #   resp.results[0].data.details.intent_detected_data.intent_id #=> String
+    #   resp.results[0].data.details.intent_detected_data.relevance_level #=> String, one of "HIGH", "MEDIUM", "LOW"
+    #   resp.results[0].data.details.source_content_data.id #=> String
+    #   resp.results[0].data.details.source_content_data.type #=> String, one of "KNOWLEDGE_CONTENT"
+    #   resp.results[0].data.details.source_content_data.text_data.title.text #=> String
+    #   resp.results[0].data.details.source_content_data.text_data.title.highlights #=> Array
+    #   resp.results[0].data.details.source_content_data.text_data.title.highlights[0].begin_offset_inclusive #=> Integer
+    #   resp.results[0].data.details.source_content_data.text_data.title.highlights[0].end_offset_exclusive #=> Integer
+    #   resp.results[0].data.details.source_content_data.text_data.excerpt.text #=> String
+    #   resp.results[0].data.details.source_content_data.text_data.excerpt.highlights #=> Array
+    #   resp.results[0].data.details.source_content_data.text_data.excerpt.highlights[0].begin_offset_inclusive #=> Integer
+    #   resp.results[0].data.details.source_content_data.text_data.excerpt.highlights[0].end_offset_exclusive #=> Integer
+    #   resp.results[0].data.details.source_content_data.ranking_data.relevance_score #=> Float
+    #   resp.results[0].data.details.source_content_data.ranking_data.relevance_level #=> String, one of "HIGH", "MEDIUM", "LOW"
+    #   resp.results[0].data.details.source_content_data.citation_span.begin_offset_inclusive #=> Integer
+    #   resp.results[0].data.details.source_content_data.citation_span.end_offset_exclusive #=> Integer
+    #   resp.results[0].data.details.generative_chunk_data.completion #=> String
+    #   resp.results[0].data.details.generative_chunk_data.references #=> Array
+    #   resp.results[0].data.details.generative_chunk_data.references[0] #=> Types::DataSummary
+    #   resp.results[0].data.details.generative_chunk_data.next_chunk_token #=> String
+    #   resp.results[0].data.details.email_response_chunk_data.completion #=> String
+    #   resp.results[0].data.details.email_response_chunk_data.next_chunk_token #=> String
+    #   resp.results[0].data.details.email_overview_chunk_data.completion #=> String
+    #   resp.results[0].data.details.email_overview_chunk_data.next_chunk_token #=> String
+    #   resp.results[0].data.details.email_generative_answer_chunk_data.completion #=> String
+    #   resp.results[0].data.details.email_generative_answer_chunk_data.references #=> Array
+    #   resp.results[0].data.details.email_generative_answer_chunk_data.references[0] #=> Types::DataSummary
+    #   resp.results[0].data.details.email_generative_answer_chunk_data.next_chunk_token #=> String
+    #   resp.results[0].data.details.case_summarization_chunk_data.completion #=> String
+    #   resp.results[0].data.details.case_summarization_chunk_data.next_chunk_token #=> String
+    #   resp.results[0].data.details.suggested_message_data.message_text #=> String
+    #   resp.results[0].data.details.notes_data.completion #=> String
+    #   resp.results[0].data.details.notes_chunk_data.completion #=> String
+    #   resp.results[0].data.details.notes_chunk_data.next_chunk_token #=> String
+    #   resp.results[0].type #=> String, one of "KNOWLEDGE_CONTENT", "INTENT_ANSWER", "GENERATIVE_ANSWER", "GENERATIVE_ANSWER_CHUNK", "BLOCKED_GENERATIVE_ANSWER_CHUNK", "INTENT_ANSWER_CHUNK", "BLOCKED_INTENT_ANSWER_CHUNK", "EMAIL_RESPONSE_CHUNK", "EMAIL_OVERVIEW_CHUNK", "EMAIL_GENERATIVE_ANSWER_CHUNK", "CASE_SUMMARIZATION_CHUNK", "BLOCKED_CASE_SUMMARIZATION_CHUNK", "NOTES", "NOTES_CHUNK", "BLOCKED_NOTES_CHUNK"
+    #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/QueryAssistant AWS API Documentation
     #
@@ -5537,21 +6644,25 @@ module Aws::QConnect
     # Removes the AI Agent that is set for use by default on an Amazon Q in
     # Connect Assistant.
     #
+    # @option params [required, String] :assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either the
+    #   ID or the ARN. URLs cannot contain the ARN.
+    #
     # @option params [required, String] :ai_agent_type
     #   The type of the AI Agent being removed for use by default from the
     #   Amazon Q in Connect Assistant.
     #
-    # @option params [required, String] :assistant_id
-    #   The identifier of the Amazon Q in Connect assistant. Can be either the
-    #   ID or the ARN. URLs cannot contain the ARN.
+    # @option params [String] :orchestrator_use_case
+    #   The orchestrator use case for the AI Agent being removed.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.remove_assistant_ai_agent({
-    #     ai_agent_type: "MANUAL_SEARCH", # required, accepts MANUAL_SEARCH, ANSWER_RECOMMENDATION, SELF_SERVICE
     #     assistant_id: "UuidOrArn", # required
+    #     ai_agent_type: "MANUAL_SEARCH", # required, accepts MANUAL_SEARCH, ANSWER_RECOMMENDATION, SELF_SERVICE, EMAIL_RESPONSE, EMAIL_OVERVIEW, EMAIL_GENERATIVE_ANSWER, ORCHESTRATION, NOTE_TAKING, CASE_SUMMARIZATION
+    #     orchestrator_use_case: "NonEmptyString",
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/RemoveAssistantAIAgent AWS API Documentation
@@ -5594,13 +6705,6 @@ module Aws::QConnect
     # keep the variable placeholder as it is and return the attribute keys
     # that are missing.
     #
-    # @option params [required, Types::MessageTemplateAttributes] :attributes
-    #   An object that specifies the values to use for variables in the
-    #   message template. This object contains different categories of
-    #   key-value pairs. Each key defines a variable or placeholder in the
-    #   message template. The corresponding value defines the value for that
-    #   variable.
-    #
     # @option params [required, String] :knowledge_base_id
     #   The identifier of the knowledge base. Can be either the ID or the ARN.
     #   URLs cannot contain the ARN.
@@ -5609,117 +6713,168 @@ module Aws::QConnect
     #   The identifier of the message template. Can be either the ID or the
     #   ARN.
     #
+    # @option params [required, Types::MessageTemplateAttributes] :attributes
+    #   An object that specifies the values to use for variables in the
+    #   message template. This object contains different categories of
+    #   key-value pairs. Each key defines a variable or placeholder in the
+    #   message template. The corresponding value defines the value for that
+    #   variable.
+    #
     # @return [Types::RenderMessageTemplateResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::RenderMessageTemplateResponse#attachments #attachments} => Array&lt;Types::MessageTemplateAttachment&gt;
-    #   * {Types::RenderMessageTemplateResponse#attributes_not_interpolated #attributes_not_interpolated} => Array&lt;String&gt;
     #   * {Types::RenderMessageTemplateResponse#content #content} => Types::MessageTemplateContentProvider
+    #   * {Types::RenderMessageTemplateResponse#source_configuration_summary #source_configuration_summary} => Types::MessageTemplateSourceConfigurationSummary
+    #   * {Types::RenderMessageTemplateResponse#attributes_not_interpolated #attributes_not_interpolated} => Array&lt;String&gt;
+    #   * {Types::RenderMessageTemplateResponse#attachments #attachments} => Array&lt;Types::MessageTemplateAttachment&gt;
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.render_message_template({
+    #     knowledge_base_id: "UuidOrArn", # required
+    #     message_template_id: "UuidOrArnOrEitherWithQualifier", # required
     #     attributes: { # required
+    #       system_attributes: {
+    #         name: "MessageTemplateAttributeValue",
+    #         customer_endpoint: {
+    #           address: "MessageTemplateAttributeValue",
+    #         },
+    #         system_endpoint: {
+    #           address: "MessageTemplateAttributeValue",
+    #         },
+    #       },
     #       agent_attributes: {
     #         first_name: "MessageTemplateAttributeValue",
     #         last_name: "MessageTemplateAttributeValue",
     #       },
-    #       custom_attributes: {
-    #         "MessageTemplateAttributeKey" => "MessageTemplateAttributeValue",
-    #       },
     #       customer_profile_attributes: {
+    #         profile_id: "MessageTemplateAttributeValue",
+    #         profile_arn: "MessageTemplateAttributeValue",
+    #         first_name: "MessageTemplateAttributeValue",
+    #         middle_name: "MessageTemplateAttributeValue",
+    #         last_name: "MessageTemplateAttributeValue",
     #         account_number: "MessageTemplateAttributeValue",
+    #         email_address: "MessageTemplateAttributeValue",
+    #         phone_number: "MessageTemplateAttributeValue",
     #         additional_information: "MessageTemplateAttributeValue",
+    #         party_type: "MessageTemplateAttributeValue",
+    #         business_name: "MessageTemplateAttributeValue",
+    #         birth_date: "MessageTemplateAttributeValue",
+    #         gender: "MessageTemplateAttributeValue",
+    #         mobile_phone_number: "MessageTemplateAttributeValue",
+    #         home_phone_number: "MessageTemplateAttributeValue",
+    #         business_phone_number: "MessageTemplateAttributeValue",
+    #         business_email_address: "MessageTemplateAttributeValue",
     #         address1: "MessageTemplateAttributeValue",
     #         address2: "MessageTemplateAttributeValue",
     #         address3: "MessageTemplateAttributeValue",
     #         address4: "MessageTemplateAttributeValue",
-    #         billing_address_1: "MessageTemplateAttributeValue",
-    #         billing_address_2: "MessageTemplateAttributeValue",
-    #         billing_address_3: "MessageTemplateAttributeValue",
-    #         billing_address_4: "MessageTemplateAttributeValue",
-    #         billing_city: "MessageTemplateAttributeValue",
-    #         billing_country: "MessageTemplateAttributeValue",
-    #         billing_county: "MessageTemplateAttributeValue",
-    #         billing_postal_code: "MessageTemplateAttributeValue",
-    #         billing_province: "MessageTemplateAttributeValue",
-    #         billing_state: "MessageTemplateAttributeValue",
-    #         birth_date: "MessageTemplateAttributeValue",
-    #         business_email_address: "MessageTemplateAttributeValue",
-    #         business_name: "MessageTemplateAttributeValue",
-    #         business_phone_number: "MessageTemplateAttributeValue",
     #         city: "MessageTemplateAttributeValue",
-    #         country: "MessageTemplateAttributeValue",
     #         county: "MessageTemplateAttributeValue",
-    #         custom: {
-    #           "MessageTemplateAttributeKey" => "MessageTemplateAttributeValue",
-    #         },
-    #         email_address: "MessageTemplateAttributeValue",
-    #         first_name: "MessageTemplateAttributeValue",
-    #         gender: "MessageTemplateAttributeValue",
-    #         home_phone_number: "MessageTemplateAttributeValue",
-    #         last_name: "MessageTemplateAttributeValue",
-    #         mailing_address_1: "MessageTemplateAttributeValue",
-    #         mailing_address_2: "MessageTemplateAttributeValue",
-    #         mailing_address_3: "MessageTemplateAttributeValue",
-    #         mailing_address_4: "MessageTemplateAttributeValue",
-    #         mailing_city: "MessageTemplateAttributeValue",
-    #         mailing_country: "MessageTemplateAttributeValue",
-    #         mailing_county: "MessageTemplateAttributeValue",
-    #         mailing_postal_code: "MessageTemplateAttributeValue",
-    #         mailing_province: "MessageTemplateAttributeValue",
-    #         mailing_state: "MessageTemplateAttributeValue",
-    #         middle_name: "MessageTemplateAttributeValue",
-    #         mobile_phone_number: "MessageTemplateAttributeValue",
-    #         party_type: "MessageTemplateAttributeValue",
-    #         phone_number: "MessageTemplateAttributeValue",
+    #         country: "MessageTemplateAttributeValue",
     #         postal_code: "MessageTemplateAttributeValue",
-    #         profile_arn: "MessageTemplateAttributeValue",
-    #         profile_id: "MessageTemplateAttributeValue",
     #         province: "MessageTemplateAttributeValue",
+    #         state: "MessageTemplateAttributeValue",
     #         shipping_address_1: "MessageTemplateAttributeValue",
     #         shipping_address_2: "MessageTemplateAttributeValue",
     #         shipping_address_3: "MessageTemplateAttributeValue",
     #         shipping_address_4: "MessageTemplateAttributeValue",
     #         shipping_city: "MessageTemplateAttributeValue",
-    #         shipping_country: "MessageTemplateAttributeValue",
     #         shipping_county: "MessageTemplateAttributeValue",
+    #         shipping_country: "MessageTemplateAttributeValue",
     #         shipping_postal_code: "MessageTemplateAttributeValue",
     #         shipping_province: "MessageTemplateAttributeValue",
     #         shipping_state: "MessageTemplateAttributeValue",
-    #         state: "MessageTemplateAttributeValue",
+    #         mailing_address_1: "MessageTemplateAttributeValue",
+    #         mailing_address_2: "MessageTemplateAttributeValue",
+    #         mailing_address_3: "MessageTemplateAttributeValue",
+    #         mailing_address_4: "MessageTemplateAttributeValue",
+    #         mailing_city: "MessageTemplateAttributeValue",
+    #         mailing_county: "MessageTemplateAttributeValue",
+    #         mailing_country: "MessageTemplateAttributeValue",
+    #         mailing_postal_code: "MessageTemplateAttributeValue",
+    #         mailing_province: "MessageTemplateAttributeValue",
+    #         mailing_state: "MessageTemplateAttributeValue",
+    #         billing_address_1: "MessageTemplateAttributeValue",
+    #         billing_address_2: "MessageTemplateAttributeValue",
+    #         billing_address_3: "MessageTemplateAttributeValue",
+    #         billing_address_4: "MessageTemplateAttributeValue",
+    #         billing_city: "MessageTemplateAttributeValue",
+    #         billing_county: "MessageTemplateAttributeValue",
+    #         billing_country: "MessageTemplateAttributeValue",
+    #         billing_postal_code: "MessageTemplateAttributeValue",
+    #         billing_province: "MessageTemplateAttributeValue",
+    #         billing_state: "MessageTemplateAttributeValue",
+    #         custom: {
+    #           "MessageTemplateAttributeKey" => "MessageTemplateAttributeValue",
+    #         },
     #       },
-    #       system_attributes: {
-    #         customer_endpoint: {
-    #           address: "MessageTemplateAttributeValue",
-    #         },
-    #         name: "MessageTemplateAttributeValue",
-    #         system_endpoint: {
-    #           address: "MessageTemplateAttributeValue",
-    #         },
+    #       custom_attributes: {
+    #         "MessageTemplateAttributeKey" => "MessageTemplateAttributeValue",
     #       },
     #     },
-    #     knowledge_base_id: "UuidOrArn", # required
-    #     message_template_id: "UuidOrArnOrEitherWithQualifier", # required
     #   })
     #
     # @example Response structure
     #
+    #   resp.content.email.subject #=> String
+    #   resp.content.email.body.plain_text.content #=> String
+    #   resp.content.email.body.html.content #=> String
+    #   resp.content.email.headers #=> Array
+    #   resp.content.email.headers[0].name #=> String
+    #   resp.content.email.headers[0].value #=> String
+    #   resp.content.sms.body.plain_text.content #=> String
+    #   resp.content.whats_app.data #=> String
+    #   resp.content.push.adm.title #=> String
+    #   resp.content.push.adm.body.content #=> String
+    #   resp.content.push.adm.action #=> String, one of "OPEN_APP", "DEEP_LINK", "URL"
+    #   resp.content.push.adm.sound #=> String
+    #   resp.content.push.adm.url #=> String
+    #   resp.content.push.adm.image_url #=> String
+    #   resp.content.push.adm.image_icon_url #=> String
+    #   resp.content.push.adm.small_image_icon_url #=> String
+    #   resp.content.push.adm.raw_content.content #=> String
+    #   resp.content.push.apns.title #=> String
+    #   resp.content.push.apns.body.content #=> String
+    #   resp.content.push.apns.action #=> String, one of "OPEN_APP", "DEEP_LINK", "URL"
+    #   resp.content.push.apns.sound #=> String
+    #   resp.content.push.apns.url #=> String
+    #   resp.content.push.apns.media_url #=> String
+    #   resp.content.push.apns.raw_content.content #=> String
+    #   resp.content.push.fcm.title #=> String
+    #   resp.content.push.fcm.body.content #=> String
+    #   resp.content.push.fcm.action #=> String, one of "OPEN_APP", "DEEP_LINK", "URL"
+    #   resp.content.push.fcm.sound #=> String
+    #   resp.content.push.fcm.url #=> String
+    #   resp.content.push.fcm.image_url #=> String
+    #   resp.content.push.fcm.image_icon_url #=> String
+    #   resp.content.push.fcm.small_image_icon_url #=> String
+    #   resp.content.push.fcm.raw_content.content #=> String
+    #   resp.content.push.baidu.title #=> String
+    #   resp.content.push.baidu.body.content #=> String
+    #   resp.content.push.baidu.action #=> String, one of "OPEN_APP", "DEEP_LINK", "URL"
+    #   resp.content.push.baidu.sound #=> String
+    #   resp.content.push.baidu.url #=> String
+    #   resp.content.push.baidu.image_url #=> String
+    #   resp.content.push.baidu.image_icon_url #=> String
+    #   resp.content.push.baidu.small_image_icon_url #=> String
+    #   resp.content.push.baidu.raw_content.content #=> String
+    #   resp.source_configuration_summary.whats_app.business_account_id #=> String
+    #   resp.source_configuration_summary.whats_app.template_id #=> String
+    #   resp.source_configuration_summary.whats_app.name #=> String
+    #   resp.source_configuration_summary.whats_app.language #=> String
+    #   resp.source_configuration_summary.whats_app.components #=> Array
+    #   resp.source_configuration_summary.whats_app.components[0] #=> String
+    #   resp.source_configuration_summary.whats_app.status #=> String, one of "VALID", "INVALID", "REJECTED"
+    #   resp.source_configuration_summary.whats_app.status_reason #=> String
+    #   resp.attributes_not_interpolated #=> Array
+    #   resp.attributes_not_interpolated[0] #=> String
     #   resp.attachments #=> Array
-    #   resp.attachments[0].attachment_id #=> String
     #   resp.attachments[0].content_disposition #=> String, one of "ATTACHMENT"
     #   resp.attachments[0].name #=> String
     #   resp.attachments[0].uploaded_time #=> Time
     #   resp.attachments[0].url #=> String
     #   resp.attachments[0].url_expiry #=> Time
-    #   resp.attributes_not_interpolated #=> Array
-    #   resp.attributes_not_interpolated[0] #=> String
-    #   resp.content.email.body.html.content #=> String
-    #   resp.content.email.body.plain_text.content #=> String
-    #   resp.content.email.headers #=> Array
-    #   resp.content.email.headers[0].name #=> String
-    #   resp.content.email.headers[0].value #=> String
-    #   resp.content.email.subject #=> String
-    #   resp.content.sms.body.plain_text.content #=> String
+    #   resp.attachments[0].attachment_id #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/RenderMessageTemplate AWS API Documentation
     #
@@ -5730,21 +6885,135 @@ module Aws::QConnect
       req.send_request(options)
     end
 
+    # Retrieves content from knowledge sources based on a query.
+    #
+    # @option params [required, String] :assistant_id
+    #   The identifier of the Amazon Q in Connect assistant for content
+    #   retrieval.
+    #
+    # @option params [required, Types::RetrievalConfiguration] :retrieval_configuration
+    #   The configuration for the content retrieval operation.
+    #
+    # @option params [required, String] :retrieval_query
+    #   The query for content retrieval.
+    #
+    # @return [Types::RetrieveResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::RetrieveResponse#results #results} => Array&lt;Types::RetrieveResult&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.retrieve({
+    #     assistant_id: "UuidOrArn", # required
+    #     retrieval_configuration: { # required
+    #       knowledge_source: { # required
+    #         assistant_association_ids: ["UuidOrArn"],
+    #       },
+    #       filter: {
+    #         and_all: [
+    #           {
+    #             # recursive RetrievalFilterConfiguration
+    #           },
+    #         ],
+    #         equals: {
+    #           key: "FilterAttributeKey", # required
+    #           value: { # required
+    #           },
+    #         },
+    #         greater_than: {
+    #           key: "FilterAttributeKey", # required
+    #           value: { # required
+    #           },
+    #         },
+    #         greater_than_or_equals: {
+    #           key: "FilterAttributeKey", # required
+    #           value: { # required
+    #           },
+    #         },
+    #         in: {
+    #           key: "FilterAttributeKey", # required
+    #           value: { # required
+    #           },
+    #         },
+    #         less_than: {
+    #           key: "FilterAttributeKey", # required
+    #           value: { # required
+    #           },
+    #         },
+    #         less_than_or_equals: {
+    #           key: "FilterAttributeKey", # required
+    #           value: { # required
+    #           },
+    #         },
+    #         list_contains: {
+    #           key: "FilterAttributeKey", # required
+    #           value: { # required
+    #           },
+    #         },
+    #         not_equals: {
+    #           key: "FilterAttributeKey", # required
+    #           value: { # required
+    #           },
+    #         },
+    #         not_in: {
+    #           key: "FilterAttributeKey", # required
+    #           value: { # required
+    #           },
+    #         },
+    #         or_all: [
+    #           {
+    #             # recursive RetrievalFilterConfiguration
+    #           },
+    #         ],
+    #         starts_with: {
+    #           key: "FilterAttributeKey", # required
+    #           value: { # required
+    #           },
+    #         },
+    #         string_contains: {
+    #           key: "FilterAttributeKey", # required
+    #           value: { # required
+    #           },
+    #         },
+    #       },
+    #       number_of_results: 1,
+    #       override_knowledge_base_search_type: "HYBRID", # accepts HYBRID, SEMANTIC
+    #     },
+    #     retrieval_query: "NonEmptySensitiveString", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.results #=> Array
+    #   resp.results[0].association_id #=> String
+    #   resp.results[0].source_id #=> String
+    #   resp.results[0].reference_type #=> String, one of "WEB_CRAWLER", "KNOWLEDGE_BASE", "BEDROCK_KB_S3", "BEDROCK_KB_WEB", "BEDROCK_KB_CONFLUENCE", "BEDROCK_KB_SALESFORCE", "BEDROCK_KB_SHAREPOINT", "BEDROCK_KB_KENDRA", "BEDROCK_KB_CUSTOM_DOCUMENT", "BEDROCK_KB_SQL"
+    #   resp.results[0].content_text #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/Retrieve AWS API Documentation
+    #
+    # @overload retrieve(params = {})
+    # @param [Hash] params ({})
+    def retrieve(params = {}, options = {})
+      req = build_request(:retrieve, params)
+      req.send_request(options)
+    end
+
     # Searches for content in a specified knowledge base. Can be used to get
     # a specific content resource by its name.
-    #
-    # @option params [required, String] :knowledge_base_id
-    #   The identifier of the knowledge base. This should not be a
-    #   QUICK\_RESPONSES type knowledge base. Can be either the ID or the ARN.
-    #   URLs cannot contain the ARN.
-    #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to return per page.
     #
     # @option params [String] :next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return per page.
+    #
+    # @option params [required, String] :knowledge_base_id
+    #   The identifier of the knowledge base. This should not be a
+    #   QUICK\_RESPONSES type knowledge base. Can be either the ID or the ARN.
+    #   URLs cannot contain the ARN.
     #
     # @option params [required, Types::SearchExpression] :search_expression
     #   The search expression to filter results.
@@ -5759,9 +7028,9 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.search_content({
-    #     knowledge_base_id: "UuidOrArn", # required
-    #     max_results: 1,
     #     next_token: "NextToken",
+    #     max_results: 1,
+    #     knowledge_base_id: "UuidOrArn", # required
     #     search_expression: { # required
     #       filters: [ # required
     #         {
@@ -5778,17 +7047,17 @@ module Aws::QConnect
     #   resp.content_summaries #=> Array
     #   resp.content_summaries[0].content_arn #=> String
     #   resp.content_summaries[0].content_id #=> String
-    #   resp.content_summaries[0].content_type #=> String
     #   resp.content_summaries[0].knowledge_base_arn #=> String
     #   resp.content_summaries[0].knowledge_base_id #=> String
-    #   resp.content_summaries[0].metadata #=> Hash
-    #   resp.content_summaries[0].metadata["NonEmptyString"] #=> String
     #   resp.content_summaries[0].name #=> String
     #   resp.content_summaries[0].revision_id #=> String
+    #   resp.content_summaries[0].title #=> String
+    #   resp.content_summaries[0].content_type #=> String
     #   resp.content_summaries[0].status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED", "UPDATE_FAILED"
+    #   resp.content_summaries[0].metadata #=> Hash
+    #   resp.content_summaries[0].metadata["NonEmptyString"] #=> String
     #   resp.content_summaries[0].tags #=> Hash
     #   resp.content_summaries[0].tags["TagKey"] #=> String
-    #   resp.content_summaries[0].title #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SearchContent AWS API Documentation
@@ -5807,21 +7076,21 @@ module Aws::QConnect
     #   The identifier of the knowledge base. Can be either the ID or the ARN.
     #   URLs cannot contain the ARN.
     #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to return per page.
+    # @option params [required, Types::MessageTemplateSearchExpression] :search_expression
+    #   The search expression for querying the message template.
     #
     # @option params [String] :next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
     #
-    # @option params [required, Types::MessageTemplateSearchExpression] :search_expression
-    #   The search expression for querying the message template.
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return per page.
     #
     # @return [Types::SearchMessageTemplatesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::SearchMessageTemplatesResponse#next_token #next_token} => String
     #   * {Types::SearchMessageTemplatesResponse#results #results} => Array&lt;Types::MessageTemplateSearchResultData&gt;
+    #   * {Types::SearchMessageTemplatesResponse#next_token #next_token} => String
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
     #
@@ -5829,55 +7098,64 @@ module Aws::QConnect
     #
     #   resp = client.search_message_templates({
     #     knowledge_base_id: "UuidOrArn", # required
-    #     max_results: 1,
-    #     next_token: "NextToken",
     #     search_expression: { # required
+    #       queries: [
+    #         {
+    #           name: "NonEmptyString", # required
+    #           values: ["MessageTemplateQueryValue"], # required
+    #           operator: "CONTAINS", # required, accepts CONTAINS, CONTAINS_AND_PREFIX
+    #           allow_fuzziness: false,
+    #           priority: "HIGH", # accepts HIGH, MEDIUM, LOW
+    #         },
+    #       ],
     #       filters: [
     #         {
-    #           include_no_existence: false,
     #           name: "NonEmptyString", # required
-    #           operator: "EQUALS", # required, accepts EQUALS, PREFIX
     #           values: ["MessageTemplateFilterValue"],
+    #           operator: "EQUALS", # required, accepts EQUALS, PREFIX
+    #           include_no_existence: false,
     #         },
     #       ],
     #       order_on_field: {
     #         name: "NonEmptyString", # required
     #         order: "ASC", # accepts ASC, DESC
     #       },
-    #       queries: [
-    #         {
-    #           allow_fuzziness: false,
-    #           name: "NonEmptyString", # required
-    #           operator: "CONTAINS", # required, accepts CONTAINS, CONTAINS_AND_PREFIX
-    #           priority: "HIGH", # accepts HIGH, MEDIUM, LOW
-    #           values: ["MessageTemplateQueryValue"], # required
-    #         },
-    #       ],
     #     },
+    #     next_token: "NextToken",
+    #     max_results: 1,
     #   })
     #
     # @example Response structure
     #
-    #   resp.next_token #=> String
     #   resp.results #=> Array
-    #   resp.results[0].channel_subtype #=> String, one of "EMAIL", "SMS"
+    #   resp.results[0].message_template_arn #=> String
+    #   resp.results[0].message_template_id #=> String
+    #   resp.results[0].knowledge_base_arn #=> String
+    #   resp.results[0].knowledge_base_id #=> String
+    #   resp.results[0].name #=> String
+    #   resp.results[0].channel #=> String
+    #   resp.results[0].channel_subtype #=> String, one of "EMAIL", "SMS", "WHATSAPP", "PUSH"
     #   resp.results[0].created_time #=> Time
+    #   resp.results[0].last_modified_time #=> Time
+    #   resp.results[0].last_modified_by #=> String
+    #   resp.results[0].is_active #=> Boolean
+    #   resp.results[0].version_number #=> Integer
     #   resp.results[0].description #=> String
+    #   resp.results[0].source_configuration_summary.whats_app.business_account_id #=> String
+    #   resp.results[0].source_configuration_summary.whats_app.template_id #=> String
+    #   resp.results[0].source_configuration_summary.whats_app.name #=> String
+    #   resp.results[0].source_configuration_summary.whats_app.language #=> String
+    #   resp.results[0].source_configuration_summary.whats_app.components #=> Array
+    #   resp.results[0].source_configuration_summary.whats_app.components[0] #=> String
+    #   resp.results[0].source_configuration_summary.whats_app.status #=> String, one of "VALID", "INVALID", "REJECTED"
+    #   resp.results[0].source_configuration_summary.whats_app.status_reason #=> String
     #   resp.results[0].grouping_configuration.criteria #=> String
     #   resp.results[0].grouping_configuration.values #=> Array
     #   resp.results[0].grouping_configuration.values[0] #=> String
-    #   resp.results[0].is_active #=> Boolean
-    #   resp.results[0].knowledge_base_arn #=> String
-    #   resp.results[0].knowledge_base_id #=> String
     #   resp.results[0].language #=> String
-    #   resp.results[0].last_modified_by #=> String
-    #   resp.results[0].last_modified_time #=> Time
-    #   resp.results[0].message_template_arn #=> String
-    #   resp.results[0].message_template_id #=> String
-    #   resp.results[0].name #=> String
     #   resp.results[0].tags #=> Hash
     #   resp.results[0].tags["TagKey"] #=> String
-    #   resp.results[0].version_number #=> Integer
+    #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SearchMessageTemplates AWS API Documentation
     #
@@ -5891,6 +7169,22 @@ module Aws::QConnect
     # Searches existing Amazon Q in Connect quick responses in an Amazon Q
     # in Connect knowledge base.
     #
+    # @option params [required, String] :knowledge_base_id
+    #   The identifier of the knowledge base. This should be a
+    #   QUICK\_RESPONSES type knowledge base. Can be either the ID or the ARN.
+    #   URLs cannot contain the ARN.
+    #
+    # @option params [required, Types::QuickResponseSearchExpression] :search_expression
+    #   The search expression for querying the quick response.
+    #
+    # @option params [String] :next_token
+    #   The token for the next set of results. Use the value returned in the
+    #   previous response in the next request to retrieve the next set of
+    #   results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return per page.
+    #
     # @option params [Hash<String,String>] :attributes
     #   The [user-defined Amazon Connect contact attributes][1] to be resolved
     #   when search results are returned.
@@ -5899,94 +7193,78 @@ module Aws::QConnect
     #
     #   [1]: https://docs.aws.amazon.com/connect/latest/adminguide/connect-attrib-list.html#user-defined-attributes
     #
-    # @option params [required, String] :knowledge_base_id
-    #   The identifier of the knowledge base. This should be a
-    #   QUICK\_RESPONSES type knowledge base. Can be either the ID or the ARN.
-    #   URLs cannot contain the ARN.
-    #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to return per page.
-    #
-    # @option params [String] :next_token
-    #   The token for the next set of results. Use the value returned in the
-    #   previous response in the next request to retrieve the next set of
-    #   results.
-    #
-    # @option params [required, Types::QuickResponseSearchExpression] :search_expression
-    #   The search expression for querying the quick response.
-    #
     # @return [Types::SearchQuickResponsesResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::SearchQuickResponsesResponse#next_token #next_token} => String
     #   * {Types::SearchQuickResponsesResponse#results #results} => Array&lt;Types::QuickResponseSearchResultData&gt;
+    #   * {Types::SearchQuickResponsesResponse#next_token #next_token} => String
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.search_quick_responses({
-    #     attributes: {
-    #       "ContactAttributeKey" => "ContactAttributeValue",
-    #     },
     #     knowledge_base_id: "UuidOrArn", # required
-    #     max_results: 1,
-    #     next_token: "NonEmptyString",
     #     search_expression: { # required
+    #       queries: [
+    #         {
+    #           name: "NonEmptyString", # required
+    #           values: ["QuickResponseQueryValue"], # required
+    #           operator: "CONTAINS", # required, accepts CONTAINS, CONTAINS_AND_PREFIX
+    #           allow_fuzziness: false,
+    #           priority: "HIGH", # accepts HIGH, MEDIUM, LOW
+    #         },
+    #       ],
     #       filters: [
     #         {
-    #           include_no_existence: false,
     #           name: "NonEmptyString", # required
-    #           operator: "EQUALS", # required, accepts EQUALS, PREFIX
     #           values: ["QuickResponseFilterValue"],
+    #           operator: "EQUALS", # required, accepts EQUALS, PREFIX
+    #           include_no_existence: false,
     #         },
     #       ],
     #       order_on_field: {
     #         name: "NonEmptyString", # required
     #         order: "ASC", # accepts ASC, DESC
     #       },
-    #       queries: [
-    #         {
-    #           allow_fuzziness: false,
-    #           name: "NonEmptyString", # required
-    #           operator: "CONTAINS", # required, accepts CONTAINS, CONTAINS_AND_PREFIX
-    #           priority: "HIGH", # accepts HIGH, MEDIUM, LOW
-    #           values: ["QuickResponseQueryValue"], # required
-    #         },
-    #       ],
+    #     },
+    #     next_token: "NonEmptyString",
+    #     max_results: 1,
+    #     attributes: {
+    #       "ContactAttributeKey" => "ContactAttributeValue",
     #     },
     #   })
     #
     # @example Response structure
     #
-    #   resp.next_token #=> String
     #   resp.results #=> Array
-    #   resp.results[0].attributes_interpolated #=> Array
-    #   resp.results[0].attributes_interpolated[0] #=> String
-    #   resp.results[0].attributes_not_interpolated #=> Array
-    #   resp.results[0].attributes_not_interpolated[0] #=> String
-    #   resp.results[0].channels #=> Array
-    #   resp.results[0].channels[0] #=> String
+    #   resp.results[0].quick_response_arn #=> String
+    #   resp.results[0].quick_response_id #=> String
+    #   resp.results[0].knowledge_base_arn #=> String
+    #   resp.results[0].knowledge_base_id #=> String
+    #   resp.results[0].name #=> String
     #   resp.results[0].content_type #=> String
-    #   resp.results[0].contents.markdown.content #=> String
+    #   resp.results[0].status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "CREATED", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED", "UPDATE_IN_PROGRESS", "UPDATE_FAILED"
     #   resp.results[0].contents.plain_text.content #=> String
+    #   resp.results[0].contents.markdown.content #=> String
     #   resp.results[0].created_time #=> Time
+    #   resp.results[0].last_modified_time #=> Time
+    #   resp.results[0].is_active #=> Boolean
     #   resp.results[0].description #=> String
     #   resp.results[0].grouping_configuration.criteria #=> String
     #   resp.results[0].grouping_configuration.values #=> Array
     #   resp.results[0].grouping_configuration.values[0] #=> String
-    #   resp.results[0].is_active #=> Boolean
-    #   resp.results[0].knowledge_base_arn #=> String
-    #   resp.results[0].knowledge_base_id #=> String
-    #   resp.results[0].language #=> String
-    #   resp.results[0].last_modified_by #=> String
-    #   resp.results[0].last_modified_time #=> Time
-    #   resp.results[0].name #=> String
-    #   resp.results[0].quick_response_arn #=> String
-    #   resp.results[0].quick_response_id #=> String
     #   resp.results[0].shortcut_key #=> String
-    #   resp.results[0].status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "CREATED", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED", "UPDATE_IN_PROGRESS", "UPDATE_FAILED"
+    #   resp.results[0].last_modified_by #=> String
+    #   resp.results[0].channels #=> Array
+    #   resp.results[0].channels[0] #=> String
+    #   resp.results[0].language #=> String
+    #   resp.results[0].attributes_not_interpolated #=> Array
+    #   resp.results[0].attributes_not_interpolated[0] #=> String
+    #   resp.results[0].attributes_interpolated #=> Array
+    #   resp.results[0].attributes_interpolated[0] #=> String
     #   resp.results[0].tags #=> Hash
     #   resp.results[0].tags["TagKey"] #=> String
+    #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SearchQuickResponses AWS API Documentation
     #
@@ -5999,34 +7277,34 @@ module Aws::QConnect
 
     # Searches for sessions.
     #
-    # @option params [required, String] :assistant_id
-    #   The identifier of the Amazon Q in Connect assistant. Can be either the
-    #   ID or the ARN. URLs cannot contain the ARN.
-    #
-    # @option params [Integer] :max_results
-    #   The maximum number of results to return per page.
-    #
     # @option params [String] :next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return per page.
+    #
+    # @option params [required, String] :assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either the
+    #   ID or the ARN. URLs cannot contain the ARN.
     #
     # @option params [required, Types::SearchExpression] :search_expression
     #   The search expression to filter results.
     #
     # @return [Types::SearchSessionsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::SearchSessionsResponse#next_token #next_token} => String
     #   * {Types::SearchSessionsResponse#session_summaries #session_summaries} => Array&lt;Types::SessionSummary&gt;
+    #   * {Types::SearchSessionsResponse#next_token #next_token} => String
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.search_sessions({
-    #     assistant_id: "UuidOrArn", # required
-    #     max_results: 1,
     #     next_token: "NextToken",
+    #     max_results: 1,
+    #     assistant_id: "UuidOrArn", # required
     #     search_expression: { # required
     #       filters: [ # required
     #         {
@@ -6040,12 +7318,12 @@ module Aws::QConnect
     #
     # @example Response structure
     #
-    #   resp.next_token #=> String
     #   resp.session_summaries #=> Array
-    #   resp.session_summaries[0].assistant_arn #=> String
-    #   resp.session_summaries[0].assistant_id #=> String
-    #   resp.session_summaries[0].session_arn #=> String
     #   resp.session_summaries[0].session_id #=> String
+    #   resp.session_summaries[0].session_arn #=> String
+    #   resp.session_summaries[0].assistant_id #=> String
+    #   resp.session_summaries[0].assistant_arn #=> String
+    #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SearchSessions AWS API Documentation
     #
@@ -6061,6 +7339,28 @@ module Aws::QConnect
     # @option params [required, String] :assistant_id
     #   The identifier of the Amazon Q in Connect assistant.
     #
+    # @option params [required, String] :session_id
+    #   The identifier of the Amazon Q in Connect session.
+    #
+    # @option params [required, String] :type
+    #   The message type.
+    #
+    # @option params [required, Types::MessageInput] :message
+    #   The message data to submit to the Amazon Q in Connect session.
+    #
+    # @option params [String] :ai_agent_id
+    #   The identifier of the AI Agent to use for processing the message.
+    #
+    # @option params [Types::ConversationContext] :conversation_context
+    #   The conversation context before the Amazon Q in Connect session.
+    #
+    # @option params [Types::MessageConfiguration] :configuration
+    #   The configuration of the [SendMessage][1] request.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/connect/latest/APIReference/API_amazon-q-connect_SendMessage.html
+    #
     # @option params [String] :client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
     #   idempotency of the request. If not provided, the AWS SDK populates
@@ -6070,52 +7370,88 @@ module Aws::QConnect
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.**
     #
-    # @option params [Types::ConversationContext] :conversation_context
-    #   The conversation context before the Amazon Q in Connect session.
+    # @option params [String] :orchestrator_use_case
+    #   The orchestrator use case for message processing.
     #
-    # @option params [required, Types::MessageInput] :message
-    #   The message data to submit to the Amazon Q in Connect session.
+    # @option params [Hash<String,String>] :metadata
+    #   Additional metadata for the message.
     #
-    # @option params [required, String] :session_id
-    #   The identifier of the Amazon Q in Connect session.
-    #
-    # @option params [required, String] :type
-    #   The message type.
+    # @option params [String] :origin_request_id
+    #   Request identifier from the origin system, used for end-to-end tracing
+    #   across spans.
     #
     # @return [Types::SendMessageResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::SendMessageResponse#next_message_token #next_message_token} => String
     #   * {Types::SendMessageResponse#request_message_id #request_message_id} => String
+    #   * {Types::SendMessageResponse#configuration #configuration} => Types::MessageConfiguration
+    #   * {Types::SendMessageResponse#next_message_token #next_message_token} => String
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.send_message({
     #     assistant_id: "UuidOrArn", # required
-    #     client_token: "ClientToken",
-    #     conversation_context: {
-    #       self_service_conversation_history: [ # required
-    #         {
-    #           bot_response: "SensitiveString",
-    #           input_transcript: "SensitiveString",
-    #           turn_number: 1, # required
-    #         },
-    #       ],
-    #     },
+    #     session_id: "UuidOrArn", # required
+    #     type: "TEXT", # required, accepts TEXT, TOOL_USE_RESULT
     #     message: { # required
     #       value: { # required
     #         text: {
     #           value: "TextMessageValueString",
+    #           citations: [
+    #             {
+    #               content_id: "Uuid",
+    #               title: "SensitiveString",
+    #               knowledge_base_id: "Uuid",
+    #               citation_span: { # required
+    #                 begin_offset_inclusive: 1,
+    #                 end_offset_exclusive: 1,
+    #               },
+    #               source_url: "SensitiveString",
+    #               reference_type: "WEB_CRAWLER", # required, accepts WEB_CRAWLER, KNOWLEDGE_BASE, BEDROCK_KB_S3, BEDROCK_KB_WEB, BEDROCK_KB_CONFLUENCE, BEDROCK_KB_SALESFORCE, BEDROCK_KB_SHAREPOINT, BEDROCK_KB_KENDRA, BEDROCK_KB_CUSTOM_DOCUMENT, BEDROCK_KB_SQL
+    #             },
+    #           ],
+    #           ai_guardrail_assessment: {
+    #             blocked: false, # required
+    #           },
+    #         },
+    #         tool_use_result: {
+    #           tool_use_id: "NonEmptyString", # required
+    #           tool_name: "NonEmptyString", # required
+    #           tool_result: { # required
+    #           },
+    #           input_schema: {
+    #           },
     #         },
     #       },
     #     },
-    #     session_id: "UuidOrArn", # required
-    #     type: "TEXT", # required, accepts TEXT
+    #     ai_agent_id: "UuidOrArnOrEitherWithQualifier",
+    #     conversation_context: {
+    #       self_service_conversation_history: [ # required
+    #         {
+    #           turn_number: 1,
+    #           input_transcript: "SensitiveString",
+    #           bot_response: "SensitiveString",
+    #           timestamp: Time.now,
+    #         },
+    #       ],
+    #     },
+    #     configuration: {
+    #       generate_filler_message: false,
+    #       generate_chunked_message: false,
+    #     },
+    #     client_token: "ClientToken",
+    #     orchestrator_use_case: "NonEmptyString",
+    #     metadata: {
+    #       "NonEmptyString" => "NonEmptyString",
+    #     },
+    #     origin_request_id: "SendMessageRequestOriginRequestIdString",
     #   })
     #
     # @example Response structure
     #
-    #   resp.next_message_token #=> String
     #   resp.request_message_id #=> String
+    #   resp.configuration.generate_filler_message #=> Boolean
+    #   resp.configuration.generate_chunked_message #=> Boolean
+    #   resp.next_message_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SendMessage AWS API Documentation
     #
@@ -6138,12 +7474,12 @@ module Aws::QConnect
     # [1]: https://docs.aws.amazon.com/amazon-q-connect/latest/APIReference/API_CreateContent.html
     # [2]: https://docs.aws.amazon.com/amazon-q-connect/latest/APIReference/API_UpdateContent.html
     #
-    # @option params [required, String] :content_type
-    #   The type of content to upload.
-    #
     # @option params [required, String] :knowledge_base_id
     #   The identifier of the knowledge base. Can be either the ID or the ARN.
     #   URLs cannot contain the ARN.
+    #
+    # @option params [required, String] :content_type
+    #   The type of content to upload.
     #
     # @option params [Integer] :presigned_url_time_to_live
     #   The expected expiration time of the generated presigned URL, specified
@@ -6151,26 +7487,26 @@ module Aws::QConnect
     #
     # @return [Types::StartContentUploadResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::StartContentUploadResponse#headers_to_include #headers_to_include} => Hash&lt;String,String&gt;
     #   * {Types::StartContentUploadResponse#upload_id #upload_id} => String
     #   * {Types::StartContentUploadResponse#url #url} => String
     #   * {Types::StartContentUploadResponse#url_expiry #url_expiry} => Time
+    #   * {Types::StartContentUploadResponse#headers_to_include #headers_to_include} => Hash&lt;String,String&gt;
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.start_content_upload({
-    #     content_type: "ContentType", # required
     #     knowledge_base_id: "UuidOrArn", # required
+    #     content_type: "ContentType", # required
     #     presigned_url_time_to_live: 1,
     #   })
     #
     # @example Response structure
     #
-    #   resp.headers_to_include #=> Hash
-    #   resp.headers_to_include["NonEmptyString"] #=> String
     #   resp.upload_id #=> String
     #   resp.url #=> String
     #   resp.url_expiry #=> Time
+    #   resp.headers_to_include #=> Hash
+    #   resp.headers_to_include["NonEmptyString"] #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/StartContentUpload AWS API Documentation
     #
@@ -6198,24 +7534,6 @@ module Aws::QConnect
     # [1]: https://docs.aws.amazon.com/wisdom/latest/APIReference/API_StartContentUpload.html
     # [2]: https://docs.aws.amazon.com/console/connect/quick-responses/add-data
     #
-    # @option params [String] :client_token
-    #   The tags used to organize, track, or control access for this resource.
-    #
-    #   **A suitable default value is auto-generated.** You should normally
-    #   not need to pass this option.**
-    #
-    # @option params [Types::ExternalSourceConfiguration] :external_source_configuration
-    #   The configuration information of the external source that the resource
-    #   data are imported from.
-    #
-    # @option params [required, String] :import_job_type
-    #   The type of the import job.
-    #
-    #   * For importing quick response resource, set the value to
-    #     `QUICK_RESPONSES`.
-    #
-    #   ^
-    #
     # @option params [required, String] :knowledge_base_id
     #   The identifier of the knowledge base. Can be either the ID or the ARN.
     #   URLs cannot contain the ARN.
@@ -6225,8 +7543,13 @@ module Aws::QConnect
     #
     #   ^
     #
-    # @option params [Hash<String,String>] :metadata
-    #   The metadata fields of the imported Amazon Q in Connect resources.
+    # @option params [required, String] :import_job_type
+    #   The type of the import job.
+    #
+    #   * For importing quick response resource, set the value to
+    #     `QUICK_RESPONSES`.
+    #
+    #   ^
     #
     # @option params [required, String] :upload_id
     #   A pointer to the uploaded asset. This value is returned by
@@ -6236,6 +7559,19 @@ module Aws::QConnect
     #
     #   [1]: https://docs.aws.amazon.com/wisdom/latest/APIReference/API_StartContentUpload.html
     #
+    # @option params [String] :client_token
+    #   The tags used to organize, track, or control access for this resource.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @option params [Hash<String,String>] :metadata
+    #   The metadata fields of the imported Amazon Q in Connect resources.
+    #
+    # @option params [Types::ExternalSourceConfiguration] :external_source_configuration
+    #   The configuration information of the external source that the resource
+    #   data are imported from.
+    #
     # @return [Types::StartImportJobResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::StartImportJobResponse#import_job #import_job} => Types::ImportJobData
@@ -6243,40 +7579,40 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.start_import_job({
+    #     knowledge_base_id: "UuidOrArn", # required
+    #     import_job_type: "QUICK_RESPONSES", # required, accepts QUICK_RESPONSES
+    #     upload_id: "UploadId", # required
     #     client_token: "NonEmptyString",
+    #     metadata: {
+    #       "NonEmptyString" => "NonEmptyString",
+    #     },
     #     external_source_configuration: {
+    #       source: "AMAZON_CONNECT", # required, accepts AMAZON_CONNECT
     #       configuration: { # required
     #         connect_configuration: {
     #           instance_id: "NonEmptyString",
     #         },
     #       },
-    #       source: "AMAZON_CONNECT", # required, accepts AMAZON_CONNECT
     #     },
-    #     import_job_type: "QUICK_RESPONSES", # required, accepts QUICK_RESPONSES
-    #     knowledge_base_id: "UuidOrArn", # required
-    #     metadata: {
-    #       "NonEmptyString" => "NonEmptyString",
-    #     },
-    #     upload_id: "UploadId", # required
     #   })
     #
     # @example Response structure
     #
-    #   resp.import_job.created_time #=> Time
-    #   resp.import_job.external_source_configuration.configuration.connect_configuration.instance_id #=> String
-    #   resp.import_job.external_source_configuration.source #=> String, one of "AMAZON_CONNECT"
-    #   resp.import_job.failed_record_report #=> String
     #   resp.import_job.import_job_id #=> String
-    #   resp.import_job.import_job_type #=> String, one of "QUICK_RESPONSES"
-    #   resp.import_job.knowledge_base_arn #=> String
     #   resp.import_job.knowledge_base_id #=> String
+    #   resp.import_job.upload_id #=> String
+    #   resp.import_job.knowledge_base_arn #=> String
+    #   resp.import_job.import_job_type #=> String, one of "QUICK_RESPONSES"
+    #   resp.import_job.status #=> String, one of "START_IN_PROGRESS", "FAILED", "COMPLETE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
+    #   resp.import_job.url #=> String
+    #   resp.import_job.failed_record_report #=> String
+    #   resp.import_job.url_expiry #=> Time
+    #   resp.import_job.created_time #=> Time
     #   resp.import_job.last_modified_time #=> Time
     #   resp.import_job.metadata #=> Hash
     #   resp.import_job.metadata["NonEmptyString"] #=> String
-    #   resp.import_job.status #=> String, one of "START_IN_PROGRESS", "FAILED", "COMPLETE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
-    #   resp.import_job.upload_id #=> String
-    #   resp.import_job.url #=> String
-    #   resp.import_job.url_expiry #=> Time
+    #   resp.import_job.external_source_configuration.source #=> String, one of "AMAZON_CONNECT"
+    #   resp.import_job.external_source_configuration.configuration.connect_configuration.instance_id #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/StartImportJob AWS API Documentation
     #
@@ -6343,13 +7679,6 @@ module Aws::QConnect
 
     # Updates an AI Agent.
     #
-    # @option params [required, String] :ai_agent_id
-    #   The identifier of the Amazon Q in Connect AI Agent.
-    #
-    # @option params [required, String] :assistant_id
-    #   The identifier of the Amazon Q in Connect assistant. Can be either the
-    #   ID or the ARN. URLs cannot contain the ARN.
-    #
     # @option params [String] :client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
     #   idempotency of the request. If not provided, the Amazon Web Services
@@ -6363,14 +7692,21 @@ module Aws::QConnect
     #
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #
+    # @option params [required, String] :assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either the
+    #   ID or the ARN. URLs cannot contain the ARN.
+    #
+    # @option params [required, String] :ai_agent_id
+    #   The identifier of the Amazon Q in Connect AI Agent.
+    #
+    # @option params [required, String] :visibility_status
+    #   The visbility status of the Amazon Q in Connect AI Agent.
+    #
     # @option params [Types::AIAgentConfiguration] :configuration
     #   The configuration of the Amazon Q in Connect AI Agent.
     #
     # @option params [String] :description
     #   The description of the Amazon Q in Connect AI Agent.
-    #
-    # @option params [required, String] :visibility_status
-    #   The visbility status of the Amazon Q in Connect AI Agent.
     #
     # @return [Types::UpdateAIAgentResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -6379,63 +7715,25 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_ai_agent({
-    #     ai_agent_id: "UuidOrArnOrEitherWithQualifier", # required
-    #     assistant_id: "UuidOrArn", # required
     #     client_token: "ClientToken",
+    #     assistant_id: "UuidOrArn", # required
+    #     ai_agent_id: "UuidOrArnOrEitherWithQualifier", # required
+    #     visibility_status: "SAVED", # required, accepts SAVED, PUBLISHED
     #     configuration: {
-    #       answer_recommendation_ai_agent_configuration: {
-    #         answer_generation_ai_guardrail_id: "UuidWithQualifier",
-    #         answer_generation_ai_prompt_id: "UuidWithQualifier",
-    #         association_configurations: [
-    #           {
-    #             association_configuration_data: {
-    #               knowledge_base_association_configuration_data: {
-    #                 content_tag_filter: {
-    #                   and_conditions: [
-    #                     {
-    #                       key: "TagKey", # required
-    #                       value: "TagValue",
-    #                     },
-    #                   ],
-    #                   or_conditions: [
-    #                     {
-    #                       and_conditions: [
-    #                         {
-    #                           key: "TagKey", # required
-    #                           value: "TagValue",
-    #                         },
-    #                       ],
-    #                       tag_condition: {
-    #                         key: "TagKey", # required
-    #                         value: "TagValue",
-    #                       },
-    #                     },
-    #                   ],
-    #                   tag_condition: {
-    #                     key: "TagKey", # required
-    #                     value: "TagValue",
-    #                   },
-    #                 },
-    #                 max_results: 1,
-    #                 override_knowledge_base_search_type: "HYBRID", # accepts HYBRID, SEMANTIC
-    #               },
-    #             },
-    #             association_id: "Uuid",
-    #             association_type: "KNOWLEDGE_BASE", # accepts KNOWLEDGE_BASE
-    #           },
-    #         ],
-    #         intent_labeling_generation_ai_prompt_id: "UuidWithQualifier",
-    #         locale: "NonEmptyString",
-    #         query_reformulation_ai_prompt_id: "UuidWithQualifier",
-    #       },
     #       manual_search_ai_agent_configuration: {
-    #         answer_generation_ai_guardrail_id: "UuidWithQualifier",
     #         answer_generation_ai_prompt_id: "UuidWithQualifier",
+    #         answer_generation_ai_guardrail_id: "UuidWithQualifier",
     #         association_configurations: [
     #           {
+    #             association_id: "Uuid",
+    #             association_type: "KNOWLEDGE_BASE", # accepts KNOWLEDGE_BASE
     #             association_configuration_data: {
     #               knowledge_base_association_configuration_data: {
     #                 content_tag_filter: {
+    #                   tag_condition: {
+    #                     key: "TagKey", # required
+    #                     value: "TagValue",
+    #                   },
     #                   and_conditions: [
     #                     {
     #                       key: "TagKey", # required
@@ -6456,27 +7754,76 @@ module Aws::QConnect
     #                       },
     #                     },
     #                   ],
-    #                   tag_condition: {
-    #                     key: "TagKey", # required
-    #                     value: "TagValue",
-    #                   },
     #                 },
     #                 max_results: 1,
     #                 override_knowledge_base_search_type: "HYBRID", # accepts HYBRID, SEMANTIC
     #               },
     #             },
-    #             association_id: "Uuid",
-    #             association_type: "KNOWLEDGE_BASE", # accepts KNOWLEDGE_BASE
     #           },
     #         ],
     #         locale: "NonEmptyString",
+    #       },
+    #       answer_recommendation_ai_agent_configuration: {
+    #         intent_labeling_generation_ai_prompt_id: "UuidWithQualifier",
+    #         query_reformulation_ai_prompt_id: "UuidWithQualifier",
+    #         answer_generation_ai_prompt_id: "UuidWithQualifier",
+    #         answer_generation_ai_guardrail_id: "UuidWithQualifier",
+    #         association_configurations: [
+    #           {
+    #             association_id: "Uuid",
+    #             association_type: "KNOWLEDGE_BASE", # accepts KNOWLEDGE_BASE
+    #             association_configuration_data: {
+    #               knowledge_base_association_configuration_data: {
+    #                 content_tag_filter: {
+    #                   tag_condition: {
+    #                     key: "TagKey", # required
+    #                     value: "TagValue",
+    #                   },
+    #                   and_conditions: [
+    #                     {
+    #                       key: "TagKey", # required
+    #                       value: "TagValue",
+    #                     },
+    #                   ],
+    #                   or_conditions: [
+    #                     {
+    #                       and_conditions: [
+    #                         {
+    #                           key: "TagKey", # required
+    #                           value: "TagValue",
+    #                         },
+    #                       ],
+    #                       tag_condition: {
+    #                         key: "TagKey", # required
+    #                         value: "TagValue",
+    #                       },
+    #                     },
+    #                   ],
+    #                 },
+    #                 max_results: 1,
+    #                 override_knowledge_base_search_type: "HYBRID", # accepts HYBRID, SEMANTIC
+    #               },
+    #             },
+    #           },
+    #         ],
+    #         locale: "NonEmptyString",
+    #         suggested_messages: ["NonEmptySensitiveString"],
     #       },
     #       self_service_ai_agent_configuration: {
+    #         self_service_pre_processing_ai_prompt_id: "UuidWithQualifier",
+    #         self_service_answer_generation_ai_prompt_id: "UuidWithQualifier",
+    #         self_service_ai_guardrail_id: "UuidWithQualifier",
     #         association_configurations: [
     #           {
+    #             association_id: "Uuid",
+    #             association_type: "KNOWLEDGE_BASE", # accepts KNOWLEDGE_BASE
     #             association_configuration_data: {
     #               knowledge_base_association_configuration_data: {
     #                 content_tag_filter: {
+    #                   tag_condition: {
+    #                     key: "TagKey", # required
+    #                     value: "TagValue",
+    #                   },
     #                   and_conditions: [
     #                     {
     #                       key: "TagKey", # required
@@ -6497,58 +7844,183 @@ module Aws::QConnect
     #                       },
     #                     },
     #                   ],
-    #                   tag_condition: {
-    #                     key: "TagKey", # required
-    #                     value: "TagValue",
-    #                   },
     #                 },
     #                 max_results: 1,
     #                 override_knowledge_base_search_type: "HYBRID", # accepts HYBRID, SEMANTIC
     #               },
     #             },
-    #             association_id: "Uuid",
-    #             association_type: "KNOWLEDGE_BASE", # accepts KNOWLEDGE_BASE
     #           },
     #         ],
-    #         self_service_ai_guardrail_id: "UuidWithQualifier",
-    #         self_service_answer_generation_ai_prompt_id: "UuidWithQualifier",
-    #         self_service_pre_processing_ai_prompt_id: "UuidWithQualifier",
+    #       },
+    #       email_response_ai_agent_configuration: {
+    #         email_response_ai_prompt_id: "UuidWithQualifier",
+    #         email_query_reformulation_ai_prompt_id: "UuidWithQualifier",
+    #         locale: "NonEmptyString",
+    #         association_configurations: [
+    #           {
+    #             association_id: "Uuid",
+    #             association_type: "KNOWLEDGE_BASE", # accepts KNOWLEDGE_BASE
+    #             association_configuration_data: {
+    #               knowledge_base_association_configuration_data: {
+    #                 content_tag_filter: {
+    #                   tag_condition: {
+    #                     key: "TagKey", # required
+    #                     value: "TagValue",
+    #                   },
+    #                   and_conditions: [
+    #                     {
+    #                       key: "TagKey", # required
+    #                       value: "TagValue",
+    #                     },
+    #                   ],
+    #                   or_conditions: [
+    #                     {
+    #                       and_conditions: [
+    #                         {
+    #                           key: "TagKey", # required
+    #                           value: "TagValue",
+    #                         },
+    #                       ],
+    #                       tag_condition: {
+    #                         key: "TagKey", # required
+    #                         value: "TagValue",
+    #                       },
+    #                     },
+    #                   ],
+    #                 },
+    #                 max_results: 1,
+    #                 override_knowledge_base_search_type: "HYBRID", # accepts HYBRID, SEMANTIC
+    #               },
+    #             },
+    #           },
+    #         ],
+    #       },
+    #       email_overview_ai_agent_configuration: {
+    #         email_overview_ai_prompt_id: "UuidWithQualifier",
+    #         locale: "NonEmptyString",
+    #       },
+    #       email_generative_answer_ai_agent_configuration: {
+    #         email_generative_answer_ai_prompt_id: "UuidWithQualifier",
+    #         email_query_reformulation_ai_prompt_id: "UuidWithQualifier",
+    #         locale: "NonEmptyString",
+    #         association_configurations: [
+    #           {
+    #             association_id: "Uuid",
+    #             association_type: "KNOWLEDGE_BASE", # accepts KNOWLEDGE_BASE
+    #             association_configuration_data: {
+    #               knowledge_base_association_configuration_data: {
+    #                 content_tag_filter: {
+    #                   tag_condition: {
+    #                     key: "TagKey", # required
+    #                     value: "TagValue",
+    #                   },
+    #                   and_conditions: [
+    #                     {
+    #                       key: "TagKey", # required
+    #                       value: "TagValue",
+    #                     },
+    #                   ],
+    #                   or_conditions: [
+    #                     {
+    #                       and_conditions: [
+    #                         {
+    #                           key: "TagKey", # required
+    #                           value: "TagValue",
+    #                         },
+    #                       ],
+    #                       tag_condition: {
+    #                         key: "TagKey", # required
+    #                         value: "TagValue",
+    #                       },
+    #                     },
+    #                   ],
+    #                 },
+    #                 max_results: 1,
+    #                 override_knowledge_base_search_type: "HYBRID", # accepts HYBRID, SEMANTIC
+    #               },
+    #             },
+    #           },
+    #         ],
+    #       },
+    #       orchestration_ai_agent_configuration: {
+    #         orchestration_ai_prompt_id: "UuidWithQualifier", # required
+    #         orchestration_ai_guardrail_id: "UuidWithQualifier",
+    #         tool_configurations: [
+    #           {
+    #             tool_name: "NonEmptyString", # required
+    #             tool_type: "MODEL_CONTEXT_PROTOCOL", # required, accepts MODEL_CONTEXT_PROTOCOL, RETURN_TO_CONTROL, CONSTANT
+    #             title: "NonEmptySensitiveString",
+    #             tool_id: "NonEmptyString",
+    #             description: "NonEmptySensitiveString",
+    #             instruction: {
+    #               instruction: "String",
+    #               examples: ["String"],
+    #             },
+    #             override_input_values: [
+    #               {
+    #                 json_path: "NonEmptyString", # required
+    #                 value: { # required
+    #                   constant: {
+    #                     type: "STRING", # required, accepts STRING, NUMBER, JSON_STRING
+    #                     value: "NonEmptySensitiveString", # required
+    #                   },
+    #                 },
+    #               },
+    #             ],
+    #             output_filters: [
+    #               {
+    #                 json_path: "NonEmptyString", # required
+    #                 output_configuration: {
+    #                   output_variable_name_override: "NonEmptyString",
+    #                   session_data_namespace: "NonEmptyString",
+    #                 },
+    #               },
+    #             ],
+    #             input_schema: {
+    #             },
+    #             output_schema: {
+    #             },
+    #             annotations: {
+    #               title: "String",
+    #               destructive_hint: false,
+    #             },
+    #             user_interaction_configuration: {
+    #               is_user_confirmation_required: false,
+    #             },
+    #           },
+    #         ],
+    #         connect_instance_arn: "GenericArn",
+    #         locale: "NonEmptyString",
+    #       },
+    #       note_taking_ai_agent_configuration: {
+    #         note_taking_ai_prompt_id: "UuidWithQualifier",
+    #         note_taking_ai_guardrail_id: "UuidWithQualifier",
+    #         locale: "NonEmptyString",
+    #       },
+    #       case_summarization_ai_agent_configuration: {
+    #         case_summarization_ai_prompt_id: "UuidWithQualifier",
+    #         case_summarization_ai_guardrail_id: "UuidWithQualifier",
+    #         locale: "NonEmptyString",
     #       },
     #     },
     #     description: "Description",
-    #     visibility_status: "SAVED", # required, accepts SAVED, PUBLISHED
     #   })
     #
     # @example Response structure
     #
-    #   resp.ai_agent.ai_agent_arn #=> String
-    #   resp.ai_agent.ai_agent_id #=> String
-    #   resp.ai_agent.assistant_arn #=> String
     #   resp.ai_agent.assistant_id #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.answer_generation_ai_guardrail_id #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.answer_generation_ai_prompt_id #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations #=> Array
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions #=> Array
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions #=> Array
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].key #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_id #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.intent_labeling_generation_ai_prompt_id #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.locale #=> String
-    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.query_reformulation_ai_prompt_id #=> String
-    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.answer_generation_ai_guardrail_id #=> String
+    #   resp.ai_agent.assistant_arn #=> String
+    #   resp.ai_agent.ai_agent_id #=> String
+    #   resp.ai_agent.ai_agent_arn #=> String
+    #   resp.ai_agent.name #=> String
+    #   resp.ai_agent.type #=> String, one of "MANUAL_SEARCH", "ANSWER_RECOMMENDATION", "SELF_SERVICE", "EMAIL_RESPONSE", "EMAIL_OVERVIEW", "EMAIL_GENERATIVE_ANSWER", "ORCHESTRATION", "NOTE_TAKING", "CASE_SUMMARIZATION"
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.answer_generation_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.answer_generation_ai_guardrail_id #=> String
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
@@ -6558,14 +8030,40 @@ module Aws::QConnect
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
-    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
-    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
-    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_id #=> String
-    #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
     #   resp.ai_agent.configuration.manual_search_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.intent_labeling_generation_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.query_reformulation_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.answer_generation_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.answer_generation_ai_guardrail_id #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions #=> Array
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions #=> Array
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].key #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.suggested_messages #=> Array
+    #   resp.ai_agent.configuration.answer_recommendation_ai_agent_configuration.suggested_messages[0] #=> String
+    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.self_service_pre_processing_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.self_service_answer_generation_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.self_service_ai_guardrail_id #=> String
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
@@ -6575,24 +8073,85 @@ module Aws::QConnect
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
-    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
-    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
     #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
-    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_id #=> String
-    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
-    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.self_service_ai_guardrail_id #=> String
-    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.self_service_answer_generation_ai_prompt_id #=> String
-    #   resp.ai_agent.configuration.self_service_ai_agent_configuration.self_service_pre_processing_ai_prompt_id #=> String
-    #   resp.ai_agent.description #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.email_response_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.email_query_reformulation_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions #=> Array
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions #=> Array
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].key #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
+    #   resp.ai_agent.configuration.email_response_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
+    #   resp.ai_agent.configuration.email_overview_ai_agent_configuration.email_overview_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.email_overview_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.email_generative_answer_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.email_query_reformulation_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations #=> Array
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_id #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_type #=> String, one of "KNOWLEDGE_BASE"
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.key #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.tag_condition.value #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions #=> Array
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].key #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.and_conditions[0].value #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions #=> Array
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions #=> Array
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].key #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].and_conditions[0].value #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.key #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.content_tag_filter.or_conditions[0].tag_condition.value #=> String
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.max_results #=> Integer
+    #   resp.ai_agent.configuration.email_generative_answer_ai_agent_configuration.association_configurations[0].association_configuration_data.knowledge_base_association_configuration_data.override_knowledge_base_search_type #=> String, one of "HYBRID", "SEMANTIC"
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.orchestration_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.orchestration_ai_guardrail_id #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations #=> Array
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].tool_name #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].tool_type #=> String, one of "MODEL_CONTEXT_PROTOCOL", "RETURN_TO_CONTROL", "CONSTANT"
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].title #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].tool_id #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].description #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].instruction.instruction #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].instruction.examples #=> Array
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].instruction.examples[0] #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].override_input_values #=> Array
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].override_input_values[0].json_path #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].override_input_values[0].value.constant.type #=> String, one of "STRING", "NUMBER", "JSON_STRING"
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].override_input_values[0].value.constant.value #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].output_filters #=> Array
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].output_filters[0].json_path #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].output_filters[0].output_configuration.output_variable_name_override #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].output_filters[0].output_configuration.session_data_namespace #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].annotations.title #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].annotations.destructive_hint #=> Boolean
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.tool_configurations[0].user_interaction_configuration.is_user_confirmation_required #=> Boolean
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.connect_instance_arn #=> String
+    #   resp.ai_agent.configuration.orchestration_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent.configuration.note_taking_ai_agent_configuration.note_taking_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.note_taking_ai_agent_configuration.note_taking_ai_guardrail_id #=> String
+    #   resp.ai_agent.configuration.note_taking_ai_agent_configuration.locale #=> String
+    #   resp.ai_agent.configuration.case_summarization_ai_agent_configuration.case_summarization_ai_prompt_id #=> String
+    #   resp.ai_agent.configuration.case_summarization_ai_agent_configuration.case_summarization_ai_guardrail_id #=> String
+    #   resp.ai_agent.configuration.case_summarization_ai_agent_configuration.locale #=> String
     #   resp.ai_agent.modified_time #=> Time
-    #   resp.ai_agent.name #=> String
-    #   resp.ai_agent.origin #=> String, one of "SYSTEM", "CUSTOMER"
-    #   resp.ai_agent.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
+    #   resp.ai_agent.description #=> String
+    #   resp.ai_agent.visibility_status #=> String, one of "SAVED", "PUBLISHED"
     #   resp.ai_agent.tags #=> Hash
     #   resp.ai_agent.tags["TagKey"] #=> String
-    #   resp.ai_agent.type #=> String, one of "MANUAL_SEARCH", "ANSWER_RECOMMENDATION", "SELF_SERVICE"
-    #   resp.ai_agent.visibility_status #=> String, one of "SAVED", "PUBLISHED"
+    #   resp.ai_agent.origin #=> String, one of "SYSTEM", "CUSTOMER"
+    #   resp.ai_agent.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/UpdateAIAgent AWS API Documentation
     #
@@ -6605,19 +8164,6 @@ module Aws::QConnect
 
     # Updates an AI Guardrail.
     #
-    # @option params [required, String] :ai_guardrail_id
-    #   The identifier of the Amazon Q in Connect AI Guardrail.
-    #
-    # @option params [required, String] :assistant_id
-    #   The identifier of the Amazon Q in Connect assistant. Can be either the
-    #   ID or the ARN. URLs cannot contain the ARN.
-    #
-    # @option params [required, String] :blocked_input_messaging
-    #   The message to return when the AI Guardrail blocks a prompt.
-    #
-    # @option params [required, String] :blocked_outputs_messaging
-    #   The message to return when the AI Guardrail blocks a model response.
-    #
     # @option params [String] :client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
     #   idempotency of the request. If not provided, the Amazon Web Services
@@ -6631,27 +8177,40 @@ module Aws::QConnect
     #
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #
-    # @option params [Types::AIGuardrailContentPolicyConfig] :content_policy_config
-    #   The content filter policies to configure for the AI Guardrail.
+    # @option params [required, String] :assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either the
+    #   ID or the ARN. URLs cannot contain the ARN.
     #
-    # @option params [Types::AIGuardrailContextualGroundingPolicyConfig] :contextual_grounding_policy_config
-    #   The contextual grounding policy configuration used to create an AI
-    #   Guardrail.
-    #
-    # @option params [String] :description
-    #   A description of the AI Guardrail.
-    #
-    # @option params [Types::AIGuardrailSensitiveInformationPolicyConfig] :sensitive_information_policy_config
-    #   The sensitive information policy to configure for the AI Guardrail.
-    #
-    # @option params [Types::AIGuardrailTopicPolicyConfig] :topic_policy_config
-    #   The topic policies to configure for the AI Guardrail.
+    # @option params [required, String] :ai_guardrail_id
+    #   The identifier of the Amazon Q in Connect AI Guardrail.
     #
     # @option params [required, String] :visibility_status
     #   The visibility status of the Amazon Q in Connect AI Guardrail.
     #
+    # @option params [required, String] :blocked_input_messaging
+    #   The message to return when the AI Guardrail blocks a prompt.
+    #
+    # @option params [required, String] :blocked_outputs_messaging
+    #   The message to return when the AI Guardrail blocks a model response.
+    #
+    # @option params [String] :description
+    #   A description of the AI Guardrail.
+    #
+    # @option params [Types::AIGuardrailTopicPolicyConfig] :topic_policy_config
+    #   The topic policies to configure for the AI Guardrail.
+    #
+    # @option params [Types::AIGuardrailContentPolicyConfig] :content_policy_config
+    #   The content filter policies to configure for the AI Guardrail.
+    #
     # @option params [Types::AIGuardrailWordPolicyConfig] :word_policy_config
     #   The word policy you configure for the AI Guardrail.
+    #
+    # @option params [Types::AIGuardrailSensitiveInformationPolicyConfig] :sensitive_information_policy_config
+    #   The sensitive information policy to configure for the AI Guardrail.
+    #
+    # @option params [Types::AIGuardrailContextualGroundingPolicyConfig] :contextual_grounding_policy_config
+    #   The contextual grounding policy configuration used to create an AI
+    #   Guardrail.
     #
     # @return [Types::UpdateAIGuardrailResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -6660,65 +8219,65 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_ai_guardrail({
-    #     ai_guardrail_id: "UuidOrArnOrEitherWithQualifier", # required
+    #     client_token: "ClientToken",
     #     assistant_id: "UuidOrArn", # required
+    #     ai_guardrail_id: "UuidOrArnOrEitherWithQualifier", # required
+    #     visibility_status: "SAVED", # required, accepts SAVED, PUBLISHED
     #     blocked_input_messaging: "AIGuardrailBlockedMessaging", # required
     #     blocked_outputs_messaging: "AIGuardrailBlockedMessaging", # required
-    #     client_token: "ClientToken",
+    #     description: "AIGuardrailDescription",
+    #     topic_policy_config: {
+    #       topics_config: [ # required
+    #         {
+    #           name: "GuardrailTopicName", # required
+    #           definition: "GuardrailTopicDefinition", # required
+    #           examples: ["GuardrailTopicExample"],
+    #           type: "DENY", # required, accepts DENY
+    #         },
+    #       ],
+    #     },
     #     content_policy_config: {
     #       filters_config: [ # required
     #         {
+    #           type: "SEXUAL", # required, accepts SEXUAL, VIOLENCE, HATE, INSULTS, MISCONDUCT, PROMPT_ATTACK
     #           input_strength: "NONE", # required, accepts NONE, LOW, MEDIUM, HIGH
     #           output_strength: "NONE", # required, accepts NONE, LOW, MEDIUM, HIGH
-    #           type: "SEXUAL", # required, accepts SEXUAL, VIOLENCE, HATE, INSULTS, MISCONDUCT, PROMPT_ATTACK
+    #         },
+    #       ],
+    #     },
+    #     word_policy_config: {
+    #       words_config: [
+    #         {
+    #           text: "GuardrailWordText", # required
+    #         },
+    #       ],
+    #       managed_word_lists_config: [
+    #         {
+    #           type: "PROFANITY", # required, accepts PROFANITY
+    #         },
+    #       ],
+    #     },
+    #     sensitive_information_policy_config: {
+    #       pii_entities_config: [
+    #         {
+    #           type: "ADDRESS", # required, accepts ADDRESS, AGE, AWS_ACCESS_KEY, AWS_SECRET_KEY, CA_HEALTH_NUMBER, CA_SOCIAL_INSURANCE_NUMBER, CREDIT_DEBIT_CARD_CVV, CREDIT_DEBIT_CARD_EXPIRY, CREDIT_DEBIT_CARD_NUMBER, DRIVER_ID, EMAIL, INTERNATIONAL_BANK_ACCOUNT_NUMBER, IP_ADDRESS, LICENSE_PLATE, MAC_ADDRESS, NAME, PASSWORD, PHONE, PIN, SWIFT_CODE, UK_NATIONAL_HEALTH_SERVICE_NUMBER, UK_NATIONAL_INSURANCE_NUMBER, UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER, URL, USERNAME, US_BANK_ACCOUNT_NUMBER, US_BANK_ROUTING_NUMBER, US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER, US_PASSPORT_NUMBER, US_SOCIAL_SECURITY_NUMBER, VEHICLE_IDENTIFICATION_NUMBER
+    #           action: "BLOCK", # required, accepts BLOCK, ANONYMIZE
+    #         },
+    #       ],
+    #       regexes_config: [
+    #         {
+    #           name: "GuardrailRegexName", # required
+    #           description: "GuardrailRegexDescription",
+    #           pattern: "GuardrailRegexPattern", # required
+    #           action: "BLOCK", # required, accepts BLOCK, ANONYMIZE
     #         },
     #       ],
     #     },
     #     contextual_grounding_policy_config: {
     #       filters_config: [ # required
     #         {
-    #           threshold: 1.0, # required
     #           type: "GROUNDING", # required, accepts GROUNDING, RELEVANCE
-    #         },
-    #       ],
-    #     },
-    #     description: "AIGuardrailDescription",
-    #     sensitive_information_policy_config: {
-    #       pii_entities_config: [
-    #         {
-    #           action: "BLOCK", # required, accepts BLOCK, ANONYMIZE
-    #           type: "ADDRESS", # required, accepts ADDRESS, AGE, AWS_ACCESS_KEY, AWS_SECRET_KEY, CA_HEALTH_NUMBER, CA_SOCIAL_INSURANCE_NUMBER, CREDIT_DEBIT_CARD_CVV, CREDIT_DEBIT_CARD_EXPIRY, CREDIT_DEBIT_CARD_NUMBER, DRIVER_ID, EMAIL, INTERNATIONAL_BANK_ACCOUNT_NUMBER, IP_ADDRESS, LICENSE_PLATE, MAC_ADDRESS, NAME, PASSWORD, PHONE, PIN, SWIFT_CODE, UK_NATIONAL_HEALTH_SERVICE_NUMBER, UK_NATIONAL_INSURANCE_NUMBER, UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER, URL, USERNAME, US_BANK_ACCOUNT_NUMBER, US_BANK_ROUTING_NUMBER, US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER, US_PASSPORT_NUMBER, US_SOCIAL_SECURITY_NUMBER, VEHICLE_IDENTIFICATION_NUMBER
-    #         },
-    #       ],
-    #       regexes_config: [
-    #         {
-    #           action: "BLOCK", # required, accepts BLOCK, ANONYMIZE
-    #           description: "GuardrailRegexDescription",
-    #           name: "GuardrailRegexName", # required
-    #           pattern: "GuardrailRegexPattern", # required
-    #         },
-    #       ],
-    #     },
-    #     topic_policy_config: {
-    #       topics_config: [ # required
-    #         {
-    #           definition: "GuardrailTopicDefinition", # required
-    #           examples: ["GuardrailTopicExample"],
-    #           name: "GuardrailTopicName", # required
-    #           type: "DENY", # required, accepts DENY
-    #         },
-    #       ],
-    #     },
-    #     visibility_status: "SAVED", # required, accepts SAVED, PUBLISHED
-    #     word_policy_config: {
-    #       managed_word_lists_config: [
-    #         {
-    #           type: "PROFANITY", # required, accepts PROFANITY
-    #         },
-    #       ],
-    #       words_config: [
-    #         {
-    #           text: "GuardrailWordText", # required
+    #           threshold: 1.0, # required
     #         },
     #       ],
     #     },
@@ -6726,44 +8285,44 @@ module Aws::QConnect
     #
     # @example Response structure
     #
+    #   resp.ai_guardrail.assistant_id #=> String
+    #   resp.ai_guardrail.assistant_arn #=> String
     #   resp.ai_guardrail.ai_guardrail_arn #=> String
     #   resp.ai_guardrail.ai_guardrail_id #=> String
-    #   resp.ai_guardrail.assistant_arn #=> String
-    #   resp.ai_guardrail.assistant_id #=> String
+    #   resp.ai_guardrail.name #=> String
+    #   resp.ai_guardrail.visibility_status #=> String, one of "SAVED", "PUBLISHED"
     #   resp.ai_guardrail.blocked_input_messaging #=> String
     #   resp.ai_guardrail.blocked_outputs_messaging #=> String
-    #   resp.ai_guardrail.content_policy_config.filters_config #=> Array
-    #   resp.ai_guardrail.content_policy_config.filters_config[0].input_strength #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH"
-    #   resp.ai_guardrail.content_policy_config.filters_config[0].output_strength #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH"
-    #   resp.ai_guardrail.content_policy_config.filters_config[0].type #=> String, one of "SEXUAL", "VIOLENCE", "HATE", "INSULTS", "MISCONDUCT", "PROMPT_ATTACK"
-    #   resp.ai_guardrail.contextual_grounding_policy_config.filters_config #=> Array
-    #   resp.ai_guardrail.contextual_grounding_policy_config.filters_config[0].threshold #=> Float
-    #   resp.ai_guardrail.contextual_grounding_policy_config.filters_config[0].type #=> String, one of "GROUNDING", "RELEVANCE"
     #   resp.ai_guardrail.description #=> String
-    #   resp.ai_guardrail.modified_time #=> Time
-    #   resp.ai_guardrail.name #=> String
-    #   resp.ai_guardrail.sensitive_information_policy_config.pii_entities_config #=> Array
-    #   resp.ai_guardrail.sensitive_information_policy_config.pii_entities_config[0].action #=> String, one of "BLOCK", "ANONYMIZE"
-    #   resp.ai_guardrail.sensitive_information_policy_config.pii_entities_config[0].type #=> String, one of "ADDRESS", "AGE", "AWS_ACCESS_KEY", "AWS_SECRET_KEY", "CA_HEALTH_NUMBER", "CA_SOCIAL_INSURANCE_NUMBER", "CREDIT_DEBIT_CARD_CVV", "CREDIT_DEBIT_CARD_EXPIRY", "CREDIT_DEBIT_CARD_NUMBER", "DRIVER_ID", "EMAIL", "INTERNATIONAL_BANK_ACCOUNT_NUMBER", "IP_ADDRESS", "LICENSE_PLATE", "MAC_ADDRESS", "NAME", "PASSWORD", "PHONE", "PIN", "SWIFT_CODE", "UK_NATIONAL_HEALTH_SERVICE_NUMBER", "UK_NATIONAL_INSURANCE_NUMBER", "UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER", "URL", "USERNAME", "US_BANK_ACCOUNT_NUMBER", "US_BANK_ROUTING_NUMBER", "US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER", "US_PASSPORT_NUMBER", "US_SOCIAL_SECURITY_NUMBER", "VEHICLE_IDENTIFICATION_NUMBER"
-    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config #=> Array
-    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].action #=> String, one of "BLOCK", "ANONYMIZE"
-    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].description #=> String
-    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].name #=> String
-    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].pattern #=> String
-    #   resp.ai_guardrail.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
-    #   resp.ai_guardrail.tags #=> Hash
-    #   resp.ai_guardrail.tags["TagKey"] #=> String
     #   resp.ai_guardrail.topic_policy_config.topics_config #=> Array
+    #   resp.ai_guardrail.topic_policy_config.topics_config[0].name #=> String
     #   resp.ai_guardrail.topic_policy_config.topics_config[0].definition #=> String
     #   resp.ai_guardrail.topic_policy_config.topics_config[0].examples #=> Array
     #   resp.ai_guardrail.topic_policy_config.topics_config[0].examples[0] #=> String
-    #   resp.ai_guardrail.topic_policy_config.topics_config[0].name #=> String
     #   resp.ai_guardrail.topic_policy_config.topics_config[0].type #=> String, one of "DENY"
-    #   resp.ai_guardrail.visibility_status #=> String, one of "SAVED", "PUBLISHED"
-    #   resp.ai_guardrail.word_policy_config.managed_word_lists_config #=> Array
-    #   resp.ai_guardrail.word_policy_config.managed_word_lists_config[0].type #=> String, one of "PROFANITY"
+    #   resp.ai_guardrail.content_policy_config.filters_config #=> Array
+    #   resp.ai_guardrail.content_policy_config.filters_config[0].type #=> String, one of "SEXUAL", "VIOLENCE", "HATE", "INSULTS", "MISCONDUCT", "PROMPT_ATTACK"
+    #   resp.ai_guardrail.content_policy_config.filters_config[0].input_strength #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH"
+    #   resp.ai_guardrail.content_policy_config.filters_config[0].output_strength #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH"
     #   resp.ai_guardrail.word_policy_config.words_config #=> Array
     #   resp.ai_guardrail.word_policy_config.words_config[0].text #=> String
+    #   resp.ai_guardrail.word_policy_config.managed_word_lists_config #=> Array
+    #   resp.ai_guardrail.word_policy_config.managed_word_lists_config[0].type #=> String, one of "PROFANITY"
+    #   resp.ai_guardrail.sensitive_information_policy_config.pii_entities_config #=> Array
+    #   resp.ai_guardrail.sensitive_information_policy_config.pii_entities_config[0].type #=> String, one of "ADDRESS", "AGE", "AWS_ACCESS_KEY", "AWS_SECRET_KEY", "CA_HEALTH_NUMBER", "CA_SOCIAL_INSURANCE_NUMBER", "CREDIT_DEBIT_CARD_CVV", "CREDIT_DEBIT_CARD_EXPIRY", "CREDIT_DEBIT_CARD_NUMBER", "DRIVER_ID", "EMAIL", "INTERNATIONAL_BANK_ACCOUNT_NUMBER", "IP_ADDRESS", "LICENSE_PLATE", "MAC_ADDRESS", "NAME", "PASSWORD", "PHONE", "PIN", "SWIFT_CODE", "UK_NATIONAL_HEALTH_SERVICE_NUMBER", "UK_NATIONAL_INSURANCE_NUMBER", "UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER", "URL", "USERNAME", "US_BANK_ACCOUNT_NUMBER", "US_BANK_ROUTING_NUMBER", "US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER", "US_PASSPORT_NUMBER", "US_SOCIAL_SECURITY_NUMBER", "VEHICLE_IDENTIFICATION_NUMBER"
+    #   resp.ai_guardrail.sensitive_information_policy_config.pii_entities_config[0].action #=> String, one of "BLOCK", "ANONYMIZE"
+    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config #=> Array
+    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].name #=> String
+    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].description #=> String
+    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].pattern #=> String
+    #   resp.ai_guardrail.sensitive_information_policy_config.regexes_config[0].action #=> String, one of "BLOCK", "ANONYMIZE"
+    #   resp.ai_guardrail.contextual_grounding_policy_config.filters_config #=> Array
+    #   resp.ai_guardrail.contextual_grounding_policy_config.filters_config[0].type #=> String, one of "GROUNDING", "RELEVANCE"
+    #   resp.ai_guardrail.contextual_grounding_policy_config.filters_config[0].threshold #=> Float
+    #   resp.ai_guardrail.tags #=> Hash
+    #   resp.ai_guardrail.tags["TagKey"] #=> String
+    #   resp.ai_guardrail.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
+    #   resp.ai_guardrail.modified_time #=> Time
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/UpdateAIGuardrail AWS API Documentation
     #
@@ -6776,13 +8335,6 @@ module Aws::QConnect
 
     # Updates an AI Prompt.
     #
-    # @option params [required, String] :ai_prompt_id
-    #   The identifier of the Amazon Q in Connect AI Prompt.
-    #
-    # @option params [required, String] :assistant_id
-    #   The identifier of the Amazon Q in Connect assistant. Can be either the
-    #   ID or the ARN. URLs cannot contain the ARN.
-    #
     # @option params [String] :client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
     #   idempotency of the request. If not provided, the Amazon Web Services
@@ -6796,14 +8348,36 @@ module Aws::QConnect
     #
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #
-    # @option params [String] :description
-    #   The description of the Amazon Q in Connect AI Prompt.
+    # @option params [required, String] :assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either the
+    #   ID or the ARN. URLs cannot contain the ARN.
+    #
+    # @option params [required, String] :ai_prompt_id
+    #   The identifier of the Amazon Q in Connect AI Prompt.
+    #
+    # @option params [required, String] :visibility_status
+    #   The visibility status of the Amazon Q in Connect AI prompt.
     #
     # @option params [Types::AIPromptTemplateConfiguration] :template_configuration
     #   The configuration of the prompt template for this AI Prompt.
     #
-    # @option params [required, String] :visibility_status
-    #   The visibility status of the Amazon Q in Connect AI prompt.
+    # @option params [String] :description
+    #   The description of the Amazon Q in Connect AI Prompt.
+    #
+    # @option params [String] :model_id
+    #   The identifier of the model used for this AI Prompt.
+    #
+    #   <note markdown="1"> For information about which models are supported in each Amazon Web
+    #   Services Region, see [Supported models for system/custom prompts][1].
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/connect/latest/adminguide/create-ai-prompts.html#cli-create-aiprompt
+    #
+    # @option params [Types::AIPromptInferenceConfiguration] :inference_configuration
+    #   The updated inference configuration for the AI Prompt.
     #
     # @return [Types::UpdateAIPromptResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -6812,37 +8386,48 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_ai_prompt({
-    #     ai_prompt_id: "UuidOrArnOrEitherWithQualifier", # required
-    #     assistant_id: "UuidOrArn", # required
     #     client_token: "ClientToken",
-    #     description: "Description",
+    #     assistant_id: "UuidOrArn", # required
+    #     ai_prompt_id: "UuidOrArnOrEitherWithQualifier", # required
+    #     visibility_status: "SAVED", # required, accepts SAVED, PUBLISHED
     #     template_configuration: {
     #       text_full_ai_prompt_edit_template_configuration: {
     #         text: "TextAIPrompt", # required
     #       },
     #     },
-    #     visibility_status: "SAVED", # required, accepts SAVED, PUBLISHED
+    #     description: "Description",
+    #     model_id: "AIPromptModelIdentifier",
+    #     inference_configuration: {
+    #       temperature: 1.0,
+    #       top_p: 1.0,
+    #       top_k: 1,
+    #       max_tokens_to_sample: 1,
+    #     },
     #   })
     #
     # @example Response structure
     #
-    #   resp.ai_prompt.ai_prompt_arn #=> String
-    #   resp.ai_prompt.ai_prompt_id #=> String
-    #   resp.ai_prompt.api_format #=> String, one of "ANTHROPIC_CLAUDE_MESSAGES", "ANTHROPIC_CLAUDE_TEXT_COMPLETIONS"
-    #   resp.ai_prompt.assistant_arn #=> String
     #   resp.ai_prompt.assistant_id #=> String
-    #   resp.ai_prompt.description #=> String
-    #   resp.ai_prompt.model_id #=> String
-    #   resp.ai_prompt.modified_time #=> Time
+    #   resp.ai_prompt.assistant_arn #=> String
+    #   resp.ai_prompt.ai_prompt_id #=> String
+    #   resp.ai_prompt.ai_prompt_arn #=> String
     #   resp.ai_prompt.name #=> String
-    #   resp.ai_prompt.origin #=> String, one of "SYSTEM", "CUSTOMER"
-    #   resp.ai_prompt.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
+    #   resp.ai_prompt.type #=> String, one of "ANSWER_GENERATION", "INTENT_LABELING_GENERATION", "QUERY_REFORMULATION", "SELF_SERVICE_PRE_PROCESSING", "SELF_SERVICE_ANSWER_GENERATION", "EMAIL_RESPONSE", "EMAIL_OVERVIEW", "EMAIL_GENERATIVE_ANSWER", "EMAIL_QUERY_REFORMULATION", "ORCHESTRATION", "NOTE_TAKING", "CASE_SUMMARIZATION"
+    #   resp.ai_prompt.template_type #=> String, one of "TEXT"
+    #   resp.ai_prompt.model_id #=> String
+    #   resp.ai_prompt.api_format #=> String, one of "ANTHROPIC_CLAUDE_MESSAGES", "ANTHROPIC_CLAUDE_TEXT_COMPLETIONS", "MESSAGES", "TEXT_COMPLETIONS"
+    #   resp.ai_prompt.template_configuration.text_full_ai_prompt_edit_template_configuration.text #=> String
+    #   resp.ai_prompt.inference_configuration.temperature #=> Float
+    #   resp.ai_prompt.inference_configuration.top_p #=> Float
+    #   resp.ai_prompt.inference_configuration.top_k #=> Integer
+    #   resp.ai_prompt.inference_configuration.max_tokens_to_sample #=> Integer
+    #   resp.ai_prompt.modified_time #=> Time
+    #   resp.ai_prompt.description #=> String
+    #   resp.ai_prompt.visibility_status #=> String, one of "SAVED", "PUBLISHED"
     #   resp.ai_prompt.tags #=> Hash
     #   resp.ai_prompt.tags["TagKey"] #=> String
-    #   resp.ai_prompt.template_configuration.text_full_ai_prompt_edit_template_configuration.text #=> String
-    #   resp.ai_prompt.template_type #=> String, one of "TEXT"
-    #   resp.ai_prompt.type #=> String, one of "ANSWER_GENERATION", "INTENT_LABELING_GENERATION", "QUERY_REFORMULATION", "SELF_SERVICE_PRE_PROCESSING", "SELF_SERVICE_ANSWER_GENERATION"
-    #   resp.ai_prompt.visibility_status #=> String, one of "SAVED", "PUBLISHED"
+    #   resp.ai_prompt.origin #=> String, one of "SYSTEM", "CUSTOMER"
+    #   resp.ai_prompt.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/UpdateAIPrompt AWS API Documentation
     #
@@ -6856,17 +8441,20 @@ module Aws::QConnect
     # Updates the AI Agent that is set for use by default on an Amazon Q in
     # Connect Assistant.
     #
-    # @option params [required, String] :ai_agent_type
-    #   The type of the AI Agent being updated for use by default on the
-    #   Amazon Q in Connect Assistant.
-    #
     # @option params [required, String] :assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either the
     #   ID or the ARN. URLs cannot contain the ARN.
     #
+    # @option params [required, String] :ai_agent_type
+    #   The type of the AI Agent being updated for use by default on the
+    #   Amazon Q in Connect Assistant.
+    #
     # @option params [required, Types::AIAgentConfigurationData] :configuration
     #   The configuration of the AI Agent being updated for use by default on
     #   the Amazon Q in Connect Assistant.
+    #
+    # @option params [String] :orchestrator_use_case
+    #   The orchestrator use case for the AI Agent being added.
     #
     # @return [Types::UpdateAssistantAIAgentResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -6875,28 +8463,32 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_assistant_ai_agent({
-    #     ai_agent_type: "MANUAL_SEARCH", # required, accepts MANUAL_SEARCH, ANSWER_RECOMMENDATION, SELF_SERVICE
     #     assistant_id: "UuidOrArn", # required
+    #     ai_agent_type: "MANUAL_SEARCH", # required, accepts MANUAL_SEARCH, ANSWER_RECOMMENDATION, SELF_SERVICE, EMAIL_RESPONSE, EMAIL_OVERVIEW, EMAIL_GENERATIVE_ANSWER, ORCHESTRATION, NOTE_TAKING, CASE_SUMMARIZATION
     #     configuration: { # required
     #       ai_agent_id: "UuidWithQualifier", # required
     #     },
+    #     orchestrator_use_case: "NonEmptyString",
     #   })
     #
     # @example Response structure
     #
-    #   resp.assistant.ai_agent_configuration #=> Hash
-    #   resp.assistant.ai_agent_configuration["AIAgentType"].ai_agent_id #=> String
-    #   resp.assistant.assistant_arn #=> String
     #   resp.assistant.assistant_id #=> String
-    #   resp.assistant.capability_configuration.type #=> String, one of "V1", "V2"
-    #   resp.assistant.description #=> String
-    #   resp.assistant.integration_configuration.topic_integration_arn #=> String
+    #   resp.assistant.assistant_arn #=> String
     #   resp.assistant.name #=> String
-    #   resp.assistant.server_side_encryption_configuration.kms_key_id #=> String
+    #   resp.assistant.type #=> String, one of "AGENT"
     #   resp.assistant.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
+    #   resp.assistant.description #=> String
     #   resp.assistant.tags #=> Hash
     #   resp.assistant.tags["TagKey"] #=> String
-    #   resp.assistant.type #=> String, one of "AGENT"
+    #   resp.assistant.server_side_encryption_configuration.kms_key_id #=> String
+    #   resp.assistant.integration_configuration.topic_integration_arn #=> String
+    #   resp.assistant.capability_configuration.type #=> String, one of "V1", "V2"
+    #   resp.assistant.ai_agent_configuration #=> Hash
+    #   resp.assistant.ai_agent_configuration["AIAgentType"].ai_agent_id #=> String
+    #   resp.assistant.orchestrator_configuration_list #=> Array
+    #   resp.assistant.orchestrator_configuration_list[0].ai_agent_id #=> String
+    #   resp.assistant.orchestrator_configuration_list[0].orchestrator_use_case #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/UpdateAssistantAIAgent AWS API Documentation
     #
@@ -6909,28 +8501,13 @@ module Aws::QConnect
 
     # Updates information about the content.
     #
-    # @option params [required, String] :content_id
-    #   The identifier of the content. Can be either the ID or the ARN. URLs
-    #   cannot contain the ARN.
-    #
     # @option params [required, String] :knowledge_base_id
     #   The identifier of the knowledge base. This should not be a
     #   QUICK\_RESPONSES type knowledge base. Can be either the ID or the ARN
     #
-    # @option params [Hash<String,String>] :metadata
-    #   A key/value map to store attributes without affecting tagging or
-    #   recommendations. For example, when synchronizing data between an
-    #   external system and Amazon Q in Connect, you can store an external
-    #   version identifier as metadata to utilize for determining drift.
-    #
-    # @option params [String] :override_link_out_uri
-    #   The URI for the article. If the knowledge base has a templateUri,
-    #   setting this argument overrides it for this piece of content. To
-    #   remove an existing `overrideLinkOurUri`, exclude this argument and set
-    #   `removeOverrideLinkOutUri` to true.
-    #
-    # @option params [Boolean] :remove_override_link_out_uri
-    #   Unset the existing `overrideLinkOutUri` if it exists.
+    # @option params [required, String] :content_id
+    #   The identifier of the content. Can be either the ID or the ARN. URLs
+    #   cannot contain the ARN.
     #
     # @option params [String] :revision_id
     #   The `revisionId` of the content resource to update, taken from an
@@ -6941,6 +8518,21 @@ module Aws::QConnect
     #
     # @option params [String] :title
     #   The title of the content.
+    #
+    # @option params [String] :override_link_out_uri
+    #   The URI for the article. If the knowledge base has a templateUri,
+    #   setting this argument overrides it for this piece of content. To
+    #   remove an existing `overrideLinkOurUri`, exclude this argument and set
+    #   `removeOverrideLinkOutUri` to true.
+    #
+    # @option params [Boolean] :remove_override_link_out_uri
+    #   Unset the existing `overrideLinkOutUri` if it exists.
+    #
+    # @option params [Hash<String,String>] :metadata
+    #   A key/value map to store attributes without affecting tagging or
+    #   recommendations. For example, when synchronizing data between an
+    #   external system and Amazon Q in Connect, you can store an external
+    #   version identifier as metadata to utilize for determining drift.
     #
     # @option params [String] :upload_id
     #   A pointer to the uploaded asset. This value is returned by
@@ -6957,15 +8549,15 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_content({
-    #     content_id: "UuidOrArn", # required
     #     knowledge_base_id: "UuidOrArn", # required
+    #     content_id: "UuidOrArn", # required
+    #     revision_id: "NonEmptyString",
+    #     title: "ContentTitle",
+    #     override_link_out_uri: "Uri",
+    #     remove_override_link_out_uri: false,
     #     metadata: {
     #       "NonEmptyString" => "NonEmptyString",
     #     },
-    #     override_link_out_uri: "Uri",
-    #     remove_override_link_out_uri: false,
-    #     revision_id: "NonEmptyString",
-    #     title: "ContentTitle",
     #     upload_id: "UploadId",
     #   })
     #
@@ -6973,18 +8565,18 @@ module Aws::QConnect
     #
     #   resp.content.content_arn #=> String
     #   resp.content.content_id #=> String
-    #   resp.content.content_type #=> String
     #   resp.content.knowledge_base_arn #=> String
     #   resp.content.knowledge_base_id #=> String
-    #   resp.content.link_out_uri #=> String
-    #   resp.content.metadata #=> Hash
-    #   resp.content.metadata["NonEmptyString"] #=> String
     #   resp.content.name #=> String
     #   resp.content.revision_id #=> String
+    #   resp.content.title #=> String
+    #   resp.content.content_type #=> String
     #   resp.content.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED", "UPDATE_FAILED"
+    #   resp.content.metadata #=> Hash
+    #   resp.content.metadata["NonEmptyString"] #=> String
     #   resp.content.tags #=> Hash
     #   resp.content.tags["TagKey"] #=> String
-    #   resp.content.title #=> String
+    #   resp.content.link_out_uri #=> String
     #   resp.content.url #=> String
     #   resp.content.url_expiry #=> Time
     #
@@ -7025,43 +8617,43 @@ module Aws::QConnect
     #
     # @example Response structure
     #
-    #   resp.knowledge_base.description #=> String
-    #   resp.knowledge_base.ingestion_failure_reasons #=> Array
-    #   resp.knowledge_base.ingestion_failure_reasons[0] #=> String
-    #   resp.knowledge_base.ingestion_status #=> String, one of "SYNC_FAILED", "SYNCING_IN_PROGRESS", "SYNC_SUCCESS", "CREATE_IN_PROGRESS"
-    #   resp.knowledge_base.knowledge_base_arn #=> String
     #   resp.knowledge_base.knowledge_base_id #=> String
-    #   resp.knowledge_base.knowledge_base_type #=> String, one of "EXTERNAL", "CUSTOM", "QUICK_RESPONSES", "MESSAGE_TEMPLATES", "MANAGED"
-    #   resp.knowledge_base.last_content_modification_time #=> Time
+    #   resp.knowledge_base.knowledge_base_arn #=> String
     #   resp.knowledge_base.name #=> String
-    #   resp.knowledge_base.rendering_configuration.template_uri #=> String
-    #   resp.knowledge_base.server_side_encryption_configuration.kms_key_id #=> String
-    #   resp.knowledge_base.source_configuration.app_integrations.app_integration_arn #=> String
-    #   resp.knowledge_base.source_configuration.app_integrations.object_fields #=> Array
-    #   resp.knowledge_base.source_configuration.app_integrations.object_fields[0] #=> String
-    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.crawler_limits.rate_limit #=> Integer
-    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.exclusion_filters #=> Array
-    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.exclusion_filters[0] #=> String
-    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.inclusion_filters #=> Array
-    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.inclusion_filters[0] #=> String
-    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.scope #=> String, one of "HOST_ONLY", "SUBDOMAINS"
-    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.url_configuration.seed_urls #=> Array
-    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.url_configuration.seed_urls[0].url #=> String
+    #   resp.knowledge_base.knowledge_base_type #=> String, one of "EXTERNAL", "CUSTOM", "QUICK_RESPONSES", "MESSAGE_TEMPLATES", "MANAGED"
     #   resp.knowledge_base.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "ACTIVE", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED"
-    #   resp.knowledge_base.tags #=> Hash
-    #   resp.knowledge_base.tags["TagKey"] #=> String
+    #   resp.knowledge_base.last_content_modification_time #=> Time
     #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.chunking_strategy #=> String, one of "FIXED_SIZE", "NONE", "HIERARCHICAL", "SEMANTIC"
     #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.fixed_size_chunking_configuration.max_tokens #=> Integer
     #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.fixed_size_chunking_configuration.overlap_percentage #=> Integer
     #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.hierarchical_chunking_configuration.level_configurations #=> Array
     #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.hierarchical_chunking_configuration.level_configurations[0].max_tokens #=> Integer
     #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.hierarchical_chunking_configuration.overlap_tokens #=> Integer
-    #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.semantic_chunking_configuration.breakpoint_percentile_threshold #=> Integer
-    #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.semantic_chunking_configuration.buffer_size #=> Integer
     #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.semantic_chunking_configuration.max_tokens #=> Integer
+    #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.semantic_chunking_configuration.buffer_size #=> Integer
+    #   resp.knowledge_base.vector_ingestion_configuration.chunking_configuration.semantic_chunking_configuration.breakpoint_percentile_threshold #=> Integer
+    #   resp.knowledge_base.vector_ingestion_configuration.parsing_configuration.parsing_strategy #=> String, one of "BEDROCK_FOUNDATION_MODEL"
     #   resp.knowledge_base.vector_ingestion_configuration.parsing_configuration.bedrock_foundation_model_configuration.model_arn #=> String
     #   resp.knowledge_base.vector_ingestion_configuration.parsing_configuration.bedrock_foundation_model_configuration.parsing_prompt.parsing_prompt_text #=> String
-    #   resp.knowledge_base.vector_ingestion_configuration.parsing_configuration.parsing_strategy #=> String, one of "BEDROCK_FOUNDATION_MODEL"
+    #   resp.knowledge_base.source_configuration.app_integrations.app_integration_arn #=> String
+    #   resp.knowledge_base.source_configuration.app_integrations.object_fields #=> Array
+    #   resp.knowledge_base.source_configuration.app_integrations.object_fields[0] #=> String
+    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.url_configuration.seed_urls #=> Array
+    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.url_configuration.seed_urls[0].url #=> String
+    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.crawler_limits.rate_limit #=> Integer
+    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.inclusion_filters #=> Array
+    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.inclusion_filters[0] #=> String
+    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.exclusion_filters #=> Array
+    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.exclusion_filters[0] #=> String
+    #   resp.knowledge_base.source_configuration.managed_source_configuration.web_crawler_configuration.scope #=> String, one of "HOST_ONLY", "SUBDOMAINS"
+    #   resp.knowledge_base.rendering_configuration.template_uri #=> String
+    #   resp.knowledge_base.server_side_encryption_configuration.kms_key_id #=> String
+    #   resp.knowledge_base.description #=> String
+    #   resp.knowledge_base.tags #=> Hash
+    #   resp.knowledge_base.tags["TagKey"] #=> String
+    #   resp.knowledge_base.ingestion_status #=> String, one of "SYNC_FAILED", "SYNCING_IN_PROGRESS", "SYNC_SUCCESS", "CREATE_IN_PROGRESS"
+    #   resp.knowledge_base.ingestion_failure_reasons #=> Array
+    #   resp.knowledge_base.ingestion_failure_reasons[0] #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/UpdateKnowledgeBaseTemplateUri AWS API Documentation
     #
@@ -7079,8 +8671,26 @@ module Aws::QConnect
     # referenced by the `$LATEST` qualifier. The fields for all available
     # versions will remain unchanged.
     #
+    # @option params [required, String] :knowledge_base_id
+    #   The identifier of the knowledge base. Can be either the ID or the ARN.
+    #   URLs cannot contain the ARN.
+    #
+    # @option params [required, String] :message_template_id
+    #   The identifier of the message template. Can be either the ID or the
+    #   ARN. It cannot contain any qualifier.
+    #
     # @option params [Types::MessageTemplateContentProvider] :content
     #   The content of the message template.
+    #
+    # @option params [String] :language
+    #   The language code value for the language in which the quick response
+    #   is written. The supported language codes include `de_DE`, `en_US`,
+    #   `es_ES`, `fr_FR`, `id_ID`, `it_IT`, `ja_JP`, `ko_KR`, `pt_BR`,
+    #   `zh_CN`, `zh_TW`
+    #
+    # @option params [Types::MessageTemplateSourceConfiguration] :source_configuration
+    #   The source configuration of the message template. Only set this
+    #   argument for WHATSAPP channel subtype.
     #
     # @option params [Types::MessageTemplateAttributes] :default_attributes
     #   An object that specifies the default values to use for variables in
@@ -7089,20 +8699,6 @@ module Aws::QConnect
     #   message template. The corresponding value defines the default value
     #   for that variable.
     #
-    # @option params [required, String] :knowledge_base_id
-    #   The identifier of the knowledge base. Can be either the ID or the ARN.
-    #   URLs cannot contain the ARN.
-    #
-    # @option params [String] :language
-    #   The language code value for the language in which the quick response
-    #   is written. The supported language codes include `de_DE`, `en_US`,
-    #   `es_ES`, `fr_FR`, `id_ID`, `it_IT`, `ja_JP`, `ko_KR`, `pt_BR`,
-    #   `zh_CN`, `zh_TW`
-    #
-    # @option params [required, String] :message_template_id
-    #   The identifier of the message template. Can be either the ID or the
-    #   ARN. It cannot contain any qualifier.
-    #
     # @return [Types::UpdateMessageTemplateResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::UpdateMessageTemplateResponse#message_template #message_template} => Types::MessageTemplateData
@@ -7110,13 +8706,16 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_message_template({
+    #     knowledge_base_id: "UuidOrArn", # required
+    #     message_template_id: "UuidOrArnOrEitherWithQualifier", # required
     #     content: {
     #       email: {
+    #         subject: "NonEmptyUnlimitedString",
     #         body: {
-    #           html: {
+    #           plain_text: {
     #             content: "NonEmptyUnlimitedString",
     #           },
-    #           plain_text: {
+    #           html: {
     #             content: "NonEmptyUnlimitedString",
     #           },
     #         },
@@ -7126,7 +8725,6 @@ module Aws::QConnect
     #             value: "EmailHeaderValue",
     #           },
     #         ],
-    #         subject: "NonEmptyUnlimitedString",
     #       },
     #       sms: {
     #         body: {
@@ -7135,184 +8733,296 @@ module Aws::QConnect
     #           },
     #         },
     #       },
+    #       whats_app: {
+    #         data: "WhatsAppMessageTemplateContentData",
+    #       },
+    #       push: {
+    #         adm: {
+    #           title: "NonEmptyUnlimitedString",
+    #           body: {
+    #             content: "NonEmptyUnlimitedString",
+    #           },
+    #           action: "OPEN_APP", # accepts OPEN_APP, DEEP_LINK, URL
+    #           sound: "NonEmptyUnlimitedString",
+    #           url: "NonEmptyUnlimitedString",
+    #           image_url: "NonEmptyUnlimitedString",
+    #           image_icon_url: "NonEmptyUnlimitedString",
+    #           small_image_icon_url: "NonEmptyUnlimitedString",
+    #           raw_content: {
+    #             content: "NonEmptyUnlimitedString",
+    #           },
+    #         },
+    #         apns: {
+    #           title: "NonEmptyUnlimitedString",
+    #           body: {
+    #             content: "NonEmptyUnlimitedString",
+    #           },
+    #           action: "OPEN_APP", # accepts OPEN_APP, DEEP_LINK, URL
+    #           sound: "NonEmptyUnlimitedString",
+    #           url: "NonEmptyUnlimitedString",
+    #           media_url: "NonEmptyUnlimitedString",
+    #           raw_content: {
+    #             content: "NonEmptyUnlimitedString",
+    #           },
+    #         },
+    #         fcm: {
+    #           title: "NonEmptyUnlimitedString",
+    #           body: {
+    #             content: "NonEmptyUnlimitedString",
+    #           },
+    #           action: "OPEN_APP", # accepts OPEN_APP, DEEP_LINK, URL
+    #           sound: "NonEmptyUnlimitedString",
+    #           url: "NonEmptyUnlimitedString",
+    #           image_url: "NonEmptyUnlimitedString",
+    #           image_icon_url: "NonEmptyUnlimitedString",
+    #           small_image_icon_url: "NonEmptyUnlimitedString",
+    #           raw_content: {
+    #             content: "NonEmptyUnlimitedString",
+    #           },
+    #         },
+    #         baidu: {
+    #           title: "NonEmptyUnlimitedString",
+    #           body: {
+    #             content: "NonEmptyUnlimitedString",
+    #           },
+    #           action: "OPEN_APP", # accepts OPEN_APP, DEEP_LINK, URL
+    #           sound: "NonEmptyUnlimitedString",
+    #           url: "NonEmptyUnlimitedString",
+    #           image_url: "NonEmptyUnlimitedString",
+    #           image_icon_url: "NonEmptyUnlimitedString",
+    #           small_image_icon_url: "NonEmptyUnlimitedString",
+    #           raw_content: {
+    #             content: "NonEmptyUnlimitedString",
+    #           },
+    #         },
+    #       },
+    #     },
+    #     language: "LanguageCode",
+    #     source_configuration: {
+    #       whats_app: {
+    #         business_account_id: "WhatsAppBusinessAccountId", # required
+    #         template_id: "WhatsAppMessageTemplateId", # required
+    #         components: ["WhatsAppMessageTemplateComponent"],
+    #       },
     #     },
     #     default_attributes: {
+    #       system_attributes: {
+    #         name: "MessageTemplateAttributeValue",
+    #         customer_endpoint: {
+    #           address: "MessageTemplateAttributeValue",
+    #         },
+    #         system_endpoint: {
+    #           address: "MessageTemplateAttributeValue",
+    #         },
+    #       },
     #       agent_attributes: {
     #         first_name: "MessageTemplateAttributeValue",
     #         last_name: "MessageTemplateAttributeValue",
     #       },
-    #       custom_attributes: {
-    #         "MessageTemplateAttributeKey" => "MessageTemplateAttributeValue",
-    #       },
     #       customer_profile_attributes: {
+    #         profile_id: "MessageTemplateAttributeValue",
+    #         profile_arn: "MessageTemplateAttributeValue",
+    #         first_name: "MessageTemplateAttributeValue",
+    #         middle_name: "MessageTemplateAttributeValue",
+    #         last_name: "MessageTemplateAttributeValue",
     #         account_number: "MessageTemplateAttributeValue",
+    #         email_address: "MessageTemplateAttributeValue",
+    #         phone_number: "MessageTemplateAttributeValue",
     #         additional_information: "MessageTemplateAttributeValue",
+    #         party_type: "MessageTemplateAttributeValue",
+    #         business_name: "MessageTemplateAttributeValue",
+    #         birth_date: "MessageTemplateAttributeValue",
+    #         gender: "MessageTemplateAttributeValue",
+    #         mobile_phone_number: "MessageTemplateAttributeValue",
+    #         home_phone_number: "MessageTemplateAttributeValue",
+    #         business_phone_number: "MessageTemplateAttributeValue",
+    #         business_email_address: "MessageTemplateAttributeValue",
     #         address1: "MessageTemplateAttributeValue",
     #         address2: "MessageTemplateAttributeValue",
     #         address3: "MessageTemplateAttributeValue",
     #         address4: "MessageTemplateAttributeValue",
-    #         billing_address_1: "MessageTemplateAttributeValue",
-    #         billing_address_2: "MessageTemplateAttributeValue",
-    #         billing_address_3: "MessageTemplateAttributeValue",
-    #         billing_address_4: "MessageTemplateAttributeValue",
-    #         billing_city: "MessageTemplateAttributeValue",
-    #         billing_country: "MessageTemplateAttributeValue",
-    #         billing_county: "MessageTemplateAttributeValue",
-    #         billing_postal_code: "MessageTemplateAttributeValue",
-    #         billing_province: "MessageTemplateAttributeValue",
-    #         billing_state: "MessageTemplateAttributeValue",
-    #         birth_date: "MessageTemplateAttributeValue",
-    #         business_email_address: "MessageTemplateAttributeValue",
-    #         business_name: "MessageTemplateAttributeValue",
-    #         business_phone_number: "MessageTemplateAttributeValue",
     #         city: "MessageTemplateAttributeValue",
-    #         country: "MessageTemplateAttributeValue",
     #         county: "MessageTemplateAttributeValue",
-    #         custom: {
-    #           "MessageTemplateAttributeKey" => "MessageTemplateAttributeValue",
-    #         },
-    #         email_address: "MessageTemplateAttributeValue",
-    #         first_name: "MessageTemplateAttributeValue",
-    #         gender: "MessageTemplateAttributeValue",
-    #         home_phone_number: "MessageTemplateAttributeValue",
-    #         last_name: "MessageTemplateAttributeValue",
-    #         mailing_address_1: "MessageTemplateAttributeValue",
-    #         mailing_address_2: "MessageTemplateAttributeValue",
-    #         mailing_address_3: "MessageTemplateAttributeValue",
-    #         mailing_address_4: "MessageTemplateAttributeValue",
-    #         mailing_city: "MessageTemplateAttributeValue",
-    #         mailing_country: "MessageTemplateAttributeValue",
-    #         mailing_county: "MessageTemplateAttributeValue",
-    #         mailing_postal_code: "MessageTemplateAttributeValue",
-    #         mailing_province: "MessageTemplateAttributeValue",
-    #         mailing_state: "MessageTemplateAttributeValue",
-    #         middle_name: "MessageTemplateAttributeValue",
-    #         mobile_phone_number: "MessageTemplateAttributeValue",
-    #         party_type: "MessageTemplateAttributeValue",
-    #         phone_number: "MessageTemplateAttributeValue",
+    #         country: "MessageTemplateAttributeValue",
     #         postal_code: "MessageTemplateAttributeValue",
-    #         profile_arn: "MessageTemplateAttributeValue",
-    #         profile_id: "MessageTemplateAttributeValue",
     #         province: "MessageTemplateAttributeValue",
+    #         state: "MessageTemplateAttributeValue",
     #         shipping_address_1: "MessageTemplateAttributeValue",
     #         shipping_address_2: "MessageTemplateAttributeValue",
     #         shipping_address_3: "MessageTemplateAttributeValue",
     #         shipping_address_4: "MessageTemplateAttributeValue",
     #         shipping_city: "MessageTemplateAttributeValue",
-    #         shipping_country: "MessageTemplateAttributeValue",
     #         shipping_county: "MessageTemplateAttributeValue",
+    #         shipping_country: "MessageTemplateAttributeValue",
     #         shipping_postal_code: "MessageTemplateAttributeValue",
     #         shipping_province: "MessageTemplateAttributeValue",
     #         shipping_state: "MessageTemplateAttributeValue",
-    #         state: "MessageTemplateAttributeValue",
+    #         mailing_address_1: "MessageTemplateAttributeValue",
+    #         mailing_address_2: "MessageTemplateAttributeValue",
+    #         mailing_address_3: "MessageTemplateAttributeValue",
+    #         mailing_address_4: "MessageTemplateAttributeValue",
+    #         mailing_city: "MessageTemplateAttributeValue",
+    #         mailing_county: "MessageTemplateAttributeValue",
+    #         mailing_country: "MessageTemplateAttributeValue",
+    #         mailing_postal_code: "MessageTemplateAttributeValue",
+    #         mailing_province: "MessageTemplateAttributeValue",
+    #         mailing_state: "MessageTemplateAttributeValue",
+    #         billing_address_1: "MessageTemplateAttributeValue",
+    #         billing_address_2: "MessageTemplateAttributeValue",
+    #         billing_address_3: "MessageTemplateAttributeValue",
+    #         billing_address_4: "MessageTemplateAttributeValue",
+    #         billing_city: "MessageTemplateAttributeValue",
+    #         billing_county: "MessageTemplateAttributeValue",
+    #         billing_country: "MessageTemplateAttributeValue",
+    #         billing_postal_code: "MessageTemplateAttributeValue",
+    #         billing_province: "MessageTemplateAttributeValue",
+    #         billing_state: "MessageTemplateAttributeValue",
+    #         custom: {
+    #           "MessageTemplateAttributeKey" => "MessageTemplateAttributeValue",
+    #         },
     #       },
-    #       system_attributes: {
-    #         customer_endpoint: {
-    #           address: "MessageTemplateAttributeValue",
-    #         },
-    #         name: "MessageTemplateAttributeValue",
-    #         system_endpoint: {
-    #           address: "MessageTemplateAttributeValue",
-    #         },
+    #       custom_attributes: {
+    #         "MessageTemplateAttributeKey" => "MessageTemplateAttributeValue",
     #       },
     #     },
-    #     knowledge_base_id: "UuidOrArn", # required
-    #     language: "LanguageCode",
-    #     message_template_id: "UuidOrArnOrEitherWithQualifier", # required
     #   })
     #
     # @example Response structure
     #
-    #   resp.message_template.attribute_types #=> Array
-    #   resp.message_template.attribute_types[0] #=> String, one of "SYSTEM", "AGENT", "CUSTOMER_PROFILE", "CUSTOM"
-    #   resp.message_template.channel_subtype #=> String, one of "EMAIL", "SMS"
-    #   resp.message_template.content.email.body.html.content #=> String
+    #   resp.message_template.message_template_arn #=> String
+    #   resp.message_template.message_template_id #=> String
+    #   resp.message_template.knowledge_base_arn #=> String
+    #   resp.message_template.knowledge_base_id #=> String
+    #   resp.message_template.name #=> String
+    #   resp.message_template.channel #=> String
+    #   resp.message_template.channel_subtype #=> String, one of "EMAIL", "SMS", "WHATSAPP", "PUSH"
+    #   resp.message_template.created_time #=> Time
+    #   resp.message_template.last_modified_time #=> Time
+    #   resp.message_template.last_modified_by #=> String
+    #   resp.message_template.content.email.subject #=> String
     #   resp.message_template.content.email.body.plain_text.content #=> String
+    #   resp.message_template.content.email.body.html.content #=> String
     #   resp.message_template.content.email.headers #=> Array
     #   resp.message_template.content.email.headers[0].name #=> String
     #   resp.message_template.content.email.headers[0].value #=> String
-    #   resp.message_template.content.email.subject #=> String
     #   resp.message_template.content.sms.body.plain_text.content #=> String
-    #   resp.message_template.created_time #=> Time
+    #   resp.message_template.content.whats_app.data #=> String
+    #   resp.message_template.content.push.adm.title #=> String
+    #   resp.message_template.content.push.adm.body.content #=> String
+    #   resp.message_template.content.push.adm.action #=> String, one of "OPEN_APP", "DEEP_LINK", "URL"
+    #   resp.message_template.content.push.adm.sound #=> String
+    #   resp.message_template.content.push.adm.url #=> String
+    #   resp.message_template.content.push.adm.image_url #=> String
+    #   resp.message_template.content.push.adm.image_icon_url #=> String
+    #   resp.message_template.content.push.adm.small_image_icon_url #=> String
+    #   resp.message_template.content.push.adm.raw_content.content #=> String
+    #   resp.message_template.content.push.apns.title #=> String
+    #   resp.message_template.content.push.apns.body.content #=> String
+    #   resp.message_template.content.push.apns.action #=> String, one of "OPEN_APP", "DEEP_LINK", "URL"
+    #   resp.message_template.content.push.apns.sound #=> String
+    #   resp.message_template.content.push.apns.url #=> String
+    #   resp.message_template.content.push.apns.media_url #=> String
+    #   resp.message_template.content.push.apns.raw_content.content #=> String
+    #   resp.message_template.content.push.fcm.title #=> String
+    #   resp.message_template.content.push.fcm.body.content #=> String
+    #   resp.message_template.content.push.fcm.action #=> String, one of "OPEN_APP", "DEEP_LINK", "URL"
+    #   resp.message_template.content.push.fcm.sound #=> String
+    #   resp.message_template.content.push.fcm.url #=> String
+    #   resp.message_template.content.push.fcm.image_url #=> String
+    #   resp.message_template.content.push.fcm.image_icon_url #=> String
+    #   resp.message_template.content.push.fcm.small_image_icon_url #=> String
+    #   resp.message_template.content.push.fcm.raw_content.content #=> String
+    #   resp.message_template.content.push.baidu.title #=> String
+    #   resp.message_template.content.push.baidu.body.content #=> String
+    #   resp.message_template.content.push.baidu.action #=> String, one of "OPEN_APP", "DEEP_LINK", "URL"
+    #   resp.message_template.content.push.baidu.sound #=> String
+    #   resp.message_template.content.push.baidu.url #=> String
+    #   resp.message_template.content.push.baidu.image_url #=> String
+    #   resp.message_template.content.push.baidu.image_icon_url #=> String
+    #   resp.message_template.content.push.baidu.small_image_icon_url #=> String
+    #   resp.message_template.content.push.baidu.raw_content.content #=> String
+    #   resp.message_template.description #=> String
+    #   resp.message_template.language #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.business_account_id #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.template_id #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.name #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.language #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.components #=> Array
+    #   resp.message_template.source_configuration_summary.whats_app.components[0] #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.status #=> String, one of "VALID", "INVALID", "REJECTED"
+    #   resp.message_template.source_configuration_summary.whats_app.status_reason #=> String
+    #   resp.message_template.grouping_configuration.criteria #=> String
+    #   resp.message_template.grouping_configuration.values #=> Array
+    #   resp.message_template.grouping_configuration.values[0] #=> String
+    #   resp.message_template.default_attributes.system_attributes.name #=> String
+    #   resp.message_template.default_attributes.system_attributes.customer_endpoint.address #=> String
+    #   resp.message_template.default_attributes.system_attributes.system_endpoint.address #=> String
     #   resp.message_template.default_attributes.agent_attributes.first_name #=> String
     #   resp.message_template.default_attributes.agent_attributes.last_name #=> String
-    #   resp.message_template.default_attributes.custom_attributes #=> Hash
-    #   resp.message_template.default_attributes.custom_attributes["MessageTemplateAttributeKey"] #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.profile_id #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.profile_arn #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.first_name #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.middle_name #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.last_name #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.account_number #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.email_address #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.phone_number #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.additional_information #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.party_type #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.business_name #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.birth_date #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.gender #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mobile_phone_number #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.home_phone_number #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.business_phone_number #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.business_email_address #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.address1 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.address2 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.address3 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.address4 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_1 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_2 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_3 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_4 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_city #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_country #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_county #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_postal_code #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_province #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_state #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.birth_date #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.business_email_address #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.business_name #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.business_phone_number #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.city #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.country #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.county #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.custom #=> Hash
-    #   resp.message_template.default_attributes.customer_profile_attributes.custom["MessageTemplateAttributeKey"] #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.email_address #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.first_name #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.gender #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.home_phone_number #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.last_name #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_1 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_2 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_3 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_4 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_city #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_country #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_county #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_postal_code #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_province #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_state #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.middle_name #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mobile_phone_number #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.party_type #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.phone_number #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.country #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.postal_code #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.profile_arn #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.profile_id #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.province #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.state #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_address_1 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_address_2 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_address_3 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_address_4 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_city #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.shipping_country #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_county #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.shipping_country #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_postal_code #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_province #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_state #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.state #=> String
-    #   resp.message_template.default_attributes.system_attributes.customer_endpoint.address #=> String
-    #   resp.message_template.default_attributes.system_attributes.name #=> String
-    #   resp.message_template.default_attributes.system_attributes.system_endpoint.address #=> String
-    #   resp.message_template.description #=> String
-    #   resp.message_template.grouping_configuration.criteria #=> String
-    #   resp.message_template.grouping_configuration.values #=> Array
-    #   resp.message_template.grouping_configuration.values[0] #=> String
-    #   resp.message_template.knowledge_base_arn #=> String
-    #   resp.message_template.knowledge_base_id #=> String
-    #   resp.message_template.language #=> String
-    #   resp.message_template.last_modified_by #=> String
-    #   resp.message_template.last_modified_time #=> Time
-    #   resp.message_template.message_template_arn #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_1 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_2 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_3 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_4 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_city #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_county #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_country #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_postal_code #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_province #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_state #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_1 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_2 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_3 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_4 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_city #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_county #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_country #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_postal_code #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_province #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_state #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.custom #=> Hash
+    #   resp.message_template.default_attributes.customer_profile_attributes.custom["MessageTemplateAttributeKey"] #=> String
+    #   resp.message_template.default_attributes.custom_attributes #=> Hash
+    #   resp.message_template.default_attributes.custom_attributes["MessageTemplateAttributeKey"] #=> String
+    #   resp.message_template.attribute_types #=> Array
+    #   resp.message_template.attribute_types[0] #=> String, one of "SYSTEM", "AGENT", "CUSTOMER_PROFILE", "CUSTOM"
     #   resp.message_template.message_template_content_sha_256 #=> String
-    #   resp.message_template.message_template_id #=> String
-    #   resp.message_template.name #=> String
     #   resp.message_template.tags #=> Hash
     #   resp.message_template.tags["TagKey"] #=> String
     #
@@ -7332,13 +9042,6 @@ module Aws::QConnect
     # supported. If any field is not supplied, it will remain unchanged for
     # the message template.
     #
-    # @option params [String] :description
-    #   The description of the message template.
-    #
-    # @option params [Types::GroupingConfiguration] :grouping_configuration
-    #   The configuration information of the grouping of Amazon Q in Connect
-    #   users.
-    #
     # @option params [required, String] :knowledge_base_id
     #   The identifier of the knowledge base. Can be either the ID or the ARN.
     #   URLs cannot contain the ARN.
@@ -7350,6 +9053,13 @@ module Aws::QConnect
     # @option params [String] :name
     #   The name of the message template.
     #
+    # @option params [String] :description
+    #   The description of the message template.
+    #
+    # @option params [Types::GroupingConfiguration] :grouping_configuration
+    #   The configuration information of the grouping of Amazon Q in Connect
+    #   users.
+    #
     # @return [Types::UpdateMessageTemplateMetadataResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::UpdateMessageTemplateMetadataResponse#message_template #message_template} => Types::MessageTemplateData
@@ -7357,108 +9067,152 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_message_template_metadata({
+    #     knowledge_base_id: "UuidOrArn", # required
+    #     message_template_id: "UuidOrArnOrEitherWithQualifier", # required
+    #     name: "Name",
     #     description: "Description",
     #     grouping_configuration: {
     #       criteria: "GroupingCriteria",
     #       values: ["GroupingValue"],
     #     },
-    #     knowledge_base_id: "UuidOrArn", # required
-    #     message_template_id: "UuidOrArnOrEitherWithQualifier", # required
-    #     name: "Name",
     #   })
     #
     # @example Response structure
     #
-    #   resp.message_template.attribute_types #=> Array
-    #   resp.message_template.attribute_types[0] #=> String, one of "SYSTEM", "AGENT", "CUSTOMER_PROFILE", "CUSTOM"
-    #   resp.message_template.channel_subtype #=> String, one of "EMAIL", "SMS"
-    #   resp.message_template.content.email.body.html.content #=> String
+    #   resp.message_template.message_template_arn #=> String
+    #   resp.message_template.message_template_id #=> String
+    #   resp.message_template.knowledge_base_arn #=> String
+    #   resp.message_template.knowledge_base_id #=> String
+    #   resp.message_template.name #=> String
+    #   resp.message_template.channel #=> String
+    #   resp.message_template.channel_subtype #=> String, one of "EMAIL", "SMS", "WHATSAPP", "PUSH"
+    #   resp.message_template.created_time #=> Time
+    #   resp.message_template.last_modified_time #=> Time
+    #   resp.message_template.last_modified_by #=> String
+    #   resp.message_template.content.email.subject #=> String
     #   resp.message_template.content.email.body.plain_text.content #=> String
+    #   resp.message_template.content.email.body.html.content #=> String
     #   resp.message_template.content.email.headers #=> Array
     #   resp.message_template.content.email.headers[0].name #=> String
     #   resp.message_template.content.email.headers[0].value #=> String
-    #   resp.message_template.content.email.subject #=> String
     #   resp.message_template.content.sms.body.plain_text.content #=> String
-    #   resp.message_template.created_time #=> Time
+    #   resp.message_template.content.whats_app.data #=> String
+    #   resp.message_template.content.push.adm.title #=> String
+    #   resp.message_template.content.push.adm.body.content #=> String
+    #   resp.message_template.content.push.adm.action #=> String, one of "OPEN_APP", "DEEP_LINK", "URL"
+    #   resp.message_template.content.push.adm.sound #=> String
+    #   resp.message_template.content.push.adm.url #=> String
+    #   resp.message_template.content.push.adm.image_url #=> String
+    #   resp.message_template.content.push.adm.image_icon_url #=> String
+    #   resp.message_template.content.push.adm.small_image_icon_url #=> String
+    #   resp.message_template.content.push.adm.raw_content.content #=> String
+    #   resp.message_template.content.push.apns.title #=> String
+    #   resp.message_template.content.push.apns.body.content #=> String
+    #   resp.message_template.content.push.apns.action #=> String, one of "OPEN_APP", "DEEP_LINK", "URL"
+    #   resp.message_template.content.push.apns.sound #=> String
+    #   resp.message_template.content.push.apns.url #=> String
+    #   resp.message_template.content.push.apns.media_url #=> String
+    #   resp.message_template.content.push.apns.raw_content.content #=> String
+    #   resp.message_template.content.push.fcm.title #=> String
+    #   resp.message_template.content.push.fcm.body.content #=> String
+    #   resp.message_template.content.push.fcm.action #=> String, one of "OPEN_APP", "DEEP_LINK", "URL"
+    #   resp.message_template.content.push.fcm.sound #=> String
+    #   resp.message_template.content.push.fcm.url #=> String
+    #   resp.message_template.content.push.fcm.image_url #=> String
+    #   resp.message_template.content.push.fcm.image_icon_url #=> String
+    #   resp.message_template.content.push.fcm.small_image_icon_url #=> String
+    #   resp.message_template.content.push.fcm.raw_content.content #=> String
+    #   resp.message_template.content.push.baidu.title #=> String
+    #   resp.message_template.content.push.baidu.body.content #=> String
+    #   resp.message_template.content.push.baidu.action #=> String, one of "OPEN_APP", "DEEP_LINK", "URL"
+    #   resp.message_template.content.push.baidu.sound #=> String
+    #   resp.message_template.content.push.baidu.url #=> String
+    #   resp.message_template.content.push.baidu.image_url #=> String
+    #   resp.message_template.content.push.baidu.image_icon_url #=> String
+    #   resp.message_template.content.push.baidu.small_image_icon_url #=> String
+    #   resp.message_template.content.push.baidu.raw_content.content #=> String
+    #   resp.message_template.description #=> String
+    #   resp.message_template.language #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.business_account_id #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.template_id #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.name #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.language #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.components #=> Array
+    #   resp.message_template.source_configuration_summary.whats_app.components[0] #=> String
+    #   resp.message_template.source_configuration_summary.whats_app.status #=> String, one of "VALID", "INVALID", "REJECTED"
+    #   resp.message_template.source_configuration_summary.whats_app.status_reason #=> String
+    #   resp.message_template.grouping_configuration.criteria #=> String
+    #   resp.message_template.grouping_configuration.values #=> Array
+    #   resp.message_template.grouping_configuration.values[0] #=> String
+    #   resp.message_template.default_attributes.system_attributes.name #=> String
+    #   resp.message_template.default_attributes.system_attributes.customer_endpoint.address #=> String
+    #   resp.message_template.default_attributes.system_attributes.system_endpoint.address #=> String
     #   resp.message_template.default_attributes.agent_attributes.first_name #=> String
     #   resp.message_template.default_attributes.agent_attributes.last_name #=> String
-    #   resp.message_template.default_attributes.custom_attributes #=> Hash
-    #   resp.message_template.default_attributes.custom_attributes["MessageTemplateAttributeKey"] #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.profile_id #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.profile_arn #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.first_name #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.middle_name #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.last_name #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.account_number #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.email_address #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.phone_number #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.additional_information #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.party_type #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.business_name #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.birth_date #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.gender #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mobile_phone_number #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.home_phone_number #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.business_phone_number #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.business_email_address #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.address1 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.address2 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.address3 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.address4 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_1 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_2 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_3 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_4 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_city #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_country #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_county #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_postal_code #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_province #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.billing_state #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.birth_date #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.business_email_address #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.business_name #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.business_phone_number #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.city #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.country #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.county #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.custom #=> Hash
-    #   resp.message_template.default_attributes.customer_profile_attributes.custom["MessageTemplateAttributeKey"] #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.email_address #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.first_name #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.gender #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.home_phone_number #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.last_name #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_1 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_2 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_3 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_4 #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_city #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_country #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_county #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_postal_code #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_province #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_state #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.middle_name #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.mobile_phone_number #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.party_type #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.phone_number #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.country #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.postal_code #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.profile_arn #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.profile_id #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.province #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.state #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_address_1 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_address_2 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_address_3 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_address_4 #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_city #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.shipping_country #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_county #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.shipping_country #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_postal_code #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_province #=> String
     #   resp.message_template.default_attributes.customer_profile_attributes.shipping_state #=> String
-    #   resp.message_template.default_attributes.customer_profile_attributes.state #=> String
-    #   resp.message_template.default_attributes.system_attributes.customer_endpoint.address #=> String
-    #   resp.message_template.default_attributes.system_attributes.name #=> String
-    #   resp.message_template.default_attributes.system_attributes.system_endpoint.address #=> String
-    #   resp.message_template.description #=> String
-    #   resp.message_template.grouping_configuration.criteria #=> String
-    #   resp.message_template.grouping_configuration.values #=> Array
-    #   resp.message_template.grouping_configuration.values[0] #=> String
-    #   resp.message_template.knowledge_base_arn #=> String
-    #   resp.message_template.knowledge_base_id #=> String
-    #   resp.message_template.language #=> String
-    #   resp.message_template.last_modified_by #=> String
-    #   resp.message_template.last_modified_time #=> Time
-    #   resp.message_template.message_template_arn #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_1 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_2 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_3 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_address_4 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_city #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_county #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_country #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_postal_code #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_province #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.mailing_state #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_1 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_2 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_3 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_address_4 #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_city #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_county #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_country #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_postal_code #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_province #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.billing_state #=> String
+    #   resp.message_template.default_attributes.customer_profile_attributes.custom #=> Hash
+    #   resp.message_template.default_attributes.customer_profile_attributes.custom["MessageTemplateAttributeKey"] #=> String
+    #   resp.message_template.default_attributes.custom_attributes #=> Hash
+    #   resp.message_template.default_attributes.custom_attributes["MessageTemplateAttributeKey"] #=> String
+    #   resp.message_template.attribute_types #=> Array
+    #   resp.message_template.attribute_types[0] #=> String, one of "SYSTEM", "AGENT", "CUSTOMER_PROFILE", "CUSTOM"
     #   resp.message_template.message_template_content_sha_256 #=> String
-    #   resp.message_template.message_template_id #=> String
-    #   resp.message_template.name #=> String
     #   resp.message_template.tags #=> Hash
     #   resp.message_template.tags["TagKey"] #=> String
     #
@@ -7473,9 +9227,15 @@ module Aws::QConnect
 
     # Updates an existing Amazon Q in Connect quick response.
     #
-    # @option params [Array<String>] :channels
-    #   The Amazon Connect contact channels this quick response applies to.
-    #   The supported contact channel types include `Chat`.
+    # @option params [required, String] :knowledge_base_id
+    #   The identifier of the knowledge base. Can be either the ID or the ARN.
+    #   URLs cannot contain the ARN.
+    #
+    # @option params [required, String] :quick_response_id
+    #   The identifier of the quick response.
+    #
+    # @option params [String] :name
+    #   The name of the quick response.
     #
     # @option params [Types::QuickResponseDataProvider] :content
     #   The updated content of the quick response.
@@ -7489,43 +9249,37 @@ module Aws::QConnect
     #   * Use `application/x.quickresponse;format=markdown` for quick response
     #     written in richtext.
     #
+    # @option params [Types::GroupingConfiguration] :grouping_configuration
+    #   The updated grouping configuration of the quick response.
+    #
+    # @option params [Boolean] :remove_grouping_configuration
+    #   Whether to remove the grouping configuration of the quick response.
+    #
     # @option params [String] :description
     #   The updated description of the quick response.
     #
-    # @option params [Types::GroupingConfiguration] :grouping_configuration
-    #   The updated grouping configuration of the quick response.
+    # @option params [Boolean] :remove_description
+    #   Whether to remove the description from the quick response.
+    #
+    # @option params [String] :shortcut_key
+    #   The shortcut key of the quick response. The value should be unique
+    #   across the knowledge base.
+    #
+    # @option params [Boolean] :remove_shortcut_key
+    #   Whether to remove the shortcut key of the quick response.
     #
     # @option params [Boolean] :is_active
     #   Whether the quick response is active.
     #
-    # @option params [required, String] :knowledge_base_id
-    #   The identifier of the knowledge base. Can be either the ID or the ARN.
-    #   URLs cannot contain the ARN.
+    # @option params [Array<String>] :channels
+    #   The Amazon Connect contact channels this quick response applies to.
+    #   The supported contact channel types include `Chat`.
     #
     # @option params [String] :language
     #   The language code value for the language in which the quick response
     #   is written. The supported language codes include `de_DE`, `en_US`,
     #   `es_ES`, `fr_FR`, `id_ID`, `it_IT`, `ja_JP`, `ko_KR`, `pt_BR`,
     #   `zh_CN`, `zh_TW`
-    #
-    # @option params [String] :name
-    #   The name of the quick response.
-    #
-    # @option params [required, String] :quick_response_id
-    #   The identifier of the quick response.
-    #
-    # @option params [Boolean] :remove_description
-    #   Whether to remove the description from the quick response.
-    #
-    # @option params [Boolean] :remove_grouping_configuration
-    #   Whether to remove the grouping configuration of the quick response.
-    #
-    # @option params [Boolean] :remove_shortcut_key
-    #   Whether to remove the shortcut key of the quick response.
-    #
-    # @option params [String] :shortcut_key
-    #   The shortcut key of the quick response. The value should be unique
-    #   across the knowledge base.
     #
     # @return [Types::UpdateQuickResponseResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -7534,50 +9288,50 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_quick_response({
-    #     channels: ["Channel"],
+    #     knowledge_base_id: "UuidOrArn", # required
+    #     quick_response_id: "UuidOrArn", # required
+    #     name: "QuickResponseName",
     #     content: {
     #       content: "QuickResponseContent",
     #     },
     #     content_type: "QuickResponseType",
-    #     description: "QuickResponseDescription",
     #     grouping_configuration: {
     #       criteria: "GroupingCriteria",
     #       values: ["GroupingValue"],
     #     },
-    #     is_active: false,
-    #     knowledge_base_id: "UuidOrArn", # required
-    #     language: "LanguageCode",
-    #     name: "QuickResponseName",
-    #     quick_response_id: "UuidOrArn", # required
-    #     remove_description: false,
     #     remove_grouping_configuration: false,
-    #     remove_shortcut_key: false,
+    #     description: "QuickResponseDescription",
+    #     remove_description: false,
     #     shortcut_key: "ShortCutKey",
+    #     remove_shortcut_key: false,
+    #     is_active: false,
+    #     channels: ["Channel"],
+    #     language: "LanguageCode",
     #   })
     #
     # @example Response structure
     #
-    #   resp.quick_response.channels #=> Array
-    #   resp.quick_response.channels[0] #=> String
+    #   resp.quick_response.quick_response_arn #=> String
+    #   resp.quick_response.quick_response_id #=> String
+    #   resp.quick_response.knowledge_base_arn #=> String
+    #   resp.quick_response.knowledge_base_id #=> String
+    #   resp.quick_response.name #=> String
     #   resp.quick_response.content_type #=> String
-    #   resp.quick_response.contents.markdown.content #=> String
-    #   resp.quick_response.contents.plain_text.content #=> String
+    #   resp.quick_response.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "CREATED", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED", "UPDATE_IN_PROGRESS", "UPDATE_FAILED"
     #   resp.quick_response.created_time #=> Time
+    #   resp.quick_response.last_modified_time #=> Time
+    #   resp.quick_response.contents.plain_text.content #=> String
+    #   resp.quick_response.contents.markdown.content #=> String
     #   resp.quick_response.description #=> String
     #   resp.quick_response.grouping_configuration.criteria #=> String
     #   resp.quick_response.grouping_configuration.values #=> Array
     #   resp.quick_response.grouping_configuration.values[0] #=> String
-    #   resp.quick_response.is_active #=> Boolean
-    #   resp.quick_response.knowledge_base_arn #=> String
-    #   resp.quick_response.knowledge_base_id #=> String
-    #   resp.quick_response.language #=> String
-    #   resp.quick_response.last_modified_by #=> String
-    #   resp.quick_response.last_modified_time #=> Time
-    #   resp.quick_response.name #=> String
-    #   resp.quick_response.quick_response_arn #=> String
-    #   resp.quick_response.quick_response_id #=> String
     #   resp.quick_response.shortcut_key #=> String
-    #   resp.quick_response.status #=> String, one of "CREATE_IN_PROGRESS", "CREATE_FAILED", "CREATED", "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETED", "UPDATE_IN_PROGRESS", "UPDATE_FAILED"
+    #   resp.quick_response.last_modified_by #=> String
+    #   resp.quick_response.is_active #=> Boolean
+    #   resp.quick_response.channels #=> Array
+    #   resp.quick_response.channels[0] #=> String
+    #   resp.quick_response.language #=> String
     #   resp.quick_response.tags #=> Hash
     #   resp.quick_response.tags["TagKey"] #=> String
     #
@@ -7595,24 +9349,30 @@ module Aws::QConnect
     # Q in Connect session for each contact on which Amazon Q in Connect is
     # enabled.
     #
-    # @option params [Hash<String,Types::AIAgentConfigurationData>] :ai_agent_configuration
-    #   The configuration of the AI Agents (mapped by AI Agent Type to AI
-    #   Agent version) that should be used by Amazon Q in Connect for this
-    #   Session.
-    #
     # @option params [required, String] :assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either the
     #   ID or the ARN. URLs cannot contain the ARN.
-    #
-    # @option params [String] :description
-    #   The description.
     #
     # @option params [required, String] :session_id
     #   The identifier of the session. Can be either the ID or the ARN. URLs
     #   cannot contain the ARN.
     #
+    # @option params [String] :description
+    #   The description.
+    #
     # @option params [Types::TagFilter] :tag_filter
     #   An object that can be used to specify Tag conditions.
+    #
+    # @option params [Hash<String,Types::AIAgentConfigurationData>] :ai_agent_configuration
+    #   The configuration of the AI Agents (mapped by AI Agent Type to AI
+    #   Agent version) that should be used by Amazon Q in Connect for this
+    #   Session.
+    #
+    # @option params [Array<Types::OrchestratorConfigurationEntry>] :orchestrator_configuration_list
+    #   The updated list of orchestrator configurations for the session.
+    #
+    # @option params [Boolean] :remove_orchestrator_configuration_list
+    #   The list of orchestrator configurations to remove from the session.
     #
     # @return [Types::UpdateSessionResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -7621,15 +9381,14 @@ module Aws::QConnect
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_session({
-    #     ai_agent_configuration: {
-    #       "MANUAL_SEARCH" => {
-    #         ai_agent_id: "UuidWithQualifier", # required
-    #       },
-    #     },
     #     assistant_id: "UuidOrArn", # required
-    #     description: "Description",
     #     session_id: "UuidOrArn", # required
+    #     description: "Description",
     #     tag_filter: {
+    #       tag_condition: {
+    #         key: "TagKey", # required
+    #         value: "TagValue",
+    #       },
     #       and_conditions: [
     #         {
     #           key: "TagKey", # required
@@ -7650,22 +9409,32 @@ module Aws::QConnect
     #           },
     #         },
     #       ],
-    #       tag_condition: {
-    #         key: "TagKey", # required
-    #         value: "TagValue",
+    #     },
+    #     ai_agent_configuration: {
+    #       "MANUAL_SEARCH" => {
+    #         ai_agent_id: "UuidWithQualifier", # required
     #       },
     #     },
+    #     orchestrator_configuration_list: [
+    #       {
+    #         ai_agent_id: "UuidOrArnOrEitherWithQualifier",
+    #         orchestrator_use_case: "NonEmptyString", # required
+    #       },
+    #     ],
+    #     remove_orchestrator_configuration_list: false,
     #   })
     #
     # @example Response structure
     #
-    #   resp.session.ai_agent_configuration #=> Hash
-    #   resp.session.ai_agent_configuration["AIAgentType"].ai_agent_id #=> String
-    #   resp.session.description #=> String
-    #   resp.session.integration_configuration.topic_integration_arn #=> String
-    #   resp.session.name #=> String
     #   resp.session.session_arn #=> String
     #   resp.session.session_id #=> String
+    #   resp.session.name #=> String
+    #   resp.session.description #=> String
+    #   resp.session.tags #=> Hash
+    #   resp.session.tags["TagKey"] #=> String
+    #   resp.session.integration_configuration.topic_integration_arn #=> String
+    #   resp.session.tag_filter.tag_condition.key #=> String
+    #   resp.session.tag_filter.tag_condition.value #=> String
     #   resp.session.tag_filter.and_conditions #=> Array
     #   resp.session.tag_filter.and_conditions[0].key #=> String
     #   resp.session.tag_filter.and_conditions[0].value #=> String
@@ -7675,10 +9444,12 @@ module Aws::QConnect
     #   resp.session.tag_filter.or_conditions[0].and_conditions[0].value #=> String
     #   resp.session.tag_filter.or_conditions[0].tag_condition.key #=> String
     #   resp.session.tag_filter.or_conditions[0].tag_condition.value #=> String
-    #   resp.session.tag_filter.tag_condition.key #=> String
-    #   resp.session.tag_filter.tag_condition.value #=> String
-    #   resp.session.tags #=> Hash
-    #   resp.session.tags["TagKey"] #=> String
+    #   resp.session.ai_agent_configuration #=> Hash
+    #   resp.session.ai_agent_configuration["AIAgentType"].ai_agent_id #=> String
+    #   resp.session.origin #=> String, one of "SYSTEM", "CUSTOMER"
+    #   resp.session.orchestrator_configuration_list #=> Array
+    #   resp.session.orchestrator_configuration_list[0].ai_agent_id #=> String
+    #   resp.session.orchestrator_configuration_list[0].orchestrator_use_case #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/UpdateSession AWS API Documentation
     #
@@ -7695,28 +9466,30 @@ module Aws::QConnect
     #   The identifier of the Amazon Q in Connect assistant. Can be either the
     #   ID or the ARN. URLs cannot contain the ARN.
     #
-    # @option params [required, Array<Types::RuntimeSessionData>] :data
-    #   The data stored on the Amazon Q in Connect Session.
+    # @option params [required, String] :session_id
+    #   The identifier of the session. Can be either the ID or the ARN. URLs
+    #   cannot contain the ARN.
     #
     # @option params [String] :namespace
     #   The namespace into which the session data is stored. Supported
     #   namespaces are: Custom
     #
-    # @option params [required, String] :session_id
-    #   The identifier of the session. Can be either the ID or the ARN. URLs
-    #   cannot contain the ARN.
+    # @option params [required, Array<Types::RuntimeSessionData>] :data
+    #   The data stored on the Amazon Q in Connect Session.
     #
     # @return [Types::UpdateSessionDataResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::UpdateSessionDataResponse#data #data} => Array&lt;Types::RuntimeSessionData&gt;
-    #   * {Types::UpdateSessionDataResponse#namespace #namespace} => String
     #   * {Types::UpdateSessionDataResponse#session_arn #session_arn} => String
     #   * {Types::UpdateSessionDataResponse#session_id #session_id} => String
+    #   * {Types::UpdateSessionDataResponse#namespace #namespace} => String
+    #   * {Types::UpdateSessionDataResponse#data #data} => Array&lt;Types::RuntimeSessionData&gt;
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_session_data({
     #     assistant_id: "UuidOrArn", # required
+    #     session_id: "UuidOrArn", # required
+    #     namespace: "Custom", # accepts Custom
     #     data: [ # required
     #       {
     #         key: "NonEmptySensitiveString", # required
@@ -7725,18 +9498,16 @@ module Aws::QConnect
     #         },
     #       },
     #     ],
-    #     namespace: "Custom", # accepts Custom
-    #     session_id: "UuidOrArn", # required
     #   })
     #
     # @example Response structure
     #
+    #   resp.session_arn #=> String
+    #   resp.session_id #=> String
+    #   resp.namespace #=> String, one of "Custom"
     #   resp.data #=> Array
     #   resp.data[0].key #=> String
     #   resp.data[0].value.string_value #=> String
-    #   resp.namespace #=> String, one of "Custom"
-    #   resp.session_arn #=> String
-    #   resp.session_id #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/UpdateSessionData AWS API Documentation
     #
@@ -7765,7 +9536,7 @@ module Aws::QConnect
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-qconnect'
-      context[:gem_version] = '1.30.0'
+      context[:gem_version] = '1.59.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

@@ -18,6 +18,7 @@ module Aws
                         ?account_id: String,
                         ?active_endpoint_cache: bool,
                         ?adaptive_retry_wait_to_fill: bool,
+                        ?auth_scheme_preference: Array[String],
                         ?client_side_monitoring: bool,
                         ?client_side_monitoring_client_id: String,
                         ?client_side_monitoring_host: String,
@@ -90,7 +91,7 @@ module Aws
                               parameter_value: ::String?,
                               use_previous_value: bool?,
                               resolved_value: ::String?
-                            },
+                            }
                           ],
                           ?disable_rollback: bool,
                           ?rollback_configuration: {
@@ -98,7 +99,7 @@ module Aws
                               {
                                 arn: ::String,
                                 type: ::String
-                              },
+                              }
                             ]?,
                             monitoring_time_in_minutes: ::Integer?
                           },
@@ -114,11 +115,16 @@ module Aws
                             {
                               key: ::String,
                               value: ::String
-                            },
+                            }
                           ],
                           ?client_request_token: ::String,
                           ?enable_termination_protection: bool,
-                          ?retain_except_on_create: bool
+                          ?retain_except_on_create: bool,
+                          ?deployment_config: {
+                            mode: ("STANDARD" | "EXPRESS")?,
+                            disable_rollback: bool?
+                          },
+                          ?disable_validation: bool
                         ) -> Stack
                       | (?Hash[Symbol, untyped]) -> Stack
 

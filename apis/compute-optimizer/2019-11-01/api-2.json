@@ -4,8 +4,11 @@
     "apiVersion":"2019-11-01",
     "endpointPrefix":"compute-optimizer",
     "jsonVersion":"1.0",
-    "protocol":"json",
-    "protocols":["json"],
+    "protocol":"smithy-rpc-v2-cbor",
+    "protocols":[
+      "smithy-rpc-v2-cbor",
+      "json"
+    ],
     "serviceFullName":"AWS Compute Optimizer",
     "serviceId":"Compute Optimizer",
     "signatureVersion":"v4",
@@ -547,6 +550,7 @@
       "members":{
         "message":{"shape":"ErrorMessage"}
       },
+      "error":{"httpStatusCode":403},
       "exception":true,
       "synthetic":true
     },
@@ -785,8 +789,7 @@
     },
     "DeleteRecommendationPreferencesResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DescribeRecommendationExportJobsRequest":{
       "type":"structure",
@@ -818,7 +821,8 @@
     "EBSEffectiveRecommendationPreferences":{
       "type":"structure",
       "members":{
-        "savingsEstimationMode":{"shape":"EBSSavingsEstimationMode"}
+        "savingsEstimationMode":{"shape":"EBSSavingsEstimationMode"},
+        "lookBackPeriod":{"shape":"LookBackPeriodPreference"}
       }
     },
     "EBSEstimatedMonthlySavings":{
@@ -856,7 +860,9 @@
         "VolumeReadOpsPerSecond",
         "VolumeWriteOpsPerSecond",
         "VolumeReadBytesPerSecond",
-        "VolumeWriteBytesPerSecond"
+        "VolumeWriteBytesPerSecond",
+        "VolumeIOPSExceeded",
+        "VolumeThroughputExceeded"
       ]
     },
     "EBSSavingsEstimationMode":{
@@ -895,7 +901,8 @@
     "ECSEffectiveRecommendationPreferences":{
       "type":"structure",
       "members":{
-        "savingsEstimationMode":{"shape":"ECSSavingsEstimationMode"}
+        "savingsEstimationMode":{"shape":"ECSSavingsEstimationMode"},
+        "lookBackPeriod":{"shape":"LookBackPeriodPreference"}
       }
     },
     "ECSEstimatedMonthlySavings":{
@@ -1404,7 +1411,8 @@
         "EffectiveRecommendationPreferencesSavingsEstimationMode",
         "RecommendationOptionsSavingsOpportunityAfterDiscountsPercentage",
         "RecommendationOptionsEstimatedMonthlySavingsCurrencyAfterDiscounts",
-        "RecommendationOptionsEstimatedMonthlySavingsValueAfterDiscounts"
+        "RecommendationOptionsEstimatedMonthlySavingsValueAfterDiscounts",
+        "EffectiveRecommendationPreferencesLookBackPeriod"
       ]
     },
     "ExportableECSServiceFields":{
@@ -1431,6 +1439,25 @@
         "UtilizationMetricsEBSVolumeWriteIOPSMaximum",
         "UtilizationMetricsVolumeReadOpsPerSecondMaximum",
         "UtilizationMetricsVolumeWriteOpsPerSecondMaximum",
+        "UtilizationMetricsActiveConnectionCountMaximum",
+        "UtilizationMetricsPacketsInFromSourceMaximum",
+        "UtilizationMetricsPacketsInFromDestinationMaximum",
+        "UtilizationMetricsConsumedReadCapacityUnitsSum",
+        "UtilizationMetricsConsumedWriteCapacityUnitsSum",
+        "UtilizationMetricsNewConnectionsSum",
+        "UtilizationMetricsEngineCPUUtilizationMaximum",
+        "UtilizationMetricsCacheHitsSum",
+        "UtilizationMetricsCacheMissesSum",
+        "UtilizationMetricsKeyspaceHitsSum",
+        "UtilizationMetricsKeyspaceMissesSum",
+        "UtilizationMetricsIsIdleMinimum",
+        "UtilizationMetricsUserConnectedSum",
+        "UtilizationMetricsInvocationsSum",
+        "UtilizationMetricsGetTypeCmdsSum",
+        "UtilizationMetricsSetTypeCmdsSum",
+        "UtilizationMetricsElastiCacheProcessingUnitsSum",
+        "UtilizationMetricsCurrConnectionsSum",
+        "UtilizationMetricsDatabaseConnectionsSum",
         "Finding",
         "FindingDescription",
         "Tags"
@@ -1599,15 +1626,20 @@
         "EngineVersion",
         "Idle",
         "MultiAZDBInstance",
+        "ClusterWriter",
         "CurrentDBInstanceClass",
         "CurrentStorageConfigurationStorageType",
         "CurrentStorageConfigurationAllocatedStorage",
         "CurrentStorageConfigurationMaxAllocatedStorage",
         "CurrentStorageConfigurationIOPS",
         "CurrentStorageConfigurationStorageThroughput",
+        "CurrentStorageEstimatedMonthlyVolumeIOPsCostVariation",
         "CurrentInstanceOnDemandHourlyPrice",
         "CurrentStorageOnDemandMonthlyPrice",
         "LookbackPeriodInDays",
+        "CurrentStorageEstimatedClusterInstanceOnDemandMonthlyCost",
+        "CurrentStorageEstimatedClusterStorageOnDemandMonthlyCost",
+        "CurrentStorageEstimatedClusterStorageIOOnDemandMonthlyCost",
         "CurrentInstancePerformanceRisk",
         "UtilizationMetricsCpuMaximum",
         "UtilizationMetricsMemoryMaximum",
@@ -1627,6 +1659,9 @@
         "UtilizationMetricsAuroraMemoryNumKillQueryTotalMaximum",
         "UtilizationMetricsReadIOPSEphemeralStorageMaximum",
         "UtilizationMetricsWriteIOPSEphemeralStorageMaximum",
+        "UtilizationMetricsVolumeBytesUsedAverage",
+        "UtilizationMetricsVolumeReadIOPsAverage",
+        "UtilizationMetricsVolumeWriteIOPsAverage",
         "InstanceFinding",
         "InstanceFindingReasonCodes",
         "StorageFinding",
@@ -1641,6 +1676,7 @@
         "StorageRecommendationOptionsIOPS",
         "StorageRecommendationOptionsStorageThroughput",
         "StorageRecommendationOptionsRank",
+        "StorageRecommendationOptionsEstimatedMonthlyVolumeIOPsCostVariation",
         "InstanceRecommendationOptionsInstanceOnDemandHourlyPrice",
         "InstanceRecommendationOptionsSavingsOpportunityPercentage",
         "InstanceRecommendationOptionsEstimatedMonthlySavingsCurrency",
@@ -1649,6 +1685,9 @@
         "InstanceRecommendationOptionsEstimatedMonthlySavingsCurrencyAfterDiscounts",
         "InstanceRecommendationOptionsEstimatedMonthlySavingsValueAfterDiscounts",
         "StorageRecommendationOptionsOnDemandMonthlyPrice",
+        "StorageRecommendationOptionsEstimatedClusterInstanceOnDemandMonthlyCost",
+        "StorageRecommendationOptionsEstimatedClusterStorageOnDemandMonthlyCost",
+        "StorageRecommendationOptionsEstimatedClusterStorageIOOnDemandMonthlyCost",
         "StorageRecommendationOptionsSavingsOpportunityPercentage",
         "StorageRecommendationOptionsEstimatedMonthlySavingsCurrency",
         "StorageRecommendationOptionsEstimatedMonthlySavingsValue",
@@ -1679,6 +1718,8 @@
         "UtilizationMetricsVolumeWriteOpsPerSecondMaximum",
         "UtilizationMetricsVolumeReadBytesPerSecondMaximum",
         "UtilizationMetricsVolumeWriteBytesPerSecondMaximum",
+        "UtilizationMetricsVolumeIOPSExceededMaximum",
+        "UtilizationMetricsVolumeThroughputExceededMaximum",
         "LookbackPeriodInDays",
         "CurrentConfigurationVolumeType",
         "CurrentConfigurationVolumeBaselineIOPS",
@@ -1706,7 +1747,8 @@
         "EffectiveRecommendationPreferencesSavingsEstimationMode",
         "RecommendationOptionsSavingsOpportunityAfterDiscountsPercentage",
         "RecommendationOptionsEstimatedMonthlySavingsCurrencyAfterDiscounts",
-        "RecommendationOptionsEstimatedMonthlySavingsValueAfterDiscounts"
+        "RecommendationOptionsEstimatedMonthlySavingsValueAfterDiscounts",
+        "EffectiveRecommendationPreferencesLookBackPeriod"
       ]
     },
     "ExportableVolumeFields":{
@@ -1943,8 +1985,7 @@
     },
     "GetEnrollmentStatusRequest":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "GetEnrollmentStatusResponse":{
       "type":"structure",
@@ -2140,6 +2181,23 @@
         "False"
       ]
     },
+    "IdleDimension":{
+      "type":"structure",
+      "members":{
+        "key":{"shape":"IdleDimensionKey"},
+        "values":{"shape":"IdleDimensionValues"}
+      }
+    },
+    "IdleDimensionKey":{"type":"string"},
+    "IdleDimensionValue":{"type":"string"},
+    "IdleDimensionValues":{
+      "type":"list",
+      "member":{"shape":"IdleDimensionValue"}
+    },
+    "IdleDimensions":{
+      "type":"list",
+      "member":{"shape":"IdleDimension"}
+    },
     "IdleEstimatedMonthlySavings":{
       "type":"structure",
       "members":{
@@ -2151,7 +2209,8 @@
       "type":"string",
       "enum":[
         "Idle",
-        "Unattached"
+        "Unattached",
+        "Unused"
       ]
     },
     "IdleFindingDescription":{"type":"string"},
@@ -2172,7 +2231,26 @@
         "EBSVolumeReadIOPS",
         "EBSVolumeWriteIOPS",
         "VolumeReadOpsPerSecond",
-        "VolumeWriteOpsPerSecond"
+        "VolumeWriteOpsPerSecond",
+        "ActiveConnectionCount",
+        "PacketsInFromSource",
+        "PacketsInFromDestination",
+        "ConsumedReadCapacityUnits",
+        "ConsumedWriteCapacityUnits",
+        "ConsumedChangeDataCaptureUnits",
+        "NewConnections",
+        "EngineCPUUtilization",
+        "CacheHits",
+        "CacheMisses",
+        "KeyspaceHits",
+        "KeyspaceMisses",
+        "IsIdle",
+        "UserConnected",
+        "Invocations",
+        "GetTypeCmds",
+        "SetTypeCmds",
+        "ElastiCacheProcessingUnits",
+        "CurrConnections"
       ]
     },
     "IdleRecommendation":{
@@ -2230,7 +2308,14 @@
         "AutoScalingGroup",
         "EBSVolume",
         "ECSService",
-        "RDSDBInstance"
+        "RDSDBInstance",
+        "NatGateway",
+        "DynamoDBTable",
+        "ElastiCacheCluster",
+        "MemoryDBCluster",
+        "DocumentDBCluster",
+        "WorkSpaces",
+        "SageMakerEndpoint"
       ]
     },
     "IdleRecommendations":{
@@ -2267,7 +2352,8 @@
       "members":{
         "name":{"shape":"IdleMetricName"},
         "statistic":{"shape":"MetricStatistic"},
-        "value":{"shape":"MetricValue"}
+        "value":{"shape":"MetricValue"},
+        "dimensions":{"shape":"IdleDimensions"}
       }
     },
     "IdleUtilizationMetrics":{
@@ -2440,6 +2526,7 @@
       "members":{
         "message":{"shape":"ErrorMessage"}
       },
+      "error":{"httpStatusCode":500},
       "exception":true,
       "fault":true
     },
@@ -2448,6 +2535,7 @@
       "members":{
         "message":{"shape":"ErrorMessage"}
       },
+      "error":{"httpStatusCode":400},
       "exception":true,
       "synthetic":true
     },
@@ -2756,6 +2844,7 @@
       "members":{
         "message":{"shape":"ErrorMessage"}
       },
+      "error":{"httpStatusCode":400},
       "exception":true,
       "synthetic":true
     },
@@ -2853,6 +2942,7 @@
       "members":{
         "message":{"shape":"ErrorMessage"}
       },
+      "error":{"httpStatusCode":403},
       "exception":true,
       "synthetic":true
     },
@@ -2879,6 +2969,7 @@
       "members":{
         "message":{"shape":"ErrorMessage"}
       },
+      "error":{"httpStatusCode":403},
       "exception":true,
       "synthetic":true
     },
@@ -2972,8 +3063,7 @@
     },
     "PutRecommendationPreferencesResponse":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "RDSCurrentInstancePerformanceRisk":{
       "type":"string",
@@ -3019,7 +3109,10 @@
         "AuroraMemoryNumKillConnTotal",
         "AuroraMemoryNumKillQueryTotal",
         "ReadIOPSEphemeralStorage",
-        "WriteIOPSEphemeralStorage"
+        "WriteIOPSEphemeralStorage",
+        "VolumeReadIOPs",
+        "VolumeBytesUsed",
+        "VolumeWriteIOPs"
       ]
     },
     "RDSDBMetricStatistic":{
@@ -3050,6 +3143,7 @@
         "storageFinding":{"shape":"RDSStorageFinding"},
         "instanceFindingReasonCodes":{"shape":"RDSInstanceFindingReasonCodes"},
         "currentInstancePerformanceRisk":{"shape":"RDSCurrentInstancePerformanceRisk"},
+        "currentStorageEstimatedMonthlyVolumeIOPsCostVariation":{"shape":"RDSEstimatedMonthlyVolumeIOPsCostVariation"},
         "storageFindingReasonCodes":{"shape":"RDSStorageFindingReasonCodes"},
         "instanceRecommendationOptions":{"shape":"RDSDBInstanceRecommendationOptions"},
         "storageRecommendationOptions":{"shape":"RDSDBStorageRecommendationOptions"},
@@ -3091,7 +3185,8 @@
         "storageConfiguration":{"shape":"DBStorageConfiguration"},
         "rank":{"shape":"Rank"},
         "savingsOpportunity":{"shape":"SavingsOpportunity"},
-        "savingsOpportunityAfterDiscounts":{"shape":"RDSStorageSavingsOpportunityAfterDiscounts"}
+        "savingsOpportunityAfterDiscounts":{"shape":"RDSStorageSavingsOpportunityAfterDiscounts"},
+        "estimatedMonthlyVolumeIOPsCostVariation":{"shape":"RDSEstimatedMonthlyVolumeIOPsCostVariation"}
       }
     },
     "RDSDBStorageRecommendationOptions":{
@@ -3142,6 +3237,15 @@
         "lookBackPeriod":{"shape":"LookBackPeriodPreference"},
         "savingsEstimationMode":{"shape":"RDSSavingsEstimationMode"}
       }
+    },
+    "RDSEstimatedMonthlyVolumeIOPsCostVariation":{
+      "type":"string",
+      "enum":[
+        "None",
+        "Low",
+        "Medium",
+        "High"
+      ]
     },
     "RDSInstanceEstimatedMonthlySavings":{
       "type":"structure",
@@ -3214,7 +3318,8 @@
       "enum":[
         "Optimized",
         "Underprovisioned",
-        "Overprovisioned"
+        "Overprovisioned",
+        "NotOptimized"
       ]
     },
     "RDSStorageFindingReasonCode":{
@@ -3224,7 +3329,9 @@
         "EBSVolumeThroughputUnderprovisioned",
         "EBSVolumeIOPSOverprovisioned",
         "EBSVolumeThroughputOverprovisioned",
-        "NewGenerationStorageTypeAvailable"
+        "NewGenerationStorageTypeAvailable",
+        "DBClusterStorageOptionAvailable",
+        "DBClusterStorageSavingsAvailable"
       ]
     },
     "RDSStorageFindingReasonCodes":{
@@ -3327,7 +3434,15 @@
         "EcsService",
         "License",
         "RdsDBInstance",
-        "RdsDBInstanceStorage"
+        "RdsDBInstanceStorage",
+        "AuroraDBClusterStorage",
+        "NatGateway",
+        "DynamoDBTable",
+        "ElastiCacheCluster",
+        "MemoryDBCluster",
+        "DocumentDBCluster",
+        "WorkSpaces",
+        "SageMakerEndpoint"
       ]
     },
     "RecommendationSources":{
@@ -3377,6 +3492,7 @@
       "members":{
         "message":{"shape":"ErrorMessage"}
       },
+      "error":{"httpStatusCode":404},
       "exception":true,
       "synthetic":true
     },
@@ -3391,6 +3507,7 @@
         "EcsService",
         "License",
         "RdsDBInstance",
+        "AuroraDBClusterStorage",
         "Idle"
       ]
     },
@@ -3461,6 +3578,7 @@
       "members":{
         "message":{"shape":"ErrorMessage"}
       },
+      "error":{"httpStatusCode":503},
       "exception":true,
       "fault":true
     },
@@ -3508,6 +3626,7 @@
       "members":{
         "message":{"shape":"ErrorMessage"}
       },
+      "error":{"httpStatusCode":429},
       "exception":true,
       "synthetic":true
     },

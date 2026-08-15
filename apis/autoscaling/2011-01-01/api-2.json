@@ -38,7 +38,8 @@
       },
       "errors":[
         {"shape":"ResourceContentionFault"},
-        {"shape":"ServiceLinkedRoleFailure"}
+        {"shape":"ServiceLinkedRoleFailure"},
+        {"shape":"InstanceRefreshInProgressFault"}
       ]
     },
     "AttachLoadBalancers":{
@@ -54,7 +55,8 @@
       },
       "errors":[
         {"shape":"ResourceContentionFault"},
-        {"shape":"ServiceLinkedRoleFailure"}
+        {"shape":"ServiceLinkedRoleFailure"},
+        {"shape":"InstanceRefreshInProgressFault"}
       ]
     },
     "AttachTrafficSources":{
@@ -70,7 +72,8 @@
       },
       "errors":[
         {"shape":"ResourceContentionFault"},
-        {"shape":"ServiceLinkedRoleFailure"}
+        {"shape":"ServiceLinkedRoleFailure"},
+        {"shape":"InstanceRefreshInProgressFault"}
       ]
     },
     "BatchDeleteScheduledAction":{
@@ -744,6 +747,23 @@
         {"shape":"ResourceContentionFault"}
       ]
     },
+    "LaunchInstances":{
+      "name":"LaunchInstances",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"LaunchInstancesRequest"},
+      "output":{
+        "shape":"LaunchInstancesResult",
+        "resultWrapper":"LaunchInstancesResult"
+      },
+      "errors":[
+        {"shape":"ResourceContentionFault"},
+        {"shape":"IdempotentParameterMismatchError"},
+        {"shape":"IdempotentCallInProgressFault"}
+      ]
+    },
     "PutLifecycleHook":{
       "name":"PutLifecycleHook",
       "http":{
@@ -816,7 +836,8 @@
       },
       "errors":[
         {"shape":"LimitExceededFault"},
-        {"shape":"ResourceContentionFault"}
+        {"shape":"ResourceContentionFault"},
+        {"shape":"InstanceRefreshInProgressFault"}
       ]
     },
     "RecordLifecycleActionHeartbeat":{
@@ -1073,7 +1094,8 @@
     "ActivityType":{
       "type":"structure",
       "members":{
-        "Activity":{"shape":"Activity"}
+        "Activity":{"shape":"Activity"},
+        "Activities":{"shape":"Activities"}
       }
     },
     "AdjustmentType":{
@@ -1153,8 +1175,7 @@
     },
     "AttachLoadBalancerTargetGroupsResultType":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "AttachLoadBalancerTargetGroupsType":{
       "type":"structure",
@@ -1169,8 +1190,7 @@
     },
     "AttachLoadBalancersResultType":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "AttachLoadBalancersType":{
       "type":"structure",
@@ -1185,8 +1205,7 @@
     },
     "AttachTrafficSourcesResultType":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "AttachTrafficSourcesType":{
       "type":"structure",
@@ -1225,6 +1244,7 @@
         "PredictedCapacity":{"shape":"AutoScalingGroupPredictedCapacity"},
         "DefaultCooldown":{"shape":"Cooldown"},
         "AvailabilityZones":{"shape":"AvailabilityZones"},
+        "AvailabilityZoneIds":{"shape":"AvailabilityZoneIds"},
         "LoadBalancerNames":{"shape":"LoadBalancerNames"},
         "TargetGroupARNs":{"shape":"TargetGroupARNs"},
         "HealthCheckType":{"shape":"XmlStringMaxLen32"},
@@ -1249,9 +1269,12 @@
         "DefaultInstanceWarmup":{"shape":"DefaultInstanceWarmup"},
         "TrafficSources":{"shape":"TrafficSources"},
         "InstanceMaintenancePolicy":{"shape":"InstanceMaintenancePolicy"},
+        "DeletionProtection":{"shape":"DeletionProtection"},
         "AvailabilityZoneDistribution":{"shape":"AvailabilityZoneDistribution"},
         "AvailabilityZoneImpairmentPolicy":{"shape":"AvailabilityZoneImpairmentPolicy"},
-        "CapacityReservationSpecification":{"shape":"CapacityReservationSpecification"}
+        "CapacityReservationSpecification":{"shape":"CapacityReservationSpecification"},
+        "InstanceLifecyclePolicy":{"shape":"InstanceLifecyclePolicy"},
+        "Operator":{"shape":"Operator"}
       }
     },
     "AutoScalingGroupDesiredCapacity":{"type":"integer"},
@@ -1265,6 +1288,7 @@
       "type":"structure",
       "members":{
         "AutoScalingGroupNames":{"shape":"AutoScalingGroupNames"},
+        "IncludeInstances":{"shape":"IncludeInstances"},
         "NextToken":{"shape":"XmlString"},
         "MaxRecords":{"shape":"MaxRecords"},
         "Filters":{"shape":"Filters"}
@@ -1303,10 +1327,12 @@
         "InstanceType":{"shape":"XmlStringMaxLen255"},
         "AutoScalingGroupName":{"shape":"XmlStringMaxLen255"},
         "AvailabilityZone":{"shape":"XmlStringMaxLen255"},
+        "AvailabilityZoneId":{"shape":"XmlStringMaxLen255"},
         "LifecycleState":{"shape":"XmlStringMaxLen32"},
         "HealthStatus":{"shape":"XmlStringMaxLen32"},
         "LaunchConfigurationName":{"shape":"XmlStringMaxLen255"},
         "LaunchTemplate":{"shape":"LaunchTemplateSpecification"},
+        "ImageId":{"shape":"XmlStringMaxLen255"},
         "ProtectedFromScaleIn":{"shape":"InstanceProtected"},
         "WeightedCapacity":{"shape":"XmlStringMaxLen32"}
       }
@@ -1332,6 +1358,15 @@
         "CapacityDistributionStrategy":{"shape":"CapacityDistributionStrategy"}
       }
     },
+    "AvailabilityZoneIds":{
+      "type":"list",
+      "member":{"shape":"XmlStringMaxLen255"}
+    },
+    "AvailabilityZoneIdsLimit1":{
+      "type":"list",
+      "member":{"shape":"XmlStringMaxLen255"},
+      "max":1
+    },
     "AvailabilityZoneImpairmentPolicy":{
       "type":"structure",
       "members":{
@@ -1342,6 +1377,11 @@
     "AvailabilityZones":{
       "type":"list",
       "member":{"shape":"XmlStringMaxLen255"}
+    },
+    "AvailabilityZonesLimit1":{
+      "type":"list",
+      "member":{"shape":"XmlStringMaxLen255"},
+      "max":1
     },
     "BakeTime":{
       "type":"integer",
@@ -1439,6 +1479,7 @@
       "type":"list",
       "member":{"shape":"BlockDeviceMapping"}
     },
+    "BooleanType":{"type":"boolean"},
     "BurstablePerformance":{
       "type":"string",
       "enum":[
@@ -1457,14 +1498,16 @@
       "type":"structure",
       "required":["AutoScalingGroupName"],
       "members":{
-        "AutoScalingGroupName":{"shape":"XmlStringMaxLen255"}
+        "AutoScalingGroupName":{"shape":"XmlStringMaxLen255"},
+        "WaitForTransitioningInstances":{"shape":"BooleanType"}
       }
     },
     "CapacityDistributionStrategy":{
       "type":"string",
       "enum":[
         "balanced-only",
-        "balanced-best-effort"
+        "balanced-best-effort",
+        "reservations-then-balanced"
       ]
     },
     "CapacityForecast":{
@@ -1523,10 +1566,15 @@
       "type":"list",
       "member":{"shape":"XmlStringMaxLen255"}
     },
+    "ClientToken":{
+      "type":"string",
+      "max":64,
+      "min":1,
+      "pattern":"[A-Za-z0-9\\-_\\/]+"
+    },
     "CompleteLifecycleActionAnswer":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "CompleteLifecycleActionType":{
       "type":"structure",
@@ -1550,7 +1598,8 @@
       "enum":[
         "intel",
         "amd",
-        "amazon-web-services"
+        "amazon-web-services",
+        "apple"
       ]
     },
     "CpuManufacturers":{
@@ -1584,6 +1633,7 @@
         "DesiredCapacity":{"shape":"AutoScalingGroupDesiredCapacity"},
         "DefaultCooldown":{"shape":"Cooldown"},
         "AvailabilityZones":{"shape":"AvailabilityZones"},
+        "AvailabilityZoneIds":{"shape":"AvailabilityZoneIds"},
         "LoadBalancerNames":{"shape":"LoadBalancerNames"},
         "TargetGroupARNs":{"shape":"TargetGroupARNs"},
         "HealthCheckType":{"shape":"XmlStringMaxLen32"},
@@ -1594,6 +1644,7 @@
         "NewInstancesProtectedFromScaleIn":{"shape":"InstanceProtected"},
         "CapacityRebalance":{"shape":"CapacityRebalanceEnabled"},
         "LifecycleHookSpecificationList":{"shape":"LifecycleHookSpecifications"},
+        "DeletionProtection":{"shape":"DeletionProtection"},
         "Tags":{"shape":"Tags"},
         "ServiceLinkedRoleARN":{"shape":"ResourceName"},
         "MaxInstanceLifetime":{"shape":"MaxInstanceLifetime"},
@@ -1605,7 +1656,9 @@
         "AvailabilityZoneDistribution":{"shape":"AvailabilityZoneDistribution"},
         "AvailabilityZoneImpairmentPolicy":{"shape":"AvailabilityZoneImpairmentPolicy"},
         "SkipZonalShiftValidation":{"shape":"SkipZonalShiftValidation"},
-        "CapacityReservationSpecification":{"shape":"CapacityReservationSpecification"}
+        "CapacityReservationSpecification":{"shape":"CapacityReservationSpecification"},
+        "InstanceLifecyclePolicy":{"shape":"InstanceLifecyclePolicy"},
+        "Operator":{"shape":"Operator"}
       }
     },
     "CreateLaunchConfigurationType":{
@@ -1663,8 +1716,7 @@
     },
     "DeleteLifecycleHookAnswer":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteLifecycleHookType":{
       "type":"structure",
@@ -1716,8 +1768,7 @@
     },
     "DeleteWarmPoolAnswer":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteWarmPoolType":{
       "type":"structure",
@@ -1726,6 +1777,14 @@
         "AutoScalingGroupName":{"shape":"XmlStringMaxLen255"},
         "ForceDelete":{"shape":"ForceDelete"}
       }
+    },
+    "DeletionProtection":{
+      "type":"string",
+      "enum":[
+        "none",
+        "prevent-force-deletion",
+        "prevent-all-deletion"
+      ]
     },
     "DescribeAccountLimitsAnswer":{
       "type":"structure",
@@ -1865,7 +1924,8 @@
         "AutoScalingGroupName":{"shape":"XmlStringMaxLen255"},
         "IncludeDeletedGroups":{"shape":"IncludeDeletedGroups"},
         "MaxRecords":{"shape":"MaxRecords"},
-        "NextToken":{"shape":"XmlString"}
+        "NextToken":{"shape":"XmlString"},
+        "Filters":{"shape":"Filters"}
       }
     },
     "DescribeScheduledActionsType":{
@@ -1954,8 +2014,7 @@
     },
     "DetachLoadBalancerTargetGroupsResultType":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DetachLoadBalancerTargetGroupsType":{
       "type":"structure",
@@ -1970,8 +2029,7 @@
     },
     "DetachLoadBalancersResultType":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DetachLoadBalancersType":{
       "type":"structure",
@@ -1986,8 +2044,7 @@
     },
     "DetachTrafficSourcesResultType":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DetachTrafficSourcesType":{
       "type":"structure",
@@ -2157,6 +2214,36 @@
     "HealthCheckGracePeriod":{"type":"integer"},
     "HeartbeatTimeout":{"type":"integer"},
     "HonorCooldown":{"type":"boolean"},
+    "IdempotentCallInProgressFault":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"XmlStringMaxLen255"}
+      },
+      "error":{
+        "code":"IdempotentCallInProgress",
+        "httpStatusCode":500,
+        "senderFault":true
+      },
+      "exception":true
+    },
+    "IdempotentParameterMismatchError":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"XmlStringMaxLen255"}
+      },
+      "error":{
+        "code":"IdempotentParameterMismatch",
+        "httpStatusCode":400,
+        "senderFault":true
+      },
+      "exception":true
+    },
+    "ImageId":{
+      "type":"string",
+      "max":21,
+      "min":5,
+      "pattern":"^ami-[a-z0-9]{1,17}$"
+    },
     "ImpairedZoneHealthCheckBehavior":{
       "type":"string",
       "enum":[
@@ -2165,6 +2252,7 @@
       ]
     },
     "IncludeDeletedGroups":{"type":"boolean"},
+    "IncludeInstances":{"type":"boolean"},
     "Instance":{
       "type":"structure",
       "required":[
@@ -2178,13 +2266,30 @@
         "InstanceId":{"shape":"XmlStringMaxLen19"},
         "InstanceType":{"shape":"XmlStringMaxLen255"},
         "AvailabilityZone":{"shape":"XmlStringMaxLen255"},
+        "AvailabilityZoneId":{"shape":"XmlStringMaxLen255"},
         "LifecycleState":{"shape":"LifecycleState"},
         "HealthStatus":{"shape":"XmlStringMaxLen32"},
         "LaunchConfigurationName":{"shape":"XmlStringMaxLen255"},
         "LaunchTemplate":{"shape":"LaunchTemplateSpecification"},
+        "ImageId":{"shape":"XmlStringMaxLen255"},
         "ProtectedFromScaleIn":{"shape":"InstanceProtected"},
         "WeightedCapacity":{"shape":"XmlStringMaxLen32"}
       }
+    },
+    "InstanceCollection":{
+      "type":"structure",
+      "members":{
+        "InstanceType":{"shape":"XmlStringMaxLen255"},
+        "MarketType":{"shape":"XmlStringMaxLen64"},
+        "SubnetId":{"shape":"XmlStringMaxLen255"},
+        "AvailabilityZone":{"shape":"XmlStringMaxLen255"},
+        "AvailabilityZoneId":{"shape":"XmlStringMaxLen255"},
+        "InstanceIds":{"shape":"InstanceIds"}
+      }
+    },
+    "InstanceCollections":{
+      "type":"list",
+      "member":{"shape":"InstanceCollection"}
     },
     "InstanceGeneration":{
       "type":"string",
@@ -2200,6 +2305,12 @@
     "InstanceIds":{
       "type":"list",
       "member":{"shape":"XmlStringMaxLen19"}
+    },
+    "InstanceLifecyclePolicy":{
+      "type":"structure",
+      "members":{
+        "RetentionTriggers":{"shape":"RetentionTriggers"}
+      }
     },
     "InstanceMaintenancePolicy":{
       "type":"structure",
@@ -2256,7 +2367,8 @@
         "ProgressDetails":{"shape":"InstanceRefreshProgressDetails"},
         "Preferences":{"shape":"RefreshPreferences"},
         "DesiredConfiguration":{"shape":"DesiredConfiguration"},
-        "RollbackDetails":{"shape":"RollbackDetails"}
+        "RollbackDetails":{"shape":"RollbackDetails"},
+        "Strategy":{"shape":"RefreshStrategy"}
       }
     },
     "InstanceRefreshIds":{
@@ -2480,6 +2592,51 @@
         "NextToken":{"shape":"XmlString"}
       }
     },
+    "LaunchInstancesError":{
+      "type":"structure",
+      "members":{
+        "InstanceType":{"shape":"XmlStringMaxLen255"},
+        "MarketType":{"shape":"XmlStringMaxLen64"},
+        "SubnetId":{"shape":"XmlStringMaxLen255"},
+        "AvailabilityZone":{"shape":"XmlStringMaxLen255"},
+        "AvailabilityZoneId":{"shape":"XmlStringMaxLen255"},
+        "ErrorCode":{"shape":"XmlStringMaxLen64"},
+        "ErrorMessage":{"shape":"XmlString"}
+      }
+    },
+    "LaunchInstancesErrors":{
+      "type":"list",
+      "member":{"shape":"LaunchInstancesError"}
+    },
+    "LaunchInstancesRequest":{
+      "type":"structure",
+      "required":[
+        "AutoScalingGroupName",
+        "RequestedCapacity",
+        "ClientToken"
+      ],
+      "members":{
+        "AutoScalingGroupName":{"shape":"XmlStringMaxLen255"},
+        "RequestedCapacity":{"shape":"RequestedCapacity"},
+        "ClientToken":{
+          "shape":"ClientToken",
+          "idempotencyToken":true
+        },
+        "AvailabilityZones":{"shape":"AvailabilityZonesLimit1"},
+        "AvailabilityZoneIds":{"shape":"AvailabilityZoneIdsLimit1"},
+        "SubnetIds":{"shape":"SubnetIdsLimit1"},
+        "RetryStrategy":{"shape":"RetryStrategy"}
+      }
+    },
+    "LaunchInstancesResult":{
+      "type":"structure",
+      "members":{
+        "AutoScalingGroupName":{"shape":"XmlStringMaxLen255"},
+        "ClientToken":{"shape":"ClientToken"},
+        "Instances":{"shape":"InstanceCollections"},
+        "Errors":{"shape":"LaunchInstancesErrors"}
+      }
+    },
     "LaunchTemplate":{
       "type":"structure",
       "members":{
@@ -2499,7 +2656,8 @@
         "InstanceType":{"shape":"XmlStringMaxLen255"},
         "WeightedCapacity":{"shape":"XmlStringMaxLen32"},
         "LaunchTemplateSpecification":{"shape":"LaunchTemplateSpecification"},
-        "InstanceRequirements":{"shape":"InstanceRequirements"}
+        "InstanceRequirements":{"shape":"InstanceRequirements"},
+        "ImageId":{"shape":"ImageId"}
       }
     },
     "LaunchTemplateSpecification":{
@@ -2570,17 +2728,24 @@
         "Terminating",
         "Terminating:Wait",
         "Terminating:Proceed",
+        "Terminating:Retained",
         "Terminated",
         "Detaching",
         "Detached",
         "EnteringStandby",
         "Standby",
+        "ReplacingRootVolume",
+        "ReplacingRootVolume:Wait",
+        "ReplacingRootVolume:Proceed",
+        "RootVolumeReplaced",
         "Warmed:Pending",
         "Warmed:Pending:Wait",
         "Warmed:Pending:Proceed",
+        "Warmed:Pending:Retained",
         "Warmed:Terminating",
         "Warmed:Terminating:Wait",
         "Warmed:Terminating:Proceed",
+        "Warmed:Terminating:Retained",
         "Warmed:Terminated",
         "Warmed:Stopped",
         "Warmed:Running",
@@ -2661,6 +2826,11 @@
     "LocalStorageTypes":{
       "type":"list",
       "member":{"shape":"LocalStorageType"}
+    },
+    "ManagerIdentifier":{
+      "type":"string",
+      "max":128,
+      "min":1
     },
     "MaxGroupPreparedCapacity":{
       "type":"integer",
@@ -2861,6 +3031,13 @@
     "NumberOfLaunchConfigurations":{"type":"integer"},
     "OnDemandBaseCapacity":{"type":"integer"},
     "OnDemandPercentageAboveBaseCapacity":{"type":"integer"},
+    "Operator":{
+      "type":"structure",
+      "required":["Principal"],
+      "members":{
+        "Principal":{"shape":"ManagerIdentifier"}
+      }
+    },
     "Overrides":{
       "type":"list",
       "member":{"shape":"LaunchTemplateOverrides"}
@@ -3066,8 +3243,7 @@
     "ProtectedFromScaleIn":{"type":"boolean"},
     "PutLifecycleHookAnswer":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "PutLifecycleHookType":{
       "type":"structure",
@@ -3143,8 +3319,7 @@
     },
     "PutWarmPoolAnswer":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "PutWarmPoolType":{
       "type":"structure",
@@ -3159,8 +3334,7 @@
     },
     "RecordLifecycleActionHeartbeatAnswer":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "RecordLifecycleActionHeartbeatType":{
       "type":"structure",
@@ -3197,7 +3371,14 @@
     },
     "RefreshStrategy":{
       "type":"string",
-      "enum":["Rolling"]
+      "enum":[
+        "Rolling",
+        "ReplaceRootVolume"
+      ]
+    },
+    "RequestedCapacity":{
+      "type":"integer",
+      "min":1
     },
     "ResourceContentionFault":{
       "type":"structure",
@@ -3228,6 +3409,26 @@
       "max":1600,
       "min":1,
       "pattern":"[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDC00-\\uDBFF\\uDFFF\\r\\n\\t]*"
+    },
+    "RetentionAction":{
+      "type":"string",
+      "enum":[
+        "retain",
+        "terminate"
+      ]
+    },
+    "RetentionTriggers":{
+      "type":"structure",
+      "members":{
+        "TerminateHookAbandon":{"shape":"RetentionAction"}
+      }
+    },
+    "RetryStrategy":{
+      "type":"string",
+      "enum":[
+        "retry-with-group-configuration",
+        "none"
+      ]
     },
     "ReturnData":{"type":"boolean"},
     "ReuseOnScaleIn":{"type":"boolean"},
@@ -3289,7 +3490,10 @@
         "Successful",
         "Failed",
         "Cancelled",
-        "WaitingForConnectionDraining"
+        "WaitingForConnectionDraining",
+        "WaitingForInPlaceUpdateToStart",
+        "WaitingForInPlaceUpdateToFinalize",
+        "InPlaceUpdateInProgress"
       ]
     },
     "ScalingPolicies":{
@@ -3417,8 +3621,7 @@
     },
     "SetInstanceProtectionAnswer":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "SetInstanceProtectionQuery":{
       "type":"structure",
@@ -3481,6 +3684,11 @@
       "member":{"shape":"StepAdjustment"}
     },
     "String":{"type":"string"},
+    "SubnetIdsLimit1":{
+      "type":"list",
+      "member":{"shape":"XmlStringMaxLen255"},
+      "max":1
+    },
     "SuspendedProcess":{
       "type":"structure",
       "members":{
@@ -3585,14 +3793,19 @@
     },
     "TerminateInstanceInAutoScalingGroupType":{
       "type":"structure",
-      "required":[
-        "InstanceId",
-        "ShouldDecrementDesiredCapacity"
-      ],
+      "required":["ShouldDecrementDesiredCapacity"],
       "members":{
         "InstanceId":{"shape":"XmlStringMaxLen19"},
+        "InstanceIds":{"shape":"TerminationInstanceIds"},
+        "AutoScalingGroupName":{"shape":"XmlStringMaxLen255"},
         "ShouldDecrementDesiredCapacity":{"shape":"ShouldDecrementDesiredCapacity"}
       }
+    },
+    "TerminationInstanceIds":{
+      "type":"list",
+      "member":{"shape":"XmlStringMaxLen19"},
+      "max":100,
+      "min":1
     },
     "TerminationPolicies":{
       "type":"list",
@@ -3648,6 +3861,7 @@
         "DesiredCapacity":{"shape":"AutoScalingGroupDesiredCapacity"},
         "DefaultCooldown":{"shape":"Cooldown"},
         "AvailabilityZones":{"shape":"AvailabilityZones"},
+        "AvailabilityZoneIds":{"shape":"AvailabilityZoneIds"},
         "HealthCheckType":{"shape":"XmlStringMaxLen32"},
         "HealthCheckGracePeriod":{"shape":"HealthCheckGracePeriod"},
         "PlacementGroup":{"shape":"UpdatePlacementGroupParam"},
@@ -3664,7 +3878,9 @@
         "AvailabilityZoneDistribution":{"shape":"AvailabilityZoneDistribution"},
         "AvailabilityZoneImpairmentPolicy":{"shape":"AvailabilityZoneImpairmentPolicy"},
         "SkipZonalShiftValidation":{"shape":"SkipZonalShiftValidation"},
-        "CapacityReservationSpecification":{"shape":"CapacityReservationSpecification"}
+        "CapacityReservationSpecification":{"shape":"CapacityReservationSpecification"},
+        "InstanceLifecyclePolicy":{"shape":"InstanceLifecyclePolicy"},
+        "DeletionProtection":{"shape":"DeletionProtection"}
       }
     },
     "UpdatePlacementGroupParam":{

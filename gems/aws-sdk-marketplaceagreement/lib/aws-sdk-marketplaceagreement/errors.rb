@@ -28,8 +28,10 @@ module Aws::MarketplaceAgreement
   #
   # ## Error Classes
   # * {AccessDeniedException}
+  # * {ConflictException}
   # * {InternalServerException}
   # * {ResourceNotFoundException}
+  # * {ServiceQuotaExceededException}
   # * {ThrottlingException}
   # * {ValidationException}
   #
@@ -49,53 +51,38 @@ module Aws::MarketplaceAgreement
       end
 
       # @return [String]
+      def request_id
+        @data[:request_id]
+      end
+
+      # @return [String]
       def message
         @message || @data[:message]
       end
 
       # @return [String]
-      def request_id
-        @data[:request_id]
+      def reason
+        @data[:reason]
       end
     end
 
-    class InternalServerException < ServiceError
+    class ConflictException < ServiceError
 
       # @param [Seahorse::Client::RequestContext] context
       # @param [String] message
-      # @param [Aws::MarketplaceAgreement::Types::InternalServerException] data
+      # @param [Aws::MarketplaceAgreement::Types::ConflictException] data
       def initialize(context, message, data = Aws::EmptyStructure.new)
         super(context, message, data)
       end
 
       # @return [String]
-      def message
-        @message || @data[:message]
-      end
-
-      # @return [String]
       def request_id
         @data[:request_id]
-      end
-    end
-
-    class ResourceNotFoundException < ServiceError
-
-      # @param [Seahorse::Client::RequestContext] context
-      # @param [String] message
-      # @param [Aws::MarketplaceAgreement::Types::ResourceNotFoundException] data
-      def initialize(context, message, data = Aws::EmptyStructure.new)
-        super(context, message, data)
       end
 
       # @return [String]
       def message
         @message || @data[:message]
-      end
-
-      # @return [String]
-      def request_id
-        @data[:request_id]
       end
 
       # @return [String]
@@ -109,6 +96,96 @@ module Aws::MarketplaceAgreement
       end
     end
 
+    class InternalServerException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::MarketplaceAgreement::Types::InternalServerException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def request_id
+        @data[:request_id]
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+    end
+
+    class ResourceNotFoundException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::MarketplaceAgreement::Types::ResourceNotFoundException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def request_id
+        @data[:request_id]
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+
+      # @return [String]
+      def resource_id
+        @data[:resource_id]
+      end
+
+      # @return [String]
+      def resource_type
+        @data[:resource_type]
+      end
+    end
+
+    class ServiceQuotaExceededException < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::MarketplaceAgreement::Types::ServiceQuotaExceededException] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def request_id
+        @data[:request_id]
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+
+      # @return [String]
+      def quota_code
+        @data[:quota_code]
+      end
+
+      # @return [String]
+      def service_code
+        @data[:service_code]
+      end
+
+      # @return [String]
+      def resource_type
+        @data[:resource_type]
+      end
+
+      # @return [String]
+      def resource_id
+        @data[:resource_id]
+      end
+    end
+
     class ThrottlingException < ServiceError
 
       # @param [Seahorse::Client::RequestContext] context
@@ -119,13 +196,13 @@ module Aws::MarketplaceAgreement
       end
 
       # @return [String]
-      def message
-        @message || @data[:message]
+      def request_id
+        @data[:request_id]
       end
 
       # @return [String]
-      def request_id
-        @data[:request_id]
+      def message
+        @message || @data[:message]
       end
     end
 
@@ -139,8 +216,8 @@ module Aws::MarketplaceAgreement
       end
 
       # @return [String]
-      def fields
-        @data[:fields]
+      def request_id
+        @data[:request_id]
       end
 
       # @return [String]
@@ -154,8 +231,8 @@ module Aws::MarketplaceAgreement
       end
 
       # @return [String]
-      def request_id
-        @data[:request_id]
+      def fields
+        @data[:fields]
       end
     end
 

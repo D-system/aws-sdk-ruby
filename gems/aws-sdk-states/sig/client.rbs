@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -90,7 +91,7 @@ module Aws
                                {
                                  key: ::String?,
                                  value: ::String?
-                               },
+                               }
                              ],
                              ?encryption_configuration: {
                                kms_key_id: ::String?,
@@ -112,22 +113,12 @@ module Aws
                                   definition: ::String,
                                   role_arn: ::String,
                                   ?type: ("STANDARD" | "EXPRESS"),
-                                  ?logging_configuration: {
-                                    level: ("ALL" | "ERROR" | "FATAL" | "OFF")?,
-                                    include_execution_data: bool?,
-                                    destinations: Array[
-                                      {
-                                        cloud_watch_logs_log_group: {
-                                          log_group_arn: ::String?
-                                        }?
-                                      },
-                                    ]?
-                                  },
+                                  ?logging_configuration: Params::logging_configuration,
                                   ?tags: Array[
                                     {
                                       key: ::String?,
                                       value: ::String?
-                                    },
+                                    }
                                   ],
                                   ?tracing_configuration: {
                                     enabled: bool?
@@ -155,7 +146,7 @@ module Aws
                                           {
                                             state_machine_version_arn: ::String,
                                             weight: ::Integer
-                                          },
+                                          }
                                         ]
                                       ) -> _CreateStateMachineAliasResponseSuccess
                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateStateMachineAliasResponseSuccess
@@ -552,7 +543,7 @@ module Aws
                             {
                               key: ::String?,
                               value: ::String?
-                            },
+                            }
                           ]
                         ) -> _TagResourceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess
@@ -572,7 +563,23 @@ module Aws
                         ?input: ::String,
                         ?inspection_level: ("INFO" | "DEBUG" | "TRACE"),
                         ?reveal_secrets: bool,
-                        ?variables: ::String
+                        ?variables: ::String,
+                        ?state_name: ::String,
+                        ?mock: {
+                          result: ::String?,
+                          error_output: {
+                            error: ::String?,
+                            cause: ::String?
+                          }?,
+                          field_validation_mode: ("STRICT" | "PRESENT" | "NONE")?
+                        },
+                        ?context: ::String,
+                        ?state_configuration: {
+                          retrier_retry_count: ::Integer?,
+                          error_caused_by_state: ::String?,
+                          map_iteration_failure_count: ::Integer?,
+                          map_item_reader_data: ::String?
+                        }
                       ) -> _TestStateResponseSuccess
                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TestStateResponseSuccess
 
@@ -609,17 +616,7 @@ module Aws
                                   state_machine_arn: ::String,
                                   ?definition: ::String,
                                   ?role_arn: ::String,
-                                  ?logging_configuration: {
-                                    level: ("ALL" | "ERROR" | "FATAL" | "OFF")?,
-                                    include_execution_data: bool?,
-                                    destinations: Array[
-                                      {
-                                        cloud_watch_logs_log_group: {
-                                          log_group_arn: ::String?
-                                        }?
-                                      },
-                                    ]?
-                                  },
+                                  ?logging_configuration: Params::logging_configuration,
                                   ?tracing_configuration: {
                                     enabled: bool?
                                   },
@@ -645,7 +642,7 @@ module Aws
                                           {
                                             state_machine_version_arn: ::String,
                                             weight: ::Integer
-                                          },
+                                          }
                                         ]
                                       ) -> _UpdateStateMachineAliasResponseSuccess
                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateStateMachineAliasResponseSuccess

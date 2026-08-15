@@ -479,6 +479,11 @@ module Aws::MediaConnect
     #   The resolution of the video.
     #   @return [String]
     #
+    # @!attribute [rw] media_stream_tags
+    #   The key-value pairs that can be used to tag and organize the media
+    #   stream.
+    #   @return [Hash<String,String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/AddMediaStreamRequest AWS API Documentation
     #
     class AddMediaStreamRequest < Struct.new(
@@ -488,7 +493,8 @@ module Aws::MediaConnect
       :media_stream_id,
       :media_stream_name,
       :media_stream_type,
-      :video_format)
+      :video_format,
+      :media_stream_tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -588,8 +594,36 @@ module Aws::MediaConnect
     #   @return [Integer]
     #
     # @!attribute [rw] ndi_program_name
-    #   A suffix for the names of the NDI sources that the flow creates. If
-    #   a custom name isn't specified, MediaConnect uses the output name.
+    #   A suffix for the name of the NDI® sender that the flow creates. If a
+    #   custom name isn't specified, MediaConnect uses the output name.
+    #   @return [String]
+    #
+    # @!attribute [rw] output_tags
+    #   The key-value pairs that can be used to tag and organize the output.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] router_integration_state
+    #   Indicates whether to enable or disable router integration when
+    #   creating a new flow output.
+    #   @return [String]
+    #
+    # @!attribute [rw] router_integration_transit_encryption
+    #   The configuration that defines how content is encrypted during
+    #   transit between the MediaConnect router and a MediaConnect flow.
+    #   @return [Types::FlowTransitEncryption]
+    #
+    # @!attribute [rw] ndi_output_timecode_source
+    #   Controls how MediaConnect generates timecodes for NDI output frames.
+    #   If you don't specify this field, MediaConnect uses
+    #   `EMBEDDED_TIMECODE`.
+    #
+    #   * `EMBEDDED_TIMECODE` (default) - Preserves timecodes from the input
+    #     transport stream. The timecodes must be embedded in the video
+    #     stream as SEI timing messages. If no embedded timecode is
+    #     detected, MediaConnect uses the UTC system time instead.
+    #
+    #   * `UTC_SYSTEM_TIME` - Generates timecodes based on the system clock
+    #     time when each frame is sent.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/AddOutputRequest AWS API Documentation
@@ -612,7 +646,11 @@ module Aws::MediaConnect
       :vpc_interface_attachment,
       :output_status,
       :ndi_speed_hq_quality,
-      :ndi_program_name)
+      :ndi_program_name,
+      :output_tags,
+      :router_integration_state,
+      :router_integration_transit_encryption,
+      :ndi_output_timecode_source)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -631,6 +669,15 @@ module Aws::MediaConnect
       include Aws::Structure
     end
 
+    # Configuration settings for automatic encryption key management, where
+    # MediaConnect handles key creation and rotation.
+    #
+    # @api private
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/AutomaticEncryptionKeyConfiguration AWS API Documentation
+    #
+    class AutomaticEncryptionKeyConfiguration < Aws::EmptyStructure; end
+
     # This exception is thrown if the request contains a semantic error. The
     # precise meaning depends on the API, and is documented in the error
     # message.
@@ -646,10 +693,185 @@ module Aws::MediaConnect
       include Aws::Structure
     end
 
+    # An error that occurred when retrieving multiple router inputs in the
+    # BatchGetRouterInput operation, including the ARN, error code, and
+    # error message.
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the router input for which the
+    #   error occurred.
+    #   @return [String]
+    #
+    # @!attribute [rw] code
+    #   The error code associated with the error.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   A message describing the error.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/BatchGetRouterInputError AWS API Documentation
+    #
+    class BatchGetRouterInputError < Struct.new(
+      :arn,
+      :code,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arns
+    #   The Amazon Resource Names (ARNs) of the router inputs you want to
+    #   retrieve information about.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/BatchGetRouterInputRequest AWS API Documentation
+    #
+    class BatchGetRouterInputRequest < Struct.new(
+      :arns)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] router_inputs
+    #   An array of router inputs that were successfully retrieved.
+    #   @return [Array<Types::RouterInput>]
+    #
+    # @!attribute [rw] errors
+    #   An array of errors that occurred when retrieving the requested
+    #   router inputs.
+    #   @return [Array<Types::BatchGetRouterInputError>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/BatchGetRouterInputResponse AWS API Documentation
+    #
+    class BatchGetRouterInputResponse < Struct.new(
+      :router_inputs,
+      :errors)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # An error that occurred when retrieving multiple router network
+    # interfaces in the BatchGetRouterNetworkInterface operation, including
+    # the ARN, error code, and error message.
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the router network interface for
+    #   which the error occurred.
+    #   @return [String]
+    #
+    # @!attribute [rw] code
+    #   The error code associated with the error.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   A message describing the error.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/BatchGetRouterNetworkInterfaceError AWS API Documentation
+    #
+    class BatchGetRouterNetworkInterfaceError < Struct.new(
+      :arn,
+      :code,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arns
+    #   The Amazon Resource Names (ARNs) of the router network interfaces
+    #   you want to retrieve information about.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/BatchGetRouterNetworkInterfaceRequest AWS API Documentation
+    #
+    class BatchGetRouterNetworkInterfaceRequest < Struct.new(
+      :arns)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] router_network_interfaces
+    #   An array of router network interfaces that were successfully
+    #   retrieved.
+    #   @return [Array<Types::RouterNetworkInterface>]
+    #
+    # @!attribute [rw] errors
+    #   An array of errors that occurred when retrieving the requested
+    #   router network interfaces.
+    #   @return [Array<Types::BatchGetRouterNetworkInterfaceError>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/BatchGetRouterNetworkInterfaceResponse AWS API Documentation
+    #
+    class BatchGetRouterNetworkInterfaceResponse < Struct.new(
+      :router_network_interfaces,
+      :errors)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # An error that occurred when retrieving multiple router outputs in the
+    # BatchGetRouterOutput operation, including the ARN, error code, and
+    # error message.
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the router output for which the
+    #   error occurred.
+    #   @return [String]
+    #
+    # @!attribute [rw] code
+    #   The error code associated with the error.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   A message describing the error.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/BatchGetRouterOutputError AWS API Documentation
+    #
+    class BatchGetRouterOutputError < Struct.new(
+      :arn,
+      :code,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arns
+    #   The Amazon Resource Names (ARNs) of the router outputs you want to
+    #   retrieve information about.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/BatchGetRouterOutputRequest AWS API Documentation
+    #
+    class BatchGetRouterOutputRequest < Struct.new(
+      :arns)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] router_outputs
+    #   An array of router outputs that were successfully retrieved.
+    #   @return [Array<Types::RouterOutput>]
+    #
+    # @!attribute [rw] errors
+    #   An array of errors that occurred when retrieving the requested
+    #   router outputs.
+    #   @return [Array<Types::BatchGetRouterOutputError>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/BatchGetRouterOutputResponse AWS API Documentation
+    #
+    class BatchGetRouterOutputResponse < Struct.new(
+      :router_outputs,
+      :errors)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Configures settings for the `BlackFrames` metric.
     #
     # @!attribute [rw] state
-    #   Indicates whether the `BlackFrames` metric is enabled or disabled..
+    #   Indicates whether the `BlackFrames` metric is enabled or disabled.
     #   @return [String]
     #
     # @!attribute [rw] threshold_seconds
@@ -660,6 +882,28 @@ module Aws::MediaConnect
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/BlackFrames AWS API Documentation
     #
     class BlackFrames < Struct.new(
+      :state,
+      :threshold_seconds)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Detects black frames in the router input's source content and reports
+    # them through a CloudWatch metric, an EventBridge event, and a router
+    # input message.
+    #
+    # @!attribute [rw] state
+    #   Indicates whether black frames detection is enabled or disabled.
+    #   @return [String]
+    #
+    # @!attribute [rw] threshold_seconds
+    #   The number of consecutive seconds of black frames that MediaConnect
+    #   must detect before it reports an issue.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/BlackFramesConfiguration AWS API Documentation
+    #
+    class BlackFramesConfiguration < Struct.new(
       :state,
       :threshold_seconds)
       SENSITIVE = []
@@ -928,6 +1172,30 @@ module Aws::MediaConnect
       include Aws::Structure
     end
 
+    # Configures the content quality analysis features for the router input.
+    #
+    # @!attribute [rw] black_frames
+    #   Settings for black frames detection.
+    #   @return [Types::BlackFramesConfiguration]
+    #
+    # @!attribute [rw] frozen_frames
+    #   Settings for frozen frames detection.
+    #   @return [Types::FrozenFramesConfiguration]
+    #
+    # @!attribute [rw] silent_audio
+    #   Settings for silent audio detection.
+    #   @return [Types::SilentAudioConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/ContentQualityAnalysisFeatureConfiguration AWS API Documentation
+    #
+    class ContentQualityAnalysisFeatureConfiguration < Struct.new(
+      :black_frames,
+      :frozen_frames,
+      :silent_audio)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Exception raised by Elemental MediaConnect when creating the bridge.
     # See the error message for the operation for more information on the
     # cause of this exception.
@@ -1064,14 +1332,25 @@ module Aws::MediaConnect
     #
     # @!attribute [rw] flow_size
     #   Determines the processing capacity and feature set of the flow. Set
-    #   this optional parameter to `LARGE` if you want to enable NDI outputs
-    #   on the flow.
+    #   this optional parameter to `LARGE` if you want to enable NDI sources
+    #   or outputs on the flow.
     #   @return [String]
     #
     # @!attribute [rw] ndi_config
-    #   Specifies the configuration settings for NDI outputs. Required when
-    #   the flow includes NDI outputs.
+    #   Specifies the configuration settings for a flow's NDI source or
+    #   output. Required when the flow includes an NDI source or output.
     #   @return [Types::NdiConfig]
+    #
+    # @!attribute [rw] encoding_config
+    #   The encoding configuration to apply to the NDI® source when
+    #   transcoding it to a transport stream for downstream distribution.
+    #   You can choose between several predefined encoding profiles based on
+    #   common use cases.
+    #   @return [Types::EncodingConfig]
+    #
+    # @!attribute [rw] flow_tags
+    #   The key-value pairs that can be used to tag and organize the flow.
+    #   @return [Hash<String,String>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/CreateFlowRequest AWS API Documentation
     #
@@ -1088,7 +1367,9 @@ module Aws::MediaConnect
       :maintenance,
       :source_monitoring_config,
       :flow_size,
-      :ndi_config)
+      :ndi_config,
+      :encoding_config,
+      :flow_tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1157,6 +1438,236 @@ module Aws::MediaConnect
       SENSITIVE = []
       include Aws::Structure
     end
+
+    # @!attribute [rw] name
+    #   The name of the router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] configuration
+    #   The configuration settings for the router input, which can include
+    #   the protocol, network interface, and other details.
+    #   @return [Types::RouterInputConfiguration]
+    #
+    # @!attribute [rw] maximum_bitrate
+    #   The maximum bitrate for the router input.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] routing_scope
+    #   Specifies whether the router input can be assigned to outputs in
+    #   different Regions. REGIONAL (default) - connects only to outputs in
+    #   same Region. GLOBAL - connects to outputs in any Region.
+    #   @return [String]
+    #
+    # @!attribute [rw] tier
+    #   The tier level for the router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] region_name
+    #   The Amazon Web Services Region for the router input. Defaults to the
+    #   current region if not specified.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_zone
+    #   The Availability Zone where you want to create the router input.
+    #   This must be a valid Availability Zone for the region specified by
+    #   `regionName`, or the current region if no `regionName` is provided.
+    #   @return [String]
+    #
+    # @!attribute [rw] transit_encryption
+    #   The transit encryption settings for the router input.
+    #   @return [Types::RouterInputTransitEncryption]
+    #
+    # @!attribute [rw] maintenance_configuration
+    #   The maintenance configuration settings for the router input,
+    #   including preferred maintenance windows and schedules.
+    #   @return [Types::MaintenanceConfiguration]
+    #
+    # @!attribute [rw] tags
+    #   Key-value pairs that can be used to tag and organize this router
+    #   input.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] client_token
+    #   A unique identifier for the request to ensure idempotency.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @!attribute [rw] content_quality_analysis_configuration
+    #   The content quality analysis configuration for the router input.
+    #   @return [Types::RouterContentQualityAnalysisConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/CreateRouterInputRequest AWS API Documentation
+    #
+    class CreateRouterInputRequest < Struct.new(
+      :name,
+      :configuration,
+      :maximum_bitrate,
+      :routing_scope,
+      :tier,
+      :region_name,
+      :availability_zone,
+      :transit_encryption,
+      :maintenance_configuration,
+      :tags,
+      :client_token,
+      :content_quality_analysis_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] router_input
+    #   The newly-created router input.
+    #   @return [Types::RouterInput]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/CreateRouterInputResponse AWS API Documentation
+    #
+    class CreateRouterInputResponse < Struct.new(
+      :router_input)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] name
+    #   The name of the router network interface.
+    #   @return [String]
+    #
+    # @!attribute [rw] configuration
+    #   The configuration settings for the router network interface.
+    #   @return [Types::RouterNetworkInterfaceConfiguration]
+    #
+    # @!attribute [rw] region_name
+    #   The Amazon Web Services Region for the router network interface.
+    #   Defaults to the current region if not specified.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   Key-value pairs that can be used to tag and organize this router
+    #   network interface.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] client_token
+    #   A unique identifier for the request to ensure idempotency.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/CreateRouterNetworkInterfaceRequest AWS API Documentation
+    #
+    class CreateRouterNetworkInterfaceRequest < Struct.new(
+      :name,
+      :configuration,
+      :region_name,
+      :tags,
+      :client_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] router_network_interface
+    #   The newly-created router network interface.
+    #   @return [Types::RouterNetworkInterface]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/CreateRouterNetworkInterfaceResponse AWS API Documentation
+    #
+    class CreateRouterNetworkInterfaceResponse < Struct.new(
+      :router_network_interface)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] name
+    #   The name of the router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] configuration
+    #   The configuration settings for the router output.
+    #   @return [Types::RouterOutputConfiguration]
+    #
+    # @!attribute [rw] maximum_bitrate
+    #   The maximum bitrate for the router output.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] routing_scope
+    #   Specifies whether the router output can take inputs that are in
+    #   different Regions. REGIONAL (default) - can only take inputs from
+    #   same Region. GLOBAL - can take inputs from any Region.
+    #   @return [String]
+    #
+    # @!attribute [rw] tier
+    #   The tier level for the router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] region_name
+    #   The Amazon Web Services Region for the router output. Defaults to
+    #   the current region if not specified.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_zone
+    #   The Availability Zone where you want to create the router output.
+    #   This must be a valid Availability Zone for the region specified by
+    #   `regionName`, or the current region if no `regionName` is provided.
+    #   @return [String]
+    #
+    # @!attribute [rw] maintenance_configuration
+    #   The maintenance configuration settings for the router output,
+    #   including preferred maintenance windows and schedules.
+    #   @return [Types::MaintenanceConfiguration]
+    #
+    # @!attribute [rw] tags
+    #   Key-value pairs that can be used to tag this router output.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] fabric_configuration
+    #   The fabric configuration settings for the router output.
+    #   @return [Types::FabricConfiguration]
+    #
+    # @!attribute [rw] client_token
+    #   A unique identifier for the request to ensure idempotency.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/CreateRouterOutputRequest AWS API Documentation
+    #
+    class CreateRouterOutputRequest < Struct.new(
+      :name,
+      :configuration,
+      :maximum_bitrate,
+      :routing_scope,
+      :tier,
+      :region_name,
+      :availability_zone,
+      :maintenance_configuration,
+      :tags,
+      :fabric_configuration,
+      :client_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] router_output
+    #   The newly-created router output.
+    #   @return [Types::RouterOutput]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/CreateRouterOutputResponse AWS API Documentation
+    #
+    class CreateRouterOutputResponse < Struct.new(
+      :router_output)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration settings for default maintenance scheduling.
+    #
+    # @api private
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/DefaultMaintenanceConfiguration AWS API Documentation
+    #
+    class DefaultMaintenanceConfiguration < Aws::EmptyStructure; end
 
     # @!attribute [rw] bridge_arn
     #   The Amazon Resource Name (ARN) of the bridge that you want to
@@ -1233,6 +1744,114 @@ module Aws::MediaConnect
     #
     class DeleteGatewayResponse < Struct.new(
       :gateway_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the router input that you want to
+    #   delete.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/DeleteRouterInputRequest AWS API Documentation
+    #
+    class DeleteRouterInputRequest < Struct.new(
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The ARN of the deleted router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the deleted router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] state
+    #   The current state of the deleted router input, indicating where it
+    #   is in the deletion process.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/DeleteRouterInputResponse AWS API Documentation
+    #
+    class DeleteRouterInputResponse < Struct.new(
+      :arn,
+      :name,
+      :state)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the router network interface that
+    #   you want to delete.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/DeleteRouterNetworkInterfaceRequest AWS API Documentation
+    #
+    class DeleteRouterNetworkInterfaceRequest < Struct.new(
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The ARN of the deleted router network interface.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the deleted router network interface.
+    #   @return [String]
+    #
+    # @!attribute [rw] state
+    #   The current state of the deleted router network interface,
+    #   indicating where it is in the deletion process.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/DeleteRouterNetworkInterfaceResponse AWS API Documentation
+    #
+    class DeleteRouterNetworkInterfaceResponse < Struct.new(
+      :arn,
+      :name,
+      :state)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the router output that you want to
+    #   delete.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/DeleteRouterOutputRequest AWS API Documentation
+    #
+    class DeleteRouterOutputRequest < Struct.new(
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The ARN of the deleted router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the deleted router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] state
+    #   The current state of the deleted router output, indicating where it
+    #   is in the deletion process.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/DeleteRouterOutputResponse AWS API Documentation
+    #
+    class DeleteRouterOutputResponse < Struct.new(
+      :arn,
+      :name,
+      :state)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1359,13 +1978,21 @@ module Aws::MediaConnect
     #   Information about the flow's transport media.
     #   @return [Types::TransportMediaInfo]
     #
+    # @!attribute [rw] ndi_info
+    #   The NDI® specific information about the flow's source. This
+    #   includes the current active NDI sender, a list of all discovered NDI
+    #   senders, the associated media streams for the active NDI sender, and
+    #   any relevant status messages.
+    #   @return [Types::NdiSourceMetadataInfo]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/DescribeFlowSourceMetadataResponse AWS API Documentation
     #
     class DescribeFlowSourceMetadataResponse < Struct.new(
       :flow_arn,
       :messages,
       :timestamp,
-      :transport_media_info)
+      :transport_media_info,
+      :ndi_info)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1583,6 +2210,37 @@ module Aws::MediaConnect
       include Aws::Structure
     end
 
+    # The encoding configuration to apply to the NDI® source when
+    # transcoding it to a transport stream for downstream distribution. You
+    # can choose between several predefined encoding profiles based on
+    # common use cases.
+    #
+    # @!attribute [rw] encoding_profile
+    #   The encoding profile to use when transcoding the NDI source content
+    #   to a transport stream. You can change this value while the flow is
+    #   running.
+    #   @return [String]
+    #
+    # @!attribute [rw] video_max_bitrate
+    #   The maximum video bitrate to use when transcoding the NDI source to
+    #   a transport stream. This parameter enables you to override the
+    #   default video bitrate within the encoding profile's supported
+    #   range.
+    #
+    #   The supported range is 10,000,000 - 50,000,000 bits per second
+    #   (bps). If you don't specify a value, MediaConnect uses the default
+    #   value of 20,000,000 bps.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/EncodingConfig AWS API Documentation
+    #
+    class EncodingConfig < Struct.new(
+      :encoding_profile,
+      :video_max_bitrate)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # A collection of parameters that determine how MediaConnect will
     # convert the content. These fields only apply to outputs on flows that
     # have a CDI source.
@@ -1641,7 +2299,7 @@ module Aws::MediaConnect
       include Aws::Structure
     end
 
-    # Information about the encryption of the flow.
+    # Encryption information.
     #
     # @!attribute [rw] algorithm
     #   The type of algorithm that is used for the encryption (such as
@@ -1760,6 +2418,26 @@ module Aws::MediaConnect
       include Aws::Structure
     end
 
+    # The fabric configuration settings for the router output.
+    #
+    # @!attribute [rw] recovery_latency_mode
+    #   The recovery latency mode for the router fabric connection. Valid
+    #   values include the following:
+    #
+    #   * `BALANCED` (default) – Optimizes for stream quality.
+    #
+    #   * `LOW_LATENCY` – Reduces latency at the potential cost of stream
+    #     quality under adverse network conditions.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/FabricConfiguration AWS API Documentation
+    #
+    class FabricConfiguration < Struct.new(
+      :recovery_latency_mode)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The settings for source failover.
     #
     # @!attribute [rw] failover_mode
@@ -1791,6 +2469,134 @@ module Aws::MediaConnect
       :recovery_window,
       :source_priority,
       :state)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration settings for a failover router input that allows
+    # switching between two input sources.
+    #
+    # @!attribute [rw] network_interface_arn
+    #   The ARN of the network interface to use for this failover router
+    #   input.
+    #   @return [String]
+    #
+    # @!attribute [rw] protocol_configurations
+    #   A list of exactly two protocol configurations for the failover input
+    #   sources. Both must use the same protocol type.
+    #   @return [Array<Types::FailoverRouterInputProtocolConfiguration>]
+    #
+    # @!attribute [rw] source_priority_mode
+    #   The mode for determining source priority in failover configurations.
+    #   @return [String]
+    #
+    # @!attribute [rw] primary_source_index
+    #   The index (0 or 1) that specifies which source in the protocol
+    #   configurations list is currently active. Used to control which of
+    #   the two failover sources is currently selected. This field is
+    #   ignored when sourcePriorityMode is set to NO\_PRIORITY
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/FailoverRouterInputConfiguration AWS API Documentation
+    #
+    class FailoverRouterInputConfiguration < Struct.new(
+      :network_interface_arn,
+      :protocol_configurations,
+      :source_priority_mode,
+      :primary_source_index)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration details for an indexed stream in a failover router input
+    # setup.
+    #
+    # @!attribute [rw] source_index
+    #   The index number (0 or 1) assigned to this source in the failover
+    #   configuration.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] source_ip_address
+    #   The IP address of the source for this indexed stream.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/FailoverRouterInputIndexedStreamDetails AWS API Documentation
+    #
+    class FailoverRouterInputIndexedStreamDetails < Struct.new(
+      :source_index,
+      :source_ip_address)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Protocol configuration settings for failover router inputs.
+    #
+    # @note FailoverRouterInputProtocolConfiguration is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note FailoverRouterInputProtocolConfiguration is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of FailoverRouterInputProtocolConfiguration corresponding to the set member.
+    #
+    # @!attribute [rw] rist
+    #   The configuration settings for a router input using the RIST
+    #   (Reliable Internet Stream Transport) protocol, including the port
+    #   and recovery latency.
+    #   @return [Types::RistRouterInputConfiguration]
+    #
+    # @!attribute [rw] srt_listener
+    #   The configuration settings for a router input using the SRT (Secure
+    #   Reliable Transport) protocol in listener mode, including the port,
+    #   minimum latency, and decryption key configuration.
+    #   @return [Types::SrtListenerRouterInputConfiguration]
+    #
+    # @!attribute [rw] srt_caller
+    #   The configuration settings for a router input using the SRT (Secure
+    #   Reliable Transport) protocol in caller mode, including the source
+    #   address and port, minimum latency, stream ID, and decryption key
+    #   configuration.
+    #   @return [Types::SrtCallerRouterInputConfiguration]
+    #
+    # @!attribute [rw] rtp
+    #   The configuration settings for a Router Input using the RTP
+    #   (Real-Time Transport Protocol) protocol, including the port and
+    #   forward error correction state.
+    #   @return [Types::RtpRouterInputConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/FailoverRouterInputProtocolConfiguration AWS API Documentation
+    #
+    class FailoverRouterInputProtocolConfiguration < Struct.new(
+      :rist,
+      :srt_listener,
+      :srt_caller,
+      :rtp,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Rist < FailoverRouterInputProtocolConfiguration; end
+      class SrtListener < FailoverRouterInputProtocolConfiguration; end
+      class SrtCaller < FailoverRouterInputProtocolConfiguration; end
+      class Rtp < FailoverRouterInputProtocolConfiguration; end
+      class Unknown < FailoverRouterInputProtocolConfiguration; end
+    end
+
+    # Configuration details for a failover router input that can
+    # automatically switch between two sources.
+    #
+    # @!attribute [rw] source_index_zero_stream_details
+    #   Configuration details for the primary source (index 0) in the
+    #   failover setup.
+    #   @return [Types::FailoverRouterInputIndexedStreamDetails]
+    #
+    # @!attribute [rw] source_index_one_stream_details
+    #   Configuration details for the secondary source (index 1) in the
+    #   failover setup.
+    #   @return [Types::FailoverRouterInputIndexedStreamDetails]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/FailoverRouterInputStreamDetails AWS API Documentation
+    #
+    class FailoverRouterInputStreamDetails < Struct.new(
+      :source_index_zero_stream_details,
+      :source_index_one_stream_details)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1864,15 +2670,18 @@ module Aws::MediaConnect
     #   @return [Types::MonitoringConfig]
     #
     # @!attribute [rw] flow_size
-    #   Determines the processing capacity and feature set of the flow. Set
-    #   this optional parameter to LARGE if you want to enable NDI outputs
-    #   on the flow.
+    #   Determines the processing capacity and feature set of the flow.
     #   @return [String]
     #
     # @!attribute [rw] ndi_config
-    #   Specifies the configuration settings for NDI outputs. Required when
-    #   the flow includes NDI outputs.
+    #   Specifies the configuration settings for a flow's NDI source or
+    #   output. Required when the flow includes an NDI source or output.
     #   @return [Types::NdiConfig]
+    #
+    # @!attribute [rw] encoding_config
+    #   The encoding configuration to apply to the NDI® source when
+    #   transcoding it to a transport stream for downstream distribution.
+    #   @return [Types::EncodingConfig]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/Flow AWS API Documentation
     #
@@ -1893,9 +2702,61 @@ module Aws::MediaConnect
       :maintenance,
       :source_monitoring_config,
       :flow_size,
-      :ndi_config)
+      :ndi_config,
+      :encoding_config)
       SENSITIVE = []
       include Aws::Structure
+    end
+
+    # The configuration that defines how content is encrypted during transit
+    # between the MediaConnect router and a MediaConnect flow.
+    #
+    # @!attribute [rw] encryption_key_type
+    #   The type of encryption key to use for flow transit encryption.
+    #   @return [String]
+    #
+    # @!attribute [rw] encryption_key_configuration
+    #   The configuration details for the encryption key.
+    #   @return [Types::FlowTransitEncryptionKeyConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/FlowTransitEncryption AWS API Documentation
+    #
+    class FlowTransitEncryption < Struct.new(
+      :encryption_key_type,
+      :encryption_key_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration settings for flow transit encryption keys.
+    #
+    # @note FlowTransitEncryptionKeyConfiguration is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note FlowTransitEncryptionKeyConfiguration is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of FlowTransitEncryptionKeyConfiguration corresponding to the set member.
+    #
+    # @!attribute [rw] secrets_manager
+    #   The configuration settings for transit encryption using Secrets
+    #   Manager, including the secret ARN and role ARN.
+    #   @return [Types::SecretsManagerEncryptionKeyConfiguration]
+    #
+    # @!attribute [rw] automatic
+    #   Configuration settings for automatic encryption key management,
+    #   where MediaConnect handles key creation and rotation.
+    #   @return [Types::AutomaticEncryptionKeyConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/FlowTransitEncryptionKeyConfiguration AWS API Documentation
+    #
+    class FlowTransitEncryptionKeyConfiguration < Struct.new(
+      :secrets_manager,
+      :automatic,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class SecretsManager < FlowTransitEncryptionKeyConfiguration; end
+      class Automatic < FlowTransitEncryptionKeyConfiguration; end
+      class Unknown < FlowTransitEncryptionKeyConfiguration; end
     end
 
     # A set of parameters that define the media stream.
@@ -2044,6 +2905,28 @@ module Aws::MediaConnect
       include Aws::Structure
     end
 
+    # Detects frozen video frames in the router input's source content and
+    # reports them through a CloudWatch metric, an EventBridge event, and a
+    # router input message.
+    #
+    # @!attribute [rw] state
+    #   Indicates whether frozen frames detection is enabled or disabled.
+    #   @return [String]
+    #
+    # @!attribute [rw] threshold_seconds
+    #   The number of consecutive seconds of a frozen frame that
+    #   MediaConnect must detect before it reports an issue.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/FrozenFramesConfiguration AWS API Documentation
+    #
+    class FrozenFramesConfiguration < Struct.new(
+      :state,
+      :threshold_seconds)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The settings for a gateway, including its networks.
     #
     # @!attribute [rw] egress_cidr_blocks
@@ -2183,6 +3066,157 @@ module Aws::MediaConnect
       include Aws::Structure
     end
 
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the router input to retrieve
+    #   information about.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/GetRouterInputRequest AWS API Documentation
+    #
+    class GetRouterInputRequest < Struct.new(
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] router_input
+    #   The details of the requested router input, including its
+    #   configuration, state, and other attributes.
+    #   @return [Types::RouterInput]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/GetRouterInputResponse AWS API Documentation
+    #
+    class GetRouterInputResponse < Struct.new(
+      :router_input)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the router input to retrieve
+    #   metadata for.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/GetRouterInputSourceMetadataRequest AWS API Documentation
+    #
+    class GetRouterInputSourceMetadataRequest < Struct.new(
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] source_metadata_details
+    #   Detailed metadata information about the router input source,
+    #   including connection state, timestamps, and stream configuration.
+    #   @return [Types::RouterInputSourceMetadataDetails]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/GetRouterInputSourceMetadataResponse AWS API Documentation
+    #
+    class GetRouterInputSourceMetadataResponse < Struct.new(
+      :arn,
+      :name,
+      :source_metadata_details)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the router input that you want to
+    #   see a thumbnail of.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/GetRouterInputThumbnailRequest AWS API Documentation
+    #
+    class GetRouterInputThumbnailRequest < Struct.new(
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The ARN of the router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] thumbnail_details
+    #   The details of the thumbnail associated with the router input,
+    #   including the thumbnail image, timecode, timestamp, and any
+    #   associated error messages.
+    #   @return [Types::RouterInputThumbnailDetails]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/GetRouterInputThumbnailResponse AWS API Documentation
+    #
+    class GetRouterInputThumbnailResponse < Struct.new(
+      :arn,
+      :name,
+      :thumbnail_details)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the router network interface that
+    #   you want to retrieve information about.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/GetRouterNetworkInterfaceRequest AWS API Documentation
+    #
+    class GetRouterNetworkInterfaceRequest < Struct.new(
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] router_network_interface
+    #   The details of the requested router network interface, including its
+    #   configuration and other attributes.
+    #   @return [Types::RouterNetworkInterface]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/GetRouterNetworkInterfaceResponse AWS API Documentation
+    #
+    class GetRouterNetworkInterfaceResponse < Struct.new(
+      :router_network_interface)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the router output that you want to
+    #   retrieve information about.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/GetRouterOutputRequest AWS API Documentation
+    #
+    class GetRouterOutputRequest < Struct.new(
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] router_output
+    #   The details of the requested router output, including its
+    #   configuration, state, and other attributes.
+    #   @return [Types::RouterOutput]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/GetRouterOutputResponse AWS API Documentation
+    #
+    class GetRouterOutputResponse < Struct.new(
+      :router_output)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The entitlements that you want to grant on a flow.
     #
     # @!attribute [rw] data_transfer_subscriber_fee_percent
@@ -2220,6 +3254,11 @@ module Aws::MediaConnect
     #   to create their own flows using your content as the source.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] entitlement_tags
+    #   The key-value pairs that can be used to tag and organize the
+    #   entitlement.
+    #   @return [Hash<String,String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/GrantEntitlementRequest AWS API Documentation
     #
     class GrantEntitlementRequest < Struct.new(
@@ -2228,7 +3267,8 @@ module Aws::MediaConnect
       :encryption,
       :entitlement_status,
       :name,
-      :subscribers)
+      :subscribers,
+      :entitlement_tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2806,6 +3846,150 @@ module Aws::MediaConnect
       include Aws::Structure
     end
 
+    # @!attribute [rw] max_results
+    #   The maximum number of router inputs to return in the response.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   A token used to retrieve the next page of results.
+    #   @return [String]
+    #
+    # @!attribute [rw] filters
+    #   The filters to apply when retrieving the list of router inputs.
+    #   @return [Array<Types::RouterInputFilter>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/ListRouterInputsRequest AWS API Documentation
+    #
+    class ListRouterInputsRequest < Struct.new(
+      :max_results,
+      :next_token,
+      :filters)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] router_inputs
+    #   The summary information for the retrieved router inputs.
+    #   @return [Array<Types::ListedRouterInput>]
+    #
+    # @!attribute [rw] next_token
+    #   The token to use to retrieve the next page of results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/ListRouterInputsResponse AWS API Documentation
+    #
+    class ListRouterInputsResponse < Struct.new(
+      :router_inputs,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] max_results
+    #   The maximum number of router network interfaces to return in the
+    #   response.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   A token used to retrieve the next page of results.
+    #   @return [String]
+    #
+    # @!attribute [rw] filters
+    #   The filters to apply when retrieving the list of router network
+    #   interfaces.
+    #   @return [Array<Types::RouterNetworkInterfaceFilter>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/ListRouterNetworkInterfacesRequest AWS API Documentation
+    #
+    class ListRouterNetworkInterfacesRequest < Struct.new(
+      :max_results,
+      :next_token,
+      :filters)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] router_network_interfaces
+    #   The summary information for the retrieved router network interfaces.
+    #   @return [Array<Types::ListedRouterNetworkInterface>]
+    #
+    # @!attribute [rw] next_token
+    #   The token to use to retrieve the next page of results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/ListRouterNetworkInterfacesResponse AWS API Documentation
+    #
+    class ListRouterNetworkInterfacesResponse < Struct.new(
+      :router_network_interfaces,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] max_results
+    #   The maximum number of router outputs to return in the response.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   A token used to retrieve the next page of results.
+    #   @return [String]
+    #
+    # @!attribute [rw] filters
+    #   The filters to apply when retrieving the list of router outputs.
+    #   @return [Array<Types::RouterOutputFilter>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/ListRouterOutputsRequest AWS API Documentation
+    #
+    class ListRouterOutputsRequest < Struct.new(
+      :max_results,
+      :next_token,
+      :filters)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] router_outputs
+    #   The summary information for the retrieved router outputs.
+    #   @return [Array<Types::ListedRouterOutput>]
+    #
+    # @!attribute [rw] next_token
+    #   The token to use to retrieve the next page of results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/ListRouterOutputsResponse AWS API Documentation
+    #
+    class ListRouterOutputsResponse < Struct.new(
+      :router_outputs,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] resource_arn
+    #   The Amazon Resource Name (ARN) of the global resource whose tags you
+    #   want to list.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/ListTagsForGlobalResourceRequest AWS API Documentation
+    #
+    class ListTagsForGlobalResourceRequest < Struct.new(
+      :resource_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] tags
+    #   A map of tag keys and values associated with the global resource.
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/ListTagsForGlobalResourceResponse AWS API Documentation
+    #
+    class ListTagsForGlobalResourceResponse < Struct.new(
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] resource_arn
     #   The Amazon Resource Name (ARN) that identifies the MediaConnect
     #   resource for which to list the tags.
@@ -2995,6 +4179,263 @@ module Aws::MediaConnect
       include Aws::Structure
     end
 
+    # A summary of a router input, including its name, type, ARN, ID, state,
+    # and other key details. This structure is used in the response of the
+    # ListRouterInputs operation.
+    #
+    # @!attribute [rw] name
+    #   The name of the router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] id
+    #   The unique identifier of the router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] input_type
+    #   The type of the router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] state
+    #   The overall state of the router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] routed_outputs
+    #   The number of router outputs that are associated with this router
+    #   input.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] region_name
+    #   The Amazon Web Services Region where the router input is located.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_zone
+    #   The Availability Zone of the router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] maximum_bitrate
+    #   The maximum bitrate of the router input.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] routing_scope
+    #   Indicates whether the router input is configured for Regional or
+    #   global routing.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_at
+    #   The timestamp when the router input was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_at
+    #   The timestamp when the router input was last updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] message_count
+    #   The number of messages associated with the router input.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] network_interface_arn
+    #   The ARN of the network interface associated with the router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] maintenance_schedule_type
+    #   The type of maintenance schedule currently associated with the
+    #   listed router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] maintenance_schedule
+    #   The details of the maintenance schedule for the listed router input.
+    #   @return [Types::MaintenanceSchedule]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/ListedRouterInput AWS API Documentation
+    #
+    class ListedRouterInput < Struct.new(
+      :name,
+      :arn,
+      :id,
+      :input_type,
+      :state,
+      :routed_outputs,
+      :region_name,
+      :availability_zone,
+      :maximum_bitrate,
+      :routing_scope,
+      :created_at,
+      :updated_at,
+      :message_count,
+      :network_interface_arn,
+      :maintenance_schedule_type,
+      :maintenance_schedule)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A summary of a router network interface, including its name, type,
+    # ARN, ID, associated input/output counts, state, and other key details.
+    # This structure is used in the response of the
+    # ListRouterNetworkInterfaces operation.
+    #
+    # @!attribute [rw] name
+    #   The name of the router network interface.
+    #   @return [String]
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the router network interface.
+    #   @return [String]
+    #
+    # @!attribute [rw] id
+    #   The unique identifier of the router network interface.
+    #   @return [String]
+    #
+    # @!attribute [rw] network_interface_type
+    #   The type of the router network interface.
+    #   @return [String]
+    #
+    # @!attribute [rw] associated_output_count
+    #   The number of router outputs associated with the network interface.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] associated_input_count
+    #   The number of router inputs associated with the network interface.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] state
+    #   The current state of the router network interface.
+    #   @return [String]
+    #
+    # @!attribute [rw] region_name
+    #   The Amazon Web Services Region where the router network interface is
+    #   located.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_at
+    #   The timestamp when the network interface was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_at
+    #   The timestamp when the router network interface was last updated.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/ListedRouterNetworkInterface AWS API Documentation
+    #
+    class ListedRouterNetworkInterface < Struct.new(
+      :name,
+      :arn,
+      :id,
+      :network_interface_type,
+      :associated_output_count,
+      :associated_input_count,
+      :state,
+      :region_name,
+      :created_at,
+      :updated_at)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A summary of a router output, including its name, type, ARN, ID,
+    # state, routed state, and other key details. This structure is used in
+    # the response of the ListRouterOutputs operation.
+    #
+    # @!attribute [rw] name
+    #   The name of the router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] id
+    #   The unique identifier of the router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] output_type
+    #   The type of the router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] state
+    #   The overall state of the router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] routed_state
+    #   The current state of the association between the router output and
+    #   its input.
+    #   @return [String]
+    #
+    # @!attribute [rw] region_name
+    #   The AAmazon Web Services Region where the router output is located.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_zone
+    #   The Availability Zone of the router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] maximum_bitrate
+    #   The maximum bitrate of the router output.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] routing_scope
+    #   Indicates whether the router output is configured for Regional or
+    #   global routing.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_at
+    #   The timestamp when the router output was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_at
+    #   The timestamp when the router output was last updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] message_count
+    #   The number of messages associated with the router output.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] routed_input_arn
+    #   The ARN of the router input associated with the output.
+    #   @return [String]
+    #
+    # @!attribute [rw] network_interface_arn
+    #   The ARN of the network interface associated with the router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] maintenance_schedule_type
+    #   The type of maintenance schedule currently associated with the
+    #   listed router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] maintenance_schedule
+    #   The details of the maintenance schedule for the listed router
+    #   output.
+    #   @return [Types::MaintenanceSchedule]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/ListedRouterOutput AWS API Documentation
+    #
+    class ListedRouterOutput < Struct.new(
+      :name,
+      :arn,
+      :id,
+      :output_type,
+      :state,
+      :routed_state,
+      :region_name,
+      :availability_zone,
+      :maximum_bitrate,
+      :routing_scope,
+      :created_at,
+      :updated_at,
+      :message_count,
+      :routed_input_arn,
+      :network_interface_arn,
+      :maintenance_schedule_type,
+      :maintenance_schedule)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The maintenance setting of a flow.
     #
     # @!attribute [rw] maintenance_day
@@ -3026,6 +4467,250 @@ module Aws::MediaConnect
       :maintenance_start_hour)
       SENSITIVE = []
       include Aws::Structure
+    end
+
+    # The configuration settings for maintenance operations, including
+    # preferred maintenance windows and schedules.
+    #
+    # @note MaintenanceConfiguration is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note MaintenanceConfiguration is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of MaintenanceConfiguration corresponding to the set member.
+    #
+    # @!attribute [rw] preferred_day_time
+    #   Preferred day and time maintenance configuration settings.
+    #   @return [Types::PreferredDayTimeMaintenanceConfiguration]
+    #
+    # @!attribute [rw] default
+    #   Default maintenance configuration settings.
+    #   @return [Types::DefaultMaintenanceConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/MaintenanceConfiguration AWS API Documentation
+    #
+    class MaintenanceConfiguration < Struct.new(
+      :preferred_day_time,
+      :default,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class PreferredDayTime < MaintenanceConfiguration; end
+      class Default < MaintenanceConfiguration; end
+      class Unknown < MaintenanceConfiguration; end
+    end
+
+    # The details of the maintenance schedule.
+    #
+    # @note MaintenanceSchedule is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of MaintenanceSchedule corresponding to the set member.
+    #
+    # @!attribute [rw] window
+    #   Defines a specific time window for maintenance operations.
+    #   @return [Types::WindowMaintenanceSchedule]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/MaintenanceSchedule AWS API Documentation
+    #
+    class MaintenanceSchedule < Struct.new(
+      :window,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Window < MaintenanceSchedule; end
+      class Unknown < MaintenanceSchedule; end
+    end
+
+    # Configuration settings for connecting a router input to a flow output.
+    #
+    # @!attribute [rw] flow_arn
+    #   The ARN of the flow to connect to.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_output_arn
+    #   The ARN of the flow output to connect to this router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] source_transit_decryption
+    #   The decryption configuration for the flow source when connected to
+    #   this router input.
+    #   @return [Types::FlowTransitEncryption]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/MediaConnectFlowRouterInputConfiguration AWS API Documentation
+    #
+    class MediaConnectFlowRouterInputConfiguration < Struct.new(
+      :flow_arn,
+      :flow_output_arn,
+      :source_transit_decryption)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration details for a MediaConnect flow when used as a router
+    # input source.
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/MediaConnectFlowRouterInputStreamDetails AWS API Documentation
+    #
+    class MediaConnectFlowRouterInputStreamDetails < Aws::EmptyStructure; end
+
+    # Configuration settings for connecting a router output to a
+    # MediaConnect flow source.
+    #
+    # @!attribute [rw] flow_arn
+    #   The ARN of the flow to connect to this router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] flow_source_arn
+    #   The ARN of the flow source to connect to this router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] destination_transit_encryption
+    #   The encryption configuration for the flow destination when connected
+    #   to this router output.
+    #   @return [Types::FlowTransitEncryption]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/MediaConnectFlowRouterOutputConfiguration AWS API Documentation
+    #
+    class MediaConnectFlowRouterOutputConfiguration < Struct.new(
+      :flow_arn,
+      :flow_source_arn,
+      :destination_transit_encryption)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration details for a MediaConnect flow when used as a router
+    # output destination.
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/MediaConnectFlowRouterOutputStreamDetails AWS API Documentation
+    #
+    class MediaConnectFlowRouterOutputStreamDetails < Aws::EmptyStructure; end
+
+    # Configuration settings for connecting a router input to a MediaLive
+    # channel output.
+    #
+    # @!attribute [rw] media_live_channel_arn
+    #   The ARN of the MediaLive channel to connect to this router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] media_live_pipeline_id
+    #   The index of the MediaLive pipeline to connect to this router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] media_live_channel_output_name
+    #   The name of the MediaLive channel output to connect to this router
+    #   input.
+    #   @return [String]
+    #
+    # @!attribute [rw] source_transit_decryption
+    #   The encryption configuration that defines how content is encrypted
+    #   during transit between MediaConnect Router and MediaLive. This
+    #   configuration determines whether encryption keys are automatically
+    #   managed by the service or manually managed through Secrets Manager.
+    #   @return [Types::MediaLiveTransitEncryption]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/MediaLiveChannelRouterInputConfiguration AWS API Documentation
+    #
+    class MediaLiveChannelRouterInputConfiguration < Struct.new(
+      :media_live_channel_arn,
+      :media_live_pipeline_id,
+      :media_live_channel_output_name,
+      :source_transit_decryption)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration details for a MediaLive channel when used as a router
+    # input source.
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/MediaLiveChannelRouterInputStreamDetails AWS API Documentation
+    #
+    class MediaLiveChannelRouterInputStreamDetails < Aws::EmptyStructure; end
+
+    # Configuration settings for connecting a router output to a MediaLive
+    # input.
+    #
+    # @!attribute [rw] media_live_input_arn
+    #   The ARN of the MediaLive input to connect to this router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] media_live_pipeline_id
+    #   The index of the MediaLive pipeline to connect to this router
+    #   output.
+    #   @return [String]
+    #
+    # @!attribute [rw] destination_transit_encryption
+    #   The encryption configuration for the MediaLive input when connected
+    #   to this router output.
+    #   @return [Types::MediaLiveTransitEncryption]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/MediaLiveInputRouterOutputConfiguration AWS API Documentation
+    #
+    class MediaLiveInputRouterOutputConfiguration < Struct.new(
+      :media_live_input_arn,
+      :media_live_pipeline_id,
+      :destination_transit_encryption)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration details for a MediaLive input when used as a router
+    # output destination.
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/MediaLiveInputRouterOutputStreamDetails AWS API Documentation
+    #
+    class MediaLiveInputRouterOutputStreamDetails < Aws::EmptyStructure; end
+
+    # The encryption configuration that defines how content is encrypted
+    # during transit between MediaConnect Router and MediaLive. This
+    # configuration determines whether encryption keys are automatically
+    # managed by the service or manually managed through Secrets Manager.
+    #
+    # @!attribute [rw] encryption_key_type
+    #   The type of encryption key to use for MediaLive transit encryption.
+    #   @return [String]
+    #
+    # @!attribute [rw] encryption_key_configuration
+    #   The configuration details for the MediaLive encryption key.
+    #   @return [Types::MediaLiveTransitEncryptionKeyConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/MediaLiveTransitEncryption AWS API Documentation
+    #
+    class MediaLiveTransitEncryption < Struct.new(
+      :encryption_key_type,
+      :encryption_key_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration settings for the MediaLive transit encryption key.
+    #
+    # @note MediaLiveTransitEncryptionKeyConfiguration is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note MediaLiveTransitEncryptionKeyConfiguration is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of MediaLiveTransitEncryptionKeyConfiguration corresponding to the set member.
+    #
+    # @!attribute [rw] secrets_manager
+    #   The configuration settings for transit encryption using Secrets
+    #   Manager, including the secret ARN and role ARN.
+    #   @return [Types::SecretsManagerEncryptionKeyConfiguration]
+    #
+    # @!attribute [rw] automatic
+    #   Configuration settings for automatic encryption key management,
+    #   where MediaConnect handles key creation and rotation.
+    #   @return [Types::AutomaticEncryptionKeyConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/MediaLiveTransitEncryptionKeyConfiguration AWS API Documentation
+    #
+    class MediaLiveTransitEncryptionKeyConfiguration < Struct.new(
+      :secrets_manager,
+      :automatic,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class SecretsManager < MediaLiveTransitEncryptionKeyConfiguration; end
+      class Automatic < MediaLiveTransitEncryptionKeyConfiguration; end
+      class Unknown < MediaLiveTransitEncryptionKeyConfiguration; end
     end
 
     # A media stream represents one component of your content, such as
@@ -3253,6 +4938,109 @@ module Aws::MediaConnect
       include Aws::Structure
     end
 
+    # Configuration settings for a merge router input that combines two
+    # input sources.
+    #
+    # @!attribute [rw] network_interface_arn
+    #   The ARN of the network interface to use for this merge router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] protocol_configurations
+    #   A list of exactly two protocol configurations for the merge input
+    #   sources. Both must use the same protocol type.
+    #   @return [Array<Types::MergeRouterInputProtocolConfiguration>]
+    #
+    # @!attribute [rw] merge_recovery_window_milliseconds
+    #   The time window in milliseconds for merging the two input sources.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/MergeRouterInputConfiguration AWS API Documentation
+    #
+    class MergeRouterInputConfiguration < Struct.new(
+      :network_interface_arn,
+      :protocol_configurations,
+      :merge_recovery_window_milliseconds)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration details for an indexed stream in a merge router input
+    # setup.
+    #
+    # @!attribute [rw] source_index
+    #   The index number (0 or 1) assigned to this source in the merge
+    #   configuration.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] source_ip_address
+    #   The IP address of the source for this indexed stream in the merge
+    #   setup.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/MergeRouterInputIndexedStreamDetails AWS API Documentation
+    #
+    class MergeRouterInputIndexedStreamDetails < Struct.new(
+      :source_index,
+      :source_ip_address)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Protocol configuration settings for merge router inputs.
+    #
+    # @note MergeRouterInputProtocolConfiguration is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note MergeRouterInputProtocolConfiguration is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of MergeRouterInputProtocolConfiguration corresponding to the set member.
+    #
+    # @!attribute [rw] rtp
+    #   The configuration settings for a Router Input using the RTP
+    #   (Real-Time Transport Protocol) protocol, including the port and
+    #   forward error correction state.
+    #   @return [Types::RtpRouterInputConfiguration]
+    #
+    # @!attribute [rw] rist
+    #   The configuration settings for a router input using the RIST
+    #   (Reliable Internet Stream Transport) protocol, including the port
+    #   and recovery latency.
+    #   @return [Types::RistRouterInputConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/MergeRouterInputProtocolConfiguration AWS API Documentation
+    #
+    class MergeRouterInputProtocolConfiguration < Struct.new(
+      :rtp,
+      :rist,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Rtp < MergeRouterInputProtocolConfiguration; end
+      class Rist < MergeRouterInputProtocolConfiguration; end
+      class Unknown < MergeRouterInputProtocolConfiguration; end
+    end
+
+    # Configuration details for a merge router input that combines two input
+    # sources.
+    #
+    # @!attribute [rw] source_index_zero_stream_details
+    #   Configuration details for the first source (index 0) in the merge
+    #   setup.
+    #   @return [Types::MergeRouterInputIndexedStreamDetails]
+    #
+    # @!attribute [rw] source_index_one_stream_details
+    #   Configuration details for the second source (index 1) in the merge
+    #   setup.
+    #   @return [Types::MergeRouterInputIndexedStreamDetails]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/MergeRouterInputStreamDetails AWS API Documentation
+    #
+    class MergeRouterInputStreamDetails < Struct.new(
+      :source_index_zero_stream_details,
+      :source_index_one_stream_details)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The details of an error message.
     #
     # @!attribute [rw] code
@@ -3336,12 +5124,14 @@ module Aws::MediaConnect
       include Aws::Structure
     end
 
-    # Specifies the configuration settings for NDI outputs. Required when
-    # the flow includes NDI outputs.
+    # Specifies the configuration settings for NDI sources and outputs.
     #
     # @!attribute [rw] ndi_state
-    #   A setting that controls whether NDI outputs can be used in the flow.
-    #   Must be ENABLED to add NDI outputs. Default is DISABLED.
+    #   A setting that controls whether NDI® sources or outputs can be used
+    #   in the flow.
+    #
+    #   The default value is `DISABLED`. This value must be set as `ENABLED`
+    #   for your flow to support NDI sources or outputs.
     #   @return [String]
     #
     # @!attribute [rw] machine_name
@@ -3366,7 +5156,7 @@ module Aws::MediaConnect
       include Aws::Structure
     end
 
-    # Specifies the configuration settings for individual NDI discovery
+    # Specifies the configuration settings for individual NDI® discovery
     # servers. A maximum of 3 servers is allowed.
     #
     # @!attribute [rw] discovery_server_address
@@ -3389,6 +5179,148 @@ module Aws::MediaConnect
       :discovery_server_address,
       :discovery_server_port,
       :vpc_interface_adapter)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Metadata about the audio and video media that is part of the NDI®
+    # source content. This includes details about the individual media
+    # streams.
+    #
+    # @!attribute [rw] streams
+    #   A list of the individual media streams that make up the NDI source.
+    #   This includes details about each stream's codec, resolution, frame
+    #   rate, audio channels, and other parameters.
+    #   @return [Array<Types::NdiMediaStreamInfo>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/NdiMediaInfo AWS API Documentation
+    #
+    class NdiMediaInfo < Struct.new(
+      :streams)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Detailed information about a single media stream that is part of an
+    # NDI® source. This includes details about the stream type, codec,
+    # resolution, frame rate, audio channels, and sample rate.
+    #
+    # @!attribute [rw] stream_type
+    #   The type of media stream (for example, `Video` or `Audio`).
+    #   @return [String]
+    #
+    # @!attribute [rw] codec
+    #   The codec used for the media stream. For NDI sources, use
+    #   `speed-hq`.
+    #   @return [String]
+    #
+    # @!attribute [rw] stream_id
+    #   A unique identifier for the media stream.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] scan_mode
+    #   The method used to display video frames. Used when the `streamType`
+    #   is `Video`.
+    #   @return [String]
+    #
+    # @!attribute [rw] frame_resolution
+    #   The width and height dimensions of the video frame in pixels. Used
+    #   when the `streamType` is `Video`.
+    #   @return [Types::FrameResolution]
+    #
+    # @!attribute [rw] frame_rate
+    #   The number of video frames displayed per second. Used when the
+    #   `streamType` is `Video`.
+    #   @return [String]
+    #
+    # @!attribute [rw] channels
+    #   The number of audio channels in the stream. Used when the
+    #   `streamType` is `Audio`.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] sample_rate
+    #   The number of audio samples captured per second, measured in
+    #   kilohertz (kHz). Used when the `streamType` is `Audio`.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/NdiMediaStreamInfo AWS API Documentation
+    #
+    class NdiMediaStreamInfo < Struct.new(
+      :stream_type,
+      :codec,
+      :stream_id,
+      :scan_mode,
+      :frame_resolution,
+      :frame_rate,
+      :channels,
+      :sample_rate)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Information about a single NDI® sender, including its name.
+    #
+    # @!attribute [rw] source_name
+    #   The name of the upstream NDI sender.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/NdiSourceInfo AWS API Documentation
+    #
+    class NdiSourceInfo < Struct.new(
+      :source_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Comprehensive information about the NDI® source that's associated
+    # with a flow. This includes the currently active NDI source, a list of
+    # all discovered NDI senders, metadata about the media streams, and any
+    # relevant status messages.
+    #
+    # @!attribute [rw] active_source
+    #   The connected NDI sender that's currently sending source content to
+    #   the flow's NDI source.
+    #   @return [Types::NdiSourceInfo]
+    #
+    # @!attribute [rw] discovered_sources
+    #   A list of the available upstream NDI senders aggregated from all of
+    #   your configured discovery servers.
+    #   @return [Array<Types::NdiSourceInfo>]
+    #
+    # @!attribute [rw] media_info
+    #   Detailed information about the media streams (video, audio, and so
+    #   on) that are part of the active NDI source.
+    #   @return [Types::NdiMediaInfo]
+    #
+    # @!attribute [rw] messages
+    #   Any status messages or error codes related to the NDI source and its
+    #   metadata.
+    #   @return [Array<Types::MessageDetail>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/NdiSourceMetadataInfo AWS API Documentation
+    #
+    class NdiSourceMetadataInfo < Struct.new(
+      :active_source,
+      :discovered_sources,
+      :media_info,
+      :messages)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The settings for the NDI® source. This includes the exact name of the
+    # upstream NDI sender that you want to connect to your source.
+    #
+    # @!attribute [rw] source_name
+    #   The exact name of an existing NDI sender that's registered with
+    #   your discovery server. If included, the format of this name must be
+    #   `MACHINENAME (ProgramName)`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/NdiSourceSettings AWS API Documentation
+    #
+    class NdiSourceSettings < Struct.new(
+      :source_name)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3540,6 +5472,42 @@ module Aws::MediaConnect
     #   An indication of whether the output is transmitting data or not.
     #   @return [String]
     #
+    # @!attribute [rw] peer_ip_address
+    #   The IP address of the device that is currently receiving content
+    #   from this output.
+    #
+    #   <note markdown="1"> * For outputs that use protocols where you specify the destination
+    #     (such as SRT Caller or Zixi Push), this value matches the
+    #     configured destination address.
+    #
+    #   * For outputs that use listener protocols (such as SRT Listener),
+    #     this value shows the address of the connected receiver.
+    #
+    #   * Peer IP addresses aren't available for entitlements, managed
+    #     MediaLive outputs, NDI® sources and outputs, and CDI/ST2110
+    #     outputs.
+    #
+    #   * The peer IP address might not be visible for flows that haven't
+    #     been started yet, or flows that were started before May 2025. In
+    #     these cases, restart your flow to see the peer IP address.
+    #
+    #    </note>
+    #   @return [String]
+    #
+    # @!attribute [rw] router_integration_state
+    #   Indicates if router integration is enabled or disabled on the flow
+    #   output.
+    #   @return [String]
+    #
+    # @!attribute [rw] router_integration_transit_encryption
+    #   The encryption configuration for the output when router integration
+    #   is enabled.
+    #   @return [Types::FlowTransitEncryption]
+    #
+    # @!attribute [rw] connected_router_input_arn
+    #   The ARN of the router input that's connected to this flow output.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/Output AWS API Documentation
     #
     class Output < Struct.new(
@@ -3558,7 +5526,62 @@ module Aws::MediaConnect
       :vpc_interface_attachment,
       :bridge_arn,
       :bridge_ports,
-      :output_status)
+      :output_status,
+      :peer_ip_address,
+      :router_integration_state,
+      :router_integration_transit_encryption,
+      :connected_router_input_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration for preferred day and time maintenance settings.
+    #
+    # @!attribute [rw] day
+    #   The preferred day for maintenance operations.
+    #   @return [String]
+    #
+    # @!attribute [rw] time
+    #   The preferred time for maintenance operations.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/PreferredDayTimeMaintenanceConfiguration AWS API Documentation
+    #
+    class PreferredDayTimeMaintenanceConfiguration < Struct.new(
+      :day,
+      :time)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration settings for a public router network interface,
+    # including the list of allowed CIDR blocks.
+    #
+    # @!attribute [rw] allow_rules
+    #   The list of allowed CIDR blocks for the public router network
+    #   interface.
+    #   @return [Array<Types::PublicRouterNetworkInterfaceRule>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/PublicRouterNetworkInterfaceConfiguration AWS API Documentation
+    #
+    class PublicRouterNetworkInterfaceConfiguration < Struct.new(
+      :allow_rules)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A rule that allows a specific CIDR block to access the public router
+    # network interface.
+    #
+    # @!attribute [rw] cidr
+    #   The CIDR block that is allowed to access the public router network
+    #   interface.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/PublicRouterNetworkInterfaceRule AWS API Documentation
+    #
+    class PublicRouterNetworkInterfaceRule < Struct.new(
+      :cidr)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3938,6 +5961,76 @@ module Aws::MediaConnect
       include Aws::Structure
     end
 
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the router input that you want to
+    #   restart.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RestartRouterInputRequest AWS API Documentation
+    #
+    class RestartRouterInputRequest < Struct.new(
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The ARN of the router input that was restarted.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the router input that was restarted.
+    #   @return [String]
+    #
+    # @!attribute [rw] state
+    #   The current state of the router input after the restart operation.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RestartRouterInputResponse AWS API Documentation
+    #
+    class RestartRouterInputResponse < Struct.new(
+      :arn,
+      :name,
+      :state)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the router output that you want to
+    #   restart.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RestartRouterOutputRequest AWS API Documentation
+    #
+    class RestartRouterOutputRequest < Struct.new(
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The ARN of the router output that was restarted.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the router output that was restarted.
+    #   @return [String]
+    #
+    # @!attribute [rw] state
+    #   The current state of the router output after the restart operation.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RestartRouterOutputResponse AWS API Documentation
+    #
+    class RestartRouterOutputResponse < Struct.new(
+      :arn,
+      :name,
+      :state)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] entitlement_arn
     #   The Amazon Resource Name (ARN) of the entitlement that you want to
     #   revoke.
@@ -3969,6 +6062,1167 @@ module Aws::MediaConnect
     class RevokeFlowEntitlementResponse < Struct.new(
       :entitlement_arn,
       :flow_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration settings for a router input using the RIST (Reliable
+    # Internet Stream Transport) protocol, including the port and recovery
+    # latency.
+    #
+    # @!attribute [rw] port
+    #   The port number used for the RIST protocol in the router input
+    #   configuration.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] recovery_latency_milliseconds
+    #   The recovery latency in milliseconds for the RIST protocol in the
+    #   router input configuration.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RistRouterInputConfiguration AWS API Documentation
+    #
+    class RistRouterInputConfiguration < Struct.new(
+      :port,
+      :recovery_latency_milliseconds)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration settings for a router output using the RIST
+    # (Reliable Internet Stream Transport) protocol, including the
+    # destination address and port.
+    #
+    # @!attribute [rw] destination_address
+    #   The destination IP address for the RIST protocol in the router
+    #   output configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] destination_port
+    #   The destination port number for the RIST protocol in the router
+    #   output configuration.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RistRouterOutputConfiguration AWS API Documentation
+    #
+    class RistRouterOutputConfiguration < Struct.new(
+      :destination_address,
+      :destination_port)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The content quality analysis configuration for the router input.
+    #
+    # The content quality analysis feature only monitors the first video
+    # stream and the first audio stream it encounters within the router
+    # input source.
+    #
+    # @note RouterContentQualityAnalysisConfiguration is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note RouterContentQualityAnalysisConfiguration is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of RouterContentQualityAnalysisConfiguration corresponding to the set member.
+    #
+    # @!attribute [rw] content_level
+    #   The content quality analysis configuration.
+    #   @return [Types::ContentQualityAnalysisFeatureConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RouterContentQualityAnalysisConfiguration AWS API Documentation
+    #
+    class RouterContentQualityAnalysisConfiguration < Struct.new(
+      :content_level,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class ContentLevel < RouterContentQualityAnalysisConfiguration; end
+      class Unknown < RouterContentQualityAnalysisConfiguration; end
+    end
+
+    # A router input in AWS Elemental MediaConnect. A router input is a
+    # source of media content that can be routed to one or more router
+    # outputs.
+    #
+    # @!attribute [rw] name
+    #   The name of the router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] id
+    #   The unique identifier of the router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] state
+    #   The current state of the router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] input_type
+    #   The type of the router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] configuration
+    #   The configuration settings for a router input.
+    #   @return [Types::RouterInputConfiguration]
+    #
+    # @!attribute [rw] routed_outputs
+    #   The number of router outputs associated with the router input.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] maximum_routed_outputs
+    #   The maximum number of outputs that can be simultaneously routed to
+    #   this input.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] region_name
+    #   The Amazon Web Services Region where the router input is located.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_zone
+    #   The Availability Zone of the router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] maximum_bitrate
+    #   The maximum bitrate for the router input.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] tier
+    #   The tier level of the router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] routing_scope
+    #   Indicates whether the router input is configured for Regional or
+    #   global routing.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_at
+    #   The timestamp when the router input was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_at
+    #   The timestamp when the router input was last updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] messages
+    #   The messages associated with the router input.
+    #   @return [Array<Types::RouterInputMessage>]
+    #
+    # @!attribute [rw] transit_encryption
+    #   The transit encryption settings for a router input.
+    #   @return [Types::RouterInputTransitEncryption]
+    #
+    # @!attribute [rw] tags
+    #   Key-value pairs that can be used to tag and organize this router
+    #   input.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] stream_details
+    #   Configuration details for the router input stream.
+    #   @return [Types::RouterInputStreamDetails]
+    #
+    # @!attribute [rw] ip_address
+    #   The IP address of the router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] maintenance_type
+    #   The type of maintenance configuration applied to this router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] maintenance_configuration
+    #   The maintenance configuration settings applied to this router input.
+    #   @return [Types::MaintenanceConfiguration]
+    #
+    # @!attribute [rw] maintenance_schedule_type
+    #   The type of maintenance schedule currently in effect for this router
+    #   input.
+    #   @return [String]
+    #
+    # @!attribute [rw] maintenance_schedule
+    #   The current maintenance schedule details for this router input.
+    #   @return [Types::MaintenanceSchedule]
+    #
+    # @!attribute [rw] content_quality_analysis_type
+    #   The type of content quality analysis applied to the router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] content_quality_analysis_configuration
+    #   The content quality analysis configuration for the router input.
+    #   @return [Types::RouterContentQualityAnalysisConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RouterInput AWS API Documentation
+    #
+    class RouterInput < Struct.new(
+      :name,
+      :arn,
+      :id,
+      :state,
+      :input_type,
+      :configuration,
+      :routed_outputs,
+      :maximum_routed_outputs,
+      :region_name,
+      :availability_zone,
+      :maximum_bitrate,
+      :tier,
+      :routing_scope,
+      :created_at,
+      :updated_at,
+      :messages,
+      :transit_encryption,
+      :tags,
+      :stream_details,
+      :ip_address,
+      :maintenance_type,
+      :maintenance_configuration,
+      :maintenance_schedule_type,
+      :maintenance_schedule,
+      :content_quality_analysis_type,
+      :content_quality_analysis_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration settings for a router input.
+    #
+    # @note RouterInputConfiguration is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note RouterInputConfiguration is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of RouterInputConfiguration corresponding to the set member.
+    #
+    # @!attribute [rw] standard
+    #   The configuration settings for a standard router input, including
+    #   the protocol, protocol-specific configuration, network interface,
+    #   and availability zone.
+    #   @return [Types::StandardRouterInputConfiguration]
+    #
+    # @!attribute [rw] media_live_channel
+    #   Configuration settings for connecting a router input to a MediaLive
+    #   channel output.
+    #   @return [Types::MediaLiveChannelRouterInputConfiguration]
+    #
+    # @!attribute [rw] failover
+    #   Configuration settings for a failover router input that allows
+    #   switching between two input sources.
+    #   @return [Types::FailoverRouterInputConfiguration]
+    #
+    # @!attribute [rw] media_connect_flow
+    #   Configuration settings for connecting a router input to a flow
+    #   output.
+    #   @return [Types::MediaConnectFlowRouterInputConfiguration]
+    #
+    # @!attribute [rw] merge
+    #   Configuration settings for a merge router input that combines two
+    #   input sources.
+    #   @return [Types::MergeRouterInputConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RouterInputConfiguration AWS API Documentation
+    #
+    class RouterInputConfiguration < Struct.new(
+      :standard,
+      :media_live_channel,
+      :failover,
+      :media_connect_flow,
+      :merge,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Standard < RouterInputConfiguration; end
+      class MediaLiveChannel < RouterInputConfiguration; end
+      class Failover < RouterInputConfiguration; end
+      class MediaConnectFlow < RouterInputConfiguration; end
+      class Merge < RouterInputConfiguration; end
+      class Unknown < RouterInputConfiguration; end
+    end
+
+    # A filter that can be used to retrieve a list of router inputs.
+    #
+    # @note RouterInputFilter is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @!attribute [rw] name_contains
+    #   The names of the router inputs to include in the filter.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] region_names
+    #   The AWS Regions of the router inputs to include in the filter.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] network_interface_arns
+    #   The Amazon Resource Names (ARNs) of the network interfaces
+    #   associated with the router inputs to include in the filter.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] routing_scopes
+    #   Filter criteria to list router inputs based on their routing scope
+    #   (REGIONAL or GLOBAL).
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] input_types
+    #   The types of router inputs to include in the filter.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RouterInputFilter AWS API Documentation
+    #
+    class RouterInputFilter < Struct.new(
+      :name_contains,
+      :region_names,
+      :network_interface_arns,
+      :routing_scopes,
+      :input_types,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class NameContains < RouterInputFilter; end
+      class RegionNames < RouterInputFilter; end
+      class NetworkInterfaceArns < RouterInputFilter; end
+      class RoutingScopes < RouterInputFilter; end
+      class InputTypes < RouterInputFilter; end
+      class Unknown < RouterInputFilter; end
+    end
+
+    # A message associated with a router input, including a code and a
+    # message.
+    #
+    # @!attribute [rw] code
+    #   The code associated with the router input message.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   The message text associated with the router input message.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RouterInputMessage AWS API Documentation
+    #
+    class RouterInputMessage < Struct.new(
+      :code,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Metadata information associated with the router input, including
+    # stream details and connection state.
+    #
+    # @note RouterInputMetadata is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of RouterInputMetadata corresponding to the set member.
+    #
+    # @!attribute [rw] transport_stream_media_info
+    #   The metadata of the transport stream in the current flow's source.
+    #   @return [Types::TransportMediaInfo]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RouterInputMetadata AWS API Documentation
+    #
+    class RouterInputMetadata < Struct.new(
+      :transport_stream_media_info,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class TransportStreamMediaInfo < RouterInputMetadata; end
+      class Unknown < RouterInputMetadata; end
+    end
+
+    # The protocol configuration settings for a router input.
+    #
+    # @note RouterInputProtocolConfiguration is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note RouterInputProtocolConfiguration is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of RouterInputProtocolConfiguration corresponding to the set member.
+    #
+    # @!attribute [rw] rist
+    #   The configuration settings for a router input using the RIST
+    #   (Reliable Internet Stream Transport) protocol, including the port
+    #   and recovery latency.
+    #   @return [Types::RistRouterInputConfiguration]
+    #
+    # @!attribute [rw] srt_listener
+    #   The configuration settings for a router input using the SRT (Secure
+    #   Reliable Transport) protocol in listener mode, including the port,
+    #   minimum latency, and decryption key configuration.
+    #   @return [Types::SrtListenerRouterInputConfiguration]
+    #
+    # @!attribute [rw] srt_caller
+    #   The configuration settings for a router input using the SRT (Secure
+    #   Reliable Transport) protocol in caller mode, including the source
+    #   address and port, minimum latency, stream ID, and decryption key
+    #   configuration.
+    #   @return [Types::SrtCallerRouterInputConfiguration]
+    #
+    # @!attribute [rw] rtp
+    #   The configuration settings for a Router Input using the RTP
+    #   (Real-Time Transport Protocol) protocol, including the port and
+    #   forward error correction state.
+    #   @return [Types::RtpRouterInputConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RouterInputProtocolConfiguration AWS API Documentation
+    #
+    class RouterInputProtocolConfiguration < Struct.new(
+      :rist,
+      :srt_listener,
+      :srt_caller,
+      :rtp,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Rist < RouterInputProtocolConfiguration; end
+      class SrtListener < RouterInputProtocolConfiguration; end
+      class SrtCaller < RouterInputProtocolConfiguration; end
+      class Rtp < RouterInputProtocolConfiguration; end
+      class Unknown < RouterInputProtocolConfiguration; end
+    end
+
+    # The request to create a new router input would exceed the service
+    # quotas for the account.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RouterInputServiceQuotaExceededException AWS API Documentation
+    #
+    class RouterInputServiceQuotaExceededException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Detailed metadata information about a router input source.
+    #
+    # @!attribute [rw] source_metadata_messages
+    #   Collection of metadata messages associated with the router input
+    #   source.
+    #   @return [Array<Types::RouterInputMessage>]
+    #
+    # @!attribute [rw] timestamp
+    #   The timestamp when the metadata was last updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] router_input_metadata
+    #   Metadata information specific to the router input configuration and
+    #   state.
+    #   @return [Types::RouterInputMetadata]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RouterInputSourceMetadataDetails AWS API Documentation
+    #
+    class RouterInputSourceMetadataDetails < Struct.new(
+      :source_metadata_messages,
+      :timestamp,
+      :router_input_metadata)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration details for the router input stream.
+    #
+    # @note RouterInputStreamDetails is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of RouterInputStreamDetails corresponding to the set member.
+    #
+    # @!attribute [rw] standard
+    #   Configuration details for a standard router input stream type.
+    #   @return [Types::StandardRouterInputStreamDetails]
+    #
+    # @!attribute [rw] media_live_channel
+    #   Configuration details for a MediaLive channel when used as a router
+    #   input source.
+    #   @return [Types::MediaLiveChannelRouterInputStreamDetails]
+    #
+    # @!attribute [rw] failover
+    #   Configuration details for a failover router input that can
+    #   automatically switch between two sources.
+    #   @return [Types::FailoverRouterInputStreamDetails]
+    #
+    # @!attribute [rw] media_connect_flow
+    #   Configuration details for a MediaConnect flow when used as a router
+    #   input source.
+    #   @return [Types::MediaConnectFlowRouterInputStreamDetails]
+    #
+    # @!attribute [rw] merge
+    #   Configuration details for a merge router input that combines two
+    #   input sources.
+    #   @return [Types::MergeRouterInputStreamDetails]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RouterInputStreamDetails AWS API Documentation
+    #
+    class RouterInputStreamDetails < Struct.new(
+      :standard,
+      :media_live_channel,
+      :failover,
+      :media_connect_flow,
+      :merge,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Standard < RouterInputStreamDetails; end
+      class MediaLiveChannel < RouterInputStreamDetails; end
+      class Failover < RouterInputStreamDetails; end
+      class MediaConnectFlow < RouterInputStreamDetails; end
+      class Merge < RouterInputStreamDetails; end
+      class Unknown < RouterInputStreamDetails; end
+    end
+
+    # The details of a thumbnail associated with a router input, including
+    # the thumbnail messages, the thumbnail image, the timecode, and the
+    # timestamp.
+    #
+    # @!attribute [rw] thumbnail_messages
+    #   The messages associated with the router input thumbnail.
+    #   @return [Array<Types::RouterInputMessage>]
+    #
+    # @!attribute [rw] thumbnail
+    #   The thumbnail image, encoded as a Base64-encoded binary data object.
+    #   @return [String]
+    #
+    # @!attribute [rw] timecode
+    #   The timecode associated with the thumbnail.
+    #   @return [String]
+    #
+    # @!attribute [rw] timestamp
+    #   The timestamp associated with the thumbnail.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RouterInputThumbnailDetails AWS API Documentation
+    #
+    class RouterInputThumbnailDetails < Struct.new(
+      :thumbnail_messages,
+      :thumbnail,
+      :timecode,
+      :timestamp)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The transit encryption settings for a router input.
+    #
+    # @!attribute [rw] encryption_key_type
+    #   Specifies the type of encryption key to use for transit encryption.
+    #   @return [String]
+    #
+    # @!attribute [rw] encryption_key_configuration
+    #   Contains the configuration details for the encryption key used in
+    #   transit encryption, including the key source and associated
+    #   parameters.
+    #   @return [Types::RouterInputTransitEncryptionKeyConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RouterInputTransitEncryption AWS API Documentation
+    #
+    class RouterInputTransitEncryption < Struct.new(
+      :encryption_key_type,
+      :encryption_key_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines the configuration settings for transit encryption keys.
+    #
+    # @note RouterInputTransitEncryptionKeyConfiguration is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note RouterInputTransitEncryptionKeyConfiguration is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of RouterInputTransitEncryptionKeyConfiguration corresponding to the set member.
+    #
+    # @!attribute [rw] secrets_manager
+    #   The configuration settings for transit encryption using Secrets
+    #   Manager, including the secret ARN and role ARN.
+    #   @return [Types::SecretsManagerEncryptionKeyConfiguration]
+    #
+    # @!attribute [rw] automatic
+    #   Configuration settings for automatic encryption key management,
+    #   where MediaConnect handles key creation and rotation.
+    #   @return [Types::AutomaticEncryptionKeyConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RouterInputTransitEncryptionKeyConfiguration AWS API Documentation
+    #
+    class RouterInputTransitEncryptionKeyConfiguration < Struct.new(
+      :secrets_manager,
+      :automatic,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class SecretsManager < RouterInputTransitEncryptionKeyConfiguration; end
+      class Automatic < RouterInputTransitEncryptionKeyConfiguration; end
+      class Unknown < RouterInputTransitEncryptionKeyConfiguration; end
+    end
+
+    # A router network interface in AWS Elemental MediaConnect. A router
+    # network interface is a network interface that can be associated with
+    # one or more router inputs and outputs.
+    #
+    # @!attribute [rw] name
+    #   The name of the router network interface.
+    #   @return [String]
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the router network interface.
+    #   @return [String]
+    #
+    # @!attribute [rw] id
+    #   The unique identifier of the router network interface.
+    #   @return [String]
+    #
+    # @!attribute [rw] state
+    #   The current state of the router network interface.
+    #   @return [String]
+    #
+    # @!attribute [rw] network_interface_type
+    #   The type of the router network interface.
+    #   @return [String]
+    #
+    # @!attribute [rw] configuration
+    #   The configuration settings for a router network interface.
+    #   @return [Types::RouterNetworkInterfaceConfiguration]
+    #
+    # @!attribute [rw] associated_output_count
+    #   The number of router outputs associated with the network interface.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] associated_input_count
+    #   The number of router inputs associated with the network interface.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] region_name
+    #   The Amazon Web Services Region where the router network interface is
+    #   located.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_at
+    #   The timestamp when the router network interface was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_at
+    #   The timestamp when the router network interface was last updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] tags
+    #   Key-value pairs that can be used to tag and organize this router
+    #   network interface.
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RouterNetworkInterface AWS API Documentation
+    #
+    class RouterNetworkInterface < Struct.new(
+      :name,
+      :arn,
+      :id,
+      :state,
+      :network_interface_type,
+      :configuration,
+      :associated_output_count,
+      :associated_input_count,
+      :region_name,
+      :created_at,
+      :updated_at,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration settings for a router network interface.
+    #
+    # @note RouterNetworkInterfaceConfiguration is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note RouterNetworkInterfaceConfiguration is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of RouterNetworkInterfaceConfiguration corresponding to the set member.
+    #
+    # @!attribute [rw] public
+    #   The configuration settings for a public router network interface,
+    #   including the list of allowed CIDR blocks.
+    #   @return [Types::PublicRouterNetworkInterfaceConfiguration]
+    #
+    # @!attribute [rw] vpc
+    #   The configuration settings for a router network interface within a
+    #   VPC, including the security group IDs and subnet ID.
+    #   @return [Types::VpcRouterNetworkInterfaceConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RouterNetworkInterfaceConfiguration AWS API Documentation
+    #
+    class RouterNetworkInterfaceConfiguration < Struct.new(
+      :public,
+      :vpc,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Public < RouterNetworkInterfaceConfiguration; end
+      class Vpc < RouterNetworkInterfaceConfiguration; end
+      class Unknown < RouterNetworkInterfaceConfiguration; end
+    end
+
+    # A filter that can be used to retrieve a list of router network
+    # interfaces.
+    #
+    # @note RouterNetworkInterfaceFilter is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @!attribute [rw] region_names
+    #   The AWS Regions of the router network interfaces to include in the
+    #   filter.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] network_interface_types
+    #   The types of router network interfaces to include in the filter.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] name_contains
+    #   The names of the router network interfaces to include in the filter.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RouterNetworkInterfaceFilter AWS API Documentation
+    #
+    class RouterNetworkInterfaceFilter < Struct.new(
+      :region_names,
+      :network_interface_types,
+      :name_contains,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class RegionNames < RouterNetworkInterfaceFilter; end
+      class NetworkInterfaceTypes < RouterNetworkInterfaceFilter; end
+      class NameContains < RouterNetworkInterfaceFilter; end
+      class Unknown < RouterNetworkInterfaceFilter; end
+    end
+
+    # The request to create a new router network interface would exceed the
+    # service quotas (limits) set for the account.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RouterNetworkInterfaceServiceQuotaExceededException AWS API Documentation
+    #
+    class RouterNetworkInterfaceServiceQuotaExceededException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A router output in AWS Elemental MediaConnect. A router output is a
+    # destination for media content that can receive input from one or more
+    # router inputs.
+    #
+    # @!attribute [rw] name
+    #   The name of the router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] id
+    #   The unique identifier of the router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] state
+    #   The overall state of the router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] output_type
+    #   The type of the router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] configuration
+    #   The configuration settings for a router output.
+    #   @return [Types::RouterOutputConfiguration]
+    #
+    # @!attribute [rw] routed_state
+    #   The current state of the association between the router output and
+    #   its input.
+    #   @return [String]
+    #
+    # @!attribute [rw] region_name
+    #   The Amazon Web Services Region where the router output is located.
+    #   @return [String]
+    #
+    # @!attribute [rw] availability_zone
+    #   The Availability Zone of the router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] maximum_bitrate
+    #   The maximum bitrate for the router output.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] routing_scope
+    #   Indicates whether the router output is configured for Regional or
+    #   global routing.
+    #   @return [String]
+    #
+    # @!attribute [rw] tier
+    #   The tier level of the router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_at
+    #   The timestamp when the router output was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_at
+    #   The timestamp when the router output was last updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] messages
+    #   The messages associated with the router output.
+    #   @return [Array<Types::RouterOutputMessage>]
+    #
+    # @!attribute [rw] tags
+    #   Key-value pairs that can be used to tag and organize this router
+    #   output.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] stream_details
+    #   Information about the router output's stream, including connection
+    #   state and destination details. The specific details provided vary
+    #   based on the router output type.
+    #   @return [Types::RouterOutputStreamDetails]
+    #
+    # @!attribute [rw] ip_address
+    #   The IP address of the router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] routed_input_arn
+    #   The Amazon Resource Name (ARN) of the router input associated with
+    #   the output.
+    #   @return [String]
+    #
+    # @!attribute [rw] maintenance_type
+    #   The type of maintenance configuration applied to this router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] maintenance_configuration
+    #   The maintenance configuration settings applied to this router
+    #   output.
+    #   @return [Types::MaintenanceConfiguration]
+    #
+    # @!attribute [rw] maintenance_schedule_type
+    #   The type of maintenance schedule currently in effect for this router
+    #   output.
+    #   @return [String]
+    #
+    # @!attribute [rw] maintenance_schedule
+    #   The current maintenance schedule details for this router output.
+    #   @return [Types::MaintenanceSchedule]
+    #
+    # @!attribute [rw] fabric_configuration
+    #   The fabric configuration settings for the router output.
+    #   @return [Types::FabricConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RouterOutput AWS API Documentation
+    #
+    class RouterOutput < Struct.new(
+      :name,
+      :arn,
+      :id,
+      :state,
+      :output_type,
+      :configuration,
+      :routed_state,
+      :region_name,
+      :availability_zone,
+      :maximum_bitrate,
+      :routing_scope,
+      :tier,
+      :created_at,
+      :updated_at,
+      :messages,
+      :tags,
+      :stream_details,
+      :ip_address,
+      :routed_input_arn,
+      :maintenance_type,
+      :maintenance_configuration,
+      :maintenance_schedule_type,
+      :maintenance_schedule,
+      :fabric_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration settings for a router output.
+    #
+    # @note RouterOutputConfiguration is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note RouterOutputConfiguration is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of RouterOutputConfiguration corresponding to the set member.
+    #
+    # @!attribute [rw] standard
+    #   The configuration settings for a standard router output, including
+    #   the protocol, protocol-specific configuration, network interface,
+    #   and availability zone.
+    #   @return [Types::StandardRouterOutputConfiguration]
+    #
+    # @!attribute [rw] media_connect_flow
+    #   Configuration settings for connecting a router output to a
+    #   MediaConnect flow source.
+    #   @return [Types::MediaConnectFlowRouterOutputConfiguration]
+    #
+    # @!attribute [rw] media_live_input
+    #   Configuration settings for connecting a router output to a MediaLive
+    #   input.
+    #   @return [Types::MediaLiveInputRouterOutputConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RouterOutputConfiguration AWS API Documentation
+    #
+    class RouterOutputConfiguration < Struct.new(
+      :standard,
+      :media_connect_flow,
+      :media_live_input,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Standard < RouterOutputConfiguration; end
+      class MediaConnectFlow < RouterOutputConfiguration; end
+      class MediaLiveInput < RouterOutputConfiguration; end
+      class Unknown < RouterOutputConfiguration; end
+    end
+
+    # A filter that can be used to retrieve a list of router outputs.
+    #
+    # @note RouterOutputFilter is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @!attribute [rw] region_names
+    #   The AWS Regions of the router outputs to include in the filter.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] network_interface_arns
+    #   The Amazon Resource Names (ARNs) of the network interfaces
+    #   associated with the router outputs to include in the filter.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] routing_scopes
+    #   Filter criteria to list router outputs based on their routing scope.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] output_types
+    #   The types of router outputs to include in the filter.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] routed_input_arns
+    #   The ARNs of the router inputs associated with the router outputs to
+    #   include in the filter.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] name_contains
+    #   The names of the router outputs to include in the filter.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RouterOutputFilter AWS API Documentation
+    #
+    class RouterOutputFilter < Struct.new(
+      :region_names,
+      :network_interface_arns,
+      :routing_scopes,
+      :output_types,
+      :routed_input_arns,
+      :name_contains,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class RegionNames < RouterOutputFilter; end
+      class NetworkInterfaceArns < RouterOutputFilter; end
+      class RoutingScopes < RouterOutputFilter; end
+      class OutputTypes < RouterOutputFilter; end
+      class RoutedInputArns < RouterOutputFilter; end
+      class NameContains < RouterOutputFilter; end
+      class Unknown < RouterOutputFilter; end
+    end
+
+    # A message associated with a router output.
+    #
+    # @!attribute [rw] code
+    #   The code associated with the router output message.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   The message text associated with the router output message.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RouterOutputMessage AWS API Documentation
+    #
+    class RouterOutputMessage < Struct.new(
+      :code,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The protocol configuration settings for a router output.
+    #
+    # @note RouterOutputProtocolConfiguration is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note RouterOutputProtocolConfiguration is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of RouterOutputProtocolConfiguration corresponding to the set member.
+    #
+    # @!attribute [rw] rist
+    #   The configuration settings for a router output using the RIST
+    #   (Reliable Internet Stream Transport) protocol, including the
+    #   destination address and port.
+    #   @return [Types::RistRouterOutputConfiguration]
+    #
+    # @!attribute [rw] srt_listener
+    #   The configuration settings for a router output using the SRT (Secure
+    #   Reliable Transport) protocol in listener mode, including the port,
+    #   minimum latency, and encryption key configuration.
+    #   @return [Types::SrtListenerRouterOutputConfiguration]
+    #
+    # @!attribute [rw] srt_caller
+    #   The configuration settings for a router output using the SRT (Secure
+    #   Reliable Transport) protocol in caller mode, including the
+    #   destination address and port, minimum latency, stream ID, and
+    #   encryption key configuration.
+    #   @return [Types::SrtCallerRouterOutputConfiguration]
+    #
+    # @!attribute [rw] rtp
+    #   The configuration settings for a router output using the RTP
+    #   (Real-Time Transport Protocol) protocol, including the destination
+    #   address and port, and forward error correction state.
+    #   @return [Types::RtpRouterOutputConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RouterOutputProtocolConfiguration AWS API Documentation
+    #
+    class RouterOutputProtocolConfiguration < Struct.new(
+      :rist,
+      :srt_listener,
+      :srt_caller,
+      :rtp,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Rist < RouterOutputProtocolConfiguration; end
+      class SrtListener < RouterOutputProtocolConfiguration; end
+      class SrtCaller < RouterOutputProtocolConfiguration; end
+      class Rtp < RouterOutputProtocolConfiguration; end
+      class Unknown < RouterOutputProtocolConfiguration; end
+    end
+
+    # The request to create a new router output would exceed the service
+    # quotas (limits) set for the account.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RouterOutputServiceQuotaExceededException AWS API Documentation
+    #
+    class RouterOutputServiceQuotaExceededException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Information about the router output's stream, including connection
+    # state and destination details. The specific details provided vary
+    # based on the router output type.
+    #
+    # @note RouterOutputStreamDetails is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of RouterOutputStreamDetails corresponding to the set member.
+    #
+    # @!attribute [rw] standard
+    #   Configuration details for a standard router output stream type.
+    #   Contains information about the destination IP address and connection
+    #   state for basic output routing.
+    #   @return [Types::StandardRouterOutputStreamDetails]
+    #
+    # @!attribute [rw] media_connect_flow
+    #   Configuration details for a MediaConnect flow when used as a router
+    #   output destination.
+    #   @return [Types::MediaConnectFlowRouterOutputStreamDetails]
+    #
+    # @!attribute [rw] media_live_input
+    #   Configuration details for a MediaLive input when used as a router
+    #   output destination.
+    #   @return [Types::MediaLiveInputRouterOutputStreamDetails]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RouterOutputStreamDetails AWS API Documentation
+    #
+    class RouterOutputStreamDetails < Struct.new(
+      :standard,
+      :media_connect_flow,
+      :media_live_input,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Standard < RouterOutputStreamDetails; end
+      class MediaConnectFlow < RouterOutputStreamDetails; end
+      class MediaLiveInput < RouterOutputStreamDetails; end
+      class Unknown < RouterOutputStreamDetails; end
+    end
+
+    # The configuration settings for a Router Input using the RTP (Real-Time
+    # Transport Protocol) protocol, including the port and forward error
+    # correction state.
+    #
+    # @!attribute [rw] port
+    #   The port number used for the RTP protocol in the router input
+    #   configuration.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] forward_error_correction
+    #   The state of forward error correction for the RTP protocol in the
+    #   router input configuration.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RtpRouterInputConfiguration AWS API Documentation
+    #
+    class RtpRouterInputConfiguration < Struct.new(
+      :port,
+      :forward_error_correction)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration settings for a router output using the RTP
+    # (Real-Time Transport Protocol) protocol, including the destination
+    # address and port, and forward error correction state.
+    #
+    # @!attribute [rw] destination_address
+    #   The destination IP address for the RTP protocol in the router output
+    #   configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] destination_port
+    #   The destination port number for the RTP protocol in the router
+    #   output configuration.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] forward_error_correction
+    #   The state of forward error correction for the RTP protocol in the
+    #   router output configuration.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RtpRouterOutputConfiguration AWS API Documentation
+    #
+    class RtpRouterOutputConfiguration < Struct.new(
+      :destination_address,
+      :destination_port,
+      :forward_error_correction)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration settings for transit encryption using Secrets
+    # Manager, including the secret ARN and role ARN.
+    #
+    # @!attribute [rw] secret_arn
+    #   The ARN of the Secrets Manager secret used for transit encryption.
+    #   @return [String]
+    #
+    # @!attribute [rw] role_arn
+    #   The ARN of the IAM role assumed by MediaConnect to access the
+    #   Secrets Manager secret.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/SecretsManagerEncryptionKeyConfiguration AWS API Documentation
+    #
+    class SecretsManagerEncryptionKeyConfiguration < Struct.new(
+      :secret_arn,
+      :role_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4110,6 +7364,26 @@ module Aws::MediaConnect
     #   bridge.
     #   @return [Types::SetGatewayBridgeSourceRequest]
     #
+    # @!attribute [rw] ndi_source_settings
+    #   The settings for the NDI® source. This includes the exact name of
+    #   the upstream NDI sender that you want to connect to your source.
+    #   @return [Types::NdiSourceSettings]
+    #
+    # @!attribute [rw] source_tags
+    #   The key-value pairs that can be used to tag and organize the source.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] router_integration_state
+    #   Indicates whether to enable or disable router integration when
+    #   setting a flow source.
+    #   @return [String]
+    #
+    # @!attribute [rw] router_integration_transit_decryption
+    #   The decryption configuration for the flow source when router
+    #   integration is enabled. Specifies how the source content should be
+    #   decrypted when router integration is used.
+    #   @return [Types::FlowTransitEncryption]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/SetSourceRequest AWS API Documentation
     #
     class SetSourceRequest < Struct.new(
@@ -4131,7 +7405,11 @@ module Aws::MediaConnect
       :stream_id,
       :vpc_interface_name,
       :whitelist_cidr,
-      :gateway_bridge_source)
+      :gateway_bridge_source,
+      :ndi_source_settings,
+      :source_tags,
+      :router_integration_state,
+      :router_integration_transit_decryption)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4150,6 +7428,28 @@ module Aws::MediaConnect
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/SilentAudio AWS API Documentation
     #
     class SilentAudio < Struct.new(
+      :state,
+      :threshold_seconds)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Detects silent audio in the router input's source content and reports
+    # it through a CloudWatch metric, an EventBridge event, and a router
+    # input message.
+    #
+    # @!attribute [rw] state
+    #   Indicates whether silent audio detection is enabled or disabled.
+    #   @return [String]
+    #
+    # @!attribute [rw] threshold_seconds
+    #   The number of consecutive seconds of silence that MediaConnect must
+    #   detect before it reports an issue.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/SilentAudioConfiguration AWS API Documentation
+    #
+    class SilentAudioConfiguration < Struct.new(
       :state,
       :threshold_seconds)
       SENSITIVE = []
@@ -4199,12 +7499,12 @@ module Aws::MediaConnect
     #   @return [String]
     #
     # @!attribute [rw] sender_control_port
-    #   The IP address that the flow communicates with to initiate
+    #   The port that the flow uses to send outbound requests to initiate
     #   connection with the sender.
     #   @return [Integer]
     #
     # @!attribute [rw] sender_ip_address
-    #   The port that the flow uses to send outbound requests to initiate
+    #   The IP address that the flow communicates with to initiate
     #   connection with the sender.
     #   @return [String]
     #
@@ -4233,6 +7533,41 @@ module Aws::MediaConnect
     #   bridge.
     #   @return [Types::GatewayBridgeSource]
     #
+    # @!attribute [rw] peer_ip_address
+    #   The IP address of the device that is currently sending content to
+    #   this source.
+    #
+    #   <note markdown="1"> * For sources that use protocols where you specify the origin (such
+    #     as SRT Caller), this value matches the configured origin address.
+    #
+    #   * For sources that use listener protocols (such as SRT Listener or
+    #     RTP), this value shows the address of the connected sender.
+    #
+    #   * Peer IP addresses aren't available for entitlements and
+    #     CDI/ST2110 sources.
+    #
+    #   * The peer IP address might not be visible for flows that haven't
+    #     been started yet, or flows that were started before May 2025. In
+    #     these cases, restart your flow to see the peer IP address.
+    #
+    #    </note>
+    #   @return [String]
+    #
+    # @!attribute [rw] router_integration_state
+    #   Indicates if router integration is enabled or disabled on the flow
+    #   source.
+    #   @return [String]
+    #
+    # @!attribute [rw] router_integration_transit_decryption
+    #   The decryption configuration for the flow source when router
+    #   integration is enabled.
+    #   @return [Types::FlowTransitEncryption]
+    #
+    # @!attribute [rw] connected_router_output_arn
+    #   The ARN of the router output that's currently connected to this
+    #   source.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/Source AWS API Documentation
     #
     class Source < Struct.new(
@@ -4250,7 +7585,11 @@ module Aws::MediaConnect
       :transport,
       :vpc_interface_name,
       :whitelist_cidr,
-      :gateway_bridge_source)
+      :gateway_bridge_source,
+      :peer_ip_address,
+      :router_integration_state,
+      :router_integration_transit_decryption,
+      :connected_router_output_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4267,6 +7606,261 @@ module Aws::MediaConnect
     #
     class SourcePriority < Struct.new(
       :primary_source)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration settings for a router input using the SRT (Secure
+    # Reliable Transport) protocol in caller mode, including the source
+    # address and port, minimum latency, stream ID, and decryption key
+    # configuration.
+    #
+    # @!attribute [rw] source_address
+    #   The source IP address for the SRT protocol in caller mode.
+    #   @return [String]
+    #
+    # @!attribute [rw] source_port
+    #   The source port number for the SRT protocol in caller mode.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] minimum_latency_milliseconds
+    #   The minimum latency in milliseconds for the SRT protocol in caller
+    #   mode.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] stream_id
+    #   The stream ID for the SRT protocol in caller mode.
+    #   @return [String]
+    #
+    # @!attribute [rw] decryption_configuration
+    #   Specifies the decryption settings for an SRT caller input, including
+    #   the encryption key configuration and associated parameters.
+    #   @return [Types::SrtDecryptionConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/SrtCallerRouterInputConfiguration AWS API Documentation
+    #
+    class SrtCallerRouterInputConfiguration < Struct.new(
+      :source_address,
+      :source_port,
+      :minimum_latency_milliseconds,
+      :stream_id,
+      :decryption_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration settings for a router output using the SRT (Secure
+    # Reliable Transport) protocol in caller mode, including the destination
+    # address and port, minimum latency, stream ID, and encryption key
+    # configuration.
+    #
+    # @!attribute [rw] destination_address
+    #   The destination IP address for the SRT protocol in caller mode.
+    #   @return [String]
+    #
+    # @!attribute [rw] destination_port
+    #   The destination port number for the SRT protocol in caller mode.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] minimum_latency_milliseconds
+    #   The minimum latency in milliseconds for the SRT protocol in caller
+    #   mode.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] stream_id
+    #   The stream ID for the SRT protocol in caller mode.
+    #   @return [String]
+    #
+    # @!attribute [rw] encryption_configuration
+    #   Defines the encryption settings for an SRT caller output, including
+    #   the encryption key configuration and associated parameters.
+    #   @return [Types::SrtEncryptionConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/SrtCallerRouterOutputConfiguration AWS API Documentation
+    #
+    class SrtCallerRouterOutputConfiguration < Struct.new(
+      :destination_address,
+      :destination_port,
+      :minimum_latency_milliseconds,
+      :stream_id,
+      :encryption_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains the configuration settings for decrypting SRT streams,
+    # including the encryption key details and decryption parameters.
+    #
+    # @!attribute [rw] encryption_key
+    #   Specifies the encryption key configuration used for decrypting SRT
+    #   streams, including the key source and associated credentials.
+    #   @return [Types::SecretsManagerEncryptionKeyConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/SrtDecryptionConfiguration AWS API Documentation
+    #
+    class SrtDecryptionConfiguration < Struct.new(
+      :encryption_key)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains the configuration settings for encrypting SRT streams,
+    # including the encryption key details and encryption parameters.
+    #
+    # @!attribute [rw] encryption_key
+    #   Specifies the encryption key configuration used for encrypting SRT
+    #   streams, including the key source and associated credentials.
+    #   @return [Types::SecretsManagerEncryptionKeyConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/SrtEncryptionConfiguration AWS API Documentation
+    #
+    class SrtEncryptionConfiguration < Struct.new(
+      :encryption_key)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration settings for a router input using the SRT (Secure
+    # Reliable Transport) protocol in listener mode, including the port,
+    # minimum latency, and decryption key configuration.
+    #
+    # @!attribute [rw] port
+    #   The port number for the SRT protocol in listener mode.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] minimum_latency_milliseconds
+    #   The minimum latency in milliseconds for the SRT protocol in listener
+    #   mode.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] decryption_configuration
+    #   Specifies the decryption settings for an SRT listener input,
+    #   including the encryption key configuration and associated
+    #   parameters.
+    #   @return [Types::SrtDecryptionConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/SrtListenerRouterInputConfiguration AWS API Documentation
+    #
+    class SrtListenerRouterInputConfiguration < Struct.new(
+      :port,
+      :minimum_latency_milliseconds,
+      :decryption_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration settings for a router output using the SRT (Secure
+    # Reliable Transport) protocol in listener mode, including the port,
+    # minimum latency, and encryption key configuration.
+    #
+    # @!attribute [rw] port
+    #   The port number for the SRT protocol in listener mode.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] minimum_latency_milliseconds
+    #   The minimum latency in milliseconds for the SRT protocol in listener
+    #   mode.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] encryption_configuration
+    #   Defines the encryption settings for an SRT listener output,
+    #   including the encryption key configuration and associated
+    #   parameters.
+    #   @return [Types::SrtEncryptionConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/SrtListenerRouterOutputConfiguration AWS API Documentation
+    #
+    class SrtListenerRouterOutputConfiguration < Struct.new(
+      :port,
+      :minimum_latency_milliseconds,
+      :encryption_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration settings for a standard router input, including the
+    # protocol, protocol-specific configuration, network interface, and
+    # availability zone.
+    #
+    # @!attribute [rw] network_interface_arn
+    #   The Amazon Resource Name (ARN) of the network interface associated
+    #   with the standard router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] protocol_configuration
+    #   The configuration settings for the protocol used by the standard
+    #   router input.
+    #   @return [Types::RouterInputProtocolConfiguration]
+    #
+    # @!attribute [rw] protocol
+    #   The protocol used by the standard router input.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/StandardRouterInputConfiguration AWS API Documentation
+    #
+    class StandardRouterInputConfiguration < Struct.new(
+      :network_interface_arn,
+      :protocol_configuration,
+      :protocol)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration details for a standard router input stream type.
+    #
+    # @!attribute [rw] source_ip_address
+    #   The source IP address for the standard router input stream.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/StandardRouterInputStreamDetails AWS API Documentation
+    #
+    class StandardRouterInputStreamDetails < Struct.new(
+      :source_ip_address)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration settings for a standard router output, including the
+    # protocol, protocol-specific configuration, network interface, and
+    # availability zone.
+    #
+    # @!attribute [rw] network_interface_arn
+    #   The Amazon Resource Name (ARN) of the network interface associated
+    #   with the standard router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] protocol_configuration
+    #   The configuration settings for the protocol used by the standard
+    #   router output.
+    #   @return [Types::RouterOutputProtocolConfiguration]
+    #
+    # @!attribute [rw] protocol
+    #   The protocol used by the standard router output.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/StandardRouterOutputConfiguration AWS API Documentation
+    #
+    class StandardRouterOutputConfiguration < Struct.new(
+      :network_interface_arn,
+      :protocol_configuration,
+      :protocol)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration details for a standard router output stream type.
+    # Contains information about the destination IP address and connection
+    # state for basic output routing.
+    #
+    # @!attribute [rw] destination_ip_address
+    #   The IP address where the output stream will be sent. This is the
+    #   destination address that will receive the routed media content.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/StandardRouterOutputStreamDetails AWS API Documentation
+    #
+    class StandardRouterOutputStreamDetails < Struct.new(
+      :destination_ip_address)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4300,6 +7894,97 @@ module Aws::MediaConnect
       include Aws::Structure
     end
 
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the router input that you want to
+    #   start.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/StartRouterInputRequest AWS API Documentation
+    #
+    class StartRouterInputRequest < Struct.new(
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The ARN of the router input that was started.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the router input that was started.
+    #   @return [String]
+    #
+    # @!attribute [rw] state
+    #   The current state of the router input after being started.
+    #   @return [String]
+    #
+    # @!attribute [rw] maintenance_schedule_type
+    #   The type of maintenance schedule associated with the router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] maintenance_schedule
+    #   The details of the maintenance schedule for the router input.
+    #   @return [Types::MaintenanceSchedule]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/StartRouterInputResponse AWS API Documentation
+    #
+    class StartRouterInputResponse < Struct.new(
+      :arn,
+      :name,
+      :state,
+      :maintenance_schedule_type,
+      :maintenance_schedule)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the router output that you want to
+    #   start.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/StartRouterOutputRequest AWS API Documentation
+    #
+    class StartRouterOutputRequest < Struct.new(
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the router output that was
+    #   started.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the router output that was started.
+    #   @return [String]
+    #
+    # @!attribute [rw] state
+    #   The current state of the router output after being started.
+    #   @return [String]
+    #
+    # @!attribute [rw] maintenance_schedule_type
+    #   The type of maintenance schedule associated with the router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] maintenance_schedule
+    #   The details of the maintenance schedule for the router output.
+    #   @return [Types::MaintenanceSchedule]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/StartRouterOutputResponse AWS API Documentation
+    #
+    class StartRouterOutputResponse < Struct.new(
+      :arn,
+      :name,
+      :state,
+      :maintenance_schedule_type,
+      :maintenance_schedule)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] flow_arn
     #   The Amazon Resource Name (ARN) of the flow that you want to stop.
     #   @return [String]
@@ -4329,6 +8014,93 @@ module Aws::MediaConnect
       include Aws::Structure
     end
 
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the router input that you want to
+    #   stop.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/StopRouterInputRequest AWS API Documentation
+    #
+    class StopRouterInputRequest < Struct.new(
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The ARN of the router input that was stopped.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the router input that was stopped.
+    #   @return [String]
+    #
+    # @!attribute [rw] state
+    #   The current state of the router input after being stopped.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/StopRouterInputResponse AWS API Documentation
+    #
+    class StopRouterInputResponse < Struct.new(
+      :arn,
+      :name,
+      :state)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the router output that you want to
+    #   stop.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/StopRouterOutputRequest AWS API Documentation
+    #
+    class StopRouterOutputRequest < Struct.new(
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The ARN of the router output that was stopped.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the router output that was stopped.
+    #   @return [String]
+    #
+    # @!attribute [rw] state
+    #   The current state of the router output after being stopped.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/StopRouterOutputResponse AWS API Documentation
+    #
+    class StopRouterOutputResponse < Struct.new(
+      :arn,
+      :name,
+      :state)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] resource_arn
+    #   The Amazon Resource Name (ARN) of the global resource to tag.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   A map of tag keys and values to add to the global resource.
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/TagGlobalResourceRequest AWS API Documentation
+    #
+    class TagGlobalResourceRequest < Struct.new(
+      :resource_arn,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] resource_arn
     #   The Amazon Resource Name (ARN) that identifies the MediaConnect
     #   resource to which to add tags.
@@ -4345,6 +8117,57 @@ module Aws::MediaConnect
     class TagResourceRequest < Struct.new(
       :resource_arn,
       :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] router_output_arn
+    #   The Amazon Resource Name (ARN) of the router output that you want to
+    #   associate with a router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] router_input_arn
+    #   The Amazon Resource Name (ARN) of the router input that you want to
+    #   associate with a router output.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/TakeRouterInputRequest AWS API Documentation
+    #
+    class TakeRouterInputRequest < Struct.new(
+      :router_output_arn,
+      :router_input_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] routed_state
+    #   The state of the association between the router input and output.
+    #   @return [String]
+    #
+    # @!attribute [rw] router_output_arn
+    #   The ARN of the associated router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] router_output_name
+    #   The name of the associated router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] router_input_arn
+    #   The ARN of the associated router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] router_input_name
+    #   The name of the associated router input.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/TakeRouterInputResponse AWS API Documentation
+    #
+    class TakeRouterInputResponse < Struct.new(
+      :routed_state,
+      :router_output_arn,
+      :router_output_name,
+      :router_input_arn,
+      :router_input_name)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4478,8 +8301,26 @@ module Aws::MediaConnect
     #   @return [Integer]
     #
     # @!attribute [rw] ndi_program_name
-    #   A suffix for the names of the NDI sources that the flow creates. If
-    #   a custom name isn't specified, MediaConnect uses the output name.
+    #   A suffix for the name of the NDI® sender that the flow creates. If a
+    #   custom name isn't specified, MediaConnect uses the output name.
+    #   @return [String]
+    #
+    # @!attribute [rw] ndi_source_settings
+    #   The settings for the NDI source. This includes the exact name of the
+    #   upstream NDI sender that you want to connect to your source.
+    #   @return [Types::NdiSourceSettings]
+    #
+    # @!attribute [rw] ndi_output_timecode_source
+    #   The timecode source for NDI output frames. For NDI outputs, this
+    #   field is always present and defaults to `EMBEDDED_TIMECODE`.
+    #
+    #   * `EMBEDDED_TIMECODE` - Preserves timecodes from the input transport
+    #     stream. The timecodes must be embedded in the video stream as SEI
+    #     timing messages. If no embedded timecode is detected, MediaConnect
+    #     uses the UTC system time instead.
+    #
+    #   * `UTC_SYSTEM_TIME` - Generates timecodes based on the system clock
+    #     time when each frame is sent.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/Transport AWS API Documentation
@@ -4499,7 +8340,9 @@ module Aws::MediaConnect
       :source_listener_port,
       :stream_id,
       :ndi_speed_hq_quality,
-      :ndi_program_name)
+      :ndi_program_name,
+      :ndi_source_settings,
+      :ndi_output_timecode_source)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4601,6 +8444,24 @@ module Aws::MediaConnect
       :program_number,
       :program_pid,
       :streams)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] resource_arn
+    #   The Amazon Resource Name (ARN) of the global resource to remove tags
+    #   from.
+    #   @return [String]
+    #
+    # @!attribute [rw] tag_keys
+    #   The keys of the tags to remove from the global resource.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/UntagGlobalResourceRequest AWS API Documentation
+    #
+    class UntagGlobalResourceRequest < Struct.new(
+      :resource_arn,
+      :tag_keys)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5227,13 +9088,37 @@ module Aws::MediaConnect
     #   @return [String]
     #
     # @!attribute [rw] ndi_program_name
-    #   A suffix for the names of the NDI sources that the flow creates. If
-    #   a custom name isn't specified, MediaConnect uses the output name.
+    #   A suffix for the name of the NDI® sender that the flow creates. If a
+    #   custom name isn't specified, MediaConnect uses the output name.
     #   @return [String]
     #
     # @!attribute [rw] ndi_speed_hq_quality
     #   A quality setting for the NDI Speed HQ encoder.
     #   @return [Integer]
+    #
+    # @!attribute [rw] router_integration_state
+    #   Indicates whether to enable or disable router integration for this
+    #   flow output.
+    #   @return [String]
+    #
+    # @!attribute [rw] router_integration_transit_encryption
+    #   The configuration that defines how content is encrypted during
+    #   transit between the MediaConnect router and a MediaConnect flow.
+    #   @return [Types::FlowTransitEncryption]
+    #
+    # @!attribute [rw] ndi_output_timecode_source
+    #   Controls how MediaConnect generates timecodes for NDI output frames.
+    #   If you don't specify this field, MediaConnect leaves the value
+    #   unchanged.
+    #
+    #   * `EMBEDDED_TIMECODE` - Preserves timecodes from the input transport
+    #     stream. The timecodes must be embedded in the video stream as SEI
+    #     timing messages. If no embedded timecode is detected, MediaConnect
+    #     uses the UTC system time instead.
+    #
+    #   * `UTC_SYSTEM_TIME` - Generates timecodes based on the system clock
+    #     time when each frame is sent.
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/UpdateFlowOutputRequest AWS API Documentation
     #
@@ -5257,7 +9142,10 @@ module Aws::MediaConnect
       :vpc_interface_attachment,
       :output_status,
       :ndi_program_name,
-      :ndi_speed_hq_quality)
+      :ndi_speed_hq_quality,
+      :router_integration_state,
+      :router_integration_transit_encryption,
+      :ndi_output_timecode_source)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5296,9 +9184,20 @@ module Aws::MediaConnect
     #   @return [Types::MonitoringConfig]
     #
     # @!attribute [rw] ndi_config
-    #   Specifies the configuration settings for NDI outputs. Required when
-    #   the flow includes NDI outputs.
+    #   Specifies the configuration settings for a flow's NDI source or
+    #   output. Required when the flow includes an NDI source or output.
     #   @return [Types::NdiConfig]
+    #
+    # @!attribute [rw] flow_size
+    #   Determines the processing capacity and feature set of the flow.
+    #   @return [String]
+    #
+    # @!attribute [rw] encoding_config
+    #   The encoding configuration to apply to the NDI® source when
+    #   transcoding it to a transport stream for downstream distribution.
+    #   You can choose between several predefined encoding profiles based on
+    #   common use cases.
+    #   @return [Types::EncodingConfig]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/UpdateFlowRequest AWS API Documentation
     #
@@ -5307,7 +9206,9 @@ module Aws::MediaConnect
       :source_failover_config,
       :maintenance,
       :source_monitoring_config,
-      :ndi_config)
+      :ndi_config,
+      :flow_size,
+      :encoding_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5430,6 +9331,21 @@ module Aws::MediaConnect
     #   bridge.
     #   @return [Types::UpdateGatewayBridgeSourceRequest]
     #
+    # @!attribute [rw] ndi_source_settings
+    #   The settings for the NDI source. This includes the exact name of the
+    #   upstream NDI sender that you want to connect to your source.
+    #   @return [Types::NdiSourceSettings]
+    #
+    # @!attribute [rw] router_integration_state
+    #   Indicates whether to enable or disable router integration for this
+    #   flow source.
+    #   @return [String]
+    #
+    # @!attribute [rw] router_integration_transit_decryption
+    #   The encryption configuration for the flow source when router
+    #   integration is enabled.
+    #   @return [Types::FlowTransitEncryption]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/UpdateFlowSourceRequest AWS API Documentation
     #
     class UpdateFlowSourceRequest < Struct.new(
@@ -5452,13 +9368,16 @@ module Aws::MediaConnect
       :stream_id,
       :vpc_interface_name,
       :whitelist_cidr,
-      :gateway_bridge_source)
+      :gateway_bridge_source,
+      :ndi_source_settings,
+      :router_integration_state,
+      :router_integration_transit_decryption)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # @!attribute [rw] flow_arn
-    #   The ARN of the flow that you was updated.
+    #   The ARN of the flow that you updated.
     #   @return [String]
     #
     # @!attribute [rw] source
@@ -5575,6 +9494,181 @@ module Aws::MediaConnect
       include Aws::Structure
     end
 
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the router input that you want to
+    #   update.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The updated name for the router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] configuration
+    #   The updated configuration settings for the router input. Changing
+    #   the type of the configuration is not supported.
+    #   @return [Types::RouterInputConfiguration]
+    #
+    # @!attribute [rw] maximum_bitrate
+    #   The updated maximum bitrate for the router input.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] routing_scope
+    #   Specifies whether the router input can be assigned to outputs in
+    #   different Regions. REGIONAL (default) - can be assigned only to
+    #   outputs in the same Region. GLOBAL - can be assigned to outputs in
+    #   any Region.
+    #   @return [String]
+    #
+    # @!attribute [rw] tier
+    #   The updated tier level for the router input.
+    #   @return [String]
+    #
+    # @!attribute [rw] transit_encryption
+    #   The updated transit encryption settings for the router input.
+    #   @return [Types::RouterInputTransitEncryption]
+    #
+    # @!attribute [rw] maintenance_configuration
+    #   The updated maintenance configuration settings for the router input,
+    #   including any changes to preferred maintenance windows and
+    #   schedules.
+    #   @return [Types::MaintenanceConfiguration]
+    #
+    # @!attribute [rw] content_quality_analysis_configuration
+    #   The content quality analysis configuration for the router input.
+    #   @return [Types::RouterContentQualityAnalysisConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/UpdateRouterInputRequest AWS API Documentation
+    #
+    class UpdateRouterInputRequest < Struct.new(
+      :arn,
+      :name,
+      :configuration,
+      :maximum_bitrate,
+      :routing_scope,
+      :tier,
+      :transit_encryption,
+      :maintenance_configuration,
+      :content_quality_analysis_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] router_input
+    #   The updated router input.
+    #   @return [Types::RouterInput]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/UpdateRouterInputResponse AWS API Documentation
+    #
+    class UpdateRouterInputResponse < Struct.new(
+      :router_input)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the router network interface that
+    #   you want to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The updated name for the router network interface.
+    #   @return [String]
+    #
+    # @!attribute [rw] configuration
+    #   The updated configuration settings for the router network interface.
+    #   Changing the type of the configuration is not supported.
+    #   @return [Types::RouterNetworkInterfaceConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/UpdateRouterNetworkInterfaceRequest AWS API Documentation
+    #
+    class UpdateRouterNetworkInterfaceRequest < Struct.new(
+      :arn,
+      :name,
+      :configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] router_network_interface
+    #   The updated router network interface.
+    #   @return [Types::RouterNetworkInterface]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/UpdateRouterNetworkInterfaceResponse AWS API Documentation
+    #
+    class UpdateRouterNetworkInterfaceResponse < Struct.new(
+      :router_network_interface)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the router output that you want to
+    #   update.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The updated name for the router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] configuration
+    #   The updated configuration settings for the router output. Changing
+    #   the type of the configuration is not supported.
+    #   @return [Types::RouterOutputConfiguration]
+    #
+    # @!attribute [rw] maximum_bitrate
+    #   The updated maximum bitrate for the router output.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] routing_scope
+    #   Specifies whether the router output can take inputs that are in
+    #   different Regions. REGIONAL (default) - can only take inputs from
+    #   same Region. GLOBAL - can take inputs from any Region.
+    #   @return [String]
+    #
+    # @!attribute [rw] tier
+    #   The updated tier level for the router output.
+    #   @return [String]
+    #
+    # @!attribute [rw] maintenance_configuration
+    #   The updated maintenance configuration settings for the router
+    #   output, including any changes to preferred maintenance windows and
+    #   schedules.
+    #   @return [Types::MaintenanceConfiguration]
+    #
+    # @!attribute [rw] fabric_configuration
+    #   The updated fabric configuration settings for the router output. You
+    #   cannot update the fabric configuration while the output has an
+    #   active route. You must unroute the output before updating the fabric
+    #   configuration.
+    #   @return [Types::FabricConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/UpdateRouterOutputRequest AWS API Documentation
+    #
+    class UpdateRouterOutputRequest < Struct.new(
+      :arn,
+      :name,
+      :configuration,
+      :maximum_bitrate,
+      :routing_scope,
+      :tier,
+      :maintenance_configuration,
+      :fabric_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] router_output
+    #   The updated router output.
+    #   @return [Types::RouterOutput]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/UpdateRouterOutputResponse AWS API Documentation
+    #
+    class UpdateRouterOutputResponse < Struct.new(
+      :router_output)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Specifies the configuration for video stream metrics monitoring.
     #
     # @!attribute [rw] black_frames
@@ -5681,6 +9775,11 @@ module Aws::MediaConnect
     #   the flow.
     #   @return [String]
     #
+    # @!attribute [rw] vpc_interface_tags
+    #   The key-value pairs that can be used to tag and organize the VPC
+    #   network interface.
+    #   @return [Hash<String,String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/VpcInterfaceRequest AWS API Documentation
     #
     class VpcInterfaceRequest < Struct.new(
@@ -5688,7 +9787,54 @@ module Aws::MediaConnect
       :network_interface_type,
       :role_arn,
       :security_group_ids,
+      :subnet_id,
+      :vpc_interface_tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration settings for a router network interface within a
+    # VPC, including the security group IDs and subnet ID.
+    #
+    # @!attribute [rw] security_group_ids
+    #   The IDs of the security groups to associate with the router network
+    #   interface within the VPC.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] subnet_id
+    #   The ID of the subnet within the VPC to associate the router network
+    #   interface with.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/VpcRouterNetworkInterfaceConfiguration AWS API Documentation
+    #
+    class VpcRouterNetworkInterfaceConfiguration < Struct.new(
+      :security_group_ids,
       :subnet_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines a specific time window for maintenance operations.
+    #
+    # @!attribute [rw] start
+    #   The start time of the maintenance window.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end
+    #   The end time of the maintenance window.
+    #   @return [Time]
+    #
+    # @!attribute [rw] scheduled_time
+    #   The date and time when the maintenance window is scheduled to occur.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/WindowMaintenanceSchedule AWS API Documentation
+    #
+    class WindowMaintenanceSchedule < Struct.new(
+      :start,
+      :end,
+      :scheduled_time)
       SENSITIVE = []
       include Aws::Structure
     end

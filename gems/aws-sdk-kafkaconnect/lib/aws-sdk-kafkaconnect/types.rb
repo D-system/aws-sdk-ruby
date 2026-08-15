@@ -68,12 +68,17 @@ module Aws::KafkaConnect
     #   @return [Integer]
     #
     # @!attribute [rw] scale_in_policy
-    #   The sacle-in policy for the connector.
+    #   The scale-in policy for the connector.
     #   @return [Types::ScaleInPolicy]
     #
     # @!attribute [rw] scale_out_policy
-    #   The sacle-out policy for the connector.
+    #   The scale-out policy for the connector.
     #   @return [Types::ScaleOutPolicy]
+    #
+    # @!attribute [rw] max_autoscaling_task_count
+    #   The maximum number of tasks allocated to the connector during
+    #   autoscaling operations. Must be at least equal to maxWorkerCount.
+    #   @return [Integer]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kafkaconnect-2021-09-14/AutoScaling AWS API Documentation
     #
@@ -82,7 +87,8 @@ module Aws::KafkaConnect
       :mcu_count,
       :min_worker_count,
       :scale_in_policy,
-      :scale_out_policy)
+      :scale_out_policy,
+      :max_autoscaling_task_count)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -103,12 +109,17 @@ module Aws::KafkaConnect
     #   @return [Integer]
     #
     # @!attribute [rw] scale_in_policy
-    #   The sacle-in policy for the connector.
+    #   The scale-in policy for the connector.
     #   @return [Types::ScaleInPolicyDescription]
     #
     # @!attribute [rw] scale_out_policy
-    #   The sacle-out policy for the connector.&gt;
+    #   The scale-out policy for the connector.
     #   @return [Types::ScaleOutPolicyDescription]
+    #
+    # @!attribute [rw] max_autoscaling_task_count
+    #   The maximum number of tasks allocated to the connector during
+    #   autoscaling operations. Must be at least equal to maxWorkerCount.
+    #   @return [Integer]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kafkaconnect-2021-09-14/AutoScalingDescription AWS API Documentation
     #
@@ -117,7 +128,8 @@ module Aws::KafkaConnect
       :mcu_count,
       :min_worker_count,
       :scale_in_policy,
-      :scale_out_policy)
+      :scale_out_policy,
+      :max_autoscaling_task_count)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -138,12 +150,17 @@ module Aws::KafkaConnect
     #   @return [Integer]
     #
     # @!attribute [rw] scale_in_policy
-    #   The target sacle-in policy for the connector.
+    #   The target scale-in policy for the connector.
     #   @return [Types::ScaleInPolicyUpdate]
     #
     # @!attribute [rw] scale_out_policy
-    #   The target sacle-out policy for the connector.
+    #   The target scale-out policy for the connector.
     #   @return [Types::ScaleOutPolicyUpdate]
+    #
+    # @!attribute [rw] max_autoscaling_task_count
+    #   The maximum number of tasks allocated to the connector during
+    #   autoscaling operations. Must be at least equal to maxWorkerCount.
+    #   @return [Integer]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kafkaconnect-2021-09-14/AutoScalingUpdate AWS API Documentation
     #
@@ -152,7 +169,8 @@ module Aws::KafkaConnect
       :mcu_count,
       :min_worker_count,
       :scale_in_policy,
-      :scale_out_policy)
+      :scale_out_policy,
+      :max_autoscaling_task_count)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -392,6 +410,12 @@ module Aws::KafkaConnect
     #   Logs.
     #   @return [Types::LogDeliveryDescription]
     #
+    # @!attribute [rw] network_type
+    #   The network type of the connector. It gives connectors connectivity
+    #   to either IPv4 (IPV4) or IPv4 and IPv6 (DUAL) destinations. Defaults
+    #   to IPV4.
+    #   @return [String]
+    #
     # @!attribute [rw] plugins
     #   Specifies which plugins were used for this connector.
     #   @return [Array<Types::PluginDescription>]
@@ -420,6 +444,7 @@ module Aws::KafkaConnect
       :kafka_cluster_encryption_in_transit,
       :kafka_connect_version,
       :log_delivery,
+      :network_type,
       :plugins,
       :service_execution_role_arn,
       :worker_configuration)
@@ -467,13 +492,19 @@ module Aws::KafkaConnect
     #   Details about log delivery.
     #   @return [Types::LogDelivery]
     #
+    # @!attribute [rw] network_type
+    #   The network type of the connector. It gives connectors connectivity
+    #   to either IPv4 (IPV4) or IPv4 and IPv6 (DUAL) destinations. Defaults
+    #   to IPV4.
+    #   @return [String]
+    #
     # @!attribute [rw] plugins
     #   Amazon MSK Connect does not currently support specifying multiple
     #   plugins as a list. To use more than one plugin for your connector,
     #   you can create a single custom plugin using a ZIP file that bundles
     #   multiple plugins together.
     #
-    #   Specifies which plugin to use for the connector. You must specify a
+    #    Specifies which plugin to use for the connector. You must specify a
     #   single-element list containing one `customPlugin` object.
     #   @return [Array<Types::Plugin>]
     #
@@ -505,6 +536,7 @@ module Aws::KafkaConnect
       :kafka_cluster_encryption_in_transit,
       :kafka_connect_version,
       :log_delivery,
+      :network_type,
       :plugins,
       :service_execution_role_arn,
       :worker_configuration,
@@ -1071,6 +1103,12 @@ module Aws::KafkaConnect
     #   Details about delivering logs to Amazon CloudWatch Logs.
     #   @return [Types::LogDeliveryDescription]
     #
+    # @!attribute [rw] network_type
+    #   The network type of the connector. It gives connectors connectivity
+    #   to either IPv4 (IPV4) or IPv4 and IPv6 (DUAL) destinations. Defaults
+    #   to IPV4.
+    #   @return [String]
+    #
     # @!attribute [rw] plugins
     #   Specifies which plugins were used for this connector.
     #   @return [Array<Types::PluginDescription>]
@@ -1104,6 +1142,7 @@ module Aws::KafkaConnect
       :kafka_cluster_encryption_in_transit,
       :kafka_connect_version,
       :log_delivery,
+      :network_type,
       :plugins,
       :service_execution_role_arn,
       :worker_configuration,

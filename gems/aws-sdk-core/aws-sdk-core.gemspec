@@ -16,6 +16,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency('aws-sigv4', '~> 1.9') # necessary for s3 express auth/native sigv4a support
 
   spec.add_dependency('base64')
+  spec.add_dependency('bigdecimal')
   spec.add_dependency('jmespath', '~> 1', '>= 1.6.1') # necessary for secure jmespath JSON parsing
   spec.add_dependency('logger')
 
@@ -24,5 +25,5 @@ Gem::Specification.new do |spec|
     'changelog_uri' => 'https://github.com/aws/aws-sdk-ruby/tree/version-3/gems/aws-sdk-core/CHANGELOG.md'
   }
 
-  spec.required_ruby_version = '>= 2.5'
+  spec.required_ruby_version = '>= 2.7'
 end

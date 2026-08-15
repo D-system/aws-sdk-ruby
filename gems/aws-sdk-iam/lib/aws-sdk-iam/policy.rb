@@ -103,8 +103,14 @@ module Aws::IAM
 
     # A friendly description of the policy.
     #
-    # This element is included in the response to the GetPolicy operation.
-    # It is not included in the response to the ListPolicies operation.
+    # This element is included in the response to the [GetPolicy][1]
+    # operation. It is not included in the response to the [ListPolicies][2]
+    # operation.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetPolicy.html
+    # [2]: https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListPolicies.html
     # @return [String]
     def description
       data[:description]
@@ -552,10 +558,9 @@ module Aws::IAM
     # @option options [String] :policy_usage_filter
     #   The policy usage method to use for filtering the results.
     #
-    #   To list only permissions policies,
-    #   set `PolicyUsageFilter` to `PermissionsPolicy`. To list only the
-    #   policies used to set permissions boundaries, set the value
-    #   to `PermissionsBoundary`.
+    #   To list only permissions policies, set `PolicyUsageFilter` to
+    #   `PermissionsPolicy`. To list only the policies used to set permissions
+    #   boundaries, set the value to `PermissionsBoundary`.
     #
     #   This parameter is optional. If it is not included, all policies are
     #   returned.
@@ -609,10 +614,9 @@ module Aws::IAM
     # @option options [String] :policy_usage_filter
     #   The policy usage method to use for filtering the results.
     #
-    #   To list only permissions policies,
-    #   set `PolicyUsageFilter` to `PermissionsPolicy`. To list only the
-    #   policies used to set permissions boundaries, set the value
-    #   to `PermissionsBoundary`.
+    #   To list only permissions policies, set `PolicyUsageFilter` to
+    #   `PermissionsPolicy`. To list only the policies used to set permissions
+    #   boundaries, set the value to `PermissionsBoundary`.
     #
     #   This parameter is optional. If it is not included, all policies are
     #   returned.
@@ -666,10 +670,9 @@ module Aws::IAM
     # @option options [String] :policy_usage_filter
     #   The policy usage method to use for filtering the results.
     #
-    #   To list only permissions policies,
-    #   set `PolicyUsageFilter` to `PermissionsPolicy`. To list only the
-    #   policies used to set permissions boundaries, set the value
-    #   to `PermissionsBoundary`.
+    #   To list only permissions policies, set `PolicyUsageFilter` to
+    #   `PermissionsPolicy`. To list only the policies used to set permissions
+    #   boundaries, set the value to `PermissionsBoundary`.
     #
     #   This parameter is optional. If it is not included, all policies are
     #   returned.

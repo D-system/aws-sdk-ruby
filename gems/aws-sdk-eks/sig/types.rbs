@@ -60,6 +60,7 @@ module Aws::EKS
       attr_accessor marketplace_information: Types::MarketplaceInformation
       attr_accessor configuration_values: ::String
       attr_accessor pod_identity_associations: ::Array[::String]
+      attr_accessor namespace_config: Types::AddonNamespaceConfigResponse
       SENSITIVE: []
     end
 
@@ -81,6 +82,7 @@ module Aws::EKS
       attr_accessor publisher: ::String
       attr_accessor owner: ::String
       attr_accessor marketplace_information: Types::MarketplaceInformation
+      attr_accessor default_namespace: ::String
       SENSITIVE: []
     end
 
@@ -88,6 +90,16 @@ module Aws::EKS
       attr_accessor code: ("AccessDenied" | "InternalFailure" | "ClusterUnreachable" | "InsufficientNumberOfReplicas" | "ConfigurationConflict" | "AdmissionRequestDenied" | "UnsupportedAddonModification" | "K8sResourceNotFound" | "AddonSubscriptionNeeded" | "AddonPermissionFailure")
       attr_accessor message: ::String
       attr_accessor resource_ids: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class AddonNamespaceConfigRequest
+      attr_accessor namespace: ::String
+      SENSITIVE: []
+    end
+
+    class AddonNamespaceConfigResponse
+      attr_accessor namespace: ::String
       SENSITIVE: []
     end
 
@@ -110,6 +122,57 @@ module Aws::EKS
       attr_accessor compatibilities: ::Array[Types::Compatibility]
       attr_accessor requires_configuration: bool
       attr_accessor requires_iam_permissions: bool
+      SENSITIVE: []
+    end
+
+    class AllowedValuesConstraint
+      attr_accessor allowed_values: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class ArgoCdAwsIdcConfigRequest
+      attr_accessor idc_instance_arn: ::String
+      attr_accessor idc_region: ::String
+      SENSITIVE: []
+    end
+
+    class ArgoCdAwsIdcConfigResponse
+      attr_accessor idc_instance_arn: ::String
+      attr_accessor idc_region: ::String
+      attr_accessor idc_managed_application_arn: ::String
+      SENSITIVE: []
+    end
+
+    class ArgoCdConfigRequest
+      attr_accessor namespace: ::String
+      attr_accessor aws_idc: Types::ArgoCdAwsIdcConfigRequest
+      attr_accessor rbac_role_mappings: ::Array[Types::ArgoCdRoleMapping]
+      attr_accessor network_access: Types::ArgoCdNetworkAccessConfigRequest
+      SENSITIVE: []
+    end
+
+    class ArgoCdConfigResponse
+      attr_accessor namespace: ::String
+      attr_accessor aws_idc: Types::ArgoCdAwsIdcConfigResponse
+      attr_accessor rbac_role_mappings: ::Array[Types::ArgoCdRoleMapping]
+      attr_accessor network_access: Types::ArgoCdNetworkAccessConfigResponse
+      attr_accessor server_url: ::String
+      SENSITIVE: []
+    end
+
+    class ArgoCdNetworkAccessConfigRequest
+      attr_accessor vpce_ids: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class ArgoCdNetworkAccessConfigResponse
+      attr_accessor vpce_ids: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class ArgoCdRoleMapping
+      attr_accessor role: ("ADMIN" | "EDITOR" | "VIEWER")
+      attr_accessor identities: ::Array[Types::SsoIdentity]
       SENSITIVE: []
     end
 
@@ -177,6 +240,73 @@ module Aws::EKS
       SENSITIVE: []
     end
 
+    class CancelUpdateRequest
+      attr_accessor name: ::String
+      attr_accessor update_id: ::String
+      attr_accessor client_request_token: ::String
+      SENSITIVE: []
+    end
+
+    class CancelUpdateResponse
+      attr_accessor update: Types::Update
+      SENSITIVE: []
+    end
+
+    class Cancellation
+      attr_accessor status: ("InProgress" | "Failed" | "Successful")
+      attr_accessor reason: ::String
+      SENSITIVE: []
+    end
+
+    class Capability
+      attr_accessor capability_name: ::String
+      attr_accessor arn: ::String
+      attr_accessor cluster_name: ::String
+      attr_accessor type: ("ACK" | "KRO" | "ARGOCD")
+      attr_accessor role_arn: ::String
+      attr_accessor status: ("CREATING" | "CREATE_FAILED" | "UPDATING" | "DELETING" | "DELETE_FAILED" | "ACTIVE" | "DEGRADED")
+      attr_accessor version: ::String
+      attr_accessor configuration: Types::CapabilityConfigurationResponse
+      attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor health: Types::CapabilityHealth
+      attr_accessor created_at: ::Time
+      attr_accessor modified_at: ::Time
+      attr_accessor delete_propagation_policy: ("RETAIN")
+      SENSITIVE: []
+    end
+
+    class CapabilityConfigurationRequest
+      attr_accessor argo_cd: Types::ArgoCdConfigRequest
+      SENSITIVE: []
+    end
+
+    class CapabilityConfigurationResponse
+      attr_accessor argo_cd: Types::ArgoCdConfigResponse
+      SENSITIVE: []
+    end
+
+    class CapabilityHealth
+      attr_accessor issues: ::Array[Types::CapabilityIssue]
+      SENSITIVE: []
+    end
+
+    class CapabilityIssue
+      attr_accessor code: ("AccessDenied" | "ClusterUnreachable")
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class CapabilitySummary
+      attr_accessor capability_name: ::String
+      attr_accessor arn: ::String
+      attr_accessor type: ("ACK" | "KRO" | "ARGOCD")
+      attr_accessor status: ("CREATING" | "CREATE_FAILED" | "UPDATING" | "DELETING" | "DELETE_FAILED" | "ACTIVE" | "DEGRADED")
+      attr_accessor version: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor modified_at: ::Time
+      SENSITIVE: []
+    end
+
     class Certificate
       attr_accessor data: ::String
       SENSITIVE: []
@@ -225,6 +355,11 @@ module Aws::EKS
       attr_accessor remote_network_config: Types::RemoteNetworkConfigResponse
       attr_accessor compute_config: Types::ComputeConfigResponse
       attr_accessor storage_config: Types::StorageConfigResponse
+      attr_accessor deletion_protection: bool
+      attr_accessor control_plane_scaling_config: Types::ControlPlaneScalingConfig
+      attr_accessor kube_api_server_config: Types::KubeApiServerConfigResponse
+      attr_accessor kube_scheduler_config: Types::KubeSchedulerConfigResponse
+      attr_accessor kube_controller_manager_config: Types::KubeControllerManagerConfigResponse
       SENSITIVE: []
     end
 
@@ -251,6 +386,8 @@ module Aws::EKS
       attr_accessor status: ("unsupported" | "standard-support" | "extended-support")
       attr_accessor version_status: ("UNSUPPORTED" | "STANDARD_SUPPORT" | "EXTENDED_SUPPORT")
       attr_accessor kubernetes_patch_version: ::String
+      attr_accessor control_plane_scaling_tiers: ::Array[Types::ControlPlaneScalingTierInfo]
+      attr_accessor control_plane_component_config: Types::ControlPlaneConfigInfo
       SENSITIVE: []
     end
 
@@ -290,13 +427,36 @@ module Aws::EKS
       SENSITIVE: []
     end
 
+    class ControlPlaneConfigInfo
+      attr_accessor kube_api_server_config: Types::KubeApiServerVersionConfig
+      attr_accessor kube_scheduler_config: Types::KubeSchedulerVersionConfig
+      attr_accessor kube_controller_manager_config: Types::KubeControllerManagerVersionConfig
+      SENSITIVE: []
+    end
+
     class ControlPlanePlacementRequest
       attr_accessor group_name: ::String
+      attr_accessor spread_level: ("host" | "rack")
       SENSITIVE: []
     end
 
     class ControlPlanePlacementResponse
       attr_accessor group_name: ::String
+      attr_accessor spread_level: ("host" | "rack")
+      SENSITIVE: []
+    end
+
+    class ControlPlaneScalingConfig
+      attr_accessor tier: ("standard" | "tier-xl" | "tier-2xl" | "tier-4xl" | "tier-8xl")
+      SENSITIVE: []
+    end
+
+    class ControlPlaneScalingTierInfo
+      attr_accessor tier_name: ::String
+      attr_accessor api_request_concurrency: ::Integer
+      attr_accessor pod_scheduling_rate_per_second: ::Integer
+      attr_accessor cluster_database_size_gb: ::Integer
+      attr_accessor control_plane_component_config_overrides: Types::ControlPlaneConfigInfo
       SENSITIVE: []
     end
 
@@ -332,11 +492,29 @@ module Aws::EKS
       attr_accessor tags: ::Hash[::String, ::String]
       attr_accessor configuration_values: ::String
       attr_accessor pod_identity_associations: ::Array[Types::AddonPodIdentityAssociations]
+      attr_accessor namespace_config: Types::AddonNamespaceConfigRequest
       SENSITIVE: []
     end
 
     class CreateAddonResponse
       attr_accessor addon: Types::Addon
+      SENSITIVE: []
+    end
+
+    class CreateCapabilityRequest
+      attr_accessor capability_name: ::String
+      attr_accessor cluster_name: ::String
+      attr_accessor client_request_token: ::String
+      attr_accessor type: ("ACK" | "KRO" | "ARGOCD")
+      attr_accessor role_arn: ::String
+      attr_accessor configuration: Types::CapabilityConfigurationRequest
+      attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor delete_propagation_policy: ("RETAIN")
+      SENSITIVE: []
+    end
+
+    class CreateCapabilityResponse
+      attr_accessor capability: Types::Capability
       SENSITIVE: []
     end
 
@@ -358,6 +536,11 @@ module Aws::EKS
       attr_accessor remote_network_config: Types::RemoteNetworkConfigRequest
       attr_accessor compute_config: Types::ComputeConfigRequest
       attr_accessor storage_config: Types::StorageConfigRequest
+      attr_accessor deletion_protection: bool
+      attr_accessor control_plane_scaling_config: Types::ControlPlaneScalingConfig
+      attr_accessor kube_api_server_config: Types::KubeApiServerConfigRequest
+      attr_accessor kube_scheduler_config: Types::KubeSchedulerConfigRequest
+      attr_accessor kube_controller_manager_config: Types::KubeControllerManagerConfigRequest
       SENSITIVE: []
     end
 
@@ -405,7 +588,7 @@ module Aws::EKS
       attr_accessor disk_size: ::Integer
       attr_accessor subnets: ::Array[::String]
       attr_accessor instance_types: ::Array[::String]
-      attr_accessor ami_type: ("AL2_x86_64" | "AL2_x86_64_GPU" | "AL2_ARM_64" | "CUSTOM" | "BOTTLEROCKET_ARM_64" | "BOTTLEROCKET_x86_64" | "BOTTLEROCKET_ARM_64_NVIDIA" | "BOTTLEROCKET_x86_64_NVIDIA" | "WINDOWS_CORE_2019_x86_64" | "WINDOWS_FULL_2019_x86_64" | "WINDOWS_CORE_2022_x86_64" | "WINDOWS_FULL_2022_x86_64" | "AL2023_x86_64_STANDARD" | "AL2023_ARM_64_STANDARD" | "AL2023_x86_64_NEURON" | "AL2023_x86_64_NVIDIA")
+      attr_accessor ami_type: ("AL2_x86_64" | "AL2_x86_64_GPU" | "AL2_ARM_64" | "CUSTOM" | "BOTTLEROCKET_ARM_64" | "BOTTLEROCKET_x86_64" | "BOTTLEROCKET_ARM_64_FIPS" | "BOTTLEROCKET_x86_64_FIPS" | "BOTTLEROCKET_ARM_64_NVIDIA" | "BOTTLEROCKET_x86_64_NVIDIA" | "BOTTLEROCKET_ARM_64_NVIDIA_FIPS" | "BOTTLEROCKET_x86_64_NVIDIA_FIPS" | "WINDOWS_CORE_2019_x86_64" | "WINDOWS_FULL_2019_x86_64" | "WINDOWS_CORE_2022_x86_64" | "WINDOWS_FULL_2022_x86_64" | "WINDOWS_CORE_2025_x86_64" | "WINDOWS_FULL_2025_x86_64" | "AL2023_x86_64_STANDARD" | "AL2023_ARM_64_STANDARD" | "AL2023_x86_64_NEURON" | "AL2023_x86_64_NVIDIA" | "AL2023_ARM_64_NVIDIA")
       attr_accessor remote_access: Types::RemoteAccessConfig
       attr_accessor node_role: ::String
       attr_accessor labels: ::Hash[::String, ::String]
@@ -418,6 +601,7 @@ module Aws::EKS
       attr_accessor capacity_type: ("ON_DEMAND" | "SPOT" | "CAPACITY_BLOCK")
       attr_accessor version: ::String
       attr_accessor release_version: ::String
+      attr_accessor warm_pool_config: Types::WarmPoolConfig
       SENSITIVE: []
     end
 
@@ -433,6 +617,9 @@ module Aws::EKS
       attr_accessor role_arn: ::String
       attr_accessor client_request_token: ::String
       attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor disable_session_tags: bool
+      attr_accessor target_role_arn: ::String
+      attr_accessor policy: ::String
       SENSITIVE: []
     end
 
@@ -459,6 +646,17 @@ module Aws::EKS
 
     class DeleteAddonResponse
       attr_accessor addon: Types::Addon
+      SENSITIVE: []
+    end
+
+    class DeleteCapabilityRequest
+      attr_accessor cluster_name: ::String
+      attr_accessor capability_name: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteCapabilityResponse
+      attr_accessor capability: Types::Capability
       SENSITIVE: []
     end
 
@@ -587,6 +785,17 @@ module Aws::EKS
       SENSITIVE: []
     end
 
+    class DescribeCapabilityRequest
+      attr_accessor cluster_name: ::String
+      attr_accessor capability_name: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeCapabilityResponse
+      attr_accessor capability: Types::Capability
+      SENSITIVE: []
+    end
+
     class DescribeClusterRequest
       attr_accessor name: ::String
       SENSITIVE: []
@@ -658,6 +867,19 @@ module Aws::EKS
       SENSITIVE: []
     end
 
+    class DescribeInsightsRefreshRequest
+      attr_accessor cluster_name: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeInsightsRefreshResponse
+      attr_accessor message: ::String
+      attr_accessor status: ("IN_PROGRESS" | "FAILED" | "COMPLETED")
+      attr_accessor started_at: ::Time
+      attr_accessor ended_at: ::Time
+      SENSITIVE: []
+    end
+
     class DescribeNodegroupRequest
       attr_accessor cluster_name: ::String
       attr_accessor nodegroup_name: ::String
@@ -685,6 +907,7 @@ module Aws::EKS
       attr_accessor update_id: ::String
       attr_accessor nodegroup_name: ::String
       attr_accessor addon_name: ::String
+      attr_accessor capability_name: ::String
       SENSITIVE: []
     end
 
@@ -712,6 +935,18 @@ module Aws::EKS
 
     class DisassociateIdentityProviderConfigResponse
       attr_accessor update: Types::Update
+      SENSITIVE: []
+    end
+
+    class DurationConstraints
+      attr_accessor min: ::String
+      attr_accessor max: ::String
+      SENSITIVE: []
+    end
+
+    class DurationParameterConfig
+      attr_accessor default_value: ::String
+      attr_accessor constraints: Types::DurationConstraints
       SENSITIVE: []
     end
 
@@ -756,6 +991,16 @@ module Aws::EKS
       SENSITIVE: []
     end
 
+    class EtcdPlacementRequest
+      attr_accessor spread_level: ("host" | "rack")
+      SENSITIVE: []
+    end
+
+    class EtcdPlacementResponse
+      attr_accessor spread_level: ("host" | "rack")
+      SENSITIVE: []
+    end
+
     class FargateProfile
       attr_accessor fargate_profile_name: ::String
       attr_accessor fargate_profile_arn: ::String
@@ -788,6 +1033,21 @@ module Aws::EKS
       SENSITIVE: []
     end
 
+    class HorizontalPodAutoscalerControllerConfigRequest
+      attr_accessor horizontal_pod_autoscaler_sync_period: ::String
+      SENSITIVE: []
+    end
+
+    class HorizontalPodAutoscalerControllerConfigResponse
+      attr_accessor horizontal_pod_autoscaler_sync_period: ::String
+      SENSITIVE: []
+    end
+
+    class HorizontalPodAutoscalerControllerVersionConfig
+      attr_accessor horizontal_pod_autoscaler_sync_period: Types::DurationParameterConfig
+      SENSITIVE: []
+    end
+
     class Identity
       attr_accessor oidc: Types::OIDC
       SENSITIVE: []
@@ -807,7 +1067,7 @@ module Aws::EKS
     class Insight
       attr_accessor id: ::String
       attr_accessor name: ::String
-      attr_accessor category: ("UPGRADE_READINESS")
+      attr_accessor category: ("UPGRADE_READINESS" | "MISCONFIGURATION" | "ROLLBACK_READINESS")
       attr_accessor kubernetes_version: ::String
       attr_accessor last_refresh_time: ::Time
       attr_accessor last_transition_time: ::Time
@@ -842,7 +1102,7 @@ module Aws::EKS
     class InsightSummary
       attr_accessor id: ::String
       attr_accessor name: ::String
-      attr_accessor category: ("UPGRADE_READINESS")
+      attr_accessor category: ("UPGRADE_READINESS" | "MISCONFIGURATION" | "ROLLBACK_READINESS")
       attr_accessor kubernetes_version: ::String
       attr_accessor last_refresh_time: ::Time
       attr_accessor last_transition_time: ::Time
@@ -852,9 +1112,15 @@ module Aws::EKS
     end
 
     class InsightsFilter
-      attr_accessor categories: ::Array[("UPGRADE_READINESS")]
+      attr_accessor categories: ::Array[("UPGRADE_READINESS" | "MISCONFIGURATION" | "ROLLBACK_READINESS")]
       attr_accessor kubernetes_versions: ::Array[::String]
       attr_accessor statuses: ::Array[("PASSING" | "WARNING" | "ERROR" | "UNKNOWN")]
+      SENSITIVE: []
+    end
+
+    class IntegerRangeConstraint
+      attr_accessor min: ::Integer
+      attr_accessor max: ::Integer
       SENSITIVE: []
     end
 
@@ -877,10 +1143,64 @@ module Aws::EKS
       SENSITIVE: []
     end
 
+    class InvalidStateException
+      attr_accessor cluster_name: ::String
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
     class Issue
       attr_accessor code: ("AutoScalingGroupNotFound" | "AutoScalingGroupInvalidConfiguration" | "Ec2SecurityGroupNotFound" | "Ec2SecurityGroupDeletionFailure" | "Ec2LaunchTemplateNotFound" | "Ec2LaunchTemplateVersionMismatch" | "Ec2SubnetNotFound" | "Ec2SubnetInvalidConfiguration" | "IamInstanceProfileNotFound" | "Ec2SubnetMissingIpv6Assignment" | "IamLimitExceeded" | "IamNodeRoleNotFound" | "NodeCreationFailure" | "AsgInstanceLaunchFailures" | "InstanceLimitExceeded" | "InsufficientFreeAddresses" | "AccessDenied" | "InternalFailure" | "ClusterUnreachable" | "AmiIdNotFound" | "AutoScalingGroupOptInRequired" | "AutoScalingGroupRateLimitExceeded" | "Ec2LaunchTemplateDeletionFailure" | "Ec2LaunchTemplateInvalidConfiguration" | "Ec2LaunchTemplateMaxLimitExceeded" | "Ec2SubnetListTooLong" | "IamThrottling" | "NodeTerminationFailure" | "PodEvictionFailure" | "SourceEc2LaunchTemplateNotFound" | "LimitExceeded" | "Unknown" | "AutoScalingGroupInstanceRefreshActive" | "KubernetesLabelInvalid" | "Ec2LaunchTemplateVersionMaxLimitExceeded" | "Ec2InstanceTypeDoesNotExist")
       attr_accessor message: ::String
       attr_accessor resource_ids: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class KubeApiServerConfigRequest
+      attr_accessor event_ttl: ::String
+      attr_accessor service_node_port_range: Types::ServiceNodePortRange
+      SENSITIVE: []
+    end
+
+    class KubeApiServerConfigResponse
+      attr_accessor event_ttl: ::String
+      attr_accessor service_node_port_range: Types::ServiceNodePortRange
+      SENSITIVE: []
+    end
+
+    class KubeApiServerVersionConfig
+      attr_accessor event_ttl: Types::DurationParameterConfig
+      attr_accessor service_node_port_range: Types::PortRangeParameterConfig
+      SENSITIVE: []
+    end
+
+    class KubeControllerManagerConfigRequest
+      attr_accessor horizontal_pod_autoscaler_controller_config: Types::HorizontalPodAutoscalerControllerConfigRequest
+      SENSITIVE: []
+    end
+
+    class KubeControllerManagerConfigResponse
+      attr_accessor horizontal_pod_autoscaler_controller_config: Types::HorizontalPodAutoscalerControllerConfigResponse
+      SENSITIVE: []
+    end
+
+    class KubeControllerManagerVersionConfig
+      attr_accessor horizontal_pod_autoscaler_controller_config: Types::HorizontalPodAutoscalerControllerVersionConfig
+      SENSITIVE: []
+    end
+
+    class KubeSchedulerConfigRequest
+      attr_accessor node_resources_fit: Types::NodeResourcesFitConfig
+      SENSITIVE: []
+    end
+
+    class KubeSchedulerConfigResponse
+      attr_accessor node_resources_fit: Types::NodeResourcesFitConfig
+      SENSITIVE: []
+    end
+
+    class KubeSchedulerVersionConfig
+      attr_accessor node_resources_fit: Types::NodeResourcesFitVersionConfig
       SENSITIVE: []
     end
 
@@ -964,6 +1284,19 @@ module Aws::EKS
       attr_accessor principal_arn: ::String
       attr_accessor next_token: ::String
       attr_accessor associated_access_policies: ::Array[Types::AssociatedAccessPolicy]
+      SENSITIVE: []
+    end
+
+    class ListCapabilitiesRequest
+      attr_accessor cluster_name: ::String
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListCapabilitiesResponse
+      attr_accessor capabilities: ::Array[Types::CapabilitySummary]
+      attr_accessor next_token: ::String
       SENSITIVE: []
     end
 
@@ -1075,6 +1408,7 @@ module Aws::EKS
       attr_accessor name: ::String
       attr_accessor nodegroup_name: ::String
       attr_accessor addon_name: ::String
+      attr_accessor capability_name: ::String
       attr_accessor next_token: ::String
       attr_accessor max_results: ::Integer
       SENSITIVE: []
@@ -1105,6 +1439,29 @@ module Aws::EKS
 
     class NodeRepairConfig
       attr_accessor enabled: bool
+      attr_accessor max_unhealthy_node_threshold_count: ::Integer
+      attr_accessor max_unhealthy_node_threshold_percentage: ::Integer
+      attr_accessor max_parallel_nodes_repaired_count: ::Integer
+      attr_accessor max_parallel_nodes_repaired_percentage: ::Integer
+      attr_accessor node_repair_config_overrides: ::Array[Types::NodeRepairConfigOverrides]
+      SENSITIVE: []
+    end
+
+    class NodeRepairConfigOverrides
+      attr_accessor node_monitoring_condition: ::String
+      attr_accessor node_unhealthy_reason: ::String
+      attr_accessor min_repair_wait_time_mins: ::Integer
+      attr_accessor repair_action: ("Replace" | "Reboot" | "NoAction")
+      SENSITIVE: []
+    end
+
+    class NodeResourcesFitConfig
+      attr_accessor scoring_strategy: Types::ScoringStrategy
+      SENSITIVE: []
+    end
+
+    class NodeResourcesFitVersionConfig
+      attr_accessor scoring_strategy: Types::ScoringStrategyConfig
       SENSITIVE: []
     end
 
@@ -1122,7 +1479,7 @@ module Aws::EKS
       attr_accessor instance_types: ::Array[::String]
       attr_accessor subnets: ::Array[::String]
       attr_accessor remote_access: Types::RemoteAccessConfig
-      attr_accessor ami_type: ("AL2_x86_64" | "AL2_x86_64_GPU" | "AL2_ARM_64" | "CUSTOM" | "BOTTLEROCKET_ARM_64" | "BOTTLEROCKET_x86_64" | "BOTTLEROCKET_ARM_64_NVIDIA" | "BOTTLEROCKET_x86_64_NVIDIA" | "WINDOWS_CORE_2019_x86_64" | "WINDOWS_FULL_2019_x86_64" | "WINDOWS_CORE_2022_x86_64" | "WINDOWS_FULL_2022_x86_64" | "AL2023_x86_64_STANDARD" | "AL2023_ARM_64_STANDARD" | "AL2023_x86_64_NEURON" | "AL2023_x86_64_NVIDIA")
+      attr_accessor ami_type: ("AL2_x86_64" | "AL2_x86_64_GPU" | "AL2_ARM_64" | "CUSTOM" | "BOTTLEROCKET_ARM_64" | "BOTTLEROCKET_x86_64" | "BOTTLEROCKET_ARM_64_FIPS" | "BOTTLEROCKET_x86_64_FIPS" | "BOTTLEROCKET_ARM_64_NVIDIA" | "BOTTLEROCKET_x86_64_NVIDIA" | "BOTTLEROCKET_ARM_64_NVIDIA_FIPS" | "BOTTLEROCKET_x86_64_NVIDIA_FIPS" | "WINDOWS_CORE_2019_x86_64" | "WINDOWS_FULL_2019_x86_64" | "WINDOWS_CORE_2022_x86_64" | "WINDOWS_FULL_2022_x86_64" | "WINDOWS_CORE_2025_x86_64" | "WINDOWS_FULL_2025_x86_64" | "AL2023_x86_64_STANDARD" | "AL2023_ARM_64_STANDARD" | "AL2023_x86_64_NEURON" | "AL2023_x86_64_NVIDIA" | "AL2023_ARM_64_NVIDIA")
       attr_accessor node_role: ::String
       attr_accessor labels: ::Hash[::String, ::String]
       attr_accessor taints: ::Array[Types::Taint]
@@ -1133,6 +1490,7 @@ module Aws::EKS
       attr_accessor node_repair_config: Types::NodeRepairConfig
       attr_accessor launch_template: Types::LaunchTemplateSpecification
       attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor warm_pool_config: Types::WarmPoolConfig
       SENSITIVE: []
     end
 
@@ -1203,6 +1561,8 @@ module Aws::EKS
       attr_accessor outpost_arns: ::Array[::String]
       attr_accessor control_plane_instance_type: ::String
       attr_accessor control_plane_placement: Types::ControlPlanePlacementRequest
+      attr_accessor etcd_instance_type: ::String
+      attr_accessor etcd_placement: Types::EtcdPlacementRequest
       SENSITIVE: []
     end
 
@@ -1210,6 +1570,8 @@ module Aws::EKS
       attr_accessor outpost_arns: ::Array[::String]
       attr_accessor control_plane_instance_type: ::String
       attr_accessor control_plane_placement: Types::ControlPlanePlacementResponse
+      attr_accessor etcd_instance_type: ::String
+      attr_accessor etcd_placement: Types::EtcdPlacementResponse
       SENSITIVE: []
     end
 
@@ -1224,6 +1586,10 @@ module Aws::EKS
       attr_accessor created_at: ::Time
       attr_accessor modified_at: ::Time
       attr_accessor owner_arn: ::String
+      attr_accessor disable_session_tags: bool
+      attr_accessor target_role_arn: ::String
+      attr_accessor external_id: ::String
+      attr_accessor policy: ::String
       SENSITIVE: []
     end
 
@@ -1234,6 +1600,18 @@ module Aws::EKS
       attr_accessor association_arn: ::String
       attr_accessor association_id: ::String
       attr_accessor owner_arn: ::String
+      SENSITIVE: []
+    end
+
+    class PortRangeConstraints
+      attr_accessor min_port: Types::IntegerRangeConstraint
+      attr_accessor max_port: Types::IntegerRangeConstraint
+      SENSITIVE: []
+    end
+
+    class PortRangeParameterConfig
+      attr_accessor default_value: Types::ServiceNodePortRange
+      attr_accessor constraints: Types::PortRangeConstraints
       SENSITIVE: []
     end
 
@@ -1283,6 +1661,12 @@ module Aws::EKS
       SENSITIVE: []
     end
 
+    class ResourceConstraints
+      attr_accessor name: Types::AllowedValuesConstraint
+      attr_accessor weight: Types::IntegerRangeConstraint
+      SENSITIVE: []
+    end
+
     class ResourceInUseException
       attr_accessor cluster_name: ::String
       attr_accessor nodegroup_name: ::String
@@ -1314,6 +1698,35 @@ module Aws::EKS
       SENSITIVE: []
     end
 
+    class ResourceWeight
+      attr_accessor name: ::String
+      attr_accessor weight: ::Integer
+      SENSITIVE: []
+    end
+
+    class RollbackConfig
+      attr_accessor timeout_minutes: ::Integer
+      SENSITIVE: []
+    end
+
+    class ScoringStrategy
+      attr_accessor type: ("LeastAllocated" | "MostAllocated")
+      attr_accessor resources: ::Array[Types::ResourceWeight]
+      SENSITIVE: []
+    end
+
+    class ScoringStrategyConfig
+      attr_accessor default_value: Types::ScoringStrategy
+      attr_accessor constraints: Types::ScoringStrategyConstraints
+      SENSITIVE: []
+    end
+
+    class ScoringStrategyConstraints
+      attr_accessor scoring_strategy: Types::AllowedValuesConstraint
+      attr_accessor resources: Types::ResourceConstraints
+      SENSITIVE: []
+    end
+
     class ServerException
       attr_accessor cluster_name: ::String
       attr_accessor nodegroup_name: ::String
@@ -1323,8 +1736,31 @@ module Aws::EKS
       SENSITIVE: []
     end
 
+    class ServiceNodePortRange
+      attr_accessor min_port: ::Integer
+      attr_accessor max_port: ::Integer
+      SENSITIVE: []
+    end
+
     class ServiceUnavailableException
       attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class SsoIdentity
+      attr_accessor id: ::String
+      attr_accessor type: ("SSO_USER" | "SSO_GROUP")
+      SENSITIVE: []
+    end
+
+    class StartInsightsRefreshRequest
+      attr_accessor cluster_name: ::String
+      SENSITIVE: []
+    end
+
+    class StartInsightsRefreshResponse
+      attr_accessor message: ::String
+      attr_accessor status: ("IN_PROGRESS" | "FAILED" | "COMPLETED")
       SENSITIVE: []
     end
 
@@ -1354,6 +1790,12 @@ module Aws::EKS
       SENSITIVE: []
     end
 
+    class ThrottlingException
+      attr_accessor cluster_name: ::String
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
     class UnsupportedAvailabilityZoneException
       attr_accessor message: ::String
       attr_accessor cluster_name: ::String
@@ -1374,10 +1816,11 @@ module Aws::EKS
     class Update
       attr_accessor id: ::String
       attr_accessor status: ("InProgress" | "Failed" | "Cancelled" | "Successful")
-      attr_accessor type: ("VersionUpdate" | "EndpointAccessUpdate" | "LoggingUpdate" | "ConfigUpdate" | "AssociateIdentityProviderConfig" | "DisassociateIdentityProviderConfig" | "AssociateEncryptionConfig" | "AddonUpdate" | "VpcConfigUpdate" | "AccessConfigUpdate" | "UpgradePolicyUpdate" | "ZonalShiftConfigUpdate" | "AutoModeUpdate")
+      attr_accessor type: ("VersionUpdate" | "EndpointAccessUpdate" | "LoggingUpdate" | "ConfigUpdate" | "AssociateIdentityProviderConfig" | "DisassociateIdentityProviderConfig" | "AssociateEncryptionConfig" | "AddonUpdate" | "VpcConfigUpdate" | "AccessConfigUpdate" | "UpgradePolicyUpdate" | "ZonalShiftConfigUpdate" | "AutoModeUpdate" | "RemoteNetworkConfigUpdate" | "DeletionProtectionUpdate" | "CapabilityUpdate" | "ControlPlaneScalingConfigUpdate" | "VendedLogsUpdate" | "ControlPlaneEgressUpdate" | "VersionRollback" | "ControlPlaneComponentConfigUpdate")
       attr_accessor params: ::Array[Types::UpdateParam]
       attr_accessor created_at: ::Time
       attr_accessor errors: ::Array[Types::ErrorDetail]
+      attr_accessor cancellation: Types::Cancellation
       SENSITIVE: []
     end
 
@@ -1417,6 +1860,32 @@ module Aws::EKS
       SENSITIVE: []
     end
 
+    class UpdateArgoCdConfig
+      attr_accessor rbac_role_mappings: Types::UpdateRoleMappings
+      attr_accessor network_access: Types::ArgoCdNetworkAccessConfigRequest
+      SENSITIVE: []
+    end
+
+    class UpdateCapabilityConfiguration
+      attr_accessor argo_cd: Types::UpdateArgoCdConfig
+      SENSITIVE: []
+    end
+
+    class UpdateCapabilityRequest
+      attr_accessor cluster_name: ::String
+      attr_accessor capability_name: ::String
+      attr_accessor role_arn: ::String
+      attr_accessor configuration: Types::UpdateCapabilityConfiguration
+      attr_accessor client_request_token: ::String
+      attr_accessor delete_propagation_policy: ("RETAIN")
+      SENSITIVE: []
+    end
+
+    class UpdateCapabilityResponse
+      attr_accessor update: Types::Update
+      SENSITIVE: []
+    end
+
     class UpdateClusterConfigRequest
       attr_accessor name: ::String
       attr_accessor resources_vpc_config: Types::VpcConfigRequest
@@ -1428,6 +1897,12 @@ module Aws::EKS
       attr_accessor compute_config: Types::ComputeConfigRequest
       attr_accessor kubernetes_network_config: Types::KubernetesNetworkConfigRequest
       attr_accessor storage_config: Types::StorageConfigRequest
+      attr_accessor remote_network_config: Types::RemoteNetworkConfigRequest
+      attr_accessor deletion_protection: bool
+      attr_accessor control_plane_scaling_config: Types::ControlPlaneScalingConfig
+      attr_accessor kube_api_server_config: Types::KubeApiServerConfigRequest
+      attr_accessor kube_scheduler_config: Types::KubeSchedulerConfigRequest
+      attr_accessor kube_controller_manager_config: Types::KubeControllerManagerConfigRequest
       SENSITIVE: []
     end
 
@@ -1440,6 +1915,8 @@ module Aws::EKS
       attr_accessor name: ::String
       attr_accessor version: ::String
       attr_accessor client_request_token: ::String
+      attr_accessor force: bool
+      attr_accessor rollback_config: Types::RollbackConfig
       SENSITIVE: []
     end
 
@@ -1474,6 +1951,7 @@ module Aws::EKS
       attr_accessor scaling_config: Types::NodegroupScalingConfig
       attr_accessor update_config: Types::NodegroupUpdateConfig
       attr_accessor node_repair_config: Types::NodeRepairConfig
+      attr_accessor warm_pool_config: Types::WarmPoolConfig
       attr_accessor client_request_token: ::String
       SENSITIVE: []
     end
@@ -1500,7 +1978,7 @@ module Aws::EKS
     end
 
     class UpdateParam
-      attr_accessor type: ("Version" | "PlatformVersion" | "EndpointPrivateAccess" | "EndpointPublicAccess" | "ClusterLogging" | "DesiredSize" | "LabelsToAdd" | "LabelsToRemove" | "TaintsToAdd" | "TaintsToRemove" | "MaxSize" | "MinSize" | "ReleaseVersion" | "PublicAccessCidrs" | "LaunchTemplateName" | "LaunchTemplateVersion" | "IdentityProviderConfig" | "EncryptionConfig" | "AddonVersion" | "ServiceAccountRoleArn" | "ResolveConflicts" | "MaxUnavailable" | "MaxUnavailablePercentage" | "NodeRepairEnabled" | "UpdateStrategy" | "ConfigurationValues" | "SecurityGroups" | "Subnets" | "AuthenticationMode" | "PodIdentityAssociations" | "UpgradePolicy" | "ZonalShiftConfig" | "ComputeConfig" | "StorageConfig" | "KubernetesNetworkConfig")
+      attr_accessor type: ("Version" | "PlatformVersion" | "EndpointPrivateAccess" | "EndpointPublicAccess" | "ClusterLogging" | "DesiredSize" | "LabelsToAdd" | "LabelsToRemove" | "TaintsToAdd" | "TaintsToRemove" | "MaxSize" | "MinSize" | "ReleaseVersion" | "PublicAccessCidrs" | "LaunchTemplateName" | "LaunchTemplateVersion" | "IdentityProviderConfig" | "EncryptionConfig" | "AddonVersion" | "ServiceAccountRoleArn" | "ResolveConflicts" | "MaxUnavailable" | "MaxUnavailablePercentage" | "NodeRepairEnabled" | "UpdateStrategy" | "ConfigurationValues" | "SecurityGroups" | "Subnets" | "AuthenticationMode" | "PodIdentityAssociations" | "UpgradePolicy" | "ZonalShiftConfig" | "ComputeConfig" | "StorageConfig" | "KubernetesNetworkConfig" | "RemoteNetworkConfig" | "DeletionProtection" | "NodeRepairConfig" | "RoleArn" | "RoleMappingsToAddOrUpdate" | "RoleMappingsToRemove" | "NetworkAccess" | "VendedLogs" | "UpdatedTier" | "PreviousTier" | "WarmPoolEnabled" | "WarmPoolMaxGroupPreparedCapacity" | "WarmPoolMinSize" | "WarmPoolState" | "WarmPoolReuseOnScaleIn" | "ControlPlaneEgressMode" | "KubeApiServerConfig" | "KubeSchedulerConfig" | "KubeControllerManagerConfig")
       attr_accessor value: ::String
       SENSITIVE: []
     end
@@ -1510,11 +1988,20 @@ module Aws::EKS
       attr_accessor association_id: ::String
       attr_accessor role_arn: ::String
       attr_accessor client_request_token: ::String
+      attr_accessor disable_session_tags: bool
+      attr_accessor target_role_arn: ::String
+      attr_accessor policy: ::String
       SENSITIVE: []
     end
 
     class UpdatePodIdentityAssociationResponse
       attr_accessor association: Types::PodIdentityAssociation
+      SENSITIVE: []
+    end
+
+    class UpdateRoleMappings
+      attr_accessor add_or_update_role_mappings: ::Array[Types::ArgoCdRoleMapping]
+      attr_accessor remove_role_mappings: ::Array[Types::ArgoCdRoleMapping]
       SENSITIVE: []
     end
 
@@ -1540,6 +2027,7 @@ module Aws::EKS
       attr_accessor endpoint_public_access: bool
       attr_accessor endpoint_private_access: bool
       attr_accessor public_access_cidrs: ::Array[::String]
+      attr_accessor control_plane_egress_mode: ("AWS_MANAGED" | "CUSTOMER_ROUTED" | "CUSTOMER_ISOLATED")
       SENSITIVE: []
     end
 
@@ -1551,6 +2039,16 @@ module Aws::EKS
       attr_accessor endpoint_public_access: bool
       attr_accessor endpoint_private_access: bool
       attr_accessor public_access_cidrs: ::Array[::String]
+      attr_accessor control_plane_egress_mode: ("AWS_MANAGED" | "CUSTOMER_ROUTED" | "CUSTOMER_ISOLATED")
+      SENSITIVE: []
+    end
+
+    class WarmPoolConfig
+      attr_accessor enabled: bool
+      attr_accessor min_size: ::Integer
+      attr_accessor max_group_prepared_capacity: ::Integer
+      attr_accessor pool_state: ("STOPPED" | "RUNNING" | "HIBERNATED")
+      attr_accessor reuse_on_scale_in: bool
       SENSITIVE: []
     end
 

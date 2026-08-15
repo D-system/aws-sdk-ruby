@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -115,7 +116,7 @@ module Aws
                                    {
                                      key: ::String,
                                      value: ::String
-                                   },
+                                   }
                                  ]
                                ) -> _CreateAccessGrantResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateAccessGrantResponseSuccess
@@ -137,7 +138,7 @@ module Aws
                                              {
                                                key: ::String,
                                                value: ::String
-                                             },
+                                             }
                                            ]
                                          ) -> _CreateAccessGrantsInstanceResponseSuccess
                                        | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateAccessGrantsInstanceResponseSuccess
@@ -159,7 +160,7 @@ module Aws
                                              {
                                                key: ::String,
                                                value: ::String
-                                             },
+                                             }
                                            ]
                                          ) -> _CreateAccessGrantsLocationResponseSuccess
                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateAccessGrantsLocationResponseSuccess
@@ -183,7 +184,17 @@ module Aws
                                    block_public_policy: bool?,
                                    restrict_public_buckets: bool?
                                  },
-                                 ?bucket_account_id: ::String
+                                 ?bucket_account_id: ::String,
+                                 ?scope: {
+                                   prefixes: Array[::String]?,
+                                   permissions: Array[("GetObject" | "GetObjectAttributes" | "ListMultipartUploadParts" | "ListBucket" | "ListBucketMultipartUploads" | "PutObject" | "DeleteObject" | "AbortMultipartUpload")]?
+                                 },
+                                 ?tags: Array[
+                                   {
+                                     key: ::String,
+                                     value: ::String
+                                   }
+                                 ]
                                ) -> _CreateAccessPointResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateAccessPointResponseSuccess
 
@@ -196,22 +207,7 @@ module Aws
       def create_access_point_for_object_lambda: (
                                                    ?account_id: ::String,
                                                    name: ::String,
-                                                   configuration: {
-                                                     supporting_access_point: ::String,
-                                                     cloud_watch_metrics_enabled: bool?,
-                                                     allowed_features: Array[("GetObject-Range" | "GetObject-PartNumber" | "HeadObject-Range" | "HeadObject-PartNumber")]?,
-                                                     transformation_configurations: Array[
-                                                       {
-                                                         actions: Array[("GetObject" | "HeadObject" | "ListObjects" | "ListObjectsV2")],
-                                                         content_transformation: {
-                                                           aws_lambda: {
-                                                             function_arn: ::String,
-                                                             function_payload: ::String?
-                                                           }?
-                                                         }
-                                                       },
-                                                     ]
-                                                   }
+                                                   configuration: Params::object_lambda_configuration
                                                  ) -> _CreateAccessPointForObjectLambdaResponseSuccess
                                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateAccessPointForObjectLambdaResponseSuccess
 
@@ -255,14 +251,7 @@ module Aws
                             target_resource: ::String?,
                             canned_access_control_list: ("private" | "public-read" | "public-read-write" | "aws-exec-read" | "authenticated-read" | "bucket-owner-read" | "bucket-owner-full-control")?,
                             access_control_grants: Array[
-                              {
-                                grantee: {
-                                  type_identifier: ("id" | "emailAddress" | "uri")?,
-                                  identifier: ::String?,
-                                  display_name: ::String?
-                                }?,
-                                permission: ("FULL_CONTROL" | "READ" | "WRITE" | "READ_ACP" | "WRITE_ACP")?
-                              },
+                              Params::s3_grant
                             ]?,
                             metadata_directive: ("COPY" | "REPLACE")?,
                             modified_since_constraint: ::Time?,
@@ -283,7 +272,7 @@ module Aws
                               {
                                 key: ::String,
                                 value: ::String
-                              },
+                              }
                             ]?,
                             redirect_location: ::String?,
                             requester_pays: bool?,
@@ -295,7 +284,7 @@ module Aws
                             object_lock_mode: ("COMPLIANCE" | "GOVERNANCE")?,
                             object_lock_retain_until_date: ::Time?,
                             bucket_key_enabled: bool?,
-                            checksum_algorithm: ("CRC32" | "CRC32C" | "SHA1" | "SHA256" | "CRC64NVME")?
+                            checksum_algorithm: ("CRC32" | "CRC32C" | "SHA1" | "SHA256" | "CRC64NVME" | "SHA512" | "MD5" | "XXHASH64" | "XXHASH3" | "XXHASH128")?
                           }?,
                           s3_put_object_acl: {
                             access_control_policy: {
@@ -305,14 +294,7 @@ module Aws
                                   display_name: ::String?
                                 },
                                 grants: Array[
-                                  {
-                                    grantee: {
-                                      type_identifier: ("id" | "emailAddress" | "uri")?,
-                                      identifier: ::String?,
-                                      display_name: ::String?
-                                    }?,
-                                    permission: ("FULL_CONTROL" | "READ" | "WRITE" | "READ_ACP" | "WRITE_ACP")?
-                                  },
+                                  Params::s3_grant
                                 ]?
                               }?,
                               canned_access_control_list: ("private" | "public-read" | "public-read-write" | "aws-exec-read" | "authenticated-read" | "bucket-owner-read" | "bucket-owner-full-control")?
@@ -323,7 +305,7 @@ module Aws
                               {
                                 key: ::String,
                                 value: ::String
-                              },
+                              }
                             ]?
                           }?,
                           s3_delete_object_tagging: {
@@ -345,6 +327,18 @@ module Aws
                             }
                           }?,
                           s3_replicate_object: {
+                          }?,
+                          s3_compute_object_checksum: {
+                            checksum_algorithm: ("CRC32" | "CRC32C" | "CRC64NVME" | "MD5" | "SHA1" | "SHA256" | "SHA512" | "XXHASH64" | "XXHASH3" | "XXHASH128")?,
+                            checksum_type: ("FULL_OBJECT" | "COMPOSITE")?
+                          }?,
+                          s3_update_object_encryption: {
+                            object_encryption: {
+                              ssekms: {
+                                kms_key_arn: ::String,
+                                bucket_key_enabled: bool?
+                              }?
+                            }?
                           }?
                         },
                         report: {
@@ -352,7 +346,8 @@ module Aws
                           format: ("Report_CSV_20180820")?,
                           enabled: bool,
                           prefix: ::String?,
-                          report_scope: ("AllTasks" | "FailedTasksOnly")?
+                          report_scope: ("AllTasks" | "FailedTasksOnly")?,
+                          expected_bucket_owner: ::String?
                         },
                         client_request_token: ::String,
                         ?manifest: {
@@ -373,7 +368,7 @@ module Aws
                           {
                             key: ::String,
                             value: ::String
-                          },
+                          }
                         ],
                         ?manifest_generator: {
                           s3_job_manifest_generator: {
@@ -404,7 +399,24 @@ module Aws
                               }?,
                               object_size_greater_than_bytes: ::Integer?,
                               object_size_less_than_bytes: ::Integer?,
-                              match_any_storage_class: Array[("STANDARD" | "STANDARD_IA" | "ONEZONE_IA" | "GLACIER" | "INTELLIGENT_TIERING" | "DEEP_ARCHIVE" | "GLACIER_IR")]?
+                              match_any_storage_class: Array[("STANDARD" | "STANDARD_IA" | "ONEZONE_IA" | "GLACIER" | "INTELLIGENT_TIERING" | "DEEP_ARCHIVE" | "GLACIER_IR")]?,
+                              match_any_object_encryption: Array[
+                                {
+                                  sses3: {
+                                  }?,
+                                  ssekms: {
+                                    kms_key_arn: ::String?,
+                                    bucket_key_enabled: bool?
+                                  }?,
+                                  dssekms: {
+                                    kms_key_arn: ::String?
+                                  }?,
+                                  ssec: {
+                                  }?,
+                                  notsse: {
+                                  }?
+                                }
+                              ]?
                             }?,
                             enable_manifest_output: bool
                           }?
@@ -432,7 +444,7 @@ module Aws
                                                   {
                                                     bucket: ::String,
                                                     bucket_account_id: ::String?
-                                                  },
+                                                  }
                                                 ]
                                               }
                                             ) -> _CreateMultiRegionAccessPointResponseSuccess
@@ -441,69 +453,12 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/S3Control/Client.html#create_storage_lens_group-instance_method
       def create_storage_lens_group: (
                                        ?account_id: ::String,
-                                       storage_lens_group: {
-                                         name: ::String,
-                                         filter: {
-                                           match_any_prefix: Array[::String]?,
-                                           match_any_suffix: Array[::String]?,
-                                           match_any_tag: Array[
-                                             {
-                                               key: ::String,
-                                               value: ::String
-                                             },
-                                           ]?,
-                                           match_object_age: {
-                                             days_greater_than: ::Integer?,
-                                             days_less_than: ::Integer?
-                                           }?,
-                                           match_object_size: {
-                                             bytes_greater_than: ::Integer?,
-                                             bytes_less_than: ::Integer?
-                                           }?,
-                                           and: {
-                                             match_any_prefix: Array[::String]?,
-                                             match_any_suffix: Array[::String]?,
-                                             match_any_tag: Array[
-                                               {
-                                                 key: ::String,
-                                                 value: ::String
-                                               },
-                                             ]?,
-                                             match_object_age: {
-                                               days_greater_than: ::Integer?,
-                                               days_less_than: ::Integer?
-                                             }?,
-                                             match_object_size: {
-                                               bytes_greater_than: ::Integer?,
-                                               bytes_less_than: ::Integer?
-                                             }?
-                                           }?,
-                                           or: {
-                                             match_any_prefix: Array[::String]?,
-                                             match_any_suffix: Array[::String]?,
-                                             match_any_tag: Array[
-                                               {
-                                                 key: ::String,
-                                                 value: ::String
-                                               },
-                                             ]?,
-                                             match_object_age: {
-                                               days_greater_than: ::Integer?,
-                                               days_less_than: ::Integer?
-                                             }?,
-                                             match_object_size: {
-                                               bytes_greater_than: ::Integer?,
-                                               bytes_less_than: ::Integer?
-                                             }?
-                                           }?
-                                         },
-                                         storage_lens_group_arn: ::String?
-                                       },
+                                       storage_lens_group: Params::storage_lens_group,
                                        ?tags: Array[
                                          {
                                            key: ::String,
                                            value: ::String
-                                         },
+                                         }
                                        ]
                                      ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
@@ -561,6 +516,13 @@ module Aws
                                                           name: ::String
                                                         ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/S3Control/Client.html#delete_access_point_scope-instance_method
+      def delete_access_point_scope: (
+                                       account_id: ::String,
+                                       name: ::String
+                                     ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/S3Control/Client.html#delete_bucket-instance_method
       def delete_bucket: (
@@ -764,6 +726,8 @@ module Aws
         def access_point_arn: () -> ::String
         def endpoints: () -> ::Hash[::String, ::String]
         def bucket_account_id: () -> ::String
+        def data_source_id: () -> ::String
+        def data_source_type: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/S3Control/Client.html#get_access_point-instance_method
       def get_access_point: (
@@ -840,6 +804,17 @@ module Aws
                                                               name: ::String
                                                             ) -> _GetAccessPointPolicyStatusForObjectLambdaResponseSuccess
                                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetAccessPointPolicyStatusForObjectLambdaResponseSuccess
+
+      interface _GetAccessPointScopeResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetAccessPointScopeResult]
+        def scope: () -> Types::Scope
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/S3Control/Client.html#get_access_point_scope-instance_method
+      def get_access_point_scope: (
+                                    account_id: ::String,
+                                    name: ::String
+                                  ) -> _GetAccessPointScopeResponseSuccess
+                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetAccessPointScopeResponseSuccess
 
       interface _GetBucketResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetBucketResult]
@@ -923,7 +898,8 @@ module Aws
                              permission: ("READ" | "WRITE" | "READWRITE"),
                              ?duration_seconds: ::Integer,
                              ?privilege: ("Minimal" | "Default"),
-                             ?target_type: ("Object")
+                             ?target_type: ("Object"),
+                             ?audit_context: ::String
                            ) -> _GetDataAccessResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetDataAccessResponseSuccess
 
@@ -1081,9 +1057,25 @@ module Aws
                                 ?account_id: ::String,
                                 ?bucket: ::String,
                                 ?next_token: ::String,
-                                ?max_results: ::Integer
+                                ?max_results: ::Integer,
+                                ?data_source_id: ::String,
+                                ?data_source_type: ::String
                               ) -> _ListAccessPointsResponseSuccess
                             | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListAccessPointsResponseSuccess
+
+      interface _ListAccessPointsForDirectoryBucketsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListAccessPointsForDirectoryBucketsResult]
+        def access_point_list: () -> ::Array[Types::AccessPoint]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/S3Control/Client.html#list_access_points_for_directory_buckets-instance_method
+      def list_access_points_for_directory_buckets: (
+                                                      account_id: ::String,
+                                                      ?directory_bucket: ::String,
+                                                      ?next_token: ::String,
+                                                      ?max_results: ::Integer
+                                                    ) -> _ListAccessPointsForDirectoryBucketsResponseSuccess
+                                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListAccessPointsForDirectoryBucketsResponseSuccess
 
       interface _ListAccessPointsForObjectLambdaResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListAccessPointsForObjectLambdaResult]
@@ -1207,22 +1199,7 @@ module Aws
       def put_access_point_configuration_for_object_lambda: (
                                                               ?account_id: ::String,
                                                               name: ::String,
-                                                              configuration: {
-                                                                supporting_access_point: ::String,
-                                                                cloud_watch_metrics_enabled: bool?,
-                                                                allowed_features: Array[("GetObject-Range" | "GetObject-PartNumber" | "HeadObject-Range" | "HeadObject-PartNumber")]?,
-                                                                transformation_configurations: Array[
-                                                                  {
-                                                                    actions: Array[("GetObject" | "HeadObject" | "ListObjects" | "ListObjectsV2")],
-                                                                    content_transformation: {
-                                                                      aws_lambda: {
-                                                                        function_arn: ::String,
-                                                                        function_payload: ::String?
-                                                                      }?
-                                                                    }
-                                                                  },
-                                                                ]
-                                                              }
+                                                              configuration: Params::object_lambda_configuration
                                                             ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
@@ -1241,6 +1218,17 @@ module Aws
                                                        policy: ::String
                                                      ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/S3Control/Client.html#put_access_point_scope-instance_method
+      def put_access_point_scope: (
+                                    account_id: ::String,
+                                    name: ::String,
+                                    scope: {
+                                      prefixes: Array[::String]?,
+                                      permissions: Array[("GetObject" | "GetObjectAttributes" | "ListMultipartUploadParts" | "ListBucket" | "ListBucketMultipartUploads" | "PutObject" | "DeleteObject" | "AbortMultipartUpload")]?
+                                    }
+                                  ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
+                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/S3Control/Client.html#put_bucket_lifecycle_configuration-instance_method
       def put_bucket_lifecycle_configuration: (
@@ -1267,7 +1255,7 @@ module Aws
                                                             {
                                                               key: ::String,
                                                               value: ::String
-                                                            },
+                                                            }
                                                           ]?,
                                                           object_size_greater_than: ::Integer?,
                                                           object_size_less_than: ::Integer?
@@ -1281,13 +1269,13 @@ module Aws
                                                           date: ::Time?,
                                                           days: ::Integer?,
                                                           storage_class: ("GLACIER" | "STANDARD_IA" | "ONEZONE_IA" | "INTELLIGENT_TIERING" | "DEEP_ARCHIVE")?
-                                                        },
+                                                        }
                                                       ]?,
                                                       noncurrent_version_transitions: Array[
                                                         {
                                                           noncurrent_days: ::Integer?,
                                                           storage_class: ("GLACIER" | "STANDARD_IA" | "ONEZONE_IA" | "INTELLIGENT_TIERING" | "DEEP_ARCHIVE")?
-                                                        },
+                                                        }
                                                       ]?,
                                                       noncurrent_version_expiration: {
                                                         noncurrent_days: ::Integer?,
@@ -1296,7 +1284,7 @@ module Aws
                                                       abort_incomplete_multipart_upload: {
                                                         days_after_initiation: ::Integer?
                                                       }?
-                                                    },
+                                                    }
                                                   ]?
                                                 }
                                               ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
@@ -1334,7 +1322,7 @@ module Aws
                                                 {
                                                   key: ::String,
                                                   value: ::String
-                                                },
+                                                }
                                               ]?
                                             }?
                                           }?,
@@ -1377,7 +1365,7 @@ module Aws
                                             status: ("Enabled" | "Disabled")
                                           }?,
                                           bucket: ::String
-                                        },
+                                        }
                                       ]
                                     }
                                   ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
@@ -1392,7 +1380,7 @@ module Aws
                                     {
                                       key: ::String,
                                       value: ::String
-                                    },
+                                    }
                                   ]
                                 }
                               ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
@@ -1421,7 +1409,7 @@ module Aws
                                {
                                  key: ::String,
                                  value: ::String
-                               },
+                               }
                              ]
                            ) -> _PutJobTaggingResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutJobTaggingResponseSuccess
@@ -1485,6 +1473,9 @@ module Aws
                                                   }?,
                                                   detailed_status_codes_metrics: {
                                                     is_enabled: bool?
+                                                  }?,
+                                                  advanced_performance_metrics: {
+                                                    is_enabled: bool?
                                                   }?
                                                 },
                                                 advanced_cost_optimization_metrics: {
@@ -1494,6 +1485,9 @@ module Aws
                                                   is_enabled: bool?
                                                 }?,
                                                 detailed_status_codes_metrics: {
+                                                  is_enabled: bool?
+                                                }?,
+                                                advanced_performance_metrics: {
                                                   is_enabled: bool?
                                                 }?,
                                                 storage_lens_group_level: {
@@ -1512,35 +1506,28 @@ module Aws
                                                 regions: Array[::String]?
                                               }?,
                                               data_export: {
-                                                s3_bucket_destination: {
-                                                  format: ("CSV" | "Parquet"),
-                                                  output_schema_version: ("V_1"),
-                                                  account_id: ::String,
-                                                  arn: ::String,
-                                                  prefix: ::String?,
-                                                  encryption: {
-                                                    sses3: {
-                                                    }?,
-                                                    ssekms: {
-                                                      key_id: ::String
-                                                    }?
-                                                  }?
-                                                }?,
+                                                s3_bucket_destination: Params::s3_bucket_destination?,
                                                 cloud_watch_metrics: {
                                                   is_enabled: bool
-                                                }?
+                                                }?,
+                                                storage_lens_table_destination: Params::storage_lens_table_destination?
+                                              }?,
+                                              expanded_prefixes_data_export: {
+                                                s3_bucket_destination: Params::s3_bucket_destination?,
+                                                storage_lens_table_destination: Params::storage_lens_table_destination?
                                               }?,
                                               is_enabled: bool,
                                               aws_org: {
                                                 arn: ::String
                                               }?,
-                                              storage_lens_arn: ::String?
+                                              storage_lens_arn: ::String?,
+                                              prefix_delimiter: ::String?
                                             },
                                             ?tags: Array[
                                               {
                                                 key: ::String,
                                                 value: ::String
-                                              },
+                                              }
                                             ]
                                           ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
@@ -1556,7 +1543,7 @@ module Aws
                                                       {
                                                         key: ::String,
                                                         value: ::String
-                                                      },
+                                                      }
                                                     ]
                                                   ) -> _PutStorageLensConfigurationTaggingResponseSuccess
                                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutStorageLensConfigurationTaggingResponseSuccess
@@ -1573,7 +1560,7 @@ module Aws
                                                          bucket: ::String?,
                                                          region: ::String?,
                                                          traffic_dial_percentage: ::Integer
-                                                       },
+                                                       }
                                                      ]
                                                    ) -> _SubmitMultiRegionAccessPointRoutesResponseSuccess
                                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _SubmitMultiRegionAccessPointRoutesResponseSuccess
@@ -1589,7 +1576,7 @@ module Aws
                             {
                               key: ::String,
                               value: ::String
-                            },
+                            }
                           ]
                         ) -> _TagResourceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess
@@ -1653,64 +1640,7 @@ module Aws
       def update_storage_lens_group: (
                                        name: ::String,
                                        ?account_id: ::String,
-                                       storage_lens_group: {
-                                         name: ::String,
-                                         filter: {
-                                           match_any_prefix: Array[::String]?,
-                                           match_any_suffix: Array[::String]?,
-                                           match_any_tag: Array[
-                                             {
-                                               key: ::String,
-                                               value: ::String
-                                             },
-                                           ]?,
-                                           match_object_age: {
-                                             days_greater_than: ::Integer?,
-                                             days_less_than: ::Integer?
-                                           }?,
-                                           match_object_size: {
-                                             bytes_greater_than: ::Integer?,
-                                             bytes_less_than: ::Integer?
-                                           }?,
-                                           and: {
-                                             match_any_prefix: Array[::String]?,
-                                             match_any_suffix: Array[::String]?,
-                                             match_any_tag: Array[
-                                               {
-                                                 key: ::String,
-                                                 value: ::String
-                                               },
-                                             ]?,
-                                             match_object_age: {
-                                               days_greater_than: ::Integer?,
-                                               days_less_than: ::Integer?
-                                             }?,
-                                             match_object_size: {
-                                               bytes_greater_than: ::Integer?,
-                                               bytes_less_than: ::Integer?
-                                             }?
-                                           }?,
-                                           or: {
-                                             match_any_prefix: Array[::String]?,
-                                             match_any_suffix: Array[::String]?,
-                                             match_any_tag: Array[
-                                               {
-                                                 key: ::String,
-                                                 value: ::String
-                                               },
-                                             ]?,
-                                             match_object_age: {
-                                               days_greater_than: ::Integer?,
-                                               days_less_than: ::Integer?
-                                             }?,
-                                             match_object_size: {
-                                               bytes_greater_than: ::Integer?,
-                                               bytes_less_than: ::Integer?
-                                             }?
-                                           }?
-                                         },
-                                         storage_lens_group_arn: ::String?
-                                       }
+                                       storage_lens_group: Params::storage_lens_group
                                      ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
     end

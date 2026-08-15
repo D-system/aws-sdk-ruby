@@ -24,6 +24,18 @@ module Aws::WorkSpaces
       SENSITIVE: []
     end
 
+    class AccessEndpoint
+      attr_accessor access_endpoint_type: ("STREAMING_WSP")
+      attr_accessor vpc_endpoint_id: ::String
+      SENSITIVE: []
+    end
+
+    class AccessEndpointConfig
+      attr_accessor access_endpoints: ::Array[Types::AccessEndpoint]
+      attr_accessor internet_fallback_protocols: ::Array[("PCOIP")]
+      SENSITIVE: []
+    end
+
     class AccountLink
       attr_accessor account_link_id: ::String
       attr_accessor account_link_status: ("LINKED" | "LINKING_FAILED" | "LINK_NOT_FOUND" | "PENDING_ACCEPTANCE_BY_TARGET_ACCOUNT" | "REJECTED")
@@ -107,7 +119,7 @@ module Aws::WorkSpaces
     end
 
     class AssociationStateReason
-      attr_accessor error_code: ("ValidationError.InsufficientDiskSpace" | "ValidationError.InsufficientMemory" | "ValidationError.UnsupportedOperatingSystem" | "DeploymentError.InternalServerError" | "DeploymentError.WorkspaceUnreachable")
+      attr_accessor error_code: ("ValidationError.InsufficientDiskSpace" | "ValidationError.InsufficientMemory" | "ValidationError.UnsupportedOperatingSystem" | "DeploymentError.InternalServerError" | "DeploymentError.WorkspaceUnreachable" | "ValidationError.ApplicationOldVersionExists")
       attr_accessor error_message: ::String
       SENSITIVE: []
     end
@@ -154,6 +166,7 @@ module Aws::WorkSpaces
     class ClientProperties
       attr_accessor reconnect_enabled: ("ENABLED" | "DISABLED")
       attr_accessor log_upload_enabled: ("ENABLED" | "DISABLED")
+      attr_accessor client_experience_policy: ::String
       SENSITIVE: []
     end
 
@@ -167,7 +180,7 @@ module Aws::WorkSpaces
     end
 
     class ComputeType
-      attr_accessor name: ("VALUE" | "STANDARD" | "PERFORMANCE" | "POWER" | "GRAPHICS" | "POWERPRO" | "GENERALPURPOSE_4XLARGE" | "GENERALPURPOSE_8XLARGE" | "GRAPHICSPRO" | "GRAPHICS_G4DN" | "GRAPHICSPRO_G4DN")
+      attr_accessor name: ("VALUE" | "STANDARD" | "PERFORMANCE" | "POWER" | "GRAPHICS" | "POWERPRO" | "GENERALPURPOSE_4XLARGE" | "GENERALPURPOSE_8XLARGE" | "GRAPHICSPRO" | "GRAPHICS_G4DN" | "GRAPHICSPRO_G4DN" | "GRAPHICS_G6_XLARGE" | "GRAPHICS_G6_2XLARGE" | "GRAPHICS_G6_4XLARGE" | "GRAPHICS_G6_8XLARGE" | "GRAPHICS_G6_16XLARGE" | "GRAPHICS_GR6_4XLARGE" | "GRAPHICS_GR6_8XLARGE" | "GRAPHICS_G6F_LARGE" | "GRAPHICS_G6F_XLARGE" | "GRAPHICS_G6F_2XLARGE" | "GRAPHICS_G6F_4XLARGE" | "GRAPHICS_GR6F_4XLARGE")
       SENSITIVE: []
     end
 
@@ -347,6 +360,7 @@ module Aws::WorkSpaces
       attr_accessor tags: ::Array[Types::Tag]
       attr_accessor application_settings: Types::ApplicationSettingsRequest
       attr_accessor timeout_settings: Types::TimeoutSettings
+      attr_accessor running_mode: ("AUTO_STOP" | "ALWAYS_ON")
       SENSITIVE: []
     end
 
@@ -363,6 +377,12 @@ module Aws::WorkSpaces
     class CreateWorkspacesResult
       attr_accessor failed_requests: ::Array[Types::FailedCreateWorkspaceRequest]
       attr_accessor pending_requests: ::Array[Types::Workspace]
+      SENSITIVE: []
+    end
+
+    class CustomWorkspaceImageImportErrorDetails
+      attr_accessor error_code: ::String
+      attr_accessor error_message: ::String
       SENSITIVE: []
     end
 
@@ -391,7 +411,6 @@ module Aws::WorkSpaces
     end
 
     class DefaultWorkspaceCreationProperties
-      attr_accessor enable_work_docs: bool
       attr_accessor enable_internet_access: bool
       attr_accessor default_ou: ::String
       attr_accessor custom_security_group_id: ::String
@@ -508,6 +527,7 @@ module Aws::WorkSpaces
       attr_accessor dedicated_tenancy_support: ("ENABLED" | "DISABLED")
       attr_accessor dedicated_tenancy_management_cidr_range: ::String
       attr_accessor dedicated_tenancy_account_type: ("SOURCE_ACCOUNT" | "TARGET_ACCOUNT")
+      attr_accessor message: ::String
       SENSITIVE: []
     end
 
@@ -527,9 +547,9 @@ module Aws::WorkSpaces
 
     class DescribeApplicationsRequest
       attr_accessor application_ids: ::Array[::String]
-      attr_accessor compute_type_names: ::Array[("VALUE" | "STANDARD" | "PERFORMANCE" | "POWER" | "GRAPHICS" | "POWERPRO" | "GENERALPURPOSE_4XLARGE" | "GENERALPURPOSE_8XLARGE" | "GRAPHICSPRO" | "GRAPHICS_G4DN" | "GRAPHICSPRO_G4DN")]
+      attr_accessor compute_type_names: ::Array[("VALUE" | "STANDARD" | "PERFORMANCE" | "POWER" | "GRAPHICS" | "POWERPRO" | "GENERALPURPOSE_4XLARGE" | "GENERALPURPOSE_8XLARGE" | "GRAPHICSPRO" | "GRAPHICS_G4DN" | "GRAPHICSPRO_G4DN" | "GRAPHICS_G6_XLARGE" | "GRAPHICS_G6_2XLARGE" | "GRAPHICS_G6_4XLARGE" | "GRAPHICS_G6_8XLARGE" | "GRAPHICS_G6_16XLARGE" | "GRAPHICS_GR6_4XLARGE" | "GRAPHICS_GR6_8XLARGE" | "GRAPHICS_G6F_LARGE" | "GRAPHICS_G6F_XLARGE" | "GRAPHICS_G6F_2XLARGE" | "GRAPHICS_G6F_4XLARGE" | "GRAPHICS_GR6F_4XLARGE")]
       attr_accessor license_type: ("LICENSED" | "UNLICENSED")
-      attr_accessor operating_system_names: ::Array[("AMAZON_LINUX_2" | "UBUNTU_18_04" | "UBUNTU_20_04" | "UBUNTU_22_04" | "UNKNOWN" | "WINDOWS_10" | "WINDOWS_11" | "WINDOWS_7" | "WINDOWS_SERVER_2016" | "WINDOWS_SERVER_2019" | "WINDOWS_SERVER_2022" | "RHEL_8" | "ROCKY_8")]
+      attr_accessor operating_system_names: ::Array[("AMAZON_LINUX_2" | "UBUNTU_18_04" | "UBUNTU_20_04" | "UBUNTU_22_04" | "UNKNOWN" | "WINDOWS_10" | "WINDOWS_11" | "WINDOWS_7" | "WINDOWS_SERVER_2016" | "WINDOWS_SERVER_2019" | "WINDOWS_SERVER_2022" | "WINDOWS_SERVER_2025" | "RHEL_8" | "ROCKY_8")]
       attr_accessor owner: ::String
       attr_accessor max_results: ::Integer
       attr_accessor next_token: ::String
@@ -616,6 +636,25 @@ module Aws::WorkSpaces
     class DescribeConnectionAliasesResult
       attr_accessor connection_aliases: ::Array[Types::ConnectionAlias]
       attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeCustomWorkspaceImageImportRequest
+      attr_accessor image_id: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeCustomWorkspaceImageImportResult
+      attr_accessor image_id: ::String
+      attr_accessor infrastructure_configuration_arn: ::String
+      attr_accessor state: ("PENDING" | "IN_PROGRESS" | "PROCESSING_SOURCE_IMAGE" | "IMAGE_TESTING_START" | "UPDATING_OPERATING_SYSTEM" | "IMAGE_COMPATIBILITY_CHECKING" | "IMAGE_TESTING_GENERALIZATION" | "CREATING_TEST_INSTANCE" | "INSTALLING_COMPONENTS" | "GENERALIZING" | "VALIDATING" | "PUBLISHING" | "COMPLETED" | "ERROR")
+      attr_accessor state_message: ::String
+      attr_accessor progress_percentage: ::Integer
+      attr_accessor created: ::Time
+      attr_accessor last_updated_time: ::Time
+      attr_accessor image_source: Types::ImageSourceIdentifier
+      attr_accessor image_builder_instance_id: ::String
+      attr_accessor error_details: ::Array[Types::CustomWorkspaceImageImportErrorDetails]
       SENSITIVE: []
     end
 
@@ -830,7 +869,7 @@ module Aws::WorkSpaces
     end
 
     class ErrorDetails
-      attr_accessor error_code: ("OutdatedPowershellVersion" | "OfficeInstalled" | "PCoIPAgentInstalled" | "WindowsUpdatesEnabled" | "AutoMountDisabled" | "WorkspacesBYOLAccountNotFound" | "WorkspacesBYOLAccountDisabled" | "DHCPDisabled" | "DiskFreeSpace" | "AdditionalDrivesAttached" | "OSNotSupported" | "DomainJoined" | "AzureDomainJoined" | "FirewallEnabled" | "VMWareToolsInstalled" | "DiskSizeExceeded" | "IncompatiblePartitioning" | "PendingReboot" | "AutoLogonEnabled" | "RealTimeUniversalDisabled" | "MultipleBootPartition" | "Requires64BitOS" | "ZeroRearmCount" | "InPlaceUpgrade" | "AntiVirusInstalled" | "UEFINotSupported" | "UnknownError" | "AppXPackagesInstalled" | "ReservedStorageInUse" | "AdditionalDrivesPresent" | "WindowsUpdatesRequired" | "SysPrepFileMissing" | "UserProfileMissing" | "InsufficientDiskSpace" | "EnvironmentVariablesPathMissingEntries" | "DomainAccountServicesFound" | "InvalidIp" | "RemoteDesktopServicesDisabled" | "WindowsModulesInstallerDisabled" | "AmazonSsmAgentEnabled" | "UnsupportedSecurityProtocol" | "MultipleUserProfiles" | "StagedAppxPackage" | "UnsupportedOsUpgrade" | "InsufficientRearmCount")
+      attr_accessor error_code: ("OutdatedPowershellVersion" | "OfficeInstalled" | "PCoIPAgentInstalled" | "WindowsUpdatesEnabled" | "AutoMountDisabled" | "WorkspacesBYOLAccountNotFound" | "WorkspacesBYOLAccountDisabled" | "DHCPDisabled" | "DiskFreeSpace" | "AdditionalDrivesAttached" | "OSNotSupported" | "DomainJoined" | "AzureDomainJoined" | "FirewallEnabled" | "VMWareToolsInstalled" | "DiskSizeExceeded" | "IncompatiblePartitioning" | "PendingReboot" | "AutoLogonEnabled" | "RealTimeUniversalDisabled" | "MultipleBootPartition" | "Requires64BitOS" | "ZeroRearmCount" | "InPlaceUpgrade" | "AntiVirusInstalled" | "UEFINotSupported" | "UnknownError" | "AppXPackagesInstalled" | "ReservedStorageInUse" | "AdditionalDrivesPresent" | "WindowsUpdatesRequired" | "SysPrepFileMissing" | "UserProfileMissing" | "InsufficientDiskSpace" | "EnvironmentVariablesPathMissingEntries" | "DomainAccountServicesFound" | "InvalidIp" | "RemoteDesktopServicesDisabled" | "WindowsModulesInstallerDisabled" | "AmazonSsmAgentEnabled" | "UnsupportedSecurityProtocol" | "MultipleUserProfiles" | "StagedAppxPackage" | "UnsupportedOsUpgrade" | "InsufficientRearmCount" | "ProtocolOSIncompatibility" | "MemoryIntegrityIncompatibility" | "RestrictedDriveLetterInUse")
       attr_accessor error_message: ::String
       SENSITIVE: []
     end
@@ -901,6 +940,23 @@ module Aws::WorkSpaces
       SENSITIVE: []
     end
 
+    class ImageSourceIdentifier
+      attr_accessor ec2_import_task_id: ::String
+      attr_accessor image_build_version_arn: ::String
+      attr_accessor ec2_image_id: ::String
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class Ec2ImportTaskId < ImageSourceIdentifier
+      end
+      class ImageBuildVersionArn < ImageSourceIdentifier
+      end
+      class Ec2ImageId < ImageSourceIdentifier
+      end
+      class Unknown < ImageSourceIdentifier
+      end
+    end
+
     class ImportClientBrandingRequest
       attr_accessor resource_id: ::String
       attr_accessor device_type_windows: Types::DefaultImportClientBrandingAttributes
@@ -919,6 +975,25 @@ module Aws::WorkSpaces
       attr_accessor device_type_ios: Types::IosClientBrandingAttributes
       attr_accessor device_type_linux: Types::DefaultClientBrandingAttributes
       attr_accessor device_type_web: Types::DefaultClientBrandingAttributes
+      SENSITIVE: []
+    end
+
+    class ImportCustomWorkspaceImageRequest
+      attr_accessor image_name: ::String
+      attr_accessor image_description: ::String
+      attr_accessor compute_type: ("BASE" | "GRAPHICS_G4DN" | "GRAPHICS_G6")
+      attr_accessor protocol: ("PCOIP" | "DCV" | "BYOP")
+      attr_accessor image_source: Types::ImageSourceIdentifier
+      attr_accessor infrastructure_configuration_arn: ::String
+      attr_accessor platform: ("WINDOWS")
+      attr_accessor os_version: ("Windows_10" | "Windows_11")
+      attr_accessor tags: ::Array[Types::Tag]
+      SENSITIVE: []
+    end
+
+    class ImportCustomWorkspaceImageResult
+      attr_accessor image_id: ::String
+      attr_accessor state: ("PENDING" | "IN_PROGRESS" | "PROCESSING_SOURCE_IMAGE" | "IMAGE_TESTING_START" | "UPDATING_OPERATING_SYSTEM" | "IMAGE_COMPATIBILITY_CHECKING" | "IMAGE_TESTING_GENERALIZATION" | "CREATING_TEST_INSTANCE" | "INSTALLING_COMPONENTS" | "GENERALIZING" | "VALIDATING" | "PUBLISHING" | "COMPLETED" | "ERROR")
       SENSITIVE: []
     end
 
@@ -941,6 +1016,11 @@ module Aws::WorkSpaces
     end
 
     class InternalServerException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class InvalidParameterCombinationException
       attr_accessor message: ::String
       SENSITIVE: []
     end
@@ -1028,8 +1108,8 @@ module Aws::WorkSpaces
     end
 
     class ModificationState
-      attr_accessor resource: ("ROOT_VOLUME" | "USER_VOLUME" | "COMPUTE_TYPE")
-      attr_accessor state: ("UPDATE_INITIATED" | "UPDATE_IN_PROGRESS")
+      attr_accessor resource: ("ROOT_VOLUME" | "USER_VOLUME" | "COMPUTE_TYPE" | "PROTOCOL")
+      attr_accessor state: ("UPDATE_INITIATED" | "UPDATE_IN_PROGRESS" | "UPDATE_FAILED")
       SENSITIVE: []
     end
 
@@ -1039,7 +1119,9 @@ module Aws::WorkSpaces
       SENSITIVE: []
     end
 
-    class ModifyAccountResult < Aws::EmptyStructure
+    class ModifyAccountResult
+      attr_accessor message: ::String
+      SENSITIVE: []
     end
 
     class ModifyCertificateBasedAuthPropertiesRequest
@@ -1201,7 +1283,6 @@ module Aws::WorkSpaces
     class RegisterWorkspaceDirectoryRequest
       attr_accessor directory_id: ::String
       attr_accessor subnet_ids: ::Array[::String]
-      attr_accessor enable_work_docs: bool
       attr_accessor enable_self_service: bool
       attr_accessor tenancy: ("DEDICATED" | "SHARED")
       attr_accessor tags: ::Array[Types::Tag]
@@ -1513,6 +1594,7 @@ module Aws::WorkSpaces
       attr_accessor capacity: Types::Capacity
       attr_accessor application_settings: Types::ApplicationSettingsRequest
       attr_accessor timeout_settings: Types::TimeoutSettings
+      attr_accessor running_mode: ("AUTO_STOP" | "ALWAYS_ON")
       SENSITIVE: []
     end
 
@@ -1546,8 +1628,8 @@ module Aws::WorkSpaces
       attr_accessor name: ::String
       attr_accessor owner: ::String
       attr_accessor state: ("PENDING" | "ERROR" | "AVAILABLE" | "UNINSTALL_ONLY")
-      attr_accessor supported_compute_type_names: ::Array[("VALUE" | "STANDARD" | "PERFORMANCE" | "POWER" | "GRAPHICS" | "POWERPRO" | "GENERALPURPOSE_4XLARGE" | "GENERALPURPOSE_8XLARGE" | "GRAPHICSPRO" | "GRAPHICS_G4DN" | "GRAPHICSPRO_G4DN")]
-      attr_accessor supported_operating_system_names: ::Array[("AMAZON_LINUX_2" | "UBUNTU_18_04" | "UBUNTU_20_04" | "UBUNTU_22_04" | "UNKNOWN" | "WINDOWS_10" | "WINDOWS_11" | "WINDOWS_7" | "WINDOWS_SERVER_2016" | "WINDOWS_SERVER_2019" | "WINDOWS_SERVER_2022" | "RHEL_8" | "ROCKY_8")]
+      attr_accessor supported_compute_type_names: ::Array[("VALUE" | "STANDARD" | "PERFORMANCE" | "POWER" | "GRAPHICS" | "POWERPRO" | "GENERALPURPOSE_4XLARGE" | "GENERALPURPOSE_8XLARGE" | "GRAPHICSPRO" | "GRAPHICS_G4DN" | "GRAPHICSPRO_G4DN" | "GRAPHICS_G6_XLARGE" | "GRAPHICS_G6_2XLARGE" | "GRAPHICS_G6_4XLARGE" | "GRAPHICS_G6_8XLARGE" | "GRAPHICS_G6_16XLARGE" | "GRAPHICS_GR6_4XLARGE" | "GRAPHICS_GR6_8XLARGE" | "GRAPHICS_G6F_LARGE" | "GRAPHICS_G6F_XLARGE" | "GRAPHICS_G6F_2XLARGE" | "GRAPHICS_G6F_4XLARGE" | "GRAPHICS_GR6F_4XLARGE")]
+      attr_accessor supported_operating_system_names: ::Array[("AMAZON_LINUX_2" | "UBUNTU_18_04" | "UBUNTU_20_04" | "UBUNTU_22_04" | "UNKNOWN" | "WINDOWS_10" | "WINDOWS_11" | "WINDOWS_7" | "WINDOWS_SERVER_2016" | "WINDOWS_SERVER_2019" | "WINDOWS_SERVER_2022" | "WINDOWS_SERVER_2025" | "RHEL_8" | "ROCKY_8")]
       SENSITIVE: []
     end
 
@@ -1561,6 +1643,7 @@ module Aws::WorkSpaces
       attr_accessor directory_id: ::String
       attr_accessor user_name: ::String
       attr_accessor ip_address: ::String
+      attr_accessor ipv_6_address: ::String
       attr_accessor state: ("PENDING" | "AVAILABLE" | "IMPAIRED" | "UNHEALTHY" | "REBOOTING" | "STARTING" | "REBUILDING" | "RESTORING" | "MAINTENANCE" | "ADMIN_MAINTENANCE" | "TERMINATING" | "TERMINATED" | "SUSPENDED" | "UPDATING" | "STOPPING" | "STOPPED" | "ERROR")
       attr_accessor bundle_id: ::String
       attr_accessor subnet_id: ::String
@@ -1589,6 +1672,7 @@ module Aws::WorkSpaces
       attr_accessor device_type_zero_client: ("ALLOW" | "DENY")
       attr_accessor device_type_linux: ("ALLOW" | "DENY")
       attr_accessor device_type_work_spaces_thin_client: ("ALLOW" | "DENY")
+      attr_accessor access_endpoint_config: Types::AccessEndpointConfig
       SENSITIVE: []
     end
 
@@ -1617,7 +1701,6 @@ module Aws::WorkSpaces
     end
 
     class WorkspaceCreationProperties
-      attr_accessor enable_work_docs: bool
       attr_accessor enable_internet_access: bool
       attr_accessor default_ou: ::String
       attr_accessor custom_security_group_id: ::String
@@ -1634,6 +1717,7 @@ module Aws::WorkSpaces
       attr_accessor registration_code: ::String
       attr_accessor subnet_ids: ::Array[::String]
       attr_accessor dns_ip_addresses: ::Array[::String]
+      attr_accessor dns_ipv_6_addresses: ::Array[::String]
       attr_accessor customer_user_name: ::String
       attr_accessor iam_role_id: ::String
       attr_accessor directory_type: ("SIMPLE_AD" | "AD_CONNECTOR" | "CUSTOMER_MANAGED" | "AWS_IAM_IDENTITY_CENTER")
@@ -1680,9 +1764,9 @@ module Aws::WorkSpaces
       attr_accessor running_mode_auto_stop_timeout_in_minutes: ::Integer
       attr_accessor root_volume_size_gib: ::Integer
       attr_accessor user_volume_size_gib: ::Integer
-      attr_accessor compute_type_name: ("VALUE" | "STANDARD" | "PERFORMANCE" | "POWER" | "GRAPHICS" | "POWERPRO" | "GENERALPURPOSE_4XLARGE" | "GENERALPURPOSE_8XLARGE" | "GRAPHICSPRO" | "GRAPHICS_G4DN" | "GRAPHICSPRO_G4DN")
+      attr_accessor compute_type_name: ("VALUE" | "STANDARD" | "PERFORMANCE" | "POWER" | "GRAPHICS" | "POWERPRO" | "GENERALPURPOSE_4XLARGE" | "GENERALPURPOSE_8XLARGE" | "GRAPHICSPRO" | "GRAPHICS_G4DN" | "GRAPHICSPRO_G4DN" | "GRAPHICS_G6_XLARGE" | "GRAPHICS_G6_2XLARGE" | "GRAPHICS_G6_4XLARGE" | "GRAPHICS_G6_8XLARGE" | "GRAPHICS_G6_16XLARGE" | "GRAPHICS_GR6_4XLARGE" | "GRAPHICS_GR6_8XLARGE" | "GRAPHICS_G6F_LARGE" | "GRAPHICS_G6F_XLARGE" | "GRAPHICS_G6F_2XLARGE" | "GRAPHICS_G6F_4XLARGE" | "GRAPHICS_GR6F_4XLARGE")
       attr_accessor protocols: ::Array[("PCOIP" | "WSP")]
-      attr_accessor operating_system_name: ("AMAZON_LINUX_2" | "UBUNTU_18_04" | "UBUNTU_20_04" | "UBUNTU_22_04" | "UNKNOWN" | "WINDOWS_10" | "WINDOWS_11" | "WINDOWS_7" | "WINDOWS_SERVER_2016" | "WINDOWS_SERVER_2019" | "WINDOWS_SERVER_2022" | "RHEL_8" | "ROCKY_8")
+      attr_accessor operating_system_name: ("AMAZON_LINUX_2" | "UBUNTU_18_04" | "UBUNTU_20_04" | "UBUNTU_22_04" | "UNKNOWN" | "WINDOWS_10" | "WINDOWS_11" | "WINDOWS_7" | "WINDOWS_SERVER_2016" | "WINDOWS_SERVER_2019" | "WINDOWS_SERVER_2022" | "WINDOWS_SERVER_2025" | "RHEL_8" | "ROCKY_8")
       attr_accessor global_accelerator: Types::GlobalAcceleratorForWorkSpace
       SENSITIVE: []
     end
@@ -1697,6 +1781,7 @@ module Aws::WorkSpaces
       attr_accessor workspace_properties: Types::WorkspaceProperties
       attr_accessor tags: ::Array[Types::Tag]
       attr_accessor workspace_name: ::String
+      attr_accessor ipv_6_address: ::String
       SENSITIVE: []
     end
 
@@ -1737,6 +1822,7 @@ module Aws::WorkSpaces
       attr_accessor errors: ::Array[Types::WorkspacesPoolError]
       attr_accessor application_settings: Types::ApplicationSettingsResponse
       attr_accessor timeout_settings: Types::TimeoutSettings
+      attr_accessor running_mode: ("AUTO_STOP" | "ALWAYS_ON")
       SENSITIVE: []
     end
 

@@ -869,8 +869,7 @@
     },
     "DeleteActivityOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteStateMachineAliasInput":{
       "type":"structure",
@@ -881,8 +880,7 @@
     },
     "DeleteStateMachineAliasOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteStateMachineInput":{
       "type":"structure",
@@ -893,8 +891,7 @@
     },
     "DeleteStateMachineOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteStateMachineVersionInput":{
       "type":"structure",
@@ -905,8 +902,7 @@
     },
     "DeleteStateMachineVersionOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DescribeActivityInput":{
       "type":"structure",
@@ -1126,6 +1122,12 @@
       "sensitive":true
     },
     "EventId":{"type":"long"},
+    "ExceptionHandlerIndex":{
+      "type":"integer",
+      "box":true,
+      "min":0,
+      "sensitive":true
+    },
     "ExecutionAbortedEventDetails":{
       "type":"structure",
       "members":{
@@ -1454,7 +1456,24 @@
         "afterResultPath":{"shape":"SensitiveData"},
         "request":{"shape":"InspectionDataRequest"},
         "response":{"shape":"InspectionDataResponse"},
-        "variables":{"shape":"SensitiveData"}
+        "variables":{"shape":"SensitiveData"},
+        "errorDetails":{"shape":"InspectionErrorDetails"},
+        "afterItemsPath":{"shape":"SensitiveData"},
+        "afterItemSelector":{"shape":"SensitiveData"},
+        "afterItemBatcher":{"shape":"SensitiveData"},
+        "afterItemsPointer":{"shape":"SensitiveData"},
+        "toleratedFailureCount":{
+          "shape":"InspectionToleratedFailureCount",
+          "box":true
+        },
+        "toleratedFailurePercentage":{
+          "shape":"InspectionToleratedFailurePercentage",
+          "box":true
+        },
+        "maxConcurrency":{
+          "shape":"InspectionMaxConcurrency",
+          "box":true
+        }
       },
       "sensitive":true
     },
@@ -1478,6 +1497,23 @@
         "body":{"shape":"HTTPBody"}
       }
     },
+    "InspectionErrorDetails":{
+      "type":"structure",
+      "members":{
+        "catchIndex":{
+          "shape":"ExceptionHandlerIndex",
+          "box":true
+        },
+        "retryIndex":{
+          "shape":"ExceptionHandlerIndex",
+          "box":true
+        },
+        "retryBackoffIntervalSeconds":{
+          "shape":"RetryBackoffIntervalSeconds",
+          "box":true
+        }
+      }
+    },
     "InspectionLevel":{
       "type":"string",
       "enum":[
@@ -1485,6 +1521,25 @@
         "DEBUG",
         "TRACE"
       ]
+    },
+    "InspectionMaxConcurrency":{
+      "type":"integer",
+      "box":true,
+      "min":0,
+      "sensitive":true
+    },
+    "InspectionToleratedFailureCount":{
+      "type":"integer",
+      "box":true,
+      "min":0,
+      "sensitive":true
+    },
+    "InspectionToleratedFailurePercentage":{
+      "type":"float",
+      "box":true,
+      "max":100,
+      "min":0,
+      "sensitive":true
     },
     "InvalidArn":{
       "type":"structure",
@@ -1799,6 +1854,11 @@
         "index":{"shape":"UnsignedInteger"}
       }
     },
+    "MapIterationFailureCount":{
+      "type":"integer",
+      "box":true,
+      "min":0
+    },
     "MapRunExecutionCounts":{
       "type":"structure",
       "required":[
@@ -1916,6 +1976,29 @@
       },
       "exception":true
     },
+    "MockErrorOutput":{
+      "type":"structure",
+      "members":{
+        "error":{"shape":"SensitiveError"},
+        "cause":{"shape":"SensitiveCause"}
+      }
+    },
+    "MockInput":{
+      "type":"structure",
+      "members":{
+        "result":{"shape":"SensitiveData"},
+        "errorOutput":{"shape":"MockErrorOutput"},
+        "fieldValidationMode":{"shape":"MockResponseValidationMode"}
+      }
+    },
+    "MockResponseValidationMode":{
+      "type":"string",
+      "enum":[
+        "STRICT",
+        "PRESENT",
+        "NONE"
+      ]
+    },
     "Name":{
       "type":"string",
       "max":80,
@@ -1982,6 +2065,17 @@
       },
       "exception":true
     },
+    "RetrierRetryCount":{
+      "type":"integer",
+      "box":true,
+      "min":0
+    },
+    "RetryBackoffIntervalSeconds":{
+      "type":"integer",
+      "box":true,
+      "min":0,
+      "sensitive":true
+    },
     "RevealSecrets":{"type":"boolean"},
     "ReverseOrder":{"type":"boolean"},
     "RevisionId":{"type":"string"},
@@ -2013,8 +2107,7 @@
     },
     "SendTaskFailureOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "SendTaskHeartbeatInput":{
       "type":"structure",
@@ -2025,8 +2118,7 @@
     },
     "SendTaskHeartbeatOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "SendTaskSuccessInput":{
       "type":"structure",
@@ -2041,8 +2133,7 @@
     },
     "SendTaskSuccessOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "SensitiveCause":{
       "type":"string",
@@ -2057,7 +2148,7 @@
     },
     "SensitiveDataJobInput":{
       "type":"string",
-      "max":262144,
+      "max":1048576,
       "sensitive":true
     },
     "SensitiveError":{
@@ -2310,8 +2401,7 @@
     },
     "TagResourceOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "TagValue":{
       "type":"string",
@@ -2465,6 +2555,21 @@
         "CAUGHT_ERROR"
       ]
     },
+    "TestStateConfiguration":{
+      "type":"structure",
+      "members":{
+        "retrierRetryCount":{
+          "shape":"RetrierRetryCount",
+          "box":true
+        },
+        "errorCausedByState":{"shape":"TestStateStateName"},
+        "mapIterationFailureCount":{
+          "shape":"MapIterationFailureCount",
+          "box":true
+        },
+        "mapItemReaderData":{"shape":"SensitiveData"}
+      }
+    },
     "TestStateInput":{
       "type":"structure",
       "required":["definition"],
@@ -2474,7 +2579,11 @@
         "input":{"shape":"SensitiveData"},
         "inspectionLevel":{"shape":"InspectionLevel"},
         "revealSecrets":{"shape":"RevealSecrets"},
-        "variables":{"shape":"SensitiveData"}
+        "variables":{"shape":"SensitiveData"},
+        "stateName":{"shape":"TestStateStateName"},
+        "mock":{"shape":"MockInput"},
+        "context":{"shape":"SensitiveData"},
+        "stateConfiguration":{"shape":"TestStateConfiguration"}
       }
     },
     "TestStateOutput":{
@@ -2487,6 +2596,12 @@
         "nextState":{"shape":"StateName"},
         "status":{"shape":"TestExecutionStatus"}
       }
+    },
+    "TestStateStateName":{
+      "type":"string",
+      "max":80,
+      "min":1,
+      "sensitive":true
     },
     "TimeoutInSeconds":{"type":"long"},
     "Timestamp":{"type":"timestamp"},
@@ -2541,8 +2656,7 @@
     },
     "UntagResourceOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "UpdateMapRunInput":{
       "type":"structure",
@@ -2565,8 +2679,7 @@
     },
     "UpdateMapRunOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "UpdateStateMachineAliasInput":{
       "type":"structure",

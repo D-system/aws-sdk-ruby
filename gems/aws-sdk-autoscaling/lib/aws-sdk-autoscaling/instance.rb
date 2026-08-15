@@ -56,18 +56,27 @@ module Aws::AutoScaling
       data[:availability_zone]
     end
 
+    # The Availability Zone ID where the instance is located.
+    # @return [String]
+    def availability_zone_id
+      data[:availability_zone_id]
+    end
+
     # The lifecycle state for the instance. The `Quarantined` state is not
     # used. For more information, see [Amazon EC2 Auto Scaling instance
     # lifecycle][1] in the *Amazon EC2 Auto Scaling User Guide*.
     #
     # Valid values: `Pending` \| `Pending:Wait` \| `Pending:Proceed` \|
     # `Quarantined` \| `InService` \| `Terminating` \| `Terminating:Wait` \|
-    # `Terminating:Proceed` \| `Terminated` \| `Detaching` \| `Detached` \|
-    # `EnteringStandby` \| `Standby` \| `Warmed:Pending` \|
-    # `Warmed:Pending:Wait` \| `Warmed:Pending:Proceed` \|
-    # `Warmed:Terminating` \| `Warmed:Terminating:Wait` \|
-    # `Warmed:Terminating:Proceed` \| `Warmed:Terminated` \|
-    # `Warmed:Stopped` \| `Warmed:Running`
+    # `Terminating:Proceed` \| `Terminating:Retained` \| `Terminated` \|
+    # `Detaching` \| `Detached` \| `EnteringStandby` \| `Standby` \|
+    # `ReplacingRootVolume` \| `ReplacingRootVolume:Wait` \|
+    # `ReplacingRootVolume:Proceed` \| `RootVolumeReplaced` \|
+    # `Warmed:Pending` \| `Warmed:Pending:Wait` \| `Warmed:Pending:Proceed`
+    # \| `Warmed:Pending:Retained` \| `Warmed:Terminating` \|
+    # `Warmed:Terminating:Wait` \| `Warmed:Terminating:Proceed` \|
+    # `Warmed:Terminating:Retained` \| `Warmed:Terminated` \|
+    # `Warmed:Stopped` \| `Warmed:Running` \| `Warmed:Hibernated`
     #
     #
     #
@@ -97,6 +106,28 @@ module Aws::AutoScaling
     # @return [Types::LaunchTemplateSpecification]
     def launch_template
       data[:launch_template]
+    end
+
+    # The ID of the Amazon Machine Image (AMI) associated with the instance.
+    # This field shows the current AMI ID of the instance's root volume. It
+    # may differ from the original AMI used when the instance was first
+    # launched.
+    #
+    # This field appears for:
+    #
+    # * Instances with root volume replacements through Instance Refresh
+    #
+    # * Instances launched with AMI overrides
+    #
+    # This field won't appear for:
+    #
+    # * Existing instances launched from Launch Templates without overrides
+    #
+    # * Existing instances that didn’t have their root volume replaced
+    #   through Instance Refresh
+    # @return [String]
+    def image_id
+      data[:image_id]
     end
 
     # Indicates whether the instance is protected from termination by Amazon
@@ -388,9 +419,17 @@ module Aws::AutoScaling
     # @example Request syntax with placeholder values
     #
     #   activity = instance.terminate({
+    #     instance_ids: ["XmlStringMaxLen19"],
+    #     auto_scaling_group_name: "XmlStringMaxLen255",
     #     should_decrement_desired_capacity: false, # required
     #   })
     # @param [Hash] options ({})
+    # @option options [Array<String>] :instance_ids
+    #   The IDs of the instances. You can specify up to 100 instances.
+    #
+    #   This parameter requires that you also specify `AutoScalingGroupName`.
+    # @option options [String] :auto_scaling_group_name
+    #   The name of the Auto Scaling group. Required when using `InstanceIds`.
     # @option options [required, Boolean] :should_decrement_desired_capacity
     #   Indicates whether terminating the instance also decrements the size of
     #   the Auto Scaling group.

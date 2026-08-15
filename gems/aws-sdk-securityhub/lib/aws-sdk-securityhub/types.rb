@@ -10,13 +10,114 @@
 module Aws::SecurityHub
   module Types
 
+    # Contains information about self-hosted AI resources and their host
+    # resources. The fields that are present depend on the role of the
+    # resource.
+    #
+    # On a self-hosted AI resource (a resource with a `SelfHosted::AI::`
+    # resource type, such as `SelfHosted::AI::Model` or
+    # `SelfHosted::AI::Agent`), the `HostResourceGuid` and
+    # `HostResourceType` fields link the resource to its host. The
+    # `CanonicalId` field identifies what the resource is, enabling
+    # aggregation of identical resources across multiple hosts.
+    #
+    # On a host resource (such as an Amazon EC2 instance), the
+    # `SelfHostedAI*ResourceCount` fields contain the count for each
+    # `ResourceSubCategory` and the total count of self-hosted AI resources
+    # detected on the host.
+    #
+    # @!attribute [rw] host_resource_guid
+    #   The identifier of the host resource that hosts the self-hosted AI
+    #   resource. Present only on self-hosted AI resources.
+    #   @return [String]
+    #
+    # @!attribute [rw] host_resource_type
+    #   The `ResourceType` of the host resource that hosts the self-hosted
+    #   AI resource, such as `AWS::EC2::Instance`. Present only on
+    #   self-hosted AI resources.
+    #   @return [String]
+    #
+    # @!attribute [rw] canonical_id
+    #   The canonical identifier for the AI resource, independent of where
+    #   it is deployed. Multiple occurrences of the same resource on
+    #   different hosts share the same `CanonicalId`. For model resources,
+    #   the value follows the format `model/<purl>`, such as
+    #   `model/pkg:huggingface/meta-llama/llama-3-8b`. Present only on
+    #   self-hosted AI resources.
+    #   @return [String]
+    #
+    # @!attribute [rw] self_hosted_ai_model_resource_count
+    #   The number of self-hosted AI resources of `ResourceSubCategory`
+    #   `Model` detected on the host resource. Present only on host
+    #   resources.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] self_hosted_ai_agent_resource_count
+    #   The number of self-hosted AI resources of `ResourceSubCategory`
+    #   `Agent` detected on the host resource. Present only on host
+    #   resources.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] self_hosted_ai_model_serving_resource_count
+    #   The number of self-hosted AI resources of `ResourceSubCategory`
+    #   `ModelServing` detected on the host resource. Present only on host
+    #   resources.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] self_hosted_ai_external_endpoint_resource_count
+    #   The number of self-hosted AI resources of `ResourceSubCategory`
+    #   `ExternalEndpoint` detected on the host resource. Present only on
+    #   host resources.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] self_hosted_ai_development_resource_count
+    #   The number of self-hosted AI resources of `ResourceSubCategory`
+    #   `Development` detected on the host resource. Present only on host
+    #   resources.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] self_hosted_ai_agent_framework_resource_count
+    #   The number of self-hosted AI resources of `ResourceSubCategory`
+    #   `AgentFramework` detected on the host resource. Present only on host
+    #   resources.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] self_hosted_ai_agent_tools_and_identity_resource_count
+    #   The number of self-hosted AI resources of `ResourceSubCategory`
+    #   `AgentToolsAndIdentity` detected on the host resource. Present only
+    #   on host resources.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] self_hosted_total_ai_resource_count
+    #   The total number of all self-hosted AI resources detected on the
+    #   host resource. Present only on host resources.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/AIDetails AWS API Documentation
+    #
+    class AIDetails < Struct.new(
+      :host_resource_guid,
+      :host_resource_type,
+      :canonical_id,
+      :self_hosted_ai_model_resource_count,
+      :self_hosted_ai_agent_resource_count,
+      :self_hosted_ai_model_serving_resource_count,
+      :self_hosted_ai_external_endpoint_resource_count,
+      :self_hosted_ai_development_resource_count,
+      :self_hosted_ai_agent_framework_resource_count,
+      :self_hosted_ai_agent_tools_and_identity_resource_count,
+      :self_hosted_total_ai_resource_count)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] administrator_id
-    #   The account ID of the Security Hub administrator account that sent
-    #   the invitation.
+    #   The account ID of the Security Hub CSPM administrator account that
+    #   sent the invitation.
     #   @return [String]
     #
     # @!attribute [rw] invitation_id
-    #   The identifier of the invitation sent from the Security Hub
+    #   The identifier of the invitation sent from the Security Hub CSPM
     #   administrator account.
     #   @return [String]
     #
@@ -34,12 +135,12 @@ module Aws::SecurityHub
     class AcceptAdministratorInvitationResponse < Aws::EmptyStructure; end
 
     # @!attribute [rw] master_id
-    #   The account ID of the Security Hub administrator account that sent
-    #   the invitation.
+    #   The account ID of the Security Hub CSPM administrator account that
+    #   sent the invitation.
     #   @return [String]
     #
     # @!attribute [rw] invitation_id
-    #   The identifier of the invitation sent from the Security Hub
+    #   The identifier of the invitation sent from the Security Hub CSPM
     #   administrator account.
     #   @return [String]
     #
@@ -89,6 +190,35 @@ module Aws::SecurityHub
     class AccountDetails < Struct.new(
       :account_id,
       :email)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The free trial status of each Security Hub feature for an account.
+    #
+    # @!attribute [rw] account_id
+    #   The Amazon Web Services account identifier that the free trial
+    #   statuses apply to.
+    #   @return [String]
+    #
+    # @!attribute [rw] evaluated_at
+    #   The date and time at which Security Hub evaluated the free trial
+    #   statuses for this account. Every status in `FreeTrialStatuses`
+    #   reflects this point in time.
+    #   @return [Time]
+    #
+    # @!attribute [rw] free_trial_statuses
+    #   An array of free trial statuses, one for each feature that has a
+    #   free trial period for the account. The array is empty if the account
+    #   has no free trial to report.
+    #   @return [Array<Types::FreeTrialStatus>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/AccountFreeTrialStatus AWS API Documentation
+    #
+    class AccountFreeTrialStatus < Struct.new(
+      :account_id,
+      :evaluated_at,
+      :free_trial_statuses)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -273,9 +403,9 @@ module Aws::SecurityHub
     # Extended Threat Detection attack sequence. GuardDuty generates an
     # attack sequence finding when multiple events align to a potentially
     # suspicious activity. To receive GuardDuty attack sequence findings in
-    # Security Hub, you must have GuardDuty enabled. For more information,
-    # see [GuardDuty Extended Threat Detection ][1] in the *Amazon GuardDuty
-    # User Guide*.
+    # Security Hub CSPM, you must have GuardDuty enabled. For more
+    # information, see [GuardDuty Extended Threat Detection ][1] in the
+    # *Amazon GuardDuty User Guide*.
     #
     #
     #
@@ -310,7 +440,7 @@ module Aws::SecurityHub
     # Detection attack sequence. GuardDuty generates an attack sequence
     # finding when multiple events align to a potentially suspicious
     # activity. To receive GuardDuty attack sequence findings in Security
-    # Hub, you must have GuardDuty enabled. For more information, see
+    # Hub CSPM, you must have GuardDuty enabled. For more information, see
     # [GuardDuty Extended Threat Detection ][1] in the *Amazon GuardDuty
     # User Guide*.
     #
@@ -359,7 +489,7 @@ module Aws::SecurityHub
     # identified in an Amazon GuardDuty Extended Threat Detection attack
     # sequence. GuardDuty generates an attack sequence finding when multiple
     # events align to a potentially suspicious activity. To receive
-    # GuardDuty attack sequence findings in Security Hub, you must have
+    # GuardDuty attack sequence findings in Security Hub CSPM, you must have
     # GuardDuty enabled. For more information, see [GuardDuty Extended
     # Threat Detection ][1] in the *Amazon GuardDuty User Guide*.
     #
@@ -418,18 +548,18 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
-    # Represents a Security Hub administrator account designated by an
+    # Represents a Security Hub CSPM administrator account designated by an
     # organization management account.
     #
     # @!attribute [rw] account_id
-    #   The Amazon Web Services account identifier of the Security Hub
+    #   The Amazon Web Services account identifier of the Security Hub CSPM
     #   administrator account.
     #   @return [String]
     #
     # @!attribute [rw] status
-    #   The current status of the Security Hub administrator account.
+    #   The current status of the Security Hub CSPM administrator account.
     #   Indicates whether the account is currently enabled as a Security Hub
-    #   administrator.
+    #   CSPM administrator.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/AdminAccount AWS API Documentation
@@ -437,6 +567,21 @@ module Aws::SecurityHub
     class AdminAccount < Struct.new(
       :account_id,
       :status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Specifies a cross-Region data aggregation configuration, including the
+    # aggregation Region and any linked Regions.
+    #
+    # @!attribute [rw] aggregator_v2_arn
+    #   The ARN of the aggregatorV2.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/AggregatorV2 AWS API Documentation
+    #
+    class AggregatorV2 < Struct.new(
+      :aggregator_v2_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -474,8 +619,8 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] association_type
     #   Indicates whether the association between a target and a
-    #   configuration was directly applied by the Security Hub delegated
-    #   administrator or inherited from a parent.
+    #   configuration was directly applied by the Security Hub CSPM
+    #   delegated administrator or inherited from a parent.
     #   @return [String]
     #
     # @!attribute [rw] association_status
@@ -555,12 +700,12 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
-    # One or more actions that Security Hub takes when a finding matches the
-    # defined criteria of a rule.
+    # One or more actions that Security Hub CSPM takes when a finding
+    # matches the defined criteria of a rule.
     #
     # @!attribute [rw] type
-    #   Specifies the type of action that Security Hub takes when a finding
-    #   matches the defined criteria of a rule.
+    #   Specifies the type of action that Security Hub CSPM takes when a
+    #   finding matches the defined criteria of a rule.
     #   @return [String]
     #
     # @!attribute [rw] finding_fields_update
@@ -577,6 +722,46 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
+    # Allows you to customize security response workflows.
+    #
+    # @!attribute [rw] type
+    #   The category of action to be executed by the automation rule.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/AutomationRulesActionTypeObjectV2 AWS API Documentation
+    #
+    class AutomationRulesActionTypeObjectV2 < Struct.new(
+      :type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Allows you to configure automated responses.
+    #
+    # @!attribute [rw] type
+    #   The category of action to be executed by the automation rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] finding_fields_update
+    #   The changes to be applied to fields in a security finding when an
+    #   automation rule is triggered.
+    #   @return [Types::AutomationRulesFindingFieldsUpdateV2]
+    #
+    # @!attribute [rw] external_integration_configuration
+    #   The settings for integrating automation rule actions with external
+    #   systems or service.
+    #   @return [Types::ExternalIntegrationConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/AutomationRulesActionV2 AWS API Documentation
+    #
+    class AutomationRulesActionV2 < Struct.new(
+      :type,
+      :finding_fields_update,
+      :external_integration_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Defines the configuration of an automation rule.
     #
     # @!attribute [rw] rule_arn
@@ -585,14 +770,14 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] rule_status
     #   Whether the rule is active after it is created. If this parameter is
-    #   equal to `ENABLED`, Security Hub starts applying the rule to
+    #   equal to `ENABLED`, Security Hub CSPM starts applying the rule to
     #   findings and finding updates after the rule is created.
     #   @return [String]
     #
     # @!attribute [rw] rule_order
     #   An integer ranging from 1 to 1000 that represents the order in which
-    #   the rule action is applied to findings. Security Hub applies rules
-    #   with lower values for this parameter first.
+    #   the rule action is applied to findings. Security Hub CSPM applies
+    #   rules with lower values for this parameter first.
     #   @return [Integer]
     #
     # @!attribute [rw] rule_name
@@ -607,18 +792,18 @@ module Aws::SecurityHub
     #   Specifies whether a rule is the last to be applied with respect to a
     #   finding that matches the rule criteria. This is useful when a
     #   finding matches the criteria for multiple rules, and each rule has
-    #   different actions. If a rule is terminal, Security Hub applies the
-    #   rule action to a finding that matches the rule criteria and doesn't
-    #   evaluate other rules for the finding. By default, a rule isn't
-    #   terminal.
+    #   different actions. If a rule is terminal, Security Hub CSPM applies
+    #   the rule action to a finding that matches the rule criteria and
+    #   doesn't evaluate other rules for the finding. By default, a rule
+    #   isn't terminal.
     #   @return [Boolean]
     #
     # @!attribute [rw] criteria
     #   A set of [Amazon Web Services Security Finding Format][1] finding
     #   field attributes and corresponding expected values that Security Hub
-    #   uses to filter findings. If a rule is enabled and a finding matches
-    #   the conditions specified in this parameter, Security Hub applies the
-    #   rule action to the finding.
+    #   CSPM uses to filter findings. If a rule is enabled and a finding
+    #   matches the conditions specified in this parameter, Security Hub
+    #   CSPM applies the rule action to the finding.
     #
     #
     #
@@ -634,7 +819,7 @@ module Aws::SecurityHub
     #   A timestamp that indicates when the rule was created.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -645,7 +830,7 @@ module Aws::SecurityHub
     #   A timestamp that indicates when the rule was most recently updated.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -729,11 +914,39 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
+    # Allows you to define the structure for modifying specific fields in
+    # security findings.
+    #
+    # @!attribute [rw] severity_id
+    #   The severity level to be assigned to findings that match the
+    #   automation rule criteria.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] comment
+    #   Notes or contextual information for findings that are modified by
+    #   the automation rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_id
+    #   The status to be applied to findings that match automation rule
+    #   criteria.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/AutomationRulesFindingFieldsUpdateV2 AWS API Documentation
+    #
+    class AutomationRulesFindingFieldsUpdateV2 < Struct.new(
+      :severity_id,
+      :comment,
+      :status_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The criteria that determine which findings a rule applies to.
     #
     # @!attribute [rw] product_arn
     #   The Amazon Resource Name (ARN) for a third-party product that
-    #   generated a finding in Security Hub.
+    #   generated a finding in Security Hub CSPM.
     #
     #   Array Members: Minimum number of 1 item. Maximum number of 20 items.
     #   @return [Array<Types::StringFilter>]
@@ -763,7 +976,7 @@ module Aws::SecurityHub
     #   One or more finding types in the format of
     #   namespace/category/classifier that classify a finding. For a list of
     #   namespaces, classifiers, and categories, see [Types taxonomy for
-    #   ASFF][1] in the *Security Hub User Guide*.
+    #   ASFF][1] in the *Security Hub CSPM User Guide*.
     #
     #   Array Members: Minimum number of 1 item. Maximum number of 20 items.
     #
@@ -778,7 +991,7 @@ module Aws::SecurityHub
     #   product.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #   Array Members: Minimum number of 1 item. Maximum number of 20 items.
     #
@@ -793,7 +1006,7 @@ module Aws::SecurityHub
     #   finding.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #   Array Members: Minimum number of 1 item. Maximum number of 20 items.
     #
@@ -806,7 +1019,7 @@ module Aws::SecurityHub
     #   A timestamp that indicates when this finding record was created.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #   Array Members: Minimum number of 1 item. Maximum number of 20 items.
     #
@@ -820,7 +1033,7 @@ module Aws::SecurityHub
     #   updated.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #   Array Members: Minimum number of 1 item. Maximum number of 20 items.
     #
@@ -837,7 +1050,7 @@ module Aws::SecurityHub
     #   example, a data exfiltration detection based on a statistical
     #   deviation of network traffic has low confidence because an actual
     #   exfiltration hasn't been verified. For more information, see
-    #   [Confidence][1] in the *Security Hub User Guide*.
+    #   [Confidence][1] in the *Security Hub CSPM User Guide*.
     #
     #   Array Members: Minimum number of 1 item. Maximum number of 20 items.
     #
@@ -852,7 +1065,8 @@ module Aws::SecurityHub
     #   using a ratio scale that supports only full integers. A score of `0`
     #   means that the underlying resources have no criticality, and a score
     #   of `100` is reserved for the most critical resources. For more
-    #   information, see [Criticality][1] in the *Security Hub User Guide*.
+    #   information, see [Criticality][1] in the *Security Hub CSPM User
+    #   Guide*.
     #
     #   Array Members: Minimum number of 1 item. Maximum number of 20 items.
     #
@@ -883,7 +1097,7 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] product_name
     #   Provides the name of the product that generated the finding. For
-    #   control-based findings, the product name is Security Hub.
+    #   control-based findings, the product name is Security Hub CSPM.
     #
     #   Array Members: Minimum number of 1 item. Maximum number of 20 items.
     #   @return [Array<Types::StringFilter>]
@@ -1016,7 +1230,7 @@ module Aws::SecurityHub
     #   The timestamp of when the note was updated.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #   Array Members: Minimum number of 1 item. Maximum number of 20 items.
     #
@@ -1056,6 +1270,22 @@ module Aws::SecurityHub
     #   generated.
     #
     #   Array Members: Minimum number of 1 item. Maximum number of 20 items.
+    #   @return [Array<Types::StringFilter>]
+    #
+    # @!attribute [rw] resource_provider
+    #   The cloud provider that the resource belongs to. Valid values are
+    #   `AWS` and `Azure`.
+    #   @return [Array<Types::StringFilter>]
+    #
+    # @!attribute [rw] resource_owner_account_id
+    #   The unique identifier of the account that owns the resource that the
+    #   finding applies to, for example, Azure Subscription Id or Amazon Web
+    #   Services Account Id
+    #   @return [Array<Types::StringFilter>]
+    #
+    # @!attribute [rw] resource_owner_org_id
+    #   The unique identifier of the organization that owns the resource
+    #   that the finding applies to, for example, Azure Tenant Id
     #   @return [Array<Types::StringFilter>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/AutomationRulesFindingFilters AWS API Documentation
@@ -1098,7 +1328,10 @@ module Aws::SecurityHub
       :user_defined_fields,
       :resource_application_arn,
       :resource_application_name,
-      :aws_account_name)
+      :aws_account_name,
+      :resource_provider,
+      :resource_owner_account_id,
+      :resource_owner_org_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1112,7 +1345,7 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] rule_status
     #   Whether the rule is active after it is created. If this parameter is
-    #   equal to `ENABLED`, Security Hub starts applying the rule to
+    #   equal to `ENABLED`, Security Hub CSPM starts applying the rule to
     #   findings and finding updates after the rule is created. To change
     #   the value of this parameter after creating a rule, use [
     #   `BatchUpdateAutomationRules` ][1].
@@ -1124,8 +1357,8 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] rule_order
     #   An integer ranging from 1 to 1000 that represents the order in which
-    #   the rule action is applied to findings. Security Hub applies rules
-    #   with lower values for this parameter first.
+    #   the rule action is applied to findings. Security Hub CSPM applies
+    #   rules with lower values for this parameter first.
     #   @return [Integer]
     #
     # @!attribute [rw] rule_name
@@ -1140,17 +1373,17 @@ module Aws::SecurityHub
     #   Specifies whether a rule is the last to be applied with respect to a
     #   finding that matches the rule criteria. This is useful when a
     #   finding matches the criteria for multiple rules, and each rule has
-    #   different actions. If a rule is terminal, Security Hub applies the
-    #   rule action to a finding that matches the rule criteria and doesn't
-    #   evaluate other rules for the finding. By default, a rule isn't
-    #   terminal.
+    #   different actions. If a rule is terminal, Security Hub CSPM applies
+    #   the rule action to a finding that matches the rule criteria and
+    #   doesn't evaluate other rules for the finding. By default, a rule
+    #   isn't terminal.
     #   @return [Boolean]
     #
     # @!attribute [rw] created_at
     #   A timestamp that indicates when the rule was created.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -1161,7 +1394,7 @@ module Aws::SecurityHub
     #   A timestamp that indicates when the rule was most recently updated.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -1184,6 +1417,62 @@ module Aws::SecurityHub
       :created_at,
       :updated_at,
       :created_by)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Includes essential metadata information about automation rules.
+    #
+    # @!attribute [rw] rule_arn
+    #   The ARN of the automation rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] rule_id
+    #   The ID of the automation rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] rule_order
+    #   The value for the rule priority.
+    #   @return [Float]
+    #
+    # @!attribute [rw] rule_name
+    #   The name of the automation rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] rule_status
+    #   The status of the automation rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   An explanation for the purpose and funcitonality of the automation
+    #   rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] actions
+    #   The list of action to be performed when the rule criteria is met.
+    #   @return [Array<Types::AutomationRulesActionTypeObjectV2>]
+    #
+    # @!attribute [rw] created_at
+    #   The timestamp for when the automation rule was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_at
+    #   The timestamp for the most recent modification to the automation
+    #   rule.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/AutomationRulesMetadataV2 AWS API Documentation
+    #
+    class AutomationRulesMetadataV2 < Struct.new(
+      :rule_arn,
+      :rule_id,
+      :rule_order,
+      :rule_name,
+      :rule_status,
+      :description,
+      :actions,
+      :created_at,
+      :updated_at)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1560,7 +1849,7 @@ module Aws::SecurityHub
     #   A timestamp that indicates when the API call was first observed.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -1572,7 +1861,7 @@ module Aws::SecurityHub
     #   observed.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -1802,7 +2091,7 @@ module Aws::SecurityHub
     #   Indicates when the API was created.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -1927,7 +2216,7 @@ module Aws::SecurityHub
     #   Indicates when the stage was created.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -1938,7 +2227,7 @@ module Aws::SecurityHub
     #   Indicates when the stage was most recently updated.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -1995,7 +2284,7 @@ module Aws::SecurityHub
     #   Indicates when the API was created.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -2107,7 +2396,7 @@ module Aws::SecurityHub
     #   Indicates when the stage was created.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -2130,7 +2419,7 @@ module Aws::SecurityHub
     #   Indicates when the stage was most recently updated.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -2570,7 +2859,7 @@ module Aws::SecurityHub
     #   Indicates when the auto scaling group was created.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -2911,7 +3200,7 @@ module Aws::SecurityHub
     #   The creation date and time for the launch configuration.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -3582,7 +3871,7 @@ module Aws::SecurityHub
     #   Indicates when the certificate was requested.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -3625,7 +3914,7 @@ module Aws::SecurityHub
     #   certificate type is `IMPORTED`.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -3642,7 +3931,7 @@ module Aws::SecurityHub
     #   certificate type is `AMAZON_ISSUED`.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -3669,7 +3958,7 @@ module Aws::SecurityHub
     #   The time after which the certificate becomes invalid.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -3680,7 +3969,7 @@ module Aws::SecurityHub
     #   The time before which the certificate is not valid.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -3908,7 +4197,7 @@ module Aws::SecurityHub
     #   Indicates when the renewal summary was last updated.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -4175,7 +4464,7 @@ module Aws::SecurityHub
     #   Indicates when that the distribution was last modified.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -4376,8 +4665,8 @@ module Aws::SecurityHub
     end
 
     # A complex type that describes the Amazon S3 bucket, HTTP server (for
-    # example, a web server), Elemental MediaStore, or other server from
-    # which CloudFront gets your files.
+    # example, a web server), or other server from which CloudFront gets
+    # your files.
     #
     # @!attribute [rw] domain_name
     #   Amazon S3 origins: The DNS name of the S3 bucket from which you want
@@ -5570,7 +5859,7 @@ module Aws::SecurityHub
     #   mode was set to that value.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -5600,7 +5889,7 @@ module Aws::SecurityHub
     #   Indicates when the table was created.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -5868,7 +6157,7 @@ module Aws::SecurityHub
     #   Indicates when the provisioned throughput was last decreased.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -5879,7 +6168,7 @@ module Aws::SecurityHub
     #   Indicates when the provisioned throughput was last increased.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -6012,7 +6301,7 @@ module Aws::SecurityHub
     #   Indicates the point in time that the table was restored to.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -6041,7 +6330,7 @@ module Aws::SecurityHub
     #   that the key was inaccessible.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -6471,7 +6760,7 @@ module Aws::SecurityHub
     #   Indicates when the instance was launched.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -7974,7 +8263,7 @@ module Aws::SecurityHub
     #   Indicates when the attachment initiated.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -8563,7 +8852,7 @@ module Aws::SecurityHub
     #   Indicates when the volume was created.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -9098,7 +9387,7 @@ module Aws::SecurityHub
     #   The date and time of the last change in status.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -9164,7 +9453,7 @@ module Aws::SecurityHub
     #   The date and time when the image was pushed to the repository.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -12339,7 +12628,7 @@ module Aws::SecurityHub
     #   Indicates when the load balancer was created.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -12634,7 +12923,7 @@ module Aws::SecurityHub
     #   Indicates when the load balancer was created.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -13197,7 +13486,7 @@ module Aws::SecurityHub
     #   Indicates when the IAM access key was created.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -13274,7 +13563,7 @@ module Aws::SecurityHub
     #   Indicates when the session was created.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -13356,7 +13645,7 @@ module Aws::SecurityHub
     #   Indicates when the IAM group was created.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -13416,7 +13705,7 @@ module Aws::SecurityHub
     #   Indicates when the instance profile was created.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -13466,7 +13755,7 @@ module Aws::SecurityHub
     #   Indicates when the role was created.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -13529,7 +13818,7 @@ module Aws::SecurityHub
     #   When the policy was created.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -13573,7 +13862,7 @@ module Aws::SecurityHub
     #   When the policy was most recently updated.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -13612,7 +13901,7 @@ module Aws::SecurityHub
     #   Indicates when the version was created.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -13644,7 +13933,7 @@ module Aws::SecurityHub
     #   Indicates when the role was created.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -13722,7 +14011,7 @@ module Aws::SecurityHub
     #   Indicates when the user was created.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -13852,7 +14141,7 @@ module Aws::SecurityHub
     #   Indicates when the KMS key was created.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -14003,7 +14292,7 @@ module Aws::SecurityHub
     #   Indicates when the function was last updated.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -14219,7 +14508,7 @@ module Aws::SecurityHub
     #   Indicates when the version was created.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -15080,6 +15369,47 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
+    # Specifies an Organizations scope. Data from the specified organization
+    # or organizational unit is included in the response.
+    #
+    # To scope to a specific organizational unit, provide
+    # `OrganizationalUnitId`. You can optionally include `OrganizationId`.
+    # If you omit `OrganizationId`, Security Hub uses the caller's
+    # organization ID. To scope to the delegated administrator's entire
+    # organization, provide only `OrganizationId`.
+    #
+    # The organization ID and organizational unit must belong to the
+    # delegated administrator's own organization. Each request must use one
+    # scoping approach: either scope to the entire organization by providing
+    # an `AwsOrganizationScope` entry with only `OrganizationId`, or scope
+    # to specific organizational units by providing `AwsOrganizationScope`
+    # entries with `OrganizationalUnitId`. You can't combine both
+    # approaches in the same request.
+    #
+    # @!attribute [rw] organization_id
+    #   The unique identifier (ID) of the organization (for example,
+    #   `o-abcd1234567890`). The organization must be the delegated
+    #   administrator's own organization. If you omit this value and
+    #   provide `OrganizationalUnitId`, Security Hub uses the caller's
+    #   organization ID.
+    #   @return [String]
+    #
+    # @!attribute [rw] organizational_unit_id
+    #   The unique identifier (ID) of the organizational unit (OU) (for
+    #   example, `ou-ab12-cd345678`). The OU must exist within the delegated
+    #   administrator's own organization. When specified, the results
+    #   include only data from accounts in this OU.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/AwsOrganizationScope AWS API Documentation
+    #
+    class AwsOrganizationScope < Struct.new(
+      :organization_id,
+      :organizational_unit_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # An IAM role that is associated with the Amazon RDS DB cluster.
     #
     # @!attribute [rw] role_arn
@@ -15226,7 +15556,7 @@ module Aws::SecurityHub
     #   Time (UTC).
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -15457,7 +15787,7 @@ module Aws::SecurityHub
     #   Indicates when the snapshot was taken.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -15491,7 +15821,7 @@ module Aws::SecurityHub
     #   Time (UTC).
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -15732,7 +16062,7 @@ module Aws::SecurityHub
     #   Indicates when the DB instance was created.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -15838,7 +16168,7 @@ module Aws::SecurityHub
     #   point-in-time restore.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -16650,7 +16980,7 @@ module Aws::SecurityHub
     #   The datetime when the event notification subscription was created.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -16840,7 +17170,7 @@ module Aws::SecurityHub
     #   The end of the time window for which maintenance was deferred.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -16855,7 +17185,7 @@ module Aws::SecurityHub
     #   The start of the time window for which maintenance was deferred.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -16908,7 +17238,7 @@ module Aws::SecurityHub
     #   Indicates when the cluster was created.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -17010,7 +17340,7 @@ module Aws::SecurityHub
     #   enabled.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -17063,7 +17393,7 @@ module Aws::SecurityHub
     #   Indicates the start of the next maintenance window.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -17296,7 +17626,7 @@ module Aws::SecurityHub
     #   The last time when logs failed to be delivered.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -17307,7 +17637,7 @@ module Aws::SecurityHub
     #   The last time that logs were delivered successfully.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -17771,7 +18101,7 @@ module Aws::SecurityHub
     #   The date when objects are moved or deleted.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -17979,7 +18309,7 @@ module Aws::SecurityHub
     #   class. If you provide `Date`, you cannot provide `Days`.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -18058,7 +18388,7 @@ module Aws::SecurityHub
     #   Indicates when the S3 bucket was created.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -18505,7 +18835,7 @@ module Aws::SecurityHub
     #   Indicates when the object was last modified.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -18785,7 +19115,7 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
-    # Provides a consistent format for Security Hub findings.
+    # Provides a consistent format for Security Hub CSPM findings.
     # `AwsSecurityFinding` format allows you to share findings between
     # Amazon Web Services security services and third-party solutions.
     #
@@ -18807,10 +19137,10 @@ module Aws::SecurityHub
     #   @return [String]
     #
     # @!attribute [rw] product_arn
-    #   The ARN generated by Security Hub that uniquely identifies a product
-    #   that generates findings. This can be the ARN for a third-party
-    #   product that is integrated with Security Hub, or the ARN for a
-    #   custom integration.
+    #   The ARN generated by Security Hub CSPM that uniquely identifies a
+    #   product that generates findings. This can be the ARN for a
+    #   third-party product that is integrated with Security Hub CSPM, or
+    #   the ARN for a custom integration.
     #
     #   Length Constraints: Minimum length of 12. Maximum length of 2048.
     #   @return [String]
@@ -18818,13 +19148,13 @@ module Aws::SecurityHub
     # @!attribute [rw] product_name
     #   The name of the product that generated the finding.
     #
-    #   Security Hub populates this attribute automatically for each
+    #   Security Hub CSPM populates this attribute automatically for each
     #   finding. You cannot update this attribute with `BatchImportFindings`
     #   or `BatchUpdateFindings`. The exception to this is a custom
     #   integration.
     #
-    #   When you use the Security Hub console or API to filter findings by
-    #   product name, you use this attribute.
+    #   When you use the Security Hub CSPM console or API to filter findings
+    #   by product name, you use this attribute.
     #
     #   Length Constraints: Minimum length of 1. Maximum length of 128.
     #   @return [String]
@@ -18832,13 +19162,13 @@ module Aws::SecurityHub
     # @!attribute [rw] company_name
     #   The name of the company for the product that generated the finding.
     #
-    #   Security Hub populates this attribute automatically for each
+    #   Security Hub CSPM populates this attribute automatically for each
     #   finding. You cannot update this attribute with `BatchImportFindings`
     #   or `BatchUpdateFindings`. The exception to this is a custom
     #   integration.
     #
-    #   When you use the Security Hub console or API to filter findings by
-    #   company name, you use this attribute.
+    #   When you use the Security Hub CSPM console or API to filter findings
+    #   by company name, you use this attribute.
     #
     #   Length Constraints: Minimum length of 1. Maximum length of 128.
     #   @return [String]
@@ -18846,7 +19176,7 @@ module Aws::SecurityHub
     # @!attribute [rw] region
     #   The Region from which the finding was generated.
     #
-    #   Security Hub populates this attribute automatically for each
+    #   Security Hub CSPM populates this attribute automatically for each
     #   finding. You cannot update it using `BatchImportFindings` or
     #   `BatchUpdateFindings`.
     #
@@ -18884,7 +19214,7 @@ module Aws::SecurityHub
     #   potential security issue that a finding captured.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -18896,7 +19226,7 @@ module Aws::SecurityHub
     #   a change in the resource that is involved in the finding.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -18908,7 +19238,7 @@ module Aws::SecurityHub
     #   security issue that a finding captured.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -18920,7 +19250,7 @@ module Aws::SecurityHub
     #   finding record.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -19092,16 +19422,16 @@ module Aws::SecurityHub
     #   finding. This field pertains to findings that relate to Lambda
     #   functions. Amazon Inspector identifies policy violations and
     #   vulnerabilities in Lambda function code based on internal detectors
-    #   developed in collaboration with Amazon CodeGuru. Security Hub
+    #   developed in collaboration with Amazon CodeGuru. Security Hub CSPM
     #   receives those findings.
     #   @return [Types::GeneratorDetails]
     #
     # @!attribute [rw] processed_at
-    #   A timestamp that indicates when Security Hub received a finding and
-    #   begins to process it.
+    #   A timestamp that indicates when Security Hub CSPM received a finding
+    #   and begins to process it.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -19119,8 +19449,8 @@ module Aws::SecurityHub
     #   Provides details about an Amazon GuardDuty Extended Threat Detection
     #   attack sequence. GuardDuty generates an attack sequence finding when
     #   multiple events align to a potentially suspicious activity. To
-    #   receive GuardDuty attack sequence findings in Security Hub, you must
-    #   have GuardDuty enabled. For more information, see [GuardDuty
+    #   receive GuardDuty attack sequence findings in Security Hub CSPM, you
+    #   must have GuardDuty enabled. For more information, see [GuardDuty
     #   Extended Threat Detection ][1] in the *Amazon GuardDuty User Guide*.
     #
     #
@@ -19181,16 +19511,16 @@ module Aws::SecurityHub
     end
 
     # A collection of filters that are applied to all active findings
-    # aggregated by Security Hub.
+    # aggregated by Security Hub CSPM.
     #
     # You can filter by up to ten finding attributes. For each attribute,
     # you can provide up to 20 filter values.
     #
     # @!attribute [rw] product_arn
-    #   The ARN generated by Security Hub that uniquely identifies a
+    #   The ARN generated by Security Hub CSPM that uniquely identifies a
     #   third-party company (security findings provider) after this
     #   provider's product (solution that generates findings) is registered
-    #   with Security Hub.
+    #   with Security Hub CSPM.
     #   @return [Array<Types::StringFilter>]
     #
     # @!attribute [rw] aws_account_id
@@ -19222,7 +19552,7 @@ module Aws::SecurityHub
     #   observed the potential security issue that a finding captured.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -19235,7 +19565,7 @@ module Aws::SecurityHub
     #   finding.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -19247,7 +19577,7 @@ module Aws::SecurityHub
     #   created the potential security issue that a finding reflects.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -19259,7 +19589,7 @@ module Aws::SecurityHub
     #   updated the finding record.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -19423,7 +19753,7 @@ module Aws::SecurityHub
     #   A timestamp that identifies when the process was launched.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -19434,7 +19764,7 @@ module Aws::SecurityHub
     #   A timestamp that identifies when the process was terminated.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -19458,7 +19788,7 @@ module Aws::SecurityHub
     #   intelligence indicator.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -19576,7 +19906,7 @@ module Aws::SecurityHub
     #   A timestamp that identifies when the container was started.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -19612,8 +19942,8 @@ module Aws::SecurityHub
     #
     #   * `NEW` - The initial state of a finding, before it is reviewed.
     #
-    #     Security Hub also resets the workflow status from `NOTIFIED` or
-    #     `RESOLVED` to `NEW` in the following cases:
+    #     Security Hub CSPM also resets the workflow status from `NOTIFIED`
+    #     or `RESOLVED` to `NEW` in the following cases:
     #
     #     * `RecordState` changes from `ARCHIVED` to `ACTIVE`.
     #
@@ -19650,7 +19980,7 @@ module Aws::SecurityHub
     #     `NEW`.
     #
     #     For findings from controls, if `Compliance.Status` is `PASSED`,
-    #     then Security Hub automatically sets the workflow status to
+    #     then Security Hub CSPM automatically sets the workflow status to
     #     `RESOLVED`.
     #   @return [Array<Types::StringFilter>]
     #
@@ -19753,13 +20083,13 @@ module Aws::SecurityHub
     # @!attribute [rw] vulnerabilities_exploit_available
     #   Indicates whether a software vulnerability in your environment has a
     #   known exploit. You can filter findings by this field only if you use
-    #   Security Hub and Amazon Inspector.
+    #   Security Hub CSPM and Amazon Inspector.
     #   @return [Array<Types::StringFilter>]
     #
     # @!attribute [rw] vulnerabilities_fix_available
     #   Indicates whether a vulnerability is fixed in a newer version of the
     #   affected software packages. You can filter findings by this field
-    #   only if you use Security Hub and Amazon Inspector.
+    #   only if you use Security Hub CSPM and Amazon Inspector.
     #   @return [Array<Types::StringFilter>]
     #
     # @!attribute [rw] compliance_security_control_parameters_name
@@ -19781,6 +20111,22 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] resource_application_arn
     #   The ARN of the application that is related to a finding.
+    #   @return [Array<Types::StringFilter>]
+    #
+    # @!attribute [rw] resource_owner_account_id
+    #   The unique identifier of the account that owns the resource that the
+    #   finding applies to, for example, Azure Subscription Id or Amazon Web
+    #   Services Account Id
+    #   @return [Array<Types::StringFilter>]
+    #
+    # @!attribute [rw] resource_owner_org_id
+    #   The unique identifier of the organization that owns the resource
+    #   that the finding applies to, for example, Azure Tenant Id
+    #   @return [Array<Types::StringFilter>]
+    #
+    # @!attribute [rw] resource_provider
+    #   The cloud provider that the resource belongs to. Valid values are
+    #   `AWS` and `Azure`.
     #   @return [Array<Types::StringFilter>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/AwsSecurityFindingFilters AWS API Documentation
@@ -19889,7 +20235,10 @@ module Aws::SecurityHub
       :compliance_security_control_parameters_value,
       :aws_account_name,
       :resource_application_name,
-      :resource_application_arn)
+      :resource_application_arn,
+      :resource_owner_account_id,
+      :resource_owner_org_id,
+      :resource_provider)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -19902,10 +20251,10 @@ module Aws::SecurityHub
     #   @return [String]
     #
     # @!attribute [rw] product_arn
-    #   The ARN generated by Security Hub that uniquely identifies a product
-    #   that generates findings. This can be the ARN for a third-party
-    #   product that is integrated with Security Hub, or the ARN for a
-    #   custom integration.
+    #   The ARN generated by Security Hub CSPM that uniquely identifies a
+    #   product that generates findings. This can be the ARN for a
+    #   third-party product that is integrated with Security Hub CSPM, or
+    #   the ARN for a custom integration.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/AwsSecurityFindingIdentifier AWS API Documentation
@@ -21482,6 +21831,99 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
+    # The detailed Azure configuration for a connector.
+    #
+    # @!attribute [rw] aws_config_connector_arn
+    #   The ARN of the multi-cloud configuration connector used to establish
+    #   the connection to Azure.
+    #   @return [String]
+    #
+    # @!attribute [rw] scope_configuration
+    #   The scope configuration that defines which Azure resources are
+    #   monitored.
+    #   @return [Types::AzureScopeConfiguration]
+    #
+    # @!attribute [rw] azure_regions
+    #   The list of Azure regions being monitored.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/AzureDetail AWS API Documentation
+    #
+    class AzureDetail < Struct.new(
+      :aws_config_connector_arn,
+      :scope_configuration,
+      :azure_regions)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration for connecting to an Azure environment.
+    #
+    # @!attribute [rw] aws_config_connector_arn
+    #   The ARN of the multi-cloud configuration connector used to establish
+    #   the connection to Azure.
+    #   @return [String]
+    #
+    # @!attribute [rw] scope_configuration
+    #   The scope configuration that defines which Azure resources are
+    #   monitored.
+    #   @return [Types::AzureScopeConfiguration]
+    #
+    # @!attribute [rw] azure_regions
+    #   The list of Azure regions to monitor.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/AzureProviderConfiguration AWS API Documentation
+    #
+    class AzureProviderConfiguration < Struct.new(
+      :aws_config_connector_arn,
+      :scope_configuration,
+      :azure_regions)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The scope configuration for an Azure connector, defining the tenant or
+    # subscription scope.
+    #
+    # @!attribute [rw] scope_type
+    #   The type of scope. Valid values are `tenant` and `subscription`.
+    #   @return [String]
+    #
+    # @!attribute [rw] scope_values
+    #   The list of scope values, such as subscription IDs, when the scope
+    #   type is `subscription`.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/AzureScopeConfiguration AWS API Documentation
+    #
+    class AzureScopeConfiguration < Struct.new(
+      :scope_type,
+      :scope_values)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration for updating an Azure connector's scope and
+    # regions.
+    #
+    # @!attribute [rw] scope_configuration
+    #   The updated scope configuration.
+    #   @return [Types::AzureScopeConfiguration]
+    #
+    # @!attribute [rw] azure_regions
+    #   The updated list of Azure regions to monitor.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/AzureUpdateConfiguration AWS API Documentation
+    #
+    class AzureUpdateConfiguration < Struct.new(
+      :scope_configuration,
+      :azure_regions)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] automation_rules_arns
     #   A list of Amazon Resource Names (ARNs) for the rules that are to be
     #   deleted.
@@ -21889,8 +22331,8 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
-    # A finding from a `BatchUpdateFindings` request that Security Hub was
-    # unable to update.
+    # A finding from a `BatchUpdateFindings` request that Security Hub CSPM
+    # was unable to update.
     #
     # @!attribute [rw] finding_identifier
     #   The identifier of the finding that was not updated.
@@ -21953,6 +22395,116 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
+    # The list of findings that were updated.
+    #
+    # @!attribute [rw] finding_identifier
+    #   The finding identifier of a processed finding.
+    #   @return [Types::OcsfFindingIdentifier]
+    #
+    # @!attribute [rw] metadata_uid
+    #   The metadata.uid of a processed finding.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/BatchUpdateFindingsV2ProcessedFinding AWS API Documentation
+    #
+    class BatchUpdateFindingsV2ProcessedFinding < Struct.new(
+      :finding_identifier,
+      :metadata_uid)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] metadata_uids
+    #   The list of finding `metadata.uid` to indicate findings to update.
+    #   Finding `metadata.uid` is a globally unique identifier associated
+    #   with the finding. Customers cannot use `MetadataUids` together with
+    #   `FindingIdentifiers`.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] finding_identifiers
+    #   Provides information to identify a specific V2 finding.
+    #   @return [Array<Types::OcsfFindingIdentifier>]
+    #
+    # @!attribute [rw] comment
+    #   The updated value for a user provided comment about the finding.
+    #   Minimum character length 1. Maximum character length 512.
+    #   @return [String]
+    #
+    # @!attribute [rw] severity_id
+    #   The updated value for the normalized severity identifier. The
+    #   severity ID is an integer with the allowed enum values \[0, 1, 2, 3,
+    #   4, 5, 6, 99\]. When customer provides the updated severity ID, the
+    #   string sibling severity will automatically be updated in the
+    #   finding.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] status_id
+    #   The updated value for the normalized status identifier. The status
+    #   ID is an integer with the allowed enum values \[0, 1, 2, 3, 4, 5,
+    #   99\]. When customer provides the updated status ID, the string
+    #   sibling status will automatically be updated in the finding.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/BatchUpdateFindingsV2Request AWS API Documentation
+    #
+    class BatchUpdateFindingsV2Request < Struct.new(
+      :metadata_uids,
+      :finding_identifiers,
+      :comment,
+      :severity_id,
+      :status_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] processed_findings
+    #   The list of findings that were updated successfully.
+    #   @return [Array<Types::BatchUpdateFindingsV2ProcessedFinding>]
+    #
+    # @!attribute [rw] unprocessed_findings
+    #   The list of V2 findings that were not updated.
+    #   @return [Array<Types::BatchUpdateFindingsV2UnprocessedFinding>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/BatchUpdateFindingsV2Response AWS API Documentation
+    #
+    class BatchUpdateFindingsV2Response < Struct.new(
+      :processed_findings,
+      :unprocessed_findings)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The list of findings that were not updated.
+    #
+    # @!attribute [rw] finding_identifier
+    #   The finding identifier of an unprocessed finding.
+    #   @return [Types::OcsfFindingIdentifier]
+    #
+    # @!attribute [rw] metadata_uid
+    #   The metadata.uid of an unprocessed finding.
+    #   @return [String]
+    #
+    # @!attribute [rw] error_code
+    #   Indicates the specific type of error preventing successful
+    #   processing of a finding during a batch update operation.
+    #   @return [String]
+    #
+    # @!attribute [rw] error_message
+    #   A detailed description of why a finding could not be processed
+    #   during a batch update operation.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/BatchUpdateFindingsV2UnprocessedFinding AWS API Documentation
+    #
+    class BatchUpdateFindingsV2UnprocessedFinding < Struct.new(
+      :finding_identifier,
+      :metadata_uid,
+      :error_code,
+      :error_message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] standards_control_association_updates
     #   Updates the enablement status of a security control in a specified
     #   standard.
@@ -21988,7 +22540,7 @@ module Aws::SecurityHub
     # boolean. For a boolean parameter, the options are `true` and `false`.
     #
     # @!attribute [rw] default_value
-    #   The Security Hub default value for a boolean parameter.
+    #   The Security Hub CSPM default value for a boolean parameter.
     #   @return [Boolean]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/BooleanConfigurationOptions AWS API Documentation
@@ -22178,6 +22730,33 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
+    # Details about an external code repository with which you can connect
+    # your Amazon Web Services resources. The connection is established
+    # through Amazon Inspector.
+    #
+    # @!attribute [rw] provider_type
+    #   The type of repository provider.
+    #   @return [String]
+    #
+    # @!attribute [rw] project_name
+    #   The name of the project in the code repository.
+    #   @return [String]
+    #
+    # @!attribute [rw] code_security_integration_arn
+    #   The Amazon Resource Name (ARN) of the code security integration
+    #   associated with the repository.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/CodeRepositoryDetails AWS API Documentation
+    #
+    class CodeRepositoryDetails < Struct.new(
+      :provider_type,
+      :project_name,
+      :code_security_integration_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Provides details about where a code vulnerability is located in your
     # Lambda function.
     #
@@ -22213,13 +22792,14 @@ module Aws::SecurityHub
     # This object typically provides details about a control finding, such
     # as applicable standards and the status of control checks. While
     # finding providers can add custom content in `Compliance` object
-    # fields, they are typically used to review details of Security Hub
+    # fields, they are typically used to review details of Security Hub CSPM
     # control findings.
     #
     # @!attribute [rw] status
     #   Typically summarizes the result of a control check.
     #
-    #   For Security Hub controls, valid values for `Status` are as follows.
+    #   For Security Hub CSPM controls, valid values for `Status` are as
+    #   follows.
     #
     #   * * `PASSED` - Standards check passed for all evaluated resources.
     #
@@ -22232,8 +22812,8 @@ module Aws::SecurityHub
     #     * `NOT_AVAILABLE` - Check could not be performed due to a service
     #       outage, API error, or because the result of the Config
     #       evaluation was `NOT_APPLICABLE`. If the Config evaluation result
-    #       was `NOT_APPLICABLE` for a Security Hub control, Security Hub
-    #       automatically archives the finding after 3 days.
+    #       was `NOT_APPLICABLE` for a Security Hub CSPM control, Security
+    #       Hub CSPM automatically archives the finding after 3 days.
     #   @return [String]
     #
     # @!attribute [rw] related_requirements
@@ -22251,7 +22831,7 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] security_control_id
     #   Typically provides the unique identifier of a control across
-    #   standards. For Security Hub controls, this field consists of an
+    #   standards. For Security Hub CSPM controls, this field consists of an
     #   Amazon Web Services service and a unique number, such as
     #   `APIGateway.5`.
     #   @return [String]
@@ -22275,6 +22855,62 @@ module Aws::SecurityHub
       :security_control_id,
       :associated_standards,
       :security_control_parameters)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Enables the creation of filtering criteria for security findings.
+    #
+    # @!attribute [rw] string_filters
+    #   Enables filtering based on string field values.
+    #   @return [Array<Types::OcsfStringFilter>]
+    #
+    # @!attribute [rw] date_filters
+    #   Enables filtering based on date and timestamp fields.
+    #   @return [Array<Types::OcsfDateFilter>]
+    #
+    # @!attribute [rw] boolean_filters
+    #   Enables filtering based on boolean field values.
+    #   @return [Array<Types::OcsfBooleanFilter>]
+    #
+    # @!attribute [rw] number_filters
+    #   Enables filtering based on numerical field values.
+    #   @return [Array<Types::OcsfNumberFilter>]
+    #
+    # @!attribute [rw] map_filters
+    #   Enables filtering based on map field values.
+    #   @return [Array<Types::OcsfMapFilter>]
+    #
+    # @!attribute [rw] ip_filters
+    #   A list of IP address filters that allowing you to filter findings
+    #   based on IP address properties.
+    #   @return [Array<Types::OcsfIpFilter>]
+    #
+    # @!attribute [rw] nested_composite_filters
+    #   Provides an additional level of filtering, creating a three-layer
+    #   nested structure. The first layer is a `CompositeFilters` array with
+    #   a `CompositeOperator` (`AND`/`OR`). The second layer is a
+    #   `CompositeFilter` object that contains direct filters and
+    #   `NestedCompositeFilters`. The third layer is
+    #   `NestedCompositeFilters`, which contains additional filter
+    #   conditions.
+    #   @return [Array<Types::CompositeFilter>]
+    #
+    # @!attribute [rw] operator
+    #   The logical operator used to combine multiple filter conditions.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/CompositeFilter AWS API Documentation
+    #
+    class CompositeFilter < Struct.new(
+      :string_filters,
+      :date_filters,
+      :boolean_filters,
+      :number_filters,
+      :map_filters,
+      :ip_filters,
+      :nested_composite_filters,
+      :operator)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -22351,7 +22987,7 @@ module Aws::SecurityHub
       class Unknown < ConfigurationOptions; end
     end
 
-    # Provides details about the association between an Security Hub
+    # Provides details about the association between an Security Hub CSPM
     # configuration and a target account, organizational unit, or the root.
     # An association can exist between a target and a configuration policy,
     # or between a target and self-managed behavior.
@@ -22389,8 +23025,8 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] association_type
     #   Indicates whether the association between the specified target and
-    #   the configuration was directly applied by the Security Hub delegated
-    #   administrator or inherited from a parent.
+    #   the configuration was directly applied by the Security Hub CSPM
+    #   delegated administrator or inherited from a parent.
     #   @return [String]
     #
     # @!attribute [rw] updated_at
@@ -22421,8 +23057,9 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
-    # An object that contains the details of an Security Hub configuration
-    # policy that’s returned in a `ListConfigurationPolicies` request.
+    # An object that contains the details of an Security Hub CSPM
+    # configuration policy that’s returned in a `ListConfigurationPolicies`
+    # request.
     #
     # @!attribute [rw] arn
     #   The Amazon Resource Name (ARN) of the configuration policy.
@@ -22465,6 +23102,76 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
+    # The request causes conflict with the current state of the service
+    # resource.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @!attribute [rw] code
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ConflictException AWS API Documentation
+    #
+    class ConflictException < Struct.new(
+      :message,
+      :code)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A condensed overview of the connectorV2..
+    #
+    # @!attribute [rw] connector_arn
+    #   The Amazon Resource Name (ARN) of the connectorV2.
+    #   @return [String]
+    #
+    # @!attribute [rw] connector_id
+    #   The UUID of the connectorV2 to identify connectorV2 resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The Name field contains the user-defined name assigned to the
+    #   integration connector. This helps identify and manage multiple
+    #   connectors within Security Hub.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   The description of the connectorV2.
+    #   @return [String]
+    #
+    # @!attribute [rw] provider_summary
+    #   The connectorV2 third party provider configuration summary.
+    #   @return [Types::ProviderSummary]
+    #
+    # @!attribute [rw] created_at
+    #   ISO 8601 UTC timestamp for the time create the connectorV2.
+    #   @return [Time]
+    #
+    # @!attribute [rw] enablement_status
+    #   The enablement status of the connector.
+    #   @return [String]
+    #
+    # @!attribute [rw] enablement_status_reason
+    #   The reason for the current enablement status. Provides additional
+    #   context when the connector is in a failed state.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ConnectorSummary AWS API Documentation
+    #
+    class ConnectorSummary < Struct.new(
+      :connector_arn,
+      :connector_id,
+      :name,
+      :description,
+      :provider_summary,
+      :created_at,
+      :enablement_status,
+      :enablement_status_reason)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Container details related to a finding.
     #
     # @!attribute [rw] container_runtime
@@ -22487,7 +23194,7 @@ module Aws::SecurityHub
     #   Indicates when the container started.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -22573,13 +23280,70 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
+    # @!attribute [rw] region_linking_mode
+    #   Determines how Regions are linked to an Aggregator V2.
+    #   @return [String]
+    #
+    # @!attribute [rw] linked_regions
+    #   The list of Regions that are linked to the aggregation Region.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] tags
+    #   A list of key-value pairs to be applied to the AggregatorV2.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] client_token
+    #   A unique identifier used to ensure idempotency.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/CreateAggregatorV2Request AWS API Documentation
+    #
+    class CreateAggregatorV2Request < Struct.new(
+      :region_linking_mode,
+      :linked_regions,
+      :tags,
+      :client_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] aggregator_v2_arn
+    #   The ARN of the AggregatorV2.
+    #   @return [String]
+    #
+    # @!attribute [rw] aggregation_region
+    #   The Amazon Web Services Region where data is aggregated.
+    #   @return [String]
+    #
+    # @!attribute [rw] region_linking_mode
+    #   Determines how Regions are linked to an Aggregator V2.
+    #   @return [String]
+    #
+    # @!attribute [rw] linked_regions
+    #   The list of Regions that are linked to the aggregation Region.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/CreateAggregatorV2Response AWS API Documentation
+    #
+    class CreateAggregatorV2Response < Struct.new(
+      :aggregator_v2_arn,
+      :aggregation_region,
+      :region_linking_mode,
+      :linked_regions)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] tags
     #   User-defined tags associated with an automation rule.
     #   @return [Hash<String,String>]
     #
     # @!attribute [rw] rule_status
     #   Whether the rule is active after it is created. If this parameter is
-    #   equal to `ENABLED`, Security Hub starts applying the rule to
+    #   equal to `ENABLED`, Security Hub CSPM starts applying the rule to
     #   findings and finding updates after the rule is created. To change
     #   the value of this parameter after creating a rule, use [
     #   `BatchUpdateAutomationRules` ][1].
@@ -22591,8 +23355,8 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] rule_order
     #   An integer ranging from 1 to 1000 that represents the order in which
-    #   the rule action is applied to findings. Security Hub applies rules
-    #   with lower values for this parameter first.
+    #   the rule action is applied to findings. Security Hub CSPM applies
+    #   rules with lower values for this parameter first.
     #   @return [Integer]
     #
     # @!attribute [rw] rule_name
@@ -22607,17 +23371,17 @@ module Aws::SecurityHub
     #   Specifies whether a rule is the last to be applied with respect to a
     #   finding that matches the rule criteria. This is useful when a
     #   finding matches the criteria for multiple rules, and each rule has
-    #   different actions. If a rule is terminal, Security Hub applies the
-    #   rule action to a finding that matches the rule criteria and doesn't
-    #   evaluate other rules for the finding. By default, a rule isn't
-    #   terminal.
+    #   different actions. If a rule is terminal, Security Hub CSPM applies
+    #   the rule action to a finding that matches the rule criteria and
+    #   doesn't evaluate other rules for the finding. By default, a rule
+    #   isn't terminal.
     #   @return [Boolean]
     #
     # @!attribute [rw] criteria
     #   A set of ASFF finding field attributes and corresponding expected
-    #   values that Security Hub uses to filter findings. If a rule is
+    #   values that Security Hub CSPM uses to filter findings. If a rule is
     #   enabled and a finding matches the conditions specified in this
-    #   parameter, Security Hub applies the rule action to the finding.
+    #   parameter, Security Hub CSPM applies the rule action to the finding.
     #   @return [Types::AutomationRulesFindingFilters]
     #
     # @!attribute [rw] actions
@@ -22653,6 +23417,73 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
+    # @!attribute [rw] rule_name
+    #   The name of the V2 automation rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] rule_status
+    #   The status of the V2 automation rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A description of the V2 automation rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] rule_order
+    #   The value for the rule priority.
+    #   @return [Float]
+    #
+    # @!attribute [rw] criteria
+    #   The filtering type and configuration of the automation rule.
+    #   @return [Types::Criteria]
+    #
+    # @!attribute [rw] actions
+    #   A list of actions to be performed when the rule criteria is met.
+    #   @return [Array<Types::AutomationRulesActionV2>]
+    #
+    # @!attribute [rw] tags
+    #   A list of key-value pairs associated with the V2 automation rule.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] client_token
+    #   A unique identifier used to ensure idempotency.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/CreateAutomationRuleV2Request AWS API Documentation
+    #
+    class CreateAutomationRuleV2Request < Struct.new(
+      :rule_name,
+      :rule_status,
+      :description,
+      :rule_order,
+      :criteria,
+      :actions,
+      :tags,
+      :client_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] rule_arn
+    #   The ARN of the V2 automation rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] rule_id
+    #   The ID of the V2 automation rule.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/CreateAutomationRuleV2Response AWS API Documentation
+    #
+    class CreateAutomationRuleV2Response < Struct.new(
+      :rule_arn,
+      :rule_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] name
     #   The name of the configuration policy. Alphanumeric characters and
     #   the following ASCII characters are permitted: `-, ., !, *, /`.
@@ -22663,22 +23494,22 @@ module Aws::SecurityHub
     #   @return [String]
     #
     # @!attribute [rw] configuration_policy
-    #   An object that defines how Security Hub is configured. It includes
-    #   whether Security Hub is enabled or disabled, a list of enabled
-    #   security standards, a list of enabled or disabled security controls,
-    #   and a list of custom parameter values for specified controls. If you
-    #   provide a list of security controls that are enabled in the
-    #   configuration policy, Security Hub disables all other controls
-    #   (including newly released controls). If you provide a list of
-    #   security controls that are disabled in the configuration policy,
-    #   Security Hub enables all other controls (including newly released
-    #   controls).
+    #   An object that defines how Security Hub CSPM is configured. It
+    #   includes whether Security Hub CSPM is enabled or disabled, a list of
+    #   enabled security standards, a list of enabled or disabled security
+    #   controls, and a list of custom parameter values for specified
+    #   controls. If you provide a list of security controls that are
+    #   enabled in the configuration policy, Security Hub CSPM disables all
+    #   other controls (including newly released controls). If you provide a
+    #   list of security controls that are disabled in the configuration
+    #   policy, Security Hub CSPM enables all other controls (including
+    #   newly released controls).
     #   @return [Types::Policy]
     #
     # @!attribute [rw] tags
     #   User-defined tags associated with a configuration policy. For more
-    #   information, see [Tagging Security Hub resources][1] in the
-    #   *Security Hub user guide*.
+    #   information, see [Tagging Security Hub CSPM resources][1] in the
+    #   *Security Hub CSPM user guide*.
     #
     #
     #
@@ -22724,16 +23555,16 @@ module Aws::SecurityHub
     #   @return [Time]
     #
     # @!attribute [rw] configuration_policy
-    #   An object that defines how Security Hub is configured. It includes
-    #   whether Security Hub is enabled or disabled, a list of enabled
-    #   security standards, a list of enabled or disabled security controls,
-    #   and a list of custom parameter values for specified controls. If the
-    #   request included a list of security controls that are enabled in the
-    #   configuration policy, Security Hub disables all other controls
-    #   (including newly released controls). If the request included a list
-    #   of security controls that are disabled in the configuration policy,
-    #   Security Hub enables all other controls (including newly released
-    #   controls).
+    #   An object that defines how Security Hub CSPM is configured. It
+    #   includes whether Security Hub CSPM is enabled or disabled, a list of
+    #   enabled security standards, a list of enabled or disabled security
+    #   controls, and a list of custom parameter values for specified
+    #   controls. If the request included a list of security controls that
+    #   are enabled in the configuration policy, Security Hub CSPM disables
+    #   all other controls (including newly released controls). If the
+    #   request included a list of security controls that are disabled in
+    #   the configuration policy, Security Hub CSPM enables all other
+    #   controls (including newly released controls).
     #   @return [Types::Policy]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/CreateConfigurationPolicyResponse AWS API Documentation
@@ -22750,11 +23581,147 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
+    # @!attribute [rw] name
+    #   The name of the connector. Must be unique within the account.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   The description of the connector.
+    #   @return [String]
+    #
+    # @!attribute [rw] provider
+    #   The configuration for the cloud provider to connect to. Currently
+    #   supports Azure.
+    #   @return [Types::CspmProviderConfiguration]
+    #
+    # @!attribute [rw] tags
+    #   The tags to add to the connector resource.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] client_token
+    #   A unique identifier used to ensure idempotency of the request.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/CreateConnectorRequest AWS API Documentation
+    #
+    class CreateConnectorRequest < Struct.new(
+      :name,
+      :description,
+      :provider,
+      :tags,
+      :client_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] connector_arn
+    #   The Amazon Resource Name (ARN) of the connector.
+    #   @return [String]
+    #
+    # @!attribute [rw] connector_id
+    #   The unique identifier of the connector.
+    #   @return [String]
+    #
+    # @!attribute [rw] connector_status
+    #   The connectivity status of the connector.
+    #   @return [String]
+    #
+    # @!attribute [rw] enablement_status
+    #   The enablement status of the connector.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/CreateConnectorResponse AWS API Documentation
+    #
+    class CreateConnectorResponse < Struct.new(
+      :connector_arn,
+      :connector_id,
+      :connector_status,
+      :enablement_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] name
+    #   The unique name of the connectorV2.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   The description of the connectorV2.
+    #   @return [String]
+    #
+    # @!attribute [rw] provider
+    #   The third-party provider’s service configuration.
+    #   @return [Types::ProviderConfiguration]
+    #
+    # @!attribute [rw] kms_key_arn
+    #   The Amazon Resource Name (ARN) of KMS key used to encrypt secrets
+    #   for the connectorV2.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   The tags to add to the connectorV2 when you create.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] client_token
+    #   A unique identifier used to ensure idempotency.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/CreateConnectorV2Request AWS API Documentation
+    #
+    class CreateConnectorV2Request < Struct.new(
+      :name,
+      :description,
+      :provider,
+      :kms_key_arn,
+      :tags,
+      :client_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] connector_arn
+    #   The Amazon Resource Name (ARN) of the connectorV2.
+    #   @return [String]
+    #
+    # @!attribute [rw] connector_id
+    #   The UUID of the connectorV2 to identify connectorV2 resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] auth_url
+    #   The Url provide to customers for OAuth auth code flow.
+    #   @return [String]
+    #
+    # @!attribute [rw] connector_status
+    #   The current status of the connectorV2.
+    #   @return [String]
+    #
+    # @!attribute [rw] enablement_status
+    #   The enablement status of the connector after creation.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/CreateConnectorV2Response AWS API Documentation
+    #
+    class CreateConnectorV2Response < Struct.new(
+      :connector_arn,
+      :connector_id,
+      :auth_url,
+      :connector_status,
+      :enablement_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] region_linking_mode
     #   Indicates whether to aggregate findings from all of the available
     #   Regions in the current partition. Also determines whether to
     #   automatically aggregate findings from new Regions as Security Hub
-    #   supports them and you opt into them.
+    #   CSPM supports them and you opt into them.
     #
     #   The selected option also determines how to use the Regions provided
     #   in the Regions list.
@@ -22762,18 +23729,19 @@ module Aws::SecurityHub
     #   The options are as follows:
     #
     #   * `ALL_REGIONS` - Aggregates findings from all of the Regions where
-    #     Security Hub is enabled. When you choose this option, Security Hub
-    #     also automatically aggregates findings from new Regions as
-    #     Security Hub supports them and you opt into them.
+    #     Security Hub CSPM is enabled. When you choose this option,
+    #     Security Hub CSPM also automatically aggregates findings from new
+    #     Regions as Security Hub CSPM supports them and you opt into them.
     #
     #   * `ALL_REGIONS_EXCEPT_SPECIFIED` - Aggregates findings from all of
-    #     the Regions where Security Hub is enabled, except for the Regions
-    #     listed in the `Regions` parameter. When you choose this option,
-    #     Security Hub also automatically aggregates findings from new
-    #     Regions as Security Hub supports them and you opt into them.
+    #     the Regions where Security Hub CSPM is enabled, except for the
+    #     Regions listed in the `Regions` parameter. When you choose this
+    #     option, Security Hub CSPM also automatically aggregates findings
+    #     from new Regions as Security Hub CSPM supports them and you opt
+    #     into them.
     #
     #   * `SPECIFIED_REGIONS` - Aggregates findings only from the Regions
-    #     listed in the `Regions` parameter. Security Hub does not
+    #     listed in the `Regions` parameter. Security Hub CSPM does not
     #     automatically aggregate findings from new Regions.
     #
     #   * `NO_REGIONS` - Aggregates no data because no Regions are selected
@@ -22874,7 +23842,7 @@ module Aws::SecurityHub
     end
 
     # @!attribute [rw] account_details
-    #   The list of accounts to associate with the Security Hub
+    #   The list of accounts to associate with the Security Hub CSPM
     #   administrator account. For each account, the list includes the
     #   account ID and optionally the email address.
     #   @return [Array<Types::AccountDetails>]
@@ -22899,6 +23867,250 @@ module Aws::SecurityHub
       :unprocessed_accounts)
       SENSITIVE = []
       include Aws::Structure
+    end
+
+    # @!attribute [rw] connector_id
+    #   The UUID of the connectorV2 to identify connectorV2 resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] finding_metadata_uid
+    #   The the unique ID for the finding.
+    #   @return [String]
+    #
+    # @!attribute [rw] client_token
+    #   The client idempotency token.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @!attribute [rw] mode
+    #   The mode for ticket creation. When set to DRYRUN, the ticket is
+    #   created using a Security Hub owned template test finding to verify
+    #   the integration is working correctly.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/CreateTicketV2Request AWS API Documentation
+    #
+    class CreateTicketV2Request < Struct.new(
+      :connector_id,
+      :finding_metadata_uid,
+      :client_token,
+      :mode)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] ticket_id
+    #   The ID for the ticketv2.
+    #   @return [String]
+    #
+    # @!attribute [rw] ticket_src_url
+    #   The url to the created ticket.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/CreateTicketV2Response AWS API Documentation
+    #
+    class CreateTicketV2Response < Struct.new(
+      :ticket_id,
+      :ticket_src_url)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines the parameters and conditions used to evaluate and filter
+    # security findings.
+    #
+    # @note Criteria is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note Criteria is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of Criteria corresponding to the set member.
+    #
+    # @!attribute [rw] ocsf_finding_criteria
+    #   The filtering conditions that align with OCSF standards.
+    #   @return [Types::OcsfFindingFilters]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/Criteria AWS API Documentation
+    #
+    class Criteria < Struct.new(
+      :ocsf_finding_criteria,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class OcsfFindingCriteria < Criteria; end
+      class Unknown < Criteria; end
+    end
+
+    # A summary of a CSPM connector.
+    #
+    # @!attribute [rw] connector_arn
+    #   The Amazon Resource Name (ARN) of the connector.
+    #   @return [String]
+    #
+    # @!attribute [rw] connector_id
+    #   The unique identifier of the connector.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the connector.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   The description of the connector.
+    #   @return [String]
+    #
+    # @!attribute [rw] provider_summary
+    #   A summary of the cloud provider configuration for the connector.
+    #   @return [Types::CspmProviderSummary]
+    #
+    # @!attribute [rw] created_at
+    #   The ISO 8601 UTC timestamp indicating when the connector was
+    #   created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] created_by
+    #   The service principal that created the connector.
+    #   @return [String]
+    #
+    # @!attribute [rw] enablement_status
+    #   The enablement status of the connector.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/CspmConnectorSummary AWS API Documentation
+    #
+    class CspmConnectorSummary < Struct.new(
+      :connector_arn,
+      :connector_id,
+      :name,
+      :description,
+      :provider_summary,
+      :created_at,
+      :created_by,
+      :enablement_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Information about the operational status and health of a CSPM
+    # connector.
+    #
+    # @!attribute [rw] connector_status
+    #   The connectivity status of the connector.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   A message describing the reason for the current connector status.
+    #   @return [String]
+    #
+    # @!attribute [rw] last_checked_at
+    #   The ISO 8601 UTC timestamp indicating when the health status was
+    #   last checked.
+    #   @return [Time]
+    #
+    # @!attribute [rw] issues
+    #   A list of health issues associated with the connector.
+    #   @return [Array<Types::HealthIssue>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/CspmHealthCheck AWS API Documentation
+    #
+    class CspmHealthCheck < Struct.new(
+      :connector_status,
+      :message,
+      :last_checked_at,
+      :issues)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The cloud provider configuration for creating a connector. This is a
+    # union type that currently supports Azure.
+    #
+    # @note CspmProviderConfiguration is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @!attribute [rw] azure
+    #   The Azure provider configuration.
+    #   @return [Types::AzureProviderConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/CspmProviderConfiguration AWS API Documentation
+    #
+    class CspmProviderConfiguration < Struct.new(
+      :azure,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Azure < CspmProviderConfiguration; end
+      class Unknown < CspmProviderConfiguration; end
+    end
+
+    # The detailed cloud provider configuration for a connector. This is a
+    # union type that currently supports Azure.
+    #
+    # @note CspmProviderDetail is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of CspmProviderDetail corresponding to the set member.
+    #
+    # @!attribute [rw] azure
+    #   The Azure provider detail.
+    #   @return [Types::AzureDetail]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/CspmProviderDetail AWS API Documentation
+    #
+    class CspmProviderDetail < Struct.new(
+      :azure,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Azure < CspmProviderDetail; end
+      class Unknown < CspmProviderDetail; end
+    end
+
+    # A summary of the cloud provider configuration for a connector.
+    #
+    # @!attribute [rw] provider_name
+    #   The name of the cloud provider.
+    #   @return [String]
+    #
+    # @!attribute [rw] connector_status
+    #   The connectivity status of the connector.
+    #   @return [String]
+    #
+    # @!attribute [rw] provider_configuration
+    #   The provider configuration details.
+    #   @return [Types::CspmProviderDetail]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/CspmProviderSummary AWS API Documentation
+    #
+    class CspmProviderSummary < Struct.new(
+      :provider_name,
+      :connector_status,
+      :provider_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The cloud provider configuration for updating a connector. This is a
+    # union type that currently supports Azure.
+    #
+    # @note CspmProviderUpdateConfiguration is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @!attribute [rw] azure
+    #   The Azure update configuration.
+    #   @return [Types::AzureUpdateConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/CspmProviderUpdateConfiguration AWS API Documentation
+    #
+    class CspmProviderUpdateConfiguration < Struct.new(
+      :azure,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Azure < CspmProviderUpdateConfiguration; end
+      class Unknown < CspmProviderUpdateConfiguration; end
     end
 
     # The list of detected instances of sensitive data.
@@ -23012,7 +24224,7 @@ module Aws::SecurityHub
     #   A timestamp that provides the start date for the date filter.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -23023,7 +24235,7 @@ module Aws::SecurityHub
     #   A timestamp that provides the end date for the date filter.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -23054,11 +24266,20 @@ module Aws::SecurityHub
     #   A date range unit for the date filter.
     #   @return [String]
     #
+    # @!attribute [rw] comparison
+    #   The condition to apply to a date range filter. If you specify
+    #   `WITHIN`, Security Hub filters for dates within the specified date
+    #   range. If you specify `OLDER_THAN`, Security Hub filters for dates
+    #   before the specified date range. If you don't specify a value, the
+    #   default is `WITHIN`.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/DateRange AWS API Documentation
     #
     class DateRange < Struct.new(
       :value,
-      :unit)
+      :unit,
+      :comparison)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -23115,6 +24336,38 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
+    # @!attribute [rw] aggregator_v2_arn
+    #   The ARN of the Aggregator V2.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/DeleteAggregatorV2Request AWS API Documentation
+    #
+    class DeleteAggregatorV2Request < Struct.new(
+      :aggregator_v2_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/DeleteAggregatorV2Response AWS API Documentation
+    #
+    class DeleteAggregatorV2Response < Aws::EmptyStructure; end
+
+    # @!attribute [rw] identifier
+    #   The ARN of the V2 automation rule.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/DeleteAutomationRuleV2Request AWS API Documentation
+    #
+    class DeleteAutomationRuleV2Request < Struct.new(
+      :identifier)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/DeleteAutomationRuleV2Response AWS API Documentation
+    #
+    class DeleteAutomationRuleV2Response < Aws::EmptyStructure; end
+
     # @!attribute [rw] identifier
     #   The Amazon Resource Name (ARN) or universally unique identifier
     #   (UUID) of the configuration policy.
@@ -23131,6 +24384,54 @@ module Aws::SecurityHub
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/DeleteConfigurationPolicyResponse AWS API Documentation
     #
     class DeleteConfigurationPolicyResponse < Aws::EmptyStructure; end
+
+    # @!attribute [rw] connector_id
+    #   The unique identifier of the connector to delete.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/DeleteConnectorRequest AWS API Documentation
+    #
+    class DeleteConnectorRequest < Struct.new(
+      :connector_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] enablement_status
+    #   The enablement status of the connector after the delete request.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/DeleteConnectorResponse AWS API Documentation
+    #
+    class DeleteConnectorResponse < Struct.new(
+      :enablement_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] connector_id
+    #   The UUID of the connectorV2 to identify connectorV2 resource.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/DeleteConnectorV2Request AWS API Documentation
+    #
+    class DeleteConnectorV2Request < Struct.new(
+      :connector_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] enablement_status
+    #   The enablement status of the connector after deletion.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/DeleteConnectorV2Response AWS API Documentation
+    #
+    class DeleteConnectorV2Response < Struct.new(
+      :enablement_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # @!attribute [rw] finding_aggregator_arn
     #   The ARN of the finding aggregator to delete. To obtain the ARN, use
@@ -23258,7 +24559,7 @@ module Aws::SecurityHub
     # @!attribute [rw] action_targets
     #   A list of `ActionTarget` objects. Each object includes the
     #   `ActionTargetArn`, `Description`, and `Name` of a custom action
-    #   target available in Security Hub.
+    #   target available in Security Hub CSPM.
     #   @return [Array<Types::ActionTarget>]
     #
     # @!attribute [rw] next_token
@@ -23291,7 +24592,7 @@ module Aws::SecurityHub
     #   @return [String]
     #
     # @!attribute [rw] subscribed_at
-    #   The date and time when Security Hub was enabled in the account.
+    #   The date and time when Security Hub CSPM was enabled in the account.
     #   @return [String]
     #
     # @!attribute [rw] auto_enable_controls
@@ -23306,28 +24607,28 @@ module Aws::SecurityHub
     #   the controls in the console and programmatically immediately after
     #   release. However, automatically enabled controls have a temporary
     #   default status of `DISABLED`. It can take up to several days for
-    #   Security Hub to process the control release and designate the
+    #   Security Hub CSPM to process the control release and designate the
     #   control as `ENABLED` in your account. During the processing period,
-    #   you can manually enable or disable a control, and Security Hub will
-    #   maintain that designation regardless of whether you have
+    #   you can manually enable or disable a control, and Security Hub CSPM
+    #   will maintain that designation regardless of whether you have
     #   `AutoEnableControls` set to `true`.
     #   @return [Boolean]
     #
     # @!attribute [rw] control_finding_generator
     #   Specifies whether the calling account has consolidated control
     #   findings turned on. If the value for this field is set to
-    #   `SECURITY_CONTROL`, Security Hub generates a single finding for a
-    #   control check even when the check applies to multiple enabled
+    #   `SECURITY_CONTROL`, Security Hub CSPM generates a single finding for
+    #   a control check even when the check applies to multiple enabled
     #   standards.
     #
     #   If the value for this field is set to `STANDARD_CONTROL`, Security
-    #   Hub generates separate findings for a control check when the check
-    #   applies to multiple enabled standards.
+    #   Hub CSPM generates separate findings for a control check when the
+    #   check applies to multiple enabled standards.
     #
     #   The value for this field in a member account matches the value in
     #   the administrator account. For accounts that aren't part of an
     #   organization, the default value of this field is `SECURITY_CONTROL`
-    #   if you enabled Security Hub on or after February 23, 2023.
+    #   if you enabled Security Hub CSPM on or after February 23, 2023.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/DescribeHubResponse AWS API Documentation
@@ -23348,31 +24649,32 @@ module Aws::SecurityHub
     class DescribeOrganizationConfigurationRequest < Aws::EmptyStructure; end
 
     # @!attribute [rw] auto_enable
-    #   Whether to automatically enable Security Hub in new member accounts
-    #   when they join the organization.
+    #   Whether to automatically enable Security Hub CSPM in new member
+    #   accounts when they join the organization.
     #
-    #   If set to `true`, then Security Hub is automatically enabled in new
-    #   accounts. If set to `false`, then Security Hub isn't enabled in new
-    #   accounts automatically. The default value is `false`.
+    #   If set to `true`, then Security Hub CSPM is automatically enabled in
+    #   new accounts. If set to `false`, then Security Hub CSPM isn't
+    #   enabled in new accounts automatically. The default value is `false`.
     #
     #   If the `ConfigurationType` of your organization is set to `CENTRAL`,
     #   then this field is set to `false` and can't be changed in the home
     #   Region and linked Regions. However, in that case, the delegated
     #   administrator can create a configuration policy in which Security
-    #   Hub is enabled and associate the policy with new organization
+    #   Hub CSPM is enabled and associate the policy with new organization
     #   accounts.
     #   @return [Boolean]
     #
     # @!attribute [rw] member_account_limit_reached
     #   Whether the maximum number of allowed member accounts are already
-    #   associated with the Security Hub administrator account.
+    #   associated with the Security Hub CSPM administrator account.
     #   @return [Boolean]
     #
     # @!attribute [rw] auto_enable_standards
-    #   Whether to automatically enable Security Hub [default standards][1]
-    #   in new member accounts when they join the organization.
+    #   Whether to automatically enable Security Hub CSPM [default
+    #   standards][1] in new member accounts when they join the
+    #   organization.
     #
-    #   If equal to `DEFAULT`, then Security Hub default standards are
+    #   If equal to `DEFAULT`, then Security Hub CSPM default standards are
     #   automatically enabled for new member accounts. If equal to `NONE`,
     #   then default standards are not automatically enabled for new member
     #   accounts. The default value of this parameter is equal to `DEFAULT`.
@@ -23391,7 +24693,7 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] organization_configuration
     #   Provides information about the way an organization is configured in
-    #   Security Hub.
+    #   Security Hub CSPM.
     #   @return [Types::OrganizationConfiguration]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/DescribeOrganizationConfigurationResponse AWS API Documentation
@@ -23446,6 +24748,73 @@ module Aws::SecurityHub
     class DescribeProductsResponse < Struct.new(
       :products,
       :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   The token required for pagination. On your first call, set the value
+    #   of this parameter to `NULL`. For subsequent calls, to continue
+    #   listing data, set the value of this parameter to the value returned
+    #   in the previous response.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/DescribeProductsV2Request AWS API Documentation
+    #
+    class DescribeProductsV2Request < Struct.new(
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] products_v2
+    #   Gets information about the product integration.
+    #   @return [Array<Types::ProductV2>]
+    #
+    # @!attribute [rw] next_token
+    #   The pagination token to use to request the next page of results.
+    #   Otherwise, this parameter is null.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/DescribeProductsV2Response AWS API Documentation
+    #
+    class DescribeProductsV2Response < Struct.new(
+      :products_v2,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @api private
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/DescribeSecurityHubV2Request AWS API Documentation
+    #
+    class DescribeSecurityHubV2Request < Aws::EmptyStructure; end
+
+    # @!attribute [rw] hub_v2_arn
+    #   The ARN of the service resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] subscribed_at
+    #   The date and time when the service was enabled in the account.
+    #   @return [String]
+    #
+    # @!attribute [rw] features
+    #   A map of opt-in features and their current status and metadata for
+    #   the account in the current Region.
+    #   @return [Hash<String,Types::FeatureDetail>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/DescribeSecurityHubV2Response AWS API Documentation
+    #
+    class DescribeSecurityHubV2Response < Struct.new(
+      :hub_v2_arn,
+      :subscribed_at,
+      :features)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -23511,11 +24880,18 @@ module Aws::SecurityHub
     #   The maximum number of standards to return.
     #   @return [Integer]
     #
+    # @!attribute [rw] providers
+    #   A list of cloud providers to filter the standards by. For example,
+    #   specify `Azure` to return only standards that evaluate Azure
+    #   resources.
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/DescribeStandardsRequest AWS API Documentation
     #
     class DescribeStandardsRequest < Struct.new(
       :next_token,
-      :max_results)
+      :max_results,
+      :providers)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -23541,8 +24917,8 @@ module Aws::SecurityHub
     # GuardDuty Extended Threat Detection attack sequence. GuardDuty
     # generates an attack sequence finding when multiple events align to a
     # potentially suspicious activity. To receive GuardDuty attack sequence
-    # findings in Security Hub, you must have GuardDuty enabled. For more
-    # information, see [GuardDuty Extended Threat Detection ][1] in the
+    # findings in Security Hub CSPM, you must have GuardDuty enabled. For
+    # more information, see [GuardDuty Extended Threat Detection ][1] in the
     # *Amazon GuardDuty User Guide*.
     #
     #
@@ -23578,14 +24954,20 @@ module Aws::SecurityHub
     class DisableImportFindingsForProductResponse < Aws::EmptyStructure; end
 
     # @!attribute [rw] admin_account_id
-    #   The Amazon Web Services account identifier of the Security Hub
+    #   The Amazon Web Services account identifier of the Security Hub CSPM
     #   administrator account.
+    #   @return [String]
+    #
+    # @!attribute [rw] feature
+    #   The feature for which the delegated admin account is disabled.
+    #   Defaults to Security Hub CSPM if not specified.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/DisableOrganizationAdminAccountRequest AWS API Documentation
     #
     class DisableOrganizationAdminAccountRequest < Struct.new(
-      :admin_account_id)
+      :admin_account_id,
+      :feature)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -23593,6 +24975,22 @@ module Aws::SecurityHub
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/DisableOrganizationAdminAccountResponse AWS API Documentation
     #
     class DisableOrganizationAdminAccountResponse < Aws::EmptyStructure; end
+
+    # @!attribute [rw] feature_name
+    #   The name of the feature to disable.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/DisableSecurityHubFeatureV2Request AWS API Documentation
+    #
+    class DisableSecurityHubFeatureV2Request < Struct.new(
+      :feature_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/DisableSecurityHubFeatureV2Response AWS API Documentation
+    #
+    class DisableSecurityHubFeatureV2Response < Aws::EmptyStructure; end
 
     # @api private
     #
@@ -23603,6 +25001,16 @@ module Aws::SecurityHub
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/DisableSecurityHubResponse AWS API Documentation
     #
     class DisableSecurityHubResponse < Aws::EmptyStructure; end
+
+    # @api private
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/DisableSecurityHubV2Request AWS API Documentation
+    #
+    class DisableSecurityHubV2Request < Aws::EmptyStructure; end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/DisableSecurityHubV2Response AWS API Documentation
+    #
+    class DisableSecurityHubV2Response < Aws::EmptyStructure; end
 
     # @api private
     #
@@ -23674,8 +25082,8 @@ module Aws::SecurityHub
     # double.
     #
     # @!attribute [rw] default_value
-    #   The Security Hub default value for a control parameter that is a
-    #   double.
+    #   The Security Hub CSPM default value for a control parameter that is
+    #   a double.
     #   @return [Float]
     #
     # @!attribute [rw] min
@@ -23723,27 +25131,66 @@ module Aws::SecurityHub
 
     # @!attribute [rw] admin_account_id
     #   The Amazon Web Services account identifier of the account to
-    #   designate as the Security Hub administrator account.
+    #   designate as the Security Hub CSPM administrator account.
+    #   @return [String]
+    #
+    # @!attribute [rw] feature
+    #   The feature for which the delegated admin account is enabled.
+    #   Defaults to Security Hub CSPM if not specified.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/EnableOrganizationAdminAccountRequest AWS API Documentation
     #
     class EnableOrganizationAdminAccountRequest < Struct.new(
-      :admin_account_id)
+      :admin_account_id,
+      :feature)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # @!attribute [rw] admin_account_id
+    #   The Amazon Web Services account identifier of the account to
+    #   designate as the Security Hub CSPM administrator account.
+    #   @return [String]
+    #
+    # @!attribute [rw] feature
+    #   The feature where the delegated administrator is enabled. The
+    #   default is Security Hub CSPM CSPM if no delegated administrator is
+    #   specified in the request.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/EnableOrganizationAdminAccountResponse AWS API Documentation
     #
-    class EnableOrganizationAdminAccountResponse < Aws::EmptyStructure; end
+    class EnableOrganizationAdminAccountResponse < Struct.new(
+      :admin_account_id,
+      :feature)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] feature_name
+    #   The name of the feature to enable.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/EnableSecurityHubFeatureV2Request AWS API Documentation
+    #
+    class EnableSecurityHubFeatureV2Request < Struct.new(
+      :feature_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/EnableSecurityHubFeatureV2Response AWS API Documentation
+    #
+    class EnableSecurityHubFeatureV2Response < Aws::EmptyStructure; end
 
     # @!attribute [rw] tags
-    #   The tags to add to the hub resource when you enable Security Hub.
+    #   The tags to add to the hub resource when you enable Security Hub
+    #   CSPM.
     #   @return [Hash<String,String>]
     #
     # @!attribute [rw] enable_default_standards
-    #   Whether to enable the security standards that Security Hub has
+    #   Whether to enable the security standards that Security Hub CSPM has
     #   designated as automatically enabled. If you don't provide a value
     #   for `EnableDefaultStandards`, it is set to `true`. To not enable the
     #   automatically enabled standards, set `EnableDefaultStandards` to
@@ -23751,20 +25198,20 @@ module Aws::SecurityHub
     #   @return [Boolean]
     #
     # @!attribute [rw] control_finding_generator
-    #   This field, used when enabling Security Hub, specifies whether the
-    #   calling account has consolidated control findings turned on. If the
-    #   value for this field is set to `SECURITY_CONTROL`, Security Hub
-    #   generates a single finding for a control check even when the check
-    #   applies to multiple enabled standards.
+    #   This field, used when enabling Security Hub CSPM, specifies whether
+    #   the calling account has consolidated control findings turned on. If
+    #   the value for this field is set to `SECURITY_CONTROL`, Security Hub
+    #   CSPM generates a single finding for a control check even when the
+    #   check applies to multiple enabled standards.
     #
     #   If the value for this field is set to `STANDARD_CONTROL`, Security
-    #   Hub generates separate findings for a control check when the check
-    #   applies to multiple enabled standards.
+    #   Hub CSPM generates separate findings for a control check when the
+    #   check applies to multiple enabled standards.
     #
     #   The value for this field in a member account matches the value in
     #   the administrator account. For accounts that aren't part of an
     #   organization, the default value of this field is `SECURITY_CONTROL`
-    #   if you enabled Security Hub on or after February 23, 2023.
+    #   if you enabled Security Hub CSPM on or after February 23, 2023.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/EnableSecurityHubRequest AWS API Documentation
@@ -23781,12 +25228,36 @@ module Aws::SecurityHub
     #
     class EnableSecurityHubResponse < Aws::EmptyStructure; end
 
+    # @!attribute [rw] tags
+    #   The tags to add to the hub V2 resource when you enable Security Hub.
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/EnableSecurityHubV2Request AWS API Documentation
+    #
+    class EnableSecurityHubV2Request < Struct.new(
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] hub_v2_arn
+    #   The ARN of the V2 resource that was created.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/EnableSecurityHubV2Response AWS API Documentation
+    #
+    class EnableSecurityHubV2Response < Struct.new(
+      :hub_v2_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The options for customizing a security control parameter that is an
     # enum.
     #
     # @!attribute [rw] default_value
-    #   The Security Hub default value for a control parameter that is an
-    #   enum.
+    #   The Security Hub CSPM default value for a control parameter that is
+    #   an enum.
     #   @return [String]
     #
     # @!attribute [rw] allowed_values
@@ -23806,8 +25277,8 @@ module Aws::SecurityHub
     # list of enums.
     #
     # @!attribute [rw] default_value
-    #   The Security Hub default value for a control parameter that is a
-    #   list of enums.
+    #   The Security Hub CSPM default value for a control parameter that is
+    #   a list of enums.
     #   @return [Array<String>]
     #
     # @!attribute [rw] max_items
@@ -23825,6 +25296,41 @@ module Aws::SecurityHub
       :default_value,
       :max_items,
       :allowed_values)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines the settings and parameters required for integrating external
+    # security tools and services.
+    #
+    # @!attribute [rw] connector_arn
+    #   The ARN of the connector that establishes the integration.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ExternalIntegrationConfiguration AWS API Documentation
+    #
+    class ExternalIntegrationConfiguration < Struct.new(
+      :connector_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains the status and metadata for an opt-in feature.
+    #
+    # @!attribute [rw] feature_status
+    #   The current enablement status of the feature. Valid values:
+    #   `ENABLED` \| `DISABLED`.
+    #   @return [String]
+    #
+    # @!attribute [rw] updated_at
+    #   The date and time when the feature status was last updated.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/FeatureDetail AWS API Documentation
+    #
+    class FeatureDetail < Struct.new(
+      :feature_status,
+      :updated_at)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -23870,7 +25376,7 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
-    # A finding aggregator is a Security Hub resource that specifies
+    # A finding aggregator is a Security Hub CSPM resource that specifies
     # cross-Region aggregation settings, including the home Region and any
     # linked Regions.
     #
@@ -23897,11 +25403,11 @@ module Aws::SecurityHub
     #   @return [Types::AwsSecurityFindingIdentifier]
     #
     # @!attribute [rw] update_time
-    #   A timestamp that indicates when Security Hub processed the updated
-    #   finding record.
+    #   A timestamp that indicates when Security Hub CSPM processed the
+    #   updated finding record.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -23918,7 +25424,7 @@ module Aws::SecurityHub
     #   Identifies the source of the event that changed the finding. For
     #   example, an integrated Amazon Web Services service or third-party
     #   partner integration may call [ `BatchImportFindings` ][1], or an
-    #   Security Hub customer may call [ `BatchUpdateFindings` ][2].
+    #   Security Hub CSPM customer may call [ `BatchUpdateFindings` ][2].
     #
     #
     #
@@ -23972,8 +25478,8 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] new_value
     #   The value of the ASFF field after the finding change event. To
-    #   preserve storage and readability, Security Hub omits this value if [
-    #   `FindingHistoryRecord` ][1] exceeds database limits.
+    #   preserve storage and readability, Security Hub CSPM omits this value
+    #   if [ `FindingHistoryRecord` ][1] exceeds database limits.
     #
     #
     #
@@ -23996,7 +25502,7 @@ module Aws::SecurityHub
     #   Describes the type of finding change event, such as a call to [
     #   `BatchImportFindings` ][1] (by an integrated Amazon Web Services
     #   service or third party partner integration) or [
-    #   `BatchUpdateFindings` ][2] (by a Security Hub customer).
+    #   `BatchUpdateFindings` ][2] (by a Security Hub CSPM customer).
     #
     #
     #
@@ -24035,10 +25541,10 @@ module Aws::SecurityHub
     #
     # The preceding fields are nested under the `FindingProviderFields`
     # object, but also have analogues of the same name as top-level ASFF
-    # fields. When a new finding is sent to Security Hub by a finding
-    # provider, Security Hub populates the `FindingProviderFields` object
-    # automatically, if it is empty, based on the corresponding top-level
-    # fields.
+    # fields. When a new finding is sent to Security Hub CSPM by a finding
+    # provider, Security Hub CSPM populates the `FindingProviderFields`
+    # object automatically, if it is empty, based on the corresponding
+    # top-level fields.
     #
     # Finding providers can update `FindingProviderFields` only by using the
     # `BatchImportFindings` operation. Finding providers can't update this
@@ -24046,10 +25552,10 @@ module Aws::SecurityHub
     # update the top-level fields by using the `BatchUpdateFindings`
     # operation. Customers can't update `FindingProviderFields`.
     #
-    # For information about how Security Hub handles updates from
+    # For information about how Security Hub CSPM handles updates from
     # `BatchImportFindings` to `FindingProviderFields` and to the
     # corresponding top-level attributes, see [Using `FindingProviderFields`
-    # ][3] in the *Security Hub User Guide*.
+    # ][3] in the *Security Hub CSPM User Guide*.
     #
     #
     #
@@ -24118,7 +25624,7 @@ module Aws::SecurityHub
     # * `Product`
     #
     # If a [ `BatchImportFindings` ][1] request for a new finding only
-    # provides `Label` or only provides `Normalized`, Security Hub
+    # provides `Label` or only provides `Normalized`, Security Hub CSPM
     # automatically populates the value of the other field.
     #
     # The `Normalized` and `Product` attributes are included in the
@@ -24128,10 +25634,10 @@ module Aws::SecurityHub
     # ][2] operation.
     #
     # If the top-level `Finding.Severity` object is present, but
-    # `Finding.FindingProviderFields` isn't present, Security Hub creates
-    # the `FindingProviderFields.Severity` object and copies the entire
-    # `Finding.Severity` object into it. This ensures that the original,
-    # provider-supplied details are retained within the
+    # `Finding.FindingProviderFields` isn't present, Security Hub CSPM
+    # creates the `FindingProviderFields.Severity` object and copies the
+    # entire `Finding.Severity` object into it. This ensures that the
+    # original, provider-supplied details are retained within the
     # `FindingProviderFields.Severity` object, even if the top-level
     # `Severity` object is overwritten.
     #
@@ -24155,6 +25661,139 @@ module Aws::SecurityHub
     class FindingProviderSeverity < Struct.new(
       :label,
       :original)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines the data boundary for a findings query. Scopes determine which
+    # organizational units or organizations to retrieve data from.
+    #
+    # @!attribute [rw] aws_organizations
+    #   A list of Organizations scopes to include in the query results. Each
+    #   entry in the list specifies an organization or organizational unit
+    #   to include for the delegated administrator's account. If the list
+    #   specifies multiple entries, the entries are combined using OR logic.
+    #   @return [Array<Types::AwsOrganizationScope>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/FindingScopes AWS API Documentation
+    #
+    class FindingScopes < Struct.new(
+      :aws_organizations)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A filter structure that contains a logical combination of string
+    # filters and nested composite filters for findings trend data.
+    #
+    # @!attribute [rw] string_filters
+    #   A list of string filters that apply to findings trend data fields.
+    #   @return [Array<Types::FindingsTrendsStringFilter>]
+    #
+    # @!attribute [rw] nested_composite_filters
+    #   A list of nested composite filters that you can use to create
+    #   complex filter conditions for findings trend data.
+    #   @return [Array<Types::FindingsTrendsCompositeFilter>]
+    #
+    # @!attribute [rw] operator
+    #   The logical operator (AND, OR) to apply between the string filters
+    #   and nested composite filters.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/FindingsTrendsCompositeFilter AWS API Documentation
+    #
+    class FindingsTrendsCompositeFilter < Struct.new(
+      :string_filters,
+      :nested_composite_filters,
+      :operator)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The structure that defines filters to apply to findings trend data
+    # queries.
+    #
+    # @!attribute [rw] composite_filters
+    #   A list of composite filters to apply to the findings trend data.
+    #   @return [Array<Types::FindingsTrendsCompositeFilter>]
+    #
+    # @!attribute [rw] composite_operator
+    #   The logical operator (AND, OR) to apply between multiple composite
+    #   filters.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/FindingsTrendsFilters AWS API Documentation
+    #
+    class FindingsTrendsFilters < Struct.new(
+      :composite_filters,
+      :composite_operator)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A filter for string-based fields in findings trend data.
+    #
+    # @!attribute [rw] field_name
+    #   The name of the findings field to filter on. You can specify one of
+    #   the following fields.
+    #
+    #   * `account_id` – The Amazon Web Services account ID associated with
+    #     the finding.
+    #
+    #   * `region` – The Amazon Web Services Region associated with the
+    #     finding.
+    #
+    #   * `finding_types` – The finding types associated with the finding.
+    #
+    #   * `finding_status` – The status of the finding.
+    #
+    #   * `finding_cve_ids` – The Common Vulnerabilities and Exposures (CVE)
+    #     identifiers associated with the finding.
+    #
+    #   * `finding_compliance_status` – The compliance status of the
+    #     finding.
+    #
+    #   * `finding_control_id` – The identifier of the security control
+    #     associated with the finding.
+    #
+    #   * `finding_class_name` – The finding class, such as `Compliance
+    #     Finding`.
+    #
+    #   * `finding_provider` – The name of the product that generated the
+    #     finding.
+    #
+    #   * `finding_activity_name` – The activity name associated with the
+    #     finding.
+    #
+    #   * `resource_cloud_providers` – The cloud providers of the resources
+    #     that the finding is associated with. Valid values are `AWS` and
+    #     `Azure`.
+    #
+    #   * `resource_regions` – The Regions of the associated resources. For
+    #     an Amazon Web Services resource, this is the Amazon Web Services
+    #     Region. For an Azure resource, this is the Azure Region, such as
+    #     `eastus`.
+    #
+    #   * `resource_owner_ids` – The identifiers of the accounts that own
+    #     the associated resources. For an Amazon Web Services resource,
+    #     this is the Amazon Web Services account ID. For an Azure resource,
+    #     this is the Azure subscription ID.
+    #
+    #   * `resource_owner_organization_ids` – The identifiers of the
+    #     organizations that own the associated resources. For an Amazon Web
+    #     Services resource, this is the Amazon Web Services organization
+    #     ID. For an Azure resource, this is the Azure tenant ID.
+    #   @return [String]
+    #
+    # @!attribute [rw] filter
+    #   A string filter for filtering Security Hub CSPM findings.
+    #   @return [Types::StringFilter]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/FindingsTrendsStringFilter AWS API Documentation
+    #
+    class FindingsTrendsStringFilter < Struct.new(
+      :field_name,
+      :filter)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -24256,12 +25895,72 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
+    # The free trial period for a Security Hub feature, and whether the
+    # trial is currently active.
+    #
+    # @!attribute [rw] feature_type
+    #   The feature that the free trial period applies to. Valid values:
+    #
+    #   * `SECURITY_HUB_V2` specifies Security Hub.
+    #
+    #   * `SECURITY_HUB_V2_MULTI_CLOUD_AZURE` specifies Security Hub
+    #     coverage for Microsoft Azure resources.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   Whether the free trial period is currently active. Valid values:
+    #
+    #   * `ACTIVE` specifies that the free trial period is ongoing.
+    #
+    #   * `INACTIVE` specifies that the free trial period has ended, or that
+    #     it never started.
+    #
+    #   To determine whether a trial has expired, compare `ExpiresAt` to the
+    #   current time.
+    #   @return [String]
+    #
+    # @!attribute [rw] started_at
+    #   The date and time at which the free trial period began.
+    #   @return [Time]
+    #
+    # @!attribute [rw] expires_at
+    #   The date and time at which the free trial period ends.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/FreeTrialStatus AWS API Documentation
+    #
+    class FreeTrialStatus < Struct.new(
+      :feature_type,
+      :status,
+      :started_at,
+      :expires_at)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] metadata_uid
+    #   The unique identifier (ID) of Security Hub OCSF findings found under
+    #   the `metadata.uid` field of the finding.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GenerateRecommendedPolicyV2Request AWS API Documentation
+    #
+    class GenerateRecommendedPolicyV2Request < Struct.new(
+      :metadata_uid)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GenerateRecommendedPolicyV2Response AWS API Documentation
+    #
+    class GenerateRecommendedPolicyV2Response < Aws::EmptyStructure; end
+
     # Provides metadata for the Amazon CodeGuru detector associated with a
     # finding. This field pertains to findings that relate to Lambda
     # functions. Amazon Inspector identifies policy violations and
     # vulnerabilities in Lambda function code based on internal detectors
-    # developed in collaboration with Amazon CodeGuru. Security Hub receives
-    # those findings.
+    # developed in collaboration with Amazon CodeGuru. Security Hub CSPM
+    # receives those findings.
     #
     # @!attribute [rw] name
     #   The name of the detector used to identify the code vulnerability.
@@ -24327,6 +26026,114 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
+    # @!attribute [rw] aggregator_v2_arn
+    #   The ARN of the Aggregator V2.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GetAggregatorV2Request AWS API Documentation
+    #
+    class GetAggregatorV2Request < Struct.new(
+      :aggregator_v2_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] aggregator_v2_arn
+    #   The ARN of the Aggregator V2.
+    #   @return [String]
+    #
+    # @!attribute [rw] aggregation_region
+    #   The Amazon Web Services Region where data is aggregated.
+    #   @return [String]
+    #
+    # @!attribute [rw] region_linking_mode
+    #   Determines how Regions are linked to an Aggregator V2.
+    #   @return [String]
+    #
+    # @!attribute [rw] linked_regions
+    #   The list of Regions that are linked to the aggregation Region.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GetAggregatorV2Response AWS API Documentation
+    #
+    class GetAggregatorV2Response < Struct.new(
+      :aggregator_v2_arn,
+      :aggregation_region,
+      :region_linking_mode,
+      :linked_regions)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] identifier
+    #   The ARN of the V2 automation rule.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GetAutomationRuleV2Request AWS API Documentation
+    #
+    class GetAutomationRuleV2Request < Struct.new(
+      :identifier)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] rule_arn
+    #   The ARN of the V2 automation rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] rule_id
+    #   The ID of the V2 automation rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] rule_order
+    #   The value for the rule priority.
+    #   @return [Float]
+    #
+    # @!attribute [rw] rule_name
+    #   The name of the V2 automation rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] rule_status
+    #   The status of the V2 automation automation rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A description of the automation rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] criteria
+    #   The filtering type and configuration of the V2 automation rule.
+    #   @return [Types::Criteria]
+    #
+    # @!attribute [rw] actions
+    #   A list of actions performed when the rule criteria is met.
+    #   @return [Array<Types::AutomationRulesActionV2>]
+    #
+    # @!attribute [rw] created_at
+    #   The timestamp when the V2 automation rule was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_at
+    #   The timestamp when the V2 automation rule was updated.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GetAutomationRuleV2Response AWS API Documentation
+    #
+    class GetAutomationRuleV2Response < Struct.new(
+      :rule_arn,
+      :rule_id,
+      :rule_order,
+      :rule_name,
+      :rule_status,
+      :description,
+      :criteria,
+      :actions,
+      :created_at,
+      :updated_at)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] target
     #   The target account ID, organizational unit ID, or the root ID to
     #   retrieve the association for.
@@ -24357,8 +26164,8 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] association_type
     #   Indicates whether the association between the specified target and
-    #   the configuration was directly applied by the Security Hub delegated
-    #   administrator or inherited from a parent.
+    #   the configuration was directly applied by the Security Hub CSPM
+    #   delegated administrator or inherited from a parent.
     #   @return [String]
     #
     # @!attribute [rw] updated_at
@@ -24429,15 +26236,15 @@ module Aws::SecurityHub
     #   @return [Time]
     #
     # @!attribute [rw] configuration_policy
-    #   An object that defines how Security Hub is configured. It includes
-    #   whether Security Hub is enabled or disabled, a list of enabled
-    #   security standards, a list of enabled or disabled security controls,
-    #   and a list of custom parameter values for specified controls. If the
-    #   policy includes a list of security controls that are enabled,
-    #   Security Hub disables all other controls (including newly released
-    #   controls). If the policy includes a list of security controls that
-    #   are disabled, Security Hub enables all other controls (including
-    #   newly released controls).
+    #   An object that defines how Security Hub CSPM is configured. It
+    #   includes whether Security Hub CSPM is enabled or disabled, a list of
+    #   enabled security standards, a list of enabled or disabled security
+    #   controls, and a list of custom parameter values for specified
+    #   controls. If the policy includes a list of security controls that
+    #   are enabled, Security Hub CSPM disables all other controls
+    #   (including newly released controls). If the policy includes a list
+    #   of security controls that are disabled, Security Hub CSPM enables
+    #   all other controls (including newly released controls).
     #   @return [Types::Policy]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GetConfigurationPolicyResponse AWS API Documentation
@@ -24450,6 +26257,154 @@ module Aws::SecurityHub
       :updated_at,
       :created_at,
       :configuration_policy)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] connector_id
+    #   The unique identifier of the connector to retrieve.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GetConnectorRequest AWS API Documentation
+    #
+    class GetConnectorRequest < Struct.new(
+      :connector_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] connector_arn
+    #   The Amazon Resource Name (ARN) of the connector.
+    #   @return [String]
+    #
+    # @!attribute [rw] connector_id
+    #   The unique identifier of the connector.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the connector.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   The description of the connector.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_at
+    #   The ISO 8601 UTC timestamp indicating when the connector was
+    #   created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] last_updated_at
+    #   The ISO 8601 UTC timestamp indicating when the connector was last
+    #   updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] health
+    #   The health status of the connector, including connectivity status
+    #   and last check time.
+    #   @return [Types::CspmHealthCheck]
+    #
+    # @!attribute [rw] provider_detail
+    #   The cloud provider configuration details for the connector.
+    #   @return [Types::CspmProviderDetail]
+    #
+    # @!attribute [rw] created_by
+    #   The service principal that created the connector.
+    #   @return [String]
+    #
+    # @!attribute [rw] enablement_status
+    #   The enablement status of the connector.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GetConnectorResponse AWS API Documentation
+    #
+    class GetConnectorResponse < Struct.new(
+      :connector_arn,
+      :connector_id,
+      :name,
+      :description,
+      :created_at,
+      :last_updated_at,
+      :health,
+      :provider_detail,
+      :created_by,
+      :enablement_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] connector_id
+    #   The UUID of the connectorV2 to identify connectorV2 resource.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GetConnectorV2Request AWS API Documentation
+    #
+    class GetConnectorV2Request < Struct.new(
+      :connector_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] connector_arn
+    #   The Amazon Resource Name (ARN) of the connectorV2.
+    #   @return [String]
+    #
+    # @!attribute [rw] connector_id
+    #   The UUID of the connectorV2 to identify connectorV2 resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the connectorV2.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   The description of the connectorV2.
+    #   @return [String]
+    #
+    # @!attribute [rw] kms_key_arn
+    #   The Amazon Resource Name (ARN) of KMS key used for the connectorV2.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_at
+    #   ISO 8601 UTC timestamp for the time create the connectorV2.
+    #   @return [Time]
+    #
+    # @!attribute [rw] last_updated_at
+    #   ISO 8601 UTC timestamp for the time update the connectorV2
+    #   connectorStatus.
+    #   @return [Time]
+    #
+    # @!attribute [rw] health
+    #   The current health status for connectorV2
+    #   @return [Types::HealthCheck]
+    #
+    # @!attribute [rw] provider_detail
+    #   The third-party provider detail for a service configuration.
+    #   @return [Types::ProviderDetail]
+    #
+    # @!attribute [rw] enablement_status
+    #   The enablement status of the connector.
+    #   @return [String]
+    #
+    # @!attribute [rw] enablement_status_reason
+    #   The reason for the current enablement status. Provides additional
+    #   context when the connector is in a failed state.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GetConnectorV2Response AWS API Documentation
+    #
+    class GetConnectorV2Response < Struct.new(
+      :connector_arn,
+      :connector_id,
+      :name,
+      :description,
+      :kms_key_arn,
+      :created_at,
+      :last_updated_at,
+      :health,
+      :provider_detail,
+      :enablement_status,
+      :enablement_status_reason)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -24473,12 +26428,19 @@ module Aws::SecurityHub
     #   The maximum number of results to return in the response.
     #   @return [Integer]
     #
+    # @!attribute [rw] providers
+    #   A list of cloud providers to filter the enabled standards by. For
+    #   example, specify `Azure` to return only enabled standards that
+    #   evaluate Azure resources.
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GetEnabledStandardsRequest AWS API Documentation
     #
     class GetEnabledStandardsRequest < Struct.new(
       :standards_subscription_arns,
       :next_token,
-      :max_results)
+      :max_results,
+      :providers)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -24552,20 +26514,19 @@ module Aws::SecurityHub
     #   history.
     #
     #   If you provide values for both `StartTime` and `EndTime`, Security
-    #   Hub returns finding history for the specified time period. If you
-    #   provide a value for `StartTime` but not for `EndTime`, Security Hub
-    #   returns finding history from the `StartTime` to the time at which
-    #   the API is called. If you provide a value for `EndTime` but not for
-    #   `StartTime`, Security Hub returns finding history from the
-    #   [CreatedAt][1] timestamp of the finding to the `EndTime`. If you
-    #   provide neither `StartTime` nor `EndTime`, Security Hub returns
-    #   finding history from the CreatedAt timestamp of the finding to the
+    #   Hub CSPM returns finding history for the specified time period. If
+    #   you provide a value for `StartTime` but not for `EndTime`, Security
+    #   Hub CSPM returns finding history from the `StartTime` to the time at
+    #   which the API is called. If you provide a value for `EndTime` but
+    #   not for `StartTime`, Security Hub CSPM returns finding history from
+    #   the [CreatedAt][1] timestamp of the finding to the `EndTime`. If you
+    #   provide neither `StartTime` nor `EndTime`, Security Hub CSPM returns
+    #   finding history from the `CreatedAt` timestamp of the finding to the
     #   time at which the API is called. In all of these scenarios, the
-    #   response is limited to 100 results, and the maximum time period is
-    #   limited to 90 days.
+    #   response is limited to 100 results.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][2].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][2].
     #
     #
     #
@@ -24578,20 +26539,19 @@ module Aws::SecurityHub
     #   requested finding history.
     #
     #   If you provide values for both `StartTime` and `EndTime`, Security
-    #   Hub returns finding history for the specified time period. If you
-    #   provide a value for `StartTime` but not for `EndTime`, Security Hub
-    #   returns finding history from the `StartTime` to the time at which
-    #   the API is called. If you provide a value for `EndTime` but not for
-    #   `StartTime`, Security Hub returns finding history from the
-    #   [CreatedAt][1] timestamp of the finding to the `EndTime`. If you
-    #   provide neither `StartTime` nor `EndTime`, Security Hub returns
-    #   finding history from the CreatedAt timestamp of the finding to the
+    #   Hub CSPM returns finding history for the specified time period. If
+    #   you provide a value for `StartTime` but not for `EndTime`, Security
+    #   Hub CSPM returns finding history from the `StartTime` to the time at
+    #   which the API is called. If you provide a value for `EndTime` but
+    #   not for `StartTime`, Security Hub CSPM returns finding history from
+    #   the [CreatedAt][1] timestamp of the finding to the `EndTime`. If you
+    #   provide neither `StartTime` nor `EndTime`, Security Hub CSPM returns
+    #   finding history from the `CreatedAt` timestamp of the finding to the
     #   time at which the API is called. In all of these scenarios, the
-    #   response is limited to 100 results, and the maximum time period is
-    #   limited to 90 days.
+    #   response is limited to 100 results.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][2].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][2].
     #
     #
     #
@@ -24603,13 +26563,13 @@ module Aws::SecurityHub
     #   A token for pagination purposes. Provide `NULL` as the initial
     #   value. In subsequent requests, provide the token included in the
     #   response to get up to an additional 100 results of finding history.
-    #   If you don’t provide `NextToken`, Security Hub returns up to 100
-    #   results of finding history for each request.
+    #   If you don’t provide `NextToken`, Security Hub CSPM returns up to
+    #   100 results of finding history for each request.
     #   @return [String]
     #
     # @!attribute [rw] max_results
     #   The maximum number of results to be returned. If you don’t provide
-    #   it, Security Hub returns up to 100 results of finding history.
+    #   it, Security Hub CSPM returns up to 100 results of finding history.
     #   @return [Integer]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GetFindingHistoryRequest AWS API Documentation
@@ -24641,6 +26601,61 @@ module Aws::SecurityHub
     class GetFindingHistoryResponse < Struct.new(
       :records,
       :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] group_by_rules
+    #   Specifies how security findings should be aggregated and organized
+    #   in the statistical analysis. It can accept up to 5 `groupBy` fields
+    #   in a single call.
+    #   @return [Array<Types::GroupByRule>]
+    #
+    # @!attribute [rw] scopes
+    #   Limits the results to findings from specific organizational units or
+    #   from the delegated administrator's organization. Only the delegated
+    #   administrator account can use this parameter. Other accounts receive
+    #   an `AccessDeniedException`.
+    #
+    #   This parameter is optional. If you omit it, the delegated
+    #   administrator sees statistics from all accounts across the entire
+    #   organization. Other accounts see only statistics for their own
+    #   findings.
+    #
+    #   You can specify up to 10 entries in `Scopes.AwsOrganizations`. If
+    #   multiple entries are specified, the entries are combined using OR
+    #   logic.
+    #   @return [Types::FindingScopes]
+    #
+    # @!attribute [rw] sort_order
+    #   Orders the aggregation count in descending or ascending order.
+    #   Descending order is the default.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_statistic_results
+    #   The maximum number of results to be returned.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GetFindingStatisticsV2Request AWS API Documentation
+    #
+    class GetFindingStatisticsV2Request < Struct.new(
+      :group_by_rules,
+      :scopes,
+      :sort_order,
+      :max_statistic_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] group_by_results
+    #   Aggregated statistics about security findings based on specified
+    #   grouping criteria.
+    #   @return [Array<Types::GroupByResult>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GetFindingStatisticsV2Response AWS API Documentation
+    #
+    class GetFindingStatisticsV2Response < Struct.new(
+      :group_by_results)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -24696,6 +26711,133 @@ module Aws::SecurityHub
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GetFindingsResponse AWS API Documentation
     #
     class GetFindingsResponse < Struct.new(
+      :findings,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] filters
+    #   The filters to apply to the findings trend data.
+    #   @return [Types::FindingsTrendsFilters]
+    #
+    # @!attribute [rw] start_time
+    #   The starting timestamp for the time period to analyze findings
+    #   trends, in ISO 8601 format.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   The ending timestamp for the time period to analyze findings trends,
+    #   in ISO 8601 format.
+    #   @return [Time]
+    #
+    # @!attribute [rw] next_token
+    #   The token to use for paginating results. This value is returned in
+    #   the response if more results are available.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of trend data points to return in a single
+    #   response.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GetFindingsTrendsV2Request AWS API Documentation
+    #
+    class GetFindingsTrendsV2Request < Struct.new(
+      :filters,
+      :start_time,
+      :end_time,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] granularity
+    #   The time interval granularity for the returned trend data.
+    #   @return [String]
+    #
+    # @!attribute [rw] trends_metrics
+    #   The collection of time-series trend metrics, including counts of
+    #   findings by severity across the specified time period.
+    #   @return [Array<Types::TrendsMetricsResult>]
+    #
+    # @!attribute [rw] next_token
+    #   The token to use for retrieving the next page of results, if more
+    #   trend data is available.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GetFindingsTrendsV2Response AWS API Documentation
+    #
+    class GetFindingsTrendsV2Response < Struct.new(
+      :granularity,
+      :trends_metrics,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] filters
+    #   The finding attributes used to define a condition to filter the
+    #   returned OCSF findings. You can filter up to 10 composite filters.
+    #   For each filter type inside of a composite filter, you can provide
+    #   up to 20 filters.
+    #   @return [Types::OcsfFindingFilters]
+    #
+    # @!attribute [rw] scopes
+    #   Limits the results to findings from specific organizational units or
+    #   from the delegated administrator's organization. Only the delegated
+    #   administrator account can use this parameter. Other accounts receive
+    #   an `AccessDeniedException`.
+    #
+    #   This parameter is optional. If you omit it, the delegated
+    #   administrator sees findings from all accounts across the entire
+    #   organization. Other accounts see only their own findings.
+    #
+    #   You can specify up to 10 entries in `Scopes.AwsOrganizations`. If
+    #   multiple entries are specified, the entries are combined using OR
+    #   logic.
+    #   @return [Types::FindingScopes]
+    #
+    # @!attribute [rw] sort_criteria
+    #   The finding attributes used to sort the list of returned findings.
+    #   @return [Array<Types::SortCriterion>]
+    #
+    # @!attribute [rw] next_token
+    #   The token required for pagination. On your first call, set the value
+    #   of this parameter to `NULL`. For subsequent calls, to continue
+    #   listing data, set the value of this parameter to the value returned
+    #   in the previous response.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GetFindingsV2Request AWS API Documentation
+    #
+    class GetFindingsV2Request < Struct.new(
+      :filters,
+      :scopes,
+      :sort_criteria,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] findings
+    #   An array of security findings returned by the operation.
+    #   @return [Array<Hash,Array,String,Numeric,Boolean>]
+    #
+    # @!attribute [rw] next_token
+    #   The pagination token to use to request the next page of results.
+    #   Otherwise, this parameter is null.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GetFindingsV2Response AWS API Documentation
+    #
+    class GetFindingsV2Response < Struct.new(
       :findings,
       :next_token)
       SENSITIVE = []
@@ -24780,7 +26922,8 @@ module Aws::SecurityHub
 
     # @!attribute [rw] invitations_count
     #   The number of all membership invitations sent to this Security Hub
-    #   member account, not including the currently accepted invitation.
+    #   CSPM member account, not including the currently accepted
+    #   invitation.
     #   @return [Integer]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GetInvitationsCountResponse AWS API Documentation
@@ -24798,8 +26941,8 @@ module Aws::SecurityHub
     class GetMasterAccountRequest < Aws::EmptyStructure; end
 
     # @!attribute [rw] master
-    #   A list of details about the Security Hub administrator account for
-    #   the current member account.
+    #   A list of details about the Security Hub CSPM administrator account
+    #   for the current member account.
     #   @return [Types::Invitation]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GetMasterAccountResponse AWS API Documentation
@@ -24811,7 +26954,7 @@ module Aws::SecurityHub
     end
 
     # @!attribute [rw] account_ids
-    #   The list of account IDs for the Security Hub member accounts to
+    #   The list of account IDs for the Security Hub CSPM member accounts to
     #   return the details for.
     #   @return [Array<String>]
     #
@@ -24824,7 +26967,7 @@ module Aws::SecurityHub
     end
 
     # @!attribute [rw] members
-    #   The list of details about the Security Hub member accounts.
+    #   The list of details about the Security Hub CSPM member accounts.
     #   @return [Array<Types::Member>]
     #
     # @!attribute [rw] unprocessed_accounts
@@ -24838,6 +26981,248 @@ module Aws::SecurityHub
     class GetMembersResponse < Struct.new(
       :members,
       :unprocessed_accounts)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] metadata_uid
+    #   The unique identifier (ID) of Security Hub OCSF findings found under
+    #   the `metadata.uid` field of the finding.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   The token used to paginate the `RecommendationSteps` list returned.
+    #   On your first call to `GetRecommendedPolicyV2`, omit this parameter
+    #   or set it to `NULL`. For subsequent calls, use the `NextToken` value
+    #   returned in the previous response to retrieve the next page of
+    #   results.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of recommendation steps to return.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GetRecommendedPolicyV2Request AWS API Documentation
+    #
+    class GetRecommendedPolicyV2Request < Struct.new(
+      :metadata_uid,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   The pagination token to use to request the next page of results.
+    #   @return [String]
+    #
+    # @!attribute [rw] recommendation_type
+    #   The type of recommendation for the finding.
+    #   @return [String]
+    #
+    # @!attribute [rw] recommendation_steps
+    #   The recommended steps to take to resolve the finding.
+    #   @return [Array<Types::RecommendationStep>]
+    #
+    # @!attribute [rw] error
+    #   Detailed information for a `FAILED` retrieval status.
+    #   @return [Types::RecommendationError]
+    #
+    # @!attribute [rw] status
+    #   The current status of the recommended policy retrieval.
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_arn
+    #   The ARN of the resource of the finding.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GetRecommendedPolicyV2Response AWS API Documentation
+    #
+    class GetRecommendedPolicyV2Response < Struct.new(
+      :next_token,
+      :recommendation_type,
+      :recommendation_steps,
+      :error,
+      :status,
+      :resource_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] group_by_rules
+    #   How resource statistics should be aggregated and organized in the
+    #   response.
+    #   @return [Array<Types::ResourceGroupByRule>]
+    #
+    # @!attribute [rw] scopes
+    #   Limits the results to resources from specific organizational units
+    #   or from the delegated administrator's organization. Only the
+    #   delegated administrator account can use this parameter. Other
+    #   accounts receive an `AccessDeniedException`.
+    #
+    #   This parameter is optional. If you omit it, the delegated
+    #   administrator sees statistics from all accounts across the entire
+    #   organization. Other accounts see only statistics for their own
+    #   resources.
+    #
+    #   You can specify up to 10 entries in `Scopes.AwsOrganizations`. If
+    #   multiple entries are specified, the entries are combined using OR
+    #   logic.
+    #   @return [Types::ResourceScopes]
+    #
+    # @!attribute [rw] sort_order
+    #   Sorts aggregated statistics.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_statistic_results
+    #   The maximum number of results to be returned.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GetResourcesStatisticsV2Request AWS API Documentation
+    #
+    class GetResourcesStatisticsV2Request < Struct.new(
+      :group_by_rules,
+      :scopes,
+      :sort_order,
+      :max_statistic_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] group_by_results
+    #   The aggregated statistics about resources based on the specified
+    #   grouping rule.
+    #   @return [Array<Types::GroupByResult>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GetResourcesStatisticsV2Response AWS API Documentation
+    #
+    class GetResourcesStatisticsV2Response < Struct.new(
+      :group_by_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] filters
+    #   The filters to apply to the resources trend data.
+    #   @return [Types::ResourcesTrendsFilters]
+    #
+    # @!attribute [rw] start_time
+    #   The starting timestamp for the time period to analyze resources
+    #   trends, in ISO 8601 format.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   The ending timestamp for the time period to analyze resources
+    #   trends, in ISO 8601 format.
+    #   @return [Time]
+    #
+    # @!attribute [rw] next_token
+    #   The token to use for paginating results. This value is returned in
+    #   the response if more results are available.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of trend data points to return in a single
+    #   response.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GetResourcesTrendsV2Request AWS API Documentation
+    #
+    class GetResourcesTrendsV2Request < Struct.new(
+      :filters,
+      :start_time,
+      :end_time,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] granularity
+    #   The time interval granularity for the returned trend data (such as
+    #   DAILY or WEEKLY).
+    #   @return [String]
+    #
+    # @!attribute [rw] trends_metrics
+    #   The collection of time-series trend metrics, including counts of
+    #   resources across the specified time period.
+    #   @return [Array<Types::ResourcesTrendsMetricsResult>]
+    #
+    # @!attribute [rw] next_token
+    #   The token to use for retrieving the next page of results, if more
+    #   trend data is available.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GetResourcesTrendsV2Response AWS API Documentation
+    #
+    class GetResourcesTrendsV2Response < Struct.new(
+      :granularity,
+      :trends_metrics,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] filters
+    #   Filters resources based on a set of criteria.
+    #   @return [Types::ResourcesFilters]
+    #
+    # @!attribute [rw] scopes
+    #   Limits the results to resources from specific organizational units
+    #   or from the delegated administrator's organization. Only the
+    #   delegated administrator account can use this parameter. Other
+    #   accounts receive an `AccessDeniedException`.
+    #
+    #   This parameter is optional. If you omit it, the delegated
+    #   administrator sees resources from all accounts across the entire
+    #   organization. Other accounts see only their own resources.
+    #
+    #   You can specify up to 10 entries in `Scopes.AwsOrganizations`. If
+    #   multiple entries are specified, the entries are combined using OR
+    #   logic.
+    #   @return [Types::ResourceScopes]
+    #
+    # @!attribute [rw] sort_criteria
+    #   The resource attributes used to sort the list of returned resources.
+    #   @return [Array<Types::SortCriterion>]
+    #
+    # @!attribute [rw] next_token
+    #   The token required for pagination. On your first call, set the value
+    #   of this parameter to `NULL`. For subsequent calls, to continue
+    #   listing data, set the value of this parameter to the value returned
+    #   in the previous response.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GetResourcesV2Request AWS API Documentation
+    #
+    class GetResourcesV2Request < Struct.new(
+      :filters,
+      :scopes,
+      :sort_criteria,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] resources
+    #   An array of resources returned by the operation.
+    #   @return [Array<Types::ResourceResult>]
+    #
+    # @!attribute [rw] next_token
+    #   The pagination token to use to request the next page of results.
+    #   Otherwise, this parameter is null.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GetResourcesV2Response AWS API Documentation
+    #
+    class GetResourcesV2Response < Struct.new(
+      :resources,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -24866,6 +27251,117 @@ module Aws::SecurityHub
     #
     class GetSecurityControlDefinitionResponse < Struct.new(
       :security_control_definition)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents finding statistics grouped by `GroupedByField`.
+    #
+    # @!attribute [rw] group_by_field
+    #   The attribute by which filtered security findings should be grouped.
+    #   @return [String]
+    #
+    # @!attribute [rw] group_by_values
+    #   An array of grouped values and their respective counts for each
+    #   `GroupByField`.
+    #   @return [Array<Types::GroupByValue>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GroupByResult AWS API Documentation
+    #
+    class GroupByResult < Struct.new(
+      :group_by_field,
+      :group_by_values)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines the how the finding attribute should be grouped.
+    #
+    # @!attribute [rw] filters
+    #   The criteria used to select which security findings should be
+    #   included in the grouping operation.
+    #   @return [Types::OcsfFindingFilters]
+    #
+    # @!attribute [rw] group_by_field
+    #   The attribute by which filtered findings should be grouped.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GroupByRule AWS API Documentation
+    #
+    class GroupByRule < Struct.new(
+      :filters,
+      :group_by_field)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents individual aggregated results when grouping security
+    # findings for each `GroupByField`.
+    #
+    # @!attribute [rw] field_value
+    #   The value of the field by which findings are grouped.
+    #   @return [String]
+    #
+    # @!attribute [rw] count
+    #   The number of findings for a specific `FieldValue` and
+    #   `GroupByField`.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/GroupByValue AWS API Documentation
+    #
+    class GroupByValue < Struct.new(
+      :field_value,
+      :count)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Information about the operational status and health of a connectorV2.
+    #
+    # @!attribute [rw] connector_status
+    #   The status of the connectorV2.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   The message for the reason of connectorStatus change.
+    #   @return [String]
+    #
+    # @!attribute [rw] last_checked_at
+    #   ISO 8601 UTC timestamp for the time check the health status of the
+    #   connectorV2.
+    #   @return [Time]
+    #
+    # @!attribute [rw] issues
+    #   A list of health issues associated with the connector, including
+    #   error codes and messages.
+    #   @return [Array<Types::HealthIssue>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/HealthCheck AWS API Documentation
+    #
+    class HealthCheck < Struct.new(
+      :connector_status,
+      :message,
+      :last_checked_at,
+      :issues)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents a specific health issue detected for a connector.
+    #
+    # @!attribute [rw] code
+    #   The error code that identifies the type of health issue.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   A human-readable message that describes the health issue.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/HealthIssue AWS API Documentation
+    #
+    class HealthIssue < Struct.new(
+      :code,
+      :message)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -24924,8 +27420,8 @@ module Aws::SecurityHub
     # GuardDuty uses to detect an attack sequence finding. GuardDuty
     # generates an attack sequence finding when multiple signals align to a
     # potentially suspicious activity. To receive GuardDuty attack sequence
-    # findings in Security Hub, you must have GuardDuty and GuardDuty S3
-    # Protection enabled. For more information, see [GuardDuty Extended
+    # findings in Security Hub CSPM, you must have GuardDuty and GuardDuty
+    # S3 Protection enabled. For more information, see [GuardDuty Extended
     # Threat Detection ][1] in the *Amazon GuardDuty User Guide*.
     #
     #
@@ -24963,14 +27459,14 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
-    # Contains information about a Security Hub insight.
+    # Contains information about a Security Hub CSPM insight.
     #
     # @!attribute [rw] insight_arn
-    #   The ARN of a Security Hub insight.
+    #   The ARN of a Security Hub CSPM insight.
     #   @return [String]
     #
     # @!attribute [rw] name
-    #   The name of a Security Hub insight.
+    #   The name of a Security Hub CSPM insight.
     #   @return [String]
     #
     # @!attribute [rw] filters
@@ -25052,8 +27548,8 @@ module Aws::SecurityHub
     # integer.
     #
     # @!attribute [rw] default_value
-    #   The Security Hub default value for a control parameter that is an
-    #   integer.
+    #   The Security Hub CSPM default value for a control parameter that is
+    #   an integer.
     #   @return [Integer]
     #
     # @!attribute [rw] min
@@ -25078,8 +27574,8 @@ module Aws::SecurityHub
     # list of integers.
     #
     # @!attribute [rw] default_value
-    #   The Security Hub default value for a control parameter that is a
-    #   list of integers.
+    #   The Security Hub CSPM default value for a control parameter that is
+    #   a list of integers.
     #   @return [Array<Integer>]
     #
     # @!attribute [rw] min
@@ -25125,6 +27621,23 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
+    # The request has failed due to an internal failure of the service.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @!attribute [rw] code
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/InternalServerException AWS API Documentation
+    #
+    class InternalServerException < Struct.new(
+      :message,
+      :code)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The account doesn't have permission to perform this action.
     #
     # @!attribute [rw] message
@@ -25163,8 +27676,8 @@ module Aws::SecurityHub
     # Details about an invitation.
     #
     # @!attribute [rw] account_id
-    #   The account ID of the Security Hub administrator account that the
-    #   invitation was sent from.
+    #   The account ID of the Security Hub CSPM administrator account that
+    #   the invitation was sent from.
     #   @return [String]
     #
     # @!attribute [rw] invitation_id
@@ -25193,7 +27706,7 @@ module Aws::SecurityHub
 
     # @!attribute [rw] account_ids
     #   The list of account IDs of the Amazon Web Services accounts to
-    #   invite to Security Hub as members.
+    #   invite to Security Hub CSPM as members.
     #   @return [Array<String>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/InviteMembersRequest AWS API Documentation
@@ -25298,6 +27811,70 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
+    # Information about the configuration and status of a Jira Cloud
+    # integration.
+    #
+    # @!attribute [rw] cloud_id
+    #   The cloud id of the Jira Cloud.
+    #   @return [String]
+    #
+    # @!attribute [rw] project_key
+    #   The projectKey of Jira Cloud.
+    #   @return [String]
+    #
+    # @!attribute [rw] domain
+    #   The URL domain of your Jira Cloud instance.
+    #   @return [String]
+    #
+    # @!attribute [rw] auth_url
+    #   The URL to provide to customers for OAuth auth code flow.
+    #   @return [String]
+    #
+    # @!attribute [rw] auth_status
+    #   The status of the authorization between Jira Cloud and the service.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/JiraCloudDetail AWS API Documentation
+    #
+    class JiraCloudDetail < Struct.new(
+      :cloud_id,
+      :project_key,
+      :domain,
+      :auth_url,
+      :auth_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The initial configuration settings required to establish an
+    # integration between Security Hub and Jira Cloud.
+    #
+    # @!attribute [rw] project_key
+    #   The project key for a JiraCloud instance.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/JiraCloudProviderConfiguration AWS API Documentation
+    #
+    class JiraCloudProviderConfiguration < Struct.new(
+      :project_key)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The parameters used to modify an existing Jira Cloud integration.
+    #
+    # @!attribute [rw] project_key
+    #   The project key for a JiraCloud instance.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/JiraCloudUpdateConfiguration AWS API Documentation
+    #
+    class JiraCloudUpdateConfiguration < Struct.new(
+      :project_key)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # A keyword filter for querying findings.
     #
     # @!attribute [rw] value
@@ -25327,6 +27904,44 @@ module Aws::SecurityHub
     class LimitExceededException < Struct.new(
       :message,
       :code)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   The token required for pagination. On your first call, set the value
+    #   of this parameter to `NULL`. For subsequent calls, to continue
+    #   listing data, set the value of this parameter to the value returned
+    #   in the previous response.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ListAggregatorsV2Request AWS API Documentation
+    #
+    class ListAggregatorsV2Request < Struct.new(
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] aggregators_v2
+    #   An array of aggregators.
+    #   @return [Array<Types::AggregatorV2>]
+    #
+    # @!attribute [rw] next_token
+    #   The pagination token to use to request the next page of results.
+    #   Otherwise, this parameter is null.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ListAggregatorsV2Response AWS API Documentation
+    #
+    class ListAggregatorsV2Response < Struct.new(
+      :aggregators_v2,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -25365,6 +27980,44 @@ module Aws::SecurityHub
     #
     class ListAutomationRulesResponse < Struct.new(
       :automation_rules_metadata,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   The token required for pagination. On your first call, set the value
+    #   of this parameter to `NULL`. For subsequent calls, to continue
+    #   listing data, set the value of this parameter to the value returned
+    #   in the previous response.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ListAutomationRulesV2Request AWS API Documentation
+    #
+    class ListAutomationRulesV2Request < Struct.new(
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] rules
+    #   An array of automation rules.
+    #   @return [Array<Types::AutomationRulesMetadataV2>]
+    #
+    # @!attribute [rw] next_token
+    #   The pagination token to use to request the next page of results.
+    #   Otherwise, this parameter is null.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ListAutomationRulesV2Response AWS API Documentation
+    #
+    class ListAutomationRulesV2Response < Struct.new(
+      :rules,
       :next_token)
       SENSITIVE = []
       include Aws::Structure
@@ -25482,6 +28135,106 @@ module Aws::SecurityHub
     end
 
     # @!attribute [rw] next_token
+    #   The pagination token to request the next page of results.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] provider_name
+    #   The name of the cloud provider to filter connectors by.
+    #   @return [String]
+    #
+    # @!attribute [rw] connector_status
+    #   The connectivity status to filter connectors by.
+    #   @return [String]
+    #
+    # @!attribute [rw] enablement_status
+    #   The enablement status to filter connectors by.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ListConnectorsRequest AWS API Documentation
+    #
+    class ListConnectorsRequest < Struct.new(
+      :next_token,
+      :max_results,
+      :provider_name,
+      :connector_status,
+      :enablement_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   The pagination token to use to request the next page of results. If
+    #   there are no additional results, this value is null.
+    #   @return [String]
+    #
+    # @!attribute [rw] connectors
+    #   An array of connector summaries.
+    #   @return [Array<Types::CspmConnectorSummary>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ListConnectorsResponse AWS API Documentation
+    #
+    class ListConnectorsResponse < Struct.new(
+      :next_token,
+      :connectors)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   The pagination token per the Amazon Web Services Pagination standard
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to be returned.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] provider_name
+    #   The name of the third-party provider.
+    #   @return [String]
+    #
+    # @!attribute [rw] connector_status
+    #   The status for the connectorV2.
+    #   @return [String]
+    #
+    # @!attribute [rw] enablement_status
+    #   The enablement status to filter connectors by.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ListConnectorsV2Request AWS API Documentation
+    #
+    class ListConnectorsV2Request < Struct.new(
+      :next_token,
+      :max_results,
+      :provider_name,
+      :connector_status,
+      :enablement_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   The pagination token to use to request the next page of results.
+    #   Otherwise, this parameter is null.
+    #   @return [String]
+    #
+    # @!attribute [rw] connectors
+    #   An array of connectorV2 summaries.
+    #   @return [Array<Types::ConnectorSummary>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ListConnectorsV2Response AWS API Documentation
+    #
+    class ListConnectorsV2Response < Struct.new(
+      :next_token,
+      :connectors)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
     #   The token that is required for pagination. On your first call to the
     #   `ListEnabledProductsForImport` operation, set the value of this
     #   parameter to `NULL`.
@@ -25557,6 +28310,59 @@ module Aws::SecurityHub
     #
     class ListFindingAggregatorsResponse < Struct.new(
       :finding_aggregators,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] account_ids
+    #   The Amazon Web Services account identifiers to list free trial
+    #   status for. You can specify accounts other than your own only if you
+    #   are a delegated Security Hub administrator.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] statuses
+    #   The free trial statuses to filter the results by. Valid values:
+    #
+    #   * `ACTIVE` returns only features with an ongoing free trial period.
+    #
+    #   * `INACTIVE` returns only features whose free trial period has
+    #     ended, or that never started.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return. If you don't specify a
+    #   value, Security Hub returns up to 100 results.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   The pagination token to request the next page of results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ListFreeTrialStatusesV2Request AWS API Documentation
+    #
+    class ListFreeTrialStatusesV2Request < Struct.new(
+      :account_ids,
+      :statuses,
+      :max_results,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] account_free_trial_statuses
+    #   An array of free trial statuses, one for each account in scope.
+    #   @return [Array<Types::AccountFreeTrialStatus>]
+    #
+    # @!attribute [rw] next_token
+    #   The pagination token to use to request the next page of results. If
+    #   there are no additional results, this value is null.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ListFreeTrialStatusesV2Response AWS API Documentation
+    #
+    class ListFreeTrialStatusesV2Response < Struct.new(
+      :account_free_trial_statuses,
       :next_token)
       SENSITIVE = []
       include Aws::Structure
@@ -25667,28 +28473,40 @@ module Aws::SecurityHub
     #   returned from the previous response.
     #   @return [String]
     #
+    # @!attribute [rw] feature
+    #   The feature where the delegated administrator account is listed.
+    #   Defaults to Security Hub CSPM if not specified.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ListOrganizationAdminAccountsRequest AWS API Documentation
     #
     class ListOrganizationAdminAccountsRequest < Struct.new(
       :max_results,
-      :next_token)
+      :next_token,
+      :feature)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # @!attribute [rw] admin_accounts
-    #   The list of Security Hub administrator accounts.
+    #   The list of Security Hub CSPM administrator accounts.
     #   @return [Array<Types::AdminAccount>]
     #
     # @!attribute [rw] next_token
     #   The pagination token to use to request the next page of results.
     #   @return [String]
     #
+    # @!attribute [rw] feature
+    #   The feature where the delegated administrator account is listed.
+    #   Defaults to Security Hub CSPM CSPM if not specified.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ListOrganizationAdminAccountsResponse AWS API Documentation
     #
     class ListOrganizationAdminAccountsResponse < Struct.new(
       :admin_accounts,
-      :next_token)
+      :next_token,
+      :feature)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -25712,12 +28530,19 @@ module Aws::SecurityHub
     #   standard are returned.
     #   @return [Integer]
     #
+    # @!attribute [rw] providers
+    #   A list of cloud providers to filter the security control definitions
+    #   by. For example, specify `Azure` to return only controls that
+    #   evaluate Azure resources.
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ListSecurityControlDefinitionsRequest AWS API Documentation
     #
     class ListSecurityControlDefinitionsRequest < Struct.new(
       :standards_arn,
       :next_token,
-      :max_results)
+      :max_results,
+      :providers)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -25758,8 +28583,8 @@ module Aws::SecurityHub
     #   parameter that you can use in a subsequent API call to get the next
     #   25 associations. This repeats until all associations for the
     #   specified control are returned. The number of results is limited by
-    #   the number of supported Security Hub standards that you've enabled
-    #   in the calling account.
+    #   the number of supported Security Hub CSPM standards that you've
+    #   enabled in the calling account.
     #   @return [Integer]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ListStandardsControlAssociationsRequest AWS API Documentation
@@ -25873,7 +28698,7 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
-    # A map filter for filtering Security Hub findings. Each map filter
+    # A map filter for filtering Security Hub CSPM findings. Each map filter
     # provides the field to check for, the value to check for, and the
     # comparison operator.
     #
@@ -25892,7 +28717,7 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] comparison
     #   The condition to apply to the key value when filtering Security Hub
-    #   findings with a map filter.
+    #   CSPM findings with a map filter.
     #
     #   To search for values that have the filter value, use one of the
     #   following comparison operators:
@@ -25945,7 +28770,7 @@ module Aws::SecurityHub
     #
     #   `CONTAINS` and `NOT_CONTAINS` operators can be used only with
     #   automation rules. For more information, see [Automation rules][1] in
-    #   the *Security Hub User Guide*.
+    #   the *Security Hub CSPM User Guide*.
     #
     #
     #
@@ -25975,13 +28800,13 @@ module Aws::SecurityHub
     # @!attribute [rw] master_id
     #   This is replaced by `AdministratorID`.
     #
-    #   The Amazon Web Services account ID of the Security Hub administrator
-    #   account associated with this member account.
+    #   The Amazon Web Services account ID of the Security Hub CSPM
+    #   administrator account associated with this member account.
     #   @return [String]
     #
     # @!attribute [rw] administrator_id
-    #   The Amazon Web Services account ID of the Security Hub administrator
-    #   account associated with this member account.
+    #   The Amazon Web Services account ID of the Security Hub CSPM
+    #   administrator account associated with this member account.
     #   @return [String]
     #
     # @!attribute [rw] member_status
@@ -26125,7 +28950,7 @@ module Aws::SecurityHub
     # endpoints involved in an Amazon GuardDuty Extended Threat Detection
     # attack sequence. GuardDuty generates an attack sequence finding when
     # multiple events align to a potentially suspicious activity. To receive
-    # GuardDuty attack sequence findings in Security Hub, you must have
+    # GuardDuty attack sequence findings in Security Hub CSPM, you must have
     # GuardDuty enabled. For more information, see [GuardDuty Extended
     # Threat Detection ][1] in the *Amazon GuardDuty User Guide*.
     #
@@ -26154,8 +28979,8 @@ module Aws::SecurityHub
     # Amazon GuardDuty Extended Threat Detection attack sequence. GuardDuty
     # generates an attack sequence finding when multiple events align to a
     # potentially suspicious activity. To receive GuardDuty attack sequence
-    # findings in Security Hub, you must have GuardDuty enabled. For more
-    # information, see [GuardDuty Extended Threat Detection ][1] in the
+    # findings in Security Hub CSPM, you must have GuardDuty enabled. For
+    # more information, see [GuardDuty Extended Threat Detection ][1] in the
     # *Amazon GuardDuty User Guide*.
     #
     #
@@ -26221,8 +29046,8 @@ module Aws::SecurityHub
     # GuardDuty Extended Threat Detection attack sequence. GuardDuty
     # generates an attack sequence finding when multiple events align to a
     # potentially suspicious activity. To receive GuardDuty attack sequence
-    # findings in Security Hub, you must have GuardDuty enabled. For more
-    # information, see [GuardDuty Extended Threat Detection ][1] in the
+    # findings in Security Hub CSPM, you must have GuardDuty enabled. For
+    # more information, see [GuardDuty Extended Threat Detection ][1] in the
     # *Amazon GuardDuty User Guide*.
     #
     # This field can provide information about the network endpoints
@@ -26280,7 +29105,7 @@ module Aws::SecurityHub
     # in an Amazon GuardDuty Extended Threat Detection attack sequence.
     # GuardDuty generates an attack sequence finding when multiple events
     # align to a potentially suspicious activity. To receive GuardDuty
-    # attack sequence findings in Security Hub, you must have GuardDuty
+    # attack sequence findings in Security Hub CSPM, you must have GuardDuty
     # enabled. For more information, see [GuardDuty Extended Threat
     # Detection ][1] in the *Amazon GuardDuty User Guide*.
     #
@@ -26413,7 +29238,7 @@ module Aws::SecurityHub
     #   A timestamp that indicates when the note was updated.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -26528,29 +29353,198 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
+    # Enables filtering of security findings based on boolean field values
+    # in OCSF.
+    #
+    # @!attribute [rw] field_name
+    #   The name of the field.
+    #   @return [String]
+    #
+    # @!attribute [rw] filter
+    #   Boolean filter for querying findings.
+    #   @return [Types::BooleanFilter]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/OcsfBooleanFilter AWS API Documentation
+    #
+    class OcsfBooleanFilter < Struct.new(
+      :field_name,
+      :filter)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Enables filtering of security findings based on date and timestamp
+    # fields in OCSF.
+    #
+    # @!attribute [rw] field_name
+    #   The name of the field.
+    #   @return [String]
+    #
+    # @!attribute [rw] filter
+    #   A date filter for querying findings.
+    #   @return [Types::DateFilter]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/OcsfDateFilter AWS API Documentation
+    #
+    class OcsfDateFilter < Struct.new(
+      :field_name,
+      :filter)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Specifies the filtering criteria for security findings using OCSF.
+    #
+    # @!attribute [rw] composite_filters
+    #   Enables the creation of complex filtering conditions by combining
+    #   filter criteria.
+    #   @return [Array<Types::CompositeFilter>]
+    #
+    # @!attribute [rw] composite_operator
+    #   The logical operators used to combine the filtering on multiple
+    #   `CompositeFilters`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/OcsfFindingFilters AWS API Documentation
+    #
+    class OcsfFindingFilters < Struct.new(
+      :composite_filters,
+      :composite_operator)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Provides a standard to identify security findings using OCSF.
+    #
+    # @!attribute [rw] cloud_account_uid
+    #   Finding cloud.account.uid, which is a unique identifier in the
+    #   Amazon Web Services account..
+    #   @return [String]
+    #
+    # @!attribute [rw] finding_info_uid
+    #   Finding finding\_info.uid, which is a unique identifier for the
+    #   finding from the finding provider.
+    #   @return [String]
+    #
+    # @!attribute [rw] metadata_product_uid
+    #   Finding metadata.product.uid, which is a unique identifier for the
+    #   product.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/OcsfFindingIdentifier AWS API Documentation
+    #
+    class OcsfFindingIdentifier < Struct.new(
+      :cloud_account_uid,
+      :finding_info_uid,
+      :metadata_product_uid)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The structure for filtering findings based on IP address attributes.
+    #
+    # @!attribute [rw] field_name
+    #   The name of the IP address field to filter on.
+    #   @return [String]
+    #
+    # @!attribute [rw] filter
+    #   The IP filter for querying findings.
+    #   @return [Types::IpFilter]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/OcsfIpFilter AWS API Documentation
+    #
+    class OcsfIpFilter < Struct.new(
+      :field_name,
+      :filter)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Enables filtering of security findings based on map field values in
+    # OCSF.
+    #
+    # @!attribute [rw] field_name
+    #   The name of the field.
+    #   @return [String]
+    #
+    # @!attribute [rw] filter
+    #   A map filter for filtering Security Hub CSPM findings. Each map
+    #   filter provides the field to check for, the value to check for, and
+    #   the comparison operator.
+    #   @return [Types::MapFilter]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/OcsfMapFilter AWS API Documentation
+    #
+    class OcsfMapFilter < Struct.new(
+      :field_name,
+      :filter)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Enables filtering of security findings based on numerical field values
+    # in OCSF.
+    #
+    # @!attribute [rw] field_name
+    #   The name of the field.
+    #   @return [String]
+    #
+    # @!attribute [rw] filter
+    #   A number filter for querying findings.
+    #   @return [Types::NumberFilter]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/OcsfNumberFilter AWS API Documentation
+    #
+    class OcsfNumberFilter < Struct.new(
+      :field_name,
+      :filter)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Enables filtering of security findings based on string field values in
+    # OCSF.
+    #
+    # @!attribute [rw] field_name
+    #   The name of the field.
+    #   @return [String]
+    #
+    # @!attribute [rw] filter
+    #   A string filter for filtering Security Hub CSPM findings.
+    #   @return [Types::StringFilter]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/OcsfStringFilter AWS API Documentation
+    #
+    class OcsfStringFilter < Struct.new(
+      :field_name,
+      :filter)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Provides information about the way an organization is configured in
-    # Security Hub.
+    # Security Hub CSPM.
     #
     # @!attribute [rw] configuration_type
     #   Indicates whether the organization uses local or central
     #   configuration.
     #
-    #   If you use local configuration, the Security Hub delegated
+    #   If you use local configuration, the Security Hub CSPM delegated
     #   administrator can set `AutoEnable` to `true` and
     #   `AutoEnableStandards` to `DEFAULT`. This automatically enables
-    #   Security Hub and default security standards in new organization
+    #   Security Hub CSPM and default security standards in new organization
     #   accounts. These new account settings must be set separately in each
     #   Amazon Web Services Region, and settings may be different in each
     #   Region.
     #
     #   If you use central configuration, the delegated administrator can
     #   create configuration policies. Configuration policies can be used to
-    #   configure Security Hub, security standards, and security controls in
-    #   multiple accounts and Regions. If you want new organization accounts
-    #   to use a specific configuration, you can create a configuration
-    #   policy and associate it with the root or specific organizational
-    #   units (OUs). New accounts will inherit the policy from the root or
-    #   their assigned OU.
+    #   configure Security Hub CSPM, security standards, and security
+    #   controls in multiple accounts and Regions. If you want new
+    #   organization accounts to use a specific configuration, you can
+    #   create a configuration policy and associate it with the root or
+    #   specific organizational units (OUs). New accounts will inherit the
+    #   policy from the root or their assigned OU.
     #   @return [String]
     #
     # @!attribute [rw] status
@@ -26571,6 +29565,42 @@ module Aws::SecurityHub
       :configuration_type,
       :status,
       :status_message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The request failed because one or more organizations specified in the
+    # request don't exist or don't belong to the caller's organization.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @!attribute [rw] code
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/OrganizationNotFoundException AWS API Documentation
+    #
+    class OrganizationNotFoundException < Struct.new(
+      :message,
+      :code)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The request failed because one or more organizational units specified
+    # in the request don't exist within the caller's organization.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @!attribute [rw] code
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/OrganizationalUnitNotFoundException AWS API Documentation
+    #
+    class OrganizationalUnitNotFoundException < Struct.new(
+      :message,
+      :code)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -26607,13 +29637,13 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] value_type
     #   Identifies whether a control parameter uses a custom user-defined
-    #   value or subscribes to the default Security Hub behavior.
+    #   value or subscribes to the default Security Hub CSPM behavior.
     #
     #   When `ValueType` is set equal to `DEFAULT`, the default behavior can
-    #   be a specific Security Hub default value, or the default behavior
-    #   can be to ignore a specific parameter. When `ValueType` is set equal
-    #   to `DEFAULT`, Security Hub ignores user-provided input for the
-    #   `Value` field.
+    #   be a specific Security Hub CSPM default value, or the default
+    #   behavior can be to ignore a specific parameter. When `ValueType` is
+    #   set equal to `DEFAULT`, Security Hub CSPM ignores user-provided
+    #   input for the `Value` field.
     #
     #   When `ValueType` is set equal to `CUSTOM`, the `Value` field can't
     #   be empty.
@@ -26776,7 +29806,7 @@ module Aws::SecurityHub
     #   Indicates when the operation started.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -26787,7 +29817,7 @@ module Aws::SecurityHub
     #   Indicates when the operation completed.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -26825,15 +29855,16 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
-    # An object that defines how Security Hub is configured. It includes
-    # whether Security Hub is enabled or disabled, a list of enabled
-    # security standards, a list of enabled or disabled security controls,
-    # and a list of custom parameter values for specified controls. If you
-    # provide a list of security controls that are enabled in the
-    # configuration policy, Security Hub disables all other controls
-    # (including newly released controls). If you provide a list of security
-    # controls that are disabled in the configuration policy, Security Hub
-    # enables all other controls (including newly released controls).
+    # An object that defines how Security Hub CSPM is configured. It
+    # includes whether Security Hub CSPM is enabled or disabled, a list of
+    # enabled security standards, a list of enabled or disabled security
+    # controls, and a list of custom parameter values for specified
+    # controls. If you provide a list of security controls that are enabled
+    # in the configuration policy, Security Hub CSPM disables all other
+    # controls (including newly released controls). If you provide a list of
+    # security controls that are disabled in the configuration policy,
+    # Security Hub CSPM enables all other controls (including newly released
+    # controls).
     #
     # @note Policy is a union - when making an API calls you must set exactly one of the members.
     #
@@ -26971,7 +30002,7 @@ module Aws::SecurityHub
     #   Indicates when the process was launched.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -26982,7 +30013,7 @@ module Aws::SecurityHub
     #   Indicates when the process was terminated.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -27029,14 +30060,14 @@ module Aws::SecurityHub
     #   are the following.
     #
     #   * `SEND_FINDINGS_TO_SECURITY_HUB` - The integration sends findings
-    #     to Security Hub.
+    #     to Security Hub CSPM.
     #
     #   * `RECEIVE_FINDINGS_FROM_SECURITY_HUB` - The integration receives
-    #     findings from Security Hub.
+    #     findings from Security Hub CSPM.
     #
     #   * `UPDATE_FINDINGS_IN_SECURITY_HUB` - The integration does not send
-    #     new findings to Security Hub, but does make updates to the
-    #     findings that it receives from Security Hub.
+    #     new findings to Security Hub CSPM, but does make updates to the
+    #     findings that it receives from Security Hub CSPM.
     #   @return [Array<String>]
     #
     # @!attribute [rw] marketplace_url
@@ -27049,7 +30080,7 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] activation_url
     #   The URL to the service or product documentation about the
-    #   integration with Security Hub, including how to activate the
+    #   integration with Security Hub CSPM, including how to activate the
     #   integration.
     #   @return [String]
     #
@@ -27073,6 +30104,57 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
+    # Defines the structure for the productV2.
+    #
+    # @!attribute [rw] product_v2_name
+    #   The name of the productV2.
+    #   @return [String]
+    #
+    # @!attribute [rw] company_name
+    #   The name of the organization or vendor that provides the productV2.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   Detailed information about the productV2.
+    #   @return [String]
+    #
+    # @!attribute [rw] categories
+    #   The domains or functional areas the productV2 addresses.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] integration_v2_types
+    #   The type of integration.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] marketplace_url
+    #   The console URL where you can purchase or subscribe to products.
+    #   @return [String]
+    #
+    # @!attribute [rw] activation_url
+    #   The URL to the serviceV@ or productV2 documentation about the
+    #   integration, which includes how to activate the integration.
+    #   @return [String]
+    #
+    # @!attribute [rw] marketplace_product_id
+    #   The identifier for the Amazon Web Services Marketplace product
+    #   associated with this integration.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ProductV2 AWS API Documentation
+    #
+    class ProductV2 < Struct.new(
+      :product_v2_name,
+      :company_name,
+      :description,
+      :categories,
+      :integration_v2_types,
+      :marketplace_url,
+      :activation_url,
+      :marketplace_product_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Describes a virtual private gateway propagating route.
     #
     # @!attribute [rw] gateway_id
@@ -27085,6 +30167,137 @@ module Aws::SecurityHub
       :gateway_id)
       SENSITIVE = []
       include Aws::Structure
+    end
+
+    # The initial configuration settings required to establish an
+    # integration between Security Hub and third-party provider.
+    #
+    # @note ProviderConfiguration is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @!attribute [rw] jira_cloud
+    #   The configuration settings required to establish an integration with
+    #   Jira Cloud.
+    #   @return [Types::JiraCloudProviderConfiguration]
+    #
+    # @!attribute [rw] service_now
+    #   The configuration settings required to establish an integration with
+    #   ServiceNow ITSM.
+    #   @return [Types::ServiceNowProviderConfiguration]
+    #
+    # @!attribute [rw] azure
+    #   The configuration settings required to establish a CSPM integration
+    #   with Microsoft Azure.
+    #   @return [Types::AzureProviderConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ProviderConfiguration AWS API Documentation
+    #
+    class ProviderConfiguration < Struct.new(
+      :jira_cloud,
+      :service_now,
+      :azure,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class JiraCloud < ProviderConfiguration; end
+      class ServiceNow < ProviderConfiguration; end
+      class Azure < ProviderConfiguration; end
+      class Unknown < ProviderConfiguration; end
+    end
+
+    # The third-party provider detail for a service configuration.
+    #
+    # @note ProviderDetail is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of ProviderDetail corresponding to the set member.
+    #
+    # @!attribute [rw] jira_cloud
+    #   Details about a Jira Cloud integration.
+    #   @return [Types::JiraCloudDetail]
+    #
+    # @!attribute [rw] service_now
+    #   Details about a ServiceNow ITSM integration.
+    #   @return [Types::ServiceNowDetail]
+    #
+    # @!attribute [rw] azure
+    #   Details about a Microsoft Azure CSPM integration.
+    #   @return [Types::AzureDetail]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ProviderDetail AWS API Documentation
+    #
+    class ProviderDetail < Struct.new(
+      :jira_cloud,
+      :service_now,
+      :azure,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class JiraCloud < ProviderDetail; end
+      class ServiceNow < ProviderDetail; end
+      class Azure < ProviderDetail; end
+      class Unknown < ProviderDetail; end
+    end
+
+    # The connectorV2 third-party provider configuration summary.
+    #
+    # @!attribute [rw] provider_name
+    #   The name of the provider.
+    #   @return [String]
+    #
+    # @!attribute [rw] connector_status
+    #   The status for the connectorV2.
+    #   @return [String]
+    #
+    # @!attribute [rw] provider_configuration
+    #   The third-party provider detail for a service configuration.
+    #   @return [Types::ProviderDetail]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ProviderSummary AWS API Documentation
+    #
+    class ProviderSummary < Struct.new(
+      :provider_name,
+      :connector_status,
+      :provider_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The parameters required to update the configuration of an integration
+    # provider.
+    #
+    # @note ProviderUpdateConfiguration is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @!attribute [rw] jira_cloud
+    #   The parameters required to update the configuration for a Jira Cloud
+    #   integration.
+    #   @return [Types::JiraCloudUpdateConfiguration]
+    #
+    # @!attribute [rw] service_now
+    #   The parameters required to update the configuration for a ServiceNow
+    #   integration.
+    #   @return [Types::ServiceNowUpdateConfiguration]
+    #
+    # @!attribute [rw] azure
+    #   The parameters required to update the configuration for a Microsoft
+    #   Azure CSPM integration.
+    #   @return [Types::AzureUpdateConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ProviderUpdateConfiguration AWS API Documentation
+    #
+    class ProviderUpdateConfiguration < Struct.new(
+      :jira_cloud,
+      :service_now,
+      :azure,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class JiraCloud < ProviderUpdateConfiguration; end
+      class ServiceNow < ProviderUpdateConfiguration; end
+      class Azure < ProviderUpdateConfiguration; end
+      class Unknown < ProviderUpdateConfiguration; end
     end
 
     # Identifies where the sensitive data begins and ends.
@@ -27140,6 +30353,50 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
+    # Contains information about the reason that the retrieval of a
+    # recommended policy for a finding failed.
+    #
+    # @!attribute [rw] code
+    #   The error code for a failed retrieval of a recommended policy for a
+    #   finding.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   The error message for a failed retrieval of a recommended policy for
+    #   a finding.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/RecommendationError AWS API Documentation
+    #
+    class RecommendationError < Struct.new(
+      :code,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about a recommended step to remediate a Security
+    # Hub finding.
+    #
+    # @note RecommendationStep is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of RecommendationStep corresponding to the set member.
+    #
+    # @!attribute [rw] unused_permissions
+    #   A recommended step to remediate an unused permissions finding.
+    #   @return [Types::UnusedPermissionsRecommendationStep]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/RecommendationStep AWS API Documentation
+    #
+    class RecommendationStep < Struct.new(
+      :unused_permissions,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class UnusedPermissions < RecommendationStep; end
+      class Unknown < RecommendationStep; end
+    end
+
     # An occurrence of sensitive data in an Apache Avro object container or
     # an Apache Parquet file.
     #
@@ -27160,6 +30417,42 @@ module Aws::SecurityHub
     class Record < Struct.new(
       :json_path,
       :record_index)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] auth_code
+    #   The authCode retrieved from authUrl to complete the OAuth 2.0
+    #   authorization code flow.
+    #   @return [String]
+    #
+    # @!attribute [rw] auth_state
+    #   The authState retrieved from authUrl to complete the OAuth 2.0
+    #   authorization code flow.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/RegisterConnectorV2Request AWS API Documentation
+    #
+    class RegisterConnectorV2Request < Struct.new(
+      :auth_code,
+      :auth_state)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] connector_arn
+    #   The Amazon Resource Name (ARN) of the connectorV2.
+    #   @return [String]
+    #
+    # @!attribute [rw] connector_id
+    #   The UUID of the connectorV2 to identify connectorV2 resource.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/RegisterConnectorV2Response AWS API Documentation
+    #
+    class RegisterConnectorV2Response < Struct.new(
+      :connector_arn,
+      :connector_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -27228,6 +30521,16 @@ module Aws::SecurityHub
     #   Length Constraints: Minimum length of 1. Maximum length of 16.
     #   @return [String]
     #
+    # @!attribute [rw] provider
+    #   The cloud provider that the resource belongs to. Valid values are
+    #   `AWS` and `Azure`.
+    #   @return [String]
+    #
+    # @!attribute [rw] owner
+    #   Information about the account and organization that own the
+    #   resource.
+    #   @return [Types::ResourceOwner]
+    #
     # @!attribute [rw] resource_role
     #   Identifies the role of the resource in the finding. A resource is
     #   either the actor or target of the finding activity,
@@ -27268,6 +30571,8 @@ module Aws::SecurityHub
       :id,
       :partition,
       :region,
+      :provider,
+      :owner,
       :resource_role,
       :tags,
       :data_classification,
@@ -27767,6 +31072,16 @@ module Aws::SecurityHub
     #   sessions.
     #   @return [Types::AwsEc2ClientVpnEndpointDetails]
     #
+    # @!attribute [rw] code_repository
+    #   Details about an external code repository with which you can connect
+    #   your Amazon Web Services resources. The connection is established
+    #   through Amazon Inspector.
+    #   @return [Types::CodeRepositoryDetails]
+    #
+    # @!attribute [rw] azure_resource
+    #   Details about an Azure resource that is related to a finding.
+    #   @return [Hash,Array,String,Numeric,Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ResourceDetails AWS API Documentation
     #
     class ResourceDetails < Struct.new(
@@ -27868,7 +31183,59 @@ module Aws::SecurityHub
       :aws_route_53_hosted_zone,
       :aws_msk_cluster,
       :aws_s3_access_point,
-      :aws_ec2_client_vpn_endpoint)
+      :aws_ec2_client_vpn_endpoint,
+      :code_repository,
+      :azure_resource)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A list of summaries for all finding types on a resource.
+    #
+    # @!attribute [rw] finding_type
+    #   The category or classification of the security finding.
+    #   @return [String]
+    #
+    # @!attribute [rw] product_name
+    #   The name of the product associated with the security finding.
+    #   @return [String]
+    #
+    # @!attribute [rw] total_findings
+    #   The total count of security findings.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] severities
+    #   A breakdown of security findings by their severity levels.
+    #   @return [Types::ResourceSeverityBreakdown]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ResourceFindingsSummary AWS API Documentation
+    #
+    class ResourceFindingsSummary < Struct.new(
+      :finding_type,
+      :product_name,
+      :total_findings,
+      :severities)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines the configuration for organizing and categorizing Amazon Web
+    # Services resources based on associated security findings.
+    #
+    # @!attribute [rw] group_by_field
+    #   Specifies the attribute that resources should be grouped by.
+    #   @return [String]
+    #
+    # @!attribute [rw] filters
+    #   The criteria used to select resources and associated security
+    #   findings.
+    #   @return [Types::ResourcesFilters]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ResourceGroupByRule AWS API Documentation
+    #
+    class ResourceGroupByRule < Struct.new(
+      :group_by_field,
+      :filters)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -27892,6 +31259,23 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
+    # Additional details about a resource that are specific to its category.
+    # For AI/ML resources and their host resources, this structure contains
+    # `AIDetails`.
+    #
+    # @!attribute [rw] ai_details
+    #   Details that are specific to self-hosted AI resources and their host
+    #   resources.
+    #   @return [Types::AIDetails]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ResourceInfo AWS API Documentation
+    #
+    class ResourceInfo < Struct.new(
+      :ai_details)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The request was rejected because we can't find the specified
     # resource.
     #
@@ -27906,6 +31290,579 @@ module Aws::SecurityHub
     class ResourceNotFoundException < Struct.new(
       :message,
       :code)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Information about the owner of a resource, including the account and
+    # organization that the resource belongs to.
+    #
+    # @!attribute [rw] account
+    #   Information about the account that owns the resource, for example,
+    #   an Azure Subscription or Amazon Web Services Account.
+    #   @return [Types::ResourceOwnerAccount]
+    #
+    # @!attribute [rw] org
+    #   Information about the organization that owns the resource, for
+    #   example, an Azure Tenant.
+    #   @return [Types::ResourceOwnerOrg]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ResourceOwner AWS API Documentation
+    #
+    class ResourceOwner < Struct.new(
+      :account,
+      :org)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Information about the account that owns a resource, for example, an
+    # Azure Subscription or Amazon Web Services Account.
+    #
+    # @!attribute [rw] id
+    #   The unique identifier of the account that owns the resource, for
+    #   example, Azure Subscription Id or Amazon Web Services Account Id.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ResourceOwnerAccount AWS API Documentation
+    #
+    class ResourceOwnerAccount < Struct.new(
+      :id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Information about the organization that owns a resource, for example,
+    # an Azure Tenant.
+    #
+    # @!attribute [rw] id
+    #   The unique identifier of the organization that owns the resource,
+    #   for example, Azure Tenant Id.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ResourceOwnerOrg AWS API Documentation
+    #
+    class ResourceOwnerOrg < Struct.new(
+      :id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Provides comprehensive details about an Amazon Web Services resource
+    # and its associated security findings.
+    #
+    # @!attribute [rw] resource_guid
+    #   The global identifier used to identify a resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_id
+    #   The unique identifier for a resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] account_id
+    #   The Amazon Web Services account that recorded the resource data in
+    #   Security Hub.
+    #   @return [String]
+    #
+    # @!attribute [rw] account_name
+    #   The name of the Amazon Web Services account that's associated with
+    #   the resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] region
+    #   The Amazon Web Services Region that recorded the resource data in
+    #   Security Hub.
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_provider
+    #   The cloud provider where the resource exists. Valid values are `AWS`
+    #   and `Azure`. This field is always included.
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_owner_account_id
+    #   The identifier of the cloud account that owns the resource. For
+    #   Amazon Web Services resources, this is the Amazon Web Services
+    #   account ID. For Azure resources, this is the Azure subscription ID.
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_owner_org_id
+    #   The identifier of the cloud organization that owns the resource. For
+    #   Amazon Web Services resources, this is the Organizations ID. For
+    #   Azure resources, this is the Azure tenant ID.
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_cloud_partition
+    #   The cloud partition where the resource exists. For Amazon Web
+    #   Services, valid values include `aws`, `aws-cn`, and `aws-us-gov`.
+    #   This field isn't returned for cloud providers that don't use
+    #   partitions.
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_region
+    #   The native cloud region where the resource is located. For Amazon
+    #   Web Services, this is an Amazon Web Services Region (for example,
+    #   `us-east-1`). For Azure resources, this is the Azure region (for
+    #   example, `westus2`). This field is always included.
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_category
+    #   The grouping where the resource belongs.
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_type
+    #   The type of resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_name
+    #   The name of the resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_creation_time_dt
+    #   The time when the resource was created.
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_detail_capture_time_dt
+    #   The timestamp when information about the resource was captured.
+    #   @return [String]
+    #
+    # @!attribute [rw] findings_summary
+    #   An aggregated view of security findings associated with a resource.
+    #   @return [Array<Types::ResourceFindingsSummary>]
+    #
+    # @!attribute [rw] resource_tags
+    #   The key-value pairs associated with a resource.
+    #   @return [Array<Types::ResourceTag>]
+    #
+    # @!attribute [rw] resource_config
+    #   The configuration details of a resource.
+    #   @return [Hash,Array,String,Numeric,Boolean]
+    #
+    # @!attribute [rw] resource_sub_category
+    #   The AI/ML sub-grouping of the resource. Present only when
+    #   `ResourceCategory` is `AI/ML`.
+    #   @return [String]
+    #
+    # @!attribute [rw] discovery_type
+    #   Specifies how the resource was discovered. If the value is
+    #   `Managed`, the resource is natively provided by a cloud service
+    #   provider. If the value is `SelfHosted`, the resource is hosted on
+    #   customer-managed infrastructure, such as a compute instance or
+    #   container image.
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_info
+    #   Additional resource-type-specific details. For self-hosted AI
+    #   resources and their host resources, contains an `AIDetails`
+    #   structure.
+    #   @return [Types::ResourceInfo]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ResourceResult AWS API Documentation
+    #
+    class ResourceResult < Struct.new(
+      :resource_guid,
+      :resource_id,
+      :account_id,
+      :account_name,
+      :region,
+      :resource_provider,
+      :resource_owner_account_id,
+      :resource_owner_org_id,
+      :resource_cloud_partition,
+      :resource_region,
+      :resource_category,
+      :resource_type,
+      :resource_name,
+      :resource_creation_time_dt,
+      :resource_detail_capture_time_dt,
+      :findings_summary,
+      :resource_tags,
+      :resource_config,
+      :resource_sub_category,
+      :discovery_type,
+      :resource_info)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines the data boundary for a resources query. Scopes determine
+    # which organizational units or organizations to retrieve data from.
+    #
+    # @!attribute [rw] aws_organizations
+    #   A list of Organizations scopes to include in the query results. Each
+    #   entry in the list specifies an organization or organizational unit
+    #   to include for the delegated administrator's account. If the list
+    #   specifies multiple entries, the entries are combined using OR logic.
+    #   @return [Array<Types::AwsOrganizationScope>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ResourceScopes AWS API Documentation
+    #
+    class ResourceScopes < Struct.new(
+      :aws_organizations)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A comprehensive distribution of security findings by severity level
+    # for Amazon Web Services resources.
+    #
+    # @!attribute [rw] other
+    #   The number of findings not in any of the severity categories.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] fatal
+    #   The number of findings with a severity level of fatal.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] critical
+    #   The number of findings with a severity level of critical.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] high
+    #   The number of findings with a severity level of high.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] medium
+    #   The number of findings with a severity level of medium.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] low
+    #   The number of findings with a severity level of low.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] informational
+    #   The number of findings that provide security-related information.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] unknown
+    #   The number of findings with a severity level cannot be determined.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ResourceSeverityBreakdown AWS API Documentation
+    #
+    class ResourceSeverityBreakdown < Struct.new(
+      :other,
+      :fatal,
+      :critical,
+      :high,
+      :medium,
+      :low,
+      :informational,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents tag information associated with Amazon Web Services
+    # resources.
+    #
+    # @!attribute [rw] key
+    #   The identifier or name of the tag.
+    #   @return [String]
+    #
+    # @!attribute [rw] value
+    #   The data associated with the tag key.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ResourceTag AWS API Documentation
+    #
+    class ResourceTag < Struct.new(
+      :key,
+      :value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Enables the creation of criteria for Amazon Web Services resources in
+    # Security Hub CSPM.
+    #
+    # @!attribute [rw] string_filters
+    #   Enables filtering based on string field values.
+    #   @return [Array<Types::ResourcesStringFilter>]
+    #
+    # @!attribute [rw] date_filters
+    #   Enables filtering based on date and timestamp field values.
+    #   @return [Array<Types::ResourcesDateFilter>]
+    #
+    # @!attribute [rw] number_filters
+    #   Enables filtering based on numerical field values.
+    #   @return [Array<Types::ResourcesNumberFilter>]
+    #
+    # @!attribute [rw] map_filters
+    #   Enables filtering based on map-based field values.
+    #   @return [Array<Types::ResourcesMapFilter>]
+    #
+    # @!attribute [rw] nested_composite_filters
+    #   Provides an additional level of filtering, creating a three-layer
+    #   nested structure. The first layer is a `CompositeFilters` array with
+    #   a `CompositeOperator` (`AND`/`OR`). The second layer is a
+    #   `CompositeFilter` object that contains direct filters and
+    #   `NestedCompositeFilters`. The third layer is
+    #   `NestedCompositeFilters`, which contains additional filter
+    #   conditions.
+    #   @return [Array<Types::ResourcesCompositeFilter>]
+    #
+    # @!attribute [rw] operator
+    #   The logical operator used to combine multiple filter conditions.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ResourcesCompositeFilter AWS API Documentation
+    #
+    class ResourcesCompositeFilter < Struct.new(
+      :string_filters,
+      :date_filters,
+      :number_filters,
+      :map_filters,
+      :nested_composite_filters,
+      :operator)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains counts of resources for trend analysis.
+    #
+    # @!attribute [rw] all_resources
+    #   The total count of all resources for the given time interval.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ResourcesCount AWS API Documentation
+    #
+    class ResourcesCount < Struct.new(
+      :all_resources)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Enables the filtering of Amazon Web Services resources based on date
+    # and timestamp attributes.
+    #
+    # @!attribute [rw] field_name
+    #   The name of the field.
+    #   @return [String]
+    #
+    # @!attribute [rw] filter
+    #   A date filter for querying findings.
+    #   @return [Types::DateFilter]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ResourcesDateFilter AWS API Documentation
+    #
+    class ResourcesDateFilter < Struct.new(
+      :field_name,
+      :filter)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Enables filtering of Amazon Web Services resources based on data.
+    #
+    # @!attribute [rw] composite_filters
+    #   A collection of complex filtering conditions that can be applied to
+    #   Amazon Web Services resources.
+    #   @return [Array<Types::ResourcesCompositeFilter>]
+    #
+    # @!attribute [rw] composite_operator
+    #   The logical operator used to combine multiple filter conditions in
+    #   the structure.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ResourcesFilters AWS API Documentation
+    #
+    class ResourcesFilters < Struct.new(
+      :composite_filters,
+      :composite_operator)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Enables filtering of Amazon Web Services resources based on key-value
+    # map attributes.
+    #
+    # @!attribute [rw] field_name
+    #   The name of the field.
+    #   @return [String]
+    #
+    # @!attribute [rw] filter
+    #   A map filter for filtering Security Hub CSPM findings. Each map
+    #   filter provides the field to check for, the value to check for, and
+    #   the comparison operator.
+    #   @return [Types::MapFilter]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ResourcesMapFilter AWS API Documentation
+    #
+    class ResourcesMapFilter < Struct.new(
+      :field_name,
+      :filter)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Enables filtering of Amazon Web Services resources based on numerical
+    # values.
+    #
+    # @!attribute [rw] field_name
+    #   The name of the field.
+    #   @return [String]
+    #
+    # @!attribute [rw] filter
+    #   A number filter for querying findings.
+    #   @return [Types::NumberFilter]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ResourcesNumberFilter AWS API Documentation
+    #
+    class ResourcesNumberFilter < Struct.new(
+      :field_name,
+      :filter)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Enables filtering of Amazon Web Services resources based on string
+    # field values.
+    #
+    # @!attribute [rw] field_name
+    #   The name of the field.
+    #   @return [String]
+    #
+    # @!attribute [rw] filter
+    #   A string filter for filtering Security Hub CSPM findings.
+    #   @return [Types::StringFilter]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ResourcesStringFilter AWS API Documentation
+    #
+    class ResourcesStringFilter < Struct.new(
+      :field_name,
+      :filter)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A filter structure that contains a logical combination of string
+    # filters and nested composite filters for resources trend data.
+    #
+    # @!attribute [rw] string_filters
+    #   A list of string filters that apply to resources trend data fields.
+    #   @return [Array<Types::ResourcesTrendsStringFilter>]
+    #
+    # @!attribute [rw] nested_composite_filters
+    #   A list of nested composite filters that you can use to create
+    #   complex filter conditions for resources trend data.
+    #   @return [Array<Types::ResourcesTrendsCompositeFilter>]
+    #
+    # @!attribute [rw] operator
+    #   The logical operator (AND, OR) to apply between the string filters
+    #   and nested composite filters.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ResourcesTrendsCompositeFilter AWS API Documentation
+    #
+    class ResourcesTrendsCompositeFilter < Struct.new(
+      :string_filters,
+      :nested_composite_filters,
+      :operator)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The structure that defines filters to apply to resources trend data
+    # queries.
+    #
+    # @!attribute [rw] composite_filters
+    #   A list of composite filters to apply to the resources trend data.
+    #   @return [Array<Types::ResourcesTrendsCompositeFilter>]
+    #
+    # @!attribute [rw] composite_operator
+    #   The logical operator (AND, OR) to apply between multiple composite
+    #   filters.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ResourcesTrendsFilters AWS API Documentation
+    #
+    class ResourcesTrendsFilters < Struct.new(
+      :composite_filters,
+      :composite_operator)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains the resource trend metrics data for a specific time point in
+    # the requested time period.
+    #
+    # @!attribute [rw] timestamp
+    #   The timestamp for this data point in the resources trend metrics.
+    #   @return [Time]
+    #
+    # @!attribute [rw] trends_values
+    #   The resource trend metric values associated with this timestamp,
+    #   including resource counts.
+    #   @return [Types::ResourcesTrendsValues]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ResourcesTrendsMetricsResult AWS API Documentation
+    #
+    class ResourcesTrendsMetricsResult < Struct.new(
+      :timestamp,
+      :trends_values)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A filter for string-based fields in resources trend data, such as
+    # resource type or account ID.
+    #
+    # @!attribute [rw] field_name
+    #   The name of the resources field to filter on. You can specify one of
+    #   the following fields.
+    #
+    #   * `account_id` – The Amazon Web Services account ID that owns the
+    #     resource.
+    #
+    #   * `region` – The Amazon Web Services Region of the resource.
+    #
+    #   * `resource_type` – The type of the resource.
+    #
+    #   * `resource_category` – The category of the resource.
+    #
+    #   * `resource_cloud_provider` – The cloud provider of the resource.
+    #     Valid values are `AWS` and `Azure`.
+    #
+    #   * `resource_region` – The Region of the resource. For an Amazon Web
+    #     Services resource, this is the Amazon Web Services Region. For an
+    #     Azure resource, this is the Azure Region, such as `eastus`.
+    #
+    #   * `resource_owner_id` – The identifier of the account that owns the
+    #     resource. For an Amazon Web Services resource, this is the Amazon
+    #     Web Services account ID. For an Azure resource, this is the Azure
+    #     subscription ID.
+    #
+    #   * `resource_owner_organization_id` – The identifier of the
+    #     organization that owns the resource. For an Amazon Web Services
+    #     resource, this is the Amazon Web Services organization ID. For an
+    #     Azure resource, this is the Azure tenant ID.
+    #   @return [String]
+    #
+    # @!attribute [rw] filter
+    #   A string filter for filtering Security Hub CSPM findings.
+    #   @return [Types::StringFilter]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ResourcesTrendsStringFilter AWS API Documentation
+    #
+    class ResourcesTrendsStringFilter < Struct.new(
+      :field_name,
+      :filter)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains the aggregated resource count values for a specific point in
+    # the resources trend timeline.
+    #
+    # @!attribute [rw] resources_count
+    #   The resource count statistics for this data point in the trend
+    #   timeline.
+    #   @return [Types::ResourcesCount]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ResourcesTrendsValues AWS API Documentation
+    #
+    class ResourcesTrendsValues < Struct.new(
+      :resources_count)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -28459,8 +32416,8 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
-    # A security control in Security Hub describes a security best practice
-    # related to a specific resource.
+    # A security control in Security Hub CSPM describes a security best
+    # practice related to a specific resource.
     #
     # @!attribute [rw] security_control_id
     #   The unique identifier of a security control across standards. Values
@@ -28481,20 +32438,21 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] description
     #   The description of a security control across standards. This
-    #   typically summarizes how Security Hub evaluates the control and the
-    #   conditions under which it produces a failed finding. This parameter
-    #   doesn't reference a specific standard.
+    #   typically summarizes how Security Hub CSPM evaluates the control and
+    #   the conditions under which it produces a failed finding. This
+    #   parameter doesn't reference a specific standard.
     #   @return [String]
     #
     # @!attribute [rw] remediation_url
-    #   A link to Security Hub documentation that explains how to remediate
-    #   a failed finding for a security control.
+    #   A link to Security Hub CSPM documentation that explains how to
+    #   remediate a failed finding for a security control.
     #   @return [String]
     #
     # @!attribute [rw] severity_rating
     #   The severity of a security control. For more information about how
-    #   Security Hub determines control severity, see [Assigning severity to
-    #   control findings][1] in the *Security Hub User Guide*.
+    #   Security Hub CSPM determines control severity, see [Assigning
+    #   severity to control findings][1] in the *Security Hub CSPM User
+    #   Guide*.
     #
     #
     #
@@ -28507,11 +32465,11 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] update_status
     #   Identifies whether customizable properties of a security control are
-    #   reflected in Security Hub findings. A status of `READY` indicates
-    #   that Security Hub uses the current control parameter values when
-    #   running security checks of the control. A status of `UPDATING`
-    #   indicates that all security checks might not use the current
-    #   parameter values.
+    #   reflected in Security Hub CSPM findings. A status of `READY`
+    #   indicates that Security Hub CSPM uses the current control parameter
+    #   values when running security checks of the control. A status of
+    #   `UPDATING` indicates that all security checks might not use the
+    #   current parameter values.
     #   @return [String]
     #
     # @!attribute [rw] parameters
@@ -28532,6 +32490,11 @@ module Aws::SecurityHub
     #   [1]: https://docs.aws.amazon.com/securityhub/1.0/APIReference/API_BatchUpdateStandardsControlAssociations.html
     #   @return [String]
     #
+    # @!attribute [rw] provider
+    #   The cloud provider whose resources the security control evaluates.
+    #   For example, `AWS` or `Azure`.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/SecurityControl AWS API Documentation
     #
     class SecurityControl < Struct.new(
@@ -28544,7 +32507,8 @@ module Aws::SecurityHub
       :security_control_status,
       :update_status,
       :parameters,
-      :last_update_reason)
+      :last_update_reason,
+      :provider)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -28591,20 +32555,21 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] description
     #   The description of a security control across standards. This
-    #   typically summarizes how Security Hub evaluates the control and the
-    #   conditions under which it produces a failed finding. This parameter
-    #   doesn't reference a specific standard.
+    #   typically summarizes how Security Hub CSPM evaluates the control and
+    #   the conditions under which it produces a failed finding. This
+    #   parameter doesn't reference a specific standard.
     #   @return [String]
     #
     # @!attribute [rw] remediation_url
-    #   A link to Security Hub documentation that explains how to remediate
-    #   a failed finding for a security control.
+    #   A link to Security Hub CSPM documentation that explains how to
+    #   remediate a failed finding for a security control.
     #   @return [String]
     #
     # @!attribute [rw] severity_rating
     #   The severity of a security control. For more information about how
-    #   Security Hub determines control severity, see [Assigning severity to
-    #   control findings][1] in the *Security Hub User Guide*.
+    #   Security Hub CSPM determines control severity, see [Assigning
+    #   severity to control findings][1] in the *Security Hub CSPM User
+    #   Guide*.
     #
     #
     #
@@ -28628,6 +32593,11 @@ module Aws::SecurityHub
     #   excluded for a control that doesn't support custom parameters.
     #   @return [Hash<String,Types::ParameterDefinition>]
     #
+    # @!attribute [rw] provider
+    #   The cloud provider whose resources the security control evaluates.
+    #   For example, `AWS` or `Azure`.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/SecurityControlDefinition AWS API Documentation
     #
     class SecurityControlDefinition < Struct.new(
@@ -28638,7 +32608,8 @@ module Aws::SecurityHub
       :severity_rating,
       :current_region_availability,
       :customizable_properties,
-      :parameter_definitions)
+      :parameter_definitions,
+      :provider)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -28663,19 +32634,19 @@ module Aws::SecurityHub
     end
 
     # An object that defines which security controls are enabled in an
-    # Security Hub configuration policy. The enablement status of a control
-    # is aligned across all of the enabled standards in an account.
+    # Security Hub CSPM configuration policy. The enablement status of a
+    # control is aligned across all of the enabled standards in an account.
     #
     # @!attribute [rw] enabled_security_control_identifiers
     #   A list of security controls that are enabled in the configuration
-    #   policy. Security Hub disables all other controls (including newly
-    #   released controls) other than the listed controls.
+    #   policy. Security Hub CSPM disables all other controls (including
+    #   newly released controls) other than the listed controls.
     #   @return [Array<String>]
     #
     # @!attribute [rw] disabled_security_control_identifiers
     #   A list of security controls that are disabled in the configuration
-    #   policy. Security Hub enables all other controls (including newly
-    #   released controls) other than the listed controls.
+    #   policy. Security Hub CSPM enables all other controls (including
+    #   newly released controls) other than the listed controls.
     #   @return [Array<String>]
     #
     # @!attribute [rw] security_control_custom_parameters
@@ -28693,19 +32664,19 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
-    # An object that defines how Security Hub is configured. The
-    # configuration policy includes whether Security Hub is enabled or
+    # An object that defines how Security Hub CSPM is configured. The
+    # configuration policy includes whether Security Hub CSPM is enabled or
     # disabled, a list of enabled security standards, a list of enabled or
     # disabled security controls, and a list of custom parameter values for
     # specified controls. If you provide a list of security controls that
-    # are enabled in the configuration policy, Security Hub disables all
-    # other controls (including newly released controls). If you provide a
-    # list of security controls that are disabled in the configuration
-    # policy, Security Hub enables all other controls (including newly
+    # are enabled in the configuration policy, Security Hub CSPM disables
+    # all other controls (including newly released controls). If you provide
+    # a list of security controls that are disabled in the configuration
+    # policy, Security Hub CSPM enables all other controls (including newly
     # released controls).
     #
     # @!attribute [rw] service_enabled
-    #   Indicates whether Security Hub is enabled in the policy.
+    #   Indicates whether Security Hub CSPM is enabled in the policy.
     #   @return [Boolean]
     #
     # @!attribute [rw] enabled_standard_identifiers
@@ -28786,9 +32757,9 @@ module Aws::SecurityHub
     # Detection attack sequence finding. GuardDuty generates an attack
     # sequence finding when multiple events align to a potentially
     # suspicious activity. To receive GuardDuty attack sequence findings in
-    # Security Hub, you must have GuardDuty enabled. For more information,
-    # see [GuardDuty Extended Threat Detection ][1] in the *Amazon GuardDuty
-    # User Guide*.
+    # Security Hub CSPM, you must have GuardDuty enabled. For more
+    # information, see [GuardDuty Extended Threat Detection ][1] in the
+    # *Amazon GuardDuty User Guide*.
     #
     #
     #
@@ -28836,6 +32807,85 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
+    # Information about a ServiceNow ITSM integration.
+    #
+    # @!attribute [rw] instance_name
+    #   The instanceName of ServiceNow ITSM.
+    #   @return [String]
+    #
+    # @!attribute [rw] secret_arn
+    #   The Amazon Resource Name (ARN) of the Amazon Web Services Secrets
+    #   Manager secret that contains the ServiceNow credentials.
+    #   @return [String]
+    #
+    # @!attribute [rw] auth_status
+    #   The status of the authorization between ServiceNow and the service.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ServiceNowDetail AWS API Documentation
+    #
+    class ServiceNowDetail < Struct.new(
+      :instance_name,
+      :secret_arn,
+      :auth_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The initial configuration settings required to establish an
+    # integration between Security Hub and ServiceNow ITSM.
+    #
+    # @!attribute [rw] instance_name
+    #   The instance name of ServiceNow ITSM.
+    #   @return [String]
+    #
+    # @!attribute [rw] secret_arn
+    #   The Amazon Resource Name (ARN) of the Amazon Web Services Secrets
+    #   Manager secret that contains the ServiceNow credentials.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ServiceNowProviderConfiguration AWS API Documentation
+    #
+    class ServiceNowProviderConfiguration < Struct.new(
+      :instance_name,
+      :secret_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The parameters used to modify an existing ServiceNow integration.
+    #
+    # @!attribute [rw] secret_arn
+    #   The Amazon Resource Name (ARN) of the Amazon Web Services Secrets
+    #   Manager secret that contains the ServiceNow credentials.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ServiceNowUpdateConfiguration AWS API Documentation
+    #
+    class ServiceNowUpdateConfiguration < Struct.new(
+      :secret_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The request was rejected because it would exceed the service quota
+    # limit.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @!attribute [rw] code
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ServiceQuotaExceededException AWS API Documentation
+    #
+    class ServiceQuotaExceededException < Struct.new(
+      :message,
+      :code)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The severity of the finding.
     #
     # The finding provider can provide the initial severity. The finding
@@ -28843,7 +32893,7 @@ module Aws::SecurityHub
     # `BatchUpdateFindings`.
     #
     # The finding must have either `Label` or `Normalized` populated. If
-    # only one of these attributes is populated, then Security Hub
+    # only one of these attributes is populated, then Security Hub CSPM
     # automatically populates the other one. If neither attribute is
     # populated, then the finding is invalid. `Label` is the preferred
     # attribute.
@@ -28923,6 +32973,64 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
+    # Contains counts of findings grouped by severity level for trend
+    # analysis.
+    #
+    # @!attribute [rw] unknown
+    #   The count of findings with Unknown severity level at this point in
+    #   the trend timeline.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] informational
+    #   The count of findings with Informational severity level at this
+    #   point in the trend timeline.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] low
+    #   The count of findings with Low severity level at this point in the
+    #   trend timeline.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] medium
+    #   The count of findings with Medium severity level at this point in
+    #   the trend timeline.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] high
+    #   The count of findings with High severity level at this point in the
+    #   trend timeline.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] critical
+    #   The count of findings with Critical severity level at this point in
+    #   the trend timeline.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] fatal
+    #   The count of findings with Fatal severity level at this point in the
+    #   trend timeline.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] other
+    #   The count of findings with severity levels not fitting into the
+    #   standard categories at this point in the trend timeline.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/SeverityTrendsCount AWS API Documentation
+    #
+    class SeverityTrendsCount < Struct.new(
+      :unknown,
+      :informational,
+      :low,
+      :medium,
+      :high,
+      :critical,
+      :fatal,
+      :other)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Updates to the severity information for a finding.
     #
     # @!attribute [rw] normalized
@@ -28978,8 +33086,9 @@ module Aws::SecurityHub
     # Extended Threat Detection attack sequence. An attack sequence is a
     # type of threat detected by GuardDuty. GuardDuty generates an attack
     # sequence finding when multiple events, or signals, align to a
-    # potentially suspicious activity. When GuardDuty and Security Hub are
-    # integrated, GuardDuty sends attack sequence findings to Security Hub.
+    # potentially suspicious activity. When GuardDuty and Security Hub CSPM
+    # are integrated, GuardDuty sends attack sequence findings to Security
+    # Hub CSPM.
     #
     # A signal can be an API activity or a finding that GuardDuty uses to
     # detect an attack sequence finding.
@@ -29198,7 +33307,7 @@ module Aws::SecurityHub
     # Provides information about a specific security standard.
     #
     # @!attribute [rw] standards_arn
-    #   The ARN of a standard.
+    #   The ARN of the standard.
     #   @return [String]
     #
     # @!attribute [rw] name
@@ -29210,14 +33319,19 @@ module Aws::SecurityHub
     #   @return [String]
     #
     # @!attribute [rw] enabled_by_default
-    #   Whether the standard is enabled by default. When Security Hub is
-    #   enabled from the console, if a standard is enabled by default, the
-    #   check box for that standard is selected by default.
+    #   Whether the standard is enabled by default. When Security Hub CSPM
+    #   is enabled from the console, if a standard is enabled by default,
+    #   the check box for that standard is selected by default.
     #
-    #   When Security Hub is enabled using the `EnableSecurityHub` API
+    #   When Security Hub CSPM is enabled using the `EnableSecurityHub` API
     #   operation, the standard is enabled by default unless
     #   `EnableDefaultStandards` is set to `false`.
     #   @return [Boolean]
+    #
+    # @!attribute [rw] provider
+    #   The cloud provider whose resources the standard evaluates. For
+    #   example, `AWS` or `Azure`.
+    #   @return [String]
     #
     # @!attribute [rw] standards_managed_by
     #   Provides details about the management of a standard.
@@ -29230,6 +33344,7 @@ module Aws::SecurityHub
       :name,
       :description,
       :enabled_by_default,
+      :provider,
       :standards_managed_by)
       SENSITIVE = []
       include Aws::Structure
@@ -29243,8 +33358,8 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] control_status
     #   The current status of the security standard control. Indicates
-    #   whether the control is enabled or disabled. Security Hub does not
-    #   check against disabled controls.
+    #   whether the control is enabled or disabled. Security Hub CSPM does
+    #   not check against disabled controls.
     #   @return [String]
     #
     # @!attribute [rw] disabled_reason
@@ -29272,7 +33387,7 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] remediation_url
     #   A link to remediation information for the control in the Security
-    #   Hub user documentation.
+    #   Hub CSPM user documentation.
     #   @return [String]
     #
     # @!attribute [rw] severity_rating
@@ -29351,12 +33466,13 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] standards_control_description
     #   The description of a control. This typically summarizes how Security
-    #   Hub evaluates the control and the conditions under which it produces
-    #   a failed finding. This parameter may reference a specific standard.
+    #   Hub CSPM evaluates the control and the conditions under which it
+    #   produces a failed finding. This parameter may reference a specific
+    #   standard.
     #   @return [String]
     #
     # @!attribute [rw] standards_control_arns
-    #   Provides the input parameter that Security Hub uses to call the
+    #   Provides the input parameter that Security Hub CSPM uses to call the
     #   [UpdateStandardsControl][1] API. This API can be used to enable or
     #   disable a control in a specified standard.
     #
@@ -29451,8 +33567,9 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] standards_control_description
     #   The description of a control. This typically summarizes how Security
-    #   Hub evaluates the control and the conditions under which it produces
-    #   a failed finding. The parameter may reference a specific standard.
+    #   Hub CSPM evaluates the control and the conditions under which it
+    #   produces a failed finding. The parameter may reference a specific
+    #   standard.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/StandardsControlAssociationSummary AWS API Documentation
@@ -29530,7 +33647,8 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
-    # The reason for the current status of a standard subscription.
+    # The reason for the current status of your subscription to the
+    # standard.
     #
     # @!attribute [rw] status_reason_code
     #   The reason code that represents the reason for the current status of
@@ -29548,12 +33666,12 @@ module Aws::SecurityHub
     # A resource that represents your subscription to a supported standard.
     #
     # @!attribute [rw] standards_subscription_arn
-    #   The ARN of a resource that represents your subscription to a
-    #   supported standard.
+    #   The ARN of the resource that represents your subscription to the
+    #   standard.
     #   @return [String]
     #
     # @!attribute [rw] standards_arn
-    #   The ARN of a standard.
+    #   The ARN of the standard.
     #   @return [String]
     #
     # @!attribute [rw] standards_input
@@ -29561,39 +33679,45 @@ module Aws::SecurityHub
     #   @return [Hash<String,String>]
     #
     # @!attribute [rw] standards_status
-    #   The status of the standard subscription.
+    #   The status of your subscription to the standard. Possible values
+    #   are:
     #
-    #   The status values are as follows:
+    #   * `PENDING` - The standard is in the process of being enabled. Or
+    #     the standard is already enabled and Security Hub CSPM is adding
+    #     new controls to the standard.
     #
-    #   * `PENDING` - Standard is in the process of being enabled.
+    #   * `READY` - The standard is enabled.
     #
-    #   * `READY` - Standard is enabled.
+    #   * `INCOMPLETE` - The standard could not be enabled completely. One
+    #     or more errors (`StandardsStatusReason`) occurred when Security
+    #     Hub CSPM attempted to enable the standard.
     #
-    #   * `INCOMPLETE` - Standard could not be enabled completely. Some
-    #     controls may not be available.
+    #   * `DELETING` - The standard is in the process of being disabled.
     #
-    #   * `DELETING` - Standard is in the process of being disabled.
-    #
-    #   * `FAILED` - Standard could not be disabled.
+    #   * `FAILED` - The standard could not be disabled. One or more errors
+    #     (`StandardsStatusReason`) occurred when Security Hub CSPM
+    #     attempted to disable the standard.
     #   @return [String]
     #
     # @!attribute [rw] standards_controls_updatable
-    #   Indicates whether the controls associated with this standards
-    #   subscription can be viewed and updated.
+    #   Specifies whether you can retrieve information about and configure
+    #   individual controls that apply to the standard. Possible values are:
     #
-    #   The values are as follows:
+    #   * `READY_FOR_UPDATES` - Controls in the standard can be retrieved
+    #     and configured.
     #
-    #   * `READY_FOR_UPDATES` - Controls associated with this standards
-    #     subscription can be viewed and updated.
-    #
-    #   * `NOT_READY_FOR_UPDATES` - Controls associated with this standards
-    #     subscription cannot be retrieved or updated yet. Security Hub is
-    #     still processing a request to create the controls.
+    #   * `NOT_READY_FOR_UPDATES` - Controls in the standard cannot be
+    #     retrieved or configured.
     #   @return [String]
     #
     # @!attribute [rw] standards_status_reason
     #   The reason for the current status.
     #   @return [Types::StandardsStatusReason]
+    #
+    # @!attribute [rw] provider
+    #   The cloud provider whose resources the standard evaluates. For
+    #   example, `AWS` or `Azure`.
+    #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/StandardsSubscription AWS API Documentation
     #
@@ -29603,7 +33727,8 @@ module Aws::SecurityHub
       :standards_input,
       :standards_status,
       :standards_controls_updatable,
-      :standards_status_reason)
+      :standards_status_reason,
+      :provider)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -29666,8 +33791,8 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] association_type
     #   Indicates whether the association between the specified target and
-    #   the configuration was directly applied by the Security Hub delegated
-    #   administrator or inherited from a parent.
+    #   the configuration was directly applied by the Security Hub CSPM
+    #   delegated administrator or inherited from a parent.
     #   @return [String]
     #
     # @!attribute [rw] updated_at
@@ -29771,7 +33896,7 @@ module Aws::SecurityHub
     # @!attribute [rw] reason_code
     #   A code that represents a reason for the control status. For the list
     #   of status reason codes and their meanings, see [Compliance details
-    #   for control findings][1] in the *Security Hub User Guide*.
+    #   for control findings][1] in the *Security Hub CSPM User Guide*.
     #
     #
     #
@@ -29795,12 +33920,12 @@ module Aws::SecurityHub
     # string.
     #
     # @!attribute [rw] default_value
-    #   The Security Hub default value for a control parameter that is a
-    #   string.
+    #   The Security Hub CSPM default value for a control parameter that is
+    #   a string.
     #   @return [String]
     #
     # @!attribute [rw] re_2_expression
-    #   An RE2 regular expression that Security Hub uses to validate a
+    #   An RE2 regular expression that Security Hub CSPM uses to validate a
     #   user-provided control parameter string.
     #   @return [String]
     #
@@ -29818,18 +33943,18 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
-    # A string filter for filtering Security Hub findings.
+    # A string filter for filtering Security Hub CSPM findings.
     #
     # @!attribute [rw] value
     #   The string filter value. Filter values are case sensitive. For
     #   example, the product name for control-based findings is `Security
-    #   Hub`. If you provide `security hub` as the filter value, there's no
-    #   match.
+    #   Hub CSPM`. If you provide `security hub` as the filter value,
+    #   there's no match.
     #   @return [String]
     #
     # @!attribute [rw] comparison
     #   The condition to apply to a string value when filtering Security Hub
-    #   findings.
+    #   CSPM findings.
     #
     #   To search for values that have the filter value, use one of the
     #   following comparison operators:
@@ -29889,11 +34014,11 @@ module Aws::SecurityHub
     #   filters.
     #
     #   You can combine `PREFIX` filters with `NOT_EQUALS` or
-    #   `PREFIX_NOT_EQUALS` filters for the same field. Security Hub first
-    #   processes the `PREFIX` filters, and then the `NOT_EQUALS` or
+    #   `PREFIX_NOT_EQUALS` filters for the same field. Security Hub CSPM
+    #   first processes the `PREFIX` filters, and then the `NOT_EQUALS` or
     #   `PREFIX_NOT_EQUALS` filters.
     #
-    #   For example, for the following filters, Security Hub first
+    #   For example, for the following filters, Security Hub CSPM first
     #   identifies findings that have resource types that start with either
     #   `AwsIam` or `AwsEc2`. It then excludes findings that have a resource
     #   type of `AwsIamPolicy` and findings that have a resource type of
@@ -29907,9 +34032,12 @@ module Aws::SecurityHub
     #
     #   * `ResourceType NOT_EQUALS AwsEc2NetworkInterface`
     #
-    #   `CONTAINS` and `NOT_CONTAINS` operators can be used only with
-    #   automation rules. For more information, see [Automation rules][1] in
-    #   the *Security Hub User Guide*.
+    #   The `CONTAINS` operator works with automation rules V1 and V2. The
+    #   `NOT_CONTAINS` operator works only with automation rules V1. The
+    #   `CONTAINS_WORD` operator works only in the `GetFindingsV2`,
+    #   `GetFindingStatisticsV2`, `GetResourcesV2`, and
+    #   `GetResourcesStatisticsV2` APIs. For more information, see
+    #   [Automation rules][1] in the *Security Hub CSPM User Guide*.
     #
     #
     #
@@ -29929,12 +34057,12 @@ module Aws::SecurityHub
     # list of strings.
     #
     # @!attribute [rw] default_value
-    #   The Security Hub default value for a control parameter that is a
-    #   list of strings.
+    #   The Security Hub CSPM default value for a control parameter that is
+    #   a list of strings.
     #   @return [Array<String>]
     #
     # @!attribute [rw] re_2_expression
-    #   An RE2 regular expression that Security Hub uses to validate a
+    #   An RE2 regular expression that Security Hub CSPM uses to validate a
     #   user-provided list of strings for a control parameter.
     #   @return [String]
     #
@@ -29982,8 +34110,8 @@ module Aws::SecurityHub
     class TagResourceResponse < Aws::EmptyStructure; end
 
     # The target account, organizational unit, or the root that is
-    # associated with an Security Hub configuration. The configuration can
-    # be a configuration policy or self-managed behavior.
+    # associated with an Security Hub CSPM configuration. The configuration
+    # can be a configuration policy or self-managed behavior.
     #
     # @note Target is a union - when making an API calls you must set exactly one of the members.
     #
@@ -30076,7 +34204,7 @@ module Aws::SecurityHub
     #   indicator was observed.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -30103,6 +34231,60 @@ module Aws::SecurityHub
       :last_observed_at,
       :source,
       :source_url)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The limit on the number of requests per second was exceeded.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @!attribute [rw] code
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ThrottlingException AWS API Documentation
+    #
+    class ThrottlingException < Struct.new(
+      :message,
+      :code)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains the findings trend metrics data for a specific time point in
+    # the requested time period.
+    #
+    # @!attribute [rw] timestamp
+    #   The timestamp for this data point in the findings trend metrics.
+    #   @return [Time]
+    #
+    # @!attribute [rw] trends_values
+    #   The finding trend metric values associated with this timestamp,
+    #   including severity counts.
+    #   @return [Types::TrendsValues]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/TrendsMetricsResult AWS API Documentation
+    #
+    class TrendsMetricsResult < Struct.new(
+      :timestamp,
+      :trends_values)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains the aggregated finding values for a specific point in the
+    # findings trend timeline.
+    #
+    # @!attribute [rw] severity_trends
+    #   The count of findings organized by severity level for this data
+    #   point in the trend timeline.
+    #   @return [Types::SeverityTrendsCount]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/TrendsValues AWS API Documentation
+    #
+    class TrendsValues < Struct.new(
+      :severity_trends)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -30175,7 +34357,9 @@ module Aws::SecurityHub
     #   @return [String]
     #
     # @!attribute [rw] error_code
-    #   The error code for the unprocessed security control.
+    #   The error code for the unprocessed security control. The `NOT_FOUND`
+    #   value has been deprecated and replaced by the `RESOURCE_NOT_FOUND`
+    #   value.
     #   @return [String]
     #
     # @!attribute [rw] error_reason
@@ -30216,6 +34400,8 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] error_code
     #   The error code for the unprocessed standard and control association.
+    #   The `NOT_FOUND` value has been deprecated and replaced by the
+    #   `RESOURCE_NOT_FOUND` value.
     #   @return [String]
     #
     # @!attribute [rw] error_reason
@@ -30252,7 +34438,8 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] error_code
     #   The error code for the unprocessed update of the control's
-    #   enablement status in the specified standard.
+    #   enablement status in the specified standard. The `NOT_FOUND` value
+    #   has been deprecated and replaced by the `RESOURCE_NOT_FOUND` value.
     #   @return [String]
     #
     # @!attribute [rw] error_reason
@@ -30292,6 +34479,46 @@ module Aws::SecurityHub
     #
     class UntagResourceResponse < Aws::EmptyStructure; end
 
+    # Contains information about the action to take for a policy in an
+    # unused permissions finding.
+    #
+    # @!attribute [rw] recommended_action
+    #   A recommendation of whether to create or detach a policy for an
+    #   unused permissions finding.
+    #   @return [String]
+    #
+    # @!attribute [rw] existing_policy
+    #   The contents of the existing policy identified by `ExistingPolicyId`
+    #   which needs to be replaced, when the `RecommendedAction` is
+    #   `CREATE_POLICY`.
+    #   @return [String]
+    #
+    # @!attribute [rw] existing_policy_id
+    #   The ID of an existing policy to be replaced or detached.
+    #   @return [String]
+    #
+    # @!attribute [rw] policy_updated_at
+    #   The time at which the existing policy for the unused permissions
+    #   finding was last updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] recommended_policy
+    #   The contents of the least-privileged recommended replacement for
+    #   `ExistingPolicyId`, when the `RecommendedAction` is `CREATE_POLICY`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/UnusedPermissionsRecommendationStep AWS API Documentation
+    #
+    class UnusedPermissionsRecommendationStep < Struct.new(
+      :recommended_action,
+      :existing_policy,
+      :existing_policy_id,
+      :policy_updated_at,
+      :recommended_policy)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] action_target_arn
     #   The ARN of the custom action target to update.
     #   @return [String]
@@ -30318,6 +34545,105 @@ module Aws::SecurityHub
     #
     class UpdateActionTargetResponse < Aws::EmptyStructure; end
 
+    # @!attribute [rw] aggregator_v2_arn
+    #   The ARN of the Aggregator V2.
+    #   @return [String]
+    #
+    # @!attribute [rw] region_linking_mode
+    #   Determines how Amazon Web Services Regions should be linked to the
+    #   Aggregator V2.
+    #   @return [String]
+    #
+    # @!attribute [rw] linked_regions
+    #   A list of Amazon Web Services Regions linked to the aggegation
+    #   Region.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/UpdateAggregatorV2Request AWS API Documentation
+    #
+    class UpdateAggregatorV2Request < Struct.new(
+      :aggregator_v2_arn,
+      :region_linking_mode,
+      :linked_regions)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] aggregator_v2_arn
+    #   The ARN of the Aggregator V2.
+    #   @return [String]
+    #
+    # @!attribute [rw] aggregation_region
+    #   The Amazon Web Services Region where data is aggregated.
+    #   @return [String]
+    #
+    # @!attribute [rw] region_linking_mode
+    #   Determines how Amazon Web Services Regions should be linked to the
+    #   Aggregator V2.
+    #   @return [String]
+    #
+    # @!attribute [rw] linked_regions
+    #   A list of Amazon Web Services Regions linked to the aggegation
+    #   Region.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/UpdateAggregatorV2Response AWS API Documentation
+    #
+    class UpdateAggregatorV2Response < Struct.new(
+      :aggregator_v2_arn,
+      :aggregation_region,
+      :region_linking_mode,
+      :linked_regions)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] identifier
+    #   The ARN of the automation rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] rule_status
+    #   The status of the automation rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] rule_order
+    #   Represents a value for the rule priority.
+    #   @return [Float]
+    #
+    # @!attribute [rw] description
+    #   A description of the automation rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] rule_name
+    #   The name of the automation rule.
+    #   @return [String]
+    #
+    # @!attribute [rw] criteria
+    #   The filtering type and configuration of the automation rule.
+    #   @return [Types::Criteria]
+    #
+    # @!attribute [rw] actions
+    #   A list of actions to be performed when the rule criteria is met.
+    #   @return [Array<Types::AutomationRulesActionV2>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/UpdateAutomationRuleV2Request AWS API Documentation
+    #
+    class UpdateAutomationRuleV2Request < Struct.new(
+      :identifier,
+      :rule_status,
+      :rule_order,
+      :description,
+      :rule_name,
+      :criteria,
+      :actions)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/UpdateAutomationRuleV2Response AWS API Documentation
+    #
+    class UpdateAutomationRuleV2Response < Aws::EmptyStructure; end
+
     # Specifies the parameters to update in an existing automation rule.
     #
     # @!attribute [rw] rule_arn
@@ -30326,7 +34652,7 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] rule_status
     #   Whether the rule is active after it is created. If this parameter is
-    #   equal to `ENABLED`, Security Hub starts applying the rule to
+    #   equal to `ENABLED`, Security Hub CSPM starts applying the rule to
     #   findings and finding updates after the rule is created. To change
     #   the value of this parameter after creating a rule, use [
     #   `BatchUpdateAutomationRules` ][1].
@@ -30338,8 +34664,8 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] rule_order
     #   An integer ranging from 1 to 1000 that represents the order in which
-    #   the rule action is applied to findings. Security Hub applies rules
-    #   with lower values for this parameter first.
+    #   the rule action is applied to findings. Security Hub CSPM applies
+    #   rules with lower values for this parameter first.
     #   @return [Integer]
     #
     # @!attribute [rw] description
@@ -30354,17 +34680,17 @@ module Aws::SecurityHub
     #   Specifies whether a rule is the last to be applied with respect to a
     #   finding that matches the rule criteria. This is useful when a
     #   finding matches the criteria for multiple rules, and each rule has
-    #   different actions. If a rule is terminal, Security Hub applies the
-    #   rule action to a finding that matches the rule criteria and doesn't
-    #   evaluate other rules for the finding. By default, a rule isn't
-    #   terminal.
+    #   different actions. If a rule is terminal, Security Hub CSPM applies
+    #   the rule action to a finding that matches the rule criteria and
+    #   doesn't evaluate other rules for the finding. By default, a rule
+    #   isn't terminal.
     #   @return [Boolean]
     #
     # @!attribute [rw] criteria
     #   A set of ASFF finding field attributes and corresponding expected
-    #   values that Security Hub uses to filter findings. If a rule is
+    #   values that Security Hub CSPM uses to filter findings. If a rule is
     #   enabled and a finding matches the conditions specified in this
-    #   parameter, Security Hub applies the rule action to the finding.
+    #   parameter, Security Hub CSPM applies the rule action to the finding.
     #   @return [Types::AutomationRulesFindingFilters]
     #
     # @!attribute [rw] actions
@@ -30406,16 +34732,16 @@ module Aws::SecurityHub
     #   @return [String]
     #
     # @!attribute [rw] configuration_policy
-    #   An object that defines how Security Hub is configured. It includes
-    #   whether Security Hub is enabled or disabled, a list of enabled
-    #   security standards, a list of enabled or disabled security controls,
-    #   and a list of custom parameter values for specified controls. If you
-    #   provide a list of security controls that are enabled in the
-    #   configuration policy, Security Hub disables all other controls
-    #   (including newly released controls). If you provide a list of
-    #   security controls that are disabled in the configuration policy,
-    #   Security Hub enables all other controls (including newly released
-    #   controls).
+    #   An object that defines how Security Hub CSPM is configured. It
+    #   includes whether Security Hub CSPM is enabled or disabled, a list of
+    #   enabled security standards, a list of enabled or disabled security
+    #   controls, and a list of custom parameter values for specified
+    #   controls. If you provide a list of security controls that are
+    #   enabled in the configuration policy, Security Hub CSPM disables all
+    #   other controls (including newly released controls). If you provide a
+    #   list of security controls that are disabled in the configuration
+    #   policy, Security Hub CSPM enables all other controls (including
+    #   newly released controls).
     #
     #   When updating a configuration policy, provide a complete list of
     #   standards that you want to enable and a complete list of controls
@@ -30462,16 +34788,16 @@ module Aws::SecurityHub
     #   @return [Time]
     #
     # @!attribute [rw] configuration_policy
-    #   An object that defines how Security Hub is configured. It includes
-    #   whether Security Hub is enabled or disabled, a list of enabled
-    #   security standards, a list of enabled or disabled security controls,
-    #   and a list of custom parameter values for specified controls. If the
-    #   request included a list of security controls that are enabled in the
-    #   configuration policy, Security Hub disables all other controls
-    #   (including newly released controls). If the request included a list
-    #   of security controls that are disabled in the configuration policy,
-    #   Security Hub enables all other controls (including newly released
-    #   controls).
+    #   An object that defines how Security Hub CSPM is configured. It
+    #   includes whether Security Hub CSPM is enabled or disabled, a list of
+    #   enabled security standards, a list of enabled or disabled security
+    #   controls, and a list of custom parameter values for specified
+    #   controls. If the request included a list of security controls that
+    #   are enabled in the configuration policy, Security Hub CSPM disables
+    #   all other controls (including newly released controls). If the
+    #   request included a list of security controls that are disabled in
+    #   the configuration policy, Security Hub CSPM enables all other
+    #   controls (including newly released controls).
     #   @return [Types::Policy]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/UpdateConfigurationPolicyResponse AWS API Documentation
@@ -30488,6 +34814,84 @@ module Aws::SecurityHub
       include Aws::Structure
     end
 
+    # @!attribute [rw] connector_id
+    #   The unique identifier of the connector to update.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   The updated description of the connector.
+    #   @return [String]
+    #
+    # @!attribute [rw] provider
+    #   The updated cloud provider configuration for the connector.
+    #   @return [Types::CspmProviderUpdateConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/UpdateConnectorRequest AWS API Documentation
+    #
+    class UpdateConnectorRequest < Struct.new(
+      :connector_id,
+      :description,
+      :provider)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] connector_status
+    #   The connectivity status of the connector after the update.
+    #   @return [String]
+    #
+    # @!attribute [rw] enablement_status
+    #   The enablement status of the connector after the update.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/UpdateConnectorResponse AWS API Documentation
+    #
+    class UpdateConnectorResponse < Struct.new(
+      :connector_status,
+      :enablement_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] connector_id
+    #   The UUID of the connectorV2 to identify connectorV2 resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   The description of the connectorV2.
+    #   @return [String]
+    #
+    # @!attribute [rw] provider
+    #   The third-party provider’s service configuration.
+    #   @return [Types::ProviderUpdateConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/UpdateConnectorV2Request AWS API Documentation
+    #
+    class UpdateConnectorV2Request < Struct.new(
+      :connector_id,
+      :description,
+      :provider)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] connector_status
+    #   The status of the connector after the update.
+    #   @return [String]
+    #
+    # @!attribute [rw] enablement_status
+    #   The enablement status of the connector after the update.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/UpdateConnectorV2Response AWS API Documentation
+    #
+    class UpdateConnectorV2Response < Struct.new(
+      :connector_status,
+      :enablement_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] finding_aggregator_arn
     #   The ARN of the finding aggregator. To obtain the ARN, use
     #   `ListFindingAggregators`.
@@ -30497,7 +34901,7 @@ module Aws::SecurityHub
     #   Indicates whether to aggregate findings from all of the available
     #   Regions in the current partition. Also determines whether to
     #   automatically aggregate findings from new Regions as Security Hub
-    #   supports them and you opt into them.
+    #   CSPM supports them and you opt into them.
     #
     #   The selected option also determines how to use the Regions provided
     #   in the Regions list.
@@ -30505,18 +34909,19 @@ module Aws::SecurityHub
     #   The options are as follows:
     #
     #   * `ALL_REGIONS` - Aggregates findings from all of the Regions where
-    #     Security Hub is enabled. When you choose this option, Security Hub
-    #     also automatically aggregates findings from new Regions as
-    #     Security Hub supports them and you opt into them.
+    #     Security Hub CSPM is enabled. When you choose this option,
+    #     Security Hub CSPM also automatically aggregates findings from new
+    #     Regions as Security Hub CSPM supports them and you opt into them.
     #
     #   * `ALL_REGIONS_EXCEPT_SPECIFIED` - Aggregates findings from all of
-    #     the Regions where Security Hub is enabled, except for the Regions
-    #     listed in the `Regions` parameter. When you choose this option,
-    #     Security Hub also automatically aggregates findings from new
-    #     Regions as Security Hub supports them and you opt into them.
+    #     the Regions where Security Hub CSPM is enabled, except for the
+    #     Regions listed in the `Regions` parameter. When you choose this
+    #     option, Security Hub CSPM also automatically aggregates findings
+    #     from new Regions as Security Hub CSPM supports them and you opt
+    #     into them.
     #
     #   * `SPECIFIED_REGIONS` - Aggregates findings only from the Regions
-    #     listed in the `Regions` parameter. Security Hub does not
+    #     listed in the `Regions` parameter. Security Hub CSPM does not
     #     automatically aggregate findings from new Regions.
     #
     #   * `NO_REGIONS` - Aggregates no data because no Regions are selected
@@ -30634,28 +35039,29 @@ module Aws::SecurityHub
     class UpdateInsightResponse < Aws::EmptyStructure; end
 
     # @!attribute [rw] auto_enable
-    #   Whether to automatically enable Security Hub in new member accounts
-    #   when they join the organization.
+    #   Whether to automatically enable Security Hub CSPM in new member
+    #   accounts when they join the organization.
     #
-    #   If set to `true`, then Security Hub is automatically enabled in new
-    #   accounts. If set to `false`, then Security Hub isn't enabled in new
-    #   accounts automatically. The default value is `false`.
+    #   If set to `true`, then Security Hub CSPM is automatically enabled in
+    #   new accounts. If set to `false`, then Security Hub CSPM isn't
+    #   enabled in new accounts automatically. The default value is `false`.
     #
     #   If the `ConfigurationType` of your organization is set to `CENTRAL`,
     #   then this field is set to `false` and can't be changed in the home
     #   Region and linked Regions. However, in that case, the delegated
     #   administrator can create a configuration policy in which Security
-    #   Hub is enabled and associate the policy with new organization
+    #   Hub CSPM is enabled and associate the policy with new organization
     #   accounts.
     #   @return [Boolean]
     #
     # @!attribute [rw] auto_enable_standards
-    #   Whether to automatically enable Security Hub [default standards][1]
-    #   in new member accounts when they join the organization.
+    #   Whether to automatically enable Security Hub CSPM [default
+    #   standards][1] in new member accounts when they join the
+    #   organization.
     #
     #   The default value of this parameter is equal to `DEFAULT`.
     #
-    #   If equal to `DEFAULT`, then Security Hub default standards are
+    #   If equal to `DEFAULT`, then Security Hub CSPM default standards are
     #   automatically enabled for new member accounts. If equal to `NONE`,
     #   then default standards are not automatically enabled for new member
     #   accounts.
@@ -30674,7 +35080,7 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] organization_configuration
     #   Provides information about the way an organization is configured in
-    #   Security Hub.
+    #   Security Hub CSPM.
     #   @return [Types::OrganizationConfiguration]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/UpdateOrganizationConfigurationRequest AWS API Documentation
@@ -30732,23 +35138,23 @@ module Aws::SecurityHub
     #   the controls in the console and programmatically immediately after
     #   release. However, automatically enabled controls have a temporary
     #   default status of `DISABLED`. It can take up to several days for
-    #   Security Hub to process the control release and designate the
+    #   Security Hub CSPM to process the control release and designate the
     #   control as `ENABLED` in your account. During the processing period,
-    #   you can manually enable or disable a control, and Security Hub will
-    #   maintain that designation regardless of whether you have
+    #   you can manually enable or disable a control, and Security Hub CSPM
+    #   will maintain that designation regardless of whether you have
     #   `AutoEnableControls` set to `true`.
     #   @return [Boolean]
     #
     # @!attribute [rw] control_finding_generator
     #   Updates whether the calling account has consolidated control
     #   findings turned on. If the value for this field is set to
-    #   `SECURITY_CONTROL`, Security Hub generates a single finding for a
-    #   control check even when the check applies to multiple enabled
+    #   `SECURITY_CONTROL`, Security Hub CSPM generates a single finding for
+    #   a control check even when the check applies to multiple enabled
     #   standards.
     #
     #   If the value for this field is set to `STANDARD_CONTROL`, Security
-    #   Hub generates separate findings for a control check when the check
-    #   applies to multiple enabled standards.
+    #   Hub CSPM generates separate findings for a control check when the
+    #   check applies to multiple enabled standards.
     #
     #   For accounts that are part of an organization, this value can only
     #   be updated in the administrator account.
@@ -30799,7 +35205,7 @@ module Aws::SecurityHub
     # in an Amazon GuardDuty Extended Threat Detection attack sequence.
     # GuardDuty generates an attack sequence finding when multiple events
     # align to a potentially suspicious activity. To receive GuardDuty
-    # attack sequence findings in Security Hub, you must have GuardDuty
+    # attack sequence findings in Security Hub CSPM, you must have GuardDuty
     # enabled. For more information, see [GuardDuty Extended Threat
     # Detection ][1] in the *Amazon GuardDuty User Guide*.
     #
@@ -30821,6 +35227,24 @@ module Aws::SecurityHub
     class UserAccount < Struct.new(
       :uid,
       :name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The request has failed validation because it's missing required
+    # fields or has invalid inputs.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @!attribute [rw] code
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/ValidationException AWS API Documentation
+    #
+    class ValidationException < Struct.new(
+      :message,
+      :code)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -30959,7 +35383,7 @@ module Aws::SecurityHub
     #
     # @!attribute [rw] code_vulnerabilities
     #   The vulnerabilities found in your Lambda function code. This field
-    #   pertains to findings that Security Hub receives from Amazon
+    #   pertains to findings that Security Hub CSPM receives from Amazon
     #   Inspector.
     #   @return [Array<Types::VulnerabilityCodeVulnerabilities>]
     #
@@ -30982,7 +35406,7 @@ module Aws::SecurityHub
     end
 
     # Provides details about the vulnerabilities found in your Lambda
-    # function code. This field pertains to findings that Security Hub
+    # function code. This field pertains to findings that Security Hub CSPM
     # receives from Amazon Inspector.
     #
     # @!attribute [rw] cwes
@@ -31028,7 +35452,7 @@ module Aws::SecurityHub
     #   Indicates when the vulnerability advisory was created.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -31039,7 +35463,7 @@ module Aws::SecurityHub
     #   Indicates when the vulnerability advisory was last updated.
     #
     #   For more information about the validation and formatting of
-    #   timestamp fields in Security Hub, see [Timestamps][1].
+    #   timestamp fields in Security Hub CSPM, see [Timestamps][1].
     #
     #
     #
@@ -31129,8 +35553,8 @@ module Aws::SecurityHub
     #
     #   * `NEW` - The initial state of a finding, before it is reviewed.
     #
-    #     Security Hub also resets the workflow status from `NOTIFIED` or
-    #     `RESOLVED` to `NEW` in the following cases:
+    #     Security Hub CSPM also resets the workflow status from `NOTIFIED`
+    #     or `RESOLVED` to `NEW` in the following cases:
     #
     #     * `RecordState` changes from `ARCHIVED` to `ACTIVE`.
     #
@@ -31169,7 +35593,7 @@ module Aws::SecurityHub
     #
     #   * `NEW` - The initial state of a finding, before it is reviewed.
     #
-    #     Security Hub also resets `WorkFlowStatus` from `NOTIFIED` or
+    #     Security Hub CSPM also resets `WorkFlowStatus` from `NOTIFIED` or
     #     `RESOLVED` to `NEW` in the following cases:
     #
     #     * The record state changes from `ARCHIVED` to `ACTIVE`.

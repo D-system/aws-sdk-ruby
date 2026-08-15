@@ -472,6 +472,7 @@ module Aws::ElastiCache
       attr_accessor transit_encryption_mode: ("preferred" | "required")
       attr_accessor cluster_mode: ("enabled" | "disabled" | "compatible")
       attr_accessor serverless_cache_snapshot_name: ::String
+      attr_accessor durability: ("default" | "async" | "sync" | "disabled")
       SENSITIVE: []
     end
 
@@ -494,6 +495,7 @@ module Aws::ElastiCache
       attr_accessor subnet_ids: ::Array[::String]
       attr_accessor snapshot_retention_limit: ::Integer
       attr_accessor daily_snapshot_time: ::String
+      attr_accessor network_type: ("ipv4" | "ipv6" | "dual_stack")
       SENSITIVE: []
     end
 
@@ -1173,6 +1175,7 @@ module Aws::ElastiCache
       attr_accessor auth_token_update_strategy: ("SET" | "ROTATE" | "DELETE")
       attr_accessor log_delivery_configurations: ::Array[Types::LogDeliveryConfigurationRequest]
       attr_accessor ip_discovery: ("ipv4" | "ipv6")
+      attr_accessor scale_config: Types::ScaleConfig
       SENSITIVE: []
     end
 
@@ -1247,6 +1250,7 @@ module Aws::ElastiCache
       attr_accessor transit_encryption_enabled: bool
       attr_accessor transit_encryption_mode: ("preferred" | "required")
       attr_accessor cluster_mode: ("enabled" | "disabled" | "compatible")
+      attr_accessor durability: ("default" | "async" | "sync" | "disabled")
       SENSITIVE: []
     end
 
@@ -1426,6 +1430,7 @@ module Aws::ElastiCache
       attr_accessor log_delivery_configurations: ::Array[Types::PendingLogDeliveryConfiguration]
       attr_accessor transit_encryption_enabled: bool
       attr_accessor transit_encryption_mode: ("preferred" | "required")
+      attr_accessor scale_config: Types::ScaleConfig
       SENSITIVE: []
     end
 
@@ -1513,6 +1518,7 @@ module Aws::ElastiCache
       attr_accessor at_rest_encryption_enabled: bool
       attr_accessor member_clusters_outpost_arns: ::Array[::String]
       attr_accessor kms_key_id: ::String
+      attr_accessor storage_encryption_type: ("none" | "sse-elasticache" | "sse-kms")
       attr_accessor arn: ::String
       attr_accessor user_group_ids: ::Array[::String]
       attr_accessor log_delivery_configurations: ::Array[Types::LogDeliveryConfiguration]
@@ -1524,6 +1530,8 @@ module Aws::ElastiCache
       attr_accessor transit_encryption_mode: ("preferred" | "required")
       attr_accessor cluster_mode: ("enabled" | "disabled" | "compatible")
       attr_accessor engine: ::String
+      attr_accessor durability: ("default" | "async" | "sync" | "disabled")
+      attr_accessor effective_durability: ("async" | "sync" | "disabled")
       SENSITIVE: []
     end
 
@@ -1641,6 +1649,12 @@ module Aws::ElastiCache
       SENSITIVE: []
     end
 
+    class ScaleConfig
+      attr_accessor scale_percentage: ::Integer
+      attr_accessor scale_interval_minutes: ::Integer
+      SENSITIVE: []
+    end
+
     class SecurityGroupMembership
       attr_accessor security_group_id: ::String
       attr_accessor status: ::String
@@ -1657,6 +1671,7 @@ module Aws::ElastiCache
       attr_accessor full_engine_version: ::String
       attr_accessor cache_usage_limits: Types::CacheUsageLimits
       attr_accessor kms_key_id: ::String
+      attr_accessor storage_encryption_type: ("none" | "sse-elasticache" | "sse-kms")
       attr_accessor security_group_ids: ::Array[::String]
       attr_accessor endpoint: Types::Endpoint
       attr_accessor reader_endpoint: Types::Endpoint
@@ -1665,6 +1680,7 @@ module Aws::ElastiCache
       attr_accessor subnet_ids: ::Array[::String]
       attr_accessor snapshot_retention_limit: ::Integer
       attr_accessor daily_snapshot_time: ::String
+      attr_accessor network_type: ("ipv4" | "ipv6" | "dual_stack")
       SENSITIVE: []
     end
 
@@ -1768,6 +1784,7 @@ module Aws::ElastiCache
       attr_accessor kms_key_id: ::String
       attr_accessor arn: ::String
       attr_accessor data_tiering: ("enabled" | "disabled")
+      attr_accessor durability: ("default" | "async" | "sync" | "disabled")
       SENSITIVE: []
     end
 

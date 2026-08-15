@@ -1,6 +1,216 @@
 Unreleased Changes
 ------------------
 
+1.107.0 (2026-07-09)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.106.0 (2026-07-06)
+------------------
+
+* Feature - This release introduces Saved Object Migration APIs, enabling users to migrate dashboards, visualizations, index patterns, and other saved objects from a data source into an Amazon OpenSearch Service application workspace with configurable export filters and conflict resolution strategies.
+
+1.105.0 (2026-07-01)
+------------------
+
+* Feature - To create a Mustang domain via the AWS CLI, you must pass EngineMode OPTIMIZED (along with UseCase OBSERVABILITY or MIXED)  without it, the domain defaults to a regular (GENERAL) domain. Also this release includes Insights Feedback API which user can use to provide feedback for Insight API.
+
+1.104.0 (2026-06-19)
+------------------
+
+* Feature - This release introduces data source attachment APIs, enabling users to attach and detach Amazon OpenSearch Service domains and Amazon OpenSearch Serverless collections to an OpenSearch application.
+
+1.103.0 (2026-06-17)
+------------------
+
+* Feature - Adds support for configuring IAM Identity Center options on existing OpenSearch applications via the UpdateApplication API.
+
+1.102.0 (2026-05-27)
+------------------
+
+* Feature - OpenSearch will now support multi-segment paths in JWKS URLs.
+
+1.101.0 (2026-05-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.100.0 (2026-05-19)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.99.0 (2026-05-13)
+------------------
+
+* Feature - Adds support for AutomatedSnapshotPauseOptions.
+
+1.98.0 (2026-05-05)
+------------------
+
+* Feature - Amazon OpenSearch Service now supports VPC egress, enabling outbound traffic from your OpenSearch domain to route privately through your VPC instead of the public internet.
+
+1.97.0 (2026-04-27)
+------------------
+
+* Feature - Amazon OpenSearch Service now supports JWKS URL configuration for JWT authentication
+
+1.96.0 (2026-04-23)
+------------------
+
+* Feature - Amazon OpenSearch UI applications now support cross-Region domain association, enabling you to connect OpenSearch Dashboards in one AWS Region to OpenSearch domains in other Regions within the same partition for centralized data visualization.
+
+1.95.0 (2026-04-22)
+------------------
+
+* Feature - Adds support for RollbackServiceSoftwareUpdate API
+
+1.94.0 (2026-04-01)
+------------------
+
+* Feature - Adding Policy-Min-TLS-1-2-RFC9151-FIPS-2024-08 as TLS Policy in Supported Regions
+
+1.93.0 (2026-03-31)
+------------------
+
+* Feature - Support RegisterCapability, GetCapability, DeregisterCapability API for AI Assistant feature management for OpenSearch UI Applications
+
+1.92.0 (2026-03-30)
+------------------
+
+* Feature - Added Cluster Insights API's In OpenSearch Service SDK.
+
+1.91.0 (2026-03-20)
+------------------
+
+* Feature - Added support for Amazon Managed Service for Prometheus (AMP) as a connected data source in OpenSearch UI. Now users can analyze Prometheus metrics in OpenSearch UI without data copy.
+
+1.90.0 (2026-03-18)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.89.0 (2026-03-09)
+------------------
+
+* Feature - This change enables cross-account and cross-region access for DataSources. Customers can now define access policies on their datasources to allow other AWS accounts to access and query their data.
+
+1.88.0 (2026-03-04)
+------------------
+
+* Feature - Adding support for DeploymentStrategyOptions
+
+1.87.0 (2026-02-24)
+------------------
+
+* Feature - Fixed HTTP binding for DescribeDomainAutoTunes API to correctly pass request parameters as query parameters in the HTTP request.
+
+1.86.0 (2026-01-16)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.85.0 (2026-01-08)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.84.0 (2026-01-05)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.83.0 (2025-12-18)
+------------------
+
+* Feature - Amazon OpenSearch Service adds support for warm nodes, enabling new multi-tier architecture.
+
+1.82.0 (2025-12-10)
+------------------
+
+* Feature - The CreateApplication API now supports an optional kms key arn parameter to allow customers to specify a CMK for application encryption.
+
+1.81.0 (2025-12-02)
+------------------
+
+* Feature - GPU-acceleration helps you build large-scale vector databases faster and more efficiently. You can enable this feature on new OpenSearch domains and OpenSearch Serverless collections. This feature uses GPU-acceleration to reduce the time needed to index data into vector indexes.
+
+1.80.0 (2025-11-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.79.0 (2025-11-17)
+------------------
+
+* Feature - This release adds index operation APIs to support Automatic Semantic Enrichment feature
+
+1.78.0 (2025-11-07)
+------------------
+
+* Feature - This release introduces the Default Application feature, allowing users to set, change, or unset a preferred OpenSearch UI application on a per-region basis for a streamlined and consistent user experience.
+
+1.77.0 (2025-10-28)
+------------------
+
+* Feature - Update endpoint ruleset parameters casing
+
+1.76.0 (2025-10-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.75.0 (2025-08-28)
+------------------
+
+* Feature - Remove incorrect endpoint tests
+
+1.74.0 (2025-08-26)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.73.0 (2025-08-04)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.72.0 (2025-07-31)
+------------------
+
+* Feature - Granular access control support for NEO-SAML with IAMFederation for AOS data source
+
+1.71.0 (2025-07-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.70.0 (2025-07-15)
+------------------
+
+* Feature - AWS Opensearch adds support for enabling s3 vector engine options. After enabling this option, customers will be able to create indices with s3 vector engine.
+
+1.69.0 (2025-06-02)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.68.0 (2025-05-12)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.67.0 (2025-05-01)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.66.0 (2025-04-03)
+------------------
+
+* Feature - Improve descriptions for various API commands and data types.
+
 1.65.0 (2025-02-18)
 ------------------
 

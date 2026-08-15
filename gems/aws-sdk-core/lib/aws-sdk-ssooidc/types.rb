@@ -17,6 +17,10 @@ module Aws::SSOOIDC
     #   `access_denied`.
     #   @return [String]
     #
+    # @!attribute [rw] reason
+    #   A string that uniquely identifies a reason for the error.
+    #   @return [String]
+    #
     # @!attribute [rw] error_description
     #   Human-readable text providing additional information, used to assist
     #   the client developer in understanding the error that occurred.
@@ -26,6 +30,7 @@ module Aws::SSOOIDC
     #
     class AccessDeniedException < Struct.new(
       :error,
+      :reason,
       :error_description)
       SENSITIVE = []
       include Aws::Structure
@@ -49,6 +54,31 @@ module Aws::SSOOIDC
     class AuthorizationPendingException < Struct.new(
       :error,
       :error_description)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # This structure contains Amazon Web Services-specific parameter
+    # extensions and the [identity context][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/singlesignon/latest/userguide/trustedidentitypropagation-overview.html
+    #
+    # @!attribute [rw] identity_context
+    #   The trusted context assertion is signed and encrypted by STS. It
+    #   provides access to `sts:identity_context` claim in the `idToken`
+    #   without JWT parsing
+    #
+    #   Identity context comprises information that Amazon Web Services
+    #   services use to make authorization decisions when they receive
+    #   requests.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sso-oidc-2019-06-10/AwsAdditionalDetails AWS API Documentation
+    #
+    class AwsAdditionalDetails < Struct.new(
+      :identity_context)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -103,11 +133,9 @@ module Aws::SSOOIDC
     #   @return [String]
     #
     # @!attribute [rw] scope
-    #   The list of scopes for which authorization is requested. The access
-    #   token that is issued is limited to the scopes that are granted. If
-    #   this value is not specified, IAM Identity Center authorizes all
-    #   scopes that are configured for the client during the call to
-    #   RegisterClient.
+    #   The list of scopes for which authorization is requested. This
+    #   parameter has no effect; the access token will always include all
+    #   scopes configured during client registration.
     #   @return [Array<String>]
     #
     # @!attribute [rw] redirect_uri
@@ -356,6 +384,11 @@ module Aws::SSOOIDC
     #   token that is issued is limited to the scopes that are granted.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] aws_additional_details
+    #   A structure containing information from IAM Identity Center managed
+    #   user and group information.
+    #   @return [Types::AwsAdditionalDetails]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/sso-oidc-2019-06-10/CreateTokenWithIAMResponse AWS API Documentation
     #
     class CreateTokenWithIAMResponse < Struct.new(
@@ -365,7 +398,8 @@ module Aws::SSOOIDC
       :refresh_token,
       :id_token,
       :issued_token_type,
-      :scope)
+      :scope,
+      :aws_additional_details)
       SENSITIVE = [:access_token, :refresh_token, :id_token]
       include Aws::Structure
     end
@@ -511,6 +545,10 @@ module Aws::SSOOIDC
     #   `invalid_request`.
     #   @return [String]
     #
+    # @!attribute [rw] reason
+    #   A string that uniquely identifies a reason for the error.
+    #   @return [String]
+    #
     # @!attribute [rw] error_description
     #   Human-readable text providing additional information, used to assist
     #   the client developer in understanding the error that occurred.
@@ -520,6 +558,7 @@ module Aws::SSOOIDC
     #
     class InvalidRequestException < Struct.new(
       :error,
+      :reason,
       :error_description)
       SENSITIVE = []
       include Aws::Structure

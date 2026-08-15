@@ -97,8 +97,8 @@ module Aws::QBusiness
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -126,22 +126,24 @@ module Aws::QBusiness
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -169,6 +171,11 @@ module Aws::QBusiness
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -194,7 +201,7 @@ module Aws::QBusiness
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -202,8 +209,7 @@ module Aws::QBusiness
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -265,8 +271,8 @@ module Aws::QBusiness
     #     When an EventStream or Proc object is provided, it will be used as callback for each chunk of event stream response received along the way.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -328,17 +334,15 @@ module Aws::QBusiness
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -379,8 +383,8 @@ module Aws::QBusiness
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -498,6 +502,11 @@ module Aws::QBusiness
     #   The list of Amazon Q Business actions that the ISV is allowed to
     #   perform.
     #
+    # @option params [Array<Types::PermissionCondition>] :conditions
+    #   The conditions that restrict when the permission is effective. These
+    #   conditions can be used to limit the permission based on specific
+    #   attributes of the request.
+    #
     # @option params [required, String] :principal
     #   The Amazon Resource Name of the IAM role for the ISV that is being
     #   granted permission.
@@ -512,6 +521,13 @@ module Aws::QBusiness
     #     application_id: "ApplicationId", # required
     #     statement_id: "StatementId", # required
     #     actions: ["QIamAction"], # required
+    #     conditions: [
+    #       {
+    #         condition_operator: "StringEquals", # required, accepts StringEquals
+    #         condition_key: "PermissionConditionKey", # required
+    #         condition_values: ["PermissionConditionValue"], # required
+    #       },
+    #     ],
     #     principal: "PrincipalRoleArn", # required
     #   })
     #
@@ -605,6 +621,10 @@ module Aws::QBusiness
     #
     # @option params [required, Array<Types::Document>] :documents
     #   One or more documents to add to the index.
+    #
+    #   Ensure that the name of your document doesn't contain any
+    #   confidential information. Amazon Q Business returns document names in
+    #   chat responses and citations when relevant.
     #
     # @option params [String] :role_arn
     #   The Amazon Resource Name (ARN) of an IAM role with permission to
@@ -1055,6 +1075,9 @@ module Aws::QBusiness
     #   resp.source_attributions[0].text_message_segments[0].source_details.video_source_details.start_time_milliseconds #=> Integer
     #   resp.source_attributions[0].text_message_segments[0].source_details.video_source_details.end_time_milliseconds #=> Integer
     #   resp.source_attributions[0].text_message_segments[0].source_details.video_source_details.video_extraction_type #=> String, one of "TRANSCRIPT", "SUMMARY"
+    #   resp.source_attributions[0].document_id #=> String
+    #   resp.source_attributions[0].index_id #=> String
+    #   resp.source_attributions[0].datasource_id #=> String
     #   resp.failed_attachments #=> Array
     #   resp.failed_attachments[0].name #=> String
     #   resp.failed_attachments[0].status #=> String, one of "FAILED", "SUCCESS"
@@ -1069,6 +1092,128 @@ module Aws::QBusiness
     # @param [Hash] params ({})
     def chat_sync(params = {}, options = {})
       req = build_request(:chat_sync, params)
+      req.send_request(options)
+    end
+
+    # Verifies if a user has access permissions for a specified document and
+    # returns the actual ACL attached to the document. Resolves user access
+    # on the document via user aliases and groups when verifying user
+    # access.
+    #
+    # @option params [required, String] :application_id
+    #   The unique identifier of the application. This is required to identify
+    #   the specific Amazon Q Business application context for the document
+    #   access check.
+    #
+    # @option params [required, String] :index_id
+    #   The unique identifier of the index. Used to locate the correct index
+    #   within the application where the document is stored.
+    #
+    # @option params [required, String] :user_id
+    #   The unique identifier of the user. Used to check the access
+    #   permissions for this specific user against the document's ACL.
+    #
+    # @option params [required, String] :document_id
+    #   The unique identifier of the document. Specifies which document's
+    #   access permissions are being checked.
+    #
+    # @option params [String] :data_source_id
+    #   The unique identifier of the data source. Identifies the specific data
+    #   source from which the document originates. Should not be used when a
+    #   document is uploaded directly with BatchPutDocument, as no
+    #   dataSourceId is available or necessary.
+    #
+    # @return [Types::CheckDocumentAccessResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CheckDocumentAccessResponse#user_groups #user_groups} => Array&lt;Types::AssociatedGroup&gt;
+    #   * {Types::CheckDocumentAccessResponse#user_aliases #user_aliases} => Array&lt;Types::AssociatedUser&gt;
+    #   * {Types::CheckDocumentAccessResponse#has_access #has_access} => Boolean
+    #   * {Types::CheckDocumentAccessResponse#document_acl #document_acl} => Types::DocumentAcl
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.check_document_access({
+    #     application_id: "ApplicationId", # required
+    #     index_id: "IndexId", # required
+    #     user_id: "String", # required
+    #     document_id: "DocumentId", # required
+    #     data_source_id: "DataSourceId",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.user_groups #=> Array
+    #   resp.user_groups[0].name #=> String
+    #   resp.user_groups[0].type #=> String, one of "INDEX", "DATASOURCE"
+    #   resp.user_aliases #=> Array
+    #   resp.user_aliases[0].id #=> String
+    #   resp.user_aliases[0].type #=> String, one of "INDEX", "DATASOURCE"
+    #   resp.has_access #=> Boolean
+    #   resp.document_acl.allowlist.member_relation #=> String, one of "AND", "OR"
+    #   resp.document_acl.allowlist.conditions #=> Array
+    #   resp.document_acl.allowlist.conditions[0].member_relation #=> String, one of "AND", "OR"
+    #   resp.document_acl.allowlist.conditions[0].users #=> Array
+    #   resp.document_acl.allowlist.conditions[0].users[0].id #=> String
+    #   resp.document_acl.allowlist.conditions[0].users[0].type #=> String, one of "INDEX", "DATASOURCE"
+    #   resp.document_acl.allowlist.conditions[0].groups #=> Array
+    #   resp.document_acl.allowlist.conditions[0].groups[0].name #=> String
+    #   resp.document_acl.allowlist.conditions[0].groups[0].type #=> String, one of "INDEX", "DATASOURCE"
+    #   resp.document_acl.deny_list.member_relation #=> String, one of "AND", "OR"
+    #   resp.document_acl.deny_list.conditions #=> Array
+    #   resp.document_acl.deny_list.conditions[0].member_relation #=> String, one of "AND", "OR"
+    #   resp.document_acl.deny_list.conditions[0].users #=> Array
+    #   resp.document_acl.deny_list.conditions[0].users[0].id #=> String
+    #   resp.document_acl.deny_list.conditions[0].users[0].type #=> String, one of "INDEX", "DATASOURCE"
+    #   resp.document_acl.deny_list.conditions[0].groups #=> Array
+    #   resp.document_acl.deny_list.conditions[0].groups[0].name #=> String
+    #   resp.document_acl.deny_list.conditions[0].groups[0].type #=> String, one of "INDEX", "DATASOURCE"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qbusiness-2023-11-27/CheckDocumentAccess AWS API Documentation
+    #
+    # @overload check_document_access(params = {})
+    # @param [Hash] params ({})
+    def check_document_access(params = {}, options = {})
+      req = build_request(:check_document_access, params)
+      req.send_request(options)
+    end
+
+    # Creates a unique URL for anonymous Amazon Q Business web experience.
+    # This URL can only be used once and must be used within 5 minutes after
+    # it's generated.
+    #
+    # @option params [required, String] :application_id
+    #   The identifier of the Amazon Q Business application environment
+    #   attached to the web experience.
+    #
+    # @option params [required, String] :web_experience_id
+    #   The identifier of the web experience.
+    #
+    # @option params [Integer] :session_duration_in_minutes
+    #   The duration of the session associated with the unique URL for the web
+    #   experience.
+    #
+    # @return [Types::CreateAnonymousWebExperienceUrlResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateAnonymousWebExperienceUrlResponse#anonymous_url #anonymous_url} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_anonymous_web_experience_url({
+    #     application_id: "ApplicationId", # required
+    #     web_experience_id: "WebExperienceId", # required
+    #     session_duration_in_minutes: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.anonymous_url #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qbusiness-2023-11-27/CreateAnonymousWebExperienceUrl AWS API Documentation
+    #
+    # @overload create_anonymous_web_experience_url(params = {})
+    # @param [Hash] params ({})
+    def create_anonymous_web_experience_url(params = {}, options = {})
+      req = build_request(:create_anonymous_web_experience_url, params)
       req.send_request(options)
     end
 
@@ -1164,11 +1309,11 @@ module Aws::QBusiness
     #   [1]: https://docs.aws.amazon.com/amazonq/latest/qbusiness-ug/personalizing-chat-responses.html
     #
     # @option params [Types::QuickSightConfiguration] :quick_sight_configuration
-    #   The Amazon QuickSight configuration for an Amazon Q Business
-    #   application that uses QuickSight for authentication. This
-    #   configuration is required if your application uses QuickSight as the
-    #   identity provider. For more information, see [Creating an Amazon
-    #   QuickSight integrated application][1].
+    #   The Amazon Quick Suite configuration for an Amazon Q Business
+    #   application that uses Quick Suite for authentication. This
+    #   configuration is required if your application uses Quick Suite as the
+    #   identity provider. For more information, see [Creating an Amazon Quick
+    #   Suite integrated application][1].
     #
     #
     #
@@ -1184,7 +1329,7 @@ module Aws::QBusiness
     #   resp = client.create_application({
     #     display_name: "ApplicationName", # required
     #     role_arn: "RoleArn",
-    #     identity_type: "AWS_IAM_IDP_SAML", # accepts AWS_IAM_IDP_SAML, AWS_IAM_IDP_OIDC, AWS_IAM_IDC, AWS_QUICKSIGHT_IDP
+    #     identity_type: "AWS_IAM_IDP_SAML", # accepts AWS_IAM_IDP_SAML, AWS_IAM_IDP_OIDC, AWS_IAM_IDC, AWS_QUICKSIGHT_IDP, ANONYMOUS
     #     iam_identity_provider_arn: "IAMIdentityProviderArn",
     #     identity_center_instance_arn: "InstanceArn",
     #     client_ids_for_oidc: ["ClientIdForOIDC"],
@@ -1227,6 +1372,84 @@ module Aws::QBusiness
       req.send_request(options)
     end
 
+    # Creates a new chat response configuration for an Amazon Q Business
+    # application. This operation establishes a set of parameters that
+    # define how the system generates and formats responses to user queries
+    # in chat interactions.
+    #
+    # @option params [required, String] :application_id
+    #   The unique identifier of the Amazon Q Business application for which
+    #   to create the new chat response configuration.
+    #
+    # @option params [required, String] :display_name
+    #   A human-readable name for the new chat response configuration, making
+    #   it easier to identify and manage among multiple configurations.
+    #
+    # @option params [String] :client_token
+    #   A unique, case-sensitive identifier to ensure idempotency of the
+    #   request. This helps prevent the same configuration from being created
+    #   multiple times if retries occur.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @option params [required, Hash<String,Types::ResponseConfiguration>] :response_configurations
+    #   A collection of response configuration settings that define how Amazon
+    #   Q Business will generate and format responses to user queries in chat
+    #   interactions.
+    #
+    # @option params [Array<Types::Tag>] :tags
+    #   A list of key-value pairs to apply as tags to the new chat response
+    #   configuration, enabling categorization and management of resources
+    #   across Amazon Web Services services.
+    #
+    # @return [Types::CreateChatResponseConfigurationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateChatResponseConfigurationResponse#chat_response_configuration_id #chat_response_configuration_id} => String
+    #   * {Types::CreateChatResponseConfigurationResponse#chat_response_configuration_arn #chat_response_configuration_arn} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_chat_response_configuration({
+    #     application_id: "ApplicationId", # required
+    #     display_name: "DisplayName", # required
+    #     client_token: "String",
+    #     response_configurations: { # required
+    #       "ALL" => {
+    #         instruction_collection: {
+    #           response_length: "Instruction",
+    #           target_audience: "Instruction",
+    #           perspective: "Instruction",
+    #           output_style: "Instruction",
+    #           identity: "Instruction",
+    #           tone: "Instruction",
+    #           custom_instructions: "Instruction",
+    #           examples: "Instruction",
+    #         },
+    #       },
+    #     },
+    #     tags: [
+    #       {
+    #         key: "TagKey", # required
+    #         value: "TagValue", # required
+    #       },
+    #     ],
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.chat_response_configuration_id #=> String
+    #   resp.chat_response_configuration_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qbusiness-2023-11-27/CreateChatResponseConfiguration AWS API Documentation
+    #
+    # @overload create_chat_response_configuration(params = {})
+    # @param [Hash] params ({})
+    def create_chat_response_configuration(params = {}, options = {})
+      req = build_request(:create_chat_response_configuration, params)
+      req.send_request(options)
+    end
+
     # Creates a new data accessor for an ISV to access data from a Amazon Q
     # Business application. The data accessor is an entity that represents
     # the ISV's access to the Amazon Q Business application's data. It
@@ -1257,6 +1480,11 @@ module Aws::QBusiness
     #
     # @option params [required, String] :display_name
     #   A friendly name for the data accessor.
+    #
+    # @option params [Types::DataAccessorAuthenticationDetail] :authentication_detail
+    #   The authentication configuration details for the data accessor. This
+    #   specifies how the ISV will authenticate when accessing data through
+    #   this data accessor.
     #
     # @option params [Array<Types::Tag>] :tags
     #   The tags to associate with the data accessor.
@@ -1359,6 +1587,15 @@ module Aws::QBusiness
     #     ],
     #     client_token: "ClientToken",
     #     display_name: "DataAccessorName", # required
+    #     authentication_detail: {
+    #       authentication_type: "AWS_IAM_IDC_TTI", # required, accepts AWS_IAM_IDC_TTI, AWS_IAM_IDC_AUTH_CODE
+    #       authentication_configuration: {
+    #         idc_trusted_token_issuer_configuration: {
+    #           idc_trusted_token_issuer_arn: "IdcTrustedTokenIssuerArn", # required
+    #         },
+    #       },
+    #       external_ids: ["DataAccessorExternalId"],
+    #     },
     #     tags: [
     #       {
     #         key: "TagKey", # required
@@ -1464,7 +1701,9 @@ module Aws::QBusiness
     #
     # @option params [String] :role_arn
     #   The Amazon Resource Name (ARN) of an IAM role with permission to
-    #   access the data source and required resources.
+    #   access the data source and required resources. This field is required
+    #   for all connector types except custom connectors, where it is
+    #   optional.
     #
     # @option params [String] :client_token
     #   A token you provide to identify a request to create a data source
@@ -1756,7 +1995,7 @@ module Aws::QBusiness
     #     custom_plugin_configuration: {
     #       description: "PluginDescription", # required
     #       api_schema_type: "OPEN_API_V3", # required, accepts OPEN_API_V3
-    #       api_schema: { # required
+    #       api_schema: {
     #         payload: "Payload",
     #         s3: {
     #           bucket: "S3BucketName", # required
@@ -1834,24 +2073,25 @@ module Aws::QBusiness
     #     configuration: { # required
     #       native_index_configuration: {
     #         index_id: "IndexId", # required
+    #         version: 1,
     #         boosting_override: {
     #           "DocumentAttributeKey" => {
     #             number_configuration: {
-    #               boosting_level: "NONE", # required, accepts NONE, LOW, MEDIUM, HIGH, VERY_HIGH
+    #               boosting_level: "NONE", # required, accepts NONE, LOW, MEDIUM, HIGH, VERY_HIGH, ONE, TWO
     #               boosting_type: "PRIORITIZE_LARGER_VALUES", # accepts PRIORITIZE_LARGER_VALUES, PRIORITIZE_SMALLER_VALUES
     #             },
     #             string_configuration: {
-    #               boosting_level: "NONE", # required, accepts NONE, LOW, MEDIUM, HIGH, VERY_HIGH
+    #               boosting_level: "NONE", # required, accepts NONE, LOW, MEDIUM, HIGH, VERY_HIGH, ONE, TWO
     #               attribute_value_boosting: {
-    #                 "String" => "LOW", # accepts LOW, MEDIUM, HIGH, VERY_HIGH
+    #                 "String" => "LOW", # accepts LOW, MEDIUM, HIGH, VERY_HIGH, ONE, TWO, THREE, FOUR, FIVE
     #               },
     #             },
     #             date_configuration: {
-    #               boosting_level: "NONE", # required, accepts NONE, LOW, MEDIUM, HIGH, VERY_HIGH
+    #               boosting_level: "NONE", # required, accepts NONE, LOW, MEDIUM, HIGH, VERY_HIGH, ONE, TWO
     #               boosting_duration_in_seconds: 1,
     #             },
     #             string_list_configuration: {
-    #               boosting_level: "NONE", # required, accepts NONE, LOW, MEDIUM, HIGH, VERY_HIGH
+    #               boosting_level: "NONE", # required, accepts NONE, LOW, MEDIUM, HIGH, VERY_HIGH, ONE, TWO
     #             },
     #           },
     #         },
@@ -1892,9 +2132,15 @@ module Aws::QBusiness
     # user. For more information on subscriptions and pricing tiers, see
     # [Amazon Q Business pricing][1].
     #
+    # <note markdown="1"> For an example IAM role policy for assigning subscriptions, see [Set
+    # up required permissions][2] in the Amazon Q Business User Guide.
+    #
+    #  </note>
+    #
     #
     #
     # [1]: https://aws.amazon.com/q/business/pricing/
+    # [2]: https://docs.aws.amazon.com/amazonq/latest/qbusiness-ug/setting-up.html#permissions
     #
     # @option params [required, String] :application_id
     #   The identifier of the Amazon Q Business application the subscription
@@ -2017,21 +2263,22 @@ module Aws::QBusiness
     #
     # @option params [Array<String>] :origins
     #   Sets the website domain origins that are allowed to embed the Amazon Q
-    #   Business web experience.      The <i>domain origin</i> refers to the
-    #   base URL for accessing a website including the protocol
-    #   (<code>http/https</code>), the domain name, and the port number (if
-    #   specified). </p> <note> <p>You must only submit a <i>base URL</i> and
-    #   not a full path. For example,
-    #   <code>https://docs.aws.amazon.com</code>.</p> </note>
+    #   Business web experience. The *domain origin* refers to the base URL
+    #   for accessing a website including the protocol (`http/https`), the
+    #   domain name, and the port number (if specified).
+    #
+    #   <note markdown="1"> You must only submit a *base URL* and not a full path. For example,
+    #   `https://docs.aws.amazon.com`.
+    #
+    #    </note>
     #
     # @option params [String] :role_arn
     #   The Amazon Resource Name (ARN) of the service role attached to your
     #   web experience.
     #
-    #   <note markdown="1"> You must provide this value if you're using IAM Identity Center to
-    #   manage end user access to your application. If you're using legacy
-    #   identity management to manage user access, you don't need to provide
-    #   this value.
+    #   <note markdown="1"> The `roleArn` parameter is required when your Amazon Q Business
+    #   application is created with IAM Identity Center. It is not required
+    #   for SAML-based applications.
     #
     #    </note>
     #
@@ -2208,6 +2455,35 @@ module Aws::QBusiness
     # @param [Hash] params ({})
     def delete_chat_controls_configuration(params = {}, options = {})
       req = build_request(:delete_chat_controls_configuration, params)
+      req.send_request(options)
+    end
+
+    # Deletes a specified chat response configuration from an Amazon Q
+    # Business application.
+    #
+    # @option params [required, String] :application_id
+    #   The unique identifier of theAmazon Q Business application from which
+    #   to delete the chat response configuration.
+    #
+    # @option params [required, String] :chat_response_configuration_id
+    #   The unique identifier of the chat response configuration to delete
+    #   from the specified application.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_chat_response_configuration({
+    #     application_id: "ApplicationId", # required
+    #     chat_response_configuration_id: "ChatResponseConfigurationId", # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qbusiness-2023-11-27/DeleteChatResponseConfiguration AWS API Documentation
+    #
+    # @overload delete_chat_response_configuration(params = {})
+    # @param [Hash] params ({})
+    def delete_chat_response_configuration(params = {}, options = {})
+      req = build_request(:delete_chat_response_configuration, params)
       req.send_request(options)
     end
 
@@ -2561,7 +2837,7 @@ module Aws::QBusiness
     #   resp.display_name #=> String
     #   resp.application_id #=> String
     #   resp.application_arn #=> String
-    #   resp.identity_type #=> String, one of "AWS_IAM_IDP_SAML", "AWS_IAM_IDP_OIDC", "AWS_IAM_IDC", "AWS_QUICKSIGHT_IDP"
+    #   resp.identity_type #=> String, one of "AWS_IAM_IDP_SAML", "AWS_IAM_IDP_OIDC", "AWS_IAM_IDC", "AWS_QUICKSIGHT_IDP", "ANONYMOUS"
     #   resp.iam_identity_provider_arn #=> String
     #   resp.identity_center_application_arn #=> String
     #   resp.role_arn #=> String
@@ -2614,6 +2890,7 @@ module Aws::QBusiness
     #   * {Types::GetChatControlsConfigurationResponse#topic_configurations #topic_configurations} => Array&lt;Types::TopicConfiguration&gt;
     #   * {Types::GetChatControlsConfigurationResponse#creator_mode_configuration #creator_mode_configuration} => Types::AppliedCreatorModeConfiguration
     #   * {Types::GetChatControlsConfigurationResponse#next_token #next_token} => String
+    #   * {Types::GetChatControlsConfigurationResponse#hallucination_reduction_configuration #hallucination_reduction_configuration} => Types::HallucinationReductionConfiguration
     #
     # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
     #
@@ -2653,6 +2930,7 @@ module Aws::QBusiness
     #   resp.topic_configurations[0].rules[0].rule_configuration.content_retrieval_rule.eligible_data_sources[0].data_source_id #=> String
     #   resp.creator_mode_configuration.creator_mode_control #=> String, one of "ENABLED", "DISABLED"
     #   resp.next_token #=> String
+    #   resp.hallucination_reduction_configuration.hallucination_reduction_control #=> String, one of "ENABLED", "DISABLED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qbusiness-2023-11-27/GetChatControlsConfiguration AWS API Documentation
     #
@@ -2660,6 +2938,78 @@ module Aws::QBusiness
     # @param [Hash] params ({})
     def get_chat_controls_configuration(params = {}, options = {})
       req = build_request(:get_chat_controls_configuration, params)
+      req.send_request(options)
+    end
+
+    # Retrieves detailed information about a specific chat response
+    # configuration from an Amazon Q Business application. This operation
+    # returns the complete configuration settings and metadata.
+    #
+    # @option params [required, String] :application_id
+    #   The unique identifier of the Amazon Q Business application containing
+    #   the chat response configuration to retrieve.
+    #
+    # @option params [required, String] :chat_response_configuration_id
+    #   The unique identifier of the chat response configuration to retrieve
+    #   from the specified application.
+    #
+    # @return [Types::GetChatResponseConfigurationResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetChatResponseConfigurationResponse#chat_response_configuration_id #chat_response_configuration_id} => String
+    #   * {Types::GetChatResponseConfigurationResponse#chat_response_configuration_arn #chat_response_configuration_arn} => String
+    #   * {Types::GetChatResponseConfigurationResponse#display_name #display_name} => String
+    #   * {Types::GetChatResponseConfigurationResponse#created_at #created_at} => Time
+    #   * {Types::GetChatResponseConfigurationResponse#in_use_configuration #in_use_configuration} => Types::ChatResponseConfigurationDetail
+    #   * {Types::GetChatResponseConfigurationResponse#last_update_configuration #last_update_configuration} => Types::ChatResponseConfigurationDetail
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_chat_response_configuration({
+    #     application_id: "ApplicationId", # required
+    #     chat_response_configuration_id: "ChatResponseConfigurationId", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.chat_response_configuration_id #=> String
+    #   resp.chat_response_configuration_arn #=> String
+    #   resp.display_name #=> String
+    #   resp.created_at #=> Time
+    #   resp.in_use_configuration.response_configurations #=> Hash
+    #   resp.in_use_configuration.response_configurations["ResponseConfigurationType"].instruction_collection.response_length #=> String
+    #   resp.in_use_configuration.response_configurations["ResponseConfigurationType"].instruction_collection.target_audience #=> String
+    #   resp.in_use_configuration.response_configurations["ResponseConfigurationType"].instruction_collection.perspective #=> String
+    #   resp.in_use_configuration.response_configurations["ResponseConfigurationType"].instruction_collection.output_style #=> String
+    #   resp.in_use_configuration.response_configurations["ResponseConfigurationType"].instruction_collection.identity #=> String
+    #   resp.in_use_configuration.response_configurations["ResponseConfigurationType"].instruction_collection.tone #=> String
+    #   resp.in_use_configuration.response_configurations["ResponseConfigurationType"].instruction_collection.custom_instructions #=> String
+    #   resp.in_use_configuration.response_configurations["ResponseConfigurationType"].instruction_collection.examples #=> String
+    #   resp.in_use_configuration.response_configuration_summary #=> String
+    #   resp.in_use_configuration.status #=> String, one of "CREATING", "UPDATING", "FAILED", "ACTIVE"
+    #   resp.in_use_configuration.error.error_message #=> String
+    #   resp.in_use_configuration.error.error_code #=> String, one of "InternalError", "InvalidRequest", "ResourceInactive", "ResourceNotFound"
+    #   resp.in_use_configuration.updated_at #=> Time
+    #   resp.last_update_configuration.response_configurations #=> Hash
+    #   resp.last_update_configuration.response_configurations["ResponseConfigurationType"].instruction_collection.response_length #=> String
+    #   resp.last_update_configuration.response_configurations["ResponseConfigurationType"].instruction_collection.target_audience #=> String
+    #   resp.last_update_configuration.response_configurations["ResponseConfigurationType"].instruction_collection.perspective #=> String
+    #   resp.last_update_configuration.response_configurations["ResponseConfigurationType"].instruction_collection.output_style #=> String
+    #   resp.last_update_configuration.response_configurations["ResponseConfigurationType"].instruction_collection.identity #=> String
+    #   resp.last_update_configuration.response_configurations["ResponseConfigurationType"].instruction_collection.tone #=> String
+    #   resp.last_update_configuration.response_configurations["ResponseConfigurationType"].instruction_collection.custom_instructions #=> String
+    #   resp.last_update_configuration.response_configurations["ResponseConfigurationType"].instruction_collection.examples #=> String
+    #   resp.last_update_configuration.response_configuration_summary #=> String
+    #   resp.last_update_configuration.status #=> String, one of "CREATING", "UPDATING", "FAILED", "ACTIVE"
+    #   resp.last_update_configuration.error.error_message #=> String
+    #   resp.last_update_configuration.error.error_code #=> String, one of "InternalError", "InvalidRequest", "ResourceInactive", "ResourceNotFound"
+    #   resp.last_update_configuration.updated_at #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qbusiness-2023-11-27/GetChatResponseConfiguration AWS API Documentation
+    #
+    # @overload get_chat_response_configuration(params = {})
+    # @param [Hash] params ({})
+    def get_chat_response_configuration(params = {}, options = {})
+      req = build_request(:get_chat_response_configuration, params)
       req.send_request(options)
     end
 
@@ -2685,6 +3035,7 @@ module Aws::QBusiness
     #   * {Types::GetDataAccessorResponse#idc_application_arn #idc_application_arn} => String
     #   * {Types::GetDataAccessorResponse#principal #principal} => String
     #   * {Types::GetDataAccessorResponse#action_configurations #action_configurations} => Array&lt;Types::ActionConfiguration&gt;
+    #   * {Types::GetDataAccessorResponse#authentication_detail #authentication_detail} => Types::DataAccessorAuthenticationDetail
     #   * {Types::GetDataAccessorResponse#created_at #created_at} => Time
     #   * {Types::GetDataAccessorResponse#updated_at #updated_at} => Time
     #
@@ -2752,6 +3103,10 @@ module Aws::QBusiness
     #   resp.action_configurations[0].filter_configuration.document_attribute_filter.less_than_or_equals.value.string_list_value[0] #=> String
     #   resp.action_configurations[0].filter_configuration.document_attribute_filter.less_than_or_equals.value.long_value #=> Integer
     #   resp.action_configurations[0].filter_configuration.document_attribute_filter.less_than_or_equals.value.date_value #=> Time
+    #   resp.authentication_detail.authentication_type #=> String, one of "AWS_IAM_IDC_TTI", "AWS_IAM_IDC_AUTH_CODE"
+    #   resp.authentication_detail.authentication_configuration.idc_trusted_token_issuer_configuration.idc_trusted_token_issuer_arn #=> String
+    #   resp.authentication_detail.external_ids #=> Array
+    #   resp.authentication_detail.external_ids[0] #=> String
     #   resp.created_at #=> Time
     #   resp.updated_at #=> Time
     #
@@ -2870,6 +3225,64 @@ module Aws::QBusiness
     # @param [Hash] params ({})
     def get_data_source(params = {}, options = {})
       req = build_request(:get_data_source, params)
+      req.send_request(options)
+    end
+
+    # Retrieves the content of a document that was ingested into Amazon Q
+    # Business. This API validates user authorization against document ACLs
+    # before returning a pre-signed URL for secure document access. You can
+    # download or view source documents referenced in chat responses through
+    # the URL.
+    #
+    # @option params [required, String] :application_id
+    #   The unique identifier of the Amazon Q Business application containing
+    #   the document. This ensures the request is scoped to the correct
+    #   application environment and its associated security policies.
+    #
+    # @option params [required, String] :index_id
+    #   The identifier of the index where documents are indexed.
+    #
+    # @option params [String] :data_source_id
+    #   The identifier of the data source from which the document was
+    #   ingested. This field is not present if the document is ingested by
+    #   directly calling the BatchPutDocument API. If the document is from a
+    #   file-upload data source, the datasource will be
+    #   "uploaded-docs-file-stat-datasourceid".
+    #
+    # @option params [required, String] :document_id
+    #   The unique identifier of the document that is indexed via
+    #   BatchPutDocument API or file-upload or connector sync. It is also
+    #   found in chat or chatSync response.
+    #
+    # @option params [String] :output_format
+    #   Document outputFormat. Defaults to RAW if not selected.
+    #
+    # @return [Types::GetDocumentContentResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetDocumentContentResponse#presigned_url #presigned_url} => String
+    #   * {Types::GetDocumentContentResponse#mime_type #mime_type} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_document_content({
+    #     application_id: "ApplicationId", # required
+    #     index_id: "IndexId", # required
+    #     data_source_id: "DataSourceId",
+    #     document_id: "DocumentId", # required
+    #     output_format: "RAW", # accepts RAW, EXTRACTED
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.presigned_url #=> String
+    #   resp.mime_type #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qbusiness-2023-11-27/GetDocumentContent AWS API Documentation
+    #
+    # @overload get_document_content(params = {})
+    # @param [Hash] params ({})
+    def get_document_content(params = {}, options = {})
+      req = build_request(:get_document_content, params)
       req.send_request(options)
     end
 
@@ -3175,15 +3588,16 @@ module Aws::QBusiness
     #   resp.status #=> String, one of "CREATING", "ACTIVE", "FAILED"
     #   resp.display_name #=> String
     #   resp.configuration.native_index_configuration.index_id #=> String
+    #   resp.configuration.native_index_configuration.version #=> Integer
     #   resp.configuration.native_index_configuration.boosting_override #=> Hash
-    #   resp.configuration.native_index_configuration.boosting_override["DocumentAttributeKey"].number_configuration.boosting_level #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH", "VERY_HIGH"
+    #   resp.configuration.native_index_configuration.boosting_override["DocumentAttributeKey"].number_configuration.boosting_level #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH", "VERY_HIGH", "ONE", "TWO"
     #   resp.configuration.native_index_configuration.boosting_override["DocumentAttributeKey"].number_configuration.boosting_type #=> String, one of "PRIORITIZE_LARGER_VALUES", "PRIORITIZE_SMALLER_VALUES"
-    #   resp.configuration.native_index_configuration.boosting_override["DocumentAttributeKey"].string_configuration.boosting_level #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH", "VERY_HIGH"
+    #   resp.configuration.native_index_configuration.boosting_override["DocumentAttributeKey"].string_configuration.boosting_level #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH", "VERY_HIGH", "ONE", "TWO"
     #   resp.configuration.native_index_configuration.boosting_override["DocumentAttributeKey"].string_configuration.attribute_value_boosting #=> Hash
-    #   resp.configuration.native_index_configuration.boosting_override["DocumentAttributeKey"].string_configuration.attribute_value_boosting["String"] #=> String, one of "LOW", "MEDIUM", "HIGH", "VERY_HIGH"
-    #   resp.configuration.native_index_configuration.boosting_override["DocumentAttributeKey"].date_configuration.boosting_level #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH", "VERY_HIGH"
+    #   resp.configuration.native_index_configuration.boosting_override["DocumentAttributeKey"].string_configuration.attribute_value_boosting["String"] #=> String, one of "LOW", "MEDIUM", "HIGH", "VERY_HIGH", "ONE", "TWO", "THREE", "FOUR", "FIVE"
+    #   resp.configuration.native_index_configuration.boosting_override["DocumentAttributeKey"].date_configuration.boosting_level #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH", "VERY_HIGH", "ONE", "TWO"
     #   resp.configuration.native_index_configuration.boosting_override["DocumentAttributeKey"].date_configuration.boosting_duration_in_seconds #=> Integer
-    #   resp.configuration.native_index_configuration.boosting_override["DocumentAttributeKey"].string_list_configuration.boosting_level #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH", "VERY_HIGH"
+    #   resp.configuration.native_index_configuration.boosting_override["DocumentAttributeKey"].string_list_configuration.boosting_level #=> String, one of "NONE", "LOW", "MEDIUM", "HIGH", "VERY_HIGH", "ONE", "TWO"
     #   resp.configuration.kendra_index_configuration.index_id #=> String
     #   resp.role_arn #=> String
     #   resp.created_at #=> Time
@@ -3357,7 +3771,7 @@ module Aws::QBusiness
     #   resp.applications[0].created_at #=> Time
     #   resp.applications[0].updated_at #=> Time
     #   resp.applications[0].status #=> String, one of "CREATING", "ACTIVE", "DELETING", "FAILED", "UPDATING"
-    #   resp.applications[0].identity_type #=> String, one of "AWS_IAM_IDP_SAML", "AWS_IAM_IDP_OIDC", "AWS_IAM_IDC", "AWS_QUICKSIGHT_IDP"
+    #   resp.applications[0].identity_type #=> String, one of "AWS_IAM_IDP_SAML", "AWS_IAM_IDP_OIDC", "AWS_IAM_IDC", "AWS_QUICKSIGHT_IDP", "ANONYMOUS"
     #   resp.applications[0].quick_sight_configuration.client_namespace #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qbusiness-2023-11-27/ListApplications AWS API Documentation
@@ -3432,6 +3846,60 @@ module Aws::QBusiness
     # @param [Hash] params ({})
     def list_attachments(params = {}, options = {})
       req = build_request(:list_attachments, params)
+      req.send_request(options)
+    end
+
+    # Retrieves a list of all chat response configurations available in a
+    # specified Amazon Q Business application. This operation returns
+    # summary information about each configuration to help administrators
+    # manage and select appropriate response settings.
+    #
+    # @option params [required, String] :application_id
+    #   The unique identifier of the Amazon Q Business application for which
+    #   to list available chat response configurations.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of chat response configurations to return in a
+    #   single response. This parameter helps control pagination of results
+    #   when many configurations exist.
+    #
+    # @option params [String] :next_token
+    #   A pagination token used to retrieve the next set of results when the
+    #   number of configurations exceeds the specified `maxResults` value.
+    #
+    # @return [Types::ListChatResponseConfigurationsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListChatResponseConfigurationsResponse#chat_response_configurations #chat_response_configurations} => Array&lt;Types::ChatResponseConfiguration&gt;
+    #   * {Types::ListChatResponseConfigurationsResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_chat_response_configurations({
+    #     application_id: "ApplicationId", # required
+    #     max_results: 1,
+    #     next_token: "NextToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.chat_response_configurations #=> Array
+    #   resp.chat_response_configurations[0].chat_response_configuration_id #=> String
+    #   resp.chat_response_configurations[0].chat_response_configuration_arn #=> String
+    #   resp.chat_response_configurations[0].display_name #=> String
+    #   resp.chat_response_configurations[0].response_configuration_summary #=> String
+    #   resp.chat_response_configurations[0].status #=> String, one of "CREATING", "UPDATING", "FAILED", "ACTIVE"
+    #   resp.chat_response_configurations[0].created_at #=> Time
+    #   resp.chat_response_configurations[0].updated_at #=> Time
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qbusiness-2023-11-27/ListChatResponseConfigurations AWS API Documentation
+    #
+    # @overload list_chat_response_configurations(params = {})
+    # @param [Hash] params ({})
+    def list_chat_response_configurations(params = {}, options = {})
+      req = build_request(:list_chat_response_configurations, params)
       req.send_request(options)
     end
 
@@ -3524,6 +3992,10 @@ module Aws::QBusiness
     #   resp.data_accessors[0].data_accessor_arn #=> String
     #   resp.data_accessors[0].idc_application_arn #=> String
     #   resp.data_accessors[0].principal #=> String
+    #   resp.data_accessors[0].authentication_detail.authentication_type #=> String, one of "AWS_IAM_IDC_TTI", "AWS_IAM_IDC_AUTH_CODE"
+    #   resp.data_accessors[0].authentication_detail.authentication_configuration.idc_trusted_token_issuer_configuration.idc_trusted_token_issuer_arn #=> String
+    #   resp.data_accessors[0].authentication_detail.external_ids #=> Array
+    #   resp.data_accessors[0].authentication_detail.external_ids[0] #=> String
     #   resp.data_accessors[0].created_at #=> Time
     #   resp.data_accessors[0].updated_at #=> Time
     #   resp.next_token #=> String
@@ -3914,6 +4386,9 @@ module Aws::QBusiness
     #   resp.messages[0].source_attribution[0].text_message_segments[0].source_details.video_source_details.start_time_milliseconds #=> Integer
     #   resp.messages[0].source_attribution[0].text_message_segments[0].source_details.video_source_details.end_time_milliseconds #=> Integer
     #   resp.messages[0].source_attribution[0].text_message_segments[0].source_details.video_source_details.video_extraction_type #=> String, one of "TRANSCRIPT", "SUMMARY"
+    #   resp.messages[0].source_attribution[0].document_id #=> String
+    #   resp.messages[0].source_attribution[0].index_id #=> String
+    #   resp.messages[0].source_attribution[0].datasource_id #=> String
     #   resp.messages[0].action_review.plugin_id #=> String
     #   resp.messages[0].action_review.plugin_type #=> String, one of "SERVICE_NOW", "SALESFORCE", "JIRA", "ZENDESK", "CUSTOM", "QUICKSIGHT", "SERVICENOW_NOW_PLATFORM", "JIRA_CLOUD", "SALESFORCE_CRM", "ZENDESK_SUITE", "ATLASSIAN_CONFLUENCE", "GOOGLE_CALENDAR", "MICROSOFT_TEAMS", "MICROSOFT_EXCHANGE", "PAGERDUTY_ADVANCE", "SMARTSHEET", "ASANA"
     #   resp.messages[0].action_review.payload #=> Hash
@@ -4873,6 +5348,9 @@ module Aws::QBusiness
     # @option params [Types::CreatorModeConfiguration] :creator_mode_configuration
     #   The configuration details for `CREATOR_MODE`.
     #
+    # @option params [Types::HallucinationReductionConfiguration] :hallucination_reduction_configuration
+    #   The hallucination reduction settings for your application.
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     # @example Request syntax with placeholder values
@@ -4958,6 +5436,9 @@ module Aws::QBusiness
     #     creator_mode_configuration: {
     #       creator_mode_control: "ENABLED", # required, accepts ENABLED, DISABLED
     #     },
+    #     hallucination_reduction_configuration: {
+    #       hallucination_reduction_control: "ENABLED", # accepts ENABLED, DISABLED
+    #     },
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qbusiness-2023-11-27/UpdateChatControlsConfiguration AWS API Documentation
@@ -4966,6 +5447,70 @@ module Aws::QBusiness
     # @param [Hash] params ({})
     def update_chat_controls_configuration(params = {}, options = {})
       req = build_request(:update_chat_controls_configuration, params)
+      req.send_request(options)
+    end
+
+    # Updates an existing chat response configuration in an Amazon Q
+    # Business application. This operation allows administrators to modify
+    # configuration settings, display name, and response parameters to
+    # refine how the system generates responses.
+    #
+    # @option params [required, String] :application_id
+    #   The unique identifier of the Amazon Q Business application containing
+    #   the chat response configuration to update.
+    #
+    # @option params [required, String] :chat_response_configuration_id
+    #   The unique identifier of the chat response configuration to update
+    #   within the specified application.
+    #
+    # @option params [String] :display_name
+    #   The new human-readable name to assign to the chat response
+    #   configuration, making it easier to identify among multiple
+    #   configurations.
+    #
+    # @option params [required, Hash<String,Types::ResponseConfiguration>] :response_configurations
+    #   The updated collection of response configuration settings that define
+    #   how Amazon Q Business generates and formats responses to user queries.
+    #
+    # @option params [String] :client_token
+    #   A unique, case-sensitive identifier to ensure idempotency of the
+    #   request. This helps prevent the same update from being processed
+    #   multiple times if retries occur.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_chat_response_configuration({
+    #     application_id: "ApplicationId", # required
+    #     chat_response_configuration_id: "ChatResponseConfigurationId", # required
+    #     display_name: "DisplayName",
+    #     response_configurations: { # required
+    #       "ALL" => {
+    #         instruction_collection: {
+    #           response_length: "Instruction",
+    #           target_audience: "Instruction",
+    #           perspective: "Instruction",
+    #           output_style: "Instruction",
+    #           identity: "Instruction",
+    #           tone: "Instruction",
+    #           custom_instructions: "Instruction",
+    #           examples: "Instruction",
+    #         },
+    #       },
+    #     },
+    #     client_token: "String",
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qbusiness-2023-11-27/UpdateChatResponseConfiguration AWS API Documentation
+    #
+    # @overload update_chat_response_configuration(params = {})
+    # @param [Hash] params ({})
+    def update_chat_response_configuration(params = {}, options = {})
+      req = build_request(:update_chat_response_configuration, params)
       req.send_request(options)
     end
 
@@ -4984,6 +5529,11 @@ module Aws::QBusiness
     # @option params [required, Array<Types::ActionConfiguration>] :action_configurations
     #   The updated list of action configurations specifying the allowed
     #   actions and any associated filters.
+    #
+    # @option params [Types::DataAccessorAuthenticationDetail] :authentication_detail
+    #   The updated authentication configuration details for the data
+    #   accessor. This specifies how the ISV will authenticate when accessing
+    #   data through this data accessor.
     #
     # @option params [String] :display_name
     #   The updated friendly name for the data accessor.
@@ -5080,6 +5630,15 @@ module Aws::QBusiness
     #         },
     #       },
     #     ],
+    #     authentication_detail: {
+    #       authentication_type: "AWS_IAM_IDC_TTI", # required, accepts AWS_IAM_IDC_TTI, AWS_IAM_IDC_AUTH_CODE
+    #       authentication_configuration: {
+    #         idc_trusted_token_issuer_configuration: {
+    #           idc_trusted_token_issuer_arn: "IdcTrustedTokenIssuerArn", # required
+    #         },
+    #       },
+    #       external_ids: ["DataAccessorExternalId"],
+    #     },
     #     display_name: "DataAccessorName",
     #   })
     #
@@ -5337,7 +5896,7 @@ module Aws::QBusiness
     #     custom_plugin_configuration: {
     #       description: "PluginDescription", # required
     #       api_schema_type: "OPEN_API_V3", # required, accepts OPEN_API_V3
-    #       api_schema: { # required
+    #       api_schema: {
     #         payload: "Payload",
     #         s3: {
     #           bucket: "S3BucketName", # required
@@ -5403,24 +5962,25 @@ module Aws::QBusiness
     #     configuration: {
     #       native_index_configuration: {
     #         index_id: "IndexId", # required
+    #         version: 1,
     #         boosting_override: {
     #           "DocumentAttributeKey" => {
     #             number_configuration: {
-    #               boosting_level: "NONE", # required, accepts NONE, LOW, MEDIUM, HIGH, VERY_HIGH
+    #               boosting_level: "NONE", # required, accepts NONE, LOW, MEDIUM, HIGH, VERY_HIGH, ONE, TWO
     #               boosting_type: "PRIORITIZE_LARGER_VALUES", # accepts PRIORITIZE_LARGER_VALUES, PRIORITIZE_SMALLER_VALUES
     #             },
     #             string_configuration: {
-    #               boosting_level: "NONE", # required, accepts NONE, LOW, MEDIUM, HIGH, VERY_HIGH
+    #               boosting_level: "NONE", # required, accepts NONE, LOW, MEDIUM, HIGH, VERY_HIGH, ONE, TWO
     #               attribute_value_boosting: {
-    #                 "String" => "LOW", # accepts LOW, MEDIUM, HIGH, VERY_HIGH
+    #                 "String" => "LOW", # accepts LOW, MEDIUM, HIGH, VERY_HIGH, ONE, TWO, THREE, FOUR, FIVE
     #               },
     #             },
     #             date_configuration: {
-    #               boosting_level: "NONE", # required, accepts NONE, LOW, MEDIUM, HIGH, VERY_HIGH
+    #               boosting_level: "NONE", # required, accepts NONE, LOW, MEDIUM, HIGH, VERY_HIGH, ONE, TWO
     #               boosting_duration_in_seconds: 1,
     #             },
     #             string_list_configuration: {
-    #               boosting_level: "NONE", # required, accepts NONE, LOW, MEDIUM, HIGH, VERY_HIGH
+    #               boosting_level: "NONE", # required, accepts NONE, LOW, MEDIUM, HIGH, VERY_HIGH, ONE, TWO
     #             },
     #           },
     #         },
@@ -5593,14 +6153,17 @@ module Aws::QBusiness
     #
     # @option params [Array<String>] :origins
     #   Updates the website domain origins that are allowed to embed the
-    #   Amazon Q Business web experience.      The <i>domain origin</i> refers
-    #   to the <i>base URL</i> for accessing a website including the protocol
-    #   (<code>http/https</code>), the domain name, and the port number (if
-    #   specified).</p> <note> <ul> <li> <p>Any values except
-    #   <code>null</code> submitted as part of this update will replace all
-    #   previous values.</p> </li> <li> <p>You must only submit a <i>base
-    #   URL</i> and not a full path. For example,
-    #   <code>https://docs.aws.amazon.com</code>.</p> </li> </ul> </note>
+    #   Amazon Q Business web experience. The *domain origin* refers to the
+    #   *base URL* for accessing a website including the protocol
+    #   (`http/https`), the domain name, and the port number (if specified).
+    #
+    #   <note markdown="1"> * Any values except `null` submitted as part of this update will
+    #     replace all previous values.
+    #
+    #   * You must only submit a *base URL* and not a full path. For example,
+    #     `https://docs.aws.amazon.com`.
+    #
+    #    </note>
     #
     # @option params [Types::BrowserExtensionConfiguration] :browser_extension_configuration
     #   The browser extension configuration for an Amazon Q Business web
@@ -5690,7 +6253,7 @@ module Aws::QBusiness
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-qbusiness'
-      context[:gem_version] = '1.33.0'
+      context[:gem_version] = '1.61.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

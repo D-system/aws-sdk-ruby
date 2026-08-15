@@ -45,7 +45,7 @@ module Aws::AccessAnalyzer
       attr_accessor resource_owner_account: ::String
       attr_accessor error: ::String
       attr_accessor sources: ::Array[Types::FindingSource]
-      attr_accessor resource_control_policy_restriction: ("APPLICABLE" | "FAILED_TO_EVALUATE_RCP" | "NOT_APPLICABLE")
+      attr_accessor resource_control_policy_restriction: ("APPLICABLE" | "FAILED_TO_EVALUATE_RCP" | "NOT_APPLICABLE" | "APPLIED")
       SENSITIVE: []
     end
 
@@ -112,10 +112,13 @@ module Aws::AccessAnalyzer
 
     class AnalyzerConfiguration
       attr_accessor unused_access: Types::UnusedAccessConfiguration
+      attr_accessor internal_access: Types::InternalAccessConfiguration
       attr_accessor unknown: untyped
       SENSITIVE: []
 
       class UnusedAccess < AnalyzerConfiguration
+      end
+      class InternalAccess < AnalyzerConfiguration
       end
       class Unknown < AnalyzerConfiguration
       end
@@ -124,7 +127,7 @@ module Aws::AccessAnalyzer
     class AnalyzerSummary
       attr_accessor arn: ::String
       attr_accessor name: ::String
-      attr_accessor type: ("ACCOUNT" | "ORGANIZATION" | "ACCOUNT_UNUSED_ACCESS" | "ORGANIZATION_UNUSED_ACCESS")
+      attr_accessor type: ("ACCOUNT" | "ORGANIZATION" | "ACCOUNT_UNUSED_ACCESS" | "ORGANIZATION_UNUSED_ACCESS" | "ACCOUNT_INTERNAL_ACCESS" | "ORGANIZATION_INTERNAL_ACCESS")
       attr_accessor created_at: ::Time
       attr_accessor last_resource_analyzed: ::String
       attr_accessor last_resource_analyzed_at: ::Time
@@ -132,6 +135,7 @@ module Aws::AccessAnalyzer
       attr_accessor status: ("ACTIVE" | "CREATING" | "DISABLED" | "FAILED")
       attr_accessor status_reason: Types::StatusReason
       attr_accessor configuration: Types::AnalyzerConfiguration
+      attr_accessor managed_by: ::String
       SENSITIVE: []
     end
 
@@ -188,7 +192,7 @@ module Aws::AccessAnalyzer
 
     class CheckNoPublicAccessRequest
       attr_accessor policy_document: ::String
-      attr_accessor resource_type: ("AWS::DynamoDB::Table" | "AWS::DynamoDB::Stream" | "AWS::EFS::FileSystem" | "AWS::OpenSearchService::Domain" | "AWS::Kinesis::Stream" | "AWS::Kinesis::StreamConsumer" | "AWS::KMS::Key" | "AWS::Lambda::Function" | "AWS::S3::Bucket" | "AWS::S3::AccessPoint" | "AWS::S3Express::DirectoryBucket" | "AWS::S3::Glacier" | "AWS::S3Outposts::Bucket" | "AWS::S3Outposts::AccessPoint" | "AWS::SecretsManager::Secret" | "AWS::SNS::Topic" | "AWS::SQS::Queue" | "AWS::IAM::AssumeRolePolicyDocument")
+      attr_accessor resource_type: ("AWS::DynamoDB::Table" | "AWS::DynamoDB::Stream" | "AWS::EFS::FileSystem" | "AWS::OpenSearchService::Domain" | "AWS::Kinesis::Stream" | "AWS::Kinesis::StreamConsumer" | "AWS::KMS::Key" | "AWS::Lambda::Function" | "AWS::S3::Bucket" | "AWS::S3::AccessPoint" | "AWS::S3Express::DirectoryBucket" | "AWS::S3::Glacier" | "AWS::S3Outposts::Bucket" | "AWS::S3Outposts::AccessPoint" | "AWS::SecretsManager::Secret" | "AWS::SNS::Topic" | "AWS::SQS::Queue" | "AWS::IAM::AssumeRolePolicyDocument" | "AWS::S3Tables::TableBucket" | "AWS::ApiGateway::RestApi" | "AWS::CodeArtifact::Domain" | "AWS::Backup::BackupVault" | "AWS::CloudTrail::Dashboard" | "AWS::CloudTrail::EventDataStore" | "AWS::S3Tables::Table" | "AWS::S3Express::AccessPoint")
       SENSITIVE: [:policy_document]
     end
 
@@ -285,7 +289,7 @@ module Aws::AccessAnalyzer
 
     class CreateAnalyzerRequest
       attr_accessor analyzer_name: ::String
-      attr_accessor type: ("ACCOUNT" | "ORGANIZATION" | "ACCOUNT_UNUSED_ACCESS" | "ORGANIZATION_UNUSED_ACCESS")
+      attr_accessor type: ("ACCOUNT" | "ORGANIZATION" | "ACCOUNT_UNUSED_ACCESS" | "ORGANIZATION_UNUSED_ACCESS" | "ACCOUNT_INTERNAL_ACCESS" | "ORGANIZATION_INTERNAL_ACCESS")
       attr_accessor archive_rules: ::Array[Types::InlineArchiveRule]
       attr_accessor tags: ::Hash[::String, ::String]
       attr_accessor client_token: ::String
@@ -306,6 +310,19 @@ module Aws::AccessAnalyzer
       SENSITIVE: []
     end
 
+    class CreateServiceLinkedAnalyzerRequest
+      attr_accessor type: ("ACCOUNT" | "ORGANIZATION" | "ACCOUNT_UNUSED_ACCESS" | "ORGANIZATION_UNUSED_ACCESS" | "ACCOUNT_INTERNAL_ACCESS" | "ORGANIZATION_INTERNAL_ACCESS")
+      attr_accessor archive_rules: ::Array[Types::InlineArchiveRule]
+      attr_accessor client_token: ::String
+      attr_accessor configuration: Types::AnalyzerConfiguration
+      SENSITIVE: []
+    end
+
+    class CreateServiceLinkedAnalyzerResponse
+      attr_accessor arn: ::String
+      SENSITIVE: []
+    end
+
     class Criterion
       attr_accessor eq: ::Array[::String]
       attr_accessor neq: ::Array[::String]
@@ -323,6 +340,12 @@ module Aws::AccessAnalyzer
     class DeleteArchiveRuleRequest
       attr_accessor analyzer_name: ::String
       attr_accessor rule_name: ::String
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteServiceLinkedAnalyzerRequest
+      attr_accessor analyzer_name: ::String
       attr_accessor client_token: ::String
       SENSITIVE: []
     end
@@ -360,7 +383,7 @@ module Aws::AccessAnalyzer
       attr_accessor is_public: bool
       attr_accessor principal: ::Hash[::String, ::String]
       attr_accessor sources: ::Array[Types::FindingSource]
-      attr_accessor resource_control_policy_restriction: ("APPLICABLE" | "FAILED_TO_EVALUATE_RCP" | "NOT_APPLICABLE")
+      attr_accessor resource_control_policy_restriction: ("APPLICABLE" | "FAILED_TO_EVALUATE_RCP" | "NOT_APPLICABLE" | "APPLIED")
       SENSITIVE: []
     end
 
@@ -387,7 +410,7 @@ module Aws::AccessAnalyzer
       attr_accessor resource_owner_account: ::String
       attr_accessor error: ::String
       attr_accessor sources: ::Array[Types::FindingSource]
-      attr_accessor resource_control_policy_restriction: ("APPLICABLE" | "FAILED_TO_EVALUATE_RCP" | "NOT_APPLICABLE")
+      attr_accessor resource_control_policy_restriction: ("APPLICABLE" | "FAILED_TO_EVALUATE_RCP" | "NOT_APPLICABLE" | "APPLIED")
       SENSITIVE: []
     end
 
@@ -399,6 +422,7 @@ module Aws::AccessAnalyzer
     end
 
     class FindingDetails
+      attr_accessor internal_access_details: Types::InternalAccessDetails
       attr_accessor external_access_details: Types::ExternalAccessDetails
       attr_accessor unused_permission_details: Types::UnusedPermissionDetails
       attr_accessor unused_iam_user_access_key_details: Types::UnusedIamUserAccessKeyDetails
@@ -407,6 +431,8 @@ module Aws::AccessAnalyzer
       attr_accessor unknown: untyped
       SENSITIVE: []
 
+      class InternalAccessDetails < FindingDetails
+      end
       class ExternalAccessDetails < FindingDetails
       end
       class UnusedPermissionDetails < FindingDetails
@@ -448,7 +474,7 @@ module Aws::AccessAnalyzer
       attr_accessor resource_owner_account: ::String
       attr_accessor error: ::String
       attr_accessor sources: ::Array[Types::FindingSource]
-      attr_accessor resource_control_policy_restriction: ("APPLICABLE" | "FAILED_TO_EVALUATE_RCP" | "NOT_APPLICABLE")
+      attr_accessor resource_control_policy_restriction: ("APPLICABLE" | "FAILED_TO_EVALUATE_RCP" | "NOT_APPLICABLE" | "APPLIED")
       SENSITIVE: []
     end
 
@@ -462,17 +488,20 @@ module Aws::AccessAnalyzer
       attr_accessor resource_owner_account: ::String
       attr_accessor status: ("ACTIVE" | "ARCHIVED" | "RESOLVED")
       attr_accessor updated_at: ::Time
-      attr_accessor finding_type: ("ExternalAccess" | "UnusedIAMRole" | "UnusedIAMUserAccessKey" | "UnusedIAMUserPassword" | "UnusedPermission")
+      attr_accessor finding_type: ("ExternalAccess" | "UnusedIAMRole" | "UnusedIAMUserAccessKey" | "UnusedIAMUserPassword" | "UnusedPermission" | "InternalAccess")
       SENSITIVE: []
     end
 
     class FindingsStatistics
       attr_accessor external_access_findings_statistics: Types::ExternalAccessFindingsStatistics
+      attr_accessor internal_access_findings_statistics: Types::InternalAccessFindingsStatistics
       attr_accessor unused_access_findings_statistics: Types::UnusedAccessFindingsStatistics
       attr_accessor unknown: untyped
       SENSITIVE: []
 
       class ExternalAccessFindingsStatistics < FindingsStatistics
+      end
+      class InternalAccessFindingsStatistics < FindingsStatistics
       end
       class UnusedAccessFindingsStatistics < FindingsStatistics
       end
@@ -598,7 +627,7 @@ module Aws::AccessAnalyzer
       attr_accessor status: ("ACTIVE" | "ARCHIVED" | "RESOLVED")
       attr_accessor updated_at: ::Time
       attr_accessor finding_details: ::Array[Types::FindingDetails]
-      attr_accessor finding_type: ("ExternalAccess" | "UnusedIAMRole" | "UnusedIAMUserAccessKey" | "UnusedIAMUserPassword" | "UnusedPermission")
+      attr_accessor finding_type: ("ExternalAccess" | "UnusedIAMRole" | "UnusedIAMUserAccessKey" | "UnusedIAMUserPassword" | "UnusedPermission" | "InternalAccess")
       SENSITIVE: []
     end
 
@@ -634,6 +663,51 @@ module Aws::AccessAnalyzer
     class InlineArchiveRule
       attr_accessor rule_name: ::String
       attr_accessor filter: ::Hash[::String, Types::Criterion]
+      SENSITIVE: []
+    end
+
+    class InternalAccessAnalysisRule
+      attr_accessor inclusions: ::Array[Types::InternalAccessAnalysisRuleCriteria]
+      SENSITIVE: []
+    end
+
+    class InternalAccessAnalysisRuleCriteria
+      attr_accessor account_ids: ::Array[::String]
+      attr_accessor resource_types: ::Array[("AWS::S3::Bucket" | "AWS::IAM::Role" | "AWS::SQS::Queue" | "AWS::Lambda::Function" | "AWS::Lambda::LayerVersion" | "AWS::KMS::Key" | "AWS::SecretsManager::Secret" | "AWS::EFS::FileSystem" | "AWS::EC2::Snapshot" | "AWS::ECR::Repository" | "AWS::RDS::DBSnapshot" | "AWS::RDS::DBClusterSnapshot" | "AWS::SNS::Topic" | "AWS::S3Express::DirectoryBucket" | "AWS::DynamoDB::Table" | "AWS::DynamoDB::Stream" | "AWS::IAM::User")]
+      attr_accessor resource_arns: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class InternalAccessConfiguration
+      attr_accessor analysis_rule: Types::InternalAccessAnalysisRule
+      SENSITIVE: []
+    end
+
+    class InternalAccessDetails
+      attr_accessor action: ::Array[::String]
+      attr_accessor condition: ::Hash[::String, ::String]
+      attr_accessor principal: ::Hash[::String, ::String]
+      attr_accessor principal_owner_account: ::String
+      attr_accessor access_type: ("INTRA_ACCOUNT" | "INTRA_ORG")
+      attr_accessor principal_type: ("IAM_ROLE" | "IAM_USER")
+      attr_accessor sources: ::Array[Types::FindingSource]
+      attr_accessor resource_control_policy_restriction: ("APPLICABLE" | "FAILED_TO_EVALUATE_RCP" | "NOT_APPLICABLE" | "APPLIED")
+      attr_accessor service_control_policy_restriction: ("APPLICABLE" | "FAILED_TO_EVALUATE_SCP" | "NOT_APPLICABLE" | "APPLIED")
+      SENSITIVE: []
+    end
+
+    class InternalAccessFindingsStatistics
+      attr_accessor resource_type_statistics: ::Hash[("AWS::S3::Bucket" | "AWS::IAM::Role" | "AWS::SQS::Queue" | "AWS::Lambda::Function" | "AWS::Lambda::LayerVersion" | "AWS::KMS::Key" | "AWS::SecretsManager::Secret" | "AWS::EFS::FileSystem" | "AWS::EC2::Snapshot" | "AWS::ECR::Repository" | "AWS::RDS::DBSnapshot" | "AWS::RDS::DBClusterSnapshot" | "AWS::SNS::Topic" | "AWS::S3Express::DirectoryBucket" | "AWS::DynamoDB::Table" | "AWS::DynamoDB::Stream" | "AWS::IAM::User"), Types::InternalAccessResourceTypeDetails]
+      attr_accessor total_active_findings: ::Integer
+      attr_accessor total_archived_findings: ::Integer
+      attr_accessor total_resolved_findings: ::Integer
+      SENSITIVE: []
+    end
+
+    class InternalAccessResourceTypeDetails
+      attr_accessor total_active_findings: ::Integer
+      attr_accessor total_resolved_findings: ::Integer
+      attr_accessor total_archived_findings: ::Integer
       SENSITIVE: []
     end
 
@@ -732,7 +806,7 @@ module Aws::AccessAnalyzer
     class ListAnalyzersRequest
       attr_accessor next_token: ::String
       attr_accessor max_results: ::Integer
-      attr_accessor type: ("ACCOUNT" | "ORGANIZATION" | "ACCOUNT_UNUSED_ACCESS" | "ORGANIZATION_UNUSED_ACCESS")
+      attr_accessor type: ("ACCOUNT" | "ORGANIZATION" | "ACCOUNT_UNUSED_ACCESS" | "ORGANIZATION_UNUSED_ACCESS" | "ACCOUNT_INTERNAL_ACCESS" | "ORGANIZATION_INTERNAL_ACCESS")
       SENSITIVE: []
     end
 
@@ -937,6 +1011,7 @@ module Aws::AccessAnalyzer
     class ResourceTypeDetails
       attr_accessor total_active_public: ::Integer
       attr_accessor total_active_cross_account: ::Integer
+      attr_accessor total_active_errors: ::Integer
       SENSITIVE: []
     end
 
@@ -961,8 +1036,15 @@ module Aws::AccessAnalyzer
       SENSITIVE: []
     end
 
+    class S3ExpressDirectoryAccessPointConfiguration
+      attr_accessor access_point_policy: ::String
+      attr_accessor network_origin: Types::NetworkOriginConfiguration
+      SENSITIVE: []
+    end
+
     class S3ExpressDirectoryBucketConfiguration
       attr_accessor bucket_policy: ::String
+      attr_accessor access_points: ::Hash[::String, Types::S3ExpressDirectoryAccessPointConfiguration]
       SENSITIVE: []
     end
 

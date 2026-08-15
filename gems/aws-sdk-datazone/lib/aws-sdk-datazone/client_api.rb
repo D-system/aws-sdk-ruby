@@ -27,6 +27,14 @@ module Aws::DataZone
     AcceptedAssetScope = Shapes::StructureShape.new(name: 'AcceptedAssetScope')
     AcceptedAssetScopes = Shapes::ListShape.new(name: 'AcceptedAssetScopes')
     AccessDeniedException = Shapes::StructureShape.new(name: 'AccessDeniedException')
+    AccountInfo = Shapes::StructureShape.new(name: 'AccountInfo')
+    AccountInfoList = Shapes::ListShape.new(name: 'AccountInfoList')
+    AccountPoolId = Shapes::StringShape.new(name: 'AccountPoolId')
+    AccountPoolList = Shapes::ListShape.new(name: 'AccountPoolList')
+    AccountPoolName = Shapes::StringShape.new(name: 'AccountPoolName')
+    AccountPoolSummaries = Shapes::ListShape.new(name: 'AccountPoolSummaries')
+    AccountPoolSummary = Shapes::StructureShape.new(name: 'AccountPoolSummary')
+    AccountSource = Shapes::UnionShape.new(name: 'AccountSource')
     ActionLink = Shapes::StringShape.new(name: 'ActionLink')
     ActionParameters = Shapes::UnionShape.new(name: 'ActionParameters')
     AddEntityOwnerInput = Shapes::StructureShape.new(name: 'AddEntityOwnerInput')
@@ -34,8 +42,27 @@ module Aws::DataZone
     AddPolicyGrantInput = Shapes::StructureShape.new(name: 'AddPolicyGrantInput')
     AddPolicyGrantOutput = Shapes::StructureShape.new(name: 'AddPolicyGrantOutput')
     AddToProjectMemberPoolPolicyGrantDetail = Shapes::StructureShape.new(name: 'AddToProjectMemberPoolPolicyGrantDetail')
+    AdditionalAttributes = Shapes::StructureShape.new(name: 'AdditionalAttributes')
+    AggregationAttributeDisplayValue = Shapes::StringShape.new(name: 'AggregationAttributeDisplayValue')
+    AggregationAttributeValue = Shapes::StringShape.new(name: 'AggregationAttributeValue')
+    AggregationDisplayValue = Shapes::StringShape.new(name: 'AggregationDisplayValue')
+    AggregationList = Shapes::ListShape.new(name: 'AggregationList')
+    AggregationListItem = Shapes::StructureShape.new(name: 'AggregationListItem')
+    AggregationOutput = Shapes::StructureShape.new(name: 'AggregationOutput')
+    AggregationOutputItem = Shapes::StructureShape.new(name: 'AggregationOutputItem')
+    AggregationOutputItems = Shapes::ListShape.new(name: 'AggregationOutputItems')
+    AggregationOutputList = Shapes::ListShape.new(name: 'AggregationOutputList')
     AllDomainUnitsGrantFilter = Shapes::StructureShape.new(name: 'AllDomainUnitsGrantFilter')
     AllUsersGrantFilter = Shapes::StructureShape.new(name: 'AllUsersGrantFilter')
+    AmazonQPropertiesInput = Shapes::StructureShape.new(name: 'AmazonQPropertiesInput')
+    AmazonQPropertiesInputAuthModeString = Shapes::StringShape.new(name: 'AmazonQPropertiesInputAuthModeString')
+    AmazonQPropertiesInputProfileArnString = Shapes::StringShape.new(name: 'AmazonQPropertiesInputProfileArnString')
+    AmazonQPropertiesOutput = Shapes::StructureShape.new(name: 'AmazonQPropertiesOutput')
+    AmazonQPropertiesOutputAuthModeString = Shapes::StringShape.new(name: 'AmazonQPropertiesOutputAuthModeString')
+    AmazonQPropertiesOutputProfileArnString = Shapes::StringShape.new(name: 'AmazonQPropertiesOutputProfileArnString')
+    AmazonQPropertiesPatch = Shapes::StructureShape.new(name: 'AmazonQPropertiesPatch')
+    AmazonQPropertiesPatchAuthModeString = Shapes::StringShape.new(name: 'AmazonQPropertiesPatchAuthModeString')
+    AmazonQPropertiesPatchProfileArnString = Shapes::StringShape.new(name: 'AmazonQPropertiesPatchProfileArnString')
     ApplicableAssetTypes = Shapes::ListShape.new(name: 'ApplicableAssetTypes')
     AssetFilterConfiguration = Shapes::UnionShape.new(name: 'AssetFilterConfiguration')
     AssetFilterSummary = Shapes::StructureShape.new(name: 'AssetFilterSummary')
@@ -46,11 +73,16 @@ module Aws::DataZone
     AssetInDataProductListingItems = Shapes::ListShape.new(name: 'AssetInDataProductListingItems')
     AssetItem = Shapes::StructureShape.new(name: 'AssetItem')
     AssetItemAdditionalAttributes = Shapes::StructureShape.new(name: 'AssetItemAdditionalAttributes')
+    AssetItemGovernedGlossaryTermsList = Shapes::ListShape.new(name: 'AssetItemGovernedGlossaryTermsList')
     AssetListing = Shapes::StructureShape.new(name: 'AssetListing')
     AssetListingDetails = Shapes::StructureShape.new(name: 'AssetListingDetails')
+    AssetListingGovernedGlossaryTermsList = Shapes::ListShape.new(name: 'AssetListingGovernedGlossaryTermsList')
     AssetListingItem = Shapes::StructureShape.new(name: 'AssetListingItem')
     AssetListingItemAdditionalAttributes = Shapes::StructureShape.new(name: 'AssetListingItemAdditionalAttributes')
+    AssetListingItemGovernedGlossaryTermsList = Shapes::ListShape.new(name: 'AssetListingItemGovernedGlossaryTermsList')
     AssetName = Shapes::StringShape.new(name: 'AssetName')
+    AssetPermission = Shapes::StructureShape.new(name: 'AssetPermission')
+    AssetPermissions = Shapes::ListShape.new(name: 'AssetPermissions')
     AssetRevision = Shapes::StructureShape.new(name: 'AssetRevision')
     AssetRevisions = Shapes::ListShape.new(name: 'AssetRevisions')
     AssetScope = Shapes::StructureShape.new(name: 'AssetScope')
@@ -62,6 +94,9 @@ module Aws::DataZone
     AssetTypesForRule = Shapes::StructureShape.new(name: 'AssetTypesForRule')
     AssociateEnvironmentRoleInput = Shapes::StructureShape.new(name: 'AssociateEnvironmentRoleInput')
     AssociateEnvironmentRoleOutput = Shapes::StructureShape.new(name: 'AssociateEnvironmentRoleOutput')
+    AssociateGovernedTermsInput = Shapes::StructureShape.new(name: 'AssociateGovernedTermsInput')
+    AssociateGovernedTermsInputGovernedGlossaryTermsList = Shapes::ListShape.new(name: 'AssociateGovernedTermsInputGovernedGlossaryTermsList')
+    AssociateGovernedTermsOutput = Shapes::StructureShape.new(name: 'AssociateGovernedTermsOutput')
     AthenaPropertiesInput = Shapes::StructureShape.new(name: 'AthenaPropertiesInput')
     AthenaPropertiesInputWorkgroupNameString = Shapes::StringShape.new(name: 'AthenaPropertiesInputWorkgroupNameString')
     AthenaPropertiesOutput = Shapes::StructureShape.new(name: 'AthenaPropertiesOutput')
@@ -69,6 +104,13 @@ module Aws::DataZone
     AthenaPropertiesPatch = Shapes::StructureShape.new(name: 'AthenaPropertiesPatch')
     AthenaPropertiesPatchWorkgroupNameString = Shapes::StringShape.new(name: 'AthenaPropertiesPatchWorkgroupNameString')
     Attribute = Shapes::StringShape.new(name: 'Attribute')
+    AttributeEntityType = Shapes::StringShape.new(name: 'AttributeEntityType')
+    AttributeError = Shapes::StructureShape.new(name: 'AttributeError')
+    AttributeIdentifier = Shapes::StringShape.new(name: 'AttributeIdentifier')
+    AttributeInput = Shapes::StructureShape.new(name: 'AttributeInput')
+    Attributes = Shapes::ListShape.new(name: 'Attributes')
+    AttributesErrors = Shapes::ListShape.new(name: 'AttributesErrors')
+    AttributesList = Shapes::ListShape.new(name: 'AttributesList')
     AuthType = Shapes::StringShape.new(name: 'AuthType')
     AuthenticationConfiguration = Shapes::StructureShape.new(name: 'AuthenticationConfiguration')
     AuthenticationConfigurationInput = Shapes::StructureShape.new(name: 'AuthenticationConfigurationInput')
@@ -85,30 +127,51 @@ module Aws::DataZone
     AuthorizedPrincipalIdentifiers = Shapes::ListShape.new(name: 'AuthorizedPrincipalIdentifiers')
     AwsAccount = Shapes::UnionShape.new(name: 'AwsAccount')
     AwsAccountId = Shapes::StringShape.new(name: 'AwsAccountId')
+    AwsAccountName = Shapes::StringShape.new(name: 'AwsAccountName')
     AwsConsoleLinkParameters = Shapes::StructureShape.new(name: 'AwsConsoleLinkParameters')
     AwsLocation = Shapes::StructureShape.new(name: 'AwsLocation')
     AwsLocationAccessRoleString = Shapes::StringShape.new(name: 'AwsLocationAccessRoleString')
     AwsRegion = Shapes::StringShape.new(name: 'AwsRegion')
+    AwsRegionList = Shapes::ListShape.new(name: 'AwsRegionList')
     BasicAuthenticationCredentials = Shapes::StructureShape.new(name: 'BasicAuthenticationCredentials')
     BasicAuthenticationCredentialsPasswordString = Shapes::StringShape.new(name: 'BasicAuthenticationCredentialsPasswordString')
     BasicAuthenticationCredentialsUserNameString = Shapes::StringShape.new(name: 'BasicAuthenticationCredentialsUserNameString')
+    BatchGetAttributeItems = Shapes::ListShape.new(name: 'BatchGetAttributeItems')
+    BatchGetAttributeOutput = Shapes::StructureShape.new(name: 'BatchGetAttributeOutput')
+    BatchGetAttributesMetadataInput = Shapes::StructureShape.new(name: 'BatchGetAttributesMetadataInput')
+    BatchGetAttributesMetadataOutput = Shapes::StructureShape.new(name: 'BatchGetAttributesMetadataOutput')
+    BatchPutAttributeItems = Shapes::ListShape.new(name: 'BatchPutAttributeItems')
+    BatchPutAttributeOutput = Shapes::StructureShape.new(name: 'BatchPutAttributeOutput')
+    BatchPutAttributesMetadataInput = Shapes::StructureShape.new(name: 'BatchPutAttributesMetadataInput')
+    BatchPutAttributesMetadataOutput = Shapes::StructureShape.new(name: 'BatchPutAttributesMetadataOutput')
     Boolean = Shapes::BooleanShape.new(name: 'Boolean')
     BusinessNameGenerationConfiguration = Shapes::StructureShape.new(name: 'BusinessNameGenerationConfiguration')
     CancelMetadataGenerationRunInput = Shapes::StructureShape.new(name: 'CancelMetadataGenerationRunInput')
     CancelMetadataGenerationRunOutput = Shapes::StructureShape.new(name: 'CancelMetadataGenerationRunOutput')
     CancelSubscriptionInput = Shapes::StructureShape.new(name: 'CancelSubscriptionInput')
     CancelSubscriptionOutput = Shapes::StructureShape.new(name: 'CancelSubscriptionOutput')
+    CellInformation = Shapes::StructureShape.new(name: 'CellInformation')
+    CellOrder = Shapes::ListShape.new(name: 'CellOrder')
     ChangeAction = Shapes::StringShape.new(name: 'ChangeAction')
     ClientToken = Shapes::StringShape.new(name: 'ClientToken')
     CloudFormationProperties = Shapes::StructureShape.new(name: 'CloudFormationProperties')
     ColumnFilterConfiguration = Shapes::StructureShape.new(name: 'ColumnFilterConfiguration')
     ColumnNameList = Shapes::ListShape.new(name: 'ColumnNameList')
+    CommitHash = Shapes::StringShape.new(name: 'CommitHash')
+    CommitMessage = Shapes::StringShape.new(name: 'CommitMessage')
+    CompletedAt = Shapes::TimestampShape.new(name: 'CompletedAt')
+    ComputeConfig = Shapes::StructureShape.new(name: 'ComputeConfig')
     ComputeEnvironments = Shapes::StringShape.new(name: 'ComputeEnvironments')
     ComputeEnvironmentsList = Shapes::ListShape.new(name: 'ComputeEnvironmentsList')
+    ComputeId = Shapes::StringShape.new(name: 'ComputeId')
     ConfigurableActionParameter = Shapes::StructureShape.new(name: 'ConfigurableActionParameter')
     ConfigurableActionParameterList = Shapes::ListShape.new(name: 'ConfigurableActionParameterList')
     ConfigurableActionTypeAuthorization = Shapes::StringShape.new(name: 'ConfigurableActionTypeAuthorization')
     ConfigurableEnvironmentAction = Shapes::StructureShape.new(name: 'ConfigurableEnvironmentAction')
+    Configuration = Shapes::StructureShape.new(name: 'Configuration')
+    ConfigurationClassificationString = Shapes::StringShape.new(name: 'ConfigurationClassificationString')
+    ConfigurationStatus = Shapes::StringShape.new(name: 'ConfigurationStatus')
+    Configurations = Shapes::ListShape.new(name: 'Configurations')
     ConflictException = Shapes::StructureShape.new(name: 'ConflictException')
     ConnectionCredentials = Shapes::StructureShape.new(name: 'ConnectionCredentials')
     ConnectionId = Shapes::StringShape.new(name: 'ConnectionId')
@@ -118,16 +181,26 @@ module Aws::DataZone
     ConnectionPropertiesOutput = Shapes::UnionShape.new(name: 'ConnectionPropertiesOutput')
     ConnectionPropertiesPatch = Shapes::UnionShape.new(name: 'ConnectionPropertiesPatch')
     ConnectionPropertiesValueString = Shapes::StringShape.new(name: 'ConnectionPropertiesValueString')
+    ConnectionScope = Shapes::StringShape.new(name: 'ConnectionScope')
     ConnectionStatus = Shapes::StringShape.new(name: 'ConnectionStatus')
     ConnectionSummaries = Shapes::ListShape.new(name: 'ConnectionSummaries')
     ConnectionSummary = Shapes::StructureShape.new(name: 'ConnectionSummary')
     ConnectionType = Shapes::StringShape.new(name: 'ConnectionType')
+    ConnectivityProperties = Shapes::StructureShape.new(name: 'ConnectivityProperties')
+    ConnectivityPropertiesDescriptionString = Shapes::StringShape.new(name: 'ConnectivityPropertiesDescriptionString')
+    ConnectivityPropertiesNameString = Shapes::StringShape.new(name: 'ConnectivityPropertiesNameString')
+    ConnectivityPropertiesPatch = Shapes::StructureShape.new(name: 'ConnectivityPropertiesPatch')
+    ConnectivityPropertiesPatchDescriptionString = Shapes::StringShape.new(name: 'ConnectivityPropertiesPatchDescriptionString')
+    CreateAccountPoolInput = Shapes::StructureShape.new(name: 'CreateAccountPoolInput')
+    CreateAccountPoolOutput = Shapes::StructureShape.new(name: 'CreateAccountPoolOutput')
     CreateAssetFilterInput = Shapes::StructureShape.new(name: 'CreateAssetFilterInput')
     CreateAssetFilterOutput = Shapes::StructureShape.new(name: 'CreateAssetFilterOutput')
     CreateAssetInput = Shapes::StructureShape.new(name: 'CreateAssetInput')
     CreateAssetOutput = Shapes::StructureShape.new(name: 'CreateAssetOutput')
+    CreateAssetOutputGovernedGlossaryTermsList = Shapes::ListShape.new(name: 'CreateAssetOutputGovernedGlossaryTermsList')
     CreateAssetRevisionInput = Shapes::StructureShape.new(name: 'CreateAssetRevisionInput')
     CreateAssetRevisionOutput = Shapes::StructureShape.new(name: 'CreateAssetRevisionOutput')
+    CreateAssetRevisionOutputGovernedGlossaryTermsList = Shapes::ListShape.new(name: 'CreateAssetRevisionOutputGovernedGlossaryTermsList')
     CreateAssetTypeInput = Shapes::StructureShape.new(name: 'CreateAssetTypeInput')
     CreateAssetTypeOutput = Shapes::StructureShape.new(name: 'CreateAssetTypeOutput')
     CreateAssetTypePolicyGrantDetail = Shapes::StructureShape.new(name: 'CreateAssetTypePolicyGrantDetail')
@@ -150,6 +223,8 @@ module Aws::DataZone
     CreateDomainUnitPolicyGrantDetail = Shapes::StructureShape.new(name: 'CreateDomainUnitPolicyGrantDetail')
     CreateEnvironmentActionInput = Shapes::StructureShape.new(name: 'CreateEnvironmentActionInput')
     CreateEnvironmentActionOutput = Shapes::StructureShape.new(name: 'CreateEnvironmentActionOutput')
+    CreateEnvironmentBlueprintInput = Shapes::StructureShape.new(name: 'CreateEnvironmentBlueprintInput')
+    CreateEnvironmentBlueprintOutput = Shapes::StructureShape.new(name: 'CreateEnvironmentBlueprintOutput')
     CreateEnvironmentInput = Shapes::StructureShape.new(name: 'CreateEnvironmentInput')
     CreateEnvironmentOutput = Shapes::StructureShape.new(name: 'CreateEnvironmentOutput')
     CreateEnvironmentProfileInput = Shapes::StructureShape.new(name: 'CreateEnvironmentProfileInput')
@@ -167,8 +242,11 @@ module Aws::DataZone
     CreateGroupProfileOutput = Shapes::StructureShape.new(name: 'CreateGroupProfileOutput')
     CreateListingChangeSetInput = Shapes::StructureShape.new(name: 'CreateListingChangeSetInput')
     CreateListingChangeSetOutput = Shapes::StructureShape.new(name: 'CreateListingChangeSetOutput')
+    CreateNotebookInput = Shapes::StructureShape.new(name: 'CreateNotebookInput')
+    CreateNotebookOutput = Shapes::StructureShape.new(name: 'CreateNotebookOutput')
     CreateProjectFromProjectProfilePolicyGrantDetail = Shapes::StructureShape.new(name: 'CreateProjectFromProjectProfilePolicyGrantDetail')
     CreateProjectInput = Shapes::StructureShape.new(name: 'CreateProjectInput')
+    CreateProjectInputResourceTagsMap = Shapes::MapShape.new(name: 'CreateProjectInputResourceTagsMap')
     CreateProjectMembershipInput = Shapes::StructureShape.new(name: 'CreateProjectMembershipInput')
     CreateProjectMembershipOutput = Shapes::StructureShape.new(name: 'CreateProjectMembershipOutput')
     CreateProjectOutput = Shapes::StructureShape.new(name: 'CreateProjectOutput')
@@ -186,6 +264,7 @@ module Aws::DataZone
     CreateSubscriptionTargetInput = Shapes::StructureShape.new(name: 'CreateSubscriptionTargetInput')
     CreateSubscriptionTargetOutput = Shapes::StructureShape.new(name: 'CreateSubscriptionTargetOutput')
     CreateUserProfileInput = Shapes::StructureShape.new(name: 'CreateUserProfileInput')
+    CreateUserProfileInputSessionNameString = Shapes::StringShape.new(name: 'CreateUserProfileInputSessionNameString')
     CreateUserProfileOutput = Shapes::StructureShape.new(name: 'CreateUserProfileOutput')
     CreatedAt = Shapes::TimestampShape.new(name: 'CreatedAt')
     CreatedBy = Shapes::StringShape.new(name: 'CreatedBy')
@@ -193,6 +272,7 @@ module Aws::DataZone
     CredentialMapKeyString = Shapes::StringShape.new(name: 'CredentialMapKeyString')
     CredentialMapValueString = Shapes::StringShape.new(name: 'CredentialMapValueString')
     CronString = Shapes::StringShape.new(name: 'CronString')
+    CustomAccountPoolHandler = Shapes::StructureShape.new(name: 'CustomAccountPoolHandler')
     CustomParameter = Shapes::StructureShape.new(name: 'CustomParameter')
     CustomParameterKeyNameString = Shapes::StringShape.new(name: 'CustomParameterKeyNameString')
     CustomParameterList = Shapes::ListShape.new(name: 'CustomParameterList')
@@ -201,6 +281,7 @@ module Aws::DataZone
     DataProductDescription = Shapes::StringShape.new(name: 'DataProductDescription')
     DataProductId = Shapes::StringShape.new(name: 'DataProductId')
     DataProductItem = Shapes::StructureShape.new(name: 'DataProductItem')
+    DataProductItemAdditionalAttributes = Shapes::StructureShape.new(name: 'DataProductItemAdditionalAttributes')
     DataProductItemType = Shapes::StringShape.new(name: 'DataProductItemType')
     DataProductItems = Shapes::ListShape.new(name: 'DataProductItems')
     DataProductListing = Shapes::StructureShape.new(name: 'DataProductListing')
@@ -231,6 +312,8 @@ module Aws::DataZone
     DataZoneEntityType = Shapes::StringShape.new(name: 'DataZoneEntityType')
     DateTime = Shapes::TimestampShape.new(name: 'DateTime', timestampFormat: "iso8601")
     DecisionComment = Shapes::StringShape.new(name: 'DecisionComment')
+    DeleteAccountPoolInput = Shapes::StructureShape.new(name: 'DeleteAccountPoolInput')
+    DeleteAccountPoolOutput = Shapes::StructureShape.new(name: 'DeleteAccountPoolOutput')
     DeleteAssetFilterInput = Shapes::StructureShape.new(name: 'DeleteAssetFilterInput')
     DeleteAssetInput = Shapes::StructureShape.new(name: 'DeleteAssetInput')
     DeleteAssetOutput = Shapes::StructureShape.new(name: 'DeleteAssetOutput')
@@ -238,6 +321,8 @@ module Aws::DataZone
     DeleteAssetTypeOutput = Shapes::StructureShape.new(name: 'DeleteAssetTypeOutput')
     DeleteConnectionInput = Shapes::StructureShape.new(name: 'DeleteConnectionInput')
     DeleteConnectionOutput = Shapes::StructureShape.new(name: 'DeleteConnectionOutput')
+    DeleteDataExportConfigurationInput = Shapes::StructureShape.new(name: 'DeleteDataExportConfigurationInput')
+    DeleteDataExportConfigurationOutput = Shapes::StructureShape.new(name: 'DeleteDataExportConfigurationOutput')
     DeleteDataProductInput = Shapes::StructureShape.new(name: 'DeleteDataProductInput')
     DeleteDataProductOutput = Shapes::StructureShape.new(name: 'DeleteDataProductOutput')
     DeleteDataSourceInput = Shapes::StructureShape.new(name: 'DeleteDataSourceInput')
@@ -249,6 +334,7 @@ module Aws::DataZone
     DeleteEnvironmentActionInput = Shapes::StructureShape.new(name: 'DeleteEnvironmentActionInput')
     DeleteEnvironmentBlueprintConfigurationInput = Shapes::StructureShape.new(name: 'DeleteEnvironmentBlueprintConfigurationInput')
     DeleteEnvironmentBlueprintConfigurationOutput = Shapes::StructureShape.new(name: 'DeleteEnvironmentBlueprintConfigurationOutput')
+    DeleteEnvironmentBlueprintInput = Shapes::StructureShape.new(name: 'DeleteEnvironmentBlueprintInput')
     DeleteEnvironmentInput = Shapes::StructureShape.new(name: 'DeleteEnvironmentInput')
     DeleteEnvironmentProfileInput = Shapes::StructureShape.new(name: 'DeleteEnvironmentProfileInput')
     DeleteFormTypeInput = Shapes::StructureShape.new(name: 'DeleteFormTypeInput')
@@ -257,8 +343,12 @@ module Aws::DataZone
     DeleteGlossaryOutput = Shapes::StructureShape.new(name: 'DeleteGlossaryOutput')
     DeleteGlossaryTermInput = Shapes::StructureShape.new(name: 'DeleteGlossaryTermInput')
     DeleteGlossaryTermOutput = Shapes::StructureShape.new(name: 'DeleteGlossaryTermOutput')
+    DeleteLineageEventInput = Shapes::StructureShape.new(name: 'DeleteLineageEventInput')
+    DeleteLineageEventOutput = Shapes::StructureShape.new(name: 'DeleteLineageEventOutput')
     DeleteListingInput = Shapes::StructureShape.new(name: 'DeleteListingInput')
     DeleteListingOutput = Shapes::StructureShape.new(name: 'DeleteListingOutput')
+    DeleteNotebookInput = Shapes::StructureShape.new(name: 'DeleteNotebookInput')
+    DeleteNotebookOutput = Shapes::StructureShape.new(name: 'DeleteNotebookOutput')
     DeleteProjectInput = Shapes::StructureShape.new(name: 'DeleteProjectInput')
     DeleteProjectMembershipInput = Shapes::StructureShape.new(name: 'DeleteProjectMembershipInput')
     DeleteProjectMembershipOutput = Shapes::StructureShape.new(name: 'DeleteProjectMembershipOutput')
@@ -288,6 +378,9 @@ module Aws::DataZone
     DetailedGlossaryTerms = Shapes::ListShape.new(name: 'DetailedGlossaryTerms')
     DisassociateEnvironmentRoleInput = Shapes::StructureShape.new(name: 'DisassociateEnvironmentRoleInput')
     DisassociateEnvironmentRoleOutput = Shapes::StructureShape.new(name: 'DisassociateEnvironmentRoleOutput')
+    DisassociateGovernedTermsInput = Shapes::StructureShape.new(name: 'DisassociateGovernedTermsInput')
+    DisassociateGovernedTermsInputGovernedGlossaryTermsList = Shapes::ListShape.new(name: 'DisassociateGovernedTermsInputGovernedGlossaryTermsList')
+    DisassociateGovernedTermsOutput = Shapes::StructureShape.new(name: 'DisassociateGovernedTermsOutput')
     DomainDescription = Shapes::StringShape.new(name: 'DomainDescription')
     DomainId = Shapes::StringShape.new(name: 'DomainId')
     DomainName = Shapes::StringShape.new(name: 'DomainName')
@@ -314,9 +407,12 @@ module Aws::DataZone
     EditedValue = Shapes::StringShape.new(name: 'EditedValue')
     EnableSetting = Shapes::StringShape.new(name: 'EnableSetting')
     EnabledRegionList = Shapes::ListShape.new(name: 'EnabledRegionList')
+    EncryptionConfiguration = Shapes::StructureShape.new(name: 'EncryptionConfiguration')
     EntityId = Shapes::StringShape.new(name: 'EntityId')
     EntityIdentifier = Shapes::StringShape.new(name: 'EntityIdentifier')
     EntityOwners = Shapes::ListShape.new(name: 'EntityOwners')
+    EntityPattern = Shapes::StructureShape.new(name: 'EntityPattern')
+    EntityPatternIdentifierString = Shapes::StringShape.new(name: 'EntityPatternIdentifierString')
     EntityType = Shapes::StringShape.new(name: 'EntityType')
     EnvironmentActionId = Shapes::StringShape.new(name: 'EnvironmentActionId')
     EnvironmentActionList = Shapes::ListShape.new(name: 'EnvironmentActionList')
@@ -327,6 +423,7 @@ module Aws::DataZone
     EnvironmentBlueprintName = Shapes::StringShape.new(name: 'EnvironmentBlueprintName')
     EnvironmentBlueprintSummaries = Shapes::ListShape.new(name: 'EnvironmentBlueprintSummaries')
     EnvironmentBlueprintSummary = Shapes::StructureShape.new(name: 'EnvironmentBlueprintSummary')
+    EnvironmentConfig = Shapes::StructureShape.new(name: 'EnvironmentConfig')
     EnvironmentConfiguration = Shapes::StructureShape.new(name: 'EnvironmentConfiguration')
     EnvironmentConfigurationId = Shapes::StringShape.new(name: 'EnvironmentConfigurationId')
     EnvironmentConfigurationName = Shapes::StringShape.new(name: 'EnvironmentConfigurationName')
@@ -349,16 +446,20 @@ module Aws::DataZone
     EnvironmentProfileName = Shapes::StringShape.new(name: 'EnvironmentProfileName')
     EnvironmentProfileSummaries = Shapes::ListShape.new(name: 'EnvironmentProfileSummaries')
     EnvironmentProfileSummary = Shapes::StructureShape.new(name: 'EnvironmentProfileSummary')
+    EnvironmentResolvedAccount = Shapes::StructureShape.new(name: 'EnvironmentResolvedAccount')
     EnvironmentStatus = Shapes::StringShape.new(name: 'EnvironmentStatus')
     EnvironmentSummaries = Shapes::ListShape.new(name: 'EnvironmentSummaries')
     EnvironmentSummary = Shapes::StructureShape.new(name: 'EnvironmentSummary')
     EqualToExpression = Shapes::StructureShape.new(name: 'EqualToExpression')
     ErrorMessage = Shapes::StringShape.new(name: 'ErrorMessage')
     EventSummary = Shapes::UnionShape.new(name: 'EventSummary')
+    ExportId = Shapes::StringShape.new(name: 'ExportId')
     ExternalIdentifier = Shapes::StringShape.new(name: 'ExternalIdentifier')
     FailedQueryProcessingErrorMessages = Shapes::ListShape.new(name: 'FailedQueryProcessingErrorMessages')
     FailureCause = Shapes::StructureShape.new(name: 'FailureCause')
     FailureReasons = Shapes::ListShape.new(name: 'FailureReasons')
+    FileFormat = Shapes::StringShape.new(name: 'FileFormat')
+    FileName = Shapes::StringShape.new(name: 'FileName')
     Filter = Shapes::StructureShape.new(name: 'Filter')
     FilterClause = Shapes::UnionShape.new(name: 'FilterClause')
     FilterExpression = Shapes::StructureShape.new(name: 'FilterExpression')
@@ -369,6 +470,7 @@ module Aws::DataZone
     FilterIds = Shapes::ListShape.new(name: 'FilterIds')
     FilterList = Shapes::ListShape.new(name: 'FilterList')
     FilterName = Shapes::StringShape.new(name: 'FilterName')
+    FilterOperator = Shapes::StringShape.new(name: 'FilterOperator')
     FilterStatus = Shapes::StringShape.new(name: 'FilterStatus')
     FilterValueString = Shapes::StringShape.new(name: 'FilterValueString')
     FirstName = Shapes::StringShape.new(name: 'FirstName')
@@ -379,6 +481,7 @@ module Aws::DataZone
     FormInputContentString = Shapes::StringShape.new(name: 'FormInputContentString')
     FormInputList = Shapes::ListShape.new(name: 'FormInputList')
     FormName = Shapes::StringShape.new(name: 'FormName')
+    FormNameList = Shapes::ListShape.new(name: 'FormNameList')
     FormOutput = Shapes::StructureShape.new(name: 'FormOutput')
     FormOutputList = Shapes::ListShape.new(name: 'FormOutputList')
     FormTypeData = Shapes::StructureShape.new(name: 'FormTypeData')
@@ -388,14 +491,19 @@ module Aws::DataZone
     Forms = Shapes::StringShape.new(name: 'Forms')
     FormsInputMap = Shapes::MapShape.new(name: 'FormsInputMap')
     FormsOutputMap = Shapes::MapShape.new(name: 'FormsOutputMap')
+    GetAccountPoolInput = Shapes::StructureShape.new(name: 'GetAccountPoolInput')
+    GetAccountPoolOutput = Shapes::StructureShape.new(name: 'GetAccountPoolOutput')
     GetAssetFilterInput = Shapes::StructureShape.new(name: 'GetAssetFilterInput')
     GetAssetFilterOutput = Shapes::StructureShape.new(name: 'GetAssetFilterOutput')
     GetAssetInput = Shapes::StructureShape.new(name: 'GetAssetInput')
     GetAssetOutput = Shapes::StructureShape.new(name: 'GetAssetOutput')
+    GetAssetOutputGovernedGlossaryTermsList = Shapes::ListShape.new(name: 'GetAssetOutputGovernedGlossaryTermsList')
     GetAssetTypeInput = Shapes::StructureShape.new(name: 'GetAssetTypeInput')
     GetAssetTypeOutput = Shapes::StructureShape.new(name: 'GetAssetTypeOutput')
     GetConnectionInput = Shapes::StructureShape.new(name: 'GetConnectionInput')
     GetConnectionOutput = Shapes::StructureShape.new(name: 'GetConnectionOutput')
+    GetDataExportConfigurationInput = Shapes::StructureShape.new(name: 'GetDataExportConfigurationInput')
+    GetDataExportConfigurationOutput = Shapes::StructureShape.new(name: 'GetDataExportConfigurationOutput')
     GetDataProductInput = Shapes::StructureShape.new(name: 'GetDataProductInput')
     GetDataProductOutput = Shapes::StructureShape.new(name: 'GetDataProductOutput')
     GetDataSourceInput = Shapes::StructureShape.new(name: 'GetDataSourceInput')
@@ -438,6 +546,12 @@ module Aws::DataZone
     GetListingOutput = Shapes::StructureShape.new(name: 'GetListingOutput')
     GetMetadataGenerationRunInput = Shapes::StructureShape.new(name: 'GetMetadataGenerationRunInput')
     GetMetadataGenerationRunOutput = Shapes::StructureShape.new(name: 'GetMetadataGenerationRunOutput')
+    GetNotebookExportInput = Shapes::StructureShape.new(name: 'GetNotebookExportInput')
+    GetNotebookExportOutput = Shapes::StructureShape.new(name: 'GetNotebookExportOutput')
+    GetNotebookInput = Shapes::StructureShape.new(name: 'GetNotebookInput')
+    GetNotebookOutput = Shapes::StructureShape.new(name: 'GetNotebookOutput')
+    GetNotebookRunInput = Shapes::StructureShape.new(name: 'GetNotebookRunInput')
+    GetNotebookRunOutput = Shapes::StructureShape.new(name: 'GetNotebookRunOutput')
     GetProjectInput = Shapes::StructureShape.new(name: 'GetProjectInput')
     GetProjectOutput = Shapes::StructureShape.new(name: 'GetProjectOutput')
     GetProjectProfileInput = Shapes::StructureShape.new(name: 'GetProjectProfileInput')
@@ -457,23 +571,48 @@ module Aws::DataZone
     GetTimeSeriesDataPointInput = Shapes::StructureShape.new(name: 'GetTimeSeriesDataPointInput')
     GetTimeSeriesDataPointOutput = Shapes::StructureShape.new(name: 'GetTimeSeriesDataPointOutput')
     GetUserProfileInput = Shapes::StructureShape.new(name: 'GetUserProfileInput')
+    GetUserProfileInputSessionNameString = Shapes::StringShape.new(name: 'GetUserProfileInputSessionNameString')
     GetUserProfileOutput = Shapes::StructureShape.new(name: 'GetUserProfileOutput')
+    GitBranch = Shapes::StringShape.new(name: 'GitBranch')
+    GitConnectionId = Shapes::StringShape.new(name: 'GitConnectionId')
+    GitMetadata = Shapes::StructureShape.new(name: 'GitMetadata')
+    GitPropertiesInput = Shapes::StructureShape.new(name: 'GitPropertiesInput')
+    GitPropertiesInputCodeConnectionArnString = Shapes::StringShape.new(name: 'GitPropertiesInputCodeConnectionArnString')
+    GitPropertiesInputDefaultBranchString = Shapes::StringShape.new(name: 'GitPropertiesInputDefaultBranchString')
+    GitPropertiesInputRepositoryIdString = Shapes::StringShape.new(name: 'GitPropertiesInputRepositoryIdString')
+    GitPropertiesOutput = Shapes::StructureShape.new(name: 'GitPropertiesOutput')
+    GitPropertiesOutputCodeConnectionArnString = Shapes::StringShape.new(name: 'GitPropertiesOutputCodeConnectionArnString')
+    GitPropertiesOutputDefaultBranchString = Shapes::StringShape.new(name: 'GitPropertiesOutputDefaultBranchString')
+    GitPropertiesOutputRepositoryIdString = Shapes::StringShape.new(name: 'GitPropertiesOutputRepositoryIdString')
+    GitPropertiesPatch = Shapes::StructureShape.new(name: 'GitPropertiesPatch')
+    GitPropertiesPatchCodeConnectionArnString = Shapes::StringShape.new(name: 'GitPropertiesPatchCodeConnectionArnString')
+    GitPropertiesPatchDefaultBranchString = Shapes::StringShape.new(name: 'GitPropertiesPatchDefaultBranchString')
+    GitRepository = Shapes::StringShape.new(name: 'GitRepository')
+    GlobalParameterMap = Shapes::MapShape.new(name: 'GlobalParameterMap')
     GlossaryDescription = Shapes::StringShape.new(name: 'GlossaryDescription')
     GlossaryId = Shapes::StringShape.new(name: 'GlossaryId')
     GlossaryItem = Shapes::StructureShape.new(name: 'GlossaryItem')
+    GlossaryItemAdditionalAttributes = Shapes::StructureShape.new(name: 'GlossaryItemAdditionalAttributes')
     GlossaryName = Shapes::StringShape.new(name: 'GlossaryName')
     GlossaryStatus = Shapes::StringShape.new(name: 'GlossaryStatus')
+    GlossaryTermEnforcementDetail = Shapes::StructureShape.new(name: 'GlossaryTermEnforcementDetail')
     GlossaryTermId = Shapes::StringShape.new(name: 'GlossaryTermId')
+    GlossaryTermIdentifiers = Shapes::ListShape.new(name: 'GlossaryTermIdentifiers')
     GlossaryTermItem = Shapes::StructureShape.new(name: 'GlossaryTermItem')
+    GlossaryTermItemAdditionalAttributes = Shapes::StructureShape.new(name: 'GlossaryTermItemAdditionalAttributes')
     GlossaryTermName = Shapes::StringShape.new(name: 'GlossaryTermName')
     GlossaryTermStatus = Shapes::StringShape.new(name: 'GlossaryTermStatus')
     GlossaryTerms = Shapes::ListShape.new(name: 'GlossaryTerms')
+    GlossaryUsageRestriction = Shapes::StringShape.new(name: 'GlossaryUsageRestriction')
+    GlossaryUsageRestrictions = Shapes::ListShape.new(name: 'GlossaryUsageRestrictions')
     GlueConnection = Shapes::StructureShape.new(name: 'GlueConnection')
     GlueConnectionConnectionSchemaVersionInteger = Shapes::IntegerShape.new(name: 'GlueConnectionConnectionSchemaVersionInteger')
     GlueConnectionDescriptionString = Shapes::StringShape.new(name: 'GlueConnectionDescriptionString')
     GlueConnectionInput = Shapes::StructureShape.new(name: 'GlueConnectionInput')
     GlueConnectionInputMatchCriteriaString = Shapes::StringShape.new(name: 'GlueConnectionInputMatchCriteriaString')
     GlueConnectionInputNameString = Shapes::StringShape.new(name: 'GlueConnectionInputNameString')
+    GlueConnectionName = Shapes::StringShape.new(name: 'GlueConnectionName')
+    GlueConnectionNames = Shapes::ListShape.new(name: 'GlueConnectionNames')
     GlueConnectionPatch = Shapes::StructureShape.new(name: 'GlueConnectionPatch')
     GlueConnectionStatusReasonString = Shapes::StringShape.new(name: 'GlueConnectionStatusReasonString')
     GlueConnectionType = Shapes::StringShape.new(name: 'GlueConnectionType')
@@ -495,8 +634,11 @@ module Aws::DataZone
     GlueRunConfigurationOutputRegionString = Shapes::StringShape.new(name: 'GlueRunConfigurationOutputRegionString')
     GlueSelfGrantStatusOutput = Shapes::StructureShape.new(name: 'GlueSelfGrantStatusOutput')
     GovernanceType = Shapes::StringShape.new(name: 'GovernanceType')
+    GovernedEntityType = Shapes::StringShape.new(name: 'GovernedEntityType')
+    GrantIdentifier = Shapes::StringShape.new(name: 'GrantIdentifier')
     GrantedEntity = Shapes::UnionShape.new(name: 'GrantedEntity')
     GrantedEntityInput = Shapes::UnionShape.new(name: 'GrantedEntityInput')
+    GraphEntityType = Shapes::StringShape.new(name: 'GraphEntityType')
     GreaterThanExpression = Shapes::StructureShape.new(name: 'GreaterThanExpression')
     GreaterThanOrEqualToExpression = Shapes::StructureShape.new(name: 'GreaterThanOrEqualToExpression')
     GroupDetails = Shapes::StructureShape.new(name: 'GroupDetails')
@@ -513,14 +655,17 @@ module Aws::DataZone
     HyperPodPropertiesInput = Shapes::StructureShape.new(name: 'HyperPodPropertiesInput')
     HyperPodPropertiesInputClusterNameString = Shapes::StringShape.new(name: 'HyperPodPropertiesInputClusterNameString')
     HyperPodPropertiesOutput = Shapes::StructureShape.new(name: 'HyperPodPropertiesOutput')
+    IamPrincipalArn = Shapes::StringShape.new(name: 'IamPrincipalArn')
     IamPropertiesInput = Shapes::StructureShape.new(name: 'IamPropertiesInput')
     IamPropertiesOutput = Shapes::StructureShape.new(name: 'IamPropertiesOutput')
     IamPropertiesPatch = Shapes::StructureShape.new(name: 'IamPropertiesPatch')
     IamRoleArn = Shapes::StringShape.new(name: 'IamRoleArn')
     IamUserProfileDetails = Shapes::StructureShape.new(name: 'IamUserProfileDetails')
+    IdentityMapping = Shapes::StructureShape.new(name: 'IdentityMapping')
     Import = Shapes::StructureShape.new(name: 'Import')
     ImportList = Shapes::ListShape.new(name: 'ImportList')
     InExpression = Shapes::StructureShape.new(name: 'InExpression')
+    InstanceType = Shapes::StringShape.new(name: 'InstanceType')
     Integer = Shapes::IntegerShape.new(name: 'Integer')
     InternalServerException = Shapes::StructureShape.new(name: 'InternalServerException')
     InventorySearchScope = Shapes::StringShape.new(name: 'InventorySearchScope')
@@ -536,6 +681,11 @@ module Aws::DataZone
     JobType = Shapes::StringShape.new(name: 'JobType')
     KmsKeyArn = Shapes::StringShape.new(name: 'KmsKeyArn')
     LakeFormationConfiguration = Shapes::StructureShape.new(name: 'LakeFormationConfiguration')
+    LakehousePropertiesInput = Shapes::StructureShape.new(name: 'LakehousePropertiesInput')
+    LakehousePropertiesOutput = Shapes::StructureShape.new(name: 'LakehousePropertiesOutput')
+    LakehousePropertiesPatch = Shapes::StructureShape.new(name: 'LakehousePropertiesPatch')
+    LambdaExecutionRoleArn = Shapes::StringShape.new(name: 'LambdaExecutionRoleArn')
+    LambdaFunctionArn = Shapes::StringShape.new(name: 'LambdaFunctionArn')
     LastName = Shapes::StringShape.new(name: 'LastName')
     LessThanExpression = Shapes::StructureShape.new(name: 'LessThanExpression')
     LessThanOrEqualToExpression = Shapes::StructureShape.new(name: 'LessThanOrEqualToExpression')
@@ -550,6 +700,8 @@ module Aws::DataZone
     LineageInfo = Shapes::StructureShape.new(name: 'LineageInfo')
     LineageNodeId = Shapes::StringShape.new(name: 'LineageNodeId')
     LineageNodeIdentifier = Shapes::StringShape.new(name: 'LineageNodeIdentifier')
+    LineageNodeIds = Shapes::ListShape.new(name: 'LineageNodeIds')
+    LineageNodeItem = Shapes::StructureShape.new(name: 'LineageNodeItem')
     LineageNodeReference = Shapes::StructureShape.new(name: 'LineageNodeReference')
     LineageNodeReferenceList = Shapes::ListShape.new(name: 'LineageNodeReferenceList')
     LineageNodeSummaries = Shapes::ListShape.new(name: 'LineageNodeSummaries')
@@ -557,8 +709,15 @@ module Aws::DataZone
     LineageNodeTypeItem = Shapes::StructureShape.new(name: 'LineageNodeTypeItem')
     LineageRunDetails = Shapes::StructureShape.new(name: 'LineageRunDetails')
     LineageSqlQueryRunDetails = Shapes::StructureShape.new(name: 'LineageSqlQueryRunDetails')
+    LineageSyncInput = Shapes::StructureShape.new(name: 'LineageSyncInput')
+    LineageSyncOutput = Shapes::StructureShape.new(name: 'LineageSyncOutput')
     LineageSyncSchedule = Shapes::StructureShape.new(name: 'LineageSyncSchedule')
+    LineageSyncScheduleCronString = Shapes::StringShape.new(name: 'LineageSyncScheduleCronString')
     LineageSyncScheduleScheduleString = Shapes::StringShape.new(name: 'LineageSyncScheduleScheduleString')
+    ListAccountPoolsInput = Shapes::StructureShape.new(name: 'ListAccountPoolsInput')
+    ListAccountPoolsOutput = Shapes::StructureShape.new(name: 'ListAccountPoolsOutput')
+    ListAccountsInAccountPoolInput = Shapes::StructureShape.new(name: 'ListAccountsInAccountPoolInput')
+    ListAccountsInAccountPoolOutput = Shapes::StructureShape.new(name: 'ListAccountsInAccountPoolOutput')
     ListAssetFiltersInput = Shapes::StructureShape.new(name: 'ListAssetFiltersInput')
     ListAssetFiltersOutput = Shapes::StructureShape.new(name: 'ListAssetFiltersOutput')
     ListAssetRevisionsInput = Shapes::StructureShape.new(name: 'ListAssetRevisionsInput')
@@ -599,6 +758,10 @@ module Aws::DataZone
     ListLineageNodeHistoryOutput = Shapes::StructureShape.new(name: 'ListLineageNodeHistoryOutput')
     ListMetadataGenerationRunsInput = Shapes::StructureShape.new(name: 'ListMetadataGenerationRunsInput')
     ListMetadataGenerationRunsOutput = Shapes::StructureShape.new(name: 'ListMetadataGenerationRunsOutput')
+    ListNotebookRunsInput = Shapes::StructureShape.new(name: 'ListNotebookRunsInput')
+    ListNotebookRunsOutput = Shapes::StructureShape.new(name: 'ListNotebookRunsOutput')
+    ListNotebooksInput = Shapes::StructureShape.new(name: 'ListNotebooksInput')
+    ListNotebooksOutput = Shapes::StructureShape.new(name: 'ListNotebooksOutput')
     ListNotificationsInput = Shapes::StructureShape.new(name: 'ListNotificationsInput')
     ListNotificationsOutput = Shapes::StructureShape.new(name: 'ListNotificationsOutput')
     ListPolicyGrantsInput = Shapes::StructureShape.new(name: 'ListPolicyGrantsInput')
@@ -634,14 +797,24 @@ module Aws::DataZone
     ListingSummary = Shapes::StructureShape.new(name: 'ListingSummary')
     ListingSummaryItem = Shapes::StructureShape.new(name: 'ListingSummaryItem')
     ListingSummaryItems = Shapes::ListShape.new(name: 'ListingSummaryItems')
+    Long = Shapes::IntegerShape.new(name: 'Long')
     LongDescription = Shapes::StringShape.new(name: 'LongDescription')
+    ManagedEndpointCredentials = Shapes::StructureShape.new(name: 'ManagedEndpointCredentials')
+    ManagedEndpointCredentialsIdString = Shapes::StringShape.new(name: 'ManagedEndpointCredentialsIdString')
     ManagedPolicyType = Shapes::StringShape.new(name: 'ManagedPolicyType')
+    MatchClause = Shapes::UnionShape.new(name: 'MatchClause')
+    MatchClauses = Shapes::ListShape.new(name: 'MatchClauses')
     MatchCriteria = Shapes::ListShape.new(name: 'MatchCriteria')
+    MatchOffset = Shapes::StructureShape.new(name: 'MatchOffset')
+    MatchOffsets = Shapes::ListShape.new(name: 'MatchOffsets')
+    MatchRationale = Shapes::ListShape.new(name: 'MatchRationale')
+    MatchRationaleItem = Shapes::UnionShape.new(name: 'MatchRationaleItem')
     MaxResults = Shapes::IntegerShape.new(name: 'MaxResults')
     MaxResultsForListDomains = Shapes::IntegerShape.new(name: 'MaxResultsForListDomains')
     Member = Shapes::UnionShape.new(name: 'Member')
     MemberDetails = Shapes::UnionShape.new(name: 'MemberDetails')
     Message = Shapes::StringShape.new(name: 'Message')
+    Metadata = Shapes::MapShape.new(name: 'Metadata')
     MetadataFormEnforcementDetail = Shapes::StructureShape.new(name: 'MetadataFormEnforcementDetail')
     MetadataFormInputs = Shapes::ListShape.new(name: 'MetadataFormInputs')
     MetadataFormReference = Shapes::StructureShape.new(name: 'MetadataFormReference')
@@ -653,16 +826,43 @@ module Aws::DataZone
     MetadataGenerationRunStatus = Shapes::StringShape.new(name: 'MetadataGenerationRunStatus')
     MetadataGenerationRunTarget = Shapes::StructureShape.new(name: 'MetadataGenerationRunTarget')
     MetadataGenerationRunType = Shapes::StringShape.new(name: 'MetadataGenerationRunType')
+    MetadataGenerationRunTypeStat = Shapes::StructureShape.new(name: 'MetadataGenerationRunTypeStat')
+    MetadataGenerationRunTypeStats = Shapes::ListShape.new(name: 'MetadataGenerationRunTypeStats')
+    MetadataGenerationRunTypes = Shapes::ListShape.new(name: 'MetadataGenerationRunTypes')
     MetadataGenerationRuns = Shapes::ListShape.new(name: 'MetadataGenerationRuns')
     MetadataGenerationTargetType = Shapes::StringShape.new(name: 'MetadataGenerationTargetType')
+    MetadataKey = Shapes::StringShape.new(name: 'MetadataKey')
     MetadataMap = Shapes::MapShape.new(name: 'MetadataMap')
+    MetadataValue = Shapes::StringShape.new(name: 'MetadataValue')
+    MlflowPropertiesInput = Shapes::StructureShape.new(name: 'MlflowPropertiesInput')
+    MlflowPropertiesOutput = Shapes::StructureShape.new(name: 'MlflowPropertiesOutput')
+    MlflowPropertiesPatch = Shapes::StructureShape.new(name: 'MlflowPropertiesPatch')
     Model = Shapes::UnionShape.new(name: 'Model')
     Name = Shapes::StringShape.new(name: 'Name')
     NameIdentifier = Shapes::StructureShape.new(name: 'NameIdentifier')
     NameIdentifiers = Shapes::ListShape.new(name: 'NameIdentifiers')
+    NetworkAccessType = Shapes::StringShape.new(name: 'NetworkAccessType')
+    NetworkConfig = Shapes::StructureShape.new(name: 'NetworkConfig')
     NotEqualToExpression = Shapes::StructureShape.new(name: 'NotEqualToExpression')
     NotInExpression = Shapes::StructureShape.new(name: 'NotInExpression')
     NotLikeExpression = Shapes::StructureShape.new(name: 'NotLikeExpression')
+    NotebookError = Shapes::StructureShape.new(name: 'NotebookError')
+    NotebookErrorMessageString = Shapes::StringShape.new(name: 'NotebookErrorMessageString')
+    NotebookExportError = Shapes::StructureShape.new(name: 'NotebookExportError')
+    NotebookExportErrorMessageString = Shapes::StringShape.new(name: 'NotebookExportErrorMessageString')
+    NotebookExportStatus = Shapes::StringShape.new(name: 'NotebookExportStatus')
+    NotebookId = Shapes::StringShape.new(name: 'NotebookId')
+    NotebookName = Shapes::StringShape.new(name: 'NotebookName')
+    NotebookRunError = Shapes::StructureShape.new(name: 'NotebookRunError')
+    NotebookRunErrorMessageString = Shapes::StringShape.new(name: 'NotebookRunErrorMessageString')
+    NotebookRunId = Shapes::StringShape.new(name: 'NotebookRunId')
+    NotebookRunStatus = Shapes::StringShape.new(name: 'NotebookRunStatus')
+    NotebookRunSummary = Shapes::StructureShape.new(name: 'NotebookRunSummary')
+    NotebookRunSummaryList = Shapes::ListShape.new(name: 'NotebookRunSummaryList')
+    NotebookS3Uri = Shapes::StringShape.new(name: 'NotebookS3Uri')
+    NotebookStatus = Shapes::StringShape.new(name: 'NotebookStatus')
+    NotebookSummary = Shapes::StructureShape.new(name: 'NotebookSummary')
+    NotebookSummaryList = Shapes::ListShape.new(name: 'NotebookSummaryList')
     NotificationOutput = Shapes::StructureShape.new(name: 'NotificationOutput')
     NotificationResource = Shapes::StructureShape.new(name: 'NotificationResource')
     NotificationResourceType = Shapes::StringShape.new(name: 'NotificationResourceType')
@@ -678,6 +878,7 @@ module Aws::DataZone
     OAuth2PropertiesTokenUrlString = Shapes::StringShape.new(name: 'OAuth2PropertiesTokenUrlString')
     OpenLineageRunEventSummary = Shapes::StructureShape.new(name: 'OpenLineageRunEventSummary')
     OpenLineageRunState = Shapes::StringShape.new(name: 'OpenLineageRunState')
+    OutputLocation = Shapes::UnionShape.new(name: 'OutputLocation')
     OverallDeploymentStatus = Shapes::StringShape.new(name: 'OverallDeploymentStatus')
     OverrideDomainUnitOwnersPolicyGrantDetail = Shapes::StructureShape.new(name: 'OverrideDomainUnitOwnersPolicyGrantDetail')
     OverrideProjectOwnersPolicyGrantDetail = Shapes::StructureShape.new(name: 'OverrideProjectOwnersPolicyGrantDetail')
@@ -687,9 +888,16 @@ module Aws::DataZone
     OwnerPropertiesOutput = Shapes::UnionShape.new(name: 'OwnerPropertiesOutput')
     OwnerUserProperties = Shapes::StructureShape.new(name: 'OwnerUserProperties')
     OwnerUserPropertiesOutput = Shapes::StructureShape.new(name: 'OwnerUserPropertiesOutput')
+    PackageConfig = Shapes::StructureShape.new(name: 'PackageConfig')
+    PackageConfigPackageSpecificationString = Shapes::StringShape.new(name: 'PackageConfigPackageSpecificationString')
+    PackageManager = Shapes::StringShape.new(name: 'PackageManager')
     PaginationToken = Shapes::StringShape.new(name: 'PaginationToken')
+    ParameterKey = Shapes::StringShape.new(name: 'ParameterKey')
     ParameterStorePath = Shapes::StringShape.new(name: 'ParameterStorePath')
+    ParameterValue = Shapes::StringShape.new(name: 'ParameterValue')
+    Parameters = Shapes::MapShape.new(name: 'Parameters')
     Password = Shapes::StringShape.new(name: 'Password')
+    Permissions = Shapes::UnionShape.new(name: 'Permissions')
     PhysicalConnectionRequirements = Shapes::StructureShape.new(name: 'PhysicalConnectionRequirements')
     PhysicalConnectionRequirementsAvailabilityZoneString = Shapes::StringShape.new(name: 'PhysicalConnectionRequirementsAvailabilityZoneString')
     PhysicalEndpoint = Shapes::StructureShape.new(name: 'PhysicalEndpoint')
@@ -712,6 +920,8 @@ module Aws::DataZone
     ProjectIds = Shapes::ListShape.new(name: 'ProjectIds')
     ProjectMember = Shapes::StructureShape.new(name: 'ProjectMember')
     ProjectMembers = Shapes::ListShape.new(name: 'ProjectMembers')
+    ProjectMembershipAssignment = Shapes::StructureShape.new(name: 'ProjectMembershipAssignment')
+    ProjectMembershipAssignments = Shapes::ListShape.new(name: 'ProjectMembershipAssignments')
     ProjectName = Shapes::StringShape.new(name: 'ProjectName')
     ProjectPolicyGrantPrincipal = Shapes::StructureShape.new(name: 'ProjectPolicyGrantPrincipal')
     ProjectProfileId = Shapes::StringShape.new(name: 'ProjectProfileId')
@@ -719,6 +929,7 @@ module Aws::DataZone
     ProjectProfileName = Shapes::StringShape.new(name: 'ProjectProfileName')
     ProjectProfileSummaries = Shapes::ListShape.new(name: 'ProjectProfileSummaries')
     ProjectProfileSummary = Shapes::StructureShape.new(name: 'ProjectProfileSummary')
+    ProjectResourceTagParameters = Shapes::ListShape.new(name: 'ProjectResourceTagParameters')
     ProjectStatus = Shapes::StringShape.new(name: 'ProjectStatus')
     ProjectSummaries = Shapes::ListShape.new(name: 'ProjectSummaries')
     ProjectSummary = Shapes::StructureShape.new(name: 'ProjectSummary')
@@ -730,8 +941,15 @@ module Aws::DataZone
     ProvisioningConfiguration = Shapes::UnionShape.new(name: 'ProvisioningConfiguration')
     ProvisioningConfigurationList = Shapes::ListShape.new(name: 'ProvisioningConfigurationList')
     ProvisioningProperties = Shapes::UnionShape.new(name: 'ProvisioningProperties')
+    PutDataExportConfigurationInput = Shapes::StructureShape.new(name: 'PutDataExportConfigurationInput')
+    PutDataExportConfigurationOutput = Shapes::StructureShape.new(name: 'PutDataExportConfigurationOutput')
     PutEnvironmentBlueprintConfigurationInput = Shapes::StructureShape.new(name: 'PutEnvironmentBlueprintConfigurationInput')
     PutEnvironmentBlueprintConfigurationOutput = Shapes::StructureShape.new(name: 'PutEnvironmentBlueprintConfigurationOutput')
+    PutResourceConfiguration = Shapes::StructureShape.new(name: 'PutResourceConfiguration')
+    PutResourceConfigurationNameString = Shapes::StringShape.new(name: 'PutResourceConfigurationNameString')
+    PutResourceConfigurations = Shapes::ListShape.new(name: 'PutResourceConfigurations')
+    QueryGraphInput = Shapes::StructureShape.new(name: 'QueryGraphInput')
+    QueryGraphOutput = Shapes::StructureShape.new(name: 'QueryGraphOutput')
     RecommendationConfiguration = Shapes::StructureShape.new(name: 'RecommendationConfiguration')
     RedshiftClusterStorage = Shapes::StructureShape.new(name: 'RedshiftClusterStorage')
     RedshiftClusterStorageClusterNameString = Shapes::StringShape.new(name: 'RedshiftClusterStorageClusterNameString')
@@ -775,6 +993,10 @@ module Aws::DataZone
     RejectSubscriptionRequestOutput = Shapes::StructureShape.new(name: 'RejectSubscriptionRequestOutput')
     RejectSubscriptionRequestOutputSubscribedListingsList = Shapes::ListShape.new(name: 'RejectSubscriptionRequestOutputSubscribedListingsList')
     RejectSubscriptionRequestOutputSubscribedPrincipalsList = Shapes::ListShape.new(name: 'RejectSubscriptionRequestOutputSubscribedPrincipalsList')
+    RelationDirection = Shapes::StringShape.new(name: 'RelationDirection')
+    RelationPattern = Shapes::StructureShape.new(name: 'RelationPattern')
+    RelationPatternMaxPathLengthInteger = Shapes::IntegerShape.new(name: 'RelationPatternMaxPathLengthInteger')
+    RelationType = Shapes::StringShape.new(name: 'RelationType')
     RelationalFilterConfiguration = Shapes::StructureShape.new(name: 'RelationalFilterConfiguration')
     RelationalFilterConfigurationDatabaseNameString = Shapes::StringShape.new(name: 'RelationalFilterConfigurationDatabaseNameString')
     RelationalFilterConfigurationSchemaNameString = Shapes::StringShape.new(name: 'RelationalFilterConfigurationSchemaNameString')
@@ -785,9 +1007,19 @@ module Aws::DataZone
     RemovePolicyGrantOutput = Shapes::StructureShape.new(name: 'RemovePolicyGrantOutput')
     RequestReason = Shapes::StringShape.new(name: 'RequestReason')
     RequiredMetadataFormList = Shapes::ListShape.new(name: 'RequiredMetadataFormList')
+    ResolutionStrategy = Shapes::StringShape.new(name: 'ResolutionStrategy')
     Resource = Shapes::StructureShape.new(name: 'Resource')
+    ResourceConfiguration = Shapes::StructureShape.new(name: 'ResourceConfiguration')
+    ResourceConfigurationParameterMap = Shapes::MapShape.new(name: 'ResourceConfigurationParameterMap')
+    ResourceConfigurations = Shapes::ListShape.new(name: 'ResourceConfigurations')
     ResourceList = Shapes::ListShape.new(name: 'ResourceList')
     ResourceNotFoundException = Shapes::StructureShape.new(name: 'ResourceNotFoundException')
+    ResourceTag = Shapes::StructureShape.new(name: 'ResourceTag')
+    ResourceTagParameter = Shapes::StructureShape.new(name: 'ResourceTagParameter')
+    ResourceTagSource = Shapes::StringShape.new(name: 'ResourceTagSource')
+    ResourceTags = Shapes::ListShape.new(name: 'ResourceTags')
+    ResultItem = Shapes::UnionShape.new(name: 'ResultItem')
+    ResultItemList = Shapes::ListShape.new(name: 'ResultItemList')
     Revision = Shapes::StringShape.new(name: 'Revision')
     RevisionInput = Shapes::StringShape.new(name: 'RevisionInput')
     RevokeSubscriptionInput = Shapes::StructureShape.new(name: 'RevokeSubscriptionInput')
@@ -812,8 +1044,18 @@ module Aws::DataZone
     RuleType = Shapes::StringShape.new(name: 'RuleType')
     RunIdentifier = Shapes::StringShape.new(name: 'RunIdentifier')
     RunStatisticsForAssets = Shapes::StructureShape.new(name: 'RunStatisticsForAssets')
+    S3AccessGrantLocationId = Shapes::StringShape.new(name: 'S3AccessGrantLocationId')
+    S3Destination = Shapes::StructureShape.new(name: 'S3Destination')
     S3Location = Shapes::StringShape.new(name: 'S3Location')
     S3LocationList = Shapes::ListShape.new(name: 'S3LocationList')
+    S3Path = Shapes::StringShape.new(name: 'S3Path')
+    S3Permission = Shapes::StringShape.new(name: 'S3Permission')
+    S3Permissions = Shapes::ListShape.new(name: 'S3Permissions')
+    S3PropertiesInput = Shapes::StructureShape.new(name: 'S3PropertiesInput')
+    S3PropertiesOutput = Shapes::StructureShape.new(name: 'S3PropertiesOutput')
+    S3PropertiesPatch = Shapes::StructureShape.new(name: 'S3PropertiesPatch')
+    S3SourceLocation = Shapes::StringShape.new(name: 'S3SourceLocation')
+    S3Uri = Shapes::StringShape.new(name: 'S3Uri')
     SageMakerAssetType = Shapes::StringShape.new(name: 'SageMakerAssetType')
     SageMakerResourceArn = Shapes::StringShape.new(name: 'SageMakerResourceArn')
     SageMakerRunConfigurationInput = Shapes::StructureShape.new(name: 'SageMakerRunConfigurationInput')
@@ -821,6 +1063,7 @@ module Aws::DataZone
     SageMakerRunConfigurationOutputAccountIdString = Shapes::StringShape.new(name: 'SageMakerRunConfigurationOutputAccountIdString')
     SageMakerRunConfigurationOutputRegionString = Shapes::StringShape.new(name: 'SageMakerRunConfigurationOutputRegionString')
     ScheduleConfiguration = Shapes::StructureShape.new(name: 'ScheduleConfiguration')
+    ScheduleId = Shapes::StringShape.new(name: 'ScheduleId')
     SearchGroupProfilesInput = Shapes::StructureShape.new(name: 'SearchGroupProfilesInput')
     SearchGroupProfilesOutput = Shapes::StructureShape.new(name: 'SearchGroupProfilesOutput')
     SearchInItem = Shapes::StructureShape.new(name: 'SearchInItem')
@@ -829,6 +1072,7 @@ module Aws::DataZone
     SearchInventoryResultItem = Shapes::UnionShape.new(name: 'SearchInventoryResultItem')
     SearchInventoryResultItems = Shapes::ListShape.new(name: 'SearchInventoryResultItems')
     SearchListingsInput = Shapes::StructureShape.new(name: 'SearchListingsInput')
+    SearchListingsInputSearchTextString = Shapes::StringShape.new(name: 'SearchListingsInputSearchTextString')
     SearchListingsOutput = Shapes::StructureShape.new(name: 'SearchListingsOutput')
     SearchOutput = Shapes::StructureShape.new(name: 'SearchOutput')
     SearchOutputAdditionalAttribute = Shapes::StringShape.new(name: 'SearchOutputAdditionalAttribute')
@@ -843,8 +1087,10 @@ module Aws::DataZone
     SearchTypesResultItems = Shapes::ListShape.new(name: 'SearchTypesResultItems')
     SearchUserProfilesInput = Shapes::StructureShape.new(name: 'SearchUserProfilesInput')
     SearchUserProfilesOutput = Shapes::StructureShape.new(name: 'SearchUserProfilesOutput')
+    SecurityGroupId = Shapes::StringShape.new(name: 'SecurityGroupId')
     SecurityGroupIdList = Shapes::ListShape.new(name: 'SecurityGroupIdList')
     SecurityGroupIdListMemberString = Shapes::StringShape.new(name: 'SecurityGroupIdListMemberString')
+    SecurityGroupIds = Shapes::ListShape.new(name: 'SecurityGroupIds')
     SelfGrantStatus = Shapes::StringShape.new(name: 'SelfGrantStatus')
     SelfGrantStatusDetail = Shapes::StructureShape.new(name: 'SelfGrantStatusDetail')
     SelfGrantStatusDetailDatabaseNameString = Shapes::StringShape.new(name: 'SelfGrantStatusDetailDatabaseNameString')
@@ -856,24 +1102,33 @@ module Aws::DataZone
     SingleSignOn = Shapes::StructureShape.new(name: 'SingleSignOn')
     SingleSignOnIdcInstanceArnString = Shapes::StringShape.new(name: 'SingleSignOnIdcInstanceArnString')
     Smithy = Shapes::StringShape.new(name: 'Smithy')
+    SnowflakePropertiesInput = Shapes::StructureShape.new(name: 'SnowflakePropertiesInput')
+    SnowflakePropertiesOutput = Shapes::StructureShape.new(name: 'SnowflakePropertiesOutput')
+    SnowflakePropertiesPatch = Shapes::StructureShape.new(name: 'SnowflakePropertiesPatch')
+    SnowflakeRole = Shapes::StringShape.new(name: 'SnowflakeRole')
+    SortFieldAccountPool = Shapes::StringShape.new(name: 'SortFieldAccountPool')
     SortFieldConnection = Shapes::StringShape.new(name: 'SortFieldConnection')
     SortFieldProject = Shapes::StringShape.new(name: 'SortFieldProject')
     SortKey = Shapes::StringShape.new(name: 'SortKey')
     SortOrder = Shapes::StringShape.new(name: 'SortOrder')
+    SourceLocation = Shapes::UnionShape.new(name: 'SourceLocation')
     SparkEmrPropertiesInput = Shapes::StructureShape.new(name: 'SparkEmrPropertiesInput')
     SparkEmrPropertiesInputComputeArnString = Shapes::StringShape.new(name: 'SparkEmrPropertiesInputComputeArnString')
     SparkEmrPropertiesInputInstanceProfileArnString = Shapes::StringShape.new(name: 'SparkEmrPropertiesInputInstanceProfileArnString')
     SparkEmrPropertiesInputJavaVirtualEnvString = Shapes::StringShape.new(name: 'SparkEmrPropertiesInputJavaVirtualEnvString')
     SparkEmrPropertiesInputLogUriString = Shapes::StringShape.new(name: 'SparkEmrPropertiesInputLogUriString')
+    SparkEmrPropertiesInputManagedEndpointArnString = Shapes::StringShape.new(name: 'SparkEmrPropertiesInputManagedEndpointArnString')
     SparkEmrPropertiesInputPythonVirtualEnvString = Shapes::StringShape.new(name: 'SparkEmrPropertiesInputPythonVirtualEnvString')
     SparkEmrPropertiesInputRuntimeRoleString = Shapes::StringShape.new(name: 'SparkEmrPropertiesInputRuntimeRoleString')
     SparkEmrPropertiesInputTrustedCertificatesS3UriString = Shapes::StringShape.new(name: 'SparkEmrPropertiesInputTrustedCertificatesS3UriString')
     SparkEmrPropertiesOutput = Shapes::StructureShape.new(name: 'SparkEmrPropertiesOutput')
+    SparkEmrPropertiesOutputManagedEndpointArnString = Shapes::StringShape.new(name: 'SparkEmrPropertiesOutputManagedEndpointArnString')
     SparkEmrPropertiesPatch = Shapes::StructureShape.new(name: 'SparkEmrPropertiesPatch')
     SparkEmrPropertiesPatchComputeArnString = Shapes::StringShape.new(name: 'SparkEmrPropertiesPatchComputeArnString')
     SparkEmrPropertiesPatchInstanceProfileArnString = Shapes::StringShape.new(name: 'SparkEmrPropertiesPatchInstanceProfileArnString')
     SparkEmrPropertiesPatchJavaVirtualEnvString = Shapes::StringShape.new(name: 'SparkEmrPropertiesPatchJavaVirtualEnvString')
     SparkEmrPropertiesPatchLogUriString = Shapes::StringShape.new(name: 'SparkEmrPropertiesPatchLogUriString')
+    SparkEmrPropertiesPatchManagedEndpointArnString = Shapes::StringShape.new(name: 'SparkEmrPropertiesPatchManagedEndpointArnString')
     SparkEmrPropertiesPatchPythonVirtualEnvString = Shapes::StringShape.new(name: 'SparkEmrPropertiesPatchPythonVirtualEnvString')
     SparkEmrPropertiesPatchRuntimeRoleString = Shapes::StringShape.new(name: 'SparkEmrPropertiesPatchRuntimeRoleString')
     SparkEmrPropertiesPatchTrustedCertificatesS3UriString = Shapes::StringShape.new(name: 'SparkEmrPropertiesPatchTrustedCertificatesS3UriString')
@@ -890,14 +1145,30 @@ module Aws::DataZone
     StartDataSourceRunOutput = Shapes::StructureShape.new(name: 'StartDataSourceRunOutput')
     StartMetadataGenerationRunInput = Shapes::StructureShape.new(name: 'StartMetadataGenerationRunInput')
     StartMetadataGenerationRunOutput = Shapes::StructureShape.new(name: 'StartMetadataGenerationRunOutput')
+    StartNotebookExportInput = Shapes::StructureShape.new(name: 'StartNotebookExportInput')
+    StartNotebookExportOutput = Shapes::StructureShape.new(name: 'StartNotebookExportOutput')
+    StartNotebookImportInput = Shapes::StructureShape.new(name: 'StartNotebookImportInput')
+    StartNotebookImportOutput = Shapes::StructureShape.new(name: 'StartNotebookImportOutput')
+    StartNotebookRunInput = Shapes::StructureShape.new(name: 'StartNotebookRunInput')
+    StartNotebookRunOutput = Shapes::StructureShape.new(name: 'StartNotebookRunOutput')
+    StartNotebookSyncInput = Shapes::StructureShape.new(name: 'StartNotebookSyncInput')
+    StartNotebookSyncOutput = Shapes::StructureShape.new(name: 'StartNotebookSyncOutput')
     Status = Shapes::StringShape.new(name: 'Status')
+    StopNotebookRunInput = Shapes::StructureShape.new(name: 'StopNotebookRunInput')
+    StopNotebookRunOutput = Shapes::StructureShape.new(name: 'StopNotebookRunOutput')
+    StorageConfig = Shapes::StructureShape.new(name: 'StorageConfig')
     String = Shapes::StringShape.new(name: 'String')
     StringList = Shapes::ListShape.new(name: 'StringList')
     SubnetId = Shapes::StringShape.new(name: 'SubnetId')
     SubnetIdList = Shapes::ListShape.new(name: 'SubnetIdList')
+    SubnetIds = Shapes::ListShape.new(name: 'SubnetIds')
     SubscribedAsset = Shapes::StructureShape.new(name: 'SubscribedAsset')
     SubscribedAssetListing = Shapes::StructureShape.new(name: 'SubscribedAssetListing')
     SubscribedAssets = Shapes::ListShape.new(name: 'SubscribedAssets')
+    SubscribedGroup = Shapes::StructureShape.new(name: 'SubscribedGroup')
+    SubscribedGroupInput = Shapes::StructureShape.new(name: 'SubscribedGroupInput')
+    SubscribedIamPrincipal = Shapes::StructureShape.new(name: 'SubscribedIamPrincipal')
+    SubscribedIamPrincipalInput = Shapes::StructureShape.new(name: 'SubscribedIamPrincipalInput')
     SubscribedListing = Shapes::StructureShape.new(name: 'SubscribedListing')
     SubscribedListingInput = Shapes::StructureShape.new(name: 'SubscribedListingInput')
     SubscribedListingInputs = Shapes::ListShape.new(name: 'SubscribedListingInputs')
@@ -908,6 +1179,9 @@ module Aws::DataZone
     SubscribedProductListing = Shapes::StructureShape.new(name: 'SubscribedProductListing')
     SubscribedProject = Shapes::StructureShape.new(name: 'SubscribedProject')
     SubscribedProjectInput = Shapes::StructureShape.new(name: 'SubscribedProjectInput')
+    SubscribedUser = Shapes::StructureShape.new(name: 'SubscribedUser')
+    SubscribedUserInput = Shapes::StructureShape.new(name: 'SubscribedUserInput')
+    SubscriptionGrantCreationMode = Shapes::StringShape.new(name: 'SubscriptionGrantCreationMode')
     SubscriptionGrantId = Shapes::StringShape.new(name: 'SubscriptionGrantId')
     SubscriptionGrantOverallStatus = Shapes::StringShape.new(name: 'SubscriptionGrantOverallStatus')
     SubscriptionGrantStatus = Shapes::StringShape.new(name: 'SubscriptionGrantStatus')
@@ -942,6 +1216,8 @@ module Aws::DataZone
     TermRelations = Shapes::StructureShape.new(name: 'TermRelations')
     TermRelationsClassifiesList = Shapes::ListShape.new(name: 'TermRelationsClassifiesList')
     TermRelationsIsAList = Shapes::ListShape.new(name: 'TermRelationsIsAList')
+    TextMatchItem = Shapes::StructureShape.new(name: 'TextMatchItem')
+    TextMatches = Shapes::ListShape.new(name: 'TextMatches')
     ThrottlingException = Shapes::StructureShape.new(name: 'ThrottlingException')
     TimeSeriesDataPointFormInput = Shapes::StructureShape.new(name: 'TimeSeriesDataPointFormInput')
     TimeSeriesDataPointFormInputContentString = Shapes::StringShape.new(name: 'TimeSeriesDataPointFormInputContentString')
@@ -955,6 +1231,8 @@ module Aws::DataZone
     TimeSeriesDataPointSummaryFormOutputList = Shapes::ListShape.new(name: 'TimeSeriesDataPointSummaryFormOutputList')
     TimeSeriesEntityType = Shapes::StringShape.new(name: 'TimeSeriesEntityType')
     TimeSeriesFormName = Shapes::StringShape.new(name: 'TimeSeriesFormName')
+    TimeoutConfig = Shapes::StructureShape.new(name: 'TimeoutConfig')
+    TimeoutConfigRunTimeoutInMinutesInteger = Shapes::IntegerShape.new(name: 'TimeoutConfigRunTimeoutInMinutesInteger')
     Timestamp = Shapes::TimestampShape.new(name: 'Timestamp')
     Timezone = Shapes::StringShape.new(name: 'Timezone')
     Title = Shapes::StringShape.new(name: 'Title')
@@ -964,12 +1242,16 @@ module Aws::DataZone
     Topic = Shapes::StructureShape.new(name: 'Topic')
     TrackingAssetArns = Shapes::ListShape.new(name: 'TrackingAssetArns')
     TrackingAssets = Shapes::MapShape.new(name: 'TrackingAssets')
+    TriggerSource = Shapes::StructureShape.new(name: 'TriggerSource')
+    TriggerSourceType = Shapes::StringShape.new(name: 'TriggerSourceType')
     TypeName = Shapes::StringShape.new(name: 'TypeName')
     TypesSearchScope = Shapes::StringShape.new(name: 'TypesSearchScope')
     UnauthorizedException = Shapes::StructureShape.new(name: 'UnauthorizedException')
     Unit = Shapes::StructureShape.new(name: 'Unit')
     UntagResourceRequest = Shapes::StructureShape.new(name: 'UntagResourceRequest')
     UntagResourceResponse = Shapes::StructureShape.new(name: 'UntagResourceResponse')
+    UpdateAccountPoolInput = Shapes::StructureShape.new(name: 'UpdateAccountPoolInput')
+    UpdateAccountPoolOutput = Shapes::StructureShape.new(name: 'UpdateAccountPoolOutput')
     UpdateAssetFilterInput = Shapes::StructureShape.new(name: 'UpdateAssetFilterInput')
     UpdateAssetFilterOutput = Shapes::StructureShape.new(name: 'UpdateAssetFilterOutput')
     UpdateConnectionInput = Shapes::StructureShape.new(name: 'UpdateConnectionInput')
@@ -983,6 +1265,8 @@ module Aws::DataZone
     UpdateDomainUnitOutput = Shapes::StructureShape.new(name: 'UpdateDomainUnitOutput')
     UpdateEnvironmentActionInput = Shapes::StructureShape.new(name: 'UpdateEnvironmentActionInput')
     UpdateEnvironmentActionOutput = Shapes::StructureShape.new(name: 'UpdateEnvironmentActionOutput')
+    UpdateEnvironmentBlueprintInput = Shapes::StructureShape.new(name: 'UpdateEnvironmentBlueprintInput')
+    UpdateEnvironmentBlueprintOutput = Shapes::StructureShape.new(name: 'UpdateEnvironmentBlueprintOutput')
     UpdateEnvironmentInput = Shapes::StructureShape.new(name: 'UpdateEnvironmentInput')
     UpdateEnvironmentOutput = Shapes::StructureShape.new(name: 'UpdateEnvironmentOutput')
     UpdateEnvironmentProfileInput = Shapes::StructureShape.new(name: 'UpdateEnvironmentProfileInput')
@@ -993,10 +1277,15 @@ module Aws::DataZone
     UpdateGlossaryTermOutput = Shapes::StructureShape.new(name: 'UpdateGlossaryTermOutput')
     UpdateGroupProfileInput = Shapes::StructureShape.new(name: 'UpdateGroupProfileInput')
     UpdateGroupProfileOutput = Shapes::StructureShape.new(name: 'UpdateGroupProfileOutput')
+    UpdateNotebookInput = Shapes::StructureShape.new(name: 'UpdateNotebookInput')
+    UpdateNotebookOutput = Shapes::StructureShape.new(name: 'UpdateNotebookOutput')
     UpdateProjectInput = Shapes::StructureShape.new(name: 'UpdateProjectInput')
+    UpdateProjectInputResourceTagsMap = Shapes::MapShape.new(name: 'UpdateProjectInputResourceTagsMap')
     UpdateProjectOutput = Shapes::StructureShape.new(name: 'UpdateProjectOutput')
     UpdateProjectProfileInput = Shapes::StructureShape.new(name: 'UpdateProjectProfileInput')
     UpdateProjectProfileOutput = Shapes::StructureShape.new(name: 'UpdateProjectProfileOutput')
+    UpdateRootDomainUnitOwnerInput = Shapes::StructureShape.new(name: 'UpdateRootDomainUnitOwnerInput')
+    UpdateRootDomainUnitOwnerOutput = Shapes::StructureShape.new(name: 'UpdateRootDomainUnitOwnerOutput')
     UpdateRuleInput = Shapes::StructureShape.new(name: 'UpdateRuleInput')
     UpdateRuleOutput = Shapes::StructureShape.new(name: 'UpdateRuleOutput')
     UpdateSubscriptionGrantStatusInput = Shapes::StructureShape.new(name: 'UpdateSubscriptionGrantStatusInput')
@@ -1008,9 +1297,11 @@ module Aws::DataZone
     UpdateSubscriptionTargetInput = Shapes::StructureShape.new(name: 'UpdateSubscriptionTargetInput')
     UpdateSubscriptionTargetOutput = Shapes::StructureShape.new(name: 'UpdateSubscriptionTargetOutput')
     UpdateUserProfileInput = Shapes::StructureShape.new(name: 'UpdateUserProfileInput')
+    UpdateUserProfileInputSessionNameString = Shapes::StringShape.new(name: 'UpdateUserProfileInputSessionNameString')
     UpdateUserProfileOutput = Shapes::StructureShape.new(name: 'UpdateUserProfileOutput')
     UpdatedAt = Shapes::TimestampShape.new(name: 'UpdatedAt')
     UpdatedBy = Shapes::StringShape.new(name: 'UpdatedBy')
+    UseAssetTypePolicyGrantDetail = Shapes::StructureShape.new(name: 'UseAssetTypePolicyGrantDetail')
     UserAssignment = Shapes::StringShape.new(name: 'UserAssignment')
     UserDesignation = Shapes::StringShape.new(name: 'UserDesignation')
     UserDetails = Shapes::StructureShape.new(name: 'UserDetails')
@@ -1029,24 +1320,33 @@ module Aws::DataZone
     Username = Shapes::StringShape.new(name: 'Username')
     UsernamePassword = Shapes::StructureShape.new(name: 'UsernamePassword')
     ValidationException = Shapes::StructureShape.new(name: 'ValidationException')
+    VpcConnectionSubnetIdList = Shapes::ListShape.new(name: 'VpcConnectionSubnetIdList')
+    VpcId = Shapes::StringShape.new(name: 'VpcId')
+    VpcPropertiesInput = Shapes::StructureShape.new(name: 'VpcPropertiesInput')
+    VpcPropertiesOutput = Shapes::StructureShape.new(name: 'VpcPropertiesOutput')
+    VpcPropertiesPatch = Shapes::StructureShape.new(name: 'VpcPropertiesPatch')
+    WorkflowsMwaaPropertiesInput = Shapes::StructureShape.new(name: 'WorkflowsMwaaPropertiesInput')
+    WorkflowsMwaaPropertiesOutput = Shapes::StructureShape.new(name: 'WorkflowsMwaaPropertiesOutput')
+    WorkflowsServerlessPropertiesInput = Shapes::StructureShape.new(name: 'WorkflowsServerlessPropertiesInput')
+    WorkflowsServerlessPropertiesOutput = Shapes::StructureShape.new(name: 'WorkflowsServerlessPropertiesOutput')
 
-    AcceptChoice.add_member(:edited_value, Shapes::ShapeRef.new(shape: EditedValue, location_name: "editedValue"))
-    AcceptChoice.add_member(:prediction_choice, Shapes::ShapeRef.new(shape: Integer, location_name: "predictionChoice"))
     AcceptChoice.add_member(:prediction_target, Shapes::ShapeRef.new(shape: String, required: true, location_name: "predictionTarget"))
+    AcceptChoice.add_member(:prediction_choice, Shapes::ShapeRef.new(shape: Integer, location_name: "predictionChoice"))
+    AcceptChoice.add_member(:edited_value, Shapes::ShapeRef.new(shape: EditedValue, location_name: "editedValue"))
     AcceptChoice.struct_class = Types::AcceptChoice
 
     AcceptChoices.member = Shapes::ShapeRef.new(shape: AcceptChoice)
 
-    AcceptPredictionsInput.add_member(:accept_choices, Shapes::ShapeRef.new(shape: AcceptChoices, location_name: "acceptChoices"))
-    AcceptPredictionsInput.add_member(:accept_rule, Shapes::ShapeRef.new(shape: AcceptRule, location_name: "acceptRule"))
-    AcceptPredictionsInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
     AcceptPredictionsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     AcceptPredictionsInput.add_member(:identifier, Shapes::ShapeRef.new(shape: AssetIdentifier, required: true, location: "uri", location_name: "identifier"))
     AcceptPredictionsInput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, location: "querystring", location_name: "revision"))
+    AcceptPredictionsInput.add_member(:accept_rule, Shapes::ShapeRef.new(shape: AcceptRule, location_name: "acceptRule"))
+    AcceptPredictionsInput.add_member(:accept_choices, Shapes::ShapeRef.new(shape: AcceptChoices, location_name: "acceptChoices"))
+    AcceptPredictionsInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     AcceptPredictionsInput.struct_class = Types::AcceptPredictionsInput
 
-    AcceptPredictionsOutput.add_member(:asset_id, Shapes::ShapeRef.new(shape: AssetId, required: true, location_name: "assetId"))
     AcceptPredictionsOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    AcceptPredictionsOutput.add_member(:asset_id, Shapes::ShapeRef.new(shape: AssetId, required: true, location_name: "assetId"))
     AcceptPredictionsOutput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
     AcceptPredictionsOutput.struct_class = Types::AcceptPredictionsOutput
 
@@ -1054,26 +1354,27 @@ module Aws::DataZone
     AcceptRule.add_member(:threshold, Shapes::ShapeRef.new(shape: Float, location_name: "threshold"))
     AcceptRule.struct_class = Types::AcceptRule
 
-    AcceptSubscriptionRequestInput.add_member(:asset_scopes, Shapes::ShapeRef.new(shape: AcceptedAssetScopes, location_name: "assetScopes"))
-    AcceptSubscriptionRequestInput.add_member(:decision_comment, Shapes::ShapeRef.new(shape: DecisionComment, location_name: "decisionComment"))
     AcceptSubscriptionRequestInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     AcceptSubscriptionRequestInput.add_member(:identifier, Shapes::ShapeRef.new(shape: SubscriptionRequestId, required: true, location: "uri", location_name: "identifier"))
+    AcceptSubscriptionRequestInput.add_member(:decision_comment, Shapes::ShapeRef.new(shape: DecisionComment, location_name: "decisionComment"))
+    AcceptSubscriptionRequestInput.add_member(:asset_scopes, Shapes::ShapeRef.new(shape: AcceptedAssetScopes, location_name: "assetScopes"))
+    AcceptSubscriptionRequestInput.add_member(:asset_permissions, Shapes::ShapeRef.new(shape: AssetPermissions, location_name: "assetPermissions"))
     AcceptSubscriptionRequestInput.struct_class = Types::AcceptSubscriptionRequestInput
 
-    AcceptSubscriptionRequestOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
-    AcceptSubscriptionRequestOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    AcceptSubscriptionRequestOutput.add_member(:decision_comment, Shapes::ShapeRef.new(shape: DecisionComment, location_name: "decisionComment"))
-    AcceptSubscriptionRequestOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    AcceptSubscriptionRequestOutput.add_member(:existing_subscription_id, Shapes::ShapeRef.new(shape: SubscriptionId, location_name: "existingSubscriptionId"))
     AcceptSubscriptionRequestOutput.add_member(:id, Shapes::ShapeRef.new(shape: SubscriptionRequestId, required: true, location_name: "id"))
-    AcceptSubscriptionRequestOutput.add_member(:metadata_forms, Shapes::ShapeRef.new(shape: MetadataForms, location_name: "metadataForms"))
-    AcceptSubscriptionRequestOutput.add_member(:request_reason, Shapes::ShapeRef.new(shape: RequestReason, required: true, location_name: "requestReason"))
-    AcceptSubscriptionRequestOutput.add_member(:reviewer_id, Shapes::ShapeRef.new(shape: String, location_name: "reviewerId"))
-    AcceptSubscriptionRequestOutput.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionRequestStatus, required: true, location_name: "status"))
-    AcceptSubscriptionRequestOutput.add_member(:subscribed_listings, Shapes::ShapeRef.new(shape: AcceptSubscriptionRequestOutputSubscribedListingsList, required: true, location_name: "subscribedListings"))
-    AcceptSubscriptionRequestOutput.add_member(:subscribed_principals, Shapes::ShapeRef.new(shape: AcceptSubscriptionRequestOutputSubscribedPrincipalsList, required: true, location_name: "subscribedPrincipals"))
-    AcceptSubscriptionRequestOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    AcceptSubscriptionRequestOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
     AcceptSubscriptionRequestOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    AcceptSubscriptionRequestOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    AcceptSubscriptionRequestOutput.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionRequestStatus, required: true, location_name: "status"))
+    AcceptSubscriptionRequestOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
+    AcceptSubscriptionRequestOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    AcceptSubscriptionRequestOutput.add_member(:request_reason, Shapes::ShapeRef.new(shape: RequestReason, required: true, location_name: "requestReason"))
+    AcceptSubscriptionRequestOutput.add_member(:subscribed_principals, Shapes::ShapeRef.new(shape: AcceptSubscriptionRequestOutputSubscribedPrincipalsList, required: true, location_name: "subscribedPrincipals"))
+    AcceptSubscriptionRequestOutput.add_member(:subscribed_listings, Shapes::ShapeRef.new(shape: AcceptSubscriptionRequestOutputSubscribedListingsList, required: true, location_name: "subscribedListings"))
+    AcceptSubscriptionRequestOutput.add_member(:reviewer_id, Shapes::ShapeRef.new(shape: String, location_name: "reviewerId"))
+    AcceptSubscriptionRequestOutput.add_member(:decision_comment, Shapes::ShapeRef.new(shape: DecisionComment, location_name: "decisionComment"))
+    AcceptSubscriptionRequestOutput.add_member(:existing_subscription_id, Shapes::ShapeRef.new(shape: SubscriptionId, location_name: "existingSubscriptionId"))
+    AcceptSubscriptionRequestOutput.add_member(:metadata_forms, Shapes::ShapeRef.new(shape: MetadataForms, location_name: "metadataForms"))
     AcceptSubscriptionRequestOutput.struct_class = Types::AcceptSubscriptionRequestOutput
 
     AcceptSubscriptionRequestOutputSubscribedListingsList.member = Shapes::ShapeRef.new(shape: SubscribedListing)
@@ -1089,38 +1390,105 @@ module Aws::DataZone
     AccessDeniedException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, required: true, location_name: "message"))
     AccessDeniedException.struct_class = Types::AccessDeniedException
 
+    AccountInfo.add_member(:aws_account_id, Shapes::ShapeRef.new(shape: AwsAccountId, required: true, location_name: "awsAccountId"))
+    AccountInfo.add_member(:supported_regions, Shapes::ShapeRef.new(shape: AwsRegionList, required: true, location_name: "supportedRegions"))
+    AccountInfo.add_member(:aws_account_name, Shapes::ShapeRef.new(shape: AwsAccountName, location_name: "awsAccountName"))
+    AccountInfo.struct_class = Types::AccountInfo
+
+    AccountInfoList.member = Shapes::ShapeRef.new(shape: AccountInfo)
+
+    AccountPoolList.member = Shapes::ShapeRef.new(shape: AccountPoolId)
+
+    AccountPoolSummaries.member = Shapes::ShapeRef.new(shape: AccountPoolSummary)
+
+    AccountPoolSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "domainId"))
+    AccountPoolSummary.add_member(:id, Shapes::ShapeRef.new(shape: AccountPoolId, location_name: "id"))
+    AccountPoolSummary.add_member(:name, Shapes::ShapeRef.new(shape: AccountPoolName, location_name: "name"))
+    AccountPoolSummary.add_member(:resolution_strategy, Shapes::ShapeRef.new(shape: ResolutionStrategy, location_name: "resolutionStrategy"))
+    AccountPoolSummary.add_member(:domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitId"))
+    AccountPoolSummary.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
+    AccountPoolSummary.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    AccountPoolSummary.struct_class = Types::AccountPoolSummary
+
+    AccountSource.add_member(:accounts, Shapes::ShapeRef.new(shape: AccountInfoList, location_name: "accounts"))
+    AccountSource.add_member(:custom_account_pool_handler, Shapes::ShapeRef.new(shape: CustomAccountPoolHandler, location_name: "customAccountPoolHandler"))
+    AccountSource.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    AccountSource.add_member_subclass(:accounts, Types::AccountSource::Accounts)
+    AccountSource.add_member_subclass(:custom_account_pool_handler, Types::AccountSource::CustomAccountPoolHandler)
+    AccountSource.add_member_subclass(:unknown, Types::AccountSource::Unknown)
+    AccountSource.struct_class = Types::AccountSource
+
     ActionParameters.add_member(:aws_console_link, Shapes::ShapeRef.new(shape: AwsConsoleLinkParameters, location_name: "awsConsoleLink"))
     ActionParameters.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
     ActionParameters.add_member_subclass(:aws_console_link, Types::ActionParameters::AwsConsoleLink)
     ActionParameters.add_member_subclass(:unknown, Types::ActionParameters::Unknown)
     ActionParameters.struct_class = Types::ActionParameters
 
-    AddEntityOwnerInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
     AddEntityOwnerInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    AddEntityOwnerInput.add_member(:entity_identifier, Shapes::ShapeRef.new(shape: String, required: true, location: "uri", location_name: "entityIdentifier"))
     AddEntityOwnerInput.add_member(:entity_type, Shapes::ShapeRef.new(shape: DataZoneEntityType, required: true, location: "uri", location_name: "entityType"))
+    AddEntityOwnerInput.add_member(:entity_identifier, Shapes::ShapeRef.new(shape: String, required: true, location: "uri", location_name: "entityIdentifier"))
     AddEntityOwnerInput.add_member(:owner, Shapes::ShapeRef.new(shape: OwnerProperties, required: true, location_name: "owner"))
+    AddEntityOwnerInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     AddEntityOwnerInput.struct_class = Types::AddEntityOwnerInput
 
     AddEntityOwnerOutput.struct_class = Types::AddEntityOwnerOutput
 
-    AddPolicyGrantInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
-    AddPolicyGrantInput.add_member(:detail, Shapes::ShapeRef.new(shape: PolicyGrantDetail, required: true, location_name: "detail"))
     AddPolicyGrantInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    AddPolicyGrantInput.add_member(:entity_identifier, Shapes::ShapeRef.new(shape: String, required: true, location: "uri", location_name: "entityIdentifier"))
     AddPolicyGrantInput.add_member(:entity_type, Shapes::ShapeRef.new(shape: TargetEntityType, required: true, location: "uri", location_name: "entityType"))
+    AddPolicyGrantInput.add_member(:entity_identifier, Shapes::ShapeRef.new(shape: String, required: true, location: "uri", location_name: "entityIdentifier"))
     AddPolicyGrantInput.add_member(:policy_type, Shapes::ShapeRef.new(shape: ManagedPolicyType, required: true, location_name: "policyType"))
     AddPolicyGrantInput.add_member(:principal, Shapes::ShapeRef.new(shape: PolicyGrantPrincipal, required: true, location_name: "principal"))
+    AddPolicyGrantInput.add_member(:detail, Shapes::ShapeRef.new(shape: PolicyGrantDetail, required: true, location_name: "detail"))
+    AddPolicyGrantInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     AddPolicyGrantInput.struct_class = Types::AddPolicyGrantInput
 
+    AddPolicyGrantOutput.add_member(:grant_id, Shapes::ShapeRef.new(shape: GrantIdentifier, location_name: "grantId"))
     AddPolicyGrantOutput.struct_class = Types::AddPolicyGrantOutput
 
     AddToProjectMemberPoolPolicyGrantDetail.add_member(:include_child_domain_units, Shapes::ShapeRef.new(shape: Boolean, location_name: "includeChildDomainUnits"))
     AddToProjectMemberPoolPolicyGrantDetail.struct_class = Types::AddToProjectMemberPoolPolicyGrantDetail
 
+    AdditionalAttributes.add_member(:form_names, Shapes::ShapeRef.new(shape: FormNameList, location_name: "formNames"))
+    AdditionalAttributes.struct_class = Types::AdditionalAttributes
+
+    AggregationList.member = Shapes::ShapeRef.new(shape: AggregationListItem)
+
+    AggregationListItem.add_member(:attribute, Shapes::ShapeRef.new(shape: Attribute, required: true, location_name: "attribute"))
+    AggregationListItem.add_member(:display_value, Shapes::ShapeRef.new(shape: AggregationDisplayValue, location_name: "displayValue"))
+    AggregationListItem.struct_class = Types::AggregationListItem
+
+    AggregationOutput.add_member(:attribute, Shapes::ShapeRef.new(shape: Attribute, location_name: "attribute"))
+    AggregationOutput.add_member(:display_value, Shapes::ShapeRef.new(shape: AggregationDisplayValue, location_name: "displayValue"))
+    AggregationOutput.add_member(:items, Shapes::ShapeRef.new(shape: AggregationOutputItems, location_name: "items"))
+    AggregationOutput.struct_class = Types::AggregationOutput
+
+    AggregationOutputItem.add_member(:value, Shapes::ShapeRef.new(shape: AggregationAttributeValue, location_name: "value"))
+    AggregationOutputItem.add_member(:count, Shapes::ShapeRef.new(shape: Integer, location_name: "count"))
+    AggregationOutputItem.add_member(:display_value, Shapes::ShapeRef.new(shape: AggregationAttributeDisplayValue, location_name: "displayValue"))
+    AggregationOutputItem.struct_class = Types::AggregationOutputItem
+
+    AggregationOutputItems.member = Shapes::ShapeRef.new(shape: AggregationOutputItem)
+
+    AggregationOutputList.member = Shapes::ShapeRef.new(shape: AggregationOutput)
+
     AllDomainUnitsGrantFilter.struct_class = Types::AllDomainUnitsGrantFilter
 
     AllUsersGrantFilter.struct_class = Types::AllUsersGrantFilter
+
+    AmazonQPropertiesInput.add_member(:is_enabled, Shapes::ShapeRef.new(shape: Boolean, required: true, location_name: "isEnabled"))
+    AmazonQPropertiesInput.add_member(:profile_arn, Shapes::ShapeRef.new(shape: AmazonQPropertiesInputProfileArnString, location_name: "profileArn"))
+    AmazonQPropertiesInput.add_member(:auth_mode, Shapes::ShapeRef.new(shape: AmazonQPropertiesInputAuthModeString, location_name: "authMode"))
+    AmazonQPropertiesInput.struct_class = Types::AmazonQPropertiesInput
+
+    AmazonQPropertiesOutput.add_member(:is_enabled, Shapes::ShapeRef.new(shape: Boolean, required: true, location_name: "isEnabled"))
+    AmazonQPropertiesOutput.add_member(:profile_arn, Shapes::ShapeRef.new(shape: AmazonQPropertiesOutputProfileArnString, location_name: "profileArn"))
+    AmazonQPropertiesOutput.add_member(:auth_mode, Shapes::ShapeRef.new(shape: AmazonQPropertiesOutputAuthModeString, location_name: "authMode"))
+    AmazonQPropertiesOutput.struct_class = Types::AmazonQPropertiesOutput
+
+    AmazonQPropertiesPatch.add_member(:is_enabled, Shapes::ShapeRef.new(shape: Boolean, required: true, location_name: "isEnabled"))
+    AmazonQPropertiesPatch.add_member(:profile_arn, Shapes::ShapeRef.new(shape: AmazonQPropertiesPatchProfileArnString, location_name: "profileArn"))
+    AmazonQPropertiesPatch.add_member(:auth_mode, Shapes::ShapeRef.new(shape: AmazonQPropertiesPatchAuthModeString, location_name: "authMode"))
+    AmazonQPropertiesPatch.struct_class = Types::AmazonQPropertiesPatch
 
     ApplicableAssetTypes.member = Shapes::ShapeRef.new(shape: TypeName)
 
@@ -1132,16 +1500,16 @@ module Aws::DataZone
     AssetFilterConfiguration.add_member_subclass(:unknown, Types::AssetFilterConfiguration::Unknown)
     AssetFilterConfiguration.struct_class = Types::AssetFilterConfiguration
 
-    AssetFilterSummary.add_member(:asset_id, Shapes::ShapeRef.new(shape: AssetId, required: true, location_name: "assetId"))
-    AssetFilterSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
-    AssetFilterSummary.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    AssetFilterSummary.add_member(:id, Shapes::ShapeRef.new(shape: FilterId, required: true, location_name: "id"))
     AssetFilterSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    AssetFilterSummary.add_member(:asset_id, Shapes::ShapeRef.new(shape: AssetId, required: true, location_name: "assetId"))
+    AssetFilterSummary.add_member(:name, Shapes::ShapeRef.new(shape: FilterName, required: true, location_name: "name"))
+    AssetFilterSummary.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    AssetFilterSummary.add_member(:status, Shapes::ShapeRef.new(shape: FilterStatus, location_name: "status"))
     AssetFilterSummary.add_member(:effective_column_names, Shapes::ShapeRef.new(shape: ColumnNameList, location_name: "effectiveColumnNames"))
     AssetFilterSummary.add_member(:effective_row_filter, Shapes::ShapeRef.new(shape: String, location_name: "effectiveRowFilter"))
+    AssetFilterSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
     AssetFilterSummary.add_member(:error_message, Shapes::ShapeRef.new(shape: String, location_name: "errorMessage"))
-    AssetFilterSummary.add_member(:id, Shapes::ShapeRef.new(shape: FilterId, required: true, location_name: "id"))
-    AssetFilterSummary.add_member(:name, Shapes::ShapeRef.new(shape: FilterName, required: true, location_name: "name"))
-    AssetFilterSummary.add_member(:status, Shapes::ShapeRef.new(shape: FilterStatus, location_name: "status"))
     AssetFilterSummary.struct_class = Types::AssetFilterSummary
 
     AssetFilters.member = Shapes::ShapeRef.new(shape: AssetFilterSummary)
@@ -1153,34 +1521,39 @@ module Aws::DataZone
 
     AssetInDataProductListingItems.member = Shapes::ShapeRef.new(shape: AssetInDataProductListingItem)
 
-    AssetItem.add_member(:additional_attributes, Shapes::ShapeRef.new(shape: AssetItemAdditionalAttributes, location_name: "additionalAttributes"))
+    AssetItem.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    AssetItem.add_member(:identifier, Shapes::ShapeRef.new(shape: AssetIdentifier, required: true, location_name: "identifier"))
+    AssetItem.add_member(:name, Shapes::ShapeRef.new(shape: AssetName, required: true, location_name: "name"))
+    AssetItem.add_member(:type_identifier, Shapes::ShapeRef.new(shape: AssetTypeIdentifier, required: true, location_name: "typeIdentifier"))
+    AssetItem.add_member(:type_revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "typeRevision"))
+    AssetItem.add_member(:external_identifier, Shapes::ShapeRef.new(shape: ExternalIdentifier, location_name: "externalIdentifier"))
+    AssetItem.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     AssetItem.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
     AssetItem.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
-    AssetItem.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    AssetItem.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    AssetItem.add_member(:external_identifier, Shapes::ShapeRef.new(shape: ExternalIdentifier, location_name: "externalIdentifier"))
     AssetItem.add_member(:first_revision_created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "firstRevisionCreatedAt"))
     AssetItem.add_member(:first_revision_created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "firstRevisionCreatedBy"))
     AssetItem.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
-    AssetItem.add_member(:identifier, Shapes::ShapeRef.new(shape: AssetIdentifier, required: true, location_name: "identifier"))
-    AssetItem.add_member(:name, Shapes::ShapeRef.new(shape: AssetName, required: true, location_name: "name"))
     AssetItem.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
-    AssetItem.add_member(:type_identifier, Shapes::ShapeRef.new(shape: AssetTypeIdentifier, required: true, location_name: "typeIdentifier"))
-    AssetItem.add_member(:type_revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "typeRevision"))
+    AssetItem.add_member(:additional_attributes, Shapes::ShapeRef.new(shape: AssetItemAdditionalAttributes, location_name: "additionalAttributes"))
+    AssetItem.add_member(:governed_glossary_terms, Shapes::ShapeRef.new(shape: AssetItemGovernedGlossaryTermsList, location_name: "governedGlossaryTerms"))
     AssetItem.struct_class = Types::AssetItem
 
     AssetItemAdditionalAttributes.add_member(:forms_output, Shapes::ShapeRef.new(shape: FormOutputList, location_name: "formsOutput"))
-    AssetItemAdditionalAttributes.add_member(:latest_time_series_data_point_forms_output, Shapes::ShapeRef.new(shape: TimeSeriesDataPointSummaryFormOutputList, location_name: "latestTimeSeriesDataPointFormsOutput"))
     AssetItemAdditionalAttributes.add_member(:read_only_forms_output, Shapes::ShapeRef.new(shape: FormOutputList, location_name: "readOnlyFormsOutput"))
+    AssetItemAdditionalAttributes.add_member(:latest_time_series_data_point_forms_output, Shapes::ShapeRef.new(shape: TimeSeriesDataPointSummaryFormOutputList, location_name: "latestTimeSeriesDataPointFormsOutput"))
+    AssetItemAdditionalAttributes.add_member(:match_rationale, Shapes::ShapeRef.new(shape: MatchRationale, location_name: "matchRationale"))
     AssetItemAdditionalAttributes.struct_class = Types::AssetItemAdditionalAttributes
+
+    AssetItemGovernedGlossaryTermsList.member = Shapes::ShapeRef.new(shape: GlossaryTermId)
 
     AssetListing.add_member(:asset_id, Shapes::ShapeRef.new(shape: AssetId, location_name: "assetId"))
     AssetListing.add_member(:asset_revision, Shapes::ShapeRef.new(shape: Revision, location_name: "assetRevision"))
     AssetListing.add_member(:asset_type, Shapes::ShapeRef.new(shape: TypeName, location_name: "assetType"))
     AssetListing.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
     AssetListing.add_member(:forms, Shapes::ShapeRef.new(shape: Forms, location_name: "forms"))
-    AssetListing.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: DetailedGlossaryTerms, location_name: "glossaryTerms"))
     AssetListing.add_member(:latest_time_series_data_point_forms, Shapes::ShapeRef.new(shape: TimeSeriesDataPointSummaryFormOutputList, location_name: "latestTimeSeriesDataPointForms"))
+    AssetListing.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: DetailedGlossaryTerms, location_name: "glossaryTerms"))
+    AssetListing.add_member(:governed_glossary_terms, Shapes::ShapeRef.new(shape: AssetListingGovernedGlossaryTermsList, location_name: "governedGlossaryTerms"))
     AssetListing.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "owningProjectId"))
     AssetListing.struct_class = Types::AssetListing
 
@@ -1188,38 +1561,51 @@ module Aws::DataZone
     AssetListingDetails.add_member(:listing_status, Shapes::ShapeRef.new(shape: ListingStatus, required: true, location_name: "listingStatus"))
     AssetListingDetails.struct_class = Types::AssetListingDetails
 
-    AssetListingItem.add_member(:additional_attributes, Shapes::ShapeRef.new(shape: AssetListingItemAdditionalAttributes, location_name: "additionalAttributes"))
-    AssetListingItem.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
-    AssetListingItem.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    AssetListingGovernedGlossaryTermsList.member = Shapes::ShapeRef.new(shape: DetailedGlossaryTerm)
+
+    AssetListingItem.add_member(:listing_id, Shapes::ShapeRef.new(shape: ListingId, location_name: "listingId"))
+    AssetListingItem.add_member(:listing_revision, Shapes::ShapeRef.new(shape: Revision, location_name: "listingRevision"))
+    AssetListingItem.add_member(:name, Shapes::ShapeRef.new(shape: AssetName, location_name: "name"))
     AssetListingItem.add_member(:entity_id, Shapes::ShapeRef.new(shape: AssetId, location_name: "entityId"))
     AssetListingItem.add_member(:entity_revision, Shapes::ShapeRef.new(shape: Revision, location_name: "entityRevision"))
     AssetListingItem.add_member(:entity_type, Shapes::ShapeRef.new(shape: TypeName, location_name: "entityType"))
-    AssetListingItem.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: DetailedGlossaryTerms, location_name: "glossaryTerms"))
+    AssetListingItem.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    AssetListingItem.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
     AssetListingItem.add_member(:listing_created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "listingCreatedBy"))
-    AssetListingItem.add_member(:listing_id, Shapes::ShapeRef.new(shape: ListingId, location_name: "listingId"))
-    AssetListingItem.add_member(:listing_revision, Shapes::ShapeRef.new(shape: Revision, location_name: "listingRevision"))
     AssetListingItem.add_member(:listing_updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "listingUpdatedBy"))
-    AssetListingItem.add_member(:name, Shapes::ShapeRef.new(shape: AssetName, location_name: "name"))
+    AssetListingItem.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: DetailedGlossaryTerms, location_name: "glossaryTerms"))
+    AssetListingItem.add_member(:governed_glossary_terms, Shapes::ShapeRef.new(shape: AssetListingItemGovernedGlossaryTermsList, location_name: "governedGlossaryTerms"))
     AssetListingItem.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "owningProjectId"))
+    AssetListingItem.add_member(:additional_attributes, Shapes::ShapeRef.new(shape: AssetListingItemAdditionalAttributes, location_name: "additionalAttributes"))
     AssetListingItem.struct_class = Types::AssetListingItem
 
     AssetListingItemAdditionalAttributes.add_member(:forms, Shapes::ShapeRef.new(shape: Forms, location_name: "forms"))
+    AssetListingItemAdditionalAttributes.add_member(:match_rationale, Shapes::ShapeRef.new(shape: MatchRationale, location_name: "matchRationale"))
     AssetListingItemAdditionalAttributes.add_member(:latest_time_series_data_point_forms, Shapes::ShapeRef.new(shape: TimeSeriesDataPointSummaryFormOutputList, location_name: "latestTimeSeriesDataPointForms"))
     AssetListingItemAdditionalAttributes.struct_class = Types::AssetListingItemAdditionalAttributes
 
-    AssetRevision.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
-    AssetRevision.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
+    AssetListingItemGovernedGlossaryTermsList.member = Shapes::ShapeRef.new(shape: DetailedGlossaryTerm)
+
+    AssetPermission.add_member(:asset_id, Shapes::ShapeRef.new(shape: AssetId, required: true, location_name: "assetId"))
+    AssetPermission.add_member(:permissions, Shapes::ShapeRef.new(shape: Permissions, required: true, location_name: "permissions"))
+    AssetPermission.struct_class = Types::AssetPermission
+
+    AssetPermissions.member = Shapes::ShapeRef.new(shape: AssetPermission)
+
     AssetRevision.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "domainId"))
     AssetRevision.add_member(:id, Shapes::ShapeRef.new(shape: AssetId, location_name: "id"))
     AssetRevision.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, location_name: "revision"))
+    AssetRevision.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
+    AssetRevision.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
     AssetRevision.struct_class = Types::AssetRevision
 
     AssetRevisions.member = Shapes::ShapeRef.new(shape: AssetRevision)
 
     AssetScope.add_member(:asset_id, Shapes::ShapeRef.new(shape: AssetId, required: true, location_name: "assetId"))
-    AssetScope.add_member(:error_message, Shapes::ShapeRef.new(shape: String, location_name: "errorMessage"))
     AssetScope.add_member(:filter_ids, Shapes::ShapeRef.new(shape: FilterIds, required: true, location_name: "filterIds"))
     AssetScope.add_member(:status, Shapes::ShapeRef.new(shape: String, required: true, location_name: "status"))
+    AssetScope.add_member(:scope_name, Shapes::ShapeRef.new(shape: String, location_name: "scopeName"))
+    AssetScope.add_member(:error_message, Shapes::ShapeRef.new(shape: String, location_name: "errorMessage"))
     AssetScope.struct_class = Types::AssetScope
 
     AssetTargetNameMap.add_member(:asset_id, Shapes::ShapeRef.new(shape: AssetId, required: true, location_name: "assetId"))
@@ -1230,16 +1616,16 @@ module Aws::DataZone
 
     AssetTypeIdentifiers.member = Shapes::ShapeRef.new(shape: AssetTypeIdentifier)
 
-    AssetTypeItem.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
-    AssetTypeItem.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
-    AssetTypeItem.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     AssetTypeItem.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    AssetTypeItem.add_member(:forms_output, Shapes::ShapeRef.new(shape: FormsOutputMap, required: true, location_name: "formsOutput"))
     AssetTypeItem.add_member(:name, Shapes::ShapeRef.new(shape: TypeName, required: true, location_name: "name"))
+    AssetTypeItem.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
+    AssetTypeItem.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    AssetTypeItem.add_member(:forms_output, Shapes::ShapeRef.new(shape: FormsOutputMap, required: true, location_name: "formsOutput"))
+    AssetTypeItem.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
     AssetTypeItem.add_member(:origin_domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "originDomainId"))
     AssetTypeItem.add_member(:origin_project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "originProjectId"))
-    AssetTypeItem.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
-    AssetTypeItem.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
+    AssetTypeItem.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    AssetTypeItem.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
     AssetTypeItem.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
     AssetTypeItem.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
     AssetTypeItem.struct_class = Types::AssetTypeItem
@@ -1255,6 +1641,16 @@ module Aws::DataZone
 
     AssociateEnvironmentRoleOutput.struct_class = Types::AssociateEnvironmentRoleOutput
 
+    AssociateGovernedTermsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    AssociateGovernedTermsInput.add_member(:entity_identifier, Shapes::ShapeRef.new(shape: EntityIdentifier, required: true, location: "uri", location_name: "entityIdentifier"))
+    AssociateGovernedTermsInput.add_member(:entity_type, Shapes::ShapeRef.new(shape: GovernedEntityType, required: true, location: "uri", location_name: "entityType"))
+    AssociateGovernedTermsInput.add_member(:governed_glossary_terms, Shapes::ShapeRef.new(shape: AssociateGovernedTermsInputGovernedGlossaryTermsList, required: true, location_name: "governedGlossaryTerms"))
+    AssociateGovernedTermsInput.struct_class = Types::AssociateGovernedTermsInput
+
+    AssociateGovernedTermsInputGovernedGlossaryTermsList.member = Shapes::ShapeRef.new(shape: GlossaryTermId)
+
+    AssociateGovernedTermsOutput.struct_class = Types::AssociateGovernedTermsOutput
+
     AthenaPropertiesInput.add_member(:workgroup_name, Shapes::ShapeRef.new(shape: AthenaPropertiesInputWorkgroupNameString, location_name: "workgroupName"))
     AthenaPropertiesInput.struct_class = Types::AthenaPropertiesInput
 
@@ -1264,21 +1660,36 @@ module Aws::DataZone
     AthenaPropertiesPatch.add_member(:workgroup_name, Shapes::ShapeRef.new(shape: AthenaPropertiesPatchWorkgroupNameString, location_name: "workgroupName"))
     AthenaPropertiesPatch.struct_class = Types::AthenaPropertiesPatch
 
+    AttributeError.add_member(:attribute_identifier, Shapes::ShapeRef.new(shape: AttributeIdentifier, required: true, location_name: "attributeIdentifier"))
+    AttributeError.add_member(:code, Shapes::ShapeRef.new(shape: String, required: true, location_name: "code"))
+    AttributeError.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
+    AttributeError.struct_class = Types::AttributeError
+
+    AttributeInput.add_member(:attribute_identifier, Shapes::ShapeRef.new(shape: AttributeIdentifier, required: true, location_name: "attributeIdentifier"))
+    AttributeInput.add_member(:forms, Shapes::ShapeRef.new(shape: FormInputList, required: true, location_name: "forms"))
+    AttributeInput.struct_class = Types::AttributeInput
+
+    Attributes.member = Shapes::ShapeRef.new(shape: AttributeInput)
+
+    AttributesErrors.member = Shapes::ShapeRef.new(shape: AttributeError)
+
+    AttributesList.member = Shapes::ShapeRef.new(shape: AttributeIdentifier)
+
     AuthenticationConfiguration.add_member(:authentication_type, Shapes::ShapeRef.new(shape: AuthenticationType, location_name: "authenticationType"))
-    AuthenticationConfiguration.add_member(:o_auth_2_properties, Shapes::ShapeRef.new(shape: OAuth2Properties, location_name: "oAuth2Properties"))
     AuthenticationConfiguration.add_member(:secret_arn, Shapes::ShapeRef.new(shape: AuthenticationConfigurationSecretArnString, location_name: "secretArn"))
+    AuthenticationConfiguration.add_member(:o_auth_2_properties, Shapes::ShapeRef.new(shape: OAuth2Properties, location_name: "oAuth2Properties"))
     AuthenticationConfiguration.struct_class = Types::AuthenticationConfiguration
 
     AuthenticationConfigurationInput.add_member(:authentication_type, Shapes::ShapeRef.new(shape: AuthenticationType, location_name: "authenticationType"))
-    AuthenticationConfigurationInput.add_member(:basic_authentication_credentials, Shapes::ShapeRef.new(shape: BasicAuthenticationCredentials, location_name: "basicAuthenticationCredentials"))
-    AuthenticationConfigurationInput.add_member(:custom_authentication_credentials, Shapes::ShapeRef.new(shape: CredentialMap, location_name: "customAuthenticationCredentials"))
-    AuthenticationConfigurationInput.add_member(:kms_key_arn, Shapes::ShapeRef.new(shape: AuthenticationConfigurationInputKmsKeyArnString, location_name: "kmsKeyArn"))
     AuthenticationConfigurationInput.add_member(:o_auth_2_properties, Shapes::ShapeRef.new(shape: OAuth2Properties, location_name: "oAuth2Properties"))
     AuthenticationConfigurationInput.add_member(:secret_arn, Shapes::ShapeRef.new(shape: AuthenticationConfigurationInputSecretArnString, location_name: "secretArn"))
+    AuthenticationConfigurationInput.add_member(:kms_key_arn, Shapes::ShapeRef.new(shape: AuthenticationConfigurationInputKmsKeyArnString, location_name: "kmsKeyArn"))
+    AuthenticationConfigurationInput.add_member(:basic_authentication_credentials, Shapes::ShapeRef.new(shape: BasicAuthenticationCredentials, location_name: "basicAuthenticationCredentials"))
+    AuthenticationConfigurationInput.add_member(:custom_authentication_credentials, Shapes::ShapeRef.new(shape: CredentialMap, location_name: "customAuthenticationCredentials"))
     AuthenticationConfigurationInput.struct_class = Types::AuthenticationConfigurationInput
 
-    AuthenticationConfigurationPatch.add_member(:basic_authentication_credentials, Shapes::ShapeRef.new(shape: BasicAuthenticationCredentials, location_name: "basicAuthenticationCredentials"))
     AuthenticationConfigurationPatch.add_member(:secret_arn, Shapes::ShapeRef.new(shape: AuthenticationConfigurationPatchSecretArnString, location_name: "secretArn"))
+    AuthenticationConfigurationPatch.add_member(:basic_authentication_credentials, Shapes::ShapeRef.new(shape: BasicAuthenticationCredentials, location_name: "basicAuthenticationCredentials"))
     AuthenticationConfigurationPatch.struct_class = Types::AuthenticationConfigurationPatch
 
     AuthorizationCodeProperties.add_member(:authorization_code, Shapes::ShapeRef.new(shape: AuthorizationCodePropertiesAuthorizationCodeString, location_name: "authorizationCode"))
@@ -1304,9 +1715,44 @@ module Aws::DataZone
     AwsLocation.add_member(:iam_connection_id, Shapes::ShapeRef.new(shape: ConnectionId, location_name: "iamConnectionId"))
     AwsLocation.struct_class = Types::AwsLocation
 
-    BasicAuthenticationCredentials.add_member(:password, Shapes::ShapeRef.new(shape: BasicAuthenticationCredentialsPasswordString, location_name: "password"))
+    AwsRegionList.member = Shapes::ShapeRef.new(shape: AwsRegion)
+
     BasicAuthenticationCredentials.add_member(:user_name, Shapes::ShapeRef.new(shape: BasicAuthenticationCredentialsUserNameString, location_name: "userName"))
+    BasicAuthenticationCredentials.add_member(:password, Shapes::ShapeRef.new(shape: BasicAuthenticationCredentialsPasswordString, location_name: "password"))
     BasicAuthenticationCredentials.struct_class = Types::BasicAuthenticationCredentials
+
+    BatchGetAttributeItems.member = Shapes::ShapeRef.new(shape: BatchGetAttributeOutput)
+
+    BatchGetAttributeOutput.add_member(:attribute_identifier, Shapes::ShapeRef.new(shape: AttributeIdentifier, required: true, location_name: "attributeIdentifier"))
+    BatchGetAttributeOutput.add_member(:forms, Shapes::ShapeRef.new(shape: FormOutputList, location_name: "forms"))
+    BatchGetAttributeOutput.struct_class = Types::BatchGetAttributeOutput
+
+    BatchGetAttributesMetadataInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    BatchGetAttributesMetadataInput.add_member(:entity_type, Shapes::ShapeRef.new(shape: AttributeEntityType, required: true, location: "uri", location_name: "entityType"))
+    BatchGetAttributesMetadataInput.add_member(:entity_identifier, Shapes::ShapeRef.new(shape: EntityId, required: true, location: "uri", location_name: "entityIdentifier"))
+    BatchGetAttributesMetadataInput.add_member(:entity_revision, Shapes::ShapeRef.new(shape: Revision, location: "querystring", location_name: "entityRevision"))
+    BatchGetAttributesMetadataInput.add_member(:attribute_identifiers, Shapes::ShapeRef.new(shape: AttributesList, required: true, location: "querystring", location_name: "attributeIdentifier"))
+    BatchGetAttributesMetadataInput.struct_class = Types::BatchGetAttributesMetadataInput
+
+    BatchGetAttributesMetadataOutput.add_member(:attributes, Shapes::ShapeRef.new(shape: BatchGetAttributeItems, location_name: "attributes"))
+    BatchGetAttributesMetadataOutput.add_member(:errors, Shapes::ShapeRef.new(shape: AttributesErrors, required: true, location_name: "errors"))
+    BatchGetAttributesMetadataOutput.struct_class = Types::BatchGetAttributesMetadataOutput
+
+    BatchPutAttributeItems.member = Shapes::ShapeRef.new(shape: BatchPutAttributeOutput)
+
+    BatchPutAttributeOutput.add_member(:attribute_identifier, Shapes::ShapeRef.new(shape: AttributeIdentifier, required: true, location_name: "attributeIdentifier"))
+    BatchPutAttributeOutput.struct_class = Types::BatchPutAttributeOutput
+
+    BatchPutAttributesMetadataInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    BatchPutAttributesMetadataInput.add_member(:entity_type, Shapes::ShapeRef.new(shape: AttributeEntityType, required: true, location: "uri", location_name: "entityType"))
+    BatchPutAttributesMetadataInput.add_member(:entity_identifier, Shapes::ShapeRef.new(shape: EntityId, required: true, location: "uri", location_name: "entityIdentifier"))
+    BatchPutAttributesMetadataInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    BatchPutAttributesMetadataInput.add_member(:attributes, Shapes::ShapeRef.new(shape: Attributes, required: true, location_name: "attributes"))
+    BatchPutAttributesMetadataInput.struct_class = Types::BatchPutAttributesMetadataInput
+
+    BatchPutAttributesMetadataOutput.add_member(:errors, Shapes::ShapeRef.new(shape: AttributesErrors, location_name: "errors"))
+    BatchPutAttributesMetadataOutput.add_member(:attributes, Shapes::ShapeRef.new(shape: BatchPutAttributeItems, location_name: "attributes"))
+    BatchPutAttributesMetadataOutput.struct_class = Types::BatchPutAttributesMetadataOutput
 
     BusinessNameGenerationConfiguration.add_member(:enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "enabled"))
     BusinessNameGenerationConfiguration.struct_class = Types::BusinessNameGenerationConfiguration
@@ -1321,18 +1767,22 @@ module Aws::DataZone
     CancelSubscriptionInput.add_member(:identifier, Shapes::ShapeRef.new(shape: SubscriptionId, required: true, location: "uri", location_name: "identifier"))
     CancelSubscriptionInput.struct_class = Types::CancelSubscriptionInput
 
-    CancelSubscriptionOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
-    CancelSubscriptionOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    CancelSubscriptionOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     CancelSubscriptionOutput.add_member(:id, Shapes::ShapeRef.new(shape: SubscriptionId, required: true, location_name: "id"))
-    CancelSubscriptionOutput.add_member(:retain_permissions, Shapes::ShapeRef.new(shape: Boolean, location_name: "retainPermissions"))
-    CancelSubscriptionOutput.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionStatus, required: true, location_name: "status"))
-    CancelSubscriptionOutput.add_member(:subscribed_listing, Shapes::ShapeRef.new(shape: SubscribedListing, required: true, location_name: "subscribedListing"))
-    CancelSubscriptionOutput.add_member(:subscribed_principal, Shapes::ShapeRef.new(shape: SubscribedPrincipal, required: true, location_name: "subscribedPrincipal"))
-    CancelSubscriptionOutput.add_member(:subscription_request_id, Shapes::ShapeRef.new(shape: SubscriptionRequestId, location_name: "subscriptionRequestId"))
-    CancelSubscriptionOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    CancelSubscriptionOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
     CancelSubscriptionOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    CancelSubscriptionOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    CancelSubscriptionOutput.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionStatus, required: true, location_name: "status"))
+    CancelSubscriptionOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
+    CancelSubscriptionOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    CancelSubscriptionOutput.add_member(:subscribed_principal, Shapes::ShapeRef.new(shape: SubscribedPrincipal, required: true, location_name: "subscribedPrincipal"))
+    CancelSubscriptionOutput.add_member(:subscribed_listing, Shapes::ShapeRef.new(shape: SubscribedListing, required: true, location_name: "subscribedListing"))
+    CancelSubscriptionOutput.add_member(:subscription_request_id, Shapes::ShapeRef.new(shape: SubscriptionRequestId, location_name: "subscriptionRequestId"))
+    CancelSubscriptionOutput.add_member(:retain_permissions, Shapes::ShapeRef.new(shape: Boolean, location_name: "retainPermissions"))
     CancelSubscriptionOutput.struct_class = Types::CancelSubscriptionOutput
+
+    CellInformation.struct_class = Types::CellInformation
+
+    CellOrder.member = Shapes::ShapeRef.new(shape: CellInformation)
 
     CloudFormationProperties.add_member(:template_url, Shapes::ShapeRef.new(shape: String, required: true, location_name: "templateUrl"))
     CloudFormationProperties.struct_class = Types::CloudFormationProperties
@@ -1342,6 +1792,10 @@ module Aws::DataZone
 
     ColumnNameList.member = Shapes::ShapeRef.new(shape: String)
 
+    ComputeConfig.add_member(:instance_type, Shapes::ShapeRef.new(shape: InstanceType, location_name: "instanceType"))
+    ComputeConfig.add_member(:environment_version, Shapes::ShapeRef.new(shape: String, location_name: "environmentVersion"))
+    ComputeConfig.struct_class = Types::ComputeConfig
+
     ComputeEnvironmentsList.member = Shapes::ShapeRef.new(shape: ComputeEnvironments)
 
     ConfigurableActionParameter.add_member(:key, Shapes::ShapeRef.new(shape: String, location_name: "key"))
@@ -1350,18 +1804,24 @@ module Aws::DataZone
 
     ConfigurableActionParameterList.member = Shapes::ShapeRef.new(shape: ConfigurableActionParameter)
 
+    ConfigurableEnvironmentAction.add_member(:type, Shapes::ShapeRef.new(shape: String, required: true, location_name: "type"))
     ConfigurableEnvironmentAction.add_member(:auth, Shapes::ShapeRef.new(shape: ConfigurableActionTypeAuthorization, location_name: "auth"))
     ConfigurableEnvironmentAction.add_member(:parameters, Shapes::ShapeRef.new(shape: ConfigurableActionParameterList, required: true, location_name: "parameters"))
-    ConfigurableEnvironmentAction.add_member(:type, Shapes::ShapeRef.new(shape: String, required: true, location_name: "type"))
     ConfigurableEnvironmentAction.struct_class = Types::ConfigurableEnvironmentAction
+
+    Configuration.add_member(:classification, Shapes::ShapeRef.new(shape: ConfigurationClassificationString, location_name: "classification"))
+    Configuration.add_member(:properties, Shapes::ShapeRef.new(shape: PropertyMap, location_name: "properties"))
+    Configuration.struct_class = Types::Configuration
+
+    Configurations.member = Shapes::ShapeRef.new(shape: Configuration)
 
     ConflictException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, required: true, location_name: "message"))
     ConflictException.struct_class = Types::ConflictException
 
     ConnectionCredentials.add_member(:access_key_id, Shapes::ShapeRef.new(shape: String, location_name: "accessKeyId"))
-    ConnectionCredentials.add_member(:expiration, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "expiration"))
     ConnectionCredentials.add_member(:secret_access_key, Shapes::ShapeRef.new(shape: String, location_name: "secretAccessKey"))
     ConnectionCredentials.add_member(:session_token, Shapes::ShapeRef.new(shape: String, location_name: "sessionToken"))
+    ConnectionCredentials.add_member(:expiration, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "expiration"))
     ConnectionCredentials.struct_class = Types::ConnectionCredentials
 
     ConnectionProperties.key = Shapes::ShapeRef.new(shape: String)
@@ -1374,6 +1834,15 @@ module Aws::DataZone
     ConnectionPropertiesInput.add_member(:redshift_properties, Shapes::ShapeRef.new(shape: RedshiftPropertiesInput, location_name: "redshiftProperties"))
     ConnectionPropertiesInput.add_member(:spark_emr_properties, Shapes::ShapeRef.new(shape: SparkEmrPropertiesInput, location_name: "sparkEmrProperties"))
     ConnectionPropertiesInput.add_member(:spark_glue_properties, Shapes::ShapeRef.new(shape: SparkGluePropertiesInput, location_name: "sparkGlueProperties"))
+    ConnectionPropertiesInput.add_member(:s3_properties, Shapes::ShapeRef.new(shape: S3PropertiesInput, location_name: "s3Properties"))
+    ConnectionPropertiesInput.add_member(:snowflake_properties, Shapes::ShapeRef.new(shape: SnowflakePropertiesInput, location_name: "snowflakeProperties"))
+    ConnectionPropertiesInput.add_member(:amazon_q_properties, Shapes::ShapeRef.new(shape: AmazonQPropertiesInput, location_name: "amazonQProperties"))
+    ConnectionPropertiesInput.add_member(:mlflow_properties, Shapes::ShapeRef.new(shape: MlflowPropertiesInput, location_name: "mlflowProperties"))
+    ConnectionPropertiesInput.add_member(:workflows_mwaa_properties, Shapes::ShapeRef.new(shape: WorkflowsMwaaPropertiesInput, location_name: "workflowsMwaaProperties"))
+    ConnectionPropertiesInput.add_member(:workflows_serverless_properties, Shapes::ShapeRef.new(shape: WorkflowsServerlessPropertiesInput, location_name: "workflowsServerlessProperties"))
+    ConnectionPropertiesInput.add_member(:lakehouse_properties, Shapes::ShapeRef.new(shape: LakehousePropertiesInput, location_name: "lakehouseProperties"))
+    ConnectionPropertiesInput.add_member(:vpc_properties, Shapes::ShapeRef.new(shape: VpcPropertiesInput, location_name: "vpcProperties"))
+    ConnectionPropertiesInput.add_member(:git_properties, Shapes::ShapeRef.new(shape: GitPropertiesInput, location_name: "gitProperties"))
     ConnectionPropertiesInput.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
     ConnectionPropertiesInput.add_member_subclass(:athena_properties, Types::ConnectionPropertiesInput::AthenaProperties)
     ConnectionPropertiesInput.add_member_subclass(:glue_properties, Types::ConnectionPropertiesInput::GlueProperties)
@@ -1382,6 +1851,15 @@ module Aws::DataZone
     ConnectionPropertiesInput.add_member_subclass(:redshift_properties, Types::ConnectionPropertiesInput::RedshiftProperties)
     ConnectionPropertiesInput.add_member_subclass(:spark_emr_properties, Types::ConnectionPropertiesInput::SparkEmrProperties)
     ConnectionPropertiesInput.add_member_subclass(:spark_glue_properties, Types::ConnectionPropertiesInput::SparkGlueProperties)
+    ConnectionPropertiesInput.add_member_subclass(:s3_properties, Types::ConnectionPropertiesInput::S3Properties)
+    ConnectionPropertiesInput.add_member_subclass(:snowflake_properties, Types::ConnectionPropertiesInput::SnowflakeProperties)
+    ConnectionPropertiesInput.add_member_subclass(:amazon_q_properties, Types::ConnectionPropertiesInput::AmazonQProperties)
+    ConnectionPropertiesInput.add_member_subclass(:mlflow_properties, Types::ConnectionPropertiesInput::MlflowProperties)
+    ConnectionPropertiesInput.add_member_subclass(:workflows_mwaa_properties, Types::ConnectionPropertiesInput::WorkflowsMwaaProperties)
+    ConnectionPropertiesInput.add_member_subclass(:workflows_serverless_properties, Types::ConnectionPropertiesInput::WorkflowsServerlessProperties)
+    ConnectionPropertiesInput.add_member_subclass(:lakehouse_properties, Types::ConnectionPropertiesInput::LakehouseProperties)
+    ConnectionPropertiesInput.add_member_subclass(:vpc_properties, Types::ConnectionPropertiesInput::VpcProperties)
+    ConnectionPropertiesInput.add_member_subclass(:git_properties, Types::ConnectionPropertiesInput::GitProperties)
     ConnectionPropertiesInput.add_member_subclass(:unknown, Types::ConnectionPropertiesInput::Unknown)
     ConnectionPropertiesInput.struct_class = Types::ConnectionPropertiesInput
 
@@ -1392,6 +1870,15 @@ module Aws::DataZone
     ConnectionPropertiesOutput.add_member(:redshift_properties, Shapes::ShapeRef.new(shape: RedshiftPropertiesOutput, location_name: "redshiftProperties"))
     ConnectionPropertiesOutput.add_member(:spark_emr_properties, Shapes::ShapeRef.new(shape: SparkEmrPropertiesOutput, location_name: "sparkEmrProperties"))
     ConnectionPropertiesOutput.add_member(:spark_glue_properties, Shapes::ShapeRef.new(shape: SparkGluePropertiesOutput, location_name: "sparkGlueProperties"))
+    ConnectionPropertiesOutput.add_member(:s3_properties, Shapes::ShapeRef.new(shape: S3PropertiesOutput, location_name: "s3Properties"))
+    ConnectionPropertiesOutput.add_member(:snowflake_properties, Shapes::ShapeRef.new(shape: SnowflakePropertiesOutput, location_name: "snowflakeProperties"))
+    ConnectionPropertiesOutput.add_member(:amazon_q_properties, Shapes::ShapeRef.new(shape: AmazonQPropertiesOutput, location_name: "amazonQProperties"))
+    ConnectionPropertiesOutput.add_member(:mlflow_properties, Shapes::ShapeRef.new(shape: MlflowPropertiesOutput, location_name: "mlflowProperties"))
+    ConnectionPropertiesOutput.add_member(:workflows_mwaa_properties, Shapes::ShapeRef.new(shape: WorkflowsMwaaPropertiesOutput, location_name: "workflowsMwaaProperties"))
+    ConnectionPropertiesOutput.add_member(:workflows_serverless_properties, Shapes::ShapeRef.new(shape: WorkflowsServerlessPropertiesOutput, location_name: "workflowsServerlessProperties"))
+    ConnectionPropertiesOutput.add_member(:lakehouse_properties, Shapes::ShapeRef.new(shape: LakehousePropertiesOutput, location_name: "lakehouseProperties"))
+    ConnectionPropertiesOutput.add_member(:vpc_properties, Shapes::ShapeRef.new(shape: VpcPropertiesOutput, location_name: "vpcProperties"))
+    ConnectionPropertiesOutput.add_member(:git_properties, Shapes::ShapeRef.new(shape: GitPropertiesOutput, location_name: "gitProperties"))
     ConnectionPropertiesOutput.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
     ConnectionPropertiesOutput.add_member_subclass(:athena_properties, Types::ConnectionPropertiesOutput::AthenaProperties)
     ConnectionPropertiesOutput.add_member_subclass(:glue_properties, Types::ConnectionPropertiesOutput::GlueProperties)
@@ -1400,6 +1887,15 @@ module Aws::DataZone
     ConnectionPropertiesOutput.add_member_subclass(:redshift_properties, Types::ConnectionPropertiesOutput::RedshiftProperties)
     ConnectionPropertiesOutput.add_member_subclass(:spark_emr_properties, Types::ConnectionPropertiesOutput::SparkEmrProperties)
     ConnectionPropertiesOutput.add_member_subclass(:spark_glue_properties, Types::ConnectionPropertiesOutput::SparkGlueProperties)
+    ConnectionPropertiesOutput.add_member_subclass(:s3_properties, Types::ConnectionPropertiesOutput::S3Properties)
+    ConnectionPropertiesOutput.add_member_subclass(:snowflake_properties, Types::ConnectionPropertiesOutput::SnowflakeProperties)
+    ConnectionPropertiesOutput.add_member_subclass(:amazon_q_properties, Types::ConnectionPropertiesOutput::AmazonQProperties)
+    ConnectionPropertiesOutput.add_member_subclass(:mlflow_properties, Types::ConnectionPropertiesOutput::MlflowProperties)
+    ConnectionPropertiesOutput.add_member_subclass(:workflows_mwaa_properties, Types::ConnectionPropertiesOutput::WorkflowsMwaaProperties)
+    ConnectionPropertiesOutput.add_member_subclass(:workflows_serverless_properties, Types::ConnectionPropertiesOutput::WorkflowsServerlessProperties)
+    ConnectionPropertiesOutput.add_member_subclass(:lakehouse_properties, Types::ConnectionPropertiesOutput::LakehouseProperties)
+    ConnectionPropertiesOutput.add_member_subclass(:vpc_properties, Types::ConnectionPropertiesOutput::VpcProperties)
+    ConnectionPropertiesOutput.add_member_subclass(:git_properties, Types::ConnectionPropertiesOutput::GitProperties)
     ConnectionPropertiesOutput.add_member_subclass(:unknown, Types::ConnectionPropertiesOutput::Unknown)
     ConnectionPropertiesOutput.struct_class = Types::ConnectionPropertiesOutput
 
@@ -1408,17 +1904,32 @@ module Aws::DataZone
     ConnectionPropertiesPatch.add_member(:iam_properties, Shapes::ShapeRef.new(shape: IamPropertiesPatch, location_name: "iamProperties"))
     ConnectionPropertiesPatch.add_member(:redshift_properties, Shapes::ShapeRef.new(shape: RedshiftPropertiesPatch, location_name: "redshiftProperties"))
     ConnectionPropertiesPatch.add_member(:spark_emr_properties, Shapes::ShapeRef.new(shape: SparkEmrPropertiesPatch, location_name: "sparkEmrProperties"))
+    ConnectionPropertiesPatch.add_member(:s3_properties, Shapes::ShapeRef.new(shape: S3PropertiesPatch, location_name: "s3Properties"))
+    ConnectionPropertiesPatch.add_member(:snowflake_properties, Shapes::ShapeRef.new(shape: SnowflakePropertiesPatch, location_name: "snowflakeProperties"))
+    ConnectionPropertiesPatch.add_member(:amazon_q_properties, Shapes::ShapeRef.new(shape: AmazonQPropertiesPatch, location_name: "amazonQProperties"))
+    ConnectionPropertiesPatch.add_member(:mlflow_properties, Shapes::ShapeRef.new(shape: MlflowPropertiesPatch, location_name: "mlflowProperties"))
+    ConnectionPropertiesPatch.add_member(:lakehouse_properties, Shapes::ShapeRef.new(shape: LakehousePropertiesPatch, location_name: "lakehouseProperties"))
+    ConnectionPropertiesPatch.add_member(:vpc_properties, Shapes::ShapeRef.new(shape: VpcPropertiesPatch, location_name: "vpcProperties"))
+    ConnectionPropertiesPatch.add_member(:git_properties, Shapes::ShapeRef.new(shape: GitPropertiesPatch, location_name: "gitProperties"))
     ConnectionPropertiesPatch.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
     ConnectionPropertiesPatch.add_member_subclass(:athena_properties, Types::ConnectionPropertiesPatch::AthenaProperties)
     ConnectionPropertiesPatch.add_member_subclass(:glue_properties, Types::ConnectionPropertiesPatch::GlueProperties)
     ConnectionPropertiesPatch.add_member_subclass(:iam_properties, Types::ConnectionPropertiesPatch::IamProperties)
     ConnectionPropertiesPatch.add_member_subclass(:redshift_properties, Types::ConnectionPropertiesPatch::RedshiftProperties)
     ConnectionPropertiesPatch.add_member_subclass(:spark_emr_properties, Types::ConnectionPropertiesPatch::SparkEmrProperties)
+    ConnectionPropertiesPatch.add_member_subclass(:s3_properties, Types::ConnectionPropertiesPatch::S3Properties)
+    ConnectionPropertiesPatch.add_member_subclass(:snowflake_properties, Types::ConnectionPropertiesPatch::SnowflakeProperties)
+    ConnectionPropertiesPatch.add_member_subclass(:amazon_q_properties, Types::ConnectionPropertiesPatch::AmazonQProperties)
+    ConnectionPropertiesPatch.add_member_subclass(:mlflow_properties, Types::ConnectionPropertiesPatch::MlflowProperties)
+    ConnectionPropertiesPatch.add_member_subclass(:lakehouse_properties, Types::ConnectionPropertiesPatch::LakehouseProperties)
+    ConnectionPropertiesPatch.add_member_subclass(:vpc_properties, Types::ConnectionPropertiesPatch::VpcProperties)
+    ConnectionPropertiesPatch.add_member_subclass(:git_properties, Types::ConnectionPropertiesPatch::GitProperties)
     ConnectionPropertiesPatch.add_member_subclass(:unknown, Types::ConnectionPropertiesPatch::Unknown)
     ConnectionPropertiesPatch.struct_class = Types::ConnectionPropertiesPatch
 
     ConnectionSummaries.member = Shapes::ShapeRef.new(shape: ConnectionSummary)
 
+    ConnectionSummary.add_member(:configurations, Shapes::ShapeRef.new(shape: Configurations, location_name: "configurations"))
     ConnectionSummary.add_member(:connection_id, Shapes::ShapeRef.new(shape: ConnectionId, required: true, location_name: "connectionId"))
     ConnectionSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     ConnectionSummary.add_member(:domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, required: true, location_name: "domainUnitId"))
@@ -1428,112 +1939,156 @@ module Aws::DataZone
     ConnectionSummary.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "projectId"))
     ConnectionSummary.add_member(:props, Shapes::ShapeRef.new(shape: ConnectionPropertiesOutput, location_name: "props"))
     ConnectionSummary.add_member(:type, Shapes::ShapeRef.new(shape: ConnectionType, required: true, location_name: "type"))
+    ConnectionSummary.add_member(:scope, Shapes::ShapeRef.new(shape: ConnectionScope, location_name: "scope"))
     ConnectionSummary.struct_class = Types::ConnectionSummary
 
-    CreateAssetFilterInput.add_member(:asset_identifier, Shapes::ShapeRef.new(shape: AssetId, required: true, location: "uri", location_name: "assetIdentifier"))
-    CreateAssetFilterInput.add_member(:client_token, Shapes::ShapeRef.new(shape: String, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
-    CreateAssetFilterInput.add_member(:configuration, Shapes::ShapeRef.new(shape: AssetFilterConfiguration, required: true, location_name: "configuration"))
-    CreateAssetFilterInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    ConnectivityProperties.add_member(:connection_properties, Shapes::ShapeRef.new(shape: ConnectionProperties, location_name: "connectionProperties"))
+    ConnectivityProperties.add_member(:physical_connection_requirements, Shapes::ShapeRef.new(shape: PhysicalConnectionRequirements, location_name: "physicalConnectionRequirements"))
+    ConnectivityProperties.add_member(:name, Shapes::ShapeRef.new(shape: ConnectivityPropertiesNameString, location_name: "name"))
+    ConnectivityProperties.add_member(:description, Shapes::ShapeRef.new(shape: ConnectivityPropertiesDescriptionString, location_name: "description"))
+    ConnectivityProperties.add_member(:validate_credentials, Shapes::ShapeRef.new(shape: Boolean, location_name: "validateCredentials"))
+    ConnectivityProperties.add_member(:validate_for_compute_environments, Shapes::ShapeRef.new(shape: ComputeEnvironmentsList, location_name: "validateForComputeEnvironments"))
+    ConnectivityProperties.add_member(:spark_properties, Shapes::ShapeRef.new(shape: PropertyMap, location_name: "sparkProperties"))
+    ConnectivityProperties.add_member(:athena_properties, Shapes::ShapeRef.new(shape: PropertyMap, location_name: "athenaProperties"))
+    ConnectivityProperties.add_member(:python_properties, Shapes::ShapeRef.new(shape: PropertyMap, location_name: "pythonProperties"))
+    ConnectivityProperties.add_member(:authentication_configuration, Shapes::ShapeRef.new(shape: AuthenticationConfigurationInput, location_name: "authenticationConfiguration"))
+    ConnectivityProperties.struct_class = Types::ConnectivityProperties
+
+    ConnectivityPropertiesPatch.add_member(:description, Shapes::ShapeRef.new(shape: ConnectivityPropertiesPatchDescriptionString, location_name: "description"))
+    ConnectivityPropertiesPatch.add_member(:connection_properties, Shapes::ShapeRef.new(shape: ConnectionProperties, location_name: "connectionProperties"))
+    ConnectivityPropertiesPatch.add_member(:authentication_configuration, Shapes::ShapeRef.new(shape: AuthenticationConfigurationPatch, location_name: "authenticationConfiguration"))
+    ConnectivityPropertiesPatch.struct_class = Types::ConnectivityPropertiesPatch
+
+    CreateAccountPoolInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    CreateAccountPoolInput.add_member(:name, Shapes::ShapeRef.new(shape: AccountPoolName, required: true, location_name: "name"))
+    CreateAccountPoolInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    CreateAccountPoolInput.add_member(:resolution_strategy, Shapes::ShapeRef.new(shape: ResolutionStrategy, required: true, location_name: "resolutionStrategy"))
+    CreateAccountPoolInput.add_member(:account_source, Shapes::ShapeRef.new(shape: AccountSource, required: true, location_name: "accountSource"))
+    CreateAccountPoolInput.struct_class = Types::CreateAccountPoolInput
+
+    CreateAccountPoolOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "domainId"))
+    CreateAccountPoolOutput.add_member(:name, Shapes::ShapeRef.new(shape: AccountPoolName, location_name: "name"))
+    CreateAccountPoolOutput.add_member(:id, Shapes::ShapeRef.new(shape: AccountPoolId, location_name: "id"))
+    CreateAccountPoolOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    CreateAccountPoolOutput.add_member(:resolution_strategy, Shapes::ShapeRef.new(shape: ResolutionStrategy, location_name: "resolutionStrategy"))
+    CreateAccountPoolOutput.add_member(:account_source, Shapes::ShapeRef.new(shape: AccountSource, required: true, location_name: "accountSource"))
+    CreateAccountPoolOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
+    CreateAccountPoolOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
+    CreateAccountPoolOutput.add_member(:last_updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "lastUpdatedAt"))
+    CreateAccountPoolOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    CreateAccountPoolOutput.add_member(:domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitId"))
+    CreateAccountPoolOutput.struct_class = Types::CreateAccountPoolOutput
+
     CreateAssetFilterInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    CreateAssetFilterInput.add_member(:asset_identifier, Shapes::ShapeRef.new(shape: AssetId, required: true, location: "uri", location_name: "assetIdentifier"))
     CreateAssetFilterInput.add_member(:name, Shapes::ShapeRef.new(shape: FilterName, required: true, location_name: "name"))
+    CreateAssetFilterInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    CreateAssetFilterInput.add_member(:configuration, Shapes::ShapeRef.new(shape: AssetFilterConfiguration, required: true, location_name: "configuration"))
+    CreateAssetFilterInput.add_member(:client_token, Shapes::ShapeRef.new(shape: String, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateAssetFilterInput.struct_class = Types::CreateAssetFilterInput
 
+    CreateAssetFilterOutput.add_member(:id, Shapes::ShapeRef.new(shape: FilterId, required: true, location_name: "id"))
+    CreateAssetFilterOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     CreateAssetFilterOutput.add_member(:asset_id, Shapes::ShapeRef.new(shape: AssetId, required: true, location_name: "assetId"))
+    CreateAssetFilterOutput.add_member(:name, Shapes::ShapeRef.new(shape: FilterName, required: true, location_name: "name"))
+    CreateAssetFilterOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    CreateAssetFilterOutput.add_member(:status, Shapes::ShapeRef.new(shape: FilterStatus, location_name: "status"))
     CreateAssetFilterOutput.add_member(:configuration, Shapes::ShapeRef.new(shape: AssetFilterConfiguration, required: true, location_name: "configuration"))
     CreateAssetFilterOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
-    CreateAssetFilterOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    CreateAssetFilterOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    CreateAssetFilterOutput.add_member(:error_message, Shapes::ShapeRef.new(shape: String, location_name: "errorMessage"))
     CreateAssetFilterOutput.add_member(:effective_column_names, Shapes::ShapeRef.new(shape: ColumnNameList, location_name: "effectiveColumnNames"))
     CreateAssetFilterOutput.add_member(:effective_row_filter, Shapes::ShapeRef.new(shape: String, location_name: "effectiveRowFilter"))
-    CreateAssetFilterOutput.add_member(:error_message, Shapes::ShapeRef.new(shape: String, location_name: "errorMessage"))
-    CreateAssetFilterOutput.add_member(:id, Shapes::ShapeRef.new(shape: FilterId, required: true, location_name: "id"))
-    CreateAssetFilterOutput.add_member(:name, Shapes::ShapeRef.new(shape: FilterName, required: true, location_name: "name"))
-    CreateAssetFilterOutput.add_member(:status, Shapes::ShapeRef.new(shape: FilterStatus, location_name: "status"))
     CreateAssetFilterOutput.struct_class = Types::CreateAssetFilterOutput
 
-    CreateAssetInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
-    CreateAssetInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    CreateAssetInput.add_member(:name, Shapes::ShapeRef.new(shape: AssetName, required: true, location_name: "name"))
     CreateAssetInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     CreateAssetInput.add_member(:external_identifier, Shapes::ShapeRef.new(shape: ExternalIdentifier, location_name: "externalIdentifier"))
-    CreateAssetInput.add_member(:forms_input, Shapes::ShapeRef.new(shape: FormInputList, location_name: "formsInput"))
-    CreateAssetInput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
-    CreateAssetInput.add_member(:name, Shapes::ShapeRef.new(shape: AssetName, required: true, location_name: "name"))
-    CreateAssetInput.add_member(:owning_project_identifier, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectIdentifier"))
-    CreateAssetInput.add_member(:prediction_configuration, Shapes::ShapeRef.new(shape: PredictionConfiguration, location_name: "predictionConfiguration"))
     CreateAssetInput.add_member(:type_identifier, Shapes::ShapeRef.new(shape: AssetTypeIdentifier, required: true, location_name: "typeIdentifier"))
     CreateAssetInput.add_member(:type_revision, Shapes::ShapeRef.new(shape: Revision, location_name: "typeRevision"))
+    CreateAssetInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    CreateAssetInput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
+    CreateAssetInput.add_member(:forms_input, Shapes::ShapeRef.new(shape: FormInputList, location_name: "formsInput"))
+    CreateAssetInput.add_member(:owning_project_identifier, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectIdentifier"))
+    CreateAssetInput.add_member(:prediction_configuration, Shapes::ShapeRef.new(shape: PredictionConfiguration, location_name: "predictionConfiguration"))
+    CreateAssetInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateAssetInput.struct_class = Types::CreateAssetInput
 
-    CreateAssetOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
-    CreateAssetOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
-    CreateAssetOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    CreateAssetOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    CreateAssetOutput.add_member(:external_identifier, Shapes::ShapeRef.new(shape: ExternalIdentifier, location_name: "externalIdentifier"))
-    CreateAssetOutput.add_member(:first_revision_created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "firstRevisionCreatedAt"))
-    CreateAssetOutput.add_member(:first_revision_created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "firstRevisionCreatedBy"))
-    CreateAssetOutput.add_member(:forms_output, Shapes::ShapeRef.new(shape: FormOutputList, required: true, location_name: "formsOutput"))
-    CreateAssetOutput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
     CreateAssetOutput.add_member(:id, Shapes::ShapeRef.new(shape: AssetId, required: true, location_name: "id"))
-    CreateAssetOutput.add_member(:latest_time_series_data_point_forms_output, Shapes::ShapeRef.new(shape: TimeSeriesDataPointSummaryFormOutputList, location_name: "latestTimeSeriesDataPointFormsOutput"))
-    CreateAssetOutput.add_member(:listing, Shapes::ShapeRef.new(shape: AssetListingDetails, location_name: "listing"))
     CreateAssetOutput.add_member(:name, Shapes::ShapeRef.new(shape: AssetName, required: true, location_name: "name"))
-    CreateAssetOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
-    CreateAssetOutput.add_member(:prediction_configuration, Shapes::ShapeRef.new(shape: PredictionConfiguration, location_name: "predictionConfiguration"))
-    CreateAssetOutput.add_member(:read_only_forms_output, Shapes::ShapeRef.new(shape: FormOutputList, location_name: "readOnlyFormsOutput"))
-    CreateAssetOutput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
     CreateAssetOutput.add_member(:type_identifier, Shapes::ShapeRef.new(shape: AssetTypeIdentifier, required: true, location_name: "typeIdentifier"))
     CreateAssetOutput.add_member(:type_revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "typeRevision"))
+    CreateAssetOutput.add_member(:external_identifier, Shapes::ShapeRef.new(shape: ExternalIdentifier, location_name: "externalIdentifier"))
+    CreateAssetOutput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
+    CreateAssetOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    CreateAssetOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    CreateAssetOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
+    CreateAssetOutput.add_member(:first_revision_created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "firstRevisionCreatedAt"))
+    CreateAssetOutput.add_member(:first_revision_created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "firstRevisionCreatedBy"))
+    CreateAssetOutput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
+    CreateAssetOutput.add_member(:governed_glossary_terms, Shapes::ShapeRef.new(shape: CreateAssetOutputGovernedGlossaryTermsList, location_name: "governedGlossaryTerms"))
+    CreateAssetOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
+    CreateAssetOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    CreateAssetOutput.add_member(:listing, Shapes::ShapeRef.new(shape: AssetListingDetails, location_name: "listing"))
+    CreateAssetOutput.add_member(:forms_output, Shapes::ShapeRef.new(shape: FormOutputList, required: true, location_name: "formsOutput"))
+    CreateAssetOutput.add_member(:read_only_forms_output, Shapes::ShapeRef.new(shape: FormOutputList, location_name: "readOnlyFormsOutput"))
+    CreateAssetOutput.add_member(:latest_time_series_data_point_forms_output, Shapes::ShapeRef.new(shape: TimeSeriesDataPointSummaryFormOutputList, location_name: "latestTimeSeriesDataPointFormsOutput"))
+    CreateAssetOutput.add_member(:prediction_configuration, Shapes::ShapeRef.new(shape: PredictionConfiguration, location_name: "predictionConfiguration"))
     CreateAssetOutput.struct_class = Types::CreateAssetOutput
 
-    CreateAssetRevisionInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
-    CreateAssetRevisionInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    CreateAssetRevisionInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    CreateAssetRevisionInput.add_member(:forms_input, Shapes::ShapeRef.new(shape: FormInputList, location_name: "formsInput"))
-    CreateAssetRevisionInput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
-    CreateAssetRevisionInput.add_member(:identifier, Shapes::ShapeRef.new(shape: AssetIdentifier, required: true, location: "uri", location_name: "identifier"))
+    CreateAssetOutputGovernedGlossaryTermsList.member = Shapes::ShapeRef.new(shape: GlossaryTermId)
+
     CreateAssetRevisionInput.add_member(:name, Shapes::ShapeRef.new(shape: AssetName, required: true, location_name: "name"))
-    CreateAssetRevisionInput.add_member(:prediction_configuration, Shapes::ShapeRef.new(shape: PredictionConfiguration, location_name: "predictionConfiguration"))
+    CreateAssetRevisionInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    CreateAssetRevisionInput.add_member(:identifier, Shapes::ShapeRef.new(shape: AssetIdentifier, required: true, location: "uri", location_name: "identifier"))
     CreateAssetRevisionInput.add_member(:type_revision, Shapes::ShapeRef.new(shape: Revision, location_name: "typeRevision"))
+    CreateAssetRevisionInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    CreateAssetRevisionInput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
+    CreateAssetRevisionInput.add_member(:forms_input, Shapes::ShapeRef.new(shape: FormInputList, location_name: "formsInput"))
+    CreateAssetRevisionInput.add_member(:prediction_configuration, Shapes::ShapeRef.new(shape: PredictionConfiguration, location_name: "predictionConfiguration"))
+    CreateAssetRevisionInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateAssetRevisionInput.struct_class = Types::CreateAssetRevisionInput
 
-    CreateAssetRevisionOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
-    CreateAssetRevisionOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
-    CreateAssetRevisionOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    CreateAssetRevisionOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    CreateAssetRevisionOutput.add_member(:external_identifier, Shapes::ShapeRef.new(shape: ExternalIdentifier, location_name: "externalIdentifier"))
-    CreateAssetRevisionOutput.add_member(:first_revision_created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "firstRevisionCreatedAt"))
-    CreateAssetRevisionOutput.add_member(:first_revision_created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "firstRevisionCreatedBy"))
-    CreateAssetRevisionOutput.add_member(:forms_output, Shapes::ShapeRef.new(shape: FormOutputList, required: true, location_name: "formsOutput"))
-    CreateAssetRevisionOutput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
     CreateAssetRevisionOutput.add_member(:id, Shapes::ShapeRef.new(shape: AssetId, required: true, location_name: "id"))
-    CreateAssetRevisionOutput.add_member(:latest_time_series_data_point_forms_output, Shapes::ShapeRef.new(shape: TimeSeriesDataPointSummaryFormOutputList, location_name: "latestTimeSeriesDataPointFormsOutput"))
-    CreateAssetRevisionOutput.add_member(:listing, Shapes::ShapeRef.new(shape: AssetListingDetails, location_name: "listing"))
     CreateAssetRevisionOutput.add_member(:name, Shapes::ShapeRef.new(shape: AssetName, required: true, location_name: "name"))
-    CreateAssetRevisionOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
-    CreateAssetRevisionOutput.add_member(:prediction_configuration, Shapes::ShapeRef.new(shape: PredictionConfiguration, location_name: "predictionConfiguration"))
-    CreateAssetRevisionOutput.add_member(:read_only_forms_output, Shapes::ShapeRef.new(shape: FormOutputList, location_name: "readOnlyFormsOutput"))
-    CreateAssetRevisionOutput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
     CreateAssetRevisionOutput.add_member(:type_identifier, Shapes::ShapeRef.new(shape: AssetTypeIdentifier, required: true, location_name: "typeIdentifier"))
     CreateAssetRevisionOutput.add_member(:type_revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "typeRevision"))
+    CreateAssetRevisionOutput.add_member(:external_identifier, Shapes::ShapeRef.new(shape: ExternalIdentifier, location_name: "externalIdentifier"))
+    CreateAssetRevisionOutput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
+    CreateAssetRevisionOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    CreateAssetRevisionOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    CreateAssetRevisionOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
+    CreateAssetRevisionOutput.add_member(:first_revision_created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "firstRevisionCreatedAt"))
+    CreateAssetRevisionOutput.add_member(:first_revision_created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "firstRevisionCreatedBy"))
+    CreateAssetRevisionOutput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
+    CreateAssetRevisionOutput.add_member(:governed_glossary_terms, Shapes::ShapeRef.new(shape: CreateAssetRevisionOutputGovernedGlossaryTermsList, location_name: "governedGlossaryTerms"))
+    CreateAssetRevisionOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
+    CreateAssetRevisionOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    CreateAssetRevisionOutput.add_member(:listing, Shapes::ShapeRef.new(shape: AssetListingDetails, location_name: "listing"))
+    CreateAssetRevisionOutput.add_member(:forms_output, Shapes::ShapeRef.new(shape: FormOutputList, required: true, location_name: "formsOutput"))
+    CreateAssetRevisionOutput.add_member(:read_only_forms_output, Shapes::ShapeRef.new(shape: FormOutputList, location_name: "readOnlyFormsOutput"))
+    CreateAssetRevisionOutput.add_member(:latest_time_series_data_point_forms_output, Shapes::ShapeRef.new(shape: TimeSeriesDataPointSummaryFormOutputList, location_name: "latestTimeSeriesDataPointFormsOutput"))
+    CreateAssetRevisionOutput.add_member(:prediction_configuration, Shapes::ShapeRef.new(shape: PredictionConfiguration, location_name: "predictionConfiguration"))
     CreateAssetRevisionOutput.struct_class = Types::CreateAssetRevisionOutput
 
-    CreateAssetTypeInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    CreateAssetRevisionOutputGovernedGlossaryTermsList.member = Shapes::ShapeRef.new(shape: GlossaryTermId)
+
     CreateAssetTypeInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    CreateAssetTypeInput.add_member(:forms_input, Shapes::ShapeRef.new(shape: FormsInputMap, required: true, location_name: "formsInput"))
     CreateAssetTypeInput.add_member(:name, Shapes::ShapeRef.new(shape: TypeName, required: true, location_name: "name"))
+    CreateAssetTypeInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    CreateAssetTypeInput.add_member(:forms_input, Shapes::ShapeRef.new(shape: FormsInputMap, required: true, location_name: "formsInput"))
     CreateAssetTypeInput.add_member(:owning_project_identifier, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectIdentifier"))
     CreateAssetTypeInput.struct_class = Types::CreateAssetTypeInput
 
-    CreateAssetTypeOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
-    CreateAssetTypeOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
-    CreateAssetTypeOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     CreateAssetTypeOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    CreateAssetTypeOutput.add_member(:forms_output, Shapes::ShapeRef.new(shape: FormsOutputMap, required: true, location_name: "formsOutput"))
     CreateAssetTypeOutput.add_member(:name, Shapes::ShapeRef.new(shape: TypeName, required: true, location_name: "name"))
+    CreateAssetTypeOutput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
+    CreateAssetTypeOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    CreateAssetTypeOutput.add_member(:forms_output, Shapes::ShapeRef.new(shape: FormsOutputMap, required: true, location_name: "formsOutput"))
+    CreateAssetTypeOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "owningProjectId"))
     CreateAssetTypeOutput.add_member(:origin_domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "originDomainId"))
     CreateAssetTypeOutput.add_member(:origin_project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "originProjectId"))
-    CreateAssetTypeOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "owningProjectId"))
-    CreateAssetTypeOutput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
+    CreateAssetTypeOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    CreateAssetTypeOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
     CreateAssetTypeOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
     CreateAssetTypeOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
     CreateAssetTypeOutput.struct_class = Types::CreateAssetTypeOutput
@@ -1542,15 +2097,19 @@ module Aws::DataZone
     CreateAssetTypePolicyGrantDetail.struct_class = Types::CreateAssetTypePolicyGrantDetail
 
     CreateConnectionInput.add_member(:aws_location, Shapes::ShapeRef.new(shape: AwsLocation, location_name: "awsLocation"))
-    CreateConnectionInput.add_member(:client_token, Shapes::ShapeRef.new(shape: String, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateConnectionInput.add_member(:client_token, Shapes::ShapeRef.new(shape: String, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    CreateConnectionInput.add_member(:configurations, Shapes::ShapeRef.new(shape: Configurations, location_name: "configurations"))
     CreateConnectionInput.add_member(:description, Shapes::ShapeRef.new(shape: CreateConnectionInputDescriptionString, location_name: "description"))
     CreateConnectionInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    CreateConnectionInput.add_member(:environment_identifier, Shapes::ShapeRef.new(shape: EnvironmentId, required: true, location_name: "environmentIdentifier"))
+    CreateConnectionInput.add_member(:environment_identifier, Shapes::ShapeRef.new(shape: EnvironmentId, location_name: "environmentIdentifier"))
     CreateConnectionInput.add_member(:name, Shapes::ShapeRef.new(shape: ConnectionName, required: true, location_name: "name"))
     CreateConnectionInput.add_member(:props, Shapes::ShapeRef.new(shape: ConnectionPropertiesInput, location_name: "props"))
+    CreateConnectionInput.add_member(:enable_trusted_identity_propagation, Shapes::ShapeRef.new(shape: Boolean, location_name: "enableTrustedIdentityPropagation"))
+    CreateConnectionInput.add_member(:scope, Shapes::ShapeRef.new(shape: ConnectionScope, location_name: "scope"))
     CreateConnectionInput.struct_class = Types::CreateConnectionInput
 
     CreateConnectionOutput.add_member(:connection_id, Shapes::ShapeRef.new(shape: ConnectionId, required: true, location_name: "connectionId"))
+    CreateConnectionOutput.add_member(:configurations, Shapes::ShapeRef.new(shape: Configurations, location_name: "configurations"))
     CreateConnectionOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     CreateConnectionOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     CreateConnectionOutput.add_member(:domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, required: true, location_name: "domainUnitId"))
@@ -1560,302 +2119,330 @@ module Aws::DataZone
     CreateConnectionOutput.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "projectId"))
     CreateConnectionOutput.add_member(:props, Shapes::ShapeRef.new(shape: ConnectionPropertiesOutput, location_name: "props"))
     CreateConnectionOutput.add_member(:type, Shapes::ShapeRef.new(shape: ConnectionType, required: true, location_name: "type"))
+    CreateConnectionOutput.add_member(:scope, Shapes::ShapeRef.new(shape: ConnectionScope, location_name: "scope"))
     CreateConnectionOutput.struct_class = Types::CreateConnectionOutput
 
-    CreateDataProductInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
-    CreateDataProductInput.add_member(:description, Shapes::ShapeRef.new(shape: DataProductDescription, location_name: "description"))
     CreateDataProductInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    CreateDataProductInput.add_member(:forms_input, Shapes::ShapeRef.new(shape: FormInputList, location_name: "formsInput"))
-    CreateDataProductInput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
-    CreateDataProductInput.add_member(:items, Shapes::ShapeRef.new(shape: DataProductItems, location_name: "items"))
     CreateDataProductInput.add_member(:name, Shapes::ShapeRef.new(shape: DataProductName, required: true, location_name: "name"))
     CreateDataProductInput.add_member(:owning_project_identifier, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectIdentifier"))
+    CreateDataProductInput.add_member(:description, Shapes::ShapeRef.new(shape: DataProductDescription, location_name: "description"))
+    CreateDataProductInput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
+    CreateDataProductInput.add_member(:forms_input, Shapes::ShapeRef.new(shape: FormInputList, location_name: "formsInput"))
+    CreateDataProductInput.add_member(:items, Shapes::ShapeRef.new(shape: DataProductItems, location_name: "items"))
+    CreateDataProductInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateDataProductInput.struct_class = Types::CreateDataProductInput
 
+    CreateDataProductOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    CreateDataProductOutput.add_member(:id, Shapes::ShapeRef.new(shape: DataProductId, required: true, location_name: "id"))
+    CreateDataProductOutput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
+    CreateDataProductOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
+    CreateDataProductOutput.add_member(:name, Shapes::ShapeRef.new(shape: DataProductName, required: true, location_name: "name"))
+    CreateDataProductOutput.add_member(:status, Shapes::ShapeRef.new(shape: DataProductStatus, required: true, location_name: "status"))
+    CreateDataProductOutput.add_member(:description, Shapes::ShapeRef.new(shape: DataProductDescription, location_name: "description"))
+    CreateDataProductOutput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
+    CreateDataProductOutput.add_member(:items, Shapes::ShapeRef.new(shape: DataProductItems, location_name: "items"))
+    CreateDataProductOutput.add_member(:forms_output, Shapes::ShapeRef.new(shape: FormOutputList, location_name: "formsOutput"))
     CreateDataProductOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
     CreateDataProductOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
-    CreateDataProductOutput.add_member(:description, Shapes::ShapeRef.new(shape: DataProductDescription, location_name: "description"))
-    CreateDataProductOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     CreateDataProductOutput.add_member(:first_revision_created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "firstRevisionCreatedAt"))
     CreateDataProductOutput.add_member(:first_revision_created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "firstRevisionCreatedBy"))
-    CreateDataProductOutput.add_member(:forms_output, Shapes::ShapeRef.new(shape: FormOutputList, location_name: "formsOutput"))
-    CreateDataProductOutput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
-    CreateDataProductOutput.add_member(:id, Shapes::ShapeRef.new(shape: DataProductId, required: true, location_name: "id"))
-    CreateDataProductOutput.add_member(:items, Shapes::ShapeRef.new(shape: DataProductItems, location_name: "items"))
-    CreateDataProductOutput.add_member(:name, Shapes::ShapeRef.new(shape: DataProductName, required: true, location_name: "name"))
-    CreateDataProductOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
-    CreateDataProductOutput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
-    CreateDataProductOutput.add_member(:status, Shapes::ShapeRef.new(shape: DataProductStatus, required: true, location_name: "status"))
     CreateDataProductOutput.struct_class = Types::CreateDataProductOutput
 
-    CreateDataProductRevisionInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
-    CreateDataProductRevisionInput.add_member(:description, Shapes::ShapeRef.new(shape: DataProductDescription, location_name: "description"))
     CreateDataProductRevisionInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    CreateDataProductRevisionInput.add_member(:forms_input, Shapes::ShapeRef.new(shape: FormInputList, location_name: "formsInput"))
-    CreateDataProductRevisionInput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
     CreateDataProductRevisionInput.add_member(:identifier, Shapes::ShapeRef.new(shape: DataProductId, required: true, location: "uri", location_name: "identifier"))
-    CreateDataProductRevisionInput.add_member(:items, Shapes::ShapeRef.new(shape: DataProductItems, location_name: "items"))
     CreateDataProductRevisionInput.add_member(:name, Shapes::ShapeRef.new(shape: DataProductName, required: true, location_name: "name"))
+    CreateDataProductRevisionInput.add_member(:description, Shapes::ShapeRef.new(shape: DataProductDescription, location_name: "description"))
+    CreateDataProductRevisionInput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
+    CreateDataProductRevisionInput.add_member(:items, Shapes::ShapeRef.new(shape: DataProductItems, location_name: "items"))
+    CreateDataProductRevisionInput.add_member(:forms_input, Shapes::ShapeRef.new(shape: FormInputList, location_name: "formsInput"))
+    CreateDataProductRevisionInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateDataProductRevisionInput.struct_class = Types::CreateDataProductRevisionInput
 
+    CreateDataProductRevisionOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    CreateDataProductRevisionOutput.add_member(:id, Shapes::ShapeRef.new(shape: DataProductId, required: true, location_name: "id"))
+    CreateDataProductRevisionOutput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
+    CreateDataProductRevisionOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
+    CreateDataProductRevisionOutput.add_member(:name, Shapes::ShapeRef.new(shape: DataProductName, required: true, location_name: "name"))
+    CreateDataProductRevisionOutput.add_member(:status, Shapes::ShapeRef.new(shape: DataProductStatus, required: true, location_name: "status"))
+    CreateDataProductRevisionOutput.add_member(:description, Shapes::ShapeRef.new(shape: DataProductDescription, location_name: "description"))
+    CreateDataProductRevisionOutput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
+    CreateDataProductRevisionOutput.add_member(:items, Shapes::ShapeRef.new(shape: DataProductItems, location_name: "items"))
+    CreateDataProductRevisionOutput.add_member(:forms_output, Shapes::ShapeRef.new(shape: FormOutputList, location_name: "formsOutput"))
     CreateDataProductRevisionOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
     CreateDataProductRevisionOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
-    CreateDataProductRevisionOutput.add_member(:description, Shapes::ShapeRef.new(shape: DataProductDescription, location_name: "description"))
-    CreateDataProductRevisionOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     CreateDataProductRevisionOutput.add_member(:first_revision_created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "firstRevisionCreatedAt"))
     CreateDataProductRevisionOutput.add_member(:first_revision_created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "firstRevisionCreatedBy"))
-    CreateDataProductRevisionOutput.add_member(:forms_output, Shapes::ShapeRef.new(shape: FormOutputList, location_name: "formsOutput"))
-    CreateDataProductRevisionOutput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
-    CreateDataProductRevisionOutput.add_member(:id, Shapes::ShapeRef.new(shape: DataProductId, required: true, location_name: "id"))
-    CreateDataProductRevisionOutput.add_member(:items, Shapes::ShapeRef.new(shape: DataProductItems, location_name: "items"))
-    CreateDataProductRevisionOutput.add_member(:name, Shapes::ShapeRef.new(shape: DataProductName, required: true, location_name: "name"))
-    CreateDataProductRevisionOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
-    CreateDataProductRevisionOutput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
-    CreateDataProductRevisionOutput.add_member(:status, Shapes::ShapeRef.new(shape: DataProductStatus, required: true, location_name: "status"))
     CreateDataProductRevisionOutput.struct_class = Types::CreateDataProductRevisionOutput
 
-    CreateDataSourceInput.add_member(:asset_forms_input, Shapes::ShapeRef.new(shape: FormInputList, location_name: "assetFormsInput"))
-    CreateDataSourceInput.add_member(:client_token, Shapes::ShapeRef.new(shape: String, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
-    CreateDataSourceInput.add_member(:configuration, Shapes::ShapeRef.new(shape: DataSourceConfigurationInput, location_name: "configuration"))
-    CreateDataSourceInput.add_member(:connection_identifier, Shapes::ShapeRef.new(shape: CreateDataSourceInputConnectionIdentifierString, location_name: "connectionIdentifier"))
+    CreateDataSourceInput.add_member(:name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "name"))
     CreateDataSourceInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     CreateDataSourceInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    CreateDataSourceInput.add_member(:enable_setting, Shapes::ShapeRef.new(shape: EnableSetting, location_name: "enableSetting"))
-    CreateDataSourceInput.add_member(:environment_identifier, Shapes::ShapeRef.new(shape: CreateDataSourceInputEnvironmentIdentifierString, location_name: "environmentIdentifier"))
-    CreateDataSourceInput.add_member(:name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "name"))
     CreateDataSourceInput.add_member(:project_identifier, Shapes::ShapeRef.new(shape: CreateDataSourceInputProjectIdentifierString, required: true, location_name: "projectIdentifier"))
-    CreateDataSourceInput.add_member(:publish_on_import, Shapes::ShapeRef.new(shape: Boolean, location_name: "publishOnImport"))
-    CreateDataSourceInput.add_member(:recommendation, Shapes::ShapeRef.new(shape: RecommendationConfiguration, location_name: "recommendation"))
-    CreateDataSourceInput.add_member(:schedule, Shapes::ShapeRef.new(shape: ScheduleConfiguration, location_name: "schedule"))
+    CreateDataSourceInput.add_member(:environment_identifier, Shapes::ShapeRef.new(shape: CreateDataSourceInputEnvironmentIdentifierString, location_name: "environmentIdentifier"))
+    CreateDataSourceInput.add_member(:connection_identifier, Shapes::ShapeRef.new(shape: CreateDataSourceInputConnectionIdentifierString, location_name: "connectionIdentifier"))
     CreateDataSourceInput.add_member(:type, Shapes::ShapeRef.new(shape: DataSourceType, required: true, location_name: "type"))
+    CreateDataSourceInput.add_member(:configuration, Shapes::ShapeRef.new(shape: DataSourceConfigurationInput, location_name: "configuration"))
+    CreateDataSourceInput.add_member(:recommendation, Shapes::ShapeRef.new(shape: RecommendationConfiguration, location_name: "recommendation"))
+    CreateDataSourceInput.add_member(:enable_setting, Shapes::ShapeRef.new(shape: EnableSetting, location_name: "enableSetting"))
+    CreateDataSourceInput.add_member(:schedule, Shapes::ShapeRef.new(shape: ScheduleConfiguration, location_name: "schedule"))
+    CreateDataSourceInput.add_member(:publish_on_import, Shapes::ShapeRef.new(shape: Boolean, location_name: "publishOnImport"))
+    CreateDataSourceInput.add_member(:asset_forms_input, Shapes::ShapeRef.new(shape: FormInputList, location_name: "assetFormsInput"))
+    CreateDataSourceInput.add_member(:client_token, Shapes::ShapeRef.new(shape: String, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateDataSourceInput.struct_class = Types::CreateDataSourceInput
 
-    CreateDataSourceOutput.add_member(:asset_forms_output, Shapes::ShapeRef.new(shape: FormOutputList, location_name: "assetFormsOutput"))
-    CreateDataSourceOutput.add_member(:configuration, Shapes::ShapeRef.new(shape: DataSourceConfigurationOutput, location_name: "configuration"))
-    CreateDataSourceOutput.add_member(:connection_id, Shapes::ShapeRef.new(shape: String, location_name: "connectionId"))
-    CreateDataSourceOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "createdAt"))
-    CreateDataSourceOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    CreateDataSourceOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    CreateDataSourceOutput.add_member(:enable_setting, Shapes::ShapeRef.new(shape: EnableSetting, location_name: "enableSetting"))
-    CreateDataSourceOutput.add_member(:environment_id, Shapes::ShapeRef.new(shape: EnvironmentId, location_name: "environmentId"))
-    CreateDataSourceOutput.add_member(:error_message, Shapes::ShapeRef.new(shape: DataSourceErrorMessage, location_name: "errorMessage"))
     CreateDataSourceOutput.add_member(:id, Shapes::ShapeRef.new(shape: DataSourceId, required: true, location_name: "id"))
-    CreateDataSourceOutput.add_member(:last_run_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "lastRunAt"))
-    CreateDataSourceOutput.add_member(:last_run_error_message, Shapes::ShapeRef.new(shape: DataSourceErrorMessage, location_name: "lastRunErrorMessage"))
-    CreateDataSourceOutput.add_member(:last_run_status, Shapes::ShapeRef.new(shape: DataSourceRunStatus, location_name: "lastRunStatus"))
-    CreateDataSourceOutput.add_member(:name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "name"))
-    CreateDataSourceOutput.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "projectId"))
-    CreateDataSourceOutput.add_member(:publish_on_import, Shapes::ShapeRef.new(shape: Boolean, location_name: "publishOnImport"))
-    CreateDataSourceOutput.add_member(:recommendation, Shapes::ShapeRef.new(shape: RecommendationConfiguration, location_name: "recommendation"))
-    CreateDataSourceOutput.add_member(:schedule, Shapes::ShapeRef.new(shape: ScheduleConfiguration, location_name: "schedule"))
     CreateDataSourceOutput.add_member(:status, Shapes::ShapeRef.new(shape: DataSourceStatus, location_name: "status"))
     CreateDataSourceOutput.add_member(:type, Shapes::ShapeRef.new(shape: DataSourceType, location_name: "type"))
+    CreateDataSourceOutput.add_member(:name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "name"))
+    CreateDataSourceOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    CreateDataSourceOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    CreateDataSourceOutput.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "projectId"))
+    CreateDataSourceOutput.add_member(:environment_id, Shapes::ShapeRef.new(shape: EnvironmentId, location_name: "environmentId"))
+    CreateDataSourceOutput.add_member(:connection_id, Shapes::ShapeRef.new(shape: String, location_name: "connectionId"))
+    CreateDataSourceOutput.add_member(:configuration, Shapes::ShapeRef.new(shape: DataSourceConfigurationOutput, location_name: "configuration"))
+    CreateDataSourceOutput.add_member(:recommendation, Shapes::ShapeRef.new(shape: RecommendationConfiguration, location_name: "recommendation"))
+    CreateDataSourceOutput.add_member(:enable_setting, Shapes::ShapeRef.new(shape: EnableSetting, location_name: "enableSetting"))
+    CreateDataSourceOutput.add_member(:publish_on_import, Shapes::ShapeRef.new(shape: Boolean, location_name: "publishOnImport"))
+    CreateDataSourceOutput.add_member(:asset_forms_output, Shapes::ShapeRef.new(shape: FormOutputList, location_name: "assetFormsOutput"))
+    CreateDataSourceOutput.add_member(:schedule, Shapes::ShapeRef.new(shape: ScheduleConfiguration, location_name: "schedule"))
+    CreateDataSourceOutput.add_member(:last_run_status, Shapes::ShapeRef.new(shape: DataSourceRunStatus, location_name: "lastRunStatus"))
+    CreateDataSourceOutput.add_member(:last_run_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "lastRunAt"))
+    CreateDataSourceOutput.add_member(:last_run_error_message, Shapes::ShapeRef.new(shape: DataSourceErrorMessage, location_name: "lastRunErrorMessage"))
+    CreateDataSourceOutput.add_member(:error_message, Shapes::ShapeRef.new(shape: DataSourceErrorMessage, location_name: "errorMessage"))
+    CreateDataSourceOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "createdAt"))
     CreateDataSourceOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "updatedAt"))
     CreateDataSourceOutput.struct_class = Types::CreateDataSourceOutput
 
-    CreateDomainInput.add_member(:client_token, Shapes::ShapeRef.new(shape: String, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
-    CreateDomainInput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
-    CreateDomainInput.add_member(:domain_execution_role, Shapes::ShapeRef.new(shape: RoleArn, required: true, location_name: "domainExecutionRole"))
-    CreateDomainInput.add_member(:domain_version, Shapes::ShapeRef.new(shape: DomainVersion, location_name: "domainVersion"))
-    CreateDomainInput.add_member(:kms_key_identifier, Shapes::ShapeRef.new(shape: KmsKeyArn, location_name: "kmsKeyIdentifier"))
     CreateDomainInput.add_member(:name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "name"))
-    CreateDomainInput.add_member(:service_role, Shapes::ShapeRef.new(shape: RoleArn, location_name: "serviceRole"))
+    CreateDomainInput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
     CreateDomainInput.add_member(:single_sign_on, Shapes::ShapeRef.new(shape: SingleSignOn, location_name: "singleSignOn"))
+    CreateDomainInput.add_member(:domain_execution_role, Shapes::ShapeRef.new(shape: RoleArn, location_name: "domainExecutionRole"))
+    CreateDomainInput.add_member(:kms_key_identifier, Shapes::ShapeRef.new(shape: KmsKeyArn, location_name: "kmsKeyIdentifier"))
     CreateDomainInput.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    CreateDomainInput.add_member(:domain_version, Shapes::ShapeRef.new(shape: DomainVersion, location_name: "domainVersion"))
+    CreateDomainInput.add_member(:service_role, Shapes::ShapeRef.new(shape: RoleArn, location_name: "serviceRole"))
+    CreateDomainInput.add_member(:client_token, Shapes::ShapeRef.new(shape: String, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateDomainInput.struct_class = Types::CreateDomainInput
 
-    CreateDomainOutput.add_member(:arn, Shapes::ShapeRef.new(shape: String, location_name: "arn"))
-    CreateDomainOutput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
-    CreateDomainOutput.add_member(:domain_execution_role, Shapes::ShapeRef.new(shape: RoleArn, location_name: "domainExecutionRole"))
-    CreateDomainOutput.add_member(:domain_version, Shapes::ShapeRef.new(shape: DomainVersion, location_name: "domainVersion"))
     CreateDomainOutput.add_member(:id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "id"))
-    CreateDomainOutput.add_member(:kms_key_identifier, Shapes::ShapeRef.new(shape: KmsKeyArn, location_name: "kmsKeyIdentifier"))
-    CreateDomainOutput.add_member(:name, Shapes::ShapeRef.new(shape: String, location_name: "name"))
-    CreateDomainOutput.add_member(:portal_url, Shapes::ShapeRef.new(shape: String, location_name: "portalUrl"))
     CreateDomainOutput.add_member(:root_domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "rootDomainUnitId"))
-    CreateDomainOutput.add_member(:service_role, Shapes::ShapeRef.new(shape: RoleArn, location_name: "serviceRole"))
+    CreateDomainOutput.add_member(:name, Shapes::ShapeRef.new(shape: String, location_name: "name"))
+    CreateDomainOutput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
     CreateDomainOutput.add_member(:single_sign_on, Shapes::ShapeRef.new(shape: SingleSignOn, location_name: "singleSignOn"))
+    CreateDomainOutput.add_member(:domain_execution_role, Shapes::ShapeRef.new(shape: RoleArn, location_name: "domainExecutionRole"))
+    CreateDomainOutput.add_member(:arn, Shapes::ShapeRef.new(shape: String, location_name: "arn"))
+    CreateDomainOutput.add_member(:kms_key_identifier, Shapes::ShapeRef.new(shape: KmsKeyArn, location_name: "kmsKeyIdentifier"))
     CreateDomainOutput.add_member(:status, Shapes::ShapeRef.new(shape: DomainStatus, location_name: "status"))
+    CreateDomainOutput.add_member(:portal_url, Shapes::ShapeRef.new(shape: String, location_name: "portalUrl"))
     CreateDomainOutput.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    CreateDomainOutput.add_member(:domain_version, Shapes::ShapeRef.new(shape: DomainVersion, location_name: "domainVersion"))
+    CreateDomainOutput.add_member(:service_role, Shapes::ShapeRef.new(shape: RoleArn, location_name: "serviceRole"))
     CreateDomainOutput.struct_class = Types::CreateDomainOutput
 
-    CreateDomainUnitInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
-    CreateDomainUnitInput.add_member(:description, Shapes::ShapeRef.new(shape: DomainUnitDescription, location_name: "description"))
     CreateDomainUnitInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     CreateDomainUnitInput.add_member(:name, Shapes::ShapeRef.new(shape: DomainUnitName, required: true, location_name: "name"))
     CreateDomainUnitInput.add_member(:parent_domain_unit_identifier, Shapes::ShapeRef.new(shape: DomainUnitId, required: true, location_name: "parentDomainUnitIdentifier"))
+    CreateDomainUnitInput.add_member(:description, Shapes::ShapeRef.new(shape: DomainUnitDescription, location_name: "description"))
+    CreateDomainUnitInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateDomainUnitInput.struct_class = Types::CreateDomainUnitInput
 
+    CreateDomainUnitOutput.add_member(:id, Shapes::ShapeRef.new(shape: DomainUnitId, required: true, location_name: "id"))
+    CreateDomainUnitOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    CreateDomainUnitOutput.add_member(:name, Shapes::ShapeRef.new(shape: DomainUnitName, required: true, location_name: "name"))
+    CreateDomainUnitOutput.add_member(:parent_domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "parentDomainUnitId"))
+    CreateDomainUnitOutput.add_member(:description, Shapes::ShapeRef.new(shape: DomainUnitDescription, location_name: "description"))
+    CreateDomainUnitOutput.add_member(:owners, Shapes::ShapeRef.new(shape: DomainUnitOwners, required: true, location_name: "owners"))
     CreateDomainUnitOutput.add_member(:ancestor_domain_unit_ids, Shapes::ShapeRef.new(shape: DomainUnitIds, required: true, location_name: "ancestorDomainUnitIds"))
     CreateDomainUnitOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
     CreateDomainUnitOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
-    CreateDomainUnitOutput.add_member(:description, Shapes::ShapeRef.new(shape: DomainUnitDescription, location_name: "description"))
-    CreateDomainUnitOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    CreateDomainUnitOutput.add_member(:id, Shapes::ShapeRef.new(shape: DomainUnitId, required: true, location_name: "id"))
-    CreateDomainUnitOutput.add_member(:name, Shapes::ShapeRef.new(shape: DomainUnitName, required: true, location_name: "name"))
-    CreateDomainUnitOutput.add_member(:owners, Shapes::ShapeRef.new(shape: DomainUnitOwners, required: true, location_name: "owners"))
-    CreateDomainUnitOutput.add_member(:parent_domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "parentDomainUnitId"))
     CreateDomainUnitOutput.struct_class = Types::CreateDomainUnitOutput
 
     CreateDomainUnitPolicyGrantDetail.add_member(:include_child_domain_units, Shapes::ShapeRef.new(shape: Boolean, location_name: "includeChildDomainUnits"))
     CreateDomainUnitPolicyGrantDetail.struct_class = Types::CreateDomainUnitPolicyGrantDetail
 
-    CreateEnvironmentActionInput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
     CreateEnvironmentActionInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     CreateEnvironmentActionInput.add_member(:environment_identifier, Shapes::ShapeRef.new(shape: EnvironmentId, required: true, location: "uri", location_name: "environmentIdentifier"))
     CreateEnvironmentActionInput.add_member(:name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "name"))
     CreateEnvironmentActionInput.add_member(:parameters, Shapes::ShapeRef.new(shape: ActionParameters, required: true, location_name: "parameters"))
+    CreateEnvironmentActionInput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
     CreateEnvironmentActionInput.struct_class = Types::CreateEnvironmentActionInput
 
-    CreateEnvironmentActionOutput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
     CreateEnvironmentActionOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     CreateEnvironmentActionOutput.add_member(:environment_id, Shapes::ShapeRef.new(shape: EnvironmentId, required: true, location_name: "environmentId"))
     CreateEnvironmentActionOutput.add_member(:id, Shapes::ShapeRef.new(shape: EnvironmentActionId, required: true, location_name: "id"))
     CreateEnvironmentActionOutput.add_member(:name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "name"))
     CreateEnvironmentActionOutput.add_member(:parameters, Shapes::ShapeRef.new(shape: ActionParameters, required: true, location_name: "parameters"))
+    CreateEnvironmentActionOutput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
     CreateEnvironmentActionOutput.struct_class = Types::CreateEnvironmentActionOutput
 
-    CreateEnvironmentInput.add_member(:deployment_order, Shapes::ShapeRef.new(shape: Integer, location_name: "deploymentOrder"))
-    CreateEnvironmentInput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
+    CreateEnvironmentBlueprintInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    CreateEnvironmentBlueprintInput.add_member(:name, Shapes::ShapeRef.new(shape: EnvironmentBlueprintName, required: true, location_name: "name"))
+    CreateEnvironmentBlueprintInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    CreateEnvironmentBlueprintInput.add_member(:provisioning_properties, Shapes::ShapeRef.new(shape: ProvisioningProperties, required: true, location_name: "provisioningProperties"))
+    CreateEnvironmentBlueprintInput.add_member(:user_parameters, Shapes::ShapeRef.new(shape: CustomParameterList, location_name: "userParameters"))
+    CreateEnvironmentBlueprintInput.struct_class = Types::CreateEnvironmentBlueprintInput
+
+    CreateEnvironmentBlueprintOutput.add_member(:id, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, required: true, location_name: "id"))
+    CreateEnvironmentBlueprintOutput.add_member(:name, Shapes::ShapeRef.new(shape: EnvironmentBlueprintName, required: true, location_name: "name"))
+    CreateEnvironmentBlueprintOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    CreateEnvironmentBlueprintOutput.add_member(:provider, Shapes::ShapeRef.new(shape: String, required: true, location_name: "provider"))
+    CreateEnvironmentBlueprintOutput.add_member(:provisioning_properties, Shapes::ShapeRef.new(shape: ProvisioningProperties, required: true, location_name: "provisioningProperties"))
+    CreateEnvironmentBlueprintOutput.add_member(:deployment_properties, Shapes::ShapeRef.new(shape: DeploymentProperties, location_name: "deploymentProperties"))
+    CreateEnvironmentBlueprintOutput.add_member(:user_parameters, Shapes::ShapeRef.new(shape: CustomParameterList, location_name: "userParameters"))
+    CreateEnvironmentBlueprintOutput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
+    CreateEnvironmentBlueprintOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
+    CreateEnvironmentBlueprintOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "updatedAt"))
+    CreateEnvironmentBlueprintOutput.struct_class = Types::CreateEnvironmentBlueprintOutput
+
+    CreateEnvironmentInput.add_member(:project_identifier, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "projectIdentifier"))
     CreateEnvironmentInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    CreateEnvironmentInput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
+    CreateEnvironmentInput.add_member(:name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "name"))
+    CreateEnvironmentInput.add_member(:environment_profile_identifier, Shapes::ShapeRef.new(shape: EnvironmentProfileId, location_name: "environmentProfileIdentifier"))
+    CreateEnvironmentInput.add_member(:user_parameters, Shapes::ShapeRef.new(shape: EnvironmentParametersList, location_name: "userParameters"))
+    CreateEnvironmentInput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
     CreateEnvironmentInput.add_member(:environment_account_identifier, Shapes::ShapeRef.new(shape: String, location_name: "environmentAccountIdentifier"))
     CreateEnvironmentInput.add_member(:environment_account_region, Shapes::ShapeRef.new(shape: String, location_name: "environmentAccountRegion"))
     CreateEnvironmentInput.add_member(:environment_blueprint_identifier, Shapes::ShapeRef.new(shape: String, location_name: "environmentBlueprintIdentifier"))
+    CreateEnvironmentInput.add_member(:deployment_order, Shapes::ShapeRef.new(shape: Integer, location_name: "deploymentOrder"))
     CreateEnvironmentInput.add_member(:environment_configuration_id, Shapes::ShapeRef.new(shape: String, location_name: "environmentConfigurationId"))
-    CreateEnvironmentInput.add_member(:environment_profile_identifier, Shapes::ShapeRef.new(shape: EnvironmentProfileId, required: true, location_name: "environmentProfileIdentifier"))
-    CreateEnvironmentInput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
-    CreateEnvironmentInput.add_member(:name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "name"))
-    CreateEnvironmentInput.add_member(:project_identifier, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "projectIdentifier"))
-    CreateEnvironmentInput.add_member(:user_parameters, Shapes::ShapeRef.new(shape: EnvironmentParametersList, location_name: "userParameters"))
+    CreateEnvironmentInput.add_member(:environment_configuration_name, Shapes::ShapeRef.new(shape: EnvironmentConfigurationName, location_name: "environmentConfigurationName"))
     CreateEnvironmentInput.struct_class = Types::CreateEnvironmentInput
 
+    CreateEnvironmentOutput.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "projectId"))
+    CreateEnvironmentOutput.add_member(:id, Shapes::ShapeRef.new(shape: EnvironmentId, location_name: "id"))
+    CreateEnvironmentOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    CreateEnvironmentOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: String, required: true, location_name: "createdBy"))
+    CreateEnvironmentOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
+    CreateEnvironmentOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "updatedAt"))
+    CreateEnvironmentOutput.add_member(:name, Shapes::ShapeRef.new(shape: EnvironmentName, required: true, location_name: "name"))
+    CreateEnvironmentOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    CreateEnvironmentOutput.add_member(:environment_profile_id, Shapes::ShapeRef.new(shape: EnvironmentProfileId, location_name: "environmentProfileId"))
     CreateEnvironmentOutput.add_member(:aws_account_id, Shapes::ShapeRef.new(shape: AwsAccountId, location_name: "awsAccountId"))
     CreateEnvironmentOutput.add_member(:aws_account_region, Shapes::ShapeRef.new(shape: AwsRegion, location_name: "awsAccountRegion"))
-    CreateEnvironmentOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
-    CreateEnvironmentOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: String, required: true, location_name: "createdBy"))
-    CreateEnvironmentOutput.add_member(:deployment_properties, Shapes::ShapeRef.new(shape: DeploymentProperties, location_name: "deploymentProperties"))
-    CreateEnvironmentOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    CreateEnvironmentOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    CreateEnvironmentOutput.add_member(:environment_actions, Shapes::ShapeRef.new(shape: EnvironmentActionList, location_name: "environmentActions"))
-    CreateEnvironmentOutput.add_member(:environment_blueprint_id, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, location_name: "environmentBlueprintId"))
-    CreateEnvironmentOutput.add_member(:environment_configuration_id, Shapes::ShapeRef.new(shape: EnvironmentConfigurationId, location_name: "environmentConfigurationId"))
-    CreateEnvironmentOutput.add_member(:environment_profile_id, Shapes::ShapeRef.new(shape: EnvironmentProfileId, location_name: "environmentProfileId"))
-    CreateEnvironmentOutput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
-    CreateEnvironmentOutput.add_member(:id, Shapes::ShapeRef.new(shape: EnvironmentId, location_name: "id"))
-    CreateEnvironmentOutput.add_member(:last_deployment, Shapes::ShapeRef.new(shape: Deployment, location_name: "lastDeployment"))
-    CreateEnvironmentOutput.add_member(:name, Shapes::ShapeRef.new(shape: EnvironmentName, required: true, location_name: "name"))
-    CreateEnvironmentOutput.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "projectId"))
     CreateEnvironmentOutput.add_member(:provider, Shapes::ShapeRef.new(shape: String, required: true, location_name: "provider"))
     CreateEnvironmentOutput.add_member(:provisioned_resources, Shapes::ShapeRef.new(shape: ResourceList, location_name: "provisionedResources"))
-    CreateEnvironmentOutput.add_member(:provisioning_properties, Shapes::ShapeRef.new(shape: ProvisioningProperties, location_name: "provisioningProperties"))
     CreateEnvironmentOutput.add_member(:status, Shapes::ShapeRef.new(shape: EnvironmentStatus, location_name: "status"))
-    CreateEnvironmentOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "updatedAt"))
+    CreateEnvironmentOutput.add_member(:environment_actions, Shapes::ShapeRef.new(shape: EnvironmentActionList, location_name: "environmentActions"))
+    CreateEnvironmentOutput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
     CreateEnvironmentOutput.add_member(:user_parameters, Shapes::ShapeRef.new(shape: CustomParameterList, location_name: "userParameters"))
+    CreateEnvironmentOutput.add_member(:last_deployment, Shapes::ShapeRef.new(shape: Deployment, location_name: "lastDeployment"))
+    CreateEnvironmentOutput.add_member(:provisioning_properties, Shapes::ShapeRef.new(shape: ProvisioningProperties, location_name: "provisioningProperties"))
+    CreateEnvironmentOutput.add_member(:deployment_properties, Shapes::ShapeRef.new(shape: DeploymentProperties, location_name: "deploymentProperties"))
+    CreateEnvironmentOutput.add_member(:environment_blueprint_id, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, location_name: "environmentBlueprintId"))
+    CreateEnvironmentOutput.add_member(:environment_configuration_id, Shapes::ShapeRef.new(shape: EnvironmentConfigurationId, location_name: "environmentConfigurationId"))
+    CreateEnvironmentOutput.add_member(:environment_configuration_name, Shapes::ShapeRef.new(shape: EnvironmentConfigurationName, location_name: "environmentConfigurationName"))
     CreateEnvironmentOutput.struct_class = Types::CreateEnvironmentOutput
 
-    CreateEnvironmentProfileInput.add_member(:aws_account_id, Shapes::ShapeRef.new(shape: AwsAccountId, location_name: "awsAccountId"))
-    CreateEnvironmentProfileInput.add_member(:aws_account_region, Shapes::ShapeRef.new(shape: AwsRegion, location_name: "awsAccountRegion"))
-    CreateEnvironmentProfileInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     CreateEnvironmentProfileInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    CreateEnvironmentProfileInput.add_member(:environment_blueprint_identifier, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, required: true, location_name: "environmentBlueprintIdentifier"))
     CreateEnvironmentProfileInput.add_member(:name, Shapes::ShapeRef.new(shape: EnvironmentProfileName, required: true, location_name: "name"))
+    CreateEnvironmentProfileInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    CreateEnvironmentProfileInput.add_member(:environment_blueprint_identifier, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, required: true, location_name: "environmentBlueprintIdentifier"))
     CreateEnvironmentProfileInput.add_member(:project_identifier, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "projectIdentifier"))
     CreateEnvironmentProfileInput.add_member(:user_parameters, Shapes::ShapeRef.new(shape: EnvironmentParametersList, location_name: "userParameters"))
+    CreateEnvironmentProfileInput.add_member(:aws_account_id, Shapes::ShapeRef.new(shape: AwsAccountId, location_name: "awsAccountId"))
+    CreateEnvironmentProfileInput.add_member(:aws_account_region, Shapes::ShapeRef.new(shape: AwsRegion, location_name: "awsAccountRegion"))
     CreateEnvironmentProfileInput.struct_class = Types::CreateEnvironmentProfileInput
 
+    CreateEnvironmentProfileOutput.add_member(:id, Shapes::ShapeRef.new(shape: EnvironmentProfileId, required: true, location_name: "id"))
+    CreateEnvironmentProfileOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     CreateEnvironmentProfileOutput.add_member(:aws_account_id, Shapes::ShapeRef.new(shape: AwsAccountId, location_name: "awsAccountId"))
     CreateEnvironmentProfileOutput.add_member(:aws_account_region, Shapes::ShapeRef.new(shape: AwsRegion, location_name: "awsAccountRegion"))
-    CreateEnvironmentProfileOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
     CreateEnvironmentProfileOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: String, required: true, location_name: "createdBy"))
-    CreateEnvironmentProfileOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    CreateEnvironmentProfileOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    CreateEnvironmentProfileOutput.add_member(:environment_blueprint_id, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, required: true, location_name: "environmentBlueprintId"))
-    CreateEnvironmentProfileOutput.add_member(:id, Shapes::ShapeRef.new(shape: EnvironmentProfileId, required: true, location_name: "id"))
-    CreateEnvironmentProfileOutput.add_member(:name, Shapes::ShapeRef.new(shape: EnvironmentProfileName, required: true, location_name: "name"))
-    CreateEnvironmentProfileOutput.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "projectId"))
+    CreateEnvironmentProfileOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
     CreateEnvironmentProfileOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "updatedAt"))
+    CreateEnvironmentProfileOutput.add_member(:name, Shapes::ShapeRef.new(shape: EnvironmentProfileName, required: true, location_name: "name"))
+    CreateEnvironmentProfileOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    CreateEnvironmentProfileOutput.add_member(:environment_blueprint_id, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, required: true, location_name: "environmentBlueprintId"))
+    CreateEnvironmentProfileOutput.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "projectId"))
     CreateEnvironmentProfileOutput.add_member(:user_parameters, Shapes::ShapeRef.new(shape: CustomParameterList, location_name: "userParameters"))
     CreateEnvironmentProfileOutput.struct_class = Types::CreateEnvironmentProfileOutput
 
     CreateEnvironmentProfilePolicyGrantDetail.add_member(:domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitId"))
     CreateEnvironmentProfilePolicyGrantDetail.struct_class = Types::CreateEnvironmentProfilePolicyGrantDetail
 
-    CreateFormTypeInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     CreateFormTypeInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    CreateFormTypeInput.add_member(:model, Shapes::ShapeRef.new(shape: Model, required: true, location_name: "model"))
     CreateFormTypeInput.add_member(:name, Shapes::ShapeRef.new(shape: FormTypeName, required: true, location_name: "name"))
+    CreateFormTypeInput.add_member(:model, Shapes::ShapeRef.new(shape: Model, required: true, location_name: "model"))
     CreateFormTypeInput.add_member(:owning_project_identifier, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectIdentifier"))
     CreateFormTypeInput.add_member(:status, Shapes::ShapeRef.new(shape: FormTypeStatus, location_name: "status"))
+    CreateFormTypeInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     CreateFormTypeInput.struct_class = Types::CreateFormTypeInput
 
-    CreateFormTypeOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     CreateFormTypeOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     CreateFormTypeOutput.add_member(:name, Shapes::ShapeRef.new(shape: FormTypeName, required: true, location_name: "name"))
+    CreateFormTypeOutput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
+    CreateFormTypeOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    CreateFormTypeOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "owningProjectId"))
     CreateFormTypeOutput.add_member(:origin_domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "originDomainId"))
     CreateFormTypeOutput.add_member(:origin_project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "originProjectId"))
-    CreateFormTypeOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "owningProjectId"))
-    CreateFormTypeOutput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
     CreateFormTypeOutput.struct_class = Types::CreateFormTypeOutput
 
     CreateFormTypePolicyGrantDetail.add_member(:include_child_domain_units, Shapes::ShapeRef.new(shape: Boolean, location_name: "includeChildDomainUnits"))
     CreateFormTypePolicyGrantDetail.struct_class = Types::CreateFormTypePolicyGrantDetail
 
-    CreateGlossaryInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
-    CreateGlossaryInput.add_member(:description, Shapes::ShapeRef.new(shape: GlossaryDescription, location_name: "description"))
     CreateGlossaryInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     CreateGlossaryInput.add_member(:name, Shapes::ShapeRef.new(shape: GlossaryName, required: true, location_name: "name"))
     CreateGlossaryInput.add_member(:owning_project_identifier, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectIdentifier"))
+    CreateGlossaryInput.add_member(:description, Shapes::ShapeRef.new(shape: GlossaryDescription, location_name: "description"))
     CreateGlossaryInput.add_member(:status, Shapes::ShapeRef.new(shape: GlossaryStatus, location_name: "status"))
+    CreateGlossaryInput.add_member(:usage_restrictions, Shapes::ShapeRef.new(shape: GlossaryUsageRestrictions, location_name: "usageRestrictions"))
+    CreateGlossaryInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateGlossaryInput.struct_class = Types::CreateGlossaryInput
 
-    CreateGlossaryOutput.add_member(:description, Shapes::ShapeRef.new(shape: GlossaryDescription, location_name: "description"))
     CreateGlossaryOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     CreateGlossaryOutput.add_member(:id, Shapes::ShapeRef.new(shape: GlossaryId, required: true, location_name: "id"))
     CreateGlossaryOutput.add_member(:name, Shapes::ShapeRef.new(shape: GlossaryName, required: true, location_name: "name"))
     CreateGlossaryOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
+    CreateGlossaryOutput.add_member(:description, Shapes::ShapeRef.new(shape: GlossaryDescription, location_name: "description"))
     CreateGlossaryOutput.add_member(:status, Shapes::ShapeRef.new(shape: GlossaryStatus, location_name: "status"))
+    CreateGlossaryOutput.add_member(:usage_restrictions, Shapes::ShapeRef.new(shape: GlossaryUsageRestrictions, location_name: "usageRestrictions"))
     CreateGlossaryOutput.struct_class = Types::CreateGlossaryOutput
 
     CreateGlossaryPolicyGrantDetail.add_member(:include_child_domain_units, Shapes::ShapeRef.new(shape: Boolean, location_name: "includeChildDomainUnits"))
     CreateGlossaryPolicyGrantDetail.struct_class = Types::CreateGlossaryPolicyGrantDetail
 
-    CreateGlossaryTermInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
     CreateGlossaryTermInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     CreateGlossaryTermInput.add_member(:glossary_identifier, Shapes::ShapeRef.new(shape: GlossaryTermId, required: true, location_name: "glossaryIdentifier"))
-    CreateGlossaryTermInput.add_member(:long_description, Shapes::ShapeRef.new(shape: LongDescription, location_name: "longDescription"))
     CreateGlossaryTermInput.add_member(:name, Shapes::ShapeRef.new(shape: GlossaryTermName, required: true, location_name: "name"))
-    CreateGlossaryTermInput.add_member(:short_description, Shapes::ShapeRef.new(shape: ShortDescription, location_name: "shortDescription"))
     CreateGlossaryTermInput.add_member(:status, Shapes::ShapeRef.new(shape: GlossaryTermStatus, location_name: "status"))
+    CreateGlossaryTermInput.add_member(:short_description, Shapes::ShapeRef.new(shape: ShortDescription, location_name: "shortDescription"))
+    CreateGlossaryTermInput.add_member(:long_description, Shapes::ShapeRef.new(shape: LongDescription, location_name: "longDescription"))
     CreateGlossaryTermInput.add_member(:term_relations, Shapes::ShapeRef.new(shape: TermRelations, location_name: "termRelations"))
+    CreateGlossaryTermInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateGlossaryTermInput.struct_class = Types::CreateGlossaryTermInput
 
+    CreateGlossaryTermOutput.add_member(:id, Shapes::ShapeRef.new(shape: GlossaryTermId, required: true, location_name: "id"))
     CreateGlossaryTermOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     CreateGlossaryTermOutput.add_member(:glossary_id, Shapes::ShapeRef.new(shape: GlossaryId, required: true, location_name: "glossaryId"))
-    CreateGlossaryTermOutput.add_member(:id, Shapes::ShapeRef.new(shape: GlossaryTermId, required: true, location_name: "id"))
-    CreateGlossaryTermOutput.add_member(:long_description, Shapes::ShapeRef.new(shape: LongDescription, location_name: "longDescription"))
     CreateGlossaryTermOutput.add_member(:name, Shapes::ShapeRef.new(shape: GlossaryTermName, required: true, location_name: "name"))
-    CreateGlossaryTermOutput.add_member(:short_description, Shapes::ShapeRef.new(shape: ShortDescription, location_name: "shortDescription"))
     CreateGlossaryTermOutput.add_member(:status, Shapes::ShapeRef.new(shape: GlossaryTermStatus, required: true, location_name: "status"))
+    CreateGlossaryTermOutput.add_member(:short_description, Shapes::ShapeRef.new(shape: ShortDescription, location_name: "shortDescription"))
+    CreateGlossaryTermOutput.add_member(:long_description, Shapes::ShapeRef.new(shape: LongDescription, location_name: "longDescription"))
     CreateGlossaryTermOutput.add_member(:term_relations, Shapes::ShapeRef.new(shape: TermRelations, location_name: "termRelations"))
+    CreateGlossaryTermOutput.add_member(:usage_restrictions, Shapes::ShapeRef.new(shape: GlossaryUsageRestrictions, location_name: "usageRestrictions"))
     CreateGlossaryTermOutput.struct_class = Types::CreateGlossaryTermOutput
 
-    CreateGroupProfileInput.add_member(:client_token, Shapes::ShapeRef.new(shape: String, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
     CreateGroupProfileInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    CreateGroupProfileInput.add_member(:group_identifier, Shapes::ShapeRef.new(shape: GroupIdentifier, required: true, location_name: "groupIdentifier"))
+    CreateGroupProfileInput.add_member(:group_identifier, Shapes::ShapeRef.new(shape: GroupIdentifier, location_name: "groupIdentifier"))
+    CreateGroupProfileInput.add_member(:role_principal_arn, Shapes::ShapeRef.new(shape: String, location_name: "rolePrincipalArn"))
+    CreateGroupProfileInput.add_member(:client_token, Shapes::ShapeRef.new(shape: String, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateGroupProfileInput.struct_class = Types::CreateGroupProfileInput
 
     CreateGroupProfileOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "domainId"))
-    CreateGroupProfileOutput.add_member(:group_name, Shapes::ShapeRef.new(shape: GroupProfileName, location_name: "groupName"))
     CreateGroupProfileOutput.add_member(:id, Shapes::ShapeRef.new(shape: GroupProfileId, location_name: "id"))
     CreateGroupProfileOutput.add_member(:status, Shapes::ShapeRef.new(shape: GroupProfileStatus, location_name: "status"))
+    CreateGroupProfileOutput.add_member(:group_name, Shapes::ShapeRef.new(shape: GroupProfileName, location_name: "groupName"))
+    CreateGroupProfileOutput.add_member(:role_principal_arn, Shapes::ShapeRef.new(shape: String, location_name: "rolePrincipalArn"))
+    CreateGroupProfileOutput.add_member(:role_principal_id, Shapes::ShapeRef.new(shape: String, location_name: "rolePrincipalId"))
     CreateGroupProfileOutput.struct_class = Types::CreateGroupProfileOutput
 
-    CreateListingChangeSetInput.add_member(:action, Shapes::ShapeRef.new(shape: ChangeAction, required: true, location_name: "action"))
-    CreateListingChangeSetInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
     CreateListingChangeSetInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     CreateListingChangeSetInput.add_member(:entity_identifier, Shapes::ShapeRef.new(shape: EntityIdentifier, required: true, location_name: "entityIdentifier"))
-    CreateListingChangeSetInput.add_member(:entity_revision, Shapes::ShapeRef.new(shape: Revision, location_name: "entityRevision"))
     CreateListingChangeSetInput.add_member(:entity_type, Shapes::ShapeRef.new(shape: EntityType, required: true, location_name: "entityType"))
+    CreateListingChangeSetInput.add_member(:entity_revision, Shapes::ShapeRef.new(shape: Revision, location_name: "entityRevision"))
+    CreateListingChangeSetInput.add_member(:action, Shapes::ShapeRef.new(shape: ChangeAction, required: true, location_name: "action"))
+    CreateListingChangeSetInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateListingChangeSetInput.struct_class = Types::CreateListingChangeSetInput
 
     CreateListingChangeSetOutput.add_member(:listing_id, Shapes::ShapeRef.new(shape: ListingId, required: true, location_name: "listingId"))
@@ -1863,245 +2450,307 @@ module Aws::DataZone
     CreateListingChangeSetOutput.add_member(:status, Shapes::ShapeRef.new(shape: ListingStatus, required: true, location_name: "status"))
     CreateListingChangeSetOutput.struct_class = Types::CreateListingChangeSetOutput
 
+    CreateNotebookInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    CreateNotebookInput.add_member(:owning_project_identifier, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectIdentifier"))
+    CreateNotebookInput.add_member(:name, Shapes::ShapeRef.new(shape: NotebookName, required: true, location_name: "name"))
+    CreateNotebookInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    CreateNotebookInput.add_member(:metadata, Shapes::ShapeRef.new(shape: Metadata, location_name: "metadata"))
+    CreateNotebookInput.add_member(:parameters, Shapes::ShapeRef.new(shape: Parameters, location_name: "parameters"))
+    CreateNotebookInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    CreateNotebookInput.struct_class = Types::CreateNotebookInput
+
+    CreateNotebookOutput.add_member(:id, Shapes::ShapeRef.new(shape: NotebookId, required: true, location_name: "id"))
+    CreateNotebookOutput.add_member(:name, Shapes::ShapeRef.new(shape: NotebookName, required: true, location_name: "name"))
+    CreateNotebookOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
+    CreateNotebookOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    CreateNotebookOutput.add_member(:cell_order, Shapes::ShapeRef.new(shape: CellOrder, required: true, location_name: "cellOrder"))
+    CreateNotebookOutput.add_member(:status, Shapes::ShapeRef.new(shape: NotebookStatus, required: true, location_name: "status"))
+    CreateNotebookOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    CreateNotebookOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    CreateNotebookOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
+    CreateNotebookOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
+    CreateNotebookOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    CreateNotebookOutput.add_member(:locked_by, Shapes::ShapeRef.new(shape: String, location_name: "lockedBy"))
+    CreateNotebookOutput.add_member(:locked_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "lockedAt"))
+    CreateNotebookOutput.add_member(:lock_expires_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "lockExpiresAt"))
+    CreateNotebookOutput.add_member(:compute_id, Shapes::ShapeRef.new(shape: ComputeId, location_name: "computeId"))
+    CreateNotebookOutput.add_member(:metadata, Shapes::ShapeRef.new(shape: Metadata, location_name: "metadata"))
+    CreateNotebookOutput.add_member(:parameters, Shapes::ShapeRef.new(shape: Parameters, location_name: "parameters"))
+    CreateNotebookOutput.add_member(:environment_configuration, Shapes::ShapeRef.new(shape: EnvironmentConfig, location_name: "environmentConfiguration"))
+    CreateNotebookOutput.add_member(:error, Shapes::ShapeRef.new(shape: NotebookError, location_name: "error"))
+    CreateNotebookOutput.add_member(:git_metadata, Shapes::ShapeRef.new(shape: GitMetadata, location_name: "gitMetadata"))
+    CreateNotebookOutput.struct_class = Types::CreateNotebookOutput
+
     CreateProjectFromProjectProfilePolicyGrantDetail.add_member(:include_child_domain_units, Shapes::ShapeRef.new(shape: Boolean, location_name: "includeChildDomainUnits"))
     CreateProjectFromProjectProfilePolicyGrantDetail.add_member(:project_profiles, Shapes::ShapeRef.new(shape: ProjectProfileList, location_name: "projectProfiles"))
     CreateProjectFromProjectProfilePolicyGrantDetail.struct_class = Types::CreateProjectFromProjectProfilePolicyGrantDetail
 
-    CreateProjectInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     CreateProjectInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    CreateProjectInput.add_member(:domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitId"))
-    CreateProjectInput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
     CreateProjectInput.add_member(:name, Shapes::ShapeRef.new(shape: ProjectName, required: true, location_name: "name"))
+    CreateProjectInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    CreateProjectInput.add_member(:resource_tags, Shapes::ShapeRef.new(shape: CreateProjectInputResourceTagsMap, location_name: "resourceTags"))
+    CreateProjectInput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
+    CreateProjectInput.add_member(:domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitId"))
     CreateProjectInput.add_member(:project_profile_id, Shapes::ShapeRef.new(shape: ProjectProfileId, location_name: "projectProfileId"))
     CreateProjectInput.add_member(:user_parameters, Shapes::ShapeRef.new(shape: EnvironmentConfigurationUserParametersList, location_name: "userParameters"))
+    CreateProjectInput.add_member(:project_category, Shapes::ShapeRef.new(shape: String, location_name: "projectCategory"))
+    CreateProjectInput.add_member(:project_execution_role, Shapes::ShapeRef.new(shape: RoleArn, location_name: "projectExecutionRole"))
+    CreateProjectInput.add_member(:membership_assignments, Shapes::ShapeRef.new(shape: ProjectMembershipAssignments, location_name: "membershipAssignments"))
     CreateProjectInput.struct_class = Types::CreateProjectInput
 
-    CreateProjectMembershipInput.add_member(:designation, Shapes::ShapeRef.new(shape: UserDesignation, required: true, location_name: "designation"))
+    CreateProjectInputResourceTagsMap.key = Shapes::ShapeRef.new(shape: TagKey)
+    CreateProjectInputResourceTagsMap.value = Shapes::ShapeRef.new(shape: TagValue)
+
     CreateProjectMembershipInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    CreateProjectMembershipInput.add_member(:member, Shapes::ShapeRef.new(shape: Member, required: true, location_name: "member"))
     CreateProjectMembershipInput.add_member(:project_identifier, Shapes::ShapeRef.new(shape: ProjectId, required: true, location: "uri", location_name: "projectIdentifier"))
+    CreateProjectMembershipInput.add_member(:member, Shapes::ShapeRef.new(shape: Member, required: true, location_name: "member"))
+    CreateProjectMembershipInput.add_member(:designation, Shapes::ShapeRef.new(shape: UserDesignation, required: true, location_name: "designation"))
     CreateProjectMembershipInput.struct_class = Types::CreateProjectMembershipInput
 
     CreateProjectMembershipOutput.struct_class = Types::CreateProjectMembershipOutput
 
-    CreateProjectOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
-    CreateProjectOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    CreateProjectOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     CreateProjectOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    CreateProjectOutput.add_member(:domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitId"))
-    CreateProjectOutput.add_member(:environment_deployment_details, Shapes::ShapeRef.new(shape: EnvironmentDeploymentDetails, location_name: "environmentDeploymentDetails"))
-    CreateProjectOutput.add_member(:failure_reasons, Shapes::ShapeRef.new(shape: FailureReasons, location_name: "failureReasons"))
-    CreateProjectOutput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
     CreateProjectOutput.add_member(:id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "id"))
-    CreateProjectOutput.add_member(:last_updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "lastUpdatedAt"))
     CreateProjectOutput.add_member(:name, Shapes::ShapeRef.new(shape: ProjectName, required: true, location_name: "name"))
-    CreateProjectOutput.add_member(:project_profile_id, Shapes::ShapeRef.new(shape: ProjectProfileId, location_name: "projectProfileId"))
+    CreateProjectOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     CreateProjectOutput.add_member(:project_status, Shapes::ShapeRef.new(shape: ProjectStatus, location_name: "projectStatus"))
+    CreateProjectOutput.add_member(:failure_reasons, Shapes::ShapeRef.new(shape: FailureReasons, location_name: "failureReasons"))
+    CreateProjectOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
+    CreateProjectOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
+    CreateProjectOutput.add_member(:last_updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "lastUpdatedAt"))
+    CreateProjectOutput.add_member(:resource_tags, Shapes::ShapeRef.new(shape: ResourceTags, location_name: "resourceTags"))
+    CreateProjectOutput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
+    CreateProjectOutput.add_member(:domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitId"))
+    CreateProjectOutput.add_member(:project_profile_id, Shapes::ShapeRef.new(shape: ProjectProfileId, location_name: "projectProfileId"))
     CreateProjectOutput.add_member(:user_parameters, Shapes::ShapeRef.new(shape: EnvironmentConfigurationUserParametersList, location_name: "userParameters"))
+    CreateProjectOutput.add_member(:environment_deployment_details, Shapes::ShapeRef.new(shape: EnvironmentDeploymentDetails, location_name: "environmentDeploymentDetails"))
+    CreateProjectOutput.add_member(:project_category, Shapes::ShapeRef.new(shape: String, location_name: "projectCategory"))
     CreateProjectOutput.struct_class = Types::CreateProjectOutput
 
     CreateProjectPolicyGrantDetail.add_member(:include_child_domain_units, Shapes::ShapeRef.new(shape: Boolean, location_name: "includeChildDomainUnits"))
     CreateProjectPolicyGrantDetail.struct_class = Types::CreateProjectPolicyGrantDetail
 
-    CreateProjectProfileInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     CreateProjectProfileInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    CreateProjectProfileInput.add_member(:domain_unit_identifier, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitIdentifier"))
-    CreateProjectProfileInput.add_member(:environment_configurations, Shapes::ShapeRef.new(shape: EnvironmentConfigurationsList, location_name: "environmentConfigurations"))
     CreateProjectProfileInput.add_member(:name, Shapes::ShapeRef.new(shape: ProjectProfileName, required: true, location_name: "name"))
+    CreateProjectProfileInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     CreateProjectProfileInput.add_member(:status, Shapes::ShapeRef.new(shape: Status, location_name: "status"))
+    CreateProjectProfileInput.add_member(:project_resource_tags, Shapes::ShapeRef.new(shape: ProjectResourceTagParameters, location_name: "projectResourceTags"))
+    CreateProjectProfileInput.add_member(:allow_custom_project_resource_tags, Shapes::ShapeRef.new(shape: Boolean, location_name: "allowCustomProjectResourceTags"))
+    CreateProjectProfileInput.add_member(:project_resource_tags_description, Shapes::ShapeRef.new(shape: Description, location_name: "projectResourceTagsDescription"))
+    CreateProjectProfileInput.add_member(:environment_configurations, Shapes::ShapeRef.new(shape: EnvironmentConfigurationsList, location_name: "environmentConfigurations"))
+    CreateProjectProfileInput.add_member(:domain_unit_identifier, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitIdentifier"))
     CreateProjectProfileInput.struct_class = Types::CreateProjectProfileInput
 
-    CreateProjectProfileOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
-    CreateProjectProfileOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    CreateProjectProfileOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     CreateProjectProfileOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    CreateProjectProfileOutput.add_member(:domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitId"))
-    CreateProjectProfileOutput.add_member(:environment_configurations, Shapes::ShapeRef.new(shape: EnvironmentConfigurationsList, location_name: "environmentConfigurations"))
     CreateProjectProfileOutput.add_member(:id, Shapes::ShapeRef.new(shape: ProjectProfileId, required: true, location_name: "id"))
-    CreateProjectProfileOutput.add_member(:last_updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "lastUpdatedAt"))
     CreateProjectProfileOutput.add_member(:name, Shapes::ShapeRef.new(shape: ProjectProfileName, required: true, location_name: "name"))
+    CreateProjectProfileOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     CreateProjectProfileOutput.add_member(:status, Shapes::ShapeRef.new(shape: Status, location_name: "status"))
+    CreateProjectProfileOutput.add_member(:project_resource_tags, Shapes::ShapeRef.new(shape: ProjectResourceTagParameters, location_name: "projectResourceTags"))
+    CreateProjectProfileOutput.add_member(:allow_custom_project_resource_tags, Shapes::ShapeRef.new(shape: Boolean, location_name: "allowCustomProjectResourceTags"))
+    CreateProjectProfileOutput.add_member(:project_resource_tags_description, Shapes::ShapeRef.new(shape: Description, location_name: "projectResourceTagsDescription"))
+    CreateProjectProfileOutput.add_member(:environment_configurations, Shapes::ShapeRef.new(shape: EnvironmentConfigurationsList, location_name: "environmentConfigurations"))
+    CreateProjectProfileOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
+    CreateProjectProfileOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
+    CreateProjectProfileOutput.add_member(:last_updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "lastUpdatedAt"))
+    CreateProjectProfileOutput.add_member(:domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitId"))
     CreateProjectProfileOutput.struct_class = Types::CreateProjectProfileOutput
 
-    CreateRuleInput.add_member(:action, Shapes::ShapeRef.new(shape: RuleAction, required: true, location_name: "action"))
-    CreateRuleInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
-    CreateRuleInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    CreateRuleInput.add_member(:detail, Shapes::ShapeRef.new(shape: RuleDetail, required: true, location_name: "detail"))
     CreateRuleInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     CreateRuleInput.add_member(:name, Shapes::ShapeRef.new(shape: RuleName, required: true, location_name: "name"))
-    CreateRuleInput.add_member(:scope, Shapes::ShapeRef.new(shape: RuleScope, required: true, location_name: "scope"))
     CreateRuleInput.add_member(:target, Shapes::ShapeRef.new(shape: RuleTarget, required: true, location_name: "target"))
+    CreateRuleInput.add_member(:action, Shapes::ShapeRef.new(shape: RuleAction, required: true, location_name: "action"))
+    CreateRuleInput.add_member(:scope, Shapes::ShapeRef.new(shape: RuleScope, required: true, location_name: "scope"))
+    CreateRuleInput.add_member(:detail, Shapes::ShapeRef.new(shape: RuleDetail, required: true, location_name: "detail"))
+    CreateRuleInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    CreateRuleInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateRuleInput.struct_class = Types::CreateRuleInput
 
-    CreateRuleOutput.add_member(:action, Shapes::ShapeRef.new(shape: RuleAction, required: true, location_name: "action"))
-    CreateRuleOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
-    CreateRuleOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    CreateRuleOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    CreateRuleOutput.add_member(:detail, Shapes::ShapeRef.new(shape: RuleDetail, required: true, location_name: "detail"))
     CreateRuleOutput.add_member(:identifier, Shapes::ShapeRef.new(shape: RuleId, required: true, location_name: "identifier"))
     CreateRuleOutput.add_member(:name, Shapes::ShapeRef.new(shape: RuleName, required: true, location_name: "name"))
     CreateRuleOutput.add_member(:rule_type, Shapes::ShapeRef.new(shape: RuleType, required: true, location_name: "ruleType"))
-    CreateRuleOutput.add_member(:scope, Shapes::ShapeRef.new(shape: RuleScope, required: true, location_name: "scope"))
     CreateRuleOutput.add_member(:target, Shapes::ShapeRef.new(shape: RuleTarget, required: true, location_name: "target"))
+    CreateRuleOutput.add_member(:action, Shapes::ShapeRef.new(shape: RuleAction, required: true, location_name: "action"))
+    CreateRuleOutput.add_member(:scope, Shapes::ShapeRef.new(shape: RuleScope, required: true, location_name: "scope"))
+    CreateRuleOutput.add_member(:detail, Shapes::ShapeRef.new(shape: RuleDetail, required: true, location_name: "detail"))
     CreateRuleOutput.add_member(:target_type, Shapes::ShapeRef.new(shape: RuleTargetType, location_name: "targetType"))
+    CreateRuleOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    CreateRuleOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
+    CreateRuleOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
     CreateRuleOutput.struct_class = Types::CreateRuleOutput
 
-    CreateSubscriptionGrantInput.add_member(:asset_target_names, Shapes::ShapeRef.new(shape: AssetTargetNames, location_name: "assetTargetNames"))
-    CreateSubscriptionGrantInput.add_member(:client_token, Shapes::ShapeRef.new(shape: String, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
     CreateSubscriptionGrantInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     CreateSubscriptionGrantInput.add_member(:environment_identifier, Shapes::ShapeRef.new(shape: EnvironmentId, required: true, location_name: "environmentIdentifier"))
-    CreateSubscriptionGrantInput.add_member(:granted_entity, Shapes::ShapeRef.new(shape: GrantedEntityInput, required: true, location_name: "grantedEntity"))
     CreateSubscriptionGrantInput.add_member(:subscription_target_identifier, Shapes::ShapeRef.new(shape: SubscriptionTargetId, location_name: "subscriptionTargetIdentifier"))
+    CreateSubscriptionGrantInput.add_member(:granted_entity, Shapes::ShapeRef.new(shape: GrantedEntityInput, required: true, location_name: "grantedEntity"))
+    CreateSubscriptionGrantInput.add_member(:asset_target_names, Shapes::ShapeRef.new(shape: AssetTargetNames, location_name: "assetTargetNames"))
+    CreateSubscriptionGrantInput.add_member(:client_token, Shapes::ShapeRef.new(shape: String, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateSubscriptionGrantInput.struct_class = Types::CreateSubscriptionGrantInput
 
-    CreateSubscriptionGrantOutput.add_member(:assets, Shapes::ShapeRef.new(shape: SubscribedAssets, location_name: "assets"))
-    CreateSubscriptionGrantOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
-    CreateSubscriptionGrantOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    CreateSubscriptionGrantOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    CreateSubscriptionGrantOutput.add_member(:granted_entity, Shapes::ShapeRef.new(shape: GrantedEntity, required: true, location_name: "grantedEntity"))
     CreateSubscriptionGrantOutput.add_member(:id, Shapes::ShapeRef.new(shape: SubscriptionGrantId, required: true, location_name: "id"))
-    CreateSubscriptionGrantOutput.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionGrantOverallStatus, required: true, location_name: "status"))
-    CreateSubscriptionGrantOutput.add_member(:subscription_id, Shapes::ShapeRef.new(shape: SubscriptionId, deprecated: true, location_name: "subscriptionId", metadata: {"deprecatedMessage"=>"Multiple subscriptions can exist for a single grant"}))
-    CreateSubscriptionGrantOutput.add_member(:subscription_target_id, Shapes::ShapeRef.new(shape: SubscriptionTargetId, required: true, location_name: "subscriptionTargetId"))
-    CreateSubscriptionGrantOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    CreateSubscriptionGrantOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
     CreateSubscriptionGrantOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    CreateSubscriptionGrantOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    CreateSubscriptionGrantOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
+    CreateSubscriptionGrantOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    CreateSubscriptionGrantOutput.add_member(:environment_id, Shapes::ShapeRef.new(shape: EnvironmentId, location_name: "environmentId"))
+    CreateSubscriptionGrantOutput.add_member(:subscription_target_id, Shapes::ShapeRef.new(shape: SubscriptionTargetId, required: true, location_name: "subscriptionTargetId"))
+    CreateSubscriptionGrantOutput.add_member(:granted_entity, Shapes::ShapeRef.new(shape: GrantedEntity, required: true, location_name: "grantedEntity"))
+    CreateSubscriptionGrantOutput.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionGrantOverallStatus, required: true, location_name: "status"))
+    CreateSubscriptionGrantOutput.add_member(:assets, Shapes::ShapeRef.new(shape: SubscribedAssets, location_name: "assets"))
+    CreateSubscriptionGrantOutput.add_member(:subscription_id, Shapes::ShapeRef.new(shape: SubscriptionId, deprecated: true, location_name: "subscriptionId", metadata: {"deprecatedMessage" => "Multiple subscriptions can exist for a single grant"}))
     CreateSubscriptionGrantOutput.struct_class = Types::CreateSubscriptionGrantOutput
 
-    CreateSubscriptionRequestInput.add_member(:client_token, Shapes::ShapeRef.new(shape: String, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
     CreateSubscriptionRequestInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    CreateSubscriptionRequestInput.add_member(:metadata_forms, Shapes::ShapeRef.new(shape: MetadataFormInputs, location_name: "metadataForms"))
-    CreateSubscriptionRequestInput.add_member(:request_reason, Shapes::ShapeRef.new(shape: RequestReason, required: true, location_name: "requestReason"))
-    CreateSubscriptionRequestInput.add_member(:subscribed_listings, Shapes::ShapeRef.new(shape: SubscribedListingInputs, required: true, location_name: "subscribedListings"))
     CreateSubscriptionRequestInput.add_member(:subscribed_principals, Shapes::ShapeRef.new(shape: SubscribedPrincipalInputs, required: true, location_name: "subscribedPrincipals"))
+    CreateSubscriptionRequestInput.add_member(:subscribed_listings, Shapes::ShapeRef.new(shape: SubscribedListingInputs, required: true, location_name: "subscribedListings"))
+    CreateSubscriptionRequestInput.add_member(:request_reason, Shapes::ShapeRef.new(shape: RequestReason, required: true, location_name: "requestReason"))
+    CreateSubscriptionRequestInput.add_member(:client_token, Shapes::ShapeRef.new(shape: String, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    CreateSubscriptionRequestInput.add_member(:metadata_forms, Shapes::ShapeRef.new(shape: MetadataFormInputs, location_name: "metadataForms"))
+    CreateSubscriptionRequestInput.add_member(:asset_permissions, Shapes::ShapeRef.new(shape: AssetPermissions, location_name: "assetPermissions"))
+    CreateSubscriptionRequestInput.add_member(:asset_scopes, Shapes::ShapeRef.new(shape: AcceptedAssetScopes, location_name: "assetScopes"))
     CreateSubscriptionRequestInput.struct_class = Types::CreateSubscriptionRequestInput
 
-    CreateSubscriptionRequestOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
-    CreateSubscriptionRequestOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    CreateSubscriptionRequestOutput.add_member(:decision_comment, Shapes::ShapeRef.new(shape: DecisionComment, location_name: "decisionComment"))
-    CreateSubscriptionRequestOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    CreateSubscriptionRequestOutput.add_member(:existing_subscription_id, Shapes::ShapeRef.new(shape: SubscriptionId, location_name: "existingSubscriptionId"))
     CreateSubscriptionRequestOutput.add_member(:id, Shapes::ShapeRef.new(shape: SubscriptionRequestId, required: true, location_name: "id"))
-    CreateSubscriptionRequestOutput.add_member(:metadata_forms, Shapes::ShapeRef.new(shape: MetadataForms, location_name: "metadataForms"))
-    CreateSubscriptionRequestOutput.add_member(:request_reason, Shapes::ShapeRef.new(shape: RequestReason, required: true, location_name: "requestReason"))
-    CreateSubscriptionRequestOutput.add_member(:reviewer_id, Shapes::ShapeRef.new(shape: String, location_name: "reviewerId"))
-    CreateSubscriptionRequestOutput.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionRequestStatus, required: true, location_name: "status"))
-    CreateSubscriptionRequestOutput.add_member(:subscribed_listings, Shapes::ShapeRef.new(shape: CreateSubscriptionRequestOutputSubscribedListingsList, required: true, location_name: "subscribedListings"))
-    CreateSubscriptionRequestOutput.add_member(:subscribed_principals, Shapes::ShapeRef.new(shape: CreateSubscriptionRequestOutputSubscribedPrincipalsList, required: true, location_name: "subscribedPrincipals"))
-    CreateSubscriptionRequestOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    CreateSubscriptionRequestOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
     CreateSubscriptionRequestOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    CreateSubscriptionRequestOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    CreateSubscriptionRequestOutput.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionRequestStatus, required: true, location_name: "status"))
+    CreateSubscriptionRequestOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
+    CreateSubscriptionRequestOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    CreateSubscriptionRequestOutput.add_member(:request_reason, Shapes::ShapeRef.new(shape: RequestReason, required: true, location_name: "requestReason"))
+    CreateSubscriptionRequestOutput.add_member(:subscribed_principals, Shapes::ShapeRef.new(shape: CreateSubscriptionRequestOutputSubscribedPrincipalsList, required: true, location_name: "subscribedPrincipals"))
+    CreateSubscriptionRequestOutput.add_member(:subscribed_listings, Shapes::ShapeRef.new(shape: CreateSubscriptionRequestOutputSubscribedListingsList, required: true, location_name: "subscribedListings"))
+    CreateSubscriptionRequestOutput.add_member(:reviewer_id, Shapes::ShapeRef.new(shape: String, location_name: "reviewerId"))
+    CreateSubscriptionRequestOutput.add_member(:decision_comment, Shapes::ShapeRef.new(shape: DecisionComment, location_name: "decisionComment"))
+    CreateSubscriptionRequestOutput.add_member(:existing_subscription_id, Shapes::ShapeRef.new(shape: SubscriptionId, location_name: "existingSubscriptionId"))
+    CreateSubscriptionRequestOutput.add_member(:metadata_forms, Shapes::ShapeRef.new(shape: MetadataForms, location_name: "metadataForms"))
     CreateSubscriptionRequestOutput.struct_class = Types::CreateSubscriptionRequestOutput
 
     CreateSubscriptionRequestOutputSubscribedListingsList.member = Shapes::ShapeRef.new(shape: SubscribedListing)
 
     CreateSubscriptionRequestOutputSubscribedPrincipalsList.member = Shapes::ShapeRef.new(shape: SubscribedPrincipal)
 
-    CreateSubscriptionTargetInput.add_member(:applicable_asset_types, Shapes::ShapeRef.new(shape: ApplicableAssetTypes, required: true, location_name: "applicableAssetTypes"))
-    CreateSubscriptionTargetInput.add_member(:authorized_principals, Shapes::ShapeRef.new(shape: AuthorizedPrincipalIdentifiers, required: true, location_name: "authorizedPrincipals"))
-    CreateSubscriptionTargetInput.add_member(:client_token, Shapes::ShapeRef.new(shape: String, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
     CreateSubscriptionTargetInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     CreateSubscriptionTargetInput.add_member(:environment_identifier, Shapes::ShapeRef.new(shape: EnvironmentId, required: true, location: "uri", location_name: "environmentIdentifier"))
-    CreateSubscriptionTargetInput.add_member(:manage_access_role, Shapes::ShapeRef.new(shape: IamRoleArn, required: true, location_name: "manageAccessRole"))
     CreateSubscriptionTargetInput.add_member(:name, Shapes::ShapeRef.new(shape: SubscriptionTargetName, required: true, location_name: "name"))
-    CreateSubscriptionTargetInput.add_member(:provider, Shapes::ShapeRef.new(shape: String, location_name: "provider"))
-    CreateSubscriptionTargetInput.add_member(:subscription_target_config, Shapes::ShapeRef.new(shape: SubscriptionTargetForms, required: true, location_name: "subscriptionTargetConfig"))
     CreateSubscriptionTargetInput.add_member(:type, Shapes::ShapeRef.new(shape: String, required: true, location_name: "type"))
+    CreateSubscriptionTargetInput.add_member(:subscription_target_config, Shapes::ShapeRef.new(shape: SubscriptionTargetForms, required: true, location_name: "subscriptionTargetConfig"))
+    CreateSubscriptionTargetInput.add_member(:authorized_principals, Shapes::ShapeRef.new(shape: AuthorizedPrincipalIdentifiers, required: true, location_name: "authorizedPrincipals"))
+    CreateSubscriptionTargetInput.add_member(:manage_access_role, Shapes::ShapeRef.new(shape: IamRoleArn, required: true, location_name: "manageAccessRole"))
+    CreateSubscriptionTargetInput.add_member(:applicable_asset_types, Shapes::ShapeRef.new(shape: ApplicableAssetTypes, required: true, location_name: "applicableAssetTypes"))
+    CreateSubscriptionTargetInput.add_member(:provider, Shapes::ShapeRef.new(shape: String, location_name: "provider"))
+    CreateSubscriptionTargetInput.add_member(:client_token, Shapes::ShapeRef.new(shape: String, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    CreateSubscriptionTargetInput.add_member(:subscription_grant_creation_mode, Shapes::ShapeRef.new(shape: SubscriptionGrantCreationMode, location_name: "subscriptionGrantCreationMode"))
     CreateSubscriptionTargetInput.struct_class = Types::CreateSubscriptionTargetInput
 
-    CreateSubscriptionTargetOutput.add_member(:applicable_asset_types, Shapes::ShapeRef.new(shape: ApplicableAssetTypes, required: true, location_name: "applicableAssetTypes"))
-    CreateSubscriptionTargetOutput.add_member(:authorized_principals, Shapes::ShapeRef.new(shape: AuthorizedPrincipalIdentifiers, required: true, location_name: "authorizedPrincipals"))
-    CreateSubscriptionTargetOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
-    CreateSubscriptionTargetOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    CreateSubscriptionTargetOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    CreateSubscriptionTargetOutput.add_member(:environment_id, Shapes::ShapeRef.new(shape: EnvironmentId, required: true, location_name: "environmentId"))
     CreateSubscriptionTargetOutput.add_member(:id, Shapes::ShapeRef.new(shape: SubscriptionTargetId, required: true, location_name: "id"))
-    CreateSubscriptionTargetOutput.add_member(:manage_access_role, Shapes::ShapeRef.new(shape: IamRoleArn, location_name: "manageAccessRole"))
-    CreateSubscriptionTargetOutput.add_member(:name, Shapes::ShapeRef.new(shape: SubscriptionTargetName, required: true, location_name: "name"))
+    CreateSubscriptionTargetOutput.add_member(:authorized_principals, Shapes::ShapeRef.new(shape: AuthorizedPrincipalIdentifiers, required: true, location_name: "authorizedPrincipals"))
+    CreateSubscriptionTargetOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     CreateSubscriptionTargetOutput.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "projectId"))
-    CreateSubscriptionTargetOutput.add_member(:provider, Shapes::ShapeRef.new(shape: String, required: true, location_name: "provider"))
-    CreateSubscriptionTargetOutput.add_member(:subscription_target_config, Shapes::ShapeRef.new(shape: SubscriptionTargetForms, required: true, location_name: "subscriptionTargetConfig"))
+    CreateSubscriptionTargetOutput.add_member(:environment_id, Shapes::ShapeRef.new(shape: EnvironmentId, required: true, location_name: "environmentId"))
+    CreateSubscriptionTargetOutput.add_member(:name, Shapes::ShapeRef.new(shape: SubscriptionTargetName, required: true, location_name: "name"))
     CreateSubscriptionTargetOutput.add_member(:type, Shapes::ShapeRef.new(shape: String, required: true, location_name: "type"))
-    CreateSubscriptionTargetOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
+    CreateSubscriptionTargetOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
     CreateSubscriptionTargetOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    CreateSubscriptionTargetOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
+    CreateSubscriptionTargetOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
+    CreateSubscriptionTargetOutput.add_member(:manage_access_role, Shapes::ShapeRef.new(shape: IamRoleArn, location_name: "manageAccessRole"))
+    CreateSubscriptionTargetOutput.add_member(:applicable_asset_types, Shapes::ShapeRef.new(shape: ApplicableAssetTypes, required: true, location_name: "applicableAssetTypes"))
+    CreateSubscriptionTargetOutput.add_member(:subscription_target_config, Shapes::ShapeRef.new(shape: SubscriptionTargetForms, required: true, location_name: "subscriptionTargetConfig"))
+    CreateSubscriptionTargetOutput.add_member(:provider, Shapes::ShapeRef.new(shape: String, required: true, location_name: "provider"))
+    CreateSubscriptionTargetOutput.add_member(:subscription_grant_creation_mode, Shapes::ShapeRef.new(shape: SubscriptionGrantCreationMode, location_name: "subscriptionGrantCreationMode"))
     CreateSubscriptionTargetOutput.struct_class = Types::CreateSubscriptionTargetOutput
 
-    CreateUserProfileInput.add_member(:client_token, Shapes::ShapeRef.new(shape: String, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
     CreateUserProfileInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     CreateUserProfileInput.add_member(:user_identifier, Shapes::ShapeRef.new(shape: UserIdentifier, required: true, location_name: "userIdentifier"))
     CreateUserProfileInput.add_member(:user_type, Shapes::ShapeRef.new(shape: UserType, location_name: "userType"))
+    CreateUserProfileInput.add_member(:session_name, Shapes::ShapeRef.new(shape: CreateUserProfileInputSessionNameString, location_name: "sessionName"))
+    CreateUserProfileInput.add_member(:client_token, Shapes::ShapeRef.new(shape: String, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateUserProfileInput.struct_class = Types::CreateUserProfileInput
 
-    CreateUserProfileOutput.add_member(:details, Shapes::ShapeRef.new(shape: UserProfileDetails, location_name: "details"))
     CreateUserProfileOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "domainId"))
     CreateUserProfileOutput.add_member(:id, Shapes::ShapeRef.new(shape: UserProfileId, location_name: "id"))
-    CreateUserProfileOutput.add_member(:status, Shapes::ShapeRef.new(shape: UserProfileStatus, location_name: "status"))
     CreateUserProfileOutput.add_member(:type, Shapes::ShapeRef.new(shape: UserProfileType, location_name: "type"))
+    CreateUserProfileOutput.add_member(:status, Shapes::ShapeRef.new(shape: UserProfileStatus, location_name: "status"))
+    CreateUserProfileOutput.add_member(:details, Shapes::ShapeRef.new(shape: UserProfileDetails, location_name: "details"))
     CreateUserProfileOutput.struct_class = Types::CreateUserProfileOutput
 
     CredentialMap.key = Shapes::ShapeRef.new(shape: CredentialMapKeyString)
     CredentialMap.value = Shapes::ShapeRef.new(shape: CredentialMapValueString)
 
-    CustomParameter.add_member(:default_value, Shapes::ShapeRef.new(shape: String, location_name: "defaultValue"))
+    CustomAccountPoolHandler.add_member(:lambda_function_arn, Shapes::ShapeRef.new(shape: LambdaFunctionArn, required: true, location_name: "lambdaFunctionArn"))
+    CustomAccountPoolHandler.add_member(:lambda_execution_role_arn, Shapes::ShapeRef.new(shape: LambdaExecutionRoleArn, location_name: "lambdaExecutionRoleArn"))
+    CustomAccountPoolHandler.struct_class = Types::CustomAccountPoolHandler
+
+    CustomParameter.add_member(:key_name, Shapes::ShapeRef.new(shape: CustomParameterKeyNameString, required: true, location_name: "keyName"))
     CustomParameter.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     CustomParameter.add_member(:field_type, Shapes::ShapeRef.new(shape: String, required: true, location_name: "fieldType"))
+    CustomParameter.add_member(:default_value, Shapes::ShapeRef.new(shape: String, location_name: "defaultValue"))
     CustomParameter.add_member(:is_editable, Shapes::ShapeRef.new(shape: Boolean, location_name: "isEditable"))
     CustomParameter.add_member(:is_optional, Shapes::ShapeRef.new(shape: Boolean, location_name: "isOptional"))
-    CustomParameter.add_member(:key_name, Shapes::ShapeRef.new(shape: CustomParameterKeyNameString, required: true, location_name: "keyName"))
+    CustomParameter.add_member(:is_update_supported, Shapes::ShapeRef.new(shape: Boolean, location_name: "isUpdateSupported"))
     CustomParameter.struct_class = Types::CustomParameter
 
     CustomParameterList.member = Shapes::ShapeRef.new(shape: CustomParameter)
 
-    DataProductItem.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: ItemGlossaryTerms, location_name: "glossaryTerms"))
-    DataProductItem.add_member(:identifier, Shapes::ShapeRef.new(shape: EntityIdentifier, required: true, location_name: "identifier"))
     DataProductItem.add_member(:item_type, Shapes::ShapeRef.new(shape: DataProductItemType, required: true, location_name: "itemType"))
+    DataProductItem.add_member(:identifier, Shapes::ShapeRef.new(shape: EntityIdentifier, required: true, location_name: "identifier"))
     DataProductItem.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, location_name: "revision"))
+    DataProductItem.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: ItemGlossaryTerms, location_name: "glossaryTerms"))
     DataProductItem.struct_class = Types::DataProductItem
+
+    DataProductItemAdditionalAttributes.add_member(:match_rationale, Shapes::ShapeRef.new(shape: MatchRationale, location_name: "matchRationale"))
+    DataProductItemAdditionalAttributes.struct_class = Types::DataProductItemAdditionalAttributes
 
     DataProductItems.member = Shapes::ShapeRef.new(shape: DataProductItem)
 
-    DataProductListing.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
     DataProductListing.add_member(:data_product_id, Shapes::ShapeRef.new(shape: DataProductId, location_name: "dataProductId"))
     DataProductListing.add_member(:data_product_revision, Shapes::ShapeRef.new(shape: Revision, location_name: "dataProductRevision"))
+    DataProductListing.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
     DataProductListing.add_member(:forms, Shapes::ShapeRef.new(shape: Forms, location_name: "forms"))
     DataProductListing.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: DetailedGlossaryTerms, location_name: "glossaryTerms"))
-    DataProductListing.add_member(:items, Shapes::ShapeRef.new(shape: ListingSummaries, location_name: "items"))
     DataProductListing.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "owningProjectId"))
+    DataProductListing.add_member(:items, Shapes::ShapeRef.new(shape: ListingSummaries, location_name: "items"))
     DataProductListing.struct_class = Types::DataProductListing
 
-    DataProductListingItem.add_member(:additional_attributes, Shapes::ShapeRef.new(shape: DataProductListingItemAdditionalAttributes, location_name: "additionalAttributes"))
-    DataProductListingItem.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
-    DataProductListingItem.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    DataProductListingItem.add_member(:entity_id, Shapes::ShapeRef.new(shape: DataProductId, location_name: "entityId"))
-    DataProductListingItem.add_member(:entity_revision, Shapes::ShapeRef.new(shape: Revision, location_name: "entityRevision"))
-    DataProductListingItem.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: DetailedGlossaryTerms, location_name: "glossaryTerms"))
-    DataProductListingItem.add_member(:items, Shapes::ShapeRef.new(shape: ListingSummaryItems, location_name: "items"))
-    DataProductListingItem.add_member(:listing_created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "listingCreatedBy"))
     DataProductListingItem.add_member(:listing_id, Shapes::ShapeRef.new(shape: ListingId, location_name: "listingId"))
     DataProductListingItem.add_member(:listing_revision, Shapes::ShapeRef.new(shape: Revision, location_name: "listingRevision"))
-    DataProductListingItem.add_member(:listing_updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "listingUpdatedBy"))
     DataProductListingItem.add_member(:name, Shapes::ShapeRef.new(shape: DataProductName, location_name: "name"))
+    DataProductListingItem.add_member(:entity_id, Shapes::ShapeRef.new(shape: DataProductId, location_name: "entityId"))
+    DataProductListingItem.add_member(:entity_revision, Shapes::ShapeRef.new(shape: Revision, location_name: "entityRevision"))
+    DataProductListingItem.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    DataProductListingItem.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    DataProductListingItem.add_member(:listing_created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "listingCreatedBy"))
+    DataProductListingItem.add_member(:listing_updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "listingUpdatedBy"))
+    DataProductListingItem.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: DetailedGlossaryTerms, location_name: "glossaryTerms"))
     DataProductListingItem.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "owningProjectId"))
+    DataProductListingItem.add_member(:additional_attributes, Shapes::ShapeRef.new(shape: DataProductListingItemAdditionalAttributes, location_name: "additionalAttributes"))
+    DataProductListingItem.add_member(:items, Shapes::ShapeRef.new(shape: ListingSummaryItems, location_name: "items"))
     DataProductListingItem.struct_class = Types::DataProductListingItem
 
     DataProductListingItemAdditionalAttributes.add_member(:forms, Shapes::ShapeRef.new(shape: Forms, location_name: "forms"))
+    DataProductListingItemAdditionalAttributes.add_member(:match_rationale, Shapes::ShapeRef.new(shape: MatchRationale, location_name: "matchRationale"))
     DataProductListingItemAdditionalAttributes.struct_class = Types::DataProductListingItemAdditionalAttributes
 
-    DataProductResultItem.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
-    DataProductResultItem.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
-    DataProductResultItem.add_member(:description, Shapes::ShapeRef.new(shape: DataProductDescription, location_name: "description"))
     DataProductResultItem.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    DataProductResultItem.add_member(:first_revision_created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "firstRevisionCreatedAt"))
-    DataProductResultItem.add_member(:first_revision_created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "firstRevisionCreatedBy"))
-    DataProductResultItem.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
     DataProductResultItem.add_member(:id, Shapes::ShapeRef.new(shape: DataProductId, required: true, location_name: "id"))
     DataProductResultItem.add_member(:name, Shapes::ShapeRef.new(shape: DataProductName, required: true, location_name: "name"))
     DataProductResultItem.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
+    DataProductResultItem.add_member(:description, Shapes::ShapeRef.new(shape: DataProductDescription, location_name: "description"))
+    DataProductResultItem.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
+    DataProductResultItem.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    DataProductResultItem.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
+    DataProductResultItem.add_member(:first_revision_created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "firstRevisionCreatedAt"))
+    DataProductResultItem.add_member(:first_revision_created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "firstRevisionCreatedBy"))
+    DataProductResultItem.add_member(:additional_attributes, Shapes::ShapeRef.new(shape: DataProductItemAdditionalAttributes, location_name: "additionalAttributes"))
     DataProductResultItem.struct_class = Types::DataProductResultItem
 
-    DataProductRevision.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
-    DataProductRevision.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
     DataProductRevision.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "domainId"))
     DataProductRevision.add_member(:id, Shapes::ShapeRef.new(shape: DataProductId, location_name: "id"))
     DataProductRevision.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, location_name: "revision"))
+    DataProductRevision.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    DataProductRevision.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
     DataProductRevision.struct_class = Types::DataProductRevision
 
     DataProductRevisions.member = Shapes::ShapeRef.new(shape: DataProductRevision)
@@ -2126,22 +2775,22 @@ module Aws::DataZone
     DataSourceConfigurationOutput.add_member_subclass(:unknown, Types::DataSourceConfigurationOutput::Unknown)
     DataSourceConfigurationOutput.struct_class = Types::DataSourceConfigurationOutput
 
-    DataSourceErrorMessage.add_member(:error_detail, Shapes::ShapeRef.new(shape: String, location_name: "errorDetail"))
     DataSourceErrorMessage.add_member(:error_type, Shapes::ShapeRef.new(shape: DataSourceErrorType, required: true, location_name: "errorType"))
+    DataSourceErrorMessage.add_member(:error_detail, Shapes::ShapeRef.new(shape: String, location_name: "errorDetail"))
     DataSourceErrorMessage.struct_class = Types::DataSourceErrorMessage
 
     DataSourceRunActivities.member = Shapes::ShapeRef.new(shape: DataSourceRunActivity)
 
-    DataSourceRunActivity.add_member(:created_at, Shapes::ShapeRef.new(shape: DateTime, required: true, location_name: "createdAt"))
-    DataSourceRunActivity.add_member(:data_asset_id, Shapes::ShapeRef.new(shape: String, location_name: "dataAssetId"))
-    DataSourceRunActivity.add_member(:data_asset_status, Shapes::ShapeRef.new(shape: DataAssetActivityStatus, required: true, location_name: "dataAssetStatus"))
-    DataSourceRunActivity.add_member(:data_source_run_id, Shapes::ShapeRef.new(shape: DataSourceRunId, required: true, location_name: "dataSourceRunId"))
     DataSourceRunActivity.add_member(:database, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "database"))
+    DataSourceRunActivity.add_member(:data_source_run_id, Shapes::ShapeRef.new(shape: DataSourceRunId, required: true, location_name: "dataSourceRunId"))
+    DataSourceRunActivity.add_member(:technical_name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "technicalName"))
+    DataSourceRunActivity.add_member(:data_asset_status, Shapes::ShapeRef.new(shape: DataAssetActivityStatus, required: true, location_name: "dataAssetStatus"))
+    DataSourceRunActivity.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "projectId"))
+    DataSourceRunActivity.add_member(:data_asset_id, Shapes::ShapeRef.new(shape: String, location_name: "dataAssetId"))
+    DataSourceRunActivity.add_member(:technical_description, Shapes::ShapeRef.new(shape: Description, location_name: "technicalDescription"))
     DataSourceRunActivity.add_member(:error_message, Shapes::ShapeRef.new(shape: DataSourceErrorMessage, location_name: "errorMessage"))
     DataSourceRunActivity.add_member(:lineage_summary, Shapes::ShapeRef.new(shape: LineageInfo, location_name: "lineageSummary"))
-    DataSourceRunActivity.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "projectId"))
-    DataSourceRunActivity.add_member(:technical_description, Shapes::ShapeRef.new(shape: Description, location_name: "technicalDescription"))
-    DataSourceRunActivity.add_member(:technical_name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "technicalName"))
+    DataSourceRunActivity.add_member(:created_at, Shapes::ShapeRef.new(shape: DateTime, required: true, location_name: "createdAt"))
     DataSourceRunActivity.add_member(:updated_at, Shapes::ShapeRef.new(shape: DateTime, required: true, location_name: "updatedAt"))
     DataSourceRunActivity.struct_class = Types::DataSourceRunActivity
 
@@ -2150,42 +2799,48 @@ module Aws::DataZone
 
     DataSourceRunSummaries.member = Shapes::ShapeRef.new(shape: DataSourceRunSummary)
 
-    DataSourceRunSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: DateTime, required: true, location_name: "createdAt"))
-    DataSourceRunSummary.add_member(:data_source_id, Shapes::ShapeRef.new(shape: DataSourceId, required: true, location_name: "dataSourceId"))
-    DataSourceRunSummary.add_member(:error_message, Shapes::ShapeRef.new(shape: DataSourceErrorMessage, location_name: "errorMessage"))
     DataSourceRunSummary.add_member(:id, Shapes::ShapeRef.new(shape: DataSourceRunId, required: true, location_name: "id"))
-    DataSourceRunSummary.add_member(:lineage_summary, Shapes::ShapeRef.new(shape: DataSourceRunLineageSummary, location_name: "lineageSummary"))
+    DataSourceRunSummary.add_member(:data_source_id, Shapes::ShapeRef.new(shape: DataSourceId, required: true, location_name: "dataSourceId"))
+    DataSourceRunSummary.add_member(:type, Shapes::ShapeRef.new(shape: DataSourceRunType, required: true, location_name: "type"))
+    DataSourceRunSummary.add_member(:status, Shapes::ShapeRef.new(shape: DataSourceRunStatus, required: true, location_name: "status"))
     DataSourceRunSummary.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "projectId"))
     DataSourceRunSummary.add_member(:run_statistics_for_assets, Shapes::ShapeRef.new(shape: RunStatisticsForAssets, location_name: "runStatisticsForAssets"))
-    DataSourceRunSummary.add_member(:started_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "startedAt"))
-    DataSourceRunSummary.add_member(:status, Shapes::ShapeRef.new(shape: DataSourceRunStatus, required: true, location_name: "status"))
-    DataSourceRunSummary.add_member(:stopped_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "stoppedAt"))
-    DataSourceRunSummary.add_member(:type, Shapes::ShapeRef.new(shape: DataSourceRunType, required: true, location_name: "type"))
+    DataSourceRunSummary.add_member(:error_message, Shapes::ShapeRef.new(shape: DataSourceErrorMessage, location_name: "errorMessage"))
+    DataSourceRunSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: DateTime, required: true, location_name: "createdAt"))
     DataSourceRunSummary.add_member(:updated_at, Shapes::ShapeRef.new(shape: DateTime, required: true, location_name: "updatedAt"))
+    DataSourceRunSummary.add_member(:started_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "startedAt"))
+    DataSourceRunSummary.add_member(:stopped_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "stoppedAt"))
+    DataSourceRunSummary.add_member(:lineage_summary, Shapes::ShapeRef.new(shape: DataSourceRunLineageSummary, location_name: "lineageSummary"))
     DataSourceRunSummary.struct_class = Types::DataSourceRunSummary
 
     DataSourceSummaries.member = Shapes::ShapeRef.new(shape: DataSourceSummary)
 
-    DataSourceSummary.add_member(:connection_id, Shapes::ShapeRef.new(shape: String, location_name: "connectionId"))
-    DataSourceSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "createdAt"))
-    DataSourceSummary.add_member(:data_source_id, Shapes::ShapeRef.new(shape: DataSourceId, required: true, location_name: "dataSourceId"))
-    DataSourceSummary.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     DataSourceSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    DataSourceSummary.add_member(:enable_setting, Shapes::ShapeRef.new(shape: EnableSetting, location_name: "enableSetting"))
     DataSourceSummary.add_member(:environment_id, Shapes::ShapeRef.new(shape: String, location_name: "environmentId"))
-    DataSourceSummary.add_member(:last_run_asset_count, Shapes::ShapeRef.new(shape: Integer, location_name: "lastRunAssetCount"))
+    DataSourceSummary.add_member(:connection_id, Shapes::ShapeRef.new(shape: String, location_name: "connectionId"))
+    DataSourceSummary.add_member(:data_source_id, Shapes::ShapeRef.new(shape: DataSourceId, required: true, location_name: "dataSourceId"))
+    DataSourceSummary.add_member(:name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "name"))
+    DataSourceSummary.add_member(:type, Shapes::ShapeRef.new(shape: String, required: true, location_name: "type"))
+    DataSourceSummary.add_member(:status, Shapes::ShapeRef.new(shape: DataSourceStatus, required: true, location_name: "status"))
+    DataSourceSummary.add_member(:enable_setting, Shapes::ShapeRef.new(shape: EnableSetting, location_name: "enableSetting"))
+    DataSourceSummary.add_member(:schedule, Shapes::ShapeRef.new(shape: ScheduleConfiguration, location_name: "schedule"))
+    DataSourceSummary.add_member(:last_run_status, Shapes::ShapeRef.new(shape: DataSourceRunStatus, location_name: "lastRunStatus"))
     DataSourceSummary.add_member(:last_run_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "lastRunAt"))
     DataSourceSummary.add_member(:last_run_error_message, Shapes::ShapeRef.new(shape: DataSourceErrorMessage, location_name: "lastRunErrorMessage"))
-    DataSourceSummary.add_member(:last_run_status, Shapes::ShapeRef.new(shape: DataSourceRunStatus, location_name: "lastRunStatus"))
-    DataSourceSummary.add_member(:name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "name"))
-    DataSourceSummary.add_member(:schedule, Shapes::ShapeRef.new(shape: ScheduleConfiguration, location_name: "schedule"))
-    DataSourceSummary.add_member(:status, Shapes::ShapeRef.new(shape: DataSourceStatus, required: true, location_name: "status"))
-    DataSourceSummary.add_member(:type, Shapes::ShapeRef.new(shape: String, required: true, location_name: "type"))
+    DataSourceSummary.add_member(:last_run_asset_count, Shapes::ShapeRef.new(shape: Integer, location_name: "lastRunAssetCount"))
+    DataSourceSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "createdAt"))
     DataSourceSummary.add_member(:updated_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "updatedAt"))
+    DataSourceSummary.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     DataSourceSummary.struct_class = Types::DataSourceSummary
 
-    DeleteAssetFilterInput.add_member(:asset_identifier, Shapes::ShapeRef.new(shape: AssetId, required: true, location: "uri", location_name: "assetIdentifier"))
+    DeleteAccountPoolInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    DeleteAccountPoolInput.add_member(:identifier, Shapes::ShapeRef.new(shape: AccountPoolId, required: true, location: "uri", location_name: "identifier"))
+    DeleteAccountPoolInput.struct_class = Types::DeleteAccountPoolInput
+
+    DeleteAccountPoolOutput.struct_class = Types::DeleteAccountPoolOutput
+
     DeleteAssetFilterInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    DeleteAssetFilterInput.add_member(:asset_identifier, Shapes::ShapeRef.new(shape: AssetId, required: true, location: "uri", location_name: "assetIdentifier"))
     DeleteAssetFilterInput.add_member(:identifier, Shapes::ShapeRef.new(shape: FilterId, required: true, location: "uri", location_name: "identifier"))
     DeleteAssetFilterInput.struct_class = Types::DeleteAssetFilterInput
 
@@ -2208,44 +2863,49 @@ module Aws::DataZone
     DeleteConnectionOutput.add_member(:status, Shapes::ShapeRef.new(shape: String, location_name: "status"))
     DeleteConnectionOutput.struct_class = Types::DeleteConnectionOutput
 
+    DeleteDataExportConfigurationInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    DeleteDataExportConfigurationInput.struct_class = Types::DeleteDataExportConfigurationInput
+
+    DeleteDataExportConfigurationOutput.struct_class = Types::DeleteDataExportConfigurationOutput
+
     DeleteDataProductInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     DeleteDataProductInput.add_member(:identifier, Shapes::ShapeRef.new(shape: DataProductId, required: true, location: "uri", location_name: "identifier"))
     DeleteDataProductInput.struct_class = Types::DeleteDataProductInput
 
     DeleteDataProductOutput.struct_class = Types::DeleteDataProductOutput
 
-    DeleteDataSourceInput.add_member(:client_token, Shapes::ShapeRef.new(shape: String, deprecated: true, location: "querystring", location_name: "clientToken", metadata: {"deprecatedMessage"=>"This field is no longer required for idempotency.", "idempotencyToken"=>true}))
     DeleteDataSourceInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     DeleteDataSourceInput.add_member(:identifier, Shapes::ShapeRef.new(shape: DataSourceId, required: true, location: "uri", location_name: "identifier"))
+    DeleteDataSourceInput.add_member(:client_token, Shapes::ShapeRef.new(shape: String, deprecated: true, location: "querystring", location_name: "clientToken", metadata: {"deprecatedMessage" => "This field is no longer required for idempotency.", "deprecatedSince" => "2024-12-02", "idempotencyToken" => true}))
     DeleteDataSourceInput.add_member(:retain_permissions_on_revoke_failure, Shapes::ShapeRef.new(shape: Boolean, location: "querystring", location_name: "retainPermissionsOnRevokeFailure"))
     DeleteDataSourceInput.struct_class = Types::DeleteDataSourceInput
 
-    DeleteDataSourceOutput.add_member(:asset_forms_output, Shapes::ShapeRef.new(shape: FormOutputList, location_name: "assetFormsOutput"))
-    DeleteDataSourceOutput.add_member(:configuration, Shapes::ShapeRef.new(shape: DataSourceConfigurationOutput, location_name: "configuration"))
-    DeleteDataSourceOutput.add_member(:connection_id, Shapes::ShapeRef.new(shape: String, location_name: "connectionId"))
-    DeleteDataSourceOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "createdAt"))
-    DeleteDataSourceOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    DeleteDataSourceOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    DeleteDataSourceOutput.add_member(:enable_setting, Shapes::ShapeRef.new(shape: EnableSetting, location_name: "enableSetting"))
-    DeleteDataSourceOutput.add_member(:environment_id, Shapes::ShapeRef.new(shape: EnvironmentId, location_name: "environmentId"))
-    DeleteDataSourceOutput.add_member(:error_message, Shapes::ShapeRef.new(shape: DataSourceErrorMessage, location_name: "errorMessage"))
     DeleteDataSourceOutput.add_member(:id, Shapes::ShapeRef.new(shape: DataSourceId, required: true, location_name: "id"))
-    DeleteDataSourceOutput.add_member(:last_run_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "lastRunAt"))
-    DeleteDataSourceOutput.add_member(:last_run_error_message, Shapes::ShapeRef.new(shape: DataSourceErrorMessage, location_name: "lastRunErrorMessage"))
-    DeleteDataSourceOutput.add_member(:last_run_status, Shapes::ShapeRef.new(shape: DataSourceRunStatus, location_name: "lastRunStatus"))
-    DeleteDataSourceOutput.add_member(:name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "name"))
-    DeleteDataSourceOutput.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "projectId"))
-    DeleteDataSourceOutput.add_member(:publish_on_import, Shapes::ShapeRef.new(shape: Boolean, location_name: "publishOnImport"))
-    DeleteDataSourceOutput.add_member(:retain_permissions_on_revoke_failure, Shapes::ShapeRef.new(shape: Boolean, location_name: "retainPermissionsOnRevokeFailure"))
-    DeleteDataSourceOutput.add_member(:schedule, Shapes::ShapeRef.new(shape: ScheduleConfiguration, location_name: "schedule"))
-    DeleteDataSourceOutput.add_member(:self_grant_status, Shapes::ShapeRef.new(shape: SelfGrantStatusOutput, location_name: "selfGrantStatus"))
     DeleteDataSourceOutput.add_member(:status, Shapes::ShapeRef.new(shape: DataSourceStatus, location_name: "status"))
     DeleteDataSourceOutput.add_member(:type, Shapes::ShapeRef.new(shape: DataSourceType, location_name: "type"))
+    DeleteDataSourceOutput.add_member(:name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "name"))
+    DeleteDataSourceOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    DeleteDataSourceOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    DeleteDataSourceOutput.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "projectId"))
+    DeleteDataSourceOutput.add_member(:environment_id, Shapes::ShapeRef.new(shape: EnvironmentId, location_name: "environmentId"))
+    DeleteDataSourceOutput.add_member(:connection_id, Shapes::ShapeRef.new(shape: String, location_name: "connectionId"))
+    DeleteDataSourceOutput.add_member(:configuration, Shapes::ShapeRef.new(shape: DataSourceConfigurationOutput, location_name: "configuration"))
+    DeleteDataSourceOutput.add_member(:enable_setting, Shapes::ShapeRef.new(shape: EnableSetting, location_name: "enableSetting"))
+    DeleteDataSourceOutput.add_member(:publish_on_import, Shapes::ShapeRef.new(shape: Boolean, location_name: "publishOnImport"))
+    DeleteDataSourceOutput.add_member(:asset_forms_output, Shapes::ShapeRef.new(shape: FormOutputList, location_name: "assetFormsOutput"))
+    DeleteDataSourceOutput.add_member(:schedule, Shapes::ShapeRef.new(shape: ScheduleConfiguration, location_name: "schedule"))
+    DeleteDataSourceOutput.add_member(:last_run_status, Shapes::ShapeRef.new(shape: DataSourceRunStatus, location_name: "lastRunStatus"))
+    DeleteDataSourceOutput.add_member(:last_run_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "lastRunAt"))
+    DeleteDataSourceOutput.add_member(:last_run_error_message, Shapes::ShapeRef.new(shape: DataSourceErrorMessage, location_name: "lastRunErrorMessage"))
+    DeleteDataSourceOutput.add_member(:error_message, Shapes::ShapeRef.new(shape: DataSourceErrorMessage, location_name: "errorMessage"))
+    DeleteDataSourceOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "createdAt"))
     DeleteDataSourceOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "updatedAt"))
+    DeleteDataSourceOutput.add_member(:self_grant_status, Shapes::ShapeRef.new(shape: SelfGrantStatusOutput, location_name: "selfGrantStatus"))
+    DeleteDataSourceOutput.add_member(:retain_permissions_on_revoke_failure, Shapes::ShapeRef.new(shape: Boolean, location_name: "retainPermissionsOnRevokeFailure"))
     DeleteDataSourceOutput.struct_class = Types::DeleteDataSourceOutput
 
-    DeleteDomainInput.add_member(:client_token, Shapes::ShapeRef.new(shape: String, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
     DeleteDomainInput.add_member(:identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "identifier"))
+    DeleteDomainInput.add_member(:client_token, Shapes::ShapeRef.new(shape: String, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     DeleteDomainInput.add_member(:skip_deletion_check, Shapes::ShapeRef.new(shape: Boolean, location: "querystring", location_name: "skipDeletionCheck"))
     DeleteDomainInput.struct_class = Types::DeleteDomainInput
 
@@ -2268,6 +2928,10 @@ module Aws::DataZone
     DeleteEnvironmentBlueprintConfigurationInput.struct_class = Types::DeleteEnvironmentBlueprintConfigurationInput
 
     DeleteEnvironmentBlueprintConfigurationOutput.struct_class = Types::DeleteEnvironmentBlueprintConfigurationOutput
+
+    DeleteEnvironmentBlueprintInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    DeleteEnvironmentBlueprintInput.add_member(:identifier, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, required: true, location: "uri", location_name: "identifier"))
+    DeleteEnvironmentBlueprintInput.struct_class = Types::DeleteEnvironmentBlueprintInput
 
     DeleteEnvironmentInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     DeleteEnvironmentInput.add_member(:identifier, Shapes::ShapeRef.new(shape: EnvironmentId, required: true, location: "uri", location_name: "identifier"))
@@ -2295,11 +2959,26 @@ module Aws::DataZone
 
     DeleteGlossaryTermOutput.struct_class = Types::DeleteGlossaryTermOutput
 
+    DeleteLineageEventInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    DeleteLineageEventInput.add_member(:identifier, Shapes::ShapeRef.new(shape: LineageEventIdentifier, required: true, location: "uri", location_name: "identifier"))
+    DeleteLineageEventInput.struct_class = Types::DeleteLineageEventInput
+
+    DeleteLineageEventOutput.add_member(:id, Shapes::ShapeRef.new(shape: LineageEventIdentifier, location_name: "id"))
+    DeleteLineageEventOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "domainId"))
+    DeleteLineageEventOutput.add_member(:processing_status, Shapes::ShapeRef.new(shape: LineageEventProcessingStatus, location_name: "processingStatus"))
+    DeleteLineageEventOutput.struct_class = Types::DeleteLineageEventOutput
+
     DeleteListingInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     DeleteListingInput.add_member(:identifier, Shapes::ShapeRef.new(shape: ListingId, required: true, location: "uri", location_name: "identifier"))
     DeleteListingInput.struct_class = Types::DeleteListingInput
 
     DeleteListingOutput.struct_class = Types::DeleteListingOutput
+
+    DeleteNotebookInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    DeleteNotebookInput.add_member(:identifier, Shapes::ShapeRef.new(shape: NotebookId, required: true, location: "uri", location_name: "identifier"))
+    DeleteNotebookInput.struct_class = Types::DeleteNotebookInput
+
+    DeleteNotebookOutput.struct_class = Types::DeleteNotebookOutput
 
     DeleteProjectInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     DeleteProjectInput.add_member(:identifier, Shapes::ShapeRef.new(shape: ProjectId, required: true, location: "uri", location_name: "identifier"))
@@ -2307,8 +2986,8 @@ module Aws::DataZone
     DeleteProjectInput.struct_class = Types::DeleteProjectInput
 
     DeleteProjectMembershipInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    DeleteProjectMembershipInput.add_member(:member, Shapes::ShapeRef.new(shape: Member, required: true, location_name: "member"))
     DeleteProjectMembershipInput.add_member(:project_identifier, Shapes::ShapeRef.new(shape: ProjectId, required: true, location: "uri", location_name: "projectIdentifier"))
+    DeleteProjectMembershipInput.add_member(:member, Shapes::ShapeRef.new(shape: Member, required: true, location_name: "member"))
     DeleteProjectMembershipInput.struct_class = Types::DeleteProjectMembershipInput
 
     DeleteProjectMembershipOutput.struct_class = Types::DeleteProjectMembershipOutput
@@ -2331,17 +3010,18 @@ module Aws::DataZone
     DeleteSubscriptionGrantInput.add_member(:identifier, Shapes::ShapeRef.new(shape: SubscriptionGrantId, required: true, location: "uri", location_name: "identifier"))
     DeleteSubscriptionGrantInput.struct_class = Types::DeleteSubscriptionGrantInput
 
-    DeleteSubscriptionGrantOutput.add_member(:assets, Shapes::ShapeRef.new(shape: SubscribedAssets, location_name: "assets"))
-    DeleteSubscriptionGrantOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
-    DeleteSubscriptionGrantOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    DeleteSubscriptionGrantOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    DeleteSubscriptionGrantOutput.add_member(:granted_entity, Shapes::ShapeRef.new(shape: GrantedEntity, required: true, location_name: "grantedEntity"))
     DeleteSubscriptionGrantOutput.add_member(:id, Shapes::ShapeRef.new(shape: SubscriptionGrantId, required: true, location_name: "id"))
-    DeleteSubscriptionGrantOutput.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionGrantOverallStatus, required: true, location_name: "status"))
-    DeleteSubscriptionGrantOutput.add_member(:subscription_id, Shapes::ShapeRef.new(shape: SubscriptionId, deprecated: true, location_name: "subscriptionId", metadata: {"deprecatedMessage"=>"Multiple subscriptions can exist for a single grant"}))
-    DeleteSubscriptionGrantOutput.add_member(:subscription_target_id, Shapes::ShapeRef.new(shape: SubscriptionTargetId, required: true, location_name: "subscriptionTargetId"))
-    DeleteSubscriptionGrantOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    DeleteSubscriptionGrantOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
     DeleteSubscriptionGrantOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    DeleteSubscriptionGrantOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    DeleteSubscriptionGrantOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
+    DeleteSubscriptionGrantOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    DeleteSubscriptionGrantOutput.add_member(:environment_id, Shapes::ShapeRef.new(shape: EnvironmentId, location_name: "environmentId"))
+    DeleteSubscriptionGrantOutput.add_member(:subscription_target_id, Shapes::ShapeRef.new(shape: SubscriptionTargetId, required: true, location_name: "subscriptionTargetId"))
+    DeleteSubscriptionGrantOutput.add_member(:granted_entity, Shapes::ShapeRef.new(shape: GrantedEntity, required: true, location_name: "grantedEntity"))
+    DeleteSubscriptionGrantOutput.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionGrantOverallStatus, required: true, location_name: "status"))
+    DeleteSubscriptionGrantOutput.add_member(:assets, Shapes::ShapeRef.new(shape: SubscribedAssets, location_name: "assets"))
+    DeleteSubscriptionGrantOutput.add_member(:subscription_id, Shapes::ShapeRef.new(shape: SubscriptionId, deprecated: true, location_name: "subscriptionId", metadata: {"deprecatedMessage" => "Multiple subscriptions can exist for a single grant"}))
     DeleteSubscriptionGrantOutput.struct_class = Types::DeleteSubscriptionGrantOutput
 
     DeleteSubscriptionRequestInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
@@ -2353,27 +3033,27 @@ module Aws::DataZone
     DeleteSubscriptionTargetInput.add_member(:identifier, Shapes::ShapeRef.new(shape: SubscriptionTargetId, required: true, location: "uri", location_name: "identifier"))
     DeleteSubscriptionTargetInput.struct_class = Types::DeleteSubscriptionTargetInput
 
-    DeleteTimeSeriesDataPointsInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
     DeleteTimeSeriesDataPointsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     DeleteTimeSeriesDataPointsInput.add_member(:entity_identifier, Shapes::ShapeRef.new(shape: EntityIdentifier, required: true, location: "uri", location_name: "entityIdentifier"))
     DeleteTimeSeriesDataPointsInput.add_member(:entity_type, Shapes::ShapeRef.new(shape: TimeSeriesEntityType, required: true, location: "uri", location_name: "entityType"))
     DeleteTimeSeriesDataPointsInput.add_member(:form_name, Shapes::ShapeRef.new(shape: TimeSeriesFormName, required: true, location: "querystring", location_name: "formName"))
+    DeleteTimeSeriesDataPointsInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     DeleteTimeSeriesDataPointsInput.struct_class = Types::DeleteTimeSeriesDataPointsInput
 
     DeleteTimeSeriesDataPointsOutput.struct_class = Types::DeleteTimeSeriesDataPointsOutput
 
     Deployment.add_member(:deployment_id, Shapes::ShapeRef.new(shape: String, location_name: "deploymentId"))
-    Deployment.add_member(:deployment_status, Shapes::ShapeRef.new(shape: DeploymentStatus, location_name: "deploymentStatus"))
     Deployment.add_member(:deployment_type, Shapes::ShapeRef.new(shape: DeploymentType, location_name: "deploymentType"))
+    Deployment.add_member(:deployment_status, Shapes::ShapeRef.new(shape: DeploymentStatus, location_name: "deploymentStatus"))
     Deployment.add_member(:failure_reason, Shapes::ShapeRef.new(shape: EnvironmentError, location_name: "failureReason"))
-    Deployment.add_member(:is_deployment_complete, Shapes::ShapeRef.new(shape: Boolean, location_name: "isDeploymentComplete"))
     Deployment.add_member(:messages, Shapes::ShapeRef.new(shape: DeploymentMessagesList, location_name: "messages"))
+    Deployment.add_member(:is_deployment_complete, Shapes::ShapeRef.new(shape: Boolean, location_name: "isDeploymentComplete"))
     Deployment.struct_class = Types::Deployment
 
     DeploymentMessagesList.member = Shapes::ShapeRef.new(shape: DeploymentMessage)
 
-    DeploymentProperties.add_member(:end_timeout_minutes, Shapes::ShapeRef.new(shape: DeploymentPropertiesEndTimeoutMinutesInteger, location_name: "endTimeoutMinutes"))
     DeploymentProperties.add_member(:start_timeout_minutes, Shapes::ShapeRef.new(shape: DeploymentPropertiesStartTimeoutMinutesInteger, location_name: "startTimeoutMinutes"))
+    DeploymentProperties.add_member(:end_timeout_minutes, Shapes::ShapeRef.new(shape: DeploymentPropertiesEndTimeoutMinutesInteger, location_name: "endTimeoutMinutes"))
     DeploymentProperties.struct_class = Types::DeploymentProperties
 
     DetailedGlossaryTerm.add_member(:name, Shapes::ShapeRef.new(shape: GlossaryTermName, location_name: "name"))
@@ -2389,22 +3069,32 @@ module Aws::DataZone
 
     DisassociateEnvironmentRoleOutput.struct_class = Types::DisassociateEnvironmentRoleOutput
 
+    DisassociateGovernedTermsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    DisassociateGovernedTermsInput.add_member(:entity_identifier, Shapes::ShapeRef.new(shape: EntityIdentifier, required: true, location: "uri", location_name: "entityIdentifier"))
+    DisassociateGovernedTermsInput.add_member(:entity_type, Shapes::ShapeRef.new(shape: GovernedEntityType, required: true, location: "uri", location_name: "entityType"))
+    DisassociateGovernedTermsInput.add_member(:governed_glossary_terms, Shapes::ShapeRef.new(shape: DisassociateGovernedTermsInputGovernedGlossaryTermsList, required: true, location_name: "governedGlossaryTerms"))
+    DisassociateGovernedTermsInput.struct_class = Types::DisassociateGovernedTermsInput
+
+    DisassociateGovernedTermsInputGovernedGlossaryTermsList.member = Shapes::ShapeRef.new(shape: GlossaryTermId)
+
+    DisassociateGovernedTermsOutput.struct_class = Types::DisassociateGovernedTermsOutput
+
     DomainSummaries.member = Shapes::ShapeRef.new(shape: DomainSummary)
 
-    DomainSummary.add_member(:arn, Shapes::ShapeRef.new(shape: String, required: true, location_name: "arn"))
-    DomainSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
-    DomainSummary.add_member(:description, Shapes::ShapeRef.new(shape: DomainDescription, location_name: "description"))
-    DomainSummary.add_member(:domain_version, Shapes::ShapeRef.new(shape: DomainVersion, location_name: "domainVersion"))
     DomainSummary.add_member(:id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "id"))
-    DomainSummary.add_member(:last_updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "lastUpdatedAt"))
-    DomainSummary.add_member(:managed_account_id, Shapes::ShapeRef.new(shape: String, required: true, location_name: "managedAccountId"))
     DomainSummary.add_member(:name, Shapes::ShapeRef.new(shape: DomainName, required: true, location_name: "name"))
-    DomainSummary.add_member(:portal_url, Shapes::ShapeRef.new(shape: String, location_name: "portalUrl"))
+    DomainSummary.add_member(:description, Shapes::ShapeRef.new(shape: DomainDescription, location_name: "description"))
+    DomainSummary.add_member(:arn, Shapes::ShapeRef.new(shape: String, required: true, location_name: "arn"))
+    DomainSummary.add_member(:managed_account_id, Shapes::ShapeRef.new(shape: String, required: true, location_name: "managedAccountId"))
     DomainSummary.add_member(:status, Shapes::ShapeRef.new(shape: DomainStatus, required: true, location_name: "status"))
+    DomainSummary.add_member(:portal_url, Shapes::ShapeRef.new(shape: String, location_name: "portalUrl"))
+    DomainSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
+    DomainSummary.add_member(:last_updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "lastUpdatedAt"))
+    DomainSummary.add_member(:domain_version, Shapes::ShapeRef.new(shape: DomainVersion, location_name: "domainVersion"))
     DomainSummary.struct_class = Types::DomainSummary
 
     DomainUnitFilterForProject.add_member(:domain_unit, Shapes::ShapeRef.new(shape: DomainUnitId, required: true, location_name: "domainUnit"))
-    DomainUnitFilterForProject.add_member(:include_child_domain_units, Shapes::ShapeRef.new(shape: Boolean, location_name: "includeChildDomainUnits", metadata: {"box"=>true}))
+    DomainUnitFilterForProject.add_member(:include_child_domain_units, Shapes::ShapeRef.new(shape: Boolean, location_name: "includeChildDomainUnits", metadata: {"box" => true}))
     DomainUnitFilterForProject.struct_class = Types::DomainUnitFilterForProject
 
     DomainUnitGrantFilter.add_member(:all_domain_units_grant_filter, Shapes::ShapeRef.new(shape: AllDomainUnitsGrantFilter, location_name: "allDomainUnitsGrantFilter"))
@@ -2418,25 +3108,25 @@ module Aws::DataZone
 
     DomainUnitIds.member = Shapes::ShapeRef.new(shape: DomainUnitId)
 
-    DomainUnitOwnerProperties.add_member(:group, Shapes::ShapeRef.new(shape: DomainUnitGroupProperties, location_name: "group"))
     DomainUnitOwnerProperties.add_member(:user, Shapes::ShapeRef.new(shape: DomainUnitUserProperties, location_name: "user"))
+    DomainUnitOwnerProperties.add_member(:group, Shapes::ShapeRef.new(shape: DomainUnitGroupProperties, location_name: "group"))
     DomainUnitOwnerProperties.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
-    DomainUnitOwnerProperties.add_member_subclass(:group, Types::DomainUnitOwnerProperties::Group)
     DomainUnitOwnerProperties.add_member_subclass(:user, Types::DomainUnitOwnerProperties::User)
+    DomainUnitOwnerProperties.add_member_subclass(:group, Types::DomainUnitOwnerProperties::Group)
     DomainUnitOwnerProperties.add_member_subclass(:unknown, Types::DomainUnitOwnerProperties::Unknown)
     DomainUnitOwnerProperties.struct_class = Types::DomainUnitOwnerProperties
 
     DomainUnitOwners.member = Shapes::ShapeRef.new(shape: DomainUnitOwnerProperties)
 
     DomainUnitPolicyGrantPrincipal.add_member(:domain_unit_designation, Shapes::ShapeRef.new(shape: DomainUnitDesignation, required: true, location_name: "domainUnitDesignation"))
-    DomainUnitPolicyGrantPrincipal.add_member(:domain_unit_grant_filter, Shapes::ShapeRef.new(shape: DomainUnitGrantFilter, location_name: "domainUnitGrantFilter"))
     DomainUnitPolicyGrantPrincipal.add_member(:domain_unit_identifier, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitIdentifier"))
+    DomainUnitPolicyGrantPrincipal.add_member(:domain_unit_grant_filter, Shapes::ShapeRef.new(shape: DomainUnitGrantFilter, location_name: "domainUnitGrantFilter"))
     DomainUnitPolicyGrantPrincipal.struct_class = Types::DomainUnitPolicyGrantPrincipal
 
     DomainUnitSummaries.member = Shapes::ShapeRef.new(shape: DomainUnitSummary)
 
-    DomainUnitSummary.add_member(:id, Shapes::ShapeRef.new(shape: DomainUnitId, required: true, location_name: "id"))
     DomainUnitSummary.add_member(:name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "name"))
+    DomainUnitSummary.add_member(:id, Shapes::ShapeRef.new(shape: DomainUnitId, required: true, location_name: "id"))
     DomainUnitSummary.struct_class = Types::DomainUnitSummary
 
     DomainUnitTarget.add_member(:domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, required: true, location_name: "domainUnitId"))
@@ -2448,68 +3138,85 @@ module Aws::DataZone
 
     EnabledRegionList.member = Shapes::ShapeRef.new(shape: RegionName)
 
+    EncryptionConfiguration.add_member(:kms_key_arn, Shapes::ShapeRef.new(shape: String, location_name: "kmsKeyArn"))
+    EncryptionConfiguration.add_member(:sse_algorithm, Shapes::ShapeRef.new(shape: String, location_name: "sseAlgorithm"))
+    EncryptionConfiguration.struct_class = Types::EncryptionConfiguration
+
     EntityOwners.member = Shapes::ShapeRef.new(shape: OwnerPropertiesOutput)
+
+    EntityPattern.add_member(:entity_type, Shapes::ShapeRef.new(shape: GraphEntityType, required: true, location_name: "entityType"))
+    EntityPattern.add_member(:identifier, Shapes::ShapeRef.new(shape: EntityPatternIdentifierString, required: true, location_name: "identifier"))
+    EntityPattern.add_member(:filters, Shapes::ShapeRef.new(shape: FilterClause, location_name: "filters"))
+    EntityPattern.struct_class = Types::EntityPattern
 
     EnvironmentActionList.member = Shapes::ShapeRef.new(shape: ConfigurableEnvironmentAction)
 
-    EnvironmentActionSummary.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
     EnvironmentActionSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     EnvironmentActionSummary.add_member(:environment_id, Shapes::ShapeRef.new(shape: EnvironmentId, required: true, location_name: "environmentId"))
     EnvironmentActionSummary.add_member(:id, Shapes::ShapeRef.new(shape: EnvironmentActionId, required: true, location_name: "id"))
     EnvironmentActionSummary.add_member(:name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "name"))
     EnvironmentActionSummary.add_member(:parameters, Shapes::ShapeRef.new(shape: ActionParameters, required: true, location_name: "parameters"))
+    EnvironmentActionSummary.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
     EnvironmentActionSummary.struct_class = Types::EnvironmentActionSummary
 
-    EnvironmentBlueprintConfigurationItem.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
     EnvironmentBlueprintConfigurationItem.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    EnvironmentBlueprintConfigurationItem.add_member(:enabled_regions, Shapes::ShapeRef.new(shape: EnabledRegionList, location_name: "enabledRegions"))
     EnvironmentBlueprintConfigurationItem.add_member(:environment_blueprint_id, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, required: true, location_name: "environmentBlueprintId"))
+    EnvironmentBlueprintConfigurationItem.add_member(:provisioning_role_arn, Shapes::ShapeRef.new(shape: RoleArn, location_name: "provisioningRoleArn"))
     EnvironmentBlueprintConfigurationItem.add_member(:environment_role_permission_boundary, Shapes::ShapeRef.new(shape: PolicyArn, location_name: "environmentRolePermissionBoundary"))
     EnvironmentBlueprintConfigurationItem.add_member(:manage_access_role_arn, Shapes::ShapeRef.new(shape: RoleArn, location_name: "manageAccessRoleArn"))
-    EnvironmentBlueprintConfigurationItem.add_member(:provisioning_configurations, Shapes::ShapeRef.new(shape: ProvisioningConfigurationList, location_name: "provisioningConfigurations"))
-    EnvironmentBlueprintConfigurationItem.add_member(:provisioning_role_arn, Shapes::ShapeRef.new(shape: RoleArn, location_name: "provisioningRoleArn"))
+    EnvironmentBlueprintConfigurationItem.add_member(:enabled_regions, Shapes::ShapeRef.new(shape: EnabledRegionList, location_name: "enabledRegions"))
     EnvironmentBlueprintConfigurationItem.add_member(:regional_parameters, Shapes::ShapeRef.new(shape: RegionalParameterMap, location_name: "regionalParameters"))
+    EnvironmentBlueprintConfigurationItem.add_member(:allow_user_provided_configurations, Shapes::ShapeRef.new(shape: Boolean, location_name: "allowUserProvidedConfigurations"))
+    EnvironmentBlueprintConfigurationItem.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
     EnvironmentBlueprintConfigurationItem.add_member(:updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "updatedAt"))
+    EnvironmentBlueprintConfigurationItem.add_member(:resource_configurations, Shapes::ShapeRef.new(shape: ResourceConfigurations, location_name: "resourceConfigurations"))
+    EnvironmentBlueprintConfigurationItem.add_member(:provisioning_configurations, Shapes::ShapeRef.new(shape: ProvisioningConfigurationList, location_name: "provisioningConfigurations"))
     EnvironmentBlueprintConfigurationItem.struct_class = Types::EnvironmentBlueprintConfigurationItem
 
     EnvironmentBlueprintConfigurations.member = Shapes::ShapeRef.new(shape: EnvironmentBlueprintConfigurationItem)
 
     EnvironmentBlueprintSummaries.member = Shapes::ShapeRef.new(shape: EnvironmentBlueprintSummary)
 
-    EnvironmentBlueprintSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
-    EnvironmentBlueprintSummary.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     EnvironmentBlueprintSummary.add_member(:id, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, required: true, location_name: "id"))
     EnvironmentBlueprintSummary.add_member(:name, Shapes::ShapeRef.new(shape: EnvironmentBlueprintName, required: true, location_name: "name"))
+    EnvironmentBlueprintSummary.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     EnvironmentBlueprintSummary.add_member(:provider, Shapes::ShapeRef.new(shape: String, required: true, location_name: "provider"))
     EnvironmentBlueprintSummary.add_member(:provisioning_properties, Shapes::ShapeRef.new(shape: ProvisioningProperties, required: true, location_name: "provisioningProperties"))
+    EnvironmentBlueprintSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
     EnvironmentBlueprintSummary.add_member(:updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "updatedAt"))
     EnvironmentBlueprintSummary.struct_class = Types::EnvironmentBlueprintSummary
 
-    EnvironmentConfiguration.add_member(:aws_account, Shapes::ShapeRef.new(shape: AwsAccount, required: true, location_name: "awsAccount"))
-    EnvironmentConfiguration.add_member(:aws_region, Shapes::ShapeRef.new(shape: Region, required: true, location_name: "awsRegion"))
-    EnvironmentConfiguration.add_member(:configuration_parameters, Shapes::ShapeRef.new(shape: EnvironmentConfigurationParametersDetails, location_name: "configurationParameters"))
-    EnvironmentConfiguration.add_member(:deployment_mode, Shapes::ShapeRef.new(shape: DeploymentMode, location_name: "deploymentMode"))
-    EnvironmentConfiguration.add_member(:deployment_order, Shapes::ShapeRef.new(shape: DeploymentOrder, location_name: "deploymentOrder"))
-    EnvironmentConfiguration.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    EnvironmentConfiguration.add_member(:environment_blueprint_id, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, required: true, location_name: "environmentBlueprintId"))
-    EnvironmentConfiguration.add_member(:id, Shapes::ShapeRef.new(shape: EnvironmentConfigurationId, location_name: "id"))
+    EnvironmentConfig.add_member(:image_version, Shapes::ShapeRef.new(shape: String, location_name: "imageVersion"))
+    EnvironmentConfig.add_member(:package_config, Shapes::ShapeRef.new(shape: PackageConfig, location_name: "packageConfig"))
+    EnvironmentConfig.struct_class = Types::EnvironmentConfig
+
     EnvironmentConfiguration.add_member(:name, Shapes::ShapeRef.new(shape: EnvironmentConfigurationName, required: true, location_name: "name"))
+    EnvironmentConfiguration.add_member(:id, Shapes::ShapeRef.new(shape: EnvironmentConfigurationId, location_name: "id"))
+    EnvironmentConfiguration.add_member(:environment_blueprint_id, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, required: true, location_name: "environmentBlueprintId"))
+    EnvironmentConfiguration.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    EnvironmentConfiguration.add_member(:deployment_mode, Shapes::ShapeRef.new(shape: DeploymentMode, location_name: "deploymentMode"))
+    EnvironmentConfiguration.add_member(:configuration_parameters, Shapes::ShapeRef.new(shape: EnvironmentConfigurationParametersDetails, location_name: "configurationParameters"))
+    EnvironmentConfiguration.add_member(:aws_account, Shapes::ShapeRef.new(shape: AwsAccount, location_name: "awsAccount"))
+    EnvironmentConfiguration.add_member(:account_pools, Shapes::ShapeRef.new(shape: AccountPoolList, location_name: "accountPools"))
+    EnvironmentConfiguration.add_member(:aws_region, Shapes::ShapeRef.new(shape: Region, location_name: "awsRegion"))
+    EnvironmentConfiguration.add_member(:deployment_order, Shapes::ShapeRef.new(shape: DeploymentOrder, location_name: "deploymentOrder"))
     EnvironmentConfiguration.struct_class = Types::EnvironmentConfiguration
 
-    EnvironmentConfigurationParameter.add_member(:is_editable, Shapes::ShapeRef.new(shape: Boolean, location_name: "isEditable"))
     EnvironmentConfigurationParameter.add_member(:name, Shapes::ShapeRef.new(shape: EnvironmentConfigurationParameterName, location_name: "name"))
     EnvironmentConfigurationParameter.add_member(:value, Shapes::ShapeRef.new(shape: String, location_name: "value"))
+    EnvironmentConfigurationParameter.add_member(:is_editable, Shapes::ShapeRef.new(shape: Boolean, location_name: "isEditable"))
     EnvironmentConfigurationParameter.struct_class = Types::EnvironmentConfigurationParameter
 
+    EnvironmentConfigurationParametersDetails.add_member(:ssm_path, Shapes::ShapeRef.new(shape: ParameterStorePath, location_name: "ssmPath"))
     EnvironmentConfigurationParametersDetails.add_member(:parameter_overrides, Shapes::ShapeRef.new(shape: EnvironmentConfigurationParametersList, location_name: "parameterOverrides"))
     EnvironmentConfigurationParametersDetails.add_member(:resolved_parameters, Shapes::ShapeRef.new(shape: EnvironmentConfigurationParametersList, location_name: "resolvedParameters"))
-    EnvironmentConfigurationParametersDetails.add_member(:ssm_path, Shapes::ShapeRef.new(shape: ParameterStorePath, location_name: "ssmPath"))
     EnvironmentConfigurationParametersDetails.struct_class = Types::EnvironmentConfigurationParametersDetails
 
     EnvironmentConfigurationParametersList.member = Shapes::ShapeRef.new(shape: EnvironmentConfigurationParameter)
 
-    EnvironmentConfigurationUserParameter.add_member(:environment_configuration_name, Shapes::ShapeRef.new(shape: EnvironmentConfigurationName, location_name: "environmentConfigurationName"))
     EnvironmentConfigurationUserParameter.add_member(:environment_id, Shapes::ShapeRef.new(shape: EnvironmentId, location_name: "environmentId"))
+    EnvironmentConfigurationUserParameter.add_member(:environment_resolved_account, Shapes::ShapeRef.new(shape: EnvironmentResolvedAccount, location_name: "environmentResolvedAccount"))
+    EnvironmentConfigurationUserParameter.add_member(:environment_configuration_name, Shapes::ShapeRef.new(shape: EnvironmentConfigurationName, location_name: "environmentConfigurationName"))
     EnvironmentConfigurationUserParameter.add_member(:environment_parameters, Shapes::ShapeRef.new(shape: EnvironmentParametersList, location_name: "environmentParameters"))
     EnvironmentConfigurationUserParameter.struct_class = Types::EnvironmentConfigurationUserParameter
 
@@ -2517,8 +3224,8 @@ module Aws::DataZone
 
     EnvironmentConfigurationsList.member = Shapes::ShapeRef.new(shape: EnvironmentConfiguration)
 
-    EnvironmentDeploymentDetails.add_member(:environment_failure_reasons, Shapes::ShapeRef.new(shape: EnvironmentFailureReasons, location_name: "environmentFailureReasons"))
     EnvironmentDeploymentDetails.add_member(:overall_deployment_status, Shapes::ShapeRef.new(shape: OverallDeploymentStatus, location_name: "overallDeploymentStatus"))
+    EnvironmentDeploymentDetails.add_member(:environment_failure_reasons, Shapes::ShapeRef.new(shape: EnvironmentFailureReasons, location_name: "environmentFailureReasons"))
     EnvironmentDeploymentDetails.struct_class = Types::EnvironmentDeploymentDetails
 
     EnvironmentError.add_member(:code, Shapes::ShapeRef.new(shape: String, location_name: "code"))
@@ -2538,35 +3245,41 @@ module Aws::DataZone
 
     EnvironmentProfileSummaries.member = Shapes::ShapeRef.new(shape: EnvironmentProfileSummary)
 
+    EnvironmentProfileSummary.add_member(:id, Shapes::ShapeRef.new(shape: EnvironmentProfileId, required: true, location_name: "id"))
+    EnvironmentProfileSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     EnvironmentProfileSummary.add_member(:aws_account_id, Shapes::ShapeRef.new(shape: AwsAccountId, location_name: "awsAccountId"))
     EnvironmentProfileSummary.add_member(:aws_account_region, Shapes::ShapeRef.new(shape: AwsRegion, location_name: "awsAccountRegion"))
-    EnvironmentProfileSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
     EnvironmentProfileSummary.add_member(:created_by, Shapes::ShapeRef.new(shape: String, required: true, location_name: "createdBy"))
-    EnvironmentProfileSummary.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    EnvironmentProfileSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    EnvironmentProfileSummary.add_member(:environment_blueprint_id, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, required: true, location_name: "environmentBlueprintId"))
-    EnvironmentProfileSummary.add_member(:id, Shapes::ShapeRef.new(shape: EnvironmentProfileId, required: true, location_name: "id"))
-    EnvironmentProfileSummary.add_member(:name, Shapes::ShapeRef.new(shape: EnvironmentProfileName, required: true, location_name: "name"))
-    EnvironmentProfileSummary.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "projectId"))
+    EnvironmentProfileSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
     EnvironmentProfileSummary.add_member(:updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "updatedAt"))
+    EnvironmentProfileSummary.add_member(:name, Shapes::ShapeRef.new(shape: EnvironmentProfileName, required: true, location_name: "name"))
+    EnvironmentProfileSummary.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    EnvironmentProfileSummary.add_member(:environment_blueprint_id, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, required: true, location_name: "environmentBlueprintId"))
+    EnvironmentProfileSummary.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "projectId"))
     EnvironmentProfileSummary.struct_class = Types::EnvironmentProfileSummary
+
+    EnvironmentResolvedAccount.add_member(:aws_account_id, Shapes::ShapeRef.new(shape: AwsAccountId, required: true, location_name: "awsAccountId"))
+    EnvironmentResolvedAccount.add_member(:region_name, Shapes::ShapeRef.new(shape: AwsRegion, required: true, location_name: "regionName"))
+    EnvironmentResolvedAccount.add_member(:source_account_pool_id, Shapes::ShapeRef.new(shape: AccountPoolId, location_name: "sourceAccountPoolId"))
+    EnvironmentResolvedAccount.struct_class = Types::EnvironmentResolvedAccount
 
     EnvironmentSummaries.member = Shapes::ShapeRef.new(shape: EnvironmentSummary)
 
+    EnvironmentSummary.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "projectId"))
+    EnvironmentSummary.add_member(:id, Shapes::ShapeRef.new(shape: EnvironmentId, location_name: "id"))
+    EnvironmentSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    EnvironmentSummary.add_member(:created_by, Shapes::ShapeRef.new(shape: String, required: true, location_name: "createdBy"))
+    EnvironmentSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
+    EnvironmentSummary.add_member(:updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "updatedAt"))
+    EnvironmentSummary.add_member(:name, Shapes::ShapeRef.new(shape: EnvironmentName, required: true, location_name: "name"))
+    EnvironmentSummary.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    EnvironmentSummary.add_member(:environment_profile_id, Shapes::ShapeRef.new(shape: EnvironmentProfileId, location_name: "environmentProfileId"))
     EnvironmentSummary.add_member(:aws_account_id, Shapes::ShapeRef.new(shape: AwsAccountId, location_name: "awsAccountId"))
     EnvironmentSummary.add_member(:aws_account_region, Shapes::ShapeRef.new(shape: AwsRegion, location_name: "awsAccountRegion"))
-    EnvironmentSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
-    EnvironmentSummary.add_member(:created_by, Shapes::ShapeRef.new(shape: String, required: true, location_name: "createdBy"))
-    EnvironmentSummary.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    EnvironmentSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    EnvironmentSummary.add_member(:environment_configuration_id, Shapes::ShapeRef.new(shape: EnvironmentConfigurationId, location_name: "environmentConfigurationId"))
-    EnvironmentSummary.add_member(:environment_profile_id, Shapes::ShapeRef.new(shape: EnvironmentProfileId, location_name: "environmentProfileId"))
-    EnvironmentSummary.add_member(:id, Shapes::ShapeRef.new(shape: EnvironmentId, location_name: "id"))
-    EnvironmentSummary.add_member(:name, Shapes::ShapeRef.new(shape: EnvironmentName, required: true, location_name: "name"))
-    EnvironmentSummary.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "projectId"))
     EnvironmentSummary.add_member(:provider, Shapes::ShapeRef.new(shape: String, required: true, location_name: "provider"))
     EnvironmentSummary.add_member(:status, Shapes::ShapeRef.new(shape: EnvironmentStatus, location_name: "status"))
-    EnvironmentSummary.add_member(:updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "updatedAt"))
+    EnvironmentSummary.add_member(:environment_configuration_id, Shapes::ShapeRef.new(shape: EnvironmentConfigurationId, location_name: "environmentConfigurationId"))
+    EnvironmentSummary.add_member(:environment_configuration_name, Shapes::ShapeRef.new(shape: EnvironmentConfigurationName, location_name: "environmentConfigurationName"))
     EnvironmentSummary.struct_class = Types::EnvironmentSummary
 
     EqualToExpression.add_member(:column_name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "columnName"))
@@ -2587,21 +3300,23 @@ module Aws::DataZone
     FailureReasons.member = Shapes::ShapeRef.new(shape: ProjectDeletionError)
 
     Filter.add_member(:attribute, Shapes::ShapeRef.new(shape: Attribute, required: true, location_name: "attribute"))
-    Filter.add_member(:value, Shapes::ShapeRef.new(shape: FilterValueString, required: true, location_name: "value"))
+    Filter.add_member(:value, Shapes::ShapeRef.new(shape: FilterValueString, location_name: "value"))
+    Filter.add_member(:int_value, Shapes::ShapeRef.new(shape: Long, location_name: "intValue"))
+    Filter.add_member(:operator, Shapes::ShapeRef.new(shape: FilterOperator, location_name: "operator"))
     Filter.struct_class = Types::Filter
 
-    FilterClause.add_member(:and, Shapes::ShapeRef.new(shape: FilterList, location_name: "and"))
     FilterClause.add_member(:filter, Shapes::ShapeRef.new(shape: Filter, location_name: "filter"))
+    FilterClause.add_member(:and, Shapes::ShapeRef.new(shape: FilterList, location_name: "and"))
     FilterClause.add_member(:or, Shapes::ShapeRef.new(shape: FilterList, location_name: "or"))
     FilterClause.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
-    FilterClause.add_member_subclass(:and, Types::FilterClause::And)
     FilterClause.add_member_subclass(:filter, Types::FilterClause::Filter)
+    FilterClause.add_member_subclass(:and, Types::FilterClause::And)
     FilterClause.add_member_subclass(:or, Types::FilterClause::Or)
     FilterClause.add_member_subclass(:unknown, Types::FilterClause::Unknown)
     FilterClause.struct_class = Types::FilterClause
 
-    FilterExpression.add_member(:expression, Shapes::ShapeRef.new(shape: FilterExpressionExpressionString, required: true, location_name: "expression"))
     FilterExpression.add_member(:type, Shapes::ShapeRef.new(shape: FilterExpressionType, required: true, location_name: "type"))
+    FilterExpression.add_member(:expression, Shapes::ShapeRef.new(shape: FilterExpressionExpressionString, required: true, location_name: "expression"))
     FilterExpression.struct_class = Types::FilterExpression
 
     FilterExpressions.member = Shapes::ShapeRef.new(shape: FilterExpression)
@@ -2610,44 +3325,46 @@ module Aws::DataZone
 
     FilterList.member = Shapes::ShapeRef.new(shape: FilterClause)
 
-    FormEntryInput.add_member(:required, Shapes::ShapeRef.new(shape: Boolean, location_name: "required"))
     FormEntryInput.add_member(:type_identifier, Shapes::ShapeRef.new(shape: FormTypeIdentifier, required: true, location_name: "typeIdentifier"))
     FormEntryInput.add_member(:type_revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "typeRevision"))
+    FormEntryInput.add_member(:required, Shapes::ShapeRef.new(shape: Boolean, location_name: "required"))
     FormEntryInput.struct_class = Types::FormEntryInput
 
-    FormEntryOutput.add_member(:required, Shapes::ShapeRef.new(shape: Boolean, location_name: "required"))
     FormEntryOutput.add_member(:type_name, Shapes::ShapeRef.new(shape: FormTypeName, required: true, location_name: "typeName"))
     FormEntryOutput.add_member(:type_revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "typeRevision"))
+    FormEntryOutput.add_member(:required, Shapes::ShapeRef.new(shape: Boolean, location_name: "required"))
     FormEntryOutput.struct_class = Types::FormEntryOutput
 
-    FormInput.add_member(:content, Shapes::ShapeRef.new(shape: FormInputContentString, location_name: "content"))
     FormInput.add_member(:form_name, Shapes::ShapeRef.new(shape: FormName, required: true, location_name: "formName"))
     FormInput.add_member(:type_identifier, Shapes::ShapeRef.new(shape: FormTypeIdentifier, location_name: "typeIdentifier"))
     FormInput.add_member(:type_revision, Shapes::ShapeRef.new(shape: RevisionInput, location_name: "typeRevision"))
+    FormInput.add_member(:content, Shapes::ShapeRef.new(shape: FormInputContentString, location_name: "content"))
     FormInput.struct_class = Types::FormInput
 
     FormInputList.member = Shapes::ShapeRef.new(shape: FormInput)
 
-    FormOutput.add_member(:content, Shapes::ShapeRef.new(shape: String, location_name: "content"))
+    FormNameList.member = Shapes::ShapeRef.new(shape: FormName)
+
     FormOutput.add_member(:form_name, Shapes::ShapeRef.new(shape: FormName, required: true, location_name: "formName"))
     FormOutput.add_member(:type_name, Shapes::ShapeRef.new(shape: FormTypeName, location_name: "typeName"))
     FormOutput.add_member(:type_revision, Shapes::ShapeRef.new(shape: Revision, location_name: "typeRevision"))
+    FormOutput.add_member(:content, Shapes::ShapeRef.new(shape: String, location_name: "content"))
     FormOutput.struct_class = Types::FormOutput
 
     FormOutputList.member = Shapes::ShapeRef.new(shape: FormOutput)
 
+    FormTypeData.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    FormTypeData.add_member(:name, Shapes::ShapeRef.new(shape: FormTypeName, required: true, location_name: "name"))
+    FormTypeData.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
+    FormTypeData.add_member(:model, Shapes::ShapeRef.new(shape: Model, location_name: "model"))
+    FormTypeData.add_member(:status, Shapes::ShapeRef.new(shape: FormTypeStatus, location_name: "status"))
+    FormTypeData.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "owningProjectId"))
+    FormTypeData.add_member(:origin_domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "originDomainId"))
+    FormTypeData.add_member(:origin_project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "originProjectId"))
     FormTypeData.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
     FormTypeData.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
     FormTypeData.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    FormTypeData.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     FormTypeData.add_member(:imports, Shapes::ShapeRef.new(shape: ImportList, location_name: "imports"))
-    FormTypeData.add_member(:model, Shapes::ShapeRef.new(shape: Model, location_name: "model"))
-    FormTypeData.add_member(:name, Shapes::ShapeRef.new(shape: FormTypeName, required: true, location_name: "name"))
-    FormTypeData.add_member(:origin_domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "originDomainId"))
-    FormTypeData.add_member(:origin_project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "originProjectId"))
-    FormTypeData.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "owningProjectId"))
-    FormTypeData.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
-    FormTypeData.add_member(:status, Shapes::ShapeRef.new(shape: FormTypeStatus, location_name: "status"))
     FormTypeData.struct_class = Types::FormTypeData
 
     FormsInputMap.key = Shapes::ShapeRef.new(shape: FormName)
@@ -2656,22 +3373,39 @@ module Aws::DataZone
     FormsOutputMap.key = Shapes::ShapeRef.new(shape: FormName)
     FormsOutputMap.value = Shapes::ShapeRef.new(shape: FormEntryOutput)
 
-    GetAssetFilterInput.add_member(:asset_identifier, Shapes::ShapeRef.new(shape: AssetId, required: true, location: "uri", location_name: "assetIdentifier"))
+    GetAccountPoolInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    GetAccountPoolInput.add_member(:identifier, Shapes::ShapeRef.new(shape: AccountPoolId, required: true, location: "uri", location_name: "identifier"))
+    GetAccountPoolInput.struct_class = Types::GetAccountPoolInput
+
+    GetAccountPoolOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "domainId"))
+    GetAccountPoolOutput.add_member(:name, Shapes::ShapeRef.new(shape: AccountPoolName, location_name: "name"))
+    GetAccountPoolOutput.add_member(:id, Shapes::ShapeRef.new(shape: AccountPoolId, location_name: "id"))
+    GetAccountPoolOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    GetAccountPoolOutput.add_member(:resolution_strategy, Shapes::ShapeRef.new(shape: ResolutionStrategy, location_name: "resolutionStrategy"))
+    GetAccountPoolOutput.add_member(:account_source, Shapes::ShapeRef.new(shape: AccountSource, required: true, location_name: "accountSource"))
+    GetAccountPoolOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
+    GetAccountPoolOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
+    GetAccountPoolOutput.add_member(:last_updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "lastUpdatedAt"))
+    GetAccountPoolOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    GetAccountPoolOutput.add_member(:domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitId"))
+    GetAccountPoolOutput.struct_class = Types::GetAccountPoolOutput
+
     GetAssetFilterInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    GetAssetFilterInput.add_member(:asset_identifier, Shapes::ShapeRef.new(shape: AssetId, required: true, location: "uri", location_name: "assetIdentifier"))
     GetAssetFilterInput.add_member(:identifier, Shapes::ShapeRef.new(shape: FilterId, required: true, location: "uri", location_name: "identifier"))
     GetAssetFilterInput.struct_class = Types::GetAssetFilterInput
 
+    GetAssetFilterOutput.add_member(:id, Shapes::ShapeRef.new(shape: FilterId, required: true, location_name: "id"))
+    GetAssetFilterOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     GetAssetFilterOutput.add_member(:asset_id, Shapes::ShapeRef.new(shape: AssetId, required: true, location_name: "assetId"))
+    GetAssetFilterOutput.add_member(:name, Shapes::ShapeRef.new(shape: FilterName, required: true, location_name: "name"))
+    GetAssetFilterOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    GetAssetFilterOutput.add_member(:status, Shapes::ShapeRef.new(shape: FilterStatus, location_name: "status"))
     GetAssetFilterOutput.add_member(:configuration, Shapes::ShapeRef.new(shape: AssetFilterConfiguration, required: true, location_name: "configuration"))
     GetAssetFilterOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
-    GetAssetFilterOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    GetAssetFilterOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    GetAssetFilterOutput.add_member(:error_message, Shapes::ShapeRef.new(shape: String, location_name: "errorMessage"))
     GetAssetFilterOutput.add_member(:effective_column_names, Shapes::ShapeRef.new(shape: ColumnNameList, location_name: "effectiveColumnNames"))
     GetAssetFilterOutput.add_member(:effective_row_filter, Shapes::ShapeRef.new(shape: String, location_name: "effectiveRowFilter"))
-    GetAssetFilterOutput.add_member(:error_message, Shapes::ShapeRef.new(shape: String, location_name: "errorMessage"))
-    GetAssetFilterOutput.add_member(:id, Shapes::ShapeRef.new(shape: FilterId, required: true, location_name: "id"))
-    GetAssetFilterOutput.add_member(:name, Shapes::ShapeRef.new(shape: FilterName, required: true, location_name: "name"))
-    GetAssetFilterOutput.add_member(:status, Shapes::ShapeRef.new(shape: FilterStatus, location_name: "status"))
     GetAssetFilterOutput.struct_class = Types::GetAssetFilterOutput
 
     GetAssetInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
@@ -2679,41 +3413,44 @@ module Aws::DataZone
     GetAssetInput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, location: "querystring", location_name: "revision"))
     GetAssetInput.struct_class = Types::GetAssetInput
 
-    GetAssetOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
-    GetAssetOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
-    GetAssetOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    GetAssetOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    GetAssetOutput.add_member(:external_identifier, Shapes::ShapeRef.new(shape: ExternalIdentifier, location_name: "externalIdentifier"))
-    GetAssetOutput.add_member(:first_revision_created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "firstRevisionCreatedAt"))
-    GetAssetOutput.add_member(:first_revision_created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "firstRevisionCreatedBy"))
-    GetAssetOutput.add_member(:forms_output, Shapes::ShapeRef.new(shape: FormOutputList, required: true, location_name: "formsOutput"))
-    GetAssetOutput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
     GetAssetOutput.add_member(:id, Shapes::ShapeRef.new(shape: AssetId, required: true, location_name: "id"))
-    GetAssetOutput.add_member(:latest_time_series_data_point_forms_output, Shapes::ShapeRef.new(shape: TimeSeriesDataPointSummaryFormOutputList, location_name: "latestTimeSeriesDataPointFormsOutput"))
-    GetAssetOutput.add_member(:listing, Shapes::ShapeRef.new(shape: AssetListingDetails, location_name: "listing"))
     GetAssetOutput.add_member(:name, Shapes::ShapeRef.new(shape: AssetName, required: true, location_name: "name"))
-    GetAssetOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
-    GetAssetOutput.add_member(:read_only_forms_output, Shapes::ShapeRef.new(shape: FormOutputList, location_name: "readOnlyFormsOutput"))
-    GetAssetOutput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
     GetAssetOutput.add_member(:type_identifier, Shapes::ShapeRef.new(shape: AssetTypeIdentifier, required: true, location_name: "typeIdentifier"))
     GetAssetOutput.add_member(:type_revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "typeRevision"))
+    GetAssetOutput.add_member(:external_identifier, Shapes::ShapeRef.new(shape: ExternalIdentifier, location_name: "externalIdentifier"))
+    GetAssetOutput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
+    GetAssetOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    GetAssetOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    GetAssetOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
+    GetAssetOutput.add_member(:first_revision_created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "firstRevisionCreatedAt"))
+    GetAssetOutput.add_member(:first_revision_created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "firstRevisionCreatedBy"))
+    GetAssetOutput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
+    GetAssetOutput.add_member(:governed_glossary_terms, Shapes::ShapeRef.new(shape: GetAssetOutputGovernedGlossaryTermsList, location_name: "governedGlossaryTerms"))
+    GetAssetOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
+    GetAssetOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    GetAssetOutput.add_member(:listing, Shapes::ShapeRef.new(shape: AssetListingDetails, location_name: "listing"))
+    GetAssetOutput.add_member(:forms_output, Shapes::ShapeRef.new(shape: FormOutputList, required: true, location_name: "formsOutput"))
+    GetAssetOutput.add_member(:read_only_forms_output, Shapes::ShapeRef.new(shape: FormOutputList, location_name: "readOnlyFormsOutput"))
+    GetAssetOutput.add_member(:latest_time_series_data_point_forms_output, Shapes::ShapeRef.new(shape: TimeSeriesDataPointSummaryFormOutputList, location_name: "latestTimeSeriesDataPointFormsOutput"))
     GetAssetOutput.struct_class = Types::GetAssetOutput
+
+    GetAssetOutputGovernedGlossaryTermsList.member = Shapes::ShapeRef.new(shape: GlossaryTermId)
 
     GetAssetTypeInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     GetAssetTypeInput.add_member(:identifier, Shapes::ShapeRef.new(shape: AssetTypeIdentifier, required: true, location: "uri", location_name: "identifier"))
     GetAssetTypeInput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, location: "querystring", location_name: "revision"))
     GetAssetTypeInput.struct_class = Types::GetAssetTypeInput
 
-    GetAssetTypeOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
-    GetAssetTypeOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
-    GetAssetTypeOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     GetAssetTypeOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    GetAssetTypeOutput.add_member(:forms_output, Shapes::ShapeRef.new(shape: FormsOutputMap, required: true, location_name: "formsOutput"))
     GetAssetTypeOutput.add_member(:name, Shapes::ShapeRef.new(shape: TypeName, required: true, location_name: "name"))
+    GetAssetTypeOutput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
+    GetAssetTypeOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    GetAssetTypeOutput.add_member(:forms_output, Shapes::ShapeRef.new(shape: FormsOutputMap, required: true, location_name: "formsOutput"))
+    GetAssetTypeOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
     GetAssetTypeOutput.add_member(:origin_domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "originDomainId"))
     GetAssetTypeOutput.add_member(:origin_project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "originProjectId"))
-    GetAssetTypeOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
-    GetAssetTypeOutput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
+    GetAssetTypeOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    GetAssetTypeOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
     GetAssetTypeOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
     GetAssetTypeOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
     GetAssetTypeOutput.struct_class = Types::GetAssetTypeOutput
@@ -2724,6 +3461,7 @@ module Aws::DataZone
     GetConnectionInput.struct_class = Types::GetConnectionInput
 
     GetConnectionOutput.add_member(:connection_credentials, Shapes::ShapeRef.new(shape: ConnectionCredentials, location_name: "connectionCredentials"))
+    GetConnectionOutput.add_member(:configurations, Shapes::ShapeRef.new(shape: Configurations, location_name: "configurations"))
     GetConnectionOutput.add_member(:connection_id, Shapes::ShapeRef.new(shape: ConnectionId, required: true, location_name: "connectionId"))
     GetConnectionOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     GetConnectionOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
@@ -2735,112 +3473,124 @@ module Aws::DataZone
     GetConnectionOutput.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "projectId"))
     GetConnectionOutput.add_member(:props, Shapes::ShapeRef.new(shape: ConnectionPropertiesOutput, location_name: "props"))
     GetConnectionOutput.add_member(:type, Shapes::ShapeRef.new(shape: ConnectionType, required: true, location_name: "type"))
+    GetConnectionOutput.add_member(:scope, Shapes::ShapeRef.new(shape: ConnectionScope, location_name: "scope"))
     GetConnectionOutput.struct_class = Types::GetConnectionOutput
+
+    GetDataExportConfigurationInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    GetDataExportConfigurationInput.struct_class = Types::GetDataExportConfigurationInput
+
+    GetDataExportConfigurationOutput.add_member(:is_export_enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "isExportEnabled"))
+    GetDataExportConfigurationOutput.add_member(:status, Shapes::ShapeRef.new(shape: ConfigurationStatus, location_name: "status"))
+    GetDataExportConfigurationOutput.add_member(:encryption_configuration, Shapes::ShapeRef.new(shape: EncryptionConfiguration, location_name: "encryptionConfiguration"))
+    GetDataExportConfigurationOutput.add_member(:s3_table_bucket_arn, Shapes::ShapeRef.new(shape: String, location_name: "s3TableBucketArn"))
+    GetDataExportConfigurationOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    GetDataExportConfigurationOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
+    GetDataExportConfigurationOutput.struct_class = Types::GetDataExportConfigurationOutput
 
     GetDataProductInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     GetDataProductInput.add_member(:identifier, Shapes::ShapeRef.new(shape: DataProductId, required: true, location: "uri", location_name: "identifier"))
     GetDataProductInput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, location: "querystring", location_name: "revision"))
     GetDataProductInput.struct_class = Types::GetDataProductInput
 
+    GetDataProductOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    GetDataProductOutput.add_member(:id, Shapes::ShapeRef.new(shape: DataProductId, required: true, location_name: "id"))
+    GetDataProductOutput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
+    GetDataProductOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
+    GetDataProductOutput.add_member(:name, Shapes::ShapeRef.new(shape: DataProductName, required: true, location_name: "name"))
+    GetDataProductOutput.add_member(:status, Shapes::ShapeRef.new(shape: DataProductStatus, required: true, location_name: "status"))
+    GetDataProductOutput.add_member(:description, Shapes::ShapeRef.new(shape: DataProductDescription, location_name: "description"))
+    GetDataProductOutput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
+    GetDataProductOutput.add_member(:items, Shapes::ShapeRef.new(shape: DataProductItems, location_name: "items"))
+    GetDataProductOutput.add_member(:forms_output, Shapes::ShapeRef.new(shape: FormOutputList, location_name: "formsOutput"))
     GetDataProductOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
     GetDataProductOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
-    GetDataProductOutput.add_member(:description, Shapes::ShapeRef.new(shape: DataProductDescription, location_name: "description"))
-    GetDataProductOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     GetDataProductOutput.add_member(:first_revision_created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "firstRevisionCreatedAt"))
     GetDataProductOutput.add_member(:first_revision_created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "firstRevisionCreatedBy"))
-    GetDataProductOutput.add_member(:forms_output, Shapes::ShapeRef.new(shape: FormOutputList, location_name: "formsOutput"))
-    GetDataProductOutput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
-    GetDataProductOutput.add_member(:id, Shapes::ShapeRef.new(shape: DataProductId, required: true, location_name: "id"))
-    GetDataProductOutput.add_member(:items, Shapes::ShapeRef.new(shape: DataProductItems, location_name: "items"))
-    GetDataProductOutput.add_member(:name, Shapes::ShapeRef.new(shape: DataProductName, required: true, location_name: "name"))
-    GetDataProductOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
-    GetDataProductOutput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
-    GetDataProductOutput.add_member(:status, Shapes::ShapeRef.new(shape: DataProductStatus, required: true, location_name: "status"))
     GetDataProductOutput.struct_class = Types::GetDataProductOutput
 
     GetDataSourceInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     GetDataSourceInput.add_member(:identifier, Shapes::ShapeRef.new(shape: DataSourceId, required: true, location: "uri", location_name: "identifier"))
     GetDataSourceInput.struct_class = Types::GetDataSourceInput
 
-    GetDataSourceOutput.add_member(:asset_forms_output, Shapes::ShapeRef.new(shape: FormOutputList, location_name: "assetFormsOutput"))
-    GetDataSourceOutput.add_member(:configuration, Shapes::ShapeRef.new(shape: DataSourceConfigurationOutput, location_name: "configuration"))
-    GetDataSourceOutput.add_member(:connection_id, Shapes::ShapeRef.new(shape: String, location_name: "connectionId"))
-    GetDataSourceOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "createdAt"))
-    GetDataSourceOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    GetDataSourceOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    GetDataSourceOutput.add_member(:enable_setting, Shapes::ShapeRef.new(shape: EnableSetting, location_name: "enableSetting"))
-    GetDataSourceOutput.add_member(:environment_id, Shapes::ShapeRef.new(shape: EnvironmentId, location_name: "environmentId"))
-    GetDataSourceOutput.add_member(:error_message, Shapes::ShapeRef.new(shape: DataSourceErrorMessage, location_name: "errorMessage"))
     GetDataSourceOutput.add_member(:id, Shapes::ShapeRef.new(shape: DataSourceId, required: true, location_name: "id"))
-    GetDataSourceOutput.add_member(:last_run_asset_count, Shapes::ShapeRef.new(shape: Integer, location_name: "lastRunAssetCount"))
-    GetDataSourceOutput.add_member(:last_run_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "lastRunAt"))
-    GetDataSourceOutput.add_member(:last_run_error_message, Shapes::ShapeRef.new(shape: DataSourceErrorMessage, location_name: "lastRunErrorMessage"))
-    GetDataSourceOutput.add_member(:last_run_status, Shapes::ShapeRef.new(shape: DataSourceRunStatus, location_name: "lastRunStatus"))
-    GetDataSourceOutput.add_member(:name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "name"))
-    GetDataSourceOutput.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "projectId"))
-    GetDataSourceOutput.add_member(:publish_on_import, Shapes::ShapeRef.new(shape: Boolean, location_name: "publishOnImport"))
-    GetDataSourceOutput.add_member(:recommendation, Shapes::ShapeRef.new(shape: RecommendationConfiguration, location_name: "recommendation"))
-    GetDataSourceOutput.add_member(:schedule, Shapes::ShapeRef.new(shape: ScheduleConfiguration, location_name: "schedule"))
-    GetDataSourceOutput.add_member(:self_grant_status, Shapes::ShapeRef.new(shape: SelfGrantStatusOutput, location_name: "selfGrantStatus"))
     GetDataSourceOutput.add_member(:status, Shapes::ShapeRef.new(shape: DataSourceStatus, location_name: "status"))
     GetDataSourceOutput.add_member(:type, Shapes::ShapeRef.new(shape: DataSourceType, location_name: "type"))
+    GetDataSourceOutput.add_member(:name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "name"))
+    GetDataSourceOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    GetDataSourceOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    GetDataSourceOutput.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "projectId"))
+    GetDataSourceOutput.add_member(:environment_id, Shapes::ShapeRef.new(shape: EnvironmentId, location_name: "environmentId"))
+    GetDataSourceOutput.add_member(:connection_id, Shapes::ShapeRef.new(shape: String, location_name: "connectionId"))
+    GetDataSourceOutput.add_member(:configuration, Shapes::ShapeRef.new(shape: DataSourceConfigurationOutput, location_name: "configuration"))
+    GetDataSourceOutput.add_member(:recommendation, Shapes::ShapeRef.new(shape: RecommendationConfiguration, location_name: "recommendation"))
+    GetDataSourceOutput.add_member(:enable_setting, Shapes::ShapeRef.new(shape: EnableSetting, location_name: "enableSetting"))
+    GetDataSourceOutput.add_member(:publish_on_import, Shapes::ShapeRef.new(shape: Boolean, location_name: "publishOnImport"))
+    GetDataSourceOutput.add_member(:asset_forms_output, Shapes::ShapeRef.new(shape: FormOutputList, location_name: "assetFormsOutput"))
+    GetDataSourceOutput.add_member(:schedule, Shapes::ShapeRef.new(shape: ScheduleConfiguration, location_name: "schedule"))
+    GetDataSourceOutput.add_member(:last_run_status, Shapes::ShapeRef.new(shape: DataSourceRunStatus, location_name: "lastRunStatus"))
+    GetDataSourceOutput.add_member(:last_run_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "lastRunAt"))
+    GetDataSourceOutput.add_member(:last_run_error_message, Shapes::ShapeRef.new(shape: DataSourceErrorMessage, location_name: "lastRunErrorMessage"))
+    GetDataSourceOutput.add_member(:last_run_asset_count, Shapes::ShapeRef.new(shape: Integer, location_name: "lastRunAssetCount"))
+    GetDataSourceOutput.add_member(:error_message, Shapes::ShapeRef.new(shape: DataSourceErrorMessage, location_name: "errorMessage"))
+    GetDataSourceOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "createdAt"))
     GetDataSourceOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "updatedAt"))
+    GetDataSourceOutput.add_member(:self_grant_status, Shapes::ShapeRef.new(shape: SelfGrantStatusOutput, location_name: "selfGrantStatus"))
     GetDataSourceOutput.struct_class = Types::GetDataSourceOutput
 
     GetDataSourceRunInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     GetDataSourceRunInput.add_member(:identifier, Shapes::ShapeRef.new(shape: DataSourceRunId, required: true, location: "uri", location_name: "identifier"))
     GetDataSourceRunInput.struct_class = Types::GetDataSourceRunInput
 
-    GetDataSourceRunOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: DateTime, required: true, location_name: "createdAt"))
-    GetDataSourceRunOutput.add_member(:data_source_configuration_snapshot, Shapes::ShapeRef.new(shape: String, location_name: "dataSourceConfigurationSnapshot"))
-    GetDataSourceRunOutput.add_member(:data_source_id, Shapes::ShapeRef.new(shape: DataSourceId, required: true, location_name: "dataSourceId"))
     GetDataSourceRunOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    GetDataSourceRunOutput.add_member(:error_message, Shapes::ShapeRef.new(shape: DataSourceErrorMessage, location_name: "errorMessage"))
+    GetDataSourceRunOutput.add_member(:data_source_id, Shapes::ShapeRef.new(shape: DataSourceId, required: true, location_name: "dataSourceId"))
     GetDataSourceRunOutput.add_member(:id, Shapes::ShapeRef.new(shape: DataSourceRunId, required: true, location_name: "id"))
-    GetDataSourceRunOutput.add_member(:lineage_summary, Shapes::ShapeRef.new(shape: DataSourceRunLineageSummary, location_name: "lineageSummary"))
     GetDataSourceRunOutput.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "projectId"))
-    GetDataSourceRunOutput.add_member(:run_statistics_for_assets, Shapes::ShapeRef.new(shape: RunStatisticsForAssets, location_name: "runStatisticsForAssets"))
-    GetDataSourceRunOutput.add_member(:started_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "startedAt"))
     GetDataSourceRunOutput.add_member(:status, Shapes::ShapeRef.new(shape: DataSourceRunStatus, required: true, location_name: "status"))
-    GetDataSourceRunOutput.add_member(:stopped_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "stoppedAt"))
     GetDataSourceRunOutput.add_member(:type, Shapes::ShapeRef.new(shape: DataSourceRunType, required: true, location_name: "type"))
+    GetDataSourceRunOutput.add_member(:data_source_configuration_snapshot, Shapes::ShapeRef.new(shape: String, location_name: "dataSourceConfigurationSnapshot"))
+    GetDataSourceRunOutput.add_member(:run_statistics_for_assets, Shapes::ShapeRef.new(shape: RunStatisticsForAssets, location_name: "runStatisticsForAssets"))
+    GetDataSourceRunOutput.add_member(:lineage_summary, Shapes::ShapeRef.new(shape: DataSourceRunLineageSummary, location_name: "lineageSummary"))
+    GetDataSourceRunOutput.add_member(:error_message, Shapes::ShapeRef.new(shape: DataSourceErrorMessage, location_name: "errorMessage"))
+    GetDataSourceRunOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: DateTime, required: true, location_name: "createdAt"))
     GetDataSourceRunOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: DateTime, required: true, location_name: "updatedAt"))
+    GetDataSourceRunOutput.add_member(:started_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "startedAt"))
+    GetDataSourceRunOutput.add_member(:stopped_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "stoppedAt"))
     GetDataSourceRunOutput.struct_class = Types::GetDataSourceRunOutput
 
     GetDomainInput.add_member(:identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "identifier"))
     GetDomainInput.struct_class = Types::GetDomainInput
 
-    GetDomainOutput.add_member(:arn, Shapes::ShapeRef.new(shape: String, location_name: "arn"))
-    GetDomainOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
-    GetDomainOutput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
-    GetDomainOutput.add_member(:domain_execution_role, Shapes::ShapeRef.new(shape: RoleArn, required: true, location_name: "domainExecutionRole"))
-    GetDomainOutput.add_member(:domain_version, Shapes::ShapeRef.new(shape: DomainVersion, location_name: "domainVersion"))
     GetDomainOutput.add_member(:id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "id"))
-    GetDomainOutput.add_member(:kms_key_identifier, Shapes::ShapeRef.new(shape: KmsKeyArn, location_name: "kmsKeyIdentifier"))
-    GetDomainOutput.add_member(:last_updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "lastUpdatedAt"))
-    GetDomainOutput.add_member(:name, Shapes::ShapeRef.new(shape: String, location_name: "name"))
-    GetDomainOutput.add_member(:portal_url, Shapes::ShapeRef.new(shape: String, location_name: "portalUrl"))
     GetDomainOutput.add_member(:root_domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "rootDomainUnitId"))
-    GetDomainOutput.add_member(:service_role, Shapes::ShapeRef.new(shape: RoleArn, location_name: "serviceRole"))
+    GetDomainOutput.add_member(:name, Shapes::ShapeRef.new(shape: String, location_name: "name"))
+    GetDomainOutput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
     GetDomainOutput.add_member(:single_sign_on, Shapes::ShapeRef.new(shape: SingleSignOn, location_name: "singleSignOn"))
+    GetDomainOutput.add_member(:domain_execution_role, Shapes::ShapeRef.new(shape: RoleArn, required: true, location_name: "domainExecutionRole"))
+    GetDomainOutput.add_member(:arn, Shapes::ShapeRef.new(shape: String, location_name: "arn"))
+    GetDomainOutput.add_member(:kms_key_identifier, Shapes::ShapeRef.new(shape: KmsKeyArn, location_name: "kmsKeyIdentifier"))
     GetDomainOutput.add_member(:status, Shapes::ShapeRef.new(shape: DomainStatus, required: true, location_name: "status"))
+    GetDomainOutput.add_member(:portal_url, Shapes::ShapeRef.new(shape: String, location_name: "portalUrl"))
+    GetDomainOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    GetDomainOutput.add_member(:last_updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "lastUpdatedAt"))
     GetDomainOutput.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    GetDomainOutput.add_member(:domain_version, Shapes::ShapeRef.new(shape: DomainVersion, location_name: "domainVersion"))
+    GetDomainOutput.add_member(:service_role, Shapes::ShapeRef.new(shape: RoleArn, location_name: "serviceRole"))
     GetDomainOutput.struct_class = Types::GetDomainOutput
 
     GetDomainUnitInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     GetDomainUnitInput.add_member(:identifier, Shapes::ShapeRef.new(shape: DomainUnitId, required: true, location: "uri", location_name: "identifier"))
     GetDomainUnitInput.struct_class = Types::GetDomainUnitInput
 
-    GetDomainUnitOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
-    GetDomainUnitOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
-    GetDomainUnitOutput.add_member(:description, Shapes::ShapeRef.new(shape: DomainUnitDescription, location_name: "description"))
-    GetDomainUnitOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     GetDomainUnitOutput.add_member(:id, Shapes::ShapeRef.new(shape: DomainUnitId, required: true, location_name: "id"))
-    GetDomainUnitOutput.add_member(:last_updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "lastUpdatedAt"))
-    GetDomainUnitOutput.add_member(:last_updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "lastUpdatedBy"))
+    GetDomainUnitOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     GetDomainUnitOutput.add_member(:name, Shapes::ShapeRef.new(shape: DomainUnitName, required: true, location_name: "name"))
-    GetDomainUnitOutput.add_member(:owners, Shapes::ShapeRef.new(shape: DomainUnitOwners, required: true, location_name: "owners"))
     GetDomainUnitOutput.add_member(:parent_domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "parentDomainUnitId"))
+    GetDomainUnitOutput.add_member(:description, Shapes::ShapeRef.new(shape: DomainUnitDescription, location_name: "description"))
+    GetDomainUnitOutput.add_member(:owners, Shapes::ShapeRef.new(shape: DomainUnitOwners, required: true, location_name: "owners"))
+    GetDomainUnitOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    GetDomainUnitOutput.add_member(:last_updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "lastUpdatedAt"))
+    GetDomainUnitOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
+    GetDomainUnitOutput.add_member(:last_updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "lastUpdatedBy"))
     GetDomainUnitOutput.struct_class = Types::GetDomainUnitOutput
 
     GetEnvironmentActionInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
@@ -2848,44 +3598,46 @@ module Aws::DataZone
     GetEnvironmentActionInput.add_member(:identifier, Shapes::ShapeRef.new(shape: String, required: true, location: "uri", location_name: "identifier"))
     GetEnvironmentActionInput.struct_class = Types::GetEnvironmentActionInput
 
-    GetEnvironmentActionOutput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
     GetEnvironmentActionOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     GetEnvironmentActionOutput.add_member(:environment_id, Shapes::ShapeRef.new(shape: EnvironmentId, required: true, location_name: "environmentId"))
     GetEnvironmentActionOutput.add_member(:id, Shapes::ShapeRef.new(shape: EnvironmentActionId, required: true, location_name: "id"))
     GetEnvironmentActionOutput.add_member(:name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "name"))
     GetEnvironmentActionOutput.add_member(:parameters, Shapes::ShapeRef.new(shape: ActionParameters, required: true, location_name: "parameters"))
+    GetEnvironmentActionOutput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
     GetEnvironmentActionOutput.struct_class = Types::GetEnvironmentActionOutput
 
     GetEnvironmentBlueprintConfigurationInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     GetEnvironmentBlueprintConfigurationInput.add_member(:environment_blueprint_identifier, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, required: true, location: "uri", location_name: "environmentBlueprintIdentifier"))
     GetEnvironmentBlueprintConfigurationInput.struct_class = Types::GetEnvironmentBlueprintConfigurationInput
 
-    GetEnvironmentBlueprintConfigurationOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
     GetEnvironmentBlueprintConfigurationOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    GetEnvironmentBlueprintConfigurationOutput.add_member(:enabled_regions, Shapes::ShapeRef.new(shape: EnabledRegionList, location_name: "enabledRegions"))
     GetEnvironmentBlueprintConfigurationOutput.add_member(:environment_blueprint_id, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, required: true, location_name: "environmentBlueprintId"))
+    GetEnvironmentBlueprintConfigurationOutput.add_member(:provisioning_role_arn, Shapes::ShapeRef.new(shape: RoleArn, location_name: "provisioningRoleArn"))
     GetEnvironmentBlueprintConfigurationOutput.add_member(:environment_role_permission_boundary, Shapes::ShapeRef.new(shape: PolicyArn, location_name: "environmentRolePermissionBoundary"))
     GetEnvironmentBlueprintConfigurationOutput.add_member(:manage_access_role_arn, Shapes::ShapeRef.new(shape: RoleArn, location_name: "manageAccessRoleArn"))
-    GetEnvironmentBlueprintConfigurationOutput.add_member(:provisioning_configurations, Shapes::ShapeRef.new(shape: ProvisioningConfigurationList, location_name: "provisioningConfigurations"))
-    GetEnvironmentBlueprintConfigurationOutput.add_member(:provisioning_role_arn, Shapes::ShapeRef.new(shape: RoleArn, location_name: "provisioningRoleArn"))
+    GetEnvironmentBlueprintConfigurationOutput.add_member(:enabled_regions, Shapes::ShapeRef.new(shape: EnabledRegionList, location_name: "enabledRegions"))
     GetEnvironmentBlueprintConfigurationOutput.add_member(:regional_parameters, Shapes::ShapeRef.new(shape: RegionalParameterMap, location_name: "regionalParameters"))
+    GetEnvironmentBlueprintConfigurationOutput.add_member(:allow_user_provided_configurations, Shapes::ShapeRef.new(shape: Boolean, location_name: "allowUserProvidedConfigurations"))
+    GetEnvironmentBlueprintConfigurationOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
     GetEnvironmentBlueprintConfigurationOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "updatedAt"))
+    GetEnvironmentBlueprintConfigurationOutput.add_member(:resource_configurations, Shapes::ShapeRef.new(shape: ResourceConfigurations, location_name: "resourceConfigurations"))
+    GetEnvironmentBlueprintConfigurationOutput.add_member(:provisioning_configurations, Shapes::ShapeRef.new(shape: ProvisioningConfigurationList, location_name: "provisioningConfigurations"))
     GetEnvironmentBlueprintConfigurationOutput.struct_class = Types::GetEnvironmentBlueprintConfigurationOutput
 
     GetEnvironmentBlueprintInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     GetEnvironmentBlueprintInput.add_member(:identifier, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, required: true, location: "uri", location_name: "identifier"))
     GetEnvironmentBlueprintInput.struct_class = Types::GetEnvironmentBlueprintInput
 
-    GetEnvironmentBlueprintOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
-    GetEnvironmentBlueprintOutput.add_member(:deployment_properties, Shapes::ShapeRef.new(shape: DeploymentProperties, location_name: "deploymentProperties"))
-    GetEnvironmentBlueprintOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    GetEnvironmentBlueprintOutput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
     GetEnvironmentBlueprintOutput.add_member(:id, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, required: true, location_name: "id"))
     GetEnvironmentBlueprintOutput.add_member(:name, Shapes::ShapeRef.new(shape: EnvironmentBlueprintName, required: true, location_name: "name"))
+    GetEnvironmentBlueprintOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     GetEnvironmentBlueprintOutput.add_member(:provider, Shapes::ShapeRef.new(shape: String, required: true, location_name: "provider"))
     GetEnvironmentBlueprintOutput.add_member(:provisioning_properties, Shapes::ShapeRef.new(shape: ProvisioningProperties, required: true, location_name: "provisioningProperties"))
-    GetEnvironmentBlueprintOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "updatedAt"))
+    GetEnvironmentBlueprintOutput.add_member(:deployment_properties, Shapes::ShapeRef.new(shape: DeploymentProperties, location_name: "deploymentProperties"))
     GetEnvironmentBlueprintOutput.add_member(:user_parameters, Shapes::ShapeRef.new(shape: CustomParameterList, location_name: "userParameters"))
+    GetEnvironmentBlueprintOutput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
+    GetEnvironmentBlueprintOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
+    GetEnvironmentBlueprintOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "updatedAt"))
     GetEnvironmentBlueprintOutput.struct_class = Types::GetEnvironmentBlueprintOutput
 
     GetEnvironmentCredentialsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
@@ -2893,54 +3645,55 @@ module Aws::DataZone
     GetEnvironmentCredentialsInput.struct_class = Types::GetEnvironmentCredentialsInput
 
     GetEnvironmentCredentialsOutput.add_member(:access_key_id, Shapes::ShapeRef.new(shape: String, location_name: "accessKeyId"))
-    GetEnvironmentCredentialsOutput.add_member(:expiration, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "expiration"))
     GetEnvironmentCredentialsOutput.add_member(:secret_access_key, Shapes::ShapeRef.new(shape: String, location_name: "secretAccessKey"))
     GetEnvironmentCredentialsOutput.add_member(:session_token, Shapes::ShapeRef.new(shape: String, location_name: "sessionToken"))
+    GetEnvironmentCredentialsOutput.add_member(:expiration, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "expiration"))
     GetEnvironmentCredentialsOutput.struct_class = Types::GetEnvironmentCredentialsOutput
 
     GetEnvironmentInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     GetEnvironmentInput.add_member(:identifier, Shapes::ShapeRef.new(shape: EnvironmentId, required: true, location: "uri", location_name: "identifier"))
     GetEnvironmentInput.struct_class = Types::GetEnvironmentInput
 
+    GetEnvironmentOutput.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "projectId"))
+    GetEnvironmentOutput.add_member(:id, Shapes::ShapeRef.new(shape: EnvironmentId, location_name: "id"))
+    GetEnvironmentOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    GetEnvironmentOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: String, required: true, location_name: "createdBy"))
+    GetEnvironmentOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
+    GetEnvironmentOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "updatedAt"))
+    GetEnvironmentOutput.add_member(:name, Shapes::ShapeRef.new(shape: EnvironmentName, required: true, location_name: "name"))
+    GetEnvironmentOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    GetEnvironmentOutput.add_member(:environment_profile_id, Shapes::ShapeRef.new(shape: EnvironmentProfileId, location_name: "environmentProfileId"))
     GetEnvironmentOutput.add_member(:aws_account_id, Shapes::ShapeRef.new(shape: AwsAccountId, location_name: "awsAccountId"))
     GetEnvironmentOutput.add_member(:aws_account_region, Shapes::ShapeRef.new(shape: AwsRegion, location_name: "awsAccountRegion"))
-    GetEnvironmentOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
-    GetEnvironmentOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: String, required: true, location_name: "createdBy"))
-    GetEnvironmentOutput.add_member(:deployment_properties, Shapes::ShapeRef.new(shape: DeploymentProperties, location_name: "deploymentProperties"))
-    GetEnvironmentOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    GetEnvironmentOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    GetEnvironmentOutput.add_member(:environment_actions, Shapes::ShapeRef.new(shape: EnvironmentActionList, location_name: "environmentActions"))
-    GetEnvironmentOutput.add_member(:environment_blueprint_id, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, location_name: "environmentBlueprintId"))
-    GetEnvironmentOutput.add_member(:environment_configuration_id, Shapes::ShapeRef.new(shape: EnvironmentConfigurationId, location_name: "environmentConfigurationId"))
-    GetEnvironmentOutput.add_member(:environment_profile_id, Shapes::ShapeRef.new(shape: EnvironmentProfileId, location_name: "environmentProfileId"))
-    GetEnvironmentOutput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
-    GetEnvironmentOutput.add_member(:id, Shapes::ShapeRef.new(shape: EnvironmentId, location_name: "id"))
-    GetEnvironmentOutput.add_member(:last_deployment, Shapes::ShapeRef.new(shape: Deployment, location_name: "lastDeployment"))
-    GetEnvironmentOutput.add_member(:name, Shapes::ShapeRef.new(shape: EnvironmentName, required: true, location_name: "name"))
-    GetEnvironmentOutput.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "projectId"))
     GetEnvironmentOutput.add_member(:provider, Shapes::ShapeRef.new(shape: String, required: true, location_name: "provider"))
     GetEnvironmentOutput.add_member(:provisioned_resources, Shapes::ShapeRef.new(shape: ResourceList, location_name: "provisionedResources"))
-    GetEnvironmentOutput.add_member(:provisioning_properties, Shapes::ShapeRef.new(shape: ProvisioningProperties, location_name: "provisioningProperties"))
     GetEnvironmentOutput.add_member(:status, Shapes::ShapeRef.new(shape: EnvironmentStatus, location_name: "status"))
-    GetEnvironmentOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "updatedAt"))
+    GetEnvironmentOutput.add_member(:environment_actions, Shapes::ShapeRef.new(shape: EnvironmentActionList, location_name: "environmentActions"))
+    GetEnvironmentOutput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
     GetEnvironmentOutput.add_member(:user_parameters, Shapes::ShapeRef.new(shape: CustomParameterList, location_name: "userParameters"))
+    GetEnvironmentOutput.add_member(:last_deployment, Shapes::ShapeRef.new(shape: Deployment, location_name: "lastDeployment"))
+    GetEnvironmentOutput.add_member(:provisioning_properties, Shapes::ShapeRef.new(shape: ProvisioningProperties, location_name: "provisioningProperties"))
+    GetEnvironmentOutput.add_member(:deployment_properties, Shapes::ShapeRef.new(shape: DeploymentProperties, location_name: "deploymentProperties"))
+    GetEnvironmentOutput.add_member(:environment_blueprint_id, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, location_name: "environmentBlueprintId"))
+    GetEnvironmentOutput.add_member(:environment_configuration_id, Shapes::ShapeRef.new(shape: EnvironmentConfigurationId, location_name: "environmentConfigurationId"))
+    GetEnvironmentOutput.add_member(:environment_configuration_name, Shapes::ShapeRef.new(shape: EnvironmentConfigurationName, location_name: "environmentConfigurationName"))
     GetEnvironmentOutput.struct_class = Types::GetEnvironmentOutput
 
     GetEnvironmentProfileInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     GetEnvironmentProfileInput.add_member(:identifier, Shapes::ShapeRef.new(shape: EnvironmentProfileId, required: true, location: "uri", location_name: "identifier"))
     GetEnvironmentProfileInput.struct_class = Types::GetEnvironmentProfileInput
 
+    GetEnvironmentProfileOutput.add_member(:id, Shapes::ShapeRef.new(shape: EnvironmentProfileId, required: true, location_name: "id"))
+    GetEnvironmentProfileOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     GetEnvironmentProfileOutput.add_member(:aws_account_id, Shapes::ShapeRef.new(shape: AwsAccountId, location_name: "awsAccountId"))
     GetEnvironmentProfileOutput.add_member(:aws_account_region, Shapes::ShapeRef.new(shape: AwsRegion, location_name: "awsAccountRegion"))
-    GetEnvironmentProfileOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
     GetEnvironmentProfileOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: String, required: true, location_name: "createdBy"))
-    GetEnvironmentProfileOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    GetEnvironmentProfileOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    GetEnvironmentProfileOutput.add_member(:environment_blueprint_id, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, required: true, location_name: "environmentBlueprintId"))
-    GetEnvironmentProfileOutput.add_member(:id, Shapes::ShapeRef.new(shape: EnvironmentProfileId, required: true, location_name: "id"))
-    GetEnvironmentProfileOutput.add_member(:name, Shapes::ShapeRef.new(shape: EnvironmentProfileName, required: true, location_name: "name"))
-    GetEnvironmentProfileOutput.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "projectId"))
+    GetEnvironmentProfileOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
     GetEnvironmentProfileOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "updatedAt"))
+    GetEnvironmentProfileOutput.add_member(:name, Shapes::ShapeRef.new(shape: EnvironmentProfileName, required: true, location_name: "name"))
+    GetEnvironmentProfileOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    GetEnvironmentProfileOutput.add_member(:environment_blueprint_id, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, required: true, location_name: "environmentBlueprintId"))
+    GetEnvironmentProfileOutput.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "projectId"))
     GetEnvironmentProfileOutput.add_member(:user_parameters, Shapes::ShapeRef.new(shape: CustomParameterList, location_name: "userParameters"))
     GetEnvironmentProfileOutput.struct_class = Types::GetEnvironmentProfileOutput
 
@@ -2949,52 +3702,54 @@ module Aws::DataZone
     GetFormTypeInput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, location: "querystring", location_name: "revision"))
     GetFormTypeInput.struct_class = Types::GetFormTypeInput
 
+    GetFormTypeOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    GetFormTypeOutput.add_member(:name, Shapes::ShapeRef.new(shape: FormTypeName, required: true, location_name: "name"))
+    GetFormTypeOutput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
+    GetFormTypeOutput.add_member(:model, Shapes::ShapeRef.new(shape: Model, required: true, location_name: "model"))
+    GetFormTypeOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "owningProjectId"))
+    GetFormTypeOutput.add_member(:origin_domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "originDomainId"))
+    GetFormTypeOutput.add_member(:origin_project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "originProjectId"))
+    GetFormTypeOutput.add_member(:status, Shapes::ShapeRef.new(shape: FormTypeStatus, location_name: "status"))
     GetFormTypeOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
     GetFormTypeOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
     GetFormTypeOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    GetFormTypeOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     GetFormTypeOutput.add_member(:imports, Shapes::ShapeRef.new(shape: ImportList, location_name: "imports"))
-    GetFormTypeOutput.add_member(:model, Shapes::ShapeRef.new(shape: Model, required: true, location_name: "model"))
-    GetFormTypeOutput.add_member(:name, Shapes::ShapeRef.new(shape: FormTypeName, required: true, location_name: "name"))
-    GetFormTypeOutput.add_member(:origin_domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "originDomainId"))
-    GetFormTypeOutput.add_member(:origin_project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "originProjectId"))
-    GetFormTypeOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "owningProjectId"))
-    GetFormTypeOutput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
-    GetFormTypeOutput.add_member(:status, Shapes::ShapeRef.new(shape: FormTypeStatus, location_name: "status"))
     GetFormTypeOutput.struct_class = Types::GetFormTypeOutput
 
     GetGlossaryInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     GetGlossaryInput.add_member(:identifier, Shapes::ShapeRef.new(shape: GlossaryId, required: true, location: "uri", location_name: "identifier"))
     GetGlossaryInput.struct_class = Types::GetGlossaryInput
 
-    GetGlossaryOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
-    GetGlossaryOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
-    GetGlossaryOutput.add_member(:description, Shapes::ShapeRef.new(shape: GlossaryDescription, location_name: "description"))
     GetGlossaryOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     GetGlossaryOutput.add_member(:id, Shapes::ShapeRef.new(shape: GlossaryId, required: true, location_name: "id"))
-    GetGlossaryOutput.add_member(:name, Shapes::ShapeRef.new(shape: GlossaryName, required: true, location_name: "name"))
     GetGlossaryOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
+    GetGlossaryOutput.add_member(:name, Shapes::ShapeRef.new(shape: GlossaryName, required: true, location_name: "name"))
+    GetGlossaryOutput.add_member(:description, Shapes::ShapeRef.new(shape: GlossaryDescription, location_name: "description"))
     GetGlossaryOutput.add_member(:status, Shapes::ShapeRef.new(shape: GlossaryStatus, required: true, location_name: "status"))
+    GetGlossaryOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    GetGlossaryOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
     GetGlossaryOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
     GetGlossaryOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    GetGlossaryOutput.add_member(:usage_restrictions, Shapes::ShapeRef.new(shape: GlossaryUsageRestrictions, location_name: "usageRestrictions"))
     GetGlossaryOutput.struct_class = Types::GetGlossaryOutput
 
     GetGlossaryTermInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     GetGlossaryTermInput.add_member(:identifier, Shapes::ShapeRef.new(shape: GlossaryTermId, required: true, location: "uri", location_name: "identifier"))
     GetGlossaryTermInput.struct_class = Types::GetGlossaryTermInput
 
-    GetGlossaryTermOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
-    GetGlossaryTermOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
     GetGlossaryTermOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     GetGlossaryTermOutput.add_member(:glossary_id, Shapes::ShapeRef.new(shape: GlossaryId, required: true, location_name: "glossaryId"))
     GetGlossaryTermOutput.add_member(:id, Shapes::ShapeRef.new(shape: GlossaryTermId, required: true, location_name: "id"))
-    GetGlossaryTermOutput.add_member(:long_description, Shapes::ShapeRef.new(shape: LongDescription, location_name: "longDescription"))
     GetGlossaryTermOutput.add_member(:name, Shapes::ShapeRef.new(shape: GlossaryTermName, required: true, location_name: "name"))
     GetGlossaryTermOutput.add_member(:short_description, Shapes::ShapeRef.new(shape: ShortDescription, location_name: "shortDescription"))
-    GetGlossaryTermOutput.add_member(:status, Shapes::ShapeRef.new(shape: GlossaryTermStatus, required: true, location_name: "status"))
+    GetGlossaryTermOutput.add_member(:long_description, Shapes::ShapeRef.new(shape: LongDescription, location_name: "longDescription"))
     GetGlossaryTermOutput.add_member(:term_relations, Shapes::ShapeRef.new(shape: TermRelations, location_name: "termRelations"))
+    GetGlossaryTermOutput.add_member(:status, Shapes::ShapeRef.new(shape: GlossaryTermStatus, required: true, location_name: "status"))
+    GetGlossaryTermOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    GetGlossaryTermOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
     GetGlossaryTermOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
     GetGlossaryTermOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    GetGlossaryTermOutput.add_member(:usage_restrictions, Shapes::ShapeRef.new(shape: GlossaryUsageRestrictions, location_name: "usageRestrictions"))
     GetGlossaryTermOutput.struct_class = Types::GetGlossaryTermOutput
 
     GetGroupProfileInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
@@ -3002,9 +3757,11 @@ module Aws::DataZone
     GetGroupProfileInput.struct_class = Types::GetGroupProfileInput
 
     GetGroupProfileOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "domainId"))
-    GetGroupProfileOutput.add_member(:group_name, Shapes::ShapeRef.new(shape: GroupProfileName, location_name: "groupName"))
     GetGroupProfileOutput.add_member(:id, Shapes::ShapeRef.new(shape: GroupProfileId, location_name: "id"))
     GetGroupProfileOutput.add_member(:status, Shapes::ShapeRef.new(shape: GroupProfileStatus, location_name: "status"))
+    GetGroupProfileOutput.add_member(:group_name, Shapes::ShapeRef.new(shape: GroupProfileName, location_name: "groupName"))
+    GetGroupProfileOutput.add_member(:role_principal_arn, Shapes::ShapeRef.new(shape: String, location_name: "rolePrincipalArn"))
+    GetGroupProfileOutput.add_member(:role_principal_id, Shapes::ShapeRef.new(shape: String, location_name: "rolePrincipalId"))
     GetGroupProfileOutput.struct_class = Types::GetGroupProfileOutput
 
     GetIamPortalLoginUrlInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
@@ -3018,55 +3775,55 @@ module Aws::DataZone
     GetJobRunInput.add_member(:identifier, Shapes::ShapeRef.new(shape: RunIdentifier, required: true, location: "uri", location_name: "identifier"))
     GetJobRunInput.struct_class = Types::GetJobRunInput
 
-    GetJobRunOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "createdAt"))
-    GetJobRunOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: String, location_name: "createdBy"))
-    GetJobRunOutput.add_member(:details, Shapes::ShapeRef.new(shape: JobRunDetails, location_name: "details"))
     GetJobRunOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "domainId"))
-    GetJobRunOutput.add_member(:end_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "endTime"))
-    GetJobRunOutput.add_member(:error, Shapes::ShapeRef.new(shape: JobRunError, location_name: "error"))
     GetJobRunOutput.add_member(:id, Shapes::ShapeRef.new(shape: String, location_name: "id"))
     GetJobRunOutput.add_member(:job_id, Shapes::ShapeRef.new(shape: String, location_name: "jobId"))
     GetJobRunOutput.add_member(:job_type, Shapes::ShapeRef.new(shape: JobType, location_name: "jobType"))
     GetJobRunOutput.add_member(:run_mode, Shapes::ShapeRef.new(shape: JobRunMode, location_name: "runMode"))
-    GetJobRunOutput.add_member(:start_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "startTime"))
+    GetJobRunOutput.add_member(:details, Shapes::ShapeRef.new(shape: JobRunDetails, location_name: "details"))
     GetJobRunOutput.add_member(:status, Shapes::ShapeRef.new(shape: JobRunStatus, location_name: "status"))
+    GetJobRunOutput.add_member(:error, Shapes::ShapeRef.new(shape: JobRunError, location_name: "error"))
+    GetJobRunOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: String, location_name: "createdBy"))
+    GetJobRunOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "createdAt"))
+    GetJobRunOutput.add_member(:start_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "startTime"))
+    GetJobRunOutput.add_member(:end_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "endTime"))
     GetJobRunOutput.struct_class = Types::GetJobRunOutput
 
     GetLineageEventInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     GetLineageEventInput.add_member(:identifier, Shapes::ShapeRef.new(shape: LineageEventIdentifier, required: true, location: "uri", location_name: "identifier"))
     GetLineageEventInput.struct_class = Types::GetLineageEventInput
 
-    GetLineageEventOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location: "header", location_name: "Created-At"))
-    GetLineageEventOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location: "header", location_name: "Created-By"))
     GetLineageEventOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, location: "header", location_name: "Domain-Id"))
-    GetLineageEventOutput.add_member(:event, Shapes::ShapeRef.new(shape: LineageEvent, location_name: "event"))
-    GetLineageEventOutput.add_member(:event_time, Shapes::ShapeRef.new(shape: Timestamp, location: "header", location_name: "Event-Time"))
     GetLineageEventOutput.add_member(:id, Shapes::ShapeRef.new(shape: LineageEventIdentifier, location: "header", location_name: "Id"))
+    GetLineageEventOutput.add_member(:event, Shapes::ShapeRef.new(shape: LineageEvent, location_name: "event"))
+    GetLineageEventOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location: "header", location_name: "Created-By"))
     GetLineageEventOutput.add_member(:processing_status, Shapes::ShapeRef.new(shape: LineageEventProcessingStatus, location: "header", location_name: "Processing-Status"))
+    GetLineageEventOutput.add_member(:event_time, Shapes::ShapeRef.new(shape: Timestamp, location: "header", location_name: "Event-Time"))
+    GetLineageEventOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location: "header", location_name: "Created-At"))
     GetLineageEventOutput.struct_class = Types::GetLineageEventOutput
     GetLineageEventOutput[:payload] = :event
     GetLineageEventOutput[:payload_member] = GetLineageEventOutput.member(:event)
 
     GetLineageNodeInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    GetLineageNodeInput.add_member(:event_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location: "querystring", location_name: "timestamp"))
     GetLineageNodeInput.add_member(:identifier, Shapes::ShapeRef.new(shape: LineageNodeIdentifier, required: true, location: "uri", location_name: "identifier"))
+    GetLineageNodeInput.add_member(:event_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location: "querystring", location_name: "timestamp"))
     GetLineageNodeInput.struct_class = Types::GetLineageNodeInput
 
+    GetLineageNodeOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    GetLineageNodeOutput.add_member(:name, Shapes::ShapeRef.new(shape: String, location_name: "name"))
+    GetLineageNodeOutput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
     GetLineageNodeOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
     GetLineageNodeOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
-    GetLineageNodeOutput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
-    GetLineageNodeOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    GetLineageNodeOutput.add_member(:downstream_nodes, Shapes::ShapeRef.new(shape: LineageNodeReferenceList, location_name: "downstreamNodes"))
-    GetLineageNodeOutput.add_member(:event_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "eventTimestamp"))
-    GetLineageNodeOutput.add_member(:forms_output, Shapes::ShapeRef.new(shape: FormOutputList, location_name: "formsOutput"))
-    GetLineageNodeOutput.add_member(:id, Shapes::ShapeRef.new(shape: LineageNodeId, required: true, location_name: "id"))
-    GetLineageNodeOutput.add_member(:name, Shapes::ShapeRef.new(shape: String, location_name: "name"))
-    GetLineageNodeOutput.add_member(:source_identifier, Shapes::ShapeRef.new(shape: String, location_name: "sourceIdentifier"))
-    GetLineageNodeOutput.add_member(:type_name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "typeName"))
-    GetLineageNodeOutput.add_member(:type_revision, Shapes::ShapeRef.new(shape: Revision, location_name: "typeRevision"))
     GetLineageNodeOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
     GetLineageNodeOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    GetLineageNodeOutput.add_member(:id, Shapes::ShapeRef.new(shape: LineageNodeId, required: true, location_name: "id"))
+    GetLineageNodeOutput.add_member(:type_name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "typeName"))
+    GetLineageNodeOutput.add_member(:type_revision, Shapes::ShapeRef.new(shape: Revision, location_name: "typeRevision"))
+    GetLineageNodeOutput.add_member(:source_identifier, Shapes::ShapeRef.new(shape: String, location_name: "sourceIdentifier"))
+    GetLineageNodeOutput.add_member(:event_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "eventTimestamp"))
+    GetLineageNodeOutput.add_member(:forms_output, Shapes::ShapeRef.new(shape: FormOutputList, location_name: "formsOutput"))
     GetLineageNodeOutput.add_member(:upstream_nodes, Shapes::ShapeRef.new(shape: LineageNodeReferenceList, location_name: "upstreamNodes"))
+    GetLineageNodeOutput.add_member(:downstream_nodes, Shapes::ShapeRef.new(shape: LineageNodeReferenceList, location_name: "downstreamNodes"))
     GetLineageNodeOutput.struct_class = Types::GetLineageNodeOutput
 
     GetListingInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
@@ -3074,67 +3831,146 @@ module Aws::DataZone
     GetListingInput.add_member(:listing_revision, Shapes::ShapeRef.new(shape: Revision, location: "querystring", location_name: "listingRevision"))
     GetListingInput.struct_class = Types::GetListingInput
 
-    GetListingOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
-    GetListingOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
-    GetListingOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     GetListingOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     GetListingOutput.add_member(:id, Shapes::ShapeRef.new(shape: ListingId, required: true, location_name: "id"))
-    GetListingOutput.add_member(:item, Shapes::ShapeRef.new(shape: ListingItem, location_name: "item"))
     GetListingOutput.add_member(:listing_revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "listingRevision"))
-    GetListingOutput.add_member(:name, Shapes::ShapeRef.new(shape: ListingName, location_name: "name"))
-    GetListingOutput.add_member(:status, Shapes::ShapeRef.new(shape: ListingStatus, location_name: "status"))
+    GetListingOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
     GetListingOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
+    GetListingOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
     GetListingOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    GetListingOutput.add_member(:item, Shapes::ShapeRef.new(shape: ListingItem, location_name: "item"))
+    GetListingOutput.add_member(:name, Shapes::ShapeRef.new(shape: ListingName, location_name: "name"))
+    GetListingOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    GetListingOutput.add_member(:status, Shapes::ShapeRef.new(shape: ListingStatus, location_name: "status"))
     GetListingOutput.struct_class = Types::GetListingOutput
 
     GetMetadataGenerationRunInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     GetMetadataGenerationRunInput.add_member(:identifier, Shapes::ShapeRef.new(shape: MetadataGenerationRunIdentifier, required: true, location: "uri", location_name: "identifier"))
+    GetMetadataGenerationRunInput.add_member(:type, Shapes::ShapeRef.new(shape: MetadataGenerationRunType, location: "querystring", location_name: "type"))
     GetMetadataGenerationRunInput.struct_class = Types::GetMetadataGenerationRunInput
 
-    GetMetadataGenerationRunOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
-    GetMetadataGenerationRunOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
     GetMetadataGenerationRunOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     GetMetadataGenerationRunOutput.add_member(:id, Shapes::ShapeRef.new(shape: MetadataGenerationRunIdentifier, required: true, location_name: "id"))
-    GetMetadataGenerationRunOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
-    GetMetadataGenerationRunOutput.add_member(:status, Shapes::ShapeRef.new(shape: MetadataGenerationRunStatus, location_name: "status"))
     GetMetadataGenerationRunOutput.add_member(:target, Shapes::ShapeRef.new(shape: MetadataGenerationRunTarget, location_name: "target"))
-    GetMetadataGenerationRunOutput.add_member(:type, Shapes::ShapeRef.new(shape: MetadataGenerationRunType, location_name: "type"))
+    GetMetadataGenerationRunOutput.add_member(:status, Shapes::ShapeRef.new(shape: MetadataGenerationRunStatus, location_name: "status"))
+    GetMetadataGenerationRunOutput.add_member(:type, Shapes::ShapeRef.new(shape: MetadataGenerationRunType, deprecated: true, location_name: "type", metadata: {"deprecatedMessage" => "This field is going to be deprecated, please use the 'types' field to provide the MetadataGenerationRun types", "deprecatedSince" => "2025-11-21"}))
+    GetMetadataGenerationRunOutput.add_member(:types, Shapes::ShapeRef.new(shape: MetadataGenerationRunTypes, location_name: "types"))
+    GetMetadataGenerationRunOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    GetMetadataGenerationRunOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
+    GetMetadataGenerationRunOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
+    GetMetadataGenerationRunOutput.add_member(:type_stats, Shapes::ShapeRef.new(shape: MetadataGenerationRunTypeStats, location_name: "typeStats"))
     GetMetadataGenerationRunOutput.struct_class = Types::GetMetadataGenerationRunOutput
+
+    GetNotebookExportInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    GetNotebookExportInput.add_member(:identifier, Shapes::ShapeRef.new(shape: ExportId, required: true, location: "uri", location_name: "identifier"))
+    GetNotebookExportInput.struct_class = Types::GetNotebookExportInput
+
+    GetNotebookExportOutput.add_member(:id, Shapes::ShapeRef.new(shape: ExportId, required: true, location_name: "id"))
+    GetNotebookExportOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    GetNotebookExportOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
+    GetNotebookExportOutput.add_member(:notebook_id, Shapes::ShapeRef.new(shape: NotebookId, required: true, location_name: "notebookId"))
+    GetNotebookExportOutput.add_member(:file_format, Shapes::ShapeRef.new(shape: FileFormat, required: true, location_name: "fileFormat"))
+    GetNotebookExportOutput.add_member(:status, Shapes::ShapeRef.new(shape: NotebookExportStatus, required: true, location_name: "status"))
+    GetNotebookExportOutput.add_member(:output_location, Shapes::ShapeRef.new(shape: OutputLocation, location_name: "outputLocation"))
+    GetNotebookExportOutput.add_member(:error, Shapes::ShapeRef.new(shape: NotebookExportError, location_name: "error"))
+    GetNotebookExportOutput.add_member(:completed_at, Shapes::ShapeRef.new(shape: CompletedAt, location_name: "completedAt"))
+    GetNotebookExportOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    GetNotebookExportOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
+    GetNotebookExportOutput.struct_class = Types::GetNotebookExportOutput
+
+    GetNotebookInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    GetNotebookInput.add_member(:identifier, Shapes::ShapeRef.new(shape: NotebookId, required: true, location: "uri", location_name: "identifier"))
+    GetNotebookInput.struct_class = Types::GetNotebookInput
+
+    GetNotebookOutput.add_member(:id, Shapes::ShapeRef.new(shape: NotebookId, required: true, location_name: "id"))
+    GetNotebookOutput.add_member(:name, Shapes::ShapeRef.new(shape: NotebookName, required: true, location_name: "name"))
+    GetNotebookOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
+    GetNotebookOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    GetNotebookOutput.add_member(:cell_order, Shapes::ShapeRef.new(shape: CellOrder, required: true, location_name: "cellOrder"))
+    GetNotebookOutput.add_member(:status, Shapes::ShapeRef.new(shape: NotebookStatus, required: true, location_name: "status"))
+    GetNotebookOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    GetNotebookOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    GetNotebookOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
+    GetNotebookOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
+    GetNotebookOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    GetNotebookOutput.add_member(:locked_by, Shapes::ShapeRef.new(shape: String, location_name: "lockedBy"))
+    GetNotebookOutput.add_member(:locked_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "lockedAt"))
+    GetNotebookOutput.add_member(:lock_expires_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "lockExpiresAt"))
+    GetNotebookOutput.add_member(:compute_id, Shapes::ShapeRef.new(shape: ComputeId, location_name: "computeId"))
+    GetNotebookOutput.add_member(:metadata, Shapes::ShapeRef.new(shape: Metadata, location_name: "metadata"))
+    GetNotebookOutput.add_member(:parameters, Shapes::ShapeRef.new(shape: Parameters, location_name: "parameters"))
+    GetNotebookOutput.add_member(:environment_configuration, Shapes::ShapeRef.new(shape: EnvironmentConfig, location_name: "environmentConfiguration"))
+    GetNotebookOutput.add_member(:error, Shapes::ShapeRef.new(shape: NotebookError, location_name: "error"))
+    GetNotebookOutput.add_member(:git_metadata, Shapes::ShapeRef.new(shape: GitMetadata, location_name: "gitMetadata"))
+    GetNotebookOutput.struct_class = Types::GetNotebookOutput
+
+    GetNotebookRunInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    GetNotebookRunInput.add_member(:identifier, Shapes::ShapeRef.new(shape: NotebookRunId, required: true, location: "uri", location_name: "identifier"))
+    GetNotebookRunInput.struct_class = Types::GetNotebookRunInput
+
+    GetNotebookRunOutput.add_member(:id, Shapes::ShapeRef.new(shape: NotebookRunId, required: true, location_name: "id"))
+    GetNotebookRunOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    GetNotebookRunOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
+    GetNotebookRunOutput.add_member(:notebook_id, Shapes::ShapeRef.new(shape: NotebookId, required: true, location_name: "notebookId"))
+    GetNotebookRunOutput.add_member(:schedule_id, Shapes::ShapeRef.new(shape: ScheduleId, location_name: "scheduleId"))
+    GetNotebookRunOutput.add_member(:status, Shapes::ShapeRef.new(shape: NotebookRunStatus, required: true, location_name: "status"))
+    GetNotebookRunOutput.add_member(:cell_order, Shapes::ShapeRef.new(shape: CellOrder, location_name: "cellOrder"))
+    GetNotebookRunOutput.add_member(:metadata, Shapes::ShapeRef.new(shape: Metadata, location_name: "metadata"))
+    GetNotebookRunOutput.add_member(:parameters, Shapes::ShapeRef.new(shape: Parameters, location_name: "parameters"))
+    GetNotebookRunOutput.add_member(:compute_configuration, Shapes::ShapeRef.new(shape: ComputeConfig, location_name: "computeConfiguration"))
+    GetNotebookRunOutput.add_member(:network_configuration, Shapes::ShapeRef.new(shape: NetworkConfig, location_name: "networkConfiguration"))
+    GetNotebookRunOutput.add_member(:timeout_configuration, Shapes::ShapeRef.new(shape: TimeoutConfig, location_name: "timeoutConfiguration"))
+    GetNotebookRunOutput.add_member(:environment_configuration, Shapes::ShapeRef.new(shape: EnvironmentConfig, location_name: "environmentConfiguration"))
+    GetNotebookRunOutput.add_member(:storage_configuration, Shapes::ShapeRef.new(shape: StorageConfig, location_name: "storageConfiguration"))
+    GetNotebookRunOutput.add_member(:trigger_source, Shapes::ShapeRef.new(shape: TriggerSource, location_name: "triggerSource"))
+    GetNotebookRunOutput.add_member(:error, Shapes::ShapeRef.new(shape: NotebookRunError, location_name: "error"))
+    GetNotebookRunOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    GetNotebookRunOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
+    GetNotebookRunOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
+    GetNotebookRunOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    GetNotebookRunOutput.add_member(:started_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "startedAt"))
+    GetNotebookRunOutput.add_member(:completed_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "completedAt"))
+    GetNotebookRunOutput.struct_class = Types::GetNotebookRunOutput
 
     GetProjectInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     GetProjectInput.add_member(:identifier, Shapes::ShapeRef.new(shape: ProjectId, required: true, location: "uri", location_name: "identifier"))
     GetProjectInput.struct_class = Types::GetProjectInput
 
-    GetProjectOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
-    GetProjectOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    GetProjectOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     GetProjectOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    GetProjectOutput.add_member(:domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitId"))
-    GetProjectOutput.add_member(:environment_deployment_details, Shapes::ShapeRef.new(shape: EnvironmentDeploymentDetails, location_name: "environmentDeploymentDetails"))
-    GetProjectOutput.add_member(:failure_reasons, Shapes::ShapeRef.new(shape: FailureReasons, location_name: "failureReasons"))
-    GetProjectOutput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
     GetProjectOutput.add_member(:id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "id"))
-    GetProjectOutput.add_member(:last_updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "lastUpdatedAt"))
     GetProjectOutput.add_member(:name, Shapes::ShapeRef.new(shape: ProjectName, required: true, location_name: "name"))
-    GetProjectOutput.add_member(:project_profile_id, Shapes::ShapeRef.new(shape: ProjectProfileId, location_name: "projectProfileId"))
+    GetProjectOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     GetProjectOutput.add_member(:project_status, Shapes::ShapeRef.new(shape: ProjectStatus, location_name: "projectStatus"))
+    GetProjectOutput.add_member(:failure_reasons, Shapes::ShapeRef.new(shape: FailureReasons, location_name: "failureReasons"))
+    GetProjectOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
+    GetProjectOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
+    GetProjectOutput.add_member(:last_updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "lastUpdatedAt"))
+    GetProjectOutput.add_member(:resource_tags, Shapes::ShapeRef.new(shape: ResourceTags, location_name: "resourceTags"))
+    GetProjectOutput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
+    GetProjectOutput.add_member(:domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitId"))
+    GetProjectOutput.add_member(:project_profile_id, Shapes::ShapeRef.new(shape: ProjectProfileId, location_name: "projectProfileId"))
     GetProjectOutput.add_member(:user_parameters, Shapes::ShapeRef.new(shape: EnvironmentConfigurationUserParametersList, location_name: "userParameters"))
+    GetProjectOutput.add_member(:environment_deployment_details, Shapes::ShapeRef.new(shape: EnvironmentDeploymentDetails, location_name: "environmentDeploymentDetails"))
+    GetProjectOutput.add_member(:project_category, Shapes::ShapeRef.new(shape: String, location_name: "projectCategory"))
     GetProjectOutput.struct_class = Types::GetProjectOutput
 
     GetProjectProfileInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     GetProjectProfileInput.add_member(:identifier, Shapes::ShapeRef.new(shape: ProjectProfileId, required: true, location: "uri", location_name: "identifier"))
     GetProjectProfileInput.struct_class = Types::GetProjectProfileInput
 
-    GetProjectProfileOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
-    GetProjectProfileOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    GetProjectProfileOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     GetProjectProfileOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    GetProjectProfileOutput.add_member(:domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitId"))
-    GetProjectProfileOutput.add_member(:environment_configurations, Shapes::ShapeRef.new(shape: EnvironmentConfigurationsList, location_name: "environmentConfigurations"))
     GetProjectProfileOutput.add_member(:id, Shapes::ShapeRef.new(shape: ProjectProfileId, required: true, location_name: "id"))
-    GetProjectProfileOutput.add_member(:last_updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "lastUpdatedAt"))
     GetProjectProfileOutput.add_member(:name, Shapes::ShapeRef.new(shape: ProjectProfileName, required: true, location_name: "name"))
+    GetProjectProfileOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     GetProjectProfileOutput.add_member(:status, Shapes::ShapeRef.new(shape: Status, location_name: "status"))
+    GetProjectProfileOutput.add_member(:project_resource_tags, Shapes::ShapeRef.new(shape: ProjectResourceTagParameters, location_name: "projectResourceTags"))
+    GetProjectProfileOutput.add_member(:allow_custom_project_resource_tags, Shapes::ShapeRef.new(shape: Boolean, location_name: "allowCustomProjectResourceTags"))
+    GetProjectProfileOutput.add_member(:project_resource_tags_description, Shapes::ShapeRef.new(shape: Description, location_name: "projectResourceTagsDescription"))
+    GetProjectProfileOutput.add_member(:environment_configurations, Shapes::ShapeRef.new(shape: EnvironmentConfigurationsList, location_name: "environmentConfigurations"))
+    GetProjectProfileOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
+    GetProjectProfileOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
+    GetProjectProfileOutput.add_member(:last_updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "lastUpdatedAt"))
+    GetProjectProfileOutput.add_member(:domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitId"))
     GetProjectProfileOutput.struct_class = Types::GetProjectProfileOutput
 
     GetRuleInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
@@ -3142,74 +3978,75 @@ module Aws::DataZone
     GetRuleInput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, location: "querystring", location_name: "revision"))
     GetRuleInput.struct_class = Types::GetRuleInput
 
-    GetRuleOutput.add_member(:action, Shapes::ShapeRef.new(shape: RuleAction, required: true, location_name: "action"))
-    GetRuleOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
-    GetRuleOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    GetRuleOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    GetRuleOutput.add_member(:detail, Shapes::ShapeRef.new(shape: RuleDetail, required: true, location_name: "detail"))
     GetRuleOutput.add_member(:identifier, Shapes::ShapeRef.new(shape: RuleId, required: true, location_name: "identifier"))
-    GetRuleOutput.add_member(:last_updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, required: true, location_name: "lastUpdatedBy"))
-    GetRuleOutput.add_member(:name, Shapes::ShapeRef.new(shape: RuleName, required: true, location_name: "name"))
     GetRuleOutput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
+    GetRuleOutput.add_member(:name, Shapes::ShapeRef.new(shape: RuleName, required: true, location_name: "name"))
     GetRuleOutput.add_member(:rule_type, Shapes::ShapeRef.new(shape: RuleType, required: true, location_name: "ruleType"))
-    GetRuleOutput.add_member(:scope, Shapes::ShapeRef.new(shape: RuleScope, required: true, location_name: "scope"))
     GetRuleOutput.add_member(:target, Shapes::ShapeRef.new(shape: RuleTarget, required: true, location_name: "target"))
+    GetRuleOutput.add_member(:action, Shapes::ShapeRef.new(shape: RuleAction, required: true, location_name: "action"))
+    GetRuleOutput.add_member(:scope, Shapes::ShapeRef.new(shape: RuleScope, required: true, location_name: "scope"))
+    GetRuleOutput.add_member(:detail, Shapes::ShapeRef.new(shape: RuleDetail, required: true, location_name: "detail"))
     GetRuleOutput.add_member(:target_type, Shapes::ShapeRef.new(shape: RuleTargetType, location_name: "targetType"))
+    GetRuleOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    GetRuleOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
     GetRuleOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    GetRuleOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
+    GetRuleOutput.add_member(:last_updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, required: true, location_name: "lastUpdatedBy"))
     GetRuleOutput.struct_class = Types::GetRuleOutput
 
     GetSubscriptionGrantInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     GetSubscriptionGrantInput.add_member(:identifier, Shapes::ShapeRef.new(shape: SubscriptionGrantId, required: true, location: "uri", location_name: "identifier"))
     GetSubscriptionGrantInput.struct_class = Types::GetSubscriptionGrantInput
 
-    GetSubscriptionGrantOutput.add_member(:assets, Shapes::ShapeRef.new(shape: SubscribedAssets, location_name: "assets"))
-    GetSubscriptionGrantOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
-    GetSubscriptionGrantOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    GetSubscriptionGrantOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    GetSubscriptionGrantOutput.add_member(:granted_entity, Shapes::ShapeRef.new(shape: GrantedEntity, required: true, location_name: "grantedEntity"))
     GetSubscriptionGrantOutput.add_member(:id, Shapes::ShapeRef.new(shape: SubscriptionGrantId, required: true, location_name: "id"))
-    GetSubscriptionGrantOutput.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionGrantOverallStatus, required: true, location_name: "status"))
-    GetSubscriptionGrantOutput.add_member(:subscription_id, Shapes::ShapeRef.new(shape: SubscriptionId, deprecated: true, location_name: "subscriptionId", metadata: {"deprecatedMessage"=>"Multiple subscriptions can exist for a single grant"}))
-    GetSubscriptionGrantOutput.add_member(:subscription_target_id, Shapes::ShapeRef.new(shape: SubscriptionTargetId, required: true, location_name: "subscriptionTargetId"))
-    GetSubscriptionGrantOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    GetSubscriptionGrantOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
     GetSubscriptionGrantOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    GetSubscriptionGrantOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    GetSubscriptionGrantOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
+    GetSubscriptionGrantOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    GetSubscriptionGrantOutput.add_member(:environment_id, Shapes::ShapeRef.new(shape: EnvironmentId, location_name: "environmentId"))
+    GetSubscriptionGrantOutput.add_member(:subscription_target_id, Shapes::ShapeRef.new(shape: SubscriptionTargetId, required: true, location_name: "subscriptionTargetId"))
+    GetSubscriptionGrantOutput.add_member(:granted_entity, Shapes::ShapeRef.new(shape: GrantedEntity, required: true, location_name: "grantedEntity"))
+    GetSubscriptionGrantOutput.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionGrantOverallStatus, required: true, location_name: "status"))
+    GetSubscriptionGrantOutput.add_member(:assets, Shapes::ShapeRef.new(shape: SubscribedAssets, location_name: "assets"))
+    GetSubscriptionGrantOutput.add_member(:subscription_id, Shapes::ShapeRef.new(shape: SubscriptionId, deprecated: true, location_name: "subscriptionId", metadata: {"deprecatedMessage" => "Multiple subscriptions can exist for a single grant"}))
     GetSubscriptionGrantOutput.struct_class = Types::GetSubscriptionGrantOutput
 
     GetSubscriptionInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     GetSubscriptionInput.add_member(:identifier, Shapes::ShapeRef.new(shape: SubscriptionId, required: true, location: "uri", location_name: "identifier"))
     GetSubscriptionInput.struct_class = Types::GetSubscriptionInput
 
-    GetSubscriptionOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
-    GetSubscriptionOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    GetSubscriptionOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     GetSubscriptionOutput.add_member(:id, Shapes::ShapeRef.new(shape: SubscriptionId, required: true, location_name: "id"))
-    GetSubscriptionOutput.add_member(:retain_permissions, Shapes::ShapeRef.new(shape: Boolean, location_name: "retainPermissions"))
-    GetSubscriptionOutput.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionStatus, required: true, location_name: "status"))
-    GetSubscriptionOutput.add_member(:subscribed_listing, Shapes::ShapeRef.new(shape: SubscribedListing, required: true, location_name: "subscribedListing"))
-    GetSubscriptionOutput.add_member(:subscribed_principal, Shapes::ShapeRef.new(shape: SubscribedPrincipal, required: true, location_name: "subscribedPrincipal"))
-    GetSubscriptionOutput.add_member(:subscription_request_id, Shapes::ShapeRef.new(shape: SubscriptionRequestId, location_name: "subscriptionRequestId"))
-    GetSubscriptionOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    GetSubscriptionOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
     GetSubscriptionOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    GetSubscriptionOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    GetSubscriptionOutput.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionStatus, required: true, location_name: "status"))
+    GetSubscriptionOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
+    GetSubscriptionOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    GetSubscriptionOutput.add_member(:subscribed_principal, Shapes::ShapeRef.new(shape: SubscribedPrincipal, required: true, location_name: "subscribedPrincipal"))
+    GetSubscriptionOutput.add_member(:subscribed_listing, Shapes::ShapeRef.new(shape: SubscribedListing, required: true, location_name: "subscribedListing"))
+    GetSubscriptionOutput.add_member(:subscription_request_id, Shapes::ShapeRef.new(shape: SubscriptionRequestId, location_name: "subscriptionRequestId"))
+    GetSubscriptionOutput.add_member(:retain_permissions, Shapes::ShapeRef.new(shape: Boolean, location_name: "retainPermissions"))
     GetSubscriptionOutput.struct_class = Types::GetSubscriptionOutput
 
     GetSubscriptionRequestDetailsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     GetSubscriptionRequestDetailsInput.add_member(:identifier, Shapes::ShapeRef.new(shape: SubscriptionRequestId, required: true, location: "uri", location_name: "identifier"))
     GetSubscriptionRequestDetailsInput.struct_class = Types::GetSubscriptionRequestDetailsInput
 
-    GetSubscriptionRequestDetailsOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
-    GetSubscriptionRequestDetailsOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    GetSubscriptionRequestDetailsOutput.add_member(:decision_comment, Shapes::ShapeRef.new(shape: DecisionComment, location_name: "decisionComment"))
-    GetSubscriptionRequestDetailsOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    GetSubscriptionRequestDetailsOutput.add_member(:existing_subscription_id, Shapes::ShapeRef.new(shape: SubscriptionId, location_name: "existingSubscriptionId"))
     GetSubscriptionRequestDetailsOutput.add_member(:id, Shapes::ShapeRef.new(shape: SubscriptionRequestId, required: true, location_name: "id"))
-    GetSubscriptionRequestDetailsOutput.add_member(:metadata_forms, Shapes::ShapeRef.new(shape: MetadataForms, location_name: "metadataForms"))
-    GetSubscriptionRequestDetailsOutput.add_member(:request_reason, Shapes::ShapeRef.new(shape: RequestReason, required: true, location_name: "requestReason"))
-    GetSubscriptionRequestDetailsOutput.add_member(:reviewer_id, Shapes::ShapeRef.new(shape: String, location_name: "reviewerId"))
-    GetSubscriptionRequestDetailsOutput.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionRequestStatus, required: true, location_name: "status"))
-    GetSubscriptionRequestDetailsOutput.add_member(:subscribed_listings, Shapes::ShapeRef.new(shape: GetSubscriptionRequestDetailsOutputSubscribedListingsList, required: true, location_name: "subscribedListings"))
-    GetSubscriptionRequestDetailsOutput.add_member(:subscribed_principals, Shapes::ShapeRef.new(shape: GetSubscriptionRequestDetailsOutputSubscribedPrincipalsList, required: true, location_name: "subscribedPrincipals"))
-    GetSubscriptionRequestDetailsOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    GetSubscriptionRequestDetailsOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
     GetSubscriptionRequestDetailsOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    GetSubscriptionRequestDetailsOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    GetSubscriptionRequestDetailsOutput.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionRequestStatus, required: true, location_name: "status"))
+    GetSubscriptionRequestDetailsOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
+    GetSubscriptionRequestDetailsOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    GetSubscriptionRequestDetailsOutput.add_member(:request_reason, Shapes::ShapeRef.new(shape: RequestReason, required: true, location_name: "requestReason"))
+    GetSubscriptionRequestDetailsOutput.add_member(:subscribed_principals, Shapes::ShapeRef.new(shape: GetSubscriptionRequestDetailsOutputSubscribedPrincipalsList, required: true, location_name: "subscribedPrincipals"))
+    GetSubscriptionRequestDetailsOutput.add_member(:subscribed_listings, Shapes::ShapeRef.new(shape: GetSubscriptionRequestDetailsOutputSubscribedListingsList, required: true, location_name: "subscribedListings"))
+    GetSubscriptionRequestDetailsOutput.add_member(:reviewer_id, Shapes::ShapeRef.new(shape: String, location_name: "reviewerId"))
+    GetSubscriptionRequestDetailsOutput.add_member(:decision_comment, Shapes::ShapeRef.new(shape: DecisionComment, location_name: "decisionComment"))
+    GetSubscriptionRequestDetailsOutput.add_member(:existing_subscription_id, Shapes::ShapeRef.new(shape: SubscriptionId, location_name: "existingSubscriptionId"))
+    GetSubscriptionRequestDetailsOutput.add_member(:metadata_forms, Shapes::ShapeRef.new(shape: MetadataForms, location_name: "metadataForms"))
     GetSubscriptionRequestDetailsOutput.struct_class = Types::GetSubscriptionRequestDetailsOutput
 
     GetSubscriptionRequestDetailsOutputSubscribedListingsList.member = Shapes::ShapeRef.new(shape: SubscribedListing)
@@ -3221,144 +4058,193 @@ module Aws::DataZone
     GetSubscriptionTargetInput.add_member(:identifier, Shapes::ShapeRef.new(shape: SubscriptionTargetId, required: true, location: "uri", location_name: "identifier"))
     GetSubscriptionTargetInput.struct_class = Types::GetSubscriptionTargetInput
 
-    GetSubscriptionTargetOutput.add_member(:applicable_asset_types, Shapes::ShapeRef.new(shape: ApplicableAssetTypes, required: true, location_name: "applicableAssetTypes"))
-    GetSubscriptionTargetOutput.add_member(:authorized_principals, Shapes::ShapeRef.new(shape: AuthorizedPrincipalIdentifiers, required: true, location_name: "authorizedPrincipals"))
-    GetSubscriptionTargetOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
-    GetSubscriptionTargetOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    GetSubscriptionTargetOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    GetSubscriptionTargetOutput.add_member(:environment_id, Shapes::ShapeRef.new(shape: EnvironmentId, required: true, location_name: "environmentId"))
     GetSubscriptionTargetOutput.add_member(:id, Shapes::ShapeRef.new(shape: SubscriptionTargetId, required: true, location_name: "id"))
-    GetSubscriptionTargetOutput.add_member(:manage_access_role, Shapes::ShapeRef.new(shape: IamRoleArn, location_name: "manageAccessRole"))
-    GetSubscriptionTargetOutput.add_member(:name, Shapes::ShapeRef.new(shape: SubscriptionTargetName, required: true, location_name: "name"))
+    GetSubscriptionTargetOutput.add_member(:authorized_principals, Shapes::ShapeRef.new(shape: AuthorizedPrincipalIdentifiers, required: true, location_name: "authorizedPrincipals"))
+    GetSubscriptionTargetOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     GetSubscriptionTargetOutput.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "projectId"))
-    GetSubscriptionTargetOutput.add_member(:provider, Shapes::ShapeRef.new(shape: String, required: true, location_name: "provider"))
-    GetSubscriptionTargetOutput.add_member(:subscription_target_config, Shapes::ShapeRef.new(shape: SubscriptionTargetForms, required: true, location_name: "subscriptionTargetConfig"))
+    GetSubscriptionTargetOutput.add_member(:environment_id, Shapes::ShapeRef.new(shape: EnvironmentId, required: true, location_name: "environmentId"))
+    GetSubscriptionTargetOutput.add_member(:name, Shapes::ShapeRef.new(shape: SubscriptionTargetName, required: true, location_name: "name"))
     GetSubscriptionTargetOutput.add_member(:type, Shapes::ShapeRef.new(shape: String, required: true, location_name: "type"))
-    GetSubscriptionTargetOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
+    GetSubscriptionTargetOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
     GetSubscriptionTargetOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    GetSubscriptionTargetOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
+    GetSubscriptionTargetOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
+    GetSubscriptionTargetOutput.add_member(:manage_access_role, Shapes::ShapeRef.new(shape: IamRoleArn, location_name: "manageAccessRole"))
+    GetSubscriptionTargetOutput.add_member(:applicable_asset_types, Shapes::ShapeRef.new(shape: ApplicableAssetTypes, required: true, location_name: "applicableAssetTypes"))
+    GetSubscriptionTargetOutput.add_member(:subscription_target_config, Shapes::ShapeRef.new(shape: SubscriptionTargetForms, required: true, location_name: "subscriptionTargetConfig"))
+    GetSubscriptionTargetOutput.add_member(:provider, Shapes::ShapeRef.new(shape: String, required: true, location_name: "provider"))
+    GetSubscriptionTargetOutput.add_member(:subscription_grant_creation_mode, Shapes::ShapeRef.new(shape: SubscriptionGrantCreationMode, location_name: "subscriptionGrantCreationMode"))
     GetSubscriptionTargetOutput.struct_class = Types::GetSubscriptionTargetOutput
 
     GetTimeSeriesDataPointInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     GetTimeSeriesDataPointInput.add_member(:entity_identifier, Shapes::ShapeRef.new(shape: EntityIdentifier, required: true, location: "uri", location_name: "entityIdentifier"))
     GetTimeSeriesDataPointInput.add_member(:entity_type, Shapes::ShapeRef.new(shape: TimeSeriesEntityType, required: true, location: "uri", location_name: "entityType"))
-    GetTimeSeriesDataPointInput.add_member(:form_name, Shapes::ShapeRef.new(shape: TimeSeriesFormName, required: true, location: "querystring", location_name: "formName"))
     GetTimeSeriesDataPointInput.add_member(:identifier, Shapes::ShapeRef.new(shape: TimeSeriesDataPointIdentifier, required: true, location: "uri", location_name: "identifier"))
+    GetTimeSeriesDataPointInput.add_member(:form_name, Shapes::ShapeRef.new(shape: TimeSeriesFormName, required: true, location: "querystring", location_name: "formName"))
     GetTimeSeriesDataPointInput.struct_class = Types::GetTimeSeriesDataPointInput
 
     GetTimeSeriesDataPointOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "domainId"))
     GetTimeSeriesDataPointOutput.add_member(:entity_id, Shapes::ShapeRef.new(shape: EntityId, location_name: "entityId"))
     GetTimeSeriesDataPointOutput.add_member(:entity_type, Shapes::ShapeRef.new(shape: TimeSeriesEntityType, location_name: "entityType"))
-    GetTimeSeriesDataPointOutput.add_member(:form, Shapes::ShapeRef.new(shape: TimeSeriesDataPointFormOutput, location_name: "form"))
     GetTimeSeriesDataPointOutput.add_member(:form_name, Shapes::ShapeRef.new(shape: TimeSeriesFormName, location_name: "formName"))
+    GetTimeSeriesDataPointOutput.add_member(:form, Shapes::ShapeRef.new(shape: TimeSeriesDataPointFormOutput, location_name: "form"))
     GetTimeSeriesDataPointOutput.struct_class = Types::GetTimeSeriesDataPointOutput
 
     GetUserProfileInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    GetUserProfileInput.add_member(:type, Shapes::ShapeRef.new(shape: UserProfileType, location: "querystring", location_name: "type"))
     GetUserProfileInput.add_member(:user_identifier, Shapes::ShapeRef.new(shape: UserIdentifier, required: true, location: "uri", location_name: "userIdentifier"))
+    GetUserProfileInput.add_member(:type, Shapes::ShapeRef.new(shape: UserProfileType, location: "querystring", location_name: "type"))
+    GetUserProfileInput.add_member(:session_name, Shapes::ShapeRef.new(shape: GetUserProfileInputSessionNameString, location: "querystring", location_name: "sessionName"))
     GetUserProfileInput.struct_class = Types::GetUserProfileInput
 
-    GetUserProfileOutput.add_member(:details, Shapes::ShapeRef.new(shape: UserProfileDetails, location_name: "details"))
     GetUserProfileOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "domainId"))
     GetUserProfileOutput.add_member(:id, Shapes::ShapeRef.new(shape: UserProfileId, location_name: "id"))
-    GetUserProfileOutput.add_member(:status, Shapes::ShapeRef.new(shape: UserProfileStatus, location_name: "status"))
     GetUserProfileOutput.add_member(:type, Shapes::ShapeRef.new(shape: UserProfileType, location_name: "type"))
+    GetUserProfileOutput.add_member(:status, Shapes::ShapeRef.new(shape: UserProfileStatus, location_name: "status"))
+    GetUserProfileOutput.add_member(:details, Shapes::ShapeRef.new(shape: UserProfileDetails, location_name: "details"))
     GetUserProfileOutput.struct_class = Types::GetUserProfileOutput
 
-    GlossaryItem.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
-    GlossaryItem.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
-    GlossaryItem.add_member(:description, Shapes::ShapeRef.new(shape: GlossaryDescription, location_name: "description"))
+    GitMetadata.add_member(:connection_id, Shapes::ShapeRef.new(shape: GitConnectionId, required: true, location_name: "connectionId"))
+    GitMetadata.add_member(:repository, Shapes::ShapeRef.new(shape: GitRepository, required: true, location_name: "repository"))
+    GitMetadata.add_member(:branch, Shapes::ShapeRef.new(shape: GitBranch, required: true, location_name: "branch"))
+    GitMetadata.add_member(:commit_hash, Shapes::ShapeRef.new(shape: CommitHash, required: true, location_name: "commitHash"))
+    GitMetadata.add_member(:file_name, Shapes::ShapeRef.new(shape: FileName, location_name: "fileName"))
+    GitMetadata.add_member(:committed_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "committedAt"))
+    GitMetadata.add_member(:commit_message, Shapes::ShapeRef.new(shape: CommitMessage, location_name: "commitMessage"))
+    GitMetadata.struct_class = Types::GitMetadata
+
+    GitPropertiesInput.add_member(:code_connection_arn, Shapes::ShapeRef.new(shape: GitPropertiesInputCodeConnectionArnString, required: true, location_name: "codeConnectionArn"))
+    GitPropertiesInput.add_member(:repository_id, Shapes::ShapeRef.new(shape: GitPropertiesInputRepositoryIdString, required: true, location_name: "repositoryId"))
+    GitPropertiesInput.add_member(:default_branch, Shapes::ShapeRef.new(shape: GitPropertiesInputDefaultBranchString, required: true, location_name: "defaultBranch"))
+    GitPropertiesInput.struct_class = Types::GitPropertiesInput
+
+    GitPropertiesOutput.add_member(:code_connection_arn, Shapes::ShapeRef.new(shape: GitPropertiesOutputCodeConnectionArnString, required: true, location_name: "codeConnectionArn"))
+    GitPropertiesOutput.add_member(:repository_id, Shapes::ShapeRef.new(shape: GitPropertiesOutputRepositoryIdString, required: true, location_name: "repositoryId"))
+    GitPropertiesOutput.add_member(:default_branch, Shapes::ShapeRef.new(shape: GitPropertiesOutputDefaultBranchString, required: true, location_name: "defaultBranch"))
+    GitPropertiesOutput.add_member(:status, Shapes::ShapeRef.new(shape: ConnectionStatus, location_name: "status"))
+    GitPropertiesOutput.add_member(:error_message, Shapes::ShapeRef.new(shape: String, location_name: "errorMessage"))
+    GitPropertiesOutput.struct_class = Types::GitPropertiesOutput
+
+    GitPropertiesPatch.add_member(:code_connection_arn, Shapes::ShapeRef.new(shape: GitPropertiesPatchCodeConnectionArnString, location_name: "codeConnectionArn"))
+    GitPropertiesPatch.add_member(:default_branch, Shapes::ShapeRef.new(shape: GitPropertiesPatchDefaultBranchString, location_name: "defaultBranch"))
+    GitPropertiesPatch.struct_class = Types::GitPropertiesPatch
+
+    GlobalParameterMap.key = Shapes::ShapeRef.new(shape: String)
+    GlobalParameterMap.value = Shapes::ShapeRef.new(shape: String)
+
     GlossaryItem.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     GlossaryItem.add_member(:id, Shapes::ShapeRef.new(shape: GlossaryId, required: true, location_name: "id"))
     GlossaryItem.add_member(:name, Shapes::ShapeRef.new(shape: GlossaryName, required: true, location_name: "name"))
     GlossaryItem.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
+    GlossaryItem.add_member(:description, Shapes::ShapeRef.new(shape: GlossaryDescription, location_name: "description"))
     GlossaryItem.add_member(:status, Shapes::ShapeRef.new(shape: GlossaryStatus, required: true, location_name: "status"))
+    GlossaryItem.add_member(:usage_restrictions, Shapes::ShapeRef.new(shape: GlossaryUsageRestrictions, location_name: "usageRestrictions"))
+    GlossaryItem.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    GlossaryItem.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
     GlossaryItem.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
     GlossaryItem.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    GlossaryItem.add_member(:additional_attributes, Shapes::ShapeRef.new(shape: GlossaryItemAdditionalAttributes, location_name: "additionalAttributes"))
     GlossaryItem.struct_class = Types::GlossaryItem
 
-    GlossaryTermItem.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
-    GlossaryTermItem.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
+    GlossaryItemAdditionalAttributes.add_member(:match_rationale, Shapes::ShapeRef.new(shape: MatchRationale, location_name: "matchRationale"))
+    GlossaryItemAdditionalAttributes.struct_class = Types::GlossaryItemAdditionalAttributes
+
+    GlossaryTermEnforcementDetail.add_member(:required_glossary_term_ids, Shapes::ShapeRef.new(shape: GlossaryTermIdentifiers, location_name: "requiredGlossaryTermIds"))
+    GlossaryTermEnforcementDetail.struct_class = Types::GlossaryTermEnforcementDetail
+
+    GlossaryTermIdentifiers.member = Shapes::ShapeRef.new(shape: GlossaryTermId)
+
     GlossaryTermItem.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     GlossaryTermItem.add_member(:glossary_id, Shapes::ShapeRef.new(shape: GlossaryId, required: true, location_name: "glossaryId"))
     GlossaryTermItem.add_member(:id, Shapes::ShapeRef.new(shape: GlossaryTermId, required: true, location_name: "id"))
-    GlossaryTermItem.add_member(:long_description, Shapes::ShapeRef.new(shape: LongDescription, location_name: "longDescription"))
     GlossaryTermItem.add_member(:name, Shapes::ShapeRef.new(shape: GlossaryTermName, required: true, location_name: "name"))
     GlossaryTermItem.add_member(:short_description, Shapes::ShapeRef.new(shape: ShortDescription, location_name: "shortDescription"))
-    GlossaryTermItem.add_member(:status, Shapes::ShapeRef.new(shape: GlossaryTermStatus, required: true, location_name: "status"))
+    GlossaryTermItem.add_member(:usage_restrictions, Shapes::ShapeRef.new(shape: GlossaryUsageRestrictions, location_name: "usageRestrictions"))
+    GlossaryTermItem.add_member(:long_description, Shapes::ShapeRef.new(shape: LongDescription, location_name: "longDescription"))
     GlossaryTermItem.add_member(:term_relations, Shapes::ShapeRef.new(shape: TermRelations, location_name: "termRelations"))
+    GlossaryTermItem.add_member(:status, Shapes::ShapeRef.new(shape: GlossaryTermStatus, required: true, location_name: "status"))
+    GlossaryTermItem.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    GlossaryTermItem.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
     GlossaryTermItem.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
     GlossaryTermItem.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    GlossaryTermItem.add_member(:additional_attributes, Shapes::ShapeRef.new(shape: GlossaryTermItemAdditionalAttributes, location_name: "additionalAttributes"))
     GlossaryTermItem.struct_class = Types::GlossaryTermItem
+
+    GlossaryTermItemAdditionalAttributes.add_member(:match_rationale, Shapes::ShapeRef.new(shape: MatchRationale, location_name: "matchRationale"))
+    GlossaryTermItemAdditionalAttributes.struct_class = Types::GlossaryTermItemAdditionalAttributes
 
     GlossaryTerms.member = Shapes::ShapeRef.new(shape: GlossaryTermId)
 
-    GlueConnection.add_member(:athena_properties, Shapes::ShapeRef.new(shape: PropertyMap, location_name: "athenaProperties"))
-    GlueConnection.add_member(:authentication_configuration, Shapes::ShapeRef.new(shape: AuthenticationConfiguration, location_name: "authenticationConfiguration"))
-    GlueConnection.add_member(:compatible_compute_environments, Shapes::ShapeRef.new(shape: ComputeEnvironmentsList, location_name: "compatibleComputeEnvironments"))
-    GlueConnection.add_member(:connection_properties, Shapes::ShapeRef.new(shape: ConnectionProperties, location_name: "connectionProperties"))
-    GlueConnection.add_member(:connection_schema_version, Shapes::ShapeRef.new(shape: GlueConnectionConnectionSchemaVersionInteger, location_name: "connectionSchemaVersion"))
-    GlueConnection.add_member(:connection_type, Shapes::ShapeRef.new(shape: ConnectionType, location_name: "connectionType"))
-    GlueConnection.add_member(:creation_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "creationTime"))
-    GlueConnection.add_member(:description, Shapes::ShapeRef.new(shape: GlueConnectionDescriptionString, location_name: "description"))
-    GlueConnection.add_member(:last_connection_validation_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "lastConnectionValidationTime"))
-    GlueConnection.add_member(:last_updated_by, Shapes::ShapeRef.new(shape: String, location_name: "lastUpdatedBy"))
-    GlueConnection.add_member(:last_updated_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "lastUpdatedTime"))
-    GlueConnection.add_member(:match_criteria, Shapes::ShapeRef.new(shape: MatchCriteria, location_name: "matchCriteria"))
+    GlossaryUsageRestrictions.member = Shapes::ShapeRef.new(shape: GlossaryUsageRestriction)
+
     GlueConnection.add_member(:name, Shapes::ShapeRef.new(shape: String, location_name: "name"))
-    GlueConnection.add_member(:physical_connection_requirements, Shapes::ShapeRef.new(shape: PhysicalConnectionRequirements, location_name: "physicalConnectionRequirements"))
-    GlueConnection.add_member(:python_properties, Shapes::ShapeRef.new(shape: PropertyMap, location_name: "pythonProperties"))
+    GlueConnection.add_member(:description, Shapes::ShapeRef.new(shape: GlueConnectionDescriptionString, location_name: "description"))
+    GlueConnection.add_member(:connection_type, Shapes::ShapeRef.new(shape: ConnectionType, location_name: "connectionType"))
+    GlueConnection.add_member(:match_criteria, Shapes::ShapeRef.new(shape: MatchCriteria, location_name: "matchCriteria"))
+    GlueConnection.add_member(:connection_properties, Shapes::ShapeRef.new(shape: ConnectionProperties, location_name: "connectionProperties"))
     GlueConnection.add_member(:spark_properties, Shapes::ShapeRef.new(shape: PropertyMap, location_name: "sparkProperties"))
+    GlueConnection.add_member(:athena_properties, Shapes::ShapeRef.new(shape: PropertyMap, location_name: "athenaProperties"))
+    GlueConnection.add_member(:python_properties, Shapes::ShapeRef.new(shape: PropertyMap, location_name: "pythonProperties"))
+    GlueConnection.add_member(:physical_connection_requirements, Shapes::ShapeRef.new(shape: PhysicalConnectionRequirements, location_name: "physicalConnectionRequirements"))
+    GlueConnection.add_member(:creation_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "creationTime"))
+    GlueConnection.add_member(:last_updated_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "lastUpdatedTime"))
+    GlueConnection.add_member(:last_updated_by, Shapes::ShapeRef.new(shape: String, location_name: "lastUpdatedBy"))
     GlueConnection.add_member(:status, Shapes::ShapeRef.new(shape: ConnectionStatus, location_name: "status"))
     GlueConnection.add_member(:status_reason, Shapes::ShapeRef.new(shape: GlueConnectionStatusReasonString, location_name: "statusReason"))
+    GlueConnection.add_member(:last_connection_validation_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "lastConnectionValidationTime"))
+    GlueConnection.add_member(:authentication_configuration, Shapes::ShapeRef.new(shape: AuthenticationConfiguration, location_name: "authenticationConfiguration"))
+    GlueConnection.add_member(:connection_schema_version, Shapes::ShapeRef.new(shape: GlueConnectionConnectionSchemaVersionInteger, location_name: "connectionSchemaVersion"))
+    GlueConnection.add_member(:compatible_compute_environments, Shapes::ShapeRef.new(shape: ComputeEnvironmentsList, location_name: "compatibleComputeEnvironments"))
     GlueConnection.struct_class = Types::GlueConnection
 
-    GlueConnectionInput.add_member(:athena_properties, Shapes::ShapeRef.new(shape: PropertyMap, location_name: "athenaProperties"))
-    GlueConnectionInput.add_member(:authentication_configuration, Shapes::ShapeRef.new(shape: AuthenticationConfigurationInput, location_name: "authenticationConfiguration"))
     GlueConnectionInput.add_member(:connection_properties, Shapes::ShapeRef.new(shape: ConnectionProperties, location_name: "connectionProperties"))
-    GlueConnectionInput.add_member(:connection_type, Shapes::ShapeRef.new(shape: GlueConnectionType, location_name: "connectionType"))
-    GlueConnectionInput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
-    GlueConnectionInput.add_member(:match_criteria, Shapes::ShapeRef.new(shape: GlueConnectionInputMatchCriteriaString, location_name: "matchCriteria"))
-    GlueConnectionInput.add_member(:name, Shapes::ShapeRef.new(shape: GlueConnectionInputNameString, location_name: "name"))
     GlueConnectionInput.add_member(:physical_connection_requirements, Shapes::ShapeRef.new(shape: PhysicalConnectionRequirements, location_name: "physicalConnectionRequirements"))
-    GlueConnectionInput.add_member(:python_properties, Shapes::ShapeRef.new(shape: PropertyMap, location_name: "pythonProperties"))
-    GlueConnectionInput.add_member(:spark_properties, Shapes::ShapeRef.new(shape: PropertyMap, location_name: "sparkProperties"))
+    GlueConnectionInput.add_member(:name, Shapes::ShapeRef.new(shape: GlueConnectionInputNameString, location_name: "name"))
+    GlueConnectionInput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
+    GlueConnectionInput.add_member(:connection_type, Shapes::ShapeRef.new(shape: GlueConnectionType, location_name: "connectionType"))
+    GlueConnectionInput.add_member(:match_criteria, Shapes::ShapeRef.new(shape: GlueConnectionInputMatchCriteriaString, location_name: "matchCriteria"))
     GlueConnectionInput.add_member(:validate_credentials, Shapes::ShapeRef.new(shape: Boolean, location_name: "validateCredentials"))
     GlueConnectionInput.add_member(:validate_for_compute_environments, Shapes::ShapeRef.new(shape: ComputeEnvironmentsList, location_name: "validateForComputeEnvironments"))
+    GlueConnectionInput.add_member(:spark_properties, Shapes::ShapeRef.new(shape: PropertyMap, location_name: "sparkProperties"))
+    GlueConnectionInput.add_member(:athena_properties, Shapes::ShapeRef.new(shape: PropertyMap, location_name: "athenaProperties"))
+    GlueConnectionInput.add_member(:python_properties, Shapes::ShapeRef.new(shape: PropertyMap, location_name: "pythonProperties"))
+    GlueConnectionInput.add_member(:authentication_configuration, Shapes::ShapeRef.new(shape: AuthenticationConfigurationInput, location_name: "authenticationConfiguration"))
     GlueConnectionInput.struct_class = Types::GlueConnectionInput
 
-    GlueConnectionPatch.add_member(:authentication_configuration, Shapes::ShapeRef.new(shape: AuthenticationConfigurationPatch, location_name: "authenticationConfiguration"))
-    GlueConnectionPatch.add_member(:connection_properties, Shapes::ShapeRef.new(shape: ConnectionProperties, location_name: "connectionProperties"))
+    GlueConnectionNames.member = Shapes::ShapeRef.new(shape: GlueConnectionName)
+
     GlueConnectionPatch.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
+    GlueConnectionPatch.add_member(:connection_properties, Shapes::ShapeRef.new(shape: ConnectionProperties, location_name: "connectionProperties"))
+    GlueConnectionPatch.add_member(:authentication_configuration, Shapes::ShapeRef.new(shape: AuthenticationConfigurationPatch, location_name: "authenticationConfiguration"))
     GlueConnectionPatch.struct_class = Types::GlueConnectionPatch
 
-    GlueOAuth2Credentials.add_member(:access_token, Shapes::ShapeRef.new(shape: GlueOAuth2CredentialsAccessTokenString, location_name: "accessToken"))
-    GlueOAuth2Credentials.add_member(:jwt_token, Shapes::ShapeRef.new(shape: GlueOAuth2CredentialsJwtTokenString, location_name: "jwtToken"))
-    GlueOAuth2Credentials.add_member(:refresh_token, Shapes::ShapeRef.new(shape: GlueOAuth2CredentialsRefreshTokenString, location_name: "refreshToken"))
     GlueOAuth2Credentials.add_member(:user_managed_client_application_client_secret, Shapes::ShapeRef.new(shape: GlueOAuth2CredentialsUserManagedClientApplicationClientSecretString, location_name: "userManagedClientApplicationClientSecret"))
+    GlueOAuth2Credentials.add_member(:access_token, Shapes::ShapeRef.new(shape: GlueOAuth2CredentialsAccessTokenString, location_name: "accessToken"))
+    GlueOAuth2Credentials.add_member(:refresh_token, Shapes::ShapeRef.new(shape: GlueOAuth2CredentialsRefreshTokenString, location_name: "refreshToken"))
+    GlueOAuth2Credentials.add_member(:jwt_token, Shapes::ShapeRef.new(shape: GlueOAuth2CredentialsJwtTokenString, location_name: "jwtToken"))
     GlueOAuth2Credentials.struct_class = Types::GlueOAuth2Credentials
 
     GluePropertiesInput.add_member(:glue_connection_input, Shapes::ShapeRef.new(shape: GlueConnectionInput, location_name: "glueConnectionInput"))
     GluePropertiesInput.struct_class = Types::GluePropertiesInput
 
-    GluePropertiesOutput.add_member(:error_message, Shapes::ShapeRef.new(shape: String, location_name: "errorMessage"))
     GluePropertiesOutput.add_member(:status, Shapes::ShapeRef.new(shape: ConnectionStatus, location_name: "status"))
+    GluePropertiesOutput.add_member(:error_message, Shapes::ShapeRef.new(shape: String, location_name: "errorMessage"))
     GluePropertiesOutput.struct_class = Types::GluePropertiesOutput
 
     GluePropertiesPatch.add_member(:glue_connection_input, Shapes::ShapeRef.new(shape: GlueConnectionPatch, location_name: "glueConnectionInput"))
     GluePropertiesPatch.struct_class = Types::GluePropertiesPatch
 
-    GlueRunConfigurationInput.add_member(:auto_import_data_quality_result, Shapes::ShapeRef.new(shape: Boolean, location_name: "autoImportDataQualityResult"))
-    GlueRunConfigurationInput.add_member(:catalog_name, Shapes::ShapeRef.new(shape: GlueRunConfigurationInputCatalogNameString, location_name: "catalogName"))
     GlueRunConfigurationInput.add_member(:data_access_role, Shapes::ShapeRef.new(shape: GlueRunConfigurationInputDataAccessRoleString, location_name: "dataAccessRole"))
     GlueRunConfigurationInput.add_member(:relational_filter_configurations, Shapes::ShapeRef.new(shape: RelationalFilterConfigurations, required: true, location_name: "relationalFilterConfigurations"))
+    GlueRunConfigurationInput.add_member(:auto_import_data_quality_result, Shapes::ShapeRef.new(shape: Boolean, location_name: "autoImportDataQualityResult"))
+    GlueRunConfigurationInput.add_member(:catalog_name, Shapes::ShapeRef.new(shape: GlueRunConfigurationInputCatalogNameString, location_name: "catalogName"))
     GlueRunConfigurationInput.struct_class = Types::GlueRunConfigurationInput
 
     GlueRunConfigurationOutput.add_member(:account_id, Shapes::ShapeRef.new(shape: GlueRunConfigurationOutputAccountIdString, location_name: "accountId"))
+    GlueRunConfigurationOutput.add_member(:region, Shapes::ShapeRef.new(shape: GlueRunConfigurationOutputRegionString, location_name: "region"))
+    GlueRunConfigurationOutput.add_member(:data_access_role, Shapes::ShapeRef.new(shape: GlueRunConfigurationOutputDataAccessRoleString, location_name: "dataAccessRole"))
+    GlueRunConfigurationOutput.add_member(:relational_filter_configurations, Shapes::ShapeRef.new(shape: RelationalFilterConfigurations, required: true, location_name: "relationalFilterConfigurations"))
     GlueRunConfigurationOutput.add_member(:auto_import_data_quality_result, Shapes::ShapeRef.new(shape: Boolean, location_name: "autoImportDataQualityResult"))
     GlueRunConfigurationOutput.add_member(:catalog_name, Shapes::ShapeRef.new(shape: GlueRunConfigurationOutputCatalogNameString, location_name: "catalogName"))
-    GlueRunConfigurationOutput.add_member(:data_access_role, Shapes::ShapeRef.new(shape: GlueRunConfigurationOutputDataAccessRoleString, location_name: "dataAccessRole"))
-    GlueRunConfigurationOutput.add_member(:region, Shapes::ShapeRef.new(shape: GlueRunConfigurationOutputRegionString, location_name: "region"))
-    GlueRunConfigurationOutput.add_member(:relational_filter_configurations, Shapes::ShapeRef.new(shape: RelationalFilterConfigurations, required: true, location_name: "relationalFilterConfigurations"))
     GlueRunConfigurationOutput.struct_class = Types::GlueRunConfigurationOutput
 
     GlueSelfGrantStatusOutput.add_member(:self_grant_status_details, Shapes::ShapeRef.new(shape: SelfGrantStatusDetails, required: true, location_name: "selfGrantStatusDetails"))
@@ -3396,16 +4282,18 @@ module Aws::DataZone
     GroupProfileSummaries.member = Shapes::ShapeRef.new(shape: GroupProfileSummary)
 
     GroupProfileSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "domainId"))
-    GroupProfileSummary.add_member(:group_name, Shapes::ShapeRef.new(shape: GroupProfileName, location_name: "groupName"))
     GroupProfileSummary.add_member(:id, Shapes::ShapeRef.new(shape: GroupProfileId, location_name: "id"))
     GroupProfileSummary.add_member(:status, Shapes::ShapeRef.new(shape: GroupProfileStatus, location_name: "status"))
+    GroupProfileSummary.add_member(:group_name, Shapes::ShapeRef.new(shape: GroupProfileName, location_name: "groupName"))
+    GroupProfileSummary.add_member(:role_principal_arn, Shapes::ShapeRef.new(shape: String, location_name: "rolePrincipalArn"))
+    GroupProfileSummary.add_member(:role_principal_id, Shapes::ShapeRef.new(shape: String, location_name: "rolePrincipalId"))
     GroupProfileSummary.struct_class = Types::GroupProfileSummary
 
     HyperPodPropertiesInput.add_member(:cluster_name, Shapes::ShapeRef.new(shape: HyperPodPropertiesInputClusterNameString, required: true, location_name: "clusterName"))
     HyperPodPropertiesInput.struct_class = Types::HyperPodPropertiesInput
 
-    HyperPodPropertiesOutput.add_member(:cluster_arn, Shapes::ShapeRef.new(shape: String, location_name: "clusterArn"))
     HyperPodPropertiesOutput.add_member(:cluster_name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "clusterName"))
+    HyperPodPropertiesOutput.add_member(:cluster_arn, Shapes::ShapeRef.new(shape: String, location_name: "clusterArn"))
     HyperPodPropertiesOutput.add_member(:orchestrator, Shapes::ShapeRef.new(shape: HyperPodOrchestrator, location_name: "orchestrator"))
     HyperPodPropertiesOutput.struct_class = Types::HyperPodPropertiesOutput
 
@@ -3420,7 +4308,14 @@ module Aws::DataZone
     IamPropertiesPatch.struct_class = Types::IamPropertiesPatch
 
     IamUserProfileDetails.add_member(:arn, Shapes::ShapeRef.new(shape: String, location_name: "arn"))
+    IamUserProfileDetails.add_member(:principal_id, Shapes::ShapeRef.new(shape: String, location_name: "principalId"))
+    IamUserProfileDetails.add_member(:session_name, Shapes::ShapeRef.new(shape: String, location_name: "sessionName"))
+    IamUserProfileDetails.add_member(:group_profile_id, Shapes::ShapeRef.new(shape: String, location_name: "groupProfileId"))
     IamUserProfileDetails.struct_class = Types::IamUserProfileDetails
+
+    IdentityMapping.add_member(:username_attribute, Shapes::ShapeRef.new(shape: String, required: true, location_name: "usernameAttribute"))
+    IdentityMapping.add_member(:prefix, Shapes::ShapeRef.new(shape: String, location_name: "prefix"))
+    IdentityMapping.struct_class = Types::IdentityMapping
 
     Import.add_member(:name, Shapes::ShapeRef.new(shape: FormTypeName, required: true, location_name: "name"))
     Import.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
@@ -3454,22 +4349,31 @@ module Aws::DataZone
 
     JobRunSummaries.member = Shapes::ShapeRef.new(shape: JobRunSummary)
 
-    JobRunSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "createdAt"))
-    JobRunSummary.add_member(:created_by, Shapes::ShapeRef.new(shape: String, location_name: "createdBy"))
     JobRunSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "domainId"))
-    JobRunSummary.add_member(:end_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "endTime"))
-    JobRunSummary.add_member(:error, Shapes::ShapeRef.new(shape: JobRunError, location_name: "error"))
     JobRunSummary.add_member(:job_id, Shapes::ShapeRef.new(shape: String, location_name: "jobId"))
     JobRunSummary.add_member(:job_type, Shapes::ShapeRef.new(shape: JobType, location_name: "jobType"))
     JobRunSummary.add_member(:run_id, Shapes::ShapeRef.new(shape: String, location_name: "runId"))
     JobRunSummary.add_member(:run_mode, Shapes::ShapeRef.new(shape: JobRunMode, location_name: "runMode"))
-    JobRunSummary.add_member(:start_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "startTime"))
     JobRunSummary.add_member(:status, Shapes::ShapeRef.new(shape: JobRunStatus, location_name: "status"))
+    JobRunSummary.add_member(:error, Shapes::ShapeRef.new(shape: JobRunError, location_name: "error"))
+    JobRunSummary.add_member(:created_by, Shapes::ShapeRef.new(shape: String, location_name: "createdBy"))
+    JobRunSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "createdAt"))
+    JobRunSummary.add_member(:start_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "startTime"))
+    JobRunSummary.add_member(:end_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "endTime"))
     JobRunSummary.struct_class = Types::JobRunSummary
 
-    LakeFormationConfiguration.add_member(:location_registration_exclude_s3_locations, Shapes::ShapeRef.new(shape: S3LocationList, location_name: "locationRegistrationExcludeS3Locations"))
     LakeFormationConfiguration.add_member(:location_registration_role, Shapes::ShapeRef.new(shape: RoleArn, location_name: "locationRegistrationRole"))
+    LakeFormationConfiguration.add_member(:location_registration_exclude_s3_locations, Shapes::ShapeRef.new(shape: S3LocationList, location_name: "locationRegistrationExcludeS3Locations"))
     LakeFormationConfiguration.struct_class = Types::LakeFormationConfiguration
+
+    LakehousePropertiesInput.add_member(:glue_lineage_sync_enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "glueLineageSyncEnabled"))
+    LakehousePropertiesInput.struct_class = Types::LakehousePropertiesInput
+
+    LakehousePropertiesOutput.add_member(:glue_lineage_sync_enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "glueLineageSyncEnabled"))
+    LakehousePropertiesOutput.struct_class = Types::LakehousePropertiesOutput
+
+    LakehousePropertiesPatch.add_member(:glue_lineage_sync_enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "glueLineageSyncEnabled"))
+    LakehousePropertiesPatch.struct_class = Types::LakehousePropertiesPatch
 
     LessThanExpression.add_member(:column_name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "columnName"))
     LessThanExpression.add_member(:value, Shapes::ShapeRef.new(shape: String, required: true, location_name: "value"))
@@ -3485,71 +4389,123 @@ module Aws::DataZone
 
     LineageEventSummaries.member = Shapes::ShapeRef.new(shape: LineageEventSummary)
 
-    LineageEventSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
-    LineageEventSummary.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
-    LineageEventSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "domainId"))
-    LineageEventSummary.add_member(:event_summary, Shapes::ShapeRef.new(shape: EventSummary, location_name: "eventSummary"))
-    LineageEventSummary.add_member(:event_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "eventTime"))
     LineageEventSummary.add_member(:id, Shapes::ShapeRef.new(shape: LineageEventIdentifier, location_name: "id"))
+    LineageEventSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "domainId"))
     LineageEventSummary.add_member(:processing_status, Shapes::ShapeRef.new(shape: LineageEventProcessingStatus, location_name: "processingStatus"))
+    LineageEventSummary.add_member(:event_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "eventTime"))
+    LineageEventSummary.add_member(:event_summary, Shapes::ShapeRef.new(shape: EventSummary, location_name: "eventSummary"))
+    LineageEventSummary.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
+    LineageEventSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
     LineageEventSummary.struct_class = Types::LineageEventSummary
 
-    LineageInfo.add_member(:error_message, Shapes::ShapeRef.new(shape: LineageEventErrorMessage, location_name: "errorMessage"))
     LineageInfo.add_member(:event_id, Shapes::ShapeRef.new(shape: String, location_name: "eventId"))
     LineageInfo.add_member(:event_status, Shapes::ShapeRef.new(shape: LineageEventProcessingStatus, location_name: "eventStatus"))
+    LineageInfo.add_member(:error_message, Shapes::ShapeRef.new(shape: LineageEventErrorMessage, location_name: "errorMessage"))
     LineageInfo.struct_class = Types::LineageInfo
 
-    LineageNodeReference.add_member(:event_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "eventTimestamp"))
+    LineageNodeIds.member = Shapes::ShapeRef.new(shape: LineageNodeId)
+
+    LineageNodeItem.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    LineageNodeItem.add_member(:name, Shapes::ShapeRef.new(shape: String, location_name: "name"))
+    LineageNodeItem.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
+    LineageNodeItem.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    LineageNodeItem.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
+    LineageNodeItem.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
+    LineageNodeItem.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    LineageNodeItem.add_member(:id, Shapes::ShapeRef.new(shape: LineageNodeId, required: true, location_name: "id"))
+    LineageNodeItem.add_member(:type_name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "typeName"))
+    LineageNodeItem.add_member(:type_revision, Shapes::ShapeRef.new(shape: Revision, location_name: "typeRevision"))
+    LineageNodeItem.add_member(:source_identifier, Shapes::ShapeRef.new(shape: String, location_name: "sourceIdentifier"))
+    LineageNodeItem.add_member(:event_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "eventTimestamp"))
+    LineageNodeItem.add_member(:forms_output, Shapes::ShapeRef.new(shape: FormOutputList, location_name: "formsOutput"))
+    LineageNodeItem.add_member(:upstream_lineage_node_ids, Shapes::ShapeRef.new(shape: LineageNodeIds, location_name: "upstreamLineageNodeIds"))
+    LineageNodeItem.add_member(:downstream_lineage_node_ids, Shapes::ShapeRef.new(shape: LineageNodeIds, location_name: "downstreamLineageNodeIds"))
+    LineageNodeItem.struct_class = Types::LineageNodeItem
+
     LineageNodeReference.add_member(:id, Shapes::ShapeRef.new(shape: LineageNodeId, location_name: "id"))
+    LineageNodeReference.add_member(:event_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "eventTimestamp"))
     LineageNodeReference.struct_class = Types::LineageNodeReference
 
     LineageNodeReferenceList.member = Shapes::ShapeRef.new(shape: LineageNodeReference)
 
     LineageNodeSummaries.member = Shapes::ShapeRef.new(shape: LineageNodeSummary)
 
+    LineageNodeSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    LineageNodeSummary.add_member(:name, Shapes::ShapeRef.new(shape: String, location_name: "name"))
+    LineageNodeSummary.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
     LineageNodeSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
     LineageNodeSummary.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
-    LineageNodeSummary.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
-    LineageNodeSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    LineageNodeSummary.add_member(:event_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "eventTimestamp"))
-    LineageNodeSummary.add_member(:id, Shapes::ShapeRef.new(shape: LineageNodeId, required: true, location_name: "id"))
-    LineageNodeSummary.add_member(:name, Shapes::ShapeRef.new(shape: String, location_name: "name"))
-    LineageNodeSummary.add_member(:source_identifier, Shapes::ShapeRef.new(shape: String, location_name: "sourceIdentifier"))
-    LineageNodeSummary.add_member(:type_name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "typeName"))
-    LineageNodeSummary.add_member(:type_revision, Shapes::ShapeRef.new(shape: Revision, location_name: "typeRevision"))
     LineageNodeSummary.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
     LineageNodeSummary.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    LineageNodeSummary.add_member(:id, Shapes::ShapeRef.new(shape: LineageNodeId, required: true, location_name: "id"))
+    LineageNodeSummary.add_member(:type_name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "typeName"))
+    LineageNodeSummary.add_member(:type_revision, Shapes::ShapeRef.new(shape: Revision, location_name: "typeRevision"))
+    LineageNodeSummary.add_member(:source_identifier, Shapes::ShapeRef.new(shape: String, location_name: "sourceIdentifier"))
+    LineageNodeSummary.add_member(:event_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "eventTimestamp"))
     LineageNodeSummary.struct_class = Types::LineageNodeSummary
 
+    LineageNodeTypeItem.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    LineageNodeTypeItem.add_member(:name, Shapes::ShapeRef.new(shape: String, location_name: "name"))
+    LineageNodeTypeItem.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
     LineageNodeTypeItem.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
     LineageNodeTypeItem.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
-    LineageNodeTypeItem.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
-    LineageNodeTypeItem.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    LineageNodeTypeItem.add_member(:forms_output, Shapes::ShapeRef.new(shape: FormsOutputMap, required: true, location_name: "formsOutput"))
-    LineageNodeTypeItem.add_member(:name, Shapes::ShapeRef.new(shape: String, location_name: "name"))
-    LineageNodeTypeItem.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
     LineageNodeTypeItem.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
     LineageNodeTypeItem.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    LineageNodeTypeItem.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
+    LineageNodeTypeItem.add_member(:forms_output, Shapes::ShapeRef.new(shape: FormsOutputMap, required: true, location_name: "formsOutput"))
     LineageNodeTypeItem.struct_class = Types::LineageNodeTypeItem
 
     LineageRunDetails.add_member(:sql_query_run_details, Shapes::ShapeRef.new(shape: LineageSqlQueryRunDetails, location_name: "sqlQueryRunDetails"))
     LineageRunDetails.struct_class = Types::LineageRunDetails
 
-    LineageSqlQueryRunDetails.add_member(:error_messages, Shapes::ShapeRef.new(shape: FailedQueryProcessingErrorMessages, location_name: "errorMessages"))
-    LineageSqlQueryRunDetails.add_member(:num_queries_failed, Shapes::ShapeRef.new(shape: Integer, location_name: "numQueriesFailed"))
-    LineageSqlQueryRunDetails.add_member(:query_end_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "queryEndTime"))
     LineageSqlQueryRunDetails.add_member(:query_start_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "queryStartTime"))
+    LineageSqlQueryRunDetails.add_member(:query_end_time, Shapes::ShapeRef.new(shape: Timestamp, location_name: "queryEndTime"))
     LineageSqlQueryRunDetails.add_member(:total_queries_processed, Shapes::ShapeRef.new(shape: Integer, location_name: "totalQueriesProcessed"))
+    LineageSqlQueryRunDetails.add_member(:num_queries_failed, Shapes::ShapeRef.new(shape: Integer, location_name: "numQueriesFailed"))
+    LineageSqlQueryRunDetails.add_member(:error_messages, Shapes::ShapeRef.new(shape: FailedQueryProcessingErrorMessages, location_name: "errorMessages"))
     LineageSqlQueryRunDetails.struct_class = Types::LineageSqlQueryRunDetails
+
+    LineageSyncInput.add_member(:timezone, Shapes::ShapeRef.new(shape: Timezone, location_name: "timezone"))
+    LineageSyncInput.add_member(:enabled, Shapes::ShapeRef.new(shape: Boolean, required: true, location_name: "enabled"))
+    LineageSyncInput.add_member(:schedule, Shapes::ShapeRef.new(shape: LineageSyncScheduleCronString, location_name: "schedule"))
+    LineageSyncInput.struct_class = Types::LineageSyncInput
+
+    LineageSyncOutput.add_member(:lineage_job_id, Shapes::ShapeRef.new(shape: String, location_name: "lineageJobId"))
+    LineageSyncOutput.add_member(:timezone, Shapes::ShapeRef.new(shape: Timezone, location_name: "timezone"))
+    LineageSyncOutput.add_member(:enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "enabled"))
+    LineageSyncOutput.add_member(:schedule, Shapes::ShapeRef.new(shape: LineageSyncScheduleCronString, location_name: "schedule"))
+    LineageSyncOutput.struct_class = Types::LineageSyncOutput
 
     LineageSyncSchedule.add_member(:schedule, Shapes::ShapeRef.new(shape: LineageSyncScheduleScheduleString, location_name: "schedule"))
     LineageSyncSchedule.struct_class = Types::LineageSyncSchedule
 
-    ListAssetFiltersInput.add_member(:asset_identifier, Shapes::ShapeRef.new(shape: AssetId, required: true, location: "uri", location_name: "assetIdentifier"))
+    ListAccountPoolsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    ListAccountPoolsInput.add_member(:name, Shapes::ShapeRef.new(shape: AccountPoolName, location: "querystring", location_name: "name"))
+    ListAccountPoolsInput.add_member(:sort_by, Shapes::ShapeRef.new(shape: SortFieldAccountPool, location: "querystring", location_name: "sortBy"))
+    ListAccountPoolsInput.add_member(:sort_order, Shapes::ShapeRef.new(shape: SortOrder, location: "querystring", location_name: "sortOrder"))
+    ListAccountPoolsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
+    ListAccountPoolsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListAccountPoolsInput.struct_class = Types::ListAccountPoolsInput
+
+    ListAccountPoolsOutput.add_member(:items, Shapes::ShapeRef.new(shape: AccountPoolSummaries, location_name: "items"))
+    ListAccountPoolsOutput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
+    ListAccountPoolsOutput.struct_class = Types::ListAccountPoolsOutput
+
+    ListAccountsInAccountPoolInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    ListAccountsInAccountPoolInput.add_member(:identifier, Shapes::ShapeRef.new(shape: AccountPoolId, required: true, location: "uri", location_name: "identifier"))
+    ListAccountsInAccountPoolInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
+    ListAccountsInAccountPoolInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListAccountsInAccountPoolInput.struct_class = Types::ListAccountsInAccountPoolInput
+
+    ListAccountsInAccountPoolOutput.add_member(:items, Shapes::ShapeRef.new(shape: AccountInfoList, location_name: "items"))
+    ListAccountsInAccountPoolOutput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
+    ListAccountsInAccountPoolOutput.struct_class = Types::ListAccountsInAccountPoolOutput
+
     ListAssetFiltersInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    ListAssetFiltersInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
-    ListAssetFiltersInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
+    ListAssetFiltersInput.add_member(:asset_identifier, Shapes::ShapeRef.new(shape: AssetId, required: true, location: "uri", location_name: "assetIdentifier"))
     ListAssetFiltersInput.add_member(:status, Shapes::ShapeRef.new(shape: FilterStatus, location: "querystring", location_name: "status"))
+    ListAssetFiltersInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
+    ListAssetFiltersInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
     ListAssetFiltersInput.struct_class = Types::ListAssetFiltersInput
 
     ListAssetFiltersOutput.add_member(:items, Shapes::ShapeRef.new(shape: AssetFilters, required: true, location_name: "items"))
@@ -3558,8 +4514,8 @@ module Aws::DataZone
 
     ListAssetRevisionsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     ListAssetRevisionsInput.add_member(:identifier, Shapes::ShapeRef.new(shape: AssetIdentifier, required: true, location: "uri", location_name: "identifier"))
-    ListAssetRevisionsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
     ListAssetRevisionsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
+    ListAssetRevisionsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
     ListAssetRevisionsInput.struct_class = Types::ListAssetRevisionsInput
 
     ListAssetRevisionsOutput.add_member(:items, Shapes::ShapeRef.new(shape: AssetRevisions, location_name: "items"))
@@ -3567,14 +4523,15 @@ module Aws::DataZone
     ListAssetRevisionsOutput.struct_class = Types::ListAssetRevisionsOutput
 
     ListConnectionsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    ListConnectionsInput.add_member(:environment_identifier, Shapes::ShapeRef.new(shape: EnvironmentId, location: "querystring", location_name: "environmentIdentifier"))
     ListConnectionsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
-    ListConnectionsInput.add_member(:name, Shapes::ShapeRef.new(shape: ConnectionName, location: "querystring", location_name: "name"))
     ListConnectionsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
-    ListConnectionsInput.add_member(:project_identifier, Shapes::ShapeRef.new(shape: ProjectId, required: true, location: "querystring", location_name: "projectIdentifier"))
     ListConnectionsInput.add_member(:sort_by, Shapes::ShapeRef.new(shape: SortFieldConnection, location: "querystring", location_name: "sortBy"))
     ListConnectionsInput.add_member(:sort_order, Shapes::ShapeRef.new(shape: SortOrder, location: "querystring", location_name: "sortOrder"))
+    ListConnectionsInput.add_member(:name, Shapes::ShapeRef.new(shape: ConnectionName, location: "querystring", location_name: "name"))
+    ListConnectionsInput.add_member(:environment_identifier, Shapes::ShapeRef.new(shape: EnvironmentId, location: "querystring", location_name: "environmentIdentifier"))
+    ListConnectionsInput.add_member(:project_identifier, Shapes::ShapeRef.new(shape: ProjectId, location: "querystring", location_name: "projectIdentifier"))
     ListConnectionsInput.add_member(:type, Shapes::ShapeRef.new(shape: ConnectionType, location: "querystring", location_name: "type"))
+    ListConnectionsInput.add_member(:scope, Shapes::ShapeRef.new(shape: ConnectionScope, location: "querystring", location_name: "scope"))
     ListConnectionsInput.struct_class = Types::ListConnectionsInput
 
     ListConnectionsOutput.add_member(:items, Shapes::ShapeRef.new(shape: ConnectionSummaries, required: true, location_name: "items"))
@@ -3593,35 +4550,35 @@ module Aws::DataZone
 
     ListDataSourceRunActivitiesInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     ListDataSourceRunActivitiesInput.add_member(:identifier, Shapes::ShapeRef.new(shape: DataSourceRunId, required: true, location: "uri", location_name: "identifier"))
-    ListDataSourceRunActivitiesInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
-    ListDataSourceRunActivitiesInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
     ListDataSourceRunActivitiesInput.add_member(:status, Shapes::ShapeRef.new(shape: DataAssetActivityStatus, location: "querystring", location_name: "status"))
+    ListDataSourceRunActivitiesInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
+    ListDataSourceRunActivitiesInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
     ListDataSourceRunActivitiesInput.struct_class = Types::ListDataSourceRunActivitiesInput
 
     ListDataSourceRunActivitiesOutput.add_member(:items, Shapes::ShapeRef.new(shape: DataSourceRunActivities, required: true, location_name: "items"))
     ListDataSourceRunActivitiesOutput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
     ListDataSourceRunActivitiesOutput.struct_class = Types::ListDataSourceRunActivitiesOutput
 
-    ListDataSourceRunsInput.add_member(:data_source_identifier, Shapes::ShapeRef.new(shape: DataSourceId, required: true, location: "uri", location_name: "dataSourceIdentifier"))
     ListDataSourceRunsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    ListDataSourceRunsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
-    ListDataSourceRunsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
+    ListDataSourceRunsInput.add_member(:data_source_identifier, Shapes::ShapeRef.new(shape: DataSourceId, required: true, location: "uri", location_name: "dataSourceIdentifier"))
     ListDataSourceRunsInput.add_member(:status, Shapes::ShapeRef.new(shape: DataSourceRunStatus, location: "querystring", location_name: "status"))
+    ListDataSourceRunsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
+    ListDataSourceRunsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
     ListDataSourceRunsInput.struct_class = Types::ListDataSourceRunsInput
 
     ListDataSourceRunsOutput.add_member(:items, Shapes::ShapeRef.new(shape: DataSourceRunSummaries, required: true, location_name: "items"))
     ListDataSourceRunsOutput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
     ListDataSourceRunsOutput.struct_class = Types::ListDataSourceRunsOutput
 
-    ListDataSourcesInput.add_member(:connection_identifier, Shapes::ShapeRef.new(shape: String, location: "querystring", location_name: "connectionIdentifier"))
     ListDataSourcesInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    ListDataSourcesInput.add_member(:project_identifier, Shapes::ShapeRef.new(shape: String, required: true, location: "querystring", location_name: "projectIdentifier"))
     ListDataSourcesInput.add_member(:environment_identifier, Shapes::ShapeRef.new(shape: String, location: "querystring", location_name: "environmentIdentifier"))
-    ListDataSourcesInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListDataSourcesInput.add_member(:connection_identifier, Shapes::ShapeRef.new(shape: String, location: "querystring", location_name: "connectionIdentifier"))
+    ListDataSourcesInput.add_member(:type, Shapes::ShapeRef.new(shape: DataSourceType, location: "querystring", location_name: "type"))
+    ListDataSourcesInput.add_member(:status, Shapes::ShapeRef.new(shape: DataSourceStatus, location: "querystring", location_name: "status"))
     ListDataSourcesInput.add_member(:name, Shapes::ShapeRef.new(shape: Name, location: "querystring", location_name: "name"))
     ListDataSourcesInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
-    ListDataSourcesInput.add_member(:project_identifier, Shapes::ShapeRef.new(shape: String, required: true, location: "querystring", location_name: "projectIdentifier"))
-    ListDataSourcesInput.add_member(:status, Shapes::ShapeRef.new(shape: DataSourceStatus, location: "querystring", location_name: "status"))
-    ListDataSourcesInput.add_member(:type, Shapes::ShapeRef.new(shape: DataSourceType, location: "querystring", location_name: "type"))
+    ListDataSourcesInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
     ListDataSourcesInput.struct_class = Types::ListDataSourcesInput
 
     ListDataSourcesOutput.add_member(:items, Shapes::ShapeRef.new(shape: DataSourceSummaries, required: true, location_name: "items"))
@@ -3629,18 +4586,18 @@ module Aws::DataZone
     ListDataSourcesOutput.struct_class = Types::ListDataSourcesOutput
 
     ListDomainUnitsForParentInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    ListDomainUnitsForParentInput.add_member(:parent_domain_unit_identifier, Shapes::ShapeRef.new(shape: DomainUnitId, required: true, location: "querystring", location_name: "parentDomainUnitIdentifier"))
     ListDomainUnitsForParentInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResultsForListDomains, location: "querystring", location_name: "maxResults"))
     ListDomainUnitsForParentInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
-    ListDomainUnitsForParentInput.add_member(:parent_domain_unit_identifier, Shapes::ShapeRef.new(shape: DomainUnitId, required: true, location: "querystring", location_name: "parentDomainUnitIdentifier"))
     ListDomainUnitsForParentInput.struct_class = Types::ListDomainUnitsForParentInput
 
     ListDomainUnitsForParentOutput.add_member(:items, Shapes::ShapeRef.new(shape: DomainUnitSummaries, required: true, location_name: "items"))
     ListDomainUnitsForParentOutput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
     ListDomainUnitsForParentOutput.struct_class = Types::ListDomainUnitsForParentOutput
 
+    ListDomainsInput.add_member(:status, Shapes::ShapeRef.new(shape: DomainStatus, location: "querystring", location_name: "status"))
     ListDomainsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResultsForListDomains, location: "querystring", location_name: "maxResults"))
     ListDomainsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
-    ListDomainsInput.add_member(:status, Shapes::ShapeRef.new(shape: DomainStatus, location: "querystring", location_name: "status"))
     ListDomainsInput.struct_class = Types::ListDomainsInput
 
     ListDomainsOutput.add_member(:items, Shapes::ShapeRef.new(shape: DomainSummaries, required: true, location_name: "items"))
@@ -3648,22 +4605,22 @@ module Aws::DataZone
     ListDomainsOutput.struct_class = Types::ListDomainsOutput
 
     ListEntityOwnersInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    ListEntityOwnersInput.add_member(:entity_identifier, Shapes::ShapeRef.new(shape: String, required: true, location: "uri", location_name: "entityIdentifier"))
     ListEntityOwnersInput.add_member(:entity_type, Shapes::ShapeRef.new(shape: DataZoneEntityType, required: true, location: "uri", location_name: "entityType"))
+    ListEntityOwnersInput.add_member(:entity_identifier, Shapes::ShapeRef.new(shape: String, required: true, location: "uri", location_name: "entityIdentifier"))
     ListEntityOwnersInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResultsForListDomains, location: "querystring", location_name: "maxResults"))
     ListEntityOwnersInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
     ListEntityOwnersInput.struct_class = Types::ListEntityOwnersInput
 
-    ListEntityOwnersOutput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
     ListEntityOwnersOutput.add_member(:owners, Shapes::ShapeRef.new(shape: EntityOwners, required: true, location_name: "owners"))
+    ListEntityOwnersOutput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
     ListEntityOwnersOutput.struct_class = Types::ListEntityOwnersOutput
 
     ListEnvironmentActionSummaries.member = Shapes::ShapeRef.new(shape: EnvironmentActionSummary)
 
     ListEnvironmentActionsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     ListEnvironmentActionsInput.add_member(:environment_identifier, Shapes::ShapeRef.new(shape: EnvironmentId, required: true, location: "uri", location_name: "environmentIdentifier"))
-    ListEnvironmentActionsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
     ListEnvironmentActionsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
+    ListEnvironmentActionsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
     ListEnvironmentActionsInput.struct_class = Types::ListEnvironmentActionsInput
 
     ListEnvironmentActionsOutput.add_member(:items, Shapes::ShapeRef.new(shape: ListEnvironmentActionSummaries, location_name: "items"))
@@ -3680,41 +4637,41 @@ module Aws::DataZone
     ListEnvironmentBlueprintConfigurationsOutput.struct_class = Types::ListEnvironmentBlueprintConfigurationsOutput
 
     ListEnvironmentBlueprintsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    ListEnvironmentBlueprintsInput.add_member(:managed, Shapes::ShapeRef.new(shape: Boolean, location: "querystring", location_name: "managed"))
     ListEnvironmentBlueprintsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
-    ListEnvironmentBlueprintsInput.add_member(:name, Shapes::ShapeRef.new(shape: EnvironmentBlueprintName, location: "querystring", location_name: "name"))
     ListEnvironmentBlueprintsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
+    ListEnvironmentBlueprintsInput.add_member(:name, Shapes::ShapeRef.new(shape: EnvironmentBlueprintName, location: "querystring", location_name: "name"))
+    ListEnvironmentBlueprintsInput.add_member(:managed, Shapes::ShapeRef.new(shape: Boolean, location: "querystring", location_name: "managed"))
     ListEnvironmentBlueprintsInput.struct_class = Types::ListEnvironmentBlueprintsInput
 
     ListEnvironmentBlueprintsOutput.add_member(:items, Shapes::ShapeRef.new(shape: EnvironmentBlueprintSummaries, required: true, location_name: "items"))
     ListEnvironmentBlueprintsOutput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
     ListEnvironmentBlueprintsOutput.struct_class = Types::ListEnvironmentBlueprintsOutput
 
+    ListEnvironmentProfilesInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     ListEnvironmentProfilesInput.add_member(:aws_account_id, Shapes::ShapeRef.new(shape: AwsAccountId, location: "querystring", location_name: "awsAccountId"))
     ListEnvironmentProfilesInput.add_member(:aws_account_region, Shapes::ShapeRef.new(shape: AwsRegion, location: "querystring", location_name: "awsAccountRegion"))
-    ListEnvironmentProfilesInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     ListEnvironmentProfilesInput.add_member(:environment_blueprint_identifier, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, location: "querystring", location_name: "environmentBlueprintIdentifier"))
-    ListEnvironmentProfilesInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListEnvironmentProfilesInput.add_member(:project_identifier, Shapes::ShapeRef.new(shape: ProjectId, location: "querystring", location_name: "projectIdentifier"))
     ListEnvironmentProfilesInput.add_member(:name, Shapes::ShapeRef.new(shape: EnvironmentProfileName, location: "querystring", location_name: "name"))
     ListEnvironmentProfilesInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
-    ListEnvironmentProfilesInput.add_member(:project_identifier, Shapes::ShapeRef.new(shape: ProjectId, location: "querystring", location_name: "projectIdentifier"))
+    ListEnvironmentProfilesInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
     ListEnvironmentProfilesInput.struct_class = Types::ListEnvironmentProfilesInput
 
     ListEnvironmentProfilesOutput.add_member(:items, Shapes::ShapeRef.new(shape: EnvironmentProfileSummaries, required: true, location_name: "items"))
     ListEnvironmentProfilesOutput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
     ListEnvironmentProfilesOutput.struct_class = Types::ListEnvironmentProfilesOutput
 
-    ListEnvironmentsInput.add_member(:aws_account_id, Shapes::ShapeRef.new(shape: AwsAccountId, location: "querystring", location_name: "awsAccountId"))
-    ListEnvironmentsInput.add_member(:aws_account_region, Shapes::ShapeRef.new(shape: AwsRegion, location: "querystring", location_name: "awsAccountRegion"))
     ListEnvironmentsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    ListEnvironmentsInput.add_member(:environment_blueprint_identifier, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, location: "querystring", location_name: "environmentBlueprintIdentifier"))
-    ListEnvironmentsInput.add_member(:environment_profile_identifier, Shapes::ShapeRef.new(shape: EnvironmentProfileId, location: "querystring", location_name: "environmentProfileIdentifier"))
-    ListEnvironmentsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
-    ListEnvironmentsInput.add_member(:name, Shapes::ShapeRef.new(shape: String, location: "querystring", location_name: "name"))
-    ListEnvironmentsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
-    ListEnvironmentsInput.add_member(:project_identifier, Shapes::ShapeRef.new(shape: ProjectId, required: true, location: "querystring", location_name: "projectIdentifier"))
-    ListEnvironmentsInput.add_member(:provider, Shapes::ShapeRef.new(shape: String, location: "querystring", location_name: "provider"))
+    ListEnvironmentsInput.add_member(:aws_account_id, Shapes::ShapeRef.new(shape: AwsAccountId, location: "querystring", location_name: "awsAccountId"))
     ListEnvironmentsInput.add_member(:status, Shapes::ShapeRef.new(shape: EnvironmentStatus, location: "querystring", location_name: "status"))
+    ListEnvironmentsInput.add_member(:aws_account_region, Shapes::ShapeRef.new(shape: AwsRegion, location: "querystring", location_name: "awsAccountRegion"))
+    ListEnvironmentsInput.add_member(:project_identifier, Shapes::ShapeRef.new(shape: ProjectId, required: true, location: "querystring", location_name: "projectIdentifier"))
+    ListEnvironmentsInput.add_member(:environment_profile_identifier, Shapes::ShapeRef.new(shape: EnvironmentProfileId, location: "querystring", location_name: "environmentProfileIdentifier"))
+    ListEnvironmentsInput.add_member(:environment_blueprint_identifier, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, location: "querystring", location_name: "environmentBlueprintIdentifier"))
+    ListEnvironmentsInput.add_member(:provider, Shapes::ShapeRef.new(shape: String, location: "querystring", location_name: "provider"))
+    ListEnvironmentsInput.add_member(:name, Shapes::ShapeRef.new(shape: String, location: "querystring", location_name: "name"))
+    ListEnvironmentsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListEnvironmentsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
     ListEnvironmentsInput.struct_class = Types::ListEnvironmentsInput
 
     ListEnvironmentsOutput.add_member(:items, Shapes::ShapeRef.new(shape: EnvironmentSummaries, required: true, location_name: "items"))
@@ -3723,10 +4680,10 @@ module Aws::DataZone
 
     ListJobRunsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     ListJobRunsInput.add_member(:job_identifier, Shapes::ShapeRef.new(shape: ListJobRunsInputJobIdentifierString, required: true, location: "uri", location_name: "jobIdentifier"))
-    ListJobRunsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
-    ListJobRunsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
-    ListJobRunsInput.add_member(:sort_order, Shapes::ShapeRef.new(shape: SortOrder, location: "querystring", location_name: "sortOrder"))
     ListJobRunsInput.add_member(:status, Shapes::ShapeRef.new(shape: JobRunStatus, location: "querystring", location_name: "status"))
+    ListJobRunsInput.add_member(:sort_order, Shapes::ShapeRef.new(shape: SortOrder, location: "querystring", location_name: "sortOrder"))
+    ListJobRunsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
+    ListJobRunsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
     ListJobRunsInput.struct_class = Types::ListJobRunsInput
 
     ListJobRunsOutput.add_member(:items, Shapes::ShapeRef.new(shape: JobRunSummaries, location_name: "items"))
@@ -3735,62 +4692,90 @@ module Aws::DataZone
 
     ListLineageEventsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     ListLineageEventsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
-    ListLineageEventsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
-    ListLineageEventsInput.add_member(:processing_status, Shapes::ShapeRef.new(shape: LineageEventProcessingStatus, location: "querystring", location_name: "processingStatus"))
-    ListLineageEventsInput.add_member(:sort_order, Shapes::ShapeRef.new(shape: SortOrder, location: "querystring", location_name: "sortOrder"))
     ListLineageEventsInput.add_member(:timestamp_after, Shapes::ShapeRef.new(shape: Timestamp, location: "querystring", location_name: "timestampAfter"))
     ListLineageEventsInput.add_member(:timestamp_before, Shapes::ShapeRef.new(shape: Timestamp, location: "querystring", location_name: "timestampBefore"))
+    ListLineageEventsInput.add_member(:processing_status, Shapes::ShapeRef.new(shape: LineageEventProcessingStatus, location: "querystring", location_name: "processingStatus"))
+    ListLineageEventsInput.add_member(:sort_order, Shapes::ShapeRef.new(shape: SortOrder, location: "querystring", location_name: "sortOrder"))
+    ListLineageEventsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
     ListLineageEventsInput.struct_class = Types::ListLineageEventsInput
 
     ListLineageEventsOutput.add_member(:items, Shapes::ShapeRef.new(shape: LineageEventSummaries, location_name: "items"))
     ListLineageEventsOutput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
     ListLineageEventsOutput.struct_class = Types::ListLineageEventsOutput
 
-    ListLineageNodeHistoryInput.add_member(:direction, Shapes::ShapeRef.new(shape: EdgeDirection, location: "querystring", location_name: "direction"))
     ListLineageNodeHistoryInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    ListLineageNodeHistoryInput.add_member(:event_timestamp_gte, Shapes::ShapeRef.new(shape: Timestamp, location: "querystring", location_name: "timestampGTE"))
-    ListLineageNodeHistoryInput.add_member(:event_timestamp_lte, Shapes::ShapeRef.new(shape: Timestamp, location: "querystring", location_name: "timestampLTE"))
-    ListLineageNodeHistoryInput.add_member(:identifier, Shapes::ShapeRef.new(shape: LineageNodeIdentifier, required: true, location: "uri", location_name: "identifier"))
     ListLineageNodeHistoryInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
     ListLineageNodeHistoryInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
+    ListLineageNodeHistoryInput.add_member(:identifier, Shapes::ShapeRef.new(shape: LineageNodeIdentifier, required: true, location: "uri", location_name: "identifier"))
+    ListLineageNodeHistoryInput.add_member(:direction, Shapes::ShapeRef.new(shape: EdgeDirection, location: "querystring", location_name: "direction"))
+    ListLineageNodeHistoryInput.add_member(:event_timestamp_gte, Shapes::ShapeRef.new(shape: Timestamp, location: "querystring", location_name: "timestampGTE"))
+    ListLineageNodeHistoryInput.add_member(:event_timestamp_lte, Shapes::ShapeRef.new(shape: Timestamp, location: "querystring", location_name: "timestampLTE"))
     ListLineageNodeHistoryInput.add_member(:sort_order, Shapes::ShapeRef.new(shape: SortOrder, location: "querystring", location_name: "sortOrder"))
     ListLineageNodeHistoryInput.struct_class = Types::ListLineageNodeHistoryInput
 
-    ListLineageNodeHistoryOutput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
     ListLineageNodeHistoryOutput.add_member(:nodes, Shapes::ShapeRef.new(shape: LineageNodeSummaries, location_name: "nodes"))
+    ListLineageNodeHistoryOutput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
     ListLineageNodeHistoryOutput.struct_class = Types::ListLineageNodeHistoryOutput
 
     ListMetadataGenerationRunsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    ListMetadataGenerationRunsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
-    ListMetadataGenerationRunsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
     ListMetadataGenerationRunsInput.add_member(:status, Shapes::ShapeRef.new(shape: MetadataGenerationRunStatus, location: "querystring", location_name: "status"))
     ListMetadataGenerationRunsInput.add_member(:type, Shapes::ShapeRef.new(shape: MetadataGenerationRunType, location: "querystring", location_name: "type"))
+    ListMetadataGenerationRunsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
+    ListMetadataGenerationRunsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListMetadataGenerationRunsInput.add_member(:target_identifier, Shapes::ShapeRef.new(shape: EntityId, location: "querystring", location_name: "targetIdentifier"))
     ListMetadataGenerationRunsInput.struct_class = Types::ListMetadataGenerationRunsInput
 
     ListMetadataGenerationRunsOutput.add_member(:items, Shapes::ShapeRef.new(shape: MetadataGenerationRuns, location_name: "items"))
     ListMetadataGenerationRunsOutput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
     ListMetadataGenerationRunsOutput.struct_class = Types::ListMetadataGenerationRunsOutput
 
+    ListNotebookRunsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    ListNotebookRunsInput.add_member(:owning_project_identifier, Shapes::ShapeRef.new(shape: ProjectId, required: true, location: "querystring", location_name: "owningProjectIdentifier"))
+    ListNotebookRunsInput.add_member(:notebook_identifier, Shapes::ShapeRef.new(shape: NotebookId, location: "querystring", location_name: "notebookIdentifier"))
+    ListNotebookRunsInput.add_member(:status, Shapes::ShapeRef.new(shape: NotebookRunStatus, location: "querystring", location_name: "status"))
+    ListNotebookRunsInput.add_member(:schedule_identifier, Shapes::ShapeRef.new(shape: ScheduleId, location: "querystring", location_name: "scheduleIdentifier"))
+    ListNotebookRunsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListNotebookRunsInput.add_member(:sort_order, Shapes::ShapeRef.new(shape: SortOrder, location: "querystring", location_name: "sortOrder"))
+    ListNotebookRunsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
+    ListNotebookRunsInput.struct_class = Types::ListNotebookRunsInput
+
+    ListNotebookRunsOutput.add_member(:items, Shapes::ShapeRef.new(shape: NotebookRunSummaryList, location_name: "items"))
+    ListNotebookRunsOutput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
+    ListNotebookRunsOutput.struct_class = Types::ListNotebookRunsOutput
+
+    ListNotebooksInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    ListNotebooksInput.add_member(:owning_project_identifier, Shapes::ShapeRef.new(shape: ProjectId, required: true, location: "querystring", location_name: "owningProjectIdentifier"))
+    ListNotebooksInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListNotebooksInput.add_member(:sort_order, Shapes::ShapeRef.new(shape: SortOrder, location: "querystring", location_name: "sortOrder"))
+    ListNotebooksInput.add_member(:sort_by, Shapes::ShapeRef.new(shape: SortKey, location: "querystring", location_name: "sortBy"))
+    ListNotebooksInput.add_member(:status, Shapes::ShapeRef.new(shape: NotebookStatus, location: "querystring", location_name: "status"))
+    ListNotebooksInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
+    ListNotebooksInput.struct_class = Types::ListNotebooksInput
+
+    ListNotebooksOutput.add_member(:items, Shapes::ShapeRef.new(shape: NotebookSummaryList, location_name: "items"))
+    ListNotebooksOutput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
+    ListNotebooksOutput.struct_class = Types::ListNotebooksOutput
+
+    ListNotificationsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    ListNotificationsInput.add_member(:type, Shapes::ShapeRef.new(shape: NotificationType, required: true, location: "querystring", location_name: "type"))
     ListNotificationsInput.add_member(:after_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location: "querystring", location_name: "afterTimestamp"))
     ListNotificationsInput.add_member(:before_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location: "querystring", location_name: "beforeTimestamp"))
-    ListNotificationsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    ListNotificationsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
-    ListNotificationsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
     ListNotificationsInput.add_member(:subjects, Shapes::ShapeRef.new(shape: NotificationSubjects, location: "querystring", location_name: "subjects"))
     ListNotificationsInput.add_member(:task_status, Shapes::ShapeRef.new(shape: TaskStatus, location: "querystring", location_name: "taskStatus"))
-    ListNotificationsInput.add_member(:type, Shapes::ShapeRef.new(shape: NotificationType, required: true, location: "querystring", location_name: "type"))
+    ListNotificationsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListNotificationsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
     ListNotificationsInput.struct_class = Types::ListNotificationsInput
 
-    ListNotificationsOutput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
     ListNotificationsOutput.add_member(:notifications, Shapes::ShapeRef.new(shape: NotificationsList, location_name: "notifications"))
+    ListNotificationsOutput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
     ListNotificationsOutput.struct_class = Types::ListNotificationsOutput
 
     ListPolicyGrantsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    ListPolicyGrantsInput.add_member(:entity_identifier, Shapes::ShapeRef.new(shape: String, required: true, location: "uri", location_name: "entityIdentifier"))
     ListPolicyGrantsInput.add_member(:entity_type, Shapes::ShapeRef.new(shape: TargetEntityType, required: true, location: "uri", location_name: "entityType"))
+    ListPolicyGrantsInput.add_member(:entity_identifier, Shapes::ShapeRef.new(shape: String, required: true, location: "uri", location_name: "entityIdentifier"))
+    ListPolicyGrantsInput.add_member(:policy_type, Shapes::ShapeRef.new(shape: ManagedPolicyType, required: true, location: "querystring", location_name: "policyType"))
     ListPolicyGrantsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResultsForListDomains, location: "querystring", location_name: "maxResults"))
     ListPolicyGrantsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
-    ListPolicyGrantsInput.add_member(:policy_type, Shapes::ShapeRef.new(shape: ManagedPolicyType, required: true, location: "querystring", location_name: "policyType"))
     ListPolicyGrantsInput.struct_class = Types::ListPolicyGrantsInput
 
     ListPolicyGrantsOutput.add_member(:grant_list, Shapes::ShapeRef.new(shape: PolicyGrantList, required: true, location_name: "grantList"))
@@ -3798,11 +4783,11 @@ module Aws::DataZone
     ListPolicyGrantsOutput.struct_class = Types::ListPolicyGrantsOutput
 
     ListProjectMembershipsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    ListProjectMembershipsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
-    ListProjectMembershipsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
     ListProjectMembershipsInput.add_member(:project_identifier, Shapes::ShapeRef.new(shape: ProjectId, required: true, location: "uri", location_name: "projectIdentifier"))
     ListProjectMembershipsInput.add_member(:sort_by, Shapes::ShapeRef.new(shape: SortFieldProject, location: "querystring", location_name: "sortBy"))
     ListProjectMembershipsInput.add_member(:sort_order, Shapes::ShapeRef.new(shape: SortOrder, location: "querystring", location_name: "sortOrder"))
+    ListProjectMembershipsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
+    ListProjectMembershipsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
     ListProjectMembershipsInput.struct_class = Types::ListProjectMembershipsInput
 
     ListProjectMembershipsOutput.add_member(:members, Shapes::ShapeRef.new(shape: ProjectMembers, required: true, location_name: "members"))
@@ -3810,11 +4795,11 @@ module Aws::DataZone
     ListProjectMembershipsOutput.struct_class = Types::ListProjectMembershipsOutput
 
     ListProjectProfilesInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    ListProjectProfilesInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
     ListProjectProfilesInput.add_member(:name, Shapes::ShapeRef.new(shape: ProjectProfileName, location: "querystring", location_name: "name"))
-    ListProjectProfilesInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
     ListProjectProfilesInput.add_member(:sort_by, Shapes::ShapeRef.new(shape: SortFieldProject, location: "querystring", location_name: "sortBy"))
     ListProjectProfilesInput.add_member(:sort_order, Shapes::ShapeRef.new(shape: SortOrder, location: "querystring", location_name: "sortOrder"))
+    ListProjectProfilesInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
+    ListProjectProfilesInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
     ListProjectProfilesInput.struct_class = Types::ListProjectProfilesInput
 
     ListProjectProfilesOutput.add_member(:items, Shapes::ShapeRef.new(shape: ProjectProfileSummaries, location_name: "items"))
@@ -3822,28 +4807,29 @@ module Aws::DataZone
     ListProjectProfilesOutput.struct_class = Types::ListProjectProfilesOutput
 
     ListProjectsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    ListProjectsInput.add_member(:group_identifier, Shapes::ShapeRef.new(shape: String, location: "querystring", location_name: "groupIdentifier"))
-    ListProjectsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
-    ListProjectsInput.add_member(:name, Shapes::ShapeRef.new(shape: ProjectName, location: "querystring", location_name: "name"))
-    ListProjectsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
     ListProjectsInput.add_member(:user_identifier, Shapes::ShapeRef.new(shape: String, location: "querystring", location_name: "userIdentifier"))
+    ListProjectsInput.add_member(:group_identifier, Shapes::ShapeRef.new(shape: String, location: "querystring", location_name: "groupIdentifier"))
+    ListProjectsInput.add_member(:name, Shapes::ShapeRef.new(shape: ProjectName, location: "querystring", location_name: "name"))
+    ListProjectsInput.add_member(:project_category, Shapes::ShapeRef.new(shape: String, location: "querystring", location_name: "projectCategory"))
+    ListProjectsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
+    ListProjectsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
     ListProjectsInput.struct_class = Types::ListProjectsInput
 
     ListProjectsOutput.add_member(:items, Shapes::ShapeRef.new(shape: ProjectSummaries, location_name: "items"))
     ListProjectsOutput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
     ListProjectsOutput.struct_class = Types::ListProjectsOutput
 
+    ListRulesInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    ListRulesInput.add_member(:target_type, Shapes::ShapeRef.new(shape: RuleTargetType, required: true, location: "uri", location_name: "targetType"))
+    ListRulesInput.add_member(:target_identifier, Shapes::ShapeRef.new(shape: String, required: true, location: "uri", location_name: "targetIdentifier"))
+    ListRulesInput.add_member(:rule_type, Shapes::ShapeRef.new(shape: RuleType, location: "querystring", location_name: "ruleType"))
     ListRulesInput.add_member(:action, Shapes::ShapeRef.new(shape: RuleAction, location: "querystring", location_name: "ruleAction"))
+    ListRulesInput.add_member(:project_ids, Shapes::ShapeRef.new(shape: ProjectIds, location: "querystring", location_name: "projectIds"))
     ListRulesInput.add_member(:asset_types, Shapes::ShapeRef.new(shape: AssetTypeIdentifiers, location: "querystring", location_name: "assetTypes"))
     ListRulesInput.add_member(:data_product, Shapes::ShapeRef.new(shape: Boolean, location: "querystring", location_name: "dataProduct"))
-    ListRulesInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     ListRulesInput.add_member(:include_cascaded, Shapes::ShapeRef.new(shape: Boolean, location: "querystring", location_name: "includeCascaded"))
     ListRulesInput.add_member(:max_results, Shapes::ShapeRef.new(shape: ListRulesInputMaxResultsInteger, location: "querystring", location_name: "maxResults"))
     ListRulesInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
-    ListRulesInput.add_member(:project_ids, Shapes::ShapeRef.new(shape: ProjectIds, location: "querystring", location_name: "projectIds"))
-    ListRulesInput.add_member(:rule_type, Shapes::ShapeRef.new(shape: RuleType, location: "querystring", location_name: "ruleType"))
-    ListRulesInput.add_member(:target_identifier, Shapes::ShapeRef.new(shape: String, required: true, location: "uri", location_name: "targetIdentifier"))
-    ListRulesInput.add_member(:target_type, Shapes::ShapeRef.new(shape: RuleTargetType, required: true, location: "uri", location_name: "targetType"))
     ListRulesInput.struct_class = Types::ListRulesInput
 
     ListRulesOutput.add_member(:items, Shapes::ShapeRef.new(shape: RuleSummaries, required: true, location_name: "items"))
@@ -3852,29 +4838,35 @@ module Aws::DataZone
 
     ListSubscriptionGrantsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     ListSubscriptionGrantsInput.add_member(:environment_id, Shapes::ShapeRef.new(shape: EnvironmentId, location: "querystring", location_name: "environmentId"))
-    ListSubscriptionGrantsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
-    ListSubscriptionGrantsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
-    ListSubscriptionGrantsInput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, location: "querystring", location_name: "owningProjectId"))
-    ListSubscriptionGrantsInput.add_member(:sort_by, Shapes::ShapeRef.new(shape: SortKey, location: "querystring", location_name: "sortBy"))
-    ListSubscriptionGrantsInput.add_member(:sort_order, Shapes::ShapeRef.new(shape: SortOrder, location: "querystring", location_name: "sortOrder"))
+    ListSubscriptionGrantsInput.add_member(:subscription_target_id, Shapes::ShapeRef.new(shape: SubscriptionTargetId, location: "querystring", location_name: "subscriptionTargetId"))
     ListSubscriptionGrantsInput.add_member(:subscribed_listing_id, Shapes::ShapeRef.new(shape: ListingId, location: "querystring", location_name: "subscribedListingId"))
     ListSubscriptionGrantsInput.add_member(:subscription_id, Shapes::ShapeRef.new(shape: SubscriptionId, location: "querystring", location_name: "subscriptionId"))
-    ListSubscriptionGrantsInput.add_member(:subscription_target_id, Shapes::ShapeRef.new(shape: SubscriptionTargetId, location: "querystring", location_name: "subscriptionTargetId"))
+    ListSubscriptionGrantsInput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, location: "querystring", location_name: "owningProjectId"))
+    ListSubscriptionGrantsInput.add_member(:owning_iam_principal_arn, Shapes::ShapeRef.new(shape: IamPrincipalArn, location: "querystring", location_name: "owningIamPrincipalArn"))
+    ListSubscriptionGrantsInput.add_member(:owning_user_id, Shapes::ShapeRef.new(shape: UserProfileId, location: "querystring", location_name: "owningUserId"))
+    ListSubscriptionGrantsInput.add_member(:owning_group_id, Shapes::ShapeRef.new(shape: GroupProfileId, location: "querystring", location_name: "owningGroupId"))
+    ListSubscriptionGrantsInput.add_member(:sort_by, Shapes::ShapeRef.new(shape: SortKey, deprecated: true, location: "querystring", location_name: "sortBy", metadata: {"deprecatedMessage" => "Results are always sorted by updatedAt", "deprecatedSince" => "Jan 31 2026"}))
+    ListSubscriptionGrantsInput.add_member(:sort_order, Shapes::ShapeRef.new(shape: SortOrder, location: "querystring", location_name: "sortOrder"))
+    ListSubscriptionGrantsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListSubscriptionGrantsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
     ListSubscriptionGrantsInput.struct_class = Types::ListSubscriptionGrantsInput
 
     ListSubscriptionGrantsOutput.add_member(:items, Shapes::ShapeRef.new(shape: SubscriptionGrants, required: true, location_name: "items"))
     ListSubscriptionGrantsOutput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
     ListSubscriptionGrantsOutput.struct_class = Types::ListSubscriptionGrantsOutput
 
-    ListSubscriptionRequestsInput.add_member(:approver_project_id, Shapes::ShapeRef.new(shape: ProjectId, location: "querystring", location_name: "approverProjectId"))
     ListSubscriptionRequestsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    ListSubscriptionRequestsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
-    ListSubscriptionRequestsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
-    ListSubscriptionRequestsInput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, location: "querystring", location_name: "owningProjectId"))
-    ListSubscriptionRequestsInput.add_member(:sort_by, Shapes::ShapeRef.new(shape: SortKey, location: "querystring", location_name: "sortBy"))
-    ListSubscriptionRequestsInput.add_member(:sort_order, Shapes::ShapeRef.new(shape: SortOrder, location: "querystring", location_name: "sortOrder"))
     ListSubscriptionRequestsInput.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionRequestStatus, location: "querystring", location_name: "status"))
     ListSubscriptionRequestsInput.add_member(:subscribed_listing_id, Shapes::ShapeRef.new(shape: ListingId, location: "querystring", location_name: "subscribedListingId"))
+    ListSubscriptionRequestsInput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, location: "querystring", location_name: "owningProjectId"))
+    ListSubscriptionRequestsInput.add_member(:owning_iam_principal_arn, Shapes::ShapeRef.new(shape: IamPrincipalArn, location: "querystring", location_name: "owningIamPrincipalArn"))
+    ListSubscriptionRequestsInput.add_member(:approver_project_id, Shapes::ShapeRef.new(shape: ProjectId, location: "querystring", location_name: "approverProjectId"))
+    ListSubscriptionRequestsInput.add_member(:owning_user_id, Shapes::ShapeRef.new(shape: UserProfileId, location: "querystring", location_name: "owningUserId"))
+    ListSubscriptionRequestsInput.add_member(:owning_group_id, Shapes::ShapeRef.new(shape: GroupProfileId, location: "querystring", location_name: "owningGroupId"))
+    ListSubscriptionRequestsInput.add_member(:sort_by, Shapes::ShapeRef.new(shape: SortKey, deprecated: true, location: "querystring", location_name: "sortBy", metadata: {"deprecatedMessage" => "Results are always sorted by updatedAt", "deprecatedSince" => "Jan 31 2026"}))
+    ListSubscriptionRequestsInput.add_member(:sort_order, Shapes::ShapeRef.new(shape: SortOrder, location: "querystring", location_name: "sortOrder"))
+    ListSubscriptionRequestsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListSubscriptionRequestsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
     ListSubscriptionRequestsInput.struct_class = Types::ListSubscriptionRequestsInput
 
     ListSubscriptionRequestsOutput.add_member(:items, Shapes::ShapeRef.new(shape: SubscriptionRequests, required: true, location_name: "items"))
@@ -3883,26 +4875,29 @@ module Aws::DataZone
 
     ListSubscriptionTargetsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     ListSubscriptionTargetsInput.add_member(:environment_identifier, Shapes::ShapeRef.new(shape: EnvironmentId, required: true, location: "uri", location_name: "environmentIdentifier"))
-    ListSubscriptionTargetsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
-    ListSubscriptionTargetsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
     ListSubscriptionTargetsInput.add_member(:sort_by, Shapes::ShapeRef.new(shape: SortKey, location: "querystring", location_name: "sortBy"))
     ListSubscriptionTargetsInput.add_member(:sort_order, Shapes::ShapeRef.new(shape: SortOrder, location: "querystring", location_name: "sortOrder"))
+    ListSubscriptionTargetsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListSubscriptionTargetsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
     ListSubscriptionTargetsInput.struct_class = Types::ListSubscriptionTargetsInput
 
     ListSubscriptionTargetsOutput.add_member(:items, Shapes::ShapeRef.new(shape: SubscriptionTargets, required: true, location_name: "items"))
     ListSubscriptionTargetsOutput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
     ListSubscriptionTargetsOutput.struct_class = Types::ListSubscriptionTargetsOutput
 
-    ListSubscriptionsInput.add_member(:approver_project_id, Shapes::ShapeRef.new(shape: ProjectId, location: "querystring", location_name: "approverProjectId"))
     ListSubscriptionsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    ListSubscriptionsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
-    ListSubscriptionsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
-    ListSubscriptionsInput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, location: "querystring", location_name: "owningProjectId"))
-    ListSubscriptionsInput.add_member(:sort_by, Shapes::ShapeRef.new(shape: SortKey, location: "querystring", location_name: "sortBy"))
-    ListSubscriptionsInput.add_member(:sort_order, Shapes::ShapeRef.new(shape: SortOrder, location: "querystring", location_name: "sortOrder"))
+    ListSubscriptionsInput.add_member(:subscription_request_identifier, Shapes::ShapeRef.new(shape: SubscriptionRequestId, location: "querystring", location_name: "subscriptionRequestIdentifier"))
     ListSubscriptionsInput.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionStatus, location: "querystring", location_name: "status"))
     ListSubscriptionsInput.add_member(:subscribed_listing_id, Shapes::ShapeRef.new(shape: ListingId, location: "querystring", location_name: "subscribedListingId"))
-    ListSubscriptionsInput.add_member(:subscription_request_identifier, Shapes::ShapeRef.new(shape: SubscriptionRequestId, location: "querystring", location_name: "subscriptionRequestIdentifier"))
+    ListSubscriptionsInput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, location: "querystring", location_name: "owningProjectId"))
+    ListSubscriptionsInput.add_member(:owning_iam_principal_arn, Shapes::ShapeRef.new(shape: IamPrincipalArn, location: "querystring", location_name: "owningIamPrincipalArn"))
+    ListSubscriptionsInput.add_member(:owning_user_id, Shapes::ShapeRef.new(shape: UserProfileId, location: "querystring", location_name: "owningUserId"))
+    ListSubscriptionsInput.add_member(:owning_group_id, Shapes::ShapeRef.new(shape: GroupProfileId, location: "querystring", location_name: "owningGroupId"))
+    ListSubscriptionsInput.add_member(:approver_project_id, Shapes::ShapeRef.new(shape: ProjectId, location: "querystring", location_name: "approverProjectId"))
+    ListSubscriptionsInput.add_member(:sort_by, Shapes::ShapeRef.new(shape: SortKey, deprecated: true, location: "querystring", location_name: "sortBy", metadata: {"deprecatedMessage" => "Results are always sorted by updatedAt", "deprecatedSince" => "Jan 31 2026"}))
+    ListSubscriptionsInput.add_member(:sort_order, Shapes::ShapeRef.new(shape: SortOrder, location: "querystring", location_name: "sortOrder"))
+    ListSubscriptionsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListSubscriptionsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
     ListSubscriptionsInput.struct_class = Types::ListSubscriptionsInput
 
     ListSubscriptionsOutput.add_member(:items, Shapes::ShapeRef.new(shape: Subscriptions, required: true, location_name: "items"))
@@ -3916,13 +4911,13 @@ module Aws::DataZone
     ListTagsForResourceResponse.struct_class = Types::ListTagsForResourceResponse
 
     ListTimeSeriesDataPointsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    ListTimeSeriesDataPointsInput.add_member(:ended_at, Shapes::ShapeRef.new(shape: Timestamp, location: "querystring", location_name: "endedAt"))
     ListTimeSeriesDataPointsInput.add_member(:entity_identifier, Shapes::ShapeRef.new(shape: EntityIdentifier, required: true, location: "uri", location_name: "entityIdentifier"))
     ListTimeSeriesDataPointsInput.add_member(:entity_type, Shapes::ShapeRef.new(shape: TimeSeriesEntityType, required: true, location: "uri", location_name: "entityType"))
     ListTimeSeriesDataPointsInput.add_member(:form_name, Shapes::ShapeRef.new(shape: TimeSeriesFormName, required: true, location: "querystring", location_name: "formName"))
-    ListTimeSeriesDataPointsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
-    ListTimeSeriesDataPointsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
     ListTimeSeriesDataPointsInput.add_member(:started_at, Shapes::ShapeRef.new(shape: Timestamp, location: "querystring", location_name: "startedAt"))
+    ListTimeSeriesDataPointsInput.add_member(:ended_at, Shapes::ShapeRef.new(shape: Timestamp, location: "querystring", location_name: "endedAt"))
+    ListTimeSeriesDataPointsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
+    ListTimeSeriesDataPointsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
     ListTimeSeriesDataPointsInput.struct_class = Types::ListTimeSeriesDataPointsInput
 
     ListTimeSeriesDataPointsOutput.add_member(:items, Shapes::ShapeRef.new(shape: TimeSeriesDataPointSummaryFormOutputList, location_name: "items"))
@@ -3947,35 +4942,66 @@ module Aws::DataZone
 
     ListingSummaries.member = Shapes::ShapeRef.new(shape: ListingSummary)
 
-    ListingSummary.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: DetailedGlossaryTerms, location_name: "glossaryTerms"))
     ListingSummary.add_member(:listing_id, Shapes::ShapeRef.new(shape: ListingId, location_name: "listingId"))
     ListingSummary.add_member(:listing_revision, Shapes::ShapeRef.new(shape: Revision, location_name: "listingRevision"))
+    ListingSummary.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: DetailedGlossaryTerms, location_name: "glossaryTerms"))
     ListingSummary.struct_class = Types::ListingSummary
 
-    ListingSummaryItem.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: DetailedGlossaryTerms, location_name: "glossaryTerms"))
     ListingSummaryItem.add_member(:listing_id, Shapes::ShapeRef.new(shape: ListingId, location_name: "listingId"))
     ListingSummaryItem.add_member(:listing_revision, Shapes::ShapeRef.new(shape: Revision, location_name: "listingRevision"))
+    ListingSummaryItem.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: DetailedGlossaryTerms, location_name: "glossaryTerms"))
     ListingSummaryItem.struct_class = Types::ListingSummaryItem
 
     ListingSummaryItems.member = Shapes::ShapeRef.new(shape: ListingSummaryItem)
 
+    ManagedEndpointCredentials.add_member(:id, Shapes::ShapeRef.new(shape: ManagedEndpointCredentialsIdString, location_name: "id"))
+    ManagedEndpointCredentials.add_member(:token, Shapes::ShapeRef.new(shape: String, location_name: "token"))
+    ManagedEndpointCredentials.struct_class = Types::ManagedEndpointCredentials
+
+    MatchClause.add_member(:relation_pattern, Shapes::ShapeRef.new(shape: RelationPattern, location_name: "relationPattern"))
+    MatchClause.add_member(:entity_pattern, Shapes::ShapeRef.new(shape: EntityPattern, location_name: "entityPattern"))
+    MatchClause.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    MatchClause.add_member_subclass(:relation_pattern, Types::MatchClause::RelationPattern)
+    MatchClause.add_member_subclass(:entity_pattern, Types::MatchClause::EntityPattern)
+    MatchClause.add_member_subclass(:unknown, Types::MatchClause::Unknown)
+    MatchClause.struct_class = Types::MatchClause
+
+    MatchClauses.member = Shapes::ShapeRef.new(shape: MatchClause)
+
     MatchCriteria.member = Shapes::ShapeRef.new(shape: String)
 
-    Member.add_member(:group_identifier, Shapes::ShapeRef.new(shape: String, location_name: "groupIdentifier"))
+    MatchOffset.add_member(:start_offset, Shapes::ShapeRef.new(shape: Integer, location_name: "startOffset"))
+    MatchOffset.add_member(:end_offset, Shapes::ShapeRef.new(shape: Integer, location_name: "endOffset"))
+    MatchOffset.struct_class = Types::MatchOffset
+
+    MatchOffsets.member = Shapes::ShapeRef.new(shape: MatchOffset)
+
+    MatchRationale.member = Shapes::ShapeRef.new(shape: MatchRationaleItem)
+
+    MatchRationaleItem.add_member(:text_matches, Shapes::ShapeRef.new(shape: TextMatches, location_name: "textMatches"))
+    MatchRationaleItem.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    MatchRationaleItem.add_member_subclass(:text_matches, Types::MatchRationaleItem::TextMatches)
+    MatchRationaleItem.add_member_subclass(:unknown, Types::MatchRationaleItem::Unknown)
+    MatchRationaleItem.struct_class = Types::MatchRationaleItem
+
     Member.add_member(:user_identifier, Shapes::ShapeRef.new(shape: String, location_name: "userIdentifier"))
+    Member.add_member(:group_identifier, Shapes::ShapeRef.new(shape: String, location_name: "groupIdentifier"))
     Member.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
-    Member.add_member_subclass(:group_identifier, Types::Member::GroupIdentifier)
     Member.add_member_subclass(:user_identifier, Types::Member::UserIdentifier)
+    Member.add_member_subclass(:group_identifier, Types::Member::GroupIdentifier)
     Member.add_member_subclass(:unknown, Types::Member::Unknown)
     Member.struct_class = Types::Member
 
-    MemberDetails.add_member(:group, Shapes::ShapeRef.new(shape: GroupDetails, location_name: "group"))
     MemberDetails.add_member(:user, Shapes::ShapeRef.new(shape: UserDetails, location_name: "user"))
+    MemberDetails.add_member(:group, Shapes::ShapeRef.new(shape: GroupDetails, location_name: "group"))
     MemberDetails.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
-    MemberDetails.add_member_subclass(:group, Types::MemberDetails::Group)
     MemberDetails.add_member_subclass(:user, Types::MemberDetails::User)
+    MemberDetails.add_member_subclass(:group, Types::MemberDetails::Group)
     MemberDetails.add_member_subclass(:unknown, Types::MemberDetails::Unknown)
     MemberDetails.struct_class = Types::MemberDetails
+
+    Metadata.key = Shapes::ShapeRef.new(shape: MetadataKey)
+    Metadata.value = Shapes::ShapeRef.new(shape: MetadataValue)
 
     MetadataFormEnforcementDetail.add_member(:required_metadata_forms, Shapes::ShapeRef.new(shape: RequiredMetadataFormList, location_name: "requiredMetadataForms"))
     MetadataFormEnforcementDetail.struct_class = Types::MetadataFormEnforcementDetail
@@ -3995,25 +5021,44 @@ module Aws::DataZone
 
     MetadataFormsSummary.member = Shapes::ShapeRef.new(shape: MetadataFormSummary)
 
-    MetadataGenerationRunItem.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
-    MetadataGenerationRunItem.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
     MetadataGenerationRunItem.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     MetadataGenerationRunItem.add_member(:id, Shapes::ShapeRef.new(shape: MetadataGenerationRunIdentifier, required: true, location_name: "id"))
-    MetadataGenerationRunItem.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
-    MetadataGenerationRunItem.add_member(:status, Shapes::ShapeRef.new(shape: MetadataGenerationRunStatus, location_name: "status"))
     MetadataGenerationRunItem.add_member(:target, Shapes::ShapeRef.new(shape: MetadataGenerationRunTarget, location_name: "target"))
-    MetadataGenerationRunItem.add_member(:type, Shapes::ShapeRef.new(shape: MetadataGenerationRunType, location_name: "type"))
+    MetadataGenerationRunItem.add_member(:status, Shapes::ShapeRef.new(shape: MetadataGenerationRunStatus, location_name: "status"))
+    MetadataGenerationRunItem.add_member(:type, Shapes::ShapeRef.new(shape: MetadataGenerationRunType, deprecated: true, location_name: "type", metadata: {"deprecatedMessage" => "This field is going to be deprecated, please use the 'types' field to provide the MetadataGenerationRun types", "deprecatedSince" => "2025-11-21"}))
+    MetadataGenerationRunItem.add_member(:types, Shapes::ShapeRef.new(shape: MetadataGenerationRunTypes, location_name: "types"))
+    MetadataGenerationRunItem.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    MetadataGenerationRunItem.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
+    MetadataGenerationRunItem.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
     MetadataGenerationRunItem.struct_class = Types::MetadataGenerationRunItem
 
+    MetadataGenerationRunTarget.add_member(:type, Shapes::ShapeRef.new(shape: MetadataGenerationTargetType, required: true, location_name: "type"))
     MetadataGenerationRunTarget.add_member(:identifier, Shapes::ShapeRef.new(shape: String, required: true, location_name: "identifier"))
     MetadataGenerationRunTarget.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, location_name: "revision"))
-    MetadataGenerationRunTarget.add_member(:type, Shapes::ShapeRef.new(shape: MetadataGenerationTargetType, required: true, location_name: "type"))
     MetadataGenerationRunTarget.struct_class = Types::MetadataGenerationRunTarget
+
+    MetadataGenerationRunTypeStat.add_member(:type, Shapes::ShapeRef.new(shape: MetadataGenerationRunType, required: true, location_name: "type"))
+    MetadataGenerationRunTypeStat.add_member(:status, Shapes::ShapeRef.new(shape: MetadataGenerationRunStatus, required: true, location_name: "status"))
+    MetadataGenerationRunTypeStat.add_member(:error_message, Shapes::ShapeRef.new(shape: String, location_name: "errorMessage"))
+    MetadataGenerationRunTypeStat.struct_class = Types::MetadataGenerationRunTypeStat
+
+    MetadataGenerationRunTypeStats.member = Shapes::ShapeRef.new(shape: MetadataGenerationRunTypeStat)
+
+    MetadataGenerationRunTypes.member = Shapes::ShapeRef.new(shape: MetadataGenerationRunType)
 
     MetadataGenerationRuns.member = Shapes::ShapeRef.new(shape: MetadataGenerationRunItem)
 
     MetadataMap.key = Shapes::ShapeRef.new(shape: String)
     MetadataMap.value = Shapes::ShapeRef.new(shape: String)
+
+    MlflowPropertiesInput.add_member(:tracking_server_arn, Shapes::ShapeRef.new(shape: String, location_name: "trackingServerArn"))
+    MlflowPropertiesInput.struct_class = Types::MlflowPropertiesInput
+
+    MlflowPropertiesOutput.add_member(:tracking_server_arn, Shapes::ShapeRef.new(shape: String, location_name: "trackingServerArn"))
+    MlflowPropertiesOutput.struct_class = Types::MlflowPropertiesOutput
+
+    MlflowPropertiesPatch.add_member(:tracking_server_arn, Shapes::ShapeRef.new(shape: String, location_name: "trackingServerArn"))
+    MlflowPropertiesPatch.struct_class = Types::MlflowPropertiesPatch
 
     Model.add_member(:smithy, Shapes::ShapeRef.new(shape: Smithy, location_name: "smithy"))
     Model.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
@@ -4027,6 +5072,12 @@ module Aws::DataZone
 
     NameIdentifiers.member = Shapes::ShapeRef.new(shape: NameIdentifier)
 
+    NetworkConfig.add_member(:network_access_type, Shapes::ShapeRef.new(shape: NetworkAccessType, required: true, location_name: "networkAccessType"))
+    NetworkConfig.add_member(:vpc_id, Shapes::ShapeRef.new(shape: String, location_name: "vpcId"))
+    NetworkConfig.add_member(:subnet_ids, Shapes::ShapeRef.new(shape: SubnetIds, location_name: "subnetIds"))
+    NetworkConfig.add_member(:security_group_ids, Shapes::ShapeRef.new(shape: SecurityGroupIds, location_name: "securityGroupIds"))
+    NetworkConfig.struct_class = Types::NetworkConfig
+
     NotEqualToExpression.add_member(:column_name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "columnName"))
     NotEqualToExpression.add_member(:value, Shapes::ShapeRef.new(shape: String, required: true, location_name: "value"))
     NotEqualToExpression.struct_class = Types::NotEqualToExpression
@@ -4039,46 +5090,92 @@ module Aws::DataZone
     NotLikeExpression.add_member(:value, Shapes::ShapeRef.new(shape: String, required: true, location_name: "value"))
     NotLikeExpression.struct_class = Types::NotLikeExpression
 
+    NotebookError.add_member(:message, Shapes::ShapeRef.new(shape: NotebookErrorMessageString, required: true, location_name: "message"))
+    NotebookError.struct_class = Types::NotebookError
+
+    NotebookExportError.add_member(:message, Shapes::ShapeRef.new(shape: NotebookExportErrorMessageString, required: true, location_name: "message"))
+    NotebookExportError.struct_class = Types::NotebookExportError
+
+    NotebookRunError.add_member(:message, Shapes::ShapeRef.new(shape: NotebookRunErrorMessageString, required: true, location_name: "message"))
+    NotebookRunError.struct_class = Types::NotebookRunError
+
+    NotebookRunSummary.add_member(:id, Shapes::ShapeRef.new(shape: NotebookRunId, required: true, location_name: "id"))
+    NotebookRunSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    NotebookRunSummary.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
+    NotebookRunSummary.add_member(:notebook_id, Shapes::ShapeRef.new(shape: NotebookId, required: true, location_name: "notebookId"))
+    NotebookRunSummary.add_member(:schedule_id, Shapes::ShapeRef.new(shape: ScheduleId, location_name: "scheduleId"))
+    NotebookRunSummary.add_member(:status, Shapes::ShapeRef.new(shape: NotebookRunStatus, required: true, location_name: "status"))
+    NotebookRunSummary.add_member(:trigger_source, Shapes::ShapeRef.new(shape: TriggerSource, location_name: "triggerSource"))
+    NotebookRunSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    NotebookRunSummary.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
+    NotebookRunSummary.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
+    NotebookRunSummary.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    NotebookRunSummary.add_member(:started_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "startedAt"))
+    NotebookRunSummary.add_member(:completed_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "completedAt"))
+    NotebookRunSummary.struct_class = Types::NotebookRunSummary
+
+    NotebookRunSummaryList.member = Shapes::ShapeRef.new(shape: NotebookRunSummary)
+
+    NotebookSummary.add_member(:id, Shapes::ShapeRef.new(shape: NotebookId, required: true, location_name: "id"))
+    NotebookSummary.add_member(:name, Shapes::ShapeRef.new(shape: NotebookName, required: true, location_name: "name"))
+    NotebookSummary.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
+    NotebookSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    NotebookSummary.add_member(:status, Shapes::ShapeRef.new(shape: NotebookStatus, required: true, location_name: "status"))
+    NotebookSummary.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    NotebookSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    NotebookSummary.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
+    NotebookSummary.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
+    NotebookSummary.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    NotebookSummary.struct_class = Types::NotebookSummary
+
+    NotebookSummaryList.member = Shapes::ShapeRef.new(shape: NotebookSummary)
+
+    NotificationOutput.add_member(:identifier, Shapes::ShapeRef.new(shape: TaskId, required: true, location_name: "identifier"))
+    NotificationOutput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainIdentifier"))
+    NotificationOutput.add_member(:type, Shapes::ShapeRef.new(shape: NotificationType, required: true, location_name: "type"))
+    NotificationOutput.add_member(:topic, Shapes::ShapeRef.new(shape: Topic, required: true, location_name: "topic"))
+    NotificationOutput.add_member(:title, Shapes::ShapeRef.new(shape: Title, required: true, location_name: "title"))
+    NotificationOutput.add_member(:message, Shapes::ShapeRef.new(shape: Message, required: true, location_name: "message"))
+    NotificationOutput.add_member(:status, Shapes::ShapeRef.new(shape: TaskStatus, location_name: "status"))
     NotificationOutput.add_member(:action_link, Shapes::ShapeRef.new(shape: ActionLink, required: true, location_name: "actionLink"))
     NotificationOutput.add_member(:creation_timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "creationTimestamp"))
-    NotificationOutput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainIdentifier"))
-    NotificationOutput.add_member(:identifier, Shapes::ShapeRef.new(shape: TaskId, required: true, location_name: "identifier"))
     NotificationOutput.add_member(:last_updated_timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "lastUpdatedTimestamp"))
-    NotificationOutput.add_member(:message, Shapes::ShapeRef.new(shape: Message, required: true, location_name: "message"))
     NotificationOutput.add_member(:metadata, Shapes::ShapeRef.new(shape: MetadataMap, location_name: "metadata"))
-    NotificationOutput.add_member(:status, Shapes::ShapeRef.new(shape: TaskStatus, location_name: "status"))
-    NotificationOutput.add_member(:title, Shapes::ShapeRef.new(shape: Title, required: true, location_name: "title"))
-    NotificationOutput.add_member(:topic, Shapes::ShapeRef.new(shape: Topic, required: true, location_name: "topic"))
-    NotificationOutput.add_member(:type, Shapes::ShapeRef.new(shape: NotificationType, required: true, location_name: "type"))
     NotificationOutput.struct_class = Types::NotificationOutput
 
+    NotificationResource.add_member(:type, Shapes::ShapeRef.new(shape: NotificationResourceType, required: true, location_name: "type"))
     NotificationResource.add_member(:id, Shapes::ShapeRef.new(shape: String, required: true, location_name: "id"))
     NotificationResource.add_member(:name, Shapes::ShapeRef.new(shape: String, location_name: "name"))
-    NotificationResource.add_member(:type, Shapes::ShapeRef.new(shape: NotificationResourceType, required: true, location_name: "type"))
     NotificationResource.struct_class = Types::NotificationResource
 
     NotificationSubjects.member = Shapes::ShapeRef.new(shape: String)
 
     NotificationsList.member = Shapes::ShapeRef.new(shape: NotificationOutput)
 
-    OAuth2ClientApplication.add_member(:a_ws_managed_client_application_reference, Shapes::ShapeRef.new(shape: OAuth2ClientApplicationAWSManagedClientApplicationReferenceString, location_name: "aWSManagedClientApplicationReference"))
     OAuth2ClientApplication.add_member(:user_managed_client_application_client_id, Shapes::ShapeRef.new(shape: OAuth2ClientApplicationUserManagedClientApplicationClientIdString, location_name: "userManagedClientApplicationClientId"))
+    OAuth2ClientApplication.add_member(:a_ws_managed_client_application_reference, Shapes::ShapeRef.new(shape: OAuth2ClientApplicationAWSManagedClientApplicationReferenceString, location_name: "aWSManagedClientApplicationReference"))
     OAuth2ClientApplication.struct_class = Types::OAuth2ClientApplication
 
-    OAuth2Properties.add_member(:authorization_code_properties, Shapes::ShapeRef.new(shape: AuthorizationCodeProperties, location_name: "authorizationCodeProperties"))
-    OAuth2Properties.add_member(:o_auth_2_client_application, Shapes::ShapeRef.new(shape: OAuth2ClientApplication, location_name: "oAuth2ClientApplication"))
-    OAuth2Properties.add_member(:o_auth_2_credentials, Shapes::ShapeRef.new(shape: GlueOAuth2Credentials, location_name: "oAuth2Credentials"))
     OAuth2Properties.add_member(:o_auth_2_grant_type, Shapes::ShapeRef.new(shape: OAuth2GrantType, location_name: "oAuth2GrantType"))
+    OAuth2Properties.add_member(:o_auth_2_client_application, Shapes::ShapeRef.new(shape: OAuth2ClientApplication, location_name: "oAuth2ClientApplication"))
     OAuth2Properties.add_member(:token_url, Shapes::ShapeRef.new(shape: OAuth2PropertiesTokenUrlString, location_name: "tokenUrl"))
     OAuth2Properties.add_member(:token_url_parameters_map, Shapes::ShapeRef.new(shape: TokenUrlParametersMap, location_name: "tokenUrlParametersMap"))
+    OAuth2Properties.add_member(:authorization_code_properties, Shapes::ShapeRef.new(shape: AuthorizationCodeProperties, location_name: "authorizationCodeProperties"))
+    OAuth2Properties.add_member(:o_auth_2_credentials, Shapes::ShapeRef.new(shape: GlueOAuth2Credentials, location_name: "oAuth2Credentials"))
     OAuth2Properties.struct_class = Types::OAuth2Properties
 
     OpenLineageRunEventSummary.add_member(:event_type, Shapes::ShapeRef.new(shape: OpenLineageRunState, location_name: "eventType"))
-    OpenLineageRunEventSummary.add_member(:inputs, Shapes::ShapeRef.new(shape: NameIdentifiers, location_name: "inputs"))
-    OpenLineageRunEventSummary.add_member(:job, Shapes::ShapeRef.new(shape: NameIdentifier, location_name: "job"))
-    OpenLineageRunEventSummary.add_member(:outputs, Shapes::ShapeRef.new(shape: NameIdentifiers, location_name: "outputs"))
     OpenLineageRunEventSummary.add_member(:run_id, Shapes::ShapeRef.new(shape: String, location_name: "runId"))
+    OpenLineageRunEventSummary.add_member(:job, Shapes::ShapeRef.new(shape: NameIdentifier, location_name: "job"))
+    OpenLineageRunEventSummary.add_member(:inputs, Shapes::ShapeRef.new(shape: NameIdentifiers, location_name: "inputs"))
+    OpenLineageRunEventSummary.add_member(:outputs, Shapes::ShapeRef.new(shape: NameIdentifiers, location_name: "outputs"))
     OpenLineageRunEventSummary.struct_class = Types::OpenLineageRunEventSummary
+
+    OutputLocation.add_member(:s3, Shapes::ShapeRef.new(shape: S3Destination, location_name: "s3"))
+    OutputLocation.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    OutputLocation.add_member_subclass(:s3, Types::OutputLocation::S3)
+    OutputLocation.add_member_subclass(:unknown, Types::OutputLocation::Unknown)
+    OutputLocation.struct_class = Types::OutputLocation
 
     OverrideDomainUnitOwnersPolicyGrantDetail.add_member(:include_child_domain_units, Shapes::ShapeRef.new(shape: Boolean, location_name: "includeChildDomainUnits"))
     OverrideDomainUnitOwnersPolicyGrantDetail.struct_class = Types::OverrideDomainUnitOwnersPolicyGrantDetail
@@ -4092,19 +5189,19 @@ module Aws::DataZone
     OwnerGroupPropertiesOutput.add_member(:group_id, Shapes::ShapeRef.new(shape: String, location_name: "groupId"))
     OwnerGroupPropertiesOutput.struct_class = Types::OwnerGroupPropertiesOutput
 
-    OwnerProperties.add_member(:group, Shapes::ShapeRef.new(shape: OwnerGroupProperties, location_name: "group"))
     OwnerProperties.add_member(:user, Shapes::ShapeRef.new(shape: OwnerUserProperties, location_name: "user"))
+    OwnerProperties.add_member(:group, Shapes::ShapeRef.new(shape: OwnerGroupProperties, location_name: "group"))
     OwnerProperties.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
-    OwnerProperties.add_member_subclass(:group, Types::OwnerProperties::Group)
     OwnerProperties.add_member_subclass(:user, Types::OwnerProperties::User)
+    OwnerProperties.add_member_subclass(:group, Types::OwnerProperties::Group)
     OwnerProperties.add_member_subclass(:unknown, Types::OwnerProperties::Unknown)
     OwnerProperties.struct_class = Types::OwnerProperties
 
-    OwnerPropertiesOutput.add_member(:group, Shapes::ShapeRef.new(shape: OwnerGroupPropertiesOutput, location_name: "group"))
     OwnerPropertiesOutput.add_member(:user, Shapes::ShapeRef.new(shape: OwnerUserPropertiesOutput, location_name: "user"))
+    OwnerPropertiesOutput.add_member(:group, Shapes::ShapeRef.new(shape: OwnerGroupPropertiesOutput, location_name: "group"))
     OwnerPropertiesOutput.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
-    OwnerPropertiesOutput.add_member_subclass(:group, Types::OwnerPropertiesOutput::Group)
     OwnerPropertiesOutput.add_member_subclass(:user, Types::OwnerPropertiesOutput::User)
+    OwnerPropertiesOutput.add_member_subclass(:group, Types::OwnerPropertiesOutput::Group)
     OwnerPropertiesOutput.add_member_subclass(:unknown, Types::OwnerPropertiesOutput::Unknown)
     OwnerPropertiesOutput.struct_class = Types::OwnerPropertiesOutput
 
@@ -4114,15 +5211,30 @@ module Aws::DataZone
     OwnerUserPropertiesOutput.add_member(:user_id, Shapes::ShapeRef.new(shape: String, location_name: "userId"))
     OwnerUserPropertiesOutput.struct_class = Types::OwnerUserPropertiesOutput
 
-    PhysicalConnectionRequirements.add_member(:availability_zone, Shapes::ShapeRef.new(shape: PhysicalConnectionRequirementsAvailabilityZoneString, location_name: "availabilityZone"))
-    PhysicalConnectionRequirements.add_member(:security_group_id_list, Shapes::ShapeRef.new(shape: SecurityGroupIdList, location_name: "securityGroupIdList"))
+    PackageConfig.add_member(:package_manager, Shapes::ShapeRef.new(shape: PackageManager, required: true, location_name: "packageManager"))
+    PackageConfig.add_member(:package_specification, Shapes::ShapeRef.new(shape: PackageConfigPackageSpecificationString, location_name: "packageSpecification"))
+    PackageConfig.struct_class = Types::PackageConfig
+
+    Parameters.key = Shapes::ShapeRef.new(shape: ParameterKey)
+    Parameters.value = Shapes::ShapeRef.new(shape: ParameterValue)
+
+    Permissions.add_member(:s3, Shapes::ShapeRef.new(shape: S3Permissions, location_name: "s3"))
+    Permissions.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    Permissions.add_member_subclass(:s3, Types::Permissions::S3)
+    Permissions.add_member_subclass(:unknown, Types::Permissions::Unknown)
+    Permissions.struct_class = Types::Permissions
+
     PhysicalConnectionRequirements.add_member(:subnet_id, Shapes::ShapeRef.new(shape: SubnetId, location_name: "subnetId"))
     PhysicalConnectionRequirements.add_member(:subnet_id_list, Shapes::ShapeRef.new(shape: SubnetIdList, location_name: "subnetIdList"))
+    PhysicalConnectionRequirements.add_member(:security_group_id_list, Shapes::ShapeRef.new(shape: SecurityGroupIdList, location_name: "securityGroupIdList"))
+    PhysicalConnectionRequirements.add_member(:availability_zone, Shapes::ShapeRef.new(shape: PhysicalConnectionRequirementsAvailabilityZoneString, location_name: "availabilityZone"))
     PhysicalConnectionRequirements.struct_class = Types::PhysicalConnectionRequirements
 
     PhysicalEndpoint.add_member(:aws_location, Shapes::ShapeRef.new(shape: AwsLocation, location_name: "awsLocation"))
-    PhysicalEndpoint.add_member(:glue_connection, Shapes::ShapeRef.new(shape: GlueConnection, location_name: "glueConnection"))
     PhysicalEndpoint.add_member(:glue_connection_name, Shapes::ShapeRef.new(shape: String, location_name: "glueConnectionName"))
+    PhysicalEndpoint.add_member(:glue_connection_names, Shapes::ShapeRef.new(shape: GlueConnectionNames, location_name: "glueConnectionNames"))
+    PhysicalEndpoint.add_member(:glue_connection, Shapes::ShapeRef.new(shape: GlueConnection, location_name: "glueConnection"))
+    PhysicalEndpoint.add_member(:enable_trusted_identity_propagation, Shapes::ShapeRef.new(shape: Boolean, location_name: "enableTrustedIdentityPropagation"))
     PhysicalEndpoint.add_member(:host, Shapes::ShapeRef.new(shape: String, location_name: "host"))
     PhysicalEndpoint.add_member(:port, Shapes::ShapeRef.new(shape: Integer, location_name: "port"))
     PhysicalEndpoint.add_member(:protocol, Shapes::ShapeRef.new(shape: Protocol, location_name: "protocol"))
@@ -4131,72 +5243,75 @@ module Aws::DataZone
 
     PhysicalEndpoints.member = Shapes::ShapeRef.new(shape: PhysicalEndpoint)
 
-    PolicyGrantDetail.add_member(:add_to_project_member_pool, Shapes::ShapeRef.new(shape: AddToProjectMemberPoolPolicyGrantDetail, location_name: "addToProjectMemberPool"))
-    PolicyGrantDetail.add_member(:create_asset_type, Shapes::ShapeRef.new(shape: CreateAssetTypePolicyGrantDetail, location_name: "createAssetType"))
     PolicyGrantDetail.add_member(:create_domain_unit, Shapes::ShapeRef.new(shape: CreateDomainUnitPolicyGrantDetail, location_name: "createDomainUnit"))
+    PolicyGrantDetail.add_member(:override_domain_unit_owners, Shapes::ShapeRef.new(shape: OverrideDomainUnitOwnersPolicyGrantDetail, location_name: "overrideDomainUnitOwners"))
+    PolicyGrantDetail.add_member(:add_to_project_member_pool, Shapes::ShapeRef.new(shape: AddToProjectMemberPoolPolicyGrantDetail, location_name: "addToProjectMemberPool"))
+    PolicyGrantDetail.add_member(:override_project_owners, Shapes::ShapeRef.new(shape: OverrideProjectOwnersPolicyGrantDetail, location_name: "overrideProjectOwners"))
+    PolicyGrantDetail.add_member(:create_glossary, Shapes::ShapeRef.new(shape: CreateGlossaryPolicyGrantDetail, location_name: "createGlossary"))
+    PolicyGrantDetail.add_member(:create_form_type, Shapes::ShapeRef.new(shape: CreateFormTypePolicyGrantDetail, location_name: "createFormType"))
+    PolicyGrantDetail.add_member(:create_asset_type, Shapes::ShapeRef.new(shape: CreateAssetTypePolicyGrantDetail, location_name: "createAssetType"))
+    PolicyGrantDetail.add_member(:create_project, Shapes::ShapeRef.new(shape: CreateProjectPolicyGrantDetail, location_name: "createProject"))
+    PolicyGrantDetail.add_member(:create_environment_profile, Shapes::ShapeRef.new(shape: CreateEnvironmentProfilePolicyGrantDetail, location_name: "createEnvironmentProfile"))
+    PolicyGrantDetail.add_member(:delegate_create_environment_profile, Shapes::ShapeRef.new(shape: Unit, location_name: "delegateCreateEnvironmentProfile"))
     PolicyGrantDetail.add_member(:create_environment, Shapes::ShapeRef.new(shape: Unit, location_name: "createEnvironment"))
     PolicyGrantDetail.add_member(:create_environment_from_blueprint, Shapes::ShapeRef.new(shape: Unit, location_name: "createEnvironmentFromBlueprint"))
-    PolicyGrantDetail.add_member(:create_environment_profile, Shapes::ShapeRef.new(shape: CreateEnvironmentProfilePolicyGrantDetail, location_name: "createEnvironmentProfile"))
-    PolicyGrantDetail.add_member(:create_form_type, Shapes::ShapeRef.new(shape: CreateFormTypePolicyGrantDetail, location_name: "createFormType"))
-    PolicyGrantDetail.add_member(:create_glossary, Shapes::ShapeRef.new(shape: CreateGlossaryPolicyGrantDetail, location_name: "createGlossary"))
-    PolicyGrantDetail.add_member(:create_project, Shapes::ShapeRef.new(shape: CreateProjectPolicyGrantDetail, location_name: "createProject"))
     PolicyGrantDetail.add_member(:create_project_from_project_profile, Shapes::ShapeRef.new(shape: CreateProjectFromProjectProfilePolicyGrantDetail, location_name: "createProjectFromProjectProfile"))
-    PolicyGrantDetail.add_member(:delegate_create_environment_profile, Shapes::ShapeRef.new(shape: Unit, location_name: "delegateCreateEnvironmentProfile"))
-    PolicyGrantDetail.add_member(:override_domain_unit_owners, Shapes::ShapeRef.new(shape: OverrideDomainUnitOwnersPolicyGrantDetail, location_name: "overrideDomainUnitOwners"))
-    PolicyGrantDetail.add_member(:override_project_owners, Shapes::ShapeRef.new(shape: OverrideProjectOwnersPolicyGrantDetail, location_name: "overrideProjectOwners"))
+    PolicyGrantDetail.add_member(:use_asset_type, Shapes::ShapeRef.new(shape: UseAssetTypePolicyGrantDetail, location_name: "useAssetType"))
     PolicyGrantDetail.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
-    PolicyGrantDetail.add_member_subclass(:add_to_project_member_pool, Types::PolicyGrantDetail::AddToProjectMemberPool)
-    PolicyGrantDetail.add_member_subclass(:create_asset_type, Types::PolicyGrantDetail::CreateAssetType)
     PolicyGrantDetail.add_member_subclass(:create_domain_unit, Types::PolicyGrantDetail::CreateDomainUnit)
+    PolicyGrantDetail.add_member_subclass(:override_domain_unit_owners, Types::PolicyGrantDetail::OverrideDomainUnitOwners)
+    PolicyGrantDetail.add_member_subclass(:add_to_project_member_pool, Types::PolicyGrantDetail::AddToProjectMemberPool)
+    PolicyGrantDetail.add_member_subclass(:override_project_owners, Types::PolicyGrantDetail::OverrideProjectOwners)
+    PolicyGrantDetail.add_member_subclass(:create_glossary, Types::PolicyGrantDetail::CreateGlossary)
+    PolicyGrantDetail.add_member_subclass(:create_form_type, Types::PolicyGrantDetail::CreateFormType)
+    PolicyGrantDetail.add_member_subclass(:create_asset_type, Types::PolicyGrantDetail::CreateAssetType)
+    PolicyGrantDetail.add_member_subclass(:create_project, Types::PolicyGrantDetail::CreateProject)
+    PolicyGrantDetail.add_member_subclass(:create_environment_profile, Types::PolicyGrantDetail::CreateEnvironmentProfile)
+    PolicyGrantDetail.add_member_subclass(:delegate_create_environment_profile, Types::PolicyGrantDetail::DelegateCreateEnvironmentProfile)
     PolicyGrantDetail.add_member_subclass(:create_environment, Types::PolicyGrantDetail::CreateEnvironment)
     PolicyGrantDetail.add_member_subclass(:create_environment_from_blueprint, Types::PolicyGrantDetail::CreateEnvironmentFromBlueprint)
-    PolicyGrantDetail.add_member_subclass(:create_environment_profile, Types::PolicyGrantDetail::CreateEnvironmentProfile)
-    PolicyGrantDetail.add_member_subclass(:create_form_type, Types::PolicyGrantDetail::CreateFormType)
-    PolicyGrantDetail.add_member_subclass(:create_glossary, Types::PolicyGrantDetail::CreateGlossary)
-    PolicyGrantDetail.add_member_subclass(:create_project, Types::PolicyGrantDetail::CreateProject)
     PolicyGrantDetail.add_member_subclass(:create_project_from_project_profile, Types::PolicyGrantDetail::CreateProjectFromProjectProfile)
-    PolicyGrantDetail.add_member_subclass(:delegate_create_environment_profile, Types::PolicyGrantDetail::DelegateCreateEnvironmentProfile)
-    PolicyGrantDetail.add_member_subclass(:override_domain_unit_owners, Types::PolicyGrantDetail::OverrideDomainUnitOwners)
-    PolicyGrantDetail.add_member_subclass(:override_project_owners, Types::PolicyGrantDetail::OverrideProjectOwners)
+    PolicyGrantDetail.add_member_subclass(:use_asset_type, Types::PolicyGrantDetail::UseAssetType)
     PolicyGrantDetail.add_member_subclass(:unknown, Types::PolicyGrantDetail::Unknown)
     PolicyGrantDetail.struct_class = Types::PolicyGrantDetail
 
     PolicyGrantList.member = Shapes::ShapeRef.new(shape: PolicyGrantMember)
 
+    PolicyGrantMember.add_member(:principal, Shapes::ShapeRef.new(shape: PolicyGrantPrincipal, location_name: "principal"))
+    PolicyGrantMember.add_member(:detail, Shapes::ShapeRef.new(shape: PolicyGrantDetail, location_name: "detail"))
     PolicyGrantMember.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
     PolicyGrantMember.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
-    PolicyGrantMember.add_member(:detail, Shapes::ShapeRef.new(shape: PolicyGrantDetail, location_name: "detail"))
-    PolicyGrantMember.add_member(:principal, Shapes::ShapeRef.new(shape: PolicyGrantPrincipal, location_name: "principal"))
+    PolicyGrantMember.add_member(:grant_id, Shapes::ShapeRef.new(shape: GrantIdentifier, location_name: "grantId"))
     PolicyGrantMember.struct_class = Types::PolicyGrantMember
 
-    PolicyGrantPrincipal.add_member(:domain_unit, Shapes::ShapeRef.new(shape: DomainUnitPolicyGrantPrincipal, location_name: "domainUnit"))
+    PolicyGrantPrincipal.add_member(:user, Shapes::ShapeRef.new(shape: UserPolicyGrantPrincipal, location_name: "user"))
     PolicyGrantPrincipal.add_member(:group, Shapes::ShapeRef.new(shape: GroupPolicyGrantPrincipal, location_name: "group"))
     PolicyGrantPrincipal.add_member(:project, Shapes::ShapeRef.new(shape: ProjectPolicyGrantPrincipal, location_name: "project"))
-    PolicyGrantPrincipal.add_member(:user, Shapes::ShapeRef.new(shape: UserPolicyGrantPrincipal, location_name: "user"))
+    PolicyGrantPrincipal.add_member(:domain_unit, Shapes::ShapeRef.new(shape: DomainUnitPolicyGrantPrincipal, location_name: "domainUnit"))
     PolicyGrantPrincipal.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
-    PolicyGrantPrincipal.add_member_subclass(:domain_unit, Types::PolicyGrantPrincipal::DomainUnit)
+    PolicyGrantPrincipal.add_member_subclass(:user, Types::PolicyGrantPrincipal::User)
     PolicyGrantPrincipal.add_member_subclass(:group, Types::PolicyGrantPrincipal::Group)
     PolicyGrantPrincipal.add_member_subclass(:project, Types::PolicyGrantPrincipal::Project)
-    PolicyGrantPrincipal.add_member_subclass(:user, Types::PolicyGrantPrincipal::User)
+    PolicyGrantPrincipal.add_member_subclass(:domain_unit, Types::PolicyGrantPrincipal::DomainUnit)
     PolicyGrantPrincipal.add_member_subclass(:unknown, Types::PolicyGrantPrincipal::Unknown)
     PolicyGrantPrincipal.struct_class = Types::PolicyGrantPrincipal
 
-    PostLineageEventInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "header", location_name: "Client-Token", metadata: {"idempotencyToken"=>true}))
     PostLineageEventInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     PostLineageEventInput.add_member(:event, Shapes::ShapeRef.new(shape: LineageEvent, required: true, location_name: "event"))
+    PostLineageEventInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location: "header", location_name: "Client-Token", metadata: {"idempotencyToken" => true}))
     PostLineageEventInput.struct_class = Types::PostLineageEventInput
     PostLineageEventInput[:payload] = :event
     PostLineageEventInput[:payload_member] = PostLineageEventInput.member(:event)
 
-    PostLineageEventOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "domainId"))
     PostLineageEventOutput.add_member(:id, Shapes::ShapeRef.new(shape: LineageEventIdentifier, location_name: "id"))
+    PostLineageEventOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "domainId"))
     PostLineageEventOutput.struct_class = Types::PostLineageEventOutput
 
-    PostTimeSeriesDataPointsInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
     PostTimeSeriesDataPointsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     PostTimeSeriesDataPointsInput.add_member(:entity_identifier, Shapes::ShapeRef.new(shape: EntityIdentifier, required: true, location: "uri", location_name: "entityIdentifier"))
     PostTimeSeriesDataPointsInput.add_member(:entity_type, Shapes::ShapeRef.new(shape: TimeSeriesEntityType, required: true, location: "uri", location_name: "entityType"))
     PostTimeSeriesDataPointsInput.add_member(:forms, Shapes::ShapeRef.new(shape: TimeSeriesDataPointFormInputList, required: true, location_name: "forms"))
+    PostTimeSeriesDataPointsInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     PostTimeSeriesDataPointsInput.struct_class = Types::PostTimeSeriesDataPointsInput
 
     PostTimeSeriesDataPointsOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "domainId"))
@@ -4222,44 +5337,53 @@ module Aws::DataZone
 
     ProjectIds.member = Shapes::ShapeRef.new(shape: ProjectId)
 
-    ProjectMember.add_member(:designation, Shapes::ShapeRef.new(shape: UserDesignation, required: true, location_name: "designation"))
     ProjectMember.add_member(:member_details, Shapes::ShapeRef.new(shape: MemberDetails, required: true, location_name: "memberDetails"))
+    ProjectMember.add_member(:designation, Shapes::ShapeRef.new(shape: UserDesignation, required: true, location_name: "designation"))
     ProjectMember.struct_class = Types::ProjectMember
 
     ProjectMembers.member = Shapes::ShapeRef.new(shape: ProjectMember)
 
+    ProjectMembershipAssignment.add_member(:member, Shapes::ShapeRef.new(shape: Member, required: true, location_name: "member"))
+    ProjectMembershipAssignment.add_member(:designation, Shapes::ShapeRef.new(shape: UserDesignation, required: true, location_name: "designation"))
+    ProjectMembershipAssignment.struct_class = Types::ProjectMembershipAssignment
+
+    ProjectMembershipAssignments.member = Shapes::ShapeRef.new(shape: ProjectMembershipAssignment)
+
     ProjectPolicyGrantPrincipal.add_member(:project_designation, Shapes::ShapeRef.new(shape: ProjectDesignation, required: true, location_name: "projectDesignation"))
-    ProjectPolicyGrantPrincipal.add_member(:project_grant_filter, Shapes::ShapeRef.new(shape: ProjectGrantFilter, location_name: "projectGrantFilter"))
     ProjectPolicyGrantPrincipal.add_member(:project_identifier, Shapes::ShapeRef.new(shape: ProjectId, location_name: "projectIdentifier"))
+    ProjectPolicyGrantPrincipal.add_member(:project_grant_filter, Shapes::ShapeRef.new(shape: ProjectGrantFilter, location_name: "projectGrantFilter"))
     ProjectPolicyGrantPrincipal.struct_class = Types::ProjectPolicyGrantPrincipal
 
     ProjectProfileList.member = Shapes::ShapeRef.new(shape: String)
 
     ProjectProfileSummaries.member = Shapes::ShapeRef.new(shape: ProjectProfileSummary)
 
-    ProjectProfileSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
-    ProjectProfileSummary.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    ProjectProfileSummary.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     ProjectProfileSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    ProjectProfileSummary.add_member(:domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitId"))
     ProjectProfileSummary.add_member(:id, Shapes::ShapeRef.new(shape: ProjectProfileId, required: true, location_name: "id"))
-    ProjectProfileSummary.add_member(:last_updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "lastUpdatedAt"))
     ProjectProfileSummary.add_member(:name, Shapes::ShapeRef.new(shape: ProjectProfileName, required: true, location_name: "name"))
+    ProjectProfileSummary.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     ProjectProfileSummary.add_member(:status, Shapes::ShapeRef.new(shape: Status, location_name: "status"))
+    ProjectProfileSummary.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
+    ProjectProfileSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
+    ProjectProfileSummary.add_member(:last_updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "lastUpdatedAt"))
+    ProjectProfileSummary.add_member(:domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitId"))
     ProjectProfileSummary.struct_class = Types::ProjectProfileSummary
+
+    ProjectResourceTagParameters.member = Shapes::ShapeRef.new(shape: ResourceTagParameter)
 
     ProjectSummaries.member = Shapes::ShapeRef.new(shape: ProjectSummary)
 
-    ProjectSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
-    ProjectSummary.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    ProjectSummary.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     ProjectSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    ProjectSummary.add_member(:domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitId"))
-    ProjectSummary.add_member(:failure_reasons, Shapes::ShapeRef.new(shape: FailureReasons, location_name: "failureReasons"))
     ProjectSummary.add_member(:id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "id"))
     ProjectSummary.add_member(:name, Shapes::ShapeRef.new(shape: ProjectName, required: true, location_name: "name"))
+    ProjectSummary.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     ProjectSummary.add_member(:project_status, Shapes::ShapeRef.new(shape: ProjectStatus, location_name: "projectStatus"))
+    ProjectSummary.add_member(:failure_reasons, Shapes::ShapeRef.new(shape: FailureReasons, location_name: "failureReasons"))
+    ProjectSummary.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
+    ProjectSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
     ProjectSummary.add_member(:updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "updatedAt"))
+    ProjectSummary.add_member(:domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitId"))
+    ProjectSummary.add_member(:project_category, Shapes::ShapeRef.new(shape: String, location_name: "projectCategory"))
     ProjectSummary.struct_class = Types::ProjectSummary
 
     ProjectsForRule.add_member(:selection_mode, Shapes::ShapeRef.new(shape: RuleScopeSelectionMode, required: true, location_name: "selectionMode"))
@@ -4283,27 +5407,59 @@ module Aws::DataZone
     ProvisioningProperties.add_member_subclass(:unknown, Types::ProvisioningProperties::Unknown)
     ProvisioningProperties.struct_class = Types::ProvisioningProperties
 
+    PutDataExportConfigurationInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    PutDataExportConfigurationInput.add_member(:enable_export, Shapes::ShapeRef.new(shape: Boolean, required: true, location_name: "enableExport"))
+    PutDataExportConfigurationInput.add_member(:encryption_configuration, Shapes::ShapeRef.new(shape: EncryptionConfiguration, location_name: "encryptionConfiguration"))
+    PutDataExportConfigurationInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    PutDataExportConfigurationInput.struct_class = Types::PutDataExportConfigurationInput
+
+    PutDataExportConfigurationOutput.struct_class = Types::PutDataExportConfigurationOutput
+
     PutEnvironmentBlueprintConfigurationInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    PutEnvironmentBlueprintConfigurationInput.add_member(:enabled_regions, Shapes::ShapeRef.new(shape: EnabledRegionList, required: true, location_name: "enabledRegions"))
     PutEnvironmentBlueprintConfigurationInput.add_member(:environment_blueprint_identifier, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, required: true, location: "uri", location_name: "environmentBlueprintIdentifier"))
-    PutEnvironmentBlueprintConfigurationInput.add_member(:environment_role_permission_boundary, Shapes::ShapeRef.new(shape: PolicyArn, location_name: "environmentRolePermissionBoundary"))
-    PutEnvironmentBlueprintConfigurationInput.add_member(:manage_access_role_arn, Shapes::ShapeRef.new(shape: RoleArn, location_name: "manageAccessRoleArn"))
-    PutEnvironmentBlueprintConfigurationInput.add_member(:provisioning_configurations, Shapes::ShapeRef.new(shape: ProvisioningConfigurationList, location_name: "provisioningConfigurations"))
     PutEnvironmentBlueprintConfigurationInput.add_member(:provisioning_role_arn, Shapes::ShapeRef.new(shape: RoleArn, location_name: "provisioningRoleArn"))
+    PutEnvironmentBlueprintConfigurationInput.add_member(:manage_access_role_arn, Shapes::ShapeRef.new(shape: RoleArn, location_name: "manageAccessRoleArn"))
+    PutEnvironmentBlueprintConfigurationInput.add_member(:environment_role_permission_boundary, Shapes::ShapeRef.new(shape: PolicyArn, location_name: "environmentRolePermissionBoundary"))
+    PutEnvironmentBlueprintConfigurationInput.add_member(:enabled_regions, Shapes::ShapeRef.new(shape: EnabledRegionList, required: true, location_name: "enabledRegions"))
     PutEnvironmentBlueprintConfigurationInput.add_member(:regional_parameters, Shapes::ShapeRef.new(shape: RegionalParameterMap, location_name: "regionalParameters"))
+    PutEnvironmentBlueprintConfigurationInput.add_member(:resource_configurations, Shapes::ShapeRef.new(shape: PutResourceConfigurations, location_name: "resourceConfigurations"))
+    PutEnvironmentBlueprintConfigurationInput.add_member(:allow_user_provided_configurations, Shapes::ShapeRef.new(shape: Boolean, location_name: "allowUserProvidedConfigurations"))
+    PutEnvironmentBlueprintConfigurationInput.add_member(:global_parameters, Shapes::ShapeRef.new(shape: GlobalParameterMap, location_name: "globalParameters"))
+    PutEnvironmentBlueprintConfigurationInput.add_member(:provisioning_configurations, Shapes::ShapeRef.new(shape: ProvisioningConfigurationList, location_name: "provisioningConfigurations"))
     PutEnvironmentBlueprintConfigurationInput.struct_class = Types::PutEnvironmentBlueprintConfigurationInput
 
-    PutEnvironmentBlueprintConfigurationOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
     PutEnvironmentBlueprintConfigurationOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    PutEnvironmentBlueprintConfigurationOutput.add_member(:enabled_regions, Shapes::ShapeRef.new(shape: EnabledRegionList, location_name: "enabledRegions"))
     PutEnvironmentBlueprintConfigurationOutput.add_member(:environment_blueprint_id, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, required: true, location_name: "environmentBlueprintId"))
+    PutEnvironmentBlueprintConfigurationOutput.add_member(:provisioning_role_arn, Shapes::ShapeRef.new(shape: RoleArn, location_name: "provisioningRoleArn"))
     PutEnvironmentBlueprintConfigurationOutput.add_member(:environment_role_permission_boundary, Shapes::ShapeRef.new(shape: PolicyArn, location_name: "environmentRolePermissionBoundary"))
     PutEnvironmentBlueprintConfigurationOutput.add_member(:manage_access_role_arn, Shapes::ShapeRef.new(shape: RoleArn, location_name: "manageAccessRoleArn"))
-    PutEnvironmentBlueprintConfigurationOutput.add_member(:provisioning_configurations, Shapes::ShapeRef.new(shape: ProvisioningConfigurationList, location_name: "provisioningConfigurations"))
-    PutEnvironmentBlueprintConfigurationOutput.add_member(:provisioning_role_arn, Shapes::ShapeRef.new(shape: RoleArn, location_name: "provisioningRoleArn"))
+    PutEnvironmentBlueprintConfigurationOutput.add_member(:enabled_regions, Shapes::ShapeRef.new(shape: EnabledRegionList, location_name: "enabledRegions"))
     PutEnvironmentBlueprintConfigurationOutput.add_member(:regional_parameters, Shapes::ShapeRef.new(shape: RegionalParameterMap, location_name: "regionalParameters"))
+    PutEnvironmentBlueprintConfigurationOutput.add_member(:allow_user_provided_configurations, Shapes::ShapeRef.new(shape: Boolean, location_name: "allowUserProvidedConfigurations"))
+    PutEnvironmentBlueprintConfigurationOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
     PutEnvironmentBlueprintConfigurationOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "updatedAt"))
+    PutEnvironmentBlueprintConfigurationOutput.add_member(:resource_configurations, Shapes::ShapeRef.new(shape: ResourceConfigurations, location_name: "resourceConfigurations"))
+    PutEnvironmentBlueprintConfigurationOutput.add_member(:provisioning_configurations, Shapes::ShapeRef.new(shape: ProvisioningConfigurationList, location_name: "provisioningConfigurations"))
     PutEnvironmentBlueprintConfigurationOutput.struct_class = Types::PutEnvironmentBlueprintConfigurationOutput
+
+    PutResourceConfiguration.add_member(:name, Shapes::ShapeRef.new(shape: PutResourceConfigurationNameString, required: true, location_name: "name"))
+    PutResourceConfiguration.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
+    PutResourceConfiguration.add_member(:region, Shapes::ShapeRef.new(shape: RegionName, required: true, location_name: "region"))
+    PutResourceConfiguration.add_member(:parameters, Shapes::ShapeRef.new(shape: ResourceConfigurationParameterMap, required: true, location_name: "parameters"))
+    PutResourceConfiguration.struct_class = Types::PutResourceConfiguration
+
+    PutResourceConfigurations.member = Shapes::ShapeRef.new(shape: PutResourceConfiguration)
+
+    QueryGraphInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    QueryGraphInput.add_member(:match, Shapes::ShapeRef.new(shape: MatchClauses, required: true, location_name: "match"))
+    QueryGraphInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    QueryGraphInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location: "querystring", location_name: "nextToken"))
+    QueryGraphInput.add_member(:additional_attributes, Shapes::ShapeRef.new(shape: AdditionalAttributes, location_name: "additionalAttributes"))
+    QueryGraphInput.struct_class = Types::QueryGraphInput
+
+    QueryGraphOutput.add_member(:items, Shapes::ShapeRef.new(shape: ResultItemList, location_name: "items"))
+    QueryGraphOutput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
+    QueryGraphOutput.struct_class = Types::QueryGraphOutput
 
     RecommendationConfiguration.add_member(:enable_business_name_generation, Shapes::ShapeRef.new(shape: Boolean, location_name: "enableBusinessNameGeneration"))
     RecommendationConfiguration.struct_class = Types::RecommendationConfiguration
@@ -4326,50 +5482,50 @@ module Aws::DataZone
     RedshiftLineageSyncConfigurationInput.add_member(:schedule, Shapes::ShapeRef.new(shape: LineageSyncSchedule, location_name: "schedule"))
     RedshiftLineageSyncConfigurationInput.struct_class = Types::RedshiftLineageSyncConfigurationInput
 
-    RedshiftLineageSyncConfigurationOutput.add_member(:enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "enabled"))
     RedshiftLineageSyncConfigurationOutput.add_member(:lineage_job_id, Shapes::ShapeRef.new(shape: String, location_name: "lineageJobId"))
+    RedshiftLineageSyncConfigurationOutput.add_member(:enabled, Shapes::ShapeRef.new(shape: Boolean, location_name: "enabled"))
     RedshiftLineageSyncConfigurationOutput.add_member(:schedule, Shapes::ShapeRef.new(shape: LineageSyncSchedule, location_name: "schedule"))
     RedshiftLineageSyncConfigurationOutput.struct_class = Types::RedshiftLineageSyncConfigurationOutput
 
-    RedshiftPropertiesInput.add_member(:credentials, Shapes::ShapeRef.new(shape: RedshiftCredentials, location_name: "credentials"))
+    RedshiftPropertiesInput.add_member(:storage, Shapes::ShapeRef.new(shape: RedshiftStorageProperties, location_name: "storage"))
     RedshiftPropertiesInput.add_member(:database_name, Shapes::ShapeRef.new(shape: RedshiftPropertiesInputDatabaseNameString, location_name: "databaseName"))
     RedshiftPropertiesInput.add_member(:host, Shapes::ShapeRef.new(shape: RedshiftPropertiesInputHostString, location_name: "host"))
-    RedshiftPropertiesInput.add_member(:lineage_sync, Shapes::ShapeRef.new(shape: RedshiftLineageSyncConfigurationInput, location_name: "lineageSync"))
     RedshiftPropertiesInput.add_member(:port, Shapes::ShapeRef.new(shape: Integer, location_name: "port"))
-    RedshiftPropertiesInput.add_member(:storage, Shapes::ShapeRef.new(shape: RedshiftStorageProperties, location_name: "storage"))
+    RedshiftPropertiesInput.add_member(:credentials, Shapes::ShapeRef.new(shape: RedshiftCredentials, location_name: "credentials"))
+    RedshiftPropertiesInput.add_member(:lineage_sync, Shapes::ShapeRef.new(shape: RedshiftLineageSyncConfigurationInput, location_name: "lineageSync"))
     RedshiftPropertiesInput.struct_class = Types::RedshiftPropertiesInput
 
+    RedshiftPropertiesOutput.add_member(:storage, Shapes::ShapeRef.new(shape: RedshiftStorageProperties, location_name: "storage"))
     RedshiftPropertiesOutput.add_member(:credentials, Shapes::ShapeRef.new(shape: RedshiftCredentials, location_name: "credentials"))
-    RedshiftPropertiesOutput.add_member(:database_name, Shapes::ShapeRef.new(shape: String, location_name: "databaseName"))
     RedshiftPropertiesOutput.add_member(:is_provisioned_secret, Shapes::ShapeRef.new(shape: Boolean, location_name: "isProvisionedSecret"))
     RedshiftPropertiesOutput.add_member(:jdbc_iam_url, Shapes::ShapeRef.new(shape: String, location_name: "jdbcIamUrl"))
     RedshiftPropertiesOutput.add_member(:jdbc_url, Shapes::ShapeRef.new(shape: String, location_name: "jdbcUrl"))
-    RedshiftPropertiesOutput.add_member(:lineage_sync, Shapes::ShapeRef.new(shape: RedshiftLineageSyncConfigurationOutput, location_name: "lineageSync"))
     RedshiftPropertiesOutput.add_member(:redshift_temp_dir, Shapes::ShapeRef.new(shape: String, location_name: "redshiftTempDir"))
+    RedshiftPropertiesOutput.add_member(:lineage_sync, Shapes::ShapeRef.new(shape: RedshiftLineageSyncConfigurationOutput, location_name: "lineageSync"))
     RedshiftPropertiesOutput.add_member(:status, Shapes::ShapeRef.new(shape: ConnectionStatus, location_name: "status"))
-    RedshiftPropertiesOutput.add_member(:storage, Shapes::ShapeRef.new(shape: RedshiftStorageProperties, location_name: "storage"))
+    RedshiftPropertiesOutput.add_member(:database_name, Shapes::ShapeRef.new(shape: String, location_name: "databaseName"))
     RedshiftPropertiesOutput.struct_class = Types::RedshiftPropertiesOutput
 
-    RedshiftPropertiesPatch.add_member(:credentials, Shapes::ShapeRef.new(shape: RedshiftCredentials, location_name: "credentials"))
+    RedshiftPropertiesPatch.add_member(:storage, Shapes::ShapeRef.new(shape: RedshiftStorageProperties, location_name: "storage"))
     RedshiftPropertiesPatch.add_member(:database_name, Shapes::ShapeRef.new(shape: RedshiftPropertiesPatchDatabaseNameString, location_name: "databaseName"))
     RedshiftPropertiesPatch.add_member(:host, Shapes::ShapeRef.new(shape: RedshiftPropertiesPatchHostString, location_name: "host"))
-    RedshiftPropertiesPatch.add_member(:lineage_sync, Shapes::ShapeRef.new(shape: RedshiftLineageSyncConfigurationInput, location_name: "lineageSync"))
     RedshiftPropertiesPatch.add_member(:port, Shapes::ShapeRef.new(shape: Integer, location_name: "port"))
-    RedshiftPropertiesPatch.add_member(:storage, Shapes::ShapeRef.new(shape: RedshiftStorageProperties, location_name: "storage"))
+    RedshiftPropertiesPatch.add_member(:credentials, Shapes::ShapeRef.new(shape: RedshiftCredentials, location_name: "credentials"))
+    RedshiftPropertiesPatch.add_member(:lineage_sync, Shapes::ShapeRef.new(shape: RedshiftLineageSyncConfigurationInput, location_name: "lineageSync"))
     RedshiftPropertiesPatch.struct_class = Types::RedshiftPropertiesPatch
 
     RedshiftRunConfigurationInput.add_member(:data_access_role, Shapes::ShapeRef.new(shape: RedshiftRunConfigurationInputDataAccessRoleString, location_name: "dataAccessRole"))
+    RedshiftRunConfigurationInput.add_member(:relational_filter_configurations, Shapes::ShapeRef.new(shape: RelationalFilterConfigurations, required: true, location_name: "relationalFilterConfigurations"))
     RedshiftRunConfigurationInput.add_member(:redshift_credential_configuration, Shapes::ShapeRef.new(shape: RedshiftCredentialConfiguration, location_name: "redshiftCredentialConfiguration"))
     RedshiftRunConfigurationInput.add_member(:redshift_storage, Shapes::ShapeRef.new(shape: RedshiftStorage, location_name: "redshiftStorage"))
-    RedshiftRunConfigurationInput.add_member(:relational_filter_configurations, Shapes::ShapeRef.new(shape: RelationalFilterConfigurations, required: true, location_name: "relationalFilterConfigurations"))
     RedshiftRunConfigurationInput.struct_class = Types::RedshiftRunConfigurationInput
 
     RedshiftRunConfigurationOutput.add_member(:account_id, Shapes::ShapeRef.new(shape: RedshiftRunConfigurationOutputAccountIdString, location_name: "accountId"))
+    RedshiftRunConfigurationOutput.add_member(:region, Shapes::ShapeRef.new(shape: RedshiftRunConfigurationOutputRegionString, location_name: "region"))
     RedshiftRunConfigurationOutput.add_member(:data_access_role, Shapes::ShapeRef.new(shape: RedshiftRunConfigurationOutputDataAccessRoleString, location_name: "dataAccessRole"))
+    RedshiftRunConfigurationOutput.add_member(:relational_filter_configurations, Shapes::ShapeRef.new(shape: RelationalFilterConfigurations, required: true, location_name: "relationalFilterConfigurations"))
     RedshiftRunConfigurationOutput.add_member(:redshift_credential_configuration, Shapes::ShapeRef.new(shape: RedshiftCredentialConfiguration, location_name: "redshiftCredentialConfiguration"))
     RedshiftRunConfigurationOutput.add_member(:redshift_storage, Shapes::ShapeRef.new(shape: RedshiftStorage, required: true, location_name: "redshiftStorage"))
-    RedshiftRunConfigurationOutput.add_member(:region, Shapes::ShapeRef.new(shape: RedshiftRunConfigurationOutputRegionString, location_name: "region"))
-    RedshiftRunConfigurationOutput.add_member(:relational_filter_configurations, Shapes::ShapeRef.new(shape: RelationalFilterConfigurations, required: true, location_name: "relationalFilterConfigurations"))
     RedshiftRunConfigurationOutput.struct_class = Types::RedshiftRunConfigurationOutput
 
     RedshiftSelfGrantStatusOutput.add_member(:self_grant_status_details, Shapes::ShapeRef.new(shape: SelfGrantStatusDetails, required: true, location_name: "selfGrantStatusDetails"))
@@ -4408,117 +5564,155 @@ module Aws::DataZone
     RegionalParameterMap.key = Shapes::ShapeRef.new(shape: RegionName)
     RegionalParameterMap.value = Shapes::ShapeRef.new(shape: RegionalParameter)
 
-    RejectChoice.add_member(:prediction_choices, Shapes::ShapeRef.new(shape: PredictionChoices, location_name: "predictionChoices"))
     RejectChoice.add_member(:prediction_target, Shapes::ShapeRef.new(shape: String, required: true, location_name: "predictionTarget"))
+    RejectChoice.add_member(:prediction_choices, Shapes::ShapeRef.new(shape: PredictionChoices, location_name: "predictionChoices"))
     RejectChoice.struct_class = Types::RejectChoice
 
     RejectChoices.member = Shapes::ShapeRef.new(shape: RejectChoice)
 
-    RejectPredictionsInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
     RejectPredictionsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     RejectPredictionsInput.add_member(:identifier, Shapes::ShapeRef.new(shape: AssetIdentifier, required: true, location: "uri", location_name: "identifier"))
-    RejectPredictionsInput.add_member(:reject_choices, Shapes::ShapeRef.new(shape: RejectChoices, location_name: "rejectChoices"))
-    RejectPredictionsInput.add_member(:reject_rule, Shapes::ShapeRef.new(shape: RejectRule, location_name: "rejectRule"))
     RejectPredictionsInput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, location: "querystring", location_name: "revision"))
+    RejectPredictionsInput.add_member(:reject_rule, Shapes::ShapeRef.new(shape: RejectRule, location_name: "rejectRule"))
+    RejectPredictionsInput.add_member(:reject_choices, Shapes::ShapeRef.new(shape: RejectChoices, location_name: "rejectChoices"))
+    RejectPredictionsInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     RejectPredictionsInput.struct_class = Types::RejectPredictionsInput
 
+    RejectPredictionsOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     RejectPredictionsOutput.add_member(:asset_id, Shapes::ShapeRef.new(shape: AssetId, required: true, location_name: "assetId"))
     RejectPredictionsOutput.add_member(:asset_revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "assetRevision"))
-    RejectPredictionsOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     RejectPredictionsOutput.struct_class = Types::RejectPredictionsOutput
 
     RejectRule.add_member(:rule, Shapes::ShapeRef.new(shape: RejectRuleBehavior, location_name: "rule"))
     RejectRule.add_member(:threshold, Shapes::ShapeRef.new(shape: Float, location_name: "threshold"))
     RejectRule.struct_class = Types::RejectRule
 
-    RejectSubscriptionRequestInput.add_member(:decision_comment, Shapes::ShapeRef.new(shape: DecisionComment, location_name: "decisionComment"))
     RejectSubscriptionRequestInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     RejectSubscriptionRequestInput.add_member(:identifier, Shapes::ShapeRef.new(shape: SubscriptionRequestId, required: true, location: "uri", location_name: "identifier"))
+    RejectSubscriptionRequestInput.add_member(:decision_comment, Shapes::ShapeRef.new(shape: DecisionComment, location_name: "decisionComment"))
     RejectSubscriptionRequestInput.struct_class = Types::RejectSubscriptionRequestInput
 
-    RejectSubscriptionRequestOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
-    RejectSubscriptionRequestOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    RejectSubscriptionRequestOutput.add_member(:decision_comment, Shapes::ShapeRef.new(shape: DecisionComment, location_name: "decisionComment"))
-    RejectSubscriptionRequestOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    RejectSubscriptionRequestOutput.add_member(:existing_subscription_id, Shapes::ShapeRef.new(shape: SubscriptionId, location_name: "existingSubscriptionId"))
     RejectSubscriptionRequestOutput.add_member(:id, Shapes::ShapeRef.new(shape: SubscriptionRequestId, required: true, location_name: "id"))
-    RejectSubscriptionRequestOutput.add_member(:metadata_forms, Shapes::ShapeRef.new(shape: MetadataForms, location_name: "metadataForms"))
-    RejectSubscriptionRequestOutput.add_member(:request_reason, Shapes::ShapeRef.new(shape: RequestReason, required: true, location_name: "requestReason"))
-    RejectSubscriptionRequestOutput.add_member(:reviewer_id, Shapes::ShapeRef.new(shape: String, location_name: "reviewerId"))
-    RejectSubscriptionRequestOutput.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionRequestStatus, required: true, location_name: "status"))
-    RejectSubscriptionRequestOutput.add_member(:subscribed_listings, Shapes::ShapeRef.new(shape: RejectSubscriptionRequestOutputSubscribedListingsList, required: true, location_name: "subscribedListings"))
-    RejectSubscriptionRequestOutput.add_member(:subscribed_principals, Shapes::ShapeRef.new(shape: RejectSubscriptionRequestOutputSubscribedPrincipalsList, required: true, location_name: "subscribedPrincipals"))
-    RejectSubscriptionRequestOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    RejectSubscriptionRequestOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
     RejectSubscriptionRequestOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    RejectSubscriptionRequestOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    RejectSubscriptionRequestOutput.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionRequestStatus, required: true, location_name: "status"))
+    RejectSubscriptionRequestOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
+    RejectSubscriptionRequestOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    RejectSubscriptionRequestOutput.add_member(:request_reason, Shapes::ShapeRef.new(shape: RequestReason, required: true, location_name: "requestReason"))
+    RejectSubscriptionRequestOutput.add_member(:subscribed_principals, Shapes::ShapeRef.new(shape: RejectSubscriptionRequestOutputSubscribedPrincipalsList, required: true, location_name: "subscribedPrincipals"))
+    RejectSubscriptionRequestOutput.add_member(:subscribed_listings, Shapes::ShapeRef.new(shape: RejectSubscriptionRequestOutputSubscribedListingsList, required: true, location_name: "subscribedListings"))
+    RejectSubscriptionRequestOutput.add_member(:reviewer_id, Shapes::ShapeRef.new(shape: String, location_name: "reviewerId"))
+    RejectSubscriptionRequestOutput.add_member(:decision_comment, Shapes::ShapeRef.new(shape: DecisionComment, location_name: "decisionComment"))
+    RejectSubscriptionRequestOutput.add_member(:existing_subscription_id, Shapes::ShapeRef.new(shape: SubscriptionId, location_name: "existingSubscriptionId"))
+    RejectSubscriptionRequestOutput.add_member(:metadata_forms, Shapes::ShapeRef.new(shape: MetadataForms, location_name: "metadataForms"))
     RejectSubscriptionRequestOutput.struct_class = Types::RejectSubscriptionRequestOutput
 
     RejectSubscriptionRequestOutputSubscribedListingsList.member = Shapes::ShapeRef.new(shape: SubscribedListing)
 
     RejectSubscriptionRequestOutputSubscribedPrincipalsList.member = Shapes::ShapeRef.new(shape: SubscribedPrincipal)
 
+    RelationPattern.add_member(:relation_type, Shapes::ShapeRef.new(shape: RelationType, required: true, location_name: "relationType"))
+    RelationPattern.add_member(:relation_direction, Shapes::ShapeRef.new(shape: RelationDirection, required: true, location_name: "relationDirection"))
+    RelationPattern.add_member(:max_path_length, Shapes::ShapeRef.new(shape: RelationPatternMaxPathLengthInteger, location_name: "maxPathLength"))
+    RelationPattern.struct_class = Types::RelationPattern
+
     RelationalFilterConfiguration.add_member(:database_name, Shapes::ShapeRef.new(shape: RelationalFilterConfigurationDatabaseNameString, required: true, location_name: "databaseName"))
-    RelationalFilterConfiguration.add_member(:filter_expressions, Shapes::ShapeRef.new(shape: FilterExpressions, location_name: "filterExpressions"))
     RelationalFilterConfiguration.add_member(:schema_name, Shapes::ShapeRef.new(shape: RelationalFilterConfigurationSchemaNameString, location_name: "schemaName"))
+    RelationalFilterConfiguration.add_member(:filter_expressions, Shapes::ShapeRef.new(shape: FilterExpressions, location_name: "filterExpressions"))
     RelationalFilterConfiguration.struct_class = Types::RelationalFilterConfiguration
 
     RelationalFilterConfigurations.member = Shapes::ShapeRef.new(shape: RelationalFilterConfiguration)
 
-    RemoveEntityOwnerInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
     RemoveEntityOwnerInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    RemoveEntityOwnerInput.add_member(:entity_identifier, Shapes::ShapeRef.new(shape: String, required: true, location: "uri", location_name: "entityIdentifier"))
     RemoveEntityOwnerInput.add_member(:entity_type, Shapes::ShapeRef.new(shape: DataZoneEntityType, required: true, location: "uri", location_name: "entityType"))
+    RemoveEntityOwnerInput.add_member(:entity_identifier, Shapes::ShapeRef.new(shape: String, required: true, location: "uri", location_name: "entityIdentifier"))
     RemoveEntityOwnerInput.add_member(:owner, Shapes::ShapeRef.new(shape: OwnerProperties, required: true, location_name: "owner"))
+    RemoveEntityOwnerInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     RemoveEntityOwnerInput.struct_class = Types::RemoveEntityOwnerInput
 
     RemoveEntityOwnerOutput.struct_class = Types::RemoveEntityOwnerOutput
 
-    RemovePolicyGrantInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
     RemovePolicyGrantInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    RemovePolicyGrantInput.add_member(:entity_identifier, Shapes::ShapeRef.new(shape: String, required: true, location: "uri", location_name: "entityIdentifier"))
     RemovePolicyGrantInput.add_member(:entity_type, Shapes::ShapeRef.new(shape: TargetEntityType, required: true, location: "uri", location_name: "entityType"))
+    RemovePolicyGrantInput.add_member(:entity_identifier, Shapes::ShapeRef.new(shape: String, required: true, location: "uri", location_name: "entityIdentifier"))
     RemovePolicyGrantInput.add_member(:policy_type, Shapes::ShapeRef.new(shape: ManagedPolicyType, required: true, location_name: "policyType"))
     RemovePolicyGrantInput.add_member(:principal, Shapes::ShapeRef.new(shape: PolicyGrantPrincipal, required: true, location_name: "principal"))
+    RemovePolicyGrantInput.add_member(:grant_identifier, Shapes::ShapeRef.new(shape: GrantIdentifier, location_name: "grantIdentifier"))
+    RemovePolicyGrantInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     RemovePolicyGrantInput.struct_class = Types::RemovePolicyGrantInput
 
     RemovePolicyGrantOutput.struct_class = Types::RemovePolicyGrantOutput
 
     RequiredMetadataFormList.member = Shapes::ShapeRef.new(shape: MetadataFormReference)
 
-    Resource.add_member(:name, Shapes::ShapeRef.new(shape: String, location_name: "name"))
     Resource.add_member(:provider, Shapes::ShapeRef.new(shape: String, location_name: "provider"))
-    Resource.add_member(:type, Shapes::ShapeRef.new(shape: String, required: true, location_name: "type"))
+    Resource.add_member(:name, Shapes::ShapeRef.new(shape: String, location_name: "name"))
     Resource.add_member(:value, Shapes::ShapeRef.new(shape: String, required: true, location_name: "value"))
+    Resource.add_member(:type, Shapes::ShapeRef.new(shape: String, required: true, location_name: "type"))
     Resource.struct_class = Types::Resource
+
+    ResourceConfiguration.add_member(:identifier, Shapes::ShapeRef.new(shape: String, required: true, location_name: "identifier"))
+    ResourceConfiguration.add_member(:name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "name"))
+    ResourceConfiguration.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
+    ResourceConfiguration.add_member(:region, Shapes::ShapeRef.new(shape: RegionName, required: true, location_name: "region"))
+    ResourceConfiguration.add_member(:parameters, Shapes::ShapeRef.new(shape: ResourceConfigurationParameterMap, required: true, location_name: "parameters"))
+    ResourceConfiguration.struct_class = Types::ResourceConfiguration
+
+    ResourceConfigurationParameterMap.key = Shapes::ShapeRef.new(shape: String)
+    ResourceConfigurationParameterMap.value = Shapes::ShapeRef.new(shape: String)
+
+    ResourceConfigurations.member = Shapes::ShapeRef.new(shape: ResourceConfiguration)
 
     ResourceList.member = Shapes::ShapeRef.new(shape: Resource)
 
     ResourceNotFoundException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, required: true, location_name: "message"))
     ResourceNotFoundException.struct_class = Types::ResourceNotFoundException
 
+    ResourceTag.add_member(:key, Shapes::ShapeRef.new(shape: TagKey, required: true, location_name: "key"))
+    ResourceTag.add_member(:value, Shapes::ShapeRef.new(shape: TagValue, required: true, location_name: "value"))
+    ResourceTag.add_member(:source, Shapes::ShapeRef.new(shape: ResourceTagSource, required: true, location_name: "source"))
+    ResourceTag.struct_class = Types::ResourceTag
+
+    ResourceTagParameter.add_member(:key, Shapes::ShapeRef.new(shape: TagKey, required: true, location_name: "key"))
+    ResourceTagParameter.add_member(:value, Shapes::ShapeRef.new(shape: TagValue, required: true, location_name: "value"))
+    ResourceTagParameter.add_member(:is_value_editable, Shapes::ShapeRef.new(shape: Boolean, required: true, location_name: "isValueEditable"))
+    ResourceTagParameter.struct_class = Types::ResourceTagParameter
+
+    ResourceTags.member = Shapes::ShapeRef.new(shape: ResourceTag)
+
+    ResultItem.add_member(:lineage_node, Shapes::ShapeRef.new(shape: LineageNodeItem, location_name: "lineageNode"))
+    ResultItem.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    ResultItem.add_member_subclass(:lineage_node, Types::ResultItem::LineageNode)
+    ResultItem.add_member_subclass(:unknown, Types::ResultItem::Unknown)
+    ResultItem.struct_class = Types::ResultItem
+
+    ResultItemList.member = Shapes::ShapeRef.new(shape: ResultItem)
+
     RevokeSubscriptionInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     RevokeSubscriptionInput.add_member(:identifier, Shapes::ShapeRef.new(shape: SubscriptionId, required: true, location: "uri", location_name: "identifier"))
     RevokeSubscriptionInput.add_member(:retain_permissions, Shapes::ShapeRef.new(shape: Boolean, location_name: "retainPermissions"))
     RevokeSubscriptionInput.struct_class = Types::RevokeSubscriptionInput
 
-    RevokeSubscriptionOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
-    RevokeSubscriptionOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    RevokeSubscriptionOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     RevokeSubscriptionOutput.add_member(:id, Shapes::ShapeRef.new(shape: SubscriptionId, required: true, location_name: "id"))
-    RevokeSubscriptionOutput.add_member(:retain_permissions, Shapes::ShapeRef.new(shape: Boolean, location_name: "retainPermissions"))
-    RevokeSubscriptionOutput.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionStatus, required: true, location_name: "status"))
-    RevokeSubscriptionOutput.add_member(:subscribed_listing, Shapes::ShapeRef.new(shape: SubscribedListing, required: true, location_name: "subscribedListing"))
-    RevokeSubscriptionOutput.add_member(:subscribed_principal, Shapes::ShapeRef.new(shape: SubscribedPrincipal, required: true, location_name: "subscribedPrincipal"))
-    RevokeSubscriptionOutput.add_member(:subscription_request_id, Shapes::ShapeRef.new(shape: SubscriptionRequestId, location_name: "subscriptionRequestId"))
-    RevokeSubscriptionOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    RevokeSubscriptionOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
     RevokeSubscriptionOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    RevokeSubscriptionOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    RevokeSubscriptionOutput.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionStatus, required: true, location_name: "status"))
+    RevokeSubscriptionOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
+    RevokeSubscriptionOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    RevokeSubscriptionOutput.add_member(:subscribed_principal, Shapes::ShapeRef.new(shape: SubscribedPrincipal, required: true, location_name: "subscribedPrincipal"))
+    RevokeSubscriptionOutput.add_member(:subscribed_listing, Shapes::ShapeRef.new(shape: SubscribedListing, required: true, location_name: "subscribedListing"))
+    RevokeSubscriptionOutput.add_member(:subscription_request_id, Shapes::ShapeRef.new(shape: SubscriptionRequestId, location_name: "subscriptionRequestId"))
+    RevokeSubscriptionOutput.add_member(:retain_permissions, Shapes::ShapeRef.new(shape: Boolean, location_name: "retainPermissions"))
     RevokeSubscriptionOutput.struct_class = Types::RevokeSubscriptionOutput
 
-    RowFilter.add_member(:and, Shapes::ShapeRef.new(shape: RowFilterList, location_name: "and"))
     RowFilter.add_member(:expression, Shapes::ShapeRef.new(shape: RowFilterExpression, location_name: "expression"))
+    RowFilter.add_member(:and, Shapes::ShapeRef.new(shape: RowFilterList, location_name: "and"))
     RowFilter.add_member(:or, Shapes::ShapeRef.new(shape: RowFilterList, location_name: "or"))
     RowFilter.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
-    RowFilter.add_member_subclass(:and, Types::RowFilter::And)
     RowFilter.add_member_subclass(:expression, Types::RowFilter::Expression)
+    RowFilter.add_member_subclass(:and, Types::RowFilter::And)
     RowFilter.add_member_subclass(:or, Types::RowFilter::Or)
     RowFilter.add_member_subclass(:unknown, Types::RowFilter::Unknown)
     RowFilter.struct_class = Types::RowFilter
@@ -4528,29 +5722,29 @@ module Aws::DataZone
     RowFilterConfiguration.struct_class = Types::RowFilterConfiguration
 
     RowFilterExpression.add_member(:equal_to, Shapes::ShapeRef.new(shape: EqualToExpression, location_name: "equalTo"))
-    RowFilterExpression.add_member(:greater_than, Shapes::ShapeRef.new(shape: GreaterThanExpression, location_name: "greaterThan"))
-    RowFilterExpression.add_member(:greater_than_or_equal_to, Shapes::ShapeRef.new(shape: GreaterThanOrEqualToExpression, location_name: "greaterThanOrEqualTo"))
-    RowFilterExpression.add_member(:in, Shapes::ShapeRef.new(shape: InExpression, location_name: "in"))
-    RowFilterExpression.add_member(:is_not_null, Shapes::ShapeRef.new(shape: IsNotNullExpression, location_name: "isNotNull"))
-    RowFilterExpression.add_member(:is_null, Shapes::ShapeRef.new(shape: IsNullExpression, location_name: "isNull"))
-    RowFilterExpression.add_member(:less_than, Shapes::ShapeRef.new(shape: LessThanExpression, location_name: "lessThan"))
-    RowFilterExpression.add_member(:less_than_or_equal_to, Shapes::ShapeRef.new(shape: LessThanOrEqualToExpression, location_name: "lessThanOrEqualTo"))
-    RowFilterExpression.add_member(:like, Shapes::ShapeRef.new(shape: LikeExpression, location_name: "like"))
     RowFilterExpression.add_member(:not_equal_to, Shapes::ShapeRef.new(shape: NotEqualToExpression, location_name: "notEqualTo"))
+    RowFilterExpression.add_member(:greater_than, Shapes::ShapeRef.new(shape: GreaterThanExpression, location_name: "greaterThan"))
+    RowFilterExpression.add_member(:less_than, Shapes::ShapeRef.new(shape: LessThanExpression, location_name: "lessThan"))
+    RowFilterExpression.add_member(:greater_than_or_equal_to, Shapes::ShapeRef.new(shape: GreaterThanOrEqualToExpression, location_name: "greaterThanOrEqualTo"))
+    RowFilterExpression.add_member(:less_than_or_equal_to, Shapes::ShapeRef.new(shape: LessThanOrEqualToExpression, location_name: "lessThanOrEqualTo"))
+    RowFilterExpression.add_member(:is_null, Shapes::ShapeRef.new(shape: IsNullExpression, location_name: "isNull"))
+    RowFilterExpression.add_member(:is_not_null, Shapes::ShapeRef.new(shape: IsNotNullExpression, location_name: "isNotNull"))
+    RowFilterExpression.add_member(:in, Shapes::ShapeRef.new(shape: InExpression, location_name: "in"))
     RowFilterExpression.add_member(:not_in, Shapes::ShapeRef.new(shape: NotInExpression, location_name: "notIn"))
+    RowFilterExpression.add_member(:like, Shapes::ShapeRef.new(shape: LikeExpression, location_name: "like"))
     RowFilterExpression.add_member(:not_like, Shapes::ShapeRef.new(shape: NotLikeExpression, location_name: "notLike"))
     RowFilterExpression.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
     RowFilterExpression.add_member_subclass(:equal_to, Types::RowFilterExpression::EqualTo)
-    RowFilterExpression.add_member_subclass(:greater_than, Types::RowFilterExpression::GreaterThan)
-    RowFilterExpression.add_member_subclass(:greater_than_or_equal_to, Types::RowFilterExpression::GreaterThanOrEqualTo)
-    RowFilterExpression.add_member_subclass(:in, Types::RowFilterExpression::In)
-    RowFilterExpression.add_member_subclass(:is_not_null, Types::RowFilterExpression::IsNotNull)
-    RowFilterExpression.add_member_subclass(:is_null, Types::RowFilterExpression::IsNull)
-    RowFilterExpression.add_member_subclass(:less_than, Types::RowFilterExpression::LessThan)
-    RowFilterExpression.add_member_subclass(:less_than_or_equal_to, Types::RowFilterExpression::LessThanOrEqualTo)
-    RowFilterExpression.add_member_subclass(:like, Types::RowFilterExpression::Like)
     RowFilterExpression.add_member_subclass(:not_equal_to, Types::RowFilterExpression::NotEqualTo)
+    RowFilterExpression.add_member_subclass(:greater_than, Types::RowFilterExpression::GreaterThan)
+    RowFilterExpression.add_member_subclass(:less_than, Types::RowFilterExpression::LessThan)
+    RowFilterExpression.add_member_subclass(:greater_than_or_equal_to, Types::RowFilterExpression::GreaterThanOrEqualTo)
+    RowFilterExpression.add_member_subclass(:less_than_or_equal_to, Types::RowFilterExpression::LessThanOrEqualTo)
+    RowFilterExpression.add_member_subclass(:is_null, Types::RowFilterExpression::IsNull)
+    RowFilterExpression.add_member_subclass(:is_not_null, Types::RowFilterExpression::IsNotNull)
+    RowFilterExpression.add_member_subclass(:in, Types::RowFilterExpression::In)
     RowFilterExpression.add_member_subclass(:not_in, Types::RowFilterExpression::NotIn)
+    RowFilterExpression.add_member_subclass(:like, Types::RowFilterExpression::Like)
     RowFilterExpression.add_member_subclass(:not_like, Types::RowFilterExpression::NotLike)
     RowFilterExpression.add_member_subclass(:unknown, Types::RowFilterExpression::Unknown)
     RowFilterExpression.struct_class = Types::RowFilterExpression
@@ -4560,8 +5754,10 @@ module Aws::DataZone
     RuleAssetTypeList.member = Shapes::ShapeRef.new(shape: AssetTypeIdentifier)
 
     RuleDetail.add_member(:metadata_form_enforcement_detail, Shapes::ShapeRef.new(shape: MetadataFormEnforcementDetail, location_name: "metadataFormEnforcementDetail"))
+    RuleDetail.add_member(:glossary_term_enforcement_detail, Shapes::ShapeRef.new(shape: GlossaryTermEnforcementDetail, location_name: "glossaryTermEnforcementDetail"))
     RuleDetail.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
     RuleDetail.add_member_subclass(:metadata_form_enforcement_detail, Types::RuleDetail::MetadataFormEnforcementDetail)
+    RuleDetail.add_member_subclass(:glossary_term_enforcement_detail, Types::RuleDetail::GlossaryTermEnforcementDetail)
     RuleDetail.add_member_subclass(:unknown, Types::RuleDetail::Unknown)
     RuleDetail.struct_class = Types::RuleDetail
 
@@ -4574,16 +5770,16 @@ module Aws::DataZone
 
     RuleSummaries.member = Shapes::ShapeRef.new(shape: RuleSummary)
 
-    RuleSummary.add_member(:action, Shapes::ShapeRef.new(shape: RuleAction, location_name: "action"))
     RuleSummary.add_member(:identifier, Shapes::ShapeRef.new(shape: RuleId, location_name: "identifier"))
-    RuleSummary.add_member(:last_updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "lastUpdatedBy"))
-    RuleSummary.add_member(:name, Shapes::ShapeRef.new(shape: RuleName, location_name: "name"))
     RuleSummary.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, location_name: "revision"))
     RuleSummary.add_member(:rule_type, Shapes::ShapeRef.new(shape: RuleType, location_name: "ruleType"))
-    RuleSummary.add_member(:scope, Shapes::ShapeRef.new(shape: RuleScope, location_name: "scope"))
-    RuleSummary.add_member(:target, Shapes::ShapeRef.new(shape: RuleTarget, location_name: "target"))
+    RuleSummary.add_member(:name, Shapes::ShapeRef.new(shape: RuleName, location_name: "name"))
     RuleSummary.add_member(:target_type, Shapes::ShapeRef.new(shape: RuleTargetType, location_name: "targetType"))
+    RuleSummary.add_member(:target, Shapes::ShapeRef.new(shape: RuleTarget, location_name: "target"))
+    RuleSummary.add_member(:action, Shapes::ShapeRef.new(shape: RuleAction, location_name: "action"))
+    RuleSummary.add_member(:scope, Shapes::ShapeRef.new(shape: RuleScope, location_name: "scope"))
     RuleSummary.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
+    RuleSummary.add_member(:last_updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "lastUpdatedBy"))
     RuleSummary.struct_class = Types::RuleSummary
 
     RuleTarget.add_member(:domain_unit_target, Shapes::ShapeRef.new(shape: DomainUnitTarget, location_name: "domainUnitTarget"))
@@ -4593,13 +5789,35 @@ module Aws::DataZone
     RuleTarget.struct_class = Types::RuleTarget
 
     RunStatisticsForAssets.add_member(:added, Shapes::ShapeRef.new(shape: Integer, location_name: "added"))
-    RunStatisticsForAssets.add_member(:failed, Shapes::ShapeRef.new(shape: Integer, location_name: "failed"))
-    RunStatisticsForAssets.add_member(:skipped, Shapes::ShapeRef.new(shape: Integer, location_name: "skipped"))
-    RunStatisticsForAssets.add_member(:unchanged, Shapes::ShapeRef.new(shape: Integer, location_name: "unchanged"))
     RunStatisticsForAssets.add_member(:updated, Shapes::ShapeRef.new(shape: Integer, location_name: "updated"))
+    RunStatisticsForAssets.add_member(:unchanged, Shapes::ShapeRef.new(shape: Integer, location_name: "unchanged"))
+    RunStatisticsForAssets.add_member(:skipped, Shapes::ShapeRef.new(shape: Integer, location_name: "skipped"))
+    RunStatisticsForAssets.add_member(:failed, Shapes::ShapeRef.new(shape: Integer, location_name: "failed"))
     RunStatisticsForAssets.struct_class = Types::RunStatisticsForAssets
 
+    S3Destination.add_member(:uri, Shapes::ShapeRef.new(shape: NotebookS3Uri, location_name: "uri"))
+    S3Destination.struct_class = Types::S3Destination
+
     S3LocationList.member = Shapes::ShapeRef.new(shape: S3Location)
+
+    S3Permissions.member = Shapes::ShapeRef.new(shape: S3Permission)
+
+    S3PropertiesInput.add_member(:s3_uri, Shapes::ShapeRef.new(shape: S3Uri, required: true, location_name: "s3Uri"))
+    S3PropertiesInput.add_member(:s3_access_grant_location_id, Shapes::ShapeRef.new(shape: S3AccessGrantLocationId, location_name: "s3AccessGrantLocationId"))
+    S3PropertiesInput.add_member(:register_s3_access_grant_location, Shapes::ShapeRef.new(shape: Boolean, location_name: "registerS3AccessGrantLocation"))
+    S3PropertiesInput.struct_class = Types::S3PropertiesInput
+
+    S3PropertiesOutput.add_member(:s3_uri, Shapes::ShapeRef.new(shape: S3Uri, required: true, location_name: "s3Uri"))
+    S3PropertiesOutput.add_member(:s3_access_grant_location_id, Shapes::ShapeRef.new(shape: S3AccessGrantLocationId, location_name: "s3AccessGrantLocationId"))
+    S3PropertiesOutput.add_member(:register_s3_access_grant_location, Shapes::ShapeRef.new(shape: Boolean, location_name: "registerS3AccessGrantLocation"))
+    S3PropertiesOutput.add_member(:status, Shapes::ShapeRef.new(shape: ConnectionStatus, location_name: "status"))
+    S3PropertiesOutput.add_member(:error_message, Shapes::ShapeRef.new(shape: String, location_name: "errorMessage"))
+    S3PropertiesOutput.struct_class = Types::S3PropertiesOutput
+
+    S3PropertiesPatch.add_member(:s3_uri, Shapes::ShapeRef.new(shape: S3Uri, required: true, location_name: "s3Uri"))
+    S3PropertiesPatch.add_member(:s3_access_grant_location_id, Shapes::ShapeRef.new(shape: S3AccessGrantLocationId, location_name: "s3AccessGrantLocationId"))
+    S3PropertiesPatch.add_member(:register_s3_access_grant_location, Shapes::ShapeRef.new(shape: Boolean, location_name: "registerS3AccessGrantLocation"))
+    S3PropertiesPatch.struct_class = Types::S3PropertiesPatch
 
     SageMakerRunConfigurationInput.add_member(:tracking_assets, Shapes::ShapeRef.new(shape: TrackingAssets, required: true, location_name: "trackingAssets"))
     SageMakerRunConfigurationInput.struct_class = Types::SageMakerRunConfigurationInput
@@ -4609,15 +5827,15 @@ module Aws::DataZone
     SageMakerRunConfigurationOutput.add_member(:tracking_assets, Shapes::ShapeRef.new(shape: TrackingAssets, required: true, location_name: "trackingAssets"))
     SageMakerRunConfigurationOutput.struct_class = Types::SageMakerRunConfigurationOutput
 
-    ScheduleConfiguration.add_member(:schedule, Shapes::ShapeRef.new(shape: CronString, location_name: "schedule"))
     ScheduleConfiguration.add_member(:timezone, Shapes::ShapeRef.new(shape: Timezone, location_name: "timezone"))
+    ScheduleConfiguration.add_member(:schedule, Shapes::ShapeRef.new(shape: CronString, location_name: "schedule"))
     ScheduleConfiguration.struct_class = Types::ScheduleConfiguration
 
     SearchGroupProfilesInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     SearchGroupProfilesInput.add_member(:group_type, Shapes::ShapeRef.new(shape: GroupSearchType, required: true, location_name: "groupType"))
+    SearchGroupProfilesInput.add_member(:search_text, Shapes::ShapeRef.new(shape: GroupSearchText, location_name: "searchText"))
     SearchGroupProfilesInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location_name: "maxResults"))
     SearchGroupProfilesInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
-    SearchGroupProfilesInput.add_member(:search_text, Shapes::ShapeRef.new(shape: GroupSearchText, location_name: "searchText"))
     SearchGroupProfilesInput.struct_class = Types::SearchGroupProfilesInput
 
     SearchGroupProfilesOutput.add_member(:items, Shapes::ShapeRef.new(shape: GroupProfileSummaries, location_name: "items"))
@@ -4629,45 +5847,47 @@ module Aws::DataZone
 
     SearchInList.member = Shapes::ShapeRef.new(shape: SearchInItem)
 
-    SearchInput.add_member(:additional_attributes, Shapes::ShapeRef.new(shape: SearchOutputAdditionalAttributes, location_name: "additionalAttributes"))
     SearchInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    SearchInput.add_member(:filters, Shapes::ShapeRef.new(shape: FilterClause, location_name: "filters"))
+    SearchInput.add_member(:owning_project_identifier, Shapes::ShapeRef.new(shape: ProjectId, location_name: "owningProjectIdentifier"))
     SearchInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location_name: "maxResults"))
     SearchInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
-    SearchInput.add_member(:owning_project_identifier, Shapes::ShapeRef.new(shape: ProjectId, location_name: "owningProjectIdentifier"))
-    SearchInput.add_member(:search_in, Shapes::ShapeRef.new(shape: SearchInList, location_name: "searchIn"))
     SearchInput.add_member(:search_scope, Shapes::ShapeRef.new(shape: InventorySearchScope, required: true, location_name: "searchScope"))
     SearchInput.add_member(:search_text, Shapes::ShapeRef.new(shape: SearchText, location_name: "searchText"))
+    SearchInput.add_member(:search_in, Shapes::ShapeRef.new(shape: SearchInList, location_name: "searchIn"))
+    SearchInput.add_member(:filters, Shapes::ShapeRef.new(shape: FilterClause, location_name: "filters"))
     SearchInput.add_member(:sort, Shapes::ShapeRef.new(shape: SearchSort, location_name: "sort"))
+    SearchInput.add_member(:additional_attributes, Shapes::ShapeRef.new(shape: SearchOutputAdditionalAttributes, location_name: "additionalAttributes"))
     SearchInput.struct_class = Types::SearchInput
 
-    SearchInventoryResultItem.add_member(:asset_item, Shapes::ShapeRef.new(shape: AssetItem, location_name: "assetItem"))
-    SearchInventoryResultItem.add_member(:data_product_item, Shapes::ShapeRef.new(shape: DataProductResultItem, location_name: "dataProductItem"))
     SearchInventoryResultItem.add_member(:glossary_item, Shapes::ShapeRef.new(shape: GlossaryItem, location_name: "glossaryItem"))
     SearchInventoryResultItem.add_member(:glossary_term_item, Shapes::ShapeRef.new(shape: GlossaryTermItem, location_name: "glossaryTermItem"))
+    SearchInventoryResultItem.add_member(:asset_item, Shapes::ShapeRef.new(shape: AssetItem, location_name: "assetItem"))
+    SearchInventoryResultItem.add_member(:data_product_item, Shapes::ShapeRef.new(shape: DataProductResultItem, location_name: "dataProductItem"))
     SearchInventoryResultItem.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
-    SearchInventoryResultItem.add_member_subclass(:asset_item, Types::SearchInventoryResultItem::AssetItem)
-    SearchInventoryResultItem.add_member_subclass(:data_product_item, Types::SearchInventoryResultItem::DataProductItem)
     SearchInventoryResultItem.add_member_subclass(:glossary_item, Types::SearchInventoryResultItem::GlossaryItem)
     SearchInventoryResultItem.add_member_subclass(:glossary_term_item, Types::SearchInventoryResultItem::GlossaryTermItem)
+    SearchInventoryResultItem.add_member_subclass(:asset_item, Types::SearchInventoryResultItem::AssetItem)
+    SearchInventoryResultItem.add_member_subclass(:data_product_item, Types::SearchInventoryResultItem::DataProductItem)
     SearchInventoryResultItem.add_member_subclass(:unknown, Types::SearchInventoryResultItem::Unknown)
     SearchInventoryResultItem.struct_class = Types::SearchInventoryResultItem
 
     SearchInventoryResultItems.member = Shapes::ShapeRef.new(shape: SearchInventoryResultItem)
 
-    SearchListingsInput.add_member(:additional_attributes, Shapes::ShapeRef.new(shape: SearchOutputAdditionalAttributes, location_name: "additionalAttributes"))
     SearchListingsInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    SearchListingsInput.add_member(:filters, Shapes::ShapeRef.new(shape: FilterClause, location_name: "filters"))
+    SearchListingsInput.add_member(:search_text, Shapes::ShapeRef.new(shape: SearchListingsInputSearchTextString, location_name: "searchText"))
+    SearchListingsInput.add_member(:search_in, Shapes::ShapeRef.new(shape: SearchInList, location_name: "searchIn"))
     SearchListingsInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location_name: "maxResults"))
     SearchListingsInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
-    SearchListingsInput.add_member(:search_in, Shapes::ShapeRef.new(shape: SearchInList, location_name: "searchIn"))
-    SearchListingsInput.add_member(:search_text, Shapes::ShapeRef.new(shape: String, location_name: "searchText"))
+    SearchListingsInput.add_member(:filters, Shapes::ShapeRef.new(shape: FilterClause, location_name: "filters"))
+    SearchListingsInput.add_member(:aggregations, Shapes::ShapeRef.new(shape: AggregationList, location_name: "aggregations"))
     SearchListingsInput.add_member(:sort, Shapes::ShapeRef.new(shape: SearchSort, location_name: "sort"))
+    SearchListingsInput.add_member(:additional_attributes, Shapes::ShapeRef.new(shape: SearchOutputAdditionalAttributes, location_name: "additionalAttributes"))
     SearchListingsInput.struct_class = Types::SearchListingsInput
 
     SearchListingsOutput.add_member(:items, Shapes::ShapeRef.new(shape: SearchResultItems, location_name: "items"))
     SearchListingsOutput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
     SearchListingsOutput.add_member(:total_match_count, Shapes::ShapeRef.new(shape: Integer, location_name: "totalMatchCount"))
+    SearchListingsOutput.add_member(:aggregates, Shapes::ShapeRef.new(shape: AggregationOutputList, location_name: "aggregates"))
     SearchListingsOutput.struct_class = Types::SearchListingsOutput
 
     SearchOutput.add_member(:items, Shapes::ShapeRef.new(shape: SearchInventoryResultItems, location_name: "items"))
@@ -4692,14 +5912,14 @@ module Aws::DataZone
     SearchSort.struct_class = Types::SearchSort
 
     SearchTypesInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    SearchTypesInput.add_member(:filters, Shapes::ShapeRef.new(shape: FilterClause, location_name: "filters"))
-    SearchTypesInput.add_member(:managed, Shapes::ShapeRef.new(shape: Boolean, required: true, location_name: "managed"))
     SearchTypesInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location_name: "maxResults"))
     SearchTypesInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
-    SearchTypesInput.add_member(:search_in, Shapes::ShapeRef.new(shape: SearchInList, location_name: "searchIn"))
     SearchTypesInput.add_member(:search_scope, Shapes::ShapeRef.new(shape: TypesSearchScope, required: true, location_name: "searchScope"))
     SearchTypesInput.add_member(:search_text, Shapes::ShapeRef.new(shape: SearchText, location_name: "searchText"))
+    SearchTypesInput.add_member(:search_in, Shapes::ShapeRef.new(shape: SearchInList, location_name: "searchIn"))
+    SearchTypesInput.add_member(:filters, Shapes::ShapeRef.new(shape: FilterClause, location_name: "filters"))
     SearchTypesInput.add_member(:sort, Shapes::ShapeRef.new(shape: SearchSort, location_name: "sort"))
+    SearchTypesInput.add_member(:managed, Shapes::ShapeRef.new(shape: Boolean, required: true, location_name: "managed"))
     SearchTypesInput.struct_class = Types::SearchTypesInput
 
     SearchTypesOutput.add_member(:items, Shapes::ShapeRef.new(shape: SearchTypesResultItems, location_name: "items"))
@@ -4720,10 +5940,10 @@ module Aws::DataZone
     SearchTypesResultItems.member = Shapes::ShapeRef.new(shape: SearchTypesResultItem)
 
     SearchUserProfilesInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    SearchUserProfilesInput.add_member(:user_type, Shapes::ShapeRef.new(shape: UserSearchType, required: true, location_name: "userType"))
+    SearchUserProfilesInput.add_member(:search_text, Shapes::ShapeRef.new(shape: UserSearchText, location_name: "searchText"))
     SearchUserProfilesInput.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location_name: "maxResults"))
     SearchUserProfilesInput.add_member(:next_token, Shapes::ShapeRef.new(shape: PaginationToken, location_name: "nextToken"))
-    SearchUserProfilesInput.add_member(:search_text, Shapes::ShapeRef.new(shape: UserSearchText, location_name: "searchText"))
-    SearchUserProfilesInput.add_member(:user_type, Shapes::ShapeRef.new(shape: UserSearchType, required: true, location_name: "userType"))
     SearchUserProfilesInput.struct_class = Types::SearchUserProfilesInput
 
     SearchUserProfilesOutput.add_member(:items, Shapes::ShapeRef.new(shape: UserProfileSummaries, location_name: "items"))
@@ -4732,10 +5952,12 @@ module Aws::DataZone
 
     SecurityGroupIdList.member = Shapes::ShapeRef.new(shape: SecurityGroupIdListMemberString)
 
+    SecurityGroupIds.member = Shapes::ShapeRef.new(shape: String)
+
     SelfGrantStatusDetail.add_member(:database_name, Shapes::ShapeRef.new(shape: SelfGrantStatusDetailDatabaseNameString, required: true, location_name: "databaseName"))
-    SelfGrantStatusDetail.add_member(:failure_cause, Shapes::ShapeRef.new(shape: String, location_name: "failureCause"))
     SelfGrantStatusDetail.add_member(:schema_name, Shapes::ShapeRef.new(shape: SelfGrantStatusDetailSchemaNameString, location_name: "schemaName"))
     SelfGrantStatusDetail.add_member(:status, Shapes::ShapeRef.new(shape: SelfGrantStatus, required: true, location_name: "status"))
+    SelfGrantStatusDetail.add_member(:failure_cause, Shapes::ShapeRef.new(shape: String, location_name: "failureCause"))
     SelfGrantStatusDetail.struct_class = Types::SelfGrantStatusDetail
 
     SelfGrantStatusDetails.member = Shapes::ShapeRef.new(shape: SelfGrantStatusDetail)
@@ -4751,10 +5973,34 @@ module Aws::DataZone
     ServiceQuotaExceededException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, required: true, location_name: "message"))
     ServiceQuotaExceededException.struct_class = Types::ServiceQuotaExceededException
 
-    SingleSignOn.add_member(:idc_instance_arn, Shapes::ShapeRef.new(shape: SingleSignOnIdcInstanceArnString, location_name: "idcInstanceArn"))
     SingleSignOn.add_member(:type, Shapes::ShapeRef.new(shape: AuthType, location_name: "type"))
     SingleSignOn.add_member(:user_assignment, Shapes::ShapeRef.new(shape: UserAssignment, location_name: "userAssignment"))
+    SingleSignOn.add_member(:idc_instance_arn, Shapes::ShapeRef.new(shape: SingleSignOnIdcInstanceArnString, location_name: "idcInstanceArn"))
     SingleSignOn.struct_class = Types::SingleSignOn
+
+    SnowflakePropertiesInput.add_member(:connectivity_properties, Shapes::ShapeRef.new(shape: ConnectivityProperties, location_name: "connectivityProperties"))
+    SnowflakePropertiesInput.add_member(:snowflake_role, Shapes::ShapeRef.new(shape: SnowflakeRole, required: true, location_name: "snowflakeRole"))
+    SnowflakePropertiesInput.add_member(:identity_mapping, Shapes::ShapeRef.new(shape: IdentityMapping, required: true, location_name: "identityMapping"))
+    SnowflakePropertiesInput.add_member(:lineage_sync, Shapes::ShapeRef.new(shape: LineageSyncInput, location_name: "lineageSync"))
+    SnowflakePropertiesInput.struct_class = Types::SnowflakePropertiesInput
+
+    SnowflakePropertiesOutput.add_member(:snowflake_role, Shapes::ShapeRef.new(shape: SnowflakeRole, required: true, location_name: "snowflakeRole"))
+    SnowflakePropertiesOutput.add_member(:identity_mapping, Shapes::ShapeRef.new(shape: IdentityMapping, required: true, location_name: "identityMapping"))
+    SnowflakePropertiesOutput.add_member(:lineage_sync, Shapes::ShapeRef.new(shape: LineageSyncOutput, required: true, location_name: "lineageSync"))
+    SnowflakePropertiesOutput.add_member(:status, Shapes::ShapeRef.new(shape: ConnectionStatus, required: true, location_name: "status"))
+    SnowflakePropertiesOutput.add_member(:error_message, Shapes::ShapeRef.new(shape: String, location_name: "errorMessage"))
+    SnowflakePropertiesOutput.struct_class = Types::SnowflakePropertiesOutput
+
+    SnowflakePropertiesPatch.add_member(:connectivity_properties_patch, Shapes::ShapeRef.new(shape: ConnectivityPropertiesPatch, location_name: "connectivityPropertiesPatch"))
+    SnowflakePropertiesPatch.add_member(:snowflake_role, Shapes::ShapeRef.new(shape: SnowflakeRole, location_name: "snowflakeRole"))
+    SnowflakePropertiesPatch.add_member(:lineage_sync, Shapes::ShapeRef.new(shape: LineageSyncInput, location_name: "lineageSync"))
+    SnowflakePropertiesPatch.struct_class = Types::SnowflakePropertiesPatch
+
+    SourceLocation.add_member(:s3, Shapes::ShapeRef.new(shape: S3SourceLocation, location_name: "s3"))
+    SourceLocation.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    SourceLocation.add_member_subclass(:s3, Types::SourceLocation::S3)
+    SourceLocation.add_member_subclass(:unknown, Types::SourceLocation::Unknown)
+    SourceLocation.struct_class = Types::SourceLocation
 
     SparkEmrPropertiesInput.add_member(:compute_arn, Shapes::ShapeRef.new(shape: SparkEmrPropertiesInputComputeArnString, location_name: "computeArn"))
     SparkEmrPropertiesInput.add_member(:instance_profile_arn, Shapes::ShapeRef.new(shape: SparkEmrPropertiesInputInstanceProfileArnString, location_name: "instanceProfileArn"))
@@ -4763,6 +6009,7 @@ module Aws::DataZone
     SparkEmrPropertiesInput.add_member(:python_virtual_env, Shapes::ShapeRef.new(shape: SparkEmrPropertiesInputPythonVirtualEnvString, location_name: "pythonVirtualEnv"))
     SparkEmrPropertiesInput.add_member(:runtime_role, Shapes::ShapeRef.new(shape: SparkEmrPropertiesInputRuntimeRoleString, location_name: "runtimeRole"))
     SparkEmrPropertiesInput.add_member(:trusted_certificates_s3_uri, Shapes::ShapeRef.new(shape: SparkEmrPropertiesInputTrustedCertificatesS3UriString, location_name: "trustedCertificatesS3Uri"))
+    SparkEmrPropertiesInput.add_member(:managed_endpoint_arn, Shapes::ShapeRef.new(shape: SparkEmrPropertiesInputManagedEndpointArnString, location_name: "managedEndpointArn"))
     SparkEmrPropertiesInput.struct_class = Types::SparkEmrPropertiesInput
 
     SparkEmrPropertiesOutput.add_member(:compute_arn, Shapes::ShapeRef.new(shape: String, location_name: "computeArn"))
@@ -4776,6 +6023,9 @@ module Aws::DataZone
     SparkEmrPropertiesOutput.add_member(:python_virtual_env, Shapes::ShapeRef.new(shape: String, location_name: "pythonVirtualEnv"))
     SparkEmrPropertiesOutput.add_member(:runtime_role, Shapes::ShapeRef.new(shape: String, location_name: "runtimeRole"))
     SparkEmrPropertiesOutput.add_member(:trusted_certificates_s3_uri, Shapes::ShapeRef.new(shape: String, location_name: "trustedCertificatesS3Uri"))
+    SparkEmrPropertiesOutput.add_member(:certificate_data, Shapes::ShapeRef.new(shape: String, location_name: "certificateData"))
+    SparkEmrPropertiesOutput.add_member(:managed_endpoint_arn, Shapes::ShapeRef.new(shape: SparkEmrPropertiesOutputManagedEndpointArnString, location_name: "managedEndpointArn"))
+    SparkEmrPropertiesOutput.add_member(:managed_endpoint_credentials, Shapes::ShapeRef.new(shape: ManagedEndpointCredentials, location_name: "managedEndpointCredentials"))
     SparkEmrPropertiesOutput.struct_class = Types::SparkEmrPropertiesOutput
 
     SparkEmrPropertiesPatch.add_member(:compute_arn, Shapes::ShapeRef.new(shape: SparkEmrPropertiesPatchComputeArnString, location_name: "computeArn"))
@@ -4785,6 +6035,7 @@ module Aws::DataZone
     SparkEmrPropertiesPatch.add_member(:python_virtual_env, Shapes::ShapeRef.new(shape: SparkEmrPropertiesPatchPythonVirtualEnvString, location_name: "pythonVirtualEnv"))
     SparkEmrPropertiesPatch.add_member(:runtime_role, Shapes::ShapeRef.new(shape: SparkEmrPropertiesPatchRuntimeRoleString, location_name: "runtimeRole"))
     SparkEmrPropertiesPatch.add_member(:trusted_certificates_s3_uri, Shapes::ShapeRef.new(shape: SparkEmrPropertiesPatchTrustedCertificatesS3UriString, location_name: "trustedCertificatesS3Uri"))
+    SparkEmrPropertiesPatch.add_member(:managed_endpoint_arn, Shapes::ShapeRef.new(shape: SparkEmrPropertiesPatchManagedEndpointArnString, location_name: "managedEndpointArn"))
     SparkEmrPropertiesPatch.struct_class = Types::SparkEmrPropertiesPatch
 
     SparkGlueArgs.add_member(:connection, Shapes::ShapeRef.new(shape: String, location_name: "connection"))
@@ -4792,6 +6043,7 @@ module Aws::DataZone
 
     SparkGluePropertiesInput.add_member(:additional_args, Shapes::ShapeRef.new(shape: SparkGlueArgs, location_name: "additionalArgs"))
     SparkGluePropertiesInput.add_member(:glue_connection_name, Shapes::ShapeRef.new(shape: SparkGluePropertiesInputGlueConnectionNameString, location_name: "glueConnectionName"))
+    SparkGluePropertiesInput.add_member(:glue_connection_names, Shapes::ShapeRef.new(shape: GlueConnectionNames, location_name: "glueConnectionNames"))
     SparkGluePropertiesInput.add_member(:glue_version, Shapes::ShapeRef.new(shape: SparkGluePropertiesInputGlueVersionString, location_name: "glueVersion"))
     SparkGluePropertiesInput.add_member(:idle_timeout, Shapes::ShapeRef.new(shape: Integer, location_name: "idleTimeout"))
     SparkGluePropertiesInput.add_member(:java_virtual_env, Shapes::ShapeRef.new(shape: SparkGluePropertiesInputJavaVirtualEnvString, location_name: "javaVirtualEnv"))
@@ -4802,6 +6054,7 @@ module Aws::DataZone
 
     SparkGluePropertiesOutput.add_member(:additional_args, Shapes::ShapeRef.new(shape: SparkGlueArgs, location_name: "additionalArgs"))
     SparkGluePropertiesOutput.add_member(:glue_connection_name, Shapes::ShapeRef.new(shape: String, location_name: "glueConnectionName"))
+    SparkGluePropertiesOutput.add_member(:glue_connection_names, Shapes::ShapeRef.new(shape: GlueConnectionNames, location_name: "glueConnectionNames"))
     SparkGluePropertiesOutput.add_member(:glue_version, Shapes::ShapeRef.new(shape: String, location_name: "glueVersion"))
     SparkGluePropertiesOutput.add_member(:idle_timeout, Shapes::ShapeRef.new(shape: Integer, location_name: "idleTimeout"))
     SparkGluePropertiesOutput.add_member(:java_virtual_env, Shapes::ShapeRef.new(shape: String, location_name: "javaVirtualEnv"))
@@ -4810,78 +6063,207 @@ module Aws::DataZone
     SparkGluePropertiesOutput.add_member(:worker_type, Shapes::ShapeRef.new(shape: String, location_name: "workerType"))
     SparkGluePropertiesOutput.struct_class = Types::SparkGluePropertiesOutput
 
+    SsoUserProfileDetails.add_member(:username, Shapes::ShapeRef.new(shape: UserProfileName, location_name: "username"))
     SsoUserProfileDetails.add_member(:first_name, Shapes::ShapeRef.new(shape: FirstName, location_name: "firstName"))
     SsoUserProfileDetails.add_member(:last_name, Shapes::ShapeRef.new(shape: LastName, location_name: "lastName"))
-    SsoUserProfileDetails.add_member(:username, Shapes::ShapeRef.new(shape: UserProfileName, location_name: "username"))
     SsoUserProfileDetails.struct_class = Types::SsoUserProfileDetails
 
-    StartDataSourceRunInput.add_member(:client_token, Shapes::ShapeRef.new(shape: String, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
-    StartDataSourceRunInput.add_member(:data_source_identifier, Shapes::ShapeRef.new(shape: DataSourceId, required: true, location: "uri", location_name: "dataSourceIdentifier"))
     StartDataSourceRunInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    StartDataSourceRunInput.add_member(:data_source_identifier, Shapes::ShapeRef.new(shape: DataSourceId, required: true, location: "uri", location_name: "dataSourceIdentifier"))
+    StartDataSourceRunInput.add_member(:client_token, Shapes::ShapeRef.new(shape: String, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     StartDataSourceRunInput.struct_class = Types::StartDataSourceRunInput
 
-    StartDataSourceRunOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: DateTime, required: true, location_name: "createdAt"))
-    StartDataSourceRunOutput.add_member(:data_source_configuration_snapshot, Shapes::ShapeRef.new(shape: String, location_name: "dataSourceConfigurationSnapshot"))
-    StartDataSourceRunOutput.add_member(:data_source_id, Shapes::ShapeRef.new(shape: DataSourceId, required: true, location_name: "dataSourceId"))
     StartDataSourceRunOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    StartDataSourceRunOutput.add_member(:error_message, Shapes::ShapeRef.new(shape: DataSourceErrorMessage, location_name: "errorMessage"))
+    StartDataSourceRunOutput.add_member(:data_source_id, Shapes::ShapeRef.new(shape: DataSourceId, required: true, location_name: "dataSourceId"))
     StartDataSourceRunOutput.add_member(:id, Shapes::ShapeRef.new(shape: DataSourceRunId, required: true, location_name: "id"))
     StartDataSourceRunOutput.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "projectId"))
-    StartDataSourceRunOutput.add_member(:run_statistics_for_assets, Shapes::ShapeRef.new(shape: RunStatisticsForAssets, location_name: "runStatisticsForAssets"))
-    StartDataSourceRunOutput.add_member(:started_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "startedAt"))
     StartDataSourceRunOutput.add_member(:status, Shapes::ShapeRef.new(shape: DataSourceRunStatus, required: true, location_name: "status"))
-    StartDataSourceRunOutput.add_member(:stopped_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "stoppedAt"))
     StartDataSourceRunOutput.add_member(:type, Shapes::ShapeRef.new(shape: DataSourceRunType, required: true, location_name: "type"))
+    StartDataSourceRunOutput.add_member(:data_source_configuration_snapshot, Shapes::ShapeRef.new(shape: String, location_name: "dataSourceConfigurationSnapshot"))
+    StartDataSourceRunOutput.add_member(:run_statistics_for_assets, Shapes::ShapeRef.new(shape: RunStatisticsForAssets, location_name: "runStatisticsForAssets"))
+    StartDataSourceRunOutput.add_member(:error_message, Shapes::ShapeRef.new(shape: DataSourceErrorMessage, location_name: "errorMessage"))
+    StartDataSourceRunOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: DateTime, required: true, location_name: "createdAt"))
     StartDataSourceRunOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: DateTime, required: true, location_name: "updatedAt"))
+    StartDataSourceRunOutput.add_member(:started_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "startedAt"))
+    StartDataSourceRunOutput.add_member(:stopped_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "stoppedAt"))
     StartDataSourceRunOutput.struct_class = Types::StartDataSourceRunOutput
 
-    StartMetadataGenerationRunInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
     StartMetadataGenerationRunInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    StartMetadataGenerationRunInput.add_member(:owning_project_identifier, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectIdentifier"))
+    StartMetadataGenerationRunInput.add_member(:type, Shapes::ShapeRef.new(shape: MetadataGenerationRunType, deprecated: true, location_name: "type", metadata: {"deprecatedMessage" => "This field is going to be deprecated, please use the 'types' field to provide the MetadataGenerationRun types", "deprecatedSince" => "2025-11-21"}))
+    StartMetadataGenerationRunInput.add_member(:types, Shapes::ShapeRef.new(shape: MetadataGenerationRunTypes, location_name: "types"))
     StartMetadataGenerationRunInput.add_member(:target, Shapes::ShapeRef.new(shape: MetadataGenerationRunTarget, required: true, location_name: "target"))
-    StartMetadataGenerationRunInput.add_member(:type, Shapes::ShapeRef.new(shape: MetadataGenerationRunType, required: true, location_name: "type"))
+    StartMetadataGenerationRunInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    StartMetadataGenerationRunInput.add_member(:owning_project_identifier, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectIdentifier"))
     StartMetadataGenerationRunInput.struct_class = Types::StartMetadataGenerationRunInput
 
-    StartMetadataGenerationRunOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
-    StartMetadataGenerationRunOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
     StartMetadataGenerationRunOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     StartMetadataGenerationRunOutput.add_member(:id, Shapes::ShapeRef.new(shape: MetadataGenerationRunIdentifier, required: true, location_name: "id"))
-    StartMetadataGenerationRunOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "owningProjectId"))
     StartMetadataGenerationRunOutput.add_member(:status, Shapes::ShapeRef.new(shape: MetadataGenerationRunStatus, location_name: "status"))
-    StartMetadataGenerationRunOutput.add_member(:type, Shapes::ShapeRef.new(shape: MetadataGenerationRunType, location_name: "type"))
+    StartMetadataGenerationRunOutput.add_member(:type, Shapes::ShapeRef.new(shape: MetadataGenerationRunType, deprecated: true, location_name: "type", metadata: {"deprecatedMessage" => "This field is going to be deprecated, please use the 'types' field to provide the MetadataGenerationRun types", "deprecatedSince" => "2025-11-21"}))
+    StartMetadataGenerationRunOutput.add_member(:types, Shapes::ShapeRef.new(shape: MetadataGenerationRunTypes, location_name: "types"))
+    StartMetadataGenerationRunOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    StartMetadataGenerationRunOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
+    StartMetadataGenerationRunOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "owningProjectId"))
     StartMetadataGenerationRunOutput.struct_class = Types::StartMetadataGenerationRunOutput
+
+    StartNotebookExportInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    StartNotebookExportInput.add_member(:notebook_identifier, Shapes::ShapeRef.new(shape: NotebookId, required: true, location_name: "notebookIdentifier"))
+    StartNotebookExportInput.add_member(:owning_project_identifier, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectIdentifier"))
+    StartNotebookExportInput.add_member(:file_format, Shapes::ShapeRef.new(shape: FileFormat, required: true, location_name: "fileFormat"))
+    StartNotebookExportInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    StartNotebookExportInput.struct_class = Types::StartNotebookExportInput
+
+    StartNotebookExportOutput.add_member(:id, Shapes::ShapeRef.new(shape: ExportId, required: true, location_name: "id"))
+    StartNotebookExportOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    StartNotebookExportOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
+    StartNotebookExportOutput.add_member(:notebook_id, Shapes::ShapeRef.new(shape: NotebookId, required: true, location_name: "notebookId"))
+    StartNotebookExportOutput.add_member(:file_format, Shapes::ShapeRef.new(shape: FileFormat, required: true, location_name: "fileFormat"))
+    StartNotebookExportOutput.add_member(:status, Shapes::ShapeRef.new(shape: NotebookExportStatus, required: true, location_name: "status"))
+    StartNotebookExportOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    StartNotebookExportOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
+    StartNotebookExportOutput.struct_class = Types::StartNotebookExportOutput
+
+    StartNotebookImportInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    StartNotebookImportInput.add_member(:owning_project_identifier, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectIdentifier"))
+    StartNotebookImportInput.add_member(:source_location, Shapes::ShapeRef.new(shape: SourceLocation, required: true, location_name: "sourceLocation"))
+    StartNotebookImportInput.add_member(:name, Shapes::ShapeRef.new(shape: NotebookName, required: true, location_name: "name"))
+    StartNotebookImportInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    StartNotebookImportInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    StartNotebookImportInput.struct_class = Types::StartNotebookImportInput
+
+    StartNotebookImportOutput.add_member(:notebook_id, Shapes::ShapeRef.new(shape: NotebookId, location_name: "notebookId"))
+    StartNotebookImportOutput.add_member(:status, Shapes::ShapeRef.new(shape: NotebookStatus, location_name: "status"))
+    StartNotebookImportOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "domainId"))
+    StartNotebookImportOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "owningProjectId"))
+    StartNotebookImportOutput.add_member(:name, Shapes::ShapeRef.new(shape: NotebookName, location_name: "name"))
+    StartNotebookImportOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    StartNotebookImportOutput.add_member(:source_location, Shapes::ShapeRef.new(shape: SourceLocation, location_name: "sourceLocation"))
+    StartNotebookImportOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    StartNotebookImportOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
+    StartNotebookImportOutput.struct_class = Types::StartNotebookImportOutput
+
+    StartNotebookRunInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    StartNotebookRunInput.add_member(:owning_project_identifier, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectIdentifier"))
+    StartNotebookRunInput.add_member(:notebook_identifier, Shapes::ShapeRef.new(shape: NotebookId, required: true, location_name: "notebookIdentifier"))
+    StartNotebookRunInput.add_member(:schedule_identifier, Shapes::ShapeRef.new(shape: ScheduleId, location_name: "scheduleIdentifier"))
+    StartNotebookRunInput.add_member(:compute_configuration, Shapes::ShapeRef.new(shape: ComputeConfig, location_name: "computeConfiguration"))
+    StartNotebookRunInput.add_member(:network_configuration, Shapes::ShapeRef.new(shape: NetworkConfig, location_name: "networkConfiguration"))
+    StartNotebookRunInput.add_member(:timeout_configuration, Shapes::ShapeRef.new(shape: TimeoutConfig, location_name: "timeoutConfiguration"))
+    StartNotebookRunInput.add_member(:trigger_source, Shapes::ShapeRef.new(shape: TriggerSource, location_name: "triggerSource"))
+    StartNotebookRunInput.add_member(:metadata, Shapes::ShapeRef.new(shape: Metadata, location_name: "metadata"))
+    StartNotebookRunInput.add_member(:parameters, Shapes::ShapeRef.new(shape: Parameters, location_name: "parameters"))
+    StartNotebookRunInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    StartNotebookRunInput.struct_class = Types::StartNotebookRunInput
+
+    StartNotebookRunOutput.add_member(:id, Shapes::ShapeRef.new(shape: NotebookRunId, required: true, location_name: "id"))
+    StartNotebookRunOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    StartNotebookRunOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
+    StartNotebookRunOutput.add_member(:notebook_id, Shapes::ShapeRef.new(shape: NotebookId, required: true, location_name: "notebookId"))
+    StartNotebookRunOutput.add_member(:schedule_id, Shapes::ShapeRef.new(shape: ScheduleId, location_name: "scheduleId"))
+    StartNotebookRunOutput.add_member(:status, Shapes::ShapeRef.new(shape: NotebookRunStatus, required: true, location_name: "status"))
+    StartNotebookRunOutput.add_member(:cell_order, Shapes::ShapeRef.new(shape: CellOrder, location_name: "cellOrder"))
+    StartNotebookRunOutput.add_member(:metadata, Shapes::ShapeRef.new(shape: Metadata, location_name: "metadata"))
+    StartNotebookRunOutput.add_member(:parameters, Shapes::ShapeRef.new(shape: Parameters, location_name: "parameters"))
+    StartNotebookRunOutput.add_member(:compute_configuration, Shapes::ShapeRef.new(shape: ComputeConfig, location_name: "computeConfiguration"))
+    StartNotebookRunOutput.add_member(:network_configuration, Shapes::ShapeRef.new(shape: NetworkConfig, location_name: "networkConfiguration"))
+    StartNotebookRunOutput.add_member(:timeout_configuration, Shapes::ShapeRef.new(shape: TimeoutConfig, location_name: "timeoutConfiguration"))
+    StartNotebookRunOutput.add_member(:environment_configuration, Shapes::ShapeRef.new(shape: EnvironmentConfig, location_name: "environmentConfiguration"))
+    StartNotebookRunOutput.add_member(:storage_configuration, Shapes::ShapeRef.new(shape: StorageConfig, location_name: "storageConfiguration"))
+    StartNotebookRunOutput.add_member(:trigger_source, Shapes::ShapeRef.new(shape: TriggerSource, location_name: "triggerSource"))
+    StartNotebookRunOutput.add_member(:error, Shapes::ShapeRef.new(shape: NotebookRunError, location_name: "error"))
+    StartNotebookRunOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    StartNotebookRunOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
+    StartNotebookRunOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
+    StartNotebookRunOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    StartNotebookRunOutput.add_member(:started_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "startedAt"))
+    StartNotebookRunOutput.add_member(:completed_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "completedAt"))
+    StartNotebookRunOutput.struct_class = Types::StartNotebookRunOutput
+
+    StartNotebookSyncInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    StartNotebookSyncInput.add_member(:owning_project_identifier, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectIdentifier"))
+    StartNotebookSyncInput.add_member(:source_location, Shapes::ShapeRef.new(shape: SourceLocation, required: true, location_name: "sourceLocation"))
+    StartNotebookSyncInput.add_member(:git_metadata, Shapes::ShapeRef.new(shape: GitMetadata, location_name: "gitMetadata"))
+    StartNotebookSyncInput.add_member(:notebook_id, Shapes::ShapeRef.new(shape: NotebookId, location_name: "notebookId"))
+    StartNotebookSyncInput.add_member(:name, Shapes::ShapeRef.new(shape: NotebookName, location_name: "name"))
+    StartNotebookSyncInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    StartNotebookSyncInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    StartNotebookSyncInput.struct_class = Types::StartNotebookSyncInput
+
+    StartNotebookSyncOutput.add_member(:notebook_id, Shapes::ShapeRef.new(shape: NotebookId, location_name: "notebookId"))
+    StartNotebookSyncOutput.add_member(:status, Shapes::ShapeRef.new(shape: NotebookStatus, location_name: "status"))
+    StartNotebookSyncOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "domainId"))
+    StartNotebookSyncOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "owningProjectId"))
+    StartNotebookSyncOutput.add_member(:source_location, Shapes::ShapeRef.new(shape: SourceLocation, location_name: "sourceLocation"))
+    StartNotebookSyncOutput.add_member(:git_metadata, Shapes::ShapeRef.new(shape: GitMetadata, location_name: "gitMetadata"))
+    StartNotebookSyncOutput.add_member(:name, Shapes::ShapeRef.new(shape: NotebookName, location_name: "name"))
+    StartNotebookSyncOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    StartNotebookSyncOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    StartNotebookSyncOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
+    StartNotebookSyncOutput.struct_class = Types::StartNotebookSyncOutput
+
+    StopNotebookRunInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    StopNotebookRunInput.add_member(:identifier, Shapes::ShapeRef.new(shape: NotebookRunId, required: true, location: "uri", location_name: "identifier"))
+    StopNotebookRunInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    StopNotebookRunInput.struct_class = Types::StopNotebookRunInput
+
+    StopNotebookRunOutput.add_member(:id, Shapes::ShapeRef.new(shape: NotebookRunId, required: true, location_name: "id"))
+    StopNotebookRunOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    StopNotebookRunOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
+    StopNotebookRunOutput.add_member(:status, Shapes::ShapeRef.new(shape: NotebookRunStatus, required: true, location_name: "status"))
+    StopNotebookRunOutput.struct_class = Types::StopNotebookRunOutput
+
+    StorageConfig.add_member(:project_s3_path, Shapes::ShapeRef.new(shape: S3Path, location_name: "projectS3Path"))
+    StorageConfig.add_member(:kms_key_arn, Shapes::ShapeRef.new(shape: KmsKeyArn, location_name: "kmsKeyArn"))
+    StorageConfig.struct_class = Types::StorageConfig
 
     StringList.member = Shapes::ShapeRef.new(shape: String)
 
     SubnetIdList.member = Shapes::ShapeRef.new(shape: SubnetId)
 
+    SubnetIds.member = Shapes::ShapeRef.new(shape: String)
+
     SubscribedAsset.add_member(:asset_id, Shapes::ShapeRef.new(shape: AssetId, required: true, location_name: "assetId"))
     SubscribedAsset.add_member(:asset_revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "assetRevision"))
-    SubscribedAsset.add_member(:asset_scope, Shapes::ShapeRef.new(shape: AssetScope, location_name: "assetScope"))
-    SubscribedAsset.add_member(:failure_cause, Shapes::ShapeRef.new(shape: FailureCause, location_name: "failureCause"))
-    SubscribedAsset.add_member(:failure_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "failureTimestamp"))
-    SubscribedAsset.add_member(:granted_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "grantedTimestamp"))
     SubscribedAsset.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionGrantStatus, required: true, location_name: "status"))
     SubscribedAsset.add_member(:target_name, Shapes::ShapeRef.new(shape: String, location_name: "targetName"))
+    SubscribedAsset.add_member(:failure_cause, Shapes::ShapeRef.new(shape: FailureCause, location_name: "failureCause"))
+    SubscribedAsset.add_member(:granted_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "grantedTimestamp"))
+    SubscribedAsset.add_member(:failure_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "failureTimestamp"))
+    SubscribedAsset.add_member(:asset_scope, Shapes::ShapeRef.new(shape: AssetScope, location_name: "assetScope"))
+    SubscribedAsset.add_member(:permissions, Shapes::ShapeRef.new(shape: Permissions, location_name: "permissions"))
     SubscribedAsset.struct_class = Types::SubscribedAsset
 
-    SubscribedAssetListing.add_member(:asset_scope, Shapes::ShapeRef.new(shape: AssetScope, location_name: "assetScope"))
     SubscribedAssetListing.add_member(:entity_id, Shapes::ShapeRef.new(shape: AssetId, location_name: "entityId"))
     SubscribedAssetListing.add_member(:entity_revision, Shapes::ShapeRef.new(shape: Revision, location_name: "entityRevision"))
     SubscribedAssetListing.add_member(:entity_type, Shapes::ShapeRef.new(shape: TypeName, location_name: "entityType"))
     SubscribedAssetListing.add_member(:forms, Shapes::ShapeRef.new(shape: Forms, location_name: "forms"))
     SubscribedAssetListing.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: DetailedGlossaryTerms, location_name: "glossaryTerms"))
+    SubscribedAssetListing.add_member(:asset_scope, Shapes::ShapeRef.new(shape: AssetScope, location_name: "assetScope"))
+    SubscribedAssetListing.add_member(:permissions, Shapes::ShapeRef.new(shape: Permissions, location_name: "permissions"))
     SubscribedAssetListing.struct_class = Types::SubscribedAssetListing
 
     SubscribedAssets.member = Shapes::ShapeRef.new(shape: SubscribedAsset)
 
-    SubscribedListing.add_member(:description, Shapes::ShapeRef.new(shape: Description, required: true, location_name: "description"))
+    SubscribedGroup.add_member(:id, Shapes::ShapeRef.new(shape: GroupProfileId, location_name: "id"))
+    SubscribedGroup.add_member(:name, Shapes::ShapeRef.new(shape: GroupProfileName, location_name: "name"))
+    SubscribedGroup.struct_class = Types::SubscribedGroup
+
+    SubscribedGroupInput.add_member(:identifier, Shapes::ShapeRef.new(shape: GroupProfileId, location_name: "identifier"))
+    SubscribedGroupInput.struct_class = Types::SubscribedGroupInput
+
+    SubscribedIamPrincipal.add_member(:principal_arn, Shapes::ShapeRef.new(shape: IamPrincipalArn, location_name: "principalArn"))
+    SubscribedIamPrincipal.struct_class = Types::SubscribedIamPrincipal
+
+    SubscribedIamPrincipalInput.add_member(:identifier, Shapes::ShapeRef.new(shape: IamPrincipalArn, location_name: "identifier"))
+    SubscribedIamPrincipalInput.struct_class = Types::SubscribedIamPrincipalInput
+
     SubscribedListing.add_member(:id, Shapes::ShapeRef.new(shape: ListingId, required: true, location_name: "id"))
-    SubscribedListing.add_member(:item, Shapes::ShapeRef.new(shape: SubscribedListingItem, required: true, location_name: "item"))
+    SubscribedListing.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, location_name: "revision"))
     SubscribedListing.add_member(:name, Shapes::ShapeRef.new(shape: ListingName, required: true, location_name: "name"))
+    SubscribedListing.add_member(:description, Shapes::ShapeRef.new(shape: Description, required: true, location_name: "description"))
+    SubscribedListing.add_member(:item, Shapes::ShapeRef.new(shape: SubscribedListingItem, required: true, location_name: "item"))
     SubscribedListing.add_member(:owner_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "ownerProjectId"))
     SubscribedListing.add_member(:owner_project_name, Shapes::ShapeRef.new(shape: String, location_name: "ownerProjectName"))
-    SubscribedListing.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, location_name: "revision"))
     SubscribedListing.struct_class = Types::SubscribedListing
 
     SubscribedListingInput.add_member(:identifier, Shapes::ShapeRef.new(shape: ListingId, required: true, location_name: "identifier"))
@@ -4898,25 +6280,37 @@ module Aws::DataZone
     SubscribedListingItem.struct_class = Types::SubscribedListingItem
 
     SubscribedPrincipal.add_member(:project, Shapes::ShapeRef.new(shape: SubscribedProject, location_name: "project"))
+    SubscribedPrincipal.add_member(:user, Shapes::ShapeRef.new(shape: SubscribedUser, location_name: "user"))
+    SubscribedPrincipal.add_member(:group, Shapes::ShapeRef.new(shape: SubscribedGroup, location_name: "group"))
+    SubscribedPrincipal.add_member(:iam, Shapes::ShapeRef.new(shape: SubscribedIamPrincipal, location_name: "iam"))
     SubscribedPrincipal.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
     SubscribedPrincipal.add_member_subclass(:project, Types::SubscribedPrincipal::Project)
+    SubscribedPrincipal.add_member_subclass(:user, Types::SubscribedPrincipal::User)
+    SubscribedPrincipal.add_member_subclass(:group, Types::SubscribedPrincipal::Group)
+    SubscribedPrincipal.add_member_subclass(:iam, Types::SubscribedPrincipal::Iam)
     SubscribedPrincipal.add_member_subclass(:unknown, Types::SubscribedPrincipal::Unknown)
     SubscribedPrincipal.struct_class = Types::SubscribedPrincipal
 
     SubscribedPrincipalInput.add_member(:project, Shapes::ShapeRef.new(shape: SubscribedProjectInput, location_name: "project"))
+    SubscribedPrincipalInput.add_member(:user, Shapes::ShapeRef.new(shape: SubscribedUserInput, location_name: "user"))
+    SubscribedPrincipalInput.add_member(:group, Shapes::ShapeRef.new(shape: SubscribedGroupInput, location_name: "group"))
+    SubscribedPrincipalInput.add_member(:iam, Shapes::ShapeRef.new(shape: SubscribedIamPrincipalInput, location_name: "iam"))
     SubscribedPrincipalInput.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
     SubscribedPrincipalInput.add_member_subclass(:project, Types::SubscribedPrincipalInput::Project)
+    SubscribedPrincipalInput.add_member_subclass(:user, Types::SubscribedPrincipalInput::User)
+    SubscribedPrincipalInput.add_member_subclass(:group, Types::SubscribedPrincipalInput::Group)
+    SubscribedPrincipalInput.add_member_subclass(:iam, Types::SubscribedPrincipalInput::Iam)
     SubscribedPrincipalInput.add_member_subclass(:unknown, Types::SubscribedPrincipalInput::Unknown)
     SubscribedPrincipalInput.struct_class = Types::SubscribedPrincipalInput
 
     SubscribedPrincipalInputs.member = Shapes::ShapeRef.new(shape: SubscribedPrincipalInput)
 
-    SubscribedProductListing.add_member(:asset_listings, Shapes::ShapeRef.new(shape: AssetInDataProductListingItems, location_name: "assetListings"))
-    SubscribedProductListing.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
     SubscribedProductListing.add_member(:entity_id, Shapes::ShapeRef.new(shape: AssetId, location_name: "entityId"))
     SubscribedProductListing.add_member(:entity_revision, Shapes::ShapeRef.new(shape: Revision, location_name: "entityRevision"))
     SubscribedProductListing.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: DetailedGlossaryTerms, location_name: "glossaryTerms"))
     SubscribedProductListing.add_member(:name, Shapes::ShapeRef.new(shape: String, location_name: "name"))
+    SubscribedProductListing.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
+    SubscribedProductListing.add_member(:asset_listings, Shapes::ShapeRef.new(shape: AssetInDataProductListingItems, location_name: "assetListings"))
     SubscribedProductListing.struct_class = Types::SubscribedProductListing
 
     SubscribedProject.add_member(:id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "id"))
@@ -4926,35 +6320,43 @@ module Aws::DataZone
     SubscribedProjectInput.add_member(:identifier, Shapes::ShapeRef.new(shape: ProjectId, location_name: "identifier"))
     SubscribedProjectInput.struct_class = Types::SubscribedProjectInput
 
-    SubscriptionGrantSummary.add_member(:assets, Shapes::ShapeRef.new(shape: SubscribedAssets, location_name: "assets"))
-    SubscriptionGrantSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
-    SubscriptionGrantSummary.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    SubscriptionGrantSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    SubscriptionGrantSummary.add_member(:granted_entity, Shapes::ShapeRef.new(shape: GrantedEntity, required: true, location_name: "grantedEntity"))
+    SubscribedUser.add_member(:id, Shapes::ShapeRef.new(shape: UserProfileId, location_name: "id"))
+    SubscribedUser.add_member(:details, Shapes::ShapeRef.new(shape: UserProfileDetails, location_name: "details"))
+    SubscribedUser.struct_class = Types::SubscribedUser
+
+    SubscribedUserInput.add_member(:identifier, Shapes::ShapeRef.new(shape: UserProfileId, location_name: "identifier"))
+    SubscribedUserInput.struct_class = Types::SubscribedUserInput
+
     SubscriptionGrantSummary.add_member(:id, Shapes::ShapeRef.new(shape: SubscriptionGrantId, required: true, location_name: "id"))
-    SubscriptionGrantSummary.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionGrantOverallStatus, required: true, location_name: "status"))
-    SubscriptionGrantSummary.add_member(:subscription_id, Shapes::ShapeRef.new(shape: SubscriptionId, deprecated: true, location_name: "subscriptionId", metadata: {"deprecatedMessage"=>"Multiple subscriptions can exist for a single grant"}))
-    SubscriptionGrantSummary.add_member(:subscription_target_id, Shapes::ShapeRef.new(shape: SubscriptionTargetId, required: true, location_name: "subscriptionTargetId"))
-    SubscriptionGrantSummary.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    SubscriptionGrantSummary.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
     SubscriptionGrantSummary.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    SubscriptionGrantSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    SubscriptionGrantSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
+    SubscriptionGrantSummary.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    SubscriptionGrantSummary.add_member(:environment_id, Shapes::ShapeRef.new(shape: EnvironmentId, location_name: "environmentId"))
+    SubscriptionGrantSummary.add_member(:subscription_target_id, Shapes::ShapeRef.new(shape: SubscriptionTargetId, required: true, location_name: "subscriptionTargetId"))
+    SubscriptionGrantSummary.add_member(:granted_entity, Shapes::ShapeRef.new(shape: GrantedEntity, required: true, location_name: "grantedEntity"))
+    SubscriptionGrantSummary.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionGrantOverallStatus, required: true, location_name: "status"))
+    SubscriptionGrantSummary.add_member(:assets, Shapes::ShapeRef.new(shape: SubscribedAssets, location_name: "assets"))
+    SubscriptionGrantSummary.add_member(:subscription_id, Shapes::ShapeRef.new(shape: SubscriptionId, deprecated: true, location_name: "subscriptionId", metadata: {"deprecatedMessage" => "Multiple subscriptions can exist for a single grant"}))
     SubscriptionGrantSummary.struct_class = Types::SubscriptionGrantSummary
 
     SubscriptionGrants.member = Shapes::ShapeRef.new(shape: SubscriptionGrantSummary)
 
-    SubscriptionRequestSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
-    SubscriptionRequestSummary.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    SubscriptionRequestSummary.add_member(:decision_comment, Shapes::ShapeRef.new(shape: DecisionComment, location_name: "decisionComment"))
-    SubscriptionRequestSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    SubscriptionRequestSummary.add_member(:existing_subscription_id, Shapes::ShapeRef.new(shape: SubscriptionId, location_name: "existingSubscriptionId"))
     SubscriptionRequestSummary.add_member(:id, Shapes::ShapeRef.new(shape: SubscriptionRequestId, required: true, location_name: "id"))
-    SubscriptionRequestSummary.add_member(:metadata_forms_summary, Shapes::ShapeRef.new(shape: MetadataFormsSummary, location_name: "metadataFormsSummary"))
-    SubscriptionRequestSummary.add_member(:request_reason, Shapes::ShapeRef.new(shape: RequestReason, required: true, location_name: "requestReason"))
-    SubscriptionRequestSummary.add_member(:reviewer_id, Shapes::ShapeRef.new(shape: String, location_name: "reviewerId"))
-    SubscriptionRequestSummary.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionRequestStatus, required: true, location_name: "status"))
-    SubscriptionRequestSummary.add_member(:subscribed_listings, Shapes::ShapeRef.new(shape: SubscriptionRequestSummarySubscribedListingsList, required: true, location_name: "subscribedListings"))
-    SubscriptionRequestSummary.add_member(:subscribed_principals, Shapes::ShapeRef.new(shape: SubscriptionRequestSummarySubscribedPrincipalsList, required: true, location_name: "subscribedPrincipals"))
-    SubscriptionRequestSummary.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    SubscriptionRequestSummary.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
     SubscriptionRequestSummary.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    SubscriptionRequestSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    SubscriptionRequestSummary.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionRequestStatus, required: true, location_name: "status"))
+    SubscriptionRequestSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
+    SubscriptionRequestSummary.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    SubscriptionRequestSummary.add_member(:request_reason, Shapes::ShapeRef.new(shape: RequestReason, required: true, location_name: "requestReason"))
+    SubscriptionRequestSummary.add_member(:subscribed_principals, Shapes::ShapeRef.new(shape: SubscriptionRequestSummarySubscribedPrincipalsList, required: true, location_name: "subscribedPrincipals"))
+    SubscriptionRequestSummary.add_member(:subscribed_listings, Shapes::ShapeRef.new(shape: SubscriptionRequestSummarySubscribedListingsList, required: true, location_name: "subscribedListings"))
+    SubscriptionRequestSummary.add_member(:reviewer_id, Shapes::ShapeRef.new(shape: String, location_name: "reviewerId"))
+    SubscriptionRequestSummary.add_member(:decision_comment, Shapes::ShapeRef.new(shape: DecisionComment, location_name: "decisionComment"))
+    SubscriptionRequestSummary.add_member(:existing_subscription_id, Shapes::ShapeRef.new(shape: SubscriptionId, location_name: "existingSubscriptionId"))
+    SubscriptionRequestSummary.add_member(:metadata_forms_summary, Shapes::ShapeRef.new(shape: MetadataFormsSummary, location_name: "metadataFormsSummary"))
     SubscriptionRequestSummary.struct_class = Types::SubscriptionRequestSummary
 
     SubscriptionRequestSummarySubscribedListingsList.member = Shapes::ShapeRef.new(shape: SubscribedListing)
@@ -4963,40 +6365,41 @@ module Aws::DataZone
 
     SubscriptionRequests.member = Shapes::ShapeRef.new(shape: SubscriptionRequestSummary)
 
-    SubscriptionSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
-    SubscriptionSummary.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    SubscriptionSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     SubscriptionSummary.add_member(:id, Shapes::ShapeRef.new(shape: SubscriptionId, required: true, location_name: "id"))
-    SubscriptionSummary.add_member(:retain_permissions, Shapes::ShapeRef.new(shape: Boolean, location_name: "retainPermissions"))
-    SubscriptionSummary.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionStatus, required: true, location_name: "status"))
-    SubscriptionSummary.add_member(:subscribed_listing, Shapes::ShapeRef.new(shape: SubscribedListing, required: true, location_name: "subscribedListing"))
-    SubscriptionSummary.add_member(:subscribed_principal, Shapes::ShapeRef.new(shape: SubscribedPrincipal, required: true, location_name: "subscribedPrincipal"))
-    SubscriptionSummary.add_member(:subscription_request_id, Shapes::ShapeRef.new(shape: SubscriptionRequestId, location_name: "subscriptionRequestId"))
-    SubscriptionSummary.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    SubscriptionSummary.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
     SubscriptionSummary.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    SubscriptionSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    SubscriptionSummary.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionStatus, required: true, location_name: "status"))
+    SubscriptionSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
+    SubscriptionSummary.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    SubscriptionSummary.add_member(:subscribed_principal, Shapes::ShapeRef.new(shape: SubscribedPrincipal, required: true, location_name: "subscribedPrincipal"))
+    SubscriptionSummary.add_member(:subscribed_listing, Shapes::ShapeRef.new(shape: SubscribedListing, required: true, location_name: "subscribedListing"))
+    SubscriptionSummary.add_member(:subscription_request_id, Shapes::ShapeRef.new(shape: SubscriptionRequestId, location_name: "subscriptionRequestId"))
+    SubscriptionSummary.add_member(:retain_permissions, Shapes::ShapeRef.new(shape: Boolean, location_name: "retainPermissions"))
     SubscriptionSummary.struct_class = Types::SubscriptionSummary
 
-    SubscriptionTargetForm.add_member(:content, Shapes::ShapeRef.new(shape: String, required: true, location_name: "content"))
     SubscriptionTargetForm.add_member(:form_name, Shapes::ShapeRef.new(shape: FormName, required: true, location_name: "formName"))
+    SubscriptionTargetForm.add_member(:content, Shapes::ShapeRef.new(shape: String, required: true, location_name: "content"))
     SubscriptionTargetForm.struct_class = Types::SubscriptionTargetForm
 
     SubscriptionTargetForms.member = Shapes::ShapeRef.new(shape: SubscriptionTargetForm)
 
-    SubscriptionTargetSummary.add_member(:applicable_asset_types, Shapes::ShapeRef.new(shape: ApplicableAssetTypes, required: true, location_name: "applicableAssetTypes"))
-    SubscriptionTargetSummary.add_member(:authorized_principals, Shapes::ShapeRef.new(shape: AuthorizedPrincipalIdentifiers, required: true, location_name: "authorizedPrincipals"))
-    SubscriptionTargetSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
-    SubscriptionTargetSummary.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    SubscriptionTargetSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    SubscriptionTargetSummary.add_member(:environment_id, Shapes::ShapeRef.new(shape: EnvironmentId, required: true, location_name: "environmentId"))
     SubscriptionTargetSummary.add_member(:id, Shapes::ShapeRef.new(shape: SubscriptionTargetId, required: true, location_name: "id"))
-    SubscriptionTargetSummary.add_member(:manage_access_role, Shapes::ShapeRef.new(shape: IamRoleArn, location_name: "manageAccessRole"))
-    SubscriptionTargetSummary.add_member(:name, Shapes::ShapeRef.new(shape: SubscriptionTargetName, required: true, location_name: "name"))
+    SubscriptionTargetSummary.add_member(:authorized_principals, Shapes::ShapeRef.new(shape: AuthorizedPrincipalIdentifiers, required: true, location_name: "authorizedPrincipals"))
+    SubscriptionTargetSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     SubscriptionTargetSummary.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "projectId"))
-    SubscriptionTargetSummary.add_member(:provider, Shapes::ShapeRef.new(shape: String, required: true, location_name: "provider"))
-    SubscriptionTargetSummary.add_member(:subscription_target_config, Shapes::ShapeRef.new(shape: SubscriptionTargetForms, required: true, location_name: "subscriptionTargetConfig"))
+    SubscriptionTargetSummary.add_member(:environment_id, Shapes::ShapeRef.new(shape: EnvironmentId, required: true, location_name: "environmentId"))
+    SubscriptionTargetSummary.add_member(:name, Shapes::ShapeRef.new(shape: SubscriptionTargetName, required: true, location_name: "name"))
     SubscriptionTargetSummary.add_member(:type, Shapes::ShapeRef.new(shape: String, required: true, location_name: "type"))
-    SubscriptionTargetSummary.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
+    SubscriptionTargetSummary.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
     SubscriptionTargetSummary.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    SubscriptionTargetSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
+    SubscriptionTargetSummary.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
+    SubscriptionTargetSummary.add_member(:manage_access_role, Shapes::ShapeRef.new(shape: IamRoleArn, location_name: "manageAccessRole"))
+    SubscriptionTargetSummary.add_member(:applicable_asset_types, Shapes::ShapeRef.new(shape: ApplicableAssetTypes, required: true, location_name: "applicableAssetTypes"))
+    SubscriptionTargetSummary.add_member(:subscription_target_config, Shapes::ShapeRef.new(shape: SubscriptionTargetForms, required: true, location_name: "subscriptionTargetConfig"))
+    SubscriptionTargetSummary.add_member(:provider, Shapes::ShapeRef.new(shape: String, required: true, location_name: "provider"))
+    SubscriptionTargetSummary.add_member(:subscription_grant_creation_mode, Shapes::ShapeRef.new(shape: SubscriptionGrantCreationMode, location_name: "subscriptionGrantCreationMode"))
     SubscriptionTargetSummary.struct_class = Types::SubscriptionTargetSummary
 
     SubscriptionTargets.member = Shapes::ShapeRef.new(shape: SubscriptionTargetSummary)
@@ -5014,58 +6417,72 @@ module Aws::DataZone
     Tags.key = Shapes::ShapeRef.new(shape: TagKey)
     Tags.value = Shapes::ShapeRef.new(shape: TagValue)
 
-    TermRelations.add_member(:classifies, Shapes::ShapeRef.new(shape: TermRelationsClassifiesList, location_name: "classifies"))
     TermRelations.add_member(:is_a, Shapes::ShapeRef.new(shape: TermRelationsIsAList, location_name: "isA"))
+    TermRelations.add_member(:classifies, Shapes::ShapeRef.new(shape: TermRelationsClassifiesList, location_name: "classifies"))
     TermRelations.struct_class = Types::TermRelations
 
     TermRelationsClassifiesList.member = Shapes::ShapeRef.new(shape: GlossaryTermId)
 
     TermRelationsIsAList.member = Shapes::ShapeRef.new(shape: GlossaryTermId)
 
+    TextMatchItem.add_member(:attribute, Shapes::ShapeRef.new(shape: Attribute, location_name: "attribute"))
+    TextMatchItem.add_member(:text, Shapes::ShapeRef.new(shape: String, location_name: "text"))
+    TextMatchItem.add_member(:match_offsets, Shapes::ShapeRef.new(shape: MatchOffsets, location_name: "matchOffsets"))
+    TextMatchItem.struct_class = Types::TextMatchItem
+
+    TextMatches.member = Shapes::ShapeRef.new(shape: TextMatchItem)
+
     ThrottlingException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, required: true, location_name: "message"))
     ThrottlingException.struct_class = Types::ThrottlingException
 
-    TimeSeriesDataPointFormInput.add_member(:content, Shapes::ShapeRef.new(shape: TimeSeriesDataPointFormInputContentString, location_name: "content"))
     TimeSeriesDataPointFormInput.add_member(:form_name, Shapes::ShapeRef.new(shape: TimeSeriesFormName, required: true, location_name: "formName"))
-    TimeSeriesDataPointFormInput.add_member(:timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "timestamp"))
     TimeSeriesDataPointFormInput.add_member(:type_identifier, Shapes::ShapeRef.new(shape: FormTypeIdentifier, required: true, location_name: "typeIdentifier"))
     TimeSeriesDataPointFormInput.add_member(:type_revision, Shapes::ShapeRef.new(shape: Revision, location_name: "typeRevision"))
+    TimeSeriesDataPointFormInput.add_member(:timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "timestamp"))
+    TimeSeriesDataPointFormInput.add_member(:content, Shapes::ShapeRef.new(shape: TimeSeriesDataPointFormInputContentString, location_name: "content"))
     TimeSeriesDataPointFormInput.struct_class = Types::TimeSeriesDataPointFormInput
 
     TimeSeriesDataPointFormInputList.member = Shapes::ShapeRef.new(shape: TimeSeriesDataPointFormInput)
 
-    TimeSeriesDataPointFormOutput.add_member(:content, Shapes::ShapeRef.new(shape: TimeSeriesDataPointFormOutputContentString, location_name: "content"))
     TimeSeriesDataPointFormOutput.add_member(:form_name, Shapes::ShapeRef.new(shape: TimeSeriesFormName, required: true, location_name: "formName"))
-    TimeSeriesDataPointFormOutput.add_member(:id, Shapes::ShapeRef.new(shape: DataPointIdentifier, location_name: "id"))
-    TimeSeriesDataPointFormOutput.add_member(:timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "timestamp"))
     TimeSeriesDataPointFormOutput.add_member(:type_identifier, Shapes::ShapeRef.new(shape: FormTypeIdentifier, required: true, location_name: "typeIdentifier"))
     TimeSeriesDataPointFormOutput.add_member(:type_revision, Shapes::ShapeRef.new(shape: Revision, location_name: "typeRevision"))
+    TimeSeriesDataPointFormOutput.add_member(:timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "timestamp"))
+    TimeSeriesDataPointFormOutput.add_member(:content, Shapes::ShapeRef.new(shape: TimeSeriesDataPointFormOutputContentString, location_name: "content"))
+    TimeSeriesDataPointFormOutput.add_member(:id, Shapes::ShapeRef.new(shape: DataPointIdentifier, location_name: "id"))
     TimeSeriesDataPointFormOutput.struct_class = Types::TimeSeriesDataPointFormOutput
 
     TimeSeriesDataPointFormOutputList.member = Shapes::ShapeRef.new(shape: TimeSeriesDataPointFormOutput)
 
-    TimeSeriesDataPointSummaryFormOutput.add_member(:content_summary, Shapes::ShapeRef.new(shape: TimeSeriesDataPointSummaryFormOutputContentSummaryString, location_name: "contentSummary"))
     TimeSeriesDataPointSummaryFormOutput.add_member(:form_name, Shapes::ShapeRef.new(shape: TimeSeriesFormName, required: true, location_name: "formName"))
-    TimeSeriesDataPointSummaryFormOutput.add_member(:id, Shapes::ShapeRef.new(shape: DataPointIdentifier, location_name: "id"))
-    TimeSeriesDataPointSummaryFormOutput.add_member(:timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "timestamp"))
     TimeSeriesDataPointSummaryFormOutput.add_member(:type_identifier, Shapes::ShapeRef.new(shape: FormTypeIdentifier, required: true, location_name: "typeIdentifier"))
     TimeSeriesDataPointSummaryFormOutput.add_member(:type_revision, Shapes::ShapeRef.new(shape: Revision, location_name: "typeRevision"))
+    TimeSeriesDataPointSummaryFormOutput.add_member(:timestamp, Shapes::ShapeRef.new(shape: Timestamp, required: true, location_name: "timestamp"))
+    TimeSeriesDataPointSummaryFormOutput.add_member(:content_summary, Shapes::ShapeRef.new(shape: TimeSeriesDataPointSummaryFormOutputContentSummaryString, location_name: "contentSummary"))
+    TimeSeriesDataPointSummaryFormOutput.add_member(:id, Shapes::ShapeRef.new(shape: DataPointIdentifier, location_name: "id"))
     TimeSeriesDataPointSummaryFormOutput.struct_class = Types::TimeSeriesDataPointSummaryFormOutput
 
     TimeSeriesDataPointSummaryFormOutputList.member = Shapes::ShapeRef.new(shape: TimeSeriesDataPointSummaryFormOutput)
 
+    TimeoutConfig.add_member(:run_timeout_in_minutes, Shapes::ShapeRef.new(shape: TimeoutConfigRunTimeoutInMinutesInteger, location_name: "runTimeoutInMinutes"))
+    TimeoutConfig.struct_class = Types::TimeoutConfig
+
     TokenUrlParametersMap.key = Shapes::ShapeRef.new(shape: TokenUrlParametersMapKeyString)
     TokenUrlParametersMap.value = Shapes::ShapeRef.new(shape: TokenUrlParametersMapValueString)
 
+    Topic.add_member(:subject, Shapes::ShapeRef.new(shape: String, required: true, location_name: "subject"))
     Topic.add_member(:resource, Shapes::ShapeRef.new(shape: NotificationResource, required: true, location_name: "resource"))
     Topic.add_member(:role, Shapes::ShapeRef.new(shape: NotificationRole, required: true, location_name: "role"))
-    Topic.add_member(:subject, Shapes::ShapeRef.new(shape: String, required: true, location_name: "subject"))
     Topic.struct_class = Types::Topic
 
     TrackingAssetArns.member = Shapes::ShapeRef.new(shape: SageMakerResourceArn)
 
     TrackingAssets.key = Shapes::ShapeRef.new(shape: SageMakerAssetType)
     TrackingAssets.value = Shapes::ShapeRef.new(shape: TrackingAssetArns)
+
+    TriggerSource.add_member(:type, Shapes::ShapeRef.new(shape: TriggerSourceType, location_name: "type"))
+    TriggerSource.add_member(:name, Shapes::ShapeRef.new(shape: String, location_name: "name"))
+    TriggerSource.struct_class = Types::TriggerSource
 
     UnauthorizedException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, required: true, location_name: "message"))
     UnauthorizedException.struct_class = Types::UnauthorizedException
@@ -5078,34 +6495,57 @@ module Aws::DataZone
 
     UntagResourceResponse.struct_class = Types::UntagResourceResponse
 
-    UpdateAssetFilterInput.add_member(:asset_identifier, Shapes::ShapeRef.new(shape: AssetId, required: true, location: "uri", location_name: "assetIdentifier"))
-    UpdateAssetFilterInput.add_member(:configuration, Shapes::ShapeRef.new(shape: AssetFilterConfiguration, location_name: "configuration"))
-    UpdateAssetFilterInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    UpdateAccountPoolInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    UpdateAccountPoolInput.add_member(:identifier, Shapes::ShapeRef.new(shape: AccountPoolId, required: true, location: "uri", location_name: "identifier"))
+    UpdateAccountPoolInput.add_member(:name, Shapes::ShapeRef.new(shape: AccountPoolName, location_name: "name"))
+    UpdateAccountPoolInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    UpdateAccountPoolInput.add_member(:resolution_strategy, Shapes::ShapeRef.new(shape: ResolutionStrategy, location_name: "resolutionStrategy"))
+    UpdateAccountPoolInput.add_member(:account_source, Shapes::ShapeRef.new(shape: AccountSource, location_name: "accountSource"))
+    UpdateAccountPoolInput.struct_class = Types::UpdateAccountPoolInput
+
+    UpdateAccountPoolOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "domainId"))
+    UpdateAccountPoolOutput.add_member(:name, Shapes::ShapeRef.new(shape: AccountPoolName, location_name: "name"))
+    UpdateAccountPoolOutput.add_member(:id, Shapes::ShapeRef.new(shape: AccountPoolId, location_name: "id"))
+    UpdateAccountPoolOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    UpdateAccountPoolOutput.add_member(:resolution_strategy, Shapes::ShapeRef.new(shape: ResolutionStrategy, location_name: "resolutionStrategy"))
+    UpdateAccountPoolOutput.add_member(:account_source, Shapes::ShapeRef.new(shape: AccountSource, required: true, location_name: "accountSource"))
+    UpdateAccountPoolOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
+    UpdateAccountPoolOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
+    UpdateAccountPoolOutput.add_member(:last_updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "lastUpdatedAt"))
+    UpdateAccountPoolOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    UpdateAccountPoolOutput.add_member(:domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitId"))
+    UpdateAccountPoolOutput.struct_class = Types::UpdateAccountPoolOutput
+
     UpdateAssetFilterInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    UpdateAssetFilterInput.add_member(:asset_identifier, Shapes::ShapeRef.new(shape: AssetId, required: true, location: "uri", location_name: "assetIdentifier"))
     UpdateAssetFilterInput.add_member(:identifier, Shapes::ShapeRef.new(shape: FilterId, required: true, location: "uri", location_name: "identifier"))
     UpdateAssetFilterInput.add_member(:name, Shapes::ShapeRef.new(shape: String, location_name: "name"))
+    UpdateAssetFilterInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    UpdateAssetFilterInput.add_member(:configuration, Shapes::ShapeRef.new(shape: AssetFilterConfiguration, location_name: "configuration"))
     UpdateAssetFilterInput.struct_class = Types::UpdateAssetFilterInput
 
+    UpdateAssetFilterOutput.add_member(:id, Shapes::ShapeRef.new(shape: FilterId, required: true, location_name: "id"))
+    UpdateAssetFilterOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     UpdateAssetFilterOutput.add_member(:asset_id, Shapes::ShapeRef.new(shape: AssetId, required: true, location_name: "assetId"))
+    UpdateAssetFilterOutput.add_member(:name, Shapes::ShapeRef.new(shape: FilterName, required: true, location_name: "name"))
+    UpdateAssetFilterOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    UpdateAssetFilterOutput.add_member(:status, Shapes::ShapeRef.new(shape: FilterStatus, location_name: "status"))
     UpdateAssetFilterOutput.add_member(:configuration, Shapes::ShapeRef.new(shape: AssetFilterConfiguration, required: true, location_name: "configuration"))
     UpdateAssetFilterOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
-    UpdateAssetFilterOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    UpdateAssetFilterOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    UpdateAssetFilterOutput.add_member(:error_message, Shapes::ShapeRef.new(shape: String, location_name: "errorMessage"))
     UpdateAssetFilterOutput.add_member(:effective_column_names, Shapes::ShapeRef.new(shape: ColumnNameList, location_name: "effectiveColumnNames"))
     UpdateAssetFilterOutput.add_member(:effective_row_filter, Shapes::ShapeRef.new(shape: String, location_name: "effectiveRowFilter"))
-    UpdateAssetFilterOutput.add_member(:error_message, Shapes::ShapeRef.new(shape: String, location_name: "errorMessage"))
-    UpdateAssetFilterOutput.add_member(:id, Shapes::ShapeRef.new(shape: FilterId, required: true, location_name: "id"))
-    UpdateAssetFilterOutput.add_member(:name, Shapes::ShapeRef.new(shape: FilterName, required: true, location_name: "name"))
-    UpdateAssetFilterOutput.add_member(:status, Shapes::ShapeRef.new(shape: FilterStatus, location_name: "status"))
     UpdateAssetFilterOutput.struct_class = Types::UpdateAssetFilterOutput
 
-    UpdateConnectionInput.add_member(:aws_location, Shapes::ShapeRef.new(shape: AwsLocation, location_name: "awsLocation"))
-    UpdateConnectionInput.add_member(:description, Shapes::ShapeRef.new(shape: UpdateConnectionInputDescriptionString, location_name: "description"))
+    UpdateConnectionInput.add_member(:configurations, Shapes::ShapeRef.new(shape: Configurations, location_name: "configurations"))
     UpdateConnectionInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     UpdateConnectionInput.add_member(:identifier, Shapes::ShapeRef.new(shape: ConnectionId, required: true, location: "uri", location_name: "identifier"))
+    UpdateConnectionInput.add_member(:description, Shapes::ShapeRef.new(shape: UpdateConnectionInputDescriptionString, location_name: "description"))
+    UpdateConnectionInput.add_member(:aws_location, Shapes::ShapeRef.new(shape: AwsLocation, location_name: "awsLocation"))
     UpdateConnectionInput.add_member(:props, Shapes::ShapeRef.new(shape: ConnectionPropertiesPatch, location_name: "props"))
     UpdateConnectionInput.struct_class = Types::UpdateConnectionInput
 
+    UpdateConnectionOutput.add_member(:configurations, Shapes::ShapeRef.new(shape: Configurations, location_name: "configurations"))
     UpdateConnectionOutput.add_member(:connection_id, Shapes::ShapeRef.new(shape: ConnectionId, required: true, location_name: "connectionId"))
     UpdateConnectionOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     UpdateConnectionOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
@@ -5116,189 +6556,213 @@ module Aws::DataZone
     UpdateConnectionOutput.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "projectId"))
     UpdateConnectionOutput.add_member(:props, Shapes::ShapeRef.new(shape: ConnectionPropertiesOutput, location_name: "props"))
     UpdateConnectionOutput.add_member(:type, Shapes::ShapeRef.new(shape: ConnectionType, required: true, location_name: "type"))
+    UpdateConnectionOutput.add_member(:scope, Shapes::ShapeRef.new(shape: ConnectionScope, location_name: "scope"))
     UpdateConnectionOutput.struct_class = Types::UpdateConnectionOutput
 
-    UpdateDataSourceInput.add_member(:asset_forms_input, Shapes::ShapeRef.new(shape: FormInputList, location_name: "assetFormsInput"))
-    UpdateDataSourceInput.add_member(:configuration, Shapes::ShapeRef.new(shape: DataSourceConfigurationInput, location_name: "configuration"))
-    UpdateDataSourceInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     UpdateDataSourceInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    UpdateDataSourceInput.add_member(:enable_setting, Shapes::ShapeRef.new(shape: EnableSetting, location_name: "enableSetting"))
     UpdateDataSourceInput.add_member(:identifier, Shapes::ShapeRef.new(shape: DataSourceId, required: true, location: "uri", location_name: "identifier"))
     UpdateDataSourceInput.add_member(:name, Shapes::ShapeRef.new(shape: Name, location_name: "name"))
+    UpdateDataSourceInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    UpdateDataSourceInput.add_member(:enable_setting, Shapes::ShapeRef.new(shape: EnableSetting, location_name: "enableSetting"))
     UpdateDataSourceInput.add_member(:publish_on_import, Shapes::ShapeRef.new(shape: Boolean, location_name: "publishOnImport"))
+    UpdateDataSourceInput.add_member(:asset_forms_input, Shapes::ShapeRef.new(shape: FormInputList, location_name: "assetFormsInput"))
+    UpdateDataSourceInput.add_member(:schedule, Shapes::ShapeRef.new(shape: ScheduleConfiguration, location_name: "schedule"))
+    UpdateDataSourceInput.add_member(:configuration, Shapes::ShapeRef.new(shape: DataSourceConfigurationInput, location_name: "configuration"))
     UpdateDataSourceInput.add_member(:recommendation, Shapes::ShapeRef.new(shape: RecommendationConfiguration, location_name: "recommendation"))
     UpdateDataSourceInput.add_member(:retain_permissions_on_revoke_failure, Shapes::ShapeRef.new(shape: Boolean, location_name: "retainPermissionsOnRevokeFailure"))
-    UpdateDataSourceInput.add_member(:schedule, Shapes::ShapeRef.new(shape: ScheduleConfiguration, location_name: "schedule"))
     UpdateDataSourceInput.struct_class = Types::UpdateDataSourceInput
 
-    UpdateDataSourceOutput.add_member(:asset_forms_output, Shapes::ShapeRef.new(shape: FormOutputList, location_name: "assetFormsOutput"))
-    UpdateDataSourceOutput.add_member(:configuration, Shapes::ShapeRef.new(shape: DataSourceConfigurationOutput, location_name: "configuration"))
-    UpdateDataSourceOutput.add_member(:connection_id, Shapes::ShapeRef.new(shape: String, location_name: "connectionId"))
-    UpdateDataSourceOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "createdAt"))
-    UpdateDataSourceOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    UpdateDataSourceOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    UpdateDataSourceOutput.add_member(:enable_setting, Shapes::ShapeRef.new(shape: EnableSetting, location_name: "enableSetting"))
-    UpdateDataSourceOutput.add_member(:environment_id, Shapes::ShapeRef.new(shape: EnvironmentId, location_name: "environmentId"))
-    UpdateDataSourceOutput.add_member(:error_message, Shapes::ShapeRef.new(shape: DataSourceErrorMessage, location_name: "errorMessage"))
     UpdateDataSourceOutput.add_member(:id, Shapes::ShapeRef.new(shape: DataSourceId, required: true, location_name: "id"))
-    UpdateDataSourceOutput.add_member(:last_run_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "lastRunAt"))
-    UpdateDataSourceOutput.add_member(:last_run_error_message, Shapes::ShapeRef.new(shape: DataSourceErrorMessage, location_name: "lastRunErrorMessage"))
-    UpdateDataSourceOutput.add_member(:last_run_status, Shapes::ShapeRef.new(shape: DataSourceRunStatus, location_name: "lastRunStatus"))
-    UpdateDataSourceOutput.add_member(:name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "name"))
-    UpdateDataSourceOutput.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "projectId"))
-    UpdateDataSourceOutput.add_member(:publish_on_import, Shapes::ShapeRef.new(shape: Boolean, location_name: "publishOnImport"))
-    UpdateDataSourceOutput.add_member(:recommendation, Shapes::ShapeRef.new(shape: RecommendationConfiguration, location_name: "recommendation"))
-    UpdateDataSourceOutput.add_member(:retain_permissions_on_revoke_failure, Shapes::ShapeRef.new(shape: Boolean, location_name: "retainPermissionsOnRevokeFailure"))
-    UpdateDataSourceOutput.add_member(:schedule, Shapes::ShapeRef.new(shape: ScheduleConfiguration, location_name: "schedule"))
-    UpdateDataSourceOutput.add_member(:self_grant_status, Shapes::ShapeRef.new(shape: SelfGrantStatusOutput, location_name: "selfGrantStatus"))
     UpdateDataSourceOutput.add_member(:status, Shapes::ShapeRef.new(shape: DataSourceStatus, location_name: "status"))
     UpdateDataSourceOutput.add_member(:type, Shapes::ShapeRef.new(shape: DataSourceType, location_name: "type"))
+    UpdateDataSourceOutput.add_member(:name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "name"))
+    UpdateDataSourceOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    UpdateDataSourceOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    UpdateDataSourceOutput.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "projectId"))
+    UpdateDataSourceOutput.add_member(:environment_id, Shapes::ShapeRef.new(shape: EnvironmentId, location_name: "environmentId"))
+    UpdateDataSourceOutput.add_member(:connection_id, Shapes::ShapeRef.new(shape: String, location_name: "connectionId"))
+    UpdateDataSourceOutput.add_member(:configuration, Shapes::ShapeRef.new(shape: DataSourceConfigurationOutput, location_name: "configuration"))
+    UpdateDataSourceOutput.add_member(:recommendation, Shapes::ShapeRef.new(shape: RecommendationConfiguration, location_name: "recommendation"))
+    UpdateDataSourceOutput.add_member(:enable_setting, Shapes::ShapeRef.new(shape: EnableSetting, location_name: "enableSetting"))
+    UpdateDataSourceOutput.add_member(:publish_on_import, Shapes::ShapeRef.new(shape: Boolean, location_name: "publishOnImport"))
+    UpdateDataSourceOutput.add_member(:asset_forms_output, Shapes::ShapeRef.new(shape: FormOutputList, location_name: "assetFormsOutput"))
+    UpdateDataSourceOutput.add_member(:schedule, Shapes::ShapeRef.new(shape: ScheduleConfiguration, location_name: "schedule"))
+    UpdateDataSourceOutput.add_member(:last_run_status, Shapes::ShapeRef.new(shape: DataSourceRunStatus, location_name: "lastRunStatus"))
+    UpdateDataSourceOutput.add_member(:last_run_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "lastRunAt"))
+    UpdateDataSourceOutput.add_member(:last_run_error_message, Shapes::ShapeRef.new(shape: DataSourceErrorMessage, location_name: "lastRunErrorMessage"))
+    UpdateDataSourceOutput.add_member(:error_message, Shapes::ShapeRef.new(shape: DataSourceErrorMessage, location_name: "errorMessage"))
+    UpdateDataSourceOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "createdAt"))
     UpdateDataSourceOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: DateTime, location_name: "updatedAt"))
+    UpdateDataSourceOutput.add_member(:self_grant_status, Shapes::ShapeRef.new(shape: SelfGrantStatusOutput, location_name: "selfGrantStatus"))
+    UpdateDataSourceOutput.add_member(:retain_permissions_on_revoke_failure, Shapes::ShapeRef.new(shape: Boolean, location_name: "retainPermissionsOnRevokeFailure"))
     UpdateDataSourceOutput.struct_class = Types::UpdateDataSourceOutput
 
-    UpdateDomainInput.add_member(:client_token, Shapes::ShapeRef.new(shape: String, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
-    UpdateDomainInput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
-    UpdateDomainInput.add_member(:domain_execution_role, Shapes::ShapeRef.new(shape: RoleArn, location_name: "domainExecutionRole"))
     UpdateDomainInput.add_member(:identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "identifier"))
-    UpdateDomainInput.add_member(:name, Shapes::ShapeRef.new(shape: String, location_name: "name"))
-    UpdateDomainInput.add_member(:service_role, Shapes::ShapeRef.new(shape: RoleArn, location_name: "serviceRole"))
+    UpdateDomainInput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
     UpdateDomainInput.add_member(:single_sign_on, Shapes::ShapeRef.new(shape: SingleSignOn, location_name: "singleSignOn"))
+    UpdateDomainInput.add_member(:domain_execution_role, Shapes::ShapeRef.new(shape: RoleArn, location_name: "domainExecutionRole"))
+    UpdateDomainInput.add_member(:service_role, Shapes::ShapeRef.new(shape: RoleArn, location_name: "serviceRole"))
+    UpdateDomainInput.add_member(:name, Shapes::ShapeRef.new(shape: String, location_name: "name"))
+    UpdateDomainInput.add_member(:client_token, Shapes::ShapeRef.new(shape: String, location: "querystring", location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     UpdateDomainInput.struct_class = Types::UpdateDomainInput
 
-    UpdateDomainOutput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
-    UpdateDomainOutput.add_member(:domain_execution_role, Shapes::ShapeRef.new(shape: RoleArn, location_name: "domainExecutionRole"))
     UpdateDomainOutput.add_member(:id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "id"))
-    UpdateDomainOutput.add_member(:last_updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "lastUpdatedAt"))
-    UpdateDomainOutput.add_member(:name, Shapes::ShapeRef.new(shape: String, location_name: "name"))
     UpdateDomainOutput.add_member(:root_domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "rootDomainUnitId"))
-    UpdateDomainOutput.add_member(:service_role, Shapes::ShapeRef.new(shape: RoleArn, location_name: "serviceRole"))
+    UpdateDomainOutput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
     UpdateDomainOutput.add_member(:single_sign_on, Shapes::ShapeRef.new(shape: SingleSignOn, location_name: "singleSignOn"))
+    UpdateDomainOutput.add_member(:domain_execution_role, Shapes::ShapeRef.new(shape: RoleArn, location_name: "domainExecutionRole"))
+    UpdateDomainOutput.add_member(:service_role, Shapes::ShapeRef.new(shape: RoleArn, location_name: "serviceRole"))
+    UpdateDomainOutput.add_member(:name, Shapes::ShapeRef.new(shape: String, location_name: "name"))
+    UpdateDomainOutput.add_member(:last_updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "lastUpdatedAt"))
     UpdateDomainOutput.struct_class = Types::UpdateDomainOutput
 
-    UpdateDomainUnitInput.add_member(:description, Shapes::ShapeRef.new(shape: DomainUnitDescription, location_name: "description"))
     UpdateDomainUnitInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     UpdateDomainUnitInput.add_member(:identifier, Shapes::ShapeRef.new(shape: DomainUnitId, required: true, location: "uri", location_name: "identifier"))
+    UpdateDomainUnitInput.add_member(:description, Shapes::ShapeRef.new(shape: DomainUnitDescription, location_name: "description"))
     UpdateDomainUnitInput.add_member(:name, Shapes::ShapeRef.new(shape: DomainUnitName, location_name: "name"))
     UpdateDomainUnitInput.struct_class = Types::UpdateDomainUnitInput
 
-    UpdateDomainUnitOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
-    UpdateDomainUnitOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
-    UpdateDomainUnitOutput.add_member(:description, Shapes::ShapeRef.new(shape: DomainUnitDescription, location_name: "description"))
-    UpdateDomainUnitOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     UpdateDomainUnitOutput.add_member(:id, Shapes::ShapeRef.new(shape: DomainUnitId, required: true, location_name: "id"))
-    UpdateDomainUnitOutput.add_member(:last_updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "lastUpdatedAt"))
-    UpdateDomainUnitOutput.add_member(:last_updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "lastUpdatedBy"))
+    UpdateDomainUnitOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     UpdateDomainUnitOutput.add_member(:name, Shapes::ShapeRef.new(shape: DomainUnitName, required: true, location_name: "name"))
     UpdateDomainUnitOutput.add_member(:owners, Shapes::ShapeRef.new(shape: DomainUnitOwners, required: true, location_name: "owners"))
+    UpdateDomainUnitOutput.add_member(:description, Shapes::ShapeRef.new(shape: DomainUnitDescription, location_name: "description"))
     UpdateDomainUnitOutput.add_member(:parent_domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "parentDomainUnitId"))
+    UpdateDomainUnitOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    UpdateDomainUnitOutput.add_member(:last_updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "lastUpdatedAt"))
+    UpdateDomainUnitOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
+    UpdateDomainUnitOutput.add_member(:last_updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "lastUpdatedBy"))
     UpdateDomainUnitOutput.struct_class = Types::UpdateDomainUnitOutput
 
-    UpdateEnvironmentActionInput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
     UpdateEnvironmentActionInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     UpdateEnvironmentActionInput.add_member(:environment_identifier, Shapes::ShapeRef.new(shape: EnvironmentId, required: true, location: "uri", location_name: "environmentIdentifier"))
     UpdateEnvironmentActionInput.add_member(:identifier, Shapes::ShapeRef.new(shape: String, required: true, location: "uri", location_name: "identifier"))
-    UpdateEnvironmentActionInput.add_member(:name, Shapes::ShapeRef.new(shape: String, location_name: "name"))
     UpdateEnvironmentActionInput.add_member(:parameters, Shapes::ShapeRef.new(shape: ActionParameters, location_name: "parameters"))
+    UpdateEnvironmentActionInput.add_member(:name, Shapes::ShapeRef.new(shape: String, location_name: "name"))
+    UpdateEnvironmentActionInput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
     UpdateEnvironmentActionInput.struct_class = Types::UpdateEnvironmentActionInput
 
-    UpdateEnvironmentActionOutput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
     UpdateEnvironmentActionOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     UpdateEnvironmentActionOutput.add_member(:environment_id, Shapes::ShapeRef.new(shape: EnvironmentId, required: true, location_name: "environmentId"))
     UpdateEnvironmentActionOutput.add_member(:id, Shapes::ShapeRef.new(shape: EnvironmentActionId, required: true, location_name: "id"))
     UpdateEnvironmentActionOutput.add_member(:name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "name"))
     UpdateEnvironmentActionOutput.add_member(:parameters, Shapes::ShapeRef.new(shape: ActionParameters, required: true, location_name: "parameters"))
+    UpdateEnvironmentActionOutput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
     UpdateEnvironmentActionOutput.struct_class = Types::UpdateEnvironmentActionOutput
 
-    UpdateEnvironmentInput.add_member(:blueprint_version, Shapes::ShapeRef.new(shape: String, location_name: "blueprintVersion"))
-    UpdateEnvironmentInput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
+    UpdateEnvironmentBlueprintInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    UpdateEnvironmentBlueprintInput.add_member(:identifier, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, required: true, location: "uri", location_name: "identifier"))
+    UpdateEnvironmentBlueprintInput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
+    UpdateEnvironmentBlueprintInput.add_member(:provisioning_properties, Shapes::ShapeRef.new(shape: ProvisioningProperties, location_name: "provisioningProperties"))
+    UpdateEnvironmentBlueprintInput.add_member(:user_parameters, Shapes::ShapeRef.new(shape: CustomParameterList, location_name: "userParameters"))
+    UpdateEnvironmentBlueprintInput.struct_class = Types::UpdateEnvironmentBlueprintInput
+
+    UpdateEnvironmentBlueprintOutput.add_member(:id, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, required: true, location_name: "id"))
+    UpdateEnvironmentBlueprintOutput.add_member(:name, Shapes::ShapeRef.new(shape: EnvironmentBlueprintName, required: true, location_name: "name"))
+    UpdateEnvironmentBlueprintOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    UpdateEnvironmentBlueprintOutput.add_member(:provider, Shapes::ShapeRef.new(shape: String, required: true, location_name: "provider"))
+    UpdateEnvironmentBlueprintOutput.add_member(:provisioning_properties, Shapes::ShapeRef.new(shape: ProvisioningProperties, required: true, location_name: "provisioningProperties"))
+    UpdateEnvironmentBlueprintOutput.add_member(:deployment_properties, Shapes::ShapeRef.new(shape: DeploymentProperties, location_name: "deploymentProperties"))
+    UpdateEnvironmentBlueprintOutput.add_member(:user_parameters, Shapes::ShapeRef.new(shape: CustomParameterList, location_name: "userParameters"))
+    UpdateEnvironmentBlueprintOutput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
+    UpdateEnvironmentBlueprintOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
+    UpdateEnvironmentBlueprintOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "updatedAt"))
+    UpdateEnvironmentBlueprintOutput.struct_class = Types::UpdateEnvironmentBlueprintOutput
+
     UpdateEnvironmentInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    UpdateEnvironmentInput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
     UpdateEnvironmentInput.add_member(:identifier, Shapes::ShapeRef.new(shape: EnvironmentId, required: true, location: "uri", location_name: "identifier"))
     UpdateEnvironmentInput.add_member(:name, Shapes::ShapeRef.new(shape: String, location_name: "name"))
+    UpdateEnvironmentInput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
+    UpdateEnvironmentInput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
+    UpdateEnvironmentInput.add_member(:blueprint_version, Shapes::ShapeRef.new(shape: String, location_name: "blueprintVersion"))
     UpdateEnvironmentInput.add_member(:user_parameters, Shapes::ShapeRef.new(shape: EnvironmentParametersList, location_name: "userParameters"))
+    UpdateEnvironmentInput.add_member(:environment_configuration_name, Shapes::ShapeRef.new(shape: EnvironmentConfigurationName, location_name: "environmentConfigurationName"))
     UpdateEnvironmentInput.struct_class = Types::UpdateEnvironmentInput
 
+    UpdateEnvironmentOutput.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "projectId"))
+    UpdateEnvironmentOutput.add_member(:id, Shapes::ShapeRef.new(shape: EnvironmentId, location_name: "id"))
+    UpdateEnvironmentOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    UpdateEnvironmentOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: String, required: true, location_name: "createdBy"))
+    UpdateEnvironmentOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
+    UpdateEnvironmentOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "updatedAt"))
+    UpdateEnvironmentOutput.add_member(:name, Shapes::ShapeRef.new(shape: EnvironmentName, required: true, location_name: "name"))
+    UpdateEnvironmentOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    UpdateEnvironmentOutput.add_member(:environment_profile_id, Shapes::ShapeRef.new(shape: EnvironmentProfileId, location_name: "environmentProfileId"))
     UpdateEnvironmentOutput.add_member(:aws_account_id, Shapes::ShapeRef.new(shape: AwsAccountId, location_name: "awsAccountId"))
     UpdateEnvironmentOutput.add_member(:aws_account_region, Shapes::ShapeRef.new(shape: AwsRegion, location_name: "awsAccountRegion"))
-    UpdateEnvironmentOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
-    UpdateEnvironmentOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: String, required: true, location_name: "createdBy"))
-    UpdateEnvironmentOutput.add_member(:deployment_properties, Shapes::ShapeRef.new(shape: DeploymentProperties, location_name: "deploymentProperties"))
-    UpdateEnvironmentOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    UpdateEnvironmentOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    UpdateEnvironmentOutput.add_member(:environment_actions, Shapes::ShapeRef.new(shape: EnvironmentActionList, location_name: "environmentActions"))
-    UpdateEnvironmentOutput.add_member(:environment_blueprint_id, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, location_name: "environmentBlueprintId"))
-    UpdateEnvironmentOutput.add_member(:environment_configuration_id, Shapes::ShapeRef.new(shape: EnvironmentConfigurationId, location_name: "environmentConfigurationId"))
-    UpdateEnvironmentOutput.add_member(:environment_profile_id, Shapes::ShapeRef.new(shape: EnvironmentProfileId, location_name: "environmentProfileId"))
-    UpdateEnvironmentOutput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
-    UpdateEnvironmentOutput.add_member(:id, Shapes::ShapeRef.new(shape: EnvironmentId, location_name: "id"))
-    UpdateEnvironmentOutput.add_member(:last_deployment, Shapes::ShapeRef.new(shape: Deployment, location_name: "lastDeployment"))
-    UpdateEnvironmentOutput.add_member(:name, Shapes::ShapeRef.new(shape: EnvironmentName, required: true, location_name: "name"))
-    UpdateEnvironmentOutput.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "projectId"))
     UpdateEnvironmentOutput.add_member(:provider, Shapes::ShapeRef.new(shape: String, required: true, location_name: "provider"))
     UpdateEnvironmentOutput.add_member(:provisioned_resources, Shapes::ShapeRef.new(shape: ResourceList, location_name: "provisionedResources"))
-    UpdateEnvironmentOutput.add_member(:provisioning_properties, Shapes::ShapeRef.new(shape: ProvisioningProperties, location_name: "provisioningProperties"))
     UpdateEnvironmentOutput.add_member(:status, Shapes::ShapeRef.new(shape: EnvironmentStatus, location_name: "status"))
-    UpdateEnvironmentOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "updatedAt"))
+    UpdateEnvironmentOutput.add_member(:environment_actions, Shapes::ShapeRef.new(shape: EnvironmentActionList, location_name: "environmentActions"))
+    UpdateEnvironmentOutput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
     UpdateEnvironmentOutput.add_member(:user_parameters, Shapes::ShapeRef.new(shape: CustomParameterList, location_name: "userParameters"))
+    UpdateEnvironmentOutput.add_member(:last_deployment, Shapes::ShapeRef.new(shape: Deployment, location_name: "lastDeployment"))
+    UpdateEnvironmentOutput.add_member(:provisioning_properties, Shapes::ShapeRef.new(shape: ProvisioningProperties, location_name: "provisioningProperties"))
+    UpdateEnvironmentOutput.add_member(:deployment_properties, Shapes::ShapeRef.new(shape: DeploymentProperties, location_name: "deploymentProperties"))
+    UpdateEnvironmentOutput.add_member(:environment_blueprint_id, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, location_name: "environmentBlueprintId"))
+    UpdateEnvironmentOutput.add_member(:environment_configuration_id, Shapes::ShapeRef.new(shape: EnvironmentConfigurationId, location_name: "environmentConfigurationId"))
+    UpdateEnvironmentOutput.add_member(:environment_configuration_name, Shapes::ShapeRef.new(shape: EnvironmentConfigurationName, location_name: "environmentConfigurationName"))
     UpdateEnvironmentOutput.struct_class = Types::UpdateEnvironmentOutput
 
-    UpdateEnvironmentProfileInput.add_member(:aws_account_id, Shapes::ShapeRef.new(shape: AwsAccountId, location_name: "awsAccountId"))
-    UpdateEnvironmentProfileInput.add_member(:aws_account_region, Shapes::ShapeRef.new(shape: AwsRegion, location_name: "awsAccountRegion"))
-    UpdateEnvironmentProfileInput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
     UpdateEnvironmentProfileInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     UpdateEnvironmentProfileInput.add_member(:identifier, Shapes::ShapeRef.new(shape: EnvironmentProfileId, required: true, location: "uri", location_name: "identifier"))
     UpdateEnvironmentProfileInput.add_member(:name, Shapes::ShapeRef.new(shape: EnvironmentProfileName, location_name: "name"))
+    UpdateEnvironmentProfileInput.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
     UpdateEnvironmentProfileInput.add_member(:user_parameters, Shapes::ShapeRef.new(shape: EnvironmentParametersList, location_name: "userParameters"))
+    UpdateEnvironmentProfileInput.add_member(:aws_account_id, Shapes::ShapeRef.new(shape: AwsAccountId, location_name: "awsAccountId"))
+    UpdateEnvironmentProfileInput.add_member(:aws_account_region, Shapes::ShapeRef.new(shape: AwsRegion, location_name: "awsAccountRegion"))
     UpdateEnvironmentProfileInput.struct_class = Types::UpdateEnvironmentProfileInput
 
+    UpdateEnvironmentProfileOutput.add_member(:id, Shapes::ShapeRef.new(shape: EnvironmentProfileId, required: true, location_name: "id"))
+    UpdateEnvironmentProfileOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     UpdateEnvironmentProfileOutput.add_member(:aws_account_id, Shapes::ShapeRef.new(shape: AwsAccountId, location_name: "awsAccountId"))
     UpdateEnvironmentProfileOutput.add_member(:aws_account_region, Shapes::ShapeRef.new(shape: AwsRegion, location_name: "awsAccountRegion"))
-    UpdateEnvironmentProfileOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
     UpdateEnvironmentProfileOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: String, required: true, location_name: "createdBy"))
-    UpdateEnvironmentProfileOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    UpdateEnvironmentProfileOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    UpdateEnvironmentProfileOutput.add_member(:environment_blueprint_id, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, required: true, location_name: "environmentBlueprintId"))
-    UpdateEnvironmentProfileOutput.add_member(:id, Shapes::ShapeRef.new(shape: EnvironmentProfileId, required: true, location_name: "id"))
-    UpdateEnvironmentProfileOutput.add_member(:name, Shapes::ShapeRef.new(shape: EnvironmentProfileName, required: true, location_name: "name"))
-    UpdateEnvironmentProfileOutput.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "projectId"))
+    UpdateEnvironmentProfileOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
     UpdateEnvironmentProfileOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "updatedAt"))
+    UpdateEnvironmentProfileOutput.add_member(:name, Shapes::ShapeRef.new(shape: EnvironmentProfileName, required: true, location_name: "name"))
+    UpdateEnvironmentProfileOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    UpdateEnvironmentProfileOutput.add_member(:environment_blueprint_id, Shapes::ShapeRef.new(shape: EnvironmentBlueprintId, required: true, location_name: "environmentBlueprintId"))
+    UpdateEnvironmentProfileOutput.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, location_name: "projectId"))
     UpdateEnvironmentProfileOutput.add_member(:user_parameters, Shapes::ShapeRef.new(shape: CustomParameterList, location_name: "userParameters"))
     UpdateEnvironmentProfileOutput.struct_class = Types::UpdateEnvironmentProfileOutput
 
-    UpdateGlossaryInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
-    UpdateGlossaryInput.add_member(:description, Shapes::ShapeRef.new(shape: GlossaryDescription, location_name: "description"))
     UpdateGlossaryInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     UpdateGlossaryInput.add_member(:identifier, Shapes::ShapeRef.new(shape: GlossaryId, required: true, location: "uri", location_name: "identifier"))
     UpdateGlossaryInput.add_member(:name, Shapes::ShapeRef.new(shape: GlossaryName, location_name: "name"))
+    UpdateGlossaryInput.add_member(:description, Shapes::ShapeRef.new(shape: GlossaryDescription, location_name: "description"))
     UpdateGlossaryInput.add_member(:status, Shapes::ShapeRef.new(shape: GlossaryStatus, location_name: "status"))
+    UpdateGlossaryInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     UpdateGlossaryInput.struct_class = Types::UpdateGlossaryInput
 
-    UpdateGlossaryOutput.add_member(:description, Shapes::ShapeRef.new(shape: GlossaryDescription, location_name: "description"))
     UpdateGlossaryOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     UpdateGlossaryOutput.add_member(:id, Shapes::ShapeRef.new(shape: GlossaryId, required: true, location_name: "id"))
     UpdateGlossaryOutput.add_member(:name, Shapes::ShapeRef.new(shape: GlossaryName, required: true, location_name: "name"))
     UpdateGlossaryOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
+    UpdateGlossaryOutput.add_member(:description, Shapes::ShapeRef.new(shape: GlossaryDescription, location_name: "description"))
     UpdateGlossaryOutput.add_member(:status, Shapes::ShapeRef.new(shape: GlossaryStatus, location_name: "status"))
+    UpdateGlossaryOutput.add_member(:usage_restrictions, Shapes::ShapeRef.new(shape: GlossaryUsageRestrictions, location_name: "usageRestrictions"))
     UpdateGlossaryOutput.struct_class = Types::UpdateGlossaryOutput
 
     UpdateGlossaryTermInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     UpdateGlossaryTermInput.add_member(:glossary_identifier, Shapes::ShapeRef.new(shape: GlossaryTermId, location_name: "glossaryIdentifier"))
     UpdateGlossaryTermInput.add_member(:identifier, Shapes::ShapeRef.new(shape: GlossaryTermId, required: true, location: "uri", location_name: "identifier"))
-    UpdateGlossaryTermInput.add_member(:long_description, Shapes::ShapeRef.new(shape: LongDescription, location_name: "longDescription"))
     UpdateGlossaryTermInput.add_member(:name, Shapes::ShapeRef.new(shape: GlossaryTermName, location_name: "name"))
     UpdateGlossaryTermInput.add_member(:short_description, Shapes::ShapeRef.new(shape: ShortDescription, location_name: "shortDescription"))
-    UpdateGlossaryTermInput.add_member(:status, Shapes::ShapeRef.new(shape: GlossaryTermStatus, location_name: "status"))
+    UpdateGlossaryTermInput.add_member(:long_description, Shapes::ShapeRef.new(shape: LongDescription, location_name: "longDescription"))
     UpdateGlossaryTermInput.add_member(:term_relations, Shapes::ShapeRef.new(shape: TermRelations, location_name: "termRelations"))
+    UpdateGlossaryTermInput.add_member(:status, Shapes::ShapeRef.new(shape: GlossaryTermStatus, location_name: "status"))
     UpdateGlossaryTermInput.struct_class = Types::UpdateGlossaryTermInput
 
+    UpdateGlossaryTermOutput.add_member(:id, Shapes::ShapeRef.new(shape: GlossaryTermId, required: true, location_name: "id"))
     UpdateGlossaryTermOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     UpdateGlossaryTermOutput.add_member(:glossary_id, Shapes::ShapeRef.new(shape: GlossaryId, required: true, location_name: "glossaryId"))
-    UpdateGlossaryTermOutput.add_member(:id, Shapes::ShapeRef.new(shape: GlossaryTermId, required: true, location_name: "id"))
-    UpdateGlossaryTermOutput.add_member(:long_description, Shapes::ShapeRef.new(shape: LongDescription, location_name: "longDescription"))
     UpdateGlossaryTermOutput.add_member(:name, Shapes::ShapeRef.new(shape: GlossaryTermName, required: true, location_name: "name"))
-    UpdateGlossaryTermOutput.add_member(:short_description, Shapes::ShapeRef.new(shape: ShortDescription, location_name: "shortDescription"))
     UpdateGlossaryTermOutput.add_member(:status, Shapes::ShapeRef.new(shape: GlossaryTermStatus, required: true, location_name: "status"))
+    UpdateGlossaryTermOutput.add_member(:short_description, Shapes::ShapeRef.new(shape: ShortDescription, location_name: "shortDescription"))
+    UpdateGlossaryTermOutput.add_member(:long_description, Shapes::ShapeRef.new(shape: LongDescription, location_name: "longDescription"))
     UpdateGlossaryTermOutput.add_member(:term_relations, Shapes::ShapeRef.new(shape: TermRelations, location_name: "termRelations"))
+    UpdateGlossaryTermOutput.add_member(:usage_restrictions, Shapes::ShapeRef.new(shape: GlossaryUsageRestrictions, location_name: "usageRestrictions"))
     UpdateGlossaryTermOutput.struct_class = Types::UpdateGlossaryTermOutput
 
     UpdateGroupProfileInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
@@ -5307,101 +6771,159 @@ module Aws::DataZone
     UpdateGroupProfileInput.struct_class = Types::UpdateGroupProfileInput
 
     UpdateGroupProfileOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "domainId"))
-    UpdateGroupProfileOutput.add_member(:group_name, Shapes::ShapeRef.new(shape: GroupProfileName, location_name: "groupName"))
     UpdateGroupProfileOutput.add_member(:id, Shapes::ShapeRef.new(shape: GroupProfileId, location_name: "id"))
     UpdateGroupProfileOutput.add_member(:status, Shapes::ShapeRef.new(shape: GroupProfileStatus, location_name: "status"))
+    UpdateGroupProfileOutput.add_member(:group_name, Shapes::ShapeRef.new(shape: GroupProfileName, location_name: "groupName"))
+    UpdateGroupProfileOutput.add_member(:role_principal_arn, Shapes::ShapeRef.new(shape: String, location_name: "rolePrincipalArn"))
+    UpdateGroupProfileOutput.add_member(:role_principal_id, Shapes::ShapeRef.new(shape: String, location_name: "rolePrincipalId"))
     UpdateGroupProfileOutput.struct_class = Types::UpdateGroupProfileOutput
 
-    UpdateProjectInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    UpdateNotebookInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    UpdateNotebookInput.add_member(:identifier, Shapes::ShapeRef.new(shape: NotebookId, required: true, location: "uri", location_name: "identifier"))
+    UpdateNotebookInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    UpdateNotebookInput.add_member(:status, Shapes::ShapeRef.new(shape: NotebookStatus, location_name: "status"))
+    UpdateNotebookInput.add_member(:name, Shapes::ShapeRef.new(shape: NotebookName, location_name: "name"))
+    UpdateNotebookInput.add_member(:cell_order, Shapes::ShapeRef.new(shape: CellOrder, location_name: "cellOrder"))
+    UpdateNotebookInput.add_member(:metadata, Shapes::ShapeRef.new(shape: Metadata, location_name: "metadata"))
+    UpdateNotebookInput.add_member(:parameters, Shapes::ShapeRef.new(shape: Parameters, location_name: "parameters"))
+    UpdateNotebookInput.add_member(:environment_configuration, Shapes::ShapeRef.new(shape: EnvironmentConfig, location_name: "environmentConfiguration"))
+    UpdateNotebookInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    UpdateNotebookInput.struct_class = Types::UpdateNotebookInput
+
+    UpdateNotebookOutput.add_member(:id, Shapes::ShapeRef.new(shape: NotebookId, required: true, location_name: "id"))
+    UpdateNotebookOutput.add_member(:name, Shapes::ShapeRef.new(shape: NotebookName, required: true, location_name: "name"))
+    UpdateNotebookOutput.add_member(:owning_project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "owningProjectId"))
+    UpdateNotebookOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    UpdateNotebookOutput.add_member(:cell_order, Shapes::ShapeRef.new(shape: CellOrder, required: true, location_name: "cellOrder"))
+    UpdateNotebookOutput.add_member(:status, Shapes::ShapeRef.new(shape: NotebookStatus, required: true, location_name: "status"))
+    UpdateNotebookOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    UpdateNotebookOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, location_name: "createdAt"))
+    UpdateNotebookOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, location_name: "createdBy"))
+    UpdateNotebookOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
+    UpdateNotebookOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    UpdateNotebookOutput.add_member(:locked_by, Shapes::ShapeRef.new(shape: String, location_name: "lockedBy"))
+    UpdateNotebookOutput.add_member(:locked_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "lockedAt"))
+    UpdateNotebookOutput.add_member(:lock_expires_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "lockExpiresAt"))
+    UpdateNotebookOutput.add_member(:compute_id, Shapes::ShapeRef.new(shape: ComputeId, location_name: "computeId"))
+    UpdateNotebookOutput.add_member(:metadata, Shapes::ShapeRef.new(shape: Metadata, location_name: "metadata"))
+    UpdateNotebookOutput.add_member(:parameters, Shapes::ShapeRef.new(shape: Parameters, location_name: "parameters"))
+    UpdateNotebookOutput.add_member(:environment_configuration, Shapes::ShapeRef.new(shape: EnvironmentConfig, location_name: "environmentConfiguration"))
+    UpdateNotebookOutput.add_member(:error, Shapes::ShapeRef.new(shape: NotebookError, location_name: "error"))
+    UpdateNotebookOutput.add_member(:git_metadata, Shapes::ShapeRef.new(shape: GitMetadata, location_name: "gitMetadata"))
+    UpdateNotebookOutput.struct_class = Types::UpdateNotebookOutput
+
     UpdateProjectInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    UpdateProjectInput.add_member(:environment_deployment_details, Shapes::ShapeRef.new(shape: EnvironmentDeploymentDetails, location_name: "environmentDeploymentDetails"))
-    UpdateProjectInput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
     UpdateProjectInput.add_member(:identifier, Shapes::ShapeRef.new(shape: ProjectId, required: true, location: "uri", location_name: "identifier"))
     UpdateProjectInput.add_member(:name, Shapes::ShapeRef.new(shape: ProjectName, location_name: "name"))
-    UpdateProjectInput.add_member(:project_profile_version, Shapes::ShapeRef.new(shape: String, location_name: "projectProfileVersion"))
+    UpdateProjectInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    UpdateProjectInput.add_member(:resource_tags, Shapes::ShapeRef.new(shape: UpdateProjectInputResourceTagsMap, location_name: "resourceTags"))
+    UpdateProjectInput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
+    UpdateProjectInput.add_member(:domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitId"))
+    UpdateProjectInput.add_member(:environment_deployment_details, Shapes::ShapeRef.new(shape: EnvironmentDeploymentDetails, location_name: "environmentDeploymentDetails"))
     UpdateProjectInput.add_member(:user_parameters, Shapes::ShapeRef.new(shape: EnvironmentConfigurationUserParametersList, location_name: "userParameters"))
+    UpdateProjectInput.add_member(:project_profile_version, Shapes::ShapeRef.new(shape: String, location_name: "projectProfileVersion"))
     UpdateProjectInput.struct_class = Types::UpdateProjectInput
 
-    UpdateProjectOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
-    UpdateProjectOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    UpdateProjectOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    UpdateProjectInputResourceTagsMap.key = Shapes::ShapeRef.new(shape: TagKey)
+    UpdateProjectInputResourceTagsMap.value = Shapes::ShapeRef.new(shape: TagValue)
+
     UpdateProjectOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    UpdateProjectOutput.add_member(:domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitId"))
-    UpdateProjectOutput.add_member(:environment_deployment_details, Shapes::ShapeRef.new(shape: EnvironmentDeploymentDetails, location_name: "environmentDeploymentDetails"))
-    UpdateProjectOutput.add_member(:failure_reasons, Shapes::ShapeRef.new(shape: FailureReasons, location_name: "failureReasons"))
-    UpdateProjectOutput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
     UpdateProjectOutput.add_member(:id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "id"))
-    UpdateProjectOutput.add_member(:last_updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "lastUpdatedAt"))
     UpdateProjectOutput.add_member(:name, Shapes::ShapeRef.new(shape: ProjectName, required: true, location_name: "name"))
-    UpdateProjectOutput.add_member(:project_profile_id, Shapes::ShapeRef.new(shape: ProjectProfileId, location_name: "projectProfileId"))
+    UpdateProjectOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     UpdateProjectOutput.add_member(:project_status, Shapes::ShapeRef.new(shape: ProjectStatus, location_name: "projectStatus"))
+    UpdateProjectOutput.add_member(:failure_reasons, Shapes::ShapeRef.new(shape: FailureReasons, location_name: "failureReasons"))
+    UpdateProjectOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
+    UpdateProjectOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
+    UpdateProjectOutput.add_member(:last_updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "lastUpdatedAt"))
+    UpdateProjectOutput.add_member(:resource_tags, Shapes::ShapeRef.new(shape: ResourceTags, location_name: "resourceTags"))
+    UpdateProjectOutput.add_member(:glossary_terms, Shapes::ShapeRef.new(shape: GlossaryTerms, location_name: "glossaryTerms"))
+    UpdateProjectOutput.add_member(:domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitId"))
+    UpdateProjectOutput.add_member(:project_profile_id, Shapes::ShapeRef.new(shape: ProjectProfileId, location_name: "projectProfileId"))
     UpdateProjectOutput.add_member(:user_parameters, Shapes::ShapeRef.new(shape: EnvironmentConfigurationUserParametersList, location_name: "userParameters"))
+    UpdateProjectOutput.add_member(:environment_deployment_details, Shapes::ShapeRef.new(shape: EnvironmentDeploymentDetails, location_name: "environmentDeploymentDetails"))
+    UpdateProjectOutput.add_member(:project_category, Shapes::ShapeRef.new(shape: String, location_name: "projectCategory"))
     UpdateProjectOutput.struct_class = Types::UpdateProjectOutput
 
-    UpdateProjectProfileInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     UpdateProjectProfileInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    UpdateProjectProfileInput.add_member(:domain_unit_identifier, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitIdentifier"))
-    UpdateProjectProfileInput.add_member(:environment_configurations, Shapes::ShapeRef.new(shape: EnvironmentConfigurationsList, location_name: "environmentConfigurations"))
     UpdateProjectProfileInput.add_member(:identifier, Shapes::ShapeRef.new(shape: ProjectProfileId, required: true, location: "uri", location_name: "identifier"))
     UpdateProjectProfileInput.add_member(:name, Shapes::ShapeRef.new(shape: ProjectProfileName, location_name: "name"))
+    UpdateProjectProfileInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     UpdateProjectProfileInput.add_member(:status, Shapes::ShapeRef.new(shape: Status, location_name: "status"))
+    UpdateProjectProfileInput.add_member(:project_resource_tags, Shapes::ShapeRef.new(shape: ProjectResourceTagParameters, location_name: "projectResourceTags"))
+    UpdateProjectProfileInput.add_member(:allow_custom_project_resource_tags, Shapes::ShapeRef.new(shape: Boolean, location_name: "allowCustomProjectResourceTags"))
+    UpdateProjectProfileInput.add_member(:project_resource_tags_description, Shapes::ShapeRef.new(shape: Description, location_name: "projectResourceTagsDescription"))
+    UpdateProjectProfileInput.add_member(:environment_configurations, Shapes::ShapeRef.new(shape: EnvironmentConfigurationsList, location_name: "environmentConfigurations"))
+    UpdateProjectProfileInput.add_member(:domain_unit_identifier, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitIdentifier"))
     UpdateProjectProfileInput.struct_class = Types::UpdateProjectProfileInput
 
-    UpdateProjectProfileOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
-    UpdateProjectProfileOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    UpdateProjectProfileOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     UpdateProjectProfileOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    UpdateProjectProfileOutput.add_member(:domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitId"))
-    UpdateProjectProfileOutput.add_member(:environment_configurations, Shapes::ShapeRef.new(shape: EnvironmentConfigurationsList, location_name: "environmentConfigurations"))
     UpdateProjectProfileOutput.add_member(:id, Shapes::ShapeRef.new(shape: ProjectProfileId, required: true, location_name: "id"))
-    UpdateProjectProfileOutput.add_member(:last_updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "lastUpdatedAt"))
     UpdateProjectProfileOutput.add_member(:name, Shapes::ShapeRef.new(shape: ProjectProfileName, required: true, location_name: "name"))
+    UpdateProjectProfileOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     UpdateProjectProfileOutput.add_member(:status, Shapes::ShapeRef.new(shape: Status, location_name: "status"))
+    UpdateProjectProfileOutput.add_member(:project_resource_tags, Shapes::ShapeRef.new(shape: ProjectResourceTagParameters, location_name: "projectResourceTags"))
+    UpdateProjectProfileOutput.add_member(:allow_custom_project_resource_tags, Shapes::ShapeRef.new(shape: Boolean, location_name: "allowCustomProjectResourceTags"))
+    UpdateProjectProfileOutput.add_member(:project_resource_tags_description, Shapes::ShapeRef.new(shape: Description, location_name: "projectResourceTagsDescription"))
+    UpdateProjectProfileOutput.add_member(:environment_configurations, Shapes::ShapeRef.new(shape: EnvironmentConfigurationsList, location_name: "environmentConfigurations"))
+    UpdateProjectProfileOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
+    UpdateProjectProfileOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "createdAt"))
+    UpdateProjectProfileOutput.add_member(:last_updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "lastUpdatedAt"))
+    UpdateProjectProfileOutput.add_member(:domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitId"))
     UpdateProjectProfileOutput.struct_class = Types::UpdateProjectProfileOutput
 
-    UpdateRuleInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    UpdateRuleInput.add_member(:detail, Shapes::ShapeRef.new(shape: RuleDetail, location_name: "detail"))
+    UpdateRootDomainUnitOwnerInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
+    UpdateRootDomainUnitOwnerInput.add_member(:current_owner, Shapes::ShapeRef.new(shape: UserIdentifier, required: true, location_name: "currentOwner"))
+    UpdateRootDomainUnitOwnerInput.add_member(:new_owner, Shapes::ShapeRef.new(shape: String, required: true, location_name: "newOwner"))
+    UpdateRootDomainUnitOwnerInput.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    UpdateRootDomainUnitOwnerInput.struct_class = Types::UpdateRootDomainUnitOwnerInput
+
+    UpdateRootDomainUnitOwnerOutput.struct_class = Types::UpdateRootDomainUnitOwnerOutput
+
     UpdateRuleInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     UpdateRuleInput.add_member(:identifier, Shapes::ShapeRef.new(shape: RuleId, required: true, location: "uri", location_name: "identifier"))
-    UpdateRuleInput.add_member(:include_child_domain_units, Shapes::ShapeRef.new(shape: Boolean, location_name: "includeChildDomainUnits"))
     UpdateRuleInput.add_member(:name, Shapes::ShapeRef.new(shape: RuleName, location_name: "name"))
+    UpdateRuleInput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
     UpdateRuleInput.add_member(:scope, Shapes::ShapeRef.new(shape: RuleScope, location_name: "scope"))
+    UpdateRuleInput.add_member(:detail, Shapes::ShapeRef.new(shape: RuleDetail, location_name: "detail"))
+    UpdateRuleInput.add_member(:include_child_domain_units, Shapes::ShapeRef.new(shape: Boolean, location_name: "includeChildDomainUnits"))
     UpdateRuleInput.struct_class = Types::UpdateRuleInput
 
-    UpdateRuleOutput.add_member(:action, Shapes::ShapeRef.new(shape: RuleAction, required: true, location_name: "action"))
-    UpdateRuleOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
-    UpdateRuleOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    UpdateRuleOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
-    UpdateRuleOutput.add_member(:detail, Shapes::ShapeRef.new(shape: RuleDetail, required: true, location_name: "detail"))
     UpdateRuleOutput.add_member(:identifier, Shapes::ShapeRef.new(shape: RuleId, required: true, location_name: "identifier"))
-    UpdateRuleOutput.add_member(:last_updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, required: true, location_name: "lastUpdatedBy"))
-    UpdateRuleOutput.add_member(:name, Shapes::ShapeRef.new(shape: RuleName, required: true, location_name: "name"))
     UpdateRuleOutput.add_member(:revision, Shapes::ShapeRef.new(shape: Revision, required: true, location_name: "revision"))
+    UpdateRuleOutput.add_member(:name, Shapes::ShapeRef.new(shape: RuleName, required: true, location_name: "name"))
     UpdateRuleOutput.add_member(:rule_type, Shapes::ShapeRef.new(shape: RuleType, required: true, location_name: "ruleType"))
-    UpdateRuleOutput.add_member(:scope, Shapes::ShapeRef.new(shape: RuleScope, required: true, location_name: "scope"))
     UpdateRuleOutput.add_member(:target, Shapes::ShapeRef.new(shape: RuleTarget, required: true, location_name: "target"))
+    UpdateRuleOutput.add_member(:action, Shapes::ShapeRef.new(shape: RuleAction, required: true, location_name: "action"))
+    UpdateRuleOutput.add_member(:scope, Shapes::ShapeRef.new(shape: RuleScope, required: true, location_name: "scope"))
+    UpdateRuleOutput.add_member(:detail, Shapes::ShapeRef.new(shape: RuleDetail, required: true, location_name: "detail"))
+    UpdateRuleOutput.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "description"))
+    UpdateRuleOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
     UpdateRuleOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    UpdateRuleOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
+    UpdateRuleOutput.add_member(:last_updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, required: true, location_name: "lastUpdatedBy"))
     UpdateRuleOutput.struct_class = Types::UpdateRuleOutput
 
-    UpdateSubscriptionGrantStatusInput.add_member(:asset_identifier, Shapes::ShapeRef.new(shape: AssetId, required: true, location: "uri", location_name: "assetIdentifier"))
     UpdateSubscriptionGrantStatusInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    UpdateSubscriptionGrantStatusInput.add_member(:failure_cause, Shapes::ShapeRef.new(shape: FailureCause, location_name: "failureCause"))
     UpdateSubscriptionGrantStatusInput.add_member(:identifier, Shapes::ShapeRef.new(shape: SubscriptionGrantId, required: true, location: "uri", location_name: "identifier"))
+    UpdateSubscriptionGrantStatusInput.add_member(:asset_identifier, Shapes::ShapeRef.new(shape: AssetId, required: true, location: "uri", location_name: "assetIdentifier"))
     UpdateSubscriptionGrantStatusInput.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionGrantStatus, required: true, location_name: "status"))
+    UpdateSubscriptionGrantStatusInput.add_member(:failure_cause, Shapes::ShapeRef.new(shape: FailureCause, location_name: "failureCause"))
     UpdateSubscriptionGrantStatusInput.add_member(:target_name, Shapes::ShapeRef.new(shape: String, location_name: "targetName"))
     UpdateSubscriptionGrantStatusInput.struct_class = Types::UpdateSubscriptionGrantStatusInput
 
-    UpdateSubscriptionGrantStatusOutput.add_member(:assets, Shapes::ShapeRef.new(shape: SubscribedAssets, location_name: "assets"))
-    UpdateSubscriptionGrantStatusOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
-    UpdateSubscriptionGrantStatusOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    UpdateSubscriptionGrantStatusOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    UpdateSubscriptionGrantStatusOutput.add_member(:granted_entity, Shapes::ShapeRef.new(shape: GrantedEntity, required: true, location_name: "grantedEntity"))
     UpdateSubscriptionGrantStatusOutput.add_member(:id, Shapes::ShapeRef.new(shape: SubscriptionGrantId, required: true, location_name: "id"))
-    UpdateSubscriptionGrantStatusOutput.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionGrantOverallStatus, required: true, location_name: "status"))
-    UpdateSubscriptionGrantStatusOutput.add_member(:subscription_id, Shapes::ShapeRef.new(shape: SubscriptionId, deprecated: true, location_name: "subscriptionId", metadata: {"deprecatedMessage"=>"Multiple subscriptions can exist for a single grant"}))
-    UpdateSubscriptionGrantStatusOutput.add_member(:subscription_target_id, Shapes::ShapeRef.new(shape: SubscriptionTargetId, required: true, location_name: "subscriptionTargetId"))
-    UpdateSubscriptionGrantStatusOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    UpdateSubscriptionGrantStatusOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
     UpdateSubscriptionGrantStatusOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    UpdateSubscriptionGrantStatusOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    UpdateSubscriptionGrantStatusOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
+    UpdateSubscriptionGrantStatusOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    UpdateSubscriptionGrantStatusOutput.add_member(:environment_id, Shapes::ShapeRef.new(shape: EnvironmentId, location_name: "environmentId"))
+    UpdateSubscriptionGrantStatusOutput.add_member(:subscription_target_id, Shapes::ShapeRef.new(shape: SubscriptionTargetId, required: true, location_name: "subscriptionTargetId"))
+    UpdateSubscriptionGrantStatusOutput.add_member(:granted_entity, Shapes::ShapeRef.new(shape: GrantedEntity, required: true, location_name: "grantedEntity"))
+    UpdateSubscriptionGrantStatusOutput.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionGrantOverallStatus, required: true, location_name: "status"))
+    UpdateSubscriptionGrantStatusOutput.add_member(:assets, Shapes::ShapeRef.new(shape: SubscribedAssets, location_name: "assets"))
+    UpdateSubscriptionGrantStatusOutput.add_member(:subscription_id, Shapes::ShapeRef.new(shape: SubscriptionId, deprecated: true, location_name: "subscriptionId", metadata: {"deprecatedMessage" => "Multiple subscriptions can exist for a single grant"}))
     UpdateSubscriptionGrantStatusOutput.struct_class = Types::UpdateSubscriptionGrantStatusOutput
 
     UpdateSubscriptionRequestInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
@@ -5409,75 +6931,81 @@ module Aws::DataZone
     UpdateSubscriptionRequestInput.add_member(:request_reason, Shapes::ShapeRef.new(shape: RequestReason, required: true, location_name: "requestReason"))
     UpdateSubscriptionRequestInput.struct_class = Types::UpdateSubscriptionRequestInput
 
-    UpdateSubscriptionRequestOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
-    UpdateSubscriptionRequestOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    UpdateSubscriptionRequestOutput.add_member(:decision_comment, Shapes::ShapeRef.new(shape: DecisionComment, location_name: "decisionComment"))
-    UpdateSubscriptionRequestOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    UpdateSubscriptionRequestOutput.add_member(:existing_subscription_id, Shapes::ShapeRef.new(shape: SubscriptionId, location_name: "existingSubscriptionId"))
     UpdateSubscriptionRequestOutput.add_member(:id, Shapes::ShapeRef.new(shape: SubscriptionRequestId, required: true, location_name: "id"))
-    UpdateSubscriptionRequestOutput.add_member(:metadata_forms, Shapes::ShapeRef.new(shape: MetadataForms, location_name: "metadataForms"))
-    UpdateSubscriptionRequestOutput.add_member(:request_reason, Shapes::ShapeRef.new(shape: RequestReason, required: true, location_name: "requestReason"))
-    UpdateSubscriptionRequestOutput.add_member(:reviewer_id, Shapes::ShapeRef.new(shape: String, location_name: "reviewerId"))
-    UpdateSubscriptionRequestOutput.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionRequestStatus, required: true, location_name: "status"))
-    UpdateSubscriptionRequestOutput.add_member(:subscribed_listings, Shapes::ShapeRef.new(shape: UpdateSubscriptionRequestOutputSubscribedListingsList, required: true, location_name: "subscribedListings"))
-    UpdateSubscriptionRequestOutput.add_member(:subscribed_principals, Shapes::ShapeRef.new(shape: UpdateSubscriptionRequestOutputSubscribedPrincipalsList, required: true, location_name: "subscribedPrincipals"))
-    UpdateSubscriptionRequestOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    UpdateSubscriptionRequestOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
     UpdateSubscriptionRequestOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    UpdateSubscriptionRequestOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    UpdateSubscriptionRequestOutput.add_member(:status, Shapes::ShapeRef.new(shape: SubscriptionRequestStatus, required: true, location_name: "status"))
+    UpdateSubscriptionRequestOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
+    UpdateSubscriptionRequestOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, required: true, location_name: "updatedAt"))
+    UpdateSubscriptionRequestOutput.add_member(:request_reason, Shapes::ShapeRef.new(shape: RequestReason, required: true, location_name: "requestReason"))
+    UpdateSubscriptionRequestOutput.add_member(:subscribed_principals, Shapes::ShapeRef.new(shape: UpdateSubscriptionRequestOutputSubscribedPrincipalsList, required: true, location_name: "subscribedPrincipals"))
+    UpdateSubscriptionRequestOutput.add_member(:subscribed_listings, Shapes::ShapeRef.new(shape: UpdateSubscriptionRequestOutputSubscribedListingsList, required: true, location_name: "subscribedListings"))
+    UpdateSubscriptionRequestOutput.add_member(:reviewer_id, Shapes::ShapeRef.new(shape: String, location_name: "reviewerId"))
+    UpdateSubscriptionRequestOutput.add_member(:decision_comment, Shapes::ShapeRef.new(shape: DecisionComment, location_name: "decisionComment"))
+    UpdateSubscriptionRequestOutput.add_member(:existing_subscription_id, Shapes::ShapeRef.new(shape: SubscriptionId, location_name: "existingSubscriptionId"))
+    UpdateSubscriptionRequestOutput.add_member(:metadata_forms, Shapes::ShapeRef.new(shape: MetadataForms, location_name: "metadataForms"))
     UpdateSubscriptionRequestOutput.struct_class = Types::UpdateSubscriptionRequestOutput
 
     UpdateSubscriptionRequestOutputSubscribedListingsList.member = Shapes::ShapeRef.new(shape: SubscribedListing)
 
     UpdateSubscriptionRequestOutputSubscribedPrincipalsList.member = Shapes::ShapeRef.new(shape: SubscribedPrincipal)
 
-    UpdateSubscriptionTargetInput.add_member(:applicable_asset_types, Shapes::ShapeRef.new(shape: ApplicableAssetTypes, location_name: "applicableAssetTypes"))
-    UpdateSubscriptionTargetInput.add_member(:authorized_principals, Shapes::ShapeRef.new(shape: AuthorizedPrincipalIdentifiers, location_name: "authorizedPrincipals"))
     UpdateSubscriptionTargetInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
     UpdateSubscriptionTargetInput.add_member(:environment_identifier, Shapes::ShapeRef.new(shape: EnvironmentId, required: true, location: "uri", location_name: "environmentIdentifier"))
     UpdateSubscriptionTargetInput.add_member(:identifier, Shapes::ShapeRef.new(shape: SubscriptionTargetId, required: true, location: "uri", location_name: "identifier"))
-    UpdateSubscriptionTargetInput.add_member(:manage_access_role, Shapes::ShapeRef.new(shape: IamRoleArn, location_name: "manageAccessRole"))
     UpdateSubscriptionTargetInput.add_member(:name, Shapes::ShapeRef.new(shape: SubscriptionTargetName, location_name: "name"))
-    UpdateSubscriptionTargetInput.add_member(:provider, Shapes::ShapeRef.new(shape: String, location_name: "provider"))
+    UpdateSubscriptionTargetInput.add_member(:authorized_principals, Shapes::ShapeRef.new(shape: AuthorizedPrincipalIdentifiers, location_name: "authorizedPrincipals"))
+    UpdateSubscriptionTargetInput.add_member(:applicable_asset_types, Shapes::ShapeRef.new(shape: ApplicableAssetTypes, location_name: "applicableAssetTypes"))
     UpdateSubscriptionTargetInput.add_member(:subscription_target_config, Shapes::ShapeRef.new(shape: SubscriptionTargetForms, location_name: "subscriptionTargetConfig"))
+    UpdateSubscriptionTargetInput.add_member(:manage_access_role, Shapes::ShapeRef.new(shape: IamRoleArn, location_name: "manageAccessRole"))
+    UpdateSubscriptionTargetInput.add_member(:provider, Shapes::ShapeRef.new(shape: String, location_name: "provider"))
+    UpdateSubscriptionTargetInput.add_member(:subscription_grant_creation_mode, Shapes::ShapeRef.new(shape: SubscriptionGrantCreationMode, location_name: "subscriptionGrantCreationMode"))
     UpdateSubscriptionTargetInput.struct_class = Types::UpdateSubscriptionTargetInput
 
-    UpdateSubscriptionTargetOutput.add_member(:applicable_asset_types, Shapes::ShapeRef.new(shape: ApplicableAssetTypes, required: true, location_name: "applicableAssetTypes"))
-    UpdateSubscriptionTargetOutput.add_member(:authorized_principals, Shapes::ShapeRef.new(shape: AuthorizedPrincipalIdentifiers, required: true, location_name: "authorizedPrincipals"))
-    UpdateSubscriptionTargetOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
-    UpdateSubscriptionTargetOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
-    UpdateSubscriptionTargetOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    UpdateSubscriptionTargetOutput.add_member(:environment_id, Shapes::ShapeRef.new(shape: EnvironmentId, required: true, location_name: "environmentId"))
     UpdateSubscriptionTargetOutput.add_member(:id, Shapes::ShapeRef.new(shape: SubscriptionTargetId, required: true, location_name: "id"))
-    UpdateSubscriptionTargetOutput.add_member(:manage_access_role, Shapes::ShapeRef.new(shape: IamRoleArn, location_name: "manageAccessRole"))
-    UpdateSubscriptionTargetOutput.add_member(:name, Shapes::ShapeRef.new(shape: SubscriptionTargetName, required: true, location_name: "name"))
+    UpdateSubscriptionTargetOutput.add_member(:authorized_principals, Shapes::ShapeRef.new(shape: AuthorizedPrincipalIdentifiers, required: true, location_name: "authorizedPrincipals"))
+    UpdateSubscriptionTargetOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
     UpdateSubscriptionTargetOutput.add_member(:project_id, Shapes::ShapeRef.new(shape: ProjectId, required: true, location_name: "projectId"))
-    UpdateSubscriptionTargetOutput.add_member(:provider, Shapes::ShapeRef.new(shape: String, required: true, location_name: "provider"))
-    UpdateSubscriptionTargetOutput.add_member(:subscription_target_config, Shapes::ShapeRef.new(shape: SubscriptionTargetForms, required: true, location_name: "subscriptionTargetConfig"))
+    UpdateSubscriptionTargetOutput.add_member(:environment_id, Shapes::ShapeRef.new(shape: EnvironmentId, required: true, location_name: "environmentId"))
+    UpdateSubscriptionTargetOutput.add_member(:name, Shapes::ShapeRef.new(shape: SubscriptionTargetName, required: true, location_name: "name"))
     UpdateSubscriptionTargetOutput.add_member(:type, Shapes::ShapeRef.new(shape: String, required: true, location_name: "type"))
-    UpdateSubscriptionTargetOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
+    UpdateSubscriptionTargetOutput.add_member(:created_by, Shapes::ShapeRef.new(shape: CreatedBy, required: true, location_name: "createdBy"))
     UpdateSubscriptionTargetOutput.add_member(:updated_by, Shapes::ShapeRef.new(shape: UpdatedBy, location_name: "updatedBy"))
+    UpdateSubscriptionTargetOutput.add_member(:created_at, Shapes::ShapeRef.new(shape: CreatedAt, required: true, location_name: "createdAt"))
+    UpdateSubscriptionTargetOutput.add_member(:updated_at, Shapes::ShapeRef.new(shape: UpdatedAt, location_name: "updatedAt"))
+    UpdateSubscriptionTargetOutput.add_member(:manage_access_role, Shapes::ShapeRef.new(shape: IamRoleArn, location_name: "manageAccessRole"))
+    UpdateSubscriptionTargetOutput.add_member(:applicable_asset_types, Shapes::ShapeRef.new(shape: ApplicableAssetTypes, required: true, location_name: "applicableAssetTypes"))
+    UpdateSubscriptionTargetOutput.add_member(:subscription_target_config, Shapes::ShapeRef.new(shape: SubscriptionTargetForms, required: true, location_name: "subscriptionTargetConfig"))
+    UpdateSubscriptionTargetOutput.add_member(:provider, Shapes::ShapeRef.new(shape: String, required: true, location_name: "provider"))
+    UpdateSubscriptionTargetOutput.add_member(:subscription_grant_creation_mode, Shapes::ShapeRef.new(shape: SubscriptionGrantCreationMode, location_name: "subscriptionGrantCreationMode"))
     UpdateSubscriptionTargetOutput.struct_class = Types::UpdateSubscriptionTargetOutput
 
     UpdateUserProfileInput.add_member(:domain_identifier, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainIdentifier"))
-    UpdateUserProfileInput.add_member(:status, Shapes::ShapeRef.new(shape: UserProfileStatus, required: true, location_name: "status"))
-    UpdateUserProfileInput.add_member(:type, Shapes::ShapeRef.new(shape: UserProfileType, location_name: "type"))
     UpdateUserProfileInput.add_member(:user_identifier, Shapes::ShapeRef.new(shape: UserIdentifier, required: true, location: "uri", location_name: "userIdentifier"))
+    UpdateUserProfileInput.add_member(:type, Shapes::ShapeRef.new(shape: UserProfileType, location_name: "type"))
+    UpdateUserProfileInput.add_member(:status, Shapes::ShapeRef.new(shape: UserProfileStatus, required: true, location_name: "status"))
+    UpdateUserProfileInput.add_member(:session_name, Shapes::ShapeRef.new(shape: UpdateUserProfileInputSessionNameString, location_name: "sessionName"))
     UpdateUserProfileInput.struct_class = Types::UpdateUserProfileInput
 
-    UpdateUserProfileOutput.add_member(:details, Shapes::ShapeRef.new(shape: UserProfileDetails, location_name: "details"))
     UpdateUserProfileOutput.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "domainId"))
     UpdateUserProfileOutput.add_member(:id, Shapes::ShapeRef.new(shape: UserProfileId, location_name: "id"))
-    UpdateUserProfileOutput.add_member(:status, Shapes::ShapeRef.new(shape: UserProfileStatus, location_name: "status"))
     UpdateUserProfileOutput.add_member(:type, Shapes::ShapeRef.new(shape: UserProfileType, location_name: "type"))
+    UpdateUserProfileOutput.add_member(:status, Shapes::ShapeRef.new(shape: UserProfileStatus, location_name: "status"))
+    UpdateUserProfileOutput.add_member(:details, Shapes::ShapeRef.new(shape: UserProfileDetails, location_name: "details"))
     UpdateUserProfileOutput.struct_class = Types::UpdateUserProfileOutput
+
+    UseAssetTypePolicyGrantDetail.add_member(:domain_unit_id, Shapes::ShapeRef.new(shape: DomainUnitId, location_name: "domainUnitId"))
+    UseAssetTypePolicyGrantDetail.struct_class = Types::UseAssetTypePolicyGrantDetail
 
     UserDetails.add_member(:user_id, Shapes::ShapeRef.new(shape: String, required: true, location_name: "userId"))
     UserDetails.struct_class = Types::UserDetails
 
-    UserPolicyGrantPrincipal.add_member(:all_users_grant_filter, Shapes::ShapeRef.new(shape: AllUsersGrantFilter, location_name: "allUsersGrantFilter"))
     UserPolicyGrantPrincipal.add_member(:user_identifier, Shapes::ShapeRef.new(shape: UserIdentifier, location_name: "userIdentifier"))
+    UserPolicyGrantPrincipal.add_member(:all_users_grant_filter, Shapes::ShapeRef.new(shape: AllUsersGrantFilter, location_name: "allUsersGrantFilter"))
     UserPolicyGrantPrincipal.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
-    UserPolicyGrantPrincipal.add_member_subclass(:all_users_grant_filter, Types::UserPolicyGrantPrincipal::AllUsersGrantFilter)
     UserPolicyGrantPrincipal.add_member_subclass(:user_identifier, Types::UserPolicyGrantPrincipal::UserIdentifier)
+    UserPolicyGrantPrincipal.add_member_subclass(:all_users_grant_filter, Types::UserPolicyGrantPrincipal::AllUsersGrantFilter)
     UserPolicyGrantPrincipal.add_member_subclass(:unknown, Types::UserPolicyGrantPrincipal::Unknown)
     UserPolicyGrantPrincipal.struct_class = Types::UserPolicyGrantPrincipal
 
@@ -5491,11 +7019,11 @@ module Aws::DataZone
 
     UserProfileSummaries.member = Shapes::ShapeRef.new(shape: UserProfileSummary)
 
-    UserProfileSummary.add_member(:details, Shapes::ShapeRef.new(shape: UserProfileDetails, location_name: "details"))
     UserProfileSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, location_name: "domainId"))
     UserProfileSummary.add_member(:id, Shapes::ShapeRef.new(shape: UserProfileId, location_name: "id"))
-    UserProfileSummary.add_member(:status, Shapes::ShapeRef.new(shape: UserProfileStatus, location_name: "status"))
     UserProfileSummary.add_member(:type, Shapes::ShapeRef.new(shape: UserProfileType, location_name: "type"))
+    UserProfileSummary.add_member(:status, Shapes::ShapeRef.new(shape: UserProfileStatus, location_name: "status"))
+    UserProfileSummary.add_member(:details, Shapes::ShapeRef.new(shape: UserProfileDetails, location_name: "details"))
     UserProfileSummary.struct_class = Types::UserProfileSummary
 
     UsernamePassword.add_member(:password, Shapes::ShapeRef.new(shape: Password, required: true, location_name: "password"))
@@ -5505,6 +7033,35 @@ module Aws::DataZone
     ValidationException.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, required: true, location_name: "message"))
     ValidationException.struct_class = Types::ValidationException
 
+    VpcConnectionSubnetIdList.member = Shapes::ShapeRef.new(shape: SubnetId)
+
+    VpcPropertiesInput.add_member(:vpc_id, Shapes::ShapeRef.new(shape: VpcId, required: true, location_name: "vpcId"))
+    VpcPropertiesInput.add_member(:subnet_ids, Shapes::ShapeRef.new(shape: VpcConnectionSubnetIdList, required: true, location_name: "subnetIds"))
+    VpcPropertiesInput.add_member(:security_group_id, Shapes::ShapeRef.new(shape: SecurityGroupId, location_name: "securityGroupId"))
+    VpcPropertiesInput.struct_class = Types::VpcPropertiesInput
+
+    VpcPropertiesOutput.add_member(:vpc_id, Shapes::ShapeRef.new(shape: VpcId, required: true, location_name: "vpcId"))
+    VpcPropertiesOutput.add_member(:subnet_ids, Shapes::ShapeRef.new(shape: VpcConnectionSubnetIdList, required: true, location_name: "subnetIds"))
+    VpcPropertiesOutput.add_member(:status, Shapes::ShapeRef.new(shape: ConnectionStatus, required: true, location_name: "status"))
+    VpcPropertiesOutput.add_member(:security_group_id, Shapes::ShapeRef.new(shape: SecurityGroupId, location_name: "securityGroupId"))
+    VpcPropertiesOutput.add_member(:glue_connection_names, Shapes::ShapeRef.new(shape: GlueConnectionNames, location_name: "glueConnectionNames"))
+    VpcPropertiesOutput.struct_class = Types::VpcPropertiesOutput
+
+    VpcPropertiesPatch.add_member(:vpc_id, Shapes::ShapeRef.new(shape: VpcId, location_name: "vpcId"))
+    VpcPropertiesPatch.add_member(:subnet_ids, Shapes::ShapeRef.new(shape: VpcConnectionSubnetIdList, location_name: "subnetIds"))
+    VpcPropertiesPatch.add_member(:security_group_id, Shapes::ShapeRef.new(shape: SecurityGroupId, location_name: "securityGroupId"))
+    VpcPropertiesPatch.struct_class = Types::VpcPropertiesPatch
+
+    WorkflowsMwaaPropertiesInput.add_member(:mwaa_environment_name, Shapes::ShapeRef.new(shape: String, location_name: "mwaaEnvironmentName"))
+    WorkflowsMwaaPropertiesInput.struct_class = Types::WorkflowsMwaaPropertiesInput
+
+    WorkflowsMwaaPropertiesOutput.add_member(:mwaa_environment_name, Shapes::ShapeRef.new(shape: String, location_name: "mwaaEnvironmentName"))
+    WorkflowsMwaaPropertiesOutput.struct_class = Types::WorkflowsMwaaPropertiesOutput
+
+    WorkflowsServerlessPropertiesInput.struct_class = Types::WorkflowsServerlessPropertiesInput
+
+    WorkflowsServerlessPropertiesOutput.struct_class = Types::WorkflowsServerlessPropertiesOutput
+
 
     # @api private
     API = Seahorse::Model::Api.new.tap do |api|
@@ -5513,9 +7070,10 @@ module Aws::DataZone
 
       api.metadata = {
         "apiVersion" => "2018-05-10",
+        "auth" => ["aws.auth#sigv4"],
         "endpointPrefix" => "datazone",
-        "jsonVersion" => "1.1",
         "protocol" => "rest-json",
+        "protocols" => ["rest-json"],
         "serviceFullName" => "Amazon DataZone",
         "serviceId" => "DataZone",
         "signatureVersion" => "v4",
@@ -5548,6 +7106,7 @@ module Aws::DataZone
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
@@ -5599,6 +7158,50 @@ module Aws::DataZone
         o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
       end)
 
+      api.add_operation(:associate_governed_terms, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "AssociateGovernedTerms"
+        o.http_method = "PATCH"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/entities/{entityType}/{entityIdentifier}/associate-governed-terms"
+        o.input = Shapes::ShapeRef.new(shape: AssociateGovernedTermsInput)
+        o.output = Shapes::ShapeRef.new(shape: AssociateGovernedTermsOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
+      api.add_operation(:batch_get_attributes_metadata, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "BatchGetAttributesMetadata"
+        o.http_method = "GET"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/entities/{entityType}/{entityIdentifier}/attributes-metadata"
+        o.input = Shapes::ShapeRef.new(shape: BatchGetAttributesMetadataInput)
+        o.output = Shapes::ShapeRef.new(shape: BatchGetAttributesMetadataOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
+      api.add_operation(:batch_put_attributes_metadata, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "BatchPutAttributesMetadata"
+        o.http_method = "PUT"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/entities/{entityType}/{entityIdentifier}/attributes-metadata"
+        o.input = Shapes::ShapeRef.new(shape: BatchPutAttributesMetadataInput)
+        o.output = Shapes::ShapeRef.new(shape: BatchPutAttributesMetadataOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
       api.add_operation(:cancel_metadata_generation_run, Seahorse::Model::Operation.new.tap do |o|
         o.name = "CancelMetadataGenerationRun"
         o.http_method = "POST"
@@ -5624,6 +7227,22 @@ module Aws::DataZone
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
+      api.add_operation(:create_account_pool, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CreateAccountPool"
+        o.http_method = "POST"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/account-pools"
+        o.input = Shapes::ShapeRef.new(shape: CreateAccountPoolInput)
+        o.output = Shapes::ShapeRef.new(shape: CreateAccountPoolOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
@@ -5815,6 +7434,22 @@ module Aws::DataZone
         o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
       end)
 
+      api.add_operation(:create_environment_blueprint, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CreateEnvironmentBlueprint"
+        o.http_method = "POST"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/environment-blueprints"
+        o.input = Shapes::ShapeRef.new(shape: CreateEnvironmentBlueprintInput)
+        o.output = Shapes::ShapeRef.new(shape: CreateEnvironmentBlueprintOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
       api.add_operation(:create_environment_profile, Seahorse::Model::Operation.new.tap do |o|
         o.name = "CreateEnvironmentProfile"
         o.http_method = "POST"
@@ -5897,6 +7532,22 @@ module Aws::DataZone
         o.http_request_uri = "/v2/domains/{domainIdentifier}/listings/change-set"
         o.input = Shapes::ShapeRef.new(shape: CreateListingChangeSetInput)
         o.output = Shapes::ShapeRef.new(shape: CreateListingChangeSetOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
+      api.add_operation(:create_notebook, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CreateNotebook"
+        o.http_method = "POST"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/notebooks"
+        o.input = Shapes::ShapeRef.new(shape: CreateNotebookInput)
+        o.output = Shapes::ShapeRef.new(shape: CreateNotebookOutput)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
@@ -5994,6 +7645,7 @@ module Aws::DataZone
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
@@ -6020,6 +7672,20 @@ module Aws::DataZone
         o.http_request_uri = "/v2/domains/{domainIdentifier}/user-profiles"
         o.input = Shapes::ShapeRef.new(shape: CreateUserProfileInput)
         o.output = Shapes::ShapeRef.new(shape: CreateUserProfileOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
+      api.add_operation(:delete_account_pool, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeleteAccountPool"
+        o.http_method = "DELETE"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/account-pools/{identifier}"
+        o.input = Shapes::ShapeRef.new(shape: DeleteAccountPoolInput)
+        o.output = Shapes::ShapeRef.new(shape: DeleteAccountPoolOutput)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
@@ -6083,6 +7749,21 @@ module Aws::DataZone
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
+      api.add_operation(:delete_data_export_configuration, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeleteDataExportConfiguration"
+        o.http_method = "DELETE"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/data-export-configuration"
+        o.input = Shapes::ShapeRef.new(shape: DeleteDataExportConfigurationInput)
+        o.output = Shapes::ShapeRef.new(shape: DeleteDataExportConfigurationOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
       end)
@@ -6177,6 +7858,21 @@ module Aws::DataZone
         o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
       end)
 
+      api.add_operation(:delete_environment_blueprint, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeleteEnvironmentBlueprint"
+        o.http_method = "DELETE"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/environment-blueprints/{identifier}"
+        o.input = Shapes::ShapeRef.new(shape: DeleteEnvironmentBlueprintInput)
+        o.output = Shapes::ShapeRef.new(shape: Shapes::StructureShape.new(struct_class: Aws::EmptyStructure))
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
       api.add_operation(:delete_environment_blueprint_configuration, Seahorse::Model::Operation.new.tap do |o|
         o.name = "DeleteEnvironmentBlueprintConfiguration"
         o.http_method = "DELETE"
@@ -6249,6 +7945,20 @@ module Aws::DataZone
         o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
       end)
 
+      api.add_operation(:delete_lineage_event, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeleteLineageEvent"
+        o.http_method = "DELETE"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/lineage/events/{identifier}"
+        o.input = Shapes::ShapeRef.new(shape: DeleteLineageEventInput)
+        o.output = Shapes::ShapeRef.new(shape: DeleteLineageEventOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
       api.add_operation(:delete_listing, Seahorse::Model::Operation.new.tap do |o|
         o.name = "DeleteListing"
         o.http_method = "DELETE"
@@ -6257,6 +7967,20 @@ module Aws::DataZone
         o.output = Shapes::ShapeRef.new(shape: DeleteListingOutput)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
+      api.add_operation(:delete_notebook, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeleteNotebook"
+        o.http_method = "DELETE"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/notebooks/{identifier}"
+        o.input = Shapes::ShapeRef.new(shape: DeleteNotebookInput)
+        o.output = Shapes::ShapeRef.new(shape: DeleteNotebookOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
@@ -6396,6 +8120,35 @@ module Aws::DataZone
         o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
       end)
 
+      api.add_operation(:disassociate_governed_terms, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DisassociateGovernedTerms"
+        o.http_method = "PATCH"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/entities/{entityType}/{entityIdentifier}/disassociate-governed-terms"
+        o.input = Shapes::ShapeRef.new(shape: DisassociateGovernedTermsInput)
+        o.output = Shapes::ShapeRef.new(shape: DisassociateGovernedTermsOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
+      api.add_operation(:get_account_pool, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetAccountPool"
+        o.http_method = "GET"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/account-pools/{identifier}"
+        o.input = Shapes::ShapeRef.new(shape: GetAccountPoolInput)
+        o.output = Shapes::ShapeRef.new(shape: GetAccountPoolOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
       api.add_operation(:get_asset, Seahorse::Model::Operation.new.tap do |o|
         o.name = "GetAsset"
         o.http_method = "GET"
@@ -6444,6 +8197,20 @@ module Aws::DataZone
         o.http_request_uri = "/v2/domains/{domainIdentifier}/connections/{identifier}"
         o.input = Shapes::ShapeRef.new(shape: GetConnectionInput)
         o.output = Shapes::ShapeRef.new(shape: GetConnectionOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
+      api.add_operation(:get_data_export_configuration, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetDataExportConfiguration"
+        o.http_method = "GET"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/data-export-configuration"
+        o.input = Shapes::ShapeRef.new(shape: GetDataExportConfigurationInput)
+        o.output = Shapes::ShapeRef.new(shape: GetDataExportConfigurationOutput)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
@@ -6752,6 +8519,48 @@ module Aws::DataZone
         o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
       end)
 
+      api.add_operation(:get_notebook, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetNotebook"
+        o.http_method = "GET"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/notebooks/{identifier}"
+        o.input = Shapes::ShapeRef.new(shape: GetNotebookInput)
+        o.output = Shapes::ShapeRef.new(shape: GetNotebookOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
+      api.add_operation(:get_notebook_export, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetNotebookExport"
+        o.http_method = "GET"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/notebook-exports/{identifier}"
+        o.input = Shapes::ShapeRef.new(shape: GetNotebookExportInput)
+        o.output = Shapes::ShapeRef.new(shape: GetNotebookExportOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
+      api.add_operation(:get_notebook_run, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetNotebookRun"
+        o.http_method = "GET"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/notebook-runs/{identifier}"
+        o.input = Shapes::ShapeRef.new(shape: GetNotebookRunInput)
+        o.output = Shapes::ShapeRef.new(shape: GetNotebookRunOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
       api.add_operation(:get_project, Seahorse::Model::Operation.new.tap do |o|
         o.name = "GetProject"
         o.http_method = "GET"
@@ -6876,6 +8685,45 @@ module Aws::DataZone
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
+      api.add_operation(:list_account_pools, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListAccountPools"
+        o.http_method = "GET"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/account-pools"
+        o.input = Shapes::ShapeRef.new(shape: ListAccountPoolsInput)
+        o.output = Shapes::ShapeRef.new(shape: ListAccountPoolsOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:list_accounts_in_account_pool, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListAccountsInAccountPool"
+        o.http_method = "GET"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/account-pools/{identifier}/accounts"
+        o.input = Shapes::ShapeRef.new(shape: ListAccountsInAccountPoolInput)
+        o.output = Shapes::ShapeRef.new(shape: ListAccountsInAccountPoolOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
       end)
 
       api.add_operation(:list_asset_filters, Seahorse::Model::Operation.new.tap do |o|
@@ -7259,6 +9107,44 @@ module Aws::DataZone
         )
       end)
 
+      api.add_operation(:list_notebook_runs, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListNotebookRuns"
+        o.http_method = "GET"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/notebook-runs"
+        o.input = Shapes::ShapeRef.new(shape: ListNotebookRunsInput)
+        o.output = Shapes::ShapeRef.new(shape: ListNotebookRunsOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:list_notebooks, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListNotebooks"
+        o.http_method = "GET"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/notebooks"
+        o.input = Shapes::ShapeRef.new(shape: ListNotebooksInput)
+        o.output = Shapes::ShapeRef.new(shape: ListNotebooksOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
       api.add_operation(:list_notifications, Seahorse::Model::Operation.new.tap do |o|
         o.name = "ListNotifications"
         o.http_method = "GET"
@@ -7522,6 +9408,22 @@ module Aws::DataZone
         o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
       end)
 
+      api.add_operation(:put_data_export_configuration, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "PutDataExportConfiguration"
+        o.http_method = "PUT"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/data-export-configuration"
+        o.input = Shapes::ShapeRef.new(shape: PutDataExportConfigurationInput)
+        o.output = Shapes::ShapeRef.new(shape: PutDataExportConfigurationOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
       api.add_operation(:put_environment_blueprint_configuration, Seahorse::Model::Operation.new.tap do |o|
         o.name = "PutEnvironmentBlueprintConfiguration"
         o.http_method = "PUT"
@@ -7535,6 +9437,25 @@ module Aws::DataZone
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
+      api.add_operation(:query_graph, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "QueryGraph"
+        o.http_method = "POST"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/graph/query"
+        o.input = Shapes::ShapeRef.new(shape: QueryGraphInput)
+        o.output = Shapes::ShapeRef.new(shape: QueryGraphOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
       end)
 
       api.add_operation(:reject_predictions, Seahorse::Model::Operation.new.tap do |o|
@@ -7738,6 +9659,85 @@ module Aws::DataZone
         o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
       end)
 
+      api.add_operation(:start_notebook_export, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "StartNotebookExport"
+        o.http_method = "POST"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/notebook-exports"
+        o.input = Shapes::ShapeRef.new(shape: StartNotebookExportInput)
+        o.output = Shapes::ShapeRef.new(shape: StartNotebookExportOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
+      api.add_operation(:start_notebook_import, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "StartNotebookImport"
+        o.http_method = "POST"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/notebook-imports"
+        o.input = Shapes::ShapeRef.new(shape: StartNotebookImportInput)
+        o.output = Shapes::ShapeRef.new(shape: StartNotebookImportOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
+      api.add_operation(:start_notebook_run, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "StartNotebookRun"
+        o.http_method = "POST"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/notebook-runs"
+        o.input = Shapes::ShapeRef.new(shape: StartNotebookRunInput)
+        o.output = Shapes::ShapeRef.new(shape: StartNotebookRunOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
+      api.add_operation(:start_notebook_sync, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "StartNotebookSync"
+        o.http_method = "POST"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/notebook-syncs"
+        o.input = Shapes::ShapeRef.new(shape: StartNotebookSyncInput)
+        o.output = Shapes::ShapeRef.new(shape: StartNotebookSyncOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
+      api.add_operation(:stop_notebook_run, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "StopNotebookRun"
+        o.http_method = "PUT"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/notebook-runs/{identifier}/stop"
+        o.input = Shapes::ShapeRef.new(shape: StopNotebookRunInput)
+        o.output = Shapes::ShapeRef.new(shape: StopNotebookRunOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
       api.add_operation(:tag_resource, Seahorse::Model::Operation.new.tap do |o|
         o.name = "TagResource"
         o.http_method = "POST"
@@ -7762,6 +9762,22 @@ module Aws::DataZone
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
+      api.add_operation(:update_account_pool, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "UpdateAccountPool"
+        o.http_method = "PATCH"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/account-pools/{identifier}"
+        o.input = Shapes::ShapeRef.new(shape: UpdateAccountPoolInput)
+        o.output = Shapes::ShapeRef.new(shape: UpdateAccountPoolOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
       end)
 
@@ -7873,6 +9889,22 @@ module Aws::DataZone
         o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
       end)
 
+      api.add_operation(:update_environment_blueprint, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "UpdateEnvironmentBlueprint"
+        o.http_method = "PATCH"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/environment-blueprints/{identifier}"
+        o.input = Shapes::ShapeRef.new(shape: UpdateEnvironmentBlueprintInput)
+        o.output = Shapes::ShapeRef.new(shape: UpdateEnvironmentBlueprintOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
       api.add_operation(:update_environment_profile, Seahorse::Model::Operation.new.tap do |o|
         o.name = "UpdateEnvironmentProfile"
         o.http_method = "PATCH"
@@ -7933,6 +9965,21 @@ module Aws::DataZone
         o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
       end)
 
+      api.add_operation(:update_notebook, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "UpdateNotebook"
+        o.http_method = "PATCH"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/notebooks/{identifier}"
+        o.input = Shapes::ShapeRef.new(shape: UpdateNotebookInput)
+        o.output = Shapes::ShapeRef.new(shape: UpdateNotebookOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
       api.add_operation(:update_project, Seahorse::Model::Operation.new.tap do |o|
         o.name = "UpdateProject"
         o.http_method = "PATCH"
@@ -7960,6 +10007,21 @@ module Aws::DataZone
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)
+      end)
+
+      api.add_operation(:update_root_domain_unit_owner, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "UpdateRootDomainUnitOwner"
+        o.http_method = "PATCH"
+        o.http_request_uri = "/v2/domains/{domainIdentifier}/root-domain-unit-owner"
+        o.input = Shapes::ShapeRef.new(shape: UpdateRootDomainUnitOwnerInput)
+        o.output = Shapes::ShapeRef.new(shape: UpdateRootDomainUnitOwnerOutput)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: UnauthorizedException)

@@ -112,8 +112,22 @@ module Aws::Pricing
     # @!attribute [rw] type
     #   The type of filter that you want to use.
     #
-    #   Valid values are: `TERM_MATCH`. `TERM_MATCH` returns only products
-    #   that match both the given filter field and the given value.
+    #   Valid values are:
+    #
+    #   * `TERM_MATCH`: Returns only products that match both the given
+    #     filter field and the given value.
+    #
+    #   * `EQUALS`: Returns products that have a field value exactly
+    #     matching the provided value.
+    #
+    #   * `CONTAINS`: Returns products where the field value contains the
+    #     provided value as a substring.
+    #
+    #   * `ANY_OF`: Returns products where the field value is any of the
+    #     provided values.
+    #
+    #   * `NONE_OF`: Returns products where the field value is not any of
+    #     the provided values.
     #   @return [String]
     #
     # @!attribute [rw] field
@@ -340,13 +354,13 @@ module Aws::Pricing
     end
 
     # @!attribute [rw] service_code
-    #   The service code or the Savings Plan service code for the attributes
-    #   that you want to retrieve. For example, to get the list of
-    #   applicable Amazon EC2 price lists, use `AmazonEC2`. For a full list
-    #   of service codes containing On-Demand and Reserved Instance (RI)
-    #   pricing, use the [DescribeServices][1] API.
+    #   The service code or the Savings Plans service code for the
+    #   attributes that you want to retrieve. For example, to get the list
+    #   of applicable Amazon EC2 price lists, use `AmazonEC2`. For a full
+    #   list of service codes containing On-Demand and Reserved Instance
+    #   (RI) pricing, use the [DescribeServices][1] API.
     #
-    #   To retrieve the Reserved Instance and Compute Savings Plan price
+    #   To retrieve the Reserved Instance and Compute Savings Plans price
     #   lists, use `ComputeSavingsPlans`.
     #
     #   To retrieve Machine Learning Savings Plans price lists, use

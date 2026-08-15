@@ -95,8 +95,8 @@ module Aws::MedicalImaging
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::MedicalImaging
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::MedicalImaging
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::MedicalImaging
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::MedicalImaging
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::MedicalImaging
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::MedicalImaging
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::MedicalImaging
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -482,9 +486,16 @@ module Aws::MedicalImaging
     #   Copy image set information.
     #
     # @option params [Boolean] :force
-    #   Setting this flag will force the `CopyImageSet` operation, even if
-    #   Patient, Study, or Series level metadata are mismatched across the
-    #   `sourceImageSet` and `destinationImageSet`.
+    #   Providing this parameter will force completion of the `CopyImageSet`
+    #   operation, even if there are inconsistent Patient, Study, and/or
+    #   Series level metadata elements between the `sourceImageSet` and
+    #   `destinationImageSet`.
+    #
+    # @option params [Boolean] :promote_to_primary
+    #   Providing this parameter will configure the `CopyImageSet` operation
+    #   to promote the given image set to the primary DICOM hierarchy. If
+    #   successful, a new primary image set ID will be returned as the
+    #   destination image set.
     #
     # @return [Types::CopyImageSetResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -510,6 +521,7 @@ module Aws::MedicalImaging
     #       },
     #     },
     #     force: false,
+    #     promote_to_primary: false,
     #   })
     #
     # @example Response structure
@@ -518,14 +530,14 @@ module Aws::MedicalImaging
     #   resp.source_image_set_properties.image_set_id #=> String
     #   resp.source_image_set_properties.latest_version_id #=> String
     #   resp.source_image_set_properties.image_set_state #=> String, one of "ACTIVE", "LOCKED", "DELETED"
-    #   resp.source_image_set_properties.image_set_workflow_status #=> String, one of "CREATED", "COPIED", "COPYING", "COPYING_WITH_READ_ONLY_ACCESS", "COPY_FAILED", "UPDATING", "UPDATED", "UPDATE_FAILED", "DELETING", "DELETED"
+    #   resp.source_image_set_properties.image_set_workflow_status #=> String, one of "CREATED", "COPIED", "COPYING", "COPYING_WITH_READ_ONLY_ACCESS", "COPY_FAILED", "UPDATING", "UPDATING_FOR_STUDY_CONSISTENCY", "UPDATED", "UPDATE_FAILED", "DELETING", "DELETED", "IMPORTING", "IMPORTED", "IMPORT_FAILED"
     #   resp.source_image_set_properties.created_at #=> Time
     #   resp.source_image_set_properties.updated_at #=> Time
     #   resp.source_image_set_properties.image_set_arn #=> String
     #   resp.destination_image_set_properties.image_set_id #=> String
     #   resp.destination_image_set_properties.latest_version_id #=> String
     #   resp.destination_image_set_properties.image_set_state #=> String, one of "ACTIVE", "LOCKED", "DELETED"
-    #   resp.destination_image_set_properties.image_set_workflow_status #=> String, one of "CREATED", "COPIED", "COPYING", "COPYING_WITH_READ_ONLY_ACCESS", "COPY_FAILED", "UPDATING", "UPDATED", "UPDATE_FAILED", "DELETING", "DELETED"
+    #   resp.destination_image_set_properties.image_set_workflow_status #=> String, one of "CREATED", "COPIED", "COPYING", "COPYING_WITH_READ_ONLY_ACCESS", "COPY_FAILED", "UPDATING", "UPDATING_FOR_STUDY_CONSISTENCY", "UPDATED", "UPDATE_FAILED", "DELETING", "DELETED", "IMPORTING", "IMPORTED", "IMPORT_FAILED"
     #   resp.destination_image_set_properties.created_at #=> Time
     #   resp.destination_image_set_properties.updated_at #=> Time
     #   resp.destination_image_set_properties.image_set_arn #=> String
@@ -557,6 +569,12 @@ module Aws::MedicalImaging
     #   The Amazon Resource Name (ARN) assigned to the Key Management Service
     #   (KMS) key for accessing encrypted data.
     #
+    # @option params [String] :lambda_authorizer_arn
+    #   The ARN of the authorizer's Lambda function.
+    #
+    # @option params [String] :lossless_storage_format
+    #   The lossless storage format for the datastore.
+    #
     # @return [Types::CreateDatastoreResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateDatastoreResponse#datastore_id #datastore_id} => String
@@ -571,6 +589,8 @@ module Aws::MedicalImaging
     #       "TagKey" => "TagValue",
     #     },
     #     kms_key_arn: "KmsKeyArn",
+    #     lambda_authorizer_arn: "LambdaArn",
+    #     lossless_storage_format: "HTJ2K", # accepts HTJ2K, JPEG_2000_LOSSLESS
     #   })
     #
     # @example Response structure
@@ -649,7 +669,7 @@ module Aws::MedicalImaging
     #   resp.datastore_id #=> String
     #   resp.image_set_id #=> String
     #   resp.image_set_state #=> String, one of "ACTIVE", "LOCKED", "DELETED"
-    #   resp.image_set_workflow_status #=> String, one of "CREATED", "COPIED", "COPYING", "COPYING_WITH_READ_ONLY_ACCESS", "COPY_FAILED", "UPDATING", "UPDATED", "UPDATE_FAILED", "DELETING", "DELETED"
+    #   resp.image_set_workflow_status #=> String, one of "CREATED", "COPIED", "COPYING", "COPYING_WITH_READ_ONLY_ACCESS", "COPY_FAILED", "UPDATING", "UPDATING_FOR_STUDY_CONSISTENCY", "UPDATED", "UPDATE_FAILED", "DELETING", "DELETED", "IMPORTING", "IMPORTED", "IMPORT_FAILED"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medical-imaging-2023-07-19/DeleteImageSet AWS API Documentation
     #
@@ -701,6 +721,10 @@ module Aws::MedicalImaging
     #   resp.job_properties.input_s3_uri #=> String
     #   resp.job_properties.output_s3_uri #=> String
     #   resp.job_properties.message #=> String
+    #   resp.job_properties.import_configuration.dicom_json_metadata_import_configuration.dicom_metadata_mappings #=> Array
+    #   resp.job_properties.import_configuration.dicom_json_metadata_import_configuration.dicom_metadata_mappings[0].study_instance_uid #=> String
+    #   resp.job_properties.import_configuration.dicom_json_metadata_import_configuration.dicom_metadata_mappings[0].series_instance_uid #=> String
+    #   resp.job_properties.import_configuration.dicom_json_metadata_import_configuration.dicom_metadata_mappings[0].metadata_file_path #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medical-imaging-2023-07-19/GetDICOMImportJob AWS API Documentation
     #
@@ -732,6 +756,8 @@ module Aws::MedicalImaging
     #   resp.datastore_properties.datastore_name #=> String
     #   resp.datastore_properties.datastore_status #=> String, one of "CREATING", "CREATE_FAILED", "ACTIVE", "DELETING", "DELETED"
     #   resp.datastore_properties.kms_key_arn #=> String
+    #   resp.datastore_properties.lambda_authorizer_arn #=> String
+    #   resp.datastore_properties.lossless_storage_format #=> String, one of "HTJ2K", "JPEG_2000_LOSSLESS"
     #   resp.datastore_properties.datastore_arn #=> String
     #   resp.datastore_properties.created_at #=> Time
     #   resp.datastore_properties.updated_at #=> Time
@@ -809,6 +835,9 @@ module Aws::MedicalImaging
     #   * {Types::GetImageSetResponse#message #message} => String
     #   * {Types::GetImageSetResponse#image_set_arn #image_set_arn} => String
     #   * {Types::GetImageSetResponse#overrides #overrides} => Types::Overrides
+    #   * {Types::GetImageSetResponse#is_primary #is_primary} => Boolean
+    #   * {Types::GetImageSetResponse#last_accessed_at #last_accessed_at} => Time
+    #   * {Types::GetImageSetResponse#storage_tier #storage_tier} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -824,13 +853,16 @@ module Aws::MedicalImaging
     #   resp.image_set_id #=> String
     #   resp.version_id #=> String
     #   resp.image_set_state #=> String, one of "ACTIVE", "LOCKED", "DELETED"
-    #   resp.image_set_workflow_status #=> String, one of "CREATED", "COPIED", "COPYING", "COPYING_WITH_READ_ONLY_ACCESS", "COPY_FAILED", "UPDATING", "UPDATED", "UPDATE_FAILED", "DELETING", "DELETED"
+    #   resp.image_set_workflow_status #=> String, one of "CREATED", "COPIED", "COPYING", "COPYING_WITH_READ_ONLY_ACCESS", "COPY_FAILED", "UPDATING", "UPDATING_FOR_STUDY_CONSISTENCY", "UPDATED", "UPDATE_FAILED", "DELETING", "DELETED", "IMPORTING", "IMPORTED", "IMPORT_FAILED"
     #   resp.created_at #=> Time
     #   resp.updated_at #=> Time
     #   resp.deleted_at #=> Time
     #   resp.message #=> String
     #   resp.image_set_arn #=> String
     #   resp.overrides.forced #=> Boolean
+    #   resp.is_primary #=> Boolean
+    #   resp.last_accessed_at #=> Time
+    #   resp.storage_tier #=> String, one of "FREQUENT_ACCESS", "ARCHIVE_INSTANT_ACCESS"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medical-imaging-2023-07-19/GetImageSet AWS API Documentation
     #
@@ -1018,12 +1050,13 @@ module Aws::MedicalImaging
     #   resp.image_set_properties_list[0].image_set_id #=> String
     #   resp.image_set_properties_list[0].version_id #=> String
     #   resp.image_set_properties_list[0].image_set_state #=> String, one of "ACTIVE", "LOCKED", "DELETED"
-    #   resp.image_set_properties_list[0].image_set_workflow_status #=> String, one of "CREATED", "COPIED", "COPYING", "COPYING_WITH_READ_ONLY_ACCESS", "COPY_FAILED", "UPDATING", "UPDATED", "UPDATE_FAILED", "DELETING", "DELETED"
+    #   resp.image_set_properties_list[0].image_set_workflow_status #=> String, one of "CREATED", "COPIED", "COPYING", "COPYING_WITH_READ_ONLY_ACCESS", "COPY_FAILED", "UPDATING", "UPDATING_FOR_STUDY_CONSISTENCY", "UPDATED", "UPDATE_FAILED", "DELETING", "DELETED", "IMPORTING", "IMPORTED", "IMPORT_FAILED"
     #   resp.image_set_properties_list[0].created_at #=> Time
     #   resp.image_set_properties_list[0].updated_at #=> Time
     #   resp.image_set_properties_list[0].deleted_at #=> Time
     #   resp.image_set_properties_list[0].message #=> String
     #   resp.image_set_properties_list[0].overrides.forced #=> Boolean
+    #   resp.image_set_properties_list[0].is_primary #=> Boolean
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/medical-imaging-2023-07-19/ListImageSetVersions AWS API Documentation
@@ -1120,6 +1153,7 @@ module Aws::MedicalImaging
     #                 dicom_study_date: "DICOMStudyDate", # required
     #                 dicom_study_time: "DICOMStudyTime",
     #               },
+    #               is_primary: false,
     #             },
     #           ],
     #           operator: "EQUAL", # required, accepts EQUAL, BETWEEN
@@ -1141,6 +1175,8 @@ module Aws::MedicalImaging
     #   resp.image_sets_metadata_summaries[0].version #=> Integer
     #   resp.image_sets_metadata_summaries[0].created_at #=> Time
     #   resp.image_sets_metadata_summaries[0].updated_at #=> Time
+    #   resp.image_sets_metadata_summaries[0].last_accessed_at #=> Time
+    #   resp.image_sets_metadata_summaries[0].storage_tier #=> String, one of "FREQUENT_ACCESS", "ARCHIVE_INSTANT_ACCESS"
     #   resp.image_sets_metadata_summaries[0].dicom_tags.dicom_patient_id #=> String
     #   resp.image_sets_metadata_summaries[0].dicom_tags.dicom_patient_name #=> String
     #   resp.image_sets_metadata_summaries[0].dicom_tags.dicom_patient_birth_date #=> String
@@ -1157,6 +1193,7 @@ module Aws::MedicalImaging
     #   resp.image_sets_metadata_summaries[0].dicom_tags.dicom_series_number #=> Integer
     #   resp.image_sets_metadata_summaries[0].dicom_tags.dicom_study_date #=> String
     #   resp.image_sets_metadata_summaries[0].dicom_tags.dicom_study_time #=> String
+    #   resp.image_sets_metadata_summaries[0].is_primary #=> Boolean
     #   resp.data.sort.sort_order #=> String, one of "ASC", "DESC"
     #   resp.data.sort.sort_field #=> String, one of "updatedAt", "createdAt", "DICOMStudyDateAndTime"
     #   resp.next_token #=> String
@@ -1171,9 +1208,11 @@ module Aws::MedicalImaging
     end
 
     # Start importing bulk data into an `ACTIVE` data store. The import job
-    # imports DICOM P10 files found in the S3 prefix specified by the
-    # `inputS3Uri` parameter. The import job stores processing results in
-    # the file specified by the `outputS3Uri` parameter.
+    # imports DICOM P10 files or enhances existing DICOM files with JSON
+    # metadata. The `importConfiguration` parameter specifies the import
+    # type. The data is found in the S3 prefix specified by the `inputS3Uri`
+    # parameter. The import job stores processing results in the file
+    # specified by the `outputS3Uri` parameter.
     #
     # @option params [String] :job_name
     #   The import job name.
@@ -1202,6 +1241,9 @@ module Aws::MedicalImaging
     # @option params [String] :input_owner_account_id
     #   The account ID of the source S3 bucket owner.
     #
+    # @option params [Types::ImportConfiguration] :import_configuration
+    #   The import configuration for the import job.
+    #
     # @return [Types::StartDICOMImportJobResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::StartDICOMImportJobResponse#datastore_id #datastore_id} => String
@@ -1219,6 +1261,17 @@ module Aws::MedicalImaging
     #     input_s3_uri: "S3Uri", # required
     #     output_s3_uri: "S3Uri", # required
     #     input_owner_account_id: "AwsAccountId",
+    #     import_configuration: {
+    #       dicom_json_metadata_import_configuration: {
+    #         dicom_metadata_mappings: [ # required
+    #           {
+    #             study_instance_uid: "DICOMStudyInstanceUID", # required
+    #             series_instance_uid: "DICOMSeriesInstanceUID",
+    #             metadata_file_path: "MetadataFilePath", # required
+    #           },
+    #         ],
+    #       },
+    #     },
     #   })
     #
     # @example Response structure
@@ -1315,6 +1368,10 @@ module Aws::MedicalImaging
     #   * Adding, removing, or updating private tags for an individual SOP
     #     Instance
     #
+    # @option params [Boolean] :include_study_image_sets
+    #   Flag to apply the metadata updates to all image sets in the same Study
+    #   as the requested image set ID.
+    #
     # @option params [required, Types::MetadataUpdates] :update_image_set_metadata_updates
     #   Update image set metadata updates.
     #
@@ -1336,6 +1393,7 @@ module Aws::MedicalImaging
     #     image_set_id: "ImageSetId", # required
     #     latest_version_id: "ImageSetExternalVersionId", # required
     #     force: false,
+    #     include_study_image_sets: false,
     #     update_image_set_metadata_updates: { # required
     #       dicom_updates: {
     #         removable_attributes: "data",
@@ -1351,7 +1409,7 @@ module Aws::MedicalImaging
     #   resp.image_set_id #=> String
     #   resp.latest_version_id #=> String
     #   resp.image_set_state #=> String, one of "ACTIVE", "LOCKED", "DELETED"
-    #   resp.image_set_workflow_status #=> String, one of "CREATED", "COPIED", "COPYING", "COPYING_WITH_READ_ONLY_ACCESS", "COPY_FAILED", "UPDATING", "UPDATED", "UPDATE_FAILED", "DELETING", "DELETED"
+    #   resp.image_set_workflow_status #=> String, one of "CREATED", "COPIED", "COPYING", "COPYING_WITH_READ_ONLY_ACCESS", "COPY_FAILED", "UPDATING", "UPDATING_FOR_STUDY_CONSISTENCY", "UPDATED", "UPDATE_FAILED", "DELETING", "DELETED", "IMPORTING", "IMPORTED", "IMPORT_FAILED"
     #   resp.created_at #=> Time
     #   resp.updated_at #=> Time
     #   resp.message #=> String
@@ -1383,7 +1441,7 @@ module Aws::MedicalImaging
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-medicalimaging'
-      context[:gem_version] = '1.25.0'
+      context[:gem_version] = '1.50.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

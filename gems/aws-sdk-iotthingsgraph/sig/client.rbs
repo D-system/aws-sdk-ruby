@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -113,7 +114,7 @@ module Aws
                                       {
                                         key: ::String,
                                         value: ::String
-                                      },
+                                      }
                                     ],
                                     definition: {
                                       language: ("GRAPHQL"),
@@ -370,7 +371,7 @@ module Aws
                                {
                                  name: ("NAME" | "NAMESPACE" | "SEMANTIC_TYPE_PATH" | "REFERENCED_ENTITY_ID")?,
                                  value: Array[::String]?
-                               },
+                               }
                              ],
                              ?next_token: ::String,
                              ?max_results: ::Integer,
@@ -405,7 +406,7 @@ module Aws
                                      {
                                        name: ("DEVICE_MODEL_ID"),
                                        value: Array[::String]
-                                     },
+                                     }
                                    ],
                                    ?next_token: ::String,
                                    ?max_results: ::Integer
@@ -423,7 +424,7 @@ module Aws
                                        {
                                          name: ("SYSTEM_TEMPLATE_ID" | "STATUS" | "GREENGRASS_GROUP_NAME")?,
                                          value: Array[::String]?
-                                       },
+                                       }
                                      ],
                                      ?next_token: ::String,
                                      ?max_results: ::Integer
@@ -441,7 +442,7 @@ module Aws
                                        {
                                          name: ("FLOW_TEMPLATE_ID"),
                                          value: Array[::String]
-                                       },
+                                       }
                                      ],
                                      ?next_token: ::String,
                                      ?max_results: ::Integer
@@ -472,7 +473,7 @@ module Aws
                             {
                               key: ::String,
                               value: ::String
-                            },
+                            }
                           ]
                         ) -> _TagResourceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess

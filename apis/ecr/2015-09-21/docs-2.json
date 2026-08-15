@@ -16,9 +16,12 @@
     "DeleteRepository": "<p>Deletes a repository. If the repository isn't empty, you must either delete the contents of the repository or use the <code>force</code> option to delete the repository and have Amazon ECR delete all of its contents on your behalf.</p>",
     "DeleteRepositoryCreationTemplate": "<p>Deletes a repository creation template.</p>",
     "DeleteRepositoryPolicy": "<p>Deletes the repository policy associated with the specified repository.</p>",
+    "DeleteSigningConfiguration": "<p>Deletes the registry's signing configuration. Images pushed after deletion of the signing configuration will no longer be automatically signed.</p> <p>For more information, see <a href=\"https://docs.aws.amazon.com/AmazonECR/latest/userguide/managed-signing.html\">Managed signing</a> in the <i>Amazon Elastic Container Registry User Guide</i>.</p> <note> <p>Deleting the signing configuration does not affect existing image signatures.</p> </note>",
+    "DeregisterPullTimeUpdateExclusion": "<p>Removes a principal from the pull time update exclusion list for a registry. Once removed, Amazon ECR will resume updating the pull time if the specified principal pulls an image.</p>",
     "DescribeImageReplicationStatus": "<p>Returns the replication status for a specified image.</p>",
     "DescribeImageScanFindings": "<p>Returns the scan findings for the specified image.</p>",
-    "DescribeImages": "<p>Returns metadata about the images in a repository.</p> <note> <p>Beginning with Docker version 1.9, the Docker client compresses image layers before pushing them to a V2 Docker registry. The output of the <code>docker images</code> command shows the uncompressed image size, so it may return a larger image size than the image sizes returned by <a>DescribeImages</a>.</p> </note>",
+    "DescribeImageSigningStatus": "<p>Returns the signing status for a specified image. If the image matched signing rules that reference different signing profiles, a status is returned for each profile.</p> <p>For more information, see <a href=\"https://docs.aws.amazon.com/AmazonECR/latest/userguide/managed-signing.html\">Managed signing</a> in the <i>Amazon Elastic Container Registry User Guide</i>.</p>",
+    "DescribeImages": "<p>Returns metadata about the images in a repository.</p> <note> <p>Starting with Docker version 1.9, the Docker client compresses image layers before pushing them to a V2 Docker registry. The output of the <code>docker images</code> command shows the uncompressed image size. Therefore, Docker might return a larger image than the image shown in the Amazon Web Services Management Console.</p> </note> <important> <p>The new version of Amazon ECR <i>Basic Scanning</i> doesn't use the <a>ImageDetail$imageScanFindingsSummary</a> and <a>ImageDetail$imageScanStatus</a> attributes from the API response to return scan results. Use the <a>DescribeImageScanFindings</a> API instead. For more information about Amazon Web Services native basic scanning, see <a href=\"https://docs.aws.amazon.com/AmazonECR/latest/userguide/image-scanning.html\"> Scan images for software vulnerabilities in Amazon ECR</a>.</p> </important>",
     "DescribePullThroughCacheRules": "<p>Returns the pull through cache rules for a registry.</p>",
     "DescribeRegistry": "<p>Describes the settings for a registry. The replication configuration for a repository can be created or updated with the <a>PutReplicationConfiguration</a> API action.</p>",
     "DescribeRepositories": "<p>Describes image repositories in a registry.</p>",
@@ -31,8 +34,11 @@
     "GetRegistryPolicy": "<p>Retrieves the permissions policy for a registry.</p>",
     "GetRegistryScanningConfiguration": "<p>Retrieves the scanning configuration for a registry.</p>",
     "GetRepositoryPolicy": "<p>Retrieves the repository policy for the specified repository.</p>",
+    "GetSigningConfiguration": "<p>Retrieves the registry's signing configuration, which defines rules for automatically signing images using Amazon Web Services Signer.</p> <p>For more information, see <a href=\"https://docs.aws.amazon.com/AmazonECR/latest/userguide/managed-signing.html\">Managed signing</a> in the <i>Amazon Elastic Container Registry User Guide</i>.</p>",
     "InitiateLayerUpload": "<p>Notifies Amazon ECR that you intend to upload an image layer.</p> <p>When an image is pushed, the InitiateLayerUpload API is called once per image layer that has not already been uploaded. Whether or not an image layer has been uploaded is determined by the BatchCheckLayerAvailability API action.</p> <note> <p>This operation is used by the Amazon ECR proxy and is not generally used by customers for pulling and pushing images. In most cases, you should use the <code>docker</code> CLI to pull, tag, and push images.</p> </note>",
+    "ListImageReferrers": "<p>Lists the artifacts associated with a specified subject image.</p> <note> <p>The IAM principal invoking this operation must have the <code>ecr:BatchGetImage</code> permission.</p> </note>",
     "ListImages": "<p>Lists all the image IDs for the specified repository.</p> <p>You can filter images based on whether or not they are tagged by using the <code>tagStatus</code> filter and specifying either <code>TAGGED</code>, <code>UNTAGGED</code> or <code>ANY</code>. For example, you can filter your results to return only <code>UNTAGGED</code> images and then pipe that result to a <a>BatchDeleteImage</a> operation to delete them. Or, you can filter your results to return only <code>TAGGED</code> images to list all of the tags in your repository.</p>",
+    "ListPullTimeUpdateExclusions": "<p>Lists the IAM principals that are excluded from having their image pull times recorded.</p>",
     "ListTagsForResource": "<p>List the tags for an Amazon ECR resource.</p>",
     "PutAccountSetting": "<p>Allows you to change the basic scan type version or registry policy scope.</p>",
     "PutImage": "<p>Creates or updates the image manifest and tags associated with an image.</p> <p>When an image is pushed and all new image layers have been uploaded, the PutImage API is called once to create or update the image manifest and the tags associated with the image.</p> <note> <p>This operation is used by the Amazon ECR proxy and is not generally used by customers for pulling and pushing images. In most cases, you should use the <code>docker</code> CLI to pull, tag, and push images.</p> </note>",
@@ -42,11 +48,14 @@
     "PutRegistryPolicy": "<p>Creates or updates the permissions policy for your registry.</p> <p>A registry policy is used to specify permissions for another Amazon Web Services account and is used when configuring cross-account replication. For more information, see <a href=\"https://docs.aws.amazon.com/AmazonECR/latest/userguide/registry-permissions.html\">Registry permissions</a> in the <i>Amazon Elastic Container Registry User Guide</i>.</p>",
     "PutRegistryScanningConfiguration": "<p>Creates or updates the scanning configuration for your private registry.</p>",
     "PutReplicationConfiguration": "<p>Creates or updates the replication configuration for a registry. The existing replication configuration for a repository can be retrieved with the <a>DescribeRegistry</a> API action. The first time the PutReplicationConfiguration API is called, a service-linked IAM role is created in your account for the replication process. For more information, see <a href=\"https://docs.aws.amazon.com/AmazonECR/latest/userguide/using-service-linked-roles.html\">Using service-linked roles for Amazon ECR</a> in the <i>Amazon Elastic Container Registry User Guide</i>. For more information on the custom role for replication, see <a href=\"https://docs.aws.amazon.com/AmazonECR/latest/userguide/replication-creation-templates.html#roles-creatingrole-user-console\">Creating an IAM role for replication</a>.</p> <note> <p>When configuring cross-account replication, the destination account must grant the source account permission to replicate. This permission is controlled using a registry permissions policy. For more information, see <a>PutRegistryPolicy</a>.</p> </note>",
+    "PutSigningConfiguration": "<p>Creates or updates the registry's signing configuration, which defines rules for automatically signing images with Amazon Web Services Signer.</p> <p>For more information, see <a href=\"https://docs.aws.amazon.com/AmazonECR/latest/userguide/managed-signing.html\">Managed signing</a> in the <i>Amazon Elastic Container Registry User Guide</i>.</p> <note> <p>To successfully generate a signature, the IAM principal pushing images must have permission to sign payloads with the Amazon Web Services Signer signing profile referenced in the signing configuration.</p> </note>",
+    "RegisterPullTimeUpdateExclusion": "<p>Adds an IAM principal to the pull time update exclusion list for a registry. Amazon ECR will not record the pull time if an excluded principal pulls an image.</p>",
     "SetRepositoryPolicy": "<p>Applies a repository policy to the specified repository to control access permissions. For more information, see <a href=\"https://docs.aws.amazon.com/AmazonECR/latest/userguide/repository-policies.html\">Amazon ECR Repository policies</a> in the <i>Amazon Elastic Container Registry User Guide</i>.</p>",
     "StartImageScan": "<p>Starts a basic image vulnerability scan.</p> <p> A basic image scan can only be started once per 24 hours on an individual image. This limit includes if an image was scanned on initial push. You can start up to 100,000 basic scans per 24 hours. This limit includes both scans on initial push and scans initiated by the StartImageScan API. For more information, see <a href=\"https://docs.aws.amazon.com/AmazonECR/latest/userguide/image-scanning-basic.html\">Basic scanning</a> in the <i>Amazon Elastic Container Registry User Guide</i>.</p>",
     "StartLifecyclePolicyPreview": "<p>Starts a preview of a lifecycle policy for the specified repository. This allows you to see the results before associating the lifecycle policy with the repository.</p>",
     "TagResource": "<p>Adds specified tags to a resource with the specified ARN. Existing tags on a resource are not changed if they are not specified in the request parameters.</p>",
     "UntagResource": "<p>Deletes specified tags from a resource.</p>",
+    "UpdateImageStorageClass": "<p>Transitions an image between storage classes. You can transition images from Amazon ECR standard storage class to Amazon ECR archival storage class for long-term storage, or restore archived images back to Amazon ECR standard.</p>",
     "UpdatePullThroughCacheRule": "<p>Updates an existing pull through cache rule.</p>",
     "UpdateRepositoryCreationTemplate": "<p>Updates an existing repository creation template.</p>",
     "UploadLayerPart": "<p>Uploads an image layer part to Amazon ECR.</p> <p>When an image is pushed, each new image layer is uploaded in parts. The maximum size of each image layer part can be 20971520 bytes (or about 20MB). The UploadLayerPart API is called once per each new image layer part.</p> <note> <p>This operation is used by the Amazon ECR proxy and is not generally used by customers for pulling and pushing images. In most cases, you should use the <code>docker</code> CLI to pull, tag, and push images.</p> </note>",
@@ -56,18 +65,24 @@
     "AccountSettingName": {
       "base": null,
       "refs": {
-        "GetAccountSettingRequest$name": "<p>The name of the account setting, such as <code>BASIC_SCAN_TYPE_VERSION</code> or <code>REGISTRY_POLICY_SCOPE</code>. </p>",
+        "GetAccountSettingRequest$name": "<p>The name of the account setting, such as <code>BASIC_SCAN_TYPE_VERSION</code>, <code>REGISTRY_POLICY_SCOPE</code>, or <code>BLOB_MOUNTING</code>.</p>",
         "GetAccountSettingResponse$name": "<p>Retrieves the name of the account setting.</p>",
-        "GetAccountSettingResponse$value": "<p>The setting value for the setting name. The following are valid values for the basic scan type being used: <code>AWS_NATIVE</code> or <code>CLAIR</code>. The following are valid values for the registry policy scope being used: <code>V1</code> or <code>V2</code>.</p>",
-        "PutAccountSettingRequest$name": "<p>The name of the account setting, such as <code>BASIC_SCAN_TYPE_VERSION</code> or <code>REGISTRY_POLICY_SCOPE</code>. </p>",
+        "GetAccountSettingResponse$value": "<p>The setting value for the setting name. Valid value for basic scan type: <code>AWS_NATIVE</code>. Valid values for registry policy scope: <code>V2</code>. Valid values for blob mounting: <code>ENABLED</code> or <code>DISABLED</code>.</p>",
+        "PutAccountSettingRequest$name": "<p>The name of the account setting, such as <code>BASIC_SCAN_TYPE_VERSION</code>, <code>REGISTRY_POLICY_SCOPE</code>, or <code>BLOB_MOUNTING</code>.</p>",
         "PutAccountSettingResponse$name": "<p>Retrieves the name of the account setting.</p>"
       }
     },
     "AccountSettingValue": {
       "base": null,
       "refs": {
-        "PutAccountSettingRequest$value": "<p>Setting value that is specified. The following are valid values for the basic scan type being used: <code>AWS_NATIVE</code> or <code>CLAIR</code>. The following are valid values for the registry policy scope being used: <code>V1</code> or <code>V2</code>.</p>",
+        "PutAccountSettingRequest$value": "<p>Setting value that is specified. Valid value for basic scan type: <code>AWS_NATIVE</code>. Valid values for registry policy scope: <code>V2</code>. Valid values for blob mounting: <code>ENABLED</code> or <code>DISABLED</code>.</p>",
         "PutAccountSettingResponse$value": "<p>Retrieves the value of the specified account setting.</p>"
+      }
+    },
+    "Annotations": {
+      "base": null,
+      "refs": {
+        "ImageReferrer$annotations": "<p>A map of annotations associated with the artifact.</p>"
       }
     },
     "Arch": {
@@ -85,6 +100,31 @@
         "RepositoryScanningConfiguration$repositoryArn": "<p>The ARN of the repository.</p>",
         "TagResourceRequest$resourceArn": "<p>The Amazon Resource Name (ARN) of the the resource to which to add tags. Currently, the only supported resource is an Amazon ECR repository.</p>",
         "UntagResourceRequest$resourceArn": "<p>The Amazon Resource Name (ARN) of the resource from which to remove tags. Currently, the only supported resource is an Amazon ECR repository.</p>"
+      }
+    },
+    "ArtifactStatus": {
+      "base": null,
+      "refs": {
+        "ImageReferrer$artifactStatus": "<p>The status of the artifact. Valid values are <code>ACTIVE</code>, <code>ARCHIVED</code>, or <code>ACTIVATING</code>.</p>"
+      }
+    },
+    "ArtifactStatusFilter": {
+      "base": null,
+      "refs": {
+        "ListImageReferrersFilter$artifactStatus": "<p>The artifact status with which to filter your <a>ListImageReferrers</a> results. Valid values are <code>ACTIVE</code>, <code>ARCHIVED</code>, <code>ACTIVATING</code>, or <code>ANY</code>. If not specified, only artifacts with <code>ACTIVE</code> status are returned.</p>"
+      }
+    },
+    "ArtifactType": {
+      "base": null,
+      "refs": {
+        "ArtifactTypeList$member": null,
+        "ImageReferrer$artifactType": "<p>A string identifying the type of artifact.</p>"
+      }
+    },
+    "ArtifactTypeList": {
+      "base": null,
+      "refs": {
+        "ListImageReferrersFilter$artifactTypes": "<p>The artifact types with which to filter your <a>ListImageReferrers</a> results.</p>"
       }
     },
     "Attribute": {
@@ -126,7 +166,7 @@
     "AuthorizationDataList": {
       "base": null,
       "refs": {
-        "GetAuthorizationTokenResponse$authorizationData": "<p>A list of authorization token data objects that correspond to the <code>registryIds</code> values in the request.</p>"
+        "GetAuthorizationTokenResponse$authorizationData": "<p>A list of authorization token data objects that correspond to the <code>registryIds</code> values in the request.</p> <note> <p>The size of the authorization token returned by Amazon ECR is not fixed. We recommend that you don't make assumptions about the maximum size.</p> </note>"
       }
     },
     "AwsEcrContainerImageDetails": {
@@ -149,43 +189,35 @@
     },
     "BatchCheckLayerAvailabilityRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "BatchCheckLayerAvailabilityResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "BatchDeleteImageRequest": {
       "base": "<p>Deletes specified images within a specified repository. Images are specified with either the <code>imageTag</code> or <code>imageDigest</code>.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "BatchDeleteImageResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "BatchGetImageRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "BatchGetImageResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "BatchGetRepositoryScanningConfigurationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "BatchGetRepositoryScanningConfigurationResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "BatchedOperationLayerDigest": {
       "base": null,
@@ -200,45 +232,41 @@
         "BatchCheckLayerAvailabilityRequest$layerDigests": "<p>The digests of the image layers to check.</p>"
       }
     },
+    "BlockedByOrganizationPolicyException": {
+      "base": "<p>The operation did not succeed because the account is managed by a organization policy.</p>",
+      "refs": {}
+    },
     "CompleteLayerUploadRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CompleteLayerUploadResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreatePullThroughCacheRuleRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreatePullThroughCacheRuleResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateRepositoryCreationTemplateRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateRepositoryCreationTemplateResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateRepositoryRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateRepositoryResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreationTimestamp": {
       "base": null,
@@ -246,6 +274,7 @@
         "CreatePullThroughCacheRuleResponse$createdAt": "<p>The date and time, in JavaScript date format, when the pull through cache rule was created.</p>",
         "DeletePullThroughCacheRuleResponse$createdAt": "<p>The timestamp associated with the pull through cache rule.</p>",
         "PullThroughCacheRule$createdAt": "<p>The date and time the pull through cache was created.</p>",
+        "RegisterPullTimeUpdateExclusionResponse$createdAt": "<p>The date and time, expressed in standard JavaScript date format, when the exclusion was created.</p>",
         "Repository$createdAt": "<p>The date and time, in JavaScript date format, when the repository was created.</p>"
       }
     },
@@ -310,6 +339,7 @@
       "base": null,
       "refs": {
         "AwsEcrContainerImageDetails$pushedAt": "<p>The date and time the Amazon ECR container image was pushed.</p>",
+        "AwsEcrContainerImageDetails$lastInUseAt": "<p>The most recent date and time a cluster was running the image.</p>",
         "EnhancedImageScanFinding$firstObservedAt": "<p>The date and time that the finding was first observed.</p>",
         "EnhancedImageScanFinding$lastObservedAt": "<p>The date and time that the finding was last observed.</p>",
         "EnhancedImageScanFinding$updatedAt": "<p>The date and time the finding was last updated at.</p>",
@@ -321,83 +351,91 @@
     },
     "DeleteLifecyclePolicyRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteLifecyclePolicyResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeletePullThroughCacheRuleRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeletePullThroughCacheRuleResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteRegistryPolicyRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteRegistryPolicyResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteRepositoryCreationTemplateRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteRepositoryCreationTemplateResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteRepositoryPolicyRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteRepositoryPolicyResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteRepositoryRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteRepositoryResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
+    },
+    "DeleteSigningConfigurationRequest": {
+      "base": null,
+      "refs": {}
+    },
+    "DeleteSigningConfigurationResponse": {
+      "base": null,
+      "refs": {}
+    },
+    "DeregisterPullTimeUpdateExclusionRequest": {
+      "base": null,
+      "refs": {}
+    },
+    "DeregisterPullTimeUpdateExclusionResponse": {
+      "base": null,
+      "refs": {}
     },
     "DescribeImageReplicationStatusRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeImageReplicationStatusResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeImageScanFindingsRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeImageScanFindingsResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
+    },
+    "DescribeImageSigningStatusRequest": {
+      "base": null,
+      "refs": {}
+    },
+    "DescribeImageSigningStatusResponse": {
+      "base": null,
+      "refs": {}
     },
     "DescribeImagesFilter": {
       "base": "<p>An object representing a filter on a <a>DescribeImages</a> operation.</p>",
@@ -407,58 +445,47 @@
     },
     "DescribeImagesRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeImagesResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribePullThroughCacheRulesRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribePullThroughCacheRulesResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeRegistryRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeRegistryResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeRepositoriesRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeRepositoriesResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeRepositoryCreationTemplatesRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeRepositoryCreationTemplatesResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "EmptyUploadException": {
       "base": "<p>The specified layer upload does not contain any layer parts.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "EncryptionConfiguration": {
       "base": "<p>The encryption configuration for the repository. This determines how the contents of your repository are encrypted at rest.</p> <p>By default, when no encryption configuration is set or the <code>AES256</code> encryption type is used, Amazon ECR uses server-side encryption with Amazon S3-managed encryption keys which encrypts your data at rest using an AES256 encryption algorithm. This does not require any action on your part.</p> <p>For more control over the encryption of the contents of your repository, you can use server-side encryption with Key Management Service key stored in Key Management Service (KMS) to encrypt your images. For more information, see <a href=\"https://docs.aws.amazon.com/AmazonECR/latest/userguide/encryption-at-rest.html\">Amazon ECR encryption at rest</a> in the <i>Amazon Elastic Container Registry User Guide</i>.</p>",
@@ -510,10 +537,15 @@
     "ExceptionMessage": {
       "base": null,
       "refs": {
+        "BlockedByOrganizationPolicyException$message": null,
         "EmptyUploadException$message": "<p>The error message associated with the exception.</p>",
+        "ExclusionAlreadyExistsException$message": null,
+        "ExclusionNotFoundException$message": null,
         "ImageAlreadyExistsException$message": "<p>The error message associated with the exception.</p>",
+        "ImageArchivedException$message": null,
         "ImageDigestDoesNotMatchException$message": null,
         "ImageNotFoundException$message": null,
+        "ImageStorageClassUpdateNotSupportedException$message": null,
         "ImageTagAlreadyExistsException$message": null,
         "InvalidLayerException$message": "<p>The error message associated with the exception.</p>",
         "InvalidLayerPartException$message": "<p>The error message associated with the exception.</p>",
@@ -539,6 +571,7 @@
         "ScanNotFoundException$message": null,
         "SecretNotFoundException$message": null,
         "ServerException$message": "<p>The error message associated with the exception.</p>",
+        "SigningConfigurationNotFoundException$message": "<p>The error message associated with the exception.</p>",
         "TemplateAlreadyExistsException$message": null,
         "TemplateNotFoundException$message": null,
         "TooManyTagsException$message": null,
@@ -546,11 +579,20 @@
         "UnableToDecryptSecretValueException$message": null,
         "UnableToGetUpstreamImageException$message": null,
         "UnableToGetUpstreamLayerException$message": null,
+        "UnableToListUpstreamImageReferrersException$message": null,
         "UnsupportedImageTypeException$message": null,
         "UnsupportedUpstreamRegistryException$message": null,
         "UploadNotFoundException$message": "<p>The error message associated with the exception.</p>",
         "ValidationException$message": null
       }
+    },
+    "ExclusionAlreadyExistsException": {
+      "base": "<p>The specified pull time update exclusion already exists for the registry.</p>",
+      "refs": {}
+    },
+    "ExclusionNotFoundException": {
+      "base": "<p>The specified pull time update exclusion was not found.</p>",
+      "refs": {}
     },
     "ExpirationTimestamp": {
       "base": null,
@@ -562,6 +604,12 @@
       "base": null,
       "refs": {
         "EnhancedImageScanFinding$exploitAvailable": "<p>If a finding discovered in your environment has an exploit available.</p>"
+      }
+    },
+    "FiftyMaxResults": {
+      "base": null,
+      "refs": {
+        "ListImageReferrersRequest$maxResults": "<p>The maximum number of image referrer results returned by <code>ListImageReferrers</code> in paginated output. When this parameter is used, <code>ListImageReferrers</code> only returns <code>maxResults</code> results in a single page along with a <code>nextToken</code> response element. The remaining results of the initial request can be seen by sending another <code>ListImageReferrers</code> request with the returned <code>nextToken</code> value. This value can be between 1 and 50. If this parameter is not used, then <code>ListImageReferrers</code> returns up to 20 results and a <code>nextToken</code> value, if applicable.</p>"
       }
     },
     "FilePath": {
@@ -624,13 +672,11 @@
     },
     "GetAccountSettingRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetAccountSettingResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetAuthorizationTokenRegistryIdList": {
       "base": null,
@@ -640,73 +686,67 @@
     },
     "GetAuthorizationTokenRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetAuthorizationTokenResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetDownloadUrlForLayerRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetDownloadUrlForLayerResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetLifecyclePolicyPreviewRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetLifecyclePolicyPreviewResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetLifecyclePolicyRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetLifecyclePolicyResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetRegistryPolicyRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetRegistryPolicyResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetRegistryScanningConfigurationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetRegistryScanningConfigurationResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetRepositoryPolicyRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "GetRepositoryPolicyResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
+    },
+    "GetSigningConfigurationRequest": {
+      "base": null,
+      "refs": {}
+    },
+    "GetSigningConfigurationResponse": {
+      "base": null,
+      "refs": {}
     },
     "Image": {
       "base": "<p>An object representing an Amazon ECR image.</p>",
@@ -723,13 +763,17 @@
     },
     "ImageAlreadyExistsException": {
       "base": "<p>The specified image has already been pushed, and there were no changes to the manifest or image tag after the last push.</p>",
-      "refs": {
-      }
+      "refs": {}
+    },
+    "ImageArchivedException": {
+      "base": "<p>The specified image is archived and cannot be scanned.</p>",
+      "refs": {}
     },
     "ImageCount": {
       "base": null,
       "refs": {
-        "LifecyclePolicyPreviewSummary$expiringImageTotalCount": "<p>The number of expiring images.</p>"
+        "LifecyclePolicyPreviewSummary$expiringImageTotalCount": "<p>The number of expiring images.</p>",
+        "TransitioningImageTotalCount$imageTotalCount": "<p>The total number of images transitioning to the storage class.</p>"
       }
     },
     "ImageDetail": {
@@ -749,15 +793,17 @@
       "refs": {
         "AwsEcrContainerImageDetails$imageHash": "<p>The image hash of the Amazon ECR container image.</p>",
         "ImageDetail$imageDigest": "<p>The <code>sha256</code> digest of the image manifest.</p>",
+        "ImageDetail$subjectManifestDigest": "<p>The digest of the subject manifest for images that are referrers.</p>",
         "ImageIdentifier$imageDigest": "<p>The <code>sha256</code> digest of the image manifest.</p>",
+        "ImageReferrer$digest": "<p>The digest of the artifact manifest.</p>",
         "LifecyclePolicyPreviewResult$imageDigest": "<p>The <code>sha256</code> digest of the image manifest.</p>",
-        "PutImageRequest$imageDigest": "<p>The image digest of the image manifest corresponding to the image.</p>"
+        "PutImageRequest$imageDigest": "<p>The image digest of the image manifest corresponding to the image.</p>",
+        "SubjectIdentifier$imageDigest": "<p>The digest of the image.</p>"
       }
     },
     "ImageDigestDoesNotMatchException": {
       "base": "<p>The specified image digest does not match the digest that Amazon ECR calculated for the image.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ImageFailure": {
       "base": "<p>An object representing an Amazon ECR image failure.</p>",
@@ -791,11 +837,15 @@
         "DescribeImageReplicationStatusResponse$imageId": null,
         "DescribeImageScanFindingsRequest$imageId": null,
         "DescribeImageScanFindingsResponse$imageId": null,
+        "DescribeImageSigningStatusRequest$imageId": "<p>An object containing identifying information for an image.</p>",
+        "DescribeImageSigningStatusResponse$imageId": "<p>An object with identifying information for the image.</p>",
         "Image$imageId": "<p>An object containing the image tag and image digest associated with an image.</p>",
         "ImageFailure$imageId": "<p>The image ID associated with the failure.</p>",
         "ImageIdentifierList$member": null,
         "StartImageScanRequest$imageId": null,
-        "StartImageScanResponse$imageId": null
+        "StartImageScanResponse$imageId": null,
+        "UpdateImageStorageClassRequest$imageId": null,
+        "UpdateImageStorageClassResponse$imageId": null
       }
     },
     "ImageIdentifierList": {
@@ -824,7 +874,18 @@
     },
     "ImageNotFoundException": {
       "base": "<p>The image requested does not exist in the specified repository.</p>",
+      "refs": {}
+    },
+    "ImageReferrer": {
+      "base": "<p>An object representing an artifact associated with a subject image.</p>",
       "refs": {
+        "ImageReferrerList$member": null
+      }
+    },
+    "ImageReferrerList": {
+      "base": null,
+      "refs": {
+        "ListImageReferrersResponse$referrers": "<p>The list of artifacts associated with the subject image.</p>"
       }
     },
     "ImageReplicationStatus": {
@@ -874,17 +935,48 @@
     "ImageScanningConfiguration": {
       "base": "<p>The image scanning configuration for a repository.</p>",
       "refs": {
-        "CreateRepositoryRequest$imageScanningConfiguration": "<p>The image scanning configuration for the repository. This determines whether images are scanned for known vulnerabilities after being pushed to the repository.</p>",
+        "CreateRepositoryRequest$imageScanningConfiguration": "<important> <p>The <code>imageScanningConfiguration</code> parameter is being deprecated, in favor of specifying the image scanning configuration at the registry level. For more information, see <code>PutRegistryScanningConfiguration</code>.</p> </important> <p>The image scanning configuration for the repository. This determines whether images are scanned for known vulnerabilities after being pushed to the repository.</p>",
         "PutImageScanningConfigurationRequest$imageScanningConfiguration": "<p>The image scanning configuration for the repository. This setting determines whether images are scanned for known vulnerabilities after being pushed to the repository.</p>",
         "PutImageScanningConfigurationResponse$imageScanningConfiguration": "<p>The image scanning configuration setting for the repository.</p>",
         "Repository$imageScanningConfiguration": null
       }
     },
+    "ImageSigningStatus": {
+      "base": "<p>The signing status for an image. Each status corresponds to a signing profile.</p>",
+      "refs": {
+        "ImageSigningStatusList$member": null
+      }
+    },
+    "ImageSigningStatusList": {
+      "base": null,
+      "refs": {
+        "DescribeImageSigningStatusResponse$signingStatuses": "<p>A list of signing statuses for the specified image. Each status corresponds to a signing profile.</p>"
+      }
+    },
     "ImageSizeInBytes": {
       "base": null,
       "refs": {
-        "ImageDetail$imageSizeInBytes": "<p>The size, in bytes, of the image in the repository.</p> <p>If the image is a manifest list, this will be the max size of all manifests in the list.</p> <note> <p>Starting with Docker version 1.9, the Docker client compresses image layers before pushing them to a V2 Docker registry. The output of the <code>docker images</code> command shows the uncompressed image size. Therefore, Docker might return a larger image than the image sizes returned by <a>DescribeImages</a>.</p> </note>"
+        "ImageDetail$imageSizeInBytes": "<p>The size, in bytes, of the image in the repository.</p> <p>If the image is a manifest list, this will be the max size of all manifests in the list.</p> <note> <p>Starting with Docker version 1.9, the Docker client compresses image layers before pushing them to a V2 Docker registry. The output of the <code>docker images</code> command shows the uncompressed image size. Therefore, Docker might return a larger image than the image shown in the Amazon Web Services Management Console.</p> </note>",
+        "ImageReferrer$size": "<p>The size, in bytes, of the artifact.</p>"
       }
+    },
+    "ImageStatus": {
+      "base": null,
+      "refs": {
+        "ImageDetail$imageStatus": "<p>The current status of the image.</p>",
+        "UpdateImageStorageClassResponse$imageStatus": "<p>The current status of the image after the call to UpdateImageStorageClass is complete. Valid values are <code>ACTIVE</code>, <code>ARCHIVED</code>, and <code>ACTIVATING</code>.</p>"
+      }
+    },
+    "ImageStatusFilter": {
+      "base": null,
+      "refs": {
+        "DescribeImagesFilter$imageStatus": "<p>The image status with which to filter your <a>DescribeImages</a> results. Valid values are <code>ACTIVE</code>, <code>ARCHIVED</code>, and <code>ACTIVATING</code>. If not specified, only images with <code>ACTIVE</code> status are returned.</p>",
+        "ListImagesFilter$imageStatus": "<p>The image status with which to filter your <a>ListImages</a> results. Valid values are <code>ACTIVE</code>, <code>ARCHIVED</code>, and <code>ACTIVATING</code>. If not specified, only images with <code>ACTIVE</code> status are returned.</p>"
+      }
+    },
+    "ImageStorageClassUpdateNotSupportedException": {
+      "base": "<p>The requested image storage class update is not supported.</p>",
+      "refs": {}
     },
     "ImageTag": {
       "base": null,
@@ -892,13 +984,12 @@
         "ImageIdentifier$imageTag": "<p>The tag used for the image.</p>",
         "ImageTagList$member": null,
         "ImageTagsList$member": null,
-        "PutImageRequest$imageTag": "<p>The tag to associate with the image. This parameter is required for images that use the Docker Image Manifest V2 Schema 2 or Open Container Initiative (OCI) formats.</p>"
+        "PutImageRequest$imageTag": "<p>The tag to associate with the image. This parameter is optional.</p>"
       }
     },
     "ImageTagAlreadyExistsException": {
       "base": "<p>The specified image is tagged with a tag that already exists. The repository is configured for tag immutability.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ImageTagList": {
       "base": null,
@@ -915,8 +1006,38 @@
         "PutImageTagMutabilityRequest$imageTagMutability": "<p>The tag mutability setting for the repository. If <code>MUTABLE</code> is specified, image tags can be overwritten. If <code>IMMUTABLE</code> is specified, all image tags within the repository will be immutable which will prevent them from being overwritten.</p>",
         "PutImageTagMutabilityResponse$imageTagMutability": "<p>The image tag mutability setting for the repository.</p>",
         "Repository$imageTagMutability": "<p>The tag mutability setting for the repository.</p>",
-        "RepositoryCreationTemplate$imageTagMutability": "<p>The tag mutability setting for the repository. If this parameter is omitted, the default setting of MUTABLE will be used which will allow image tags to be overwritten. If IMMUTABLE is specified, all image tags within the repository will be immutable which will prevent them from being overwritten.</p>",
+        "RepositoryCreationTemplate$imageTagMutability": "<p>The tag mutability setting for the repository. If this parameter is omitted, the default setting of <code>MUTABLE</code> will be used which will allow image tags to be overwritten. If <code>IMMUTABLE</code> is specified, all image tags within the repository will be immutable which will prevent them from being overwritten.</p>",
         "UpdateRepositoryCreationTemplateRequest$imageTagMutability": "<p>Updates the tag mutability setting for the repository. If this parameter is omitted, the default setting of <code>MUTABLE</code> will be used which will allow image tags to be overwritten. If <code>IMMUTABLE</code> is specified, all image tags within the repository will be immutable which will prevent them from being overwritten.</p>"
+      }
+    },
+    "ImageTagMutabilityExclusionFilter": {
+      "base": "<p>A filter that specifies which image tags should be excluded from the repository's image tag mutability setting.</p>",
+      "refs": {
+        "ImageTagMutabilityExclusionFilters$member": null
+      }
+    },
+    "ImageTagMutabilityExclusionFilterType": {
+      "base": null,
+      "refs": {
+        "ImageTagMutabilityExclusionFilter$filterType": "<p>The type of filter to apply for excluding image tags from mutability settings.</p>"
+      }
+    },
+    "ImageTagMutabilityExclusionFilterValue": {
+      "base": null,
+      "refs": {
+        "ImageTagMutabilityExclusionFilter$filter": "<p>The filter value used to match image tags for exclusion from mutability settings.</p>"
+      }
+    },
+    "ImageTagMutabilityExclusionFilters": {
+      "base": null,
+      "refs": {
+        "CreateRepositoryCreationTemplateRequest$imageTagMutabilityExclusionFilters": "<p>A list of filters that specify which image tags should be excluded from the repository creation template's image tag mutability setting.</p>",
+        "CreateRepositoryRequest$imageTagMutabilityExclusionFilters": "<p>A list of filters that specify which image tags should be excluded from the repository's image tag mutability setting.</p>",
+        "PutImageTagMutabilityRequest$imageTagMutabilityExclusionFilters": "<p>A list of filters that specify which image tags should be excluded from the image tag mutability setting being applied.</p>",
+        "PutImageTagMutabilityResponse$imageTagMutabilityExclusionFilters": "<p>The list of filters that specify which image tags are excluded from the repository's image tag mutability setting.</p>",
+        "Repository$imageTagMutabilityExclusionFilters": "<p>A list of filters that specify which image tags are excluded from the repository's image tag mutability setting.</p>",
+        "RepositoryCreationTemplate$imageTagMutabilityExclusionFilters": "<p>A list of filters that specify which image tags are excluded from the repository creation template's image tag mutability setting.</p>",
+        "UpdateRepositoryCreationTemplateRequest$imageTagMutabilityExclusionFilters": "<p>A list of filters that specify which image tags should be excluded from the repository creation template's image tag mutability setting.</p>"
       }
     },
     "ImageTagsList": {
@@ -925,35 +1046,35 @@
         "AwsEcrContainerImageDetails$imageTags": "<p>The image tags attached to the Amazon ECR container image.</p>"
       }
     },
-    "InitiateLayerUploadRequest": {
+    "InUseCount": {
       "base": null,
       "refs": {
+        "AwsEcrContainerImageDetails$inUseCount": "<p>The number of Amazon ECS or Amazon EKS clusters currently running the image.</p>"
       }
+    },
+    "InitiateLayerUploadRequest": {
+      "base": null,
+      "refs": {}
     },
     "InitiateLayerUploadResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidLayerException": {
       "base": "<p>The layer digest calculation performed by Amazon ECR upon receipt of the image layer does not match the digest specified.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidLayerPartException": {
       "base": "<p>The layer part size is not valid, or the first byte specified is not consecutive to the last byte of a previous layer part upload.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidParameterException": {
       "base": "<p>The specified parameter is invalid. Review the available parameters for the API request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidTagParameterException": {
       "base": "<p>An invalid parameter has been specified. Tag keys can have a maximum character length of 128 characters, and tag values can have a maximum length of 256 characters.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "IsPTCRuleValid": {
       "base": null,
@@ -969,8 +1090,7 @@
     },
     "KmsException": {
       "base": "<p>The operation failed due to a KMS exception.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "KmsKey": {
       "base": null,
@@ -984,6 +1104,18 @@
         "EncryptionConfigurationForRepositoryCreationTemplate$kmsKey": "<p>If you use the <code>KMS</code> encryption type, specify the KMS key to use for encryption. The full ARN of the KMS key must be specified. The key must exist in the same Region as the repository. If no key is specified, the default Amazon Web Services managed KMS key for Amazon ECR will be used.</p>"
       }
     },
+    "LastActivatedAtTimestamp": {
+      "base": null,
+      "refs": {
+        "ImageDetail$lastActivatedAt": "<p>The date and time, expressed in standard JavaScript date format, when the image was last restored from Amazon ECR archive to Amazon ECR standard.</p>"
+      }
+    },
+    "LastArchivedAtTimestamp": {
+      "base": null,
+      "refs": {
+        "ImageDetail$lastArchivedAt": "<p>The date and time, expressed in standard JavaScript date format, when the image was last transitioned to Amazon ECR archive.</p>"
+      }
+    },
     "Layer": {
       "base": "<p>An object representing an Amazon ECR image layer.</p>",
       "refs": {
@@ -992,8 +1124,7 @@
     },
     "LayerAlreadyExistsException": {
       "base": "<p>The image layer already exists in the associated repository.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "LayerAvailability": {
       "base": null,
@@ -1043,8 +1174,7 @@
     },
     "LayerInaccessibleException": {
       "base": "<p>The specified layer is not available because it is not associated with an image. Unassociated image layers may be cleaned up at any time.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "LayerList": {
       "base": null,
@@ -1060,8 +1190,7 @@
     },
     "LayerPartTooSmallException": {
       "base": "<p>Layer parts must be at least 5 MiB in size.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "LayerSizeInBytes": {
       "base": null,
@@ -1071,13 +1200,11 @@
     },
     "LayersNotFoundException": {
       "base": "<p>The specified layers could not be found, or the specified layer is not valid for this repository.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "LifecyclePolicyNotFoundException": {
       "base": "<p>The lifecycle policy could not be found, and no policy is set to the repository.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "LifecyclePolicyPreviewFilter": {
       "base": "<p>The filter for the lifecycle policy preview.</p>",
@@ -1087,13 +1214,11 @@
     },
     "LifecyclePolicyPreviewInProgressException": {
       "base": "<p>The previous lifecycle policy preview request has not completed. Wait and try again.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "LifecyclePolicyPreviewNotFoundException": {
       "base": "<p>There is no dry run for this repository.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "LifecyclePolicyPreviewResult": {
       "base": "<p>The result of the lifecycle policy preview.</p>",
@@ -1132,6 +1257,19 @@
         "LifecyclePolicyPreviewResult$appliedRulePriority": "<p>The priority of the applied rule.</p>"
       }
     },
+    "LifecyclePolicyStorageClass": {
+      "base": null,
+      "refs": {
+        "LifecyclePolicyPreviewResult$storageClass": "<p>The storage class of the image.</p>"
+      }
+    },
+    "LifecyclePolicyTargetStorageClass": {
+      "base": null,
+      "refs": {
+        "LifecyclePolicyRuleAction$targetStorageClass": "<p>The target storage class for the action. This is only present when the <code>type</code> is <code>TRANSITION.</code> </p>",
+        "TransitioningImageTotalCount$targetStorageClass": "<p>The target storage class.</p>"
+      }
+    },
     "LifecyclePolicyText": {
       "base": null,
       "refs": {
@@ -1155,13 +1293,26 @@
     "LifecyclePreviewMaxResults": {
       "base": null,
       "refs": {
-        "GetLifecyclePolicyPreviewRequest$maxResults": "<p>The maximum number of repository results returned by <code>GetLifecyclePolicyPreviewRequest</code> in&#x2028; paginated output. When this parameter is used, <code>GetLifecyclePolicyPreviewRequest</code> only returns&#x2028; <code>maxResults</code> results in a single page along with a <code>nextToken</code>&#x2028; response element. The remaining results of the initial request can be seen by sending&#x2028; another <code>GetLifecyclePolicyPreviewRequest</code> request with the returned <code>nextToken</code>&#x2028; value. This value can be between 1 and 1000. If this&#x2028; parameter is not used, then <code>GetLifecyclePolicyPreviewRequest</code> returns up to&#x2028; 100 results and a <code>nextToken</code> value, if&#x2028; applicable. This option cannot be used when you specify images with <code>imageIds</code>.</p>"
+        "GetLifecyclePolicyPreviewRequest$maxResults": "<p>The maximum number of repository results returned by <code>GetLifecyclePolicyPreviewRequest</code> in&#x2028; paginated output. When this parameter is used, <code>GetLifecyclePolicyPreviewRequest</code> only returns&#x2028; <code>maxResults</code> results in a single page along with a <code>nextToken</code>&#x2028; response element. The remaining results of the initial request can be seen by sending&#x2028; another <code>GetLifecyclePolicyPreviewRequest</code> request with the returned <code>nextToken</code>&#x2028; value. This value can be between 1 and 100. If this&#x2028; parameter is not used, then <code>GetLifecyclePolicyPreviewRequest</code> returns up to&#x2028;100 results and a <code>nextToken</code> value, if&#x2028; applicable. This option cannot be used when you specify images with <code>imageIds</code>.</p>"
       }
     },
     "LimitExceededException": {
       "base": "<p>The operation did not succeed because it would have exceeded a service limit for your account. For more information, see <a href=\"https://docs.aws.amazon.com/AmazonECR/latest/userguide/service-quotas.html\">Amazon ECR service quotas</a> in the Amazon Elastic Container Registry User Guide.</p>",
+      "refs": {}
+    },
+    "ListImageReferrersFilter": {
+      "base": "<p>An object representing a filter on a <a>ListImageReferrers</a> operation.</p>",
       "refs": {
+        "ListImageReferrersRequest$filter": "<p>The filter key and value with which to filter your <code>ListImageReferrers</code> results. If no filter is specified, only artifacts with <code>ACTIVE</code> status are returned.</p>"
       }
+    },
+    "ListImageReferrersRequest": {
+      "base": null,
+      "refs": {}
+    },
+    "ListImageReferrersResponse": {
+      "base": null,
+      "refs": {}
     },
     "ListImagesFilter": {
       "base": "<p>An object representing a filter on a <a>ListImages</a> operation.</p>",
@@ -1171,23 +1322,27 @@
     },
     "ListImagesRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListImagesResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
+    },
+    "ListPullTimeUpdateExclusionsRequest": {
+      "base": null,
+      "refs": {}
+    },
+    "ListPullTimeUpdateExclusionsResponse": {
+      "base": null,
+      "refs": {}
     },
     "ListTagsForResourceRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ListTagsForResourceResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "MaxResults": {
       "base": null,
@@ -1197,7 +1352,8 @@
         "DescribePullThroughCacheRulesRequest$maxResults": "<p>The maximum number of pull through cache rules returned by <code>DescribePullThroughCacheRulesRequest</code> in paginated output. When this parameter is used, <code>DescribePullThroughCacheRulesRequest</code> only returns <code>maxResults</code> results in a single page along with a <code>nextToken</code> response element. The remaining results of the initial request can be seen by sending another <code>DescribePullThroughCacheRulesRequest</code> request with the returned <code>nextToken</code> value. This value can be between 1 and 1000. If this parameter is not used, then <code>DescribePullThroughCacheRulesRequest</code> returns up to 100 results and a <code>nextToken</code> value, if applicable.</p>",
         "DescribeRepositoriesRequest$maxResults": "<p>The maximum number of repository results returned by <code>DescribeRepositories</code> in paginated output. When this parameter is used, <code>DescribeRepositories</code> only returns <code>maxResults</code> results in a single page along with a <code>nextToken</code> response element. The remaining results of the initial request can be seen by sending another <code>DescribeRepositories</code> request with the returned <code>nextToken</code> value. This value can be between 1 and 1000. If this parameter is not used, then <code>DescribeRepositories</code> returns up to 100 results and a <code>nextToken</code> value, if applicable. This option cannot be used when you specify repositories with <code>repositoryNames</code>.</p>",
         "DescribeRepositoryCreationTemplatesRequest$maxResults": "<p>The maximum number of repository results returned by <code>DescribeRepositoryCreationTemplatesRequest</code> in paginated output. When this parameter is used, <code>DescribeRepositoryCreationTemplatesRequest</code> only returns <code>maxResults</code> results in a single page along with a <code>nextToken</code> response element. The remaining results of the initial request can be seen by sending another <code>DescribeRepositoryCreationTemplatesRequest</code> request with the returned <code>nextToken</code> value. This value can be between 1 and 1000. If this parameter is not used, then <code>DescribeRepositoryCreationTemplatesRequest</code> returns up to 100 results and a <code>nextToken</code> value, if applicable.</p>",
-        "ListImagesRequest$maxResults": "<p>The maximum number of image results returned by <code>ListImages</code> in paginated output. When this parameter is used, <code>ListImages</code> only returns <code>maxResults</code> results in a single page along with a <code>nextToken</code> response element. The remaining results of the initial request can be seen by sending another <code>ListImages</code> request with the returned <code>nextToken</code> value. This value can be between 1 and 1000. If this parameter is not used, then <code>ListImages</code> returns up to 100 results and a <code>nextToken</code> value, if applicable.</p>"
+        "ListImagesRequest$maxResults": "<p>The maximum number of image results returned by <code>ListImages</code> in paginated output. When this parameter is used, <code>ListImages</code> only returns <code>maxResults</code> results in a single page along with a <code>nextToken</code> response element. The remaining results of the initial request can be seen by sending another <code>ListImages</code> request with the returned <code>nextToken</code> value. This value can be between 1 and 1000. If this parameter is not used, then <code>ListImages</code> returns up to 100 results and a <code>nextToken</code> value, if applicable.</p>",
+        "ListPullTimeUpdateExclusionsRequest$maxResults": "<p>The maximum number of pull time update exclusion results returned by <code>ListPullTimeUpdateExclusions</code> in paginated output. When this parameter is used, <code>ListPullTimeUpdateExclusions</code> only returns <code>maxResults</code> results in a single page along with a <code>nextToken</code> response element. The remaining results of the initial request can be seen by sending another <code>ListPullTimeUpdateExclusions</code> request with the returned <code>nextToken</code> value. This value can be between 1 and 1000. If this parameter is not used, then <code>ListPullTimeUpdateExclusions</code> returns up to 100 results and a <code>nextToken</code> value, if applicable.</p>"
       }
     },
     "MediaType": {
@@ -1206,6 +1362,7 @@
         "Image$imageManifestMediaType": "<p>The manifest media type of the image.</p>",
         "ImageDetail$imageManifestMediaType": "<p>The media type of the image manifest.</p>",
         "ImageDetail$artifactMediaType": "<p>The artifact media type of the image.</p>",
+        "ImageReferrer$mediaType": "<p>The media type of the artifact manifest.</p>",
         "Layer$mediaType": "<p>The media type of the layer, such as <code>application/vnd.docker.image.rootfs.diff.tar.gzip</code> or <code>application/vnd.oci.image.layer.v1.tar+gzip</code>.</p>",
         "MediaTypeList$member": null,
         "PutImageRequest$imageManifestMediaType": "<p>The media type of the image manifest. If you push an image manifest that does not contain the <code>mediaType</code> field, you must specify the <code>imageManifestMediaType</code> in the request.</p>"
@@ -1238,8 +1395,12 @@
         "DescribeRepositoryCreationTemplatesResponse$nextToken": "<p>The <code>nextToken</code> value to include in a future <code>DescribeRepositoryCreationTemplates</code> request. When the results of a <code>DescribeRepositoryCreationTemplates</code> request exceed <code>maxResults</code>, this value can be used to retrieve the next page of results. This value is <code>null</code> when there are no more results to return.</p>",
         "GetLifecyclePolicyPreviewRequest$nextToken": "<p>The <code>nextToken</code> value returned from a previous paginated&#x2028; <code>GetLifecyclePolicyPreviewRequest</code> request where <code>maxResults</code> was used and the&#x2028; results exceeded the value of that parameter. Pagination continues from the end of the&#x2028; previous results that returned the <code>nextToken</code> value. This value is&#x2028; <code>null</code> when there are no more results to return. This option cannot be used when you specify images with <code>imageIds</code>.</p>",
         "GetLifecyclePolicyPreviewResponse$nextToken": "<p>The <code>nextToken</code> value to include in a future <code>GetLifecyclePolicyPreview</code> request. When the results of a <code>GetLifecyclePolicyPreview</code> request exceed <code>maxResults</code>, this value can be used to retrieve the next page of results. This value is <code>null</code> when there are no more results to return.</p>",
+        "ListImageReferrersRequest$nextToken": "<p>The <code>nextToken</code> value returned from a previous paginated <code>ListImageReferrers</code> request where <code>maxResults</code> was used and the results exceeded the value of that parameter. Pagination continues from the end of the previous results that returned the <code>nextToken</code> value. This value is <code>null</code> when there are no more results to return.</p> <note> <p>This token should be treated as an opaque identifier that is only used to retrieve the next items in a list and not for other programmatic purposes.</p> </note>",
+        "ListImageReferrersResponse$nextToken": "<p>The <code>nextToken</code> value to include in a future <code>ListImageReferrers</code> request. When the results of a <code>ListImageReferrers</code> request exceed <code>maxResults</code>, this value can be used to retrieve the next page of results. This value is <code>null</code> when there are no more results to return.</p>",
         "ListImagesRequest$nextToken": "<p>The <code>nextToken</code> value returned from a previous paginated <code>ListImages</code> request where <code>maxResults</code> was used and the results exceeded the value of that parameter. Pagination continues from the end of the previous results that returned the <code>nextToken</code> value. This value is <code>null</code> when there are no more results to return.</p> <note> <p>This token should be treated as an opaque identifier that is only used to retrieve the next items in a list and not for other programmatic purposes.</p> </note>",
-        "ListImagesResponse$nextToken": "<p>The <code>nextToken</code> value to include in a future <code>ListImages</code> request. When the results of a <code>ListImages</code> request exceed <code>maxResults</code>, this value can be used to retrieve the next page of results. This value is <code>null</code> when there are no more results to return.</p>"
+        "ListImagesResponse$nextToken": "<p>The <code>nextToken</code> value to include in a future <code>ListImages</code> request. When the results of a <code>ListImages</code> request exceed <code>maxResults</code>, this value can be used to retrieve the next page of results. This value is <code>null</code> when there are no more results to return.</p>",
+        "ListPullTimeUpdateExclusionsRequest$nextToken": "<p>The <code>nextToken</code> value returned from a previous paginated <code>ListPullTimeUpdateExclusions</code> request where <code>maxResults</code> was used and the results exceeded the value of that parameter. Pagination continues from the end of the previous results that returned the <code>nextToken</code> value. This value is <code>null</code> when there are no more results to return.</p> <note> <p>This token should be treated as an opaque identifier that is only used to retrieve the next items in a list and not for other programmatic purposes.</p> </note>",
+        "ListPullTimeUpdateExclusionsResponse$nextToken": "<p>The <code>nextToken</code> value to include in a future <code>ListPullTimeUpdateExclusions</code> request. When the results of a <code>ListPullTimeUpdateExclusions</code> request exceed <code>maxResults</code>, this value can be used to retrieve the next page of results. This value is <code>null</code> when there are no more results to return.</p>"
       }
     },
     "PTCValidateFailure": {
@@ -1292,6 +1453,16 @@
         "DescribeRepositoryCreationTemplatesRequest$prefixes": "<p>The repository namespace prefixes associated with the repository creation templates to describe. If this value is not specified, all repository creation templates are returned.</p>"
       }
     },
+    "PrincipalArn": {
+      "base": null,
+      "refs": {
+        "DeregisterPullTimeUpdateExclusionRequest$principalArn": "<p>The ARN of the IAM principal to remove from the pull time update exclusion list.</p>",
+        "DeregisterPullTimeUpdateExclusionResponse$principalArn": "<p>The ARN of the IAM principal that was removed from the pull time update exclusion list.</p>",
+        "PullTimeUpdateExclusionList$member": null,
+        "RegisterPullTimeUpdateExclusionRequest$principalArn": "<p>The ARN of the IAM principal to exclude from having image pull times recorded.</p>",
+        "RegisterPullTimeUpdateExclusionResponse$principalArn": "<p>The ARN of the IAM principal that was added to the pull time update exclusion list.</p>"
+      }
+    },
     "ProxyEndpoint": {
       "base": null,
       "refs": {
@@ -1306,8 +1477,7 @@
     },
     "PullThroughCacheRuleAlreadyExistsException": {
       "base": "<p>A pull through cache rule with these settings already exists for the private registry.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "PullThroughCacheRuleList": {
       "base": null,
@@ -1317,8 +1487,7 @@
     },
     "PullThroughCacheRuleNotFoundException": {
       "base": "<p>The pull through cache rule was not found. Specify a valid pull through cache rule and try again.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "PullThroughCacheRuleRepositoryPrefix": {
       "base": null,
@@ -1347,6 +1516,12 @@
         "DescribePullThroughCacheRulesRequest$ecrRepositoryPrefixes": "<p>The Amazon ECR repository prefixes associated with the pull through cache rules to return. If no repository prefix value is specified, all pull through cache rules are returned.</p>"
       }
     },
+    "PullTimeUpdateExclusionList": {
+      "base": null,
+      "refs": {
+        "ListPullTimeUpdateExclusionsResponse$pullTimeUpdateExclusions": "<p>The list of IAM principal ARNs that are excluded from having their image pull times recorded.</p>"
+      }
+    },
     "PushTimestamp": {
       "base": null,
       "refs": {
@@ -1356,83 +1531,75 @@
     },
     "PutAccountSettingRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutAccountSettingResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutImageRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutImageResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutImageScanningConfigurationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutImageScanningConfigurationResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutImageTagMutabilityRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutImageTagMutabilityResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutLifecyclePolicyRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutLifecyclePolicyResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutRegistryPolicyRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutRegistryPolicyResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutRegistryScanningConfigurationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutRegistryScanningConfigurationResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutReplicationConfigurationRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "PutReplicationConfigurationResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
+    },
+    "PutSigningConfigurationRequest": {
+      "base": null,
+      "refs": {}
+    },
+    "PutSigningConfigurationResponse": {
+      "base": null,
+      "refs": {}
     },
     "RCTAppliedFor": {
       "base": null,
@@ -1443,9 +1610,9 @@
     "RCTAppliedForList": {
       "base": null,
       "refs": {
-        "CreateRepositoryCreationTemplateRequest$appliedFor": "<p>A list of enumerable strings representing the Amazon ECR repository creation scenarios that this template will apply towards. The two supported scenarios are <code>PULL_THROUGH_CACHE</code> and <code>REPLICATION</code> </p>",
-        "RepositoryCreationTemplate$appliedFor": "<p>A list of enumerable Strings representing the repository creation scenarios that this template will apply towards. The two supported scenarios are PULL_THROUGH_CACHE and REPLICATION</p>",
-        "UpdateRepositoryCreationTemplateRequest$appliedFor": "<p>Updates the list of enumerable strings representing the Amazon ECR repository creation scenarios that this template will apply towards. The two supported scenarios are <code>PULL_THROUGH_CACHE</code> and <code>REPLICATION</code> </p>"
+        "CreateRepositoryCreationTemplateRequest$appliedFor": "<p>A list of enumerable strings representing the Amazon ECR repository creation scenarios that this template will apply towards. The supported scenarios are <code>PULL_THROUGH_CACHE</code>, <code>REPLICATION</code>, and <code>CREATE_ON_PUSH</code> </p>",
+        "RepositoryCreationTemplate$appliedFor": "<p>A list of enumerable Strings representing the repository creation scenarios that this template will apply towards. The supported scenarios are PULL_THROUGH_CACHE, REPLICATION, and CREATE_ON_PUSH</p>",
+        "UpdateRepositoryCreationTemplateRequest$appliedFor": "<p>Updates the list of enumerable strings representing the Amazon ECR repository creation scenarios that this template will apply towards. The supported scenarios are <code>PULL_THROUGH_CACHE</code>, <code>REPLICATION</code>, and <code>CREATE_ON_PUSH</code> </p>"
       }
     },
     "Reason": {
@@ -1480,8 +1647,7 @@
     },
     "ReferencedImagesNotFoundException": {
       "base": "<p>The manifest list is referencing an image that does not exist.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "Region": {
       "base": null,
@@ -1489,6 +1655,14 @@
         "ImageReplicationStatus$region": "<p>The destination Region for the image replication.</p>",
         "ReplicationDestination$region": "<p>The Region to replicate to.</p>"
       }
+    },
+    "RegisterPullTimeUpdateExclusionRequest": {
+      "base": null,
+      "refs": {}
+    },
+    "RegisterPullTimeUpdateExclusionResponse": {
+      "base": null,
+      "refs": {}
     },
     "RegistryId": {
       "base": null,
@@ -1512,9 +1686,12 @@
         "DeleteRepositoryPolicyRequest$registryId": "<p>The Amazon Web Services account ID associated with the registry that contains the repository policy to delete. If you do not specify a registry, the default registry is assumed.</p>",
         "DeleteRepositoryPolicyResponse$registryId": "<p>The registry ID associated with the request.</p>",
         "DeleteRepositoryRequest$registryId": "<p>The Amazon Web Services account ID associated with the registry that contains the repository to delete. If you do not specify a registry, the default registry is assumed.</p>",
+        "DeleteSigningConfigurationResponse$registryId": "<p>The Amazon Web Services account ID associated with the registry.</p>",
         "DescribeImageReplicationStatusRequest$registryId": "<p>The Amazon Web Services account ID associated with the registry. If you do not specify a registry, the default registry is assumed.</p>",
         "DescribeImageScanFindingsRequest$registryId": "<p>The Amazon Web Services account ID associated with the registry that contains the repository in which to describe the image scan findings for. If you do not specify a registry, the default registry is assumed.</p>",
         "DescribeImageScanFindingsResponse$registryId": "<p>The registry ID associated with the request.</p>",
+        "DescribeImageSigningStatusRequest$registryId": "<p>The Amazon Web Services account ID associated with the registry that contains the repository. If you do not specify a registry, the default registry is assumed.</p>",
+        "DescribeImageSigningStatusResponse$registryId": "<p>The Amazon Web Services account ID associated with the registry.</p>",
         "DescribeImagesRequest$registryId": "<p>The Amazon Web Services account ID associated with the registry that contains the repository in which to describe images. If you do not specify a registry, the default registry is assumed.</p>",
         "DescribePullThroughCacheRulesRequest$registryId": "<p>The Amazon Web Services account ID associated with the registry to return the pull through cache rules for. If you do not specify a registry, the default registry is assumed.</p>",
         "DescribeRegistryResponse$registryId": "<p>The registry ID associated with the request.</p>",
@@ -1531,11 +1708,13 @@
         "GetRegistryScanningConfigurationResponse$registryId": "<p>The registry ID associated with the request.</p>",
         "GetRepositoryPolicyRequest$registryId": "<p>The Amazon Web Services account ID associated with the registry that contains the repository. If you do not specify a registry, the default registry is assumed.</p>",
         "GetRepositoryPolicyResponse$registryId": "<p>The registry ID associated with the request.</p>",
+        "GetSigningConfigurationResponse$registryId": "<p>The Amazon Web Services account ID associated with the registry.</p>",
         "Image$registryId": "<p>The Amazon Web Services account ID associated with the registry containing the image.</p>",
         "ImageDetail$registryId": "<p>The Amazon Web Services account ID associated with the registry to which this image belongs.</p>",
         "ImageReplicationStatus$registryId": "<p>The Amazon Web Services account ID associated with the registry to which the image belongs.</p>",
         "InitiateLayerUploadRequest$registryId": "<p>The Amazon Web Services account ID associated with the registry to which you intend to upload layers. If you do not specify a registry, the default registry is assumed.</p>",
         "InvalidLayerPartException$registryId": "<p>The registry ID associated with the exception.</p>",
+        "ListImageReferrersRequest$registryId": "<p>The Amazon Web Services account ID associated with the registry that contains the repository in which to list image referrers. If you do not specify a registry, the default registry is assumed.</p>",
         "ListImagesRequest$registryId": "<p>The Amazon Web Services account ID associated with the registry that contains the repository in which to list images. If you do not specify a registry, the default registry is assumed.</p>",
         "PullThroughCacheRule$registryId": "<p>The Amazon Web Services account ID associated with the registry the pull through cache rule is associated with.</p>",
         "PutImageRequest$registryId": "<p>The Amazon Web Services account ID associated with the registry that contains the repository in which to put the image. If you do not specify a registry, the default registry is assumed.</p>",
@@ -1554,6 +1733,8 @@
         "StartImageScanResponse$registryId": "<p>The registry ID associated with the request.</p>",
         "StartLifecyclePolicyPreviewRequest$registryId": "<p>The Amazon Web Services account ID associated with the registry that contains the repository. If you do not specify a registry, the default registry is assumed.</p>",
         "StartLifecyclePolicyPreviewResponse$registryId": "<p>The registry ID associated with the request.</p>",
+        "UpdateImageStorageClassRequest$registryId": "<p>The Amazon Web Services account ID associated with the registry that contains the image to transition. If you do not specify a registry, the default registry is assumed.</p>",
+        "UpdateImageStorageClassResponse$registryId": "<p>The registry ID associated with the request.</p>",
         "UpdatePullThroughCacheRuleRequest$registryId": "<p>The Amazon Web Services account ID associated with the registry associated with the pull through cache rule. If you do not specify a registry, the default registry is assumed.</p>",
         "UpdatePullThroughCacheRuleResponse$registryId": "<p>The registry ID associated with the request.</p>",
         "UpdateRepositoryCreationTemplateResponse$registryId": "<p>The registry ID associated with the request.</p>",
@@ -1565,8 +1746,7 @@
     },
     "RegistryPolicyNotFoundException": {
       "base": "<p>The registry doesn't have an associated registry policy.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "RegistryPolicyText": {
       "base": null,
@@ -1675,8 +1855,7 @@
     },
     "RepositoryAlreadyExistsException": {
       "base": "<p>The specified repository already exists in the specified registry.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "RepositoryCreationTemplate": {
       "base": "<p>The details of the repository creation template associated with the request.</p>",
@@ -1742,6 +1921,8 @@
         "DescribeImageReplicationStatusResponse$repositoryName": "<p>The repository name associated with the request.</p>",
         "DescribeImageScanFindingsRequest$repositoryName": "<p>The repository for the image for which to describe the scan findings.</p>",
         "DescribeImageScanFindingsResponse$repositoryName": "<p>The repository name associated with the request.</p>",
+        "DescribeImageSigningStatusRequest$repositoryName": "<p>The name of the repository that contains the image.</p>",
+        "DescribeImageSigningStatusResponse$repositoryName": "<p>The name of the repository.</p>",
         "DescribeImagesRequest$repositoryName": "<p>The repository that contains the images to describe.</p>",
         "GetDownloadUrlForLayerRequest$repositoryName": "<p>The name of the repository that is associated with the image layer to download.</p>",
         "GetLifecyclePolicyPreviewRequest$repositoryName": "<p>The name of the repository.</p>",
@@ -1754,6 +1935,7 @@
         "ImageDetail$repositoryName": "<p>The name of the repository to which this image belongs.</p>",
         "InitiateLayerUploadRequest$repositoryName": "<p>The name of the repository to which you intend to upload layers.</p>",
         "InvalidLayerPartException$repositoryName": "<p>The repository name associated with the exception.</p>",
+        "ListImageReferrersRequest$repositoryName": "<p>The name of the repository that contains the subject image.</p>",
         "ListImagesRequest$repositoryName": "<p>The repository with image IDs to be listed.</p>",
         "PutImageRequest$repositoryName": "<p>The name of the repository in which to put the image.</p>",
         "PutImageScanningConfigurationRequest$repositoryName": "<p>The name of the repository in which to update the image scanning configuration setting.</p>",
@@ -1773,6 +1955,8 @@
         "StartImageScanResponse$repositoryName": "<p>The repository name associated with the request.</p>",
         "StartLifecyclePolicyPreviewRequest$repositoryName": "<p>The name of the repository to be evaluated.</p>",
         "StartLifecyclePolicyPreviewResponse$repositoryName": "<p>The repository name associated with the request.</p>",
+        "UpdateImageStorageClassRequest$repositoryName": "<p>The name of the repository that contains the image to transition.</p>",
+        "UpdateImageStorageClassResponse$repositoryName": "<p>The repository name associated with the request.</p>",
         "UploadLayerPartRequest$repositoryName": "<p>The name of the repository to which you are uploading layer parts.</p>",
         "UploadLayerPartResponse$repositoryName": "<p>The repository name associated with the request.</p>"
       }
@@ -1785,18 +1969,15 @@
     },
     "RepositoryNotEmptyException": {
       "base": "<p>The specified repository contains images. To delete a repository that contains images, you must force the deletion with the <code>force</code> parameter.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "RepositoryNotFoundException": {
       "base": "<p>The specified repository could not be found. Check the spelling of the specified repository and ensure that you are performing operations on the correct registry.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "RepositoryPolicyNotFoundException": {
       "base": "<p>The specified repository and registry combination does not have an associated repository policy.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "RepositoryPolicyText": {
       "base": null,
@@ -1875,8 +2056,7 @@
     },
     "ScanNotFoundException": {
       "base": "<p>The specified image scan could not be found. Ensure that image scanning is enabled on the repository and try again.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ScanOnPushFlag": {
       "base": null,
@@ -1976,23 +2156,19 @@
     },
     "SecretNotFoundException": {
       "base": "<p>The ARN of the secret specified in the pull through cache rule was not found. Update the pull through cache rule with a valid secret ARN and try again.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ServerException": {
       "base": "<p>These errors are usually caused by a server-side issue.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "SetRepositoryPolicyRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "SetRepositoryPolicyResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "Severity": {
       "base": null,
@@ -2005,6 +2181,80 @@
       "base": null,
       "refs": {
         "FindingSeverityCounts$value": null
+      }
+    },
+    "SigningConfiguration": {
+      "base": "<p>The signing configuration for a registry, which specifies rules for automatically signing images when pushed.</p>",
+      "refs": {
+        "DeleteSigningConfigurationResponse$signingConfiguration": "<p>The registry's deleted signing configuration.</p>",
+        "GetSigningConfigurationResponse$signingConfiguration": "<p>The registry's signing configuration.</p>",
+        "PutSigningConfigurationRequest$signingConfiguration": "<p>The signing configuration to assign to the registry.</p>",
+        "PutSigningConfigurationResponse$signingConfiguration": "<p>The registry's updated signing configuration.</p>"
+      }
+    },
+    "SigningConfigurationNotFoundException": {
+      "base": "<p>The specified signing configuration was not found. This occurs when attempting to retrieve or delete a signing configuration that does not exist.</p>",
+      "refs": {}
+    },
+    "SigningProfileArn": {
+      "base": "<p>The Amazon Resource Name (ARN) of an Amazon Web Services Signer signing profile. The ARN contains the <code>arn:aws:signer</code> namespace, followed by the region, Amazon Web Services account ID, and signing profile resource path. For example, <code>arn:aws:signer:region:012345678910:/signing-profiles/profile-name</code>.</p>",
+      "refs": {
+        "ImageSigningStatus$signingProfileArn": "<p>The ARN of the Amazon Web Services Signer signing profile used to sign the image.</p>",
+        "SigningRule$signingProfileArn": "<p>The ARN of the Amazon Web Services Signer signing profile to use for signing images that match this rule. For more information about signing profiles, see <a href=\"https://docs.aws.amazon.com/signer/latest/developerguide/signing-profiles.html\">Signing profiles</a> in the <i>Amazon Web Services Signer Developer Guide</i>.</p>"
+      }
+    },
+    "SigningRepositoryFilter": {
+      "base": "<p>A repository filter used to determine which repositories have their images automatically signed on push. Each filter consists of a filter type and filter value.</p>",
+      "refs": {
+        "SigningRepositoryFilterList$member": null
+      }
+    },
+    "SigningRepositoryFilterList": {
+      "base": null,
+      "refs": {
+        "SigningRule$repositoryFilters": "<p>A list of repository filters that determine which repositories have their images signed on push. If no filters are specified, all images pushed to the registry are signed using the rule's signing profile. Maximum of 100 filters per rule.</p>"
+      }
+    },
+    "SigningRepositoryFilterType": {
+      "base": "<p>The type of filter to use when determining which repositories should have their images automatically signed.</p>",
+      "refs": {
+        "SigningRepositoryFilter$filterType": "<p>The type of filter to apply. Currently, only <code>WILDCARD_MATCH</code> is supported, which uses wildcard patterns to match repository names.</p>"
+      }
+    },
+    "SigningRepositoryFilterValue": {
+      "base": null,
+      "refs": {
+        "SigningRepositoryFilter$filter": "<p>The filter value used to match repository names. When using <code>WILDCARD_MATCH</code>, the <code>*</code> character matches any sequence of characters.</p> <p>Examples:</p> <ul> <li> <p> <code>myapp/*</code> - Matches all repositories starting with <code>myapp/</code> </p> </li> <li> <p> <code>*/production</code> - Matches all repositories ending with <code>/production</code> </p> </li> <li> <p> <code>*prod*</code> - Matches all repositories containing <code>prod</code> </p> </li> </ul>"
+      }
+    },
+    "SigningRule": {
+      "base": "<p>A signing rule that specifies a signing profile and optional repository filters. When an image is pushed to a matching repository, a signing job is created using the specified profile.</p>",
+      "refs": {
+        "SigningRuleList$member": null
+      }
+    },
+    "SigningRuleList": {
+      "base": null,
+      "refs": {
+        "SigningConfiguration$rules": "<p>A list of signing rules. Each rule defines a signing profile and optional repository filters that determine which images are automatically signed. Maximum of 10 rules.</p>"
+      }
+    },
+    "SigningStatus": {
+      "base": "<p>The image signing status. Possible values include <code>IN_PROGRESS</code>, <code>COMPLETE</code>, and <code>FAILED</code>.</p>",
+      "refs": {
+        "ImageSigningStatus$status": "<p>The image's signing status. Possible values are:</p> <ul> <li> <p> <code>IN_PROGRESS</code> - Signing is currently in progress.</p> </li> <li> <p> <code>COMPLETE</code> - The signature was successfully generated.</p> </li> <li> <p> <code>FAILED</code> - Signing failed. See <code>failureCode</code> and <code>failureReason</code> for details.</p> </li> </ul>"
+      }
+    },
+    "SigningStatusFailureCode": {
+      "base": null,
+      "refs": {
+        "ImageSigningStatus$failureCode": "<p>The failure code, which is only present if <code>status</code> is <code>FAILED</code>.</p>"
+      }
+    },
+    "SigningStatusFailureReason": {
+      "base": null,
+      "refs": {
+        "ImageSigningStatus$failureReason": "<p>A description of why signing the image failed. This field is only present if <code>status</code> is <code>FAILED</code>.</p>"
       }
     },
     "Source": {
@@ -2023,28 +2273,37 @@
     },
     "StartImageScanRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "StartImageScanResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "StartLifecyclePolicyPreviewRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "StartLifecyclePolicyPreviewResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "Status": {
       "base": null,
       "refs": {
         "EnhancedImageScanFinding$status": "<p>The status of the finding.</p>"
+      }
+    },
+    "String": {
+      "base": null,
+      "refs": {
+        "Annotations$key": null,
+        "Annotations$value": null
+      }
+    },
+    "SubjectIdentifier": {
+      "base": "<p>An object that identifies an image subject.</p>",
+      "refs": {
+        "ListImageReferrersRequest$subjectId": "<p>An object containing the image digest of the subject image for which to retrieve associated artifacts.</p>"
       }
     },
     "Tag": {
@@ -2080,20 +2339,18 @@
     },
     "TagResourceRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "TagResourceResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "TagStatus": {
       "base": null,
       "refs": {
         "DescribeImagesFilter$tagStatus": "<p>The tag status with which to filter your <a>DescribeImages</a> results. You can filter results based on whether they are <code>TAGGED</code> or <code>UNTAGGED</code>.</p>",
         "LifecyclePolicyPreviewFilter$tagStatus": "<p>The tag status of the image.</p>",
-        "ListImagesFilter$tagStatus": "<p>The tag status with which to filter your <a>ListImages</a> results. You can filter results based on whether they are <code>TAGGED</code> or <code>UNTAGGED</code>.</p>"
+        "ListImagesFilter$tagStatus": "<p>The tag status with which to filter your <a>ListImages</a> results.</p>"
       }
     },
     "TagValue": {
@@ -2109,15 +2366,19 @@
         "Resource$tags": "<p>The tags attached to the resource.</p>"
       }
     },
+    "TargetStorageClass": {
+      "base": null,
+      "refs": {
+        "UpdateImageStorageClassRequest$targetStorageClass": "<p>The target storage class for the image.</p>"
+      }
+    },
     "TemplateAlreadyExistsException": {
       "base": "<p>The repository creation template already exists. Specify a unique prefix and try again.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "TemplateNotFoundException": {
       "base": "<p>The specified repository creation template can't be found. Verify the registry ID and prefix and try again.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "Title": {
       "base": null,
@@ -2127,7 +2388,18 @@
     },
     "TooManyTagsException": {
       "base": "<p>The list of tags on the repository is over the limit. The maximum number of tags that can be applied to a repository is 50.</p>",
+      "refs": {}
+    },
+    "TransitioningImageTotalCount": {
+      "base": "<p>The total count of images transitioning to a storage class.</p>",
       "refs": {
+        "TransitioningImageTotalCounts$member": null
+      }
+    },
+    "TransitioningImageTotalCounts": {
+      "base": null,
+      "refs": {
+        "LifecyclePolicyPreviewSummary$transitioningImageTotalCounts": "<p>The total count of images that will be transitioned to each storage class. This field is only present if at least one image will be transitoned in the summary.</p>"
       }
     },
     "Type": {
@@ -2139,63 +2411,63 @@
     },
     "UnableToAccessSecretException": {
       "base": "<p>The secret is unable to be accessed. Verify the resource permissions for the secret and try again.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "UnableToDecryptSecretValueException": {
       "base": "<p>The secret is accessible but is unable to be decrypted. Verify the resource permisisons and try again.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "UnableToGetUpstreamImageException": {
       "base": "<p>The image or images were unable to be pulled using the pull through cache rule. This is usually caused because of an issue with the Secrets Manager secret containing the credentials for the upstream registry.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "UnableToGetUpstreamLayerException": {
       "base": "<p>There was an issue getting the upstream layer matching the pull through cache rule.</p>",
-      "refs": {
-      }
+      "refs": {}
+    },
+    "UnableToListUpstreamImageReferrersException": {
+      "base": "<p>The referrer or referrers were unable to be listed using the pull through cache rule. This is usually caused because of an issue with the Secrets Manager secret containing the credentials for the upstream registry.</p>",
+      "refs": {}
     },
     "UnsupportedImageTypeException": {
       "base": "<p>The image is of a type that cannot be scanned.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "UnsupportedUpstreamRegistryException": {
       "base": "<p>The specified upstream registry isn't supported.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "UntagResourceRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UntagResourceResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
+    },
+    "UpdateImageStorageClassRequest": {
+      "base": null,
+      "refs": {}
+    },
+    "UpdateImageStorageClassResponse": {
+      "base": null,
+      "refs": {}
     },
     "UpdatePullThroughCacheRuleRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdatePullThroughCacheRuleResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateRepositoryCreationTemplateRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateRepositoryCreationTemplateResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdatedTimestamp": {
       "base": null,
@@ -2217,18 +2489,15 @@
     },
     "UploadLayerPartRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UploadLayerPartResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UploadNotFoundException": {
       "base": "<p>The upload could not be found, or the specified upload ID is not valid for this repository.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "UpstreamRegistry": {
       "base": null,
@@ -2241,7 +2510,7 @@
     "Url": {
       "base": null,
       "refs": {
-        "CreatePullThroughCacheRuleRequest$upstreamRegistryUrl": "<p>The registry URL of the upstream public registry to use as the source for the pull through cache rule. The following is the syntax to use for each supported upstream registry.</p> <ul> <li> <p>Amazon ECR (<code>ecr</code>) – <code>dkr.ecr.&lt;region&gt;.amazonaws.com</code> </p> </li> <li> <p>Amazon ECR Public (<code>ecr-public</code>) – <code>public.ecr.aws</code> </p> </li> <li> <p>Docker Hub (<code>docker-hub</code>) – <code>registry-1.docker.io</code> </p> </li> <li> <p>GitHub Container Registry (<code>github-container-registry</code>) – <code>ghcr.io</code> </p> </li> <li> <p>GitLab Container Registry (<code>gitlab-container-registry</code>) – <code>registry.gitlab.com</code> </p> </li> <li> <p>Kubernetes (<code>k8s</code>) – <code>registry.k8s.io</code> </p> </li> <li> <p>Microsoft Azure Container Registry (<code>azure-container-registry</code>) – <code>&lt;custom&gt;.azurecr.io</code> </p> </li> <li> <p>Quay (<code>quay</code>) – <code>quay.io</code> </p> </li> </ul>",
+        "CreatePullThroughCacheRuleRequest$upstreamRegistryUrl": "<p>The registry URL of the upstream public registry to use as the source for the pull through cache rule. The following is the syntax to use for each supported upstream registry.</p> <ul> <li> <p>Amazon ECR (<code>ecr</code>) – <code>&lt;accountId&gt;.dkr.ecr.&lt;region&gt;.amazonaws.com</code> </p> </li> <li> <p>Amazon ECR Public (<code>ecr-public</code>) – <code>public.ecr.aws</code> </p> </li> <li> <p>Docker Hub (<code>docker-hub</code>) – <code>registry-1.docker.io</code> </p> </li> <li> <p>GitHub Container Registry (<code>github-container-registry</code>) – <code>ghcr.io</code> </p> </li> <li> <p>GitLab Container Registry (<code>gitlab-container-registry</code>) – <code>registry.gitlab.com</code> </p> </li> <li> <p>Kubernetes (<code>k8s</code>) – <code>registry.k8s.io</code> </p> </li> <li> <p>Microsoft Azure Container Registry (<code>azure-container-registry</code>) – <code>&lt;custom&gt;.azurecr.io</code> </p> </li> <li> <p>Quay (<code>quay</code>) – <code>quay.io</code> </p> </li> </ul>",
         "CreatePullThroughCacheRuleResponse$upstreamRegistryUrl": "<p>The upstream registry URL associated with the pull through cache rule.</p>",
         "DeletePullThroughCacheRuleResponse$upstreamRegistryUrl": "<p>The upstream registry URL associated with the pull through cache rule.</p>",
         "GetDownloadUrlForLayerResponse$downloadUrl": "<p>The pre-signed Amazon S3 download URL for the requested layer.</p>",
@@ -2256,18 +2525,15 @@
     },
     "ValidatePullThroughCacheRuleRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ValidatePullThroughCacheRuleResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ValidationException": {
       "base": "<p>There was an exception validating this request.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "Version": {
       "base": null,

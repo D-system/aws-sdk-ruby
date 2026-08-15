@@ -1,0 +1,3379 @@
+# WARNING ABOUT GENERATED CODE
+#
+# This file is generated. See the contributing guide for more information:
+# https://github.com/aws/aws-sdk-ruby/blob/version-3/CONTRIBUTING.md
+#
+# WARNING ABOUT GENERATED CODE
+
+module Aws::BedrockAgentCore
+  module Types
+
+    class A2aDescriptor
+      attr_accessor agent_card: Types::AgentCardDefinition
+      SENSITIVE: []
+    end
+
+    class ABTestEvaluationConfig
+      attr_accessor online_evaluation_config_arn: ::String
+      attr_accessor per_variant_online_evaluation_config: ::Array[Types::PerVariantOnlineEvaluationConfig]
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class OnlineEvaluationConfigArn < ABTestEvaluationConfig
+      end
+      class PerVariantOnlineEvaluationConfig < ABTestEvaluationConfig
+      end
+      class Unknown < ABTestEvaluationConfig
+      end
+    end
+
+    class ABTestResults
+      attr_accessor analysis_timestamp: ::Time
+      attr_accessor evaluator_metrics: ::Array[Types::EvaluatorMetric]
+      SENSITIVE: []
+    end
+
+    class ABTestSummary
+      attr_accessor ab_test_id: ::String
+      attr_accessor ab_test_arn: ::String
+      attr_accessor name: ::String
+      attr_accessor status: ("CREATING" | "ACTIVE" | "CREATE_FAILED" | "UPDATING" | "UPDATE_FAILED" | "DELETING" | "DELETE_FAILED" | "FAILED")
+      attr_accessor execution_status: ("PAUSED" | "RUNNING" | "STOPPED" | "NOT_STARTED")
+      attr_accessor description: ::String
+      attr_accessor gateway_arn: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class AccessDeniedException
+      attr_accessor message: ::String
+      attr_accessor event_type: untyped
+      SENSITIVE: []
+    end
+
+    class ActorSummary
+      attr_accessor actor_id: ::String
+      SENSITIVE: []
+    end
+
+    class AffectedSession
+      attr_accessor session_id: ::String
+      attr_accessor explanation: ::String
+      attr_accessor fix_type: ::String
+      attr_accessor recommendation: ::String
+      attr_accessor failure_spans: ::Array[Types::FailureSpanDetail]
+      SENSITIVE: []
+    end
+
+    class AgentCardDefinition
+      attr_accessor schema_version: ::String
+      attr_accessor inline_content: ::String
+      SENSITIVE: []
+    end
+
+    class AgentSkillsDescriptor
+      attr_accessor skill_md: Types::SkillMdDefinition
+      attr_accessor skill_definition: Types::SkillDefinition
+      SENSITIVE: []
+    end
+
+    class AgentTracesConfig
+      attr_accessor session_spans: ::Array[untyped]
+      attr_accessor cloudwatch_logs: Types::CloudWatchLogsTraceConfig
+      attr_accessor batch_evaluation: Types::BatchEvaluationTraceConfig
+      attr_accessor online_evaluation: Types::OnlineEvaluationTraceConfig
+      attr_accessor unknown: untyped
+      SENSITIVE: [:session_spans]
+
+      class SessionSpans < AgentTracesConfig
+      end
+      class CloudwatchLogs < AgentTracesConfig
+      end
+      class BatchEvaluation < AgentTracesConfig
+      end
+      class OnlineEvaluation < AgentTracesConfig
+      end
+      class Unknown < AgentTracesConfig
+      end
+    end
+
+    class Amount
+      attr_accessor value: ::String
+      attr_accessor currency: ("USD")
+      SENSITIVE: []
+    end
+
+    class AutomationStream
+      attr_accessor stream_endpoint: ::String
+      attr_accessor stream_status: ("ENABLED" | "DISABLED")
+      SENSITIVE: []
+    end
+
+    class AutomationStreamUpdate
+      attr_accessor stream_status: ("ENABLED" | "DISABLED")
+      SENSITIVE: []
+    end
+
+    class AvailableLimits
+      attr_accessor available_spend_amount: Types::Amount
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class BasicAuth
+      attr_accessor secret_arn: ::String
+      SENSITIVE: []
+    end
+
+    class BatchCreateMemoryRecordsInput
+      attr_accessor memory_id: ::String
+      attr_accessor records: ::Array[Types::MemoryRecordCreateInput]
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class BatchCreateMemoryRecordsOutput
+      attr_accessor successful_records: ::Array[Types::MemoryRecordOutput]
+      attr_accessor failed_records: ::Array[Types::MemoryRecordOutput]
+      SENSITIVE: []
+    end
+
+    class BatchDeleteMemoryRecordsInput
+      attr_accessor memory_id: ::String
+      attr_accessor records: ::Array[Types::MemoryRecordDeleteInput]
+      SENSITIVE: []
+    end
+
+    class BatchDeleteMemoryRecordsOutput
+      attr_accessor successful_records: ::Array[Types::MemoryRecordOutput]
+      attr_accessor failed_records: ::Array[Types::MemoryRecordOutput]
+      SENSITIVE: []
+    end
+
+    class BatchEvaluationSummary
+      attr_accessor batch_evaluation_id: ::String
+      attr_accessor batch_evaluation_arn: ::String
+      attr_accessor batch_evaluation_name: ::String
+      attr_accessor status: ("PENDING" | "IN_PROGRESS" | "COMPLETED" | "COMPLETED_WITH_ERRORS" | "FAILED" | "STOPPING" | "STOPPED" | "DELETING")
+      attr_accessor created_at: ::Time
+      attr_accessor description: ::String
+      attr_accessor evaluators: ::Array[Types::Evaluator]
+      attr_accessor insights: ::Array[Types::Insight]
+      attr_accessor evaluation_results: Types::EvaluationJobResults
+      attr_accessor error_details: ::Array[::String]
+      attr_accessor kms_key_arn: ::String
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class BatchEvaluationTraceConfig
+      attr_accessor batch_evaluation_arn: ::String
+      SENSITIVE: []
+    end
+
+    class BatchUpdateMemoryRecordsInput
+      attr_accessor memory_id: ::String
+      attr_accessor records: ::Array[Types::MemoryRecordUpdateInput]
+      SENSITIVE: []
+    end
+
+    class BatchUpdateMemoryRecordsOutput
+      attr_accessor successful_records: ::Array[Types::MemoryRecordOutput]
+      attr_accessor failed_records: ::Array[Types::MemoryRecordOutput]
+      SENSITIVE: []
+    end
+
+    class Branch
+      attr_accessor root_event_id: ::String
+      attr_accessor name: ::String
+      SENSITIVE: []
+    end
+
+    class BranchFilter
+      attr_accessor name: ::String
+      attr_accessor include_parent_branches: bool
+      SENSITIVE: []
+    end
+
+    class BrowserAction
+      attr_accessor mouse_click: Types::MouseClickArguments
+      attr_accessor mouse_move: Types::MouseMoveArguments
+      attr_accessor mouse_drag: Types::MouseDragArguments
+      attr_accessor mouse_scroll: Types::MouseScrollArguments
+      attr_accessor key_type: Types::KeyTypeArguments
+      attr_accessor key_press: Types::KeyPressArguments
+      attr_accessor key_shortcut: Types::KeyShortcutArguments
+      attr_accessor screenshot: Types::ScreenshotArguments
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class MouseClick < BrowserAction
+      end
+      class MouseMove < BrowserAction
+      end
+      class MouseDrag < BrowserAction
+      end
+      class MouseScroll < BrowserAction
+      end
+      class KeyType < BrowserAction
+      end
+      class KeyPress < BrowserAction
+      end
+      class KeyShortcut < BrowserAction
+      end
+      class Screenshot < BrowserAction
+      end
+      class Unknown < BrowserAction
+      end
+    end
+
+    class BrowserActionResult
+      attr_accessor mouse_click: Types::MouseClickResult
+      attr_accessor mouse_move: Types::MouseMoveResult
+      attr_accessor mouse_drag: Types::MouseDragResult
+      attr_accessor mouse_scroll: Types::MouseScrollResult
+      attr_accessor key_type: Types::KeyTypeResult
+      attr_accessor key_press: Types::KeyPressResult
+      attr_accessor key_shortcut: Types::KeyShortcutResult
+      attr_accessor screenshot: Types::ScreenshotResult
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class MouseClick < BrowserActionResult
+      end
+      class MouseMove < BrowserActionResult
+      end
+      class MouseDrag < BrowserActionResult
+      end
+      class MouseScroll < BrowserActionResult
+      end
+      class KeyType < BrowserActionResult
+      end
+      class KeyPress < BrowserActionResult
+      end
+      class KeyShortcut < BrowserActionResult
+      end
+      class Screenshot < BrowserActionResult
+      end
+      class Unknown < BrowserActionResult
+      end
+    end
+
+    class BrowserEnterprisePolicy
+      attr_accessor location: Types::ResourceLocation
+      attr_accessor type: ("MANAGED" | "RECOMMENDED")
+      SENSITIVE: []
+    end
+
+    class BrowserExtension
+      attr_accessor location: Types::ResourceLocation
+      SENSITIVE: []
+    end
+
+    class BrowserProfileConfiguration
+      attr_accessor profile_identifier: ::String
+      SENSITIVE: []
+    end
+
+    class BrowserSessionStream
+      attr_accessor automation_stream: Types::AutomationStream
+      attr_accessor live_view_stream: Types::LiveViewStream
+      SENSITIVE: []
+    end
+
+    class BrowserSessionSummary
+      attr_accessor browser_identifier: ::String
+      attr_accessor session_id: ::String
+      attr_accessor name: ::String
+      attr_accessor status: ("READY" | "TERMINATED")
+      attr_accessor created_at: ::Time
+      attr_accessor last_updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class Certificate
+      attr_accessor location: Types::CertificateLocation
+      SENSITIVE: []
+    end
+
+    class CertificateLocation
+      attr_accessor secrets_manager: Types::SecretsManagerLocation
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class SecretsManager < CertificateLocation
+      end
+      class Unknown < CertificateLocation
+      end
+    end
+
+    class CloudWatchFilterConfig
+      attr_accessor session_ids: ::Array[::String]
+      attr_accessor time_range: Types::SessionFilterConfig
+      SENSITIVE: []
+    end
+
+    class CloudWatchLogsFilter
+      attr_accessor key: ::String
+      attr_accessor operator: ("Equals" | "NotEquals" | "GreaterThan" | "LessThan" | "GreaterThanOrEqual" | "LessThanOrEqual" | "Contains" | "NotContains")
+      attr_accessor value: Types::FilterValue
+      SENSITIVE: []
+    end
+
+    class CloudWatchLogsRule
+      attr_accessor filters: ::Array[Types::CloudWatchLogsFilter]
+      SENSITIVE: []
+    end
+
+    class CloudWatchLogsSource
+      attr_accessor service_names: ::Array[::String]
+      attr_accessor log_group_names: ::Array[::String]
+      attr_accessor filter_config: Types::CloudWatchFilterConfig
+      SENSITIVE: []
+    end
+
+    class CloudWatchLogsTraceConfig
+      attr_accessor log_group_arns: ::Array[::String]
+      attr_accessor service_names: ::Array[::String]
+      attr_accessor start_time: ::Time
+      attr_accessor end_time: ::Time
+      attr_accessor rule: Types::CloudWatchLogsRule
+      SENSITIVE: []
+    end
+
+    class CloudWatchOutputConfig
+      attr_accessor log_group_name: ::String
+      attr_accessor log_stream_name: ::String
+      SENSITIVE: []
+    end
+
+    class CodeInterpreterResult
+      attr_accessor content: ::Array[Types::ContentBlock]
+      attr_accessor structured_content: Types::ToolResultStructuredContent
+      attr_accessor is_error: bool
+      attr_accessor event_type: untyped
+      SENSITIVE: []
+    end
+
+    class CodeInterpreterSessionSummary
+      attr_accessor code_interpreter_identifier: ::String
+      attr_accessor session_id: ::String
+      attr_accessor name: ::String
+      attr_accessor status: ("READY" | "TERMINATED")
+      attr_accessor created_at: ::Time
+      attr_accessor last_updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class CoinbaseCdpTokenRequestInput
+      attr_accessor request_method: ("GET" | "POST" | "PUT" | "DELETE" | "PATCH")
+      attr_accessor request_host: ::String
+      attr_accessor request_path: ::String
+      attr_accessor include_wallet_auth_token: bool
+      attr_accessor request_body: ::String
+      SENSITIVE: []
+    end
+
+    class CoinbaseCdpTokenResponseOutput
+      attr_accessor bearer_token: ::String
+      attr_accessor wallet_auth_token: ::String
+      SENSITIVE: [:bearer_token, :wallet_auth_token]
+    end
+
+    class CompleteResourceTokenAuthRequest
+      attr_accessor user_identifier: Types::UserIdentifier
+      attr_accessor session_uri: ::String
+      SENSITIVE: []
+    end
+
+    class CompleteResourceTokenAuthResponse < Aws::EmptyStructure
+    end
+
+    class ConfidenceInterval
+      attr_accessor lower: ::Float
+      attr_accessor upper: ::Float
+      SENSITIVE: []
+    end
+
+    class ConfigurationBundleRef
+      attr_accessor bundle_arn: ::String
+      attr_accessor bundle_version: ::String
+      SENSITIVE: []
+    end
+
+    class ConfigurationBundleToolEntry
+      attr_accessor tool_name: ::String
+      attr_accessor tool_description_json_path: ::String
+      SENSITIVE: []
+    end
+
+    class ConflictException
+      attr_accessor message: ::String
+      attr_accessor event_type: untyped
+      SENSITIVE: []
+    end
+
+    class Content
+      attr_accessor text: ::String
+      attr_accessor unknown: untyped
+      SENSITIVE: [:text]
+
+      class Text < Content
+      end
+      class Unknown < Content
+      end
+    end
+
+    class ContentBlock
+      attr_accessor type: ("text" | "image" | "resource" | "resource_link")
+      attr_accessor text: ::String
+      attr_accessor data: ::String
+      attr_accessor mime_type: ::String
+      attr_accessor uri: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor size: ::Integer
+      attr_accessor resource: Types::ResourceContent
+      SENSITIVE: []
+    end
+
+    class ContentDeltaEvent
+      attr_accessor stdout: ::String
+      attr_accessor stderr: ::String
+      SENSITIVE: []
+    end
+
+    class ContentStartEvent < Aws::EmptyStructure
+    end
+
+    class ContentStopEvent
+      attr_accessor exit_code: ::Integer
+      attr_accessor status: ("COMPLETED" | "TIMED_OUT")
+      SENSITIVE: []
+    end
+
+    class Context
+      attr_accessor span_context: Types::SpanContext
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class SpanContext < Context
+      end
+      class Unknown < Context
+      end
+    end
+
+    class ControlStats
+      attr_accessor variant_name: ::String
+      attr_accessor sample_size: ::Integer
+      attr_accessor mean: ::Float
+      SENSITIVE: []
+    end
+
+    class Conversational
+      attr_accessor content: Types::Content
+      attr_accessor role: ("ASSISTANT" | "USER" | "TOOL" | "OTHER")
+      SENSITIVE: []
+    end
+
+    class CreateABTestRequest
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor gateway_arn: ::String
+      attr_accessor variants: ::Array[Types::Variant]
+      attr_accessor gateway_filter: Types::GatewayFilter
+      attr_accessor evaluation_config: Types::ABTestEvaluationConfig
+      attr_accessor role_arn: ::String
+      attr_accessor enable_on_create: bool
+      attr_accessor client_token: ::String
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class CreateABTestResponse
+      attr_accessor ab_test_id: ::String
+      attr_accessor ab_test_arn: ::String
+      attr_accessor name: ::String
+      attr_accessor status: ("CREATING" | "ACTIVE" | "CREATE_FAILED" | "UPDATING" | "UPDATE_FAILED" | "DELETING" | "DELETE_FAILED" | "FAILED")
+      attr_accessor execution_status: ("PAUSED" | "RUNNING" | "STOPPED" | "NOT_STARTED")
+      attr_accessor created_at: ::Time
+      SENSITIVE: []
+    end
+
+    class CreateEventInput
+      attr_accessor memory_id: ::String
+      attr_accessor actor_id: ::String
+      attr_accessor session_id: ::String
+      attr_accessor event_timestamp: ::Time
+      attr_accessor payload: ::Array[Types::PayloadType]
+      attr_accessor branch: Types::Branch
+      attr_accessor client_token: ::String
+      attr_accessor metadata: ::Hash[::String, Types::MetadataValue]
+      attr_accessor extraction_mode: ("SKIP")
+      SENSITIVE: []
+    end
+
+    class CreateEventOutput
+      attr_accessor event: Types::Event
+      SENSITIVE: []
+    end
+
+    class CreatePaymentInstrumentRequest
+      attr_accessor user_id: ::String
+      attr_accessor agent_name: ::String
+      attr_accessor payment_manager_arn: ::String
+      attr_accessor payment_connector_id: ::String
+      attr_accessor payment_instrument_type: ("EMBEDDED_CRYPTO_WALLET")
+      attr_accessor payment_instrument_details: Types::PaymentInstrumentDetails
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class CreatePaymentInstrumentResponse
+      attr_accessor payment_instrument: Types::PaymentInstrument
+      SENSITIVE: []
+    end
+
+    class CreatePaymentSessionRequest
+      attr_accessor user_id: ::String
+      attr_accessor agent_name: ::String
+      attr_accessor payment_manager_arn: ::String
+      attr_accessor limits: Types::SessionLimits
+      attr_accessor expiry_time_in_minutes: ::Integer
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class CreatePaymentSessionResponse
+      attr_accessor payment_session: Types::PaymentSession
+      SENSITIVE: []
+    end
+
+    class CryptoX402PaymentInput
+      attr_accessor version: ::String
+      attr_accessor payload: untyped
+      attr_accessor permit2_allowance_limit: ::String
+      SENSITIVE: [:payload]
+    end
+
+    class CryptoX402PaymentOutput
+      attr_accessor version: ::String
+      attr_accessor payload: untyped
+      SENSITIVE: [:payload]
+    end
+
+    class CustomDescriptor
+      attr_accessor inline_content: ::String
+      SENSITIVE: []
+    end
+
+    class DataSourceConfig
+      attr_accessor cloud_watch_logs: Types::CloudWatchLogsSource
+      attr_accessor online_evaluation_config_source: Types::OnlineEvaluationConfigSource
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class CloudWatchLogs < DataSourceConfig
+      end
+      class OnlineEvaluationConfigSource < DataSourceConfig
+      end
+      class Unknown < DataSourceConfig
+      end
+    end
+
+    class DeleteABTestRequest
+      attr_accessor ab_test_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteABTestResponse
+      attr_accessor ab_test_id: ::String
+      attr_accessor ab_test_arn: ::String
+      attr_accessor status: ("CREATING" | "ACTIVE" | "CREATE_FAILED" | "UPDATING" | "UPDATE_FAILED" | "DELETING" | "DELETE_FAILED" | "FAILED")
+      SENSITIVE: []
+    end
+
+    class DeleteBatchEvaluationRequest
+      attr_accessor batch_evaluation_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteBatchEvaluationResponse
+      attr_accessor batch_evaluation_id: ::String
+      attr_accessor batch_evaluation_arn: ::String
+      attr_accessor status: ("PENDING" | "IN_PROGRESS" | "COMPLETED" | "COMPLETED_WITH_ERRORS" | "FAILED" | "STOPPING" | "STOPPED" | "DELETING")
+      SENSITIVE: []
+    end
+
+    class DeleteCapacityProviderSessionRequest
+      attr_accessor capacity_provider_id: ::String
+      attr_accessor session_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteCapacityProviderSessionResponse
+      attr_accessor capacity_provider_arn: ::String
+      attr_accessor session_id: ::String
+      attr_accessor status: ("Provisioning" | "Deprovisioning" | "Active" | "Deleting" | "Deleted" | "Stopped")
+      SENSITIVE: []
+    end
+
+    class DeleteEventInput
+      attr_accessor memory_id: ::String
+      attr_accessor session_id: ::String
+      attr_accessor event_id: ::String
+      attr_accessor actor_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteEventOutput
+      attr_accessor event_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteMemoryRecordInput
+      attr_accessor memory_id: ::String
+      attr_accessor memory_record_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteMemoryRecordOutput
+      attr_accessor memory_record_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeletePaymentInstrumentRequest
+      attr_accessor user_id: ::String
+      attr_accessor payment_manager_arn: ::String
+      attr_accessor payment_connector_id: ::String
+      attr_accessor payment_instrument_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeletePaymentInstrumentResponse
+      attr_accessor status: ("INITIATED" | "ACTIVE" | "FAILED" | "DELETED" | "BLOCKED")
+      SENSITIVE: []
+    end
+
+    class DeletePaymentSessionRequest
+      attr_accessor user_id: ::String
+      attr_accessor payment_manager_arn: ::String
+      attr_accessor payment_session_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeletePaymentSessionResponse
+      attr_accessor status: ("ACTIVE" | "EXPIRED" | "DELETED")
+      SENSITIVE: []
+    end
+
+    class DeleteRecommendationRequest
+      attr_accessor recommendation_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteRecommendationResponse
+      attr_accessor recommendation_id: ::String
+      attr_accessor status: ("PENDING" | "IN_PROGRESS" | "COMPLETED" | "FAILED" | "DELETING")
+      SENSITIVE: []
+    end
+
+    class Descriptors
+      attr_accessor mcp: Types::McpDescriptor
+      attr_accessor a2a: Types::A2aDescriptor
+      attr_accessor custom: Types::CustomDescriptor
+      attr_accessor agent_skills: Types::AgentSkillsDescriptor
+      SENSITIVE: []
+    end
+
+    class DuplicateIdException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class EfsConfiguration
+      attr_accessor access_point_arn: ::String
+      attr_accessor mount_path: ::String
+      attr_accessor file_system_arn: ::String
+      SENSITIVE: []
+    end
+
+    class EmbeddedCryptoWallet
+      attr_accessor network: ("ETHEREUM" | "SOLANA")
+      attr_accessor linked_accounts: ::Array[Types::LinkedAccount]
+      attr_accessor wallet_address: ::String
+      attr_accessor redirect_url: ::String
+      SENSITIVE: []
+    end
+
+    class EvaluateRequest
+      attr_accessor evaluator_id: ::String
+      attr_accessor evaluation_input: Types::EvaluationInput
+      attr_accessor evaluation_target: Types::EvaluationTarget
+      attr_accessor evaluation_reference_inputs: ::Array[Types::EvaluationReferenceInput]
+      SENSITIVE: [:evaluation_reference_inputs]
+    end
+
+    class EvaluateResponse
+      attr_accessor evaluation_results: ::Array[Types::EvaluationResultContent]
+      SENSITIVE: []
+    end
+
+    class EvaluationContent
+      attr_accessor text: ::String
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class Text < EvaluationContent
+      end
+      class Unknown < EvaluationContent
+      end
+    end
+
+    class EvaluationExpectedTrajectory
+      attr_accessor tool_names: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class EvaluationInput
+      attr_accessor session_spans: ::Array[untyped]
+      attr_accessor unknown: untyped
+      SENSITIVE: [:session_spans]
+
+      class SessionSpans < EvaluationInput
+      end
+      class Unknown < EvaluationInput
+      end
+    end
+
+    class EvaluationJobResults
+      attr_accessor number_of_sessions_completed: ::Integer
+      attr_accessor number_of_sessions_in_progress: ::Integer
+      attr_accessor number_of_sessions_failed: ::Integer
+      attr_accessor total_number_of_sessions: ::Integer
+      attr_accessor number_of_sessions_ignored: ::Integer
+      attr_accessor evaluator_summaries: ::Array[Types::EvaluatorSummary]
+      SENSITIVE: []
+    end
+
+    class EvaluationMetadata
+      attr_accessor session_metadata: ::Array[Types::SessionMetadataShape]
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class SessionMetadata < EvaluationMetadata
+      end
+      class Unknown < EvaluationMetadata
+      end
+    end
+
+    class EvaluationReferenceInput
+      attr_accessor context: Types::Context
+      attr_accessor expected_response: Types::EvaluationContent
+      attr_accessor assertions: ::Array[Types::EvaluationContent]
+      attr_accessor expected_trajectory: Types::EvaluationExpectedTrajectory
+      SENSITIVE: []
+    end
+
+    class EvaluationResultContent
+      attr_accessor evaluator_arn: ::String
+      attr_accessor evaluator_id: ::String
+      attr_accessor evaluator_name: ::String
+      attr_accessor explanation: ::String
+      attr_accessor context: Types::Context
+      attr_accessor value: ::Float
+      attr_accessor label: ::String
+      attr_accessor token_usage: Types::TokenUsage
+      attr_accessor error_message: ::String
+      attr_accessor error_code: ::String
+      attr_accessor ignored_reference_input_fields: ::Array[::String]
+      SENSITIVE: [:explanation]
+    end
+
+    class EvaluationTarget
+      attr_accessor span_ids: ::Array[::String]
+      attr_accessor trace_ids: ::Array[::String]
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class SpanIds < EvaluationTarget
+      end
+      class TraceIds < EvaluationTarget
+      end
+      class Unknown < EvaluationTarget
+      end
+    end
+
+    class Evaluator
+      attr_accessor evaluator_id: ::String
+      SENSITIVE: []
+    end
+
+    class EvaluatorMetric
+      attr_accessor evaluator_arn: ::String
+      attr_accessor control_stats: Types::ControlStats
+      attr_accessor variant_results: ::Array[Types::VariantResult]
+      SENSITIVE: []
+    end
+
+    class EvaluatorStatistics
+      attr_accessor average_score: ::Float
+      SENSITIVE: []
+    end
+
+    class EvaluatorSummary
+      attr_accessor evaluator_id: ::String
+      attr_accessor statistics: Types::EvaluatorStatistics
+      attr_accessor total_evaluated: ::Integer
+      attr_accessor total_failed: ::Integer
+      SENSITIVE: []
+    end
+
+    class Event
+      attr_accessor memory_id: ::String
+      attr_accessor actor_id: ::String
+      attr_accessor session_id: ::String
+      attr_accessor event_id: ::String
+      attr_accessor event_timestamp: ::Time
+      attr_accessor payload: ::Array[Types::PayloadType]
+      attr_accessor branch: Types::Branch
+      attr_accessor metadata: ::Hash[::String, Types::MetadataValue]
+      SENSITIVE: []
+    end
+
+    class EventMetadataFilterExpression
+      attr_accessor left: Types::LeftExpression
+      attr_accessor operator: ("EQUALS_TO" | "EXISTS" | "NOT_EXISTS")
+      attr_accessor right: Types::RightExpression
+      SENSITIVE: []
+    end
+
+    class ExecutionSummaryAffectedSession
+      attr_accessor session_id: ::String
+      attr_accessor approach_taken: ::String
+      attr_accessor final_outcome: ::String
+      SENSITIVE: []
+    end
+
+    class ExecutionSummaryCluster
+      attr_accessor cluster_id: ::Integer
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor affected_session_count: ::Integer
+      attr_accessor affected_sessions: ::Array[Types::ExecutionSummaryAffectedSession]
+      SENSITIVE: []
+    end
+
+    class ExecutionSummaryClusteringResultContent
+      attr_accessor execution_summaries: ::Array[Types::ExecutionSummaryCluster]
+      SENSITIVE: []
+    end
+
+    class ExternalProxy
+      attr_accessor server: ::String
+      attr_accessor port: ::Integer
+      attr_accessor domain_patterns: ::Array[::String]
+      attr_accessor credentials: Types::ProxyCredentials
+      SENSITIVE: []
+    end
+
+    class ExtractionJob
+      attr_accessor job_id: ::String
+      SENSITIVE: []
+    end
+
+    class ExtractionJobFilterInput
+      attr_accessor strategy_id: ::String
+      attr_accessor session_id: ::String
+      attr_accessor actor_id: ::String
+      attr_accessor status: ("FAILED")
+      SENSITIVE: []
+    end
+
+    class ExtractionJobMessages
+      attr_accessor messages_list: ::Array[Types::MessageMetadata]
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class MessagesList < ExtractionJobMessages
+      end
+      class Unknown < ExtractionJobMessages
+      end
+    end
+
+    class ExtractionJobMetadata
+      attr_accessor job_id: ::String
+      attr_accessor messages: Types::ExtractionJobMessages
+      attr_accessor status: ("FAILED")
+      attr_accessor failure_reason: ::String
+      attr_accessor strategy_id: ::String
+      attr_accessor session_id: ::String
+      attr_accessor actor_id: ::String
+      SENSITIVE: []
+    end
+
+    class FailureAnalysisResultContent
+      attr_accessor failures: ::Array[Types::FailureCategoryCluster]
+      SENSITIVE: []
+    end
+
+    class FailureCategoryCluster
+      attr_accessor cluster_id: ::Integer
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor affected_session_count: ::Integer
+      attr_accessor sub_categories: ::Array[Types::FailureSubCategoryCluster]
+      SENSITIVE: []
+    end
+
+    class FailureSpanDetail
+      attr_accessor span_id: ::String
+      attr_accessor trace_id: ::String
+      attr_accessor signals: ::Array[Types::InsightsFailureSignal]
+      SENSITIVE: []
+    end
+
+    class FailureSubCategoryCluster
+      attr_accessor cluster_id: ::Integer
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor affected_session_count: ::Integer
+      attr_accessor root_causes: ::Array[Types::RootCauseCluster]
+      SENSITIVE: []
+    end
+
+    class FilterInput
+      attr_accessor branch: Types::BranchFilter
+      attr_accessor event_metadata: ::Array[Types::EventMetadataFilterExpression]
+      SENSITIVE: []
+    end
+
+    class FilterValue
+      attr_accessor string_value: ::String
+      attr_accessor double_value: ::Float
+      attr_accessor boolean_value: bool
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class StringValue < FilterValue
+      end
+      class DoubleValue < FilterValue
+      end
+      class BooleanValue < FilterValue
+      end
+      class Unknown < FilterValue
+      end
+    end
+
+    class GatewayFilter
+      attr_accessor target_paths: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class GetABTestRequest
+      attr_accessor ab_test_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetABTestResponse
+      attr_accessor ab_test_id: ::String
+      attr_accessor ab_test_arn: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor status: ("CREATING" | "ACTIVE" | "CREATE_FAILED" | "UPDATING" | "UPDATE_FAILED" | "DELETING" | "DELETE_FAILED" | "FAILED")
+      attr_accessor execution_status: ("PAUSED" | "RUNNING" | "STOPPED" | "NOT_STARTED")
+      attr_accessor gateway_arn: ::String
+      attr_accessor variants: ::Array[Types::Variant]
+      attr_accessor gateway_filter: Types::GatewayFilter
+      attr_accessor evaluation_config: Types::ABTestEvaluationConfig
+      attr_accessor role_arn: ::String
+      attr_accessor current_run_id: ::String
+      attr_accessor error_details: ::Array[::String]
+      attr_accessor started_at: ::Time
+      attr_accessor stopped_at: ::Time
+      attr_accessor max_duration_expires_at: ::Time
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      attr_accessor results: Types::ABTestResults
+      SENSITIVE: []
+    end
+
+    class GetAgentCardRequest
+      attr_accessor runtime_session_id: ::String
+      attr_accessor agent_runtime_arn: ::String
+      attr_accessor qualifier: ::String
+      SENSITIVE: []
+    end
+
+    class GetAgentCardResponse
+      attr_accessor runtime_session_id: ::String
+      attr_accessor agent_card: untyped
+      attr_accessor status_code: ::Integer
+      SENSITIVE: []
+    end
+
+    class GetBatchEvaluationRequest
+      attr_accessor batch_evaluation_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetBatchEvaluationResponse
+      attr_accessor batch_evaluation_id: ::String
+      attr_accessor batch_evaluation_arn: ::String
+      attr_accessor batch_evaluation_name: ::String
+      attr_accessor status: ("PENDING" | "IN_PROGRESS" | "COMPLETED" | "COMPLETED_WITH_ERRORS" | "FAILED" | "STOPPING" | "STOPPED" | "DELETING")
+      attr_accessor created_at: ::Time
+      attr_accessor evaluators: ::Array[Types::Evaluator]
+      attr_accessor insights: ::Array[Types::Insight]
+      attr_accessor data_source_config: Types::DataSourceConfig
+      attr_accessor output_config: Types::OutputConfig
+      attr_accessor evaluation_results: Types::EvaluationJobResults
+      attr_accessor failure_analysis_result: Types::FailureAnalysisResultContent
+      attr_accessor user_intent_result: Types::UserIntentClusteringResultContent
+      attr_accessor execution_summary_result: Types::ExecutionSummaryClusteringResultContent
+      attr_accessor error_details: ::Array[::String]
+      attr_accessor description: ::String
+      attr_accessor updated_at: ::Time
+      attr_accessor kms_key_arn: ::String
+      SENSITIVE: []
+    end
+
+    class GetBrowserSessionRequest
+      attr_accessor browser_identifier: ::String
+      attr_accessor session_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetBrowserSessionResponse
+      attr_accessor browser_identifier: ::String
+      attr_accessor session_id: ::String
+      attr_accessor name: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor view_port: Types::ViewPort
+      attr_accessor extensions: ::Array[Types::BrowserExtension]
+      attr_accessor enterprise_policies: ::Array[Types::BrowserEnterprisePolicy]
+      attr_accessor profile_configuration: Types::BrowserProfileConfiguration
+      attr_accessor session_timeout_seconds: ::Integer
+      attr_accessor status: ("READY" | "TERMINATED")
+      attr_accessor streams: Types::BrowserSessionStream
+      attr_accessor proxy_configuration: Types::ProxyConfiguration
+      attr_accessor certificates: ::Array[Types::Certificate]
+      attr_accessor filesystem_configurations: ::Array[Types::ToolsFileSystemConfiguration]
+      attr_accessor session_replay_artifact: ::String
+      attr_accessor last_updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class GetCodeInterpreterSessionRequest
+      attr_accessor code_interpreter_identifier: ::String
+      attr_accessor session_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetCodeInterpreterSessionResponse
+      attr_accessor code_interpreter_identifier: ::String
+      attr_accessor session_id: ::String
+      attr_accessor name: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor session_timeout_seconds: ::Integer
+      attr_accessor status: ("READY" | "TERMINATED")
+      attr_accessor certificates: ::Array[Types::Certificate]
+      attr_accessor filesystem_configurations: ::Array[Types::ToolsFileSystemConfiguration]
+      SENSITIVE: []
+    end
+
+    class GetEventInput
+      attr_accessor memory_id: ::String
+      attr_accessor session_id: ::String
+      attr_accessor actor_id: ::String
+      attr_accessor event_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetEventOutput
+      attr_accessor event: Types::Event
+      SENSITIVE: []
+    end
+
+    class GetMemoryRecordInput
+      attr_accessor memory_id: ::String
+      attr_accessor memory_record_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetMemoryRecordOutput
+      attr_accessor memory_record: Types::MemoryRecord
+      SENSITIVE: []
+    end
+
+    class GetPaymentInstrumentBalanceRequest
+      attr_accessor user_id: ::String
+      attr_accessor agent_name: ::String
+      attr_accessor payment_manager_arn: ::String
+      attr_accessor payment_connector_id: ::String
+      attr_accessor payment_instrument_id: ::String
+      attr_accessor chain: ("BASE" | "BASE_SEPOLIA" | "ETHEREUM" | "SOLANA" | "SOLANA_DEVNET")
+      attr_accessor token: ("USDC")
+      SENSITIVE: []
+    end
+
+    class GetPaymentInstrumentBalanceResponse
+      attr_accessor payment_instrument_id: ::String
+      attr_accessor token_balance: Types::TokenBalance
+      SENSITIVE: []
+    end
+
+    class GetPaymentInstrumentRequest
+      attr_accessor user_id: ::String
+      attr_accessor agent_name: ::String
+      attr_accessor payment_manager_arn: ::String
+      attr_accessor payment_connector_id: ::String
+      attr_accessor payment_instrument_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetPaymentInstrumentResponse
+      attr_accessor payment_instrument: Types::PaymentInstrument
+      SENSITIVE: []
+    end
+
+    class GetPaymentSessionRequest
+      attr_accessor user_id: ::String
+      attr_accessor agent_name: ::String
+      attr_accessor payment_manager_arn: ::String
+      attr_accessor payment_session_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetPaymentSessionResponse
+      attr_accessor payment_session: Types::PaymentSession
+      SENSITIVE: []
+    end
+
+    class GetRecommendationRequest
+      attr_accessor recommendation_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetRecommendationResponse
+      attr_accessor recommendation_id: ::String
+      attr_accessor recommendation_arn: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor type: ("SYSTEM_PROMPT_RECOMMENDATION" | "TOOL_DESCRIPTION_RECOMMENDATION")
+      attr_accessor recommendation_config: Types::RecommendationConfig
+      attr_accessor status: ("PENDING" | "IN_PROGRESS" | "COMPLETED" | "FAILED" | "DELETING")
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      attr_accessor recommendation_result: Types::RecommendationResult
+      attr_accessor kms_key_arn: ::String
+      SENSITIVE: []
+    end
+
+    class GetResourceApiKeyRequest
+      attr_accessor workload_identity_token: ::String
+      attr_accessor resource_credential_provider_name: ::String
+      SENSITIVE: [:workload_identity_token]
+    end
+
+    class GetResourceApiKeyResponse
+      attr_accessor api_key: ::String
+      SENSITIVE: [:api_key]
+    end
+
+    class GetResourceOauth2TokenRequest
+      attr_accessor workload_identity_token: ::String
+      attr_accessor resource_credential_provider_name: ::String
+      attr_accessor scopes: ::Array[::String]
+      attr_accessor oauth2_flow: ("USER_FEDERATION" | "M2M" | "ON_BEHALF_OF_TOKEN_EXCHANGE")
+      attr_accessor session_uri: ::String
+      attr_accessor resource_oauth_2_return_url: ::String
+      attr_accessor force_authentication: bool
+      attr_accessor custom_parameters: ::Hash[::String, ::String]
+      attr_accessor custom_state: ::String
+      attr_accessor resources: ::Array[::String]
+      attr_accessor audiences: ::Array[::String]
+      SENSITIVE: [:workload_identity_token, :custom_state]
+    end
+
+    class GetResourceOauth2TokenResponse
+      attr_accessor authorization_url: ::String
+      attr_accessor access_token: ::String
+      attr_accessor session_uri: ::String
+      attr_accessor session_status: ("IN_PROGRESS" | "FAILED")
+      SENSITIVE: [:authorization_url, :access_token]
+    end
+
+    class GetResourcePaymentTokenRequest
+      attr_accessor workload_identity_token: ::String
+      attr_accessor resource_credential_provider_name: ::String
+      attr_accessor payment_token_request: Types::PaymentTokenRequestInput
+      SENSITIVE: [:workload_identity_token]
+    end
+
+    class GetResourcePaymentTokenResponse
+      attr_accessor payment_token_response: Types::PaymentTokenResponseOutput
+      SENSITIVE: []
+    end
+
+    class GetWorkloadAccessTokenForJWTRequest
+      attr_accessor workload_name: ::String
+      attr_accessor user_token: ::String
+      SENSITIVE: [:user_token]
+    end
+
+    class GetWorkloadAccessTokenForJWTResponse
+      attr_accessor workload_access_token: ::String
+      SENSITIVE: [:workload_access_token]
+    end
+
+    class GetWorkloadAccessTokenForUserIdRequest
+      attr_accessor workload_name: ::String
+      attr_accessor user_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetWorkloadAccessTokenForUserIdResponse
+      attr_accessor workload_access_token: ::String
+      SENSITIVE: [:workload_access_token]
+    end
+
+    class GetWorkloadAccessTokenRequest
+      attr_accessor workload_name: ::String
+      SENSITIVE: []
+    end
+
+    class GetWorkloadAccessTokenResponse
+      attr_accessor workload_access_token: ::String
+      SENSITIVE: [:workload_access_token]
+    end
+
+    class GroundTruthSource
+      attr_accessor inline: Types::InlineGroundTruth
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class Inline < GroundTruthSource
+      end
+      class Unknown < GroundTruthSource
+      end
+    end
+
+    class GroundTruthTurn
+      attr_accessor input: Types::GroundTruthTurnInput
+      attr_accessor expected_response: Types::EvaluationContent
+      SENSITIVE: []
+    end
+
+    class GroundTruthTurnInput
+      attr_accessor prompt: ::String
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class Prompt < GroundTruthTurnInput
+      end
+      class Unknown < GroundTruthTurnInput
+      end
+    end
+
+    class HarnessAgentCoreBrowserConfig
+      attr_accessor browser_arn: ::String
+      SENSITIVE: []
+    end
+
+    class HarnessAgentCoreCodeInterpreterConfig
+      attr_accessor code_interpreter_arn: ::String
+      SENSITIVE: []
+    end
+
+    class HarnessAgentCoreGatewayConfig
+      attr_accessor gateway_arn: ::String
+      attr_accessor outbound_auth: Types::HarnessGatewayOutboundAuth
+      SENSITIVE: []
+    end
+
+    class HarnessBedrockModelConfig
+      attr_accessor model_id: ::String
+      attr_accessor max_tokens: ::Integer
+      attr_accessor temperature: ::Float
+      attr_accessor top_p: ::Float
+      attr_accessor api_format: ("converse_stream" | "responses" | "chat_completions")
+      attr_accessor additional_params: untyped
+      SENSITIVE: []
+    end
+
+    class HarnessContentBlock
+      attr_accessor text: ::String
+      attr_accessor tool_use: Types::HarnessToolUseBlock
+      attr_accessor tool_result: Types::HarnessToolResultBlock
+      attr_accessor reasoning_content: Types::HarnessReasoningContentBlock
+      attr_accessor unknown: untyped
+      SENSITIVE: [:text, :reasoning_content]
+
+      class Text < HarnessContentBlock
+      end
+      class ToolUse < HarnessContentBlock
+      end
+      class ToolResult < HarnessContentBlock
+      end
+      class ReasoningContent < HarnessContentBlock
+      end
+      class Unknown < HarnessContentBlock
+      end
+    end
+
+    class HarnessContentBlockDelta
+      attr_accessor text: ::String
+      attr_accessor tool_use: Types::HarnessToolUseBlockDelta
+      attr_accessor tool_result: ::Array[Types::HarnessToolResultBlockDelta]
+      attr_accessor reasoning_content: Types::HarnessReasoningContentBlockDelta
+      attr_accessor tool_result_metadata: Types::HarnessToolResultMetadataBlockDelta
+      attr_accessor unknown: untyped
+      SENSITIVE: [:text, :reasoning_content]
+
+      class Text < HarnessContentBlockDelta
+      end
+      class ToolUse < HarnessContentBlockDelta
+      end
+      class ToolResult < HarnessContentBlockDelta
+      end
+      class ReasoningContent < HarnessContentBlockDelta
+      end
+      class ToolResultMetadata < HarnessContentBlockDelta
+      end
+      class Unknown < HarnessContentBlockDelta
+      end
+    end
+
+    class HarnessContentBlockDeltaEvent
+      attr_accessor content_block_index: ::Integer
+      attr_accessor delta: Types::HarnessContentBlockDelta
+      attr_accessor event_type: untyped
+      SENSITIVE: []
+    end
+
+    class HarnessContentBlockStart
+      attr_accessor tool_use: Types::HarnessToolUseBlockStart
+      attr_accessor tool_result: Types::HarnessToolResultBlockStart
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class ToolUse < HarnessContentBlockStart
+      end
+      class ToolResult < HarnessContentBlockStart
+      end
+      class Unknown < HarnessContentBlockStart
+      end
+    end
+
+    class HarnessContentBlockStartEvent
+      attr_accessor content_block_index: ::Integer
+      attr_accessor start: Types::HarnessContentBlockStart
+      attr_accessor event_type: untyped
+      SENSITIVE: []
+    end
+
+    class HarnessContentBlockStopEvent
+      attr_accessor content_block_index: ::Integer
+      attr_accessor event_type: untyped
+      SENSITIVE: []
+    end
+
+    class HarnessGatewayOutboundAuth
+      attr_accessor aws_iam: Types::Unit
+      attr_accessor none: Types::Unit
+      attr_accessor oauth: Types::OAuthCredentialProvider
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class AwsIam < HarnessGatewayOutboundAuth
+      end
+      class None < HarnessGatewayOutboundAuth
+      end
+      class Oauth < HarnessGatewayOutboundAuth
+      end
+      class Unknown < HarnessGatewayOutboundAuth
+      end
+    end
+
+    class HarnessGeminiModelConfig
+      attr_accessor model_id: ::String
+      attr_accessor api_key_arn: ::String
+      attr_accessor max_tokens: ::Integer
+      attr_accessor temperature: ::Float
+      attr_accessor top_p: ::Float
+      attr_accessor top_k: ::Integer
+      attr_accessor additional_params: untyped
+      SENSITIVE: []
+    end
+
+    class HarnessInlineFunctionConfig
+      attr_accessor description: ::String
+      attr_accessor input_schema: untyped
+      SENSITIVE: [:description, :input_schema]
+    end
+
+    class HarnessLiteLlmModelConfig
+      attr_accessor model_id: ::String
+      attr_accessor api_key_arn: ::String
+      attr_accessor api_base: ::String
+      attr_accessor max_tokens: ::Integer
+      attr_accessor temperature: ::Float
+      attr_accessor top_p: ::Float
+      attr_accessor additional_params: untyped
+      SENSITIVE: [:api_base]
+    end
+
+    class HarnessMessage
+      attr_accessor role: ("user" | "assistant")
+      attr_accessor content: ::Array[Types::HarnessContentBlock]
+      SENSITIVE: []
+    end
+
+    class HarnessMessageStartEvent
+      attr_accessor role: ("user" | "assistant")
+      attr_accessor event_type: untyped
+      SENSITIVE: []
+    end
+
+    class HarnessMessageStopEvent
+      attr_accessor stop_reason: ("end_turn" | "tool_use" | "tool_result" | "max_tokens" | "stop_sequence" | "content_filtered" | "malformed_model_output" | "malformed_tool_use" | "interrupted" | "partial_turn" | "model_context_window_exceeded" | "max_iterations_exceeded" | "max_output_tokens_exceeded" | "timeout_exceeded")
+      attr_accessor event_type: untyped
+      SENSITIVE: []
+    end
+
+    class HarnessMetadataEvent
+      attr_accessor usage: Types::HarnessTokenUsage
+      attr_accessor metrics: Types::HarnessStreamMetrics
+      attr_accessor event_type: untyped
+      SENSITIVE: []
+    end
+
+    class HarnessModelConfiguration
+      attr_accessor bedrock_model_config: Types::HarnessBedrockModelConfig
+      attr_accessor open_ai_model_config: Types::HarnessOpenAiModelConfig
+      attr_accessor gemini_model_config: Types::HarnessGeminiModelConfig
+      attr_accessor lite_llm_model_config: Types::HarnessLiteLlmModelConfig
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class BedrockModelConfig < HarnessModelConfiguration
+      end
+      class OpenAiModelConfig < HarnessModelConfiguration
+      end
+      class GeminiModelConfig < HarnessModelConfiguration
+      end
+      class LiteLlmModelConfig < HarnessModelConfiguration
+      end
+      class Unknown < HarnessModelConfiguration
+      end
+    end
+
+    class HarnessOpenAiModelConfig
+      attr_accessor model_id: ::String
+      attr_accessor api_key_arn: ::String
+      attr_accessor max_tokens: ::Integer
+      attr_accessor temperature: ::Float
+      attr_accessor top_p: ::Float
+      attr_accessor api_format: ("chat_completions" | "responses")
+      attr_accessor additional_params: untyped
+      SENSITIVE: []
+    end
+
+    class HarnessReasoningContentBlock
+      attr_accessor reasoning_text: Types::HarnessReasoningTextBlock
+      attr_accessor redacted_content: ::String
+      attr_accessor unknown: untyped
+      SENSITIVE: [:reasoning_text]
+
+      class ReasoningText < HarnessReasoningContentBlock
+      end
+      class RedactedContent < HarnessReasoningContentBlock
+      end
+      class Unknown < HarnessReasoningContentBlock
+      end
+    end
+
+    class HarnessReasoningContentBlockDelta
+      attr_accessor text: ::String
+      attr_accessor redacted_content: ::String
+      attr_accessor signature: ::String
+      attr_accessor unknown: untyped
+      SENSITIVE: [:redacted_content]
+
+      class Text < HarnessReasoningContentBlockDelta
+      end
+      class RedactedContent < HarnessReasoningContentBlockDelta
+      end
+      class Signature < HarnessReasoningContentBlockDelta
+      end
+      class Unknown < HarnessReasoningContentBlockDelta
+      end
+    end
+
+    class HarnessReasoningTextBlock
+      attr_accessor text: ::String
+      attr_accessor signature: ::String
+      SENSITIVE: []
+    end
+
+    class HarnessRemoteMcpConfig
+      attr_accessor url: ::String
+      attr_accessor headers: ::Hash[::String, ::String]
+      SENSITIVE: [:url, :headers]
+    end
+
+    class HarnessSkill
+      attr_accessor path: ::String
+      attr_accessor s3: Types::HarnessSkillS3Source
+      attr_accessor git: Types::HarnessSkillGitSource
+      attr_accessor aws_skills: Types::HarnessSkillAwsSkillsSource
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class Path < HarnessSkill
+      end
+      class S3 < HarnessSkill
+      end
+      class Git < HarnessSkill
+      end
+      class AwsSkills < HarnessSkill
+      end
+      class Unknown < HarnessSkill
+      end
+    end
+
+    class HarnessSkillAwsSkillsSource
+      attr_accessor paths: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class HarnessSkillGitAuth
+      attr_accessor credential_arn: ::String
+      attr_accessor username: ::String
+      SENSITIVE: []
+    end
+
+    class HarnessSkillGitSource
+      attr_accessor url: ::String
+      attr_accessor path: ::String
+      attr_accessor auth: Types::HarnessSkillGitAuth
+      SENSITIVE: []
+    end
+
+    class HarnessSkillS3Source
+      attr_accessor uri: ::String
+      SENSITIVE: []
+    end
+
+    class HarnessStreamMetrics
+      attr_accessor latency_ms: ::Integer
+      SENSITIVE: []
+    end
+
+    class HarnessSystemContentBlock
+      attr_accessor text: ::String
+      attr_accessor unknown: untyped
+      SENSITIVE: [:text]
+
+      class Text < HarnessSystemContentBlock
+      end
+      class Unknown < HarnessSystemContentBlock
+      end
+    end
+
+    class HarnessTokenUsage
+      attr_accessor input_tokens: ::Integer
+      attr_accessor output_tokens: ::Integer
+      attr_accessor total_tokens: ::Integer
+      attr_accessor cache_read_input_tokens: ::Integer
+      attr_accessor cache_write_input_tokens: ::Integer
+      SENSITIVE: []
+    end
+
+    class HarnessTool
+      attr_accessor type: ("remote_mcp" | "agentcore_browser" | "agentcore_gateway" | "inline_function" | "agentcore_code_interpreter")
+      attr_accessor name: ::String
+      attr_accessor config: Types::HarnessToolConfiguration
+      SENSITIVE: []
+    end
+
+    class HarnessToolConfiguration
+      attr_accessor remote_mcp: Types::HarnessRemoteMcpConfig
+      attr_accessor agent_core_browser: Types::HarnessAgentCoreBrowserConfig
+      attr_accessor agent_core_gateway: Types::HarnessAgentCoreGatewayConfig
+      attr_accessor inline_function: Types::HarnessInlineFunctionConfig
+      attr_accessor agent_core_code_interpreter: Types::HarnessAgentCoreCodeInterpreterConfig
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class RemoteMcp < HarnessToolConfiguration
+      end
+      class AgentCoreBrowser < HarnessToolConfiguration
+      end
+      class AgentCoreGateway < HarnessToolConfiguration
+      end
+      class InlineFunction < HarnessToolConfiguration
+      end
+      class AgentCoreCodeInterpreter < HarnessToolConfiguration
+      end
+      class Unknown < HarnessToolConfiguration
+      end
+    end
+
+    class HarnessToolResultBlock
+      attr_accessor tool_use_id: ::String
+      attr_accessor content: ::Array[Types::HarnessToolResultContentBlock]
+      attr_accessor status: ("success" | "error")
+      attr_accessor type: ("tool_use" | "server_tool_use" | "mcp_tool_use")
+      SENSITIVE: []
+    end
+
+    class HarnessToolResultBlockDelta
+      attr_accessor text: ::String
+      attr_accessor json: untyped
+      attr_accessor unknown: untyped
+      SENSITIVE: [:text, :json]
+
+      class Text < HarnessToolResultBlockDelta
+      end
+      class Json < HarnessToolResultBlockDelta
+      end
+      class Unknown < HarnessToolResultBlockDelta
+      end
+    end
+
+    class HarnessToolResultBlockStart
+      attr_accessor tool_use_id: ::String
+      attr_accessor status: ("success" | "error")
+      SENSITIVE: []
+    end
+
+    class HarnessToolResultContentBlock
+      attr_accessor text: ::String
+      attr_accessor json: untyped
+      attr_accessor unknown: untyped
+      SENSITIVE: [:text, :json]
+
+      class Text < HarnessToolResultContentBlock
+      end
+      class Json < HarnessToolResultContentBlock
+      end
+      class Unknown < HarnessToolResultContentBlock
+      end
+    end
+
+    class HarnessToolResultMetadataBlockDelta
+      attr_accessor metadata: ::String
+      SENSITIVE: [:metadata]
+    end
+
+    class HarnessToolUseBlock
+      attr_accessor name: ::String
+      attr_accessor tool_use_id: ::String
+      attr_accessor input: untyped
+      attr_accessor type: ("tool_use" | "server_tool_use" | "mcp_tool_use")
+      attr_accessor server_name: ::String
+      SENSITIVE: [:input]
+    end
+
+    class HarnessToolUseBlockDelta
+      attr_accessor input: ::String
+      SENSITIVE: [:input]
+    end
+
+    class HarnessToolUseBlockStart
+      attr_accessor tool_use_id: ::String
+      attr_accessor name: ::String
+      attr_accessor type: ("tool_use" | "server_tool_use" | "mcp_tool_use")
+      attr_accessor server_name: ::String
+      SENSITIVE: []
+    end
+
+    class InlineGroundTruth
+      attr_accessor assertions: ::Array[Types::EvaluationContent]
+      attr_accessor expected_trajectory: Types::EvaluationExpectedTrajectory
+      attr_accessor turns: ::Array[Types::GroundTruthTurn]
+      SENSITIVE: []
+    end
+
+    class InputContentBlock
+      attr_accessor path: ::String
+      attr_accessor text: ::String
+      attr_accessor blob: ::String
+      SENSITIVE: [:blob]
+    end
+
+    class Insight
+      attr_accessor insight_id: ::String
+      SENSITIVE: []
+    end
+
+    class InsightsFailureSignal
+      attr_accessor category: ("execution-error-category-authentication" | "execution-error-category-resource-not-found" | "execution-error-category-service-errors" | "execution-error-category-rate-limiting" | "execution-error-category-formatting" | "execution-error-category-timeout" | "execution-error-category-resource-exhaustion" | "execution-error-category-environment" | "execution-error-category-tool-schema" | "task-instruction-category-non-compliance" | "task-instruction-category-problem-id" | "incorrect-actions-category-tool-selection" | "incorrect-actions-category-poor-information-retrieval" | "incorrect-actions-category-clarification" | "incorrect-actions-category-inappropriate-info-request" | "context-handling-error-category-context-handling-failures" | "hallucination-category-hall-capabilities" | "hallucination-category-hall-misunderstand" | "hallucination-category-hall-usage" | "hallucination-category-hall-history" | "hallucination-category-hall-params" | "hallucination-category-fabricate-tool-outputs" | "repetitive-behavior-category-repetition-tool" | "repetitive-behavior-category-repetition-info" | "repetitive-behavior-category-step-repetition" | "orchestration-related-errors-category-reasoning-mismatch" | "orchestration-related-errors-category-goal-deviation" | "orchestration-related-errors-category-premature-termination" | "orchestration-related-errors-category-unaware-termination" | "llm-output-category-nonsensical" | "configuration-mismatch-category-tool-definition" | "coding-use-case-specific-failure-types-category-edge-case-oversights" | "coding-use-case-specific-failure-types-category-dependency-issues" | "other")
+      attr_accessor evidence: ::String
+      attr_accessor confidence: ::Float
+      SENSITIVE: []
+    end
+
+    class InternalServerException
+      attr_accessor message: ::String
+      attr_accessor event_type: untyped
+      SENSITIVE: []
+    end
+
+    class InvalidInputException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class InvokeAgentRuntimeCommandRequest
+      attr_accessor content_type: ::String
+      attr_accessor accept: ::String
+      attr_accessor runtime_session_id: ::String
+      attr_accessor trace_id: ::String
+      attr_accessor trace_parent: ::String
+      attr_accessor trace_state: ::String
+      attr_accessor baggage: ::String
+      attr_accessor agent_runtime_arn: ::String
+      attr_accessor qualifier: ::String
+      attr_accessor account_id: ::String
+      attr_accessor body: Types::InvokeAgentRuntimeCommandRequestBody
+      SENSITIVE: []
+    end
+
+    class InvokeAgentRuntimeCommandRequestBody
+      attr_accessor command: ::String
+      attr_accessor timeout: ::Integer
+      SENSITIVE: []
+    end
+
+    class InvokeAgentRuntimeCommandResponse
+      attr_accessor runtime_session_id: ::String
+      attr_accessor trace_id: ::String
+      attr_accessor trace_parent: ::String
+      attr_accessor trace_state: ::String
+      attr_accessor baggage: ::String
+      attr_accessor content_type: ::String
+      attr_accessor status_code: ::Integer
+      attr_accessor stream: Types::InvokeAgentRuntimeCommandStreamOutput
+      SENSITIVE: []
+    end
+
+    class InvokeAgentRuntimeRequest
+      attr_accessor content_type: ::String
+      attr_accessor accept: ::String
+      attr_accessor mcp_session_id: ::String
+      attr_accessor runtime_session_id: ::String
+      attr_accessor mcp_protocol_version: ::String
+      attr_accessor mcp_method: ::String
+      attr_accessor mcp_name: ::String
+      attr_accessor runtime_user_id: ::String
+      attr_accessor trace_id: ::String
+      attr_accessor trace_parent: ::String
+      attr_accessor trace_state: ::String
+      attr_accessor baggage: ::String
+      attr_accessor agent_runtime_arn: ::String
+      attr_accessor qualifier: ::String
+      attr_accessor account_id: ::String
+      attr_accessor payload: ::String
+      SENSITIVE: [:payload]
+    end
+
+    class InvokeAgentRuntimeResponse
+      attr_accessor runtime_session_id: ::String
+      attr_accessor mcp_session_id: ::String
+      attr_accessor mcp_protocol_version: ::String
+      attr_accessor trace_id: ::String
+      attr_accessor trace_parent: ::String
+      attr_accessor trace_state: ::String
+      attr_accessor baggage: ::String
+      attr_accessor content_type: ::String
+      attr_accessor response: ::IO
+      attr_accessor status_code: ::Integer
+      SENSITIVE: [:response]
+    end
+
+    class InvokeBrowserRequest
+      attr_accessor browser_identifier: ::String
+      attr_accessor session_id: ::String
+      attr_accessor action: Types::BrowserAction
+      SENSITIVE: []
+    end
+
+    class InvokeBrowserResponse
+      attr_accessor result: Types::BrowserActionResult
+      attr_accessor session_id: ::String
+      SENSITIVE: []
+    end
+
+    class InvokeCodeInterpreterRequest
+      attr_accessor code_interpreter_identifier: ::String
+      attr_accessor session_id: ::String
+      attr_accessor trace_id: ::String
+      attr_accessor trace_parent: ::String
+      attr_accessor name: ("executeCode" | "executeCommand" | "readFiles" | "listFiles" | "removeFiles" | "writeFiles" | "startCommandExecution" | "getTask" | "stopTask")
+      attr_accessor arguments: Types::ToolArguments
+      SENSITIVE: []
+    end
+
+    class InvokeCodeInterpreterResponse
+      attr_accessor session_id: ::String
+      attr_accessor stream: Types::CodeInterpreterStreamOutput
+      SENSITIVE: []
+    end
+
+    class InvokeHarnessRequest
+      attr_accessor harness_arn: ::String
+      attr_accessor qualifier: ::String
+      attr_accessor runtime_session_id: ::String
+      attr_accessor runtime_user_id: ::String
+      attr_accessor trace_parent: ::String
+      attr_accessor trace_state: ::String
+      attr_accessor trace_id: ::String
+      attr_accessor baggage: ::String
+      attr_accessor messages: ::Array[Types::HarnessMessage]
+      attr_accessor model: Types::HarnessModelConfiguration
+      attr_accessor system_prompt: ::Array[Types::HarnessSystemContentBlock]
+      attr_accessor tools: ::Array[Types::HarnessTool]
+      attr_accessor skills: ::Array[Types::HarnessSkill]
+      attr_accessor allowed_tools: ::Array[::String]
+      attr_accessor max_iterations: ::Integer
+      attr_accessor max_tokens: ::Integer
+      attr_accessor timeout_seconds: ::Integer
+      attr_accessor actor_id: ::String
+      SENSITIVE: []
+    end
+
+    class InvokeHarnessResponse
+      attr_accessor stream: Types::InvokeHarnessStreamOutput
+      SENSITIVE: []
+    end
+
+    class KeyPressArguments
+      attr_accessor key: ::String
+      attr_accessor presses: ::Integer
+      SENSITIVE: []
+    end
+
+    class KeyPressResult
+      attr_accessor status: ("SUCCESS" | "FAILED")
+      attr_accessor error: ::String
+      SENSITIVE: []
+    end
+
+    class KeyShortcutArguments
+      attr_accessor keys: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class KeyShortcutResult
+      attr_accessor status: ("SUCCESS" | "FAILED")
+      attr_accessor error: ::String
+      SENSITIVE: []
+    end
+
+    class KeyTypeArguments
+      attr_accessor text: ::String
+      SENSITIVE: []
+    end
+
+    class KeyTypeResult
+      attr_accessor status: ("SUCCESS" | "FAILED")
+      attr_accessor error: ::String
+      SENSITIVE: []
+    end
+
+    class LeftExpression
+      attr_accessor metadata_key: ::String
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class MetadataKey < LeftExpression
+      end
+      class Unknown < LeftExpression
+      end
+    end
+
+    class LinkedAccount
+      attr_accessor email: Types::LinkedAccountEmail
+      attr_accessor sms: Types::LinkedAccountSms
+      attr_accessor developer_jwt: Types::LinkedAccountDeveloperJwt
+      attr_accessor o_auth_2: Types::LinkedAccountOAuth2
+      attr_accessor unknown: untyped
+      SENSITIVE: [:email, :sms]
+
+      class Email < LinkedAccount
+      end
+      class Sms < LinkedAccount
+      end
+      class DeveloperJwt < LinkedAccount
+      end
+      class OAuth2 < LinkedAccount
+      end
+      class Unknown < LinkedAccount
+      end
+    end
+
+    class LinkedAccountDeveloperJwt
+      attr_accessor kid: ::String
+      attr_accessor sub: ::String
+      SENSITIVE: []
+    end
+
+    class LinkedAccountEmail
+      attr_accessor email_address: ::String
+      SENSITIVE: [:email_address]
+    end
+
+    class LinkedAccountOAuth2
+      attr_accessor google: Types::OAuth2Authentication
+      attr_accessor apple: Types::OAuth2Authentication
+      attr_accessor x: Types::OAuth2Authentication
+      attr_accessor telegram: Types::OAuth2Authentication
+      attr_accessor github: Types::OAuth2Authentication
+      attr_accessor unknown: untyped
+      SENSITIVE: [:google, :apple, :x, :telegram, :github]
+
+      class Google < LinkedAccountOAuth2
+      end
+      class Apple < LinkedAccountOAuth2
+      end
+      class X < LinkedAccountOAuth2
+      end
+      class Telegram < LinkedAccountOAuth2
+      end
+      class Github < LinkedAccountOAuth2
+      end
+      class Unknown < LinkedAccountOAuth2
+      end
+    end
+
+    class LinkedAccountSms
+      attr_accessor phone_number: ::String
+      SENSITIVE: [:phone_number]
+    end
+
+    class ListABTestsRequest
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListABTestsResponse
+      attr_accessor ab_tests: ::Array[Types::ABTestSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListActorsInput
+      attr_accessor memory_id: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListActorsOutput
+      attr_accessor actor_summaries: ::Array[Types::ActorSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListBatchEvaluationsRequest
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListBatchEvaluationsResponse
+      attr_accessor batch_evaluations: ::Array[Types::BatchEvaluationSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListBrowserSessionsRequest
+      attr_accessor browser_identifier: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      attr_accessor status: ("READY" | "TERMINATED")
+      SENSITIVE: []
+    end
+
+    class ListBrowserSessionsResponse
+      attr_accessor items: ::Array[Types::BrowserSessionSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListCodeInterpreterSessionsRequest
+      attr_accessor code_interpreter_identifier: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      attr_accessor status: ("READY" | "TERMINATED")
+      SENSITIVE: []
+    end
+
+    class ListCodeInterpreterSessionsResponse
+      attr_accessor items: ::Array[Types::CodeInterpreterSessionSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListEventsInput
+      attr_accessor memory_id: ::String
+      attr_accessor session_id: ::String
+      attr_accessor actor_id: ::String
+      attr_accessor include_payloads: bool
+      attr_accessor filter: Types::FilterInput
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListEventsOutput
+      attr_accessor events: ::Array[Types::Event]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListMemoryExtractionJobsInput
+      attr_accessor memory_id: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor filter: Types::ExtractionJobFilterInput
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListMemoryExtractionJobsOutput
+      attr_accessor jobs: ::Array[Types::ExtractionJobMetadata]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListMemoryRecordsInput
+      attr_accessor memory_id: ::String
+      attr_accessor namespace: ::String
+      attr_accessor namespace_path: ::String
+      attr_accessor memory_strategy_id: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      attr_accessor metadata_filters: ::Array[Types::MemoryMetadataFilterExpression]
+      SENSITIVE: []
+    end
+
+    class ListMemoryRecordsOutput
+      attr_accessor memory_record_summaries: ::Array[Types::MemoryRecordSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListPaymentInstrumentsRequest
+      attr_accessor user_id: ::String
+      attr_accessor agent_name: ::String
+      attr_accessor payment_manager_arn: ::String
+      attr_accessor payment_connector_id: ::String
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListPaymentInstrumentsResponse
+      attr_accessor payment_instruments: ::Array[Types::PaymentInstrumentSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListPaymentSessionsRequest
+      attr_accessor user_id: ::String
+      attr_accessor agent_name: ::String
+      attr_accessor payment_manager_arn: ::String
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListPaymentSessionsResponse
+      attr_accessor payment_sessions: ::Array[Types::PaymentSessionSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListRecommendationsRequest
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      attr_accessor status_filter: ("PENDING" | "IN_PROGRESS" | "COMPLETED" | "FAILED" | "DELETING")
+      SENSITIVE: []
+    end
+
+    class ListRecommendationsResponse
+      attr_accessor recommendation_summaries: ::Array[Types::RecommendationSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListSessionsInput
+      attr_accessor memory_id: ::String
+      attr_accessor actor_id: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      attr_accessor filter: Types::SessionFilter
+      SENSITIVE: []
+    end
+
+    class ListSessionsOutput
+      attr_accessor session_summaries: ::Array[Types::SessionSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class LiveViewStream
+      attr_accessor stream_endpoint: ::String
+      SENSITIVE: []
+    end
+
+    class McpDescriptor
+      attr_accessor server: Types::ServerDefinition
+      attr_accessor tools: Types::ToolsDefinition
+      SENSITIVE: []
+    end
+
+    class MemoryContent
+      attr_accessor text: ::String
+      attr_accessor unknown: untyped
+      SENSITIVE: [:text]
+
+      class Text < MemoryContent
+      end
+      class Unknown < MemoryContent
+      end
+    end
+
+    class MemoryMetadataFilterExpression
+      attr_accessor left: Types::MemoryRecordLeftExpression
+      attr_accessor operator: ("EQUALS_TO" | "EXISTS" | "NOT_EXISTS" | "BEFORE" | "AFTER" | "CONTAINS" | "GREATER_THAN" | "GREATER_THAN_OR_EQUALS" | "LESS_THAN" | "LESS_THAN_OR_EQUALS")
+      attr_accessor right: Types::MemoryRecordRightExpression
+      SENSITIVE: []
+    end
+
+    class MemoryRecord
+      attr_accessor memory_record_id: ::String
+      attr_accessor content: Types::MemoryContent
+      attr_accessor memory_strategy_id: ::String
+      attr_accessor namespaces: ::Array[::String]
+      attr_accessor created_at: ::Time
+      attr_accessor metadata: ::Hash[::String, Types::MemoryRecordMetadataValue]
+      SENSITIVE: []
+    end
+
+    class MemoryRecordCreateInput
+      attr_accessor request_identifier: ::String
+      attr_accessor namespaces: ::Array[::String]
+      attr_accessor content: Types::MemoryContent
+      attr_accessor timestamp: ::Time
+      attr_accessor memory_strategy_id: ::String
+      attr_accessor metadata: ::Hash[::String, Types::MemoryRecordMetadataValue]
+      SENSITIVE: []
+    end
+
+    class MemoryRecordDeleteInput
+      attr_accessor memory_record_id: ::String
+      SENSITIVE: []
+    end
+
+    class MemoryRecordLeftExpression
+      attr_accessor metadata_key: ::String
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class MetadataKey < MemoryRecordLeftExpression
+      end
+      class Unknown < MemoryRecordLeftExpression
+      end
+    end
+
+    class MemoryRecordMetadataValue
+      attr_accessor string_value: ::String
+      attr_accessor string_list_value: ::Array[::String]
+      attr_accessor number_value: ::Float
+      attr_accessor date_time_value: ::Time
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class StringValue < MemoryRecordMetadataValue
+      end
+      class StringListValue < MemoryRecordMetadataValue
+      end
+      class NumberValue < MemoryRecordMetadataValue
+      end
+      class DateTimeValue < MemoryRecordMetadataValue
+      end
+      class Unknown < MemoryRecordMetadataValue
+      end
+    end
+
+    class MemoryRecordOutput
+      attr_accessor memory_record_id: ::String
+      attr_accessor status: ("SUCCEEDED" | "FAILED")
+      attr_accessor request_identifier: ::String
+      attr_accessor error_code: ::Integer
+      attr_accessor error_message: ::String
+      SENSITIVE: []
+    end
+
+    class MemoryRecordRightExpression
+      attr_accessor metadata_value: Types::MemoryRecordMetadataValue
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class MetadataValue < MemoryRecordRightExpression
+      end
+      class Unknown < MemoryRecordRightExpression
+      end
+    end
+
+    class MemoryRecordSummary
+      attr_accessor memory_record_id: ::String
+      attr_accessor content: Types::MemoryContent
+      attr_accessor memory_strategy_id: ::String
+      attr_accessor namespaces: ::Array[::String]
+      attr_accessor created_at: ::Time
+      attr_accessor score: ::Float
+      attr_accessor metadata: ::Hash[::String, Types::MemoryRecordMetadataValue]
+      SENSITIVE: []
+    end
+
+    class MemoryRecordUpdateInput
+      attr_accessor memory_record_id: ::String
+      attr_accessor timestamp: ::Time
+      attr_accessor content: Types::MemoryContent
+      attr_accessor namespaces: ::Array[::String]
+      attr_accessor memory_strategy_id: ::String
+      attr_accessor metadata: ::Hash[::String, Types::MemoryRecordMetadataValue]
+      SENSITIVE: []
+    end
+
+    class MessageMetadata
+      attr_accessor event_id: ::String
+      attr_accessor message_index: ::Integer
+      SENSITIVE: []
+    end
+
+    class MetadataValue
+      attr_accessor string_value: ::String
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class StringValue < MetadataValue
+      end
+      class Unknown < MetadataValue
+      end
+    end
+
+    class MouseClickArguments
+      attr_accessor x: ::Integer
+      attr_accessor y: ::Integer
+      attr_accessor button: ("LEFT" | "RIGHT" | "MIDDLE")
+      attr_accessor click_count: ::Integer
+      SENSITIVE: []
+    end
+
+    class MouseClickResult
+      attr_accessor status: ("SUCCESS" | "FAILED")
+      attr_accessor error: ::String
+      SENSITIVE: []
+    end
+
+    class MouseDragArguments
+      attr_accessor end_x: ::Integer
+      attr_accessor end_y: ::Integer
+      attr_accessor start_x: ::Integer
+      attr_accessor start_y: ::Integer
+      attr_accessor button: ("LEFT" | "RIGHT" | "MIDDLE")
+      SENSITIVE: []
+    end
+
+    class MouseDragResult
+      attr_accessor status: ("SUCCESS" | "FAILED")
+      attr_accessor error: ::String
+      SENSITIVE: []
+    end
+
+    class MouseMoveArguments
+      attr_accessor x: ::Integer
+      attr_accessor y: ::Integer
+      SENSITIVE: []
+    end
+
+    class MouseMoveResult
+      attr_accessor status: ("SUCCESS" | "FAILED")
+      attr_accessor error: ::String
+      SENSITIVE: []
+    end
+
+    class MouseScrollArguments
+      attr_accessor x: ::Integer
+      attr_accessor y: ::Integer
+      attr_accessor delta_x: ::Integer
+      attr_accessor delta_y: ::Integer
+      SENSITIVE: []
+    end
+
+    class MouseScrollResult
+      attr_accessor status: ("SUCCESS" | "FAILED")
+      attr_accessor error: ::String
+      SENSITIVE: []
+    end
+
+    class MppPaymentInput
+      attr_accessor version: ::String
+      attr_accessor www_authenticate_headers: ::Array[::String]
+      attr_accessor buyer_pays_gas_fees: bool
+      SENSITIVE: []
+    end
+
+    class MppPaymentOutput
+      attr_accessor version: ::String
+      attr_accessor selected_payment_id: ::String
+      attr_accessor payment_credential: ::String
+      SENSITIVE: [:payment_credential]
+    end
+
+    class OAuth2Authentication
+      attr_accessor sub: ::String
+      attr_accessor email_address: ::String
+      attr_accessor name: ::String
+      attr_accessor username: ::String
+      SENSITIVE: [:email_address]
+    end
+
+    class OAuthCredentialProvider
+      attr_accessor provider_arn: ::String
+      attr_accessor scopes: ::Array[::String]
+      attr_accessor custom_parameters: ::Hash[::String, ::String]
+      attr_accessor grant_type: ("CLIENT_CREDENTIALS" | "AUTHORIZATION_CODE" | "TOKEN_EXCHANGE")
+      attr_accessor default_return_url: ::String
+      SENSITIVE: []
+    end
+
+    class OnlineEvaluationConfigSource
+      attr_accessor online_evaluation_config_arn: ::String
+      attr_accessor time_range: Types::SessionFilterConfig
+      SENSITIVE: []
+    end
+
+    class OnlineEvaluationTraceConfig
+      attr_accessor online_evaluation_config_arn: ::String
+      attr_accessor start_time: ::Time
+      attr_accessor end_time: ::Time
+      SENSITIVE: []
+    end
+
+    class OutputConfig
+      attr_accessor cloud_watch_config: Types::CloudWatchOutputConfig
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class CloudWatchConfig < OutputConfig
+      end
+      class Unknown < OutputConfig
+      end
+    end
+
+    class PayloadType
+      attr_accessor conversational: Types::Conversational
+      attr_accessor blob: untyped
+      attr_accessor unknown: untyped
+      SENSITIVE: [:blob]
+
+      class Conversational < PayloadType
+      end
+      class Blob < PayloadType
+      end
+      class Unknown < PayloadType
+      end
+    end
+
+    class PaymentInput
+      attr_accessor crypto_x402: Types::CryptoX402PaymentInput
+      attr_accessor mpp: Types::MppPaymentInput
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class CryptoX402 < PaymentInput
+      end
+      class Mpp < PaymentInput
+      end
+      class Unknown < PaymentInput
+      end
+    end
+
+    class PaymentInstrument
+      attr_accessor payment_instrument_id: ::String
+      attr_accessor payment_manager_arn: ::String
+      attr_accessor payment_connector_id: ::String
+      attr_accessor user_id: ::String
+      attr_accessor payment_instrument_type: ("EMBEDDED_CRYPTO_WALLET")
+      attr_accessor payment_instrument_details: Types::PaymentInstrumentDetails
+      attr_accessor created_at: ::Time
+      attr_accessor status: ("INITIATED" | "ACTIVE" | "FAILED" | "DELETED" | "BLOCKED")
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class PaymentInstrumentDetails
+      attr_accessor embedded_crypto_wallet: Types::EmbeddedCryptoWallet
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class EmbeddedCryptoWallet < PaymentInstrumentDetails
+      end
+      class Unknown < PaymentInstrumentDetails
+      end
+    end
+
+    class PaymentInstrumentSummary
+      attr_accessor payment_instrument_id: ::String
+      attr_accessor payment_manager_arn: ::String
+      attr_accessor payment_connector_id: ::String
+      attr_accessor user_id: ::String
+      attr_accessor payment_instrument_type: ("EMBEDDED_CRYPTO_WALLET")
+      attr_accessor status: ("INITIATED" | "ACTIVE" | "FAILED" | "DELETED" | "BLOCKED")
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class PaymentOutput
+      attr_accessor crypto_x402: Types::CryptoX402PaymentOutput
+      attr_accessor mpp: Types::MppPaymentOutput
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class CryptoX402 < PaymentOutput
+      end
+      class Mpp < PaymentOutput
+      end
+      class Unknown < PaymentOutput
+      end
+    end
+
+    class PaymentSession
+      attr_accessor payment_session_id: ::String
+      attr_accessor payment_manager_arn: ::String
+      attr_accessor limits: Types::SessionLimits
+      attr_accessor user_id: ::String
+      attr_accessor expiry_time_in_minutes: ::Integer
+      attr_accessor created_at: ::Time
+      attr_accessor available_limits: Types::AvailableLimits
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class PaymentSessionSummary
+      attr_accessor payment_session_id: ::String
+      attr_accessor payment_manager_arn: ::String
+      attr_accessor user_id: ::String
+      attr_accessor expiry_time_in_minutes: ::Integer
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class PaymentTokenRequestInput
+      attr_accessor coinbase_cdp_token_request: Types::CoinbaseCdpTokenRequestInput
+      attr_accessor stripe_privy_token_request: Types::StripePrivyTokenRequestInput
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class CoinbaseCdpTokenRequest < PaymentTokenRequestInput
+      end
+      class StripePrivyTokenRequest < PaymentTokenRequestInput
+      end
+      class Unknown < PaymentTokenRequestInput
+      end
+    end
+
+    class PaymentTokenResponseOutput
+      attr_accessor coinbase_cdp_token_response: Types::CoinbaseCdpTokenResponseOutput
+      attr_accessor stripe_privy_token_response: Types::StripePrivyTokenResponseOutput
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class CoinbaseCdpTokenResponse < PaymentTokenResponseOutput
+      end
+      class StripePrivyTokenResponse < PaymentTokenResponseOutput
+      end
+      class Unknown < PaymentTokenResponseOutput
+      end
+    end
+
+    class PerVariantOnlineEvaluationConfig
+      attr_accessor name: ::String
+      attr_accessor online_evaluation_config_arn: ::String
+      SENSITIVE: []
+    end
+
+    class ProcessPaymentRequest
+      attr_accessor user_id: ::String
+      attr_accessor agent_name: ::String
+      attr_accessor payment_manager_arn: ::String
+      attr_accessor payment_session_id: ::String
+      attr_accessor payment_instrument_id: ::String
+      attr_accessor payment_type: ("CRYPTO_X402" | "MPP")
+      attr_accessor payment_input: Types::PaymentInput
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class ProcessPaymentResponse
+      attr_accessor process_payment_id: ::String
+      attr_accessor payment_manager_arn: ::String
+      attr_accessor payment_session_id: ::String
+      attr_accessor payment_instrument_id: ::String
+      attr_accessor payment_type: ("CRYPTO_X402" | "MPP")
+      attr_accessor status: ("PROOF_GENERATED")
+      attr_accessor payment_output: Types::PaymentOutput
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class Proxy
+      attr_accessor external_proxy: Types::ExternalProxy
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class ExternalProxy < Proxy
+      end
+      class Unknown < Proxy
+      end
+    end
+
+    class ProxyBypass
+      attr_accessor domain_patterns: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class ProxyConfiguration
+      attr_accessor proxies: ::Array[Types::Proxy]
+      attr_accessor bypass: Types::ProxyBypass
+      SENSITIVE: []
+    end
+
+    class ProxyCredentials
+      attr_accessor basic_auth: Types::BasicAuth
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class BasicAuth < ProxyCredentials
+      end
+      class Unknown < ProxyCredentials
+      end
+    end
+
+    class RecommendationConfig
+      attr_accessor system_prompt_recommendation_config: Types::SystemPromptRecommendationConfig
+      attr_accessor tool_description_recommendation_config: Types::ToolDescriptionRecommendationConfig
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class SystemPromptRecommendationConfig < RecommendationConfig
+      end
+      class ToolDescriptionRecommendationConfig < RecommendationConfig
+      end
+      class Unknown < RecommendationConfig
+      end
+    end
+
+    class RecommendationEvaluationConfig
+      attr_accessor evaluators: ::Array[Types::RecommendationEvaluatorReference]
+      SENSITIVE: []
+    end
+
+    class RecommendationEvaluatorReference
+      attr_accessor evaluator_arn: ::String
+      SENSITIVE: []
+    end
+
+    class RecommendationResult
+      attr_accessor system_prompt_recommendation_result: Types::SystemPromptRecommendationResult
+      attr_accessor tool_description_recommendation_result: Types::ToolDescriptionRecommendationResult
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class SystemPromptRecommendationResult < RecommendationResult
+      end
+      class ToolDescriptionRecommendationResult < RecommendationResult
+      end
+      class Unknown < RecommendationResult
+      end
+    end
+
+    class RecommendationResultConfigurationBundle
+      attr_accessor bundle_arn: ::String
+      attr_accessor version_id: ::String
+      SENSITIVE: []
+    end
+
+    class RecommendationSummary
+      attr_accessor recommendation_id: ::String
+      attr_accessor recommendation_arn: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor type: ("SYSTEM_PROMPT_RECOMMENDATION" | "TOOL_DESCRIPTION_RECOMMENDATION")
+      attr_accessor status: ("PENDING" | "IN_PROGRESS" | "COMPLETED" | "FAILED" | "DELETING")
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class RegistryRecordSummary
+      attr_accessor registry_arn: ::String
+      attr_accessor record_arn: ::String
+      attr_accessor record_id: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor descriptor_type: ("MCP" | "A2A" | "CUSTOM" | "AGENT_SKILLS")
+      attr_accessor descriptors: Types::Descriptors
+      attr_accessor version: ::String
+      attr_accessor status: ("DRAFT" | "PENDING_APPROVAL" | "APPROVED" | "REJECTED" | "DEPRECATED")
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: [:description]
+    end
+
+    class ResourceContent
+      attr_accessor type: ("text" | "blob")
+      attr_accessor uri: ::String
+      attr_accessor mime_type: ::String
+      attr_accessor text: ::String
+      attr_accessor blob: ::String
+      SENSITIVE: []
+    end
+
+    class ResourceLocation
+      attr_accessor s3: Types::S3Location
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class S3 < ResourceLocation
+      end
+      class Unknown < ResourceLocation
+      end
+    end
+
+    class ResourceNotFoundException
+      attr_accessor message: ::String
+      attr_accessor event_type: untyped
+      SENSITIVE: []
+    end
+
+    class ResponseChunk
+      attr_accessor content_start: Types::ContentStartEvent
+      attr_accessor content_delta: Types::ContentDeltaEvent
+      attr_accessor content_stop: Types::ContentStopEvent
+      attr_accessor event_type: untyped
+      SENSITIVE: []
+    end
+
+    class RetrieveMemoryRecordsInput
+      attr_accessor memory_id: ::String
+      attr_accessor namespace: ::String
+      attr_accessor namespace_path: ::String
+      attr_accessor search_criteria: Types::SearchCriteria
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class RetrieveMemoryRecordsOutput
+      attr_accessor memory_record_summaries: ::Array[Types::MemoryRecordSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class RetryableConflictException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class RightExpression
+      attr_accessor metadata_value: Types::MetadataValue
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class MetadataValue < RightExpression
+      end
+      class Unknown < RightExpression
+      end
+    end
+
+    class RootCauseCluster
+      attr_accessor cluster_id: ::Integer
+      attr_accessor name: ::String
+      attr_accessor root_cause: ::String
+      attr_accessor recommendation: ::String
+      attr_accessor affected_session_count: ::Integer
+      attr_accessor affected_sessions: ::Array[Types::AffectedSession]
+      SENSITIVE: []
+    end
+
+    class RuntimeClientError
+      attr_accessor message: ::String
+      attr_accessor event_type: untyped
+      SENSITIVE: []
+    end
+
+    class S3FilesConfiguration
+      attr_accessor access_point_arn: ::String
+      attr_accessor mount_path: ::String
+      attr_accessor file_system_arn: ::String
+      SENSITIVE: []
+    end
+
+    class S3Location
+      attr_accessor bucket: ::String
+      attr_accessor prefix: ::String
+      attr_accessor version_id: ::String
+      SENSITIVE: []
+    end
+
+    class SaveBrowserSessionProfileRequest
+      attr_accessor trace_id: ::String
+      attr_accessor trace_parent: ::String
+      attr_accessor profile_identifier: ::String
+      attr_accessor browser_identifier: ::String
+      attr_accessor session_id: ::String
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class SaveBrowserSessionProfileResponse
+      attr_accessor profile_identifier: ::String
+      attr_accessor browser_identifier: ::String
+      attr_accessor session_id: ::String
+      attr_accessor last_updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class ScreenshotArguments
+      attr_accessor format: ("PNG")
+      SENSITIVE: []
+    end
+
+    class ScreenshotResult
+      attr_accessor status: ("SUCCESS" | "FAILED")
+      attr_accessor error: ::String
+      attr_accessor data: ::String
+      SENSITIVE: []
+    end
+
+    class SearchCriteria
+      attr_accessor search_query: ::String
+      attr_accessor memory_strategy_id: ::String
+      attr_accessor top_k: ::Integer
+      attr_accessor metadata_filters: ::Array[Types::MemoryMetadataFilterExpression]
+      SENSITIVE: [:search_query]
+    end
+
+    class SearchRegistryRecordsRequest
+      attr_accessor search_query: ::String
+      attr_accessor registry_ids: ::Array[::String]
+      attr_accessor max_results: ::Integer
+      attr_accessor filters: untyped
+      SENSITIVE: []
+    end
+
+    class SearchRegistryRecordsResponse
+      attr_accessor registry_records: ::Array[Types::RegistryRecordSummary]
+      SENSITIVE: []
+    end
+
+    class SecretsManagerLocation
+      attr_accessor secret_arn: ::String
+      SENSITIVE: []
+    end
+
+    class ServerDefinition
+      attr_accessor schema_version: ::String
+      attr_accessor inline_content: ::String
+      SENSITIVE: []
+    end
+
+    class ServiceException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class ServiceQuotaExceededException
+      attr_accessor message: ::String
+      attr_accessor event_type: untyped
+      SENSITIVE: []
+    end
+
+    class SessionFilter
+      attr_accessor event_filter: ("HAS_EVENTS")
+      SENSITIVE: []
+    end
+
+    class SessionFilterConfig
+      attr_accessor start_time: ::Time
+      attr_accessor end_time: ::Time
+      SENSITIVE: []
+    end
+
+    class SessionLimits
+      attr_accessor max_spend_amount: Types::Amount
+      SENSITIVE: []
+    end
+
+    class SessionMetadataShape
+      attr_accessor session_id: ::String
+      attr_accessor test_scenario_id: ::String
+      attr_accessor ground_truth: Types::GroundTruthSource
+      attr_accessor metadata: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class SessionSummary
+      attr_accessor session_id: ::String
+      attr_accessor actor_id: ::String
+      attr_accessor created_at: ::Time
+      SENSITIVE: []
+    end
+
+    class SkillDefinition
+      attr_accessor schema_version: ::String
+      attr_accessor inline_content: ::String
+      SENSITIVE: []
+    end
+
+    class SkillMdDefinition
+      attr_accessor inline_content: ::String
+      SENSITIVE: []
+    end
+
+    class SpanContext
+      attr_accessor session_id: ::String
+      attr_accessor trace_id: ::String
+      attr_accessor span_id: ::String
+      SENSITIVE: []
+    end
+
+    class StartBatchEvaluationRequest
+      attr_accessor batch_evaluation_name: ::String
+      attr_accessor evaluators: ::Array[Types::Evaluator]
+      attr_accessor insights: ::Array[Types::Insight]
+      attr_accessor data_source_config: Types::DataSourceConfig
+      attr_accessor client_token: ::String
+      attr_accessor evaluation_metadata: Types::EvaluationMetadata
+      attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor kms_key_arn: ::String
+      attr_accessor description: ::String
+      SENSITIVE: []
+    end
+
+    class StartBatchEvaluationResponse
+      attr_accessor batch_evaluation_id: ::String
+      attr_accessor batch_evaluation_arn: ::String
+      attr_accessor batch_evaluation_name: ::String
+      attr_accessor evaluators: ::Array[Types::Evaluator]
+      attr_accessor insights: ::Array[Types::Insight]
+      attr_accessor status: ("PENDING" | "IN_PROGRESS" | "COMPLETED" | "COMPLETED_WITH_ERRORS" | "FAILED" | "STOPPING" | "STOPPED" | "DELETING")
+      attr_accessor created_at: ::Time
+      attr_accessor output_config: Types::OutputConfig
+      attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor kms_key_arn: ::String
+      attr_accessor description: ::String
+      SENSITIVE: []
+    end
+
+    class StartBrowserSessionRequest
+      attr_accessor trace_id: ::String
+      attr_accessor trace_parent: ::String
+      attr_accessor browser_identifier: ::String
+      attr_accessor name: ::String
+      attr_accessor session_timeout_seconds: ::Integer
+      attr_accessor view_port: Types::ViewPort
+      attr_accessor extensions: ::Array[Types::BrowserExtension]
+      attr_accessor profile_configuration: Types::BrowserProfileConfiguration
+      attr_accessor proxy_configuration: Types::ProxyConfiguration
+      attr_accessor enterprise_policies: ::Array[Types::BrowserEnterprisePolicy]
+      attr_accessor certificates: ::Array[Types::Certificate]
+      attr_accessor filesystem_configurations: ::Array[Types::ToolsFileSystemConfiguration]
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class StartBrowserSessionResponse
+      attr_accessor browser_identifier: ::String
+      attr_accessor session_id: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor streams: Types::BrowserSessionStream
+      SENSITIVE: []
+    end
+
+    class StartCodeInterpreterSessionRequest
+      attr_accessor trace_id: ::String
+      attr_accessor trace_parent: ::String
+      attr_accessor code_interpreter_identifier: ::String
+      attr_accessor name: ::String
+      attr_accessor session_timeout_seconds: ::Integer
+      attr_accessor certificates: ::Array[Types::Certificate]
+      attr_accessor filesystem_configurations: ::Array[Types::ToolsFileSystemConfiguration]
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class StartCodeInterpreterSessionResponse
+      attr_accessor code_interpreter_identifier: ::String
+      attr_accessor session_id: ::String
+      attr_accessor created_at: ::Time
+      SENSITIVE: []
+    end
+
+    class StartMemoryExtractionJobInput
+      attr_accessor memory_id: ::String
+      attr_accessor extraction_job: Types::ExtractionJob
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class StartMemoryExtractionJobOutput
+      attr_accessor job_id: ::String
+      SENSITIVE: []
+    end
+
+    class StartRecommendationRequest
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor type: ("SYSTEM_PROMPT_RECOMMENDATION" | "TOOL_DESCRIPTION_RECOMMENDATION")
+      attr_accessor recommendation_config: Types::RecommendationConfig
+      attr_accessor kms_key_arn: ::String
+      attr_accessor client_token: ::String
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class StartRecommendationResponse
+      attr_accessor recommendation_id: ::String
+      attr_accessor recommendation_arn: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor type: ("SYSTEM_PROMPT_RECOMMENDATION" | "TOOL_DESCRIPTION_RECOMMENDATION")
+      attr_accessor recommendation_config: Types::RecommendationConfig
+      attr_accessor status: ("PENDING" | "IN_PROGRESS" | "COMPLETED" | "FAILED" | "DELETING")
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class StopBatchEvaluationRequest
+      attr_accessor batch_evaluation_id: ::String
+      SENSITIVE: []
+    end
+
+    class StopBatchEvaluationResponse
+      attr_accessor batch_evaluation_id: ::String
+      attr_accessor batch_evaluation_arn: ::String
+      attr_accessor status: ("PENDING" | "IN_PROGRESS" | "COMPLETED" | "COMPLETED_WITH_ERRORS" | "FAILED" | "STOPPING" | "STOPPED" | "DELETING")
+      attr_accessor description: ::String
+      SENSITIVE: []
+    end
+
+    class StopBrowserSessionRequest
+      attr_accessor trace_id: ::String
+      attr_accessor trace_parent: ::String
+      attr_accessor browser_identifier: ::String
+      attr_accessor session_id: ::String
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class StopBrowserSessionResponse
+      attr_accessor browser_identifier: ::String
+      attr_accessor session_id: ::String
+      attr_accessor last_updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class StopCodeInterpreterSessionRequest
+      attr_accessor trace_id: ::String
+      attr_accessor trace_parent: ::String
+      attr_accessor code_interpreter_identifier: ::String
+      attr_accessor session_id: ::String
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class StopCodeInterpreterSessionResponse
+      attr_accessor code_interpreter_identifier: ::String
+      attr_accessor session_id: ::String
+      attr_accessor last_updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class StopRuntimeSessionRequest
+      attr_accessor runtime_session_id: ::String
+      attr_accessor agent_runtime_arn: ::String
+      attr_accessor qualifier: ::String
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class StopRuntimeSessionResponse
+      attr_accessor runtime_session_id: ::String
+      attr_accessor status_code: ::Integer
+      SENSITIVE: []
+    end
+
+    class StreamUpdate
+      attr_accessor automation_stream_update: Types::AutomationStreamUpdate
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class AutomationStreamUpdate < StreamUpdate
+      end
+      class Unknown < StreamUpdate
+      end
+    end
+
+    class StripePrivyTokenRequestInput
+      attr_accessor request_host: ::String
+      attr_accessor request_path: ::String
+      attr_accessor request_body: ::String
+      attr_accessor include_authorization_signature: bool
+      SENSITIVE: [:request_body]
+    end
+
+    class StripePrivyTokenResponseOutput
+      attr_accessor authorization_signature: ::String
+      attr_accessor request_expiry: ::Integer
+      attr_accessor app_id: ::String
+      attr_accessor basic_auth_token: ::String
+      SENSITIVE: [:authorization_signature, :basic_auth_token]
+    end
+
+    class SubscriptionRequiredException
+      attr_accessor message: ::String
+      attr_accessor subscription_url: ::String
+      attr_accessor product_name: ::String
+      SENSITIVE: []
+    end
+
+    class SystemPromptConfig
+      attr_accessor text: ::String
+      attr_accessor configuration_bundle: Types::SystemPromptConfigurationBundle
+      attr_accessor unknown: untyped
+      SENSITIVE: [:text]
+
+      class Text < SystemPromptConfig
+      end
+      class ConfigurationBundle < SystemPromptConfig
+      end
+      class Unknown < SystemPromptConfig
+      end
+    end
+
+    class SystemPromptConfigurationBundle
+      attr_accessor bundle_arn: ::String
+      attr_accessor version_id: ::String
+      attr_accessor system_prompt_json_path: ::String
+      SENSITIVE: []
+    end
+
+    class SystemPromptRecommendationConfig
+      attr_accessor system_prompt: Types::SystemPromptConfig
+      attr_accessor agent_traces: Types::AgentTracesConfig
+      attr_accessor evaluation_config: Types::RecommendationEvaluationConfig
+      SENSITIVE: []
+    end
+
+    class SystemPromptRecommendationResult
+      attr_accessor recommended_system_prompt: ::String
+      attr_accessor configuration_bundle: Types::RecommendationResultConfigurationBundle
+      attr_accessor explanation: ::String
+      attr_accessor error_code: ::String
+      attr_accessor error_message: ::String
+      SENSITIVE: [:recommended_system_prompt]
+    end
+
+    class TargetRef
+      attr_accessor name: ::String
+      SENSITIVE: []
+    end
+
+    class ThrottledException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class ThrottlingException
+      attr_accessor message: ::String
+      attr_accessor event_type: untyped
+      SENSITIVE: []
+    end
+
+    class TokenBalance
+      attr_accessor amount: ::String
+      attr_accessor decimals: ::Integer
+      attr_accessor token: ("USDC")
+      attr_accessor network: ("ETHEREUM" | "SOLANA")
+      attr_accessor chain: ("BASE" | "BASE_SEPOLIA" | "ETHEREUM" | "SOLANA" | "SOLANA_DEVNET")
+      SENSITIVE: []
+    end
+
+    class TokenUsage
+      attr_accessor input_tokens: ::Integer
+      attr_accessor output_tokens: ::Integer
+      attr_accessor total_tokens: ::Integer
+      SENSITIVE: []
+    end
+
+    class ToolArguments
+      attr_accessor code: ::String
+      attr_accessor language: ("python" | "javascript" | "typescript")
+      attr_accessor clear_context: bool
+      attr_accessor command: ::String
+      attr_accessor path: ::String
+      attr_accessor paths: ::Array[::String]
+      attr_accessor content: ::Array[Types::InputContentBlock]
+      attr_accessor directory_path: ::String
+      attr_accessor task_id: ::String
+      attr_accessor runtime: ("nodejs" | "deno" | "python")
+      SENSITIVE: []
+    end
+
+    class ToolDescriptionConfig
+      attr_accessor text: ::String
+      attr_accessor unknown: untyped
+      SENSITIVE: [:text]
+
+      class Text < ToolDescriptionConfig
+      end
+      class Unknown < ToolDescriptionConfig
+      end
+    end
+
+    class ToolDescriptionConfigurationBundle
+      attr_accessor bundle_arn: ::String
+      attr_accessor version_id: ::String
+      attr_accessor tools: ::Array[Types::ConfigurationBundleToolEntry]
+      SENSITIVE: []
+    end
+
+    class ToolDescriptionInput
+      attr_accessor tool_name: ::String
+      attr_accessor tool_description: Types::ToolDescriptionConfig
+      SENSITIVE: []
+    end
+
+    class ToolDescriptionOutput
+      attr_accessor tool_name: ::String
+      attr_accessor recommended_tool_description: ::String
+      attr_accessor explanation: ::String
+      SENSITIVE: [:recommended_tool_description]
+    end
+
+    class ToolDescriptionRecommendationConfig
+      attr_accessor tool_description: Types::ToolDescriptionSource
+      attr_accessor agent_traces: Types::AgentTracesConfig
+      SENSITIVE: []
+    end
+
+    class ToolDescriptionRecommendationResult
+      attr_accessor tools: ::Array[Types::ToolDescriptionOutput]
+      attr_accessor configuration_bundle: Types::RecommendationResultConfigurationBundle
+      attr_accessor error_code: ::String
+      attr_accessor error_message: ::String
+      SENSITIVE: []
+    end
+
+    class ToolDescriptionSource
+      attr_accessor tool_description_text: Types::ToolDescriptionTextInput
+      attr_accessor configuration_bundle: Types::ToolDescriptionConfigurationBundle
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class ToolDescriptionText < ToolDescriptionSource
+      end
+      class ConfigurationBundle < ToolDescriptionSource
+      end
+      class Unknown < ToolDescriptionSource
+      end
+    end
+
+    class ToolDescriptionTextInput
+      attr_accessor tools: ::Array[Types::ToolDescriptionInput]
+      SENSITIVE: []
+    end
+
+    class ToolResultStructuredContent
+      attr_accessor task_id: ::String
+      attr_accessor task_status: ("submitted" | "working" | "completed" | "canceled" | "failed")
+      attr_accessor stdout: ::String
+      attr_accessor stderr: ::String
+      attr_accessor exit_code: ::Integer
+      attr_accessor execution_time: ::Float
+      SENSITIVE: []
+    end
+
+    class ToolsDefinition
+      attr_accessor protocol_version: ::String
+      attr_accessor inline_content: ::String
+      SENSITIVE: []
+    end
+
+    class ToolsFileSystemConfiguration
+      attr_accessor s3_files_configuration: Types::S3FilesConfiguration
+      attr_accessor efs_configuration: Types::EfsConfiguration
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class S3FilesConfiguration < ToolsFileSystemConfiguration
+      end
+      class EfsConfiguration < ToolsFileSystemConfiguration
+      end
+      class Unknown < ToolsFileSystemConfiguration
+      end
+    end
+
+    class UnauthorizedException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class Unit < Aws::EmptyStructure
+    end
+
+    class UpdateABTestRequest
+      attr_accessor ab_test_id: ::String
+      attr_accessor client_token: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor variants: ::Array[Types::Variant]
+      attr_accessor gateway_filter: Types::GatewayFilter
+      attr_accessor evaluation_config: Types::ABTestEvaluationConfig
+      attr_accessor role_arn: ::String
+      attr_accessor execution_status: ("PAUSED" | "RUNNING" | "STOPPED" | "NOT_STARTED")
+      SENSITIVE: []
+    end
+
+    class UpdateABTestResponse
+      attr_accessor ab_test_id: ::String
+      attr_accessor ab_test_arn: ::String
+      attr_accessor status: ("CREATING" | "ACTIVE" | "CREATE_FAILED" | "UPDATING" | "UPDATE_FAILED" | "DELETING" | "DELETE_FAILED" | "FAILED")
+      attr_accessor execution_status: ("PAUSED" | "RUNNING" | "STOPPED" | "NOT_STARTED")
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class UpdateBrowserStreamRequest
+      attr_accessor browser_identifier: ::String
+      attr_accessor session_id: ::String
+      attr_accessor stream_update: Types::StreamUpdate
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class UpdateBrowserStreamResponse
+      attr_accessor browser_identifier: ::String
+      attr_accessor session_id: ::String
+      attr_accessor streams: Types::BrowserSessionStream
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class UserIdentifier
+      attr_accessor user_token: ::String
+      attr_accessor user_id: ::String
+      attr_accessor unknown: untyped
+      SENSITIVE: [:user_token]
+
+      class UserToken < UserIdentifier
+      end
+      class UserId < UserIdentifier
+      end
+      class Unknown < UserIdentifier
+      end
+    end
+
+    class UserIntentAffectedSession
+      attr_accessor session_id: ::String
+      attr_accessor user_messages: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class UserIntentCluster
+      attr_accessor cluster_id: ::Integer
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor affected_session_count: ::Integer
+      attr_accessor affected_sessions: ::Array[Types::UserIntentAffectedSession]
+      SENSITIVE: []
+    end
+
+    class UserIntentClusteringResultContent
+      attr_accessor user_intents: ::Array[Types::UserIntentCluster]
+      SENSITIVE: []
+    end
+
+    class ValidationException
+      attr_accessor message: ::String
+      attr_accessor reason: ("CannotParse" | "FieldValidationFailed" | "IdempotentParameterMismatchException" | "EventInOtherSession" | "ResourceConflict")
+      attr_accessor field_list: ::Array[Types::ValidationExceptionField]
+      attr_accessor event_type: untyped
+      SENSITIVE: []
+    end
+
+    class ValidationExceptionField
+      attr_accessor name: ::String
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class Variant
+      attr_accessor name: ::String
+      attr_accessor weight: ::Integer
+      attr_accessor variant_configuration: Types::VariantConfiguration
+      SENSITIVE: []
+    end
+
+    class VariantConfiguration
+      attr_accessor configuration_bundle: Types::ConfigurationBundleRef
+      attr_accessor target: Types::TargetRef
+      SENSITIVE: []
+    end
+
+    class VariantResult
+      attr_accessor variant_name: ::String
+      attr_accessor sample_size: ::Integer
+      attr_accessor mean: ::Float
+      attr_accessor absolute_change: ::Float
+      attr_accessor percent_change: ::Float
+      attr_accessor p_value: ::Float
+      attr_accessor confidence_interval: Types::ConfidenceInterval
+      attr_accessor is_significant: bool
+      SENSITIVE: []
+    end
+
+    class ViewPort
+      attr_accessor width: ::Integer
+      attr_accessor height: ::Integer
+      SENSITIVE: []
+    end
+
+    class CodeInterpreterStreamOutput < Enumerator[untyped, untyped]
+      def event_types: () -> [:result, :access_denied_exception, :conflict_exception, :internal_server_exception, :resource_not_found_exception, :service_quota_exceeded_exception, :throttling_exception, :validation_exception]
+    end
+
+    class InvokeAgentRuntimeCommandStreamOutput < Enumerator[untyped, untyped]
+      def event_types: () -> [:chunk, :access_denied_exception, :internal_server_exception, :resource_not_found_exception, :service_quota_exceeded_exception, :throttling_exception, :validation_exception, :runtime_client_error]
+    end
+
+    class InvokeHarnessStreamOutput < Enumerator[untyped, untyped]
+      def event_types: () -> [:message_start, :content_block_start, :content_block_delta, :content_block_stop, :message_stop, :metadata, :internal_server_exception, :validation_exception, :runtime_client_error]
+    end
+  end
+end

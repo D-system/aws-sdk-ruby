@@ -16,6 +16,7 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
           stream_arn: context.params[:stream_arn],
           operation_type: "control",
         )
@@ -26,6 +27,7 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
           stream_arn: context.params[:stream_arn],
           operation_type: "control",
         )
@@ -36,6 +38,7 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
           operation_type: "control",
           resource_arn: context.params[:resource_arn],
         )
@@ -46,6 +49,7 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
           stream_arn: context.params[:stream_arn],
           operation_type: "control",
         )
@@ -56,6 +60,7 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
           stream_arn: context.params[:stream_arn],
           operation_type: "control",
           consumer_arn: context.params[:consumer_arn],
@@ -67,6 +72,7 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
           stream_arn: context.params[:stream_arn],
           operation_type: "control",
         )
@@ -77,6 +83,7 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
           stream_arn: context.params[:stream_arn],
           operation_type: "control",
           consumer_arn: context.params[:consumer_arn],
@@ -88,6 +95,7 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
           stream_arn: context.params[:stream_arn],
           operation_type: "control",
         )
@@ -98,6 +106,7 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
           stream_arn: context.params[:stream_arn],
           operation_type: "control",
         )
@@ -108,6 +117,7 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
           stream_arn: context.params[:stream_arn],
           operation_type: "control",
         )
@@ -118,6 +128,7 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
           stream_arn: context.params[:stream_arn],
           operation_type: "data",
         )
@@ -128,6 +139,7 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
           operation_type: "control",
           resource_arn: context.params[:resource_arn],
         )
@@ -138,6 +150,7 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
           stream_arn: context.params[:stream_arn],
           operation_type: "data",
         )
@@ -148,6 +161,7 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
           stream_arn: context.params[:stream_arn],
           operation_type: "control",
         )
@@ -158,6 +172,7 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
           stream_arn: context.params[:stream_arn],
           operation_type: "control",
         )
@@ -168,8 +183,20 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
           stream_arn: context.params[:stream_arn],
           operation_type: "control",
+        )
+      end
+    end
+
+    class ListTagsForResource
+      def self.build(context)
+        Aws::Kinesis::EndpointParameters.create(
+          context.config,
+          stream_id: context.params[:stream_id],
+          operation_type: "control",
+          resource_arn: context.params[:resource_arn],
         )
       end
     end
@@ -178,6 +205,7 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
           stream_arn: context.params[:stream_arn],
           operation_type: "control",
         )
@@ -188,6 +216,7 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
           stream_arn: context.params[:stream_arn],
           operation_type: "control",
         )
@@ -198,6 +227,7 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
           stream_arn: context.params[:stream_arn],
           operation_type: "data",
         )
@@ -208,6 +238,7 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
           stream_arn: context.params[:stream_arn],
           operation_type: "data",
         )
@@ -218,6 +249,7 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
           operation_type: "control",
           resource_arn: context.params[:resource_arn],
         )
@@ -228,6 +260,7 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
           stream_arn: context.params[:stream_arn],
           operation_type: "control",
         )
@@ -238,6 +271,7 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
           stream_arn: context.params[:stream_arn],
           operation_type: "control",
         )
@@ -248,6 +282,7 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
           stream_arn: context.params[:stream_arn],
           operation_type: "control",
         )
@@ -258,6 +293,7 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
           stream_arn: context.params[:stream_arn],
           operation_type: "control",
         )
@@ -268,6 +304,7 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
           stream_arn: context.params[:stream_arn],
           operation_type: "control",
         )
@@ -278,8 +315,42 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
           operation_type: "data",
           consumer_arn: context.params[:consumer_arn],
+        )
+      end
+    end
+
+    class TagResource
+      def self.build(context)
+        Aws::Kinesis::EndpointParameters.create(
+          context.config,
+          stream_id: context.params[:stream_id],
+          operation_type: "control",
+          resource_arn: context.params[:resource_arn],
+        )
+      end
+    end
+
+    class UntagResource
+      def self.build(context)
+        Aws::Kinesis::EndpointParameters.create(
+          context.config,
+          stream_id: context.params[:stream_id],
+          operation_type: "control",
+          resource_arn: context.params[:resource_arn],
+        )
+      end
+    end
+
+    class UpdateMaxRecordSize
+      def self.build(context)
+        Aws::Kinesis::EndpointParameters.create(
+          context.config,
+          stream_id: context.params[:stream_id],
+          stream_arn: context.params[:stream_arn],
+          operation_type: "control",
         )
       end
     end
@@ -288,6 +359,7 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
           stream_arn: context.params[:stream_arn],
           operation_type: "control",
         )
@@ -298,6 +370,18 @@ module Aws::Kinesis
       def self.build(context)
         Aws::Kinesis::EndpointParameters.create(
           context.config,
+          stream_id: context.params[:stream_id],
+          stream_arn: context.params[:stream_arn],
+          operation_type: "control",
+        )
+      end
+    end
+
+    class UpdateStreamWarmThroughput
+      def self.build(context)
+        Aws::Kinesis::EndpointParameters.create(
+          context.config,
+          stream_id: context.params[:stream_id],
           stream_arn: context.params[:stream_arn],
           operation_type: "control",
         )
@@ -339,6 +423,8 @@ module Aws::Kinesis
         ListShards.build(context)
       when :list_stream_consumers
         ListStreamConsumers.build(context)
+      when :list_tags_for_resource
+        ListTagsForResource.build(context)
       when :list_tags_for_stream
         ListTagsForStream.build(context)
       when :merge_shards
@@ -361,10 +447,18 @@ module Aws::Kinesis
         StopStreamEncryption.build(context)
       when :subscribe_to_shard
         SubscribeToShard.build(context)
+      when :tag_resource
+        TagResource.build(context)
+      when :untag_resource
+        UntagResource.build(context)
+      when :update_max_record_size
+        UpdateMaxRecordSize.build(context)
       when :update_shard_count
         UpdateShardCount.build(context)
       when :update_stream_mode
         UpdateStreamMode.build(context)
+      when :update_stream_warm_throughput
+        UpdateStreamWarmThroughput.build(context)
       else
         Aws::Kinesis::EndpointParameters.create(context.config)
       end

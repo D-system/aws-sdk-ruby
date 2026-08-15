@@ -23,7 +23,7 @@ Aws::Plugins::GlobalConfiguration.add_identifier(:marketplaceagreement)
 # structure.
 #
 #     marketplace_agreement = Aws::MarketplaceAgreement::Client.new
-#     resp = marketplace_agreement.describe_agreement(params)
+#     resp = marketplace_agreement.accept_agreement_cancellation_request(params)
 #
 # See {Client} for more information.
 #
@@ -49,12 +49,13 @@ module Aws::MarketplaceAgreement
   end
   autoload :Client, 'aws-sdk-marketplaceagreement/client'
   autoload :Errors, 'aws-sdk-marketplaceagreement/errors'
+  autoload :Waiters, 'aws-sdk-marketplaceagreement/waiters'
   autoload :Resource, 'aws-sdk-marketplaceagreement/resource'
   autoload :EndpointParameters, 'aws-sdk-marketplaceagreement/endpoint_parameters'
   autoload :EndpointProvider, 'aws-sdk-marketplaceagreement/endpoint_provider'
   autoload :Endpoints, 'aws-sdk-marketplaceagreement/endpoints'
 
-  GEM_VERSION = '1.17.0'
+  GEM_VERSION = '1.43.0'
 
 end
 

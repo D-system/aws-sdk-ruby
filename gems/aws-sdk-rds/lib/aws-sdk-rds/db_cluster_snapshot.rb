@@ -146,6 +146,35 @@ module Aws::RDS
       data[:storage_encrypted]
     end
 
+    # The type of encryption used to protect data at rest in the DB cluster
+    # snapshot. Possible values:
+    #
+    # * `none` - The DB cluster snapshot is not encrypted.
+    #
+    # * `sse-rds` - The DB cluster snapshot is encrypted using an Amazon Web
+    #   Services owned KMS key.
+    #
+    # * `sse-kms` - The DB cluster snapshot is encrypted using a customer
+    #   managed KMS key or Amazon Web Services managed KMS key.
+    # @return [String]
+    def storage_encryption_type
+      data[:storage_encryption_type]
+    end
+
+    # The number of days for which automatic DB snapshots are retained.
+    # @return [Integer]
+    def backup_retention_period
+      data[:backup_retention_period]
+    end
+
+    # The daily time range during which automated backups are created if
+    # automated backups are enabled, as determined by the
+    # `BackupRetentionPeriod`.
+    # @return [String]
+    def preferred_backup_window
+      data[:preferred_backup_window]
+    end
+
     # If `StorageEncrypted` is true, the Amazon Web Services KMS key
     # identifier for the encrypted DB cluster snapshot.
     #
@@ -192,25 +221,12 @@ module Aws::RDS
       data[:tag_list]
     end
 
-    # Reserved for future use.
-    # @return [String]
-    def db_system_id
-      data[:db_system_id]
-    end
-
     # The storage type associated with the DB cluster snapshot.
     #
     # This setting is only for Aurora DB clusters.
     # @return [String]
     def storage_type
       data[:storage_type]
-    end
-
-    # The resource ID of the DB cluster that this DB cluster snapshot was
-    # created from.
-    # @return [String]
-    def db_cluster_resource_id
-      data[:db_cluster_resource_id]
     end
 
     # The storage throughput for the DB cluster snapshot. The throughput is
@@ -221,6 +237,19 @@ module Aws::RDS
     # @return [Integer]
     def storage_throughput
       data[:storage_throughput]
+    end
+
+    # The resource ID of the DB cluster that this DB cluster snapshot was
+    # created from.
+    # @return [String]
+    def db_cluster_resource_id
+      data[:db_cluster_resource_id]
+    end
+
+    # Reserved for future use.
+    # @return [String]
+    def db_system_id
+      data[:db_system_id]
     end
 
     # @!endgroup
@@ -396,7 +425,7 @@ module Aws::RDS
     #   dbclustersnapshot = db_cluster_snapshot.copy({
     #     target_db_cluster_snapshot_identifier: "String", # required
     #     kms_key_id: "String",
-    #     pre_signed_url: "String",
+    #     pre_signed_url: "SensitiveString",
     #     copy_tags: false,
     #     tags: [
     #       {
@@ -589,12 +618,12 @@ module Aws::RDS
     #     storage_type: "String",
     #     iops: 1,
     #     publicly_accessible: false,
+    #     network_type: "String",
     #     serverless_v2_scaling_configuration: {
     #       min_capacity: 1.0,
     #       max_capacity: 1.0,
     #       seconds_until_auto_pause: 1,
     #     },
-    #     network_type: "String",
     #     rds_custom_cluster_configuration: {
     #       interconnect_subnet_id: "String",
     #       transit_gateway_multicast_domain_id: "String",
@@ -605,7 +634,28 @@ module Aws::RDS
     #     enable_performance_insights: false,
     #     performance_insights_kms_key_id: "String",
     #     performance_insights_retention_period: 1,
+    #     backup_retention_period: 1,
+    #     preferred_backup_window: "String",
     #     engine_lifecycle_support: "String",
+    #     tag_specifications: [
+    #       {
+    #         resource_type: "String",
+    #         tags: [
+    #           {
+    #             key: "String",
+    #             value: "String",
+    #           },
+    #         ],
+    #       },
+    #     ],
+    #     enable_vpc_networking: false,
+    #     enable_internet_access_gateway: false,
+    #     associated_roles: [
+    #       {
+    #         role_arn: "IAMRoleArn", # required
+    #         feature_name: "String",
+    #       },
+    #     ],
     #   })
     # @param [Hash] options ({})
     # @option options [Array<String>] :availability_zones
@@ -957,16 +1007,6 @@ module Aws::RDS
     #     attached to it, the DB cluster is public.
     #
     #   Valid for: Aurora DB clusters and Multi-AZ DB clusters
-    # @option options [Types::ServerlessV2ScalingConfiguration] :serverless_v2_scaling_configuration
-    #   Contains the scaling configuration of an Aurora Serverless v2 DB
-    #   cluster.
-    #
-    #   For more information, see [Using Amazon Aurora Serverless v2][1] in
-    #   the *Amazon Aurora User Guide*.
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-serverless-v2.html
     # @option options [String] :network_type
     #   The network type of the DB cluster.
     #
@@ -988,6 +1028,16 @@ module Aws::RDS
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html
+    # @option options [Types::ServerlessV2ScalingConfiguration] :serverless_v2_scaling_configuration
+    #   Contains the scaling configuration of an Aurora Serverless v2 DB
+    #   cluster.
+    #
+    #   For more information, see [Using Amazon Aurora Serverless v2][1] in
+    #   the *Amazon Aurora User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-serverless-v2.html
     # @option options [Types::RdsCustomClusterConfiguration] :rds_custom_cluster_configuration
     #   Reserved for future use.
     # @option options [Integer] :monitoring_interval
@@ -1038,8 +1088,46 @@ module Aws::RDS
     #
     #   If you specify a retention period that isn't valid, such as `94`,
     #   Amazon RDS issues an error.
+    # @option options [Integer] :backup_retention_period
+    #   The number of days for which automated backups are retained. Specify a
+    #   minimum value of `1`.
+    #
+    #   Valid for Cluster Type: Aurora DB clusters and Multi-AZ DB clusters
+    #
+    #   Default: Uses existing setting
+    #
+    #   Constraints:
+    #
+    #   * Must be a value from 1 to 35.
+    #
+    #   ^
+    # @option options [String] :preferred_backup_window
+    #   The daily time range during which automated backups are created if
+    #   automated backups are enabled, using the `BackupRetentionPeriod`
+    #   parameter.
+    #
+    #   The default is a 30-minute window selected at random from an 8-hour
+    #   block of time for each Amazon Web Services Region. To view the time
+    #   blocks available, see [ Backup window][1] in the *Amazon Aurora User
+    #   Guide*.
+    #
+    #   Valid for Cluster Type: Aurora DB clusters and Multi-AZ DB clusters
+    #
+    #   Constraints:
+    #
+    #   * Must be in the format `hh24:mi-hh24:mi`.
+    #
+    #   * Must be in Universal Coordinated Time (UTC).
+    #
+    #   * Must not conflict with the preferred maintenance window.
+    #
+    #   * Must be at least 30 minutes.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Managing.Backups.html#Aurora.Managing.Backups.BackupWindow
     # @option options [String] :engine_lifecycle_support
-    #   The life cycle type for this DB cluster.
+    #   The lifecycle type for this DB cluster.
     #
     #   <note markdown="1"> By default, this value is set to `open-source-rds-extended-support`,
     #   which enrolls your DB cluster into Amazon RDS Extended Support. At the
@@ -1057,11 +1145,11 @@ module Aws::RDS
     #   support for that engine version. For more information, see the
     #   following sections:
     #
-    #   * Amazon Aurora - [Using Amazon RDS Extended Support][1] in the
-    #     *Amazon Aurora User Guide*
+    #   * Amazon Aurora - [Amazon RDS Extended Support with Amazon Aurora][1]
+    #     in the *Amazon Aurora User Guide*
     #
-    #   * Amazon RDS - [Using Amazon RDS Extended Support][2] in the *Amazon
-    #     RDS User Guide*
+    #   * Amazon RDS - [Amazon RDS Extended Support with Amazon RDS][2] in the
+    #     *Amazon RDS User Guide*
     #
     #   Valid for Cluster Type: Aurora DB clusters and Multi-AZ DB clusters
     #
@@ -1074,6 +1162,45 @@ module Aws::RDS
     #
     #   [1]: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/extended-support.html
     #   [2]: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/extended-support.html
+    # @option options [Array<Types::TagSpecification>] :tag_specifications
+    #   Tags to assign to resources associated with the DB cluster.
+    #
+    #   Valid Values:
+    #
+    #   * `cluster-auto-backup` - The DB cluster's automated backup.
+    #
+    #   ^
+    # @option options [Boolean] :enable_vpc_networking
+    #   Specifies whether to enable VPC networking for the restored DB
+    #   cluster. Set this parameter to `false` to create a cluster without the
+    #   VPC network interface (ENI).
+    #
+    #   This parameter must be used together with
+    #   `EnableInternetAccessGateway`. When both parameters are specified, IAM
+    #   database authentication is required. You must also specify
+    #   `EnableIAMDatabaseAuthentication`.
+    #
+    #   Valid for Cluster Type: Aurora PostgreSQL clusters
+    # @option options [Boolean] :enable_internet_access_gateway
+    #   Specifies that the restored DB cluster should use internet-based
+    #   connectivity through an internet access gateway. This allows clients
+    #   to connect to the cluster over the internet without requiring a VPC.
+    #
+    #   This parameter must be used together with `EnableVPCNetworking` set to
+    #   `false`. When both parameters are specified, IAM database
+    #   authentication is required. You must also specify
+    #   `EnableIAMDatabaseAuthentication`.
+    #
+    #   Valid for Cluster Type: Aurora PostgreSQL clusters
+    # @option options [Array<Types::DBClusterAssociatedRole>] :associated_roles
+    #   A list of Amazon Web Services Identity and Access Management (IAM)
+    #   roles to associate with the DB cluster when it's restored from a
+    #   snapshot. Each role grants the DB cluster permission to access other
+    #   Amazon Web Services on your behalf. For each role, specify a role ARN
+    #   and, optionally, the feature name (such as `s3Import`, `s3Export`, or
+    #   `Lambda`).
+    #
+    #   Valid for Cluster Type: Aurora DB clusters only
     # @return [DBCluster]
     def restore(options = {})
       options = options.merge(snapshot_identifier: @snapshot_id)

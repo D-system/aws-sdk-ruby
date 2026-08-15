@@ -95,8 +95,8 @@ module Aws::NetworkFlowMonitor
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::NetworkFlowMonitor
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::NetworkFlowMonitor
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::NetworkFlowMonitor
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::NetworkFlowMonitor
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::NetworkFlowMonitor
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::NetworkFlowMonitor
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::NetworkFlowMonitor
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -474,7 +478,7 @@ module Aws::NetworkFlowMonitor
     # resources, so that you can monitor network performance for one or
     # several of your workloads. For each monitor, Network Flow Monitor
     # publishes detailed end-to-end performance metrics and a network health
-    # indicators (NHI) that informs you whether there were Amazon Web
+    # indicator (NHI) that informs you whether there were Amazon Web
     # Services network issues for one or more of the network flows tracked
     # by a monitor, during a time period that you choose.
     #
@@ -482,18 +486,37 @@ module Aws::NetworkFlowMonitor
     #   The name of the monitor.
     #
     # @option params [required, Array<Types::MonitorLocalResource>] :local_resources
-    #   The local resources to monitor. A local resource, in a bi-directional
-    #   flow of a workload, is the host where the agent is installed. For
-    #   example, if a workload consists of an interaction between a web
-    #   service and a backend database (for example, Amazon Relational
-    #   Database Service (RDS)), the EC2 instance hosting the web service,
-    #   which also runs the agent, is the local resource.
+    #   The local resources to monitor. A local resource in a workload is the
+    #   location of the host, or hosts, where the Network Flow Monitor agent
+    #   is installed. For example, if a workload consists of an interaction
+    #   between a web service and a backend database (for example, Amazon
+    #   Dynamo DB), the subnet with the EC2 instance that hosts the web
+    #   service, which also runs the agent, is the local resource.
+    #
+    #   Be aware that all local resources must belong to the current Region.
     #
     # @option params [Array<Types::MonitorRemoteResource>] :remote_resources
     #   The remote resources to monitor. A remote resource is the other
     #   endpoint in the bi-directional flow of a workload, with a local
-    #   resource. For example, Amazon Relational Database Service (RDS) can be
-    #   a remote resource.
+    #   resource. For example, Amazon Dynamo DB can be a remote resource.
+    #
+    #   When you specify remote resources, be aware that specific combinations
+    #   of resources are allowed and others are not, including the following
+    #   constraints:
+    #
+    #   * All remote resources that you specify must all belong to a single
+    #     Region.
+    #
+    #   * If you specify Amazon Web Services services as remote resources, any
+    #     other remote resources that you specify must be in the current
+    #     Region.
+    #
+    #   * When you specify a remote resource for another Region, you can only
+    #     specify the `Region` resource type. You cannot specify a subnet,
+    #     VPC, or Availability Zone in another Region.
+    #
+    #   * If you leave the `RemoteResources` parameter empty, the monitor will
+    #     include all network flows that terminate in the current Region.
     #
     # @option params [required, String] :scope_arn
     #   The Amazon Resource Name (ARN) of the scope for the monitor.
@@ -526,13 +549,13 @@ module Aws::NetworkFlowMonitor
     #     monitor_name: "ResourceName", # required
     #     local_resources: [ # required
     #       {
-    #         type: "AWS::EC2::VPC", # required, accepts AWS::EC2::VPC, AWS::AvailabilityZone, AWS::EC2::Subnet
+    #         type: "AWS::EC2::VPC", # required, accepts AWS::EC2::VPC, AWS::AvailabilityZone, AWS::EC2::Subnet, AWS::Region, AWS::EKS::Cluster
     #         identifier: "String", # required
     #       },
     #     ],
     #     remote_resources: [
     #       {
-    #         type: "AWS::EC2::VPC", # required, accepts AWS::EC2::VPC, AWS::AvailabilityZone, AWS::EC2::Subnet, AWS::AWSService
+    #         type: "AWS::EC2::VPC", # required, accepts AWS::EC2::VPC, AWS::AvailabilityZone, AWS::EC2::Subnet, AWS::AWSService, AWS::Region
     #         identifier: "String", # required
     #       },
     #     ],
@@ -549,10 +572,10 @@ module Aws::NetworkFlowMonitor
     #   resp.monitor_name #=> String
     #   resp.monitor_status #=> String, one of "PENDING", "ACTIVE", "INACTIVE", "ERROR", "DELETING"
     #   resp.local_resources #=> Array
-    #   resp.local_resources[0].type #=> String, one of "AWS::EC2::VPC", "AWS::AvailabilityZone", "AWS::EC2::Subnet"
+    #   resp.local_resources[0].type #=> String, one of "AWS::EC2::VPC", "AWS::AvailabilityZone", "AWS::EC2::Subnet", "AWS::Region", "AWS::EKS::Cluster"
     #   resp.local_resources[0].identifier #=> String
     #   resp.remote_resources #=> Array
-    #   resp.remote_resources[0].type #=> String, one of "AWS::EC2::VPC", "AWS::AvailabilityZone", "AWS::EC2::Subnet", "AWS::AWSService"
+    #   resp.remote_resources[0].type #=> String, one of "AWS::EC2::VPC", "AWS::AvailabilityZone", "AWS::EC2::Subnet", "AWS::AWSService", "AWS::Region"
     #   resp.remote_resources[0].identifier #=> String
     #   resp.created_at #=> Time
     #   resp.modified_at #=> Time
@@ -568,18 +591,34 @@ module Aws::NetworkFlowMonitor
       req.send_request(options)
     end
 
-    # Create a scope of resources that you want to be available for Network
-    # Flow Monitor to generate metrics for, when you have active agents on
-    # those resources sending metrics reports to the Network Flow Monitor
-    # backend. This call returns a scope ID to identify the scope.
+    # In Network Flow Monitor, you specify a scope for the service to
+    # generate metrics for. By using the scope, Network Flow Monitor can
+    # generate a topology of all the resources to measure performance
+    # metrics for. When you create a scope, you enable permissions for
+    # Network Flow Monitor.
     #
-    # When you create a scope, you enable permissions for Network Flow
-    # Monitor. The scope is set to the resources for the Amazon Web Services
-    # that enables the feature.
+    # A scope is a Region-account pair or multiple Region-account pairs.
+    # Network Flow Monitor uses your scope to determine all the resources
+    # (the topology) where Network Flow Monitor will gather network flow
+    # performance metrics for you. To provide performance metrics, Network
+    # Flow Monitor uses the data that is sent by the Network Flow Monitor
+    # agents you install on the resources.
+    #
+    # To define the Region-account pairs for your scope, the Network Flow
+    # Monitor API uses the following constucts, which allow for future
+    # flexibility in defining scopes:
+    #
+    # * *Targets*, which are arrays of targetResources.
+    #
+    # * *Target resources*, which are Region-targetIdentifier pairs.
+    #
+    # * *Target identifiers*, made up of a targetID (currently always an
+    #   account ID) and a targetType (currently always an account).
     #
     # @option params [required, Array<Types::TargetResource>] :targets
-    #   The targets to define the scope to be monitored. Currently, a target
-    #   is an Amazon Web Services account.
+    #   The targets to define the scope to be monitored. A target is an array
+    #   of targetResources, which are currently Region-account pairs, defined
+    #   by targetResource constructs.
     #
     # @option params [String] :client_token
     #   A unique, case-sensitive string of up to 64 ASCII characters that you
@@ -622,7 +661,7 @@ module Aws::NetworkFlowMonitor
     # @example Response structure
     #
     #   resp.scope_id #=> String
-    #   resp.status #=> String, one of "SUCCEEDED", "IN_PROGRESS", "FAILED"
+    #   resp.status #=> String, one of "SUCCEEDED", "IN_PROGRESS", "FAILED", "DEACTIVATING", "DEACTIVATED"
     #   resp.scope_arn #=> String
     #   resp.tags #=> Hash
     #   resp.tags["TagKey"] #=> String
@@ -713,10 +752,10 @@ module Aws::NetworkFlowMonitor
     #   resp.monitor_name #=> String
     #   resp.monitor_status #=> String, one of "PENDING", "ACTIVE", "INACTIVE", "ERROR", "DELETING"
     #   resp.local_resources #=> Array
-    #   resp.local_resources[0].type #=> String, one of "AWS::EC2::VPC", "AWS::AvailabilityZone", "AWS::EC2::Subnet"
+    #   resp.local_resources[0].type #=> String, one of "AWS::EC2::VPC", "AWS::AvailabilityZone", "AWS::EC2::Subnet", "AWS::Region", "AWS::EKS::Cluster"
     #   resp.local_resources[0].identifier #=> String
     #   resp.remote_resources #=> Array
-    #   resp.remote_resources[0].type #=> String, one of "AWS::EC2::VPC", "AWS::AvailabilityZone", "AWS::EC2::Subnet", "AWS::AWSService"
+    #   resp.remote_resources[0].type #=> String, one of "AWS::EC2::VPC", "AWS::AvailabilityZone", "AWS::EC2::Subnet", "AWS::AWSService", "AWS::Region"
     #   resp.remote_resources[0].identifier #=> String
     #   resp.created_at #=> Time
     #   resp.modified_at #=> Time
@@ -742,15 +781,17 @@ module Aws::NetworkFlowMonitor
     # ID that was returned for your account by `CreateScope`.
     #
     # Top contributors in Network Flow Monitor are network flows with the
-    # highest values for a specific metric type, related to a scope (for
-    # workload insights) or a monitor.
+    # highest values for a specific metric type. Top contributors can be
+    # across all workload insights, for a given scope, or for a specific
+    # monitor. Use the applicable call for the top contributors that you
+    # want to be returned.
     #
     # @option params [required, String] :monitor_name
     #   The name of the monitor.
     #
     # @option params [required, String] :query_id
     #   The identifier for the query. A query ID is an internally-generated
-    #   identifier for a specific query returned from an API call to start a
+    #   identifier for a specific query returned from an API call to create a
     #   query.
     #
     # @option params [String] :next_token
@@ -789,7 +830,7 @@ module Aws::NetworkFlowMonitor
     #   resp.top_contributors[0].local_az #=> String
     #   resp.top_contributors[0].local_subnet_id #=> String
     #   resp.top_contributors[0].target_port #=> Integer
-    #   resp.top_contributors[0].destination_category #=> String, one of "INTRA_AZ", "INTER_AZ", "INTER_VPC", "UNCLASSIFIED", "AMAZON_S3", "AMAZON_DYNAMODB"
+    #   resp.top_contributors[0].destination_category #=> String, one of "INTRA_AZ", "INTER_AZ", "INTER_VPC", "UNCLASSIFIED", "AMAZON_S3", "AMAZON_DYNAMODB", "INTER_REGION"
     #   resp.top_contributors[0].remote_vpc_id #=> String
     #   resp.top_contributors[0].remote_region #=> String
     #   resp.top_contributors[0].remote_az #=> String
@@ -841,8 +882,10 @@ module Aws::NetworkFlowMonitor
     # the scope ID that was returned for your account by `CreateScope`.
     #
     # Top contributors in Network Flow Monitor are network flows with the
-    # highest values for a specific metric type, related to a scope (for
-    # workload insights) or a monitor.
+    # highest values for a specific metric type. Top contributors can be
+    # across all workload insights, for a given scope, or for a specific
+    # monitor. Use the applicable call for the top contributors that you
+    # want to be returned.
     #
     # @option params [required, String] :scope_id
     #   The identifier for the scope that includes the resources you want to
@@ -851,7 +894,7 @@ module Aws::NetworkFlowMonitor
     #
     # @option params [required, String] :query_id
     #   The identifier for the query. A query ID is an internally-generated
-    #   identifier for a specific query returned from an API call to start a
+    #   identifier for a specific query returned from an API call to create a
     #   query.
     #
     # @option params [String] :next_token
@@ -915,11 +958,13 @@ module Aws::NetworkFlowMonitor
     # Use the scope ID that was returned for your account by `CreateScope`.
     #
     # Top contributors in Network Flow Monitor are network flows with the
-    # highest values for a specific metric type, related to a scope (for
-    # workload insights) or a monitor.
+    # highest values for a specific metric type. Top contributors can be
+    # across all workload insights, for a given scope, or for a specific
+    # monitor. Use the applicable call for the top contributors that you
+    # want to be returned.
     #
-    # The top contributor network flows overall for a specific metric type,
-    # for example, the number of retransmissions.
+    # The top contributor network flows overall are for a specific metric
+    # type, for example, the number of retransmissions.
     #
     # @option params [required, String] :scope_id
     #   The identifier for the scope that includes the resources you want to
@@ -928,7 +973,7 @@ module Aws::NetworkFlowMonitor
     #
     # @option params [required, String] :query_id
     #   The identifier for the query. A query ID is an internally-generated
-    #   identifier for a specific query returned from an API call to start a
+    #   identifier for a specific query returned from an API call to create a
     #   query.
     #
     # @option params [String] :next_token
@@ -979,11 +1024,10 @@ module Aws::NetworkFlowMonitor
     # query interface, for a specified query ID and monitor. This call
     # returns the query status for the top contributors for a monitor.
     #
-    # When you start a query, use this call to check the status of the query
-    # to make sure that it has has `SUCCEEDED` before you
-    # reviewStartQueryWorkloadInsightsTopContributorsData the results. Use
-    # the same query ID that you used for the corresponding API call to
-    # start the query, `StartQueryMonitorTopContributors`.
+    # When you create a query, use this call to check the status of the
+    # query to make sure that it has has `SUCCEEDED` before you review the
+    # results. Use the same query ID that you used for the corresponding API
+    # call to start (create) the query, `StartQueryMonitorTopContributors`.
     #
     # When you run a query, use this call to check the status of the query
     # to make sure that the query has `SUCCEEDED` before you review the
@@ -1032,8 +1076,10 @@ module Aws::NetworkFlowMonitor
     # call to start the query, `StartQueryWorkloadInsightsTopContributors`.
     #
     # Top contributors in Network Flow Monitor are network flows with the
-    # highest values for a specific metric type, related to a scope (for
-    # workload insights) or a monitor.
+    # highest values for a specific metric type. Top contributors can be
+    # across all workload insights, for a given scope, or for a specific
+    # monitor. Use the applicable call for the top contributors that you
+    # want to be returned.
     #
     # @option params [required, String] :scope_id
     #   The identifier for the scope that includes the resources you want to
@@ -1081,11 +1127,13 @@ module Aws::NetworkFlowMonitor
     # `StartQueryWorkloadInsightsTopContributorsData`.
     #
     # Top contributors in Network Flow Monitor are network flows with the
-    # highest values for a specific metric type, related to a scope (for
-    # workload insights) or a monitor.
+    # highest values for a specific metric type. Top contributors can be
+    # across all workload insights, for a given scope, or for a specific
+    # monitor. Use the applicable call for the top contributors that you
+    # want to be returned.
     #
-    # The top contributor network flows overall for a specific metric type,
-    # for example, the number of retransmissions.
+    # The top contributor network flows overall are for a specific metric
+    # type, for example, the number of retransmissions.
     #
     # @option params [required, String] :scope_id
     #   The identifier for the scope that includes the resources you want to
@@ -1148,7 +1196,7 @@ module Aws::NetworkFlowMonitor
     # @example Response structure
     #
     #   resp.scope_id #=> String
-    #   resp.status #=> String, one of "SUCCEEDED", "IN_PROGRESS", "FAILED"
+    #   resp.status #=> String, one of "SUCCEEDED", "IN_PROGRESS", "FAILED", "DEACTIVATING", "DEACTIVATED"
     #   resp.scope_arn #=> String
     #   resp.targets #=> Array
     #   resp.targets[0].target_identifier.target_id.account_id #=> String
@@ -1248,7 +1296,7 @@ module Aws::NetworkFlowMonitor
     #
     #   resp.scopes #=> Array
     #   resp.scopes[0].scope_id #=> String
-    #   resp.scopes[0].status #=> String, one of "SUCCEEDED", "IN_PROGRESS", "FAILED"
+    #   resp.scopes[0].status #=> String, one of "SUCCEEDED", "IN_PROGRESS", "FAILED", "DEACTIVATING", "DEACTIVATED"
     #   resp.scopes[0].scope_arn #=> String
     #   resp.next_token #=> String
     #
@@ -1290,21 +1338,30 @@ module Aws::NetworkFlowMonitor
       req.send_request(options)
     end
 
-    # Start a query to return the data with the Network Flow Monitor query
-    # interface. Specify the query that you want to return results for by
-    # providing a query ID and a monitor name. This query returns the top
-    # contributors for a specific monitor.
+    # Create a query that you can use with the Network Flow Monitor query
+    # interface to return the top contributors for a monitor. Specify the
+    # monitor that you want to create the query for.
+    #
+    # The call returns a query ID that you can use with [
+    # GetQueryResultsMonitorTopContributors][1] to run the query and return
+    # the top contributors for a specific monitor.
     #
     # Top contributors in Network Flow Monitor are network flows with the
-    # highest values for a specific metric type, related to a scope (for
-    # workload insights) or a monitor.
+    # highest values for a specific metric type. Top contributors can be
+    # across all workload insights, for a given scope, or for a specific
+    # monitor. Use the applicable APIs for the top contributors that you
+    # want to be returned.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/networkflowmonitor/2.0/APIReference/API_GetQueryResultsMonitorTopContributors.html
     #
     # @option params [required, String] :monitor_name
     #   The name of the monitor.
     #
     # @option params [required, Time,DateTime,Date,Integer,String] :start_time
-    #   The timestamp that is the date and time beginning of the period that
-    #   you want to retrieve results for with your query.
+    #   The timestamp that is the date and time that is the beginning of the
+    #   period that you want to retrieve results for with your query.
     #
     # @option params [required, Time,DateTime,Date,Integer,String] :end_time
     #   The timestamp that is the date and time end of the period that you
@@ -1312,9 +1369,10 @@ module Aws::NetworkFlowMonitor
     #
     # @option params [required, String] :metric_name
     #   The metric that you want to query top contributors for. That is, you
-    #   can specify this metric to return the top contributor network flows,
-    #   for this type of metric, for a monitor and (optionally) within a
-    #   specific category, such as network flows between Availability Zones.
+    #   can specify a metric with this call and return the top contributor
+    #   network flows, for that type of metric, for a monitor and (optionally)
+    #   within a specific category, such as network flows between Availability
+    #   Zones.
     #
     # @option params [required, String] :destination_category
     #   The category that you want to query top contributors for, for a
@@ -1324,6 +1382,9 @@ module Aws::NetworkFlowMonitor
     #     Availability Zone
     #
     #   * `INTER_AZ`: Top contributor network flows between Availability Zones
+    #
+    #   * `INTER_REGION`: Top contributor network flows between Regions (to
+    #     the edge of another Region)
     #
     #   * `INTER_VPC`: Top contributor network flows between VPCs
     #
@@ -1349,7 +1410,7 @@ module Aws::NetworkFlowMonitor
     #     start_time: Time.now, # required
     #     end_time: Time.now, # required
     #     metric_name: "ROUND_TRIP_TIME", # required, accepts ROUND_TRIP_TIME, TIMEOUTS, RETRANSMISSIONS, DATA_TRANSFERRED
-    #     destination_category: "INTRA_AZ", # required, accepts INTRA_AZ, INTER_AZ, INTER_VPC, UNCLASSIFIED, AMAZON_S3, AMAZON_DYNAMODB
+    #     destination_category: "INTRA_AZ", # required, accepts INTRA_AZ, INTER_AZ, INTER_VPC, UNCLASSIFIED, AMAZON_S3, AMAZON_DYNAMODB, INTER_REGION
     #     limit: 1,
     #   })
     #
@@ -1366,14 +1427,23 @@ module Aws::NetworkFlowMonitor
       req.send_request(options)
     end
 
-    # Start a query to return the data with the Network Flow Monitor query
-    # interface. Specify the query that you want to start by providing a
-    # query ID and a monitor name. This query returns the top contributors
-    # for a specific monitor.
+    # Create a query with the Network Flow Monitor query interface that you
+    # can run to return workload insights top contributors. Specify the
+    # scope that you want to create a query for.
+    #
+    # The call returns a query ID that you can use with [
+    # GetQueryResultsWorkloadInsightsTopContributors][1] to run the query
+    # and return the top contributors for the workload insights for a scope.
     #
     # Top contributors in Network Flow Monitor are network flows with the
-    # highest values for a specific metric type, related to a scope (for
-    # workload insights) or a monitor.
+    # highest values for a specific metric type. Top contributors can be
+    # across all workload insights, for a given scope, or for a specific
+    # monitor. Use the applicable APIs for the top contributors that you
+    # want to be returned.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/networkflowmonitor/2.0/APIReference/API_GetQueryResultsWorkloadInsightsTopContributors.html
     #
     # @option params [required, String] :scope_id
     #   The identifier for the scope that includes the resources you want to
@@ -1382,8 +1452,8 @@ module Aws::NetworkFlowMonitor
     #   ID is returned from a `CreateScope` API call.
     #
     # @option params [required, Time,DateTime,Date,Integer,String] :start_time
-    #   The timestamp that is the date and time beginning of the period that
-    #   you want to retrieve results for with your query.
+    #   The timestamp that is the date and time that is the beginning of the
+    #   period that you want to retrieve results for with your query.
     #
     # @option params [required, Time,DateTime,Date,Integer,String] :end_time
     #   The timestamp that is the date and time end of the period that you
@@ -1403,6 +1473,9 @@ module Aws::NetworkFlowMonitor
     #     Availability Zone
     #
     #   * `INTER_AZ`: Top contributor network flows between Availability Zones
+    #
+    #   * `INTER_REGION`: Top contributor network flows between Regions (to
+    #     the edge of another Region)
     #
     #   * `INTER_VPC`: Top contributor network flows between VPCs
     #
@@ -1426,7 +1499,7 @@ module Aws::NetworkFlowMonitor
     #     start_time: Time.now, # required
     #     end_time: Time.now, # required
     #     metric_name: "TIMEOUTS", # required, accepts TIMEOUTS, RETRANSMISSIONS, DATA_TRANSFERRED
-    #     destination_category: "INTRA_AZ", # required, accepts INTRA_AZ, INTER_AZ, INTER_VPC, UNCLASSIFIED, AMAZON_S3, AMAZON_DYNAMODB
+    #     destination_category: "INTRA_AZ", # required, accepts INTRA_AZ, INTER_AZ, INTER_VPC, UNCLASSIFIED, AMAZON_S3, AMAZON_DYNAMODB, INTER_REGION
     #     limit: 1,
     #   })
     #
@@ -1443,14 +1516,24 @@ module Aws::NetworkFlowMonitor
       req.send_request(options)
     end
 
-    # Start a query to return the with the Network Flow Monitor query
-    # interface. Specify the query that you want to start by providing a
-    # query ID and a monitor name. This query returns the data for top
-    # contributors for workload insights.
+    # Create a query with the Network Flow Monitor query interface that you
+    # can run to return data for workload insights top contributors. Specify
+    # the scope that you want to create a query for.
+    #
+    # The call returns a query ID that you can use with [
+    # GetQueryResultsWorkloadInsightsTopContributorsData][1] to run the
+    # query and return the data for the top contributors for the workload
+    # insights for a scope.
     #
     # Top contributors in Network Flow Monitor are network flows with the
-    # highest values for a specific metric type, related to a scope (for
-    # workload insights) or a monitor.
+    # highest values for a specific metric type. Top contributors can be
+    # across all workload insights, for a given scope, or for a specific
+    # monitor. Use the applicable call for the top contributors that you
+    # want to be returned.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/networkflowmonitor/2.0/APIReference/API_GetQueryResultsWorkloadInsightsTopContributorsData.html
     #
     # @option params [required, String] :scope_id
     #   The identifier for the scope that includes the resources you want to
@@ -1458,8 +1541,8 @@ module Aws::NetworkFlowMonitor
     #   that includes all the resources for a specific root account.
     #
     # @option params [required, Time,DateTime,Date,Integer,String] :start_time
-    #   The timestamp that is the date and time beginning of the period that
-    #   you want to retrieve results for with your query.
+    #   The timestamp that is the date and time that is the beginning of the
+    #   period that you want to retrieve results for with your query.
     #
     # @option params [required, Time,DateTime,Date,Integer,String] :end_time
     #   The timestamp that is the date and time end of the period that you
@@ -1480,6 +1563,9 @@ module Aws::NetworkFlowMonitor
     #
     #   * `INTER_AZ`: Top contributor network flows between Availability Zones
     #
+    #   * `INTER_REGION`: Top contributor network flows between Regions (to
+    #     the edge of another Region)
+    #
     #   * `INTER_VPC`: Top contributor network flows between VPCs
     #
     #   * `AWS_SERVICES`: Top contributor network flows to or from Amazon Web
@@ -1499,7 +1585,7 @@ module Aws::NetworkFlowMonitor
     #     start_time: Time.now, # required
     #     end_time: Time.now, # required
     #     metric_name: "TIMEOUTS", # required, accepts TIMEOUTS, RETRANSMISSIONS, DATA_TRANSFERRED
-    #     destination_category: "INTRA_AZ", # required, accepts INTRA_AZ, INTER_AZ, INTER_VPC, UNCLASSIFIED, AMAZON_S3, AMAZON_DYNAMODB
+    #     destination_category: "INTRA_AZ", # required, accepts INTRA_AZ, INTER_AZ, INTER_VPC, UNCLASSIFIED, AMAZON_S3, AMAZON_DYNAMODB, INTER_REGION
     #   })
     #
     # @example Response structure
@@ -1515,20 +1601,21 @@ module Aws::NetworkFlowMonitor
       req.send_request(options)
     end
 
-    # Stop a query with the Network Flow Monitor query interface. Specify
-    # the query that you want to stop by providing a query ID and a monitor
-    # name. This query returns the top contributors for a specific monitor.
+    # Stop a top contributors query for a monitor. Specify the query that
+    # you want to stop by providing a query ID and a monitor name.
     #
     # Top contributors in Network Flow Monitor are network flows with the
-    # highest values for a specific metric type, related to a scope (for
-    # workload insights) or a monitor.
+    # highest values for a specific metric type. Top contributors can be
+    # across all workload insights, for a given scope, or for a specific
+    # monitor. Use the applicable call for the top contributors that you
+    # want to be returned.
     #
     # @option params [required, String] :monitor_name
     #   The name of the monitor.
     #
     # @option params [required, String] :query_id
     #   The identifier for the query. A query ID is an internally-generated
-    #   identifier for a specific query returned from an API call to start a
+    #   identifier for a specific query returned from an API call to create a
     #   query.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
@@ -1549,13 +1636,14 @@ module Aws::NetworkFlowMonitor
       req.send_request(options)
     end
 
-    # Stop a query with the Network Flow Monitor query interface. Specify
-    # the query that you want to stop by providing a query ID and a monitor
-    # name. This query returns the top contributors for a specific monitor.
+    # Stop a top contributors query for workload insights. Specify the query
+    # that you want to stop by providing a query ID and a scope ID.
     #
     # Top contributors in Network Flow Monitor are network flows with the
-    # highest values for a specific metric type, related to a scope (for
-    # workload insights) or a monitor.
+    # highest values for a specific metric type. Top contributors can be
+    # across all workload insights, for a given scope, or for a specific
+    # monitor. Use the applicable call for the top contributors that you
+    # want to be returned.
     #
     # @option params [required, String] :scope_id
     #   The identifier for the scope that includes the resources you want to
@@ -1564,7 +1652,7 @@ module Aws::NetworkFlowMonitor
     #
     # @option params [required, String] :query_id
     #   The identifier for the query. A query ID is an internally-generated
-    #   identifier for a specific query returned from an API call to start a
+    #   identifier for a specific query returned from an API call to create a
     #   query.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
@@ -1585,19 +1673,14 @@ module Aws::NetworkFlowMonitor
       req.send_request(options)
     end
 
-    # Return the data for a query with the Network Flow Monitor query
-    # interface. Specify the query that you want to return results for by
-    # providing a query ID and a scope ID. This query returns data for the
-    # top contributors for workload insights. Workload insights provide a
-    # high level view of network flow performance data collected by agents
-    # for a scope.
+    # Stop a top contributors data query for workload insights. Specify the
+    # query that you want to stop by providing a query ID and a scope ID.
     #
     # Top contributors in Network Flow Monitor are network flows with the
-    # highest values for a specific metric type, related to a scope (for
-    # workload insights) or a monitor.
-    #
-    # The top contributor network flows overall for a specific metric type,
-    # for example, the number of retransmissions.
+    # highest values for a specific metric type. Top contributors can be
+    # across all workload insights, for a given scope, or for a specific
+    # monitor. Use the applicable call for the top contributors that you
+    # want to be returned.
     #
     # @option params [required, String] :scope_id
     #   The identifier for the scope that includes the resources you want to
@@ -1606,7 +1689,7 @@ module Aws::NetworkFlowMonitor
     #
     # @option params [required, String] :query_id
     #   The identifier for the query. A query ID is an internally-generated
-    #   identifier for a specific query returned from an API call to start a
+    #   identifier for a specific query returned from an API call to create a
     #   query.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
@@ -1687,20 +1770,30 @@ module Aws::NetworkFlowMonitor
     #   The name of the monitor.
     #
     # @option params [Array<Types::MonitorLocalResource>] :local_resources_to_add
-    #   The local resources to add, as an array of resources with identifiers
-    #   and types.
+    #   Additional local resources to specify network flows for a monitor, as
+    #   an array of resources with identifiers and types. A local resource in
+    #   a workload is the location of hosts where the Network Flow Monitor
+    #   agent is installed.
     #
     # @option params [Array<Types::MonitorLocalResource>] :local_resources_to_remove
     #   The local resources to remove, as an array of resources with
     #   identifiers and types.
     #
     # @option params [Array<Types::MonitorRemoteResource>] :remote_resources_to_add
-    #   The remove resources to add, as an array of resources with identifiers
+    #   The remote resources to add, as an array of resources with identifiers
     #   and types.
     #
+    #   A remote resource is the other endpoint in the flow of a workload,
+    #   with a local resource. For example, Amazon Dynamo DB can be a remote
+    #   resource.
+    #
     # @option params [Array<Types::MonitorRemoteResource>] :remote_resources_to_remove
-    #   The remove resources to remove, as an array of resources with
+    #   The remote resources to remove, as an array of resources with
     #   identifiers and types.
+    #
+    #   A remote resource is the other endpoint specified for the network flow
+    #   of a workload, with a local resource. For example, Amazon Dynamo DB
+    #   can be a remote resource.
     #
     # @option params [String] :client_token
     #   A unique, case-sensitive string of up to 64 ASCII characters that you
@@ -1727,25 +1820,25 @@ module Aws::NetworkFlowMonitor
     #     monitor_name: "ResourceName", # required
     #     local_resources_to_add: [
     #       {
-    #         type: "AWS::EC2::VPC", # required, accepts AWS::EC2::VPC, AWS::AvailabilityZone, AWS::EC2::Subnet
+    #         type: "AWS::EC2::VPC", # required, accepts AWS::EC2::VPC, AWS::AvailabilityZone, AWS::EC2::Subnet, AWS::Region, AWS::EKS::Cluster
     #         identifier: "String", # required
     #       },
     #     ],
     #     local_resources_to_remove: [
     #       {
-    #         type: "AWS::EC2::VPC", # required, accepts AWS::EC2::VPC, AWS::AvailabilityZone, AWS::EC2::Subnet
+    #         type: "AWS::EC2::VPC", # required, accepts AWS::EC2::VPC, AWS::AvailabilityZone, AWS::EC2::Subnet, AWS::Region, AWS::EKS::Cluster
     #         identifier: "String", # required
     #       },
     #     ],
     #     remote_resources_to_add: [
     #       {
-    #         type: "AWS::EC2::VPC", # required, accepts AWS::EC2::VPC, AWS::AvailabilityZone, AWS::EC2::Subnet, AWS::AWSService
+    #         type: "AWS::EC2::VPC", # required, accepts AWS::EC2::VPC, AWS::AvailabilityZone, AWS::EC2::Subnet, AWS::AWSService, AWS::Region
     #         identifier: "String", # required
     #       },
     #     ],
     #     remote_resources_to_remove: [
     #       {
-    #         type: "AWS::EC2::VPC", # required, accepts AWS::EC2::VPC, AWS::AvailabilityZone, AWS::EC2::Subnet, AWS::AWSService
+    #         type: "AWS::EC2::VPC", # required, accepts AWS::EC2::VPC, AWS::AvailabilityZone, AWS::EC2::Subnet, AWS::AWSService, AWS::Region
     #         identifier: "String", # required
     #       },
     #     ],
@@ -1758,10 +1851,10 @@ module Aws::NetworkFlowMonitor
     #   resp.monitor_name #=> String
     #   resp.monitor_status #=> String, one of "PENDING", "ACTIVE", "INACTIVE", "ERROR", "DELETING"
     #   resp.local_resources #=> Array
-    #   resp.local_resources[0].type #=> String, one of "AWS::EC2::VPC", "AWS::AvailabilityZone", "AWS::EC2::Subnet"
+    #   resp.local_resources[0].type #=> String, one of "AWS::EC2::VPC", "AWS::AvailabilityZone", "AWS::EC2::Subnet", "AWS::Region", "AWS::EKS::Cluster"
     #   resp.local_resources[0].identifier #=> String
     #   resp.remote_resources #=> Array
-    #   resp.remote_resources[0].type #=> String, one of "AWS::EC2::VPC", "AWS::AvailabilityZone", "AWS::EC2::Subnet", "AWS::AWSService"
+    #   resp.remote_resources[0].type #=> String, one of "AWS::EC2::VPC", "AWS::AvailabilityZone", "AWS::EC2::Subnet", "AWS::AWSService", "AWS::Region"
     #   resp.remote_resources[0].identifier #=> String
     #   resp.created_at #=> Time
     #   resp.modified_at #=> Time
@@ -1831,7 +1924,7 @@ module Aws::NetworkFlowMonitor
     # @example Response structure
     #
     #   resp.scope_id #=> String
-    #   resp.status #=> String, one of "SUCCEEDED", "IN_PROGRESS", "FAILED"
+    #   resp.status #=> String, one of "SUCCEEDED", "IN_PROGRESS", "FAILED", "DEACTIVATING", "DEACTIVATED"
     #   resp.scope_arn #=> String
     #   resp.tags #=> Hash
     #   resp.tags["TagKey"] #=> String
@@ -1863,7 +1956,7 @@ module Aws::NetworkFlowMonitor
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-networkflowmonitor'
-      context[:gem_version] = '1.4.0'
+      context[:gem_version] = '1.28.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

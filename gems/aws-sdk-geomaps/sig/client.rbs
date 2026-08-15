@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -152,6 +153,11 @@ module Aws
                                   style: ("Standard" | "Monochrome" | "Hybrid" | "Satellite"),
                                   ?color_scheme: ("Light" | "Dark"),
                                   ?political_view: ::String,
+                                  ?terrain: ("Hillshade" | "Terrain3D"),
+                                  ?contour_density: ("Low" | "Medium" | "High"),
+                                  ?traffic: ("All" | "Congestion"),
+                                  ?travel_modes: Array[("Transit" | "Truck")],
+                                  ?buildings: ("Buildings3D"),
                                   ?key: ::String
                                 ) ?{ (*untyped) -> void } -> _GetStyleDescriptorResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) ?{ (*untyped) -> void } -> _GetStyleDescriptorResponseSuccess
@@ -166,6 +172,7 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/GeoMaps/Client.html#get_tile-instance_method
       def get_tile: (
+                      ?additional_features: Array[("ContourLines" | "Hillshade" | "Logistics" | "Transit")],
                       tileset: ::String,
                       z: ::String,
                       x: ::String,

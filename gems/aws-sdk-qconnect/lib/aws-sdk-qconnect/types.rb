@@ -17,32 +17,71 @@ module Aws::QConnect
     #
     # @note AIAgentConfiguration is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of AIAgentConfiguration corresponding to the set member.
     #
-    # @!attribute [rw] answer_recommendation_ai_agent_configuration
-    #   The configuration for AI Agents of type `ANSWER_RECOMMENDATION`.
-    #   @return [Types::AnswerRecommendationAIAgentConfiguration]
-    #
     # @!attribute [rw] manual_search_ai_agent_configuration
     #   The configuration for AI Agents of type `MANUAL_SEARCH`.
     #   @return [Types::ManualSearchAIAgentConfiguration]
+    #
+    # @!attribute [rw] answer_recommendation_ai_agent_configuration
+    #   The configuration for AI Agents of type `ANSWER_RECOMMENDATION`.
+    #   @return [Types::AnswerRecommendationAIAgentConfiguration]
     #
     # @!attribute [rw] self_service_ai_agent_configuration
     #   The configuration for AI Agents of type SELF\_SERVICE.
     #   @return [Types::SelfServiceAIAgentConfiguration]
     #
+    # @!attribute [rw] email_response_ai_agent_configuration
+    #   Configuration for the EMAIL\_RESPONSE AI agent that generates
+    #   professional email responses using knowledge base content.
+    #   @return [Types::EmailResponseAIAgentConfiguration]
+    #
+    # @!attribute [rw] email_overview_ai_agent_configuration
+    #   Configuration for the EMAIL\_OVERVIEW AI agent that generates
+    #   structured overview of email conversations.
+    #   @return [Types::EmailOverviewAIAgentConfiguration]
+    #
+    # @!attribute [rw] email_generative_answer_ai_agent_configuration
+    #   Configuration for the EMAIL\_GENERATIVE\_ANSWER AI agent that
+    #   provides comprehensive knowledge-based answers for customer queries.
+    #   @return [Types::EmailGenerativeAnswerAIAgentConfiguration]
+    #
+    # @!attribute [rw] orchestration_ai_agent_configuration
+    #   The configuration for AI Agents of type `ORCHESTRATION`.
+    #   @return [Types::OrchestrationAIAgentConfiguration]
+    #
+    # @!attribute [rw] note_taking_ai_agent_configuration
+    #   The configuration for AI Agents of type `NOTE_TAKING`.
+    #   @return [Types::NoteTakingAIAgentConfiguration]
+    #
+    # @!attribute [rw] case_summarization_ai_agent_configuration
+    #   The configuration for AI Agents of type `CASE_SUMMARIZATION`.
+    #   @return [Types::CaseSummarizationAIAgentConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/AIAgentConfiguration AWS API Documentation
     #
     class AIAgentConfiguration < Struct.new(
-      :answer_recommendation_ai_agent_configuration,
       :manual_search_ai_agent_configuration,
+      :answer_recommendation_ai_agent_configuration,
       :self_service_ai_agent_configuration,
+      :email_response_ai_agent_configuration,
+      :email_overview_ai_agent_configuration,
+      :email_generative_answer_ai_agent_configuration,
+      :orchestration_ai_agent_configuration,
+      :note_taking_ai_agent_configuration,
+      :case_summarization_ai_agent_configuration,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
       include Aws::Structure::Union
 
-      class AnswerRecommendationAiAgentConfiguration < AIAgentConfiguration; end
       class ManualSearchAiAgentConfiguration < AIAgentConfiguration; end
+      class AnswerRecommendationAiAgentConfiguration < AIAgentConfiguration; end
       class SelfServiceAiAgentConfiguration < AIAgentConfiguration; end
+      class EmailResponseAiAgentConfiguration < AIAgentConfiguration; end
+      class EmailOverviewAiAgentConfiguration < AIAgentConfiguration; end
+      class EmailGenerativeAnswerAiAgentConfiguration < AIAgentConfiguration; end
+      class OrchestrationAiAgentConfiguration < AIAgentConfiguration; end
+      class NoteTakingAiAgentConfiguration < AIAgentConfiguration; end
+      class CaseSummarizationAiAgentConfiguration < AIAgentConfiguration; end
       class Unknown < AIAgentConfiguration; end
     end
 
@@ -64,38 +103,51 @@ module Aws::QConnect
 
     # The data for the AI Agent.
     #
-    # @!attribute [rw] ai_agent_arn
-    #   The Amazon Resource Name (ARN) of the AI agent.
-    #   @return [String]
-    #
-    # @!attribute [rw] ai_agent_id
-    #   The identifier of the AI Agent.
+    # @!attribute [rw] assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either
+    #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
     # @!attribute [rw] assistant_arn
     #   The Amazon Resource Name (ARN) of the Amazon Q in Connect assistant.
     #   @return [String]
     #
-    # @!attribute [rw] assistant_id
-    #   The identifier of the Amazon Q in Connect assistant. Can be either
-    #   the ID or the ARN. URLs cannot contain the ARN.
+    # @!attribute [rw] ai_agent_id
+    #   The identifier of the AI Agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_agent_arn
+    #   The Amazon Resource Name (ARN) of the AI agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the AI Agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The type of the AI Agent.
     #   @return [String]
     #
     # @!attribute [rw] configuration
     #   Configuration for the AI Agent.
     #   @return [Types::AIAgentConfiguration]
     #
-    # @!attribute [rw] description
-    #   The description of the AI Agent.
-    #   @return [String]
-    #
     # @!attribute [rw] modified_time
     #   The time the AI Agent was last modified.
     #   @return [Time]
     #
-    # @!attribute [rw] name
-    #   The name of the AI Agent.
+    # @!attribute [rw] description
+    #   The description of the AI Agent.
     #   @return [String]
+    #
+    # @!attribute [rw] visibility_status
+    #   The visibility status of the AI Agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   The tags used to organize, track, or control access for this
+    #   resource.
+    #   @return [Hash<String,String>]
     #
     # @!attribute [rw] origin
     #   Specifies the origin of the AI Agent. `SYSTEM` for a default AI
@@ -107,51 +159,30 @@ module Aws::QConnect
     #   The status of the AI Agent.
     #   @return [String]
     #
-    # @!attribute [rw] tags
-    #   The tags used to organize, track, or control access for this
-    #   resource.
-    #   @return [Hash<String,String>]
-    #
-    # @!attribute [rw] type
-    #   The type of the AI Agent.
-    #   @return [String]
-    #
-    # @!attribute [rw] visibility_status
-    #   The visibility status of the AI Agent.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/AIAgentData AWS API Documentation
     #
     class AIAgentData < Struct.new(
-      :ai_agent_arn,
-      :ai_agent_id,
-      :assistant_arn,
       :assistant_id,
-      :configuration,
-      :description,
-      :modified_time,
+      :assistant_arn,
+      :ai_agent_id,
+      :ai_agent_arn,
       :name,
-      :origin,
-      :status,
-      :tags,
       :type,
-      :visibility_status)
+      :configuration,
+      :modified_time,
+      :description,
+      :visibility_status,
+      :tags,
+      :origin,
+      :status)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # The summary of the AI Agent.
     #
-    # @!attribute [rw] ai_agent_arn
-    #   The Amazon Resource Name (ARN) of the AI agent.
-    #   @return [String]
-    #
-    # @!attribute [rw] ai_agent_id
-    #   The identifier of the AI Agent.
-    #   @return [String]
-    #
-    # @!attribute [rw] assistant_arn
-    #   The Amazon Resource Name (ARN) of the Amazon Q in Connect assistant.
+    # @!attribute [rw] name
+    #   The name of the AI Agent.
     #   @return [String]
     #
     # @!attribute [rw] assistant_id
@@ -159,26 +190,42 @@ module Aws::QConnect
     #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
-    # @!attribute [rw] configuration
-    #   The configuration for the AI Agent.
-    #   @return [Types::AIAgentConfiguration]
+    # @!attribute [rw] assistant_arn
+    #   The Amazon Resource Name (ARN) of the Amazon Q in Connect assistant.
+    #   @return [String]
     #
-    # @!attribute [rw] description
-    #   The description of the AI Agent.
+    # @!attribute [rw] ai_agent_id
+    #   The identifier of the AI Agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The type of the AI Agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_agent_arn
+    #   The Amazon Resource Name (ARN) of the AI agent.
     #   @return [String]
     #
     # @!attribute [rw] modified_time
     #   The time the AI Agent was last modified.
     #   @return [Time]
     #
-    # @!attribute [rw] name
-    #   The name of the AI Agent.
+    # @!attribute [rw] visibility_status
+    #   The visibility status of the AI Agent.
     #   @return [String]
+    #
+    # @!attribute [rw] configuration
+    #   The configuration for the AI Agent.
+    #   @return [Types::AIAgentConfiguration]
     #
     # @!attribute [rw] origin
     #   The origin of the AI Agent. `SYSTEM` for a default AI Agent created
     #   by Q in Connect or `CUSTOMER` for an AI Agent created by calling AI
     #   Agent creation APIs.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   The description of the AI Agent.
     #   @return [String]
     #
     # @!attribute [rw] status
@@ -190,30 +237,22 @@ module Aws::QConnect
     #   resource.
     #   @return [Hash<String,String>]
     #
-    # @!attribute [rw] type
-    #   The type of the AI Agent.
-    #   @return [String]
-    #
-    # @!attribute [rw] visibility_status
-    #   The visibility status of the AI Agent.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/AIAgentSummary AWS API Documentation
     #
     class AIAgentSummary < Struct.new(
-      :ai_agent_arn,
-      :ai_agent_id,
-      :assistant_arn,
-      :assistant_id,
-      :configuration,
-      :description,
-      :modified_time,
       :name,
-      :origin,
-      :status,
-      :tags,
+      :assistant_id,
+      :assistant_arn,
+      :ai_agent_id,
       :type,
-      :visibility_status)
+      :ai_agent_arn,
+      :modified_time,
+      :visibility_status,
+      :configuration,
+      :origin,
+      :description,
+      :status,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -233,6 +272,20 @@ module Aws::QConnect
     class AIAgentVersionSummary < Struct.new(
       :ai_agent_summary,
       :version_number)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The assessment information from the AI Guardrail.
+    #
+    # @!attribute [rw] blocked
+    #   Indicates whether the AI Guardrail blocked the content.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/AIGuardrailAssessment AWS API Documentation
+    #
+    class AIGuardrailAssessment < Struct.new(
+      :blocked)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -270,6 +323,15 @@ module Aws::QConnect
 
     # The data for the AI Guardrail
     #
+    # @!attribute [rw] assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either
+    #   the ID or the ARN. URLs cannot contain the ARN.
+    #   @return [String]
+    #
+    # @!attribute [rw] assistant_arn
+    #   The Amazon Resource Name (ARN) of the Amazon Q in Connect assistant.
+    #   @return [String]
+    #
     # @!attribute [rw] ai_guardrail_arn
     #   The Amazon Resource Name (ARN) of the AI Guardrail.
     #   @return [String]
@@ -278,13 +340,12 @@ module Aws::QConnect
     #   The identifier of the Amazon Q in Connect AI Guardrail.
     #   @return [String]
     #
-    # @!attribute [rw] assistant_arn
-    #   The Amazon Resource Name (ARN) of the Amazon Q in Connect assistant.
+    # @!attribute [rw] name
+    #   The name of the AI Guardrail.
     #   @return [String]
     #
-    # @!attribute [rw] assistant_id
-    #   The identifier of the Amazon Q in Connect assistant. Can be either
-    #   the ID or the ARN. URLs cannot contain the ARN.
+    # @!attribute [rw] visibility_status
+    #   The visibility status of the AI Guardrail.
     #   @return [String]
     #
     # @!attribute [rw] blocked_input_messaging
@@ -295,75 +356,67 @@ module Aws::QConnect
     #   The message to return when the AI Guardrail blocks a model response.
     #   @return [String]
     #
-    # @!attribute [rw] content_policy_config
-    #   Contains details about how to handle harmful content.
-    #   @return [Types::AIGuardrailContentPolicyConfig]
-    #
-    # @!attribute [rw] contextual_grounding_policy_config
-    #   The policy configuration details for the AI Guardrail's contextual
-    #   grounding policy.
-    #   @return [Types::AIGuardrailContextualGroundingPolicyConfig]
-    #
     # @!attribute [rw] description
     #   A description of the AI Guardrail.
     #   @return [String]
-    #
-    # @!attribute [rw] modified_time
-    #   The time the AI Guardrail was last modified.
-    #   @return [Time]
-    #
-    # @!attribute [rw] name
-    #   The name of the AI Guardrail.
-    #   @return [String]
-    #
-    # @!attribute [rw] sensitive_information_policy_config
-    #   Contains details about PII entities and regular expressions to
-    #   configure for the AI Guardrail.
-    #   @return [Types::AIGuardrailSensitiveInformationPolicyConfig]
-    #
-    # @!attribute [rw] status
-    #   The status of the AI Guardrail.
-    #   @return [String]
-    #
-    # @!attribute [rw] tags
-    #   The tags used to organize, track, or control access for this
-    #   resource.
-    #   @return [Hash<String,String>]
     #
     # @!attribute [rw] topic_policy_config
     #   Contains details about topics that the AI Guardrail should identify
     #   and deny.
     #   @return [Types::AIGuardrailTopicPolicyConfig]
     #
-    # @!attribute [rw] visibility_status
-    #   The visibility status of the AI Guardrail.
-    #   @return [String]
+    # @!attribute [rw] content_policy_config
+    #   Contains details about how to handle harmful content.
+    #   @return [Types::AIGuardrailContentPolicyConfig]
     #
     # @!attribute [rw] word_policy_config
     #   Contains details about the word policy to configured for the AI
     #   Guardrail.
     #   @return [Types::AIGuardrailWordPolicyConfig]
     #
+    # @!attribute [rw] sensitive_information_policy_config
+    #   Contains details about PII entities and regular expressions to
+    #   configure for the AI Guardrail.
+    #   @return [Types::AIGuardrailSensitiveInformationPolicyConfig]
+    #
+    # @!attribute [rw] contextual_grounding_policy_config
+    #   The policy configuration details for the AI Guardrail's contextual
+    #   grounding policy.
+    #   @return [Types::AIGuardrailContextualGroundingPolicyConfig]
+    #
+    # @!attribute [rw] tags
+    #   The tags used to organize, track, or control access for this
+    #   resource.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] status
+    #   The status of the AI Guardrail.
+    #   @return [String]
+    #
+    # @!attribute [rw] modified_time
+    #   The time the AI Guardrail was last modified.
+    #   @return [Time]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/AIGuardrailData AWS API Documentation
     #
     class AIGuardrailData < Struct.new(
+      :assistant_id,
+      :assistant_arn,
       :ai_guardrail_arn,
       :ai_guardrail_id,
-      :assistant_arn,
-      :assistant_id,
+      :name,
+      :visibility_status,
       :blocked_input_messaging,
       :blocked_outputs_messaging,
-      :content_policy_config,
-      :contextual_grounding_policy_config,
       :description,
-      :modified_time,
-      :name,
-      :sensitive_information_policy_config,
-      :status,
-      :tags,
       :topic_policy_config,
-      :visibility_status,
-      :word_policy_config)
+      :content_policy_config,
+      :word_policy_config,
+      :sensitive_information_policy_config,
+      :contextual_grounding_policy_config,
+      :tags,
+      :status,
+      :modified_time)
       SENSITIVE = [:blocked_input_messaging, :blocked_outputs_messaging, :description]
       include Aws::Structure
     end
@@ -390,16 +443,8 @@ module Aws::QConnect
 
     # The summary of the AI Guardrail.
     #
-    # @!attribute [rw] ai_guardrail_arn
-    #   The Amazon Resource Name (ARN) of the AI Guardrail.
-    #   @return [String]
-    #
-    # @!attribute [rw] ai_guardrail_id
-    #   The identifier of the Amazon Q in Connect AI Guardrail.
-    #   @return [String]
-    #
-    # @!attribute [rw] assistant_arn
-    #   The Amazon Resource Name (ARN) of the Amazon Q in Connect assistant.
+    # @!attribute [rw] name
+    #   The name of the AI Guardrail.
     #   @return [String]
     #
     # @!attribute [rw] assistant_id
@@ -407,16 +452,28 @@ module Aws::QConnect
     #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
-    # @!attribute [rw] description
-    #   A description of the AI Guardrail.
+    # @!attribute [rw] assistant_arn
+    #   The Amazon Resource Name (ARN) of the Amazon Q in Connect assistant.
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_guardrail_id
+    #   The identifier of the Amazon Q in Connect AI Guardrail.
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_guardrail_arn
+    #   The Amazon Resource Name (ARN) of the AI Guardrail.
     #   @return [String]
     #
     # @!attribute [rw] modified_time
     #   The time the AI Guardrail was last modified.
     #   @return [Time]
     #
-    # @!attribute [rw] name
-    #   The name of the AI Guardrail.
+    # @!attribute [rw] visibility_status
+    #   The visibility status of the AI Guardrail.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A description of the AI Guardrail.
     #   @return [String]
     #
     # @!attribute [rw] status
@@ -428,23 +485,19 @@ module Aws::QConnect
     #   resource.
     #   @return [Hash<String,String>]
     #
-    # @!attribute [rw] visibility_status
-    #   The visibility status of the AI Guardrail.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/AIGuardrailSummary AWS API Documentation
     #
     class AIGuardrailSummary < Struct.new(
-      :ai_guardrail_arn,
-      :ai_guardrail_id,
-      :assistant_arn,
-      :assistant_id,
-      :description,
-      :modified_time,
       :name,
+      :assistant_id,
+      :assistant_arn,
+      :ai_guardrail_id,
+      :ai_guardrail_arn,
+      :modified_time,
+      :visibility_status,
+      :description,
       :status,
-      :tags,
-      :visibility_status)
+      :tags)
       SENSITIVE = [:description]
       include Aws::Structure
     end
@@ -487,63 +540,122 @@ module Aws::QConnect
     # Contains details about the word policy to configured for the AI
     # Guardrail.
     #
-    # @!attribute [rw] managed_word_lists_config
-    #   A list of managed words to configure for the AI Guardrail.
-    #   @return [Array<Types::GuardrailManagedWordsConfig>]
-    #
     # @!attribute [rw] words_config
     #   A list of words to configure for the AI Guardrail.
     #   @return [Array<Types::GuardrailWordConfig>]
     #
+    # @!attribute [rw] managed_word_lists_config
+    #   A list of managed words to configure for the AI Guardrail.
+    #   @return [Array<Types::GuardrailManagedWordsConfig>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/AIGuardrailWordPolicyConfig AWS API Documentation
     #
     class AIGuardrailWordPolicyConfig < Struct.new(
-      :managed_word_lists_config,
-      :words_config)
+      :words_config,
+      :managed_word_lists_config)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # The data for the AI Prompt
     #
-    # @!attribute [rw] ai_prompt_arn
-    #   The Amazon Resource Name (ARN) of the AI Prompt.
-    #   @return [String]
-    #
-    # @!attribute [rw] ai_prompt_id
-    #   The identifier of the Amazon Q in Connect AI prompt.
-    #   @return [String]
-    #
-    # @!attribute [rw] api_format
-    #   The API format used for this AI Prompt.
+    # @!attribute [rw] assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either
+    #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
     # @!attribute [rw] assistant_arn
     #   The Amazon Resource Name (ARN) of the Amazon Q in Connect assistant.
     #   @return [String]
     #
-    # @!attribute [rw] assistant_id
-    #   The identifier of the Amazon Q in Connect assistant. Can be either
-    #   the ID or the ARN. URLs cannot contain the ARN.
+    # @!attribute [rw] ai_prompt_id
+    #   The identifier of the Amazon Q in Connect AI prompt.
     #   @return [String]
     #
-    # @!attribute [rw] description
-    #   The description of the AI Prompt.
+    # @!attribute [rw] ai_prompt_arn
+    #   The Amazon Resource Name (ARN) of the AI Prompt.
     #   @return [String]
-    #
-    # @!attribute [rw] model_id
-    #   The identifier of the model used for this AI Prompt. Model Ids
-    #   supported are: `anthropic.claude-3-haiku-20240307-v1:0`.
-    #   @return [String]
-    #
-    # @!attribute [rw] modified_time
-    #   The time the AI Prompt was last modified.
-    #   @return [Time]
     #
     # @!attribute [rw] name
     #   The name of the AI Prompt
     #   @return [String]
     #
+    # @!attribute [rw] type
+    #   The type of this AI Prompt.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_type
+    #   The type of the prompt template for this AI Prompt.
+    #   @return [String]
+    #
+    # @!attribute [rw] model_id
+    #   The identifier of the model used for this AI Prompt. The following
+    #   model Ids are supported:
+    #
+    #   * `anthropic.claude-3-haiku--v1:0`
+    #
+    #   * `apac.amazon.nova-lite-v1:0`
+    #
+    #   * `apac.amazon.nova-micro-v1:0`
+    #
+    #   * `apac.amazon.nova-pro-v1:0`
+    #
+    #   * `apac.anthropic.claude-3-5-sonnet--v2:0`
+    #
+    #   * `apac.anthropic.claude-3-haiku-20240307-v1:0`
+    #
+    #   * `eu.amazon.nova-lite-v1:0`
+    #
+    #   * `eu.amazon.nova-micro-v1:0`
+    #
+    #   * `eu.amazon.nova-pro-v1:0`
+    #
+    #   * `eu.anthropic.claude-3-7-sonnet-20250219-v1:0`
+    #
+    #   * `eu.anthropic.claude-3-haiku-20240307-v1:0`
+    #
+    #   * `us.amazon.nova-lite-v1:0`
+    #
+    #   * `us.amazon.nova-micro-v1:0`
+    #
+    #   * `us.amazon.nova-pro-v1:0`
+    #
+    #   * `us.anthropic.claude-3-5-haiku-20241022-v1:0`
+    #
+    #   * `us.anthropic.claude-3-7-sonnet-20250219-v1:0`
+    #
+    #   * `us.anthropic.claude-3-haiku-20240307-v1:0`
+    #   @return [String]
+    #
+    # @!attribute [rw] api_format
+    #   The API format used for this AI Prompt.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_configuration
+    #   The configuration of the prompt template for this AI Prompt.
+    #   @return [Types::AIPromptTemplateConfiguration]
+    #
+    # @!attribute [rw] inference_configuration
+    #   The configuration for inference parameters when using the AI Prompt.
+    #   @return [Types::AIPromptInferenceConfiguration]
+    #
+    # @!attribute [rw] modified_time
+    #   The time the AI Prompt was last modified.
+    #   @return [Time]
+    #
+    # @!attribute [rw] description
+    #   The description of the AI Prompt.
+    #   @return [String]
+    #
+    # @!attribute [rw] visibility_status
+    #   The visibility status of the AI Prompt.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   The tags used to organize, track, or control access for this
+    #   resource.
+    #   @return [Hash<String,String>]
+    #
     # @!attribute [rw] origin
     #   The origin of the AI Prompt. `SYSTEM` for a default AI Prompt
     #   created by Q in Connect or `CUSTOMER` for an AI Prompt created by
@@ -554,66 +666,64 @@ module Aws::QConnect
     #   The status of the AI Prompt.
     #   @return [String]
     #
-    # @!attribute [rw] tags
-    #   The tags used to organize, track, or control access for this
-    #   resource.
-    #   @return [Hash<String,String>]
-    #
-    # @!attribute [rw] template_configuration
-    #   The configuration of the prompt template for this AI Prompt.
-    #   @return [Types::AIPromptTemplateConfiguration]
-    #
-    # @!attribute [rw] template_type
-    #   The type of the prompt template for this AI Prompt.
-    #   @return [String]
-    #
-    # @!attribute [rw] type
-    #   The type of this AI Prompt.
-    #   @return [String]
-    #
-    # @!attribute [rw] visibility_status
-    #   The visibility status of the AI Prompt.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/AIPromptData AWS API Documentation
     #
     class AIPromptData < Struct.new(
-      :ai_prompt_arn,
-      :ai_prompt_id,
-      :api_format,
-      :assistant_arn,
       :assistant_id,
-      :description,
-      :model_id,
-      :modified_time,
+      :assistant_arn,
+      :ai_prompt_id,
+      :ai_prompt_arn,
       :name,
-      :origin,
-      :status,
-      :tags,
-      :template_configuration,
-      :template_type,
       :type,
-      :visibility_status)
+      :template_type,
+      :model_id,
+      :api_format,
+      :template_configuration,
+      :inference_configuration,
+      :modified_time,
+      :description,
+      :visibility_status,
+      :tags,
+      :origin,
+      :status)
       SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration for inference parameters when using AI Prompts.
+    #
+    # @!attribute [rw] temperature
+    #   The temperature setting for controlling randomness in the generated
+    #   response.
+    #   @return [Float]
+    #
+    # @!attribute [rw] top_p
+    #   The top-P sampling parameter for nucleus sampling.
+    #   @return [Float]
+    #
+    # @!attribute [rw] top_k
+    #   The top-K sampling parameter for token selection.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max_tokens_to_sample
+    #   The maximum number of tokens to generate in the response.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/AIPromptInferenceConfiguration AWS API Documentation
+    #
+    class AIPromptInferenceConfiguration < Struct.new(
+      :temperature,
+      :top_p,
+      :top_k,
+      :max_tokens_to_sample)
+      SENSITIVE = [:temperature, :top_p, :top_k, :max_tokens_to_sample]
       include Aws::Structure
     end
 
     # The summary of the AI Prompt.
     #
-    # @!attribute [rw] ai_prompt_arn
-    #   The Amazon Resource Name (ARN) of the AI Prompt.
-    #   @return [String]
-    #
-    # @!attribute [rw] ai_prompt_id
-    #   The identifier of the Amazon Q in Connect AI prompt.
-    #   @return [String]
-    #
-    # @!attribute [rw] api_format
-    #   The API format used for this AI Prompt.
-    #   @return [String]
-    #
-    # @!attribute [rw] assistant_arn
-    #   The Amazon Resource Name (ARN) of the Amazon Q in Connect assistant.
+    # @!attribute [rw] name
+    #   The name of the AI Prompt.
     #   @return [String]
     #
     # @!attribute [rw] assistant_id
@@ -621,8 +731,28 @@ module Aws::QConnect
     #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
-    # @!attribute [rw] description
-    #   The description of the AI Prompt.
+    # @!attribute [rw] assistant_arn
+    #   The Amazon Resource Name (ARN) of the Amazon Q in Connect assistant.
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_prompt_id
+    #   The identifier of the Amazon Q in Connect AI prompt.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The type of this AI Prompt.
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_prompt_arn
+    #   The Amazon Resource Name (ARN) of the AI Prompt.
+    #   @return [String]
+    #
+    # @!attribute [rw] modified_time
+    #   The time the AI Prompt was last modified.
+    #   @return [Time]
+    #
+    # @!attribute [rw] template_type
+    #   The type of the prompt template for this AI Prompt.
     #   @return [String]
     #
     # @!attribute [rw] model_id
@@ -630,18 +760,22 @@ module Aws::QConnect
     #   supported are: `anthropic.claude-3-haiku-20240307-v1:0`.
     #   @return [String]
     #
-    # @!attribute [rw] modified_time
-    #   The time the AI Prompt was last modified.
-    #   @return [Time]
+    # @!attribute [rw] api_format
+    #   The API format used for this AI Prompt.
+    #   @return [String]
     #
-    # @!attribute [rw] name
-    #   The name of the AI Prompt.
+    # @!attribute [rw] visibility_status
+    #   The visibility status of the AI Prompt.
     #   @return [String]
     #
     # @!attribute [rw] origin
     #   The origin of the AI Prompt. `SYSTEM` for a default AI Prompt
     #   created by Q in Connect or `CUSTOMER` for an AI Prompt created by
     #   calling AI Prompt creation APIs.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   The description of the AI Prompt.
     #   @return [String]
     #
     # @!attribute [rw] status
@@ -653,36 +787,24 @@ module Aws::QConnect
     #   resource.
     #   @return [Hash<String,String>]
     #
-    # @!attribute [rw] template_type
-    #   The type of the prompt template for this AI Prompt.
-    #   @return [String]
-    #
-    # @!attribute [rw] type
-    #   The type of this AI Prompt.
-    #   @return [String]
-    #
-    # @!attribute [rw] visibility_status
-    #   The visibility status of the AI Prompt.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/AIPromptSummary AWS API Documentation
     #
     class AIPromptSummary < Struct.new(
-      :ai_prompt_arn,
-      :ai_prompt_id,
-      :api_format,
-      :assistant_arn,
-      :assistant_id,
-      :description,
-      :model_id,
-      :modified_time,
       :name,
-      :origin,
-      :status,
-      :tags,
-      :template_type,
+      :assistant_id,
+      :assistant_arn,
+      :ai_prompt_id,
       :type,
-      :visibility_status)
+      :ai_prompt_arn,
+      :modified_time,
+      :template_type,
+      :model_id,
+      :api_format,
+      :visibility_status,
+      :origin,
+      :description,
+      :status,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -831,42 +953,31 @@ module Aws::QConnect
       include Aws::Structure
     end
 
+    # An annotation that provides additional context or metadata.
+    #
+    # @!attribute [rw] title
+    #   The title of the annotation.
+    #   @return [String]
+    #
+    # @!attribute [rw] destructive_hint
+    #   A hint indicating that the annotation contains potentially
+    #   destructive content.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/Annotation AWS API Documentation
+    #
+    class Annotation < Struct.new(
+      :title,
+      :destructive_hint)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The configuration for the `ANSWER_RECOMMENDATION` AI Agent type.
-    #
-    # @!attribute [rw] answer_generation_ai_guardrail_id
-    #   The AI Guardrail identifier for the Answer Generation Guardrail used
-    #   by the `ANSWER_RECOMMENDATION` AI Agent.
-    #   @return [String]
-    #
-    # @!attribute [rw] answer_generation_ai_prompt_id
-    #   The AI Prompt identifier for the Answer Generation prompt used by
-    #   the `ANSWER_RECOMMENDATION` AI Agent.
-    #   @return [String]
-    #
-    # @!attribute [rw] association_configurations
-    #   The association configurations for overriding behavior on this AI
-    #   Agent.
-    #   @return [Array<Types::AssociationConfiguration>]
     #
     # @!attribute [rw] intent_labeling_generation_ai_prompt_id
     #   The AI Prompt identifier for the Intent Labeling prompt used by the
     #   `ANSWER_RECOMMENDATION` AI Agent.
-    #   @return [String]
-    #
-    # @!attribute [rw] locale
-    #   The locale to which specifies the language and region settings that
-    #   determine the response language for [QueryAssistant][1].
-    #
-    #   <note markdown="1"> Changing this locale to anything other than `en_US`, `en_GB`, or
-    #   `en_AU` will turn off recommendations triggered by contact
-    #   transcripts for agent assistance, as this feature is not supported
-    #   in multiple languages.
-    #
-    #    </note>
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/connect/latest/APIReference/API_amazon-q-connect_QueryAssistant.html
     #   @return [String]
     #
     # @!attribute [rw] query_reformulation_ai_prompt_id
@@ -874,16 +985,52 @@ module Aws::QConnect
     #   the `ANSWER_RECOMMENDATION` AI Agent.
     #   @return [String]
     #
+    # @!attribute [rw] answer_generation_ai_prompt_id
+    #   The AI Prompt identifier for the Answer Generation prompt used by
+    #   the `ANSWER_RECOMMENDATION` AI Agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] answer_generation_ai_guardrail_id
+    #   The AI Guardrail identifier for the Answer Generation Guardrail used
+    #   by the `ANSWER_RECOMMENDATION` AI Agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] association_configurations
+    #   The association configurations for overriding behavior on this AI
+    #   Agent.
+    #   @return [Array<Types::AssociationConfiguration>]
+    #
+    # @!attribute [rw] locale
+    #   The locale to which specifies the language and region settings that
+    #   determine the response language for [QueryAssistant][1].
+    #
+    #   <note markdown="1"> For more information on supported locales, see [Language support for
+    #   Amazon Q in Connect][2].
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/connect/latest/APIReference/API_amazon-q-connect_QueryAssistant.html
+    #   [2]: https://docs.aws.amazon.com/connect/latest/adminguide/supported-languages.html#qic-notes-languages
+    #   @return [String]
+    #
+    # @!attribute [rw] suggested_messages
+    #   The suggested messages configuration for the Answer Recommendation
+    #   AI Agent.
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/AnswerRecommendationAIAgentConfiguration AWS API Documentation
     #
     class AnswerRecommendationAIAgentConfiguration < Struct.new(
-      :answer_generation_ai_guardrail_id,
-      :answer_generation_ai_prompt_id,
-      :association_configurations,
       :intent_labeling_generation_ai_prompt_id,
+      :query_reformulation_ai_prompt_id,
+      :answer_generation_ai_prompt_id,
+      :answer_generation_ai_guardrail_id,
+      :association_configurations,
       :locale,
-      :query_reformulation_ai_prompt_id)
-      SENSITIVE = []
+      :suggested_messages)
+      SENSITIVE = [:suggested_messages]
       include Aws::Structure
     end
 
@@ -969,30 +1116,30 @@ module Aws::QConnect
 
     # Information about the assistant association.
     #
-    # @!attribute [rw] assistant_arn
-    #   The Amazon Resource Name (ARN) of the Amazon Q in Connect assistant.
+    # @!attribute [rw] assistant_association_id
+    #   The identifier of the assistant association.
     #   @return [String]
     #
     # @!attribute [rw] assistant_association_arn
     #   The Amazon Resource Name (ARN) of the assistant association.
     #   @return [String]
     #
-    # @!attribute [rw] assistant_association_id
-    #   The identifier of the assistant association.
-    #   @return [String]
-    #
     # @!attribute [rw] assistant_id
     #   The identifier of the Amazon Q in Connect assistant.
+    #   @return [String]
+    #
+    # @!attribute [rw] assistant_arn
+    #   The Amazon Resource Name (ARN) of the Amazon Q in Connect assistant.
+    #   @return [String]
+    #
+    # @!attribute [rw] association_type
+    #   The type of association.
     #   @return [String]
     #
     # @!attribute [rw] association_data
     #   A union type that currently has a single argument, the knowledge
     #   base ID.
     #   @return [Types::AssistantAssociationOutputData]
-    #
-    # @!attribute [rw] association_type
-    #   The type of association.
-    #   @return [String]
     #
     # @!attribute [rw] tags
     #   The tags used to organize, track, or control access for this
@@ -1002,12 +1149,12 @@ module Aws::QConnect
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/AssistantAssociationData AWS API Documentation
     #
     class AssistantAssociationData < Struct.new(
-      :assistant_arn,
-      :assistant_association_arn,
       :assistant_association_id,
+      :assistant_association_arn,
       :assistant_id,
-      :association_data,
+      :assistant_arn,
       :association_type,
+      :association_data,
       :tags)
       SENSITIVE = []
       include Aws::Structure
@@ -1023,16 +1170,23 @@ module Aws::QConnect
     #   QUICK\_RESPONSES type knowledge base.
     #   @return [String]
     #
+    # @!attribute [rw] external_bedrock_knowledge_base_config
+    #   The configuration for an external Bedrock knowledge base
+    #   association.
+    #   @return [Types::ExternalBedrockKnowledgeBaseConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/AssistantAssociationInputData AWS API Documentation
     #
     class AssistantAssociationInputData < Struct.new(
       :knowledge_base_id,
+      :external_bedrock_knowledge_base_config,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
       include Aws::Structure::Union
 
       class KnowledgeBaseId < AssistantAssociationInputData; end
+      class ExternalBedrockKnowledgeBaseConfig < AssistantAssociationInputData; end
       class Unknown < AssistantAssociationInputData; end
     end
 
@@ -1044,44 +1198,51 @@ module Aws::QConnect
     #   The knowledge base where output data is sent.
     #   @return [Types::KnowledgeBaseAssociationData]
     #
+    # @!attribute [rw] external_bedrock_knowledge_base_config
+    #   The configuration for an external Bedrock knowledge base association
+    #   in the output data.
+    #   @return [Types::ExternalBedrockKnowledgeBaseConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/AssistantAssociationOutputData AWS API Documentation
     #
     class AssistantAssociationOutputData < Struct.new(
       :knowledge_base_association,
+      :external_bedrock_knowledge_base_config,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
       include Aws::Structure::Union
 
       class KnowledgeBaseAssociation < AssistantAssociationOutputData; end
+      class ExternalBedrockKnowledgeBaseConfig < AssistantAssociationOutputData; end
       class Unknown < AssistantAssociationOutputData; end
     end
 
     # Summary information about the assistant association.
     #
-    # @!attribute [rw] assistant_arn
-    #   The Amazon Resource Name (ARN) of the Amazon Q in Connect assistant.
+    # @!attribute [rw] assistant_association_id
+    #   The identifier of the assistant association.
     #   @return [String]
     #
     # @!attribute [rw] assistant_association_arn
     #   The Amazon Resource Name (ARN) of the assistant association.
     #   @return [String]
     #
-    # @!attribute [rw] assistant_association_id
-    #   The identifier of the assistant association.
-    #   @return [String]
-    #
     # @!attribute [rw] assistant_id
     #   The identifier of the Amazon Q in Connect assistant.
+    #   @return [String]
+    #
+    # @!attribute [rw] assistant_arn
+    #   The Amazon Resource Name (ARN) of the Amazon Q in Connect assistant.
+    #   @return [String]
+    #
+    # @!attribute [rw] association_type
+    #   The type of association.
     #   @return [String]
     #
     # @!attribute [rw] association_data
     #   The association data.
     #   @return [Types::AssistantAssociationOutputData]
-    #
-    # @!attribute [rw] association_type
-    #   The type of association.
-    #   @return [String]
     #
     # @!attribute [rw] tags
     #   The tags used to organize, track, or control access for this
@@ -1091,12 +1252,12 @@ module Aws::QConnect
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/AssistantAssociationSummary AWS API Documentation
     #
     class AssistantAssociationSummary < Struct.new(
-      :assistant_arn,
-      :assistant_association_arn,
       :assistant_association_id,
+      :assistant_association_arn,
       :assistant_id,
-      :association_data,
+      :assistant_arn,
       :association_type,
+      :association_data,
       :tags)
       SENSITIVE = []
       include Aws::Structure
@@ -1118,36 +1279,34 @@ module Aws::QConnect
 
     # The assistant data.
     #
-    # @!attribute [rw] ai_agent_configuration
-    #   The configuration of the AI Agents (mapped by AI Agent Type to AI
-    #   Agent version) that is set on the Amazon Q in Connect Assistant.
-    #   @return [Hash<String,Types::AIAgentConfigurationData>]
+    # @!attribute [rw] assistant_id
+    #   The identifier of the Amazon Q in Connect assistant.
+    #   @return [String]
     #
     # @!attribute [rw] assistant_arn
     #   The Amazon Resource Name (ARN) of the Amazon Q in Connect assistant.
     #   @return [String]
     #
-    # @!attribute [rw] assistant_id
-    #   The identifier of the Amazon Q in Connect assistant.
+    # @!attribute [rw] name
+    #   The name.
     #   @return [String]
     #
-    # @!attribute [rw] capability_configuration
-    #   The configuration information for the Amazon Q in Connect assistant
-    #   capability.
-    #   @return [Types::AssistantCapabilityConfiguration]
+    # @!attribute [rw] type
+    #   The type of assistant.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the assistant.
+    #   @return [String]
     #
     # @!attribute [rw] description
     #   The description.
     #   @return [String]
     #
-    # @!attribute [rw] integration_configuration
-    #   The configuration information for the Amazon Q in Connect assistant
-    #   integration.
-    #   @return [Types::AssistantIntegrationConfiguration]
-    #
-    # @!attribute [rw] name
-    #   The name.
-    #   @return [String]
+    # @!attribute [rw] tags
+    #   The tags used to organize, track, or control access for this
+    #   resource.
+    #   @return [Hash<String,String>]
     #
     # @!attribute [rw] server_side_encryption_configuration
     #   The configuration information for the customer managed key used for
@@ -1170,33 +1329,40 @@ module Aws::QConnect
     #   [1]: https://docs.aws.amazon.com/connect/latest/adminguide/enable-q.html
     #   @return [Types::ServerSideEncryptionConfiguration]
     #
-    # @!attribute [rw] status
-    #   The status of the assistant.
-    #   @return [String]
+    # @!attribute [rw] integration_configuration
+    #   The configuration information for the Amazon Q in Connect assistant
+    #   integration.
+    #   @return [Types::AssistantIntegrationConfiguration]
     #
-    # @!attribute [rw] tags
-    #   The tags used to organize, track, or control access for this
-    #   resource.
-    #   @return [Hash<String,String>]
+    # @!attribute [rw] capability_configuration
+    #   The configuration information for the Amazon Q in Connect assistant
+    #   capability.
+    #   @return [Types::AssistantCapabilityConfiguration]
     #
-    # @!attribute [rw] type
-    #   The type of assistant.
-    #   @return [String]
+    # @!attribute [rw] ai_agent_configuration
+    #   The configuration of the AI Agents (mapped by AI Agent Type to AI
+    #   Agent version) that is set on the Amazon Q in Connect Assistant.
+    #   @return [Hash<String,Types::AIAgentConfigurationData>]
+    #
+    # @!attribute [rw] orchestrator_configuration_list
+    #   The list of orchestrator configurations for the assistant.
+    #   @return [Array<Types::OrchestratorConfigurationEntry>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/AssistantData AWS API Documentation
     #
     class AssistantData < Struct.new(
-      :ai_agent_configuration,
-      :assistant_arn,
       :assistant_id,
-      :capability_configuration,
-      :description,
-      :integration_configuration,
+      :assistant_arn,
       :name,
-      :server_side_encryption_configuration,
+      :type,
       :status,
+      :description,
       :tags,
-      :type)
+      :server_side_encryption_configuration,
+      :integration_configuration,
+      :capability_configuration,
+      :ai_agent_configuration,
+      :orchestrator_configuration_list)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1219,36 +1385,34 @@ module Aws::QConnect
 
     # Summary information about the assistant.
     #
-    # @!attribute [rw] ai_agent_configuration
-    #   The configuration of the AI Agents (mapped by AI Agent Type to AI
-    #   Agent version) that is set on the Amazon Q in Connect Assistant.
-    #   @return [Hash<String,Types::AIAgentConfigurationData>]
+    # @!attribute [rw] assistant_id
+    #   The identifier of the Amazon Q in Connect assistant.
+    #   @return [String]
     #
     # @!attribute [rw] assistant_arn
     #   The Amazon Resource Name (ARN) of the Amazon Q in Connect assistant.
     #   @return [String]
     #
-    # @!attribute [rw] assistant_id
-    #   The identifier of the Amazon Q in Connect assistant.
+    # @!attribute [rw] name
+    #   The name of the assistant.
     #   @return [String]
     #
-    # @!attribute [rw] capability_configuration
-    #   The configuration information for the Amazon Q in Connect assistant
-    #   capability.
-    #   @return [Types::AssistantCapabilityConfiguration]
+    # @!attribute [rw] type
+    #   The type of the assistant.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the assistant.
+    #   @return [String]
     #
     # @!attribute [rw] description
     #   The description of the assistant.
     #   @return [String]
     #
-    # @!attribute [rw] integration_configuration
-    #   The configuration information for the Amazon Q in Connect assistant
-    #   integration.
-    #   @return [Types::AssistantIntegrationConfiguration]
-    #
-    # @!attribute [rw] name
-    #   The name of the assistant.
-    #   @return [String]
+    # @!attribute [rw] tags
+    #   The tags used to organize, track, or control access for this
+    #   resource.
+    #   @return [Hash<String,String>]
     #
     # @!attribute [rw] server_side_encryption_configuration
     #   The configuration information for the customer managed key used for
@@ -1271,43 +1435,45 @@ module Aws::QConnect
     #   [1]: https://docs.aws.amazon.com/connect/latest/adminguide/enable-q.html
     #   @return [Types::ServerSideEncryptionConfiguration]
     #
-    # @!attribute [rw] status
-    #   The status of the assistant.
-    #   @return [String]
+    # @!attribute [rw] integration_configuration
+    #   The configuration information for the Amazon Q in Connect assistant
+    #   integration.
+    #   @return [Types::AssistantIntegrationConfiguration]
     #
-    # @!attribute [rw] tags
-    #   The tags used to organize, track, or control access for this
-    #   resource.
-    #   @return [Hash<String,String>]
+    # @!attribute [rw] capability_configuration
+    #   The configuration information for the Amazon Q in Connect assistant
+    #   capability.
+    #   @return [Types::AssistantCapabilityConfiguration]
     #
-    # @!attribute [rw] type
-    #   The type of the assistant.
-    #   @return [String]
+    # @!attribute [rw] ai_agent_configuration
+    #   The configuration of the AI Agents (mapped by AI Agent Type to AI
+    #   Agent version) that is set on the Amazon Q in Connect Assistant.
+    #   @return [Hash<String,Types::AIAgentConfigurationData>]
+    #
+    # @!attribute [rw] orchestrator_configuration_list
+    #   The list of orchestrator configurations for the assistant.
+    #   @return [Array<Types::OrchestratorConfigurationEntry>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/AssistantSummary AWS API Documentation
     #
     class AssistantSummary < Struct.new(
-      :ai_agent_configuration,
-      :assistant_arn,
       :assistant_id,
-      :capability_configuration,
-      :description,
-      :integration_configuration,
+      :assistant_arn,
       :name,
-      :server_side_encryption_configuration,
+      :type,
       :status,
+      :description,
       :tags,
-      :type)
+      :server_side_encryption_configuration,
+      :integration_configuration,
+      :capability_configuration,
+      :ai_agent_configuration,
+      :orchestrator_configuration_list)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # The configuration for an Amazon Q in Connect Assistant Association.
-    #
-    # @!attribute [rw] association_configuration_data
-    #   The data of the configuration for an Amazon Q in Connect Assistant
-    #   Association.
-    #   @return [Types::AssociationConfigurationData]
     #
     # @!attribute [rw] association_id
     #   The identifier of the association for this Association
@@ -1318,12 +1484,17 @@ module Aws::QConnect
     #   The type of the association for this Association Configuration.
     #   @return [String]
     #
+    # @!attribute [rw] association_configuration_data
+    #   The data of the configuration for an Amazon Q in Connect Assistant
+    #   Association.
+    #   @return [Types::AssociationConfigurationData]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/AssociationConfiguration AWS API Documentation
     #
     class AssociationConfiguration < Struct.new(
-      :association_configuration_data,
       :association_id,
-      :association_type)
+      :association_type,
+      :association_configuration_data)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1373,6 +1544,64 @@ module Aws::QConnect
       include Aws::Structure
     end
 
+    # The configuration for AI Agents of type `CASE_SUMMARIZATION`.
+    #
+    # @!attribute [rw] case_summarization_ai_prompt_id
+    #   The AI Prompt identifier used by the Case Summarization AI Agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] case_summarization_ai_guardrail_id
+    #   The AI Guardrail identifier used by the Case Summarization AI Agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] locale
+    #   The locale setting for the Case Summarization AI Agent.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CaseSummarizationAIAgentConfiguration AWS API Documentation
+    #
+    class CaseSummarizationAIAgentConfiguration < Struct.new(
+      :case_summarization_ai_prompt_id,
+      :case_summarization_ai_guardrail_id,
+      :locale)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details about case summarization chunk data.
+    #
+    # @!attribute [rw] completion
+    #   A chunk of the case summarization completion.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_chunk_token
+    #   Token for retrieving the next chunk of streaming summarization data,
+    #   if available.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CaseSummarizationChunkDataDetails AWS API Documentation
+    #
+    class CaseSummarizationChunkDataDetails < Struct.new(
+      :completion,
+      :next_chunk_token)
+      SENSITIVE = [:completion]
+      include Aws::Structure
+    end
+
+    # Input data for case summarization.
+    #
+    # @!attribute [rw] case_arn
+    #   The Amazon Resource Name (ARN) of the case for summarization.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CaseSummarizationInputData AWS API Documentation
+    #
+    class CaseSummarizationInputData < Struct.new(
+      :case_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Details about how to chunk the documents in the data source. A chunk
     # refers to an excerpt from a data source that is returned when the
     # knowledge base that it belongs to is queried.
@@ -1413,6 +1642,46 @@ module Aws::QConnect
       :hierarchical_chunking_configuration,
       :semantic_chunking_configuration)
       SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A citation that references source content.
+    #
+    # @!attribute [rw] content_id
+    #   The identifier of the content being cited.
+    #   @return [String]
+    #
+    # @!attribute [rw] title
+    #   The title of the cited content.
+    #   @return [String]
+    #
+    # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base containing the cited content.
+    #   @return [String]
+    #
+    # @!attribute [rw] citation_span
+    #   Contains information about where the text with a citation begins and
+    #   ends in the generated output.
+    #   @return [Types::CitationSpan]
+    #
+    # @!attribute [rw] source_url
+    #   The source URL for the citation.
+    #   @return [String]
+    #
+    # @!attribute [rw] reference_type
+    #   A type to define the KB origin of a cited content
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/Citation AWS API Documentation
+    #
+    class Citation < Struct.new(
+      :content_id,
+      :title,
+      :knowledge_base_id,
+      :citation_span,
+      :source_url,
+      :reference_type)
+      SENSITIVE = [:title, :source_url]
       include Aws::Structure
     end
 
@@ -1515,20 +1784,20 @@ module Aws::QConnect
 
     # Information about the content association.
     #
-    # @!attribute [rw] association_data
-    #   The content association.
-    #   @return [Types::ContentAssociationContents]
+    # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base.
+    #   @return [String]
     #
-    # @!attribute [rw] association_type
-    #   The type of association.
+    # @!attribute [rw] knowledge_base_arn
+    #   The Amazon Resource Name (ARN) of the knowledge base.
+    #   @return [String]
+    #
+    # @!attribute [rw] content_id
+    #   The identifier of the content.
     #   @return [String]
     #
     # @!attribute [rw] content_arn
     #   The Amazon Resource Name (ARN) of the content.
-    #   @return [String]
-    #
-    # @!attribute [rw] content_association_arn
-    #   The Amazon Resource Name (ARN) of the content association.
     #   @return [String]
     #
     # @!attribute [rw] content_association_id
@@ -1536,17 +1805,17 @@ module Aws::QConnect
     #   the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
-    # @!attribute [rw] content_id
-    #   The identifier of the content.
+    # @!attribute [rw] content_association_arn
+    #   The Amazon Resource Name (ARN) of the content association.
     #   @return [String]
     #
-    # @!attribute [rw] knowledge_base_arn
-    #   The Amazon Resource Name (ARN) of the knowledge base.
+    # @!attribute [rw] association_type
+    #   The type of association.
     #   @return [String]
     #
-    # @!attribute [rw] knowledge_base_id
-    #   The identifier of the knowledge base.
-    #   @return [String]
+    # @!attribute [rw] association_data
+    #   The content association.
+    #   @return [Types::ContentAssociationContents]
     #
     # @!attribute [rw] tags
     #   The tags used to organize, track, or control access for this
@@ -1556,14 +1825,14 @@ module Aws::QConnect
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ContentAssociationData AWS API Documentation
     #
     class ContentAssociationData < Struct.new(
-      :association_data,
-      :association_type,
-      :content_arn,
-      :content_association_arn,
-      :content_association_id,
-      :content_id,
-      :knowledge_base_arn,
       :knowledge_base_id,
+      :knowledge_base_arn,
+      :content_id,
+      :content_arn,
+      :content_association_id,
+      :content_association_arn,
+      :association_type,
+      :association_data,
       :tags)
       SENSITIVE = []
       include Aws::Structure
@@ -1571,20 +1840,20 @@ module Aws::QConnect
 
     # Summary information about a content association.
     #
-    # @!attribute [rw] association_data
-    #   The content association.
-    #   @return [Types::ContentAssociationContents]
+    # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base.
+    #   @return [String]
     #
-    # @!attribute [rw] association_type
-    #   The type of association.
+    # @!attribute [rw] knowledge_base_arn
+    #   The Amazon Resource Name (ARN) of the knowledge base.
+    #   @return [String]
+    #
+    # @!attribute [rw] content_id
+    #   The identifier of the content.
     #   @return [String]
     #
     # @!attribute [rw] content_arn
     #   The Amazon Resource Name (ARN) of the content.
-    #   @return [String]
-    #
-    # @!attribute [rw] content_association_arn
-    #   The Amazon Resource Name (ARN) of the content association.
     #   @return [String]
     #
     # @!attribute [rw] content_association_id
@@ -1592,17 +1861,17 @@ module Aws::QConnect
     #   the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
-    # @!attribute [rw] content_id
-    #   The identifier of the content.
+    # @!attribute [rw] content_association_arn
+    #   The Amazon Resource Name (ARN) of the content association.
     #   @return [String]
     #
-    # @!attribute [rw] knowledge_base_arn
-    #   The Amazon Resource Name (ARN) of the knowledge base.
+    # @!attribute [rw] association_type
+    #   The type of association.
     #   @return [String]
     #
-    # @!attribute [rw] knowledge_base_id
-    #   The identifier of the knowledge base.
-    #   @return [String]
+    # @!attribute [rw] association_data
+    #   The content association.
+    #   @return [Types::ContentAssociationContents]
     #
     # @!attribute [rw] tags
     #   The tags used to organize, track, or control access for this
@@ -1612,14 +1881,14 @@ module Aws::QConnect
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ContentAssociationSummary AWS API Documentation
     #
     class ContentAssociationSummary < Struct.new(
-      :association_data,
-      :association_type,
-      :content_arn,
-      :content_association_arn,
-      :content_association_id,
-      :content_id,
-      :knowledge_base_arn,
       :knowledge_base_id,
+      :knowledge_base_arn,
+      :content_id,
+      :content_arn,
+      :content_association_id,
+      :content_association_arn,
+      :association_type,
+      :association_data,
       :tags)
       SENSITIVE = []
       include Aws::Structure
@@ -1635,10 +1904,6 @@ module Aws::QConnect
     #   The identifier of the content.
     #   @return [String]
     #
-    # @!attribute [rw] content_type
-    #   The media type of the content.
-    #   @return [String]
-    #
     # @!attribute [rw] knowledge_base_arn
     #   The Amazon Resource Name (ARN) of the knowledge base.
     #   @return [String]
@@ -1646,17 +1911,6 @@ module Aws::QConnect
     # @!attribute [rw] knowledge_base_id
     #   The identifier of the knowledge base.
     #   @return [String]
-    #
-    # @!attribute [rw] link_out_uri
-    #   The URI of the content.
-    #   @return [String]
-    #
-    # @!attribute [rw] metadata
-    #   A key/value map to store attributes without affecting tagging or
-    #   recommendations. For example, when synchronizing data between an
-    #   external system and Amazon Q in Connect, you can store an external
-    #   version identifier as metadata to utilize for determining drift.
-    #   @return [Hash<String,String>]
     #
     # @!attribute [rw] name
     #   The name of the content.
@@ -1666,17 +1920,32 @@ module Aws::QConnect
     #   The identifier of the content revision.
     #   @return [String]
     #
+    # @!attribute [rw] title
+    #   The title of the content.
+    #   @return [String]
+    #
+    # @!attribute [rw] content_type
+    #   The media type of the content.
+    #   @return [String]
+    #
     # @!attribute [rw] status
     #   The status of the content.
     #   @return [String]
+    #
+    # @!attribute [rw] metadata
+    #   A key/value map to store attributes without affecting tagging or
+    #   recommendations. For example, when synchronizing data between an
+    #   external system and Amazon Q in Connect, you can store an external
+    #   version identifier as metadata to utilize for determining drift.
+    #   @return [Hash<String,String>]
     #
     # @!attribute [rw] tags
     #   The tags used to organize, track, or control access for this
     #   resource.
     #   @return [Hash<String,String>]
     #
-    # @!attribute [rw] title
-    #   The title of the content.
+    # @!attribute [rw] link_out_uri
+    #   The URI of the content.
     #   @return [String]
     #
     # @!attribute [rw] url
@@ -1692,16 +1961,16 @@ module Aws::QConnect
     class ContentData < Struct.new(
       :content_arn,
       :content_id,
-      :content_type,
       :knowledge_base_arn,
       :knowledge_base_id,
-      :link_out_uri,
-      :metadata,
       :name,
       :revision_id,
-      :status,
-      :tags,
       :title,
+      :content_type,
+      :status,
+      :metadata,
+      :tags,
+      :link_out_uri,
       :url,
       :url_expiry)
       SENSITIVE = [:url]
@@ -1710,19 +1979,19 @@ module Aws::QConnect
 
     # Details about the content data.
     #
-    # @!attribute [rw] ranking_data
-    #   Details about the content ranking data.
-    #   @return [Types::RankingData]
-    #
     # @!attribute [rw] text_data
     #   Details about the content text data.
     #   @return [Types::TextData]
     #
+    # @!attribute [rw] ranking_data
+    #   Details about the content ranking data.
+    #   @return [Types::RankingData]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ContentDataDetails AWS API Documentation
     #
     class ContentDataDetails < Struct.new(
-      :ranking_data,
-      :text_data)
+      :text_data,
+      :ranking_data)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1752,14 +2021,6 @@ module Aws::QConnect
 
     # Reference information about the content.
     #
-    # @!attribute [rw] content_arn
-    #   The Amazon Resource Name (ARN) of the content.
-    #   @return [String]
-    #
-    # @!attribute [rw] content_id
-    #   The identifier of the content.
-    #   @return [String]
-    #
     # @!attribute [rw] knowledge_base_arn
     #   The Amazon Resource Name (ARN) of the knowledge base.
     #   @return [String]
@@ -1769,23 +2030,31 @@ module Aws::QConnect
     #   QUICK\_RESPONSES type knowledge base.
     #   @return [String]
     #
-    # @!attribute [rw] reference_type
-    #   The type of reference content.
+    # @!attribute [rw] content_arn
+    #   The Amazon Resource Name (ARN) of the content.
+    #   @return [String]
+    #
+    # @!attribute [rw] content_id
+    #   The identifier of the content.
     #   @return [String]
     #
     # @!attribute [rw] source_url
     #   The web URL of the source content.
     #   @return [String]
     #
+    # @!attribute [rw] reference_type
+    #   The type of reference content.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ContentReference AWS API Documentation
     #
     class ContentReference < Struct.new(
-      :content_arn,
-      :content_id,
       :knowledge_base_arn,
       :knowledge_base_id,
-      :reference_type,
-      :source_url)
+      :content_arn,
+      :content_id,
+      :source_url,
+      :reference_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1800,10 +2069,6 @@ module Aws::QConnect
     #   The identifier of the content.
     #   @return [String]
     #
-    # @!attribute [rw] content_type
-    #   The media type of the content.
-    #   @return [String]
-    #
     # @!attribute [rw] knowledge_base_arn
     #   The Amazon Resource Name (ARN) of the knowledge base.
     #   @return [String]
@@ -1813,13 +2078,6 @@ module Aws::QConnect
     #   QUICK\_RESPONSES type knowledge base.
     #   @return [String]
     #
-    # @!attribute [rw] metadata
-    #   A key/value map to store attributes without affecting tagging or
-    #   recommendations. For example, when synchronizing data between an
-    #   external system and Amazon Q in Connect, you can store an external
-    #   version identifier as metadata to utilize for determining drift.
-    #   @return [Hash<String,String>]
-    #
     # @!attribute [rw] name
     #   The name of the content.
     #   @return [String]
@@ -1828,33 +2086,44 @@ module Aws::QConnect
     #   The identifier of the revision of the content.
     #   @return [String]
     #
+    # @!attribute [rw] title
+    #   The title of the content.
+    #   @return [String]
+    #
+    # @!attribute [rw] content_type
+    #   The media type of the content.
+    #   @return [String]
+    #
     # @!attribute [rw] status
     #   The status of the content.
     #   @return [String]
+    #
+    # @!attribute [rw] metadata
+    #   A key/value map to store attributes without affecting tagging or
+    #   recommendations. For example, when synchronizing data between an
+    #   external system and Amazon Q in Connect, you can store an external
+    #   version identifier as metadata to utilize for determining drift.
+    #   @return [Hash<String,String>]
     #
     # @!attribute [rw] tags
     #   The tags used to organize, track, or control access for this
     #   resource.
     #   @return [Hash<String,String>]
     #
-    # @!attribute [rw] title
-    #   The title of the content.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ContentSummary AWS API Documentation
     #
     class ContentSummary < Struct.new(
       :content_arn,
       :content_id,
-      :content_type,
       :knowledge_base_arn,
       :knowledge_base_id,
-      :metadata,
       :name,
       :revision_id,
+      :title,
+      :content_type,
       :status,
-      :tags,
-      :title)
+      :metadata,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1876,28 +2145,23 @@ module Aws::QConnect
 
     # The conversation state associated to a message.
     #
-    # @!attribute [rw] reason
-    #   The reason of the conversation state.
-    #   @return [String]
-    #
     # @!attribute [rw] status
     #   The status of the conversation state.
+    #   @return [String]
+    #
+    # @!attribute [rw] reason
+    #   The reason of the conversation state.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ConversationState AWS API Documentation
     #
     class ConversationState < Struct.new(
-      :reason,
-      :status)
+      :status,
+      :reason)
       SENSITIVE = []
       include Aws::Structure
     end
 
-    # @!attribute [rw] assistant_id
-    #   The identifier of the Amazon Q in Connect assistant. Can be either
-    #   the ID or the ARN. URLs cannot contain the ARN.
-    #   @return [String]
-    #
     # @!attribute [rw] client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
     #   idempotency of the request. If not provided, the Amazon Web Services
@@ -1912,16 +2176,25 @@ module Aws::QConnect
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #   @return [String]
     #
-    # @!attribute [rw] configuration
-    #   The configuration of the AI Agent.
-    #   @return [Types::AIAgentConfiguration]
-    #
-    # @!attribute [rw] description
-    #   The description of the AI Agent.
+    # @!attribute [rw] assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either
+    #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
     # @!attribute [rw] name
     #   The name of the AI Agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The type of the AI Agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] configuration
+    #   The configuration of the AI Agent.
+    #   @return [Types::AIAgentConfiguration]
+    #
+    # @!attribute [rw] visibility_status
+    #   The visibility status of the AI Agent.
     #   @return [String]
     #
     # @!attribute [rw] tags
@@ -1929,25 +2202,21 @@ module Aws::QConnect
     #   resource.
     #   @return [Hash<String,String>]
     #
-    # @!attribute [rw] type
-    #   The type of the AI Agent.
-    #   @return [String]
-    #
-    # @!attribute [rw] visibility_status
-    #   The visibility status of the AI Agent.
+    # @!attribute [rw] description
+    #   The description of the AI Agent.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CreateAIAgentRequest AWS API Documentation
     #
     class CreateAIAgentRequest < Struct.new(
-      :assistant_id,
       :client_token,
-      :configuration,
-      :description,
+      :assistant_id,
       :name,
-      :tags,
       :type,
-      :visibility_status)
+      :configuration,
+      :visibility_status,
+      :tags,
+      :description)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1964,14 +2233,24 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] ai_agent_id
-    #   The identifier of the Amazon Q in Connect AI Agent.
-    #   @return [String]
-    #
     # @!attribute [rw] assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either
     #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
+    #
+    # @!attribute [rw] ai_agent_id
+    #   The identifier of the Amazon Q in Connect AI Agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] modified_time
+    #   The modification time of the AI Agent should be tracked for version
+    #   creation. This field should be specified to avoid version creation
+    #   when simultaneous update to the underlying AI Agent are possible.
+    #   The value should be the modifiedTime returned from the request to
+    #   create or update an AI Agent so that version creation can fail if an
+    #   update to the AI Agent post the specified modification time has been
+    #   made.
+    #   @return [Time]
     #
     # @!attribute [rw] client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
@@ -1987,23 +2266,13 @@ module Aws::QConnect
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #   @return [String]
     #
-    # @!attribute [rw] modified_time
-    #   The modification time of the AI Agent should be tracked for version
-    #   creation. This field should be specified to avoid version creation
-    #   when simultaneous update to the underlying AI Agent are possible.
-    #   The value should be the modifiedTime returned from the request to
-    #   create or update an AI Agent so that version creation can fail if an
-    #   update to the AI Agent post the specified modification time has been
-    #   made.
-    #   @return [Time]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CreateAIAgentVersionRequest AWS API Documentation
     #
     class CreateAIAgentVersionRequest < Struct.new(
-      :ai_agent_id,
       :assistant_id,
-      :client_token,
-      :modified_time)
+      :ai_agent_id,
+      :modified_time,
+      :client_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2025,19 +2294,6 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] assistant_id
-    #   The identifier of the Amazon Q in Connect assistant. Can be either
-    #   the ID or the ARN. URLs cannot contain the ARN.
-    #   @return [String]
-    #
-    # @!attribute [rw] blocked_input_messaging
-    #   The message to return when the AI Guardrail blocks a prompt.
-    #   @return [String]
-    #
-    # @!attribute [rw] blocked_outputs_messaging
-    #   The message to return when the AI Guardrail blocks a model response.
-    #   @return [String]
-    #
     # @!attribute [rw] client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
     #   idempotency of the request. If not provided, the Amazon Web Services
@@ -2052,60 +2308,73 @@ module Aws::QConnect
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #   @return [String]
     #
-    # @!attribute [rw] content_policy_config
-    #   The content filter policies to configure for the AI Guardrail.
-    #   @return [Types::AIGuardrailContentPolicyConfig]
-    #
-    # @!attribute [rw] contextual_grounding_policy_config
-    #   The contextual grounding policy configuration used to create an AI
-    #   Guardrail.
-    #   @return [Types::AIGuardrailContextualGroundingPolicyConfig]
-    #
-    # @!attribute [rw] description
-    #   A description of the AI Guardrail.
+    # @!attribute [rw] assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either
+    #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
     # @!attribute [rw] name
     #   The name of the AI Guardrail.
     #   @return [String]
     #
+    # @!attribute [rw] blocked_input_messaging
+    #   The message to return when the AI Guardrail blocks a prompt.
+    #   @return [String]
+    #
+    # @!attribute [rw] blocked_outputs_messaging
+    #   The message to return when the AI Guardrail blocks a model response.
+    #   @return [String]
+    #
+    # @!attribute [rw] visibility_status
+    #   The visibility status of the AI Guardrail.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A description of the AI Guardrail.
+    #   @return [String]
+    #
+    # @!attribute [rw] topic_policy_config
+    #   The topic policies to configure for the AI Guardrail.
+    #   @return [Types::AIGuardrailTopicPolicyConfig]
+    #
+    # @!attribute [rw] content_policy_config
+    #   The content filter policies to configure for the AI Guardrail.
+    #   @return [Types::AIGuardrailContentPolicyConfig]
+    #
+    # @!attribute [rw] word_policy_config
+    #   The word policy you configure for the AI Guardrail.
+    #   @return [Types::AIGuardrailWordPolicyConfig]
+    #
     # @!attribute [rw] sensitive_information_policy_config
     #   The sensitive information policy to configure for the AI Guardrail.
     #   @return [Types::AIGuardrailSensitiveInformationPolicyConfig]
+    #
+    # @!attribute [rw] contextual_grounding_policy_config
+    #   The contextual grounding policy configuration used to create an AI
+    #   Guardrail.
+    #   @return [Types::AIGuardrailContextualGroundingPolicyConfig]
     #
     # @!attribute [rw] tags
     #   The tags used to organize, track, or control access for this
     #   resource.
     #   @return [Hash<String,String>]
     #
-    # @!attribute [rw] topic_policy_config
-    #   The topic policies to configure for the AI Guardrail.
-    #   @return [Types::AIGuardrailTopicPolicyConfig]
-    #
-    # @!attribute [rw] visibility_status
-    #   The visibility status of the AI Guardrail.
-    #   @return [String]
-    #
-    # @!attribute [rw] word_policy_config
-    #   The word policy you configure for the AI Guardrail.
-    #   @return [Types::AIGuardrailWordPolicyConfig]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CreateAIGuardrailRequest AWS API Documentation
     #
     class CreateAIGuardrailRequest < Struct.new(
+      :client_token,
       :assistant_id,
+      :name,
       :blocked_input_messaging,
       :blocked_outputs_messaging,
-      :client_token,
-      :content_policy_config,
-      :contextual_grounding_policy_config,
-      :description,
-      :name,
-      :sensitive_information_policy_config,
-      :tags,
-      :topic_policy_config,
       :visibility_status,
-      :word_policy_config)
+      :description,
+      :topic_policy_config,
+      :content_policy_config,
+      :word_policy_config,
+      :sensitive_information_policy_config,
+      :contextual_grounding_policy_config,
+      :tags)
       SENSITIVE = [:blocked_input_messaging, :blocked_outputs_messaging, :description]
       include Aws::Structure
     end
@@ -2122,14 +2391,18 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] ai_guardrail_id
-    #   The identifier of the Amazon Q in Connect AI Guardrail.
-    #   @return [String]
-    #
     # @!attribute [rw] assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either
     #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
+    #
+    # @!attribute [rw] ai_guardrail_id
+    #   The identifier of the Amazon Q in Connect AI Guardrail.
+    #   @return [String]
+    #
+    # @!attribute [rw] modified_time
+    #   The time the AI Guardrail was last modified.
+    #   @return [Time]
     #
     # @!attribute [rw] client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
@@ -2145,17 +2418,13 @@ module Aws::QConnect
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #   @return [String]
     #
-    # @!attribute [rw] modified_time
-    #   The time the AI Guardrail was last modified.
-    #   @return [Time]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CreateAIGuardrailVersionRequest AWS API Documentation
     #
     class CreateAIGuardrailVersionRequest < Struct.new(
-      :ai_guardrail_id,
       :assistant_id,
-      :client_token,
-      :modified_time)
+      :ai_guardrail_id,
+      :modified_time,
+      :client_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2177,15 +2446,6 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] api_format
-    #   The API Format of the AI Prompt.
-    #   @return [String]
-    #
-    # @!attribute [rw] assistant_id
-    #   The identifier of the Amazon Q in Connect assistant. Can be either
-    #   the ID or the ARN. URLs cannot contain the ARN.
-    #   @return [String]
-    #
     # @!attribute [rw] client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
     #   idempotency of the request. If not provided, the Amazon Web Services
@@ -2200,17 +2460,54 @@ module Aws::QConnect
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #   @return [String]
     #
-    # @!attribute [rw] description
-    #   The description of the AI Prompt.
-    #   @return [String]
-    #
-    # @!attribute [rw] model_id
-    #   The identifier of the model used for this AI Prompt. Model Ids
-    #   supported are: `anthropic.claude-3-haiku-20240307-v1:0`
+    # @!attribute [rw] assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either
+    #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
     # @!attribute [rw] name
     #   The name of the AI Prompt.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The type of this AI Prompt.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_configuration
+    #   The configuration of the prompt template for this AI Prompt.
+    #   @return [Types::AIPromptTemplateConfiguration]
+    #
+    # @!attribute [rw] visibility_status
+    #   The visibility status of the AI Prompt.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_type
+    #   The type of the prompt template for this AI Prompt.
+    #   @return [String]
+    #
+    # @!attribute [rw] model_id
+    #   The identifier of the model used for this AI Prompt.
+    #
+    #   <note markdown="1"> For information about which models are supported in each Amazon Web
+    #   Services Region, see [Supported models for system/custom
+    #   prompts][1].
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/connect/latest/adminguide/create-ai-prompts.html#cli-create-aiprompt
+    #   @return [String]
+    #
+    # @!attribute [rw] api_format
+    #   The API Format of the AI Prompt.
+    #
+    #   Recommended values: `MESSAGES | TEXT_COMPLETIONS`
+    #
+    #   <note markdown="1"> The values `ANTHROPIC_CLAUDE_MESSAGES |
+    #   ANTHROPIC_CLAUDE_TEXT_COMPLETIONS` will be deprecated.
+    #
+    #    </note>
     #   @return [String]
     #
     # @!attribute [rw] tags
@@ -2218,36 +2515,29 @@ module Aws::QConnect
     #   resource.
     #   @return [Hash<String,String>]
     #
-    # @!attribute [rw] template_configuration
-    #   The configuration of the prompt template for this AI Prompt.
-    #   @return [Types::AIPromptTemplateConfiguration]
-    #
-    # @!attribute [rw] template_type
-    #   The type of the prompt template for this AI Prompt.
+    # @!attribute [rw] description
+    #   The description of the AI Prompt.
     #   @return [String]
     #
-    # @!attribute [rw] type
-    #   The type of this AI Prompt.
-    #   @return [String]
-    #
-    # @!attribute [rw] visibility_status
-    #   The visibility status of the AI Prompt.
-    #   @return [String]
+    # @!attribute [rw] inference_configuration
+    #   The inference configuration for the AI Prompt being created.
+    #   @return [Types::AIPromptInferenceConfiguration]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CreateAIPromptRequest AWS API Documentation
     #
     class CreateAIPromptRequest < Struct.new(
-      :api_format,
-      :assistant_id,
       :client_token,
-      :description,
-      :model_id,
+      :assistant_id,
       :name,
-      :tags,
-      :template_configuration,
-      :template_type,
       :type,
-      :visibility_status)
+      :template_configuration,
+      :visibility_status,
+      :template_type,
+      :model_id,
+      :api_format,
+      :tags,
+      :description,
+      :inference_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2264,14 +2554,18 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] ai_prompt_id
-    #   The identifier of the Amazon Q in Connect AI prompt.
-    #   @return [String]
-    #
     # @!attribute [rw] assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either
     #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
+    #
+    # @!attribute [rw] ai_prompt_id
+    #   The identifier of the Amazon Q in Connect AI prompt.
+    #   @return [String]
+    #
+    # @!attribute [rw] modified_time
+    #   The time the AI Prompt was last modified.
+    #   @return [Time]
     #
     # @!attribute [rw] client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
@@ -2287,17 +2581,13 @@ module Aws::QConnect
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #   @return [String]
     #
-    # @!attribute [rw] modified_time
-    #   The time the AI Prompt was last modified.
-    #   @return [Time]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CreateAIPromptVersionRequest AWS API Documentation
     #
     class CreateAIPromptVersionRequest < Struct.new(
-      :ai_prompt_id,
       :assistant_id,
-      :client_token,
-      :modified_time)
+      :ai_prompt_id,
+      :modified_time,
+      :client_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2324,13 +2614,13 @@ module Aws::QConnect
     #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
-    # @!attribute [rw] association
-    #   The identifier of the associated resource.
-    #   @return [Types::AssistantAssociationInputData]
-    #
     # @!attribute [rw] association_type
     #   The type of association.
     #   @return [String]
+    #
+    # @!attribute [rw] association
+    #   The identifier of the associated resource.
+    #   @return [Types::AssistantAssociationInputData]
     #
     # @!attribute [rw] client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
@@ -2355,8 +2645,8 @@ module Aws::QConnect
     #
     class CreateAssistantAssociationRequest < Struct.new(
       :assistant_id,
-      :association,
       :association_type,
+      :association,
       :client_token,
       :tags)
       SENSITIVE = []
@@ -2389,13 +2679,22 @@ module Aws::QConnect
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #   @return [String]
     #
+    # @!attribute [rw] name
+    #   The name of the assistant.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The type of assistant.
+    #   @return [String]
+    #
     # @!attribute [rw] description
     #   The description of the assistant.
     #   @return [String]
     #
-    # @!attribute [rw] name
-    #   The name of the assistant.
-    #   @return [String]
+    # @!attribute [rw] tags
+    #   The tags used to organize, track, or control access for this
+    #   resource.
+    #   @return [Hash<String,String>]
     #
     # @!attribute [rw] server_side_encryption_configuration
     #   The configuration information for the customer managed key used for
@@ -2418,24 +2717,15 @@ module Aws::QConnect
     #   [1]: https://docs.aws.amazon.com/connect/latest/adminguide/enable-q.html
     #   @return [Types::ServerSideEncryptionConfiguration]
     #
-    # @!attribute [rw] tags
-    #   The tags used to organize, track, or control access for this
-    #   resource.
-    #   @return [Hash<String,String>]
-    #
-    # @!attribute [rw] type
-    #   The type of assistant.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CreateAssistantRequest AWS API Documentation
     #
     class CreateAssistantRequest < Struct.new(
       :client_token,
-      :description,
       :name,
-      :server_side_encryption_configuration,
+      :type,
+      :description,
       :tags,
-      :type)
+      :server_side_encryption_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2452,14 +2742,6 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] association
-    #   The identifier of the associated resource.
-    #   @return [Types::ContentAssociationContents]
-    #
-    # @!attribute [rw] association_type
-    #   The type of association.
-    #   @return [String]
-    #
     # @!attribute [rw] client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
     #   idempotency of the request. If not provided, the Amazon Web Services
@@ -2474,13 +2756,21 @@ module Aws::QConnect
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #   @return [String]
     #
+    # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base.
+    #   @return [String]
+    #
     # @!attribute [rw] content_id
     #   The identifier of the content.
     #   @return [String]
     #
-    # @!attribute [rw] knowledge_base_id
-    #   The identifier of the knowledge base.
+    # @!attribute [rw] association_type
+    #   The type of association.
     #   @return [String]
+    #
+    # @!attribute [rw] association
+    #   The identifier of the associated resource.
+    #   @return [Types::ContentAssociationContents]
     #
     # @!attribute [rw] tags
     #   The tags used to organize, track, or control access for this
@@ -2490,11 +2780,11 @@ module Aws::QConnect
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CreateContentAssociationRequest AWS API Documentation
     #
     class CreateContentAssociationRequest < Struct.new(
-      :association,
-      :association_type,
       :client_token,
-      :content_id,
       :knowledge_base_id,
+      :content_id,
+      :association_type,
+      :association,
       :tags)
       SENSITIVE = []
       include Aws::Structure
@@ -2513,6 +2803,50 @@ module Aws::QConnect
       include Aws::Structure
     end
 
+    # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base. This should not be a
+    #   QUICK\_RESPONSES type knowledge base. Can be either the ID or the
+    #   ARN. URLs cannot contain the ARN.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the content. Each piece of content in a knowledge base
+    #   must have a unique name. You can retrieve a piece of content using
+    #   only its knowledge base and its name with the [SearchContent][1]
+    #   API.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/amazon-q-connect/latest/APIReference/API_SearchContent.html
+    #   @return [String]
+    #
+    # @!attribute [rw] title
+    #   The title of the content. If not set, the title is equal to the
+    #   name.
+    #   @return [String]
+    #
+    # @!attribute [rw] override_link_out_uri
+    #   The URI you want to use for the article. If the knowledge base has a
+    #   templateUri, setting this argument overrides it for this piece of
+    #   content.
+    #   @return [String]
+    #
+    # @!attribute [rw] metadata
+    #   A key/value map to store attributes without affecting tagging or
+    #   recommendations. For example, when synchronizing data between an
+    #   external system and Amazon Q in Connect, you can store an external
+    #   version identifier as metadata to utilize for determining drift.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] upload_id
+    #   A pointer to the uploaded asset. This value is returned by
+    #   [StartContentUpload][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/amazon-q-connect/latest/APIReference/API_StartContentUpload.html
+    #   @return [String]
+    #
     # @!attribute [rw] client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
     #   idempotency of the request. If not provided, the Amazon Web Services
@@ -2527,66 +2861,22 @@ module Aws::QConnect
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #   @return [String]
     #
-    # @!attribute [rw] knowledge_base_id
-    #   The identifier of the knowledge base. This should not be a
-    #   QUICK\_RESPONSES type knowledge base. Can be either the ID or the
-    #   ARN. URLs cannot contain the ARN.
-    #   @return [String]
-    #
-    # @!attribute [rw] metadata
-    #   A key/value map to store attributes without affecting tagging or
-    #   recommendations. For example, when synchronizing data between an
-    #   external system and Amazon Q in Connect, you can store an external
-    #   version identifier as metadata to utilize for determining drift.
-    #   @return [Hash<String,String>]
-    #
-    # @!attribute [rw] name
-    #   The name of the content. Each piece of content in a knowledge base
-    #   must have a unique name. You can retrieve a piece of content using
-    #   only its knowledge base and its name with the [SearchContent][1]
-    #   API.
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/amazon-q-connect/latest/APIReference/API_SearchContent.html
-    #   @return [String]
-    #
-    # @!attribute [rw] override_link_out_uri
-    #   The URI you want to use for the article. If the knowledge base has a
-    #   templateUri, setting this argument overrides it for this piece of
-    #   content.
-    #   @return [String]
-    #
     # @!attribute [rw] tags
     #   The tags used to organize, track, or control access for this
     #   resource.
     #   @return [Hash<String,String>]
     #
-    # @!attribute [rw] title
-    #   The title of the content. If not set, the title is equal to the
-    #   name.
-    #   @return [String]
-    #
-    # @!attribute [rw] upload_id
-    #   A pointer to the uploaded asset. This value is returned by
-    #   [StartContentUpload][1].
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/amazon-q-connect/latest/APIReference/API_StartContentUpload.html
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CreateContentRequest AWS API Documentation
     #
     class CreateContentRequest < Struct.new(
-      :client_token,
       :knowledge_base_id,
-      :metadata,
       :name,
-      :override_link_out_uri,
-      :tags,
       :title,
-      :upload_id)
+      :override_link_out_uri,
+      :metadata,
+      :upload_id,
+      :client_token,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2617,8 +2907,8 @@ module Aws::QConnect
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #   @return [String]
     #
-    # @!attribute [rw] description
-    #   The description.
+    # @!attribute [rw] name
+    #   The name of the knowledge base.
     #   @return [String]
     #
     # @!attribute [rw] knowledge_base_type
@@ -2628,13 +2918,18 @@ module Aws::QConnect
     #   automatically.
     #   @return [String]
     #
-    # @!attribute [rw] name
-    #   The name of the knowledge base.
-    #   @return [String]
+    # @!attribute [rw] source_configuration
+    #   The source of the knowledge base content. Only set this argument for
+    #   EXTERNAL or Managed knowledge bases.
+    #   @return [Types::SourceConfiguration]
     #
     # @!attribute [rw] rendering_configuration
     #   Information about how to render the content.
     #   @return [Types::RenderingConfiguration]
+    #
+    # @!attribute [rw] vector_ingestion_configuration
+    #   Contains details about how to ingest the documents in a data source.
+    #   @return [Types::VectorIngestionConfiguration]
     #
     # @!attribute [rw] server_side_encryption_configuration
     #   The configuration information for the customer managed key used for
@@ -2654,32 +2949,27 @@ module Aws::QConnect
     #   [1]: https://docs.aws.amazon.com/connect/latest/adminguide/enable-q.html
     #   @return [Types::ServerSideEncryptionConfiguration]
     #
-    # @!attribute [rw] source_configuration
-    #   The source of the knowledge base content. Only set this argument for
-    #   EXTERNAL or Managed knowledge bases.
-    #   @return [Types::SourceConfiguration]
+    # @!attribute [rw] description
+    #   The description.
+    #   @return [String]
     #
     # @!attribute [rw] tags
     #   The tags used to organize, track, or control access for this
     #   resource.
     #   @return [Hash<String,String>]
     #
-    # @!attribute [rw] vector_ingestion_configuration
-    #   Contains details about how to ingest the documents in a data source.
-    #   @return [Types::VectorIngestionConfiguration]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CreateKnowledgeBaseRequest AWS API Documentation
     #
     class CreateKnowledgeBaseRequest < Struct.new(
       :client_token,
-      :description,
-      :knowledge_base_type,
       :name,
-      :rendering_configuration,
-      :server_side_encryption_configuration,
+      :knowledge_base_type,
       :source_configuration,
-      :tags,
-      :vector_ingestion_configuration)
+      :rendering_configuration,
+      :vector_ingestion_configuration,
+      :server_side_encryption_configuration,
+      :description,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2696,6 +2986,25 @@ module Aws::QConnect
       include Aws::Structure
     end
 
+    # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base. Can be either the ID or the
+    #   ARN. URLs cannot contain the ARN.
+    #   @return [String]
+    #
+    # @!attribute [rw] message_template_id
+    #   The identifier of the message template. Can be either the ID or the
+    #   ARN. It cannot contain any qualifier.
+    #   @return [String]
+    #
+    # @!attribute [rw] content_disposition
+    #   The presentation information for the attachment file.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the attachment file being uploaded. The name should
+    #   include the file extension.
+    #   @return [String]
+    #
     # @!attribute [rw] body
     #   The body of the attachment file being uploaded. It should be encoded
     #   using base64 encoding.
@@ -2712,35 +3021,16 @@ module Aws::QConnect
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #   @return [String]
     #
-    # @!attribute [rw] content_disposition
-    #   The presentation information for the attachment file.
-    #   @return [String]
-    #
-    # @!attribute [rw] knowledge_base_id
-    #   The identifier of the knowledge base. Can be either the ID or the
-    #   ARN. URLs cannot contain the ARN.
-    #   @return [String]
-    #
-    # @!attribute [rw] message_template_id
-    #   The identifier of the message template. Can be either the ID or the
-    #   ARN. It cannot contain any qualifier.
-    #   @return [String]
-    #
-    # @!attribute [rw] name
-    #   The name of the attachment file being uploaded. The name should
-    #   include the file extension.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CreateMessageTemplateAttachmentRequest AWS API Documentation
     #
     class CreateMessageTemplateAttachmentRequest < Struct.new(
-      :body,
-      :client_token,
-      :content_disposition,
       :knowledge_base_id,
       :message_template_id,
-      :name)
-      SENSITIVE = [:body, :name]
+      :content_disposition,
+      :name,
+      :body,
+      :client_token)
+      SENSITIVE = [:name, :body]
       include Aws::Structure
     end
 
@@ -2756,9 +3046,51 @@ module Aws::QConnect
       include Aws::Structure
     end
 
+    # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base. Can be either the ID or the
+    #   ARN. URLs cannot contain the ARN.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the message template.
+    #   @return [String]
+    #
+    # @!attribute [rw] content
+    #   The content of the message template.
+    #   @return [Types::MessageTemplateContentProvider]
+    #
+    # @!attribute [rw] description
+    #   The description of the message template.
+    #   @return [String]
+    #
     # @!attribute [rw] channel_subtype
     #   The channel subtype this message template applies to.
     #   @return [String]
+    #
+    # @!attribute [rw] language
+    #   The language code value for the language in which the quick response
+    #   is written. The supported language codes include `de_DE`, `en_US`,
+    #   `es_ES`, `fr_FR`, `id_ID`, `it_IT`, `ja_JP`, `ko_KR`, `pt_BR`,
+    #   `zh_CN`, `zh_TW`
+    #   @return [String]
+    #
+    # @!attribute [rw] source_configuration
+    #   The source configuration of the message template. Only set this
+    #   argument for WHATSAPP channel subtype.
+    #   @return [Types::MessageTemplateSourceConfiguration]
+    #
+    # @!attribute [rw] default_attributes
+    #   An object that specifies the default values to use for variables in
+    #   the message template. This object contains different categories of
+    #   key-value pairs. Each key defines a variable or placeholder in the
+    #   message template. The corresponding value defines the default value
+    #   for that variable.
+    #   @return [Types::MessageTemplateAttributes]
+    #
+    # @!attribute [rw] grouping_configuration
+    #   The configuration information of the grouping of Amazon Q in Connect
+    #   users.
+    #   @return [Types::GroupingConfiguration]
     #
     # @!attribute [rw] client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
@@ -2774,43 +3106,6 @@ module Aws::QConnect
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #   @return [String]
     #
-    # @!attribute [rw] content
-    #   The content of the message template.
-    #   @return [Types::MessageTemplateContentProvider]
-    #
-    # @!attribute [rw] default_attributes
-    #   An object that specifies the default values to use for variables in
-    #   the message template. This object contains different categories of
-    #   key-value pairs. Each key defines a variable or placeholder in the
-    #   message template. The corresponding value defines the default value
-    #   for that variable.
-    #   @return [Types::MessageTemplateAttributes]
-    #
-    # @!attribute [rw] description
-    #   The description of the message template.
-    #   @return [String]
-    #
-    # @!attribute [rw] grouping_configuration
-    #   The configuration information of the grouping of Amazon Q in Connect
-    #   users.
-    #   @return [Types::GroupingConfiguration]
-    #
-    # @!attribute [rw] knowledge_base_id
-    #   The identifier of the knowledge base. Can be either the ID or the
-    #   ARN. URLs cannot contain the ARN.
-    #   @return [String]
-    #
-    # @!attribute [rw] language
-    #   The language code value for the language in which the quick response
-    #   is written. The supported language codes include `de_DE`, `en_US`,
-    #   `es_ES`, `fr_FR`, `id_ID`, `it_IT`, `ja_JP`, `ko_KR`, `pt_BR`,
-    #   `zh_CN`, `zh_TW`
-    #   @return [String]
-    #
-    # @!attribute [rw] name
-    #   The name of the message template.
-    #   @return [String]
-    #
     # @!attribute [rw] tags
     #   The tags used to organize, track, or control access for this
     #   resource.
@@ -2819,15 +3114,16 @@ module Aws::QConnect
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CreateMessageTemplateRequest AWS API Documentation
     #
     class CreateMessageTemplateRequest < Struct.new(
-      :channel_subtype,
-      :client_token,
-      :content,
-      :default_attributes,
-      :description,
-      :grouping_configuration,
       :knowledge_base_id,
-      :language,
       :name,
+      :content,
+      :description,
+      :channel_subtype,
+      :language,
+      :source_configuration,
+      :default_attributes,
+      :grouping_configuration,
+      :client_token,
       :tags)
       SENSITIVE = []
       include Aws::Structure
@@ -2850,6 +3146,11 @@ module Aws::QConnect
     #   ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
+    # @!attribute [rw] message_template_id
+    #   The identifier of the message template. Can be either the ID or the
+    #   ARN. It cannot contain any qualifier.
+    #   @return [String]
+    #
     # @!attribute [rw] message_template_content_sha_256
     #   The checksum value of the message template content that is
     #   referenced by the `$LATEST` qualifier. It can be returned in
@@ -2860,17 +3161,12 @@ module Aws::QConnect
     #   content that is referenced by the `$LATEST` qualifier by default.
     #   @return [String]
     #
-    # @!attribute [rw] message_template_id
-    #   The identifier of the message template. Can be either the ID or the
-    #   ARN. It cannot contain any qualifier.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CreateMessageTemplateVersionRequest AWS API Documentation
     #
     class CreateMessageTemplateVersionRequest < Struct.new(
       :knowledge_base_id,
-      :message_template_content_sha_256,
-      :message_template_id)
+      :message_template_id,
+      :message_template_content_sha_256)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2887,22 +3183,13 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] channels
-    #   The Amazon Connect channels this quick response applies to.
-    #   @return [Array<String>]
+    # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base. Can be either the ID or the
+    #   ARN. URLs cannot contain the ARN.
+    #   @return [String]
     #
-    # @!attribute [rw] client_token
-    #   A unique, case-sensitive identifier that you provide to ensure the
-    #   idempotency of the request. If not provided, the Amazon Web Services
-    #   SDK populates this field. For more information about idempotency,
-    #   see [Making retries safe with idempotent APIs][1].
-    #
-    #   **A suitable default value is auto-generated.** You should normally
-    #   not need to pass this option.
-    #
-    #
-    #
-    #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
+    # @!attribute [rw] name
+    #   The name of the quick response.
     #   @return [String]
     #
     # @!attribute [rw] content
@@ -2919,23 +3206,27 @@ module Aws::QConnect
     #     response written in richtext.
     #   @return [String]
     #
-    # @!attribute [rw] description
-    #   The description of the quick response.
-    #   @return [String]
-    #
     # @!attribute [rw] grouping_configuration
     #   The configuration information of the user groups that the quick
     #   response is accessible to.
     #   @return [Types::GroupingConfiguration]
     #
+    # @!attribute [rw] description
+    #   The description of the quick response.
+    #   @return [String]
+    #
+    # @!attribute [rw] shortcut_key
+    #   The shortcut key of the quick response. The value should be unique
+    #   across the knowledge base.
+    #   @return [String]
+    #
     # @!attribute [rw] is_active
     #   Whether the quick response is active.
     #   @return [Boolean]
     #
-    # @!attribute [rw] knowledge_base_id
-    #   The identifier of the knowledge base. Can be either the ID or the
-    #   ARN. URLs cannot contain the ARN.
-    #   @return [String]
+    # @!attribute [rw] channels
+    #   The Amazon Connect channels this quick response applies to.
+    #   @return [Array<String>]
     #
     # @!attribute [rw] language
     #   The language code value for the language in which the quick response
@@ -2944,13 +3235,18 @@ module Aws::QConnect
     #   `zh_CN`, `zh_TW`
     #   @return [String]
     #
-    # @!attribute [rw] name
-    #   The name of the quick response.
-    #   @return [String]
+    # @!attribute [rw] client_token
+    #   A unique, case-sensitive identifier that you provide to ensure the
+    #   idempotency of the request. If not provided, the Amazon Web Services
+    #   SDK populates this field. For more information about idempotency,
+    #   see [Making retries safe with idempotent APIs][1].
     #
-    # @!attribute [rw] shortcut_key
-    #   The shortcut key of the quick response. The value should be unique
-    #   across the knowledge base.
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #
+    #
+    #
+    #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #   @return [String]
     #
     # @!attribute [rw] tags
@@ -2961,17 +3257,17 @@ module Aws::QConnect
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CreateQuickResponseRequest AWS API Documentation
     #
     class CreateQuickResponseRequest < Struct.new(
-      :channels,
-      :client_token,
+      :knowledge_base_id,
+      :name,
       :content,
       :content_type,
-      :description,
       :grouping_configuration,
-      :is_active,
-      :knowledge_base_id,
-      :language,
-      :name,
+      :description,
       :shortcut_key,
+      :is_active,
+      :channels,
+      :language,
+      :client_token,
       :tags)
       SENSITIVE = [:channels]
       include Aws::Structure
@@ -2989,17 +3285,6 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] ai_agent_configuration
-    #   The configuration of the AI Agents (mapped by AI Agent Type to AI
-    #   Agent version) that should be used by Amazon Q in Connect for this
-    #   Session.
-    #   @return [Hash<String,Types::AIAgentConfigurationData>]
-    #
-    # @!attribute [rw] assistant_id
-    #   The identifier of the Amazon Q in Connect assistant. Can be either
-    #   the ID or the ARN. URLs cannot contain the ARN.
-    #   @return [String]
-    #
     # @!attribute [rw] client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
     #   idempotency of the request. If not provided, the Amazon Web Services
@@ -3014,33 +3299,62 @@ module Aws::QConnect
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #   @return [String]
     #
-    # @!attribute [rw] description
-    #   The description.
+    # @!attribute [rw] assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either
+    #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
     # @!attribute [rw] name
     #   The name of the session.
     #   @return [String]
     #
-    # @!attribute [rw] tag_filter
-    #   An object that can be used to specify Tag conditions.
-    #   @return [Types::TagFilter]
+    # @!attribute [rw] description
+    #   The description.
+    #   @return [String]
     #
     # @!attribute [rw] tags
     #   The tags used to organize, track, or control access for this
     #   resource.
     #   @return [Hash<String,String>]
     #
+    # @!attribute [rw] tag_filter
+    #   An object that can be used to specify Tag conditions.
+    #   @return [Types::TagFilter]
+    #
+    # @!attribute [rw] ai_agent_configuration
+    #   The configuration of the AI Agents (mapped by AI Agent Type to AI
+    #   Agent version) that should be used by Amazon Q in Connect for this
+    #   Session.
+    #   @return [Hash<String,Types::AIAgentConfigurationData>]
+    #
+    # @!attribute [rw] contact_arn
+    #   The Amazon Resource Name (ARN) of the email contact in Amazon
+    #   Connect. Used to retrieve email content and establish session
+    #   context for AI-powered email assistance.
+    #   @return [String]
+    #
+    # @!attribute [rw] orchestrator_configuration_list
+    #   The list of orchestrator configurations for the session being
+    #   created.
+    #   @return [Array<Types::OrchestratorConfigurationEntry>]
+    #
+    # @!attribute [rw] remove_orchestrator_configuration_list
+    #   The list of orchestrator configurations to remove from the session.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CreateSessionRequest AWS API Documentation
     #
     class CreateSessionRequest < Struct.new(
-      :ai_agent_configuration,
-      :assistant_id,
       :client_token,
-      :description,
+      :assistant_id,
       :name,
+      :description,
+      :tags,
       :tag_filter,
-      :tags)
+      :ai_agent_configuration,
+      :contact_arn,
+      :orchestrator_configuration_list,
+      :remove_orchestrator_configuration_list)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3060,12 +3374,74 @@ module Aws::QConnect
     # The customer profile attributes that are used with the message
     # template.
     #
+    # @!attribute [rw] profile_id
+    #   The unique identifier of a customer profile.
+    #   @return [String]
+    #
+    # @!attribute [rw] profile_arn
+    #   The ARN of a customer profile.
+    #   @return [String]
+    #
+    # @!attribute [rw] first_name
+    #   The customer's first name.
+    #   @return [String]
+    #
+    # @!attribute [rw] middle_name
+    #   The customer's middle name.
+    #   @return [String]
+    #
+    # @!attribute [rw] last_name
+    #   The customer's last name.
+    #   @return [String]
+    #
     # @!attribute [rw] account_number
     #   A unique account number that you have given to the customer.
     #   @return [String]
     #
+    # @!attribute [rw] email_address
+    #   The customer's email address, which has not been specified as a
+    #   personal or business address.
+    #   @return [String]
+    #
+    # @!attribute [rw] phone_number
+    #   The customer's phone number, which has not been specified as a
+    #   mobile, home, or business number.
+    #   @return [String]
+    #
     # @!attribute [rw] additional_information
     #   Any additional information relevant to the customer's profile.
+    #   @return [String]
+    #
+    # @!attribute [rw] party_type
+    #   The customer's party type.
+    #   @return [String]
+    #
+    # @!attribute [rw] business_name
+    #   The name of the customer's business.
+    #   @return [String]
+    #
+    # @!attribute [rw] birth_date
+    #   The customer's birth date.
+    #   @return [String]
+    #
+    # @!attribute [rw] gender
+    #   The customer's gender.
+    #   @return [String]
+    #
+    # @!attribute [rw] mobile_phone_number
+    #   The customer's mobile phone number.
+    #   @return [String]
+    #
+    # @!attribute [rw] home_phone_number
+    #   The customer's mobile phone number.
+    #   @return [String]
+    #
+    # @!attribute [rw] business_phone_number
+    #   The customer's business phone number.
+    #   @return [String]
+    #
+    # @!attribute [rw] business_email_address
+    #   The customer's business email address.
     #   @return [String]
     #
     # @!attribute [rw] address1
@@ -3084,170 +3460,28 @@ module Aws::QConnect
     #   The fourth line of a customer address.
     #   @return [String]
     #
-    # @!attribute [rw] billing_address_1
-    #   The first line of a customer’s billing address.
-    #   @return [String]
-    #
-    # @!attribute [rw] billing_address_2
-    #   The second line of a customer’s billing address.
-    #   @return [String]
-    #
-    # @!attribute [rw] billing_address_3
-    #   The third line of a customer’s billing address.
-    #   @return [String]
-    #
-    # @!attribute [rw] billing_address_4
-    #   The fourth line of a customer’s billing address.
-    #   @return [String]
-    #
-    # @!attribute [rw] billing_city
-    #   The city of a customer’s billing address.
-    #   @return [String]
-    #
-    # @!attribute [rw] billing_country
-    #   The country of a customer’s billing address.
-    #   @return [String]
-    #
-    # @!attribute [rw] billing_county
-    #   The county of a customer’s billing address.
-    #   @return [String]
-    #
-    # @!attribute [rw] billing_postal_code
-    #   The postal code of a customer’s billing address.
-    #   @return [String]
-    #
-    # @!attribute [rw] billing_province
-    #   The province of a customer’s billing address.
-    #   @return [String]
-    #
-    # @!attribute [rw] billing_state
-    #   The state of a customer’s billing address.
-    #   @return [String]
-    #
-    # @!attribute [rw] birth_date
-    #   The customer's birth date.
-    #   @return [String]
-    #
-    # @!attribute [rw] business_email_address
-    #   The customer's business email address.
-    #   @return [String]
-    #
-    # @!attribute [rw] business_name
-    #   The name of the customer's business.
-    #   @return [String]
-    #
-    # @!attribute [rw] business_phone_number
-    #   The customer's business phone number.
-    #   @return [String]
-    #
     # @!attribute [rw] city
     #   The city in which a customer lives.
-    #   @return [String]
-    #
-    # @!attribute [rw] country
-    #   The country in which a customer lives.
     #   @return [String]
     #
     # @!attribute [rw] county
     #   The county in which a customer lives.
     #   @return [String]
     #
-    # @!attribute [rw] custom
-    #   The custom attributes in customer profile attributes.
-    #   @return [Hash<String,String>]
-    #
-    # @!attribute [rw] email_address
-    #   The customer's email address, which has not been specified as a
-    #   personal or business address.
-    #   @return [String]
-    #
-    # @!attribute [rw] first_name
-    #   The customer's first name.
-    #   @return [String]
-    #
-    # @!attribute [rw] gender
-    #   The customer's gender.
-    #   @return [String]
-    #
-    # @!attribute [rw] home_phone_number
-    #   The customer's mobile phone number.
-    #   @return [String]
-    #
-    # @!attribute [rw] last_name
-    #   The customer's last name.
-    #   @return [String]
-    #
-    # @!attribute [rw] mailing_address_1
-    #   The first line of a customer’s mailing address.
-    #   @return [String]
-    #
-    # @!attribute [rw] mailing_address_2
-    #   The second line of a customer’s mailing address.
-    #   @return [String]
-    #
-    # @!attribute [rw] mailing_address_3
-    #   The third line of a customer’s mailing address.
-    #   @return [String]
-    #
-    # @!attribute [rw] mailing_address_4
-    #   The fourth line of a customer’s mailing address.
-    #   @return [String]
-    #
-    # @!attribute [rw] mailing_city
-    #   The city of a customer’s mailing address.
-    #   @return [String]
-    #
-    # @!attribute [rw] mailing_country
-    #   The country of a customer’s mailing address.
-    #   @return [String]
-    #
-    # @!attribute [rw] mailing_county
-    #   The county of a customer’s mailing address.
-    #   @return [String]
-    #
-    # @!attribute [rw] mailing_postal_code
-    #   The postal code of a customer’s mailing address.
-    #   @return [String]
-    #
-    # @!attribute [rw] mailing_province
-    #   The province of a customer’s mailing address.
-    #   @return [String]
-    #
-    # @!attribute [rw] mailing_state
-    #   The state of a customer’s mailing address.
-    #   @return [String]
-    #
-    # @!attribute [rw] middle_name
-    #   The customer's middle name.
-    #   @return [String]
-    #
-    # @!attribute [rw] mobile_phone_number
-    #   The customer's mobile phone number.
-    #   @return [String]
-    #
-    # @!attribute [rw] party_type
-    #   The customer's party type.
-    #   @return [String]
-    #
-    # @!attribute [rw] phone_number
-    #   The customer's phone number, which has not been specified as a
-    #   mobile, home, or business number.
+    # @!attribute [rw] country
+    #   The country in which a customer lives.
     #   @return [String]
     #
     # @!attribute [rw] postal_code
     #   The postal code of a customer address.
     #   @return [String]
     #
-    # @!attribute [rw] profile_arn
-    #   The ARN of a customer profile.
-    #   @return [String]
-    #
-    # @!attribute [rw] profile_id
-    #   The unique identifier of a customer profile.
-    #   @return [String]
-    #
     # @!attribute [rw] province
     #   The province in which a customer lives.
+    #   @return [String]
+    #
+    # @!attribute [rw] state
+    #   The state in which a customer lives.
     #   @return [String]
     #
     # @!attribute [rw] shipping_address_1
@@ -3270,12 +3504,12 @@ module Aws::QConnect
     #   The city of a customer’s shipping address.
     #   @return [String]
     #
-    # @!attribute [rw] shipping_country
-    #   The country of a customer’s shipping address.
-    #   @return [String]
-    #
     # @!attribute [rw] shipping_county
     #   The county of a customer’s shipping address.
+    #   @return [String]
+    #
+    # @!attribute [rw] shipping_country
+    #   The country of a customer’s shipping address.
     #   @return [String]
     #
     # @!attribute [rw] shipping_postal_code
@@ -3290,72 +3524,152 @@ module Aws::QConnect
     #   The state of a customer’s shipping address.
     #   @return [String]
     #
-    # @!attribute [rw] state
-    #   The state in which a customer lives.
+    # @!attribute [rw] mailing_address_1
+    #   The first line of a customer’s mailing address.
     #   @return [String]
+    #
+    # @!attribute [rw] mailing_address_2
+    #   The second line of a customer’s mailing address.
+    #   @return [String]
+    #
+    # @!attribute [rw] mailing_address_3
+    #   The third line of a customer’s mailing address.
+    #   @return [String]
+    #
+    # @!attribute [rw] mailing_address_4
+    #   The fourth line of a customer’s mailing address.
+    #   @return [String]
+    #
+    # @!attribute [rw] mailing_city
+    #   The city of a customer’s mailing address.
+    #   @return [String]
+    #
+    # @!attribute [rw] mailing_county
+    #   The county of a customer’s mailing address.
+    #   @return [String]
+    #
+    # @!attribute [rw] mailing_country
+    #   The country of a customer’s mailing address.
+    #   @return [String]
+    #
+    # @!attribute [rw] mailing_postal_code
+    #   The postal code of a customer’s mailing address.
+    #   @return [String]
+    #
+    # @!attribute [rw] mailing_province
+    #   The province of a customer’s mailing address.
+    #   @return [String]
+    #
+    # @!attribute [rw] mailing_state
+    #   The state of a customer’s mailing address.
+    #   @return [String]
+    #
+    # @!attribute [rw] billing_address_1
+    #   The first line of a customer’s billing address.
+    #   @return [String]
+    #
+    # @!attribute [rw] billing_address_2
+    #   The second line of a customer’s billing address.
+    #   @return [String]
+    #
+    # @!attribute [rw] billing_address_3
+    #   The third line of a customer’s billing address.
+    #   @return [String]
+    #
+    # @!attribute [rw] billing_address_4
+    #   The fourth line of a customer’s billing address.
+    #   @return [String]
+    #
+    # @!attribute [rw] billing_city
+    #   The city of a customer’s billing address.
+    #   @return [String]
+    #
+    # @!attribute [rw] billing_county
+    #   The county of a customer’s billing address.
+    #   @return [String]
+    #
+    # @!attribute [rw] billing_country
+    #   The country of a customer’s billing address.
+    #   @return [String]
+    #
+    # @!attribute [rw] billing_postal_code
+    #   The postal code of a customer’s billing address.
+    #   @return [String]
+    #
+    # @!attribute [rw] billing_province
+    #   The province of a customer’s billing address.
+    #   @return [String]
+    #
+    # @!attribute [rw] billing_state
+    #   The state of a customer’s billing address.
+    #   @return [String]
+    #
+    # @!attribute [rw] custom
+    #   The custom attributes in customer profile attributes.
+    #   @return [Hash<String,String>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/CustomerProfileAttributes AWS API Documentation
     #
     class CustomerProfileAttributes < Struct.new(
+      :profile_id,
+      :profile_arn,
+      :first_name,
+      :middle_name,
+      :last_name,
       :account_number,
+      :email_address,
+      :phone_number,
       :additional_information,
+      :party_type,
+      :business_name,
+      :birth_date,
+      :gender,
+      :mobile_phone_number,
+      :home_phone_number,
+      :business_phone_number,
+      :business_email_address,
       :address1,
       :address2,
       :address3,
       :address4,
-      :billing_address_1,
-      :billing_address_2,
-      :billing_address_3,
-      :billing_address_4,
-      :billing_city,
-      :billing_country,
-      :billing_county,
-      :billing_postal_code,
-      :billing_province,
-      :billing_state,
-      :birth_date,
-      :business_email_address,
-      :business_name,
-      :business_phone_number,
       :city,
-      :country,
       :county,
-      :custom,
-      :email_address,
-      :first_name,
-      :gender,
-      :home_phone_number,
-      :last_name,
-      :mailing_address_1,
-      :mailing_address_2,
-      :mailing_address_3,
-      :mailing_address_4,
-      :mailing_city,
-      :mailing_country,
-      :mailing_county,
-      :mailing_postal_code,
-      :mailing_province,
-      :mailing_state,
-      :middle_name,
-      :mobile_phone_number,
-      :party_type,
-      :phone_number,
+      :country,
       :postal_code,
-      :profile_arn,
-      :profile_id,
       :province,
+      :state,
       :shipping_address_1,
       :shipping_address_2,
       :shipping_address_3,
       :shipping_address_4,
       :shipping_city,
-      :shipping_country,
       :shipping_county,
+      :shipping_country,
       :shipping_postal_code,
       :shipping_province,
       :shipping_state,
-      :state)
-      SENSITIVE = [:account_number, :additional_information, :address1, :address2, :address3, :address4, :billing_address_1, :billing_address_2, :billing_address_3, :billing_address_4, :billing_city, :billing_country, :billing_county, :billing_postal_code, :billing_province, :billing_state, :birth_date, :business_email_address, :business_name, :business_phone_number, :city, :country, :county, :custom, :email_address, :first_name, :gender, :home_phone_number, :last_name, :mailing_address_1, :mailing_address_2, :mailing_address_3, :mailing_address_4, :mailing_city, :mailing_country, :mailing_county, :mailing_postal_code, :mailing_province, :mailing_state, :middle_name, :mobile_phone_number, :party_type, :phone_number, :postal_code, :profile_arn, :profile_id, :province, :shipping_address_1, :shipping_address_2, :shipping_address_3, :shipping_address_4, :shipping_city, :shipping_country, :shipping_county, :shipping_postal_code, :shipping_province, :shipping_state, :state]
+      :mailing_address_1,
+      :mailing_address_2,
+      :mailing_address_3,
+      :mailing_address_4,
+      :mailing_city,
+      :mailing_county,
+      :mailing_country,
+      :mailing_postal_code,
+      :mailing_province,
+      :mailing_state,
+      :billing_address_1,
+      :billing_address_2,
+      :billing_address_3,
+      :billing_address_4,
+      :billing_city,
+      :billing_county,
+      :billing_country,
+      :billing_postal_code,
+      :billing_province,
+      :billing_state,
+      :custom)
+      SENSITIVE = [:profile_id, :profile_arn, :first_name, :middle_name, :last_name, :account_number, :email_address, :phone_number, :additional_information, :party_type, :business_name, :birth_date, :gender, :mobile_phone_number, :home_phone_number, :business_phone_number, :business_email_address, :address1, :address2, :address3, :address4, :city, :county, :country, :postal_code, :province, :state, :shipping_address_1, :shipping_address_2, :shipping_address_3, :shipping_address_4, :shipping_city, :shipping_county, :shipping_country, :shipping_postal_code, :shipping_province, :shipping_state, :mailing_address_1, :mailing_address_2, :mailing_address_3, :mailing_address_4, :mailing_city, :mailing_county, :mailing_country, :mailing_postal_code, :mailing_province, :mailing_state, :billing_address_1, :billing_address_2, :billing_address_3, :billing_address_4, :billing_city, :billing_county, :billing_country, :billing_postal_code, :billing_province, :billing_state, :custom]
       include Aws::Structure
     end
 
@@ -3379,6 +3693,41 @@ module Aws::QConnect
     #   Details about the content data.
     #   @return [Types::SourceContentDataDetails]
     #
+    # @!attribute [rw] generative_chunk_data
+    #   Details about the generative chunk data.
+    #   @return [Types::GenerativeChunkDataDetails]
+    #
+    # @!attribute [rw] email_response_chunk_data
+    #   Streaming chunk data for email response generation containing
+    #   partial response content.
+    #   @return [Types::EmailResponseChunkDataDetails]
+    #
+    # @!attribute [rw] email_overview_chunk_data
+    #   Streaming chunk data for email overview containing partial overview
+    #   content.
+    #   @return [Types::EmailOverviewChunkDataDetails]
+    #
+    # @!attribute [rw] email_generative_answer_chunk_data
+    #   Streaming chunk data for email generative answers containing partial
+    #   knowledge-based response content.
+    #   @return [Types::EmailGenerativeAnswerChunkDataDetails]
+    #
+    # @!attribute [rw] case_summarization_chunk_data
+    #   Details about case summarization chunk data.
+    #   @return [Types::CaseSummarizationChunkDataDetails]
+    #
+    # @!attribute [rw] suggested_message_data
+    #   Details about suggested message data.
+    #   @return [Types::SuggestedMessageDataDetails]
+    #
+    # @!attribute [rw] notes_data
+    #   Details about notes data.
+    #   @return [Types::NotesDataDetails]
+    #
+    # @!attribute [rw] notes_chunk_data
+    #   Details about notes chunk data.
+    #   @return [Types::NotesChunkDataDetails]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/DataDetails AWS API Documentation
     #
     class DataDetails < Struct.new(
@@ -3386,6 +3735,14 @@ module Aws::QConnect
       :generative_data,
       :intent_detected_data,
       :source_content_data,
+      :generative_chunk_data,
+      :email_response_chunk_data,
+      :email_overview_chunk_data,
+      :email_generative_answer_chunk_data,
+      :case_summarization_chunk_data,
+      :suggested_message_data,
+      :notes_data,
+      :notes_chunk_data,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
@@ -3395,6 +3752,14 @@ module Aws::QConnect
       class GenerativeData < DataDetails; end
       class IntentDetectedData < DataDetails; end
       class SourceContentData < DataDetails; end
+      class GenerativeChunkData < DataDetails; end
+      class EmailResponseChunkData < DataDetails; end
+      class EmailOverviewChunkData < DataDetails; end
+      class EmailGenerativeAnswerChunkData < DataDetails; end
+      class CaseSummarizationChunkData < DataDetails; end
+      class SuggestedMessageData < DataDetails; end
+      class NotesData < DataDetails; end
+      class NotesChunkData < DataDetails; end
       class Unknown < DataDetails; end
     end
 
@@ -3410,11 +3775,16 @@ module Aws::QConnect
     #   Reference information about the generative content.
     #   @return [Types::GenerativeReference]
     #
+    # @!attribute [rw] suggested_message_reference
+    #   Reference information for suggested messages.
+    #   @return [Types::SuggestedMessageReference]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/DataReference AWS API Documentation
     #
     class DataReference < Struct.new(
       :content_reference,
       :generative_reference,
+      :suggested_message_reference,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
@@ -3422,24 +3792,25 @@ module Aws::QConnect
 
       class ContentReference < DataReference; end
       class GenerativeReference < DataReference; end
+      class SuggestedMessageReference < DataReference; end
       class Unknown < DataReference; end
     end
 
     # Summary of the data.
     #
-    # @!attribute [rw] details
-    #   Details about the data.
-    #   @return [Types::DataDetails]
-    #
     # @!attribute [rw] reference
     #   Reference information about the content.
     #   @return [Types::DataReference]
     #
+    # @!attribute [rw] details
+    #   Details about the data.
+    #   @return [Types::DataDetails]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/DataSummary AWS API Documentation
     #
     class DataSummary < Struct.new(
-      :details,
-      :reference)
+      :reference,
+      :details)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3491,21 +3862,21 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] ai_agent_id
-    #   The identifier of the Amazon Q in Connect AI Agent. Can be either
+    # @!attribute [rw] assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either
     #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
-    # @!attribute [rw] assistant_id
-    #   The identifier of the Amazon Q in Connect assistant. Can be either
+    # @!attribute [rw] ai_agent_id
+    #   The identifier of the Amazon Q in Connect AI Agent. Can be either
     #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/DeleteAIAgentRequest AWS API Documentation
     #
     class DeleteAIAgentRequest < Struct.new(
-      :ai_agent_id,
-      :assistant_id)
+      :assistant_id,
+      :ai_agent_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3514,13 +3885,13 @@ module Aws::QConnect
     #
     class DeleteAIAgentResponse < Aws::EmptyStructure; end
 
-    # @!attribute [rw] ai_agent_id
-    #   The identifier of the Amazon Q in Connect AI Agent. Can be either
+    # @!attribute [rw] assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either
     #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
-    # @!attribute [rw] assistant_id
-    #   The identifier of the Amazon Q in Connect assistant. Can be either
+    # @!attribute [rw] ai_agent_id
+    #   The identifier of the Amazon Q in Connect AI Agent. Can be either
     #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
@@ -3531,8 +3902,8 @@ module Aws::QConnect
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/DeleteAIAgentVersionRequest AWS API Documentation
     #
     class DeleteAIAgentVersionRequest < Struct.new(
-      :ai_agent_id,
       :assistant_id,
+      :ai_agent_id,
       :version_number)
       SENSITIVE = []
       include Aws::Structure
@@ -3542,21 +3913,21 @@ module Aws::QConnect
     #
     class DeleteAIAgentVersionResponse < Aws::EmptyStructure; end
 
-    # @!attribute [rw] ai_guardrail_id
-    #   The identifier of the Amazon Q in Connect AI Guardrail. Can be
-    #   either the ID or the ARN. URLs cannot contain the ARN.
-    #   @return [String]
-    #
     # @!attribute [rw] assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either
     #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
+    # @!attribute [rw] ai_guardrail_id
+    #   The identifier of the Amazon Q in Connect AI Guardrail. Can be
+    #   either the ID or the ARN. URLs cannot contain the ARN.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/DeleteAIGuardrailRequest AWS API Documentation
     #
     class DeleteAIGuardrailRequest < Struct.new(
-      :ai_guardrail_id,
-      :assistant_id)
+      :assistant_id,
+      :ai_guardrail_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3565,13 +3936,13 @@ module Aws::QConnect
     #
     class DeleteAIGuardrailResponse < Aws::EmptyStructure; end
 
-    # @!attribute [rw] ai_guardrail_id
-    #   The identifier of the Amazon Q in Connect AI Guardrail.
-    #   @return [String]
-    #
     # @!attribute [rw] assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either
     #   the ID or the ARN. URLs cannot contain the ARN.
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_guardrail_id
+    #   The identifier of the Amazon Q in Connect AI Guardrail.
     #   @return [String]
     #
     # @!attribute [rw] version_number
@@ -3581,8 +3952,8 @@ module Aws::QConnect
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/DeleteAIGuardrailVersionRequest AWS API Documentation
     #
     class DeleteAIGuardrailVersionRequest < Struct.new(
-      :ai_guardrail_id,
       :assistant_id,
+      :ai_guardrail_id,
       :version_number)
       SENSITIVE = []
       include Aws::Structure
@@ -3592,21 +3963,21 @@ module Aws::QConnect
     #
     class DeleteAIGuardrailVersionResponse < Aws::EmptyStructure; end
 
-    # @!attribute [rw] ai_prompt_id
-    #   The identifier of the Amazon Q in Connect AI prompt. Can be either
+    # @!attribute [rw] assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either
     #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
-    # @!attribute [rw] assistant_id
-    #   The identifier of the Amazon Q in Connect assistant. Can be either
+    # @!attribute [rw] ai_prompt_id
+    #   The identifier of the Amazon Q in Connect AI prompt. Can be either
     #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/DeleteAIPromptRequest AWS API Documentation
     #
     class DeleteAIPromptRequest < Struct.new(
-      :ai_prompt_id,
-      :assistant_id)
+      :assistant_id,
+      :ai_prompt_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3615,13 +3986,13 @@ module Aws::QConnect
     #
     class DeleteAIPromptResponse < Aws::EmptyStructure; end
 
-    # @!attribute [rw] ai_prompt_id
-    #   The identifier of the Amazon Q in Connect AI prompt.
-    #   @return [String]
-    #
     # @!attribute [rw] assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either
     #   the ID or the ARN. URLs cannot contain the ARN.
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_prompt_id
+    #   The identifier of the Amazon Q in Connect AI prompt.
     #   @return [String]
     #
     # @!attribute [rw] version_number
@@ -3631,8 +4002,8 @@ module Aws::QConnect
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/DeleteAIPromptVersionRequest AWS API Documentation
     #
     class DeleteAIPromptVersionRequest < Struct.new(
-      :ai_prompt_id,
       :assistant_id,
+      :ai_prompt_id,
       :version_number)
       SENSITIVE = []
       include Aws::Structure
@@ -3682,25 +4053,25 @@ module Aws::QConnect
     #
     class DeleteAssistantResponse < Aws::EmptyStructure; end
 
-    # @!attribute [rw] content_association_id
-    #   The identifier of the content association. Can be either the ID or
-    #   the ARN. URLs cannot contain the ARN.
+    # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base.
     #   @return [String]
     #
     # @!attribute [rw] content_id
     #   The identifier of the content.
     #   @return [String]
     #
-    # @!attribute [rw] knowledge_base_id
-    #   The identifier of the knowledge base.
+    # @!attribute [rw] content_association_id
+    #   The identifier of the content association. Can be either the ID or
+    #   the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/DeleteContentAssociationRequest AWS API Documentation
     #
     class DeleteContentAssociationRequest < Struct.new(
-      :content_association_id,
+      :knowledge_base_id,
       :content_id,
-      :knowledge_base_id)
+      :content_association_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3709,21 +4080,21 @@ module Aws::QConnect
     #
     class DeleteContentAssociationResponse < Aws::EmptyStructure; end
 
-    # @!attribute [rw] content_id
-    #   The identifier of the content. Can be either the ID or the ARN. URLs
-    #   cannot contain the ARN.
-    #   @return [String]
-    #
     # @!attribute [rw] knowledge_base_id
     #   The identifier of the knowledge base. Can be either the ID or the
     #   ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
+    # @!attribute [rw] content_id
+    #   The identifier of the content. Can be either the ID or the ARN. URLs
+    #   cannot contain the ARN.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/DeleteContentRequest AWS API Documentation
     #
     class DeleteContentRequest < Struct.new(
-      :content_id,
-      :knowledge_base_id)
+      :knowledge_base_id,
+      :content_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3732,19 +4103,19 @@ module Aws::QConnect
     #
     class DeleteContentResponse < Aws::EmptyStructure; end
 
-    # @!attribute [rw] import_job_id
-    #   The identifier of the import job to be deleted.
-    #   @return [String]
-    #
     # @!attribute [rw] knowledge_base_id
     #   The identifier of the knowledge base.
+    #   @return [String]
+    #
+    # @!attribute [rw] import_job_id
+    #   The identifier of the import job to be deleted.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/DeleteImportJobRequest AWS API Documentation
     #
     class DeleteImportJobRequest < Struct.new(
-      :import_job_id,
-      :knowledge_base_id)
+      :knowledge_base_id,
+      :import_job_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3770,10 +4141,6 @@ module Aws::QConnect
     #
     class DeleteKnowledgeBaseResponse < Aws::EmptyStructure; end
 
-    # @!attribute [rw] attachment_id
-    #   The identifier of the attachment file.
-    #   @return [String]
-    #
     # @!attribute [rw] knowledge_base_id
     #   The identifier of the knowledge base. Can be either the ID or the
     #   ARN. URLs cannot contain the ARN.
@@ -3784,12 +4151,16 @@ module Aws::QConnect
     #   ARN. It cannot contain any qualifier.
     #   @return [String]
     #
+    # @!attribute [rw] attachment_id
+    #   The identifier of the attachment file.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/DeleteMessageTemplateAttachmentRequest AWS API Documentation
     #
     class DeleteMessageTemplateAttachmentRequest < Struct.new(
-      :attachment_id,
       :knowledge_base_id,
-      :message_template_id)
+      :message_template_id,
+      :attachment_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3843,46 +4214,121 @@ module Aws::QConnect
     #
     class DeleteQuickResponseResponse < Aws::EmptyStructure; end
 
+    # The request failed because it depends on another request that failed.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/DependencyFailedException AWS API Documentation
+    #
+    class DependencyFailedException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The document.
     #
     # @!attribute [rw] content_reference
     #   A reference to the content resource.
     #   @return [Types::ContentReference]
     #
-    # @!attribute [rw] excerpt
-    #   The excerpt from the document.
-    #   @return [Types::DocumentText]
-    #
     # @!attribute [rw] title
     #   The title of the document.
+    #   @return [Types::DocumentText]
+    #
+    # @!attribute [rw] excerpt
+    #   The excerpt from the document.
     #   @return [Types::DocumentText]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/Document AWS API Documentation
     #
     class Document < Struct.new(
       :content_reference,
-      :excerpt,
-      :title)
+      :title,
+      :excerpt)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # The text of the document.
     #
-    # @!attribute [rw] highlights
-    #   Highlights in the document text.
-    #   @return [Array<Types::Highlight>]
-    #
     # @!attribute [rw] text
     #   Text in the document.
     #   @return [String]
     #
+    # @!attribute [rw] highlights
+    #   Highlights in the document text.
+    #   @return [Array<Types::Highlight>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/DocumentText AWS API Documentation
     #
     class DocumentText < Struct.new(
-      :highlights,
-      :text)
+      :text,
+      :highlights)
       SENSITIVE = [:text]
+      include Aws::Structure
+    end
+
+    # Configuration settings for the EMAIL\_GENERATIVE\_ANSWER AI agent
+    # including prompts, locale, and knowledge base associations.
+    #
+    # @!attribute [rw] email_generative_answer_ai_prompt_id
+    #   The ID of the System AI prompt used for generating comprehensive
+    #   knowledge-based answers from email queries.
+    #   @return [String]
+    #
+    # @!attribute [rw] email_query_reformulation_ai_prompt_id
+    #   The ID of the System AI prompt used for reformulating email queries
+    #   to optimize knowledge base search results.
+    #   @return [String]
+    #
+    # @!attribute [rw] locale
+    #   The locale setting for language-specific email processing and
+    #   response generation (for example, en\_US, es\_ES).
+    #   @return [String]
+    #
+    # @!attribute [rw] association_configurations
+    #   Configuration settings for knowledge base associations used by the
+    #   email generative answer agent.
+    #   @return [Array<Types::AssociationConfiguration>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/EmailGenerativeAnswerAIAgentConfiguration AWS API Documentation
+    #
+    class EmailGenerativeAnswerAIAgentConfiguration < Struct.new(
+      :email_generative_answer_ai_prompt_id,
+      :email_query_reformulation_ai_prompt_id,
+      :locale,
+      :association_configurations)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details of streaming chunk data for email generative answers including
+    # completion text and references.
+    #
+    # @!attribute [rw] completion
+    #   The partial or complete text content of the generative answer
+    #   response.
+    #   @return [String]
+    #
+    # @!attribute [rw] references
+    #   Source references and citations from knowledge base articles used to
+    #   generate the answer.
+    #   @return [Array<Types::DataSummary>]
+    #
+    # @!attribute [rw] next_chunk_token
+    #   Token for retrieving the next chunk of streaming response data, if
+    #   available.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/EmailGenerativeAnswerChunkDataDetails AWS API Documentation
+    #
+    class EmailGenerativeAnswerChunkDataDetails < Struct.new(
+      :completion,
+      :references,
+      :next_chunk_token)
+      SENSITIVE = [:completion]
       include Aws::Structure
     end
 
@@ -3908,6 +4354,10 @@ module Aws::QConnect
     # The content of the message template that applies to the email channel
     # subtype.
     #
+    # @!attribute [rw] subject
+    #   The subject line, or title, to use in email messages.
+    #   @return [String]
+    #
     # @!attribute [rw] body
     #   The body to use in email messages.
     #   @return [Types::EmailMessageTemplateContentBody]
@@ -3916,28 +4366,17 @@ module Aws::QConnect
     #   The email headers to include in email messages.
     #   @return [Array<Types::EmailHeader>]
     #
-    # @!attribute [rw] subject
-    #   The subject line, or title, to use in email messages.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/EmailMessageTemplateContent AWS API Documentation
     #
     class EmailMessageTemplateContent < Struct.new(
+      :subject,
       :body,
-      :headers,
-      :subject)
+      :headers)
       SENSITIVE = [:subject]
       include Aws::Structure
     end
 
     # The body to use in email messages.
-    #
-    # @!attribute [rw] html
-    #   The message body, in HTML format, to use in email messages that are
-    #   based on the message template. We recommend using HTML format for
-    #   email clients that render HTML content. You can include links,
-    #   formatted text, and more in an HTML message.
-    #   @return [Types::MessageTemplateBodyContentProvider]
     #
     # @!attribute [rw] plain_text
     #   The message body, in plain text format, to use in email messages
@@ -3947,57 +4386,131 @@ module Aws::QConnect
     #   devices.
     #   @return [Types::MessageTemplateBodyContentProvider]
     #
+    # @!attribute [rw] html
+    #   The message body, in HTML format, to use in email messages that are
+    #   based on the message template. We recommend using HTML format for
+    #   email clients that render HTML content. You can include links,
+    #   formatted text, and more in an HTML message.
+    #   @return [Types::MessageTemplateBodyContentProvider]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/EmailMessageTemplateContentBody AWS API Documentation
     #
     class EmailMessageTemplateContentBody < Struct.new(
-      :html,
-      :plain_text)
+      :plain_text,
+      :html)
       SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration settings for the EMAIL\_OVERVIEW AI agent including
+    # prompt ID and locale settings.
+    #
+    # @!attribute [rw] email_overview_ai_prompt_id
+    #   The ID of the System AI prompt used for generating structured email
+    #   conversation summaries.
+    #   @return [String]
+    #
+    # @!attribute [rw] locale
+    #   The locale setting for language-specific email overview processing
+    #   (for example, en\_US, es\_ES).
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/EmailOverviewAIAgentConfiguration AWS API Documentation
+    #
+    class EmailOverviewAIAgentConfiguration < Struct.new(
+      :email_overview_ai_prompt_id,
+      :locale)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details of streaming chunk data for email overview including
+    # completion text and pagination tokens.
+    #
+    # @!attribute [rw] completion
+    #   The partial or complete overview text content in structured HTML
+    #   format with customer issues, resolutions, and next steps.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_chunk_token
+    #   Token for retrieving the next chunk of streaming overview data, if
+    #   available.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/EmailOverviewChunkDataDetails AWS API Documentation
+    #
+    class EmailOverviewChunkDataDetails < Struct.new(
+      :completion,
+      :next_chunk_token)
+      SENSITIVE = [:completion]
+      include Aws::Structure
+    end
+
+    # Configuration settings for the EMAIL\_RESPONSE AI agent including
+    # prompts, locale, and knowledge base associations.
+    #
+    # @!attribute [rw] email_response_ai_prompt_id
+    #   The ID of the System AI prompt used for generating professional
+    #   email responses based on knowledge base content.
+    #   @return [String]
+    #
+    # @!attribute [rw] email_query_reformulation_ai_prompt_id
+    #   The ID of the System AI prompt used for reformulating email queries
+    #   to optimize knowledge base search for response generation.
+    #   @return [String]
+    #
+    # @!attribute [rw] locale
+    #   The locale setting for language-specific email response generation
+    #   (for example, en\_US, es\_ES).
+    #   @return [String]
+    #
+    # @!attribute [rw] association_configurations
+    #   Configuration settings for knowledge base associations used by the
+    #   email response agent.
+    #   @return [Array<Types::AssociationConfiguration>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/EmailResponseAIAgentConfiguration AWS API Documentation
+    #
+    class EmailResponseAIAgentConfiguration < Struct.new(
+      :email_response_ai_prompt_id,
+      :email_query_reformulation_ai_prompt_id,
+      :locale,
+      :association_configurations)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details of streaming chunk data for email responses including
+    # completion text and pagination tokens.
+    #
+    # @!attribute [rw] completion
+    #   The partial or complete professional email response text with
+    #   appropriate greetings and closings.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_chunk_token
+    #   Token for retrieving the next chunk of streaming response data, if
+    #   available.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/EmailResponseChunkDataDetails AWS API Documentation
+    #
+    class EmailResponseChunkDataDetails < Struct.new(
+      :completion,
+      :next_chunk_token)
+      SENSITIVE = [:completion]
       include Aws::Structure
     end
 
     # The extended data of a message template.
     #
-    # @!attribute [rw] attachments
-    #   The message template attachments.
-    #   @return [Array<Types::MessageTemplateAttachment>]
-    #
-    # @!attribute [rw] attribute_types
-    #   The types of attributes contain the message template.
-    #   @return [Array<String>]
-    #
-    # @!attribute [rw] channel_subtype
-    #   The channel subtype this message template applies to.
+    # @!attribute [rw] message_template_arn
+    #   The Amazon Resource Name (ARN) of the message template.
     #   @return [String]
     #
-    # @!attribute [rw] content
-    #   The content of the message template.
-    #   @return [Types::MessageTemplateContentProvider]
-    #
-    # @!attribute [rw] created_time
-    #   The timestamp when the message template was created.
-    #   @return [Time]
-    #
-    # @!attribute [rw] default_attributes
-    #   An object that specifies the default values to use for variables in
-    #   the message template. This object contains different categories of
-    #   key-value pairs. Each key defines a variable or placeholder in the
-    #   message template. The corresponding value defines the default value
-    #   for that variable.
-    #   @return [Types::MessageTemplateAttributes]
-    #
-    # @!attribute [rw] description
-    #   The description of the message template.
+    # @!attribute [rw] message_template_id
+    #   The identifier of the message template.
     #   @return [String]
-    #
-    # @!attribute [rw] grouping_configuration
-    #   The configuration information of the grouping of Amazon Q in Connect
-    #   users.
-    #   @return [Types::GroupingConfiguration]
-    #
-    # @!attribute [rw] is_active
-    #   Whether the version of the message template is activated.
-    #   @return [Boolean]
     #
     # @!attribute [rw] knowledge_base_arn
     #   The Amazon Resource Name (ARN) of the knowledge base.
@@ -4007,6 +4520,39 @@ module Aws::QConnect
     #   The identifier of the knowledge base.
     #   @return [String]
     #
+    # @!attribute [rw] name
+    #   The name of the message template.
+    #   @return [String]
+    #
+    # @!attribute [rw] channel
+    #   The channel of the message template.
+    #   @return [String]
+    #
+    # @!attribute [rw] channel_subtype
+    #   The channel subtype this message template applies to.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_time
+    #   The timestamp when the message template was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] last_modified_time
+    #   The timestamp when the message template data was last modified.
+    #   @return [Time]
+    #
+    # @!attribute [rw] last_modified_by
+    #   The Amazon Resource Name (ARN) of the user who last updated the
+    #   message template data.
+    #   @return [String]
+    #
+    # @!attribute [rw] content
+    #   The content of the message template.
+    #   @return [Types::MessageTemplateContentProvider]
+    #
+    # @!attribute [rw] description
+    #   The description of the message template.
+    #   @return [String]
+    #
     # @!attribute [rw] language
     #   The language code value for the language in which the quick response
     #   is written. The supported language codes include `de_DE`, `en_US`,
@@ -4014,18 +4560,38 @@ module Aws::QConnect
     #   `zh_CN`, `zh_TW`
     #   @return [String]
     #
-    # @!attribute [rw] last_modified_by
-    #   The Amazon Resource Name (ARN) of the user who last updated the
-    #   message template data.
-    #   @return [String]
+    # @!attribute [rw] source_configuration_summary
+    #   The source configuration summary of the message template.
+    #   @return [Types::MessageTemplateSourceConfigurationSummary]
     #
-    # @!attribute [rw] last_modified_time
-    #   The timestamp when the message template data was last modified.
-    #   @return [Time]
+    # @!attribute [rw] grouping_configuration
+    #   The configuration information of the grouping of Amazon Q in Connect
+    #   users.
+    #   @return [Types::GroupingConfiguration]
     #
-    # @!attribute [rw] message_template_arn
-    #   The Amazon Resource Name (ARN) of the message template.
-    #   @return [String]
+    # @!attribute [rw] default_attributes
+    #   An object that specifies the default values to use for variables in
+    #   the message template. This object contains different categories of
+    #   key-value pairs. Each key defines a variable or placeholder in the
+    #   message template. The corresponding value defines the default value
+    #   for that variable.
+    #   @return [Types::MessageTemplateAttributes]
+    #
+    # @!attribute [rw] attribute_types
+    #   The types of attributes contain the message template.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] attachments
+    #   The message template attachments.
+    #   @return [Array<Types::MessageTemplateAttachment>]
+    #
+    # @!attribute [rw] is_active
+    #   Whether the version of the message template is activated.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] version_number
+    #   The version number of the message template version.
+    #   @return [Integer]
     #
     # @!attribute [rw] message_template_content_sha_256
     #   The checksum value of the message template content that is
@@ -4035,65 +4601,76 @@ module Aws::QConnect
     #   `Attachments` of the message template.
     #   @return [String]
     #
-    # @!attribute [rw] message_template_id
-    #   The identifier of the message template.
-    #   @return [String]
-    #
-    # @!attribute [rw] name
-    #   The name of the message template.
-    #   @return [String]
-    #
     # @!attribute [rw] tags
     #   The tags used to organize, track, or control access for this
     #   resource.
     #   @return [Hash<String,String>]
     #
-    # @!attribute [rw] version_number
-    #   The version number of the message template version.
-    #   @return [Integer]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ExtendedMessageTemplateData AWS API Documentation
     #
     class ExtendedMessageTemplateData < Struct.new(
-      :attachments,
-      :attribute_types,
-      :channel_subtype,
-      :content,
-      :created_time,
-      :default_attributes,
-      :description,
-      :grouping_configuration,
-      :is_active,
+      :message_template_arn,
+      :message_template_id,
       :knowledge_base_arn,
       :knowledge_base_id,
-      :language,
-      :last_modified_by,
-      :last_modified_time,
-      :message_template_arn,
-      :message_template_content_sha_256,
-      :message_template_id,
       :name,
-      :tags,
-      :version_number)
+      :channel,
+      :channel_subtype,
+      :created_time,
+      :last_modified_time,
+      :last_modified_by,
+      :content,
+      :description,
+      :language,
+      :source_configuration_summary,
+      :grouping_configuration,
+      :default_attributes,
+      :attribute_types,
+      :attachments,
+      :is_active,
+      :version_number,
+      :message_template_content_sha_256,
+      :tags)
+      SENSITIVE = [:channel]
+      include Aws::Structure
+    end
+
+    # Configuration for an external Bedrock knowledge base.
+    #
+    # @!attribute [rw] bedrock_knowledge_base_arn
+    #   The Amazon Resource Name (ARN) of the external Bedrock knowledge
+    #   base.
+    #   @return [String]
+    #
+    # @!attribute [rw] access_role_arn
+    #   The Amazon Resource Name (ARN) of the IAM role used to access the
+    #   external Bedrock knowledge base.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ExternalBedrockKnowledgeBaseConfig AWS API Documentation
+    #
+    class ExternalBedrockKnowledgeBaseConfig < Struct.new(
+      :bedrock_knowledge_base_arn,
+      :access_role_arn)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # The configuration information of the external data source.
     #
-    # @!attribute [rw] configuration
-    #   The configuration information of the external data source.
-    #   @return [Types::Configuration]
-    #
     # @!attribute [rw] source
     #   The type of the external data source.
     #   @return [String]
     #
+    # @!attribute [rw] configuration
+    #   The configuration information of the external data source.
+    #   @return [Types::Configuration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ExternalSourceConfiguration AWS API Documentation
     #
     class ExternalSourceConfiguration < Struct.new(
-      :configuration,
-      :source)
+      :source,
+      :configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4123,6 +4700,25 @@ module Aws::QConnect
       include Aws::Structure
     end
 
+    # An attribute used for filtering.
+    #
+    # @!attribute [rw] key
+    #   The key of the filter attribute.
+    #   @return [String]
+    #
+    # @!attribute [rw] value
+    #   The value of the filter attribute.
+    #   @return [Hash,Array,String,Numeric,Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/FilterAttribute AWS API Documentation
+    #
+    class FilterAttribute < Struct.new(
+      :key,
+      :value)
+      SENSITIVE = [:value]
+      include Aws::Structure
+    end
+
     # Configurations for when you choose fixed-size chunking. If you set the
     # `chunkingStrategy` as `NONE`, exclude this field.
     #
@@ -4140,6 +4736,32 @@ module Aws::QConnect
       :max_tokens,
       :overlap_percentage)
       SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details about the generative chunk data.
+    #
+    # @!attribute [rw] completion
+    #   A chunk of the LLM response.
+    #   @return [String]
+    #
+    # @!attribute [rw] references
+    #   The references used to generate the LLM response.
+    #   @return [Array<Types::DataSummary>]
+    #
+    # @!attribute [rw] next_chunk_token
+    #   The token for the next set of chunks. Use the value returned in the
+    #   previous response in the next request to retrieve the next set of
+    #   chunks.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GenerativeChunkDataDetails AWS API Documentation
+    #
+    class GenerativeChunkDataDetails < Struct.new(
+      :completion,
+      :references,
+      :next_chunk_token)
+      SENSITIVE = [:completion]
       include Aws::Structure
     end
 
@@ -4163,59 +4785,59 @@ module Aws::QConnect
     #   The LLM response.
     #   @return [String]
     #
-    # @!attribute [rw] ranking_data
-    #   Details about the generative content ranking data.
-    #   @return [Types::RankingData]
-    #
     # @!attribute [rw] references
     #   The references used to generative the LLM response.
     #   @return [Array<Types::DataSummary>]
+    #
+    # @!attribute [rw] ranking_data
+    #   Details about the generative content ranking data.
+    #   @return [Types::RankingData]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GenerativeDataDetails AWS API Documentation
     #
     class GenerativeDataDetails < Struct.new(
       :completion,
-      :ranking_data,
-      :references)
+      :references,
+      :ranking_data)
       SENSITIVE = [:completion]
       include Aws::Structure
     end
 
     # Reference information about generative content.
     #
-    # @!attribute [rw] generation_id
+    # @!attribute [rw] model_id
     #   The identifier of the LLM model.
     #   @return [String]
     #
-    # @!attribute [rw] model_id
+    # @!attribute [rw] generation_id
     #   The identifier of the LLM model.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GenerativeReference AWS API Documentation
     #
     class GenerativeReference < Struct.new(
-      :generation_id,
-      :model_id)
+      :model_id,
+      :generation_id)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # @!attribute [rw] assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either
+    #   the ID or the ARN. URLs cannot contain the ARN.
+    #   @return [String]
+    #
     # @!attribute [rw] ai_agent_id
     #   The identifier of the Amazon Q in Connect AI Agent (with or without
     #   a version qualifier). Can be either the ID or the ARN. URLs cannot
     #   contain the ARN.
     #   @return [String]
     #
-    # @!attribute [rw] assistant_id
-    #   The identifier of the Amazon Q in Connect assistant. Can be either
-    #   the ID or the ARN. URLs cannot contain the ARN.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GetAIAgentRequest AWS API Documentation
     #
     class GetAIAgentRequest < Struct.new(
-      :ai_agent_id,
-      :assistant_id)
+      :assistant_id,
+      :ai_agent_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4239,20 +4861,20 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] ai_guardrail_id
-    #   The identifier of the Amazon Q in Connect AI Guardrail.
-    #   @return [String]
-    #
     # @!attribute [rw] assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either
     #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
+    # @!attribute [rw] ai_guardrail_id
+    #   The identifier of the Amazon Q in Connect AI Guardrail.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GetAIGuardrailRequest AWS API Documentation
     #
     class GetAIGuardrailRequest < Struct.new(
-      :ai_guardrail_id,
-      :assistant_id)
+      :assistant_id,
+      :ai_guardrail_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4276,20 +4898,20 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] ai_prompt_id
-    #   The identifier of the Amazon Q in Connect AI prompt.
-    #   @return [String]
-    #
     # @!attribute [rw] assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either
     #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
+    # @!attribute [rw] ai_prompt_id
+    #   The identifier of the Amazon Q in Connect AI prompt.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GetAIPromptRequest AWS API Documentation
     #
     class GetAIPromptRequest < Struct.new(
-      :ai_prompt_id,
-      :assistant_id)
+      :assistant_id,
+      :ai_prompt_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4369,25 +4991,25 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] content_association_id
-    #   The identifier of the content association. Can be either the ID or
-    #   the ARN. URLs cannot contain the ARN.
+    # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base.
     #   @return [String]
     #
     # @!attribute [rw] content_id
     #   The identifier of the content.
     #   @return [String]
     #
-    # @!attribute [rw] knowledge_base_id
-    #   The identifier of the knowledge base.
+    # @!attribute [rw] content_association_id
+    #   The identifier of the content association. Can be either the ID or
+    #   the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GetContentAssociationRequest AWS API Documentation
     #
     class GetContentAssociationRequest < Struct.new(
-      :content_association_id,
+      :knowledge_base_id,
       :content_id,
-      :knowledge_base_id)
+      :content_association_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4522,21 +5144,21 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] knowledge_base_id
-    #   The identifier of the knowledge base. Can be either the ID or the
-    #   ARN. URLs cannot contain the ARN.
-    #   @return [String]
-    #
     # @!attribute [rw] message_template_id
     #   The identifier of the message template. Can be either the ID or the
     #   ARN.
     #   @return [String]
     #
+    # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base. Can be either the ID or the
+    #   ARN. URLs cannot contain the ARN.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GetMessageTemplateRequest AWS API Documentation
     #
     class GetMessageTemplateRequest < Struct.new(
-      :knowledge_base_id,
-      :message_template_id)
+      :message_template_id,
+      :knowledge_base_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4557,29 +5179,37 @@ module Aws::QConnect
     #   The identifier of the Amazon Q in Connect assistant.
     #   @return [String]
     #
+    # @!attribute [rw] session_id
+    #   The identifier of the Amazon Q in Connect session.
+    #   @return [String]
+    #
     # @!attribute [rw] next_message_token
     #   The token for the next message. Use the value returned in the
     #   SendMessage or previous response in the next request to retrieve the
     #   next message.
     #   @return [String]
     #
-    # @!attribute [rw] session_id
-    #   The identifier of the Amazon Q in Connect session.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GetNextMessageRequest AWS API Documentation
     #
     class GetNextMessageRequest < Struct.new(
       :assistant_id,
-      :next_message_token,
-      :session_id)
+      :session_id,
+      :next_message_token)
       SENSITIVE = []
       include Aws::Structure
     end
 
-    # @!attribute [rw] conversation_session_data
-    #   The conversation data stored on an Amazon Q in Connect Session.
-    #   @return [Array<Types::RuntimeSessionData>]
+    # @!attribute [rw] type
+    #   The type of message response.
+    #   @return [String]
+    #
+    # @!attribute [rw] response
+    #   The message response to the requested message.
+    #   @return [Types::MessageOutput]
+    #
+    # @!attribute [rw] request_message_id
+    #   The identifier of the submitted message.
+    #   @return [String]
     #
     # @!attribute [rw] conversation_state
     #   The state of current conversation.
@@ -4589,45 +5219,42 @@ module Aws::QConnect
     #   The token for the next message.
     #   @return [String]
     #
-    # @!attribute [rw] request_message_id
-    #   The identifier of the submitted message.
-    #   @return [String]
+    # @!attribute [rw] conversation_session_data
+    #   The conversation data stored on an Amazon Q in Connect Session.
+    #   @return [Array<Types::RuntimeSessionData>]
     #
-    # @!attribute [rw] response
-    #   The message response to the requested message.
-    #   @return [Types::MessageOutput]
-    #
-    # @!attribute [rw] type
-    #   The type of message response.
-    #   @return [String]
+    # @!attribute [rw] chunked_response_terminated
+    #   Indicates whether the chunked response has been terminated.
+    #   @return [Boolean]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GetNextMessageResponse AWS API Documentation
     #
     class GetNextMessageResponse < Struct.new(
-      :conversation_session_data,
+      :type,
+      :response,
+      :request_message_id,
       :conversation_state,
       :next_message_token,
-      :request_message_id,
-      :response,
-      :type)
+      :conversation_session_data,
+      :chunked_response_terminated)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # @!attribute [rw] quick_response_id
+    #   The identifier of the quick response.
+    #   @return [String]
+    #
     # @!attribute [rw] knowledge_base_id
     #   The identifier of the knowledge base. This should be a
     #   QUICK\_RESPONSES type knowledge base.
     #   @return [String]
     #
-    # @!attribute [rw] quick_response_id
-    #   The identifier of the quick response.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GetQuickResponseRequest AWS API Documentation
     #
     class GetQuickResponseRequest < Struct.new(
-      :knowledge_base_id,
-      :quick_response_id)
+      :quick_response_id,
+      :knowledge_base_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4649,14 +5276,14 @@ module Aws::QConnect
     #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
-    # @!attribute [rw] max_results
-    #   The maximum number of results to return per page.
-    #   @return [Integer]
-    #
     # @!attribute [rw] session_id
     #   The identifier of the session. Can be either the ID or the ARN. URLs
     #   cannot contain the ARN.
     #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per page.
+    #   @return [Integer]
     #
     # @!attribute [rw] wait_time_seconds
     #   The duration (in seconds) for which the call waits for a
@@ -4666,13 +5293,25 @@ module Aws::QConnect
     #   expires, the call returns successfully with an empty list.
     #   @return [Integer]
     #
+    # @!attribute [rw] next_chunk_token
+    #   The token for the next set of chunks. Use the value returned in the
+    #   previous response in the next request to retrieve the next set of
+    #   chunks.
+    #   @return [String]
+    #
+    # @!attribute [rw] recommendation_type
+    #   The type of recommendation being requested.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GetRecommendationsRequest AWS API Documentation
     #
     class GetRecommendationsRequest < Struct.new(
       :assistant_id,
-      :max_results,
       :session_id,
-      :wait_time_seconds)
+      :max_results,
+      :wait_time_seconds,
+      :next_chunk_token,
+      :recommendation_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4804,6 +5443,10 @@ module Aws::QConnect
     # Insults</i> with LOW confidence, *Sexual* with NONE confidence, and
     # *Violence* with MEDIUM confidence.
     #
+    # @!attribute [rw] type
+    #   The harmful category that the content filter is applied to.
+    #   @return [String]
+    #
     # @!attribute [rw] input_strength
     #   The strength of the content filter to apply to prompts. As you
     #   increase the filter strength, the likelihood of filtering harmful
@@ -4818,38 +5461,34 @@ module Aws::QConnect
     #   content in your application reduces.
     #   @return [String]
     #
-    # @!attribute [rw] type
-    #   The harmful category that the content filter is applied to.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GuardrailContentFilterConfig AWS API Documentation
     #
     class GuardrailContentFilterConfig < Struct.new(
+      :type,
       :input_strength,
-      :output_strength,
-      :type)
-      SENSITIVE = [:input_strength, :output_strength, :type]
+      :output_strength)
+      SENSITIVE = [:type, :input_strength, :output_strength]
       include Aws::Structure
     end
 
     # The filter configuration details for the AI Guardrail's contextual
     # grounding filter.
     #
+    # @!attribute [rw] type
+    #   The filter type for the AI Guardrail's contextual grounding filter.
+    #   @return [String]
+    #
     # @!attribute [rw] threshold
     #   The threshold details for the AI Guardrail's contextual grounding
     #   filter.
     #   @return [Float]
     #
-    # @!attribute [rw] type
-    #   The filter type for the AI Guardrail's contextual grounding filter.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GuardrailContextualGroundingFilterConfig AWS API Documentation
     #
     class GuardrailContextualGroundingFilterConfig < Struct.new(
-      :threshold,
-      :type)
-      SENSITIVE = [:threshold, :type]
+      :type,
+      :threshold)
+      SENSITIVE = [:type, :threshold]
       include Aws::Structure
     end
 
@@ -4868,10 +5507,6 @@ module Aws::QConnect
     end
 
     # The PII entity to configure for the AI Guardrail.
-    #
-    # @!attribute [rw] action
-    #   Configure AI Guardrail's action when the PII entity is detected.
-    #   @return [String]
     #
     # @!attribute [rw] type
     #   Configure AI Guardrail type when the PII entity is detected.
@@ -5096,20 +5731,49 @@ module Aws::QConnect
     #   [2]: https://www.wikipedia.org/wiki/Luhn_algorithm
     #   @return [String]
     #
+    # @!attribute [rw] action
+    #   Configure AI Guardrail's action when the PII entity is detected.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GuardrailPiiEntityConfig AWS API Documentation
     #
     class GuardrailPiiEntityConfig < Struct.new(
+      :type,
+      :action)
+      SENSITIVE = [:type, :action]
+      include Aws::Structure
+    end
+
+    # Per-policy guardrail assessment result. Captures which policy
+    # triggered, its outcome, and a policy-specific detail string.
+    #
+    # @!attribute [rw] policy_type
+    #   The type of guardrail policy that was evaluated.
+    #   @return [String]
+    #
+    # @!attribute [rw] action
+    #   Outcome of this specific policy.
+    #   @return [String]
+    #
+    # @!attribute [rw] details
+    #   Policy-specific detail.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GuardrailPolicyResult AWS API Documentation
+    #
+    class GuardrailPolicyResult < Struct.new(
+      :policy_type,
       :action,
-      :type)
-      SENSITIVE = [:action, :type]
+      :details)
+      SENSITIVE = []
       include Aws::Structure
     end
 
     # The regular expression to configure for the AI Guardrail.
     #
-    # @!attribute [rw] action
-    #   The AI Guardrail action to configure when matching regular
-    #   expression is detected.
+    # @!attribute [rw] name
+    #   The name of the regular expression to configure for the AI
+    #   Guardrail.
     #   @return [String]
     #
     # @!attribute [rw] description
@@ -5117,27 +5781,31 @@ module Aws::QConnect
     #   Guardrail.
     #   @return [String]
     #
-    # @!attribute [rw] name
-    #   The name of the regular expression to configure for the AI
-    #   Guardrail.
-    #   @return [String]
-    #
     # @!attribute [rw] pattern
     #   The regular expression pattern to configure for the AI Guardrail.
+    #   @return [String]
+    #
+    # @!attribute [rw] action
+    #   The AI Guardrail action to configure when matching regular
+    #   expression is detected.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GuardrailRegexConfig AWS API Documentation
     #
     class GuardrailRegexConfig < Struct.new(
-      :action,
-      :description,
       :name,
-      :pattern)
-      SENSITIVE = [:action, :description, :name, :pattern]
+      :description,
+      :pattern,
+      :action)
+      SENSITIVE = [:name, :description, :pattern, :action]
       include Aws::Structure
     end
 
     # Details about topics for the AI Guardrail to identify and deny.
+    #
+    # @!attribute [rw] name
+    #   The name of the topic to deny.
+    #   @return [String]
     #
     # @!attribute [rw] definition
     #   A definition of the topic to deny.
@@ -5148,10 +5816,6 @@ module Aws::QConnect
     #   be categorized as belonging to the topic.
     #   @return [Array<String>]
     #
-    # @!attribute [rw] name
-    #   The name of the topic to deny.
-    #   @return [String]
-    #
     # @!attribute [rw] type
     #   Specifies to deny the topic.
     #   @return [String]
@@ -5159,11 +5823,11 @@ module Aws::QConnect
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/GuardrailTopicConfig AWS API Documentation
     #
     class GuardrailTopicConfig < Struct.new(
+      :name,
       :definition,
       :examples,
-      :name,
       :type)
-      SENSITIVE = [:definition, :examples, :name, :type]
+      SENSITIVE = [:name, :definition, :examples, :type]
       include Aws::Structure
     end
 
@@ -5239,34 +5903,52 @@ module Aws::QConnect
 
     # Summary information about the import job.
     #
-    # @!attribute [rw] created_time
-    #   The timestamp when the import job was created.
-    #   @return [Time]
-    #
-    # @!attribute [rw] external_source_configuration
-    #   The configuration information of the external data source.
-    #   @return [Types::ExternalSourceConfiguration]
-    #
-    # @!attribute [rw] failed_record_report
-    #   The link to download the information of resource data that failed to
-    #   be imported.
-    #   @return [String]
-    #
     # @!attribute [rw] import_job_id
     #   The identifier of the import job.
     #   @return [String]
     #
-    # @!attribute [rw] import_job_type
-    #   The type of the import job.
+    # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base.
+    #   @return [String]
+    #
+    # @!attribute [rw] upload_id
+    #   A pointer to the uploaded asset. This value is returned by
+    #   [StartContentUpload][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/wisdom/latest/APIReference/API_StartContentUpload.html
     #   @return [String]
     #
     # @!attribute [rw] knowledge_base_arn
     #   The Amazon Resource Name (ARN) of the knowledge base.
     #   @return [String]
     #
-    # @!attribute [rw] knowledge_base_id
-    #   The identifier of the knowledge base.
+    # @!attribute [rw] import_job_type
+    #   The type of the import job.
     #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the import job.
+    #   @return [String]
+    #
+    # @!attribute [rw] url
+    #   The download link to the resource file that is uploaded to the
+    #   import job.
+    #   @return [String]
+    #
+    # @!attribute [rw] failed_record_report
+    #   The link to download the information of resource data that failed to
+    #   be imported.
+    #   @return [String]
+    #
+    # @!attribute [rw] url_expiry
+    #   The expiration time of the URL as an epoch timestamp.
+    #   @return [Time]
+    #
+    # @!attribute [rw] created_time
+    #   The timestamp when the import job was created.
+    #   @return [Time]
     #
     # @!attribute [rw] last_modified_time
     #   The timestamp when the import job data was last modified.
@@ -5276,8 +5958,38 @@ module Aws::QConnect
     #   The metadata fields of the imported Amazon Q in Connect resources.
     #   @return [Hash<String,String>]
     #
-    # @!attribute [rw] status
-    #   The status of the import job.
+    # @!attribute [rw] external_source_configuration
+    #   The configuration information of the external data source.
+    #   @return [Types::ExternalSourceConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ImportJobData AWS API Documentation
+    #
+    class ImportJobData < Struct.new(
+      :import_job_id,
+      :knowledge_base_id,
+      :upload_id,
+      :knowledge_base_arn,
+      :import_job_type,
+      :status,
+      :url,
+      :failed_record_report,
+      :url_expiry,
+      :created_time,
+      :last_modified_time,
+      :metadata,
+      :external_source_configuration)
+      SENSITIVE = [:url, :failed_record_report]
+      include Aws::Structure
+    end
+
+    # Summary information about the import job.
+    #
+    # @!attribute [rw] import_job_id
+    #   The identifier of the import job.
+    #   @return [String]
+    #
+    # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base.
     #   @return [String]
     #
     # @!attribute [rw] upload_id
@@ -5289,61 +6001,21 @@ module Aws::QConnect
     #   [1]: https://docs.aws.amazon.com/wisdom/latest/APIReference/API_StartContentUpload.html
     #   @return [String]
     #
-    # @!attribute [rw] url
-    #   The download link to the resource file that is uploaded to the
-    #   import job.
-    #   @return [String]
-    #
-    # @!attribute [rw] url_expiry
-    #   The expiration time of the URL as an epoch timestamp.
-    #   @return [Time]
-    #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ImportJobData AWS API Documentation
-    #
-    class ImportJobData < Struct.new(
-      :created_time,
-      :external_source_configuration,
-      :failed_record_report,
-      :import_job_id,
-      :import_job_type,
-      :knowledge_base_arn,
-      :knowledge_base_id,
-      :last_modified_time,
-      :metadata,
-      :status,
-      :upload_id,
-      :url,
-      :url_expiry)
-      SENSITIVE = [:failed_record_report, :url]
-      include Aws::Structure
-    end
-
-    # Summary information about the import job.
-    #
-    # @!attribute [rw] created_time
-    #   The timestamp when the import job was created.
-    #   @return [Time]
-    #
-    # @!attribute [rw] external_source_configuration
-    #   The configuration information of the external source that the
-    #   resource data are imported from.
-    #   @return [Types::ExternalSourceConfiguration]
-    #
-    # @!attribute [rw] import_job_id
-    #   The identifier of the import job.
+    # @!attribute [rw] knowledge_base_arn
+    #   The Amazon Resource Name (ARN) of the knowledge base.
     #   @return [String]
     #
     # @!attribute [rw] import_job_type
     #   The type of import job.
     #   @return [String]
     #
-    # @!attribute [rw] knowledge_base_arn
-    #   The Amazon Resource Name (ARN) of the knowledge base.
+    # @!attribute [rw] status
+    #   The status of the import job.
     #   @return [String]
     #
-    # @!attribute [rw] knowledge_base_id
-    #   The identifier of the knowledge base.
-    #   @return [String]
+    # @!attribute [rw] created_time
+    #   The timestamp when the import job was created.
+    #   @return [Time]
     #
     # @!attribute [rw] last_modified_time
     #   The timestamp when the import job was last modified.
@@ -5353,32 +6025,24 @@ module Aws::QConnect
     #   The metadata fields of the imported Amazon Q in Connect resources.
     #   @return [Hash<String,String>]
     #
-    # @!attribute [rw] status
-    #   The status of the import job.
-    #   @return [String]
-    #
-    # @!attribute [rw] upload_id
-    #   A pointer to the uploaded asset. This value is returned by
-    #   [StartContentUpload][1].
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/wisdom/latest/APIReference/API_StartContentUpload.html
-    #   @return [String]
+    # @!attribute [rw] external_source_configuration
+    #   The configuration information of the external source that the
+    #   resource data are imported from.
+    #   @return [Types::ExternalSourceConfiguration]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ImportJobSummary AWS API Documentation
     #
     class ImportJobSummary < Struct.new(
-      :created_time,
-      :external_source_configuration,
       :import_job_id,
-      :import_job_type,
-      :knowledge_base_arn,
       :knowledge_base_id,
+      :upload_id,
+      :knowledge_base_arn,
+      :import_job_type,
+      :status,
+      :created_time,
       :last_modified_time,
       :metadata,
-      :status,
-      :upload_id)
+      :external_source_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5393,11 +6057,16 @@ module Aws::QConnect
     #   The identifier of the detected intent.
     #   @return [String]
     #
+    # @!attribute [rw] relevance_level
+    #   The relevance level of the detected intent.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/IntentDetectedDataDetails AWS API Documentation
     #
     class IntentDetectedDataDetails < Struct.new(
       :intent,
-      :intent_id)
+      :intent_id,
+      :relevance_level)
       SENSITIVE = [:intent]
       include Aws::Structure
     end
@@ -5445,47 +6114,43 @@ module Aws::QConnect
 
     # Association information about the knowledge base.
     #
-    # @!attribute [rw] knowledge_base_arn
-    #   The Amazon Resource Name (ARN) of the knowledge base.
-    #   @return [String]
-    #
     # @!attribute [rw] knowledge_base_id
     #   The identifier of the knowledge base.
+    #   @return [String]
+    #
+    # @!attribute [rw] knowledge_base_arn
+    #   The Amazon Resource Name (ARN) of the knowledge base.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/KnowledgeBaseAssociationData AWS API Documentation
     #
     class KnowledgeBaseAssociationData < Struct.new(
-      :knowledge_base_arn,
-      :knowledge_base_id)
+      :knowledge_base_id,
+      :knowledge_base_arn)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # Information about the knowledge base.
     #
-    # @!attribute [rw] description
-    #   The description.
-    #   @return [String]
-    #
-    # @!attribute [rw] ingestion_failure_reasons
-    #   List of failure reasons on ingestion per file.
-    #   @return [Array<String>]
-    #
-    # @!attribute [rw] ingestion_status
-    #   Status of ingestion on data source.
+    # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base.
     #   @return [String]
     #
     # @!attribute [rw] knowledge_base_arn
     #   The Amazon Resource Name (ARN) of the knowledge base.
     #   @return [String]
     #
-    # @!attribute [rw] knowledge_base_id
-    #   The identifier of the knowledge base.
+    # @!attribute [rw] name
+    #   The name of the knowledge base.
     #   @return [String]
     #
     # @!attribute [rw] knowledge_base_type
     #   The type of knowledge base.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the knowledge base.
     #   @return [String]
     #
     # @!attribute [rw] last_content_modification_time
@@ -5494,9 +6159,13 @@ module Aws::QConnect
     #   this value is unset.
     #   @return [Time]
     #
-    # @!attribute [rw] name
-    #   The name of the knowledge base.
-    #   @return [String]
+    # @!attribute [rw] vector_ingestion_configuration
+    #   Contains details about how to ingest the documents in a data source.
+    #   @return [Types::VectorIngestionConfiguration]
+    #
+    # @!attribute [rw] source_configuration
+    #   Source configuration information about the knowledge base.
+    #   @return [Types::SourceConfiguration]
     #
     # @!attribute [rw] rendering_configuration
     #   Information about how to render the content.
@@ -5520,12 +6189,8 @@ module Aws::QConnect
     #   [1]: https://docs.aws.amazon.com/connect/latest/adminguide/enable-q.html
     #   @return [Types::ServerSideEncryptionConfiguration]
     #
-    # @!attribute [rw] source_configuration
-    #   Source configuration information about the knowledge base.
-    #   @return [Types::SourceConfiguration]
-    #
-    # @!attribute [rw] status
-    #   The status of the knowledge base.
+    # @!attribute [rw] description
+    #   The description.
     #   @return [String]
     #
     # @!attribute [rw] tags
@@ -5533,52 +6198,64 @@ module Aws::QConnect
     #   resource.
     #   @return [Hash<String,String>]
     #
-    # @!attribute [rw] vector_ingestion_configuration
-    #   Contains details about how to ingest the documents in a data source.
-    #   @return [Types::VectorIngestionConfiguration]
+    # @!attribute [rw] ingestion_status
+    #   Status of ingestion on data source.
+    #   @return [String]
+    #
+    # @!attribute [rw] ingestion_failure_reasons
+    #   List of failure reasons on ingestion per file.
+    #   @return [Array<String>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/KnowledgeBaseData AWS API Documentation
     #
     class KnowledgeBaseData < Struct.new(
-      :description,
-      :ingestion_failure_reasons,
-      :ingestion_status,
-      :knowledge_base_arn,
       :knowledge_base_id,
-      :knowledge_base_type,
-      :last_content_modification_time,
+      :knowledge_base_arn,
       :name,
+      :knowledge_base_type,
+      :status,
+      :last_content_modification_time,
+      :vector_ingestion_configuration,
+      :source_configuration,
       :rendering_configuration,
       :server_side_encryption_configuration,
-      :source_configuration,
-      :status,
+      :description,
       :tags,
-      :vector_ingestion_configuration)
+      :ingestion_status,
+      :ingestion_failure_reasons)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # Summary information about the knowledge base.
     #
-    # @!attribute [rw] description
-    #   The description of the knowledge base.
+    # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base.
     #   @return [String]
     #
     # @!attribute [rw] knowledge_base_arn
     #   The Amazon Resource Name (ARN) of the knowledge base.
     #   @return [String]
     #
-    # @!attribute [rw] knowledge_base_id
-    #   The identifier of the knowledge base.
+    # @!attribute [rw] name
+    #   The name of the knowledge base.
     #   @return [String]
     #
     # @!attribute [rw] knowledge_base_type
     #   The type of knowledge base.
     #   @return [String]
     #
-    # @!attribute [rw] name
-    #   The name of the knowledge base.
+    # @!attribute [rw] status
+    #   The status of the knowledge base summary.
     #   @return [String]
+    #
+    # @!attribute [rw] source_configuration
+    #   Configuration information about the external data source.
+    #   @return [Types::SourceConfiguration]
+    #
+    # @!attribute [rw] vector_ingestion_configuration
+    #   Contains details about how to ingest the documents in a data source.
+    #   @return [Types::VectorIngestionConfiguration]
     #
     # @!attribute [rw] rendering_configuration
     #   Information about how to render the content.
@@ -5602,12 +6279,8 @@ module Aws::QConnect
     #   [1]: https://docs.aws.amazon.com/connect/latest/adminguide/enable-q.html
     #   @return [Types::ServerSideEncryptionConfiguration]
     #
-    # @!attribute [rw] source_configuration
-    #   Configuration information about the external data source.
-    #   @return [Types::SourceConfiguration]
-    #
-    # @!attribute [rw] status
-    #   The status of the knowledge base summary.
+    # @!attribute [rw] description
+    #   The description of the knowledge base.
     #   @return [String]
     #
     # @!attribute [rw] tags
@@ -5615,47 +6288,65 @@ module Aws::QConnect
     #   resource.
     #   @return [Hash<String,String>]
     #
-    # @!attribute [rw] vector_ingestion_configuration
-    #   Contains details about how to ingest the documents in a data source.
-    #   @return [Types::VectorIngestionConfiguration]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/KnowledgeBaseSummary AWS API Documentation
     #
     class KnowledgeBaseSummary < Struct.new(
-      :description,
-      :knowledge_base_arn,
       :knowledge_base_id,
-      :knowledge_base_type,
+      :knowledge_base_arn,
       :name,
+      :knowledge_base_type,
+      :status,
+      :source_configuration,
+      :vector_ingestion_configuration,
       :rendering_configuration,
       :server_side_encryption_configuration,
-      :source_configuration,
-      :status,
-      :tags,
-      :vector_ingestion_configuration)
+      :description,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
 
-    # @!attribute [rw] ai_agent_id
-    #   The identifier of the Amazon Q in Connect AI Agent for which
-    #   versions are to be listed.
-    #   @return [String]
+    # A knowledge source that provides content for recommendations.
     #
+    # @note KnowledgeSource is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @!attribute [rw] assistant_association_ids
+    #   The list of assistant association identifiers for the knowledge
+    #   source.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/KnowledgeSource AWS API Documentation
+    #
+    class KnowledgeSource < Struct.new(
+      :assistant_association_ids,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class AssistantAssociationIds < KnowledgeSource; end
+      class Unknown < KnowledgeSource; end
+    end
+
     # @!attribute [rw] assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either
     #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
-    # @!attribute [rw] max_results
-    #   The maximum number of results to return per page.
-    #   @return [Integer]
+    # @!attribute [rw] ai_agent_id
+    #   The identifier of the Amazon Q in Connect AI Agent for which
+    #   versions are to be listed.
+    #   @return [String]
     #
     # @!attribute [rw] next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
     #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per page.
+    #   @return [Integer]
     #
     # @!attribute [rw] origin
     #   The origin of the AI Agent versions to be listed. `SYSTEM` for a
@@ -5666,10 +6357,10 @@ module Aws::QConnect
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListAIAgentVersionsRequest AWS API Documentation
     #
     class ListAIAgentVersionsRequest < Struct.new(
-      :ai_agent_id,
       :assistant_id,
-      :max_results,
+      :ai_agent_id,
       :next_token,
+      :max_results,
       :origin)
       SENSITIVE = []
       include Aws::Structure
@@ -5699,15 +6390,15 @@ module Aws::QConnect
     #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
-    # @!attribute [rw] max_results
-    #   The maximum number of results to return per page.
-    #   @return [Integer]
-    #
     # @!attribute [rw] next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
     #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per page.
+    #   @return [Integer]
     #
     # @!attribute [rw] origin
     #   The origin of the AI Agents to be listed. `SYSTEM` for a default AI
@@ -5719,8 +6410,8 @@ module Aws::QConnect
     #
     class ListAIAgentsRequest < Struct.new(
       :assistant_id,
-      :max_results,
       :next_token,
+      :max_results,
       :origin)
       SENSITIVE = []
       include Aws::Structure
@@ -5745,19 +6436,15 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] ai_guardrail_id
-    #   The identifier of the Amazon Q in Connect AI Guardrail for which
-    #   versions are to be listed.
-    #   @return [String]
-    #
     # @!attribute [rw] assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either
     #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
-    # @!attribute [rw] max_results
-    #   The maximum number of results to return per page.
-    #   @return [Integer]
+    # @!attribute [rw] ai_guardrail_id
+    #   The identifier of the Amazon Q in Connect AI Guardrail for which
+    #   versions are to be listed.
+    #   @return [String]
     #
     # @!attribute [rw] next_token
     #   The token for the next set of results. Use the value returned in the
@@ -5765,13 +6452,17 @@ module Aws::QConnect
     #   results.
     #   @return [String]
     #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per page.
+    #   @return [Integer]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListAIGuardrailVersionsRequest AWS API Documentation
     #
     class ListAIGuardrailVersionsRequest < Struct.new(
-      :ai_guardrail_id,
       :assistant_id,
-      :max_results,
-      :next_token)
+      :ai_guardrail_id,
+      :next_token,
+      :max_results)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5800,22 +6491,22 @@ module Aws::QConnect
     #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
-    # @!attribute [rw] max_results
-    #   The maximum number of results to return per page.
-    #   @return [Integer]
-    #
     # @!attribute [rw] next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
     #   @return [String]
     #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per page.
+    #   @return [Integer]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListAIGuardrailsRequest AWS API Documentation
     #
     class ListAIGuardrailsRequest < Struct.new(
       :assistant_id,
-      :max_results,
-      :next_token)
+      :next_token,
+      :max_results)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5839,25 +6530,25 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] ai_prompt_id
-    #   The identifier of the Amazon Q in Connect AI prompt for which
-    #   versions are to be listed.
-    #   @return [String]
-    #
     # @!attribute [rw] assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either
     #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
-    # @!attribute [rw] max_results
-    #   The maximum number of results to return per page.
-    #   @return [Integer]
+    # @!attribute [rw] ai_prompt_id
+    #   The identifier of the Amazon Q in Connect AI prompt for which
+    #   versions are to be listed.
+    #   @return [String]
     #
     # @!attribute [rw] next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
     #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per page.
+    #   @return [Integer]
     #
     # @!attribute [rw] origin
     #   The origin of the AI Prompt versions to be listed. `SYSTEM` for a
@@ -5868,10 +6559,10 @@ module Aws::QConnect
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListAIPromptVersionsRequest AWS API Documentation
     #
     class ListAIPromptVersionsRequest < Struct.new(
-      :ai_prompt_id,
       :assistant_id,
-      :max_results,
+      :ai_prompt_id,
       :next_token,
+      :max_results,
       :origin)
       SENSITIVE = []
       include Aws::Structure
@@ -5901,15 +6592,15 @@ module Aws::QConnect
     #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
-    # @!attribute [rw] max_results
-    #   The maximum number of results to return per page.
-    #   @return [Integer]
-    #
     # @!attribute [rw] next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
     #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per page.
+    #   @return [Integer]
     #
     # @!attribute [rw] origin
     #   The origin of the AI Prompts to be listed. `SYSTEM` for a default AI
@@ -5921,8 +6612,8 @@ module Aws::QConnect
     #
     class ListAIPromptsRequest < Struct.new(
       :assistant_id,
-      :max_results,
       :next_token,
+      :max_results,
       :origin)
       SENSITIVE = []
       include Aws::Structure
@@ -5947,27 +6638,27 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] assistant_id
-    #   The identifier of the Amazon Q in Connect assistant. Can be either
-    #   the ID or the ARN. URLs cannot contain the ARN.
-    #   @return [String]
-    #
-    # @!attribute [rw] max_results
-    #   The maximum number of results to return per page.
-    #   @return [Integer]
-    #
     # @!attribute [rw] next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
     #   @return [String]
     #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per page.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either
+    #   the ID or the ARN. URLs cannot contain the ARN.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListAssistantAssociationsRequest AWS API Documentation
     #
     class ListAssistantAssociationsRequest < Struct.new(
-      :assistant_id,
+      :next_token,
       :max_results,
-      :next_token)
+      :assistant_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5990,21 +6681,21 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] max_results
-    #   The maximum number of results to return per page.
-    #   @return [Integer]
-    #
     # @!attribute [rw] next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
     #   @return [String]
     #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per page.
+    #   @return [Integer]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListAssistantsRequest AWS API Documentation
     #
     class ListAssistantsRequest < Struct.new(
-      :max_results,
-      :next_token)
+      :next_token,
+      :max_results)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6027,31 +6718,31 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] content_id
-    #   The identifier of the content.
-    #   @return [String]
-    #
-    # @!attribute [rw] knowledge_base_id
-    #   The identifier of the knowledge base.
-    #   @return [String]
-    #
-    # @!attribute [rw] max_results
-    #   The maximum number of results to return per page.
-    #   @return [Integer]
-    #
     # @!attribute [rw] next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
     #   @return [String]
     #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per page.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base.
+    #   @return [String]
+    #
+    # @!attribute [rw] content_id
+    #   The identifier of the content.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListContentAssociationsRequest AWS API Documentation
     #
     class ListContentAssociationsRequest < Struct.new(
-      :content_id,
-      :knowledge_base_id,
+      :next_token,
       :max_results,
-      :next_token)
+      :knowledge_base_id,
+      :content_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6074,28 +6765,28 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] knowledge_base_id
-    #   The identifier of the knowledge base. This should not be a
-    #   QUICK\_RESPONSES type knowledge base. Can be either the ID or the
-    #   ARN. URLs cannot contain the ARN.
-    #   @return [String]
-    #
-    # @!attribute [rw] max_results
-    #   The maximum number of results to return per page.
-    #   @return [Integer]
-    #
     # @!attribute [rw] next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
     #   @return [String]
     #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per page.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base. This should not be a
+    #   QUICK\_RESPONSES type knowledge base. Can be either the ID or the
+    #   ARN. URLs cannot contain the ARN.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListContentsRequest AWS API Documentation
     #
     class ListContentsRequest < Struct.new(
-      :knowledge_base_id,
+      :next_token,
       :max_results,
-      :next_token)
+      :knowledge_base_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6118,27 +6809,27 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] knowledge_base_id
-    #   The identifier of the knowledge base. Can be either the ID or the
-    #   ARN. URLs cannot contain the ARN.
-    #   @return [String]
-    #
-    # @!attribute [rw] max_results
-    #   The maximum number of results to return per page.
-    #   @return [Integer]
-    #
     # @!attribute [rw] next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
     #   @return [String]
     #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per page.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base. Can be either the ID or the
+    #   ARN. URLs cannot contain the ARN.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListImportJobsRequest AWS API Documentation
     #
     class ListImportJobsRequest < Struct.new(
-      :knowledge_base_id,
+      :next_token,
       :max_results,
-      :next_token)
+      :knowledge_base_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6162,21 +6853,21 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] max_results
-    #   The maximum number of results to return per page.
-    #   @return [Integer]
-    #
     # @!attribute [rw] next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
     #   @return [String]
     #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per page.
+    #   @return [Integer]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListKnowledgeBasesRequest AWS API Documentation
     #
     class ListKnowledgeBasesRequest < Struct.new(
-      :max_results,
-      :next_token)
+      :next_token,
+      :max_results)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6204,10 +6895,6 @@ module Aws::QConnect
     #   ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
-    # @!attribute [rw] max_results
-    #   The maximum number of results to return per page.
-    #   @return [Integer]
-    #
     # @!attribute [rw] message_template_id
     #   The identifier of the message template. Can be either the ID or the
     #   ARN. It cannot contain any qualifier.
@@ -6219,13 +6906,17 @@ module Aws::QConnect
     #   results.
     #   @return [String]
     #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per page.
+    #   @return [Integer]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListMessageTemplateVersionsRequest AWS API Documentation
     #
     class ListMessageTemplateVersionsRequest < Struct.new(
       :knowledge_base_id,
-      :max_results,
       :message_template_id,
-      :next_token)
+      :next_token,
+      :max_results)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6248,27 +6939,27 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] knowledge_base_id
-    #   The identifier of the knowledge base. Can be either the ID or the
-    #   ARN. URLs cannot contain the ARN.
-    #   @return [String]
-    #
-    # @!attribute [rw] max_results
-    #   The maximum number of results to return per page.
-    #   @return [Integer]
-    #
     # @!attribute [rw] next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
     #   @return [String]
     #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per page.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base. Can be either the ID or the
+    #   ARN. URLs cannot contain the ARN.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListMessageTemplatesRequest AWS API Documentation
     #
     class ListMessageTemplatesRequest < Struct.new(
-      :knowledge_base_id,
+      :next_token,
       :max_results,
-      :next_token)
+      :knowledge_base_id)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6295,9 +6986,9 @@ module Aws::QConnect
     #   The identifier of the Amazon Q in Connect assistant.
     #   @return [String]
     #
-    # @!attribute [rw] max_results
-    #   The maximum number of results to return per page.
-    #   @return [Integer]
+    # @!attribute [rw] session_id
+    #   The identifier of the Amazon Q in Connect session.
+    #   @return [String]
     #
     # @!attribute [rw] next_token
     #   The token for the next set of results. Use the value returned in the
@@ -6305,17 +6996,22 @@ module Aws::QConnect
     #   results.
     #   @return [String]
     #
-    # @!attribute [rw] session_id
-    #   The identifier of the Amazon Q in Connect session.
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per page.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] filter
+    #   The filter criteria for listing messages.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListMessagesRequest AWS API Documentation
     #
     class ListMessagesRequest < Struct.new(
       :assistant_id,
-      :max_results,
+      :session_id,
       :next_token,
-      :session_id)
+      :max_results,
+      :filter)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6339,14 +7035,21 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] knowledge_base_id
-    #   The identifier of the knowledge base. Can be either the ID or the
-    #   ARN. URLs cannot contain the ARN.
+    # @!attribute [rw] assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either
+    #   the ID or the ARN. URLs cannot contain the ARN. The assistant's
+    #   region determines which models are available.
     #   @return [String]
     #
-    # @!attribute [rw] max_results
-    #   The maximum number of results to return per page.
-    #   @return [Integer]
+    # @!attribute [rw] ai_prompt_type
+    #   The type of the AI Prompt to filter models by. When specified, only
+    #   models that support the given AI Prompt type are returned.
+    #   @return [String]
+    #
+    # @!attribute [rw] model_lifecycle
+    #   The lifecycle status of models to filter by. When specified, only
+    #   models with the given lifecycle status are returned.
+    #   @return [String]
     #
     # @!attribute [rw] next_token
     #   The token for the next set of results. Use the value returned in the
@@ -6354,11 +7057,35 @@ module Aws::QConnect
     #   results.
     #   @return [String]
     #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListQuickResponsesRequest AWS API Documentation
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per page.
+    #   @return [Integer]
     #
-    class ListQuickResponsesRequest < Struct.new(
-      :knowledge_base_id,
-      :max_results,
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListModelsRequest AWS API Documentation
+    #
+    class ListModelsRequest < Struct.new(
+      :assistant_id,
+      :ai_prompt_type,
+      :model_lifecycle,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] model_summaries
+    #   The summaries of the models available to the assistant.
+    #   @return [Array<Types::ModelSummary>]
+    #
+    # @!attribute [rw] next_token
+    #   If there are additional results, this is the token for the next set
+    #   of results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListModelsResponse AWS API Documentation
+    #
+    class ListModelsResponse < Struct.new(
+      :model_summaries,
       :next_token)
       SENSITIVE = []
       include Aws::Structure
@@ -6370,15 +7097,84 @@ module Aws::QConnect
     #   results.
     #   @return [String]
     #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per page.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base. Can be either the ID or the
+    #   ARN. URLs cannot contain the ARN.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListQuickResponsesRequest AWS API Documentation
+    #
+    class ListQuickResponsesRequest < Struct.new(
+      :next_token,
+      :max_results,
+      :knowledge_base_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] quick_response_summaries
     #   Summary information about the quick responses.
     #   @return [Array<Types::QuickResponseSummary>]
     #
+    # @!attribute [rw] next_token
+    #   The token for the next set of results. Use the value returned in the
+    #   previous response in the next request to retrieve the next set of
+    #   results.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListQuickResponsesResponse AWS API Documentation
     #
     class ListQuickResponsesResponse < Struct.new(
+      :quick_response_summaries,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] assistant_id
+    #   UUID or ARN of the Connect AI Assistant resource
+    #   @return [String]
+    #
+    # @!attribute [rw] session_id
+    #   UUID or ARN of the Connect AI Session resource
+    #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   Pagination token for retrieving the next page of results
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   Maximum number of spans to return per page
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListSpansRequest AWS API Documentation
+    #
+    class ListSpansRequest < Struct.new(
+      :assistant_id,
+      :session_id,
       :next_token,
-      :quick_response_summaries)
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] spans
+    #   Array of span objects for the session
+    #   @return [Array<Types::Span>]
+    #
+    # @!attribute [rw] next_token
+    #   Pagination token for retrieving additional results
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ListSpansResponse AWS API Documentation
+    #
+    class ListSpansResponse < Struct.new(
+      :spans,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6433,14 +7229,14 @@ module Aws::QConnect
 
     # The configuration for the `MANUAL_SEARCH` AI Agent type.
     #
-    # @!attribute [rw] answer_generation_ai_guardrail_id
-    #   The AI Guardrail identifier for the Answer Generation guardrail used
-    #   by the MANUAL\_SEARCH AI Agent.
-    #   @return [String]
-    #
     # @!attribute [rw] answer_generation_ai_prompt_id
     #   The AI Prompt identifier for the Answer Generation prompt used by
     #   the MANUAL\_SEARCH AI Agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] answer_generation_ai_guardrail_id
+    #   The AI Guardrail identifier for the Answer Generation guardrail used
+    #   by the MANUAL\_SEARCH AI Agent.
     #   @return [String]
     #
     # @!attribute [rw] association_configurations
@@ -6452,18 +7248,47 @@ module Aws::QConnect
     #   The locale to which specifies the language and region settings that
     #   determine the response language for [QueryAssistant][1].
     #
+    #   <note markdown="1"> For more information on supported locales, see [Language support for
+    #   Amazon Q in Connect][2].
+    #
+    #    </note>
+    #
     #
     #
     #   [1]: https://docs.aws.amazon.com/connect/latest/APIReference/API_amazon-q-connect_QueryAssistant.html
+    #   [2]: https://docs.aws.amazon.com/connect/latest/adminguide/supported-languages.html#qic-notes-languages
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ManualSearchAIAgentConfiguration AWS API Documentation
     #
     class ManualSearchAIAgentConfiguration < Struct.new(
-      :answer_generation_ai_guardrail_id,
       :answer_generation_ai_prompt_id,
+      :answer_generation_ai_guardrail_id,
       :association_configurations,
       :locale)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration for a [SendMessage][1] request.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/connect/latest/APIReference/API_amazon-q-connect_SendMessage.html
+    #
+    # @!attribute [rw] generate_filler_message
+    #   Generates a filler response when tool selection is `QUESTION`.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] generate_chunked_message
+    #   Configuration for generating chunked messages.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/MessageConfiguration AWS API Documentation
+    #
+    class MessageConfiguration < Struct.new(
+      :generate_filler_message,
+      :generate_chunked_message)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6478,16 +7303,22 @@ module Aws::QConnect
     #   The message data in text type.
     #   @return [Types::TextMessage]
     #
+    # @!attribute [rw] tool_use_result
+    #   The result of tool usage in the message.
+    #   @return [Types::ToolUseResultData]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/MessageData AWS API Documentation
     #
     class MessageData < Struct.new(
       :text,
+      :tool_use_result,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
       include Aws::Structure::Union
 
       class Text < MessageData; end
+      class ToolUseResult < MessageData; end
       class Unknown < MessageData; end
     end
 
@@ -6507,6 +7338,10 @@ module Aws::QConnect
 
     # The message output.
     #
+    # @!attribute [rw] value
+    #   The value of a message data.
+    #   @return [Types::MessageData]
+    #
     # @!attribute [rw] message_id
     #   The identifier of a message.
     #   @return [String]
@@ -6519,26 +7354,18 @@ module Aws::QConnect
     #   The timestamp of a message.
     #   @return [Time]
     #
-    # @!attribute [rw] value
-    #   The value of a message data.
-    #   @return [Types::MessageData]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/MessageOutput AWS API Documentation
     #
     class MessageOutput < Struct.new(
+      :value,
       :message_id,
       :participant,
-      :timestamp,
-      :value)
+      :timestamp)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # Information about the message template attachment.
-    #
-    # @!attribute [rw] attachment_id
-    #   The identifier of the attachment file.
-    #   @return [String]
     #
     # @!attribute [rw] content_disposition
     #   The presentation information for the attachment file.
@@ -6562,45 +7389,49 @@ module Aws::QConnect
     #   The expiration time of the pre-signed Amazon S3 URL.
     #   @return [Time]
     #
+    # @!attribute [rw] attachment_id
+    #   The identifier of the attachment file.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/MessageTemplateAttachment AWS API Documentation
     #
     class MessageTemplateAttachment < Struct.new(
-      :attachment_id,
       :content_disposition,
       :name,
       :uploaded_time,
       :url,
-      :url_expiry)
+      :url_expiry,
+      :attachment_id)
       SENSITIVE = [:name, :url]
       include Aws::Structure
     end
 
     # The attributes that are used with the message template.
     #
+    # @!attribute [rw] system_attributes
+    #   The system attributes that are used with the message template.
+    #   @return [Types::SystemAttributes]
+    #
     # @!attribute [rw] agent_attributes
     #   The agent attributes that are used with the message template.
     #   @return [Types::AgentAttributes]
-    #
-    # @!attribute [rw] custom_attributes
-    #   The custom attributes that are used with the message template.
-    #   @return [Hash<String,String>]
     #
     # @!attribute [rw] customer_profile_attributes
     #   The customer profile attributes that are used with the message
     #   template.
     #   @return [Types::CustomerProfileAttributes]
     #
-    # @!attribute [rw] system_attributes
-    #   The system attributes that are used with the message template.
-    #   @return [Types::SystemAttributes]
+    # @!attribute [rw] custom_attributes
+    #   The custom attributes that are used with the message template.
+    #   @return [Hash<String,String>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/MessageTemplateAttributes AWS API Documentation
     #
     class MessageTemplateAttributes < Struct.new(
+      :system_attributes,
       :agent_attributes,
-      :custom_attributes,
       :customer_profile_attributes,
-      :system_attributes)
+      :custom_attributes)
       SENSITIVE = [:custom_attributes]
       include Aws::Structure
     end
@@ -6644,11 +7475,23 @@ module Aws::QConnect
     #   subtype.
     #   @return [Types::SMSMessageTemplateContent]
     #
+    # @!attribute [rw] whats_app
+    #   The content of the message template that applies to the WHATSAPP
+    #   channel subtype.
+    #   @return [Types::WhatsAppMessageTemplateContent]
+    #
+    # @!attribute [rw] push
+    #   The content of the message template that applies to the push channel
+    #   subtype.
+    #   @return [Types::PushMessageTemplateContent]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/MessageTemplateContentProvider AWS API Documentation
     #
     class MessageTemplateContentProvider < Struct.new(
       :email,
       :sms,
+      :whats_app,
+      :push,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
@@ -6656,43 +7499,20 @@ module Aws::QConnect
 
       class Email < MessageTemplateContentProvider; end
       class Sms < MessageTemplateContentProvider; end
+      class WhatsApp < MessageTemplateContentProvider; end
+      class Push < MessageTemplateContentProvider; end
       class Unknown < MessageTemplateContentProvider; end
     end
 
     # The data of a message template.
     #
-    # @!attribute [rw] attribute_types
-    #   The types of attributes that the message template contains.
-    #   @return [Array<String>]
-    #
-    # @!attribute [rw] channel_subtype
-    #   The channel subtype this message template applies to.
+    # @!attribute [rw] message_template_arn
+    #   The Amazon Resource Name (ARN) of the message template.
     #   @return [String]
     #
-    # @!attribute [rw] content
-    #   The content of the message template.
-    #   @return [Types::MessageTemplateContentProvider]
-    #
-    # @!attribute [rw] created_time
-    #   The timestamp when the message template was created.
-    #   @return [Time]
-    #
-    # @!attribute [rw] default_attributes
-    #   An object that specifies the default values to use for variables in
-    #   the message template. This object contains different categories of
-    #   key-value pairs. Each key defines a variable or placeholder in the
-    #   message template. The corresponding value defines the default value
-    #   for that variable.
-    #   @return [Types::MessageTemplateAttributes]
-    #
-    # @!attribute [rw] description
-    #   The description of the message template.
+    # @!attribute [rw] message_template_id
+    #   The identifier of the message template.
     #   @return [String]
-    #
-    # @!attribute [rw] grouping_configuration
-    #   The configuration information of the grouping of Amazon Q in Connect
-    #   users.
-    #   @return [Types::GroupingConfiguration]
     #
     # @!attribute [rw] knowledge_base_arn
     #   The Amazon Resource Name (ARN) of the knowledge base.
@@ -6702,6 +7522,39 @@ module Aws::QConnect
     #   The identifier of the knowledge base.
     #   @return [String]
     #
+    # @!attribute [rw] name
+    #   The name of the message template.
+    #   @return [String]
+    #
+    # @!attribute [rw] channel
+    #   The channel of the message template.
+    #   @return [String]
+    #
+    # @!attribute [rw] channel_subtype
+    #   The channel subtype this message template applies to.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_time
+    #   The timestamp when the message template was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] last_modified_time
+    #   The timestamp when the message template data was last modified.
+    #   @return [Time]
+    #
+    # @!attribute [rw] last_modified_by
+    #   The Amazon Resource Name (ARN) of the user who last updated the
+    #   message template data.
+    #   @return [String]
+    #
+    # @!attribute [rw] content
+    #   The content of the message template.
+    #   @return [Types::MessageTemplateContentProvider]
+    #
+    # @!attribute [rw] description
+    #   The description of the message template.
+    #   @return [String]
+    #
     # @!attribute [rw] language
     #   The language code value for the language in which the quick response
     #   is written. The supported language codes include `de_DE`, `en_US`,
@@ -6709,18 +7562,26 @@ module Aws::QConnect
     #   `zh_CN`, `zh_TW`
     #   @return [String]
     #
-    # @!attribute [rw] last_modified_by
-    #   The Amazon Resource Name (ARN) of the user who last updated the
-    #   message template data.
-    #   @return [String]
+    # @!attribute [rw] source_configuration_summary
+    #   The source configuration summary of the message template.
+    #   @return [Types::MessageTemplateSourceConfigurationSummary]
     #
-    # @!attribute [rw] last_modified_time
-    #   The timestamp when the message template data was last modified.
-    #   @return [Time]
+    # @!attribute [rw] grouping_configuration
+    #   The configuration information of the grouping of Amazon Q in Connect
+    #   users.
+    #   @return [Types::GroupingConfiguration]
     #
-    # @!attribute [rw] message_template_arn
-    #   The Amazon Resource Name (ARN) of the message template.
-    #   @return [String]
+    # @!attribute [rw] default_attributes
+    #   An object that specifies the default values to use for variables in
+    #   the message template. This object contains different categories of
+    #   key-value pairs. Each key defines a variable or placeholder in the
+    #   message template. The corresponding value defines the default value
+    #   for that variable.
+    #   @return [Types::MessageTemplateAttributes]
+    #
+    # @!attribute [rw] attribute_types
+    #   The types of attributes that the message template contains.
+    #   @return [Array<String>]
     #
     # @!attribute [rw] message_template_content_sha_256
     #   The checksum value of the message template content that is
@@ -6728,14 +7589,6 @@ module Aws::QConnect
     #   `MessageTemplateData` or `ExtendedMessageTemplateData`. It’s
     #   calculated by content, language, `defaultAttributes` and
     #   `Attachments` of the message template.
-    #   @return [String]
-    #
-    # @!attribute [rw] message_template_id
-    #   The identifier of the message template.
-    #   @return [String]
-    #
-    # @!attribute [rw] name
-    #   The name of the message template.
     #   @return [String]
     #
     # @!attribute [rw] tags
@@ -6746,24 +7599,26 @@ module Aws::QConnect
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/MessageTemplateData AWS API Documentation
     #
     class MessageTemplateData < Struct.new(
-      :attribute_types,
-      :channel_subtype,
-      :content,
-      :created_time,
-      :default_attributes,
-      :description,
-      :grouping_configuration,
+      :message_template_arn,
+      :message_template_id,
       :knowledge_base_arn,
       :knowledge_base_id,
-      :language,
-      :last_modified_by,
-      :last_modified_time,
-      :message_template_arn,
-      :message_template_content_sha_256,
-      :message_template_id,
       :name,
+      :channel,
+      :channel_subtype,
+      :created_time,
+      :last_modified_time,
+      :last_modified_by,
+      :content,
+      :description,
+      :language,
+      :source_configuration_summary,
+      :grouping_configuration,
+      :default_attributes,
+      :attribute_types,
+      :message_template_content_sha_256,
       :tags)
-      SENSITIVE = []
+      SENSITIVE = [:channel]
       include Aws::Structure
     end
 
@@ -6792,29 +7647,29 @@ module Aws::QConnect
     #
     # * groupingConfiguration.values
     #
-    # @!attribute [rw] include_no_existence
-    #   Whether to treat null value as a match for the attribute field.
-    #   @return [Boolean]
-    #
     # @!attribute [rw] name
     #   The name of the attribute field to filter the message templates by.
-    #   @return [String]
-    #
-    # @!attribute [rw] operator
-    #   The operator to use for filtering.
     #   @return [String]
     #
     # @!attribute [rw] values
     #   The values of attribute field to filter the message template by.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] operator
+    #   The operator to use for filtering.
+    #   @return [String]
+    #
+    # @!attribute [rw] include_no_existence
+    #   Whether to treat null value as a match for the attribute field.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/MessageTemplateFilterField AWS API Documentation
     #
     class MessageTemplateFilterField < Struct.new(
-      :include_no_existence,
       :name,
+      :values,
       :operator,
-      :values)
+      :include_no_existence)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6868,20 +7723,24 @@ module Aws::QConnect
     #
     # * description
     #
-    # @!attribute [rw] allow_fuzziness
-    #   Whether the query expects only exact matches on the attribute field
-    #   values. The results of the query will only include exact matches if
-    #   this parameter is set to false.
-    #   @return [Boolean]
-    #
     # @!attribute [rw] name
     #   The name of the attribute to query the message templates by.
     #   @return [String]
+    #
+    # @!attribute [rw] values
+    #   The values of the attribute to query the message templates by.
+    #   @return [Array<String>]
     #
     # @!attribute [rw] operator
     #   The operator to use for matching attribute field values in the
     #   query.
     #   @return [String]
+    #
+    # @!attribute [rw] allow_fuzziness
+    #   Whether the query expects only exact matches on the attribute field
+    #   values. The results of the query will only include exact matches if
+    #   this parameter is set to false.
+    #   @return [Boolean]
     #
     # @!attribute [rw] priority
     #   The importance of the attribute field when calculating query result
@@ -6889,23 +7748,23 @@ module Aws::QConnect
     #   ordering of search results.
     #   @return [String]
     #
-    # @!attribute [rw] values
-    #   The values of the attribute to query the message templates by.
-    #   @return [Array<String>]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/MessageTemplateQueryField AWS API Documentation
     #
     class MessageTemplateQueryField < Struct.new(
-      :allow_fuzziness,
       :name,
+      :values,
       :operator,
-      :priority,
-      :values)
+      :allow_fuzziness,
+      :priority)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # The search expression of the message template.
+    #
+    # @!attribute [rw] queries
+    #   The message template query expressions.
+    #   @return [Array<Types::MessageTemplateQueryField>]
     #
     # @!attribute [rw] filters
     #   The configuration of filtering rules applied to message template
@@ -6917,21 +7776,41 @@ module Aws::QConnect
     #   ordered.
     #   @return [Types::MessageTemplateOrderField]
     #
-    # @!attribute [rw] queries
-    #   The message template query expressions.
-    #   @return [Array<Types::MessageTemplateQueryField>]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/MessageTemplateSearchExpression AWS API Documentation
     #
     class MessageTemplateSearchExpression < Struct.new(
+      :queries,
       :filters,
-      :order_on_field,
-      :queries)
+      :order_on_field)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # The result of message template search.
+    #
+    # @!attribute [rw] message_template_arn
+    #   The Amazon Resource Name (ARN) of the message template.
+    #   @return [String]
+    #
+    # @!attribute [rw] message_template_id
+    #   The identifier of the message template.
+    #   @return [String]
+    #
+    # @!attribute [rw] knowledge_base_arn
+    #   The Amazon Resource Name (ARN) of the knowledge base.
+    #   @return [String]
+    #
+    # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the message template.
+    #   @return [String]
+    #
+    # @!attribute [rw] channel
+    #   The channel of the message template.
+    #   @return [String]
     #
     # @!attribute [rw] channel_subtype
     #   The channel subtype this message template applies to.
@@ -6941,26 +7820,35 @@ module Aws::QConnect
     #   The timestamp when the message template was created.
     #   @return [Time]
     #
-    # @!attribute [rw] description
-    #   The description of the message template.
-    #   @return [String]
+    # @!attribute [rw] last_modified_time
+    #   The timestamp when the message template data was last modified.
+    #   @return [Time]
     #
-    # @!attribute [rw] grouping_configuration
-    #   The configuration information of the grouping of Amazon Q in Connect
-    #   users.
-    #   @return [Types::GroupingConfiguration]
+    # @!attribute [rw] last_modified_by
+    #   The Amazon Resource Name (ARN) of the user who last updated the
+    #   message template data.
+    #   @return [String]
     #
     # @!attribute [rw] is_active
     #   Whether the version of the message template is activated.
     #   @return [Boolean]
     #
-    # @!attribute [rw] knowledge_base_arn
-    #   The Amazon Resource Name (ARN) of the knowledge base.
+    # @!attribute [rw] version_number
+    #   The version number of the message template version.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] description
+    #   The description of the message template.
     #   @return [String]
     #
-    # @!attribute [rw] knowledge_base_id
-    #   The identifier of the knowledge base.
-    #   @return [String]
+    # @!attribute [rw] source_configuration_summary
+    #   The source configuration summary of the message template.
+    #   @return [Types::MessageTemplateSourceConfigurationSummary]
+    #
+    # @!attribute [rw] grouping_configuration
+    #   The configuration information of the grouping of Amazon Q in Connect
+    #   users.
+    #   @return [Types::GroupingConfiguration]
     #
     # @!attribute [rw] language
     #   The language code value for the language in which the quick response
@@ -6969,14 +7857,82 @@ module Aws::QConnect
     #   `zh_CN`, `zh_TW`
     #   @return [String]
     #
-    # @!attribute [rw] last_modified_by
-    #   The Amazon Resource Name (ARN) of the user who last updated the
-    #   message template data.
-    #   @return [String]
+    # @!attribute [rw] tags
+    #   The tags used to organize, track, or control access for this
+    #   resource.
+    #   @return [Hash<String,String>]
     #
-    # @!attribute [rw] last_modified_time
-    #   The timestamp when the message template data was last modified.
-    #   @return [Time]
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/MessageTemplateSearchResultData AWS API Documentation
+    #
+    class MessageTemplateSearchResultData < Struct.new(
+      :message_template_arn,
+      :message_template_id,
+      :knowledge_base_arn,
+      :knowledge_base_id,
+      :name,
+      :channel,
+      :channel_subtype,
+      :created_time,
+      :last_modified_time,
+      :last_modified_by,
+      :is_active,
+      :version_number,
+      :description,
+      :source_configuration_summary,
+      :grouping_configuration,
+      :language,
+      :tags)
+      SENSITIVE = [:channel]
+      include Aws::Structure
+    end
+
+    # The container of message template source configuration.
+    #
+    # @note MessageTemplateSourceConfiguration is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note MessageTemplateSourceConfiguration is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of MessageTemplateSourceConfiguration corresponding to the set member.
+    #
+    # @!attribute [rw] whats_app
+    #   The sourceConfiguration of the message template that applies to the
+    #   WHATSAPP channel subtype.
+    #   @return [Types::WhatsAppMessageTemplateSourceConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/MessageTemplateSourceConfiguration AWS API Documentation
+    #
+    class MessageTemplateSourceConfiguration < Struct.new(
+      :whats_app,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class WhatsApp < MessageTemplateSourceConfiguration; end
+      class Unknown < MessageTemplateSourceConfiguration; end
+    end
+
+    # The container of message template source configuration summary.
+    #
+    # @note MessageTemplateSourceConfigurationSummary is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of MessageTemplateSourceConfigurationSummary corresponding to the set member.
+    #
+    # @!attribute [rw] whats_app
+    #   The sourceConfiguration summary of the message template that applies
+    #   to the WHATSAPP channel subtype.
+    #   @return [Types::WhatsAppMessageTemplateSourceConfigurationSummary]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/MessageTemplateSourceConfigurationSummary AWS API Documentation
+    #
+    class MessageTemplateSourceConfigurationSummary < Struct.new(
+      :whats_app,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class WhatsApp < MessageTemplateSourceConfigurationSummary; end
+      class Unknown < MessageTemplateSourceConfigurationSummary; end
+    end
+
+    # The summary of the message template.
     #
     # @!attribute [rw] message_template_arn
     #   The Amazon Resource Name (ARN) of the message template.
@@ -6984,60 +7940,6 @@ module Aws::QConnect
     #
     # @!attribute [rw] message_template_id
     #   The identifier of the message template.
-    #   @return [String]
-    #
-    # @!attribute [rw] name
-    #   The name of the message template.
-    #   @return [String]
-    #
-    # @!attribute [rw] tags
-    #   The tags used to organize, track, or control access for this
-    #   resource.
-    #   @return [Hash<String,String>]
-    #
-    # @!attribute [rw] version_number
-    #   The version number of the message template version.
-    #   @return [Integer]
-    #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/MessageTemplateSearchResultData AWS API Documentation
-    #
-    class MessageTemplateSearchResultData < Struct.new(
-      :channel_subtype,
-      :created_time,
-      :description,
-      :grouping_configuration,
-      :is_active,
-      :knowledge_base_arn,
-      :knowledge_base_id,
-      :language,
-      :last_modified_by,
-      :last_modified_time,
-      :message_template_arn,
-      :message_template_id,
-      :name,
-      :tags,
-      :version_number)
-      SENSITIVE = []
-      include Aws::Structure
-    end
-
-    # The summary of the message template.
-    #
-    # @!attribute [rw] active_version_number
-    #   The version number of the message template version that is
-    #   activated.
-    #   @return [Integer]
-    #
-    # @!attribute [rw] channel_subtype
-    #   The channel subtype this message template applies to.
-    #   @return [String]
-    #
-    # @!attribute [rw] created_time
-    #   The timestamp when the message template was created.
-    #   @return [Time]
-    #
-    # @!attribute [rw] description
-    #   The description of the message template.
     #   @return [String]
     #
     # @!attribute [rw] knowledge_base_arn
@@ -7048,25 +7950,42 @@ module Aws::QConnect
     #   The identifier of the knowledge base.
     #   @return [String]
     #
-    # @!attribute [rw] last_modified_by
-    #   The Amazon Resource Name (ARN) of the user who last updated the
-    #   message template data.
+    # @!attribute [rw] name
+    #   The name of the message template.
     #   @return [String]
+    #
+    # @!attribute [rw] channel
+    #   The channel this message template applies to.
+    #   @return [String]
+    #
+    # @!attribute [rw] channel_subtype
+    #   The channel subtype this message template applies to.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_time
+    #   The timestamp when the message template was created.
+    #   @return [Time]
     #
     # @!attribute [rw] last_modified_time
     #   The timestamp when the message template data was last modified.
     #   @return [Time]
     #
-    # @!attribute [rw] message_template_arn
-    #   The Amazon Resource Name (ARN) of the message template.
+    # @!attribute [rw] last_modified_by
+    #   The Amazon Resource Name (ARN) of the user who last updated the
+    #   message template data.
     #   @return [String]
     #
-    # @!attribute [rw] message_template_id
-    #   The identifier of the message template.
-    #   @return [String]
+    # @!attribute [rw] source_configuration
+    #   The container of message template source configuration.
+    #   @return [Types::MessageTemplateSourceConfiguration]
     #
-    # @!attribute [rw] name
-    #   The name of the message template.
+    # @!attribute [rw] active_version_number
+    #   The version number of the message template version that is
+    #   activated.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] description
+    #   The description of the message template.
     #   @return [String]
     #
     # @!attribute [rw] tags
@@ -7077,39 +7996,25 @@ module Aws::QConnect
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/MessageTemplateSummary AWS API Documentation
     #
     class MessageTemplateSummary < Struct.new(
-      :active_version_number,
-      :channel_subtype,
-      :created_time,
-      :description,
-      :knowledge_base_arn,
-      :knowledge_base_id,
-      :last_modified_by,
-      :last_modified_time,
       :message_template_arn,
       :message_template_id,
+      :knowledge_base_arn,
+      :knowledge_base_id,
       :name,
+      :channel,
+      :channel_subtype,
+      :created_time,
+      :last_modified_time,
+      :last_modified_by,
+      :source_configuration,
+      :active_version_number,
+      :description,
       :tags)
-      SENSITIVE = []
+      SENSITIVE = [:channel]
       include Aws::Structure
     end
 
     # The summary of the message template version.
-    #
-    # @!attribute [rw] channel_subtype
-    #   The channel subtype this message template applies to.
-    #   @return [String]
-    #
-    # @!attribute [rw] is_active
-    #   Whether the version of the message template is activated.
-    #   @return [Boolean]
-    #
-    # @!attribute [rw] knowledge_base_arn
-    #   The Amazon Resource Name (ARN) of the knowledge base.
-    #   @return [String]
-    #
-    # @!attribute [rw] knowledge_base_id
-    #   The identifier of the knowledge base.
-    #   @return [String]
     #
     # @!attribute [rw] message_template_arn
     #   The Amazon Resource Name (ARN) of the message template.
@@ -7119,9 +8024,29 @@ module Aws::QConnect
     #   The identifier of the message template.
     #   @return [String]
     #
+    # @!attribute [rw] knowledge_base_arn
+    #   The Amazon Resource Name (ARN) of the knowledge base.
+    #   @return [String]
+    #
+    # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base.
+    #   @return [String]
+    #
     # @!attribute [rw] name
     #   The name of the message template.
     #   @return [String]
+    #
+    # @!attribute [rw] channel
+    #   The channel of the message template.
+    #   @return [String]
+    #
+    # @!attribute [rw] channel_subtype
+    #   The channel subtype this message template applies to.
+    #   @return [String]
+    #
+    # @!attribute [rw] is_active
+    #   Whether the version of the message template is activated.
+    #   @return [Boolean]
     #
     # @!attribute [rw] version_number
     #   The version number of the message template version.
@@ -7130,33 +8055,149 @@ module Aws::QConnect
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/MessageTemplateVersionSummary AWS API Documentation
     #
     class MessageTemplateVersionSummary < Struct.new(
-      :channel_subtype,
-      :is_active,
-      :knowledge_base_arn,
-      :knowledge_base_id,
       :message_template_arn,
       :message_template_id,
+      :knowledge_base_arn,
+      :knowledge_base_id,
       :name,
+      :channel,
+      :channel_subtype,
+      :is_active,
       :version_number)
+      SENSITIVE = [:channel]
+      include Aws::Structure
+    end
+
+    # The summary of a model available to an Amazon Q in Connect assistant.
+    #
+    # @!attribute [rw] model_id
+    #   The identifier of the model.
+    #   @return [String]
+    #
+    # @!attribute [rw] display_name
+    #   The display name of the model.
+    #   @return [String]
+    #
+    # @!attribute [rw] cross_region_status
+    #   The cross-region availability status of the model. `NONE` indicates
+    #   the model is only available in a single region, `REGIONAL` indicates
+    #   the model is available through regional inference, and `GLOBAL`
+    #   indicates the model is available through global cross-region
+    #   inference.
+    #   @return [String]
+    #
+    # @!attribute [rw] supports_prompt_caching
+    #   Whether the model supports prompt caching.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] supported_ai_prompt_types
+    #   The list of AI Prompt types that the model supports.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] model_lifecycle
+    #   The current lifecycle of the model. `ACTIVE` indicates the model is
+    #   recommended for use and `LEGACY` indicates the model is still usable
+    #   but is deprecated.
+    #   @return [String]
+    #
+    # @!attribute [rw] legacy_timestamp
+    #   The timestamp when the model lifecycle will transition from `ACTIVE`
+    #   to `LEGACY`.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_of_life_timestamp
+    #   The timestamp when the model will reach end of life and no longer be
+    #   available for use.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ModelSummary AWS API Documentation
+    #
+    class ModelSummary < Struct.new(
+      :model_id,
+      :display_name,
+      :cross_region_status,
+      :supports_prompt_caching,
+      :supported_ai_prompt_types,
+      :model_lifecycle,
+      :legacy_timestamp,
+      :end_of_life_timestamp)
       SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration for AI Agents of type `NOTE_TAKING`.
+    #
+    # @!attribute [rw] note_taking_ai_prompt_id
+    #   The AI Prompt identifier used by the Note Taking AI Agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] note_taking_ai_guardrail_id
+    #   The AI Guardrail identifier used by the Note Taking AI Agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] locale
+    #   The locale setting for language-specific case summarization
+    #   generation (for example, en\_US, es\_ES).
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/NoteTakingAIAgentConfiguration AWS API Documentation
+    #
+    class NoteTakingAIAgentConfiguration < Struct.new(
+      :note_taking_ai_prompt_id,
+      :note_taking_ai_guardrail_id,
+      :locale)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details about notes chunk data.
+    #
+    # @!attribute [rw] completion
+    #   A chunk of the notes completion.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_chunk_token
+    #   The token for the next chunk of notes data.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/NotesChunkDataDetails AWS API Documentation
+    #
+    class NotesChunkDataDetails < Struct.new(
+      :completion,
+      :next_chunk_token)
+      SENSITIVE = [:completion]
+      include Aws::Structure
+    end
+
+    # Details about notes data.
+    #
+    # @!attribute [rw] completion
+    #   The completion data for notes.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/NotesDataDetails AWS API Documentation
+    #
+    class NotesDataDetails < Struct.new(
+      :completion)
+      SENSITIVE = [:completion]
       include Aws::Structure
     end
 
     # An error occurred when creating a recommendation.
     #
-    # @!attribute [rw] message
-    #   A recommendation is causing an error.
-    #   @return [String]
-    #
     # @!attribute [rw] recommendation_id
     #   The identifier of the recommendation that is in error.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   A recommendation is causing an error.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/NotifyRecommendationsReceivedError AWS API Documentation
     #
     class NotifyRecommendationsReceivedError < Struct.new(
-      :message,
-      :recommendation_id)
+      :recommendation_id,
+      :message)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7166,38 +8207,38 @@ module Aws::QConnect
     #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
-    # @!attribute [rw] recommendation_ids
-    #   The identifiers of the recommendations.
-    #   @return [Array<String>]
-    #
     # @!attribute [rw] session_id
     #   The identifier of the session. Can be either the ID or the ARN. URLs
     #   cannot contain the ARN.
     #   @return [String]
     #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/NotifyRecommendationsReceivedRequest AWS API Documentation
-    #
-    class NotifyRecommendationsReceivedRequest < Struct.new(
-      :assistant_id,
-      :recommendation_ids,
-      :session_id)
-      SENSITIVE = []
-      include Aws::Structure
-    end
-
-    # @!attribute [rw] errors
-    #   The identifiers of recommendations that are causing errors.
-    #   @return [Array<Types::NotifyRecommendationsReceivedError>]
-    #
     # @!attribute [rw] recommendation_ids
     #   The identifiers of the recommendations.
     #   @return [Array<String>]
     #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/NotifyRecommendationsReceivedRequest AWS API Documentation
+    #
+    class NotifyRecommendationsReceivedRequest < Struct.new(
+      :assistant_id,
+      :session_id,
+      :recommendation_ids)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] recommendation_ids
+    #   The identifiers of the recommendations.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] errors
+    #   The identifiers of recommendations that are causing errors.
+    #   @return [Array<Types::NotifyRecommendationsReceivedError>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/NotifyRecommendationsReceivedResponse AWS API Documentation
     #
     class NotifyRecommendationsReceivedResponse < Struct.new(
-      :errors,
-      :recommendation_ids)
+      :recommendation_ids,
+      :errors)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7233,26 +8274,81 @@ module Aws::QConnect
       class Unknown < OrCondition; end
     end
 
+    # The configuration for AI Agents of type `ORCHESTRATION`.
+    #
+    # @!attribute [rw] orchestration_ai_prompt_id
+    #   The AI Prompt identifier used by the Orchestration AI Agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] orchestration_ai_guardrail_id
+    #   The AI Guardrail identifier used by the Orchestration AI Agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] tool_configurations
+    #   The tool configurations used by the Orchestration AI Agent.
+    #   @return [Array<Types::ToolConfiguration>]
+    #
+    # @!attribute [rw] connect_instance_arn
+    #   The Amazon Resource Name (ARN) of the Amazon Connect instance used
+    #   by the Orchestration AI Agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] locale
+    #   The locale setting for the Orchestration AI Agent.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/OrchestrationAIAgentConfiguration AWS API Documentation
+    #
+    class OrchestrationAIAgentConfiguration < Struct.new(
+      :orchestration_ai_prompt_id,
+      :orchestration_ai_guardrail_id,
+      :tool_configurations,
+      :connect_instance_arn,
+      :locale)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # An entry in the orchestrator configuration list.
+    #
+    # @!attribute [rw] ai_agent_id
+    #   The identifier of the AI Agent in the orchestrator configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] orchestrator_use_case
+    #   The use case for the orchestrator configuration. (for example
+    #   Connect.SelfService, Connect.AgentAssistance)
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/OrchestratorConfigurationEntry AWS API Documentation
+    #
+    class OrchestratorConfigurationEntry < Struct.new(
+      :ai_agent_id,
+      :orchestrator_use_case)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Settings for parsing document contents. By default, the service
     # converts the contents of each document into text before splitting it
     # into chunks. To improve processing of PDF files with tables and
     # images, you can configure the data source to convert the pages of text
     # into images and use a model to describe the contents of each page.
     #
+    # @!attribute [rw] parsing_strategy
+    #   The parsing strategy for the data source.
+    #   @return [String]
+    #
     # @!attribute [rw] bedrock_foundation_model_configuration
     #   Settings for a foundation model used to parse documents for a data
     #   source.
     #   @return [Types::BedrockFoundationModelConfigurationForParsing]
     #
-    # @!attribute [rw] parsing_strategy
-    #   The parsing strategy for the data source.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ParsingConfiguration AWS API Documentation
     #
     class ParsingConfiguration < Struct.new(
-      :bedrock_foundation_model_configuration,
-      :parsing_strategy)
+      :parsing_strategy,
+      :bedrock_foundation_model_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7285,13 +8381,355 @@ module Aws::QConnect
       include Aws::Structure
     end
 
+    # The content of the push message template that applies to ADM (Amazon
+    # Device Messaging) notification service.
+    #
+    # @!attribute [rw] title
+    #   The title to use in a push notification that's based on the message
+    #   template. This title appears above the notification message on a
+    #   recipient's device.
+    #   @return [String]
+    #
+    # @!attribute [rw] body
+    #   The message body to use in a push notification that is based on the
+    #   message template.
+    #   @return [Types::MessageTemplateBodyContentProvider]
+    #
+    # @!attribute [rw] action
+    #   The action to occur if a recipient taps a push notification that is
+    #   based on the message template. Valid values are:
+    #
+    #   * `OPEN_APP` - Your app opens or it becomes the foreground app if it
+    #     was sent to the background. This is the default action.
+    #
+    #   * `DEEP_LINK` - Your app opens and displays a designated user
+    #     interface in the app. This action uses the deep-linking features
+    #     of the Android platform.
+    #
+    #   * `URL` - The default mobile browser on the recipient's device
+    #     opens and loads the web page at a URL that you specify.
+    #   @return [String]
+    #
+    # @!attribute [rw] sound
+    #   The sound to play when a recipient receives a push notification
+    #   that's based on the message template. You can use the default
+    #   stream or specify the file name of a sound resource that's bundled
+    #   in your app. On an Android platform, the sound file must reside in
+    #   `/res/raw/`.
+    #   @return [String]
+    #
+    # @!attribute [rw] url
+    #   The URL to open in a recipient's default mobile browser, if a
+    #   recipient taps a push notification that's based on the message
+    #   template and the value of the `action` property is `URL`.
+    #   @return [String]
+    #
+    # @!attribute [rw] image_url
+    #   The URL of an image to display in a push notification that's based
+    #   on the message template.
+    #   @return [String]
+    #
+    # @!attribute [rw] image_icon_url
+    #   The URL of the large icon image to display in the content view of a
+    #   push notification that's based on the message template.
+    #   @return [String]
+    #
+    # @!attribute [rw] small_image_icon_url
+    #   The URL of the small icon image to display in the status bar and the
+    #   content view of a push notification that's based on the message
+    #   template.
+    #   @return [String]
+    #
+    # @!attribute [rw] raw_content
+    #   The URL of the small icon image to display in the status bar and the
+    #   content view of a push notification that's based on the message
+    #   template.
+    #   @return [Types::MessageTemplateBodyContentProvider]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/PushADMMessageTemplateContent AWS API Documentation
+    #
+    class PushADMMessageTemplateContent < Struct.new(
+      :title,
+      :body,
+      :action,
+      :sound,
+      :url,
+      :image_url,
+      :image_icon_url,
+      :small_image_icon_url,
+      :raw_content)
+      SENSITIVE = [:title, :sound, :url, :image_url, :image_icon_url, :small_image_icon_url]
+      include Aws::Structure
+    end
+
+    # The content of the push message template that applies to APNS (Apple
+    # Push Notification service) notification service.
+    #
+    # @!attribute [rw] title
+    #   The title to use in a push notification that's based on the message
+    #   template. This title appears above the notification message on a
+    #   recipient's device.
+    #   @return [String]
+    #
+    # @!attribute [rw] body
+    #   The message body to use in a push notification that is based on the
+    #   message template.
+    #   @return [Types::MessageTemplateBodyContentProvider]
+    #
+    # @!attribute [rw] action
+    #   The action to occur if a recipient taps a push notification that is
+    #   based on the message template. Valid values are:
+    #
+    #   * `OPEN_APP` - Your app opens or it becomes the foreground app if it
+    #     was sent to the background. This is the default action.
+    #
+    #   * `DEEP_LINK` - Your app opens and displays a designated user
+    #     interface in the app. This action uses the deep-linking features
+    #     of the iOS platform.
+    #
+    #   * `URL` - The default mobile browser on the recipient's device
+    #     opens and loads the web page at a URL that you specify.
+    #   @return [String]
+    #
+    # @!attribute [rw] sound
+    #   The key for the sound to play when the recipient receives a push
+    #   notification that's based on the message template. The value for
+    #   this key is the name of a sound file in your app's main bundle or
+    #   the `Library/Sounds` folder in your app's data container. If the
+    #   sound file can't be found or you specify `default` for the value,
+    #   the system plays the default alert sound.
+    #   @return [String]
+    #
+    # @!attribute [rw] url
+    #   The URL to open in a recipient's default mobile browser, if a
+    #   recipient taps a push notification that's based on the message
+    #   template and the value of the `action` property is `URL`.
+    #   @return [String]
+    #
+    # @!attribute [rw] media_url
+    #   The URL of an image or video to display in push notifications that
+    #   are based on the message template.
+    #   @return [String]
+    #
+    # @!attribute [rw] raw_content
+    #   The raw, JSON-formatted string to use as the payload for a push
+    #   notification that's based on the message template. If specified,
+    #   this value overrides all other content for the message template.
+    #   @return [Types::MessageTemplateBodyContentProvider]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/PushAPNSMessageTemplateContent AWS API Documentation
+    #
+    class PushAPNSMessageTemplateContent < Struct.new(
+      :title,
+      :body,
+      :action,
+      :sound,
+      :url,
+      :media_url,
+      :raw_content)
+      SENSITIVE = [:title, :sound, :url, :media_url]
+      include Aws::Structure
+    end
+
+    # The content of the push message template that applies to Baidu
+    # notification service.
+    #
+    # @!attribute [rw] title
+    #   The title to use in a push notification that's based on the message
+    #   template. This title appears above the notification message on a
+    #   recipient's device.
+    #   @return [String]
+    #
+    # @!attribute [rw] body
+    #   The message body to use in a push notification that is based on the
+    #   message template.
+    #   @return [Types::MessageTemplateBodyContentProvider]
+    #
+    # @!attribute [rw] action
+    #   The action to occur if a recipient taps a push notification that is
+    #   based on the message template. Valid values are:
+    #
+    #   * `OPEN_APP` - Your app opens or it becomes the foreground app if it
+    #     was sent to the background. This is the default action.
+    #
+    #   * `DEEP_LINK` - Your app opens and displays a designated user
+    #     interface in the app. This action uses the deep-linking features
+    #     of the Android platform.
+    #
+    #   * `URL` - The default mobile browser on the recipient's device
+    #     opens and loads the web page at a URL that you specify.
+    #   @return [String]
+    #
+    # @!attribute [rw] sound
+    #   The sound to play when a recipient receives a push notification
+    #   that's based on the message template. You can use the default
+    #   stream or specify the file name of a sound resource that's bundled
+    #   in your app. On an Android platform, the sound file must reside in
+    #   `/res/raw/`.
+    #   @return [String]
+    #
+    # @!attribute [rw] url
+    #   The URL to open in a recipient's default mobile browser, if a
+    #   recipient taps a push notification that's based on the message
+    #   template and the value of the `action` property is `URL`.
+    #   @return [String]
+    #
+    # @!attribute [rw] image_url
+    #   The URL of an image to display in a push notification that's based
+    #   on the message template.
+    #   @return [String]
+    #
+    # @!attribute [rw] image_icon_url
+    #   The URL of the large icon image to display in the content view of a
+    #   push notification that's based on the message template.
+    #   @return [String]
+    #
+    # @!attribute [rw] small_image_icon_url
+    #   The URL of the small icon image to display in the status bar and the
+    #   content view of a push notification that's based on the message
+    #   template.
+    #   @return [String]
+    #
+    # @!attribute [rw] raw_content
+    #   The URL of the small icon image to display in the status bar and the
+    #   content view of a push notification that's based on the message
+    #   template.
+    #   @return [Types::MessageTemplateBodyContentProvider]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/PushBaiduMessageTemplateContent AWS API Documentation
+    #
+    class PushBaiduMessageTemplateContent < Struct.new(
+      :title,
+      :body,
+      :action,
+      :sound,
+      :url,
+      :image_url,
+      :image_icon_url,
+      :small_image_icon_url,
+      :raw_content)
+      SENSITIVE = [:title, :sound, :url, :image_url, :image_icon_url, :small_image_icon_url]
+      include Aws::Structure
+    end
+
+    # The content of the push message template that applies to FCM (Firebase
+    # Cloud Messaging) notification service.
+    #
+    # @!attribute [rw] title
+    #   The title to use in a push notification that's based on the message
+    #   template. This title appears above the notification message on a
+    #   recipient's device.
+    #   @return [String]
+    #
+    # @!attribute [rw] body
+    #   The message body to use in a push notification that is based on the
+    #   message template.
+    #   @return [Types::MessageTemplateBodyContentProvider]
+    #
+    # @!attribute [rw] action
+    #   The action to occur if a recipient taps a push notification that is
+    #   based on the message template. Valid values are:
+    #
+    #   * `OPEN_APP` - Your app opens or it becomes the foreground app if it
+    #     was sent to the background. This is the default action.
+    #
+    #   * `DEEP_LINK` - Your app opens and displays a designated user
+    #     interface in the app. This action uses the deep-linking features
+    #     of the Android platform.
+    #
+    #   * `URL` - The default mobile browser on the recipient's device
+    #     opens and loads the web page at a URL that you specify.
+    #   @return [String]
+    #
+    # @!attribute [rw] sound
+    #   The sound to play when a recipient receives a push notification
+    #   that's based on the message template. You can use the default
+    #   stream or specify the file name of a sound resource that's bundled
+    #   in your app. On an Android platform, the sound file must reside in
+    #   `/res/raw/`.
+    #   @return [String]
+    #
+    # @!attribute [rw] url
+    #   The URL to open in a recipient's default mobile browser, if a
+    #   recipient taps a push notification that's based on the message
+    #   template and the value of the `action` property is `URL`.
+    #   @return [String]
+    #
+    # @!attribute [rw] image_url
+    #   The URL of an image to display in a push notification that's based
+    #   on the message template.
+    #   @return [String]
+    #
+    # @!attribute [rw] image_icon_url
+    #   The URL of the large icon image to display in the content view of a
+    #   push notification that's based on the message template.
+    #   @return [String]
+    #
+    # @!attribute [rw] small_image_icon_url
+    #   The URL of the small icon image to display in the status bar and the
+    #   content view of a push notification that's based on the message
+    #   template.
+    #   @return [String]
+    #
+    # @!attribute [rw] raw_content
+    #   The URL of the small icon image to display in the status bar and the
+    #   content view of a push notification that's based on the message
+    #   template.
+    #   @return [Types::MessageTemplateBodyContentProvider]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/PushFCMMessageTemplateContent AWS API Documentation
+    #
+    class PushFCMMessageTemplateContent < Struct.new(
+      :title,
+      :body,
+      :action,
+      :sound,
+      :url,
+      :image_url,
+      :image_icon_url,
+      :small_image_icon_url,
+      :raw_content)
+      SENSITIVE = [:title, :sound, :url, :image_url, :image_icon_url, :small_image_icon_url]
+      include Aws::Structure
+    end
+
+    # The content of the message template that applies to the push channel
+    # subtype.
+    #
+    # @!attribute [rw] adm
+    #   The content of the message template that applies to ADM (Amazon
+    #   Device Messaging) notification service.
+    #   @return [Types::PushADMMessageTemplateContent]
+    #
+    # @!attribute [rw] apns
+    #   The content of the message template that applies to APNS(Apple Push
+    #   Notification service) notification service.
+    #   @return [Types::PushAPNSMessageTemplateContent]
+    #
+    # @!attribute [rw] fcm
+    #   The content of the message template that applies to FCM (Firebase
+    #   Cloud Messaging) notification service.
+    #   @return [Types::PushFCMMessageTemplateContent]
+    #
+    # @!attribute [rw] baidu
+    #   The content of the message template that applies to Baidu
+    #   notification service.
+    #   @return [Types::PushBaiduMessageTemplateContent]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/PushMessageTemplateContent AWS API Documentation
+    #
+    class PushMessageTemplateContent < Struct.new(
+      :adm,
+      :apns,
+      :fcm,
+      :baidu)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] assistant_id
     #   The identifier of the Amazon Q in Connect assistant.
     #   @return [String]
-    #
-    # @!attribute [rw] content_feedback
-    #   Information about the feedback provided.
-    #   @return [Types::ContentFeedbackData]
     #
     # @!attribute [rw] target_id
     #   The identifier of the feedback target.
@@ -7300,29 +8738,29 @@ module Aws::QConnect
     # @!attribute [rw] target_type
     #   The type of the feedback target.
     #   @return [String]
+    #
+    # @!attribute [rw] content_feedback
+    #   Information about the feedback provided.
+    #   @return [Types::ContentFeedbackData]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/PutFeedbackRequest AWS API Documentation
     #
     class PutFeedbackRequest < Struct.new(
       :assistant_id,
-      :content_feedback,
       :target_id,
-      :target_type)
+      :target_type,
+      :content_feedback)
       SENSITIVE = []
       include Aws::Structure
     end
 
-    # @!attribute [rw] assistant_arn
-    #   The Amazon Resource Name (ARN) of the Amazon Q in Connect assistant.
-    #   @return [String]
-    #
     # @!attribute [rw] assistant_id
     #   The identifier of the Amazon Q in Connect assistant.
     #   @return [String]
     #
-    # @!attribute [rw] content_feedback
-    #   Information about the feedback provided.
-    #   @return [Types::ContentFeedbackData]
+    # @!attribute [rw] assistant_arn
+    #   The Amazon Resource Name (ARN) of the Amazon Q in Connect assistant.
+    #   @return [String]
     #
     # @!attribute [rw] target_id
     #   The identifier of the feedback target.
@@ -7332,14 +8770,18 @@ module Aws::QConnect
     #   The type of the feedback target.
     #   @return [String]
     #
+    # @!attribute [rw] content_feedback
+    #   Information about the feedback provided.
+    #   @return [Types::ContentFeedbackData]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/PutFeedbackResponse AWS API Documentation
     #
     class PutFeedbackResponse < Struct.new(
-      :assistant_arn,
       :assistant_id,
-      :content_feedback,
+      :assistant_arn,
       :target_id,
-      :target_type)
+      :target_type,
+      :content_feedback)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7349,9 +8791,9 @@ module Aws::QConnect
     #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
-    # @!attribute [rw] max_results
-    #   The maximum number of results to return per page.
-    #   @return [Integer]
+    # @!attribute [rw] query_text
+    #   The text to search for.
+    #   @return [String]
     #
     # @!attribute [rw] next_token
     #   The token for the next set of results. Use the value returned in the
@@ -7359,10 +8801,13 @@ module Aws::QConnect
     #   results.
     #   @return [String]
     #
-    # @!attribute [rw] override_knowledge_base_search_type
-    #   The search type to be used against the Knowledge Base for this
-    #   request. The values can be `SEMANTIC` which uses vector embeddings
-    #   or `HYBRID` which use vector embeddings and raw text.
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per page.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] session_id
+    #   The identifier of the Amazon Q in Connect session. Can be either the
+    #   ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
     # @!attribute [rw] query_condition
@@ -7373,44 +8818,41 @@ module Aws::QConnect
     #   Information about the query.
     #   @return [Types::QueryInputData]
     #
-    # @!attribute [rw] query_text
-    #   The text to search for.
-    #   @return [String]
-    #
-    # @!attribute [rw] session_id
-    #   The identifier of the Amazon Q in Connect session. Can be either the
-    #   ID or the ARN. URLs cannot contain the ARN.
+    # @!attribute [rw] override_knowledge_base_search_type
+    #   The search type to be used against the Knowledge Base for this
+    #   request. The values can be `SEMANTIC` which uses vector embeddings
+    #   or `HYBRID` which use vector embeddings and raw text.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/QueryAssistantRequest AWS API Documentation
     #
     class QueryAssistantRequest < Struct.new(
       :assistant_id,
-      :max_results,
+      :query_text,
       :next_token,
-      :override_knowledge_base_search_type,
+      :max_results,
+      :session_id,
       :query_condition,
       :query_input_data,
-      :query_text,
-      :session_id)
+      :override_knowledge_base_search_type)
       SENSITIVE = [:query_text]
       include Aws::Structure
     end
 
+    # @!attribute [rw] results
+    #   The results of the query.
+    #   @return [Array<Types::ResultData>]
+    #
     # @!attribute [rw] next_token
     #   If there are additional results, this is the token for the next set
     #   of results.
     #   @return [String]
     #
-    # @!attribute [rw] results
-    #   The results of the query.
-    #   @return [Array<Types::ResultData>]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/QueryAssistantResponse AWS API Documentation
     #
     class QueryAssistantResponse < Struct.new(
-      :next_token,
-      :results)
+      :results,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7438,12 +8880,12 @@ module Aws::QConnect
 
     # The condition for the query.
     #
-    # @!attribute [rw] comparator
-    #   The comparison operator for query condition to query on.
-    #   @return [String]
-    #
     # @!attribute [rw] field
     #   The name of the field for query condition to query on.
+    #   @return [String]
+    #
+    # @!attribute [rw] comparator
+    #   The comparison operator for query condition to query on.
     #   @return [String]
     #
     # @!attribute [rw] value
@@ -7453,8 +8895,8 @@ module Aws::QConnect
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/QueryConditionItem AWS API Documentation
     #
     class QueryConditionItem < Struct.new(
-      :comparator,
       :field,
+      :comparator,
       :value)
       SENSITIVE = []
       include Aws::Structure
@@ -7464,26 +8906,32 @@ module Aws::QConnect
     #
     # @note QueryInputData is a union - when making an API calls you must set exactly one of the members.
     #
-    # @!attribute [rw] intent_input_data
-    #   Input information for the intent.
-    #   @return [Types::IntentInputData]
-    #
     # @!attribute [rw] query_text_input_data
     #   Input information for the query.
     #   @return [Types::QueryTextInputData]
     #
+    # @!attribute [rw] intent_input_data
+    #   Input information for the intent.
+    #   @return [Types::IntentInputData]
+    #
+    # @!attribute [rw] case_summarization_input_data
+    #   Input data for case summarization queries.
+    #   @return [Types::CaseSummarizationInputData]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/QueryInputData AWS API Documentation
     #
     class QueryInputData < Struct.new(
-      :intent_input_data,
       :query_text_input_data,
+      :intent_input_data,
+      :case_summarization_input_data,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
       include Aws::Structure::Union
 
-      class IntentInputData < QueryInputData; end
       class QueryTextInputData < QueryInputData; end
+      class IntentInputData < QueryInputData; end
+      class CaseSummarizationInputData < QueryInputData; end
       class Unknown < QueryInputData; end
     end
 
@@ -7538,29 +8986,45 @@ module Aws::QConnect
 
     # The content of the quick response stored in different media types.
     #
-    # @!attribute [rw] markdown
+    # @!attribute [rw] plain_text
     #   The container quick response content.
     #   @return [Types::QuickResponseContentProvider]
     #
-    # @!attribute [rw] plain_text
+    # @!attribute [rw] markdown
     #   The container quick response content.
     #   @return [Types::QuickResponseContentProvider]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/QuickResponseContents AWS API Documentation
     #
     class QuickResponseContents < Struct.new(
-      :markdown,
-      :plain_text)
+      :plain_text,
+      :markdown)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # Information about the quick response.
     #
-    # @!attribute [rw] channels
-    #   The Amazon Connect contact channels this quick response applies to.
-    #   The supported contact channel types include `Chat`.
-    #   @return [Array<String>]
+    # @!attribute [rw] quick_response_arn
+    #   The Amazon Resource Name (ARN) of the quick response.
+    #   @return [String]
+    #
+    # @!attribute [rw] quick_response_id
+    #   The identifier of the quick response.
+    #   @return [String]
+    #
+    # @!attribute [rw] knowledge_base_arn
+    #   The Amazon Resource Name (ARN) of the knowledge base.
+    #   @return [String]
+    #
+    # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base. Can be either the ID or the
+    #   ARN. URLs cannot contain the ARN.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the quick response.
+    #   @return [String]
     #
     # @!attribute [rw] content_type
     #   The media type of the quick response content.
@@ -7572,13 +9036,21 @@ module Aws::QConnect
     #     response written in richtext.
     #   @return [String]
     #
-    # @!attribute [rw] contents
-    #   The contents of the quick response.
-    #   @return [Types::QuickResponseContents]
+    # @!attribute [rw] status
+    #   The status of the quick response data.
+    #   @return [String]
     #
     # @!attribute [rw] created_time
     #   The timestamp when the quick response was created.
     #   @return [Time]
+    #
+    # @!attribute [rw] last_modified_time
+    #   The timestamp when the quick response data was last modified.
+    #   @return [Time]
+    #
+    # @!attribute [rw] contents
+    #   The contents of the quick response.
+    #   @return [Types::QuickResponseContents]
     #
     # @!attribute [rw] description
     #   The description of the quick response.
@@ -7589,24 +9061,9 @@ module Aws::QConnect
     #   response is accessible to.
     #   @return [Types::GroupingConfiguration]
     #
-    # @!attribute [rw] is_active
-    #   Whether the quick response is active.
-    #   @return [Boolean]
-    #
-    # @!attribute [rw] knowledge_base_arn
-    #   The Amazon Resource Name (ARN) of the knowledge base.
-    #   @return [String]
-    #
-    # @!attribute [rw] knowledge_base_id
-    #   The identifier of the knowledge base. Can be either the ID or the
-    #   ARN. URLs cannot contain the ARN.
-    #   @return [String]
-    #
-    # @!attribute [rw] language
-    #   The language code value for the language in which the quick response
-    #   is written. The supported language codes include `de_DE`, `en_US`,
-    #   `es_ES`, `fr_FR`, `id_ID`, `it_IT`, `ja_JP`, `ko_KR`, `pt_BR`,
-    #   `zh_CN`, `zh_TW`
+    # @!attribute [rw] shortcut_key
+    #   The shortcut key of the quick response. The value should be unique
+    #   across the knowledge base.
     #   @return [String]
     #
     # @!attribute [rw] last_modified_by
@@ -7614,29 +9071,20 @@ module Aws::QConnect
     #   quick response data.
     #   @return [String]
     #
-    # @!attribute [rw] last_modified_time
-    #   The timestamp when the quick response data was last modified.
-    #   @return [Time]
+    # @!attribute [rw] is_active
+    #   Whether the quick response is active.
+    #   @return [Boolean]
     #
-    # @!attribute [rw] name
-    #   The name of the quick response.
-    #   @return [String]
+    # @!attribute [rw] channels
+    #   The Amazon Connect contact channels this quick response applies to.
+    #   The supported contact channel types include `Chat`.
+    #   @return [Array<String>]
     #
-    # @!attribute [rw] quick_response_arn
-    #   The Amazon Resource Name (ARN) of the quick response.
-    #   @return [String]
-    #
-    # @!attribute [rw] quick_response_id
-    #   The identifier of the quick response.
-    #   @return [String]
-    #
-    # @!attribute [rw] shortcut_key
-    #   The shortcut key of the quick response. The value should be unique
-    #   across the knowledge base.
-    #   @return [String]
-    #
-    # @!attribute [rw] status
-    #   The status of the quick response data.
+    # @!attribute [rw] language
+    #   The language code value for the language in which the quick response
+    #   is written. The supported language codes include `de_DE`, `en_US`,
+    #   `es_ES`, `fr_FR`, `id_ID`, `it_IT`, `ja_JP`, `ko_KR`, `pt_BR`,
+    #   `zh_CN`, `zh_TW`
     #   @return [String]
     #
     # @!attribute [rw] tags
@@ -7647,23 +9095,23 @@ module Aws::QConnect
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/QuickResponseData AWS API Documentation
     #
     class QuickResponseData < Struct.new(
-      :channels,
-      :content_type,
-      :contents,
-      :created_time,
-      :description,
-      :grouping_configuration,
-      :is_active,
-      :knowledge_base_arn,
-      :knowledge_base_id,
-      :language,
-      :last_modified_by,
-      :last_modified_time,
-      :name,
       :quick_response_arn,
       :quick_response_id,
-      :shortcut_key,
+      :knowledge_base_arn,
+      :knowledge_base_id,
+      :name,
+      :content_type,
       :status,
+      :created_time,
+      :last_modified_time,
+      :contents,
+      :description,
+      :grouping_configuration,
+      :shortcut_key,
+      :last_modified_by,
+      :is_active,
+      :channels,
+      :language,
       :tags)
       SENSITIVE = [:channels]
       include Aws::Structure
@@ -7719,29 +9167,29 @@ module Aws::QConnect
     #
     # * groupingConfiguration.values
     #
-    # @!attribute [rw] include_no_existence
-    #   Whether to treat null value as a match for the attribute field.
-    #   @return [Boolean]
-    #
     # @!attribute [rw] name
     #   The name of the attribute field to filter the quick responses by.
-    #   @return [String]
-    #
-    # @!attribute [rw] operator
-    #   The operator to use for filtering.
     #   @return [String]
     #
     # @!attribute [rw] values
     #   The values of attribute field to filter the quick response by.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] operator
+    #   The operator to use for filtering.
+    #   @return [String]
+    #
+    # @!attribute [rw] include_no_existence
+    #   Whether to treat null value as a match for the attribute field.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/QuickResponseFilterField AWS API Documentation
     #
     class QuickResponseFilterField < Struct.new(
-      :include_no_existence,
       :name,
+      :values,
       :operator,
-      :values)
+      :include_no_existence)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7805,20 +9253,24 @@ module Aws::QConnect
     #
     # * shortcutKey
     #
-    # @!attribute [rw] allow_fuzziness
-    #   Whether the query expects only exact matches on the attribute field
-    #   values. The results of the query will only include exact matches if
-    #   this parameter is set to false.
-    #   @return [Boolean]
-    #
     # @!attribute [rw] name
     #   The name of the attribute to query the quick responses by.
     #   @return [String]
+    #
+    # @!attribute [rw] values
+    #   The values of the attribute to query the quick responses by.
+    #   @return [Array<String>]
     #
     # @!attribute [rw] operator
     #   The operator to use for matching attribute field values in the
     #   query.
     #   @return [String]
+    #
+    # @!attribute [rw] allow_fuzziness
+    #   Whether the query expects only exact matches on the attribute field
+    #   values. The results of the query will only include exact matches if
+    #   this parameter is set to false.
+    #   @return [Boolean]
     #
     # @!attribute [rw] priority
     #   The importance of the attribute field when calculating query result
@@ -7826,23 +9278,23 @@ module Aws::QConnect
     #   ordering of search results.
     #   @return [String]
     #
-    # @!attribute [rw] values
-    #   The values of the attribute to query the quick responses by.
-    #   @return [Array<String>]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/QuickResponseQueryField AWS API Documentation
     #
     class QuickResponseQueryField < Struct.new(
-      :allow_fuzziness,
       :name,
+      :values,
       :operator,
-      :priority,
-      :values)
+      :allow_fuzziness,
+      :priority)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # Information about the import job.
+    #
+    # @!attribute [rw] queries
+    #   The quick response query expressions.
+    #   @return [Array<Types::QuickResponseQueryField>]
     #
     # @!attribute [rw] filters
     #   The configuration of filtering rules applied to quick response query
@@ -7854,67 +9306,25 @@ module Aws::QConnect
     #   ordered.
     #   @return [Types::QuickResponseOrderField]
     #
-    # @!attribute [rw] queries
-    #   The quick response query expressions.
-    #   @return [Array<Types::QuickResponseQueryField>]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/QuickResponseSearchExpression AWS API Documentation
     #
     class QuickResponseSearchExpression < Struct.new(
+      :queries,
       :filters,
-      :order_on_field,
-      :queries)
+      :order_on_field)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # The result of quick response search.
     #
-    # @!attribute [rw] attributes_interpolated
-    #   The user defined contact attributes that are resolved when the
-    #   search result is returned.
-    #   @return [Array<String>]
-    #
-    # @!attribute [rw] attributes_not_interpolated
-    #   The user defined contact attributes that are not resolved when the
-    #   search result is returned.
-    #   @return [Array<String>]
-    #
-    # @!attribute [rw] channels
-    #   The Amazon Connect contact channels this quick response applies to.
-    #   The supported contact channel types include `Chat`.
-    #   @return [Array<String>]
-    #
-    # @!attribute [rw] content_type
-    #   The media type of the quick response content.
-    #
-    #   * Use `application/x.quickresponse;format=plain` for quick response
-    #     written in plain text.
-    #
-    #   * Use `application/x.quickresponse;format=markdown` for quick
-    #     response written in richtext.
+    # @!attribute [rw] quick_response_arn
+    #   The Amazon Resource Name (ARN) of the quick response.
     #   @return [String]
     #
-    # @!attribute [rw] contents
-    #   The contents of the quick response.
-    #   @return [Types::QuickResponseContents]
-    #
-    # @!attribute [rw] created_time
-    #   The timestamp when the quick response was created.
-    #   @return [Time]
-    #
-    # @!attribute [rw] description
-    #   The description of the quick response.
+    # @!attribute [rw] quick_response_id
+    #   The identifier of the quick response.
     #   @return [String]
-    #
-    # @!attribute [rw] grouping_configuration
-    #   The configuration information of the user groups that the quick
-    #   response is accessible to.
-    #   @return [Types::GroupingConfiguration]
-    #
-    # @!attribute [rw] is_active
-    #   Whether the quick response is active.
-    #   @return [Boolean]
     #
     # @!attribute [rw] knowledge_base_arn
     #   The Amazon Resource Name (ARN) of the knowledge base.
@@ -7925,80 +9335,9 @@ module Aws::QConnect
     #   ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
-    # @!attribute [rw] language
-    #   The language code value for the language in which the quick response
-    #   is written.
-    #   @return [String]
-    #
-    # @!attribute [rw] last_modified_by
-    #   The Amazon Resource Name (ARN) of the user who last updated the
-    #   quick response search result data.
-    #   @return [String]
-    #
-    # @!attribute [rw] last_modified_time
-    #   The timestamp when the quick response search result data was last
-    #   modified.
-    #   @return [Time]
-    #
     # @!attribute [rw] name
     #   The name of the quick response.
     #   @return [String]
-    #
-    # @!attribute [rw] quick_response_arn
-    #   The Amazon Resource Name (ARN) of the quick response.
-    #   @return [String]
-    #
-    # @!attribute [rw] quick_response_id
-    #   The identifier of the quick response.
-    #   @return [String]
-    #
-    # @!attribute [rw] shortcut_key
-    #   The shortcut key of the quick response. The value should be unique
-    #   across the knowledge base.
-    #   @return [String]
-    #
-    # @!attribute [rw] status
-    #   The resource status of the quick response.
-    #   @return [String]
-    #
-    # @!attribute [rw] tags
-    #   The tags used to organize, track, or control access for this
-    #   resource.
-    #   @return [Hash<String,String>]
-    #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/QuickResponseSearchResultData AWS API Documentation
-    #
-    class QuickResponseSearchResultData < Struct.new(
-      :attributes_interpolated,
-      :attributes_not_interpolated,
-      :channels,
-      :content_type,
-      :contents,
-      :created_time,
-      :description,
-      :grouping_configuration,
-      :is_active,
-      :knowledge_base_arn,
-      :knowledge_base_id,
-      :language,
-      :last_modified_by,
-      :last_modified_time,
-      :name,
-      :quick_response_arn,
-      :quick_response_id,
-      :shortcut_key,
-      :status,
-      :tags)
-      SENSITIVE = [:attributes_interpolated, :attributes_not_interpolated, :channels]
-      include Aws::Structure
-    end
-
-    # The summary information about the quick response.
-    #
-    # @!attribute [rw] channels
-    #   The Amazon Connect contact channels this quick response applies to.
-    #   The supported contact channel types include `Chat`.
-    #   @return [Array<String>]
     #
     # @!attribute [rw] content_type
     #   The media type of the quick response content.
@@ -8010,38 +9349,99 @@ module Aws::QConnect
     #     response written in richtext.
     #   @return [String]
     #
+    # @!attribute [rw] status
+    #   The resource status of the quick response.
+    #   @return [String]
+    #
+    # @!attribute [rw] contents
+    #   The contents of the quick response.
+    #   @return [Types::QuickResponseContents]
+    #
     # @!attribute [rw] created_time
     #   The timestamp when the quick response was created.
     #   @return [Time]
     #
-    # @!attribute [rw] description
-    #   The description of the quick response.
-    #   @return [String]
+    # @!attribute [rw] last_modified_time
+    #   The timestamp when the quick response search result data was last
+    #   modified.
+    #   @return [Time]
     #
     # @!attribute [rw] is_active
     #   Whether the quick response is active.
     #   @return [Boolean]
     #
-    # @!attribute [rw] knowledge_base_arn
-    #   The Amazon Resource Name (ARN) of the knowledge base.
+    # @!attribute [rw] description
+    #   The description of the quick response.
     #   @return [String]
     #
-    # @!attribute [rw] knowledge_base_id
-    #   The identifier of the knowledge base.
+    # @!attribute [rw] grouping_configuration
+    #   The configuration information of the user groups that the quick
+    #   response is accessible to.
+    #   @return [Types::GroupingConfiguration]
+    #
+    # @!attribute [rw] shortcut_key
+    #   The shortcut key of the quick response. The value should be unique
+    #   across the knowledge base.
     #   @return [String]
     #
     # @!attribute [rw] last_modified_by
     #   The Amazon Resource Name (ARN) of the user who last updated the
-    #   quick response data.
+    #   quick response search result data.
     #   @return [String]
     #
-    # @!attribute [rw] last_modified_time
-    #   The timestamp when the quick response summary was last modified.
-    #   @return [Time]
+    # @!attribute [rw] channels
+    #   The Amazon Connect contact channels this quick response applies to.
+    #   The supported contact channel types include `Chat`.
+    #   @return [Array<String>]
     #
-    # @!attribute [rw] name
-    #   The name of the quick response.
+    # @!attribute [rw] language
+    #   The language code value for the language in which the quick response
+    #   is written.
     #   @return [String]
+    #
+    # @!attribute [rw] attributes_not_interpolated
+    #   The user defined contact attributes that are not resolved when the
+    #   search result is returned.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] attributes_interpolated
+    #   The user defined contact attributes that are resolved when the
+    #   search result is returned.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] tags
+    #   The tags used to organize, track, or control access for this
+    #   resource.
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/QuickResponseSearchResultData AWS API Documentation
+    #
+    class QuickResponseSearchResultData < Struct.new(
+      :quick_response_arn,
+      :quick_response_id,
+      :knowledge_base_arn,
+      :knowledge_base_id,
+      :name,
+      :content_type,
+      :status,
+      :contents,
+      :created_time,
+      :last_modified_time,
+      :is_active,
+      :description,
+      :grouping_configuration,
+      :shortcut_key,
+      :last_modified_by,
+      :channels,
+      :language,
+      :attributes_not_interpolated,
+      :attributes_interpolated,
+      :tags)
+      SENSITIVE = [:channels, :attributes_not_interpolated, :attributes_interpolated]
+      include Aws::Structure
+    end
+
+    # The summary information about the quick response.
     #
     # @!attribute [rw] quick_response_arn
     #   The Amazon Resource Name (ARN) of the quick response.
@@ -8051,9 +9451,57 @@ module Aws::QConnect
     #   The identifier of the quick response.
     #   @return [String]
     #
+    # @!attribute [rw] knowledge_base_arn
+    #   The Amazon Resource Name (ARN) of the knowledge base.
+    #   @return [String]
+    #
+    # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the quick response.
+    #   @return [String]
+    #
+    # @!attribute [rw] content_type
+    #   The media type of the quick response content.
+    #
+    #   * Use `application/x.quickresponse;format=plain` for quick response
+    #     written in plain text.
+    #
+    #   * Use `application/x.quickresponse;format=markdown` for quick
+    #     response written in richtext.
+    #   @return [String]
+    #
     # @!attribute [rw] status
     #   The resource status of the quick response.
     #   @return [String]
+    #
+    # @!attribute [rw] created_time
+    #   The timestamp when the quick response was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] last_modified_time
+    #   The timestamp when the quick response summary was last modified.
+    #   @return [Time]
+    #
+    # @!attribute [rw] description
+    #   The description of the quick response.
+    #   @return [String]
+    #
+    # @!attribute [rw] last_modified_by
+    #   The Amazon Resource Name (ARN) of the user who last updated the
+    #   quick response data.
+    #   @return [String]
+    #
+    # @!attribute [rw] is_active
+    #   Whether the quick response is active.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] channels
+    #   The Amazon Connect contact channels this quick response applies to.
+    #   The supported contact channel types include `Chat`.
+    #   @return [Array<String>]
     #
     # @!attribute [rw] tags
     #   The tags used to organize, track, or control access for this
@@ -8063,19 +9511,19 @@ module Aws::QConnect
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/QuickResponseSummary AWS API Documentation
     #
     class QuickResponseSummary < Struct.new(
-      :channels,
-      :content_type,
-      :created_time,
-      :description,
-      :is_active,
-      :knowledge_base_arn,
-      :knowledge_base_id,
-      :last_modified_by,
-      :last_modified_time,
-      :name,
       :quick_response_arn,
       :quick_response_id,
+      :knowledge_base_arn,
+      :knowledge_base_id,
+      :name,
+      :content_type,
       :status,
+      :created_time,
+      :last_modified_time,
+      :description,
+      :last_modified_by,
+      :is_active,
+      :channels,
       :tags)
       SENSITIVE = [:channels]
       include Aws::Structure
@@ -8083,58 +9531,58 @@ module Aws::QConnect
 
     # Details about the source content ranking data.
     #
-    # @!attribute [rw] relevance_level
-    #   The relevance score of the content.
-    #   @return [String]
-    #
     # @!attribute [rw] relevance_score
     #   The relevance level of the recommendation.
     #   @return [Float]
     #
+    # @!attribute [rw] relevance_level
+    #   The relevance score of the content.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/RankingData AWS API Documentation
     #
     class RankingData < Struct.new(
-      :relevance_level,
-      :relevance_score)
+      :relevance_score,
+      :relevance_level)
       SENSITIVE = []
       include Aws::Structure
     end
 
     # Information about the recommendation.
     #
-    # @!attribute [rw] data
-    #   Summary of the recommended content.
-    #   @return [Types::DataSummary]
+    # @!attribute [rw] recommendation_id
+    #   The identifier of the recommendation.
+    #   @return [String]
     #
     # @!attribute [rw] document
     #   The recommended document.
     #   @return [Types::Document]
     #
-    # @!attribute [rw] recommendation_id
-    #   The identifier of the recommendation.
-    #   @return [String]
+    # @!attribute [rw] relevance_score
+    #   The relevance score of the recommendation.
+    #   @return [Float]
     #
     # @!attribute [rw] relevance_level
     #   The relevance level of the recommendation.
     #   @return [String]
     #
-    # @!attribute [rw] relevance_score
-    #   The relevance score of the recommendation.
-    #   @return [Float]
-    #
     # @!attribute [rw] type
     #   The type of recommendation.
     #   @return [String]
     #
+    # @!attribute [rw] data
+    #   Summary of the recommended content.
+    #   @return [Types::DataSummary]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/RecommendationData AWS API Documentation
     #
     class RecommendationData < Struct.new(
-      :data,
-      :document,
       :recommendation_id,
-      :relevance_level,
+      :document,
       :relevance_score,
-      :type)
+      :relevance_level,
+      :type,
+      :data)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -8143,17 +9591,13 @@ module Aws::QConnect
     # the referenced recommendations. Recommendations are only referenced in
     # `recommendationIds` by a single RecommendationTrigger.
     #
-    # @!attribute [rw] data
-    #   A union type containing information related to the trigger.
-    #   @return [Types::RecommendationTriggerData]
-    #
     # @!attribute [rw] id
     #   The identifier of the recommendation trigger.
     #   @return [String]
     #
-    # @!attribute [rw] recommendation_ids
-    #   The identifiers of the recommendations.
-    #   @return [Array<String>]
+    # @!attribute [rw] type
+    #   The type of recommendation trigger.
+    #   @return [String]
     #
     # @!attribute [rw] source
     #   The source of the recommendation trigger.
@@ -8165,18 +9609,22 @@ module Aws::QConnect
     #     by a Contact Lens rule.
     #   @return [String]
     #
-    # @!attribute [rw] type
-    #   The type of recommendation trigger.
-    #   @return [String]
+    # @!attribute [rw] data
+    #   A union type containing information related to the trigger.
+    #   @return [Types::RecommendationTriggerData]
+    #
+    # @!attribute [rw] recommendation_ids
+    #   The identifiers of the recommendations.
+    #   @return [Array<String>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/RecommendationTrigger AWS API Documentation
     #
     class RecommendationTrigger < Struct.new(
-      :data,
       :id,
-      :recommendation_ids,
+      :type,
       :source,
-      :type)
+      :data,
+      :recommendation_ids)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -8202,21 +9650,26 @@ module Aws::QConnect
       class Unknown < RecommendationTriggerData; end
     end
 
-    # @!attribute [rw] ai_agent_type
-    #   The type of the AI Agent being removed for use by default from the
-    #   Amazon Q in Connect Assistant.
-    #   @return [String]
-    #
     # @!attribute [rw] assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either
     #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
+    # @!attribute [rw] ai_agent_type
+    #   The type of the AI Agent being removed for use by default from the
+    #   Amazon Q in Connect Assistant.
+    #   @return [String]
+    #
+    # @!attribute [rw] orchestrator_use_case
+    #   The orchestrator use case for the AI Agent being removed.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/RemoveAssistantAIAgentRequest AWS API Documentation
     #
     class RemoveAssistantAIAgentRequest < Struct.new(
+      :assistant_id,
       :ai_agent_type,
-      :assistant_id)
+      :orchestrator_use_case)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -8242,14 +9695,6 @@ module Aws::QConnect
     #
     class RemoveKnowledgeBaseTemplateUriResponse < Aws::EmptyStructure; end
 
-    # @!attribute [rw] attributes
-    #   An object that specifies the values to use for variables in the
-    #   message template. This object contains different categories of
-    #   key-value pairs. Each key defines a variable or placeholder in the
-    #   message template. The corresponding value defines the value for that
-    #   variable.
-    #   @return [Types::MessageTemplateAttributes]
-    #
     # @!attribute [rw] knowledge_base_id
     #   The identifier of the knowledge base. Can be either the ID or the
     #   ARN. URLs cannot contain the ARN.
@@ -8260,34 +9705,47 @@ module Aws::QConnect
     #   ARN.
     #   @return [String]
     #
+    # @!attribute [rw] attributes
+    #   An object that specifies the values to use for variables in the
+    #   message template. This object contains different categories of
+    #   key-value pairs. Each key defines a variable or placeholder in the
+    #   message template. The corresponding value defines the value for that
+    #   variable.
+    #   @return [Types::MessageTemplateAttributes]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/RenderMessageTemplateRequest AWS API Documentation
     #
     class RenderMessageTemplateRequest < Struct.new(
-      :attributes,
       :knowledge_base_id,
-      :message_template_id)
+      :message_template_id,
+      :attributes)
       SENSITIVE = []
       include Aws::Structure
     end
 
-    # @!attribute [rw] attachments
-    #   The message template attachments.
-    #   @return [Array<Types::MessageTemplateAttachment>]
+    # @!attribute [rw] content
+    #   The content of the message template.
+    #   @return [Types::MessageTemplateContentProvider]
+    #
+    # @!attribute [rw] source_configuration_summary
+    #   The source configuration of the message template.
+    #   @return [Types::MessageTemplateSourceConfigurationSummary]
     #
     # @!attribute [rw] attributes_not_interpolated
     #   The attribute keys that are not resolved.
     #   @return [Array<String>]
     #
-    # @!attribute [rw] content
-    #   The content of the message template.
-    #   @return [Types::MessageTemplateContentProvider]
+    # @!attribute [rw] attachments
+    #   The message template attachments.
+    #   @return [Array<Types::MessageTemplateAttachment>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/RenderMessageTemplateResponse AWS API Documentation
     #
     class RenderMessageTemplateResponse < Struct.new(
-      :attachments,
+      :content,
+      :source_configuration_summary,
       :attributes_not_interpolated,
-      :content)
+      :attachments)
       SENSITIVE = [:attributes_not_interpolated]
       include Aws::Structure
     end
@@ -8360,9 +9818,9 @@ module Aws::QConnect
 
     # Information about the result.
     #
-    # @!attribute [rw] data
-    #   Summary of the recommended content.
-    #   @return [Types::DataSummary]
+    # @!attribute [rw] result_id
+    #   The identifier of the result data.
+    #   @return [String]
     #
     # @!attribute [rw] document
     #   The document.
@@ -8372,9 +9830,9 @@ module Aws::QConnect
     #   The relevance score of the results.
     #   @return [Float]
     #
-    # @!attribute [rw] result_id
-    #   The identifier of the result data.
-    #   @return [String]
+    # @!attribute [rw] data
+    #   Summary of the recommended content.
+    #   @return [Types::DataSummary]
     #
     # @!attribute [rw] type
     #   The type of the query result.
@@ -8383,12 +9841,201 @@ module Aws::QConnect
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ResultData AWS API Documentation
     #
     class ResultData < Struct.new(
-      :data,
+      :result_id,
       :document,
       :relevance_score,
-      :result_id,
+      :data,
       :type)
       SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration for content retrieval operations.
+    #
+    # @!attribute [rw] knowledge_source
+    #   The knowledge source configuration for content retrieval.
+    #   @return [Types::KnowledgeSource]
+    #
+    # @!attribute [rw] filter
+    #   The filter configuration for content retrieval.
+    #   @return [Types::RetrievalFilterConfiguration]
+    #
+    # @!attribute [rw] number_of_results
+    #   The number of results to retrieve.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] override_knowledge_base_search_type
+    #   Override setting for the knowledge base search type during
+    #   retrieval.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/RetrievalConfiguration AWS API Documentation
+    #
+    class RetrievalConfiguration < Struct.new(
+      :knowledge_source,
+      :filter,
+      :number_of_results,
+      :override_knowledge_base_search_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration for filtering content during retrieval operations.
+    #
+    # @note RetrievalFilterConfiguration is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @!attribute [rw] and_all
+    #   Filter configuration that requires all conditions to be met.
+    #   @return [Array<Types::RetrievalFilterConfiguration>]
+    #
+    # @!attribute [rw] equals
+    #   Filter configuration for exact equality matching.
+    #   @return [Types::FilterAttribute]
+    #
+    # @!attribute [rw] greater_than
+    #   Filter configuration for greater than comparison.
+    #   @return [Types::FilterAttribute]
+    #
+    # @!attribute [rw] greater_than_or_equals
+    #   Filter configuration for greater than or equal comparison.
+    #   @return [Types::FilterAttribute]
+    #
+    # @!attribute [rw] in
+    #   Filter configuration for membership in a set of values.
+    #   @return [Types::FilterAttribute]
+    #
+    # @!attribute [rw] less_than
+    #   Filter configuration for less than comparison.
+    #   @return [Types::FilterAttribute]
+    #
+    # @!attribute [rw] less_than_or_equals
+    #   Filter configuration for less than or equal comparison.
+    #   @return [Types::FilterAttribute]
+    #
+    # @!attribute [rw] list_contains
+    #   Filter configuration for checking if a list contains a value.
+    #   @return [Types::FilterAttribute]
+    #
+    # @!attribute [rw] not_equals
+    #   Filter configuration for inequality matching.
+    #   @return [Types::FilterAttribute]
+    #
+    # @!attribute [rw] not_in
+    #   Filter configuration for exclusion from a set of values.
+    #   @return [Types::FilterAttribute]
+    #
+    # @!attribute [rw] or_all
+    #   Filter configuration where any condition can be met.
+    #   @return [Array<Types::RetrievalFilterConfiguration>]
+    #
+    # @!attribute [rw] starts_with
+    #   Filter configuration for prefix matching.
+    #   @return [Types::FilterAttribute]
+    #
+    # @!attribute [rw] string_contains
+    #   Filter configuration for substring matching.
+    #   @return [Types::FilterAttribute]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/RetrievalFilterConfiguration AWS API Documentation
+    #
+    class RetrievalFilterConfiguration < Struct.new(
+      :and_all,
+      :equals,
+      :greater_than,
+      :greater_than_or_equals,
+      :in,
+      :less_than,
+      :less_than_or_equals,
+      :list_contains,
+      :not_equals,
+      :not_in,
+      :or_all,
+      :starts_with,
+      :string_contains,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class AndAll < RetrievalFilterConfiguration; end
+      class Equals < RetrievalFilterConfiguration; end
+      class GreaterThan < RetrievalFilterConfiguration; end
+      class GreaterThanOrEquals < RetrievalFilterConfiguration; end
+      class In < RetrievalFilterConfiguration; end
+      class LessThan < RetrievalFilterConfiguration; end
+      class LessThanOrEquals < RetrievalFilterConfiguration; end
+      class ListContains < RetrievalFilterConfiguration; end
+      class NotEquals < RetrievalFilterConfiguration; end
+      class NotIn < RetrievalFilterConfiguration; end
+      class OrAll < RetrievalFilterConfiguration; end
+      class StartsWith < RetrievalFilterConfiguration; end
+      class StringContains < RetrievalFilterConfiguration; end
+      class Unknown < RetrievalFilterConfiguration; end
+    end
+
+    # @!attribute [rw] assistant_id
+    #   The identifier of the Amazon Q in Connect assistant for content
+    #   retrieval.
+    #   @return [String]
+    #
+    # @!attribute [rw] retrieval_configuration
+    #   The configuration for the content retrieval operation.
+    #   @return [Types::RetrievalConfiguration]
+    #
+    # @!attribute [rw] retrieval_query
+    #   The query for content retrieval.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/RetrieveRequest AWS API Documentation
+    #
+    class RetrieveRequest < Struct.new(
+      :assistant_id,
+      :retrieval_configuration,
+      :retrieval_query)
+      SENSITIVE = [:retrieval_query]
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] results
+    #   The results of the content retrieval operation.
+    #   @return [Array<Types::RetrieveResult>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/RetrieveResponse AWS API Documentation
+    #
+    class RetrieveResponse < Struct.new(
+      :results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A single result from a content retrieval operation.
+    #
+    # @!attribute [rw] association_id
+    #   The identifier of the assistant association for the retrieved
+    #   result.
+    #   @return [String]
+    #
+    # @!attribute [rw] source_id
+    #   The URL, URI, or ID of the retrieved content when available, or a
+    #   UUID when unavailable.
+    #   @return [String]
+    #
+    # @!attribute [rw] reference_type
+    #   A type to define the KB origin of a retrieved content.
+    #   @return [String]
+    #
+    # @!attribute [rw] content_text
+    #   The text content of the retrieved result.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/RetrieveResult AWS API Documentation
+    #
+    class RetrieveResult < Struct.new(
+      :association_id,
+      :source_id,
+      :reference_type,
+      :content_text)
+      SENSITIVE = [:source_id, :content_text]
       include Aws::Structure
     end
 
@@ -8463,20 +10110,20 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] knowledge_base_id
-    #   The identifier of the knowledge base. This should not be a
-    #   QUICK\_RESPONSES type knowledge base. Can be either the ID or the
-    #   ARN. URLs cannot contain the ARN.
+    # @!attribute [rw] next_token
+    #   The token for the next set of results. Use the value returned in the
+    #   previous response in the next request to retrieve the next set of
+    #   results.
     #   @return [String]
     #
     # @!attribute [rw] max_results
     #   The maximum number of results to return per page.
     #   @return [Integer]
     #
-    # @!attribute [rw] next_token
-    #   The token for the next set of results. Use the value returned in the
-    #   previous response in the next request to retrieve the next set of
-    #   results.
+    # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base. This should not be a
+    #   QUICK\_RESPONSES type knowledge base. Can be either the ID or the
+    #   ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
     # @!attribute [rw] search_expression
@@ -8486,9 +10133,9 @@ module Aws::QConnect
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SearchContentRequest AWS API Documentation
     #
     class SearchContentRequest < Struct.new(
-      :knowledge_base_id,
-      :max_results,
       :next_token,
+      :max_results,
+      :knowledge_base_id,
       :search_expression)
       SENSITIVE = []
       include Aws::Structure
@@ -8531,9 +10178,9 @@ module Aws::QConnect
     #   ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
-    # @!attribute [rw] max_results
-    #   The maximum number of results to return per page.
-    #   @return [Integer]
+    # @!attribute [rw] search_expression
+    #   The search expression for querying the message template.
+    #   @return [Types::MessageTemplateSearchExpression]
     #
     # @!attribute [rw] next_token
     #   The token for the next set of results. Use the value returned in the
@@ -8541,39 +10188,59 @@ module Aws::QConnect
     #   results.
     #   @return [String]
     #
-    # @!attribute [rw] search_expression
-    #   The search expression for querying the message template.
-    #   @return [Types::MessageTemplateSearchExpression]
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per page.
+    #   @return [Integer]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SearchMessageTemplatesRequest AWS API Documentation
     #
     class SearchMessageTemplatesRequest < Struct.new(
       :knowledge_base_id,
-      :max_results,
+      :search_expression,
       :next_token,
-      :search_expression)
+      :max_results)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # @!attribute [rw] results
+    #   The results of the message template search.
+    #   @return [Array<Types::MessageTemplateSearchResultData>]
+    #
     # @!attribute [rw] next_token
     #   If there are additional results, this is the token for the next set
     #   of results.
     #   @return [String]
     #
-    # @!attribute [rw] results
-    #   The results of the message template search.
-    #   @return [Array<Types::MessageTemplateSearchResultData>]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SearchMessageTemplatesResponse AWS API Documentation
     #
     class SearchMessageTemplatesResponse < Struct.new(
-      :next_token,
-      :results)
+      :results,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base. This should be a
+    #   QUICK\_RESPONSES type knowledge base. Can be either the ID or the
+    #   ARN. URLs cannot contain the ARN.
+    #   @return [String]
+    #
+    # @!attribute [rw] search_expression
+    #   The search expression for querying the quick response.
+    #   @return [Types::QuickResponseSearchExpression]
+    #
+    # @!attribute [rw] next_token
+    #   The token for the next set of results. Use the value returned in the
+    #   previous response in the next request to retrieve the next set of
+    #   results.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per page.
+    #   @return [Integer]
+    #
     # @!attribute [rw] attributes
     #   The [user-defined Amazon Connect contact attributes][1] to be
     #   resolved when search results are returned.
@@ -8583,70 +10250,50 @@ module Aws::QConnect
     #   [1]: https://docs.aws.amazon.com/connect/latest/adminguide/connect-attrib-list.html#user-defined-attributes
     #   @return [Hash<String,String>]
     #
-    # @!attribute [rw] knowledge_base_id
-    #   The identifier of the knowledge base. This should be a
-    #   QUICK\_RESPONSES type knowledge base. Can be either the ID or the
-    #   ARN. URLs cannot contain the ARN.
-    #   @return [String]
-    #
-    # @!attribute [rw] max_results
-    #   The maximum number of results to return per page.
-    #   @return [Integer]
-    #
-    # @!attribute [rw] next_token
-    #   The token for the next set of results. Use the value returned in the
-    #   previous response in the next request to retrieve the next set of
-    #   results.
-    #   @return [String]
-    #
-    # @!attribute [rw] search_expression
-    #   The search expression for querying the quick response.
-    #   @return [Types::QuickResponseSearchExpression]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SearchQuickResponsesRequest AWS API Documentation
     #
     class SearchQuickResponsesRequest < Struct.new(
-      :attributes,
       :knowledge_base_id,
-      :max_results,
+      :search_expression,
       :next_token,
-      :search_expression)
+      :max_results,
+      :attributes)
       SENSITIVE = [:attributes]
       include Aws::Structure
     end
 
+    # @!attribute [rw] results
+    #   The results of the quick response search.
+    #   @return [Array<Types::QuickResponseSearchResultData>]
+    #
     # @!attribute [rw] next_token
     #   The token for the next set of results. Use the value returned in the
     #   previous response in the next request to retrieve the next set of
     #   results.
     #   @return [String]
     #
-    # @!attribute [rw] results
-    #   The results of the quick response search.
-    #   @return [Array<Types::QuickResponseSearchResultData>]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SearchQuickResponsesResponse AWS API Documentation
     #
     class SearchQuickResponsesResponse < Struct.new(
-      :next_token,
-      :results)
+      :results,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
 
-    # @!attribute [rw] assistant_id
-    #   The identifier of the Amazon Q in Connect assistant. Can be either
-    #   the ID or the ARN. URLs cannot contain the ARN.
+    # @!attribute [rw] next_token
+    #   The token for the next set of results. Use the value returned in the
+    #   previous response in the next request to retrieve the next set of
+    #   results.
     #   @return [String]
     #
     # @!attribute [rw] max_results
     #   The maximum number of results to return per page.
     #   @return [Integer]
     #
-    # @!attribute [rw] next_token
-    #   The token for the next set of results. Use the value returned in the
-    #   previous response in the next request to retrieve the next set of
-    #   results.
+    # @!attribute [rw] assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either
+    #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
     # @!attribute [rw] search_expression
@@ -8656,28 +10303,28 @@ module Aws::QConnect
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SearchSessionsRequest AWS API Documentation
     #
     class SearchSessionsRequest < Struct.new(
-      :assistant_id,
-      :max_results,
       :next_token,
+      :max_results,
+      :assistant_id,
       :search_expression)
       SENSITIVE = []
       include Aws::Structure
     end
 
+    # @!attribute [rw] session_summaries
+    #   Summary information about the sessions.
+    #   @return [Array<Types::SessionSummary>]
+    #
     # @!attribute [rw] next_token
     #   If there are additional results, this is the token for the next set
     #   of results.
     #   @return [String]
     #
-    # @!attribute [rw] session_summaries
-    #   Summary information about the sessions.
-    #   @return [Array<Types::SessionSummary>]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SearchSessionsResponse AWS API Documentation
     #
     class SearchSessionsResponse < Struct.new(
-      :next_token,
-      :session_summaries)
+      :session_summaries,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -8698,13 +10345,9 @@ module Aws::QConnect
 
     # The configuration for AI Agents of type SELF\_SERVICE.
     #
-    # @!attribute [rw] association_configurations
-    #   The association configurations for overriding behavior on this AI
-    #   Agent.
-    #   @return [Array<Types::AssociationConfiguration>]
-    #
-    # @!attribute [rw] self_service_ai_guardrail_id
-    #   The AI Guardrail identifier used by the SELF\_SERVICE AI Agent.
+    # @!attribute [rw] self_service_pre_processing_ai_prompt_id
+    #   The AI Prompt identifier for the Self Service Pre-Processing prompt
+    #   used by the SELF\_SERVICE AI Agent
     #   @return [String]
     #
     # @!attribute [rw] self_service_answer_generation_ai_prompt_id
@@ -8712,18 +10355,22 @@ module Aws::QConnect
     #   prompt used by the SELF\_SERVICE AI Agent
     #   @return [String]
     #
-    # @!attribute [rw] self_service_pre_processing_ai_prompt_id
-    #   The AI Prompt identifier for the Self Service Pre-Processing prompt
-    #   used by the SELF\_SERVICE AI Agent
+    # @!attribute [rw] self_service_ai_guardrail_id
+    #   The AI Guardrail identifier used by the SELF\_SERVICE AI Agent.
     #   @return [String]
+    #
+    # @!attribute [rw] association_configurations
+    #   The association configurations for overriding behavior on this AI
+    #   Agent.
+    #   @return [Array<Types::AssociationConfiguration>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SelfServiceAIAgentConfiguration AWS API Documentation
     #
     class SelfServiceAIAgentConfiguration < Struct.new(
-      :association_configurations,
-      :self_service_ai_guardrail_id,
+      :self_service_pre_processing_ai_prompt_id,
       :self_service_answer_generation_ai_prompt_id,
-      :self_service_pre_processing_ai_prompt_id)
+      :self_service_ai_guardrail_id,
+      :association_configurations)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -8731,25 +10378,30 @@ module Aws::QConnect
     # The conversation history data to included in conversation context data
     # before the Amazon Q in Connect session.
     #
-    # @!attribute [rw] bot_response
-    #   The bot response of the conversation history data.
-    #   @return [String]
+    # @!attribute [rw] turn_number
+    #   The number of turn of the conversation history data.
+    #   @return [Integer]
     #
     # @!attribute [rw] input_transcript
     #   The input transcript of the conversation history data.
     #   @return [String]
     #
-    # @!attribute [rw] turn_number
-    #   The number of turn of the conversation history data.
-    #   @return [Integer]
+    # @!attribute [rw] bot_response
+    #   The bot response of the conversation history data.
+    #   @return [String]
+    #
+    # @!attribute [rw] timestamp
+    #   The timestamp of the conversation history entry.
+    #   @return [Time]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SelfServiceConversationHistory AWS API Documentation
     #
     class SelfServiceConversationHistory < Struct.new(
-      :bot_response,
+      :turn_number,
       :input_transcript,
-      :turn_number)
-      SENSITIVE = [:bot_response, :input_transcript]
+      :bot_response,
+      :timestamp)
+      SENSITIVE = [:input_transcript, :bot_response]
       include Aws::Structure
     end
 
@@ -8758,24 +10410,24 @@ module Aws::QConnect
     # similar content derived from the text with natural language
     # processing.
     #
-    # @!attribute [rw] breakpoint_percentile_threshold
-    #   The dissimilarity threshold for splitting chunks.
+    # @!attribute [rw] max_tokens
+    #   The maximum number of tokens that a chunk can contain.
     #   @return [Integer]
     #
     # @!attribute [rw] buffer_size
     #   The buffer size.
     #   @return [Integer]
     #
-    # @!attribute [rw] max_tokens
-    #   The maximum number of tokens that a chunk can contain.
+    # @!attribute [rw] breakpoint_percentile_threshold
+    #   The dissimilarity threshold for splitting chunks.
     #   @return [Integer]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SemanticChunkingConfiguration AWS API Documentation
     #
     class SemanticChunkingConfiguration < Struct.new(
-      :breakpoint_percentile_threshold,
+      :max_tokens,
       :buffer_size,
-      :max_tokens)
+      :breakpoint_percentile_threshold)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -8783,6 +10435,34 @@ module Aws::QConnect
     # @!attribute [rw] assistant_id
     #   The identifier of the Amazon Q in Connect assistant.
     #   @return [String]
+    #
+    # @!attribute [rw] session_id
+    #   The identifier of the Amazon Q in Connect session.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The message type.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   The message data to submit to the Amazon Q in Connect session.
+    #   @return [Types::MessageInput]
+    #
+    # @!attribute [rw] ai_agent_id
+    #   The identifier of the AI Agent to use for processing the message.
+    #   @return [String]
+    #
+    # @!attribute [rw] conversation_context
+    #   The conversation context before the Amazon Q in Connect session.
+    #   @return [Types::ConversationContext]
+    #
+    # @!attribute [rw] configuration
+    #   The configuration of the [SendMessage][1] request.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/connect/latest/APIReference/API_amazon-q-connect_SendMessage.html
+    #   @return [Types::MessageConfiguration]
     #
     # @!attribute [rw] client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
@@ -8794,48 +10474,59 @@ module Aws::QConnect
     #   not need to pass this option.
     #   @return [String]
     #
-    # @!attribute [rw] conversation_context
-    #   The conversation context before the Amazon Q in Connect session.
-    #   @return [Types::ConversationContext]
-    #
-    # @!attribute [rw] message
-    #   The message data to submit to the Amazon Q in Connect session.
-    #   @return [Types::MessageInput]
-    #
-    # @!attribute [rw] session_id
-    #   The identifier of the Amazon Q in Connect session.
+    # @!attribute [rw] orchestrator_use_case
+    #   The orchestrator use case for message processing.
     #   @return [String]
     #
-    # @!attribute [rw] type
-    #   The message type.
+    # @!attribute [rw] metadata
+    #   Additional metadata for the message.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] origin_request_id
+    #   Request identifier from the origin system, used for end-to-end
+    #   tracing across spans.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SendMessageRequest AWS API Documentation
     #
     class SendMessageRequest < Struct.new(
       :assistant_id,
-      :client_token,
-      :conversation_context,
-      :message,
       :session_id,
-      :type)
+      :type,
+      :message,
+      :ai_agent_id,
+      :conversation_context,
+      :configuration,
+      :client_token,
+      :orchestrator_use_case,
+      :metadata,
+      :origin_request_id)
       SENSITIVE = []
       include Aws::Structure
     end
 
-    # @!attribute [rw] next_message_token
-    #   The token for the next message, used by GetNextMessage.
-    #   @return [String]
-    #
     # @!attribute [rw] request_message_id
     #   The identifier of the submitted message.
+    #   @return [String]
+    #
+    # @!attribute [rw] configuration
+    #   The configuration of the [SendMessage][1] request.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/connect/latest/APIReference/API_amazon-q-connect_SendMessage.html
+    #   @return [Types::MessageConfiguration]
+    #
+    # @!attribute [rw] next_message_token
+    #   The token for the next message, used by GetNextMessage.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SendMessageResponse AWS API Documentation
     #
     class SendMessageResponse < Struct.new(
-      :next_message_token,
-      :request_message_id)
+      :request_message_id,
+      :configuration,
+      :next_message_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -8880,24 +10571,6 @@ module Aws::QConnect
 
     # Information about the session.
     #
-    # @!attribute [rw] ai_agent_configuration
-    #   The configuration of the AI Agents (mapped by AI Agent Type to AI
-    #   Agent version) that should be used by Amazon Q in Connect for this
-    #   Session.
-    #   @return [Hash<String,Types::AIAgentConfigurationData>]
-    #
-    # @!attribute [rw] description
-    #   The description of the session.
-    #   @return [String]
-    #
-    # @!attribute [rw] integration_configuration
-    #   The configuration information for the session integration.
-    #   @return [Types::SessionIntegrationConfiguration]
-    #
-    # @!attribute [rw] name
-    #   The name of the session.
-    #   @return [String]
-    #
     # @!attribute [rw] session_arn
     #   The Amazon Resource Name (ARN) of the session.
     #   @return [String]
@@ -8906,26 +10579,60 @@ module Aws::QConnect
     #   The identifier of the session.
     #   @return [String]
     #
-    # @!attribute [rw] tag_filter
-    #   An object that can be used to specify Tag conditions.
-    #   @return [Types::TagFilter]
+    # @!attribute [rw] name
+    #   The name of the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   The description of the session.
+    #   @return [String]
     #
     # @!attribute [rw] tags
     #   The tags used to organize, track, or control access for this
     #   resource.
     #   @return [Hash<String,String>]
     #
+    # @!attribute [rw] integration_configuration
+    #   The configuration information for the session integration.
+    #   @return [Types::SessionIntegrationConfiguration]
+    #
+    # @!attribute [rw] tag_filter
+    #   An object that can be used to specify Tag conditions.
+    #   @return [Types::TagFilter]
+    #
+    # @!attribute [rw] ai_agent_configuration
+    #   The configuration of the AI Agents (mapped by AI Agent Type to AI
+    #   Agent version) that should be used by Amazon Q in Connect for this
+    #   Session.
+    #   @return [Hash<String,Types::AIAgentConfigurationData>]
+    #
+    # @!attribute [rw] origin
+    #   The origin of the Session to be listed. `SYSTEM` for a default
+    #   Session created by Amazon Q in Connect or `CUSTOMER` for a Session
+    #   created by calling [CreateSession][1] API.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/connect/latest/APIReference/API_amazon-q-connect_CreateSession.html
+    #   @return [String]
+    #
+    # @!attribute [rw] orchestrator_configuration_list
+    #   The list of orchestrator configurations for the session.
+    #   @return [Array<Types::OrchestratorConfigurationEntry>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SessionData AWS API Documentation
     #
     class SessionData < Struct.new(
-      :ai_agent_configuration,
-      :description,
-      :integration_configuration,
-      :name,
       :session_arn,
       :session_id,
+      :name,
+      :description,
+      :tags,
+      :integration_configuration,
       :tag_filter,
-      :tags)
+      :ai_agent_configuration,
+      :origin,
+      :orchestrator_configuration_list)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -8947,29 +10654,29 @@ module Aws::QConnect
 
     # Summary information about the session.
     #
-    # @!attribute [rw] assistant_arn
-    #   The Amazon Resource Name (ARN) of the Amazon Q in Connect assistant.
-    #   @return [String]
-    #
-    # @!attribute [rw] assistant_id
-    #   The identifier of the Amazon Q in Connect assistant.
+    # @!attribute [rw] session_id
+    #   The identifier of the session.
     #   @return [String]
     #
     # @!attribute [rw] session_arn
     #   The Amazon Resource Name (ARN) of the session.
     #   @return [String]
     #
-    # @!attribute [rw] session_id
-    #   The identifier of the session.
+    # @!attribute [rw] assistant_id
+    #   The identifier of the Amazon Q in Connect assistant.
+    #   @return [String]
+    #
+    # @!attribute [rw] assistant_arn
+    #   The Amazon Resource Name (ARN) of the Amazon Q in Connect assistant.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SessionSummary AWS API Documentation
     #
     class SessionSummary < Struct.new(
-      :assistant_arn,
-      :assistant_id,
+      :session_id,
       :session_arn,
-      :session_id)
+      :assistant_id,
+      :assistant_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -9006,46 +10713,535 @@ module Aws::QConnect
 
     # Details about the source content data.
     #
-    # @!attribute [rw] citation_span
-    #   Contains information about where the text with a citation begins and
-    #   ends in the generated output.
-    #   @return [Types::CitationSpan]
-    #
     # @!attribute [rw] id
     #   The identifier of the source content.
     #   @return [String]
-    #
-    # @!attribute [rw] ranking_data
-    #   Details about the source content ranking data.
-    #   @return [Types::RankingData]
-    #
-    # @!attribute [rw] text_data
-    #   Details about the source content text data.
-    #   @return [Types::TextData]
     #
     # @!attribute [rw] type
     #   The type of the source content.
     #   @return [String]
     #
+    # @!attribute [rw] text_data
+    #   Details about the source content text data.
+    #   @return [Types::TextData]
+    #
+    # @!attribute [rw] ranking_data
+    #   Details about the source content ranking data.
+    #   @return [Types::RankingData]
+    #
+    # @!attribute [rw] citation_span
+    #   Contains information about where the text with a citation begins and
+    #   ends in the generated output.
+    #   @return [Types::CitationSpan]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SourceContentDataDetails AWS API Documentation
     #
     class SourceContentDataDetails < Struct.new(
-      :citation_span,
       :id,
-      :ranking_data,
+      :type,
       :text_data,
-      :type)
+      :ranking_data,
+      :citation_span)
       SENSITIVE = []
       include Aws::Structure
     end
 
-    # @!attribute [rw] content_type
-    #   The type of content to upload.
+    # A span represents a unit of work during AI agent execution, capturing
+    # timing, status, and contextual attributes.
+    #
+    # @!attribute [rw] span_id
+    #   Unique span identifier
+    #   @return [String]
+    #
+    # @!attribute [rw] assistant_id
+    #   UUID of the Connect AI Assistant resource
+    #   @return [String]
+    #
+    # @!attribute [rw] session_id
+    #   UUID of the Connect AI Session resource
+    #   @return [String]
+    #
+    # @!attribute [rw] parent_span_id
+    #   Parent span identifier for hierarchy. Null for root spans.
+    #   @return [String]
+    #
+    # @!attribute [rw] span_name
+    #   Service-defined operation name
+    #   @return [String]
+    #
+    # @!attribute [rw] span_type
+    #   Operation relationship type
+    #   @return [String]
+    #
+    # @!attribute [rw] start_timestamp
+    #   Operation start time in milliseconds since epoch
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_timestamp
+    #   Operation end time in milliseconds since epoch
+    #   @return [Time]
+    #
+    # @!attribute [rw] status
+    #   Span completion status
+    #   @return [String]
+    #
+    # @!attribute [rw] status_description
+    #   Human-readable error description when status is ERROR or TIMEOUT
+    #   @return [String]
+    #
+    # @!attribute [rw] request_id
+    #   The service request ID that initiated the operation
+    #   @return [String]
+    #
+    # @!attribute [rw] origin_request_id
+    #   The origin request identifier for end-to-end tracing.
+    #   @return [String]
+    #
+    # @!attribute [rw] attributes
+    #   Span-specific contextual attributes
+    #   @return [Types::SpanAttributes]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/Span AWS API Documentation
+    #
+    class Span < Struct.new(
+      :span_id,
+      :assistant_id,
+      :session_id,
+      :parent_span_id,
+      :span_name,
+      :span_type,
+      :start_timestamp,
+      :end_timestamp,
+      :status,
+      :status_description,
+      :request_id,
+      :origin_request_id,
+      :attributes)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contextual attributes capturing operation details, LLM configuration,
+    # usage metrics, and conversation data
+    #
+    # @!attribute [rw] operation_name
+    #   Action being performed
+    #   @return [String]
+    #
+    # @!attribute [rw] provider_name
+    #   Model provider identifier (e.g., aws.bedrock)
+    #   @return [String]
+    #
+    # @!attribute [rw] error_type
+    #   Error classification if span failed (e.g., throttle, timeout)
+    #   @return [String]
+    #
+    # @!attribute [rw] agent_id
+    #   Amazon Connect agent ID
+    #   @return [String]
+    #
+    # @!attribute [rw] instance_arn
+    #   Amazon Connect instance ARN
+    #   @return [String]
+    #
+    # @!attribute [rw] contact_id
+    #   Amazon Connect contact identifier
+    #   @return [String]
+    #
+    # @!attribute [rw] initial_contact_id
+    #   Amazon Connect contact identifier
+    #   @return [String]
+    #
+    # @!attribute [rw] session_name
+    #   Session name
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_agent_arn
+    #   AI agent ARN
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_agent_type
+    #   AI agent type
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_agent_name
+    #   AI agent name
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_agent_id
+    #   AI agent identifier
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_agent_version
+    #   AI agent version number
+    #   @return [Integer]
+    #
+    # @!attribute [rw] ai_agent_invoker
+    #   Entity that invoked the AI agent
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_agent_orchestrator_use_case
+    #   AI agent orchestrator use case
+    #   @return [String]
+    #
+    # @!attribute [rw] request_model
+    #   LLM model ID for request (e.g., anthropic.claude-3-sonnet)
+    #   @return [String]
+    #
+    # @!attribute [rw] request_max_tokens
+    #   Maximum tokens configured for generation
+    #   @return [Integer]
+    #
+    # @!attribute [rw] temperature
+    #   Sampling temperature for generation
+    #   @return [Float]
+    #
+    # @!attribute [rw] top_p
+    #   Top-p sampling parameter for generation
+    #   @return [Float]
+    #
+    # @!attribute [rw] response_model
+    #   Actual model used for response (usually matches requestModel)
+    #   @return [String]
+    #
+    # @!attribute [rw] response_finish_reasons
+    #   Generation termination reasons (e.g., stop, max\_tokens)
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] usage_input_tokens
+    #   Number of input tokens in prompt
+    #   @return [Integer]
+    #
+    # @!attribute [rw] usage_output_tokens
+    #   Number of output tokens in response
+    #   @return [Integer]
+    #
+    # @!attribute [rw] usage_total_tokens
+    #   Total tokens consumed (input + output)
+    #   @return [Integer]
+    #
+    # @!attribute [rw] cache_read_input_tokens
+    #   Number of input tokens that were retrieved from cache
+    #   @return [Integer]
+    #
+    # @!attribute [rw] cache_write_input_tokens
+    #   Number of input tokens that were written to cache in this request
+    #   @return [Integer]
+    #
+    # @!attribute [rw] input_messages
+    #   Input message collection sent to LLM
+    #   @return [Array<Types::SpanMessage>]
+    #
+    # @!attribute [rw] output_messages
+    #   Output message collection received from LLM
+    #   @return [Array<Types::SpanMessage>]
+    #
+    # @!attribute [rw] system_instructions
+    #   System prompt instructions
+    #   @return [Array<Types::SpanMessageValue>]
+    #
+    # @!attribute [rw] prompt_arn
+    #   AI prompt ARN
+    #   @return [String]
+    #
+    # @!attribute [rw] prompt_id
+    #   AI prompt identifier
+    #   @return [String]
+    #
+    # @!attribute [rw] prompt_type
+    #   AI prompt type
+    #   @return [String]
+    #
+    # @!attribute [rw] prompt_name
+    #   AI prompt name
+    #   @return [String]
+    #
+    # @!attribute [rw] prompt_version
+    #   AI prompt version number
+    #   @return [Integer]
+    #
+    # @!attribute [rw] time_to_first_token_ms
+    #   Time to first token in milliseconds, measured from when Amazon
+    #   Bedrock was invoked to when the first token was returned
+    #   @return [Integer]
+    #
+    # @!attribute [rw] guardrail_assessments
+    #   Guardrail assessments for the inference span. Absent on other span
+    #   types and when no AI Guardrail is attached to the AI Agent.
+    #   @return [Array<Types::SpanGuardrailAssessment>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SpanAttributes AWS API Documentation
+    #
+    class SpanAttributes < Struct.new(
+      :operation_name,
+      :provider_name,
+      :error_type,
+      :agent_id,
+      :instance_arn,
+      :contact_id,
+      :initial_contact_id,
+      :session_name,
+      :ai_agent_arn,
+      :ai_agent_type,
+      :ai_agent_name,
+      :ai_agent_id,
+      :ai_agent_version,
+      :ai_agent_invoker,
+      :ai_agent_orchestrator_use_case,
+      :request_model,
+      :request_max_tokens,
+      :temperature,
+      :top_p,
+      :response_model,
+      :response_finish_reasons,
+      :usage_input_tokens,
+      :usage_output_tokens,
+      :usage_total_tokens,
+      :cache_read_input_tokens,
+      :cache_write_input_tokens,
+      :input_messages,
+      :output_messages,
+      :system_instructions,
+      :prompt_arn,
+      :prompt_id,
+      :prompt_type,
+      :prompt_name,
+      :prompt_version,
+      :time_to_first_token_ms,
+      :guardrail_assessments)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A citation that spans a specific range of text.
+    #
+    # @!attribute [rw] content_id
+    #   The identifier of the content being cited in the span.
+    #   @return [String]
+    #
+    # @!attribute [rw] title
+    #   The title of the content being cited in the span.
     #   @return [String]
     #
     # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base containing the cited content.
+    #   @return [String]
+    #
+    # @!attribute [rw] knowledge_base_arn
+    #   The Amazon Resource Name (ARN) of the knowledge base containing the
+    #   cited content.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SpanCitation AWS API Documentation
+    #
+    class SpanCitation < Struct.new(
+      :content_id,
+      :title,
+      :knowledge_base_id,
+      :knowledge_base_arn)
+      SENSITIVE = [:title]
+      include Aws::Structure
+    end
+
+    # Result of a single guardrail assessment, covering either the input
+    # (customer/user message) or the output (LLM response) of a Bedrock
+    # Converse call.
+    #
+    # @!attribute [rw] guardrail_id
+    #   Unique AI Guardrail identifier.
+    #   @return [String]
+    #
+    # @!attribute [rw] guardrail_name
+    #   Customer-defined display name of the AI Guardrail resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] source
+    #   Content source the guardrail was evaluated against.
+    #   @return [String]
+    #
+    # @!attribute [rw] action
+    #   Outcome of the guardrail assessment.
+    #   @return [String]
+    #
+    # @!attribute [rw] policies
+    #   Per-policy assessment results. Absent or empty when action is NONE.
+    #   @return [Array<Types::GuardrailPolicyResult>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SpanGuardrailAssessment AWS API Documentation
+    #
+    class SpanGuardrailAssessment < Struct.new(
+      :guardrail_id,
+      :guardrail_name,
+      :source,
+      :action,
+      :policies)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A message in the conversation history with participant role and
+    # content values
+    #
+    # @!attribute [rw] message_id
+    #   Unique message identifier
+    #   @return [String]
+    #
+    # @!attribute [rw] participant
+    #   Message source role
+    #   @return [String]
+    #
+    # @!attribute [rw] timestamp
+    #   Message timestamp
+    #   @return [Time]
+    #
+    # @!attribute [rw] values
+    #   Message content values (text, tool use, tool result, reasoning)
+    #   @return [Array<Types::SpanMessageValue>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SpanMessage AWS API Documentation
+    #
+    class SpanMessage < Struct.new(
+      :message_id,
+      :participant,
+      :timestamp,
+      :values)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Message content value - can be text, tool invocation, tool result, or
+    # reasoning
+    #
+    # @note SpanMessageValue is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of SpanMessageValue corresponding to the set member.
+    #
+    # @!attribute [rw] text
+    #   Text message content
+    #   @return [Types::SpanTextValue]
+    #
+    # @!attribute [rw] tool_use
+    #   Tool invocation message content
+    #   @return [Types::SpanToolUseValue]
+    #
+    # @!attribute [rw] tool_result
+    #   Tool result message content
+    #   @return [Types::SpanToolResultValue]
+    #
+    # @!attribute [rw] reasoning
+    #   Model reasoning and it's internal decision making process
+    #   @return [Types::SpanReasoningValue]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SpanMessageValue AWS API Documentation
+    #
+    class SpanMessageValue < Struct.new(
+      :text,
+      :tool_use,
+      :tool_result,
+      :reasoning,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Text < SpanMessageValue; end
+      class ToolUse < SpanMessageValue; end
+      class ToolResult < SpanMessageValue; end
+      class Reasoning < SpanMessageValue; end
+      class Unknown < SpanMessageValue; end
+    end
+
+    # Model reasoning and it's internal decision making process
+    #
+    # @!attribute [rw] value
+    #   The reasoning text content
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SpanReasoningValue AWS API Documentation
+    #
+    class SpanReasoningValue < Struct.new(
+      :value)
+      SENSITIVE = [:value]
+      include Aws::Structure
+    end
+
+    # Text message content
+    #
+    # @!attribute [rw] value
+    #   String content of the message text
+    #   @return [String]
+    #
+    # @!attribute [rw] citations
+    #   The citations associated with the span text.
+    #   @return [Array<Types::SpanCitation>]
+    #
+    # @!attribute [rw] ai_guardrail_assessment
+    #   The AI Guardrail assessment for the span text.
+    #   @return [Types::AIGuardrailAssessment]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SpanTextValue AWS API Documentation
+    #
+    class SpanTextValue < Struct.new(
+      :value,
+      :citations,
+      :ai_guardrail_assessment)
+      SENSITIVE = [:value]
+      include Aws::Structure
+    end
+
+    # Tool result message content
+    #
+    # @!attribute [rw] tool_use_id
+    #   Relates this result back to the tool invocation
+    #   @return [String]
+    #
+    # @!attribute [rw] values
+    #   The tool results
+    #   @return [Array<Types::SpanMessageValue>]
+    #
+    # @!attribute [rw] error
+    #   The tool invocation error if failed
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SpanToolResultValue AWS API Documentation
+    #
+    class SpanToolResultValue < Struct.new(
+      :tool_use_id,
+      :values,
+      :error)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Tool invocation message content
+    #
+    # @!attribute [rw] tool_use_id
+    #   Unique ID for this tool invocation
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The tool name
+    #   @return [String]
+    #
+    # @!attribute [rw] arguments
+    #   The tool input arguments
+    #   @return [Hash,Array,String,Numeric,Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SpanToolUseValue AWS API Documentation
+    #
+    class SpanToolUseValue < Struct.new(
+      :tool_use_id,
+      :name,
+      :arguments)
+      SENSITIVE = [:arguments]
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] knowledge_base_id
     #   The identifier of the knowledge base. Can be either the ID or the
     #   ARN. URLs cannot contain the ARN.
+    #   @return [String]
+    #
+    # @!attribute [rw] content_type
+    #   The type of content to upload.
     #   @return [String]
     #
     # @!attribute [rw] presigned_url_time_to_live
@@ -9056,17 +11252,13 @@ module Aws::QConnect
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/StartContentUploadRequest AWS API Documentation
     #
     class StartContentUploadRequest < Struct.new(
-      :content_type,
       :knowledge_base_id,
+      :content_type,
       :presigned_url_time_to_live)
       SENSITIVE = []
       include Aws::Structure
     end
 
-    # @!attribute [rw] headers_to_include
-    #   The headers to include in the upload.
-    #   @return [Hash<String,String>]
-    #
     # @!attribute [rw] upload_id
     #   The identifier of the upload.
     #   @return [String]
@@ -9079,39 +11271,21 @@ module Aws::QConnect
     #   The expiration time of the URL as an epoch timestamp.
     #   @return [Time]
     #
+    # @!attribute [rw] headers_to_include
+    #   The headers to include in the upload.
+    #   @return [Hash<String,String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/StartContentUploadResponse AWS API Documentation
     #
     class StartContentUploadResponse < Struct.new(
-      :headers_to_include,
       :upload_id,
       :url,
-      :url_expiry)
+      :url_expiry,
+      :headers_to_include)
       SENSITIVE = [:url]
       include Aws::Structure
     end
 
-    # @!attribute [rw] client_token
-    #   The tags used to organize, track, or control access for this
-    #   resource.
-    #
-    #   **A suitable default value is auto-generated.** You should normally
-    #   not need to pass this option.
-    #   @return [String]
-    #
-    # @!attribute [rw] external_source_configuration
-    #   The configuration information of the external source that the
-    #   resource data are imported from.
-    #   @return [Types::ExternalSourceConfiguration]
-    #
-    # @!attribute [rw] import_job_type
-    #   The type of the import job.
-    #
-    #   * For importing quick response resource, set the value to
-    #     `QUICK_RESPONSES`.
-    #
-    #   ^
-    #   @return [String]
-    #
     # @!attribute [rw] knowledge_base_id
     #   The identifier of the knowledge base. Can be either the ID or the
     #   ARN. URLs cannot contain the ARN.
@@ -9122,9 +11296,14 @@ module Aws::QConnect
     #   ^
     #   @return [String]
     #
-    # @!attribute [rw] metadata
-    #   The metadata fields of the imported Amazon Q in Connect resources.
-    #   @return [Hash<String,String>]
+    # @!attribute [rw] import_job_type
+    #   The type of the import job.
+    #
+    #   * For importing quick response resource, set the value to
+    #     `QUICK_RESPONSES`.
+    #
+    #   ^
+    #   @return [String]
     #
     # @!attribute [rw] upload_id
     #   A pointer to the uploaded asset. This value is returned by
@@ -9135,15 +11314,32 @@ module Aws::QConnect
     #   [1]: https://docs.aws.amazon.com/wisdom/latest/APIReference/API_StartContentUpload.html
     #   @return [String]
     #
+    # @!attribute [rw] client_token
+    #   The tags used to organize, track, or control access for this
+    #   resource.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @!attribute [rw] metadata
+    #   The metadata fields of the imported Amazon Q in Connect resources.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] external_source_configuration
+    #   The configuration information of the external source that the
+    #   resource data are imported from.
+    #   @return [Types::ExternalSourceConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/StartImportJobRequest AWS API Documentation
     #
     class StartImportJobRequest < Struct.new(
-      :client_token,
-      :external_source_configuration,
-      :import_job_type,
       :knowledge_base_id,
+      :import_job_type,
+      :upload_id,
+      :client_token,
       :metadata,
-      :upload_id)
+      :external_source_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -9160,15 +11356,49 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # The system attributes that are used with the message template.
+    # Details about suggested message data.
     #
-    # @!attribute [rw] customer_endpoint
-    #   The CustomerEndpoint attribute.
-    #   @return [Types::SystemEndpointAttributes]
+    # @!attribute [rw] message_text
+    #   The text content of the suggested message.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SuggestedMessageDataDetails AWS API Documentation
+    #
+    class SuggestedMessageDataDetails < Struct.new(
+      :message_text)
+      SENSITIVE = [:message_text]
+      include Aws::Structure
+    end
+
+    # Reference information for a suggested message.
+    #
+    # @!attribute [rw] ai_agent_id
+    #   The identifier of the AI Agent that generated the suggested message.
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_agent_arn
+    #   The Amazon Resource Name (ARN) of the AI Agent that generated the
+    #   suggested message.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SuggestedMessageReference AWS API Documentation
+    #
+    class SuggestedMessageReference < Struct.new(
+      :ai_agent_id,
+      :ai_agent_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The system attributes that are used with the message template.
     #
     # @!attribute [rw] name
     #   The name of the task.
     #   @return [String]
+    #
+    # @!attribute [rw] customer_endpoint
+    #   The CustomerEndpoint attribute.
+    #   @return [Types::SystemEndpointAttributes]
     #
     # @!attribute [rw] system_endpoint
     #   The SystemEndpoint attribute.
@@ -9177,8 +11407,8 @@ module Aws::QConnect
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/SystemAttributes AWS API Documentation
     #
     class SystemAttributes < Struct.new(
-      :customer_endpoint,
       :name,
+      :customer_endpoint,
       :system_endpoint)
       SENSITIVE = [:name]
       include Aws::Structure
@@ -9226,6 +11456,10 @@ module Aws::QConnect
     #
     # @note TagFilter is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of TagFilter corresponding to the set member.
     #
+    # @!attribute [rw] tag_condition
+    #   A leaf node condition which can be used to specify a tag condition.
+    #   @return [Types::TagCondition]
+    #
     # @!attribute [rw] and_conditions
     #   A list of conditions which would be applied together with an `AND`
     #   condition.
@@ -9236,24 +11470,20 @@ module Aws::QConnect
     #   condition.
     #   @return [Array<Types::OrCondition>]
     #
-    # @!attribute [rw] tag_condition
-    #   A leaf node condition which can be used to specify a tag condition.
-    #   @return [Types::TagCondition]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/TagFilter AWS API Documentation
     #
     class TagFilter < Struct.new(
+      :tag_condition,
       :and_conditions,
       :or_conditions,
-      :tag_condition,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
       include Aws::Structure::Union
 
+      class TagCondition < TagFilter; end
       class AndConditions < TagFilter; end
       class OrConditions < TagFilter; end
-      class TagCondition < TagFilter; end
       class Unknown < TagFilter; end
     end
 
@@ -9281,19 +11511,19 @@ module Aws::QConnect
 
     # Details about the source content text data.
     #
-    # @!attribute [rw] excerpt
+    # @!attribute [rw] title
     #   The text of the document.
     #   @return [Types::DocumentText]
     #
-    # @!attribute [rw] title
+    # @!attribute [rw] excerpt
     #   The text of the document.
     #   @return [Types::DocumentText]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/TextData AWS API Documentation
     #
     class TextData < Struct.new(
-      :excerpt,
-      :title)
+      :title,
+      :excerpt)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -9319,10 +11549,20 @@ module Aws::QConnect
     #   The value of the message data in text type.
     #   @return [String]
     #
+    # @!attribute [rw] citations
+    #   The citations associated with the text message.
+    #   @return [Array<Types::Citation>]
+    #
+    # @!attribute [rw] ai_guardrail_assessment
+    #   The AI Guardrail assessment for the text message.
+    #   @return [Types::AIGuardrailAssessment]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/TextMessage AWS API Documentation
     #
     class TextMessage < Struct.new(
-      :value)
+      :value,
+      :citations,
+      :ai_guardrail_assessment)
       SENSITIVE = [:value]
       include Aws::Structure
     end
@@ -9359,6 +11599,249 @@ module Aws::QConnect
       include Aws::Structure
     end
 
+    # Configuration settings for a tool used by AI Agents.
+    #
+    # @!attribute [rw] tool_name
+    #   The name of the tool.
+    #   @return [String]
+    #
+    # @!attribute [rw] tool_type
+    #   The type of the tool.
+    #   @return [String]
+    #
+    # @!attribute [rw] title
+    #   The title of the tool configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] tool_id
+    #   The identifier of the tool, for example toolName from Model Context
+    #   Provider server.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   The description of the tool configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] instruction
+    #   Instructions for using the tool.
+    #   @return [Types::ToolInstruction]
+    #
+    # @!attribute [rw] override_input_values
+    #   Override input values for the tool configuration.
+    #   @return [Array<Types::ToolOverrideInputValue>]
+    #
+    # @!attribute [rw] output_filters
+    #   Output filters applies to the tool result.
+    #   @return [Array<Types::ToolOutputFilter>]
+    #
+    # @!attribute [rw] input_schema
+    #   The input schema for the tool configuration.
+    #   @return [Hash,Array,String,Numeric,Boolean]
+    #
+    # @!attribute [rw] output_schema
+    #   The output schema for the tool configuration.
+    #   @return [Hash,Array,String,Numeric,Boolean]
+    #
+    # @!attribute [rw] annotations
+    #   Annotations for the tool configuration.
+    #   @return [Types::Annotation]
+    #
+    # @!attribute [rw] user_interaction_configuration
+    #   Configuration for user interaction with the tool.
+    #   @return [Types::UserInteractionConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ToolConfiguration AWS API Documentation
+    #
+    class ToolConfiguration < Struct.new(
+      :tool_name,
+      :tool_type,
+      :title,
+      :tool_id,
+      :description,
+      :instruction,
+      :override_input_values,
+      :output_filters,
+      :input_schema,
+      :output_schema,
+      :annotations,
+      :user_interaction_configuration)
+      SENSITIVE = [:title, :description, :instruction, :override_input_values, :output_filters, :input_schema, :output_schema, :annotations]
+      include Aws::Structure
+    end
+
+    # Instructions for using a tool.
+    #
+    # @!attribute [rw] instruction
+    #   The instruction text for the tool.
+    #   @return [String]
+    #
+    # @!attribute [rw] examples
+    #   Examples for using the tool.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ToolInstruction AWS API Documentation
+    #
+    class ToolInstruction < Struct.new(
+      :instruction,
+      :examples)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration for tool output handling.
+    #
+    # @!attribute [rw] output_variable_name_override
+    #   Override the tool output results to different variable name.
+    #   @return [String]
+    #
+    # @!attribute [rw] session_data_namespace
+    #   The session data namespace for tool output.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ToolOutputConfiguration AWS API Documentation
+    #
+    class ToolOutputConfiguration < Struct.new(
+      :output_variable_name_override,
+      :session_data_namespace)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Filter configuration for tool output.
+    #
+    # @!attribute [rw] json_path
+    #   The JSON path for filtering tool output.
+    #   @return [String]
+    #
+    # @!attribute [rw] output_configuration
+    #   The output configuration for the filter.
+    #   @return [Types::ToolOutputConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ToolOutputFilter AWS API Documentation
+    #
+    class ToolOutputFilter < Struct.new(
+      :json_path,
+      :output_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A constant input value for tool override.
+    #
+    # @!attribute [rw] type
+    #   Override tool input value with constant values
+    #   @return [String]
+    #
+    # @!attribute [rw] value
+    #   The constant input override value.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ToolOverrideConstantInputValue AWS API Documentation
+    #
+    class ToolOverrideConstantInputValue < Struct.new(
+      :type,
+      :value)
+      SENSITIVE = [:value]
+      include Aws::Structure
+    end
+
+    # An input value override for tools.
+    #
+    # @!attribute [rw] json_path
+    #   The JSON path for the input value override.
+    #   @return [String]
+    #
+    # @!attribute [rw] value
+    #   The override input value.
+    #   @return [Types::ToolOverrideInputValueConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ToolOverrideInputValue AWS API Documentation
+    #
+    class ToolOverrideInputValue < Struct.new(
+      :json_path,
+      :value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration for overriding tool input values.
+    #
+    # @note ToolOverrideInputValueConfiguration is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note ToolOverrideInputValueConfiguration is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of ToolOverrideInputValueConfiguration corresponding to the set member.
+    #
+    # @!attribute [rw] constant
+    #   Constant input value configuration for tool override.
+    #   @return [Types::ToolOverrideConstantInputValue]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ToolOverrideInputValueConfiguration AWS API Documentation
+    #
+    class ToolOverrideInputValueConfiguration < Struct.new(
+      :constant,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Constant < ToolOverrideInputValueConfiguration; end
+      class Unknown < ToolOverrideInputValueConfiguration; end
+    end
+
+    # Data about the result of tool usage.
+    #
+    # @!attribute [rw] tool_use_id
+    #   The identifier of the tool use instance.
+    #   @return [String]
+    #
+    # @!attribute [rw] tool_name
+    #   The name of the tool that was used.
+    #   @return [String]
+    #
+    # @!attribute [rw] tool_result
+    #   The result of the tool usage.
+    #   @return [Hash,Array,String,Numeric,Boolean]
+    #
+    # @!attribute [rw] input_schema
+    #   The input schema for the tool use result.
+    #   @return [Hash,Array,String,Numeric,Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/ToolUseResultData AWS API Documentation
+    #
+    class ToolUseResultData < Struct.new(
+      :tool_use_id,
+      :tool_name,
+      :tool_result,
+      :input_schema)
+      SENSITIVE = [:tool_result, :input_schema]
+      include Aws::Structure
+    end
+
+    # You do not have permission to perform this action.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/UnauthorizedException AWS API Documentation
+    #
+    class UnauthorizedException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The server has a failure of processing the message
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/UnprocessableContentException AWS API Documentation
+    #
+    class UnprocessableContentException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] resource_arn
     #   The Amazon Resource Name (ARN) of the resource.
     #   @return [String]
@@ -9380,15 +11863,6 @@ module Aws::QConnect
     #
     class UntagResourceResponse < Aws::EmptyStructure; end
 
-    # @!attribute [rw] ai_agent_id
-    #   The identifier of the Amazon Q in Connect AI Agent.
-    #   @return [String]
-    #
-    # @!attribute [rw] assistant_id
-    #   The identifier of the Amazon Q in Connect assistant. Can be either
-    #   the ID or the ARN. URLs cannot contain the ARN.
-    #   @return [String]
-    #
     # @!attribute [rw] client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
     #   idempotency of the request. If not provided, the Amazon Web Services
@@ -9403,6 +11877,19 @@ module Aws::QConnect
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #   @return [String]
     #
+    # @!attribute [rw] assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either
+    #   the ID or the ARN. URLs cannot contain the ARN.
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_agent_id
+    #   The identifier of the Amazon Q in Connect AI Agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] visibility_status
+    #   The visbility status of the Amazon Q in Connect AI Agent.
+    #   @return [String]
+    #
     # @!attribute [rw] configuration
     #   The configuration of the Amazon Q in Connect AI Agent.
     #   @return [Types::AIAgentConfiguration]
@@ -9411,19 +11898,15 @@ module Aws::QConnect
     #   The description of the Amazon Q in Connect AI Agent.
     #   @return [String]
     #
-    # @!attribute [rw] visibility_status
-    #   The visbility status of the Amazon Q in Connect AI Agent.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/UpdateAIAgentRequest AWS API Documentation
     #
     class UpdateAIAgentRequest < Struct.new(
-      :ai_agent_id,
-      :assistant_id,
       :client_token,
+      :assistant_id,
+      :ai_agent_id,
+      :visibility_status,
       :configuration,
-      :description,
-      :visibility_status)
+      :description)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -9440,23 +11923,6 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] ai_guardrail_id
-    #   The identifier of the Amazon Q in Connect AI Guardrail.
-    #   @return [String]
-    #
-    # @!attribute [rw] assistant_id
-    #   The identifier of the Amazon Q in Connect assistant. Can be either
-    #   the ID or the ARN. URLs cannot contain the ARN.
-    #   @return [String]
-    #
-    # @!attribute [rw] blocked_input_messaging
-    #   The message to return when the AI Guardrail blocks a prompt.
-    #   @return [String]
-    #
-    # @!attribute [rw] blocked_outputs_messaging
-    #   The message to return when the AI Guardrail blocks a model response.
-    #   @return [String]
-    #
     # @!attribute [rw] client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
     #   idempotency of the request. If not provided, the Amazon Web Services
@@ -9471,50 +11937,67 @@ module Aws::QConnect
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #   @return [String]
     #
+    # @!attribute [rw] assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either
+    #   the ID or the ARN. URLs cannot contain the ARN.
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_guardrail_id
+    #   The identifier of the Amazon Q in Connect AI Guardrail.
+    #   @return [String]
+    #
+    # @!attribute [rw] visibility_status
+    #   The visibility status of the Amazon Q in Connect AI Guardrail.
+    #   @return [String]
+    #
+    # @!attribute [rw] blocked_input_messaging
+    #   The message to return when the AI Guardrail blocks a prompt.
+    #   @return [String]
+    #
+    # @!attribute [rw] blocked_outputs_messaging
+    #   The message to return when the AI Guardrail blocks a model response.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A description of the AI Guardrail.
+    #   @return [String]
+    #
+    # @!attribute [rw] topic_policy_config
+    #   The topic policies to configure for the AI Guardrail.
+    #   @return [Types::AIGuardrailTopicPolicyConfig]
+    #
     # @!attribute [rw] content_policy_config
     #   The content filter policies to configure for the AI Guardrail.
     #   @return [Types::AIGuardrailContentPolicyConfig]
+    #
+    # @!attribute [rw] word_policy_config
+    #   The word policy you configure for the AI Guardrail.
+    #   @return [Types::AIGuardrailWordPolicyConfig]
+    #
+    # @!attribute [rw] sensitive_information_policy_config
+    #   The sensitive information policy to configure for the AI Guardrail.
+    #   @return [Types::AIGuardrailSensitiveInformationPolicyConfig]
     #
     # @!attribute [rw] contextual_grounding_policy_config
     #   The contextual grounding policy configuration used to create an AI
     #   Guardrail.
     #   @return [Types::AIGuardrailContextualGroundingPolicyConfig]
     #
-    # @!attribute [rw] description
-    #   A description of the AI Guardrail.
-    #   @return [String]
-    #
-    # @!attribute [rw] sensitive_information_policy_config
-    #   The sensitive information policy to configure for the AI Guardrail.
-    #   @return [Types::AIGuardrailSensitiveInformationPolicyConfig]
-    #
-    # @!attribute [rw] topic_policy_config
-    #   The topic policies to configure for the AI Guardrail.
-    #   @return [Types::AIGuardrailTopicPolicyConfig]
-    #
-    # @!attribute [rw] visibility_status
-    #   The visibility status of the Amazon Q in Connect AI Guardrail.
-    #   @return [String]
-    #
-    # @!attribute [rw] word_policy_config
-    #   The word policy you configure for the AI Guardrail.
-    #   @return [Types::AIGuardrailWordPolicyConfig]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/UpdateAIGuardrailRequest AWS API Documentation
     #
     class UpdateAIGuardrailRequest < Struct.new(
-      :ai_guardrail_id,
+      :client_token,
       :assistant_id,
+      :ai_guardrail_id,
+      :visibility_status,
       :blocked_input_messaging,
       :blocked_outputs_messaging,
-      :client_token,
-      :content_policy_config,
-      :contextual_grounding_policy_config,
       :description,
-      :sensitive_information_policy_config,
       :topic_policy_config,
-      :visibility_status,
-      :word_policy_config)
+      :content_policy_config,
+      :word_policy_config,
+      :sensitive_information_policy_config,
+      :contextual_grounding_policy_config)
       SENSITIVE = [:blocked_input_messaging, :blocked_outputs_messaging, :description]
       include Aws::Structure
     end
@@ -9531,15 +12014,6 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] ai_prompt_id
-    #   The identifier of the Amazon Q in Connect AI Prompt.
-    #   @return [String]
-    #
-    # @!attribute [rw] assistant_id
-    #   The identifier of the Amazon Q in Connect assistant. Can be either
-    #   the ID or the ARN. URLs cannot contain the ARN.
-    #   @return [String]
-    #
     # @!attribute [rw] client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
     #   idempotency of the request. If not provided, the Amazon Web Services
@@ -9554,27 +12028,56 @@ module Aws::QConnect
     #   [1]: http://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
     #   @return [String]
     #
-    # @!attribute [rw] description
-    #   The description of the Amazon Q in Connect AI Prompt.
+    # @!attribute [rw] assistant_id
+    #   The identifier of the Amazon Q in Connect assistant. Can be either
+    #   the ID or the ARN. URLs cannot contain the ARN.
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_prompt_id
+    #   The identifier of the Amazon Q in Connect AI Prompt.
+    #   @return [String]
+    #
+    # @!attribute [rw] visibility_status
+    #   The visibility status of the Amazon Q in Connect AI prompt.
     #   @return [String]
     #
     # @!attribute [rw] template_configuration
     #   The configuration of the prompt template for this AI Prompt.
     #   @return [Types::AIPromptTemplateConfiguration]
     #
-    # @!attribute [rw] visibility_status
-    #   The visibility status of the Amazon Q in Connect AI prompt.
+    # @!attribute [rw] description
+    #   The description of the Amazon Q in Connect AI Prompt.
     #   @return [String]
+    #
+    # @!attribute [rw] model_id
+    #   The identifier of the model used for this AI Prompt.
+    #
+    #   <note markdown="1"> For information about which models are supported in each Amazon Web
+    #   Services Region, see [Supported models for system/custom
+    #   prompts][1].
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/connect/latest/adminguide/create-ai-prompts.html#cli-create-aiprompt
+    #   @return [String]
+    #
+    # @!attribute [rw] inference_configuration
+    #   The updated inference configuration for the AI Prompt.
+    #   @return [Types::AIPromptInferenceConfiguration]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/UpdateAIPromptRequest AWS API Documentation
     #
     class UpdateAIPromptRequest < Struct.new(
-      :ai_prompt_id,
-      :assistant_id,
       :client_token,
-      :description,
+      :assistant_id,
+      :ai_prompt_id,
+      :visibility_status,
       :template_configuration,
-      :visibility_status)
+      :description,
+      :model_id,
+      :inference_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -9591,14 +12094,14 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] ai_agent_type
-    #   The type of the AI Agent being updated for use by default on the
-    #   Amazon Q in Connect Assistant.
-    #   @return [String]
-    #
     # @!attribute [rw] assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either
     #   the ID or the ARN. URLs cannot contain the ARN.
+    #   @return [String]
+    #
+    # @!attribute [rw] ai_agent_type
+    #   The type of the AI Agent being updated for use by default on the
+    #   Amazon Q in Connect Assistant.
     #   @return [String]
     #
     # @!attribute [rw] configuration
@@ -9606,12 +12109,17 @@ module Aws::QConnect
     #   on the Amazon Q in Connect Assistant.
     #   @return [Types::AIAgentConfigurationData]
     #
+    # @!attribute [rw] orchestrator_use_case
+    #   The orchestrator use case for the AI Agent being added.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/UpdateAssistantAIAgentRequest AWS API Documentation
     #
     class UpdateAssistantAIAgentRequest < Struct.new(
-      :ai_agent_type,
       :assistant_id,
-      :configuration)
+      :ai_agent_type,
+      :configuration,
+      :orchestrator_use_case)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -9628,34 +12136,16 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] content_id
-    #   The identifier of the content. Can be either the ID or the ARN. URLs
-    #   cannot contain the ARN.
-    #   @return [String]
-    #
     # @!attribute [rw] knowledge_base_id
     #   The identifier of the knowledge base. This should not be a
     #   QUICK\_RESPONSES type knowledge base. Can be either the ID or the
     #   ARN
     #   @return [String]
     #
-    # @!attribute [rw] metadata
-    #   A key/value map to store attributes without affecting tagging or
-    #   recommendations. For example, when synchronizing data between an
-    #   external system and Amazon Q in Connect, you can store an external
-    #   version identifier as metadata to utilize for determining drift.
-    #   @return [Hash<String,String>]
-    #
-    # @!attribute [rw] override_link_out_uri
-    #   The URI for the article. If the knowledge base has a templateUri,
-    #   setting this argument overrides it for this piece of content. To
-    #   remove an existing `overrideLinkOurUri`, exclude this argument and
-    #   set `removeOverrideLinkOutUri` to true.
+    # @!attribute [rw] content_id
+    #   The identifier of the content. Can be either the ID or the ARN. URLs
+    #   cannot contain the ARN.
     #   @return [String]
-    #
-    # @!attribute [rw] remove_override_link_out_uri
-    #   Unset the existing `overrideLinkOutUri` if it exists.
-    #   @return [Boolean]
     #
     # @!attribute [rw] revision_id
     #   The `revisionId` of the content resource to update, taken from an
@@ -9670,6 +12160,24 @@ module Aws::QConnect
     #   The title of the content.
     #   @return [String]
     #
+    # @!attribute [rw] override_link_out_uri
+    #   The URI for the article. If the knowledge base has a templateUri,
+    #   setting this argument overrides it for this piece of content. To
+    #   remove an existing `overrideLinkOurUri`, exclude this argument and
+    #   set `removeOverrideLinkOutUri` to true.
+    #   @return [String]
+    #
+    # @!attribute [rw] remove_override_link_out_uri
+    #   Unset the existing `overrideLinkOutUri` if it exists.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] metadata
+    #   A key/value map to store attributes without affecting tagging or
+    #   recommendations. For example, when synchronizing data between an
+    #   external system and Amazon Q in Connect, you can store an external
+    #   version identifier as metadata to utilize for determining drift.
+    #   @return [Hash<String,String>]
+    #
     # @!attribute [rw] upload_id
     #   A pointer to the uploaded asset. This value is returned by
     #   [StartContentUpload][1].
@@ -9682,13 +12190,13 @@ module Aws::QConnect
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/UpdateContentRequest AWS API Documentation
     #
     class UpdateContentRequest < Struct.new(
-      :content_id,
       :knowledge_base_id,
-      :metadata,
-      :override_link_out_uri,
-      :remove_override_link_out_uri,
+      :content_id,
       :revision_id,
       :title,
+      :override_link_out_uri,
+      :remove_override_link_out_uri,
+      :metadata,
       :upload_id)
       SENSITIVE = []
       include Aws::Structure
@@ -9737,15 +12245,6 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] description
-    #   The description of the message template.
-    #   @return [String]
-    #
-    # @!attribute [rw] grouping_configuration
-    #   The configuration information of the grouping of Amazon Q in Connect
-    #   users.
-    #   @return [Types::GroupingConfiguration]
-    #
     # @!attribute [rw] knowledge_base_id
     #   The identifier of the knowledge base. Can be either the ID or the
     #   ARN. URLs cannot contain the ARN.
@@ -9760,14 +12259,23 @@ module Aws::QConnect
     #   The name of the message template.
     #   @return [String]
     #
+    # @!attribute [rw] description
+    #   The description of the message template.
+    #   @return [String]
+    #
+    # @!attribute [rw] grouping_configuration
+    #   The configuration information of the grouping of Amazon Q in Connect
+    #   users.
+    #   @return [Types::GroupingConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/UpdateMessageTemplateMetadataRequest AWS API Documentation
     #
     class UpdateMessageTemplateMetadataRequest < Struct.new(
-      :description,
-      :grouping_configuration,
       :knowledge_base_id,
       :message_template_id,
-      :name)
+      :name,
+      :description,
+      :grouping_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -9784,9 +12292,31 @@ module Aws::QConnect
       include Aws::Structure
     end
 
+    # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base. Can be either the ID or the
+    #   ARN. URLs cannot contain the ARN.
+    #   @return [String]
+    #
+    # @!attribute [rw] message_template_id
+    #   The identifier of the message template. Can be either the ID or the
+    #   ARN. It cannot contain any qualifier.
+    #   @return [String]
+    #
     # @!attribute [rw] content
     #   The content of the message template.
     #   @return [Types::MessageTemplateContentProvider]
+    #
+    # @!attribute [rw] language
+    #   The language code value for the language in which the quick response
+    #   is written. The supported language codes include `de_DE`, `en_US`,
+    #   `es_ES`, `fr_FR`, `id_ID`, `it_IT`, `ja_JP`, `ko_KR`, `pt_BR`,
+    #   `zh_CN`, `zh_TW`
+    #   @return [String]
+    #
+    # @!attribute [rw] source_configuration
+    #   The source configuration of the message template. Only set this
+    #   argument for WHATSAPP channel subtype.
+    #   @return [Types::MessageTemplateSourceConfiguration]
     #
     # @!attribute [rw] default_attributes
     #   An object that specifies the default values to use for variables in
@@ -9796,31 +12326,15 @@ module Aws::QConnect
     #   for that variable.
     #   @return [Types::MessageTemplateAttributes]
     #
-    # @!attribute [rw] knowledge_base_id
-    #   The identifier of the knowledge base. Can be either the ID or the
-    #   ARN. URLs cannot contain the ARN.
-    #   @return [String]
-    #
-    # @!attribute [rw] language
-    #   The language code value for the language in which the quick response
-    #   is written. The supported language codes include `de_DE`, `en_US`,
-    #   `es_ES`, `fr_FR`, `id_ID`, `it_IT`, `ja_JP`, `ko_KR`, `pt_BR`,
-    #   `zh_CN`, `zh_TW`
-    #   @return [String]
-    #
-    # @!attribute [rw] message_template_id
-    #   The identifier of the message template. Can be either the ID or the
-    #   ARN. It cannot contain any qualifier.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/UpdateMessageTemplateRequest AWS API Documentation
     #
     class UpdateMessageTemplateRequest < Struct.new(
-      :content,
-      :default_attributes,
       :knowledge_base_id,
+      :message_template_id,
+      :content,
       :language,
-      :message_template_id)
+      :source_configuration,
+      :default_attributes)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -9837,10 +12351,18 @@ module Aws::QConnect
       include Aws::Structure
     end
 
-    # @!attribute [rw] channels
-    #   The Amazon Connect contact channels this quick response applies to.
-    #   The supported contact channel types include `Chat`.
-    #   @return [Array<String>]
+    # @!attribute [rw] knowledge_base_id
+    #   The identifier of the knowledge base. Can be either the ID or the
+    #   ARN. URLs cannot contain the ARN.
+    #   @return [String]
+    #
+    # @!attribute [rw] quick_response_id
+    #   The identifier of the quick response.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the quick response.
+    #   @return [String]
     #
     # @!attribute [rw] content
     #   The updated content of the quick response.
@@ -9856,22 +12378,39 @@ module Aws::QConnect
     #     response written in richtext.
     #   @return [String]
     #
+    # @!attribute [rw] grouping_configuration
+    #   The updated grouping configuration of the quick response.
+    #   @return [Types::GroupingConfiguration]
+    #
+    # @!attribute [rw] remove_grouping_configuration
+    #   Whether to remove the grouping configuration of the quick response.
+    #   @return [Boolean]
+    #
     # @!attribute [rw] description
     #   The updated description of the quick response.
     #   @return [String]
     #
-    # @!attribute [rw] grouping_configuration
-    #   The updated grouping configuration of the quick response.
-    #   @return [Types::GroupingConfiguration]
+    # @!attribute [rw] remove_description
+    #   Whether to remove the description from the quick response.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] shortcut_key
+    #   The shortcut key of the quick response. The value should be unique
+    #   across the knowledge base.
+    #   @return [String]
+    #
+    # @!attribute [rw] remove_shortcut_key
+    #   Whether to remove the shortcut key of the quick response.
+    #   @return [Boolean]
     #
     # @!attribute [rw] is_active
     #   Whether the quick response is active.
     #   @return [Boolean]
     #
-    # @!attribute [rw] knowledge_base_id
-    #   The identifier of the knowledge base. Can be either the ID or the
-    #   ARN. URLs cannot contain the ARN.
-    #   @return [String]
+    # @!attribute [rw] channels
+    #   The Amazon Connect contact channels this quick response applies to.
+    #   The supported contact channel types include `Chat`.
+    #   @return [Array<String>]
     #
     # @!attribute [rw] language
     #   The language code value for the language in which the quick response
@@ -9880,48 +12419,23 @@ module Aws::QConnect
     #   `zh_CN`, `zh_TW`
     #   @return [String]
     #
-    # @!attribute [rw] name
-    #   The name of the quick response.
-    #   @return [String]
-    #
-    # @!attribute [rw] quick_response_id
-    #   The identifier of the quick response.
-    #   @return [String]
-    #
-    # @!attribute [rw] remove_description
-    #   Whether to remove the description from the quick response.
-    #   @return [Boolean]
-    #
-    # @!attribute [rw] remove_grouping_configuration
-    #   Whether to remove the grouping configuration of the quick response.
-    #   @return [Boolean]
-    #
-    # @!attribute [rw] remove_shortcut_key
-    #   Whether to remove the shortcut key of the quick response.
-    #   @return [Boolean]
-    #
-    # @!attribute [rw] shortcut_key
-    #   The shortcut key of the quick response. The value should be unique
-    #   across the knowledge base.
-    #   @return [String]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/UpdateQuickResponseRequest AWS API Documentation
     #
     class UpdateQuickResponseRequest < Struct.new(
-      :channels,
+      :knowledge_base_id,
+      :quick_response_id,
+      :name,
       :content,
       :content_type,
-      :description,
       :grouping_configuration,
-      :is_active,
-      :knowledge_base_id,
-      :language,
-      :name,
-      :quick_response_id,
-      :remove_description,
       :remove_grouping_configuration,
+      :description,
+      :remove_description,
+      :shortcut_key,
       :remove_shortcut_key,
-      :shortcut_key)
+      :is_active,
+      :channels,
+      :language)
       SENSITIVE = [:channels]
       include Aws::Structure
     end
@@ -9943,40 +12457,31 @@ module Aws::QConnect
     #   the ID or the ARN. URLs cannot contain the ARN.
     #   @return [String]
     #
-    # @!attribute [rw] data
-    #   The data stored on the Amazon Q in Connect Session.
-    #   @return [Array<Types::RuntimeSessionData>]
-    #
-    # @!attribute [rw] namespace
-    #   The namespace into which the session data is stored. Supported
-    #   namespaces are: Custom
-    #   @return [String]
-    #
     # @!attribute [rw] session_id
     #   The identifier of the session. Can be either the ID or the ARN. URLs
     #   cannot contain the ARN.
     #   @return [String]
     #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/UpdateSessionDataRequest AWS API Documentation
-    #
-    class UpdateSessionDataRequest < Struct.new(
-      :assistant_id,
-      :data,
-      :namespace,
-      :session_id)
-      SENSITIVE = []
-      include Aws::Structure
-    end
-
-    # @!attribute [rw] data
-    #   Data stored in the session.
-    #   @return [Array<Types::RuntimeSessionData>]
-    #
     # @!attribute [rw] namespace
     #   The namespace into which the session data is stored. Supported
     #   namespaces are: Custom
     #   @return [String]
     #
+    # @!attribute [rw] data
+    #   The data stored on the Amazon Q in Connect Session.
+    #   @return [Array<Types::RuntimeSessionData>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/UpdateSessionDataRequest AWS API Documentation
+    #
+    class UpdateSessionDataRequest < Struct.new(
+      :assistant_id,
+      :session_id,
+      :namespace,
+      :data)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] session_arn
     #   The Amazon Resource Name (ARN) of the session.
     #   @return [String]
@@ -9985,30 +12490,29 @@ module Aws::QConnect
     #   The identifier of the session.
     #   @return [String]
     #
+    # @!attribute [rw] namespace
+    #   The namespace into which the session data is stored. Supported
+    #   namespaces are: Custom
+    #   @return [String]
+    #
+    # @!attribute [rw] data
+    #   Data stored in the session.
+    #   @return [Array<Types::RuntimeSessionData>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/UpdateSessionDataResponse AWS API Documentation
     #
     class UpdateSessionDataResponse < Struct.new(
-      :data,
-      :namespace,
       :session_arn,
-      :session_id)
+      :session_id,
+      :namespace,
+      :data)
       SENSITIVE = []
       include Aws::Structure
     end
 
-    # @!attribute [rw] ai_agent_configuration
-    #   The configuration of the AI Agents (mapped by AI Agent Type to AI
-    #   Agent version) that should be used by Amazon Q in Connect for this
-    #   Session.
-    #   @return [Hash<String,Types::AIAgentConfigurationData>]
-    #
     # @!attribute [rw] assistant_id
     #   The identifier of the Amazon Q in Connect assistant. Can be either
     #   the ID or the ARN. URLs cannot contain the ARN.
-    #   @return [String]
-    #
-    # @!attribute [rw] description
-    #   The description.
     #   @return [String]
     #
     # @!attribute [rw] session_id
@@ -10016,18 +12520,38 @@ module Aws::QConnect
     #   cannot contain the ARN.
     #   @return [String]
     #
+    # @!attribute [rw] description
+    #   The description.
+    #   @return [String]
+    #
     # @!attribute [rw] tag_filter
     #   An object that can be used to specify Tag conditions.
     #   @return [Types::TagFilter]
     #
+    # @!attribute [rw] ai_agent_configuration
+    #   The configuration of the AI Agents (mapped by AI Agent Type to AI
+    #   Agent version) that should be used by Amazon Q in Connect for this
+    #   Session.
+    #   @return [Hash<String,Types::AIAgentConfigurationData>]
+    #
+    # @!attribute [rw] orchestrator_configuration_list
+    #   The updated list of orchestrator configurations for the session.
+    #   @return [Array<Types::OrchestratorConfigurationEntry>]
+    #
+    # @!attribute [rw] remove_orchestrator_configuration_list
+    #   The list of orchestrator configurations to remove from the session.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/UpdateSessionRequest AWS API Documentation
     #
     class UpdateSessionRequest < Struct.new(
-      :ai_agent_configuration,
       :assistant_id,
-      :description,
       :session_id,
-      :tag_filter)
+      :description,
+      :tag_filter,
+      :ai_agent_configuration,
+      :orchestrator_configuration_list,
+      :remove_orchestrator_configuration_list)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -10055,6 +12579,20 @@ module Aws::QConnect
     #
     class UrlConfiguration < Struct.new(
       :seed_urls)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration for user interaction settings.
+    #
+    # @!attribute [rw] is_user_confirmation_required
+    #   Indicates whether user confirmation is required for the interaction.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/UserInteractionConfiguration AWS API Documentation
+    #
+    class UserInteractionConfiguration < Struct.new(
+      :is_user_confirmation_required)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -10095,20 +12633,25 @@ module Aws::QConnect
 
     # The configuration details for the web data source.
     #
+    # @!attribute [rw] url_configuration
+    #   The configuration of the URL/URLs for the web content that you want
+    #   to crawl. You should be authorized to crawl the URLs.
+    #   @return [Types::UrlConfiguration]
+    #
     # @!attribute [rw] crawler_limits
     #   The configuration of crawl limits for the web URLs.
     #   @return [Types::WebCrawlerLimits]
     #
-    # @!attribute [rw] exclusion_filters
-    #   A list of one or more exclusion regular expression patterns to
-    #   exclude certain URLs. If you specify an inclusion and exclusion
+    # @!attribute [rw] inclusion_filters
+    #   A list of one or more inclusion regular expression patterns to
+    #   include certain URLs. If you specify an inclusion and exclusion
     #   filter/pattern and both match a URL, the exclusion filter takes
     #   precedence and the web content of the URL isn’t crawled.
     #   @return [Array<String>]
     #
-    # @!attribute [rw] inclusion_filters
-    #   A list of one or more inclusion regular expression patterns to
-    #   include certain URLs. If you specify an inclusion and exclusion
+    # @!attribute [rw] exclusion_filters
+    #   A list of one or more exclusion regular expression patterns to
+    #   exclude certain URLs. If you specify an inclusion and exclusion
     #   filter/pattern and both match a URL, the exclusion filter takes
     #   precedence and the web content of the URL isn’t crawled.
     #   @return [Array<String>]
@@ -10123,20 +12666,15 @@ module Aws::QConnect
     #   `aws.amazon.com` can also include sub domain `docs.aws.amazon.com`.
     #   @return [String]
     #
-    # @!attribute [rw] url_configuration
-    #   The configuration of the URL/URLs for the web content that you want
-    #   to crawl. You should be authorized to crawl the URLs.
-    #   @return [Types::UrlConfiguration]
-    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/WebCrawlerConfiguration AWS API Documentation
     #
     class WebCrawlerConfiguration < Struct.new(
+      :url_configuration,
       :crawler_limits,
-      :exclusion_filters,
       :inclusion_filters,
-      :scope,
-      :url_configuration)
-      SENSITIVE = [:exclusion_filters, :inclusion_filters]
+      :exclusion_filters,
+      :scope)
+      SENSITIVE = [:inclusion_filters, :exclusion_filters]
       include Aws::Structure
     end
 
@@ -10151,6 +12689,93 @@ module Aws::QConnect
     class WebCrawlerLimits < Struct.new(
       :rate_limit)
       SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The content of the message template that applies to the WHATSAPP
+    # channel subtype.
+    #
+    # @!attribute [rw] data
+    #   The data.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/WhatsAppMessageTemplateContent AWS API Documentation
+    #
+    class WhatsAppMessageTemplateContent < Struct.new(
+      :data)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration information about the external data source.
+    #
+    # @!attribute [rw] business_account_id
+    #   The ID of the End User Messaging WhatsApp Business Account to
+    #   associate with this template.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_id
+    #   The WhatsApp template ID.
+    #   @return [String]
+    #
+    # @!attribute [rw] components
+    #   The list of component mapping from WhatsApp template parameters to
+    #   Message Template attributes.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/WhatsAppMessageTemplateSourceConfiguration AWS API Documentation
+    #
+    class WhatsAppMessageTemplateSourceConfiguration < Struct.new(
+      :business_account_id,
+      :template_id,
+      :components)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration information about the external data source.
+    #
+    # @!attribute [rw] business_account_id
+    #   The ID of the End User Messaging WhatsApp Business Account to
+    #   associate with this template.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_id
+    #   The ID of WhatsApp template.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the WhatsApp template.
+    #   @return [String]
+    #
+    # @!attribute [rw] language
+    #   The language of the WhatsApp template.
+    #   @return [String]
+    #
+    # @!attribute [rw] components
+    #   The list of component mapping from WhatsApp template parameters to
+    #   Message Template attributes.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] status
+    #   The status of the message template.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_reason
+    #   The status reason of the message template.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/WhatsAppMessageTemplateSourceConfigurationSummary AWS API Documentation
+    #
+    class WhatsAppMessageTemplateSourceConfigurationSummary < Struct.new(
+      :business_account_id,
+      :template_id,
+      :name,
+      :language,
+      :components,
+      :status,
+      :status_reason)
+      SENSITIVE = [:status_reason]
       include Aws::Structure
     end
 

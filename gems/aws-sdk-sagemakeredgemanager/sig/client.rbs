@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -108,7 +109,7 @@ module Aws
                                 metric_name: ::String?,
                                 value: ::Float?,
                                 timestamp: ::Time?
-                              },
+                              }
                             ],
                             ?models: Array[
                               {
@@ -122,9 +123,9 @@ module Aws
                                     metric_name: ::String?,
                                     value: ::Float?,
                                     timestamp: ::Time?
-                                  },
+                                  }
                                 ]?
-                              },
+                              }
                             ],
                             agent_version: ::String,
                             device_name: ::String,
@@ -145,7 +146,7 @@ module Aws
                                   status: ("SUCCESS" | "FAIL")?,
                                   status_reason: ::String?,
                                   rollback_failure_reason: ::String?
-                                },
+                                }
                               ]?
                             }
                           ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]

@@ -95,8 +95,8 @@ module Aws::ComputeOptimizer
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::ComputeOptimizer
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::ComputeOptimizer
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::ComputeOptimizer
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::ComputeOptimizer
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::ComputeOptimizer
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::ComputeOptimizer
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::ComputeOptimizer
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -517,7 +521,7 @@ module Aws::ComputeOptimizer
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_recommendation_preferences({
-    #     resource_type: "Ec2Instance", # required, accepts Ec2Instance, AutoScalingGroup, EbsVolume, LambdaFunction, NotApplicable, EcsService, License, RdsDBInstance, Idle
+    #     resource_type: "Ec2Instance", # required, accepts Ec2Instance, AutoScalingGroup, EbsVolume, LambdaFunction, NotApplicable, EcsService, License, RdsDBInstance, AuroraDBClusterStorage, Idle
     #     scope: {
     #       name: "Organization", # accepts Organization, AccountId, ResourceArn
     #       value: "ScopeValue",
@@ -592,7 +596,7 @@ module Aws::ComputeOptimizer
     #   resp.recommendation_export_jobs[0].destination.s3.bucket #=> String
     #   resp.recommendation_export_jobs[0].destination.s3.key #=> String
     #   resp.recommendation_export_jobs[0].destination.s3.metadata_key #=> String
-    #   resp.recommendation_export_jobs[0].resource_type #=> String, one of "Ec2Instance", "AutoScalingGroup", "EbsVolume", "LambdaFunction", "NotApplicable", "EcsService", "License", "RdsDBInstance", "Idle"
+    #   resp.recommendation_export_jobs[0].resource_type #=> String, one of "Ec2Instance", "AutoScalingGroup", "EbsVolume", "LambdaFunction", "NotApplicable", "EcsService", "License", "RdsDBInstance", "AuroraDBClusterStorage", "Idle"
     #   resp.recommendation_export_jobs[0].status #=> String, one of "Queued", "InProgress", "Complete", "Failed"
     #   resp.recommendation_export_jobs[0].creation_timestamp #=> Time
     #   resp.recommendation_export_jobs[0].last_updated_timestamp #=> Time
@@ -852,7 +856,7 @@ module Aws::ComputeOptimizer
     #         values: ["FilterValue"],
     #       },
     #     ],
-    #     fields_to_export: ["AccountId"], # accepts AccountId, VolumeArn, Finding, UtilizationMetricsVolumeReadOpsPerSecondMaximum, UtilizationMetricsVolumeWriteOpsPerSecondMaximum, UtilizationMetricsVolumeReadBytesPerSecondMaximum, UtilizationMetricsVolumeWriteBytesPerSecondMaximum, LookbackPeriodInDays, CurrentConfigurationVolumeType, CurrentConfigurationVolumeBaselineIOPS, CurrentConfigurationVolumeBaselineThroughput, CurrentConfigurationVolumeBurstIOPS, CurrentConfigurationVolumeBurstThroughput, CurrentConfigurationVolumeSize, CurrentMonthlyPrice, RecommendationOptionsConfigurationVolumeType, RecommendationOptionsConfigurationVolumeBaselineIOPS, RecommendationOptionsConfigurationVolumeBaselineThroughput, RecommendationOptionsConfigurationVolumeBurstIOPS, RecommendationOptionsConfigurationVolumeBurstThroughput, RecommendationOptionsConfigurationVolumeSize, RecommendationOptionsMonthlyPrice, RecommendationOptionsPerformanceRisk, LastRefreshTimestamp, CurrentPerformanceRisk, RecommendationOptionsSavingsOpportunityPercentage, RecommendationOptionsEstimatedMonthlySavingsCurrency, RecommendationOptionsEstimatedMonthlySavingsValue, Tags, RootVolume, CurrentConfigurationRootVolume, EffectiveRecommendationPreferencesSavingsEstimationMode, RecommendationOptionsSavingsOpportunityAfterDiscountsPercentage, RecommendationOptionsEstimatedMonthlySavingsCurrencyAfterDiscounts, RecommendationOptionsEstimatedMonthlySavingsValueAfterDiscounts
+    #     fields_to_export: ["AccountId"], # accepts AccountId, VolumeArn, Finding, UtilizationMetricsVolumeReadOpsPerSecondMaximum, UtilizationMetricsVolumeWriteOpsPerSecondMaximum, UtilizationMetricsVolumeReadBytesPerSecondMaximum, UtilizationMetricsVolumeWriteBytesPerSecondMaximum, UtilizationMetricsVolumeIOPSExceededMaximum, UtilizationMetricsVolumeThroughputExceededMaximum, LookbackPeriodInDays, CurrentConfigurationVolumeType, CurrentConfigurationVolumeBaselineIOPS, CurrentConfigurationVolumeBaselineThroughput, CurrentConfigurationVolumeBurstIOPS, CurrentConfigurationVolumeBurstThroughput, CurrentConfigurationVolumeSize, CurrentMonthlyPrice, RecommendationOptionsConfigurationVolumeType, RecommendationOptionsConfigurationVolumeBaselineIOPS, RecommendationOptionsConfigurationVolumeBaselineThroughput, RecommendationOptionsConfigurationVolumeBurstIOPS, RecommendationOptionsConfigurationVolumeBurstThroughput, RecommendationOptionsConfigurationVolumeSize, RecommendationOptionsMonthlyPrice, RecommendationOptionsPerformanceRisk, LastRefreshTimestamp, CurrentPerformanceRisk, RecommendationOptionsSavingsOpportunityPercentage, RecommendationOptionsEstimatedMonthlySavingsCurrency, RecommendationOptionsEstimatedMonthlySavingsValue, Tags, RootVolume, CurrentConfigurationRootVolume, EffectiveRecommendationPreferencesSavingsEstimationMode, RecommendationOptionsSavingsOpportunityAfterDiscountsPercentage, RecommendationOptionsEstimatedMonthlySavingsCurrencyAfterDiscounts, RecommendationOptionsEstimatedMonthlySavingsValueAfterDiscounts, EffectiveRecommendationPreferencesLookBackPeriod
     #     s3_destination_config: { # required
     #       bucket: "DestinationBucket",
     #       key_prefix: "DestinationKeyPrefix",
@@ -1117,7 +1121,7 @@ module Aws::ComputeOptimizer
     #         values: ["FilterValue"],
     #       },
     #     ],
-    #     fields_to_export: ["AccountId"], # accepts AccountId, ServiceArn, LookbackPeriodInDays, LastRefreshTimestamp, LaunchType, CurrentPerformanceRisk, CurrentServiceConfigurationMemory, CurrentServiceConfigurationCpu, CurrentServiceConfigurationTaskDefinitionArn, CurrentServiceConfigurationAutoScalingConfiguration, CurrentServiceContainerConfigurations, UtilizationMetricsCpuMaximum, UtilizationMetricsMemoryMaximum, Finding, FindingReasonCodes, RecommendationOptionsMemory, RecommendationOptionsCpu, RecommendationOptionsSavingsOpportunityPercentage, RecommendationOptionsEstimatedMonthlySavingsCurrency, RecommendationOptionsEstimatedMonthlySavingsValue, RecommendationOptionsContainerRecommendations, RecommendationOptionsProjectedUtilizationMetricsCpuMaximum, RecommendationOptionsProjectedUtilizationMetricsMemoryMaximum, Tags, EffectiveRecommendationPreferencesSavingsEstimationMode, RecommendationOptionsSavingsOpportunityAfterDiscountsPercentage, RecommendationOptionsEstimatedMonthlySavingsCurrencyAfterDiscounts, RecommendationOptionsEstimatedMonthlySavingsValueAfterDiscounts
+    #     fields_to_export: ["AccountId"], # accepts AccountId, ServiceArn, LookbackPeriodInDays, LastRefreshTimestamp, LaunchType, CurrentPerformanceRisk, CurrentServiceConfigurationMemory, CurrentServiceConfigurationCpu, CurrentServiceConfigurationTaskDefinitionArn, CurrentServiceConfigurationAutoScalingConfiguration, CurrentServiceContainerConfigurations, UtilizationMetricsCpuMaximum, UtilizationMetricsMemoryMaximum, Finding, FindingReasonCodes, RecommendationOptionsMemory, RecommendationOptionsCpu, RecommendationOptionsSavingsOpportunityPercentage, RecommendationOptionsEstimatedMonthlySavingsCurrency, RecommendationOptionsEstimatedMonthlySavingsValue, RecommendationOptionsContainerRecommendations, RecommendationOptionsProjectedUtilizationMetricsCpuMaximum, RecommendationOptionsProjectedUtilizationMetricsMemoryMaximum, Tags, EffectiveRecommendationPreferencesSavingsEstimationMode, RecommendationOptionsSavingsOpportunityAfterDiscountsPercentage, RecommendationOptionsEstimatedMonthlySavingsCurrencyAfterDiscounts, RecommendationOptionsEstimatedMonthlySavingsValueAfterDiscounts, EffectiveRecommendationPreferencesLookBackPeriod
     #     s3_destination_config: { # required
     #       bucket: "DestinationBucket",
     #       key_prefix: "DestinationKeyPrefix",
@@ -1246,7 +1250,7 @@ module Aws::ComputeOptimizer
     #         values: ["FilterValue"],
     #       },
     #     ],
-    #     fields_to_export: ["AccountId"], # accepts AccountId, ResourceArn, ResourceId, ResourceType, LastRefreshTimestamp, LookbackPeriodInDays, SavingsOpportunity, SavingsOpportunityAfterDiscount, UtilizationMetricsCpuMaximum, UtilizationMetricsMemoryMaximum, UtilizationMetricsNetworkOutBytesPerSecondMaximum, UtilizationMetricsNetworkInBytesPerSecondMaximum, UtilizationMetricsDatabaseConnectionsMaximum, UtilizationMetricsEBSVolumeReadIOPSMaximum, UtilizationMetricsEBSVolumeWriteIOPSMaximum, UtilizationMetricsVolumeReadOpsPerSecondMaximum, UtilizationMetricsVolumeWriteOpsPerSecondMaximum, Finding, FindingDescription, Tags
+    #     fields_to_export: ["AccountId"], # accepts AccountId, ResourceArn, ResourceId, ResourceType, LastRefreshTimestamp, LookbackPeriodInDays, SavingsOpportunity, SavingsOpportunityAfterDiscount, UtilizationMetricsCpuMaximum, UtilizationMetricsMemoryMaximum, UtilizationMetricsNetworkOutBytesPerSecondMaximum, UtilizationMetricsNetworkInBytesPerSecondMaximum, UtilizationMetricsDatabaseConnectionsMaximum, UtilizationMetricsEBSVolumeReadIOPSMaximum, UtilizationMetricsEBSVolumeWriteIOPSMaximum, UtilizationMetricsVolumeReadOpsPerSecondMaximum, UtilizationMetricsVolumeWriteOpsPerSecondMaximum, UtilizationMetricsActiveConnectionCountMaximum, UtilizationMetricsPacketsInFromSourceMaximum, UtilizationMetricsPacketsInFromDestinationMaximum, UtilizationMetricsConsumedReadCapacityUnitsSum, UtilizationMetricsConsumedWriteCapacityUnitsSum, UtilizationMetricsNewConnectionsSum, UtilizationMetricsEngineCPUUtilizationMaximum, UtilizationMetricsCacheHitsSum, UtilizationMetricsCacheMissesSum, UtilizationMetricsKeyspaceHitsSum, UtilizationMetricsKeyspaceMissesSum, UtilizationMetricsIsIdleMinimum, UtilizationMetricsUserConnectedSum, UtilizationMetricsInvocationsSum, UtilizationMetricsGetTypeCmdsSum, UtilizationMetricsSetTypeCmdsSum, UtilizationMetricsElastiCacheProcessingUnitsSum, UtilizationMetricsCurrConnectionsSum, UtilizationMetricsDatabaseConnectionsSum, Finding, FindingDescription, Tags
     #     s3_destination_config: { # required
     #       bucket: "DestinationBucket",
     #       key_prefix: "DestinationKeyPrefix",
@@ -1530,8 +1534,8 @@ module Aws::ComputeOptimizer
       req.send_request(options)
     end
 
-    # Export optimization recommendations for your Amazon Relational
-    # Database Service (Amazon RDS).
+    # Export optimization recommendations for your Amazon Aurora and Amazon
+    # Relational Database Service (Amazon RDS) databases.
     #
     # Recommendations are exported in a comma-separated values (CSV) file,
     # and its metadata in a JavaScript Object Notation (JSON) file, to an
@@ -1539,16 +1543,16 @@ module Aws::ComputeOptimizer
     # specify. For more information, see [Exporting Recommendations][1] in
     # the *Compute Optimizer User Guide*.
     #
-    # You can have only one Amazon RDS export job in progress per Amazon Web
-    # Services Region.
+    # You can have only one Amazon Aurora or RDS export job in progress per
+    # Amazon Web Services Region.
     #
     #
     #
     # [1]: https://docs.aws.amazon.com/compute-optimizer/latest/ug/exporting-recommendations.html
     #
     # @option params [Array<String>] :account_ids
-    #   The Amazon Web Services account IDs for the export Amazon RDS
-    #   recommendations.
+    #   The Amazon Web Services account IDs for the export Amazon Aurora and
+    #   RDS database recommendations.
     #
     #   If your account is the management account or the delegated
     #   administrator of an organization, use this parameter to specify the
@@ -1565,7 +1569,7 @@ module Aws::ComputeOptimizer
     #
     # @option params [Array<Types::RDSDBRecommendationFilter>] :filters
     #   An array of objects to specify a filter that exports a more specific
-    #   set of Amazon RDS recommendations.
+    #   set of Amazon Aurora and RDS recommendations.
     #
     # @option params [Array<String>] :fields_to_export
     #   The recommendations data to include in the export file. For more
@@ -1642,7 +1646,7 @@ module Aws::ComputeOptimizer
     #         values: ["FilterValue"],
     #       },
     #     ],
-    #     fields_to_export: ["ResourceArn"], # accepts ResourceArn, AccountId, Engine, EngineVersion, Idle, MultiAZDBInstance, CurrentDBInstanceClass, CurrentStorageConfigurationStorageType, CurrentStorageConfigurationAllocatedStorage, CurrentStorageConfigurationMaxAllocatedStorage, CurrentStorageConfigurationIOPS, CurrentStorageConfigurationStorageThroughput, CurrentInstanceOnDemandHourlyPrice, CurrentStorageOnDemandMonthlyPrice, LookbackPeriodInDays, CurrentInstancePerformanceRisk, UtilizationMetricsCpuMaximum, UtilizationMetricsMemoryMaximum, UtilizationMetricsEBSVolumeStorageSpaceUtilizationMaximum, UtilizationMetricsNetworkReceiveThroughputMaximum, UtilizationMetricsNetworkTransmitThroughputMaximum, UtilizationMetricsEBSVolumeReadIOPSMaximum, UtilizationMetricsEBSVolumeWriteIOPSMaximum, UtilizationMetricsEBSVolumeReadThroughputMaximum, UtilizationMetricsEBSVolumeWriteThroughputMaximum, UtilizationMetricsDatabaseConnectionsMaximum, UtilizationMetricsStorageNetworkReceiveThroughputMaximum, UtilizationMetricsStorageNetworkTransmitThroughputMaximum, UtilizationMetricsAuroraMemoryHealthStateMaximum, UtilizationMetricsAuroraMemoryNumDeclinedSqlTotalMaximum, UtilizationMetricsAuroraMemoryNumKillConnTotalMaximum, UtilizationMetricsAuroraMemoryNumKillQueryTotalMaximum, UtilizationMetricsReadIOPSEphemeralStorageMaximum, UtilizationMetricsWriteIOPSEphemeralStorageMaximum, InstanceFinding, InstanceFindingReasonCodes, StorageFinding, StorageFindingReasonCodes, InstanceRecommendationOptionsDBInstanceClass, InstanceRecommendationOptionsRank, InstanceRecommendationOptionsPerformanceRisk, InstanceRecommendationOptionsProjectedUtilizationMetricsCpuMaximum, StorageRecommendationOptionsStorageType, StorageRecommendationOptionsAllocatedStorage, StorageRecommendationOptionsMaxAllocatedStorage, StorageRecommendationOptionsIOPS, StorageRecommendationOptionsStorageThroughput, StorageRecommendationOptionsRank, InstanceRecommendationOptionsInstanceOnDemandHourlyPrice, InstanceRecommendationOptionsSavingsOpportunityPercentage, InstanceRecommendationOptionsEstimatedMonthlySavingsCurrency, InstanceRecommendationOptionsEstimatedMonthlySavingsValue, InstanceRecommendationOptionsSavingsOpportunityAfterDiscountsPercentage, InstanceRecommendationOptionsEstimatedMonthlySavingsCurrencyAfterDiscounts, InstanceRecommendationOptionsEstimatedMonthlySavingsValueAfterDiscounts, StorageRecommendationOptionsOnDemandMonthlyPrice, StorageRecommendationOptionsSavingsOpportunityPercentage, StorageRecommendationOptionsEstimatedMonthlySavingsCurrency, StorageRecommendationOptionsEstimatedMonthlySavingsValue, StorageRecommendationOptionsSavingsOpportunityAfterDiscountsPercentage, StorageRecommendationOptionsEstimatedMonthlySavingsCurrencyAfterDiscounts, StorageRecommendationOptionsEstimatedMonthlySavingsValueAfterDiscounts, EffectiveRecommendationPreferencesCpuVendorArchitectures, EffectiveRecommendationPreferencesEnhancedInfrastructureMetrics, EffectiveRecommendationPreferencesLookBackPeriod, EffectiveRecommendationPreferencesSavingsEstimationMode, LastRefreshTimestamp, Tags, DBClusterIdentifier, PromotionTier
+    #     fields_to_export: ["ResourceArn"], # accepts ResourceArn, AccountId, Engine, EngineVersion, Idle, MultiAZDBInstance, ClusterWriter, CurrentDBInstanceClass, CurrentStorageConfigurationStorageType, CurrentStorageConfigurationAllocatedStorage, CurrentStorageConfigurationMaxAllocatedStorage, CurrentStorageConfigurationIOPS, CurrentStorageConfigurationStorageThroughput, CurrentStorageEstimatedMonthlyVolumeIOPsCostVariation, CurrentInstanceOnDemandHourlyPrice, CurrentStorageOnDemandMonthlyPrice, LookbackPeriodInDays, CurrentStorageEstimatedClusterInstanceOnDemandMonthlyCost, CurrentStorageEstimatedClusterStorageOnDemandMonthlyCost, CurrentStorageEstimatedClusterStorageIOOnDemandMonthlyCost, CurrentInstancePerformanceRisk, UtilizationMetricsCpuMaximum, UtilizationMetricsMemoryMaximum, UtilizationMetricsEBSVolumeStorageSpaceUtilizationMaximum, UtilizationMetricsNetworkReceiveThroughputMaximum, UtilizationMetricsNetworkTransmitThroughputMaximum, UtilizationMetricsEBSVolumeReadIOPSMaximum, UtilizationMetricsEBSVolumeWriteIOPSMaximum, UtilizationMetricsEBSVolumeReadThroughputMaximum, UtilizationMetricsEBSVolumeWriteThroughputMaximum, UtilizationMetricsDatabaseConnectionsMaximum, UtilizationMetricsStorageNetworkReceiveThroughputMaximum, UtilizationMetricsStorageNetworkTransmitThroughputMaximum, UtilizationMetricsAuroraMemoryHealthStateMaximum, UtilizationMetricsAuroraMemoryNumDeclinedSqlTotalMaximum, UtilizationMetricsAuroraMemoryNumKillConnTotalMaximum, UtilizationMetricsAuroraMemoryNumKillQueryTotalMaximum, UtilizationMetricsReadIOPSEphemeralStorageMaximum, UtilizationMetricsWriteIOPSEphemeralStorageMaximum, UtilizationMetricsVolumeBytesUsedAverage, UtilizationMetricsVolumeReadIOPsAverage, UtilizationMetricsVolumeWriteIOPsAverage, InstanceFinding, InstanceFindingReasonCodes, StorageFinding, StorageFindingReasonCodes, InstanceRecommendationOptionsDBInstanceClass, InstanceRecommendationOptionsRank, InstanceRecommendationOptionsPerformanceRisk, InstanceRecommendationOptionsProjectedUtilizationMetricsCpuMaximum, StorageRecommendationOptionsStorageType, StorageRecommendationOptionsAllocatedStorage, StorageRecommendationOptionsMaxAllocatedStorage, StorageRecommendationOptionsIOPS, StorageRecommendationOptionsStorageThroughput, StorageRecommendationOptionsRank, StorageRecommendationOptionsEstimatedMonthlyVolumeIOPsCostVariation, InstanceRecommendationOptionsInstanceOnDemandHourlyPrice, InstanceRecommendationOptionsSavingsOpportunityPercentage, InstanceRecommendationOptionsEstimatedMonthlySavingsCurrency, InstanceRecommendationOptionsEstimatedMonthlySavingsValue, InstanceRecommendationOptionsSavingsOpportunityAfterDiscountsPercentage, InstanceRecommendationOptionsEstimatedMonthlySavingsCurrencyAfterDiscounts, InstanceRecommendationOptionsEstimatedMonthlySavingsValueAfterDiscounts, StorageRecommendationOptionsOnDemandMonthlyPrice, StorageRecommendationOptionsEstimatedClusterInstanceOnDemandMonthlyCost, StorageRecommendationOptionsEstimatedClusterStorageOnDemandMonthlyCost, StorageRecommendationOptionsEstimatedClusterStorageIOOnDemandMonthlyCost, StorageRecommendationOptionsSavingsOpportunityPercentage, StorageRecommendationOptionsEstimatedMonthlySavingsCurrency, StorageRecommendationOptionsEstimatedMonthlySavingsValue, StorageRecommendationOptionsSavingsOpportunityAfterDiscountsPercentage, StorageRecommendationOptionsEstimatedMonthlySavingsCurrencyAfterDiscounts, StorageRecommendationOptionsEstimatedMonthlySavingsValueAfterDiscounts, EffectiveRecommendationPreferencesCpuVendorArchitectures, EffectiveRecommendationPreferencesEnhancedInfrastructureMetrics, EffectiveRecommendationPreferencesLookBackPeriod, EffectiveRecommendationPreferencesSavingsEstimationMode, LastRefreshTimestamp, Tags, DBClusterIdentifier, PromotionTier
     #     s3_destination_config: { # required
     #       bucket: "DestinationBucket",
     #       key_prefix: "DestinationKeyPrefix",
@@ -1902,7 +1906,7 @@ module Aws::ComputeOptimizer
     #   resp.volume_recommendations[0].current_configuration.root_volume #=> Boolean
     #   resp.volume_recommendations[0].finding #=> String, one of "Optimized", "NotOptimized"
     #   resp.volume_recommendations[0].utilization_metrics #=> Array
-    #   resp.volume_recommendations[0].utilization_metrics[0].name #=> String, one of "VolumeReadOpsPerSecond", "VolumeWriteOpsPerSecond", "VolumeReadBytesPerSecond", "VolumeWriteBytesPerSecond"
+    #   resp.volume_recommendations[0].utilization_metrics[0].name #=> String, one of "VolumeReadOpsPerSecond", "VolumeWriteOpsPerSecond", "VolumeReadBytesPerSecond", "VolumeWriteBytesPerSecond", "VolumeIOPSExceeded", "VolumeThroughputExceeded"
     #   resp.volume_recommendations[0].utilization_metrics[0].statistic #=> String, one of "Maximum", "Average"
     #   resp.volume_recommendations[0].utilization_metrics[0].value #=> Float
     #   resp.volume_recommendations[0].look_back_period_in_days #=> Float
@@ -1925,6 +1929,7 @@ module Aws::ComputeOptimizer
     #   resp.volume_recommendations[0].last_refresh_timestamp #=> Time
     #   resp.volume_recommendations[0].current_performance_risk #=> String, one of "VeryLow", "Low", "Medium", "High"
     #   resp.volume_recommendations[0].effective_recommendation_preferences.savings_estimation_mode.source #=> String, one of "PublicPricing", "CostExplorerRightsizing", "CostOptimizationHub"
+    #   resp.volume_recommendations[0].effective_recommendation_preferences.look_back_period #=> String, one of "DAYS_14", "DAYS_32", "DAYS_93"
     #   resp.volume_recommendations[0].tags #=> Array
     #   resp.volume_recommendations[0].tags[0].key #=> String
     #   resp.volume_recommendations[0].tags[0].value #=> String
@@ -2047,7 +2052,7 @@ module Aws::ComputeOptimizer
     #   resp.instance_recommendations[0].recommendation_options[0].migration_effort #=> String, one of "VeryLow", "Low", "Medium", "High"
     #   resp.instance_recommendations[0].recommendation_sources #=> Array
     #   resp.instance_recommendations[0].recommendation_sources[0].recommendation_source_arn #=> String
-    #   resp.instance_recommendations[0].recommendation_sources[0].recommendation_source_type #=> String, one of "Ec2Instance", "AutoScalingGroup", "EbsVolume", "LambdaFunction", "EcsService", "License", "RdsDBInstance", "RdsDBInstanceStorage"
+    #   resp.instance_recommendations[0].recommendation_sources[0].recommendation_source_type #=> String, one of "Ec2Instance", "AutoScalingGroup", "EbsVolume", "LambdaFunction", "EcsService", "License", "RdsDBInstance", "RdsDBInstanceStorage", "AuroraDBClusterStorage", "NatGateway", "DynamoDBTable", "ElastiCacheCluster", "MemoryDBCluster", "DocumentDBCluster", "WorkSpaces", "SageMakerEndpoint"
     #   resp.instance_recommendations[0].last_refresh_timestamp #=> Time
     #   resp.instance_recommendations[0].current_performance_risk #=> String, one of "VeryLow", "Low", "Medium", "High"
     #   resp.instance_recommendations[0].effective_recommendation_preferences.cpu_vendor_architectures #=> Array
@@ -2336,6 +2341,7 @@ module Aws::ComputeOptimizer
     #   resp.ecs_service_recommendations[0].service_recommendation_options[0].container_recommendations[0].cpu #=> Integer
     #   resp.ecs_service_recommendations[0].current_performance_risk #=> String, one of "VeryLow", "Low", "Medium", "High"
     #   resp.ecs_service_recommendations[0].effective_recommendation_preferences.savings_estimation_mode.source #=> String, one of "PublicPricing", "CostExplorerRightsizing", "CostOptimizationHub"
+    #   resp.ecs_service_recommendations[0].effective_recommendation_preferences.look_back_period #=> String, one of "DAYS_14", "DAYS_32", "DAYS_93"
     #   resp.ecs_service_recommendations[0].tags #=> Array
     #   resp.ecs_service_recommendations[0].tags[0].key #=> String
     #   resp.ecs_service_recommendations[0].tags[0].value #=> String
@@ -2573,9 +2579,9 @@ module Aws::ComputeOptimizer
     #   resp.idle_recommendations #=> Array
     #   resp.idle_recommendations[0].resource_arn #=> String
     #   resp.idle_recommendations[0].resource_id #=> String
-    #   resp.idle_recommendations[0].resource_type #=> String, one of "EC2Instance", "AutoScalingGroup", "EBSVolume", "ECSService", "RDSDBInstance"
+    #   resp.idle_recommendations[0].resource_type #=> String, one of "EC2Instance", "AutoScalingGroup", "EBSVolume", "ECSService", "RDSDBInstance", "NatGateway", "DynamoDBTable", "ElastiCacheCluster", "MemoryDBCluster", "DocumentDBCluster", "WorkSpaces", "SageMakerEndpoint"
     #   resp.idle_recommendations[0].account_id #=> String
-    #   resp.idle_recommendations[0].finding #=> String, one of "Idle", "Unattached"
+    #   resp.idle_recommendations[0].finding #=> String, one of "Idle", "Unattached", "Unused"
     #   resp.idle_recommendations[0].finding_description #=> String
     #   resp.idle_recommendations[0].savings_opportunity.savings_opportunity_percentage #=> Float
     #   resp.idle_recommendations[0].savings_opportunity.estimated_monthly_savings.currency #=> String, one of "USD", "CNY"
@@ -2584,9 +2590,13 @@ module Aws::ComputeOptimizer
     #   resp.idle_recommendations[0].savings_opportunity_after_discounts.estimated_monthly_savings.currency #=> String, one of "USD", "CNY"
     #   resp.idle_recommendations[0].savings_opportunity_after_discounts.estimated_monthly_savings.value #=> Float
     #   resp.idle_recommendations[0].utilization_metrics #=> Array
-    #   resp.idle_recommendations[0].utilization_metrics[0].name #=> String, one of "CPU", "Memory", "NetworkOutBytesPerSecond", "NetworkInBytesPerSecond", "DatabaseConnections", "EBSVolumeReadIOPS", "EBSVolumeWriteIOPS", "VolumeReadOpsPerSecond", "VolumeWriteOpsPerSecond"
+    #   resp.idle_recommendations[0].utilization_metrics[0].name #=> String, one of "CPU", "Memory", "NetworkOutBytesPerSecond", "NetworkInBytesPerSecond", "DatabaseConnections", "EBSVolumeReadIOPS", "EBSVolumeWriteIOPS", "VolumeReadOpsPerSecond", "VolumeWriteOpsPerSecond", "ActiveConnectionCount", "PacketsInFromSource", "PacketsInFromDestination", "ConsumedReadCapacityUnits", "ConsumedWriteCapacityUnits", "ConsumedChangeDataCaptureUnits", "NewConnections", "EngineCPUUtilization", "CacheHits", "CacheMisses", "KeyspaceHits", "KeyspaceMisses", "IsIdle", "UserConnected", "Invocations", "GetTypeCmds", "SetTypeCmds", "ElastiCacheProcessingUnits", "CurrConnections"
     #   resp.idle_recommendations[0].utilization_metrics[0].statistic #=> String, one of "Maximum", "Average"
     #   resp.idle_recommendations[0].utilization_metrics[0].value #=> Float
+    #   resp.idle_recommendations[0].utilization_metrics[0].dimensions #=> Array
+    #   resp.idle_recommendations[0].utilization_metrics[0].dimensions[0].key #=> String
+    #   resp.idle_recommendations[0].utilization_metrics[0].dimensions[0].values #=> Array
+    #   resp.idle_recommendations[0].utilization_metrics[0].dimensions[0].values[0] #=> String
     #   resp.idle_recommendations[0].look_back_period_in_days #=> Float
     #   resp.idle_recommendations[0].last_refresh_timestamp #=> Time
     #   resp.idle_recommendations[0].tags #=> Array
@@ -2596,7 +2606,7 @@ module Aws::ComputeOptimizer
     #   resp.errors[0].identifier #=> String
     #   resp.errors[0].code #=> String
     #   resp.errors[0].message #=> String
-    #   resp.errors[0].resource_type #=> String, one of "EC2Instance", "AutoScalingGroup", "EBSVolume", "ECSService", "RDSDBInstance"
+    #   resp.errors[0].resource_type #=> String, one of "EC2Instance", "AutoScalingGroup", "EBSVolume", "ECSService", "RDSDBInstance", "NatGateway", "DynamoDBTable", "ElastiCacheCluster", "MemoryDBCluster", "DocumentDBCluster", "WorkSpaces", "SageMakerEndpoint"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/compute-optimizer-2019-11-01/GetIdleRecommendations AWS API Documentation
     #
@@ -2834,10 +2844,11 @@ module Aws::ComputeOptimizer
       req.send_request(options)
     end
 
-    # Returns the projected metrics of Amazon RDS recommendations.
+    # Returns the projected metrics of Aurora and RDS database
+    # recommendations.
     #
     # @option params [required, String] :resource_arn
-    #   The ARN that identifies the Amazon RDS.
+    #   The ARN that identifies the Amazon Aurora or RDS database.
     #
     #   The following is the format of the ARN:
     #
@@ -2884,7 +2895,7 @@ module Aws::ComputeOptimizer
     #   resp.recommended_option_projected_metrics[0].recommended_db_instance_class #=> String
     #   resp.recommended_option_projected_metrics[0].rank #=> Integer
     #   resp.recommended_option_projected_metrics[0].projected_metrics #=> Array
-    #   resp.recommended_option_projected_metrics[0].projected_metrics[0].name #=> String, one of "CPU", "Memory", "EBSVolumeStorageSpaceUtilization", "NetworkReceiveThroughput", "NetworkTransmitThroughput", "EBSVolumeReadIOPS", "EBSVolumeWriteIOPS", "EBSVolumeReadThroughput", "EBSVolumeWriteThroughput", "DatabaseConnections", "StorageNetworkReceiveThroughput", "StorageNetworkTransmitThroughput", "AuroraMemoryHealthState", "AuroraMemoryNumDeclinedSql", "AuroraMemoryNumKillConnTotal", "AuroraMemoryNumKillQueryTotal", "ReadIOPSEphemeralStorage", "WriteIOPSEphemeralStorage"
+    #   resp.recommended_option_projected_metrics[0].projected_metrics[0].name #=> String, one of "CPU", "Memory", "EBSVolumeStorageSpaceUtilization", "NetworkReceiveThroughput", "NetworkTransmitThroughput", "EBSVolumeReadIOPS", "EBSVolumeWriteIOPS", "EBSVolumeReadThroughput", "EBSVolumeWriteThroughput", "DatabaseConnections", "StorageNetworkReceiveThroughput", "StorageNetworkTransmitThroughput", "AuroraMemoryHealthState", "AuroraMemoryNumDeclinedSql", "AuroraMemoryNumKillConnTotal", "AuroraMemoryNumKillQueryTotal", "ReadIOPSEphemeralStorage", "WriteIOPSEphemeralStorage", "VolumeReadIOPs", "VolumeBytesUsed", "VolumeWriteIOPs"
     #   resp.recommended_option_projected_metrics[0].projected_metrics[0].timestamps #=> Array
     #   resp.recommended_option_projected_metrics[0].projected_metrics[0].timestamps[0] #=> Time
     #   resp.recommended_option_projected_metrics[0].projected_metrics[0].values #=> Array
@@ -2899,18 +2910,19 @@ module Aws::ComputeOptimizer
       req.send_request(options)
     end
 
-    # Returns Amazon RDS recommendations.
+    # Returns Amazon Aurora and RDS database recommendations.
     #
-    # Compute Optimizer generates recommendations for Amazon RDS that meet a
-    # specific set of requirements. For more information, see the [Supported
-    # resources and requirements][1] in the *Compute Optimizer User Guide*.
+    # Compute Optimizer generates recommendations for Amazon Aurora and RDS
+    # databases that meet a specific set of requirements. For more
+    # information, see the [Supported resources and requirements][1] in the
+    # *Compute Optimizer User Guide*.
     #
     #
     #
     # [1]: https://docs.aws.amazon.com/compute-optimizer/latest/ug/requirements.html
     #
     # @option params [Array<String>] :resource_arns
-    #   The ARN that identifies the Amazon RDS.
+    #   The ARN that identifies the Amazon Aurora or RDS database.
     #
     #   The following is the format of the ARN:
     #
@@ -2921,26 +2933,28 @@ module Aws::ComputeOptimizer
     #   `arn:aws:rds:{region}:{accountId}:cluster:{resourceName}`
     #
     # @option params [String] :next_token
-    #   The token to advance to the next page of Amazon RDS recommendations.
+    #   The token to advance to the next page of Amazon Aurora and RDS
+    #   database recommendations.
     #
     # @option params [Integer] :max_results
-    #   The maximum number of Amazon RDS recommendations to return with a
-    #   single request.
+    #   The maximum number of Amazon Aurora and RDS database recommendations
+    #   to return with a single request.
     #
     #   To retrieve the remaining results, make another request with the
     #   returned `nextToken` value.
     #
     # @option params [Array<Types::RDSDBRecommendationFilter>] :filters
     #   An array of objects to specify a filter that returns a more specific
-    #   list of Amazon RDS recommendations.
+    #   list of Amazon Aurora and RDS database recommendations.
     #
     # @option params [Array<String>] :account_ids
-    #   Return the Amazon RDS recommendations to the specified Amazon Web
-    #   Services account IDs.
+    #   Return the Amazon Aurora and RDS database recommendations to the
+    #   specified Amazon Web Services account IDs.
     #
     #   If your account is the management account or the delegated
     #   administrator of an organization, use this parameter to return the
-    #   Amazon RDS recommendations to specific member accounts.
+    #   Amazon Aurora and RDS database recommendations to specific member
+    #   accounts.
     #
     #   You can only specify one account ID per request.
     #
@@ -2992,16 +3006,17 @@ module Aws::ComputeOptimizer
     #   resp.rds_db_recommendations[0].db_cluster_identifier #=> String
     #   resp.rds_db_recommendations[0].idle #=> String, one of "True", "False"
     #   resp.rds_db_recommendations[0].instance_finding #=> String, one of "Optimized", "Underprovisioned", "Overprovisioned"
-    #   resp.rds_db_recommendations[0].storage_finding #=> String, one of "Optimized", "Underprovisioned", "Overprovisioned"
+    #   resp.rds_db_recommendations[0].storage_finding #=> String, one of "Optimized", "Underprovisioned", "Overprovisioned", "NotOptimized"
     #   resp.rds_db_recommendations[0].instance_finding_reason_codes #=> Array
     #   resp.rds_db_recommendations[0].instance_finding_reason_codes[0] #=> String, one of "CPUOverprovisioned", "NetworkBandwidthOverprovisioned", "EBSIOPSOverprovisioned", "EBSIOPSUnderprovisioned", "EBSThroughputOverprovisioned", "CPUUnderprovisioned", "NetworkBandwidthUnderprovisioned", "EBSThroughputUnderprovisioned", "NewGenerationDBInstanceClassAvailable", "NewEngineVersionAvailable", "DBClusterWriterUnderprovisioned", "MemoryUnderprovisioned", "InstanceStorageReadIOPSUnderprovisioned", "InstanceStorageWriteIOPSUnderprovisioned"
     #   resp.rds_db_recommendations[0].current_instance_performance_risk #=> String, one of "VeryLow", "Low", "Medium", "High"
+    #   resp.rds_db_recommendations[0].current_storage_estimated_monthly_volume_io_ps_cost_variation #=> String, one of "None", "Low", "Medium", "High"
     #   resp.rds_db_recommendations[0].storage_finding_reason_codes #=> Array
-    #   resp.rds_db_recommendations[0].storage_finding_reason_codes[0] #=> String, one of "EBSVolumeAllocatedStorageUnderprovisioned", "EBSVolumeThroughputUnderprovisioned", "EBSVolumeIOPSOverprovisioned", "EBSVolumeThroughputOverprovisioned", "NewGenerationStorageTypeAvailable"
+    #   resp.rds_db_recommendations[0].storage_finding_reason_codes[0] #=> String, one of "EBSVolumeAllocatedStorageUnderprovisioned", "EBSVolumeThroughputUnderprovisioned", "EBSVolumeIOPSOverprovisioned", "EBSVolumeThroughputOverprovisioned", "NewGenerationStorageTypeAvailable", "DBClusterStorageOptionAvailable", "DBClusterStorageSavingsAvailable"
     #   resp.rds_db_recommendations[0].instance_recommendation_options #=> Array
     #   resp.rds_db_recommendations[0].instance_recommendation_options[0].db_instance_class #=> String
     #   resp.rds_db_recommendations[0].instance_recommendation_options[0].projected_utilization_metrics #=> Array
-    #   resp.rds_db_recommendations[0].instance_recommendation_options[0].projected_utilization_metrics[0].name #=> String, one of "CPU", "Memory", "EBSVolumeStorageSpaceUtilization", "NetworkReceiveThroughput", "NetworkTransmitThroughput", "EBSVolumeReadIOPS", "EBSVolumeWriteIOPS", "EBSVolumeReadThroughput", "EBSVolumeWriteThroughput", "DatabaseConnections", "StorageNetworkReceiveThroughput", "StorageNetworkTransmitThroughput", "AuroraMemoryHealthState", "AuroraMemoryNumDeclinedSql", "AuroraMemoryNumKillConnTotal", "AuroraMemoryNumKillQueryTotal", "ReadIOPSEphemeralStorage", "WriteIOPSEphemeralStorage"
+    #   resp.rds_db_recommendations[0].instance_recommendation_options[0].projected_utilization_metrics[0].name #=> String, one of "CPU", "Memory", "EBSVolumeStorageSpaceUtilization", "NetworkReceiveThroughput", "NetworkTransmitThroughput", "EBSVolumeReadIOPS", "EBSVolumeWriteIOPS", "EBSVolumeReadThroughput", "EBSVolumeWriteThroughput", "DatabaseConnections", "StorageNetworkReceiveThroughput", "StorageNetworkTransmitThroughput", "AuroraMemoryHealthState", "AuroraMemoryNumDeclinedSql", "AuroraMemoryNumKillConnTotal", "AuroraMemoryNumKillQueryTotal", "ReadIOPSEphemeralStorage", "WriteIOPSEphemeralStorage", "VolumeReadIOPs", "VolumeBytesUsed", "VolumeWriteIOPs"
     #   resp.rds_db_recommendations[0].instance_recommendation_options[0].projected_utilization_metrics[0].statistic #=> String, one of "Maximum", "Minimum", "Average"
     #   resp.rds_db_recommendations[0].instance_recommendation_options[0].projected_utilization_metrics[0].value #=> Float
     #   resp.rds_db_recommendations[0].instance_recommendation_options[0].performance_risk #=> Float
@@ -3025,8 +3040,9 @@ module Aws::ComputeOptimizer
     #   resp.rds_db_recommendations[0].storage_recommendation_options[0].savings_opportunity_after_discounts.savings_opportunity_percentage #=> Float
     #   resp.rds_db_recommendations[0].storage_recommendation_options[0].savings_opportunity_after_discounts.estimated_monthly_savings.currency #=> String, one of "USD", "CNY"
     #   resp.rds_db_recommendations[0].storage_recommendation_options[0].savings_opportunity_after_discounts.estimated_monthly_savings.value #=> Float
+    #   resp.rds_db_recommendations[0].storage_recommendation_options[0].estimated_monthly_volume_io_ps_cost_variation #=> String, one of "None", "Low", "Medium", "High"
     #   resp.rds_db_recommendations[0].utilization_metrics #=> Array
-    #   resp.rds_db_recommendations[0].utilization_metrics[0].name #=> String, one of "CPU", "Memory", "EBSVolumeStorageSpaceUtilization", "NetworkReceiveThroughput", "NetworkTransmitThroughput", "EBSVolumeReadIOPS", "EBSVolumeWriteIOPS", "EBSVolumeReadThroughput", "EBSVolumeWriteThroughput", "DatabaseConnections", "StorageNetworkReceiveThroughput", "StorageNetworkTransmitThroughput", "AuroraMemoryHealthState", "AuroraMemoryNumDeclinedSql", "AuroraMemoryNumKillConnTotal", "AuroraMemoryNumKillQueryTotal", "ReadIOPSEphemeralStorage", "WriteIOPSEphemeralStorage"
+    #   resp.rds_db_recommendations[0].utilization_metrics[0].name #=> String, one of "CPU", "Memory", "EBSVolumeStorageSpaceUtilization", "NetworkReceiveThroughput", "NetworkTransmitThroughput", "EBSVolumeReadIOPS", "EBSVolumeWriteIOPS", "EBSVolumeReadThroughput", "EBSVolumeWriteThroughput", "DatabaseConnections", "StorageNetworkReceiveThroughput", "StorageNetworkTransmitThroughput", "AuroraMemoryHealthState", "AuroraMemoryNumDeclinedSql", "AuroraMemoryNumKillConnTotal", "AuroraMemoryNumKillQueryTotal", "ReadIOPSEphemeralStorage", "WriteIOPSEphemeralStorage", "VolumeReadIOPs", "VolumeBytesUsed", "VolumeWriteIOPs"
     #   resp.rds_db_recommendations[0].utilization_metrics[0].statistic #=> String, one of "Maximum", "Minimum", "Average"
     #   resp.rds_db_recommendations[0].utilization_metrics[0].value #=> Float
     #   resp.rds_db_recommendations[0].effective_recommendation_preferences.cpu_vendor_architectures #=> Array
@@ -3111,7 +3127,7 @@ module Aws::ComputeOptimizer
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_recommendation_preferences({
-    #     resource_type: "Ec2Instance", # required, accepts Ec2Instance, AutoScalingGroup, EbsVolume, LambdaFunction, NotApplicable, EcsService, License, RdsDBInstance, Idle
+    #     resource_type: "Ec2Instance", # required, accepts Ec2Instance, AutoScalingGroup, EbsVolume, LambdaFunction, NotApplicable, EcsService, License, RdsDBInstance, AuroraDBClusterStorage, Idle
     #     scope: {
     #       name: "Organization", # accepts Organization, AccountId, ResourceArn
     #       value: "ScopeValue",
@@ -3126,7 +3142,7 @@ module Aws::ComputeOptimizer
     #   resp.recommendation_preferences_details #=> Array
     #   resp.recommendation_preferences_details[0].scope.name #=> String, one of "Organization", "AccountId", "ResourceArn"
     #   resp.recommendation_preferences_details[0].scope.value #=> String
-    #   resp.recommendation_preferences_details[0].resource_type #=> String, one of "Ec2Instance", "AutoScalingGroup", "EbsVolume", "LambdaFunction", "NotApplicable", "EcsService", "License", "RdsDBInstance", "Idle"
+    #   resp.recommendation_preferences_details[0].resource_type #=> String, one of "Ec2Instance", "AutoScalingGroup", "EbsVolume", "LambdaFunction", "NotApplicable", "EcsService", "License", "RdsDBInstance", "AuroraDBClusterStorage", "Idle"
     #   resp.recommendation_preferences_details[0].enhanced_infrastructure_metrics #=> String, one of "Active", "Inactive"
     #   resp.recommendation_preferences_details[0].inferred_workload_types #=> String, one of "Active", "Inactive"
     #   resp.recommendation_preferences_details[0].external_metrics_preference.source #=> String, one of "Datadog", "Dynatrace", "NewRelic", "Instana"
@@ -3161,7 +3177,7 @@ module Aws::ComputeOptimizer
     # * Amazon EC2 instances in an account that are `Underprovisioned`,
     #   `Overprovisioned`, or `Optimized`.
     #
-    # * Auto Scaling groups in an account that are `NotOptimized`, or
+    # * EC2Auto Scaling groups in an account that are `NotOptimized`, or
     #   `Optimized`.
     #
     # * Amazon EBS volumes in an account that are `NotOptimized`, or
@@ -3172,6 +3188,13 @@ module Aws::ComputeOptimizer
     #
     # * Amazon ECS services in an account that are `Underprovisioned`,
     #   `Overprovisioned`, or `Optimized`.
+    #
+    # * Commercial software licenses in an account that are
+    #   `InsufficientMetrics`, `NotOptimized` or `Optimized`.
+    #
+    # * Amazon Aurora and Amazon RDS databases in an account that are
+    #   `Underprovisioned`, `Overprovisioned`, `Optimized`, or
+    #   `NotOptimized`.
     #
     # @option params [Array<String>] :account_ids
     #   The ID of the Amazon Web Services account for which to return
@@ -3219,9 +3242,9 @@ module Aws::ComputeOptimizer
     #   resp.recommendation_summaries[0].summaries[0].reason_code_summaries[0].name #=> String, one of "MemoryOverprovisioned", "MemoryUnderprovisioned"
     #   resp.recommendation_summaries[0].summaries[0].reason_code_summaries[0].value #=> Float
     #   resp.recommendation_summaries[0].idle_summaries #=> Array
-    #   resp.recommendation_summaries[0].idle_summaries[0].name #=> String, one of "Idle", "Unattached"
+    #   resp.recommendation_summaries[0].idle_summaries[0].name #=> String, one of "Idle", "Unattached", "Unused"
     #   resp.recommendation_summaries[0].idle_summaries[0].value #=> Float
-    #   resp.recommendation_summaries[0].recommendation_resource_type #=> String, one of "Ec2Instance", "AutoScalingGroup", "EbsVolume", "LambdaFunction", "EcsService", "License", "RdsDBInstance", "RdsDBInstanceStorage"
+    #   resp.recommendation_summaries[0].recommendation_resource_type #=> String, one of "Ec2Instance", "AutoScalingGroup", "EbsVolume", "LambdaFunction", "EcsService", "License", "RdsDBInstance", "RdsDBInstanceStorage", "AuroraDBClusterStorage", "NatGateway", "DynamoDBTable", "ElastiCacheCluster", "MemoryDBCluster", "DocumentDBCluster", "WorkSpaces", "SageMakerEndpoint"
     #   resp.recommendation_summaries[0].account_id #=> String
     #   resp.recommendation_summaries[0].savings_opportunity.savings_opportunity_percentage #=> Float
     #   resp.recommendation_summaries[0].savings_opportunity.estimated_monthly_savings.currency #=> String, one of "USD", "CNY"
@@ -3350,14 +3373,33 @@ module Aws::ComputeOptimizer
     #   of the Amazon Web Services resource are analyzed. When this preference
     #   isn't specified, we use the default value `DAYS_14`.
     #
-    #   You can only set this preference for the Amazon EC2 instance and Auto
-    #   Scaling group resource types.
+    #   You can only set this preference for the Amazon EC2 instance, Auto
+    #   Scaling group, Amazon EBS volume, Amazon ECS service on Fargate,
+    #   Amazon RDS DB instance, and Aurora DB cluster storage resource types.
     #
-    #   <note markdown="1"> * Amazon EC2 instance lookback preferences can be set at the
-    #     organization, account, and resource levels.
+    #   <note markdown="1"> * Lookback period preferences for Amazon EC2 instances, Amazon EBS
+    #     volumes, Amazon ECS services, Amazon RDS DB instances, and Aurora DB
+    #     cluster storage resource types can be set at the organization,
+    #     account, and resource levels.
     #
     #   * Auto Scaling group lookback preferences can only be set at the
     #     resource level.
+    #
+    #   * Amazon EBS volume lookback preferences can be set at the
+    #     organization, account, and resource levels.
+    #
+    #   * Amazon ECS service on Fargate lookback preferences can be set at the
+    #     organization, account, and resource levels.
+    #
+    #   * Amazon RDS DB instance lookback preferences can be set at the
+    #     organization, account, and resource levels.
+    #
+    #   * Aurora DB cluster storage lookback preferences can be set at the
+    #     organization, account, and resource levels.
+    #
+    #   * Changing the lookback period for Amazon EBS volumes to 14 days does
+    #     not affect the 32-day lookback period used to determine whether an
+    #     Amazon EBS volume is unattached.
     #
     #    </note>
     #
@@ -3392,8 +3434,9 @@ module Aws::ComputeOptimizer
     #   specify either an `includeList` or `excludeList`. If the preference is
     #   an empty set of resource type values, an error occurs.
     #
-    #   <note markdown="1"> You can only set this preference for the Amazon EC2 instance and Auto
-    #   Scaling group resource types.
+    #   <note markdown="1"> You can only set this preference for the Amazon EC2 instance, Auto
+    #   Scaling group, Amazon EBS volume, Amazon ECS service, Amazon RDS DB
+    #   instance, and Aurora DB cluster storage resource types.
     #
     #    </note>
     #
@@ -3419,7 +3462,7 @@ module Aws::ComputeOptimizer
     # @example Request syntax with placeholder values
     #
     #   resp = client.put_recommendation_preferences({
-    #     resource_type: "Ec2Instance", # required, accepts Ec2Instance, AutoScalingGroup, EbsVolume, LambdaFunction, NotApplicable, EcsService, License, RdsDBInstance, Idle
+    #     resource_type: "Ec2Instance", # required, accepts Ec2Instance, AutoScalingGroup, EbsVolume, LambdaFunction, NotApplicable, EcsService, License, RdsDBInstance, AuroraDBClusterStorage, Idle
     #     scope: {
     #       name: "Organization", # accepts Organization, AccountId, ResourceArn
     #       value: "ScopeValue",
@@ -3552,7 +3595,7 @@ module Aws::ComputeOptimizer
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-computeoptimizer'
-      context[:gem_version] = '1.75.0'
+      context[:gem_version] = '1.100.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

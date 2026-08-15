@@ -95,8 +95,8 @@ module Aws::PaymentCryptography
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::PaymentCryptography
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::PaymentCryptography
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::PaymentCryptography
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::PaymentCryptography
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::PaymentCryptography
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::PaymentCryptography
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::PaymentCryptography
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -477,6 +481,180 @@ module Aws::PaymentCryptography
 
     # @!group API Operations
 
+    # Adds replication Amazon Web Services Regions to an existing Amazon Web
+    # Services Payment Cryptography key, enabling the key to be used for
+    # cryptographic operations in additional Amazon Web Services Regions.
+    #
+    # [Multi-Region key replication][1] allow you to use the same key
+    # material across multiple Amazon Web Services Regions, providing lower
+    # latency for applications distributed across regions. When you add
+    # Replication Regions, Amazon Web Services Payment Cryptography securely
+    # replicates the key material to the specified Amazon Web Services
+    # Regions.
+    #
+    # The key must be in an active state to add Replication Regions. You can
+    # add multiple regions in a single operation, and the key will be
+    # available for use in those regions once replication is complete.
+    #
+    # **Cross-account use:** This operation supports cross-account use when
+    # the key has a resource-based policy that grants access. For more
+    # information, see [Resource-based policies][2].
+    #
+    # **Related operations:**
+    #
+    # * [RemoveKeyReplicationRegions][3]
+    #
+    # * [EnableDefaultKeyReplicationRegions][4]
+    #
+    # * [GetDefaultKeyReplicationRegions][5]
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-multi-region-replication.html
+    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/security_iam_resource-based-policies.html
+    # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_RemoveKeyReplicationRegions.html
+    # [4]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_EnableDefaultKeyReplicationRegions.html
+    # [5]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_GetDefaultKeyReplicationRegions.html
+    #
+    # @option params [required, String] :key_identifier
+    #   The key identifier (ARN or alias) of the key for which to add
+    #   replication regions.
+    #
+    #   This key must exist and be in a valid state for replication
+    #   operations.
+    #
+    # @option params [required, Array<String>] :replication_regions
+    #   The list of Amazon Web Services Regions to add to the key's
+    #   replication configuration.
+    #
+    #   Each region must be a valid Amazon Web Services Region where Amazon
+    #   Web Services Payment Cryptography is available. The key will be
+    #   replicated to these regions, allowing cryptographic operations to be
+    #   performed closer to your applications.
+    #
+    # @return [Types::AddKeyReplicationRegionsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::AddKeyReplicationRegionsOutput#key #key} => Types::Key
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.add_key_replication_regions({
+    #     key_identifier: "KeyArnOrKeyAliasType", # required
+    #     replication_regions: ["Region"], # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.key.key_arn #=> String
+    #   resp.key.key_attributes.key_usage #=> String, one of "TR31_B0_BASE_DERIVATION_KEY", "TR31_C0_CARD_VERIFICATION_KEY", "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY", "TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION", "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS", "TR31_E1_EMV_MKEY_CONFIDENTIALITY", "TR31_E2_EMV_MKEY_INTEGRITY", "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS", "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION", "TR31_E6_EMV_MKEY_OTHER", "TR31_K0_KEY_ENCRYPTION_KEY", "TR31_K1_KEY_BLOCK_PROTECTION_KEY", "TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT", "TR31_M0_ISO_16609_MAC_KEY", "TR31_M3_ISO_9797_3_MAC_KEY", "TR31_M1_ISO_9797_1_MAC_KEY", "TR31_M6_ISO_9797_5_CMAC_KEY", "TR31_M7_HMAC_KEY", "TR31_P0_PIN_ENCRYPTION_KEY", "TR31_P1_PIN_GENERATION_KEY", "TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE", "TR31_V1_IBM3624_PIN_VERIFICATION_KEY", "TR31_V2_VISA_PIN_VERIFICATION_KEY", "TR31_K2_TR34_ASYMMETRIC_KEY"
+    #   resp.key.key_attributes.key_class #=> String, one of "SYMMETRIC_KEY", "ASYMMETRIC_KEY_PAIR", "PRIVATE_KEY", "PUBLIC_KEY"
+    #   resp.key.key_attributes.key_algorithm #=> String, one of "TDES_2KEY", "TDES_3KEY", "AES_128", "AES_192", "AES_256", "HMAC_SHA256", "HMAC_SHA384", "HMAC_SHA512", "HMAC_SHA224", "RSA_2048", "RSA_3072", "RSA_4096", "ECC_NIST_P256", "ECC_NIST_P384", "ECC_NIST_P521"
+    #   resp.key.key_attributes.key_modes_of_use.encrypt #=> Boolean
+    #   resp.key.key_attributes.key_modes_of_use.decrypt #=> Boolean
+    #   resp.key.key_attributes.key_modes_of_use.wrap #=> Boolean
+    #   resp.key.key_attributes.key_modes_of_use.unwrap #=> Boolean
+    #   resp.key.key_attributes.key_modes_of_use.generate #=> Boolean
+    #   resp.key.key_attributes.key_modes_of_use.sign #=> Boolean
+    #   resp.key.key_attributes.key_modes_of_use.verify #=> Boolean
+    #   resp.key.key_attributes.key_modes_of_use.derive_key #=> Boolean
+    #   resp.key.key_attributes.key_modes_of_use.no_restrictions #=> Boolean
+    #   resp.key.key_check_value #=> String
+    #   resp.key.key_check_value_algorithm #=> String, one of "CMAC", "ANSI_X9_24", "HMAC", "SHA_1"
+    #   resp.key.enabled #=> Boolean
+    #   resp.key.exportable #=> Boolean
+    #   resp.key.key_state #=> String, one of "CREATE_IN_PROGRESS", "CREATE_COMPLETE", "DELETE_PENDING", "DELETE_COMPLETE"
+    #   resp.key.key_origin #=> String, one of "EXTERNAL", "AWS_PAYMENT_CRYPTOGRAPHY"
+    #   resp.key.create_timestamp #=> Time
+    #   resp.key.usage_start_timestamp #=> Time
+    #   resp.key.usage_stop_timestamp #=> Time
+    #   resp.key.delete_pending_timestamp #=> Time
+    #   resp.key.delete_timestamp #=> Time
+    #   resp.key.derive_key_usage #=> String, one of "TR31_B0_BASE_DERIVATION_KEY", "TR31_C0_CARD_VERIFICATION_KEY", "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY", "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS", "TR31_E1_EMV_MKEY_CONFIDENTIALITY", "TR31_E2_EMV_MKEY_INTEGRITY", "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS", "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION", "TR31_E6_EMV_MKEY_OTHER", "TR31_K0_KEY_ENCRYPTION_KEY", "TR31_K1_KEY_BLOCK_PROTECTION_KEY", "TR31_M3_ISO_9797_3_MAC_KEY", "TR31_M1_ISO_9797_1_MAC_KEY", "TR31_M6_ISO_9797_5_CMAC_KEY", "TR31_M7_HMAC_KEY", "TR31_P0_PIN_ENCRYPTION_KEY", "TR31_P1_PIN_GENERATION_KEY", "TR31_V1_IBM3624_PIN_VERIFICATION_KEY", "TR31_V2_VISA_PIN_VERIFICATION_KEY"
+    #   resp.key.multi_region_key_type #=> String, one of "PRIMARY", "REPLICA"
+    #   resp.key.primary_region #=> String
+    #   resp.key.replication_status #=> Hash
+    #   resp.key.replication_status["Region"].status #=> String, one of "IN_PROGRESS", "DELETE_IN_PROGRESS", "FAILED", "SYNCHRONIZED"
+    #   resp.key.replication_status["Region"].status_message #=> String
+    #   resp.key.using_default_replication_regions #=> Boolean
+    #   resp.key.mpa_status.mpa_session_arn #=> String
+    #   resp.key.mpa_status.status #=> String, one of "PENDING", "APPROVED", "FAILED", "CANCELLED"
+    #   resp.key.mpa_status.initiation_date #=> Time
+    #   resp.key.mpa_status.status_message #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/AddKeyReplicationRegions AWS API Documentation
+    #
+    # @overload add_key_replication_regions(params = {})
+    # @param [Hash] params ({})
+    def add_key_replication_regions(params = {}, options = {})
+      req = build_request(:add_key_replication_regions, params)
+      req.send_request(options)
+    end
+
+    # Associates a Multi-Party Approval (MPA) team with a protected
+    # operation. For more information, see [Multi-Party Approval][1] in the
+    # *Amazon Web Services Payment Cryptography User Guide.*
+    #
+    # **Cross-account use:** This operation can't be used across different
+    # Amazon Web Services accounts.
+    #
+    # **Related operations:**
+    #
+    # * [DisassociateMpaTeam][2]
+    #
+    # * [GetMpaTeamAssociation][3]
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/mpa.html
+    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_DisassociateMpaTeam.html
+    # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_GetMpaTeamAssociation.html
+    #
+    # @option params [required, String] :action
+    #   The protected operation to associate with the MPA team. Currently, the
+    #   only supported value is `IMPORT_ROOT_PUBLIC_KEY_CERTIFICATE`.
+    #
+    # @option params [required, String] :mpa_team_arn
+    #   The ARN of the MPA team to associate with the protected operation.
+    #
+    # @option params [String] :requester_comment
+    #   The comment from the requester explaining the reason for the
+    #   association.
+    #
+    #   Don't include personal, confidential or sensitive information in this
+    #   field. This field may be displayed in plaintext in CloudTrail logs and
+    #   other output.
+    #
+    # @return [Types::AssociateMpaTeamOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::AssociateMpaTeamOutput#mpa_team_association #mpa_team_association} => Types::MpaTeamAssociation
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.associate_mpa_team({
+    #     action: "IMPORT_ROOT_PUBLIC_KEY_CERTIFICATE", # required, accepts IMPORT_ROOT_PUBLIC_KEY_CERTIFICATE
+    #     mpa_team_arn: "MpaTeamArn", # required
+    #     requester_comment: "MpaRequesterComment",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.mpa_team_association.action #=> String, one of "IMPORT_ROOT_PUBLIC_KEY_CERTIFICATE"
+    #   resp.mpa_team_association.mpa_team_arn #=> String
+    #   resp.mpa_team_association.association_state #=> String, one of "ACTIVE", "UPDATE_PENDING", "DELETE_PENDING"
+    #   resp.mpa_team_association.mpa_status.mpa_session_arn #=> String
+    #   resp.mpa_team_association.mpa_status.status #=> String, one of "PENDING", "APPROVED", "FAILED", "CANCELLED"
+    #   resp.mpa_team_association.mpa_status.initiation_date #=> Time
+    #   resp.mpa_team_association.mpa_status.status_message #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/AssociateMpaTeam AWS API Documentation
+    #
+    # @overload associate_mpa_team(params = {})
+    # @param [Hash] params ({})
+    def associate_mpa_team(params = {}, options = {})
+      req = build_request(:associate_mpa_team, params)
+      req.send_request(options)
+    end
+
     # Creates an *alias*, or a friendly name, for an Amazon Web Services
     # Payment Cryptography key. You can use an alias to identify a key in
     # the console and when you call cryptographic operations such as
@@ -570,16 +748,33 @@ module Aws::PaymentCryptography
     # key, for example key class (example: `SYMMETRIC_KEY`), key algorithm
     # (example: `TDES_2KEY`), key usage (example:
     # `TR31_P0_PIN_ENCRYPTION_KEY`) and key modes of use (example:
-    # `Encrypt`). For information about valid combinations of key
-    # attributes, see [Understanding key attributes][1] in the *Amazon Web
-    # Services Payment Cryptography User Guide*. The mutable data contained
-    # within a key includes usage timestamp and key deletion timestamp and
-    # can be modified after creation.
+    # `Encrypt`). Amazon Web Services Payment Cryptography binds key
+    # attributes to keys using key blocks when you store or export them.
+    # Amazon Web Services Payment Cryptography stores the key contents
+    # wrapped and never stores or transmits them in the clear.
     #
-    # Amazon Web Services Payment Cryptography binds key attributes to keys
-    # using key blocks when you store or export them. Amazon Web Services
-    # Payment Cryptography stores the key contents wrapped and never stores
-    # or transmits them in the clear.
+    # For information about valid combinations of key attributes, see
+    # [Understanding key attributes][1] in the *Amazon Web Services Payment
+    # Cryptography User Guide*. The mutable data contained within a key
+    # includes usage timestamp and key deletion timestamp and can be
+    # modified after creation.
+    #
+    # You can use the `CreateKey` operation to generate an ECC (Elliptic
+    # Curve Cryptography) key pair used for establishing an ECDH (Elliptic
+    # Curve Diffie-Hellman) key agreement between two parties. In the ECDH
+    # key agreement process, both parties generate their own ECC key pair
+    # with key usage K3 and exchange the public keys. Each party then use
+    # their private key, the received public key from the other party, and
+    # the key derivation parameters including key derivation function, hash
+    # algorithm, derivation data, and key algorithm to derive a shared key.
+    #
+    # To maintain the single-use principle of cryptographic keys in
+    # payments, ECDH derived keys should not be used for multiple purposes,
+    # such as a `TR31_P0_PIN_ENCRYPTION_KEY` and
+    # `TR31_K1_KEY_BLOCK_PROTECTION_KEY`. When creating ECC key pairs in
+    # Amazon Web Services Payment Cryptography you can optionally set the
+    # `DeriveKeyUsage` parameter, which defines the key usage bound to the
+    # symmetric key that will be derived using the ECC key pair.
     #
     # **Cross-account use**: This operation can't be used across different
     # Amazon Web Services accounts.
@@ -613,7 +808,9 @@ module Aws::PaymentCryptography
     #   value of zero, with the key to be checked and retaining the 3 highest
     #   order bytes of the encrypted result. For AES keys, the KCV is computed
     #   using a CMAC algorithm where the input data is 16 bytes of zero and
-    #   retaining the 3 highest order bytes of the encrypted result.
+    #   retaining the 3 highest order bytes of the encrypted result. For HMAC
+    #   keys, the KCV is computed using the hash selected at key creation on a
+    #   zero-length message, taking the leftmost 3 bytes.
     #
     # @option params [required, Boolean] :exportable
     #   Specifies whether the key is exportable from the service.
@@ -647,6 +844,21 @@ module Aws::PaymentCryptography
     #
     #   [1]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_TagResource.html
     #
+    # @option params [String] :derive_key_usage
+    #   The intended cryptographic usage of keys derived from the ECC key pair
+    #   to be created.
+    #
+    #   After creating an ECC key pair, you cannot change the intended
+    #   cryptographic usage of keys derived from it using ECDH.
+    #
+    # @option params [Array<String>] :replication_regions
+    #   A list of Amazon Web Services Regions for key replication operations.
+    #
+    #   Each region in the list must be a valid Amazon Web Services Region
+    #   identifier where Amazon Web Services Payment Cryptography is
+    #   available. This list is used to specify which regions should be added
+    #   to or removed from a key's replication configuration.
+    #
     # @return [Types::CreateKeyOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateKeyOutput#key #key} => Types::Key
@@ -655,9 +867,9 @@ module Aws::PaymentCryptography
     #
     #   resp = client.create_key({
     #     key_attributes: { # required
-    #       key_usage: "TR31_B0_BASE_DERIVATION_KEY", # required, accepts TR31_B0_BASE_DERIVATION_KEY, TR31_C0_CARD_VERIFICATION_KEY, TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY, TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION, TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS, TR31_E1_EMV_MKEY_CONFIDENTIALITY, TR31_E2_EMV_MKEY_INTEGRITY, TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS, TR31_E5_EMV_MKEY_CARD_PERSONALIZATION, TR31_E6_EMV_MKEY_OTHER, TR31_K0_KEY_ENCRYPTION_KEY, TR31_K1_KEY_BLOCK_PROTECTION_KEY, TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT, TR31_M3_ISO_9797_3_MAC_KEY, TR31_M1_ISO_9797_1_MAC_KEY, TR31_M6_ISO_9797_5_CMAC_KEY, TR31_M7_HMAC_KEY, TR31_P0_PIN_ENCRYPTION_KEY, TR31_P1_PIN_GENERATION_KEY, TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE, TR31_V1_IBM3624_PIN_VERIFICATION_KEY, TR31_V2_VISA_PIN_VERIFICATION_KEY, TR31_K2_TR34_ASYMMETRIC_KEY
+    #       key_usage: "TR31_B0_BASE_DERIVATION_KEY", # required, accepts TR31_B0_BASE_DERIVATION_KEY, TR31_C0_CARD_VERIFICATION_KEY, TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY, TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION, TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS, TR31_E1_EMV_MKEY_CONFIDENTIALITY, TR31_E2_EMV_MKEY_INTEGRITY, TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS, TR31_E5_EMV_MKEY_CARD_PERSONALIZATION, TR31_E6_EMV_MKEY_OTHER, TR31_K0_KEY_ENCRYPTION_KEY, TR31_K1_KEY_BLOCK_PROTECTION_KEY, TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT, TR31_M0_ISO_16609_MAC_KEY, TR31_M3_ISO_9797_3_MAC_KEY, TR31_M1_ISO_9797_1_MAC_KEY, TR31_M6_ISO_9797_5_CMAC_KEY, TR31_M7_HMAC_KEY, TR31_P0_PIN_ENCRYPTION_KEY, TR31_P1_PIN_GENERATION_KEY, TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE, TR31_V1_IBM3624_PIN_VERIFICATION_KEY, TR31_V2_VISA_PIN_VERIFICATION_KEY, TR31_K2_TR34_ASYMMETRIC_KEY
     #       key_class: "SYMMETRIC_KEY", # required, accepts SYMMETRIC_KEY, ASYMMETRIC_KEY_PAIR, PRIVATE_KEY, PUBLIC_KEY
-    #       key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256, RSA_2048, RSA_3072, RSA_4096, ECC_NIST_P256, ECC_NIST_P384
+    #       key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256, HMAC_SHA256, HMAC_SHA384, HMAC_SHA512, HMAC_SHA224, RSA_2048, RSA_3072, RSA_4096, ECC_NIST_P256, ECC_NIST_P384, ECC_NIST_P521
     #       key_modes_of_use: { # required
     #         encrypt: false,
     #         decrypt: false,
@@ -670,7 +882,7 @@ module Aws::PaymentCryptography
     #         no_restrictions: false,
     #       },
     #     },
-    #     key_check_value_algorithm: "CMAC", # accepts CMAC, ANSI_X9_24
+    #     key_check_value_algorithm: "CMAC", # accepts CMAC, ANSI_X9_24, HMAC, SHA_1
     #     exportable: false, # required
     #     enabled: false,
     #     tags: [
@@ -679,14 +891,16 @@ module Aws::PaymentCryptography
     #         value: "TagValue", # required
     #       },
     #     ],
+    #     derive_key_usage: "TR31_B0_BASE_DERIVATION_KEY", # accepts TR31_B0_BASE_DERIVATION_KEY, TR31_C0_CARD_VERIFICATION_KEY, TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY, TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS, TR31_E1_EMV_MKEY_CONFIDENTIALITY, TR31_E2_EMV_MKEY_INTEGRITY, TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS, TR31_E5_EMV_MKEY_CARD_PERSONALIZATION, TR31_E6_EMV_MKEY_OTHER, TR31_K0_KEY_ENCRYPTION_KEY, TR31_K1_KEY_BLOCK_PROTECTION_KEY, TR31_M3_ISO_9797_3_MAC_KEY, TR31_M1_ISO_9797_1_MAC_KEY, TR31_M6_ISO_9797_5_CMAC_KEY, TR31_M7_HMAC_KEY, TR31_P0_PIN_ENCRYPTION_KEY, TR31_P1_PIN_GENERATION_KEY, TR31_V1_IBM3624_PIN_VERIFICATION_KEY, TR31_V2_VISA_PIN_VERIFICATION_KEY
+    #     replication_regions: ["Region"],
     #   })
     #
     # @example Response structure
     #
     #   resp.key.key_arn #=> String
-    #   resp.key.key_attributes.key_usage #=> String, one of "TR31_B0_BASE_DERIVATION_KEY", "TR31_C0_CARD_VERIFICATION_KEY", "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY", "TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION", "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS", "TR31_E1_EMV_MKEY_CONFIDENTIALITY", "TR31_E2_EMV_MKEY_INTEGRITY", "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS", "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION", "TR31_E6_EMV_MKEY_OTHER", "TR31_K0_KEY_ENCRYPTION_KEY", "TR31_K1_KEY_BLOCK_PROTECTION_KEY", "TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT", "TR31_M3_ISO_9797_3_MAC_KEY", "TR31_M1_ISO_9797_1_MAC_KEY", "TR31_M6_ISO_9797_5_CMAC_KEY", "TR31_M7_HMAC_KEY", "TR31_P0_PIN_ENCRYPTION_KEY", "TR31_P1_PIN_GENERATION_KEY", "TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE", "TR31_V1_IBM3624_PIN_VERIFICATION_KEY", "TR31_V2_VISA_PIN_VERIFICATION_KEY", "TR31_K2_TR34_ASYMMETRIC_KEY"
+    #   resp.key.key_attributes.key_usage #=> String, one of "TR31_B0_BASE_DERIVATION_KEY", "TR31_C0_CARD_VERIFICATION_KEY", "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY", "TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION", "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS", "TR31_E1_EMV_MKEY_CONFIDENTIALITY", "TR31_E2_EMV_MKEY_INTEGRITY", "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS", "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION", "TR31_E6_EMV_MKEY_OTHER", "TR31_K0_KEY_ENCRYPTION_KEY", "TR31_K1_KEY_BLOCK_PROTECTION_KEY", "TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT", "TR31_M0_ISO_16609_MAC_KEY", "TR31_M3_ISO_9797_3_MAC_KEY", "TR31_M1_ISO_9797_1_MAC_KEY", "TR31_M6_ISO_9797_5_CMAC_KEY", "TR31_M7_HMAC_KEY", "TR31_P0_PIN_ENCRYPTION_KEY", "TR31_P1_PIN_GENERATION_KEY", "TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE", "TR31_V1_IBM3624_PIN_VERIFICATION_KEY", "TR31_V2_VISA_PIN_VERIFICATION_KEY", "TR31_K2_TR34_ASYMMETRIC_KEY"
     #   resp.key.key_attributes.key_class #=> String, one of "SYMMETRIC_KEY", "ASYMMETRIC_KEY_PAIR", "PRIVATE_KEY", "PUBLIC_KEY"
-    #   resp.key.key_attributes.key_algorithm #=> String, one of "TDES_2KEY", "TDES_3KEY", "AES_128", "AES_192", "AES_256", "RSA_2048", "RSA_3072", "RSA_4096", "ECC_NIST_P256", "ECC_NIST_P384"
+    #   resp.key.key_attributes.key_algorithm #=> String, one of "TDES_2KEY", "TDES_3KEY", "AES_128", "AES_192", "AES_256", "HMAC_SHA256", "HMAC_SHA384", "HMAC_SHA512", "HMAC_SHA224", "RSA_2048", "RSA_3072", "RSA_4096", "ECC_NIST_P256", "ECC_NIST_P384", "ECC_NIST_P521"
     #   resp.key.key_attributes.key_modes_of_use.encrypt #=> Boolean
     #   resp.key.key_attributes.key_modes_of_use.decrypt #=> Boolean
     #   resp.key.key_attributes.key_modes_of_use.wrap #=> Boolean
@@ -697,7 +911,7 @@ module Aws::PaymentCryptography
     #   resp.key.key_attributes.key_modes_of_use.derive_key #=> Boolean
     #   resp.key.key_attributes.key_modes_of_use.no_restrictions #=> Boolean
     #   resp.key.key_check_value #=> String
-    #   resp.key.key_check_value_algorithm #=> String, one of "CMAC", "ANSI_X9_24"
+    #   resp.key.key_check_value_algorithm #=> String, one of "CMAC", "ANSI_X9_24", "HMAC", "SHA_1"
     #   resp.key.enabled #=> Boolean
     #   resp.key.exportable #=> Boolean
     #   resp.key.key_state #=> String, one of "CREATE_IN_PROGRESS", "CREATE_COMPLETE", "DELETE_PENDING", "DELETE_COMPLETE"
@@ -707,6 +921,17 @@ module Aws::PaymentCryptography
     #   resp.key.usage_stop_timestamp #=> Time
     #   resp.key.delete_pending_timestamp #=> Time
     #   resp.key.delete_timestamp #=> Time
+    #   resp.key.derive_key_usage #=> String, one of "TR31_B0_BASE_DERIVATION_KEY", "TR31_C0_CARD_VERIFICATION_KEY", "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY", "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS", "TR31_E1_EMV_MKEY_CONFIDENTIALITY", "TR31_E2_EMV_MKEY_INTEGRITY", "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS", "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION", "TR31_E6_EMV_MKEY_OTHER", "TR31_K0_KEY_ENCRYPTION_KEY", "TR31_K1_KEY_BLOCK_PROTECTION_KEY", "TR31_M3_ISO_9797_3_MAC_KEY", "TR31_M1_ISO_9797_1_MAC_KEY", "TR31_M6_ISO_9797_5_CMAC_KEY", "TR31_M7_HMAC_KEY", "TR31_P0_PIN_ENCRYPTION_KEY", "TR31_P1_PIN_GENERATION_KEY", "TR31_V1_IBM3624_PIN_VERIFICATION_KEY", "TR31_V2_VISA_PIN_VERIFICATION_KEY"
+    #   resp.key.multi_region_key_type #=> String, one of "PRIMARY", "REPLICA"
+    #   resp.key.primary_region #=> String
+    #   resp.key.replication_status #=> Hash
+    #   resp.key.replication_status["Region"].status #=> String, one of "IN_PROGRESS", "DELETE_IN_PROGRESS", "FAILED", "SYNCHRONIZED"
+    #   resp.key.replication_status["Region"].status_message #=> String
+    #   resp.key.using_default_replication_regions #=> Boolean
+    #   resp.key.mpa_status.mpa_session_arn #=> String
+    #   resp.key.mpa_status.status #=> String, one of "PENDING", "APPROVED", "FAILED", "CANCELLED"
+    #   resp.key.mpa_status.initiation_date #=> Time
+    #   resp.key.mpa_status.status_message #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/CreateKey AWS API Documentation
     #
@@ -789,22 +1014,24 @@ module Aws::PaymentCryptography
     # aren't sure, consider deactivating it instead by calling
     # [StopKeyUsage][1].
     #
-    # **Cross-account use:** This operation can't be used across different
-    # Amazon Web Services accounts.
+    # **Cross-account use:** This operation supports cross-account use when
+    # the key has a resource-based policy that grants access. For more
+    # information, see [Resource-based policies][2].
     #
     # **Related operations:**
     #
-    # * [RestoreKey][2]
+    # * [RestoreKey][3]
     #
-    # * [StartKeyUsage][3]
+    # * [StartKeyUsage][4]
     #
     # * [StopKeyUsage][1]
     #
     #
     #
     # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_StopKeyUsage.html
-    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_RestoreKey.html
-    # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_StartKeyUsage.html
+    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/security_iam_resource-based-policies.html
+    # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_RestoreKey.html
+    # [4]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_StartKeyUsage.html
     #
     # @option params [required, String] :key_identifier
     #   The `KeyARN` of the key that is scheduled for deletion.
@@ -826,9 +1053,9 @@ module Aws::PaymentCryptography
     # @example Response structure
     #
     #   resp.key.key_arn #=> String
-    #   resp.key.key_attributes.key_usage #=> String, one of "TR31_B0_BASE_DERIVATION_KEY", "TR31_C0_CARD_VERIFICATION_KEY", "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY", "TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION", "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS", "TR31_E1_EMV_MKEY_CONFIDENTIALITY", "TR31_E2_EMV_MKEY_INTEGRITY", "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS", "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION", "TR31_E6_EMV_MKEY_OTHER", "TR31_K0_KEY_ENCRYPTION_KEY", "TR31_K1_KEY_BLOCK_PROTECTION_KEY", "TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT", "TR31_M3_ISO_9797_3_MAC_KEY", "TR31_M1_ISO_9797_1_MAC_KEY", "TR31_M6_ISO_9797_5_CMAC_KEY", "TR31_M7_HMAC_KEY", "TR31_P0_PIN_ENCRYPTION_KEY", "TR31_P1_PIN_GENERATION_KEY", "TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE", "TR31_V1_IBM3624_PIN_VERIFICATION_KEY", "TR31_V2_VISA_PIN_VERIFICATION_KEY", "TR31_K2_TR34_ASYMMETRIC_KEY"
+    #   resp.key.key_attributes.key_usage #=> String, one of "TR31_B0_BASE_DERIVATION_KEY", "TR31_C0_CARD_VERIFICATION_KEY", "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY", "TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION", "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS", "TR31_E1_EMV_MKEY_CONFIDENTIALITY", "TR31_E2_EMV_MKEY_INTEGRITY", "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS", "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION", "TR31_E6_EMV_MKEY_OTHER", "TR31_K0_KEY_ENCRYPTION_KEY", "TR31_K1_KEY_BLOCK_PROTECTION_KEY", "TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT", "TR31_M0_ISO_16609_MAC_KEY", "TR31_M3_ISO_9797_3_MAC_KEY", "TR31_M1_ISO_9797_1_MAC_KEY", "TR31_M6_ISO_9797_5_CMAC_KEY", "TR31_M7_HMAC_KEY", "TR31_P0_PIN_ENCRYPTION_KEY", "TR31_P1_PIN_GENERATION_KEY", "TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE", "TR31_V1_IBM3624_PIN_VERIFICATION_KEY", "TR31_V2_VISA_PIN_VERIFICATION_KEY", "TR31_K2_TR34_ASYMMETRIC_KEY"
     #   resp.key.key_attributes.key_class #=> String, one of "SYMMETRIC_KEY", "ASYMMETRIC_KEY_PAIR", "PRIVATE_KEY", "PUBLIC_KEY"
-    #   resp.key.key_attributes.key_algorithm #=> String, one of "TDES_2KEY", "TDES_3KEY", "AES_128", "AES_192", "AES_256", "RSA_2048", "RSA_3072", "RSA_4096", "ECC_NIST_P256", "ECC_NIST_P384"
+    #   resp.key.key_attributes.key_algorithm #=> String, one of "TDES_2KEY", "TDES_3KEY", "AES_128", "AES_192", "AES_256", "HMAC_SHA256", "HMAC_SHA384", "HMAC_SHA512", "HMAC_SHA224", "RSA_2048", "RSA_3072", "RSA_4096", "ECC_NIST_P256", "ECC_NIST_P384", "ECC_NIST_P521"
     #   resp.key.key_attributes.key_modes_of_use.encrypt #=> Boolean
     #   resp.key.key_attributes.key_modes_of_use.decrypt #=> Boolean
     #   resp.key.key_attributes.key_modes_of_use.wrap #=> Boolean
@@ -839,7 +1066,7 @@ module Aws::PaymentCryptography
     #   resp.key.key_attributes.key_modes_of_use.derive_key #=> Boolean
     #   resp.key.key_attributes.key_modes_of_use.no_restrictions #=> Boolean
     #   resp.key.key_check_value #=> String
-    #   resp.key.key_check_value_algorithm #=> String, one of "CMAC", "ANSI_X9_24"
+    #   resp.key.key_check_value_algorithm #=> String, one of "CMAC", "ANSI_X9_24", "HMAC", "SHA_1"
     #   resp.key.enabled #=> Boolean
     #   resp.key.exportable #=> Boolean
     #   resp.key.key_state #=> String, one of "CREATE_IN_PROGRESS", "CREATE_COMPLETE", "DELETE_PENDING", "DELETE_COMPLETE"
@@ -849,6 +1076,17 @@ module Aws::PaymentCryptography
     #   resp.key.usage_stop_timestamp #=> Time
     #   resp.key.delete_pending_timestamp #=> Time
     #   resp.key.delete_timestamp #=> Time
+    #   resp.key.derive_key_usage #=> String, one of "TR31_B0_BASE_DERIVATION_KEY", "TR31_C0_CARD_VERIFICATION_KEY", "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY", "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS", "TR31_E1_EMV_MKEY_CONFIDENTIALITY", "TR31_E2_EMV_MKEY_INTEGRITY", "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS", "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION", "TR31_E6_EMV_MKEY_OTHER", "TR31_K0_KEY_ENCRYPTION_KEY", "TR31_K1_KEY_BLOCK_PROTECTION_KEY", "TR31_M3_ISO_9797_3_MAC_KEY", "TR31_M1_ISO_9797_1_MAC_KEY", "TR31_M6_ISO_9797_5_CMAC_KEY", "TR31_M7_HMAC_KEY", "TR31_P0_PIN_ENCRYPTION_KEY", "TR31_P1_PIN_GENERATION_KEY", "TR31_V1_IBM3624_PIN_VERIFICATION_KEY", "TR31_V2_VISA_PIN_VERIFICATION_KEY"
+    #   resp.key.multi_region_key_type #=> String, one of "PRIMARY", "REPLICA"
+    #   resp.key.primary_region #=> String
+    #   resp.key.replication_status #=> Hash
+    #   resp.key.replication_status["Region"].status #=> String, one of "IN_PROGRESS", "DELETE_IN_PROGRESS", "FAILED", "SYNCHRONIZED"
+    #   resp.key.replication_status["Region"].status_message #=> String
+    #   resp.key.using_default_replication_regions #=> Boolean
+    #   resp.key.mpa_status.mpa_session_arn #=> String
+    #   resp.key.mpa_status.status #=> String, one of "PENDING", "APPROVED", "FAILED", "CANCELLED"
+    #   resp.key.mpa_status.initiation_date #=> Time
+    #   resp.key.mpa_status.status_message #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/DeleteKey AWS API Documentation
     #
@@ -856,6 +1094,228 @@ module Aws::PaymentCryptography
     # @param [Hash] params ({})
     def delete_key(params = {}, options = {})
       req = build_request(:delete_key, params)
+      req.send_request(options)
+    end
+
+    # Removes the resource-based policy attached to an Amazon Web Services
+    # Payment Cryptography key.
+    #
+    # **Cross-account use:** This operation can't be used across different
+    # Amazon Web Services accounts.
+    #
+    # **Related operations:**
+    #
+    # * [PutResourcePolicy][1]
+    #
+    # * [GetResourcePolicy][2]
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_PutResourcePolicy.html
+    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_GetResourcePolicy.html
+    #
+    # @option params [required, String] :resource_arn
+    #   The `KeyARN` of the key whose resource-based policy you want to
+    #   delete.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_resource_policy({
+    #     resource_arn: "ResourceArn", # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/DeleteResourcePolicy AWS API Documentation
+    #
+    # @overload delete_resource_policy(params = {})
+    # @param [Hash] params ({})
+    def delete_resource_policy(params = {}, options = {})
+      req = build_request(:delete_resource_policy, params)
+      req.send_request(options)
+    end
+
+    # Disables [Multi-Region key replication][1] settings for the specified
+    # Amazon Web Services Regions in your Amazon Web Services account,
+    # preventing new keys from being automatically replicated to those
+    # regions.
+    #
+    # After disabling Multi-Region key replication for specific regions, new
+    # keys created in your account will not be automatically replicated to
+    # those regions. You can still manually add replication to those regions
+    # for individual keys using the [AddKeyReplicationRegions][2] operation.
+    #
+    # This operation does not affect existing keys or their current
+    # replication configuration.
+    #
+    # **Cross-account use:** This operation can't be used across different
+    # Amazon Web Services accounts.
+    #
+    # **Related operations:**
+    #
+    # * [EnableDefaultKeyReplicationRegions][3]
+    #
+    # * [GetDefaultKeyReplicationRegions][4]
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-multi-region-replication.html
+    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_AddKeyReplicationRegions.html
+    # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_EnableDefaultKeyReplicationRegions.html
+    # [4]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_GetDefaultKeyReplicationRegions.html
+    #
+    # @option params [required, Array<String>] :replication_regions
+    #   The list of Amazon Web Services Regions to remove from the account's
+    #   default replication regions.
+    #
+    #   New keys created after this operation will not automatically be
+    #   replicated to these regions, though existing keys with replication to
+    #   these regions will be unaffected.
+    #
+    # @return [Types::DisableDefaultKeyReplicationRegionsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DisableDefaultKeyReplicationRegionsOutput#enabled_replication_regions #enabled_replication_regions} => Array&lt;String&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.disable_default_key_replication_regions({
+    #     replication_regions: ["Region"], # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.enabled_replication_regions #=> Array
+    #   resp.enabled_replication_regions[0] #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/DisableDefaultKeyReplicationRegions AWS API Documentation
+    #
+    # @overload disable_default_key_replication_regions(params = {})
+    # @param [Hash] params ({})
+    def disable_default_key_replication_regions(params = {}, options = {})
+      req = build_request(:disable_default_key_replication_regions, params)
+      req.send_request(options)
+    end
+
+    # Removes the association between a Multi-Party Approval (MPA) team and
+    # a protected operation.
+    #
+    # **Cross-account use:** This operation can't be used across different
+    # Amazon Web Services accounts.
+    #
+    # **Related operations:**
+    #
+    # * [AssociateMpaTeam][1]
+    #
+    # * [GetMpaTeamAssociation][2]
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_AssociateMpaTeam.html
+    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_GetMpaTeamAssociation.html
+    #
+    # @option params [required, String] :action
+    #   The protected operation to disassociate from the MPA team. Currently,
+    #   the only supported value is `IMPORT_ROOT_PUBLIC_KEY_CERTIFICATE`.
+    #
+    # @option params [String] :requester_comment
+    #   The comment from the requester explaining the reason for the
+    #   disassociation.
+    #
+    #   Don't include personal, confidential or sensitive information in this
+    #   field. This field may be displayed in plaintext in CloudTrail logs and
+    #   other output.
+    #
+    # @return [Types::DisassociateMpaTeamOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DisassociateMpaTeamOutput#mpa_team_association #mpa_team_association} => Types::MpaTeamAssociation
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.disassociate_mpa_team({
+    #     action: "IMPORT_ROOT_PUBLIC_KEY_CERTIFICATE", # required, accepts IMPORT_ROOT_PUBLIC_KEY_CERTIFICATE
+    #     requester_comment: "MpaRequesterComment",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.mpa_team_association.action #=> String, one of "IMPORT_ROOT_PUBLIC_KEY_CERTIFICATE"
+    #   resp.mpa_team_association.mpa_team_arn #=> String
+    #   resp.mpa_team_association.association_state #=> String, one of "ACTIVE", "UPDATE_PENDING", "DELETE_PENDING"
+    #   resp.mpa_team_association.mpa_status.mpa_session_arn #=> String
+    #   resp.mpa_team_association.mpa_status.status #=> String, one of "PENDING", "APPROVED", "FAILED", "CANCELLED"
+    #   resp.mpa_team_association.mpa_status.initiation_date #=> Time
+    #   resp.mpa_team_association.mpa_status.status_message #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/DisassociateMpaTeam AWS API Documentation
+    #
+    # @overload disassociate_mpa_team(params = {})
+    # @param [Hash] params ({})
+    def disassociate_mpa_team(params = {}, options = {})
+      req = build_request(:disassociate_mpa_team, params)
+      req.send_request(options)
+    end
+
+    # Enables [Multi-Region key replication][1] settings for your Amazon Web
+    # Services account, causing new keys to be automatically replicated to
+    # the specified Amazon Web Services Regions when created.
+    #
+    # When Multi-Region key replication are enabled, any new keys created in
+    # your account will automatically be replicated to these regions unless
+    # you explicitly override this behavior during key creation. This
+    # simplifies key management for applications that operate across
+    # multiple regions.
+    #
+    # Existing keys are not affected by this operation - only keys created
+    # after enabling default replication will be automatically replicated.
+    #
+    # **Cross-account use:** This operation can't be used across different
+    # Amazon Web Services accounts.
+    #
+    # **Related operations:**
+    #
+    # * [DisableDefaultKeyReplicationRegions][2]
+    #
+    # * [GetDefaultKeyReplicationRegions][3]
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-multi-region-replication.html
+    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_DisableDefaultKeyReplicationRegions.html
+    # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_GetDefaultKeyReplicationRegions.html
+    #
+    # @option params [required, Array<String>] :replication_regions
+    #   The list of Amazon Web Services Regions to enable as default
+    #   replication regions for the Amazon Web Services account for
+    #   [Multi-Region key replication][1].
+    #
+    #   New keys created in this account will automatically be replicated to
+    #   these regions unless explicitly overridden during key creation.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-multi-region-replication.html
+    #
+    # @return [Types::EnableDefaultKeyReplicationRegionsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::EnableDefaultKeyReplicationRegionsOutput#enabled_replication_regions #enabled_replication_regions} => Array&lt;String&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.enable_default_key_replication_regions({
+    #     replication_regions: ["Region"], # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.enabled_replication_regions #=> Array
+    #   resp.enabled_replication_regions[0] #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/EnableDefaultKeyReplicationRegions AWS API Documentation
+    #
+    # @overload enable_default_key_replication_regions(params = {})
+    # @param [Hash] params ({})
+    def enable_default_key_replication_regions(params = {}, options = {})
+      req = build_request(:enable_default_key_replication_regions, params)
       req.send_request(options)
     end
 
@@ -872,20 +1332,21 @@ module Aws::PaymentCryptography
     # For symmetric key exchange, Amazon Web Services Payment Cryptography
     # uses the ANSI X9 TR-31 norm in accordance with PCI PIN guidelines. And
     # for asymmetric key exchange, Amazon Web Services Payment Cryptography
-    # supports ANSI X9 TR-34 norm and RSA wrap and unwrap key exchange
-    # mechanism. Asymmetric key exchange methods are typically used to
-    # establish bi-directional trust between the two parties exhanging keys
-    # and are used for initial key exchange such as Key Encryption Key
-    # (KEK). After which you can export working keys using symmetric method
-    # to perform various cryptographic operations within Amazon Web Services
-    # Payment Cryptography.
+    # supports ANSI X9 TR-34 norm, RSA unwrap, and ECDH (Elliptic Curve
+    # Diffie-Hellman) key exchange mechanisms. Asymmetric key exchange
+    # methods are typically used to establish bi-directional trust between
+    # the two parties exhanging keys and are used for initial key exchange
+    # such as Key Encryption Key (KEK). After which you can export working
+    # keys using symmetric method to perform various cryptographic
+    # operations within Amazon Web Services Payment Cryptography.
     #
-    # The TR-34 norm is intended for exchanging 3DES keys only and keys are
-    # imported in a WrappedKeyBlock format. Key attributes (such as
-    # KeyUsage, KeyAlgorithm, KeyModesOfUse, Exportability) are contained
-    # within the key block. With RSA wrap and unwrap, you can exchange both
-    # 3DES and AES-128 keys. The keys are imported in a WrappedKeyCryptogram
-    # format and you will need to specify the key attributes during import.
+    # PCI requires specific minimum key strength of wrapping keys used to
+    # protect the keys being exchanged electronically. These requirements
+    # can change when PCI standards are revised. The rules specify that
+    # wrapping keys used for transport must be at least as strong as the key
+    # being protected. For more information on recommended key strength of
+    # wrapping keys and key exchange mechanism, see [Importing and exporting
+    # keys][1] in the *Amazon Web Services Payment Cryptography User Guide*.
     #
     # You can also use `ExportKey` functionality to generate and export an
     # IPEK (Initial Pin Encryption Key) from Amazon Web Services Payment
@@ -905,7 +1366,7 @@ module Aws::PaymentCryptography
     #
     # The `OptionalBlocks` contain the additional data related to the key.
     # For information on data type that can be included within optional
-    # blocks, refer to [ASC X9.143-2022][1].
+    # blocks, refer to [ASC X9.143-2022][2].
     #
     # <note markdown="1"> Data included in key block headers is signed but transmitted in clear
     # text. Sensitive or confidential information should not be included in
@@ -926,7 +1387,7 @@ module Aws::PaymentCryptography
     # the key.
     #
     # To initiate TR-34 key export, the KRD must obtain an export token by
-    # calling [GetParametersForExport][2]. This operation also generates a
+    # calling [GetParametersForExport][3]. This operation also generates a
     # key pair for the purpose of key export, signs the key and returns back
     # the signing public key certificate (also known as KDH signing
     # certificate) and root certificate chain. The KDH uses the private key
@@ -934,18 +1395,18 @@ module Aws::PaymentCryptography
     # is provided to KRD to verify the signature. The KRD can import the
     # root certificate into its Hardware Security Module (HSM), as required.
     # The export token and the associated KDH signing certificate expires
-    # after 7 days.
+    # after 30 days.
     #
     # Next the KRD generates a key pair for the the purpose of encrypting
     # the KDH key and provides the public key cerificate (also known as KRD
     # wrapping certificate) back to KDH. The KRD will also import the root
     # cerificate chain into Amazon Web Services Payment Cryptography by
-    # calling [ImportKey][3] for `RootCertificatePublicKey`. The KDH, Amazon
+    # calling [ImportKey][4] for `RootCertificatePublicKey`. The KDH, Amazon
     # Web Services Payment Cryptography, will use the KRD wrapping
     # cerificate to encrypt (wrap) the key under export and signs it with
     # signing private key to generate a TR-34 WrappedKeyBlock. For more
     # information on TR-34 key export, see section [Exporting symmetric
-    # keys][4] in the *Amazon Web Services Payment Cryptography User Guide*.
+    # keys][5] in the *Amazon Web Services Payment Cryptography User Guide*.
     #
     # Set the following parameters:
     #
@@ -961,7 +1422,7 @@ module Aws::PaymentCryptography
     #   certificate chain that signed the KRD wrapping key certificate.
     #
     # * `ExportToken`: Obtained from KDH by calling
-    #   [GetParametersForImport][5].
+    #   [GetParametersForImport][6].
     #
     # * `WrappingKeyCertificate`: The public key certificate in PEM format
     #   (base64 encoded) of the KRD wrapping key Amazon Web Services Payment
@@ -980,7 +1441,7 @@ module Aws::PaymentCryptography
     # asymmetric key pair on the receiving HSM and obtain the public key
     # certificate in PEM format (base64 encoded) for the purpose of wrapping
     # and the root certifiate chain. Import the root certificate into Amazon
-    # Web Services Payment Cryptography by calling [ImportKey][3] for
+    # Web Services Payment Cryptography by calling [ImportKey][4] for
     # `RootCertificatePublicKey`.
     #
     # Next call `ExportKey` and set the following parameters:
@@ -1004,7 +1465,7 @@ module Aws::PaymentCryptography
     # Using this operation, you can export working keys or IPEK using TR-31
     # symmetric key exchange. In TR-31, you must use an initial key such as
     # KEK to encrypt or wrap the key under export. To establish a KEK, you
-    # can use [CreateKey][6] or [ImportKey][3].
+    # can use [CreateKey][7] or [ImportKey][4].
     #
     # Set the following parameters:
     #
@@ -1016,27 +1477,61 @@ module Aws::PaymentCryptography
     #
     # * `KeyMaterial`: Use `Tr31KeyBlock` parameters.
     #
-    # When this operation is successful, Amazon Web Services Payment
-    # Cryptography returns the working key or IPEK as a TR-31
-    # WrappedKeyBlock.
+    # **To export working keys using ECDH**
     #
-    # **Cross-account use:** This operation can't be used across different
-    # Amazon Web Services accounts.
+    # You can also use ECDH key agreement to export working keys in a TR-31
+    # keyblock, where the wrapping key is an ECDH derived key.
+    #
+    # To initiate a TR-31 key export using ECDH, both sides must create an
+    # ECC key pair with key usage K3 and exchange public key certificates.
+    # In Amazon Web Services Payment Cryptography, you can do this by
+    # calling `CreateKey`. If you have not already done so, you must import
+    # the CA chain that issued the receiving public key certificate by
+    # calling `ImportKey` with input `RootCertificatePublicKey` for root CA
+    # or `TrustedPublicKey` for intermediate CA. You can then complete a
+    # TR-31 key export by deriving a shared wrapping key using the service
+    # ECC key pair, public certificate of your ECC key pair outside of
+    # Amazon Web Services Payment Cryptography, and the key derivation
+    # parameters including key derivation function, hash algorithm,
+    # derivation data, key algorithm.
+    #
+    # * `KeyMaterial`: Use `DiffieHellmanTr31KeyBlock` parameters.
+    #
+    # * `PrivateKeyIdentifier`: The `KeyArn` of the ECC key pair created
+    #   within Amazon Web Services Payment Cryptography to derive a shared
+    #   KEK.
+    #
+    # * `PublicKeyCertificate`: The public key certificate of the receiving
+    #   ECC key pair in PEM format (base64 encoded) to derive a shared KEK.
+    #
+    # * `CertificateAuthorityPublicKeyIdentifier`: The `keyARN` of the CA
+    #   that signed the public key certificate of the receiving ECC key
+    #   pair.
+    #
+    # When this operation is successful, Amazon Web Services Payment
+    # Cryptography returns the working key as a TR-31 WrappedKeyBlock, where
+    # the wrapping key is the ECDH derived key.
+    #
+    # **Cross-account use:** This operation supports cross-account use when
+    # the key has a resource-based policy that grants access. For more
+    # information, see [Resource-based policies][8].
     #
     # **Related operations:**
     #
-    # * [GetParametersForExport][2]
+    # * [GetParametersForExport][3]
     #
-    # * [ImportKey][3]
+    # * [ImportKey][4]
     #
     #
     #
-    # [1]: https://webstore.ansi.org/standards/ascx9/ansix91432022
-    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_GetParametersForExport.html
-    # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_ImportKey.html
-    # [4]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-export.html
-    # [5]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_GetParametersForImport.html
-    # [6]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_CreateKey.html
+    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-importexport.html
+    # [2]: https://webstore.ansi.org/standards/ascx9/ansix91432022
+    # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_GetParametersForExport.html
+    # [4]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_ImportKey.html
+    # [5]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-export.html
+    # [6]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_GetParametersForImport.html
+    # [7]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_CreateKey.html
+    # [8]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/security_iam_resource-based-policies.html
     #
     # @option params [required, Types::ExportKeyMaterial] :key_material
     #   The key block format type, for example, TR-34 or TR-31, to use during
@@ -1081,7 +1576,9 @@ module Aws::PaymentCryptography
     #       tr_34_key_block: {
     #         certificate_authority_public_key_identifier: "KeyArnOrKeyAliasType", # required
     #         wrapping_key_certificate: "CertificateType", # required
-    #         export_token: "ExportTokenId", # required
+    #         export_token: "ExportTokenId",
+    #         signing_key_identifier: "KeyArnOrKeyAliasType",
+    #         signing_key_certificate: "CertificateType",
     #         key_block_format: "X9_TR34_2012", # required, accepts X9_TR34_2012
     #         random_nonce: "EvenHexLengthBetween16And32",
     #         key_block_headers: {
@@ -1108,13 +1605,46 @@ module Aws::PaymentCryptography
     #         wrapping_key_certificate: "CertificateType", # required
     #         wrapping_spec: "RSA_OAEP_SHA_256", # accepts RSA_OAEP_SHA_256, RSA_OAEP_SHA_512
     #       },
+    #       diffie_hellman_tr_31_key_block: {
+    #         private_key_identifier: "KeyArnOrKeyAliasType", # required
+    #         certificate_authority_public_key_identifier: "KeyArnOrKeyAliasType", # required
+    #         public_key_certificate: "CertificateType", # required
+    #         derive_key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256, HMAC_SHA256, HMAC_SHA384, HMAC_SHA512, HMAC_SHA224
+    #         key_derivation_function: "NIST_SP800", # required, accepts NIST_SP800, ANSI_X963
+    #         key_derivation_hash_algorithm: "SHA_256", # required, accepts SHA_256, SHA_384, SHA_512
+    #         derivation_data: { # required
+    #           shared_information: "SharedInformation",
+    #         },
+    #         key_block_headers: {
+    #           key_modes_of_use: {
+    #             encrypt: false,
+    #             decrypt: false,
+    #             wrap: false,
+    #             unwrap: false,
+    #             generate: false,
+    #             sign: false,
+    #             verify: false,
+    #             derive_key: false,
+    #             no_restrictions: false,
+    #           },
+    #           key_exportability: "EXPORTABLE", # accepts EXPORTABLE, NON_EXPORTABLE, SENSITIVE
+    #           key_version: "KeyVersion",
+    #           optional_blocks: {
+    #             "OptionalBlockId" => "OptionalBlockValue",
+    #           },
+    #         },
+    #       },
+    #       as_2805_key_cryptogram: {
+    #         wrapping_key_identifier: "KeyArnOrKeyAliasType", # required
+    #         as_2805_key_variant: "TERMINAL_MAJOR_KEY_VARIANT_00", # required, accepts TERMINAL_MAJOR_KEY_VARIANT_00, PIN_ENCRYPTION_KEY_VARIANT_28, MESSAGE_AUTHENTICATION_KEY_VARIANT_24, DATA_ENCRYPTION_KEY_VARIANT_22
+    #       },
     #     },
     #     export_key_identifier: "KeyArnOrKeyAliasType", # required
     #     export_attributes: {
     #       export_dukpt_initial_key: {
     #         key_serial_number: "HexLength20Or24", # required
     #       },
-    #       key_check_value_algorithm: "CMAC", # accepts CMAC, ANSI_X9_24
+    #       key_check_value_algorithm: "CMAC", # accepts CMAC, ANSI_X9_24, HMAC, SHA_1
     #     },
     #   })
     #
@@ -1124,7 +1654,7 @@ module Aws::PaymentCryptography
     #   resp.wrapped_key.wrapped_key_material_format #=> String, one of "KEY_CRYPTOGRAM", "TR31_KEY_BLOCK", "TR34_KEY_BLOCK"
     #   resp.wrapped_key.key_material #=> String
     #   resp.wrapped_key.key_check_value #=> String
-    #   resp.wrapped_key.key_check_value_algorithm #=> String, one of "CMAC", "ANSI_X9_24"
+    #   resp.wrapped_key.key_check_value_algorithm #=> String, one of "CMAC", "ANSI_X9_24", "HMAC", "SHA_1"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/ExportKey AWS API Documentation
     #
@@ -1185,26 +1715,115 @@ module Aws::PaymentCryptography
       req.send_request(options)
     end
 
-    # Gets the key material for an Amazon Web Services Payment Cryptography
-    # key, including the immutable and mutable data specified when the key
-    # was created.
+    # Creates a certificate signing request (CSR) from a key pair.
+    #
+    # @option params [required, String] :key_identifier
+    #   Asymmetric key used for generating the certificate signing request
+    #
+    # @option params [required, String] :signing_algorithm
+    #   The cryptographic algorithm used to sign your CSR.
+    #
+    # @option params [required, Types::CertificateSubjectType] :certificate_subject
+    #   The metadata used to create the CSR.
+    #
+    # @return [Types::GetCertificateSigningRequestOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetCertificateSigningRequestOutput#certificate_signing_request #certificate_signing_request} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_certificate_signing_request({
+    #     key_identifier: "KeyArnOrKeyAliasType", # required
+    #     signing_algorithm: "SHA224", # required, accepts SHA224, SHA256, SHA384, SHA512
+    #     certificate_subject: { # required
+    #       common_name: "CertificateSubjectTypeCommonNameString", # required
+    #       organization_unit: "CertificateSubjectTypeOrganizationUnitString",
+    #       organization: "CertificateSubjectTypeOrganizationString",
+    #       city: "CertificateSubjectTypeCityString",
+    #       country: "CertificateSubjectTypeCountryString",
+    #       state_or_province: "CertificateSubjectTypeStateOrProvinceString",
+    #       email_address: "CertificateSubjectTypeEmailAddressString",
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.certificate_signing_request #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/GetCertificateSigningRequest AWS API Documentation
+    #
+    # @overload get_certificate_signing_request(params = {})
+    # @param [Hash] params ({})
+    def get_certificate_signing_request(params = {}, options = {})
+      req = build_request(:get_certificate_signing_request, params)
+      req.send_request(options)
+    end
+
+    # Retrieves the list of Amazon Web Services Regions where [Multi-Region
+    # key replication][1] is currently enabled for your Amazon Web Services
+    # account.
+    #
+    # This operation returns the current Multi-Region key replication
+    # configuration. New keys created in your account will be automatically
+    # replicated to these regions unless explicitly overridden during key
+    # creation.
     #
     # **Cross-account use:** This operation can't be used across different
     # Amazon Web Services accounts.
     #
     # **Related operations:**
     #
-    # * [CreateKey][1]
+    # * [EnableDefaultKeyReplicationRegions][2]
     #
-    # * [DeleteKey][2]
-    #
-    # * [ListKeys][3]
+    # * [DisableDefaultKeyReplicationRegions][3]
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_CreateKey.html
-    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_DeleteKey.html
-    # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_ListKeys.html
+    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-multi-region-replication.html
+    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_EnableDefaultKeyReplicationRegions.html
+    # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_DisableDefaultKeyReplicationRegions.html
+    #
+    # @return [Types::GetDefaultKeyReplicationRegionsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetDefaultKeyReplicationRegionsOutput#enabled_replication_regions #enabled_replication_regions} => Array&lt;String&gt;
+    #
+    # @example Response structure
+    #
+    #   resp.enabled_replication_regions #=> Array
+    #   resp.enabled_replication_regions[0] #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/GetDefaultKeyReplicationRegions AWS API Documentation
+    #
+    # @overload get_default_key_replication_regions(params = {})
+    # @param [Hash] params ({})
+    def get_default_key_replication_regions(params = {}, options = {})
+      req = build_request(:get_default_key_replication_regions, params)
+      req.send_request(options)
+    end
+
+    # Gets the key metadata for an Amazon Web Services Payment Cryptography
+    # key, including the immutable and mutable attributes specified when the
+    # key was created. Returns key metadata including attributes, state, and
+    # timestamps, but does not return the actual cryptographic key material.
+    #
+    # **Cross-account use:** This operation supports cross-account use when
+    # the key has a resource-based policy that grants access. For more
+    # information, see [Resource-based policies][1].
+    #
+    # **Related operations:**
+    #
+    # * [CreateKey][2]
+    #
+    # * [DeleteKey][3]
+    #
+    # * [ListKeys][4]
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/security_iam_resource-based-policies.html
+    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_CreateKey.html
+    # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_DeleteKey.html
+    # [4]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_ListKeys.html
     #
     # @option params [required, String] :key_identifier
     #   The `KeyARN` of the Amazon Web Services Payment Cryptography key.
@@ -1222,9 +1841,9 @@ module Aws::PaymentCryptography
     # @example Response structure
     #
     #   resp.key.key_arn #=> String
-    #   resp.key.key_attributes.key_usage #=> String, one of "TR31_B0_BASE_DERIVATION_KEY", "TR31_C0_CARD_VERIFICATION_KEY", "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY", "TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION", "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS", "TR31_E1_EMV_MKEY_CONFIDENTIALITY", "TR31_E2_EMV_MKEY_INTEGRITY", "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS", "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION", "TR31_E6_EMV_MKEY_OTHER", "TR31_K0_KEY_ENCRYPTION_KEY", "TR31_K1_KEY_BLOCK_PROTECTION_KEY", "TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT", "TR31_M3_ISO_9797_3_MAC_KEY", "TR31_M1_ISO_9797_1_MAC_KEY", "TR31_M6_ISO_9797_5_CMAC_KEY", "TR31_M7_HMAC_KEY", "TR31_P0_PIN_ENCRYPTION_KEY", "TR31_P1_PIN_GENERATION_KEY", "TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE", "TR31_V1_IBM3624_PIN_VERIFICATION_KEY", "TR31_V2_VISA_PIN_VERIFICATION_KEY", "TR31_K2_TR34_ASYMMETRIC_KEY"
+    #   resp.key.key_attributes.key_usage #=> String, one of "TR31_B0_BASE_DERIVATION_KEY", "TR31_C0_CARD_VERIFICATION_KEY", "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY", "TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION", "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS", "TR31_E1_EMV_MKEY_CONFIDENTIALITY", "TR31_E2_EMV_MKEY_INTEGRITY", "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS", "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION", "TR31_E6_EMV_MKEY_OTHER", "TR31_K0_KEY_ENCRYPTION_KEY", "TR31_K1_KEY_BLOCK_PROTECTION_KEY", "TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT", "TR31_M0_ISO_16609_MAC_KEY", "TR31_M3_ISO_9797_3_MAC_KEY", "TR31_M1_ISO_9797_1_MAC_KEY", "TR31_M6_ISO_9797_5_CMAC_KEY", "TR31_M7_HMAC_KEY", "TR31_P0_PIN_ENCRYPTION_KEY", "TR31_P1_PIN_GENERATION_KEY", "TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE", "TR31_V1_IBM3624_PIN_VERIFICATION_KEY", "TR31_V2_VISA_PIN_VERIFICATION_KEY", "TR31_K2_TR34_ASYMMETRIC_KEY"
     #   resp.key.key_attributes.key_class #=> String, one of "SYMMETRIC_KEY", "ASYMMETRIC_KEY_PAIR", "PRIVATE_KEY", "PUBLIC_KEY"
-    #   resp.key.key_attributes.key_algorithm #=> String, one of "TDES_2KEY", "TDES_3KEY", "AES_128", "AES_192", "AES_256", "RSA_2048", "RSA_3072", "RSA_4096", "ECC_NIST_P256", "ECC_NIST_P384"
+    #   resp.key.key_attributes.key_algorithm #=> String, one of "TDES_2KEY", "TDES_3KEY", "AES_128", "AES_192", "AES_256", "HMAC_SHA256", "HMAC_SHA384", "HMAC_SHA512", "HMAC_SHA224", "RSA_2048", "RSA_3072", "RSA_4096", "ECC_NIST_P256", "ECC_NIST_P384", "ECC_NIST_P521"
     #   resp.key.key_attributes.key_modes_of_use.encrypt #=> Boolean
     #   resp.key.key_attributes.key_modes_of_use.decrypt #=> Boolean
     #   resp.key.key_attributes.key_modes_of_use.wrap #=> Boolean
@@ -1235,7 +1854,7 @@ module Aws::PaymentCryptography
     #   resp.key.key_attributes.key_modes_of_use.derive_key #=> Boolean
     #   resp.key.key_attributes.key_modes_of_use.no_restrictions #=> Boolean
     #   resp.key.key_check_value #=> String
-    #   resp.key.key_check_value_algorithm #=> String, one of "CMAC", "ANSI_X9_24"
+    #   resp.key.key_check_value_algorithm #=> String, one of "CMAC", "ANSI_X9_24", "HMAC", "SHA_1"
     #   resp.key.enabled #=> Boolean
     #   resp.key.exportable #=> Boolean
     #   resp.key.key_state #=> String, one of "CREATE_IN_PROGRESS", "CREATE_COMPLETE", "DELETE_PENDING", "DELETE_COMPLETE"
@@ -1245,6 +1864,17 @@ module Aws::PaymentCryptography
     #   resp.key.usage_stop_timestamp #=> Time
     #   resp.key.delete_pending_timestamp #=> Time
     #   resp.key.delete_timestamp #=> Time
+    #   resp.key.derive_key_usage #=> String, one of "TR31_B0_BASE_DERIVATION_KEY", "TR31_C0_CARD_VERIFICATION_KEY", "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY", "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS", "TR31_E1_EMV_MKEY_CONFIDENTIALITY", "TR31_E2_EMV_MKEY_INTEGRITY", "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS", "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION", "TR31_E6_EMV_MKEY_OTHER", "TR31_K0_KEY_ENCRYPTION_KEY", "TR31_K1_KEY_BLOCK_PROTECTION_KEY", "TR31_M3_ISO_9797_3_MAC_KEY", "TR31_M1_ISO_9797_1_MAC_KEY", "TR31_M6_ISO_9797_5_CMAC_KEY", "TR31_M7_HMAC_KEY", "TR31_P0_PIN_ENCRYPTION_KEY", "TR31_P1_PIN_GENERATION_KEY", "TR31_V1_IBM3624_PIN_VERIFICATION_KEY", "TR31_V2_VISA_PIN_VERIFICATION_KEY"
+    #   resp.key.multi_region_key_type #=> String, one of "PRIMARY", "REPLICA"
+    #   resp.key.primary_region #=> String
+    #   resp.key.replication_status #=> Hash
+    #   resp.key.replication_status["Region"].status #=> String, one of "IN_PROGRESS", "DELETE_IN_PROGRESS", "FAILED", "SYNCHRONIZED"
+    #   resp.key.replication_status["Region"].status_message #=> String
+    #   resp.key.using_default_replication_regions #=> Boolean
+    #   resp.key.mpa_status.mpa_session_arn #=> String
+    #   resp.key.mpa_status.status #=> String, one of "PENDING", "APPROVED", "FAILED", "CANCELLED"
+    #   resp.key.mpa_status.initiation_date #=> Time
+    #   resp.key.mpa_status.status_message #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/GetKey AWS API Documentation
     #
@@ -1255,14 +1885,69 @@ module Aws::PaymentCryptography
       req.send_request(options)
     end
 
+    # Returns the Multi-Party Approval (MPA) team association for a
+    # protected operation.
+    #
+    # **Cross-account use:** This operation can't be used across different
+    # Amazon Web Services accounts.
+    #
+    # **Related operations:**
+    #
+    # * [AssociateMpaTeam][1]
+    #
+    # * [DisassociateMpaTeam][2]
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_AssociateMpaTeam.html
+    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_DisassociateMpaTeam.html
+    #
+    # @option params [required, String] :action
+    #   The protected operation whose MPA team association you want to
+    #   retrieve. Currently, the only supported value is
+    #   `IMPORT_ROOT_PUBLIC_KEY_CERTIFICATE`.
+    #
+    # @return [Types::GetMpaTeamAssociationOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetMpaTeamAssociationOutput#mpa_team_association #mpa_team_association} => Types::MpaTeamAssociation
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_mpa_team_association({
+    #     action: "IMPORT_ROOT_PUBLIC_KEY_CERTIFICATE", # required, accepts IMPORT_ROOT_PUBLIC_KEY_CERTIFICATE
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.mpa_team_association.action #=> String, one of "IMPORT_ROOT_PUBLIC_KEY_CERTIFICATE"
+    #   resp.mpa_team_association.mpa_team_arn #=> String
+    #   resp.mpa_team_association.association_state #=> String, one of "ACTIVE", "UPDATE_PENDING", "DELETE_PENDING"
+    #   resp.mpa_team_association.mpa_status.mpa_session_arn #=> String
+    #   resp.mpa_team_association.mpa_status.status #=> String, one of "PENDING", "APPROVED", "FAILED", "CANCELLED"
+    #   resp.mpa_team_association.mpa_status.initiation_date #=> Time
+    #   resp.mpa_team_association.mpa_status.status_message #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/GetMpaTeamAssociation AWS API Documentation
+    #
+    # @overload get_mpa_team_association(params = {})
+    # @param [Hash] params ({})
+    def get_mpa_team_association(params = {}, options = {})
+      req = build_request(:get_mpa_team_association, params)
+      req.send_request(options)
+    end
+
     # Gets the export token and the signing key certificate to initiate a
     # TR-34 key export from Amazon Web Services Payment Cryptography.
     #
     # The signing key certificate signs the wrapped key under export within
     # the TR-34 key payload. The export token and signing key certificate
     # must be in place and operational before calling [ExportKey][1]. The
-    # export token expires in 7 days. You can use the same export token to
+    # export token expires in 30 days. You can use the same export token to
     # export multiple keys from your service account.
+    #
+    # To return a previously generated export token and signing key
+    # certificate instead of generating new ones, set
+    # `ReuseLastGeneratedToken` to `true`.
     #
     # **Cross-account use:** This operation can't be used across different
     # Amazon Web Services accounts.
@@ -1289,6 +1974,16 @@ module Aws::PaymentCryptography
     #   certificate signs the wrapped key under export within the TR-34 key
     #   block. `RSA_2048` is the only signing key algorithm allowed.
     #
+    # @option params [Boolean] :reuse_last_generated_token
+    #   Specifies whether to reuse the existing export token and signing key
+    #   certificate. If set to `true` and a valid export token exists for the
+    #   same key material type and signing key algorithm with at least 7 days
+    #   of remaining validity, the existing token and signing key certificate
+    #   are returned. Otherwise, a new export token and signing key
+    #   certificate are generated. The default value is `false`, which
+    #   generates a new export token and signing key certificate on every
+    #   call.
+    #
     # @return [Types::GetParametersForExportOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::GetParametersForExportOutput#signing_key_certificate #signing_key_certificate} => String
@@ -1301,14 +1996,15 @@ module Aws::PaymentCryptography
     #
     #   resp = client.get_parameters_for_export({
     #     key_material_type: "TR34_KEY_BLOCK", # required, accepts TR34_KEY_BLOCK, TR31_KEY_BLOCK, ROOT_PUBLIC_KEY_CERTIFICATE, TRUSTED_PUBLIC_KEY_CERTIFICATE, KEY_CRYPTOGRAM
-    #     signing_key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256, RSA_2048, RSA_3072, RSA_4096, ECC_NIST_P256, ECC_NIST_P384
+    #     signing_key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256, HMAC_SHA256, HMAC_SHA384, HMAC_SHA512, HMAC_SHA224, RSA_2048, RSA_3072, RSA_4096, ECC_NIST_P256, ECC_NIST_P384, ECC_NIST_P521
+    #     reuse_last_generated_token: false,
     #   })
     #
     # @example Response structure
     #
     #   resp.signing_key_certificate #=> String
     #   resp.signing_key_certificate_chain #=> String
-    #   resp.signing_key_algorithm #=> String, one of "TDES_2KEY", "TDES_3KEY", "AES_128", "AES_192", "AES_256", "RSA_2048", "RSA_3072", "RSA_4096", "ECC_NIST_P256", "ECC_NIST_P384"
+    #   resp.signing_key_algorithm #=> String, one of "TDES_2KEY", "TDES_3KEY", "AES_128", "AES_192", "AES_256", "HMAC_SHA256", "HMAC_SHA384", "HMAC_SHA512", "HMAC_SHA224", "RSA_2048", "RSA_3072", "RSA_4096", "ECC_NIST_P256", "ECC_NIST_P384", "ECC_NIST_P521"
     #   resp.export_token #=> String
     #   resp.parameters_valid_until_timestamp #=> Time
     #
@@ -1328,9 +2024,13 @@ module Aws::PaymentCryptography
     #
     # The wrapping key certificate wraps the key under import. The import
     # token and wrapping key certificate must be in place and operational
-    # before calling [ImportKey][1]. The import token expires in 7 days. You
-    # can use the same import token to import multiple keys into your
+    # before calling [ImportKey][1]. The import token expires in 30 days.
+    # You can use the same import token to import multiple keys into your
     # service account.
+    #
+    # To return a previously generated import token and wrapping key
+    # certificate instead of generating new ones, set
+    # `ReuseLastGeneratedToken` to `true`.
     #
     # **Cross-account use:** This operation can't be used across different
     # Amazon Web Services accounts.
@@ -1363,6 +2063,16 @@ module Aws::PaymentCryptography
     #   `RSA_4096` are the allowed algorithms for RSA WrappedKeyCryptogram
     #   import.
     #
+    # @option params [Boolean] :reuse_last_generated_token
+    #   Specifies whether to reuse the existing import token and wrapping key
+    #   certificate. If set to `true` and a valid import token exists for the
+    #   same key material type and wrapping key algorithm with at least 7 days
+    #   of remaining validity, the existing token and wrapping key certificate
+    #   are returned. Otherwise, a new import token and wrapping key
+    #   certificate are generated. The default value is `false`, which
+    #   generates a new import token and wrapping key certificate on every
+    #   call.
+    #
     # @return [Types::GetParametersForImportOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::GetParametersForImportOutput#wrapping_key_certificate #wrapping_key_certificate} => String
@@ -1375,14 +2085,15 @@ module Aws::PaymentCryptography
     #
     #   resp = client.get_parameters_for_import({
     #     key_material_type: "TR34_KEY_BLOCK", # required, accepts TR34_KEY_BLOCK, TR31_KEY_BLOCK, ROOT_PUBLIC_KEY_CERTIFICATE, TRUSTED_PUBLIC_KEY_CERTIFICATE, KEY_CRYPTOGRAM
-    #     wrapping_key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256, RSA_2048, RSA_3072, RSA_4096, ECC_NIST_P256, ECC_NIST_P384
+    #     wrapping_key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256, HMAC_SHA256, HMAC_SHA384, HMAC_SHA512, HMAC_SHA224, RSA_2048, RSA_3072, RSA_4096, ECC_NIST_P256, ECC_NIST_P384, ECC_NIST_P521
+    #     reuse_last_generated_token: false,
     #   })
     #
     # @example Response structure
     #
     #   resp.wrapping_key_certificate #=> String
     #   resp.wrapping_key_certificate_chain #=> String
-    #   resp.wrapping_key_algorithm #=> String, one of "TDES_2KEY", "TDES_3KEY", "AES_128", "AES_192", "AES_256", "RSA_2048", "RSA_3072", "RSA_4096", "ECC_NIST_P256", "ECC_NIST_P384"
+    #   resp.wrapping_key_algorithm #=> String, one of "TDES_2KEY", "TDES_3KEY", "AES_128", "AES_192", "AES_256", "HMAC_SHA256", "HMAC_SHA384", "HMAC_SHA512", "HMAC_SHA224", "RSA_2048", "RSA_3072", "RSA_4096", "ECC_NIST_P256", "ECC_NIST_P384", "ECC_NIST_P521"
     #   resp.import_token #=> String
     #   resp.parameters_valid_until_timestamp #=> Time
     #
@@ -1405,8 +2116,13 @@ module Aws::PaymentCryptography
     # certificate to allow others to encrypt messages and verify signatures
     # outside of Amazon Web Services Payment Cryptography
     #
-    # **Cross-account use:** This operation can't be used across different
-    # Amazon Web Services accounts.
+    # **Cross-account use:** This operation supports cross-account use when
+    # the key has a resource-based policy that grants access. For more
+    # information, see [Resource-based policies][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/security_iam_resource-based-policies.html
     #
     # @option params [required, String] :key_identifier
     #   The `KeyARN` of the asymmetric key pair.
@@ -1436,6 +2152,52 @@ module Aws::PaymentCryptography
       req.send_request(options)
     end
 
+    # Returns the resource-based policy attached to an Amazon Web Services
+    # Payment Cryptography key.
+    #
+    # **Cross-account use:** This operation can't be used across different
+    # Amazon Web Services accounts.
+    #
+    # **Related operations:**
+    #
+    # * [PutResourcePolicy][1]
+    #
+    # * [DeleteResourcePolicy][2]
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_PutResourcePolicy.html
+    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_DeleteResourcePolicy.html
+    #
+    # @option params [required, String] :resource_arn
+    #   The `KeyARN` of the key whose resource-based policy you want to
+    #   retrieve.
+    #
+    # @return [Types::GetResourcePolicyOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetResourcePolicyOutput#resource_arn #resource_arn} => String
+    #   * {Types::GetResourcePolicyOutput#policy #policy} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_resource_policy({
+    #     resource_arn: "ResourceArn", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.resource_arn #=> String
+    #   resp.policy #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/GetResourcePolicy AWS API Documentation
+    #
+    # @overload get_resource_policy(params = {})
+    # @param [Hash] params ({})
+    def get_resource_policy(params = {}, options = {})
+      req = build_request(:get_resource_policy, params)
+      req.send_request(options)
+    end
+
     # Imports symmetric keys and public key certificates in PEM format
     # (base64 encoded) into Amazon Web Services Payment Cryptography.
     #
@@ -1447,26 +2209,22 @@ module Aws::PaymentCryptography
     # For symmetric key exchange, Amazon Web Services Payment Cryptography
     # uses the ANSI X9 TR-31 norm in accordance with PCI PIN guidelines. And
     # for asymmetric key exchange, Amazon Web Services Payment Cryptography
-    # supports ANSI X9 TR-34 norm and RSA wrap and unwrap key exchange
-    # mechanisms. Asymmetric key exchange methods are typically used to
-    # establish bi-directional trust between the two parties exhanging keys
-    # and are used for initial key exchange such as Key Encryption Key (KEK)
-    # or Zone Master Key (ZMK). After which you can import working keys
-    # using symmetric method to perform various cryptographic operations
-    # within Amazon Web Services Payment Cryptography.
+    # supports ANSI X9 TR-34 norm, RSA unwrap, and ECDH (Elliptic Curve
+    # Diffie-Hellman) key exchange mechanisms. Asymmetric key exchange
+    # methods are typically used to establish bi-directional trust between
+    # the two parties exhanging keys and are used for initial key exchange
+    # such as Key Encryption Key (KEK) or Zone Master Key (ZMK). After which
+    # you can import working keys using symmetric method to perform various
+    # cryptographic operations within Amazon Web Services Payment
+    # Cryptography.
     #
-    # The TR-34 norm is intended for exchanging 3DES keys only and keys are
-    # imported in a WrappedKeyBlock format. Key attributes (such as
-    # KeyUsage, KeyAlgorithm, KeyModesOfUse, Exportability) are contained
-    # within the key block. With RSA wrap and unwrap, you can exchange both
-    # 3DES and AES-128 keys. The keys are imported in a WrappedKeyCryptogram
-    # format and you will need to specify the key attributes during import.
-    #
-    # You can also import a *root public key certificate*, used to sign
-    # other public key certificates, or a *trusted public key certificate*
-    # under an already established root public key certificate.
-    #
-    # **To import a public root key certificate**
+    # PCI requires specific minimum key strength of wrapping keys used to
+    # protect the keys being exchanged electronically. These requirements
+    # can change when PCI standards are revised. The rules specify that
+    # wrapping keys used for transport must be at least as strong as the key
+    # being protected. For more information on recommended key strength of
+    # wrapping keys and key exchange mechanism, see [Importing and exporting
+    # keys][1] in the *Amazon Web Services Payment Cryptography User Guide*.
     #
     # You can also import a *root public key certificate*, used to sign
     # other public key certificates, or a *trusted public key certificate*
@@ -1521,13 +2279,13 @@ module Aws::PaymentCryptography
     # Amazon Web Services Payment Cryptography who receives the key.
     #
     # To initiate TR-34 key import, the KDH must obtain an import token by
-    # calling [GetParametersForImport][1]. This operation generates an
+    # calling [GetParametersForImport][2]. This operation generates an
     # encryption keypair for the purpose of key import, signs the key and
     # returns back the wrapping key certificate (also known as KRD wrapping
     # certificate) and the root certificate chain. The KDH must trust and
     # install the KRD wrapping certificate on its HSM and use it to encrypt
     # (wrap) the KDH key during TR-34 WrappedKeyBlock generation. The import
-    # token and associated KRD wrapping certificate expires after 7 days.
+    # token and associated KRD wrapping certificate expires after 30 days.
     #
     # Next the KDH generates a key pair for the purpose of signing the
     # encrypted KDH key and provides the public certificate of the signing
@@ -1535,7 +2293,7 @@ module Aws::PaymentCryptography
     # need to import the root certificate chain of the KDH signing
     # certificate by calling `ImportKey` for `RootCertificatePublicKey`. For
     # more information on TR-34 key import, see section [Importing symmetric
-    # keys][2] in the *Amazon Web Services Payment Cryptography User Guide*.
+    # keys][3] in the *Amazon Web Services Payment Cryptography User Guide*.
     #
     # Set the following parameters:
     #
@@ -1545,7 +2303,7 @@ module Aws::PaymentCryptography
     #   certificate chain that signed the KDH signing key certificate.
     #
     # * `ImportToken`: Obtained from KRD by calling
-    #   [GetParametersForImport][1].
+    #   [GetParametersForImport][2].
     #
     # * `WrappedKeyBlock`: The TR-34 wrapped key material from KDH. It
     #   contains the KDH key under import, wrapped with KRD wrapping
@@ -1563,12 +2321,12 @@ module Aws::PaymentCryptography
     #
     # Using this operation, you can import initial key using asymmetric RSA
     # wrap and unwrap key exchange method. To initiate import, call
-    # [GetParametersForImport][1] with `KeyMaterial` set to `KEY_CRYPTOGRAM`
+    # [GetParametersForImport][2] with `KeyMaterial` set to `KEY_CRYPTOGRAM`
     # to generate an import token. This operation also generates an
     # encryption keypair for the purpose of key import, signs the key and
     # returns back the wrapping key certificate in PEM format (base64
     # encoded) and its root certificate chain. The import token and
-    # associated KRD wrapping certificate expires after 7 days.
+    # associated KRD wrapping certificate expires after 30 days.
     #
     # You must trust and install the wrapping certificate and its
     # certificate chain on the sending HSM and use it to wrap the key under
@@ -1581,7 +2339,7 @@ module Aws::PaymentCryptography
     # Amazon Web Services Payment Cryptography uses TR-31 symmetric key
     # exchange norm to import working keys. A KEK must be established within
     # Amazon Web Services Payment Cryptography by using TR-34 key import or
-    # by using [CreateKey][3]. To initiate a TR-31 key import, set the
+    # by using [CreateKey][4]. To initiate a TR-31 key import, set the
     # following parameters:
     #
     # * `KeyMaterial`: Use `Tr31KeyBlock` parameters.
@@ -1595,21 +2353,59 @@ module Aws::PaymentCryptography
     #   Services Payment Cryptography uses to decrypt or unwrap the key
     #   under import.
     #
-    # **Cross-account use:** This operation can't be used across different
-    # Amazon Web Services accounts.
+    # **To import working keys using ECDH**
+    #
+    # You can also use ECDH key agreement to import working keys as a TR-31
+    # keyblock, where the wrapping key is an ECDH derived key.
+    #
+    # To initiate a TR-31 key import using ECDH, both sides must create an
+    # ECC key pair with key usage K3 and exchange public key certificates.
+    # In Amazon Web Services Payment Cryptography, you can do this by
+    # calling `CreateKey` and then `GetPublicKeyCertificate` to retrieve its
+    # public key certificate. Next, you can then generate a TR-31
+    # WrappedKeyBlock using your own ECC key pair, the public certificate of
+    # the service's ECC key pair, and the key derivation parameters
+    # including key derivation function, hash algorithm, derivation data,
+    # and key algorithm. If you have not already done so, you must import
+    # the CA chain that issued the receiving public key certificate by
+    # calling `ImportKey` with input `RootCertificatePublicKey` for root CA
+    # or `TrustedPublicKey` for intermediate CA. To complete the TR-31 key
+    # import, you can use the following parameters. It is important that the
+    # ECDH key derivation parameters you use should match those used during
+    # import to derive the same shared wrapping key within Amazon Web
+    # Services Payment Cryptography.
+    #
+    # * `KeyMaterial`: Use `DiffieHellmanTr31KeyBlock` parameters.
+    #
+    # * `PrivateKeyIdentifier`: The `KeyArn` of the ECC key pair created
+    #   within Amazon Web Services Payment Cryptography to derive a shared
+    #   KEK.
+    #
+    # * `PublicKeyCertificate`: The public key certificate of the receiving
+    #   ECC key pair in PEM format (base64 encoded) to derive a shared KEK.
+    #
+    # * `CertificateAuthorityPublicKeyIdentifier`: The `keyARN` of the CA
+    #   that signed the public key certificate of the receiving ECC key
+    #   pair.
+    #
+    # **Cross-account use:** This operation supports cross-account use when
+    # the key has a resource-based policy that grants access. For more
+    # information, see [Resource-based policies][5].
     #
     # **Related operations:**
     #
-    # * [ExportKey][4]
+    # * [ExportKey][6]
     #
-    # * [GetParametersForImport][1]
+    # * [GetParametersForImport][2]
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_GetParametersForImport.html
-    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-import.html
-    # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_CreateKey.html
-    # [4]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_ExportKey.html
+    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-importexport.html
+    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_GetParametersForImport.html
+    # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-import.html
+    # [4]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_CreateKey.html
+    # [5]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/security_iam_resource-based-policies.html
+    # [6]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_ExportKey.html
     #
     # @option params [required, Types::ImportKeyMaterial] :key_material
     #   The key or public key certificate type to use during key material
@@ -1624,7 +2420,9 @@ module Aws::PaymentCryptography
     #   value of zero, with the key to be checked and retaining the 3 highest
     #   order bytes of the encrypted result. For AES keys, the KCV is computed
     #   using a CMAC algorithm where the input data is 16 bytes of zero and
-    #   retaining the 3 highest order bytes of the encrypted result.
+    #   retaining the 3 highest order bytes of the encrypted result. For HMAC
+    #   keys, the KCV is computed using the hash selected at key creation on a
+    #   zero-length message, taking the leftmost 3 bytes.
     #
     # @option params [Boolean] :enabled
     #   Specifies whether import key is enabled.
@@ -1656,6 +2454,21 @@ module Aws::PaymentCryptography
     #
     #   [1]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_TagResource.html
     #
+    # @option params [Array<String>] :replication_regions
+    #   A list of Amazon Web Services Regions for key replication operations.
+    #
+    #   Each region in the list must be a valid Amazon Web Services Region
+    #   identifier where Amazon Web Services Payment Cryptography is
+    #   available. This list is used to specify which regions should be added
+    #   to or removed from a key's replication configuration.
+    #
+    # @option params [String] :requester_comment
+    #   The comment from the requester explaining the reason for the import.
+    #
+    #   Don't include personal, confidential or sensitive information in this
+    #   field. This field may be displayed in plaintext in CloudTrail logs and
+    #   other output.
+    #
     # @return [Types::ImportKeyOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::ImportKeyOutput#key #key} => Types::Key
@@ -1666,9 +2479,9 @@ module Aws::PaymentCryptography
     #     key_material: { # required
     #       root_certificate_public_key: {
     #         key_attributes: { # required
-    #           key_usage: "TR31_B0_BASE_DERIVATION_KEY", # required, accepts TR31_B0_BASE_DERIVATION_KEY, TR31_C0_CARD_VERIFICATION_KEY, TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY, TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION, TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS, TR31_E1_EMV_MKEY_CONFIDENTIALITY, TR31_E2_EMV_MKEY_INTEGRITY, TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS, TR31_E5_EMV_MKEY_CARD_PERSONALIZATION, TR31_E6_EMV_MKEY_OTHER, TR31_K0_KEY_ENCRYPTION_KEY, TR31_K1_KEY_BLOCK_PROTECTION_KEY, TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT, TR31_M3_ISO_9797_3_MAC_KEY, TR31_M1_ISO_9797_1_MAC_KEY, TR31_M6_ISO_9797_5_CMAC_KEY, TR31_M7_HMAC_KEY, TR31_P0_PIN_ENCRYPTION_KEY, TR31_P1_PIN_GENERATION_KEY, TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE, TR31_V1_IBM3624_PIN_VERIFICATION_KEY, TR31_V2_VISA_PIN_VERIFICATION_KEY, TR31_K2_TR34_ASYMMETRIC_KEY
+    #           key_usage: "TR31_B0_BASE_DERIVATION_KEY", # required, accepts TR31_B0_BASE_DERIVATION_KEY, TR31_C0_CARD_VERIFICATION_KEY, TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY, TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION, TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS, TR31_E1_EMV_MKEY_CONFIDENTIALITY, TR31_E2_EMV_MKEY_INTEGRITY, TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS, TR31_E5_EMV_MKEY_CARD_PERSONALIZATION, TR31_E6_EMV_MKEY_OTHER, TR31_K0_KEY_ENCRYPTION_KEY, TR31_K1_KEY_BLOCK_PROTECTION_KEY, TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT, TR31_M0_ISO_16609_MAC_KEY, TR31_M3_ISO_9797_3_MAC_KEY, TR31_M1_ISO_9797_1_MAC_KEY, TR31_M6_ISO_9797_5_CMAC_KEY, TR31_M7_HMAC_KEY, TR31_P0_PIN_ENCRYPTION_KEY, TR31_P1_PIN_GENERATION_KEY, TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE, TR31_V1_IBM3624_PIN_VERIFICATION_KEY, TR31_V2_VISA_PIN_VERIFICATION_KEY, TR31_K2_TR34_ASYMMETRIC_KEY
     #           key_class: "SYMMETRIC_KEY", # required, accepts SYMMETRIC_KEY, ASYMMETRIC_KEY_PAIR, PRIVATE_KEY, PUBLIC_KEY
-    #           key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256, RSA_2048, RSA_3072, RSA_4096, ECC_NIST_P256, ECC_NIST_P384
+    #           key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256, HMAC_SHA256, HMAC_SHA384, HMAC_SHA512, HMAC_SHA224, RSA_2048, RSA_3072, RSA_4096, ECC_NIST_P256, ECC_NIST_P384, ECC_NIST_P521
     #           key_modes_of_use: { # required
     #             encrypt: false,
     #             decrypt: false,
@@ -1685,9 +2498,9 @@ module Aws::PaymentCryptography
     #       },
     #       trusted_certificate_public_key: {
     #         key_attributes: { # required
-    #           key_usage: "TR31_B0_BASE_DERIVATION_KEY", # required, accepts TR31_B0_BASE_DERIVATION_KEY, TR31_C0_CARD_VERIFICATION_KEY, TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY, TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION, TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS, TR31_E1_EMV_MKEY_CONFIDENTIALITY, TR31_E2_EMV_MKEY_INTEGRITY, TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS, TR31_E5_EMV_MKEY_CARD_PERSONALIZATION, TR31_E6_EMV_MKEY_OTHER, TR31_K0_KEY_ENCRYPTION_KEY, TR31_K1_KEY_BLOCK_PROTECTION_KEY, TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT, TR31_M3_ISO_9797_3_MAC_KEY, TR31_M1_ISO_9797_1_MAC_KEY, TR31_M6_ISO_9797_5_CMAC_KEY, TR31_M7_HMAC_KEY, TR31_P0_PIN_ENCRYPTION_KEY, TR31_P1_PIN_GENERATION_KEY, TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE, TR31_V1_IBM3624_PIN_VERIFICATION_KEY, TR31_V2_VISA_PIN_VERIFICATION_KEY, TR31_K2_TR34_ASYMMETRIC_KEY
+    #           key_usage: "TR31_B0_BASE_DERIVATION_KEY", # required, accepts TR31_B0_BASE_DERIVATION_KEY, TR31_C0_CARD_VERIFICATION_KEY, TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY, TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION, TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS, TR31_E1_EMV_MKEY_CONFIDENTIALITY, TR31_E2_EMV_MKEY_INTEGRITY, TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS, TR31_E5_EMV_MKEY_CARD_PERSONALIZATION, TR31_E6_EMV_MKEY_OTHER, TR31_K0_KEY_ENCRYPTION_KEY, TR31_K1_KEY_BLOCK_PROTECTION_KEY, TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT, TR31_M0_ISO_16609_MAC_KEY, TR31_M3_ISO_9797_3_MAC_KEY, TR31_M1_ISO_9797_1_MAC_KEY, TR31_M6_ISO_9797_5_CMAC_KEY, TR31_M7_HMAC_KEY, TR31_P0_PIN_ENCRYPTION_KEY, TR31_P1_PIN_GENERATION_KEY, TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE, TR31_V1_IBM3624_PIN_VERIFICATION_KEY, TR31_V2_VISA_PIN_VERIFICATION_KEY, TR31_K2_TR34_ASYMMETRIC_KEY
     #           key_class: "SYMMETRIC_KEY", # required, accepts SYMMETRIC_KEY, ASYMMETRIC_KEY_PAIR, PRIVATE_KEY, PUBLIC_KEY
-    #           key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256, RSA_2048, RSA_3072, RSA_4096, ECC_NIST_P256, ECC_NIST_P384
+    #           key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256, HMAC_SHA256, HMAC_SHA384, HMAC_SHA512, HMAC_SHA224, RSA_2048, RSA_3072, RSA_4096, ECC_NIST_P256, ECC_NIST_P384, ECC_NIST_P521
     #           key_modes_of_use: { # required
     #             encrypt: false,
     #             decrypt: false,
@@ -1710,16 +2523,18 @@ module Aws::PaymentCryptography
     #       tr_34_key_block: {
     #         certificate_authority_public_key_identifier: "KeyArnOrKeyAliasType", # required
     #         signing_key_certificate: "CertificateType", # required
-    #         import_token: "ImportTokenId", # required
+    #         import_token: "ImportTokenId",
+    #         wrapping_key_identifier: "KeyArnOrKeyAliasType",
+    #         wrapping_key_certificate: "CertificateType",
     #         wrapped_key_block: "Tr34WrappedKeyBlock", # required
     #         key_block_format: "X9_TR34_2012", # required, accepts X9_TR34_2012
     #         random_nonce: "EvenHexLengthBetween16And32",
     #       },
     #       key_cryptogram: {
     #         key_attributes: { # required
-    #           key_usage: "TR31_B0_BASE_DERIVATION_KEY", # required, accepts TR31_B0_BASE_DERIVATION_KEY, TR31_C0_CARD_VERIFICATION_KEY, TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY, TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION, TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS, TR31_E1_EMV_MKEY_CONFIDENTIALITY, TR31_E2_EMV_MKEY_INTEGRITY, TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS, TR31_E5_EMV_MKEY_CARD_PERSONALIZATION, TR31_E6_EMV_MKEY_OTHER, TR31_K0_KEY_ENCRYPTION_KEY, TR31_K1_KEY_BLOCK_PROTECTION_KEY, TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT, TR31_M3_ISO_9797_3_MAC_KEY, TR31_M1_ISO_9797_1_MAC_KEY, TR31_M6_ISO_9797_5_CMAC_KEY, TR31_M7_HMAC_KEY, TR31_P0_PIN_ENCRYPTION_KEY, TR31_P1_PIN_GENERATION_KEY, TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE, TR31_V1_IBM3624_PIN_VERIFICATION_KEY, TR31_V2_VISA_PIN_VERIFICATION_KEY, TR31_K2_TR34_ASYMMETRIC_KEY
+    #           key_usage: "TR31_B0_BASE_DERIVATION_KEY", # required, accepts TR31_B0_BASE_DERIVATION_KEY, TR31_C0_CARD_VERIFICATION_KEY, TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY, TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION, TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS, TR31_E1_EMV_MKEY_CONFIDENTIALITY, TR31_E2_EMV_MKEY_INTEGRITY, TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS, TR31_E5_EMV_MKEY_CARD_PERSONALIZATION, TR31_E6_EMV_MKEY_OTHER, TR31_K0_KEY_ENCRYPTION_KEY, TR31_K1_KEY_BLOCK_PROTECTION_KEY, TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT, TR31_M0_ISO_16609_MAC_KEY, TR31_M3_ISO_9797_3_MAC_KEY, TR31_M1_ISO_9797_1_MAC_KEY, TR31_M6_ISO_9797_5_CMAC_KEY, TR31_M7_HMAC_KEY, TR31_P0_PIN_ENCRYPTION_KEY, TR31_P1_PIN_GENERATION_KEY, TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE, TR31_V1_IBM3624_PIN_VERIFICATION_KEY, TR31_V2_VISA_PIN_VERIFICATION_KEY, TR31_K2_TR34_ASYMMETRIC_KEY
     #           key_class: "SYMMETRIC_KEY", # required, accepts SYMMETRIC_KEY, ASYMMETRIC_KEY_PAIR, PRIVATE_KEY, PUBLIC_KEY
-    #           key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256, RSA_2048, RSA_3072, RSA_4096, ECC_NIST_P256, ECC_NIST_P384
+    #           key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256, HMAC_SHA256, HMAC_SHA384, HMAC_SHA512, HMAC_SHA224, RSA_2048, RSA_3072, RSA_4096, ECC_NIST_P256, ECC_NIST_P384, ECC_NIST_P521
     #           key_modes_of_use: { # required
     #             encrypt: false,
     #             decrypt: false,
@@ -1737,8 +2552,38 @@ module Aws::PaymentCryptography
     #         import_token: "ImportTokenId", # required
     #         wrapping_spec: "RSA_OAEP_SHA_256", # accepts RSA_OAEP_SHA_256, RSA_OAEP_SHA_512
     #       },
+    #       diffie_hellman_tr_31_key_block: {
+    #         private_key_identifier: "KeyArnOrKeyAliasType", # required
+    #         certificate_authority_public_key_identifier: "KeyArnOrKeyAliasType", # required
+    #         public_key_certificate: "CertificateType", # required
+    #         derive_key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256, HMAC_SHA256, HMAC_SHA384, HMAC_SHA512, HMAC_SHA224
+    #         key_derivation_function: "NIST_SP800", # required, accepts NIST_SP800, ANSI_X963
+    #         key_derivation_hash_algorithm: "SHA_256", # required, accepts SHA_256, SHA_384, SHA_512
+    #         derivation_data: { # required
+    #           shared_information: "SharedInformation",
+    #         },
+    #         wrapped_key_block: "Tr31WrappedKeyBlock", # required
+    #       },
+    #       as_2805_key_cryptogram: {
+    #         as_2805_key_variant: "TERMINAL_MAJOR_KEY_VARIANT_00", # required, accepts TERMINAL_MAJOR_KEY_VARIANT_00, PIN_ENCRYPTION_KEY_VARIANT_28, MESSAGE_AUTHENTICATION_KEY_VARIANT_24, DATA_ENCRYPTION_KEY_VARIANT_22
+    #         key_modes_of_use: { # required
+    #           encrypt: false,
+    #           decrypt: false,
+    #           wrap: false,
+    #           unwrap: false,
+    #           generate: false,
+    #           sign: false,
+    #           verify: false,
+    #           derive_key: false,
+    #           no_restrictions: false,
+    #         },
+    #         key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256, HMAC_SHA256, HMAC_SHA384, HMAC_SHA512, HMAC_SHA224, RSA_2048, RSA_3072, RSA_4096, ECC_NIST_P256, ECC_NIST_P384, ECC_NIST_P521
+    #         exportable: false, # required
+    #         wrapping_key_identifier: "KeyArnOrKeyAliasType", # required
+    #         wrapped_key_cryptogram: "WrappedKeyCryptogram", # required
+    #       },
     #     },
-    #     key_check_value_algorithm: "CMAC", # accepts CMAC, ANSI_X9_24
+    #     key_check_value_algorithm: "CMAC", # accepts CMAC, ANSI_X9_24, HMAC, SHA_1
     #     enabled: false,
     #     tags: [
     #       {
@@ -1746,14 +2591,16 @@ module Aws::PaymentCryptography
     #         value: "TagValue", # required
     #       },
     #     ],
+    #     replication_regions: ["Region"],
+    #     requester_comment: "MpaRequesterComment",
     #   })
     #
     # @example Response structure
     #
     #   resp.key.key_arn #=> String
-    #   resp.key.key_attributes.key_usage #=> String, one of "TR31_B0_BASE_DERIVATION_KEY", "TR31_C0_CARD_VERIFICATION_KEY", "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY", "TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION", "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS", "TR31_E1_EMV_MKEY_CONFIDENTIALITY", "TR31_E2_EMV_MKEY_INTEGRITY", "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS", "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION", "TR31_E6_EMV_MKEY_OTHER", "TR31_K0_KEY_ENCRYPTION_KEY", "TR31_K1_KEY_BLOCK_PROTECTION_KEY", "TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT", "TR31_M3_ISO_9797_3_MAC_KEY", "TR31_M1_ISO_9797_1_MAC_KEY", "TR31_M6_ISO_9797_5_CMAC_KEY", "TR31_M7_HMAC_KEY", "TR31_P0_PIN_ENCRYPTION_KEY", "TR31_P1_PIN_GENERATION_KEY", "TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE", "TR31_V1_IBM3624_PIN_VERIFICATION_KEY", "TR31_V2_VISA_PIN_VERIFICATION_KEY", "TR31_K2_TR34_ASYMMETRIC_KEY"
+    #   resp.key.key_attributes.key_usage #=> String, one of "TR31_B0_BASE_DERIVATION_KEY", "TR31_C0_CARD_VERIFICATION_KEY", "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY", "TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION", "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS", "TR31_E1_EMV_MKEY_CONFIDENTIALITY", "TR31_E2_EMV_MKEY_INTEGRITY", "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS", "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION", "TR31_E6_EMV_MKEY_OTHER", "TR31_K0_KEY_ENCRYPTION_KEY", "TR31_K1_KEY_BLOCK_PROTECTION_KEY", "TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT", "TR31_M0_ISO_16609_MAC_KEY", "TR31_M3_ISO_9797_3_MAC_KEY", "TR31_M1_ISO_9797_1_MAC_KEY", "TR31_M6_ISO_9797_5_CMAC_KEY", "TR31_M7_HMAC_KEY", "TR31_P0_PIN_ENCRYPTION_KEY", "TR31_P1_PIN_GENERATION_KEY", "TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE", "TR31_V1_IBM3624_PIN_VERIFICATION_KEY", "TR31_V2_VISA_PIN_VERIFICATION_KEY", "TR31_K2_TR34_ASYMMETRIC_KEY"
     #   resp.key.key_attributes.key_class #=> String, one of "SYMMETRIC_KEY", "ASYMMETRIC_KEY_PAIR", "PRIVATE_KEY", "PUBLIC_KEY"
-    #   resp.key.key_attributes.key_algorithm #=> String, one of "TDES_2KEY", "TDES_3KEY", "AES_128", "AES_192", "AES_256", "RSA_2048", "RSA_3072", "RSA_4096", "ECC_NIST_P256", "ECC_NIST_P384"
+    #   resp.key.key_attributes.key_algorithm #=> String, one of "TDES_2KEY", "TDES_3KEY", "AES_128", "AES_192", "AES_256", "HMAC_SHA256", "HMAC_SHA384", "HMAC_SHA512", "HMAC_SHA224", "RSA_2048", "RSA_3072", "RSA_4096", "ECC_NIST_P256", "ECC_NIST_P384", "ECC_NIST_P521"
     #   resp.key.key_attributes.key_modes_of_use.encrypt #=> Boolean
     #   resp.key.key_attributes.key_modes_of_use.decrypt #=> Boolean
     #   resp.key.key_attributes.key_modes_of_use.wrap #=> Boolean
@@ -1764,7 +2611,7 @@ module Aws::PaymentCryptography
     #   resp.key.key_attributes.key_modes_of_use.derive_key #=> Boolean
     #   resp.key.key_attributes.key_modes_of_use.no_restrictions #=> Boolean
     #   resp.key.key_check_value #=> String
-    #   resp.key.key_check_value_algorithm #=> String, one of "CMAC", "ANSI_X9_24"
+    #   resp.key.key_check_value_algorithm #=> String, one of "CMAC", "ANSI_X9_24", "HMAC", "SHA_1"
     #   resp.key.enabled #=> Boolean
     #   resp.key.exportable #=> Boolean
     #   resp.key.key_state #=> String, one of "CREATE_IN_PROGRESS", "CREATE_COMPLETE", "DELETE_PENDING", "DELETE_COMPLETE"
@@ -1774,6 +2621,17 @@ module Aws::PaymentCryptography
     #   resp.key.usage_stop_timestamp #=> Time
     #   resp.key.delete_pending_timestamp #=> Time
     #   resp.key.delete_timestamp #=> Time
+    #   resp.key.derive_key_usage #=> String, one of "TR31_B0_BASE_DERIVATION_KEY", "TR31_C0_CARD_VERIFICATION_KEY", "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY", "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS", "TR31_E1_EMV_MKEY_CONFIDENTIALITY", "TR31_E2_EMV_MKEY_INTEGRITY", "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS", "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION", "TR31_E6_EMV_MKEY_OTHER", "TR31_K0_KEY_ENCRYPTION_KEY", "TR31_K1_KEY_BLOCK_PROTECTION_KEY", "TR31_M3_ISO_9797_3_MAC_KEY", "TR31_M1_ISO_9797_1_MAC_KEY", "TR31_M6_ISO_9797_5_CMAC_KEY", "TR31_M7_HMAC_KEY", "TR31_P0_PIN_ENCRYPTION_KEY", "TR31_P1_PIN_GENERATION_KEY", "TR31_V1_IBM3624_PIN_VERIFICATION_KEY", "TR31_V2_VISA_PIN_VERIFICATION_KEY"
+    #   resp.key.multi_region_key_type #=> String, one of "PRIMARY", "REPLICA"
+    #   resp.key.primary_region #=> String
+    #   resp.key.replication_status #=> Hash
+    #   resp.key.replication_status["Region"].status #=> String, one of "IN_PROGRESS", "DELETE_IN_PROGRESS", "FAILED", "SYNCHRONIZED"
+    #   resp.key.replication_status["Region"].status_message #=> String
+    #   resp.key.using_default_replication_regions #=> Boolean
+    #   resp.key.mpa_status.mpa_session_arn #=> String
+    #   resp.key.mpa_status.status #=> String, one of "PENDING", "APPROVED", "FAILED", "CANCELLED"
+    #   resp.key.mpa_status.initiation_date #=> Time
+    #   resp.key.mpa_status.status_message #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/ImportKey AWS API Documentation
     #
@@ -1929,9 +2787,9 @@ module Aws::PaymentCryptography
     #   resp.keys #=> Array
     #   resp.keys[0].key_arn #=> String
     #   resp.keys[0].key_state #=> String, one of "CREATE_IN_PROGRESS", "CREATE_COMPLETE", "DELETE_PENDING", "DELETE_COMPLETE"
-    #   resp.keys[0].key_attributes.key_usage #=> String, one of "TR31_B0_BASE_DERIVATION_KEY", "TR31_C0_CARD_VERIFICATION_KEY", "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY", "TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION", "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS", "TR31_E1_EMV_MKEY_CONFIDENTIALITY", "TR31_E2_EMV_MKEY_INTEGRITY", "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS", "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION", "TR31_E6_EMV_MKEY_OTHER", "TR31_K0_KEY_ENCRYPTION_KEY", "TR31_K1_KEY_BLOCK_PROTECTION_KEY", "TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT", "TR31_M3_ISO_9797_3_MAC_KEY", "TR31_M1_ISO_9797_1_MAC_KEY", "TR31_M6_ISO_9797_5_CMAC_KEY", "TR31_M7_HMAC_KEY", "TR31_P0_PIN_ENCRYPTION_KEY", "TR31_P1_PIN_GENERATION_KEY", "TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE", "TR31_V1_IBM3624_PIN_VERIFICATION_KEY", "TR31_V2_VISA_PIN_VERIFICATION_KEY", "TR31_K2_TR34_ASYMMETRIC_KEY"
+    #   resp.keys[0].key_attributes.key_usage #=> String, one of "TR31_B0_BASE_DERIVATION_KEY", "TR31_C0_CARD_VERIFICATION_KEY", "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY", "TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION", "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS", "TR31_E1_EMV_MKEY_CONFIDENTIALITY", "TR31_E2_EMV_MKEY_INTEGRITY", "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS", "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION", "TR31_E6_EMV_MKEY_OTHER", "TR31_K0_KEY_ENCRYPTION_KEY", "TR31_K1_KEY_BLOCK_PROTECTION_KEY", "TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT", "TR31_M0_ISO_16609_MAC_KEY", "TR31_M3_ISO_9797_3_MAC_KEY", "TR31_M1_ISO_9797_1_MAC_KEY", "TR31_M6_ISO_9797_5_CMAC_KEY", "TR31_M7_HMAC_KEY", "TR31_P0_PIN_ENCRYPTION_KEY", "TR31_P1_PIN_GENERATION_KEY", "TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE", "TR31_V1_IBM3624_PIN_VERIFICATION_KEY", "TR31_V2_VISA_PIN_VERIFICATION_KEY", "TR31_K2_TR34_ASYMMETRIC_KEY"
     #   resp.keys[0].key_attributes.key_class #=> String, one of "SYMMETRIC_KEY", "ASYMMETRIC_KEY_PAIR", "PRIVATE_KEY", "PUBLIC_KEY"
-    #   resp.keys[0].key_attributes.key_algorithm #=> String, one of "TDES_2KEY", "TDES_3KEY", "AES_128", "AES_192", "AES_256", "RSA_2048", "RSA_3072", "RSA_4096", "ECC_NIST_P256", "ECC_NIST_P384"
+    #   resp.keys[0].key_attributes.key_algorithm #=> String, one of "TDES_2KEY", "TDES_3KEY", "AES_128", "AES_192", "AES_256", "HMAC_SHA256", "HMAC_SHA384", "HMAC_SHA512", "HMAC_SHA224", "RSA_2048", "RSA_3072", "RSA_4096", "ECC_NIST_P256", "ECC_NIST_P384", "ECC_NIST_P521"
     #   resp.keys[0].key_attributes.key_modes_of_use.encrypt #=> Boolean
     #   resp.keys[0].key_attributes.key_modes_of_use.decrypt #=> Boolean
     #   resp.keys[0].key_attributes.key_modes_of_use.wrap #=> Boolean
@@ -1944,6 +2802,8 @@ module Aws::PaymentCryptography
     #   resp.keys[0].key_check_value #=> String
     #   resp.keys[0].exportable #=> Boolean
     #   resp.keys[0].enabled #=> Boolean
+    #   resp.keys[0].multi_region_key_type #=> String, one of "PRIMARY", "REPLICA"
+    #   resp.keys[0].primary_region #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/ListKeys AWS API Documentation
@@ -1964,19 +2824,21 @@ module Aws::PaymentCryptography
     # receive a response with no NextToken (or an empty or null value), that
     # means there are no more tags to get.
     #
-    # **Cross-account use:** This operation can't be used across different
-    # Amazon Web Services accounts.
+    # **Cross-account use:** This operation supports cross-account use when
+    # the key has a resource-based policy that grants access. For more
+    # information, see [Resource-based policies][1].
     #
     # **Related operations:**
     #
-    # * [TagResource][1]
+    # * [TagResource][2]
     #
-    # * [UntagResource][2]
+    # * [UntagResource][3]
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_TagResource.html
-    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_UntagResource.html
+    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/security_iam_resource-based-policies.html
+    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_TagResource.html
+    # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_UntagResource.html
     #
     # @option params [required, String] :resource_arn
     #   The `KeyARN` of the key whose tags you are getting.
@@ -2026,6 +2888,166 @@ module Aws::PaymentCryptography
       req.send_request(options)
     end
 
+    # Attaches or replaces a resource-based policy on an Amazon Web Services
+    # Payment Cryptography key. A resource-based policy can grant
+    # cross-account access to your key.
+    #
+    # If the policy would grant public access, the request fails with a
+    # `PublicPolicyException`.
+    #
+    # To remove a resource-based policy from a key, use
+    # [DeleteResourcePolicy][1].
+    #
+    # **Cross-account use:** This operation can't be used across different
+    # Amazon Web Services accounts.
+    #
+    # **Related operations:**
+    #
+    # * [GetResourcePolicy][2]
+    #
+    # * [DeleteResourcePolicy][1]
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_DeleteResourcePolicy.html
+    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_GetResourcePolicy.html
+    #
+    # @option params [required, String] :resource_arn
+    #   The `KeyARN` of the key to attach the resource-based policy to.
+    #
+    # @option params [required, String] :policy
+    #   The resource-based policy to attach to the key, in JSON format.
+    #
+    # @return [Types::PutResourcePolicyOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::PutResourcePolicyOutput#resource_arn #resource_arn} => String
+    #   * {Types::PutResourcePolicyOutput#policy #policy} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.put_resource_policy({
+    #     resource_arn: "ResourceArn", # required
+    #     policy: "ResourcePolicy", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.resource_arn #=> String
+    #   resp.policy #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/PutResourcePolicy AWS API Documentation
+    #
+    # @overload put_resource_policy(params = {})
+    # @param [Hash] params ({})
+    def put_resource_policy(params = {}, options = {})
+      req = build_request(:put_resource_policy, params)
+      req.send_request(options)
+    end
+
+    # Removes Replication Regions from an existing Amazon Web Services
+    # Payment Cryptography key, disabling the key's availability for
+    # cryptographic operations in the specified Amazon Web Services Regions.
+    #
+    # When you remove Replication Regions, the key material is securely
+    # deleted from those regions and can no longer be used for cryptographic
+    # operations there. This operation is irreversible for the specified
+    # Amazon Web Services Regions. For more information, see [Multi-Region
+    # key replication][1].
+    #
+    # Ensure that no active cryptographic operations or applications depend
+    # on the key in the regions you're removing before performing this
+    # operation.
+    #
+    # **Cross-account use:** This operation supports cross-account use when
+    # the key has a resource-based policy that grants access. For more
+    # information, see [Resource-based policies][2].
+    #
+    # **Related operations:**
+    #
+    # * [AddKeyReplicationRegions][3]
+    #
+    # * [DisableDefaultKeyReplicationRegions][4]
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-multi-region-replication.html
+    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/security_iam_resource-based-policies.html
+    # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_AddKeyReplicationRegions.html
+    # [4]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_DisableDefaultKeyReplicationRegions.html
+    #
+    # @option params [required, String] :key_identifier
+    #   The key identifier (ARN or alias) of the key from which to remove
+    #   replication regions.
+    #
+    #   This key must exist and have replication enabled in the specified
+    #   regions.
+    #
+    # @option params [required, Array<String>] :replication_regions
+    #   The list of Amazon Web Services Regions to remove from the key's
+    #   replication configuration.
+    #
+    #   The key will no longer be available for cryptographic operations in
+    #   these regions after removal. Ensure no active operations depend on the
+    #   key in these regions before removal.
+    #
+    # @return [Types::RemoveKeyReplicationRegionsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::RemoveKeyReplicationRegionsOutput#key #key} => Types::Key
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.remove_key_replication_regions({
+    #     key_identifier: "KeyArnOrKeyAliasType", # required
+    #     replication_regions: ["Region"], # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.key.key_arn #=> String
+    #   resp.key.key_attributes.key_usage #=> String, one of "TR31_B0_BASE_DERIVATION_KEY", "TR31_C0_CARD_VERIFICATION_KEY", "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY", "TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION", "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS", "TR31_E1_EMV_MKEY_CONFIDENTIALITY", "TR31_E2_EMV_MKEY_INTEGRITY", "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS", "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION", "TR31_E6_EMV_MKEY_OTHER", "TR31_K0_KEY_ENCRYPTION_KEY", "TR31_K1_KEY_BLOCK_PROTECTION_KEY", "TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT", "TR31_M0_ISO_16609_MAC_KEY", "TR31_M3_ISO_9797_3_MAC_KEY", "TR31_M1_ISO_9797_1_MAC_KEY", "TR31_M6_ISO_9797_5_CMAC_KEY", "TR31_M7_HMAC_KEY", "TR31_P0_PIN_ENCRYPTION_KEY", "TR31_P1_PIN_GENERATION_KEY", "TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE", "TR31_V1_IBM3624_PIN_VERIFICATION_KEY", "TR31_V2_VISA_PIN_VERIFICATION_KEY", "TR31_K2_TR34_ASYMMETRIC_KEY"
+    #   resp.key.key_attributes.key_class #=> String, one of "SYMMETRIC_KEY", "ASYMMETRIC_KEY_PAIR", "PRIVATE_KEY", "PUBLIC_KEY"
+    #   resp.key.key_attributes.key_algorithm #=> String, one of "TDES_2KEY", "TDES_3KEY", "AES_128", "AES_192", "AES_256", "HMAC_SHA256", "HMAC_SHA384", "HMAC_SHA512", "HMAC_SHA224", "RSA_2048", "RSA_3072", "RSA_4096", "ECC_NIST_P256", "ECC_NIST_P384", "ECC_NIST_P521"
+    #   resp.key.key_attributes.key_modes_of_use.encrypt #=> Boolean
+    #   resp.key.key_attributes.key_modes_of_use.decrypt #=> Boolean
+    #   resp.key.key_attributes.key_modes_of_use.wrap #=> Boolean
+    #   resp.key.key_attributes.key_modes_of_use.unwrap #=> Boolean
+    #   resp.key.key_attributes.key_modes_of_use.generate #=> Boolean
+    #   resp.key.key_attributes.key_modes_of_use.sign #=> Boolean
+    #   resp.key.key_attributes.key_modes_of_use.verify #=> Boolean
+    #   resp.key.key_attributes.key_modes_of_use.derive_key #=> Boolean
+    #   resp.key.key_attributes.key_modes_of_use.no_restrictions #=> Boolean
+    #   resp.key.key_check_value #=> String
+    #   resp.key.key_check_value_algorithm #=> String, one of "CMAC", "ANSI_X9_24", "HMAC", "SHA_1"
+    #   resp.key.enabled #=> Boolean
+    #   resp.key.exportable #=> Boolean
+    #   resp.key.key_state #=> String, one of "CREATE_IN_PROGRESS", "CREATE_COMPLETE", "DELETE_PENDING", "DELETE_COMPLETE"
+    #   resp.key.key_origin #=> String, one of "EXTERNAL", "AWS_PAYMENT_CRYPTOGRAPHY"
+    #   resp.key.create_timestamp #=> Time
+    #   resp.key.usage_start_timestamp #=> Time
+    #   resp.key.usage_stop_timestamp #=> Time
+    #   resp.key.delete_pending_timestamp #=> Time
+    #   resp.key.delete_timestamp #=> Time
+    #   resp.key.derive_key_usage #=> String, one of "TR31_B0_BASE_DERIVATION_KEY", "TR31_C0_CARD_VERIFICATION_KEY", "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY", "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS", "TR31_E1_EMV_MKEY_CONFIDENTIALITY", "TR31_E2_EMV_MKEY_INTEGRITY", "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS", "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION", "TR31_E6_EMV_MKEY_OTHER", "TR31_K0_KEY_ENCRYPTION_KEY", "TR31_K1_KEY_BLOCK_PROTECTION_KEY", "TR31_M3_ISO_9797_3_MAC_KEY", "TR31_M1_ISO_9797_1_MAC_KEY", "TR31_M6_ISO_9797_5_CMAC_KEY", "TR31_M7_HMAC_KEY", "TR31_P0_PIN_ENCRYPTION_KEY", "TR31_P1_PIN_GENERATION_KEY", "TR31_V1_IBM3624_PIN_VERIFICATION_KEY", "TR31_V2_VISA_PIN_VERIFICATION_KEY"
+    #   resp.key.multi_region_key_type #=> String, one of "PRIMARY", "REPLICA"
+    #   resp.key.primary_region #=> String
+    #   resp.key.replication_status #=> Hash
+    #   resp.key.replication_status["Region"].status #=> String, one of "IN_PROGRESS", "DELETE_IN_PROGRESS", "FAILED", "SYNCHRONIZED"
+    #   resp.key.replication_status["Region"].status_message #=> String
+    #   resp.key.using_default_replication_regions #=> Boolean
+    #   resp.key.mpa_status.mpa_session_arn #=> String
+    #   resp.key.mpa_status.status #=> String, one of "PENDING", "APPROVED", "FAILED", "CANCELLED"
+    #   resp.key.mpa_status.initiation_date #=> Time
+    #   resp.key.mpa_status.status_message #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/RemoveKeyReplicationRegions AWS API Documentation
+    #
+    # @overload remove_key_replication_regions(params = {})
+    # @param [Hash] params ({})
+    def remove_key_replication_regions(params = {}, options = {})
+      req = build_request(:remove_key_replication_regions, params)
+      req.send_request(options)
+    end
+
     # Cancels a scheduled key deletion during the waiting period. Use this
     # operation to restore a `Key` that is scheduled for deletion.
     #
@@ -2035,22 +3057,24 @@ module Aws::PaymentCryptography
     # `CREATE_COMPLETE`, and the value for `deletePendingTimestamp` is
     # removed.
     #
-    # **Cross-account use:** This operation can't be used across different
-    # Amazon Web Services accounts.
+    # **Cross-account use:** This operation supports cross-account use when
+    # the key has a resource-based policy that grants access. For more
+    # information, see [Resource-based policies][1].
     #
     # **Related operations:**
     #
-    # * [DeleteKey][1]
+    # * [DeleteKey][2]
     #
-    # * [StartKeyUsage][2]
+    # * [StartKeyUsage][3]
     #
-    # * [StopKeyUsage][3]
+    # * [StopKeyUsage][4]
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_DeleteKey.html
-    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_StartKeyUsage.html
-    # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_StopKeyUsage.html
+    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/security_iam_resource-based-policies.html
+    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_DeleteKey.html
+    # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_StartKeyUsage.html
+    # [4]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_StopKeyUsage.html
     #
     # @option params [required, String] :key_identifier
     #   The `KeyARN` of the key to be restored within Amazon Web Services
@@ -2069,9 +3093,9 @@ module Aws::PaymentCryptography
     # @example Response structure
     #
     #   resp.key.key_arn #=> String
-    #   resp.key.key_attributes.key_usage #=> String, one of "TR31_B0_BASE_DERIVATION_KEY", "TR31_C0_CARD_VERIFICATION_KEY", "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY", "TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION", "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS", "TR31_E1_EMV_MKEY_CONFIDENTIALITY", "TR31_E2_EMV_MKEY_INTEGRITY", "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS", "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION", "TR31_E6_EMV_MKEY_OTHER", "TR31_K0_KEY_ENCRYPTION_KEY", "TR31_K1_KEY_BLOCK_PROTECTION_KEY", "TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT", "TR31_M3_ISO_9797_3_MAC_KEY", "TR31_M1_ISO_9797_1_MAC_KEY", "TR31_M6_ISO_9797_5_CMAC_KEY", "TR31_M7_HMAC_KEY", "TR31_P0_PIN_ENCRYPTION_KEY", "TR31_P1_PIN_GENERATION_KEY", "TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE", "TR31_V1_IBM3624_PIN_VERIFICATION_KEY", "TR31_V2_VISA_PIN_VERIFICATION_KEY", "TR31_K2_TR34_ASYMMETRIC_KEY"
+    #   resp.key.key_attributes.key_usage #=> String, one of "TR31_B0_BASE_DERIVATION_KEY", "TR31_C0_CARD_VERIFICATION_KEY", "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY", "TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION", "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS", "TR31_E1_EMV_MKEY_CONFIDENTIALITY", "TR31_E2_EMV_MKEY_INTEGRITY", "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS", "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION", "TR31_E6_EMV_MKEY_OTHER", "TR31_K0_KEY_ENCRYPTION_KEY", "TR31_K1_KEY_BLOCK_PROTECTION_KEY", "TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT", "TR31_M0_ISO_16609_MAC_KEY", "TR31_M3_ISO_9797_3_MAC_KEY", "TR31_M1_ISO_9797_1_MAC_KEY", "TR31_M6_ISO_9797_5_CMAC_KEY", "TR31_M7_HMAC_KEY", "TR31_P0_PIN_ENCRYPTION_KEY", "TR31_P1_PIN_GENERATION_KEY", "TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE", "TR31_V1_IBM3624_PIN_VERIFICATION_KEY", "TR31_V2_VISA_PIN_VERIFICATION_KEY", "TR31_K2_TR34_ASYMMETRIC_KEY"
     #   resp.key.key_attributes.key_class #=> String, one of "SYMMETRIC_KEY", "ASYMMETRIC_KEY_PAIR", "PRIVATE_KEY", "PUBLIC_KEY"
-    #   resp.key.key_attributes.key_algorithm #=> String, one of "TDES_2KEY", "TDES_3KEY", "AES_128", "AES_192", "AES_256", "RSA_2048", "RSA_3072", "RSA_4096", "ECC_NIST_P256", "ECC_NIST_P384"
+    #   resp.key.key_attributes.key_algorithm #=> String, one of "TDES_2KEY", "TDES_3KEY", "AES_128", "AES_192", "AES_256", "HMAC_SHA256", "HMAC_SHA384", "HMAC_SHA512", "HMAC_SHA224", "RSA_2048", "RSA_3072", "RSA_4096", "ECC_NIST_P256", "ECC_NIST_P384", "ECC_NIST_P521"
     #   resp.key.key_attributes.key_modes_of_use.encrypt #=> Boolean
     #   resp.key.key_attributes.key_modes_of_use.decrypt #=> Boolean
     #   resp.key.key_attributes.key_modes_of_use.wrap #=> Boolean
@@ -2082,7 +3106,7 @@ module Aws::PaymentCryptography
     #   resp.key.key_attributes.key_modes_of_use.derive_key #=> Boolean
     #   resp.key.key_attributes.key_modes_of_use.no_restrictions #=> Boolean
     #   resp.key.key_check_value #=> String
-    #   resp.key.key_check_value_algorithm #=> String, one of "CMAC", "ANSI_X9_24"
+    #   resp.key.key_check_value_algorithm #=> String, one of "CMAC", "ANSI_X9_24", "HMAC", "SHA_1"
     #   resp.key.enabled #=> Boolean
     #   resp.key.exportable #=> Boolean
     #   resp.key.key_state #=> String, one of "CREATE_IN_PROGRESS", "CREATE_COMPLETE", "DELETE_PENDING", "DELETE_COMPLETE"
@@ -2092,6 +3116,17 @@ module Aws::PaymentCryptography
     #   resp.key.usage_stop_timestamp #=> Time
     #   resp.key.delete_pending_timestamp #=> Time
     #   resp.key.delete_timestamp #=> Time
+    #   resp.key.derive_key_usage #=> String, one of "TR31_B0_BASE_DERIVATION_KEY", "TR31_C0_CARD_VERIFICATION_KEY", "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY", "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS", "TR31_E1_EMV_MKEY_CONFIDENTIALITY", "TR31_E2_EMV_MKEY_INTEGRITY", "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS", "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION", "TR31_E6_EMV_MKEY_OTHER", "TR31_K0_KEY_ENCRYPTION_KEY", "TR31_K1_KEY_BLOCK_PROTECTION_KEY", "TR31_M3_ISO_9797_3_MAC_KEY", "TR31_M1_ISO_9797_1_MAC_KEY", "TR31_M6_ISO_9797_5_CMAC_KEY", "TR31_M7_HMAC_KEY", "TR31_P0_PIN_ENCRYPTION_KEY", "TR31_P1_PIN_GENERATION_KEY", "TR31_V1_IBM3624_PIN_VERIFICATION_KEY", "TR31_V2_VISA_PIN_VERIFICATION_KEY"
+    #   resp.key.multi_region_key_type #=> String, one of "PRIMARY", "REPLICA"
+    #   resp.key.primary_region #=> String
+    #   resp.key.replication_status #=> Hash
+    #   resp.key.replication_status["Region"].status #=> String, one of "IN_PROGRESS", "DELETE_IN_PROGRESS", "FAILED", "SYNCHRONIZED"
+    #   resp.key.replication_status["Region"].status_message #=> String
+    #   resp.key.using_default_replication_regions #=> Boolean
+    #   resp.key.mpa_status.mpa_session_arn #=> String
+    #   resp.key.mpa_status.status #=> String, one of "PENDING", "APPROVED", "FAILED", "CANCELLED"
+    #   resp.key.mpa_status.initiation_date #=> Time
+    #   resp.key.mpa_status.status_message #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/RestoreKey AWS API Documentation
     #
@@ -2106,18 +3141,20 @@ module Aws::PaymentCryptography
     # it active for cryptographic operations within Amazon Web Services
     # Payment Cryptography
     #
-    # **Cross-account use:** This operation can't be used across different
-    # Amazon Web Services accounts.
+    # **Cross-account use:** This operation supports cross-account use when
+    # the key has a resource-based policy that grants access. For more
+    # information, see [Resource-based policies][1].
     #
     # **Related operations:**
     #
-    # * [StopKeyUsage][1]
+    # * [StopKeyUsage][2]
     #
     # ^
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_StopKeyUsage.html
+    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/security_iam_resource-based-policies.html
+    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_StopKeyUsage.html
     #
     # @option params [required, String] :key_identifier
     #   The `KeyArn` of the key.
@@ -2135,9 +3172,9 @@ module Aws::PaymentCryptography
     # @example Response structure
     #
     #   resp.key.key_arn #=> String
-    #   resp.key.key_attributes.key_usage #=> String, one of "TR31_B0_BASE_DERIVATION_KEY", "TR31_C0_CARD_VERIFICATION_KEY", "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY", "TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION", "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS", "TR31_E1_EMV_MKEY_CONFIDENTIALITY", "TR31_E2_EMV_MKEY_INTEGRITY", "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS", "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION", "TR31_E6_EMV_MKEY_OTHER", "TR31_K0_KEY_ENCRYPTION_KEY", "TR31_K1_KEY_BLOCK_PROTECTION_KEY", "TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT", "TR31_M3_ISO_9797_3_MAC_KEY", "TR31_M1_ISO_9797_1_MAC_KEY", "TR31_M6_ISO_9797_5_CMAC_KEY", "TR31_M7_HMAC_KEY", "TR31_P0_PIN_ENCRYPTION_KEY", "TR31_P1_PIN_GENERATION_KEY", "TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE", "TR31_V1_IBM3624_PIN_VERIFICATION_KEY", "TR31_V2_VISA_PIN_VERIFICATION_KEY", "TR31_K2_TR34_ASYMMETRIC_KEY"
+    #   resp.key.key_attributes.key_usage #=> String, one of "TR31_B0_BASE_DERIVATION_KEY", "TR31_C0_CARD_VERIFICATION_KEY", "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY", "TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION", "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS", "TR31_E1_EMV_MKEY_CONFIDENTIALITY", "TR31_E2_EMV_MKEY_INTEGRITY", "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS", "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION", "TR31_E6_EMV_MKEY_OTHER", "TR31_K0_KEY_ENCRYPTION_KEY", "TR31_K1_KEY_BLOCK_PROTECTION_KEY", "TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT", "TR31_M0_ISO_16609_MAC_KEY", "TR31_M3_ISO_9797_3_MAC_KEY", "TR31_M1_ISO_9797_1_MAC_KEY", "TR31_M6_ISO_9797_5_CMAC_KEY", "TR31_M7_HMAC_KEY", "TR31_P0_PIN_ENCRYPTION_KEY", "TR31_P1_PIN_GENERATION_KEY", "TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE", "TR31_V1_IBM3624_PIN_VERIFICATION_KEY", "TR31_V2_VISA_PIN_VERIFICATION_KEY", "TR31_K2_TR34_ASYMMETRIC_KEY"
     #   resp.key.key_attributes.key_class #=> String, one of "SYMMETRIC_KEY", "ASYMMETRIC_KEY_PAIR", "PRIVATE_KEY", "PUBLIC_KEY"
-    #   resp.key.key_attributes.key_algorithm #=> String, one of "TDES_2KEY", "TDES_3KEY", "AES_128", "AES_192", "AES_256", "RSA_2048", "RSA_3072", "RSA_4096", "ECC_NIST_P256", "ECC_NIST_P384"
+    #   resp.key.key_attributes.key_algorithm #=> String, one of "TDES_2KEY", "TDES_3KEY", "AES_128", "AES_192", "AES_256", "HMAC_SHA256", "HMAC_SHA384", "HMAC_SHA512", "HMAC_SHA224", "RSA_2048", "RSA_3072", "RSA_4096", "ECC_NIST_P256", "ECC_NIST_P384", "ECC_NIST_P521"
     #   resp.key.key_attributes.key_modes_of_use.encrypt #=> Boolean
     #   resp.key.key_attributes.key_modes_of_use.decrypt #=> Boolean
     #   resp.key.key_attributes.key_modes_of_use.wrap #=> Boolean
@@ -2148,7 +3185,7 @@ module Aws::PaymentCryptography
     #   resp.key.key_attributes.key_modes_of_use.derive_key #=> Boolean
     #   resp.key.key_attributes.key_modes_of_use.no_restrictions #=> Boolean
     #   resp.key.key_check_value #=> String
-    #   resp.key.key_check_value_algorithm #=> String, one of "CMAC", "ANSI_X9_24"
+    #   resp.key.key_check_value_algorithm #=> String, one of "CMAC", "ANSI_X9_24", "HMAC", "SHA_1"
     #   resp.key.enabled #=> Boolean
     #   resp.key.exportable #=> Boolean
     #   resp.key.key_state #=> String, one of "CREATE_IN_PROGRESS", "CREATE_COMPLETE", "DELETE_PENDING", "DELETE_COMPLETE"
@@ -2158,6 +3195,17 @@ module Aws::PaymentCryptography
     #   resp.key.usage_stop_timestamp #=> Time
     #   resp.key.delete_pending_timestamp #=> Time
     #   resp.key.delete_timestamp #=> Time
+    #   resp.key.derive_key_usage #=> String, one of "TR31_B0_BASE_DERIVATION_KEY", "TR31_C0_CARD_VERIFICATION_KEY", "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY", "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS", "TR31_E1_EMV_MKEY_CONFIDENTIALITY", "TR31_E2_EMV_MKEY_INTEGRITY", "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS", "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION", "TR31_E6_EMV_MKEY_OTHER", "TR31_K0_KEY_ENCRYPTION_KEY", "TR31_K1_KEY_BLOCK_PROTECTION_KEY", "TR31_M3_ISO_9797_3_MAC_KEY", "TR31_M1_ISO_9797_1_MAC_KEY", "TR31_M6_ISO_9797_5_CMAC_KEY", "TR31_M7_HMAC_KEY", "TR31_P0_PIN_ENCRYPTION_KEY", "TR31_P1_PIN_GENERATION_KEY", "TR31_V1_IBM3624_PIN_VERIFICATION_KEY", "TR31_V2_VISA_PIN_VERIFICATION_KEY"
+    #   resp.key.multi_region_key_type #=> String, one of "PRIMARY", "REPLICA"
+    #   resp.key.primary_region #=> String
+    #   resp.key.replication_status #=> Hash
+    #   resp.key.replication_status["Region"].status #=> String, one of "IN_PROGRESS", "DELETE_IN_PROGRESS", "FAILED", "SYNCHRONIZED"
+    #   resp.key.replication_status["Region"].status_message #=> String
+    #   resp.key.using_default_replication_regions #=> Boolean
+    #   resp.key.mpa_status.mpa_session_arn #=> String
+    #   resp.key.mpa_status.status #=> String, one of "PENDING", "APPROVED", "FAILED", "CANCELLED"
+    #   resp.key.mpa_status.initiation_date #=> Time
+    #   resp.key.mpa_status.status_message #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/StartKeyUsage AWS API Documentation
     #
@@ -2175,8 +3223,9 @@ module Aws::PaymentCryptography
     # key. You can enable the key in the future by calling
     # [StartKeyUsage][2].
     #
-    # **Cross-account use:** This operation can't be used across different
-    # Amazon Web Services accounts.
+    # **Cross-account use:** This operation supports cross-account use when
+    # the key has a resource-based policy that grants access. For more
+    # information, see [Resource-based policies][3].
     #
     # **Related operations:**
     #
@@ -2188,6 +3237,7 @@ module Aws::PaymentCryptography
     #
     # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_DeleteKey.html
     # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_StartKeyUsage.html
+    # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/security_iam_resource-based-policies.html
     #
     # @option params [required, String] :key_identifier
     #   The `KeyArn` of the key.
@@ -2205,9 +3255,9 @@ module Aws::PaymentCryptography
     # @example Response structure
     #
     #   resp.key.key_arn #=> String
-    #   resp.key.key_attributes.key_usage #=> String, one of "TR31_B0_BASE_DERIVATION_KEY", "TR31_C0_CARD_VERIFICATION_KEY", "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY", "TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION", "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS", "TR31_E1_EMV_MKEY_CONFIDENTIALITY", "TR31_E2_EMV_MKEY_INTEGRITY", "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS", "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION", "TR31_E6_EMV_MKEY_OTHER", "TR31_K0_KEY_ENCRYPTION_KEY", "TR31_K1_KEY_BLOCK_PROTECTION_KEY", "TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT", "TR31_M3_ISO_9797_3_MAC_KEY", "TR31_M1_ISO_9797_1_MAC_KEY", "TR31_M6_ISO_9797_5_CMAC_KEY", "TR31_M7_HMAC_KEY", "TR31_P0_PIN_ENCRYPTION_KEY", "TR31_P1_PIN_GENERATION_KEY", "TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE", "TR31_V1_IBM3624_PIN_VERIFICATION_KEY", "TR31_V2_VISA_PIN_VERIFICATION_KEY", "TR31_K2_TR34_ASYMMETRIC_KEY"
+    #   resp.key.key_attributes.key_usage #=> String, one of "TR31_B0_BASE_DERIVATION_KEY", "TR31_C0_CARD_VERIFICATION_KEY", "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY", "TR31_D1_ASYMMETRIC_KEY_FOR_DATA_ENCRYPTION", "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS", "TR31_E1_EMV_MKEY_CONFIDENTIALITY", "TR31_E2_EMV_MKEY_INTEGRITY", "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS", "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION", "TR31_E6_EMV_MKEY_OTHER", "TR31_K0_KEY_ENCRYPTION_KEY", "TR31_K1_KEY_BLOCK_PROTECTION_KEY", "TR31_K3_ASYMMETRIC_KEY_FOR_KEY_AGREEMENT", "TR31_M0_ISO_16609_MAC_KEY", "TR31_M3_ISO_9797_3_MAC_KEY", "TR31_M1_ISO_9797_1_MAC_KEY", "TR31_M6_ISO_9797_5_CMAC_KEY", "TR31_M7_HMAC_KEY", "TR31_P0_PIN_ENCRYPTION_KEY", "TR31_P1_PIN_GENERATION_KEY", "TR31_S0_ASYMMETRIC_KEY_FOR_DIGITAL_SIGNATURE", "TR31_V1_IBM3624_PIN_VERIFICATION_KEY", "TR31_V2_VISA_PIN_VERIFICATION_KEY", "TR31_K2_TR34_ASYMMETRIC_KEY"
     #   resp.key.key_attributes.key_class #=> String, one of "SYMMETRIC_KEY", "ASYMMETRIC_KEY_PAIR", "PRIVATE_KEY", "PUBLIC_KEY"
-    #   resp.key.key_attributes.key_algorithm #=> String, one of "TDES_2KEY", "TDES_3KEY", "AES_128", "AES_192", "AES_256", "RSA_2048", "RSA_3072", "RSA_4096", "ECC_NIST_P256", "ECC_NIST_P384"
+    #   resp.key.key_attributes.key_algorithm #=> String, one of "TDES_2KEY", "TDES_3KEY", "AES_128", "AES_192", "AES_256", "HMAC_SHA256", "HMAC_SHA384", "HMAC_SHA512", "HMAC_SHA224", "RSA_2048", "RSA_3072", "RSA_4096", "ECC_NIST_P256", "ECC_NIST_P384", "ECC_NIST_P521"
     #   resp.key.key_attributes.key_modes_of_use.encrypt #=> Boolean
     #   resp.key.key_attributes.key_modes_of_use.decrypt #=> Boolean
     #   resp.key.key_attributes.key_modes_of_use.wrap #=> Boolean
@@ -2218,7 +3268,7 @@ module Aws::PaymentCryptography
     #   resp.key.key_attributes.key_modes_of_use.derive_key #=> Boolean
     #   resp.key.key_attributes.key_modes_of_use.no_restrictions #=> Boolean
     #   resp.key.key_check_value #=> String
-    #   resp.key.key_check_value_algorithm #=> String, one of "CMAC", "ANSI_X9_24"
+    #   resp.key.key_check_value_algorithm #=> String, one of "CMAC", "ANSI_X9_24", "HMAC", "SHA_1"
     #   resp.key.enabled #=> Boolean
     #   resp.key.exportable #=> Boolean
     #   resp.key.key_state #=> String, one of "CREATE_IN_PROGRESS", "CREATE_COMPLETE", "DELETE_PENDING", "DELETE_COMPLETE"
@@ -2228,6 +3278,17 @@ module Aws::PaymentCryptography
     #   resp.key.usage_stop_timestamp #=> Time
     #   resp.key.delete_pending_timestamp #=> Time
     #   resp.key.delete_timestamp #=> Time
+    #   resp.key.derive_key_usage #=> String, one of "TR31_B0_BASE_DERIVATION_KEY", "TR31_C0_CARD_VERIFICATION_KEY", "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY", "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS", "TR31_E1_EMV_MKEY_CONFIDENTIALITY", "TR31_E2_EMV_MKEY_INTEGRITY", "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS", "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION", "TR31_E6_EMV_MKEY_OTHER", "TR31_K0_KEY_ENCRYPTION_KEY", "TR31_K1_KEY_BLOCK_PROTECTION_KEY", "TR31_M3_ISO_9797_3_MAC_KEY", "TR31_M1_ISO_9797_1_MAC_KEY", "TR31_M6_ISO_9797_5_CMAC_KEY", "TR31_M7_HMAC_KEY", "TR31_P0_PIN_ENCRYPTION_KEY", "TR31_P1_PIN_GENERATION_KEY", "TR31_V1_IBM3624_PIN_VERIFICATION_KEY", "TR31_V2_VISA_PIN_VERIFICATION_KEY"
+    #   resp.key.multi_region_key_type #=> String, one of "PRIMARY", "REPLICA"
+    #   resp.key.primary_region #=> String
+    #   resp.key.replication_status #=> Hash
+    #   resp.key.replication_status["Region"].status #=> String, one of "IN_PROGRESS", "DELETE_IN_PROGRESS", "FAILED", "SYNCHRONIZED"
+    #   resp.key.replication_status["Region"].status_message #=> String
+    #   resp.key.using_default_replication_regions #=> Boolean
+    #   resp.key.mpa_status.mpa_session_arn #=> String
+    #   resp.key.mpa_status.status #=> String, one of "PENDING", "APPROVED", "FAILED", "CANCELLED"
+    #   resp.key.mpa_status.initiation_date #=> Time
+    #   resp.key.mpa_status.status_message #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/StopKeyUsage AWS API Documentation
     #
@@ -2252,20 +3313,22 @@ module Aws::PaymentCryptography
     # to an Amazon Web Services Payment Cryptography key when you create it
     # with [CreateKey][1].
     #
-    # **Cross-account use:** This operation can't be used across different
-    # Amazon Web Services accounts.
+    # **Cross-account use:** This operation supports cross-account use when
+    # the key has a resource-based policy that grants access. For more
+    # information, see [Resource-based policies][2].
     #
     # **Related operations:**
     #
-    # * [ListTagsForResource][2]
+    # * [ListTagsForResource][3]
     #
-    # * [UntagResource][3]
+    # * [UntagResource][4]
     #
     #
     #
     # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_CreateKey.html
-    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_ListTagsForResource.html
-    # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_UntagResource.html
+    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/security_iam_resource-based-policies.html
+    # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_ListTagsForResource.html
+    # [4]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_UntagResource.html
     #
     # @option params [required, String] :resource_arn
     #   The `KeyARN` of the key whose tags are being updated.
@@ -2323,19 +3386,21 @@ module Aws::PaymentCryptography
     #
     #  </note>
     #
-    # **Cross-account use:** This operation can't be used across different
-    # Amazon Web Services accounts.
+    # **Cross-account use:** This operation supports cross-account use when
+    # the key has a resource-based policy that grants access. For more
+    # information, see [Resource-based policies][1].
     #
     # **Related operations:**
     #
-    # * [ListTagsForResource][1]
+    # * [ListTagsForResource][2]
     #
-    # * [TagResource][2]
+    # * [TagResource][3]
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_ListTagsForResource.html
-    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_TagResource.html
+    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/security_iam_resource-based-policies.html
+    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_ListTagsForResource.html
+    # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_TagResource.html
     #
     # @option params [required, String] :resource_arn
     #   The `KeyARN` of the key whose tags are being removed.
@@ -2447,7 +3512,7 @@ module Aws::PaymentCryptography
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-paymentcryptography'
-      context[:gem_version] = '1.31.0'
+      context[:gem_version] = '1.60.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

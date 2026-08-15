@@ -101,8 +101,8 @@ module Aws::S3Control
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -130,22 +130,24 @@ module Aws::S3Control
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -173,6 +175,11 @@ module Aws::S3Control
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -198,7 +205,7 @@ module Aws::S3Control
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -206,8 +213,7 @@ module Aws::S3Control
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -260,8 +266,8 @@ module Aws::S3Control
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -323,17 +329,15 @@ module Aws::S3Control
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [Boolean] :s3_use_arn_region (true)
     #     For S3 and S3 Outposts ARNs passed into the `:bucket` or `:name`
@@ -380,8 +384,8 @@ module Aws::S3Control
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -843,20 +847,21 @@ module Aws::S3Control
       req.send_request(options)
     end
 
-    # <note markdown="1"> This operation is not supported by directory buckets.
+    # Creates an access point and associates it to a specified bucket. For
+    # more information, see [Managing access to shared datasets with access
+    # points][1] or [Managing access to shared datasets in directory buckets
+    # with access points][2] in the *Amazon S3 User Guide*.
     #
-    #  </note>
-    #
-    # Creates an access point and associates it with the specified bucket.
-    # For more information, see [Managing Data Access with Amazon S3 Access
-    # Points][1] in the *Amazon S3 User Guide*.
+    # To create an access point and attach it to a volume on an Amazon FSx
+    # file system, see [CreateAndAttachS3AccessPoint][3] in the *Amazon FSx
+    # API Reference*.
     #
     #
     #
     # <note markdown="1"> S3 on Outposts only supports VPC-style access points.
     #
     #  For more information, see [ Accessing Amazon S3 on Outposts using
-    # virtual private cloud (VPC) only access points][2] in the *Amazon S3
+    # virtual private cloud (VPC) only access points][4] in the *Amazon S3
     # User Guide*.
     #
     #  </note>
@@ -867,26 +872,31 @@ module Aws::S3Control
     # prefix instead of `s3-control`. For an example of the request syntax
     # for Amazon S3 on Outposts that uses the S3 on Outposts endpoint
     # hostname prefix and the `x-amz-outpost-id` derived by using the access
-    # point ARN, see the [Examples][3] section.
+    # point ARN, see the [Examples][5] section.
     #
     #
     #
     # The following actions are related to `CreateAccessPoint`:
     #
-    # * [GetAccessPoint][4]
+    # * [GetAccessPoint][6]
     #
-    # * [DeleteAccessPoint][5]
+    # * [DeleteAccessPoint][7]
     #
-    # * [ListAccessPoints][6]
+    # * [ListAccessPoints][8]
+    #
+    # * [ListAccessPointsForDirectoryBuckets][9]
     #
     #
     #
     # [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-points.html
-    # [2]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/S3onOutposts.html
-    # [3]: https://docs.aws.amazon.com/AmazonS3/latest/API/API_control_CreateAccessPoint.html#API_control_CreateAccessPoint_Examples
-    # [4]: https://docs.aws.amazon.com/AmazonS3/latest/API/API_control_GetAccessPoint.html
-    # [5]: https://docs.aws.amazon.com/AmazonS3/latest/API/API_control_DeleteAccessPoint.html
-    # [6]: https://docs.aws.amazon.com/AmazonS3/latest/API/API_control_ListAccessPoints.html
+    # [2]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-points-directory-buckets.html
+    # [3]: https://docs.aws.amazon.com/fsx/latest/APIReference/API_CreateAndAttachS3AccessPoint.html
+    # [4]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/S3onOutposts.html
+    # [5]: https://docs.aws.amazon.com/AmazonS3/latest/API/API_control_CreateAccessPoint.html#API_control_CreateAccessPoint_Examples
+    # [6]: https://docs.aws.amazon.com/AmazonS3/latest/API/API_control_GetAccessPoint.html
+    # [7]: https://docs.aws.amazon.com/AmazonS3/latest/API/API_control_DeleteAccessPoint.html
+    # [8]: https://docs.aws.amazon.com/AmazonS3/latest/API/API_control_ListAccessPoints.html
+    # [9]: https://docs.aws.amazon.com/AmazonS3/latest/API/API_control_ListAccessPointsForDirectoryBuckets.html
     #
     # @option params [String] :account_id
     #   The Amazon Web Services account ID for the account that owns the
@@ -894,6 +904,17 @@ module Aws::S3Control
     #
     # @option params [required, String] :name
     #   The name you want to assign to this access point.
+    #
+    #   For directory buckets, the access point name must consist of a base
+    #   name that you provide and suffix that includes the `ZoneID` (Amazon
+    #   Web Services Availability Zone or Local Zone) of your bucket location,
+    #   followed by `--xa-s3`. For more information, see [Managing access to
+    #   shared datasets in directory buckets with access points][1] in the
+    #   *Amazon S3 User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-points-directory-buckets.html
     #
     # @option params [required, String] :bucket
     #   The name of the bucket that you want to associate this access point
@@ -934,6 +955,33 @@ module Aws::S3Control
     #   cross-account access point when your bucket and access point are not
     #   in the same account, the `BucketAccountId` is required.
     #
+    # @option params [Types::Scope] :scope
+    #   For directory buckets, you can filter access control to specific
+    #   prefixes, API operations, or a combination of both. For more
+    #   information, see [Managing access to shared datasets in directory
+    #   buckets with access points][1] in the *Amazon S3 User Guide*.
+    #
+    #   <note markdown="1"> Scope is only supported for access points attached to directory
+    #   buckets.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-points-directory-buckets.html
+    #
+    # @option params [Array<Types::Tag>] :tags
+    #   An array of tags that you can apply to an access point. Tags are
+    #   key-value pairs of metadata used to control access to your access
+    #   points. For more information about tags, see [Using tags with Amazon
+    #   S3][1]. For information about tagging access points, see [Using tags
+    #   for attribute-based access control (ABAC)][2].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/tagging.html
+    #   [2]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/tagging.html#using-tags-for-abac
+    #
     # @return [Types::CreateAccessPointResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateAccessPointResult#access_point_arn #access_point_arn} => String
@@ -955,6 +1003,16 @@ module Aws::S3Control
     #       restrict_public_buckets: false,
     #     },
     #     bucket_account_id: "AccountId",
+    #     scope: {
+    #       prefixes: ["Prefix"],
+    #       permissions: ["GetObject"], # accepts GetObject, GetObjectAttributes, ListMultipartUploadParts, ListBucket, ListBucketMultipartUploads, PutObject, DeleteObject, AbortMultipartUpload
+    #     },
+    #     tags: [
+    #       {
+    #         key: "TagKeyString", # required
+    #         value: "TagValueString", # required
+    #       },
+    #     ],
     #   })
     #
     # @example Response structure
@@ -1359,7 +1417,7 @@ module Aws::S3Control
     #         object_lock_mode: "COMPLIANCE", # accepts COMPLIANCE, GOVERNANCE
     #         object_lock_retain_until_date: Time.now,
     #         bucket_key_enabled: false,
-    #         checksum_algorithm: "CRC32", # accepts CRC32, CRC32C, SHA1, SHA256, CRC64NVME
+    #         checksum_algorithm: "CRC32", # accepts CRC32, CRC32C, SHA1, SHA256, CRC64NVME, SHA512, MD5, XXHASH64, XXHASH3, XXHASH128
     #       },
     #       s3_put_object_acl: {
     #         access_control_policy: {
@@ -1410,6 +1468,18 @@ module Aws::S3Control
     #       },
     #       s3_replicate_object: {
     #       },
+    #       s3_compute_object_checksum: {
+    #         checksum_algorithm: "CRC32", # accepts CRC32, CRC32C, CRC64NVME, MD5, SHA1, SHA256, SHA512, XXHASH64, XXHASH3, XXHASH128
+    #         checksum_type: "FULL_OBJECT", # accepts FULL_OBJECT, COMPOSITE
+    #       },
+    #       s3_update_object_encryption: {
+    #         object_encryption: {
+    #           ssekms: {
+    #             kms_key_arn: "NonEmptyKmsKeyArnString", # required
+    #             bucket_key_enabled: false,
+    #           },
+    #         },
+    #       },
     #     },
     #     report: { # required
     #       bucket: "S3BucketArnString",
@@ -1417,6 +1487,7 @@ module Aws::S3Control
     #       enabled: false, # required
     #       prefix: "ReportPrefixString",
     #       report_scope: "AllTasks", # accepts AllTasks, FailedTasksOnly
+    #       expected_bucket_owner: "AccountId",
     #     },
     #     client_request_token: "NonEmptyMaxLength64String", # required
     #     manifest: {
@@ -1469,6 +1540,23 @@ module Aws::S3Control
     #           object_size_greater_than_bytes: 1,
     #           object_size_less_than_bytes: 1,
     #           match_any_storage_class: ["STANDARD"], # accepts STANDARD, STANDARD_IA, ONEZONE_IA, GLACIER, INTELLIGENT_TIERING, DEEP_ARCHIVE, GLACIER_IR
+    #           match_any_object_encryption: [
+    #             {
+    #               sses3: {
+    #               },
+    #               ssekms: {
+    #                 kms_key_arn: "NonEmptyKmsKeyArnString",
+    #                 bucket_key_enabled: false,
+    #               },
+    #               dssekms: {
+    #                 kms_key_arn: "NonEmptyKmsKeyArnString",
+    #               },
+    #               ssec: {
+    #               },
+    #               notsse: {
+    #               },
+    #             },
+    #           ],
     #         },
     #         enable_manifest_output: false, # required
     #       },
@@ -1847,10 +1935,6 @@ module Aws::S3Control
       req.send_request(options)
     end
 
-    # <note markdown="1"> This operation is not supported by directory buckets.
-    #
-    #  </note>
-    #
     # Deletes the specified access point.
     #
     # All Amazon S3 on Outposts REST API requests for this action require an
@@ -1960,10 +2044,6 @@ module Aws::S3Control
       req.send_request(options)
     end
 
-    # <note markdown="1"> This operation is not supported by directory buckets.
-    #
-    #  </note>
-    #
     # Deletes the access point policy for the specified access point.
     #
     #
@@ -2066,6 +2146,47 @@ module Aws::S3Control
     # @param [Hash] params ({})
     def delete_access_point_policy_for_object_lambda(params = {}, options = {})
       req = build_request(:delete_access_point_policy_for_object_lambda, params)
+      req.send_request(options)
+    end
+
+    # Deletes an existing access point scope for a directory bucket.
+    #
+    # <note markdown="1"> When you delete the scope of an access point, all prefixes and
+    # permissions are deleted.
+    #
+    #  </note>
+    #
+    # To use this operation, you must have the permission to perform the
+    # `s3express:DeleteAccessPointScope` action.
+    #
+    # For information about REST API errors, see [REST error responses][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AmazonS3/latest/API/ErrorResponses.html#RESTErrorResponses
+    #
+    # @option params [required, String] :account_id
+    #   The Amazon Web Services account ID that owns the access point with the
+    #   scope that you want to delete.
+    #
+    # @option params [required, String] :name
+    #   The name of the access point with the scope that you want to delete.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_access_point_scope({
+    #     account_id: "AccountId", # required
+    #     name: "AccessPointName", # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/DeleteAccessPointScope AWS API Documentation
+    #
+    # @overload delete_access_point_scope(params = {})
+    # @param [Hash] params ({})
+    def delete_access_point_scope(params = {}, options = {})
+      req = build_request(:delete_access_point_scope, params)
       req.send_request(options)
     end
 
@@ -2609,8 +2730,13 @@ module Aws::S3Control
     #  </note>
     #
     # Removes the `PublicAccessBlock` configuration for an Amazon Web
-    # Services account. For more information, see [ Using Amazon S3 block
-    # public access][1].
+    # Services account. This operation might be restricted when the account
+    # is managed by organization-level Block Public Access policies. You’ll
+    # get an Access Denied (403) error when the account is managed by
+    # organization-level Block Public Access policies. Organization-level
+    # policies override account-level settings, preventing direct
+    # account-level modifications. For more information, see [ Using Amazon
+    # S3 block public access][1].
     #
     # Related actions include:
     #
@@ -2870,7 +2996,7 @@ module Aws::S3Control
     #   resp.job.operation.s3_put_object_copy.object_lock_mode #=> String, one of "COMPLIANCE", "GOVERNANCE"
     #   resp.job.operation.s3_put_object_copy.object_lock_retain_until_date #=> Time
     #   resp.job.operation.s3_put_object_copy.bucket_key_enabled #=> Boolean
-    #   resp.job.operation.s3_put_object_copy.checksum_algorithm #=> String, one of "CRC32", "CRC32C", "SHA1", "SHA256", "CRC64NVME"
+    #   resp.job.operation.s3_put_object_copy.checksum_algorithm #=> String, one of "CRC32", "CRC32C", "SHA1", "SHA256", "CRC64NVME", "SHA512", "MD5", "XXHASH64", "XXHASH3", "XXHASH128"
     #   resp.job.operation.s3_put_object_acl.access_control_policy.access_control_list.owner.id #=> String
     #   resp.job.operation.s3_put_object_acl.access_control_policy.access_control_list.owner.display_name #=> String
     #   resp.job.operation.s3_put_object_acl.access_control_policy.access_control_list.grants #=> Array
@@ -2888,6 +3014,10 @@ module Aws::S3Control
     #   resp.job.operation.s3_put_object_retention.bypass_governance_retention #=> Boolean
     #   resp.job.operation.s3_put_object_retention.retention.retain_until_date #=> Time
     #   resp.job.operation.s3_put_object_retention.retention.mode #=> String, one of "COMPLIANCE", "GOVERNANCE"
+    #   resp.job.operation.s3_compute_object_checksum.checksum_algorithm #=> String, one of "CRC32", "CRC32C", "CRC64NVME", "MD5", "SHA1", "SHA256", "SHA512", "XXHASH64", "XXHASH3", "XXHASH128"
+    #   resp.job.operation.s3_compute_object_checksum.checksum_type #=> String, one of "FULL_OBJECT", "COMPOSITE"
+    #   resp.job.operation.s3_update_object_encryption.object_encryption.ssekms.kms_key_arn #=> String
+    #   resp.job.operation.s3_update_object_encryption.object_encryption.ssekms.bucket_key_enabled #=> Boolean
     #   resp.job.priority #=> Integer
     #   resp.job.progress_summary.total_number_of_tasks #=> Integer
     #   resp.job.progress_summary.number_of_tasks_succeeded #=> Integer
@@ -2902,6 +3032,7 @@ module Aws::S3Control
     #   resp.job.report.enabled #=> Boolean
     #   resp.job.report.prefix #=> String
     #   resp.job.report.report_scope #=> String, one of "AllTasks", "FailedTasksOnly"
+    #   resp.job.report.expected_bucket_owner #=> String
     #   resp.job.creation_time #=> Time
     #   resp.job.termination_date #=> Time
     #   resp.job.role_arn #=> String
@@ -2929,6 +3060,10 @@ module Aws::S3Control
     #   resp.job.manifest_generator.s3_job_manifest_generator.filter.object_size_less_than_bytes #=> Integer
     #   resp.job.manifest_generator.s3_job_manifest_generator.filter.match_any_storage_class #=> Array
     #   resp.job.manifest_generator.s3_job_manifest_generator.filter.match_any_storage_class[0] #=> String, one of "STANDARD", "STANDARD_IA", "ONEZONE_IA", "GLACIER", "INTELLIGENT_TIERING", "DEEP_ARCHIVE", "GLACIER_IR"
+    #   resp.job.manifest_generator.s3_job_manifest_generator.filter.match_any_object_encryption #=> Array
+    #   resp.job.manifest_generator.s3_job_manifest_generator.filter.match_any_object_encryption[0].ssekms.kms_key_arn #=> String
+    #   resp.job.manifest_generator.s3_job_manifest_generator.filter.match_any_object_encryption[0].ssekms.bucket_key_enabled #=> Boolean
+    #   resp.job.manifest_generator.s3_job_manifest_generator.filter.match_any_object_encryption[0].dssekms.kms_key_arn #=> String
     #   resp.job.manifest_generator.s3_job_manifest_generator.enable_manifest_output #=> Boolean
     #   resp.job.generated_manifest_descriptor.format #=> String, one of "S3InventoryReport_CSV_20211130"
     #   resp.job.generated_manifest_descriptor.location.object_arn #=> String
@@ -3296,10 +3431,6 @@ module Aws::S3Control
       req.send_request(options)
     end
 
-    # <note markdown="1"> This operation is not supported by directory buckets.
-    #
-    #  </note>
-    #
     # Returns configuration information about the specified access point.
     #
     #
@@ -3360,6 +3491,8 @@ module Aws::S3Control
     #   * {Types::GetAccessPointResult#access_point_arn #access_point_arn} => String
     #   * {Types::GetAccessPointResult#endpoints #endpoints} => Hash&lt;String,String&gt;
     #   * {Types::GetAccessPointResult#bucket_account_id #bucket_account_id} => String
+    #   * {Types::GetAccessPointResult#data_source_id #data_source_id} => String
+    #   * {Types::GetAccessPointResult#data_source_type #data_source_type} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -3384,6 +3517,8 @@ module Aws::S3Control
     #   resp.endpoints #=> Hash
     #   resp.endpoints["NonEmptyMaxLength64String"] #=> String
     #   resp.bucket_account_id #=> String
+    #   resp.data_source_id #=> String
+    #   resp.data_source_type #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/GetAccessPoint AWS API Documentation
     #
@@ -3513,10 +3648,6 @@ module Aws::S3Control
       req.send_request(options)
     end
 
-    # <note markdown="1"> This operation is not supported by directory buckets.
-    #
-    #  </note>
-    #
     # Returns the access point policy associated with the specified access
     # point.
     #
@@ -3701,6 +3832,51 @@ module Aws::S3Control
     # @param [Hash] params ({})
     def get_access_point_policy_status_for_object_lambda(params = {}, options = {})
       req = build_request(:get_access_point_policy_status_for_object_lambda, params)
+      req.send_request(options)
+    end
+
+    # Returns the access point scope for a directory bucket.
+    #
+    # To use this operation, you must have the permission to perform the
+    # `s3express:GetAccessPointScope` action.
+    #
+    # For information about REST API errors, see [REST error responses][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AmazonS3/latest/API/ErrorResponses.html#RESTErrorResponses
+    #
+    # @option params [required, String] :account_id
+    #   The Amazon Web Services account ID that owns the access point with the
+    #   scope that you want to retrieve.
+    #
+    # @option params [required, String] :name
+    #   The name of the access point with the scope you want to retrieve.
+    #
+    # @return [Types::GetAccessPointScopeResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetAccessPointScopeResult#scope #scope} => Types::Scope
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_access_point_scope({
+    #     account_id: "AccountId", # required
+    #     name: "AccessPointName", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.scope.prefixes #=> Array
+    #   resp.scope.prefixes[0] #=> String
+    #   resp.scope.permissions #=> Array
+    #   resp.scope.permissions[0] #=> String, one of "GetObject", "GetObjectAttributes", "ListMultipartUploadParts", "ListBucket", "ListBucketMultipartUploads", "PutObject", "DeleteObject", "AbortMultipartUpload"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/GetAccessPointScope AWS API Documentation
+    #
+    # @overload get_access_point_scope(params = {})
+    # @param [Hash] params ({})
+    def get_access_point_scope(params = {}, options = {})
+      req = build_request(:get_access_point_scope, params)
       req.send_request(options)
     end
 
@@ -4371,6 +4547,11 @@ module Aws::S3Control
     #   object. Do not pass this value if the target data is a bucket or a
     #   bucket and a prefix.
     #
+    # @option params [String] :audit_context
+    #   The context to identify the job or query associated with the
+    #   credential request. This information will be displayed in CloudTrail
+    #   log in your account.
+    #
     # @return [Types::GetDataAccessResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::GetDataAccessResult#credentials #credentials} => Types::Credentials
@@ -4386,6 +4567,7 @@ module Aws::S3Control
     #     duration_seconds: 1,
     #     privilege: "Minimal", # accepts Minimal, Default
     #     target_type: "Object", # accepts Object
+    #     audit_context: "AuditContext",
     #   })
     #
     # @example Response structure
@@ -4737,8 +4919,9 @@ module Aws::S3Control
     #  </note>
     #
     # Retrieves the `PublicAccessBlock` configuration for an Amazon Web
-    # Services account. For more information, see [ Using Amazon S3 block
-    # public access][1].
+    # Services account. This operation returns the effective account-level
+    # configuration, which may inherit from organization-level policies. For
+    # more information, see [ Using Amazon S3 block public access][1].
     #
     # Related actions include:
     #
@@ -4834,9 +5017,11 @@ module Aws::S3Control
     #   resp.storage_lens_configuration.account_level.bucket_level.advanced_cost_optimization_metrics.is_enabled #=> Boolean
     #   resp.storage_lens_configuration.account_level.bucket_level.advanced_data_protection_metrics.is_enabled #=> Boolean
     #   resp.storage_lens_configuration.account_level.bucket_level.detailed_status_codes_metrics.is_enabled #=> Boolean
+    #   resp.storage_lens_configuration.account_level.bucket_level.advanced_performance_metrics.is_enabled #=> Boolean
     #   resp.storage_lens_configuration.account_level.advanced_cost_optimization_metrics.is_enabled #=> Boolean
     #   resp.storage_lens_configuration.account_level.advanced_data_protection_metrics.is_enabled #=> Boolean
     #   resp.storage_lens_configuration.account_level.detailed_status_codes_metrics.is_enabled #=> Boolean
+    #   resp.storage_lens_configuration.account_level.advanced_performance_metrics.is_enabled #=> Boolean
     #   resp.storage_lens_configuration.account_level.storage_lens_group_level.selection_criteria.include #=> Array
     #   resp.storage_lens_configuration.account_level.storage_lens_group_level.selection_criteria.include[0] #=> String
     #   resp.storage_lens_configuration.account_level.storage_lens_group_level.selection_criteria.exclude #=> Array
@@ -4856,9 +5041,20 @@ module Aws::S3Control
     #   resp.storage_lens_configuration.data_export.s3_bucket_destination.prefix #=> String
     #   resp.storage_lens_configuration.data_export.s3_bucket_destination.encryption.ssekms.key_id #=> String
     #   resp.storage_lens_configuration.data_export.cloud_watch_metrics.is_enabled #=> Boolean
+    #   resp.storage_lens_configuration.data_export.storage_lens_table_destination.is_enabled #=> Boolean
+    #   resp.storage_lens_configuration.data_export.storage_lens_table_destination.encryption.ssekms.key_id #=> String
+    #   resp.storage_lens_configuration.expanded_prefixes_data_export.s3_bucket_destination.format #=> String, one of "CSV", "Parquet"
+    #   resp.storage_lens_configuration.expanded_prefixes_data_export.s3_bucket_destination.output_schema_version #=> String, one of "V_1"
+    #   resp.storage_lens_configuration.expanded_prefixes_data_export.s3_bucket_destination.account_id #=> String
+    #   resp.storage_lens_configuration.expanded_prefixes_data_export.s3_bucket_destination.arn #=> String
+    #   resp.storage_lens_configuration.expanded_prefixes_data_export.s3_bucket_destination.prefix #=> String
+    #   resp.storage_lens_configuration.expanded_prefixes_data_export.s3_bucket_destination.encryption.ssekms.key_id #=> String
+    #   resp.storage_lens_configuration.expanded_prefixes_data_export.storage_lens_table_destination.is_enabled #=> Boolean
+    #   resp.storage_lens_configuration.expanded_prefixes_data_export.storage_lens_table_destination.encryption.ssekms.key_id #=> String
     #   resp.storage_lens_configuration.is_enabled #=> Boolean
     #   resp.storage_lens_configuration.aws_org.arn #=> String
     #   resp.storage_lens_configuration.storage_lens_arn #=> String
+    #   resp.storage_lens_configuration.prefix_delimiter #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/GetStorageLensConfiguration AWS API Documentation
     #
@@ -5242,12 +5438,14 @@ module Aws::S3Control
     #
     #  </note>
     #
-    # Returns a list of the access points that are owned by the current
-    # account that's associated with the specified bucket. You can retrieve
-    # up to 1000 access points per call. If the specified bucket has more
-    # than 1,000 access points (or the number specified in `maxResults`,
-    # whichever is less), the response will include a continuation token
-    # that you can use to list the additional access points.
+    # Returns a list of the access points. You can retrieve up to 1,000
+    # access points per call. If the call returns more than 1,000 access
+    # points (or the number specified in `maxResults`, whichever is less),
+    # the response will include a continuation token that you can use to
+    # list the additional access points.
+    #
+    # Returns only access points attached to S3 buckets by default. To
+    # return all access points specify `DataSourceType` as `ALL`.
     #
     #
     #
@@ -5307,6 +5505,14 @@ module Aws::S3Control
     #   `NextToken` field that you can use to retrieve the next page of access
     #   points.
     #
+    # @option params [String] :data_source_id
+    #   The unique identifier for the data source of the access point.
+    #
+    # @option params [String] :data_source_type
+    #   The type of the data source that the access point is attached to.
+    #   Returns only access points attached to S3 buckets by default. To
+    #   return all access points specify `DataSourceType` as `ALL`.
+    #
     # @return [Types::ListAccessPointsResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::ListAccessPointsResult#access_point_list #access_point_list} => Array&lt;Types::AccessPoint&gt;
@@ -5321,6 +5527,8 @@ module Aws::S3Control
     #     bucket: "BucketName",
     #     next_token: "NonEmptyMaxLength1024String",
     #     max_results: 1,
+    #     data_source_id: "DataSourceId",
+    #     data_source_type: "DataSourceType",
     #   })
     #
     # @example Response structure
@@ -5333,6 +5541,8 @@ module Aws::S3Control
     #   resp.access_point_list[0].access_point_arn #=> String
     #   resp.access_point_list[0].alias #=> String
     #   resp.access_point_list[0].bucket_account_id #=> String
+    #   resp.access_point_list[0].data_source_id #=> String
+    #   resp.access_point_list[0].data_source_type #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/ListAccessPoints AWS API Documentation
@@ -5341,6 +5551,83 @@ module Aws::S3Control
     # @param [Hash] params ({})
     def list_access_points(params = {}, options = {})
       req = build_request(:list_access_points, params)
+      req.send_request(options)
+    end
+
+    # Returns a list of the access points that are owned by the Amazon Web
+    # Services account and that are associated with the specified directory
+    # bucket.
+    #
+    # To list access points for general purpose buckets, see
+    # [ListAccesspoints][1].
+    #
+    # To use this operation, you must have the permission to perform the
+    # `s3express:ListAccessPointsForDirectoryBuckets` action.
+    #
+    # For information about REST API errors, see [REST error responses][2].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AmazonS3/latest/API/API_control_ListAccessPoints.html
+    # [2]: https://docs.aws.amazon.com/AmazonS3/latest/API/ErrorResponses.html#RESTErrorResponses
+    #
+    # @option params [required, String] :account_id
+    #   The Amazon Web Services account ID that owns the access points.
+    #
+    # @option params [String] :directory_bucket
+    #   The name of the directory bucket associated with the access points you
+    #   want to list.
+    #
+    # @option params [String] :next_token
+    #   If `NextToken` is returned, there are more access points available
+    #   than requested in the `maxResults` value. The value of `NextToken` is
+    #   a unique pagination token for each page. Make the call again using the
+    #   returned token to retrieve the next page. Keep all other arguments
+    #   unchanged. Each pagination token expires after 24 hours.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of access points that you would like returned in
+    #   the `ListAccessPointsForDirectoryBuckets` response. If the directory
+    #   bucket is associated with more than this number of access points, the
+    #   results include the pagination token `NextToken`. Make another call
+    #   using the `NextToken` to retrieve more results.
+    #
+    # @return [Types::ListAccessPointsForDirectoryBucketsResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListAccessPointsForDirectoryBucketsResult#access_point_list #access_point_list} => Array&lt;Types::AccessPoint&gt;
+    #   * {Types::ListAccessPointsForDirectoryBucketsResult#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_access_points_for_directory_buckets({
+    #     account_id: "AccountId", # required
+    #     directory_bucket: "BucketName",
+    #     next_token: "NonEmptyMaxLength1024String",
+    #     max_results: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.access_point_list #=> Array
+    #   resp.access_point_list[0].name #=> String
+    #   resp.access_point_list[0].network_origin #=> String, one of "Internet", "VPC"
+    #   resp.access_point_list[0].vpc_configuration.vpc_id #=> String
+    #   resp.access_point_list[0].bucket #=> String
+    #   resp.access_point_list[0].access_point_arn #=> String
+    #   resp.access_point_list[0].alias #=> String
+    #   resp.access_point_list[0].bucket_account_id #=> String
+    #   resp.access_point_list[0].data_source_id #=> String
+    #   resp.access_point_list[0].data_source_type #=> String
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/ListAccessPointsForDirectoryBuckets AWS API Documentation
+    #
+    # @overload list_access_points_for_directory_buckets(params = {})
+    # @param [Hash] params ({})
+    def list_access_points_for_directory_buckets(params = {}, options = {})
+      req = build_request(:list_access_points_for_directory_buckets, params)
       req.send_request(options)
     end
 
@@ -5573,7 +5860,7 @@ module Aws::S3Control
     #   resp.jobs #=> Array
     #   resp.jobs[0].job_id #=> String
     #   resp.jobs[0].description #=> String
-    #   resp.jobs[0].operation #=> String, one of "LambdaInvoke", "S3PutObjectCopy", "S3PutObjectAcl", "S3PutObjectTagging", "S3DeleteObjectTagging", "S3InitiateRestoreObject", "S3PutObjectLegalHold", "S3PutObjectRetention", "S3ReplicateObject"
+    #   resp.jobs[0].operation #=> String, one of "LambdaInvoke", "S3PutObjectCopy", "S3PutObjectAcl", "S3PutObjectTagging", "S3DeleteObjectTagging", "S3InitiateRestoreObject", "S3PutObjectLegalHold", "S3PutObjectRetention", "S3ReplicateObject", "S3ComputeObjectChecksum", "S3UpdateObjectEncryption"
     #   resp.jobs[0].priority #=> Integer
     #   resp.jobs[0].status #=> String, one of "Active", "Cancelled", "Cancelling", "Complete", "Completing", "Failed", "Failing", "New", "Paused", "Pausing", "Preparing", "Ready", "Suspended"
     #   resp.jobs[0].creation_time #=> Time
@@ -5854,44 +6141,68 @@ module Aws::S3Control
       req.send_request(options)
     end
 
-    # This operation allows you to list all the Amazon Web Services resource
-    # tags for a specified resource. Each tag is a label consisting of a
-    # user-defined key and value. Tags can help you manage, identify,
-    # organize, search for, and filter resources.
+    # This operation allows you to list all of the tags for a specified
+    # resource. Each tag is a label consisting of a key and value. Tags can
+    # help you organize, track costs for, and control access to resources.
     #
-    # Permissions
+    # <note markdown="1"> This operation is only supported for the following Amazon S3
+    # resources:
     #
-    # : You must have the `s3:ListTagsForResource` permission to use this
-    #   operation.
+    #  * [General purpose buckets][1]
     #
-    # <note markdown="1"> This operation is only supported for [S3 Storage Lens groups][1] and
-    # for [S3 Access Grants][2]. The tagged resource can be an S3 Storage
-    # Lens group or S3 Access Grants instance, registered location, or
-    # grant.
+    # * [Access Points for directory buckets][2]
+    #
+    # * [Access Points for general purpose buckets][3]
+    #
+    # * [Directory buckets][4]
+    #
+    # * [S3 Storage Lens groups][5]
+    #
+    # * [S3 Access Grants instances, registered locations, and grants][6].
     #
     #  </note>
     #
-    # For more information about the required Storage Lens Groups
-    # permissions, see [Setting account permissions to use S3 Storage Lens
-    # groups][3].
+    # Permissions
+    #
+    # : For general purpose buckets, access points for general purpose
+    #   buckets, Storage Lens groups, and S3 Access Grants, you must have
+    #   the `s3:ListTagsForResource` permission to use this operation.
+    #
+    # Directory bucket permissions
+    #
+    # : For directory buckets, you must have the
+    #   `s3express:ListTagsForResource` permission to use this operation.
+    #   For more information about directory buckets policies and
+    #   permissions, see [Identity and Access Management (IAM) for S3
+    #   Express One Zone][7] in the *Amazon S3 User Guide*.
+    #
+    # HTTP Host header syntax
+    #
+    # : <b>Directory buckets </b> - The HTTP Host header syntax is
+    #   `s3express-control.region.amazonaws.com`.
     #
     # For information about S3 Tagging errors, see [List of Amazon S3
-    # Tagging error codes][4].
+    # Tagging error codes][8].
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-lens-groups.html
-    # [2]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-grants-tagging.html
-    # [3]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage_lens_iam_permissions.html#storage_lens_groups_permissions
-    # [4]: https://docs.aws.amazon.com/AmazonS3/latest/API/ErrorResponses.html#S3TaggingErrorCodeList
+    # [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/buckets-tagging.html
+    # [2]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-points-db-tagging.html
+    # [3]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-points-tagging.html
+    # [4]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/directory-buckets-tagging.html
+    # [5]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-lens-groups.html
+    # [6]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-grants-tagging.html
+    # [7]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-express-permissions.html
+    # [8]: https://docs.aws.amazon.com/AmazonS3/latest/API/ErrorResponses.html#S3TaggingErrorCodeList
     #
     # @option params [String] :account_id
     #   The Amazon Web Services account ID of the resource owner.
     #
     # @option params [required, String] :resource_arn
     #   The Amazon Resource Name (ARN) of the S3 resource that you want to
-    #   list the tags for. The tagged resource can be an S3 Storage Lens group
-    #   or S3 Access Grants instance, registered location, or grant.
+    #   list tags for. The tagged resource can be a directory bucket, S3
+    #   Storage Lens group or S3 Access Grants instance, registered location,
+    #   or grant.
     #
     # @return [Types::ListTagsForResourceResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -6027,10 +6338,6 @@ module Aws::S3Control
       req.send_request(options)
     end
 
-    # <note markdown="1"> This operation is not supported by directory buckets.
-    #
-    #  </note>
-    #
     # Associates an access policy with the specified access point. Each
     # access point can have only one policy, so a request made to this API
     # replaces any existing policy associated with the specified access
@@ -6082,11 +6389,14 @@ module Aws::S3Control
     # @option params [required, String] :policy
     #   The policy that you want to apply to the specified access point. For
     #   more information about access point policies, see [Managing data
-    #   access with Amazon S3 access points][1] in the *Amazon S3 User Guide*.
+    #   access with Amazon S3 access points][1] or [Managing access to shared
+    #   datasets in directory buckets with access points][2] in the *Amazon S3
+    #   User Guide*.
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-points.html
+    #   [2]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-points-directory-buckets.html
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
@@ -6154,6 +6464,57 @@ module Aws::S3Control
     # @param [Hash] params ({})
     def put_access_point_policy_for_object_lambda(params = {}, options = {})
       req = build_request(:put_access_point_policy_for_object_lambda, params)
+      req.send_request(options)
+    end
+
+    # Creates or replaces the access point scope for a directory bucket. You
+    # can use the access point scope to restrict access to specific
+    # prefixes, API operations, or a combination of both.
+    #
+    # <note markdown="1"> You can specify any amount of prefixes, but the total length of
+    # characters of all prefixes must be less than 256 bytes in size.
+    #
+    #  </note>
+    #
+    # To use this operation, you must have the permission to perform the
+    # `s3express:PutAccessPointScope` action.
+    #
+    # For information about REST API errors, see [REST error responses][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AmazonS3/latest/API/ErrorResponses.html#RESTErrorResponses
+    #
+    # @option params [required, String] :account_id
+    #   The Amazon Web Services account ID that owns the access point with
+    #   scope that you want to create or replace.
+    #
+    # @option params [required, String] :name
+    #   The name of the access point with the scope that you want to create or
+    #   replace.
+    #
+    # @option params [required, Types::Scope] :scope
+    #   Object prefixes, API operations, or a combination of both.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.put_access_point_scope({
+    #     account_id: "AccountId", # required
+    #     name: "AccessPointName", # required
+    #     scope: { # required
+    #       prefixes: ["Prefix"],
+    #       permissions: ["GetObject"], # accepts GetObject, GetObjectAttributes, ListMultipartUploadParts, ListBucket, ListBucketMultipartUploads, PutObject, DeleteObject, AbortMultipartUpload
+    #     },
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/PutAccessPointScope AWS API Documentation
+    #
+    # @overload put_access_point_scope(params = {})
+    # @param [Hash] params ({})
+    def put_access_point_scope(params = {}, options = {})
+      req = build_request(:put_access_point_scope, params)
       req.send_request(options)
     end
 
@@ -6987,7 +7348,12 @@ module Aws::S3Control
     #  </note>
     #
     # Creates or modifies the `PublicAccessBlock` configuration for an
-    # Amazon Web Services account. For this operation, users must have the
+    # Amazon Web Services account. This operation may be restricted when the
+    # account is managed by organization-level Block Public Access policies.
+    # You might get an Access Denied (403) error when the account is managed
+    # by organization-level Block Public Access policies. Organization-level
+    # policies override account-level settings, preventing direct
+    # account-level modifications. For this operation, users must have the
     # `s3:PutAccountPublicAccessBlock` permission. For more information, see
     # [ Using Amazon S3 block public access][1].
     #
@@ -7109,6 +7475,9 @@ module Aws::S3Control
     #           detailed_status_codes_metrics: {
     #             is_enabled: false,
     #           },
+    #           advanced_performance_metrics: {
+    #             is_enabled: false,
+    #           },
     #         },
     #         advanced_cost_optimization_metrics: {
     #           is_enabled: false,
@@ -7117,6 +7486,9 @@ module Aws::S3Control
     #           is_enabled: false,
     #         },
     #         detailed_status_codes_metrics: {
+    #           is_enabled: false,
+    #         },
+    #         advanced_performance_metrics: {
     #           is_enabled: false,
     #         },
     #         storage_lens_group_level: {
@@ -7152,12 +7524,49 @@ module Aws::S3Control
     #         cloud_watch_metrics: {
     #           is_enabled: false, # required
     #         },
+    #         storage_lens_table_destination: {
+    #           is_enabled: false, # required
+    #           encryption: {
+    #             sses3: {
+    #             },
+    #             ssekms: {
+    #               key_id: "SSEKMSKeyId", # required
+    #             },
+    #           },
+    #         },
+    #       },
+    #       expanded_prefixes_data_export: {
+    #         s3_bucket_destination: {
+    #           format: "CSV", # required, accepts CSV, Parquet
+    #           output_schema_version: "V_1", # required, accepts V_1
+    #           account_id: "AccountId", # required
+    #           arn: "S3BucketArnString", # required
+    #           prefix: "Prefix",
+    #           encryption: {
+    #             sses3: {
+    #             },
+    #             ssekms: {
+    #               key_id: "SSEKMSKeyId", # required
+    #             },
+    #           },
+    #         },
+    #         storage_lens_table_destination: {
+    #           is_enabled: false, # required
+    #           encryption: {
+    #             sses3: {
+    #             },
+    #             ssekms: {
+    #               key_id: "SSEKMSKeyId", # required
+    #             },
+    #           },
+    #         },
     #       },
     #       is_enabled: false, # required
     #       aws_org: {
     #         arn: "AwsOrgArn", # required
     #       },
     #       storage_lens_arn: "StorageLensArn",
+    #       prefix_delimiter: "StorageLensPrefixLevelDelimiter",
     #     },
     #     tags: [
     #       {
@@ -7308,45 +7717,70 @@ module Aws::S3Control
       req.send_request(options)
     end
 
-    # Creates a new Amazon Web Services resource tag or updates an existing
-    # resource tag. Each tag is a label consisting of a user-defined key and
-    # value. Tags can help you manage, identify, organize, search for, and
-    # filter resources. You can add up to 50 Amazon Web Services resource
-    # tags for each S3 resource.
+    # Creates a new user-defined tag or updates an existing tag. Each tag is
+    # a label consisting of a key and value that is applied to your
+    # resource. Tags can help you organize, track costs for, and control
+    # access to your resources. You can add up to 50 Amazon Web Services
+    # resource tags for each S3 resource.
     #
-    # <note markdown="1"> This operation is only supported for [S3 Storage Lens groups][1] and
-    # for [S3 Access Grants][2]. The tagged resource can be an S3 Storage
-    # Lens group or S3 Access Grants instance, registered location, or
-    # grant.
+    # <note markdown="1"> This operation is only supported for the following Amazon S3 resource:
+    #
+    #  * [General purpose buckets][1]
+    #
+    # * [Access Points for directory buckets][2]
+    #
+    # * [Access Points for general purpose buckets][3]
+    #
+    # * [Directory buckets][4]
+    #
+    # * [S3 Storage Lens groups][5]
+    #
+    # * [S3 Access Grants instances, registered locations, or grants][6].
     #
     #  </note>
     #
     # Permissions
     #
-    # : You must have the `s3:TagResource` permission to use this operation.
+    # : For general purpose buckets, access points for general purpose
+    #   buckets, Storage Lens groups, and S3 Access Grants, you must have
+    #   the `s3:TagResource` permission to use this operation.
     #
-    # For more information about the required Storage Lens Groups
-    # permissions, see [Setting account permissions to use S3 Storage Lens
-    # groups][3].
+    # Directory bucket permissions
+    #
+    # : For directory buckets, you must have the `s3express:TagResource`
+    #   permission to use this operation. For more information about
+    #   directory buckets policies and permissions, see [Identity and Access
+    #   Management (IAM) for S3 Express One Zone][7] in the *Amazon S3 User
+    #   Guide*.
+    #
+    # HTTP Host header syntax
+    #
+    # : <b>Directory buckets </b> - The HTTP Host header syntax is
+    #   `s3express-control.region.amazonaws.com`.
     #
     # For information about S3 Tagging errors, see [List of Amazon S3
-    # Tagging error codes][4].
+    # Tagging error codes][8].
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-lens-groups.html
-    # [2]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-grants-tagging.html
-    # [3]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage_lens_iam_permissions.html#storage_lens_groups_permissions
-    # [4]: https://docs.aws.amazon.com/AmazonS3/latest/API/ErrorResponses.html#S3TaggingErrorCodeList
+    # [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/buckets-tagging.html
+    # [2]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-points-db-tagging.html
+    # [3]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-points-tagging.html
+    # [4]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/directory-buckets-tagging.html
+    # [5]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-lens-groups.html
+    # [6]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-grants-tagging.html
+    # [7]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-express-permissions.html
+    # [8]: https://docs.aws.amazon.com/AmazonS3/latest/API/ErrorResponses.html#S3TaggingErrorCodeList
     #
     # @option params [String] :account_id
     #   The Amazon Web Services account ID that created the S3 resource that
     #   you're trying to add tags to or the requester's account ID.
     #
     # @option params [required, String] :resource_arn
-    #   The Amazon Resource Name (ARN) of the S3 resource that you're trying
-    #   to add tags to. The tagged resource can be an S3 Storage Lens group or
-    #   S3 Access Grants instance, registered location, or grant.
+    #   The Amazon Resource Name (ARN) of the S3 resource that you're
+    #   applying tags to. The tagged resource can be a directory bucket, S3
+    #   Storage Lens group or S3 Access Grants instance, registered location,
+    #   or grant.
     #
     # @option params [required, Array<Types::Tag>] :tags
     #   The Amazon Web Services resource tags that you want to add to the
@@ -7376,44 +7810,68 @@ module Aws::S3Control
       req.send_request(options)
     end
 
-    # This operation removes the specified Amazon Web Services resource tags
-    # from an S3 resource. Each tag is a label consisting of a user-defined
-    # key and value. Tags can help you manage, identify, organize, search
-    # for, and filter resources.
+    # This operation removes the specified user-defined tags from an S3
+    # resource. You can pass one or more tag keys.
     #
-    # <note markdown="1"> This operation is only supported for [S3 Storage Lens groups][1] and
-    # for [S3 Access Grants][2]. The tagged resource can be an S3 Storage
-    # Lens group or S3 Access Grants instance, registered location, or
-    # grant.
+    # <note markdown="1"> This operation is only supported for the following Amazon S3
+    # resources:
+    #
+    #  * [General purpose buckets][1]
+    #
+    # * [Access Points for directory buckets][2]
+    #
+    # * [Access Points for general purpose buckets][3]
+    #
+    # * [Directory buckets][4]
+    #
+    # * [S3 Storage Lens groups][5]
+    #
+    # * [S3 Access Grants instances, registered locations, and grants][6].
     #
     #  </note>
     #
     # Permissions
     #
-    # : You must have the `s3:UntagResource` permission to use this
-    #   operation.
+    # : For general purpose buckets, access points for general purpose
+    #   buckets, Storage Lens groups, and S3 Access Grants, you must have
+    #   the `s3:UntagResource` permission to use this operation.
     #
-    # For more information about the required Storage Lens Groups
-    # permissions, see [Setting account permissions to use S3 Storage Lens
-    # groups][3].
+    # Directory bucket permissions
+    #
+    # : For directory buckets, you must have the `s3express:UntagResource`
+    #   permission to use this operation. For more information about
+    #   directory buckets policies and permissions, see [Identity and Access
+    #   Management (IAM) for S3 Express One Zone][7] in the *Amazon S3 User
+    #   Guide*.
+    #
+    # HTTP Host header syntax
+    #
+    # : <b>Directory buckets </b> - The HTTP Host header syntax is
+    #   `s3express-control.region.amazonaws.com`.
     #
     # For information about S3 Tagging errors, see [List of Amazon S3
-    # Tagging error codes][4].
+    # Tagging error codes][8].
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-lens-groups.html
-    # [2]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-grants-tagging.html
-    # [3]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage_lens_iam_permissions.html#storage_lens_groups_permissions
-    # [4]: https://docs.aws.amazon.com/AmazonS3/latest/API/ErrorResponses.html#S3TaggingErrorCodeList
+    # [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/buckets-tagging.html
+    # [2]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-points-db-tagging.html
+    # [3]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-points-tagging.html
+    # [4]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/directory-buckets-tagging.html
+    # [5]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-lens-groups.html
+    # [6]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-grants-tagging.html
+    # [7]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-express-permissions.html
+    # [8]: https://docs.aws.amazon.com/AmazonS3/latest/API/ErrorResponses.html#S3TaggingErrorCodeList
     #
     # @option params [String] :account_id
     #   The Amazon Web Services account ID that owns the resource that you're
     #   trying to remove the tags from.
     #
     # @option params [required, String] :resource_arn
-    #   The Amazon Resource Name (ARN) of the S3 resource that you're trying
-    #   to remove the tags from.
+    #   The Amazon Resource Name (ARN) of the S3 resource that you're
+    #   removing tags from. The tagged resource can be a directory bucket, S3
+    #   Storage Lens group or S3 Access Grants instance, registered location,
+    #   or grant.
     #
     # @option params [required, Array<String>] :tag_keys
     #   The array of tag key-value pairs that you're trying to remove from of
@@ -7760,7 +8218,7 @@ module Aws::S3Control
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-s3control'
-      context[:gem_version] = '1.104.0'
+      context[:gem_version] = '1.134.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

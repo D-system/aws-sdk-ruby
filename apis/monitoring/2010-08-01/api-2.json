@@ -2,18 +2,52 @@
   "version":"2.0",
   "metadata":{
     "apiVersion":"2010-08-01",
+    "awsQueryCompatible":{},
     "endpointPrefix":"monitoring",
-    "protocol":"query",
-    "protocols":["query"],
+    "jsonVersion":"1.0",
+    "protocol":"smithy-rpc-v2-cbor",
+    "protocols":[
+      "smithy-rpc-v2-cbor",
+      "json",
+      "query"
+    ],
     "serviceAbbreviation":"CloudWatch",
     "serviceFullName":"Amazon CloudWatch",
     "serviceId":"CloudWatch",
     "signatureVersion":"v4",
+    "targetPrefix":"GraniteServiceVersion20100801",
     "uid":"monitoring-2010-08-01",
     "xmlNamespace":"http://monitoring.amazonaws.com/doc/2010-08-01/",
     "auth":["aws.auth#sigv4"]
   },
   "operations":{
+    "AssociateDatasetKmsKey":{
+      "name":"AssociateDatasetKmsKey",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"AssociateDatasetKmsKeyInput"},
+      "output":{
+        "shape":"AssociateDatasetKmsKeyOutput",
+        "resultWrapper":"AssociateDatasetKmsKeyResult"
+      },
+      "errors":[
+        {"shape":"KmsAccessDeniedException"},
+        {"shape":"KmsKeyNotFoundException"},
+        {"shape":"ConflictException"},
+        {"shape":"KmsKeyDisabledException"},
+        {"shape":"ResourceNotFoundException"}
+      ]
+    },
+    "DeleteAlarmMuteRule":{
+      "name":"DeleteAlarmMuteRule",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DeleteAlarmMuteRuleInput"}
+    },
     "DeleteAlarms":{
       "name":"DeleteAlarms",
       "http":{
@@ -22,7 +56,8 @@
       },
       "input":{"shape":"DeleteAlarmsInput"},
       "errors":[
-        {"shape":"ResourceNotFound"}
+        {"shape":"ResourceNotFound"},
+        {"shape":"ResourceConflict"}
       ]
     },
     "DeleteAnomalyDetector":{
@@ -57,8 +92,8 @@
       },
       "errors":[
         {"shape":"InvalidParameterValueException"},
-        {"shape":"DashboardNotFoundError"},
-        {"shape":"InternalServiceFault"}
+        {"shape":"InternalServiceFault"},
+        {"shape":"ConflictException"}
       ]
     },
     "DeleteInsightRules":{
@@ -92,6 +127,22 @@
         {"shape":"InternalServiceFault"},
         {"shape":"InvalidParameterValueException"},
         {"shape":"MissingRequiredParameterException"}
+      ]
+    },
+    "DescribeAlarmContributors":{
+      "name":"DescribeAlarmContributors",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DescribeAlarmContributorsInput"},
+      "output":{
+        "shape":"DescribeAlarmContributorsOutput",
+        "resultWrapper":"DescribeAlarmContributorsResult"
+      },
+      "errors":[
+        {"shape":"InvalidNextToken"},
+        {"shape":"ResourceNotFoundException"}
       ]
     },
     "DescribeAlarmHistory":{
@@ -193,6 +244,23 @@
         {"shape":"MissingRequiredParameterException"}
       ]
     },
+    "DisassociateDatasetKmsKey":{
+      "name":"DisassociateDatasetKmsKey",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DisassociateDatasetKmsKeyInput"},
+      "output":{
+        "shape":"DisassociateDatasetKmsKeyOutput",
+        "resultWrapper":"DisassociateDatasetKmsKeyResult"
+      },
+      "errors":[
+        {"shape":"ConflictException"},
+        {"shape":"ResourceNotFoundException"}
+      ],
+      "idempotent":true
+    },
     "EnableAlarmActions":{
       "name":"EnableAlarmActions",
       "http":{
@@ -218,6 +286,21 @@
         {"shape":"LimitExceededException"}
       ]
     },
+    "GetAlarmMuteRule":{
+      "name":"GetAlarmMuteRule",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"GetAlarmMuteRuleInput"},
+      "output":{
+        "shape":"GetAlarmMuteRuleOutput",
+        "resultWrapper":"GetAlarmMuteRuleResult"
+      },
+      "errors":[
+        {"shape":"ResourceNotFoundException"}
+      ]
+    },
     "GetDashboard":{
       "name":"GetDashboard",
       "http":{
@@ -234,6 +317,22 @@
         {"shape":"DashboardNotFoundError"},
         {"shape":"InternalServiceFault"}
       ]
+    },
+    "GetDataset":{
+      "name":"GetDataset",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"GetDatasetInput"},
+      "output":{
+        "shape":"GetDatasetOutput",
+        "resultWrapper":"GetDatasetResult"
+      },
+      "errors":[
+        {"shape":"ResourceNotFoundException"}
+      ],
+      "readonly":true
     },
     "GetInsightRuleReport":{
       "name":"GetInsightRuleReport",
@@ -315,6 +414,34 @@
         "shape":"GetMetricWidgetImageOutput",
         "resultWrapper":"GetMetricWidgetImageResult"
       }
+    },
+    "GetOTelEnrichment":{
+      "name":"GetOTelEnrichment",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"GetOTelEnrichmentInput"},
+      "output":{
+        "shape":"GetOTelEnrichmentOutput",
+        "resultWrapper":"GetOTelEnrichmentResult"
+      }
+    },
+    "ListAlarmMuteRules":{
+      "name":"ListAlarmMuteRules",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ListAlarmMuteRulesInput"},
+      "output":{
+        "shape":"ListAlarmMuteRulesOutput",
+        "resultWrapper":"ListAlarmMuteRulesResult"
+      },
+      "errors":[
+        {"shape":"InvalidNextToken"},
+        {"shape":"ResourceNotFoundException"}
+      ]
     },
     "ListDashboards":{
       "name":"ListDashboards",
@@ -400,6 +527,17 @@
         {"shape":"InternalServiceFault"}
       ]
     },
+    "PutAlarmMuteRule":{
+      "name":"PutAlarmMuteRule",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"PutAlarmMuteRuleInput"},
+      "errors":[
+        {"shape":"LimitExceededFault"}
+      ]
+    },
     "PutAnomalyDetector":{
       "name":"PutAnomalyDetector",
       "http":{
@@ -443,7 +581,8 @@
       },
       "errors":[
         {"shape":"DashboardInvalidInputError"},
-        {"shape":"InternalServiceFault"}
+        {"shape":"InternalServiceFault"},
+        {"shape":"ConflictException"}
       ]
     },
     "PutInsightRule":{
@@ -461,6 +600,18 @@
         {"shape":"InvalidParameterValueException"},
         {"shape":"MissingRequiredParameterException"},
         {"shape":"LimitExceededException"}
+      ]
+    },
+    "PutLogAlarm":{
+      "name":"PutLogAlarm",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"PutLogAlarmInput"},
+      "errors":[
+        {"shape":"LimitExceededFault"},
+        {"shape":"ResourceConflict"}
       ]
     },
     "PutManagedInsightRules":{
@@ -553,6 +704,18 @@
         {"shape":"MissingRequiredParameterException"}
       ]
     },
+    "StartOTelEnrichment":{
+      "name":"StartOTelEnrichment",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"StartOTelEnrichmentInput"},
+      "output":{
+        "shape":"StartOTelEnrichmentOutput",
+        "resultWrapper":"StartOTelEnrichmentResult"
+      }
+    },
     "StopMetricStreams":{
       "name":"StopMetricStreams",
       "http":{
@@ -570,6 +733,18 @@
         {"shape":"MissingRequiredParameterException"}
       ]
     },
+    "StopOTelEnrichment":{
+      "name":"StopOTelEnrichment",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"StopOTelEnrichmentInput"},
+      "output":{
+        "shape":"StopOTelEnrichmentOutput",
+        "resultWrapper":"StopOTelEnrichmentResult"
+      }
+    },
     "TagResource":{
       "name":"TagResource",
       "http":{
@@ -585,7 +760,8 @@
         {"shape":"InvalidParameterValueException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"ConcurrentModificationException"},
-        {"shape":"InternalServiceFault"}
+        {"shape":"InternalServiceFault"},
+        {"shape":"ConflictException"}
       ]
     },
     "UntagResource":{
@@ -603,7 +779,8 @@
         {"shape":"InvalidParameterValueException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"ConcurrentModificationException"},
-        {"shape":"InternalServiceFault"}
+        {"shape":"InternalServiceFault"},
+        {"shape":"ConflictException"}
       ]
     }
   },
@@ -613,6 +790,8 @@
       "max":255,
       "min":1
     },
+    "ActionLogLineCount":{"type":"integer"},
+    "ActionLogLineRoleArn":{"type":"string"},
     "ActionPrefix":{
       "type":"string",
       "max":1024,
@@ -632,10 +811,39 @@
       "max":1024,
       "min":0
     },
+    "AggregationExpression":{
+      "type":"string",
+      "max":2048,
+      "min":1
+    },
     "AlarmArn":{
       "type":"string",
       "max":1600,
       "min":1
+    },
+    "AlarmContributor":{
+      "type":"structure",
+      "required":[
+        "ContributorId",
+        "ContributorAttributes",
+        "StateReason"
+      ],
+      "members":{
+        "ContributorId":{"shape":"ContributorId"},
+        "ContributorAttributes":{"shape":"ContributorAttributes"},
+        "StateReason":{"shape":"StateReason"},
+        "StateTransitionedTimestamp":{"shape":"Timestamp"}
+      },
+      "xmlOrder":[
+        "ContributorId",
+        "ContributorAttributes",
+        "StateReason",
+        "StateTransitionedTimestamp"
+      ]
+    },
+    "AlarmContributors":{
+      "type":"list",
+      "member":{"shape":"AlarmContributor"}
     },
     "AlarmDescription":{
       "type":"string",
@@ -646,16 +854,44 @@
       "type":"structure",
       "members":{
         "AlarmName":{"shape":"AlarmName"},
+        "AlarmContributorId":{"shape":"ContributorId"},
         "AlarmType":{"shape":"AlarmType"},
         "Timestamp":{"shape":"Timestamp"},
         "HistoryItemType":{"shape":"HistoryItemType"},
         "HistorySummary":{"shape":"HistorySummary"},
-        "HistoryData":{"shape":"HistoryData"}
+        "HistoryData":{"shape":"HistoryData"},
+        "AlarmContributorAttributes":{"shape":"ContributorAttributes"}
       }
     },
     "AlarmHistoryItems":{
       "type":"list",
       "member":{"shape":"AlarmHistoryItem"}
+    },
+    "AlarmMuteRuleStatus":{
+      "type":"string",
+      "enum":[
+        "SCHEDULED",
+        "ACTIVE",
+        "EXPIRED"
+      ]
+    },
+    "AlarmMuteRuleStatuses":{
+      "type":"list",
+      "member":{"shape":"AlarmMuteRuleStatus"}
+    },
+    "AlarmMuteRuleSummaries":{
+      "type":"list",
+      "member":{"shape":"AlarmMuteRuleSummary"}
+    },
+    "AlarmMuteRuleSummary":{
+      "type":"structure",
+      "members":{
+        "AlarmMuteRuleArn":{"shape":"Arn"},
+        "ExpireDate":{"shape":"Timestamp"},
+        "Status":{"shape":"AlarmMuteRuleStatus"},
+        "MuteType":{"shape":"MuteType"},
+        "LastUpdatedTimestamp":{"shape":"Timestamp"}
+      }
     },
     "AlarmName":{
       "type":"string",
@@ -672,6 +908,15 @@
       "member":{"shape":"AlarmName"},
       "max":100
     },
+    "AlarmPromQLCriteria":{
+      "type":"structure",
+      "required":["Query"],
+      "members":{
+        "Query":{"shape":"Query"},
+        "PendingPeriod":{"shape":"PendingPeriod"},
+        "RecoveryPeriod":{"shape":"RecoveryPeriod"}
+      }
+    },
     "AlarmRule":{
       "type":"string",
       "max":10240,
@@ -681,7 +926,8 @@
       "type":"string",
       "enum":[
         "CompositeAlarm",
-        "MetricAlarm"
+        "MetricAlarm",
+        "LogAlarm"
       ]
     },
     "AlarmTypes":{
@@ -696,6 +942,7 @@
     "AnomalyDetector":{
       "type":"structure",
       "members":{
+        "AnomalyDetectorId":{"shape":"AnomalyDetectorId"},
         "Namespace":{
           "shape":"Namespace",
           "deprecated":true,
@@ -734,6 +981,17 @@
       "type":"list",
       "member":{"shape":"Range"}
     },
+    "AnomalyDetectorId":{
+      "type":"string",
+      "max":128,
+      "min":1,
+      "pattern":"[A-Za-z0-9_./:%()+-]+"
+    },
+    "AnomalyDetectorIds":{
+      "type":"list",
+      "member":{"shape":"AnomalyDetectorId"},
+      "max":50
+    },
     "AnomalyDetectorMetricStat":{
       "type":"string",
       "max":50,
@@ -767,6 +1025,36 @@
     "AnomalyDetectors":{
       "type":"list",
       "member":{"shape":"AnomalyDetector"}
+    },
+    "Arn":{
+      "type":"string",
+      "max":1600,
+      "min":1
+    },
+    "AssociateDatasetKmsKeyInput":{
+      "type":"structure",
+      "required":[
+        "DatasetIdentifier",
+        "KmsKeyArn"
+      ],
+      "members":{
+        "DatasetIdentifier":{"shape":"DatasetIdentifier"},
+        "KmsKeyArn":{"shape":"KmsKeyArn"}
+      }
+    },
+    "AssociateDatasetKmsKeyOutput":{
+      "type":"structure",
+      "members":{}
+    },
+    "AttributeName":{
+      "type":"string",
+      "max":255,
+      "min":1
+    },
+    "AttributeValue":{
+      "type":"string",
+      "max":1024,
+      "min":1
     },
     "AwsQueryErrorMessage":{"type":"string"},
     "BatchFailures":{
@@ -836,14 +1124,33 @@
     },
     "ConcurrentModificationException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"ConcurrentModificationException",
         "httpStatusCode":429,
         "senderFault":true
       },
       "exception":true
+    },
+    "ConflictException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"ErrorMessage"}
+      },
+      "error":{"httpStatusCode":409},
+      "exception":true
+    },
+    "ContributorAttributes":{
+      "type":"map",
+      "key":{"shape":"AttributeName"},
+      "value":{"shape":"AttributeValue"},
+      "max":150,
+      "min":0
+    },
+    "ContributorId":{
+      "type":"string",
+      "max":16,
+      "min":1
     },
     "Counts":{
       "type":"list",
@@ -949,6 +1256,31 @@
       "type":"integer",
       "min":1
     },
+    "DatasetArn":{
+      "type":"string",
+      "max":2048,
+      "min":1,
+      "pattern":"arn:[a-zA-Z0-9-]+:cloudwatch:[a-zA-Z0-9-]*:\\d{12}:dataset/default"
+    },
+    "DatasetId":{
+      "type":"string",
+      "max":7,
+      "min":7,
+      "pattern":"default"
+    },
+    "DatasetIdentifier":{
+      "type":"string",
+      "max":2048,
+      "min":1,
+      "pattern":"(default|arn:[a-zA-Z0-9-]+:cloudwatch:[a-zA-Z0-9-]*:\\d{12}:dataset/default)"
+    },
+    "DeleteAlarmMuteRuleInput":{
+      "type":"structure",
+      "required":["AlarmMuteRuleName"],
+      "members":{
+        "AlarmMuteRuleName":{"shape":"Name"}
+      }
+    },
     "DeleteAlarmsInput":{
       "type":"structure",
       "required":["AlarmNames"],
@@ -959,6 +1291,7 @@
     "DeleteAnomalyDetectorInput":{
       "type":"structure",
       "members":{
+        "AnomalyDetectorId":{"shape":"AnomalyDetectorId"},
         "Namespace":{
           "shape":"Namespace",
           "deprecated":true,
@@ -985,8 +1318,7 @@
     },
     "DeleteAnomalyDetectorOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteDashboardsInput":{
       "type":"structure",
@@ -997,8 +1329,7 @@
     },
     "DeleteDashboardsOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "DeleteInsightRulesInput":{
       "type":"structure",
@@ -1022,13 +1353,29 @@
     },
     "DeleteMetricStreamOutput":{
       "type":"structure",
+      "members":{}
+    },
+    "DescribeAlarmContributorsInput":{
+      "type":"structure",
+      "required":["AlarmName"],
       "members":{
+        "AlarmName":{"shape":"AlarmName"},
+        "NextToken":{"shape":"NextToken"}
+      }
+    },
+    "DescribeAlarmContributorsOutput":{
+      "type":"structure",
+      "required":["AlarmContributors"],
+      "members":{
+        "AlarmContributors":{"shape":"AlarmContributors"},
+        "NextToken":{"shape":"NextToken"}
       }
     },
     "DescribeAlarmHistoryInput":{
       "type":"structure",
       "members":{
         "AlarmName":{"shape":"AlarmName"},
+        "AlarmContributorId":{"shape":"ContributorId"},
         "AlarmTypes":{"shape":"AlarmTypes"},
         "HistoryItemType":{"shape":"HistoryItemType"},
         "StartDate":{"shape":"Timestamp"},
@@ -1086,12 +1433,14 @@
       "members":{
         "CompositeAlarms":{"shape":"CompositeAlarms"},
         "MetricAlarms":{"shape":"MetricAlarms"},
+        "LogAlarms":{"shape":"LogAlarms"},
         "NextToken":{"shape":"NextToken"}
       }
     },
     "DescribeAnomalyDetectorsInput":{
       "type":"structure",
       "members":{
+        "AnomalyDetectorIds":{"shape":"AnomalyDetectorIds"},
         "NextToken":{"shape":"NextToken"},
         "MaxResults":{"shape":"MaxReturnedResultsCount"},
         "Namespace":{"shape":"Namespace"},
@@ -1184,6 +1533,22 @@
         "Failures":{"shape":"BatchFailures"}
       }
     },
+    "DisassociateDatasetKmsKeyInput":{
+      "type":"structure",
+      "required":["DatasetIdentifier"],
+      "members":{
+        "DatasetIdentifier":{"shape":"DatasetIdentifier"}
+      }
+    },
+    "DisassociateDatasetKmsKeyOutput":{
+      "type":"structure",
+      "members":{}
+    },
+    "Duration":{
+      "type":"string",
+      "max":50,
+      "min":1
+    },
     "EnableAlarmActionsInput":{
       "type":"structure",
       "required":["AlarmNames"],
@@ -1203,6 +1568,11 @@
       "members":{
         "Failures":{"shape":"BatchFailures"}
       }
+    },
+    "EndTimeOffset":{
+      "type":"long",
+      "max":2592000,
+      "min":0
     },
     "Entity":{
       "type":"structure",
@@ -1266,15 +1636,44 @@
       "max":255,
       "min":1
     },
+    "EvaluationCriteria":{
+      "type":"structure",
+      "members":{
+        "PromQLCriteria":{"shape":"AlarmPromQLCriteria"}
+      },
+      "union":true
+    },
+    "EvaluationInterval":{
+      "type":"integer",
+      "max":3600,
+      "min":10
+    },
     "EvaluationPeriods":{
       "type":"integer",
       "min":1
     },
     "EvaluationState":{
       "type":"string",
-      "enum":["PARTIAL_DATA"]
+      "enum":[
+        "PARTIAL_DATA",
+        "EVALUATION_FAILURE",
+        "EVALUATION_ERROR"
+      ]
+    },
+    "EvaluationWindow":{
+      "type":"structure",
+      "members":{
+        "WallClockWindow":{"shape":"WallClockWindow"},
+        "SlidingWindow":{"shape":"SlidingWindow"}
+      },
+      "union":true
     },
     "ExceptionType":{"type":"string"},
+    "Expression":{
+      "type":"string",
+      "max":256,
+      "min":1
+    },
     "ExtendedStatistic":{"type":"string"},
     "ExtendedStatistics":{
       "type":"list",
@@ -1286,6 +1685,28 @@
     "FailureDescription":{"type":"string"},
     "FailureResource":{"type":"string"},
     "FaultDescription":{"type":"string"},
+    "GetAlarmMuteRuleInput":{
+      "type":"structure",
+      "required":["AlarmMuteRuleName"],
+      "members":{
+        "AlarmMuteRuleName":{"shape":"Name"}
+      }
+    },
+    "GetAlarmMuteRuleOutput":{
+      "type":"structure",
+      "members":{
+        "Name":{"shape":"Name"},
+        "AlarmMuteRuleArn":{"shape":"Arn"},
+        "Description":{"shape":"AlarmDescription"},
+        "Rule":{"shape":"Rule"},
+        "MuteTargets":{"shape":"MuteTargets"},
+        "StartDate":{"shape":"Timestamp"},
+        "ExpireDate":{"shape":"Timestamp"},
+        "Status":{"shape":"AlarmMuteRuleStatus"},
+        "LastUpdatedTimestamp":{"shape":"Timestamp"},
+        "MuteType":{"shape":"MuteType"}
+      }
+    },
     "GetDashboardInput":{
       "type":"structure",
       "required":["DashboardName"],
@@ -1299,6 +1720,25 @@
         "DashboardArn":{"shape":"DashboardArn"},
         "DashboardBody":{"shape":"DashboardBody"},
         "DashboardName":{"shape":"DashboardName"}
+      }
+    },
+    "GetDatasetInput":{
+      "type":"structure",
+      "required":["DatasetIdentifier"],
+      "members":{
+        "DatasetIdentifier":{"shape":"DatasetIdentifier"}
+      }
+    },
+    "GetDatasetOutput":{
+      "type":"structure",
+      "required":[
+        "DatasetId",
+        "Arn"
+      ],
+      "members":{
+        "DatasetId":{"shape":"DatasetId"},
+        "Arn":{"shape":"DatasetArn"},
+        "KmsKeyArn":{"shape":"KmsKeyArn"}
       }
     },
     "GetInsightRuleReportInput":{
@@ -1423,6 +1863,17 @@
         "MetricWidgetImage":{"shape":"MetricWidgetImage"}
       }
     },
+    "GetOTelEnrichmentInput":{
+      "type":"structure",
+      "members":{}
+    },
+    "GetOTelEnrichmentOutput":{
+      "type":"structure",
+      "required":["Status"],
+      "members":{
+        "Status":{"shape":"OTelEnrichmentStatus"}
+      }
+    },
     "HistoryData":{
       "type":"string",
       "max":4095,
@@ -1433,7 +1884,9 @@
       "enum":[
         "ConfigurationUpdate",
         "StateUpdate",
-        "Action"
+        "Action",
+        "AlarmContributorStateUpdate",
+        "AlarmContributorAction"
       ]
     },
     "HistorySummary":{
@@ -1456,7 +1909,8 @@
         "State":{"shape":"InsightRuleState"},
         "Schema":{"shape":"InsightRuleSchema"},
         "Definition":{"shape":"InsightRuleDefinition"},
-        "ManagedRule":{"shape":"InsightRuleIsManaged"}
+        "ManagedRule":{"shape":"InsightRuleIsManaged"},
+        "ApplyOnTransformedLogs":{"shape":"InsightRuleOnTransformedLogs"}
       }
     },
     "InsightRuleAggregationStatistic":{"type":"string"},
@@ -1552,6 +2006,7 @@
       "type":"list",
       "member":{"shape":"InsightRuleName"}
     },
+    "InsightRuleOnTransformedLogs":{"type":"boolean"},
     "InsightRuleOrderBy":{
       "type":"string",
       "max":32,
@@ -1634,6 +2089,36 @@
       "exception":true,
       "synthetic":true
     },
+    "KmsAccessDeniedException":{
+      "type":"structure",
+      "required":["Message"],
+      "members":{
+        "Message":{"shape":"String"}
+      },
+      "exception":true
+    },
+    "KmsKeyArn":{
+      "type":"string",
+      "max":2048,
+      "min":20,
+      "pattern":"arn:[a-zA-Z0-9-]+:kms:[a-zA-Z0-9-]+:\\d{12}:key/[a-f0-9-]+"
+    },
+    "KmsKeyDisabledException":{
+      "type":"structure",
+      "required":["Message"],
+      "members":{
+        "Message":{"shape":"String"}
+      },
+      "exception":true
+    },
+    "KmsKeyNotFoundException":{
+      "type":"structure",
+      "required":["Message"],
+      "members":{
+        "Message":{"shape":"String"}
+      },
+      "exception":true
+    },
     "LabelOptions":{
       "type":"structure",
       "members":{
@@ -1643,8 +2128,7 @@
     "LastModified":{"type":"timestamp"},
     "LimitExceededException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"LimitExceededException",
         "httpStatusCode":400,
@@ -1663,6 +2147,22 @@
         "senderFault":true
       },
       "exception":true
+    },
+    "ListAlarmMuteRulesInput":{
+      "type":"structure",
+      "members":{
+        "AlarmName":{"shape":"Name"},
+        "Statuses":{"shape":"AlarmMuteRuleStatuses"},
+        "MaxRecords":{"shape":"MaxRecords"},
+        "NextToken":{"shape":"NextToken"}
+      }
+    },
+    "ListAlarmMuteRulesOutput":{
+      "type":"structure",
+      "members":{
+        "AlarmMuteRuleSummaries":{"shape":"AlarmMuteRuleSummaries"},
+        "NextToken":{"shape":"NextToken"}
+      }
     },
     "ListDashboardsInput":{
       "type":"structure",
@@ -1750,6 +2250,67 @@
       "members":{
         "Tags":{"shape":"TagList"}
       }
+    },
+    "LogAlarm":{
+      "type":"structure",
+      "members":{
+        "AlarmName":{"shape":"AlarmName"},
+        "AlarmArn":{"shape":"AlarmArn"},
+        "AlarmDescription":{"shape":"AlarmDescription"},
+        "AlarmConfigurationUpdatedTimestamp":{"shape":"Timestamp"},
+        "ActionsEnabled":{"shape":"ActionsEnabled"},
+        "OKActions":{"shape":"ResourceList"},
+        "AlarmActions":{"shape":"ResourceList"},
+        "InsufficientDataActions":{"shape":"ResourceList"},
+        "StateValue":{"shape":"StateValue"},
+        "StateReason":{"shape":"StateReason"},
+        "StateReasonData":{"shape":"StateReasonData"},
+        "StateUpdatedTimestamp":{"shape":"Timestamp"},
+        "ScheduledQueryConfiguration":{"shape":"ScheduledQueryConfiguration"},
+        "QueryResultsToEvaluate":{"shape":"QueryResultsToEvaluate"},
+        "QueryResultsToAlarm":{"shape":"QueryResultsToAlarm"},
+        "Threshold":{"shape":"Threshold"},
+        "ComparisonOperator":{"shape":"ComparisonOperator"},
+        "TreatMissingData":{"shape":"TreatMissingData"},
+        "StateTransitionedTimestamp":{"shape":"Timestamp"},
+        "EvaluationState":{"shape":"EvaluationState"},
+        "ActionLogLineCount":{"shape":"ActionLogLineCount"},
+        "ActionLogLineRoleArn":{"shape":"ActionLogLineRoleArn"}
+      },
+      "xmlOrder":[
+        "AlarmName",
+        "AlarmArn",
+        "AlarmDescription",
+        "AlarmConfigurationUpdatedTimestamp",
+        "ActionsEnabled",
+        "OKActions",
+        "AlarmActions",
+        "InsufficientDataActions",
+        "StateValue",
+        "StateReason",
+        "StateReasonData",
+        "StateUpdatedTimestamp",
+        "StateTransitionedTimestamp",
+        "ScheduledQueryConfiguration",
+        "QueryResultsToEvaluate",
+        "QueryResultsToAlarm",
+        "Threshold",
+        "ComparisonOperator",
+        "TreatMissingData",
+        "EvaluationState",
+        "ActionLogLineCount",
+        "ActionLogLineRoleArn"
+      ]
+    },
+    "LogAlarms":{
+      "type":"list",
+      "member":{"shape":"LogAlarm"}
+    },
+    "LogGroupIdentifiers":{
+      "type":"list",
+      "member":{"shape":"AmazonResourceName"},
+      "max":50,
+      "min":1
     },
     "ManagedRule":{
       "type":"structure",
@@ -1853,7 +2414,10 @@
         "Metrics":{"shape":"MetricDataQueries"},
         "ThresholdMetricId":{"shape":"MetricId"},
         "EvaluationState":{"shape":"EvaluationState"},
-        "StateTransitionedTimestamp":{"shape":"Timestamp"}
+        "StateTransitionedTimestamp":{"shape":"Timestamp"},
+        "EvaluationWindow":{"shape":"EvaluationWindow"},
+        "EvaluationCriteria":{"shape":"EvaluationCriteria"},
+        "EvaluationInterval":{"shape":"EvaluationInterval"}
       },
       "xmlOrder":[
         "AlarmName",
@@ -1884,7 +2448,10 @@
         "Metrics",
         "ThresholdMetricId",
         "EvaluationState",
-        "StateTransitionedTimestamp"
+        "StateTransitionedTimestamp",
+        "EvaluationWindow",
+        "EvaluationCriteria",
+        "EvaluationInterval"
       ]
     },
     "MetricAlarms":{
@@ -2093,6 +2660,24 @@
       "exception":true,
       "synthetic":true
     },
+    "MuteTargetAlarmNameList":{
+      "type":"list",
+      "member":{"shape":"Name"},
+      "max":100
+    },
+    "MuteTargets":{
+      "type":"structure",
+      "required":["AlarmNames"],
+      "members":{
+        "AlarmNames":{"shape":"MuteTargetAlarmNameList"}
+      }
+    },
+    "MuteType":{"type":"string"},
+    "Name":{
+      "type":"string",
+      "max":255,
+      "min":1
+    },
     "Namespace":{
       "type":"string",
       "max":255,
@@ -2100,6 +2685,13 @@
       "pattern":"[^:].*"
     },
     "NextToken":{"type":"string"},
+    "OTelEnrichmentStatus":{
+      "type":"string",
+      "enum":[
+        "Running",
+        "Stopped"
+      ]
+    },
     "OutputFormat":{"type":"string"},
     "OwningAccounts":{
       "type":"list",
@@ -2114,11 +2706,32 @@
         "FailureDescription":{"shape":"FailureDescription"}
       }
     },
+    "PendingPeriod":{
+      "type":"integer",
+      "max":86400,
+      "min":0
+    },
     "Period":{
       "type":"integer",
       "min":1
     },
     "PeriodicSpikes":{"type":"boolean"},
+    "PutAlarmMuteRuleInput":{
+      "type":"structure",
+      "required":[
+        "Name",
+        "Rule"
+      ],
+      "members":{
+        "Name":{"shape":"Name"},
+        "Description":{"shape":"AlarmDescription"},
+        "Rule":{"shape":"Rule"},
+        "MuteTargets":{"shape":"MuteTargets"},
+        "Tags":{"shape":"TagList"},
+        "StartDate":{"shape":"Timestamp"},
+        "ExpireDate":{"shape":"Timestamp"}
+      }
+    },
     "PutAnomalyDetectorInput":{
       "type":"structure",
       "members":{
@@ -2151,6 +2764,7 @@
     "PutAnomalyDetectorOutput":{
       "type":"structure",
       "members":{
+        "AnomalyDetectorId":{"shape":"AnomalyDetectorId"}
       }
     },
     "PutCompositeAlarmInput":{
@@ -2181,7 +2795,8 @@
       ],
       "members":{
         "DashboardName":{"shape":"DashboardName"},
-        "DashboardBody":{"shape":"DashboardBody"}
+        "DashboardBody":{"shape":"DashboardBody"},
+        "Tags":{"shape":"TagList"}
       }
     },
     "PutDashboardOutput":{
@@ -2200,12 +2815,40 @@
         "RuleName":{"shape":"InsightRuleName"},
         "RuleState":{"shape":"InsightRuleState"},
         "RuleDefinition":{"shape":"InsightRuleDefinition"},
-        "Tags":{"shape":"TagList"}
+        "Tags":{"shape":"TagList"},
+        "ApplyOnTransformedLogs":{"shape":"InsightRuleOnTransformedLogs"}
       }
     },
     "PutInsightRuleOutput":{
       "type":"structure",
+      "members":{}
+    },
+    "PutLogAlarmInput":{
+      "type":"structure",
+      "required":[
+        "AlarmName",
+        "ScheduledQueryConfiguration",
+        "QueryResultsToEvaluate",
+        "QueryResultsToAlarm",
+        "Threshold",
+        "ComparisonOperator"
+      ],
       "members":{
+        "AlarmName":{"shape":"AlarmName"},
+        "AlarmDescription":{"shape":"AlarmDescription"},
+        "ScheduledQueryConfiguration":{"shape":"ScheduledQueryConfiguration"},
+        "ActionLogLineCount":{"shape":"ActionLogLineCount"},
+        "ActionLogLineRoleArn":{"shape":"ActionLogLineRoleArn"},
+        "ActionsEnabled":{"shape":"ActionsEnabled"},
+        "OKActions":{"shape":"ResourceList"},
+        "AlarmActions":{"shape":"ResourceList"},
+        "InsufficientDataActions":{"shape":"ResourceList"},
+        "QueryResultsToEvaluate":{"shape":"QueryResultsToEvaluate"},
+        "QueryResultsToAlarm":{"shape":"QueryResultsToAlarm"},
+        "Threshold":{"shape":"Threshold"},
+        "ComparisonOperator":{"shape":"ComparisonOperator"},
+        "TreatMissingData":{"shape":"TreatMissingData"},
+        "Tags":{"shape":"TagList"}
       }
     },
     "PutManagedInsightRulesInput":{
@@ -2223,11 +2866,7 @@
     },
     "PutMetricAlarmInput":{
       "type":"structure",
-      "required":[
-        "AlarmName",
-        "EvaluationPeriods",
-        "ComparisonOperator"
-      ],
+      "required":["AlarmName"],
       "members":{
         "AlarmName":{"shape":"AlarmName"},
         "AlarmDescription":{"shape":"AlarmDescription"},
@@ -2250,7 +2889,10 @@
         "EvaluateLowSampleCountPercentile":{"shape":"EvaluateLowSampleCountPercentile"},
         "Metrics":{"shape":"MetricDataQueries"},
         "Tags":{"shape":"TagList"},
-        "ThresholdMetricId":{"shape":"MetricId"}
+        "ThresholdMetricId":{"shape":"MetricId"},
+        "EvaluationWindow":{"shape":"EvaluationWindow"},
+        "EvaluationCriteria":{"shape":"EvaluationCriteria"},
+        "EvaluationInterval":{"shape":"EvaluationInterval"}
       }
     },
     "PutMetricDataInput":{
@@ -2292,6 +2934,24 @@
         "Arn":{"shape":"AmazonResourceName"}
       }
     },
+    "Query":{
+      "type":"string",
+      "max":10000,
+      "min":1
+    },
+    "QueryResultsToAlarm":{
+      "type":"integer",
+      "min":1
+    },
+    "QueryResultsToEvaluate":{
+      "type":"integer",
+      "min":1
+    },
+    "QueryString":{
+      "type":"string",
+      "max":10000,
+      "min":0
+    },
     "Range":{
       "type":"structure",
       "required":[
@@ -2310,6 +2970,23 @@
     "RecentlyActive":{
       "type":"string",
       "enum":["PT3H"]
+    },
+    "RecoveryPeriod":{
+      "type":"integer",
+      "max":86400,
+      "min":0
+    },
+    "ResourceConflict":{
+      "type":"structure",
+      "members":{
+        "message":{"shape":"ErrorMessage"}
+      },
+      "error":{
+        "code":"ResourceConflict",
+        "httpStatusCode":409,
+        "senderFault":true
+      },
+      "exception":true
     },
     "ResourceId":{"type":"string"},
     "ResourceList":{
@@ -2349,12 +3026,66 @@
     },
     "ResourceType":{"type":"string"},
     "ReturnData":{"type":"boolean"},
+    "Rule":{
+      "type":"structure",
+      "required":["Schedule"],
+      "members":{
+        "Schedule":{"shape":"Schedule"}
+      }
+    },
     "ScanBy":{
       "type":"string",
       "enum":[
         "TimestampDescending",
         "TimestampAscending"
       ]
+    },
+    "Schedule":{
+      "type":"structure",
+      "required":[
+        "Expression",
+        "Duration"
+      ],
+      "members":{
+        "Expression":{"shape":"Expression"},
+        "Duration":{"shape":"Duration"},
+        "Timezone":{"shape":"Timezone"}
+      }
+    },
+    "ScheduleConfiguration":{
+      "type":"structure",
+      "required":[
+        "ScheduleExpression",
+        "StartTimeOffset"
+      ],
+      "members":{
+        "ScheduleExpression":{"shape":"ScheduleExpression"},
+        "StartTimeOffset":{"shape":"StartTimeOffset"},
+        "EndTimeOffset":{"shape":"EndTimeOffset"}
+      }
+    },
+    "ScheduleExpression":{
+      "type":"string",
+      "max":256,
+      "min":1
+    },
+    "ScheduledQueryConfiguration":{
+      "type":"structure",
+      "required":[
+        "QueryString",
+        "ScheduledQueryRoleARN",
+        "ScheduleConfiguration",
+        "AggregationExpression"
+      ],
+      "members":{
+        "QueryString":{"shape":"QueryString"},
+        "LogGroupIdentifiers":{"shape":"LogGroupIdentifiers"},
+        "QueryARN":{"shape":"AmazonResourceName"},
+        "ScheduledQueryRoleARN":{"shape":"AmazonResourceName"},
+        "ScheduleConfiguration":{"shape":"ScheduleConfiguration"},
+        "AggregationExpression":{"shape":"AggregationExpression"},
+        "Tags":{"shape":"TagList"}
+      }
     },
     "SetAlarmStateInput":{
       "type":"structure",
@@ -2381,6 +3112,10 @@
       }
     },
     "Size":{"type":"long"},
+    "SlidingWindow":{
+      "type":"structure",
+      "members":{}
+    },
     "StandardUnit":{
       "type":"string",
       "enum":[
@@ -2422,8 +3157,20 @@
     },
     "StartMetricStreamsOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
+    },
+    "StartOTelEnrichmentInput":{
+      "type":"structure",
+      "members":{}
+    },
+    "StartOTelEnrichmentOutput":{
+      "type":"structure",
+      "members":{}
+    },
+    "StartTimeOffset":{
+      "type":"long",
+      "max":2592000,
+      "min":1
     },
     "Stat":{"type":"string"},
     "StateReason":{
@@ -2493,14 +3240,22 @@
     },
     "StopMetricStreamsOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
+    },
+    "StopOTelEnrichmentInput":{
+      "type":"structure",
+      "members":{}
+    },
+    "StopOTelEnrichmentOutput":{
+      "type":"structure",
+      "members":{}
     },
     "StorageResolution":{
       "type":"integer",
       "min":1
     },
     "StrictEntityValidation":{"type":"boolean"},
+    "String":{"type":"string"},
     "SuppressorPeriod":{"type":"integer"},
     "Tag":{
       "type":"structure",
@@ -2539,8 +3294,7 @@
     },
     "TagResourceOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "TagValue":{
       "type":"string",
@@ -2558,6 +3312,11 @@
     "Timestamps":{
       "type":"list",
       "member":{"shape":"Timestamp"}
+    },
+    "Timezone":{
+      "type":"string",
+      "max":50,
+      "min":1
     },
     "TreatMissingData":{
       "type":"string",
@@ -2577,12 +3336,17 @@
     },
     "UntagResourceOutput":{
       "type":"structure",
-      "members":{
-      }
+      "members":{}
     },
     "Values":{
       "type":"list",
       "member":{"shape":"DatapointValue"}
+    },
+    "WallClockWindow":{
+      "type":"structure",
+      "members":{
+        "Timezone":{"shape":"Timezone"}
+      }
     }
   }
 }

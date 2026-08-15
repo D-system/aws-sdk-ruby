@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -113,31 +114,10 @@ module Aws
                                 ?max_workers: ::Integer,
                                 ?kms_key: ::String,
                                 ?airflow_version: ::String,
-                                ?logging_configuration: {
-                                  dag_processing_logs: {
-                                    enabled: bool,
-                                    log_level: ("CRITICAL" | "ERROR" | "WARNING" | "INFO" | "DEBUG")
-                                  }?,
-                                  scheduler_logs: {
-                                    enabled: bool,
-                                    log_level: ("CRITICAL" | "ERROR" | "WARNING" | "INFO" | "DEBUG")
-                                  }?,
-                                  webserver_logs: {
-                                    enabled: bool,
-                                    log_level: ("CRITICAL" | "ERROR" | "WARNING" | "INFO" | "DEBUG")
-                                  }?,
-                                  worker_logs: {
-                                    enabled: bool,
-                                    log_level: ("CRITICAL" | "ERROR" | "WARNING" | "INFO" | "DEBUG")
-                                  }?,
-                                  task_logs: {
-                                    enabled: bool,
-                                    log_level: ("CRITICAL" | "ERROR" | "WARNING" | "INFO" | "DEBUG")
-                                  }?
-                                },
+                                ?logging_configuration: Params::logging_configuration_input,
                                 ?weekly_maintenance_window_start: ::String,
                                 ?tags: Hash[::String, ::String],
-                                ?webserver_access_mode: ("PRIVATE_ONLY" | "PUBLIC_ONLY"),
+                                ?webserver_access_mode: ("PRIVATE_ONLY" | "PUBLIC_ONLY" | "PUBLIC_AND_PRIVATE"),
                                 ?min_workers: ::Integer,
                                 ?schedulers: ::Integer,
                                 ?endpoint_management: ("CUSTOMER" | "SERVICE"),
@@ -231,7 +211,7 @@ module Aws
                                    {
                                      name: ::String,
                                      value: ::String
-                                   },
+                                   }
                                  ]?,
                                  value: ::Float?,
                                  unit: ("Seconds" | "Microseconds" | "Milliseconds" | "Bytes" | "Kilobytes" | "Megabytes" | "Gigabytes" | "Terabytes" | "Bits" | "Kilobits" | "Megabits" | "Gigabits" | "Terabits" | "Percent" | "Count" | "Bytes/Second" | "Kilobytes/Second" | "Megabytes/Second" | "Gigabytes/Second" | "Terabytes/Second" | "Bits/Second" | "Kilobits/Second" | "Megabits/Second" | "Gigabits/Second" | "Terabits/Second" | "Count/Second" | "None")?,
@@ -241,7 +221,7 @@ module Aws
                                    minimum: ::Float?,
                                    maximum: ::Float?
                                  }?
-                               },
+                               }
                              ]
                            ) -> _PublishMetricsResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PublishMetricsResponseSuccess
@@ -274,49 +254,29 @@ module Aws
       def update_environment: (
                                 name: ::String,
                                 ?execution_role_arn: ::String,
+                                ?airflow_configuration_options: Hash[::String, ::String],
                                 ?airflow_version: ::String,
-                                ?source_bucket_arn: ::String,
                                 ?dag_s3_path: ::String,
+                                ?environment_class: ::String,
+                                ?logging_configuration: Params::logging_configuration_input,
+                                ?max_workers: ::Integer,
+                                ?min_workers: ::Integer,
+                                ?max_webservers: ::Integer,
+                                ?min_webservers: ::Integer,
+                                ?worker_replacement_strategy: ("FORCED" | "GRACEFUL"),
+                                ?network_configuration: {
+                                  security_group_ids: Array[::String]
+                                },
                                 ?plugins_s3_path: ::String,
                                 ?plugins_s3_object_version: ::String,
                                 ?requirements_s3_path: ::String,
                                 ?requirements_s3_object_version: ::String,
+                                ?schedulers: ::Integer,
+                                ?source_bucket_arn: ::String,
                                 ?startup_script_s3_path: ::String,
                                 ?startup_script_s3_object_version: ::String,
-                                ?airflow_configuration_options: Hash[::String, ::String],
-                                ?environment_class: ::String,
-                                ?max_workers: ::Integer,
-                                ?network_configuration: {
-                                  security_group_ids: Array[::String]
-                                },
-                                ?logging_configuration: {
-                                  dag_processing_logs: {
-                                    enabled: bool,
-                                    log_level: ("CRITICAL" | "ERROR" | "WARNING" | "INFO" | "DEBUG")
-                                  }?,
-                                  scheduler_logs: {
-                                    enabled: bool,
-                                    log_level: ("CRITICAL" | "ERROR" | "WARNING" | "INFO" | "DEBUG")
-                                  }?,
-                                  webserver_logs: {
-                                    enabled: bool,
-                                    log_level: ("CRITICAL" | "ERROR" | "WARNING" | "INFO" | "DEBUG")
-                                  }?,
-                                  worker_logs: {
-                                    enabled: bool,
-                                    log_level: ("CRITICAL" | "ERROR" | "WARNING" | "INFO" | "DEBUG")
-                                  }?,
-                                  task_logs: {
-                                    enabled: bool,
-                                    log_level: ("CRITICAL" | "ERROR" | "WARNING" | "INFO" | "DEBUG")
-                                  }?
-                                },
-                                ?weekly_maintenance_window_start: ::String,
-                                ?webserver_access_mode: ("PRIVATE_ONLY" | "PUBLIC_ONLY"),
-                                ?min_workers: ::Integer,
-                                ?schedulers: ::Integer,
-                                ?min_webservers: ::Integer,
-                                ?max_webservers: ::Integer
+                                ?webserver_access_mode: ("PRIVATE_ONLY" | "PUBLIC_ONLY" | "PUBLIC_AND_PRIVATE"),
+                                ?weekly_maintenance_window_start: ::String
                               ) -> _UpdateEnvironmentResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateEnvironmentResponseSuccess
     end

@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -99,7 +100,8 @@ module Aws
                                 latest_version_id: ::String
                               }?
                             },
-                            ?force: bool
+                            ?force: bool,
+                            ?promote_to_primary: bool
                           ) -> _CopyImageSetResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CopyImageSetResponseSuccess
 
@@ -113,7 +115,9 @@ module Aws
                               ?datastore_name: ::String,
                               client_token: ::String,
                               ?tags: Hash[::String, ::String],
-                              ?kms_key_arn: ::String
+                              ?kms_key_arn: ::String,
+                              ?lambda_authorizer_arn: ::String,
+                              ?lossless_storage_format: ("HTJ2K" | "JPEG_2000_LOSSLESS")
                             ) -> _CreateDatastoreResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateDatastoreResponseSuccess
 
@@ -133,7 +137,7 @@ module Aws
         def datastore_id: () -> ::String
         def image_set_id: () -> ::String
         def image_set_state: () -> ("ACTIVE" | "LOCKED" | "DELETED")
-        def image_set_workflow_status: () -> ("CREATED" | "COPIED" | "COPYING" | "COPYING_WITH_READ_ONLY_ACCESS" | "COPY_FAILED" | "UPDATING" | "UPDATED" | "UPDATE_FAILED" | "DELETING" | "DELETED")
+        def image_set_workflow_status: () -> ("CREATED" | "COPIED" | "COPYING" | "COPYING_WITH_READ_ONLY_ACCESS" | "COPY_FAILED" | "UPDATING" | "UPDATING_FOR_STUDY_CONSISTENCY" | "UPDATED" | "UPDATE_FAILED" | "DELETING" | "DELETED" | "IMPORTING" | "IMPORTED" | "IMPORT_FAILED")
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/MedicalImaging/Client.html#delete_image_set-instance_method
       def delete_image_set: (
@@ -184,13 +188,16 @@ module Aws
         def image_set_id: () -> ::String
         def version_id: () -> ::String
         def image_set_state: () -> ("ACTIVE" | "LOCKED" | "DELETED")
-        def image_set_workflow_status: () -> ("CREATED" | "COPIED" | "COPYING" | "COPYING_WITH_READ_ONLY_ACCESS" | "COPY_FAILED" | "UPDATING" | "UPDATED" | "UPDATE_FAILED" | "DELETING" | "DELETED")
+        def image_set_workflow_status: () -> ("CREATED" | "COPIED" | "COPYING" | "COPYING_WITH_READ_ONLY_ACCESS" | "COPY_FAILED" | "UPDATING" | "UPDATING_FOR_STUDY_CONSISTENCY" | "UPDATED" | "UPDATE_FAILED" | "DELETING" | "DELETED" | "IMPORTING" | "IMPORTED" | "IMPORT_FAILED")
         def created_at: () -> ::Time
         def updated_at: () -> ::Time
         def deleted_at: () -> ::Time
         def message: () -> ::String
         def image_set_arn: () -> ::String
         def overrides: () -> Types::Overrides
+        def is_primary: () -> bool
+        def last_accessed_at: () -> ::Time
+        def storage_tier: () -> ("FREQUENT_ACCESS" | "ARCHIVE_INSTANT_ACCESS")
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/MedicalImaging/Client.html#get_image_set-instance_method
       def get_image_set: (
@@ -289,11 +296,12 @@ module Aws
                                          dicom_study_date_and_time: {
                                            dicom_study_date: ::String,
                                            dicom_study_time: ::String?
-                                         }?
-                                       },
+                                         }?,
+                                         is_primary: bool?
+                                       }
                                      ],
                                      operator: ("EQUAL" | "BETWEEN")
-                                   },
+                                   }
                                  ]?,
                                  sort: {
                                    sort_order: ("ASC" | "DESC"),
@@ -320,7 +328,18 @@ module Aws
                                     datastore_id: ::String,
                                     input_s3_uri: ::String,
                                     output_s3_uri: ::String,
-                                    ?input_owner_account_id: ::String
+                                    ?input_owner_account_id: ::String,
+                                    ?import_configuration: {
+                                      dicom_json_metadata_import_configuration: {
+                                        dicom_metadata_mappings: Array[
+                                          {
+                                            study_instance_uid: ::String,
+                                            series_instance_uid: ::String?,
+                                            metadata_file_path: ::String
+                                          }
+                                        ]
+                                      }?
+                                    }
                                   ) -> _StartDICOMImportJobResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartDICOMImportJobResponseSuccess
 
@@ -350,7 +369,7 @@ module Aws
         def image_set_id: () -> ::String
         def latest_version_id: () -> ::String
         def image_set_state: () -> ("ACTIVE" | "LOCKED" | "DELETED")
-        def image_set_workflow_status: () -> ("CREATED" | "COPIED" | "COPYING" | "COPYING_WITH_READ_ONLY_ACCESS" | "COPY_FAILED" | "UPDATING" | "UPDATED" | "UPDATE_FAILED" | "DELETING" | "DELETED")
+        def image_set_workflow_status: () -> ("CREATED" | "COPIED" | "COPYING" | "COPYING_WITH_READ_ONLY_ACCESS" | "COPY_FAILED" | "UPDATING" | "UPDATING_FOR_STUDY_CONSISTENCY" | "UPDATED" | "UPDATE_FAILED" | "DELETING" | "DELETED" | "IMPORTING" | "IMPORTED" | "IMPORT_FAILED")
         def created_at: () -> ::Time
         def updated_at: () -> ::Time
         def message: () -> ::String
@@ -361,6 +380,7 @@ module Aws
                                        image_set_id: ::String,
                                        latest_version_id: ::String,
                                        ?force: bool,
+                                       ?include_study_image_sets: bool,
                                        update_image_set_metadata_updates: {
                                          dicom_updates: {
                                            removable_attributes: ::String?,

@@ -95,8 +95,8 @@ module Aws::Kafka
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::Kafka
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::Kafka
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::Kafka
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::Kafka
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::Kafka
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::Kafka
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::Kafka
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -543,6 +547,11 @@ module Aws::Kafka
     # @option params [Hash<String,String>] :tags
     #   Create tags when creating the cluster.
     #
+    # @option params [Types::Rebalancing] :rebalancing
+    #   Specifies if intelligent rebalancing should be turned on for the new
+    #   MSK Provisioned cluster with Express brokers. By default, intelligent
+    #   rebalancing status is ACTIVE for all new clusters.
+    #
     # @option params [String] :storage_mode
     #   This controls storage mode for supported storage tiers.
     #
@@ -588,6 +597,7 @@ module Aws::Kafka
     #             },
     #           },
     #         },
+    #         network_type: "IPV4", # accepts IPV4, DUAL
     #       },
     #       zone_ids: ["__string"],
     #     },
@@ -625,6 +635,21 @@ module Aws::Kafka
     #     enhanced_monitoring: "DEFAULT", # accepts DEFAULT, PER_BROKER, PER_TOPIC_PER_BROKER, PER_TOPIC_PER_PARTITION
     #     kafka_version: "__stringMin1Max128", # required
     #     logging_info: {
+    #       authorizer_logs: {
+    #         cloud_watch_logs: {
+    #           enabled: false, # required
+    #           log_group: "__string",
+    #         },
+    #         firehose: {
+    #           delivery_stream: "__string",
+    #           enabled: false, # required
+    #         },
+    #         s3: {
+    #           bucket: "__string",
+    #           enabled: false, # required
+    #           prefix: "__string",
+    #         },
+    #       },
     #       broker_logs: { # required
     #         cloud_watch_logs: {
     #           enabled: false, # required
@@ -654,6 +679,9 @@ module Aws::Kafka
     #     },
     #     tags: {
     #       "__string" => "__string",
+    #     },
+    #     rebalancing: {
+    #       status: "PAUSED", # required, accepts PAUSED, ACTIVE
     #     },
     #     storage_mode: "LOCAL", # accepts LOCAL, TIERED
     #   })
@@ -736,6 +764,7 @@ module Aws::Kafka
     #               },
     #             },
     #           },
+    #           network_type: "IPV4", # accepts IPV4, DUAL
     #         },
     #         zone_ids: ["__string"],
     #       },
@@ -782,6 +811,21 @@ module Aws::Kafka
     #       },
     #       kafka_version: "__stringMin1Max128", # required
     #       logging_info: {
+    #         authorizer_logs: {
+    #           cloud_watch_logs: {
+    #             enabled: false, # required
+    #             log_group: "__string",
+    #           },
+    #           firehose: {
+    #             delivery_stream: "__string",
+    #             enabled: false, # required
+    #           },
+    #           s3: {
+    #             bucket: "__string",
+    #             enabled: false, # required
+    #             prefix: "__string",
+    #           },
+    #         },
     #         broker_logs: { # required
     #           cloud_watch_logs: {
     #             enabled: false, # required
@@ -800,6 +844,9 @@ module Aws::Kafka
     #       },
     #       number_of_broker_nodes: 1, # required
     #       storage_mode: "LOCAL", # accepts LOCAL, TIERED
+    #       rebalancing: {
+    #         status: "PAUSED", # required, accepts PAUSED, ACTIVE
+    #       },
     #     },
     #     serverless: {
     #       vpc_configs: [ # required
@@ -885,6 +932,146 @@ module Aws::Kafka
       req.send_request(options)
     end
 
+    # Creates a Channel that streams records from an Amazon MSK Express
+    # cluster topic to Amazon S3 or Apache Iceberg.
+    #
+    # @option params [required, String] :channel_name
+    #   The name of the channel. Must be unique within the cluster.
+    #
+    # @option params [required, String] :cluster_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the cluster.
+    #
+    # @option params [Types::EncryptionConfiguration] :encryption_configuration
+    #   The encryption configuration applied to the channel.
+    #
+    # @option params [Types::IcebergDestinationConfiguration] :iceberg_destination_configuration
+    #   The Apache Iceberg destination for the channel. Mutually exclusive
+    #   with s3DestinationConfiguration.
+    #
+    # @option params [Types::ChannelLoggingInfo] :logging_info
+    #   The destinations to which the channel publishes operational logs.
+    #
+    # @option params [Types::S3DestinationConfiguration] :s3_destination_configuration
+    #   The Amazon S3 destination for the channel. Mutually exclusive with
+    #   icebergDestinationConfiguration.
+    #
+    # @option params [Hash<String,String>] :tags
+    #   The tags attached to the channel.
+    #
+    # @option params [required, Array<Types::TopicConfiguration>] :topic_configuration_list
+    #   The list of topic configurations for the channel. Currently exactly
+    #   one topic must be specified.
+    #
+    # @return [Types::CreateChannelResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateChannelResponse#channel_arn #channel_arn} => String
+    #   * {Types::CreateChannelResponse#cluster_operation_arn #cluster_operation_arn} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_channel({
+    #     channel_name: "__string", # required
+    #     cluster_arn: "__string", # required
+    #     encryption_configuration: {
+    #       kms_key_arn: "__string", # required
+    #     },
+    #     iceberg_destination_configuration: {
+    #       append_only: false, # required
+    #       catalog: {
+    #         catalog_arn: "__string",
+    #         warehouse_location: "__string",
+    #       },
+    #       data_freshness_in_seconds: 1,
+    #       dead_letter_queue_s3: { # required
+    #         bucket_arn: "__string", # required
+    #         error_output_prefix: "__string",
+    #         expected_bucket_owner: "__string",
+    #       },
+    #       destination_table_list: [ # required
+    #         {
+    #           destination_database_name: "__string",
+    #           destination_table_name: "__string",
+    #           partition_spec: {
+    #             partition_strategy: "TIME_HOUR", # required, accepts TIME_HOUR
+    #             source_list: [
+    #               {
+    #                 source_name: "__string",
+    #               },
+    #             ],
+    #           },
+    #         },
+    #       ],
+    #       schema_evolution: { # required
+    #         enable_schema_evolution: false,
+    #       },
+    #       service_execution_role_arn: "__string", # required
+    #       table_creation: { # required
+    #         enable_table_creation: false,
+    #       },
+    #       compression_type: "ZSTD", # accepts ZSTD, SNAPPY
+    #     },
+    #     logging_info: {
+    #       cloud_watch_logs: {
+    #         enabled: false, # required
+    #         log_group: "__string",
+    #       },
+    #       firehose: {
+    #         delivery_stream: "__string",
+    #         enabled: false, # required
+    #       },
+    #       s3: {
+    #         bucket: "__string",
+    #         enabled: false, # required
+    #         prefix: "__string",
+    #       },
+    #     },
+    #     s3_destination_configuration: {
+    #       data_freshness_in_seconds: 1,
+    #       dead_letter_queue_s3: { # required
+    #         bucket_arn: "__string", # required
+    #         error_output_prefix: "__string",
+    #         expected_bucket_owner: "__string",
+    #       },
+    #       service_execution_role_arn: "__string", # required
+    #       storage: { # required
+    #         bucket_arn: "__string", # required
+    #         compression_type: "NONE", # required, accepts NONE, GZIP, ZSTD
+    #         output_prefix: "__string",
+    #         output_key_template: "__string",
+    #         storage_class: "STANDARD", # required, accepts STANDARD, INTELLIGENT_TIERING, GLACIER_IR
+    #         expected_bucket_owner: "__string",
+    #       },
+    #     },
+    #     tags: {
+    #       "__string" => "__string",
+    #     },
+    #     topic_configuration_list: [ # required
+    #       {
+    #         record_converter: { # required
+    #           value_converter: "BYTE_ARRAY", # required, accepts BYTE_ARRAY, JSON, JSON_SCHEMA_GSR, STRING
+    #         },
+    #         record_schema: {
+    #           gsr_arn: "__string", # required
+    #         },
+    #         topic_arn: "__string", # required
+    #       },
+    #     ],
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.channel_arn #=> String
+    #   resp.cluster_operation_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/CreateChannel AWS API Documentation
+    #
+    # @overload create_channel(params = {})
+    # @param [Hash] params ({})
+    def create_channel(params = {}, options = {})
+      req = build_request(:create_channel, params)
+      req.send_request(options)
+    end
+
     # Creates a new Kafka Replicator.
     #
     # @option params [String] :description
@@ -892,6 +1079,9 @@ module Aws::Kafka
     #
     # @option params [required, Array<Types::KafkaCluster>] :kafka_clusters
     #   Kafka Clusters to use in setting up sources / targets for replication.
+    #
+    # @option params [Types::LogDelivery] :log_delivery
+    #   Configuration for delivering replicator logs to customer destinations.
     #
     # @option params [required, Array<Types::ReplicationInfo>] :replication_info_list
     #   A list of replication configurations, where each configuration targets
@@ -920,15 +1110,49 @@ module Aws::Kafka
     #     description: "__stringMax1024",
     #     kafka_clusters: [ # required
     #       {
-    #         amazon_msk_cluster: { # required
+    #         amazon_msk_cluster: {
     #           msk_cluster_arn: "__string", # required
     #         },
-    #         vpc_config: { # required
+    #         apache_kafka_cluster: {
+    #           apache_kafka_cluster_id: "__string", # required
+    #           bootstrap_broker_string: "__string", # required
+    #         },
+    #         vpc_config: {
     #           security_group_ids: ["__string"],
     #           subnet_ids: ["__string"], # required
     #         },
+    #         client_authentication: {
+    #           sasl_scram: {
+    #             mechanism: "SHA256", # required, accepts SHA256, SHA512
+    #             secret_arn: "__string", # required
+    #           },
+    #           mtls: {
+    #             secret_arn: "__string", # required
+    #           },
+    #         },
+    #         encryption_in_transit: {
+    #           encryption_type: "TLS", # required, accepts TLS
+    #           root_ca_certificate: "__string",
+    #         },
     #       },
     #     ],
+    #     log_delivery: {
+    #       replicator_log_delivery: {
+    #         cloud_watch_logs: {
+    #           enabled: false, # required
+    #           log_group: "__string",
+    #         },
+    #         firehose: {
+    #           delivery_stream: "__string",
+    #           enabled: false, # required
+    #         },
+    #         s3: {
+    #           bucket: "__string",
+    #           enabled: false, # required
+    #           prefix: "__string",
+    #         },
+    #       },
+    #     },
     #     replication_info_list: [ # required
     #       {
     #         consumer_group_replication: { # required
@@ -936,10 +1160,13 @@ module Aws::Kafka
     #           consumer_groups_to_replicate: ["__stringMax256"], # required
     #           detect_and_copy_new_consumer_groups: false,
     #           synchronise_consumer_group_offsets: false,
+    #           consumer_group_offset_sync_mode: "LEGACY", # accepts LEGACY, ENHANCED
     #         },
-    #         source_kafka_cluster_arn: "__string", # required
+    #         source_kafka_cluster_arn: "__string",
+    #         source_kafka_cluster_id: "__string",
     #         target_compression_type: "NONE", # required, accepts NONE, GZIP, SNAPPY, LZ4, ZSTD
-    #         target_kafka_cluster_arn: "__string", # required
+    #         target_kafka_cluster_arn: "__string",
+    #         target_kafka_cluster_id: "__string",
     #         topic_replication: { # required
     #           copy_access_control_lists_for_topics: false,
     #           copy_topic_configurations: false,
@@ -974,6 +1201,49 @@ module Aws::Kafka
     # @param [Hash] params ({})
     def create_replicator(params = {}, options = {})
       req = build_request(:create_replicator, params)
+      req.send_request(options)
+    end
+
+    # Creates a topic in the specified MSK cluster.
+    #
+    # @option params [required, String] :cluster_arn
+    #
+    # @option params [required, String] :topic_name
+    #
+    # @option params [required, Integer] :partition_count
+    #
+    # @option params [required, Integer] :replication_factor
+    #
+    # @option params [String] :configs
+    #
+    # @return [Types::CreateTopicResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateTopicResponse#topic_arn #topic_arn} => String
+    #   * {Types::CreateTopicResponse#topic_name #topic_name} => String
+    #   * {Types::CreateTopicResponse#status #status} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_topic({
+    #     cluster_arn: "__string", # required
+    #     topic_name: "__string", # required
+    #     partition_count: 1, # required
+    #     replication_factor: 1, # required
+    #     configs: "__string",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.topic_arn #=> String
+    #   resp.topic_name #=> String
+    #   resp.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/CreateTopic AWS API Documentation
+    #
+    # @overload create_topic(params = {})
+    # @param [Hash] params ({})
+    def create_topic(params = {}, options = {})
+      req = build_request(:create_topic, params)
       req.send_request(options)
     end
 
@@ -1076,6 +1346,42 @@ module Aws::Kafka
       req.send_request(options)
     end
 
+    # Deletes the channel specified by channelArn from the cluster specified
+    # by clusterArn. The channel transitions through DELETING and is removed
+    # when the asynchronous delete completes.
+    #
+    # @option params [required, String] :channel_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the channel.
+    #
+    # @option params [required, String] :cluster_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the cluster.
+    #
+    # @return [Types::DeleteChannelResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DeleteChannelResponse#channel_arn #channel_arn} => String
+    #   * {Types::DeleteChannelResponse#cluster_operation_arn #cluster_operation_arn} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_channel({
+    #     channel_arn: "__string", # required
+    #     cluster_arn: "__string", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.channel_arn #=> String
+    #   resp.cluster_operation_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/DeleteChannel AWS API Documentation
+    #
+    # @overload delete_channel(params = {})
+    # @param [Hash] params ({})
+    def delete_channel(params = {}, options = {})
+      req = build_request(:delete_channel, params)
+      req.send_request(options)
+    end
+
     # Deletes the specified MSK configuration. The configuration must be in
     # the ACTIVE or DELETE\_FAILED state.
     #
@@ -1139,6 +1445,40 @@ module Aws::Kafka
       req.send_request(options)
     end
 
+    # Deletes a topic in the specified MSK cluster.
+    #
+    # @option params [required, String] :cluster_arn
+    #
+    # @option params [required, String] :topic_name
+    #
+    # @return [Types::DeleteTopicResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DeleteTopicResponse#topic_arn #topic_arn} => String
+    #   * {Types::DeleteTopicResponse#topic_name #topic_name} => String
+    #   * {Types::DeleteTopicResponse#status #status} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_topic({
+    #     cluster_arn: "__string", # required
+    #     topic_name: "__string", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.topic_arn #=> String
+    #   resp.topic_name #=> String
+    #   resp.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/DeleteTopic AWS API Documentation
+    #
+    # @overload delete_topic(params = {})
+    # @param [Hash] params ({})
+    def delete_topic(params = {}, options = {})
+      req = build_request(:delete_topic, params)
+      req.send_request(options)
+    end
+
     # Deletes the Amazon MSK VPC connection specified in your request.
     #
     # @option params [required, String] :arn
@@ -1199,6 +1539,7 @@ module Aws::Kafka
     #   resp.cluster_info.broker_node_group_info.connectivity_info.vpc_connectivity.client_authentication.sasl.scram.enabled #=> Boolean
     #   resp.cluster_info.broker_node_group_info.connectivity_info.vpc_connectivity.client_authentication.sasl.iam.enabled #=> Boolean
     #   resp.cluster_info.broker_node_group_info.connectivity_info.vpc_connectivity.client_authentication.tls.enabled #=> Boolean
+    #   resp.cluster_info.broker_node_group_info.connectivity_info.network_type #=> String, one of "IPV4", "DUAL"
     #   resp.cluster_info.broker_node_group_info.zone_ids #=> Array
     #   resp.cluster_info.broker_node_group_info.zone_ids[0] #=> String
     #   resp.cluster_info.client_authentication.sasl.scram.enabled #=> Boolean
@@ -1213,6 +1554,13 @@ module Aws::Kafka
     #   resp.cluster_info.current_broker_software_info.configuration_arn #=> String
     #   resp.cluster_info.current_broker_software_info.configuration_revision #=> Integer
     #   resp.cluster_info.current_broker_software_info.kafka_version #=> String
+    #   resp.cluster_info.logging_info.authorizer_logs.cloud_watch_logs.enabled #=> Boolean
+    #   resp.cluster_info.logging_info.authorizer_logs.cloud_watch_logs.log_group #=> String
+    #   resp.cluster_info.logging_info.authorizer_logs.firehose.delivery_stream #=> String
+    #   resp.cluster_info.logging_info.authorizer_logs.firehose.enabled #=> Boolean
+    #   resp.cluster_info.logging_info.authorizer_logs.s3.bucket #=> String
+    #   resp.cluster_info.logging_info.authorizer_logs.s3.enabled #=> Boolean
+    #   resp.cluster_info.logging_info.authorizer_logs.s3.prefix #=> String
     #   resp.cluster_info.logging_info.broker_logs.cloud_watch_logs.enabled #=> Boolean
     #   resp.cluster_info.logging_info.broker_logs.cloud_watch_logs.log_group #=> String
     #   resp.cluster_info.logging_info.broker_logs.firehose.delivery_stream #=> String
@@ -1236,6 +1584,7 @@ module Aws::Kafka
     #   resp.cluster_info.zookeeper_connect_string #=> String
     #   resp.cluster_info.zookeeper_connect_string_tls #=> String
     #   resp.cluster_info.storage_mode #=> String, one of "LOCAL", "TIERED"
+    #   resp.cluster_info.rebalancing.status #=> String, one of "PAUSED", "ACTIVE"
     #   resp.cluster_info.customer_action_status #=> String, one of "CRITICAL_ACTION_REQUIRED", "ACTION_RECOMMENDED", "NONE"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/DescribeCluster AWS API Documentation
@@ -1290,6 +1639,7 @@ module Aws::Kafka
     #   resp.cluster_info.provisioned.broker_node_group_info.connectivity_info.vpc_connectivity.client_authentication.sasl.scram.enabled #=> Boolean
     #   resp.cluster_info.provisioned.broker_node_group_info.connectivity_info.vpc_connectivity.client_authentication.sasl.iam.enabled #=> Boolean
     #   resp.cluster_info.provisioned.broker_node_group_info.connectivity_info.vpc_connectivity.client_authentication.tls.enabled #=> Boolean
+    #   resp.cluster_info.provisioned.broker_node_group_info.connectivity_info.network_type #=> String, one of "IPV4", "DUAL"
     #   resp.cluster_info.provisioned.broker_node_group_info.zone_ids #=> Array
     #   resp.cluster_info.provisioned.broker_node_group_info.zone_ids[0] #=> String
     #   resp.cluster_info.provisioned.current_broker_software_info.configuration_arn #=> String
@@ -1307,6 +1657,13 @@ module Aws::Kafka
     #   resp.cluster_info.provisioned.enhanced_monitoring #=> String, one of "DEFAULT", "PER_BROKER", "PER_TOPIC_PER_BROKER", "PER_TOPIC_PER_PARTITION"
     #   resp.cluster_info.provisioned.open_monitoring.prometheus.jmx_exporter.enabled_in_broker #=> Boolean
     #   resp.cluster_info.provisioned.open_monitoring.prometheus.node_exporter.enabled_in_broker #=> Boolean
+    #   resp.cluster_info.provisioned.logging_info.authorizer_logs.cloud_watch_logs.enabled #=> Boolean
+    #   resp.cluster_info.provisioned.logging_info.authorizer_logs.cloud_watch_logs.log_group #=> String
+    #   resp.cluster_info.provisioned.logging_info.authorizer_logs.firehose.delivery_stream #=> String
+    #   resp.cluster_info.provisioned.logging_info.authorizer_logs.firehose.enabled #=> Boolean
+    #   resp.cluster_info.provisioned.logging_info.authorizer_logs.s3.bucket #=> String
+    #   resp.cluster_info.provisioned.logging_info.authorizer_logs.s3.enabled #=> Boolean
+    #   resp.cluster_info.provisioned.logging_info.authorizer_logs.s3.prefix #=> String
     #   resp.cluster_info.provisioned.logging_info.broker_logs.cloud_watch_logs.enabled #=> Boolean
     #   resp.cluster_info.provisioned.logging_info.broker_logs.cloud_watch_logs.log_group #=> String
     #   resp.cluster_info.provisioned.logging_info.broker_logs.firehose.delivery_stream #=> String
@@ -1318,6 +1675,7 @@ module Aws::Kafka
     #   resp.cluster_info.provisioned.zookeeper_connect_string #=> String
     #   resp.cluster_info.provisioned.zookeeper_connect_string_tls #=> String
     #   resp.cluster_info.provisioned.storage_mode #=> String, one of "LOCAL", "TIERED"
+    #   resp.cluster_info.provisioned.rebalancing.status #=> String, one of "PAUSED", "ACTIVE"
     #   resp.cluster_info.provisioned.customer_action_status #=> String, one of "CRITICAL_ACTION_REQUIRED", "ACTION_RECOMMENDED", "NONE"
     #   resp.cluster_info.serverless.vpc_configs #=> Array
     #   resp.cluster_info.serverless.vpc_configs[0].subnet_ids #=> Array
@@ -1325,6 +1683,7 @@ module Aws::Kafka
     #   resp.cluster_info.serverless.vpc_configs[0].security_group_ids #=> Array
     #   resp.cluster_info.serverless.vpc_configs[0].security_group_ids[0] #=> String
     #   resp.cluster_info.serverless.client_authentication.sasl.iam.enabled #=> Boolean
+    #   resp.cluster_info.serverless.connectivity_info.network_type #=> String, one of "IPV4", "DUAL"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/DescribeClusterV2 AWS API Documentation
     #
@@ -1375,6 +1734,13 @@ module Aws::Kafka
     #   resp.cluster_operation_info.source_cluster_info.open_monitoring.prometheus.node_exporter.enabled_in_broker #=> Boolean
     #   resp.cluster_operation_info.source_cluster_info.enhanced_monitoring #=> String, one of "DEFAULT", "PER_BROKER", "PER_TOPIC_PER_BROKER", "PER_TOPIC_PER_PARTITION"
     #   resp.cluster_operation_info.source_cluster_info.kafka_version #=> String
+    #   resp.cluster_operation_info.source_cluster_info.logging_info.authorizer_logs.cloud_watch_logs.enabled #=> Boolean
+    #   resp.cluster_operation_info.source_cluster_info.logging_info.authorizer_logs.cloud_watch_logs.log_group #=> String
+    #   resp.cluster_operation_info.source_cluster_info.logging_info.authorizer_logs.firehose.delivery_stream #=> String
+    #   resp.cluster_operation_info.source_cluster_info.logging_info.authorizer_logs.firehose.enabled #=> Boolean
+    #   resp.cluster_operation_info.source_cluster_info.logging_info.authorizer_logs.s3.bucket #=> String
+    #   resp.cluster_operation_info.source_cluster_info.logging_info.authorizer_logs.s3.enabled #=> Boolean
+    #   resp.cluster_operation_info.source_cluster_info.logging_info.authorizer_logs.s3.prefix #=> String
     #   resp.cluster_operation_info.source_cluster_info.logging_info.broker_logs.cloud_watch_logs.enabled #=> Boolean
     #   resp.cluster_operation_info.source_cluster_info.logging_info.broker_logs.cloud_watch_logs.log_group #=> String
     #   resp.cluster_operation_info.source_cluster_info.logging_info.broker_logs.firehose.delivery_stream #=> String
@@ -1396,11 +1762,14 @@ module Aws::Kafka
     #   resp.cluster_operation_info.source_cluster_info.connectivity_info.vpc_connectivity.client_authentication.sasl.scram.enabled #=> Boolean
     #   resp.cluster_operation_info.source_cluster_info.connectivity_info.vpc_connectivity.client_authentication.sasl.iam.enabled #=> Boolean
     #   resp.cluster_operation_info.source_cluster_info.connectivity_info.vpc_connectivity.client_authentication.tls.enabled #=> Boolean
+    #   resp.cluster_operation_info.source_cluster_info.connectivity_info.network_type #=> String, one of "IPV4", "DUAL"
+    #   resp.cluster_operation_info.source_cluster_info.zookeeper_access.enabled #=> Boolean
     #   resp.cluster_operation_info.source_cluster_info.storage_mode #=> String, one of "LOCAL", "TIERED"
     #   resp.cluster_operation_info.source_cluster_info.broker_count_update_info.created_broker_ids #=> Array
     #   resp.cluster_operation_info.source_cluster_info.broker_count_update_info.created_broker_ids[0] #=> Float
     #   resp.cluster_operation_info.source_cluster_info.broker_count_update_info.deleted_broker_ids #=> Array
     #   resp.cluster_operation_info.source_cluster_info.broker_count_update_info.deleted_broker_ids[0] #=> Float
+    #   resp.cluster_operation_info.source_cluster_info.rebalancing.status #=> String, one of "PAUSED", "ACTIVE"
     #   resp.cluster_operation_info.target_cluster_info.broker_ebs_volume_info #=> Array
     #   resp.cluster_operation_info.target_cluster_info.broker_ebs_volume_info[0].kafka_broker_node_id #=> String
     #   resp.cluster_operation_info.target_cluster_info.broker_ebs_volume_info[0].provisioned_throughput.enabled #=> Boolean
@@ -1413,6 +1782,13 @@ module Aws::Kafka
     #   resp.cluster_operation_info.target_cluster_info.open_monitoring.prometheus.node_exporter.enabled_in_broker #=> Boolean
     #   resp.cluster_operation_info.target_cluster_info.enhanced_monitoring #=> String, one of "DEFAULT", "PER_BROKER", "PER_TOPIC_PER_BROKER", "PER_TOPIC_PER_PARTITION"
     #   resp.cluster_operation_info.target_cluster_info.kafka_version #=> String
+    #   resp.cluster_operation_info.target_cluster_info.logging_info.authorizer_logs.cloud_watch_logs.enabled #=> Boolean
+    #   resp.cluster_operation_info.target_cluster_info.logging_info.authorizer_logs.cloud_watch_logs.log_group #=> String
+    #   resp.cluster_operation_info.target_cluster_info.logging_info.authorizer_logs.firehose.delivery_stream #=> String
+    #   resp.cluster_operation_info.target_cluster_info.logging_info.authorizer_logs.firehose.enabled #=> Boolean
+    #   resp.cluster_operation_info.target_cluster_info.logging_info.authorizer_logs.s3.bucket #=> String
+    #   resp.cluster_operation_info.target_cluster_info.logging_info.authorizer_logs.s3.enabled #=> Boolean
+    #   resp.cluster_operation_info.target_cluster_info.logging_info.authorizer_logs.s3.prefix #=> String
     #   resp.cluster_operation_info.target_cluster_info.logging_info.broker_logs.cloud_watch_logs.enabled #=> Boolean
     #   resp.cluster_operation_info.target_cluster_info.logging_info.broker_logs.cloud_watch_logs.log_group #=> String
     #   resp.cluster_operation_info.target_cluster_info.logging_info.broker_logs.firehose.delivery_stream #=> String
@@ -1434,11 +1810,14 @@ module Aws::Kafka
     #   resp.cluster_operation_info.target_cluster_info.connectivity_info.vpc_connectivity.client_authentication.sasl.scram.enabled #=> Boolean
     #   resp.cluster_operation_info.target_cluster_info.connectivity_info.vpc_connectivity.client_authentication.sasl.iam.enabled #=> Boolean
     #   resp.cluster_operation_info.target_cluster_info.connectivity_info.vpc_connectivity.client_authentication.tls.enabled #=> Boolean
+    #   resp.cluster_operation_info.target_cluster_info.connectivity_info.network_type #=> String, one of "IPV4", "DUAL"
+    #   resp.cluster_operation_info.target_cluster_info.zookeeper_access.enabled #=> Boolean
     #   resp.cluster_operation_info.target_cluster_info.storage_mode #=> String, one of "LOCAL", "TIERED"
     #   resp.cluster_operation_info.target_cluster_info.broker_count_update_info.created_broker_ids #=> Array
     #   resp.cluster_operation_info.target_cluster_info.broker_count_update_info.created_broker_ids[0] #=> Float
     #   resp.cluster_operation_info.target_cluster_info.broker_count_update_info.deleted_broker_ids #=> Array
     #   resp.cluster_operation_info.target_cluster_info.broker_count_update_info.deleted_broker_ids[0] #=> Float
+    #   resp.cluster_operation_info.target_cluster_info.rebalancing.status #=> String, one of "PAUSED", "ACTIVE"
     #   resp.cluster_operation_info.vpc_connection_info.vpc_connection_arn #=> String
     #   resp.cluster_operation_info.vpc_connection_info.owner #=> String
     #   resp.cluster_operation_info.vpc_connection_info.user_identity.type #=> String, one of "AWSACCOUNT", "AWSSERVICE"
@@ -1492,6 +1871,13 @@ module Aws::Kafka
     #   resp.cluster_operation_info.provisioned.source_cluster_info.open_monitoring.prometheus.node_exporter.enabled_in_broker #=> Boolean
     #   resp.cluster_operation_info.provisioned.source_cluster_info.enhanced_monitoring #=> String, one of "DEFAULT", "PER_BROKER", "PER_TOPIC_PER_BROKER", "PER_TOPIC_PER_PARTITION"
     #   resp.cluster_operation_info.provisioned.source_cluster_info.kafka_version #=> String
+    #   resp.cluster_operation_info.provisioned.source_cluster_info.logging_info.authorizer_logs.cloud_watch_logs.enabled #=> Boolean
+    #   resp.cluster_operation_info.provisioned.source_cluster_info.logging_info.authorizer_logs.cloud_watch_logs.log_group #=> String
+    #   resp.cluster_operation_info.provisioned.source_cluster_info.logging_info.authorizer_logs.firehose.delivery_stream #=> String
+    #   resp.cluster_operation_info.provisioned.source_cluster_info.logging_info.authorizer_logs.firehose.enabled #=> Boolean
+    #   resp.cluster_operation_info.provisioned.source_cluster_info.logging_info.authorizer_logs.s3.bucket #=> String
+    #   resp.cluster_operation_info.provisioned.source_cluster_info.logging_info.authorizer_logs.s3.enabled #=> Boolean
+    #   resp.cluster_operation_info.provisioned.source_cluster_info.logging_info.authorizer_logs.s3.prefix #=> String
     #   resp.cluster_operation_info.provisioned.source_cluster_info.logging_info.broker_logs.cloud_watch_logs.enabled #=> Boolean
     #   resp.cluster_operation_info.provisioned.source_cluster_info.logging_info.broker_logs.cloud_watch_logs.log_group #=> String
     #   resp.cluster_operation_info.provisioned.source_cluster_info.logging_info.broker_logs.firehose.delivery_stream #=> String
@@ -1513,11 +1899,14 @@ module Aws::Kafka
     #   resp.cluster_operation_info.provisioned.source_cluster_info.connectivity_info.vpc_connectivity.client_authentication.sasl.scram.enabled #=> Boolean
     #   resp.cluster_operation_info.provisioned.source_cluster_info.connectivity_info.vpc_connectivity.client_authentication.sasl.iam.enabled #=> Boolean
     #   resp.cluster_operation_info.provisioned.source_cluster_info.connectivity_info.vpc_connectivity.client_authentication.tls.enabled #=> Boolean
+    #   resp.cluster_operation_info.provisioned.source_cluster_info.connectivity_info.network_type #=> String, one of "IPV4", "DUAL"
+    #   resp.cluster_operation_info.provisioned.source_cluster_info.zookeeper_access.enabled #=> Boolean
     #   resp.cluster_operation_info.provisioned.source_cluster_info.storage_mode #=> String, one of "LOCAL", "TIERED"
     #   resp.cluster_operation_info.provisioned.source_cluster_info.broker_count_update_info.created_broker_ids #=> Array
     #   resp.cluster_operation_info.provisioned.source_cluster_info.broker_count_update_info.created_broker_ids[0] #=> Float
     #   resp.cluster_operation_info.provisioned.source_cluster_info.broker_count_update_info.deleted_broker_ids #=> Array
     #   resp.cluster_operation_info.provisioned.source_cluster_info.broker_count_update_info.deleted_broker_ids[0] #=> Float
+    #   resp.cluster_operation_info.provisioned.source_cluster_info.rebalancing.status #=> String, one of "PAUSED", "ACTIVE"
     #   resp.cluster_operation_info.provisioned.target_cluster_info.broker_ebs_volume_info #=> Array
     #   resp.cluster_operation_info.provisioned.target_cluster_info.broker_ebs_volume_info[0].kafka_broker_node_id #=> String
     #   resp.cluster_operation_info.provisioned.target_cluster_info.broker_ebs_volume_info[0].provisioned_throughput.enabled #=> Boolean
@@ -1530,6 +1919,13 @@ module Aws::Kafka
     #   resp.cluster_operation_info.provisioned.target_cluster_info.open_monitoring.prometheus.node_exporter.enabled_in_broker #=> Boolean
     #   resp.cluster_operation_info.provisioned.target_cluster_info.enhanced_monitoring #=> String, one of "DEFAULT", "PER_BROKER", "PER_TOPIC_PER_BROKER", "PER_TOPIC_PER_PARTITION"
     #   resp.cluster_operation_info.provisioned.target_cluster_info.kafka_version #=> String
+    #   resp.cluster_operation_info.provisioned.target_cluster_info.logging_info.authorizer_logs.cloud_watch_logs.enabled #=> Boolean
+    #   resp.cluster_operation_info.provisioned.target_cluster_info.logging_info.authorizer_logs.cloud_watch_logs.log_group #=> String
+    #   resp.cluster_operation_info.provisioned.target_cluster_info.logging_info.authorizer_logs.firehose.delivery_stream #=> String
+    #   resp.cluster_operation_info.provisioned.target_cluster_info.logging_info.authorizer_logs.firehose.enabled #=> Boolean
+    #   resp.cluster_operation_info.provisioned.target_cluster_info.logging_info.authorizer_logs.s3.bucket #=> String
+    #   resp.cluster_operation_info.provisioned.target_cluster_info.logging_info.authorizer_logs.s3.enabled #=> Boolean
+    #   resp.cluster_operation_info.provisioned.target_cluster_info.logging_info.authorizer_logs.s3.prefix #=> String
     #   resp.cluster_operation_info.provisioned.target_cluster_info.logging_info.broker_logs.cloud_watch_logs.enabled #=> Boolean
     #   resp.cluster_operation_info.provisioned.target_cluster_info.logging_info.broker_logs.cloud_watch_logs.log_group #=> String
     #   resp.cluster_operation_info.provisioned.target_cluster_info.logging_info.broker_logs.firehose.delivery_stream #=> String
@@ -1551,16 +1947,21 @@ module Aws::Kafka
     #   resp.cluster_operation_info.provisioned.target_cluster_info.connectivity_info.vpc_connectivity.client_authentication.sasl.scram.enabled #=> Boolean
     #   resp.cluster_operation_info.provisioned.target_cluster_info.connectivity_info.vpc_connectivity.client_authentication.sasl.iam.enabled #=> Boolean
     #   resp.cluster_operation_info.provisioned.target_cluster_info.connectivity_info.vpc_connectivity.client_authentication.tls.enabled #=> Boolean
+    #   resp.cluster_operation_info.provisioned.target_cluster_info.connectivity_info.network_type #=> String, one of "IPV4", "DUAL"
+    #   resp.cluster_operation_info.provisioned.target_cluster_info.zookeeper_access.enabled #=> Boolean
     #   resp.cluster_operation_info.provisioned.target_cluster_info.storage_mode #=> String, one of "LOCAL", "TIERED"
     #   resp.cluster_operation_info.provisioned.target_cluster_info.broker_count_update_info.created_broker_ids #=> Array
     #   resp.cluster_operation_info.provisioned.target_cluster_info.broker_count_update_info.created_broker_ids[0] #=> Float
     #   resp.cluster_operation_info.provisioned.target_cluster_info.broker_count_update_info.deleted_broker_ids #=> Array
     #   resp.cluster_operation_info.provisioned.target_cluster_info.broker_count_update_info.deleted_broker_ids[0] #=> Float
+    #   resp.cluster_operation_info.provisioned.target_cluster_info.rebalancing.status #=> String, one of "PAUSED", "ACTIVE"
     #   resp.cluster_operation_info.provisioned.vpc_connection_info.vpc_connection_arn #=> String
     #   resp.cluster_operation_info.provisioned.vpc_connection_info.owner #=> String
     #   resp.cluster_operation_info.provisioned.vpc_connection_info.user_identity.type #=> String, one of "AWSACCOUNT", "AWSSERVICE"
     #   resp.cluster_operation_info.provisioned.vpc_connection_info.user_identity.principal_id #=> String
     #   resp.cluster_operation_info.provisioned.vpc_connection_info.creation_time #=> Time
+    #   resp.cluster_operation_info.serverless.source_cluster_info.network_type #=> String, one of "IPV4", "DUAL"
+    #   resp.cluster_operation_info.serverless.target_cluster_info.network_type #=> String, one of "IPV4", "DUAL"
     #   resp.cluster_operation_info.serverless.vpc_connection_info.creation_time #=> Time
     #   resp.cluster_operation_info.serverless.vpc_connection_info.owner #=> String
     #   resp.cluster_operation_info.serverless.vpc_connection_info.user_identity.type #=> String, one of "AWSACCOUNT", "AWSSERVICE"
@@ -1573,6 +1974,99 @@ module Aws::Kafka
     # @param [Hash] params ({})
     def describe_cluster_operation_v2(params = {}, options = {})
       req = build_request(:describe_cluster_operation_v2, params)
+      req.send_request(options)
+    end
+
+    # Returns the current configuration and state of a channel.
+    #
+    # @option params [required, String] :channel_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the channel.
+    #
+    # @option params [required, String] :cluster_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the cluster.
+    #
+    # @return [Types::DescribeChannelResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DescribeChannelResponse#channel_arn #channel_arn} => String
+    #   * {Types::DescribeChannelResponse#channel_name #channel_name} => String
+    #   * {Types::DescribeChannelResponse#encryption_configuration #encryption_configuration} => Types::EncryptionConfiguration
+    #   * {Types::DescribeChannelResponse#iceberg_destination_configuration #iceberg_destination_configuration} => Types::IcebergDestinationConfiguration
+    #   * {Types::DescribeChannelResponse#s3_destination_configuration #s3_destination_configuration} => Types::S3DestinationConfiguration
+    #   * {Types::DescribeChannelResponse#status #status} => String
+    #   * {Types::DescribeChannelResponse#destination_type #destination_type} => String
+    #   * {Types::DescribeChannelResponse#creation_time #creation_time} => Time
+    #   * {Types::DescribeChannelResponse#topic_configuration_list #topic_configuration_list} => Array&lt;Types::TopicConfiguration&gt;
+    #   * {Types::DescribeChannelResponse#logging_info #logging_info} => Types::ChannelLoggingInfo
+    #   * {Types::DescribeChannelResponse#state_info #state_info} => Types::ChannelStateInfo
+    #   * {Types::DescribeChannelResponse#cluster_operation_arn #cluster_operation_arn} => String
+    #   * {Types::DescribeChannelResponse#tags #tags} => Hash&lt;String,String&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.describe_channel({
+    #     channel_arn: "__string", # required
+    #     cluster_arn: "__string", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.channel_arn #=> String
+    #   resp.channel_name #=> String
+    #   resp.encryption_configuration.kms_key_arn #=> String
+    #   resp.iceberg_destination_configuration.append_only #=> Boolean
+    #   resp.iceberg_destination_configuration.catalog.catalog_arn #=> String
+    #   resp.iceberg_destination_configuration.catalog.warehouse_location #=> String
+    #   resp.iceberg_destination_configuration.data_freshness_in_seconds #=> Integer
+    #   resp.iceberg_destination_configuration.dead_letter_queue_s3.bucket_arn #=> String
+    #   resp.iceberg_destination_configuration.dead_letter_queue_s3.error_output_prefix #=> String
+    #   resp.iceberg_destination_configuration.dead_letter_queue_s3.expected_bucket_owner #=> String
+    #   resp.iceberg_destination_configuration.destination_table_list #=> Array
+    #   resp.iceberg_destination_configuration.destination_table_list[0].destination_database_name #=> String
+    #   resp.iceberg_destination_configuration.destination_table_list[0].destination_table_name #=> String
+    #   resp.iceberg_destination_configuration.destination_table_list[0].partition_spec.partition_strategy #=> String, one of "TIME_HOUR"
+    #   resp.iceberg_destination_configuration.destination_table_list[0].partition_spec.source_list #=> Array
+    #   resp.iceberg_destination_configuration.destination_table_list[0].partition_spec.source_list[0].source_name #=> String
+    #   resp.iceberg_destination_configuration.schema_evolution.enable_schema_evolution #=> Boolean
+    #   resp.iceberg_destination_configuration.service_execution_role_arn #=> String
+    #   resp.iceberg_destination_configuration.table_creation.enable_table_creation #=> Boolean
+    #   resp.iceberg_destination_configuration.compression_type #=> String, one of "ZSTD", "SNAPPY"
+    #   resp.s3_destination_configuration.data_freshness_in_seconds #=> Integer
+    #   resp.s3_destination_configuration.dead_letter_queue_s3.bucket_arn #=> String
+    #   resp.s3_destination_configuration.dead_letter_queue_s3.error_output_prefix #=> String
+    #   resp.s3_destination_configuration.dead_letter_queue_s3.expected_bucket_owner #=> String
+    #   resp.s3_destination_configuration.service_execution_role_arn #=> String
+    #   resp.s3_destination_configuration.storage.bucket_arn #=> String
+    #   resp.s3_destination_configuration.storage.compression_type #=> String, one of "NONE", "GZIP", "ZSTD"
+    #   resp.s3_destination_configuration.storage.output_prefix #=> String
+    #   resp.s3_destination_configuration.storage.output_key_template #=> String
+    #   resp.s3_destination_configuration.storage.storage_class #=> String, one of "STANDARD", "INTELLIGENT_TIERING", "GLACIER_IR"
+    #   resp.s3_destination_configuration.storage.expected_bucket_owner #=> String
+    #   resp.status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "FAILED", "SUSPENDING", "SUSPENDED"
+    #   resp.destination_type #=> String, one of "ICEBERG", "S3"
+    #   resp.creation_time #=> Time
+    #   resp.topic_configuration_list #=> Array
+    #   resp.topic_configuration_list[0].record_converter.value_converter #=> String, one of "BYTE_ARRAY", "JSON", "JSON_SCHEMA_GSR", "STRING"
+    #   resp.topic_configuration_list[0].record_schema.gsr_arn #=> String
+    #   resp.topic_configuration_list[0].topic_arn #=> String
+    #   resp.logging_info.cloud_watch_logs.enabled #=> Boolean
+    #   resp.logging_info.cloud_watch_logs.log_group #=> String
+    #   resp.logging_info.firehose.delivery_stream #=> String
+    #   resp.logging_info.firehose.enabled #=> Boolean
+    #   resp.logging_info.s3.bucket #=> String
+    #   resp.logging_info.s3.enabled #=> Boolean
+    #   resp.logging_info.s3.prefix #=> String
+    #   resp.state_info.code #=> String
+    #   resp.state_info.message #=> String
+    #   resp.cluster_operation_arn #=> String
+    #   resp.tags #=> Hash
+    #   resp.tags["__string"] #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/DescribeChannel AWS API Documentation
+    #
+    # @overload describe_channel(params = {})
+    # @param [Hash] params ({})
+    def describe_channel(params = {}, options = {})
+      req = build_request(:describe_channel, params)
       req.send_request(options)
     end
 
@@ -1667,6 +2161,7 @@ module Aws::Kafka
     #   * {Types::DescribeReplicatorResponse#current_version #current_version} => String
     #   * {Types::DescribeReplicatorResponse#is_replicator_reference #is_replicator_reference} => Boolean
     #   * {Types::DescribeReplicatorResponse#kafka_clusters #kafka_clusters} => Array&lt;Types::KafkaClusterDescription&gt;
+    #   * {Types::DescribeReplicatorResponse#log_delivery #log_delivery} => Types::LogDelivery
     #   * {Types::DescribeReplicatorResponse#replication_info_list #replication_info_list} => Array&lt;Types::ReplicationInfoDescription&gt;
     #   * {Types::DescribeReplicatorResponse#replicator_arn #replicator_arn} => String
     #   * {Types::DescribeReplicatorResponse#replicator_description #replicator_description} => String
@@ -1690,11 +2185,25 @@ module Aws::Kafka
     #   resp.is_replicator_reference #=> Boolean
     #   resp.kafka_clusters #=> Array
     #   resp.kafka_clusters[0].amazon_msk_cluster.msk_cluster_arn #=> String
+    #   resp.kafka_clusters[0].apache_kafka_cluster.apache_kafka_cluster_id #=> String
+    #   resp.kafka_clusters[0].apache_kafka_cluster.bootstrap_broker_string #=> String
     #   resp.kafka_clusters[0].kafka_cluster_alias #=> String
     #   resp.kafka_clusters[0].vpc_config.security_group_ids #=> Array
     #   resp.kafka_clusters[0].vpc_config.security_group_ids[0] #=> String
     #   resp.kafka_clusters[0].vpc_config.subnet_ids #=> Array
     #   resp.kafka_clusters[0].vpc_config.subnet_ids[0] #=> String
+    #   resp.kafka_clusters[0].client_authentication.sasl_scram.mechanism #=> String, one of "SHA256", "SHA512"
+    #   resp.kafka_clusters[0].client_authentication.sasl_scram.secret_arn #=> String
+    #   resp.kafka_clusters[0].client_authentication.mtls.secret_arn #=> String
+    #   resp.kafka_clusters[0].encryption_in_transit.encryption_type #=> String, one of "TLS"
+    #   resp.kafka_clusters[0].encryption_in_transit.root_ca_certificate #=> String
+    #   resp.log_delivery.replicator_log_delivery.cloud_watch_logs.enabled #=> Boolean
+    #   resp.log_delivery.replicator_log_delivery.cloud_watch_logs.log_group #=> String
+    #   resp.log_delivery.replicator_log_delivery.firehose.delivery_stream #=> String
+    #   resp.log_delivery.replicator_log_delivery.firehose.enabled #=> Boolean
+    #   resp.log_delivery.replicator_log_delivery.s3.bucket #=> String
+    #   resp.log_delivery.replicator_log_delivery.s3.enabled #=> Boolean
+    #   resp.log_delivery.replicator_log_delivery.s3.prefix #=> String
     #   resp.replication_info_list #=> Array
     #   resp.replication_info_list[0].consumer_group_replication.consumer_groups_to_exclude #=> Array
     #   resp.replication_info_list[0].consumer_group_replication.consumer_groups_to_exclude[0] #=> String
@@ -1702,6 +2211,7 @@ module Aws::Kafka
     #   resp.replication_info_list[0].consumer_group_replication.consumer_groups_to_replicate[0] #=> String
     #   resp.replication_info_list[0].consumer_group_replication.detect_and_copy_new_consumer_groups #=> Boolean
     #   resp.replication_info_list[0].consumer_group_replication.synchronise_consumer_group_offsets #=> Boolean
+    #   resp.replication_info_list[0].consumer_group_replication.consumer_group_offset_sync_mode #=> String, one of "LEGACY", "ENHANCED"
     #   resp.replication_info_list[0].source_kafka_cluster_alias #=> String
     #   resp.replication_info_list[0].target_compression_type #=> String, one of "NONE", "GZIP", "SNAPPY", "LZ4", "ZSTD"
     #   resp.replication_info_list[0].target_kafka_cluster_alias #=> String
@@ -1731,6 +2241,92 @@ module Aws::Kafka
     # @param [Hash] params ({})
     def describe_replicator(params = {}, options = {})
       req = build_request(:describe_replicator, params)
+      req.send_request(options)
+    end
+
+    # Returns topic details of this topic on a MSK cluster.
+    #
+    # @option params [required, String] :cluster_arn
+    #
+    # @option params [required, String] :topic_name
+    #
+    # @return [Types::DescribeTopicResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DescribeTopicResponse#topic_arn #topic_arn} => String
+    #   * {Types::DescribeTopicResponse#topic_name #topic_name} => String
+    #   * {Types::DescribeTopicResponse#replication_factor #replication_factor} => Integer
+    #   * {Types::DescribeTopicResponse#partition_count #partition_count} => Integer
+    #   * {Types::DescribeTopicResponse#configs #configs} => String
+    #   * {Types::DescribeTopicResponse#status #status} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.describe_topic({
+    #     cluster_arn: "__string", # required
+    #     topic_name: "__string", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.topic_arn #=> String
+    #   resp.topic_name #=> String
+    #   resp.replication_factor #=> Integer
+    #   resp.partition_count #=> Integer
+    #   resp.configs #=> String
+    #   resp.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/DescribeTopic AWS API Documentation
+    #
+    # @overload describe_topic(params = {})
+    # @param [Hash] params ({})
+    def describe_topic(params = {}, options = {})
+      req = build_request(:describe_topic, params)
+      req.send_request(options)
+    end
+
+    # Returns partition details of this topic on a MSK cluster.
+    #
+    # @option params [required, String] :cluster_arn
+    #
+    # @option params [required, String] :topic_name
+    #
+    # @option params [Integer] :max_results
+    #
+    # @option params [String] :next_token
+    #
+    # @return [Types::DescribeTopicPartitionsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DescribeTopicPartitionsResponse#partitions #partitions} => Array&lt;Types::TopicPartitionInfo&gt;
+    #   * {Types::DescribeTopicPartitionsResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.describe_topic_partitions({
+    #     cluster_arn: "__string", # required
+    #     topic_name: "__string", # required
+    #     max_results: 1,
+    #     next_token: "__string",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.partitions #=> Array
+    #   resp.partitions[0].partition #=> Integer
+    #   resp.partitions[0].leader #=> Integer
+    #   resp.partitions[0].replicas #=> Array
+    #   resp.partitions[0].replicas[0] #=> Integer
+    #   resp.partitions[0].isr #=> Array
+    #   resp.partitions[0].isr[0] #=> Integer
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/DescribeTopicPartitions AWS API Documentation
+    #
+    # @overload describe_topic_partitions(params = {})
+    # @param [Hash] params ({})
+    def describe_topic_partitions(params = {}, options = {})
+      req = build_request(:describe_topic_partitions, params)
       req.send_request(options)
     end
 
@@ -1838,6 +2434,10 @@ module Aws::Kafka
     #   * {Types::GetBootstrapBrokersResponse#bootstrap_broker_string_vpc_connectivity_tls #bootstrap_broker_string_vpc_connectivity_tls} => String
     #   * {Types::GetBootstrapBrokersResponse#bootstrap_broker_string_vpc_connectivity_sasl_scram #bootstrap_broker_string_vpc_connectivity_sasl_scram} => String
     #   * {Types::GetBootstrapBrokersResponse#bootstrap_broker_string_vpc_connectivity_sasl_iam #bootstrap_broker_string_vpc_connectivity_sasl_iam} => String
+    #   * {Types::GetBootstrapBrokersResponse#bootstrap_broker_string_ipv_6 #bootstrap_broker_string_ipv_6} => String
+    #   * {Types::GetBootstrapBrokersResponse#bootstrap_broker_string_tls_ipv_6 #bootstrap_broker_string_tls_ipv_6} => String
+    #   * {Types::GetBootstrapBrokersResponse#bootstrap_broker_string_sasl_scram_ipv_6 #bootstrap_broker_string_sasl_scram_ipv_6} => String
+    #   * {Types::GetBootstrapBrokersResponse#bootstrap_broker_string_sasl_iam_ipv_6 #bootstrap_broker_string_sasl_iam_ipv_6} => String
     #
     # @example Request syntax with placeholder values
     #
@@ -1857,6 +2457,10 @@ module Aws::Kafka
     #   resp.bootstrap_broker_string_vpc_connectivity_tls #=> String
     #   resp.bootstrap_broker_string_vpc_connectivity_sasl_scram #=> String
     #   resp.bootstrap_broker_string_vpc_connectivity_sasl_iam #=> String
+    #   resp.bootstrap_broker_string_ipv_6 #=> String
+    #   resp.bootstrap_broker_string_tls_ipv_6 #=> String
+    #   resp.bootstrap_broker_string_sasl_scram_ipv_6 #=> String
+    #   resp.bootstrap_broker_string_sasl_iam_ipv_6 #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/GetBootstrapBrokers AWS API Documentation
     #
@@ -1895,6 +2499,57 @@ module Aws::Kafka
     # @param [Hash] params ({})
     def get_compatible_kafka_versions(params = {}, options = {})
       req = build_request(:get_compatible_kafka_versions, params)
+      req.send_request(options)
+    end
+
+    # Returns the list of channels in a cluster.
+    #
+    # @option params [required, String] :cluster_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the cluster.
+    #
+    # @option params [Integer] :max_results
+    #   Maximum number of channels to return in a single response.
+    #
+    # @option params [String] :next_token
+    #   If the response of ListChannels is truncated, it returns a nextToken
+    #   in the response. This nextToken should be sent in the subsequent
+    #   request to ListChannels.
+    #
+    # @option params [String] :topic_name_filter
+    #   Filters results to channels whose topic name matches the specified
+    #   value.
+    #
+    # @return [Types::ListChannelsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListChannelsResponse#channels #channels} => Array&lt;Types::ChannelInfo&gt;
+    #   * {Types::ListChannelsResponse#next_token #next_token} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_channels({
+    #     cluster_arn: "__string", # required
+    #     max_results: 1,
+    #     next_token: "__string",
+    #     topic_name_filter: "__string",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.channels #=> Array
+    #   resp.channels[0].channel_arn #=> String
+    #   resp.channels[0].channel_name #=> String
+    #   resp.channels[0].status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "FAILED", "SUSPENDING", "SUSPENDED"
+    #   resp.channels[0].creation_time #=> Time
+    #   resp.channels[0].destination_type #=> String, one of "ICEBERG", "S3"
+    #   resp.channels[0].cluster_operation_arn #=> String
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/ListChannels AWS API Documentation
+    #
+    # @overload list_channels(params = {})
+    # @param [Hash] params ({})
+    def list_channels(params = {}, options = {})
+      req = build_request(:list_channels, params)
       req.send_request(options)
     end
 
@@ -1949,6 +2604,13 @@ module Aws::Kafka
     #   resp.cluster_operation_info_list[0].source_cluster_info.open_monitoring.prometheus.node_exporter.enabled_in_broker #=> Boolean
     #   resp.cluster_operation_info_list[0].source_cluster_info.enhanced_monitoring #=> String, one of "DEFAULT", "PER_BROKER", "PER_TOPIC_PER_BROKER", "PER_TOPIC_PER_PARTITION"
     #   resp.cluster_operation_info_list[0].source_cluster_info.kafka_version #=> String
+    #   resp.cluster_operation_info_list[0].source_cluster_info.logging_info.authorizer_logs.cloud_watch_logs.enabled #=> Boolean
+    #   resp.cluster_operation_info_list[0].source_cluster_info.logging_info.authorizer_logs.cloud_watch_logs.log_group #=> String
+    #   resp.cluster_operation_info_list[0].source_cluster_info.logging_info.authorizer_logs.firehose.delivery_stream #=> String
+    #   resp.cluster_operation_info_list[0].source_cluster_info.logging_info.authorizer_logs.firehose.enabled #=> Boolean
+    #   resp.cluster_operation_info_list[0].source_cluster_info.logging_info.authorizer_logs.s3.bucket #=> String
+    #   resp.cluster_operation_info_list[0].source_cluster_info.logging_info.authorizer_logs.s3.enabled #=> Boolean
+    #   resp.cluster_operation_info_list[0].source_cluster_info.logging_info.authorizer_logs.s3.prefix #=> String
     #   resp.cluster_operation_info_list[0].source_cluster_info.logging_info.broker_logs.cloud_watch_logs.enabled #=> Boolean
     #   resp.cluster_operation_info_list[0].source_cluster_info.logging_info.broker_logs.cloud_watch_logs.log_group #=> String
     #   resp.cluster_operation_info_list[0].source_cluster_info.logging_info.broker_logs.firehose.delivery_stream #=> String
@@ -1970,11 +2632,14 @@ module Aws::Kafka
     #   resp.cluster_operation_info_list[0].source_cluster_info.connectivity_info.vpc_connectivity.client_authentication.sasl.scram.enabled #=> Boolean
     #   resp.cluster_operation_info_list[0].source_cluster_info.connectivity_info.vpc_connectivity.client_authentication.sasl.iam.enabled #=> Boolean
     #   resp.cluster_operation_info_list[0].source_cluster_info.connectivity_info.vpc_connectivity.client_authentication.tls.enabled #=> Boolean
+    #   resp.cluster_operation_info_list[0].source_cluster_info.connectivity_info.network_type #=> String, one of "IPV4", "DUAL"
+    #   resp.cluster_operation_info_list[0].source_cluster_info.zookeeper_access.enabled #=> Boolean
     #   resp.cluster_operation_info_list[0].source_cluster_info.storage_mode #=> String, one of "LOCAL", "TIERED"
     #   resp.cluster_operation_info_list[0].source_cluster_info.broker_count_update_info.created_broker_ids #=> Array
     #   resp.cluster_operation_info_list[0].source_cluster_info.broker_count_update_info.created_broker_ids[0] #=> Float
     #   resp.cluster_operation_info_list[0].source_cluster_info.broker_count_update_info.deleted_broker_ids #=> Array
     #   resp.cluster_operation_info_list[0].source_cluster_info.broker_count_update_info.deleted_broker_ids[0] #=> Float
+    #   resp.cluster_operation_info_list[0].source_cluster_info.rebalancing.status #=> String, one of "PAUSED", "ACTIVE"
     #   resp.cluster_operation_info_list[0].target_cluster_info.broker_ebs_volume_info #=> Array
     #   resp.cluster_operation_info_list[0].target_cluster_info.broker_ebs_volume_info[0].kafka_broker_node_id #=> String
     #   resp.cluster_operation_info_list[0].target_cluster_info.broker_ebs_volume_info[0].provisioned_throughput.enabled #=> Boolean
@@ -1987,6 +2652,13 @@ module Aws::Kafka
     #   resp.cluster_operation_info_list[0].target_cluster_info.open_monitoring.prometheus.node_exporter.enabled_in_broker #=> Boolean
     #   resp.cluster_operation_info_list[0].target_cluster_info.enhanced_monitoring #=> String, one of "DEFAULT", "PER_BROKER", "PER_TOPIC_PER_BROKER", "PER_TOPIC_PER_PARTITION"
     #   resp.cluster_operation_info_list[0].target_cluster_info.kafka_version #=> String
+    #   resp.cluster_operation_info_list[0].target_cluster_info.logging_info.authorizer_logs.cloud_watch_logs.enabled #=> Boolean
+    #   resp.cluster_operation_info_list[0].target_cluster_info.logging_info.authorizer_logs.cloud_watch_logs.log_group #=> String
+    #   resp.cluster_operation_info_list[0].target_cluster_info.logging_info.authorizer_logs.firehose.delivery_stream #=> String
+    #   resp.cluster_operation_info_list[0].target_cluster_info.logging_info.authorizer_logs.firehose.enabled #=> Boolean
+    #   resp.cluster_operation_info_list[0].target_cluster_info.logging_info.authorizer_logs.s3.bucket #=> String
+    #   resp.cluster_operation_info_list[0].target_cluster_info.logging_info.authorizer_logs.s3.enabled #=> Boolean
+    #   resp.cluster_operation_info_list[0].target_cluster_info.logging_info.authorizer_logs.s3.prefix #=> String
     #   resp.cluster_operation_info_list[0].target_cluster_info.logging_info.broker_logs.cloud_watch_logs.enabled #=> Boolean
     #   resp.cluster_operation_info_list[0].target_cluster_info.logging_info.broker_logs.cloud_watch_logs.log_group #=> String
     #   resp.cluster_operation_info_list[0].target_cluster_info.logging_info.broker_logs.firehose.delivery_stream #=> String
@@ -2008,11 +2680,14 @@ module Aws::Kafka
     #   resp.cluster_operation_info_list[0].target_cluster_info.connectivity_info.vpc_connectivity.client_authentication.sasl.scram.enabled #=> Boolean
     #   resp.cluster_operation_info_list[0].target_cluster_info.connectivity_info.vpc_connectivity.client_authentication.sasl.iam.enabled #=> Boolean
     #   resp.cluster_operation_info_list[0].target_cluster_info.connectivity_info.vpc_connectivity.client_authentication.tls.enabled #=> Boolean
+    #   resp.cluster_operation_info_list[0].target_cluster_info.connectivity_info.network_type #=> String, one of "IPV4", "DUAL"
+    #   resp.cluster_operation_info_list[0].target_cluster_info.zookeeper_access.enabled #=> Boolean
     #   resp.cluster_operation_info_list[0].target_cluster_info.storage_mode #=> String, one of "LOCAL", "TIERED"
     #   resp.cluster_operation_info_list[0].target_cluster_info.broker_count_update_info.created_broker_ids #=> Array
     #   resp.cluster_operation_info_list[0].target_cluster_info.broker_count_update_info.created_broker_ids[0] #=> Float
     #   resp.cluster_operation_info_list[0].target_cluster_info.broker_count_update_info.deleted_broker_ids #=> Array
     #   resp.cluster_operation_info_list[0].target_cluster_info.broker_count_update_info.deleted_broker_ids[0] #=> Float
+    #   resp.cluster_operation_info_list[0].target_cluster_info.rebalancing.status #=> String, one of "PAUSED", "ACTIVE"
     #   resp.cluster_operation_info_list[0].vpc_connection_info.vpc_connection_arn #=> String
     #   resp.cluster_operation_info_list[0].vpc_connection_info.owner #=> String
     #   resp.cluster_operation_info_list[0].vpc_connection_info.user_identity.type #=> String, one of "AWSACCOUNT", "AWSSERVICE"
@@ -2114,6 +2789,7 @@ module Aws::Kafka
     #   resp.cluster_info_list[0].broker_node_group_info.connectivity_info.vpc_connectivity.client_authentication.sasl.scram.enabled #=> Boolean
     #   resp.cluster_info_list[0].broker_node_group_info.connectivity_info.vpc_connectivity.client_authentication.sasl.iam.enabled #=> Boolean
     #   resp.cluster_info_list[0].broker_node_group_info.connectivity_info.vpc_connectivity.client_authentication.tls.enabled #=> Boolean
+    #   resp.cluster_info_list[0].broker_node_group_info.connectivity_info.network_type #=> String, one of "IPV4", "DUAL"
     #   resp.cluster_info_list[0].broker_node_group_info.zone_ids #=> Array
     #   resp.cluster_info_list[0].broker_node_group_info.zone_ids[0] #=> String
     #   resp.cluster_info_list[0].client_authentication.sasl.scram.enabled #=> Boolean
@@ -2128,6 +2804,13 @@ module Aws::Kafka
     #   resp.cluster_info_list[0].current_broker_software_info.configuration_arn #=> String
     #   resp.cluster_info_list[0].current_broker_software_info.configuration_revision #=> Integer
     #   resp.cluster_info_list[0].current_broker_software_info.kafka_version #=> String
+    #   resp.cluster_info_list[0].logging_info.authorizer_logs.cloud_watch_logs.enabled #=> Boolean
+    #   resp.cluster_info_list[0].logging_info.authorizer_logs.cloud_watch_logs.log_group #=> String
+    #   resp.cluster_info_list[0].logging_info.authorizer_logs.firehose.delivery_stream #=> String
+    #   resp.cluster_info_list[0].logging_info.authorizer_logs.firehose.enabled #=> Boolean
+    #   resp.cluster_info_list[0].logging_info.authorizer_logs.s3.bucket #=> String
+    #   resp.cluster_info_list[0].logging_info.authorizer_logs.s3.enabled #=> Boolean
+    #   resp.cluster_info_list[0].logging_info.authorizer_logs.s3.prefix #=> String
     #   resp.cluster_info_list[0].logging_info.broker_logs.cloud_watch_logs.enabled #=> Boolean
     #   resp.cluster_info_list[0].logging_info.broker_logs.cloud_watch_logs.log_group #=> String
     #   resp.cluster_info_list[0].logging_info.broker_logs.firehose.delivery_stream #=> String
@@ -2151,6 +2834,7 @@ module Aws::Kafka
     #   resp.cluster_info_list[0].zookeeper_connect_string #=> String
     #   resp.cluster_info_list[0].zookeeper_connect_string_tls #=> String
     #   resp.cluster_info_list[0].storage_mode #=> String, one of "LOCAL", "TIERED"
+    #   resp.cluster_info_list[0].rebalancing.status #=> String, one of "PAUSED", "ACTIVE"
     #   resp.cluster_info_list[0].customer_action_status #=> String, one of "CRITICAL_ACTION_REQUIRED", "ACTION_RECOMMENDED", "NONE"
     #   resp.next_token #=> String
     #
@@ -2224,6 +2908,7 @@ module Aws::Kafka
     #   resp.cluster_info_list[0].provisioned.broker_node_group_info.connectivity_info.vpc_connectivity.client_authentication.sasl.scram.enabled #=> Boolean
     #   resp.cluster_info_list[0].provisioned.broker_node_group_info.connectivity_info.vpc_connectivity.client_authentication.sasl.iam.enabled #=> Boolean
     #   resp.cluster_info_list[0].provisioned.broker_node_group_info.connectivity_info.vpc_connectivity.client_authentication.tls.enabled #=> Boolean
+    #   resp.cluster_info_list[0].provisioned.broker_node_group_info.connectivity_info.network_type #=> String, one of "IPV4", "DUAL"
     #   resp.cluster_info_list[0].provisioned.broker_node_group_info.zone_ids #=> Array
     #   resp.cluster_info_list[0].provisioned.broker_node_group_info.zone_ids[0] #=> String
     #   resp.cluster_info_list[0].provisioned.current_broker_software_info.configuration_arn #=> String
@@ -2241,6 +2926,13 @@ module Aws::Kafka
     #   resp.cluster_info_list[0].provisioned.enhanced_monitoring #=> String, one of "DEFAULT", "PER_BROKER", "PER_TOPIC_PER_BROKER", "PER_TOPIC_PER_PARTITION"
     #   resp.cluster_info_list[0].provisioned.open_monitoring.prometheus.jmx_exporter.enabled_in_broker #=> Boolean
     #   resp.cluster_info_list[0].provisioned.open_monitoring.prometheus.node_exporter.enabled_in_broker #=> Boolean
+    #   resp.cluster_info_list[0].provisioned.logging_info.authorizer_logs.cloud_watch_logs.enabled #=> Boolean
+    #   resp.cluster_info_list[0].provisioned.logging_info.authorizer_logs.cloud_watch_logs.log_group #=> String
+    #   resp.cluster_info_list[0].provisioned.logging_info.authorizer_logs.firehose.delivery_stream #=> String
+    #   resp.cluster_info_list[0].provisioned.logging_info.authorizer_logs.firehose.enabled #=> Boolean
+    #   resp.cluster_info_list[0].provisioned.logging_info.authorizer_logs.s3.bucket #=> String
+    #   resp.cluster_info_list[0].provisioned.logging_info.authorizer_logs.s3.enabled #=> Boolean
+    #   resp.cluster_info_list[0].provisioned.logging_info.authorizer_logs.s3.prefix #=> String
     #   resp.cluster_info_list[0].provisioned.logging_info.broker_logs.cloud_watch_logs.enabled #=> Boolean
     #   resp.cluster_info_list[0].provisioned.logging_info.broker_logs.cloud_watch_logs.log_group #=> String
     #   resp.cluster_info_list[0].provisioned.logging_info.broker_logs.firehose.delivery_stream #=> String
@@ -2252,6 +2944,7 @@ module Aws::Kafka
     #   resp.cluster_info_list[0].provisioned.zookeeper_connect_string #=> String
     #   resp.cluster_info_list[0].provisioned.zookeeper_connect_string_tls #=> String
     #   resp.cluster_info_list[0].provisioned.storage_mode #=> String, one of "LOCAL", "TIERED"
+    #   resp.cluster_info_list[0].provisioned.rebalancing.status #=> String, one of "PAUSED", "ACTIVE"
     #   resp.cluster_info_list[0].provisioned.customer_action_status #=> String, one of "CRITICAL_ACTION_REQUIRED", "ACTION_RECOMMENDED", "NONE"
     #   resp.cluster_info_list[0].serverless.vpc_configs #=> Array
     #   resp.cluster_info_list[0].serverless.vpc_configs[0].subnet_ids #=> Array
@@ -2259,6 +2952,7 @@ module Aws::Kafka
     #   resp.cluster_info_list[0].serverless.vpc_configs[0].security_group_ids #=> Array
     #   resp.cluster_info_list[0].serverless.vpc_configs[0].security_group_ids[0] #=> String
     #   resp.cluster_info_list[0].serverless.client_authentication.sasl.iam.enabled #=> Boolean
+    #   resp.cluster_info_list[0].serverless.connectivity_info.network_type #=> String, one of "IPV4", "DUAL"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/ListClustersV2 AWS API Documentation
@@ -2480,6 +3174,8 @@ module Aws::Kafka
     #   resp.replicators[0].is_replicator_reference #=> Boolean
     #   resp.replicators[0].kafka_clusters_summary #=> Array
     #   resp.replicators[0].kafka_clusters_summary[0].amazon_msk_cluster.msk_cluster_arn #=> String
+    #   resp.replicators[0].kafka_clusters_summary[0].apache_kafka_cluster.apache_kafka_cluster_id #=> String
+    #   resp.replicators[0].kafka_clusters_summary[0].apache_kafka_cluster.bootstrap_broker_string #=> String
     #   resp.replicators[0].kafka_clusters_summary[0].kafka_cluster_alias #=> String
     #   resp.replicators[0].replication_info_summary_list #=> Array
     #   resp.replicators[0].replication_info_summary_list[0].source_kafka_cluster_alias #=> String
@@ -2644,6 +3340,51 @@ module Aws::Kafka
     # @param [Hash] params ({})
     def list_vpc_connections(params = {}, options = {})
       req = build_request(:list_vpc_connections, params)
+      req.send_request(options)
+    end
+
+    # List topics in a MSK cluster.
+    #
+    # @option params [required, String] :cluster_arn
+    #
+    # @option params [Integer] :max_results
+    #
+    # @option params [String] :next_token
+    #
+    # @option params [String] :topic_name_filter
+    #
+    # @return [Types::ListTopicsResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListTopicsResponse#topics #topics} => Array&lt;Types::TopicInfo&gt;
+    #   * {Types::ListTopicsResponse#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_topics({
+    #     cluster_arn: "__string", # required
+    #     max_results: 1,
+    #     next_token: "__string",
+    #     topic_name_filter: "__string",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.topics #=> Array
+    #   resp.topics[0].topic_arn #=> String
+    #   resp.topics[0].topic_name #=> String
+    #   resp.topics[0].replication_factor #=> Integer
+    #   resp.topics[0].partition_count #=> Integer
+    #   resp.topics[0].out_of_sync_replica_count #=> Integer
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/ListTopics AWS API Documentation
+    #
+    # @overload list_topics(params = {})
+    # @param [Hash] params ({})
+    def list_topics(params = {}, options = {})
+      req = build_request(:list_topics, params)
       req.send_request(options)
     end
 
@@ -3011,6 +3752,56 @@ module Aws::Kafka
       req.send_request(options)
     end
 
+    # Updates the destination configuration of an existing channel. Exactly
+    # one of icebergDestinationUpdate or s3DestinationUpdate must be
+    # supplied.
+    #
+    # @option params [required, String] :channel_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the channel.
+    #
+    # @option params [required, String] :cluster_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the cluster.
+    #
+    # @option params [Types::IcebergDestinationUpdate] :iceberg_destination_update
+    #   Updates fields on an Apache Iceberg destination. Use only when the
+    #   channel was created with an Iceberg destination.
+    #
+    # @option params [Types::S3DestinationUpdate] :s3_destination_update
+    #   Updates fields on an Amazon S3 destination. Use only when the channel
+    #   was created with an Amazon S3 destination.
+    #
+    # @return [Types::UpdateChannelResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateChannelResponse#channel_arn #channel_arn} => String
+    #   * {Types::UpdateChannelResponse#cluster_operation_arn #cluster_operation_arn} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_channel({
+    #     channel_arn: "__string", # required
+    #     cluster_arn: "__string", # required
+    #     iceberg_destination_update: {
+    #       data_freshness_in_seconds: 1, # required
+    #     },
+    #     s3_destination_update: {
+    #       data_freshness_in_seconds: 1, # required
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.channel_arn #=> String
+    #   resp.cluster_operation_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/UpdateChannel AWS API Documentation
+    #
+    # @overload update_channel(params = {})
+    # @param [Hash] params ({})
+    def update_channel(params = {}, options = {})
+      req = build_request(:update_channel, params)
+      req.send_request(options)
+    end
+
     # Updates the cluster with the configuration that is specified in the
     # request body.
     #
@@ -3100,11 +3891,14 @@ module Aws::Kafka
     #
     # @option params [required, String] :cluster_arn
     #
-    # @option params [required, Types::ConnectivityInfo] :connectivity_info
+    # @option params [Types::ConnectivityInfo] :connectivity_info
     #   Information about the broker access configuration.
     #
     # @option params [required, String] :current_version
     #   The current version of the cluster.
+    #
+    # @option params [Types::ZookeeperAccess] :zookeeper_access
+    #   Access control settings for zookeeper
     #
     # @return [Types::UpdateConnectivityResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -3115,7 +3909,7 @@ module Aws::Kafka
     #
     #   resp = client.update_connectivity({
     #     cluster_arn: "__string", # required
-    #     connectivity_info: { # required
+    #     connectivity_info: {
     #       public_access: {
     #         type: "__string",
     #       },
@@ -3134,8 +3928,12 @@ module Aws::Kafka
     #           },
     #         },
     #       },
+    #       network_type: "IPV4", # accepts IPV4, DUAL
     #     },
     #     current_version: "__string", # required
+    #     zookeeper_access: {
+    #       enabled: false,
+    #     },
     #   })
     #
     # @example Response structure
@@ -3195,6 +3993,21 @@ module Aws::Kafka
     #       },
     #     },
     #     logging_info: {
+    #       authorizer_logs: {
+    #         cloud_watch_logs: {
+    #           enabled: false, # required
+    #           log_group: "__string",
+    #         },
+    #         firehose: {
+    #           delivery_stream: "__string",
+    #           enabled: false, # required
+    #         },
+    #         s3: {
+    #           bucket: "__string",
+    #           enabled: false, # required
+    #           prefix: "__string",
+    #         },
+    #       },
     #       broker_logs: { # required
     #         cloud_watch_logs: {
     #           enabled: false, # required
@@ -3227,6 +4040,47 @@ module Aws::Kafka
       req.send_request(options)
     end
 
+    # Use this resource to update the intelligent rebalancing status of an
+    # Amazon MSK Provisioned cluster with Express brokers.
+    #
+    # @option params [required, String] :cluster_arn
+    #   The Amazon Resource Name (ARN) of the cluster.
+    #
+    # @option params [required, String] :current_version
+    #   The current version of the cluster.
+    #
+    # @option params [required, Types::Rebalancing] :rebalancing
+    #   Includes all rebalancing-related information for the cluster.
+    #
+    # @return [Types::UpdateRebalancingResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateRebalancingResponse#cluster_arn #cluster_arn} => String
+    #   * {Types::UpdateRebalancingResponse#cluster_operation_arn #cluster_operation_arn} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_rebalancing({
+    #     cluster_arn: "__string", # required
+    #     current_version: "__string", # required
+    #     rebalancing: { # required
+    #       status: "PAUSED", # required, accepts PAUSED, ACTIVE
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.cluster_arn #=> String
+    #   resp.cluster_operation_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/UpdateRebalancing AWS API Documentation
+    #
+    # @overload update_rebalancing(params = {})
+    # @param [Hash] params ({})
+    def update_rebalancing(params = {}, options = {})
+      req = build_request(:update_rebalancing, params)
+      req.send_request(options)
+    end
+
     # Updates replication info of a replicator.
     #
     # @option params [Types::ConsumerGroupReplicationUpdate] :consumer_group_replication
@@ -3235,13 +4089,22 @@ module Aws::Kafka
     # @option params [required, String] :current_version
     #   Current replicator version.
     #
+    # @option params [Types::LogDelivery] :log_delivery
+    #   Configuration for delivering replicator logs to customer destinations.
+    #
     # @option params [required, String] :replicator_arn
     #
-    # @option params [required, String] :source_kafka_cluster_arn
+    # @option params [String] :source_kafka_cluster_arn
     #   The ARN of the source Kafka cluster.
     #
-    # @option params [required, String] :target_kafka_cluster_arn
+    # @option params [String] :source_kafka_cluster_id
+    #   The ID of the source Kafka cluster.
+    #
+    # @option params [String] :target_kafka_cluster_arn
     #   The ARN of the target Kafka cluster.
+    #
+    # @option params [String] :target_kafka_cluster_id
+    #   The ID of the target Kafka cluster.
     #
     # @option params [Types::TopicReplicationUpdate] :topic_replication
     #   Updated topic replication information.
@@ -3261,9 +4124,28 @@ module Aws::Kafka
     #       synchronise_consumer_group_offsets: false, # required
     #     },
     #     current_version: "__string", # required
+    #     log_delivery: {
+    #       replicator_log_delivery: {
+    #         cloud_watch_logs: {
+    #           enabled: false, # required
+    #           log_group: "__string",
+    #         },
+    #         firehose: {
+    #           delivery_stream: "__string",
+    #           enabled: false, # required
+    #         },
+    #         s3: {
+    #           bucket: "__string",
+    #           enabled: false, # required
+    #           prefix: "__string",
+    #         },
+    #       },
+    #     },
     #     replicator_arn: "__string", # required
-    #     source_kafka_cluster_arn: "__string", # required
-    #     target_kafka_cluster_arn: "__string", # required
+    #     source_kafka_cluster_arn: "__string",
+    #     source_kafka_cluster_id: "__string",
+    #     target_kafka_cluster_arn: "__string",
+    #     target_kafka_cluster_id: "__string",
     #     topic_replication: {
     #       copy_access_control_lists_for_topics: false, # required
     #       copy_topic_configurations: false, # required
@@ -3405,6 +4287,47 @@ module Aws::Kafka
       req.send_request(options)
     end
 
+    # Updates the topic configuration or partition count in the specified
+    # MSK cluster.
+    #
+    # @option params [required, String] :cluster_arn
+    #
+    # @option params [required, String] :topic_name
+    #
+    # @option params [String] :configs
+    #
+    # @option params [Integer] :partition_count
+    #
+    # @return [Types::UpdateTopicResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateTopicResponse#topic_arn #topic_arn} => String
+    #   * {Types::UpdateTopicResponse#topic_name #topic_name} => String
+    #   * {Types::UpdateTopicResponse#status #status} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_topic({
+    #     cluster_arn: "__string", # required
+    #     topic_name: "__string", # required
+    #     configs: "__string",
+    #     partition_count: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.topic_arn #=> String
+    #   resp.topic_name #=> String
+    #   resp.status #=> String, one of "CREATING", "UPDATING", "DELETING", "ACTIVE"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/UpdateTopic AWS API Documentation
+    #
+    # @overload update_topic(params = {})
+    # @param [Hash] params ({})
+    def update_topic(params = {}, options = {})
+      req = build_request(:update_topic, params)
+      req.send_request(options)
+    end
+
     # @!endgroup
 
     # @param params ({})
@@ -3423,7 +4346,7 @@ module Aws::Kafka
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-kafka'
-      context[:gem_version] = '1.89.0'
+      context[:gem_version] = '1.118.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

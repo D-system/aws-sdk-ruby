@@ -95,8 +95,8 @@ module Aws::GameLiftStreams
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::GameLiftStreams
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::GameLiftStreams
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::GameLiftStreams
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::GameLiftStreams
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::GameLiftStreams
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::GameLiftStreams
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::GameLiftStreams
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -470,9 +474,10 @@ module Aws::GameLiftStreams
 
     # @!group API Operations
 
-    # Add locations that can host stream sessions. You configure locations
-    # and their corresponding capacity for each stream group. Creating a
-    # stream group in a location that's nearest to your end users can help
+    # Add locations that can host stream sessions. To add a location, the
+    # stream group must be in `ACTIVE` status. You configure locations and
+    # their corresponding capacity for each stream group. Creating a stream
+    # group in a location that's nearest to your end users can help
     # minimize latency and improve quality.
     #
     # This operation provisions stream capacity at the specified locations.
@@ -486,8 +491,14 @@ module Aws::GameLiftStreams
     # @option params [required, String] :identifier
     #   A stream group to add the specified locations to.
     #
-    #   This value is a Amazon Resource Name (ARN) that uniquely identifies
-    #   the stream group resource. Format example: `1AB2C3De4`.
+    #   This value is an [Amazon Resource Name (ARN)][1] or ID that uniquely
+    #   identifies the stream group resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:streamgroup/sg-1AB2C3De4`.
+    #   Example ID: `sg-1AB2C3De4`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
     #
     # @option params [required, Array<Types::LocationConfiguration>] :location_configurations
     #   A set of one or more locations and the streaming capacity for each
@@ -504,9 +515,15 @@ module Aws::GameLiftStreams
     #     identifier: "Identifier", # required
     #     location_configurations: [ # required
     #       {
-    #         always_on_capacity: 1,
     #         location_name: "LocationName", # required
+    #         always_on_capacity: 1,
     #         on_demand_capacity: 1,
+    #         target_idle_capacity: 1,
+    #         maximum_capacity: 1,
+    #         vpc_transit_configuration: {
+    #           vpc_id: "VpcId", # required
+    #           ipv_4_cidr_blocks: ["Ipv4CidrBlock"], # required
+    #         },
     #       },
     #     ],
     #   })
@@ -515,13 +532,21 @@ module Aws::GameLiftStreams
     #
     #   resp.identifier #=> String
     #   resp.locations #=> Array
-    #   resp.locations[0].allocated_capacity #=> Integer
-    #   resp.locations[0].always_on_capacity #=> Integer
-    #   resp.locations[0].idle_capacity #=> Integer
     #   resp.locations[0].location_name #=> String
-    #   resp.locations[0].on_demand_capacity #=> Integer
-    #   resp.locations[0].requested_capacity #=> Integer
     #   resp.locations[0].status #=> String, one of "ACTIVATING", "ACTIVE", "ERROR", "REMOVING"
+    #   resp.locations[0].always_on_capacity #=> Integer
+    #   resp.locations[0].on_demand_capacity #=> Integer
+    #   resp.locations[0].target_idle_capacity #=> Integer
+    #   resp.locations[0].maximum_capacity #=> Integer
+    #   resp.locations[0].requested_capacity #=> Integer
+    #   resp.locations[0].allocated_capacity #=> Integer
+    #   resp.locations[0].idle_capacity #=> Integer
+    #   resp.locations[0].internal_vpc_ipv_4_cidr_block #=> String
+    #   resp.locations[0].vpc_transit_configuration.vpc_id #=> String
+    #   resp.locations[0].vpc_transit_configuration.ipv_4_cidr_blocks #=> Array
+    #   resp.locations[0].vpc_transit_configuration.ipv_4_cidr_blocks[0] #=> String
+    #   resp.locations[0].vpc_transit_configuration.transit_gateway_id #=> String
+    #   resp.locations[0].vpc_transit_configuration.transit_gateway_resource_share_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gameliftstreams-2018-05-10/AddStreamGroupLocations AWS API Documentation
     #
@@ -536,27 +561,35 @@ module Aws::GameLiftStreams
     # Amazon GameLift Streams can launch the application using the stream
     # group's allocated compute resources. The stream group must be in
     # `ACTIVE` status. You can reverse this action by using
-    # DisassociateApplications.
+    # [DisassociateApplications][1].
     #
-    # @option params [required, Array<String>] :application_identifiers
-    #   A set of applications to associate with the stream group.
+    # If a stream group does not already have a linked application, Amazon
+    # GameLift Streams will automatically assign the first application
+    # provided in `ApplicationIdentifiers` as the default.
     #
-    #   This value is a set of either [Amazon Resource Names (ARN)][1] or IDs
-    #   that uniquely identify application resources. Format example:
-    #   ARN-`arn:aws:gameliftstreams:us-west-2:123456789012:application/9ZY8X7Wv6`
-    #   or ID-`9ZY8X7Wv6`.
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/gameliftstreams/latest/apireference/API_DisassociateApplications.html
+    #
+    # @option params [required, String] :identifier
+    #   A stream group to associate to the applications.
+    #
+    #   This value is an [Amazon Resource Name (ARN)][1] or ID that uniquely
+    #   identifies the stream group resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:streamgroup/sg-1AB2C3De4`.
+    #   Example ID: `sg-1AB2C3De4`.
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
     #
-    # @option params [required, String] :identifier
-    #   A stream group to associate to the applications.
+    # @option params [required, Array<String>] :application_identifiers
+    #   A set of applications to associate with the stream group.
     #
-    #   This value is a [Amazon Resource Name (ARN)][1] or ID that uniquely
-    #   identifies the stream group resource. Format example:
-    #   ARN-`arn:aws:gameliftstreams:us-west-2:123456789012:streamgroup/1AB2C3De4`
-    #   or ID-`1AB2C3De4`.
+    #   This value is a set of either [Amazon Resource Names (ARN)][1] or IDs
+    #   that uniquely identify application resources. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:application/a-9ZY8X7Wv6`.
+    #   Example ID: `a-9ZY8X7Wv6`.
     #
     #
     #
@@ -564,21 +597,21 @@ module Aws::GameLiftStreams
     #
     # @return [Types::AssociateApplicationsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::AssociateApplicationsOutput#application_arns #application_arns} => Array&lt;String&gt;
     #   * {Types::AssociateApplicationsOutput#arn #arn} => String
+    #   * {Types::AssociateApplicationsOutput#application_arns #application_arns} => Array&lt;String&gt;
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.associate_applications({
-    #     application_identifiers: ["Identifier"], # required
     #     identifier: "Identifier", # required
+    #     application_identifiers: ["Identifier"], # required
     #   })
     #
     # @example Response structure
     #
+    #   resp.arn #=> String
     #   resp.application_arns #=> Array
     #   resp.application_arns[0] #=> String
-    #   resp.arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gameliftstreams-2018-05-10/AssociateApplications AWS API Documentation
     #
@@ -599,51 +632,137 @@ module Aws::GameLiftStreams
     # Developer Guide.
     #
     # Make sure that your files in the Amazon S3 bucket are the correct
-    # version you want to use. As soon as you create a Amazon GameLift
-    # Streams application, you cannot change the files at a later time.
+    # version you want to use. If you change the files at a later time, you
+    # will need to create a new Amazon GameLift Streams application.
+    #
+    # <note markdown="1"> Creating an application is the only time Amazon GameLift Streams
+    # accesses your Amazon S3 bucket. After the application reaches `READY`
+    # status, you can delete the original files from your Amazon S3 bucket
+    # without affecting the application.
+    #
+    #  </note>
     #
     # If the request is successful, Amazon GameLift Streams begins to create
     # an application and sets the status to `INITIALIZED`. When an
     # application reaches `READY` status, you can use the application to set
     # up stream groups and start streams. To track application status, call
-    # GetApplication.
+    # [GetApplication][1].
     #
-    # @option params [String] :application_log_output_uri
-    #   An Amazon S3 URI to a bucket where you would like Amazon GameLift
-    #   Streams to save application logs. Use the following format for the
-    #   URI: `s3://[bucket name]/[prefix]`. Required if you specify one or
-    #   more `LogPaths`.
     #
-    #   <note markdown="1"> The log bucket must have permissions that give Amazon GameLift Streams
-    #   access to write the log files. For more information, see **Getting
-    #   Started** in the Amazon GameLift Streams Developer Guide.
+    #
+    # [1]: https://docs.aws.amazon.com/gameliftstreams/latest/apireference/API_GetApplication.html
+    #
+    # @option params [required, String] :description
+    #   A human-readable label for the application. You can update this value
+    #   later.
+    #
+    # @option params [required, Types::RuntimeEnvironment] :runtime_environment
+    #   Configuration settings that identify the operating system for an
+    #   application resource. This can also include a compatibility layer and
+    #   other drivers.
+    #
+    #   A runtime environment can be one of the following:
+    #
+    #   * For Linux applications
+    #
+    #     * Ubuntu 22.04 LTS (`Type=UBUNTU, Version=22_04_LTS`)
+    #
+    #     ^
+    #   * For Windows applications
+    #
+    #     * Microsoft Windows Server 2022 Base (`Type=WINDOWS, Version=2022`)
+    #
+    #     * Proton 10.0-4 (`Type=PROTON, Version=20260204`)
+    #
+    #     * Proton 9.0-2 (`Type=PROTON, Version=20250516`)
+    #
+    #     * Proton 8.0-5 (`Type=PROTON, Version=20241007`)
+    #
+    #     * Proton 8.0-2c (`Type=PROTON, Version=20230704`)
+    #
+    # @option params [required, String] :executable_path
+    #   The relative path and file name of the executable file that Amazon
+    #   GameLift Streams will stream. Specify a path relative to the location
+    #   set in `ApplicationSourceUri`. The file must be contained within the
+    #   application's root folder. For Windows applications, the file must be
+    #   a valid Windows executable or batch file with a filename ending in
+    #   .exe, .cmd, or .bat. For Linux applications, the file must be a valid
+    #   Linux binary executable or a script that contains an initial
+    #   interpreter line starting with a shebang ('`#!`').
+    #
+    # @option params [required, String] :application_source_uri
+    #   The location of the content that you want to stream. Enter an Amazon
+    #   S3 URI to a bucket that contains your game or other application. The
+    #   location can have a multi-level prefix structure, but it must include
+    #   all the files needed to run the content. Amazon GameLift Streams
+    #   copies everything under the specified location.
+    #
+    #   This value is immutable. To designate a different content location,
+    #   create a new application.
+    #
+    #   <note markdown="1"> The Amazon S3 bucket and the Amazon GameLift Streams application must
+    #   be in the same Amazon Web Services Region.
     #
     #    </note>
     #
     # @option params [Array<String>] :application_log_paths
     #   Locations of log files that your content generates during a stream
     #   session. Enter path values that are relative to the
-    #   `ApplicationSourceUri` location. You can specify up to 10 log
-    #   locations. Amazon GameLift Streams uploads designated log files to the
-    #   Amazon S3 bucket that you specify in `ApplicationLogOutputUri` at the
-    #   end of a stream session. To retrieve stored log files, call
-    #   GetStreamSession and get the `LogFileLocationUri`.
+    #   `ApplicationSourceUri` location, or relative to the user's home
+    #   directory when using a supported path variable. You can specify up to
+    #   10 log paths. Each individual log file cannot exceed 50 MB in size.
     #
-    # @option params [required, String] :application_source_uri
-    #   The location of the content that you want to stream. Enter the URI of
-    #   an Amazon S3 location (bucket name and prefixes) that contains your
-    #   content. Use the following format for the URI: `s3://[bucket
-    #   name]/[prefix]`. The location can have a multi-level prefix structure,
-    #   but it must include all the files needed to run the content. Amazon
-    #   GameLift Streams copies everything under the specified location.
+    #   Each path can be a directory or an exact file path. When you specify a
+    #   directory, Amazon GameLift Streams collects only files with the
+    #   following extensions: `.txt`, `.log`, and `.utrace`. To collect files
+    #   with other extensions, specify the exact file path. The copy operation
+    #   is not performed recursively in subfolders.
     #
-    #   This value is immutable. To designate a different content location,
-    #   create a new application.
+    #   The following path variables are recognized when they appear as the
+    #   first component of a path: `%USERPROFILE%` (Windows and Proton),
+    #   `$HOME` or `~` (Linux). Use a path variable when your application
+    #   writes logs outside of the application directory.
     #
-    #   <note markdown="1"> The S3 bucket and the Amazon GameLift Streams application must be in
-    #   the same Amazon Web Services Region.
+    #   Amazon GameLift Streams uploads designated log files to the Amazon S3
+    #   bucket that you specify in `ApplicationLogOutputUri` at the end of a
+    #   stream session. To retrieve stored log files, call
+    #   [GetStreamSession][1] and get the `LogFileLocationUri`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/gameliftstreams/latest/apireference/API_GetStreamSession.html
+    #
+    # @option params [String] :application_log_output_uri
+    #   An Amazon S3 URI to a bucket where you would like Amazon GameLift
+    #   Streams to save application logs. Required if you specify one or more
+    #   `ApplicationLogPaths`.
+    #
+    #   <note markdown="1"> The log bucket must have permissions that give Amazon GameLift Streams
+    #   access to write the log files. For more information, see [Application
+    #   log bucket permission policy][1] in the *Amazon GameLift Streams
+    #   Developer Guide*.
     #
     #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/gameliftstreams/latest/developerguide/applications.html#application-bucket-permission-template
+    #
+    # @option params [Hash<String,String>] :tags
+    #   A list of labels to assign to the new application resource. Tags are
+    #   developer-defined key-value pairs. Tagging Amazon Web Services
+    #   resources is useful for resource management, access management and
+    #   cost allocation. See [ Tagging Amazon Web Services Resources][1] in
+    #   the *Amazon Web Services General Reference*. You can use
+    #   [TagResource][2] to add tags, [UntagResource][3] to remove tags, and
+    #   [ListTagsForResource][4] to view tags on existing resources.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html
+    #   [2]: https://docs.aws.amazon.com/gameliftstreams/latest/apireference/API_TagResource.html
+    #   [3]: https://docs.aws.amazon.com/gameliftstreams/latest/apireference/API_UntagResource.html
+    #   [4]: https://docs.aws.amazon.com/gameliftstreams/latest/apireference/API_ListTagsForResource.html
     #
     # @option params [String] :client_token
     #   A unique identifier that represents a client request. The request is
@@ -654,106 +773,62 @@ module Aws::GameLiftStreams
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.**
     #
-    # @option params [required, String] :description
-    #   A human-readable label for the application. You can update this value
-    #   later.
-    #
-    # @option params [required, String] :executable_path
-    #   The path and file name of the executable file that launches the
-    #   content for streaming. Enter a path value that is relative to the
-    #   location set in `ApplicationSourceUri`.
-    #
-    # @option params [required, Types::RuntimeEnvironment] :runtime_environment
-    #   A set of configuration settings to run the application on a stream
-    #   group. This configures the operating system, and can include
-    #   compatibility layers and other drivers.
-    #
-    #   A runtime environment can be one of the following:
-    #
-    #   * For Linux applications
-    #
-    #     * Ubuntu 22.04 LTS(`Type=UBUNTU, Version=22_04_LTS`)
-    #
-    #     ^
-    #   * For Windows applications
-    #
-    #     * Microsoft Windows Server 2022 Base (`Type=WINDOWS, Version=2022`)
-    #
-    #     * Proton 8.0-5 (`Type=PROTON, Version=20241007`)
-    #
-    #     * Proton 8.0-2c (`Type=PROTON, Version=20230704`)
-    #
-    # @option params [Hash<String,String>] :tags
-    #   A list of labels to assign to the new application resource. Tags are
-    #   developer-defined key-value pairs. Tagging Amazon Web Services
-    #   resources is useful for resource management, access management and
-    #   cost allocation. See [ Tagging Amazon Web Services Resources][1] in
-    #   the *Amazon Web Services General Reference*. You can use TagResource
-    #   to add tags, UntagResource to remove tags, and ListTagsForResource to
-    #   view tags on existing resources. The maximum tag limit might be lower
-    #   than stated. See the *Amazon Web Services General Reference* for
-    #   actual tagging limits.
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html
-    #
     # @return [Types::CreateApplicationOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::CreateApplicationOutput#application_log_output_uri #application_log_output_uri} => String
-    #   * {Types::CreateApplicationOutput#application_log_paths #application_log_paths} => Array&lt;String&gt;
-    #   * {Types::CreateApplicationOutput#application_source_uri #application_source_uri} => String
     #   * {Types::CreateApplicationOutput#arn #arn} => String
-    #   * {Types::CreateApplicationOutput#associated_stream_groups #associated_stream_groups} => Array&lt;String&gt;
-    #   * {Types::CreateApplicationOutput#created_at #created_at} => Time
     #   * {Types::CreateApplicationOutput#description #description} => String
-    #   * {Types::CreateApplicationOutput#executable_path #executable_path} => String
-    #   * {Types::CreateApplicationOutput#id #id} => String
-    #   * {Types::CreateApplicationOutput#last_updated_at #last_updated_at} => Time
-    #   * {Types::CreateApplicationOutput#replication_statuses #replication_statuses} => Array&lt;Types::ReplicationStatus&gt;
     #   * {Types::CreateApplicationOutput#runtime_environment #runtime_environment} => Types::RuntimeEnvironment
+    #   * {Types::CreateApplicationOutput#executable_path #executable_path} => String
+    #   * {Types::CreateApplicationOutput#application_log_paths #application_log_paths} => Array&lt;String&gt;
+    #   * {Types::CreateApplicationOutput#application_log_output_uri #application_log_output_uri} => String
+    #   * {Types::CreateApplicationOutput#application_source_uri #application_source_uri} => String
+    #   * {Types::CreateApplicationOutput#id #id} => String
     #   * {Types::CreateApplicationOutput#status #status} => String
     #   * {Types::CreateApplicationOutput#status_reason #status_reason} => String
+    #   * {Types::CreateApplicationOutput#replication_statuses #replication_statuses} => Array&lt;Types::ReplicationStatus&gt;
+    #   * {Types::CreateApplicationOutput#created_at #created_at} => Time
+    #   * {Types::CreateApplicationOutput#last_updated_at #last_updated_at} => Time
+    #   * {Types::CreateApplicationOutput#associated_stream_groups #associated_stream_groups} => Array&lt;String&gt;
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_application({
-    #     application_log_output_uri: "ApplicationLogOutputUri",
-    #     application_log_paths: ["FilePath"],
-    #     application_source_uri: "ApplicationSourceUri", # required
-    #     client_token: "ClientToken",
     #     description: "Description", # required
-    #     executable_path: "ExecutablePath", # required
     #     runtime_environment: { # required
     #       type: "PROTON", # required, accepts PROTON, WINDOWS, UBUNTU
     #       version: "RuntimeEnvironmentVersion", # required
     #     },
+    #     executable_path: "ExecutablePath", # required
+    #     application_source_uri: "ApplicationSourceUri", # required
+    #     application_log_paths: ["FilePath"],
+    #     application_log_output_uri: "ApplicationLogOutputUri",
     #     tags: {
     #       "TagKey" => "TagValue",
     #     },
+    #     client_token: "ClientToken",
     #   })
     #
     # @example Response structure
     #
-    #   resp.application_log_output_uri #=> String
+    #   resp.arn #=> String
+    #   resp.description #=> String
+    #   resp.runtime_environment.type #=> String, one of "PROTON", "WINDOWS", "UBUNTU"
+    #   resp.runtime_environment.version #=> String
+    #   resp.executable_path #=> String
     #   resp.application_log_paths #=> Array
     #   resp.application_log_paths[0] #=> String
+    #   resp.application_log_output_uri #=> String
     #   resp.application_source_uri #=> String
-    #   resp.arn #=> String
-    #   resp.associated_stream_groups #=> Array
-    #   resp.associated_stream_groups[0] #=> String
-    #   resp.created_at #=> Time
-    #   resp.description #=> String
-    #   resp.executable_path #=> String
     #   resp.id #=> String
-    #   resp.last_updated_at #=> Time
+    #   resp.status #=> String, one of "INITIALIZED", "PROCESSING", "READY", "DELETING", "ERROR"
+    #   resp.status_reason #=> String, one of "internalError", "accessDenied", "sourceModified"
     #   resp.replication_statuses #=> Array
     #   resp.replication_statuses[0].location #=> String
     #   resp.replication_statuses[0].status #=> String, one of "REPLICATING", "COMPLETED"
-    #   resp.runtime_environment.type #=> String, one of "PROTON", "WINDOWS", "UBUNTU"
-    #   resp.runtime_environment.version #=> String
-    #   resp.status #=> String, one of "INITIALIZED", "PROCESSING", "READY", "DELETING", "ERROR"
-    #   resp.status_reason #=> String, one of "internalError", "accessDenied"
+    #   resp.created_at #=> Time
+    #   resp.last_updated_at #=> Time
+    #   resp.associated_stream_groups #=> Array
+    #   resp.associated_stream_groups[0] #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gameliftstreams-2018-05-10/CreateApplication AWS API Documentation
     #
@@ -764,67 +839,66 @@ module Aws::GameLiftStreams
       req.send_request(options)
     end
 
-    # Manage how Amazon GameLift Streams streams your applications by using
-    # a stream group. A stream group is a collection of resources that
-    # Amazon GameLift Streams uses to stream your application to end-users.
-    # When you create a stream group, you specify an application to stream
-    # by default and the type of hardware to use, such as the graphical
-    # processing unit (GPU). You can also link additional applications,
-    # which allows you to stream those applications using this stream group.
-    # Depending on your expected users, you also scale the number of
-    # concurrent streams you want to support at one time, and in what
-    # locations.
+    # Stream groups manage how Amazon GameLift Streams allocates resources
+    # and handles concurrent streams, allowing you to effectively manage
+    # capacity and costs. Within a stream group, you specify an application
+    # to stream, streaming locations and their capacity, and the stream
+    # class you want to use when streaming applications to your end-users. A
+    # stream class defines the hardware configuration of the compute
+    # resources that Amazon GameLift Streams will use when streaming, such
+    # as the CPU, GPU, and memory.
     #
     # Stream capacity represents the number of concurrent streams that can
     # be active at a time. You set stream capacity per location, per stream
-    # group. There are two types of capacity: always-on and on-demand:
+    # group. The following capacity settings are available:
     #
-    # * **Always-on**: The streaming capacity that is allocated and ready to
-    #   handle stream requests without delay. You pay for this capacity
-    #   whether it's in use or not. Best for quickest time from streaming
-    #   request to streaming session.      </p> </li> <li> <p>
-    #   <b>On-demand</b>: The streaming capacity that Amazon GameLift
-    #   Streams can allocate in response to stream requests, and then
-    #   de-allocate when the session has terminated. This offers a cost
-    #   control measure at the expense of a greater startup time (typically
-    #   under 5 minutes). </p> </li> </ul> <p> To adjust the capacity of any
-    #   <code>ACTIVE</code> stream group, call <a>UpdateStreamGroup</a>.
-    #   </p> <p> If the request is successful, Amazon GameLift Streams
-    #   begins creating the stream group. Amazon GameLift Streams assigns a
-    #   unique ID to the stream group resource and sets the status to
-    #   <code>ACTIVATING</code>. When the stream group reaches
-    #   <code>ACTIVE</code> status, you can start stream sessions by using
-    #   <a>StartStreamSession</a>. To check the stream group's status, call
-    #   <a>GetStreamGroup</a>. </p>
+    # * **Always-on capacity**: This setting, if non-zero, indicates minimum
+    #   streaming capacity which is allocated to you and is never released
+    #   back to the service. You pay for this base level of capacity at all
+    #   times, whether used or idle.
     #
-    # ^
+    # * **Maximum capacity**: This indicates the maximum capacity that the
+    #   service can allocate for you. Newly created streams may take a few
+    #   minutes to start. Capacity is released back to the service when
+    #   idle. You pay for capacity that is allocated to you until it is
+    #   released.
     #
-    # @option params [String] :client_token
-    #   A unique identifier that represents a client request. The request is
-    #   idempotent, which ensures that an API request completes only once.
-    #   When users send a request, Amazon GameLift Streams automatically
-    #   populates this field.
+    # * **Target-idle capacity**: This indicates idle capacity which the
+    #   service pre-allocates and holds for you in anticipation of future
+    #   activity. This helps to insulate your users from capacity-allocation
+    #   delays. You pay for capacity which is held in this intentional idle
+    #   state.
     #
-    #   **A suitable default value is auto-generated.** You should normally
-    #   not need to pass this option.**
+    # Values for capacity must be whole number multiples of the tenancy
+    # value of the stream group's stream class.
     #
-    # @option params [String] :default_application_identifier
-    #   The unique identifier of the Amazon GameLift Streams application that
-    #   you want to associate to a stream group as the default application.
-    #   The application must be in `READY` status. By setting the default
-    #   application identifier, you will optimize startup performance of this
-    #   application in your stream group. Once set, this application cannot be
-    #   disassociated from the stream group, unlike applications that are
-    #   associated using AssociateApplications. If not set when creating a
-    #   stream group, you will need to call AssociateApplications later,
-    #   before you can start streaming.
+    # To adjust the capacity of any `ACTIVE` stream group, call
+    # [UpdateStreamGroup][1].
+    #
+    # If the `CreateStreamGroup` request is successful, Amazon GameLift
+    # Streams assigns a unique ID to the stream group resource and sets the
+    # status to `ACTIVATING`. It can take a few minutes for Amazon GameLift
+    # Streams to finish creating the stream group while it searches for
+    # unallocated compute resources and provisions them. When complete, the
+    # stream group status will be `ACTIVE` and you can start stream sessions
+    # by using [StartStreamSession][2]. To check the stream group's status,
+    # call [GetStreamGroup][3].
+    #
+    # Stream groups should be recreated every 3-4 weeks to pick up important
+    # service updates and fixes. Stream groups that are older than 180 days
+    # can no longer be updated with new application associations. Stream
+    # groups expire when they are 365 days old, at which point they can no
+    # longer stream sessions. The exact expiration date is indicated by the
+    # date value in the `ExpiresAt` field.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/gameliftstreams/latest/apireference/API_UpdateStreamGroup.html
+    # [2]: https://docs.aws.amazon.com/gameliftstreams/latest/apireference/API_StartStreamSession.html
+    # [3]: https://docs.aws.amazon.com/gameliftstreams/latest/apireference/API_GetStreamGroup.html
     #
     # @option params [required, String] :description
     #   A descriptive label for the stream group.
-    #
-    # @option params [Array<Types::LocationConfiguration>] :location_configurations
-    #   A set of one or more locations and the streaming capacity for each
-    #   location.
     #
     # @option params [required, String] :stream_class
     #   The target stream quality for sessions that are hosted in this stream
@@ -835,12 +909,142 @@ module Aws::GameLiftStreams
     #
     #   A stream class can be one of the following:
     #
+    #   * <b> <code>gen6n_pro_win2022</code> (NVIDIA, pro)</b> Supports
+    #     applications with extremely high 3D scene complexity which require
+    #     maximum resources. Runs applications on Microsoft Windows Server
+    #     2022 Base and supports DirectX 12. Compatible with Unreal Engine
+    #     versions up through 5.6, 32 and 64-bit applications, and anti-cheat
+    #     technology. Powered by NVIDIA L4 Tensor Core GPUs.
+    #
+    #     * Reference resolution: 1080p
+    #
+    #     * Reference frame rate: 60 fps
+    #
+    #     * Workload specifications: 16 vCPUs, 64 GB RAM, 24 GB VRAM
+    #
+    #     * Tenancy: Supports 1 concurrent stream session
+    #   * <b> <code>gen6n_pro</code> (NVIDIA, pro)</b> Supports applications
+    #     with extremely high 3D scene complexity which require maximum
+    #     resources. Powered by NVIDIA L4 Tensor Core GPUs.
+    #
+    #     * Reference resolution: 1080p
+    #
+    #     * Reference frame rate: 60 fps
+    #
+    #     * Workload specifications: 16 vCPUs, 64 GB RAM, 24 GB VRAM
+    #
+    #     * Tenancy: Supports 1 concurrent stream session
+    #   * <b> <code>gen6n_ultra_win2022</code> (NVIDIA, ultra)</b> Supports
+    #     applications with high 3D scene complexity. Runs applications on
+    #     Microsoft Windows Server 2022 Base and supports DirectX 12.
+    #     Compatible with Unreal Engine versions up through 5.6, 32 and 64-bit
+    #     applications, and anti-cheat technology. Powered by NVIDIA L4 Tensor
+    #     Core GPUs.
+    #
+    #     * Reference resolution: 1080p
+    #
+    #     * Reference frame rate: 60 fps
+    #
+    #     * Workload specifications: 8 vCPUs, 32 GB RAM, 24 GB VRAM
+    #
+    #     * Tenancy: Supports 1 concurrent stream session
+    #   * <b> <code>gen6n_ultra</code> (NVIDIA, ultra)</b> Supports
+    #     applications with high 3D scene complexity. Powered by NVIDIA L4
+    #     Tensor Core GPUs.
+    #
+    #     * Reference resolution: 1080p
+    #
+    #     * Reference frame rate: 60 fps
+    #
+    #     * Workload specifications: 8 vCPUs, 32 GB RAM, 24 GB VRAM
+    #
+    #     * Tenancy: Supports 1 concurrent stream session
+    #   * <b> <code>gen6n_high</code> (NVIDIA, high)</b> Supports applications
+    #     with moderate to high 3D scene complexity. Powered by NVIDIA L4
+    #     Tensor Core GPUs.
+    #
+    #     * Reference resolution: 1080p
+    #
+    #     * Reference frame rate: 60 fps
+    #
+    #     * Workload specifications: 4 vCPUs, 16 GB RAM, 12 GB VRAM
+    #
+    #     * Tenancy: Supports up to 2 concurrent stream sessions
+    #   * <b> <code>gen6n_medium</code> (NVIDIA, medium)</b> Supports
+    #     applications with moderate 3D scene complexity. Powered by NVIDIA L4
+    #     Tensor Core GPUs.
+    #
+    #     * Reference resolution: 1080p
+    #
+    #     * Reference frame rate: 60 fps
+    #
+    #     * Workload specifications: 2 vCPUs, 8 GB RAM, 6 GB VRAM
+    #
+    #     * Tenancy: Supports up to 4 concurrent stream sessions
+    #   * <b> <code>gen6n_small</code> (NVIDIA, small)</b> Supports
+    #     applications with lightweight 3D scene complexity and low CPU usage.
+    #     Powered by NVIDIA L4 Tensor Core GPUs.
+    #
+    #     * Reference resolution: 1080p
+    #
+    #     * Reference frame rate: 60 fps
+    #
+    #     * Workload specifications: 1 vCPUs, 4 GB RAM, 2 GB VRAM
+    #
+    #     * Tenancy: Supports up to 12 concurrent stream sessions
+    #   * <b> <code>gen6n_medium_win2022</code> (NVIDIA, medium)</b> Supports
+    #     applications with low 3D scene complexity. Powered by NVIDIA L4
+    #     Tensor Core GPUs.
+    #
+    #     * Reference resolution: 1080p
+    #
+    #     * Reference frame rate: 60 fps
+    #
+    #     * Workload specifications: 8 vCPUs, 32 GB RAM, 6 GB VRAM
+    #
+    #     * Tenancy: Supports 1 concurrent stream session
+    #   * <b> <code>gen6n_small_win2022</code> (NVIDIA, small)</b> Supports
+    #     applications with low 3D scene complexity. Powered by NVIDIA L4
+    #     Tensor Core GPUs.
+    #
+    #     * Reference resolution: 1080p
+    #
+    #     * Reference frame rate: 60 fps
+    #
+    #     * Workload specifications: 2 vCPUs, 8 GB RAM, 3 GB VRAM
+    #
+    #     * Tenancy: Supports 1 concurrent stream session
+    #   * <b> <code>gen6e_pro_win2022</code> (NVIDIA, pro)</b> Supports
+    #     applications with extremely high 3D scene complexity which require
+    #     maximum resources. Runs applications on Microsoft Windows Server
+    #     2022 Base and supports DirectX 12. Compatible with Unreal Engine
+    #     versions up through 5.6, 32 and 64-bit applications, and anti-cheat
+    #     technology. Powered by NVIDIA L40S Tensor Core GPUs.
+    #
+    #     * Reference resolution: 1080p
+    #
+    #     * Reference frame rate: 60 fps
+    #
+    #     * Workload specifications: 16 vCPUs, 128 GB RAM, 48 GB VRAM
+    #
+    #     * Tenancy: Supports 1 concurrent stream session
+    #   * <b> <code>gen6e_pro</code> (NVIDIA, pro)</b> Supports applications
+    #     with extremely high 3D scene complexity which require maximum
+    #     resources. Powered by NVIDIA L40S Tensor Core GPUs.
+    #
+    #     * Reference resolution: 1080p
+    #
+    #     * Reference frame rate: 60 fps
+    #
+    #     * Workload specifications: 16 vCPUs, 128 GB RAM, 48 GB VRAM
+    #
+    #     * Tenancy: Supports 1 concurrent stream session
     #   * <b> <code>gen5n_win2022</code> (NVIDIA, ultra)</b> Supports
     #     applications with extremely high 3D scene complexity. Runs
     #     applications on Microsoft Windows Server 2022 Base and supports
-    #     DirectX 12. Compatible with most Unreal Engine 5.x builds, 32-bit
-    #     applications, and anti-cheat technology. Uses NVIDIA A10G Tensor
-    #     GPU.
+    #     DirectX 12. Compatible with Unreal Engine versions up through 5.6,
+    #     32 and 64-bit applications, and anti-cheat technology. Powered by
+    #     NVIDIA A10G Tensor Core GPUs.
     #
     #     * Reference resolution: 1080p
     #
@@ -850,8 +1054,8 @@ module Aws::GameLiftStreams
     #
     #     * Tenancy: Supports 1 concurrent stream session
     #   * <b> <code>gen5n_high</code> (NVIDIA, high)</b> Supports applications
-    #     with moderate to high 3D scene complexity. Uses NVIDIA A10G Tensor
-    #     GPU.
+    #     with moderate to high 3D scene complexity. Powered by NVIDIA A10G
+    #     Tensor Core GPUs.
     #
     #     * Reference resolution: 1080p
     #
@@ -861,8 +1065,8 @@ module Aws::GameLiftStreams
     #
     #     * Tenancy: Supports up to 2 concurrent stream sessions
     #   * <b> <code>gen5n_ultra</code> (NVIDIA, ultra)</b> Supports
-    #     applications with extremely high 3D scene complexity. Uses dedicated
-    #     NVIDIA A10G Tensor GPU.
+    #     applications with extremely high 3D scene complexity. Powered by
+    #     NVIDIA A10G Tensor Core GPUs.
     #
     #     * Reference resolution: 1080p
     #
@@ -874,9 +1078,9 @@ module Aws::GameLiftStreams
     #   * <b> <code>gen4n_win2022</code> (NVIDIA, ultra)</b> Supports
     #     applications with extremely high 3D scene complexity. Runs
     #     applications on Microsoft Windows Server 2022 Base and supports
-    #     DirectX 12. Compatible with most Unreal Engine 5.2 and 5.3 builds,
-    #     32-bit applications, and anti-cheat technology. Uses NVIDIA T4
-    #     Tensor GPU.
+    #     DirectX 12. Compatible with Unreal Engine versions up through 5.6,
+    #     32 and 64-bit applications, and anti-cheat technology. Powered by
+    #     NVIDIA T4 Tensor Core GPUs.
     #
     #     * Reference resolution: 1080p
     #
@@ -886,8 +1090,8 @@ module Aws::GameLiftStreams
     #
     #     * Tenancy: Supports 1 concurrent stream session
     #   * <b> <code>gen4n_high</code> (NVIDIA, high)</b> Supports applications
-    #     with moderate to high 3D scene complexity. Uses NVIDIA T4 Tensor
-    #     GPU.
+    #     with moderate to high 3D scene complexity. Powered by NVIDIA T4
+    #     Tensor Core GPUs.
     #
     #     * Reference resolution: 1080p
     #
@@ -897,8 +1101,8 @@ module Aws::GameLiftStreams
     #
     #     * Tenancy: Supports up to 2 concurrent stream sessions
     #   * <b> <code>gen4n_ultra</code> (NVIDIA, ultra)</b> Supports
-    #     applications with high 3D scene complexity. Uses dedicated NVIDIA T4
-    #     Tensor GPU.
+    #     applications with high 3D scene complexity. Powered by NVIDIA T4
+    #     Tensor Core GPUs.
     #
     #     * Reference resolution: 1080p
     #
@@ -908,75 +1112,128 @@ module Aws::GameLiftStreams
     #
     #     * Tenancy: Supports 1 concurrent stream session
     #
+    # @option params [String] :default_application_identifier
+    #   The unique identifier of the Amazon GameLift Streams application that
+    #   you want to set as the default application in a stream group. The
+    #   application that you specify must be in `READY` status. The default
+    #   application is pre-cached on always-on compute resources, reducing
+    #   stream startup times. Other applications are automatically cached as
+    #   needed.
+    #
+    #   If you do not link an application when you create a stream group, you
+    #   will need to link one later, before you can start streaming, using
+    #   [AssociateApplications][1].
+    #
+    #   This value is an [Amazon Resource Name (ARN)][2] or ID that uniquely
+    #   identifies the application resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:application/a-9ZY8X7Wv6`.
+    #   Example ID: `a-9ZY8X7Wv6`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/gameliftstreams/latest/apireference/API_AssociateApplications.html
+    #   [2]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
+    #
+    # @option params [Array<Types::LocationConfiguration>] :location_configurations
+    #   A set of one or more locations and the streaming capacity for each
+    #   location.
+    #
     # @option params [Hash<String,String>] :tags
     #   A list of labels to assign to the new stream group resource. Tags are
-    #   developer-defined key-value pairs. It is useful to tag Amazon Web
-    #   Services resources for resource management, access management, and
+    #   developer-defined key-value pairs. Tagging Amazon Web Services
+    #   resources is useful for resource management, access management and
     #   cost allocation. See [ Tagging Amazon Web Services Resources][1] in
-    #   the *Amazon Web Services General Reference*. You can use TagResource,
-    #   UntagResource, and ListTagsForResource to add, remove, and view tags
-    #   on existing resources. The maximum tag limit might be lower than
-    #   stated. See the <i>Amazon Web Services </i> for actual tagging limits.
+    #   the *Amazon Web Services General Reference*. You can use
+    #   [TagResource][2] to add tags, [UntagResource][3] to remove tags, and
+    #   [ListTagsForResource][4] to view tags on existing resources.
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html
+    #   [2]: https://docs.aws.amazon.com/gameliftstreams/latest/apireference/API_TagResource.html
+    #   [3]: https://docs.aws.amazon.com/gameliftstreams/latest/apireference/API_UntagResource.html
+    #   [4]: https://docs.aws.amazon.com/gameliftstreams/latest/apireference/API_ListTagsForResource.html
+    #
+    # @option params [String] :client_token
+    #   A unique identifier that represents a client request. The request is
+    #   idempotent, which ensures that an API request completes only once.
+    #   When users send a request, Amazon GameLift Streams automatically
+    #   populates this field.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
     #
     # @return [Types::CreateStreamGroupOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateStreamGroupOutput#arn #arn} => String
-    #   * {Types::CreateStreamGroupOutput#associated_applications #associated_applications} => Array&lt;String&gt;
-    #   * {Types::CreateStreamGroupOutput#created_at #created_at} => Time
-    #   * {Types::CreateStreamGroupOutput#default_application #default_application} => Types::DefaultApplication
     #   * {Types::CreateStreamGroupOutput#description #description} => String
-    #   * {Types::CreateStreamGroupOutput#id #id} => String
-    #   * {Types::CreateStreamGroupOutput#last_updated_at #last_updated_at} => Time
+    #   * {Types::CreateStreamGroupOutput#default_application #default_application} => Types::DefaultApplication
     #   * {Types::CreateStreamGroupOutput#location_states #location_states} => Array&lt;Types::LocationState&gt;
+    #   * {Types::CreateStreamGroupOutput#stream_class #stream_class} => String
+    #   * {Types::CreateStreamGroupOutput#id #id} => String
     #   * {Types::CreateStreamGroupOutput#status #status} => String
     #   * {Types::CreateStreamGroupOutput#status_reason #status_reason} => String
-    #   * {Types::CreateStreamGroupOutput#stream_class #stream_class} => String
+    #   * {Types::CreateStreamGroupOutput#last_updated_at #last_updated_at} => Time
+    #   * {Types::CreateStreamGroupOutput#created_at #created_at} => Time
+    #   * {Types::CreateStreamGroupOutput#expires_at #expires_at} => Time
+    #   * {Types::CreateStreamGroupOutput#associated_applications #associated_applications} => Array&lt;String&gt;
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_stream_group({
-    #     client_token: "ClientToken",
-    #     default_application_identifier: "Identifier",
     #     description: "Description", # required
+    #     stream_class: "gen4n_high", # required, accepts gen4n_high, gen4n_ultra, gen4n_win2022, gen5n_high, gen5n_ultra, gen5n_win2022, gen6n_small, gen6n_medium, gen6n_high, gen6n_ultra, gen6n_ultra_win2022, gen6n_pro, gen6n_pro_win2022, gen6n_small_win2022, gen6n_medium_win2022, gen6e_pro, gen6e_pro_win2022
+    #     default_application_identifier: "Identifier",
     #     location_configurations: [
     #       {
-    #         always_on_capacity: 1,
     #         location_name: "LocationName", # required
+    #         always_on_capacity: 1,
     #         on_demand_capacity: 1,
+    #         target_idle_capacity: 1,
+    #         maximum_capacity: 1,
+    #         vpc_transit_configuration: {
+    #           vpc_id: "VpcId", # required
+    #           ipv_4_cidr_blocks: ["Ipv4CidrBlock"], # required
+    #         },
     #       },
     #     ],
-    #     stream_class: "gen4n_high", # required, accepts gen4n_high, gen4n_ultra, gen4n_win2022, gen5n_high, gen5n_ultra, gen5n_win2022
     #     tags: {
     #       "TagKey" => "TagValue",
     #     },
+    #     client_token: "ClientToken",
     #   })
     #
     # @example Response structure
     #
     #   resp.arn #=> String
+    #   resp.description #=> String
+    #   resp.default_application.id #=> String
+    #   resp.default_application.arn #=> String
+    #   resp.location_states #=> Array
+    #   resp.location_states[0].location_name #=> String
+    #   resp.location_states[0].status #=> String, one of "ACTIVATING", "ACTIVE", "ERROR", "REMOVING"
+    #   resp.location_states[0].always_on_capacity #=> Integer
+    #   resp.location_states[0].on_demand_capacity #=> Integer
+    #   resp.location_states[0].target_idle_capacity #=> Integer
+    #   resp.location_states[0].maximum_capacity #=> Integer
+    #   resp.location_states[0].requested_capacity #=> Integer
+    #   resp.location_states[0].allocated_capacity #=> Integer
+    #   resp.location_states[0].idle_capacity #=> Integer
+    #   resp.location_states[0].internal_vpc_ipv_4_cidr_block #=> String
+    #   resp.location_states[0].vpc_transit_configuration.vpc_id #=> String
+    #   resp.location_states[0].vpc_transit_configuration.ipv_4_cidr_blocks #=> Array
+    #   resp.location_states[0].vpc_transit_configuration.ipv_4_cidr_blocks[0] #=> String
+    #   resp.location_states[0].vpc_transit_configuration.transit_gateway_id #=> String
+    #   resp.location_states[0].vpc_transit_configuration.transit_gateway_resource_share_arn #=> String
+    #   resp.stream_class #=> String, one of "gen4n_high", "gen4n_ultra", "gen4n_win2022", "gen5n_high", "gen5n_ultra", "gen5n_win2022", "gen6n_small", "gen6n_medium", "gen6n_high", "gen6n_ultra", "gen6n_ultra_win2022", "gen6n_pro", "gen6n_pro_win2022", "gen6n_small_win2022", "gen6n_medium_win2022", "gen6e_pro", "gen6e_pro_win2022"
+    #   resp.id #=> String
+    #   resp.status #=> String, one of "ACTIVATING", "UPDATING_LOCATIONS", "ACTIVE", "ACTIVE_WITH_ERRORS", "ERROR", "DELETING", "EXPIRED"
+    #   resp.status_reason #=> String, one of "internalError", "noAvailableInstances"
+    #   resp.last_updated_at #=> Time
+    #   resp.created_at #=> Time
+    #   resp.expires_at #=> Time
     #   resp.associated_applications #=> Array
     #   resp.associated_applications[0] #=> String
-    #   resp.created_at #=> Time
-    #   resp.default_application.arn #=> String
-    #   resp.default_application.id #=> String
-    #   resp.description #=> String
-    #   resp.id #=> String
-    #   resp.last_updated_at #=> Time
-    #   resp.location_states #=> Array
-    #   resp.location_states[0].allocated_capacity #=> Integer
-    #   resp.location_states[0].always_on_capacity #=> Integer
-    #   resp.location_states[0].idle_capacity #=> Integer
-    #   resp.location_states[0].location_name #=> String
-    #   resp.location_states[0].on_demand_capacity #=> Integer
-    #   resp.location_states[0].requested_capacity #=> Integer
-    #   resp.location_states[0].status #=> String, one of "ACTIVATING", "ACTIVE", "ERROR", "REMOVING"
-    #   resp.status #=> String, one of "ACTIVATING", "UPDATING_LOCATIONS", "ACTIVE", "ACTIVE_WITH_ERRORS", "ERROR", "DELETING"
-    #   resp.status_reason #=> String, one of "internalError", "noAvailableInstances"
-    #   resp.stream_class #=> String, one of "gen4n_high", "gen4n_ultra", "gen4n_win2022", "gen5n_high", "gen5n_ultra", "gen5n_win2022"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gameliftstreams-2018-05-10/CreateStreamGroup AWS API Documentation
     #
@@ -987,29 +1244,126 @@ module Aws::GameLiftStreams
       req.send_request(options)
     end
 
-    # Allows clients to reconnect to a recently disconnected stream session
-    # without losing any data from the last session.
+    # Creates an administrative terminal session with full access to the
+    # live runtime environment of the Amazon GameLift Streams stream
+    # session. Use the returned credentials (`SessionId`, `StreamUrl` and
+    # `TokenValue`) with the Amazon Web Services Systems Manager [Session
+    # Manager plugin][1] for the CLI to access the terminal session.
     #
-    # A client can reconnect to a stream session that's in
-    # `PENDING_CLIENT_RECONNECTION` or `ACTIVE` status. In the stream
-    # session life cycle, when the client disconnects from the stream
-    # session, the stream session transitions from `CONNECTED` to
-    # `PENDING_CLIENT_RECONNECTION` status. When a client requests to
-    # reconnect by calling `CreateStreamSessionConnection`, the stream
-    # session transitions to `RECONNECTING` status. When the reconnection is
-    # successful, the stream session transitions to `ACTIVE` status. After a
-    # stream session is disconnected for longer than
-    # `ConnectionTimeoutSeconds`, the stream session transitions to the
-    # `TERMINATED` status.
+    # The stream session must be in one of the following statuses: `ACTIVE`,
+    # `CONNECTED`, `PENDING_CLIENT_RECONNECTION`, or `RECONNECTING`.
     #
-    # To connect to an existing stream session, specify the stream group ID
-    # and stream session ID that you want to reconnect to, as well as the
-    # signal request settings to use with the stream.
+    # The `StreamUrl` is valid for 60 seconds. After it expires, call this
+    # operation again to get a new URL.
     #
-    # `ConnectionTimeoutSeconds` defines the amount of time after the stream
-    # session disconnects that a reconnection is allowed. If a client is
-    # disconnected from the stream for longer than
-    # `ConnectionTimeoutSeconds`, the stream session ends.
+    # The returned credentials grant full access to the live runtime
+    # environment of the Amazon GameLift Streams stream session. The
+    # operator who connects to the terminal session has the same level of
+    # access that your Amazon GameLift Streams applications have, including
+    # potentially user input, screen images, and application data files.
+    # Grant permissions to call this operation only to trusted IAM
+    # identities that require live runtime environment access.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html
+    #
+    # @option params [required, String] :identifier
+    #   The stream group that runs this stream session.
+    #
+    #   This value is an [Amazon Resource Name (ARN)][1] or ID that uniquely
+    #   identifies the stream group resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:streamgroup/sg-1AB2C3De4`.
+    #   Example ID: `sg-1AB2C3De4`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
+    #
+    # @option params [required, String] :stream_session_identifier
+    #   An [Amazon Resource Name (ARN)][1] or ID that uniquely identifies the
+    #   stream session resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:streamsession/sg-1AB2C3De4/ABC123def4567`.
+    #   Example ID: `ABC123def4567`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
+    #
+    # @return [Types::CreateStreamSessionAdminShellOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateStreamSessionAdminShellOutput#session_id #session_id} => String
+    #   * {Types::CreateStreamSessionAdminShellOutput#stream_url #stream_url} => String
+    #   * {Types::CreateStreamSessionAdminShellOutput#token_value #token_value} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_stream_session_admin_shell({
+    #     identifier: "Identifier", # required
+    #     stream_session_identifier: "Identifier", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.session_id #=> String
+    #   resp.stream_url #=> String
+    #   resp.token_value #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/gameliftstreams-2018-05-10/CreateStreamSessionAdminShell AWS API Documentation
+    #
+    # @overload create_stream_session_admin_shell(params = {})
+    # @param [Hash] params ({})
+    def create_stream_session_admin_shell(params = {}, options = {})
+      req = build_request(:create_stream_session_admin_shell, params)
+      req.send_request(options)
+    end
+
+    # Enables clients to reconnect to a stream session while preserving all
+    # session state and data in the disconnected session. This reconnection
+    # process can be initiated when a stream session is in either
+    # `PENDING_CLIENT_RECONNECTION` or `ACTIVE` status. The process works as
+    # follows:
+    #
+    # 1.  Initial disconnect:
+    #
+    #     * When a client disconnects or loses connection, the stream
+    #       session transitions from `CONNECTED` to
+    #       `PENDING_CLIENT_RECONNECTION`
+    #
+    #     ^
+    # 2.  Reconnection time window:
+    #
+    #     * Clients have `ConnectionTimeoutSeconds` (defined in
+    #       [StartStreamSession][1]) to reconnect before session termination
+    #
+    #     * Your backend server must call **CreateStreamSessionConnection**
+    #       to initiate reconnection
+    #
+    #     * Session transitions to `RECONNECTING` status
+    # 3.  Reconnection completion:
+    #
+    #     * On successful **CreateStreamSessionConnection**, session status
+    #       changes to `ACTIVE`
+    #
+    #     * Provide the new connection information to the requesting client
+    #
+    #     * Client must establish connection within
+    #       `ConnectionTimeoutSeconds`
+    #
+    #     * Session terminates automatically if client fails to connect in
+    #       time
+    #
+    # For more information about the stream session lifecycle, see [Stream
+    # sessions][2] in the *Amazon GameLift Streams Developer Guide*.
+    #
+    # To begin re-connecting to an existing stream session, specify the
+    # stream group ID and stream session ID that you want to reconnect to,
+    # and the signal request to use with the stream.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/gameliftstreams/latest/apireference/API_StartStreamSession.html
+    # [2]: https://docs.aws.amazon.com/gameliftstreams/latest/developerguide/stream-sessions.html
     #
     # @option params [String] :client_token
     #   A unique identifier that represents a client request. The request is
@@ -1022,12 +1376,25 @@ module Aws::GameLiftStreams
     #
     # @option params [required, String] :identifier
     #   [Amazon Resource Name (ARN)][1] or ID that uniquely identifies the
-    #   stream group resource. Format example:
-    #   ARN-`arn:aws:gameliftstreams:us-west-2:123456789012:streamgroup/1AB2C3De4`
-    #   or ID-`1AB2C3De4`.
+    #   stream group resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:streamgroup/sg-1AB2C3De4`.
+    #   Example ID: `sg-1AB2C3De4`.
     #
     #   The stream group that you want to run this stream session with. The
-    #   stream group must be in `ACTIVE` status and have idle stream capacity.
+    #   stream group must be in `ACTIVE` status.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
+    #
+    # @option params [required, String] :stream_session_identifier
+    #   [Amazon Resource Name (ARN)][1] or ID that uniquely identifies the
+    #   stream session resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:streamsession/sg-1AB2C3De4/ABC123def4567`.
+    #   Example ID: `ABC123def4567`.
+    #
+    #   The stream session must be in `PENDING_CLIENT_RECONNECTION` or
+    #   `ACTIVE` status.
     #
     #
     #
@@ -1039,15 +1406,6 @@ module Aws::GameLiftStreams
     #   as a text value in quotes. The offer must be newly generated, not the
     #   same offer provided to `StartStreamSession`.
     #
-    # @option params [required, String] :stream_session_identifier
-    #   [Amazon Resource Name (ARN)][1] that uniquely identifies the stream
-    #   session resource. Format example: `1AB2C3De4`. The stream session must
-    #   be in `PENDING_CLIENT_RECONNECTION` or `ACTIVE` status.
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
-    #
     # @return [Types::CreateStreamSessionConnectionOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateStreamSessionConnectionOutput#signal_response #signal_response} => String
@@ -1057,8 +1415,8 @@ module Aws::GameLiftStreams
     #   resp = client.create_stream_session_connection({
     #     client_token: "ClientToken",
     #     identifier: "Identifier", # required
-    #     signal_request: "SignalRequest", # required
     #     stream_session_identifier: "Identifier", # required
+    #     signal_request: "SignalRequest", # required
     #   })
     #
     # @example Response structure
@@ -1071,6 +1429,221 @@ module Aws::GameLiftStreams
     # @param [Hash] params ({})
     def create_stream_session_connection(params = {}, options = {})
       req = build_request(:create_stream_session_connection, params)
+      req.send_request(options)
+    end
+
+    # Creates a stream URL that grants temporary access to a stream session
+    # in a web browser without requiring an Amazon Web Services account or
+    # client integration.
+    #
+    # You can use the stream URL to start a stream session up to the number
+    # of times set by `UsageLimit`, until it expires after
+    # `UrlExpiresAfterMinutes`. Each successful use starts a new stream
+    # session.
+    #
+    # To make the request idempotent, provide a `ClientToken`.
+    #
+    # @option params [required, String] :identifier
+    #   An [Amazon Resource Name (ARN)][1] or ID that uniquely identifies the
+    #   stream group resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:streamgroup/sg-1AB2C3De4`.
+    #   Example ID: `sg-1AB2C3De4`.
+    #
+    #   The stream session runs in this stream group.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
+    #
+    # @option params [required, String] :application_identifier
+    #   An [Amazon Resource Name (ARN)][1] or ID that uniquely identifies the
+    #   application resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:application/a-9ZY8X7Wv6`.
+    #   Example ID: `a-9ZY8X7Wv6`.
+    #
+    #   This application must be associated with the stream group.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
+    #
+    # @option params [required, String] :protocol
+    #   The data transport protocol for the stream session. Amazon GameLift
+    #   Streams supports `WebRTC`.
+    #
+    # @option params [required, Integer] :url_expires_after_minutes
+    #   The number of minutes after creation that the stream URL remains
+    #   valid. After this period, the status of the stream URL changes to
+    #   `EXPIRED` and it can no longer start stream sessions. The minimum is 1
+    #   minute. For the maximum, see [Regions, quotas, and limitations][1] in
+    #   the *Amazon GameLift Streams Developer Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/gameliftstreams/latest/developerguide/regions-quotas.html
+    #
+    # @option params [Integer] :usage_limit
+    #   The maximum number of times the stream URL can start a stream session.
+    #   Each successful use reduces the remaining uses by one. The minimum is
+    #   1, and the default is 1. For the maximum, see [Regions, quotas, and
+    #   limitations][1] in the *Amazon GameLift Streams Developer Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/gameliftstreams/latest/developerguide/regions-quotas.html
+    #
+    # @option params [String] :description
+    #   A descriptive label for the stream URL.
+    #
+    # @option params [required, Array<String>] :locations
+    #   A list of locations, in order of preference, where Amazon GameLift
+    #   Streams can place the stream session. Specify each location by its
+    #   Amazon Web Services Region code, for example `us-east-1`. For a
+    #   complete list of locations that Amazon GameLift Streams supports,
+    #   refer to [Regions, quotas, and limitations][1] in the *Amazon GameLift
+    #   Streams Developer Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/gameliftstreams/latest/developerguide/regions-quotas.html
+    #
+    # @option params [Integer] :session_length_seconds
+    #   The maximum length of time, in seconds, that a stream session started
+    #   from this stream URL can run. Valid values are 1-86400 seconds (1
+    #   second to 24 hours). The default is 43200 seconds (12 hours).
+    #
+    # @option params [Array<String>] :additional_launch_args
+    #   A list of CLI arguments that are sent to the streaming server when a
+    #   stream session launches. You can use this to configure the application
+    #   or stream session details. You can also provide custom arguments that
+    #   Amazon GameLift Streams passes to your game client.
+    #
+    #   `AdditionalEnvironmentVariables` and `AdditionalLaunchArgs` have
+    #   similar purposes. `AdditionalEnvironmentVariables` passes data using
+    #   environment variables; while `AdditionalLaunchArgs` passes data using
+    #   command-line arguments.
+    #
+    # @option params [Hash<String,String>] :additional_environment_variables
+    #   A set of options that you can use to control the stream session
+    #   runtime environment, expressed as a set of key-value pairs. You can
+    #   use this to configure the application or stream session details. You
+    #   can also provide custom environment variables that Amazon GameLift
+    #   Streams passes to your game client.
+    #
+    #   <note markdown="1"> If you want to debug your application with environment variables, we
+    #   recommend that you do so in a local environment outside of Amazon
+    #   GameLift Streams. For more information, refer to the Compatibility
+    #   Guidance in the troubleshooting section of the Developer Guide.
+    #
+    #    </note>
+    #
+    #   `AdditionalEnvironmentVariables` and `AdditionalLaunchArgs` have
+    #   similar purposes. `AdditionalEnvironmentVariables` passes data using
+    #   environment variables; while `AdditionalLaunchArgs` passes data using
+    #   command-line arguments.
+    #
+    # @option params [String] :role_arn
+    #   The Amazon Resource Name (ARN) of the IAM role that Amazon GameLift
+    #   Streams assumes during stream sessions started from this stream URL.
+    #   For more information, see [Provide AWS credentials to your streaming
+    #   application][1] in the *Amazon GameLift Streams Developer Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/gameliftstreams/latest/developerguide/session-credentials.html
+    #
+    # @option params [Types::DisplayConfiguration] :display_configuration
+    #   The display settings, such as resolution, for stream sessions started
+    #   from this stream URL.
+    #
+    # @option params [String] :client_token
+    #   A unique, case-sensitive identifier that you provide to ensure this
+    #   request is idempotent. If you retry a request with the same
+    #   `ClientToken`, Amazon GameLift Streams returns the original response
+    #   without performing the operation again.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @return [Types::CreateStreamUrlOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateStreamUrlOutput#arn #arn} => String
+    #   * {Types::CreateStreamUrlOutput#stream_url_id #stream_url_id} => String
+    #   * {Types::CreateStreamUrlOutput#stream_url #stream_url} => String
+    #   * {Types::CreateStreamUrlOutput#status #status} => String
+    #   * {Types::CreateStreamUrlOutput#status_reason #status_reason} => String
+    #   * {Types::CreateStreamUrlOutput#expires_at #expires_at} => Time
+    #   * {Types::CreateStreamUrlOutput#created_at #created_at} => Time
+    #   * {Types::CreateStreamUrlOutput#usage_limit #usage_limit} => Integer
+    #   * {Types::CreateStreamUrlOutput#remaining_uses #remaining_uses} => Integer
+    #   * {Types::CreateStreamUrlOutput#stream_group_arn #stream_group_arn} => String
+    #   * {Types::CreateStreamUrlOutput#application_arn #application_arn} => String
+    #   * {Types::CreateStreamUrlOutput#protocol #protocol} => String
+    #   * {Types::CreateStreamUrlOutput#locations #locations} => Array&lt;String&gt;
+    #   * {Types::CreateStreamUrlOutput#session_length_seconds #session_length_seconds} => Integer
+    #   * {Types::CreateStreamUrlOutput#description #description} => String
+    #   * {Types::CreateStreamUrlOutput#additional_launch_args #additional_launch_args} => Array&lt;String&gt;
+    #   * {Types::CreateStreamUrlOutput#additional_environment_variables #additional_environment_variables} => Hash&lt;String,String&gt;
+    #   * {Types::CreateStreamUrlOutput#role_arn #role_arn} => String
+    #   * {Types::CreateStreamUrlOutput#display_configuration #display_configuration} => Types::DisplayConfiguration
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_stream_url({
+    #     identifier: "Identifier", # required
+    #     application_identifier: "Identifier", # required
+    #     protocol: "WebRTC", # required, accepts WebRTC
+    #     url_expires_after_minutes: 1, # required
+    #     usage_limit: 1,
+    #     description: "Description",
+    #     locations: ["LocationName"], # required
+    #     session_length_seconds: 1,
+    #     additional_launch_args: ["String"],
+    #     additional_environment_variables: {
+    #       "EnvironmentVariablesKeyString" => "EnvironmentVariablesValueString",
+    #     },
+    #     role_arn: "IamRoleArn",
+    #     display_configuration: {
+    #       resolution: {
+    #         width: 1, # required
+    #         height: 1, # required
+    #       },
+    #     },
+    #     client_token: "ClientToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.arn #=> String
+    #   resp.stream_url_id #=> String
+    #   resp.stream_url #=> String
+    #   resp.status #=> String, one of "ACTIVE", "EXPIRED", "REVOKED", "LIMIT_REACHED"
+    #   resp.status_reason #=> String, one of "userRevoked", "revokedAndTerminatingSessions", "revokedAndSessionsTerminated", "streamGroupDeleted", "applicationDeleted"
+    #   resp.expires_at #=> Time
+    #   resp.created_at #=> Time
+    #   resp.usage_limit #=> Integer
+    #   resp.remaining_uses #=> Integer
+    #   resp.stream_group_arn #=> String
+    #   resp.application_arn #=> String
+    #   resp.protocol #=> String, one of "WebRTC"
+    #   resp.locations #=> Array
+    #   resp.locations[0] #=> String
+    #   resp.session_length_seconds #=> Integer
+    #   resp.description #=> String
+    #   resp.additional_launch_args #=> Array
+    #   resp.additional_launch_args[0] #=> String
+    #   resp.additional_environment_variables #=> Hash
+    #   resp.additional_environment_variables["EnvironmentVariablesKeyString"] #=> String
+    #   resp.role_arn #=> String
+    #   resp.display_configuration.resolution.width #=> Integer
+    #   resp.display_configuration.resolution.height #=> Integer
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/gameliftstreams-2018-05-10/CreateStreamUrl AWS API Documentation
+    #
+    # @overload create_stream_url(params = {})
+    # @param [Hash] params ({})
+    def create_stream_url(params = {}, options = {})
+      req = build_request(:create_stream_url, params)
       req.send_request(options)
     end
 
@@ -1088,23 +1661,30 @@ module Aws::GameLiftStreams
     #   an application that's in `PROCESSING` or `INITIALIZED` status.
     #
     # * The application is not the default application of any stream groups.
-    #   You must first delete the stream group by using DeleteStreamGroup.
+    #   You must first delete the stream group by using
+    #   [DeleteStreamGroup][1].
     #
     # * The application is not linked to any stream groups. You must first
-    #   unlink the stream group by using DisassociateApplications.
+    #   unlink the stream group by using [DisassociateApplications][2].
     #
     # * An application is not streaming in any ongoing stream session. You
     #   must wait until the client ends the stream session or call
-    #   TerminateStreamSession to end the stream.
+    #   [TerminateStreamSession][3] to end the stream.
     #
     # If any active stream groups exist for this application, this request
     # returns a `ValidationException`.
     #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/gameliftstreams/latest/apireference/API_DeleteStreamGroup.html
+    # [2]: https://docs.aws.amazon.com/gameliftstreams/latest/apireference/API_DisassociateApplications.html
+    # [3]: https://docs.aws.amazon.com/gameliftstreams/latest/apireference/API_TerminateStreamSession.html
+    #
     # @option params [required, String] :identifier
     #   An [Amazon Resource Name (ARN)][1] or ID that uniquely identifies the
-    #   application resource. Format example:
-    #   ARN-`arn:aws:gameliftstreams:us-west-2:123456789012:application/9ZY8X7Wv6`
-    #   or ID-`9ZY8X7Wv6`.
+    #   application resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:application/a-9ZY8X7Wv6`.
+    #   Example ID: `a-9ZY8X7Wv6`.
     #
     #
     #
@@ -1132,14 +1712,24 @@ module Aws::GameLiftStreams
     # group identifier. During the deletion process, the stream group's
     # status is `DELETING`. This operation stops streams in progress and
     # prevents new streams from starting. As a best practice, before
-    # deleting the stream group, call ListStreamSessions to check for
+    # deleting the stream group, call [ListStreamSessions][1] to check for
     # streams in progress and take action to stop them. When you delete a
     # stream group, any application associations referring to that stream
     # group are automatically removed.
     #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/gameliftstreams/latest/apireference/API_ListStreamSessions.html
+    #
     # @option params [required, String] :identifier
-    #   The unique ID value of the stream group resource to delete. Format
-    #   example: `1AB2C3De4`.
+    #   An [Amazon Resource Name (ARN)][1] or ID that uniquely identifies the
+    #   stream group resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:streamgroup/sg-1AB2C3De4`.
+    #   Example ID: `sg-1AB2C3De4`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
@@ -1163,33 +1753,41 @@ module Aws::GameLiftStreams
     # group's allocated compute resources. Any streams in process will
     # continue until they terminate, which helps avoid interrupting an
     # end-user's stream. Amazon GameLift Streams will not initiate new
-    # streams using this stream group. The disassociate action does not
-    # affect the stream capacity of a stream group.
+    # streams in the stream group using the disassociated application. The
+    # disassociate action does not affect the stream capacity of a stream
+    # group. To disassociate an application, the stream group must be in
+    # `ACTIVE` status.
     #
-    # You can only disassociate an application if it's not a default
-    # application of the stream group. Check `DefaultApplicationIdentifier`
-    # by calling GetStreamGroup.
+    # If you disassociate the default application, Amazon GameLift Streams
+    # will automatically choose a new default application from the remaining
+    # associated applications. To change which application is the default
+    # application, call [UpdateStreamGroup][1] and specify a new
+    # `DefaultApplicationIdentifier`.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/gameliftstreams/latest/apireference/API_UpdateStreamGroup.html
+    #
+    # @option params [required, String] :identifier
+    #   A stream group to disassociate these applications from.
+    #
+    #   This value is an [Amazon Resource Name (ARN)][1] or ID that uniquely
+    #   identifies the stream group resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:streamgroup/sg-1AB2C3De4`.
+    #   Example ID: `sg-1AB2C3De4`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
     #
     # @option params [required, Array<String>] :application_identifiers
     #   A set of applications that you want to disassociate from the stream
     #   group.
     #
     #   This value is a set of either [Amazon Resource Names (ARN)][1] or IDs
-    #   that uniquely identify application resources. Format example:
-    #   ARN-`arn:aws:gameliftstreams:us-west-2:123456789012:application/9ZY8X7Wv6`
-    #   or ID-`9ZY8X7Wv6`.
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
-    #
-    # @option params [required, String] :identifier
-    #   A stream group to disassociate these applications from.
-    #
-    #   This value is an [Amazon Resource Name (ARN)][1] or ID that uniquely
-    #   identifies the stream group resource. Format example:
-    #   ARN-`arn:aws:gameliftstreams:us-west-2:123456789012:streamgroup/1AB2C3De4`
-    #   or ID-`1AB2C3De4`.
+    #   that uniquely identify application resources. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:application/a-9ZY8X7Wv6`.
+    #   Example ID: `a-9ZY8X7Wv6`.
     #
     #
     #
@@ -1197,21 +1795,21 @@ module Aws::GameLiftStreams
     #
     # @return [Types::DisassociateApplicationsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::DisassociateApplicationsOutput#application_arns #application_arns} => Array&lt;String&gt;
     #   * {Types::DisassociateApplicationsOutput#arn #arn} => String
+    #   * {Types::DisassociateApplicationsOutput#application_arns #application_arns} => Array&lt;String&gt;
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.disassociate_applications({
-    #     application_identifiers: ["Identifier"], # required
     #     identifier: "Identifier", # required
+    #     application_identifiers: ["Identifier"], # required
     #   })
     #
     # @example Response structure
     #
+    #   resp.arn #=> String
     #   resp.application_arns #=> Array
     #   resp.application_arns[0] #=> String
-    #   resp.arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gameliftstreams-2018-05-10/DisassociateApplications AWS API Documentation
     #
@@ -1260,9 +1858,19 @@ module Aws::GameLiftStreams
     #
     # @option params [required, String] :identifier
     #   An [Amazon Resource Name (ARN)][1] or ID that uniquely identifies the
-    #   stream group resource. Format example:
-    #   ARN-`arn:aws:gameliftstreams:us-west-2:123456789012:streamgroup/1AB2C3De4`
-    #   or ID-`1AB2C3De4`.
+    #   stream group resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:streamgroup/sg-1AB2C3De4`.
+    #   Example ID: `sg-1AB2C3De4`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
+    #
+    # @option params [required, String] :stream_session_identifier
+    #   An [Amazon Resource Name (ARN)][1] or ID that uniquely identifies the
+    #   stream session resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:streamsession/sg-1AB2C3De4/ABC123def4567`.
+    #   Example ID: `ABC123def4567`.
     #
     #
     #
@@ -1276,22 +1884,14 @@ module Aws::GameLiftStreams
     #   `.zip` file extension.
     #
     #   Example 1: If you provide an S3 URI called
-    #   `s3://MyBucket/MyGame_Session1.zip`, then Amazon GameLift Streams will
-    #   save the files at that location.
+    #   `s3://amzn-s3-demo-destination-bucket/MyGame_Session1.zip`, then
+    #   Amazon GameLift Streams will save the files at that location.
     #
     #   Example 2: If you provide an S3 URI called
-    #   `s3://MyBucket/MyGameSessions_ExportedFiles/`, then Amazon GameLift
-    #   Streams will save the files at
-    #   `s3://MyBucket/MyGameSessions_ExportedFiles/YYYYMMDD-HHMMSS-appId-sg-Id-sessionId.zip`
+    #   `s3://amzn-s3-demo-destination-bucket/MyGameSessions_ExportedFiles/`,
+    #   then Amazon GameLift Streams will save the files at
+    #   `s3://amzn-s3-demo-destination-bucket/MyGameSessions_ExportedFiles/YYYYMMDD-HHMMSS-appId-sg-Id-sessionId.zip`
     #   or another similar name.
-    #
-    # @option params [required, String] :stream_session_identifier
-    #   An [Amazon Resource Name (ARN)][1] or ID that uniquely identifies the
-    #   stream session resource. Format example: `1AB2C3De4`.
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
@@ -1299,8 +1899,8 @@ module Aws::GameLiftStreams
     #
     #   resp = client.export_stream_session_files({
     #     identifier: "Identifier", # required
-    #     output_uri: "OutputUri", # required
     #     stream_session_identifier: "Identifier", # required
+    #     output_uri: "OutputUri", # required
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gameliftstreams-2018-05-10/ExportStreamSessionFiles AWS API Documentation
@@ -1319,9 +1919,9 @@ module Aws::GameLiftStreams
     #
     # @option params [required, String] :identifier
     #   An [Amazon Resource Name (ARN)][1] or ID that uniquely identifies the
-    #   application resource. Format example:
-    #   ARN-`arn:aws:gameliftstreams:us-west-2:123456789012:application/9ZY8X7Wv6`
-    #   or ID-`9ZY8X7Wv6`.
+    #   application resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:application/a-9ZY8X7Wv6`.
+    #   Example ID: `a-9ZY8X7Wv6`.
     #
     #
     #
@@ -1329,20 +1929,20 @@ module Aws::GameLiftStreams
     #
     # @return [Types::GetApplicationOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::GetApplicationOutput#application_log_output_uri #application_log_output_uri} => String
-    #   * {Types::GetApplicationOutput#application_log_paths #application_log_paths} => Array&lt;String&gt;
-    #   * {Types::GetApplicationOutput#application_source_uri #application_source_uri} => String
     #   * {Types::GetApplicationOutput#arn #arn} => String
-    #   * {Types::GetApplicationOutput#associated_stream_groups #associated_stream_groups} => Array&lt;String&gt;
-    #   * {Types::GetApplicationOutput#created_at #created_at} => Time
     #   * {Types::GetApplicationOutput#description #description} => String
-    #   * {Types::GetApplicationOutput#executable_path #executable_path} => String
-    #   * {Types::GetApplicationOutput#id #id} => String
-    #   * {Types::GetApplicationOutput#last_updated_at #last_updated_at} => Time
-    #   * {Types::GetApplicationOutput#replication_statuses #replication_statuses} => Array&lt;Types::ReplicationStatus&gt;
     #   * {Types::GetApplicationOutput#runtime_environment #runtime_environment} => Types::RuntimeEnvironment
+    #   * {Types::GetApplicationOutput#executable_path #executable_path} => String
+    #   * {Types::GetApplicationOutput#application_log_paths #application_log_paths} => Array&lt;String&gt;
+    #   * {Types::GetApplicationOutput#application_log_output_uri #application_log_output_uri} => String
+    #   * {Types::GetApplicationOutput#application_source_uri #application_source_uri} => String
+    #   * {Types::GetApplicationOutput#id #id} => String
     #   * {Types::GetApplicationOutput#status #status} => String
     #   * {Types::GetApplicationOutput#status_reason #status_reason} => String
+    #   * {Types::GetApplicationOutput#replication_statuses #replication_statuses} => Array&lt;Types::ReplicationStatus&gt;
+    #   * {Types::GetApplicationOutput#created_at #created_at} => Time
+    #   * {Types::GetApplicationOutput#last_updated_at #last_updated_at} => Time
+    #   * {Types::GetApplicationOutput#associated_stream_groups #associated_stream_groups} => Array&lt;String&gt;
     #
     # @example Request syntax with placeholder values
     #
@@ -1352,25 +1952,25 @@ module Aws::GameLiftStreams
     #
     # @example Response structure
     #
-    #   resp.application_log_output_uri #=> String
+    #   resp.arn #=> String
+    #   resp.description #=> String
+    #   resp.runtime_environment.type #=> String, one of "PROTON", "WINDOWS", "UBUNTU"
+    #   resp.runtime_environment.version #=> String
+    #   resp.executable_path #=> String
     #   resp.application_log_paths #=> Array
     #   resp.application_log_paths[0] #=> String
+    #   resp.application_log_output_uri #=> String
     #   resp.application_source_uri #=> String
-    #   resp.arn #=> String
-    #   resp.associated_stream_groups #=> Array
-    #   resp.associated_stream_groups[0] #=> String
-    #   resp.created_at #=> Time
-    #   resp.description #=> String
-    #   resp.executable_path #=> String
     #   resp.id #=> String
-    #   resp.last_updated_at #=> Time
+    #   resp.status #=> String, one of "INITIALIZED", "PROCESSING", "READY", "DELETING", "ERROR"
+    #   resp.status_reason #=> String, one of "internalError", "accessDenied", "sourceModified"
     #   resp.replication_statuses #=> Array
     #   resp.replication_statuses[0].location #=> String
     #   resp.replication_statuses[0].status #=> String, one of "REPLICATING", "COMPLETED"
-    #   resp.runtime_environment.type #=> String, one of "PROTON", "WINDOWS", "UBUNTU"
-    #   resp.runtime_environment.version #=> String
-    #   resp.status #=> String, one of "INITIALIZED", "PROCESSING", "READY", "DELETING", "ERROR"
-    #   resp.status_reason #=> String, one of "internalError", "accessDenied"
+    #   resp.created_at #=> Time
+    #   resp.last_updated_at #=> Time
+    #   resp.associated_stream_groups #=> Array
+    #   resp.associated_stream_groups[0] #=> String
     #
     #
     # The following waiters are defined for this operation (see {Client#wait_until} for detailed usage):
@@ -1393,22 +1993,29 @@ module Aws::GameLiftStreams
     # the requested stream group.
     #
     # @option params [required, String] :identifier
-    #   The unique ID value of the stream group resource to retrieve. Format
-    #   example: `1AB2C3De4`.
+    #   An [Amazon Resource Name (ARN)][1] or ID that uniquely identifies the
+    #   stream group resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:streamgroup/sg-1AB2C3De4`.
+    #   Example ID: `sg-1AB2C3De4`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
     #
     # @return [Types::GetStreamGroupOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::GetStreamGroupOutput#arn #arn} => String
-    #   * {Types::GetStreamGroupOutput#associated_applications #associated_applications} => Array&lt;String&gt;
-    #   * {Types::GetStreamGroupOutput#created_at #created_at} => Time
-    #   * {Types::GetStreamGroupOutput#default_application #default_application} => Types::DefaultApplication
     #   * {Types::GetStreamGroupOutput#description #description} => String
-    #   * {Types::GetStreamGroupOutput#id #id} => String
-    #   * {Types::GetStreamGroupOutput#last_updated_at #last_updated_at} => Time
+    #   * {Types::GetStreamGroupOutput#default_application #default_application} => Types::DefaultApplication
     #   * {Types::GetStreamGroupOutput#location_states #location_states} => Array&lt;Types::LocationState&gt;
+    #   * {Types::GetStreamGroupOutput#stream_class #stream_class} => String
+    #   * {Types::GetStreamGroupOutput#id #id} => String
     #   * {Types::GetStreamGroupOutput#status #status} => String
     #   * {Types::GetStreamGroupOutput#status_reason #status_reason} => String
-    #   * {Types::GetStreamGroupOutput#stream_class #stream_class} => String
+    #   * {Types::GetStreamGroupOutput#last_updated_at #last_updated_at} => Time
+    #   * {Types::GetStreamGroupOutput#created_at #created_at} => Time
+    #   * {Types::GetStreamGroupOutput#expires_at #expires_at} => Time
+    #   * {Types::GetStreamGroupOutput#associated_applications #associated_applications} => Array&lt;String&gt;
     #
     # @example Request syntax with placeholder values
     #
@@ -1419,25 +2026,34 @@ module Aws::GameLiftStreams
     # @example Response structure
     #
     #   resp.arn #=> String
+    #   resp.description #=> String
+    #   resp.default_application.id #=> String
+    #   resp.default_application.arn #=> String
+    #   resp.location_states #=> Array
+    #   resp.location_states[0].location_name #=> String
+    #   resp.location_states[0].status #=> String, one of "ACTIVATING", "ACTIVE", "ERROR", "REMOVING"
+    #   resp.location_states[0].always_on_capacity #=> Integer
+    #   resp.location_states[0].on_demand_capacity #=> Integer
+    #   resp.location_states[0].target_idle_capacity #=> Integer
+    #   resp.location_states[0].maximum_capacity #=> Integer
+    #   resp.location_states[0].requested_capacity #=> Integer
+    #   resp.location_states[0].allocated_capacity #=> Integer
+    #   resp.location_states[0].idle_capacity #=> Integer
+    #   resp.location_states[0].internal_vpc_ipv_4_cidr_block #=> String
+    #   resp.location_states[0].vpc_transit_configuration.vpc_id #=> String
+    #   resp.location_states[0].vpc_transit_configuration.ipv_4_cidr_blocks #=> Array
+    #   resp.location_states[0].vpc_transit_configuration.ipv_4_cidr_blocks[0] #=> String
+    #   resp.location_states[0].vpc_transit_configuration.transit_gateway_id #=> String
+    #   resp.location_states[0].vpc_transit_configuration.transit_gateway_resource_share_arn #=> String
+    #   resp.stream_class #=> String, one of "gen4n_high", "gen4n_ultra", "gen4n_win2022", "gen5n_high", "gen5n_ultra", "gen5n_win2022", "gen6n_small", "gen6n_medium", "gen6n_high", "gen6n_ultra", "gen6n_ultra_win2022", "gen6n_pro", "gen6n_pro_win2022", "gen6n_small_win2022", "gen6n_medium_win2022", "gen6e_pro", "gen6e_pro_win2022"
+    #   resp.id #=> String
+    #   resp.status #=> String, one of "ACTIVATING", "UPDATING_LOCATIONS", "ACTIVE", "ACTIVE_WITH_ERRORS", "ERROR", "DELETING", "EXPIRED"
+    #   resp.status_reason #=> String, one of "internalError", "noAvailableInstances"
+    #   resp.last_updated_at #=> Time
+    #   resp.created_at #=> Time
+    #   resp.expires_at #=> Time
     #   resp.associated_applications #=> Array
     #   resp.associated_applications[0] #=> String
-    #   resp.created_at #=> Time
-    #   resp.default_application.arn #=> String
-    #   resp.default_application.id #=> String
-    #   resp.description #=> String
-    #   resp.id #=> String
-    #   resp.last_updated_at #=> Time
-    #   resp.location_states #=> Array
-    #   resp.location_states[0].allocated_capacity #=> Integer
-    #   resp.location_states[0].always_on_capacity #=> Integer
-    #   resp.location_states[0].idle_capacity #=> Integer
-    #   resp.location_states[0].location_name #=> String
-    #   resp.location_states[0].on_demand_capacity #=> Integer
-    #   resp.location_states[0].requested_capacity #=> Integer
-    #   resp.location_states[0].status #=> String, one of "ACTIVATING", "ACTIVE", "ERROR", "REMOVING"
-    #   resp.status #=> String, one of "ACTIVATING", "UPDATING_LOCATIONS", "ACTIVE", "ACTIVE_WITH_ERRORS", "ERROR", "DELETING"
-    #   resp.status_reason #=> String, one of "internalError", "noAvailableInstances"
-    #   resp.stream_class #=> String, one of "gen4n_high", "gen4n_ultra", "gen4n_win2022", "gen5n_high", "gen5n_ultra", "gen5n_win2022"
     #
     #
     # The following waiters are defined for this operation (see {Client#wait_until} for detailed usage):
@@ -1463,17 +2079,19 @@ module Aws::GameLiftStreams
     #   The stream group that runs this stream session.
     #
     #   This value is an [Amazon Resource Name (ARN)][1] or ID that uniquely
-    #   identifies the stream group resource. Format example:
-    #   ARN-`arn:aws:gameliftstreams:us-west-2:123456789012:streamgroup/1AB2C3De4`
-    #   or ID-`1AB2C3De4`.
+    #   identifies the stream group resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:streamgroup/sg-1AB2C3De4`.
+    #   Example ID: `sg-1AB2C3De4`.
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
     #
     # @option params [required, String] :stream_session_identifier
-    #   An [Amazon Resource Name (ARN)][1] that uniquely identifies the stream
-    #   session resource. Format example: `1AB2C3De4`.
+    #   An [Amazon Resource Name (ARN)][1] or ID that uniquely identifies the
+    #   stream session resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:streamsession/sg-1AB2C3De4/ABC123def4567`.
+    #   Example ID: `ABC123def4567`.
     #
     #
     #
@@ -1481,26 +2099,29 @@ module Aws::GameLiftStreams
     #
     # @return [Types::GetStreamSessionOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::GetStreamSessionOutput#additional_environment_variables #additional_environment_variables} => Hash&lt;String,String&gt;
-    #   * {Types::GetStreamSessionOutput#additional_launch_args #additional_launch_args} => Array&lt;String&gt;
-    #   * {Types::GetStreamSessionOutput#application_arn #application_arn} => String
     #   * {Types::GetStreamSessionOutput#arn #arn} => String
-    #   * {Types::GetStreamSessionOutput#connection_timeout_seconds #connection_timeout_seconds} => Integer
-    #   * {Types::GetStreamSessionOutput#created_at #created_at} => Time
     #   * {Types::GetStreamSessionOutput#description #description} => String
-    #   * {Types::GetStreamSessionOutput#export_files_metadata #export_files_metadata} => Types::ExportFilesMetadata
-    #   * {Types::GetStreamSessionOutput#last_updated_at #last_updated_at} => Time
-    #   * {Types::GetStreamSessionOutput#location #location} => String
-    #   * {Types::GetStreamSessionOutput#log_file_location_uri #log_file_location_uri} => String
-    #   * {Types::GetStreamSessionOutput#protocol #protocol} => String
-    #   * {Types::GetStreamSessionOutput#session_length_seconds #session_length_seconds} => Integer
-    #   * {Types::GetStreamSessionOutput#signal_request #signal_request} => String
-    #   * {Types::GetStreamSessionOutput#signal_response #signal_response} => String
-    #   * {Types::GetStreamSessionOutput#status #status} => String
-    #   * {Types::GetStreamSessionOutput#status_reason #status_reason} => String
     #   * {Types::GetStreamSessionOutput#stream_group_id #stream_group_id} => String
     #   * {Types::GetStreamSessionOutput#user_id #user_id} => String
+    #   * {Types::GetStreamSessionOutput#status #status} => String
+    #   * {Types::GetStreamSessionOutput#status_reason #status_reason} => String
+    #   * {Types::GetStreamSessionOutput#protocol #protocol} => String
+    #   * {Types::GetStreamSessionOutput#location #location} => String
+    #   * {Types::GetStreamSessionOutput#signal_request #signal_request} => String
+    #   * {Types::GetStreamSessionOutput#signal_response #signal_response} => String
+    #   * {Types::GetStreamSessionOutput#connection_timeout_seconds #connection_timeout_seconds} => Integer
+    #   * {Types::GetStreamSessionOutput#session_length_seconds #session_length_seconds} => Integer
+    #   * {Types::GetStreamSessionOutput#additional_launch_args #additional_launch_args} => Array&lt;String&gt;
+    #   * {Types::GetStreamSessionOutput#additional_environment_variables #additional_environment_variables} => Hash&lt;String,String&gt;
+    #   * {Types::GetStreamSessionOutput#performance_stats_configuration #performance_stats_configuration} => Types::PerformanceStatsConfiguration
+    #   * {Types::GetStreamSessionOutput#log_file_location_uri #log_file_location_uri} => String
     #   * {Types::GetStreamSessionOutput#web_sdk_protocol_url #web_sdk_protocol_url} => String
+    #   * {Types::GetStreamSessionOutput#last_updated_at #last_updated_at} => Time
+    #   * {Types::GetStreamSessionOutput#created_at #created_at} => Time
+    #   * {Types::GetStreamSessionOutput#application_arn #application_arn} => String
+    #   * {Types::GetStreamSessionOutput#export_files_metadata #export_files_metadata} => Types::ExportFilesMetadata
+    #   * {Types::GetStreamSessionOutput#role_arn #role_arn} => String
+    #   * {Types::GetStreamSessionOutput#display_configuration #display_configuration} => Types::DisplayConfiguration
     #
     # @example Request syntax with placeholder values
     #
@@ -1511,30 +2132,34 @@ module Aws::GameLiftStreams
     #
     # @example Response structure
     #
-    #   resp.additional_environment_variables #=> Hash
-    #   resp.additional_environment_variables["EnvironmentVariablesKeyString"] #=> String
-    #   resp.additional_launch_args #=> Array
-    #   resp.additional_launch_args[0] #=> String
-    #   resp.application_arn #=> String
     #   resp.arn #=> String
-    #   resp.connection_timeout_seconds #=> Integer
-    #   resp.created_at #=> Time
     #   resp.description #=> String
-    #   resp.export_files_metadata.output_uri #=> String
-    #   resp.export_files_metadata.status #=> String, one of "SUCCEEDED", "FAILED", "PENDING"
-    #   resp.export_files_metadata.status_reason #=> String
-    #   resp.last_updated_at #=> Time
-    #   resp.location #=> String
-    #   resp.log_file_location_uri #=> String
-    #   resp.protocol #=> String, one of "WebRTC"
-    #   resp.session_length_seconds #=> Integer
-    #   resp.signal_request #=> String
-    #   resp.signal_response #=> String
-    #   resp.status #=> String, one of "ACTIVATING", "ACTIVE", "CONNECTED", "PENDING_CLIENT_RECONNECTION", "RECONNECTING", "TERMINATING", "TERMINATED", "ERROR"
-    #   resp.status_reason #=> String, one of "internalError", "invalidSignalRequest", "placementTimeout", "applicationLogS3DestinationError"
     #   resp.stream_group_id #=> String
     #   resp.user_id #=> String
+    #   resp.status #=> String, one of "ACTIVATING", "ACTIVE", "CONNECTED", "PENDING_CLIENT_RECONNECTION", "RECONNECTING", "TERMINATING", "TERMINATED", "ERROR"
+    #   resp.status_reason #=> String, one of "internalError", "invalidSignalRequest", "placementTimeout", "applicationLogS3DestinationError", "assumeRoleFailed", "applicationExit", "connectionTimeout", "reconnectionTimeout", "maxSessionLengthTimeout", "idleTimeout", "apiTerminated"
+    #   resp.protocol #=> String, one of "WebRTC"
+    #   resp.location #=> String
+    #   resp.signal_request #=> String
+    #   resp.signal_response #=> String
+    #   resp.connection_timeout_seconds #=> Integer
+    #   resp.session_length_seconds #=> Integer
+    #   resp.additional_launch_args #=> Array
+    #   resp.additional_launch_args[0] #=> String
+    #   resp.additional_environment_variables #=> Hash
+    #   resp.additional_environment_variables["EnvironmentVariablesKeyString"] #=> String
+    #   resp.performance_stats_configuration.shared_with_client #=> Boolean
+    #   resp.log_file_location_uri #=> String
     #   resp.web_sdk_protocol_url #=> String
+    #   resp.last_updated_at #=> Time
+    #   resp.created_at #=> Time
+    #   resp.application_arn #=> String
+    #   resp.export_files_metadata.status #=> String, one of "SUCCEEDED", "FAILED", "PENDING"
+    #   resp.export_files_metadata.status_reason #=> String
+    #   resp.export_files_metadata.output_uri #=> String
+    #   resp.role_arn #=> String
+    #   resp.display_configuration.resolution.width #=> Integer
+    #   resp.display_configuration.resolution.height #=> Integer
     #
     #
     # The following waiters are defined for this operation (see {Client#wait_until} for detailed usage):
@@ -1550,20 +2175,170 @@ module Aws::GameLiftStreams
       req.send_request(options)
     end
 
+    # Retrieves properties for a stream URL, including its current status,
+    # usage, and the stream sessions started through it.
+    #
+    # If you delete the stream group or application that backs the stream
+    # URL, this operation updates the status of the stream URL to `REVOKED`.
+    #
+    # @option params [required, String] :identifier
+    #   An [Amazon Resource Name (ARN)][1] or ID that uniquely identifies the
+    #   stream group resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:streamgroup/sg-1AB2C3De4`.
+    #   Example ID: `sg-1AB2C3De4`.
+    #
+    #   This is the stream group that owns the stream URL.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
+    #
+    # @option params [required, String] :stream_url_identifier
+    #   The unique identifier of the stream URL. Specify a stream URL ID or
+    #   Amazon Resource Name (ARN). Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:streamurl/sg-1AB2C3De4/su-1AB2C3De4`.
+    #   Example ID: `su-1AB2C3De4`.
+    #
+    # @return [Types::GetStreamUrlOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetStreamUrlOutput#arn #arn} => String
+    #   * {Types::GetStreamUrlOutput#stream_url_id #stream_url_id} => String
+    #   * {Types::GetStreamUrlOutput#stream_url #stream_url} => String
+    #   * {Types::GetStreamUrlOutput#status #status} => String
+    #   * {Types::GetStreamUrlOutput#status_reason #status_reason} => String
+    #   * {Types::GetStreamUrlOutput#expires_at #expires_at} => Time
+    #   * {Types::GetStreamUrlOutput#created_at #created_at} => Time
+    #   * {Types::GetStreamUrlOutput#usage_limit #usage_limit} => Integer
+    #   * {Types::GetStreamUrlOutput#remaining_uses #remaining_uses} => Integer
+    #   * {Types::GetStreamUrlOutput#stream_group_arn #stream_group_arn} => String
+    #   * {Types::GetStreamUrlOutput#application_arn #application_arn} => String
+    #   * {Types::GetStreamUrlOutput#protocol #protocol} => String
+    #   * {Types::GetStreamUrlOutput#locations #locations} => Array&lt;String&gt;
+    #   * {Types::GetStreamUrlOutput#session_length_seconds #session_length_seconds} => Integer
+    #   * {Types::GetStreamUrlOutput#description #description} => String
+    #   * {Types::GetStreamUrlOutput#additional_launch_args #additional_launch_args} => Array&lt;String&gt;
+    #   * {Types::GetStreamUrlOutput#additional_environment_variables #additional_environment_variables} => Hash&lt;String,String&gt;
+    #   * {Types::GetStreamUrlOutput#role_arn #role_arn} => String
+    #   * {Types::GetStreamUrlOutput#display_configuration #display_configuration} => Types::DisplayConfiguration
+    #   * {Types::GetStreamUrlOutput#stream_sessions #stream_sessions} => Array&lt;Types::StreamSessionSummary&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_stream_url({
+    #     identifier: "Identifier", # required
+    #     stream_url_identifier: "Identifier", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.arn #=> String
+    #   resp.stream_url_id #=> String
+    #   resp.stream_url #=> String
+    #   resp.status #=> String, one of "ACTIVE", "EXPIRED", "REVOKED", "LIMIT_REACHED"
+    #   resp.status_reason #=> String, one of "userRevoked", "revokedAndTerminatingSessions", "revokedAndSessionsTerminated", "streamGroupDeleted", "applicationDeleted"
+    #   resp.expires_at #=> Time
+    #   resp.created_at #=> Time
+    #   resp.usage_limit #=> Integer
+    #   resp.remaining_uses #=> Integer
+    #   resp.stream_group_arn #=> String
+    #   resp.application_arn #=> String
+    #   resp.protocol #=> String, one of "WebRTC"
+    #   resp.locations #=> Array
+    #   resp.locations[0] #=> String
+    #   resp.session_length_seconds #=> Integer
+    #   resp.description #=> String
+    #   resp.additional_launch_args #=> Array
+    #   resp.additional_launch_args[0] #=> String
+    #   resp.additional_environment_variables #=> Hash
+    #   resp.additional_environment_variables["EnvironmentVariablesKeyString"] #=> String
+    #   resp.role_arn #=> String
+    #   resp.display_configuration.resolution.width #=> Integer
+    #   resp.display_configuration.resolution.height #=> Integer
+    #   resp.stream_sessions #=> Array
+    #   resp.stream_sessions[0].arn #=> String
+    #   resp.stream_sessions[0].user_id #=> String
+    #   resp.stream_sessions[0].status #=> String, one of "ACTIVATING", "ACTIVE", "CONNECTED", "PENDING_CLIENT_RECONNECTION", "RECONNECTING", "TERMINATING", "TERMINATED", "ERROR"
+    #   resp.stream_sessions[0].status_reason #=> String, one of "internalError", "invalidSignalRequest", "placementTimeout", "applicationLogS3DestinationError", "assumeRoleFailed", "applicationExit", "connectionTimeout", "reconnectionTimeout", "maxSessionLengthTimeout", "idleTimeout", "apiTerminated"
+    #   resp.stream_sessions[0].protocol #=> String, one of "WebRTC"
+    #   resp.stream_sessions[0].last_updated_at #=> Time
+    #   resp.stream_sessions[0].created_at #=> Time
+    #   resp.stream_sessions[0].application_arn #=> String
+    #   resp.stream_sessions[0].export_files_metadata.status #=> String, one of "SUCCEEDED", "FAILED", "PENDING"
+    #   resp.stream_sessions[0].export_files_metadata.status_reason #=> String
+    #   resp.stream_sessions[0].export_files_metadata.output_uri #=> String
+    #   resp.stream_sessions[0].location #=> String
+    #   resp.stream_sessions[0].role_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/gameliftstreams-2018-05-10/GetStreamUrl AWS API Documentation
+    #
+    # @overload get_stream_url(params = {})
+    # @param [Hash] params ({})
+    def get_stream_url(params = {}, options = {})
+      req = build_request(:get_stream_url, params)
+      req.send_request(options)
+    end
+
+    # Lists the shader caches associated with an Amazon GameLift Streams
+    # application. Each shader cache entry includes its status, associated
+    # stream groups, and size in bytes.
+    #
+    # Returns shader caches associated with the specified Amazon GameLift
+    # Streams application in all statuses.
+    #
+    # @option params [required, String] :identifier
+    #   An [Amazon Resource Name (ARN)][1] or ID that uniquely identifies the
+    #   application resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:application/a-9ZY8X7Wv6`.
+    #   Example ID: `a-9ZY8X7Wv6`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
+    #
+    # @return [Types::ListApplicationShaderCachesOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListApplicationShaderCachesOutput#items #items} => Array&lt;Types::ShaderCacheSummary&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_application_shader_caches({
+    #     identifier: "Identifier", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.items #=> Array
+    #   resp.items[0].identifier #=> String
+    #   resp.items[0].application_arn #=> String
+    #   resp.items[0].status #=> String, one of "INITIALIZED", "PROCESSING", "READY", "DELETING", "ERROR"
+    #   resp.items[0].last_updated_at #=> Time
+    #   resp.items[0].storage_bytes #=> Integer
+    #   resp.items[0].associated_stream_groups #=> Array
+    #   resp.items[0].associated_stream_groups[0] #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/gameliftstreams-2018-05-10/ListApplicationShaderCaches AWS API Documentation
+    #
+    # @overload list_application_shader_caches(params = {})
+    # @param [Hash] params ({})
+    def list_application_shader_caches(params = {}, options = {})
+      req = build_request(:list_application_shader_caches, params)
+      req.send_request(options)
+    end
+
     # Retrieves a list of all Amazon GameLift Streams applications that are
     # associated with the Amazon Web Services account in use. This operation
     # returns applications in all statuses, in no particular order. You can
     # paginate the results as needed.
-    #
-    # @option params [Integer] :max_results
-    #   The number of results to return. Use this parameter with `NextToken`
-    #   to return results in sequential pages. Default value is `25`.
     #
     # @option params [String] :next_token
     #   The token that marks the start of the next set of results. Use this
     #   token when you retrieve results as sequential pages. To get the first
     #   page of results, omit a token value. To get the remaining pages,
     #   provide the token returned with the previous result set.
+    #
+    # @option params [Integer] :max_results
+    #   The number of results to return. Use this parameter with `NextToken`
+    #   to return results in sequential pages. Default value is `25`.
     #
     # @return [Types::ListApplicationsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1575,21 +2350,21 @@ module Aws::GameLiftStreams
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_applications({
-    #     max_results: 1,
     #     next_token: "NextToken",
+    #     max_results: 1,
     #   })
     #
     # @example Response structure
     #
     #   resp.items #=> Array
     #   resp.items[0].arn #=> String
-    #   resp.items[0].created_at #=> Time
-    #   resp.items[0].description #=> String
     #   resp.items[0].id #=> String
+    #   resp.items[0].description #=> String
+    #   resp.items[0].status #=> String, one of "INITIALIZED", "PROCESSING", "READY", "DELETING", "ERROR"
+    #   resp.items[0].created_at #=> Time
     #   resp.items[0].last_updated_at #=> Time
     #   resp.items[0].runtime_environment.type #=> String, one of "PROTON", "WINDOWS", "UBUNTU"
     #   resp.items[0].runtime_environment.version #=> String
-    #   resp.items[0].status #=> String, one of "INITIALIZED", "PROCESSING", "READY", "DELETING", "ERROR"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gameliftstreams-2018-05-10/ListApplications AWS API Documentation
@@ -1606,15 +2381,15 @@ module Aws::GameLiftStreams
     # returns stream groups in all statuses, in no particular order. You can
     # paginate the results as needed.
     #
-    # @option params [Integer] :max_results
-    #   The number of results to return. Use this parameter with `NextToken`
-    #   to return results in sequential pages. Default value is `25`.
-    #
     # @option params [String] :next_token
     #   A token that marks the start of the next set of results. Use this
     #   token when you retrieve results as sequential pages. To get the first
     #   page of results, omit a token value. To get the remaining pages,
     #   provide the token returned with the previous result set.
+    #
+    # @option params [Integer] :max_results
+    #   The number of results to return. Use this parameter with `NextToken`
+    #   to return results in sequential pages. Default value is `25`.
     #
     # @return [Types::ListStreamGroupsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1626,22 +2401,23 @@ module Aws::GameLiftStreams
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_stream_groups({
-    #     max_results: 1,
     #     next_token: "NextToken",
+    #     max_results: 1,
     #   })
     #
     # @example Response structure
     #
     #   resp.items #=> Array
     #   resp.items[0].arn #=> String
-    #   resp.items[0].created_at #=> Time
-    #   resp.items[0].default_application.arn #=> String
-    #   resp.items[0].default_application.id #=> String
-    #   resp.items[0].description #=> String
     #   resp.items[0].id #=> String
+    #   resp.items[0].description #=> String
+    #   resp.items[0].default_application.id #=> String
+    #   resp.items[0].default_application.arn #=> String
+    #   resp.items[0].stream_class #=> String, one of "gen4n_high", "gen4n_ultra", "gen4n_win2022", "gen5n_high", "gen5n_ultra", "gen5n_win2022", "gen6n_small", "gen6n_medium", "gen6n_high", "gen6n_ultra", "gen6n_ultra_win2022", "gen6n_pro", "gen6n_pro_win2022", "gen6n_small_win2022", "gen6n_medium_win2022", "gen6e_pro", "gen6e_pro_win2022"
+    #   resp.items[0].status #=> String, one of "ACTIVATING", "UPDATING_LOCATIONS", "ACTIVE", "ACTIVE_WITH_ERRORS", "ERROR", "DELETING", "EXPIRED"
+    #   resp.items[0].created_at #=> Time
     #   resp.items[0].last_updated_at #=> Time
-    #   resp.items[0].status #=> String, one of "ACTIVATING", "UPDATING_LOCATIONS", "ACTIVE", "ACTIVE_WITH_ERRORS", "ERROR", "DELETING"
-    #   resp.items[0].stream_class #=> String, one of "gen4n_high", "gen4n_ultra", "gen4n_win2022", "gen5n_high", "gen5n_ultra", "gen5n_win2022"
+    #   resp.items[0].expires_at #=> Time
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gameliftstreams-2018-05-10/ListStreamGroups AWS API Documentation
@@ -1663,6 +2439,11 @@ module Aws::GameLiftStreams
     # This operation returns the requested stream sessions in no particular
     # order.
     #
+    # @option params [String] :status
+    #   Filter by the stream session status. You can specify one status in
+    #   each request to retrieve only sessions that are currently in that
+    #   status.
+    #
     # @option params [String] :export_files_status
     #   Filter by the exported files status. You can specify one status in
     #   each request to retrieve only sessions that currently have that
@@ -1670,23 +2451,14 @@ module Aws::GameLiftStreams
     #
     #   Exported files can be in one of the following states:
     #
-    #   * **SUCCEEDED**: The exported files are successfully stored in S3
+    #   * `SUCCEEDED`: The exported files are successfully stored in an S3
     #     bucket.
     #
-    #   * **FAILED**: The session ended but Amazon GameLift Streams couldn't
-    #     collect and upload the to S3.
+    #   * `FAILED`: The session ended but Amazon GameLift Streams couldn't
+    #     collect and upload the files to S3.
     #
-    #   * **PENDING**: Either the stream session is still in progress, or
+    #   * `PENDING`: Either the stream session is still in progress, or
     #     uploading the exported files to the S3 bucket is in progress.
-    #
-    # @option params [required, String] :identifier
-    #   The unique identifier of a Amazon GameLift Streams stream group to
-    #   retrieve the stream session for. You can use either the stream group
-    #   ID or the Amazon Resource Name (ARN).
-    #
-    # @option params [Integer] :max_results
-    #   The number of results to return. Use this parameter with `NextToken`
-    #   to return results in sequential pages. Default value is `25`.
     #
     # @option params [String] :next_token
     #   The token that marks the start of the next set of results. Use this
@@ -1694,10 +2466,18 @@ module Aws::GameLiftStreams
     #   page of results, omit a token value. To get the remaining pages,
     #   provide the token returned with the previous result set.
     #
-    # @option params [String] :status
-    #   Filter by the stream session status. You can specify one status in
-    #   each request to retrieve only sessions that are currently in that
-    #   status.
+    # @option params [Integer] :max_results
+    #   The number of results to return. Use this parameter with `NextToken`
+    #   to return results in sequential pages. Default value is `25`.
+    #
+    # @option params [required, String] :identifier
+    #   The unique identifier of a Amazon GameLift Streams stream group to
+    #   retrieve the stream session for. You can use either the stream group
+    #   ID or the [Amazon Resource Name (ARN)][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
     #
     # @return [Types::ListStreamSessionsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1709,27 +2489,29 @@ module Aws::GameLiftStreams
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_stream_sessions({
-    #     export_files_status: "SUCCEEDED", # accepts SUCCEEDED, FAILED, PENDING
-    #     identifier: "Identifier", # required
-    #     max_results: 1,
-    #     next_token: "NextToken",
     #     status: "ACTIVATING", # accepts ACTIVATING, ACTIVE, CONNECTED, PENDING_CLIENT_RECONNECTION, RECONNECTING, TERMINATING, TERMINATED, ERROR
+    #     export_files_status: "SUCCEEDED", # accepts SUCCEEDED, FAILED, PENDING
+    #     next_token: "NextToken",
+    #     max_results: 1,
+    #     identifier: "Identifier", # required
     #   })
     #
     # @example Response structure
     #
     #   resp.items #=> Array
-    #   resp.items[0].application_arn #=> String
     #   resp.items[0].arn #=> String
+    #   resp.items[0].user_id #=> String
+    #   resp.items[0].status #=> String, one of "ACTIVATING", "ACTIVE", "CONNECTED", "PENDING_CLIENT_RECONNECTION", "RECONNECTING", "TERMINATING", "TERMINATED", "ERROR"
+    #   resp.items[0].status_reason #=> String, one of "internalError", "invalidSignalRequest", "placementTimeout", "applicationLogS3DestinationError", "assumeRoleFailed", "applicationExit", "connectionTimeout", "reconnectionTimeout", "maxSessionLengthTimeout", "idleTimeout", "apiTerminated"
+    #   resp.items[0].protocol #=> String, one of "WebRTC"
+    #   resp.items[0].last_updated_at #=> Time
     #   resp.items[0].created_at #=> Time
-    #   resp.items[0].export_files_metadata.output_uri #=> String
+    #   resp.items[0].application_arn #=> String
     #   resp.items[0].export_files_metadata.status #=> String, one of "SUCCEEDED", "FAILED", "PENDING"
     #   resp.items[0].export_files_metadata.status_reason #=> String
-    #   resp.items[0].last_updated_at #=> Time
+    #   resp.items[0].export_files_metadata.output_uri #=> String
     #   resp.items[0].location #=> String
-    #   resp.items[0].protocol #=> String, one of "WebRTC"
-    #   resp.items[0].status #=> String, one of "ACTIVATING", "ACTIVE", "CONNECTED", "PENDING_CLIENT_RECONNECTION", "RECONNECTING", "TERMINATING", "TERMINATED", "ERROR"
-    #   resp.items[0].user_id #=> String
+    #   resp.items[0].role_arn #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gameliftstreams-2018-05-10/ListStreamSessions AWS API Documentation
@@ -1746,20 +2528,25 @@ module Aws::GameLiftStreams
     #
     # In the returned list of stream sessions, the `ExportFilesMetadata`
     # property only shows the `Status` value. To get the `OutpurUri` and
-    # `StatusReason` values, use GetStreamSession.
+    # `StatusReason` values, use [GetStreamSession][1].
     #
     # We don't recommend using this operation to regularly check stream
     # session statuses because it's costly. Instead, to check status
-    # updates for a specific stream session, use GetStreamSession.
+    # updates for a specific stream session, use [GetStreamSession][1].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/gameliftstreams/latest/apireference/API_GetStreamSession.html
+    #
+    # @option params [String] :status
+    #   Filter by the stream session status. You can specify one status in
+    #   each request to retrieve only sessions that are currently in that
+    #   status.
     #
     # @option params [String] :export_files_status
     #   Filter by the exported files status. You can specify one status in
     #   each request to retrieve only sessions that currently have that
     #   exported files status.
-    #
-    # @option params [Integer] :max_results
-    #   The number of results to return. Use this parameter with `NextToken`
-    #   to return results in sequential pages. Default value is `25`.
     #
     # @option params [String] :next_token
     #   The token that marks the start of the next set of results. Use this
@@ -1767,10 +2554,9 @@ module Aws::GameLiftStreams
     #   page of results, omit a token value. To get the remaining pages,
     #   provide the token returned with the previous result set.
     #
-    # @option params [String] :status
-    #   Filter by the stream session status. You can specify one status in
-    #   each request to retrieve only sessions that are currently in that
-    #   status.
+    # @option params [Integer] :max_results
+    #   The number of results to return. Use this parameter with `NextToken`
+    #   to return results in sequential pages. Default value is `25`.
     #
     # @return [Types::ListStreamSessionsByAccountOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1782,26 +2568,28 @@ module Aws::GameLiftStreams
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_stream_sessions_by_account({
-    #     export_files_status: "SUCCEEDED", # accepts SUCCEEDED, FAILED, PENDING
-    #     max_results: 1,
-    #     next_token: "NextToken",
     #     status: "ACTIVATING", # accepts ACTIVATING, ACTIVE, CONNECTED, PENDING_CLIENT_RECONNECTION, RECONNECTING, TERMINATING, TERMINATED, ERROR
+    #     export_files_status: "SUCCEEDED", # accepts SUCCEEDED, FAILED, PENDING
+    #     next_token: "NextToken",
+    #     max_results: 1,
     #   })
     #
     # @example Response structure
     #
     #   resp.items #=> Array
-    #   resp.items[0].application_arn #=> String
     #   resp.items[0].arn #=> String
+    #   resp.items[0].user_id #=> String
+    #   resp.items[0].status #=> String, one of "ACTIVATING", "ACTIVE", "CONNECTED", "PENDING_CLIENT_RECONNECTION", "RECONNECTING", "TERMINATING", "TERMINATED", "ERROR"
+    #   resp.items[0].status_reason #=> String, one of "internalError", "invalidSignalRequest", "placementTimeout", "applicationLogS3DestinationError", "assumeRoleFailed", "applicationExit", "connectionTimeout", "reconnectionTimeout", "maxSessionLengthTimeout", "idleTimeout", "apiTerminated"
+    #   resp.items[0].protocol #=> String, one of "WebRTC"
+    #   resp.items[0].last_updated_at #=> Time
     #   resp.items[0].created_at #=> Time
-    #   resp.items[0].export_files_metadata.output_uri #=> String
+    #   resp.items[0].application_arn #=> String
     #   resp.items[0].export_files_metadata.status #=> String, one of "SUCCEEDED", "FAILED", "PENDING"
     #   resp.items[0].export_files_metadata.status_reason #=> String
-    #   resp.items[0].last_updated_at #=> Time
+    #   resp.items[0].export_files_metadata.output_uri #=> String
     #   resp.items[0].location #=> String
-    #   resp.items[0].protocol #=> String, one of "WebRTC"
-    #   resp.items[0].status #=> String, one of "ACTIVATING", "ACTIVE", "CONNECTED", "PENDING_CLIENT_RECONNECTION", "RECONNECTING", "TERMINATING", "TERMINATED", "ERROR"
-    #   resp.items[0].user_id #=> String
+    #   resp.items[0].role_arn #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gameliftstreams-2018-05-10/ListStreamSessionsByAccount AWS API Documentation
@@ -1810,6 +2598,93 @@ module Aws::GameLiftStreams
     # @param [Hash] params ({})
     def list_stream_sessions_by_account(params = {}, options = {})
       req = build_request(:list_stream_sessions_by_account, params)
+      req.send_request(options)
+    end
+
+    # Retrieves a list of the stream URLs in the current Amazon Web Services
+    # Region for your Amazon Web Services account. You can filter the
+    # results by status or by stream group. Use the pagination parameters to
+    # retrieve results as a set of sequential pages. If you delete the
+    # stream group or application that backs a stream URL, this operation
+    # updates that stream URL's status to `REVOKED`.
+    #
+    # @option params [String] :status
+    #   Filters the list to stream URLs with the specified status.
+    #
+    #   * `ACTIVE`: The stream URL is valid and can start stream sessions.
+    #
+    #   * `EXPIRED`: The stream URL has passed its expiration time and can no
+    #     longer start stream sessions.
+    #
+    #   * `REVOKED`: The stream URL was revoked and can no longer start stream
+    #     sessions.
+    #
+    #   * `LIMIT_REACHED`: The stream URL has been used the maximum number of
+    #     times and can no longer start stream sessions.
+    #
+    # @option params [String] :stream_group_identifier
+    #   Filters the list to stream URLs that belong to the specified stream
+    #   group.
+    #
+    #   This value is an [Amazon Resource Name (ARN)][1] or ID that uniquely
+    #   identifies the stream group resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:streamgroup/sg-1AB2C3De4`.
+    #   Example ID: `sg-1AB2C3De4`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
+    #
+    # @option params [String] :next_token
+    #   The token that marks the start of the next set of results. Use this
+    #   token when you retrieve results as sequential pages. To get the first
+    #   page of results, omit a token value. To get the remaining pages,
+    #   provide the token returned with the previous result set.
+    #
+    # @option params [Integer] :max_results
+    #   The maximum number of results to return per page. Valid values are
+    #   1-100. The default is 25.
+    #
+    # @return [Types::ListStreamUrlsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListStreamUrlsOutput#items #items} => Array&lt;Types::StreamUrlSummary&gt;
+    #   * {Types::ListStreamUrlsOutput#next_token #next_token} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_stream_urls({
+    #     status: "ACTIVE", # accepts ACTIVE, EXPIRED, REVOKED, LIMIT_REACHED
+    #     stream_group_identifier: "Identifier",
+    #     next_token: "NextToken",
+    #     max_results: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.items #=> Array
+    #   resp.items[0].arn #=> String
+    #   resp.items[0].stream_url_id #=> String
+    #   resp.items[0].stream_url #=> String
+    #   resp.items[0].status #=> String, one of "ACTIVE", "EXPIRED", "REVOKED", "LIMIT_REACHED"
+    #   resp.items[0].status_reason #=> String, one of "userRevoked", "revokedAndTerminatingSessions", "revokedAndSessionsTerminated", "streamGroupDeleted", "applicationDeleted"
+    #   resp.items[0].expires_at #=> Time
+    #   resp.items[0].created_at #=> Time
+    #   resp.items[0].usage_limit #=> Integer
+    #   resp.items[0].remaining_uses #=> Integer
+    #   resp.items[0].stream_group_arn #=> String
+    #   resp.items[0].application_arn #=> String
+    #   resp.items[0].session_length_seconds #=> Integer
+    #   resp.items[0].description #=> String
+    #   resp.next_token #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/gameliftstreams-2018-05-10/ListStreamUrls AWS API Documentation
+    #
+    # @overload list_stream_urls(params = {})
+    # @param [Hash] params ({})
+    def list_stream_urls(params = {}, options = {})
+      req = build_request(:list_stream_urls, params)
       req.send_request(options)
     end
 
@@ -1829,13 +2704,13 @@ module Aws::GameLiftStreams
     # [2]: http://aws.amazon.com/answers/account-management/aws-tagging-strategies/
     #
     # @option params [required, String] :resource_arn
-    #   The ([Amazon Resource Name (ARN)][1] that you want to retrieve tags
-    #   for. To get a Amazon GameLift Streams resource ARN, call a List or Get
-    #   operation for the resource.
+    #   The [Amazon Resource Name (ARN)][1] that you want to retrieve tags
+    #   for. To get an Amazon GameLift Streams resource ARN, call a List or
+    #   Get operation for the resource.
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-arn-format.html
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
     #
     # @return [Types::ListTagsForResourceResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1861,30 +2736,42 @@ module Aws::GameLiftStreams
       req.send_request(options)
     end
 
-    # Removes a set of remote locations from this stream group. Amazon
-    # GameLift Streams works to release allocated compute resources in these
-    # location. Thus, stream sessions can no longer start from these
-    # locations by using this stream group. Amazon GameLift Streams also
+    # Removes a set of remote locations from this stream group. To remove a
+    # location, the stream group must be in `ACTIVE` status. When you remove
+    # a location, Amazon GameLift Streams releases allocated compute
+    # resources in that location. Stream sessions can no longer start from
+    # removed locations in a stream group. Amazon GameLift Streams also
     # deletes the content files of all associated applications that were in
-    # Amazon GameLift Streams's internal S3 bucket at this location.
+    # Amazon GameLift Streams's internal Amazon S3 bucket at this location.
     #
-    # You cannot remove the region where you initially created this stream
-    # group, known as the primary location. However, you can set the stream
-    # capacity to zero.
+    # You cannot remove the Amazon Web Services Region location where you
+    # initially created this stream group, known as the primary location.
+    # However, you can set the stream capacity to zero to avoid incurring
+    # costs for allocated compute resources in that location.
     #
     # @option params [required, String] :identifier
     #   A stream group to remove the specified locations from.
     #
-    #   This value is a Amazon Resource Name (ARN) that uniquely identifies
-    #   the stream group resource. Format example: `1AB2C3De4`.      </p>
+    #   This value is an [Amazon Resource Name (ARN)][1] or ID that uniquely
+    #   identifies the stream group resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:streamgroup/sg-1AB2C3De4`.
+    #   Example ID: `sg-1AB2C3De4`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
     #
     # @option params [required, Array<String>] :locations
-    #   A set of locations to remove this stream group.
+    #   A set of locations to remove this stream group. For example,
+    #   `us-east-1`.
     #
-    #   A set of location names. For example, `us-east-1`. For a complete list
-    #   of locations that Amazon GameLift Streams supports, see the Regions
-    #   and quotas section in the Amazon GameLift Streams Developer Guide .
-    #   </p>
+    #   For a complete list of locations that Amazon GameLift Streams
+    #   supports, refer to [Regions, quotas, and limitations][1] in the
+    #   *Amazon GameLift Streams Developer Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/gameliftstreams/latest/developerguide/regions-quotas.html
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
@@ -1904,43 +2791,257 @@ module Aws::GameLiftStreams
       req.send_request(options)
     end
 
+    # Revokes a stream URL so that it can no longer start new stream
+    # sessions. By default, stream sessions that are already running
+    # continue until they end on their own. To also end running sessions,
+    # set `RevocationMode` to `REVOKE_AND_TERMINATE_SESSIONS`.
+    #
+    # Revoking a stream URL is permanent. The status of the stream URL
+    # changes to `REVOKED`.
+    #
+    # @option params [required, String] :identifier
+    #   An [Amazon Resource Name (ARN)][1] or ID that uniquely identifies the
+    #   stream group resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:streamgroup/sg-1AB2C3De4`.
+    #   Example ID: `sg-1AB2C3De4`.
+    #
+    #   This is the stream group that owns the stream URL.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
+    #
+    # @option params [required, String] :stream_url_identifier
+    #   The unique identifier of the stream URL to revoke. Specify a stream
+    #   URL ID or Amazon Resource Name (ARN). Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:streamurl/sg-1AB2C3De4/su-1AB2C3De4`.
+    #   Example ID: `su-1AB2C3De4`.
+    #
+    # @option params [String] :revocation_mode
+    #   Controls what happens to running stream sessions when you revoke the
+    #   stream URL. If you do not specify a value, the default is
+    #   `REVOKE_URL`. Possible values include the following:
+    #
+    #   * `REVOKE_URL`: Stops the stream URL from starting new stream
+    #     sessions. Running sessions continue until they end.
+    #
+    #   * `REVOKE_AND_TERMINATE_SESSIONS`: Stops new stream sessions and ends
+    #     any running stream sessions.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.revoke_stream_url({
+    #     identifier: "Identifier", # required
+    #     stream_url_identifier: "Identifier", # required
+    #     revocation_mode: "REVOKE_URL", # accepts REVOKE_URL, REVOKE_AND_TERMINATE_SESSIONS
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/gameliftstreams-2018-05-10/RevokeStreamUrl AWS API Documentation
+    #
+    # @overload revoke_stream_url(params = {})
+    # @param [Hash] params ({})
+    def revoke_stream_url(params = {}, options = {})
+      req = build_request(:revoke_stream_url, params)
+      req.send_request(options)
+    end
+
     # This action initiates a new stream session and outputs connection
     # information that clients can use to access the stream. A stream
     # session refers to an instance of a stream that Amazon GameLift Streams
     # transmits from the server to the end-user. A stream session runs on a
-    # compute resource, or stream capacity, that a stream group has
-    # allocated.
+    # compute resource that a stream group has allocated. The start stream
+    # session process works as follows:
     #
-    # To start a new stream session, specify a stream group and application
-    # ID, along with the transport protocol and signal request settings to
-    # use with the stream. You must have associated at least one application
-    # to the stream group before starting a stream session, either when
-    # creating the stream group, or by using AssociateApplications.
+    # 1.  Prerequisites:
+    #
+    #     * You must have a stream group in `ACTIVE` status
+    #
+    #     * You must have idle or on-demand capacity in a stream group in
+    #       the location you want to stream from
+    #
+    #     * You must have at least one application associated to the stream
+    #       group (use [AssociateApplications][1] if needed)
+    # 2.  Start stream request:
+    #
+    #     * Your backend server calls **StartStreamSession** to initiate
+    #       connection
+    #
+    #     * Amazon GameLift Streams creates the stream session resource,
+    #       assigns an Amazon Resource Name (ARN) value, and begins
+    #       searching for available stream capacity to run the stream
+    #
+    #     * Session transitions to `ACTIVATING` status
+    # 3.  Placement completion:
+    #
+    #     * If Amazon GameLift Streams is successful in finding capacity for
+    #       the stream, the stream session status changes to `ACTIVE` status
+    #       and **StartStreamSession** returns stream connection information
+    #
+    #     * If Amazon GameLift Streams was not successful in finding
+    #       capacity within the placement timeout period (defined according
+    #       to the capacity type and platform type), the stream session
+    #       status changes to `ERROR` status and **StartStreamSession**
+    #       returns a `StatusReason` of `placementTimeout`
+    # 4.  Connection completion:
+    #
+    #     * Provide the new connection information to the requesting client
+    #
+    #     * Client must establish connection within
+    #       `ConnectionTimeoutSeconds` (specified in **StartStreamSession**
+    #       parameters)
+    #
+    #     * Session terminates automatically if client fails to connect in
+    #       time
+    #
+    # For more information about the stream session lifecycle, see [Stream
+    # sessions][2] in the *Amazon GameLift Streams Developer Guide*.
+    #
+    # Timeouts to be aware of that affect a stream session:
+    #
+    # * **Placement timeout**: The amount of time that Amazon GameLift
+    #   Streams has to find capacity for a stream request. Placement timeout
+    #   varies based on the capacity type used to fulfill your stream
+    #   request:
+    #
+    #   * **Always-on capacity**: 75 seconds
+    #
+    #   * **On-demand capacity**:
+    #
+    #     * Linux/Proton runtimes: 90 seconds
+    #
+    #     * Windows runtime: 10 minutes
+    # * **Connection timeout**: The amount of time that Amazon GameLift
+    #   Streams waits for a client to connect to a stream session in
+    #   `ACTIVE` status, or reconnect to a stream session in
+    #   `PENDING_CLIENT_RECONNECTION` status, the latter of which occurs
+    #   when a client disconnects or loses connection from a stream session.
+    #   If no client connects before the timeout, Amazon GameLift Streams
+    #   terminates the stream session. This value is specified by
+    #   `ConnectionTimeoutSeconds` in the `StartStreamSession` parameters.
+    #
+    # * **Maximum session length**: A stream session will be terminated
+    #   after this amount of time has elapsed since it started, regardless
+    #   of any existing client connections. This value is specified by
+    #   `SessionLengthSeconds` in the `StartStreamSession` parameters.
+    #
+    # To start a new stream session, specify a stream group ID and
+    # application ID, along with the transport protocol and signal request
+    # to use with the stream session.
     #
     # For stream groups that have multiple locations, provide a set of
-    # locations ordered by priority by setting `Locations`. Amazon GameLift
-    # Streams will start a single stream session in the next available
-    # location. An application must be finished replicating in a remote
-    # location before the remote location can host a stream.
+    # locations ordered by priority using a `Locations` parameter. Amazon
+    # GameLift Streams will start a single stream session in the next
+    # available location. An application must be finished replicating to a
+    # remote location before the remote location can host a stream.
     #
-    # If the request is successful, Amazon GameLift Streams begins to
-    # prepare the stream. Amazon GameLift Streams assigns an Amazon Resource
-    # Name (ARN) value to the stream session resource and sets the status to
-    # `ACTIVATING`. During the stream preparation process, Amazon GameLift
-    # Streams queues the request and searches for available stream capacity
-    # to run the stream. This can result to one of the following:
+    # To reconnect to a stream session after a client disconnects or loses
+    # connection, use [CreateStreamSessionConnection][3].
     #
-    # * Amazon GameLift Streams identifies an available compute resource to
-    #   run the application content and start the stream. When the stream is
-    #   ready, the stream session's status changes to `ACTIVE` and includes
-    #   stream connection information. Provide the connection information to
-    #   the requesting client to join the stream session.
     #
-    # * Amazon GameLift Streams doesn't identify an available resource
-    #   within a certain time, set by `ClientToken`. In this case, Amazon
-    #   GameLift Streams stops processing the request, and the stream
-    #   session object status changes to `ERROR` with status reason
-    #   `placementTimeout`.
+    #
+    # [1]: https://docs.aws.amazon.com/gameliftstreams/latest/apireference/API_AssociateApplications.html
+    # [2]: https://docs.aws.amazon.com/gameliftstreams/latest/developerguide/stream-sessions.html
+    # [3]: https://docs.aws.amazon.com/gameliftstreams/latest/apireference/API_CreateStreamSessionConnection.html
+    #
+    # @option params [String] :client_token
+    #   A unique identifier that represents a client request. The request is
+    #   idempotent, which ensures that an API request completes only once.
+    #   When users send a request, Amazon GameLift Streams automatically
+    #   populates this field.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @option params [String] :description
+    #   A human-readable label for the stream session. You can update this
+    #   value later.
+    #
+    # @option params [required, String] :identifier
+    #   The stream group to run this stream session with.
+    #
+    #   This value is an [Amazon Resource Name (ARN)][1] or ID that uniquely
+    #   identifies the stream group resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:streamgroup/sg-1AB2C3De4`.
+    #   Example ID: `sg-1AB2C3De4`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
+    #
+    # @option params [required, String] :protocol
+    #   The data transport protocol to use for the stream session.
+    #
+    # @option params [required, String] :signal_request
+    #   A WebRTC ICE offer string to use when initializing a WebRTC
+    #   connection. Typically, the offer is a very long JSON string. Provide
+    #   the string as a text value in quotes.
+    #
+    #   Amazon GameLift Streams also supports setting the field to
+    #   "NO\_CLIENT\_CONNECTION". This will create a session without needing
+    #   any browser request or Web SDK integration. The session starts up as
+    #   usual and waits for a reconnection from a browser, which is
+    #   accomplished using [CreateStreamSessionConnection][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/gameliftstreams/latest/apireference/API_CreateStreamSessionConnection.html
+    #
+    # @option params [required, String] :application_identifier
+    #   An [Amazon Resource Name (ARN)][1] or ID that uniquely identifies the
+    #   application resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:application/a-9ZY8X7Wv6`.
+    #   Example ID: `a-9ZY8X7Wv6`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
+    #
+    # @option params [String] :user_id
+    #   An opaque, unique identifier for an end-user, defined by the
+    #   developer.
+    #
+    # @option params [Array<String>] :locations
+    #   A list of locations, in order of priority, where you want Amazon
+    #   GameLift Streams to start a stream from. For example, `us-east-1`.
+    #   Amazon GameLift Streams selects the location with the next available
+    #   capacity to start a single stream session in. If this value is empty,
+    #   Amazon GameLift Streams attempts to start a stream session in the
+    #   primary location.
+    #
+    #   For a complete list of locations that Amazon GameLift Streams
+    #   supports, refer to [Regions, quotas, and limitations][1] in the
+    #   *Amazon GameLift Streams Developer Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/gameliftstreams/latest/developerguide/regions-quotas.html
+    #
+    # @option params [Integer] :connection_timeout_seconds
+    #   Length of time (in seconds) that Amazon GameLift Streams should wait
+    #   for a client to connect or reconnect to the stream session. Applies to
+    #   both connection and reconnection scenarios. This time span starts when
+    #   the stream session reaches `ACTIVE` state. If no client connects
+    #   before the timeout, Amazon GameLift Streams terminates the stream
+    #   session. Default value is 120.
+    #
+    # @option params [Integer] :session_length_seconds
+    #   The maximum duration of a session. Amazon GameLift Streams will
+    #   automatically terminate a session after this amount of time has
+    #   elapsed, regardless of any existing client connections. Default value
+    #   is 43200 (12 hours).
+    #
+    # @option params [Array<String>] :additional_launch_args
+    #   A list of CLI arguments that are sent to the streaming server when a
+    #   stream session launches. You can use this to configure the application
+    #   or stream session details. You can also provide custom arguments that
+    #   Amazon GameLift Streams passes to your game client.
+    #
+    #   `AdditionalEnvironmentVariables` and `AdditionalLaunchArgs` have
+    #   similar purposes. `AdditionalEnvironmentVariables` passes data using
+    #   environment variables; while `AdditionalLaunchArgs` passes data using
+    #   command-line arguments.
     #
     # @option params [Hash<String,String>] :additional_environment_variables
     #   A set of options that you can use to control the stream session
@@ -1961,157 +3062,110 @@ module Aws::GameLiftStreams
     #   environment variables; while `AdditionalLaunchArgs` passes data using
     #   command-line arguments.
     #
-    # @option params [Array<String>] :additional_launch_args
-    #   A list of CLI arguments that are sent to the streaming server when a
-    #   stream session launches. You can use this to configure the application
-    #   or stream session details. You can also provide custom arguments that
-    #   Amazon GameLift Streams passes to your game client.
+    # @option params [Types::PerformanceStatsConfiguration] :performance_stats_configuration
+    #   Configuration settings for sharing the stream session's performance
+    #   stats with the client
     #
-    #   `AdditionalEnvironmentVariables` and `AdditionalLaunchArgs` have
-    #   similar purposes. `AdditionalEnvironmentVariables` passes data using
-    #   environment variables; while `AdditionalLaunchArgs` passes data using
-    #   command-line arguments.
+    # @option params [String] :role_arn
+    #   The ARN of an AWS Identity and Access Management (IAM) role that
+    #   Amazon GameLift Streams assumes on your behalf during the stream
+    #   session. The role grants Amazon GameLift Streams permission to obtain
+    #   temporary credentials for your application. The role's trust policy
+    #   must allow the `gameliftstreams.amazonaws.com` service principal to
+    #   assume it. The role name must start with `GameLiftStreams-`.
     #
-    # @option params [required, String] :application_identifier
-    #   An [Amazon Resource Name (ARN)][1] or ID that uniquely identifies the
-    #   application resource. Format example:
-    #   ARN-`arn:aws:gameliftstreams:us-west-2:123456789012:application/9ZY8X7Wv6`
-    #   or ID-`9ZY8X7Wv6`.
+    # @option params [Types::DisplayConfiguration] :display_configuration
+    #   The configuration for the stream session's virtual monitor, including
+    #   the resolution settings.
     #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
-    #
-    # @option params [String] :client_token
-    #   A unique identifier that represents a client request. The request is
-    #   idempotent, which ensures that an API request completes only once.
-    #   When users send a request, Amazon GameLift Streams automatically
-    #   populates this field.
-    #
-    #   **A suitable default value is auto-generated.** You should normally
-    #   not need to pass this option.**
-    #
-    # @option params [Integer] :connection_timeout_seconds
-    #   Length of time (in seconds) that Amazon GameLift Streams should wait
-    #   for a client to connect to the stream session. This time span starts
-    #   when the stream session reaches `ACTIVE` status. If no client connects
-    #   before the timeout, Amazon GameLift Streams stops the stream session
-    #   with status of `TERMINATED`. Default value is 120.
-    #
-    # @option params [String] :description
-    #   A human-readable label for the stream session. You can update this
-    #   value later.
-    #
-    # @option params [required, String] :identifier
-    #   The stream group to run this stream session with.
-    #
-    #   This value is an [Amazon Resource Name (ARN)][1] or ID that uniquely
-    #   identifies the stream group resource. Format example:
-    #   ARN-`arn:aws:gameliftstreams:us-west-2:123456789012:streamgroup/1AB2C3De4`
-    #   or ID-`1AB2C3De4`.
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
-    #
-    # @option params [Array<String>] :locations
-    #   A list of locations, in order of priority, where you want Amazon
-    #   GameLift Streams to start a stream from. Amazon GameLift Streams
-    #   selects the location with the next available capacity to start a
-    #   single stream session in. If this value is empty, Amazon GameLift
-    #   Streams attempts to start a stream session in the primary location.
-    #
-    #   This value is A set of location names. For example, `us-east-1`. For a
-    #   complete list of locations that Amazon GameLift Streams supports, see
-    #   the Regions and quotas section in the Amazon GameLift Streams
-    #   Developer Guide .      </p>
-    #
-    # @option params [required, String] :protocol
-    #   The data transport protocol to use for the stream session.
-    #
-    # @option params [Integer] :session_length_seconds
-    #   The maximum length of time (in seconds) that Amazon GameLift Streams
-    #   keeps the stream session open. At this point, Amazon GameLift Streams
-    #   ends the stream session regardless of any existing client connections.
-    #   Default value is 43200.
-    #
-    # @option params [required, String] :signal_request
-    #   A WebRTC ICE offer string to use when initializing a WebRTC
-    #   connection. The offer is a very long JSON string. Provide the string
-    #   as a text value in quotes.
-    #
-    # @option params [String] :user_id
-    #   An opaque, unique identifier for an end-user, defined by the
-    #   developer.
+    #   If not specified, Amazon GameLift Streams uses the default resolution
+    #   of 1920 × 1080.
     #
     # @return [Types::StartStreamSessionOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::StartStreamSessionOutput#additional_environment_variables #additional_environment_variables} => Hash&lt;String,String&gt;
-    #   * {Types::StartStreamSessionOutput#additional_launch_args #additional_launch_args} => Array&lt;String&gt;
-    #   * {Types::StartStreamSessionOutput#application_arn #application_arn} => String
     #   * {Types::StartStreamSessionOutput#arn #arn} => String
-    #   * {Types::StartStreamSessionOutput#connection_timeout_seconds #connection_timeout_seconds} => Integer
-    #   * {Types::StartStreamSessionOutput#created_at #created_at} => Time
     #   * {Types::StartStreamSessionOutput#description #description} => String
-    #   * {Types::StartStreamSessionOutput#export_files_metadata #export_files_metadata} => Types::ExportFilesMetadata
-    #   * {Types::StartStreamSessionOutput#last_updated_at #last_updated_at} => Time
-    #   * {Types::StartStreamSessionOutput#location #location} => String
-    #   * {Types::StartStreamSessionOutput#log_file_location_uri #log_file_location_uri} => String
-    #   * {Types::StartStreamSessionOutput#protocol #protocol} => String
-    #   * {Types::StartStreamSessionOutput#session_length_seconds #session_length_seconds} => Integer
-    #   * {Types::StartStreamSessionOutput#signal_request #signal_request} => String
-    #   * {Types::StartStreamSessionOutput#signal_response #signal_response} => String
-    #   * {Types::StartStreamSessionOutput#status #status} => String
-    #   * {Types::StartStreamSessionOutput#status_reason #status_reason} => String
     #   * {Types::StartStreamSessionOutput#stream_group_id #stream_group_id} => String
     #   * {Types::StartStreamSessionOutput#user_id #user_id} => String
+    #   * {Types::StartStreamSessionOutput#status #status} => String
+    #   * {Types::StartStreamSessionOutput#status_reason #status_reason} => String
+    #   * {Types::StartStreamSessionOutput#protocol #protocol} => String
+    #   * {Types::StartStreamSessionOutput#location #location} => String
+    #   * {Types::StartStreamSessionOutput#signal_request #signal_request} => String
+    #   * {Types::StartStreamSessionOutput#signal_response #signal_response} => String
+    #   * {Types::StartStreamSessionOutput#connection_timeout_seconds #connection_timeout_seconds} => Integer
+    #   * {Types::StartStreamSessionOutput#session_length_seconds #session_length_seconds} => Integer
+    #   * {Types::StartStreamSessionOutput#additional_launch_args #additional_launch_args} => Array&lt;String&gt;
+    #   * {Types::StartStreamSessionOutput#additional_environment_variables #additional_environment_variables} => Hash&lt;String,String&gt;
+    #   * {Types::StartStreamSessionOutput#performance_stats_configuration #performance_stats_configuration} => Types::PerformanceStatsConfiguration
+    #   * {Types::StartStreamSessionOutput#log_file_location_uri #log_file_location_uri} => String
     #   * {Types::StartStreamSessionOutput#web_sdk_protocol_url #web_sdk_protocol_url} => String
+    #   * {Types::StartStreamSessionOutput#last_updated_at #last_updated_at} => Time
+    #   * {Types::StartStreamSessionOutput#created_at #created_at} => Time
+    #   * {Types::StartStreamSessionOutput#application_arn #application_arn} => String
+    #   * {Types::StartStreamSessionOutput#export_files_metadata #export_files_metadata} => Types::ExportFilesMetadata
+    #   * {Types::StartStreamSessionOutput#role_arn #role_arn} => String
+    #   * {Types::StartStreamSessionOutput#display_configuration #display_configuration} => Types::DisplayConfiguration
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.start_stream_session({
+    #     client_token: "ClientToken",
+    #     description: "Description",
+    #     identifier: "Identifier", # required
+    #     protocol: "WebRTC", # required, accepts WebRTC
+    #     signal_request: "SignalRequest", # required
+    #     application_identifier: "Identifier", # required
+    #     user_id: "UserId",
+    #     locations: ["LocationName"],
+    #     connection_timeout_seconds: 1,
+    #     session_length_seconds: 1,
+    #     additional_launch_args: ["String"],
     #     additional_environment_variables: {
     #       "EnvironmentVariablesKeyString" => "EnvironmentVariablesValueString",
     #     },
-    #     additional_launch_args: ["String"],
-    #     application_identifier: "Identifier", # required
-    #     client_token: "ClientToken",
-    #     connection_timeout_seconds: 1,
-    #     description: "Description",
-    #     identifier: "Identifier", # required
-    #     locations: ["LocationName"],
-    #     protocol: "WebRTC", # required, accepts WebRTC
-    #     session_length_seconds: 1,
-    #     signal_request: "SignalRequest", # required
-    #     user_id: "UserId",
+    #     performance_stats_configuration: {
+    #       shared_with_client: false,
+    #     },
+    #     role_arn: "IamRoleArn",
+    #     display_configuration: {
+    #       resolution: {
+    #         width: 1, # required
+    #         height: 1, # required
+    #       },
+    #     },
     #   })
     #
     # @example Response structure
     #
-    #   resp.additional_environment_variables #=> Hash
-    #   resp.additional_environment_variables["EnvironmentVariablesKeyString"] #=> String
-    #   resp.additional_launch_args #=> Array
-    #   resp.additional_launch_args[0] #=> String
-    #   resp.application_arn #=> String
     #   resp.arn #=> String
-    #   resp.connection_timeout_seconds #=> Integer
-    #   resp.created_at #=> Time
     #   resp.description #=> String
-    #   resp.export_files_metadata.output_uri #=> String
-    #   resp.export_files_metadata.status #=> String, one of "SUCCEEDED", "FAILED", "PENDING"
-    #   resp.export_files_metadata.status_reason #=> String
-    #   resp.last_updated_at #=> Time
-    #   resp.location #=> String
-    #   resp.log_file_location_uri #=> String
-    #   resp.protocol #=> String, one of "WebRTC"
-    #   resp.session_length_seconds #=> Integer
-    #   resp.signal_request #=> String
-    #   resp.signal_response #=> String
-    #   resp.status #=> String, one of "ACTIVATING", "ACTIVE", "CONNECTED", "PENDING_CLIENT_RECONNECTION", "RECONNECTING", "TERMINATING", "TERMINATED", "ERROR"
-    #   resp.status_reason #=> String, one of "internalError", "invalidSignalRequest", "placementTimeout", "applicationLogS3DestinationError"
     #   resp.stream_group_id #=> String
     #   resp.user_id #=> String
+    #   resp.status #=> String, one of "ACTIVATING", "ACTIVE", "CONNECTED", "PENDING_CLIENT_RECONNECTION", "RECONNECTING", "TERMINATING", "TERMINATED", "ERROR"
+    #   resp.status_reason #=> String, one of "internalError", "invalidSignalRequest", "placementTimeout", "applicationLogS3DestinationError", "assumeRoleFailed", "applicationExit", "connectionTimeout", "reconnectionTimeout", "maxSessionLengthTimeout", "idleTimeout", "apiTerminated"
+    #   resp.protocol #=> String, one of "WebRTC"
+    #   resp.location #=> String
+    #   resp.signal_request #=> String
+    #   resp.signal_response #=> String
+    #   resp.connection_timeout_seconds #=> Integer
+    #   resp.session_length_seconds #=> Integer
+    #   resp.additional_launch_args #=> Array
+    #   resp.additional_launch_args[0] #=> String
+    #   resp.additional_environment_variables #=> Hash
+    #   resp.additional_environment_variables["EnvironmentVariablesKeyString"] #=> String
+    #   resp.performance_stats_configuration.shared_with_client #=> Boolean
+    #   resp.log_file_location_uri #=> String
     #   resp.web_sdk_protocol_url #=> String
+    #   resp.last_updated_at #=> Time
+    #   resp.created_at #=> Time
+    #   resp.application_arn #=> String
+    #   resp.export_files_metadata.status #=> String, one of "SUCCEEDED", "FAILED", "PENDING"
+    #   resp.export_files_metadata.status_reason #=> String
+    #   resp.export_files_metadata.output_uri #=> String
+    #   resp.role_arn #=> String
+    #   resp.display_configuration.resolution.width #=> Integer
+    #   resp.display_configuration.resolution.height #=> Integer
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gameliftstreams-2018-05-10/StartStreamSession AWS API Documentation
     #
@@ -2149,7 +3203,7 @@ module Aws::GameLiftStreams
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-arn-format.html
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
     #
     # @option params [required, Hash<String,String>] :tags
     #   A list of tags, in the form of key-value pairs, to assign to the
@@ -2182,9 +3236,9 @@ module Aws::GameLiftStreams
     #
     # @option params [required, String] :identifier
     #   [Amazon Resource Name (ARN)][1] or ID that uniquely identifies the
-    #   stream group resource. Format example:
-    #   ARN-`arn:aws:gameliftstreams:us-west-2:123456789012:streamgroup/1AB2C3De4`
-    #   or ID-`1AB2C3De4`.
+    #   stream group resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:streamgroup/sg-1AB2C3De4`.
+    #   Example ID: `sg-1AB2C3De4`.
     #
     #   The stream group that runs this stream session.
     #
@@ -2193,8 +3247,10 @@ module Aws::GameLiftStreams
     #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
     #
     # @option params [required, String] :stream_session_identifier
-    #   [Amazon Resource Name (ARN)][1] that uniquely identifies the stream
-    #   session resource. Format example: `1AB2C3De4`.
+    #   [Amazon Resource Name (ARN)][1] or ID that uniquely identifies the
+    #   stream session resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:streamsession/sg-1AB2C3De4/ABC123def4567`.
+    #   Example ID: `ABC123def4567`.
     #
     #
     #
@@ -2228,7 +3284,7 @@ module Aws::GameLiftStreams
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-arn-format.html
+    #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
     #
     # @option params [required, Array<String>] :tag_keys
     #   A list of tag keys to remove from the specified Amazon GameLift
@@ -2260,87 +3316,109 @@ module Aws::GameLiftStreams
     # the new values. If the operation is successful, it returns the
     # complete updated set of settings for the application.
     #
-    # @option params [String] :application_log_output_uri
-    #   An Amazon S3 URI to a bucket where you would like Amazon GameLift
-    #   Streams to save application logs. Use the following format for the
-    #   URI: `s3://[bucket name]/[prefix]`. Required if you specify one or
-    #   more `LogPaths`.
-    #
-    #   <note markdown="1"> The log bucket must have permissions that give Amazon GameLift Streams
-    #   access to write the log files. For more information, see **Getting
-    #   Started** in the Amazon GameLift Streams Developer Guide.
-    #
-    #    </note>
-    #
-    # @option params [Array<String>] :application_log_paths
-    #   Locations of log files that your content generates during a stream
-    #   session. Enter path values that are relative to the
-    #   `ApplicationSourceUri` location. You can specify up to 10 log
-    #   locations. Amazon GameLift Streams uploads designated log files to the
-    #   Amazon S3 bucket that you specify in `ApplicationLogOutputUri` at the
-    #   end of a stream session. To retrieve stored log files, call
-    #   GetStreamSession and get the `LogFileLocationUri`.
-    #
-    # @option params [String] :description
-    #   A human-readable label for the application.
-    #
     # @option params [required, String] :identifier
     #   An [Amazon Resource Name (ARN)][1] or ID that uniquely identifies the
-    #   application resource. Format example:
-    #   ARN-`arn:aws:gameliftstreams:us-west-2:123456789012:application/9ZY8X7Wv6`
-    #   or ID-`9ZY8X7Wv6`.
+    #   application resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:application/a-9ZY8X7Wv6`.
+    #   Example ID: `a-9ZY8X7Wv6`.
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
     #
+    # @option params [String] :description
+    #   A human-readable label for the application.
+    #
+    # @option params [Array<String>] :application_log_paths
+    #   Locations of log files that your content generates during a stream
+    #   session. Enter path values that are relative to the
+    #   `ApplicationSourceUri` location, or relative to the user's home
+    #   directory when using a supported path variable. You can specify up to
+    #   10 log paths. Each individual log file cannot exceed 50 MB in size.
+    #
+    #   Each path can be a directory or an exact file path. When you specify a
+    #   directory, Amazon GameLift Streams collects only files with the
+    #   following extensions: `.txt`, `.log`, and `.utrace`. To collect files
+    #   with other extensions, specify the exact file path. The copy operation
+    #   is not performed recursively in subfolders.
+    #
+    #   The following path variables are recognized when they appear as the
+    #   first component of a path: `%USERPROFILE%` (Windows and Proton),
+    #   `$HOME` or `~` (Linux). Use a path variable when your application
+    #   writes logs outside of the application directory.
+    #
+    #   Amazon GameLift Streams uploads designated log files to the Amazon S3
+    #   bucket that you specify in `ApplicationLogOutputUri` at the end of a
+    #   stream session. To retrieve stored log files, call
+    #   [GetStreamSession][1] and get the `LogFileLocationUri`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/gameliftstreams/latest/apireference/API_GetStreamSession.html
+    #
+    # @option params [String] :application_log_output_uri
+    #   An Amazon S3 URI to a bucket where you would like Amazon GameLift
+    #   Streams to save application logs. Required if you specify one or more
+    #   `ApplicationLogPaths`.
+    #
+    #   <note markdown="1"> The log bucket must have permissions that give Amazon GameLift Streams
+    #   access to write the log files. For more information, see [Application
+    #   log bucket permission policy][1] in the *Amazon GameLift Streams
+    #   Developer Guide*.
+    #
+    #    </note>
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/gameliftstreams/latest/developerguide/applications.html#application-bucket-permission-template
+    #
     # @return [Types::UpdateApplicationOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::UpdateApplicationOutput#application_log_output_uri #application_log_output_uri} => String
-    #   * {Types::UpdateApplicationOutput#application_log_paths #application_log_paths} => Array&lt;String&gt;
-    #   * {Types::UpdateApplicationOutput#application_source_uri #application_source_uri} => String
     #   * {Types::UpdateApplicationOutput#arn #arn} => String
-    #   * {Types::UpdateApplicationOutput#associated_stream_groups #associated_stream_groups} => Array&lt;String&gt;
-    #   * {Types::UpdateApplicationOutput#created_at #created_at} => Time
     #   * {Types::UpdateApplicationOutput#description #description} => String
-    #   * {Types::UpdateApplicationOutput#executable_path #executable_path} => String
-    #   * {Types::UpdateApplicationOutput#id #id} => String
-    #   * {Types::UpdateApplicationOutput#last_updated_at #last_updated_at} => Time
-    #   * {Types::UpdateApplicationOutput#replication_statuses #replication_statuses} => Array&lt;Types::ReplicationStatus&gt;
     #   * {Types::UpdateApplicationOutput#runtime_environment #runtime_environment} => Types::RuntimeEnvironment
+    #   * {Types::UpdateApplicationOutput#executable_path #executable_path} => String
+    #   * {Types::UpdateApplicationOutput#application_log_paths #application_log_paths} => Array&lt;String&gt;
+    #   * {Types::UpdateApplicationOutput#application_log_output_uri #application_log_output_uri} => String
+    #   * {Types::UpdateApplicationOutput#application_source_uri #application_source_uri} => String
+    #   * {Types::UpdateApplicationOutput#id #id} => String
     #   * {Types::UpdateApplicationOutput#status #status} => String
     #   * {Types::UpdateApplicationOutput#status_reason #status_reason} => String
+    #   * {Types::UpdateApplicationOutput#replication_statuses #replication_statuses} => Array&lt;Types::ReplicationStatus&gt;
+    #   * {Types::UpdateApplicationOutput#created_at #created_at} => Time
+    #   * {Types::UpdateApplicationOutput#last_updated_at #last_updated_at} => Time
+    #   * {Types::UpdateApplicationOutput#associated_stream_groups #associated_stream_groups} => Array&lt;String&gt;
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_application({
-    #     application_log_output_uri: "ApplicationLogOutputUri",
-    #     application_log_paths: ["FilePath"],
-    #     description: "Description",
     #     identifier: "Identifier", # required
+    #     description: "Description",
+    #     application_log_paths: ["FilePath"],
+    #     application_log_output_uri: "ApplicationLogOutputUri",
     #   })
     #
     # @example Response structure
     #
-    #   resp.application_log_output_uri #=> String
+    #   resp.arn #=> String
+    #   resp.description #=> String
+    #   resp.runtime_environment.type #=> String, one of "PROTON", "WINDOWS", "UBUNTU"
+    #   resp.runtime_environment.version #=> String
+    #   resp.executable_path #=> String
     #   resp.application_log_paths #=> Array
     #   resp.application_log_paths[0] #=> String
+    #   resp.application_log_output_uri #=> String
     #   resp.application_source_uri #=> String
-    #   resp.arn #=> String
-    #   resp.associated_stream_groups #=> Array
-    #   resp.associated_stream_groups[0] #=> String
-    #   resp.created_at #=> Time
-    #   resp.description #=> String
-    #   resp.executable_path #=> String
     #   resp.id #=> String
-    #   resp.last_updated_at #=> Time
+    #   resp.status #=> String, one of "INITIALIZED", "PROCESSING", "READY", "DELETING", "ERROR"
+    #   resp.status_reason #=> String, one of "internalError", "accessDenied", "sourceModified"
     #   resp.replication_statuses #=> Array
     #   resp.replication_statuses[0].location #=> String
     #   resp.replication_statuses[0].status #=> String, one of "REPLICATING", "COMPLETED"
-    #   resp.runtime_environment.type #=> String, one of "PROTON", "WINDOWS", "UBUNTU"
-    #   resp.runtime_environment.version #=> String
-    #   resp.status #=> String, one of "INITIALIZED", "PROCESSING", "READY", "DELETING", "ERROR"
-    #   resp.status_reason #=> String, one of "internalError", "accessDenied"
+    #   resp.created_at #=> Time
+    #   resp.last_updated_at #=> Time
+    #   resp.associated_stream_groups #=> Array
+    #   resp.associated_stream_groups[0] #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gameliftstreams-2018-05-10/UpdateApplication AWS API Documentation
     #
@@ -2352,38 +3430,45 @@ module Aws::GameLiftStreams
     end
 
     # Updates the configuration settings for an Amazon GameLift Streams
-    # stream group resource. You can change the description, the set of
-    # locations, and the requested capacity of a stream group per location.
-    # If you want to change the stream class, create a new stream group.
+    # stream group resource. To update a stream group, it must be in
+    # `ACTIVE` status. You can change the description, the set of locations,
+    # and the requested capacity of a stream group per location. If you want
+    # to change the stream class, create a new stream group.
     #
     # Stream capacity represents the number of concurrent streams that can
     # be active at a time. You set stream capacity per location, per stream
-    # group. There are two types of capacity: always-on and on-demand:
+    # group. The following capacity settings are available:
     #
-    # * **Always-on**: The streaming capacity that is allocated and ready to
-    #   handle stream requests without delay. You pay for this capacity
-    #   whether it's in use or not. Best for quickest time from streaming
-    #   request to streaming session.      </p> </li> <li> <p>
-    #   <b>On-demand</b>: The streaming capacity that Amazon GameLift
-    #   Streams can allocate in response to stream requests, and then
-    #   de-allocate when the session has terminated. This offers a cost
-    #   control measure at the expense of a greater startup time (typically
-    #   under 5 minutes). </p> </li> </ul> <p>To update a stream group,
-    #   specify the stream group's Amazon Resource Name (ARN) and provide
-    #   the new values. If the request is successful, Amazon GameLift
-    #   Streams returns the complete updated metadata for the stream
-    #   group.</p>
+    # * **Always-on capacity**: This setting, if non-zero, indicates minimum
+    #   streaming capacity which is allocated to you and is never released
+    #   back to the service. You pay for this base level of capacity at all
+    #   times, whether used or idle.
     #
-    # ^
+    # * **Maximum capacity**: This indicates the maximum capacity that the
+    #   service can allocate for you. Newly created streams may take a few
+    #   minutes to start. Capacity is released back to the service when
+    #   idle. You pay for capacity that is allocated to you until it is
+    #   released.
     #
-    # @option params [String] :description
-    #   A descriptive label for the stream group.
+    # * **Target-idle capacity**: This indicates idle capacity which the
+    #   service pre-allocates and holds for you in anticipation of future
+    #   activity. This helps to insulate your users from capacity-allocation
+    #   delays. You pay for capacity which is held in this intentional idle
+    #   state.
+    #
+    # Values for capacity must be whole number multiples of the tenancy
+    # value of the stream group's stream class.
+    #
+    # To update a stream group, specify the stream group's Amazon Resource
+    # Name (ARN) and provide the new values. If the request is successful,
+    # Amazon GameLift Streams returns the complete updated metadata for the
+    # stream group. Expired stream groups cannot be updated.
     #
     # @option params [required, String] :identifier
     #   An [Amazon Resource Name (ARN)][1] or ID that uniquely identifies the
-    #   stream group resource. Format example:
-    #   ARN-`arn:aws:gameliftstreams:us-west-2:123456789012:streamgroup/1AB2C3De4`
-    #   or ID-`1AB2C3De4`.
+    #   stream group resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:streamgroup/sg-1AB2C3De4`.
+    #   Example ID: `sg-1AB2C3De4`.
     #
     #
     #
@@ -2393,56 +3478,101 @@ module Aws::GameLiftStreams
     #   A set of one or more locations and the streaming capacity for each
     #   location.
     #
+    # @option params [String] :description
+    #   A descriptive label for the stream group.
+    #
+    # @option params [String] :default_application_identifier
+    #   The unique identifier of the Amazon GameLift Streams application that
+    #   you want to set as the default application in a stream group. The
+    #   application that you specify must be in `READY` status. The default
+    #   application is pre-cached on always-on compute resources, reducing
+    #   stream startup times. Other applications are automatically cached as
+    #   needed.
+    #
+    #   Note that this parameter only sets the default application in a stream
+    #   group. To associate a new application to an existing stream group, you
+    #   must use [AssociateApplications][1].
+    #
+    #   When you switch default applications in a stream group, it can take up
+    #   to a few hours for the new default application to be pre-cached.
+    #
+    #   This value is an [Amazon Resource Name (ARN)][2] or ID that uniquely
+    #   identifies the application resource. Example ARN:
+    #   `arn:aws:gameliftstreams:us-west-2:111122223333:application/a-9ZY8X7Wv6`.
+    #   Example ID: `a-9ZY8X7Wv6`.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/gameliftstreams/latest/apireference/API_AssociateApplications.html
+    #   [2]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html
+    #
     # @return [Types::UpdateStreamGroupOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::UpdateStreamGroupOutput#arn #arn} => String
-    #   * {Types::UpdateStreamGroupOutput#associated_applications #associated_applications} => Array&lt;String&gt;
-    #   * {Types::UpdateStreamGroupOutput#created_at #created_at} => Time
-    #   * {Types::UpdateStreamGroupOutput#default_application #default_application} => Types::DefaultApplication
     #   * {Types::UpdateStreamGroupOutput#description #description} => String
-    #   * {Types::UpdateStreamGroupOutput#id #id} => String
-    #   * {Types::UpdateStreamGroupOutput#last_updated_at #last_updated_at} => Time
+    #   * {Types::UpdateStreamGroupOutput#default_application #default_application} => Types::DefaultApplication
     #   * {Types::UpdateStreamGroupOutput#location_states #location_states} => Array&lt;Types::LocationState&gt;
+    #   * {Types::UpdateStreamGroupOutput#stream_class #stream_class} => String
+    #   * {Types::UpdateStreamGroupOutput#id #id} => String
     #   * {Types::UpdateStreamGroupOutput#status #status} => String
     #   * {Types::UpdateStreamGroupOutput#status_reason #status_reason} => String
-    #   * {Types::UpdateStreamGroupOutput#stream_class #stream_class} => String
+    #   * {Types::UpdateStreamGroupOutput#last_updated_at #last_updated_at} => Time
+    #   * {Types::UpdateStreamGroupOutput#created_at #created_at} => Time
+    #   * {Types::UpdateStreamGroupOutput#expires_at #expires_at} => Time
+    #   * {Types::UpdateStreamGroupOutput#associated_applications #associated_applications} => Array&lt;String&gt;
     #
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_stream_group({
-    #     description: "Description",
     #     identifier: "Identifier", # required
     #     location_configurations: [
     #       {
-    #         always_on_capacity: 1,
     #         location_name: "LocationName", # required
+    #         always_on_capacity: 1,
     #         on_demand_capacity: 1,
+    #         target_idle_capacity: 1,
+    #         maximum_capacity: 1,
+    #         vpc_transit_configuration: {
+    #           vpc_id: "VpcId", # required
+    #           ipv_4_cidr_blocks: ["Ipv4CidrBlock"], # required
+    #         },
     #       },
     #     ],
+    #     description: "Description",
+    #     default_application_identifier: "Identifier",
     #   })
     #
     # @example Response structure
     #
     #   resp.arn #=> String
+    #   resp.description #=> String
+    #   resp.default_application.id #=> String
+    #   resp.default_application.arn #=> String
+    #   resp.location_states #=> Array
+    #   resp.location_states[0].location_name #=> String
+    #   resp.location_states[0].status #=> String, one of "ACTIVATING", "ACTIVE", "ERROR", "REMOVING"
+    #   resp.location_states[0].always_on_capacity #=> Integer
+    #   resp.location_states[0].on_demand_capacity #=> Integer
+    #   resp.location_states[0].target_idle_capacity #=> Integer
+    #   resp.location_states[0].maximum_capacity #=> Integer
+    #   resp.location_states[0].requested_capacity #=> Integer
+    #   resp.location_states[0].allocated_capacity #=> Integer
+    #   resp.location_states[0].idle_capacity #=> Integer
+    #   resp.location_states[0].internal_vpc_ipv_4_cidr_block #=> String
+    #   resp.location_states[0].vpc_transit_configuration.vpc_id #=> String
+    #   resp.location_states[0].vpc_transit_configuration.ipv_4_cidr_blocks #=> Array
+    #   resp.location_states[0].vpc_transit_configuration.ipv_4_cidr_blocks[0] #=> String
+    #   resp.location_states[0].vpc_transit_configuration.transit_gateway_id #=> String
+    #   resp.location_states[0].vpc_transit_configuration.transit_gateway_resource_share_arn #=> String
+    #   resp.stream_class #=> String, one of "gen4n_high", "gen4n_ultra", "gen4n_win2022", "gen5n_high", "gen5n_ultra", "gen5n_win2022", "gen6n_small", "gen6n_medium", "gen6n_high", "gen6n_ultra", "gen6n_ultra_win2022", "gen6n_pro", "gen6n_pro_win2022", "gen6n_small_win2022", "gen6n_medium_win2022", "gen6e_pro", "gen6e_pro_win2022"
+    #   resp.id #=> String
+    #   resp.status #=> String, one of "ACTIVATING", "UPDATING_LOCATIONS", "ACTIVE", "ACTIVE_WITH_ERRORS", "ERROR", "DELETING", "EXPIRED"
+    #   resp.status_reason #=> String, one of "internalError", "noAvailableInstances"
+    #   resp.last_updated_at #=> Time
+    #   resp.created_at #=> Time
+    #   resp.expires_at #=> Time
     #   resp.associated_applications #=> Array
     #   resp.associated_applications[0] #=> String
-    #   resp.created_at #=> Time
-    #   resp.default_application.arn #=> String
-    #   resp.default_application.id #=> String
-    #   resp.description #=> String
-    #   resp.id #=> String
-    #   resp.last_updated_at #=> Time
-    #   resp.location_states #=> Array
-    #   resp.location_states[0].allocated_capacity #=> Integer
-    #   resp.location_states[0].always_on_capacity #=> Integer
-    #   resp.location_states[0].idle_capacity #=> Integer
-    #   resp.location_states[0].location_name #=> String
-    #   resp.location_states[0].on_demand_capacity #=> Integer
-    #   resp.location_states[0].requested_capacity #=> Integer
-    #   resp.location_states[0].status #=> String, one of "ACTIVATING", "ACTIVE", "ERROR", "REMOVING"
-    #   resp.status #=> String, one of "ACTIVATING", "UPDATING_LOCATIONS", "ACTIVE", "ACTIVE_WITH_ERRORS", "ERROR", "DELETING"
-    #   resp.status_reason #=> String, one of "internalError", "noAvailableInstances"
-    #   resp.stream_class #=> String, one of "gen4n_high", "gen4n_ultra", "gen4n_win2022", "gen5n_high", "gen5n_ultra", "gen5n_win2022"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/gameliftstreams-2018-05-10/UpdateStreamGroup AWS API Documentation
     #
@@ -2471,7 +3601,7 @@ module Aws::GameLiftStreams
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-gameliftstreams'
-      context[:gem_version] = '1.0.0'
+      context[:gem_version] = '1.34.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

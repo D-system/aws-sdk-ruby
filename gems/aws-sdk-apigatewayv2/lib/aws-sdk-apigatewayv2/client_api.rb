@@ -14,20 +14,26 @@ module Aws::ApiGatewayV2
 
     include Seahorse::Model
 
+    ACMManaged = Shapes::StructureShape.new(name: 'ACMManaged')
     AccessDeniedException = Shapes::StructureShape.new(name: 'AccessDeniedException')
+    AccessDeniedExceptionResponseContent = Shapes::StructureShape.new(name: 'AccessDeniedExceptionResponseContent')
     AccessLogSettings = Shapes::StructureShape.new(name: 'AccessLogSettings')
     Api = Shapes::StructureShape.new(name: 'Api')
     ApiMapping = Shapes::StructureShape.new(name: 'ApiMapping')
     ApiMappings = Shapes::StructureShape.new(name: 'ApiMappings')
     Apis = Shapes::StructureShape.new(name: 'Apis')
     Arn = Shapes::StringShape.new(name: 'Arn')
+    Authorization = Shapes::StructureShape.new(name: 'Authorization')
     AuthorizationScopes = Shapes::ListShape.new(name: 'AuthorizationScopes')
     AuthorizationType = Shapes::StringShape.new(name: 'AuthorizationType')
     Authorizer = Shapes::StructureShape.new(name: 'Authorizer')
     AuthorizerType = Shapes::StringShape.new(name: 'AuthorizerType')
     Authorizers = Shapes::StructureShape.new(name: 'Authorizers')
     BadRequestException = Shapes::StructureShape.new(name: 'BadRequestException')
+    BadRequestExceptionResponseContent = Shapes::StructureShape.new(name: 'BadRequestExceptionResponseContent')
+    CognitoConfig = Shapes::StructureShape.new(name: 'CognitoConfig')
     ConflictException = Shapes::StructureShape.new(name: 'ConflictException')
+    ConflictExceptionResponseContent = Shapes::StructureShape.new(name: 'ConflictExceptionResponseContent')
     ConnectionType = Shapes::StringShape.new(name: 'ConnectionType')
     ContentHandlingStrategy = Shapes::StringShape.new(name: 'ContentHandlingStrategy')
     Cors = Shapes::StructureShape.new(name: 'Cors')
@@ -58,18 +64,37 @@ module Aws::ApiGatewayV2
     CreateModelInput = Shapes::StructureShape.new(name: 'CreateModelInput')
     CreateModelRequest = Shapes::StructureShape.new(name: 'CreateModelRequest')
     CreateModelResponse = Shapes::StructureShape.new(name: 'CreateModelResponse')
+    CreatePortalProductRequest = Shapes::StructureShape.new(name: 'CreatePortalProductRequest')
+    CreatePortalProductRequestContent = Shapes::StructureShape.new(name: 'CreatePortalProductRequestContent')
+    CreatePortalProductResponse = Shapes::StructureShape.new(name: 'CreatePortalProductResponse')
+    CreatePortalProductResponseContent = Shapes::StructureShape.new(name: 'CreatePortalProductResponseContent')
+    CreatePortalRequest = Shapes::StructureShape.new(name: 'CreatePortalRequest')
+    CreatePortalRequestContent = Shapes::StructureShape.new(name: 'CreatePortalRequestContent')
+    CreatePortalResponse = Shapes::StructureShape.new(name: 'CreatePortalResponse')
+    CreatePortalResponseContent = Shapes::StructureShape.new(name: 'CreatePortalResponseContent')
+    CreateProductPageRequest = Shapes::StructureShape.new(name: 'CreateProductPageRequest')
+    CreateProductPageRequestContent = Shapes::StructureShape.new(name: 'CreateProductPageRequestContent')
+    CreateProductPageResponse = Shapes::StructureShape.new(name: 'CreateProductPageResponse')
+    CreateProductPageResponseContent = Shapes::StructureShape.new(name: 'CreateProductPageResponseContent')
+    CreateProductRestEndpointPageRequest = Shapes::StructureShape.new(name: 'CreateProductRestEndpointPageRequest')
+    CreateProductRestEndpointPageRequestContent = Shapes::StructureShape.new(name: 'CreateProductRestEndpointPageRequestContent')
+    CreateProductRestEndpointPageResponse = Shapes::StructureShape.new(name: 'CreateProductRestEndpointPageResponse')
+    CreateProductRestEndpointPageResponseContent = Shapes::StructureShape.new(name: 'CreateProductRestEndpointPageResponseContent')
     CreateRouteInput = Shapes::StructureShape.new(name: 'CreateRouteInput')
     CreateRouteRequest = Shapes::StructureShape.new(name: 'CreateRouteRequest')
     CreateRouteResponseInput = Shapes::StructureShape.new(name: 'CreateRouteResponseInput')
     CreateRouteResponseRequest = Shapes::StructureShape.new(name: 'CreateRouteResponseRequest')
     CreateRouteResponseResponse = Shapes::StructureShape.new(name: 'CreateRouteResponseResponse')
     CreateRouteResult = Shapes::StructureShape.new(name: 'CreateRouteResult')
+    CreateRoutingRuleRequest = Shapes::StructureShape.new(name: 'CreateRoutingRuleRequest')
+    CreateRoutingRuleResponse = Shapes::StructureShape.new(name: 'CreateRoutingRuleResponse')
     CreateStageInput = Shapes::StructureShape.new(name: 'CreateStageInput')
     CreateStageRequest = Shapes::StructureShape.new(name: 'CreateStageRequest')
     CreateStageResponse = Shapes::StructureShape.new(name: 'CreateStageResponse')
     CreateVpcLinkInput = Shapes::StructureShape.new(name: 'CreateVpcLinkInput')
     CreateVpcLinkRequest = Shapes::StructureShape.new(name: 'CreateVpcLinkRequest')
     CreateVpcLinkResponse = Shapes::StructureShape.new(name: 'CreateVpcLinkResponse')
+    CustomColors = Shapes::StructureShape.new(name: 'CustomColors')
     DeleteAccessLogSettingsRequest = Shapes::StructureShape.new(name: 'DeleteAccessLogSettingsRequest')
     DeleteApiMappingRequest = Shapes::StructureShape.new(name: 'DeleteApiMappingRequest')
     DeleteApiRequest = Shapes::StructureShape.new(name: 'DeleteApiRequest')
@@ -80,21 +105,35 @@ module Aws::ApiGatewayV2
     DeleteIntegrationRequest = Shapes::StructureShape.new(name: 'DeleteIntegrationRequest')
     DeleteIntegrationResponseRequest = Shapes::StructureShape.new(name: 'DeleteIntegrationResponseRequest')
     DeleteModelRequest = Shapes::StructureShape.new(name: 'DeleteModelRequest')
+    DeletePortalProductRequest = Shapes::StructureShape.new(name: 'DeletePortalProductRequest')
+    DeletePortalProductSharingPolicyRequest = Shapes::StructureShape.new(name: 'DeletePortalProductSharingPolicyRequest')
+    DeletePortalRequest = Shapes::StructureShape.new(name: 'DeletePortalRequest')
+    DeleteProductPageRequest = Shapes::StructureShape.new(name: 'DeleteProductPageRequest')
+    DeleteProductRestEndpointPageRequest = Shapes::StructureShape.new(name: 'DeleteProductRestEndpointPageRequest')
     DeleteRouteRequest = Shapes::StructureShape.new(name: 'DeleteRouteRequest')
     DeleteRouteRequestParameterRequest = Shapes::StructureShape.new(name: 'DeleteRouteRequestParameterRequest')
     DeleteRouteResponseRequest = Shapes::StructureShape.new(name: 'DeleteRouteResponseRequest')
     DeleteRouteSettingsRequest = Shapes::StructureShape.new(name: 'DeleteRouteSettingsRequest')
+    DeleteRoutingRuleRequest = Shapes::StructureShape.new(name: 'DeleteRoutingRuleRequest')
     DeleteStageRequest = Shapes::StructureShape.new(name: 'DeleteStageRequest')
     DeleteVpcLinkRequest = Shapes::StructureShape.new(name: 'DeleteVpcLinkRequest')
     DeleteVpcLinkResponse = Shapes::StructureShape.new(name: 'DeleteVpcLinkResponse')
     Deployment = Shapes::StructureShape.new(name: 'Deployment')
     DeploymentStatus = Shapes::StringShape.new(name: 'DeploymentStatus')
     Deployments = Shapes::StructureShape.new(name: 'Deployments')
+    DisablePortalRequest = Shapes::StructureShape.new(name: 'DisablePortalRequest')
+    DisplayContent = Shapes::StructureShape.new(name: 'DisplayContent')
+    DisplayContentOverrides = Shapes::StructureShape.new(name: 'DisplayContentOverrides')
+    DisplayOrder = Shapes::StructureShape.new(name: 'DisplayOrder')
     DomainName = Shapes::StructureShape.new(name: 'DomainName')
     DomainNameConfiguration = Shapes::StructureShape.new(name: 'DomainNameConfiguration')
     DomainNameConfigurations = Shapes::ListShape.new(name: 'DomainNameConfigurations')
     DomainNameStatus = Shapes::StringShape.new(name: 'DomainNameStatus')
     DomainNames = Shapes::StructureShape.new(name: 'DomainNames')
+    EndpointConfigurationRequest = Shapes::StructureShape.new(name: 'EndpointConfigurationRequest')
+    EndpointConfigurationResponse = Shapes::StructureShape.new(name: 'EndpointConfigurationResponse')
+    EndpointDisplayContent = Shapes::StructureShape.new(name: 'EndpointDisplayContent')
+    EndpointDisplayContentResponse = Shapes::StructureShape.new(name: 'EndpointDisplayContentResponse')
     EndpointType = Shapes::StringShape.new(name: 'EndpointType')
     ExportApiRequest = Shapes::StructureShape.new(name: 'ExportApiRequest')
     ExportApiResponse = Shapes::StructureShape.new(name: 'ExportApiResponse')
@@ -133,6 +172,21 @@ module Aws::ApiGatewayV2
     GetModelTemplateResponse = Shapes::StructureShape.new(name: 'GetModelTemplateResponse')
     GetModelsRequest = Shapes::StructureShape.new(name: 'GetModelsRequest')
     GetModelsResponse = Shapes::StructureShape.new(name: 'GetModelsResponse')
+    GetPortalProductRequest = Shapes::StructureShape.new(name: 'GetPortalProductRequest')
+    GetPortalProductResponse = Shapes::StructureShape.new(name: 'GetPortalProductResponse')
+    GetPortalProductResponseContent = Shapes::StructureShape.new(name: 'GetPortalProductResponseContent')
+    GetPortalProductSharingPolicyRequest = Shapes::StructureShape.new(name: 'GetPortalProductSharingPolicyRequest')
+    GetPortalProductSharingPolicyResponse = Shapes::StructureShape.new(name: 'GetPortalProductSharingPolicyResponse')
+    GetPortalProductSharingPolicyResponseContent = Shapes::StructureShape.new(name: 'GetPortalProductSharingPolicyResponseContent')
+    GetPortalRequest = Shapes::StructureShape.new(name: 'GetPortalRequest')
+    GetPortalResponse = Shapes::StructureShape.new(name: 'GetPortalResponse')
+    GetPortalResponseContent = Shapes::StructureShape.new(name: 'GetPortalResponseContent')
+    GetProductPageRequest = Shapes::StructureShape.new(name: 'GetProductPageRequest')
+    GetProductPageResponse = Shapes::StructureShape.new(name: 'GetProductPageResponse')
+    GetProductPageResponseContent = Shapes::StructureShape.new(name: 'GetProductPageResponseContent')
+    GetProductRestEndpointPageRequest = Shapes::StructureShape.new(name: 'GetProductRestEndpointPageRequest')
+    GetProductRestEndpointPageResponse = Shapes::StructureShape.new(name: 'GetProductRestEndpointPageResponse')
+    GetProductRestEndpointPageResponseContent = Shapes::StructureShape.new(name: 'GetProductRestEndpointPageResponseContent')
     GetRouteRequest = Shapes::StructureShape.new(name: 'GetRouteRequest')
     GetRouteResponseRequest = Shapes::StructureShape.new(name: 'GetRouteResponseRequest')
     GetRouteResponseResponse = Shapes::StructureShape.new(name: 'GetRouteResponseResponse')
@@ -141,6 +195,8 @@ module Aws::ApiGatewayV2
     GetRouteResult = Shapes::StructureShape.new(name: 'GetRouteResult')
     GetRoutesRequest = Shapes::StructureShape.new(name: 'GetRoutesRequest')
     GetRoutesResponse = Shapes::StructureShape.new(name: 'GetRoutesResponse')
+    GetRoutingRuleRequest = Shapes::StructureShape.new(name: 'GetRoutingRuleRequest')
+    GetRoutingRuleResponse = Shapes::StructureShape.new(name: 'GetRoutingRuleResponse')
     GetStageRequest = Shapes::StructureShape.new(name: 'GetStageRequest')
     GetStageResponse = Shapes::StructureShape.new(name: 'GetStageResponse')
     GetStagesRequest = Shapes::StructureShape.new(name: 'GetStagesRequest')
@@ -152,6 +208,7 @@ module Aws::ApiGatewayV2
     GetVpcLinksRequest = Shapes::StructureShape.new(name: 'GetVpcLinksRequest')
     GetVpcLinksResponse = Shapes::StructureShape.new(name: 'GetVpcLinksResponse')
     Id = Shapes::StringShape.new(name: 'Id')
+    IdentifierParts = Shapes::StructureShape.new(name: 'IdentifierParts')
     IdentitySourceList = Shapes::ListShape.new(name: 'IdentitySourceList')
     ImportApiInput = Shapes::StructureShape.new(name: 'ImportApiInput')
     ImportApiRequest = Shapes::StructureShape.new(name: 'ImportApiRequest')
@@ -165,23 +222,62 @@ module Aws::ApiGatewayV2
     IntegrationResponses = Shapes::StructureShape.new(name: 'IntegrationResponses')
     IntegrationType = Shapes::StringShape.new(name: 'IntegrationType')
     Integrations = Shapes::StructureShape.new(name: 'Integrations')
+    IpAddressType = Shapes::StringShape.new(name: 'IpAddressType')
     JWTConfiguration = Shapes::StructureShape.new(name: 'JWTConfiguration')
     LimitExceededException = Shapes::StructureShape.new(name: 'LimitExceededException')
+    LimitExceededExceptionResponseContent = Shapes::StructureShape.new(name: 'LimitExceededExceptionResponseContent')
+    ListPortalProductsRequest = Shapes::StructureShape.new(name: 'ListPortalProductsRequest')
+    ListPortalProductsResponse = Shapes::StructureShape.new(name: 'ListPortalProductsResponse')
+    ListPortalProductsResponseContent = Shapes::StructureShape.new(name: 'ListPortalProductsResponseContent')
+    ListPortalsRequest = Shapes::StructureShape.new(name: 'ListPortalsRequest')
+    ListPortalsResponse = Shapes::StructureShape.new(name: 'ListPortalsResponse')
+    ListPortalsResponseContent = Shapes::StructureShape.new(name: 'ListPortalsResponseContent')
+    ListProductPagesRequest = Shapes::StructureShape.new(name: 'ListProductPagesRequest')
+    ListProductPagesResponse = Shapes::StructureShape.new(name: 'ListProductPagesResponse')
+    ListProductPagesResponseContent = Shapes::StructureShape.new(name: 'ListProductPagesResponseContent')
+    ListProductRestEndpointPagesRequest = Shapes::StructureShape.new(name: 'ListProductRestEndpointPagesRequest')
+    ListProductRestEndpointPagesResponse = Shapes::StructureShape.new(name: 'ListProductRestEndpointPagesResponse')
+    ListProductRestEndpointPagesResponseContent = Shapes::StructureShape.new(name: 'ListProductRestEndpointPagesResponseContent')
+    ListRoutingRulesRequest = Shapes::StructureShape.new(name: 'ListRoutingRulesRequest')
+    ListRoutingRulesResponse = Shapes::StructureShape.new(name: 'ListRoutingRulesResponse')
     LoggingLevel = Shapes::StringShape.new(name: 'LoggingLevel')
+    MaxResults = Shapes::IntegerShape.new(name: 'MaxResults')
     Model = Shapes::StructureShape.new(name: 'Model')
     Models = Shapes::StructureShape.new(name: 'Models')
     MutualTlsAuthentication = Shapes::StructureShape.new(name: 'MutualTlsAuthentication')
     MutualTlsAuthenticationInput = Shapes::StructureShape.new(name: 'MutualTlsAuthenticationInput')
     NextToken = Shapes::StringShape.new(name: 'NextToken')
+    None = Shapes::StructureShape.new(name: 'None')
     NotFoundException = Shapes::StructureShape.new(name: 'NotFoundException')
+    NotFoundExceptionResponseContent = Shapes::StructureShape.new(name: 'NotFoundExceptionResponseContent')
     ParameterConstraints = Shapes::StructureShape.new(name: 'ParameterConstraints')
     PassthroughBehavior = Shapes::StringShape.new(name: 'PassthroughBehavior')
+    PortalContent = Shapes::StructureShape.new(name: 'PortalContent')
+    PortalProductSummary = Shapes::StructureShape.new(name: 'PortalProductSummary')
+    PortalSummary = Shapes::StructureShape.new(name: 'PortalSummary')
+    PortalTheme = Shapes::StructureShape.new(name: 'PortalTheme')
+    Preview = Shapes::StructureShape.new(name: 'Preview')
+    PreviewPortalRequest = Shapes::StructureShape.new(name: 'PreviewPortalRequest')
+    PreviewPortalResponse = Shapes::StructureShape.new(name: 'PreviewPortalResponse')
+    PreviewStatus = Shapes::StringShape.new(name: 'PreviewStatus')
+    ProductPageSummaryNoBody = Shapes::StructureShape.new(name: 'ProductPageSummaryNoBody')
+    ProductRestEndpointPageSummaryNoBody = Shapes::StructureShape.new(name: 'ProductRestEndpointPageSummaryNoBody')
     ProtocolType = Shapes::StringShape.new(name: 'ProtocolType')
+    PublishPortalRequest = Shapes::StructureShape.new(name: 'PublishPortalRequest')
+    PublishPortalRequestContent = Shapes::StructureShape.new(name: 'PublishPortalRequestContent')
+    PublishPortalResponse = Shapes::StructureShape.new(name: 'PublishPortalResponse')
+    PublishStatus = Shapes::StringShape.new(name: 'PublishStatus')
+    PutPortalProductSharingPolicyRequest = Shapes::StructureShape.new(name: 'PutPortalProductSharingPolicyRequest')
+    PutPortalProductSharingPolicyRequestContent = Shapes::StructureShape.new(name: 'PutPortalProductSharingPolicyRequestContent')
+    PutPortalProductSharingPolicyResponse = Shapes::StructureShape.new(name: 'PutPortalProductSharingPolicyResponse')
+    PutRoutingRuleRequest = Shapes::StructureShape.new(name: 'PutRoutingRuleRequest')
+    PutRoutingRuleResponse = Shapes::StructureShape.new(name: 'PutRoutingRuleResponse')
     ReimportApiInput = Shapes::StructureShape.new(name: 'ReimportApiInput')
     ReimportApiRequest = Shapes::StructureShape.new(name: 'ReimportApiRequest')
     ReimportApiResponse = Shapes::StructureShape.new(name: 'ReimportApiResponse')
     ResetAuthorizersCacheRequest = Shapes::StructureShape.new(name: 'ResetAuthorizersCacheRequest')
     ResponseParameters = Shapes::MapShape.new(name: 'ResponseParameters')
+    RestEndpointIdentifier = Shapes::StructureShape.new(name: 'RestEndpointIdentifier')
     Route = Shapes::StructureShape.new(name: 'Route')
     RouteModels = Shapes::MapShape.new(name: 'RouteModels')
     RouteParameters = Shapes::MapShape.new(name: 'RouteParameters')
@@ -190,6 +286,18 @@ module Aws::ApiGatewayV2
     RouteSettings = Shapes::StructureShape.new(name: 'RouteSettings')
     RouteSettingsMap = Shapes::MapShape.new(name: 'RouteSettingsMap')
     Routes = Shapes::StructureShape.new(name: 'Routes')
+    RoutingMode = Shapes::StringShape.new(name: 'RoutingMode')
+    RoutingRule = Shapes::StructureShape.new(name: 'RoutingRule')
+    RoutingRuleAction = Shapes::StructureShape.new(name: 'RoutingRuleAction')
+    RoutingRuleActionInvokeApi = Shapes::StructureShape.new(name: 'RoutingRuleActionInvokeApi')
+    RoutingRuleCondition = Shapes::StructureShape.new(name: 'RoutingRuleCondition')
+    RoutingRuleInput = Shapes::StructureShape.new(name: 'RoutingRuleInput')
+    RoutingRuleMatchBasePaths = Shapes::StructureShape.new(name: 'RoutingRuleMatchBasePaths')
+    RoutingRuleMatchHeaderValue = Shapes::StructureShape.new(name: 'RoutingRuleMatchHeaderValue')
+    RoutingRuleMatchHeaders = Shapes::StructureShape.new(name: 'RoutingRuleMatchHeaders')
+    RoutingRulePriority = Shapes::IntegerShape.new(name: 'RoutingRulePriority')
+    RoutingRules = Shapes::StructureShape.new(name: 'RoutingRules')
+    Section = Shapes::StructureShape.new(name: 'Section')
     SecurityGroupIdList = Shapes::ListShape.new(name: 'SecurityGroupIdList')
     SecurityPolicy = Shapes::StringShape.new(name: 'SecurityPolicy')
     SelectionExpression = Shapes::StringShape.new(name: 'SelectionExpression')
@@ -197,6 +305,8 @@ module Aws::ApiGatewayV2
     Stage = Shapes::StructureShape.new(name: 'Stage')
     StageVariablesMap = Shapes::MapShape.new(name: 'StageVariablesMap')
     Stages = Shapes::StructureShape.new(name: 'Stages')
+    Status = Shapes::StringShape.new(name: 'Status')
+    StatusException = Shapes::StructureShape.new(name: 'StatusException')
     StringWithLengthBetween0And1024 = Shapes::StringShape.new(name: 'StringWithLengthBetween0And1024')
     StringWithLengthBetween0And2048 = Shapes::StringShape.new(name: 'StringWithLengthBetween0And2048')
     StringWithLengthBetween0And32K = Shapes::StringShape.new(name: 'StringWithLengthBetween0And32K')
@@ -216,6 +326,7 @@ module Aws::ApiGatewayV2
     TlsConfig = Shapes::StructureShape.new(name: 'TlsConfig')
     TlsConfigInput = Shapes::StructureShape.new(name: 'TlsConfigInput')
     TooManyRequestsException = Shapes::StructureShape.new(name: 'TooManyRequestsException')
+    TryItState = Shapes::StringShape.new(name: 'TryItState')
     UntagResourceRequest = Shapes::StructureShape.new(name: 'UntagResourceRequest')
     UpdateApiInput = Shapes::StructureShape.new(name: 'UpdateApiInput')
     UpdateApiMappingInput = Shapes::StructureShape.new(name: 'UpdateApiMappingInput')
@@ -241,6 +352,22 @@ module Aws::ApiGatewayV2
     UpdateModelInput = Shapes::StructureShape.new(name: 'UpdateModelInput')
     UpdateModelRequest = Shapes::StructureShape.new(name: 'UpdateModelRequest')
     UpdateModelResponse = Shapes::StructureShape.new(name: 'UpdateModelResponse')
+    UpdatePortalProductRequest = Shapes::StructureShape.new(name: 'UpdatePortalProductRequest')
+    UpdatePortalProductRequestContent = Shapes::StructureShape.new(name: 'UpdatePortalProductRequestContent')
+    UpdatePortalProductResponse = Shapes::StructureShape.new(name: 'UpdatePortalProductResponse')
+    UpdatePortalProductResponseContent = Shapes::StructureShape.new(name: 'UpdatePortalProductResponseContent')
+    UpdatePortalRequest = Shapes::StructureShape.new(name: 'UpdatePortalRequest')
+    UpdatePortalRequestContent = Shapes::StructureShape.new(name: 'UpdatePortalRequestContent')
+    UpdatePortalResponse = Shapes::StructureShape.new(name: 'UpdatePortalResponse')
+    UpdatePortalResponseContent = Shapes::StructureShape.new(name: 'UpdatePortalResponseContent')
+    UpdateProductPageRequest = Shapes::StructureShape.new(name: 'UpdateProductPageRequest')
+    UpdateProductPageRequestContent = Shapes::StructureShape.new(name: 'UpdateProductPageRequestContent')
+    UpdateProductPageResponse = Shapes::StructureShape.new(name: 'UpdateProductPageResponse')
+    UpdateProductPageResponseContent = Shapes::StructureShape.new(name: 'UpdateProductPageResponseContent')
+    UpdateProductRestEndpointPageRequest = Shapes::StructureShape.new(name: 'UpdateProductRestEndpointPageRequest')
+    UpdateProductRestEndpointPageRequestContent = Shapes::StructureShape.new(name: 'UpdateProductRestEndpointPageRequestContent')
+    UpdateProductRestEndpointPageResponse = Shapes::StructureShape.new(name: 'UpdateProductRestEndpointPageResponse')
+    UpdateProductRestEndpointPageResponseContent = Shapes::StructureShape.new(name: 'UpdateProductRestEndpointPageResponseContent')
     UpdateRouteInput = Shapes::StructureShape.new(name: 'UpdateRouteInput')
     UpdateRouteRequest = Shapes::StructureShape.new(name: 'UpdateRouteRequest')
     UpdateRouteResponseInput = Shapes::StructureShape.new(name: 'UpdateRouteResponseInput')
@@ -269,18 +396,56 @@ module Aws::ApiGatewayV2
     __listOfIntegration = Shapes::ListShape.new(name: '__listOfIntegration')
     __listOfIntegrationResponse = Shapes::ListShape.new(name: '__listOfIntegrationResponse')
     __listOfModel = Shapes::ListShape.new(name: '__listOfModel')
+    __listOfPortalProductSummary = Shapes::ListShape.new(name: '__listOfPortalProductSummary')
+    __listOfPortalSummary = Shapes::ListShape.new(name: '__listOfPortalSummary')
+    __listOfProductPageSummaryNoBody = Shapes::ListShape.new(name: '__listOfProductPageSummaryNoBody')
+    __listOfProductRestEndpointPageSummaryNoBody = Shapes::ListShape.new(name: '__listOfProductRestEndpointPageSummaryNoBody')
     __listOfRoute = Shapes::ListShape.new(name: '__listOfRoute')
     __listOfRouteResponse = Shapes::ListShape.new(name: '__listOfRouteResponse')
+    __listOfRoutingRule = Shapes::ListShape.new(name: '__listOfRoutingRule')
+    __listOfRoutingRuleAction = Shapes::ListShape.new(name: '__listOfRoutingRuleAction')
+    __listOfRoutingRuleCondition = Shapes::ListShape.new(name: '__listOfRoutingRuleCondition')
+    __listOfRoutingRuleMatchHeaderValue = Shapes::ListShape.new(name: '__listOfRoutingRuleMatchHeaderValue')
+    __listOfSection = Shapes::ListShape.new(name: '__listOfSection')
+    __listOfSelectionKey = Shapes::ListShape.new(name: '__listOfSelectionKey')
     __listOfStage = Shapes::ListShape.new(name: '__listOfStage')
     __listOfVpcLink = Shapes::ListShape.new(name: '__listOfVpcLink')
     __listOf__string = Shapes::ListShape.new(name: '__listOf__string')
+    __listOf__stringMin20Max2048 = Shapes::ListShape.new(name: '__listOf__stringMin20Max2048')
     __long = Shapes::IntegerShape.new(name: '__long')
     __string = Shapes::StringShape.new(name: '__string')
+    __stringMin0Max1024 = Shapes::StringShape.new(name: '__stringMin0Max1024')
+    __stringMin0Max1092 = Shapes::StringShape.new(name: '__stringMin0Max1092')
+    __stringMin0Max255 = Shapes::StringShape.new(name: '__stringMin0Max255')
+    __stringMin10Max2048 = Shapes::StringShape.new(name: '__stringMin10Max2048')
+    __stringMin10Max30PatternAZ09 = Shapes::StringShape.new(name: '__stringMin10Max30PatternAZ09')
+    __stringMin1Max1024 = Shapes::StringShape.new(name: '__stringMin1Max1024')
+    __stringMin1Max128 = Shapes::StringShape.new(name: '__stringMin1Max128')
+    __stringMin1Max16 = Shapes::StringShape.new(name: '__stringMin1Max16')
+    __stringMin1Max20 = Shapes::StringShape.new(name: '__stringMin1Max20')
+    __stringMin1Max2048 = Shapes::StringShape.new(name: '__stringMin1Max2048')
+    __stringMin1Max255 = Shapes::StringShape.new(name: '__stringMin1Max255')
+    __stringMin1Max256 = Shapes::StringShape.new(name: '__stringMin1Max256')
+    __stringMin1Max307200 = Shapes::StringShape.new(name: '__stringMin1Max307200')
+    __stringMin1Max32768 = Shapes::StringShape.new(name: '__stringMin1Max32768')
+    __stringMin1Max4096 = Shapes::StringShape.new(name: '__stringMin1Max4096')
+    __stringMin1Max50 = Shapes::StringShape.new(name: '__stringMin1Max50')
+    __stringMin1Max64 = Shapes::StringShape.new(name: '__stringMin1Max64')
+    __stringMin20Max2048 = Shapes::StringShape.new(name: '__stringMin20Max2048')
+    __stringMin3Max255 = Shapes::StringShape.new(name: '__stringMin3Max255')
+    __stringMin3Max256 = Shapes::StringShape.new(name: '__stringMin3Max256')
     __timestampIso8601 = Shapes::TimestampShape.new(name: '__timestampIso8601', timestampFormat: "iso8601")
     __timestampUnix = Shapes::TimestampShape.new(name: '__timestampUnix', timestampFormat: "unixTimestamp")
 
+    ACMManaged.add_member(:certificate_arn, Shapes::ShapeRef.new(shape: __stringMin10Max2048, required: true, location_name: "certificateArn"))
+    ACMManaged.add_member(:domain_name, Shapes::ShapeRef.new(shape: __stringMin3Max256, required: true, location_name: "domainName"))
+    ACMManaged.struct_class = Types::ACMManaged
+
     AccessDeniedException.add_member(:message, Shapes::ShapeRef.new(shape: __string, location_name: "message"))
     AccessDeniedException.struct_class = Types::AccessDeniedException
+
+    AccessDeniedExceptionResponseContent.add_member(:message, Shapes::ShapeRef.new(shape: __string, location_name: "message"))
+    AccessDeniedExceptionResponseContent.struct_class = Types::AccessDeniedExceptionResponseContent
 
     AccessLogSettings.add_member(:destination_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "destinationArn"))
     AccessLogSettings.add_member(:format, Shapes::ShapeRef.new(shape: StringWithLengthBetween1And1024, location_name: "format"))
@@ -296,6 +461,7 @@ module Aws::ApiGatewayV2
     Api.add_member(:disable_schema_validation, Shapes::ShapeRef.new(shape: __boolean, location_name: "disableSchemaValidation"))
     Api.add_member(:disable_execute_api_endpoint, Shapes::ShapeRef.new(shape: __boolean, location_name: "disableExecuteApiEndpoint"))
     Api.add_member(:import_info, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "importInfo"))
+    Api.add_member(:ip_address_type, Shapes::ShapeRef.new(shape: IpAddressType, location_name: "ipAddressType"))
     Api.add_member(:name, Shapes::ShapeRef.new(shape: StringWithLengthBetween1And128, required: true, location_name: "name"))
     Api.add_member(:protocol_type, Shapes::ShapeRef.new(shape: ProtocolType, required: true, location_name: "protocolType"))
     Api.add_member(:route_selection_expression, Shapes::ShapeRef.new(shape: SelectionExpression, required: true, location_name: "routeSelectionExpression"))
@@ -317,6 +483,10 @@ module Aws::ApiGatewayV2
     Apis.add_member(:items, Shapes::ShapeRef.new(shape: __listOfApi, location_name: "items"))
     Apis.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
     Apis.struct_class = Types::Apis
+
+    Authorization.add_member(:cognito_config, Shapes::ShapeRef.new(shape: CognitoConfig, location_name: "cognitoConfig"))
+    Authorization.add_member(:none, Shapes::ShapeRef.new(shape: None, location_name: "none"))
+    Authorization.struct_class = Types::Authorization
 
     AuthorizationScopes.member = Shapes::ShapeRef.new(shape: StringWithLengthBetween1And64)
 
@@ -340,8 +510,19 @@ module Aws::ApiGatewayV2
     BadRequestException.add_member(:message, Shapes::ShapeRef.new(shape: __string, location_name: "message"))
     BadRequestException.struct_class = Types::BadRequestException
 
+    BadRequestExceptionResponseContent.add_member(:message, Shapes::ShapeRef.new(shape: __string, location_name: "message"))
+    BadRequestExceptionResponseContent.struct_class = Types::BadRequestExceptionResponseContent
+
+    CognitoConfig.add_member(:app_client_id, Shapes::ShapeRef.new(shape: __stringMin1Max256, required: true, location_name: "appClientId"))
+    CognitoConfig.add_member(:user_pool_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, required: true, location_name: "userPoolArn"))
+    CognitoConfig.add_member(:user_pool_domain, Shapes::ShapeRef.new(shape: __stringMin20Max2048, required: true, location_name: "userPoolDomain"))
+    CognitoConfig.struct_class = Types::CognitoConfig
+
     ConflictException.add_member(:message, Shapes::ShapeRef.new(shape: __string, location_name: "message"))
     ConflictException.struct_class = Types::ConflictException
+
+    ConflictExceptionResponseContent.add_member(:message, Shapes::ShapeRef.new(shape: __string, location_name: "message"))
+    ConflictExceptionResponseContent.struct_class = Types::ConflictExceptionResponseContent
 
     Cors.add_member(:allow_credentials, Shapes::ShapeRef.new(shape: __boolean, location_name: "allowCredentials"))
     Cors.add_member(:allow_headers, Shapes::ShapeRef.new(shape: CorsHeaderList, location_name: "allowHeaders"))
@@ -395,6 +576,7 @@ module Aws::ApiGatewayV2
     CreateApiRequest.add_member(:description, Shapes::ShapeRef.new(shape: StringWithLengthBetween0And1024, location_name: "description"))
     CreateApiRequest.add_member(:disable_schema_validation, Shapes::ShapeRef.new(shape: __boolean, location_name: "disableSchemaValidation"))
     CreateApiRequest.add_member(:disable_execute_api_endpoint, Shapes::ShapeRef.new(shape: __boolean, location_name: "disableExecuteApiEndpoint"))
+    CreateApiRequest.add_member(:ip_address_type, Shapes::ShapeRef.new(shape: IpAddressType, location_name: "ipAddressType"))
     CreateApiRequest.add_member(:name, Shapes::ShapeRef.new(shape: StringWithLengthBetween1And128, required: true, location_name: "name"))
     CreateApiRequest.add_member(:protocol_type, Shapes::ShapeRef.new(shape: ProtocolType, required: true, location_name: "protocolType"))
     CreateApiRequest.add_member(:route_key, Shapes::ShapeRef.new(shape: SelectionKey, location_name: "routeKey"))
@@ -414,6 +596,7 @@ module Aws::ApiGatewayV2
     CreateApiResponse.add_member(:disable_schema_validation, Shapes::ShapeRef.new(shape: __boolean, location_name: "disableSchemaValidation"))
     CreateApiResponse.add_member(:disable_execute_api_endpoint, Shapes::ShapeRef.new(shape: __boolean, location_name: "disableExecuteApiEndpoint"))
     CreateApiResponse.add_member(:import_info, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "importInfo"))
+    CreateApiResponse.add_member(:ip_address_type, Shapes::ShapeRef.new(shape: IpAddressType, location_name: "ipAddressType"))
     CreateApiResponse.add_member(:name, Shapes::ShapeRef.new(shape: StringWithLengthBetween1And128, location_name: "name"))
     CreateApiResponse.add_member(:protocol_type, Shapes::ShapeRef.new(shape: ProtocolType, location_name: "protocolType"))
     CreateApiResponse.add_member(:route_selection_expression, Shapes::ShapeRef.new(shape: SelectionExpression, location_name: "routeSelectionExpression"))
@@ -480,19 +663,23 @@ module Aws::ApiGatewayV2
     CreateDomainNameInput.add_member(:domain_name, Shapes::ShapeRef.new(shape: StringWithLengthBetween1And512, required: true, location_name: "domainName"))
     CreateDomainNameInput.add_member(:domain_name_configurations, Shapes::ShapeRef.new(shape: DomainNameConfigurations, location_name: "domainNameConfigurations"))
     CreateDomainNameInput.add_member(:mutual_tls_authentication, Shapes::ShapeRef.new(shape: MutualTlsAuthenticationInput, location_name: "mutualTlsAuthentication"))
+    CreateDomainNameInput.add_member(:routing_mode, Shapes::ShapeRef.new(shape: RoutingMode, location_name: "routingMode"))
     CreateDomainNameInput.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
     CreateDomainNameInput.struct_class = Types::CreateDomainNameInput
 
     CreateDomainNameRequest.add_member(:domain_name, Shapes::ShapeRef.new(shape: StringWithLengthBetween1And512, required: true, location_name: "domainName"))
     CreateDomainNameRequest.add_member(:domain_name_configurations, Shapes::ShapeRef.new(shape: DomainNameConfigurations, location_name: "domainNameConfigurations"))
     CreateDomainNameRequest.add_member(:mutual_tls_authentication, Shapes::ShapeRef.new(shape: MutualTlsAuthenticationInput, location_name: "mutualTlsAuthentication"))
+    CreateDomainNameRequest.add_member(:routing_mode, Shapes::ShapeRef.new(shape: RoutingMode, location_name: "routingMode"))
     CreateDomainNameRequest.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
     CreateDomainNameRequest.struct_class = Types::CreateDomainNameRequest
 
     CreateDomainNameResponse.add_member(:api_mapping_selection_expression, Shapes::ShapeRef.new(shape: SelectionExpression, location_name: "apiMappingSelectionExpression"))
     CreateDomainNameResponse.add_member(:domain_name, Shapes::ShapeRef.new(shape: StringWithLengthBetween1And512, location_name: "domainName"))
+    CreateDomainNameResponse.add_member(:domain_name_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "domainNameArn"))
     CreateDomainNameResponse.add_member(:domain_name_configurations, Shapes::ShapeRef.new(shape: DomainNameConfigurations, location_name: "domainNameConfigurations"))
     CreateDomainNameResponse.add_member(:mutual_tls_authentication, Shapes::ShapeRef.new(shape: MutualTlsAuthentication, location_name: "mutualTlsAuthentication"))
+    CreateDomainNameResponse.add_member(:routing_mode, Shapes::ShapeRef.new(shape: RoutingMode, location_name: "routingMode"))
     CreateDomainNameResponse.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
     CreateDomainNameResponse.struct_class = Types::CreateDomainNameResponse
 
@@ -601,6 +788,132 @@ module Aws::ApiGatewayV2
     CreateModelResponse.add_member(:schema, Shapes::ShapeRef.new(shape: StringWithLengthBetween0And32K, location_name: "schema"))
     CreateModelResponse.struct_class = Types::CreateModelResponse
 
+    CreatePortalProductRequest.add_member(:description, Shapes::ShapeRef.new(shape: __stringMin0Max1024, location_name: "description"))
+    CreatePortalProductRequest.add_member(:display_name, Shapes::ShapeRef.new(shape: __stringMin1Max255, required: true, location_name: "displayName"))
+    CreatePortalProductRequest.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    CreatePortalProductRequest.struct_class = Types::CreatePortalProductRequest
+
+    CreatePortalProductRequestContent.add_member(:description, Shapes::ShapeRef.new(shape: __stringMin0Max1024, location_name: "description"))
+    CreatePortalProductRequestContent.add_member(:display_name, Shapes::ShapeRef.new(shape: __stringMin1Max255, required: true, location_name: "displayName"))
+    CreatePortalProductRequestContent.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    CreatePortalProductRequestContent.struct_class = Types::CreatePortalProductRequestContent
+
+    CreatePortalProductResponse.add_member(:description, Shapes::ShapeRef.new(shape: __stringMin0Max1024, location_name: "description"))
+    CreatePortalProductResponse.add_member(:display_name, Shapes::ShapeRef.new(shape: __stringMin1Max255, location_name: "displayName"))
+    CreatePortalProductResponse.add_member(:display_order, Shapes::ShapeRef.new(shape: DisplayOrder, location_name: "displayOrder"))
+    CreatePortalProductResponse.add_member(:last_modified, Shapes::ShapeRef.new(shape: __timestampIso8601, location_name: "lastModified"))
+    CreatePortalProductResponse.add_member(:portal_product_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, location_name: "portalProductArn"))
+    CreatePortalProductResponse.add_member(:portal_product_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, location_name: "portalProductId"))
+    CreatePortalProductResponse.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    CreatePortalProductResponse.struct_class = Types::CreatePortalProductResponse
+
+    CreatePortalProductResponseContent.add_member(:description, Shapes::ShapeRef.new(shape: __stringMin0Max1024, location_name: "description"))
+    CreatePortalProductResponseContent.add_member(:display_name, Shapes::ShapeRef.new(shape: __stringMin1Max255, required: true, location_name: "displayName"))
+    CreatePortalProductResponseContent.add_member(:display_order, Shapes::ShapeRef.new(shape: DisplayOrder, location_name: "displayOrder"))
+    CreatePortalProductResponseContent.add_member(:last_modified, Shapes::ShapeRef.new(shape: __timestampIso8601, required: true, location_name: "lastModified"))
+    CreatePortalProductResponseContent.add_member(:portal_product_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, required: true, location_name: "portalProductArn"))
+    CreatePortalProductResponseContent.add_member(:portal_product_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, required: true, location_name: "portalProductId"))
+    CreatePortalProductResponseContent.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    CreatePortalProductResponseContent.struct_class = Types::CreatePortalProductResponseContent
+
+    CreatePortalRequest.add_member(:authorization, Shapes::ShapeRef.new(shape: Authorization, required: true, location_name: "authorization"))
+    CreatePortalRequest.add_member(:endpoint_configuration, Shapes::ShapeRef.new(shape: EndpointConfigurationRequest, required: true, location_name: "endpointConfiguration"))
+    CreatePortalRequest.add_member(:included_portal_product_arns, Shapes::ShapeRef.new(shape: __listOf__stringMin20Max2048, location_name: "includedPortalProductArns"))
+    CreatePortalRequest.add_member(:logo_uri, Shapes::ShapeRef.new(shape: __stringMin0Max1092, location_name: "logoUri"))
+    CreatePortalRequest.add_member(:portal_content, Shapes::ShapeRef.new(shape: PortalContent, required: true, location_name: "portalContent"))
+    CreatePortalRequest.add_member(:rum_app_monitor_name, Shapes::ShapeRef.new(shape: __stringMin0Max255, location_name: "rumAppMonitorName"))
+    CreatePortalRequest.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    CreatePortalRequest.struct_class = Types::CreatePortalRequest
+
+    CreatePortalRequestContent.add_member(:authorization, Shapes::ShapeRef.new(shape: Authorization, required: true, location_name: "authorization"))
+    CreatePortalRequestContent.add_member(:endpoint_configuration, Shapes::ShapeRef.new(shape: EndpointConfigurationRequest, required: true, location_name: "endpointConfiguration"))
+    CreatePortalRequestContent.add_member(:included_portal_product_arns, Shapes::ShapeRef.new(shape: __listOf__stringMin20Max2048, location_name: "includedPortalProductArns"))
+    CreatePortalRequestContent.add_member(:logo_uri, Shapes::ShapeRef.new(shape: __stringMin0Max1092, location_name: "logoUri"))
+    CreatePortalRequestContent.add_member(:portal_content, Shapes::ShapeRef.new(shape: PortalContent, required: true, location_name: "portalContent"))
+    CreatePortalRequestContent.add_member(:rum_app_monitor_name, Shapes::ShapeRef.new(shape: __stringMin0Max255, location_name: "rumAppMonitorName"))
+    CreatePortalRequestContent.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    CreatePortalRequestContent.struct_class = Types::CreatePortalRequestContent
+
+    CreatePortalResponse.add_member(:authorization, Shapes::ShapeRef.new(shape: Authorization, location_name: "authorization"))
+    CreatePortalResponse.add_member(:endpoint_configuration, Shapes::ShapeRef.new(shape: EndpointConfigurationResponse, location_name: "endpointConfiguration"))
+    CreatePortalResponse.add_member(:included_portal_product_arns, Shapes::ShapeRef.new(shape: __listOf__stringMin20Max2048, location_name: "includedPortalProductArns"))
+    CreatePortalResponse.add_member(:last_modified, Shapes::ShapeRef.new(shape: __timestampIso8601, location_name: "lastModified"))
+    CreatePortalResponse.add_member(:last_published, Shapes::ShapeRef.new(shape: __timestampIso8601, location_name: "lastPublished"))
+    CreatePortalResponse.add_member(:last_published_description, Shapes::ShapeRef.new(shape: __stringMin0Max1024, location_name: "lastPublishedDescription"))
+    CreatePortalResponse.add_member(:portal_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, location_name: "portalArn"))
+    CreatePortalResponse.add_member(:portal_content, Shapes::ShapeRef.new(shape: PortalContent, location_name: "portalContent"))
+    CreatePortalResponse.add_member(:portal_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, location_name: "portalId"))
+    CreatePortalResponse.add_member(:publish_status, Shapes::ShapeRef.new(shape: PublishStatus, location_name: "publishStatus"))
+    CreatePortalResponse.add_member(:rum_app_monitor_name, Shapes::ShapeRef.new(shape: __stringMin0Max255, location_name: "rumAppMonitorName"))
+    CreatePortalResponse.add_member(:status_exception, Shapes::ShapeRef.new(shape: StatusException, location_name: "statusException"))
+    CreatePortalResponse.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    CreatePortalResponse.struct_class = Types::CreatePortalResponse
+
+    CreatePortalResponseContent.add_member(:authorization, Shapes::ShapeRef.new(shape: Authorization, required: true, location_name: "authorization"))
+    CreatePortalResponseContent.add_member(:endpoint_configuration, Shapes::ShapeRef.new(shape: EndpointConfigurationResponse, required: true, location_name: "endpointConfiguration"))
+    CreatePortalResponseContent.add_member(:included_portal_product_arns, Shapes::ShapeRef.new(shape: __listOf__stringMin20Max2048, required: true, location_name: "includedPortalProductArns"))
+    CreatePortalResponseContent.add_member(:last_modified, Shapes::ShapeRef.new(shape: __timestampIso8601, required: true, location_name: "lastModified"))
+    CreatePortalResponseContent.add_member(:last_published, Shapes::ShapeRef.new(shape: __timestampIso8601, location_name: "lastPublished"))
+    CreatePortalResponseContent.add_member(:last_published_description, Shapes::ShapeRef.new(shape: __stringMin0Max1024, location_name: "lastPublishedDescription"))
+    CreatePortalResponseContent.add_member(:portal_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, required: true, location_name: "portalArn"))
+    CreatePortalResponseContent.add_member(:portal_content, Shapes::ShapeRef.new(shape: PortalContent, required: true, location_name: "portalContent"))
+    CreatePortalResponseContent.add_member(:portal_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, required: true, location_name: "portalId"))
+    CreatePortalResponseContent.add_member(:publish_status, Shapes::ShapeRef.new(shape: PublishStatus, location_name: "publishStatus"))
+    CreatePortalResponseContent.add_member(:rum_app_monitor_name, Shapes::ShapeRef.new(shape: __stringMin0Max255, location_name: "rumAppMonitorName"))
+    CreatePortalResponseContent.add_member(:status_exception, Shapes::ShapeRef.new(shape: StatusException, location_name: "statusException"))
+    CreatePortalResponseContent.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    CreatePortalResponseContent.struct_class = Types::CreatePortalResponseContent
+
+    CreateProductPageRequest.add_member(:display_content, Shapes::ShapeRef.new(shape: DisplayContent, required: true, location_name: "displayContent"))
+    CreateProductPageRequest.add_member(:portal_product_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "portalProductId"))
+    CreateProductPageRequest.struct_class = Types::CreateProductPageRequest
+
+    CreateProductPageRequestContent.add_member(:display_content, Shapes::ShapeRef.new(shape: DisplayContent, required: true, location_name: "displayContent"))
+    CreateProductPageRequestContent.struct_class = Types::CreateProductPageRequestContent
+
+    CreateProductPageResponse.add_member(:display_content, Shapes::ShapeRef.new(shape: DisplayContent, location_name: "displayContent"))
+    CreateProductPageResponse.add_member(:last_modified, Shapes::ShapeRef.new(shape: __timestampIso8601, location_name: "lastModified"))
+    CreateProductPageResponse.add_member(:product_page_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, location_name: "productPageArn"))
+    CreateProductPageResponse.add_member(:product_page_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, location_name: "productPageId"))
+    CreateProductPageResponse.struct_class = Types::CreateProductPageResponse
+
+    CreateProductPageResponseContent.add_member(:display_content, Shapes::ShapeRef.new(shape: DisplayContent, location_name: "displayContent"))
+    CreateProductPageResponseContent.add_member(:last_modified, Shapes::ShapeRef.new(shape: __timestampIso8601, required: true, location_name: "lastModified"))
+    CreateProductPageResponseContent.add_member(:product_page_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, required: true, location_name: "productPageArn"))
+    CreateProductPageResponseContent.add_member(:product_page_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, required: true, location_name: "productPageId"))
+    CreateProductPageResponseContent.struct_class = Types::CreateProductPageResponseContent
+
+    CreateProductRestEndpointPageRequest.add_member(:display_content, Shapes::ShapeRef.new(shape: EndpointDisplayContent, location_name: "displayContent"))
+    CreateProductRestEndpointPageRequest.add_member(:portal_product_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "portalProductId"))
+    CreateProductRestEndpointPageRequest.add_member(:rest_endpoint_identifier, Shapes::ShapeRef.new(shape: RestEndpointIdentifier, required: true, location_name: "restEndpointIdentifier"))
+    CreateProductRestEndpointPageRequest.add_member(:try_it_state, Shapes::ShapeRef.new(shape: TryItState, location_name: "tryItState"))
+    CreateProductRestEndpointPageRequest.struct_class = Types::CreateProductRestEndpointPageRequest
+
+    CreateProductRestEndpointPageRequestContent.add_member(:display_content, Shapes::ShapeRef.new(shape: EndpointDisplayContent, location_name: "displayContent"))
+    CreateProductRestEndpointPageRequestContent.add_member(:rest_endpoint_identifier, Shapes::ShapeRef.new(shape: RestEndpointIdentifier, required: true, location_name: "restEndpointIdentifier"))
+    CreateProductRestEndpointPageRequestContent.add_member(:try_it_state, Shapes::ShapeRef.new(shape: TryItState, location_name: "tryItState"))
+    CreateProductRestEndpointPageRequestContent.struct_class = Types::CreateProductRestEndpointPageRequestContent
+
+    CreateProductRestEndpointPageResponse.add_member(:display_content, Shapes::ShapeRef.new(shape: EndpointDisplayContentResponse, location_name: "displayContent"))
+    CreateProductRestEndpointPageResponse.add_member(:last_modified, Shapes::ShapeRef.new(shape: __timestampIso8601, location_name: "lastModified"))
+    CreateProductRestEndpointPageResponse.add_member(:product_rest_endpoint_page_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, location_name: "productRestEndpointPageArn"))
+    CreateProductRestEndpointPageResponse.add_member(:product_rest_endpoint_page_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, location_name: "productRestEndpointPageId"))
+    CreateProductRestEndpointPageResponse.add_member(:rest_endpoint_identifier, Shapes::ShapeRef.new(shape: RestEndpointIdentifier, location_name: "restEndpointIdentifier"))
+    CreateProductRestEndpointPageResponse.add_member(:status, Shapes::ShapeRef.new(shape: Status, location_name: "status"))
+    CreateProductRestEndpointPageResponse.add_member(:status_exception, Shapes::ShapeRef.new(shape: StatusException, location_name: "statusException"))
+    CreateProductRestEndpointPageResponse.add_member(:try_it_state, Shapes::ShapeRef.new(shape: TryItState, location_name: "tryItState"))
+    CreateProductRestEndpointPageResponse.struct_class = Types::CreateProductRestEndpointPageResponse
+
+    CreateProductRestEndpointPageResponseContent.add_member(:display_content, Shapes::ShapeRef.new(shape: EndpointDisplayContentResponse, required: true, location_name: "displayContent"))
+    CreateProductRestEndpointPageResponseContent.add_member(:last_modified, Shapes::ShapeRef.new(shape: __timestampIso8601, required: true, location_name: "lastModified"))
+    CreateProductRestEndpointPageResponseContent.add_member(:product_rest_endpoint_page_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, required: true, location_name: "productRestEndpointPageArn"))
+    CreateProductRestEndpointPageResponseContent.add_member(:product_rest_endpoint_page_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, required: true, location_name: "productRestEndpointPageId"))
+    CreateProductRestEndpointPageResponseContent.add_member(:rest_endpoint_identifier, Shapes::ShapeRef.new(shape: RestEndpointIdentifier, required: true, location_name: "restEndpointIdentifier"))
+    CreateProductRestEndpointPageResponseContent.add_member(:status, Shapes::ShapeRef.new(shape: Status, required: true, location_name: "status"))
+    CreateProductRestEndpointPageResponseContent.add_member(:status_exception, Shapes::ShapeRef.new(shape: StatusException, location_name: "statusException"))
+    CreateProductRestEndpointPageResponseContent.add_member(:try_it_state, Shapes::ShapeRef.new(shape: TryItState, required: true, location_name: "tryItState"))
+    CreateProductRestEndpointPageResponseContent.struct_class = Types::CreateProductRestEndpointPageResponseContent
+
     CreateRouteInput.add_member(:api_key_required, Shapes::ShapeRef.new(shape: __boolean, location_name: "apiKeyRequired"))
     CreateRouteInput.add_member(:authorization_scopes, Shapes::ShapeRef.new(shape: AuthorizationScopes, location_name: "authorizationScopes"))
     CreateRouteInput.add_member(:authorization_type, Shapes::ShapeRef.new(shape: AuthorizationType, location_name: "authorizationType"))
@@ -663,6 +976,20 @@ module Aws::ApiGatewayV2
     CreateRouteResult.add_member(:route_response_selection_expression, Shapes::ShapeRef.new(shape: SelectionExpression, location_name: "routeResponseSelectionExpression"))
     CreateRouteResult.add_member(:target, Shapes::ShapeRef.new(shape: StringWithLengthBetween1And128, location_name: "target"))
     CreateRouteResult.struct_class = Types::CreateRouteResult
+
+    CreateRoutingRuleRequest.add_member(:actions, Shapes::ShapeRef.new(shape: __listOfRoutingRuleAction, required: true, location_name: "actions"))
+    CreateRoutingRuleRequest.add_member(:conditions, Shapes::ShapeRef.new(shape: __listOfRoutingRuleCondition, required: true, location_name: "conditions"))
+    CreateRoutingRuleRequest.add_member(:domain_name, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "domainName"))
+    CreateRoutingRuleRequest.add_member(:domain_name_id, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "domainNameId"))
+    CreateRoutingRuleRequest.add_member(:priority, Shapes::ShapeRef.new(shape: RoutingRulePriority, required: true, location_name: "priority"))
+    CreateRoutingRuleRequest.struct_class = Types::CreateRoutingRuleRequest
+
+    CreateRoutingRuleResponse.add_member(:actions, Shapes::ShapeRef.new(shape: __listOfRoutingRuleAction, location_name: "actions"))
+    CreateRoutingRuleResponse.add_member(:conditions, Shapes::ShapeRef.new(shape: __listOfRoutingRuleCondition, location_name: "conditions"))
+    CreateRoutingRuleResponse.add_member(:priority, Shapes::ShapeRef.new(shape: RoutingRulePriority, location_name: "priority"))
+    CreateRoutingRuleResponse.add_member(:routing_rule_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "routingRuleArn"))
+    CreateRoutingRuleResponse.add_member(:routing_rule_id, Shapes::ShapeRef.new(shape: Id, location_name: "routingRuleId"))
+    CreateRoutingRuleResponse.struct_class = Types::CreateRoutingRuleResponse
 
     CreateStageInput.add_member(:access_log_settings, Shapes::ShapeRef.new(shape: AccessLogSettings, location_name: "accessLogSettings"))
     CreateStageInput.add_member(:auto_deploy, Shapes::ShapeRef.new(shape: __boolean, location_name: "autoDeploy"))
@@ -728,6 +1055,14 @@ module Aws::ApiGatewayV2
     CreateVpcLinkResponse.add_member(:vpc_link_version, Shapes::ShapeRef.new(shape: VpcLinkVersion, location_name: "vpcLinkVersion"))
     CreateVpcLinkResponse.struct_class = Types::CreateVpcLinkResponse
 
+    CustomColors.add_member(:accent_color, Shapes::ShapeRef.new(shape: __stringMin1Max16, required: true, location_name: "accentColor"))
+    CustomColors.add_member(:background_color, Shapes::ShapeRef.new(shape: __stringMin1Max16, required: true, location_name: "backgroundColor"))
+    CustomColors.add_member(:error_validation_color, Shapes::ShapeRef.new(shape: __stringMin1Max16, required: true, location_name: "errorValidationColor"))
+    CustomColors.add_member(:header_color, Shapes::ShapeRef.new(shape: __stringMin1Max16, required: true, location_name: "headerColor"))
+    CustomColors.add_member(:navigation_color, Shapes::ShapeRef.new(shape: __stringMin1Max16, required: true, location_name: "navigationColor"))
+    CustomColors.add_member(:text_color, Shapes::ShapeRef.new(shape: __stringMin1Max16, required: true, location_name: "textColor"))
+    CustomColors.struct_class = Types::CustomColors
+
     DeleteAccessLogSettingsRequest.add_member(:api_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "apiId"))
     DeleteAccessLogSettingsRequest.add_member(:stage_name, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "stageName"))
     DeleteAccessLogSettingsRequest.struct_class = Types::DeleteAccessLogSettingsRequest
@@ -766,6 +1101,23 @@ module Aws::ApiGatewayV2
     DeleteModelRequest.add_member(:model_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "modelId"))
     DeleteModelRequest.struct_class = Types::DeleteModelRequest
 
+    DeletePortalProductRequest.add_member(:portal_product_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "portalProductId"))
+    DeletePortalProductRequest.struct_class = Types::DeletePortalProductRequest
+
+    DeletePortalProductSharingPolicyRequest.add_member(:portal_product_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "portalProductId"))
+    DeletePortalProductSharingPolicyRequest.struct_class = Types::DeletePortalProductSharingPolicyRequest
+
+    DeletePortalRequest.add_member(:portal_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "portalId"))
+    DeletePortalRequest.struct_class = Types::DeletePortalRequest
+
+    DeleteProductPageRequest.add_member(:portal_product_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "portalProductId"))
+    DeleteProductPageRequest.add_member(:product_page_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "productPageId"))
+    DeleteProductPageRequest.struct_class = Types::DeleteProductPageRequest
+
+    DeleteProductRestEndpointPageRequest.add_member(:portal_product_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "portalProductId"))
+    DeleteProductRestEndpointPageRequest.add_member(:product_rest_endpoint_page_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "productRestEndpointPageId"))
+    DeleteProductRestEndpointPageRequest.struct_class = Types::DeleteProductRestEndpointPageRequest
+
     DeleteRouteRequest.add_member(:api_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "apiId"))
     DeleteRouteRequest.add_member(:route_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "routeId"))
     DeleteRouteRequest.struct_class = Types::DeleteRouteRequest
@@ -784,6 +1136,11 @@ module Aws::ApiGatewayV2
     DeleteRouteSettingsRequest.add_member(:route_key, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "routeKey"))
     DeleteRouteSettingsRequest.add_member(:stage_name, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "stageName"))
     DeleteRouteSettingsRequest.struct_class = Types::DeleteRouteSettingsRequest
+
+    DeleteRoutingRuleRequest.add_member(:domain_name, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "domainName"))
+    DeleteRoutingRuleRequest.add_member(:domain_name_id, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "domainNameId"))
+    DeleteRoutingRuleRequest.add_member(:routing_rule_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "routingRuleId"))
+    DeleteRoutingRuleRequest.struct_class = Types::DeleteRoutingRuleRequest
 
     DeleteStageRequest.add_member(:api_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "apiId"))
     DeleteStageRequest.add_member(:stage_name, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "stageName"))
@@ -806,10 +1163,29 @@ module Aws::ApiGatewayV2
     Deployments.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
     Deployments.struct_class = Types::Deployments
 
+    DisablePortalRequest.add_member(:portal_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "portalId"))
+    DisablePortalRequest.struct_class = Types::DisablePortalRequest
+
+    DisplayContent.add_member(:body, Shapes::ShapeRef.new(shape: __stringMin1Max32768, required: true, location_name: "body"))
+    DisplayContent.add_member(:title, Shapes::ShapeRef.new(shape: __stringMin1Max255, required: true, location_name: "title"))
+    DisplayContent.struct_class = Types::DisplayContent
+
+    DisplayContentOverrides.add_member(:body, Shapes::ShapeRef.new(shape: __stringMin1Max32768, location_name: "body"))
+    DisplayContentOverrides.add_member(:endpoint, Shapes::ShapeRef.new(shape: __stringMin1Max1024, location_name: "endpoint"))
+    DisplayContentOverrides.add_member(:operation_name, Shapes::ShapeRef.new(shape: __stringMin1Max255, location_name: "operationName"))
+    DisplayContentOverrides.struct_class = Types::DisplayContentOverrides
+
+    DisplayOrder.add_member(:contents, Shapes::ShapeRef.new(shape: __listOfSection, location_name: "contents"))
+    DisplayOrder.add_member(:overview_page_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, location_name: "overviewPageArn"))
+    DisplayOrder.add_member(:product_page_arns, Shapes::ShapeRef.new(shape: __listOf__stringMin20Max2048, location_name: "productPageArns"))
+    DisplayOrder.struct_class = Types::DisplayOrder
+
     DomainName.add_member(:api_mapping_selection_expression, Shapes::ShapeRef.new(shape: SelectionExpression, location_name: "apiMappingSelectionExpression"))
     DomainName.add_member(:domain_name, Shapes::ShapeRef.new(shape: StringWithLengthBetween1And512, required: true, location_name: "domainName"))
+    DomainName.add_member(:domain_name_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "domainNameArn"))
     DomainName.add_member(:domain_name_configurations, Shapes::ShapeRef.new(shape: DomainNameConfigurations, location_name: "domainNameConfigurations"))
     DomainName.add_member(:mutual_tls_authentication, Shapes::ShapeRef.new(shape: MutualTlsAuthentication, location_name: "mutualTlsAuthentication"))
+    DomainName.add_member(:routing_mode, Shapes::ShapeRef.new(shape: RoutingMode, location_name: "routingMode"))
     DomainName.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
     DomainName.struct_class = Types::DomainName
 
@@ -821,6 +1197,7 @@ module Aws::ApiGatewayV2
     DomainNameConfiguration.add_member(:domain_name_status_message, Shapes::ShapeRef.new(shape: __string, location_name: "domainNameStatusMessage"))
     DomainNameConfiguration.add_member(:endpoint_type, Shapes::ShapeRef.new(shape: EndpointType, location_name: "endpointType"))
     DomainNameConfiguration.add_member(:hosted_zone_id, Shapes::ShapeRef.new(shape: __string, location_name: "hostedZoneId"))
+    DomainNameConfiguration.add_member(:ip_address_type, Shapes::ShapeRef.new(shape: IpAddressType, location_name: "ipAddressType"))
     DomainNameConfiguration.add_member(:security_policy, Shapes::ShapeRef.new(shape: SecurityPolicy, location_name: "securityPolicy"))
     DomainNameConfiguration.add_member(:ownership_verification_certificate_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "ownershipVerificationCertificateArn"))
     DomainNameConfiguration.struct_class = Types::DomainNameConfiguration
@@ -831,11 +1208,30 @@ module Aws::ApiGatewayV2
     DomainNames.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
     DomainNames.struct_class = Types::DomainNames
 
+    EndpointConfigurationRequest.add_member(:acm_managed, Shapes::ShapeRef.new(shape: ACMManaged, location_name: "acmManaged"))
+    EndpointConfigurationRequest.add_member(:none, Shapes::ShapeRef.new(shape: None, location_name: "none"))
+    EndpointConfigurationRequest.struct_class = Types::EndpointConfigurationRequest
+
+    EndpointConfigurationResponse.add_member(:certificate_arn, Shapes::ShapeRef.new(shape: __stringMin10Max2048, location_name: "certificateArn"))
+    EndpointConfigurationResponse.add_member(:domain_name, Shapes::ShapeRef.new(shape: __stringMin3Max256, location_name: "domainName"))
+    EndpointConfigurationResponse.add_member(:portal_default_domain_name, Shapes::ShapeRef.new(shape: __stringMin3Max256, required: true, location_name: "portalDefaultDomainName"))
+    EndpointConfigurationResponse.add_member(:portal_domain_hosted_zone_id, Shapes::ShapeRef.new(shape: __stringMin1Max64, required: true, location_name: "portalDomainHostedZoneId"))
+    EndpointConfigurationResponse.struct_class = Types::EndpointConfigurationResponse
+
+    EndpointDisplayContent.add_member(:none, Shapes::ShapeRef.new(shape: None, location_name: "none"))
+    EndpointDisplayContent.add_member(:overrides, Shapes::ShapeRef.new(shape: DisplayContentOverrides, location_name: "overrides"))
+    EndpointDisplayContent.struct_class = Types::EndpointDisplayContent
+
+    EndpointDisplayContentResponse.add_member(:body, Shapes::ShapeRef.new(shape: __stringMin1Max32768, location_name: "body"))
+    EndpointDisplayContentResponse.add_member(:endpoint, Shapes::ShapeRef.new(shape: __stringMin1Max1024, required: true, location_name: "endpoint"))
+    EndpointDisplayContentResponse.add_member(:operation_name, Shapes::ShapeRef.new(shape: __stringMin1Max255, location_name: "operationName"))
+    EndpointDisplayContentResponse.struct_class = Types::EndpointDisplayContentResponse
+
     ExportApiRequest.add_member(:api_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "apiId"))
     ExportApiRequest.add_member(:export_version, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "exportVersion"))
     ExportApiRequest.add_member(:include_extensions, Shapes::ShapeRef.new(shape: __boolean, location: "querystring", location_name: "includeExtensions"))
-    ExportApiRequest.add_member(:output_type, Shapes::ShapeRef.new(shape: __string, required: true, location: "querystring", location_name: "outputType", metadata: {"enum"=>["YAML", "JSON"]}))
-    ExportApiRequest.add_member(:specification, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "specification", metadata: {"enum"=>["OAS30"]}))
+    ExportApiRequest.add_member(:output_type, Shapes::ShapeRef.new(shape: __string, required: true, location: "querystring", location_name: "outputType", metadata: {"enum" => ["YAML", "JSON"]}))
+    ExportApiRequest.add_member(:specification, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "specification", metadata: {"enum" => ["OAS30"]}))
     ExportApiRequest.add_member(:stage_name, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "stageName"))
     ExportApiRequest.struct_class = Types::ExportApiRequest
 
@@ -876,6 +1272,7 @@ module Aws::ApiGatewayV2
     GetApiResponse.add_member(:disable_schema_validation, Shapes::ShapeRef.new(shape: __boolean, location_name: "disableSchemaValidation"))
     GetApiResponse.add_member(:disable_execute_api_endpoint, Shapes::ShapeRef.new(shape: __boolean, location_name: "disableExecuteApiEndpoint"))
     GetApiResponse.add_member(:import_info, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "importInfo"))
+    GetApiResponse.add_member(:ip_address_type, Shapes::ShapeRef.new(shape: IpAddressType, location_name: "ipAddressType"))
     GetApiResponse.add_member(:name, Shapes::ShapeRef.new(shape: StringWithLengthBetween1And128, location_name: "name"))
     GetApiResponse.add_member(:protocol_type, Shapes::ShapeRef.new(shape: ProtocolType, location_name: "protocolType"))
     GetApiResponse.add_member(:route_selection_expression, Shapes::ShapeRef.new(shape: SelectionExpression, location_name: "routeSelectionExpression"))
@@ -944,8 +1341,10 @@ module Aws::ApiGatewayV2
 
     GetDomainNameResponse.add_member(:api_mapping_selection_expression, Shapes::ShapeRef.new(shape: SelectionExpression, location_name: "apiMappingSelectionExpression"))
     GetDomainNameResponse.add_member(:domain_name, Shapes::ShapeRef.new(shape: StringWithLengthBetween1And512, location_name: "domainName"))
+    GetDomainNameResponse.add_member(:domain_name_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "domainNameArn"))
     GetDomainNameResponse.add_member(:domain_name_configurations, Shapes::ShapeRef.new(shape: DomainNameConfigurations, location_name: "domainNameConfigurations"))
     GetDomainNameResponse.add_member(:mutual_tls_authentication, Shapes::ShapeRef.new(shape: MutualTlsAuthentication, location_name: "mutualTlsAuthentication"))
+    GetDomainNameResponse.add_member(:routing_mode, Shapes::ShapeRef.new(shape: RoutingMode, location_name: "routingMode"))
     GetDomainNameResponse.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
     GetDomainNameResponse.struct_class = Types::GetDomainNameResponse
 
@@ -1042,6 +1441,119 @@ module Aws::ApiGatewayV2
     GetModelsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
     GetModelsResponse.struct_class = Types::GetModelsResponse
 
+    GetPortalProductRequest.add_member(:portal_product_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "portalProductId"))
+    GetPortalProductRequest.add_member(:resource_owner_account_id, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "resourceOwnerAccountId"))
+    GetPortalProductRequest.struct_class = Types::GetPortalProductRequest
+
+    GetPortalProductResponse.add_member(:description, Shapes::ShapeRef.new(shape: __stringMin0Max1024, location_name: "description"))
+    GetPortalProductResponse.add_member(:display_name, Shapes::ShapeRef.new(shape: __stringMin1Max255, location_name: "displayName"))
+    GetPortalProductResponse.add_member(:display_order, Shapes::ShapeRef.new(shape: DisplayOrder, location_name: "displayOrder"))
+    GetPortalProductResponse.add_member(:last_modified, Shapes::ShapeRef.new(shape: __timestampIso8601, location_name: "lastModified"))
+    GetPortalProductResponse.add_member(:portal_product_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, location_name: "portalProductArn"))
+    GetPortalProductResponse.add_member(:portal_product_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, location_name: "portalProductId"))
+    GetPortalProductResponse.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    GetPortalProductResponse.struct_class = Types::GetPortalProductResponse
+
+    GetPortalProductResponseContent.add_member(:description, Shapes::ShapeRef.new(shape: __stringMin0Max1024, required: true, location_name: "description"))
+    GetPortalProductResponseContent.add_member(:display_name, Shapes::ShapeRef.new(shape: __stringMin1Max255, required: true, location_name: "displayName"))
+    GetPortalProductResponseContent.add_member(:display_order, Shapes::ShapeRef.new(shape: DisplayOrder, required: true, location_name: "displayOrder"))
+    GetPortalProductResponseContent.add_member(:last_modified, Shapes::ShapeRef.new(shape: __timestampIso8601, required: true, location_name: "lastModified"))
+    GetPortalProductResponseContent.add_member(:portal_product_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, required: true, location_name: "portalProductArn"))
+    GetPortalProductResponseContent.add_member(:portal_product_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, required: true, location_name: "portalProductId"))
+    GetPortalProductResponseContent.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    GetPortalProductResponseContent.struct_class = Types::GetPortalProductResponseContent
+
+    GetPortalProductSharingPolicyRequest.add_member(:portal_product_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "portalProductId"))
+    GetPortalProductSharingPolicyRequest.struct_class = Types::GetPortalProductSharingPolicyRequest
+
+    GetPortalProductSharingPolicyResponse.add_member(:policy_document, Shapes::ShapeRef.new(shape: __stringMin1Max307200, location_name: "policyDocument"))
+    GetPortalProductSharingPolicyResponse.add_member(:portal_product_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, location_name: "portalProductId"))
+    GetPortalProductSharingPolicyResponse.struct_class = Types::GetPortalProductSharingPolicyResponse
+
+    GetPortalProductSharingPolicyResponseContent.add_member(:policy_document, Shapes::ShapeRef.new(shape: __stringMin1Max307200, required: true, location_name: "policyDocument"))
+    GetPortalProductSharingPolicyResponseContent.add_member(:portal_product_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, required: true, location_name: "portalProductId"))
+    GetPortalProductSharingPolicyResponseContent.struct_class = Types::GetPortalProductSharingPolicyResponseContent
+
+    GetPortalRequest.add_member(:portal_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "portalId"))
+    GetPortalRequest.struct_class = Types::GetPortalRequest
+
+    GetPortalResponse.add_member(:authorization, Shapes::ShapeRef.new(shape: Authorization, location_name: "authorization"))
+    GetPortalResponse.add_member(:endpoint_configuration, Shapes::ShapeRef.new(shape: EndpointConfigurationResponse, location_name: "endpointConfiguration"))
+    GetPortalResponse.add_member(:included_portal_product_arns, Shapes::ShapeRef.new(shape: __listOf__stringMin20Max2048, location_name: "includedPortalProductArns"))
+    GetPortalResponse.add_member(:last_modified, Shapes::ShapeRef.new(shape: __timestampIso8601, location_name: "lastModified"))
+    GetPortalResponse.add_member(:last_published, Shapes::ShapeRef.new(shape: __timestampIso8601, location_name: "lastPublished"))
+    GetPortalResponse.add_member(:last_published_description, Shapes::ShapeRef.new(shape: __stringMin0Max1024, location_name: "lastPublishedDescription"))
+    GetPortalResponse.add_member(:portal_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, location_name: "portalArn"))
+    GetPortalResponse.add_member(:portal_content, Shapes::ShapeRef.new(shape: PortalContent, location_name: "portalContent"))
+    GetPortalResponse.add_member(:portal_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, location_name: "portalId"))
+    GetPortalResponse.add_member(:preview, Shapes::ShapeRef.new(shape: Preview, location_name: "preview"))
+    GetPortalResponse.add_member(:publish_status, Shapes::ShapeRef.new(shape: PublishStatus, location_name: "publishStatus"))
+    GetPortalResponse.add_member(:rum_app_monitor_name, Shapes::ShapeRef.new(shape: __stringMin0Max255, location_name: "rumAppMonitorName"))
+    GetPortalResponse.add_member(:status_exception, Shapes::ShapeRef.new(shape: StatusException, location_name: "statusException"))
+    GetPortalResponse.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    GetPortalResponse.struct_class = Types::GetPortalResponse
+
+    GetPortalResponseContent.add_member(:authorization, Shapes::ShapeRef.new(shape: Authorization, required: true, location_name: "authorization"))
+    GetPortalResponseContent.add_member(:endpoint_configuration, Shapes::ShapeRef.new(shape: EndpointConfigurationResponse, required: true, location_name: "endpointConfiguration"))
+    GetPortalResponseContent.add_member(:included_portal_product_arns, Shapes::ShapeRef.new(shape: __listOf__stringMin20Max2048, required: true, location_name: "includedPortalProductArns"))
+    GetPortalResponseContent.add_member(:last_modified, Shapes::ShapeRef.new(shape: __timestampIso8601, required: true, location_name: "lastModified"))
+    GetPortalResponseContent.add_member(:last_published, Shapes::ShapeRef.new(shape: __timestampIso8601, location_name: "lastPublished"))
+    GetPortalResponseContent.add_member(:last_published_description, Shapes::ShapeRef.new(shape: __stringMin0Max1024, location_name: "lastPublishedDescription"))
+    GetPortalResponseContent.add_member(:portal_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, required: true, location_name: "portalArn"))
+    GetPortalResponseContent.add_member(:portal_content, Shapes::ShapeRef.new(shape: PortalContent, required: true, location_name: "portalContent"))
+    GetPortalResponseContent.add_member(:portal_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, required: true, location_name: "portalId"))
+    GetPortalResponseContent.add_member(:preview, Shapes::ShapeRef.new(shape: Preview, location_name: "preview"))
+    GetPortalResponseContent.add_member(:publish_status, Shapes::ShapeRef.new(shape: PublishStatus, location_name: "publishStatus"))
+    GetPortalResponseContent.add_member(:rum_app_monitor_name, Shapes::ShapeRef.new(shape: __stringMin0Max255, location_name: "rumAppMonitorName"))
+    GetPortalResponseContent.add_member(:status_exception, Shapes::ShapeRef.new(shape: StatusException, location_name: "statusException"))
+    GetPortalResponseContent.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    GetPortalResponseContent.struct_class = Types::GetPortalResponseContent
+
+    GetProductPageRequest.add_member(:portal_product_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "portalProductId"))
+    GetProductPageRequest.add_member(:product_page_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "productPageId"))
+    GetProductPageRequest.add_member(:resource_owner_account_id, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "resourceOwnerAccountId"))
+    GetProductPageRequest.struct_class = Types::GetProductPageRequest
+
+    GetProductPageResponse.add_member(:display_content, Shapes::ShapeRef.new(shape: DisplayContent, location_name: "displayContent"))
+    GetProductPageResponse.add_member(:last_modified, Shapes::ShapeRef.new(shape: __timestampIso8601, location_name: "lastModified"))
+    GetProductPageResponse.add_member(:product_page_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, location_name: "productPageArn"))
+    GetProductPageResponse.add_member(:product_page_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, location_name: "productPageId"))
+    GetProductPageResponse.struct_class = Types::GetProductPageResponse
+
+    GetProductPageResponseContent.add_member(:display_content, Shapes::ShapeRef.new(shape: DisplayContent, required: true, location_name: "displayContent"))
+    GetProductPageResponseContent.add_member(:last_modified, Shapes::ShapeRef.new(shape: __timestampIso8601, required: true, location_name: "lastModified"))
+    GetProductPageResponseContent.add_member(:product_page_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, required: true, location_name: "productPageArn"))
+    GetProductPageResponseContent.add_member(:product_page_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, required: true, location_name: "productPageId"))
+    GetProductPageResponseContent.struct_class = Types::GetProductPageResponseContent
+
+    GetProductRestEndpointPageRequest.add_member(:include_raw_display_content, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "includeRawDisplayContent"))
+    GetProductRestEndpointPageRequest.add_member(:portal_product_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "portalProductId"))
+    GetProductRestEndpointPageRequest.add_member(:product_rest_endpoint_page_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "productRestEndpointPageId"))
+    GetProductRestEndpointPageRequest.add_member(:resource_owner_account_id, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "resourceOwnerAccountId"))
+    GetProductRestEndpointPageRequest.struct_class = Types::GetProductRestEndpointPageRequest
+
+    GetProductRestEndpointPageResponse.add_member(:display_content, Shapes::ShapeRef.new(shape: EndpointDisplayContentResponse, location_name: "displayContent"))
+    GetProductRestEndpointPageResponse.add_member(:last_modified, Shapes::ShapeRef.new(shape: __timestampIso8601, location_name: "lastModified"))
+    GetProductRestEndpointPageResponse.add_member(:product_rest_endpoint_page_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, location_name: "productRestEndpointPageArn"))
+    GetProductRestEndpointPageResponse.add_member(:product_rest_endpoint_page_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, location_name: "productRestEndpointPageId"))
+    GetProductRestEndpointPageResponse.add_member(:raw_display_content, Shapes::ShapeRef.new(shape: __string, location_name: "rawDisplayContent"))
+    GetProductRestEndpointPageResponse.add_member(:rest_endpoint_identifier, Shapes::ShapeRef.new(shape: RestEndpointIdentifier, location_name: "restEndpointIdentifier"))
+    GetProductRestEndpointPageResponse.add_member(:status, Shapes::ShapeRef.new(shape: Status, location_name: "status"))
+    GetProductRestEndpointPageResponse.add_member(:status_exception, Shapes::ShapeRef.new(shape: StatusException, location_name: "statusException"))
+    GetProductRestEndpointPageResponse.add_member(:try_it_state, Shapes::ShapeRef.new(shape: TryItState, location_name: "tryItState"))
+    GetProductRestEndpointPageResponse.struct_class = Types::GetProductRestEndpointPageResponse
+
+    GetProductRestEndpointPageResponseContent.add_member(:display_content, Shapes::ShapeRef.new(shape: EndpointDisplayContentResponse, required: true, location_name: "displayContent"))
+    GetProductRestEndpointPageResponseContent.add_member(:last_modified, Shapes::ShapeRef.new(shape: __timestampIso8601, required: true, location_name: "lastModified"))
+    GetProductRestEndpointPageResponseContent.add_member(:product_rest_endpoint_page_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, required: true, location_name: "productRestEndpointPageArn"))
+    GetProductRestEndpointPageResponseContent.add_member(:product_rest_endpoint_page_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, required: true, location_name: "productRestEndpointPageId"))
+    GetProductRestEndpointPageResponseContent.add_member(:raw_display_content, Shapes::ShapeRef.new(shape: __string, location_name: "rawDisplayContent"))
+    GetProductRestEndpointPageResponseContent.add_member(:rest_endpoint_identifier, Shapes::ShapeRef.new(shape: RestEndpointIdentifier, required: true, location_name: "restEndpointIdentifier"))
+    GetProductRestEndpointPageResponseContent.add_member(:status, Shapes::ShapeRef.new(shape: Status, required: true, location_name: "status"))
+    GetProductRestEndpointPageResponseContent.add_member(:status_exception, Shapes::ShapeRef.new(shape: StatusException, location_name: "statusException"))
+    GetProductRestEndpointPageResponseContent.add_member(:try_it_state, Shapes::ShapeRef.new(shape: TryItState, required: true, location_name: "tryItState"))
+    GetProductRestEndpointPageResponseContent.struct_class = Types::GetProductRestEndpointPageResponseContent
+
     GetRouteRequest.add_member(:api_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "apiId"))
     GetRouteRequest.add_member(:route_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "routeId"))
     GetRouteRequest.struct_class = Types::GetRouteRequest
@@ -1091,6 +1603,18 @@ module Aws::ApiGatewayV2
     GetRoutesResponse.add_member(:items, Shapes::ShapeRef.new(shape: __listOfRoute, location_name: "items"))
     GetRoutesResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
     GetRoutesResponse.struct_class = Types::GetRoutesResponse
+
+    GetRoutingRuleRequest.add_member(:domain_name, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "domainName"))
+    GetRoutingRuleRequest.add_member(:domain_name_id, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "domainNameId"))
+    GetRoutingRuleRequest.add_member(:routing_rule_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "routingRuleId"))
+    GetRoutingRuleRequest.struct_class = Types::GetRoutingRuleRequest
+
+    GetRoutingRuleResponse.add_member(:actions, Shapes::ShapeRef.new(shape: __listOfRoutingRuleAction, location_name: "actions"))
+    GetRoutingRuleResponse.add_member(:conditions, Shapes::ShapeRef.new(shape: __listOfRoutingRuleCondition, location_name: "conditions"))
+    GetRoutingRuleResponse.add_member(:priority, Shapes::ShapeRef.new(shape: RoutingRulePriority, location_name: "priority"))
+    GetRoutingRuleResponse.add_member(:routing_rule_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "routingRuleArn"))
+    GetRoutingRuleResponse.add_member(:routing_rule_id, Shapes::ShapeRef.new(shape: Id, location_name: "routingRuleId"))
+    GetRoutingRuleResponse.struct_class = Types::GetRoutingRuleResponse
 
     GetStageRequest.add_member(:api_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "apiId"))
     GetStageRequest.add_member(:stage_name, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "stageName"))
@@ -1149,6 +1673,12 @@ module Aws::ApiGatewayV2
     GetVpcLinksResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
     GetVpcLinksResponse.struct_class = Types::GetVpcLinksResponse
 
+    IdentifierParts.add_member(:method, Shapes::ShapeRef.new(shape: __stringMin1Max20, required: true, location_name: "method"))
+    IdentifierParts.add_member(:path, Shapes::ShapeRef.new(shape: __stringMin1Max4096, required: true, location_name: "path"))
+    IdentifierParts.add_member(:rest_api_id, Shapes::ShapeRef.new(shape: __stringMin1Max50, required: true, location_name: "restApiId"))
+    IdentifierParts.add_member(:stage, Shapes::ShapeRef.new(shape: __stringMin1Max128, required: true, location_name: "stage"))
+    IdentifierParts.struct_class = Types::IdentifierParts
+
     IdentitySourceList.member = Shapes::ShapeRef.new(shape: __string)
 
     ImportApiInput.add_member(:body, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "body"))
@@ -1169,6 +1699,7 @@ module Aws::ApiGatewayV2
     ImportApiResponse.add_member(:disable_schema_validation, Shapes::ShapeRef.new(shape: __boolean, location_name: "disableSchemaValidation"))
     ImportApiResponse.add_member(:disable_execute_api_endpoint, Shapes::ShapeRef.new(shape: __boolean, location_name: "disableExecuteApiEndpoint"))
     ImportApiResponse.add_member(:import_info, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "importInfo"))
+    ImportApiResponse.add_member(:ip_address_type, Shapes::ShapeRef.new(shape: IpAddressType, location_name: "ipAddressType"))
     ImportApiResponse.add_member(:name, Shapes::ShapeRef.new(shape: StringWithLengthBetween1And128, location_name: "name"))
     ImportApiResponse.add_member(:protocol_type, Shapes::ShapeRef.new(shape: ProtocolType, location_name: "protocolType"))
     ImportApiResponse.add_member(:route_selection_expression, Shapes::ShapeRef.new(shape: SelectionExpression, location_name: "routeSelectionExpression"))
@@ -1226,6 +1757,73 @@ module Aws::ApiGatewayV2
     LimitExceededException.add_member(:message, Shapes::ShapeRef.new(shape: __string, location_name: "message"))
     LimitExceededException.struct_class = Types::LimitExceededException
 
+    LimitExceededExceptionResponseContent.add_member(:limit_type, Shapes::ShapeRef.new(shape: __string, location_name: "limitType"))
+    LimitExceededExceptionResponseContent.add_member(:message, Shapes::ShapeRef.new(shape: __string, location_name: "message"))
+    LimitExceededExceptionResponseContent.struct_class = Types::LimitExceededExceptionResponseContent
+
+    ListPortalProductsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "maxResults"))
+    ListPortalProductsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "nextToken"))
+    ListPortalProductsRequest.add_member(:resource_owner, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "resourceOwner"))
+    ListPortalProductsRequest.struct_class = Types::ListPortalProductsRequest
+
+    ListPortalProductsResponse.add_member(:items, Shapes::ShapeRef.new(shape: __listOfPortalProductSummary, location_name: "items"))
+    ListPortalProductsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: __stringMin1Max2048, location_name: "nextToken"))
+    ListPortalProductsResponse.struct_class = Types::ListPortalProductsResponse
+
+    ListPortalProductsResponseContent.add_member(:items, Shapes::ShapeRef.new(shape: __listOfPortalProductSummary, location_name: "items"))
+    ListPortalProductsResponseContent.add_member(:next_token, Shapes::ShapeRef.new(shape: __stringMin1Max2048, location_name: "nextToken"))
+    ListPortalProductsResponseContent.struct_class = Types::ListPortalProductsResponseContent
+
+    ListPortalsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "maxResults"))
+    ListPortalsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "nextToken"))
+    ListPortalsRequest.struct_class = Types::ListPortalsRequest
+
+    ListPortalsResponse.add_member(:items, Shapes::ShapeRef.new(shape: __listOfPortalSummary, location_name: "items"))
+    ListPortalsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: __stringMin1Max2048, location_name: "nextToken"))
+    ListPortalsResponse.struct_class = Types::ListPortalsResponse
+
+    ListPortalsResponseContent.add_member(:items, Shapes::ShapeRef.new(shape: __listOfPortalSummary, location_name: "items"))
+    ListPortalsResponseContent.add_member(:next_token, Shapes::ShapeRef.new(shape: __stringMin1Max2048, location_name: "nextToken"))
+    ListPortalsResponseContent.struct_class = Types::ListPortalsResponseContent
+
+    ListProductPagesRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "maxResults"))
+    ListProductPagesRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "nextToken"))
+    ListProductPagesRequest.add_member(:portal_product_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "portalProductId"))
+    ListProductPagesRequest.add_member(:resource_owner_account_id, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "resourceOwnerAccountId"))
+    ListProductPagesRequest.struct_class = Types::ListProductPagesRequest
+
+    ListProductPagesResponse.add_member(:items, Shapes::ShapeRef.new(shape: __listOfProductPageSummaryNoBody, location_name: "items"))
+    ListProductPagesResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: __stringMin1Max2048, location_name: "nextToken"))
+    ListProductPagesResponse.struct_class = Types::ListProductPagesResponse
+
+    ListProductPagesResponseContent.add_member(:items, Shapes::ShapeRef.new(shape: __listOfProductPageSummaryNoBody, required: true, location_name: "items"))
+    ListProductPagesResponseContent.add_member(:next_token, Shapes::ShapeRef.new(shape: __stringMin1Max2048, location_name: "nextToken"))
+    ListProductPagesResponseContent.struct_class = Types::ListProductPagesResponseContent
+
+    ListProductRestEndpointPagesRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "maxResults"))
+    ListProductRestEndpointPagesRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "nextToken"))
+    ListProductRestEndpointPagesRequest.add_member(:portal_product_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "portalProductId"))
+    ListProductRestEndpointPagesRequest.add_member(:resource_owner_account_id, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "resourceOwnerAccountId"))
+    ListProductRestEndpointPagesRequest.struct_class = Types::ListProductRestEndpointPagesRequest
+
+    ListProductRestEndpointPagesResponse.add_member(:items, Shapes::ShapeRef.new(shape: __listOfProductRestEndpointPageSummaryNoBody, location_name: "items"))
+    ListProductRestEndpointPagesResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location_name: "nextToken"))
+    ListProductRestEndpointPagesResponse.struct_class = Types::ListProductRestEndpointPagesResponse
+
+    ListProductRestEndpointPagesResponseContent.add_member(:items, Shapes::ShapeRef.new(shape: __listOfProductRestEndpointPageSummaryNoBody, required: true, location_name: "items"))
+    ListProductRestEndpointPagesResponseContent.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location_name: "nextToken"))
+    ListProductRestEndpointPagesResponseContent.struct_class = Types::ListProductRestEndpointPagesResponseContent
+
+    ListRoutingRulesRequest.add_member(:domain_name, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "domainName"))
+    ListRoutingRulesRequest.add_member(:domain_name_id, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "domainNameId"))
+    ListRoutingRulesRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListRoutingRulesRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "nextToken"))
+    ListRoutingRulesRequest.struct_class = Types::ListRoutingRulesRequest
+
+    ListRoutingRulesResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    ListRoutingRulesResponse.add_member(:routing_rules, Shapes::ShapeRef.new(shape: __listOfRoutingRule, location_name: "routingRules"))
+    ListRoutingRulesResponse.struct_class = Types::ListRoutingRulesResponse
+
     Model.add_member(:content_type, Shapes::ShapeRef.new(shape: StringWithLengthBetween1And256, location_name: "contentType"))
     Model.add_member(:description, Shapes::ShapeRef.new(shape: StringWithLengthBetween0And1024, location_name: "description"))
     Model.add_member(:model_id, Shapes::ShapeRef.new(shape: Id, location_name: "modelId"))
@@ -1246,12 +1844,111 @@ module Aws::ApiGatewayV2
     MutualTlsAuthenticationInput.add_member(:truststore_version, Shapes::ShapeRef.new(shape: StringWithLengthBetween1And64, location_name: "truststoreVersion"))
     MutualTlsAuthenticationInput.struct_class = Types::MutualTlsAuthenticationInput
 
+    None.struct_class = Types::None
+
     NotFoundException.add_member(:message, Shapes::ShapeRef.new(shape: __string, location_name: "message"))
     NotFoundException.add_member(:resource_type, Shapes::ShapeRef.new(shape: __string, location_name: "resourceType"))
     NotFoundException.struct_class = Types::NotFoundException
 
+    NotFoundExceptionResponseContent.add_member(:message, Shapes::ShapeRef.new(shape: __string, location_name: "message"))
+    NotFoundExceptionResponseContent.add_member(:resource_type, Shapes::ShapeRef.new(shape: __string, location_name: "resourceType"))
+    NotFoundExceptionResponseContent.struct_class = Types::NotFoundExceptionResponseContent
+
     ParameterConstraints.add_member(:required, Shapes::ShapeRef.new(shape: __boolean, location_name: "required"))
     ParameterConstraints.struct_class = Types::ParameterConstraints
+
+    PortalContent.add_member(:description, Shapes::ShapeRef.new(shape: __stringMin0Max1024, location_name: "description"))
+    PortalContent.add_member(:display_name, Shapes::ShapeRef.new(shape: __stringMin3Max255, required: true, location_name: "displayName"))
+    PortalContent.add_member(:theme, Shapes::ShapeRef.new(shape: PortalTheme, required: true, location_name: "theme"))
+    PortalContent.struct_class = Types::PortalContent
+
+    PortalProductSummary.add_member(:description, Shapes::ShapeRef.new(shape: __stringMin0Max1024, required: true, location_name: "description"))
+    PortalProductSummary.add_member(:display_name, Shapes::ShapeRef.new(shape: __stringMin1Max255, required: true, location_name: "displayName"))
+    PortalProductSummary.add_member(:last_modified, Shapes::ShapeRef.new(shape: __timestampIso8601, required: true, location_name: "lastModified"))
+    PortalProductSummary.add_member(:portal_product_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, required: true, location_name: "portalProductArn"))
+    PortalProductSummary.add_member(:portal_product_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, required: true, location_name: "portalProductId"))
+    PortalProductSummary.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    PortalProductSummary.struct_class = Types::PortalProductSummary
+
+    PortalSummary.add_member(:authorization, Shapes::ShapeRef.new(shape: Authorization, required: true, location_name: "authorization"))
+    PortalSummary.add_member(:endpoint_configuration, Shapes::ShapeRef.new(shape: EndpointConfigurationResponse, required: true, location_name: "endpointConfiguration"))
+    PortalSummary.add_member(:included_portal_product_arns, Shapes::ShapeRef.new(shape: __listOf__stringMin20Max2048, required: true, location_name: "includedPortalProductArns"))
+    PortalSummary.add_member(:last_modified, Shapes::ShapeRef.new(shape: __timestampIso8601, required: true, location_name: "lastModified"))
+    PortalSummary.add_member(:last_published, Shapes::ShapeRef.new(shape: __timestampIso8601, location_name: "lastPublished"))
+    PortalSummary.add_member(:last_published_description, Shapes::ShapeRef.new(shape: __stringMin0Max1024, location_name: "lastPublishedDescription"))
+    PortalSummary.add_member(:portal_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, required: true, location_name: "portalArn"))
+    PortalSummary.add_member(:portal_content, Shapes::ShapeRef.new(shape: PortalContent, required: true, location_name: "portalContent"))
+    PortalSummary.add_member(:portal_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, required: true, location_name: "portalId"))
+    PortalSummary.add_member(:preview, Shapes::ShapeRef.new(shape: Preview, location_name: "preview"))
+    PortalSummary.add_member(:publish_status, Shapes::ShapeRef.new(shape: PublishStatus, location_name: "publishStatus"))
+    PortalSummary.add_member(:rum_app_monitor_name, Shapes::ShapeRef.new(shape: __stringMin0Max255, location_name: "rumAppMonitorName"))
+    PortalSummary.add_member(:status_exception, Shapes::ShapeRef.new(shape: StatusException, location_name: "statusException"))
+    PortalSummary.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    PortalSummary.struct_class = Types::PortalSummary
+
+    PortalTheme.add_member(:custom_colors, Shapes::ShapeRef.new(shape: CustomColors, required: true, location_name: "customColors"))
+    PortalTheme.add_member(:logo_last_uploaded, Shapes::ShapeRef.new(shape: __timestampIso8601, location_name: "logoLastUploaded"))
+    PortalTheme.struct_class = Types::PortalTheme
+
+    Preview.add_member(:preview_status, Shapes::ShapeRef.new(shape: PreviewStatus, required: true, location_name: "previewStatus"))
+    Preview.add_member(:preview_url, Shapes::ShapeRef.new(shape: __string, location_name: "previewUrl"))
+    Preview.add_member(:status_exception, Shapes::ShapeRef.new(shape: StatusException, location_name: "statusException"))
+    Preview.struct_class = Types::Preview
+
+    PreviewPortalRequest.add_member(:portal_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "portalId"))
+    PreviewPortalRequest.struct_class = Types::PreviewPortalRequest
+
+    PreviewPortalResponse.struct_class = Types::PreviewPortalResponse
+
+    ProductPageSummaryNoBody.add_member(:last_modified, Shapes::ShapeRef.new(shape: __timestampIso8601, required: true, location_name: "lastModified"))
+    ProductPageSummaryNoBody.add_member(:page_title, Shapes::ShapeRef.new(shape: __stringMin1Max255, required: true, location_name: "pageTitle"))
+    ProductPageSummaryNoBody.add_member(:product_page_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, required: true, location_name: "productPageArn"))
+    ProductPageSummaryNoBody.add_member(:product_page_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, required: true, location_name: "productPageId"))
+    ProductPageSummaryNoBody.struct_class = Types::ProductPageSummaryNoBody
+
+    ProductRestEndpointPageSummaryNoBody.add_member(:endpoint, Shapes::ShapeRef.new(shape: __stringMin1Max1024, required: true, location_name: "endpoint"))
+    ProductRestEndpointPageSummaryNoBody.add_member(:last_modified, Shapes::ShapeRef.new(shape: __timestampIso8601, required: true, location_name: "lastModified"))
+    ProductRestEndpointPageSummaryNoBody.add_member(:operation_name, Shapes::ShapeRef.new(shape: __stringMin1Max255, location_name: "operationName"))
+    ProductRestEndpointPageSummaryNoBody.add_member(:product_rest_endpoint_page_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, required: true, location_name: "productRestEndpointPageArn"))
+    ProductRestEndpointPageSummaryNoBody.add_member(:product_rest_endpoint_page_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, required: true, location_name: "productRestEndpointPageId"))
+    ProductRestEndpointPageSummaryNoBody.add_member(:rest_endpoint_identifier, Shapes::ShapeRef.new(shape: RestEndpointIdentifier, required: true, location_name: "restEndpointIdentifier"))
+    ProductRestEndpointPageSummaryNoBody.add_member(:status, Shapes::ShapeRef.new(shape: Status, required: true, location_name: "status"))
+    ProductRestEndpointPageSummaryNoBody.add_member(:status_exception, Shapes::ShapeRef.new(shape: StatusException, location_name: "statusException"))
+    ProductRestEndpointPageSummaryNoBody.add_member(:try_it_state, Shapes::ShapeRef.new(shape: TryItState, required: true, location_name: "tryItState"))
+    ProductRestEndpointPageSummaryNoBody.struct_class = Types::ProductRestEndpointPageSummaryNoBody
+
+    PublishPortalRequest.add_member(:description, Shapes::ShapeRef.new(shape: __stringMin0Max1024, location_name: "description"))
+    PublishPortalRequest.add_member(:portal_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "portalId"))
+    PublishPortalRequest.struct_class = Types::PublishPortalRequest
+
+    PublishPortalRequestContent.add_member(:description, Shapes::ShapeRef.new(shape: __stringMin0Max1024, location_name: "description"))
+    PublishPortalRequestContent.struct_class = Types::PublishPortalRequestContent
+
+    PublishPortalResponse.struct_class = Types::PublishPortalResponse
+
+    PutPortalProductSharingPolicyRequest.add_member(:policy_document, Shapes::ShapeRef.new(shape: __stringMin1Max307200, required: true, location_name: "policyDocument"))
+    PutPortalProductSharingPolicyRequest.add_member(:portal_product_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "portalProductId"))
+    PutPortalProductSharingPolicyRequest.struct_class = Types::PutPortalProductSharingPolicyRequest
+
+    PutPortalProductSharingPolicyRequestContent.add_member(:policy_document, Shapes::ShapeRef.new(shape: __stringMin1Max307200, required: true, location_name: "policyDocument"))
+    PutPortalProductSharingPolicyRequestContent.struct_class = Types::PutPortalProductSharingPolicyRequestContent
+
+    PutPortalProductSharingPolicyResponse.struct_class = Types::PutPortalProductSharingPolicyResponse
+
+    PutRoutingRuleRequest.add_member(:actions, Shapes::ShapeRef.new(shape: __listOfRoutingRuleAction, required: true, location_name: "actions"))
+    PutRoutingRuleRequest.add_member(:conditions, Shapes::ShapeRef.new(shape: __listOfRoutingRuleCondition, required: true, location_name: "conditions"))
+    PutRoutingRuleRequest.add_member(:domain_name, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "domainName"))
+    PutRoutingRuleRequest.add_member(:domain_name_id, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "domainNameId"))
+    PutRoutingRuleRequest.add_member(:priority, Shapes::ShapeRef.new(shape: RoutingRulePriority, required: true, location_name: "priority"))
+    PutRoutingRuleRequest.add_member(:routing_rule_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "routingRuleId"))
+    PutRoutingRuleRequest.struct_class = Types::PutRoutingRuleRequest
+
+    PutRoutingRuleResponse.add_member(:actions, Shapes::ShapeRef.new(shape: __listOfRoutingRuleAction, location_name: "actions"))
+    PutRoutingRuleResponse.add_member(:conditions, Shapes::ShapeRef.new(shape: __listOfRoutingRuleCondition, location_name: "conditions"))
+    PutRoutingRuleResponse.add_member(:priority, Shapes::ShapeRef.new(shape: RoutingRulePriority, location_name: "priority"))
+    PutRoutingRuleResponse.add_member(:routing_rule_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "routingRuleArn"))
+    PutRoutingRuleResponse.add_member(:routing_rule_id, Shapes::ShapeRef.new(shape: Id, location_name: "routingRuleId"))
+    PutRoutingRuleResponse.struct_class = Types::PutRoutingRuleResponse
 
     ReimportApiInput.add_member(:body, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "body"))
     ReimportApiInput.struct_class = Types::ReimportApiInput
@@ -1272,6 +1969,7 @@ module Aws::ApiGatewayV2
     ReimportApiResponse.add_member(:disable_schema_validation, Shapes::ShapeRef.new(shape: __boolean, location_name: "disableSchemaValidation"))
     ReimportApiResponse.add_member(:disable_execute_api_endpoint, Shapes::ShapeRef.new(shape: __boolean, location_name: "disableExecuteApiEndpoint"))
     ReimportApiResponse.add_member(:import_info, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "importInfo"))
+    ReimportApiResponse.add_member(:ip_address_type, Shapes::ShapeRef.new(shape: IpAddressType, location_name: "ipAddressType"))
     ReimportApiResponse.add_member(:name, Shapes::ShapeRef.new(shape: StringWithLengthBetween1And128, location_name: "name"))
     ReimportApiResponse.add_member(:protocol_type, Shapes::ShapeRef.new(shape: ProtocolType, location_name: "protocolType"))
     ReimportApiResponse.add_member(:route_selection_expression, Shapes::ShapeRef.new(shape: SelectionExpression, location_name: "routeSelectionExpression"))
@@ -1286,6 +1984,9 @@ module Aws::ApiGatewayV2
 
     ResponseParameters.key = Shapes::ShapeRef.new(shape: __string)
     ResponseParameters.value = Shapes::ShapeRef.new(shape: IntegrationParameters)
+
+    RestEndpointIdentifier.add_member(:identifier_parts, Shapes::ShapeRef.new(shape: IdentifierParts, location_name: "identifierParts"))
+    RestEndpointIdentifier.struct_class = Types::RestEndpointIdentifier
 
     Route.add_member(:api_gateway_managed, Shapes::ShapeRef.new(shape: __boolean, location_name: "apiGatewayManaged"))
     Route.add_member(:api_key_required, Shapes::ShapeRef.new(shape: __boolean, location_name: "apiKeyRequired"))
@@ -1333,6 +2034,48 @@ module Aws::ApiGatewayV2
     Routes.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
     Routes.struct_class = Types::Routes
 
+    RoutingRule.add_member(:actions, Shapes::ShapeRef.new(shape: __listOfRoutingRuleAction, location_name: "actions"))
+    RoutingRule.add_member(:conditions, Shapes::ShapeRef.new(shape: __listOfRoutingRuleCondition, location_name: "conditions"))
+    RoutingRule.add_member(:priority, Shapes::ShapeRef.new(shape: RoutingRulePriority, location_name: "priority"))
+    RoutingRule.add_member(:routing_rule_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "routingRuleArn"))
+    RoutingRule.add_member(:routing_rule_id, Shapes::ShapeRef.new(shape: Id, location_name: "routingRuleId"))
+    RoutingRule.struct_class = Types::RoutingRule
+
+    RoutingRuleAction.add_member(:invoke_api, Shapes::ShapeRef.new(shape: RoutingRuleActionInvokeApi, required: true, location_name: "invokeApi"))
+    RoutingRuleAction.struct_class = Types::RoutingRuleAction
+
+    RoutingRuleActionInvokeApi.add_member(:api_id, Shapes::ShapeRef.new(shape: Id, required: true, location_name: "apiId"))
+    RoutingRuleActionInvokeApi.add_member(:stage, Shapes::ShapeRef.new(shape: StringWithLengthBetween1And128, required: true, location_name: "stage"))
+    RoutingRuleActionInvokeApi.add_member(:strip_base_path, Shapes::ShapeRef.new(shape: __boolean, location_name: "stripBasePath"))
+    RoutingRuleActionInvokeApi.struct_class = Types::RoutingRuleActionInvokeApi
+
+    RoutingRuleCondition.add_member(:match_base_paths, Shapes::ShapeRef.new(shape: RoutingRuleMatchBasePaths, location_name: "matchBasePaths"))
+    RoutingRuleCondition.add_member(:match_headers, Shapes::ShapeRef.new(shape: RoutingRuleMatchHeaders, location_name: "matchHeaders"))
+    RoutingRuleCondition.struct_class = Types::RoutingRuleCondition
+
+    RoutingRuleInput.add_member(:actions, Shapes::ShapeRef.new(shape: __listOfRoutingRuleAction, required: true, location_name: "actions"))
+    RoutingRuleInput.add_member(:conditions, Shapes::ShapeRef.new(shape: __listOfRoutingRuleCondition, required: true, location_name: "conditions"))
+    RoutingRuleInput.add_member(:priority, Shapes::ShapeRef.new(shape: RoutingRulePriority, required: true, location_name: "priority"))
+    RoutingRuleInput.struct_class = Types::RoutingRuleInput
+
+    RoutingRuleMatchBasePaths.add_member(:any_of, Shapes::ShapeRef.new(shape: __listOfSelectionKey, required: true, location_name: "anyOf"))
+    RoutingRuleMatchBasePaths.struct_class = Types::RoutingRuleMatchBasePaths
+
+    RoutingRuleMatchHeaderValue.add_member(:header, Shapes::ShapeRef.new(shape: SelectionKey, required: true, location_name: "header"))
+    RoutingRuleMatchHeaderValue.add_member(:value_glob, Shapes::ShapeRef.new(shape: SelectionExpression, required: true, location_name: "valueGlob"))
+    RoutingRuleMatchHeaderValue.struct_class = Types::RoutingRuleMatchHeaderValue
+
+    RoutingRuleMatchHeaders.add_member(:any_of, Shapes::ShapeRef.new(shape: __listOfRoutingRuleMatchHeaderValue, required: true, location_name: "anyOf"))
+    RoutingRuleMatchHeaders.struct_class = Types::RoutingRuleMatchHeaders
+
+    RoutingRules.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    RoutingRules.add_member(:routing_rules, Shapes::ShapeRef.new(shape: __listOfRoutingRule, location_name: "routingRules"))
+    RoutingRules.struct_class = Types::RoutingRules
+
+    Section.add_member(:product_rest_endpoint_page_arns, Shapes::ShapeRef.new(shape: __listOf__stringMin20Max2048, required: true, location_name: "productRestEndpointPageArns"))
+    Section.add_member(:section_name, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "sectionName"))
+    Section.struct_class = Types::Section
+
     SecurityGroupIdList.member = Shapes::ShapeRef.new(shape: __string)
 
     Stage.add_member(:access_log_settings, Shapes::ShapeRef.new(shape: AccessLogSettings, location_name: "accessLogSettings"))
@@ -1357,6 +2100,10 @@ module Aws::ApiGatewayV2
     Stages.add_member(:items, Shapes::ShapeRef.new(shape: __listOfStage, location_name: "items"))
     Stages.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
     Stages.struct_class = Types::Stages
+
+    StatusException.add_member(:exception, Shapes::ShapeRef.new(shape: __stringMin1Max256, location_name: "exception"))
+    StatusException.add_member(:message, Shapes::ShapeRef.new(shape: __stringMin1Max2048, location_name: "message"))
+    StatusException.struct_class = Types::StatusException
 
     SubnetIdList.member = Shapes::ShapeRef.new(shape: __string)
 
@@ -1398,6 +2145,7 @@ module Aws::ApiGatewayV2
     UpdateApiInput.add_member(:description, Shapes::ShapeRef.new(shape: StringWithLengthBetween0And1024, location_name: "description"))
     UpdateApiInput.add_member(:disable_schema_validation, Shapes::ShapeRef.new(shape: __boolean, location_name: "disableSchemaValidation"))
     UpdateApiInput.add_member(:disable_execute_api_endpoint, Shapes::ShapeRef.new(shape: __boolean, location_name: "disableExecuteApiEndpoint"))
+    UpdateApiInput.add_member(:ip_address_type, Shapes::ShapeRef.new(shape: IpAddressType, location_name: "ipAddressType"))
     UpdateApiInput.add_member(:name, Shapes::ShapeRef.new(shape: StringWithLengthBetween1And128, location_name: "name"))
     UpdateApiInput.add_member(:route_key, Shapes::ShapeRef.new(shape: SelectionKey, location_name: "routeKey"))
     UpdateApiInput.add_member(:route_selection_expression, Shapes::ShapeRef.new(shape: SelectionExpression, location_name: "routeSelectionExpression"))
@@ -1430,6 +2178,7 @@ module Aws::ApiGatewayV2
     UpdateApiRequest.add_member(:description, Shapes::ShapeRef.new(shape: StringWithLengthBetween0And1024, location_name: "description"))
     UpdateApiRequest.add_member(:disable_schema_validation, Shapes::ShapeRef.new(shape: __boolean, location_name: "disableSchemaValidation"))
     UpdateApiRequest.add_member(:disable_execute_api_endpoint, Shapes::ShapeRef.new(shape: __boolean, location_name: "disableExecuteApiEndpoint"))
+    UpdateApiRequest.add_member(:ip_address_type, Shapes::ShapeRef.new(shape: IpAddressType, location_name: "ipAddressType"))
     UpdateApiRequest.add_member(:name, Shapes::ShapeRef.new(shape: StringWithLengthBetween1And128, location_name: "name"))
     UpdateApiRequest.add_member(:route_key, Shapes::ShapeRef.new(shape: SelectionKey, location_name: "routeKey"))
     UpdateApiRequest.add_member(:route_selection_expression, Shapes::ShapeRef.new(shape: SelectionExpression, location_name: "routeSelectionExpression"))
@@ -1447,6 +2196,7 @@ module Aws::ApiGatewayV2
     UpdateApiResponse.add_member(:disable_schema_validation, Shapes::ShapeRef.new(shape: __boolean, location_name: "disableSchemaValidation"))
     UpdateApiResponse.add_member(:disable_execute_api_endpoint, Shapes::ShapeRef.new(shape: __boolean, location_name: "disableExecuteApiEndpoint"))
     UpdateApiResponse.add_member(:import_info, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "importInfo"))
+    UpdateApiResponse.add_member(:ip_address_type, Shapes::ShapeRef.new(shape: IpAddressType, location_name: "ipAddressType"))
     UpdateApiResponse.add_member(:name, Shapes::ShapeRef.new(shape: StringWithLengthBetween1And128, location_name: "name"))
     UpdateApiResponse.add_member(:protocol_type, Shapes::ShapeRef.new(shape: ProtocolType, location_name: "protocolType"))
     UpdateApiResponse.add_member(:route_selection_expression, Shapes::ShapeRef.new(shape: SelectionExpression, location_name: "routeSelectionExpression"))
@@ -1512,17 +2262,21 @@ module Aws::ApiGatewayV2
 
     UpdateDomainNameInput.add_member(:domain_name_configurations, Shapes::ShapeRef.new(shape: DomainNameConfigurations, location_name: "domainNameConfigurations"))
     UpdateDomainNameInput.add_member(:mutual_tls_authentication, Shapes::ShapeRef.new(shape: MutualTlsAuthenticationInput, location_name: "mutualTlsAuthentication"))
+    UpdateDomainNameInput.add_member(:routing_mode, Shapes::ShapeRef.new(shape: RoutingMode, location_name: "routingMode"))
     UpdateDomainNameInput.struct_class = Types::UpdateDomainNameInput
 
     UpdateDomainNameRequest.add_member(:domain_name, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "domainName"))
     UpdateDomainNameRequest.add_member(:domain_name_configurations, Shapes::ShapeRef.new(shape: DomainNameConfigurations, location_name: "domainNameConfigurations"))
     UpdateDomainNameRequest.add_member(:mutual_tls_authentication, Shapes::ShapeRef.new(shape: MutualTlsAuthenticationInput, location_name: "mutualTlsAuthentication"))
+    UpdateDomainNameRequest.add_member(:routing_mode, Shapes::ShapeRef.new(shape: RoutingMode, location_name: "routingMode"))
     UpdateDomainNameRequest.struct_class = Types::UpdateDomainNameRequest
 
     UpdateDomainNameResponse.add_member(:api_mapping_selection_expression, Shapes::ShapeRef.new(shape: SelectionExpression, location_name: "apiMappingSelectionExpression"))
     UpdateDomainNameResponse.add_member(:domain_name, Shapes::ShapeRef.new(shape: StringWithLengthBetween1And512, location_name: "domainName"))
+    UpdateDomainNameResponse.add_member(:domain_name_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "domainNameArn"))
     UpdateDomainNameResponse.add_member(:domain_name_configurations, Shapes::ShapeRef.new(shape: DomainNameConfigurations, location_name: "domainNameConfigurations"))
     UpdateDomainNameResponse.add_member(:mutual_tls_authentication, Shapes::ShapeRef.new(shape: MutualTlsAuthentication, location_name: "mutualTlsAuthentication"))
+    UpdateDomainNameResponse.add_member(:routing_mode, Shapes::ShapeRef.new(shape: RoutingMode, location_name: "routingMode"))
     UpdateDomainNameResponse.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
     UpdateDomainNameResponse.struct_class = Types::UpdateDomainNameResponse
 
@@ -1633,6 +2387,134 @@ module Aws::ApiGatewayV2
     UpdateModelResponse.add_member(:name, Shapes::ShapeRef.new(shape: StringWithLengthBetween1And128, location_name: "name"))
     UpdateModelResponse.add_member(:schema, Shapes::ShapeRef.new(shape: StringWithLengthBetween0And32K, location_name: "schema"))
     UpdateModelResponse.struct_class = Types::UpdateModelResponse
+
+    UpdatePortalProductRequest.add_member(:description, Shapes::ShapeRef.new(shape: __stringMin0Max1024, location_name: "description"))
+    UpdatePortalProductRequest.add_member(:display_name, Shapes::ShapeRef.new(shape: __stringMin1Max255, location_name: "displayName"))
+    UpdatePortalProductRequest.add_member(:display_order, Shapes::ShapeRef.new(shape: DisplayOrder, location_name: "displayOrder"))
+    UpdatePortalProductRequest.add_member(:portal_product_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "portalProductId"))
+    UpdatePortalProductRequest.struct_class = Types::UpdatePortalProductRequest
+
+    UpdatePortalProductRequestContent.add_member(:description, Shapes::ShapeRef.new(shape: __stringMin0Max1024, location_name: "description"))
+    UpdatePortalProductRequestContent.add_member(:display_name, Shapes::ShapeRef.new(shape: __stringMin1Max255, location_name: "displayName"))
+    UpdatePortalProductRequestContent.add_member(:display_order, Shapes::ShapeRef.new(shape: DisplayOrder, location_name: "displayOrder"))
+    UpdatePortalProductRequestContent.struct_class = Types::UpdatePortalProductRequestContent
+
+    UpdatePortalProductResponse.add_member(:description, Shapes::ShapeRef.new(shape: __stringMin0Max1024, location_name: "description"))
+    UpdatePortalProductResponse.add_member(:display_name, Shapes::ShapeRef.new(shape: __stringMin1Max255, location_name: "displayName"))
+    UpdatePortalProductResponse.add_member(:display_order, Shapes::ShapeRef.new(shape: DisplayOrder, location_name: "displayOrder"))
+    UpdatePortalProductResponse.add_member(:last_modified, Shapes::ShapeRef.new(shape: __timestampIso8601, location_name: "lastModified"))
+    UpdatePortalProductResponse.add_member(:portal_product_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, location_name: "portalProductArn"))
+    UpdatePortalProductResponse.add_member(:portal_product_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, location_name: "portalProductId"))
+    UpdatePortalProductResponse.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    UpdatePortalProductResponse.struct_class = Types::UpdatePortalProductResponse
+
+    UpdatePortalProductResponseContent.add_member(:description, Shapes::ShapeRef.new(shape: __stringMin0Max1024, location_name: "description"))
+    UpdatePortalProductResponseContent.add_member(:display_name, Shapes::ShapeRef.new(shape: __stringMin1Max255, required: true, location_name: "displayName"))
+    UpdatePortalProductResponseContent.add_member(:display_order, Shapes::ShapeRef.new(shape: DisplayOrder, location_name: "displayOrder"))
+    UpdatePortalProductResponseContent.add_member(:last_modified, Shapes::ShapeRef.new(shape: __timestampIso8601, required: true, location_name: "lastModified"))
+    UpdatePortalProductResponseContent.add_member(:portal_product_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, required: true, location_name: "portalProductArn"))
+    UpdatePortalProductResponseContent.add_member(:portal_product_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, required: true, location_name: "portalProductId"))
+    UpdatePortalProductResponseContent.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    UpdatePortalProductResponseContent.struct_class = Types::UpdatePortalProductResponseContent
+
+    UpdatePortalRequest.add_member(:authorization, Shapes::ShapeRef.new(shape: Authorization, location_name: "authorization"))
+    UpdatePortalRequest.add_member(:endpoint_configuration, Shapes::ShapeRef.new(shape: EndpointConfigurationRequest, location_name: "endpointConfiguration"))
+    UpdatePortalRequest.add_member(:included_portal_product_arns, Shapes::ShapeRef.new(shape: __listOf__stringMin20Max2048, location_name: "includedPortalProductArns"))
+    UpdatePortalRequest.add_member(:logo_uri, Shapes::ShapeRef.new(shape: __stringMin0Max1092, location_name: "logoUri"))
+    UpdatePortalRequest.add_member(:portal_content, Shapes::ShapeRef.new(shape: PortalContent, location_name: "portalContent"))
+    UpdatePortalRequest.add_member(:portal_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "portalId"))
+    UpdatePortalRequest.add_member(:rum_app_monitor_name, Shapes::ShapeRef.new(shape: __stringMin0Max255, location_name: "rumAppMonitorName"))
+    UpdatePortalRequest.struct_class = Types::UpdatePortalRequest
+
+    UpdatePortalRequestContent.add_member(:authorization, Shapes::ShapeRef.new(shape: Authorization, location_name: "authorization"))
+    UpdatePortalRequestContent.add_member(:endpoint_configuration, Shapes::ShapeRef.new(shape: EndpointConfigurationRequest, location_name: "endpointConfiguration"))
+    UpdatePortalRequestContent.add_member(:included_portal_product_arns, Shapes::ShapeRef.new(shape: __listOf__stringMin20Max2048, location_name: "includedPortalProductArns"))
+    UpdatePortalRequestContent.add_member(:logo_uri, Shapes::ShapeRef.new(shape: __stringMin0Max1092, location_name: "logoUri"))
+    UpdatePortalRequestContent.add_member(:portal_content, Shapes::ShapeRef.new(shape: PortalContent, location_name: "portalContent"))
+    UpdatePortalRequestContent.add_member(:rum_app_monitor_name, Shapes::ShapeRef.new(shape: __stringMin0Max255, location_name: "rumAppMonitorName"))
+    UpdatePortalRequestContent.struct_class = Types::UpdatePortalRequestContent
+
+    UpdatePortalResponse.add_member(:authorization, Shapes::ShapeRef.new(shape: Authorization, location_name: "authorization"))
+    UpdatePortalResponse.add_member(:endpoint_configuration, Shapes::ShapeRef.new(shape: EndpointConfigurationResponse, location_name: "endpointConfiguration"))
+    UpdatePortalResponse.add_member(:included_portal_product_arns, Shapes::ShapeRef.new(shape: __listOf__stringMin20Max2048, location_name: "includedPortalProductArns"))
+    UpdatePortalResponse.add_member(:last_modified, Shapes::ShapeRef.new(shape: __timestampIso8601, location_name: "lastModified"))
+    UpdatePortalResponse.add_member(:last_published, Shapes::ShapeRef.new(shape: __timestampIso8601, location_name: "lastPublished"))
+    UpdatePortalResponse.add_member(:last_published_description, Shapes::ShapeRef.new(shape: __stringMin0Max1024, location_name: "lastPublishedDescription"))
+    UpdatePortalResponse.add_member(:portal_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, location_name: "portalArn"))
+    UpdatePortalResponse.add_member(:portal_content, Shapes::ShapeRef.new(shape: PortalContent, location_name: "portalContent"))
+    UpdatePortalResponse.add_member(:portal_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, location_name: "portalId"))
+    UpdatePortalResponse.add_member(:preview, Shapes::ShapeRef.new(shape: Preview, location_name: "preview"))
+    UpdatePortalResponse.add_member(:publish_status, Shapes::ShapeRef.new(shape: PublishStatus, location_name: "publishStatus"))
+    UpdatePortalResponse.add_member(:rum_app_monitor_name, Shapes::ShapeRef.new(shape: __stringMin0Max255, location_name: "rumAppMonitorName"))
+    UpdatePortalResponse.add_member(:status_exception, Shapes::ShapeRef.new(shape: StatusException, location_name: "statusException"))
+    UpdatePortalResponse.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    UpdatePortalResponse.struct_class = Types::UpdatePortalResponse
+
+    UpdatePortalResponseContent.add_member(:authorization, Shapes::ShapeRef.new(shape: Authorization, required: true, location_name: "authorization"))
+    UpdatePortalResponseContent.add_member(:endpoint_configuration, Shapes::ShapeRef.new(shape: EndpointConfigurationResponse, required: true, location_name: "endpointConfiguration"))
+    UpdatePortalResponseContent.add_member(:included_portal_product_arns, Shapes::ShapeRef.new(shape: __listOf__stringMin20Max2048, required: true, location_name: "includedPortalProductArns"))
+    UpdatePortalResponseContent.add_member(:last_modified, Shapes::ShapeRef.new(shape: __timestampIso8601, required: true, location_name: "lastModified"))
+    UpdatePortalResponseContent.add_member(:last_published, Shapes::ShapeRef.new(shape: __timestampIso8601, location_name: "lastPublished"))
+    UpdatePortalResponseContent.add_member(:last_published_description, Shapes::ShapeRef.new(shape: __stringMin0Max1024, location_name: "lastPublishedDescription"))
+    UpdatePortalResponseContent.add_member(:portal_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, required: true, location_name: "portalArn"))
+    UpdatePortalResponseContent.add_member(:portal_content, Shapes::ShapeRef.new(shape: PortalContent, required: true, location_name: "portalContent"))
+    UpdatePortalResponseContent.add_member(:portal_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, required: true, location_name: "portalId"))
+    UpdatePortalResponseContent.add_member(:preview, Shapes::ShapeRef.new(shape: Preview, location_name: "preview"))
+    UpdatePortalResponseContent.add_member(:publish_status, Shapes::ShapeRef.new(shape: PublishStatus, location_name: "publishStatus"))
+    UpdatePortalResponseContent.add_member(:rum_app_monitor_name, Shapes::ShapeRef.new(shape: __stringMin0Max255, location_name: "rumAppMonitorName"))
+    UpdatePortalResponseContent.add_member(:status_exception, Shapes::ShapeRef.new(shape: StatusException, location_name: "statusException"))
+    UpdatePortalResponseContent.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    UpdatePortalResponseContent.struct_class = Types::UpdatePortalResponseContent
+
+    UpdateProductPageRequest.add_member(:display_content, Shapes::ShapeRef.new(shape: DisplayContent, location_name: "displayContent"))
+    UpdateProductPageRequest.add_member(:portal_product_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "portalProductId"))
+    UpdateProductPageRequest.add_member(:product_page_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "productPageId"))
+    UpdateProductPageRequest.struct_class = Types::UpdateProductPageRequest
+
+    UpdateProductPageRequestContent.add_member(:display_content, Shapes::ShapeRef.new(shape: DisplayContent, location_name: "displayContent"))
+    UpdateProductPageRequestContent.struct_class = Types::UpdateProductPageRequestContent
+
+    UpdateProductPageResponse.add_member(:display_content, Shapes::ShapeRef.new(shape: DisplayContent, location_name: "displayContent"))
+    UpdateProductPageResponse.add_member(:last_modified, Shapes::ShapeRef.new(shape: __timestampIso8601, location_name: "lastModified"))
+    UpdateProductPageResponse.add_member(:product_page_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, location_name: "productPageArn"))
+    UpdateProductPageResponse.add_member(:product_page_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, location_name: "productPageId"))
+    UpdateProductPageResponse.struct_class = Types::UpdateProductPageResponse
+
+    UpdateProductPageResponseContent.add_member(:display_content, Shapes::ShapeRef.new(shape: DisplayContent, location_name: "displayContent"))
+    UpdateProductPageResponseContent.add_member(:last_modified, Shapes::ShapeRef.new(shape: __timestampIso8601, required: true, location_name: "lastModified"))
+    UpdateProductPageResponseContent.add_member(:product_page_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, required: true, location_name: "productPageArn"))
+    UpdateProductPageResponseContent.add_member(:product_page_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, required: true, location_name: "productPageId"))
+    UpdateProductPageResponseContent.struct_class = Types::UpdateProductPageResponseContent
+
+    UpdateProductRestEndpointPageRequest.add_member(:display_content, Shapes::ShapeRef.new(shape: EndpointDisplayContent, location_name: "displayContent"))
+    UpdateProductRestEndpointPageRequest.add_member(:portal_product_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "portalProductId"))
+    UpdateProductRestEndpointPageRequest.add_member(:product_rest_endpoint_page_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "productRestEndpointPageId"))
+    UpdateProductRestEndpointPageRequest.add_member(:try_it_state, Shapes::ShapeRef.new(shape: TryItState, location_name: "tryItState"))
+    UpdateProductRestEndpointPageRequest.struct_class = Types::UpdateProductRestEndpointPageRequest
+
+    UpdateProductRestEndpointPageRequestContent.add_member(:display_content, Shapes::ShapeRef.new(shape: EndpointDisplayContent, location_name: "displayContent"))
+    UpdateProductRestEndpointPageRequestContent.add_member(:try_it_state, Shapes::ShapeRef.new(shape: TryItState, location_name: "tryItState"))
+    UpdateProductRestEndpointPageRequestContent.struct_class = Types::UpdateProductRestEndpointPageRequestContent
+
+    UpdateProductRestEndpointPageResponse.add_member(:display_content, Shapes::ShapeRef.new(shape: EndpointDisplayContentResponse, location_name: "displayContent"))
+    UpdateProductRestEndpointPageResponse.add_member(:last_modified, Shapes::ShapeRef.new(shape: __timestampIso8601, location_name: "lastModified"))
+    UpdateProductRestEndpointPageResponse.add_member(:product_rest_endpoint_page_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, location_name: "productRestEndpointPageArn"))
+    UpdateProductRestEndpointPageResponse.add_member(:product_rest_endpoint_page_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, location_name: "productRestEndpointPageId"))
+    UpdateProductRestEndpointPageResponse.add_member(:rest_endpoint_identifier, Shapes::ShapeRef.new(shape: RestEndpointIdentifier, location_name: "restEndpointIdentifier"))
+    UpdateProductRestEndpointPageResponse.add_member(:status, Shapes::ShapeRef.new(shape: Status, location_name: "status"))
+    UpdateProductRestEndpointPageResponse.add_member(:status_exception, Shapes::ShapeRef.new(shape: StatusException, location_name: "statusException"))
+    UpdateProductRestEndpointPageResponse.add_member(:try_it_state, Shapes::ShapeRef.new(shape: TryItState, location_name: "tryItState"))
+    UpdateProductRestEndpointPageResponse.struct_class = Types::UpdateProductRestEndpointPageResponse
+
+    UpdateProductRestEndpointPageResponseContent.add_member(:display_content, Shapes::ShapeRef.new(shape: EndpointDisplayContentResponse, required: true, location_name: "displayContent"))
+    UpdateProductRestEndpointPageResponseContent.add_member(:last_modified, Shapes::ShapeRef.new(shape: __timestampIso8601, required: true, location_name: "lastModified"))
+    UpdateProductRestEndpointPageResponseContent.add_member(:product_rest_endpoint_page_arn, Shapes::ShapeRef.new(shape: __stringMin20Max2048, required: true, location_name: "productRestEndpointPageArn"))
+    UpdateProductRestEndpointPageResponseContent.add_member(:product_rest_endpoint_page_id, Shapes::ShapeRef.new(shape: __stringMin10Max30PatternAZ09, required: true, location_name: "productRestEndpointPageId"))
+    UpdateProductRestEndpointPageResponseContent.add_member(:rest_endpoint_identifier, Shapes::ShapeRef.new(shape: RestEndpointIdentifier, required: true, location_name: "restEndpointIdentifier"))
+    UpdateProductRestEndpointPageResponseContent.add_member(:status, Shapes::ShapeRef.new(shape: Status, required: true, location_name: "status"))
+    UpdateProductRestEndpointPageResponseContent.add_member(:status_exception, Shapes::ShapeRef.new(shape: StatusException, location_name: "statusException"))
+    UpdateProductRestEndpointPageResponseContent.add_member(:try_it_state, Shapes::ShapeRef.new(shape: TryItState, required: true, location_name: "tryItState"))
+    UpdateProductRestEndpointPageResponseContent.struct_class = Types::UpdateProductRestEndpointPageResponseContent
 
     UpdateRouteInput.add_member(:api_key_required, Shapes::ShapeRef.new(shape: __boolean, location_name: "apiKeyRequired"))
     UpdateRouteInput.add_member(:authorization_scopes, Shapes::ShapeRef.new(shape: AuthorizationScopes, location_name: "authorizationScopes"))
@@ -1786,15 +2668,37 @@ module Aws::ApiGatewayV2
 
     __listOfModel.member = Shapes::ShapeRef.new(shape: Model)
 
+    __listOfPortalProductSummary.member = Shapes::ShapeRef.new(shape: PortalProductSummary)
+
+    __listOfPortalSummary.member = Shapes::ShapeRef.new(shape: PortalSummary)
+
+    __listOfProductPageSummaryNoBody.member = Shapes::ShapeRef.new(shape: ProductPageSummaryNoBody)
+
+    __listOfProductRestEndpointPageSummaryNoBody.member = Shapes::ShapeRef.new(shape: ProductRestEndpointPageSummaryNoBody)
+
     __listOfRoute.member = Shapes::ShapeRef.new(shape: Route)
 
     __listOfRouteResponse.member = Shapes::ShapeRef.new(shape: RouteResponse)
+
+    __listOfRoutingRule.member = Shapes::ShapeRef.new(shape: RoutingRule)
+
+    __listOfRoutingRuleAction.member = Shapes::ShapeRef.new(shape: RoutingRuleAction)
+
+    __listOfRoutingRuleCondition.member = Shapes::ShapeRef.new(shape: RoutingRuleCondition)
+
+    __listOfRoutingRuleMatchHeaderValue.member = Shapes::ShapeRef.new(shape: RoutingRuleMatchHeaderValue)
+
+    __listOfSection.member = Shapes::ShapeRef.new(shape: Section)
+
+    __listOfSelectionKey.member = Shapes::ShapeRef.new(shape: SelectionKey)
 
     __listOfStage.member = Shapes::ShapeRef.new(shape: Stage)
 
     __listOfVpcLink.member = Shapes::ShapeRef.new(shape: VpcLink)
 
     __listOf__string.member = Shapes::ShapeRef.new(shape: __string)
+
+    __listOf__stringMin20Max2048.member = Shapes::ShapeRef.new(shape: __stringMin20Max2048)
 
 
     # @api private
@@ -1912,6 +2816,52 @@ module Aws::ApiGatewayV2
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
       end)
 
+      api.add_operation(:create_portal, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CreatePortal"
+        o.http_method = "POST"
+        o.http_request_uri = "/v2/portals"
+        o.input = Shapes::ShapeRef.new(shape: CreatePortalRequest)
+        o.output = Shapes::ShapeRef.new(shape: CreatePortalResponse)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
+      api.add_operation(:create_portal_product, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CreatePortalProduct"
+        o.http_method = "POST"
+        o.http_request_uri = "/v2/portalproducts"
+        o.input = Shapes::ShapeRef.new(shape: CreatePortalProductRequest)
+        o.output = Shapes::ShapeRef.new(shape: CreatePortalProductResponse)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
+      api.add_operation(:create_product_page, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CreateProductPage"
+        o.http_method = "POST"
+        o.http_request_uri = "/v2/portalproducts/{portalProductId}/productpages"
+        o.input = Shapes::ShapeRef.new(shape: CreateProductPageRequest)
+        o.output = Shapes::ShapeRef.new(shape: CreateProductPageResponse)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
+      api.add_operation(:create_product_rest_endpoint_page, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CreateProductRestEndpointPage"
+        o.http_method = "POST"
+        o.http_request_uri = "/v2/portalproducts/{portalProductId}/productrestendpointpages"
+        o.input = Shapes::ShapeRef.new(shape: CreateProductRestEndpointPageRequest)
+        o.output = Shapes::ShapeRef.new(shape: CreateProductRestEndpointPageResponse)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
       api.add_operation(:create_route, Seahorse::Model::Operation.new.tap do |o|
         o.name = "CreateRoute"
         o.http_method = "POST"
@@ -1930,6 +2880,18 @@ module Aws::ApiGatewayV2
         o.http_request_uri = "/v2/apis/{apiId}/routes/{routeId}/routeresponses"
         o.input = Shapes::ShapeRef.new(shape: CreateRouteResponseRequest)
         o.output = Shapes::ShapeRef.new(shape: CreateRouteResponseResponse)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+      end)
+
+      api.add_operation(:create_routing_rule, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CreateRoutingRule"
+        o.http_method = "POST"
+        o.http_request_uri = "/v2/domainnames/{domainName}/routingrules"
+        o.input = Shapes::ShapeRef.new(shape: CreateRoutingRuleRequest)
+        o.output = Shapes::ShapeRef.new(shape: CreateRoutingRuleResponse)
         o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
         o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
@@ -2059,6 +3021,65 @@ module Aws::ApiGatewayV2
         o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
       end)
 
+      api.add_operation(:delete_portal, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeletePortal"
+        o.http_method = "DELETE"
+        o.http_request_uri = "/v2/portals/{portalId}"
+        o.input = Shapes::ShapeRef.new(shape: DeletePortalRequest)
+        o.output = Shapes::ShapeRef.new(shape: Shapes::StructureShape.new(struct_class: Aws::EmptyStructure))
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
+      api.add_operation(:delete_portal_product, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeletePortalProduct"
+        o.http_method = "DELETE"
+        o.http_request_uri = "/v2/portalproducts/{portalProductId}"
+        o.input = Shapes::ShapeRef.new(shape: DeletePortalProductRequest)
+        o.output = Shapes::ShapeRef.new(shape: Shapes::StructureShape.new(struct_class: Aws::EmptyStructure))
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
+      api.add_operation(:delete_portal_product_sharing_policy, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeletePortalProductSharingPolicy"
+        o.http_method = "DELETE"
+        o.http_request_uri = "/v2/portalproducts/{portalProductId}/sharingpolicy"
+        o.input = Shapes::ShapeRef.new(shape: DeletePortalProductSharingPolicyRequest)
+        o.output = Shapes::ShapeRef.new(shape: Shapes::StructureShape.new(struct_class: Aws::EmptyStructure))
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
+      api.add_operation(:delete_product_page, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeleteProductPage"
+        o.http_method = "DELETE"
+        o.http_request_uri = "/v2/portalproducts/{portalProductId}/productpages/{productPageId}"
+        o.input = Shapes::ShapeRef.new(shape: DeleteProductPageRequest)
+        o.output = Shapes::ShapeRef.new(shape: Shapes::StructureShape.new(struct_class: Aws::EmptyStructure))
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
+      api.add_operation(:delete_product_rest_endpoint_page, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeleteProductRestEndpointPage"
+        o.http_method = "DELETE"
+        o.http_request_uri = "/v2/portalproducts/{portalProductId}/productrestendpointpages/{productRestEndpointPageId}"
+        o.input = Shapes::ShapeRef.new(shape: DeleteProductRestEndpointPageRequest)
+        o.output = Shapes::ShapeRef.new(shape: Shapes::StructureShape.new(struct_class: Aws::EmptyStructure))
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
       api.add_operation(:delete_route, Seahorse::Model::Operation.new.tap do |o|
         o.name = "DeleteRoute"
         o.http_method = "DELETE"
@@ -2099,6 +3120,17 @@ module Aws::ApiGatewayV2
         o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
       end)
 
+      api.add_operation(:delete_routing_rule, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeleteRoutingRule"
+        o.http_method = "DELETE"
+        o.http_request_uri = "/v2/domainnames/{domainName}/routingrules/{routingRuleId}"
+        o.input = Shapes::ShapeRef.new(shape: DeleteRoutingRuleRequest)
+        o.output = Shapes::ShapeRef.new(shape: Shapes::StructureShape.new(struct_class: Aws::EmptyStructure))
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+      end)
+
       api.add_operation(:delete_stage, Seahorse::Model::Operation.new.tap do |o|
         o.name = "DeleteStage"
         o.http_method = "DELETE"
@@ -2128,6 +3160,19 @@ module Aws::ApiGatewayV2
         o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
         o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+      end)
+
+      api.add_operation(:disable_portal, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DisablePortal"
+        o.http_method = "DELETE"
+        o.http_request_uri = "/v2/portals/{portalId}/publish"
+        o.input = Shapes::ShapeRef.new(shape: DisablePortalRequest)
+        o.output = Shapes::ShapeRef.new(shape: Shapes::StructureShape.new(struct_class: Aws::EmptyStructure))
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
       end)
 
       api.add_operation(:reset_authorizers_cache, Seahorse::Model::Operation.new.tap do |o|
@@ -2319,6 +3364,66 @@ module Aws::ApiGatewayV2
         o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
       end)
 
+      api.add_operation(:get_portal, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetPortal"
+        o.http_method = "GET"
+        o.http_request_uri = "/v2/portals/{portalId}"
+        o.input = Shapes::ShapeRef.new(shape: GetPortalRequest)
+        o.output = Shapes::ShapeRef.new(shape: GetPortalResponse)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
+      api.add_operation(:get_portal_product, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetPortalProduct"
+        o.http_method = "GET"
+        o.http_request_uri = "/v2/portalproducts/{portalProductId}"
+        o.input = Shapes::ShapeRef.new(shape: GetPortalProductRequest)
+        o.output = Shapes::ShapeRef.new(shape: GetPortalProductResponse)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
+      api.add_operation(:get_portal_product_sharing_policy, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetPortalProductSharingPolicy"
+        o.http_method = "GET"
+        o.http_request_uri = "/v2/portalproducts/{portalProductId}/sharingpolicy"
+        o.input = Shapes::ShapeRef.new(shape: GetPortalProductSharingPolicyRequest)
+        o.output = Shapes::ShapeRef.new(shape: GetPortalProductSharingPolicyResponse)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
+      api.add_operation(:get_product_page, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetProductPage"
+        o.http_method = "GET"
+        o.http_request_uri = "/v2/portalproducts/{portalProductId}/productpages/{productPageId}"
+        o.input = Shapes::ShapeRef.new(shape: GetProductPageRequest)
+        o.output = Shapes::ShapeRef.new(shape: GetProductPageResponse)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
+      api.add_operation(:get_product_rest_endpoint_page, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetProductRestEndpointPage"
+        o.http_method = "GET"
+        o.http_request_uri = "/v2/portalproducts/{portalProductId}/productrestendpointpages/{productRestEndpointPageId}"
+        o.input = Shapes::ShapeRef.new(shape: GetProductRestEndpointPageRequest)
+        o.output = Shapes::ShapeRef.new(shape: GetProductRestEndpointPageResponse)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
       api.add_operation(:get_route, Seahorse::Model::Operation.new.tap do |o|
         o.name = "GetRoute"
         o.http_method = "GET"
@@ -2356,6 +3461,17 @@ module Aws::ApiGatewayV2
         o.http_request_uri = "/v2/apis/{apiId}/routes"
         o.input = Shapes::ShapeRef.new(shape: GetRoutesRequest)
         o.output = Shapes::ShapeRef.new(shape: GetRoutesResponse)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+      end)
+
+      api.add_operation(:get_routing_rule, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetRoutingRule"
+        o.http_method = "GET"
+        o.http_request_uri = "/v2/domainnames/{domainName}/routingrules/{routingRuleId}"
+        o.input = Shapes::ShapeRef.new(shape: GetRoutingRuleRequest)
+        o.output = Shapes::ShapeRef.new(shape: GetRoutingRuleResponse)
         o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
         o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
@@ -2420,6 +3536,143 @@ module Aws::ApiGatewayV2
         o.http_request_uri = "/v2/apis"
         o.input = Shapes::ShapeRef.new(shape: ImportApiRequest)
         o.output = Shapes::ShapeRef.new(shape: ImportApiResponse)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+      end)
+
+      api.add_operation(:list_portal_products, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListPortalProducts"
+        o.http_method = "GET"
+        o.http_request_uri = "/v2/portalproducts"
+        o.input = Shapes::ShapeRef.new(shape: ListPortalProductsRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListPortalProductsResponse)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:list_portals, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListPortals"
+        o.http_method = "GET"
+        o.http_request_uri = "/v2/portals"
+        o.input = Shapes::ShapeRef.new(shape: ListPortalsRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListPortalsResponse)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:list_product_pages, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListProductPages"
+        o.http_method = "GET"
+        o.http_request_uri = "/v2/portalproducts/{portalProductId}/productpages"
+        o.input = Shapes::ShapeRef.new(shape: ListProductPagesRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListProductPagesResponse)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:list_product_rest_endpoint_pages, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListProductRestEndpointPages"
+        o.http_method = "GET"
+        o.http_request_uri = "/v2/portalproducts/{portalProductId}/productrestendpointpages"
+        o.input = Shapes::ShapeRef.new(shape: ListProductRestEndpointPagesRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListProductRestEndpointPagesResponse)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:list_routing_rules, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListRoutingRules"
+        o.http_method = "GET"
+        o.http_request_uri = "/v2/domainnames/{domainName}/routingrules"
+        o.input = Shapes::ShapeRef.new(shape: ListRoutingRulesRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListRoutingRulesResponse)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:preview_portal, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "PreviewPortal"
+        o.http_method = "POST"
+        o.http_request_uri = "/v2/portals/{portalId}/preview"
+        o.input = Shapes::ShapeRef.new(shape: PreviewPortalRequest)
+        o.output = Shapes::ShapeRef.new(shape: PreviewPortalResponse)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
+      api.add_operation(:publish_portal, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "PublishPortal"
+        o.http_method = "POST"
+        o.http_request_uri = "/v2/portals/{portalId}/publish"
+        o.input = Shapes::ShapeRef.new(shape: PublishPortalRequest)
+        o.output = Shapes::ShapeRef.new(shape: PublishPortalResponse)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
+      api.add_operation(:put_portal_product_sharing_policy, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "PutPortalProductSharingPolicy"
+        o.http_method = "PUT"
+        o.http_request_uri = "/v2/portalproducts/{portalProductId}/sharingpolicy"
+        o.input = Shapes::ShapeRef.new(shape: PutPortalProductSharingPolicyRequest)
+        o.output = Shapes::ShapeRef.new(shape: PutPortalProductSharingPolicyResponse)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
+      api.add_operation(:put_routing_rule, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "PutRoutingRule"
+        o.http_method = "PUT"
+        o.http_request_uri = "/v2/domainnames/{domainName}/routingrules/{routingRuleId}"
+        o.input = Shapes::ShapeRef.new(shape: PutRoutingRuleRequest)
+        o.output = Shapes::ShapeRef.new(shape: PutRoutingRuleResponse)
         o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
         o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
@@ -2556,6 +3809,55 @@ module Aws::ApiGatewayV2
         o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
         o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+      end)
+
+      api.add_operation(:update_portal, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "UpdatePortal"
+        o.http_method = "PATCH"
+        o.http_request_uri = "/v2/portals/{portalId}"
+        o.input = Shapes::ShapeRef.new(shape: UpdatePortalRequest)
+        o.output = Shapes::ShapeRef.new(shape: UpdatePortalResponse)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
+      api.add_operation(:update_portal_product, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "UpdatePortalProduct"
+        o.http_method = "PATCH"
+        o.http_request_uri = "/v2/portalproducts/{portalProductId}"
+        o.input = Shapes::ShapeRef.new(shape: UpdatePortalProductRequest)
+        o.output = Shapes::ShapeRef.new(shape: UpdatePortalProductResponse)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
+      api.add_operation(:update_product_page, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "UpdateProductPage"
+        o.http_method = "PATCH"
+        o.http_request_uri = "/v2/portalproducts/{portalProductId}/productpages/{productPageId}"
+        o.input = Shapes::ShapeRef.new(shape: UpdateProductPageRequest)
+        o.output = Shapes::ShapeRef.new(shape: UpdateProductPageResponse)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
+      api.add_operation(:update_product_rest_endpoint_page, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "UpdateProductRestEndpointPage"
+        o.http_method = "PATCH"
+        o.http_request_uri = "/v2/portalproducts/{portalProductId}/productrestendpointpages/{productRestEndpointPageId}"
+        o.input = Shapes::ShapeRef.new(shape: UpdateProductRestEndpointPageRequest)
+        o.output = Shapes::ShapeRef.new(shape: UpdateProductRestEndpointPageResponse)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
       end)
 
       api.add_operation(:update_route, Seahorse::Model::Operation.new.tap do |o|

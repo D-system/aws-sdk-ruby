@@ -25,7 +25,7 @@ module Aws
       def key_schema: () -> ::Array[Types::KeySchemaElement]
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DynamoDB/Table.html#table_status-instance_method
-      def table_status: () -> ("CREATING" | "UPDATING" | "DELETING" | "ACTIVE" | "INACCESSIBLE_ENCRYPTION_CREDENTIALS" | "ARCHIVING" | "ARCHIVED")
+      def table_status: () -> ("CREATING" | "UPDATING" | "DELETING" | "ACTIVE" | "INACCESSIBLE_ENCRYPTION_CREDENTIALS" | "ARCHIVING" | "ARCHIVED" | "REPLICATION_NOT_AUTHORIZED")
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DynamoDB/Table.html#creation_date_time-instance_method
       def creation_date_time: () -> ::Time
@@ -69,6 +69,12 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DynamoDB/Table.html#replicas-instance_method
       def replicas: () -> ::Array[Types::ReplicaDescription]
 
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DynamoDB/Table.html#global_table_witnesses-instance_method
+      def global_table_witnesses: () -> ::Array[Types::GlobalTableWitnessDescription]
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DynamoDB/Table.html#global_table_settings_replication_mode-instance_method
+      def global_table_settings_replication_mode: () -> ("ENABLED" | "DISABLED" | "ENABLED_WITH_OVERRIDES")
+
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DynamoDB/Table.html#restore_summary-instance_method
       def restore_summary: () -> Types::RestoreSummary
 
@@ -92,6 +98,9 @@ module Aws
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DynamoDB/Table.html#multi_region_consistency-instance_method
       def multi_region_consistency: () -> ("EVENTUAL" | "STRONG")
+
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/DynamoDB/Table.html#vector_indexes-instance_method
+      def vector_indexes: () -> ::Array[Types::VectorIndexDescription]
 
       def client: () -> Client
 
@@ -218,7 +227,7 @@ module Aws
                       {
                         attribute_name: ::String,
                         attribute_type: ("S" | "N" | "B")
-                      },
+                      }
                     ],
                     ?billing_mode: ("PROVISIONED" | "PAY_PER_REQUEST"),
                     ?provisioned_throughput: {
@@ -248,7 +257,7 @@ module Aws
                             {
                               attribute_name: ::String,
                               key_type: ("HASH" | "RANGE")
-                            },
+                            }
                           ],
                           projection: {
                             projection_type: ("ALL" | "KEYS_ONLY" | "INCLUDE")?,
@@ -270,7 +279,7 @@ module Aws
                         delete: {
                           index_name: ::String
                         }?
-                      },
+                      }
                     ],
                     ?stream_specification: {
                       stream_enabled: bool,
@@ -301,7 +310,7 @@ module Aws
                               on_demand_throughput_override: {
                                 max_read_request_units: ::Integer?
                               }?
-                            },
+                            }
                           ]?,
                           table_class_override: ("STANDARD" | "STANDARD_INFREQUENT_ACCESS")?
                         }?,
@@ -323,18 +332,28 @@ module Aws
                               on_demand_throughput_override: {
                                 max_read_request_units: ::Integer?
                               }?
-                            },
+                            }
                           ]?,
                           table_class_override: ("STANDARD" | "STANDARD_INFREQUENT_ACCESS")?
                         }?,
                         delete: {
                           region_name: ::String
                         }?
-                      },
+                      }
                     ],
                     ?table_class: ("STANDARD" | "STANDARD_INFREQUENT_ACCESS"),
                     ?deletion_protection_enabled: bool,
                     ?multi_region_consistency: ("EVENTUAL" | "STRONG"),
+                    ?global_table_witness_updates: Array[
+                      {
+                        create: {
+                          region_name: ::String
+                        }?,
+                        delete: {
+                          region_name: ::String
+                        }?
+                      }
+                    ],
                     ?on_demand_throughput: {
                       max_read_request_units: ::Integer?,
                       max_write_request_units: ::Integer?
@@ -342,7 +361,33 @@ module Aws
                     ?warm_throughput: {
                       read_units_per_second: ::Integer?,
                       write_units_per_second: ::Integer?
-                    }
+                    },
+                    ?global_table_settings_replication_mode: ("ENABLED" | "DISABLED" | "ENABLED_WITH_OVERRIDES"),
+                    ?vector_index_updates: Array[
+                      {
+                        create: {
+                          index_name: ::String,
+                          vector_attribute: {
+                            attribute_name: ::String
+                          },
+                          search_schema: Array[
+                            {
+                              attribute_name: ::String,
+                              search_schema_element_type: ("HASH" | "INLINE_FILTER")
+                            }
+                          ]?,
+                          projection: {
+                            projection_type: ("ALL" | "KEYS_ONLY" | "INCLUDE")?,
+                            non_key_attributes: Array[::String]?
+                          },
+                          dimensions: ::Integer,
+                          distance_function: ("COSINE" | "DOT_PRODUCT" | "EUCLIDEAN")
+                        }?,
+                        delete: {
+                          index_name: ::String
+                        }?
+                      }
+                    ]
                   ) -> Table
                 | (?Hash[Symbol, untyped]) -> Table
 

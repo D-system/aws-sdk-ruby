@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -147,6 +148,7 @@ module Aws
                                        core_network_id: ::String,
                                        edge_location: ::String,
                                        transport_attachment_id: ::String,
+                                       ?routing_policy_label: ::String,
                                        options: {
                                          protocol: ("GRE" | "NO_ENCAP")?
                                        },
@@ -154,7 +156,7 @@ module Aws
                                          {
                                            key: ::String?,
                                            value: ::String?
-                                         },
+                                         }
                                        ],
                                        ?client_token: ::String
                                      ) -> _CreateConnectAttachmentResponseSuccess
@@ -177,7 +179,7 @@ module Aws
                                    {
                                      key: ::String?,
                                      value: ::String?
-                                   },
+                                   }
                                  ],
                                  ?client_token: ::String,
                                  ?subnet_arn: ::String
@@ -200,7 +202,7 @@ module Aws
                                  {
                                    key: ::String?,
                                    value: ::String?
-                                 },
+                                 }
                                ]
                              ) -> _CreateConnectionResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateConnectionResponseSuccess
@@ -217,12 +219,27 @@ module Aws
                                    {
                                      key: ::String?,
                                      value: ::String?
-                                   },
+                                   }
                                  ],
                                  ?policy_document: ::String,
                                  ?client_token: ::String
                                ) -> _CreateCoreNetworkResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateCoreNetworkResponseSuccess
+
+      interface _CreateCoreNetworkPrefixListAssociationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateCoreNetworkPrefixListAssociationResponse]
+        def core_network_id: () -> ::String
+        def prefix_list_arn: () -> ::String
+        def prefix_list_alias: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/NetworkManager/Client.html#create_core_network_prefix_list_association-instance_method
+      def create_core_network_prefix_list_association: (
+                                                         core_network_id: ::String,
+                                                         prefix_list_arn: ::String,
+                                                         prefix_list_alias: ::String,
+                                                         ?client_token: ::String
+                                                       ) -> _CreateCoreNetworkPrefixListAssociationResponseSuccess
+                                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateCoreNetworkPrefixListAssociationResponseSuccess
 
       interface _CreateDeviceResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateDeviceResponse]
@@ -250,7 +267,7 @@ module Aws
                              {
                                key: ::String?,
                                value: ::String?
-                             },
+                             }
                            ]
                          ) -> _CreateDeviceResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateDeviceResponseSuccess
@@ -263,12 +280,13 @@ module Aws
       def create_direct_connect_gateway_attachment: (
                                                       core_network_id: ::String,
                                                       direct_connect_gateway_arn: ::String,
+                                                      ?routing_policy_label: ::String,
                                                       edge_locations: Array[::String],
                                                       ?tags: Array[
                                                         {
                                                           key: ::String?,
                                                           value: ::String?
-                                                        },
+                                                        }
                                                       ],
                                                       ?client_token: ::String
                                                     ) -> _CreateDirectConnectGatewayAttachmentResponseSuccess
@@ -285,7 +303,7 @@ module Aws
                                      {
                                        key: ::String?,
                                        value: ::String?
-                                     },
+                                     }
                                    ]
                                  ) -> _CreateGlobalNetworkResponseSuccess
                                | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateGlobalNetworkResponseSuccess
@@ -309,7 +327,7 @@ module Aws
                            {
                              key: ::String?,
                              value: ::String?
-                           },
+                           }
                          ]
                        ) -> _CreateLinkResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateLinkResponseSuccess
@@ -331,7 +349,7 @@ module Aws
                            {
                              key: ::String?,
                              value: ::String?
-                           },
+                           }
                          ]
                        ) -> _CreateSiteResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateSiteResponseSuccess
@@ -344,11 +362,12 @@ module Aws
       def create_site_to_site_vpn_attachment: (
                                                 core_network_id: ::String,
                                                 vpn_connection_arn: ::String,
+                                                ?routing_policy_label: ::String,
                                                 ?tags: Array[
                                                   {
                                                     key: ::String?,
                                                     value: ::String?
-                                                  },
+                                                  }
                                                 ],
                                                 ?client_token: ::String
                                               ) -> _CreateSiteToSiteVpnAttachmentResponseSuccess
@@ -366,7 +385,7 @@ module Aws
                                               {
                                                 key: ::String?,
                                                 value: ::String?
-                                              },
+                                              }
                                             ],
                                             ?client_token: ::String
                                           ) -> _CreateTransitGatewayPeeringResponseSuccess
@@ -380,11 +399,12 @@ module Aws
       def create_transit_gateway_route_table_attachment: (
                                                            peering_id: ::String,
                                                            transit_gateway_route_table_arn: ::String,
+                                                           ?routing_policy_label: ::String,
                                                            ?tags: Array[
                                                              {
                                                                key: ::String?,
                                                                value: ::String?
-                                                             },
+                                                             }
                                                            ],
                                                            ?client_token: ::String
                                                          ) -> _CreateTransitGatewayRouteTableAttachmentResponseSuccess
@@ -401,13 +421,16 @@ module Aws
                                    subnet_arns: Array[::String],
                                    ?options: {
                                      ipv_6_support: bool?,
-                                     appliance_mode_support: bool?
+                                     appliance_mode_support: bool?,
+                                     dns_support: bool?,
+                                     security_group_referencing_support: bool?
                                    },
+                                   ?routing_policy_label: ::String,
                                    ?tags: Array[
                                      {
                                        key: ::String?,
                                        value: ::String?
-                                     },
+                                     }
                                    ],
                                    ?client_token: ::String
                                  ) -> _CreateVpcAttachmentResponseSuccess
@@ -464,6 +487,18 @@ module Aws
                                                 policy_version_id: ::Integer
                                               ) -> _DeleteCoreNetworkPolicyVersionResponseSuccess
                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteCoreNetworkPolicyVersionResponseSuccess
+
+      interface _DeleteCoreNetworkPrefixListAssociationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteCoreNetworkPrefixListAssociationResponse]
+        def core_network_id: () -> ::String
+        def prefix_list_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/NetworkManager/Client.html#delete_core_network_prefix_list_association-instance_method
+      def delete_core_network_prefix_list_association: (
+                                                         core_network_id: ::String,
+                                                         prefix_list_arn: ::String
+                                                       ) -> _DeleteCoreNetworkPrefixListAssociationResponseSuccess
+                                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteCoreNetworkPrefixListAssociationResponseSuccess
 
       interface _DeleteDeviceResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DeleteDeviceResponse]
@@ -985,6 +1020,20 @@ module Aws
                               ) -> _GetVpcAttachmentResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetVpcAttachmentResponseSuccess
 
+      interface _ListAttachmentRoutingPolicyAssociationsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListAttachmentRoutingPolicyAssociationsResponse]
+        def attachment_routing_policy_associations: () -> ::Array[Types::AttachmentRoutingPolicyAssociationSummary]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/NetworkManager/Client.html#list_attachment_routing_policy_associations-instance_method
+      def list_attachment_routing_policy_associations: (
+                                                         core_network_id: ::String,
+                                                         ?attachment_id: ::String,
+                                                         ?max_results: ::Integer,
+                                                         ?next_token: ::String
+                                                       ) -> _ListAttachmentRoutingPolicyAssociationsResponseSuccess
+                                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListAttachmentRoutingPolicyAssociationsResponseSuccess
+
       interface _ListAttachmentsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListAttachmentsResponse]
         def attachments: () -> ::Array[Types::Attachment]
@@ -1027,6 +1076,40 @@ module Aws
                                                ?next_token: ::String
                                              ) -> _ListCoreNetworkPolicyVersionsResponseSuccess
                                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListCoreNetworkPolicyVersionsResponseSuccess
+
+      interface _ListCoreNetworkPrefixListAssociationsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListCoreNetworkPrefixListAssociationsResponse]
+        def prefix_list_associations: () -> ::Array[Types::PrefixListAssociation]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/NetworkManager/Client.html#list_core_network_prefix_list_associations-instance_method
+      def list_core_network_prefix_list_associations: (
+                                                        core_network_id: ::String,
+                                                        ?prefix_list_arn: ::String,
+                                                        ?max_results: ::Integer,
+                                                        ?next_token: ::String
+                                                      ) -> _ListCoreNetworkPrefixListAssociationsResponseSuccess
+                                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListCoreNetworkPrefixListAssociationsResponseSuccess
+
+      interface _ListCoreNetworkRoutingInformationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListCoreNetworkRoutingInformationResponse]
+        def core_network_routing_information: () -> ::Array[Types::CoreNetworkRoutingInformation]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/NetworkManager/Client.html#list_core_network_routing_information-instance_method
+      def list_core_network_routing_information: (
+                                                   core_network_id: ::String,
+                                                   segment_name: ::String,
+                                                   edge_location: ::String,
+                                                   ?next_hop_filters: Hash[::String, Array[::String]],
+                                                   ?local_preference_matches: Array[::String],
+                                                   ?exact_as_path_matches: Array[::String],
+                                                   ?med_matches: Array[::String],
+                                                   ?community_matches: Array[::String],
+                                                   ?max_results: ::Integer,
+                                                   ?next_token: ::String
+                                                 ) -> _ListCoreNetworkRoutingInformationResponseSuccess
+                                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListCoreNetworkRoutingInformationResponseSuccess
 
       interface _ListCoreNetworksResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListCoreNetworksResponse]
@@ -1078,6 +1161,21 @@ module Aws
                                   ) -> _ListTagsForResourceResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListTagsForResourceResponseSuccess
 
+      interface _PutAttachmentRoutingPolicyLabelResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::PutAttachmentRoutingPolicyLabelResponse]
+        def core_network_id: () -> ::String
+        def attachment_id: () -> ::String
+        def routing_policy_label: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/NetworkManager/Client.html#put_attachment_routing_policy_label-instance_method
+      def put_attachment_routing_policy_label: (
+                                                 core_network_id: ::String,
+                                                 attachment_id: ::String,
+                                                 routing_policy_label: ::String,
+                                                 ?client_token: ::String
+                                               ) -> _PutAttachmentRoutingPolicyLabelResponseSuccess
+                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutAttachmentRoutingPolicyLabelResponseSuccess
+
       interface _PutCoreNetworkPolicyResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::PutCoreNetworkPolicyResponse]
         def core_network_policy: () -> Types::CoreNetworkPolicy
@@ -1122,6 +1220,19 @@ module Aws
                                attachment_id: ::String
                              ) -> _RejectAttachmentResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RejectAttachmentResponseSuccess
+
+      interface _RemoveAttachmentRoutingPolicyLabelResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::RemoveAttachmentRoutingPolicyLabelResponse]
+        def core_network_id: () -> ::String
+        def attachment_id: () -> ::String
+        def routing_policy_label: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/NetworkManager/Client.html#remove_attachment_routing_policy_label-instance_method
+      def remove_attachment_routing_policy_label: (
+                                                    core_network_id: ::String,
+                                                    attachment_id: ::String
+                                                  ) -> _RemoveAttachmentRoutingPolicyLabelResponseSuccess
+                                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RemoveAttachmentRoutingPolicyLabelResponseSuccess
 
       interface _RestoreCoreNetworkPolicyVersionResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::RestoreCoreNetworkPolicyVersionResponse]
@@ -1174,7 +1285,7 @@ module Aws
                             {
                               key: ::String?,
                               value: ::String?
-                            },
+                            }
                           ]
                         ) -> _TagResourceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess
@@ -1321,7 +1432,9 @@ module Aws
                                    ?remove_subnet_arns: Array[::String],
                                    ?options: {
                                      ipv_6_support: bool?,
-                                     appliance_mode_support: bool?
+                                     appliance_mode_support: bool?,
+                                     dns_support: bool?,
+                                     security_group_referencing_support: bool?
                                    }
                                  ) -> _UpdateVpcAttachmentResponseSuccess
                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateVpcAttachmentResponseSuccess

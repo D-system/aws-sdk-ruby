@@ -1,6 +1,34 @@
 {
   "version": "1.0",
   "examples": {
+    "ContinueServiceDeployment": [
+      {
+        "input": {
+          "action": "CONTINUE",
+          "hookId": "ecs-pause-Xk7rT2mP9sLwQn4vB8fYd3hJ6gA1cE5iO0uR_ZpWq",
+          "serviceDeploymentArn": "arn:aws:ecs:us-east-1:123456789012:service-deployment/MyCluster/MyService/r9i43YFjvgF_xlg7m2eJ1r"
+        },
+        "output": {
+          "serviceDeploymentArn": "arn:aws:ecs:us-east-1:123456789012:service-deployment/MyCluster/MyService/r9i43YFjvgF_xlg7m2eJ1r"
+        },
+        "description": "This example continues a service deployment that is paused at a lifecycle hook, using the CONTINUE action to proceed to the next deployment stage.",
+        "id": "example-1",
+        "title": "To continue a paused service deployment"
+      },
+      {
+        "input": {
+          "action": "ROLLBACK",
+          "hookId": "ecs-pause-Xk7rT2mP9sLwQn4vB8fYd3hJ6gA1cE5iO0uR_ZpWq",
+          "serviceDeploymentArn": "arn:aws:ecs:us-east-1:123456789012:service-deployment/MyCluster/MyService/r9i43YFjvgF_xlg7m2eJ1r"
+        },
+        "output": {
+          "serviceDeploymentArn": "arn:aws:ecs:us-east-1:123456789012:service-deployment/MyCluster/MyService/r9i43YFjvgF_xlg7m2eJ1r"
+        },
+        "description": "This example rolls back a service deployment that is paused at a lifecycle hook, using the ROLLBACK action to revert to the previous service revision.",
+        "id": "example-2",
+        "title": "To roll back a paused service deployment"
+      }
+    ],
     "CreateCapacityProvider": [
       {
         "input": {
@@ -30,19 +58,11 @@
             },
             "capacityProviderArn": "arn:aws:ecs:us-east-1:123456789012:capacity-provider/MyCapacityProvider",
             "status": "ACTIVE",
-            "tags": [
-
-            ]
-          }
-        },
-        "comments": {
-          "input": {
-          },
-          "output": {
+            "tags": []
           }
         },
         "description": "This example creates a capacity provider that uses the specified Auto Scaling group MyASG and has managed scaling and manager termination protection enabled. ",
-        "id": "to-create-a-capacity-provider--1733861347945",
+        "id": "example-1",
         "title": "To create a capacity provider "
       }
     ],
@@ -62,15 +82,34 @@
             "status": "ACTIVE"
           }
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
+        "description": "This example creates a cluster in your default region.",
+        "id": "example-1",
+        "title": "To create a new cluster"
+      }
+    ],
+    "CreateDaemon": [
+      {
+        "input": {
+          "capacityProviderArns": [
+            "arn:aws:ecs:us-east-1:123456789012:capacity-provider/my-capacity-provider"
+          ],
+          "clusterArn": "arn:aws:ecs:us-east-1:123456789012:cluster/my-cluster",
+          "daemonName": "my-monitoring-daemon",
+          "daemonTaskDefinitionArn": "arn:aws:ecs:us-east-1:123456789012:daemon-task-definition/monitoring-agent:1",
+          "deploymentConfiguration": {
+            "bakeTimeInMinutes": 5,
+            "drainPercent": 10.0
           }
         },
-        "description": "This example creates a cluster in your default region.",
-        "id": "to-create-a-new-cluster-1472514079365",
-        "title": "To create a new cluster"
+        "output": {
+          "createdAt": "2025-03-15T12:00:00.000Z",
+          "daemonArn": "arn:aws:ecs:us-east-1:123456789012:daemon/my-cluster/my-monitoring-daemon",
+          "deploymentArn": "arn:aws:ecs:us-east-1:123456789012:daemon-deployment/my-cluster/my-monitoring-daemon/aB1cD2eF3gH4iJ5k",
+          "status": "ACTIVE"
+        },
+        "description": "This example creates a daemon named my-monitoring-daemon in the specified cluster that uses the monitoring-agent daemon task definition and deploys to the specified capacity provider.",
+        "id": "example-1",
+        "title": "To create a daemon"
       }
     ],
     "CreateService": [
@@ -111,12 +150,8 @@
               }
             ],
             "desiredCount": 10,
-            "events": [
-
-            ],
-            "loadBalancers": [
-
-            ],
+            "events": [],
+            "loadBalancers": [],
             "pendingCount": 0,
             "runningCount": 0,
             "serviceArn": "arn:aws:ecs:us-east-1:012345678910:service/default/ecs-simple-service",
@@ -125,14 +160,8 @@
             "taskDefinition": "arn:aws:ecs:us-east-1:012345678910:task-definition/default/hello_world:6"
           }
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example creates a service in your default region called ``ecs-simple-service``. The service uses the ``hello_world`` task definition and it maintains 10 copies of that task.",
-        "id": "to-create-a-new-service-1472512584282",
+        "id": "example-1",
         "title": "To create a new service"
       },
       {
@@ -170,9 +199,7 @@
               }
             ],
             "desiredCount": 10,
-            "events": [
-
-            ],
+            "events": [],
             "loadBalancers": [
               {
                 "containerName": "simple-app",
@@ -189,15 +216,115 @@
             "taskDefinition": "arn:aws:ecs:us-east-1:012345678910:task-definition/default/console-sample-app-static:6"
           }
         },
-        "comments": {
-          "input": {
+        "description": "This example creates a service in your default region called ``ecs-simple-service-elb``. The service uses the ``ecs-demo`` task definition and it maintains 10 copies of that task. You must reference an existing load balancer in the same region by its name.",
+        "id": "example-2",
+        "title": "To create a new service behind a load balancer"
+      },
+      {
+        "input": {
+          "deploymentConfiguration": {
+            "lifecycleHooks": [
+              {
+                "lifecycleStages": [
+                  "POST_PRODUCTION_TRAFFIC_SHIFT"
+                ],
+                "targetType": "PAUSE",
+                "timeoutConfiguration": {
+                  "action": "ROLLBACK",
+                  "timeoutInMinutes": 60
+                }
+              }
+            ],
+            "strategy": "BLUE_GREEN"
           },
-          "output": {
+          "desiredCount": 2,
+          "serviceName": "ecs-service-with-pause-hook",
+          "taskDefinition": "ecs-demo"
+        },
+        "output": {
+          "service": {
+            "clusterArn": "arn:aws:ecs:us-east-1:012345678910:cluster/default",
+            "createdAt": "2026-05-06T16:00:00.000Z",
+            "deploymentConfiguration": {
+              "lifecycleHooks": [
+                {
+                  "lifecycleStages": [
+                    "POST_PRODUCTION_TRAFFIC_SHIFT"
+                  ],
+                  "targetType": "PAUSE",
+                  "timeoutConfiguration": {
+                    "action": "ROLLBACK",
+                    "timeoutInMinutes": 60
+                  }
+                }
+              ],
+              "maximumPercent": 200,
+              "minimumHealthyPercent": 100,
+              "strategy": "BLUE_GREEN"
+            },
+            "deployments": [
+              {
+                "createdAt": "2026-05-06T16:00:00.000Z",
+                "desiredCount": 2,
+                "id": "ecs-svc/9223370564342348388",
+                "pendingCount": 0,
+                "runningCount": 0,
+                "status": "PRIMARY",
+                "taskDefinition": "arn:aws:ecs:us-east-1:012345678910:task-definition/ecs-demo:1",
+                "updatedAt": "2026-05-06T16:00:00.000Z"
+              }
+            ],
+            "desiredCount": 2,
+            "events": [],
+            "loadBalancers": [],
+            "pendingCount": 0,
+            "runningCount": 0,
+            "serviceArn": "arn:aws:ecs:us-east-1:012345678910:service/default/ecs-service-with-pause-hook",
+            "serviceName": "ecs-service-with-pause-hook",
+            "status": "ACTIVE",
+            "taskDefinition": "arn:aws:ecs:us-east-1:012345678910:task-definition/ecs-demo:1"
           }
         },
-        "description": "This example creates a service in your default region called ``ecs-simple-service-elb``. The service uses the ``ecs-demo`` task definition and it maintains 10 copies of that task. You must reference an existing load balancer in the same region by its name.",
-        "id": "to-create-a-new-service-behind-a-load-balancer-1472512484823",
-        "title": "To create a new service behind a load balancer"
+        "description": "This example creates a service with a blue/green deployment strategy that includes a pause lifecycle hook at the POST_PRODUCTION_TRAFFIC_SHIFT stage. The deployment will pause at that stage until you explicitly continue or roll back using the ContinueServiceDeployment API, or until the 60-minute timeout expires and triggers a rollback.",
+        "id": "example-3",
+        "title": "To create a service with a pause lifecycle hook"
+      },
+      {
+        "input": {
+          "desiredCount": 2,
+          "monitoring": {
+            "metricConfigurations": [
+              {
+                "metricNames": [
+                  "CPUUtilization",
+                  "MemoryUtilization"
+                ],
+                "resolutionSeconds": 20
+              }
+            ]
+          },
+          "serviceName": "ecs-monitored-service",
+          "taskDefinition": "my-app:1"
+        },
+        "output": {
+          "service": {
+            "clusterArn": "arn:aws:ecs:us-east-1:012345678910:cluster/default",
+            "deploymentConfiguration": {
+              "maximumPercent": 200,
+              "minimumHealthyPercent": 100
+            },
+            "desiredCount": 2,
+            "pendingCount": 0,
+            "runningCount": 0,
+            "serviceArn": "arn:aws:ecs:us-east-1:012345678910:service/default/ecs-monitored-service",
+            "serviceName": "ecs-monitored-service",
+            "status": "ACTIVE",
+            "taskDefinition": "arn:aws:ecs:us-east-1:012345678910:task-definition/my-app:1"
+          }
+        },
+        "description": "This example creates a service with a monitoring configuration that sets 20-second resolution for CPUUtilization and MemoryUtilization CloudWatch metrics. The monitoring configuration is not returned in the CreateService response. Use DescribeServiceRevisions to view the monitoring configuration.",
+        "id": "example-4",
+        "title": "To create a service with a monitoring configuration"
       }
     ],
     "CreateTaskSet": [
@@ -223,9 +350,7 @@
             "createdAt": 1557128360.711,
             "id": "ecs-svc/1234567890123456789",
             "launchType": "EC2",
-            "loadBalancers": [
-
-            ],
+            "loadBalancers": [],
             "networkConfiguration": {
               "awsvpcConfiguration": {
                 "assignPublicIp": "DISABLED",
@@ -243,9 +368,7 @@
               "value": 0,
               "unit": "PERCENT"
             },
-            "serviceRegistries": [
-
-            ],
+            "serviceRegistries": [],
             "stabilityStatus": "STABILIZING",
             "stabilityStatusAt": 1557128360.711,
             "status": "ACTIVE",
@@ -254,14 +377,8 @@
             "updatedAt": 1557128360.711
           }
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example creates a task set in a service that uses the EXTERNAL deployment controller.",
-        "id": "to-create-a-task-set-1733864092815",
+        "id": "example-1",
         "title": "To create a task set"
       }
     ],
@@ -277,14 +394,8 @@
             "principalArn": "arn:aws:iam::<aws_account_id>:user/principalName"
           }
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example deletes the account setting for your user for the specified resource type.",
-        "id": "to-delete-the-account-setting-for-your-user-account-1549524548115",
+        "id": "example-1",
         "title": "To delete your account setting"
       },
       {
@@ -299,14 +410,8 @@
             "principalArn": "arn:aws:iam::<aws_account_id>:user/principalName"
           }
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example deletes the account setting for a specific IAM user or IAM role for the specified resource type. Only the root user can view or modify the account settings for another user.",
-        "id": "to-delete-the-account-setting-for-a-specific-iam-user-or-iam-role-1549524612917",
+        "id": "example-2",
         "title": "To delete the account settings for a specific IAM user or IAM role"
       }
     ],
@@ -329,14 +434,8 @@
             }
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example deletes an attribute named stack from a container instance. ",
-        "id": "to-delete-a-custom-attribute-from-an-amazon-ecs-instance-1733867267541",
+        "id": "example-1",
         "title": "To delete a custom attribute from an Amazon ECS instance"
       }
     ],
@@ -360,20 +459,12 @@
             },
             "capacityProviderArn": "arn:aws:ecs:us-west-2:123456789012:capacity-provider/ExampleCapacityProvider",
             "status": "ACTIVE",
-            "tags": [
-
-            ],
+            "tags": [],
             "updateStatus": "DELETE_IN_PROGRESS"
           }
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example deletes a specified capacity provider. ",
-        "id": "to-delete-a-specified-capacity-provider-1733868702678",
+        "id": "example-1",
         "title": "To delete a specified capacity provider"
       }
     ],
@@ -393,15 +484,39 @@
             "status": "INACTIVE"
           }
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example deletes an empty cluster in your default region.",
-        "id": "to-delete-an-empty-cluster-1472512705352",
+        "id": "example-1",
         "title": "To delete an empty cluster"
+      }
+    ],
+    "DeleteDaemon": [
+      {
+        "input": {
+          "daemonArn": "arn:aws:ecs:us-east-1:123456789012:daemon/my-cluster/my-monitoring-daemon"
+        },
+        "output": {
+          "createdAt": "2025-03-15T12:00:00.000Z",
+          "daemonArn": "arn:aws:ecs:us-east-1:123456789012:daemon/my-cluster/my-monitoring-daemon",
+          "deploymentArn": "arn:aws:ecs:us-east-1:123456789012:daemon-deployment/my-cluster/my-monitoring-daemon/mN3oP4qR5sT6uV7w",
+          "status": "DELETE_IN_PROGRESS",
+          "updatedAt": "2025-03-25T09:00:00.000Z"
+        },
+        "description": "This example deletes the my-monitoring-daemon daemon.",
+        "id": "example-1",
+        "title": "To delete a daemon"
+      }
+    ],
+    "DeleteDaemonTaskDefinition": [
+      {
+        "input": {
+          "daemonTaskDefinition": "monitoring-agent:1"
+        },
+        "output": {
+          "daemonTaskDefinitionArn": "arn:aws:ecs:us-east-1:123456789012:daemon-task-definition/monitoring-agent:1"
+        },
+        "description": "This example deletes the first revision of the monitoring-agent daemon task definition.",
+        "id": "example-1",
+        "title": "To delete a daemon task definition"
       }
     ],
     "DeleteService": [
@@ -409,16 +524,9 @@
         "input": {
           "service": "my-http-service"
         },
-        "output": {
-        },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
+        "output": {},
         "description": "This example deletes the my-http-service service. The service must have a desired count and running count of 0 before you can delete it.",
-        "id": "e8183e38-f86e-4390-b811-f74f30a6007d",
+        "id": "example-1",
         "title": "To delete a service"
       }
     ],
@@ -430,9 +538,7 @@
           ]
         },
         "output": {
-          "failures": [
-
-          ],
+          "failures": [],
           "taskDefinitions": [
             {
               "containerDefinitions": [
@@ -446,41 +552,25 @@
                     "bash",
                     "-c"
                   ],
-                  "environment": [
-
-                  ],
+                  "environment": [],
                   "essential": true,
-                  "image": "ubuntu",
+                  "image": "public.ecr.aws/docker/library/ubuntu:latest",
                   "memory": 100,
-                  "mountPoints": [
-
-                  ],
-                  "portMappings": [
-
-                  ],
-                  "volumesFrom": [
-
-                  ]
+                  "mountPoints": [],
+                  "portMappings": [],
+                  "volumesFrom": []
                 }
               ],
               "family": "cpu-wave",
               "revision": 1,
               "status": "DELETE_IN_PROGRESS",
               "taskDefinitionArn": "arn:aws:ecs:us-east-1:012345678910:task-definition/Example-task-definition:1",
-              "volumes": [
-
-              ]
+              "volumes": []
             }
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example deletes a specified deregistered task definition. ",
-        "id": "to-delete-a-task-definition-that-has-been-deregistered-1733940790186",
+        "id": "example-1",
         "title": "To delete a task definition that has been deregistered"
       }
     ],
@@ -498,9 +588,7 @@
             "createdAt": 1557130260.276,
             "id": "ecs-svc/1234567890123456789",
             "launchType": "EC2",
-            "loadBalancers": [
-
-            ],
+            "loadBalancers": [],
             "networkConfiguration": {
               "awsvpcConfiguration": {
                 "assignPublicIp": "DISABLED",
@@ -518,9 +606,7 @@
               "value": 0,
               "unit": "PERCENT"
             },
-            "serviceRegistries": [
-
-            ],
+            "serviceRegistries": [],
             "stabilityStatus": "STABILIZING",
             "stabilityStatusAt": 1557130290.707,
             "status": "DRAINING",
@@ -529,14 +615,8 @@
             "updatedAt": 1557130290.707
           }
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example deletes a task set and uses the force flag to force deletion if it hasn't scaled to zero.",
-        "id": "to-delete-a-task-set-within-a-service-that-uses-the-external-deployment-controller-type-1733949897807",
+        "id": "example-1",
         "title": "To delete a task set within a service that uses the EXTERNAL deployment controller type"
       }
     ],
@@ -547,77 +627,49 @@
           "containerInstance": "container_instance_UUID",
           "force": true
         },
-        "output": {
-        },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
+        "output": {},
         "description": "This example deregisters a container instance from the specified cluster in your default region. If there are still tasks running on the container instance, you must either stop those tasks before deregistering, or use the force option.",
-        "id": "bf624927-cf64-4f4b-8b7e-c024a4e682f6",
+        "id": "example-1",
         "title": "To deregister a container instance from a cluster"
       }
     ],
     "DeregisterTaskDefinition": [
       {
         "input": {
-          "taskDefinition": "curler:1"
+          "taskDefinition": "fargate-task:1"
         },
         "output": {
           "taskDefinition": {
             "containerDefinitions": [
               {
-                "name": "curler",
-                "command": [
-                  "curl -v http://example.com/"
-                ],
-                "cpu": 100,
-                "entryPoint": [
-
-                ],
-                "environment": [
-
-                ],
+                "name": "nginx",
+                "cpu": 256,
                 "essential": true,
-                "image": "curl:latest",
-                "memory": 256,
-                "mountPoints": [
-
-                ],
+                "image": "public.ecr.aws/docker/library/nginx:latest",
+                "memory": 128,
                 "portMappings": [
-
-                ],
-                "volumesFrom": [
-
+                  {
+                    "containerPort": 80,
+                    "hostPort": 80,
+                    "protocol": "tcp"
+                  }
                 ]
               }
             ],
-            "family": "curler",
-            "revision": 1,
+            "family": "fargate-task",
             "status": "INACTIVE",
-            "taskDefinitionArn": "arn:aws:ecs:us-west-2:123456789012:task-definition/curler:1",
-            "volumes": [
-
-            ]
+            "taskDefinitionArn": "arn:aws:ecs:us-west-2:123456789012:task-definition/fargate-task:1",
+            "volumes": []
           }
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
-        "description": "This example deregisters the first revision of the curler task definition",
-        "id": "to-deregister-a-revision-of-a-task-definition-1733950214421",
+        "description": "This example deregisters the first revision of the fargate-task task definition",
+        "id": "example-1",
         "title": "To deregister a revision of a task definition"
       }
     ],
     "DescribeCapacityProviders": [
       {
-        "input": {
-        },
+        "input": {},
         "output": {
           "capacityProviders": [
             {
@@ -634,36 +686,24 @@
               },
               "capacityProviderArn": "arn:aws:ecs:us-west-2:123456789012:capacity-provider/MyCapacityProvider",
               "status": "ACTIVE",
-              "tags": [
-
-              ]
+              "tags": []
             },
             {
               "name": "FARGATE",
               "capacityProviderArn": "arn:aws:ecs:us-west-2:123456789012:capacity-provider/FARGATE",
               "status": "ACTIVE",
-              "tags": [
-
-              ]
+              "tags": []
             },
             {
               "name": "FARGATE_SPOT",
               "capacityProviderArn": "arn:aws:ecs:us-west-2:123456789012:capacity-provider/FARGATE_SPOT",
               "status": "ACTIVE",
-              "tags": [
-
-              ]
+              "tags": []
             }
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example retrieves details about all capacity providers. ",
-        "id": "to-describe-all-capacity-providers-1733951199913",
+        "id": "example-1",
         "title": "To describe all capacity providers"
       },
       {
@@ -700,14 +740,8 @@
             }
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example retrieves details about the capacity provider MyCapacityProvider",
-        "id": "to-describe-a-specific-capacity-provider-1733951378688",
+        "id": "example-2",
         "title": "To describe a specific capacity provider"
       }
     ],
@@ -726,18 +760,10 @@
               "status": "ACTIVE"
             }
           ],
-          "failures": [
-
-          ]
-        },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
+          "failures": []
         },
         "description": "This example provides a description of the specified cluster in your default region.",
-        "id": "ba88d100-9672-4231-80da-a4bd210bf728",
+        "id": "example-1",
         "title": "To describe a cluster"
       }
     ],
@@ -819,19 +845,184 @@
               "status": "ACTIVE"
             }
           ],
-          "failures": [
-
-          ]
-        },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
+          "failures": []
         },
         "description": "This example provides a description of the specified container instance in your default region, using the container instance UUID as an identifier.",
-        "id": "c8f439de-eb27-4269-8ca7-2c0a7ba75ab0",
+        "id": "example-1",
         "title": "To describe container instance"
+      }
+    ],
+    "DescribeDaemon": [
+      {
+        "input": {
+          "daemonArn": "arn:aws:ecs:us-east-1:123456789012:daemon/my-cluster/my-monitoring-daemon"
+        },
+        "output": {
+          "daemon": {
+            "clusterArn": "arn:aws:ecs:us-east-1:123456789012:cluster/my-cluster",
+            "createdAt": "2025-03-15T12:00:00.000Z",
+            "currentRevisions": [
+              {
+                "arn": "arn:aws:ecs:us-east-1:123456789012:daemon-revision/my-cluster/my-monitoring-daemon/4980306466373577095",
+                "capacityProviders": [
+                  {
+                    "arn": "arn:aws:ecs:us-east-1:123456789012:capacity-provider/my-capacity-provider",
+                    "runningCount": 3
+                  }
+                ],
+                "totalRunningCount": 3
+              }
+            ],
+            "daemonArn": "arn:aws:ecs:us-east-1:123456789012:daemon/my-cluster/my-monitoring-daemon",
+            "deploymentArn": "arn:aws:ecs:us-east-1:123456789012:daemon-deployment/my-cluster/my-monitoring-daemon/aB1cD2eF3gH4iJ5k",
+            "status": "ACTIVE",
+            "updatedAt": "2025-03-20T15:30:00.000Z"
+          }
+        },
+        "description": "This example describes the my-monitoring-daemon daemon.",
+        "id": "example-1",
+        "title": "To describe a daemon"
+      }
+    ],
+    "DescribeDaemonDeployments": [
+      {
+        "input": {
+          "daemonDeploymentArns": [
+            "arn:aws:ecs:us-east-1:123456789012:daemon-deployment/my-cluster/my-monitoring-daemon/aB1cD2eF3gH4iJ5k"
+          ]
+        },
+        "output": {
+          "daemonDeployments": [
+            {
+              "alarms": {
+                "alarmNames": [],
+                "status": "DISABLED",
+                "triggeredAlarmNames": []
+              },
+              "circuitBreaker": {
+                "failureCount": 0,
+                "status": "MONITORING_COMPLETE",
+                "threshold": 10
+              },
+              "clusterArn": "arn:aws:ecs:us-east-1:123456789012:cluster/my-cluster",
+              "createdAt": "2025-03-15T12:00:00.000Z",
+              "daemonDeploymentArn": "arn:aws:ecs:us-east-1:123456789012:daemon-deployment/my-cluster/my-monitoring-daemon/aB1cD2eF3gH4iJ5k",
+              "deploymentConfiguration": {
+                "alarms": {
+                  "alarmNames": [],
+                  "enable": false
+                },
+                "bakeTimeInMinutes": 5,
+                "drainPercent": 10.0
+              },
+              "finishedAt": "2025-03-15T12:15:00.000Z",
+              "sourceDaemonRevisions": [],
+              "startedAt": "2025-03-15T12:00:05.000Z",
+              "status": "SUCCESSFUL",
+              "statusReason": "Deployment completed successfully.",
+              "targetDaemonRevision": {
+                "arn": "arn:aws:ecs:us-east-1:123456789012:daemon-revision/my-cluster/my-monitoring-daemon/4980306466373577095",
+                "capacityProviders": [
+                  {
+                    "arn": "arn:aws:ecs:us-east-1:123456789012:capacity-provider/my-capacity-provider",
+                    "drainingInstanceCount": 0,
+                    "runningInstanceCount": 3
+                  }
+                ],
+                "totalDrainingInstanceCount": 0,
+                "totalRunningInstanceCount": 3
+              }
+            }
+          ],
+          "failures": []
+        },
+        "description": "This example describes a daemon deployment for the my-monitoring-daemon daemon.",
+        "id": "example-1",
+        "title": "To describe daemon deployments"
+      }
+    ],
+    "DescribeDaemonRevisions": [
+      {
+        "input": {
+          "daemonRevisionArns": [
+            "arn:aws:ecs:us-east-1:123456789012:daemon-revision/my-cluster/my-monitoring-daemon/4980306466373577095"
+          ]
+        },
+        "output": {
+          "daemonRevisions": [
+            {
+              "clusterArn": "arn:aws:ecs:us-east-1:123456789012:cluster/my-cluster",
+              "containerImages": [
+                {
+                  "containerName": "cloudwatch-agent",
+                  "image": "public.ecr.aws/cloudwatch-agent/cloudwatch-agent:latest",
+                  "imageDigest": "sha256:a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2"
+                }
+              ],
+              "createdAt": "2025-03-15T12:00:00.000Z",
+              "daemonArn": "arn:aws:ecs:us-east-1:123456789012:daemon/my-cluster/my-monitoring-daemon",
+              "daemonRevisionArn": "arn:aws:ecs:us-east-1:123456789012:daemon-revision/my-cluster/my-monitoring-daemon/4980306466373577095",
+              "daemonTaskDefinitionArn": "arn:aws:ecs:us-east-1:123456789012:daemon-task-definition/monitoring-agent:1",
+              "enableECSManagedTags": false,
+              "enableExecuteCommand": false,
+              "propagateTags": "NONE"
+            }
+          ],
+          "failures": []
+        },
+        "description": "This example describes a daemon revision for the my-monitoring-daemon daemon.",
+        "id": "example-1",
+        "title": "To describe daemon revisions"
+      }
+    ],
+    "DescribeDaemonTaskDefinition": [
+      {
+        "input": {
+          "daemonTaskDefinition": "monitoring-agent:1"
+        },
+        "output": {
+          "daemonTaskDefinition": {
+            "containerDefinitions": [
+              {
+                "name": "cloudwatch-agent",
+                "cpu": 128,
+                "environment": [
+                  {
+                    "name": "USE_DEFAULT_CONFIG",
+                    "value": "true"
+                  }
+                ],
+                "essential": true,
+                "image": "public.ecr.aws/cloudwatch-agent/cloudwatch-agent:latest",
+                "logConfiguration": {
+                  "logDriver": "awslogs",
+                  "options": {
+                    "awslogs-group": "/ecs/daemon/monitoring-agent",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "ecs"
+                  }
+                },
+                "memory": 256,
+                "mountPoints": [],
+                "secrets": []
+              }
+            ],
+            "cpu": "128",
+            "daemonTaskDefinitionArn": "arn:aws:ecs:us-east-1:123456789012:daemon-task-definition/monitoring-agent:1",
+            "executionRoleArn": "arn:aws:iam::123456789012:role/ecsTaskExecutionRole",
+            "family": "monitoring-agent",
+            "memory": "256",
+            "registeredAt": "2025-03-15T10:30:00.000Z",
+            "registeredBy": "arn:aws:iam::123456789012:user/admin",
+            "revision": 1,
+            "status": "ACTIVE",
+            "taskRoleArn": "arn:aws:iam::123456789012:role/ecsDaemonTaskRole",
+            "volumes": []
+          }
+        },
+        "description": "This example describes the first revision of the monitoring-agent daemon task definition.",
+        "id": "example-1",
+        "title": "To describe a daemon task definition"
       }
     ],
     "DescribeServiceDeployments": [
@@ -842,16 +1033,19 @@
           ]
         },
         "output": {
-          "failures": [
-
-          ],
+          "failures": [],
           "serviceDeployments": [
             {
               "clusterArn": "arn:aws:ecs:us-west-2:123456789012:cluster/example",
               "deploymentConfiguration": {
                 "deploymentCircuitBreaker": {
-                  "enable": false,
-                  "rollback": false
+                  "enable": true,
+                  "resetOnHealthyTask": true,
+                  "rollback": true,
+                  "thresholdConfiguration": {
+                    "type": "BOUNDED_PERCENT",
+                    "value": 50
+                  }
                 },
                 "maximumPercent": 200,
                 "minimumHealthyPercent": 100
@@ -865,19 +1059,77 @@
                 "requestedTaskCount": 0,
                 "runningTaskCount": 0
               },
-              "updatedAt": "2024-09-10T16:49:35.572000+00:00"
+              "updatedAt": "2024-09-10T16:49:35.57Z"
             }
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example describes a service deployment for the service sd-example in the example cluster. ",
-        "id": "to-describe-a-service-deployment--1733954961143",
+        "id": "example-1",
         "title": "To describe a service deployment "
+      },
+      {
+        "input": {
+          "serviceDeploymentArns": [
+            "arn:aws:ecs:us-east-1:123456789012:service-deployment/MyCluster/MyService/r9i43YFjvgF_xlg7m2eJ1r"
+          ]
+        },
+        "output": {
+          "failures": [],
+          "serviceDeployments": [
+            {
+              "clusterArn": "arn:aws:ecs:us-east-1:123456789012:cluster/MyCluster",
+              "deploymentConfiguration": {
+                "deploymentCircuitBreaker": {
+                  "enable": true,
+                  "resetOnHealthyTask": true,
+                  "rollback": true,
+                  "thresholdConfiguration": {
+                    "type": "BOUNDED_PERCENT",
+                    "value": 50
+                  }
+                },
+                "lifecycleHooks": [
+                  {
+                    "lifecycleStages": [
+                      "POST_PRODUCTION_TRAFFIC_SHIFT"
+                    ],
+                    "targetType": "PAUSE",
+                    "timeoutConfiguration": {
+                      "action": "ROLLBACK",
+                      "timeoutInMinutes": 60
+                    }
+                  }
+                ],
+                "maximumPercent": 200,
+                "minimumHealthyPercent": 100,
+                "strategy": "BLUE_GREEN"
+              },
+              "lifecycleHookDetails": [
+                {
+                  "expiresAt": "2026-05-06T17:00:00.000Z",
+                  "hookId": "ecs-pause-Xk7rT2mP9sLwQn4vB8fYd3hJ6gA1cE5iO0uR_ZpWq",
+                  "status": "AWAITING_ACTION",
+                  "targetType": "PAUSE",
+                  "timeoutAction": "ROLLBACK"
+                }
+              ],
+              "lifecycleStage": "POST_PRODUCTION_TRAFFIC_SHIFT",
+              "serviceArn": "arn:aws:ecs:us-east-1:123456789012:service/MyCluster/MyService",
+              "serviceDeploymentArn": "arn:aws:ecs:us-east-1:123456789012:service-deployment/MyCluster/MyService/r9i43YFjvgF_xlg7m2eJ1r",
+              "status": "IN_PROGRESS",
+              "targetServiceRevision": {
+                "arn": "arn:aws:ecs:us-east-1:123456789012:service-revision/MyCluster/MyService/1234567890123456789",
+                "pendingTaskCount": 1,
+                "requestedTaskCount": 2,
+                "runningTaskCount": 1
+              },
+              "updatedAt": "2026-05-06T16:00:00.000Z"
+            }
+          ]
+        },
+        "description": "This example describes a service deployment that is currently paused at a lifecycle hook. The lifecycleHookDetails field shows the status of the pause hook, including when it will expire and what action will be taken if the timeout is reached.",
+        "id": "example-2",
+        "title": "To describe a service deployment with a paused lifecycle hook"
       }
     ],
     "DescribeServiceRevisions": [
@@ -888,13 +1140,11 @@
           ]
         },
         "output": {
-          "failures": [
-
-          ],
+          "failures": [],
           "serviceRevisions": [
             {
               "clusterArn": "arn:aws:ecs:us-west-2:123456789012:cluster/example",
-              "createdAt": "2024-09-10T16:49:26.388000+00:00",
+              "createdAt": "2024-09-10T16:49:26.39Z",
               "launchType": "FARGATE",
               "networkConfiguration": {
                 "awsvpcConfiguration": {
@@ -915,15 +1165,45 @@
             }
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example describes a service revision with the specified ARN",
-        "id": "to-describe-a-service-revision--1734033215738",
+        "id": "example-1",
         "title": "To describe a service revision "
+      },
+      {
+        "input": {
+          "serviceRevisionArns": [
+            "arn:aws:ecs:us-east-1:012345678910:service-revision/default/ecs-monitored-service/8675309012345678901"
+          ]
+        },
+        "output": {
+          "failures": [],
+          "serviceRevisions": [
+            {
+              "clusterArn": "arn:aws:ecs:us-east-1:012345678910:cluster/default",
+              "createdAt": "2026-06-10T12:00:00.00Z",
+              "launchType": "FARGATE",
+              "monitoring": {
+                "metricConfigurations": [
+                  {
+                    "metricNames": [
+                      "CPUUtilization",
+                      "MemoryUtilization"
+                    ],
+                    "resolutionSeconds": 20
+                  }
+                ]
+              },
+              "platformFamily": "DockerLinux",
+              "platformVersion": "1.4.0",
+              "serviceArn": "arn:aws:ecs:us-east-1:012345678910:service/default/ecs-monitored-service",
+              "serviceRevisionArn": "arn:aws:ecs:us-east-1:012345678910:service-revision/default/ecs-monitored-service/8675309012345678901",
+              "taskDefinition": "arn:aws:ecs:us-east-1:012345678910:task-definition/my-app:1"
+            }
+          ]
+        },
+        "description": "This example describes a service revision that has a monitoring configuration with 20-second resolution for CPUUtilization and MemoryUtilization CloudWatch metrics.",
+        "id": "example-2",
+        "title": "To describe a service revision with a monitoring configuration"
       }
     ],
     "DescribeServices": [
@@ -934,9 +1214,7 @@
           ]
         },
         "output": {
-          "failures": [
-
-          ],
+          "failures": [],
           "services": [
             {
               "clusterArn": "arn:aws:ecs:us-east-1:012345678910:cluster/default",
@@ -965,9 +1243,7 @@
                   "message": "(service ecs-simple-service) was unable to place a task because no container instance met all of its requirements. The closest matching (container-instance 3f4de1c5-ffdd-4954-af7e-75b4be0c8841) is already using a port required by your task. For more information, see the Troubleshooting section of the Amazon ECS Developer Guide."
                 }
               ],
-              "loadBalancers": [
-
-              ],
+              "loadBalancers": [],
               "pendingCount": 0,
               "runningCount": 0,
               "serviceArn": "arn:aws:ecs:us-east-1:012345678910:service/default/ecs-simple-service",
@@ -977,16 +1253,66 @@
             }
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-            "services[0].events[0].message": "In this example, there is a service event that shows unavailable cluster resources."
-          }
-        },
         "description": "This example provides descriptive information about the service named ``ecs-simple-service``.",
-        "id": "to-describe-a-service-1472513256350",
+        "id": "example-1",
         "title": "To describe a service"
+      },
+      {
+        "input": {
+          "services": [
+            "ecs-service-with-pause-hook"
+          ]
+        },
+        "output": {
+          "failures": [],
+          "services": [
+            {
+              "clusterArn": "arn:aws:ecs:us-east-1:012345678910:cluster/default",
+              "createdAt": "2026-05-06T16:00:00.000Z",
+              "deploymentConfiguration": {
+                "lifecycleHooks": [
+                  {
+                    "lifecycleStages": [
+                      "POST_PRODUCTION_TRAFFIC_SHIFT"
+                    ],
+                    "targetType": "PAUSE",
+                    "timeoutConfiguration": {
+                      "action": "ROLLBACK",
+                      "timeoutInMinutes": 60
+                    }
+                  }
+                ],
+                "maximumPercent": 200,
+                "minimumHealthyPercent": 100,
+                "strategy": "BLUE_GREEN"
+              },
+              "deployments": [
+                {
+                  "createdAt": "2026-05-06T16:00:00.000Z",
+                  "desiredCount": 2,
+                  "id": "ecs-svc/9223370564341623665",
+                  "pendingCount": 0,
+                  "runningCount": 2,
+                  "status": "PRIMARY",
+                  "taskDefinition": "arn:aws:ecs:us-east-1:012345678910:task-definition/ecs-demo:1",
+                  "updatedAt": "2026-05-06T16:00:00.000Z"
+                }
+              ],
+              "desiredCount": 2,
+              "events": [],
+              "loadBalancers": [],
+              "pendingCount": 0,
+              "runningCount": 2,
+              "serviceArn": "arn:aws:ecs:us-east-1:012345678910:service/default/ecs-service-with-pause-hook",
+              "serviceName": "ecs-service-with-pause-hook",
+              "status": "ACTIVE",
+              "taskDefinition": "arn:aws:ecs:us-east-1:012345678910:task-definition/ecs-demo:1"
+            }
+          ]
+        },
+        "description": "This example provides descriptive information about the service ``ecs-service-with-pause-hook``, which is configured with a pause lifecycle hook in its deployment configuration.",
+        "id": "example-2",
+        "title": "To describe a service with a pause lifecycle hook"
       }
     ],
     "DescribeTaskDefinition": [
@@ -1000,27 +1326,21 @@
               {
                 "name": "wordpress",
                 "cpu": 10,
-                "environment": [
-
-                ],
+                "environment": [],
                 "essential": true,
                 "image": "wordpress",
                 "links": [
                   "mysql"
                 ],
                 "memory": 500,
-                "mountPoints": [
-
-                ],
+                "mountPoints": [],
                 "portMappings": [
                   {
                     "containerPort": 80,
                     "hostPort": 80
                   }
                 ],
-                "volumesFrom": [
-
-                ]
+                "volumesFrom": []
               },
               {
                 "name": "mysql",
@@ -1034,33 +1354,19 @@
                 "essential": true,
                 "image": "mysql",
                 "memory": 500,
-                "mountPoints": [
-
-                ],
-                "portMappings": [
-
-                ],
-                "volumesFrom": [
-
-                ]
+                "mountPoints": [],
+                "portMappings": [],
+                "volumesFrom": []
               }
             ],
             "family": "hello_world",
             "revision": 8,
             "taskDefinitionArn": "arn:aws:ecs:us-east-1:<aws_account_id>:task-definition/hello_world:8",
-            "volumes": [
-
-            ]
-          }
-        },
-        "comments": {
-          "input": {
-          },
-          "output": {
+            "volumes": []
           }
         },
         "description": "This example provides a description of the specified task definition.",
-        "id": "4c21eeb1-f1da-4a08-8c44-297fc8d0ea88",
+        "id": "example-1",
         "title": "To describe a task definition"
       }
     ],
@@ -1074,18 +1380,14 @@
           ]
         },
         "output": {
-          "failures": [
-
-          ],
+          "failures": [],
           "taskSets": [
             {
               "computedDesiredCount": 0,
               "createdAt": 1557207715.195,
               "id": "ecs-svc/1234567890123456789",
               "launchType": "EC2",
-              "loadBalancers": [
-
-              ],
+              "loadBalancers": [],
               "networkConfiguration": {
                 "awsvpcConfiguration": {
                   "assignPublicIp": "DISABLED",
@@ -1103,9 +1405,7 @@
                 "value": 0,
                 "unit": "PERCENT"
               },
-              "serviceRegistries": [
-
-              ],
+              "serviceRegistries": [],
               "stabilityStatus": "STEADY_STATE",
               "stabilityStatusAt": 1557207740.014,
               "status": "ACTIVE",
@@ -1115,14 +1415,8 @@
             }
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example describes a task set in service MyService that uses an EXTERNAL deployment controller. ",
-        "id": "to-describe-a-task-set--1734035629507",
+        "id": "example-1",
         "title": "To describe a task set "
       }
     ],
@@ -1134,9 +1428,7 @@
           ]
         },
         "output": {
-          "failures": [
-
-          ],
+          "failures": [],
           "tasks": [
             {
               "clusterArn": "arn:aws:ecs:<region>:<aws_account_id>:cluster/default",
@@ -1171,14 +1463,8 @@
             }
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example provides a description of the specified task, using the task UUID as an identifier.",
-        "id": "a90b0cde-f965-4946-b55e-cfd8cc54e827",
+        "id": "example-1",
         "title": "To describe a task"
       }
     ],
@@ -1203,14 +1489,8 @@
           },
           "taskArn": "arn:aws:ecs:us-east-1:123456789012:task/MyCluster/d789e94343414c25b9f6bd59eEXAMPLE"
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example runs an interactive /bin/sh command on a container MyContainer. ",
-        "id": "to-run-a-command-remotely-on-a-container-in-a-task-1734037663312",
+        "id": "example-1",
         "title": "To run a command remotely on a container in a task"
       }
     ],
@@ -1223,9 +1503,7 @@
           ]
         },
         "output": {
-          "failures": [
-
-          ],
+          "failures": [],
           "protectedTasks": [
             {
               "expirationDate": "2022-11-02T06:56:32.553Z",
@@ -1234,14 +1512,8 @@
             }
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "In this example, we get the protection status for a single task.",
-        "id": "get-the-protection-status-for-a-single-task-2022-11-02T06:56:32.553Z",
+        "id": "example-1",
         "title": "To get the protection status of a task"
       }
     ],
@@ -1269,14 +1541,8 @@
             }
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example displays the effective account settings for your account.",
-        "id": "to-view-your-account-settings-1549524118170",
+        "id": "example-1",
         "title": "To view your effective account settings"
       },
       {
@@ -1303,14 +1569,8 @@
             }
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example displays the effective account settings for the specified user or role.",
-        "id": "to-view-the-account-settings-for-a-specific-iam-user-or-iam-role-1549524237932",
+        "id": "example-2",
         "title": "To view the effective account settings for a specific IAM user or IAM role"
       }
     ],
@@ -1331,35 +1591,22 @@
             }
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example lists attributes for a container instance with the attribute \"stack\" equal to the value \"production\".",
-        "id": "to-list-container-instances-that-have-a-specific-attribute-1734368946577",
+        "id": "example-1",
         "title": "To list container instances that have a specific attribute"
       }
     ],
     "ListClusters": [
       {
-        "input": {
-        },
+        "input": {},
         "output": {
           "clusterArns": [
             "arn:aws:ecs:us-east-1:<aws_account_id>:cluster/test",
             "arn:aws:ecs:us-east-1:<aws_account_id>:cluster/default"
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example lists all of your available clusters in your default region.",
-        "id": "e337d059-134f-4125-ba8e-4f499139facf",
+        "id": "example-1",
         "title": "To list your available clusters"
       }
     ],
@@ -1374,15 +1621,89 @@
             "arn:aws:ecs:us-east-1:<aws_account_id>:container-instance/default/ffe3d344-77e2-476c-a4d0-bf560ad50acb"
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example lists all of your available container instances in the specified cluster in your default region.",
-        "id": "62a82a94-713c-4e18-8420-1d2b2ba9d484",
+        "id": "example-1",
         "title": "To list your available container instances in a cluster"
+      }
+    ],
+    "ListDaemonDeployments": [
+      {
+        "input": {
+          "daemonArn": "arn:aws:ecs:us-east-1:123456789012:daemon/my-cluster/my-monitoring-daemon",
+          "status": [
+            "SUCCESSFUL"
+          ]
+        },
+        "output": {
+          "daemonDeployments": [
+            {
+              "clusterArn": "arn:aws:ecs:us-east-1:123456789012:cluster/my-cluster",
+              "createdAt": "2025-03-15T12:00:00.000Z",
+              "daemonArn": "arn:aws:ecs:us-east-1:123456789012:daemon/my-cluster/my-monitoring-daemon",
+              "daemonDeploymentArn": "arn:aws:ecs:us-east-1:123456789012:daemon-deployment/my-cluster/my-monitoring-daemon/aB1cD2eF3gH4iJ5k",
+              "finishedAt": "2025-03-15T12:15:00.000Z",
+              "startedAt": "2025-03-15T12:00:05.000Z",
+              "status": "SUCCESSFUL",
+              "statusReason": "Deployment completed successfully.",
+              "targetDaemonRevisionArn": "arn:aws:ecs:us-east-1:123456789012:daemon-revision/my-cluster/my-monitoring-daemon/4980306466373577095"
+            }
+          ]
+        },
+        "description": "This example lists all successful daemon deployments for the my-monitoring-daemon daemon.",
+        "id": "example-1",
+        "title": "To list daemon deployments"
+      }
+    ],
+    "ListDaemonTaskDefinitions": [
+      {
+        "input": {
+          "familyPrefix": "monitoring"
+        },
+        "output": {
+          "daemonTaskDefinitions": [
+            {
+              "arn": "arn:aws:ecs:us-east-1:123456789012:daemon-task-definition/monitoring-agent:2",
+              "registeredAt": "2025-03-20T14:00:00.000Z",
+              "registeredBy": "arn:aws:iam::123456789012:user/admin",
+              "status": "ACTIVE"
+            },
+            {
+              "arn": "arn:aws:ecs:us-east-1:123456789012:daemon-task-definition/monitoring-agent:1",
+              "registeredAt": "2025-03-15T10:30:00.000Z",
+              "registeredBy": "arn:aws:iam::123456789012:user/admin",
+              "status": "ACTIVE"
+            }
+          ]
+        },
+        "description": "This example lists all daemon task definitions in your account that start with the monitoring prefix.",
+        "id": "example-1",
+        "title": "To list daemon task definitions"
+      }
+    ],
+    "ListDaemons": [
+      {
+        "input": {
+          "clusterArn": "arn:aws:ecs:us-east-1:123456789012:cluster/my-cluster"
+        },
+        "output": {
+          "daemonSummariesList": [
+            {
+              "createdAt": "2025-03-15T12:00:00.000Z",
+              "daemonArn": "arn:aws:ecs:us-east-1:123456789012:daemon/my-cluster/my-monitoring-daemon",
+              "status": "ACTIVE",
+              "updatedAt": "2025-03-20T15:30:00.000Z"
+            },
+            {
+              "createdAt": "2025-03-16T09:00:00.000Z",
+              "daemonArn": "arn:aws:ecs:us-east-1:123456789012:daemon/my-cluster/my-logging-daemon",
+              "status": "ACTIVE",
+              "updatedAt": "2025-03-16T09:00:00.000Z"
+            }
+          ]
+        },
+        "description": "This example lists all daemons in the specified cluster.",
+        "id": "example-1",
+        "title": "To list daemons in a cluster"
       }
     ],
     "ListServiceDeployments": [
@@ -1405,34 +1726,21 @@
             }
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example lists all successful service deployments for the service \"sd-example\" in the cluster \"example\".",
-        "id": "to-list-service-deployments-that-meet-the-specified-criteria-1734370445427",
+        "id": "example-1",
         "title": "To list service deployments that meet the specified criteria"
       }
     ],
     "ListServices": [
       {
-        "input": {
-        },
+        "input": {},
         "output": {
           "serviceArns": [
             "arn:aws:ecs:us-east-1:012345678910:service/default/my-http-service"
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example lists the services running in the default cluster for an account.",
-        "id": "1d9a8037-4e0e-4234-a528-609656809a3a",
+        "id": "example-1",
         "title": "To list the services in a cluster"
       }
     ],
@@ -1449,21 +1757,14 @@
             }
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example lists the tags for the 'dev' cluster.",
-        "id": "to-list-the-tags-for-a-cluster-1540582700259",
+        "id": "example-1",
         "title": "To list the tags for a cluster."
       }
     ],
     "ListTaskDefinitionFamilies": [
       {
-        "input": {
-        },
+        "input": {},
         "output": {
           "families": [
             "node-js-app",
@@ -1472,14 +1773,8 @@
             "hpcc-c4-8xlarge"
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example lists all of your registered task definition families.",
-        "id": "b5c89769-1d94-4ca2-a79e-8069103c7f75",
+        "id": "example-1",
         "title": "To list your registered task definition families"
       },
       {
@@ -1492,21 +1787,14 @@
             "hpcc-c4-8xlarge"
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example lists the task definition revisions that start with \"hpcc\".",
-        "id": "8a4cf9a6-42c1-4fe3-852d-99ac8968e11b",
+        "id": "example-2",
         "title": "To filter your registered task definition families"
       }
     ],
     "ListTaskDefinitions": [
       {
-        "input": {
-        },
+        "input": {},
         "output": {
           "taskDefinitionArns": [
             "arn:aws:ecs:us-east-1:<aws_account_id>:task-definition/sleep300:2",
@@ -1517,14 +1805,8 @@
             "arn:aws:ecs:us-east-1:<aws_account_id>:task-definition/wordpress:6"
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example lists all of your registered task definitions.",
-        "id": "b381ebaf-7eba-4d60-b99b-7f6ae49d3d60",
+        "id": "example-1",
         "title": "To list your registered task definitions"
       },
       {
@@ -1539,14 +1821,8 @@
             "arn:aws:ecs:us-east-1:<aws_account_id>:task-definition/wordpress:6"
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example lists the task definition revisions of a specified family.",
-        "id": "734e7afd-753a-4bc2-85d0-badddce10910",
+        "id": "example-2",
         "title": "To list the registered task definitions in a family"
       }
     ],
@@ -1561,14 +1837,8 @@
             "arn:aws:ecs:us-east-1:012345678910:task/default/6b809ef6-c67e-4467-921f-ee261c15a0a1"
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example lists all of the tasks in a cluster.",
-        "id": "9a6ec707-1a77-45d0-b2eb-516b5dd9e924",
+        "id": "example-1",
         "title": "To list the tasks in a cluster"
       },
       {
@@ -1581,14 +1851,8 @@
             "arn:aws:ecs:us-east-1:012345678910:task/default/0cc43cdb-3bee-4407-9c26-c0e6ea5bee84"
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example lists the tasks of a specified container instance. Specifying a ``containerInstance`` value limits  the  results  to  tasks  that belong to that container instance.",
-        "id": "024bf3b7-9cbb-44e3-848f-9d074e1fecce",
+        "id": "example-2",
         "title": "To list the tasks on a particular container instance"
       }
     ],
@@ -1605,14 +1869,8 @@
             "principalArn": "arn:aws:iam::<aws_account_id>:user/principalName"
           }
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example modifies your account settings to opt in to the new ARN and resource ID format for Amazon ECS services. If you’re using this command as the root user, then changes apply to the entire AWS account, unless an IAM user or role explicitly overrides these settings for themselves.",
-        "id": "to-modify-the-account-settings-for-your-iam-user-account-1549523130939",
+        "id": "example-1",
         "title": "To modify your account settings"
       },
       {
@@ -1628,14 +1886,8 @@
             "principalArn": "arn:aws:iam::<aws_account_id>:user/principalName"
           }
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example modifies the account setting for a specific IAM user or IAM role to opt in to the new ARN and resource ID format for Amazon ECS container instances. If you’re using this command as the root user, then changes apply to the entire AWS account, unless an IAM user or role explicitly overrides these settings for themselves.",
-        "id": "to-modify-the-account-settings-for-a-specific-iam-user-or-iam-role-1549523518390",
+        "id": "example-2",
         "title": "To modify the account settings for a specific IAM user or IAM role"
       }
     ],
@@ -1652,14 +1904,8 @@
             "principalArn": "arn:aws:iam::<aws_account_id>:root"
           }
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example modifies the default account setting for the specified resource for all IAM users or roles on an account. These changes apply to the entire AWS account, unless an IAM user or role explicitly overrides these settings for themselves.",
-        "id": "to-modify-the-default-account-settings-for-all-iam-users-or-roles-on-your-account-1549523794603",
+        "id": "example-1",
         "title": "To modify the default account settings for all IAM users or roles on an account"
       }
     ],
@@ -1684,14 +1930,8 @@
             }
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example adds an attribute \"stack\" with the value \"production\" to a container instance.",
-        "id": "to-create-or-update-an-attribute-on-a-resource-1734382423405",
+        "id": "example-1",
         "title": "To create or update an attribute on a resource"
       }
     ],
@@ -1777,23 +2017,13 @@
                 "value": "enabled"
               }
             ],
-            "statistics": [
-
-            ],
+            "statistics": [],
             "status": "ACTIVE",
-            "tags": [
-
-            ]
-          }
-        },
-        "comments": {
-          "input": {
-          },
-          "output": {
+            "tags": []
           }
         },
         "description": "This example adds an existing capacity provider \"MyCapacityProvider2\" to a cluster that already has the capacity provider \"MyCapacityProvider1\" associated with it. Both \"MyCapacityProvider2\" and \"MyCapacityProvider1\" need to be specified. ",
-        "id": "to-add-an-existing-capacity-provider-to-a-cluster-1734385195698",
+        "id": "example-1",
         "title": "To add an existing capacity provider to a cluuster"
       },
       {
@@ -1867,34 +2097,20 @@
                 "value": "enabled"
               }
             ],
-            "statistics": [
-
-            ],
+            "statistics": [],
             "status": "ACTIVE",
-            "tags": [
-
-            ]
-          }
-        },
-        "comments": {
-          "input": {
-          },
-          "output": {
+            "tags": []
           }
         },
         "description": "This example removes a capacity provider \"MyCapacityProvider2\" from a cluster that has both \"MyCapacityProvider2\" and \"MyCapacityProvider1\" associated with it. Only \"MyCapacityProvider1\" needs to be specified in this scenario. ",
-        "id": "to-remove-a-capacity-provider-from-a-cluster-1734386641517",
+        "id": "example-2",
         "title": "To remove a capacity provider from a cluster"
       },
       {
         "input": {
-          "capacityProviders": [
-
-          ],
+          "capacityProviders": [],
           "cluster": "MyCluster",
-          "defaultCapacityProviderStrategy": [
-
-          ]
+          "defaultCapacityProviderStrategy": []
         },
         "output": {
           "cluster": {
@@ -1932,14 +2148,10 @@
               }
             ],
             "attachmentsStatus": "UPDATE_IN_PROGRESS",
-            "capacityProviders": [
-
-            ],
+            "capacityProviders": [],
             "clusterArn": "arn:aws:ecs:us-west-2:123456789012:cluster/MyCluster",
             "clusterName": "MyCluster",
-            "defaultCapacityProviderStrategy": [
-
-            ],
+            "defaultCapacityProviderStrategy": [],
             "pendingTasksCount": 0,
             "registeredContainerInstancesCount": 0,
             "runningTasksCount": 0,
@@ -1949,24 +2161,54 @@
                 "value": "enabled"
               }
             ],
-            "statistics": [
-
-            ],
+            "statistics": [],
             "status": "ACTIVE",
-            "tags": [
-
-            ]
-          }
-        },
-        "comments": {
-          "input": {
-          },
-          "output": {
+            "tags": []
           }
         },
         "description": "This example removes all capacity providers associated with a cluster. ",
-        "id": "to-remove-all-capacity-providers-from-a-cluster-1734387170874",
+        "id": "example-3",
         "title": "To remove all capacity providers from a cluster"
+      }
+    ],
+    "RegisterDaemonTaskDefinition": [
+      {
+        "input": {
+          "containerDefinitions": [
+            {
+              "name": "cloudwatch-agent",
+              "cpu": 128,
+              "environment": [
+                {
+                  "name": "USE_DEFAULT_CONFIG",
+                  "value": "true"
+                }
+              ],
+              "essential": true,
+              "image": "public.ecr.aws/cloudwatch-agent/cloudwatch-agent:latest",
+              "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                  "awslogs-group": "/ecs/daemon/monitoring-agent",
+                  "awslogs-region": "us-east-1",
+                  "awslogs-stream-prefix": "ecs"
+                }
+              },
+              "memory": 256
+            }
+          ],
+          "cpu": "128",
+          "executionRoleArn": "arn:aws:iam::123456789012:role/ecsTaskExecutionRole",
+          "family": "monitoring-agent",
+          "memory": "256",
+          "taskRoleArn": "arn:aws:iam::123456789012:role/ecsDaemonTaskRole"
+        },
+        "output": {
+          "daemonTaskDefinitionArn": "arn:aws:ecs:us-east-1:123456789012:daemon-task-definition/monitoring-agent:1"
+        },
+        "description": "This example registers a daemon task definition in the monitoring-agent family with a single container that runs a CloudWatch agent.",
+        "id": "example-1",
+        "title": "To register a daemon task definition"
       }
     ],
     "RegisterTaskDefinition": [
@@ -1981,15 +2223,13 @@
               ],
               "cpu": 10,
               "essential": true,
-              "image": "busybox",
+              "image": "public.ecr.aws/docker/library/busybox:latest",
               "memory": 10
             }
           ],
           "family": "sleep360",
           "taskRoleArn": "",
-          "volumes": [
-
-          ]
+          "volumes": []
         },
         "output": {
           "taskDefinition": {
@@ -2001,39 +2241,23 @@
                   "360"
                 ],
                 "cpu": 10,
-                "environment": [
-
-                ],
+                "environment": [],
                 "essential": true,
-                "image": "busybox",
+                "image": "public.ecr.aws/docker/library/busybox:latest",
                 "memory": 10,
-                "mountPoints": [
-
-                ],
-                "portMappings": [
-
-                ],
-                "volumesFrom": [
-
-                ]
+                "mountPoints": [],
+                "portMappings": [],
+                "volumesFrom": []
               }
             ],
             "family": "sleep360",
             "revision": 1,
             "taskDefinitionArn": "arn:aws:ecs:us-east-1:<aws_account_id>:task-definition/sleep360:19",
-            "volumes": [
-
-            ]
-          }
-        },
-        "comments": {
-          "input": {
-          },
-          "output": {
+            "volumes": []
           }
         },
         "description": "This example registers a task definition to the specified family.",
-        "id": "to-register-a-task-definition-1470764550877",
+        "id": "example-1",
         "title": "To register a task definition"
       }
     ],
@@ -2069,14 +2293,8 @@
             }
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example runs the specified task definition on your default cluster.",
-        "id": "6f238c83-a133-42cd-ab3d-abeca0560445",
+        "id": "example-1",
         "title": "To run a task on your default cluster"
       }
     ],
@@ -2090,9 +2308,7 @@
           "taskDefinition": "hello-world"
         },
         "output": {
-          "failures": [
-
-          ],
+          "failures": [],
           "tasks": [
             {
               "version": 1,
@@ -2130,15 +2346,23 @@
             }
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example starts a new task in the cluster \"MyCluster\" on the specified container instance using the latest revision of the \"hello-world\" task definition.",
-        "id": "to-start-a-new-task-1734455482966",
+        "id": "example-1",
         "title": "To start a new task"
+      }
+    ],
+    "StopServiceDeployment": [
+      {
+        "input": {
+          "serviceDeploymentArn": "arn:aws:ecs:us-east-1:123456789012:service-deployment/MyCluster/MyService/r9i43YFjvgF_xlg7m2eJ1r",
+          "stopType": "ROLLBACK"
+        },
+        "output": {
+          "serviceDeploymentArn": "arn:aws:ecs:us-east-1:123456789012:service-deployment/MyCluster/MyService/r9i43YFjvgF_xlg7m2eJ1r"
+        },
+        "description": "This example stops the service deployment using the ROLLBACK option.",
+        "id": "example-1",
+        "title": "To stop a service deployment"
       }
     ],
     "StopTask": [
@@ -2172,9 +2396,7 @@
                 "name": "busybox",
                 "containerArn": "arn:aws:ecs:us-east-1:012345678910:container/e09064f7-7361-4c87-8ab9-8d073bbdbcb9",
                 "lastStatus": "RUNNING",
-                "networkBindings": [
-
-                ],
+                "networkBindings": [],
                 "taskArn": "arn:aws:ecs:us-east-1:012345678910:task/MyCluster/1dc5c17a-422b-4dc4-b493-371970c6c4d6"
               }
             ],
@@ -2198,14 +2420,8 @@
             "taskDefinitionArn": "arn:aws:ecs:us-east-1:012345678910:task-definition/console-sample-app-dynamic-ports:1"
           }
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example stops a task with ID \"1dc5c17a-422b-4dc4-b493-371970c6c4d6\" in cluster \"MyCluster\".",
-        "id": "to-stop-a-task-1734457210346",
+        "id": "example-1",
         "title": "To stop a task"
       }
     ],
@@ -2220,16 +2436,9 @@
             }
           ]
         },
-        "output": {
-        },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
+        "output": {},
         "description": "This example tags the 'dev' cluster with key 'team' and value 'dev'.",
-        "id": "to-tag-a-cluster-1540581863751",
+        "id": "example-1",
         "title": "To tag a cluster."
       }
     ],
@@ -2241,16 +2450,9 @@
             "team"
           ]
         },
-        "output": {
-        },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
+        "output": {},
         "description": "This example deletes the 'team' tag from the 'dev' cluster.",
-        "id": "to-untag-a-cluster-1540582546056",
+        "id": "example-1",
         "title": "To untag a cluster."
       }
     ],
@@ -2282,20 +2484,12 @@
             },
             "capacityProviderArn": "arn:aws:ecs:us-east-1:123456789012:capacity-provider/MyCapacityProvider",
             "status": "ACTIVE",
-            "tags": [
-
-            ],
+            "tags": [],
             "updateStatus": "UPDATE_COMPLETE"
           }
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example updates the targetCapacity and instanceWarmupPeriod parameters for the capacity provider MyCapacityProvider to 90 and 150 respectively.",
-        "id": "to-update-a-capacity-providers-parameters-1734557290198",
+        "id": "example-1",
         "title": "To update a capacity provider's parameters"
       }
     ],
@@ -2346,9 +2540,7 @@
               },
               {
                 "type": "sc",
-                "details": [
-
-                ],
+                "details": [],
                 "id": "45d0b36f-8cff-46b6-9380-1288744802ab",
                 "status": "ATTACHED"
               }
@@ -2378,23 +2570,13 @@
                 "value": "enhanced"
               }
             ],
-            "statistics": [
-
-            ],
+            "statistics": [],
             "status": "ACTIVE",
-            "tags": [
-
-            ]
-          }
-        },
-        "comments": {
-          "input": {
-          },
-          "output": {
+            "tags": []
           }
         },
         "description": "This example turns on enhanced containerInsights in an existing cluster. ",
-        "id": "to-update-a-clusters-observability-settings-1734626018966",
+        "id": "example-1",
         "title": "To update a cluster's observability settings."
       },
       {
@@ -2440,25 +2622,19 @@
               },
               {
                 "type": "sc",
-                "details": [
-
-                ],
+                "details": [],
                 "id": "45d0b36f-8cff-46b6-9380-1288744802ab",
                 "status": "DELETED"
               },
               {
                 "type": "sc",
-                "details": [
-
-                ],
+                "details": [],
                 "id": "3e6890c3-609c-4832-91de-d6ca891b3ef1",
                 "status": "ATTACHED"
               },
               {
                 "type": "sc",
-                "details": [
-
-                ],
+                "details": [],
                 "id": "961b8ec1-c2f1-4070-8495-e669b7668e90",
                 "status": "DELETED"
               }
@@ -2488,23 +2664,13 @@
                 "value": "enhanced"
               }
             ],
-            "statistics": [
-
-            ],
+            "statistics": [],
             "status": "ACTIVE",
-            "tags": [
-
-            ]
-          }
-        },
-        "comments": {
-          "input": {
-          },
-          "output": {
+            "tags": []
           }
         },
         "description": "This example sets a default Service Connect namespace. ",
-        "id": "to-update-a-clusters-service-connect-defaults-1734626891648",
+        "id": "example-2",
         "title": "To update a cluster's Service Connect defaults."
       }
     ],
@@ -2533,23 +2699,13 @@
                 "value": "enabled"
               }
             ],
-            "statistics": [
-
-            ],
+            "statistics": [],
             "status": "ACTIVE",
-            "tags": [
-
-            ]
-          }
-        },
-        "comments": {
-          "input": {
-          },
-          "output": {
+            "tags": []
           }
         },
         "description": "This example enables CloudWatch Container Insights for the default cluster.",
-        "id": "to-update-a-clusters-settings-1734628004887",
+        "id": "example-1",
         "title": "To update a cluster's settings"
       }
     ],
@@ -2570,14 +2726,8 @@
             }
           }
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example updates the container agent version on the specified container instance in cluster MyCluster.",
-        "id": "to-update-the-container-agent-version-on-a-container-instance-1734628653210",
+        "id": "example-1",
         "title": "To update the container agent version on a container instance"
       }
     ],
@@ -2693,9 +2843,7 @@
                   "doubleValue": 0,
                   "integerValue": 0,
                   "longValue": 0,
-                  "stringSetValue": [
-
-                  ]
+                  "stringSetValue": []
                 }
               ],
               "remainingResources": [
@@ -2733,9 +2881,7 @@
                   "doubleValue": 0,
                   "integerValue": 0,
                   "longValue": 0,
-                  "stringSetValue": [
-
-                  ]
+                  "stringSetValue": []
                 }
               ],
               "runningTasksCount": 0,
@@ -2747,19 +2893,36 @@
               }
             }
           ],
-          "failures": [
-
-          ]
-        },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
+          "failures": []
         },
         "description": "This example updates the state of the specified container instance in the default cluster to DRAINING. ",
-        "id": "to-update-the-state-of-a-container-instance-1734630991280",
+        "id": "example-1",
         "title": "To update the state of a container instance"
+      }
+    ],
+    "UpdateDaemon": [
+      {
+        "input": {
+          "capacityProviderArns": [
+            "arn:aws:ecs:us-east-1:123456789012:capacity-provider/my-capacity-provider"
+          ],
+          "daemonArn": "arn:aws:ecs:us-east-1:123456789012:daemon/my-cluster/my-monitoring-daemon",
+          "daemonTaskDefinitionArn": "arn:aws:ecs:us-east-1:123456789012:daemon-task-definition/monitoring-agent:2",
+          "deploymentConfiguration": {
+            "bakeTimeInMinutes": 5,
+            "drainPercent": 10.0
+          }
+        },
+        "output": {
+          "createdAt": "2025-03-15T12:00:00.000Z",
+          "daemonArn": "arn:aws:ecs:us-east-1:123456789012:daemon/my-cluster/my-monitoring-daemon",
+          "deploymentArn": "arn:aws:ecs:us-east-1:123456789012:daemon-deployment/my-cluster/my-monitoring-daemon/xY9zA8bC7dE6fG5h",
+          "status": "ACTIVE",
+          "updatedAt": "2025-03-20T15:30:00.000Z"
+        },
+        "description": "This example updates the my-monitoring-daemon daemon to use a new daemon task definition revision.",
+        "id": "example-1",
+        "title": "To update a daemon"
       }
     ],
     "UpdateService": [
@@ -2768,16 +2931,9 @@
           "service": "my-http-service",
           "taskDefinition": "amazon-ecs-sample"
         },
-        "output": {
-        },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
+        "output": {},
         "description": "This example updates the my-http-service service to use the amazon-ecs-sample task definition.",
-        "id": "cc9e8900-0cc2-44d2-8491-64d1d3d37887",
+        "id": "example-1",
         "title": "To change the task definition used in a service"
       },
       {
@@ -2785,17 +2941,54 @@
           "desiredCount": 10,
           "service": "my-http-service"
         },
-        "output": {
-        },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
+        "output": {},
         "description": "This example updates the desired count of the my-http-service service to 10.",
-        "id": "9581d6c5-02e3-4140-8cc1-5a4301586633",
+        "id": "example-2",
         "title": "To change the number of tasks in a service"
+      },
+      {
+        "input": {
+          "deploymentConfiguration": {
+            "lifecycleHooks": [
+              {
+                "lifecycleStages": [
+                  "POST_PRODUCTION_TRAFFIC_SHIFT"
+                ],
+                "targetType": "PAUSE",
+                "timeoutConfiguration": {
+                  "action": "CONTINUE",
+                  "timeoutInMinutes": 30
+                }
+              }
+            ],
+            "strategy": "BLUE_GREEN"
+          },
+          "service": "my-blue-green-service"
+        },
+        "output": {},
+        "description": "This example updates the my-blue-green-service service to add a pause lifecycle hook at the POST_PRODUCTION_TRAFFIC_SHIFT stage. The deployment will pause at that stage until you explicitly continue or roll back using the ContinueServiceDeployment API, or until the 30-minute timeout expires and triggers a continue.",
+        "id": "example-3",
+        "title": "To update a service to add a pause lifecycle hook"
+      },
+      {
+        "input": {
+          "monitoring": {
+            "metricConfigurations": [
+              {
+                "metricNames": [
+                  "CPUUtilization",
+                  "MemoryUtilization"
+                ],
+                "resolutionSeconds": 20
+              }
+            ]
+          },
+          "service": "ecs-monitored-service"
+        },
+        "output": {},
+        "description": "This example updates a service to add a monitoring configuration that sets 20-second resolution for CPUUtilization and MemoryUtilization CloudWatch metrics. The monitoring configuration is not returned in the UpdateService response. Use DescribeServiceRevisions to view the monitoring configuration.",
+        "id": "example-4",
+        "title": "To update a service with a monitoring configuration"
       }
     ],
     "UpdateServicePrimaryTaskSet": [
@@ -2811,9 +3004,7 @@
             "createdAt": 1557128360.711,
             "id": "ecs-svc/1234567890123456789",
             "launchType": "EC2",
-            "loadBalancers": [
-
-            ],
+            "loadBalancers": [],
             "networkConfiguration": {
               "awsvpcConfiguration": {
                 "assignPublicIp": "DISABLED",
@@ -2831,9 +3022,7 @@
               "value": 50,
               "unit": "PERCENT"
             },
-            "serviceRegistries": [
-
-            ],
+            "serviceRegistries": [],
             "stabilityStatus": "STABILIZING",
             "stabilityStatusAt": 1557129279.914,
             "status": "PRIMARY",
@@ -2842,14 +3031,8 @@
             "updatedAt": 1557129412.653
           }
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example updates the primary task set for a service MyService that uses the EXTERNAL deployment controller type. ",
-        "id": "to-update-the-primary-task-set-for-a-service-1734637150370",
+        "id": "example-1",
         "title": "To update the primary task set for a service"
       }
     ],
@@ -2864,9 +3047,7 @@
           ]
         },
         "output": {
-          "failures": [
-
-          ],
+          "failures": [],
           "protectedTasks": [
             {
               "expirationDate": "2022-11-02T06:56:32.553Z",
@@ -2875,14 +3056,8 @@
             }
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example enables scale-in protection for a task for 60 minutes.",
-        "id": "enable-the-protection-status-for-a-single-task-for-60-minutes-2022-11-02T06:56:32.553Z",
+        "id": "example-1",
         "title": "To set task scale-in protection for a task for 60 minutes"
       },
       {
@@ -2894,9 +3069,7 @@
           ]
         },
         "output": {
-          "failures": [
-
-          ],
+          "failures": [],
           "protectedTasks": [
             {
               "expirationDate": "2022-11-02T06:56:32.553Z",
@@ -2905,14 +3078,8 @@
             }
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example enables task scale-in protection for a task, without specifying the expiresInMinutes parameter, for the default protection period of 120 minutes.",
-        "id": "enable-the-protection-status-for-a-single-task-with-default-expiresinminutes-2022-11-02T06:56:32.553Z",
+        "id": "example-2",
         "title": "To set task scale-in protection for the default time period in minutes"
       },
       {
@@ -2924,9 +3091,7 @@
           ]
         },
         "output": {
-          "failures": [
-
-          ],
+          "failures": [],
           "protectedTasks": [
             {
               "protectionEnabled": false,
@@ -2934,14 +3099,8 @@
             }
           ]
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example removes scale-in protection for a task.",
-        "id": "disable-scale-in-protection-on-a-single-task",
+        "id": "example-3",
         "title": "To remove task scale-in protection"
       }
     ],
@@ -2962,9 +3121,7 @@
             "createdAt": 1557128360.711,
             "id": "ecs-svc/1234567890123456789",
             "launchType": "EC2",
-            "loadBalancers": [
-
-            ],
+            "loadBalancers": [],
             "networkConfiguration": {
               "awsvpcConfiguration": {
                 "assignPublicIp": "DISABLED",
@@ -2982,9 +3139,7 @@
               "value": 50,
               "unit": "PERCENT"
             },
-            "serviceRegistries": [
-
-            ],
+            "serviceRegistries": [],
             "stabilityStatus": "STABILIZING",
             "stabilityStatusAt": 1557129279.914,
             "status": "ACTIVE",
@@ -2993,14 +3148,8 @@
             "updatedAt": 1557129279.914
           }
         },
-        "comments": {
-          "input": {
-          },
-          "output": {
-          }
-        },
         "description": "This example updates the task set to adjust the scale.",
-        "id": "to-update-a-task-set-1734638754368",
+        "id": "example-1",
         "title": "To update a task set"
       }
     ]

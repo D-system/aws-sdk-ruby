@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -118,7 +119,7 @@ module Aws
                              {
                                key: ::String?,
                                values: Array[::String]?
-                             },
+                             }
                            ],
                            ?resources_per_page: ::Integer,
                            ?tags_per_page: ::Integer,
@@ -151,6 +152,18 @@ module Aws
                             key: ::String
                           ) -> _GetTagValuesResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetTagValuesResponseSuccess
+
+      interface _ListRequiredTagsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListRequiredTagsOutput]
+        def required_tags: () -> ::Array[Types::RequiredTag]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ResourceGroupsTaggingAPI/Client.html#list_required_tags-instance_method
+      def list_required_tags: (
+                                ?next_token: ::String,
+                                ?max_results: ::Integer
+                              ) -> _ListRequiredTagsResponseSuccess
+                            | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListRequiredTagsResponseSuccess
 
       interface _StartReportCreationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::StartReportCreationOutput]

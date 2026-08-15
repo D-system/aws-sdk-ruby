@@ -123,7 +123,7 @@ module Aws::QBusiness
       attr_accessor created_at: ::Time
       attr_accessor updated_at: ::Time
       attr_accessor status: ("CREATING" | "ACTIVE" | "DELETING" | "FAILED" | "UPDATING")
-      attr_accessor identity_type: ("AWS_IAM_IDP_SAML" | "AWS_IAM_IDP_OIDC" | "AWS_IAM_IDC" | "AWS_QUICKSIGHT_IDP")
+      attr_accessor identity_type: ("AWS_IAM_IDP_SAML" | "AWS_IAM_IDP_OIDC" | "AWS_IAM_IDC" | "AWS_QUICKSIGHT_IDP" | "ANONYMOUS")
       attr_accessor quick_sight_configuration: Types::QuickSightConfiguration
       SENSITIVE: []
     end
@@ -147,12 +147,25 @@ module Aws::QBusiness
       attr_accessor application_id: ::String
       attr_accessor statement_id: ::String
       attr_accessor actions: ::Array[::String]
+      attr_accessor conditions: ::Array[Types::PermissionCondition]
       attr_accessor principal: ::String
       SENSITIVE: []
     end
 
     class AssociatePermissionResponse
       attr_accessor statement: ::String
+      SENSITIVE: []
+    end
+
+    class AssociatedGroup
+      attr_accessor name: ::String
+      attr_accessor type: ("INDEX" | "DATASOURCE")
+      SENSITIVE: []
+    end
+
+    class AssociatedUser
+      attr_accessor id: ::String
+      attr_accessor type: ("INDEX" | "DATASOURCE")
       SENSITIVE: []
     end
 
@@ -344,6 +357,26 @@ module Aws::QBusiness
       SENSITIVE: []
     end
 
+    class ChatResponseConfiguration
+      attr_accessor chat_response_configuration_id: ::String
+      attr_accessor chat_response_configuration_arn: ::String
+      attr_accessor display_name: ::String
+      attr_accessor response_configuration_summary: ::String
+      attr_accessor status: ("CREATING" | "UPDATING" | "FAILED" | "ACTIVE")
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class ChatResponseConfigurationDetail
+      attr_accessor response_configurations: ::Hash[("ALL"), Types::ResponseConfiguration]
+      attr_accessor response_configuration_summary: ::String
+      attr_accessor status: ("CREATING" | "UPDATING" | "FAILED" | "ACTIVE")
+      attr_accessor error: Types::ErrorDetail
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
     class ChatSyncInput
       attr_accessor application_id: ::String
       attr_accessor user_id: ::String
@@ -370,6 +403,23 @@ module Aws::QBusiness
       attr_accessor auth_challenge_request: Types::AuthChallengeRequest
       attr_accessor source_attributions: ::Array[Types::SourceAttribution]
       attr_accessor failed_attachments: ::Array[Types::AttachmentOutput]
+      SENSITIVE: []
+    end
+
+    class CheckDocumentAccessRequest
+      attr_accessor application_id: ::String
+      attr_accessor index_id: ::String
+      attr_accessor user_id: ::String
+      attr_accessor document_id: ::String
+      attr_accessor data_source_id: ::String
+      SENSITIVE: []
+    end
+
+    class CheckDocumentAccessResponse
+      attr_accessor user_groups: ::Array[Types::AssociatedGroup]
+      attr_accessor user_aliases: ::Array[Types::AssociatedUser]
+      attr_accessor has_access: bool
+      attr_accessor document_acl: Types::DocumentAcl
       SENSITIVE: []
     end
 
@@ -433,10 +483,22 @@ module Aws::QBusiness
       end
     end
 
+    class CreateAnonymousWebExperienceUrlRequest
+      attr_accessor application_id: ::String
+      attr_accessor web_experience_id: ::String
+      attr_accessor session_duration_in_minutes: ::Integer
+      SENSITIVE: []
+    end
+
+    class CreateAnonymousWebExperienceUrlResponse
+      attr_accessor anonymous_url: ::String
+      SENSITIVE: []
+    end
+
     class CreateApplicationRequest
       attr_accessor display_name: ::String
       attr_accessor role_arn: ::String
-      attr_accessor identity_type: ("AWS_IAM_IDP_SAML" | "AWS_IAM_IDP_OIDC" | "AWS_IAM_IDC" | "AWS_QUICKSIGHT_IDP")
+      attr_accessor identity_type: ("AWS_IAM_IDP_SAML" | "AWS_IAM_IDP_OIDC" | "AWS_IAM_IDC" | "AWS_QUICKSIGHT_IDP" | "ANONYMOUS")
       attr_accessor iam_identity_provider_arn: ::String
       attr_accessor identity_center_instance_arn: ::String
       attr_accessor client_ids_for_oidc: ::Array[::String]
@@ -457,12 +519,28 @@ module Aws::QBusiness
       SENSITIVE: []
     end
 
+    class CreateChatResponseConfigurationRequest
+      attr_accessor application_id: ::String
+      attr_accessor display_name: ::String
+      attr_accessor client_token: ::String
+      attr_accessor response_configurations: ::Hash[("ALL"), Types::ResponseConfiguration]
+      attr_accessor tags: ::Array[Types::Tag]
+      SENSITIVE: []
+    end
+
+    class CreateChatResponseConfigurationResponse
+      attr_accessor chat_response_configuration_id: ::String
+      attr_accessor chat_response_configuration_arn: ::String
+      SENSITIVE: []
+    end
+
     class CreateDataAccessorRequest
       attr_accessor application_id: ::String
       attr_accessor principal: ::String
       attr_accessor action_configurations: ::Array[Types::ActionConfiguration]
       attr_accessor client_token: ::String
       attr_accessor display_name: ::String
+      attr_accessor authentication_detail: Types::DataAccessorAuthenticationDetail
       attr_accessor tags: ::Array[Types::Tag]
       SENSITIVE: [:display_name]
     end
@@ -624,9 +702,33 @@ module Aws::QBusiness
       attr_accessor data_accessor_arn: ::String
       attr_accessor idc_application_arn: ::String
       attr_accessor principal: ::String
+      attr_accessor authentication_detail: Types::DataAccessorAuthenticationDetail
       attr_accessor created_at: ::Time
       attr_accessor updated_at: ::Time
       SENSITIVE: [:display_name]
+    end
+
+    class DataAccessorAuthenticationConfiguration
+      attr_accessor idc_trusted_token_issuer_configuration: Types::DataAccessorIdcTrustedTokenIssuerConfiguration
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class IdcTrustedTokenIssuerConfiguration < DataAccessorAuthenticationConfiguration
+      end
+      class Unknown < DataAccessorAuthenticationConfiguration
+      end
+    end
+
+    class DataAccessorAuthenticationDetail
+      attr_accessor authentication_type: ("AWS_IAM_IDC_TTI" | "AWS_IAM_IDC_AUTH_CODE")
+      attr_accessor authentication_configuration: Types::DataAccessorAuthenticationConfiguration
+      attr_accessor external_ids: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class DataAccessorIdcTrustedTokenIssuerConfiguration
+      attr_accessor idc_trusted_token_issuer_arn: ::String
+      SENSITIVE: []
     end
 
     class DataSource
@@ -666,7 +768,7 @@ module Aws::QBusiness
     end
 
     class DateAttributeBoostingConfiguration
-      attr_accessor boosting_level: ("NONE" | "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH")
+      attr_accessor boosting_level: ("NONE" | "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH" | "ONE" | "TWO")
       attr_accessor boosting_duration_in_seconds: ::Integer
       SENSITIVE: []
     end
@@ -696,6 +798,15 @@ module Aws::QBusiness
     end
 
     class DeleteChatControlsConfigurationResponse < Aws::EmptyStructure
+    end
+
+    class DeleteChatResponseConfigurationRequest
+      attr_accessor application_id: ::String
+      attr_accessor chat_response_configuration_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteChatResponseConfigurationResponse < Aws::EmptyStructure
     end
 
     class DeleteConversationRequest
@@ -806,6 +917,37 @@ module Aws::QBusiness
       attr_accessor access_configuration: Types::AccessConfiguration
       attr_accessor document_enrichment_configuration: Types::DocumentEnrichmentConfiguration
       attr_accessor media_extraction_configuration: Types::MediaExtractionConfiguration
+      SENSITIVE: []
+    end
+
+    class DocumentAcl
+      attr_accessor allowlist: Types::DocumentAclMembership
+      attr_accessor deny_list: Types::DocumentAclMembership
+      SENSITIVE: []
+    end
+
+    class DocumentAclCondition
+      attr_accessor member_relation: ("AND" | "OR")
+      attr_accessor users: ::Array[Types::DocumentAclUser]
+      attr_accessor groups: ::Array[Types::DocumentAclGroup]
+      SENSITIVE: []
+    end
+
+    class DocumentAclGroup
+      attr_accessor name: ::String
+      attr_accessor type: ("INDEX" | "DATASOURCE")
+      SENSITIVE: []
+    end
+
+    class DocumentAclMembership
+      attr_accessor member_relation: ("AND" | "OR")
+      attr_accessor conditions: ::Array[Types::DocumentAclCondition]
+      SENSITIVE: []
+    end
+
+    class DocumentAclUser
+      attr_accessor id: ::String
+      attr_accessor type: ("INDEX" | "DATASOURCE")
       SENSITIVE: []
     end
 
@@ -958,7 +1100,7 @@ module Aws::QBusiness
       attr_accessor display_name: ::String
       attr_accessor application_id: ::String
       attr_accessor application_arn: ::String
-      attr_accessor identity_type: ("AWS_IAM_IDP_SAML" | "AWS_IAM_IDP_OIDC" | "AWS_IAM_IDC" | "AWS_QUICKSIGHT_IDP")
+      attr_accessor identity_type: ("AWS_IAM_IDP_SAML" | "AWS_IAM_IDP_OIDC" | "AWS_IAM_IDC" | "AWS_QUICKSIGHT_IDP" | "ANONYMOUS")
       attr_accessor iam_identity_provider_arn: ::String
       attr_accessor identity_center_application_arn: ::String
       attr_accessor role_arn: ::String
@@ -991,6 +1133,23 @@ module Aws::QBusiness
       attr_accessor topic_configurations: ::Array[Types::TopicConfiguration]
       attr_accessor creator_mode_configuration: Types::AppliedCreatorModeConfiguration
       attr_accessor next_token: ::String
+      attr_accessor hallucination_reduction_configuration: Types::HallucinationReductionConfiguration
+      SENSITIVE: []
+    end
+
+    class GetChatResponseConfigurationRequest
+      attr_accessor application_id: ::String
+      attr_accessor chat_response_configuration_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetChatResponseConfigurationResponse
+      attr_accessor chat_response_configuration_id: ::String
+      attr_accessor chat_response_configuration_arn: ::String
+      attr_accessor display_name: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor in_use_configuration: Types::ChatResponseConfigurationDetail
+      attr_accessor last_update_configuration: Types::ChatResponseConfigurationDetail
       SENSITIVE: []
     end
 
@@ -1008,6 +1167,7 @@ module Aws::QBusiness
       attr_accessor idc_application_arn: ::String
       attr_accessor principal: ::String
       attr_accessor action_configurations: ::Array[Types::ActionConfiguration]
+      attr_accessor authentication_detail: Types::DataAccessorAuthenticationDetail
       attr_accessor created_at: ::Time
       attr_accessor updated_at: ::Time
       SENSITIVE: [:display_name]
@@ -1038,6 +1198,21 @@ module Aws::QBusiness
       attr_accessor error: Types::ErrorDetail
       attr_accessor document_enrichment_configuration: Types::DocumentEnrichmentConfiguration
       attr_accessor media_extraction_configuration: Types::MediaExtractionConfiguration
+      SENSITIVE: []
+    end
+
+    class GetDocumentContentRequest
+      attr_accessor application_id: ::String
+      attr_accessor index_id: ::String
+      attr_accessor data_source_id: ::String
+      attr_accessor document_id: ::String
+      attr_accessor output_format: ("RAW" | "EXTRACTED")
+      SENSITIVE: []
+    end
+
+    class GetDocumentContentResponse
+      attr_accessor presigned_url: ::String
+      attr_accessor mime_type: ::String
       SENSITIVE: []
     end
 
@@ -1202,6 +1377,11 @@ module Aws::QBusiness
       SENSITIVE: []
     end
 
+    class HallucinationReductionConfiguration
+      attr_accessor hallucination_reduction_control: ("ENABLED" | "DISABLED")
+      SENSITIVE: []
+    end
+
     class HookConfiguration
       attr_accessor invocation_condition: Types::DocumentAttributeCondition
       attr_accessor lambda_arn: ::String
@@ -1267,6 +1447,18 @@ module Aws::QBusiness
       SENSITIVE: []
     end
 
+    class InstructionCollection
+      attr_accessor response_length: ::String
+      attr_accessor target_audience: ::String
+      attr_accessor perspective: ::String
+      attr_accessor output_style: ::String
+      attr_accessor identity: ::String
+      attr_accessor tone: ::String
+      attr_accessor custom_instructions: ::String
+      attr_accessor examples: ::String
+      SENSITIVE: []
+    end
+
     class InternalServerException
       attr_accessor message: ::String
       SENSITIVE: []
@@ -1305,6 +1497,19 @@ module Aws::QBusiness
 
     class ListAttachmentsResponse
       attr_accessor attachments: ::Array[Types::Attachment]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListChatResponseConfigurationsRequest
+      attr_accessor application_id: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListChatResponseConfigurationsResponse
+      attr_accessor chat_response_configurations: ::Array[Types::ChatResponseConfiguration]
       attr_accessor next_token: ::String
       SENSITIVE: []
     end
@@ -1584,6 +1789,7 @@ module Aws::QBusiness
 
     class NativeIndexConfiguration
       attr_accessor index_id: ::String
+      attr_accessor version: ::Integer
       attr_accessor boosting_override: ::Hash[::String, Types::DocumentAttributeBoostingConfiguration]
       SENSITIVE: []
     end
@@ -1592,7 +1798,7 @@ module Aws::QBusiness
     end
 
     class NumberAttributeBoostingConfiguration
-      attr_accessor boosting_level: ("NONE" | "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH")
+      attr_accessor boosting_level: ("NONE" | "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH" | "ONE" | "TWO")
       attr_accessor boosting_type: ("PRIORITIZE_LARGER_VALUES" | "PRIORITIZE_SMALLER_VALUES")
       SENSITIVE: []
     end
@@ -1613,6 +1819,13 @@ module Aws::QBusiness
 
     class OrchestrationConfiguration
       attr_accessor control: ("ENABLED" | "DISABLED")
+      SENSITIVE: []
+    end
+
+    class PermissionCondition
+      attr_accessor condition_operator: ("StringEquals")
+      attr_accessor condition_key: ::String
+      attr_accessor condition_values: ::Array[::String]
       SENSITIVE: []
     end
 
@@ -1744,6 +1957,11 @@ module Aws::QBusiness
       SENSITIVE: []
     end
 
+    class ResponseConfiguration
+      attr_accessor instruction_collection: Types::InstructionCollection
+      SENSITIVE: []
+    end
+
     class Retriever
       attr_accessor application_id: ::String
       attr_accessor retriever_id: ::String
@@ -1853,6 +2071,9 @@ module Aws::QBusiness
       attr_accessor citation_number: ::Integer
       attr_accessor updated_at: ::Time
       attr_accessor text_message_segments: ::Array[Types::TextSegment]
+      attr_accessor document_id: ::String
+      attr_accessor index_id: ::String
+      attr_accessor datasource_id: ::String
       SENSITIVE: []
     end
 
@@ -1896,13 +2117,13 @@ module Aws::QBusiness
     end
 
     class StringAttributeBoostingConfiguration
-      attr_accessor boosting_level: ("NONE" | "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH")
-      attr_accessor attribute_value_boosting: ::Hash[::String, ("LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH")]
+      attr_accessor boosting_level: ("NONE" | "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH" | "ONE" | "TWO")
+      attr_accessor attribute_value_boosting: ::Hash[::String, ("LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH" | "ONE" | "TWO" | "THREE" | "FOUR" | "FIVE")]
       SENSITIVE: []
     end
 
     class StringListAttributeBoostingConfiguration
-      attr_accessor boosting_level: ("NONE" | "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH")
+      attr_accessor boosting_level: ("NONE" | "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH" | "ONE" | "TWO")
       SENSITIVE: []
     end
 
@@ -1962,6 +2183,7 @@ module Aws::QBusiness
     end
 
     class TextOutputEvent
+      attr_accessor system_message_type: ("RESPONSE" | "GROUNDED_RESPONSE")
       attr_accessor conversation_id: ::String
       attr_accessor user_message_id: ::String
       attr_accessor system_message_id: ::String
@@ -2027,16 +2249,30 @@ module Aws::QBusiness
       attr_accessor topic_configurations_to_create_or_update: ::Array[Types::TopicConfiguration]
       attr_accessor topic_configurations_to_delete: ::Array[Types::TopicConfiguration]
       attr_accessor creator_mode_configuration: Types::CreatorModeConfiguration
+      attr_accessor hallucination_reduction_configuration: Types::HallucinationReductionConfiguration
       SENSITIVE: []
     end
 
     class UpdateChatControlsConfigurationResponse < Aws::EmptyStructure
     end
 
+    class UpdateChatResponseConfigurationRequest
+      attr_accessor application_id: ::String
+      attr_accessor chat_response_configuration_id: ::String
+      attr_accessor display_name: ::String
+      attr_accessor response_configurations: ::Hash[("ALL"), Types::ResponseConfiguration]
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class UpdateChatResponseConfigurationResponse < Aws::EmptyStructure
+    end
+
     class UpdateDataAccessorRequest
       attr_accessor application_id: ::String
       attr_accessor data_accessor_id: ::String
       attr_accessor action_configurations: ::Array[Types::ActionConfiguration]
+      attr_accessor authentication_detail: Types::DataAccessorAuthenticationDetail
       attr_accessor display_name: ::String
       SENSITIVE: [:display_name]
     end

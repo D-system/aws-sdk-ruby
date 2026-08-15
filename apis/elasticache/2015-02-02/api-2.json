@@ -1484,8 +1484,7 @@
   "shapes":{
     "APICallRateForCustomerExceededFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"APICallRateForCustomerExceeded",
         "httpStatusCode":400,
@@ -1567,8 +1566,7 @@
     },
     "AuthorizationAlreadyExistsFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"AuthorizationAlreadyExists",
         "httpStatusCode":400,
@@ -1578,8 +1576,7 @@
     },
     "AuthorizationNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"AuthorizationNotFound",
         "httpStatusCode":404,
@@ -1691,8 +1688,7 @@
     },
     "CacheClusterAlreadyExistsFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"CacheClusterAlreadyExists",
         "httpStatusCode":400,
@@ -1721,8 +1717,7 @@
     },
     "CacheClusterNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"CacheClusterNotFound",
         "httpStatusCode":404,
@@ -1849,8 +1844,7 @@
     },
     "CacheParameterGroupAlreadyExistsFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"CacheParameterGroupAlreadyExists",
         "httpStatusCode":400,
@@ -1881,8 +1875,7 @@
     },
     "CacheParameterGroupNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"CacheParameterGroupNotFound",
         "httpStatusCode":404,
@@ -1892,8 +1885,7 @@
     },
     "CacheParameterGroupQuotaExceededFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"CacheParameterGroupQuotaExceeded",
         "httpStatusCode":400,
@@ -1929,8 +1921,7 @@
     },
     "CacheSecurityGroupAlreadyExistsFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"CacheSecurityGroupAlreadyExists",
         "httpStatusCode":400,
@@ -1968,8 +1959,7 @@
     },
     "CacheSecurityGroupNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"CacheSecurityGroupNotFound",
         "httpStatusCode":404,
@@ -1979,8 +1969,7 @@
     },
     "CacheSecurityGroupQuotaExceededFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"QuotaExceeded.CacheSecurityGroup",
         "httpStatusCode":400,
@@ -2009,8 +1998,7 @@
     },
     "CacheSubnetGroupAlreadyExistsFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"CacheSubnetGroupAlreadyExists",
         "httpStatusCode":400,
@@ -2020,8 +2008,7 @@
     },
     "CacheSubnetGroupInUse":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"CacheSubnetGroupInUse",
         "httpStatusCode":400,
@@ -2038,8 +2025,7 @@
     },
     "CacheSubnetGroupNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"CacheSubnetGroupNotFoundFault",
         "httpStatusCode":400,
@@ -2049,8 +2035,7 @@
     },
     "CacheSubnetGroupQuotaExceededFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"CacheSubnetGroupQuotaExceeded",
         "httpStatusCode":400,
@@ -2067,8 +2052,7 @@
     },
     "CacheSubnetQuotaExceededFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"CacheSubnetQuotaExceededFault",
         "httpStatusCode":400,
@@ -2113,8 +2097,7 @@
     },
     "ClusterQuotaForCustomerExceededFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"ClusterQuotaForCustomerExceeded",
         "httpStatusCode":400,
@@ -2351,7 +2334,8 @@
         "IpDiscovery":{"shape":"IpDiscovery"},
         "TransitEncryptionMode":{"shape":"TransitEncryptionMode"},
         "ClusterMode":{"shape":"ClusterMode"},
-        "ServerlessCacheSnapshotName":{"shape":"String"}
+        "ServerlessCacheSnapshotName":{"shape":"String"},
+        "Durability":{"shape":"Durability"}
       }
     },
     "CreateReplicationGroupResult":{
@@ -2379,7 +2363,8 @@
         "UserGroupId":{"shape":"String"},
         "SubnetIds":{"shape":"SubnetIdsList"},
         "SnapshotRetentionLimit":{"shape":"IntegerOptional"},
-        "DailySnapshotTime":{"shape":"String"}
+        "DailySnapshotTime":{"shape":"String"},
+        "NetworkType":{"shape":"NetworkType"}
       }
     },
     "CreateServerlessCacheResponse":{
@@ -2530,8 +2515,7 @@
     },
     "DefaultUserAssociatedToUserGroupFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DefaultUserAssociatedToUserGroup",
         "httpStatusCode":400,
@@ -2541,8 +2525,7 @@
     },
     "DefaultUserRequired":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DefaultUserRequired",
         "httpStatusCode":400,
@@ -2945,14 +2928,22 @@
     "Double":{"type":"double"},
     "DuplicateUserNameFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DuplicateUserName",
         "httpStatusCode":400,
         "senderFault":true
       },
       "exception":true
+    },
+    "Durability":{
+      "type":"string",
+      "enum":[
+        "default",
+        "async",
+        "sync",
+        "disabled"
+      ]
     },
     "EC2SecurityGroup":{
       "type":"structure",
@@ -2975,6 +2966,14 @@
         "Maximum":{"shape":"IntegerOptional"},
         "Minimum":{"shape":"IntegerOptional"}
       }
+    },
+    "EffectiveDurability":{
+      "type":"string",
+      "enum":[
+        "async",
+        "sync",
+        "disabled"
+      ]
     },
     "Endpoint":{
       "type":"structure",
@@ -3126,8 +3125,7 @@
     },
     "GlobalReplicationGroupAlreadyExistsFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"GlobalReplicationGroupAlreadyExistsFault",
         "httpStatusCode":400,
@@ -3169,8 +3167,7 @@
     },
     "GlobalReplicationGroupNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"GlobalReplicationGroupNotFoundFault",
         "httpStatusCode":404,
@@ -3227,8 +3224,7 @@
     },
     "InsufficientCacheClusterCapacityFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InsufficientCacheClusterCapacity",
         "httpStatusCode":400,
@@ -3240,8 +3236,7 @@
     "IntegerOptional":{"type":"integer"},
     "InvalidARNFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidARN",
         "httpStatusCode":400,
@@ -3251,8 +3246,7 @@
     },
     "InvalidCacheClusterStateFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidCacheClusterState",
         "httpStatusCode":400,
@@ -3262,8 +3256,7 @@
     },
     "InvalidCacheParameterGroupStateFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidCacheParameterGroupState",
         "httpStatusCode":400,
@@ -3273,8 +3266,7 @@
     },
     "InvalidCacheSecurityGroupStateFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidCacheSecurityGroupState",
         "httpStatusCode":400,
@@ -3284,8 +3276,7 @@
     },
     "InvalidCredentialsException":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidCredentialsException",
         "httpStatusCode":408,
@@ -3295,8 +3286,7 @@
     },
     "InvalidGlobalReplicationGroupStateFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidGlobalReplicationGroupState",
         "httpStatusCode":400,
@@ -3306,8 +3296,7 @@
     },
     "InvalidKMSKeyFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidKMSKeyFault",
         "httpStatusCode":400,
@@ -3343,8 +3332,7 @@
     },
     "InvalidReplicationGroupStateFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidReplicationGroupState",
         "httpStatusCode":400,
@@ -3354,8 +3342,7 @@
     },
     "InvalidServerlessCacheSnapshotStateFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidServerlessCacheSnapshotStateFault",
         "httpStatusCode":400,
@@ -3365,8 +3352,7 @@
     },
     "InvalidServerlessCacheStateFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidServerlessCacheStateFault",
         "httpStatusCode":400,
@@ -3376,8 +3362,7 @@
     },
     "InvalidSnapshotStateFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidSnapshotState",
         "httpStatusCode":400,
@@ -3387,8 +3372,7 @@
     },
     "InvalidSubnet":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidSubnet",
         "httpStatusCode":400,
@@ -3398,8 +3382,7 @@
     },
     "InvalidUserGroupStateFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidUserGroupState",
         "httpStatusCode":400,
@@ -3409,8 +3392,7 @@
     },
     "InvalidUserStateFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidUserState",
         "httpStatusCode":400,
@@ -3420,8 +3402,7 @@
     },
     "InvalidVPCNetworkStateFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidVPCNetworkStateFault",
         "httpStatusCode":400,
@@ -3544,7 +3525,8 @@
         "AuthToken":{"shape":"String"},
         "AuthTokenUpdateStrategy":{"shape":"AuthTokenUpdateStrategyType"},
         "LogDeliveryConfigurations":{"shape":"LogDeliveryConfigurationRequestList"},
-        "IpDiscovery":{"shape":"IpDiscovery"}
+        "IpDiscovery":{"shape":"IpDiscovery"},
+        "ScaleConfig":{"shape":"ScaleConfig"}
       }
     },
     "ModifyCacheClusterResult":{
@@ -3638,7 +3620,8 @@
         "IpDiscovery":{"shape":"IpDiscovery"},
         "TransitEncryptionEnabled":{"shape":"BooleanOptional"},
         "TransitEncryptionMode":{"shape":"TransitEncryptionMode"},
-        "ClusterMode":{"shape":"ClusterMode"}
+        "ClusterMode":{"shape":"ClusterMode"},
+        "Durability":{"shape":"Durability"}
       }
     },
     "ModifyReplicationGroupResult":{
@@ -3735,8 +3718,7 @@
     },
     "NoOperationFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"NoOperationFault",
         "httpStatusCode":400,
@@ -3822,8 +3804,7 @@
     },
     "NodeGroupNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"NodeGroupNotFoundFault",
         "httpStatusCode":404,
@@ -3847,8 +3828,7 @@
     },
     "NodeGroupsPerReplicationGroupQuotaExceededFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"NodeGroupsPerReplicationGroupQuotaExceeded",
         "httpStatusCode":400,
@@ -3872,8 +3852,7 @@
     },
     "NodeQuotaForClusterExceededFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"NodeQuotaForClusterExceeded",
         "httpStatusCode":400,
@@ -3883,8 +3862,7 @@
     },
     "NodeQuotaForCustomerExceededFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"NodeQuotaForCustomerExceeded",
         "httpStatusCode":400,
@@ -4026,7 +4004,8 @@
         "AuthTokenStatus":{"shape":"AuthTokenUpdateStatus"},
         "LogDeliveryConfigurations":{"shape":"PendingLogDeliveryConfigurationList"},
         "TransitEncryptionEnabled":{"shape":"BooleanOptional"},
-        "TransitEncryptionMode":{"shape":"TransitEncryptionMode"}
+        "TransitEncryptionMode":{"shape":"TransitEncryptionMode"},
+        "ScaleConfig":{"shape":"ScaleConfig"}
       }
     },
     "PreferredAvailabilityZoneList":{
@@ -4190,6 +4169,7 @@
         "AtRestEncryptionEnabled":{"shape":"BooleanOptional"},
         "MemberClustersOutpostArns":{"shape":"ReplicationGroupOutpostArnList"},
         "KmsKeyId":{"shape":"String"},
+        "StorageEncryptionType":{"shape":"StorageEncryptionType"},
         "ARN":{"shape":"String"},
         "UserGroupIds":{"shape":"UserGroupIdList"},
         "LogDeliveryConfigurations":{"shape":"LogDeliveryConfigurationList"},
@@ -4200,14 +4180,15 @@
         "IpDiscovery":{"shape":"IpDiscovery"},
         "TransitEncryptionMode":{"shape":"TransitEncryptionMode"},
         "ClusterMode":{"shape":"ClusterMode"},
-        "Engine":{"shape":"String"}
+        "Engine":{"shape":"String"},
+        "Durability":{"shape":"Durability"},
+        "EffectiveDurability":{"shape":"EffectiveDurability"}
       },
       "wrapper":true
     },
     "ReplicationGroupAlreadyExistsFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"ReplicationGroupAlreadyExists",
         "httpStatusCode":400,
@@ -4217,8 +4198,7 @@
     },
     "ReplicationGroupAlreadyUnderMigrationFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"ReplicationGroupAlreadyUnderMigrationFault",
         "httpStatusCode":400,
@@ -4247,8 +4227,7 @@
     },
     "ReplicationGroupNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"ReplicationGroupNotFoundFault",
         "httpStatusCode":404,
@@ -4258,8 +4237,7 @@
     },
     "ReplicationGroupNotUnderMigrationFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"ReplicationGroupNotUnderMigrationFault",
         "httpStatusCode":400,
@@ -4309,8 +4287,7 @@
     },
     "ReservedCacheNodeAlreadyExistsFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"ReservedCacheNodeAlreadyExists",
         "httpStatusCode":404,
@@ -4334,8 +4311,7 @@
     },
     "ReservedCacheNodeNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"ReservedCacheNodeNotFound",
         "httpStatusCode":404,
@@ -4345,8 +4321,7 @@
     },
     "ReservedCacheNodeQuotaExceededFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"ReservedCacheNodeQuotaExceeded",
         "httpStatusCode":400,
@@ -4384,8 +4359,7 @@
     },
     "ReservedCacheNodesOfferingNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"ReservedCacheNodesOfferingNotFound",
         "httpStatusCode":404,
@@ -4441,6 +4415,13 @@
         "CacheSecurityGroup":{"shape":"CacheSecurityGroup"}
       }
     },
+    "ScaleConfig":{
+      "type":"structure",
+      "members":{
+        "ScalePercentage":{"shape":"IntegerOptional"},
+        "ScaleIntervalMinutes":{"shape":"IntegerOptional"}
+      }
+    },
     "SecurityGroupIdsList":{
       "type":"list",
       "member":{
@@ -4471,6 +4452,7 @@
         "FullEngineVersion":{"shape":"String"},
         "CacheUsageLimits":{"shape":"CacheUsageLimits"},
         "KmsKeyId":{"shape":"String"},
+        "StorageEncryptionType":{"shape":"StorageEncryptionType"},
         "SecurityGroupIds":{"shape":"SecurityGroupIdsList"},
         "Endpoint":{"shape":"Endpoint"},
         "ReaderEndpoint":{"shape":"Endpoint"},
@@ -4478,13 +4460,13 @@
         "UserGroupId":{"shape":"String"},
         "SubnetIds":{"shape":"SubnetIdsList"},
         "SnapshotRetentionLimit":{"shape":"IntegerOptional"},
-        "DailySnapshotTime":{"shape":"String"}
+        "DailySnapshotTime":{"shape":"String"},
+        "NetworkType":{"shape":"NetworkType"}
       }
     },
     "ServerlessCacheAlreadyExistsFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"ServerlessCacheAlreadyExistsFault",
         "httpStatusCode":400,
@@ -4506,8 +4488,7 @@
     },
     "ServerlessCacheNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"ServerlessCacheNotFoundFault",
         "httpStatusCode":404,
@@ -4517,8 +4498,7 @@
     },
     "ServerlessCacheQuotaForCustomerExceededFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"ServerlessCacheQuotaForCustomerExceededFault",
         "httpStatusCode":400,
@@ -4542,8 +4522,7 @@
     },
     "ServerlessCacheSnapshotAlreadyExistsFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"ServerlessCacheSnapshotAlreadyExistsFault",
         "httpStatusCode":400,
@@ -4560,8 +4539,7 @@
     },
     "ServerlessCacheSnapshotNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"ServerlessCacheSnapshotNotFoundFault",
         "httpStatusCode":404,
@@ -4571,8 +4549,7 @@
     },
     "ServerlessCacheSnapshotQuotaExceededFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"ServerlessCacheSnapshotQuotaExceededFault",
         "httpStatusCode":400,
@@ -4582,8 +4559,7 @@
     },
     "ServiceLinkedRoleNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"ServiceLinkedRoleNotFoundFault",
         "httpStatusCode":400,
@@ -4617,8 +4593,7 @@
     },
     "ServiceUpdateNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"ServiceUpdateNotFoundFault",
         "httpStatusCode":404,
@@ -4703,14 +4678,14 @@
         "NodeSnapshots":{"shape":"NodeSnapshotList"},
         "KmsKeyId":{"shape":"String"},
         "ARN":{"shape":"String"},
-        "DataTiering":{"shape":"DataTieringStatus"}
+        "DataTiering":{"shape":"DataTieringStatus"},
+        "Durability":{"shape":"Durability"}
       },
       "wrapper":true
     },
     "SnapshotAlreadyExistsFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"SnapshotAlreadyExistsFault",
         "httpStatusCode":400,
@@ -4727,8 +4702,7 @@
     },
     "SnapshotFeatureNotSupportedFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"SnapshotFeatureNotSupportedFault",
         "httpStatusCode":400,
@@ -4745,8 +4719,7 @@
     },
     "SnapshotNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"SnapshotNotFoundFault",
         "httpStatusCode":404,
@@ -4756,8 +4729,7 @@
     },
     "SnapshotQuotaExceededFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"SnapshotQuotaExceededFault",
         "httpStatusCode":400,
@@ -4796,6 +4768,14 @@
         "ReplicationGroup":{"shape":"ReplicationGroup"}
       }
     },
+    "StorageEncryptionType":{
+      "type":"string",
+      "enum":[
+        "none",
+        "sse-elasticache",
+        "sse-kms"
+      ]
+    },
     "String":{"type":"string"},
     "Subnet":{
       "type":"structure",
@@ -4822,8 +4802,7 @@
     },
     "SubnetInUse":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"SubnetInUse",
         "httpStatusCode":400,
@@ -4840,8 +4819,7 @@
     },
     "SubnetNotAllowedFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"SubnetNotAllowedFault",
         "httpStatusCode":400,
@@ -4878,8 +4856,7 @@
     },
     "TagNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"TagNotFound",
         "httpStatusCode":404,
@@ -4889,8 +4866,7 @@
     },
     "TagQuotaPerResourceExceeded":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"TagQuotaPerResourceExceeded",
         "httpStatusCode":400,
@@ -4911,8 +4887,7 @@
     },
     "TestFailoverNotAvailableFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"TestFailoverNotAvailableFault",
         "httpStatusCode":400,
@@ -5060,8 +5035,7 @@
     },
     "UserAlreadyExistsFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"UserAlreadyExists",
         "httpStatusCode":400,
@@ -5085,8 +5059,7 @@
     },
     "UserGroupAlreadyExistsFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"UserGroupAlreadyExists",
         "httpStatusCode":400,
@@ -5114,8 +5087,7 @@
     },
     "UserGroupNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"UserGroupNotFound",
         "httpStatusCode":404,
@@ -5132,8 +5104,7 @@
     },
     "UserGroupQuotaExceededFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"UserGroupQuotaExceeded",
         "httpStatusCode":400,
@@ -5172,8 +5143,7 @@
     },
     "UserNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"UserNotFound",
         "httpStatusCode":404,
@@ -5183,8 +5153,7 @@
     },
     "UserQuotaExceededFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"UserQuotaExceeded",
         "httpStatusCode":400,

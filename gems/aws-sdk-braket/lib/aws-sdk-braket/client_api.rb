@@ -15,6 +15,7 @@ module Aws::Braket
     include Seahorse::Model
 
     AccessDeniedException = Shapes::StructureShape.new(name: 'AccessDeniedException')
+    ActionMetadata = Shapes::StructureShape.new(name: 'ActionMetadata')
     AlgorithmSpecification = Shapes::StructureShape.new(name: 'AlgorithmSpecification')
     Association = Shapes::StructureShape.new(name: 'Association')
     AssociationType = Shapes::StringShape.new(name: 'AssociationType')
@@ -40,7 +41,12 @@ module Aws::Braket
     CreateQuantumTaskRequestOutputS3KeyPrefixString = Shapes::StringShape.new(name: 'CreateQuantumTaskRequestOutputS3KeyPrefixString')
     CreateQuantumTaskRequestShotsLong = Shapes::IntegerShape.new(name: 'CreateQuantumTaskRequestShotsLong')
     CreateQuantumTaskResponse = Shapes::StructureShape.new(name: 'CreateQuantumTaskResponse')
+    CreateSpendingLimitRequest = Shapes::StructureShape.new(name: 'CreateSpendingLimitRequest')
+    CreateSpendingLimitRequestSpendingLimitString = Shapes::StringShape.new(name: 'CreateSpendingLimitRequestSpendingLimitString')
+    CreateSpendingLimitResponse = Shapes::StructureShape.new(name: 'CreateSpendingLimitResponse')
     DataSource = Shapes::StructureShape.new(name: 'DataSource')
+    DeleteSpendingLimitRequest = Shapes::StructureShape.new(name: 'DeleteSpendingLimitRequest')
+    DeleteSpendingLimitResponse = Shapes::StructureShape.new(name: 'DeleteSpendingLimitResponse')
     DeviceArn = Shapes::StringShape.new(name: 'DeviceArn')
     DeviceConfig = Shapes::StructureShape.new(name: 'DeviceConfig')
     DeviceOfflineException = Shapes::StructureShape.new(name: 'DeviceOfflineException')
@@ -51,6 +57,8 @@ module Aws::Braket
     DeviceSummary = Shapes::StructureShape.new(name: 'DeviceSummary')
     DeviceSummaryList = Shapes::ListShape.new(name: 'DeviceSummaryList')
     DeviceType = Shapes::StringShape.new(name: 'DeviceType')
+    ExperimentalCapabilities = Shapes::UnionShape.new(name: 'ExperimentalCapabilities')
+    ExperimentalCapabilitiesEnablementType = Shapes::StringShape.new(name: 'ExperimentalCapabilitiesEnablementType')
     GetDeviceRequest = Shapes::StructureShape.new(name: 'GetDeviceRequest')
     GetDeviceResponse = Shapes::StructureShape.new(name: 'GetDeviceResponse')
     GetJobRequest = Shapes::StructureShape.new(name: 'GetJobRequest')
@@ -89,6 +97,9 @@ module Aws::Braket
     ListTagsForResourceRequest = Shapes::StructureShape.new(name: 'ListTagsForResourceRequest')
     ListTagsForResourceResponse = Shapes::StructureShape.new(name: 'ListTagsForResourceResponse')
     Long = Shapes::IntegerShape.new(name: 'Long')
+    ProgramSetValidationFailure = Shapes::StructureShape.new(name: 'ProgramSetValidationFailure')
+    ProgramSetValidationFailuresList = Shapes::ListShape.new(name: 'ProgramSetValidationFailuresList')
+    ProgramValidationFailuresList = Shapes::ListShape.new(name: 'ProgramValidationFailuresList')
     QuantumTaskAdditionalAttributeName = Shapes::StringShape.new(name: 'QuantumTaskAdditionalAttributeName')
     QuantumTaskAdditionalAttributeNamesList = Shapes::ListShape.new(name: 'QuantumTaskAdditionalAttributeNamesList')
     QuantumTaskArn = Shapes::StringShape.new(name: 'QuantumTaskArn')
@@ -124,7 +135,17 @@ module Aws::Braket
     SearchQuantumTasksRequestFiltersList = Shapes::ListShape.new(name: 'SearchQuantumTasksRequestFiltersList')
     SearchQuantumTasksRequestMaxResultsInteger = Shapes::IntegerShape.new(name: 'SearchQuantumTasksRequestMaxResultsInteger')
     SearchQuantumTasksResponse = Shapes::StructureShape.new(name: 'SearchQuantumTasksResponse')
+    SearchSpendingLimitsFilter = Shapes::StructureShape.new(name: 'SearchSpendingLimitsFilter')
+    SearchSpendingLimitsFilterOperator = Shapes::StringShape.new(name: 'SearchSpendingLimitsFilterOperator')
+    SearchSpendingLimitsFilterValuesList = Shapes::ListShape.new(name: 'SearchSpendingLimitsFilterValuesList')
+    SearchSpendingLimitsRequest = Shapes::StructureShape.new(name: 'SearchSpendingLimitsRequest')
+    SearchSpendingLimitsRequestFiltersList = Shapes::ListShape.new(name: 'SearchSpendingLimitsRequestFiltersList')
+    SearchSpendingLimitsRequestMaxResultsInteger = Shapes::IntegerShape.new(name: 'SearchSpendingLimitsRequestMaxResultsInteger')
+    SearchSpendingLimitsResponse = Shapes::StructureShape.new(name: 'SearchSpendingLimitsResponse')
     ServiceQuotaExceededException = Shapes::StructureShape.new(name: 'ServiceQuotaExceededException')
+    SpendingLimitArn = Shapes::StringShape.new(name: 'SpendingLimitArn')
+    SpendingLimitSummary = Shapes::StructureShape.new(name: 'SpendingLimitSummary')
+    SpendingLimitSummaryList = Shapes::ListShape.new(name: 'SpendingLimitSummaryList')
     String = Shapes::StringShape.new(name: 'String')
     String1024 = Shapes::StringShape.new(name: 'String1024')
     String2048 = Shapes::StringShape.new(name: 'String2048')
@@ -132,21 +153,32 @@ module Aws::Braket
     String4096 = Shapes::StringShape.new(name: 'String4096')
     String64 = Shapes::StringShape.new(name: 'String64')
     SyntheticTimestamp_date_time = Shapes::TimestampShape.new(name: 'SyntheticTimestamp_date_time', timestampFormat: "iso8601")
+    SyntheticTimestamp_epoch_seconds = Shapes::TimestampShape.new(name: 'SyntheticTimestamp_epoch_seconds', timestampFormat: "unixTimestamp")
     TagKeys = Shapes::ListShape.new(name: 'TagKeys')
     TagResourceRequest = Shapes::StructureShape.new(name: 'TagResourceRequest')
     TagResourceResponse = Shapes::StructureShape.new(name: 'TagResourceResponse')
     TagsMap = Shapes::MapShape.new(name: 'TagsMap')
     ThrottlingException = Shapes::StructureShape.new(name: 'ThrottlingException')
+    TimePeriod = Shapes::StructureShape.new(name: 'TimePeriod')
     UntagResourceRequest = Shapes::StructureShape.new(name: 'UntagResourceRequest')
     UntagResourceResponse = Shapes::StructureShape.new(name: 'UntagResourceResponse')
+    UpdateSpendingLimitRequest = Shapes::StructureShape.new(name: 'UpdateSpendingLimitRequest')
+    UpdateSpendingLimitRequestSpendingLimitString = Shapes::StringShape.new(name: 'UpdateSpendingLimitRequestSpendingLimitString')
+    UpdateSpendingLimitResponse = Shapes::StructureShape.new(name: 'UpdateSpendingLimitResponse')
     Uri = Shapes::StringShape.new(name: 'Uri')
     ValidationException = Shapes::StructureShape.new(name: 'ValidationException')
+    ValidationExceptionReason = Shapes::StringShape.new(name: 'ValidationExceptionReason')
 
     AccessDeniedException.add_member(:message, Shapes::ShapeRef.new(shape: String, location_name: "message"))
     AccessDeniedException.struct_class = Types::AccessDeniedException
 
-    AlgorithmSpecification.add_member(:container_image, Shapes::ShapeRef.new(shape: ContainerImage, location_name: "containerImage"))
+    ActionMetadata.add_member(:action_type, Shapes::ShapeRef.new(shape: String, required: true, location_name: "actionType"))
+    ActionMetadata.add_member(:program_count, Shapes::ShapeRef.new(shape: Long, location_name: "programCount"))
+    ActionMetadata.add_member(:executable_count, Shapes::ShapeRef.new(shape: Long, location_name: "executableCount"))
+    ActionMetadata.struct_class = Types::ActionMetadata
+
     AlgorithmSpecification.add_member(:script_mode_config, Shapes::ShapeRef.new(shape: ScriptModeConfig, location_name: "scriptModeConfig"))
+    AlgorithmSpecification.add_member(:container_image, Shapes::ShapeRef.new(shape: ContainerImage, location_name: "containerImage"))
     AlgorithmSpecification.struct_class = Types::AlgorithmSpecification
 
     Association.add_member(:arn, Shapes::ShapeRef.new(shape: BraketResourceArn, required: true, location_name: "arn"))
@@ -158,16 +190,16 @@ module Aws::Braket
     CancelJobRequest.add_member(:job_arn, Shapes::ShapeRef.new(shape: JobArn, required: true, location: "uri", location_name: "jobArn"))
     CancelJobRequest.struct_class = Types::CancelJobRequest
 
-    CancelJobResponse.add_member(:cancellation_status, Shapes::ShapeRef.new(shape: CancellationStatus, required: true, location_name: "cancellationStatus"))
     CancelJobResponse.add_member(:job_arn, Shapes::ShapeRef.new(shape: JobArn, required: true, location_name: "jobArn"))
+    CancelJobResponse.add_member(:cancellation_status, Shapes::ShapeRef.new(shape: CancellationStatus, required: true, location_name: "cancellationStatus"))
     CancelJobResponse.struct_class = Types::CancelJobResponse
 
-    CancelQuantumTaskRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: String64, required: true, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
     CancelQuantumTaskRequest.add_member(:quantum_task_arn, Shapes::ShapeRef.new(shape: QuantumTaskArn, required: true, location: "uri", location_name: "quantumTaskArn"))
+    CancelQuantumTaskRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: String64, required: true, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CancelQuantumTaskRequest.struct_class = Types::CancelQuantumTaskRequest
 
-    CancelQuantumTaskResponse.add_member(:cancellation_status, Shapes::ShapeRef.new(shape: CancellationStatus, required: true, location_name: "cancellationStatus"))
     CancelQuantumTaskResponse.add_member(:quantum_task_arn, Shapes::ShapeRef.new(shape: QuantumTaskArn, required: true, location_name: "quantumTaskArn"))
+    CancelQuantumTaskResponse.add_member(:cancellation_status, Shapes::ShapeRef.new(shape: CancellationStatus, required: true, location_name: "cancellationStatus"))
     CancelQuantumTaskResponse.struct_class = Types::CancelQuantumTaskResponse
 
     ConflictException.add_member(:message, Shapes::ShapeRef.new(shape: String, location_name: "message"))
@@ -176,19 +208,19 @@ module Aws::Braket
     ContainerImage.add_member(:uri, Shapes::ShapeRef.new(shape: Uri, required: true, location_name: "uri"))
     ContainerImage.struct_class = Types::ContainerImage
 
+    CreateJobRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: String64, required: true, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateJobRequest.add_member(:algorithm_specification, Shapes::ShapeRef.new(shape: AlgorithmSpecification, required: true, location_name: "algorithmSpecification"))
-    CreateJobRequest.add_member(:associations, Shapes::ShapeRef.new(shape: CreateJobRequestAssociationsList, location_name: "associations"))
-    CreateJobRequest.add_member(:checkpoint_config, Shapes::ShapeRef.new(shape: JobCheckpointConfig, location_name: "checkpointConfig"))
-    CreateJobRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: String64, required: true, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
-    CreateJobRequest.add_member(:device_config, Shapes::ShapeRef.new(shape: DeviceConfig, required: true, location_name: "deviceConfig"))
-    CreateJobRequest.add_member(:hyper_parameters, Shapes::ShapeRef.new(shape: HyperParameters, location_name: "hyperParameters"))
     CreateJobRequest.add_member(:input_data_config, Shapes::ShapeRef.new(shape: CreateJobRequestInputDataConfigList, location_name: "inputDataConfig"))
-    CreateJobRequest.add_member(:instance_config, Shapes::ShapeRef.new(shape: InstanceConfig, required: true, location_name: "instanceConfig"))
-    CreateJobRequest.add_member(:job_name, Shapes::ShapeRef.new(shape: CreateJobRequestJobNameString, required: true, location_name: "jobName"))
     CreateJobRequest.add_member(:output_data_config, Shapes::ShapeRef.new(shape: JobOutputDataConfig, required: true, location_name: "outputDataConfig"))
+    CreateJobRequest.add_member(:checkpoint_config, Shapes::ShapeRef.new(shape: JobCheckpointConfig, location_name: "checkpointConfig"))
+    CreateJobRequest.add_member(:job_name, Shapes::ShapeRef.new(shape: CreateJobRequestJobNameString, required: true, location_name: "jobName"))
     CreateJobRequest.add_member(:role_arn, Shapes::ShapeRef.new(shape: RoleArn, required: true, location_name: "roleArn"))
     CreateJobRequest.add_member(:stopping_condition, Shapes::ShapeRef.new(shape: JobStoppingCondition, location_name: "stoppingCondition"))
+    CreateJobRequest.add_member(:instance_config, Shapes::ShapeRef.new(shape: InstanceConfig, required: true, location_name: "instanceConfig"))
+    CreateJobRequest.add_member(:hyper_parameters, Shapes::ShapeRef.new(shape: HyperParameters, location_name: "hyperParameters"))
+    CreateJobRequest.add_member(:device_config, Shapes::ShapeRef.new(shape: DeviceConfig, required: true, location_name: "deviceConfig"))
     CreateJobRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagsMap, location_name: "tags"))
+    CreateJobRequest.add_member(:associations, Shapes::ShapeRef.new(shape: CreateJobRequestAssociationsList, location_name: "associations"))
     CreateJobRequest.struct_class = Types::CreateJobRequest
 
     CreateJobRequestAssociationsList.member = Shapes::ShapeRef.new(shape: Association)
@@ -198,16 +230,17 @@ module Aws::Braket
     CreateJobResponse.add_member(:job_arn, Shapes::ShapeRef.new(shape: JobArn, required: true, location_name: "jobArn"))
     CreateJobResponse.struct_class = Types::CreateJobResponse
 
-    CreateQuantumTaskRequest.add_member(:action, Shapes::ShapeRef.new(shape: JsonValue, required: true, location_name: "action", metadata: {"jsonvalue"=>true}))
-    CreateQuantumTaskRequest.add_member(:associations, Shapes::ShapeRef.new(shape: CreateQuantumTaskRequestAssociationsList, location_name: "associations"))
-    CreateQuantumTaskRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: String64, required: true, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateQuantumTaskRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: String64, required: true, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateQuantumTaskRequest.add_member(:device_arn, Shapes::ShapeRef.new(shape: DeviceArn, required: true, location_name: "deviceArn"))
-    CreateQuantumTaskRequest.add_member(:device_parameters, Shapes::ShapeRef.new(shape: CreateQuantumTaskRequestDeviceParametersString, location_name: "deviceParameters", metadata: {"jsonvalue"=>true}))
-    CreateQuantumTaskRequest.add_member(:job_token, Shapes::ShapeRef.new(shape: JobToken, location_name: "jobToken"))
+    CreateQuantumTaskRequest.add_member(:device_parameters, Shapes::ShapeRef.new(shape: CreateQuantumTaskRequestDeviceParametersString, location_name: "deviceParameters", metadata: {"jsonvalue" => true}))
+    CreateQuantumTaskRequest.add_member(:shots, Shapes::ShapeRef.new(shape: CreateQuantumTaskRequestShotsLong, required: true, location_name: "shots"))
     CreateQuantumTaskRequest.add_member(:output_s3_bucket, Shapes::ShapeRef.new(shape: CreateQuantumTaskRequestOutputS3BucketString, required: true, location_name: "outputS3Bucket"))
     CreateQuantumTaskRequest.add_member(:output_s3_key_prefix, Shapes::ShapeRef.new(shape: CreateQuantumTaskRequestOutputS3KeyPrefixString, required: true, location_name: "outputS3KeyPrefix"))
-    CreateQuantumTaskRequest.add_member(:shots, Shapes::ShapeRef.new(shape: CreateQuantumTaskRequestShotsLong, required: true, location_name: "shots"))
+    CreateQuantumTaskRequest.add_member(:action, Shapes::ShapeRef.new(shape: JsonValue, required: true, location_name: "action", metadata: {"jsonvalue" => true}))
     CreateQuantumTaskRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagsMap, location_name: "tags"))
+    CreateQuantumTaskRequest.add_member(:job_token, Shapes::ShapeRef.new(shape: JobToken, location_name: "jobToken"))
+    CreateQuantumTaskRequest.add_member(:associations, Shapes::ShapeRef.new(shape: CreateQuantumTaskRequestAssociationsList, location_name: "associations"))
+    CreateQuantumTaskRequest.add_member(:experimental_capabilities, Shapes::ShapeRef.new(shape: ExperimentalCapabilities, location_name: "experimentalCapabilities"))
     CreateQuantumTaskRequest.struct_class = Types::CreateQuantumTaskRequest
 
     CreateQuantumTaskRequestAssociationsList.member = Shapes::ShapeRef.new(shape: Association)
@@ -215,8 +248,23 @@ module Aws::Braket
     CreateQuantumTaskResponse.add_member(:quantum_task_arn, Shapes::ShapeRef.new(shape: QuantumTaskArn, required: true, location_name: "quantumTaskArn"))
     CreateQuantumTaskResponse.struct_class = Types::CreateQuantumTaskResponse
 
+    CreateSpendingLimitRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: String64, required: true, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    CreateSpendingLimitRequest.add_member(:device_arn, Shapes::ShapeRef.new(shape: DeviceArn, required: true, location_name: "deviceArn"))
+    CreateSpendingLimitRequest.add_member(:spending_limit, Shapes::ShapeRef.new(shape: CreateSpendingLimitRequestSpendingLimitString, required: true, location_name: "spendingLimit"))
+    CreateSpendingLimitRequest.add_member(:time_period, Shapes::ShapeRef.new(shape: TimePeriod, location_name: "timePeriod"))
+    CreateSpendingLimitRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagsMap, location_name: "tags"))
+    CreateSpendingLimitRequest.struct_class = Types::CreateSpendingLimitRequest
+
+    CreateSpendingLimitResponse.add_member(:spending_limit_arn, Shapes::ShapeRef.new(shape: SpendingLimitArn, required: true, location_name: "spendingLimitArn"))
+    CreateSpendingLimitResponse.struct_class = Types::CreateSpendingLimitResponse
+
     DataSource.add_member(:s3_data_source, Shapes::ShapeRef.new(shape: S3DataSource, required: true, location_name: "s3DataSource"))
     DataSource.struct_class = Types::DataSource
+
+    DeleteSpendingLimitRequest.add_member(:spending_limit_arn, Shapes::ShapeRef.new(shape: SpendingLimitArn, required: true, location: "uri", location_name: "spendingLimitArn"))
+    DeleteSpendingLimitRequest.struct_class = Types::DeleteSpendingLimitRequest
+
+    DeleteSpendingLimitResponse.struct_class = Types::DeleteSpendingLimitResponse
 
     DeviceConfig.add_member(:device, Shapes::ShapeRef.new(shape: String256, required: true, location_name: "device"))
     DeviceConfig.struct_class = Types::DeviceConfig
@@ -225,8 +273,8 @@ module Aws::Braket
     DeviceOfflineException.struct_class = Types::DeviceOfflineException
 
     DeviceQueueInfo.add_member(:queue, Shapes::ShapeRef.new(shape: QueueName, required: true, location_name: "queue"))
-    DeviceQueueInfo.add_member(:queue_priority, Shapes::ShapeRef.new(shape: QueuePriority, location_name: "queuePriority"))
     DeviceQueueInfo.add_member(:queue_size, Shapes::ShapeRef.new(shape: String, required: true, location_name: "queueSize"))
+    DeviceQueueInfo.add_member(:queue_priority, Shapes::ShapeRef.new(shape: QueuePriority, location_name: "queuePriority"))
     DeviceQueueInfo.struct_class = Types::DeviceQueueInfo
 
     DeviceQueueInfoList.member = Shapes::ShapeRef.new(shape: DeviceQueueInfo)
@@ -236,77 +284,86 @@ module Aws::Braket
 
     DeviceSummary.add_member(:device_arn, Shapes::ShapeRef.new(shape: DeviceArn, required: true, location_name: "deviceArn"))
     DeviceSummary.add_member(:device_name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "deviceName"))
-    DeviceSummary.add_member(:device_status, Shapes::ShapeRef.new(shape: DeviceStatus, required: true, location_name: "deviceStatus"))
-    DeviceSummary.add_member(:device_type, Shapes::ShapeRef.new(shape: DeviceType, required: true, location_name: "deviceType"))
     DeviceSummary.add_member(:provider_name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "providerName"))
+    DeviceSummary.add_member(:device_type, Shapes::ShapeRef.new(shape: DeviceType, required: true, location_name: "deviceType"))
+    DeviceSummary.add_member(:device_status, Shapes::ShapeRef.new(shape: DeviceStatus, required: true, location_name: "deviceStatus"))
     DeviceSummary.struct_class = Types::DeviceSummary
 
     DeviceSummaryList.member = Shapes::ShapeRef.new(shape: DeviceSummary)
+
+    ExperimentalCapabilities.add_member(:enabled, Shapes::ShapeRef.new(shape: ExperimentalCapabilitiesEnablementType, location_name: "enabled"))
+    ExperimentalCapabilities.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    ExperimentalCapabilities.add_member_subclass(:enabled, Types::ExperimentalCapabilities::Enabled)
+    ExperimentalCapabilities.add_member_subclass(:unknown, Types::ExperimentalCapabilities::Unknown)
+    ExperimentalCapabilities.struct_class = Types::ExperimentalCapabilities
 
     GetDeviceRequest.add_member(:device_arn, Shapes::ShapeRef.new(shape: DeviceArn, required: true, location: "uri", location_name: "deviceArn"))
     GetDeviceRequest.struct_class = Types::GetDeviceRequest
 
     GetDeviceResponse.add_member(:device_arn, Shapes::ShapeRef.new(shape: DeviceArn, required: true, location_name: "deviceArn"))
-    GetDeviceResponse.add_member(:device_capabilities, Shapes::ShapeRef.new(shape: JsonValue, required: true, location_name: "deviceCapabilities", metadata: {"jsonvalue"=>true}))
     GetDeviceResponse.add_member(:device_name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "deviceName"))
-    GetDeviceResponse.add_member(:device_queue_info, Shapes::ShapeRef.new(shape: DeviceQueueInfoList, location_name: "deviceQueueInfo"))
-    GetDeviceResponse.add_member(:device_status, Shapes::ShapeRef.new(shape: DeviceStatus, required: true, location_name: "deviceStatus"))
-    GetDeviceResponse.add_member(:device_type, Shapes::ShapeRef.new(shape: DeviceType, required: true, location_name: "deviceType"))
     GetDeviceResponse.add_member(:provider_name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "providerName"))
+    GetDeviceResponse.add_member(:device_type, Shapes::ShapeRef.new(shape: DeviceType, required: true, location_name: "deviceType"))
+    GetDeviceResponse.add_member(:device_status, Shapes::ShapeRef.new(shape: DeviceStatus, required: true, location_name: "deviceStatus"))
+    GetDeviceResponse.add_member(:device_capabilities, Shapes::ShapeRef.new(shape: JsonValue, required: true, location_name: "deviceCapabilities", metadata: {"jsonvalue" => true}))
+    GetDeviceResponse.add_member(:device_queue_info, Shapes::ShapeRef.new(shape: DeviceQueueInfoList, location_name: "deviceQueueInfo"))
     GetDeviceResponse.struct_class = Types::GetDeviceResponse
 
-    GetJobRequest.add_member(:additional_attribute_names, Shapes::ShapeRef.new(shape: HybridJobAdditionalAttributeNamesList, location: "querystring", location_name: "additionalAttributeNames"))
     GetJobRequest.add_member(:job_arn, Shapes::ShapeRef.new(shape: JobArn, required: true, location: "uri", location_name: "jobArn"))
+    GetJobRequest.add_member(:additional_attribute_names, Shapes::ShapeRef.new(shape: HybridJobAdditionalAttributeNamesList, location: "querystring", location_name: "additionalAttributeNames"))
     GetJobRequest.struct_class = Types::GetJobRequest
 
-    GetJobResponse.add_member(:algorithm_specification, Shapes::ShapeRef.new(shape: AlgorithmSpecification, required: true, location_name: "algorithmSpecification"))
-    GetJobResponse.add_member(:associations, Shapes::ShapeRef.new(shape: Associations, location_name: "associations"))
-    GetJobResponse.add_member(:billable_duration, Shapes::ShapeRef.new(shape: Integer, location_name: "billableDuration"))
-    GetJobResponse.add_member(:checkpoint_config, Shapes::ShapeRef.new(shape: JobCheckpointConfig, location_name: "checkpointConfig"))
-    GetJobResponse.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "createdAt"))
-    GetJobResponse.add_member(:device_config, Shapes::ShapeRef.new(shape: DeviceConfig, location_name: "deviceConfig"))
-    GetJobResponse.add_member(:ended_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "endedAt"))
-    GetJobResponse.add_member(:events, Shapes::ShapeRef.new(shape: JobEvents, location_name: "events"))
+    GetJobResponse.add_member(:status, Shapes::ShapeRef.new(shape: JobPrimaryStatus, required: true, location_name: "status"))
+    GetJobResponse.add_member(:job_arn, Shapes::ShapeRef.new(shape: JobArn, required: true, location_name: "jobArn"))
+    GetJobResponse.add_member(:role_arn, Shapes::ShapeRef.new(shape: RoleArn, required: true, location_name: "roleArn"))
     GetJobResponse.add_member(:failure_reason, Shapes::ShapeRef.new(shape: String1024, location_name: "failureReason"))
+    GetJobResponse.add_member(:job_name, Shapes::ShapeRef.new(shape: GetJobResponseJobNameString, required: true, location_name: "jobName"))
     GetJobResponse.add_member(:hyper_parameters, Shapes::ShapeRef.new(shape: HyperParameters, location_name: "hyperParameters"))
     GetJobResponse.add_member(:input_data_config, Shapes::ShapeRef.new(shape: InputConfigList, location_name: "inputDataConfig"))
-    GetJobResponse.add_member(:instance_config, Shapes::ShapeRef.new(shape: InstanceConfig, required: true, location_name: "instanceConfig"))
-    GetJobResponse.add_member(:job_arn, Shapes::ShapeRef.new(shape: JobArn, required: true, location_name: "jobArn"))
-    GetJobResponse.add_member(:job_name, Shapes::ShapeRef.new(shape: GetJobResponseJobNameString, required: true, location_name: "jobName"))
     GetJobResponse.add_member(:output_data_config, Shapes::ShapeRef.new(shape: JobOutputDataConfig, required: true, location_name: "outputDataConfig"))
-    GetJobResponse.add_member(:queue_info, Shapes::ShapeRef.new(shape: HybridJobQueueInfo, location_name: "queueInfo"))
-    GetJobResponse.add_member(:role_arn, Shapes::ShapeRef.new(shape: RoleArn, required: true, location_name: "roleArn"))
-    GetJobResponse.add_member(:started_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "startedAt"))
-    GetJobResponse.add_member(:status, Shapes::ShapeRef.new(shape: JobPrimaryStatus, required: true, location_name: "status"))
     GetJobResponse.add_member(:stopping_condition, Shapes::ShapeRef.new(shape: JobStoppingCondition, location_name: "stoppingCondition"))
+    GetJobResponse.add_member(:checkpoint_config, Shapes::ShapeRef.new(shape: JobCheckpointConfig, location_name: "checkpointConfig"))
+    GetJobResponse.add_member(:algorithm_specification, Shapes::ShapeRef.new(shape: AlgorithmSpecification, required: true, location_name: "algorithmSpecification"))
+    GetJobResponse.add_member(:instance_config, Shapes::ShapeRef.new(shape: InstanceConfig, required: true, location_name: "instanceConfig"))
+    GetJobResponse.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "createdAt"))
+    GetJobResponse.add_member(:started_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "startedAt"))
+    GetJobResponse.add_member(:ended_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "endedAt"))
+    GetJobResponse.add_member(:billable_duration, Shapes::ShapeRef.new(shape: Integer, location_name: "billableDuration"))
+    GetJobResponse.add_member(:device_config, Shapes::ShapeRef.new(shape: DeviceConfig, location_name: "deviceConfig"))
+    GetJobResponse.add_member(:events, Shapes::ShapeRef.new(shape: JobEvents, location_name: "events"))
     GetJobResponse.add_member(:tags, Shapes::ShapeRef.new(shape: TagsMap, location_name: "tags"))
+    GetJobResponse.add_member(:queue_info, Shapes::ShapeRef.new(shape: HybridJobQueueInfo, location_name: "queueInfo"))
+    GetJobResponse.add_member(:associations, Shapes::ShapeRef.new(shape: Associations, location_name: "associations"))
     GetJobResponse.struct_class = Types::GetJobResponse
 
-    GetQuantumTaskRequest.add_member(:additional_attribute_names, Shapes::ShapeRef.new(shape: QuantumTaskAdditionalAttributeNamesList, location: "querystring", location_name: "additionalAttributeNames"))
     GetQuantumTaskRequest.add_member(:quantum_task_arn, Shapes::ShapeRef.new(shape: QuantumTaskArn, required: true, location: "uri", location_name: "quantumTaskArn"))
+    GetQuantumTaskRequest.add_member(:additional_attribute_names, Shapes::ShapeRef.new(shape: QuantumTaskAdditionalAttributeNamesList, location: "querystring", location_name: "additionalAttributeNames"))
     GetQuantumTaskRequest.struct_class = Types::GetQuantumTaskRequest
 
-    GetQuantumTaskResponse.add_member(:associations, Shapes::ShapeRef.new(shape: Associations, location_name: "associations"))
-    GetQuantumTaskResponse.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "createdAt"))
-    GetQuantumTaskResponse.add_member(:device_arn, Shapes::ShapeRef.new(shape: DeviceArn, required: true, location_name: "deviceArn"))
-    GetQuantumTaskResponse.add_member(:device_parameters, Shapes::ShapeRef.new(shape: JsonValue, required: true, location_name: "deviceParameters", metadata: {"jsonvalue"=>true}))
-    GetQuantumTaskResponse.add_member(:ended_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "endedAt"))
+    GetQuantumTaskResponse.add_member(:quantum_task_arn, Shapes::ShapeRef.new(shape: QuantumTaskArn, required: true, location_name: "quantumTaskArn"))
+    GetQuantumTaskResponse.add_member(:status, Shapes::ShapeRef.new(shape: QuantumTaskStatus, required: true, location_name: "status"))
     GetQuantumTaskResponse.add_member(:failure_reason, Shapes::ShapeRef.new(shape: String, location_name: "failureReason"))
-    GetQuantumTaskResponse.add_member(:job_arn, Shapes::ShapeRef.new(shape: JobArn, location_name: "jobArn"))
+    GetQuantumTaskResponse.add_member(:device_arn, Shapes::ShapeRef.new(shape: DeviceArn, required: true, location_name: "deviceArn"))
+    GetQuantumTaskResponse.add_member(:device_parameters, Shapes::ShapeRef.new(shape: JsonValue, required: true, location_name: "deviceParameters", metadata: {"jsonvalue" => true}))
+    GetQuantumTaskResponse.add_member(:shots, Shapes::ShapeRef.new(shape: Long, required: true, location_name: "shots"))
     GetQuantumTaskResponse.add_member(:output_s3_bucket, Shapes::ShapeRef.new(shape: String, required: true, location_name: "outputS3Bucket"))
     GetQuantumTaskResponse.add_member(:output_s3_directory, Shapes::ShapeRef.new(shape: String, required: true, location_name: "outputS3Directory"))
-    GetQuantumTaskResponse.add_member(:quantum_task_arn, Shapes::ShapeRef.new(shape: QuantumTaskArn, required: true, location_name: "quantumTaskArn"))
-    GetQuantumTaskResponse.add_member(:queue_info, Shapes::ShapeRef.new(shape: QuantumTaskQueueInfo, location_name: "queueInfo"))
-    GetQuantumTaskResponse.add_member(:shots, Shapes::ShapeRef.new(shape: Long, required: true, location_name: "shots"))
-    GetQuantumTaskResponse.add_member(:status, Shapes::ShapeRef.new(shape: QuantumTaskStatus, required: true, location_name: "status"))
+    GetQuantumTaskResponse.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "createdAt"))
+    GetQuantumTaskResponse.add_member(:ended_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "endedAt"))
     GetQuantumTaskResponse.add_member(:tags, Shapes::ShapeRef.new(shape: TagsMap, location_name: "tags"))
+    GetQuantumTaskResponse.add_member(:job_arn, Shapes::ShapeRef.new(shape: JobArn, location_name: "jobArn"))
+    GetQuantumTaskResponse.add_member(:queue_info, Shapes::ShapeRef.new(shape: QuantumTaskQueueInfo, location_name: "queueInfo"))
+    GetQuantumTaskResponse.add_member(:associations, Shapes::ShapeRef.new(shape: Associations, location_name: "associations"))
+    GetQuantumTaskResponse.add_member(:num_successful_shots, Shapes::ShapeRef.new(shape: Long, location_name: "numSuccessfulShots"))
+    GetQuantumTaskResponse.add_member(:action_metadata, Shapes::ShapeRef.new(shape: ActionMetadata, location_name: "actionMetadata"))
+    GetQuantumTaskResponse.add_member(:experimental_capabilities, Shapes::ShapeRef.new(shape: ExperimentalCapabilities, location_name: "experimentalCapabilities"))
     GetQuantumTaskResponse.struct_class = Types::GetQuantumTaskResponse
 
     HybridJobAdditionalAttributeNamesList.member = Shapes::ShapeRef.new(shape: HybridJobAdditionalAttributeName)
 
-    HybridJobQueueInfo.add_member(:message, Shapes::ShapeRef.new(shape: String, location_name: "message"))
-    HybridJobQueueInfo.add_member(:position, Shapes::ShapeRef.new(shape: String, required: true, location_name: "position"))
     HybridJobQueueInfo.add_member(:queue, Shapes::ShapeRef.new(shape: QueueName, required: true, location_name: "queue"))
+    HybridJobQueueInfo.add_member(:position, Shapes::ShapeRef.new(shape: String, required: true, location_name: "position"))
+    HybridJobQueueInfo.add_member(:message, Shapes::ShapeRef.new(shape: String, location_name: "message"))
     HybridJobQueueInfo.struct_class = Types::HybridJobQueueInfo
 
     HyperParameters.key = Shapes::ShapeRef.new(shape: String256)
@@ -319,9 +376,9 @@ module Aws::Braket
     InputFileConfig.add_member(:data_source, Shapes::ShapeRef.new(shape: DataSource, required: true, location_name: "dataSource"))
     InputFileConfig.struct_class = Types::InputFileConfig
 
-    InstanceConfig.add_member(:instance_count, Shapes::ShapeRef.new(shape: InstanceConfigInstanceCountInteger, location_name: "instanceCount"))
     InstanceConfig.add_member(:instance_type, Shapes::ShapeRef.new(shape: InstanceType, required: true, location_name: "instanceType"))
     InstanceConfig.add_member(:volume_size_in_gb, Shapes::ShapeRef.new(shape: InstanceConfigVolumeSizeInGbInteger, required: true, location_name: "volumeSizeInGb"))
+    InstanceConfig.add_member(:instance_count, Shapes::ShapeRef.new(shape: InstanceConfigInstanceCountInteger, location_name: "instanceCount"))
     InstanceConfig.struct_class = Types::InstanceConfig
 
     InternalServiceException.add_member(:message, Shapes::ShapeRef.new(shape: String, location_name: "message"))
@@ -332,8 +389,8 @@ module Aws::Braket
     JobCheckpointConfig.struct_class = Types::JobCheckpointConfig
 
     JobEventDetails.add_member(:event_type, Shapes::ShapeRef.new(shape: JobEventType, location_name: "eventType"))
-    JobEventDetails.add_member(:message, Shapes::ShapeRef.new(shape: JobEventDetailsMessageString, location_name: "message"))
     JobEventDetails.add_member(:time_of_event, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "timeOfEvent"))
+    JobEventDetails.add_member(:message, Shapes::ShapeRef.new(shape: JobEventDetailsMessageString, location_name: "message"))
     JobEventDetails.struct_class = Types::JobEventDetails
 
     JobEvents.member = Shapes::ShapeRef.new(shape: JobEventDetails)
@@ -345,13 +402,13 @@ module Aws::Braket
     JobStoppingCondition.add_member(:max_runtime_in_seconds, Shapes::ShapeRef.new(shape: JobStoppingConditionMaxRuntimeInSecondsInteger, location_name: "maxRuntimeInSeconds"))
     JobStoppingCondition.struct_class = Types::JobStoppingCondition
 
-    JobSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "createdAt"))
-    JobSummary.add_member(:device, Shapes::ShapeRef.new(shape: String256, required: true, location_name: "device"))
-    JobSummary.add_member(:ended_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "endedAt"))
+    JobSummary.add_member(:status, Shapes::ShapeRef.new(shape: JobPrimaryStatus, required: true, location_name: "status"))
     JobSummary.add_member(:job_arn, Shapes::ShapeRef.new(shape: JobArn, required: true, location_name: "jobArn"))
     JobSummary.add_member(:job_name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "jobName"))
+    JobSummary.add_member(:device, Shapes::ShapeRef.new(shape: String256, required: true, location_name: "device"))
+    JobSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "createdAt"))
     JobSummary.add_member(:started_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "startedAt"))
-    JobSummary.add_member(:status, Shapes::ShapeRef.new(shape: JobPrimaryStatus, required: true, location_name: "status"))
+    JobSummary.add_member(:ended_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "endedAt"))
     JobSummary.add_member(:tags, Shapes::ShapeRef.new(shape: TagsMap, location_name: "tags"))
     JobSummary.struct_class = Types::JobSummary
 
@@ -363,22 +420,31 @@ module Aws::Braket
     ListTagsForResourceResponse.add_member(:tags, Shapes::ShapeRef.new(shape: TagsMap, location_name: "tags"))
     ListTagsForResourceResponse.struct_class = Types::ListTagsForResourceResponse
 
+    ProgramSetValidationFailure.add_member(:program_index, Shapes::ShapeRef.new(shape: Long, required: true, location_name: "programIndex"))
+    ProgramSetValidationFailure.add_member(:inputs_index, Shapes::ShapeRef.new(shape: Long, location_name: "inputsIndex"))
+    ProgramSetValidationFailure.add_member(:errors, Shapes::ShapeRef.new(shape: ProgramValidationFailuresList, location_name: "errors"))
+    ProgramSetValidationFailure.struct_class = Types::ProgramSetValidationFailure
+
+    ProgramSetValidationFailuresList.member = Shapes::ShapeRef.new(shape: ProgramSetValidationFailure)
+
+    ProgramValidationFailuresList.member = Shapes::ShapeRef.new(shape: String)
+
     QuantumTaskAdditionalAttributeNamesList.member = Shapes::ShapeRef.new(shape: QuantumTaskAdditionalAttributeName)
 
-    QuantumTaskQueueInfo.add_member(:message, Shapes::ShapeRef.new(shape: String, location_name: "message"))
-    QuantumTaskQueueInfo.add_member(:position, Shapes::ShapeRef.new(shape: String, required: true, location_name: "position"))
     QuantumTaskQueueInfo.add_member(:queue, Shapes::ShapeRef.new(shape: QueueName, required: true, location_name: "queue"))
+    QuantumTaskQueueInfo.add_member(:position, Shapes::ShapeRef.new(shape: String, required: true, location_name: "position"))
     QuantumTaskQueueInfo.add_member(:queue_priority, Shapes::ShapeRef.new(shape: QueuePriority, location_name: "queuePriority"))
+    QuantumTaskQueueInfo.add_member(:message, Shapes::ShapeRef.new(shape: String, location_name: "message"))
     QuantumTaskQueueInfo.struct_class = Types::QuantumTaskQueueInfo
 
-    QuantumTaskSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "createdAt"))
+    QuantumTaskSummary.add_member(:quantum_task_arn, Shapes::ShapeRef.new(shape: QuantumTaskArn, required: true, location_name: "quantumTaskArn"))
+    QuantumTaskSummary.add_member(:status, Shapes::ShapeRef.new(shape: QuantumTaskStatus, required: true, location_name: "status"))
     QuantumTaskSummary.add_member(:device_arn, Shapes::ShapeRef.new(shape: DeviceArn, required: true, location_name: "deviceArn"))
-    QuantumTaskSummary.add_member(:ended_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "endedAt"))
+    QuantumTaskSummary.add_member(:shots, Shapes::ShapeRef.new(shape: Long, required: true, location_name: "shots"))
     QuantumTaskSummary.add_member(:output_s3_bucket, Shapes::ShapeRef.new(shape: String, required: true, location_name: "outputS3Bucket"))
     QuantumTaskSummary.add_member(:output_s3_directory, Shapes::ShapeRef.new(shape: String, required: true, location_name: "outputS3Directory"))
-    QuantumTaskSummary.add_member(:quantum_task_arn, Shapes::ShapeRef.new(shape: QuantumTaskArn, required: true, location_name: "quantumTaskArn"))
-    QuantumTaskSummary.add_member(:shots, Shapes::ShapeRef.new(shape: Long, required: true, location_name: "shots"))
-    QuantumTaskSummary.add_member(:status, Shapes::ShapeRef.new(shape: QuantumTaskStatus, required: true, location_name: "status"))
+    QuantumTaskSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "createdAt"))
+    QuantumTaskSummary.add_member(:ended_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "endedAt"))
     QuantumTaskSummary.add_member(:tags, Shapes::ShapeRef.new(shape: TagsMap, location_name: "tags"))
     QuantumTaskSummary.struct_class = Types::QuantumTaskSummary
 
@@ -390,9 +456,9 @@ module Aws::Braket
     S3DataSource.add_member(:s3_uri, Shapes::ShapeRef.new(shape: S3Path, required: true, location_name: "s3Uri"))
     S3DataSource.struct_class = Types::S3DataSource
 
-    ScriptModeConfig.add_member(:compression_type, Shapes::ShapeRef.new(shape: CompressionType, location_name: "compressionType"))
     ScriptModeConfig.add_member(:entry_point, Shapes::ShapeRef.new(shape: String, required: true, location_name: "entryPoint"))
     ScriptModeConfig.add_member(:s3_uri, Shapes::ShapeRef.new(shape: S3Path, required: true, location_name: "s3Uri"))
+    ScriptModeConfig.add_member(:compression_type, Shapes::ShapeRef.new(shape: CompressionType, location_name: "compressionType"))
     ScriptModeConfig.struct_class = Types::ScriptModeConfig
 
     SearchDevicesFilter.add_member(:name, Shapes::ShapeRef.new(shape: SearchDevicesFilterNameString, required: true, location_name: "name"))
@@ -401,9 +467,9 @@ module Aws::Braket
 
     SearchDevicesFilterValuesList.member = Shapes::ShapeRef.new(shape: String256)
 
-    SearchDevicesRequest.add_member(:filters, Shapes::ShapeRef.new(shape: SearchDevicesRequestFiltersList, required: true, location_name: "filters"))
-    SearchDevicesRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: SearchDevicesRequestMaxResultsInteger, location_name: "maxResults"))
     SearchDevicesRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: String, location_name: "nextToken"))
+    SearchDevicesRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: SearchDevicesRequestMaxResultsInteger, location_name: "maxResults"))
+    SearchDevicesRequest.add_member(:filters, Shapes::ShapeRef.new(shape: SearchDevicesRequestFiltersList, required: true, location_name: "filters"))
     SearchDevicesRequest.struct_class = Types::SearchDevicesRequest
 
     SearchDevicesRequestFiltersList.member = Shapes::ShapeRef.new(shape: SearchDevicesFilter)
@@ -413,15 +479,15 @@ module Aws::Braket
     SearchDevicesResponse.struct_class = Types::SearchDevicesResponse
 
     SearchJobsFilter.add_member(:name, Shapes::ShapeRef.new(shape: String64, required: true, location_name: "name"))
-    SearchJobsFilter.add_member(:operator, Shapes::ShapeRef.new(shape: SearchJobsFilterOperator, required: true, location_name: "operator"))
     SearchJobsFilter.add_member(:values, Shapes::ShapeRef.new(shape: SearchJobsFilterValuesList, required: true, location_name: "values"))
+    SearchJobsFilter.add_member(:operator, Shapes::ShapeRef.new(shape: SearchJobsFilterOperator, required: true, location_name: "operator"))
     SearchJobsFilter.struct_class = Types::SearchJobsFilter
 
     SearchJobsFilterValuesList.member = Shapes::ShapeRef.new(shape: String256)
 
-    SearchJobsRequest.add_member(:filters, Shapes::ShapeRef.new(shape: SearchJobsRequestFiltersList, required: true, location_name: "filters"))
-    SearchJobsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: SearchJobsRequestMaxResultsInteger, location_name: "maxResults"))
     SearchJobsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: String, location_name: "nextToken"))
+    SearchJobsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: SearchJobsRequestMaxResultsInteger, location_name: "maxResults"))
+    SearchJobsRequest.add_member(:filters, Shapes::ShapeRef.new(shape: SearchJobsRequestFiltersList, required: true, location_name: "filters"))
     SearchJobsRequest.struct_class = Types::SearchJobsRequest
 
     SearchJobsRequestFiltersList.member = Shapes::ShapeRef.new(shape: SearchJobsFilter)
@@ -431,25 +497,56 @@ module Aws::Braket
     SearchJobsResponse.struct_class = Types::SearchJobsResponse
 
     SearchQuantumTasksFilter.add_member(:name, Shapes::ShapeRef.new(shape: String64, required: true, location_name: "name"))
-    SearchQuantumTasksFilter.add_member(:operator, Shapes::ShapeRef.new(shape: SearchQuantumTasksFilterOperator, required: true, location_name: "operator"))
     SearchQuantumTasksFilter.add_member(:values, Shapes::ShapeRef.new(shape: SearchQuantumTasksFilterValuesList, required: true, location_name: "values"))
+    SearchQuantumTasksFilter.add_member(:operator, Shapes::ShapeRef.new(shape: SearchQuantumTasksFilterOperator, required: true, location_name: "operator"))
     SearchQuantumTasksFilter.struct_class = Types::SearchQuantumTasksFilter
 
     SearchQuantumTasksFilterValuesList.member = Shapes::ShapeRef.new(shape: String256)
 
-    SearchQuantumTasksRequest.add_member(:filters, Shapes::ShapeRef.new(shape: SearchQuantumTasksRequestFiltersList, required: true, location_name: "filters"))
-    SearchQuantumTasksRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: SearchQuantumTasksRequestMaxResultsInteger, location_name: "maxResults"))
     SearchQuantumTasksRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: String, location_name: "nextToken"))
+    SearchQuantumTasksRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: SearchQuantumTasksRequestMaxResultsInteger, location_name: "maxResults"))
+    SearchQuantumTasksRequest.add_member(:filters, Shapes::ShapeRef.new(shape: SearchQuantumTasksRequestFiltersList, required: true, location_name: "filters"))
     SearchQuantumTasksRequest.struct_class = Types::SearchQuantumTasksRequest
 
     SearchQuantumTasksRequestFiltersList.member = Shapes::ShapeRef.new(shape: SearchQuantumTasksFilter)
 
-    SearchQuantumTasksResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: String, location_name: "nextToken"))
     SearchQuantumTasksResponse.add_member(:quantum_tasks, Shapes::ShapeRef.new(shape: QuantumTaskSummaryList, required: true, location_name: "quantumTasks"))
+    SearchQuantumTasksResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: String, location_name: "nextToken"))
     SearchQuantumTasksResponse.struct_class = Types::SearchQuantumTasksResponse
+
+    SearchSpendingLimitsFilter.add_member(:name, Shapes::ShapeRef.new(shape: String64, required: true, location_name: "name"))
+    SearchSpendingLimitsFilter.add_member(:values, Shapes::ShapeRef.new(shape: SearchSpendingLimitsFilterValuesList, required: true, location_name: "values"))
+    SearchSpendingLimitsFilter.add_member(:operator, Shapes::ShapeRef.new(shape: SearchSpendingLimitsFilterOperator, required: true, location_name: "operator"))
+    SearchSpendingLimitsFilter.struct_class = Types::SearchSpendingLimitsFilter
+
+    SearchSpendingLimitsFilterValuesList.member = Shapes::ShapeRef.new(shape: String256)
+
+    SearchSpendingLimitsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: String, location_name: "nextToken"))
+    SearchSpendingLimitsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: SearchSpendingLimitsRequestMaxResultsInteger, location_name: "maxResults"))
+    SearchSpendingLimitsRequest.add_member(:filters, Shapes::ShapeRef.new(shape: SearchSpendingLimitsRequestFiltersList, location_name: "filters"))
+    SearchSpendingLimitsRequest.struct_class = Types::SearchSpendingLimitsRequest
+
+    SearchSpendingLimitsRequestFiltersList.member = Shapes::ShapeRef.new(shape: SearchSpendingLimitsFilter)
+
+    SearchSpendingLimitsResponse.add_member(:spending_limits, Shapes::ShapeRef.new(shape: SpendingLimitSummaryList, required: true, location_name: "spendingLimits"))
+    SearchSpendingLimitsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: String, location_name: "nextToken"))
+    SearchSpendingLimitsResponse.struct_class = Types::SearchSpendingLimitsResponse
 
     ServiceQuotaExceededException.add_member(:message, Shapes::ShapeRef.new(shape: String, location_name: "message"))
     ServiceQuotaExceededException.struct_class = Types::ServiceQuotaExceededException
+
+    SpendingLimitSummary.add_member(:spending_limit_arn, Shapes::ShapeRef.new(shape: SpendingLimitArn, required: true, location_name: "spendingLimitArn"))
+    SpendingLimitSummary.add_member(:device_arn, Shapes::ShapeRef.new(shape: DeviceArn, required: true, location_name: "deviceArn"))
+    SpendingLimitSummary.add_member(:time_period, Shapes::ShapeRef.new(shape: TimePeriod, required: true, location_name: "timePeriod"))
+    SpendingLimitSummary.add_member(:spending_limit, Shapes::ShapeRef.new(shape: String, required: true, location_name: "spendingLimit"))
+    SpendingLimitSummary.add_member(:queued_spend, Shapes::ShapeRef.new(shape: String, required: true, location_name: "queuedSpend"))
+    SpendingLimitSummary.add_member(:total_spend, Shapes::ShapeRef.new(shape: String, required: true, location_name: "totalSpend"))
+    SpendingLimitSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "createdAt"))
+    SpendingLimitSummary.add_member(:updated_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "updatedAt"))
+    SpendingLimitSummary.add_member(:tags, Shapes::ShapeRef.new(shape: TagsMap, location_name: "tags"))
+    SpendingLimitSummary.struct_class = Types::SpendingLimitSummary
+
+    SpendingLimitSummaryList.member = Shapes::ShapeRef.new(shape: SpendingLimitSummary)
 
     TagKeys.member = Shapes::ShapeRef.new(shape: String)
 
@@ -465,13 +562,27 @@ module Aws::Braket
     ThrottlingException.add_member(:message, Shapes::ShapeRef.new(shape: String, location_name: "message"))
     ThrottlingException.struct_class = Types::ThrottlingException
 
+    TimePeriod.add_member(:start_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_epoch_seconds, required: true, location_name: "startAt"))
+    TimePeriod.add_member(:end_at, Shapes::ShapeRef.new(shape: SyntheticTimestamp_epoch_seconds, required: true, location_name: "endAt"))
+    TimePeriod.struct_class = Types::TimePeriod
+
     UntagResourceRequest.add_member(:resource_arn, Shapes::ShapeRef.new(shape: String, required: true, location: "uri", location_name: "resourceArn"))
     UntagResourceRequest.add_member(:tag_keys, Shapes::ShapeRef.new(shape: TagKeys, required: true, location: "querystring", location_name: "tagKeys"))
     UntagResourceRequest.struct_class = Types::UntagResourceRequest
 
     UntagResourceResponse.struct_class = Types::UntagResourceResponse
 
+    UpdateSpendingLimitRequest.add_member(:spending_limit_arn, Shapes::ShapeRef.new(shape: SpendingLimitArn, required: true, location: "uri", location_name: "spendingLimitArn"))
+    UpdateSpendingLimitRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: String64, required: true, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    UpdateSpendingLimitRequest.add_member(:spending_limit, Shapes::ShapeRef.new(shape: UpdateSpendingLimitRequestSpendingLimitString, location_name: "spendingLimit"))
+    UpdateSpendingLimitRequest.add_member(:time_period, Shapes::ShapeRef.new(shape: TimePeriod, location_name: "timePeriod"))
+    UpdateSpendingLimitRequest.struct_class = Types::UpdateSpendingLimitRequest
+
+    UpdateSpendingLimitResponse.struct_class = Types::UpdateSpendingLimitResponse
+
     ValidationException.add_member(:message, Shapes::ShapeRef.new(shape: String, location_name: "message"))
+    ValidationException.add_member(:reason, Shapes::ShapeRef.new(shape: ValidationExceptionReason, location_name: "reason"))
+    ValidationException.add_member(:program_set_validation_failures, Shapes::ShapeRef.new(shape: ProgramSetValidationFailuresList, location_name: "programSetValidationFailures"))
     ValidationException.struct_class = Types::ValidationException
 
 
@@ -482,9 +593,10 @@ module Aws::Braket
 
       api.metadata = {
         "apiVersion" => "2019-09-01",
+        "auth" => ["aws.auth#sigv4"],
         "endpointPrefix" => "braket",
-        "jsonVersion" => "1.1",
         "protocol" => "rest-json",
+        "protocols" => ["rest-json"],
         "serviceFullName" => "Braket",
         "serviceId" => "Braket",
         "signatureVersion" => "v4",
@@ -531,8 +643,8 @@ module Aws::Braket
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: DeviceOfflineException)
         o.errors << Shapes::ShapeRef.new(shape: DeviceRetiredException)
-        o.errors << Shapes::ShapeRef.new(shape: InternalServiceException)
         o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServiceException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
       end)
 
@@ -543,11 +655,37 @@ module Aws::Braket
         o.input = Shapes::ShapeRef.new(shape: CreateQuantumTaskRequest)
         o.output = Shapes::ShapeRef.new(shape: CreateQuantumTaskResponse)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
-        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: DeviceOfflineException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: DeviceRetiredException)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServiceException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+      end)
+
+      api.add_operation(:create_spending_limit, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CreateSpendingLimit"
+        o.http_method = "POST"
+        o.http_request_uri = "/spending-limit"
+        o.input = Shapes::ShapeRef.new(shape: CreateSpendingLimitRequest)
+        o.output = Shapes::ShapeRef.new(shape: CreateSpendingLimitResponse)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: DeviceRetiredException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServiceException)
-        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+      end)
+
+      api.add_operation(:delete_spending_limit, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeleteSpendingLimit"
+        o.http_method = "DELETE"
+        o.http_request_uri = "/spending-limit/{spendingLimitArn}/delete"
+        o.input = Shapes::ShapeRef.new(shape: DeleteSpendingLimitRequest)
+        o.output = Shapes::ShapeRef.new(shape: DeleteSpendingLimitResponse)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServiceException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
       end)
 
@@ -655,6 +793,24 @@ module Aws::Braket
         )
       end)
 
+      api.add_operation(:search_spending_limits, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "SearchSpendingLimits"
+        o.http_method = "POST"
+        o.http_request_uri = "/spending-limits"
+        o.input = Shapes::ShapeRef.new(shape: SearchSpendingLimitsRequest)
+        o.output = Shapes::ShapeRef.new(shape: SearchSpendingLimitsResponse)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServiceException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
       api.add_operation(:tag_resource, Seahorse::Model::Operation.new.tap do |o|
         o.name = "TagResource"
         o.http_method = "POST"
@@ -673,6 +829,19 @@ module Aws::Braket
         o.input = Shapes::ShapeRef.new(shape: UntagResourceRequest)
         o.output = Shapes::ShapeRef.new(shape: UntagResourceResponse)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServiceException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+      end)
+
+      api.add_operation(:update_spending_limit, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "UpdateSpendingLimit"
+        o.http_method = "PATCH"
+        o.http_request_uri = "/spending-limit/{spendingLimitArn}/update"
+        o.input = Shapes::ShapeRef.new(shape: UpdateSpendingLimitRequest)
+        o.output = Shapes::ShapeRef.new(shape: UpdateSpendingLimitResponse)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServiceException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
       end)

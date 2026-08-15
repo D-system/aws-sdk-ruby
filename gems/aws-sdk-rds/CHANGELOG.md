@@ -1,6 +1,246 @@
 Unreleased Changes
 ------------------
 
+1.320.0 (2026-07-31)
+------------------
+
+* Feature - Adds StorageOperationStatus and StorageOperationPercentProgress to DescribeDBInstances, letting you monitor RDS storage initialization and optimization progress.
+
+1.319.0 (2026-07-17)
+------------------
+
+* Feature - Adds the AssociatedRoles parameter to CreateDBCluster, RestoreDBClusterFromSnapshot, RestoreDBClusterToPointInTime, and RestoreDBClusterFromS3, letting customers associate IAM roles with an Aurora DB cluster at create or restore time instead of calling AddRoleToDBCluster afterward.
+
+1.318.0 (2026-07-15)
+------------------
+
+* Feature - Adds support for modifying EngineLifecycleSupport on DB instances and DB clusters through ModifyDBInstance and ModifyDBCluster.
+
+1.317.0 (2026-07-09)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.316.0 (2026-06-15)
+------------------
+
+* Feature - Adding support for RDS SQL Server BYOM and DB2 Community Edition
+
+1.315.0 (2026-06-03)
+------------------
+
+* Feature - Adding new BDD representation of endpoint ruleset
+
+1.314.0 (2026-05-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.313.0 (2026-05-19)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.312.0 (2026-05-13)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.311.0 (2026-04-16)
+------------------
+
+* Feature - Adds a new DescribeServerlessV2PlatformVersions API to describe platform version properties for Aurora Serverless v2. Also introduces a new valid maintenance action value for serverless platform version updates.
+
+1.310.0 (2026-03-24)
+------------------
+
+* Feature - Adds support in Aurora PostgreSQL serverless databases for express configuration based creation through WithExpressConfiguration in CreateDbCluster API, and for restoring clusters using RestoreDBClusterToPointInTime and RestoreDBClusterFromSnapshot APIs.
+
+1.309.0 (2026-03-18)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.308.0 (2026-02-17)
+------------------
+
+* Feature - Adds support for the StorageEncryptionType field to specify encryption type for DB clusters, DB instances, snapshots, automated backups, and global clusters.
+
+1.307.0 (2026-02-10)
+------------------
+
+* Feature - This release adds backup configuration for RDS and Aurora restores, letting customers set backup retention period and preferred backup window during restore. It also enables viewing backup settings when describing snapshots or automated backups for instances and clusters.
+
+1.306.0 (2026-01-16)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.305.0 (2026-01-14)
+------------------
+
+* Feature - no feature changes. model migrated to Smithy
+
+1.304.0 (2026-01-08)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.303.0 (2026-01-05)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.302.0 (2025-12-08)
+------------------
+
+* Feature - Adding support for tagging RDS Instance/Cluster Automated Backups
+
+1.301.0 (2025-12-02)
+------------------
+
+* Feature - RDS Oracle and SQL Server: Add support for adding, modifying, and removing additional storage volumes, offering up to 256TiB storage; RDS SQL Server: Support Developer Edition via custom engine versions for development and testing purposes; M7i/R7i instances with Optimize CPU for cost savings.
+
+1.300.0 (2025-11-21)
+------------------
+
+* Feature - Add support for Upgrade Rollout Order
+
+1.299.0 (2025-11-20)
+------------------
+
+* Feature - Add support for VPC Encryption Controls.
+
+1.298.0 (2025-11-13)
+------------------
+
+* Feature - Updated endpoint and service metadata
+
+1.297.0 (2025-10-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.296.0 (2025-10-10)
+------------------
+
+* Feature - Updated the text in the Important section of the ModifyDBClusterParameterGroup page.
+
+1.295.0 (2025-10-06)
+------------------
+
+* Feature - Documentation updates to the CreateDBClusterMessage$PubliclyAccessible and CreateDBInstanceMessage$PubliclyAccessible properties.
+
+1.294.0 (2025-09-30)
+------------------
+
+* Feature - Enhanced RDS error handling: Added DBProxyEndpointNotFoundFault, DBShardGroupNotFoundFault, KMSKeyNotAccessibleFault for snapshots/restores/backups, NetworkTypeNotSupported, StorageTypeNotSupportedFault for restores, and granular state validation faults. Changed DBInstanceNotReadyFault to HTTP 400.
+
+1.293.0 (2025-09-11)
+------------------
+
+* Feature - Adds support for end-to-end IAM authentication in RDS Proxy for MySQL, MariaDB, and PostgreSQL engines.
+
+1.292.0 (2025-09-04)
+------------------
+
+* Feature - Added new EndpointNetworkType and TargetConnectionNetworkType fields in Proxy APIs to support IPv6
+
+1.291.0 (2025-09-03)
+------------------
+
+* Feature - This release adds support for MasterUserAuthenticationType parameter on CreateDBInstance, ModifyDBInstance, CreateDBCluster, and ModifyDBCluster operations.
+
+1.290.0 (2025-08-28)
+------------------
+
+* Feature - Added RDS HTTP Endpoint feature support flag to DescribeOrderableDBInstanceOptions API
+
+1.289.0 (2025-08-26)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.288.0 (2025-08-22)
+------------------
+
+* Feature - Updates Amazon RDS documentation for Db2 read-only replicas.
+
+1.287.0 (2025-08-05)
+------------------
+
+* Feature - Adds a new Aurora Serverless v2 attribute to the DBCluster resource to expose the platform version. Also updates the attribute to be part of both the engine version and platform version descriptions.
+
+1.286.0 (2025-08-04)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.285.0 (2025-07-31)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.284.0 (2025-07-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.283.0 (2025-07-01)
+------------------
+
+* Feature - Amazon RDS Custom for Oracle now supports multi-AZ database instances.
+
+1.282.0 (2025-06-27)
+------------------
+
+* Feature - StartDBCluster and StopDBCluster can now throw InvalidDBShardGroupStateFault.
+
+1.281.0 (2025-06-24)
+------------------
+
+* Feature - Adding support for RDS on Dedicated Local Zones, including local backup target, snapshot availability zone and snapshot target
+
+1.280.0 (2025-06-11)
+------------------
+
+* Feature - Updates Amazon RDS documentation for Amazon RDS for Db2 cross-Region replicas in standby mode.
+
+1.279.0 (2025-06-06)
+------------------
+
+* Feature - Include Global Cluster Identifier in DBCluster if the DBCluster is a Global Cluster Member.
+
+1.278.0 (2025-06-02)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.277.0 (2025-05-20)
+------------------
+
+* Feature - This release introduces the new DescribeDBMajorEngineVersions API for describing the properties of specific major versions of database engines.
+
+1.276.0 (2025-05-12)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.275.0 (2025-05-01)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.274.0 (2025-04-24)
+------------------
+
+* Feature - This Amazon RDS release adds support for managed master user passwords for Oracle CDBs.
+
+1.273.0 (2025-03-26)
+------------------
+
+* Feature - Add note about the Availability Zone where RDS restores the DB cluster for the RestoreDBClusterToPointInTime operation.
+
 1.272.0 (2025-03-04)
 ------------------
 

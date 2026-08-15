@@ -23,6 +23,10 @@ module Aws::Keyspaces
     CapacitySpecification = Shapes::StructureShape.new(name: 'CapacitySpecification')
     CapacitySpecificationSummary = Shapes::StructureShape.new(name: 'CapacitySpecificationSummary')
     CapacityUnits = Shapes::IntegerShape.new(name: 'CapacityUnits')
+    CdcPropagateTags = Shapes::StringShape.new(name: 'CdcPropagateTags')
+    CdcSpecification = Shapes::StructureShape.new(name: 'CdcSpecification')
+    CdcSpecificationSummary = Shapes::StructureShape.new(name: 'CdcSpecificationSummary')
+    CdcStatus = Shapes::StringShape.new(name: 'CdcStatus')
     ClientSideTimestamps = Shapes::StructureShape.new(name: 'ClientSideTimestamps')
     ClientSideTimestampsStatus = Shapes::StringShape.new(name: 'ClientSideTimestampsStatus')
     ClusteringKey = Shapes::StructureShape.new(name: 'ClusteringKey')
@@ -74,6 +78,7 @@ module Aws::Keyspaces
     ListTagsForResourceResponse = Shapes::StructureShape.new(name: 'ListTagsForResourceResponse')
     ListTypesRequest = Shapes::StructureShape.new(name: 'ListTypesRequest')
     ListTypesResponse = Shapes::StructureShape.new(name: 'ListTypesResponse')
+    Long = Shapes::IntegerShape.new(name: 'Long')
     MaxResults = Shapes::IntegerShape.new(name: 'MaxResults')
     NextToken = Shapes::StringShape.new(name: 'NextToken')
     PartitionKey = Shapes::StructureShape.new(name: 'PartitionKey')
@@ -99,6 +104,7 @@ module Aws::Keyspaces
     SortOrder = Shapes::StringShape.new(name: 'SortOrder')
     StaticColumn = Shapes::StructureShape.new(name: 'StaticColumn')
     StaticColumnList = Shapes::ListShape.new(name: 'StaticColumnList')
+    StreamArn = Shapes::StringShape.new(name: 'StreamArn')
     String = Shapes::StringShape.new(name: 'String')
     TableName = Shapes::StringShape.new(name: 'TableName')
     TableNameList = Shapes::ListShape.new(name: 'TableNameList')
@@ -127,6 +133,12 @@ module Aws::Keyspaces
     UpdateTableRequest = Shapes::StructureShape.new(name: 'UpdateTableRequest')
     UpdateTableResponse = Shapes::StructureShape.new(name: 'UpdateTableResponse')
     ValidationException = Shapes::StructureShape.new(name: 'ValidationException')
+    ViewType = Shapes::StringShape.new(name: 'ViewType')
+    WarmThroughputSpecification = Shapes::StructureShape.new(name: 'WarmThroughputSpecification')
+    WarmThroughputSpecificationReadUnitsPerSecondLong = Shapes::IntegerShape.new(name: 'WarmThroughputSpecificationReadUnitsPerSecondLong')
+    WarmThroughputSpecificationSummary = Shapes::StructureShape.new(name: 'WarmThroughputSpecificationSummary')
+    WarmThroughputSpecificationWriteUnitsPerSecondLong = Shapes::IntegerShape.new(name: 'WarmThroughputSpecificationWriteUnitsPerSecondLong')
+    WarmThroughputStatus = Shapes::StringShape.new(name: 'WarmThroughputStatus')
     kmsKeyARN = Shapes::StringShape.new(name: 'kmsKeyARN')
     region = Shapes::StringShape.new(name: 'region')
     rs = Shapes::StringShape.new(name: 'rs')
@@ -157,6 +169,16 @@ module Aws::Keyspaces
     CapacitySpecificationSummary.add_member(:write_capacity_units, Shapes::ShapeRef.new(shape: CapacityUnits, location_name: "writeCapacityUnits"))
     CapacitySpecificationSummary.add_member(:last_update_to_pay_per_request_timestamp, Shapes::ShapeRef.new(shape: Timestamp, location_name: "lastUpdateToPayPerRequestTimestamp"))
     CapacitySpecificationSummary.struct_class = Types::CapacitySpecificationSummary
+
+    CdcSpecification.add_member(:status, Shapes::ShapeRef.new(shape: CdcStatus, required: true, location_name: "status"))
+    CdcSpecification.add_member(:view_type, Shapes::ShapeRef.new(shape: ViewType, location_name: "viewType"))
+    CdcSpecification.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "tags"))
+    CdcSpecification.add_member(:propagate_tags, Shapes::ShapeRef.new(shape: CdcPropagateTags, location_name: "propagateTags"))
+    CdcSpecification.struct_class = Types::CdcSpecification
+
+    CdcSpecificationSummary.add_member(:status, Shapes::ShapeRef.new(shape: CdcStatus, required: true, location_name: "status"))
+    CdcSpecificationSummary.add_member(:view_type, Shapes::ShapeRef.new(shape: ViewType, location_name: "viewType"))
+    CdcSpecificationSummary.struct_class = Types::CdcSpecificationSummary
 
     ClientSideTimestamps.add_member(:status, Shapes::ShapeRef.new(shape: ClientSideTimestampsStatus, required: true, location_name: "status"))
     ClientSideTimestamps.struct_class = Types::ClientSideTimestamps
@@ -200,6 +222,8 @@ module Aws::Keyspaces
     CreateTableRequest.add_member(:client_side_timestamps, Shapes::ShapeRef.new(shape: ClientSideTimestamps, location_name: "clientSideTimestamps"))
     CreateTableRequest.add_member(:auto_scaling_specification, Shapes::ShapeRef.new(shape: AutoScalingSpecification, location_name: "autoScalingSpecification"))
     CreateTableRequest.add_member(:replica_specifications, Shapes::ShapeRef.new(shape: ReplicaSpecificationList, location_name: "replicaSpecifications"))
+    CreateTableRequest.add_member(:cdc_specification, Shapes::ShapeRef.new(shape: CdcSpecification, location_name: "cdcSpecification"))
+    CreateTableRequest.add_member(:warm_throughput_specification, Shapes::ShapeRef.new(shape: WarmThroughputSpecification, location_name: "warmThroughputSpecification"))
     CreateTableRequest.struct_class = Types::CreateTableRequest
 
     CreateTableResponse.add_member(:resource_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "resourceArn"))
@@ -282,6 +306,9 @@ module Aws::Keyspaces
     GetTableResponse.add_member(:comment, Shapes::ShapeRef.new(shape: Comment, location_name: "comment"))
     GetTableResponse.add_member(:client_side_timestamps, Shapes::ShapeRef.new(shape: ClientSideTimestamps, location_name: "clientSideTimestamps"))
     GetTableResponse.add_member(:replica_specifications, Shapes::ShapeRef.new(shape: ReplicaSpecificationSummaryList, location_name: "replicaSpecifications"))
+    GetTableResponse.add_member(:latest_stream_arn, Shapes::ShapeRef.new(shape: StreamArn, location_name: "latestStreamArn"))
+    GetTableResponse.add_member(:cdc_specification, Shapes::ShapeRef.new(shape: CdcSpecificationSummary, location_name: "cdcSpecification"))
+    GetTableResponse.add_member(:warm_throughput_specification, Shapes::ShapeRef.new(shape: WarmThroughputSpecificationSummary, location_name: "warmThroughputSpecification"))
     GetTableResponse.struct_class = Types::GetTableResponse
 
     GetTypeRequest.add_member(:keyspace_name, Shapes::ShapeRef.new(shape: KeyspaceName, required: true, location_name: "keyspaceName"))
@@ -375,6 +402,7 @@ module Aws::Keyspaces
     ReplicaSpecificationSummary.add_member(:region, Shapes::ShapeRef.new(shape: region, location_name: "region"))
     ReplicaSpecificationSummary.add_member(:status, Shapes::ShapeRef.new(shape: TableStatus, location_name: "status"))
     ReplicaSpecificationSummary.add_member(:capacity_specification, Shapes::ShapeRef.new(shape: CapacitySpecificationSummary, location_name: "capacitySpecification"))
+    ReplicaSpecificationSummary.add_member(:warm_throughput_specification, Shapes::ShapeRef.new(shape: WarmThroughputSpecificationSummary, location_name: "warmThroughputSpecification"))
     ReplicaSpecificationSummary.struct_class = Types::ReplicaSpecificationSummary
 
     ReplicaSpecificationSummaryList.member = Shapes::ShapeRef.new(shape: ReplicaSpecificationSummary)
@@ -481,6 +509,8 @@ module Aws::Keyspaces
     UpdateTableRequest.add_member(:client_side_timestamps, Shapes::ShapeRef.new(shape: ClientSideTimestamps, location_name: "clientSideTimestamps"))
     UpdateTableRequest.add_member(:auto_scaling_specification, Shapes::ShapeRef.new(shape: AutoScalingSpecification, location_name: "autoScalingSpecification"))
     UpdateTableRequest.add_member(:replica_specifications, Shapes::ShapeRef.new(shape: ReplicaSpecificationList, location_name: "replicaSpecifications"))
+    UpdateTableRequest.add_member(:cdc_specification, Shapes::ShapeRef.new(shape: CdcSpecification, location_name: "cdcSpecification"))
+    UpdateTableRequest.add_member(:warm_throughput_specification, Shapes::ShapeRef.new(shape: WarmThroughputSpecification, location_name: "warmThroughputSpecification"))
     UpdateTableRequest.struct_class = Types::UpdateTableRequest
 
     UpdateTableResponse.add_member(:resource_arn, Shapes::ShapeRef.new(shape: ARN, required: true, location_name: "resourceArn"))
@@ -488,6 +518,15 @@ module Aws::Keyspaces
 
     ValidationException.add_member(:message, Shapes::ShapeRef.new(shape: String, location_name: "message"))
     ValidationException.struct_class = Types::ValidationException
+
+    WarmThroughputSpecification.add_member(:read_units_per_second, Shapes::ShapeRef.new(shape: WarmThroughputSpecificationReadUnitsPerSecondLong, location_name: "readUnitsPerSecond"))
+    WarmThroughputSpecification.add_member(:write_units_per_second, Shapes::ShapeRef.new(shape: WarmThroughputSpecificationWriteUnitsPerSecondLong, location_name: "writeUnitsPerSecond"))
+    WarmThroughputSpecification.struct_class = Types::WarmThroughputSpecification
+
+    WarmThroughputSpecificationSummary.add_member(:read_units_per_second, Shapes::ShapeRef.new(shape: Long, required: true, location_name: "readUnitsPerSecond"))
+    WarmThroughputSpecificationSummary.add_member(:write_units_per_second, Shapes::ShapeRef.new(shape: Long, required: true, location_name: "writeUnitsPerSecond"))
+    WarmThroughputSpecificationSummary.add_member(:status, Shapes::ShapeRef.new(shape: WarmThroughputStatus, required: true, location_name: "status"))
+    WarmThroughputSpecificationSummary.struct_class = Types::WarmThroughputSpecificationSummary
 
 
     # @api private

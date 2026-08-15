@@ -31,6 +31,10 @@ module Aws::AutoScaling
   #    * This error class is not used. `ActiveInstanceRefreshNotFound` is used during parsing instead.
   # * {AlreadyExistsFault}
   #    * This error class is not used. `AlreadyExists` is used during parsing instead.
+  # * {IdempotentCallInProgressFault}
+  #    * This error class is not used. `IdempotentCallInProgress` is used during parsing instead.
+  # * {IdempotentParameterMismatchError}
+  #    * This error class is not used. `IdempotentParameterMismatch` is used during parsing instead.
   # * {InstanceRefreshInProgressFault}
   #    * This error class is not used. `InstanceRefreshInProgress` is used during parsing instead.
   # * {InvalidNextToken}
@@ -48,7 +52,6 @@ module Aws::AutoScaling
   #
   # Additionally, error classes are dynamically generated for service errors based on the error code
   # if they are not defined above.
-  # Some existing error classes may use a different class name than the one documented.
   module Errors
 
     extend Aws::Errors::DynamicErrors
@@ -77,6 +80,40 @@ module Aws::AutoScaling
       # @param [Seahorse::Client::RequestContext] context
       # @param [String] message
       # @param [Aws::AutoScaling::Types::AlreadyExistsFault] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+    end
+
+    # @deprecated This error class is not used during parsing.
+    #   Please use `IdempotentCallInProgress` instead.
+    class IdempotentCallInProgressFault < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::AutoScaling::Types::IdempotentCallInProgressFault] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+
+      # @return [String]
+      def message
+        @message || @data[:message]
+      end
+    end
+
+    # @deprecated This error class is not used during parsing.
+    #   Please use `IdempotentParameterMismatch` instead.
+    class IdempotentParameterMismatchError < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::AutoScaling::Types::IdempotentParameterMismatchError] data
       def initialize(context, message, data = Aws::EmptyStructure.new)
         super(context, message, data)
       end

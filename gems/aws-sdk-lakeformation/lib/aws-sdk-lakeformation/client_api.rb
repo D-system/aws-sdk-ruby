@@ -16,6 +16,7 @@ module Aws::LakeFormation
 
     AccessDeniedException = Shapes::StructureShape.new(name: 'AccessDeniedException')
     AccessKeyIdString = Shapes::StringShape.new(name: 'AccessKeyIdString')
+    AccountIdString = Shapes::StringShape.new(name: 'AccountIdString')
     AddLFTagsToResourceRequest = Shapes::StructureShape.new(name: 'AddLFTagsToResourceRequest')
     AddLFTagsToResourceResponse = Shapes::StructureShape.new(name: 'AddLFTagsToResourceResponse')
     AddObjectInput = Shapes::StructureShape.new(name: 'AddObjectInput')
@@ -52,6 +53,7 @@ module Aws::LakeFormation
     ComparisonOperator = Shapes::StringShape.new(name: 'ComparisonOperator')
     ConcurrentModificationException = Shapes::StructureShape.new(name: 'ConcurrentModificationException')
     Condition = Shapes::StructureShape.new(name: 'Condition')
+    ConflictException = Shapes::StructureShape.new(name: 'ConflictException')
     ContextKey = Shapes::StringShape.new(name: 'ContextKey')
     ContextValue = Shapes::StringShape.new(name: 'ContextValue')
     CreateDataCellsFilterRequest = Shapes::StructureShape.new(name: 'CreateDataCellsFilterRequest')
@@ -65,6 +67,7 @@ module Aws::LakeFormation
     CreateLakeFormationOptInRequest = Shapes::StructureShape.new(name: 'CreateLakeFormationOptInRequest')
     CreateLakeFormationOptInResponse = Shapes::StructureShape.new(name: 'CreateLakeFormationOptInResponse')
     CredentialTimeoutDurationSecondInteger = Shapes::IntegerShape.new(name: 'CredentialTimeoutDurationSecondInteger')
+    CredentialsScope = Shapes::StringShape.new(name: 'CredentialsScope')
     DataCellsFilter = Shapes::StructureShape.new(name: 'DataCellsFilter')
     DataCellsFilterList = Shapes::ListShape.new(name: 'DataCellsFilterList')
     DataCellsFilterResource = Shapes::StructureShape.new(name: 'DataCellsFilterResource')
@@ -138,6 +141,8 @@ module Aws::LakeFormation
     GetResourceLFTagsResponse = Shapes::StructureShape.new(name: 'GetResourceLFTagsResponse')
     GetTableObjectsRequest = Shapes::StructureShape.new(name: 'GetTableObjectsRequest')
     GetTableObjectsResponse = Shapes::StructureShape.new(name: 'GetTableObjectsResponse')
+    GetTemporaryDataLocationCredentialsRequest = Shapes::StructureShape.new(name: 'GetTemporaryDataLocationCredentialsRequest')
+    GetTemporaryDataLocationCredentialsResponse = Shapes::StructureShape.new(name: 'GetTemporaryDataLocationCredentialsResponse')
     GetTemporaryGluePartitionCredentialsRequest = Shapes::StructureShape.new(name: 'GetTemporaryGluePartitionCredentialsRequest')
     GetTemporaryGluePartitionCredentialsResponse = Shapes::StructureShape.new(name: 'GetTemporaryGluePartitionCredentialsResponse')
     GetTemporaryGlueTableCredentialsRequest = Shapes::StructureShape.new(name: 'GetTemporaryGlueTableCredentialsRequest')
@@ -233,6 +238,9 @@ module Aws::LakeFormation
     QuerySessionContext = Shapes::StructureShape.new(name: 'QuerySessionContext')
     QueryStateString = Shapes::StringShape.new(name: 'QueryStateString')
     RAMResourceShareArn = Shapes::StringShape.new(name: 'RAMResourceShareArn')
+    RedshiftConnect = Shapes::StructureShape.new(name: 'RedshiftConnect')
+    RedshiftScopeUnion = Shapes::UnionShape.new(name: 'RedshiftScopeUnion')
+    RedshiftServiceIntegrations = Shapes::ListShape.new(name: 'RedshiftServiceIntegrations')
     RegisterResourceRequest = Shapes::StructureShape.new(name: 'RegisterResourceRequest')
     RegisterResourceResponse = Shapes::StructureShape.new(name: 'RegisterResourceResponse')
     RemoveLFTagsFromResourceRequest = Shapes::StructureShape.new(name: 'RemoveLFTagsFromResourceRequest')
@@ -260,6 +268,9 @@ module Aws::LakeFormation
     SearchTablesByLFTagsRequest = Shapes::StructureShape.new(name: 'SearchTablesByLFTagsRequest')
     SearchTablesByLFTagsResponse = Shapes::StructureShape.new(name: 'SearchTablesByLFTagsResponse')
     SecretAccessKeyString = Shapes::StringShape.new(name: 'SecretAccessKeyString')
+    ServiceAuthorization = Shapes::StringShape.new(name: 'ServiceAuthorization')
+    ServiceIntegrationList = Shapes::ListShape.new(name: 'ServiceIntegrationList')
+    ServiceIntegrationUnion = Shapes::UnionShape.new(name: 'ServiceIntegrationUnion')
     SessionTokenString = Shapes::StringShape.new(name: 'SessionTokenString')
     StartQueryPlanningRequest = Shapes::StructureShape.new(name: 'StartQueryPlanningRequest')
     StartQueryPlanningResponse = Shapes::StructureShape.new(name: 'StartQueryPlanningResponse')
@@ -286,6 +297,7 @@ module Aws::LakeFormation
     TagValueList = Shapes::ListShape.new(name: 'TagValueList')
     TaggedDatabase = Shapes::StructureShape.new(name: 'TaggedDatabase')
     TaggedTable = Shapes::StructureShape.new(name: 'TaggedTable')
+    TemporaryCredentials = Shapes::StructureShape.new(name: 'TemporaryCredentials')
     ThrottledException = Shapes::StructureShape.new(name: 'ThrottledException')
     Timestamp = Shapes::TimestampShape.new(name: 'Timestamp')
     Token = Shapes::StringShape.new(name: 'Token')
@@ -318,6 +330,7 @@ module Aws::LakeFormation
     UpdateTableStorageOptimizerResponse = Shapes::StructureShape.new(name: 'UpdateTableStorageOptimizerResponse')
     ValueString = Shapes::StringShape.new(name: 'ValueString')
     ValueStringList = Shapes::ListShape.new(name: 'ValueStringList')
+    VerificationStatus = Shapes::StringShape.new(name: 'VerificationStatus')
     VersionString = Shapes::StringShape.new(name: 'VersionString')
     VirtualObject = Shapes::StructureShape.new(name: 'VirtualObject')
     VirtualObjectList = Shapes::ListShape.new(name: 'VirtualObjectList')
@@ -432,6 +445,9 @@ module Aws::LakeFormation
     Condition.add_member(:expression, Shapes::ShapeRef.new(shape: ExpressionString, location_name: "Expression"))
     Condition.struct_class = Types::Condition
 
+    ConflictException.add_member(:message, Shapes::ShapeRef.new(shape: MessageString, location_name: "Message"))
+    ConflictException.struct_class = Types::ConflictException
+
     CreateDataCellsFilterRequest.add_member(:table_data, Shapes::ShapeRef.new(shape: DataCellsFilter, required: true, location_name: "TableData"))
     CreateDataCellsFilterRequest.struct_class = Types::CreateDataCellsFilterRequest
 
@@ -456,6 +472,7 @@ module Aws::LakeFormation
     CreateLakeFormationIdentityCenterConfigurationRequest.add_member(:instance_arn, Shapes::ShapeRef.new(shape: IdentityCenterInstanceArn, location_name: "InstanceArn"))
     CreateLakeFormationIdentityCenterConfigurationRequest.add_member(:external_filtering, Shapes::ShapeRef.new(shape: ExternalFilteringConfiguration, location_name: "ExternalFiltering"))
     CreateLakeFormationIdentityCenterConfigurationRequest.add_member(:share_recipients, Shapes::ShapeRef.new(shape: DataLakePrincipalList, location_name: "ShareRecipients"))
+    CreateLakeFormationIdentityCenterConfigurationRequest.add_member(:service_integrations, Shapes::ShapeRef.new(shape: ServiceIntegrationList, location_name: "ServiceIntegrations"))
     CreateLakeFormationIdentityCenterConfigurationRequest.struct_class = Types::CreateLakeFormationIdentityCenterConfigurationRequest
 
     CreateLakeFormationIdentityCenterConfigurationResponse.add_member(:application_arn, Shapes::ShapeRef.new(shape: ApplicationArn, location_name: "ApplicationArn"))
@@ -572,6 +589,7 @@ module Aws::LakeFormation
     DescribeLakeFormationIdentityCenterConfigurationResponse.add_member(:application_arn, Shapes::ShapeRef.new(shape: ApplicationArn, location_name: "ApplicationArn"))
     DescribeLakeFormationIdentityCenterConfigurationResponse.add_member(:external_filtering, Shapes::ShapeRef.new(shape: ExternalFilteringConfiguration, location_name: "ExternalFiltering"))
     DescribeLakeFormationIdentityCenterConfigurationResponse.add_member(:share_recipients, Shapes::ShapeRef.new(shape: DataLakePrincipalList, location_name: "ShareRecipients"))
+    DescribeLakeFormationIdentityCenterConfigurationResponse.add_member(:service_integrations, Shapes::ShapeRef.new(shape: ServiceIntegrationList, location_name: "ServiceIntegrations"))
     DescribeLakeFormationIdentityCenterConfigurationResponse.add_member(:resource_share, Shapes::ShapeRef.new(shape: RAMResourceShareArn, location_name: "ResourceShare"))
     DescribeLakeFormationIdentityCenterConfigurationResponse.struct_class = Types::DescribeLakeFormationIdentityCenterConfigurationResponse
 
@@ -710,6 +728,17 @@ module Aws::LakeFormation
     GetTableObjectsResponse.add_member(:objects, Shapes::ShapeRef.new(shape: PartitionedTableObjectsList, location_name: "Objects"))
     GetTableObjectsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: TokenString, location_name: "NextToken"))
     GetTableObjectsResponse.struct_class = Types::GetTableObjectsResponse
+
+    GetTemporaryDataLocationCredentialsRequest.add_member(:duration_seconds, Shapes::ShapeRef.new(shape: CredentialTimeoutDurationSecondInteger, location_name: "DurationSeconds"))
+    GetTemporaryDataLocationCredentialsRequest.add_member(:audit_context, Shapes::ShapeRef.new(shape: AuditContext, location_name: "AuditContext"))
+    GetTemporaryDataLocationCredentialsRequest.add_member(:data_locations, Shapes::ShapeRef.new(shape: PathStringList, location_name: "DataLocations"))
+    GetTemporaryDataLocationCredentialsRequest.add_member(:credentials_scope, Shapes::ShapeRef.new(shape: CredentialsScope, location_name: "CredentialsScope"))
+    GetTemporaryDataLocationCredentialsRequest.struct_class = Types::GetTemporaryDataLocationCredentialsRequest
+
+    GetTemporaryDataLocationCredentialsResponse.add_member(:credentials, Shapes::ShapeRef.new(shape: TemporaryCredentials, location_name: "Credentials"))
+    GetTemporaryDataLocationCredentialsResponse.add_member(:accessible_data_locations, Shapes::ShapeRef.new(shape: PathStringList, location_name: "AccessibleDataLocations"))
+    GetTemporaryDataLocationCredentialsResponse.add_member(:credentials_scope, Shapes::ShapeRef.new(shape: CredentialsScope, location_name: "CredentialsScope"))
+    GetTemporaryDataLocationCredentialsResponse.struct_class = Types::GetTemporaryDataLocationCredentialsResponse
 
     GetTemporaryGluePartitionCredentialsRequest.add_member(:table_arn, Shapes::ShapeRef.new(shape: ResourceArnString, required: true, location_name: "TableArn"))
     GetTemporaryGluePartitionCredentialsRequest.add_member(:partition, Shapes::ShapeRef.new(shape: PartitionValueList, required: true, location_name: "Partition"))
@@ -984,12 +1013,24 @@ module Aws::LakeFormation
     QuerySessionContext.add_member(:additional_context, Shapes::ShapeRef.new(shape: AdditionalContextMap, location_name: "AdditionalContext"))
     QuerySessionContext.struct_class = Types::QuerySessionContext
 
+    RedshiftConnect.add_member(:authorization, Shapes::ShapeRef.new(shape: ServiceAuthorization, required: true, location_name: "Authorization"))
+    RedshiftConnect.struct_class = Types::RedshiftConnect
+
+    RedshiftScopeUnion.add_member(:redshift_connect, Shapes::ShapeRef.new(shape: RedshiftConnect, location_name: "RedshiftConnect"))
+    RedshiftScopeUnion.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    RedshiftScopeUnion.add_member_subclass(:redshift_connect, Types::RedshiftScopeUnion::RedshiftConnect)
+    RedshiftScopeUnion.add_member_subclass(:unknown, Types::RedshiftScopeUnion::Unknown)
+    RedshiftScopeUnion.struct_class = Types::RedshiftScopeUnion
+
+    RedshiftServiceIntegrations.member = Shapes::ShapeRef.new(shape: RedshiftScopeUnion)
+
     RegisterResourceRequest.add_member(:resource_arn, Shapes::ShapeRef.new(shape: ResourceArnString, required: true, location_name: "ResourceArn"))
     RegisterResourceRequest.add_member(:use_service_linked_role, Shapes::ShapeRef.new(shape: NullableBoolean, location_name: "UseServiceLinkedRole"))
     RegisterResourceRequest.add_member(:role_arn, Shapes::ShapeRef.new(shape: IAMRoleArn, location_name: "RoleArn"))
     RegisterResourceRequest.add_member(:with_federation, Shapes::ShapeRef.new(shape: NullableBoolean, location_name: "WithFederation"))
     RegisterResourceRequest.add_member(:hybrid_access_enabled, Shapes::ShapeRef.new(shape: NullableBoolean, location_name: "HybridAccessEnabled"))
     RegisterResourceRequest.add_member(:with_privileged_access, Shapes::ShapeRef.new(shape: Boolean, location_name: "WithPrivilegedAccess"))
+    RegisterResourceRequest.add_member(:expected_resource_owner_account, Shapes::ShapeRef.new(shape: AccountIdString, location_name: "ExpectedResourceOwnerAccount"))
     RegisterResourceRequest.struct_class = Types::RegisterResourceRequest
 
     RegisterResourceResponse.struct_class = Types::RegisterResourceResponse
@@ -1019,6 +1060,8 @@ module Aws::LakeFormation
     ResourceInfo.add_member(:with_federation, Shapes::ShapeRef.new(shape: NullableBoolean, location_name: "WithFederation"))
     ResourceInfo.add_member(:hybrid_access_enabled, Shapes::ShapeRef.new(shape: NullableBoolean, location_name: "HybridAccessEnabled"))
     ResourceInfo.add_member(:with_privileged_access, Shapes::ShapeRef.new(shape: NullableBoolean, location_name: "WithPrivilegedAccess"))
+    ResourceInfo.add_member(:verification_status, Shapes::ShapeRef.new(shape: VerificationStatus, location_name: "VerificationStatus"))
+    ResourceInfo.add_member(:expected_resource_owner_account, Shapes::ShapeRef.new(shape: AccountIdString, location_name: "ExpectedResourceOwnerAccount"))
     ResourceInfo.struct_class = Types::ResourceInfo
 
     ResourceInfoList.member = Shapes::ShapeRef.new(shape: ResourceInfo)
@@ -1066,6 +1109,14 @@ module Aws::LakeFormation
     SearchTablesByLFTagsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: Token, location_name: "NextToken"))
     SearchTablesByLFTagsResponse.add_member(:table_list, Shapes::ShapeRef.new(shape: TableLFTagsList, location_name: "TableList"))
     SearchTablesByLFTagsResponse.struct_class = Types::SearchTablesByLFTagsResponse
+
+    ServiceIntegrationList.member = Shapes::ShapeRef.new(shape: ServiceIntegrationUnion)
+
+    ServiceIntegrationUnion.add_member(:redshift, Shapes::ShapeRef.new(shape: RedshiftServiceIntegrations, location_name: "Redshift"))
+    ServiceIntegrationUnion.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    ServiceIntegrationUnion.add_member_subclass(:redshift, Types::ServiceIntegrationUnion::Redshift)
+    ServiceIntegrationUnion.add_member_subclass(:unknown, Types::ServiceIntegrationUnion::Unknown)
+    ServiceIntegrationUnion.struct_class = Types::ServiceIntegrationUnion
 
     StartQueryPlanningRequest.add_member(:query_planning_context, Shapes::ShapeRef.new(shape: QueryPlanningContext, required: true, location_name: "QueryPlanningContext"))
     StartQueryPlanningRequest.add_member(:query_string, Shapes::ShapeRef.new(shape: SyntheticStartQueryPlanningRequestQueryString, required: true, location_name: "QueryString"))
@@ -1136,6 +1187,12 @@ module Aws::LakeFormation
     TaggedTable.add_member(:lf_tags_on_columns, Shapes::ShapeRef.new(shape: ColumnLFTagsList, location_name: "LFTagsOnColumns"))
     TaggedTable.struct_class = Types::TaggedTable
 
+    TemporaryCredentials.add_member(:access_key_id, Shapes::ShapeRef.new(shape: AccessKeyIdString, location_name: "AccessKeyId"))
+    TemporaryCredentials.add_member(:secret_access_key, Shapes::ShapeRef.new(shape: SecretAccessKeyString, location_name: "SecretAccessKey"))
+    TemporaryCredentials.add_member(:session_token, Shapes::ShapeRef.new(shape: SessionTokenString, location_name: "SessionToken"))
+    TemporaryCredentials.add_member(:expiration, Shapes::ShapeRef.new(shape: ExpirationTimestamp, location_name: "Expiration"))
+    TemporaryCredentials.struct_class = Types::TemporaryCredentials
+
     ThrottledException.add_member(:message, Shapes::ShapeRef.new(shape: MessageString, location_name: "Message"))
     ThrottledException.struct_class = Types::ThrottledException
 
@@ -1181,6 +1238,7 @@ module Aws::LakeFormation
 
     UpdateLakeFormationIdentityCenterConfigurationRequest.add_member(:catalog_id, Shapes::ShapeRef.new(shape: CatalogIdString, location_name: "CatalogId"))
     UpdateLakeFormationIdentityCenterConfigurationRequest.add_member(:share_recipients, Shapes::ShapeRef.new(shape: DataLakePrincipalList, location_name: "ShareRecipients"))
+    UpdateLakeFormationIdentityCenterConfigurationRequest.add_member(:service_integrations, Shapes::ShapeRef.new(shape: ServiceIntegrationList, location_name: "ServiceIntegrations"))
     UpdateLakeFormationIdentityCenterConfigurationRequest.add_member(:application_status, Shapes::ShapeRef.new(shape: ApplicationStatus, location_name: "ApplicationStatus"))
     UpdateLakeFormationIdentityCenterConfigurationRequest.add_member(:external_filtering, Shapes::ShapeRef.new(shape: ExternalFilteringConfiguration, location_name: "ExternalFiltering"))
     UpdateLakeFormationIdentityCenterConfigurationRequest.struct_class = Types::UpdateLakeFormationIdentityCenterConfigurationRequest
@@ -1191,6 +1249,7 @@ module Aws::LakeFormation
     UpdateResourceRequest.add_member(:resource_arn, Shapes::ShapeRef.new(shape: ResourceArnString, required: true, location_name: "ResourceArn"))
     UpdateResourceRequest.add_member(:with_federation, Shapes::ShapeRef.new(shape: NullableBoolean, location_name: "WithFederation"))
     UpdateResourceRequest.add_member(:hybrid_access_enabled, Shapes::ShapeRef.new(shape: NullableBoolean, location_name: "HybridAccessEnabled"))
+    UpdateResourceRequest.add_member(:expected_resource_owner_account, Shapes::ShapeRef.new(shape: AccountIdString, location_name: "ExpectedResourceOwnerAccount"))
     UpdateResourceRequest.struct_class = Types::UpdateResourceRequest
 
     UpdateResourceResponse.struct_class = Types::UpdateResourceResponse
@@ -1695,6 +1754,21 @@ module Aws::LakeFormation
             "next_token" => "next_token"
           }
         )
+      end)
+
+      api.add_operation(:get_temporary_data_location_credentials, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetTemporaryDataLocationCredentials"
+        o.http_method = "POST"
+        o.http_request_uri = "/GetTemporaryDataLocationCredentials"
+        o.input = Shapes::ShapeRef.new(shape: GetTemporaryDataLocationCredentialsRequest)
+        o.output = Shapes::ShapeRef.new(shape: GetTemporaryDataLocationCredentialsResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidInputException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServiceException)
+        o.errors << Shapes::ShapeRef.new(shape: OperationTimeoutException)
+        o.errors << Shapes::ShapeRef.new(shape: GlueEncryptionException)
+        o.errors << Shapes::ShapeRef.new(shape: EntityNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
       end)
 
       api.add_operation(:get_temporary_glue_partition_credentials, Seahorse::Model::Operation.new.tap do |o|

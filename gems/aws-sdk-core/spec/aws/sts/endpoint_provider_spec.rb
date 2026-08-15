@@ -16,11 +16,11 @@ module Aws::STS
 
     context "For region af-south-1 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.af-south-1.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts.af-south-1.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"af-south-1", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "af-south-1", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -30,11 +30,11 @@ module Aws::STS
 
     context "For region ap-east-1 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.ap-east-1.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts.ap-east-1.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"ap-east-1", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "ap-east-1", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -44,11 +44,11 @@ module Aws::STS
 
     context "For region ap-northeast-1 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.ap-northeast-1.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts.ap-northeast-1.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"ap-northeast-1", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "ap-northeast-1", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -58,11 +58,11 @@ module Aws::STS
 
     context "For region ap-northeast-2 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.ap-northeast-2.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts.ap-northeast-2.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"ap-northeast-2", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "ap-northeast-2", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -72,11 +72,11 @@ module Aws::STS
 
     context "For region ap-northeast-3 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.ap-northeast-3.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts.ap-northeast-3.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"ap-northeast-3", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "ap-northeast-3", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -86,11 +86,11 @@ module Aws::STS
 
     context "For region ap-south-1 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.ap-south-1.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts.ap-south-1.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"ap-south-1", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "ap-south-1", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -100,11 +100,11 @@ module Aws::STS
 
     context "For region ap-southeast-1 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.ap-southeast-1.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts.ap-southeast-1.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"ap-southeast-1", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "ap-southeast-1", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -114,11 +114,11 @@ module Aws::STS
 
     context "For region ap-southeast-2 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.ap-southeast-2.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts.ap-southeast-2.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"ap-southeast-2", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "ap-southeast-2", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -128,11 +128,11 @@ module Aws::STS
 
     context "For region ap-southeast-3 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.ap-southeast-3.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts.ap-southeast-3.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"ap-southeast-3", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "ap-southeast-3", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -142,11 +142,11 @@ module Aws::STS
 
     context "For region aws-global with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"properties"=>{"authSchemes"=>[{"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"}]}, "url"=>"https://sts.amazonaws.com"}}
+        {"endpoint" => {"properties" => {"authSchemes" => [{"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"}]}, "url" => "https://sts.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"aws-global", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "aws-global", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -156,11 +156,11 @@ module Aws::STS
 
     context "For region ca-central-1 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.ca-central-1.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts.ca-central-1.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"ca-central-1", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "ca-central-1", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -170,11 +170,11 @@ module Aws::STS
 
     context "For region eu-central-1 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.eu-central-1.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts.eu-central-1.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"eu-central-1", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "eu-central-1", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -184,11 +184,11 @@ module Aws::STS
 
     context "For region eu-north-1 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.eu-north-1.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts.eu-north-1.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"eu-north-1", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "eu-north-1", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -198,11 +198,11 @@ module Aws::STS
 
     context "For region eu-south-1 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.eu-south-1.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts.eu-south-1.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"eu-south-1", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "eu-south-1", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -212,11 +212,11 @@ module Aws::STS
 
     context "For region eu-west-1 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.eu-west-1.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts.eu-west-1.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"eu-west-1", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "eu-west-1", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -226,11 +226,11 @@ module Aws::STS
 
     context "For region eu-west-2 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.eu-west-2.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts.eu-west-2.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"eu-west-2", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "eu-west-2", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -240,11 +240,11 @@ module Aws::STS
 
     context "For region eu-west-3 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.eu-west-3.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts.eu-west-3.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"eu-west-3", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "eu-west-3", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -254,11 +254,11 @@ module Aws::STS
 
     context "For region me-south-1 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.me-south-1.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts.me-south-1.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"me-south-1", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "me-south-1", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -268,11 +268,11 @@ module Aws::STS
 
     context "For region sa-east-1 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.sa-east-1.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts.sa-east-1.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"sa-east-1", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "sa-east-1", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -282,11 +282,11 @@ module Aws::STS
 
     context "For region us-east-1 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.us-east-1.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts.us-east-1.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-east-1", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "us-east-1", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -296,11 +296,11 @@ module Aws::STS
 
     context "For region us-east-1 with FIPS enabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts-fips.us-east-1.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts-fips.us-east-1.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-east-1", :use_fips=>true, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "us-east-1", use_fips: true, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -310,11 +310,11 @@ module Aws::STS
 
     context "For region us-east-2 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.us-east-2.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts.us-east-2.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-east-2", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "us-east-2", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -324,11 +324,11 @@ module Aws::STS
 
     context "For region us-east-2 with FIPS enabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts-fips.us-east-2.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts-fips.us-east-2.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-east-2", :use_fips=>true, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "us-east-2", use_fips: true, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -338,11 +338,11 @@ module Aws::STS
 
     context "For region us-west-1 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.us-west-1.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts.us-west-1.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-west-1", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "us-west-1", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -352,11 +352,11 @@ module Aws::STS
 
     context "For region us-west-1 with FIPS enabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts-fips.us-west-1.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts-fips.us-west-1.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-west-1", :use_fips=>true, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "us-west-1", use_fips: true, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -366,11 +366,11 @@ module Aws::STS
 
     context "For region us-west-2 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.us-west-2.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts.us-west-2.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-west-2", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "us-west-2", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -380,11 +380,11 @@ module Aws::STS
 
     context "For region us-west-2 with FIPS enabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts-fips.us-west-2.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts-fips.us-west-2.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-west-2", :use_fips=>true, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "us-west-2", use_fips: true, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -394,11 +394,11 @@ module Aws::STS
 
     context "For region us-east-1 with FIPS enabled and DualStack enabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts-fips.us-east-1.api.aws"}}
+        {"endpoint" => {"url" => "https://sts-fips.us-east-1.api.aws"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-east-1", :use_fips=>true, :use_dual_stack=>true})
+        params = EndpointParameters.new(**{region: "us-east-1", use_fips: true, use_dual_stack: true})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -408,11 +408,11 @@ module Aws::STS
 
     context "For region us-east-1 with FIPS disabled and DualStack enabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.us-east-1.api.aws"}}
+        {"endpoint" => {"url" => "https://sts.us-east-1.api.aws"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-east-1", :use_fips=>false, :use_dual_stack=>true})
+        params = EndpointParameters.new(**{region: "us-east-1", use_fips: false, use_dual_stack: true})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -422,11 +422,11 @@ module Aws::STS
 
     context "For region cn-north-1 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.cn-north-1.amazonaws.com.cn"}}
+        {"endpoint" => {"url" => "https://sts.cn-north-1.amazonaws.com.cn"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"cn-north-1", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "cn-north-1", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -436,11 +436,11 @@ module Aws::STS
 
     context "For region cn-northwest-1 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.cn-northwest-1.amazonaws.com.cn"}}
+        {"endpoint" => {"url" => "https://sts.cn-northwest-1.amazonaws.com.cn"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"cn-northwest-1", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "cn-northwest-1", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -450,11 +450,11 @@ module Aws::STS
 
     context "For region cn-north-1 with FIPS enabled and DualStack enabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts-fips.cn-north-1.api.amazonwebservices.com.cn"}}
+        {"endpoint" => {"url" => "https://sts-fips.cn-north-1.api.amazonwebservices.com.cn"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"cn-north-1", :use_fips=>true, :use_dual_stack=>true})
+        params = EndpointParameters.new(**{region: "cn-north-1", use_fips: true, use_dual_stack: true})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -464,11 +464,11 @@ module Aws::STS
 
     context "For region cn-north-1 with FIPS enabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts-fips.cn-north-1.amazonaws.com.cn"}}
+        {"endpoint" => {"url" => "https://sts-fips.cn-north-1.amazonaws.com.cn"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"cn-north-1", :use_fips=>true, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "cn-north-1", use_fips: true, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -478,11 +478,11 @@ module Aws::STS
 
     context "For region cn-north-1 with FIPS disabled and DualStack enabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.cn-north-1.api.amazonwebservices.com.cn"}}
+        {"endpoint" => {"url" => "https://sts.cn-north-1.api.amazonwebservices.com.cn"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"cn-north-1", :use_fips=>false, :use_dual_stack=>true})
+        params = EndpointParameters.new(**{region: "cn-north-1", use_fips: false, use_dual_stack: true})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -492,11 +492,11 @@ module Aws::STS
 
     context "For region us-gov-east-1 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.us-gov-east-1.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts.us-gov-east-1.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-gov-east-1", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "us-gov-east-1", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -506,11 +506,11 @@ module Aws::STS
 
     context "For region us-gov-east-1 with FIPS enabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.us-gov-east-1.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts.us-gov-east-1.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-gov-east-1", :use_fips=>true, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "us-gov-east-1", use_fips: true, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -520,11 +520,11 @@ module Aws::STS
 
     context "For region us-gov-west-1 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.us-gov-west-1.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts.us-gov-west-1.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-gov-west-1", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "us-gov-west-1", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -534,11 +534,11 @@ module Aws::STS
 
     context "For region us-gov-west-1 with FIPS enabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.us-gov-west-1.amazonaws.com"}}
+        {"endpoint" => {"url" => "https://sts.us-gov-west-1.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-gov-west-1", :use_fips=>true, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "us-gov-west-1", use_fips: true, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -548,11 +548,11 @@ module Aws::STS
 
     context "For region us-gov-east-1 with FIPS enabled and DualStack enabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts-fips.us-gov-east-1.api.aws"}}
+        {"endpoint" => {"url" => "https://sts-fips.us-gov-east-1.api.aws"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-gov-east-1", :use_fips=>true, :use_dual_stack=>true})
+        params = EndpointParameters.new(**{region: "us-gov-east-1", use_fips: true, use_dual_stack: true})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -562,11 +562,11 @@ module Aws::STS
 
     context "For region us-gov-east-1 with FIPS disabled and DualStack enabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.us-gov-east-1.api.aws"}}
+        {"endpoint" => {"url" => "https://sts.us-gov-east-1.api.aws"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-gov-east-1", :use_fips=>false, :use_dual_stack=>true})
+        params = EndpointParameters.new(**{region: "us-gov-east-1", use_fips: false, use_dual_stack: true})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -576,11 +576,11 @@ module Aws::STS
 
     context "For region us-iso-east-1 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.us-iso-east-1.c2s.ic.gov"}}
+        {"endpoint" => {"url" => "https://sts.us-iso-east-1.c2s.ic.gov"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-iso-east-1", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "us-iso-east-1", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -590,92 +590,53 @@ module Aws::STS
 
     context "For region us-iso-west-1 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.us-iso-west-1.c2s.ic.gov"}}
+        {"endpoint" => {"url" => "https://sts.us-iso-west-1.c2s.ic.gov"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-iso-west-1", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "us-iso-west-1", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
         expect(endpoint.properties).to eq(expected['endpoint']['properties'] || {})
-      end
-    end
-
-    context "For region us-iso-east-1 with FIPS enabled and DualStack enabled" do
-      let(:expected) do
-        {"error"=>"FIPS and DualStack are enabled, but this partition does not support one or both"}
-      end
-
-      it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-iso-east-1", :use_fips=>true, :use_dual_stack=>true})
-        expect do
-          subject.resolve_endpoint(params)
-        end.to raise_error(ArgumentError, expected['error'])
       end
     end
 
     context "For region us-iso-east-1 with FIPS enabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts-fips.us-iso-east-1.c2s.ic.gov"}}
+        {"endpoint" => {"url" => "https://sts-fips.us-iso-east-1.c2s.ic.gov"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-iso-east-1", :use_fips=>true, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "us-iso-east-1", use_fips: true, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
         expect(endpoint.properties).to eq(expected['endpoint']['properties'] || {})
-      end
-    end
-
-    context "For region us-iso-east-1 with FIPS disabled and DualStack enabled" do
-      let(:expected) do
-        {"error"=>"DualStack is enabled but this partition does not support DualStack"}
-      end
-
-      it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-iso-east-1", :use_fips=>false, :use_dual_stack=>true})
-        expect do
-          subject.resolve_endpoint(params)
-        end.to raise_error(ArgumentError, expected['error'])
       end
     end
 
     context "For region us-isob-east-1 with FIPS disabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts.us-isob-east-1.sc2s.sgov.gov"}}
+        {"endpoint" => {"url" => "https://sts.us-isob-east-1.sc2s.sgov.gov"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-isob-east-1", :use_fips=>false, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "us-isob-east-1", use_fips: false, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
         expect(endpoint.properties).to eq(expected['endpoint']['properties'] || {})
-      end
-    end
-
-    context "For region us-isob-east-1 with FIPS enabled and DualStack enabled" do
-      let(:expected) do
-        {"error"=>"FIPS and DualStack are enabled, but this partition does not support one or both"}
-      end
-
-      it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-isob-east-1", :use_fips=>true, :use_dual_stack=>true})
-        expect do
-          subject.resolve_endpoint(params)
-        end.to raise_error(ArgumentError, expected['error'])
       end
     end
 
     context "For region us-isob-east-1 with FIPS enabled and DualStack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://sts-fips.us-isob-east-1.sc2s.sgov.gov"}}
+        {"endpoint" => {"url" => "https://sts-fips.us-isob-east-1.sc2s.sgov.gov"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-isob-east-1", :use_fips=>true, :use_dual_stack=>false})
+        params = EndpointParameters.new(**{region: "us-isob-east-1", use_fips: true, use_dual_stack: false})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -683,26 +644,13 @@ module Aws::STS
       end
     end
 
-    context "For region us-isob-east-1 with FIPS disabled and DualStack enabled" do
-      let(:expected) do
-        {"error"=>"DualStack is enabled but this partition does not support DualStack"}
-      end
-
-      it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-isob-east-1", :use_fips=>false, :use_dual_stack=>true})
-        expect do
-          subject.resolve_endpoint(params)
-        end.to raise_error(ArgumentError, expected['error'])
-      end
-    end
-
     context "For custom endpoint with region set and fips disabled and dualstack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://example.com"}}
+        {"endpoint" => {"url" => "https://example.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-east-1", :use_fips=>false, :use_dual_stack=>false, :endpoint=>"https://example.com"})
+        params = EndpointParameters.new(**{region: "us-east-1", use_fips: false, use_dual_stack: false, endpoint: "https://example.com"})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -712,11 +660,11 @@ module Aws::STS
 
     context "For custom endpoint with region not set and fips disabled and dualstack disabled" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://example.com"}}
+        {"endpoint" => {"url" => "https://example.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:use_fips=>false, :use_dual_stack=>false, :endpoint=>"https://example.com"})
+        params = EndpointParameters.new(**{use_fips: false, use_dual_stack: false, endpoint: "https://example.com"})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -726,11 +674,11 @@ module Aws::STS
 
     context "For custom endpoint with fips enabled and dualstack disabled" do
       let(:expected) do
-        {"error"=>"Invalid Configuration: FIPS and custom endpoint are not supported"}
+        {"error" => "Invalid Configuration: FIPS and custom endpoint are not supported"}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-east-1", :use_fips=>true, :use_dual_stack=>false, :endpoint=>"https://example.com"})
+        params = EndpointParameters.new(**{region: "us-east-1", use_fips: true, use_dual_stack: false, endpoint: "https://example.com"})
         expect do
           subject.resolve_endpoint(params)
         end.to raise_error(ArgumentError, expected['error'])
@@ -739,11 +687,11 @@ module Aws::STS
 
     context "For custom endpoint with fips disabled and dualstack enabled" do
       let(:expected) do
-        {"error"=>"Invalid Configuration: Dualstack and custom endpoint are not supported"}
+        {"error" => "Invalid Configuration: Dualstack and custom endpoint are not supported"}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-east-1", :use_fips=>false, :use_dual_stack=>true, :endpoint=>"https://example.com"})
+        params = EndpointParameters.new(**{region: "us-east-1", use_fips: false, use_dual_stack: true, endpoint: "https://example.com"})
         expect do
           subject.resolve_endpoint(params)
         end.to raise_error(ArgumentError, expected['error'])
@@ -752,7 +700,7 @@ module Aws::STS
 
     context "Missing region" do
       let(:expected) do
-        {"error"=>"Invalid Configuration: Missing Region"}
+        {"error" => "Invalid Configuration: Missing Region"}
       end
 
       it 'produces the expected output from the EndpointProvider' do
@@ -765,11 +713,11 @@ module Aws::STS
 
     context "UseGlobalEndpoint with legacy region `ap-northeast-1`" do
       let(:expected) do
-        {"endpoint"=>{"properties"=>{"authSchemes"=>[{"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"}]}, "url"=>"https://sts.amazonaws.com"}}
+        {"endpoint" => {"properties" => {"authSchemes" => [{"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"}]}, "url" => "https://sts.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"ap-northeast-1", :use_fips=>false, :use_dual_stack=>false, :use_global_endpoint=>true})
+        params = EndpointParameters.new(**{region: "ap-northeast-1", use_fips: false, use_dual_stack: false, use_global_endpoint: true})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -782,7 +730,7 @@ module Aws::STS
           sts_regional_endpoints: 'legacy',
           stub_responses: true
         )
-        expect_auth({"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"})
+        expect_auth({"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"})
         resp = client.get_caller_identity(
         )
         expected_uri = URI.parse(expected['endpoint']['url'])
@@ -794,11 +742,11 @@ module Aws::STS
 
     context "UseGlobalEndpoint with legacy region `ap-south-1`" do
       let(:expected) do
-        {"endpoint"=>{"properties"=>{"authSchemes"=>[{"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"}]}, "url"=>"https://sts.amazonaws.com"}}
+        {"endpoint" => {"properties" => {"authSchemes" => [{"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"}]}, "url" => "https://sts.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"ap-south-1", :use_fips=>false, :use_dual_stack=>false, :use_global_endpoint=>true})
+        params = EndpointParameters.new(**{region: "ap-south-1", use_fips: false, use_dual_stack: false, use_global_endpoint: true})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -811,7 +759,7 @@ module Aws::STS
           sts_regional_endpoints: 'legacy',
           stub_responses: true
         )
-        expect_auth({"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"})
+        expect_auth({"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"})
         resp = client.get_caller_identity(
         )
         expected_uri = URI.parse(expected['endpoint']['url'])
@@ -823,11 +771,11 @@ module Aws::STS
 
     context "UseGlobalEndpoint with legacy region `ap-southeast-1`" do
       let(:expected) do
-        {"endpoint"=>{"properties"=>{"authSchemes"=>[{"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"}]}, "url"=>"https://sts.amazonaws.com"}}
+        {"endpoint" => {"properties" => {"authSchemes" => [{"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"}]}, "url" => "https://sts.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"ap-southeast-1", :use_fips=>false, :use_dual_stack=>false, :use_global_endpoint=>true})
+        params = EndpointParameters.new(**{region: "ap-southeast-1", use_fips: false, use_dual_stack: false, use_global_endpoint: true})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -840,7 +788,7 @@ module Aws::STS
           sts_regional_endpoints: 'legacy',
           stub_responses: true
         )
-        expect_auth({"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"})
+        expect_auth({"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"})
         resp = client.get_caller_identity(
         )
         expected_uri = URI.parse(expected['endpoint']['url'])
@@ -852,11 +800,11 @@ module Aws::STS
 
     context "UseGlobalEndpoint with legacy region `ap-southeast-2`" do
       let(:expected) do
-        {"endpoint"=>{"properties"=>{"authSchemes"=>[{"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"}]}, "url"=>"https://sts.amazonaws.com"}}
+        {"endpoint" => {"properties" => {"authSchemes" => [{"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"}]}, "url" => "https://sts.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"ap-southeast-2", :use_fips=>false, :use_dual_stack=>false, :use_global_endpoint=>true})
+        params = EndpointParameters.new(**{region: "ap-southeast-2", use_fips: false, use_dual_stack: false, use_global_endpoint: true})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -869,7 +817,7 @@ module Aws::STS
           sts_regional_endpoints: 'legacy',
           stub_responses: true
         )
-        expect_auth({"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"})
+        expect_auth({"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"})
         resp = client.get_caller_identity(
         )
         expected_uri = URI.parse(expected['endpoint']['url'])
@@ -881,11 +829,11 @@ module Aws::STS
 
     context "UseGlobalEndpoint with legacy region `aws-global`" do
       let(:expected) do
-        {"endpoint"=>{"properties"=>{"authSchemes"=>[{"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"}]}, "url"=>"https://sts.amazonaws.com"}}
+        {"endpoint" => {"properties" => {"authSchemes" => [{"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"}]}, "url" => "https://sts.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"aws-global", :use_fips=>false, :use_dual_stack=>false, :use_global_endpoint=>true})
+        params = EndpointParameters.new(**{region: "aws-global", use_fips: false, use_dual_stack: false, use_global_endpoint: true})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -898,7 +846,7 @@ module Aws::STS
           sts_regional_endpoints: 'legacy',
           stub_responses: true
         )
-        expect_auth({"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"})
+        expect_auth({"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"})
         resp = client.get_caller_identity(
         )
         expected_uri = URI.parse(expected['endpoint']['url'])
@@ -910,11 +858,11 @@ module Aws::STS
 
     context "UseGlobalEndpoint with legacy region `ca-central-1`" do
       let(:expected) do
-        {"endpoint"=>{"properties"=>{"authSchemes"=>[{"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"}]}, "url"=>"https://sts.amazonaws.com"}}
+        {"endpoint" => {"properties" => {"authSchemes" => [{"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"}]}, "url" => "https://sts.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"ca-central-1", :use_fips=>false, :use_dual_stack=>false, :use_global_endpoint=>true})
+        params = EndpointParameters.new(**{region: "ca-central-1", use_fips: false, use_dual_stack: false, use_global_endpoint: true})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -927,7 +875,7 @@ module Aws::STS
           sts_regional_endpoints: 'legacy',
           stub_responses: true
         )
-        expect_auth({"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"})
+        expect_auth({"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"})
         resp = client.get_caller_identity(
         )
         expected_uri = URI.parse(expected['endpoint']['url'])
@@ -939,11 +887,11 @@ module Aws::STS
 
     context "UseGlobalEndpoint with legacy region `eu-central-1`" do
       let(:expected) do
-        {"endpoint"=>{"properties"=>{"authSchemes"=>[{"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"}]}, "url"=>"https://sts.amazonaws.com"}}
+        {"endpoint" => {"properties" => {"authSchemes" => [{"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"}]}, "url" => "https://sts.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"eu-central-1", :use_fips=>false, :use_dual_stack=>false, :use_global_endpoint=>true})
+        params = EndpointParameters.new(**{region: "eu-central-1", use_fips: false, use_dual_stack: false, use_global_endpoint: true})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -956,7 +904,7 @@ module Aws::STS
           sts_regional_endpoints: 'legacy',
           stub_responses: true
         )
-        expect_auth({"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"})
+        expect_auth({"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"})
         resp = client.get_caller_identity(
         )
         expected_uri = URI.parse(expected['endpoint']['url'])
@@ -968,11 +916,11 @@ module Aws::STS
 
     context "UseGlobalEndpoint with legacy region `eu-north-1`" do
       let(:expected) do
-        {"endpoint"=>{"properties"=>{"authSchemes"=>[{"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"}]}, "url"=>"https://sts.amazonaws.com"}}
+        {"endpoint" => {"properties" => {"authSchemes" => [{"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"}]}, "url" => "https://sts.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"eu-north-1", :use_fips=>false, :use_dual_stack=>false, :use_global_endpoint=>true})
+        params = EndpointParameters.new(**{region: "eu-north-1", use_fips: false, use_dual_stack: false, use_global_endpoint: true})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -985,7 +933,7 @@ module Aws::STS
           sts_regional_endpoints: 'legacy',
           stub_responses: true
         )
-        expect_auth({"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"})
+        expect_auth({"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"})
         resp = client.get_caller_identity(
         )
         expected_uri = URI.parse(expected['endpoint']['url'])
@@ -997,11 +945,11 @@ module Aws::STS
 
     context "UseGlobalEndpoint with legacy region `eu-west-1`" do
       let(:expected) do
-        {"endpoint"=>{"properties"=>{"authSchemes"=>[{"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"}]}, "url"=>"https://sts.amazonaws.com"}}
+        {"endpoint" => {"properties" => {"authSchemes" => [{"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"}]}, "url" => "https://sts.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"eu-west-1", :use_fips=>false, :use_dual_stack=>false, :use_global_endpoint=>true})
+        params = EndpointParameters.new(**{region: "eu-west-1", use_fips: false, use_dual_stack: false, use_global_endpoint: true})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -1014,7 +962,7 @@ module Aws::STS
           sts_regional_endpoints: 'legacy',
           stub_responses: true
         )
-        expect_auth({"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"})
+        expect_auth({"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"})
         resp = client.get_caller_identity(
         )
         expected_uri = URI.parse(expected['endpoint']['url'])
@@ -1026,11 +974,11 @@ module Aws::STS
 
     context "UseGlobalEndpoint with legacy region `eu-west-2`" do
       let(:expected) do
-        {"endpoint"=>{"properties"=>{"authSchemes"=>[{"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"}]}, "url"=>"https://sts.amazonaws.com"}}
+        {"endpoint" => {"properties" => {"authSchemes" => [{"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"}]}, "url" => "https://sts.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"eu-west-2", :use_fips=>false, :use_dual_stack=>false, :use_global_endpoint=>true})
+        params = EndpointParameters.new(**{region: "eu-west-2", use_fips: false, use_dual_stack: false, use_global_endpoint: true})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -1043,7 +991,7 @@ module Aws::STS
           sts_regional_endpoints: 'legacy',
           stub_responses: true
         )
-        expect_auth({"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"})
+        expect_auth({"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"})
         resp = client.get_caller_identity(
         )
         expected_uri = URI.parse(expected['endpoint']['url'])
@@ -1055,11 +1003,11 @@ module Aws::STS
 
     context "UseGlobalEndpoint with legacy region `eu-west-3`" do
       let(:expected) do
-        {"endpoint"=>{"properties"=>{"authSchemes"=>[{"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"}]}, "url"=>"https://sts.amazonaws.com"}}
+        {"endpoint" => {"properties" => {"authSchemes" => [{"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"}]}, "url" => "https://sts.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"eu-west-3", :use_fips=>false, :use_dual_stack=>false, :use_global_endpoint=>true})
+        params = EndpointParameters.new(**{region: "eu-west-3", use_fips: false, use_dual_stack: false, use_global_endpoint: true})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -1072,7 +1020,7 @@ module Aws::STS
           sts_regional_endpoints: 'legacy',
           stub_responses: true
         )
-        expect_auth({"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"})
+        expect_auth({"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"})
         resp = client.get_caller_identity(
         )
         expected_uri = URI.parse(expected['endpoint']['url'])
@@ -1084,11 +1032,11 @@ module Aws::STS
 
     context "UseGlobalEndpoint with legacy region `sa-east-1`" do
       let(:expected) do
-        {"endpoint"=>{"properties"=>{"authSchemes"=>[{"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"}]}, "url"=>"https://sts.amazonaws.com"}}
+        {"endpoint" => {"properties" => {"authSchemes" => [{"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"}]}, "url" => "https://sts.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"sa-east-1", :use_fips=>false, :use_dual_stack=>false, :use_global_endpoint=>true})
+        params = EndpointParameters.new(**{region: "sa-east-1", use_fips: false, use_dual_stack: false, use_global_endpoint: true})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -1101,7 +1049,7 @@ module Aws::STS
           sts_regional_endpoints: 'legacy',
           stub_responses: true
         )
-        expect_auth({"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"})
+        expect_auth({"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"})
         resp = client.get_caller_identity(
         )
         expected_uri = URI.parse(expected['endpoint']['url'])
@@ -1113,11 +1061,11 @@ module Aws::STS
 
     context "UseGlobalEndpoint with legacy region `us-east-1`" do
       let(:expected) do
-        {"endpoint"=>{"properties"=>{"authSchemes"=>[{"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"}]}, "url"=>"https://sts.amazonaws.com"}}
+        {"endpoint" => {"properties" => {"authSchemes" => [{"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"}]}, "url" => "https://sts.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-east-1", :use_fips=>false, :use_dual_stack=>false, :use_global_endpoint=>true})
+        params = EndpointParameters.new(**{region: "us-east-1", use_fips: false, use_dual_stack: false, use_global_endpoint: true})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -1130,7 +1078,7 @@ module Aws::STS
           sts_regional_endpoints: 'legacy',
           stub_responses: true
         )
-        expect_auth({"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"})
+        expect_auth({"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"})
         resp = client.get_caller_identity(
         )
         expected_uri = URI.parse(expected['endpoint']['url'])
@@ -1142,11 +1090,11 @@ module Aws::STS
 
     context "UseGlobalEndpoint with legacy region `us-east-2`" do
       let(:expected) do
-        {"endpoint"=>{"properties"=>{"authSchemes"=>[{"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"}]}, "url"=>"https://sts.amazonaws.com"}}
+        {"endpoint" => {"properties" => {"authSchemes" => [{"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"}]}, "url" => "https://sts.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-east-2", :use_fips=>false, :use_dual_stack=>false, :use_global_endpoint=>true})
+        params = EndpointParameters.new(**{region: "us-east-2", use_fips: false, use_dual_stack: false, use_global_endpoint: true})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -1159,7 +1107,7 @@ module Aws::STS
           sts_regional_endpoints: 'legacy',
           stub_responses: true
         )
-        expect_auth({"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"})
+        expect_auth({"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"})
         resp = client.get_caller_identity(
         )
         expected_uri = URI.parse(expected['endpoint']['url'])
@@ -1171,11 +1119,11 @@ module Aws::STS
 
     context "UseGlobalEndpoint with legacy region `us-west-1`" do
       let(:expected) do
-        {"endpoint"=>{"properties"=>{"authSchemes"=>[{"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"}]}, "url"=>"https://sts.amazonaws.com"}}
+        {"endpoint" => {"properties" => {"authSchemes" => [{"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"}]}, "url" => "https://sts.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-west-1", :use_fips=>false, :use_dual_stack=>false, :use_global_endpoint=>true})
+        params = EndpointParameters.new(**{region: "us-west-1", use_fips: false, use_dual_stack: false, use_global_endpoint: true})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -1188,7 +1136,7 @@ module Aws::STS
           sts_regional_endpoints: 'legacy',
           stub_responses: true
         )
-        expect_auth({"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"})
+        expect_auth({"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"})
         resp = client.get_caller_identity(
         )
         expected_uri = URI.parse(expected['endpoint']['url'])
@@ -1200,11 +1148,11 @@ module Aws::STS
 
     context "UseGlobalEndpoint with legacy region `us-west-2`" do
       let(:expected) do
-        {"endpoint"=>{"properties"=>{"authSchemes"=>[{"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"}]}, "url"=>"https://sts.amazonaws.com"}}
+        {"endpoint" => {"properties" => {"authSchemes" => [{"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"}]}, "url" => "https://sts.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-west-2", :use_fips=>false, :use_dual_stack=>false, :use_global_endpoint=>true})
+        params = EndpointParameters.new(**{region: "us-west-2", use_fips: false, use_dual_stack: false, use_global_endpoint: true})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -1217,7 +1165,7 @@ module Aws::STS
           sts_regional_endpoints: 'legacy',
           stub_responses: true
         )
-        expect_auth({"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-1"})
+        expect_auth({"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-1"})
         resp = client.get_caller_identity(
         )
         expected_uri = URI.parse(expected['endpoint']['url'])
@@ -1229,11 +1177,11 @@ module Aws::STS
 
     context "UseGlobalEndpoint with Non-legacy region `us-east-3`" do
       let(:expected) do
-        {"endpoint"=>{"properties"=>{"authSchemes"=>[{"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-3"}]}, "url"=>"https://sts.us-east-3.amazonaws.com"}}
+        {"endpoint" => {"properties" => {"authSchemes" => [{"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-3"}]}, "url" => "https://sts.us-east-3.amazonaws.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-east-3", :use_fips=>false, :use_dual_stack=>false, :use_global_endpoint=>true})
+        params = EndpointParameters.new(**{region: "us-east-3", use_fips: false, use_dual_stack: false, use_global_endpoint: true})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -1246,7 +1194,7 @@ module Aws::STS
           sts_regional_endpoints: 'legacy',
           stub_responses: true
         )
-        expect_auth({"name"=>"sigv4", "signingName"=>"sts", "signingRegion"=>"us-east-3"})
+        expect_auth({"name" => "sigv4", "signingName" => "sts", "signingRegion" => "us-east-3"})
         resp = client.get_caller_identity(
         )
         expected_uri = URI.parse(expected['endpoint']['url'])
@@ -1258,11 +1206,11 @@ module Aws::STS
 
     context "UseGlobalEndpoint with legacy region and custom endpoint" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://example.com"}}
+        {"endpoint" => {"url" => "https://example.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:region=>"us-west-1", :use_fips=>false, :use_dual_stack=>false, :use_global_endpoint=>true, :endpoint=>"https://example.com"})
+        params = EndpointParameters.new(**{region: "us-west-1", use_fips: false, use_dual_stack: false, use_global_endpoint: true, endpoint: "https://example.com"})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})
@@ -1287,11 +1235,11 @@ module Aws::STS
 
     context "UseGlobalEndpoint with unset region and custom endpoint" do
       let(:expected) do
-        {"endpoint"=>{"url"=>"https://example.com"}}
+        {"endpoint" => {"url" => "https://example.com"}}
       end
 
       it 'produces the expected output from the EndpointProvider' do
-        params = EndpointParameters.new(**{:use_fips=>false, :use_dual_stack=>false, :use_global_endpoint=>false, :endpoint=>"https://example.com"})
+        params = EndpointParameters.new(**{use_fips: false, use_dual_stack: false, use_global_endpoint: false, endpoint: "https://example.com"})
         endpoint = subject.resolve_endpoint(params)
         expect(endpoint.url).to eq(expected['endpoint']['url'])
         expect(endpoint.headers).to eq(expected['endpoint']['headers'] || {})

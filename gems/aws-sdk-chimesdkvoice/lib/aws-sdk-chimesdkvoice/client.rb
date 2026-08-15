@@ -95,8 +95,8 @@ module Aws::ChimeSDKVoice
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::ChimeSDKVoice
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::ChimeSDKVoice
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::ChimeSDKVoice
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::ChimeSDKVoice
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::ChimeSDKVoice
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::ChimeSDKVoice
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::ChimeSDKVoice
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -492,7 +496,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.associate_phone_numbers_with_voice_connector({
-    #     voice_connector_id: "NonEmptyString", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #     e164_phone_numbers: ["E164PhoneNumber"], # required
     #     force_associate: false,
     #   })
@@ -501,7 +505,7 @@ module Aws::ChimeSDKVoice
     #
     #   resp.phone_number_errors #=> Array
     #   resp.phone_number_errors[0].phone_number_id #=> String
-    #   resp.phone_number_errors[0].error_code #=> String, one of "BadRequest", "Conflict", "Forbidden", "NotFound", "PreconditionFailed", "ResourceLimitExceeded", "ServiceFailure", "AccessDenied", "ServiceUnavailable", "Throttled", "Throttling", "Unauthorized", "Unprocessable", "VoiceConnectorGroupAssociationsExist", "PhoneNumberAssociationsExist", "Gone"
+    #   resp.phone_number_errors[0].error_code #=> String, one of "BadRequest", "Conflict", "Forbidden", "NotFound", "PreconditionFailed", "ResourceLimitExceeded", "ServiceFailure", "AccessDenied", "ServiceUnavailable", "Throttled", "Throttling", "Unauthorized", "Unprocessable", "VoiceConnectorGroupAssociationsExist", "PhoneNumberAssociationsExist", "Gone", "Validation"
     #   resp.phone_number_errors[0].error_message #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/AssociatePhoneNumbersWithVoiceConnector AWS API Documentation
@@ -544,7 +548,7 @@ module Aws::ChimeSDKVoice
     #
     #   resp.phone_number_errors #=> Array
     #   resp.phone_number_errors[0].phone_number_id #=> String
-    #   resp.phone_number_errors[0].error_code #=> String, one of "BadRequest", "Conflict", "Forbidden", "NotFound", "PreconditionFailed", "ResourceLimitExceeded", "ServiceFailure", "AccessDenied", "ServiceUnavailable", "Throttled", "Throttling", "Unauthorized", "Unprocessable", "VoiceConnectorGroupAssociationsExist", "PhoneNumberAssociationsExist", "Gone"
+    #   resp.phone_number_errors[0].error_code #=> String, one of "BadRequest", "Conflict", "Forbidden", "NotFound", "PreconditionFailed", "ResourceLimitExceeded", "ServiceFailure", "AccessDenied", "ServiceUnavailable", "Throttled", "Throttling", "Unauthorized", "Unprocessable", "VoiceConnectorGroupAssociationsExist", "PhoneNumberAssociationsExist", "Gone", "Validation"
     #   resp.phone_number_errors[0].error_message #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/AssociatePhoneNumbersWithVoiceConnectorGroup AWS API Documentation
@@ -580,7 +584,7 @@ module Aws::ChimeSDKVoice
     #
     #   resp.phone_number_errors #=> Array
     #   resp.phone_number_errors[0].phone_number_id #=> String
-    #   resp.phone_number_errors[0].error_code #=> String, one of "BadRequest", "Conflict", "Forbidden", "NotFound", "PreconditionFailed", "ResourceLimitExceeded", "ServiceFailure", "AccessDenied", "ServiceUnavailable", "Throttled", "Throttling", "Unauthorized", "Unprocessable", "VoiceConnectorGroupAssociationsExist", "PhoneNumberAssociationsExist", "Gone"
+    #   resp.phone_number_errors[0].error_code #=> String, one of "BadRequest", "Conflict", "Forbidden", "NotFound", "PreconditionFailed", "ResourceLimitExceeded", "ServiceFailure", "AccessDenied", "ServiceUnavailable", "Throttled", "Throttling", "Unauthorized", "Unprocessable", "VoiceConnectorGroupAssociationsExist", "PhoneNumberAssociationsExist", "Gone", "Validation"
     #   resp.phone_number_errors[0].error_message #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/BatchDeletePhoneNumber AWS API Documentation
@@ -625,7 +629,7 @@ module Aws::ChimeSDKVoice
     #
     #   resp.phone_number_errors #=> Array
     #   resp.phone_number_errors[0].phone_number_id #=> String
-    #   resp.phone_number_errors[0].error_code #=> String, one of "BadRequest", "Conflict", "Forbidden", "NotFound", "PreconditionFailed", "ResourceLimitExceeded", "ServiceFailure", "AccessDenied", "ServiceUnavailable", "Throttled", "Throttling", "Unauthorized", "Unprocessable", "VoiceConnectorGroupAssociationsExist", "PhoneNumberAssociationsExist", "Gone"
+    #   resp.phone_number_errors[0].error_code #=> String, one of "BadRequest", "Conflict", "Forbidden", "NotFound", "PreconditionFailed", "ResourceLimitExceeded", "ServiceFailure", "AccessDenied", "ServiceUnavailable", "Throttled", "Throttling", "Unauthorized", "Unprocessable", "VoiceConnectorGroupAssociationsExist", "PhoneNumberAssociationsExist", "Gone", "Validation"
     #   resp.phone_number_errors[0].error_message #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/BatchUpdatePhoneNumber AWS API Documentation
@@ -673,6 +677,7 @@ module Aws::ChimeSDKVoice
     #   resp.phone_number_order.ordered_phone_numbers[0].status #=> String, one of "Processing", "Acquired", "Failed"
     #   resp.phone_number_order.created_timestamp #=> Time
     #   resp.phone_number_order.updated_timestamp #=> Time
+    #   resp.phone_number_order.foc_date #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/CreatePhoneNumberOrder AWS API Documentation
     #
@@ -685,6 +690,9 @@ module Aws::ChimeSDKVoice
 
     # Creates a proxy session for the specified Amazon Chime SDK Voice
     # Connector for the specified participant phone numbers.
+    #
+    # End of support notice: On April 7, 2026, AWS will end support for
+    # Amazon Chime SDK proxy sessions.
     #
     # @option params [required, String] :voice_connector_id
     #   The Voice Connector ID.
@@ -719,7 +727,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_proxy_session({
-    #     voice_connector_id: "NonEmptyString128", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #     participant_phone_numbers: ["E164PhoneNumber"], # required
     #     name: "ProxySessionNameString",
     #     expiry_minutes: 1,
@@ -906,7 +914,7 @@ module Aws::ChimeSDKVoice
     #   Disables or enables a SIP rule. You must disable SIP rules before you
     #   can delete them.
     #
-    # @option params [Array<Types::SipRuleTargetApplication>] :target_applications
+    # @option params [required, Array<Types::SipRuleTargetApplication>] :target_applications
     #   List of SIP media applications, with priority and AWS Region. Only one
     #   SIP application per AWS Region can be used.
     #
@@ -921,7 +929,7 @@ module Aws::ChimeSDKVoice
     #     trigger_type: "ToPhoneNumber", # required, accepts ToPhoneNumber, RequestUriHostname
     #     trigger_value: "NonEmptyString", # required
     #     disabled: false,
-    #     target_applications: [
+    #     target_applications: [ # required
     #       {
     #         sip_media_application_id: "NonEmptyString",
     #         priority: 1,
@@ -975,33 +983,42 @@ module Aws::ChimeSDKVoice
     #   The tags assigned to the Voice Connector.
     #
     # @option params [String] :integration_type
-    #   The connectors for use with Amazon Connect.
+    #   The connectors for use with Connect Customer.
     #
     #   The following options are available:
     #
     #   * `CONNECT_CALL_TRANSFER_CONNECTOR` - Enables enterprises to integrate
-    #     Amazon Connect with other voice systems to directly transfer voice
+    #     Connect Customer with other voice systems to directly transfer voice
     #     calls and metadata without using the public telephone network. They
-    #     can use Amazon Connect telephony and Interactive Voice Response
+    #     can use Connect Customer telephony and Interactive Voice Response
     #     (IVR) with their existing voice systems to modernize the IVR
     #     experience of their existing contact center and their enterprise and
     #     branch voice systems. Additionally, enterprises migrating their
-    #     contact center to Amazon Connect can start with Connect telephony
+    #     contact center to Connect Customer can start with Connect telephony
     #     and IVR for immediate modernization ahead of agent migration.
     #
+    #     <note markdown="1"> This integration is a gated feature. Please reach out to your
+    #     account team to discuss this feature with a Connect Specialist.
+    #
+    #      </note>
+    #
     #   * `CONNECT_ANALYTICS_CONNECTOR` - Enables enterprises to integrate
-    #     Amazon Connect with other voice systems for real-time and post-call
-    #     analytics. They can use Amazon Connect Contact Lens with their
-    #     existing voice systems to provides call recordings, conversational
-    #     analytics (including contact transcript, sensitive data redaction,
-    #     content categorization, theme detection, sentiment analysis,
-    #     real-time alerts, and post-contact summary), and agent performance
-    #     evaluations (including evaluation forms, automated evaluation,
-    #     supervisor review) with a rich user experience to display, search
-    #     and filter customer interactions, and programmatic access to data
-    #     streams and the data lake. Additionally, enterprises migrating their
-    #     contact center to Amazon Connect can start with Contact Lens
-    #     analytics and performance insights ahead of agent migration.
+    #     Connect Customer with other voice systems for real-time and
+    #     post-call analytics. They can use Connect Customer Contact Lens with
+    #     their existing voice systems to provides call recordings,
+    #     conversational analytics (including contact transcript, sensitive
+    #     data redaction, content categorization, theme detection, sentiment
+    #     analysis, real-time alerts, and post-contact summary), and agent
+    #     performance evaluations (including evaluation forms, automated
+    #     evaluation, supervisor review) with a rich user experience to
+    #     display, search and filter customer interactions, and programmatic
+    #     access to data streams and the data lake. Additionally, enterprises
+    #     migrating their contact center to Connect Customer can start with
+    #     Contact Lens analytics and performance insights ahead of agent
+    #     migration.
+    #
+    # @option params [String] :network_type
+    #   The type of network for the Voice Connector.
     #
     # @return [Types::CreateVoiceConnectorResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1020,6 +1037,7 @@ module Aws::ChimeSDKVoice
     #       },
     #     ],
     #     integration_type: "CONNECT_CALL_TRANSFER_CONNECTOR", # accepts CONNECT_CALL_TRANSFER_CONNECTOR, CONNECT_ANALYTICS_CONNECTOR
+    #     network_type: "IPV4_ONLY", # accepts IPV4_ONLY, DUAL_STACK
     #   })
     #
     # @example Response structure
@@ -1033,6 +1051,7 @@ module Aws::ChimeSDKVoice
     #   resp.voice_connector.updated_timestamp #=> Time
     #   resp.voice_connector.voice_connector_arn #=> String
     #   resp.voice_connector.integration_type #=> String, one of "CONNECT_CALL_TRANSFER_CONNECTOR", "CONNECT_ANALYTICS_CONNECTOR"
+    #   resp.voice_connector.network_type #=> String, one of "IPV4_ONLY", "DUAL_STACK"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/CreateVoiceConnector AWS API Documentation
     #
@@ -1058,6 +1077,8 @@ module Aws::ChimeSDKVoice
     # @option params [Array<Types::VoiceConnectorItem>] :voice_connector_items
     #   Lists the Voice Connectors that inbound calls are routed to.
     #
+    # @option params [String] :call_distribution_type
+    #
     # @return [Types::CreateVoiceConnectorGroupResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateVoiceConnectorGroupResponse#voice_connector_group #voice_connector_group} => Types::VoiceConnectorGroup
@@ -1068,10 +1089,11 @@ module Aws::ChimeSDKVoice
     #     name: "VoiceConnectorGroupName", # required
     #     voice_connector_items: [
     #       {
-    #         voice_connector_id: "NonEmptyString", # required
-    #         priority: 1, # required
+    #         voice_connector_id: "VoiceConnectorId", # required
+    #         priority: 1,
     #       },
     #     ],
+    #     call_distribution_type: "PriorityWeightedDistribution", # accepts PriorityWeightedDistribution, LoadBalancedDistribution
     #   })
     #
     # @example Response structure
@@ -1084,6 +1106,7 @@ module Aws::ChimeSDKVoice
     #   resp.voice_connector_group.created_timestamp #=> Time
     #   resp.voice_connector_group.updated_timestamp #=> Time
     #   resp.voice_connector_group.voice_connector_group_arn #=> String
+    #   resp.voice_connector_group.call_distribution_type #=> String, one of "PriorityWeightedDistribution", "LoadBalancedDistribution"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/CreateVoiceConnectorGroup AWS API Documentation
     #
@@ -1245,6 +1268,9 @@ module Aws::ChimeSDKVoice
     # Deletes the specified proxy session from the specified Amazon Chime
     # SDK Voice Connector.
     #
+    # End of support notice: On April 7, 2026, AWS will end support for
+    # Amazon Chime SDK proxy sessions.
+    #
     # @option params [required, String] :voice_connector_id
     #   The Voice Connector ID.
     #
@@ -1256,7 +1282,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_proxy_session({
-    #     voice_connector_id: "NonEmptyString128", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #     proxy_session_id: "NonEmptyString128", # required
     #   })
     #
@@ -1325,7 +1351,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_voice_connector({
-    #     voice_connector_id: "NonEmptyString", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/DeleteVoiceConnector AWS API Documentation
@@ -1348,7 +1374,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_voice_connector_emergency_calling_configuration({
-    #     voice_connector_id: "NonEmptyString", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/DeleteVoiceConnectorEmergencyCallingConfiguration AWS API Documentation
@@ -1371,7 +1397,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_voice_connector_external_systems_configuration({
-    #     voice_connector_id: "NonEmptyString", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/DeleteVoiceConnectorExternalSystemsConfiguration AWS API Documentation
@@ -1423,7 +1449,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_voice_connector_origination({
-    #     voice_connector_id: "NonEmptyString", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/DeleteVoiceConnectorOrigination AWS API Documentation
@@ -1438,6 +1464,9 @@ module Aws::ChimeSDKVoice
     # Deletes the proxy configuration from the specified Amazon Chime SDK
     # Voice Connector.
     #
+    # End of support notice: On April 7, 2026, AWS will end support for
+    # Amazon Chime SDK proxy sessions.
+    #
     # @option params [required, String] :voice_connector_id
     #   The Voice Connector ID.
     #
@@ -1446,7 +1475,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_voice_connector_proxy({
-    #     voice_connector_id: "NonEmptyString128", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/DeleteVoiceConnectorProxy AWS API Documentation
@@ -1468,7 +1497,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_voice_connector_streaming_configuration({
-    #     voice_connector_id: "NonEmptyString", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/DeleteVoiceConnectorStreamingConfiguration AWS API Documentation
@@ -1496,7 +1525,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_voice_connector_termination({
-    #     voice_connector_id: "NonEmptyString", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #   })
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/DeleteVoiceConnectorTermination AWS API Documentation
@@ -1523,7 +1552,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_voice_connector_termination_credentials({
-    #     voice_connector_id: "NonEmptyString", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #     usernames: ["SensitiveString"], # required
     #   })
     #
@@ -1598,7 +1627,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.disassociate_phone_numbers_from_voice_connector({
-    #     voice_connector_id: "NonEmptyString", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #     e164_phone_numbers: ["E164PhoneNumber"], # required
     #   })
     #
@@ -1606,7 +1635,7 @@ module Aws::ChimeSDKVoice
     #
     #   resp.phone_number_errors #=> Array
     #   resp.phone_number_errors[0].phone_number_id #=> String
-    #   resp.phone_number_errors[0].error_code #=> String, one of "BadRequest", "Conflict", "Forbidden", "NotFound", "PreconditionFailed", "ResourceLimitExceeded", "ServiceFailure", "AccessDenied", "ServiceUnavailable", "Throttled", "Throttling", "Unauthorized", "Unprocessable", "VoiceConnectorGroupAssociationsExist", "PhoneNumberAssociationsExist", "Gone"
+    #   resp.phone_number_errors[0].error_code #=> String, one of "BadRequest", "Conflict", "Forbidden", "NotFound", "PreconditionFailed", "ResourceLimitExceeded", "ServiceFailure", "AccessDenied", "ServiceUnavailable", "Throttled", "Throttling", "Unauthorized", "Unprocessable", "VoiceConnectorGroupAssociationsExist", "PhoneNumberAssociationsExist", "Gone", "Validation"
     #   resp.phone_number_errors[0].error_message #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/DisassociatePhoneNumbersFromVoiceConnector AWS API Documentation
@@ -1642,7 +1671,7 @@ module Aws::ChimeSDKVoice
     #
     #   resp.phone_number_errors #=> Array
     #   resp.phone_number_errors[0].phone_number_id #=> String
-    #   resp.phone_number_errors[0].error_code #=> String, one of "BadRequest", "Conflict", "Forbidden", "NotFound", "PreconditionFailed", "ResourceLimitExceeded", "ServiceFailure", "AccessDenied", "ServiceUnavailable", "Throttled", "Throttling", "Unauthorized", "Unprocessable", "VoiceConnectorGroupAssociationsExist", "PhoneNumberAssociationsExist", "Gone"
+    #   resp.phone_number_errors[0].error_code #=> String, one of "BadRequest", "Conflict", "Forbidden", "NotFound", "PreconditionFailed", "ResourceLimitExceeded", "ServiceFailure", "AccessDenied", "ServiceUnavailable", "Throttled", "Throttling", "Unauthorized", "Unprocessable", "VoiceConnectorGroupAssociationsExist", "PhoneNumberAssociationsExist", "Gone", "Validation"
     #   resp.phone_number_errors[0].error_message #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/DisassociatePhoneNumbersFromVoiceConnectorGroup AWS API Documentation
@@ -1694,6 +1723,7 @@ module Aws::ChimeSDKVoice
     #
     #   resp.phone_number.phone_number_id #=> String
     #   resp.phone_number.e164_phone_number #=> String
+    #   resp.phone_number.phone_number_arn #=> String
     #   resp.phone_number.country #=> String
     #   resp.phone_number.type #=> String, one of "Local", "TollFree"
     #   resp.phone_number.product_type #=> String, one of "VoiceConnector", "SipMediaApplicationDialIn"
@@ -1753,6 +1783,7 @@ module Aws::ChimeSDKVoice
     #   resp.phone_number_order.ordered_phone_numbers[0].status #=> String, one of "Processing", "Acquired", "Failed"
     #   resp.phone_number_order.created_timestamp #=> Time
     #   resp.phone_number_order.updated_timestamp #=> Time
+    #   resp.phone_number_order.foc_date #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/GetPhoneNumberOrder AWS API Documentation
     #
@@ -1788,6 +1819,9 @@ module Aws::ChimeSDKVoice
     # Retrieves the specified proxy session details for the specified Amazon
     # Chime SDK Voice Connector.
     #
+    # End of support notice: On April 7, 2026, AWS will end support for
+    # Amazon Chime SDK proxy sessions.
+    #
     # @option params [required, String] :voice_connector_id
     #   The Voice Connector ID.
     #
@@ -1801,7 +1835,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_proxy_session({
-    #     voice_connector_id: "NonEmptyString128", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #     proxy_session_id: "NonEmptyString128", # required
     #   })
     #
@@ -1991,7 +2025,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_speaker_search_task({
-    #     voice_connector_id: "NonEmptyString128", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #     speaker_search_task_id: "NonEmptyString256", # required
     #   })
     #
@@ -2033,7 +2067,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_voice_connector({
-    #     voice_connector_id: "NonEmptyString", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #   })
     #
     # @example Response structure
@@ -2047,6 +2081,7 @@ module Aws::ChimeSDKVoice
     #   resp.voice_connector.updated_timestamp #=> Time
     #   resp.voice_connector.voice_connector_arn #=> String
     #   resp.voice_connector.integration_type #=> String, one of "CONNECT_CALL_TRANSFER_CONNECTOR", "CONNECT_ANALYTICS_CONNECTOR"
+    #   resp.voice_connector.network_type #=> String, one of "IPV4_ONLY", "DUAL_STACK"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/GetVoiceConnector AWS API Documentation
     #
@@ -2070,7 +2105,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_voice_connector_emergency_calling_configuration({
-    #     voice_connector_id: "NonEmptyString", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #   })
     #
     # @example Response structure
@@ -2103,7 +2138,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_voice_connector_external_systems_configuration({
-    #     voice_connector_id: "NonEmptyString", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #   })
     #
     # @example Response structure
@@ -2148,6 +2183,7 @@ module Aws::ChimeSDKVoice
     #   resp.voice_connector_group.created_timestamp #=> Time
     #   resp.voice_connector_group.updated_timestamp #=> Time
     #   resp.voice_connector_group.voice_connector_group_arn #=> String
+    #   resp.voice_connector_group.call_distribution_type #=> String, one of "PriorityWeightedDistribution", "LoadBalancedDistribution"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/GetVoiceConnectorGroup AWS API Documentation
     #
@@ -2172,7 +2208,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_voice_connector_logging_configuration({
-    #     voice_connector_id: "NonEmptyString", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #   })
     #
     # @example Response structure
@@ -2201,7 +2237,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_voice_connector_origination({
-    #     voice_connector_id: "NonEmptyString", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #   })
     #
     # @example Response structure
@@ -2226,6 +2262,9 @@ module Aws::ChimeSDKVoice
     # Retrieves the proxy configuration details for the specified Amazon
     # Chime SDK Voice Connector.
     #
+    # End of support notice: On April 7, 2026, AWS will end support for
+    # Amazon Chime SDK proxy sessions.
+    #
     # @option params [required, String] :voice_connector_id
     #   The Voice Connector ID.
     #
@@ -2236,7 +2275,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_voice_connector_proxy({
-    #     voice_connector_id: "NonEmptyString128", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #   })
     #
     # @example Response structure
@@ -2271,7 +2310,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_voice_connector_streaming_configuration({
-    #     voice_connector_id: "NonEmptyString", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #   })
     #
     # @example Response structure
@@ -2305,7 +2344,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_voice_connector_termination({
-    #     voice_connector_id: "NonEmptyString", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #   })
     #
     # @example Response structure
@@ -2341,7 +2380,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_voice_connector_termination_health({
-    #     voice_connector_id: "NonEmptyString", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #   })
     #
     # @example Response structure
@@ -2444,7 +2483,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_voice_tone_analysis_task({
-    #     voice_connector_id: "NonEmptyString128", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #     voice_tone_analysis_task_id: "NonEmptyString256", # required
     #     is_caller: false, # required
     #   })
@@ -2510,7 +2549,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_phone_number_orders({
-    #     next_token: "String",
+    #     next_token: "NextTokenString",
     #     max_results: 1,
     #   })
     #
@@ -2526,6 +2565,7 @@ module Aws::ChimeSDKVoice
     #   resp.phone_number_orders[0].ordered_phone_numbers[0].status #=> String, one of "Processing", "Acquired", "Failed"
     #   resp.phone_number_orders[0].created_timestamp #=> Time
     #   resp.phone_number_orders[0].updated_timestamp #=> Time
+    #   resp.phone_number_orders[0].foc_date #=> String
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/ListPhoneNumberOrders AWS API Documentation
@@ -2582,6 +2622,7 @@ module Aws::ChimeSDKVoice
     #   resp.phone_numbers #=> Array
     #   resp.phone_numbers[0].phone_number_id #=> String
     #   resp.phone_numbers[0].e164_phone_number #=> String
+    #   resp.phone_numbers[0].phone_number_arn #=> String
     #   resp.phone_numbers[0].country #=> String
     #   resp.phone_numbers[0].type #=> String, one of "Local", "TollFree"
     #   resp.phone_numbers[0].product_type #=> String, one of "VoiceConnector", "SipMediaApplicationDialIn"
@@ -2617,6 +2658,9 @@ module Aws::ChimeSDKVoice
     # Lists the proxy sessions for the specified Amazon Chime SDK Voice
     # Connector.
     #
+    # End of support notice: On April 7, 2026, AWS will end support for
+    # Amazon Chime SDK proxy sessions.
+    #
     # @option params [required, String] :voice_connector_id
     #   The Voice Connector ID.
     #
@@ -2639,7 +2683,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_proxy_sessions({
-    #     voice_connector_id: "NonEmptyString128", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #     status: "Open", # accepts Open, InProgress, Closed
     #     next_token: "NextTokenString",
     #     max_results: 1,
@@ -2869,6 +2913,7 @@ module Aws::ChimeSDKVoice
     #   resp.voice_connector_groups[0].created_timestamp #=> Time
     #   resp.voice_connector_groups[0].updated_timestamp #=> Time
     #   resp.voice_connector_groups[0].voice_connector_group_arn #=> String
+    #   resp.voice_connector_groups[0].call_distribution_type #=> String, one of "PriorityWeightedDistribution", "LoadBalancedDistribution"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/ListVoiceConnectorGroups AWS API Documentation
@@ -2893,7 +2938,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_voice_connector_termination_credentials({
-    #     voice_connector_id: "NonEmptyString", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #   })
     #
     # @example Response structure
@@ -2945,6 +2990,7 @@ module Aws::ChimeSDKVoice
     #   resp.voice_connectors[0].updated_timestamp #=> Time
     #   resp.voice_connectors[0].voice_connector_arn #=> String
     #   resp.voice_connectors[0].integration_type #=> String, one of "CONNECT_CALL_TRANSFER_CONNECTOR", "CONNECT_ANALYTICS_CONNECTOR"
+    #   resp.voice_connectors[0].network_type #=> String, one of "IPV4_ONLY", "DUAL_STACK"
     #   resp.next_token #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/ListVoiceConnectors AWS API Documentation
@@ -3140,7 +3186,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.put_voice_connector_emergency_calling_configuration({
-    #     voice_connector_id: "NonEmptyString", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #     emergency_calling_configuration: { # required
     #       dnis: [
     #         {
@@ -3187,7 +3233,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.put_voice_connector_external_systems_configuration({
-    #     voice_connector_id: "NonEmptyString128", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #     session_border_controller_types: ["RIBBON_SBC"], # accepts RIBBON_SBC, ORACLE_ACME_PACKET_SBC, AVAYA_SBCE, CISCO_UNIFIED_BORDER_ELEMENT, AUDIOCODES_MEDIANT_SBC
     #     contact_center_system_types: ["GENESYS_ENGAGE_ON_PREMISES"], # accepts GENESYS_ENGAGE_ON_PREMISES, AVAYA_AURA_CALL_CENTER_ELITE, AVAYA_AURA_CONTACT_CENTER, CISCO_UNIFIED_CONTACT_CENTER_ENTERPRISE
     #   })
@@ -3223,7 +3269,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.put_voice_connector_logging_configuration({
-    #     voice_connector_id: "NonEmptyString", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #     logging_configuration: { # required
     #       enable_sip_logs: false,
     #       enable_media_metric_logs: false,
@@ -3259,7 +3305,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.put_voice_connector_origination({
-    #     voice_connector_id: "NonEmptyString", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #     origination: { # required
     #       routes: [
     #         {
@@ -3296,6 +3342,9 @@ module Aws::ChimeSDKVoice
     # Puts the specified proxy configuration to the specified Amazon Chime
     # SDK Voice Connector.
     #
+    # End of support notice: On April 7, 2026, AWS will end support for
+    # Amazon Chime SDK proxy sessions.
+    #
     # @option params [required, String] :voice_connector_id
     #   The Voice Connector ID.
     #
@@ -3319,7 +3368,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.put_voice_connector_proxy({
-    #     voice_connector_id: "NonEmptyString128", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #     default_session_expiry_minutes: 1, # required
     #     phone_number_pool_countries: ["Country"], # required
     #     fall_back_phone_number: "E164PhoneNumber",
@@ -3358,7 +3407,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.put_voice_connector_streaming_configuration({
-    #     voice_connector_id: "NonEmptyString", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #     streaming_configuration: { # required
     #       data_retention_in_hours: 1, # required
     #       disabled: false, # required
@@ -3407,7 +3456,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.put_voice_connector_termination({
-    #     voice_connector_id: "NonEmptyString", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #     termination: { # required
     #       cps_limit: 1,
     #       default_phone_number: "E164PhoneNumber",
@@ -3449,7 +3498,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.put_voice_connector_termination_credentials({
-    #     voice_connector_id: "NonEmptyString", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #     credentials: [
     #       {
     #         username: "SensitiveString",
@@ -3486,6 +3535,7 @@ module Aws::ChimeSDKVoice
     #
     #   resp.phone_number.phone_number_id #=> String
     #   resp.phone_number.e164_phone_number #=> String
+    #   resp.phone_number.phone_number_arn #=> String
     #   resp.phone_number.country #=> String
     #   resp.phone_number.type #=> String, one of "Local", "TollFree"
     #   resp.phone_number.product_type #=> String, one of "VoiceConnector", "SipMediaApplicationDialIn"
@@ -3618,7 +3668,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.start_speaker_search_task({
-    #     voice_connector_id: "NonEmptyString128", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #     transaction_id: "NonEmptyString256", # required
     #     voice_profile_domain_id: "NonEmptyString256", # required
     #     client_request_token: "ClientRequestId",
@@ -3684,7 +3734,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.start_voice_tone_analysis_task({
-    #     voice_connector_id: "NonEmptyString128", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #     transaction_id: "NonEmptyString256", # required
     #     language_code: "en-US", # required, accepts en-US
     #     client_request_token: "ClientRequestId",
@@ -3724,7 +3774,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.stop_speaker_search_task({
-    #     voice_connector_id: "NonEmptyString128", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #     speaker_search_task_id: "NonEmptyString256", # required
     #   })
     #
@@ -3750,7 +3800,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.stop_voice_tone_analysis_task({
-    #     voice_connector_id: "NonEmptyString128", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #     voice_tone_analysis_task_id: "NonEmptyString256", # required
     #   })
     #
@@ -3823,7 +3873,7 @@ module Aws::ChimeSDKVoice
     # Updates global settings for the Amazon Chime SDK Voice Connectors in
     # an AWS account.
     #
-    # @option params [Types::VoiceConnectorSettings] :voice_connector
+    # @option params [required, Types::VoiceConnectorSettings] :voice_connector
     #   The Voice Connector settings.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
@@ -3831,8 +3881,8 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_global_settings({
-    #     voice_connector: {
-    #       cdr_bucket: "String",
+    #     voice_connector: { # required
+    #       cdr_bucket: "S3BucketName",
     #     },
     #   })
     #
@@ -3886,6 +3936,7 @@ module Aws::ChimeSDKVoice
     #
     #   resp.phone_number.phone_number_id #=> String
     #   resp.phone_number.e164_phone_number #=> String
+    #   resp.phone_number.phone_number_arn #=> String
     #   resp.phone_number.country #=> String
     #   resp.phone_number.type #=> String, one of "Local", "TollFree"
     #   resp.phone_number.product_type #=> String, one of "VoiceConnector", "SipMediaApplicationDialIn"
@@ -3945,6 +3996,9 @@ module Aws::ChimeSDKVoice
     # Updates the specified proxy session details, such as voice or SMS
     # capabilities.
     #
+    # End of support notice: On April 7, 2026, AWS will end support for
+    # Amazon Chime SDK proxy sessions.
+    #
     # @option params [required, String] :voice_connector_id
     #   The Voice Connector ID.
     #
@@ -3964,7 +4018,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_proxy_session({
-    #     voice_connector_id: "NonEmptyString128", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #     proxy_session_id: "NonEmptyString128", # required
     #     capabilities: ["Voice"], # required, accepts Voice, SMS
     #     expiry_minutes: 1,
@@ -4162,7 +4216,7 @@ module Aws::ChimeSDKVoice
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_voice_connector({
-    #     voice_connector_id: "NonEmptyString", # required
+    #     voice_connector_id: "VoiceConnectorId", # required
     #     name: "VoiceConnectorName", # required
     #     require_encryption: false, # required
     #   })
@@ -4178,6 +4232,7 @@ module Aws::ChimeSDKVoice
     #   resp.voice_connector.updated_timestamp #=> Time
     #   resp.voice_connector.voice_connector_arn #=> String
     #   resp.voice_connector.integration_type #=> String, one of "CONNECT_CALL_TRANSFER_CONNECTOR", "CONNECT_ANALYTICS_CONNECTOR"
+    #   resp.voice_connector.network_type #=> String, one of "IPV4_ONLY", "DUAL_STACK"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/UpdateVoiceConnector AWS API Documentation
     #
@@ -4200,6 +4255,8 @@ module Aws::ChimeSDKVoice
     # @option params [required, Array<Types::VoiceConnectorItem>] :voice_connector_items
     #   The `VoiceConnectorItems` to associate with the Voice Connector group.
     #
+    # @option params [String] :call_distribution_type
+    #
     # @return [Types::UpdateVoiceConnectorGroupResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::UpdateVoiceConnectorGroupResponse#voice_connector_group #voice_connector_group} => Types::VoiceConnectorGroup
@@ -4211,10 +4268,11 @@ module Aws::ChimeSDKVoice
     #     name: "VoiceConnectorGroupName", # required
     #     voice_connector_items: [ # required
     #       {
-    #         voice_connector_id: "NonEmptyString", # required
-    #         priority: 1, # required
+    #         voice_connector_id: "VoiceConnectorId", # required
+    #         priority: 1,
     #       },
     #     ],
+    #     call_distribution_type: "PriorityWeightedDistribution", # accepts PriorityWeightedDistribution, LoadBalancedDistribution
     #   })
     #
     # @example Response structure
@@ -4227,6 +4285,7 @@ module Aws::ChimeSDKVoice
     #   resp.voice_connector_group.created_timestamp #=> Time
     #   resp.voice_connector_group.updated_timestamp #=> Time
     #   resp.voice_connector_group.voice_connector_group_arn #=> String
+    #   resp.voice_connector_group.call_distribution_type #=> String, one of "PriorityWeightedDistribution", "LoadBalancedDistribution"
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/chime-sdk-voice-2022-08-03/UpdateVoiceConnectorGroup AWS API Documentation
     #
@@ -4432,7 +4491,7 @@ module Aws::ChimeSDKVoice
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-chimesdkvoice'
-      context[:gem_version] = '1.37.0'
+      context[:gem_version] = '1.60.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

@@ -34,8 +34,35 @@ module Aws::MediaTailor
       SENSITIVE: []
     end
 
+    class AdDecisionServerConfiguration
+      attr_accessor http_request: Types::HttpRequest
+      attr_accessor vast_response: Types::VastResponse
+      SENSITIVE: []
+    end
+
     class AdMarkerPassthrough
       attr_accessor enabled: bool
+      SENSITIVE: []
+    end
+
+    class AdsInteractionLog
+      attr_accessor publish_opt_in_event_types: ::Array[("RAW_ADS_RESPONSE" | "RAW_ADS_REQUEST" | "PRE_ADS_REQUEST_HOOK_SUMMARY" | "PRE_ADS_REQUEST_FUNCTION_COMPLETED")]
+      attr_accessor exclude_event_types: ::Array[("AD_MARKER_FOUND" | "NON_AD_MARKER_FOUND" | "MAKING_ADS_REQUEST" | "MODIFIED_TARGET_URL" | "VAST_REDIRECT" | "EMPTY_VAST_RESPONSE" | "EMPTY_VMAP_RESPONSE" | "VAST_RESPONSE" | "REDIRECTED_VAST_RESPONSE" | "FILLED_AVAIL" | "FILLED_OVERLAY_AVAIL" | "BEACON_FIRED" | "WARNING_NO_ADVERTISEMENTS" | "WARNING_VPAID_AD_DROPPED" | "WARNING_URL_VARIABLE_SUBSTITUTION_FAILED" | "ERROR_UNKNOWN" | "ERROR_UNKNOWN_HOST" | "ERROR_DISALLOWED_HOST" | "ERROR_ADS_IO" | "ERROR_ADS_TIMEOUT" | "ERROR_ADS_RESPONSE_PARSE" | "ERROR_ADS_RESPONSE_UNKNOWN_ROOT_ELEMENT" | "ERROR_ADS_INVALID_RESPONSE" | "ERROR_VAST_REDIRECT_EMPTY_RESPONSE" | "ERROR_VAST_REDIRECT_MULTIPLE_VAST" | "ERROR_VAST_REDIRECT_FAILED" | "ERROR_VAST_MISSING_MEDIAFILES" | "ERROR_VAST_MISSING_CREATIVES" | "ERROR_VAST_MISSING_OVERLAYS" | "ERROR_VAST_MISSING_IMPRESSION" | "ERROR_VAST_INVALID_VAST_AD_TAG_URI" | "ERROR_VAST_MULTIPLE_TRACKING_EVENTS" | "ERROR_VAST_MULTIPLE_LINEAR" | "ERROR_VAST_INVALID_MEDIA_FILE" | "ERROR_FIRING_BEACON_FAILED" | "ERROR_PERSONALIZATION_DISABLED" | "VOD_TIME_BASED_AVAIL_PLAN_VAST_RESPONSE_FOR_OFFSET" | "VOD_TIME_BASED_AVAIL_PLAN_SUCCESS" | "VOD_TIME_BASED_AVAIL_PLAN_WARNING_NO_ADVERTISEMENTS" | "INTERSTITIAL_VOD_SUCCESS" | "INTERSTITIAL_VOD_FAILURE" | "PRE_ADS_REQUEST_HOOK_ERROR" | "PRE_ADS_REQUEST_FUNCTION_ERROR")]
+      SENSITIVE: []
+    end
+
+    class AdsPersonalizationConcurrency
+      attr_accessor max_concurrent_ads_requests: ::Integer
+      attr_accessor enable_vod_vast_parallelization: bool
+      SENSITIVE: []
+    end
+
+    class AdsPersonalizationTimeouts
+      attr_accessor ads_request_timeout_milliseconds: ::Integer
+      attr_accessor live_maximum_ads_personalization_time_milliseconds: ::Integer
+      attr_accessor vod_maximum_ads_personalization_time_milliseconds: ::Integer
+      attr_accessor prefetch_ads_request_timeout_milliseconds: ::Integer
+      attr_accessor prefetch_maximum_ads_personalization_time_milliseconds: ::Integer
       SENSITIVE: []
     end
 
@@ -118,6 +145,15 @@ module Aws::MediaTailor
       SENSITIVE: []
     end
 
+    class ConcurrentExecutorConfiguration
+      attr_accessor runtime: ("JSONATA")
+      attr_accessor output: ::Hash[::String, ::String]
+      attr_accessor function_list: ::Array[Types::FunctionRef]
+      attr_accessor timeout_milliseconds: ::Integer
+      attr_accessor max_concurrency: ::Integer
+      SENSITIVE: []
+    end
+
     class ConfigureLogsForChannelRequest
       attr_accessor channel_name: ::String
       attr_accessor log_types: ::Array[("AS_RUN")]
@@ -134,6 +170,8 @@ module Aws::MediaTailor
       attr_accessor percent_enabled: ::Integer
       attr_accessor playback_configuration_name: ::String
       attr_accessor enabled_logging_strategies: ::Array[("VENDED_LOGS" | "LEGACY_CLOUDWATCH")]
+      attr_accessor ads_interaction_log: Types::AdsInteractionLog
+      attr_accessor manifest_service_interaction_log: Types::ManifestServiceInteractionLog
       SENSITIVE: []
     end
 
@@ -141,6 +179,8 @@ module Aws::MediaTailor
       attr_accessor percent_enabled: ::Integer
       attr_accessor playback_configuration_name: ::String
       attr_accessor enabled_logging_strategies: ::Array[("VENDED_LOGS" | "LEGACY_CLOUDWATCH")]
+      attr_accessor ads_interaction_log: Types::AdsInteractionLog
+      attr_accessor manifest_service_interaction_log: Types::ManifestServiceInteractionLog
       SENSITIVE: []
     end
 
@@ -196,7 +236,10 @@ module Aws::MediaTailor
       attr_accessor name: ::String
       attr_accessor playback_configuration_name: ::String
       attr_accessor retrieval: Types::PrefetchRetrieval
+      attr_accessor recurring_prefetch_configuration: Types::RecurringPrefetchConfiguration
+      attr_accessor schedule_type: ("SINGLE" | "RECURRING")
       attr_accessor stream_id: ::String
+      attr_accessor tags: ::Hash[::String, ::String]
       SENSITIVE: []
     end
 
@@ -206,7 +249,10 @@ module Aws::MediaTailor
       attr_accessor name: ::String
       attr_accessor playback_configuration_name: ::String
       attr_accessor retrieval: Types::PrefetchRetrieval
+      attr_accessor recurring_prefetch_configuration: Types::RecurringPrefetchConfiguration
+      attr_accessor schedule_type: ("SINGLE" | "RECURRING")
       attr_accessor stream_id: ::String
+      attr_accessor tags: ::Hash[::String, ::String]
       SENSITIVE: []
     end
 
@@ -219,6 +265,7 @@ module Aws::MediaTailor
       attr_accessor source_location_name: ::String
       attr_accessor vod_source_name: ::String
       attr_accessor audience_media: ::Array[Types::AudienceMedia]
+      attr_accessor tags: ::Hash[::String, ::String]
       SENSITIVE: []
     end
 
@@ -235,6 +282,7 @@ module Aws::MediaTailor
       attr_accessor clip_range: Types::ClipRange
       attr_accessor duration_millis: ::Integer
       attr_accessor audience_media: ::Array[Types::AudienceMedia]
+      attr_accessor tags: ::Hash[::String, ::String]
       SENSITIVE: []
     end
 
@@ -280,8 +328,15 @@ module Aws::MediaTailor
       SENSITIVE: []
     end
 
+    class CustomOutputConfiguration
+      attr_accessor runtime: ("JSONATA")
+      attr_accessor output: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
     class DashConfiguration
       attr_accessor manifest_endpoint_prefix: ::String
+      attr_accessor dual_stack_manifest_endpoint_prefix: ::String
       attr_accessor mpd_location: ::String
       attr_accessor origin_manifest_type: ("SINGLE_PERIOD" | "MULTI_PERIOD")
       SENSITIVE: []
@@ -320,6 +375,14 @@ module Aws::MediaTailor
     end
 
     class DeleteChannelResponse < Aws::EmptyStructure
+    end
+
+    class DeleteFunctionRequest
+      attr_accessor function_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteFunctionResponse < Aws::EmptyStructure
     end
 
     class DeleteLiveSourceRequest
@@ -432,6 +495,7 @@ module Aws::MediaTailor
       attr_accessor clip_range: Types::ClipRange
       attr_accessor duration_millis: ::Integer
       attr_accessor audience_media: ::Array[Types::AudienceMedia]
+      attr_accessor tags: ::Hash[::String, ::String]
       SENSITIVE: []
     end
 
@@ -471,6 +535,26 @@ module Aws::MediaTailor
       SENSITIVE: []
     end
 
+    class Function
+      attr_accessor function_id: ::String
+      attr_accessor function_type: ("HTTP_REQUEST" | "CUSTOM_OUTPUT" | "CONCURRENT_EXECUTOR" | "SEQUENTIAL_EXECUTOR")
+      attr_accessor description: ::String
+      attr_accessor http_request_configuration: Types::HttpRequestConfiguration
+      attr_accessor custom_output_configuration: Types::CustomOutputConfiguration
+      attr_accessor concurrent_executor_configuration: Types::ConcurrentExecutorConfiguration
+      attr_accessor sequential_executor_configuration: Types::SequentialExecutorConfiguration
+      attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor arn: ::String
+      SENSITIVE: []
+    end
+
+    class FunctionRef
+      attr_accessor run_condition: ::String
+      attr_accessor function_id: ::String
+      attr_accessor alias: ::String
+      SENSITIVE: []
+    end
+
     class GetChannelPolicyRequest
       attr_accessor channel_name: ::String
       SENSITIVE: []
@@ -496,6 +580,24 @@ module Aws::MediaTailor
       SENSITIVE: []
     end
 
+    class GetFunctionRequest
+      attr_accessor function_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetFunctionResponse
+      attr_accessor function_id: ::String
+      attr_accessor function_type: ("HTTP_REQUEST" | "CUSTOM_OUTPUT" | "CONCURRENT_EXECUTOR" | "SEQUENTIAL_EXECUTOR")
+      attr_accessor description: ::String
+      attr_accessor http_request_configuration: Types::HttpRequestConfiguration
+      attr_accessor custom_output_configuration: Types::CustomOutputConfiguration
+      attr_accessor concurrent_executor_configuration: Types::ConcurrentExecutorConfiguration
+      attr_accessor sequential_executor_configuration: Types::SequentialExecutorConfiguration
+      attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor arn: ::String
+      SENSITIVE: []
+    end
+
     class GetPlaybackConfigurationRequest
       attr_accessor name: ::String
       SENSITIVE: []
@@ -517,12 +619,18 @@ module Aws::MediaTailor
       attr_accessor personalization_threshold_seconds: ::Integer
       attr_accessor playback_configuration_arn: ::String
       attr_accessor playback_endpoint_prefix: ::String
+      attr_accessor dual_stack_playback_endpoint_prefix: ::String
       attr_accessor session_initialization_endpoint_prefix: ::String
+      attr_accessor dual_stack_session_initialization_endpoint_prefix: ::String
       attr_accessor slate_ad_url: ::String
       attr_accessor tags: ::Hash[::String, ::String]
       attr_accessor transcode_profile_name: ::String
       attr_accessor video_content_source_url: ::String
       attr_accessor ad_conditioning_configuration: Types::AdConditioningConfiguration
+      attr_accessor ad_decision_server_configuration: Types::AdDecisionServerConfiguration
+      attr_accessor function_mapping: ::Hash[("PRE_SESSION_INITIALIZATION" | "PRE_ADS_REQUEST"), ::String]
+      attr_accessor ads_personalization_timeouts: Types::AdsPersonalizationTimeouts
+      attr_accessor ads_personalization_concurrency: Types::AdsPersonalizationConcurrency
       SENSITIVE: []
     end
 
@@ -538,12 +646,16 @@ module Aws::MediaTailor
       attr_accessor name: ::String
       attr_accessor playback_configuration_name: ::String
       attr_accessor retrieval: Types::PrefetchRetrieval
+      attr_accessor schedule_type: ("SINGLE" | "RECURRING")
+      attr_accessor recurring_prefetch_configuration: Types::RecurringPrefetchConfiguration
       attr_accessor stream_id: ::String
+      attr_accessor tags: ::Hash[::String, ::String]
       SENSITIVE: []
     end
 
     class HlsConfiguration
       attr_accessor manifest_endpoint_prefix: ::String
+      attr_accessor dual_stack_manifest_endpoint_prefix: ::String
       SENSITIVE: []
     end
 
@@ -562,6 +674,25 @@ module Aws::MediaTailor
       attr_accessor path: ::String
       attr_accessor source_group: ::String
       attr_accessor type: ("DASH" | "HLS")
+      SENSITIVE: []
+    end
+
+    class HttpRequest
+      attr_accessor method: ("GET" | "POST")
+      attr_accessor body: ::String
+      attr_accessor headers: ::Hash[::String, ::String]
+      attr_accessor compress_request: ("NONE" | "GZIP")
+      SENSITIVE: []
+    end
+
+    class HttpRequestConfiguration
+      attr_accessor runtime: ("JSONATA")
+      attr_accessor output: ::Hash[::String, ::String]
+      attr_accessor method_type: ("GET" | "POST")
+      attr_accessor request_timeout_milliseconds: ::Integer
+      attr_accessor url: ::String
+      attr_accessor body: ::String
+      attr_accessor headers: ::Hash[::String, ::String]
       SENSITIVE: []
     end
 
@@ -596,6 +727,18 @@ module Aws::MediaTailor
       SENSITIVE: []
     end
 
+    class ListFunctionsRequest
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListFunctionsResponse
+      attr_accessor items: ::Array[Types::Function]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
     class ListLiveSourcesRequest
       attr_accessor max_results: ::Integer
       attr_accessor next_token: ::String
@@ -625,6 +768,7 @@ module Aws::MediaTailor
       attr_accessor max_results: ::Integer
       attr_accessor next_token: ::String
       attr_accessor playback_configuration_name: ::String
+      attr_accessor schedule_type: ("SINGLE" | "RECURRING" | "ALL")
       attr_accessor stream_id: ::String
       SENSITIVE: []
     end
@@ -673,6 +817,7 @@ module Aws::MediaTailor
     class LivePreRollConfiguration
       attr_accessor ad_decision_server_url: ::String
       attr_accessor max_duration_seconds: ::Integer
+      attr_accessor ad_decision_server_configuration: Types::PreRollAdDecisionServerConfiguration
       SENSITIVE: []
     end
 
@@ -690,6 +835,8 @@ module Aws::MediaTailor
     class LogConfiguration
       attr_accessor percent_enabled: ::Integer
       attr_accessor enabled_logging_strategies: ::Array[("VENDED_LOGS" | "LEGACY_CLOUDWATCH")]
+      attr_accessor ads_interaction_log: Types::AdsInteractionLog
+      attr_accessor manifest_service_interaction_log: Types::ManifestServiceInteractionLog
       SENSITIVE: []
     end
 
@@ -700,6 +847,12 @@ module Aws::MediaTailor
 
     class ManifestProcessingRules
       attr_accessor ad_marker_passthrough: Types::AdMarkerPassthrough
+      SENSITIVE: []
+    end
+
+    class ManifestServiceInteractionLog
+      attr_accessor publish_opt_in_event_types: ::Array[("PRE_SESSION_INIT_HOOK_SUMMARY" | "PRE_SESSION_INIT_FUNCTION_COMPLETED")]
+      attr_accessor exclude_event_types: ::Array[("GENERATED_MANIFEST" | "ORIGIN_MANIFEST" | "SESSION_INITIALIZED" | "TRACKING_RESPONSE" | "CONFIG_SYNTAX_ERROR" | "CONFIG_SECURITY_ERROR" | "UNKNOWN_HOST" | "TIMEOUT_ERROR" | "CONNECTION_ERROR" | "IO_ERROR" | "UNKNOWN_ERROR" | "HOST_DISALLOWED" | "PARSING_ERROR" | "MANIFEST_ERROR" | "NO_MASTER_OR_MEDIA_PLAYLIST" | "NO_MASTER_PLAYLIST" | "NO_MEDIA_PLAYLIST" | "INCOMPATIBLE_HLS_VERSION" | "SCTE35_PARSING_ERROR" | "INVALID_SINGLE_PERIOD_DASH_MANIFEST" | "UNSUPPORTED_SINGLE_PERIOD_DASH_MANIFEST" | "LAST_PERIOD_MISSING_AUDIO" | "LAST_PERIOD_MISSING_AUDIO_WARNING" | "ERROR_ORIGIN_PREFIX_INTERPOLATION" | "ERROR_ADS_INTERPOLATION" | "ERROR_LIVE_PRE_ROLL_ADS_INTERPOLATION" | "ERROR_CDN_AD_SEGMENT_INTERPOLATION" | "ERROR_CDN_CONTENT_SEGMENT_INTERPOLATION" | "ERROR_SLATE_AD_URL_INTERPOLATION" | "ERROR_PROFILE_NAME_INTERPOLATION" | "ERROR_BUMPER_START_INTERPOLATION" | "ERROR_BUMPER_END_INTERPOLATION" | "PRE_SESSION_INIT_HOOK_ERROR" | "PRE_SESSION_INIT_FUNCTION_ERROR")]
       SENSITIVE: []
     end
 
@@ -719,12 +872,28 @@ module Aws::MediaTailor
       attr_accessor personalization_threshold_seconds: ::Integer
       attr_accessor playback_configuration_arn: ::String
       attr_accessor playback_endpoint_prefix: ::String
+      attr_accessor dual_stack_playback_endpoint_prefix: ::String
       attr_accessor session_initialization_endpoint_prefix: ::String
+      attr_accessor dual_stack_session_initialization_endpoint_prefix: ::String
       attr_accessor slate_ad_url: ::String
       attr_accessor tags: ::Hash[::String, ::String]
       attr_accessor transcode_profile_name: ::String
       attr_accessor video_content_source_url: ::String
       attr_accessor ad_conditioning_configuration: Types::AdConditioningConfiguration
+      attr_accessor ad_decision_server_configuration: Types::AdDecisionServerConfiguration
+      attr_accessor function_mapping: ::Hash[("PRE_SESSION_INITIALIZATION" | "PRE_ADS_REQUEST"), ::String]
+      attr_accessor ads_personalization_timeouts: Types::AdsPersonalizationTimeouts
+      attr_accessor ads_personalization_concurrency: Types::AdsPersonalizationConcurrency
+      SENSITIVE: []
+    end
+
+    class PreRollAdDecisionServerConfiguration
+      attr_accessor vast_response: Types::PreRollVastResponse
+      SENSITIVE: []
+    end
+
+    class PreRollVastResponse
+      attr_accessor ad_sequencing_mode: ("FOLLOW_AD_SEQUENCE" | "IGNORE_AD_SEQUENCE")
       SENSITIVE: []
     end
 
@@ -739,6 +908,9 @@ module Aws::MediaTailor
       attr_accessor dynamic_variables: ::Hash[::String, ::String]
       attr_accessor end_time: ::Time
       attr_accessor start_time: ::Time
+      attr_accessor traffic_shaping_type: ("RETRIEVAL_WINDOW" | "TPS")
+      attr_accessor traffic_shaping_retrieval_window: Types::TrafficShapingRetrievalWindow
+      attr_accessor traffic_shaping_tps_configuration: Types::TrafficShapingTpsConfiguration
       SENSITIVE: []
     end
 
@@ -748,7 +920,10 @@ module Aws::MediaTailor
       attr_accessor name: ::String
       attr_accessor playback_configuration_name: ::String
       attr_accessor retrieval: Types::PrefetchRetrieval
+      attr_accessor schedule_type: ("SINGLE" | "RECURRING")
+      attr_accessor recurring_prefetch_configuration: Types::RecurringPrefetchConfiguration
       attr_accessor stream_id: ::String
+      attr_accessor tags: ::Hash[::String, ::String]
       SENSITIVE: []
     end
 
@@ -759,6 +934,31 @@ module Aws::MediaTailor
     end
 
     class PutChannelPolicyResponse < Aws::EmptyStructure
+    end
+
+    class PutFunctionRequest
+      attr_accessor function_id: ::String
+      attr_accessor function_type: ("HTTP_REQUEST" | "CUSTOM_OUTPUT" | "CONCURRENT_EXECUTOR" | "SEQUENTIAL_EXECUTOR")
+      attr_accessor description: ::String
+      attr_accessor http_request_configuration: Types::HttpRequestConfiguration
+      attr_accessor custom_output_configuration: Types::CustomOutputConfiguration
+      attr_accessor concurrent_executor_configuration: Types::ConcurrentExecutorConfiguration
+      attr_accessor sequential_executor_configuration: Types::SequentialExecutorConfiguration
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class PutFunctionResponse
+      attr_accessor function_id: ::String
+      attr_accessor function_type: ("HTTP_REQUEST" | "CUSTOM_OUTPUT" | "CONCURRENT_EXECUTOR" | "SEQUENTIAL_EXECUTOR")
+      attr_accessor description: ::String
+      attr_accessor http_request_configuration: Types::HttpRequestConfiguration
+      attr_accessor custom_output_configuration: Types::CustomOutputConfiguration
+      attr_accessor concurrent_executor_configuration: Types::ConcurrentExecutorConfiguration
+      attr_accessor sequential_executor_configuration: Types::SequentialExecutorConfiguration
+      attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor arn: ::String
+      SENSITIVE: []
     end
 
     class PutPlaybackConfigurationRequest
@@ -778,6 +978,10 @@ module Aws::MediaTailor
       attr_accessor transcode_profile_name: ::String
       attr_accessor video_content_source_url: ::String
       attr_accessor ad_conditioning_configuration: Types::AdConditioningConfiguration
+      attr_accessor ad_decision_server_configuration: Types::AdDecisionServerConfiguration
+      attr_accessor function_mapping: ::Hash[("PRE_SESSION_INITIALIZATION" | "PRE_ADS_REQUEST"), ::String]
+      attr_accessor ads_personalization_timeouts: Types::AdsPersonalizationTimeouts
+      attr_accessor ads_personalization_concurrency: Types::AdsPersonalizationConcurrency
       SENSITIVE: []
     end
 
@@ -797,12 +1001,41 @@ module Aws::MediaTailor
       attr_accessor personalization_threshold_seconds: ::Integer
       attr_accessor playback_configuration_arn: ::String
       attr_accessor playback_endpoint_prefix: ::String
+      attr_accessor dual_stack_playback_endpoint_prefix: ::String
       attr_accessor session_initialization_endpoint_prefix: ::String
+      attr_accessor dual_stack_session_initialization_endpoint_prefix: ::String
       attr_accessor slate_ad_url: ::String
       attr_accessor tags: ::Hash[::String, ::String]
       attr_accessor transcode_profile_name: ::String
       attr_accessor video_content_source_url: ::String
       attr_accessor ad_conditioning_configuration: Types::AdConditioningConfiguration
+      attr_accessor ad_decision_server_configuration: Types::AdDecisionServerConfiguration
+      attr_accessor function_mapping: ::Hash[("PRE_SESSION_INITIALIZATION" | "PRE_ADS_REQUEST"), ::String]
+      attr_accessor ads_personalization_timeouts: Types::AdsPersonalizationTimeouts
+      attr_accessor ads_personalization_concurrency: Types::AdsPersonalizationConcurrency
+      SENSITIVE: []
+    end
+
+    class RecurringConsumption
+      attr_accessor retrieved_ad_expiration_seconds: ::Integer
+      attr_accessor avail_matching_criteria: ::Array[Types::AvailMatchingCriteria]
+      SENSITIVE: []
+    end
+
+    class RecurringPrefetchConfiguration
+      attr_accessor start_time: ::Time
+      attr_accessor end_time: ::Time
+      attr_accessor recurring_consumption: Types::RecurringConsumption
+      attr_accessor recurring_retrieval: Types::RecurringRetrieval
+      SENSITIVE: []
+    end
+
+    class RecurringRetrieval
+      attr_accessor dynamic_variables: ::Hash[::String, ::String]
+      attr_accessor delay_after_avail_end_seconds: ::Integer
+      attr_accessor traffic_shaping_type: ("RETRIEVAL_WINDOW" | "TPS")
+      attr_accessor traffic_shaping_retrieval_window: Types::TrafficShapingRetrievalWindow
+      attr_accessor traffic_shaping_tps_configuration: Types::TrafficShapingTpsConfiguration
       SENSITIVE: []
     end
 
@@ -819,6 +1052,7 @@ module Aws::MediaTailor
       attr_accessor hls_playlist_settings: Types::HlsPlaylistSettings
       attr_accessor manifest_name: ::String
       attr_accessor playback_url: ::String
+      attr_accessor dual_stack_playback_url: ::String
       attr_accessor source_group: ::String
       SENSITIVE: []
     end
@@ -874,6 +1108,14 @@ module Aws::MediaTailor
       attr_accessor segments_expected: ::Integer
       attr_accessor sub_segment_num: ::Integer
       attr_accessor sub_segments_expected: ::Integer
+      SENSITIVE: []
+    end
+
+    class SequentialExecutorConfiguration
+      attr_accessor runtime: ("JSONATA")
+      attr_accessor output: ::Hash[::String, ::String]
+      attr_accessor function_list: ::Array[Types::FunctionRef]
+      attr_accessor timeout_milliseconds: ::Integer
       SENSITIVE: []
     end
 
@@ -933,6 +1175,17 @@ module Aws::MediaTailor
 
     class TimeSignalMessage
       attr_accessor segmentation_descriptors: ::Array[Types::SegmentationDescriptor]
+      SENSITIVE: []
+    end
+
+    class TrafficShapingRetrievalWindow
+      attr_accessor retrieval_window_duration_seconds: ::Integer
+      SENSITIVE: []
+    end
+
+    class TrafficShapingTpsConfiguration
+      attr_accessor peak_tps: ::Integer
+      attr_accessor peak_concurrent_users: ::Integer
       SENSITIVE: []
     end
 
@@ -1016,6 +1269,7 @@ module Aws::MediaTailor
       attr_accessor duration_millis: ::Integer
       attr_accessor scheduled_start_time: ::Time
       attr_accessor audience_media: ::Array[Types::AudienceMedia]
+      attr_accessor tags: ::Hash[::String, ::String]
       SENSITIVE: []
     end
 
@@ -1068,6 +1322,11 @@ module Aws::MediaTailor
       attr_accessor source_location_name: ::String
       attr_accessor tags: ::Hash[::String, ::String]
       attr_accessor vod_source_name: ::String
+      SENSITIVE: []
+    end
+
+    class VastResponse
+      attr_accessor ad_sequencing_mode: ("FOLLOW_AD_SEQUENCE" | "IGNORE_AD_SEQUENCE" | "FOLLOW_AD_SEQUENCE_ONLY_LIVE" | "FOLLOW_AD_SEQUENCE_ONLY_VOD")
       SENSITIVE: []
     end
 

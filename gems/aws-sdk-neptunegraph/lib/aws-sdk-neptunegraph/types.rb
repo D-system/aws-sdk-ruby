@@ -120,7 +120,7 @@ module Aws::NeptuneGraph
     # @!attribute [rw] format
     #   Specifies the format of S3 data to be imported. Valid values are
     #   `CSV`, which identifies the [Gremlin CSV format][1] or `OPENCYPHER`,
-    #   which identies the [openCypher load format][2].
+    #   which identifies the [openCypher load format][2].
     #
     #
     #
@@ -638,7 +638,7 @@ module Aws::NeptuneGraph
     #   @return [Array<String>]
     #
     # @!attribute [rw] vpc_security_group_ids
-    #   Security groups to be attached to the private graph endpoint..
+    #   Security groups to be attached to the private graph endpoint.
     #   @return [Array<String>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-graph-2023-11-29/CreatePrivateGraphEndpointInput AWS API Documentation
@@ -665,7 +665,7 @@ module Aws::NeptuneGraph
     #   @return [String]
     #
     # @!attribute [rw] vpc_endpoint_id
-    #   Endpoint ID of the prviate grpah endpoint.
+    #   Endpoint ID of the private graph endpoint.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-graph-2023-11-29/CreatePrivateGraphEndpointOutput AWS API Documentation
@@ -994,7 +994,7 @@ module Aws::NeptuneGraph
       include Aws::Structure
     end
 
-    # Specifies whihc properties of that label should be included in the
+    # Specifies which properties of that label should be included in the
     # export.
     #
     # @!attribute [rw] properties
@@ -1438,7 +1438,7 @@ module Aws::NeptuneGraph
     # @!attribute [rw] format
     #   Specifies the format of S3 data to be imported. Valid values are
     #   `CSV`, which identifies the [Gremlin CSV format][1] or `OPENCYPHER`,
-    #   which identies the [openCypher load format][2].
+    #   which identifies the [openCypher load format][2].
     #
     #
     #
@@ -2790,6 +2790,103 @@ module Aws::NeptuneGraph
       include Aws::Structure
     end
 
+    # @!attribute [rw] graph_identifier
+    #   The unique identifier of the Neptune Analytics graph.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-graph-2023-11-29/StartGraphInput AWS API Documentation
+    #
+    class StartGraphInput < Struct.new(
+      :graph_identifier)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] id
+    #   The unique identifier of the graph.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the graph.
+    #   @return [String]
+    #
+    # @!attribute [rw] arn
+    #   The ARN associated with the graph.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the graph.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_reason
+    #   The reason that the graph has this status.
+    #   @return [String]
+    #
+    # @!attribute [rw] create_time
+    #   The time at which the graph was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] provisioned_memory
+    #   The number of memory-optimized Neptune Capacity Units (m-NCUs)
+    #   allocated to the graph.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] endpoint
+    #   The graph endpoint.
+    #   @return [String]
+    #
+    # @!attribute [rw] public_connectivity
+    #   If `true`, the graph has a public endpoint, otherwise not.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] vector_search_configuration
+    #   Specifies the number of dimensions for vector embeddings loaded into
+    #   the graph. Max = 65535
+    #   @return [Types::VectorSearchConfiguration]
+    #
+    # @!attribute [rw] replica_count
+    #   The number of replicas for the graph.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] kms_key_identifier
+    #   The ID of the KMS key used to encrypt and decrypt graph data.
+    #   @return [String]
+    #
+    # @!attribute [rw] source_snapshot_id
+    #   The ID of the snapshot from which the graph was created, if it was
+    #   created from a snapshot.
+    #   @return [String]
+    #
+    # @!attribute [rw] deletion_protection
+    #   If `true`, deletion protection is enabled for the graph.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] build_number
+    #   The build number of the graph.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-graph-2023-11-29/StartGraphOutput AWS API Documentation
+    #
+    class StartGraphOutput < Struct.new(
+      :id,
+      :name,
+      :arn,
+      :status,
+      :status_reason,
+      :create_time,
+      :provisioned_memory,
+      :endpoint,
+      :public_connectivity,
+      :vector_search_configuration,
+      :replica_count,
+      :kms_key_identifier,
+      :source_snapshot_id,
+      :deletion_protection,
+      :build_number)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] import_options
     #   Options for how to perform an import.
     #   @return [Types::ImportOptions]
@@ -2809,7 +2906,7 @@ module Aws::NeptuneGraph
     # @!attribute [rw] format
     #   Specifies the format of Amazon S3 data to be imported. Valid values
     #   are CSV, which identifies the Gremlin CSV format or OPENCYPHER,
-    #   which identies the openCypher load format.
+    #   which identifies the openCypher load format.
     #   @return [String]
     #
     # @!attribute [rw] parquet_type
@@ -2868,7 +2965,7 @@ module Aws::NeptuneGraph
     # @!attribute [rw] format
     #   Specifies the format of Amazon S3 data to be imported. Valid values
     #   are CSV, which identifies the Gremlin CSV format or OPENCYPHER,
-    #   which identies the openCypher load format.
+    #   which identifies the openCypher load format.
     #   @return [String]
     #
     # @!attribute [rw] parquet_type
@@ -2899,6 +2996,103 @@ module Aws::NeptuneGraph
       :role_arn,
       :status,
       :import_options)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] graph_identifier
+    #   The unique identifier of the Neptune Analytics graph.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-graph-2023-11-29/StopGraphInput AWS API Documentation
+    #
+    class StopGraphInput < Struct.new(
+      :graph_identifier)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] id
+    #   The unique identifier of the graph.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the graph.
+    #   @return [String]
+    #
+    # @!attribute [rw] arn
+    #   The ARN associated with the graph.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the graph.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_reason
+    #   The reason that the graph has this status.
+    #   @return [String]
+    #
+    # @!attribute [rw] create_time
+    #   The time at which the graph was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] provisioned_memory
+    #   The number of memory-optimized Neptune Capacity Units (m-NCUs)
+    #   allocated to the graph.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] endpoint
+    #   The graph endpoint.
+    #   @return [String]
+    #
+    # @!attribute [rw] public_connectivity
+    #   If true, the graph has a public endpoint, otherwise not.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] vector_search_configuration
+    #   Specifies the number of dimensions for vector embeddings loaded into
+    #   the graph. Max = 65535
+    #   @return [Types::VectorSearchConfiguration]
+    #
+    # @!attribute [rw] replica_count
+    #   The number of replicas for the graph.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] kms_key_identifier
+    #   The ID of the KMS key used to encrypt and decrypt graph data.
+    #   @return [String]
+    #
+    # @!attribute [rw] source_snapshot_id
+    #   The ID of the snapshot from which the graph was created, if it was
+    #   created from a snapshot.
+    #   @return [String]
+    #
+    # @!attribute [rw] deletion_protection
+    #   If `true`, deletion protection is enabled for the graph.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] build_number
+    #   The build number of the graph.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/neptune-graph-2023-11-29/StopGraphOutput AWS API Documentation
+    #
+    class StopGraphOutput < Struct.new(
+      :id,
+      :name,
+      :arn,
+      :status,
+      :status_reason,
+      :create_time,
+      :provisioned_memory,
+      :endpoint,
+      :public_connectivity,
+      :vector_search_configuration,
+      :replica_count,
+      :kms_key_identifier,
+      :source_snapshot_id,
+      :deletion_protection,
+      :build_number)
       SENSITIVE = []
       include Aws::Structure
     end

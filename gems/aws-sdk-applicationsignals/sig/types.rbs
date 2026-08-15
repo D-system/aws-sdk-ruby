@@ -13,6 +13,109 @@ module Aws::ApplicationSignals
       SENSITIVE: []
     end
 
+    class AttributeFilter
+      attr_accessor attribute_filter_name: ::String
+      attr_accessor attribute_filter_values: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class AuditFinding
+      attr_accessor key_attributes: ::Hash[::String, ::String]
+      attr_accessor auditor_results: ::Array[Types::AuditorResult]
+      attr_accessor operation: ::String
+      attr_accessor metric_graph: Types::MetricGraph
+      attr_accessor dependency_graph: Types::DependencyGraph
+      attr_accessor type: ::String
+      SENSITIVE: []
+    end
+
+    class AuditTarget
+      attr_accessor type: ::String
+      attr_accessor data: Types::AuditTargetEntity
+      SENSITIVE: []
+    end
+
+    class AuditTargetEntity
+      attr_accessor service: Types::ServiceEntity
+      attr_accessor slo: Types::ServiceLevelObjectiveEntity
+      attr_accessor service_operation: Types::ServiceOperationEntity
+      attr_accessor canary: Types::CanaryEntity
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class Service < AuditTargetEntity
+      end
+      class Slo < AuditTargetEntity
+      end
+      class ServiceOperation < AuditTargetEntity
+      end
+      class Canary < AuditTargetEntity
+      end
+      class Unknown < AuditTargetEntity
+      end
+    end
+
+    class AuditorResult
+      attr_accessor auditor: ::String
+      attr_accessor description: ::String
+      attr_accessor data: ::Hash[::String, ::String]
+      attr_accessor severity: ("CRITICAL" | "HIGH" | "MEDIUM" | "LOW" | "NONE")
+      SENSITIVE: []
+    end
+
+    class BatchDeleteByResourceArns
+      attr_accessor resource_arns: ::Array[::String]
+      attr_accessor instrumentation_type: ("BREAKPOINT" | "PROBE")
+      SENSITIVE: []
+    end
+
+    class BatchDeleteDeletionTarget
+      attr_accessor scope: Types::BatchDeleteScope
+      attr_accessor resource_arns: Types::BatchDeleteByResourceArns
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class Scope < BatchDeleteDeletionTarget
+      end
+      class ResourceArns < BatchDeleteDeletionTarget
+      end
+      class Unknown < BatchDeleteDeletionTarget
+      end
+    end
+
+    class BatchDeleteError
+      attr_accessor resource_arn: ::String
+      attr_accessor code: ("ResourceNotFoundException" | "AccessDeniedException" | "InternalServiceException")
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class BatchDeleteInstrumentationConfigurationsRequest
+      attr_accessor deletion_target: Types::BatchDeleteDeletionTarget
+      SENSITIVE: []
+    end
+
+    class BatchDeleteInstrumentationConfigurationsResponse
+      attr_accessor deleted_count: ::Integer
+      attr_accessor successful_deletions: ::Array[Types::BatchDeleteSuccessfulDeletion]
+      attr_accessor errors: ::Array[Types::BatchDeleteError]
+      SENSITIVE: []
+    end
+
+    class BatchDeleteScope
+      attr_accessor service: ::String
+      attr_accessor environment: ::String
+      attr_accessor instrumentation_type: ("BREAKPOINT" | "PROBE")
+      SENSITIVE: []
+    end
+
+    class BatchDeleteSuccessfulDeletion
+      attr_accessor resource_arn: ::String
+      attr_accessor signal_type: ::String
+      attr_accessor location_hash: ::String
+      SENSITIVE: []
+    end
+
     class BatchGetServiceLevelObjectiveBudgetReportInput
       attr_accessor timestamp: ::Time
       attr_accessor slo_ids: ::Array[::String]
@@ -58,8 +161,114 @@ module Aws::ApplicationSignals
       SENSITIVE: []
     end
 
+    class CanaryEntity
+      attr_accessor canary_name: ::String
+      SENSITIVE: []
+    end
+
+    class CaptureConfiguration
+      attr_accessor code_capture: Types::CodeCaptureConfiguration
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class CodeCapture < CaptureConfiguration
+      end
+      class Unknown < CaptureConfiguration
+      end
+    end
+
+    class CaptureLimitsConfig
+      attr_accessor max_hits: ::Integer
+      attr_accessor max_string_length: ::Integer
+      attr_accessor max_collection_width: ::Integer
+      attr_accessor max_collection_depth: ::Integer
+      attr_accessor max_stack_frames: ::Integer
+      attr_accessor max_stack_trace_size: ::Integer
+      attr_accessor max_object_depth: ::Integer
+      attr_accessor max_fields_per_object: ::Integer
+      SENSITIVE: []
+    end
+
+    class ChangeEvent
+      attr_accessor timestamp: ::Time
+      attr_accessor account_id: ::String
+      attr_accessor region: ::String
+      attr_accessor entity: ::Hash[::String, ::String]
+      attr_accessor change_event_type: ("DEPLOYMENT" | "CONFIGURATION")
+      attr_accessor event_id: ::String
+      attr_accessor user_name: ::String
+      attr_accessor event_name: ::String
+      SENSITIVE: []
+    end
+
+    class CodeCaptureConfiguration
+      attr_accessor capture_arguments: ::Array[::String]
+      attr_accessor capture_return: bool
+      attr_accessor capture_stack_trace: bool
+      attr_accessor capture_locals: ::Array[::String]
+      attr_accessor capture_limits: Types::CaptureLimitsConfig
+      SENSITIVE: []
+    end
+
+    class CodeLocation
+      attr_accessor language: ("Java" | "Python" | "Javascript")
+      attr_accessor code_unit: ::String
+      attr_accessor class_name: ::String
+      attr_accessor method_name: ::String
+      attr_accessor file_path: ::String
+      attr_accessor line_number: ::Integer
+      SENSITIVE: []
+    end
+
+    class CompositeSliComponent
+      attr_accessor operation_name: ::String
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class OperationName < CompositeSliComponent
+      end
+      class Unknown < CompositeSliComponent
+      end
+    end
+
+    class CompositeSliConfig
+      attr_accessor selection_config: Types::SelectionConfig
+      attr_accessor components: ::Array[Types::CompositeSliComponent]
+      SENSITIVE: []
+    end
+
     class ConflictException
       attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class CreateInstrumentationConfigurationRequest
+      attr_accessor instrumentation_type: ("BREAKPOINT" | "PROBE")
+      attr_accessor service: ::String
+      attr_accessor environment: ::String
+      attr_accessor signal_type: ("SNAPSHOT")
+      attr_accessor location: Types::Location
+      attr_accessor description: ::String
+      attr_accessor expires_at: ::Time
+      attr_accessor attribute_filters: ::Array[::Hash[::String, ::String]]
+      attr_accessor capture_configuration: Types::CaptureConfiguration
+      attr_accessor tags: ::Array[Types::Tag]
+      SENSITIVE: []
+    end
+
+    class CreateInstrumentationConfigurationResponse
+      attr_accessor instrumentation_type: ("BREAKPOINT" | "PROBE")
+      attr_accessor service: ::String
+      attr_accessor environment: ::String
+      attr_accessor signal_type: ("SNAPSHOT")
+      attr_accessor location: Types::Location
+      attr_accessor location_hash: ::String
+      attr_accessor description: ::String
+      attr_accessor expires_at: ::Time
+      attr_accessor attribute_filters: ::Array[::Hash[::String, ::String]]
+      attr_accessor capture_configuration: Types::CaptureConfiguration
+      attr_accessor created_at: ::Time
+      attr_accessor arn: ::String
       SENSITIVE: []
     end
 
@@ -71,11 +280,30 @@ module Aws::ApplicationSignals
       attr_accessor goal: Types::Goal
       attr_accessor tags: ::Array[Types::Tag]
       attr_accessor burn_rate_configurations: ::Array[Types::BurnRateConfiguration]
+      attr_accessor create_recommended_slo: bool
+      attr_accessor auto_investigation_enabled: bool
       SENSITIVE: []
     end
 
     class CreateServiceLevelObjectiveOutput
       attr_accessor slo: Types::ServiceLevelObjective
+      SENSITIVE: []
+    end
+
+    class DeleteGroupingConfigurationOutput < Aws::EmptyStructure
+    end
+
+    class DeleteInstrumentationConfigurationRequest
+      attr_accessor instrumentation_type: ("BREAKPOINT" | "PROBE")
+      attr_accessor service: ::String
+      attr_accessor environment: ::String
+      attr_accessor signal_type: ("SNAPSHOT")
+      attr_accessor location_identifier: Types::LocationIdentifier
+      SENSITIVE: []
+    end
+
+    class DeleteInstrumentationConfigurationResponse
+      attr_accessor deletion_status: ("DELETED")
       SENSITIVE: []
     end
 
@@ -87,9 +315,29 @@ module Aws::ApplicationSignals
     class DeleteServiceLevelObjectiveOutput < Aws::EmptyStructure
     end
 
+    class DependencyConfig
+      attr_accessor dependency_key_attributes: ::Hash[::String, ::String]
+      attr_accessor dependency_operation_name: ::String
+      SENSITIVE: []
+    end
+
+    class DependencyGraph
+      attr_accessor nodes: ::Array[Types::Node]
+      attr_accessor edges: ::Array[Types::Edge]
+      SENSITIVE: []
+    end
+
     class Dimension
       attr_accessor name: ::String
       attr_accessor value: ::String
+      SENSITIVE: []
+    end
+
+    class Edge
+      attr_accessor source_node_id: ::String
+      attr_accessor destination_node_id: ::String
+      attr_accessor duration: ::Float
+      attr_accessor connection_type: ("INDIRECT" | "DIRECT")
       SENSITIVE: []
     end
 
@@ -98,6 +346,45 @@ module Aws::ApplicationSignals
       attr_accessor start_time: ::Time
       attr_accessor recurrence_rule: Types::RecurrenceRule
       attr_accessor reason: ::String
+      SENSITIVE: []
+    end
+
+    class GetInstrumentationConfigurationRequest
+      attr_accessor instrumentation_type: ("BREAKPOINT" | "PROBE")
+      attr_accessor service: ::String
+      attr_accessor environment: ::String
+      attr_accessor signal_type: ("SNAPSHOT")
+      attr_accessor location_identifier: Types::LocationIdentifier
+      SENSITIVE: []
+    end
+
+    class GetInstrumentationConfigurationResponse
+      attr_accessor configuration: Types::InstrumentationConfiguration
+      SENSITIVE: []
+    end
+
+    class GetInstrumentationConfigurationStatusRequest
+      attr_accessor instrumentation_type: ("BREAKPOINT" | "PROBE")
+      attr_accessor service: ::String
+      attr_accessor environment: ::String
+      attr_accessor signal_type: ("SNAPSHOT")
+      attr_accessor location_identifier: Types::LocationIdentifier
+      attr_accessor status: ("READY" | "ERROR" | "ACTIVE" | "DISABLED")
+      attr_accessor start_time: ::Time
+      attr_accessor end_time: ::Time
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class GetInstrumentationConfigurationStatusResponse
+      attr_accessor service: ::String
+      attr_accessor environment: ::String
+      attr_accessor signal_type: ("SNAPSHOT")
+      attr_accessor location: Types::Location
+      attr_accessor status: ("READY" | "ERROR" | "ACTIVE" | "DISABLED")
+      attr_accessor events: ::Array[Types::InstrumentationStatusEvent]
+      attr_accessor next_token: ::String
       SENSITIVE: []
     end
 
@@ -133,6 +420,76 @@ module Aws::ApplicationSignals
       SENSITIVE: []
     end
 
+    class GroupingAttributeDefinition
+      attr_accessor grouping_name: ::String
+      attr_accessor grouping_source_keys: ::Array[::String]
+      attr_accessor default_grouping_value: ::String
+      SENSITIVE: []
+    end
+
+    class GroupingConfiguration
+      attr_accessor grouping_attribute_definitions: ::Array[Types::GroupingAttributeDefinition]
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class InstrumentationConfiguration
+      attr_accessor instrumentation_type: ("BREAKPOINT" | "PROBE")
+      attr_accessor service: ::String
+      attr_accessor environment: ::String
+      attr_accessor signal_type: ("SNAPSHOT")
+      attr_accessor location: Types::Location
+      attr_accessor location_hash: ::String
+      attr_accessor description: ::String
+      attr_accessor expires_at: ::Time
+      attr_accessor attribute_filters: ::Array[::Hash[::String, ::String]]
+      attr_accessor capture_configuration: Types::CaptureConfiguration
+      attr_accessor created_at: ::Time
+      attr_accessor arn: ::String
+      SENSITIVE: []
+    end
+
+    class InstrumentationConfigurationStatusReport
+      attr_accessor instrumentation_type: ("BREAKPOINT" | "PROBE")
+      attr_accessor signal_type: ("SNAPSHOT")
+      attr_accessor location_hash: ::String
+      attr_accessor status: ("READY" | "ERROR" | "ACTIVE" | "DISABLED")
+      attr_accessor time: ::Time
+      attr_accessor error_cause: ("FILE_NOT_FOUND" | "METHOD_NOT_FOUND" | "LINE_NOT_EXECUTABLE" | "OVERLOADED_METHODS" | "LANGUAGE_MISMATCH" | "RUNTIME_ERROR")
+      SENSITIVE: []
+    end
+
+    class InstrumentationConfigurationWithoutServiceEnv
+      attr_accessor instrumentation_type: ("BREAKPOINT" | "PROBE")
+      attr_accessor signal_type: ("SNAPSHOT")
+      attr_accessor location: Types::Location
+      attr_accessor location_hash: ::String
+      attr_accessor description: ::String
+      attr_accessor expires_at: ::Time
+      attr_accessor attribute_filters: ::Array[::Hash[::String, ::String]]
+      attr_accessor capture_configuration: Types::CaptureConfiguration
+      attr_accessor created_at: ::Time
+      attr_accessor arn: ::String
+      SENSITIVE: []
+    end
+
+    class InstrumentationConfigurationsPage
+      attr_accessor service: ::String
+      attr_accessor environment: ::String
+      attr_accessor changed: bool
+      attr_accessor latest_configurations: ::Array[Types::InstrumentationConfigurationWithoutServiceEnv]
+      attr_accessor synced_at: ::Time
+      attr_accessor sync_interval: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class InstrumentationStatusEvent
+      attr_accessor time: ::Time
+      attr_accessor error_cause: ("FILE_NOT_FOUND" | "METHOD_NOT_FOUND" | "LINE_NOT_EXECUTABLE" | "OVERLOADED_METHODS" | "LANGUAGE_MISMATCH" | "RUNTIME_ERROR")
+      SENSITIVE: []
+    end
+
     class Interval
       attr_accessor rolling_interval: Types::RollingInterval
       attr_accessor calendar_interval: Types::CalendarInterval
@@ -145,6 +502,66 @@ module Aws::ApplicationSignals
       end
       class Unknown < Interval
       end
+    end
+
+    class ListAuditFindingsInput
+      attr_accessor start_time: ::Time
+      attr_accessor end_time: ::Time
+      attr_accessor auditors: ::Array[::String]
+      attr_accessor audit_targets: ::Array[Types::AuditTarget]
+      attr_accessor detail_level: ("BRIEF" | "DETAILED")
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListAuditFindingsOutput
+      attr_accessor start_time: ::Time
+      attr_accessor end_time: ::Time
+      attr_accessor audit_findings: ::Array[Types::AuditFinding]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListEntityEventsInput
+      attr_accessor entity: ::Hash[::String, ::String]
+      attr_accessor start_time: ::Time
+      attr_accessor end_time: ::Time
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListEntityEventsOutput
+      attr_accessor start_time: ::Time
+      attr_accessor end_time: ::Time
+      attr_accessor change_events: ::Array[Types::ChangeEvent]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListGroupingAttributeDefinitionsInput
+      attr_accessor next_token: ::String
+      attr_accessor aws_account_id: ::String
+      attr_accessor include_linked_accounts: bool
+      SENSITIVE: []
+    end
+
+    class ListGroupingAttributeDefinitionsOutput
+      attr_accessor grouping_attribute_definitions: ::Array[Types::GroupingAttributeDefinition]
+      attr_accessor updated_at: ::Time
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListInstrumentationConfigurationsRequest
+      attr_accessor service: ::String
+      attr_accessor environment: ::String
+      attr_accessor instrumentation_type: ("BREAKPOINT" | "PROBE")
+      attr_accessor synced_at: ::Time
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
     end
 
     class ListServiceDependenciesInput
@@ -197,10 +614,13 @@ module Aws::ApplicationSignals
     class ListServiceLevelObjectivesInput
       attr_accessor key_attributes: ::Hash[::String, ::String]
       attr_accessor operation_name: ::String
+      attr_accessor dependency_config: Types::DependencyConfig
       attr_accessor max_results: ::Integer
       attr_accessor next_token: ::String
+      attr_accessor metric_source_types: ::Array[("ServiceOperation" | "CloudWatchMetric" | "ServiceDependency" | "AppMonitor" | "Canary" | "Service")]
       attr_accessor include_linked_accounts: bool
       attr_accessor slo_owner_aws_account_id: ::String
+      attr_accessor metric_source: Types::MetricSource
       SENSITIVE: []
     end
 
@@ -223,6 +643,25 @@ module Aws::ApplicationSignals
       attr_accessor start_time: ::Time
       attr_accessor end_time: ::Time
       attr_accessor service_operations: ::Array[Types::ServiceOperation]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListServiceStatesInput
+      attr_accessor start_time: ::Time
+      attr_accessor end_time: ::Time
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      attr_accessor include_linked_accounts: bool
+      attr_accessor aws_account_id: ::String
+      attr_accessor attribute_filters: ::Array[Types::AttributeFilter]
+      SENSITIVE: []
+    end
+
+    class ListServiceStatesOutput
+      attr_accessor start_time: ::Time
+      attr_accessor end_time: ::Time
+      attr_accessor service_states: ::Array[Types::ServiceState]
       attr_accessor next_token: ::String
       SENSITIVE: []
     end
@@ -255,6 +694,31 @@ module Aws::ApplicationSignals
       SENSITIVE: []
     end
 
+    class Location
+      attr_accessor code_location: Types::CodeLocation
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class CodeLocation < Location
+      end
+      class Unknown < Location
+      end
+    end
+
+    class LocationIdentifier
+      attr_accessor code_location: Types::CodeLocation
+      attr_accessor location_hash: ::String
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class CodeLocation < LocationIdentifier
+      end
+      class LocationHash < LocationIdentifier
+      end
+      class Unknown < LocationIdentifier
+      end
+    end
+
     class Metric
       attr_accessor namespace: ::String
       attr_accessor metric_name: ::String
@@ -273,12 +737,25 @@ module Aws::ApplicationSignals
       SENSITIVE: []
     end
 
+    class MetricGraph
+      attr_accessor metric_data_queries: ::Array[Types::MetricDataQuery]
+      attr_accessor start_time: ::Time
+      attr_accessor end_time: ::Time
+      SENSITIVE: []
+    end
+
     class MetricReference
       attr_accessor namespace: ::String
       attr_accessor metric_type: ::String
       attr_accessor dimensions: ::Array[Types::Dimension]
       attr_accessor metric_name: ::String
       attr_accessor account_id: ::String
+      SENSITIVE: []
+    end
+
+    class MetricSource
+      attr_accessor metric_source_key_attributes: ::Hash[::String, ::String]
+      attr_accessor metric_source_attributes: ::Hash[::String, ::String]
       SENSITIVE: []
     end
 
@@ -304,8 +781,43 @@ module Aws::ApplicationSignals
       end
     end
 
+    class Node
+      attr_accessor key_attributes: ::Hash[::String, ::String]
+      attr_accessor name: ::String
+      attr_accessor node_id: ::String
+      attr_accessor operation: ::String
+      attr_accessor type: ::String
+      attr_accessor duration: ::Float
+      attr_accessor status: ::String
+      SENSITIVE: []
+    end
+
+    class PutGroupingConfigurationInput
+      attr_accessor grouping_attribute_definitions: ::Array[Types::GroupingAttributeDefinition]
+      SENSITIVE: []
+    end
+
+    class PutGroupingConfigurationOutput
+      attr_accessor grouping_configuration: Types::GroupingConfiguration
+      SENSITIVE: []
+    end
+
     class RecurrenceRule
       attr_accessor expression: ::String
+      SENSITIVE: []
+    end
+
+    class ReportInstrumentationConfigurationStatusRequest
+      attr_accessor service: ::String
+      attr_accessor environment: ::String
+      attr_accessor configurations: ::Array[Types::InstrumentationConfigurationStatusReport]
+      SENSITIVE: []
+    end
+
+    class ReportInstrumentationConfigurationStatusResponse
+      attr_accessor service: ::String
+      attr_accessor environment: ::String
+      attr_accessor unprocessed_status_events: ::Array[Types::UnprocessedStatusEvent]
       SENSITIVE: []
     end
 
@@ -329,6 +841,9 @@ module Aws::ApplicationSignals
       attr_accessor metric_type: ("LATENCY" | "AVAILABILITY")
       attr_accessor total_request_count_metric: ::Array[Types::MetricDataQuery]
       attr_accessor monitored_request_count_metric: Types::MonitoredRequestCountMetricDataQueries
+      attr_accessor dependency_config: Types::DependencyConfig
+      attr_accessor metric_source: Types::MetricSource
+      attr_accessor composite_sli_config: Types::CompositeSliConfig
       SENSITIVE: []
     end
 
@@ -338,6 +853,10 @@ module Aws::ApplicationSignals
       attr_accessor metric_type: ("LATENCY" | "AVAILABILITY")
       attr_accessor total_request_count_metric: ::Array[Types::MetricDataQuery]
       attr_accessor monitored_request_count_metric: Types::MonitoredRequestCountMetricDataQueries
+      attr_accessor dependency_config: Types::DependencyConfig
+      attr_accessor metric_source: Types::MetricSource
+      attr_accessor metric_name: ::String
+      attr_accessor composite_sli_config: Types::CompositeSliConfig
       SENSITIVE: []
     end
 
@@ -354,9 +873,16 @@ module Aws::ApplicationSignals
       SENSITIVE: []
     end
 
+    class SelectionConfig
+      attr_accessor type: ("EXPLICIT" | "PREFIX" | "REGEX")
+      attr_accessor pattern: ::String
+      SENSITIVE: []
+    end
+
     class Service
       attr_accessor key_attributes: ::Hash[::String, ::String]
       attr_accessor attribute_maps: ::Array[::Hash[::String, ::String]]
+      attr_accessor service_groups: ::Array[Types::ServiceGroup]
       attr_accessor metric_references: ::Array[Types::MetricReference]
       attr_accessor log_group_references: ::Array[::Hash[::String, ::String]]
       SENSITIVE: []
@@ -375,6 +901,22 @@ module Aws::ApplicationSignals
       attr_accessor dependent_key_attributes: ::Hash[::String, ::String]
       attr_accessor dependent_operation_name: ::String
       attr_accessor metric_references: ::Array[Types::MetricReference]
+      SENSITIVE: []
+    end
+
+    class ServiceEntity
+      attr_accessor type: ::String
+      attr_accessor name: ::String
+      attr_accessor environment: ::String
+      attr_accessor aws_account_id: ::String
+      SENSITIVE: []
+    end
+
+    class ServiceGroup
+      attr_accessor group_name: ::String
+      attr_accessor group_value: ::String
+      attr_accessor group_source: ::String
+      attr_accessor group_identifier: ::String
       SENSITIVE: []
     end
 
@@ -397,6 +939,9 @@ module Aws::ApplicationSignals
       attr_accessor operation_name: ::String
       attr_accessor metric_type: ("LATENCY" | "AVAILABILITY")
       attr_accessor metric_data_queries: ::Array[Types::MetricDataQuery]
+      attr_accessor dependency_config: Types::DependencyConfig
+      attr_accessor metric_source: Types::MetricSource
+      attr_accessor composite_sli_config: Types::CompositeSliConfig
       SENSITIVE: []
     end
 
@@ -404,9 +949,13 @@ module Aws::ApplicationSignals
       attr_accessor key_attributes: ::Hash[::String, ::String]
       attr_accessor operation_name: ::String
       attr_accessor metric_type: ("LATENCY" | "AVAILABILITY")
+      attr_accessor metric_name: ::String
       attr_accessor statistic: ::String
       attr_accessor period_seconds: ::Integer
+      attr_accessor metric_source: Types::MetricSource
       attr_accessor metric_data_queries: ::Array[Types::MetricDataQuery]
+      attr_accessor dependency_config: Types::DependencyConfig
+      attr_accessor composite_sli_config: Types::CompositeSliConfig
       SENSITIVE: []
     end
 
@@ -421,6 +970,8 @@ module Aws::ApplicationSignals
       attr_accessor evaluation_type: ("PeriodBased" | "RequestBased")
       attr_accessor goal: Types::Goal
       attr_accessor burn_rate_configurations: ::Array[Types::BurnRateConfiguration]
+      attr_accessor metric_source_type: ("ServiceOperation" | "CloudWatchMetric" | "ServiceDependency" | "AppMonitor" | "Canary" | "Service")
+      attr_accessor auto_investigation_enabled: bool
       SENSITIVE: []
     end
 
@@ -448,12 +999,23 @@ module Aws::ApplicationSignals
       SENSITIVE: []
     end
 
+    class ServiceLevelObjectiveEntity
+      attr_accessor slo_name: ::String
+      attr_accessor slo_arn: ::String
+      SENSITIVE: []
+    end
+
     class ServiceLevelObjectiveSummary
       attr_accessor arn: ::String
       attr_accessor name: ::String
       attr_accessor key_attributes: ::Hash[::String, ::String]
       attr_accessor operation_name: ::String
+      attr_accessor dependency_config: Types::DependencyConfig
       attr_accessor created_time: ::Time
+      attr_accessor evaluation_type: ("PeriodBased" | "RequestBased")
+      attr_accessor metric_source_type: ("ServiceOperation" | "CloudWatchMetric" | "ServiceDependency" | "AppMonitor" | "Canary" | "Service")
+      attr_accessor metric_source: Types::MetricSource
+      attr_accessor composite_sli_config: Types::CompositeSliConfig
       SENSITIVE: []
     end
 
@@ -463,8 +1025,22 @@ module Aws::ApplicationSignals
       SENSITIVE: []
     end
 
+    class ServiceOperationEntity
+      attr_accessor service: Types::ServiceEntity
+      attr_accessor operation: ::String
+      attr_accessor metric_type: ::String
+      SENSITIVE: []
+    end
+
     class ServiceQuotaExceededException
       attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class ServiceState
+      attr_accessor attribute_filters: ::Array[Types::AttributeFilter]
+      attr_accessor service: ::Hash[::String, ::String]
+      attr_accessor latest_change_events: ::Array[Types::ChangeEvent]
       SENSITIVE: []
     end
 
@@ -472,6 +1048,7 @@ module Aws::ApplicationSignals
       attr_accessor key_attributes: ::Hash[::String, ::String]
       attr_accessor attribute_maps: ::Array[::Hash[::String, ::String]]
       attr_accessor metric_references: ::Array[Types::MetricReference]
+      attr_accessor service_groups: ::Array[Types::ServiceGroup]
       SENSITIVE: []
     end
 
@@ -501,6 +1078,16 @@ module Aws::ApplicationSignals
       SENSITIVE: []
     end
 
+    class UnprocessedStatusEvent
+      attr_accessor instrumentation_type: ("BREAKPOINT" | "PROBE")
+      attr_accessor signal_type: ("SNAPSHOT")
+      attr_accessor location_hash: ::String
+      attr_accessor status: ("READY" | "ERROR" | "ACTIVE" | "DISABLED")
+      attr_accessor time: ::Time
+      attr_accessor failed_reason: ("THROTTLED" | "INTERNAL_ERROR" | "VALIDATION_ERROR")
+      SENSITIVE: []
+    end
+
     class UntagResourceRequest
       attr_accessor resource_arn: ::String
       attr_accessor tag_keys: ::Array[::String]
@@ -517,6 +1104,7 @@ module Aws::ApplicationSignals
       attr_accessor request_based_sli_config: Types::RequestBasedServiceLevelIndicatorConfig
       attr_accessor goal: Types::Goal
       attr_accessor burn_rate_configurations: ::Array[Types::BurnRateConfiguration]
+      attr_accessor auto_investigation_enabled: bool
       SENSITIVE: []
     end
 

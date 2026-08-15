@@ -110,6 +110,8 @@ module Aws::DeviceFarm
       attr_accessor name: ::String
       attr_accessor default_job_timeout_minutes: ::Integer
       attr_accessor vpc_config: Types::VpcConfig
+      attr_accessor environment_variables: ::Array[Types::EnvironmentVariable]
+      attr_accessor execution_role_arn: ::String
       SENSITIVE: []
     end
 
@@ -119,6 +121,7 @@ module Aws::DeviceFarm
     end
 
     class CreateRemoteAccessSessionConfiguration
+      attr_accessor auxiliary_apps: ::Array[::String]
       attr_accessor billing_method: ("METERED" | "UNMETERED")
       attr_accessor vpce_configuration_arns: ::Array[::String]
       attr_accessor device_proxy: Types::DeviceProxy
@@ -128,13 +131,9 @@ module Aws::DeviceFarm
     class CreateRemoteAccessSessionRequest
       attr_accessor project_arn: ::String
       attr_accessor device_arn: ::String
+      attr_accessor app_arn: ::String
       attr_accessor instance_arn: ::String
-      attr_accessor ssh_public_key: ::String
-      attr_accessor remote_debug_enabled: bool
-      attr_accessor remote_record_enabled: bool
-      attr_accessor remote_record_app_arn: ::String
       attr_accessor name: ::String
-      attr_accessor client_id: ::String
       attr_accessor configuration: Types::CreateRemoteAccessSessionConfiguration
       attr_accessor interaction_mode: ("INTERACTIVE" | "NO_VIDEO" | "VIDEO_ONLY")
       attr_accessor skip_app_resign: bool
@@ -360,6 +359,12 @@ module Aws::DeviceFarm
       SENSITIVE: []
     end
 
+    class EnvironmentVariable
+      attr_accessor name: ::String
+      attr_accessor value: ::String
+      SENSITIVE: []
+    end
+
     class ExecutionConfiguration
       attr_accessor job_timeout_minutes: ::Integer
       attr_accessor accounts_cleanup: bool
@@ -393,6 +398,7 @@ module Aws::DeviceFarm
       attr_accessor test_type: ("BUILTIN_FUZZ" | "APPIUM_JAVA_JUNIT" | "APPIUM_JAVA_TESTNG" | "APPIUM_PYTHON" | "APPIUM_NODE" | "APPIUM_RUBY" | "APPIUM_WEB_JAVA_JUNIT" | "APPIUM_WEB_JAVA_TESTNG" | "APPIUM_WEB_PYTHON" | "APPIUM_WEB_NODE" | "APPIUM_WEB_RUBY" | "INSTRUMENTATION" | "XCTEST" | "XCTEST_UI")
       attr_accessor test: Types::ScheduleRunTest
       attr_accessor configuration: Types::ScheduleRunConfiguration
+      attr_accessor project_arn: ::String
       SENSITIVE: []
     end
 
@@ -614,6 +620,34 @@ module Aws::DeviceFarm
       attr_accessor device_minutes: Types::DeviceMinutes
       attr_accessor video_endpoint: ::String
       attr_accessor video_capture: bool
+      attr_accessor insights: Types::JobInsights
+      SENSITIVE: []
+    end
+
+    class JobInsights
+      attr_accessor status: ("PENDING" | "RUNNING" | "COMPLETED" | "SKIPPED" | "ERRORED")
+      attr_accessor test_report: Types::TestReport
+      SENSITIVE: []
+    end
+
+    class JobReport
+      attr_accessor message: ::String
+      attr_accessor metrics: Types::JobReportMetrics
+      attr_accessor job_details_url: ::String
+      SENSITIVE: [:job_details_url]
+    end
+
+    class JobReportMetrics
+      attr_accessor jobs_total: ::Integer
+      attr_accessor jobs_passed: ::Integer
+      attr_accessor jobs_failed: ::Integer
+      attr_accessor jobs_skipped: ::Integer
+      attr_accessor jobs_errored: ::Integer
+      attr_accessor jobs_stopped: ::Integer
+      attr_accessor jobs_passed_percentage: ::Float
+      attr_accessor total_job_execution_duration_seconds: ::Float
+      attr_accessor average_job_execution_duration_seconds: ::Float
+      attr_accessor median_job_execution_duration_seconds: ::Float
       SENSITIVE: []
     end
 
@@ -1012,6 +1046,8 @@ module Aws::DeviceFarm
       attr_accessor default_job_timeout_minutes: ::Integer
       attr_accessor created: ::Time
       attr_accessor vpc_config: Types::VpcConfig
+      attr_accessor environment_variables: ::Array[Types::EnvironmentVariable]
+      attr_accessor execution_role_arn: ::String
       SENSITIVE: []
     end
 
@@ -1041,6 +1077,12 @@ module Aws::DeviceFarm
       SENSITIVE: []
     end
 
+    class RemoteAccessEndpoints
+      attr_accessor remote_driver_endpoint: ::String
+      attr_accessor interactive_endpoint: ::String
+      SENSITIVE: [:remote_driver_endpoint, :interactive_endpoint]
+    end
+
     class RemoteAccessSession
       attr_accessor arn: ::String
       attr_accessor name: ::String
@@ -1052,11 +1094,6 @@ module Aws::DeviceFarm
       attr_accessor stopped: ::Time
       attr_accessor device: Types::Device
       attr_accessor instance_arn: ::String
-      attr_accessor remote_debug_enabled: bool
-      attr_accessor remote_record_enabled: bool
-      attr_accessor remote_record_app_arn: ::String
-      attr_accessor host_address: ::String
-      attr_accessor client_id: ::String
       attr_accessor billing_method: ("METERED" | "UNMETERED")
       attr_accessor device_minutes: Types::DeviceMinutes
       attr_accessor endpoint: ::String
@@ -1065,6 +1102,8 @@ module Aws::DeviceFarm
       attr_accessor skip_app_resign: bool
       attr_accessor vpc_config: Types::VpcConfig
       attr_accessor device_proxy: Types::DeviceProxy
+      attr_accessor app_upload: ::String
+      attr_accessor endpoints: Types::RemoteAccessEndpoints
       SENSITIVE: []
     end
 
@@ -1126,6 +1165,16 @@ module Aws::DeviceFarm
       attr_accessor test_spec_arn: ::String
       attr_accessor device_selection_result: Types::DeviceSelectionResult
       attr_accessor vpc_config: Types::VpcConfig
+      attr_accessor execution_role_arn: ::String
+      attr_accessor environment_variables: ::Array[Types::EnvironmentVariable]
+      attr_accessor insights_types: ::Array[("TEST_REPORT")]
+      attr_accessor insights: Types::RunInsights
+      SENSITIVE: []
+    end
+
+    class RunInsights
+      attr_accessor status: ("PENDING" | "RUNNING" | "COMPLETED" | "SKIPPED" | "ERRORED")
+      attr_accessor job_report: Types::JobReport
       SENSITIVE: []
     end
 
@@ -1147,6 +1196,9 @@ module Aws::DeviceFarm
       attr_accessor radios: Types::Radios
       attr_accessor auxiliary_apps: ::Array[::String]
       attr_accessor billing_method: ("METERED" | "UNMETERED")
+      attr_accessor environment_variables: ::Array[Types::EnvironmentVariable]
+      attr_accessor execution_role_arn: ::String
+      attr_accessor insights_types: ::Array[("TEST_REPORT")]
       SENSITIVE: []
     end
 
@@ -1310,6 +1362,26 @@ module Aws::DeviceFarm
       SENSITIVE: []
     end
 
+    class TestReport
+      attr_accessor message: ::String
+      attr_accessor metrics: Types::TestReportMetrics
+      attr_accessor test_details_url: ::String
+      SENSITIVE: [:test_details_url]
+    end
+
+    class TestReportMetrics
+      attr_accessor tests_total: ::Integer
+      attr_accessor tests_passed: ::Integer
+      attr_accessor tests_failed: ::Integer
+      attr_accessor tests_skipped: ::Integer
+      attr_accessor tests_errored: ::Integer
+      attr_accessor tests_other: ::Integer
+      attr_accessor tests_passed_percentage: ::Float
+      attr_accessor total_test_execution_duration_seconds: ::Float
+      attr_accessor median_test_execution_duration_seconds: ::Float
+      SENSITIVE: []
+    end
+
     class TooManyTagsException
       attr_accessor message: ::String
       attr_accessor resource_name: ::String
@@ -1405,6 +1477,8 @@ module Aws::DeviceFarm
       attr_accessor name: ::String
       attr_accessor default_job_timeout_minutes: ::Integer
       attr_accessor vpc_config: Types::VpcConfig
+      attr_accessor environment_variables: ::Array[Types::EnvironmentVariable]
+      attr_accessor execution_role_arn: ::String
       SENSITIVE: []
     end
 

@@ -108,6 +108,15 @@ module Aws
       class MLTransformNotReadyException < ::Aws::Errors::ServiceError
         def message: () -> ::String
       end
+      class MaterializedViewRefreshTaskNotRunningException < ::Aws::Errors::ServiceError
+        def message: () -> ::String
+      end
+      class MaterializedViewRefreshTaskRunningException < ::Aws::Errors::ServiceError
+        def message: () -> ::String
+      end
+      class MaterializedViewRefreshTaskStoppingException < ::Aws::Errors::ServiceError
+        def message: () -> ::String
+      end
       class NoScheduleException < ::Aws::Errors::ServiceError
         def message: () -> ::String
       end
@@ -136,6 +145,9 @@ module Aws
         def message: () -> ::String
       end
       class SchedulerTransitioningException < ::Aws::Errors::ServiceError
+        def message: () -> ::String
+      end
+      class SessionBusyException < ::Aws::Errors::ServiceError
         def message: () -> ::String
       end
       class TargetResourceNotFound < ::Aws::Errors::ServiceError

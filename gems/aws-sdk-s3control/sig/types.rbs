@@ -31,6 +31,8 @@ module Aws::S3Control
       attr_accessor access_point_arn: ::String
       attr_accessor alias: ::String
       attr_accessor bucket_account_id: ::String
+      attr_accessor data_source_id: ::String
+      attr_accessor data_source_type: ::String
       SENSITIVE: []
     end
 
@@ -40,6 +42,7 @@ module Aws::S3Control
       attr_accessor advanced_cost_optimization_metrics: Types::AdvancedCostOptimizationMetrics
       attr_accessor advanced_data_protection_metrics: Types::AdvancedDataProtectionMetrics
       attr_accessor detailed_status_codes_metrics: Types::DetailedStatusCodesMetrics
+      attr_accessor advanced_performance_metrics: Types::AdvancedPerformanceMetrics
       attr_accessor storage_lens_group_level: Types::StorageLensGroupLevel
       SENSITIVE: []
     end
@@ -55,6 +58,11 @@ module Aws::S3Control
     end
 
     class AdvancedDataProtectionMetrics
+      attr_accessor is_enabled: bool
+      SENSITIVE: []
+    end
+
+    class AdvancedPerformanceMetrics
       attr_accessor is_enabled: bool
       SENSITIVE: []
     end
@@ -119,6 +127,7 @@ module Aws::S3Control
       attr_accessor advanced_cost_optimization_metrics: Types::AdvancedCostOptimizationMetrics
       attr_accessor advanced_data_protection_metrics: Types::AdvancedDataProtectionMetrics
       attr_accessor detailed_status_codes_metrics: Types::DetailedStatusCodesMetrics
+      attr_accessor advanced_performance_metrics: Types::AdvancedPerformanceMetrics
       SENSITIVE: []
     end
 
@@ -206,6 +215,8 @@ module Aws::S3Control
       attr_accessor vpc_configuration: Types::VpcConfiguration
       attr_accessor public_access_block_configuration: Types::PublicAccessBlockConfiguration
       attr_accessor bucket_account_id: ::String
+      attr_accessor scope: Types::Scope
+      attr_accessor tags: ::Array[Types::Tag]
       SENSITIVE: []
     end
 
@@ -294,6 +305,11 @@ module Aws::S3Control
       SENSITIVE: [:access_key_id, :secret_access_key, :session_token]
     end
 
+    class DSSEKMSFilter
+      attr_accessor kms_key_arn: ::String
+      SENSITIVE: []
+    end
+
     class DeleteAccessGrantRequest
       attr_accessor account_id: ::String
       attr_accessor access_grant_id: ::String
@@ -335,6 +351,12 @@ module Aws::S3Control
     end
 
     class DeleteAccessPointRequest
+      attr_accessor account_id: ::String
+      attr_accessor name: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteAccessPointScopeRequest
       attr_accessor account_id: ::String
       attr_accessor name: ::String
       SENSITIVE: []
@@ -656,6 +678,19 @@ module Aws::S3Control
       attr_accessor access_point_arn: ::String
       attr_accessor endpoints: ::Hash[::String, ::String]
       attr_accessor bucket_account_id: ::String
+      attr_accessor data_source_id: ::String
+      attr_accessor data_source_type: ::String
+      SENSITIVE: []
+    end
+
+    class GetAccessPointScopeRequest
+      attr_accessor account_id: ::String
+      attr_accessor name: ::String
+      SENSITIVE: []
+    end
+
+    class GetAccessPointScopeResult
+      attr_accessor scope: Types::Scope
       SENSITIVE: []
     end
 
@@ -735,6 +770,7 @@ module Aws::S3Control
       attr_accessor duration_seconds: ::Integer
       attr_accessor privilege: ("Minimal" | "Default")
       attr_accessor target_type: ("Object")
+      attr_accessor audit_context: ::String
       SENSITIVE: []
     end
 
@@ -908,7 +944,7 @@ module Aws::S3Control
     class JobListDescriptor
       attr_accessor job_id: ::String
       attr_accessor description: ::String
-      attr_accessor operation: ("LambdaInvoke" | "S3PutObjectCopy" | "S3PutObjectAcl" | "S3PutObjectTagging" | "S3DeleteObjectTagging" | "S3InitiateRestoreObject" | "S3PutObjectLegalHold" | "S3PutObjectRetention" | "S3ReplicateObject")
+      attr_accessor operation: ("LambdaInvoke" | "S3PutObjectCopy" | "S3PutObjectAcl" | "S3PutObjectTagging" | "S3DeleteObjectTagging" | "S3InitiateRestoreObject" | "S3PutObjectLegalHold" | "S3PutObjectRetention" | "S3ReplicateObject" | "S3ComputeObjectChecksum" | "S3UpdateObjectEncryption")
       attr_accessor priority: ::Integer
       attr_accessor status: ("Active" | "Cancelled" | "Cancelling" | "Complete" | "Completing" | "Failed" | "Failing" | "New" | "Paused" | "Pausing" | "Preparing" | "Ready" | "Suspended")
       attr_accessor creation_time: ::Time
@@ -943,6 +979,7 @@ module Aws::S3Control
       attr_accessor object_size_greater_than_bytes: ::Integer
       attr_accessor object_size_less_than_bytes: ::Integer
       attr_accessor match_any_storage_class: ::Array[("STANDARD" | "STANDARD_IA" | "ONEZONE_IA" | "GLACIER" | "INTELLIGENT_TIERING" | "DEEP_ARCHIVE" | "GLACIER_IR")]
+      attr_accessor match_any_object_encryption: ::Array[Types::ObjectEncryptionFilter]
       SENSITIVE: []
     end
 
@@ -969,6 +1006,8 @@ module Aws::S3Control
       attr_accessor s3_put_object_legal_hold: Types::S3SetObjectLegalHoldOperation
       attr_accessor s3_put_object_retention: Types::S3SetObjectRetentionOperation
       attr_accessor s3_replicate_object: Types::S3ReplicateObjectOperation
+      attr_accessor s3_compute_object_checksum: Types::S3ComputeObjectChecksumOperation
+      attr_accessor s3_update_object_encryption: Types::S3UpdateObjectEncryptionOperation
       SENSITIVE: []
     end
 
@@ -986,6 +1025,7 @@ module Aws::S3Control
       attr_accessor enabled: bool
       attr_accessor prefix: ::String
       attr_accessor report_scope: ("AllTasks" | "FailedTasksOnly")
+      attr_accessor expected_bucket_owner: ::String
       SENSITIVE: []
     end
 
@@ -1131,6 +1171,20 @@ module Aws::S3Control
       SENSITIVE: []
     end
 
+    class ListAccessPointsForDirectoryBucketsRequest
+      attr_accessor account_id: ::String
+      attr_accessor directory_bucket: ::String
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListAccessPointsForDirectoryBucketsResult
+      attr_accessor access_point_list: ::Array[Types::AccessPoint]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
     class ListAccessPointsForObjectLambdaRequest
       attr_accessor account_id: ::String
       attr_accessor next_token: ::String
@@ -1149,6 +1203,8 @@ module Aws::S3Control
       attr_accessor bucket: ::String
       attr_accessor next_token: ::String
       attr_accessor max_results: ::Integer
+      attr_accessor data_source_id: ::String
+      attr_accessor data_source_type: ::String
       SENSITIVE: []
     end
 
@@ -1345,6 +1401,37 @@ module Aws::S3Control
       SENSITIVE: []
     end
 
+    class NotSSEFilter < Aws::EmptyStructure
+    end
+
+    class ObjectEncryption
+      attr_accessor ssekms: Types::S3UpdateObjectEncryptionSSEKMS
+      SENSITIVE: []
+    end
+
+    class ObjectEncryptionFilter
+      attr_accessor sses3: Types::SSES3Filter
+      attr_accessor ssekms: Types::SSEKMSFilter
+      attr_accessor dssekms: Types::DSSEKMSFilter
+      attr_accessor ssec: Types::SSECFilter
+      attr_accessor notsse: Types::NotSSEFilter
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class Sses3 < ObjectEncryptionFilter
+      end
+      class Ssekms < ObjectEncryptionFilter
+      end
+      class Dssekms < ObjectEncryptionFilter
+      end
+      class Ssec < ObjectEncryptionFilter
+      end
+      class Notsse < ObjectEncryptionFilter
+      end
+      class Unknown < ObjectEncryptionFilter
+      end
+    end
+
     class ObjectLambdaAccessPoint
       attr_accessor name: ::String
       attr_accessor object_lambda_access_point_arn: ::String
@@ -1444,6 +1531,13 @@ module Aws::S3Control
       attr_accessor account_id: ::String
       attr_accessor name: ::String
       attr_accessor policy: ::String
+      SENSITIVE: []
+    end
+
+    class PutAccessPointScopeRequest
+      attr_accessor account_id: ::String
+      attr_accessor name: ::String
+      attr_accessor scope: Types::Scope
       SENSITIVE: []
     end
 
@@ -1629,6 +1723,12 @@ module Aws::S3Control
       SENSITIVE: []
     end
 
+    class S3ComputeObjectChecksumOperation
+      attr_accessor checksum_algorithm: ("CRC32" | "CRC32C" | "CRC64NVME" | "MD5" | "SHA1" | "SHA256" | "SHA512" | "XXHASH64" | "XXHASH3" | "XXHASH128")
+      attr_accessor checksum_type: ("FULL_OBJECT" | "COMPOSITE")
+      SENSITIVE: []
+    end
+
     class S3CopyObjectOperation
       attr_accessor target_resource: ::String
       attr_accessor canned_access_control_list: ("private" | "public-read" | "public-read-write" | "aws-exec-read" | "authenticated-read" | "bucket-owner-read" | "bucket-owner-full-control")
@@ -1647,7 +1747,7 @@ module Aws::S3Control
       attr_accessor object_lock_mode: ("COMPLIANCE" | "GOVERNANCE")
       attr_accessor object_lock_retain_until_date: ::Time
       attr_accessor bucket_key_enabled: bool
-      attr_accessor checksum_algorithm: ("CRC32" | "CRC32C" | "SHA1" | "SHA256" | "CRC64NVME")
+      attr_accessor checksum_algorithm: ("CRC32" | "CRC32C" | "SHA1" | "SHA256" | "CRC64NVME" | "SHA512" | "MD5" | "XXHASH64" | "XXHASH3" | "XXHASH128")
       SENSITIVE: []
     end
 
@@ -1759,6 +1859,20 @@ module Aws::S3Control
       SENSITIVE: []
     end
 
+    class S3UpdateObjectEncryptionOperation
+      attr_accessor object_encryption: Types::ObjectEncryption
+      SENSITIVE: []
+    end
+
+    class S3UpdateObjectEncryptionSSEKMS
+      attr_accessor kms_key_arn: ::String
+      attr_accessor bucket_key_enabled: bool
+      SENSITIVE: []
+    end
+
+    class SSECFilter < Aws::EmptyStructure
+    end
+
     class SSEKMS
       attr_accessor key_id: ::String
       SENSITIVE: []
@@ -1769,10 +1883,25 @@ module Aws::S3Control
       SENSITIVE: []
     end
 
+    class SSEKMSFilter
+      attr_accessor kms_key_arn: ::String
+      attr_accessor bucket_key_enabled: bool
+      SENSITIVE: []
+    end
+
     class SSES3 < Aws::EmptyStructure
     end
 
     class SSES3Encryption < Aws::EmptyStructure
+    end
+
+    class SSES3Filter < Aws::EmptyStructure
+    end
+
+    class Scope
+      attr_accessor prefixes: ::Array[::String]
+      attr_accessor permissions: ::Array[("GetObject" | "GetObjectAttributes" | "ListMultipartUploadParts" | "ListBucket" | "ListBucketMultipartUploads" | "PutObject" | "DeleteObject" | "AbortMultipartUpload")]
+      SENSITIVE: []
     end
 
     class SelectionCriteria
@@ -1804,21 +1933,30 @@ module Aws::S3Control
       attr_accessor include: Types::Include
       attr_accessor exclude: Types::Exclude
       attr_accessor data_export: Types::StorageLensDataExport
+      attr_accessor expanded_prefixes_data_export: Types::StorageLensExpandedPrefixesDataExport
       attr_accessor is_enabled: bool
       attr_accessor aws_org: Types::StorageLensAwsOrg
       attr_accessor storage_lens_arn: ::String
+      attr_accessor prefix_delimiter: ::String
       SENSITIVE: []
     end
 
     class StorageLensDataExport
       attr_accessor s3_bucket_destination: Types::S3BucketDestination
       attr_accessor cloud_watch_metrics: Types::CloudWatchMetrics
+      attr_accessor storage_lens_table_destination: Types::StorageLensTableDestination
       SENSITIVE: []
     end
 
     class StorageLensDataExportEncryption
       attr_accessor sses3: Types::SSES3
       attr_accessor ssekms: Types::SSEKMS
+      SENSITIVE: []
+    end
+
+    class StorageLensExpandedPrefixesDataExport
+      attr_accessor s3_bucket_destination: Types::S3BucketDestination
+      attr_accessor storage_lens_table_destination: Types::StorageLensTableDestination
       SENSITIVE: []
     end
 
@@ -1866,6 +2004,12 @@ module Aws::S3Control
       attr_accessor match_any_tag: ::Array[Types::S3Tag]
       attr_accessor match_object_age: Types::MatchObjectAge
       attr_accessor match_object_size: Types::MatchObjectSize
+      SENSITIVE: []
+    end
+
+    class StorageLensTableDestination
+      attr_accessor is_enabled: bool
+      attr_accessor encryption: Types::StorageLensDataExportEncryption
       SENSITIVE: []
     end
 

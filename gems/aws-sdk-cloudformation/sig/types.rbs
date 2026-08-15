@@ -48,9 +48,20 @@ module Aws::CloudFormation
     class AlreadyExistsException < Aws::EmptyStructure
     end
 
+    class Annotation
+      attr_accessor annotation_name: ::String
+      attr_accessor status: ("PASSED" | "FAILED" | "SKIPPED")
+      attr_accessor status_message: ::String
+      attr_accessor remediation_message: ::String
+      attr_accessor remediation_link: ::String
+      attr_accessor severity_level: ("INFORMATIONAL" | "LOW" | "MEDIUM" | "HIGH" | "CRITICAL")
+      SENSITIVE: []
+    end
+
     class AutoDeployment
       attr_accessor enabled: bool
       attr_accessor retain_stacks_on_account_removal: bool
+      attr_accessor depends_on: ::Array[::String]
       SENSITIVE: []
     end
 
@@ -104,7 +115,7 @@ module Aws::CloudFormation
     class ChangeSetHookResourceTargetDetails
       attr_accessor logical_resource_id: ::String
       attr_accessor resource_type: ::String
-      attr_accessor resource_action: ("Add" | "Modify" | "Remove" | "Import" | "Dynamic")
+      attr_accessor resource_action: ("Add" | "Modify" | "Remove" | "Import" | "Dynamic" | "SyncWithActual")
       SENSITIVE: []
     end
 
@@ -168,6 +179,9 @@ module Aws::CloudFormation
       attr_accessor include_nested_stacks: bool
       attr_accessor on_stack_failure: ("DO_NOTHING" | "ROLLBACK" | "DELETE")
       attr_accessor import_existing_resources: bool
+      attr_accessor deployment_mode: ("REVERT_DRIFT")
+      attr_accessor deployment_config: Types::DeploymentConfig
+      attr_accessor disable_validation: bool
       SENSITIVE: []
     end
 
@@ -209,6 +223,8 @@ module Aws::CloudFormation
       attr_accessor client_request_token: ::String
       attr_accessor enable_termination_protection: bool
       attr_accessor retain_except_on_create: bool
+      attr_accessor deployment_config: Types::DeploymentConfig
+      attr_accessor disable_validation: bool
       SENSITIVE: []
     end
 
@@ -231,6 +247,7 @@ module Aws::CloudFormation
 
     class CreateStackOutput
       attr_accessor stack_id: ::String
+      attr_accessor operation_id: ::String
       SENSITIVE: []
     end
 
@@ -310,6 +327,7 @@ module Aws::CloudFormation
       attr_accessor role_arn: ::String
       attr_accessor client_request_token: ::String
       attr_accessor deletion_mode: ("STANDARD" | "FORCE_DELETE_STACK")
+      attr_accessor deployment_config: Types::DeploymentConfig
       SENSITIVE: []
     end
 
@@ -337,6 +355,12 @@ module Aws::CloudFormation
     end
 
     class DeleteStackSetOutput < Aws::EmptyStructure
+    end
+
+    class DeploymentConfig
+      attr_accessor mode: ("STANDARD" | "EXPRESS")
+      attr_accessor disable_rollback: bool
+      SENSITIVE: []
     end
 
     class DeploymentTargets
@@ -407,6 +431,7 @@ module Aws::CloudFormation
       attr_accessor execution_status: ("UNAVAILABLE" | "AVAILABLE" | "EXECUTE_IN_PROGRESS" | "EXECUTE_COMPLETE" | "EXECUTE_FAILED" | "OBSOLETE")
       attr_accessor status: ("CREATE_PENDING" | "CREATE_IN_PROGRESS" | "CREATE_COMPLETE" | "DELETE_PENDING" | "DELETE_IN_PROGRESS" | "DELETE_COMPLETE" | "DELETE_FAILED" | "FAILED")
       attr_accessor status_reason: ::String
+      attr_accessor stack_drift_status: ("DRIFTED" | "IN_SYNC" | "UNKNOWN" | "NOT_CHECKED")
       attr_accessor notification_arns: ::Array[::String]
       attr_accessor rollback_configuration: Types::RollbackConfiguration
       attr_accessor capabilities: ::Array[("CAPABILITY_IAM" | "CAPABILITY_NAMED_IAM" | "CAPABILITY_AUTO_EXPAND")]
@@ -418,6 +443,23 @@ module Aws::CloudFormation
       attr_accessor root_change_set_id: ::String
       attr_accessor on_stack_failure: ("DO_NOTHING" | "ROLLBACK" | "DELETE")
       attr_accessor import_existing_resources: bool
+      attr_accessor deployment_mode: ("REVERT_DRIFT")
+      attr_accessor deployment_config: Types::DeploymentConfig
+      SENSITIVE: []
+    end
+
+    class DescribeEventsInput
+      attr_accessor stack_name: ::String
+      attr_accessor change_set_name: ::String
+      attr_accessor operation_id: ::String
+      attr_accessor filters: Types::EventFilter
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeEventsOutput
+      attr_accessor operation_events: ::Array[Types::OperationEvent]
+      attr_accessor next_token: ::String
       SENSITIVE: []
     end
 
@@ -479,6 +521,7 @@ module Aws::CloudFormation
       attr_accessor resource_types: ::Array[::String]
       attr_accessor resources_scanned: ::Integer
       attr_accessor resources_read: ::Integer
+      attr_accessor scan_filters: ::Array[Types::ScanFilter]
       SENSITIVE: []
     end
 
@@ -541,7 +584,7 @@ module Aws::CloudFormation
 
     class DescribeStackResourceDriftsInput
       attr_accessor stack_name: ::String
-      attr_accessor stack_resource_drift_status_filters: ::Array[("IN_SYNC" | "MODIFIED" | "DELETED" | "NOT_CHECKED")]
+      attr_accessor stack_resource_drift_status_filters: ::Array[("IN_SYNC" | "MODIFIED" | "DELETED" | "NOT_CHECKED" | "UNKNOWN" | "UNSUPPORTED")]
       attr_accessor next_token: ::String
       attr_accessor max_results: ::Integer
       SENSITIVE: []
@@ -712,6 +755,11 @@ module Aws::CloudFormation
       SENSITIVE: []
     end
 
+    class EventFilter
+      attr_accessor failed_events: bool
+      SENSITIVE: []
+    end
+
     class ExecuteChangeSetInput
       attr_accessor change_set_name: ::String
       attr_accessor stack_name: ::String
@@ -748,6 +796,28 @@ module Aws::CloudFormation
     class GetGeneratedTemplateOutput
       attr_accessor status: ("CREATE_PENDING" | "UPDATE_PENDING" | "DELETE_PENDING" | "CREATE_IN_PROGRESS" | "UPDATE_IN_PROGRESS" | "DELETE_IN_PROGRESS" | "FAILED" | "COMPLETE")
       attr_accessor template_body: ::String
+      SENSITIVE: []
+    end
+
+    class GetHookResultInput
+      attr_accessor hook_result_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetHookResultOutput
+      attr_accessor hook_result_id: ::String
+      attr_accessor invocation_point: ("PRE_PROVISION")
+      attr_accessor failure_mode: ("FAIL" | "WARN")
+      attr_accessor type_name: ::String
+      attr_accessor original_type_name: ::String
+      attr_accessor type_version_id: ::String
+      attr_accessor type_configuration_version_id: ::String
+      attr_accessor type_arn: ::String
+      attr_accessor status: ("HOOK_IN_PROGRESS" | "HOOK_COMPLETE_SUCCEEDED" | "HOOK_COMPLETE_FAILED" | "HOOK_FAILED")
+      attr_accessor hook_status_reason: ::String
+      attr_accessor invoked_at: ::Time
+      attr_accessor target: Types::HookTarget
+      attr_accessor annotations: ::Array[Types::Annotation]
       SENSITIVE: []
     end
 
@@ -802,6 +872,7 @@ module Aws::CloudFormation
     end
 
     class HookResultSummary
+      attr_accessor hook_result_id: ::String
       attr_accessor invocation_point: ("PRE_PROVISION")
       attr_accessor failure_mode: ("FAIL" | "WARN")
       attr_accessor type_name: ::String
@@ -809,6 +880,19 @@ module Aws::CloudFormation
       attr_accessor type_configuration_version_id: ::String
       attr_accessor status: ("HOOK_IN_PROGRESS" | "HOOK_COMPLETE_SUCCEEDED" | "HOOK_COMPLETE_FAILED" | "HOOK_FAILED")
       attr_accessor hook_status_reason: ::String
+      attr_accessor invoked_at: ::Time
+      attr_accessor target_type: ("CHANGE_SET" | "STACK" | "RESOURCE" | "CLOUD_CONTROL")
+      attr_accessor target_id: ::String
+      attr_accessor type_arn: ::String
+      attr_accessor hook_execution_target: ::String
+      SENSITIVE: []
+    end
+
+    class HookTarget
+      attr_accessor target_type: ("RESOURCE")
+      attr_accessor target_type_name: ::String
+      attr_accessor target_id: ::String
+      attr_accessor action: ("CREATE" | "UPDATE" | "DELETE" | "IMPORT")
       SENSITIVE: []
     end
 
@@ -881,6 +965,8 @@ module Aws::CloudFormation
     class ListHookResultsInput
       attr_accessor target_type: ("CHANGE_SET" | "STACK" | "RESOURCE" | "CLOUD_CONTROL")
       attr_accessor target_id: ::String
+      attr_accessor type_arn: ::String
+      attr_accessor status: ("HOOK_IN_PROGRESS" | "HOOK_COMPLETE_SUCCEEDED" | "HOOK_COMPLETE_FAILED" | "HOOK_FAILED")
       attr_accessor next_token: ::String
       SENSITIVE: []
     end
@@ -939,6 +1025,7 @@ module Aws::CloudFormation
     class ListResourceScansInput
       attr_accessor next_token: ::String
       attr_accessor max_results: ::Integer
+      attr_accessor scan_type_filter: ("FULL" | "PARTIAL")
       SENSITIVE: []
     end
 
@@ -952,7 +1039,7 @@ module Aws::CloudFormation
       attr_accessor stack_set_name: ::String
       attr_accessor next_token: ::String
       attr_accessor max_results: ::Integer
-      attr_accessor stack_instance_resource_drift_statuses: ::Array[("IN_SYNC" | "MODIFIED" | "DELETED" | "NOT_CHECKED")]
+      attr_accessor stack_instance_resource_drift_statuses: ::Array[("IN_SYNC" | "MODIFIED" | "DELETED" | "NOT_CHECKED" | "UNKNOWN" | "UNSUPPORTED")]
       attr_accessor stack_instance_account: ::String
       attr_accessor stack_instance_region: ::String
       attr_accessor operation_id: ::String
@@ -1141,6 +1228,13 @@ module Aws::CloudFormation
       SENSITIVE: []
     end
 
+    class LiveResourceDrift
+      attr_accessor previous_value: ::String
+      attr_accessor actual_value: ::String
+      attr_accessor drift_detection_timestamp: ::Time
+      SENSITIVE: []
+    end
+
     class LoggingConfig
       attr_accessor log_role_arn: ::String
       attr_accessor log_group_name: ::String
@@ -1159,6 +1253,43 @@ module Aws::CloudFormation
     end
 
     class NameAlreadyExistsException < Aws::EmptyStructure
+    end
+
+    class OperationEntry
+      attr_accessor operation_type: ("CREATE_STACK" | "UPDATE_STACK" | "DELETE_STACK" | "CONTINUE_ROLLBACK" | "ROLLBACK" | "CREATE_CHANGESET")
+      attr_accessor operation_id: ::String
+      SENSITIVE: []
+    end
+
+    class OperationEvent
+      attr_accessor event_id: ::String
+      attr_accessor stack_id: ::String
+      attr_accessor operation_id: ::String
+      attr_accessor operation_type: ("CREATE_STACK" | "UPDATE_STACK" | "DELETE_STACK" | "CONTINUE_ROLLBACK" | "ROLLBACK" | "CREATE_CHANGESET")
+      attr_accessor operation_status: ("IN_PROGRESS" | "SUCCEEDED" | "FAILED")
+      attr_accessor event_type: ("STACK_EVENT" | "PROGRESS_EVENT" | "VALIDATION_ERROR" | "PROVISIONING_ERROR" | "HOOK_INVOCATION_ERROR")
+      attr_accessor logical_resource_id: ::String
+      attr_accessor physical_resource_id: ::String
+      attr_accessor resource_type: ::String
+      attr_accessor timestamp: ::Time
+      attr_accessor start_time: ::Time
+      attr_accessor end_time: ::Time
+      attr_accessor resource_status: ("CREATE_IN_PROGRESS" | "CREATE_FAILED" | "CREATE_COMPLETE" | "DELETE_IN_PROGRESS" | "DELETE_FAILED" | "DELETE_COMPLETE" | "DELETE_SKIPPED" | "UPDATE_IN_PROGRESS" | "UPDATE_FAILED" | "UPDATE_COMPLETE" | "IMPORT_FAILED" | "IMPORT_COMPLETE" | "IMPORT_IN_PROGRESS" | "IMPORT_ROLLBACK_IN_PROGRESS" | "IMPORT_ROLLBACK_FAILED" | "IMPORT_ROLLBACK_COMPLETE" | "EXPORT_FAILED" | "EXPORT_COMPLETE" | "EXPORT_IN_PROGRESS" | "EXPORT_ROLLBACK_IN_PROGRESS" | "EXPORT_ROLLBACK_FAILED" | "EXPORT_ROLLBACK_COMPLETE" | "UPDATE_ROLLBACK_IN_PROGRESS" | "UPDATE_ROLLBACK_COMPLETE" | "UPDATE_ROLLBACK_FAILED" | "ROLLBACK_IN_PROGRESS" | "ROLLBACK_COMPLETE" | "ROLLBACK_FAILED")
+      attr_accessor resource_status_reason: ::String
+      attr_accessor resource_properties: ::String
+      attr_accessor client_request_token: ::String
+      attr_accessor hook_type: ::String
+      attr_accessor hook_status: ("HOOK_IN_PROGRESS" | "HOOK_COMPLETE_SUCCEEDED" | "HOOK_COMPLETE_FAILED" | "HOOK_FAILED")
+      attr_accessor hook_status_reason: ::String
+      attr_accessor hook_invocation_point: ("PRE_PROVISION")
+      attr_accessor hook_failure_mode: ("FAIL" | "WARN")
+      attr_accessor detailed_status: ("CONFIGURATION_COMPLETE" | "VALIDATION_FAILED")
+      attr_accessor validation_failure_mode: ("FAIL" | "WARN")
+      attr_accessor validation_name: ::String
+      attr_accessor validation_status: ("FAILED" | "SKIPPED")
+      attr_accessor validation_status_reason: ::String
+      attr_accessor validation_path: ::String
+      SENSITIVE: []
     end
 
     class OperationIdAlreadyExistsException < Aws::EmptyStructure
@@ -1287,24 +1418,27 @@ module Aws::CloudFormation
 
     class ResourceChange
       attr_accessor policy_action: ("Delete" | "Retain" | "Snapshot" | "ReplaceAndDelete" | "ReplaceAndRetain" | "ReplaceAndSnapshot")
-      attr_accessor action: ("Add" | "Modify" | "Remove" | "Import" | "Dynamic")
+      attr_accessor action: ("Add" | "Modify" | "Remove" | "Import" | "Dynamic" | "SyncWithActual")
       attr_accessor logical_resource_id: ::String
       attr_accessor physical_resource_id: ::String
       attr_accessor resource_type: ::String
       attr_accessor replacement: ("True" | "False" | "Conditional")
       attr_accessor scope: ::Array[("Properties" | "Metadata" | "CreationPolicy" | "UpdatePolicy" | "DeletionPolicy" | "UpdateReplacePolicy" | "Tags")]
+      attr_accessor resource_drift_status: ("IN_SYNC" | "MODIFIED" | "DELETED" | "NOT_CHECKED" | "UNKNOWN" | "UNSUPPORTED")
+      attr_accessor resource_drift_ignored_attributes: ::Array[Types::ResourceDriftIgnoredAttribute]
       attr_accessor details: ::Array[Types::ResourceChangeDetail]
       attr_accessor change_set_id: ::String
       attr_accessor module_info: Types::ModuleInfo
       attr_accessor before_context: ::String
       attr_accessor after_context: ::String
+      attr_accessor previous_deployment_context: ::String
       SENSITIVE: []
     end
 
     class ResourceChangeDetail
       attr_accessor target: Types::ResourceTargetDefinition
       attr_accessor evaluation: ("Static" | "Dynamic")
-      attr_accessor change_source: ("ResourceReference" | "ParameterReference" | "ResourceAttribute" | "DirectModification" | "Automatic")
+      attr_accessor change_source: ("ResourceReference" | "ParameterReference" | "ResourceAttribute" | "DirectModification" | "Automatic" | "NoModification")
       attr_accessor causing_entity: ::String
       SENSITIVE: []
     end
@@ -1323,6 +1457,12 @@ module Aws::CloudFormation
       attr_accessor resource_status: ("PENDING" | "IN_PROGRESS" | "FAILED" | "COMPLETE")
       attr_accessor resource_status_reason: ::String
       attr_accessor warnings: ::Array[Types::WarningDetail]
+      SENSITIVE: []
+    end
+
+    class ResourceDriftIgnoredAttribute
+      attr_accessor path: ::String
+      attr_accessor reason: ("MANAGED_BY_AWS" | "WRITE_ONLY_PROPERTY" | "SENSITIVE_PROPERTY")
       SENSITIVE: []
     end
 
@@ -1361,6 +1501,7 @@ module Aws::CloudFormation
       attr_accessor start_time: ::Time
       attr_accessor end_time: ::Time
       attr_accessor percentage_completed: ::Float
+      attr_accessor scan_type: ("FULL" | "PARTIAL")
       SENSITIVE: []
     end
 
@@ -1371,7 +1512,10 @@ module Aws::CloudFormation
       attr_accessor path: ::String
       attr_accessor before_value: ::String
       attr_accessor after_value: ::String
-      attr_accessor attribute_change_type: ("Add" | "Remove" | "Modify")
+      attr_accessor before_value_from: ("PREVIOUS_DEPLOYMENT_STATE" | "ACTUAL_STATE")
+      attr_accessor after_value_from: ("TEMPLATE")
+      attr_accessor drift: Types::LiveResourceDrift
+      attr_accessor attribute_change_type: ("Add" | "Remove" | "Modify" | "SyncWithActual")
       SENSITIVE: []
     end
 
@@ -1393,17 +1537,24 @@ module Aws::CloudFormation
       attr_accessor role_arn: ::String
       attr_accessor client_request_token: ::String
       attr_accessor retain_except_on_create: bool
+      attr_accessor deployment_config: Types::DeploymentConfig
       SENSITIVE: []
     end
 
     class RollbackStackOutput
       attr_accessor stack_id: ::String
+      attr_accessor operation_id: ::String
       SENSITIVE: []
     end
 
     class RollbackTrigger
       attr_accessor arn: ::String
       attr_accessor type: ::String
+      SENSITIVE: []
+    end
+
+    class ScanFilter
+      attr_accessor types: ::Array[::String]
       SENSITIVE: []
     end
 
@@ -1473,6 +1624,7 @@ module Aws::CloudFormation
       attr_accessor stack_status: ("CREATE_IN_PROGRESS" | "CREATE_FAILED" | "CREATE_COMPLETE" | "ROLLBACK_IN_PROGRESS" | "ROLLBACK_FAILED" | "ROLLBACK_COMPLETE" | "DELETE_IN_PROGRESS" | "DELETE_FAILED" | "DELETE_COMPLETE" | "UPDATE_IN_PROGRESS" | "UPDATE_COMPLETE_CLEANUP_IN_PROGRESS" | "UPDATE_COMPLETE" | "UPDATE_FAILED" | "UPDATE_ROLLBACK_IN_PROGRESS" | "UPDATE_ROLLBACK_FAILED" | "UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS" | "UPDATE_ROLLBACK_COMPLETE" | "REVIEW_IN_PROGRESS" | "IMPORT_IN_PROGRESS" | "IMPORT_COMPLETE" | "IMPORT_ROLLBACK_IN_PROGRESS" | "IMPORT_ROLLBACK_FAILED" | "IMPORT_ROLLBACK_COMPLETE")
       attr_accessor stack_status_reason: ::String
       attr_accessor disable_rollback: bool
+      attr_accessor deployment_config: Types::DeploymentConfig
       attr_accessor notification_arns: ::Array[::String]
       attr_accessor timeout_in_minutes: ::Integer
       attr_accessor capabilities: ::Array[("CAPABILITY_IAM" | "CAPABILITY_NAMED_IAM" | "CAPABILITY_AUTO_EXPAND")]
@@ -1486,6 +1638,7 @@ module Aws::CloudFormation
       attr_accessor retain_except_on_create: bool
       attr_accessor deletion_mode: ("STANDARD" | "FORCE_DELETE_STACK")
       attr_accessor detailed_status: ("CONFIGURATION_COMPLETE" | "VALIDATION_FAILED")
+      attr_accessor last_operations: ::Array[Types::OperationEntry]
       SENSITIVE: []
     end
 
@@ -1512,6 +1665,7 @@ module Aws::CloudFormation
       attr_accessor stack_id: ::String
       attr_accessor event_id: ::String
       attr_accessor stack_name: ::String
+      attr_accessor operation_id: ::String
       attr_accessor logical_resource_id: ::String
       attr_accessor physical_resource_id: ::String
       attr_accessor resource_type: ::String
@@ -1524,6 +1678,7 @@ module Aws::CloudFormation
       attr_accessor hook_status: ("HOOK_IN_PROGRESS" | "HOOK_COMPLETE_SUCCEEDED" | "HOOK_COMPLETE_FAILED" | "HOOK_FAILED")
       attr_accessor hook_status_reason: ::String
       attr_accessor hook_invocation_point: ("PRE_PROVISION")
+      attr_accessor hook_invocation_id: ::String
       attr_accessor hook_failure_mode: ("FAIL" | "WARN")
       attr_accessor detailed_status: ("CONFIGURATION_COMPLETE" | "VALIDATION_FAILED")
       SENSITIVE: []
@@ -1566,7 +1721,7 @@ module Aws::CloudFormation
       attr_accessor physical_resource_id_context: ::Array[Types::PhysicalResourceIdContextKeyValuePair]
       attr_accessor resource_type: ::String
       attr_accessor property_differences: ::Array[Types::PropertyDifference]
-      attr_accessor stack_resource_drift_status: ("IN_SYNC" | "MODIFIED" | "DELETED" | "NOT_CHECKED")
+      attr_accessor stack_resource_drift_status: ("IN_SYNC" | "MODIFIED" | "DELETED" | "NOT_CHECKED" | "UNKNOWN" | "UNSUPPORTED")
       attr_accessor timestamp: ::Time
       SENSITIVE: []
     end
@@ -1656,20 +1811,21 @@ module Aws::CloudFormation
       attr_accessor expected_properties: ::String
       attr_accessor actual_properties: ::String
       attr_accessor property_differences: ::Array[Types::PropertyDifference]
-      attr_accessor stack_resource_drift_status: ("IN_SYNC" | "MODIFIED" | "DELETED" | "NOT_CHECKED")
+      attr_accessor stack_resource_drift_status: ("IN_SYNC" | "MODIFIED" | "DELETED" | "NOT_CHECKED" | "UNKNOWN" | "UNSUPPORTED")
       attr_accessor timestamp: ::Time
       attr_accessor module_info: Types::ModuleInfo
+      attr_accessor drift_status_reason: ::String
       SENSITIVE: []
     end
 
     class StackResourceDriftInformation
-      attr_accessor stack_resource_drift_status: ("IN_SYNC" | "MODIFIED" | "DELETED" | "NOT_CHECKED")
+      attr_accessor stack_resource_drift_status: ("IN_SYNC" | "MODIFIED" | "DELETED" | "NOT_CHECKED" | "UNKNOWN" | "UNSUPPORTED")
       attr_accessor last_check_timestamp: ::Time
       SENSITIVE: []
     end
 
     class StackResourceDriftInformationSummary
-      attr_accessor stack_resource_drift_status: ("IN_SYNC" | "MODIFIED" | "DELETED" | "NOT_CHECKED")
+      attr_accessor stack_resource_drift_status: ("IN_SYNC" | "MODIFIED" | "DELETED" | "NOT_CHECKED" | "UNKNOWN" | "UNSUPPORTED")
       attr_accessor last_check_timestamp: ::Time
       SENSITIVE: []
     end
@@ -1812,6 +1968,7 @@ module Aws::CloudFormation
       attr_accessor parent_id: ::String
       attr_accessor root_id: ::String
       attr_accessor drift_information: Types::StackDriftInformationSummary
+      attr_accessor last_operations: ::Array[Types::OperationEntry]
       SENSITIVE: []
     end
 
@@ -1820,6 +1977,7 @@ module Aws::CloudFormation
 
     class StartResourceScanInput
       attr_accessor client_request_token: ::String
+      attr_accessor scan_filters: ::Array[Types::ScanFilter]
       SENSITIVE: []
     end
 
@@ -1995,6 +2153,8 @@ module Aws::CloudFormation
       attr_accessor disable_rollback: bool
       attr_accessor client_request_token: ::String
       attr_accessor retain_except_on_create: bool
+      attr_accessor deployment_config: Types::DeploymentConfig
+      attr_accessor disable_validation: bool
       SENSITIVE: []
     end
 
@@ -2017,6 +2177,7 @@ module Aws::CloudFormation
 
     class UpdateStackOutput
       attr_accessor stack_id: ::String
+      attr_accessor operation_id: ::String
       SENSITIVE: []
     end
 
@@ -2075,7 +2236,7 @@ module Aws::CloudFormation
     end
 
     class WarningDetail
-      attr_accessor type: ("MUTUALLY_EXCLUSIVE_PROPERTIES" | "UNSUPPORTED_PROPERTIES" | "MUTUALLY_EXCLUSIVE_TYPES")
+      attr_accessor type: ("MUTUALLY_EXCLUSIVE_PROPERTIES" | "UNSUPPORTED_PROPERTIES" | "MUTUALLY_EXCLUSIVE_TYPES" | "EXCLUDED_PROPERTIES" | "EXCLUDED_RESOURCES")
       attr_accessor properties: ::Array[Types::WarningProperty]
       SENSITIVE: []
     end

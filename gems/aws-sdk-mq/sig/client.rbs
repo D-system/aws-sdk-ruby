@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -84,7 +85,7 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/MQ/Client.html#create_broker-instance_method
       def create_broker: (
-                           ?authentication_strategy: ("SIMPLE" | "LDAP"),
+                           ?authentication_strategy: ("SIMPLE" | "LDAP" | "CONFIG_MANAGED"),
                            ?auto_minor_version_upgrade: bool,
                            broker_name: ::String,
                            ?configuration: {
@@ -100,19 +101,7 @@ module Aws
                            engine_type: ("ACTIVEMQ" | "RABBITMQ"),
                            ?engine_version: ::String,
                            host_instance_type: ::String,
-                           ?ldap_server_metadata: {
-                             hosts: Array[::String],
-                             role_base: ::String,
-                             role_name: ::String?,
-                             role_search_matching: ::String,
-                             role_search_subtree: bool?,
-                             service_account_password: ::String,
-                             service_account_username: ::String,
-                             user_base: ::String,
-                             user_role_name: ::String?,
-                             user_search_matching: ::String,
-                             user_search_subtree: bool?
-                           },
+                           ?ldap_server_metadata: Params::ldap_server_metadata_input,
                            ?logs: {
                              audit: bool?,
                              general: bool?
@@ -124,17 +113,18 @@ module Aws
                            },
                            publicly_accessible: bool,
                            ?security_groups: Array[::String],
+                           ?storage_size: ::Integer,
                            ?storage_type: ("EBS" | "EFS"),
                            ?subnet_ids: Array[::String],
                            ?tags: Hash[::String, ::String],
-                           users: Array[
+                           ?users: Array[
                              {
                                console_access: bool?,
                                groups: Array[::String]?,
                                password: ::String,
                                username: ::String,
                                replication_user: bool?
-                             },
+                             }
                            ],
                            ?data_replication_mode: ("NONE" | "CRDR"),
                            ?data_replication_primary_broker_arn: ::String
@@ -144,7 +134,7 @@ module Aws
       interface _CreateConfigurationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateConfigurationResponse]
         def arn: () -> ::String
-        def authentication_strategy: () -> ("SIMPLE" | "LDAP")
+        def authentication_strategy: () -> ("SIMPLE" | "LDAP" | "CONFIG_MANAGED")
         def created: () -> ::Time
         def id: () -> ::String
         def latest_revision: () -> Types::ConfigurationRevision
@@ -152,7 +142,7 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/MQ/Client.html#create_configuration-instance_method
       def create_configuration: (
-                                  ?authentication_strategy: ("SIMPLE" | "LDAP"),
+                                  ?authentication_strategy: ("SIMPLE" | "LDAP" | "CONFIG_MANAGED"),
                                   engine_type: ("ACTIVEMQ" | "RABBITMQ"),
                                   ?engine_version: ::String,
                                   name: ::String,
@@ -191,6 +181,16 @@ module Aws
                          ) -> _DeleteBrokerResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteBrokerResponseSuccess
 
+      interface _DeleteConfigurationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteConfigurationResponse]
+        def configuration_id: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/MQ/Client.html#delete_configuration-instance_method
+      def delete_configuration: (
+                                  configuration_id: ::String
+                                ) -> _DeleteConfigurationResponseSuccess
+                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteConfigurationResponseSuccess
+
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/MQ/Client.html#delete_tags-instance_method
       def delete_tags: (
                          resource_arn: ::String,
@@ -211,7 +211,7 @@ module Aws
       interface _DescribeBrokerResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DescribeBrokerResponse]
         def actions_required: () -> ::Array[Types::ActionRequired]
-        def authentication_strategy: () -> ("SIMPLE" | "LDAP")
+        def authentication_strategy: () -> ("SIMPLE" | "LDAP" | "CONFIG_MANAGED")
         def auto_minor_version_upgrade: () -> bool
         def broker_arn: () -> ::String
         def broker_id: () -> ::String
@@ -228,13 +228,15 @@ module Aws
         def ldap_server_metadata: () -> Types::LdapServerMetadataOutput
         def logs: () -> Types::LogsSummary
         def maintenance_window_start_time: () -> Types::WeeklyStartTime
-        def pending_authentication_strategy: () -> ("SIMPLE" | "LDAP")
+        def pending_authentication_strategy: () -> ("SIMPLE" | "LDAP" | "CONFIG_MANAGED")
         def pending_engine_version: () -> ::String
         def pending_host_instance_type: () -> ::String
         def pending_ldap_server_metadata: () -> Types::LdapServerMetadataOutput
         def pending_security_groups: () -> ::Array[::String]
+        def pending_storage_size: () -> ::Integer
         def publicly_accessible: () -> bool
         def security_groups: () -> ::Array[::String]
+        def storage_size: () -> ::Integer
         def storage_type: () -> ("EBS" | "EFS")
         def subnet_ids: () -> ::Array[::String]
         def tags: () -> ::Hash[::String, ::String]
@@ -283,7 +285,7 @@ module Aws
       interface _DescribeConfigurationResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DescribeConfigurationResponse]
         def arn: () -> ::String
-        def authentication_strategy: () -> ("SIMPLE" | "LDAP")
+        def authentication_strategy: () -> ("SIMPLE" | "LDAP" | "CONFIG_MANAGED")
         def created: () -> ::Time
         def description: () -> ::String
         def engine_type: () -> ("ACTIVEMQ" | "RABBITMQ")
@@ -311,6 +313,19 @@ module Aws
                                              configuration_revision: ::String
                                            ) -> _DescribeConfigurationRevisionResponseSuccess
                                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeConfigurationRevisionResponseSuccess
+
+      interface _DescribeSharedResourcesResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DescribeSharedResourcesResponse]
+        def next_token: () -> ::String
+        def shared_resources: () -> ::Array[Types::SharedResource]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/MQ/Client.html#describe_shared_resources-instance_method
+      def describe_shared_resources: (
+                                       broker_id: ::String,
+                                       ?max_results: ::Integer,
+                                       ?next_token: ::String
+                                     ) -> _DescribeSharedResourcesResponseSuccess
+                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeSharedResourcesResponseSuccess
 
       interface _DescribeUserResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DescribeUserResponse]
@@ -415,7 +430,7 @@ module Aws
 
       interface _UpdateBrokerResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::UpdateBrokerResponse]
-        def authentication_strategy: () -> ("SIMPLE" | "LDAP")
+        def authentication_strategy: () -> ("SIMPLE" | "LDAP" | "CONFIG_MANAGED")
         def auto_minor_version_upgrade: () -> bool
         def broker_id: () -> ::String
         def configuration: () -> Types::ConfigurationId
@@ -424,15 +439,17 @@ module Aws
         def ldap_server_metadata: () -> Types::LdapServerMetadataOutput
         def logs: () -> Types::Logs
         def maintenance_window_start_time: () -> Types::WeeklyStartTime
+        def resource_share_arns: () -> ::Array[::String]
         def security_groups: () -> ::Array[::String]
         def data_replication_metadata: () -> Types::DataReplicationMetadataOutput
         def data_replication_mode: () -> ("NONE" | "CRDR")
         def pending_data_replication_metadata: () -> Types::DataReplicationMetadataOutput
         def pending_data_replication_mode: () -> ("NONE" | "CRDR")
+        def storage_size: () -> ::Integer
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/MQ/Client.html#update_broker-instance_method
       def update_broker: (
-                           ?authentication_strategy: ("SIMPLE" | "LDAP"),
+                           ?authentication_strategy: ("SIMPLE" | "LDAP" | "CONFIG_MANAGED"),
                            ?auto_minor_version_upgrade: bool,
                            broker_id: ::String,
                            ?configuration: {
@@ -441,19 +458,7 @@ module Aws
                            },
                            ?engine_version: ::String,
                            ?host_instance_type: ::String,
-                           ?ldap_server_metadata: {
-                             hosts: Array[::String],
-                             role_base: ::String,
-                             role_name: ::String?,
-                             role_search_matching: ::String,
-                             role_search_subtree: bool?,
-                             service_account_password: ::String,
-                             service_account_username: ::String,
-                             user_base: ::String,
-                             user_role_name: ::String?,
-                             user_search_matching: ::String,
-                             user_search_subtree: bool?
-                           },
+                           ?ldap_server_metadata: Params::ldap_server_metadata_input,
                            ?logs: {
                              audit: bool?,
                              general: bool?
@@ -463,7 +468,9 @@ module Aws
                              time_of_day: ::String,
                              time_zone: ::String?
                            },
+                           ?resource_share_arns: Array[::String],
                            ?security_groups: Array[::String],
+                           ?storage_size: ::Integer,
                            ?data_replication_mode: ("NONE" | "CRDR")
                          ) -> _UpdateBrokerResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateBrokerResponseSuccess

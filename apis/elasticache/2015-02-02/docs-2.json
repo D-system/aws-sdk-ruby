@@ -81,8 +81,7 @@
   "shapes": {
     "APICallRateForCustomerExceededFault": {
       "base": "<p>The customer has exceeded the allowed rate of API calls.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "AZMode": {
       "base": null,
@@ -101,8 +100,7 @@
     },
     "AddTagsToResourceMessage": {
       "base": "<p>Represents the input of an AddTagsToResource operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "AllowedNodeGroupId": {
       "base": null,
@@ -117,8 +115,7 @@
     },
     "AllowedNodeTypeModificationsMessage": {
       "base": "<p>Represents the allowed node types you can use to modify your cluster or replication group.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "AuthTokenUpdateStatus": {
       "base": null,
@@ -155,23 +152,19 @@
     },
     "AuthorizationAlreadyExistsFault": {
       "base": "<p>The specified Amazon EC2 security group is already authorized for the specified cache security group.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "AuthorizationNotFoundFault": {
       "base": "<p>The specified Amazon EC2 security group is not authorized for the specified cache security group.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "AuthorizeCacheSecurityGroupIngressMessage": {
       "base": "<p>Represents the input of an AuthorizeCacheSecurityGroupIngress operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "AuthorizeCacheSecurityGroupIngressResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "AutomaticFailoverStatus": {
       "base": null,
@@ -204,13 +197,11 @@
     },
     "BatchApplyUpdateActionMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "BatchStopUpdateActionMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "Boolean": {
       "base": null,
@@ -226,7 +217,7 @@
         "DescribeCacheEngineVersionsMessage$DefaultOnly": "<p>If <code>true</code>, specifies that only the default version of the specified engine or engine and major version combination is to be returned.</p>",
         "IncreaseNodeGroupsInGlobalReplicationGroupMessage$ApplyImmediately": "<p>Indicates that the process begins immediately. At present, the only permitted value for this parameter is true.</p>",
         "IncreaseReplicaCountMessage$ApplyImmediately": "<p>If <code>True</code>, the number of replica nodes is increased immediately. <code>ApplyImmediately=False</code> is not currently supported.</p>",
-        "ModifyCacheClusterMessage$ApplyImmediately": "<p>If <code>true</code>, this parameter causes the modifications in this request and any pending modifications to be applied, asynchronously and as soon as possible, regardless of the <code>PreferredMaintenanceWindow</code> setting for the cluster.</p> <p>If <code>false</code>, changes to the cluster are applied on the next maintenance reboot, or the next failure reboot, whichever occurs first.</p> <important> <p>If you perform a <code>ModifyCacheCluster</code> before a pending modification is applied, the pending modification is replaced by the newer modification.</p> </important> <p>Valid values: <code>true</code> | <code>false</code> </p> <p>Default: <code>false</code> </p>",
+        "ModifyCacheClusterMessage$ApplyImmediately": "<p>If <code>true</code>, this parameter causes the modifications in this request and any pending modifications to be applied, asynchronously and as soon as possible, regardless of the <code>PreferredMaintenanceWindow</code> setting for the cluster.</p> <p>If <code>false</code>, changes to the cluster are applied on the next maintenance reboot, or the next failure reboot, whichever occurs first.</p> <important> <p>If you perform a <code>ModifyCacheCluster</code> before a pending modification is applied, the pending modification is replaced by the newer modification. However, a pending node-count increase on Memcached clusters cannot be superseded by a request to add fewer nodes. To change a pending node addition, first cancel it by setting <code>NumCacheNodes</code> equal to the current number of nodes in the cluster, then submit the new request. See the <code>NumCacheNodes</code> parameter for details on node scaling behavior.</p> </important> <p>Valid values: <code>true</code> | <code>false</code> </p> <p>Default: <code>false</code> </p>",
         "ModifyGlobalReplicationGroupMessage$ApplyImmediately": "<p>This parameter causes the modifications in this request and any pending modifications to be applied, asynchronously and as soon as possible. Modifications to Global Replication Groups cannot be requested to be applied in PreferredMaintenceWindow. </p>",
         "ModifyReplicationGroupMessage$ApplyImmediately": "<p>If <code>true</code>, this parameter causes the modifications in this request and any pending modifications to be applied, asynchronously and as soon as possible, regardless of the <code>PreferredMaintenanceWindow</code> setting for the replication group.</p> <p>If <code>false</code>, changes to the nodes in the replication group are applied on the next maintenance reboot, or the next failure reboot, whichever occurs first.</p> <p>Valid values: <code>true</code> | <code>false</code> </p> <p>Default: <code>false</code> </p>",
         "ModifyReplicationGroupShardConfigurationMessage$ApplyImmediately": "<p>Indicates that the shard reconfiguration process begins immediately. At present, the only permitted value for this parameter is <code>true</code>.</p> <p>Value: true</p>",
@@ -249,7 +240,7 @@
         "CreateReplicationGroupMessage$MultiAZEnabled": "<p>A flag indicating if you have Multi-AZ enabled to enhance fault tolerance. For more information, see <a href=\"http://docs.aws.amazon.com/AmazonElastiCache/latest/dg/AutoFailover.html\">Minimizing Downtime: Multi-AZ</a>.</p>",
         "CreateReplicationGroupMessage$AutoMinorVersionUpgrade": "<p> If you are running Valkey 7.2 and above or Redis OSS engine version 6.0 and above, set this parameter to yes to opt-in to the next auto minor version upgrade campaign. This parameter is disabled for previous versions.  </p>",
         "CreateReplicationGroupMessage$TransitEncryptionEnabled": "<p>A flag that enables in-transit encryption when set to <code>true</code>.</p> <p>This parameter is valid only if the <code>Engine</code> parameter is <code>redis</code>, the <code>EngineVersion</code> parameter is <code>3.2.6</code>, <code>4.x</code> or later, and the cluster is being created in an Amazon VPC.</p> <p>If you enable in-transit encryption, you must also specify a value for <code>CacheSubnetGroup</code>.</p> <p> <b>Required:</b> Only available when creating a replication group in an Amazon VPC using Redis OSS version <code>3.2.6</code>, <code>4.x</code> or later.</p> <p>Default: <code>false</code> </p> <important> <p>For HIPAA compliance, you must specify <code>TransitEncryptionEnabled</code> as <code>true</code>, an <code>AuthToken</code>, and a <code>CacheSubnetGroup</code>.</p> </important>",
-        "CreateReplicationGroupMessage$AtRestEncryptionEnabled": "<p>A flag that enables encryption at rest when set to <code>true</code>.</p> <p>You cannot modify the value of <code>AtRestEncryptionEnabled</code> after the replication group is created. To enable encryption at rest on a replication group you must set <code>AtRestEncryptionEnabled</code> to <code>true</code> when you create the replication group. </p> <p> <b>Required:</b> Only available when creating a replication group in an Amazon VPC using Valkey 7.2 and later, Redis OSS version <code>3.2.6</code>, or Redis OSS <code>4.x</code> and later.</p> <p>Default: <code>true</code> when using Valkey, <code>false</code> when using Redis OSS</p>",
+        "CreateReplicationGroupMessage$AtRestEncryptionEnabled": "<p>A flag that enables encryption at-rest on the replication group when set to <code>true</code>. In some cases, encryption at-rest may be enabled even when this value is false. Use <code>StorageEncryptionType</code> to view the effective encryption state of a cluster.</p> <p>You cannot modify the value of <code>AtRestEncryptionEnabled</code> after the replication group is created.</p> <p>Default: <code>true</code> when using Valkey, <code>false</code> when using Redis OSS</p>",
         "CreateReplicationGroupMessage$DataTieringEnabled": "<p>Enables data tiering. Data tiering is only supported for replication groups using the r6gd node type. This parameter must be set to true when using r6gd nodes. For more information, see <a href=\"https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/data-tiering.html\">Data tiering</a>.</p>",
         "CreateUserMessage$NoPasswordRequired": "<p>Indicates a password is not required for this user.</p>",
         "DeleteReplicationGroupMessage$RetainPrimaryCluster": "<p>If set to <code>true</code>, all of the read replicas are deleted, but the primary node is retained.</p>",
@@ -276,7 +267,7 @@
         "ReplicationGroup$ClusterEnabled": "<p>A flag indicating whether or not this replication group is cluster enabled; i.e., whether its data can be partitioned across multiple shards (API/CLI: node groups).</p> <p>Valid values: <code>true</code> | <code>false</code> </p>",
         "ReplicationGroup$AuthTokenEnabled": "<p>A flag that enables using an <code>AuthToken</code> (password) when issuing Valkey or Redis OSS commands.</p> <p>Default: <code>false</code> </p>",
         "ReplicationGroup$TransitEncryptionEnabled": "<p>A flag that enables in-transit encryption when set to <code>true</code>.</p> <p> <b>Required:</b> Only available when creating a replication group in an Amazon VPC using Redis OSS version <code>3.2.6</code>, <code>4.x</code> or later.</p> <p>Default: <code>false</code> </p>",
-        "ReplicationGroup$AtRestEncryptionEnabled": "<p>A flag that enables encryption at-rest when set to <code>true</code>.</p> <p>You cannot modify the value of <code>AtRestEncryptionEnabled</code> after the cluster is created. To enable encryption at-rest on a cluster you must set <code>AtRestEncryptionEnabled</code> to <code>true</code> when you create a cluster.</p> <p> <b>Required:</b> Only available when creating a replication group in an Amazon VPC using Redis OSS version <code>3.2.6</code>, <code>4.x</code> or later.</p> <p>Default: <code>false</code> </p>",
+        "ReplicationGroup$AtRestEncryptionEnabled": "<p>A flag that enables encryption at-rest on the cluster when set to <code>true</code>. In some cases, encryption at-rest may be enabled even when this value is false. Use <code>StorageEncryptionType</code> to view the effective encryption state of a cluster.</p> <p>You cannot modify the value of <code>AtRestEncryptionEnabled</code> after the cluster is created.</p> <p>Default: <code>true</code> when using Valkey, <code>false</code> when using Redis OSS</p>",
         "ReplicationGroupPendingModifiedValues$TransitEncryptionEnabled": "<p>A flag that enables in-transit encryption when set to true.</p>",
         "ServiceUpdate$AutoUpdateAfterRecommendedApplyByDate": "<p>Indicates whether the service update will be automatically applied once the recommended apply-by date has expired. </p>"
       }
@@ -293,8 +284,7 @@
     },
     "CacheClusterAlreadyExistsFault": {
       "base": "<p>You already have a cluster with the given identifier.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CacheClusterIdList": {
       "base": null,
@@ -312,13 +302,11 @@
     },
     "CacheClusterMessage": {
       "base": "<p>Represents the output of a <code>DescribeCacheClusters</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CacheClusterNotFoundFault": {
       "base": "<p>The requested cluster ID does not refer to an existing cluster.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CacheEngineVersion": {
       "base": "<p>Provides all of the details about a particular cache engine version.</p>",
@@ -334,8 +322,7 @@
     },
     "CacheEngineVersionMessage": {
       "base": "<p>Represents the output of a <a>DescribeCacheEngineVersions</a> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CacheNode": {
       "base": "<p>Represents an individual cache node within a cluster. Each cache node runs its own instance of the cluster's protocol-compliant caching software - either Memcached, Valkey or Redis OSS.</p> <p>The following node types are supported by ElastiCache. Generally speaking, the current generation types provide more memory and computational power at lower cost when compared to their equivalent previous generation counterparts.</p> <ul> <li> <p>General purpose:</p> <ul> <li> <p>Current generation: </p> <p> <b>M7g node types</b>: <code>cache.m7g.large</code>, <code>cache.m7g.xlarge</code>, <code>cache.m7g.2xlarge</code>, <code>cache.m7g.4xlarge</code>, <code>cache.m7g.8xlarge</code>, <code>cache.m7g.12xlarge</code>, <code>cache.m7g.16xlarge</code> </p> <note> <p>For region availability, see <a href=\"https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/CacheNodes.SupportedTypes.html#CacheNodes.SupportedTypesByRegion\">Supported Node Types</a> </p> </note> <p> <b>M6g node types</b> (available only for Redis OSS engine version 5.0.6 onward and for Memcached engine version 1.5.16 onward): <code>cache.m6g.large</code>, <code>cache.m6g.xlarge</code>, <code>cache.m6g.2xlarge</code>, <code>cache.m6g.4xlarge</code>, <code>cache.m6g.8xlarge</code>, <code>cache.m6g.12xlarge</code>, <code>cache.m6g.16xlarge</code> </p> <p> <b>M5 node types:</b> <code>cache.m5.large</code>, <code>cache.m5.xlarge</code>, <code>cache.m5.2xlarge</code>, <code>cache.m5.4xlarge</code>, <code>cache.m5.12xlarge</code>, <code>cache.m5.24xlarge</code> </p> <p> <b>M4 node types:</b> <code>cache.m4.large</code>, <code>cache.m4.xlarge</code>, <code>cache.m4.2xlarge</code>, <code>cache.m4.4xlarge</code>, <code>cache.m4.10xlarge</code> </p> <p> <b>T4g node types</b> (available only for Redis OSS engine version 5.0.6 onward and Memcached engine version 1.5.16 onward): <code>cache.t4g.micro</code>, <code>cache.t4g.small</code>, <code>cache.t4g.medium</code> </p> <p> <b>T3 node types:</b> <code>cache.t3.micro</code>, <code>cache.t3.small</code>, <code>cache.t3.medium</code> </p> <p> <b>T2 node types:</b> <code>cache.t2.micro</code>, <code>cache.t2.small</code>, <code>cache.t2.medium</code> </p> </li> <li> <p>Previous generation: (not recommended. Existing clusters are still supported but creation of new clusters is not supported for these types.)</p> <p> <b>T1 node types:</b> <code>cache.t1.micro</code> </p> <p> <b>M1 node types:</b> <code>cache.m1.small</code>, <code>cache.m1.medium</code>, <code>cache.m1.large</code>, <code>cache.m1.xlarge</code> </p> <p> <b>M3 node types:</b> <code>cache.m3.medium</code>, <code>cache.m3.large</code>, <code>cache.m3.xlarge</code>, <code>cache.m3.2xlarge</code> </p> </li> </ul> </li> <li> <p>Compute optimized:</p> <ul> <li> <p>Previous generation: (not recommended. Existing clusters are still supported but creation of new clusters is not supported for these types.)</p> <p> <b>C1 node types:</b> <code>cache.c1.xlarge</code> </p> </li> </ul> </li> <li> <p>Memory optimized:</p> <ul> <li> <p>Current generation: </p> <p> <b>R7g node types</b>: <code>cache.r7g.large</code>, <code>cache.r7g.xlarge</code>, <code>cache.r7g.2xlarge</code>, <code>cache.r7g.4xlarge</code>, <code>cache.r7g.8xlarge</code>, <code>cache.r7g.12xlarge</code>, <code>cache.r7g.16xlarge</code> </p> <note> <p>For region availability, see <a href=\"https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/CacheNodes.SupportedTypes.html#CacheNodes.SupportedTypesByRegion\">Supported Node Types</a> </p> </note> <p> <b>R6g node types</b> (available only for Redis OSS engine version 5.0.6 onward and for Memcached engine version 1.5.16 onward): <code>cache.r6g.large</code>, <code>cache.r6g.xlarge</code>, <code>cache.r6g.2xlarge</code>, <code>cache.r6g.4xlarge</code>, <code>cache.r6g.8xlarge</code>, <code>cache.r6g.12xlarge</code>, <code>cache.r6g.16xlarge</code> </p> <p> <b>R5 node types:</b> <code>cache.r5.large</code>, <code>cache.r5.xlarge</code>, <code>cache.r5.2xlarge</code>, <code>cache.r5.4xlarge</code>, <code>cache.r5.12xlarge</code>, <code>cache.r5.24xlarge</code> </p> <p> <b>R4 node types:</b> <code>cache.r4.large</code>, <code>cache.r4.xlarge</code>, <code>cache.r4.2xlarge</code>, <code>cache.r4.4xlarge</code>, <code>cache.r4.8xlarge</code>, <code>cache.r4.16xlarge</code> </p> </li> <li> <p>Previous generation: (not recommended. Existing clusters are still supported but creation of new clusters is not supported for these types.)</p> <p> <b>M2 node types:</b> <code>cache.m2.xlarge</code>, <code>cache.m2.2xlarge</code>, <code>cache.m2.4xlarge</code> </p> <p> <b>R3 node types:</b> <code>cache.r3.large</code>, <code>cache.r3.xlarge</code>, <code>cache.r3.2xlarge</code>, <code>cache.r3.4xlarge</code>, <code>cache.r3.8xlarge</code> </p> </li> </ul> </li> </ul> <p> <b>Additional node type info</b> </p> <ul> <li> <p>All current generation instance types are created in Amazon VPC by default.</p> </li> <li> <p>Valkey or Redis OSS append-only files (AOF) are not supported for T1 or T2 instances.</p> </li> <li> <p>Valkey or Redis OSS Multi-AZ with automatic failover is not supported on T1 instances.</p> </li> <li> <p>The configuration variables <code>appendonly</code> and <code>appendfsync</code> are not supported on Valkey, or on Redis OSS version 2.8.22 and later.</p> </li> </ul>",
@@ -404,13 +391,11 @@
     },
     "CacheParameterGroupAlreadyExistsFault": {
       "base": "<p>A cache parameter group with the requested name already exists.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CacheParameterGroupDetails": {
       "base": "<p>Represents the output of a <code>DescribeCacheParameters</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CacheParameterGroupList": {
       "base": null,
@@ -420,18 +405,15 @@
     },
     "CacheParameterGroupNameMessage": {
       "base": "<p>Represents the output of one of the following operations:</p> <ul> <li> <p> <code>ModifyCacheParameterGroup</code> </p> </li> <li> <p> <code>ResetCacheParameterGroup</code> </p> </li> </ul>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CacheParameterGroupNotFoundFault": {
       "base": "<p>The requested cache parameter group name does not refer to an existing cache parameter group.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CacheParameterGroupQuotaExceededFault": {
       "base": "<p>The request cannot be processed because it would exceed the maximum number of cache security groups.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CacheParameterGroupStatus": {
       "base": "<p>Status of the cache parameter group.</p>",
@@ -441,8 +423,7 @@
     },
     "CacheParameterGroupsMessage": {
       "base": "<p>Represents the output of a <code>DescribeCacheParameterGroups</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CacheSecurityGroup": {
       "base": "<p>Represents the output of one of the following operations:</p> <ul> <li> <p> <code>AuthorizeCacheSecurityGroupIngress</code> </p> </li> <li> <p> <code>CreateCacheSecurityGroup</code> </p> </li> <li> <p> <code>RevokeCacheSecurityGroupIngress</code> </p> </li> </ul>",
@@ -455,8 +436,7 @@
     },
     "CacheSecurityGroupAlreadyExistsFault": {
       "base": "<p>A cache security group with the specified name already exists.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CacheSecurityGroupMembership": {
       "base": "<p>Represents a cluster's status within a particular cache security group.</p>",
@@ -472,8 +452,7 @@
     },
     "CacheSecurityGroupMessage": {
       "base": "<p>Represents the output of a <code>DescribeCacheSecurityGroups</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CacheSecurityGroupNameList": {
       "base": null,
@@ -486,13 +465,11 @@
     },
     "CacheSecurityGroupNotFoundFault": {
       "base": "<p>The requested cache security group name does not refer to an existing cache security group.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CacheSecurityGroupQuotaExceededFault": {
       "base": "<p>The request cannot be processed because it would exceed the allowed number of cache security groups.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CacheSecurityGroups": {
       "base": null,
@@ -510,28 +487,23 @@
     },
     "CacheSubnetGroupAlreadyExistsFault": {
       "base": "<p>The requested cache subnet group name is already in use by an existing cache subnet group.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CacheSubnetGroupInUse": {
       "base": "<p>The requested cache subnet group is currently in use.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CacheSubnetGroupMessage": {
       "base": "<p>Represents the output of a <code>DescribeCacheSubnetGroups</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CacheSubnetGroupNotFoundFault": {
       "base": "<p>The requested cache subnet group name does not refer to an existing cache subnet group.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CacheSubnetGroupQuotaExceededFault": {
       "base": "<p>The request cannot be processed because it would exceed the allowed number of cache subnet groups.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CacheSubnetGroups": {
       "base": null,
@@ -541,8 +513,7 @@
     },
     "CacheSubnetQuotaExceededFault": {
       "base": "<p>The request cannot be processed because it would exceed the allowed number of subnets in a cache subnet group.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CacheUsageLimits": {
       "base": "<p>The usage limits for storage and ElastiCache Processing Units for the cache.</p>",
@@ -582,18 +553,15 @@
     },
     "ClusterQuotaForCustomerExceededFault": {
       "base": "<p>The request cannot be processed because it would exceed the allowed number of clusters per customer.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CompleteMigrationMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CompleteMigrationResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ConfigureShard": {
       "base": "<p>Node group (shard) configuration options when adding or removing replicas. Each node group (shard) configuration has the following members: NodeGroupId, NewReplicaCount, and PreferredAvailabilityZones. </p>",
@@ -603,123 +571,99 @@
     },
     "CopyServerlessCacheSnapshotRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CopyServerlessCacheSnapshotResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CopySnapshotMessage": {
       "base": "<p>Represents the input of a <code>CopySnapshotMessage</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CopySnapshotResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateCacheClusterMessage": {
       "base": "<p>Represents the input of a CreateCacheCluster operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateCacheClusterResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateCacheParameterGroupMessage": {
       "base": "<p>Represents the input of a <code>CreateCacheParameterGroup</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateCacheParameterGroupResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateCacheSecurityGroupMessage": {
       "base": "<p>Represents the input of a <code>CreateCacheSecurityGroup</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateCacheSecurityGroupResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateCacheSubnetGroupMessage": {
       "base": "<p>Represents the input of a <code>CreateCacheSubnetGroup</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateCacheSubnetGroupResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateGlobalReplicationGroupMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateGlobalReplicationGroupResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateReplicationGroupMessage": {
       "base": "<p>Represents the input of a <code>CreateReplicationGroup</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateReplicationGroupResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateServerlessCacheRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateServerlessCacheResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateServerlessCacheSnapshotRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateServerlessCacheSnapshotResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateSnapshotMessage": {
       "base": "<p>Represents the input of a <code>CreateSnapshot</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateSnapshotResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateUserGroupMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateUserMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "CustomerNodeEndpoint": {
       "base": "<p>The endpoint from which data should be migrated.</p>",
@@ -755,248 +699,199 @@
     },
     "DecreaseNodeGroupsInGlobalReplicationGroupMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DecreaseNodeGroupsInGlobalReplicationGroupResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DecreaseReplicaCountMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DecreaseReplicaCountResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DefaultUserAssociatedToUserGroupFault": {
       "base": "<p>The default user assigned to the user group.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DefaultUserRequired": {
       "base": "<p>You must add default user to a user group.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteCacheClusterMessage": {
       "base": "<p>Represents the input of a <code>DeleteCacheCluster</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteCacheClusterResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteCacheParameterGroupMessage": {
       "base": "<p>Represents the input of a <code>DeleteCacheParameterGroup</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteCacheSecurityGroupMessage": {
       "base": "<p>Represents the input of a <code>DeleteCacheSecurityGroup</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteCacheSubnetGroupMessage": {
       "base": "<p>Represents the input of a <code>DeleteCacheSubnetGroup</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteGlobalReplicationGroupMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteGlobalReplicationGroupResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteReplicationGroupMessage": {
       "base": "<p>Represents the input of a <code>DeleteReplicationGroup</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteReplicationGroupResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteServerlessCacheRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteServerlessCacheResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteServerlessCacheSnapshotRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteServerlessCacheSnapshotResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteSnapshotMessage": {
       "base": "<p>Represents the input of a <code>DeleteSnapshot</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteSnapshotResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteUserGroupMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteUserMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeCacheClustersMessage": {
       "base": "<p>Represents the input of a <code>DescribeCacheClusters</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeCacheEngineVersionsMessage": {
       "base": "<p>Represents the input of a <code>DescribeCacheEngineVersions</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeCacheParameterGroupsMessage": {
       "base": "<p>Represents the input of a <code>DescribeCacheParameterGroups</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeCacheParametersMessage": {
       "base": "<p>Represents the input of a <code>DescribeCacheParameters</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeCacheSecurityGroupsMessage": {
       "base": "<p>Represents the input of a <code>DescribeCacheSecurityGroups</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeCacheSubnetGroupsMessage": {
       "base": "<p>Represents the input of a <code>DescribeCacheSubnetGroups</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeEngineDefaultParametersMessage": {
       "base": "<p>Represents the input of a <code>DescribeEngineDefaultParameters</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeEngineDefaultParametersResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeEventsMessage": {
       "base": "<p>Represents the input of a <code>DescribeEvents</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeGlobalReplicationGroupsMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeGlobalReplicationGroupsResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeReplicationGroupsMessage": {
       "base": "<p>Represents the input of a <code>DescribeReplicationGroups</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeReservedCacheNodesMessage": {
       "base": "<p>Represents the input of a <code>DescribeReservedCacheNodes</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeReservedCacheNodesOfferingsMessage": {
       "base": "<p>Represents the input of a <code>DescribeReservedCacheNodesOfferings</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeServerlessCacheSnapshotsRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeServerlessCacheSnapshotsResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeServerlessCachesRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeServerlessCachesResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeServiceUpdatesMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeSnapshotsListMessage": {
       "base": "<p>Represents the output of a <code>DescribeSnapshots</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeSnapshotsMessage": {
       "base": "<p>Represents the input of a <code>DescribeSnapshotsMessage</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeUpdateActionsMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeUserGroupsMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeUserGroupsResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeUsersMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeUsersResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DestinationDetails": {
       "base": "<p>Configuration details of either a CloudWatch Logs destination or Kinesis Data Firehose destination.</p>",
@@ -1016,13 +911,11 @@
     },
     "DisassociateGlobalReplicationGroupMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "DisassociateGlobalReplicationGroupResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "Double": {
       "base": null,
@@ -1037,7 +930,15 @@
     },
     "DuplicateUserNameFault": {
       "base": "<p>A user with this username already exists.</p>",
+      "refs": {}
+    },
+    "Durability": {
+      "base": null,
       "refs": {
+        "CreateReplicationGroupMessage$Durability": "<p>Specifies the durability setting for the replication group. When set to <code>default</code>, the service determines the effective durability based on the engine version, cluster mode, and other parameters. The resolved setting is reflected in the <code>EffectiveDurability</code> property of the replication group. For more information, see <a href=\"https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/durability.html\">Durability</a>.</p>",
+        "ModifyReplicationGroupMessage$Durability": "<p>Specifies the durability setting for the replication group. Use this parameter to change the durability mode of an existing replication group, for example from <code>sync</code> to <code>async</code> or vice versa. For more information, see <a href=\"https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/durability.html\">Durability</a>.</p>",
+        "ReplicationGroup$Durability": "<p>The durability setting of the replication group. For more information, see <a href=\"https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/durability.html\">Durability</a>.</p>",
+        "Snapshot$Durability": "<p>The durability setting of the cluster when the snapshot was taken. When restoring from this snapshot, the cluster uses this durability setting unless overridden in the restore request. For more information, see <a href=\"https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/durability.html\">Durability</a>.</p>"
       }
     },
     "EC2SecurityGroup": {
@@ -1056,6 +957,12 @@
       "base": "<p>The configuration for the number of ElastiCache Processing Units (ECPU) the cache can consume per second.</p>",
       "refs": {
         "CacheUsageLimits$ECPUPerSecond": null
+      }
+    },
+    "EffectiveDurability": {
+      "base": null,
+      "refs": {
+        "ReplicationGroup$EffectiveDurability": "<p>The effective durability of the replication group. When <code>Durability</code> is set to <code>default</code>, the service resolves the actual durability based on the engine version, cluster mode, and other parameters. This field reflects the resolved value. For more information, see <a href=\"https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/Durability.Configuring.html\">Configuring Durability</a>.</p>"
       }
     },
     "Endpoint": {
@@ -1103,28 +1010,23 @@
     },
     "EventsMessage": {
       "base": "<p>Represents the output of a <code>DescribeEvents</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ExportServerlessCacheSnapshotRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ExportServerlessCacheSnapshotResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "FailoverGlobalReplicationGroupMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "FailoverGlobalReplicationGroupResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "Filter": {
       "base": "<p>Used to streamline results of a search based on the property being filtered.</p>",
@@ -1191,8 +1093,7 @@
     },
     "GlobalReplicationGroupAlreadyExistsFault": {
       "base": "<p>The Global datastore name already exists.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GlobalReplicationGroupInfo": {
       "base": "<p>The name of the Global datastore and role of this replication group in the Global datastore.</p>",
@@ -1220,28 +1121,23 @@
     },
     "GlobalReplicationGroupNotFoundFault": {
       "base": "<p>The Global datastore does not exist</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "IncreaseNodeGroupsInGlobalReplicationGroupMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "IncreaseNodeGroupsInGlobalReplicationGroupResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "IncreaseReplicaCountMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "IncreaseReplicaCountResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "InputAuthenticationType": {
       "base": null,
@@ -1251,8 +1147,7 @@
     },
     "InsufficientCacheClusterCapacityFault": {
       "base": "<p>The requested cache node type is not available in the specified Availability Zone. For more information, see <a href=\"http://docs.aws.amazon.com/AmazonElastiCache/latest/dg/ErrorMessages.html#ErrorMessages.INSUFFICIENT_CACHE_CLUSTER_CAPACITY\">InsufficientCacheClusterCapacity</a> in the ElastiCache User Guide.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "Integer": {
       "base": null,
@@ -1281,7 +1176,7 @@
         "CreateReplicationGroupMessage$ReplicasPerNodeGroup": "<p>An optional parameter that specifies the number of replica nodes in each node group (shard). Valid values are 0 to 5.</p>",
         "CreateReplicationGroupMessage$Port": "<p>The port number on which each member of the replication group accepts connections.</p>",
         "CreateReplicationGroupMessage$SnapshotRetentionLimit": "<p>The number of days for which ElastiCache retains automatic snapshots before deleting them. For example, if you set <code>SnapshotRetentionLimit</code> to 5, a snapshot that was taken today is retained for 5 days before being deleted.</p> <p>Default: 0 (i.e., automatic backups are disabled for this cluster).</p>",
-        "CreateServerlessCacheRequest$SnapshotRetentionLimit": "<p>The number of snapshots that will be retained for the serverless cache that is being created. As new snapshots beyond this limit are added, the oldest snapshots will be deleted on a rolling basis. Available for Valkey, Redis OSS and Serverless Memcached only.</p>",
+        "CreateServerlessCacheRequest$SnapshotRetentionLimit": "<p>The number of days for which ElastiCache retains automatic snapshots before deleting them. Available for Valkey, Redis OSS and Serverless Memcached only. The maximum value allowed is 35 days.</p>",
         "CustomerNodeEndpoint$Port": "<p>The port of the node endpoint</p>",
         "DataStorage$Maximum": "<p>The upper limit for data storage the cache is set to use.</p>",
         "DataStorage$Minimum": "<p>The lower limit for data storage the cache is set to use.</p>",
@@ -1317,7 +1212,9 @@
         "PendingModifiedValues$NumCacheNodes": "<p>The new number of cache nodes for the cluster.</p> <p>For clusters running Valkey or Redis OSS, this value must be 1. For clusters running Memcached, this value must be between 1 and 40.</p>",
         "PurchaseReservedCacheNodesOfferingMessage$CacheNodeCount": "<p>The number of cache node instances to reserve.</p> <p>Default: <code>1</code> </p>",
         "ReplicationGroup$SnapshotRetentionLimit": "<p>The number of days for which ElastiCache retains automatic cluster snapshots before deleting them. For example, if you set <code>SnapshotRetentionLimit</code> to 5, a snapshot that was taken today is retained for 5 days before being deleted.</p> <important> <p> If the value of <code>SnapshotRetentionLimit</code> is set to zero (0), backups are turned off.</p> </important>",
-        "ServerlessCache$SnapshotRetentionLimit": "<p>The current setting for the number of serverless cache snapshots the system will retain. Available for Valkey, Redis OSS and Serverless Memcached only.</p>",
+        "ScaleConfig$ScalePercentage": "<p>The percentage by which to scale the Memcached cluster, either horizontally by adding nodes or vertically by increasing resources.</p>",
+        "ScaleConfig$ScaleIntervalMinutes": "<p>The time interval in seconds between scaling operations when performing gradual scaling for a Memcached cluster.</p>",
+        "ServerlessCache$SnapshotRetentionLimit": "<p>The number of days for which ElastiCache retains automatic snapshots before deleting them. Available for Valkey, Redis OSS and Serverless Memcached only. The maximum value allowed is 35 days.</p>",
         "Snapshot$NumCacheNodes": "<p>The number of cache nodes in the source cluster.</p> <p>For clusters running Valkey or Redis OSS, this value must be 1. For clusters running Memcached, this value must be between 1 and 40.</p>",
         "Snapshot$Port": "<p>The port number used by each cache nodes in the source cluster.</p>",
         "Snapshot$SnapshotRetentionLimit": "<p>For an automatic snapshot, the number of days for which ElastiCache retains the snapshot before deleting it.</p> <p>For manual snapshots, this field reflects the <code>SnapshotRetentionLimit</code> for the source cluster when the snapshot was created. This field is otherwise ignored: Manual snapshots do not expire, and can only be deleted using the <code>DeleteSnapshot</code> operation. </p> <p> <b>Important</b> If the value of SnapshotRetentionLimit is set to zero (0), backups are turned off.</p>",
@@ -1326,88 +1223,71 @@
     },
     "InvalidARNFault": {
       "base": "<p>The requested Amazon Resource Name (ARN) does not refer to an existing resource.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidCacheClusterStateFault": {
       "base": "<p>The requested cluster is not in the <code>available</code> state.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidCacheParameterGroupStateFault": {
       "base": "<p>The current state of the cache parameter group does not allow the requested operation to occur.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidCacheSecurityGroupStateFault": {
       "base": "<p>The current state of the cache security group does not allow deletion.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidCredentialsException": {
       "base": "<p>You must enter valid credentials.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidGlobalReplicationGroupStateFault": {
       "base": "<p>The Global datastore is not available or in primary-only state.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidKMSKeyFault": {
       "base": "<p>The KMS key supplied is not valid.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidParameterCombinationException": {
       "base": "<p>Two or more incompatible parameters were specified.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidParameterValueException": {
       "base": "<p>The value for a parameter is invalid.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidReplicationGroupStateFault": {
       "base": "<p>The requested replication group is not in the <code>available</code> state.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidServerlessCacheSnapshotStateFault": {
       "base": "<p>The state of the serverless cache snapshot was not received. Available for Valkey, Redis OSS and Serverless Memcached only.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidServerlessCacheStateFault": {
       "base": "<p>The account for these credentials is not currently active.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidSnapshotStateFault": {
       "base": "<p>The current state of the snapshot does not allow the requested operation to occur.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidSubnet": {
       "base": "<p>An invalid subnet identifier was specified.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidUserGroupStateFault": {
       "base": "<p>The user group is not in an active state.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidUserStateFault": {
       "base": "<p>The user is not in active state.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidVPCNetworkStateFault": {
       "base": "<p>The VPC network is in an invalid state.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "IpDiscovery": {
       "base": null,
@@ -1434,13 +1314,11 @@
     },
     "ListAllowedNodeTypeModificationsMessage": {
       "base": "<p>The input parameters for the <code>ListAllowedNodeTypeModifications</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListTagsForResourceMessage": {
       "base": "<p>The input parameters for the <code>ListTagsForResource</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "LogDeliveryConfiguration": {
       "base": "<p>Returns the destination, format and type of the logs. </p>",
@@ -1494,78 +1372,63 @@
     },
     "ModifyCacheClusterMessage": {
       "base": "<p>Represents the input of a <code>ModifyCacheCluster</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ModifyCacheClusterResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ModifyCacheParameterGroupMessage": {
       "base": "<p>Represents the input of a <code>ModifyCacheParameterGroup</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ModifyCacheSubnetGroupMessage": {
       "base": "<p>Represents the input of a <code>ModifyCacheSubnetGroup</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ModifyCacheSubnetGroupResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ModifyGlobalReplicationGroupMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ModifyGlobalReplicationGroupResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ModifyReplicationGroupMessage": {
       "base": "<p>Represents the input of a <code>ModifyReplicationGroups</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ModifyReplicationGroupResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ModifyReplicationGroupShardConfigurationMessage": {
       "base": "<p>Represents the input for a <code>ModifyReplicationGroupShardConfiguration</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ModifyReplicationGroupShardConfigurationResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ModifyServerlessCacheRequest": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ModifyServerlessCacheResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ModifyUserGroupMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "ModifyUserMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "MultiAZStatus": {
       "base": null,
@@ -1579,8 +1442,10 @@
         "CacheCluster$NetworkType": "<p>Must be either <code>ipv4</code> | <code>ipv6</code> | <code>dual_stack</code>. IPv6 is supported for workloads using Valkey 7.2 and above, Redis OSS engine version 6.2 7.1 or Memcached engine version 1.6.6 and above on all instances built on the <a href=\"http://aws.amazon.com/ec2/nitro/\">Nitro system</a>.</p>",
         "CreateCacheClusterMessage$NetworkType": "<p>Must be either <code>ipv4</code> | <code>ipv6</code> | <code>dual_stack</code>. IPv6 is supported for workloads using Valkey 7.2 and above, Redis OSS engine version 6.2 to 7.1 and Memcached engine version 1.6.6 and above on all instances built on the <a href=\"http://aws.amazon.com/ec2/nitro/\">Nitro system</a>. </p>",
         "CreateReplicationGroupMessage$NetworkType": "<p>Must be either <code>ipv4</code> | <code>ipv6</code> | <code>dual_stack</code>. IPv6 is supported for workloads using Valkey 7.2 and above, Redis OSS engine version 6.2 to 7.1 and Memcached engine version 1.6.6 and above on all instances built on the <a href=\"http://aws.amazon.com/ec2/nitro/\">Nitro system</a>.</p>",
+        "CreateServerlessCacheRequest$NetworkType": "<p>The IP protocol version used by the serverless cache. Must be either <code>ipv4</code> | <code>ipv6</code> | <code>dual_stack</code>. <code>ipv6</code> is only supported with IPv6-only subnets. If not specified, defaults to <code>ipv4</code>, unless all provided subnets are IPv6-only, in which case it defaults to <code>ipv6</code>. </p>",
         "NetworkTypeList$member": null,
-        "ReplicationGroup$NetworkType": "<p>Must be either <code>ipv4</code> | <code>ipv6</code> | <code>dual_stack</code>. IPv6 is supported for workloads using Valkey 7.2 and above, Redis OSS engine version 6.2 to 7.1 or Memcached engine version 1.6.6 and above on all instances built on the <a href=\"http://aws.amazon.com/ec2/nitro/\">Nitro system</a>.</p>"
+        "ReplicationGroup$NetworkType": "<p>Must be either <code>ipv4</code> | <code>ipv6</code> | <code>dual_stack</code>. IPv6 is supported for workloads using Valkey 7.2 and above, Redis OSS engine version 6.2 to 7.1 or Memcached engine version 1.6.6 and above on all instances built on the <a href=\"http://aws.amazon.com/ec2/nitro/\">Nitro system</a>.</p>",
+        "ServerlessCache$NetworkType": "<p>The type of IP address protocol used by the serverless cache. Must be either <code>ipv4</code> | <code>ipv6</code> | <code>dual_stack</code>. <code>ipv6</code> is only supported with IPv6-only subnets. If not specified, defaults to <code>ipv4</code>, unless all provided subnets are IPv6-only, in which case it defaults to <code>ipv6</code>.</p>"
       }
     },
     "NetworkTypeList": {
@@ -1592,8 +1457,7 @@
     },
     "NoOperationFault": {
       "base": "<p>The operation was not performed because no changes were required.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "NodeGroup": {
       "base": "<p>Represents a collection of cache nodes in a replication group. One node in the node group is the read/write primary node. All the other nodes are read-only Replica nodes.</p>",
@@ -1646,8 +1510,7 @@
     },
     "NodeGroupNotFoundFault": {
       "base": "<p>The node group specified by the <code>NodeGroupId</code> parameter could not be found. Please verify that the node group exists and that you spelled the <code>NodeGroupId</code> value correctly.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "NodeGroupUpdateStatus": {
       "base": "<p>The status of the service update on the node group </p>",
@@ -1663,8 +1526,7 @@
     },
     "NodeGroupsPerReplicationGroupQuotaExceededFault": {
       "base": "<p>The request cannot be processed because it would exceed the maximum allowed number of node groups (shards) in a single replication group. The default maximum is 90</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "NodeGroupsToRemoveList": {
       "base": null,
@@ -1680,13 +1542,11 @@
     },
     "NodeQuotaForClusterExceededFault": {
       "base": "<p>The request cannot be processed because it would exceed the allowed number of cache nodes in a single cluster.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "NodeQuotaForCustomerExceededFault": {
       "base": "<p>The request cannot be processed because it would exceed the allowed number of cache nodes per customer.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "NodeSnapshot": {
       "base": "<p>Represents an individual cache node in a snapshot of a cluster.</p>",
@@ -1827,33 +1687,27 @@
     },
     "PurchaseReservedCacheNodesOfferingMessage": {
       "base": "<p>Represents the input of a <code>PurchaseReservedCacheNodesOffering</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "PurchaseReservedCacheNodesOfferingResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "RebalanceSlotsInGlobalReplicationGroupMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "RebalanceSlotsInGlobalReplicationGroupResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "RebootCacheClusterMessage": {
       "base": "<p>Represents the input of a <code>RebootCacheCluster</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "RebootCacheClusterResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "RecurringCharge": {
       "base": "<p>Contains the specific price and frequency of a recurring charges for a reserved cache node, or for a reserved cache node offering.</p>",
@@ -1888,8 +1742,7 @@
     },
     "RemoveTagsFromResourceMessage": {
       "base": "<p>Represents the input of a <code>RemoveTagsFromResource</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ReplicaConfigurationList": {
       "base": null,
@@ -1916,13 +1769,11 @@
     },
     "ReplicationGroupAlreadyExistsFault": {
       "base": "<p>The specified replication group already exists.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ReplicationGroupAlreadyUnderMigrationFault": {
       "base": "<p>The targeted replication group is not available. </p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ReplicationGroupIdList": {
       "base": null,
@@ -1940,18 +1791,15 @@
     },
     "ReplicationGroupMessage": {
       "base": "<p>Represents the output of a <code>DescribeReplicationGroups</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ReplicationGroupNotFoundFault": {
       "base": "<p>The specified replication group does not exist.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ReplicationGroupNotUnderMigrationFault": {
       "base": "<p>The designated replication group is not available for data migration.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ReplicationGroupOutpostArnList": {
       "base": null,
@@ -1974,8 +1822,7 @@
     },
     "ReservedCacheNodeAlreadyExistsFault": {
       "base": "<p>You already have a reservation with the given identifier.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ReservedCacheNodeList": {
       "base": null,
@@ -1985,18 +1832,15 @@
     },
     "ReservedCacheNodeMessage": {
       "base": "<p>Represents the output of a <code>DescribeReservedCacheNodes</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ReservedCacheNodeNotFoundFault": {
       "base": "<p>The requested reserved cache node was not found.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ReservedCacheNodeQuotaExceededFault": {
       "base": "<p>The request cannot be processed because it would exceed the user's cache node quota.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ReservedCacheNodesOffering": {
       "base": "<p>Describes all of the attributes of a reserved cache node offering.</p>",
@@ -2012,18 +1856,15 @@
     },
     "ReservedCacheNodesOfferingMessage": {
       "base": "<p>Represents the output of a <code>DescribeReservedCacheNodesOfferings</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ReservedCacheNodesOfferingNotFoundFault": {
       "base": "<p>The requested cache node offering does not exist.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ResetCacheParameterGroupMessage": {
       "base": "<p>Represents the input of a <code>ResetCacheParameterGroup</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ReshardingConfiguration": {
       "base": "<p>A list of <code>PreferredAvailabilityZones</code> objects that specifies the configuration of a node group in the resharded cluster.</p>",
@@ -2046,12 +1887,17 @@
     },
     "RevokeCacheSecurityGroupIngressMessage": {
       "base": "<p>Represents the input of a <code>RevokeCacheSecurityGroupIngress</code> operation.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "RevokeCacheSecurityGroupIngressResult": {
       "base": null,
+      "refs": {}
+    },
+    "ScaleConfig": {
+      "base": "<p>Configuration settings for horizontal or vertical scaling operations on Memcached clusters.</p>",
       "refs": {
+        "ModifyCacheClusterMessage$ScaleConfig": "<p>Configures horizontal or vertical scaling for Memcached clusters, specifying the scaling percentage and interval.</p>",
+        "PendingModifiedValues$ScaleConfig": "<p>The scaling configuration changes that are pending for the Memcached cluster.</p>"
       }
     },
     "SecurityGroupIdsList": {
@@ -2089,8 +1935,7 @@
     },
     "ServerlessCacheAlreadyExistsFault": {
       "base": "<p>A serverless cache with this name already exists.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ServerlessCacheConfiguration": {
       "base": "<p>The configuration settings for a specific serverless cache.</p>",
@@ -2106,13 +1951,11 @@
     },
     "ServerlessCacheNotFoundFault": {
       "base": "<p>The serverless cache was not found or does not exist.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ServerlessCacheQuotaForCustomerExceededFault": {
       "base": "<p>The number of serverless caches exceeds the customer quota.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ServerlessCacheSnapshot": {
       "base": "<p>The resource representing a serverless cache snapshot. Available for Valkey, Redis OSS and Serverless Memcached only.</p>",
@@ -2126,8 +1969,7 @@
     },
     "ServerlessCacheSnapshotAlreadyExistsFault": {
       "base": "<p>A serverless cache snapshot with this name already exists. Available for Valkey, Redis OSS and Serverless Memcached only.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ServerlessCacheSnapshotList": {
       "base": null,
@@ -2137,18 +1979,15 @@
     },
     "ServerlessCacheSnapshotNotFoundFault": {
       "base": "<p>This serverless cache snapshot could not be found or does not exist. Available for Valkey, Redis OSS and Serverless Memcached only.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ServerlessCacheSnapshotQuotaExceededFault": {
       "base": "<p>The number of serverless cache snapshots exceeds the customer snapshot quota. Available for Valkey, Redis OSS and Serverless Memcached only.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ServiceLinkedRoleNotFoundFault": {
       "base": "<p>The specified service linked role (SLR) was not found.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ServiceUpdate": {
       "base": "<p>An update that you can apply to your Valkey or Redis OSS clusters.</p>",
@@ -2164,8 +2003,7 @@
     },
     "ServiceUpdateNotFoundFault": {
       "base": "<p>The service update doesn't exist</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ServiceUpdateSeverity": {
       "base": null,
@@ -2198,8 +2036,7 @@
     },
     "ServiceUpdatesMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "SlaMet": {
       "base": null,
@@ -2224,8 +2061,7 @@
     },
     "SnapshotAlreadyExistsFault": {
       "base": "<p>You already have a snapshot with the given name.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "SnapshotArnsList": {
       "base": null,
@@ -2237,8 +2073,7 @@
     },
     "SnapshotFeatureNotSupportedFault": {
       "base": "<p>You attempted one of the following operations:</p> <ul> <li> <p>Creating a snapshot of a Valkey or Redis OSS cluster running on a <code>cache.t1.micro</code> cache node.</p> </li> <li> <p>Creating a snapshot of a cluster that is running Memcached rather than Valkey or Redis OSS.</p> </li> </ul> <p>Neither of these are supported by ElastiCache.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "SnapshotList": {
       "base": null,
@@ -2248,13 +2083,11 @@
     },
     "SnapshotNotFoundFault": {
       "base": "<p>The requested snapshot name does not refer to an existing snapshot.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "SnapshotQuotaExceededFault": {
       "base": "<p>The request cannot be processed because it would exceed the maximum number of snapshots.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "SourceType": {
       "base": null,
@@ -2265,12 +2098,17 @@
     },
     "StartMigrationMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "StartMigrationResponse": {
       "base": null,
+      "refs": {}
+    },
+    "StorageEncryptionType": {
+      "base": null,
       "refs": {
+        "ReplicationGroup$StorageEncryptionType": "<p>Indicates the type of encryption for data stored at rest in the replication group. The value is <code>none</code> if at-rest encryption is not enabled, <code>sse-elasticache</code> if an ElastiCache service-managed key is used, or <code>sse-kms</code> if a customer-managed KMS key is used.</p>",
+        "ServerlessCache$StorageEncryptionType": "<p>Indicates the type of encryption for data stored at rest in the serverless cache. Serverless caches are always encrypted at rest. The value is <code>sse-elasticache</code> if an ElastiCache service-managed key is used, or <code>sse-kms</code> if a customer-managed KMS key is used.</p>"
       }
     },
     "String": {
@@ -2347,10 +2185,10 @@
         "ClusterIdList$member": null,
         "CompleteMigrationMessage$ReplicationGroupId": "<p>The ID of the replication group to which data is being migrated.</p>",
         "CopyServerlessCacheSnapshotRequest$SourceServerlessCacheSnapshotName": "<p>The identifier of the existing serverless cache’s snapshot to be copied. Available for Valkey, Redis OSS and Serverless Memcached only.</p>",
-        "CopyServerlessCacheSnapshotRequest$TargetServerlessCacheSnapshotName": "<p>The identifier for the snapshot to be created. Available for Valkey, Redis OSS and Serverless Memcached only.</p>",
+        "CopyServerlessCacheSnapshotRequest$TargetServerlessCacheSnapshotName": "<p>The identifier for the snapshot to be created. Available for Valkey, Redis OSS and Serverless Memcached only. This value is stored as a lowercase string.</p>",
         "CopyServerlessCacheSnapshotRequest$KmsKeyId": "<p>The identifier of the KMS key used to encrypt the target snapshot. Available for Valkey, Redis OSS and Serverless Memcached only.</p>",
         "CopySnapshotMessage$SourceSnapshotName": "<p>The name of an existing snapshot from which to make a copy.</p>",
-        "CopySnapshotMessage$TargetSnapshotName": "<p>A name for the snapshot copy. ElastiCache does not permit overwriting a snapshot, therefore this name must be unique within its context - ElastiCache or an Amazon S3 bucket if exporting.</p>",
+        "CopySnapshotMessage$TargetSnapshotName": "<p>A name for the snapshot copy. ElastiCache does not permit overwriting a snapshot, therefore this name must be unique within its context - ElastiCache or an Amazon S3 bucket if exporting. This value is stored as a lowercase string.</p>",
         "CopySnapshotMessage$TargetBucket": "<p>The Amazon S3 bucket to which the snapshot is exported. This parameter is used only when exporting a snapshot for external access.</p> <p>When using this parameter to export a snapshot, be sure Amazon ElastiCache has the needed permissions to this S3 bucket. For more information, see <a href=\"https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/backups-exporting.html#backups-exporting-grant-access\">Step 2: Grant ElastiCache Access to Your Amazon S3 Bucket</a> in the <i>Amazon ElastiCache User Guide</i>.</p> <p>For more information, see <a href=\"https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/backups-exporting.html\">Exporting a Snapshot</a> in the <i>Amazon ElastiCache User Guide</i>.</p>",
         "CopySnapshotMessage$KmsKeyId": "<p>The ID of the KMS key used to encrypt the target snapshot.</p>",
         "CreateCacheClusterMessage$CacheClusterId": "<p>The node group (shard) identifier. This parameter is stored as a lowercase string.</p> <p> <b>Constraints:</b> </p> <ul> <li> <p>A name must contain from 1 to 50 alphanumeric characters or hyphens.</p> </li> <li> <p>The first character must be a letter.</p> </li> <li> <p>A name cannot end with a hyphen or contain two consecutive hyphens.</p> </li> </ul>",
@@ -2367,7 +2205,7 @@
         "CreateCacheClusterMessage$SnapshotWindow": "<p>The daily time range (in UTC) during which ElastiCache begins taking a daily snapshot of your node group (shard).</p> <p>Example: <code>05:00-09:00</code> </p> <p>If you do not specify this parameter, ElastiCache automatically chooses an appropriate time range.</p> <note> <p>This parameter is only valid if the <code>Engine</code> parameter is <code>redis</code>.</p> </note>",
         "CreateCacheClusterMessage$AuthToken": "<p> <b>Reserved parameter.</b> The password used to access a password protected server.</p> <p>Password constraints:</p> <ul> <li> <p>Must be only printable ASCII characters.</p> </li> <li> <p>Must be at least 16 characters and no more than 128 characters in length.</p> </li> <li> <p>The only permitted printable special characters are !, &amp;, #, $, ^, &lt;, &gt;, and -. Other printable special characters cannot be used in the AUTH token.</p> </li> </ul> <p>For more information, see <a href=\"http://redis.io/commands/AUTH\">AUTH password</a> at http://redis.io/commands/AUTH.</p>",
         "CreateCacheClusterMessage$PreferredOutpostArn": "<p>The outpost ARN in which the cache cluster is created.</p>",
-        "CreateCacheParameterGroupMessage$CacheParameterGroupName": "<p>A user-specified name for the cache parameter group.</p>",
+        "CreateCacheParameterGroupMessage$CacheParameterGroupName": "<p>A user-specified name for the cache parameter group. This value is stored as a lowercase string.</p>",
         "CreateCacheParameterGroupMessage$CacheParameterGroupFamily": "<p>The name of the cache parameter group family that the cache parameter group can be used with.</p> <p>Valid values are: <code>valkey8</code> | <code>valkey7</code> | <code>memcached1.4</code> | <code>memcached1.5</code> | <code>memcached1.6</code> | <code>redis2.6</code> | <code>redis2.8</code> | <code>redis3.2</code> | <code>redis4.0</code> | <code>redis5.0</code> | <code>redis6.x</code> | <code>redis7</code> </p>",
         "CreateCacheParameterGroupMessage$Description": "<p>A user-specified description for the cache parameter group.</p>",
         "CreateCacheSecurityGroupMessage$CacheSecurityGroupName": "<p>A name for the cache security group. This value is stored as a lowercase string.</p> <p>Constraints: Must contain no more than 255 alphanumeric characters. Cannot be the word \"Default\".</p> <p>Example: <code>mysecuritygroup</code> </p>",
@@ -2376,7 +2214,7 @@
         "CreateCacheSubnetGroupMessage$CacheSubnetGroupDescription": "<p>A description for the cache subnet group.</p>",
         "CreateGlobalReplicationGroupMessage$GlobalReplicationGroupIdSuffix": "<p>The suffix name of a Global datastore. Amazon ElastiCache automatically applies a prefix to the Global datastore ID when it is created. Each Amazon Region has its own prefix. For instance, a Global datastore ID created in the US-West-1 region will begin with \"dsdfu\" along with the suffix name you provide. The suffix, combined with the auto-generated prefix, guarantees uniqueness of the Global datastore name across multiple regions. </p> <p>For a full list of Amazon Regions and their respective Global datastore iD prefixes, see <a href=\"http://docs.aws.amazon.com/AmazonElastiCache/latest/dg/Redis-Global-Datastores-CLI.html\">Using the Amazon CLI with Global datastores </a>.</p>",
         "CreateGlobalReplicationGroupMessage$GlobalReplicationGroupDescription": "<p>Provides details of the Global datastore</p>",
-        "CreateGlobalReplicationGroupMessage$PrimaryReplicationGroupId": "<p>The name of the primary cluster that accepts writes and will replicate updates to the secondary cluster.</p>",
+        "CreateGlobalReplicationGroupMessage$PrimaryReplicationGroupId": "<p>The name of the primary cluster that accepts writes and will replicate updates to the secondary cluster. This value is stored as a lowercase string.</p>",
         "CreateReplicationGroupMessage$ReplicationGroupId": "<p>The replication group identifier. This parameter is stored as a lowercase string.</p> <p>Constraints:</p> <ul> <li> <p>A name must contain from 1 to 40 alphanumeric characters or hyphens.</p> </li> <li> <p>The first character must be a letter.</p> </li> <li> <p>A name cannot end with a hyphen or contain two consecutive hyphens.</p> </li> </ul>",
         "CreateReplicationGroupMessage$ReplicationGroupDescription": "<p>A user-created description for the replication group.</p>",
         "CreateReplicationGroupMessage$GlobalReplicationGroupId": "<p>The name of the Global datastore</p>",
@@ -2400,14 +2238,14 @@
         "CreateServerlessCacheRequest$KmsKeyId": "<p>ARN of the customer managed key for encrypting the data at rest. If no KMS key is provided, a default service key is used.</p>",
         "CreateServerlessCacheRequest$UserGroupId": "<p>The identifier of the UserGroup to be associated with the serverless cache. Available for Valkey and Redis OSS only. Default is NULL.</p>",
         "CreateServerlessCacheRequest$DailySnapshotTime": "<p>The daily time that snapshots will be created from the new serverless cache. By default this number is populated with 0, i.e. no snapshots will be created on an automatic daily basis. Available for Valkey, Redis OSS and Serverless Memcached only.</p>",
-        "CreateServerlessCacheSnapshotRequest$ServerlessCacheSnapshotName": "<p>The name for the snapshot being created. Must be unique for the customer account. Available for Valkey, Redis OSS and Serverless Memcached only. Must be between 1 and 255 characters.</p>",
+        "CreateServerlessCacheSnapshotRequest$ServerlessCacheSnapshotName": "<p>The name for the snapshot being created. Must be unique for the customer account. Available for Valkey, Redis OSS and Serverless Memcached only. Must be between 1 and 255 characters. This value is stored as a lowercase string.</p>",
         "CreateServerlessCacheSnapshotRequest$ServerlessCacheName": "<p>The name of an existing serverless cache. The snapshot is created from this cache. Available for Valkey, Redis OSS and Serverless Memcached only.</p>",
         "CreateServerlessCacheSnapshotRequest$KmsKeyId": "<p>The ID of the KMS key used to encrypt the snapshot. Available for Valkey, Redis OSS and Serverless Memcached only. Default: NULL</p>",
         "CreateSnapshotMessage$ReplicationGroupId": "<p>The identifier of an existing replication group. The snapshot is created from this replication group.</p>",
         "CreateSnapshotMessage$CacheClusterId": "<p>The identifier of an existing cluster. The snapshot is created from this cluster.</p>",
-        "CreateSnapshotMessage$SnapshotName": "<p>A name for the snapshot being created.</p>",
+        "CreateSnapshotMessage$SnapshotName": "<p>A name for the snapshot being created. This value is stored as a lowercase string.</p>",
         "CreateSnapshotMessage$KmsKeyId": "<p>The ID of the KMS key used to encrypt the snapshot.</p>",
-        "CreateUserGroupMessage$UserGroupId": "<p>The ID of the user group.</p>",
+        "CreateUserGroupMessage$UserGroupId": "<p>The ID of the user group. This value is stored as a lowercase string.</p>",
         "CustomerNodeEndpoint$Address": "<p>The address of the node endpoint</p>",
         "DecreaseNodeGroupsInGlobalReplicationGroupMessage$GlobalReplicationGroupId": "<p>The name of the Global datastore</p>",
         "DecreaseReplicaCountMessage$ReplicationGroupId": "<p>The id of the replication group from which you want to remove replica nodes.</p>",
@@ -2531,7 +2369,7 @@
         "ModifyCacheClusterMessage$NotificationTopicArn": "<p>The Amazon Resource Name (ARN) of the Amazon SNS topic to which notifications are sent.</p> <note> <p>The Amazon SNS topic owner must be same as the cluster owner.</p> </note>",
         "ModifyCacheClusterMessage$CacheParameterGroupName": "<p>The name of the cache parameter group to apply to this cluster. This change is asynchronously applied as soon as possible for parameters when the <code>ApplyImmediately</code> parameter is specified as <code>true</code> for this request.</p>",
         "ModifyCacheClusterMessage$NotificationTopicStatus": "<p>The status of the Amazon SNS notification topic. Notifications are sent only if the status is <code>active</code>.</p> <p>Valid values: <code>active</code> | <code>inactive</code> </p>",
-        "ModifyCacheClusterMessage$Engine": "<p>Modifies the engine listed in a cluster message. The options are redis, memcached or valkey.</p>",
+        "ModifyCacheClusterMessage$Engine": "<p>The engine type used by the cache cluster. The options are valkey, memcached or redis.</p>",
         "ModifyCacheClusterMessage$EngineVersion": "<p>The upgraded version of the cache engine to be run on the cache nodes.</p> <p> <b>Important:</b> You can upgrade to a newer engine version (see <a href=\"https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/SelectEngine.html#VersionManagement\">Selecting a Cache Engine and Version</a>), but you cannot downgrade to an earlier engine version. If you want to use an earlier engine version, you must delete the existing cluster and create it anew with the earlier engine version. </p>",
         "ModifyCacheClusterMessage$SnapshotWindow": "<p>The daily time range (in UTC) during which ElastiCache begins taking a daily snapshot of your cluster. </p>",
         "ModifyCacheClusterMessage$CacheNodeType": "<p>A valid cache node type that you want to scale this cluster up to.</p>",
@@ -2541,7 +2379,7 @@
         "ModifyCacheSubnetGroupMessage$CacheSubnetGroupDescription": "<p>A description of the cache subnet group.</p>",
         "ModifyGlobalReplicationGroupMessage$GlobalReplicationGroupId": "<p>The name of the Global datastore</p>",
         "ModifyGlobalReplicationGroupMessage$CacheNodeType": "<p>A valid cache node type that you want to scale this Global datastore to.</p>",
-        "ModifyGlobalReplicationGroupMessage$Engine": "<p>Modifies the engine listed in a global replication group message. The options are redis, memcached or valkey.</p>",
+        "ModifyGlobalReplicationGroupMessage$Engine": "<p>Modifies the engine listed in a global replication group message. The options are valkey, memcached or redis.</p>",
         "ModifyGlobalReplicationGroupMessage$EngineVersion": "<p>The upgraded version of the cache engine to be run on the clusters in the Global datastore. </p>",
         "ModifyGlobalReplicationGroupMessage$CacheParameterGroupName": "<p>The name of the cache parameter group to use with the Global datastore. It must be compatible with the major engine version used by the Global datastore.</p>",
         "ModifyGlobalReplicationGroupMessage$GlobalReplicationGroupDescription": "<p>A description of the Global datastore</p>",
@@ -2554,7 +2392,7 @@
         "ModifyReplicationGroupMessage$NotificationTopicArn": "<p>The Amazon Resource Name (ARN) of the Amazon SNS topic to which notifications are sent.</p> <note> <p>The Amazon SNS topic owner must be same as the replication group owner. </p> </note>",
         "ModifyReplicationGroupMessage$CacheParameterGroupName": "<p>The name of the cache parameter group to apply to all of the clusters in this replication group. This change is asynchronously applied as soon as possible for parameters when the <code>ApplyImmediately</code> parameter is specified as <code>true</code> for this request.</p>",
         "ModifyReplicationGroupMessage$NotificationTopicStatus": "<p>The status of the Amazon SNS notification topic for the replication group. Notifications are sent only if the status is <code>active</code>.</p> <p>Valid values: <code>active</code> | <code>inactive</code> </p>",
-        "ModifyReplicationGroupMessage$Engine": "<p>Modifies the engine listed in a replication group message. The options are redis, memcached or valkey.</p>",
+        "ModifyReplicationGroupMessage$Engine": "<p>Modifies the engine listed in a replication group message. The options are valkey, memcached or redis.</p>",
         "ModifyReplicationGroupMessage$EngineVersion": "<p>The upgraded version of the cache engine to be run on the clusters in the replication group.</p> <p> <b>Important:</b> You can upgrade to a newer engine version (see <a href=\"https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/SelectEngine.html#VersionManagement\">Selecting a Cache Engine and Version</a>), but you cannot downgrade to an earlier engine version. If you want to use an earlier engine version, you must delete the existing replication group and create it anew with the earlier engine version. </p>",
         "ModifyReplicationGroupMessage$SnapshotWindow": "<p>The daily time range (in UTC) during which ElastiCache begins taking a daily snapshot of the node group (shard) specified by <code>SnapshottingClusterId</code>.</p> <p>Example: <code>05:00-09:00</code> </p> <p>If you do not specify this parameter, ElastiCache automatically chooses an appropriate time range.</p>",
         "ModifyReplicationGroupMessage$CacheNodeType": "<p>A valid cache node type that you want to scale this replication group to.</p>",
@@ -2564,7 +2402,7 @@
         "ModifyServerlessCacheRequest$Description": "<p>User provided description for the serverless cache. Default = NULL, i.e. the existing description is not removed/modified. The description has a maximum length of 255 characters.</p>",
         "ModifyServerlessCacheRequest$UserGroupId": "<p>The identifier of the UserGroup to be associated with the serverless cache. Available for Valkey and Redis OSS only. Default is NULL - the existing UserGroup is not removed.</p>",
         "ModifyServerlessCacheRequest$DailySnapshotTime": "<p>The daily time during which Elasticache begins taking a daily snapshot of the serverless cache. Available for Valkey, Redis OSS and Serverless Memcached only. The default is NULL, i.e. the existing snapshot time configured for the cluster is not removed.</p>",
-        "ModifyServerlessCacheRequest$Engine": "<p>Modifies the engine listed in a serverless cache request. The options are redis, memcached or valkey.</p>",
+        "ModifyServerlessCacheRequest$Engine": "<p>Modifies the engine listed in a serverless cache request. The options are valkey, memcached or redis.</p>",
         "ModifyServerlessCacheRequest$MajorEngineVersion": "<p>Modifies the engine vesion listed in a serverless cache request. </p>",
         "ModifyUserGroupMessage$UserGroupId": "<p>The ID of the user group.</p>",
         "NodeGroup$NodeGroupId": "<p>The identifier for the node group (shard). A Valkey or Redis OSS (cluster mode disabled) replication group contains only 1 node group; therefore, the node group ID is 0001. A Valkey or Redis OSS (cluster mode enabled) replication group contains 1 to 90 node groups numbered 0001 to 0090. Optionally, the user can provide the id for a node group. </p>",
@@ -2623,7 +2461,7 @@
         "ReplicationGroup$CacheNodeType": "<p>The name of the compute and memory capacity node type for each node in the replication group.</p>",
         "ReplicationGroup$KmsKeyId": "<p>The ID of the KMS key used to encrypt the disk in the cluster.</p>",
         "ReplicationGroup$ARN": "<p>The ARN (Amazon Resource Name) of the replication group.</p>",
-        "ReplicationGroup$Engine": "<p>The engine used in a replication group. The options are redis, memcached or valkey.</p>",
+        "ReplicationGroup$Engine": "<p>The engine used in a replication group. The options are valkey, memcached or redis.</p>",
         "ReplicationGroupIdList$member": null,
         "ReplicationGroupMessage$Marker": "<p>Provides an identifier to allow retrieval of paginated results.</p>",
         "ReplicationGroupOutpostArnList$member": null,
@@ -2750,8 +2588,7 @@
     },
     "SubnetInUse": {
       "base": "<p>The requested subnet is being used by another cache subnet group.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "SubnetList": {
       "base": null,
@@ -2761,8 +2598,7 @@
     },
     "SubnetNotAllowedFault": {
       "base": "<p>At least one subnet ID does not match the other subnet IDs. This mismatch typically occurs when a user sets one subnet ID to a regional Availability Zone and a different one to an outpost. Or when a user sets the subnet ID to an Outpost when not subscribed on this service.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "SubnetOutpost": {
       "base": "<p>The ID of the outpost subnet.</p>",
@@ -2837,43 +2673,35 @@
     },
     "TagListMessage": {
       "base": "<p>Represents the output from the <code>AddTagsToResource</code>, <code>ListTagsForResource</code>, and <code>RemoveTagsFromResource</code> operations.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "TagNotFoundFault": {
       "base": "<p>The requested tag was not found on this resource.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "TagQuotaPerResourceExceeded": {
       "base": "<p>The request cannot be processed because it would cause the resource to have more than the allowed number of tags. The maximum number of tags permitted on a resource is 50.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "TestFailoverMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "TestFailoverNotAvailableFault": {
       "base": "<p>The <code>TestFailover</code> action is not available.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "TestFailoverResult": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "TestMigrationMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "TestMigrationResponse": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "TimeRangeFilter": {
       "base": "<p>Filters update actions from the service updates that are in available status during the time range.</p>",
@@ -2930,8 +2758,7 @@
     },
     "UpdateActionResultsMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateActionStatus": {
       "base": null,
@@ -2949,8 +2776,7 @@
     },
     "UpdateActionsMessage": {
       "base": null,
-      "refs": {
-      }
+      "refs": {}
     },
     "User": {
       "base": null,
@@ -2960,8 +2786,7 @@
     },
     "UserAlreadyExistsFault": {
       "base": "<p>A user with this ID already exists.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "UserGroup": {
       "base": null,
@@ -2971,8 +2796,7 @@
     },
     "UserGroupAlreadyExistsFault": {
       "base": "<p>The user group with this ID already exists.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "UserGroupId": {
       "base": null,
@@ -3006,8 +2830,7 @@
     },
     "UserGroupNotFoundFault": {
       "base": "<p>The user group was not found or does not exist</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "UserGroupPendingChanges": {
       "base": "<p>Returns the updates being applied to the user group.</p>",
@@ -3017,8 +2840,7 @@
     },
     "UserGroupQuotaExceededFault": {
       "base": "<p>The number of users exceeds the user group limit.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "UserGroupsUpdateStatus": {
       "base": "<p>The status of the user group update.</p>",
@@ -3029,7 +2851,7 @@
     "UserId": {
       "base": null,
       "refs": {
-        "CreateUserMessage$UserId": "<p>The ID of the user.</p>",
+        "CreateUserMessage$UserId": "<p>The ID of the user. This value is stored as a lowercase string.</p>",
         "DeleteUserMessage$UserId": "<p>The ID of the user.</p>",
         "DescribeUsersMessage$UserId": "<p>The ID of the user.</p>",
         "ModifyUserMessage$UserId": "<p>The ID of the user.</p>",
@@ -3067,13 +2889,11 @@
     },
     "UserNotFoundFault": {
       "base": "<p>The user does not exist or could not be found.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "UserQuotaExceededFault": {
       "base": "<p>The quota of users has been exceeded.</p>",
-      "refs": {
-      }
+      "refs": {}
     }
   }
 }

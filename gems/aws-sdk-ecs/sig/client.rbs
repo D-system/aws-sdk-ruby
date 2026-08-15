@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -78,6 +79,18 @@ module Aws
                   | (?Hash[Symbol, untyped]) -> instance
 
 
+      interface _ContinueServiceDeploymentResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ContinueServiceDeploymentResponse]
+        def service_deployment_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ECS/Client.html#continue_service_deployment-instance_method
+      def continue_service_deployment: (
+                                         service_deployment_arn: ::String,
+                                         hook_id: ::String,
+                                         ?action: ("ROLLBACK" | "CONTINUE")
+                                       ) -> _ContinueServiceDeploymentResponseSuccess
+                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ContinueServiceDeploymentResponseSuccess
+
       interface _CreateCapacityProviderResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateCapacityProviderResponse]
         def capacity_provider: () -> Types::CapacityProvider
@@ -85,7 +98,8 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ECS/Client.html#create_capacity_provider-instance_method
       def create_capacity_provider: (
                                       name: ::String,
-                                      auto_scaling_group_provider: {
+                                      ?cluster: ::String,
+                                      ?auto_scaling_group_provider: {
                                         auto_scaling_group_arn: ::String,
                                         managed_scaling: {
                                           status: ("ENABLED" | "DISABLED")?,
@@ -97,11 +111,43 @@ module Aws
                                         managed_termination_protection: ("ENABLED" | "DISABLED")?,
                                         managed_draining: ("ENABLED" | "DISABLED")?
                                       },
+                                      ?managed_instances_provider: {
+                                        infrastructure_role_arn: ::String,
+                                        instance_launch_template: {
+                                          ec2_instance_profile_arn: ::String,
+                                          network_configuration: {
+                                            subnets: Array[::String]?,
+                                            security_groups: Array[::String]?
+                                          },
+                                          storage_configuration: {
+                                            storage_size_gi_b: ::Integer?
+                                          }?,
+                                          local_storage_configuration: {
+                                            use_local_storage: bool?
+                                          }?,
+                                          monitoring: ("BASIC" | "DETAILED")?,
+                                          capacity_option_type: ("ON_DEMAND" | "SPOT" | "RESERVED")?,
+                                          instance_metadata_tags_propagation: bool?,
+                                          instance_requirements: Params::instance_requirements_request?,
+                                          fips_enabled: bool?,
+                                          capacity_reservations: {
+                                            reservation_group_arn: ::String?,
+                                            reservation_preference: ("RESERVATIONS_ONLY" | "RESERVATIONS_FIRST" | "RESERVATIONS_EXCLUDED")?
+                                          }?
+                                        },
+                                        propagate_tags: ("CAPACITY_PROVIDER" | "NONE")?,
+                                        infrastructure_optimization: {
+                                          scale_in_after: ::Integer?
+                                        }?,
+                                        auto_repair_configuration: {
+                                          actions_status: ("ENABLED" | "DISABLED")?
+                                        }?
+                                      },
                                       ?tags: Array[
                                         {
                                           key: ::String?,
                                           value: ::String?
-                                        },
+                                        }
                                       ]
                                     ) -> _CreateCapacityProviderResponseSuccess
                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateCapacityProviderResponseSuccess
@@ -117,44 +163,90 @@ module Aws
                               {
                                 key: ::String?,
                                 value: ::String?
-                              },
+                              }
                             ],
                             ?settings: Array[
                               {
                                 name: ("containerInsights")?,
                                 value: ::String?
-                              },
+                              }
                             ],
-                            ?configuration: {
-                              execute_command_configuration: {
-                                kms_key_id: ::String?,
-                                logging: ("NONE" | "DEFAULT" | "OVERRIDE")?,
-                                log_configuration: {
-                                  cloud_watch_log_group_name: ::String?,
-                                  cloud_watch_encryption_enabled: bool?,
-                                  s3_bucket_name: ::String?,
-                                  s3_encryption_enabled: bool?,
-                                  s3_key_prefix: ::String?
-                                }?
-                              }?,
-                              managed_storage_configuration: {
-                                kms_key_id: ::String?,
-                                fargate_ephemeral_storage_kms_key_id: ::String?
-                              }?
-                            },
+                            ?configuration: Params::cluster_configuration,
                             ?capacity_providers: Array[::String],
                             ?default_capacity_provider_strategy: Array[
                               {
                                 capacity_provider: ::String,
                                 weight: ::Integer?,
                                 base: ::Integer?
-                              },
+                              }
                             ],
                             ?service_connect_defaults: {
                               namespace: ::String
                             }
                           ) -> _CreateClusterResponseSuccess
                         | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateClusterResponseSuccess
+
+      interface _CreateDaemonResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateDaemonResponse]
+        def daemon_arn: () -> ::String
+        def status: () -> ("ACTIVE" | "DELETE_IN_PROGRESS")
+        def created_at: () -> ::Time
+        def deployment_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ECS/Client.html#create_daemon-instance_method
+      def create_daemon: (
+                           daemon_name: ::String,
+                           ?cluster_arn: ::String,
+                           daemon_task_definition_arn: ::String,
+                           capacity_provider_arns: Array[::String],
+                           ?deployment_configuration: Params::daemon_deployment_configuration,
+                           ?tags: Array[
+                             {
+                               key: ::String?,
+                               value: ::String?
+                             }
+                           ],
+                           ?propagate_tags: ("DAEMON" | "NONE"),
+                           ?enable_ecs_managed_tags: bool,
+                           ?enable_execute_command: bool,
+                           ?client_token: ::String
+                         ) -> _CreateDaemonResponseSuccess
+                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateDaemonResponseSuccess
+
+      interface _CreateExpressGatewayServiceResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateExpressGatewayServiceResponse]
+        def service: () -> Types::ECSExpressGatewayService
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ECS/Client.html#create_express_gateway_service-instance_method
+      def create_express_gateway_service: (
+                                            ?execution_role_arn: ::String,
+                                            infrastructure_role_arn: ::String,
+                                            ?service_name: ::String,
+                                            ?cluster: ::String,
+                                            ?health_check_path: ::String,
+                                            ?primary_container: Params::express_gateway_container,
+                                            ?task_role_arn: ::String,
+                                            ?network_configuration: {
+                                              security_groups: Array[::String]?,
+                                              subnets: Array[::String]?
+                                            },
+                                            ?cpu: ::String,
+                                            ?memory: ::String,
+                                            ?scaling_target: {
+                                              min_task_count: ::Integer?,
+                                              max_task_count: ::Integer?,
+                                              auto_scaling_metric: ("AVERAGE_CPU" | "AVERAGE_MEMORY" | "REQUEST_COUNT_PER_TARGET")?,
+                                              auto_scaling_target_value: ::Integer?
+                                            },
+                                            ?tags: Array[
+                                              {
+                                                key: ::String?,
+                                                value: ::String?
+                                              }
+                                            ],
+                                            ?task_definition_arn: ::String
+                                          ) -> _CreateExpressGatewayServiceResponseSuccess
+                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateExpressGatewayServiceResponseSuccess
 
       interface _CreateServiceResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateServiceResponse]
@@ -167,12 +259,7 @@ module Aws
                             ?task_definition: ::String,
                             ?availability_zone_rebalancing: ("ENABLED" | "DISABLED"),
                             ?load_balancers: Array[
-                              {
-                                target_group_arn: ::String?,
-                                load_balancer_name: ::String?,
-                                container_name: ::String?,
-                                container_port: ::Integer?
-                              },
+                              Params::load_balancer
                             ],
                             ?service_registries: Array[
                               {
@@ -180,44 +267,32 @@ module Aws
                                 port: ::Integer?,
                                 container_name: ::String?,
                                 container_port: ::Integer?
-                              },
+                              }
                             ],
                             ?desired_count: ::Integer,
                             ?client_token: ::String,
-                            ?launch_type: ("EC2" | "FARGATE" | "EXTERNAL"),
+                            ?launch_type: ("EC2" | "FARGATE" | "EXTERNAL" | "MANAGED_INSTANCES"),
                             ?capacity_provider_strategy: Array[
                               {
                                 capacity_provider: ::String,
                                 weight: ::Integer?,
                                 base: ::Integer?
-                              },
+                              }
                             ],
                             ?platform_version: ::String,
                             ?role: ::String,
-                            ?deployment_configuration: {
-                              deployment_circuit_breaker: {
-                                enable: bool,
-                                rollback: bool
-                              }?,
-                              maximum_percent: ::Integer?,
-                              minimum_healthy_percent: ::Integer?,
-                              alarms: {
-                                alarm_names: Array[::String],
-                                rollback: bool,
-                                enable: bool
-                              }?
-                            },
+                            ?deployment_configuration: Params::deployment_configuration,
                             ?placement_constraints: Array[
                               {
                                 type: ("distinctInstance" | "memberOf")?,
                                 expression: ::String?
-                              },
+                              }
                             ],
                             ?placement_strategy: Array[
                               {
                                 type: ("random" | "spread" | "binpack")?,
                                 field: ::String?
-                              },
+                              }
                             ],
                             ?network_configuration: {
                               awsvpc_configuration: {
@@ -235,84 +310,30 @@ module Aws
                               {
                                 key: ::String?,
                                 value: ::String?
-                              },
+                              }
                             ],
                             ?enable_ecs_managed_tags: bool,
                             ?propagate_tags: ("TASK_DEFINITION" | "SERVICE" | "NONE"),
                             ?enable_execute_command: bool,
-                            ?service_connect_configuration: {
-                              enabled: bool,
-                              namespace: ::String?,
-                              services: Array[
-                                {
-                                  port_name: ::String,
-                                  discovery_name: ::String?,
-                                  client_aliases: Array[
-                                    {
-                                      port: ::Integer,
-                                      dns_name: ::String?
-                                    },
-                                  ]?,
-                                  ingress_port_override: ::Integer?,
-                                  timeout: {
-                                    idle_timeout_seconds: ::Integer?,
-                                    per_request_timeout_seconds: ::Integer?
-                                  }?,
-                                  tls: {
-                                    issuer_certificate_authority: {
-                                      aws_pca_authority_arn: ::String?
-                                    },
-                                    kms_key: ::String?,
-                                    role_arn: ::String?
-                                  }?
-                                },
-                              ]?,
-                              log_configuration: {
-                                log_driver: ("json-file" | "syslog" | "journald" | "gelf" | "fluentd" | "awslogs" | "splunk" | "awsfirelens"),
-                                options: Hash[::String, ::String]?,
-                                secret_options: Array[
-                                  {
-                                    name: ::String,
-                                    value_from: ::String
-                                  },
-                                ]?
-                              }?
-                            },
+                            ?service_connect_configuration: Params::service_connect_configuration,
                             ?volume_configurations: Array[
-                              {
-                                name: ::String,
-                                managed_ebs_volume: {
-                                  encrypted: bool?,
-                                  kms_key_id: ::String?,
-                                  volume_type: ::String?,
-                                  size_in_gi_b: ::Integer?,
-                                  snapshot_id: ::String?,
-                                  iops: ::Integer?,
-                                  throughput: ::Integer?,
-                                  tag_specifications: Array[
-                                    {
-                                      resource_type: ("volume"),
-                                      tags: Array[
-                                        {
-                                          key: ::String?,
-                                          value: ::String?
-                                        },
-                                      ]?,
-                                      propagate_tags: ("TASK_DEFINITION" | "SERVICE" | "NONE")?
-                                    },
-                                  ]?,
-                                  role_arn: ::String,
-                                  filesystem_type: ("ext3" | "ext4" | "xfs" | "ntfs")?
-                                }?
-                              },
+                              Params::service_volume_configuration
                             ],
                             ?vpc_lattice_configurations: Array[
                               {
                                 role_arn: ::String,
                                 target_group_arn: ::String,
                                 port_name: ::String
-                              },
-                            ]
+                              }
+                            ],
+                            ?monitoring: {
+                              metric_configurations: Array[
+                                {
+                                  metric_names: Array[::String],
+                                  resolution_seconds: ::Integer
+                                }
+                              ]?
+                            }
                           ) -> _CreateServiceResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateServiceResponseSuccess
 
@@ -334,12 +355,7 @@ module Aws
                                }?
                              },
                              ?load_balancers: Array[
-                               {
-                                 target_group_arn: ::String?,
-                                 load_balancer_name: ::String?,
-                                 container_name: ::String?,
-                                 container_port: ::Integer?
-                               },
+                               Params::load_balancer
                              ],
                              ?service_registries: Array[
                                {
@@ -347,15 +363,15 @@ module Aws
                                  port: ::Integer?,
                                  container_name: ::String?,
                                  container_port: ::Integer?
-                               },
+                               }
                              ],
-                             ?launch_type: ("EC2" | "FARGATE" | "EXTERNAL"),
+                             ?launch_type: ("EC2" | "FARGATE" | "EXTERNAL" | "MANAGED_INSTANCES"),
                              ?capacity_provider_strategy: Array[
                                {
                                  capacity_provider: ::String,
                                  weight: ::Integer?,
                                  base: ::Integer?
-                               },
+                               }
                              ],
                              ?platform_version: ::String,
                              ?scale: {
@@ -367,7 +383,7 @@ module Aws
                                {
                                  key: ::String?,
                                  value: ::String?
-                               },
+                               }
                              ]
                            ) -> _CreateTaskSetResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateTaskSetResponseSuccess
@@ -378,7 +394,7 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ECS/Client.html#delete_account_setting-instance_method
       def delete_account_setting: (
-                                    name: ("serviceLongArnFormat" | "taskLongArnFormat" | "containerInstanceLongArnFormat" | "awsvpcTrunking" | "containerInsights" | "fargateFIPSMode" | "tagResourceAuthorization" | "fargateTaskRetirementWaitPeriod" | "guardDutyActivate"),
+                                    name: ("serviceLongArnFormat" | "taskLongArnFormat" | "containerInstanceLongArnFormat" | "awsvpcTrunking" | "containerInsights" | "fargateFIPSMode" | "tagResourceAuthorization" | "fargateTaskRetirementWaitPeriod" | "guardDutyActivate" | "defaultLogDriverMode" | "fargateEventWindows"),
                                     ?principal_arn: ::String
                                   ) -> _DeleteAccountSettingResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteAccountSettingResponseSuccess
@@ -396,7 +412,7 @@ module Aws
                                    value: ::String?,
                                    target_type: ("container-instance")?,
                                    target_id: ::String?
-                                 },
+                                 }
                                ]
                              ) -> _DeleteAttributesResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteAttributesResponseSuccess
@@ -407,7 +423,8 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ECS/Client.html#delete_capacity_provider-instance_method
       def delete_capacity_provider: (
-                                      capacity_provider: ::String
+                                      capacity_provider: ::String,
+                                      ?cluster: ::String
                                     ) -> _DeleteCapacityProviderResponseSuccess
                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteCapacityProviderResponseSuccess
 
@@ -420,6 +437,40 @@ module Aws
                             cluster: ::String
                           ) -> _DeleteClusterResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteClusterResponseSuccess
+
+      interface _DeleteDaemonResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteDaemonResponse]
+        def daemon_arn: () -> ::String
+        def status: () -> ("ACTIVE" | "DELETE_IN_PROGRESS")
+        def created_at: () -> ::Time
+        def updated_at: () -> ::Time
+        def deployment_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ECS/Client.html#delete_daemon-instance_method
+      def delete_daemon: (
+                           daemon_arn: ::String
+                         ) -> _DeleteDaemonResponseSuccess
+                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteDaemonResponseSuccess
+
+      interface _DeleteDaemonTaskDefinitionResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteDaemonTaskDefinitionResponse]
+        def daemon_task_definition_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ECS/Client.html#delete_daemon_task_definition-instance_method
+      def delete_daemon_task_definition: (
+                                           daemon_task_definition: ::String
+                                         ) -> _DeleteDaemonTaskDefinitionResponseSuccess
+                                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteDaemonTaskDefinitionResponseSuccess
+
+      interface _DeleteExpressGatewayServiceResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteExpressGatewayServiceResponse]
+        def service: () -> Types::ECSExpressGatewayService
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ECS/Client.html#delete_express_gateway_service-instance_method
+      def delete_express_gateway_service: (
+                                            service_arn: ::String
+                                          ) -> _DeleteExpressGatewayServiceResponseSuccess
+                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteExpressGatewayServiceResponseSuccess
 
       interface _DeleteServiceResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DeleteServiceResponse]
@@ -488,6 +539,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ECS/Client.html#describe_capacity_providers-instance_method
       def describe_capacity_providers: (
                                          ?capacity_providers: Array[::String],
+                                         ?cluster: ::String,
                                          ?include: Array[("TAGS")],
                                          ?max_results: ::Integer,
                                          ?next_token: ::String
@@ -518,6 +570,59 @@ module Aws
                                           ?include: Array[("TAGS" | "CONTAINER_INSTANCE_HEALTH")]
                                         ) -> _DescribeContainerInstancesResponseSuccess
                                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeContainerInstancesResponseSuccess
+
+      interface _DescribeDaemonResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DescribeDaemonResponse]
+        def daemon: () -> Types::DaemonDetail
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ECS/Client.html#describe_daemon-instance_method
+      def describe_daemon: (
+                             daemon_arn: ::String
+                           ) -> _DescribeDaemonResponseSuccess
+                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeDaemonResponseSuccess
+
+      interface _DescribeDaemonDeploymentsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DescribeDaemonDeploymentsResponse]
+        def failures: () -> ::Array[Types::Failure]
+        def daemon_deployments: () -> ::Array[Types::DaemonDeployment]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ECS/Client.html#describe_daemon_deployments-instance_method
+      def describe_daemon_deployments: (
+                                         daemon_deployment_arns: Array[::String]
+                                       ) -> _DescribeDaemonDeploymentsResponseSuccess
+                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeDaemonDeploymentsResponseSuccess
+
+      interface _DescribeDaemonRevisionsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DescribeDaemonRevisionsResponse]
+        def daemon_revisions: () -> ::Array[Types::DaemonRevision]
+        def failures: () -> ::Array[Types::Failure]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ECS/Client.html#describe_daemon_revisions-instance_method
+      def describe_daemon_revisions: (
+                                       daemon_revision_arns: Array[::String]
+                                     ) -> _DescribeDaemonRevisionsResponseSuccess
+                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeDaemonRevisionsResponseSuccess
+
+      interface _DescribeDaemonTaskDefinitionResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DescribeDaemonTaskDefinitionResponse]
+        def daemon_task_definition: () -> Types::DaemonTaskDefinition
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ECS/Client.html#describe_daemon_task_definition-instance_method
+      def describe_daemon_task_definition: (
+                                             daemon_task_definition: ::String
+                                           ) -> _DescribeDaemonTaskDefinitionResponseSuccess
+                                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeDaemonTaskDefinitionResponseSuccess
+
+      interface _DescribeExpressGatewayServiceResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DescribeExpressGatewayServiceResponse]
+        def service: () -> Types::ECSExpressGatewayService
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ECS/Client.html#describe_express_gateway_service-instance_method
+      def describe_express_gateway_service: (
+                                              service_arn: ::String,
+                                              ?include: Array[("TAGS")]
+                                            ) -> _DescribeExpressGatewayServiceResponseSuccess
+                                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeExpressGatewayServiceResponseSuccess
 
       interface _DescribeServiceDeploymentsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DescribeServiceDeploymentsResponse]
@@ -644,7 +749,7 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ECS/Client.html#list_account_settings-instance_method
       def list_account_settings: (
-                                   ?name: ("serviceLongArnFormat" | "taskLongArnFormat" | "containerInstanceLongArnFormat" | "awsvpcTrunking" | "containerInsights" | "fargateFIPSMode" | "tagResourceAuthorization" | "fargateTaskRetirementWaitPeriod" | "guardDutyActivate"),
+                                   ?name: ("serviceLongArnFormat" | "taskLongArnFormat" | "containerInstanceLongArnFormat" | "awsvpcTrunking" | "containerInsights" | "fargateFIPSMode" | "tagResourceAuthorization" | "fargateTaskRetirementWaitPeriod" | "guardDutyActivate" | "defaultLogDriverMode" | "fargateEventWindows"),
                                    ?value: ::String,
                                    ?principal_arn: ::String,
                                    ?effective_settings: bool,
@@ -696,6 +801,55 @@ module Aws
                                     ) -> _ListContainerInstancesResponseSuccess
                                   | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListContainerInstancesResponseSuccess
 
+      interface _ListDaemonDeploymentsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListDaemonDeploymentsResponse]
+        def next_token: () -> ::String
+        def daemon_deployments: () -> ::Array[Types::DaemonDeploymentSummary]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ECS/Client.html#list_daemon_deployments-instance_method
+      def list_daemon_deployments: (
+                                     daemon_arn: ::String,
+                                     ?status: Array[("PENDING" | "SUCCESSFUL" | "STOPPED" | "STOP_REQUESTED" | "IN_PROGRESS" | "ROLLBACK_IN_PROGRESS" | "ROLLBACK_SUCCESSFUL" | "ROLLBACK_FAILED")],
+                                     ?created_at: {
+                                       before: ::Time?,
+                                       after: ::Time?
+                                     },
+                                     ?max_results: ::Integer,
+                                     ?next_token: ::String
+                                   ) -> _ListDaemonDeploymentsResponseSuccess
+                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListDaemonDeploymentsResponseSuccess
+
+      interface _ListDaemonTaskDefinitionsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListDaemonTaskDefinitionsResponse]
+        def daemon_task_definitions: () -> ::Array[Types::DaemonTaskDefinitionSummary]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ECS/Client.html#list_daemon_task_definitions-instance_method
+      def list_daemon_task_definitions: (
+                                          ?family_prefix: ::String,
+                                          ?family: ::String,
+                                          ?revision: ("LAST_REGISTERED"),
+                                          ?status: ("ACTIVE" | "DELETE_IN_PROGRESS" | "ALL"),
+                                          ?sort: ("ASC" | "DESC"),
+                                          ?next_token: ::String,
+                                          ?max_results: ::Integer
+                                        ) -> _ListDaemonTaskDefinitionsResponseSuccess
+                                      | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListDaemonTaskDefinitionsResponseSuccess
+
+      interface _ListDaemonsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListDaemonsResponse]
+        def daemon_summaries_list: () -> ::Array[Types::DaemonSummary]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ECS/Client.html#list_daemons-instance_method
+      def list_daemons: (
+                          ?cluster_arn: ::String,
+                          ?capacity_provider_arns: Array[::String],
+                          ?max_results: ::Integer,
+                          ?next_token: ::String
+                        ) -> _ListDaemonsResponseSuccess
+                      | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListDaemonsResponseSuccess
+
       interface _ListServiceDeploymentsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListServiceDeploymentsResponse]
         def service_deployments: () -> ::Array[Types::ServiceDeploymentBrief]
@@ -705,7 +859,7 @@ module Aws
       def list_service_deployments: (
                                       service: ::String,
                                       ?cluster: ::String,
-                                      ?status: Array[("PENDING" | "SUCCESSFUL" | "STOPPED" | "STOP_REQUESTED" | "IN_PROGRESS" | "ROLLBACK_IN_PROGRESS" | "ROLLBACK_SUCCESSFUL" | "ROLLBACK_FAILED")],
+                                      ?status: Array[("PENDING" | "SUCCESSFUL" | "STOPPED" | "STOP_REQUESTED" | "IN_PROGRESS" | "ROLLBACK_REQUESTED" | "ROLLBACK_IN_PROGRESS" | "ROLLBACK_SUCCESSFUL" | "ROLLBACK_FAILED")],
                                       ?created_at: {
                                         before: ::Time?,
                                         after: ::Time?
@@ -725,8 +879,9 @@ module Aws
                            ?cluster: ::String,
                            ?next_token: ::String,
                            ?max_results: ::Integer,
-                           ?launch_type: ("EC2" | "FARGATE" | "EXTERNAL"),
-                           ?scheduling_strategy: ("REPLICA" | "DAEMON")
+                           ?launch_type: ("EC2" | "FARGATE" | "EXTERNAL" | "MANAGED_INSTANCES"),
+                           ?scheduling_strategy: ("REPLICA" | "DAEMON"),
+                           ?resource_management_type: ("CUSTOMER" | "ECS")
                          ) -> _ListServicesResponseSuccess
                        | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListServicesResponseSuccess
 
@@ -797,7 +952,8 @@ module Aws
                         ?started_by: ::String,
                         ?service_name: ::String,
                         ?desired_status: ("RUNNING" | "PENDING" | "STOPPED"),
-                        ?launch_type: ("EC2" | "FARGATE" | "EXTERNAL")
+                        ?launch_type: ("EC2" | "FARGATE" | "EXTERNAL" | "MANAGED_INSTANCES"),
+                        ?daemon_name: ::String
                       ) -> _ListTasksResponseSuccess
                     | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListTasksResponseSuccess
 
@@ -807,7 +963,7 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ECS/Client.html#put_account_setting-instance_method
       def put_account_setting: (
-                                 name: ("serviceLongArnFormat" | "taskLongArnFormat" | "containerInstanceLongArnFormat" | "awsvpcTrunking" | "containerInsights" | "fargateFIPSMode" | "tagResourceAuthorization" | "fargateTaskRetirementWaitPeriod" | "guardDutyActivate"),
+                                 name: ("serviceLongArnFormat" | "taskLongArnFormat" | "containerInstanceLongArnFormat" | "awsvpcTrunking" | "containerInsights" | "fargateFIPSMode" | "tagResourceAuthorization" | "fargateTaskRetirementWaitPeriod" | "guardDutyActivate" | "defaultLogDriverMode" | "fargateEventWindows"),
                                  value: ::String,
                                  ?principal_arn: ::String
                                ) -> _PutAccountSettingResponseSuccess
@@ -819,7 +975,7 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ECS/Client.html#put_account_setting_default-instance_method
       def put_account_setting_default: (
-                                         name: ("serviceLongArnFormat" | "taskLongArnFormat" | "containerInstanceLongArnFormat" | "awsvpcTrunking" | "containerInsights" | "fargateFIPSMode" | "tagResourceAuthorization" | "fargateTaskRetirementWaitPeriod" | "guardDutyActivate"),
+                                         name: ("serviceLongArnFormat" | "taskLongArnFormat" | "containerInstanceLongArnFormat" | "awsvpcTrunking" | "containerInsights" | "fargateFIPSMode" | "tagResourceAuthorization" | "fargateTaskRetirementWaitPeriod" | "guardDutyActivate" | "defaultLogDriverMode" | "fargateEventWindows"),
                                          value: ::String
                                        ) -> _PutAccountSettingDefaultResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutAccountSettingDefaultResponseSuccess
@@ -837,7 +993,7 @@ module Aws
                                 value: ::String?,
                                 target_type: ("container-instance")?,
                                 target_id: ::String?
-                              },
+                              }
                             ]
                           ) -> _PutAttributesResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutAttributesResponseSuccess
@@ -855,7 +1011,7 @@ module Aws
                                                 capacity_provider: ::String,
                                                 weight: ::Integer?,
                                                 base: ::Integer?
-                                              },
+                                              }
                                             ]
                                           ) -> _PutClusterCapacityProvidersResponseSuccess
                                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutClusterCapacityProvidersResponseSuccess
@@ -877,7 +1033,7 @@ module Aws
                                              long_value: ::Integer?,
                                              integer_value: ::Integer?,
                                              string_set_value: Array[::String]?
-                                           },
+                                           }
                                          ],
                                          ?version_info: {
                                            agent_version: ::String?,
@@ -891,22 +1047,157 @@ module Aws
                                              value: ::String?,
                                              target_type: ("container-instance")?,
                                              target_id: ::String?
-                                           },
+                                           }
                                          ],
                                          ?platform_devices: Array[
                                            {
                                              id: ::String,
-                                             type: ("GPU")
-                                           },
+                                             type: ("GPU" | "NEURON_DEVICE")
+                                           }
                                          ],
                                          ?tags: Array[
                                            {
                                              key: ::String?,
                                              value: ::String?
-                                           },
+                                           }
                                          ]
                                        ) -> _RegisterContainerInstanceResponseSuccess
                                      | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RegisterContainerInstanceResponseSuccess
+
+      interface _RegisterDaemonTaskDefinitionResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::RegisterDaemonTaskDefinitionResponse]
+        def daemon_task_definition_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ECS/Client.html#register_daemon_task_definition-instance_method
+      def register_daemon_task_definition: (
+                                             family: ::String,
+                                             ?task_role_arn: ::String,
+                                             ?execution_role_arn: ::String,
+                                             container_definitions: Array[
+                                               {
+                                                 name: ::String?,
+                                                 image: ::String,
+                                                 memory: ::Integer?,
+                                                 memory_reservation: ::Integer?,
+                                                 repository_credentials: {
+                                                   credentials_parameter: ::String
+                                                 }?,
+                                                 health_check: {
+                                                   command: Array[::String],
+                                                   interval: ::Integer?,
+                                                   timeout: ::Integer?,
+                                                   retries: ::Integer?,
+                                                   start_period: ::Integer?
+                                                 }?,
+                                                 cpu: ::Integer?,
+                                                 essential: bool?,
+                                                 entry_point: Array[::String]?,
+                                                 command: Array[::String]?,
+                                                 working_directory: ::String?,
+                                                 environment_files: Array[
+                                                   {
+                                                     value: ::String,
+                                                     type: ("s3")
+                                                   }
+                                                 ]?,
+                                                 environment: Array[
+                                                   {
+                                                     name: ::String?,
+                                                     value: ::String?
+                                                   }
+                                                 ]?,
+                                                 secrets: Array[
+                                                   {
+                                                     name: ::String,
+                                                     value_from: ::String
+                                                   }
+                                                 ]?,
+                                                 readonly_root_filesystem: bool?,
+                                                 mount_points: Array[
+                                                   {
+                                                     source_volume: ::String?,
+                                                     container_path: ::String?,
+                                                     read_only: bool?
+                                                   }
+                                                 ]?,
+                                                 log_configuration: Params::log_configuration?,
+                                                 firelens_configuration: {
+                                                   type: ("fluentd" | "fluentbit"),
+                                                   options: Hash[::String, ::String]?
+                                                 }?,
+                                                 privileged: bool?,
+                                                 user: ::String?,
+                                                 ulimits: Array[
+                                                   {
+                                                     name: ("core" | "cpu" | "data" | "fsize" | "locks" | "memlock" | "msgqueue" | "nice" | "nofile" | "nproc" | "rss" | "rtprio" | "rttime" | "sigpending" | "stack"),
+                                                     soft_limit: ::Integer,
+                                                     hard_limit: ::Integer
+                                                   }
+                                                 ]?,
+                                                 linux_parameters: {
+                                                   capabilities: {
+                                                     add: Array[::String]?,
+                                                     drop: Array[::String]?
+                                                   }?,
+                                                   devices: Array[
+                                                     {
+                                                       host_path: ::String,
+                                                       container_path: ::String?,
+                                                       permissions: Array[("read" | "write" | "mknod")]?
+                                                     }
+                                                   ]?,
+                                                   init_process_enabled: bool?,
+                                                   tmpfs: Array[
+                                                     {
+                                                       container_path: ::String,
+                                                       size: ::Integer,
+                                                       mount_options: Array[::String]?
+                                                     }
+                                                   ]?
+                                                 }?,
+                                                 depends_on: Array[
+                                                   {
+                                                     container_name: ::String,
+                                                     condition: ("START" | "COMPLETE" | "SUCCESS" | "HEALTHY")
+                                                   }
+                                                 ]?,
+                                                 start_timeout: ::Integer?,
+                                                 stop_timeout: ::Integer?,
+                                                 system_controls: Array[
+                                                   {
+                                                     namespace: ::String?,
+                                                     value: ::String?
+                                                   }
+                                                 ]?,
+                                                 interactive: bool?,
+                                                 pseudo_terminal: bool?,
+                                                 restart_policy: {
+                                                   enabled: bool,
+                                                   ignored_exit_codes: Array[::Integer]?,
+                                                   restart_attempt_period: ::Integer?
+                                                 }?
+                                               }
+                                             ],
+                                             ?cpu: ::String,
+                                             ?memory: ::String,
+                                             ?volumes: Array[
+                                               {
+                                                 name: ::String?,
+                                                 host: {
+                                                   source_path: ::String?
+                                                 }?
+                                               }
+                                             ],
+                                             ?tags: Array[
+                                               {
+                                                 key: ::String?,
+                                                 value: ::String?
+                                               }
+                                             ],
+                                             ?pid_mode: ("none" | "shared"),
+                                             ?ipc_mode: ("none" | "shared")
+                                           ) -> _RegisterDaemonTaskDefinitionResponseSuccess
+                                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RegisterDaemonTaskDefinitionResponseSuccess
 
       interface _RegisterTaskDefinitionResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::RegisterTaskDefinitionResponse]
@@ -938,7 +1229,7 @@ module Aws
                                               name: ::String?,
                                               app_protocol: ("http" | "http2" | "grpc")?,
                                               container_port_range: ::String?
-                                            },
+                                            }
                                           ]?,
                                           essential: bool?,
                                           restart_policy: {
@@ -952,26 +1243,26 @@ module Aws
                                             {
                                               name: ::String?,
                                               value: ::String?
-                                            },
+                                            }
                                           ]?,
                                           environment_files: Array[
                                             {
                                               value: ::String,
                                               type: ("s3")
-                                            },
+                                            }
                                           ]?,
                                           mount_points: Array[
                                             {
                                               source_volume: ::String?,
                                               container_path: ::String?,
                                               read_only: bool?
-                                            },
+                                            }
                                           ]?,
                                           volumes_from: Array[
                                             {
                                               source_container: ::String?,
                                               read_only: bool?
-                                            },
+                                            }
                                           ]?,
                                           linux_parameters: {
                                             capabilities: {
@@ -983,7 +1274,7 @@ module Aws
                                                 host_path: ::String,
                                                 container_path: ::String?,
                                                 permissions: Array[("read" | "write" | "mknod")]?
-                                              },
+                                              }
                                             ]?,
                                             init_process_enabled: bool?,
                                             shared_memory_size: ::Integer?,
@@ -992,7 +1283,7 @@ module Aws
                                                 container_path: ::String,
                                                 size: ::Integer,
                                                 mount_options: Array[::String]?
-                                              },
+                                              }
                                             ]?,
                                             max_swap: ::Integer?,
                                             swappiness: ::Integer?
@@ -1001,13 +1292,13 @@ module Aws
                                             {
                                               name: ::String,
                                               value_from: ::String
-                                            },
+                                            }
                                           ]?,
                                           depends_on: Array[
                                             {
                                               container_name: ::String,
                                               condition: ("START" | "COMPLETE" | "SUCCESS" | "HEALTHY")
-                                            },
+                                            }
                                           ]?,
                                           start_timeout: ::Integer?,
                                           stop_timeout: ::Integer?,
@@ -1024,7 +1315,7 @@ module Aws
                                             {
                                               hostname: ::String,
                                               ip_address: ::String
-                                            },
+                                            }
                                           ]?,
                                           docker_security_options: Array[::String]?,
                                           interactive: bool?,
@@ -1035,18 +1326,9 @@ module Aws
                                               name: ("core" | "cpu" | "data" | "fsize" | "locks" | "memlock" | "msgqueue" | "nice" | "nofile" | "nproc" | "rss" | "rtprio" | "rttime" | "sigpending" | "stack"),
                                               soft_limit: ::Integer,
                                               hard_limit: ::Integer
-                                            },
+                                            }
                                           ]?,
-                                          log_configuration: {
-                                            log_driver: ("json-file" | "syslog" | "journald" | "gelf" | "fluentd" | "awslogs" | "splunk" | "awsfirelens"),
-                                            options: Hash[::String, ::String]?,
-                                            secret_options: Array[
-                                              {
-                                                name: ::String,
-                                                value_from: ::String
-                                              },
-                                            ]?
-                                          }?,
+                                          log_configuration: Params::log_configuration?,
                                           health_check: {
                                             command: Array[::String],
                                             interval: ::Integer?,
@@ -1058,20 +1340,20 @@ module Aws
                                             {
                                               namespace: ::String?,
                                               value: ::String?
-                                            },
+                                            }
                                           ]?,
                                           resource_requirements: Array[
                                             {
                                               value: ::String,
-                                              type: ("GPU" | "InferenceAccelerator")
-                                            },
+                                              type: ("GPU" | "InferenceAccelerator" | "NeuronDevice")
+                                            }
                                           ]?,
                                           firelens_configuration: {
                                             type: ("fluentd" | "fluentbit"),
                                             options: Hash[::String, ::String]?
                                           }?,
                                           credential_specs: Array[::String]?
-                                        },
+                                        }
                                       ],
                                       ?volumes: Array[
                                         {
@@ -1096,6 +1378,12 @@ module Aws
                                               iam: ("ENABLED" | "DISABLED")?
                                             }?
                                           }?,
+                                          s3files_volume_configuration: {
+                                            file_system_arn: ::String,
+                                            root_directory: ::String?,
+                                            transit_encryption_port: ::Integer?,
+                                            access_point_arn: ::String?
+                                          }?,
                                           fsx_windows_file_server_volume_configuration: {
                                             file_system_id: ::String,
                                             root_directory: ::String,
@@ -1105,22 +1393,22 @@ module Aws
                                             }
                                           }?,
                                           configured_at_launch: bool?
-                                        },
+                                        }
                                       ],
                                       ?placement_constraints: Array[
                                         {
                                           type: ("memberOf")?,
                                           expression: ::String?
-                                        },
+                                        }
                                       ],
-                                      ?requires_compatibilities: Array[("EC2" | "FARGATE" | "EXTERNAL")],
+                                      ?requires_compatibilities: Array[("EC2" | "FARGATE" | "EXTERNAL" | "MANAGED_INSTANCES")],
                                       ?cpu: ::String,
                                       ?memory: ::String,
                                       ?tags: Array[
                                         {
                                           key: ::String?,
                                           value: ::String?
-                                        },
+                                        }
                                       ],
                                       ?pid_mode: ("host" | "task"),
                                       ?ipc_mode: ("host" | "task" | "none"),
@@ -1131,21 +1419,21 @@ module Aws
                                           {
                                             name: ::String?,
                                             value: ::String?
-                                          },
+                                          }
                                         ]?
                                       },
                                       ?inference_accelerators: Array[
                                         {
                                           device_name: ::String,
                                           device_type: ::String
-                                        },
+                                        }
                                       ],
                                       ?ephemeral_storage: {
                                         size_in_gi_b: ::Integer
                                       },
                                       ?runtime_platform: {
                                         cpu_architecture: ("X86_64" | "ARM64")?,
-                                        operating_system_family: ("WINDOWS_SERVER_2019_FULL" | "WINDOWS_SERVER_2019_CORE" | "WINDOWS_SERVER_2016_FULL" | "WINDOWS_SERVER_2004_CORE" | "WINDOWS_SERVER_2022_CORE" | "WINDOWS_SERVER_2022_FULL" | "WINDOWS_SERVER_20H2_CORE" | "LINUX")?
+                                        operating_system_family: ("WINDOWS_SERVER_2019_FULL" | "WINDOWS_SERVER_2019_CORE" | "WINDOWS_SERVER_2016_FULL" | "WINDOWS_SERVER_2004_CORE" | "WINDOWS_SERVER_2022_CORE" | "WINDOWS_SERVER_2022_FULL" | "WINDOWS_SERVER_2025_CORE" | "WINDOWS_SERVER_2025_FULL" | "WINDOWS_SERVER_20H2_CORE" | "LINUX")?
                                       },
                                       ?enable_fault_injection: bool
                                     ) -> _RegisterTaskDefinitionResponseSuccess
@@ -1163,14 +1451,14 @@ module Aws
                           capacity_provider: ::String,
                           weight: ::Integer?,
                           base: ::Integer?
-                        },
+                        }
                       ],
                       ?cluster: ::String,
                       ?count: ::Integer,
                       ?enable_ecs_managed_tags: bool,
                       ?enable_execute_command: bool,
                       ?group: ::String,
-                      ?launch_type: ("EC2" | "FARGATE" | "EXTERNAL"),
+                      ?launch_type: ("EC2" | "FARGATE" | "EXTERNAL" | "MANAGED_INSTANCES"),
                       ?network_configuration: {
                         awsvpc_configuration: {
                           subnets: Array[::String],
@@ -1178,59 +1466,18 @@ module Aws
                           assign_public_ip: ("ENABLED" | "DISABLED")?
                         }?
                       },
-                      ?overrides: {
-                        container_overrides: Array[
-                          {
-                            name: ::String?,
-                            command: Array[::String]?,
-                            environment: Array[
-                              {
-                                name: ::String?,
-                                value: ::String?
-                              },
-                            ]?,
-                            environment_files: Array[
-                              {
-                                value: ::String,
-                                type: ("s3")
-                              },
-                            ]?,
-                            cpu: ::Integer?,
-                            memory: ::Integer?,
-                            memory_reservation: ::Integer?,
-                            resource_requirements: Array[
-                              {
-                                value: ::String,
-                                type: ("GPU" | "InferenceAccelerator")
-                              },
-                            ]?
-                          },
-                        ]?,
-                        cpu: ::String?,
-                        inference_accelerator_overrides: Array[
-                          {
-                            device_name: ::String?,
-                            device_type: ::String?
-                          },
-                        ]?,
-                        execution_role_arn: ::String?,
-                        memory: ::String?,
-                        task_role_arn: ::String?,
-                        ephemeral_storage: {
-                          size_in_gi_b: ::Integer
-                        }?
-                      },
+                      ?overrides: Params::task_override,
                       ?placement_constraints: Array[
                         {
                           type: ("distinctInstance" | "memberOf")?,
                           expression: ::String?
-                        },
+                        }
                       ],
                       ?placement_strategy: Array[
                         {
                           type: ("random" | "spread" | "binpack")?,
                           field: ::String?
-                        },
+                        }
                       ],
                       ?platform_version: ::String,
                       ?propagate_tags: ("TASK_DEFINITION" | "SERVICE" | "NONE"),
@@ -1240,40 +1487,12 @@ module Aws
                         {
                           key: ::String?,
                           value: ::String?
-                        },
+                        }
                       ],
                       task_definition: ::String,
                       ?client_token: ::String,
                       ?volume_configurations: Array[
-                        {
-                          name: ::String,
-                          managed_ebs_volume: {
-                            encrypted: bool?,
-                            kms_key_id: ::String?,
-                            volume_type: ::String?,
-                            size_in_gi_b: ::Integer?,
-                            snapshot_id: ::String?,
-                            iops: ::Integer?,
-                            throughput: ::Integer?,
-                            tag_specifications: Array[
-                              {
-                                resource_type: ("volume"),
-                                tags: Array[
-                                  {
-                                    key: ::String?,
-                                    value: ::String?
-                                  },
-                                ]?,
-                                propagate_tags: ("TASK_DEFINITION" | "SERVICE" | "NONE")?
-                              },
-                            ]?,
-                            role_arn: ::String,
-                            termination_policy: {
-                              delete_on_termination: bool
-                            }?,
-                            filesystem_type: ("ext3" | "ext4" | "xfs" | "ntfs")?
-                          }?
-                        },
+                        Params::task_volume_configuration
                       ]
                     ) -> _RunTaskResponseSuccess
                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _RunTaskResponseSuccess
@@ -1297,48 +1516,7 @@ module Aws
                             assign_public_ip: ("ENABLED" | "DISABLED")?
                           }?
                         },
-                        ?overrides: {
-                          container_overrides: Array[
-                            {
-                              name: ::String?,
-                              command: Array[::String]?,
-                              environment: Array[
-                                {
-                                  name: ::String?,
-                                  value: ::String?
-                                },
-                              ]?,
-                              environment_files: Array[
-                                {
-                                  value: ::String,
-                                  type: ("s3")
-                                },
-                              ]?,
-                              cpu: ::Integer?,
-                              memory: ::Integer?,
-                              memory_reservation: ::Integer?,
-                              resource_requirements: Array[
-                                {
-                                  value: ::String,
-                                  type: ("GPU" | "InferenceAccelerator")
-                                },
-                              ]?
-                            },
-                          ]?,
-                          cpu: ::String?,
-                          inference_accelerator_overrides: Array[
-                            {
-                              device_name: ::String?,
-                              device_type: ::String?
-                            },
-                          ]?,
-                          execution_role_arn: ::String?,
-                          memory: ::String?,
-                          task_role_arn: ::String?,
-                          ephemeral_storage: {
-                            size_in_gi_b: ::Integer
-                          }?
-                        },
+                        ?overrides: Params::task_override,
                         ?propagate_tags: ("TASK_DEFINITION" | "SERVICE" | "NONE"),
                         ?reference_id: ::String,
                         ?started_by: ::String,
@@ -1346,42 +1524,25 @@ module Aws
                           {
                             key: ::String?,
                             value: ::String?
-                          },
+                          }
                         ],
                         task_definition: ::String,
                         ?volume_configurations: Array[
-                          {
-                            name: ::String,
-                            managed_ebs_volume: {
-                              encrypted: bool?,
-                              kms_key_id: ::String?,
-                              volume_type: ::String?,
-                              size_in_gi_b: ::Integer?,
-                              snapshot_id: ::String?,
-                              iops: ::Integer?,
-                              throughput: ::Integer?,
-                              tag_specifications: Array[
-                                {
-                                  resource_type: ("volume"),
-                                  tags: Array[
-                                    {
-                                      key: ::String?,
-                                      value: ::String?
-                                    },
-                                  ]?,
-                                  propagate_tags: ("TASK_DEFINITION" | "SERVICE" | "NONE")?
-                                },
-                              ]?,
-                              role_arn: ::String,
-                              termination_policy: {
-                                delete_on_termination: bool
-                              }?,
-                              filesystem_type: ("ext3" | "ext4" | "xfs" | "ntfs")?
-                            }?
-                          },
+                          Params::task_volume_configuration
                         ]
                       ) -> _StartTaskResponseSuccess
                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartTaskResponseSuccess
+
+      interface _StopServiceDeploymentResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StopServiceDeploymentResponse]
+        def service_deployment_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ECS/Client.html#stop_service_deployment-instance_method
+      def stop_service_deployment: (
+                                     service_deployment_arn: ::String,
+                                     ?stop_type: ("ABORT" | "ROLLBACK")
+                                   ) -> _StopServiceDeploymentResponseSuccess
+                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StopServiceDeploymentResponseSuccess
 
       interface _StopTaskResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::StopTaskResponse]
@@ -1406,7 +1567,7 @@ module Aws
                                                {
                                                  attachment_arn: ::String,
                                                  status: ::String
-                                               },
+                                               }
                                              ]
                                            ) -> _SubmitAttachmentStateChangesResponseSuccess
                                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _SubmitAttachmentStateChangesResponseSuccess
@@ -1425,14 +1586,7 @@ module Aws
                                            ?exit_code: ::Integer,
                                            ?reason: ::String,
                                            ?network_bindings: Array[
-                                             {
-                                               bind_ip: ::String?,
-                                               container_port: ::Integer?,
-                                               host_port: ::Integer?,
-                                               protocol: ("tcp" | "udp")?,
-                                               container_port_range: ::String?,
-                                               host_port_range: ::String?
-                                             },
+                                             Params::network_binding
                                            ]
                                          ) -> _SubmitContainerStateChangeResponseSuccess
                                        | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _SubmitContainerStateChangeResponseSuccess
@@ -1454,24 +1608,17 @@ module Aws
                                           runtime_id: ::String?,
                                           exit_code: ::Integer?,
                                           network_bindings: Array[
-                                            {
-                                              bind_ip: ::String?,
-                                              container_port: ::Integer?,
-                                              host_port: ::Integer?,
-                                              protocol: ("tcp" | "udp")?,
-                                              container_port_range: ::String?,
-                                              host_port_range: ::String?
-                                            },
+                                            Params::network_binding
                                           ]?,
                                           reason: ::String?,
                                           status: ::String?
-                                        },
+                                        }
                                       ],
                                       ?attachments: Array[
                                         {
                                           attachment_arn: ::String,
                                           status: ::String
-                                        },
+                                        }
                                       ],
                                       ?managed_agents: Array[
                                         {
@@ -1479,7 +1626,7 @@ module Aws
                                           managed_agent_name: ("ExecuteCommandAgent"),
                                           status: ::String,
                                           reason: ::String?
-                                        },
+                                        }
                                       ],
                                       ?pull_started_at: ::Time,
                                       ?pull_stopped_at: ::Time,
@@ -1497,7 +1644,7 @@ module Aws
                             {
                               key: ::String?,
                               value: ::String?
-                            },
+                            }
                           ]
                         ) -> _TagResourceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess
@@ -1519,7 +1666,8 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ECS/Client.html#update_capacity_provider-instance_method
       def update_capacity_provider: (
                                       name: ::String,
-                                      auto_scaling_group_provider: {
+                                      ?cluster: ::String,
+                                      ?auto_scaling_group_provider: {
                                         managed_scaling: {
                                           status: ("ENABLED" | "DISABLED")?,
                                           target_capacity: ::Integer?,
@@ -1529,6 +1677,36 @@ module Aws
                                         }?,
                                         managed_termination_protection: ("ENABLED" | "DISABLED")?,
                                         managed_draining: ("ENABLED" | "DISABLED")?
+                                      },
+                                      ?managed_instances_provider: {
+                                        infrastructure_role_arn: ::String,
+                                        instance_launch_template: {
+                                          ec2_instance_profile_arn: ::String?,
+                                          network_configuration: {
+                                            subnets: Array[::String]?,
+                                            security_groups: Array[::String]?
+                                          }?,
+                                          storage_configuration: {
+                                            storage_size_gi_b: ::Integer?
+                                          }?,
+                                          instance_metadata_tags_propagation: bool?,
+                                          local_storage_configuration: {
+                                            use_local_storage: bool?
+                                          }?,
+                                          monitoring: ("BASIC" | "DETAILED")?,
+                                          instance_requirements: Params::instance_requirements_request?,
+                                          capacity_reservations: {
+                                            reservation_group_arn: ::String?,
+                                            reservation_preference: ("RESERVATIONS_ONLY" | "RESERVATIONS_FIRST" | "RESERVATIONS_EXCLUDED")?
+                                          }?
+                                        },
+                                        propagate_tags: ("CAPACITY_PROVIDER" | "NONE")?,
+                                        infrastructure_optimization: {
+                                          scale_in_after: ::Integer?
+                                        }?,
+                                        auto_repair_configuration: {
+                                          actions_status: ("ENABLED" | "DISABLED")?
+                                        }?
                                       }
                                     ) -> _UpdateCapacityProviderResponseSuccess
                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateCapacityProviderResponseSuccess
@@ -1544,25 +1722,9 @@ module Aws
                               {
                                 name: ("containerInsights")?,
                                 value: ::String?
-                              },
+                              }
                             ],
-                            ?configuration: {
-                              execute_command_configuration: {
-                                kms_key_id: ::String?,
-                                logging: ("NONE" | "DEFAULT" | "OVERRIDE")?,
-                                log_configuration: {
-                                  cloud_watch_log_group_name: ::String?,
-                                  cloud_watch_encryption_enabled: bool?,
-                                  s3_bucket_name: ::String?,
-                                  s3_encryption_enabled: bool?,
-                                  s3_key_prefix: ::String?
-                                }?
-                              }?,
-                              managed_storage_configuration: {
-                                kms_key_id: ::String?,
-                                fargate_ephemeral_storage_kms_key_id: ::String?
-                              }?
-                            },
+                            ?configuration: Params::cluster_configuration,
                             ?service_connect_defaults: {
                               namespace: ::String
                             }
@@ -1580,7 +1742,7 @@ module Aws
                                        {
                                          name: ("containerInsights")?,
                                          value: ::String?
-                                       },
+                                       }
                                      ]
                                    ) -> _UpdateClusterSettingsResponseSuccess
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateClusterSettingsResponseSuccess
@@ -1609,6 +1771,53 @@ module Aws
                                             ) -> _UpdateContainerInstancesStateResponseSuccess
                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateContainerInstancesStateResponseSuccess
 
+      interface _UpdateDaemonResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateDaemonResponse]
+        def daemon_arn: () -> ::String
+        def status: () -> ("ACTIVE" | "DELETE_IN_PROGRESS")
+        def created_at: () -> ::Time
+        def updated_at: () -> ::Time
+        def deployment_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ECS/Client.html#update_daemon-instance_method
+      def update_daemon: (
+                           daemon_arn: ::String,
+                           daemon_task_definition_arn: ::String,
+                           capacity_provider_arns: Array[::String],
+                           ?deployment_configuration: Params::daemon_deployment_configuration,
+                           ?propagate_tags: ("DAEMON" | "NONE"),
+                           ?enable_ecs_managed_tags: bool,
+                           ?enable_execute_command: bool
+                         ) -> _UpdateDaemonResponseSuccess
+                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateDaemonResponseSuccess
+
+      interface _UpdateExpressGatewayServiceResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateExpressGatewayServiceResponse]
+        def service: () -> Types::UpdatedExpressGatewayService
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ECS/Client.html#update_express_gateway_service-instance_method
+      def update_express_gateway_service: (
+                                            service_arn: ::String,
+                                            ?execution_role_arn: ::String,
+                                            ?health_check_path: ::String,
+                                            ?primary_container: Params::express_gateway_container,
+                                            ?task_role_arn: ::String,
+                                            ?network_configuration: {
+                                              security_groups: Array[::String]?,
+                                              subnets: Array[::String]?
+                                            },
+                                            ?cpu: ::String,
+                                            ?memory: ::String,
+                                            ?scaling_target: {
+                                              min_task_count: ::Integer?,
+                                              max_task_count: ::Integer?,
+                                              auto_scaling_metric: ("AVERAGE_CPU" | "AVERAGE_MEMORY" | "REQUEST_COUNT_PER_TARGET")?,
+                                              auto_scaling_target_value: ::Integer?
+                                            },
+                                            ?task_definition_arn: ::String
+                                          ) -> _UpdateExpressGatewayServiceResponseSuccess
+                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateExpressGatewayServiceResponseSuccess
+
       interface _UpdateServiceResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::UpdateServiceResponse]
         def service: () -> Types::Service
@@ -1624,21 +1833,9 @@ module Aws
                                 capacity_provider: ::String,
                                 weight: ::Integer?,
                                 base: ::Integer?
-                              },
+                              }
                             ],
-                            ?deployment_configuration: {
-                              deployment_circuit_breaker: {
-                                enable: bool,
-                                rollback: bool
-                              }?,
-                              maximum_percent: ::Integer?,
-                              minimum_healthy_percent: ::Integer?,
-                              alarms: {
-                                alarm_names: Array[::String],
-                                rollback: bool,
-                                enable: bool
-                              }?
-                            },
+                            ?deployment_configuration: Params::deployment_configuration,
                             ?availability_zone_rebalancing: ("ENABLED" | "DISABLED"),
                             ?network_configuration: {
                               awsvpc_configuration: {
@@ -1651,26 +1848,24 @@ module Aws
                               {
                                 type: ("distinctInstance" | "memberOf")?,
                                 expression: ::String?
-                              },
+                              }
                             ],
                             ?placement_strategy: Array[
                               {
                                 type: ("random" | "spread" | "binpack")?,
                                 field: ::String?
-                              },
+                              }
                             ],
                             ?platform_version: ::String,
                             ?force_new_deployment: bool,
                             ?health_check_grace_period_seconds: ::Integer,
+                            ?deployment_controller: {
+                              type: ("ECS" | "CODE_DEPLOY" | "EXTERNAL")
+                            },
                             ?enable_execute_command: bool,
                             ?enable_ecs_managed_tags: bool,
                             ?load_balancers: Array[
-                              {
-                                target_group_arn: ::String?,
-                                load_balancer_name: ::String?,
-                                container_name: ::String?,
-                                container_port: ::Integer?
-                              },
+                              Params::load_balancer
                             ],
                             ?propagate_tags: ("TASK_DEFINITION" | "SERVICE" | "NONE"),
                             ?service_registries: Array[
@@ -1679,81 +1874,27 @@ module Aws
                                 port: ::Integer?,
                                 container_name: ::String?,
                                 container_port: ::Integer?
-                              },
+                              }
                             ],
-                            ?service_connect_configuration: {
-                              enabled: bool,
-                              namespace: ::String?,
-                              services: Array[
-                                {
-                                  port_name: ::String,
-                                  discovery_name: ::String?,
-                                  client_aliases: Array[
-                                    {
-                                      port: ::Integer,
-                                      dns_name: ::String?
-                                    },
-                                  ]?,
-                                  ingress_port_override: ::Integer?,
-                                  timeout: {
-                                    idle_timeout_seconds: ::Integer?,
-                                    per_request_timeout_seconds: ::Integer?
-                                  }?,
-                                  tls: {
-                                    issuer_certificate_authority: {
-                                      aws_pca_authority_arn: ::String?
-                                    },
-                                    kms_key: ::String?,
-                                    role_arn: ::String?
-                                  }?
-                                },
-                              ]?,
-                              log_configuration: {
-                                log_driver: ("json-file" | "syslog" | "journald" | "gelf" | "fluentd" | "awslogs" | "splunk" | "awsfirelens"),
-                                options: Hash[::String, ::String]?,
-                                secret_options: Array[
-                                  {
-                                    name: ::String,
-                                    value_from: ::String
-                                  },
-                                ]?
-                              }?
-                            },
+                            ?service_connect_configuration: Params::service_connect_configuration,
                             ?volume_configurations: Array[
-                              {
-                                name: ::String,
-                                managed_ebs_volume: {
-                                  encrypted: bool?,
-                                  kms_key_id: ::String?,
-                                  volume_type: ::String?,
-                                  size_in_gi_b: ::Integer?,
-                                  snapshot_id: ::String?,
-                                  iops: ::Integer?,
-                                  throughput: ::Integer?,
-                                  tag_specifications: Array[
-                                    {
-                                      resource_type: ("volume"),
-                                      tags: Array[
-                                        {
-                                          key: ::String?,
-                                          value: ::String?
-                                        },
-                                      ]?,
-                                      propagate_tags: ("TASK_DEFINITION" | "SERVICE" | "NONE")?
-                                    },
-                                  ]?,
-                                  role_arn: ::String,
-                                  filesystem_type: ("ext3" | "ext4" | "xfs" | "ntfs")?
-                                }?
-                              },
+                              Params::service_volume_configuration
                             ],
                             ?vpc_lattice_configurations: Array[
                               {
                                 role_arn: ::String,
                                 target_group_arn: ::String,
                                 port_name: ::String
-                              },
-                            ]
+                              }
+                            ],
+                            ?monitoring: {
+                              metric_configurations: Array[
+                                {
+                                  metric_names: Array[::String],
+                                  resolution_seconds: ::Integer
+                                }
+                              ]?
+                            }
                           ) -> _UpdateServiceResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateServiceResponseSuccess
 
@@ -1800,7 +1941,27 @@ module Aws
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateTaskSetResponseSuccess
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/ECS/Client.html#wait_until-instance_method
-      def wait_until: (:services_inactive waiter_name, 
+      def wait_until: (:daemon_active waiter_name, 
+                    daemon_arn: ::String
+                  ) -> Client::_DescribeDaemonResponseSuccess
+                    | (:daemon_active waiter_name, Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> Client::_DescribeDaemonResponseSuccess
+                    | (:daemon_deployment_stopped waiter_name, 
+                    daemon_deployment_arns: Array[::String]
+                  ) -> Client::_DescribeDaemonDeploymentsResponseSuccess
+                    | (:daemon_deployment_stopped waiter_name, Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> Client::_DescribeDaemonDeploymentsResponseSuccess
+                    | (:daemon_deployment_successful waiter_name, 
+                    daemon_deployment_arns: Array[::String]
+                  ) -> Client::_DescribeDaemonDeploymentsResponseSuccess
+                    | (:daemon_deployment_successful waiter_name, Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> Client::_DescribeDaemonDeploymentsResponseSuccess
+                    | (:daemon_task_definition_active waiter_name, 
+                    daemon_task_definition: ::String
+                  ) -> Client::_DescribeDaemonTaskDefinitionResponseSuccess
+                    | (:daemon_task_definition_active waiter_name, Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> Client::_DescribeDaemonTaskDefinitionResponseSuccess
+                    | (:daemon_task_definition_deleted waiter_name, 
+                    daemon_task_definition: ::String
+                  ) -> Client::_DescribeDaemonTaskDefinitionResponseSuccess
+                    | (:daemon_task_definition_deleted waiter_name, Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> Client::_DescribeDaemonTaskDefinitionResponseSuccess
+                    | (:services_inactive waiter_name, 
                     ?cluster: ::String,
                     services: Array[::String],
                     ?include: Array[("TAGS")]

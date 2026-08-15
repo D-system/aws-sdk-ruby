@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -114,7 +115,7 @@ module Aws
                                       {
                                         identifier: ::String,
                                         type: ::String?
-                                      },
+                                      }
                                     ],
                                     ?skip_zonal_shift_validation: bool
                                   ) -> _AttachTrafficSourcesResponseSuccess
@@ -148,7 +149,7 @@ module Aws
                                                          max_size: ::Integer?,
                                                          desired_capacity: ::Integer?,
                                                          time_zone: ::String?
-                                                       },
+                                                       }
                                                      ]
                                                    ) -> _BatchPutScheduledUpdateGroupActionResponseSuccess
                                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchPutScheduledUpdateGroupActionResponseSuccess
@@ -159,7 +160,8 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/AutoScaling/Client.html#cancel_instance_refresh-instance_method
       def cancel_instance_refresh: (
-                                     auto_scaling_group_name: ::String
+                                     auto_scaling_group_name: ::String,
+                                     ?wait_for_transitioning_instances: bool
                                    ) -> _CancelInstanceRefreshResponseSuccess
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CancelInstanceRefreshResponseSuccess
 
@@ -185,102 +187,14 @@ module Aws
                                          launch_template_name: ::String?,
                                          version: ::String?
                                        },
-                                       ?mixed_instances_policy: {
-                                         launch_template: {
-                                           launch_template_specification: {
-                                             launch_template_id: ::String?,
-                                             launch_template_name: ::String?,
-                                             version: ::String?
-                                           }?,
-                                           overrides: Array[
-                                             {
-                                               instance_type: ::String?,
-                                               weighted_capacity: ::String?,
-                                               launch_template_specification: {
-                                                 launch_template_id: ::String?,
-                                                 launch_template_name: ::String?,
-                                                 version: ::String?
-                                               }?,
-                                               instance_requirements: {
-                                                 v_cpu_count: {
-                                                   min: ::Integer,
-                                                   max: ::Integer?
-                                                 },
-                                                 memory_mi_b: {
-                                                   min: ::Integer,
-                                                   max: ::Integer?
-                                                 },
-                                                 cpu_manufacturers: Array[("intel" | "amd" | "amazon-web-services")]?,
-                                                 memory_gi_b_per_v_cpu: {
-                                                   min: ::Float?,
-                                                   max: ::Float?
-                                                 }?,
-                                                 excluded_instance_types: Array[::String]?,
-                                                 instance_generations: Array[("current" | "previous")]?,
-                                                 spot_max_price_percentage_over_lowest_price: ::Integer?,
-                                                 max_spot_price_as_percentage_of_optimal_on_demand_price: ::Integer?,
-                                                 on_demand_max_price_percentage_over_lowest_price: ::Integer?,
-                                                 bare_metal: ("included" | "excluded" | "required")?,
-                                                 burstable_performance: ("included" | "excluded" | "required")?,
-                                                 require_hibernate_support: bool?,
-                                                 network_interface_count: {
-                                                   min: ::Integer?,
-                                                   max: ::Integer?
-                                                 }?,
-                                                 local_storage: ("included" | "excluded" | "required")?,
-                                                 local_storage_types: Array[("hdd" | "ssd")]?,
-                                                 total_local_storage_gb: {
-                                                   min: ::Float?,
-                                                   max: ::Float?
-                                                 }?,
-                                                 baseline_ebs_bandwidth_mbps: {
-                                                   min: ::Integer?,
-                                                   max: ::Integer?
-                                                 }?,
-                                                 accelerator_types: Array[("gpu" | "fpga" | "inference")]?,
-                                                 accelerator_count: {
-                                                   min: ::Integer?,
-                                                   max: ::Integer?
-                                                 }?,
-                                                 accelerator_manufacturers: Array[("nvidia" | "amd" | "amazon-web-services" | "xilinx")]?,
-                                                 accelerator_names: Array[("a100" | "v100" | "k80" | "t4" | "m60" | "radeon-pro-v520" | "vu9p")]?,
-                                                 accelerator_total_memory_mi_b: {
-                                                   min: ::Integer?,
-                                                   max: ::Integer?
-                                                 }?,
-                                                 network_bandwidth_gbps: {
-                                                   min: ::Float?,
-                                                   max: ::Float?
-                                                 }?,
-                                                 allowed_instance_types: Array[::String]?,
-                                                 baseline_performance_factors: {
-                                                   cpu: {
-                                                     references: Array[
-                                                       {
-                                                         instance_family: ::String?
-                                                       },
-                                                     ]?
-                                                   }?
-                                                 }?
-                                               }?
-                                             },
-                                           ]?
-                                         }?,
-                                         instances_distribution: {
-                                           on_demand_allocation_strategy: ::String?,
-                                           on_demand_base_capacity: ::Integer?,
-                                           on_demand_percentage_above_base_capacity: ::Integer?,
-                                           spot_allocation_strategy: ::String?,
-                                           spot_instance_pools: ::Integer?,
-                                           spot_max_price: ::String?
-                                         }?
-                                       },
+                                       ?mixed_instances_policy: Params::mixed_instances_policy,
                                        ?instance_id: ::String,
                                        min_size: ::Integer,
                                        max_size: ::Integer,
                                        ?desired_capacity: ::Integer,
                                        ?default_cooldown: ::Integer,
                                        ?availability_zones: Array[::String],
+                                       ?availability_zone_ids: Array[::String],
                                        ?load_balancer_names: Array[::String],
                                        ?target_group_arns: Array[::String],
                                        ?health_check_type: ::String,
@@ -299,8 +213,9 @@ module Aws
                                            default_result: ::String?,
                                            notification_target_arn: ::String?,
                                            role_arn: ::String?
-                                         },
+                                         }
                                        ],
+                                       ?deletion_protection: ("none" | "prevent-force-deletion" | "prevent-all-deletion"),
                                        ?tags: Array[
                                          {
                                            resource_id: ::String?,
@@ -308,7 +223,7 @@ module Aws
                                            key: ::String,
                                            value: ::String?,
                                            propagate_at_launch: bool?
-                                         },
+                                         }
                                        ],
                                        ?service_linked_role_arn: ::String,
                                        ?max_instance_lifetime: ::Integer,
@@ -319,14 +234,14 @@ module Aws
                                          {
                                            identifier: ::String,
                                            type: ::String?
-                                         },
+                                         }
                                        ],
                                        ?instance_maintenance_policy: {
                                          min_healthy_percentage: ::Integer?,
                                          max_healthy_percentage: ::Integer?
                                        },
                                        ?availability_zone_distribution: {
-                                         capacity_distribution_strategy: ("balanced-only" | "balanced-best-effort")?
+                                         capacity_distribution_strategy: ("balanced-only" | "balanced-best-effort" | "reservations-then-balanced")?
                                        },
                                        ?availability_zone_impairment_policy: {
                                          zonal_shift_enabled: bool?,
@@ -339,6 +254,14 @@ module Aws
                                            capacity_reservation_ids: Array[::String]?,
                                            capacity_reservation_resource_group_arns: Array[::String]?
                                          }?
+                                       },
+                                       ?instance_lifecycle_policy: {
+                                         retention_triggers: {
+                                           terminate_hook_abandon: ("retain" | "terminate")?
+                                         }?
+                                       },
+                                       ?operator: {
+                                         principal: ::String
                                        }
                                      ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
@@ -370,7 +293,7 @@ module Aws
                                                throughput: ::Integer?
                                              }?,
                                              no_device: bool?
-                                           },
+                                           }
                                          ],
                                          ?instance_monitoring: {
                                            enabled: bool?
@@ -397,7 +320,7 @@ module Aws
                                        key: ::String,
                                        value: ::String?,
                                        propagate_at_launch: bool?
-                                     },
+                                     }
                                    ]
                                  ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
@@ -455,7 +378,7 @@ module Aws
                              key: ::String,
                              value: ::String?,
                              propagate_at_launch: bool?
-                           },
+                           }
                          ]
                        ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
@@ -497,13 +420,14 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/AutoScaling/Client.html#describe_auto_scaling_groups-instance_method
       def describe_auto_scaling_groups: (
                                           ?auto_scaling_group_names: Array[::String],
+                                          ?include_instances: bool,
                                           ?next_token: ::String,
                                           ?max_records: ::Integer,
                                           ?filters: Array[
                                             {
                                               name: ::String?,
                                               values: Array[::String]?
-                                            },
+                                            }
                                           ]
                                         ) -> _DescribeAutoScalingGroupsResponseSuccess
                                       | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeAutoScalingGroupsResponseSuccess
@@ -649,7 +573,13 @@ module Aws
                                          ?auto_scaling_group_name: ::String,
                                          ?include_deleted_groups: bool,
                                          ?max_records: ::Integer,
-                                         ?next_token: ::String
+                                         ?next_token: ::String,
+                                         ?filters: Array[
+                                           {
+                                             name: ::String?,
+                                             values: Array[::String]?
+                                           }
+                                         ]
                                        ) -> _DescribeScalingActivitiesResponseSuccess
                                      | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeScalingActivitiesResponseSuccess
 
@@ -688,7 +618,7 @@ module Aws
                              {
                                name: ::String?,
                                values: Array[::String]?
-                             },
+                             }
                            ],
                            ?next_token: ::String,
                            ?max_records: ::Integer
@@ -773,7 +703,7 @@ module Aws
                                       {
                                         identifier: ::String,
                                         type: ::String?
-                                      },
+                                      }
                                     ]
                                   ) -> _DetachTrafficSourcesResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DetachTrafficSourcesResponseSuccess
@@ -841,6 +771,25 @@ module Aws
                                            ) -> _GetPredictiveScalingForecastResponseSuccess
                                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetPredictiveScalingForecastResponseSuccess
 
+      interface _LaunchInstancesResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::LaunchInstancesResult]
+        def auto_scaling_group_name: () -> ::String
+        def client_token: () -> ::String
+        def instances: () -> ::Array[Types::InstanceCollection]
+        def errors: () -> ::Array[Types::LaunchInstancesError]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/AutoScaling/Client.html#launch_instances-instance_method
+      def launch_instances: (
+                              auto_scaling_group_name: ::String,
+                              requested_capacity: ::Integer,
+                              client_token: ::String,
+                              ?availability_zones: Array[::String],
+                              ?availability_zone_ids: Array[::String],
+                              ?subnet_ids: Array[::String],
+                              ?retry_strategy: ("retry-with-group-configuration" | "none")
+                            ) -> _LaunchInstancesResponseSuccess
+                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _LaunchInstancesResponseSuccess
+
       interface _PutLifecycleHookResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::PutLifecycleHookAnswer]
       end
@@ -886,7 +835,7 @@ module Aws
                                     metric_interval_lower_bound: ::Float?,
                                     metric_interval_upper_bound: ::Float?,
                                     scaling_adjustment: ::Integer
-                                  },
+                                  }
                                 ],
                                 ?estimated_instance_warmup: ::Integer,
                                 ?target_tracking_configuration: {
@@ -901,7 +850,7 @@ module Aws
                                       {
                                         name: ::String,
                                         value: ::String
-                                      },
+                                      }
                                     ]?,
                                     statistic: ("Average" | "Minimum" | "Maximum" | "SampleCount" | "Sum")?,
                                     unit: ::String?,
@@ -911,16 +860,7 @@ module Aws
                                         id: ::String,
                                         expression: ::String?,
                                         metric_stat: {
-                                          metric: {
-                                            namespace: ::String,
-                                            metric_name: ::String,
-                                            dimensions: Array[
-                                              {
-                                                name: ::String,
-                                                value: ::String
-                                              },
-                                            ]?
-                                          },
+                                          metric: Params::metric,
                                           stat: ::String,
                                           unit: ::String?,
                                           period: ::Integer?
@@ -928,7 +868,7 @@ module Aws
                                         label: ::String?,
                                         period: ::Integer?,
                                         return_data: bool?
-                                      },
+                                      }
                                     ]?
                                   }?,
                                   target_value: ::Float,
@@ -953,77 +893,20 @@ module Aws
                                       }?,
                                       customized_scaling_metric_specification: {
                                         metric_data_queries: Array[
-                                          {
-                                            id: ::String,
-                                            expression: ::String?,
-                                            metric_stat: {
-                                              metric: {
-                                                namespace: ::String,
-                                                metric_name: ::String,
-                                                dimensions: Array[
-                                                  {
-                                                    name: ::String,
-                                                    value: ::String
-                                                  },
-                                                ]?
-                                              },
-                                              stat: ::String,
-                                              unit: ::String?
-                                            }?,
-                                            label: ::String?,
-                                            return_data: bool?
-                                          },
+                                          Params::metric_data_query
                                         ]
                                       }?,
                                       customized_load_metric_specification: {
                                         metric_data_queries: Array[
-                                          {
-                                            id: ::String,
-                                            expression: ::String?,
-                                            metric_stat: {
-                                              metric: {
-                                                namespace: ::String,
-                                                metric_name: ::String,
-                                                dimensions: Array[
-                                                  {
-                                                    name: ::String,
-                                                    value: ::String
-                                                  },
-                                                ]?
-                                              },
-                                              stat: ::String,
-                                              unit: ::String?
-                                            }?,
-                                            label: ::String?,
-                                            return_data: bool?
-                                          },
+                                          Params::metric_data_query
                                         ]
                                       }?,
                                       customized_capacity_metric_specification: {
                                         metric_data_queries: Array[
-                                          {
-                                            id: ::String,
-                                            expression: ::String?,
-                                            metric_stat: {
-                                              metric: {
-                                                namespace: ::String,
-                                                metric_name: ::String,
-                                                dimensions: Array[
-                                                  {
-                                                    name: ::String,
-                                                    value: ::String
-                                                  },
-                                                ]?
-                                              },
-                                              stat: ::String,
-                                              unit: ::String?
-                                            }?,
-                                            label: ::String?,
-                                            return_data: bool?
-                                          },
+                                          Params::metric_data_query
                                         ]
                                       }?
-                                    },
+                                    }
                                   ],
                                   mode: ("ForecastAndScale" | "ForecastOnly")?,
                                   scheduling_buffer_time: ::Integer?,
@@ -1126,103 +1009,14 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/AutoScaling/Client.html#start_instance_refresh-instance_method
       def start_instance_refresh: (
                                     auto_scaling_group_name: ::String,
-                                    ?strategy: ("Rolling"),
+                                    ?strategy: ("Rolling" | "ReplaceRootVolume"),
                                     ?desired_configuration: {
                                       launch_template: {
                                         launch_template_id: ::String?,
                                         launch_template_name: ::String?,
                                         version: ::String?
                                       }?,
-                                      mixed_instances_policy: {
-                                        launch_template: {
-                                          launch_template_specification: {
-                                            launch_template_id: ::String?,
-                                            launch_template_name: ::String?,
-                                            version: ::String?
-                                          }?,
-                                          overrides: Array[
-                                            {
-                                              instance_type: ::String?,
-                                              weighted_capacity: ::String?,
-                                              launch_template_specification: {
-                                                launch_template_id: ::String?,
-                                                launch_template_name: ::String?,
-                                                version: ::String?
-                                              }?,
-                                              instance_requirements: {
-                                                v_cpu_count: {
-                                                  min: ::Integer,
-                                                  max: ::Integer?
-                                                },
-                                                memory_mi_b: {
-                                                  min: ::Integer,
-                                                  max: ::Integer?
-                                                },
-                                                cpu_manufacturers: Array[("intel" | "amd" | "amazon-web-services")]?,
-                                                memory_gi_b_per_v_cpu: {
-                                                  min: ::Float?,
-                                                  max: ::Float?
-                                                }?,
-                                                excluded_instance_types: Array[::String]?,
-                                                instance_generations: Array[("current" | "previous")]?,
-                                                spot_max_price_percentage_over_lowest_price: ::Integer?,
-                                                max_spot_price_as_percentage_of_optimal_on_demand_price: ::Integer?,
-                                                on_demand_max_price_percentage_over_lowest_price: ::Integer?,
-                                                bare_metal: ("included" | "excluded" | "required")?,
-                                                burstable_performance: ("included" | "excluded" | "required")?,
-                                                require_hibernate_support: bool?,
-                                                network_interface_count: {
-                                                  min: ::Integer?,
-                                                  max: ::Integer?
-                                                }?,
-                                                local_storage: ("included" | "excluded" | "required")?,
-                                                local_storage_types: Array[("hdd" | "ssd")]?,
-                                                total_local_storage_gb: {
-                                                  min: ::Float?,
-                                                  max: ::Float?
-                                                }?,
-                                                baseline_ebs_bandwidth_mbps: {
-                                                  min: ::Integer?,
-                                                  max: ::Integer?
-                                                }?,
-                                                accelerator_types: Array[("gpu" | "fpga" | "inference")]?,
-                                                accelerator_count: {
-                                                  min: ::Integer?,
-                                                  max: ::Integer?
-                                                }?,
-                                                accelerator_manufacturers: Array[("nvidia" | "amd" | "amazon-web-services" | "xilinx")]?,
-                                                accelerator_names: Array[("a100" | "v100" | "k80" | "t4" | "m60" | "radeon-pro-v520" | "vu9p")]?,
-                                                accelerator_total_memory_mi_b: {
-                                                  min: ::Integer?,
-                                                  max: ::Integer?
-                                                }?,
-                                                network_bandwidth_gbps: {
-                                                  min: ::Float?,
-                                                  max: ::Float?
-                                                }?,
-                                                allowed_instance_types: Array[::String]?,
-                                                baseline_performance_factors: {
-                                                  cpu: {
-                                                    references: Array[
-                                                      {
-                                                        instance_family: ::String?
-                                                      },
-                                                    ]?
-                                                  }?
-                                                }?
-                                              }?
-                                            },
-                                          ]?
-                                        }?,
-                                        instances_distribution: {
-                                          on_demand_allocation_strategy: ::String?,
-                                          on_demand_base_capacity: ::Integer?,
-                                          on_demand_percentage_above_base_capacity: ::Integer?,
-                                          spot_allocation_strategy: ::String?,
-                                          spot_instance_pools: ::Integer?,
-                                          spot_max_price: ::String?
-                                        }?
-                                      }?
+                                      mixed_instances_policy: Params::mixed_instances_policy?
                                     },
                                     ?preferences: {
                                       min_healthy_percentage: ::Integer?,
@@ -1252,10 +1046,13 @@ module Aws
       interface _TerminateInstanceInAutoScalingGroupResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ActivityType]
         def activity: () -> Types::Activity
+        def activities: () -> ::Array[Types::Activity]
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/AutoScaling/Client.html#terminate_instance_in_auto_scaling_group-instance_method
       def terminate_instance_in_auto_scaling_group: (
-                                                      instance_id: ::String,
+                                                      ?instance_id: ::String,
+                                                      ?instance_ids: Array[::String],
+                                                      ?auto_scaling_group_name: ::String,
                                                       should_decrement_desired_capacity: bool
                                                     ) -> _TerminateInstanceInAutoScalingGroupResponseSuccess
                                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TerminateInstanceInAutoScalingGroupResponseSuccess
@@ -1269,101 +1066,13 @@ module Aws
                                          launch_template_name: ::String?,
                                          version: ::String?
                                        },
-                                       ?mixed_instances_policy: {
-                                         launch_template: {
-                                           launch_template_specification: {
-                                             launch_template_id: ::String?,
-                                             launch_template_name: ::String?,
-                                             version: ::String?
-                                           }?,
-                                           overrides: Array[
-                                             {
-                                               instance_type: ::String?,
-                                               weighted_capacity: ::String?,
-                                               launch_template_specification: {
-                                                 launch_template_id: ::String?,
-                                                 launch_template_name: ::String?,
-                                                 version: ::String?
-                                               }?,
-                                               instance_requirements: {
-                                                 v_cpu_count: {
-                                                   min: ::Integer,
-                                                   max: ::Integer?
-                                                 },
-                                                 memory_mi_b: {
-                                                   min: ::Integer,
-                                                   max: ::Integer?
-                                                 },
-                                                 cpu_manufacturers: Array[("intel" | "amd" | "amazon-web-services")]?,
-                                                 memory_gi_b_per_v_cpu: {
-                                                   min: ::Float?,
-                                                   max: ::Float?
-                                                 }?,
-                                                 excluded_instance_types: Array[::String]?,
-                                                 instance_generations: Array[("current" | "previous")]?,
-                                                 spot_max_price_percentage_over_lowest_price: ::Integer?,
-                                                 max_spot_price_as_percentage_of_optimal_on_demand_price: ::Integer?,
-                                                 on_demand_max_price_percentage_over_lowest_price: ::Integer?,
-                                                 bare_metal: ("included" | "excluded" | "required")?,
-                                                 burstable_performance: ("included" | "excluded" | "required")?,
-                                                 require_hibernate_support: bool?,
-                                                 network_interface_count: {
-                                                   min: ::Integer?,
-                                                   max: ::Integer?
-                                                 }?,
-                                                 local_storage: ("included" | "excluded" | "required")?,
-                                                 local_storage_types: Array[("hdd" | "ssd")]?,
-                                                 total_local_storage_gb: {
-                                                   min: ::Float?,
-                                                   max: ::Float?
-                                                 }?,
-                                                 baseline_ebs_bandwidth_mbps: {
-                                                   min: ::Integer?,
-                                                   max: ::Integer?
-                                                 }?,
-                                                 accelerator_types: Array[("gpu" | "fpga" | "inference")]?,
-                                                 accelerator_count: {
-                                                   min: ::Integer?,
-                                                   max: ::Integer?
-                                                 }?,
-                                                 accelerator_manufacturers: Array[("nvidia" | "amd" | "amazon-web-services" | "xilinx")]?,
-                                                 accelerator_names: Array[("a100" | "v100" | "k80" | "t4" | "m60" | "radeon-pro-v520" | "vu9p")]?,
-                                                 accelerator_total_memory_mi_b: {
-                                                   min: ::Integer?,
-                                                   max: ::Integer?
-                                                 }?,
-                                                 network_bandwidth_gbps: {
-                                                   min: ::Float?,
-                                                   max: ::Float?
-                                                 }?,
-                                                 allowed_instance_types: Array[::String]?,
-                                                 baseline_performance_factors: {
-                                                   cpu: {
-                                                     references: Array[
-                                                       {
-                                                         instance_family: ::String?
-                                                       },
-                                                     ]?
-                                                   }?
-                                                 }?
-                                               }?
-                                             },
-                                           ]?
-                                         }?,
-                                         instances_distribution: {
-                                           on_demand_allocation_strategy: ::String?,
-                                           on_demand_base_capacity: ::Integer?,
-                                           on_demand_percentage_above_base_capacity: ::Integer?,
-                                           spot_allocation_strategy: ::String?,
-                                           spot_instance_pools: ::Integer?,
-                                           spot_max_price: ::String?
-                                         }?
-                                       },
+                                       ?mixed_instances_policy: Params::mixed_instances_policy,
                                        ?min_size: ::Integer,
                                        ?max_size: ::Integer,
                                        ?desired_capacity: ::Integer,
                                        ?default_cooldown: ::Integer,
                                        ?availability_zones: Array[::String],
+                                       ?availability_zone_ids: Array[::String],
                                        ?health_check_type: ::String,
                                        ?health_check_grace_period: ::Integer,
                                        ?placement_group: ::String,
@@ -1381,7 +1090,7 @@ module Aws
                                          max_healthy_percentage: ::Integer?
                                        },
                                        ?availability_zone_distribution: {
-                                         capacity_distribution_strategy: ("balanced-only" | "balanced-best-effort")?
+                                         capacity_distribution_strategy: ("balanced-only" | "balanced-best-effort" | "reservations-then-balanced")?
                                        },
                                        ?availability_zone_impairment_policy: {
                                          zonal_shift_enabled: bool?,
@@ -1394,44 +1103,53 @@ module Aws
                                            capacity_reservation_ids: Array[::String]?,
                                            capacity_reservation_resource_group_arns: Array[::String]?
                                          }?
-                                       }
+                                       },
+                                       ?instance_lifecycle_policy: {
+                                         retention_triggers: {
+                                           terminate_hook_abandon: ("retain" | "terminate")?
+                                         }?
+                                       },
+                                       ?deletion_protection: ("none" | "prevent-force-deletion" | "prevent-all-deletion")
                                      ) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> ::Seahorse::Client::_ResponseSuccess[::Aws::EmptyStructure]
 
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/AutoScaling/Client.html#wait_until-instance_method
       def wait_until: (:group_exists waiter_name, 
                     ?auto_scaling_group_names: Array[::String],
+                    ?include_instances: bool,
                     ?next_token: ::String,
                     ?max_records: ::Integer,
                     ?filters: Array[
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ]
                   ) -> Client::_DescribeAutoScalingGroupsResponseSuccess
                     | (:group_exists waiter_name, ?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> Client::_DescribeAutoScalingGroupsResponseSuccess
                     | (:group_in_service waiter_name, 
                     ?auto_scaling_group_names: Array[::String],
+                    ?include_instances: bool,
                     ?next_token: ::String,
                     ?max_records: ::Integer,
                     ?filters: Array[
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ]
                   ) -> Client::_DescribeAutoScalingGroupsResponseSuccess
                     | (:group_in_service waiter_name, ?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> Client::_DescribeAutoScalingGroupsResponseSuccess
                     | (:group_not_exists waiter_name, 
                     ?auto_scaling_group_names: Array[::String],
+                    ?include_instances: bool,
                     ?next_token: ::String,
                     ?max_records: ::Integer,
                     ?filters: Array[
                       {
                         name: ::String?,
                         values: Array[::String]?
-                      },
+                      }
                     ]
                   ) -> Client::_DescribeAutoScalingGroupsResponseSuccess
                     | (:group_not_exists waiter_name, ?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> Client::_DescribeAutoScalingGroupsResponseSuccess

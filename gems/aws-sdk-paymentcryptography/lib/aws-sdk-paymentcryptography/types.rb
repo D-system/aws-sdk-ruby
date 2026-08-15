@@ -12,6 +12,11 @@ module Aws::PaymentCryptography
 
     # You do not have sufficient access to perform this action.
     #
+    # This exception is thrown when the caller lacks the necessary IAM
+    # permissions to perform the requested operation. Verify that your IAM
+    # policy includes the required permissions for the specific Amazon Web
+    # Services Payment Cryptography action you're attempting.
+    #
     # @!attribute [rw] message
     #   @return [String]
     #
@@ -19,6 +24,52 @@ module Aws::PaymentCryptography
     #
     class AccessDeniedException < Struct.new(
       :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Input parameters for adding replication regions to a specific key.
+    #
+    # @!attribute [rw] key_identifier
+    #   The key identifier (ARN or alias) of the key for which to add
+    #   replication regions.
+    #
+    #   This key must exist and be in a valid state for replication
+    #   operations.
+    #   @return [String]
+    #
+    # @!attribute [rw] replication_regions
+    #   The list of Amazon Web Services Regions to add to the key's
+    #   replication configuration.
+    #
+    #   Each region must be a valid Amazon Web Services Region where Amazon
+    #   Web Services Payment Cryptography is available. The key will be
+    #   replicated to these regions, allowing cryptographic operations to be
+    #   performed closer to your applications.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/AddKeyReplicationRegionsInput AWS API Documentation
+    #
+    class AddKeyReplicationRegionsInput < Struct.new(
+      :key_identifier,
+      :replication_regions)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Output from adding replication regions to a key.
+    #
+    # @!attribute [rw] key
+    #   The updated key metadata after adding the replication regions.
+    #
+    #   This includes the current state of the key and its replication
+    #   configuration.
+    #   @return [Types::Key]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/AddKeyReplicationRegionsOutput AWS API Documentation
+    #
+    class AddKeyReplicationRegionsOutput < Struct.new(
+      :key)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -47,7 +98,99 @@ module Aws::PaymentCryptography
       include Aws::Structure
     end
 
+    # @!attribute [rw] action
+    #   The protected operation to associate with the MPA team. Currently,
+    #   the only supported value is `IMPORT_ROOT_PUBLIC_KEY_CERTIFICATE`.
+    #   @return [String]
+    #
+    # @!attribute [rw] mpa_team_arn
+    #   The ARN of the MPA team to associate with the protected operation.
+    #   @return [String]
+    #
+    # @!attribute [rw] requester_comment
+    #   The comment from the requester explaining the reason for the
+    #   association.
+    #
+    #   Don't include personal, confidential or sensitive information in
+    #   this field. This field may be displayed in plaintext in CloudTrail
+    #   logs and other output.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/AssociateMpaTeamInput AWS API Documentation
+    #
+    class AssociateMpaTeamInput < Struct.new(
+      :action,
+      :mpa_team_arn,
+      :requester_comment)
+      SENSITIVE = [:requester_comment]
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] mpa_team_association
+    #   The details of the MPA team association.
+    #   @return [Types::MpaTeamAssociation]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/AssociateMpaTeamOutput AWS API Documentation
+    #
+    class AssociateMpaTeamOutput < Struct.new(
+      :mpa_team_association)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The metadata used to create the certificate signing request.
+    #
+    # @!attribute [rw] common_name
+    #   The name you provide to create the certificate signing request.
+    #   @return [String]
+    #
+    # @!attribute [rw] organization_unit
+    #   The organization unit you provide to create the certificate signing
+    #   request.
+    #   @return [String]
+    #
+    # @!attribute [rw] organization
+    #   The organization you provide to create the certificate signing
+    #   request.
+    #   @return [String]
+    #
+    # @!attribute [rw] city
+    #   The city you provide to create the certificate signing request.
+    #   @return [String]
+    #
+    # @!attribute [rw] country
+    #   The country you provide to create the certificate signing request.
+    #   @return [String]
+    #
+    # @!attribute [rw] state_or_province
+    #   The state or province you provide to create the certificate signing
+    #   request.
+    #   @return [String]
+    #
+    # @!attribute [rw] email_address
+    #   The email address you provide to create the certificate signing
+    #   request.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/CertificateSubjectType AWS API Documentation
+    #
+    class CertificateSubjectType < Struct.new(
+      :common_name,
+      :organization_unit,
+      :organization,
+      :city,
+      :country,
+      :state_or_province,
+      :email_address)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # This request can cause an inconsistent state for the resource.
+    #
+    # The requested operation conflicts with the current state of the
+    # resource. For example, attempting to delete a key that is currently
+    # being used, or trying to create a resource that already exists.
     #
     # @!attribute [rw] message
     #   @return [String]
@@ -112,7 +255,9 @@ module Aws::PaymentCryptography
     #   highest order bytes of the encrypted result. For AES keys, the KCV
     #   is computed using a CMAC algorithm where the input data is 16 bytes
     #   of zero and retaining the 3 highest order bytes of the encrypted
-    #   result.
+    #   result. For HMAC keys, the KCV is computed using the hash selected
+    #   at key creation on a zero-length message, taking the leftmost 3
+    #   bytes.
     #   @return [String]
     #
     # @!attribute [rw] exportable
@@ -150,6 +295,24 @@ module Aws::PaymentCryptography
     #   [1]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_TagResource.html
     #   @return [Array<Types::Tag>]
     #
+    # @!attribute [rw] derive_key_usage
+    #   The intended cryptographic usage of keys derived from the ECC key
+    #   pair to be created.
+    #
+    #   After creating an ECC key pair, you cannot change the intended
+    #   cryptographic usage of keys derived from it using ECDH.
+    #   @return [String]
+    #
+    # @!attribute [rw] replication_regions
+    #   A list of Amazon Web Services Regions for key replication
+    #   operations.
+    #
+    #   Each region in the list must be a valid Amazon Web Services Region
+    #   identifier where Amazon Web Services Payment Cryptography is
+    #   available. This list is used to specify which regions should be
+    #   added to or removed from a key's replication configuration.
+    #   @return [Array<String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/CreateKeyInput AWS API Documentation
     #
     class CreateKeyInput < Struct.new(
@@ -157,7 +320,9 @@ module Aws::PaymentCryptography
       :key_check_value_algorithm,
       :exportable,
       :enabled,
-      :tags)
+      :tags,
+      :derive_key_usage,
+      :replication_regions)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -222,6 +387,199 @@ module Aws::PaymentCryptography
       include Aws::Structure
     end
 
+    # @!attribute [rw] resource_arn
+    #   The `KeyARN` of the key whose resource-based policy you want to
+    #   delete.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/DeleteResourcePolicyInput AWS API Documentation
+    #
+    class DeleteResourcePolicyInput < Struct.new(
+      :resource_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/DeleteResourcePolicyOutput AWS API Documentation
+    #
+    class DeleteResourcePolicyOutput < Aws::EmptyStructure; end
+
+    # The shared information used when deriving a key using ECDH.
+    #
+    # @note DiffieHellmanDerivationData is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @!attribute [rw] shared_information
+    #   A string containing information that binds the ECDH derived key to
+    #   the two parties involved or to the context of the key.
+    #
+    #   It may include details like identities of the two parties deriving
+    #   the key, context of the operation, session IDs, and optionally a
+    #   nonce. It must not contain zero bytes. It is not recommended to
+    #   reuse shared information for multiple ECDH key derivations, as it
+    #   could result in derived key material being the same across different
+    #   derivations.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/DiffieHellmanDerivationData AWS API Documentation
+    #
+    class DiffieHellmanDerivationData < Struct.new(
+      :shared_information,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class SharedInformation < DiffieHellmanDerivationData; end
+      class Unknown < DiffieHellmanDerivationData; end
+    end
+
+    # Input parameters for disabling default key replication regions for the
+    # account.
+    #
+    # @!attribute [rw] replication_regions
+    #   The list of Amazon Web Services Regions to remove from the
+    #   account's default replication regions.
+    #
+    #   New keys created after this operation will not automatically be
+    #   replicated to these regions, though existing keys with replication
+    #   to these regions will be unaffected.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/DisableDefaultKeyReplicationRegionsInput AWS API Documentation
+    #
+    class DisableDefaultKeyReplicationRegionsInput < Struct.new(
+      :replication_regions)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Output from disabling default key replication regions for the account.
+    #
+    # @!attribute [rw] enabled_replication_regions
+    #   The remaining list of regions where default key replication is still
+    #   enabled for the account.
+    #
+    #   This reflects the account's default replication configuration after
+    #   removing the specified regions.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/DisableDefaultKeyReplicationRegionsOutput AWS API Documentation
+    #
+    class DisableDefaultKeyReplicationRegionsOutput < Struct.new(
+      :enabled_replication_regions)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] action
+    #   The protected operation to disassociate from the MPA team.
+    #   Currently, the only supported value is
+    #   `IMPORT_ROOT_PUBLIC_KEY_CERTIFICATE`.
+    #   @return [String]
+    #
+    # @!attribute [rw] requester_comment
+    #   The comment from the requester explaining the reason for the
+    #   disassociation.
+    #
+    #   Don't include personal, confidential or sensitive information in
+    #   this field. This field may be displayed in plaintext in CloudTrail
+    #   logs and other output.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/DisassociateMpaTeamInput AWS API Documentation
+    #
+    class DisassociateMpaTeamInput < Struct.new(
+      :action,
+      :requester_comment)
+      SENSITIVE = [:requester_comment]
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] mpa_team_association
+    #   The details of the MPA team association.
+    #   @return [Types::MpaTeamAssociation]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/DisassociateMpaTeamOutput AWS API Documentation
+    #
+    class DisassociateMpaTeamOutput < Struct.new(
+      :mpa_team_association)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Input parameters for enabling default key replication regions for the
+    # account.
+    #
+    # @!attribute [rw] replication_regions
+    #   The list of Amazon Web Services Regions to enable as default
+    #   replication regions for the Amazon Web Services account for
+    #   [Multi-Region key replication][1].
+    #
+    #   New keys created in this account will automatically be replicated to
+    #   these regions unless explicitly overridden during key creation.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-multi-region-replication.html
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/EnableDefaultKeyReplicationRegionsInput AWS API Documentation
+    #
+    class EnableDefaultKeyReplicationRegionsInput < Struct.new(
+      :replication_regions)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Output from enabling default key replication regions for the account.
+    #
+    # @!attribute [rw] enabled_replication_regions
+    #   The complete list of regions where default key replication is now
+    #   enabled for the account.
+    #
+    #   This includes both previously enabled regions and the newly added
+    #   regions from this operation.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/EnableDefaultKeyReplicationRegionsOutput AWS API Documentation
+    #
+    class EnableDefaultKeyReplicationRegionsOutput < Struct.new(
+      :enabled_replication_regions)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Parameter information for key material export using AS2805 key
+    # cryptogram format.
+    #
+    # @!attribute [rw] wrapping_key_identifier
+    #   A key identifier that can be either a key ARN or an alias name. This
+    #   allows flexible key identification in operations.
+    #
+    #   When using a key ARN, it must be a fully qualified ARN in the
+    #   format: `arn:aws:payment-cryptography:region:account:key/key-id`.
+    #
+    #   When using an alias, it must begin with `alias/` followed by the
+    #   alias name.
+    #
+    #   Do not include confidential or sensitive information in this field.
+    #   This field may be displayed in plaintext in CloudTrail logs and
+    #   other output.
+    #   @return [String]
+    #
+    # @!attribute [rw] as_2805_key_variant
+    #   The cryptographic usage of the key under export.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/ExportAs2805KeyCryptogram AWS API Documentation
+    #
+    class ExportAs2805KeyCryptogram < Struct.new(
+      :wrapping_key_identifier,
+      :as_2805_key_variant)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The attributes for IPEK generation during export.
     #
     # @!attribute [rw] export_dukpt_initial_key
@@ -238,7 +596,9 @@ module Aws::PaymentCryptography
     #   highest order bytes of the encrypted result. For AES keys, the KCV
     #   is computed using a CMAC algorithm where the input data is 16 bytes
     #   of zero and retaining the 3 highest order bytes of the encrypted
-    #   result.
+    #   result. For HMAC keys, the KCV is computed using the hash selected
+    #   at key creation on a zero-length message, taking the leftmost 3
+    #   bytes.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/ExportAttributes AWS API Documentation
@@ -246,6 +606,60 @@ module Aws::PaymentCryptography
     class ExportAttributes < Struct.new(
       :export_dukpt_initial_key,
       :key_check_value_algorithm)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Key derivation parameter information for key material export using
+    # asymmetric ECDH key exchange method.
+    #
+    # @!attribute [rw] private_key_identifier
+    #   The `keyARN` of the asymmetric ECC key created within Amazon Web
+    #   Services Payment Cryptography.
+    #   @return [String]
+    #
+    # @!attribute [rw] certificate_authority_public_key_identifier
+    #   The `keyARN` of the CA that signed the `PublicKeyCertificate` for
+    #   the client's receiving ECC key pair.
+    #   @return [String]
+    #
+    # @!attribute [rw] public_key_certificate
+    #   The public key certificate of the client's receiving ECC key pair,
+    #   in PEM format (base64 encoded), to use for ECDH key derivation.
+    #   @return [String]
+    #
+    # @!attribute [rw] derive_key_algorithm
+    #   The key algorithm of the shared derived ECDH key.
+    #   @return [String]
+    #
+    # @!attribute [rw] key_derivation_function
+    #   The key derivation function to use when deriving a key using ECDH.
+    #   @return [String]
+    #
+    # @!attribute [rw] key_derivation_hash_algorithm
+    #   The hash type to use when deriving a key using ECDH.
+    #   @return [String]
+    #
+    # @!attribute [rw] derivation_data
+    #   The shared information used when deriving a key using ECDH.
+    #   @return [Types::DiffieHellmanDerivationData]
+    #
+    # @!attribute [rw] key_block_headers
+    #   Optional metadata for export associated with the key material. This
+    #   data is signed but transmitted in clear text.
+    #   @return [Types::KeyBlockHeaders]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/ExportDiffieHellmanTr31KeyBlock AWS API Documentation
+    #
+    class ExportDiffieHellmanTr31KeyBlock < Struct.new(
+      :private_key_identifier,
+      :certificate_authority_public_key_identifier,
+      :public_key_certificate,
+      :derive_key_algorithm,
+      :key_derivation_function,
+      :key_derivation_hash_algorithm,
+      :derivation_data,
+      :key_block_headers)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -292,7 +706,7 @@ module Aws::PaymentCryptography
       :certificate_authority_public_key_identifier,
       :wrapping_key_certificate,
       :wrapping_spec)
-      SENSITIVE = [:wrapping_key_certificate]
+      SENSITIVE = []
       include Aws::Structure
     end
 
@@ -341,12 +755,24 @@ module Aws::PaymentCryptography
     #   wrap and unwrap key exchange method
     #   @return [Types::ExportKeyCryptogram]
     #
+    # @!attribute [rw] diffie_hellman_tr_31_key_block
+    #   Key derivation parameter information for key material export using
+    #   asymmetric ECDH key exchange method.
+    #   @return [Types::ExportDiffieHellmanTr31KeyBlock]
+    #
+    # @!attribute [rw] as_2805_key_cryptogram
+    #   Parameter information for key material export using AS2805 key
+    #   cryptogram format.
+    #   @return [Types::ExportAs2805KeyCryptogram]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/ExportKeyMaterial AWS API Documentation
     #
     class ExportKeyMaterial < Struct.new(
       :tr_31_key_block,
       :tr_34_key_block,
       :key_cryptogram,
+      :diffie_hellman_tr_31_key_block,
+      :as_2805_key_cryptogram,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
@@ -355,6 +781,8 @@ module Aws::PaymentCryptography
       class Tr31KeyBlock < ExportKeyMaterial; end
       class Tr34KeyBlock < ExportKeyMaterial; end
       class KeyCryptogram < ExportKeyMaterial; end
+      class DiffieHellmanTr31KeyBlock < ExportKeyMaterial; end
+      class As2805KeyCryptogram < ExportKeyMaterial; end
       class Unknown < ExportKeyMaterial; end
     end
 
@@ -412,12 +840,20 @@ module Aws::PaymentCryptography
     #   Payment Cryptography. It also contains the signing key certificate
     #   that will sign the wrapped key during TR-34 key block generation.
     #   Call [GetParametersForExport][1] to receive an export token. It
-    #   expires after 7 days. You can use the same export token to export
+    #   expires after 30 days. You can use the same export token to export
     #   multiple keys from the same service account.
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_GetParametersForExport.html
+    #   @return [String]
+    #
+    # @!attribute [rw] signing_key_identifier
+    #   Key Identifier used for signing the export key
+    #   @return [String]
+    #
+    # @!attribute [rw] signing_key_certificate
+    #   The certificate used to sign the TR-34 key block.
     #   @return [String]
     #
     # @!attribute [rw] key_block_format
@@ -442,10 +878,12 @@ module Aws::PaymentCryptography
       :certificate_authority_public_key_identifier,
       :wrapping_key_certificate,
       :export_token,
+      :signing_key_identifier,
+      :signing_key_certificate,
       :key_block_format,
       :random_nonce,
       :key_block_headers)
-      SENSITIVE = [:wrapping_key_certificate]
+      SENSITIVE = []
       include Aws::Structure
     end
 
@@ -474,6 +912,70 @@ module Aws::PaymentCryptography
     end
 
     # @!attribute [rw] key_identifier
+    #   Asymmetric key used for generating the certificate signing request
+    #   @return [String]
+    #
+    # @!attribute [rw] signing_algorithm
+    #   The cryptographic algorithm used to sign your CSR.
+    #   @return [String]
+    #
+    # @!attribute [rw] certificate_subject
+    #   The metadata used to create the CSR.
+    #   @return [Types::CertificateSubjectType]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/GetCertificateSigningRequestInput AWS API Documentation
+    #
+    class GetCertificateSigningRequestInput < Struct.new(
+      :key_identifier,
+      :signing_algorithm,
+      :certificate_subject)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] certificate_signing_request
+    #   The certificate signing request generated using the key pair
+    #   associated with the key identifier.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/GetCertificateSigningRequestOutput AWS API Documentation
+    #
+    class GetCertificateSigningRequestOutput < Struct.new(
+      :certificate_signing_request)
+      SENSITIVE = [:certificate_signing_request]
+      include Aws::Structure
+    end
+
+    # Input parameters for retrieving the account's default key replication
+    # regions. This operation requires no input parameters.
+    #
+    # @api private
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/GetDefaultKeyReplicationRegionsInput AWS API Documentation
+    #
+    class GetDefaultKeyReplicationRegionsInput < Aws::EmptyStructure; end
+
+    # Output containing the account's current default key replication
+    # configuration.
+    #
+    # @!attribute [rw] enabled_replication_regions
+    #   The list of regions where default key replication is currently
+    #   enabled for the account.
+    #
+    #   New keys created in this account will automatically be replicated to
+    #   these regions unless explicitly configured otherwise during key
+    #   creation.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/GetDefaultKeyReplicationRegionsOutput AWS API Documentation
+    #
+    class GetDefaultKeyReplicationRegionsOutput < Struct.new(
+      :enabled_replication_regions)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] key_identifier
     #   The `KeyARN` of the Amazon Web Services Payment Cryptography key.
     #   @return [String]
     #
@@ -486,14 +988,41 @@ module Aws::PaymentCryptography
     end
 
     # @!attribute [rw] key
-    #   The key material, including the immutable and mutable data for the
-    #   key.
+    #   Contains the key metadata, including both immutable and mutable
+    #   attributes for the key, but does not include actual cryptographic
+    #   key material.
     #   @return [Types::Key]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/GetKeyOutput AWS API Documentation
     #
     class GetKeyOutput < Struct.new(
       :key)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] action
+    #   The protected operation whose MPA team association you want to
+    #   retrieve. Currently, the only supported value is
+    #   `IMPORT_ROOT_PUBLIC_KEY_CERTIFICATE`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/GetMpaTeamAssociationInput AWS API Documentation
+    #
+    class GetMpaTeamAssociationInput < Struct.new(
+      :action)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] mpa_team_association
+    #   The details of the MPA team association.
+    #   @return [Types::MpaTeamAssociation]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/GetMpaTeamAssociationOutput AWS API Documentation
+    #
+    class GetMpaTeamAssociationOutput < Struct.new(
+      :mpa_team_association)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -511,11 +1040,23 @@ module Aws::PaymentCryptography
     #   key block. `RSA_2048` is the only signing key algorithm allowed.
     #   @return [String]
     #
+    # @!attribute [rw] reuse_last_generated_token
+    #   Specifies whether to reuse the existing export token and signing key
+    #   certificate. If set to `true` and a valid export token exists for
+    #   the same key material type and signing key algorithm with at least 7
+    #   days of remaining validity, the existing token and signing key
+    #   certificate are returned. Otherwise, a new export token and signing
+    #   key certificate are generated. The default value is `false`, which
+    #   generates a new export token and signing key certificate on every
+    #   call.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/GetParametersForExportInput AWS API Documentation
     #
     class GetParametersForExportInput < Struct.new(
       :key_material_type,
-      :signing_key_algorithm)
+      :signing_key_algorithm,
+      :reuse_last_generated_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -523,7 +1064,7 @@ module Aws::PaymentCryptography
     # @!attribute [rw] signing_key_certificate
     #   The signing key certificate in PEM format (base64 encoded) of the
     #   public key for signature within the TR-34 key block. The certificate
-    #   expires after 7 days.
+    #   expires after 30 days.
     #   @return [String]
     #
     # @!attribute [rw] signing_key_certificate_chain
@@ -539,8 +1080,8 @@ module Aws::PaymentCryptography
     #
     # @!attribute [rw] export_token
     #   The export token to initiate key export from Amazon Web Services
-    #   Payment Cryptography. The export token expires after 7 days. You can
-    #   use the same export token to export multiple keys from the same
+    #   Payment Cryptography. The export token expires after 30 days. You
+    #   can use the same export token to export multiple keys from the same
     #   service account.
     #   @return [String]
     #
@@ -556,7 +1097,7 @@ module Aws::PaymentCryptography
       :signing_key_algorithm,
       :export_token,
       :parameters_valid_until_timestamp)
-      SENSITIVE = [:signing_key_certificate, :signing_key_certificate_chain]
+      SENSITIVE = []
       include Aws::Structure
     end
 
@@ -579,11 +1120,23 @@ module Aws::PaymentCryptography
     #   import.
     #   @return [String]
     #
+    # @!attribute [rw] reuse_last_generated_token
+    #   Specifies whether to reuse the existing import token and wrapping
+    #   key certificate. If set to `true` and a valid import token exists
+    #   for the same key material type and wrapping key algorithm with at
+    #   least 7 days of remaining validity, the existing token and wrapping
+    #   key certificate are returned. Otherwise, a new import token and
+    #   wrapping key certificate are generated. The default value is
+    #   `false`, which generates a new import token and wrapping key
+    #   certificate on every call.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/GetParametersForImportInput AWS API Documentation
     #
     class GetParametersForImportInput < Struct.new(
       :key_material_type,
-      :wrapping_key_algorithm)
+      :wrapping_key_algorithm,
+      :reuse_last_generated_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -591,7 +1144,7 @@ module Aws::PaymentCryptography
     # @!attribute [rw] wrapping_key_certificate
     #   The wrapping key certificate in PEM format (base64 encoded) of the
     #   wrapping key for use within the TR-34 key block. The certificate
-    #   expires in 7 days.
+    #   expires in 30 days.
     #   @return [String]
     #
     # @!attribute [rw] wrapping_key_certificate_chain
@@ -607,8 +1160,8 @@ module Aws::PaymentCryptography
     #
     # @!attribute [rw] import_token
     #   The import token to initiate key import into Amazon Web Services
-    #   Payment Cryptography. The import token expires after 7 days. You can
-    #   use the same import token to import multiple keys to the same
+    #   Payment Cryptography. The import token expires after 30 days. You
+    #   can use the same import token to import multiple keys to the same
     #   service account.
     #   @return [String]
     #
@@ -624,7 +1177,7 @@ module Aws::PaymentCryptography
       :wrapping_key_algorithm,
       :import_token,
       :parameters_valid_until_timestamp)
-      SENSITIVE = [:wrapping_key_certificate, :wrapping_key_certificate_chain]
+      SENSITIVE = []
       include Aws::Structure
     end
 
@@ -643,7 +1196,10 @@ module Aws::PaymentCryptography
     # @!attribute [rw] key_certificate
     #   The public key component of the asymmetric key pair in a certificate
     #   PEM format (base64 encoded). It is signed by the root certificate
-    #   authority (CA). The certificate expires in 90 days.
+    #   authority (CA). The certificate is valid for 90 days from the time
+    #   it is issued. The service returns a cached certificate if one exists
+    #   with at least 30 days of remaining validity. Otherwise, a new 90-day
+    #   certificate is issued.
     #   @return [String]
     #
     # @!attribute [rw] key_certificate_chain
@@ -657,7 +1213,143 @@ module Aws::PaymentCryptography
     class GetPublicKeyCertificateOutput < Struct.new(
       :key_certificate,
       :key_certificate_chain)
-      SENSITIVE = [:key_certificate, :key_certificate_chain]
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] resource_arn
+    #   The `KeyARN` of the key whose resource-based policy you want to
+    #   retrieve.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/GetResourcePolicyInput AWS API Documentation
+    #
+    class GetResourcePolicyInput < Struct.new(
+      :resource_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] resource_arn
+    #   The `KeyARN` of the key.
+    #   @return [String]
+    #
+    # @!attribute [rw] policy
+    #   The resource-based policy attached to the key, in JSON format.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/GetResourcePolicyOutput AWS API Documentation
+    #
+    class GetResourcePolicyOutput < Struct.new(
+      :resource_arn,
+      :policy)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Parameter information for key material import using AS2805 key
+    # cryptogram format.
+    #
+    # @!attribute [rw] as_2805_key_variant
+    #   The cryptographic usage of the key under import.
+    #   @return [String]
+    #
+    # @!attribute [rw] key_modes_of_use
+    #   The list of cryptographic operations that you can perform using the
+    #   key. The modes of use are deﬁned in section A.5.3 of the TR-31 spec.
+    #   @return [Types::KeyModesOfUse]
+    #
+    # @!attribute [rw] key_algorithm
+    #   The key algorithm of the key under import.
+    #   @return [String]
+    #
+    # @!attribute [rw] exportable
+    #   Specified whether the key is exportable. This data is immutable
+    #   after the key is imported.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] wrapping_key_identifier
+    #   A key identifier that can be either a key ARN or an alias name. This
+    #   allows flexible key identification in operations.
+    #
+    #   When using a key ARN, it must be a fully qualified ARN in the
+    #   format: `arn:aws:payment-cryptography:region:account:key/key-id`.
+    #
+    #   When using an alias, it must begin with `alias/` followed by the
+    #   alias name.
+    #
+    #   Do not include confidential or sensitive information in this field.
+    #   This field may be displayed in plaintext in CloudTrail logs and
+    #   other output.
+    #   @return [String]
+    #
+    # @!attribute [rw] wrapped_key_cryptogram
+    #   The wrapped key cryptogram under import.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/ImportAs2805KeyCryptogram AWS API Documentation
+    #
+    class ImportAs2805KeyCryptogram < Struct.new(
+      :as_2805_key_variant,
+      :key_modes_of_use,
+      :key_algorithm,
+      :exportable,
+      :wrapping_key_identifier,
+      :wrapped_key_cryptogram)
+      SENSITIVE = [:wrapped_key_cryptogram]
+      include Aws::Structure
+    end
+
+    # Key derivation parameter information for key material import using
+    # asymmetric ECDH key exchange method.
+    #
+    # @!attribute [rw] private_key_identifier
+    #   The `keyARN` of the asymmetric ECC key created within Amazon Web
+    #   Services Payment Cryptography.
+    #   @return [String]
+    #
+    # @!attribute [rw] certificate_authority_public_key_identifier
+    #   The `keyARN` of the CA that signed the `PublicKeyCertificate` for
+    #   the client's receiving ECC key pair.
+    #   @return [String]
+    #
+    # @!attribute [rw] public_key_certificate
+    #   The public key certificate of the client's receiving ECC key pair,
+    #   in PEM format (base64 encoded), to use for ECDH key derivation.
+    #   @return [String]
+    #
+    # @!attribute [rw] derive_key_algorithm
+    #   The key algorithm of the shared derived ECDH key.
+    #   @return [String]
+    #
+    # @!attribute [rw] key_derivation_function
+    #   The key derivation function to use when deriving a key using ECDH.
+    #   @return [String]
+    #
+    # @!attribute [rw] key_derivation_hash_algorithm
+    #   The hash type to use when deriving a key using ECDH.
+    #   @return [String]
+    #
+    # @!attribute [rw] derivation_data
+    #   The shared information used when deriving a key using ECDH.
+    #   @return [Types::DiffieHellmanDerivationData]
+    #
+    # @!attribute [rw] wrapped_key_block
+    #   The ECDH wrapped key block to import.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/ImportDiffieHellmanTr31KeyBlock AWS API Documentation
+    #
+    class ImportDiffieHellmanTr31KeyBlock < Struct.new(
+      :private_key_identifier,
+      :certificate_authority_public_key_identifier,
+      :public_key_certificate,
+      :derive_key_algorithm,
+      :key_derivation_function,
+      :key_derivation_hash_algorithm,
+      :derivation_data,
+      :wrapped_key_block)
+      SENSITIVE = [:wrapped_key_block]
       include Aws::Structure
     end
 
@@ -681,8 +1373,8 @@ module Aws::PaymentCryptography
     # @!attribute [rw] import_token
     #   The import token that initiates key import using the asymmetric RSA
     #   wrap and unwrap key exchange method into AWS Payment Cryptography.
-    #   It expires after 7 days. You can use the same import token to import
-    #   multiple keys to the same service account.
+    #   It expires after 30 days. You can use the same import token to
+    #   import multiple keys to the same service account.
     #   @return [String]
     #
     # @!attribute [rw] wrapping_spec
@@ -716,7 +1408,9 @@ module Aws::PaymentCryptography
     #   highest order bytes of the encrypted result. For AES keys, the KCV
     #   is computed using a CMAC algorithm where the input data is 16 bytes
     #   of zero and retaining the 3 highest order bytes of the encrypted
-    #   result.
+    #   result. For HMAC keys, the KCV is computed using the hash selected
+    #   at key creation on a zero-length message, taking the leftmost 3
+    #   bytes.
     #   @return [String]
     #
     # @!attribute [rw] enabled
@@ -751,14 +1445,34 @@ module Aws::PaymentCryptography
     #   [1]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_TagResource.html
     #   @return [Array<Types::Tag>]
     #
+    # @!attribute [rw] replication_regions
+    #   A list of Amazon Web Services Regions for key replication
+    #   operations.
+    #
+    #   Each region in the list must be a valid Amazon Web Services Region
+    #   identifier where Amazon Web Services Payment Cryptography is
+    #   available. This list is used to specify which regions should be
+    #   added to or removed from a key's replication configuration.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] requester_comment
+    #   The comment from the requester explaining the reason for the import.
+    #
+    #   Don't include personal, confidential or sensitive information in
+    #   this field. This field may be displayed in plaintext in CloudTrail
+    #   logs and other output.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/ImportKeyInput AWS API Documentation
     #
     class ImportKeyInput < Struct.new(
       :key_material,
       :key_check_value_algorithm,
       :enabled,
-      :tags)
-      SENSITIVE = []
+      :tags,
+      :replication_regions,
+      :requester_comment)
+      SENSITIVE = [:requester_comment]
       include Aws::Structure
     end
 
@@ -791,6 +1505,16 @@ module Aws::PaymentCryptography
     #   wrap and unwrap key exchange method.
     #   @return [Types::ImportKeyCryptogram]
     #
+    # @!attribute [rw] diffie_hellman_tr_31_key_block
+    #   Key derivation parameter information for key material import using
+    #   asymmetric ECDH key exchange method.
+    #   @return [Types::ImportDiffieHellmanTr31KeyBlock]
+    #
+    # @!attribute [rw] as_2805_key_cryptogram
+    #   Parameter information for key material import using AS2805 key
+    #   cryptogram format.
+    #   @return [Types::ImportAs2805KeyCryptogram]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/ImportKeyMaterial AWS API Documentation
     #
     class ImportKeyMaterial < Struct.new(
@@ -799,6 +1523,8 @@ module Aws::PaymentCryptography
       :tr_31_key_block,
       :tr_34_key_block,
       :key_cryptogram,
+      :diffie_hellman_tr_31_key_block,
+      :as_2805_key_cryptogram,
       :unknown)
       SENSITIVE = []
       include Aws::Structure
@@ -809,6 +1535,8 @@ module Aws::PaymentCryptography
       class Tr31KeyBlock < ImportKeyMaterial; end
       class Tr34KeyBlock < ImportKeyMaterial; end
       class KeyCryptogram < ImportKeyMaterial; end
+      class DiffieHellmanTr31KeyBlock < ImportKeyMaterial; end
+      class As2805KeyCryptogram < ImportKeyMaterial; end
       class Unknown < ImportKeyMaterial; end
     end
 
@@ -862,8 +1590,16 @@ module Aws::PaymentCryptography
     # @!attribute [rw] import_token
     #   The import token that initiates key import using the asymmetric
     #   TR-34 key exchange method into Amazon Web Services Payment
-    #   Cryptography. It expires after 7 days. You can use the same import
+    #   Cryptography. It expires after 30 days. You can use the same import
     #   token to import multiple keys to the same service account.
+    #   @return [String]
+    #
+    # @!attribute [rw] wrapping_key_identifier
+    #   Key Identifier used for unwrapping the import key
+    #   @return [String]
+    #
+    # @!attribute [rw] wrapping_key_certificate
+    #   The certificate used to wrap the TR-34 key block.
     #   @return [String]
     #
     # @!attribute [rw] wrapped_key_block
@@ -887,15 +1623,21 @@ module Aws::PaymentCryptography
       :certificate_authority_public_key_identifier,
       :signing_key_certificate,
       :import_token,
+      :wrapping_key_identifier,
+      :wrapping_key_certificate,
       :wrapped_key_block,
       :key_block_format,
       :random_nonce)
-      SENSITIVE = [:signing_key_certificate, :wrapped_key_block]
+      SENSITIVE = [:wrapped_key_block]
       include Aws::Structure
     end
 
     # The request processing has failed because of an unknown error,
     # exception, or failure.
+    #
+    # This indicates a server-side error within the Amazon Web Services
+    # Payment Cryptography service. If this error persists, contact support
+    # for assistance.
     #
     # @!attribute [rw] message
     #   @return [String]
@@ -935,7 +1677,9 @@ module Aws::PaymentCryptography
     #   highest order bytes of the encrypted result. For AES keys, the KCV
     #   is computed using a CMAC algorithm where the input data is 16 bytes
     #   of zero and retaining the 3 highest order bytes of the encrypted
-    #   result.
+    #   result. For HMAC keys, the KCV is computed using the hash selected
+    #   at key creation on a zero-length message, taking the leftmost 3
+    #   bytes.
     #   @return [String]
     #
     # @!attribute [rw] enabled
@@ -988,6 +1732,65 @@ module Aws::PaymentCryptography
     #   Payment Cryptography key is deleted.
     #   @return [Time]
     #
+    # @!attribute [rw] derive_key_usage
+    #   The cryptographic usage of an ECDH derived key as deﬁned in section
+    #   A.5.2 of the TR-31 spec.
+    #   @return [String]
+    #
+    # @!attribute [rw] multi_region_key_type
+    #   Indicates whether this key is a Multi-Region key and its role in the
+    #   Multi-Region key hierarchy.
+    #
+    #   Multi-Region replication keys allow the same key material to be used
+    #   across multiple Amazon Web Services Regions. This field specifies
+    #   whether the key is a Primary Region key (PRK) (which can be
+    #   replicated to other Amazon Web Services Regions) or a Replica Region
+    #   key (RRK) (which is a copy of a PRK in another Region). For more
+    #   information, see [Multi-Region key replication][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-multi-region-replication.html
+    #   @return [String]
+    #
+    # @!attribute [rw] primary_region
+    #   An Amazon Web Services Region identifier in the standard format
+    #   (e.g., `us-east-1`, `eu-west-1`).
+    #
+    #   Used to specify regions for key replication operations. The region
+    #   must be a valid Amazon Web Services Region where Amazon Web Services
+    #   Payment Cryptography is available.
+    #   @return [String]
+    #
+    # @!attribute [rw] replication_status
+    #   Information about the replication status of the key across different
+    #   Amazon Web Services Regions.
+    #
+    #   This field provides details about the current state of key
+    #   replication, including any status messages or operational
+    #   information. It helps track the progress and health of key
+    #   replication operations.
+    #   @return [Hash<String,Types::ReplicationStatusType>]
+    #
+    # @!attribute [rw] using_default_replication_regions
+    #   Indicates whether this key is using the account's default
+    #   replication regions configuration for [Multi-Region key
+    #   replication][1].
+    #
+    #   When set to `true`, the key automatically replicates to the regions
+    #   specified in the account's default replication settings. When set
+    #   to `false`, the key has a custom replication configuration that
+    #   overrides the account defaults.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-multi-region-replication.html
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] mpa_status
+    #   The Multi-Party Approval (MPA) status for the key, if applicable.
+    #   @return [Types::MpaStatus]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/Key AWS API Documentation
     #
     class Key < Struct.new(
@@ -1003,7 +1806,13 @@ module Aws::PaymentCryptography
       :usage_start_timestamp,
       :usage_stop_timestamp,
       :delete_pending_timestamp,
-      :delete_timestamp)
+      :delete_timestamp,
+      :derive_key_usage,
+      :multi_region_key_type,
+      :primary_region,
+      :replication_status,
+      :using_default_replication_regions,
+      :mpa_status)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1206,6 +2015,31 @@ module Aws::PaymentCryptography
     #   Specifies whether the key is enabled.
     #   @return [Boolean]
     #
+    # @!attribute [rw] multi_region_key_type
+    #   Indicates whether this key is a Multi-Region key and its role in the
+    #   Multi-Region key hierarchy.
+    #
+    #   Multi-Region replication keys allow the same key material to be used
+    #   across multiple Amazon Web Services Regions. This field specifies
+    #   whether the key is a Primary Region key (PRK) (which can be
+    #   replicated to other Amazon Web Services Regions) or a Replica Region
+    #   key (RRK) (which is a copy of a PRK in another Region). For more
+    #   information, see [Multi-Region key replication][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-multi-region-replication.html
+    #   @return [String]
+    #
+    # @!attribute [rw] primary_region
+    #   An Amazon Web Services Region identifier in the standard format
+    #   (e.g., `us-east-1`, `eu-west-1`).
+    #
+    #   Used to specify regions for key replication operations. The region
+    #   must be a valid Amazon Web Services Region where Amazon Web Services
+    #   Payment Cryptography is available.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/KeySummary AWS API Documentation
     #
     class KeySummary < Struct.new(
@@ -1214,7 +2048,9 @@ module Aws::PaymentCryptography
       :key_attributes,
       :key_check_value,
       :exportable,
-      :enabled)
+      :enabled,
+      :multi_region_key_type,
+      :primary_region)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1369,10 +2205,213 @@ module Aws::PaymentCryptography
       include Aws::Structure
     end
 
-    # The request was denied due to an invalid resource error.
+    # The status of an MPA session.
+    #
+    # @!attribute [rw] mpa_session_arn
+    #   The ARN of the MPA session.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the MPA session.
+    #   @return [String]
+    #
+    # @!attribute [rw] initiation_date
+    #   The date and time when the MPA session was initiated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] status_message
+    #   The message providing additional information about the MPA session
+    #   status.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/MpaStatus AWS API Documentation
+    #
+    class MpaStatus < Struct.new(
+      :mpa_session_arn,
+      :status,
+      :initiation_date,
+      :status_message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The details of an MPA team association with a protected operation.
+    #
+    # @!attribute [rw] action
+    #   The protected operation associated with the MPA team.
+    #   @return [String]
+    #
+    # @!attribute [rw] mpa_team_arn
+    #   The ARN of the MPA team.
+    #   @return [String]
+    #
+    # @!attribute [rw] association_state
+    #   The state of the MPA team association.
+    #   @return [String]
+    #
+    # @!attribute [rw] mpa_status
+    #   The MPA session status for the association, if applicable.
+    #   @return [Types::MpaStatus]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/MpaTeamAssociation AWS API Documentation
+    #
+    class MpaTeamAssociation < Struct.new(
+      :action,
+      :mpa_team_arn,
+      :association_state,
+      :mpa_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The resource-based policy would grant public access to the key.
+    #
+    # Modify the policy to restrict access to specific principals and
+    # resubmit the request.
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/PublicPolicyException AWS API Documentation
+    #
+    class PublicPolicyException < Struct.new(
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] resource_arn
+    #   The `KeyARN` of the key to attach the resource-based policy to.
+    #   @return [String]
+    #
+    # @!attribute [rw] policy
+    #   The resource-based policy to attach to the key, in JSON format.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/PutResourcePolicyInput AWS API Documentation
+    #
+    class PutResourcePolicyInput < Struct.new(
+      :resource_arn,
+      :policy)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] resource_arn
+    #   The `KeyARN` of the key that the resource-based policy was attached
+    #   to.
+    #   @return [String]
+    #
+    # @!attribute [rw] policy
+    #   The resource-based policy that was attached to the key.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/PutResourcePolicyOutput AWS API Documentation
+    #
+    class PutResourcePolicyOutput < Struct.new(
+      :resource_arn,
+      :policy)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Input parameters for removing replication regions from a specific key.
+    #
+    # @!attribute [rw] key_identifier
+    #   The key identifier (ARN or alias) of the key from which to remove
+    #   replication regions.
+    #
+    #   This key must exist and have replication enabled in the specified
+    #   regions.
+    #   @return [String]
+    #
+    # @!attribute [rw] replication_regions
+    #   The list of Amazon Web Services Regions to remove from the key's
+    #   replication configuration.
+    #
+    #   The key will no longer be available for cryptographic operations in
+    #   these regions after removal. Ensure no active operations depend on
+    #   the key in these regions before removal.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/RemoveKeyReplicationRegionsInput AWS API Documentation
+    #
+    class RemoveKeyReplicationRegionsInput < Struct.new(
+      :key_identifier,
+      :replication_regions)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Output from removing replication regions from a key.
+    #
+    # @!attribute [rw] key
+    #   The updated key metadata after removing the replication regions.
+    #
+    #   This reflects the current state of the key and its updated
+    #   replication configuration.
+    #   @return [Types::Key]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/RemoveKeyReplicationRegionsOutput AWS API Documentation
+    #
+    class RemoveKeyReplicationRegionsOutput < Struct.new(
+      :key)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents the replication status information for a key in a
+    # replication region for [Multi-Region key replication][1].
+    #
+    # This structure contains details about the current state of key
+    # replication, including any status messages and operational information
+    # about the replication process.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-multi-region-replication.html
+    #
+    # @!attribute [rw] status
+    #   The current status of key replication in this Amazon Web Services
+    #   Region.
+    #
+    #   This field indicates whether the key replication is in progress,
+    #   completed successfully, or has encountered an error. Possible values
+    #   include states such as `SYNCRHONIZED`, `IN_PROGRESS`,
+    #   `DELETE_IN_PROGRESS`, or `FAILED`. This provides visibility into the
+    #   replication process for monitoring and troubleshooting purposes.
+    #   @return [String]
+    #
+    # @!attribute [rw] status_message
+    #   A message that provides additional information about the current
+    #   replication status of the key.
+    #
+    #   This field contains details about any issues or progress updates
+    #   related to key replication operations. It may include information
+    #   about replication failures, synchronization status, or other
+    #   operational details.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/ReplicationStatusType AWS API Documentation
+    #
+    class ReplicationStatusType < Struct.new(
+      :status,
+      :status_message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The request was denied due to resource not found.
+    #
+    # The specified key, alias, or other resource does not exist in your
+    # account or region. Verify that the resource identifier is correct and
+    # that the resource exists in the expected region.
     #
     # @!attribute [rw] resource_id
-    #   The string for the exception.
+    #   The identifier of the resource that was not found.
+    #
+    #   This field contains the specific resource identifier (such as a key
+    #   ARN or alias name) that could not be located.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/ResourceNotFoundException AWS API Documentation
@@ -1427,11 +2466,15 @@ module Aws::PaymentCryptography
     class RootCertificatePublicKey < Struct.new(
       :key_attributes,
       :public_key_certificate)
-      SENSITIVE = [:public_key_certificate]
+      SENSITIVE = []
       include Aws::Structure
     end
 
     # This request would cause a service quota to be exceeded.
+    #
+    # You have reached the maximum number of keys, aliases, or other
+    # resources allowed in your account. Review your current usage and
+    # consider deleting unused resources or requesting a quota increase.
     #
     # @!attribute [rw] message
     #   @return [String]
@@ -1445,6 +2488,10 @@ module Aws::PaymentCryptography
     end
 
     # The service cannot complete the request.
+    #
+    # The Amazon Web Services Payment Cryptography service is temporarily
+    # unavailable. This is typically a temporary condition - retry your
+    # request after a brief delay.
     #
     # @!attribute [rw] message
     #   @return [String]
@@ -1568,6 +2615,10 @@ module Aws::PaymentCryptography
 
     # The request was denied due to request throttling.
     #
+    # You have exceeded the rate limits for Amazon Web Services Payment
+    # Cryptography API calls. Implement exponential backoff and retry logic
+    # in your application to handle throttling gracefully.
+    #
     # @!attribute [rw] message
     #   @return [String]
     #
@@ -1602,7 +2653,7 @@ module Aws::PaymentCryptography
       :key_attributes,
       :public_key_certificate,
       :certificate_authority_public_key_identifier)
-      SENSITIVE = [:public_key_certificate]
+      SENSITIVE = []
       include Aws::Structure
     end
 
@@ -1668,6 +2719,10 @@ module Aws::PaymentCryptography
 
     # The request was denied due to an invalid request error.
     #
+    # One or more parameters in your request are invalid. Check the
+    # parameter values, formats, and constraints specified in the API
+    # documentation.
+    #
     # @!attribute [rw] message
     #   @return [String]
     #
@@ -1710,7 +2765,9 @@ module Aws::PaymentCryptography
     #   highest order bytes of the encrypted result. For AES keys, the KCV
     #   is computed using a CMAC algorithm where the input data is 16 bytes
     #   of zero and retaining the 3 highest order bytes of the encrypted
-    #   result.
+    #   result. For HMAC keys, the KCV is computed using the hash selected
+    #   at key creation on a zero-length message, taking the leftmost 3
+    #   bytes.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-2021-09-14/WrappedKey AWS API Documentation

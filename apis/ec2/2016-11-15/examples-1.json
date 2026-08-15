@@ -93,6 +93,38 @@
         "title": "To associate an Elastic IP address with a network interface"
       }
     ],
+    "AssociateApplicationStatusCheck": [
+      {
+        "input": {
+          "ApplicationStatusCheckId": "asc-0123456789abcdef0",
+          "TargetTagAssociations": [
+            {
+              "Key": "env",
+              "Value": "prod"
+            }
+          ]
+        },
+        "output": {
+          "SuccessfulResults": [
+            {
+              "ApplicationStatusCheckId": "asc-0123456789abcdef0",
+              "AssociationType": "EC2TAG",
+              "AssociationValue": "env=prod"
+            }
+          ],
+          "UnsuccessfulResults": [ ]
+        },
+        "comments": {
+          "input": {
+          },
+          "output": {
+          }
+        },
+        "description": "This example associates an application status check with instances matching the specified tag.",
+        "id": "ec2-associate-application-status-check-1",
+        "title": "To associate an application status check with tags"
+      }
+    ],
     "AssociateDhcpOptions": [
       {
         "input": {
@@ -527,6 +559,38 @@
         "description": "This example copies a snapshot with the snapshot ID of ``snap-066877671789bd71b`` from the ``us-west-2`` region to the ``us-east-1`` region and adds a short description to identify the snapshot.",
         "id": "to-copy-a-snapshot-1472502259774",
         "title": "To copy a snapshot"
+      }
+    ],
+    "CreateApplicationStatusCheck": [
+      {
+        "input": {
+          "Aggregation": "included",
+          "Path": "/health",
+          "Port": 80,
+          "Protocol": "http"
+        },
+        "output": {
+          "ApplicationStatusCheck": {
+            "Aggregation": "included",
+            "ApplicationStatusCheckId": "asc-0123456789abcdef0",
+            "FailureThreshold": 2,
+            "Interval": 60,
+            "Path": "/health",
+            "Port": 80,
+            "Protocol": "http",
+            "SuccessThreshold": 2,
+            "Timeout": 6
+          }
+        },
+        "comments": {
+          "input": {
+          },
+          "output": {
+          }
+        },
+        "description": "This example creates an application status check that monitors HTTP health on port 80.",
+        "id": "ec2-create-application-status-check-1",
+        "title": "To create an application status check"
       }
     ],
     "CreateCustomerGateway": [
@@ -981,6 +1045,122 @@
         "title": "To create a route table"
       }
     ],
+    "CreateSecondaryNetwork": [
+      {
+        "input": {
+          "ClientToken": "550e8400-e29b-41d4-a716-446655440000",
+          "Ipv4CidrBlock": "10.0.0.0/16",
+          "NetworkType": "rdma",
+          "TagSpecifications": [
+            {
+              "ResourceType": "secondary-network",
+              "Tags": [
+                {
+                  "Key": "Name",
+                  "Value": "Prod Secondary Network"
+                }
+              ]
+            }
+          ]
+        },
+        "output": {
+          "ClientToken": "550e8400-e29b-41d4-a716-446655440000",
+          "SecondaryNetwork": {
+            "Ipv4CidrBlockAssociations": [
+              {
+                "AssociationId": "sn-cidr-assoc-56789901234abcdef0",
+                "CidrBlock": "10.0.0.0/16",
+                "State": "associating"
+              }
+            ],
+            "OwnerId": "123456789012",
+            "SecondaryNetworkArn": "arn:aws:ec2:us-east-2:123456789012:secondary-network/sn-0123456789abcdef0",
+            "SecondaryNetworkId": "sn-0123456789abcdef0",
+            "State": "create-in-progress",
+            "Tags": [
+              {
+                "Key": "Name",
+                "Value": "Prod Secondary Network"
+              }
+            ],
+            "Type": "rdma"
+          }
+        },
+        "comments": {
+          "input": {
+          },
+          "output": {
+          }
+        },
+        "description": "This example creates a rdma secondary network with a /16 CIDR block.",
+        "id": "ec2-create-secondary-network-1",
+        "title": "To create a secondary network"
+      }
+    ],
+    "CreateSecondarySubnet": [
+      {
+        "input": {
+          "AvailabilityZoneId": "use2-az1",
+          "ClientToken": "550e8400-e29b-41d4-a716-446655440000",
+          "Ipv4CidrBlock": "10.0.0.0/24",
+          "SecondaryNetworkId": "sn-0123456789abcdef0",
+          "TagSpecifications": [
+            {
+              "ResourceType": "secondary-subnet",
+              "Tags": [
+                {
+                  "Key": "Name",
+                  "Value": "Prod Secondary Subnet"
+                },
+                {
+                  "Key": "Environment",
+                  "Value": "Production"
+                }
+              ]
+            }
+          ]
+        },
+        "output": {
+          "ClientToken": "550e8400-e29b-41d4-a716-446655440000",
+          "SecondarySubnet": {
+            "AvailabilityZone": "us-east-2a",
+            "AvailabilityZoneId": "use2-az1",
+            "Ipv4CidrBlockAssociations": [
+              {
+                "AssociationId": "ss-cidr-assoc-56789901234abcdef0",
+                "CidrBlock": "10.0.0.0/24",
+                "State": "associating"
+              }
+            ],
+            "OwnerId": "123456789012",
+            "SecondaryNetworkId": "sn-0123456789abcdef0",
+            "SecondaryNetworkType": "rdma",
+            "SecondarySubnetArn": "arn:aws:ec2:us-east-2:123456789012:secondary-subnet/ss-0123456789abcdef0",
+            "SecondarySubnetId": "ss-0123456789abcdef0",
+            "State": "create-in-progress",
+            "Tags": [
+              {
+                "Key": "Name",
+                "Value": "Prod Secondary Subnet"
+              },
+              {
+                "Key": "Environment",
+                "Value": "Production"
+              }
+            ]
+          }
+        },
+        "comments": {
+          "input": {
+          },
+          "output": {
+          }
+        },
+        "description": "This example creates a secondary subnet with a /24 CIDR block in the specified secondary network and Availability Zone.",
+        "id": "ec2-create-secondary-subnet-1",
+        "title": "To create a secondary subnet"
+      }
+    ],
     "CreateSecurityGroup": [
       {
         "input": {
@@ -1186,6 +1366,31 @@
         "description": "This example creates a VPC with the specified CIDR block.",
         "id": "ec2-create-vpc-1",
         "title": "To create a VPC"
+      }
+    ],
+    "DeleteApplicationStatusCheck": [
+      {
+        "input": {
+          "ApplicationStatusCheckId": "asc-0123456789abcdef0"
+        },
+        "output": {
+          "ApplicationStatusCheck": {
+            "Aggregation": "included",
+            "ApplicationStatusCheckId": "asc-0123456789abcdef0",
+            "Path": "/health",
+            "Port": 80,
+            "Protocol": "http"
+          }
+        },
+        "comments": {
+          "input": {
+          },
+          "output": {
+          }
+        },
+        "description": "This example deletes the specified application status check.",
+        "id": "ec2-delete-application-status-check-1",
+        "title": "To delete an application status check"
       }
     ],
     "DeleteCustomerGateway": [
@@ -1425,6 +1630,89 @@
         "description": "This example deletes the specified route table.",
         "id": "ec2-delete-route-table-1",
         "title": "To delete a route table"
+      }
+    ],
+    "DeleteSecondaryNetwork": [
+      {
+        "input": {
+          "ClientToken": "550e8400-e29b-41d4-a716-446655440000",
+          "SecondaryNetworkId": "sn-0123456789abcdef0"
+        },
+        "output": {
+          "ClientToken": "550e8400-e29b-41d4-a716-446655440000",
+          "SecondaryNetwork": {
+            "Ipv4CidrBlockAssociations": [
+              {
+                "AssociationId": "sn-cidr-assoc-56789901234abcdef0",
+                "CidrBlock": "10.0.0.0/16",
+                "State": "disassociating"
+              }
+            ],
+            "OwnerId": "123456789012",
+            "SecondaryNetworkArn": "arn:aws:ec2:us-east-2:123456789012:secondary-network/sn-0123456789abcdef0",
+            "SecondaryNetworkId": "sn-0123456789abcdef0",
+            "State": "delete-in-progress",
+            "Tags": [
+              {
+                "Key": "Name",
+                "Value": "Prod Secondary Network"
+              }
+            ],
+            "Type": "rdma"
+          }
+        },
+        "comments": {
+          "input": {
+          },
+          "output": {
+          }
+        },
+        "description": "This example deletes a secondary network.",
+        "id": "ec2-delete-secondary-network-1",
+        "title": "To delete a secondary network"
+      }
+    ],
+    "DeleteSecondarySubnet": [
+      {
+        "input": {
+          "ClientToken": "550e8400-e29b-41d4-a716-446655440000",
+          "SecondarySubnetId": "ss-0123456789abcdef0"
+        },
+        "output": {
+          "ClientToken": "550e8400-e29b-41d4-a716-446655440000",
+          "SecondarySubnet": {
+            "AvailabilityZone": "us-east-2a",
+            "AvailabilityZoneId": "use2-az1",
+            "Ipv4CidrBlockAssociations": [
+              {
+                "AssociationId": "ss-cidr-assoc-56789901234abcdef0",
+                "CidrBlock": "10.0.0.0/24",
+                "State": "disassociating"
+              }
+            ],
+            "OwnerId": "123456789012",
+            "SecondaryNetworkId": "sn-0123456789abcdef0",
+            "SecondaryNetworkType": "rdma",
+            "SecondarySubnetArn": "arn:aws:ec2:us-east-2:123456789012:secondary-subnet/ss-0123456789abcdef0",
+            "SecondarySubnetId": "ss-0123456789abcdef0",
+            "State": "delete-in-progress",
+            "Tags": [
+              {
+                "Key": "Name",
+                "Value": "Prod Secondary Subnet"
+              }
+            ]
+          }
+        },
+        "comments": {
+          "input": {
+          },
+          "output": {
+          }
+        },
+        "description": "This example deletes a secondary subnet.",
+        "id": "ec2-delete-secondary-subnet-1",
+        "title": "To delete a secondary subnet"
       }
     ],
     "DeleteSecurityGroup": [
@@ -1679,6 +1967,203 @@
         "description": "This example describes your Elastic IP addresses.",
         "id": "ec2-describe-addresses-1",
         "title": "To describe your Elastic IP addresses"
+      }
+    ],
+    "DescribeApplicationStatus": [
+      {
+        "input": {
+          "InstanceIds": [
+            "i-0123456789abcdef0"
+          ]
+        },
+        "output": {
+          "ApplicationStatuses": {
+            "Instances": [
+              {
+                "ApplicationStatus": {
+                  "Details": [
+                    {
+                      "Aggregation": "included",
+                      "ApplicationStatusCheckId": "asc-0123456789abcdef0",
+                      "Reason": {
+                        "Code": "ResponseCodeMatched",
+                        "Protocol": "HTTP",
+                        "StatusCode": 200
+                      },
+                      "Status": "passed"
+                    }
+                  ],
+                  "Status": "ok"
+                },
+                "InstanceId": "i-0123456789abcdef0"
+              }
+            ]
+          }
+        },
+        "comments": {
+          "input": {
+          },
+          "output": {
+          }
+        },
+        "description": "This example describes the application status for the specified instance.",
+        "id": "ec2-describe-application-status-1",
+        "title": "To describe application status for instances"
+      },
+      {
+        "input": {
+          "Filters": [
+            {
+              "Name": "availability-zone-id",
+              "Values": [
+                "use1-az1"
+              ]
+            },
+            {
+              "Name": "status",
+              "Values": [
+                "impaired"
+              ]
+            }
+          ],
+          "MaxResults": 10
+        },
+        "output": {
+          "ApplicationStatuses": {
+            "Instances": [
+              {
+                "ApplicationStatus": {
+                  "Details": [
+                    {
+                      "Aggregation": "included",
+                      "ApplicationStatusCheckId": "asc-0123456789abcdef0",
+                      "Reason": {
+                        "Code": "ConnectionTimeout"
+                      },
+                      "Status": "failed"
+                    }
+                  ],
+                  "Status": "impaired"
+                },
+                "InstanceId": "i-0123456789abcdef0"
+              }
+            ]
+          }
+        },
+        "comments": {
+          "input": {
+          },
+          "output": {
+          }
+        },
+        "description": "This example uses a filter to describe impaired application status in a specific Availability Zone.",
+        "id": "ec2-describe-application-status-2",
+        "title": "To describe application status using filters"
+      }
+    ],
+    "DescribeApplicationStatusCheckAssociations": [
+      {
+        "input": {
+          "ApplicationStatusCheckIds": [
+            "asc-0123456789abcdef0"
+          ],
+          "Filters": [
+            {
+              "Name": "association-type",
+              "Values": [
+                "instance-id"
+              ]
+            }
+          ]
+        },
+        "output": {
+          "Associations": [
+            {
+              "ApplicationStatusCheckId": "asc-0123456789abcdef0",
+              "AssociationType": "instance-id",
+              "Value": "i-0123456789abcdef0"
+            }
+          ]
+        },
+        "comments": {
+          "input": {
+          },
+          "output": {
+          }
+        },
+        "description": "This example describes instance ID associations for the specified application status check.",
+        "id": "ec2-describe-application-status-check-associations-1",
+        "title": "To describe application status check associations"
+      }
+    ],
+    "DescribeApplicationStatusChecks": [
+      {
+        "input": {
+          "ApplicationStatusCheckIds": [
+            "asc-0123456789abcdef0"
+          ]
+        },
+        "output": {
+          "ApplicationStatusChecks": [
+            {
+              "Aggregation": "included",
+              "ApplicationStatusCheckId": "asc-0123456789abcdef0",
+              "FailureThreshold": 2,
+              "Interval": 60,
+              "Path": "/health",
+              "Port": 80,
+              "Protocol": "http",
+              "SuccessThreshold": 2,
+              "Timeout": 6
+            }
+          ]
+        },
+        "comments": {
+          "input": {
+          },
+          "output": {
+          }
+        },
+        "description": "This example describes the specified application status checks.",
+        "id": "ec2-describe-application-status-checks-1",
+        "title": "To describe application status checks"
+      },
+      {
+        "input": {
+          "Filters": [
+            {
+              "Name": "aggregation",
+              "Values": [
+                "included"
+              ]
+            }
+          ],
+          "MaxResults": 10
+        },
+        "output": {
+          "ApplicationStatusChecks": [
+            {
+              "Aggregation": "included",
+              "ApplicationStatusCheckId": "asc-0123456789abcdef0",
+              "FailureThreshold": 2,
+              "Interval": 60,
+              "Path": "/health",
+              "Port": 80,
+              "Protocol": "http",
+              "SuccessThreshold": 2,
+              "Timeout": 6
+            }
+          ]
+        },
+        "comments": {
+          "input": {
+          },
+          "output": {
+          }
+        },
+        "description": "This example uses a filter to describe application status checks included in aggregation.",
+        "id": "ec2-describe-application-status-checks-2",
+        "title": "To describe application status checks using filters"
       }
     ],
     "DescribeAvailabilityZones": [
@@ -2633,6 +3118,307 @@
         "title": "To describe a route table"
       }
     ],
+    "DescribeSecondaryInterfaces": [
+      {
+        "input": {
+        },
+        "output": {
+          "SecondaryInterfaces": [
+            {
+              "Attachment": {
+                "AttachTime": "2026-02-28T23:35:33.000Z",
+                "AttachmentId": "si-attach-0123456789abcdef0",
+                "DeleteOnTermination": true,
+                "DeviceIndex": 0,
+                "InstanceId": "i-1234567890abcdef0",
+                "InstanceOwnerId": "123456789012",
+                "NetworkCardIndex": 1,
+                "Status": "attached"
+              },
+              "AvailabilityZone": "us-east-2a",
+              "AvailabilityZoneId": "use2-az1",
+              "MacAddress": "02:2f:8f:b0:cf:75",
+              "OwnerId": "123456789012",
+              "PrivateIpv4Addresses": [
+                {
+                  "PrivateIpAddress": "10.0.1.17"
+                }
+              ],
+              "SecondaryInterfaceArn": "arn:aws:ec2:us-east-2:123456789012:secondary-interface/si-0123456789abcdef0",
+              "SecondaryInterfaceId": "si-0123456789abcdef0",
+              "SecondaryInterfaceType": "secondary",
+              "SecondaryNetworkId": "sn-0123456789abcdef0",
+              "SecondaryNetworkType": "rdma",
+              "SecondarySubnetId": "ss-0123456789abcdef0",
+              "SourceDestCheck": true,
+              "Status": "in-use",
+              "Tags": [
+                {
+                  "Key": "Name",
+                  "Value": "Prod Secondary Interface"
+                }
+              ]
+            }
+          ]
+        },
+        "comments": {
+          "input": {
+          },
+          "output": {
+          }
+        },
+        "description": "This example describes all secondary interfaces in the current Region.",
+        "id": "ec2-describe-secondary-interfaces-1",
+        "title": "To describe all secondary interfaces"
+      },
+      {
+        "input": {
+          "Filters": [
+            {
+              "Name": "attachment.instance-id",
+              "Values": [
+                "i-1234567890abcdef0"
+              ]
+            }
+          ],
+          "MaxResults": 5
+        },
+        "output": {
+          "NextToken": "123456789MSIsInMiOjEsImMiOiIteGh3TERRTUEwanpsaVpab1dOdjZhMlBuRXZpZXJqTl==",
+          "SecondaryInterfaces": [
+            {
+              "Attachment": {
+                "AttachTime": "2026-02-28T23:35:33.000Z",
+                "AttachmentId": "si-attach-0123456789abcdef0",
+                "DeleteOnTermination": true,
+                "DeviceIndex": 0,
+                "InstanceId": "i-1234567890abcdef0",
+                "InstanceOwnerId": "123456789012",
+                "NetworkCardIndex": 1,
+                "Status": "attached"
+              },
+              "AvailabilityZone": "us-east-2a",
+              "AvailabilityZoneId": "use2-az1",
+              "MacAddress": "02:2f:8f:b0:cf:75",
+              "OwnerId": "123456789012",
+              "PrivateIpv4Addresses": [
+                {
+                  "PrivateIpAddress": "10.0.1.17"
+                }
+              ],
+              "SecondaryInterfaceArn": "arn:aws:ec2:us-east-2:123456789012:secondary-interface/si-0123456789abcdef0",
+              "SecondaryInterfaceId": "si-0123456789abcdef0",
+              "SecondaryInterfaceType": "secondary",
+              "SecondaryNetworkId": "sn-0123456789abcdef0",
+              "SecondaryNetworkType": "rdma",
+              "SecondarySubnetId": "ss-0123456789abcdef0",
+              "SourceDestCheck": true,
+              "Status": "in-use",
+              "Tags": [
+                {
+                  "Key": "Name",
+                  "Value": "Prod Secondary Interface"
+                }
+              ]
+            }
+          ]
+        },
+        "comments": {
+          "input": {
+          },
+          "output": {
+          }
+        },
+        "description": "This example uses filters to describe secondary interfaces attached to a specific instance.",
+        "id": "ec2-describe-secondary-interfaces-2",
+        "title": "To describe secondary interfaces using filters"
+      }
+    ],
+    "DescribeSecondaryNetworks": [
+      {
+        "input": {
+          "SecondaryNetworkIds": [
+            "sn-0123456789abcdef0",
+            "sn-0987654321fedcba0"
+          ]
+        },
+        "output": {
+          "SecondaryNetworks": [
+            {
+              "Ipv4CidrBlockAssociations": [
+                {
+                  "AssociationId": "sn-cidr-assoc-56789901234abcdef0",
+                  "CidrBlock": "10.0.0.0/16",
+                  "State": "associated"
+                }
+              ],
+              "OwnerId": "123456789012",
+              "SecondaryNetworkArn": "arn:aws:ec2:us-east-2:123456789012:secondary-network/sn-0123456789abcdef0",
+              "SecondaryNetworkId": "sn-0123456789abcdef0",
+              "State": "create-complete",
+              "Tags": [
+                {
+                  "Key": "Name",
+                  "Value": "Prod Secondary Network"
+                }
+              ],
+              "Type": "rdma"
+            },
+            {
+              "Ipv4CidrBlockAssociations": [
+                {
+                  "AssociationId": "sn-cidr-assoc-09876543210fedcba0",
+                  "CidrBlock": "10.1.0.0/16",
+                  "State": "associated"
+                }
+              ],
+              "OwnerId": "123456789012",
+              "SecondaryNetworkArn": "arn:aws:ec2:us-east-2:123456789012:secondary-network/sn-0987654321fedcba0",
+              "SecondaryNetworkId": "sn-0987654321fedcba0",
+              "State": "create-complete",
+              "Tags": [
+                {
+                  "Key": "Name",
+                  "Value": "Dev Secondary Network"
+                }
+              ],
+              "Type": "rdma"
+            }
+          ]
+        },
+        "comments": {
+          "input": {
+          },
+          "output": {
+          }
+        },
+        "description": "This example describes the specified secondary networks.",
+        "id": "ec2-describe-secondary-networks-1",
+        "title": "To describe specified secondary networks"
+      },
+      {
+        "input": {
+          "Filters": [
+            {
+              "Name": "tag:Environment",
+              "Values": [
+                "Production"
+              ]
+            },
+            {
+              "Name": "state",
+              "Values": [
+                "create-complete"
+              ]
+            }
+          ],
+          "MaxResults": 5
+        },
+        "output": {
+          "NextToken": "123456789MSIsInMiOjEsImMiOiIteGh3TERRTUEwanpsaVpab1dOdjZhMlBuRXZpZXJqTl==",
+          "SecondaryNetworks": [
+            {
+              "Ipv4CidrBlockAssociations": [
+                {
+                  "AssociationId": "sn-cidr-assoc-12349901234abc1234",
+                  "CidrBlock": "10.0.0.0/16",
+                  "State": "associated"
+                }
+              ],
+              "OwnerId": "123456789012",
+              "SecondaryNetworkArn": "arn:aws:ec2:us-east-2:123456789012:secondary-network/sn-9876543210abc1234",
+              "SecondaryNetworkId": "sn-9876543210abc1234",
+              "State": "create-complete",
+              "Tags": [
+                {
+                  "Key": "Environment",
+                  "Value": "Production"
+                }
+              ],
+              "Type": "rdma"
+            }
+          ]
+        },
+        "comments": {
+          "input": {
+          },
+          "output": {
+          }
+        },
+        "description": "This example uses filters to describe any secondary network you own that has a tag with the key Environment and the value Production and whose state is create-complete.",
+        "id": "ec2-describe-secondary-networks-2",
+        "title": "To describe secondary networks using filters"
+      }
+    ],
+    "DescribeSecondarySubnets": [
+      {
+        "input": {
+          "SecondarySubnetIds": [
+            "ss-0123456789abcdef0",
+            "ss-0987654321fedcba0"
+          ]
+        },
+        "output": {
+          "SecondarySubnets": [
+            {
+              "AvailabilityZone": "us-east-2a",
+              "AvailabilityZoneId": "use2-az1",
+              "Ipv4CidrBlockAssociations": [
+                {
+                  "AssociationId": "ss-cidr-assoc-56789901234abcdef0",
+                  "CidrBlock": "10.0.0.0/24",
+                  "State": "associated"
+                }
+              ],
+              "OwnerId": "123456789012",
+              "SecondaryNetworkId": "sn-0123456789abcdef0",
+              "SecondaryNetworkType": "rdma",
+              "SecondarySubnetArn": "arn:aws:ec2:us-east-2:123456789012:secondary-subnet/ss-0123456789abcdef0",
+              "SecondarySubnetId": "ss-0123456789abcdef0",
+              "State": "create-complete",
+              "Tags": [
+                {
+                  "Key": "Name",
+                  "Value": "Prod Secondary Subnet"
+                }
+              ]
+            },
+            {
+              "AvailabilityZone": "us-east-2a",
+              "AvailabilityZoneId": "use2-az1",
+              "Ipv4CidrBlockAssociations": [
+                {
+                  "AssociationId": "ss-cidr-assoc-09876543210fedcba0",
+                  "CidrBlock": "10.0.1.0/24",
+                  "State": "associated"
+                }
+              ],
+              "OwnerId": "123456789012",
+              "SecondaryNetworkId": "sn-0123456789abcdef0",
+              "SecondaryNetworkType": "rdma",
+              "SecondarySubnetArn": "arn:aws:ec2:us-east-2:123456789012:secondary-subnet/ss-0987654321fedcba0",
+              "SecondarySubnetId": "ss-0987654321fedcba0",
+              "State": "create-complete",
+              "Tags": [
+                {
+                  "Key": "Name",
+                  "Value": "Dev Secondary Subnet"
+                }
+              ]
+            }
+          ]
+        },
+        "comments": {
+          "input": {
+          },
+          "output": {
+          }
+        },
+        "description": "This example describes the specified secondary subnets.",
+        "id": "ec2-describe-secondary-subnets-1",
+        "title": "To describe specified secondary subnets"
+      }
+    ],
     "DescribeSecurityGroupReferences": [
       {
         "input": {
@@ -3447,6 +4233,32 @@
         "title": "To detach a volume from an instance"
       }
     ],
+    "DisableApplicationStatusCheckSuppression": [
+      {
+        "input": {
+          "InstanceIds": [
+            "i-0123456789abcdef0"
+          ]
+        },
+        "output": {
+          "SuccessfulResults": [
+            {
+              "InstanceId": "i-0123456789abcdef0"
+            }
+          ],
+          "UnsuccessfulResults": [ ]
+        },
+        "comments": {
+          "input": {
+          },
+          "output": {
+          }
+        },
+        "description": "This example disables application status check suppression for the specified instance, resuming normal status reporting.",
+        "id": "ec2-disable-application-status-check-suppression-1",
+        "title": "To disable application status check suppression"
+      }
+    ],
     "DisableVgwRoutePropagation": [
       {
         "input": {
@@ -3478,6 +4290,38 @@
         "description": "This example disassociates an Elastic IP address from an instance.",
         "id": "ec2-disassociate-address-1",
         "title": "To disassociate an Elastic IP address"
+      }
+    ],
+    "DisassociateApplicationStatusCheck": [
+      {
+        "input": {
+          "ApplicationStatusCheckId": "asc-0123456789abcdef0",
+          "TargetTagAssociations": [
+            {
+              "Key": "env",
+              "Value": "prod"
+            }
+          ]
+        },
+        "output": {
+          "SuccessfulResults": [
+            {
+              "ApplicationStatusCheckId": "asc-0123456789abcdef0",
+              "AssociationType": "EC2TAG",
+              "AssociationValue": "env=prod"
+            }
+          ],
+          "UnsuccessfulResults": [ ]
+        },
+        "comments": {
+          "input": {
+          },
+          "output": {
+          }
+        },
+        "description": "This example disassociates an application status check from instances matching the specified tag.",
+        "id": "ec2-disassociate-application-status-check-1",
+        "title": "To disassociate an application status check from tags"
       }
     ],
     "DisassociateIamInstanceProfile": [
@@ -3521,6 +4365,34 @@
         "description": "This example disassociates the specified route table from its associated subnet.",
         "id": "ec2-disassociate-route-table-1",
         "title": "To disassociate a route table"
+      }
+    ],
+    "EnableApplicationStatusCheckSuppression": [
+      {
+        "input": {
+          "DurationSeconds": 3600,
+          "InstanceIds": [
+            "i-0123456789abcdef0"
+          ]
+        },
+        "output": {
+          "SuccessfulResults": [
+            {
+              "InstanceId": "i-0123456789abcdef0",
+              "ResumeAt": "2026-05-14T19:30:00.000Z"
+            }
+          ],
+          "UnsuccessfulResults": [ ]
+        },
+        "comments": {
+          "input": {
+          },
+          "output": {
+          }
+        },
+        "description": "This example suppresses application status check reporting for the specified instance for one hour.",
+        "id": "ec2-enable-application-status-check-suppression-1",
+        "title": "To enable application status check suppression"
       }
     ],
     "EnableVgwRoutePropagation": [
@@ -3641,6 +4513,37 @@
         "description": "This example gets the launch template data for the specified instance.",
         "id": "to-get-the-launch-template-data-for-an-instance--1529356515702",
         "title": "To get the launch template data for an instance "
+      }
+    ],
+    "ModifyApplicationStatusCheck": [
+      {
+        "input": {
+          "ApplicationStatusCheckId": "asc-0123456789abcdef0",
+          "Path": "/healthv2",
+          "Port": 8080
+        },
+        "output": {
+          "ApplicationStatusCheck": {
+            "Aggregation": "included",
+            "ApplicationStatusCheckId": "asc-0123456789abcdef0",
+            "FailureThreshold": 2,
+            "Interval": 60,
+            "Path": "/healthv2",
+            "Port": 8080,
+            "Protocol": "http",
+            "SuccessThreshold": 2,
+            "Timeout": 6
+          }
+        },
+        "comments": {
+          "input": {
+          },
+          "output": {
+          }
+        },
+        "description": "This example modifies the port and path of an existing application status check.",
+        "id": "ec2-modify-application-status-check-1",
+        "title": "To modify an application status check"
       }
     ],
     "ModifyImageAttribute": [

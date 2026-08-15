@@ -23,6 +23,340 @@ module Aws::ApplicationSignals
       include Aws::Structure
     end
 
+    # A structure that defines a filter for narrowing down results based on
+    # specific attribute values. This can be used to filter services by
+    # platform, environment, or other service characteristics.
+    #
+    # @!attribute [rw] attribute_filter_name
+    #   The name of the attribute to filter by, such as `Platform`,
+    #   `Environment`, or `BusinessUnit`.
+    #   @return [String]
+    #
+    # @!attribute [rw] attribute_filter_values
+    #   An array of values to match for the specified attribute. Services
+    #   that have any of these values for the attribute will be included in
+    #   the results.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/AttributeFilter AWS API Documentation
+    #
+    class AttributeFilter < Struct.new(
+      :attribute_filter_name,
+      :attribute_filter_values)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A structure that contains information about an audit finding, which
+    # represents an automated analysis result about service behavior,
+    # performance issues, or potential problems identified through heuristic
+    # algorithms.
+    #
+    # @!attribute [rw] key_attributes
+    #   The key attributes that identify the service or entity this audit
+    #   finding relates to. This is a string-to-string map that includes
+    #   fields like Type, Name, and Environment.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] auditor_results
+    #   An array of auditor results that contain the specific findings,
+    #   descriptions, and severity levels identified by different auditing
+    #   algorithms.
+    #   @return [Array<Types::AuditorResult>]
+    #
+    # @!attribute [rw] operation
+    #   The name of the operation associated with this audit finding, if the
+    #   finding is specific to a particular service operation.
+    #   @return [String]
+    #
+    # @!attribute [rw] metric_graph
+    #   A structure containing metric data queries and time range
+    #   information that provides context for the audit finding through
+    #   relevant performance metrics.
+    #   @return [Types::MetricGraph]
+    #
+    # @!attribute [rw] dependency_graph
+    #   A structure containing nodes and edges that represent the dependency
+    #   relationships relevant to this audit finding, helping to understand
+    #   the context and potential impact.
+    #   @return [Types::DependencyGraph]
+    #
+    # @!attribute [rw] type
+    #   The type of audit finding.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/AuditFinding AWS API Documentation
+    #
+    class AuditFinding < Struct.new(
+      :key_attributes,
+      :auditor_results,
+      :operation,
+      :metric_graph,
+      :dependency_graph,
+      :type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A structure that specifies the target entity for audit analysis, such
+    # as a `service`, `SLO`, `service_operation`, or `canary`.
+    #
+    # @!attribute [rw] type
+    #   The type of entity being audited, such as `service`, `SLO`,
+    #   `service_operation`, or `canary`.
+    #   @return [String]
+    #
+    # @!attribute [rw] data
+    #   The specific data identifying the audit target entity.
+    #   @return [Types::AuditTargetEntity]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/AuditTarget AWS API Documentation
+    #
+    class AuditTarget < Struct.new(
+      :type,
+      :data)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A union structure that contains the specific entity information for
+    # different types of audit targets.
+    #
+    # @note AuditTargetEntity is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @!attribute [rw] service
+    #   Service entity information when the audit target is a service.
+    #   @return [Types::ServiceEntity]
+    #
+    # @!attribute [rw] slo
+    #   SLO entity information when the audit target is a service level
+    #   objective.
+    #   @return [Types::ServiceLevelObjectiveEntity]
+    #
+    # @!attribute [rw] service_operation
+    #   Service operation entity information when the audit target is a
+    #   specific service operation.
+    #   @return [Types::ServiceOperationEntity]
+    #
+    # @!attribute [rw] canary
+    #   Canary entity information when the audit target is a CloudWatch
+    #   Synthetics canary.
+    #   @return [Types::CanaryEntity]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/AuditTargetEntity AWS API Documentation
+    #
+    class AuditTargetEntity < Struct.new(
+      :service,
+      :slo,
+      :service_operation,
+      :canary,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Service < AuditTargetEntity; end
+      class Slo < AuditTargetEntity; end
+      class ServiceOperation < AuditTargetEntity; end
+      class Canary < AuditTargetEntity; end
+      class Unknown < AuditTargetEntity; end
+    end
+
+    # A structure that contains the result of an automated audit analysis,
+    # including the auditor name, description of findings, additional data,
+    # and severity level.
+    #
+    # @!attribute [rw] auditor
+    #   The name of the auditor algorithm that generated this result.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A detailed description of the audit finding, explaining what was
+    #   observed and potential implications.
+    #   @return [String]
+    #
+    # @!attribute [rw] data
+    #   This is a string-to-string map. It contains additional data about
+    #   the result of an automated audit analysis.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] severity
+    #   The severity level of this audit finding, indicating the importance
+    #   and potential impact of the issue.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/AuditorResult AWS API Documentation
+    #
+    class AuditorResult < Struct.new(
+      :auditor,
+      :description,
+      :data,
+      :severity)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Parameters for targeted delete by ARN list.
+    #
+    # @!attribute [rw] resource_arns
+    #   List of resource ARNs to delete.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] instrumentation_type
+    #   Instrumentation type: BREAKPOINT or PROBE.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/BatchDeleteByResourceArns AWS API Documentation
+    #
+    class BatchDeleteByResourceArns < Struct.new(
+      :resource_arns,
+      :instrumentation_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Union type for batch delete target selection. Exactly one of the two
+    # modes must be specified.
+    #
+    # @note BatchDeleteDeletionTarget is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @!attribute [rw] scope
+    #   Delete all configurations matching the specified scope.
+    #   @return [Types::BatchDeleteScope]
+    #
+    # @!attribute [rw] resource_arns
+    #   Delete specific configurations by ARN list.
+    #   @return [Types::BatchDeleteByResourceArns]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/BatchDeleteDeletionTarget AWS API Documentation
+    #
+    class BatchDeleteDeletionTarget < Struct.new(
+      :scope,
+      :resource_arns,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Scope < BatchDeleteDeletionTarget; end
+      class ResourceArns < BatchDeleteDeletionTarget; end
+      class Unknown < BatchDeleteDeletionTarget; end
+    end
+
+    # Represents an error that occurred when attempting to delete a
+    # configuration.
+    #
+    # @!attribute [rw] resource_arn
+    #   ARN of the configuration that failed to delete.
+    #   @return [String]
+    #
+    # @!attribute [rw] code
+    #   Error code indicating the type of failure.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   Descriptive error message.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/BatchDeleteError AWS API Documentation
+    #
+    class BatchDeleteError < Struct.new(
+      :resource_arn,
+      :code,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] deletion_target
+    #   The deletion target - either bulk by scope or targeted by ARN list.
+    #   @return [Types::BatchDeleteDeletionTarget]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/BatchDeleteInstrumentationConfigurationsRequest AWS API Documentation
+    #
+    class BatchDeleteInstrumentationConfigurationsRequest < Struct.new(
+      :deletion_target)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] deleted_count
+    #   Number of configurations successfully deleted. When deleting by
+    #   scope, this is the total count of deleted items. When deleting by
+    #   ARN list, this equals the length of SuccessfulDeletions.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] successful_deletions
+    #   List of successfully deleted configurations. Deleting by scope
+    #   populates SignalType and LocationHash per item. Deleting by ARN list
+    #   populates ResourceArn per item.
+    #   @return [Array<Types::BatchDeleteSuccessfulDeletion>]
+    #
+    # @!attribute [rw] errors
+    #   List of configurations that failed to delete.
+    #   @return [Array<Types::BatchDeleteError>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/BatchDeleteInstrumentationConfigurationsResponse AWS API Documentation
+    #
+    class BatchDeleteInstrumentationConfigurationsResponse < Struct.new(
+      :deleted_count,
+      :successful_deletions,
+      :errors)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Scope parameters for bulk delete by scope.
+    #
+    # @!attribute [rw] service
+    #   Service name for the instrumentation configurations.
+    #   @return [String]
+    #
+    # @!attribute [rw] environment
+    #   Environment identifier for the instrumentation configurations.
+    #   @return [String]
+    #
+    # @!attribute [rw] instrumentation_type
+    #   Instrumentation type: BREAKPOINT or PROBE.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/BatchDeleteScope AWS API Documentation
+    #
+    class BatchDeleteScope < Struct.new(
+      :service,
+      :environment,
+      :instrumentation_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Represents a successfully deleted instrumentation configuration.
+    #
+    # @!attribute [rw] resource_arn
+    #   ARN of the deleted configuration (populated only when deleting by
+    #   ARN list).
+    #   @return [String]
+    #
+    # @!attribute [rw] signal_type
+    #   Signal type of the deleted configuration (populated only when
+    #   deleting by scope).
+    #   @return [String]
+    #
+    # @!attribute [rw] location_hash
+    #   Location hash of the deleted configuration (populated only when
+    #   deleting by scope).
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/BatchDeleteSuccessfulDeletion AWS API Documentation
+    #
+    class BatchDeleteSuccessfulDeletion < Struct.new(
+      :resource_arn,
+      :signal_type,
+      :location_hash)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] timestamp
     #   The date and time that you want the report to be for. It is
     #   expressed as the number of milliseconds since Jan 1, 1970 00:00:00
@@ -199,6 +533,331 @@ module Aws::ApplicationSignals
       include Aws::Structure
     end
 
+    # A structure that contains identifying information for a CloudWatch
+    # Synthetics canary entity used in audit targeting.
+    #
+    # @!attribute [rw] canary_name
+    #   The name of the CloudWatch Synthetics canary.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/CanaryEntity AWS API Documentation
+    #
+    class CanaryEntity < Struct.new(
+      :canary_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A union that defines what data to capture when the instrumentation
+    # point is hit. Specify `CodeCapture` for code-level capture settings.
+    #
+    # @note CaptureConfiguration is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note CaptureConfiguration is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of CaptureConfiguration corresponding to the set member.
+    #
+    # @!attribute [rw] code_capture
+    #   Capture settings for code-level instrumentation, including
+    #   arguments, return values, stack traces, local variables, and safety
+    #   limits.
+    #   @return [Types::CodeCaptureConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/CaptureConfiguration AWS API Documentation
+    #
+    class CaptureConfiguration < Struct.new(
+      :code_capture,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class CodeCapture < CaptureConfiguration; end
+      class Unknown < CaptureConfiguration; end
+    end
+
+    # Guardrails that prevent instrumentation from impacting application
+    # performance by limiting how much data is captured.
+    #
+    # @!attribute [rw] max_hits
+    #   The maximum number of times the instrumentation point can be hit
+    #   before it is automatically disabled. Defaults to 100.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max_string_length
+    #   The maximum length of captured string values in characters. Strings
+    #   longer than this are truncated. Defaults to 128.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max_collection_width
+    #   The maximum number of items to capture from any collection to
+    #   prevent large payloads. Defaults to 10.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max_collection_depth
+    #   The maximum nesting depth to traverse inside collections. Defaults
+    #   to 3.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max_stack_frames
+    #   The maximum number of stack frames to capture in stack traces.
+    #   Defaults to 2.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max_stack_trace_size
+    #   The maximum total size, in bytes, of a captured stack trace.
+    #   Defaults to 1000.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max_object_depth
+    #   The maximum depth for nested object traversal when capturing
+    #   structured data. Defaults to 3.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max_fields_per_object
+    #   The maximum number of fields to capture for any object. Defaults to
+    #   10.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/CaptureLimitsConfig AWS API Documentation
+    #
+    class CaptureLimitsConfig < Struct.new(
+      :max_hits,
+      :max_string_length,
+      :max_collection_width,
+      :max_collection_depth,
+      :max_stack_frames,
+      :max_stack_trace_size,
+      :max_object_depth,
+      :max_fields_per_object)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A structure that contains information about a change event that
+    # occurred for a service, such as a deployment or configuration change.
+    #
+    # @!attribute [rw] timestamp
+    #   The timestamp when this change event occurred. When used in a raw
+    #   HTTP Query API, it is formatted as epoch time in seconds.
+    #   @return [Time]
+    #
+    # @!attribute [rw] account_id
+    #   The Amazon Web Services account ID where this change event occurred.
+    #   @return [String]
+    #
+    # @!attribute [rw] region
+    #   The Amazon Web Services region where this change event occurred.
+    #   @return [String]
+    #
+    # @!attribute [rw] entity
+    #   The entity (service or resource) that was affected by this change
+    #   event, including its key attributes.
+    #
+    #   This is a string-to-string map. It can include the following fields.
+    #
+    #   * `Type` designates the type of object this is.
+    #
+    #   * `ResourceType` specifies the type of the resource. This field is
+    #     used only when the value of the `Type` field is `Resource` or
+    #     `AWS::Resource`.
+    #
+    #   * `Name` specifies the name of the object. This is used only if the
+    #     value of the `Type` field is `Service`, `RemoteService`, or
+    #     `AWS::Service`.
+    #
+    #   * `Identifier` identifies the resource objects of this resource.
+    #     This is used only if the value of the `Type` field is `Resource`
+    #     or `AWS::Resource`.
+    #
+    #   * `Environment` specifies the location where this object is hosted,
+    #     or what it belongs to.
+    #
+    #   * `AwsAccountId` specifies the account where this object is in.
+    #
+    #   Below is an example of a service.
+    #
+    #   `{ "Type": "Service", "Name": "visits-service", "Environment":
+    #   "petclinic-test" }`
+    #
+    #   Below is an example of a resource.
+    #
+    #   `{ "Type": "AWS::Resource", "ResourceType": "AWS::DynamoDB::Table",
+    #   "Identifier": "Customers" }`
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] change_event_type
+    #   The type of change event that occurred, such as `DEPLOYMENT`.
+    #   @return [String]
+    #
+    # @!attribute [rw] event_id
+    #   A unique identifier for this change event. For CloudTrail-based
+    #   events, this is the CloudTrail event id. For other events, this will
+    #   be `Unknown`.
+    #   @return [String]
+    #
+    # @!attribute [rw] user_name
+    #   The name of the user who initiated this change event, if available.
+    #   @return [String]
+    #
+    # @!attribute [rw] event_name
+    #   The name or description of this change event.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ChangeEvent AWS API Documentation
+    #
+    class ChangeEvent < Struct.new(
+      :timestamp,
+      :account_id,
+      :region,
+      :entity,
+      :change_event_type,
+      :event_id,
+      :user_name,
+      :event_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines what data to capture for code-level instrumentation, including
+    # arguments, return values, stack traces, local variables, and safety
+    # limits.
+    #
+    # @!attribute [rw] capture_arguments
+    #   The function arguments to capture. Omit to capture defaults, use an
+    #   empty list to capture none, use `["*"]` to capture all arguments, or
+    #   specify argument names to capture selectively (up to 10 entries).
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] capture_return
+    #   Whether to capture the return value. Defaults to false.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] capture_stack_trace
+    #   Whether to capture a stack trace when the instrumentation point is
+    #   hit. Defaults to true.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] capture_locals
+    #   The local variables to capture by name. Omit or pass an empty list
+    #   to capture none. You can specify up to 20 names.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] capture_limits
+    #   Safety limits that bound what is captured, including hit counts,
+    #   string length, collection depth, and stack trace size.
+    #   @return [Types::CaptureLimitsConfig]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/CodeCaptureConfiguration AWS API Documentation
+    #
+    class CodeCaptureConfiguration < Struct.new(
+      :capture_arguments,
+      :capture_return,
+      :capture_stack_trace,
+      :capture_locals,
+      :capture_limits)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Identifies a code location to instrument, including the programming
+    # language, code unit, class, method, file path, and optional line
+    # number.
+    #
+    # @!attribute [rw] language
+    #   The programming language for this instrumentation point, such as
+    #   Java, Python, or JavaScript.
+    #   @return [String]
+    #
+    # @!attribute [rw] code_unit
+    #   The package, module, or namespace that contains the target code, for
+    #   example `com.amazon.payment` or `payment_service`.
+    #   @return [String]
+    #
+    # @!attribute [rw] class_name
+    #   The class or type name that contains the method. This is required
+    #   for Java and optional for Python module-level functions.
+    #   @return [String]
+    #
+    # @!attribute [rw] method_name
+    #   The method or function name to instrument, such as
+    #   `validateCreditCard` or `__init__`.
+    #   @return [String]
+    #
+    # @!attribute [rw] file_path
+    #   The source file path relative to the project or source root, such as
+    #   `src/payment/PaymentProcessor.java` or
+    #   `src/payment/PaymentProcessor.py`.
+    #   @return [String]
+    #
+    # @!attribute [rw] line_number
+    #   The line number to instrument. Provide this to disambiguate
+    #   overloaded methods and to target a specific line when needed.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/CodeLocation AWS API Documentation
+    #
+    class CodeLocation < Struct.new(
+      :language,
+      :code_unit,
+      :class_name,
+      :method_name,
+      :file_path,
+      :line_number)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Identifies a single operation to include in a composite SLI for a
+    # service-level SLO. Used as an element of the `Components` list in
+    # `CompositeSliConfig`.
+    #
+    # @note CompositeSliComponent is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note CompositeSliComponent is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of CompositeSliComponent corresponding to the set member.
+    #
+    # @!attribute [rw] operation_name
+    #   The name of the operation to include in the composite SLI.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/CompositeSliComponent AWS API Documentation
+    #
+    class CompositeSliComponent < Struct.new(
+      :operation_name,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class OperationName < CompositeSliComponent; end
+      class Unknown < CompositeSliComponent; end
+    end
+
+    # This structure contains the configuration for a composite service
+    # level indicator (SLI) that aggregates metrics across multiple
+    # operations of a service for service-level SLOs.
+    #
+    # @!attribute [rw] selection_config
+    #   Specifies how operations are selected for this service-level SLO.
+    #   Operations can be selected explicitly by listing them, by specifying
+    #   a prefix to match operation names, or by providing a regular
+    #   expression pattern.
+    #   @return [Types::SelectionConfig]
+    #
+    # @!attribute [rw] components
+    #   The list of operations included in this composite SLI. You must
+    #   specify between 2 and 20 components. Each component is a
+    #   `CompositeSliComponent` that identifies a single operation by its
+    #   `OperationName`.
+    #   @return [Array<Types::CompositeSliComponent>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/CompositeSliConfig AWS API Documentation
+    #
+    class CompositeSliConfig < Struct.new(
+      :selection_config,
+      :components)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # This operation attempted to create a resource that already exists.
     #
     # @!attribute [rw] message
@@ -208,6 +867,155 @@ module Aws::ApplicationSignals
     #
     class ConflictException < Struct.new(
       :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] instrumentation_type
+    #   Type of instrumentation: BREAKPOINT (temporary) or PROBE (permanent)
+    #   @return [String]
+    #
+    # @!attribute [rw] service
+    #   The name of the service to instrument. This should match the
+    #   `service.name` resource attribute reported by the application.
+    #   @return [String]
+    #
+    # @!attribute [rw] environment
+    #   The environment that the service is running in, such as
+    #   `eks:cluster-prod/namespace` or `ec2:production`.
+    #   @return [String]
+    #
+    # @!attribute [rw] signal_type
+    #   The telemetry signal type to emit for this instrumentation. The
+    #   supported value is `SNAPSHOT`.
+    #   @return [String]
+    #
+    # @!attribute [rw] location
+    #   The location where instrumentation should be applied. Specify a
+    #   `CodeLocation` for code-level instrumentation.
+    #   @return [Types::Location]
+    #
+    # @!attribute [rw] description
+    #   An optional short description (up to 50 characters) that explains
+    #   the purpose of this instrumentation.
+    #   @return [String]
+    #
+    # @!attribute [rw] expires_at
+    #   For BREAKPOINT: optional, defaults to 24 hours, must be between 5
+    #   min and 24 hours. For PROBE: not supported. PROBE configurations are
+    #   permanent and persist until explicitly deleted.
+    #   @return [Time]
+    #
+    # @!attribute [rw] attribute_filters
+    #   Client-side filters that target specific instances. Each object in
+    #   the array is AND-matched on its keys, and multiple objects are
+    #   OR-matched to decide where to apply the instrumentation.
+    #   @return [Array<Hash<String,String>>]
+    #
+    # @!attribute [rw] capture_configuration
+    #   Specifies what to capture when the instrumentation point is hit.
+    #   Specify `CodeCapture` for code-level capture settings.
+    #   @return [Types::CaptureConfiguration]
+    #
+    # @!attribute [rw] tags
+    #   An optional list of key-value pairs to associate with the
+    #   instrumentation configuration. Tags can help you organize and
+    #   categorize your resources.
+    #   @return [Array<Types::Tag>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/CreateInstrumentationConfigurationRequest AWS API Documentation
+    #
+    class CreateInstrumentationConfigurationRequest < Struct.new(
+      :instrumentation_type,
+      :service,
+      :environment,
+      :signal_type,
+      :location,
+      :description,
+      :expires_at,
+      :attribute_filters,
+      :capture_configuration,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] instrumentation_type
+    #   The type of instrumentation that was created, echoed from the
+    #   request.
+    #   @return [String]
+    #
+    # @!attribute [rw] service
+    #   The service name for the instrumentation configuration, echoed from
+    #   the request.
+    #   @return [String]
+    #
+    # @!attribute [rw] environment
+    #   The environment for the instrumentation configuration, echoed from
+    #   the request.
+    #   @return [String]
+    #
+    # @!attribute [rw] signal_type
+    #   The telemetry signal type for the instrumentation configuration,
+    #   echoed from the request.
+    #   @return [String]
+    #
+    # @!attribute [rw] location
+    #   The location where instrumentation is applied, echoed from the
+    #   request.
+    #   @return [Types::Location]
+    #
+    # @!attribute [rw] location_hash
+    #   A stable hash computed from the location that uniquely identifies
+    #   this instrumentation point within the service, environment, and
+    #   signal type.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   The optional description that was stored with the instrumentation
+    #   configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] expires_at
+    #   The timestamp after which this configuration is no longer served to
+    #   clients. Present only for `BREAKPOINT` configurations; `PROBE`
+    #   configurations do not expire.
+    #   @return [Time]
+    #
+    # @!attribute [rw] attribute_filters
+    #   The attribute filters returned with the configuration so SDKs can
+    #   perform client-side targeting.
+    #   @return [Array<Hash<String,String>>]
+    #
+    # @!attribute [rw] capture_configuration
+    #   The capture settings that were stored for this instrumentation
+    #   configuration.
+    #   @return [Types::CaptureConfiguration]
+    #
+    # @!attribute [rw] created_at
+    #   The server-generated creation timestamp for this instrumentation
+    #   configuration.
+    #   @return [Time]
+    #
+    # @!attribute [rw] arn
+    #   ARN for the created instrumentation configuration
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/CreateInstrumentationConfigurationResponse AWS API Documentation
+    #
+    class CreateInstrumentationConfigurationResponse < Struct.new(
+      :instrumentation_type,
+      :service,
+      :environment,
+      :signal_type,
+      :location,
+      :location_hash,
+      :description,
+      :expires_at,
+      :attribute_filters,
+      :capture_configuration,
+      :created_at,
+      :arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -259,6 +1067,21 @@ module Aws::ApplicationSignals
     #   error budget, relative to the attainment goal of the SLO.
     #   @return [Array<Types::BurnRateConfiguration>]
     #
+    # @!attribute [rw] create_recommended_slo
+    #   Set this to `true` to create a recommended SLO out of the box. When
+    #   set to `true`, you don't need to specify the `MetricThreshold` or
+    #   `ComparisonOperator` in the `SliConfig` or `RequestBasedSliConfig`.
+    #   The default value is `false`.
+    #
+    #   This is supported for SLOs on a service, service operation, or a
+    #   dependency.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] auto_investigation_enabled
+    #   Indicates whether DevOps Agent will automatically investigate this
+    #   SLO when it is breached
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/CreateServiceLevelObjectiveInput AWS API Documentation
     #
     class CreateServiceLevelObjectiveInput < Struct.new(
@@ -268,7 +1091,9 @@ module Aws::ApplicationSignals
       :request_based_sli_config,
       :goal,
       :tags,
-      :burn_rate_configurations)
+      :burn_rate_configurations,
+      :create_recommended_slo,
+      :auto_investigation_enabled)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -282,6 +1107,57 @@ module Aws::ApplicationSignals
     #
     class CreateServiceLevelObjectiveOutput < Struct.new(
       :slo)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/DeleteGroupingConfigurationOutput AWS API Documentation
+    #
+    class DeleteGroupingConfigurationOutput < Aws::EmptyStructure; end
+
+    # @!attribute [rw] instrumentation_type
+    #   Type of instrumentation configuration (BREAKPOINT or PROBE).
+    #   Required to identify the configuration to delete.
+    #   @return [String]
+    #
+    # @!attribute [rw] service
+    #   Service name for the instrumentation configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] environment
+    #   Environment name for the instrumentation configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] signal_type
+    #   Signal type for the instrumentation configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] location_identifier
+    #   Location identifier - either full code location or a pre-computed
+    #   hash.
+    #   @return [Types::LocationIdentifier]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/DeleteInstrumentationConfigurationRequest AWS API Documentation
+    #
+    class DeleteInstrumentationConfigurationRequest < Struct.new(
+      :instrumentation_type,
+      :service,
+      :environment,
+      :signal_type,
+      :location_identifier)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] deletion_status
+    #   The result of the delete request. The value is `DELETED` when the
+    #   configuration has been removed.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/DeleteInstrumentationConfigurationResponse AWS API Documentation
+    #
+    class DeleteInstrumentationConfigurationResponse < Struct.new(
+      :deletion_status)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -301,6 +1177,73 @@ module Aws::ApplicationSignals
     # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/DeleteServiceLevelObjectiveOutput AWS API Documentation
     #
     class DeleteServiceLevelObjectiveOutput < Aws::EmptyStructure; end
+
+    # Identifies the dependency using the `DependencyKeyAttributes` and
+    # `DependencyOperationName`.
+    #
+    # When creating a service dependency SLO, you must specify the
+    # `KeyAttributes` of the service, and the `DependencyConfig` for the
+    # dependency. You can specify the `OperationName` of the service, from
+    # which it calls the dependency. Alternatively, you can exclude
+    # `OperationName` and the SLO will monitor all of the service's
+    # operations that call the dependency.
+    #
+    # @!attribute [rw] dependency_key_attributes
+    #   This is a string-to-string map. It can include the following fields.
+    #
+    #   * `Type` designates the type of object this is.
+    #
+    #   * `ResourceType` specifies the type of the resource. This field is
+    #     used only when the value of the `Type` field is `Resource` or
+    #     `AWS::Resource`.
+    #
+    #   * `Name` specifies the name of the object. This is used only if the
+    #     value of the `Type` field is `Service`, `RemoteService`, or
+    #     `AWS::Service`.
+    #
+    #   * `Identifier` identifies the resource objects of this resource.
+    #     This is used only if the value of the `Type` field is `Resource`
+    #     or `AWS::Resource`.
+    #
+    #   * `Environment` specifies the location where this object is hosted,
+    #     or what it belongs to.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] dependency_operation_name
+    #   The name of the called operation in the dependency.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/DependencyConfig AWS API Documentation
+    #
+    class DependencyConfig < Struct.new(
+      :dependency_key_attributes,
+      :dependency_operation_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A structure that represents the dependency relationships relevant to
+    # an audit finding, containing nodes and edges that show how services
+    # and resources are connected.
+    #
+    # @!attribute [rw] nodes
+    #   An array of nodes representing the services, resources, or other
+    #   entities in the dependency graph.
+    #   @return [Array<Types::Node>]
+    #
+    # @!attribute [rw] edges
+    #   An array of edges representing the connections and relationships
+    #   between the nodes in the dependency graph.
+    #   @return [Array<Types::Edge>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/DependencyGraph AWS API Documentation
+    #
+    class DependencyGraph < Struct.new(
+      :nodes,
+      :edges)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # A dimension is a name/value pair that is part of the identity of a
     # metric. Because dimensions are part of the unique identifier for a
@@ -334,6 +1277,39 @@ module Aws::ApplicationSignals
       include Aws::Structure
     end
 
+    # A structure that represents a connection between two nodes in a
+    # dependency graph, showing the relationship and characteristics of the
+    # connection.
+    #
+    # @!attribute [rw] source_node_id
+    #   The identifier of the source node in this edge connection.
+    #   @return [String]
+    #
+    # @!attribute [rw] destination_node_id
+    #   The identifier of the destination node in this edge connection.
+    #   @return [String]
+    #
+    # @!attribute [rw] duration
+    #   The duration or latency associated with this connection, if
+    #   applicable.
+    #   @return [Float]
+    #
+    # @!attribute [rw] connection_type
+    #   The type of connection between the nodes, indicating the nature of
+    #   the relationship.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/Edge AWS API Documentation
+    #
+    class Edge < Struct.new(
+      :source_node_id,
+      :destination_node_id,
+      :duration,
+      :connection_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The core SLO time window exclusion object that includes Window,
     # StartTime, RecurrenceRule, and Reason.
     #
@@ -363,6 +1339,164 @@ module Aws::ApplicationSignals
       :start_time,
       :recurrence_rule,
       :reason)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] instrumentation_type
+    #   Type of instrumentation configuration (BREAKPOINT or PROBE).
+    #   Required to identify the configuration to retrieve.
+    #   @return [String]
+    #
+    # @!attribute [rw] service
+    #   Service name for the instrumentation configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] environment
+    #   Environment name for the instrumentation configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] signal_type
+    #   Signal type for the instrumentation configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] location_identifier
+    #   Location identifier - either full code location or a pre-computed
+    #   hash.
+    #   @return [Types::LocationIdentifier]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/GetInstrumentationConfigurationRequest AWS API Documentation
+    #
+    class GetInstrumentationConfigurationRequest < Struct.new(
+      :instrumentation_type,
+      :service,
+      :environment,
+      :signal_type,
+      :location_identifier)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] configuration
+    #   The complete instrumentation configuration, including its location
+    #   hash, capture settings, filters, expiration, and creation time.
+    #   @return [Types::InstrumentationConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/GetInstrumentationConfigurationResponse AWS API Documentation
+    #
+    class GetInstrumentationConfigurationResponse < Struct.new(
+      :configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] instrumentation_type
+    #   Type of instrumentation configuration (BREAKPOINT or PROBE).
+    #   Required to identify the configuration to retrieve.
+    #   @return [String]
+    #
+    # @!attribute [rw] service
+    #   Service name for the instrumentation configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] environment
+    #   Environment name for the instrumentation configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] signal_type
+    #   Signal type for the instrumentation configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] location_identifier
+    #   Location identifier - either full code location or a pre-computed
+    #   hash.
+    #   @return [Types::LocationIdentifier]
+    #
+    # @!attribute [rw] status
+    #   The single status to query for. If omitted, only `ACTIVE` status
+    #   events are returned.
+    #   @return [String]
+    #
+    # @!attribute [rw] start_time
+    #   The start of the time range to retrieve status events for.
+    #   `StartTime` and `EndTime` must both be provided together or both be
+    #   omitted. When both are omitted, the time range defaults to the last
+    #   hour.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   The end of the time range to retrieve status events for. `StartTime`
+    #   and `EndTime` must both be provided together or both be omitted.
+    #   When both are omitted, the time range defaults to the last hour.
+    #   @return [Time]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of status events to return in one call. The
+    #   default is 60.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   Use the token returned by a previous call to retrieve the next page
+    #   of status events.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/GetInstrumentationConfigurationStatusRequest AWS API Documentation
+    #
+    class GetInstrumentationConfigurationStatusRequest < Struct.new(
+      :instrumentation_type,
+      :service,
+      :environment,
+      :signal_type,
+      :location_identifier,
+      :status,
+      :start_time,
+      :end_time,
+      :max_results,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] service
+    #   The service name echoed from the request.
+    #   @return [String]
+    #
+    # @!attribute [rw] environment
+    #   The environment echoed from the request.
+    #   @return [String]
+    #
+    # @!attribute [rw] signal_type
+    #   The telemetry signal type echoed from the request.
+    #   @return [String]
+    #
+    # @!attribute [rw] location
+    #   The code location echoed from the request.
+    #   @return [Types::Location]
+    #
+    # @!attribute [rw] status
+    #   The status that was queried. If not specified in the request, this
+    #   is `ACTIVE`.
+    #   @return [String]
+    #
+    # @!attribute [rw] events
+    #   The list of status events within the requested time window, sorted
+    #   with the most recent first. Error events include an error cause.
+    #   @return [Array<Types::InstrumentationStatusEvent>]
+    #
+    # @!attribute [rw] next_token
+    #   Pagination token to continue retrieving status events.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/GetInstrumentationConfigurationStatusResponse AWS API Documentation
+    #
+    class GetInstrumentationConfigurationStatusResponse < Struct.new(
+      :service,
+      :environment,
+      :signal_type,
+      :location,
+      :status,
+      :events,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -539,6 +1673,312 @@ module Aws::ApplicationSignals
       include Aws::Structure
     end
 
+    # A structure that defines how services should be grouped based on
+    # specific attributes. This includes the friendly name for the grouping,
+    # the source keys to derive values from, and an optional default value.
+    #
+    # @!attribute [rw] grouping_name
+    #   The friendly name for this grouping attribute, such as
+    #   `BusinessUnit` or `Environment`. This name is used to identify the
+    #   grouping in the console and APIs.
+    #   @return [String]
+    #
+    # @!attribute [rw] grouping_source_keys
+    #   An array of source keys used to derive the grouping attribute value
+    #   from telemetry data, Amazon Web Services tags, or other sources. For
+    #   example, \["business\_unit", "team"\] would look for values in
+    #   those fields.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] default_grouping_value
+    #   The default value to use for this grouping attribute when no value
+    #   can be derived from the source keys. This ensures all services have
+    #   a grouping value even if the source data is missing.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/GroupingAttributeDefinition AWS API Documentation
+    #
+    class GroupingAttributeDefinition < Struct.new(
+      :grouping_name,
+      :grouping_source_keys,
+      :default_grouping_value)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A structure that contains the complete grouping configuration for an
+    # account, including all defined grouping attributes and metadata about
+    # when it was last updated.
+    #
+    # @!attribute [rw] grouping_attribute_definitions
+    #   An array of grouping attribute definitions that specify how services
+    #   should be grouped based on various attributes and source keys.
+    #   @return [Array<Types::GroupingAttributeDefinition>]
+    #
+    # @!attribute [rw] updated_at
+    #   The timestamp when this grouping configuration was last updated.
+    #   When used in a raw HTTP Query API, it is formatted as epoch time in
+    #   seconds.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/GroupingConfiguration AWS API Documentation
+    #
+    class GroupingConfiguration < Struct.new(
+      :grouping_attribute_definitions,
+      :updated_at)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The full instrumentation configuration, including the instrumentation
+    # type, service, environment, signal type, location details, stable
+    # location hash, capture settings, filters, expiration, creation time,
+    # and ARN.
+    #
+    # @!attribute [rw] instrumentation_type
+    #   The type of instrumentation for this configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] service
+    #   The service that this instrumentation configuration targets.
+    #   @return [String]
+    #
+    # @!attribute [rw] environment
+    #   The environment where the service is running.
+    #   @return [String]
+    #
+    # @!attribute [rw] signal_type
+    #   The telemetry signal type for this instrumentation configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] location
+    #   The location where this instrumentation is applied.
+    #   @return [Types::Location]
+    #
+    # @!attribute [rw] location_hash
+    #   The stable hash derived from the location that uniquely identifies
+    #   this instrumentation point within the service and environment.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   An optional short description of the instrumentation configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] expires_at
+    #   The timestamp when this configuration expires.
+    #   @return [Time]
+    #
+    # @!attribute [rw] attribute_filters
+    #   Client-side filters that determine which instances apply this
+    #   instrumentation.
+    #   @return [Array<Hash<String,String>>]
+    #
+    # @!attribute [rw] capture_configuration
+    #   The capture settings for this instrumentation configuration.
+    #   @return [Types::CaptureConfiguration]
+    #
+    # @!attribute [rw] created_at
+    #   The timestamp when this instrumentation configuration was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] arn
+    #   ARN for the instrumentation configuration
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/InstrumentationConfiguration AWS API Documentation
+    #
+    class InstrumentationConfiguration < Struct.new(
+      :instrumentation_type,
+      :service,
+      :environment,
+      :signal_type,
+      :location,
+      :location_hash,
+      :description,
+      :expires_at,
+      :attribute_filters,
+      :capture_configuration,
+      :created_at,
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The status of a single instrumentation configuration reported by an
+    # SDK instance.
+    #
+    # @!attribute [rw] instrumentation_type
+    #   The type of instrumentation configuration being reported.
+    #   @return [String]
+    #
+    # @!attribute [rw] signal_type
+    #   The telemetry signal type for this instrumentation configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] location_hash
+    #   The stable hash of the instrumentation location that identifies the
+    #   configuration being reported.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status of the instrumentation configuration: `READY`, `ERROR`,
+    #   `ACTIVE`, or `DISABLED`.
+    #   @return [String]
+    #
+    # @!attribute [rw] time
+    #   The timestamp when the status event occurred.
+    #   @return [Time]
+    #
+    # @!attribute [rw] error_cause
+    #   The error cause when the status is `ERROR`, such as the file or
+    #   method not being found.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/InstrumentationConfigurationStatusReport AWS API Documentation
+    #
+    class InstrumentationConfigurationStatusReport < Struct.new(
+      :instrumentation_type,
+      :signal_type,
+      :location_hash,
+      :status,
+      :time,
+      :error_cause)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # An instrumentation configuration that omits service and environment
+    # because they are provided at a higher level, such as in a list
+    # response.
+    #
+    # @!attribute [rw] instrumentation_type
+    #   The type of instrumentation for this configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] signal_type
+    #   The telemetry signal type for this instrumentation configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] location
+    #   The location where this instrumentation is applied.
+    #   @return [Types::Location]
+    #
+    # @!attribute [rw] location_hash
+    #   The stable hash derived from the location that identifies this
+    #   instrumentation point.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   An optional short description of the instrumentation configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] expires_at
+    #   The timestamp when this configuration expires.
+    #   @return [Time]
+    #
+    # @!attribute [rw] attribute_filters
+    #   Client-side filters that determine which instances apply this
+    #   instrumentation.
+    #   @return [Array<Hash<String,String>>]
+    #
+    # @!attribute [rw] capture_configuration
+    #   The capture settings for this instrumentation configuration.
+    #   @return [Types::CaptureConfiguration]
+    #
+    # @!attribute [rw] created_at
+    #   The timestamp when this instrumentation configuration was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] arn
+    #   ARN for the instrumentation configuration
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/InstrumentationConfigurationWithoutServiceEnv AWS API Documentation
+    #
+    class InstrumentationConfigurationWithoutServiceEnv < Struct.new(
+      :instrumentation_type,
+      :signal_type,
+      :location,
+      :location_hash,
+      :description,
+      :expires_at,
+      :attribute_filters,
+      :capture_configuration,
+      :created_at,
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] service
+    #   The service name associated with the returned configurations.
+    #   @return [String]
+    #
+    # @!attribute [rw] environment
+    #   The environment associated with the returned configurations.
+    #   @return [String]
+    #
+    # @!attribute [rw] changed
+    #   Indicates whether there are configuration changes since the provided
+    #   `SyncedAt` timestamp.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] latest_configurations
+    #   The current set of active instrumentation configurations for the
+    #   service and environment. Items omit service and environment because
+    #   they are provided in the request.
+    #   @return [Array<Types::InstrumentationConfigurationWithoutServiceEnv>]
+    #
+    # @!attribute [rw] synced_at
+    #   The server timestamp to supply on the next sync call.
+    #   @return [Time]
+    #
+    # @!attribute [rw] sync_interval
+    #   The suggested number of seconds to wait before the next sync
+    #   request. This is at least 60 seconds to prevent excessive polling.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   Pagination token to continue listing configurations when more
+    #   results are available.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/InstrumentationConfigurationsPage AWS API Documentation
+    #
+    class InstrumentationConfigurationsPage < Struct.new(
+      :service,
+      :environment,
+      :changed,
+      :latest_configurations,
+      :synced_at,
+      :sync_interval,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A status event for an instrumentation configuration returned by
+    # `GetInstrumentationConfigurationStatus`. Events include the timestamp
+    # and, for errors, an error cause.
+    #
+    # @!attribute [rw] time
+    #   The time when the status was reported, rounded to the nearest
+    #   minute.
+    #   @return [Time]
+    #
+    # @!attribute [rw] error_cause
+    #   The error cause when the status is `ERROR`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/InstrumentationStatusEvent AWS API Documentation
+    #
+    class InstrumentationStatusEvent < Struct.new(
+      :time,
+      :error_cause)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The time period used to evaluate the SLO. It can be either a calendar
     # interval or rolling interval.
     #
@@ -569,6 +2009,339 @@ module Aws::ApplicationSignals
       class RollingInterval < Interval; end
       class CalendarInterval < Interval; end
       class Unknown < Interval; end
+    end
+
+    # @!attribute [rw] start_time
+    #   The start of the time period to retrieve audit findings for. When
+    #   used in a raw HTTP Query API, it is formatted as epoch time in
+    #   seconds. For example, `1698778057`
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   The end of the time period to retrieve audit findings for. When used
+    #   in a raw HTTP Query API, it is formatted as epoch time in seconds.
+    #   For example, `1698778057`
+    #   @return [Time]
+    #
+    # @!attribute [rw] auditors
+    #   A list of auditor names to filter the findings by. Only findings
+    #   generated by the specified auditors will be returned.
+    #
+    #   The following auditors are available for configuration:
+    #
+    #   * `slo` - SloAuditor: Identifies SLO violations and detects breached
+    #     thresholds during the Assessment phase.
+    #
+    #   * `operation_metric` - OperationMetricAuditor: Detects anomalies in
+    #     service operation metrics from Application Signals RED metrics
+    #     during the Assessment phase
+    #
+    #     <note markdown="1"> Anomaly detection is not supported for sparse metrics (those
+    #     missing more than 80% of datapoints within the given time period).
+    #
+    #      </note>
+    #
+    #   * `service_quota` - ServiceQuotaAuditor: Monitors resource
+    #     utilization against service quotas during the Assessment phase
+    #
+    #   * `trace` - TraceAuditor: Performs deep-dive analysis of distributed
+    #     traces, correlating traces with breached SLOs or abnormal RED
+    #     metrics during the Analysis phase
+    #
+    #   * `dependency_metric` - CriticalPathAuditor: Analyzes service
+    #     dependency impacts and maps dependency relationships from
+    #     Application Signals RED metrics during the Analysis phase
+    #
+    #   * `top_contributor` - TopContributorAuditor: Identifies
+    #     infrastructure-level contributors to issues by analyzing EMF logs
+    #     of Application Signals RED metrics during the Analysis phase
+    #
+    #   * `log` - LogAuditor: Extracts insights from application logs,
+    #     categorizing error types and ranking severity by frequency during
+    #     the Analysis phase
+    #
+    #   * `change_indicator` - ChangeIndicatorAuditor: Detects change events
+    #     (deployments, configuration changes) that occurred within 10
+    #     minutes before and during a detected anomaly, and surfaces them as
+    #     findings with deployment timestamps in the Analysis phase. When
+    #     changes are detected, the `top_contributor` auditor skips its
+    #     analysis to avoid redundancy.
+    #
+    #   <note markdown="1"> `InitAuditor` and `Summarizer` auditors are not configurable as they
+    #   are automatically triggered during the audit process.
+    #
+    #    </note>
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] audit_targets
+    #   A list of audit targets to filter the findings by. You can specify
+    #   services, SLOs, or service operations to limit the audit findings to
+    #   specific entities.
+    #   @return [Array<Types::AuditTarget>]
+    #
+    # @!attribute [rw] detail_level
+    #   The level of details of the audit findings. Supported values:
+    #   `BRIEF`, `DETAILED`.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   Include this value, if it was returned by the previous operation, to
+    #   get the next set of audit findings.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of audit findings to return in one operation. If
+    #   you omit this parameter, the default of 10 is used.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ListAuditFindingsInput AWS API Documentation
+    #
+    class ListAuditFindingsInput < Struct.new(
+      :start_time,
+      :end_time,
+      :auditors,
+      :audit_targets,
+      :detail_level,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] start_time
+    #   The start of the time period that the returned audit findings apply
+    #   to. When used in a raw HTTP Query API, it is formatted as epoch time
+    #   in seconds. For example, `1698778057`
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   The end of the time period that the returned audit findings apply
+    #   to. When used in a raw HTTP Query API, it is formatted as epoch time
+    #   in seconds. For example, `1698778057`
+    #   @return [Time]
+    #
+    # @!attribute [rw] audit_findings
+    #   An array of structures, where each structure contains information
+    #   about one audit finding, including the auditor results, severity,
+    #   and associated metric and dependency graphs.
+    #   @return [Array<Types::AuditFinding>]
+    #
+    # @!attribute [rw] next_token
+    #   Include this value in your next use of this API to get the next set
+    #   of audit findings.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ListAuditFindingsOutput AWS API Documentation
+    #
+    class ListAuditFindingsOutput < Struct.new(
+      :start_time,
+      :end_time,
+      :audit_findings,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] entity
+    #   The entity for which to retrieve change events. This specifies the
+    #   service, resource, or other entity whose event history you want to
+    #   examine.
+    #
+    #   This is a string-to-string map. It can include the following fields.
+    #
+    #   * `Type` designates the type of object this is.
+    #
+    #   * `ResourceType` specifies the type of the resource. This field is
+    #     used only when the value of the `Type` field is `Resource` or
+    #     `AWS::Resource`.
+    #
+    #   * `Name` specifies the name of the object. This is used only if the
+    #     value of the `Type` field is `Service`, `RemoteService`, or
+    #     `AWS::Service`.
+    #
+    #   * `Identifier` identifies the resource objects of this resource.
+    #     This is used only if the value of the `Type` field is `Resource`
+    #     or `AWS::Resource`.
+    #
+    #   * `Environment` specifies the location where this object is hosted,
+    #     or what it belongs to.
+    #
+    #   * `AwsAccountId` specifies the account where this object is in.
+    #
+    #   Below is an example of a service.
+    #
+    #   `{ "Type": "Service", "Name": "visits-service", "Environment":
+    #   "petclinic-test" }`
+    #
+    #   Below is an example of a resource.
+    #
+    #   `{ "Type": "AWS::Resource", "ResourceType": "AWS::DynamoDB::Table",
+    #   "Identifier": "Customers" }`
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] start_time
+    #   The start of the time period to retrieve change events for. When
+    #   used in a raw HTTP Query API, it is formatted as epoch time in
+    #   seconds. For example: `1698778057`
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   The end of the time period to retrieve change events for. When used
+    #   in a raw HTTP Query API, it is formatted as epoch time in seconds.
+    #   For example: `1698778057`
+    #   @return [Time]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of change events to return in one operation. If
+    #   you omit this parameter, the default of 50 is used.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   Include this value, if it was returned by the previous operation, to
+    #   get the next set of change events.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ListEntityEventsInput AWS API Documentation
+    #
+    class ListEntityEventsInput < Struct.new(
+      :entity,
+      :start_time,
+      :end_time,
+      :max_results,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] start_time
+    #   The start of the time period that the returned change events apply
+    #   to. When used in a raw HTTP Query API, it is formatted as epoch time
+    #   in seconds. For example: `1698778057`
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   The end of the time period that the returned change events apply to.
+    #   When used in a raw HTTP Query API, it is formatted as epoch time in
+    #   seconds. For example: `1698778057`
+    #   @return [Time]
+    #
+    # @!attribute [rw] change_events
+    #   An array of structures, where each structure contains information
+    #   about one change event that occurred for the specified entity during
+    #   the requested time period.
+    #   @return [Array<Types::ChangeEvent>]
+    #
+    # @!attribute [rw] next_token
+    #   Include this value in your next use of this API to get the next set
+    #   of change events.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ListEntityEventsOutput AWS API Documentation
+    #
+    class ListEntityEventsOutput < Struct.new(
+      :start_time,
+      :end_time,
+      :change_events,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] next_token
+    #   Include this value, if it was returned by the previous operation, to
+    #   get the next set of grouping attribute definitions.
+    #   @return [String]
+    #
+    # @!attribute [rw] aws_account_id
+    #   The Amazon Web Services account ID to retrieve grouping attribute
+    #   definitions for. Use this when accessing grouping configurations
+    #   from a different account in cross-account monitoring scenarios.
+    #   @return [String]
+    #
+    # @!attribute [rw] include_linked_accounts
+    #   If you are using this operation in a monitoring account, specify
+    #   `true` to include grouping attributes from source accounts in the
+    #   returned data.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ListGroupingAttributeDefinitionsInput AWS API Documentation
+    #
+    class ListGroupingAttributeDefinitionsInput < Struct.new(
+      :next_token,
+      :aws_account_id,
+      :include_linked_accounts)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] grouping_attribute_definitions
+    #   An array of structures, where each structure contains information
+    #   about one grouping attribute definition, including the grouping
+    #   name, source keys, and default values.
+    #   @return [Array<Types::GroupingAttributeDefinition>]
+    #
+    # @!attribute [rw] updated_at
+    #   The timestamp when the grouping configuration was last updated. When
+    #   used in a raw HTTP Query API, it is formatted as epoch time in
+    #   seconds.
+    #   @return [Time]
+    #
+    # @!attribute [rw] next_token
+    #   Include this value in your next use of this API to get the next set
+    #   of grouping attribute definitions.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ListGroupingAttributeDefinitionsOutput AWS API Documentation
+    #
+    class ListGroupingAttributeDefinitionsOutput < Struct.new(
+      :grouping_attribute_definitions,
+      :updated_at,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] service
+    #   The name of the service to retrieve instrumentation configurations
+    #   for.
+    #   @return [String]
+    #
+    # @!attribute [rw] environment
+    #   The environment that the service is running in.
+    #   @return [String]
+    #
+    # @!attribute [rw] instrumentation_type
+    #   Type of instrumentation configuration (BREAKPOINT or PROBE).
+    #   Required to determine which backing store to query.
+    #   @return [String]
+    #
+    # @!attribute [rw] synced_at
+    #   The timestamp from the last successful sync. When provided, the
+    #   response returns `Changed` as `false` if nothing is new since this
+    #   time, or returns the latest configurations when changes exist.
+    #   @return [Time]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of configurations to return in one call. The
+    #   default is 50 and the maximum is 100.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   Use the token returned by a previous call to retrieve the next page
+    #   of configurations.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ListInstrumentationConfigurationsRequest AWS API Documentation
+    #
+    class ListInstrumentationConfigurationsRequest < Struct.new(
+      :service,
+      :environment,
+      :instrumentation_type,
+      :synced_at,
+      :max_results,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
     end
 
     # @!attribute [rw] start_time
@@ -785,12 +2558,12 @@ module Aws::ApplicationSignals
     #
     # @!attribute [rw] max_results
     #   The maximum number of results to return in one operation. If you
-    #   omit this parameter, the default of 50 is used.      </p>
+    #   omit this parameter, the default of 50 is used.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
     #   Include this value, if it was returned by the previous operation, to
-    #   get the next set of service level objectives.      </p>
+    #   get the next set of service level objectives.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ListServiceLevelObjectiveExclusionWindowsInput AWS API Documentation
@@ -809,7 +2582,7 @@ module Aws::ApplicationSignals
     #
     # @!attribute [rw] next_token
     #   Include this value, if it was returned by the previous operation, to
-    #   get the next set of service level objectives.      </p>
+    #   get the next set of service level objectives.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ListServiceLevelObjectiveExclusionWindowsOutput AWS API Documentation
@@ -849,6 +2622,11 @@ module Aws::ApplicationSignals
     #   The name of the operation that this SLO is associated with.
     #   @return [String]
     #
+    # @!attribute [rw] dependency_config
+    #   Identifies the dependency using the `DependencyKeyAttributes` and
+    #   `DependencyOperationName`.
+    #   @return [Types::DependencyConfig]
+    #
     # @!attribute [rw] max_results
     #   The maximum number of results to return in one operation. If you
     #   omit this parameter, the default of 50 is used.
@@ -859,29 +2637,54 @@ module Aws::ApplicationSignals
     #   get the next set of service level objectives.
     #   @return [String]
     #
+    # @!attribute [rw] metric_source_types
+    #   Use this optional field to only include SLOs with the specified
+    #   metric source types in the output. Supported types are:
+    #
+    #   * Service operation
+    #
+    #   * Service dependency
+    #
+    #   * Service
+    #
+    #   * CloudWatch metric
+    #
+    #   * AppMonitor
+    #
+    #   * Canary
+    #   @return [Array<String>]
+    #
     # @!attribute [rw] include_linked_accounts
     #   If you are using this operation in a monitoring account, specify
     #   `true` to include SLO from source accounts in the returned data.
-    #   </p> <p>When you are monitoring an account, you can use Amazon Web
-    #   Services account ID in <code>KeyAttribute</code> filter for service
-    #   source account and <code>SloOwnerawsaccountID</code> for SLO source
-    #   account with <code>IncludeLinkedAccounts</code> to filter the
-    #   returned data to only a single source account. </p>
+    #
+    #   When you are monitoring an account, you can use Amazon Web Services
+    #   account ID in `KeyAttribute` filter for service source account and
+    #   `SloOwnerawsaccountID` for SLO source account with
+    #   `IncludeLinkedAccounts` to filter the returned data to only a single
+    #   source account.
     #   @return [Boolean]
     #
     # @!attribute [rw] slo_owner_aws_account_id
     #   SLO's Amazon Web Services account ID.
     #   @return [String]
     #
+    # @!attribute [rw] metric_source
+    #   Identifies the metric source to filter SLOs by.
+    #   @return [Types::MetricSource]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ListServiceLevelObjectivesInput AWS API Documentation
     #
     class ListServiceLevelObjectivesInput < Struct.new(
       :key_attributes,
       :operation_name,
+      :dependency_config,
       :max_results,
       :next_token,
+      :metric_source_types,
       :include_linked_accounts,
-      :slo_owner_aws_account_id)
+      :slo_owner_aws_account_id,
+      :metric_source)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1010,6 +2813,92 @@ module Aws::ApplicationSignals
     end
 
     # @!attribute [rw] start_time
+    #   The start of the time period to retrieve service state information
+    #   for. When used in a raw HTTP Query API, it is formatted as epoch
+    #   time in seconds. For example, `1698778057`.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   The end of the time period to retrieve service state information
+    #   for. When used in a raw HTTP Query API, it is formatted as epoch
+    #   time in seconds. For example, `1698778057`.
+    #   @return [Time]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of service states to return in one operation. If
+    #   you omit this parameter, the default of 20 is used.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   Include this value, if it was returned by the previous operation, to
+    #   get the next set of service states.
+    #   @return [String]
+    #
+    # @!attribute [rw] include_linked_accounts
+    #   If you are using this operation in a monitoring account, specify
+    #   `true` to include service states from source accounts in the
+    #   returned data.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] aws_account_id
+    #   The Amazon Web Services account ID to filter service states by. Use
+    #   this to limit results to services from a specific account.
+    #   @return [String]
+    #
+    # @!attribute [rw] attribute_filters
+    #   A list of attribute filters to narrow down the services. You can
+    #   filter by platform, environment, or other service attributes.
+    #   @return [Array<Types::AttributeFilter>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ListServiceStatesInput AWS API Documentation
+    #
+    class ListServiceStatesInput < Struct.new(
+      :start_time,
+      :end_time,
+      :max_results,
+      :next_token,
+      :include_linked_accounts,
+      :aws_account_id,
+      :attribute_filters)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] start_time
+    #   The start of the time period that the returned information applies
+    #   to. When used in a raw HTTP Query API, it is formatted as epoch time
+    #   in seconds. For example, `1698778057`.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   The end of the time period that the returned information applies to.
+    #   When used in a raw HTTP Query API, it is formatted as epoch time in
+    #   seconds. For example, `1698778057`.
+    #   @return [Time]
+    #
+    # @!attribute [rw] service_states
+    #   An array of structures, where each structure contains information
+    #   about the state of one service, including its latest change events
+    #   such as deployments.
+    #   @return [Array<Types::ServiceState>]
+    #
+    # @!attribute [rw] next_token
+    #   Include this value in your next use of this API to get the next set
+    #   of service states.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ListServiceStatesOutput AWS API Documentation
+    #
+    class ListServiceStatesOutput < Struct.new(
+      :start_time,
+      :end_time,
+      :service_states,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] start_time
     #   The start of the time period to retrieve information about. When
     #   used in a raw HTTP Query API, it is formatted as be epoch time in
     #   seconds. For example: `1698778057`
@@ -1038,7 +2927,7 @@ module Aws::ApplicationSignals
     # @!attribute [rw] include_linked_accounts
     #   If you are using this operation in a monitoring account, specify
     #   `true` to include services from source accounts in the returned
-    #   data.      </p>
+    #   data.
     #   @return [Boolean]
     #
     # @!attribute [rw] aws_account_id
@@ -1139,6 +3028,60 @@ module Aws::ApplicationSignals
       :tags)
       SENSITIVE = []
       include Aws::Structure
+    end
+
+    # A union that identifies the location to instrument. Specify a
+    # `CodeLocation` for code-level instrumentation.
+    #
+    # @note Location is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @note Location is a union - when returned from an API call exactly one value will be set and the returned type will be a subclass of Location corresponding to the set member.
+    #
+    # @!attribute [rw] code_location
+    #   A code location for code-level instrumentation, including language,
+    #   code unit, class, method, file path, and optional line number.
+    #   @return [Types::CodeLocation]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/Location AWS API Documentation
+    #
+    class Location < Struct.new(
+      :code_location,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class CodeLocation < Location; end
+      class Unknown < Location; end
+    end
+
+    # Union type for identifying an instrumentation configuration by code
+    # location or locationHash. Used in Get/Delete/GetStatus operations to
+    # allow flexible identification.
+    #
+    # @note LocationIdentifier is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @!attribute [rw] code_location
+    #   The full code location specification (will be hashed internally)
+    #   @return [Types::CodeLocation]
+    #
+    # @!attribute [rw] location_hash
+    #   The pre-computed location hash (16-character hex string)
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/LocationIdentifier AWS API Documentation
+    #
+    class LocationIdentifier < Struct.new(
+      :code_location,
+      :location_hash,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class CodeLocation < LocationIdentifier; end
+      class LocationHash < LocationIdentifier; end
+      class Unknown < LocationIdentifier; end
     end
 
     # This structure defines the metric used for a service level indicator,
@@ -1303,6 +3246,35 @@ module Aws::ApplicationSignals
       include Aws::Structure
     end
 
+    # A structure that contains metric data queries and time range
+    # information that provides context for audit findings through relevant
+    # performance metrics.
+    #
+    # @!attribute [rw] metric_data_queries
+    #   An array of metric data queries that define the metrics to be
+    #   retrieved and analyzed as part of the audit finding context.
+    #   @return [Array<Types::MetricDataQuery>]
+    #
+    # @!attribute [rw] start_time
+    #   The start time for the metric data included in this graph. When used
+    #   in a raw HTTP Query API, it is formatted as epoch time in seconds.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   The end time for the metric data included in this graph. When used
+    #   in a raw HTTP Query API, it is formatted as epoch time in seconds.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/MetricGraph AWS API Documentation
+    #
+    class MetricGraph < Struct.new(
+      :metric_data_queries,
+      :start_time,
+      :end_time)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # This structure contains information about one CloudWatch metric
     # associated with this entity discovered by Application Signals.
     #
@@ -1345,6 +3317,26 @@ module Aws::ApplicationSignals
       :dimensions,
       :metric_name,
       :account_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Identifies the metric source for SLOs on resources other than
+    # Application Signals services.
+    #
+    # @!attribute [rw] metric_source_key_attributes
+    #   Key attributes that identify the metric source.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] metric_source_attributes
+    #   Additional attributes for the metric source.
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/MetricSource AWS API Documentation
+    #
+    class MetricSource < Struct.new(
+      :metric_source_key_attributes,
+      :metric_source_attributes)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1435,6 +3427,84 @@ module Aws::ApplicationSignals
       class Unknown < MonitoredRequestCountMetricDataQueries; end
     end
 
+    # A structure that represents a node in a dependency graph, containing
+    # information about a service, resource, or other entity and its
+    # characteristics.
+    #
+    # @!attribute [rw] key_attributes
+    #   The key attributes that identify this node, including Type, Name,
+    #   and Environment information.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] name
+    #   The name of the entity represented by this node.
+    #   @return [String]
+    #
+    # @!attribute [rw] node_id
+    #   A unique identifier for this node within the dependency graph.
+    #   @return [String]
+    #
+    # @!attribute [rw] operation
+    #   The operation associated with this node, if applicable.
+    #   @return [String]
+    #
+    # @!attribute [rw] type
+    #   The type of entity represented by this node, such as `Service` or
+    #   `Resource`.
+    #   @return [String]
+    #
+    # @!attribute [rw] duration
+    #   The duration or processing time associated with this node, if
+    #   applicable.
+    #   @return [Float]
+    #
+    # @!attribute [rw] status
+    #   The status of the entity represented by this node.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/Node AWS API Documentation
+    #
+    class Node < Struct.new(
+      :key_attributes,
+      :name,
+      :node_id,
+      :operation,
+      :type,
+      :duration,
+      :status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] grouping_attribute_definitions
+    #   An array of grouping attribute definitions that specify how services
+    #   should be grouped. Each definition includes a friendly name, source
+    #   keys to derive the grouping value from, and an optional default
+    #   value.
+    #   @return [Array<Types::GroupingAttributeDefinition>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/PutGroupingConfigurationInput AWS API Documentation
+    #
+    class PutGroupingConfigurationInput < Struct.new(
+      :grouping_attribute_definitions)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] grouping_configuration
+    #   A structure containing the updated grouping configuration, including
+    #   all grouping attribute definitions and the timestamp when it was
+    #   last updated.
+    #   @return [Types::GroupingConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/PutGroupingConfigurationOutput AWS API Documentation
+    #
+    class PutGroupingConfigurationOutput < Struct.new(
+      :grouping_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The recurrence rule for the SLO time window exclusion .
     #
     # @!attribute [rw] expression
@@ -1446,6 +3516,54 @@ module Aws::ApplicationSignals
     #
     class RecurrenceRule < Struct.new(
       :expression)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] service
+    #   The service that the reported configurations belong to.
+    #   @return [String]
+    #
+    # @!attribute [rw] environment
+    #   The environment that the service is running in.
+    #   @return [String]
+    #
+    # @!attribute [rw] configurations
+    #   An array of configuration status reports (up to 100) that include
+    #   the instrumentation type, signal type, location hash, status,
+    #   timestamp, and optional error cause.
+    #   @return [Array<Types::InstrumentationConfigurationStatusReport>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ReportInstrumentationConfigurationStatusRequest AWS API Documentation
+    #
+    class ReportInstrumentationConfigurationStatusRequest < Struct.new(
+      :service,
+      :environment,
+      :configurations)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] service
+    #   The service name echoed from the request.
+    #   @return [String]
+    #
+    # @!attribute [rw] environment
+    #   The environment echoed from the request.
+    #   @return [String]
+    #
+    # @!attribute [rw] unprocessed_status_events
+    #   Status events that failed to be processed. Each entry includes the
+    #   configuration identifiers, status, timestamp, and a reason for the
+    #   failure.
+    #   @return [Array<Types::UnprocessedStatusEvent>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ReportInstrumentationConfigurationStatusResponse AWS API Documentation
+    #
+    class ReportInstrumentationConfigurationStatusResponse < Struct.new(
+      :service,
+      :environment,
+      :unprocessed_status_events)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1560,6 +3678,21 @@ module Aws::ApplicationSignals
     #   tracks.
     #   @return [Types::MonitoredRequestCountMetricDataQueries]
     #
+    # @!attribute [rw] dependency_config
+    #   Identifies the dependency using the `DependencyKeyAttributes` and
+    #   `DependencyOperationName`.
+    #   @return [Types::DependencyConfig]
+    #
+    # @!attribute [rw] metric_source
+    #   Identifies the metric source for SLOs on resources other than
+    #   Application Signals services.
+    #   @return [Types::MetricSource]
+    #
+    # @!attribute [rw] composite_sli_config
+    #   The composite SLI configuration for service-level SLOs that monitor
+    #   multiple operations of a service.
+    #   @return [Types::CompositeSliConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/RequestBasedServiceLevelIndicatorMetric AWS API Documentation
     #
     class RequestBasedServiceLevelIndicatorMetric < Struct.new(
@@ -1567,7 +3700,10 @@ module Aws::ApplicationSignals
       :operation_name,
       :metric_type,
       :total_request_count_metric,
-      :monitored_request_count_metric)
+      :monitored_request_count_metric,
+      :dependency_config,
+      :metric_source,
+      :composite_sli_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1628,6 +3764,26 @@ module Aws::ApplicationSignals
     #   successful requests that this SLO tracks.
     #   @return [Types::MonitoredRequestCountMetricDataQueries]
     #
+    # @!attribute [rw] dependency_config
+    #   Identifies the dependency using the `DependencyKeyAttributes` and
+    #   `DependencyOperationName`.
+    #   @return [Types::DependencyConfig]
+    #
+    # @!attribute [rw] metric_source
+    #   Identifies the metric source for SLOs on resources other than
+    #   Application Signals services.
+    #   @return [Types::MetricSource]
+    #
+    # @!attribute [rw] metric_name
+    #   The name of the metric for SLOs on resources other than Application
+    #   Signals services.
+    #   @return [String]
+    #
+    # @!attribute [rw] composite_sli_config
+    #   The composite SLI configuration for service-level SLOs that monitor
+    #   multiple operations of a service.
+    #   @return [Types::CompositeSliConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/RequestBasedServiceLevelIndicatorMetricConfig AWS API Documentation
     #
     class RequestBasedServiceLevelIndicatorMetricConfig < Struct.new(
@@ -1635,7 +3791,11 @@ module Aws::ApplicationSignals
       :operation_name,
       :metric_type,
       :total_request_count_metric,
-      :monitored_request_count_metric)
+      :monitored_request_count_metric,
+      :dependency_config,
+      :metric_source,
+      :metric_name,
+      :composite_sli_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1681,6 +3841,41 @@ module Aws::ApplicationSignals
     class RollingInterval < Struct.new(
       :duration_unit,
       :duration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Defines how operations are selected for a service-level SLO.
+    #
+    # @!attribute [rw] type
+    #   The strategy for selecting operations to include in a service-level
+    #   SLO.
+    #
+    #   * `EXPLICIT` — You provide a specific list of operations in the
+    #     `Components` field of `CompositeSliConfig`.
+    #
+    #   * `PREFIX` — You provide a prefix string in the `Pattern` field of
+    #     `SelectionConfig`, and all operations whose names start with the
+    #     prefix are included.
+    #
+    #   * `REGEX` — You provide a regular expression in the `Pattern` field
+    #     of `SelectionConfig`, and all operations whose names match the
+    #     pattern are included.
+    #   @return [String]
+    #
+    # @!attribute [rw] pattern
+    #   A prefix string or regular expression that specifies which
+    #   operations to include in a service-level SLO. When `SelectionType`
+    #   is `PREFIX`, this value is a prefix string that matches the
+    #   beginning of operation names. When `SelectionType` is `REGEX`, this
+    #   value is a regular expression that matches operation names.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/SelectionConfig AWS API Documentation
+    #
+    class SelectionConfig < Struct.new(
+      :type,
+      :pattern)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1762,6 +3957,11 @@ module Aws::ApplicationSignals
     #     of telemetry data.
     #   @return [Array<Hash<String,String>>]
     #
+    # @!attribute [rw] service_groups
+    #   An array of service groups that this service belongs to, based on
+    #   the configured grouping attributes.
+    #   @return [Array<Types::ServiceGroup>]
+    #
     # @!attribute [rw] metric_references
     #   An array of structures that each contain information about one
     #   metric associated with this service.
@@ -1784,6 +3984,7 @@ module Aws::ApplicationSignals
     class Service < Struct.new(
       :key_attributes,
       :attribute_maps,
+      :service_groups,
       :metric_references,
       :log_group_references)
       SENSITIVE = []
@@ -1893,6 +4094,71 @@ module Aws::ApplicationSignals
       include Aws::Structure
     end
 
+    # A structure that contains identifying information for a service
+    # entity.
+    #
+    # @!attribute [rw] type
+    #   The type of the service entity.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The name of the service.
+    #   @return [String]
+    #
+    # @!attribute [rw] environment
+    #   The environment where the service is deployed.
+    #   @return [String]
+    #
+    # @!attribute [rw] aws_account_id
+    #   The Amazon Web Services account ID where the service is located.
+    #   Provide this value only for cross-account access.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ServiceEntity AWS API Documentation
+    #
+    class ServiceEntity < Struct.new(
+      :type,
+      :name,
+      :environment,
+      :aws_account_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A structure that represents a logical grouping of services based on
+    # shared attributes such as business unit, environment, or entry point.
+    #
+    # @!attribute [rw] group_name
+    #   The name of the grouping attribute, such as `BusinessUnit` or
+    #   `Environment`.
+    #   @return [String]
+    #
+    # @!attribute [rw] group_value
+    #   The value of the grouping attribute for this service, such as
+    #   `Payments` or `Production`.
+    #   @return [String]
+    #
+    # @!attribute [rw] group_source
+    #   The source of the grouping attribute, such as `TAG`, `OTEL`, or
+    #   `DEFAULT`.
+    #   @return [String]
+    #
+    # @!attribute [rw] group_identifier
+    #   A unique identifier for this grouping attribute value, used for
+    #   filtering and API operations.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ServiceGroup AWS API Documentation
+    #
+    class ServiceGroup < Struct.new(
+      :group_name,
+      :group_value,
+      :group_source,
+      :group_identifier)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # This structure contains information about the performance metric that
     # a period-based SLO monitors.
     #
@@ -1931,11 +4197,15 @@ module Aws::ApplicationSignals
     #   This parameter is used only when a request-based SLO tracks the
     #   `Latency` metric. Specify the threshold value that the observed
     #   `Latency` metric values are to be compared to.
+    #
+    #   This is not required if `CreateRecommendedSlo` is set to `true`.
     #   @return [Float]
     #
     # @!attribute [rw] comparison_operator
     #   The arithmetic operation to use when comparing the specified metric
     #   to the threshold.
+    #
+    #   This is not required if `CreateRecommendedSlo` is set to `true`.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ServiceLevelIndicatorConfig AWS API Documentation
@@ -1991,13 +4261,31 @@ module Aws::ApplicationSignals
     #   information about that metric or expression.
     #   @return [Array<Types::MetricDataQuery>]
     #
+    # @!attribute [rw] dependency_config
+    #   Identifies the dependency using the `DependencyKeyAttributes` and
+    #   `DependencyOperationName`.
+    #   @return [Types::DependencyConfig]
+    #
+    # @!attribute [rw] metric_source
+    #   Identifies the metric source for SLOs on resources other than
+    #   Application Signals services.
+    #   @return [Types::MetricSource]
+    #
+    # @!attribute [rw] composite_sli_config
+    #   The composite SLI configuration for service-level SLOs that monitor
+    #   multiple operations of a service.
+    #   @return [Types::CompositeSliConfig]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ServiceLevelIndicatorMetric AWS API Documentation
     #
     class ServiceLevelIndicatorMetric < Struct.new(
       :key_attributes,
       :operation_name,
       :metric_type,
-      :metric_data_queries)
+      :metric_data_queries,
+      :dependency_config,
+      :metric_source,
+      :composite_sli_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2042,6 +4330,11 @@ module Aws::ApplicationSignals
     #   which of those metrics is used.
     #   @return [String]
     #
+    # @!attribute [rw] metric_name
+    #   The name of the CloudWatch metric to use for the SLO, when using a
+    #   custom metric rather than Application Signals standard metrics.
+    #   @return [String]
+    #
     # @!attribute [rw] statistic
     #   The statistic to use for comparison to the threshold. It can be any
     #   CloudWatch statistic or extended statistic. For more information
@@ -2059,11 +4352,26 @@ module Aws::ApplicationSignals
     #   either achieved or not achieved the necessary performance.
     #   @return [Integer]
     #
+    # @!attribute [rw] metric_source
+    #   Identifies the metric source for SLOs on resources other than
+    #   Application Signals services.
+    #   @return [Types::MetricSource]
+    #
     # @!attribute [rw] metric_data_queries
     #   If this SLO monitors a CloudWatch metric or the result of a
     #   CloudWatch metric math expression, use this structure to specify
     #   that metric or expression.
     #   @return [Array<Types::MetricDataQuery>]
+    #
+    # @!attribute [rw] dependency_config
+    #   Identifies the dependency using the `DependencyKeyAttributes` and
+    #   `DependencyOperationName`.
+    #   @return [Types::DependencyConfig]
+    #
+    # @!attribute [rw] composite_sli_config
+    #   The composite SLI configuration for service-level SLOs that monitor
+    #   multiple operations of a service.
+    #   @return [Types::CompositeSliConfig]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ServiceLevelIndicatorMetricConfig AWS API Documentation
     #
@@ -2071,9 +4379,13 @@ module Aws::ApplicationSignals
       :key_attributes,
       :operation_name,
       :metric_type,
+      :metric_name,
       :statistic,
       :period_seconds,
-      :metric_data_queries)
+      :metric_source,
+      :metric_data_queries,
+      :dependency_config,
+      :composite_sli_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2138,6 +4450,28 @@ module Aws::ApplicationSignals
     #   relative to the attainment goal of the SLO.
     #   @return [Array<Types::BurnRateConfiguration>]
     #
+    # @!attribute [rw] metric_source_type
+    #   Displays the SLI metric source type for this SLO. Supported types
+    #   are:
+    #
+    #   * Service operation
+    #
+    #   * Service dependency
+    #
+    #   * Service
+    #
+    #   * CloudWatch metric
+    #
+    #   * AppMonitor
+    #
+    #   * Canary
+    #   @return [String]
+    #
+    # @!attribute [rw] auto_investigation_enabled
+    #   Indicates whether DevOps Agent will automatically investigate this
+    #   SLO when it is breached
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ServiceLevelObjective AWS API Documentation
     #
     class ServiceLevelObjective < Struct.new(
@@ -2150,7 +4484,9 @@ module Aws::ApplicationSignals
       :request_based_sli,
       :evaluation_type,
       :goal,
-      :burn_rate_configurations)
+      :burn_rate_configurations,
+      :metric_source_type,
+      :auto_investigation_enabled)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2310,6 +4646,27 @@ module Aws::ApplicationSignals
       include Aws::Structure
     end
 
+    # A structure that contains identifying information for a service level
+    # objective entity.
+    #
+    # @!attribute [rw] slo_name
+    #   The name of the service level objective.
+    #   @return [String]
+    #
+    # @!attribute [rw] slo_arn
+    #   The ARN of the service level objective. The SLO must be provided
+    #   with ARN for cross-account access.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ServiceLevelObjectiveEntity AWS API Documentation
+    #
+    class ServiceLevelObjectiveEntity < Struct.new(
+      :slo_name,
+      :slo_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # A structure that contains information about one service level
     # objective (SLO) created in Application Signals.
     #
@@ -2348,11 +4705,47 @@ module Aws::ApplicationSignals
     #   this field displays the name of that operation.
     #   @return [String]
     #
+    # @!attribute [rw] dependency_config
+    #   Identifies the dependency using the `DependencyKeyAttributes` and
+    #   `DependencyOperationName`.
+    #   @return [Types::DependencyConfig]
+    #
     # @!attribute [rw] created_time
     #   The date and time that this service level objective was created. It
     #   is expressed as the number of milliseconds since Jan 1, 1970
     #   00:00:00 UTC.
     #   @return [Time]
+    #
+    # @!attribute [rw] evaluation_type
+    #   Displays whether this is a period-based SLO or a request-based SLO.
+    #   @return [String]
+    #
+    # @!attribute [rw] metric_source_type
+    #   Displays the SLI metric source type for this SLO. Supported types
+    #   are:
+    #
+    #   * Service operation
+    #
+    #   * Service dependency
+    #
+    #   * Service
+    #
+    #   * CloudWatch metric
+    #
+    #   * AppMonitor
+    #
+    #   * Canary
+    #   @return [String]
+    #
+    # @!attribute [rw] metric_source
+    #   Identifies the metric source for SLOs on resources other than
+    #   Application Signals services.
+    #   @return [Types::MetricSource]
+    #
+    # @!attribute [rw] composite_sli_config
+    #   The composite SLI configuration for service-level SLOs that monitor
+    #   multiple operations of a service.
+    #   @return [Types::CompositeSliConfig]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ServiceLevelObjectiveSummary AWS API Documentation
     #
@@ -2361,7 +4754,12 @@ module Aws::ApplicationSignals
       :name,
       :key_attributes,
       :operation_name,
-      :created_time)
+      :dependency_config,
+      :created_time,
+      :evaluation_type,
+      :metric_source_type,
+      :metric_source,
+      :composite_sli_config)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2390,6 +4788,31 @@ module Aws::ApplicationSignals
       include Aws::Structure
     end
 
+    # A structure that contains identifying information for a service
+    # operation entity.
+    #
+    # @!attribute [rw] service
+    #   The service entity that contains this operation.
+    #   @return [Types::ServiceEntity]
+    #
+    # @!attribute [rw] operation
+    #   The name of the operation.
+    #   @return [String]
+    #
+    # @!attribute [rw] metric_type
+    #   The type of metric associated with this service operation.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ServiceOperationEntity AWS API Documentation
+    #
+    class ServiceOperationEntity < Struct.new(
+      :service,
+      :operation,
+      :metric_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # This request exceeds a service quota.
     #
     # @!attribute [rw] message
@@ -2399,6 +4822,36 @@ module Aws::ApplicationSignals
     #
     class ServiceQuotaExceededException < Struct.new(
       :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A structure that contains information about the current state of a
+    # service, including its latest change events such as deployments and
+    # other state-changing activities.
+    #
+    # @!attribute [rw] attribute_filters
+    #   The attribute filters that were applied when retrieving this service
+    #   state information.
+    #   @return [Array<Types::AttributeFilter>]
+    #
+    # @!attribute [rw] service
+    #   The key attributes that identify this service, including Type, Name,
+    #   and Environment information.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] latest_change_events
+    #   An array containing the most recent change events for this service,
+    #   such as deployments, with information about when they occurred and
+    #   who initiated them.
+    #   @return [Array<Types::ChangeEvent>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ServiceState AWS API Documentation
+    #
+    class ServiceState < Struct.new(
+      :attribute_filters,
+      :service,
+      :latest_change_events)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2487,12 +4940,18 @@ module Aws::ApplicationSignals
     #   metric associated with this service.
     #   @return [Array<Types::MetricReference>]
     #
+    # @!attribute [rw] service_groups
+    #   An array of service groups that this service belongs to, based on
+    #   the configured grouping attributes.
+    #   @return [Array<Types::ServiceGroup>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/ServiceSummary AWS API Documentation
     #
     class ServiceSummary < Struct.new(
       :key_attributes,
       :attribute_maps,
-      :metric_references)
+      :metric_references,
+      :service_groups)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2574,6 +5033,48 @@ module Aws::ApplicationSignals
       include Aws::Structure
     end
 
+    # A status event that could not be processed by the service.
+    #
+    # @!attribute [rw] instrumentation_type
+    #   The type of instrumentation configuration for the unprocessed status
+    #   event.
+    #   @return [String]
+    #
+    # @!attribute [rw] signal_type
+    #   The telemetry signal type for the unprocessed status event.
+    #   @return [String]
+    #
+    # @!attribute [rw] location_hash
+    #   The stable hash of the instrumentation location for the unprocessed
+    #   event.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The status that failed to be processed.
+    #   @return [String]
+    #
+    # @!attribute [rw] time
+    #   The timestamp of the status event that failed to be processed.
+    #   @return [Time]
+    #
+    # @!attribute [rw] failed_reason
+    #   The reason why this status event could not be processed, such as
+    #   throttling or validation errors.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/UnprocessedStatusEvent AWS API Documentation
+    #
+    class UnprocessedStatusEvent < Struct.new(
+      :instrumentation_type,
+      :signal_type,
+      :location_hash,
+      :status,
+      :time,
+      :failed_reason)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] resource_arn
     #   The Amazon Resource Name (ARN) of the CloudWatch resource that you
     #   want to delete tags from.
@@ -2641,6 +5142,11 @@ module Aws::ApplicationSignals
     #   error budget, relative to the attainment goal of the SLO.
     #   @return [Array<Types::BurnRateConfiguration>]
     #
+    # @!attribute [rw] auto_investigation_enabled
+    #   Indicates whether DevOps Agent will automatically investigate this
+    #   SLO when it is breached
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/application-signals-2024-04-15/UpdateServiceLevelObjectiveInput AWS API Documentation
     #
     class UpdateServiceLevelObjectiveInput < Struct.new(
@@ -2649,7 +5155,8 @@ module Aws::ApplicationSignals
       :sli_config,
       :request_based_sli_config,
       :goal,
-      :burn_rate_configurations)
+      :burn_rate_configurations,
+      :auto_investigation_enabled)
       SENSITIVE = []
       include Aws::Structure
     end

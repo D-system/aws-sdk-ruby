@@ -7,6 +7,7 @@
     "DeleteCampaignChannelSubtypeConfig": "<p>Deletes the channel subtype config of a campaign. This API is idempotent.</p>",
     "DeleteCampaignCommunicationLimits": "<p>Deletes the communication limits config for a campaign. This API is idempotent.</p>",
     "DeleteCampaignCommunicationTime": "<p>Deletes the communication time config for a campaign. This API is idempotent.</p>",
+    "DeleteCampaignEntryLimits": "<p>Deletes the entry limits config for a campaign. This API is idempotent.</p>",
     "DeleteConnectInstanceConfig": "<p>Deletes a connect instance config from the specified AWS account.</p>",
     "DeleteConnectInstanceIntegration": "<p>Delete the integration for the specified Amazon Connect instance.</p>",
     "DeleteInstanceOnboardingJob": "<p>Delete the Connect Campaigns onboarding job for the specified Amazon Connect instance.</p>",
@@ -14,12 +15,14 @@
     "GetCampaignState": "<p>Get state of a campaign for the specified Amazon Connect account.</p>",
     "GetCampaignStateBatch": "<p>Get state of campaigns for the specified Amazon Connect account.</p>",
     "GetConnectInstanceConfig": "<p>Get the specific Connect instance config.</p>",
+    "GetInstanceCommunicationLimits": "<p>Get the instance communication limits.</p>",
     "GetInstanceOnboardingJobStatus": "<p>Get the specific instance onboarding job status.</p>",
     "ListCampaigns": "<p>Provides summary information about the campaigns under the specified Amazon Connect account.</p>",
     "ListConnectInstanceIntegrations": "<p>Provides summary information about the integration under the specified Connect instance.</p>",
     "ListTagsForResource": "<p>List tags for a resource.</p>",
     "PauseCampaign": "<p>Pauses a campaign for the specified Amazon Connect account.</p>",
     "PutConnectInstanceIntegration": "<p>Put or update the integration for the specified Amazon Connect instance.</p>",
+    "PutInstanceCommunicationLimits": "<p>Put the instance communication limits. This API is idempotent.</p>",
     "PutOutboundRequestBatch": "<p>Creates outbound requests for the specified campaign Amazon Connect account. This API is idempotent.</p>",
     "PutProfileOutboundRequestBatch": "<p>Takes in a list of profile outbound requests to be placed as part of an outbound campaign. This API is idempotent.</p>",
     "ResumeCampaign": "<p>Stops a campaign for the specified Amazon Connect account.</p>",
@@ -31,15 +34,39 @@
     "UpdateCampaignChannelSubtypeConfig": "<p>Updates the channel subtype config of a campaign. This API is idempotent.</p>",
     "UpdateCampaignCommunicationLimits": "<p>Updates the communication limits config for a campaign. This API is idempotent.</p>",
     "UpdateCampaignCommunicationTime": "<p>Updates the communication time config for a campaign. This API is idempotent.</p>",
+    "UpdateCampaignEntryLimits": "<p>Updates the entry limits config for a campaign. This API is idempotent.</p>",
     "UpdateCampaignFlowAssociation": "<p>Updates the campaign flow associated with a campaign. This API is idempotent.</p>",
     "UpdateCampaignName": "<p>Updates the name of a campaign. This API is idempotent.</p>",
     "UpdateCampaignSchedule": "<p>Updates the schedule for a campaign. This API is idempotent.</p>",
     "UpdateCampaignSource": "<p>Updates the campaign source with a campaign. This API is idempotent.</p>"
   },
   "shapes": {
+    "AbandonmentRatePacingConfig": {
+      "base": "<p>Configuration for abandonment-rate-based dialer throttling.</p>",
+      "refs": {
+        "PacingStrategy$abandonmentRate": null
+      }
+    },
+    "AbandonmentRatePacingConfigConnectionThresholdSecondsInteger": {
+      "base": null,
+      "refs": {
+        "AbandonmentRatePacingConfig$connectionThresholdSeconds": "<p>Seconds after connectionStartPoint before a contact counts as abandoned.</p>"
+      }
+    },
     "AccessDeniedException": {
       "base": "<p>You do not have sufficient access to perform this action.</p>",
+      "refs": {}
+    },
+    "AgentAction": {
+      "base": "<p>Actions that can performed on a contact by an agent</p>",
       "refs": {
+        "AgentActions$member": null
+      }
+    },
+    "AgentActions": {
+      "base": "<p>Actions that can be performed by agent during preview phase.</p>",
+      "refs": {
+        "PreviewConfig$agentActions": null
       }
     },
     "AgentlessConfig": {
@@ -47,7 +74,8 @@
       "refs": {
         "EmailOutboundMode$agentless": null,
         "SmsOutboundMode$agentless": null,
-        "TelephonyOutboundMode$agentless": null
+        "TelephonyOutboundMode$agentless": null,
+        "WhatsAppOutboundMode$agentless": null
       }
     },
     "AnswerMachineDetectionConfig": {
@@ -80,7 +108,11 @@
         "Source$customerProfilesSegmentArn": null,
         "TagResourceRequest$arn": null,
         "UntagResourceRequest$arn": null,
-        "UpdateCampaignFlowAssociationRequest$connectCampaignFlowArn": null
+        "UpdateCampaignFlowAssociationRequest$connectCampaignFlowArn": null,
+        "WhatsAppChannelSubtypeParameters$connectSourcePhoneNumberArn": null,
+        "WhatsAppChannelSubtypeParameters$templateArn": null,
+        "WhatsAppOutboundConfig$connectSourcePhoneNumberArn": null,
+        "WhatsAppOutboundConfig$wisdomTemplateArn": null
       }
     },
     "AttributeName": {
@@ -100,13 +132,15 @@
       "refs": {
         "EmailChannelSubtypeParameters$templateParameters": null,
         "SmsChannelSubtypeParameters$templateParameters": null,
-        "TelephonyChannelSubtypeParameters$attributes": null
+        "TelephonyChannelSubtypeParameters$attributes": null,
+        "WhatsAppChannelSubtypeParameters$templateParameters": null
       }
     },
     "BandwidthAllocation": {
       "base": "<p>The bandwidth allocation of a queue resource.</p>",
       "refs": {
         "PredictiveConfig$bandwidthAllocation": null,
+        "PreviewConfig$bandwidthAllocation": null,
         "ProgressiveConfig$bandwidthAllocation": null
       }
     },
@@ -115,6 +149,12 @@
       "refs": {
         "AnswerMachineDetectionConfig$enableAnswerMachineDetection": "<p>Enable or disable answering machine detection</p>",
         "AnswerMachineDetectionConfig$awaitAnswerMachinePrompt": "<p>Enable or disable await answer machine prompt</p>"
+      }
+    },
+    "BrowserId": {
+      "base": "<p>Browser Id for web notification event trigger</p>",
+      "refs": {
+        "WebNotificationContext$browserId": null
       }
     },
     "Campaign": {
@@ -152,6 +192,7 @@
         "DeleteCampaignChannelSubtypeConfigRequest$id": null,
         "DeleteCampaignCommunicationLimitsRequest$id": null,
         "DeleteCampaignCommunicationTimeRequest$id": null,
+        "DeleteCampaignEntryLimitsRequest$id": null,
         "DeleteCampaignRequest$id": null,
         "DescribeCampaignRequest$id": null,
         "FailedCampaignStateResponse$campaignId": null,
@@ -167,6 +208,7 @@
         "UpdateCampaignChannelSubtypeConfigRequest$id": null,
         "UpdateCampaignCommunicationLimitsRequest$id": null,
         "UpdateCampaignCommunicationTimeRequest$id": null,
+        "UpdateCampaignEntryLimitsRequest$id": null,
         "UpdateCampaignFlowAssociationRequest$id": null,
         "UpdateCampaignNameRequest$id": null,
         "UpdateCampaignScheduleRequest$id": null,
@@ -207,7 +249,14 @@
       "refs": {
         "EmailChannelSubtypeConfig$capacity": null,
         "SmsChannelSubtypeConfig$capacity": null,
-        "TelephonyChannelSubtypeConfig$capacity": null
+        "TelephonyChannelSubtypeConfig$capacity": null,
+        "WhatsAppChannelSubtypeConfig$capacity": null
+      }
+    },
+    "ChannelContext": {
+      "base": "<p>Additional metadata related to the event trigger context</p>",
+      "refs": {
+        "EventTriggerContext$channelContext": null
       }
     },
     "ChannelSubtype": {
@@ -281,7 +330,8 @@
     "CommunicationLimits": {
       "base": "<p>Communication limits</p>",
       "refs": {
-        "CommunicationLimitsConfig$allChannelSubtypes": null
+        "CommunicationLimitsConfig$allChannelSubtypes": null,
+        "InstanceCommunicationLimitsConfig$allChannelSubtypes": null
       }
     },
     "CommunicationLimitsConfig": {
@@ -314,7 +364,12 @@
     },
     "ConflictException": {
       "base": "<p>The request could not be processed because of conflict in the current state of the resource.</p>",
+      "refs": {}
+    },
+    "ConnectionStartPoint": {
+      "base": "<p>Reference point against which the connection threshold is measured.</p>",
       "refs": {
+        "AbandonmentRatePacingConfig$connectionStartPoint": "<p>Event from which connectionThresholdSeconds is measured.</p>"
       }
     },
     "ContactFlowId": {
@@ -325,13 +380,11 @@
     },
     "CreateCampaignRequest": {
       "base": "<p>The request for CreateCampaign API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CreateCampaignResponse": {
       "base": "<p>The response for Create Campaign API</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "CustomerProfilesIntegrationConfig": {
       "base": "<p>Customer Profiles integration config</p>",
@@ -365,54 +418,50 @@
     },
     "DeleteCampaignChannelSubtypeConfigRequest": {
       "base": "<p>The request for DeleteCampaignChannelSubtypeConfig API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteCampaignCommunicationLimitsRequest": {
       "base": "<p>The request for DeleteCampaignCommunicationLimits API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteCampaignCommunicationTimeRequest": {
       "base": "<p>The request for DeleteCampaignCommunicationTime API.</p>",
-      "refs": {
-      }
+      "refs": {}
+    },
+    "DeleteCampaignEntryLimitsRequest": {
+      "base": "<p>The request for DeleteCampaignEntryLimits API.</p>",
+      "refs": {}
     },
     "DeleteCampaignRequest": {
       "base": "<p>The request for DeleteCampaign API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteConnectInstanceConfigRequest": {
       "base": "<p>The request for DeleteConnectInstanceConfig API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteConnectInstanceIntegrationRequest": {
       "base": "<p>The request for DeleteConnectInstanceIntegration API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DeleteInstanceOnboardingJobRequest": {
       "base": "<p>The request for DeleteInstanceOnboardingJob API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeCampaignRequest": {
       "base": "<p>The request for DescribeCampaign API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DescribeCampaignResponse": {
       "base": "<p>The response for DescribeCampaign API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "DestinationPhoneNumber": {
       "base": "<p>The phone number of the customer, in E.164 format.</p>",
       "refs": {
         "SmsChannelSubtypeParameters$destinationPhoneNumber": null,
-        "TelephonyChannelSubtypeParameters$destinationPhoneNumber": null
+        "TelephonyChannelSubtypeParameters$destinationPhoneNumber": null,
+        "WhatsAppChannelSubtypeParameters$destinationPhoneNumber": null
       }
     },
     "DialRequestId": {
@@ -485,16 +534,51 @@
         "EncryptionConfig$encryptionType": null
       }
     },
+    "EntryLimitsConfig": {
+      "base": "<p>Campaign entry limits config</p>",
+      "refs": {
+        "Campaign$entryLimitsConfig": null,
+        "CampaignSummary$entryLimitsConfig": null,
+        "CreateCampaignRequest$entryLimitsConfig": null,
+        "UpdateCampaignEntryLimitsRequest$entryLimitsConfig": null
+      }
+    },
+    "EntryLimitsConfigMaxEntryCountInteger": {
+      "base": null,
+      "refs": {
+        "EntryLimitsConfig$maxEntryCount": "<p>Maximum number of times a participant can enter the campaign. A value of 0 indicates unlimited entries. Values of 1 or greater specify the exact number of entries allowed.</p>"
+      }
+    },
+    "EvaluationWindow": {
+      "base": "<p>Rolling window over which abandonmentRate is computed. Range PT1H to PT24H.</p>",
+      "refs": {
+        "AbandonmentRatePacingConfig$evaluationWindow": "<p>Rolling window over which abandonmentRate is computed.</p>"
+      }
+    },
     "EventTrigger": {
       "base": "<p>Event trigger of the campaign</p>",
       "refs": {
         "Source$eventTrigger": null
       }
     },
+    "EventTriggerContext": {
+      "base": "<p>Event trigger context data</p>",
+      "refs": {
+        "ProfileOutboundRequest$eventTriggerContext": null
+      }
+    },
     "EventType": {
       "base": "<p>Enumeration of Customer Profiles event type</p>",
       "refs": {
         "ObjectTypeNamesMap$key": null
+      }
+    },
+    "ExternalCampaignType": {
+      "base": "<p>The type of campaign externally exposed in APIs.</p>",
+      "refs": {
+        "Campaign$type": null,
+        "CampaignSummary$type": null,
+        "CreateCampaignRequest$type": null
       }
     },
     "FailedCampaignStateResponse": {
@@ -547,8 +631,7 @@
     },
     "GetCampaignStateBatchRequest": {
       "base": "<p>The request for GetCampaignStateBatch API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetCampaignStateBatchRequestCampaignIdsList": {
       "base": "<p>List of CampaignId</p>",
@@ -558,37 +641,45 @@
     },
     "GetCampaignStateBatchResponse": {
       "base": "<p>The response for GetCampaignStateBatch API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetCampaignStateRequest": {
       "base": "<p>The request for GetCampaignState API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetCampaignStateResponse": {
       "base": "<p>The response for GetCampaignState API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetConnectInstanceConfigRequest": {
       "base": "<p>The request for GetConnectInstanceConfig API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetConnectInstanceConfigResponse": {
       "base": "<p>The response for GetConnectInstanceConfig API.</p>",
-      "refs": {
-      }
+      "refs": {}
+    },
+    "GetInstanceCommunicationLimitsRequest": {
+      "base": "<p>The request for GetInstanceCommunicationLimits API.</p>",
+      "refs": {}
+    },
+    "GetInstanceCommunicationLimitsResponse": {
+      "base": "<p>The response for GetInstanceCommunicationLimits API.</p>",
+      "refs": {}
     },
     "GetInstanceOnboardingJobStatusRequest": {
       "base": "<p>The request for GetInstanceOnboardingJobStatus API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "GetInstanceOnboardingJobStatusResponse": {
       "base": "<p>The response for GetInstanceOnboardingJobStatus API.</p>",
+      "refs": {}
+    },
+    "InstanceCommunicationLimitsConfig": {
+      "base": "<p>Instance Communication limits config</p>",
       "refs": {
+        "GetInstanceCommunicationLimitsResponse$communicationLimitsConfig": null,
+        "PutInstanceCommunicationLimitsRequest$communicationLimitsConfig": null
       }
     },
     "InstanceConfig": {
@@ -607,12 +698,14 @@
         "DeleteConnectInstanceIntegrationRequest$connectInstanceId": null,
         "DeleteInstanceOnboardingJobRequest$connectInstanceId": null,
         "GetConnectInstanceConfigRequest$connectInstanceId": null,
+        "GetInstanceCommunicationLimitsRequest$connectInstanceId": null,
         "GetInstanceOnboardingJobStatusRequest$connectInstanceId": null,
         "InstanceConfig$connectInstanceId": null,
         "InstanceIdFilter$value": null,
         "InstanceOnboardingJobStatus$connectInstanceId": null,
         "ListConnectInstanceIntegrationsRequest$connectInstanceId": null,
         "PutConnectInstanceIntegrationRequest$connectInstanceId": null,
+        "PutInstanceCommunicationLimitsRequest$connectInstanceId": null,
         "StartInstanceOnboardingJobRequest$connectInstanceId": null
       }
     },
@@ -626,6 +719,12 @@
       "base": "<p>Operators for Connect instance identifier filter</p>",
       "refs": {
         "InstanceIdFilter$operator": null
+      }
+    },
+    "InstanceLimitsHandling": {
+      "base": "<p>Instance limits handling</p>",
+      "refs": {
+        "CommunicationLimitsConfig$instanceLimitsHandling": null
       }
     },
     "InstanceOnboardingJobFailureCode": {
@@ -673,18 +772,15 @@
     },
     "InternalServerException": {
       "base": "<p>Request processing failed because of an error or failure with the service.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidCampaignStateException": {
       "base": "<p>The request could not be processed because of conflict in the current state of the campaign.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "InvalidStateException": {
       "base": "<p>The request could not be processed because of conflict in the current state.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "Iso8601Date": {
       "base": "<p>Date in ISO 8601 format, e.g. 2024-01-01</p>",
@@ -696,6 +792,7 @@
     "Iso8601Duration": {
       "base": "<p>Time duration in ISO 8601 format</p>",
       "refs": {
+        "EntryLimitsConfig$minEntryInterval": "<p>Minimum time interval that must pass before a participant can enter the campaign again.</p>",
         "Schedule$refreshFrequency": null
       }
     },
@@ -706,35 +803,55 @@
         "TimeRange$endTime": null
       }
     },
+    "LambdaArn": {
+      "base": "<p>Lambda ARN for integration with Connect instances</p>",
+      "refs": {
+        "LambdaIntegrationConfig$functionArn": null,
+        "LambdaIntegrationIdentifier$functionArn": null,
+        "LambdaIntegrationSummary$functionArn": null
+      }
+    },
+    "LambdaIntegrationConfig": {
+      "base": "<p>Lambda integration config</p>",
+      "refs": {
+        "IntegrationConfig$lambda": null
+      }
+    },
+    "LambdaIntegrationIdentifier": {
+      "base": "<p>Lambda integration identifier</p>",
+      "refs": {
+        "IntegrationIdentifier$lambda": null
+      }
+    },
+    "LambdaIntegrationSummary": {
+      "base": "<p>Lambda integration summary</p>",
+      "refs": {
+        "IntegrationSummary$lambda": null
+      }
+    },
     "ListCampaignsRequest": {
       "base": "<p>The request for ListCampaigns API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListCampaignsResponse": {
       "base": "<p>The response for ListCampaigns API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListConnectInstanceIntegrationsRequest": {
       "base": "<p>The request for ListConnectInstanceIntegrations API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListConnectInstanceIntegrationsResponse": {
       "base": "<p>The response for ListConnectInstanceIntegrations API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListTagsForResourceRequest": {
       "base": "<p>The request for ListTagsForResource API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ListTagsForResourceResponse": {
       "base": "<p>The request for ListTagsForResource API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "LocalTimeZoneConfig": {
       "base": "<p>Local time zone config</p>",
@@ -746,6 +863,12 @@
       "base": "<p>Local TimeZone Detection method list</p>",
       "refs": {
         "LocalTimeZoneConfig$localTimeZoneDetection": null
+      }
+    },
+    "LocalTimeZoneDetectionScope": {
+      "base": "<p>Local TimeZone Detection scope.</p>",
+      "refs": {
+        "LocalTimeZoneConfig$localTimeZoneDetectionScope": null
       }
     },
     "LocalTimeZoneDetectionType": {
@@ -801,15 +924,32 @@
         "PutOutboundRequestBatchRequest$outboundRequests": null
       }
     },
+    "PacingStrategy": {
+      "base": "<p>Pacing constraint the dialer may enforce.</p>",
+      "refs": {
+        "PacingStrategyList$member": null
+      }
+    },
+    "PacingStrategyList": {
+      "base": "<p>List of pacing strategies the dialer enforces simultaneously.</p>",
+      "refs": {
+        "PredictiveConfig$pacingStrategies": "<p>Pacing strategies the dialer enforces simultaneously.</p>"
+      }
+    },
     "PauseCampaignRequest": {
       "base": "<p>The request for PauseCampaign API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "PredictiveConfig": {
       "base": "<p>Predictive config</p>",
       "refs": {
         "TelephonyOutboundMode$predictive": null
+      }
+    },
+    "PreviewConfig": {
+      "base": "<p>Preview config</p>",
+      "refs": {
+        "TelephonyOutboundMode$preview": null
       }
     },
     "ProfileId": {
@@ -851,28 +991,27 @@
     },
     "PutConnectInstanceIntegrationRequest": {
       "base": "<p>The request for PutConnectInstanceIntegration API.</p>",
-      "refs": {
-      }
+      "refs": {}
+    },
+    "PutInstanceCommunicationLimitsRequest": {
+      "base": "<p>The request for PutInstanceCommunicationLimits API.</p>",
+      "refs": {}
     },
     "PutOutboundRequestBatchRequest": {
       "base": "<p>The request for PutOutboundRequestBatch API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "PutOutboundRequestBatchResponse": {
       "base": "<p>The response for PutOutboundRequestBatch API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "PutProfileOutboundRequestBatchRequest": {
       "base": "<p>The request for PutProfileOutboundRequestBatch API</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "PutProfileOutboundRequestBatchResponse": {
       "base": "<p>The response for PutProfileOutboundRequestBatch API</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "QConnectIntegrationConfig": {
       "base": "<p>Q Connect integration config</p>",
@@ -900,8 +1039,7 @@
     },
     "ResourceNotFoundException": {
       "base": "<p>The specified resource was not found.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "RestrictedPeriod": {
       "base": "<p>Restricted period</p>",
@@ -929,7 +1067,13 @@
     },
     "ResumeCampaignRequest": {
       "base": "<p>The request for ResumeCampaign API.</p>",
+      "refs": {}
+    },
+    "RingTimeout": {
+      "base": "<p>Ring timeout for outbound calls</p>",
       "refs": {
+        "TelephonyChannelSubtypeParameters$ringTimeout": null,
+        "TelephonyOutboundConfig$ringTimeout": null
       }
     },
     "Schedule": {
@@ -949,7 +1093,12 @@
     },
     "ServiceQuotaExceededException": {
       "base": "<p>Request would cause a service quota to be exceeded.</p>",
+      "refs": {}
+    },
+    "SessionId": {
+      "base": "<p>Session Id for web notification event trigger</p>",
       "refs": {
+        "WebNotificationContext$sessionId": null
       }
     },
     "SmsChannelSubtypeConfig": {
@@ -984,6 +1133,12 @@
         "UpdateCampaignSourceRequest$source": null
       }
     },
+    "SourceEvent": {
+      "base": "<p>Source event object for event triggers</p>",
+      "refs": {
+        "EventTriggerContext$sourceEvent": null
+      }
+    },
     "SourcePhoneNumber": {
       "base": "<p>The phone number associated with the Amazon Connect instance, in E.164 format. If you do not specify a source phone number, you must specify a queue.</p>",
       "refs": {
@@ -993,23 +1148,19 @@
     },
     "StartCampaignRequest": {
       "base": "<p>The request for StartCampaign API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "StartInstanceOnboardingJobRequest": {
       "base": "<p>The request for StartInstanceOnboardingJob API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "StartInstanceOnboardingJobResponse": {
       "base": "<p>The response for StartInstanceOnboardingJob API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "StopCampaignRequest": {
       "base": "<p>The request for StopCampaign API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "String": {
       "base": null,
@@ -1086,13 +1237,18 @@
     },
     "TagResourceRequest": {
       "base": "<p>The request for TagResource API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "TagValue": {
       "base": "<p>The value of tag.</p>",
       "refs": {
         "TagMap$value": null
+      }
+    },
+    "TargetRate": {
+      "base": "<p>Target abandonment rate.</p>",
+      "refs": {
+        "AbandonmentRatePacingConfig$targetRate": null
       }
     },
     "TelephonyChannelSubtypeConfig": {
@@ -1121,8 +1277,7 @@
     },
     "ThrottlingException": {
       "base": "<p>The request was denied due to request throttling.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "TimeRange": {
       "base": "<p>Time range in 24 hour format</p>",
@@ -1150,7 +1305,8 @@
       "refs": {
         "CommunicationTimeConfig$telephony": null,
         "CommunicationTimeConfig$sms": null,
-        "CommunicationTimeConfig$email": null
+        "CommunicationTimeConfig$email": null,
+        "CommunicationTimeConfig$whatsApp": null
       }
     },
     "TimeZone": {
@@ -1159,49 +1315,86 @@
         "LocalTimeZoneConfig$defaultTimeZone": null
       }
     },
+    "TimeoutConfig": {
+      "base": "<p>Timeout Config for preview contacts.</p>",
+      "refs": {
+        "PreviewConfig$timeoutConfig": null
+      }
+    },
+    "TimeoutDuration": {
+      "base": "<p>Timeout duration for a preview contact in seconds.</p>",
+      "refs": {
+        "TimeoutConfig$durationInSeconds": null
+      }
+    },
     "UntagResourceRequest": {
       "base": "<p>The request for UntagResource API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateCampaignChannelSubtypeConfigRequest": {
       "base": "<p>The request for UpdateCampaignChannelSubtypeConfig API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateCampaignCommunicationLimitsRequest": {
       "base": "<p>The request for UpdateCampaignCommunicationLimits API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateCampaignCommunicationTimeRequest": {
       "base": "<p>The request for UpdateCampaignCommunicationTime API.</p>",
-      "refs": {
-      }
+      "refs": {}
+    },
+    "UpdateCampaignEntryLimitsRequest": {
+      "base": "<p>The request for UpdateCampaignEntryLimits API.</p>",
+      "refs": {}
     },
     "UpdateCampaignFlowAssociationRequest": {
       "base": "<p>The request for UpdateCampaignFlowAssociation API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateCampaignNameRequest": {
       "base": "<p>The request for UpdateCampaignName API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateCampaignScheduleRequest": {
       "base": "<p>The request for UpdateCampaignSchedule API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "UpdateCampaignSourceRequest": {
       "base": "<p>The request for UpdateCampaignSource API.</p>",
-      "refs": {
-      }
+      "refs": {}
     },
     "ValidationException": {
       "base": "<p>The input fails to satisfy the constraints specified by an AWS service.</p>",
+      "refs": {}
+    },
+    "WebNotificationContext": {
+      "base": "<p>Context metadata for the web notification type channel</p>",
       "refs": {
+        "ChannelContext$webNotificationContext": null
+      }
+    },
+    "WhatsAppChannelSubtypeConfig": {
+      "base": "<p>WhatsApp Channel Subtype config</p>",
+      "refs": {
+        "ChannelSubtypeConfig$whatsApp": null
+      }
+    },
+    "WhatsAppChannelSubtypeParameters": {
+      "base": "<p>Parameters for the WhatsApp Channel Subtype</p>",
+      "refs": {
+        "ChannelSubtypeParameters$whatsApp": null
+      }
+    },
+    "WhatsAppOutboundConfig": {
+      "base": "<p>Default WhatsApp Outbound config</p>",
+      "refs": {
+        "WhatsAppChannelSubtypeConfig$defaultOutboundConfig": null
+      }
+    },
+    "WhatsAppOutboundMode": {
+      "base": "<p>WhatsApp Outbound Mode</p>",
+      "refs": {
+        "WhatsAppChannelSubtypeConfig$outboundMode": null
       }
     },
     "XAmazonErrorType": {

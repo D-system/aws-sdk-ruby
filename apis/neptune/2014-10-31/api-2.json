@@ -155,7 +155,8 @@
         {"shape":"DBInstanceNotFoundFault"},
         {"shape":"DBSubnetGroupDoesNotCoverEnoughAZs"},
         {"shape":"GlobalClusterNotFoundFault"},
-        {"shape":"InvalidGlobalClusterStateFault"}
+        {"shape":"InvalidGlobalClusterStateFault"},
+        {"shape":"NetworkTypeNotSupportedFault"}
       ]
     },
     "CreateDBClusterEndpoint":{
@@ -817,7 +818,8 @@
         {"shape":"InvalidDBSecurityGroupStateFault"},
         {"shape":"InvalidDBInstanceStateFault"},
         {"shape":"DBClusterAlreadyExistsFault"},
-        {"shape":"StorageTypeNotSupportedFault"}
+        {"shape":"StorageTypeNotSupportedFault"},
+        {"shape":"NetworkTypeNotSupportedFault"}
       ]
     },
     "ModifyDBClusterEndpoint":{
@@ -970,7 +972,10 @@
       },
       "errors":[
         {"shape":"GlobalClusterNotFoundFault"},
-        {"shape":"InvalidGlobalClusterStateFault"}
+        {"shape":"GlobalClusterAlreadyExistsFault"},
+        {"shape":"InvalidGlobalClusterStateFault"},
+        {"shape":"InvalidDBClusterStateFault"},
+        {"shape":"InvalidDBInstanceStateFault"}
       ]
     },
     "PromoteReadReplicaDBCluster":{
@@ -1125,7 +1130,8 @@
         {"shape":"InvalidSubnet"},
         {"shape":"OptionGroupNotFoundFault"},
         {"shape":"KMSKeyNotAccessibleFault"},
-        {"shape":"DBClusterParameterGroupNotFoundFault"}
+        {"shape":"DBClusterParameterGroupNotFoundFault"},
+        {"shape":"NetworkTypeNotSupportedFault"}
       ]
     },
     "RestoreDBClusterToPointInTime":{
@@ -1156,7 +1162,8 @@
         {"shape":"KMSKeyNotAccessibleFault"},
         {"shape":"OptionGroupNotFoundFault"},
         {"shape":"StorageQuotaExceededFault"},
-        {"shape":"DBClusterParameterGroupNotFoundFault"}
+        {"shape":"DBClusterParameterGroupNotFoundFault"},
+        {"shape":"NetworkTypeNotSupportedFault"}
       ]
     },
     "StartDBCluster":{
@@ -1191,6 +1198,24 @@
         {"shape":"DBClusterNotFoundFault"},
         {"shape":"InvalidDBClusterStateFault"},
         {"shape":"InvalidDBInstanceStateFault"}
+      ]
+    },
+    "SwitchoverGlobalCluster":{
+      "name":"SwitchoverGlobalCluster",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"SwitchoverGlobalClusterMessage"},
+      "output":{
+        "shape":"SwitchoverGlobalClusterResult",
+        "resultWrapper":"SwitchoverGlobalClusterResult"
+      },
+      "errors":[
+        {"shape":"GlobalClusterNotFoundFault"},
+        {"shape":"InvalidGlobalClusterStateFault"},
+        {"shape":"InvalidDBClusterStateFault"},
+        {"shape":"DBClusterNotFoundFault"}
       ]
     }
   },
@@ -1270,8 +1295,7 @@
     },
     "AuthorizationNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"AuthorizationNotFound",
         "httpStatusCode":404,
@@ -1304,8 +1328,7 @@
     "BooleanOptional":{"type":"boolean"},
     "CertificateNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"CertificateNotFound",
         "httpStatusCode":404,
@@ -1337,7 +1360,8 @@
         "BackupRetentionPeriod":{"shape":"IntegerOptional"},
         "StorageType":{"shape":"String"},
         "AllocatedStorage":{"shape":"IntegerOptional"},
-        "Iops":{"shape":"IntegerOptional"}
+        "Iops":{"shape":"IntegerOptional"},
+        "NetworkType":{"shape":"String"}
       }
     },
     "CopyDBClusterParameterGroupMessage":{
@@ -1466,7 +1490,8 @@
         "DeletionProtection":{"shape":"BooleanOptional"},
         "ServerlessV2ScalingConfiguration":{"shape":"ServerlessV2ScalingConfiguration"},
         "GlobalClusterIdentifier":{"shape":"GlobalClusterIdentifier"},
-        "StorageType":{"shape":"String"}
+        "StorageType":{"shape":"String"},
+        "NetworkType":{"shape":"String"}
       }
     },
     "CreateDBClusterParameterGroupMessage":{
@@ -1545,10 +1570,7 @@
         "Iops":{"shape":"IntegerOptional"},
         "OptionGroupName":{"shape":"String"},
         "CharacterSetName":{"shape":"String"},
-        "PubliclyAccessible":{
-          "shape":"BooleanOptional",
-          "deprecated":true
-        },
+        "PubliclyAccessible":{"shape":"BooleanOptional"},
         "Tags":{"shape":"TagList"},
         "DBClusterIdentifier":{"shape":"String"},
         "StorageType":{"shape":"String"},
@@ -1647,6 +1669,8 @@
         "Engine":{"shape":"String"},
         "EngineVersion":{"shape":"String"},
         "DeletionProtection":{"shape":"BooleanOptional"},
+        "DatabaseName":{"shape":"String"},
+        "Tags":{"shape":"TagList"},
         "StorageEncrypted":{"shape":"BooleanOptional"}
       }
     },
@@ -1703,14 +1727,14 @@
         "ServerlessV2ScalingConfiguration":{"shape":"ServerlessV2ScalingConfigurationInfo"},
         "GlobalClusterIdentifier":{"shape":"GlobalClusterIdentifier"},
         "IOOptimizedNextAllowedModificationTime":{"shape":"TStamp"},
-        "StorageType":{"shape":"String"}
+        "StorageType":{"shape":"String"},
+        "NetworkType":{"shape":"String"}
       },
       "wrapper":true
     },
     "DBClusterAlreadyExistsFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DBClusterAlreadyExistsFault",
         "httpStatusCode":400,
@@ -1735,8 +1759,7 @@
     },
     "DBClusterEndpointAlreadyExistsFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DBClusterEndpointAlreadyExistsFault",
         "httpStatusCode":400,
@@ -1760,8 +1783,7 @@
     },
     "DBClusterEndpointNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DBClusterEndpointNotFoundFault",
         "httpStatusCode":400,
@@ -1771,8 +1793,7 @@
     },
     "DBClusterEndpointQuotaExceededFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DBClusterEndpointQuotaExceededFault",
         "httpStatusCode":403,
@@ -1813,8 +1834,7 @@
     },
     "DBClusterNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DBClusterNotFoundFault",
         "httpStatusCode":404,
@@ -1868,8 +1888,7 @@
     },
     "DBClusterParameterGroupNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DBClusterParameterGroupNotFound",
         "httpStatusCode":404,
@@ -1886,8 +1905,7 @@
     },
     "DBClusterQuotaExceededFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DBClusterQuotaExceededFault",
         "httpStatusCode":403,
@@ -1905,8 +1923,7 @@
     },
     "DBClusterRoleAlreadyExistsFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DBClusterRoleAlreadyExists",
         "httpStatusCode":400,
@@ -1916,8 +1933,7 @@
     },
     "DBClusterRoleNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DBClusterRoleNotFound",
         "httpStatusCode":404,
@@ -1927,8 +1943,7 @@
     },
     "DBClusterRoleQuotaExceededFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DBClusterRoleQuotaExceeded",
         "httpStatusCode":400,
@@ -1972,8 +1987,7 @@
     },
     "DBClusterSnapshotAlreadyExistsFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DBClusterSnapshotAlreadyExistsFault",
         "httpStatusCode":400,
@@ -2019,8 +2033,7 @@
     },
     "DBClusterSnapshotNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DBClusterSnapshotNotFoundFault",
         "httpStatusCode":404,
@@ -2093,10 +2106,7 @@
         "OptionGroupMemberships":{"shape":"OptionGroupMembershipList"},
         "CharacterSetName":{"shape":"String"},
         "SecondaryAvailabilityZone":{"shape":"String"},
-        "PubliclyAccessible":{
-          "shape":"Boolean",
-          "deprecated":true
-        },
+        "PubliclyAccessible":{"shape":"Boolean"},
         "StatusInfos":{"shape":"DBInstanceStatusInfoList"},
         "StorageType":{"shape":"String"},
         "TdeCredentialArn":{"shape":"String"},
@@ -2118,14 +2128,14 @@
         "PerformanceInsightsEnabled":{"shape":"BooleanOptional"},
         "PerformanceInsightsKMSKeyId":{"shape":"String"},
         "EnabledCloudwatchLogsExports":{"shape":"LogTypeList"},
-        "DeletionProtection":{"shape":"BooleanOptional"}
+        "DeletionProtection":{"shape":"BooleanOptional"},
+        "NetworkType":{"shape":"String"}
       },
       "wrapper":true
     },
     "DBInstanceAlreadyExistsFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DBInstanceAlreadyExists",
         "httpStatusCode":400,
@@ -2149,8 +2159,7 @@
     },
     "DBInstanceNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DBInstanceNotFound",
         "httpStatusCode":404,
@@ -2186,8 +2195,7 @@
     },
     "DBParameterGroupAlreadyExistsFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DBParameterGroupAlreadyExists",
         "httpStatusCode":400,
@@ -2217,8 +2225,7 @@
     },
     "DBParameterGroupNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DBParameterGroupNotFound",
         "httpStatusCode":404,
@@ -2228,8 +2235,7 @@
     },
     "DBParameterGroupQuotaExceededFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DBParameterGroupQuotaExceeded",
         "httpStatusCode":400,
@@ -2281,8 +2287,7 @@
     },
     "DBSecurityGroupNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DBSecurityGroupNotFound",
         "httpStatusCode":404,
@@ -2292,8 +2297,7 @@
     },
     "DBSnapshotAlreadyExistsFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DBSnapshotAlreadyExists",
         "httpStatusCode":400,
@@ -2303,8 +2307,7 @@
     },
     "DBSnapshotNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DBSnapshotNotFound",
         "httpStatusCode":404,
@@ -2320,14 +2323,14 @@
         "VpcId":{"shape":"String"},
         "SubnetGroupStatus":{"shape":"String"},
         "Subnets":{"shape":"SubnetList"},
-        "DBSubnetGroupArn":{"shape":"String"}
+        "DBSubnetGroupArn":{"shape":"String"},
+        "SupportedNetworkTypes":{"shape":"StringList"}
       },
       "wrapper":true
     },
     "DBSubnetGroupAlreadyExistsFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DBSubnetGroupAlreadyExists",
         "httpStatusCode":400,
@@ -2337,8 +2340,7 @@
     },
     "DBSubnetGroupDoesNotCoverEnoughAZs":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DBSubnetGroupDoesNotCoverEnoughAZs",
         "httpStatusCode":400,
@@ -2355,8 +2357,7 @@
     },
     "DBSubnetGroupNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DBSubnetGroupNotFoundFault",
         "httpStatusCode":404,
@@ -2366,8 +2367,7 @@
     },
     "DBSubnetGroupQuotaExceededFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DBSubnetGroupQuotaExceeded",
         "httpStatusCode":400,
@@ -2384,8 +2384,7 @@
     },
     "DBSubnetQuotaExceededFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DBSubnetQuotaExceededFault",
         "httpStatusCode":400,
@@ -2395,8 +2394,7 @@
     },
     "DBUpgradeDependencyFailureFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DBUpgradeDependencyFailure",
         "httpStatusCode":400,
@@ -2757,8 +2755,7 @@
     },
     "DomainNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"DomainNotFoundFault",
         "httpStatusCode":404,
@@ -2863,8 +2860,7 @@
     },
     "EventSubscriptionQuotaExceededFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"EventSubscriptionQuotaExceeded",
         "httpStatusCode":400,
@@ -2914,7 +2910,9 @@
       ],
       "members":{
         "GlobalClusterIdentifier":{"shape":"GlobalClusterIdentifier"},
-        "TargetDbClusterIdentifier":{"shape":"String"}
+        "TargetDbClusterIdentifier":{"shape":"String"},
+        "AllowDataLoss":{"shape":"BooleanOptional"},
+        "Switchover":{"shape":"BooleanOptional"}
       }
     },
     "FailoverGlobalClusterResult":{
@@ -2922,6 +2920,24 @@
       "members":{
         "GlobalCluster":{"shape":"GlobalCluster"}
       }
+    },
+    "FailoverState":{
+      "type":"structure",
+      "members":{
+        "Status":{"shape":"FailoverStatus"},
+        "FromDbClusterArn":{"shape":"String"},
+        "ToDbClusterArn":{"shape":"String"},
+        "IsDataLossAllowed":{"shape":"Boolean"}
+      },
+      "wrapper":true
+    },
+    "FailoverStatus":{
+      "type":"string",
+      "enum":[
+        "pending",
+        "failing-over",
+        "cancelling"
+      ]
     },
     "Filter":{
       "type":"structure",
@@ -2957,16 +2973,18 @@
         "Status":{"shape":"String"},
         "Engine":{"shape":"String"},
         "EngineVersion":{"shape":"String"},
+        "DatabaseName":{"shape":"String"},
         "StorageEncrypted":{"shape":"BooleanOptional"},
         "DeletionProtection":{"shape":"BooleanOptional"},
-        "GlobalClusterMembers":{"shape":"GlobalClusterMemberList"}
+        "GlobalClusterMembers":{"shape":"GlobalClusterMemberList"},
+        "FailoverState":{"shape":"FailoverState"},
+        "TagList":{"shape":"TagList"}
       },
       "wrapper":true
     },
     "GlobalClusterAlreadyExistsFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"GlobalClusterAlreadyExistsFault",
         "httpStatusCode":400,
@@ -3005,8 +3023,7 @@
     },
     "GlobalClusterNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"GlobalClusterNotFoundFault",
         "httpStatusCode":404,
@@ -3016,8 +3033,7 @@
     },
     "GlobalClusterQuotaExceededFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"GlobalClusterQuotaExceededFault",
         "httpStatusCode":400,
@@ -3034,8 +3050,7 @@
     },
     "InstanceQuotaExceededFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InstanceQuotaExceeded",
         "httpStatusCode":400,
@@ -3045,8 +3060,7 @@
     },
     "InsufficientDBClusterCapacityFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InsufficientDBClusterCapacityFault",
         "httpStatusCode":403,
@@ -3056,8 +3070,7 @@
     },
     "InsufficientDBInstanceCapacityFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InsufficientDBInstanceCapacity",
         "httpStatusCode":400,
@@ -3067,8 +3080,7 @@
     },
     "InsufficientStorageClusterCapacityFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InsufficientStorageClusterCapacity",
         "httpStatusCode":400,
@@ -3080,8 +3092,7 @@
     "IntegerOptional":{"type":"integer"},
     "InvalidDBClusterEndpointStateFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidDBClusterEndpointStateFault",
         "httpStatusCode":400,
@@ -3091,8 +3102,7 @@
     },
     "InvalidDBClusterSnapshotStateFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidDBClusterSnapshotStateFault",
         "httpStatusCode":400,
@@ -3102,8 +3112,7 @@
     },
     "InvalidDBClusterStateFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidDBClusterStateFault",
         "httpStatusCode":400,
@@ -3113,8 +3122,7 @@
     },
     "InvalidDBInstanceStateFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidDBInstanceState",
         "httpStatusCode":400,
@@ -3124,8 +3132,7 @@
     },
     "InvalidDBParameterGroupStateFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidDBParameterGroupState",
         "httpStatusCode":400,
@@ -3135,8 +3142,7 @@
     },
     "InvalidDBSecurityGroupStateFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidDBSecurityGroupState",
         "httpStatusCode":400,
@@ -3146,8 +3152,7 @@
     },
     "InvalidDBSnapshotStateFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidDBSnapshotState",
         "httpStatusCode":400,
@@ -3157,8 +3162,7 @@
     },
     "InvalidDBSubnetGroupStateFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidDBSubnetGroupStateFault",
         "httpStatusCode":400,
@@ -3168,8 +3172,7 @@
     },
     "InvalidDBSubnetStateFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidDBSubnetStateFault",
         "httpStatusCode":400,
@@ -3179,8 +3182,7 @@
     },
     "InvalidEventSubscriptionStateFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidEventSubscriptionState",
         "httpStatusCode":400,
@@ -3190,8 +3192,7 @@
     },
     "InvalidGlobalClusterStateFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidGlobalClusterStateFault",
         "httpStatusCode":400,
@@ -3201,8 +3202,7 @@
     },
     "InvalidRestoreFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidRestoreFault",
         "httpStatusCode":400,
@@ -3212,8 +3212,7 @@
     },
     "InvalidSubnet":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidSubnet",
         "httpStatusCode":400,
@@ -3223,8 +3222,7 @@
     },
     "InvalidVPCNetworkStateFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"InvalidVPCNetworkStateFault",
         "httpStatusCode":400,
@@ -3234,8 +3232,7 @@
     },
     "KMSKeyNotAccessibleFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"KMSKeyNotAccessibleFault",
         "httpStatusCode":400,
@@ -3307,7 +3304,8 @@
         "DeletionProtection":{"shape":"BooleanOptional"},
         "CopyTagsToSnapshot":{"shape":"BooleanOptional"},
         "ServerlessV2ScalingConfiguration":{"shape":"ServerlessV2ScalingConfiguration"},
-        "StorageType":{"shape":"String"}
+        "StorageType":{"shape":"String"},
+        "NetworkType":{"shape":"String"}
       }
     },
     "ModifyDBClusterParameterGroupMessage":{
@@ -3378,10 +3376,7 @@
         "CopyTagsToSnapshot":{"shape":"BooleanOptional"},
         "MonitoringInterval":{"shape":"IntegerOptional"},
         "DBPortNumber":{"shape":"IntegerOptional"},
-        "PubliclyAccessible":{
-          "shape":"BooleanOptional",
-          "deprecated":true
-        },
+        "PubliclyAccessible":{"shape":"BooleanOptional"},
         "MonitoringRoleArn":{"shape":"String"},
         "DomainIAMRoleName":{"shape":"String"},
         "PromotionTier":{"shape":"IntegerOptional"},
@@ -3461,6 +3456,16 @@
         "GlobalCluster":{"shape":"GlobalCluster"}
       }
     },
+    "NetworkTypeNotSupportedFault":{
+      "type":"structure",
+      "members":{},
+      "error":{
+        "code":"NetworkTypeNotSupported",
+        "httpStatusCode":400,
+        "senderFault":true
+      },
+      "exception":true
+    },
     "OptionGroupMembership":{
       "type":"structure",
       "members":{
@@ -3477,8 +3482,7 @@
     },
     "OptionGroupNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"OptionGroupNotFoundFault",
         "httpStatusCode":404,
@@ -3509,7 +3513,8 @@
         "MaxIopsPerDbInstance":{"shape":"IntegerOptional"},
         "MinIopsPerGib":{"shape":"DoubleOptional"},
         "MaxIopsPerGib":{"shape":"DoubleOptional"},
-        "SupportsGlobalDatabases":{"shape":"Boolean"}
+        "SupportsGlobalDatabases":{"shape":"Boolean"},
+        "SupportedNetworkTypes":{"shape":"StringList"}
       },
       "wrapper":true
     },
@@ -3622,8 +3627,7 @@
     },
     "ProvisionedIopsNotAvailableInAZFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"ProvisionedIopsNotAvailableInAZFault",
         "httpStatusCode":400,
@@ -3762,8 +3766,7 @@
     },
     "ResourceNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"ResourceNotFoundFault",
         "httpStatusCode":404,
@@ -3805,7 +3808,8 @@
         "DeletionProtection":{"shape":"BooleanOptional"},
         "CopyTagsToSnapshot":{"shape":"BooleanOptional"},
         "ServerlessV2ScalingConfiguration":{"shape":"ServerlessV2ScalingConfiguration"},
-        "StorageType":{"shape":"String"}
+        "StorageType":{"shape":"String"},
+        "NetworkType":{"shape":"String"}
       }
     },
     "RestoreDBClusterFromSnapshotResult":{
@@ -3837,7 +3841,8 @@
         "DBClusterParameterGroupName":{"shape":"String"},
         "DeletionProtection":{"shape":"BooleanOptional"},
         "ServerlessV2ScalingConfiguration":{"shape":"ServerlessV2ScalingConfiguration"},
-        "StorageType":{"shape":"String"}
+        "StorageType":{"shape":"String"},
+        "NetworkType":{"shape":"String"}
       }
     },
     "RestoreDBClusterToPointInTimeResult":{
@@ -3848,8 +3853,7 @@
     },
     "SNSInvalidTopicFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"SNSInvalidTopic",
         "httpStatusCode":400,
@@ -3859,8 +3863,7 @@
     },
     "SNSNoAuthorizationFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"SNSNoAuthorization",
         "httpStatusCode":400,
@@ -3870,8 +3873,7 @@
     },
     "SNSTopicArnNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"SNSTopicArnNotFound",
         "httpStatusCode":404,
@@ -3899,8 +3901,7 @@
     },
     "SharedSnapshotQuotaExceededFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"SharedSnapshotQuotaExceeded",
         "httpStatusCode":400,
@@ -3910,8 +3911,7 @@
     },
     "SnapshotQuotaExceededFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"SnapshotQuotaExceeded",
         "httpStatusCode":400,
@@ -3928,8 +3928,7 @@
     },
     "SourceNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"SourceNotFound",
         "httpStatusCode":404,
@@ -3976,8 +3975,7 @@
     },
     "StorageQuotaExceededFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"StorageQuotaExceeded",
         "httpStatusCode":400,
@@ -3987,8 +3985,7 @@
     },
     "StorageTypeNotSupportedFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"StorageTypeNotSupported",
         "httpStatusCode":400,
@@ -4011,8 +4008,7 @@
     },
     "SubnetAlreadyInUse":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"SubnetAlreadyInUse",
         "httpStatusCode":400,
@@ -4036,8 +4032,7 @@
     },
     "SubscriptionAlreadyExistFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"SubscriptionAlreadyExist",
         "httpStatusCode":400,
@@ -4047,8 +4042,7 @@
     },
     "SubscriptionCategoryNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"SubscriptionCategoryNotFound",
         "httpStatusCode":404,
@@ -4058,8 +4052,7 @@
     },
     "SubscriptionNotFoundFault":{
       "type":"structure",
-      "members":{
-      },
+      "members":{},
       "error":{
         "code":"SubscriptionNotFound",
         "httpStatusCode":404,
@@ -4079,6 +4072,23 @@
       "member":{
         "shape":"Timezone",
         "locationName":"Timezone"
+      }
+    },
+    "SwitchoverGlobalClusterMessage":{
+      "type":"structure",
+      "required":[
+        "GlobalClusterIdentifier",
+        "TargetDbClusterIdentifier"
+      ],
+      "members":{
+        "GlobalClusterIdentifier":{"shape":"GlobalClusterIdentifier"},
+        "TargetDbClusterIdentifier":{"shape":"String"}
+      }
+    },
+    "SwitchoverGlobalClusterResult":{
+      "type":"structure",
+      "members":{
+        "GlobalCluster":{"shape":"GlobalCluster"}
       }
     },
     "TStamp":{"type":"timestamp"},

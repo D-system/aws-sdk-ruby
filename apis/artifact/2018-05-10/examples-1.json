@@ -1,10 +1,53 @@
 {
   "version": "1.0",
   "examples": {
-    "GetAccountSettings": [
+    "CreateComplianceInquiry": [
       {
         "input": {
+          "name": "My Compliance Inquiry",
+          "clientToken": "unique-client-token-1234",
+          "inquiryContent": {
+            "query": "Is my workload compliant with SOC 2?"
+          },
+          "supportMode": "AI_ONLY"
         },
+        "output": {
+          "complianceInquirySummary": {
+            "name": "My Compliance Inquiry",
+            "arn": "arn:aws:artifact:us-east-1:123456789012:compliance-inquiry/compliance-inquiry-abcdef0123456789",
+            "createdAt": "2026-03-24T12:00:00Z",
+            "id": "compliance-inquiry-abcdef0123456789",
+            "inputSource": "TEXT",
+            "status": "PROCESSING",
+            "statusMessage": "Compliance inquiry processing is in-progress."
+          }
+        },
+        "description": "Creates a compliance inquiry with a single text query.",
+        "id": "example-1",
+        "title": "Invoke CreateComplianceInquiry operation"
+      }
+    ],
+    "ExportComplianceInquiry": [
+      {
+        "input": {
+          "complianceInquiryId": "compliance-inquiry-abcdef0123456789",
+          "includeCitations": true,
+          "queryIdentifiers": [
+            1,
+            2
+          ]
+        },
+        "output": {
+          "documentPresignedUrl": "https://s3.us-east-1.amazonaws.com/artifact-bucket/export.pdf?X-Amz-Signature=example"
+        },
+        "description": "Exports a compliance inquiry report.",
+        "id": "example-1",
+        "title": "Invoke ExportComplianceInquiry operation"
+      }
+    ],
+    "GetAccountSettings": [
+      {
+        "input": {},
         "output": {
           "accountSettings": {
             "notificationSubscriptionStatus": "SUBSCRIBED"
@@ -13,6 +56,29 @@
         "description": "Get the current account settings.",
         "id": "example-1",
         "title": "Invoke GetAccountSettings operation"
+      }
+    ],
+    "GetComplianceInquiryMetadata": [
+      {
+        "input": {
+          "complianceInquiryId": "compliance-inquiry-abcdef0123456789"
+        },
+        "output": {
+          "complianceInquiryDetail": {
+            "name": "My Compliance Inquiry",
+            "arn": "arn:aws:artifact:us-east-1:123456789012:compliance-inquiry/compliance-inquiry-abcdef0123456789",
+            "createdAt": "2026-03-24T12:00:00Z",
+            "id": "compliance-inquiry-abcdef0123456789",
+            "inputSource": "TEXT",
+            "status": "COMPLETED",
+            "statusMessage": "Compliance inquiry processing is complete.",
+            "supportMode": "AI_ONLY",
+            "updatedAt": "2026-03-24T12:05:00Z"
+          }
+        },
+        "description": "Gets metadata for a compliance inquiry.",
+        "id": "example-1",
+        "title": "Invoke GetComplianceInquiryMetadata operation"
       }
     ],
     "GetReport": [
@@ -71,10 +137,63 @@
         "title": "Invoke GetTermForReport operation on the latest version of a specific report"
       }
     ],
-    "ListCustomerAgreements": [
+    "ListComplianceInquiries": [
       {
         "input": {
+          "maxResults": 10
         },
+        "output": {
+          "complianceInquiries": [
+            {
+              "name": "My Compliance Inquiry",
+              "arn": "arn:aws:artifact:us-east-1:123456789012:compliance-inquiry/compliance-inquiry-abcdef0123456789",
+              "createdAt": "2026-03-24T12:00:00Z",
+              "id": "compliance-inquiry-abcdef0123456789",
+              "inputSource": "TEXT",
+              "status": "COMPLETED",
+              "statusMessage": "Compliance inquiry processing is complete."
+            }
+          ]
+        },
+        "description": "Lists all compliance inquiries.",
+        "id": "example-1",
+        "title": "Invoke ListComplianceInquiries operation"
+      }
+    ],
+    "ListComplianceInquiryQueries": [
+      {
+        "input": {
+          "complianceInquiryId": "compliance-inquiry-abcdef0123456789",
+          "maxResults": 10
+        },
+        "output": {
+          "queries": [
+            {
+              "citations": [
+                {
+                  "sourceContent": "Relevant compliance content...",
+                  "sourceLabel": "SOC 2 Type II Report",
+                  "sourceLink": "https://example.com/soc2"
+                }
+              ],
+              "createdAt": "2026-03-24T12:00:00Z",
+              "query": "Is my workload compliant with SOC 2?",
+              "queryIdentifier": 1,
+              "response": "Based on the available compliance documentation...",
+              "reviewType": "AI",
+              "status": "COMPLETED",
+              "statusMessage": "Query processing is complete."
+            }
+          ]
+        },
+        "description": "Lists queries within a compliance inquiry.",
+        "id": "example-1",
+        "title": "Invoke ListComplianceInquiryQueries operation"
+      }
+    ],
+    "ListCustomerAgreements": [
+      {
+        "input": {},
         "output": {
           "customerAgreements": [
             {
@@ -102,10 +221,38 @@
         "title": "Invoke ListCustomerAgreements operation"
       }
     ],
-    "ListReports": [
+    "ListReportVersions": [
       {
         "input": {
+          "reportId": "report-abcdef0123456789"
         },
+        "output": {
+          "nextToken": "gPFEGk7CF4wS901w7ppYclt7gPFEGk7CF4wS901w7ppYclt7gPFEGk7CF4wS901w7ppYclt7",
+          "reports": [
+            {
+              "version": 1,
+              "name": "name",
+              "arn": "arn:aws:artifact:us-east-1::report:report-abcdef0123456789:1",
+              "category": "category",
+              "companyName": "companyName",
+              "description": "description",
+              "id": "report-abcdef0123456789",
+              "periodEnd": "2022-04-01T20:32:04Z",
+              "periodStart": "2022-04-01T20:32:04Z",
+              "productName": "productName",
+              "series": "series",
+              "state": "PUBLISHED"
+            }
+          ]
+        },
+        "description": "The ListReportVersions operation returns a collection of report versions\n                        for a given resource.",
+        "id": "example-1",
+        "title": "Invoke ListReportVersions operation"
+      }
+    ],
+    "ListReports": [
+      {
+        "input": {},
         "output": {
           "nextToken": "gPFEGk7CF4wS901w7ppYclt7gPFEGk7CF4wS901w7ppYclt7gPFEGk7CF4wS901w7ppYclt7",
           "reports": [

@@ -95,8 +95,8 @@ module Aws::IoTWireless
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::IoTWireless
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::IoTWireless
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::IoTWireless
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::IoTWireless
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::IoTWireless
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::IoTWireless
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::IoTWireless
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -780,6 +784,10 @@ module Aws::IoTWireless
     # @option params [String] :name
     #   The name of the new resource.
     #
+    #   <note markdown="1"> The following special characters aren't accepted: `<>^#~$`
+    #
+    #    </note>
+    #
     # @option params [Types::LoRaWANDeviceProfile] :lo_ra_wan
     #   The device profile information to use to create the device profile.
     #
@@ -1019,6 +1027,10 @@ module Aws::IoTWireless
     #         gateway_list: ["WirelessGatewayId"],
     #         transmission_interval: 1,
     #       },
+    #       default_session_parameters: {
+    #         dl_dr: 1,
+    #         dl_freq: 1,
+    #       },
     #     },
     #     tags: [
     #       {
@@ -1133,6 +1145,10 @@ module Aws::IoTWireless
     # @option params [String] :name
     #   The name of the new resource.
     #
+    #   <note markdown="1"> The following special characters aren't accepted: `<>^#~$`
+    #
+    #    </note>
+    #
     # @option params [Types::LoRaWANServiceProfile] :lo_ra_wan
     #   The service profile information to use to create the service profile.
     #
@@ -1173,6 +1189,10 @@ module Aws::IoTWireless
     #       dr_max: 1,
     #       pr_allowed: false,
     #       ra_allowed: false,
+    #       tx_power_index_min: 1,
+    #       tx_power_index_max: 1,
+    #       nb_trans_min: 1,
+    #       nb_trans_max: 1,
     #     },
     #     tags: [
     #       {
@@ -1202,6 +1222,10 @@ module Aws::IoTWireless
     #
     # @option params [String] :name
     #   The name of the new resource.
+    #
+    #   <note markdown="1"> The following special characters aren't accepted: `<>^#~$`
+    #
+    #    </note>
     #
     # @option params [String] :description
     #   The description of the new resource.
@@ -1236,8 +1260,8 @@ module Aws::IoTWireless
     #   you can use to manage a resource.
     #
     # @option params [String] :positioning
-    #   FPort values for the GNSS, stream, and ClockSync functions of the
-    #   positioning information.
+    #   The integration status of the Device Location feature for LoRaWAN and
+    #   Sidewalk devices.
     #
     # @option params [Types::SidewalkCreateWirelessDevice] :sidewalk
     #   The device configuration information to use to create the Sidewalk
@@ -1316,6 +1340,10 @@ module Aws::IoTWireless
     #     positioning: "Enabled", # accepts Enabled, Disabled
     #     sidewalk: {
     #       device_profile_id: "DeviceProfileId",
+    #       positioning: {
+    #         destination_name: "DestinationName",
+    #       },
+    #       sidewalk_manufacturing_sn: "SidewalkManufacturingSn",
     #     },
     #   })
     #
@@ -1348,6 +1376,10 @@ module Aws::IoTWireless
     #
     # @option params [String] :name
     #   The name of the new resource.
+    #
+    #   <note markdown="1"> The following special characters aren't accepted: `<>^#~$`
+    #
+    #    </note>
     #
     # @option params [String] :description
     #   The description of the new resource.
@@ -2313,6 +2345,8 @@ module Aws::IoTWireless
     #   resp.lo_ra_wan.participating_gateways.gateway_list #=> Array
     #   resp.lo_ra_wan.participating_gateways.gateway_list[0] #=> String
     #   resp.lo_ra_wan.participating_gateways.transmission_interval #=> Integer
+    #   resp.lo_ra_wan.default_session_parameters.dl_dr #=> Integer
+    #   resp.lo_ra_wan.default_session_parameters.dl_freq #=> Integer
     #   resp.created_at #=> Time
     #
     # @overload get_multicast_group(params = {})
@@ -2438,7 +2472,7 @@ module Aws::IoTWireless
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/iot-wireless/2020-11-22/apireference/API_GetResourcePosition.html
+    # [1]: https://docs.aws.amazon.com/iot-wireless/latest/apireference/API_GetResourcePosition.html
     #
     # @option params [required, String] :resource_identifier
     #   Resource identifier used to retrieve the position information.
@@ -2489,7 +2523,7 @@ module Aws::IoTWireless
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/iot-wireless/2020-11-22/apireference/API_GetResourcePosition.html
+    # [1]: https://docs.aws.amazon.com/iot-wireless/latest/apireference/API_GetResourcePosition.html
     #
     # @option params [required, String] :resource_identifier
     #   Resource identifier used in a position configuration.
@@ -2553,6 +2587,10 @@ module Aws::IoTWireless
     #   information will be resolved. It uses the Unix timestamp format. If
     #   not specified, the time at which the request was received will be
     #   used.
+    #
+    # @option params [Types::AdvancedConfiguration] :advanced_configuration
+    #   Optional configuration to customize position estimates. If not
+    #   provided, defaults are applied.
     #
     # @return [Types::GetPositionEstimateResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -2701,6 +2739,11 @@ module Aws::IoTWireless
     #       use_2_d_solver: false,
     #     },
     #     timestamp: Time.now,
+    #     advanced_configuration: {
+    #       wi_fi_cellular: {
+    #         confidence_percent: 1,
+    #       },
+    #     },
     #   })
     #
     # @example Response structure
@@ -2739,7 +2782,7 @@ module Aws::IoTWireless
     #
     #   resp = client.get_resource_event_configuration({
     #     identifier: "Identifier", # required
-    #     identifier_type: "PartnerAccountId", # required, accepts PartnerAccountId, DevEui, FuotaTaskId, GatewayEui, WirelessDeviceId, WirelessGatewayId
+    #     identifier_type: "PartnerAccountId", # required, accepts PartnerAccountId, DevEui, GatewayEui, WirelessDeviceId, WirelessGatewayId
     #     partner_type: "Sidewalk", # accepts Sidewalk
     #   })
     #
@@ -2910,6 +2953,10 @@ module Aws::IoTWireless
     #   resp.lo_ra_wan.nwk_geo_loc #=> Boolean
     #   resp.lo_ra_wan.target_per #=> Integer
     #   resp.lo_ra_wan.min_gw_diversity #=> Integer
+    #   resp.lo_ra_wan.tx_power_index_min #=> Integer
+    #   resp.lo_ra_wan.tx_power_index_max #=> Integer
+    #   resp.lo_ra_wan.nb_trans_min #=> Integer
+    #   resp.lo_ra_wan.nb_trans_max #=> Integer
     #
     # @overload get_service_profile(params = {})
     # @param [Hash] params ({})
@@ -2999,6 +3046,7 @@ module Aws::IoTWireless
     #   resp.sidewalk.device_profile_id #=> String
     #   resp.sidewalk.certificate_id #=> String
     #   resp.sidewalk.status #=> String, one of "PROVISIONED", "REGISTERED", "ACTIVATED", "UNKNOWN"
+    #   resp.sidewalk.positioning.destination_name #=> String
     #   resp.positioning #=> String, one of "Enabled", "Disabled"
     #
     # @overload get_wireless_device(params = {})
@@ -3019,6 +3067,7 @@ module Aws::IoTWireless
     #   * {Types::GetWirelessDeviceImportTaskResponse#id #id} => String
     #   * {Types::GetWirelessDeviceImportTaskResponse#arn #arn} => String
     #   * {Types::GetWirelessDeviceImportTaskResponse#destination_name #destination_name} => String
+    #   * {Types::GetWirelessDeviceImportTaskResponse#positioning #positioning} => String
     #   * {Types::GetWirelessDeviceImportTaskResponse#sidewalk #sidewalk} => Types::SidewalkGetStartImportInfo
     #   * {Types::GetWirelessDeviceImportTaskResponse#creation_time #creation_time} => Time
     #   * {Types::GetWirelessDeviceImportTaskResponse#status #status} => String
@@ -3039,9 +3088,11 @@ module Aws::IoTWireless
     #   resp.id #=> String
     #   resp.arn #=> String
     #   resp.destination_name #=> String
+    #   resp.positioning #=> String, one of "Enabled", "Disabled"
     #   resp.sidewalk.device_creation_file_list #=> Array
     #   resp.sidewalk.device_creation_file_list[0] #=> String
     #   resp.sidewalk.role #=> String
+    #   resp.sidewalk.positioning.destination_name #=> String
     #   resp.creation_time #=> Time
     #   resp.status #=> String, one of "INITIALIZING", "INITIALIZED", "PENDING", "COMPLETE", "FAILED", "DELETING"
     #   resp.status_reason #=> String
@@ -3432,6 +3483,8 @@ module Aws::IoTWireless
     #
     #   * {Types::ListDevicesForWirelessDeviceImportTaskResponse#next_token #next_token} => String
     #   * {Types::ListDevicesForWirelessDeviceImportTaskResponse#destination_name #destination_name} => String
+    #   * {Types::ListDevicesForWirelessDeviceImportTaskResponse#positioning #positioning} => String
+    #   * {Types::ListDevicesForWirelessDeviceImportTaskResponse#sidewalk #sidewalk} => Types::SidewalkListDevicesForImportInfo
     #   * {Types::ListDevicesForWirelessDeviceImportTaskResponse#imported_wireless_device_list #imported_wireless_device_list} => Array&lt;Types::ImportedWirelessDevice&gt;
     #
     # @example Request syntax with placeholder values
@@ -3447,6 +3500,8 @@ module Aws::IoTWireless
     #
     #   resp.next_token #=> String
     #   resp.destination_name #=> String
+    #   resp.positioning #=> String, one of "Enabled", "Disabled"
+    #   resp.sidewalk.positioning.destination_name #=> String
     #   resp.imported_wireless_device_list #=> Array
     #   resp.imported_wireless_device_list[0].sidewalk.sidewalk_manufacturing_sn #=> String
     #   resp.imported_wireless_device_list[0].sidewalk.onboarding_status #=> String, one of "INITIALIZED", "PENDING", "ONBOARDED", "FAILED"
@@ -3482,7 +3537,7 @@ module Aws::IoTWireless
     # @example Request syntax with placeholder values
     #
     #   resp = client.list_event_configurations({
-    #     resource_type: "FuotaTask", # required, accepts FuotaTask, SidewalkAccount, WirelessDevice, WirelessGateway
+    #     resource_type: "SidewalkAccount", # required, accepts SidewalkAccount, WirelessDevice, WirelessGateway
     #     max_results: 1,
     #     next_token: "NextToken",
     #   })
@@ -3492,7 +3547,7 @@ module Aws::IoTWireless
     #   resp.next_token #=> String
     #   resp.event_configurations_list #=> Array
     #   resp.event_configurations_list[0].identifier #=> String
-    #   resp.event_configurations_list[0].identifier_type #=> String, one of "PartnerAccountId", "DevEui", "FuotaTaskId", "GatewayEui", "WirelessDeviceId", "WirelessGatewayId"
+    #   resp.event_configurations_list[0].identifier_type #=> String, one of "PartnerAccountId", "DevEui", "GatewayEui", "WirelessDeviceId", "WirelessGatewayId"
     #   resp.event_configurations_list[0].partner_type #=> String, one of "Sidewalk"
     #   resp.event_configurations_list[0].events.device_registration_state.sidewalk.amazon_id_event_topic #=> String, one of "Enabled", "Disabled"
     #   resp.event_configurations_list[0].events.device_registration_state.wireless_device_id_event_topic #=> String, one of "Enabled", "Disabled"
@@ -3715,7 +3770,7 @@ module Aws::IoTWireless
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/iot-wireless/2020-11-22/apireference/API_GetResourcePosition.html
+    # [1]: https://docs.aws.amazon.com/iot-wireless/latest/apireference/API_GetResourcePosition.html
     #
     # @option params [String] :resource_type
     #   Resource type for which position configurations are listed.
@@ -3883,7 +3938,8 @@ module Aws::IoTWireless
       req.send_request(options)
     end
 
-    # List wireless devices that have been added to an import task.
+    # List of import tasks and summary information of onboarding status of
+    # devices in each import task.
     #
     # @option params [Integer] :max_results
     #   The maximum number of results to return in this operation.
@@ -3912,9 +3968,11 @@ module Aws::IoTWireless
     #   resp.wireless_device_import_task_list[0].id #=> String
     #   resp.wireless_device_import_task_list[0].arn #=> String
     #   resp.wireless_device_import_task_list[0].destination_name #=> String
+    #   resp.wireless_device_import_task_list[0].positioning #=> String, one of "Enabled", "Disabled"
     #   resp.wireless_device_import_task_list[0].sidewalk.device_creation_file_list #=> Array
     #   resp.wireless_device_import_task_list[0].sidewalk.device_creation_file_list[0] #=> String
     #   resp.wireless_device_import_task_list[0].sidewalk.role #=> String
+    #   resp.wireless_device_import_task_list[0].sidewalk.positioning.destination_name #=> String
     #   resp.wireless_device_import_task_list[0].creation_time #=> Time
     #   resp.wireless_device_import_task_list[0].status #=> String, one of "INITIALIZING", "INITIALIZED", "PENDING", "COMPLETE", "FAILED", "DELETING"
     #   resp.wireless_device_import_task_list[0].status_reason #=> String
@@ -3941,7 +3999,8 @@ module Aws::IoTWireless
     #   results.
     #
     # @option params [String] :destination_name
-    #   A filter to list only the wireless devices that use this destination.
+    #   A filter to list only the wireless devices that use as uplink
+    #   destination.
     #
     # @option params [String] :device_profile_id
     #   A filter to list only the wireless devices that use this device
@@ -4000,9 +4059,11 @@ module Aws::IoTWireless
     #   resp.wireless_device_list[0].sidewalk.device_certificates[0].value #=> String
     #   resp.wireless_device_list[0].sidewalk.device_profile_id #=> String
     #   resp.wireless_device_list[0].sidewalk.status #=> String, one of "PROVISIONED", "REGISTERED", "ACTIVATED", "UNKNOWN"
+    #   resp.wireless_device_list[0].sidewalk.positioning.destination_name #=> String
     #   resp.wireless_device_list[0].fuota_device_status #=> String, one of "Initial", "Package_Not_Supported", "FragAlgo_unsupported", "Not_enough_memory", "FragIndex_unsupported", "Wrong_descriptor", "SessionCnt_replay", "MissingFrag", "MemoryError", "MICError", "Successful", "Device_exist_in_conflict_fuota_task"
     #   resp.wireless_device_list[0].multicast_device_status #=> String
     #   resp.wireless_device_list[0].mc_group_id #=> Integer
+    #   resp.wireless_device_list[0].positioning #=> String, one of "Enabled", "Disabled"
     #
     # @overload list_wireless_devices(params = {})
     # @param [Hash] params ({})
@@ -4121,7 +4182,7 @@ module Aws::IoTWireless
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/iot-wireless/2020-11-22/apireference/API_UpdateResourcePosition.html
+    # [1]: https://docs.aws.amazon.com/iot-wireless/latest/apireference/API_UpdateResourcePosition.html
     #
     # @option params [required, String] :resource_identifier
     #   Resource identifier used to update the position configuration.
@@ -4492,6 +4553,10 @@ module Aws::IoTWireless
     #   The tag to attach to the specified resource. Tags are metadata that
     #   you can use to manage a resource.
     #
+    # @option params [String] :positioning
+    #   The integration status of the Device Location feature for Sidewalk
+    #   devices.
+    #
     # @option params [required, Types::SidewalkSingleStartImportInfo] :sidewalk
     #   The Sidewalk-related parameters for importing a single wireless
     #   device.
@@ -4513,8 +4578,12 @@ module Aws::IoTWireless
     #         value: "TagValue", # required
     #       },
     #     ],
+    #     positioning: "Enabled", # accepts Enabled, Disabled
     #     sidewalk: { # required
     #       sidewalk_manufacturing_sn: "SidewalkManufacturingSn",
+    #       positioning: {
+    #         destination_name: "DestinationName",
+    #       },
     #     },
     #   })
     #
@@ -4560,6 +4629,10 @@ module Aws::IoTWireless
     #   The tag to attach to the specified resource. Tags are metadata that
     #   you can use to manage a resource.
     #
+    # @option params [String] :positioning
+    #   The integration status of the Device Location feature for Sidewalk
+    #   devices.
+    #
     # @option params [required, Types::SidewalkStartImportInfo] :sidewalk
     #   The Sidewalk-related parameters for importing wireless devices that
     #   need to be provisioned in bulk.
@@ -4580,9 +4653,13 @@ module Aws::IoTWireless
     #         value: "TagValue", # required
     #       },
     #     ],
+    #     positioning: "Enabled", # accepts Enabled, Disabled
     #     sidewalk: { # required
     #       device_creation_file: "DeviceCreationFile",
     #       role: "Role",
+    #       positioning: {
+    #         destination_name: "DestinationName",
+    #       },
     #     },
     #   })
     #
@@ -4970,6 +5047,10 @@ module Aws::IoTWireless
     #         gateway_list: ["WirelessGatewayId"],
     #         transmission_interval: 1,
     #       },
+    #       default_session_parameters: {
+    #         dl_dr: 1,
+    #         dl_freq: 1,
+    #       },
     #     },
     #   })
     #
@@ -5087,7 +5168,7 @@ module Aws::IoTWireless
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/iot-wireless/2020-11-22/apireference/API_UpdateResourcePosition.html
+    # [1]: https://docs.aws.amazon.com/iot-wireless/latest/apireference/API_UpdateResourcePosition.html
     #
     # @option params [required, String] :resource_identifier
     #   Resource identifier of the resource for which position is updated.
@@ -5149,7 +5230,7 @@ module Aws::IoTWireless
     #
     #   resp = client.update_resource_event_configuration({
     #     identifier: "Identifier", # required
-    #     identifier_type: "PartnerAccountId", # required, accepts PartnerAccountId, DevEui, FuotaTaskId, GatewayEui, WirelessDeviceId, WirelessGatewayId
+    #     identifier_type: "PartnerAccountId", # required, accepts PartnerAccountId, DevEui, GatewayEui, WirelessDeviceId, WirelessGatewayId
     #     partner_type: "Sidewalk", # accepts Sidewalk
     #     device_registration_state: {
     #       sidewalk: {
@@ -5245,6 +5326,10 @@ module Aws::IoTWireless
     # @option params [String] :name
     #   The new name of the resource.
     #
+    #   <note markdown="1"> The following special characters aren't accepted: `<>^#~$`
+    #
+    #    </note>
+    #
     # @option params [String] :description
     #   A new description of the resource.
     #
@@ -5252,8 +5337,11 @@ module Aws::IoTWireless
     #   The updated wireless device's configuration.
     #
     # @option params [String] :positioning
-    #   FPort values for the GNSS, stream, and ClockSync functions of the
-    #   positioning information.
+    #   The integration status of the Device Location feature for LoRaWAN and
+    #   Sidewalk devices.
+    #
+    # @option params [Types::SidewalkUpdateWirelessDevice] :sidewalk
+    #   The updated sidewalk properties.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
@@ -5289,6 +5377,11 @@ module Aws::IoTWireless
     #       },
     #     },
     #     positioning: "Enabled", # accepts Enabled, Disabled
+    #     sidewalk: {
+    #       positioning: {
+    #         destination_name: "DestinationName",
+    #       },
+    #     },
     #   })
     #
     # @overload update_wireless_device(params = {})
@@ -5331,6 +5424,10 @@ module Aws::IoTWireless
     #
     # @option params [String] :name
     #   The new name of the resource.
+    #
+    #   <note markdown="1"> The following special characters aren't accepted: `<>^#~$`
+    #
+    #    </note>
     #
     # @option params [String] :description
     #   A new description of the resource.
@@ -5385,7 +5482,7 @@ module Aws::IoTWireless
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-iotwireless'
-      context[:gem_version] = '1.65.0'
+      context[:gem_version] = '1.90.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

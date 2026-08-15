@@ -146,7 +146,7 @@ module Aws::MarketplaceCatalog
     end
 
     class ContainerProductSort
-      attr_accessor sort_by: ("EntityId" | "LastModifiedDate" | "ProductTitle" | "Visibility")
+      attr_accessor sort_by: ("EntityId" | "LastModifiedDate" | "ProductTitle" | "Visibility" | "CompatibleAWSServices")
       attr_accessor sort_order: ("ASCENDING" | "DESCENDING")
       SENSITIVE: []
     end
@@ -293,6 +293,8 @@ module Aws::MarketplaceCatalog
       attr_accessor saa_s_product_summary: Types::SaaSProductSummary
       attr_accessor offer_summary: Types::OfferSummary
       attr_accessor resale_authorization_summary: Types::ResaleAuthorizationSummary
+      attr_accessor machine_learning_product_summary: Types::MachineLearningProductSummary
+      attr_accessor offer_set_summary: Types::OfferSetSummary
       SENSITIVE: []
     end
 
@@ -303,6 +305,8 @@ module Aws::MarketplaceCatalog
       attr_accessor offer_filters: Types::OfferFilters
       attr_accessor container_product_filters: Types::ContainerProductFilters
       attr_accessor resale_authorization_filters: Types::ResaleAuthorizationFilters
+      attr_accessor machine_learning_product_filters: Types::MachineLearningProductFilters
+      attr_accessor offer_set_filters: Types::OfferSetFilters
       attr_accessor unknown: untyped
       SENSITIVE: []
 
@@ -318,6 +322,10 @@ module Aws::MarketplaceCatalog
       end
       class ResaleAuthorizationFilters < EntityTypeFilters
       end
+      class MachineLearningProductFilters < EntityTypeFilters
+      end
+      class OfferSetFilters < EntityTypeFilters
+      end
       class Unknown < EntityTypeFilters
       end
     end
@@ -329,6 +337,8 @@ module Aws::MarketplaceCatalog
       attr_accessor offer_sort: Types::OfferSort
       attr_accessor container_product_sort: Types::ContainerProductSort
       attr_accessor resale_authorization_sort: Types::ResaleAuthorizationSort
+      attr_accessor machine_learning_product_sort: Types::MachineLearningProductSort
+      attr_accessor offer_set_sort: Types::OfferSetSort
       attr_accessor unknown: untyped
       SENSITIVE: []
 
@@ -343,6 +353,10 @@ module Aws::MarketplaceCatalog
       class ContainerProductSort < EntityTypeSort
       end
       class ResaleAuthorizationSort < EntityTypeSort
+      end
+      class MachineLearningProductSort < EntityTypeSort
+      end
+      class OfferSetSort < EntityTypeSort
       end
       class Unknown < EntityTypeSort
       end
@@ -420,6 +434,53 @@ module Aws::MarketplaceCatalog
       SENSITIVE: []
     end
 
+    class MachineLearningProductEntityIdFilter
+      attr_accessor value_list: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class MachineLearningProductFilters
+      attr_accessor entity_id: Types::MachineLearningProductEntityIdFilter
+      attr_accessor last_modified_date: Types::MachineLearningProductLastModifiedDateFilter
+      attr_accessor product_title: Types::MachineLearningProductTitleFilter
+      attr_accessor visibility: Types::MachineLearningProductVisibilityFilter
+      SENSITIVE: []
+    end
+
+    class MachineLearningProductLastModifiedDateFilter
+      attr_accessor date_range: Types::MachineLearningProductLastModifiedDateFilterDateRange
+      SENSITIVE: []
+    end
+
+    class MachineLearningProductLastModifiedDateFilterDateRange
+      attr_accessor after_value: ::String
+      attr_accessor before_value: ::String
+      SENSITIVE: []
+    end
+
+    class MachineLearningProductSort
+      attr_accessor sort_by: ("EntityId" | "LastModifiedDate" | "ProductTitle" | "Visibility")
+      attr_accessor sort_order: ("ASCENDING" | "DESCENDING")
+      SENSITIVE: []
+    end
+
+    class MachineLearningProductSummary
+      attr_accessor product_title: ::String
+      attr_accessor visibility: ("Limited" | "Public" | "Restricted" | "Draft")
+      SENSITIVE: []
+    end
+
+    class MachineLearningProductTitleFilter
+      attr_accessor value_list: ::Array[::String]
+      attr_accessor wild_card_value: ::String
+      SENSITIVE: []
+    end
+
+    class MachineLearningProductVisibilityFilter
+      attr_accessor value_list: ::Array[("Limited" | "Public" | "Restricted" | "Draft")]
+      SENSITIVE: []
+    end
+
     class OfferAvailabilityEndDateFilter
       attr_accessor date_range: Types::OfferAvailabilityEndDateFilterDateRange
       SENSITIVE: []
@@ -433,6 +494,11 @@ module Aws::MarketplaceCatalog
 
     class OfferBuyerAccountsFilter
       attr_accessor wild_card_value: ::String
+      SENSITIVE: []
+    end
+
+    class OfferCreatedBySourceFilter
+      attr_accessor value_list: ::Array[("Seller" | "AwsMarketplace")]
       SENSITIVE: []
     end
 
@@ -452,6 +518,10 @@ module Aws::MarketplaceCatalog
       attr_accessor state: Types::OfferStateFilter
       attr_accessor targeting: Types::OfferTargetingFilter
       attr_accessor last_modified_date: Types::OfferLastModifiedDateFilter
+      attr_accessor offer_set_id: Types::OfferSetIdFilter
+      attr_accessor target_agreement_id: Types::OfferTargetAgreementIdFilter
+      attr_accessor target_agreement_intent: Types::OfferTargetAgreementIntentFilter
+      attr_accessor created_by_source: Types::OfferCreatedBySourceFilter
       SENSITIVE: []
     end
 
@@ -493,8 +563,86 @@ module Aws::MarketplaceCatalog
       SENSITIVE: []
     end
 
+    class OfferSetAssociatedOfferIdsFilter
+      attr_accessor value_list: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class OfferSetEntityIdFilter
+      attr_accessor value_list: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class OfferSetFilters
+      attr_accessor entity_id: Types::OfferSetEntityIdFilter
+      attr_accessor name: Types::OfferSetNameFilter
+      attr_accessor state: Types::OfferSetStateFilter
+      attr_accessor release_date: Types::OfferSetReleaseDateFilter
+      attr_accessor associated_offer_ids: Types::OfferSetAssociatedOfferIdsFilter
+      attr_accessor solution_id: Types::OfferSetSolutionIdFilter
+      attr_accessor last_modified_date: Types::OfferSetLastModifiedDateFilter
+      SENSITIVE: []
+    end
+
+    class OfferSetIdFilter
+      attr_accessor value_list: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class OfferSetLastModifiedDateFilter
+      attr_accessor date_range: Types::OfferSetLastModifiedDateFilterDateRange
+      SENSITIVE: []
+    end
+
+    class OfferSetLastModifiedDateFilterDateRange
+      attr_accessor after_value: ::String
+      attr_accessor before_value: ::String
+      SENSITIVE: []
+    end
+
+    class OfferSetNameFilter
+      attr_accessor value_list: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class OfferSetReleaseDateFilter
+      attr_accessor date_range: Types::OfferSetReleaseDateFilterDateRange
+      SENSITIVE: []
+    end
+
+    class OfferSetReleaseDateFilterDateRange
+      attr_accessor after_value: ::String
+      attr_accessor before_value: ::String
+      SENSITIVE: []
+    end
+
+    class OfferSetSolutionIdFilter
+      attr_accessor value_list: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class OfferSetSort
+      attr_accessor sort_by: ("Name" | "State" | "ReleaseDate" | "SolutionId" | "EntityId" | "LastModifiedDate")
+      attr_accessor sort_order: ("ASCENDING" | "DESCENDING")
+      SENSITIVE: []
+    end
+
+    class OfferSetStateFilter
+      attr_accessor value_list: ::Array[("Draft" | "Released")]
+      SENSITIVE: []
+    end
+
+    class OfferSetSummary
+      attr_accessor name: ::String
+      attr_accessor state: ("Draft" | "Released")
+      attr_accessor release_date: ::String
+      attr_accessor associated_offer_ids: ::Array[::String]
+      attr_accessor solution_id: ::String
+      SENSITIVE: []
+    end
+
     class OfferSort
-      attr_accessor sort_by: ("EntityId" | "Name" | "ProductId" | "ResaleAuthorizationId" | "ReleaseDate" | "AvailabilityEndDate" | "BuyerAccounts" | "State" | "Targeting" | "LastModifiedDate")
+      attr_accessor sort_by: ("EntityId" | "Name" | "ProductId" | "ResaleAuthorizationId" | "ReleaseDate" | "AvailabilityEndDate" | "BuyerAccounts" | "State" | "Targeting" | "LastModifiedDate" | "OfferSetId" | "TargetAgreementId" | "TargetAgreementIntent" | "CreatedBySource")
       attr_accessor sort_order: ("ASCENDING" | "DESCENDING")
       SENSITIVE: []
     end
@@ -513,6 +661,20 @@ module Aws::MarketplaceCatalog
       attr_accessor buyer_accounts: ::Array[::String]
       attr_accessor state: ("Draft" | "Released")
       attr_accessor targeting: ::Array[("BuyerAccounts" | "ParticipatingPrograms" | "CountryCodes" | "None")]
+      attr_accessor offer_set_id: ::String
+      attr_accessor target_agreement_id: ::String
+      attr_accessor target_agreement_intent: ("Renew")
+      attr_accessor created_by_source: ("Seller" | "AwsMarketplace")
+      SENSITIVE: []
+    end
+
+    class OfferTargetAgreementIdFilter
+      attr_accessor value_list: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class OfferTargetAgreementIntentFilter
+      attr_accessor value_list: ::Array[("Renew")]
       SENSITIVE: []
     end
 
@@ -573,6 +735,7 @@ module Aws::MarketplaceCatalog
       attr_accessor status: Types::ResaleAuthorizationStatusFilter
       attr_accessor offer_extended_status: Types::ResaleAuthorizationOfferExtendedStatusFilter
       attr_accessor last_modified_date: Types::ResaleAuthorizationLastModifiedDateFilter
+      attr_accessor reseller_role: Types::ResaleAuthorizationResellerRoleFilter
       SENSITIVE: []
     end
 
@@ -634,6 +797,11 @@ module Aws::MarketplaceCatalog
       SENSITIVE: []
     end
 
+    class ResaleAuthorizationResellerRoleFilter
+      attr_accessor value_list: ::Array[("ChannelPartner" | "Distributor")]
+      SENSITIVE: []
+    end
+
     class ResaleAuthorizationSort
       attr_accessor sort_by: ("EntityId" | "Name" | "ProductId" | "ProductName" | "ManufacturerAccountId" | "ManufacturerLegalName" | "ResellerAccountID" | "ResellerLegalName" | "Status" | "OfferExtendedStatus" | "CreatedDate" | "AvailabilityEndDate" | "LastModifiedDate")
       attr_accessor sort_order: ("ASCENDING" | "DESCENDING")
@@ -657,6 +825,7 @@ module Aws::MarketplaceCatalog
       attr_accessor offer_extended_status: ::String
       attr_accessor created_date: ::String
       attr_accessor availability_end_date: ::String
+      attr_accessor reseller_role: ("ChannelPartner" | "Distributor")
       SENSITIVE: []
     end
 
@@ -700,7 +869,7 @@ module Aws::MarketplaceCatalog
     end
 
     class SaaSProductSort
-      attr_accessor sort_by: ("EntityId" | "ProductTitle" | "Visibility" | "LastModifiedDate")
+      attr_accessor sort_by: ("EntityId" | "ProductTitle" | "Visibility" | "LastModifiedDate" | "DeliveryOptionTypes")
       attr_accessor sort_order: ("ASCENDING" | "DESCENDING")
       SENSITIVE: []
     end

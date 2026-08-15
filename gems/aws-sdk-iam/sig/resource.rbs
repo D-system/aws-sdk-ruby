@@ -18,6 +18,7 @@ module Aws
                         ?account_id: String,
                         ?active_endpoint_cache: bool,
                         ?adaptive_retry_wait_to_fill: bool,
+                        ?auth_scheme_preference: Array[String],
                         ?client_side_monitoring: bool,
                         ?client_side_monitoring_client_id: String,
                         ?client_side_monitoring_host: String,
@@ -121,7 +122,7 @@ module Aws
                                        {
                                          key: ::String,
                                          value: ::String
-                                       },
+                                       }
                                      ]
                                    ) -> InstanceProfile
                                  | (?Hash[Symbol, untyped]) -> InstanceProfile
@@ -136,7 +137,7 @@ module Aws
                              {
                                key: ::String,
                                value: ::String
-                             },
+                             }
                            ]
                          ) -> Policy
                        | (?Hash[Symbol, untyped]) -> Policy
@@ -153,7 +154,7 @@ module Aws
                            {
                              key: ::String,
                              value: ::String
-                           },
+                           }
                          ]
                        ) -> Role
                      | (?Hash[Symbol, untyped]) -> Role
@@ -166,7 +167,7 @@ module Aws
                                     {
                                       key: ::String,
                                       value: ::String
-                                    },
+                                    }
                                   ],
                                   ?assertion_encryption_mode: ("Required" | "Allowed"),
                                   ?add_private_key: ::String
@@ -184,7 +185,7 @@ module Aws
                                          {
                                            key: ::String,
                                            value: ::String
-                                         },
+                                         }
                                        ]
                                      ) -> ServerCertificate
                                    | (?Hash[Symbol, untyped]) -> ServerCertificate
@@ -205,7 +206,7 @@ module Aws
                            {
                              key: ::String,
                              value: ::String
-                           },
+                           }
                          ]
                        ) -> User
                      | (?Hash[Symbol, untyped]) -> User
@@ -218,7 +219,7 @@ module Aws
                                          {
                                            key: ::String,
                                            value: ::String
-                                         },
+                                         }
                                        ]
                                      ) -> VirtualMfaDevice
                                    | (?Hash[Symbol, untyped]) -> VirtualMfaDevice

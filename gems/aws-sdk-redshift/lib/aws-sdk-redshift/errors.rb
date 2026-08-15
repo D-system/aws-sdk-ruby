@@ -171,12 +171,18 @@ module Aws::Redshift
   #    * This error class is not used. `NumberOfNodesQuotaExceeded` is used during parsing instead.
   # * {PartnerNotFoundFault}
   #    * This error class is not used. `PartnerNotFound` is used during parsing instead.
+  # * {Qev2IdcApplicationAlreadyExistsFault}
+  #    * This error class is not used. `Qev2IdcApplicationAlreadyExists` is used during parsing instead.
+  # * {Qev2IdcApplicationNotExistsFault}
+  #    * This error class is not used. `Qev2IdcApplicationNotExists` is used during parsing instead.
   # * {RedshiftIdcApplicationAlreadyExistsFault}
   #    * This error class is not used. `RedshiftIdcApplicationAlreadyExists` is used during parsing instead.
   # * {RedshiftIdcApplicationNotExistsFault}
   #    * This error class is not used. `RedshiftIdcApplicationNotExists` is used during parsing instead.
   # * {RedshiftIdcApplicationQuotaExceededFault}
   #    * This error class is not used. `RedshiftIdcApplicationQuotaExceeded` is used during parsing instead.
+  # * {RedshiftInvalidParameterFault}
+  #    * This error class is not used. `RedshiftInvalidParameter` is used during parsing instead.
   # * {ReservedNodeAlreadyExistsFault}
   #    * This error class is not used. `ReservedNodeAlreadyExists` is used during parsing instead.
   # * {ReservedNodeAlreadyMigratedFault}
@@ -253,7 +259,6 @@ module Aws::Redshift
   #
   # Additionally, error classes are dynamically generated for service errors based on the error code
   # if they are not defined above.
-  # Some existing error classes may use a different class name than the one documented.
   module Errors
 
     extend Aws::Errors::DynamicErrors
@@ -1315,6 +1320,30 @@ module Aws::Redshift
     end
 
     # @deprecated This error class is not used during parsing.
+    #   Please use `Qev2IdcApplicationAlreadyExists` instead.
+    class Qev2IdcApplicationAlreadyExistsFault < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::Redshift::Types::Qev2IdcApplicationAlreadyExistsFault] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+    end
+
+    # @deprecated This error class is not used during parsing.
+    #   Please use `Qev2IdcApplicationNotExists` instead.
+    class Qev2IdcApplicationNotExistsFault < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::Redshift::Types::Qev2IdcApplicationNotExistsFault] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+    end
+
+    # @deprecated This error class is not used during parsing.
     #   Please use `RedshiftIdcApplicationAlreadyExists` instead.
     class RedshiftIdcApplicationAlreadyExistsFault < ServiceError
 
@@ -1345,6 +1374,18 @@ module Aws::Redshift
       # @param [Seahorse::Client::RequestContext] context
       # @param [String] message
       # @param [Aws::Redshift::Types::RedshiftIdcApplicationQuotaExceededFault] data
+      def initialize(context, message, data = Aws::EmptyStructure.new)
+        super(context, message, data)
+      end
+    end
+
+    # @deprecated This error class is not used during parsing.
+    #   Please use `RedshiftInvalidParameter` instead.
+    class RedshiftInvalidParameterFault < ServiceError
+
+      # @param [Seahorse::Client::RequestContext] context
+      # @param [String] message
+      # @param [Aws::Redshift::Types::RedshiftInvalidParameterFault] data
       def initialize(context, message, data = Aws::EmptyStructure.new)
         super(context, message, data)
       end

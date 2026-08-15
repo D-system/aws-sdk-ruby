@@ -8,6 +8,18 @@
 module Aws::Synthetics
   module Types
 
+    class AccessDeniedException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class AddReplicaLocationInput
+      attr_accessor location: ::String
+      attr_accessor vpc_config: Types::VpcConfigInput
+      attr_accessor kms_key_arn: ::String
+      SENSITIVE: []
+    end
+
     class ArtifactConfigInput
       attr_accessor s3_encryption: Types::S3EncryptionConfig
       SENSITIVE: []
@@ -38,6 +50,11 @@ module Aws::Synthetics
       SENSITIVE: []
     end
 
+    class BrowserConfig
+      attr_accessor browser_type: ("CHROME" | "FIREFOX")
+      SENSITIVE: []
+    end
+
     class Canary
       attr_accessor id: ::String
       attr_accessor name: ::String
@@ -55,8 +72,14 @@ module Aws::Synthetics
       attr_accessor vpc_config: Types::VpcConfigOutput
       attr_accessor visual_reference: Types::VisualReferenceOutput
       attr_accessor provisioned_resource_cleanup: ("AUTOMATIC" | "OFF")
+      attr_accessor browser_configs: ::Array[Types::BrowserConfig]
+      attr_accessor engine_configs: ::Array[Types::EngineConfig]
+      attr_accessor visual_references: ::Array[Types::VisualReferenceOutput]
+      attr_accessor multi_location_config: Types::MultiLocationConfig
       attr_accessor tags: ::Hash[::String, ::String]
       attr_accessor artifact_config: Types::ArtifactConfigOutput
+      attr_accessor kms_key_arn: ::String
+      attr_accessor dry_run_config: Types::DryRunConfigOutput
       SENSITIVE: []
     end
 
@@ -66,12 +89,21 @@ module Aws::Synthetics
       attr_accessor s3_version: ::String
       attr_accessor zip_file: ::String
       attr_accessor handler: ::String
+      attr_accessor blueprint_types: ::Array[::String]
+      attr_accessor dependencies: ::Array[Types::Dependency]
       SENSITIVE: []
     end
 
     class CanaryCodeOutput
       attr_accessor source_location_arn: ::String
       attr_accessor handler: ::String
+      attr_accessor blueprint_types: ::Array[::String]
+      attr_accessor dependencies: ::Array[Types::Dependency]
+      SENSITIVE: []
+    end
+
+    class CanaryDryRunConfigOutput
+      attr_accessor dry_run_id: ::String
       SENSITIVE: []
     end
 
@@ -83,10 +115,15 @@ module Aws::Synthetics
 
     class CanaryRun
       attr_accessor id: ::String
+      attr_accessor scheduled_run_id: ::String
+      attr_accessor retry_attempt: ::Integer
       attr_accessor name: ::String
       attr_accessor status: Types::CanaryRunStatus
       attr_accessor timeline: Types::CanaryRunTimeline
       attr_accessor artifact_s3_location: ::String
+      attr_accessor dry_run_config: Types::CanaryDryRunConfigOutput
+      attr_accessor browser_type: ("CHROME" | "FIREFOX")
+      attr_accessor location: ::String
       SENSITIVE: []
     end
 
@@ -95,6 +132,7 @@ module Aws::Synthetics
       attr_accessor memory_in_mb: ::Integer
       attr_accessor active_tracing: bool
       attr_accessor environment_variables: ::Hash[::String, ::String]
+      attr_accessor ephemeral_storage: ::Integer
       SENSITIVE: []
     end
 
@@ -102,6 +140,7 @@ module Aws::Synthetics
       attr_accessor timeout_in_seconds: ::Integer
       attr_accessor memory_in_mb: ::Integer
       attr_accessor active_tracing: bool
+      attr_accessor ephemeral_storage: ::Integer
       SENSITIVE: []
     end
 
@@ -109,24 +148,28 @@ module Aws::Synthetics
       attr_accessor state: ("RUNNING" | "PASSED" | "FAILED")
       attr_accessor state_reason: ::String
       attr_accessor state_reason_code: ("CANARY_FAILURE" | "EXECUTION_FAILURE")
+      attr_accessor test_result: ("PASSED" | "FAILED" | "UNKNOWN")
       SENSITIVE: []
     end
 
     class CanaryRunTimeline
       attr_accessor started: ::Time
       attr_accessor completed: ::Time
+      attr_accessor metric_timestamp_for_run_and_retries: ::Time
       SENSITIVE: []
     end
 
     class CanaryScheduleInput
       attr_accessor expression: ::String
       attr_accessor duration_in_seconds: ::Integer
+      attr_accessor retry_config: Types::RetryConfigInput
       SENSITIVE: []
     end
 
     class CanaryScheduleOutput
       attr_accessor expression: ::String
       attr_accessor duration_in_seconds: ::Integer
+      attr_accessor retry_config: Types::RetryConfigOutput
       SENSITIVE: []
     end
 
@@ -163,8 +206,11 @@ module Aws::Synthetics
       attr_accessor vpc_config: Types::VpcConfigInput
       attr_accessor resources_to_replicate_tags: ::Array[("lambda-function")]
       attr_accessor provisioned_resource_cleanup: ("AUTOMATIC" | "OFF")
+      attr_accessor browser_configs: ::Array[Types::BrowserConfig]
+      attr_accessor add_replica_locations: ::Array[Types::AddReplicaLocationInput]
       attr_accessor tags: ::Hash[::String, ::String]
       attr_accessor artifact_config: Types::ArtifactConfigInput
+      attr_accessor kms_key_arn: ::String
       SENSITIVE: []
     end
 
@@ -201,10 +247,17 @@ module Aws::Synthetics
     class DeleteGroupResponse < Aws::EmptyStructure
     end
 
+    class Dependency
+      attr_accessor type: ("LambdaLayer")
+      attr_accessor reference: ::String
+      SENSITIVE: []
+    end
+
     class DescribeCanariesLastRunRequest
       attr_accessor next_token: ::String
       attr_accessor max_results: ::Integer
       attr_accessor names: ::Array[::String]
+      attr_accessor browser_type: ("CHROME" | "FIREFOX")
       SENSITIVE: []
     end
 
@@ -248,8 +301,21 @@ module Aws::Synthetics
     class DisassociateResourceResponse < Aws::EmptyStructure
     end
 
+    class DryRunConfigOutput
+      attr_accessor dry_run_id: ::String
+      attr_accessor last_dry_run_execution_status: ::String
+      SENSITIVE: []
+    end
+
+    class EngineConfig
+      attr_accessor engine_arn: ::String
+      attr_accessor browser_type: ("CHROME" | "FIREFOX")
+      SENSITIVE: []
+    end
+
     class GetCanaryRequest
       attr_accessor name: ::String
+      attr_accessor dry_run_id: ::String
       SENSITIVE: []
     end
 
@@ -262,6 +328,8 @@ module Aws::Synthetics
       attr_accessor name: ::String
       attr_accessor next_token: ::String
       attr_accessor max_results: ::Integer
+      attr_accessor dry_run_id: ::String
+      attr_accessor run_type: ("CANARY_RUN" | "DRY_RUN")
       SENSITIVE: []
     end
 
@@ -356,8 +424,32 @@ module Aws::Synthetics
       SENSITIVE: []
     end
 
+    class MultiLocationConfig
+      attr_accessor location_type: ("Primary" | "Replica")
+      attr_accessor primary_location: ::String
+      attr_accessor replicas: ::Array[Types::Replica]
+      attr_accessor replication_state: ("InProgress" | "InSync" | "Inconsistent")
+      SENSITIVE: []
+    end
+
     class NotFoundException
       attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class Replica
+      attr_accessor location: ::String
+      attr_accessor replication_status: Types::ReplicationStatus
+      attr_accessor canary_state: ("CREATING" | "READY" | "STARTING" | "RUNNING" | "UPDATING" | "STOPPING" | "STOPPED" | "ERROR" | "DELETING")
+      attr_accessor last_modified: ::Time
+      attr_accessor vpc_config: Types::VpcConfigOutput
+      SENSITIVE: []
+    end
+
+    class ReplicationStatus
+      attr_accessor state: ("InProgress" | "InSync" | "Inconsistent")
+      attr_accessor state_reason: ::String
+      attr_accessor state_reason_code: ::String
       SENSITIVE: []
     end
 
@@ -368,6 +460,16 @@ module Aws::Synthetics
 
     class ResourceNotFoundException
       attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class RetryConfigInput
+      attr_accessor max_retries: ::Integer
+      SENSITIVE: []
+    end
+
+    class RetryConfigOutput
+      attr_accessor max_retries: ::Integer
       SENSITIVE: []
     end
 
@@ -387,6 +489,29 @@ module Aws::Synthetics
 
     class ServiceQuotaExceededException
       attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class StartCanaryDryRunRequest
+      attr_accessor name: ::String
+      attr_accessor code: Types::CanaryCodeInput
+      attr_accessor runtime_version: ::String
+      attr_accessor run_config: Types::CanaryRunConfigInput
+      attr_accessor vpc_config: Types::VpcConfigInput
+      attr_accessor execution_role_arn: ::String
+      attr_accessor success_retention_period_in_days: ::Integer
+      attr_accessor failure_retention_period_in_days: ::Integer
+      attr_accessor visual_reference: Types::VisualReferenceInput
+      attr_accessor artifact_s3_location: ::String
+      attr_accessor artifact_config: Types::ArtifactConfigInput
+      attr_accessor provisioned_resource_cleanup: ("AUTOMATIC" | "OFF")
+      attr_accessor browser_configs: ::Array[Types::BrowserConfig]
+      attr_accessor visual_references: ::Array[Types::VisualReferenceInput]
+      SENSITIVE: []
+    end
+
+    class StartCanaryDryRunResponse
+      attr_accessor dry_run_config: Types::DryRunConfigOutput
       SENSITIVE: []
     end
 
@@ -443,6 +568,12 @@ module Aws::Synthetics
       attr_accessor artifact_s3_location: ::String
       attr_accessor artifact_config: Types::ArtifactConfigInput
       attr_accessor provisioned_resource_cleanup: ("AUTOMATIC" | "OFF")
+      attr_accessor dry_run_id: ::String
+      attr_accessor visual_references: ::Array[Types::VisualReferenceInput]
+      attr_accessor browser_configs: ::Array[Types::BrowserConfig]
+      attr_accessor add_replica_locations: ::Array[Types::AddReplicaLocationInput]
+      attr_accessor remove_replica_locations: ::Array[::String]
+      attr_accessor kms_key_arn: ::String
       SENSITIVE: []
     end
 
@@ -457,12 +588,14 @@ module Aws::Synthetics
     class VisualReferenceInput
       attr_accessor base_screenshots: ::Array[Types::BaseScreenshot]
       attr_accessor base_canary_run_id: ::String
+      attr_accessor browser_type: ("CHROME" | "FIREFOX")
       SENSITIVE: []
     end
 
     class VisualReferenceOutput
       attr_accessor base_screenshots: ::Array[Types::BaseScreenshot]
       attr_accessor base_canary_run_id: ::String
+      attr_accessor browser_type: ("CHROME" | "FIREFOX")
       SENSITIVE: []
     end
 

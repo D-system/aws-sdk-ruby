@@ -99,8 +99,8 @@ module Aws::SQS
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -128,22 +128,24 @@ module Aws::SQS
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -171,6 +173,11 @@ module Aws::SQS
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -196,7 +203,7 @@ module Aws::SQS
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -204,8 +211,10 @@ module Aws::SQS
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
+    #
+    #   @option options [Boolean] :disable_queue_url_region_detection (false)
+    #     When set to `true`, the region will not be extracted from a provided queue url. Defaults to `false`.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -258,8 +267,8 @@ module Aws::SQS
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -321,17 +330,15 @@ module Aws::SQS
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -379,8 +386,8 @@ module Aws::SQS
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -798,7 +805,7 @@ module Aws::SQS
     #   convert an existing standard queue into a FIFO queue. You must
     #   either create a new FIFO queue for your application or delete your
     #   existing standard queue and recreate it as a FIFO queue. For more
-    #   information, see [Moving From a Standard Queue to a FIFO Queue][1]
+    #   information, see [Moving From a standard queue to a FIFO queue][1]
     #   in the *Amazon SQS Developer Guide*.
     #
     #    </note>
@@ -872,8 +879,8 @@ module Aws::SQS
     #
     #   * `MaximumMessageSize` – The limit of how many bytes a message can
     #     contain before Amazon SQS rejects it. Valid values: An integer from
-    #     1,024 bytes (1 KiB) to 262,144 bytes (256 KiB). Default: 262,144
-    #     (256 KiB).
+    #     1,024 bytes (1 KiB) to 1,048,576 bytes (1 MiB). Default: 1,048,576
+    #     bytes (1 MiB).
     #
     #   * `MessageRetentionPeriod` – The length of time, in seconds, for which
     #     Amazon SQS retains a message. Valid values: An integer from 60
@@ -1919,8 +1926,7 @@ module Aws::SQS
     #     producer that calls the ` SendMessage ` action.
     #
     #   * `MessageGroupId` – Returns the value provided by the producer that
-    #     calls the ` SendMessage ` action. Messages with the same
-    #     `MessageGroupId` are returned in sequence.
+    #     calls the ` SendMessage ` action.
     #
     #   * `SequenceNumber` – Returns the value provided by Amazon SQS.
     #
@@ -1962,8 +1968,7 @@ module Aws::SQS
     #     producer that calls the ` SendMessage ` action.
     #
     #   * `MessageGroupId` – Returns the value provided by the producer that
-    #     calls the ` SendMessage ` action. Messages with the same
-    #     `MessageGroupId` are returned in sequence.
+    #     calls the ` SendMessage ` action.
     #
     #   * `SequenceNumber` – Returns the value provided by Amazon SQS.
     #
@@ -2096,7 +2101,8 @@ module Aws::SQS
     #   * While messages with a particular `MessageGroupId` are invisible, no
     #     more messages belonging to the same `MessageGroupId` are returned
     #     until the visibility timeout expires. You can still receive messages
-    #     with another `MessageGroupId` as long as it is also visible.
+    #     with another `MessageGroupId` from your FIFO queue as long as they
+    #     are visible.
     #
     #   * If a caller of `ReceiveMessage` can't track the
     #     `ReceiveRequestAttemptId`, no retries work until the original
@@ -2217,11 +2223,10 @@ module Aws::SQS
     #  `#x9` \| `#xA` \| `#xD` \| `#x20` to `#xD7FF` \| `#xE000` to `#xFFFD`
     # \| `#x10000` to `#x10FFFF`
     #
-    #  Amazon SQS does not throw an exception or completely reject the
-    # message if it contains invalid characters. Instead, it replaces those
-    # invalid characters with `U+FFFD` before storing the message in the
-    # queue, as long as the message body contains at least one valid
-    # character.
+    #  If a message contains characters outside the allowed set, Amazon SQS
+    # rejects the message and returns an InvalidMessageContents error.
+    # Ensure that your message body includes only valid characters to avoid
+    # this exception.
     #
     #
     #
@@ -2234,7 +2239,7 @@ module Aws::SQS
     #
     # @option params [required, String] :message_body
     #   The message to send. The minimum size is one character. The maximum
-    #   size is 256 KiB.
+    #   size is 1 MiB or 1,048,576 bytes
     #
     #   A message can include only XML, JSON, and unformatted text. The
     #   following Unicode characters are allowed. For more information, see
@@ -2243,11 +2248,10 @@ module Aws::SQS
     #    `#x9` \| `#xA` \| `#xD` \| `#x20` to `#xD7FF` \| `#xE000` to `#xFFFD`
     #   \| `#x10000` to `#x10FFFF`
     #
-    #    Amazon SQS does not throw an exception or completely reject the
-    #   message if it contains invalid characters. Instead, it replaces those
-    #   invalid characters with `U+FFFD` before storing the message in the
-    #   queue, as long as the message body contains at least one valid
-    #   character.
+    #    If a message contains characters outside the allowed set, Amazon SQS
+    #   rejects the message and returns an InvalidMessageContents error.
+    #   Ensure that your message body includes only valid characters to avoid
+    #   this exception.
     #
     #
     #
@@ -2347,33 +2351,53 @@ module Aws::SQS
     #   [2]: https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/using-messagededuplicationid-property.html
     #
     # @option params [String] :message_group_id
-    #   This parameter applies only to FIFO (first-in-first-out) queues.
+    #   `MessageGroupId` is an attribute used in Amazon SQS FIFO
+    #   (First-In-First-Out) and standard queues. In FIFO queues,
+    #   `MessageGroupId` organizes messages into distinct groups. Messages
+    #   within the same message group are always processed one at a time, in
+    #   strict order, ensuring that no two messages from the same group are
+    #   processed simultaneously. In standard queues, using `MessageGroupId`
+    #   enables fair queues. It is used to identify the tenant a message
+    #   belongs to, helping maintain consistent message dwell time across all
+    #   tenants during noisy neighbor events. Unlike FIFO queues, messages
+    #   with the same `MessageGroupId` can be processed in parallel,
+    #   maintaining the high throughput of standard queues.
     #
-    #   The tag that specifies that a message belongs to a specific message
-    #   group. Messages that belong to the same message group are processed in
-    #   a FIFO manner (however, messages in different message groups might be
-    #   processed out of order). To interleave multiple ordered streams within
-    #   a single queue, use `MessageGroupId` values (for example, session data
-    #   for multiple users). In this scenario, multiple consumers can process
-    #   the queue, but the session data of each user is processed in a FIFO
-    #   fashion.
+    #   * **FIFO queues:** `MessageGroupId` acts as the tag that specifies
+    #     that a message belongs to a specific message group. Messages that
+    #     belong to the same message group are processed in a FIFO manner
+    #     (however, messages in different message groups might be processed
+    #     out of order). To interleave multiple ordered streams within a
+    #     single queue, use `MessageGroupId` values (for example, session data
+    #     for multiple users). In this scenario, multiple consumers can
+    #     process the queue, but the session data of each user is processed in
+    #     a FIFO fashion.
     #
-    #   * You must associate a non-empty `MessageGroupId` with a message. If
-    #     you don't provide a `MessageGroupId`, the action fails.
+    #     If you do not provide a `MessageGroupId` when sending a message to a
+    #     FIFO queue, the action fails.
     #
-    #   * `ReceiveMessage` might return messages with multiple
+    #     `ReceiveMessage` might return messages with multiple
     #     `MessageGroupId` values. For each `MessageGroupId`, the messages are
-    #     sorted by time sent. The caller can't specify a `MessageGroupId`.
+    #     sorted by time sent.
     #
-    #   The maximum length of `MessageGroupId` is 128 characters. Valid
-    #   values: alphanumeric characters and punctuation ``
+    #   * **Standard queues:**Use `MessageGroupId` in standard queues to
+    #     enable fair queues. The `MessageGroupId` identifies the tenant a
+    #     message belongs to. A tenant can be any entity that shares a queue
+    #     with others, such as your customer, a client application, or a
+    #     request type. When one tenant sends a disproportionately large
+    #     volume of messages or has messages that require longer processing
+    #     time, fair queues ensure other tenants' messages maintain low dwell
+    #     time. This preserves quality of service for all tenants while
+    #     maintaining the scalability and throughput of standard queues. We
+    #     recommend that you include a `MessageGroupId` in all messages when
+    #     using fair queues.
+    #
+    #   The length of `MessageGroupId` is 128 characters. Valid values:
+    #   alphanumeric characters and punctuation ``
     #   (!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~) ``.
     #
     #   For best practices of using `MessageGroupId`, see [Using the
     #   MessageGroupId Property][1] in the *Amazon SQS Developer Guide*.
-    #
-    #   `MessageGroupId` is required for FIFO queues. You can't use it for
-    #   Standard queues.
     #
     #
     #
@@ -2445,7 +2469,7 @@ module Aws::SQS
     #
     # The maximum allowed individual message size and the maximum total
     # payload size (the sum of the individual lengths of all of the batched
-    # messages) are both 256 KiB (262,144 bytes).
+    # messages) are both 1 MiB 1,048,576 bytes.
     #
     # A message can include only XML, JSON, and unformatted text. The
     # following Unicode characters are allowed. For more information, see
@@ -2454,11 +2478,10 @@ module Aws::SQS
     #  `#x9` \| `#xA` \| `#xD` \| `#x20` to `#xD7FF` \| `#xE000` to `#xFFFD`
     # \| `#x10000` to `#x10FFFF`
     #
-    #  Amazon SQS does not throw an exception or completely reject the
-    # message if it contains invalid characters. Instead, it replaces those
-    # invalid characters with `U+FFFD` before storing the message in the
-    # queue, as long as the message body contains at least one valid
-    # character.
+    #  If a message contains characters outside the allowed set, Amazon SQS
+    # rejects the message and returns an InvalidMessageContents error.
+    # Ensure that your message body includes only valid characters to avoid
+    # this exception.
     #
     # If you don't specify the `DelaySeconds` parameter for an entry,
     # Amazon SQS uses the default value for the queue.
@@ -2581,8 +2604,8 @@ module Aws::SQS
     #
     #   * `MaximumMessageSize` – The limit of how many bytes a message can
     #     contain before Amazon SQS rejects it. Valid values: An integer from
-    #     1,024 bytes (1 KiB) up to 262,144 bytes (256 KiB). Default: 262,144
-    #     (256 KiB).
+    #     1,024 bytes (1 KiB) up to 1,048,576 bytes (1 MiB). Default:
+    #     1,048,576 bytes (1 MiB).
     #
     #   * `MessageRetentionPeriod` – The length of time, in seconds, for which
     #     Amazon SQS retains a message. Valid values: An integer representing
@@ -2958,7 +2981,7 @@ module Aws::SQS
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-sqs'
-      context[:gem_version] = '1.93.0'
+      context[:gem_version] = '1.117.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

@@ -17,10 +17,14 @@ module Aws::Account
     AcceptPrimaryEmailUpdateRequest = Shapes::StructureShape.new(name: 'AcceptPrimaryEmailUpdateRequest')
     AcceptPrimaryEmailUpdateResponse = Shapes::StructureShape.new(name: 'AcceptPrimaryEmailUpdateResponse')
     AccessDeniedException = Shapes::StructureShape.new(name: 'AccessDeniedException')
+    AccountCreatedDate = Shapes::TimestampShape.new(name: 'AccountCreatedDate', timestampFormat: "iso8601")
     AccountId = Shapes::StringShape.new(name: 'AccountId')
+    AccountName = Shapes::StringShape.new(name: 'AccountName')
+    AccountState = Shapes::StringShape.new(name: 'AccountState')
     AddressLine = Shapes::StringShape.new(name: 'AddressLine')
     AlternateContact = Shapes::StructureShape.new(name: 'AlternateContact')
     AlternateContactType = Shapes::StringShape.new(name: 'AlternateContactType')
+    AwsAccountState = Shapes::StringShape.new(name: 'AwsAccountState')
     City = Shapes::StringShape.new(name: 'City')
     CompanyName = Shapes::StringShape.new(name: 'CompanyName')
     ConflictException = Shapes::StructureShape.new(name: 'ConflictException')
@@ -33,12 +37,18 @@ module Aws::Account
     EmailAddress = Shapes::StringShape.new(name: 'EmailAddress')
     EnableRegionRequest = Shapes::StructureShape.new(name: 'EnableRegionRequest')
     FullName = Shapes::StringShape.new(name: 'FullName')
+    GetAccountInformationRequest = Shapes::StructureShape.new(name: 'GetAccountInformationRequest')
+    GetAccountInformationResponse = Shapes::StructureShape.new(name: 'GetAccountInformationResponse')
     GetAlternateContactRequest = Shapes::StructureShape.new(name: 'GetAlternateContactRequest')
     GetAlternateContactResponse = Shapes::StructureShape.new(name: 'GetAlternateContactResponse')
     GetContactInformationRequest = Shapes::StructureShape.new(name: 'GetContactInformationRequest')
     GetContactInformationResponse = Shapes::StructureShape.new(name: 'GetContactInformationResponse')
+    GetGovCloudAccountInformationRequest = Shapes::StructureShape.new(name: 'GetGovCloudAccountInformationRequest')
+    GetGovCloudAccountInformationResponse = Shapes::StructureShape.new(name: 'GetGovCloudAccountInformationResponse')
     GetPrimaryEmailRequest = Shapes::StructureShape.new(name: 'GetPrimaryEmailRequest')
     GetPrimaryEmailResponse = Shapes::StructureShape.new(name: 'GetPrimaryEmailResponse')
+    GetPrimaryEmailUpdateStatusRequest = Shapes::StructureShape.new(name: 'GetPrimaryEmailUpdateStatusRequest')
+    GetPrimaryEmailUpdateStatusResponse = Shapes::StructureShape.new(name: 'GetPrimaryEmailUpdateStatusResponse')
     GetRegionOptStatusRequest = Shapes::StructureShape.new(name: 'GetRegionOptStatusRequest')
     GetRegionOptStatusResponse = Shapes::StructureShape.new(name: 'GetRegionOptStatusResponse')
     InternalServerException = Shapes::StructureShape.new(name: 'InternalServerException')
@@ -52,6 +62,7 @@ module Aws::Account
     PostalCode = Shapes::StringShape.new(name: 'PostalCode')
     PrimaryEmailAddress = Shapes::StringShape.new(name: 'PrimaryEmailAddress')
     PrimaryEmailUpdateStatus = Shapes::StringShape.new(name: 'PrimaryEmailUpdateStatus')
+    PutAccountNameRequest = Shapes::StructureShape.new(name: 'PutAccountNameRequest')
     PutAlternateContactRequest = Shapes::StructureShape.new(name: 'PutAlternateContactRequest')
     PutContactInformationRequest = Shapes::StructureShape.new(name: 'PutContactInformationRequest')
     Region = Shapes::StructureShape.new(name: 'Region')
@@ -60,11 +71,13 @@ module Aws::Account
     RegionOptStatus = Shapes::StringShape.new(name: 'RegionOptStatus')
     RegionOptStatusList = Shapes::ListShape.new(name: 'RegionOptStatusList')
     ResourceNotFoundException = Shapes::StructureShape.new(name: 'ResourceNotFoundException')
+    ResourceUnavailableException = Shapes::StructureShape.new(name: 'ResourceUnavailableException')
     SensitiveString = Shapes::StringShape.new(name: 'SensitiveString')
     StartPrimaryEmailUpdateRequest = Shapes::StructureShape.new(name: 'StartPrimaryEmailUpdateRequest')
     StartPrimaryEmailUpdateResponse = Shapes::StructureShape.new(name: 'StartPrimaryEmailUpdateResponse')
     StateOrRegion = Shapes::StringShape.new(name: 'StateOrRegion')
     String = Shapes::StringShape.new(name: 'String')
+    Timestamp = Shapes::TimestampShape.new(name: 'Timestamp')
     Title = Shapes::StringShape.new(name: 'Title')
     TooManyRequestsException = Shapes::StructureShape.new(name: 'TooManyRequestsException')
     ValidationException = Shapes::StructureShape.new(name: 'ValidationException')
@@ -74,42 +87,44 @@ module Aws::Account
     WebsiteUrl = Shapes::StringShape.new(name: 'WebsiteUrl')
 
     AcceptPrimaryEmailUpdateRequest.add_member(:account_id, Shapes::ShapeRef.new(shape: AccountId, required: true, location_name: "AccountId"))
-    AcceptPrimaryEmailUpdateRequest.add_member(:otp, Shapes::ShapeRef.new(shape: Otp, required: true, location_name: "Otp"))
     AcceptPrimaryEmailUpdateRequest.add_member(:primary_email, Shapes::ShapeRef.new(shape: PrimaryEmailAddress, required: true, location_name: "PrimaryEmail"))
+    AcceptPrimaryEmailUpdateRequest.add_member(:otp, Shapes::ShapeRef.new(shape: Otp, required: true, location_name: "Otp"))
     AcceptPrimaryEmailUpdateRequest.struct_class = Types::AcceptPrimaryEmailUpdateRequest
 
     AcceptPrimaryEmailUpdateResponse.add_member(:status, Shapes::ShapeRef.new(shape: PrimaryEmailUpdateStatus, location_name: "Status"))
     AcceptPrimaryEmailUpdateResponse.struct_class = Types::AcceptPrimaryEmailUpdateResponse
 
     AccessDeniedException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
+    AccessDeniedException.add_member(:error_type, Shapes::ShapeRef.new(shape: String, location: "header", location_name: "x-amzn-ErrorType"))
     AccessDeniedException.struct_class = Types::AccessDeniedException
 
-    AlternateContact.add_member(:alternate_contact_type, Shapes::ShapeRef.new(shape: AlternateContactType, location_name: "AlternateContactType"))
-    AlternateContact.add_member(:email_address, Shapes::ShapeRef.new(shape: EmailAddress, location_name: "EmailAddress"))
     AlternateContact.add_member(:name, Shapes::ShapeRef.new(shape: Name, location_name: "Name"))
-    AlternateContact.add_member(:phone_number, Shapes::ShapeRef.new(shape: PhoneNumber, location_name: "PhoneNumber"))
     AlternateContact.add_member(:title, Shapes::ShapeRef.new(shape: Title, location_name: "Title"))
+    AlternateContact.add_member(:email_address, Shapes::ShapeRef.new(shape: EmailAddress, location_name: "EmailAddress"))
+    AlternateContact.add_member(:phone_number, Shapes::ShapeRef.new(shape: PhoneNumber, location_name: "PhoneNumber"))
+    AlternateContact.add_member(:alternate_contact_type, Shapes::ShapeRef.new(shape: AlternateContactType, location_name: "AlternateContactType"))
     AlternateContact.struct_class = Types::AlternateContact
 
     ConflictException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
+    ConflictException.add_member(:error_type, Shapes::ShapeRef.new(shape: String, location: "header", location_name: "x-amzn-ErrorType"))
     ConflictException.struct_class = Types::ConflictException
 
+    ContactInformation.add_member(:full_name, Shapes::ShapeRef.new(shape: FullName, required: true, location_name: "FullName"))
     ContactInformation.add_member(:address_line_1, Shapes::ShapeRef.new(shape: AddressLine, required: true, location_name: "AddressLine1"))
     ContactInformation.add_member(:address_line_2, Shapes::ShapeRef.new(shape: AddressLine, location_name: "AddressLine2"))
     ContactInformation.add_member(:address_line_3, Shapes::ShapeRef.new(shape: AddressLine, location_name: "AddressLine3"))
     ContactInformation.add_member(:city, Shapes::ShapeRef.new(shape: City, required: true, location_name: "City"))
-    ContactInformation.add_member(:company_name, Shapes::ShapeRef.new(shape: CompanyName, location_name: "CompanyName"))
-    ContactInformation.add_member(:country_code, Shapes::ShapeRef.new(shape: CountryCode, required: true, location_name: "CountryCode"))
-    ContactInformation.add_member(:district_or_county, Shapes::ShapeRef.new(shape: DistrictOrCounty, location_name: "DistrictOrCounty"))
-    ContactInformation.add_member(:full_name, Shapes::ShapeRef.new(shape: FullName, required: true, location_name: "FullName"))
-    ContactInformation.add_member(:phone_number, Shapes::ShapeRef.new(shape: ContactInformationPhoneNumber, required: true, location_name: "PhoneNumber"))
-    ContactInformation.add_member(:postal_code, Shapes::ShapeRef.new(shape: PostalCode, required: true, location_name: "PostalCode"))
     ContactInformation.add_member(:state_or_region, Shapes::ShapeRef.new(shape: StateOrRegion, location_name: "StateOrRegion"))
+    ContactInformation.add_member(:district_or_county, Shapes::ShapeRef.new(shape: DistrictOrCounty, location_name: "DistrictOrCounty"))
+    ContactInformation.add_member(:postal_code, Shapes::ShapeRef.new(shape: PostalCode, required: true, location_name: "PostalCode"))
+    ContactInformation.add_member(:country_code, Shapes::ShapeRef.new(shape: CountryCode, required: true, location_name: "CountryCode"))
+    ContactInformation.add_member(:phone_number, Shapes::ShapeRef.new(shape: ContactInformationPhoneNumber, required: true, location_name: "PhoneNumber"))
+    ContactInformation.add_member(:company_name, Shapes::ShapeRef.new(shape: CompanyName, location_name: "CompanyName"))
     ContactInformation.add_member(:website_url, Shapes::ShapeRef.new(shape: WebsiteUrl, location_name: "WebsiteUrl"))
     ContactInformation.struct_class = Types::ContactInformation
 
-    DeleteAlternateContactRequest.add_member(:account_id, Shapes::ShapeRef.new(shape: AccountId, location_name: "AccountId"))
     DeleteAlternateContactRequest.add_member(:alternate_contact_type, Shapes::ShapeRef.new(shape: AlternateContactType, required: true, location_name: "AlternateContactType"))
+    DeleteAlternateContactRequest.add_member(:account_id, Shapes::ShapeRef.new(shape: AccountId, location_name: "AccountId"))
     DeleteAlternateContactRequest.struct_class = Types::DeleteAlternateContactRequest
 
     DisableRegionRequest.add_member(:account_id, Shapes::ShapeRef.new(shape: AccountId, location_name: "AccountId"))
@@ -120,8 +135,17 @@ module Aws::Account
     EnableRegionRequest.add_member(:region_name, Shapes::ShapeRef.new(shape: RegionName, required: true, location_name: "RegionName"))
     EnableRegionRequest.struct_class = Types::EnableRegionRequest
 
-    GetAlternateContactRequest.add_member(:account_id, Shapes::ShapeRef.new(shape: AccountId, location_name: "AccountId"))
+    GetAccountInformationRequest.add_member(:account_id, Shapes::ShapeRef.new(shape: AccountId, location_name: "AccountId"))
+    GetAccountInformationRequest.struct_class = Types::GetAccountInformationRequest
+
+    GetAccountInformationResponse.add_member(:account_id, Shapes::ShapeRef.new(shape: AccountId, location_name: "AccountId"))
+    GetAccountInformationResponse.add_member(:account_name, Shapes::ShapeRef.new(shape: AccountName, location_name: "AccountName"))
+    GetAccountInformationResponse.add_member(:account_created_date, Shapes::ShapeRef.new(shape: AccountCreatedDate, location_name: "AccountCreatedDate"))
+    GetAccountInformationResponse.add_member(:account_state, Shapes::ShapeRef.new(shape: AccountState, location_name: "AccountState"))
+    GetAccountInformationResponse.struct_class = Types::GetAccountInformationResponse
+
     GetAlternateContactRequest.add_member(:alternate_contact_type, Shapes::ShapeRef.new(shape: AlternateContactType, required: true, location_name: "AlternateContactType"))
+    GetAlternateContactRequest.add_member(:account_id, Shapes::ShapeRef.new(shape: AccountId, location_name: "AccountId"))
     GetAlternateContactRequest.struct_class = Types::GetAlternateContactRequest
 
     GetAlternateContactResponse.add_member(:alternate_contact, Shapes::ShapeRef.new(shape: AlternateContact, location_name: "AlternateContact"))
@@ -133,11 +157,25 @@ module Aws::Account
     GetContactInformationResponse.add_member(:contact_information, Shapes::ShapeRef.new(shape: ContactInformation, location_name: "ContactInformation"))
     GetContactInformationResponse.struct_class = Types::GetContactInformationResponse
 
+    GetGovCloudAccountInformationRequest.add_member(:standard_account_id, Shapes::ShapeRef.new(shape: AccountId, location_name: "StandardAccountId"))
+    GetGovCloudAccountInformationRequest.struct_class = Types::GetGovCloudAccountInformationRequest
+
+    GetGovCloudAccountInformationResponse.add_member(:gov_cloud_account_id, Shapes::ShapeRef.new(shape: AccountId, required: true, location_name: "GovCloudAccountId"))
+    GetGovCloudAccountInformationResponse.add_member(:account_state, Shapes::ShapeRef.new(shape: AwsAccountState, required: true, location_name: "AccountState"))
+    GetGovCloudAccountInformationResponse.struct_class = Types::GetGovCloudAccountInformationResponse
+
     GetPrimaryEmailRequest.add_member(:account_id, Shapes::ShapeRef.new(shape: AccountId, required: true, location_name: "AccountId"))
     GetPrimaryEmailRequest.struct_class = Types::GetPrimaryEmailRequest
 
     GetPrimaryEmailResponse.add_member(:primary_email, Shapes::ShapeRef.new(shape: PrimaryEmailAddress, location_name: "PrimaryEmail"))
     GetPrimaryEmailResponse.struct_class = Types::GetPrimaryEmailResponse
+
+    GetPrimaryEmailUpdateStatusRequest.add_member(:account_id, Shapes::ShapeRef.new(shape: AccountId, location_name: "AccountId"))
+    GetPrimaryEmailUpdateStatusRequest.struct_class = Types::GetPrimaryEmailUpdateStatusRequest
+
+    GetPrimaryEmailUpdateStatusResponse.add_member(:status, Shapes::ShapeRef.new(shape: PrimaryEmailUpdateStatus, required: true, location_name: "Status"))
+    GetPrimaryEmailUpdateStatusResponse.add_member(:updated_at, Shapes::ShapeRef.new(shape: Timestamp, location_name: "UpdatedAt"))
+    GetPrimaryEmailUpdateStatusResponse.struct_class = Types::GetPrimaryEmailUpdateStatusResponse
 
     GetRegionOptStatusRequest.add_member(:account_id, Shapes::ShapeRef.new(shape: AccountId, location_name: "AccountId"))
     GetRegionOptStatusRequest.add_member(:region_name, Shapes::ShapeRef.new(shape: RegionName, required: true, location_name: "RegionName"))
@@ -148,6 +186,7 @@ module Aws::Account
     GetRegionOptStatusResponse.struct_class = Types::GetRegionOptStatusResponse
 
     InternalServerException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
+    InternalServerException.add_member(:error_type, Shapes::ShapeRef.new(shape: String, location: "header", location_name: "x-amzn-ErrorType"))
     InternalServerException.struct_class = Types::InternalServerException
 
     ListRegionsRequest.add_member(:account_id, Shapes::ShapeRef.new(shape: AccountId, location_name: "AccountId"))
@@ -160,16 +199,20 @@ module Aws::Account
     ListRegionsResponse.add_member(:regions, Shapes::ShapeRef.new(shape: RegionOptList, location_name: "Regions"))
     ListRegionsResponse.struct_class = Types::ListRegionsResponse
 
-    PutAlternateContactRequest.add_member(:account_id, Shapes::ShapeRef.new(shape: AccountId, location_name: "AccountId"))
-    PutAlternateContactRequest.add_member(:alternate_contact_type, Shapes::ShapeRef.new(shape: AlternateContactType, required: true, location_name: "AlternateContactType"))
-    PutAlternateContactRequest.add_member(:email_address, Shapes::ShapeRef.new(shape: EmailAddress, required: true, location_name: "EmailAddress"))
+    PutAccountNameRequest.add_member(:account_name, Shapes::ShapeRef.new(shape: AccountName, required: true, location_name: "AccountName"))
+    PutAccountNameRequest.add_member(:account_id, Shapes::ShapeRef.new(shape: AccountId, location_name: "AccountId"))
+    PutAccountNameRequest.struct_class = Types::PutAccountNameRequest
+
     PutAlternateContactRequest.add_member(:name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "Name"))
-    PutAlternateContactRequest.add_member(:phone_number, Shapes::ShapeRef.new(shape: PhoneNumber, required: true, location_name: "PhoneNumber"))
     PutAlternateContactRequest.add_member(:title, Shapes::ShapeRef.new(shape: Title, required: true, location_name: "Title"))
+    PutAlternateContactRequest.add_member(:email_address, Shapes::ShapeRef.new(shape: EmailAddress, required: true, location_name: "EmailAddress"))
+    PutAlternateContactRequest.add_member(:phone_number, Shapes::ShapeRef.new(shape: PhoneNumber, required: true, location_name: "PhoneNumber"))
+    PutAlternateContactRequest.add_member(:alternate_contact_type, Shapes::ShapeRef.new(shape: AlternateContactType, required: true, location_name: "AlternateContactType"))
+    PutAlternateContactRequest.add_member(:account_id, Shapes::ShapeRef.new(shape: AccountId, location_name: "AccountId"))
     PutAlternateContactRequest.struct_class = Types::PutAlternateContactRequest
 
-    PutContactInformationRequest.add_member(:account_id, Shapes::ShapeRef.new(shape: AccountId, location_name: "AccountId"))
     PutContactInformationRequest.add_member(:contact_information, Shapes::ShapeRef.new(shape: ContactInformation, required: true, location_name: "ContactInformation"))
+    PutContactInformationRequest.add_member(:account_id, Shapes::ShapeRef.new(shape: AccountId, location_name: "AccountId"))
     PutContactInformationRequest.struct_class = Types::PutContactInformationRequest
 
     Region.add_member(:region_name, Shapes::ShapeRef.new(shape: RegionName, location_name: "RegionName"))
@@ -181,7 +224,12 @@ module Aws::Account
     RegionOptStatusList.member = Shapes::ShapeRef.new(shape: RegionOptStatus)
 
     ResourceNotFoundException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
+    ResourceNotFoundException.add_member(:error_type, Shapes::ShapeRef.new(shape: String, location: "header", location_name: "x-amzn-ErrorType"))
     ResourceNotFoundException.struct_class = Types::ResourceNotFoundException
+
+    ResourceUnavailableException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
+    ResourceUnavailableException.add_member(:error_type, Shapes::ShapeRef.new(shape: String, location: "header", location_name: "x-amzn-ErrorType"))
+    ResourceUnavailableException.struct_class = Types::ResourceUnavailableException
 
     StartPrimaryEmailUpdateRequest.add_member(:account_id, Shapes::ShapeRef.new(shape: AccountId, required: true, location_name: "AccountId"))
     StartPrimaryEmailUpdateRequest.add_member(:primary_email, Shapes::ShapeRef.new(shape: PrimaryEmailAddress, required: true, location_name: "PrimaryEmail"))
@@ -191,15 +239,16 @@ module Aws::Account
     StartPrimaryEmailUpdateResponse.struct_class = Types::StartPrimaryEmailUpdateResponse
 
     TooManyRequestsException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
+    TooManyRequestsException.add_member(:error_type, Shapes::ShapeRef.new(shape: String, location: "header", location_name: "x-amzn-ErrorType"))
     TooManyRequestsException.struct_class = Types::TooManyRequestsException
 
-    ValidationException.add_member(:field_list, Shapes::ShapeRef.new(shape: ValidationExceptionFieldList, location_name: "fieldList"))
     ValidationException.add_member(:message, Shapes::ShapeRef.new(shape: SensitiveString, required: true, location_name: "message"))
     ValidationException.add_member(:reason, Shapes::ShapeRef.new(shape: ValidationExceptionReason, location_name: "reason"))
+    ValidationException.add_member(:field_list, Shapes::ShapeRef.new(shape: ValidationExceptionFieldList, location_name: "fieldList"))
     ValidationException.struct_class = Types::ValidationException
 
-    ValidationExceptionField.add_member(:message, Shapes::ShapeRef.new(shape: SensitiveString, required: true, location_name: "message"))
     ValidationExceptionField.add_member(:name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "name"))
+    ValidationExceptionField.add_member(:message, Shapes::ShapeRef.new(shape: SensitiveString, required: true, location_name: "message"))
     ValidationExceptionField.struct_class = Types::ValidationExceptionField
 
     ValidationExceptionFieldList.member = Shapes::ShapeRef.new(shape: ValidationExceptionField)
@@ -214,7 +263,6 @@ module Aws::Account
         "apiVersion" => "2021-02-01",
         "auth" => ["aws.auth#sigv4"],
         "endpointPrefix" => "account",
-        "jsonVersion" => "1.1",
         "protocol" => "rest-json",
         "protocols" => ["rest-json"],
         "serviceFullName" => "AWS Account",
@@ -231,9 +279,9 @@ module Aws::Account
         o.input = Shapes::ShapeRef.new(shape: AcceptPrimaryEmailUpdateRequest)
         o.output = Shapes::ShapeRef.new(shape: AcceptPrimaryEmailUpdateResponse)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
-        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
       end)
@@ -257,9 +305,9 @@ module Aws::Account
         o.http_request_uri = "/disableRegion"
         o.input = Shapes::ShapeRef.new(shape: DisableRegionRequest)
         o.output = Shapes::ShapeRef.new(shape: Shapes::StructureShape.new(struct_class: Aws::EmptyStructure))
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
-        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
       end)
@@ -270,9 +318,21 @@ module Aws::Account
         o.http_request_uri = "/enableRegion"
         o.input = Shapes::ShapeRef.new(shape: EnableRegionRequest)
         o.output = Shapes::ShapeRef.new(shape: Shapes::StructureShape.new(struct_class: Aws::EmptyStructure))
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+      end)
+
+      api.add_operation(:get_account_information, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetAccountInformation"
+        o.http_method = "POST"
+        o.http_request_uri = "/getAccountInformation"
+        o.input = Shapes::ShapeRef.new(shape: GetAccountInformationRequest)
+        o.output = Shapes::ShapeRef.new(shape: GetAccountInformationResponse)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
       end)
@@ -303,6 +363,20 @@ module Aws::Account
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
       end)
 
+      api.add_operation(:get_gov_cloud_account_information, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetGovCloudAccountInformation"
+        o.http_method = "POST"
+        o.http_request_uri = "/getGovCloudAccountInformation"
+        o.input = Shapes::ShapeRef.new(shape: GetGovCloudAccountInformationRequest)
+        o.output = Shapes::ShapeRef.new(shape: GetGovCloudAccountInformationResponse)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceUnavailableException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+      end)
+
       api.add_operation(:get_primary_email, Seahorse::Model::Operation.new.tap do |o|
         o.name = "GetPrimaryEmail"
         o.http_method = "POST"
@@ -310,8 +384,21 @@ module Aws::Account
         o.input = Shapes::ShapeRef.new(shape: GetPrimaryEmailRequest)
         o.output = Shapes::ShapeRef.new(shape: GetPrimaryEmailResponse)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
-        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+      end)
+
+      api.add_operation(:get_primary_email_update_status, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetPrimaryEmailUpdateStatus"
+        o.http_method = "POST"
+        o.http_request_uri = "/getPrimaryEmailUpdateStatus"
+        o.input = Shapes::ShapeRef.new(shape: GetPrimaryEmailUpdateStatusRequest)
+        o.output = Shapes::ShapeRef.new(shape: GetPrimaryEmailUpdateStatusResponse)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
       end)
@@ -322,8 +409,8 @@ module Aws::Account
         o.http_request_uri = "/getRegionOptStatus"
         o.input = Shapes::ShapeRef.new(shape: GetRegionOptStatusRequest)
         o.output = Shapes::ShapeRef.new(shape: GetRegionOptStatusResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
       end)
@@ -334,8 +421,8 @@ module Aws::Account
         o.http_request_uri = "/listRegions"
         o.input = Shapes::ShapeRef.new(shape: ListRegionsRequest)
         o.output = Shapes::ShapeRef.new(shape: ListRegionsResponse)
-        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o[:pager] = Aws::Pager.new(
@@ -344,6 +431,18 @@ module Aws::Account
             "next_token" => "next_token"
           }
         )
+      end)
+
+      api.add_operation(:put_account_name, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "PutAccountName"
+        o.http_method = "POST"
+        o.http_request_uri = "/putAccountName"
+        o.input = Shapes::ShapeRef.new(shape: PutAccountNameRequest)
+        o.output = Shapes::ShapeRef.new(shape: Shapes::StructureShape.new(struct_class: Aws::EmptyStructure))
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
       end)
 
       api.add_operation(:put_alternate_contact, Seahorse::Model::Operation.new.tap do |o|
@@ -377,9 +476,9 @@ module Aws::Account
         o.input = Shapes::ShapeRef.new(shape: StartPrimaryEmailUpdateRequest)
         o.output = Shapes::ShapeRef.new(shape: StartPrimaryEmailUpdateResponse)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
-        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
       end)

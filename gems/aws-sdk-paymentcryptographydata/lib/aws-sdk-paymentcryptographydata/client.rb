@@ -95,8 +95,8 @@ module Aws::PaymentCryptographyData
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::PaymentCryptographyData
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::PaymentCryptographyData
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::PaymentCryptographyData
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::PaymentCryptographyData
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::PaymentCryptographyData
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::PaymentCryptographyData
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::PaymentCryptographyData
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -512,8 +516,9 @@ module Aws::PaymentCryptographyData
     # operations][6] in the *Amazon Web Services Payment Cryptography User
     # Guide*.
     #
-    # **Cross-account use**: This operation can't be used across different
-    # Amazon Web Services accounts.
+    # **Cross-account use**: This operation supports cross-account use when
+    # the key has a resource-based policy that grants access. For more
+    # information, see [Resource-based policies][7].
     #
     # **Related operations:**
     #
@@ -531,6 +536,7 @@ module Aws::PaymentCryptographyData
     # [4]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/use-cases-acquirers-dynamickeys.html
     # [5]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-validattributes.html
     # [6]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/crypto-ops-validkeys-ops.html
+    # [7]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/security_iam_resource-based-policies.html
     #
     # @option params [required, String] :key_identifier
     #   The `keyARN` of the encryption key that Amazon Web Services Payment
@@ -571,7 +577,7 @@ module Aws::PaymentCryptographyData
     #         padding_type: "PKCS1", # accepts PKCS1, OAEP_SHA1, OAEP_SHA256, OAEP_SHA512
     #       },
     #       dukpt: {
-    #         key_serial_number: "HexLengthBetween10And24", # required
+    #         key_serial_number: "HexLength16Or20Or24", # required
     #         mode: "ECB", # accepts ECB, CBC
     #         dukpt_key_derivation_type: "TDES_2KEY", # accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256
     #         dukpt_key_variant: "BIDIRECTIONAL", # accepts BIDIRECTIONAL, REQUEST, RESPONSE
@@ -592,13 +598,13 @@ module Aws::PaymentCryptographyData
     #         diffie_hellman_symmetric_key: {
     #           certificate_authority_public_key_identifier: "KeyArnOrKeyAliasType", # required
     #           public_key_certificate: "CertificateType", # required
-    #           key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256
+    #           key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256, HMAC_SHA256, HMAC_SHA384, HMAC_SHA512, HMAC_SHA224
     #           key_derivation_function: "NIST_SP800", # required, accepts NIST_SP800, ANSI_X963
     #           key_derivation_hash_algorithm: "SHA_256", # required, accepts SHA_256, SHA_384, SHA_512
     #           shared_information: "SharedInformation", # required
     #         },
     #       },
-    #       key_check_value_algorithm: "CMAC", # accepts CMAC, ANSI_X9_24
+    #       key_check_value_algorithm: "CMAC", # accepts CMAC, ANSI_X9_24, HMAC, SHA_1
     #     },
     #   })
     #
@@ -665,14 +671,15 @@ module Aws::PaymentCryptographyData
     # operations][6] in the *Amazon Web Services Payment Cryptography User
     # Guide*.
     #
-    # **Cross-account use**: This operation can't be used across different
-    # Amazon Web Services accounts.
+    # **Cross-account use**: This operation supports cross-account use when
+    # the key has a resource-based policy that grants access. For more
+    # information, see [Resource-based policies][7].
     #
     # **Related operations:**
     #
     # * DecryptData
     #
-    # * [GetPublicCertificate][7]
+    # * [GetPublicCertificate][8]
     #
     # * [ImportKey][3]
     #
@@ -686,7 +693,8 @@ module Aws::PaymentCryptographyData
     # [4]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/use-cases-acquirers-dynamickeys.html
     # [5]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-validattributes.html
     # [6]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/crypto-ops-validkeys-ops.html
-    # [7]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_GetPublicKeyCertificate.html
+    # [7]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/security_iam_resource-based-policies.html
+    # [8]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_GetPublicKeyCertificate.html
     #
     # @option params [required, String] :key_identifier
     #   The `keyARN` of the encryption key that Amazon Web Services Payment
@@ -739,7 +747,7 @@ module Aws::PaymentCryptographyData
     #         padding_type: "PKCS1", # accepts PKCS1, OAEP_SHA1, OAEP_SHA256, OAEP_SHA512
     #       },
     #       dukpt: {
-    #         key_serial_number: "HexLengthBetween10And24", # required
+    #         key_serial_number: "HexLength16Or20Or24", # required
     #         mode: "ECB", # accepts ECB, CBC
     #         dukpt_key_derivation_type: "TDES_2KEY", # accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256
     #         dukpt_key_variant: "BIDIRECTIONAL", # accepts BIDIRECTIONAL, REQUEST, RESPONSE
@@ -760,13 +768,13 @@ module Aws::PaymentCryptographyData
     #         diffie_hellman_symmetric_key: {
     #           certificate_authority_public_key_identifier: "KeyArnOrKeyAliasType", # required
     #           public_key_certificate: "CertificateType", # required
-    #           key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256
+    #           key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256, HMAC_SHA256, HMAC_SHA384, HMAC_SHA512, HMAC_SHA224
     #           key_derivation_function: "NIST_SP800", # required, accepts NIST_SP800, ANSI_X963
     #           key_derivation_hash_algorithm: "SHA_256", # required, accepts SHA_256, SHA_384, SHA_512
     #           shared_information: "SharedInformation", # required
     #         },
     #       },
-    #       key_check_value_algorithm: "CMAC", # accepts CMAC, ANSI_X9_24
+    #       key_check_value_algorithm: "CMAC", # accepts CMAC, ANSI_X9_24, HMAC, SHA_1
     #     },
     #   })
     #
@@ -782,6 +790,224 @@ module Aws::PaymentCryptographyData
     # @param [Hash] params ({})
     def encrypt_data(params = {}, options = {})
       req = build_request(:encrypt_data, params)
+      req.send_request(options)
+    end
+
+    # Generates a `KekValidationRequest` or a `KekValidationResponse` for
+    # node-to-node initialization between payment processing nodes using
+    # [Australian Standard 2805 (AS2805)][1].
+    #
+    # During node-to-node initialization, both communicating nodes must
+    # validate that they possess the correct Key Encrypting Keys (KEKs)
+    # before proceeding with session key exchange. In AS2805, the sending
+    # KEK (KEKs) of one node corresponds to the receiving KEK (KEKr) of its
+    # partner node. Each node uses its KEK to encrypt and decrypt session
+    # keys exchanged between the nodes. A KEK can be created or imported
+    # into Amazon Web Services Payment Cryptography using either the
+    # [CreateKey][2] or [ImportKey][3] operations.
+    #
+    # To use `GenerateAs2805KekValidation` to generate a KEK validation
+    # request, set `KekValidationType` to `KekValidationRequest`. This
+    # operation returns both `RandomKeySend` (KRs) and `RandomKeyReceive`
+    # (KRr) as response values. The partnering node receives the KRs, uses
+    # its KEKr to decrypt it, and generates a KRr which is an inverted value
+    # of KRs. The node receiving the KRr validates it against its own KRr
+    # generated during KEK validation request outside of Amazon Web Services
+    # Payment Cryptography.
+    #
+    # You can also use this operation to generate a KEK validation response,
+    # by setting `KekValidationType` to `KekValidationResponse` and
+    # providing the incoming KRs. This operation then calculates a KRr. To
+    # learn more about more about node-to-node initialization, see
+    # [Validation of KEK][4] in the *Amazon Web Services Payment
+    # Cryptography User Guide*.
+    #
+    # For information about valid keys for this operation, see
+    # [Understanding key attributes][5] and [Key types for specific data
+    # operations][6] in the *Amazon Web Services Payment Cryptography User
+    # Guide*.
+    #
+    # **Cross-account use**: This operation supports cross-account use when
+    # the key has a resource-based policy that grants access. For more
+    # information, see [Resource-based policies][7].
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/as2805.html
+    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_CreateKey.html
+    # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_ImportKey.html
+    # [4]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/as2805.kekvalidation.html
+    # [5]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-validattributes.html
+    # [6]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/crypto-ops-validkeys-ops.html
+    # [7]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/security_iam_resource-based-policies.html
+    #
+    # @option params [required, String] :key_identifier
+    #   The `keyARN` of sending KEK that Amazon Web Services Payment
+    #   Cryptography uses for node-to-node initialization
+    #
+    # @option params [required, Types::As2805KekValidationType] :kek_validation_type
+    #   Defines whether to generate a KEK validation request or KEK validation
+    #   response for node-to-node initialization.
+    #
+    # @option params [required, String] :random_key_send_variant_mask
+    #   The key variant to use for generating a random key for KEK validation
+    #   during node-to-node initialization.
+    #
+    # @return [Types::GenerateAs2805KekValidationOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GenerateAs2805KekValidationOutput#key_arn #key_arn} => String
+    #   * {Types::GenerateAs2805KekValidationOutput#key_check_value #key_check_value} => String
+    #   * {Types::GenerateAs2805KekValidationOutput#random_key_send #random_key_send} => String
+    #   * {Types::GenerateAs2805KekValidationOutput#random_key_receive #random_key_receive} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.generate_as_2805_kek_validation({
+    #     key_identifier: "KeyArnOrKeyAliasType", # required
+    #     kek_validation_type: { # required
+    #       kek_validation_request: {
+    #         derive_key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256, HMAC_SHA256, HMAC_SHA384, HMAC_SHA512, HMAC_SHA224
+    #         random_key_max_length: "BYTES_8", # accepts BYTES_8, BYTES_16, BYTES_24
+    #       },
+    #       kek_validation_response: {
+    #         random_key_send: "As2805RandomKeyMaterial", # required
+    #       },
+    #     },
+    #     random_key_send_variant_mask: "VARIANT_MASK_82C0", # required, accepts VARIANT_MASK_82C0, VARIANT_MASK_82
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.key_arn #=> String
+    #   resp.key_check_value #=> String
+    #   resp.random_key_send #=> String
+    #   resp.random_key_receive #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-data-2022-02-03/GenerateAs2805KekValidation AWS API Documentation
+    #
+    # @overload generate_as_2805_kek_validation(params = {})
+    # @param [Hash] params ({})
+    def generate_as_2805_kek_validation(params = {}, options = {})
+      req = build_request(:generate_as_2805_kek_validation, params)
+      req.send_request(options)
+    end
+
+    # Generates an Authorization Request Cryptogram (ARQC) for an EMV chip
+    # payment card authorization. For more information, see [Generate auth
+    # request cryptogram][1] in the *Amazon Web Services Payment
+    # Cryptography User Guide*.
+    #
+    # ARQC generation uses an Issuer Master Key (IMK) for application
+    # cryptograms (TR31\_E0\_EMV\_MKEY\_APP\_CRYPTOGRAMS) to derive a
+    # session key, which is then used to generate the cryptogram from the
+    # provided transaction data (when applicable). To use this operation,
+    # you must first create or import an IMK-AC key by calling
+    # [CreateKey][2] or [ImportKey][3]. The `KeyModesOfUse` should be set to
+    # `DeriveKey` for the IMK-AC encryption key.
+    #
+    # This operation is intended for development and testing scenarios only.
+    # It is not recommended to use this operation as a substitute for
+    # card-based cryptogram generation in production payment flows.
+    #
+    # For information about valid keys for this operation, see
+    # [Understanding key attributes][4] and [Key types for specific data
+    # operations][5] in the *Amazon Web Services Payment Cryptography User
+    # Guide*.
+    #
+    # **Cross-account use**: This operation supports cross-account use when
+    # the key has a resource-based policy that grants access. For more
+    # information, see [Resource-based policies][6].
+    #
+    # **Related operations:**
+    #
+    # * VerifyAuthRequestCryptogram
+    #
+    # ^
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/data-operations.generateauthrequestcryptogram.html
+    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_CreateKey.html
+    # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_ImportKey.html
+    # [4]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-validattributes.html
+    # [5]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/crypto-ops-validkeys-ops.html
+    # [6]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/security_iam_resource-based-policies.html
+    #
+    # @option params [required, String] :key_identifier
+    #   The `keyARN` of the IMK-AC (TR31\_E0\_EMV\_MKEY\_APP\_CRYPTOGRAMS)
+    #   that Amazon Web Services Payment Cryptography uses to generate the
+    #   ARQC.
+    #
+    # @option params [required, String] :transaction_data
+    #   The transaction data that Amazon Web Services Payment Cryptography
+    #   uses for ARQC generation. The same transaction data is used for ARQC
+    #   verification by the issuer using VerifyAuthRequestCryptogram.
+    #
+    # @option params [required, String] :major_key_derivation_mode
+    #   The method to use when deriving the major encryption key for ARQC
+    #   generation within Amazon Web Services Payment Cryptography.
+    #
+    # @option params [required, Types::SessionKeyDerivation] :session_key_derivation_attributes
+    #   The attributes and values to use for deriving a session key for ARQC
+    #   generation within Amazon Web Services Payment Cryptography.
+    #
+    # @return [Types::GenerateAuthRequestCryptogramOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GenerateAuthRequestCryptogramOutput#key_arn #key_arn} => String
+    #   * {Types::GenerateAuthRequestCryptogramOutput#key_check_value #key_check_value} => String
+    #   * {Types::GenerateAuthRequestCryptogramOutput#auth_request_cryptogram #auth_request_cryptogram} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.generate_auth_request_cryptogram({
+    #     key_identifier: "KeyArnOrKeyAliasType", # required
+    #     transaction_data: "TransactionDataType", # required
+    #     major_key_derivation_mode: "EMV_OPTION_A", # required, accepts EMV_OPTION_A, EMV_OPTION_B
+    #     session_key_derivation_attributes: { # required
+    #       emv_common: {
+    #         primary_account_number: "PrimaryAccountNumberType", # required
+    #         pan_sequence_number: "NumberLengthEquals2", # required
+    #         application_transaction_counter: "HexLengthEquals4", # required
+    #       },
+    #       mastercard: {
+    #         primary_account_number: "PrimaryAccountNumberType", # required
+    #         pan_sequence_number: "NumberLengthEquals2", # required
+    #         application_transaction_counter: "HexLengthEquals4", # required
+    #         unpredictable_number: "HexLengthEquals8", # required
+    #       },
+    #       emv_2000: {
+    #         primary_account_number: "PrimaryAccountNumberType", # required
+    #         pan_sequence_number: "NumberLengthEquals2", # required
+    #         application_transaction_counter: "HexLengthEquals4", # required
+    #       },
+    #       amex: {
+    #         primary_account_number: "PrimaryAccountNumberType", # required
+    #         pan_sequence_number: "NumberLengthEquals2", # required
+    #       },
+    #       visa: {
+    #         primary_account_number: "PrimaryAccountNumberType", # required
+    #         pan_sequence_number: "NumberLengthEquals2", # required
+    #       },
+    #       union_pay: {
+    #         primary_account_number: "PrimaryAccountNumberType", # required
+    #         pan_sequence_number: "NumberLengthEquals2", # required
+    #         application_transaction_counter: "HexLengthEquals4", # required
+    #       },
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.key_arn #=> String
+    #   resp.key_check_value #=> String
+    #   resp.auth_request_cryptogram #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-data-2022-02-03/GenerateAuthRequestCryptogram AWS API Documentation
+    #
+    # @overload generate_auth_request_cryptogram(params = {})
+    # @param [Hash] params ({})
+    def generate_auth_request_cryptogram(params = {}, options = {})
+      req = build_request(:generate_auth_request_cryptogram, params)
       req.send_request(options)
     end
 
@@ -806,8 +1032,9 @@ module Aws::PaymentCryptographyData
     # operations][5] in the *Amazon Web Services Payment Cryptography User
     # Guide*.
     #
-    # **Cross-account use**: This operation can't be used across different
-    # Amazon Web Services accounts.
+    # **Cross-account use**: This operation supports cross-account use when
+    # the key has a resource-based policy that grants access. For more
+    # information, see [Resource-based policies][6].
     #
     # **Related operations:**
     #
@@ -822,6 +1049,7 @@ module Aws::PaymentCryptographyData
     # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_ImportKey.html
     # [4]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-validattributes.html
     # [5]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/crypto-ops-validkeys-ops.html
+    # [6]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/security_iam_resource-based-policies.html
     #
     # @option params [required, String] :key_identifier
     #   The `keyARN` of the CVK encryption key that Amazon Web Services
@@ -915,16 +1143,17 @@ module Aws::PaymentCryptographyData
     # You can use this operation to generate a DUPKT, CMAC, HMAC or EMV MAC
     # by setting generation attributes and algorithm to the associated
     # values. The MAC generation encryption key must have valid values for
-    # `KeyUsage` such as `TR31_M7_HMAC_KEY` for HMAC generation, and they
-    # key must have `KeyModesOfUse` set to `Generate` and `Verify`.
+    # `KeyUsage` such as `TR31_M7_HMAC_KEY` for HMAC generation, and the key
+    # must have `KeyModesOfUse` set to `Generate`.
     #
     # For information about valid keys for this operation, see
     # [Understanding key attributes][1] and [Key types for specific data
     # operations][2] in the *Amazon Web Services Payment Cryptography User
     # Guide*.
     #
-    # **Cross-account use**: This operation can't be used across different
-    # Amazon Web Services accounts.
+    # **Cross-account use**: This operation supports cross-account use when
+    # the key has a resource-based policy that grants access. For more
+    # information, see [Resource-based policies][3].
     #
     # **Related operations:**
     #
@@ -936,6 +1165,7 @@ module Aws::PaymentCryptographyData
     #
     # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-validattributes.html
     # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/crypto-ops-validkeys-ops.html
+    # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/security_iam_resource-based-policies.html
     #
     # @option params [required, String] :key_identifier
     #   The `keyARN` of the MAC generation encryption key.
@@ -963,29 +1193,29 @@ module Aws::PaymentCryptographyData
     #     key_identifier: "KeyArnOrKeyAliasType", # required
     #     message_data: "MessageDataType", # required
     #     generation_attributes: { # required
-    #       algorithm: "ISO9797_ALGORITHM1", # accepts ISO9797_ALGORITHM1, ISO9797_ALGORITHM3, CMAC, HMAC_SHA224, HMAC_SHA256, HMAC_SHA384, HMAC_SHA512
+    #       algorithm: "ISO9797_ALGORITHM1", # accepts ISO9797_ALGORITHM1, ISO9797_ALGORITHM3, CMAC, HMAC, HMAC_SHA224, HMAC_SHA256, HMAC_SHA384, HMAC_SHA512, AS2805_4_1
     #       emv_mac: {
     #         major_key_derivation_mode: "EMV_OPTION_A", # required, accepts EMV_OPTION_A, EMV_OPTION_B
     #         primary_account_number: "PrimaryAccountNumberType", # required
     #         pan_sequence_number: "NumberLengthEquals2", # required
-    #         session_key_derivation_mode: "EMV_COMMON_SESSION_KEY", # required, accepts EMV_COMMON_SESSION_KEY, EMV2000, AMEX, MASTERCARD_SESSION_KEY, VISA
+    #         session_key_derivation_mode: "EMV_COMMON_SESSION_KEY", # required, accepts EMV_COMMON_SESSION_KEY, EMV2000, AMEX, MASTERCARD_SESSION_KEY, VISA, UNION_PAY
     #         session_key_derivation_value: { # required
     #           application_cryptogram: "ApplicationCryptogramType",
     #           application_transaction_counter: "HexLengthEquals4",
     #         },
     #       },
     #       dukpt_iso_9797_algorithm_1: {
-    #         key_serial_number: "HexLengthBetween10And24", # required
+    #         key_serial_number: "HexLength16Or20Or24", # required
     #         dukpt_key_variant: "BIDIRECTIONAL", # required, accepts BIDIRECTIONAL, REQUEST, RESPONSE
     #         dukpt_derivation_type: "TDES_2KEY", # accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256
     #       },
     #       dukpt_iso_9797_algorithm_3: {
-    #         key_serial_number: "HexLengthBetween10And24", # required
+    #         key_serial_number: "HexLength16Or20Or24", # required
     #         dukpt_key_variant: "BIDIRECTIONAL", # required, accepts BIDIRECTIONAL, REQUEST, RESPONSE
     #         dukpt_derivation_type: "TDES_2KEY", # accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256
     #       },
     #       dukpt_cmac: {
-    #         key_serial_number: "HexLengthBetween10And24", # required
+    #         key_serial_number: "HexLength16Or20Or24", # required
     #         dukpt_key_variant: "BIDIRECTIONAL", # required, accepts BIDIRECTIONAL, REQUEST, RESPONSE
     #         dukpt_derivation_type: "TDES_2KEY", # accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256
     #       },
@@ -1041,8 +1271,9 @@ module Aws::PaymentCryptographyData
     #
     #  </note>
     #
-    # **Cross-account use**: This operation can't be used across different
-    # Amazon Web Services accounts.
+    # **Cross-account use**: This operation supports cross-account use when
+    # the key has a resource-based policy that grants access. For more
+    # information, see [Resource-based policies][2].
     #
     # **Related operations:**
     #
@@ -1053,6 +1284,7 @@ module Aws::PaymentCryptographyData
     #
     #
     # [1]: https://www.emvco.com/specifications/
+    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/security_iam_resource-based-policies.html
     #
     # @option params [required, String] :new_pin_pek_identifier
     #   The `keyARN` of the PEK protecting the incoming new encrypted PIN
@@ -1201,8 +1433,9 @@ module Aws::PaymentCryptographyData
     # operations][4] in the *Amazon Web Services Payment Cryptography User
     # Guide*.
     #
-    # **Cross-account use**: This operation can't be used across different
-    # Amazon Web Services accounts.
+    # **Cross-account use**: This operation supports cross-account use when
+    # the key has a resource-based policy that grants access. For more
+    # information, see [Resource-based policies][5].
     #
     # **Related operations:**
     #
@@ -1218,6 +1451,7 @@ module Aws::PaymentCryptographyData
     # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/create-keys.html
     # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-validattributes.html
     # [4]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/crypto-ops-validkeys-ops.html
+    # [5]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/security_iam_resource-based-policies.html
     #
     # @option params [required, String] :generation_key_identifier
     #   The `keyARN` of the PEK that Amazon Web Services Payment Cryptography
@@ -1235,15 +1469,15 @@ module Aws::PaymentCryptographyData
     # @option params [Integer] :pin_data_length
     #   The length of PIN under generation.
     #
-    # @option params [required, String] :primary_account_number
+    # @option params [String] :primary_account_number
     #   The Primary Account Number (PAN), a unique identifier for a payment
     #   credit or debit card that associates the card with a specific account
     #   holder.
     #
     # @option params [required, String] :pin_block_format
     #   The PIN encoding format for pin data generation as specified in ISO
-    #   9564. Amazon Web Services Payment Cryptography supports `ISO_Format_0`
-    #   and `ISO_Format_3`.
+    #   9564. Amazon Web Services Payment Cryptography supports
+    #   `ISO_Format_0`, `ISO_Format_3` and `ISO_Format_4`.
     #
     #   The `ISO_Format_0` PIN block format is equivalent to the ANSI X9.8,
     #   VISA-1, and ECI-1 PIN block formats. It is similar to a VISA-4 PIN
@@ -1251,6 +1485,9 @@ module Aws::PaymentCryptographyData
     #
     #   The `ISO_Format_3` PIN block format is the same as `ISO_Format_0`
     #   except that the fill digits are random values from 10 to 15.
+    #
+    #   The `ISO_Format_4` PIN block format is the only one supporting AES
+    #   encryption.
     #
     # @option params [Types::WrappedKey] :encryption_wrapped_key
     #   Parameter information of a WrappedKeyBlock for encryption key
@@ -1302,21 +1539,21 @@ module Aws::PaymentCryptographyData
     #       },
     #     },
     #     pin_data_length: 1,
-    #     primary_account_number: "PrimaryAccountNumberType", # required
-    #     pin_block_format: "ISO_FORMAT_0", # required, accepts ISO_FORMAT_0, ISO_FORMAT_3, ISO_FORMAT_4
+    #     primary_account_number: "PrimaryAccountNumberType",
+    #     pin_block_format: "ISO_FORMAT_0", # required, accepts ISO_FORMAT_0, ISO_FORMAT_1, ISO_FORMAT_3, ISO_FORMAT_4
     #     encryption_wrapped_key: {
     #       wrapped_key_material: { # required
     #         tr_31_key_block: "Tr31WrappedKeyBlock",
     #         diffie_hellman_symmetric_key: {
     #           certificate_authority_public_key_identifier: "KeyArnOrKeyAliasType", # required
     #           public_key_certificate: "CertificateType", # required
-    #           key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256
+    #           key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256, HMAC_SHA256, HMAC_SHA384, HMAC_SHA512, HMAC_SHA224
     #           key_derivation_function: "NIST_SP800", # required, accepts NIST_SP800, ANSI_X963
     #           key_derivation_hash_algorithm: "SHA_256", # required, accepts SHA_256, SHA_384, SHA_512
     #           shared_information: "SharedInformation", # required
     #         },
     #       },
-    #       key_check_value_algorithm: "CMAC", # accepts CMAC, ANSI_X9_24
+    #       key_check_value_algorithm: "CMAC", # accepts CMAC, ANSI_X9_24, HMAC, SHA_1
     #     },
     #   })
     #
@@ -1369,8 +1606,9 @@ module Aws::PaymentCryptographyData
     # operations][5] in the *Amazon Web Services Payment Cryptography User
     # Guide*.
     #
-    # **Cross-account use**: This operation can't be used across different
-    # Amazon Web Services accounts.
+    # **Cross-account use**: This operation supports cross-account use when
+    # the key has a resource-based policy that grants access. For more
+    # information, see [Resource-based policies][6].
     #
     # **Related operations:**
     #
@@ -1378,7 +1616,7 @@ module Aws::PaymentCryptographyData
     #
     # * EncryptData
     #
-    # * [GetPublicCertificate][6]
+    # * [GetPublicCertificate][7]
     #
     # * [ImportKey][2]
     #
@@ -1389,7 +1627,8 @@ module Aws::PaymentCryptographyData
     # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/use-cases-acquirers-dynamickeys.html
     # [4]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-validattributes.html
     # [5]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/crypto-ops-validkeys-ops.html
-    # [6]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_GetPublicKeyCertificate.html
+    # [6]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/security_iam_resource-based-policies.html
+    # [7]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_GetPublicKeyCertificate.html
     #
     # @option params [required, String] :incoming_key_identifier
     #   The `keyARN` of the encryption key of incoming ciphertext data.
@@ -1441,7 +1680,7 @@ module Aws::PaymentCryptographyData
     #         padding_type: "PKCS1", # accepts PKCS1, OAEP_SHA1, OAEP_SHA256, OAEP_SHA512
     #       },
     #       dukpt: {
-    #         key_serial_number: "HexLengthBetween10And24", # required
+    #         key_serial_number: "HexLength16Or20Or24", # required
     #         mode: "ECB", # accepts ECB, CBC
     #         dukpt_key_derivation_type: "TDES_2KEY", # accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256
     #         dukpt_key_variant: "BIDIRECTIONAL", # accepts BIDIRECTIONAL, REQUEST, RESPONSE
@@ -1455,7 +1694,7 @@ module Aws::PaymentCryptographyData
     #         padding_type: "PKCS1", # accepts PKCS1, OAEP_SHA1, OAEP_SHA256, OAEP_SHA512
     #       },
     #       dukpt: {
-    #         key_serial_number: "HexLengthBetween10And24", # required
+    #         key_serial_number: "HexLength16Or20Or24", # required
     #         mode: "ECB", # accepts ECB, CBC
     #         dukpt_key_derivation_type: "TDES_2KEY", # accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256
     #         dukpt_key_variant: "BIDIRECTIONAL", # accepts BIDIRECTIONAL, REQUEST, RESPONSE
@@ -1468,13 +1707,13 @@ module Aws::PaymentCryptographyData
     #         diffie_hellman_symmetric_key: {
     #           certificate_authority_public_key_identifier: "KeyArnOrKeyAliasType", # required
     #           public_key_certificate: "CertificateType", # required
-    #           key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256
+    #           key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256, HMAC_SHA256, HMAC_SHA384, HMAC_SHA512, HMAC_SHA224
     #           key_derivation_function: "NIST_SP800", # required, accepts NIST_SP800, ANSI_X963
     #           key_derivation_hash_algorithm: "SHA_256", # required, accepts SHA_256, SHA_384, SHA_512
     #           shared_information: "SharedInformation", # required
     #         },
     #       },
-    #       key_check_value_algorithm: "CMAC", # accepts CMAC, ANSI_X9_24
+    #       key_check_value_algorithm: "CMAC", # accepts CMAC, ANSI_X9_24, HMAC, SHA_1
     #     },
     #     outgoing_wrapped_key: {
     #       wrapped_key_material: { # required
@@ -1482,13 +1721,13 @@ module Aws::PaymentCryptographyData
     #         diffie_hellman_symmetric_key: {
     #           certificate_authority_public_key_identifier: "KeyArnOrKeyAliasType", # required
     #           public_key_certificate: "CertificateType", # required
-    #           key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256
+    #           key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256, HMAC_SHA256, HMAC_SHA384, HMAC_SHA512, HMAC_SHA224
     #           key_derivation_function: "NIST_SP800", # required, accepts NIST_SP800, ANSI_X963
     #           key_derivation_hash_algorithm: "SHA_256", # required, accepts SHA_256, SHA_384, SHA_512
     #           shared_information: "SharedInformation", # required
     #         },
     #       },
-    #       key_check_value_algorithm: "CMAC", # accepts CMAC, ANSI_X9_24
+    #       key_check_value_algorithm: "CMAC", # accepts CMAC, ANSI_X9_24, HMAC, SHA_1
     #     },
     #   })
     #
@@ -1504,6 +1743,112 @@ module Aws::PaymentCryptographyData
     # @param [Hash] params ({})
     def re_encrypt_data(params = {}, options = {})
       req = build_request(:re_encrypt_data, params)
+      req.send_request(options)
+    end
+
+    # Translates an cryptographic key between different wrapping keys
+    # without importing the key into Amazon Web Services Payment
+    # Cryptography.
+    #
+    # This operation can be used when key material is frequently rotated,
+    # such as during every card transaction, and there is a need to avoid
+    # importing short-lived keys into Amazon Web Services Payment
+    # Cryptography. It translates short-lived transaction keys such as
+    # [PEK][1] generated for each transaction and wrapped with an [ECDH][2]
+    # derived wrapping key to another [KEK][3] wrapping key.
+    #
+    # Before using this operation, you must first request the public key
+    # certificate of the ECC key pair generated within Amazon Web Services
+    # Payment Cryptography to establish an ECDH key agreement. In
+    # `TranslateKeyData`, the service uses its own ECC key pair, public
+    # certificate of receiving ECC key pair, and the key derivation
+    # parameters to generate a derived key. The service uses this derived
+    # key to unwrap the incoming transaction key received as a
+    # TR31WrappedKeyBlock and re-wrap using a user provided KEK to generate
+    # an outgoing Tr31WrappedKeyBlock.
+    #
+    # For information about valid keys for this operation, see
+    # [Understanding key attributes][4] and [Key types for specific data
+    # operations][5] in the *Amazon Web Services Payment Cryptography User
+    # Guide*.
+    #
+    # **Cross-account use**: This operation supports cross-account use when
+    # the key has a resource-based policy that grants access. For more
+    # information, see [Resource-based policies][6].
+    #
+    # **Related operations:**
+    #
+    # * [CreateKey][7]
+    #
+    # * [GetPublicCertificate][8]
+    #
+    # * [ImportKey][9]
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/terminology.html#terms.pek
+    # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/terminology.html#terms.ecdh
+    # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/terminology.html#terms.kek
+    # [4]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-validattributes.html
+    # [5]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/crypto-ops-validkeys-ops.html
+    # [6]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/security_iam_resource-based-policies.html
+    # [7]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_CreateKey.html
+    # [8]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_GetPublicKeyCertificate.html
+    # [9]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_ImportKey.html
+    #
+    # @option params [required, Types::IncomingKeyMaterial] :incoming_key_material
+    #   Parameter information of the TR31WrappedKeyBlock containing the
+    #   transaction key.
+    #
+    # @option params [required, Types::OutgoingKeyMaterial] :outgoing_key_material
+    #   Parameter information of the wrapping key used to wrap the transaction
+    #   key in the outgoing TR31WrappedKeyBlock.
+    #
+    # @option params [String] :key_check_value_algorithm
+    #   The key check value (KCV) algorithm used for calculating the KCV of
+    #   the derived key.
+    #
+    # @return [Types::TranslateKeyMaterialOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::TranslateKeyMaterialOutput#wrapped_key #wrapped_key} => Types::WrappedWorkingKey
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.translate_key_material({
+    #     incoming_key_material: { # required
+    #       diffie_hellman_tr_31_key_block: {
+    #         private_key_identifier: "KeyArnOrKeyAliasType", # required
+    #         certificate_authority_public_key_identifier: "KeyArnOrKeyAliasType", # required
+    #         public_key_certificate: "CertificateType", # required
+    #         derive_key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256, HMAC_SHA256, HMAC_SHA384, HMAC_SHA512, HMAC_SHA224
+    #         key_derivation_function: "NIST_SP800", # required, accepts NIST_SP800, ANSI_X963
+    #         key_derivation_hash_algorithm: "SHA_256", # required, accepts SHA_256, SHA_384, SHA_512
+    #         derivation_data: { # required
+    #           shared_information: "SharedInformation",
+    #         },
+    #         wrapped_key_block: "Tr31WrappedKeyBlock", # required
+    #       },
+    #     },
+    #     outgoing_key_material: { # required
+    #       tr_31_key_block: {
+    #         wrapping_key_identifier: "KeyArnOrKeyAliasType", # required
+    #       },
+    #     },
+    #     key_check_value_algorithm: "CMAC", # accepts CMAC, ANSI_X9_24, HMAC, SHA_1
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.wrapped_key.wrapped_key_material #=> String
+    #   resp.wrapped_key.key_check_value #=> String
+    #   resp.wrapped_key.wrapped_key_material_format #=> String, one of "KEY_CRYPTOGRAM", "TR31_KEY_BLOCK", "TR34_KEY_BLOCK"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-data-2022-02-03/TranslateKeyMaterial AWS API Documentation
+    #
+    # @overload translate_key_material(params = {})
+    # @param [Hash] params ({})
+    def translate_key_material(params = {}, options = {})
+      req = build_request(:translate_key_material, params)
       req.send_request(options)
     end
 
@@ -1539,7 +1884,7 @@ module Aws::PaymentCryptographyData
     # encrypted PIN block for use within the service. You can also use ECDH
     # for reveal PIN, wherein the service translates the PIN block from PEK
     # to a ECDH derived encryption key. For more information on establishing
-    # ECDH derived keys, see the [Generating keys][3] in the *Amazon Web
+    # ECDH derived keys, see the [Creating keys][3] in the *Amazon Web
     # Services Payment Cryptography User Guide*.
     #
     # The allowed combinations of PIN block format translations are guided
@@ -1560,8 +1905,9 @@ module Aws::PaymentCryptographyData
     #
     #  </note>
     #
-    # **Cross-account use**: This operation can't be used across different
-    # Amazon Web Services accounts.
+    # **Cross-account use**: This operation supports cross-account use when
+    # the key has a resource-based policy that grants access. For more
+    # information, see [Resource-based policies][6].
     #
     # **Related operations:**
     #
@@ -1576,6 +1922,7 @@ module Aws::PaymentCryptographyData
     # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/create-keys.html
     # [4]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-validattributes.html
     # [5]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/crypto-ops-validkeys-ops.html
+    # [6]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/security_iam_resource-based-policies.html
     #
     # @option params [required, String] :incoming_key_identifier
     #   The `keyARN` of the encryption key under which incoming PIN block data
@@ -1618,6 +1965,10 @@ module Aws::PaymentCryptographyData
     #   The WrappedKeyBlock containing the encryption key for encrypting
     #   outgoing PIN block data.
     #
+    # @option params [Types::As2805PekDerivationAttributes] :incoming_as_2805_attributes
+    #   The attributes and values to use for incoming AS2805 encryption key
+    #   for PIN block translation.
+    #
     # @return [Types::TranslatePinDataOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::TranslatePinDataOutput#pin_block #pin_block} => String
@@ -1641,6 +1992,9 @@ module Aws::PaymentCryptographyData
     #       iso_format_4: {
     #         primary_account_number: "PrimaryAccountNumberType", # required
     #       },
+    #       as_2805_format_0: {
+    #         primary_account_number: "PrimaryAccountNumberType", # required
+    #       },
     #     },
     #     outgoing_translation_attributes: { # required
     #       iso_format_0: {
@@ -1654,15 +2008,18 @@ module Aws::PaymentCryptographyData
     #       iso_format_4: {
     #         primary_account_number: "PrimaryAccountNumberType", # required
     #       },
+    #       as_2805_format_0: {
+    #         primary_account_number: "PrimaryAccountNumberType", # required
+    #       },
     #     },
     #     encrypted_pin_block: "HexEvenLengthBetween16And32", # required
     #     incoming_dukpt_attributes: {
-    #       key_serial_number: "HexLengthBetween10And24", # required
+    #       key_serial_number: "HexLength16Or20Or24", # required
     #       dukpt_key_derivation_type: "TDES_2KEY", # accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256
     #       dukpt_key_variant: "BIDIRECTIONAL", # accepts BIDIRECTIONAL, REQUEST, RESPONSE
     #     },
     #     outgoing_dukpt_attributes: {
-    #       key_serial_number: "HexLengthBetween10And24", # required
+    #       key_serial_number: "HexLength16Or20Or24", # required
     #       dukpt_key_derivation_type: "TDES_2KEY", # accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256
     #       dukpt_key_variant: "BIDIRECTIONAL", # accepts BIDIRECTIONAL, REQUEST, RESPONSE
     #     },
@@ -1672,13 +2029,13 @@ module Aws::PaymentCryptographyData
     #         diffie_hellman_symmetric_key: {
     #           certificate_authority_public_key_identifier: "KeyArnOrKeyAliasType", # required
     #           public_key_certificate: "CertificateType", # required
-    #           key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256
+    #           key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256, HMAC_SHA256, HMAC_SHA384, HMAC_SHA512, HMAC_SHA224
     #           key_derivation_function: "NIST_SP800", # required, accepts NIST_SP800, ANSI_X963
     #           key_derivation_hash_algorithm: "SHA_256", # required, accepts SHA_256, SHA_384, SHA_512
     #           shared_information: "SharedInformation", # required
     #         },
     #       },
-    #       key_check_value_algorithm: "CMAC", # accepts CMAC, ANSI_X9_24
+    #       key_check_value_algorithm: "CMAC", # accepts CMAC, ANSI_X9_24, HMAC, SHA_1
     #     },
     #     outgoing_wrapped_key: {
     #       wrapped_key_material: { # required
@@ -1686,13 +2043,17 @@ module Aws::PaymentCryptographyData
     #         diffie_hellman_symmetric_key: {
     #           certificate_authority_public_key_identifier: "KeyArnOrKeyAliasType", # required
     #           public_key_certificate: "CertificateType", # required
-    #           key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256
+    #           key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256, HMAC_SHA256, HMAC_SHA384, HMAC_SHA512, HMAC_SHA224
     #           key_derivation_function: "NIST_SP800", # required, accepts NIST_SP800, ANSI_X963
     #           key_derivation_hash_algorithm: "SHA_256", # required, accepts SHA_256, SHA_384, SHA_512
     #           shared_information: "SharedInformation", # required
     #         },
     #       },
-    #       key_check_value_algorithm: "CMAC", # accepts CMAC, ANSI_X9_24
+    #       key_check_value_algorithm: "CMAC", # accepts CMAC, ANSI_X9_24, HMAC, SHA_1
+    #     },
+    #     incoming_as_2805_attributes: {
+    #       system_trace_audit_number: "SystemTraceAuditNumberType", # required
+    #       transaction_amount: "TransactionAmountType", # required
     #     },
     #   })
     #
@@ -1733,8 +2094,9 @@ module Aws::PaymentCryptographyData
     # operations][5] in the *Amazon Web Services Payment Cryptography User
     # Guide*.
     #
-    # **Cross-account use**: This operation can't be used across different
-    # Amazon Web Services accounts.
+    # **Cross-account use**: This operation supports cross-account use when
+    # the key has a resource-based policy that grants access. For more
+    # information, see [Resource-based policies][6].
     #
     # **Related operations:**
     #
@@ -1749,6 +2111,7 @@ module Aws::PaymentCryptographyData
     # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_CreateKey.html
     # [4]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-validattributes.html
     # [5]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/crypto-ops-validkeys-ops.html
+    # [6]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/security_iam_resource-based-policies.html
     #
     # @option params [required, String] :key_identifier
     #   The `keyARN` of the major encryption key that Amazon Web Services
@@ -1804,7 +2167,7 @@ module Aws::PaymentCryptographyData
     #         primary_account_number: "PrimaryAccountNumberType", # required
     #         pan_sequence_number: "NumberLengthEquals2", # required
     #         application_transaction_counter: "HexLengthEquals4", # required
-    #         unpredictable_number: "HexLengthBetween2And8", # required
+    #         unpredictable_number: "HexLengthEquals8", # required
     #       },
     #       emv_2000: {
     #         primary_account_number: "PrimaryAccountNumberType", # required
@@ -1818,6 +2181,11 @@ module Aws::PaymentCryptographyData
     #       visa: {
     #         primary_account_number: "PrimaryAccountNumberType", # required
     #         pan_sequence_number: "NumberLengthEquals2", # required
+    #       },
+    #       union_pay: {
+    #         primary_account_number: "PrimaryAccountNumberType", # required
+    #         pan_sequence_number: "NumberLengthEquals2", # required
+    #         application_transaction_counter: "HexLengthEquals4", # required
     #       },
     #     },
     #     auth_response_attributes: {
@@ -1867,8 +2235,9 @@ module Aws::PaymentCryptographyData
     # operations][3] in the *Amazon Web Services Payment Cryptography User
     # Guide*.
     #
-    # **Cross-account use**: This operation can't be used across different
-    # Amazon Web Services accounts.
+    # **Cross-account use**: This operation supports cross-account use when
+    # the key has a resource-based policy that grants access. For more
+    # information, see [Resource-based policies][4].
     #
     # **Related operations:**
     #
@@ -1883,6 +2252,7 @@ module Aws::PaymentCryptographyData
     # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/verify-card-data.html
     # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-validattributes.html
     # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/crypto-ops-validkeys-ops.html
+    # [4]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/security_iam_resource-based-policies.html
     #
     # @option params [required, String] :key_identifier
     #   The `keyARN` of the CVK encryption key that Amazon Web Services
@@ -1980,8 +2350,9 @@ module Aws::PaymentCryptographyData
     # operations][2] in the *Amazon Web Services Payment Cryptography User
     # Guide*.
     #
-    # **Cross-account use**: This operation can't be used across different
-    # Amazon Web Services accounts.
+    # **Cross-account use**: This operation supports cross-account use when
+    # the key has a resource-based policy that grants access. For more
+    # information, see [Resource-based policies][3].
     #
     # **Related operations:**
     #
@@ -1993,6 +2364,7 @@ module Aws::PaymentCryptographyData
     #
     # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-validattributes.html
     # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/crypto-ops-validkeys-ops.html
+    # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/security_iam_resource-based-policies.html
     #
     # @option params [required, String] :key_identifier
     #   The `keyARN` of the encryption key that Amazon Web Services Payment
@@ -2024,29 +2396,29 @@ module Aws::PaymentCryptographyData
     #     message_data: "MessageDataType", # required
     #     mac: "MacType", # required
     #     verification_attributes: { # required
-    #       algorithm: "ISO9797_ALGORITHM1", # accepts ISO9797_ALGORITHM1, ISO9797_ALGORITHM3, CMAC, HMAC_SHA224, HMAC_SHA256, HMAC_SHA384, HMAC_SHA512
+    #       algorithm: "ISO9797_ALGORITHM1", # accepts ISO9797_ALGORITHM1, ISO9797_ALGORITHM3, CMAC, HMAC, HMAC_SHA224, HMAC_SHA256, HMAC_SHA384, HMAC_SHA512, AS2805_4_1
     #       emv_mac: {
     #         major_key_derivation_mode: "EMV_OPTION_A", # required, accepts EMV_OPTION_A, EMV_OPTION_B
     #         primary_account_number: "PrimaryAccountNumberType", # required
     #         pan_sequence_number: "NumberLengthEquals2", # required
-    #         session_key_derivation_mode: "EMV_COMMON_SESSION_KEY", # required, accepts EMV_COMMON_SESSION_KEY, EMV2000, AMEX, MASTERCARD_SESSION_KEY, VISA
+    #         session_key_derivation_mode: "EMV_COMMON_SESSION_KEY", # required, accepts EMV_COMMON_SESSION_KEY, EMV2000, AMEX, MASTERCARD_SESSION_KEY, VISA, UNION_PAY
     #         session_key_derivation_value: { # required
     #           application_cryptogram: "ApplicationCryptogramType",
     #           application_transaction_counter: "HexLengthEquals4",
     #         },
     #       },
     #       dukpt_iso_9797_algorithm_1: {
-    #         key_serial_number: "HexLengthBetween10And24", # required
+    #         key_serial_number: "HexLength16Or20Or24", # required
     #         dukpt_key_variant: "BIDIRECTIONAL", # required, accepts BIDIRECTIONAL, REQUEST, RESPONSE
     #         dukpt_derivation_type: "TDES_2KEY", # accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256
     #       },
     #       dukpt_iso_9797_algorithm_3: {
-    #         key_serial_number: "HexLengthBetween10And24", # required
+    #         key_serial_number: "HexLength16Or20Or24", # required
     #         dukpt_key_variant: "BIDIRECTIONAL", # required, accepts BIDIRECTIONAL, REQUEST, RESPONSE
     #         dukpt_derivation_type: "TDES_2KEY", # accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256
     #       },
     #       dukpt_cmac: {
-    #         key_serial_number: "HexLengthBetween10And24", # required
+    #         key_serial_number: "HexLength16Or20Or24", # required
     #         dukpt_key_variant: "BIDIRECTIONAL", # required, accepts BIDIRECTIONAL, REQUEST, RESPONSE
     #         dukpt_derivation_type: "TDES_2KEY", # accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256
     #       },
@@ -2084,8 +2456,9 @@ module Aws::PaymentCryptographyData
     # operations][3] in the *Amazon Web Services Payment Cryptography User
     # Guide*.
     #
-    # **Cross-account use**: This operation can't be used across different
-    # Amazon Web Services accounts.
+    # **Cross-account use**: This operation supports cross-account use when
+    # the key has a resource-based policy that grants access. For more
+    # information, see [Resource-based policies][4].
     #
     # **Related operations:**
     #
@@ -2098,6 +2471,7 @@ module Aws::PaymentCryptographyData
     # [1]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/verify-pin-data.html
     # [2]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-validattributes.html
     # [3]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/crypto-ops-validkeys-ops.html
+    # [4]: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/security_iam_resource-based-policies.html
     #
     # @option params [required, String] :verification_key_identifier
     #   The `keyARN` of the PIN verification key.
@@ -2113,7 +2487,7 @@ module Aws::PaymentCryptographyData
     #   The encrypted PIN block data that Amazon Web Services Payment
     #   Cryptography verifies.
     #
-    # @option params [required, String] :primary_account_number
+    # @option params [String] :primary_account_number
     #   The Primary Account Number (PAN), a unique identifier for a payment
     #   credit or debit card that associates the card with a specific account
     #   holder.
@@ -2165,11 +2539,11 @@ module Aws::PaymentCryptographyData
     #       },
     #     },
     #     encrypted_pin_block: "EncryptedPinBlockType", # required
-    #     primary_account_number: "PrimaryAccountNumberType", # required
-    #     pin_block_format: "ISO_FORMAT_0", # required, accepts ISO_FORMAT_0, ISO_FORMAT_3, ISO_FORMAT_4
+    #     primary_account_number: "PrimaryAccountNumberType",
+    #     pin_block_format: "ISO_FORMAT_0", # required, accepts ISO_FORMAT_0, ISO_FORMAT_1, ISO_FORMAT_3, ISO_FORMAT_4
     #     pin_data_length: 1,
     #     dukpt_attributes: {
-    #       key_serial_number: "HexLengthBetween10And24", # required
+    #       key_serial_number: "HexLength16Or20Or24", # required
     #       dukpt_derivation_type: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256
     #     },
     #     encryption_wrapped_key: {
@@ -2178,13 +2552,13 @@ module Aws::PaymentCryptographyData
     #         diffie_hellman_symmetric_key: {
     #           certificate_authority_public_key_identifier: "KeyArnOrKeyAliasType", # required
     #           public_key_certificate: "CertificateType", # required
-    #           key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256
+    #           key_algorithm: "TDES_2KEY", # required, accepts TDES_2KEY, TDES_3KEY, AES_128, AES_192, AES_256, HMAC_SHA256, HMAC_SHA384, HMAC_SHA512, HMAC_SHA224
     #           key_derivation_function: "NIST_SP800", # required, accepts NIST_SP800, ANSI_X963
     #           key_derivation_hash_algorithm: "SHA_256", # required, accepts SHA_256, SHA_384, SHA_512
     #           shared_information: "SharedInformation", # required
     #         },
     #       },
-    #       key_check_value_algorithm: "CMAC", # accepts CMAC, ANSI_X9_24
+    #       key_check_value_algorithm: "CMAC", # accepts CMAC, ANSI_X9_24, HMAC, SHA_1
     #     },
     #   })
     #
@@ -2222,7 +2596,7 @@ module Aws::PaymentCryptographyData
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-paymentcryptographydata'
-      context[:gem_version] = '1.30.0'
+      context[:gem_version] = '1.56.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

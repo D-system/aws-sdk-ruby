@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -81,11 +82,13 @@ module Aws
         include ::Seahorse::Client::_ResponseSuccess[Types::AssociateWhatsAppBusinessAccountOutput]
         def signup_callback_result: () -> Types::WhatsAppSignupCallbackResult
         def status_code: () -> ::Integer
+        def linked_whats_app_business_account_id: () -> ::String
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/SocialMessaging/Client.html#associate_whats_app_business_account-instance_method
       def associate_whats_app_business_account: (
                                                   ?signup_callback: {
-                                                    access_token: ::String
+                                                    access_token: ::String,
+                                                    callback_url: ::String?
                                                   },
                                                   ?setup_finalization: {
                                                     associate_in_progress_token: ::String,
@@ -98,9 +101,9 @@ module Aws
                                                           {
                                                             key: ::String,
                                                             value: ::String?
-                                                          },
+                                                          }
                                                         ]?
-                                                      },
+                                                      }
                                                     ],
                                                     phone_number_parent: ::String?,
                                                     waba: {
@@ -109,18 +112,118 @@ module Aws
                                                         {
                                                           event_destination_arn: ::String,
                                                           role_arn: ::String?
-                                                        },
+                                                        }
                                                       ]?,
                                                       tags: Array[
                                                         {
                                                           key: ::String,
                                                           value: ::String?
-                                                        },
+                                                        }
                                                       ]?
                                                     }?
                                                   }
                                                 ) -> _AssociateWhatsAppBusinessAccountResponseSuccess
                                               | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _AssociateWhatsAppBusinessAccountResponseSuccess
+
+      interface _CreateWhatsAppDatasetResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateWhatsAppDatasetOutput]
+        def dataset_id: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/SocialMessaging/Client.html#create_whats_app_dataset-instance_method
+      def create_whats_app_dataset: (
+                                      id: ::String
+                                    ) -> _CreateWhatsAppDatasetResponseSuccess
+                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateWhatsAppDatasetResponseSuccess
+
+      interface _CreateWhatsAppFlowResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateWhatsAppFlowOutput]
+        def flow_id: () -> ::String
+        def validation_errors: () -> ::Array[::String]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/SocialMessaging/Client.html#create_whats_app_flow-instance_method
+      def create_whats_app_flow: (
+                                   id: ::String,
+                                   flow_name: ::String,
+                                   categories: Array[("SIGN_UP" | "SIGN_IN" | "APPOINTMENT_BOOKING" | "LEAD_GENERATION" | "SHOPPING" | "CONTACT_US" | "CUSTOMER_SUPPORT" | "SURVEY" | "OTHER")],
+                                   ?flow_json: ::String,
+                                   ?publish: bool,
+                                   ?clone_flow_id: ::String
+                                 ) -> _CreateWhatsAppFlowResponseSuccess
+                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateWhatsAppFlowResponseSuccess
+
+      interface _CreateWhatsAppMessageTemplateResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateWhatsAppMessageTemplateOutput]
+        def meta_template_id: () -> ::String
+        def template_status: () -> ::String
+        def category: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/SocialMessaging/Client.html#create_whats_app_message_template-instance_method
+      def create_whats_app_message_template: (
+                                               template_definition: ::String,
+                                               id: ::String
+                                             ) -> _CreateWhatsAppMessageTemplateResponseSuccess
+                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateWhatsAppMessageTemplateResponseSuccess
+
+      interface _CreateWhatsAppMessageTemplateFromLibraryResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateWhatsAppMessageTemplateFromLibraryOutput]
+        def meta_template_id: () -> ::String
+        def template_status: () -> ::String
+        def category: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/SocialMessaging/Client.html#create_whats_app_message_template_from_library-instance_method
+      def create_whats_app_message_template_from_library: (
+                                                            meta_library_template: {
+                                                              template_name: ::String,
+                                                              library_template_name: ::String,
+                                                              template_category: ::String,
+                                                              template_language: ::String,
+                                                              library_template_button_inputs: Array[
+                                                                {
+                                                                  type: ::String?,
+                                                                  phone_number: ::String?,
+                                                                  url: Hash[::String, ::String]?,
+                                                                  otp_type: ::String?,
+                                                                  zero_tap_terms_accepted: bool?,
+                                                                  supported_apps: Array[
+                                                                    Hash[::String, ::String]
+                                                                  ]?
+                                                                }
+                                                              ]?,
+                                                              library_template_body_inputs: {
+                                                                add_contact_number: bool?,
+                                                                add_learn_more_link: bool?,
+                                                                add_security_recommendation: bool?,
+                                                                add_track_package_link: bool?,
+                                                                code_expiration_minutes: ::Integer?
+                                                              }?
+                                                            },
+                                                            id: ::String
+                                                          ) -> _CreateWhatsAppMessageTemplateFromLibraryResponseSuccess
+                                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateWhatsAppMessageTemplateFromLibraryResponseSuccess
+
+      interface _CreateWhatsAppMessageTemplateMediaResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateWhatsAppMessageTemplateMediaOutput]
+        def meta_header_handle: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/SocialMessaging/Client.html#create_whats_app_message_template_media-instance_method
+      def create_whats_app_message_template_media: (
+                                                     id: ::String,
+                                                     ?source_s3_file: {
+                                                       bucket_name: ::String,
+                                                       key: ::String
+                                                     }
+                                                   ) -> _CreateWhatsAppMessageTemplateMediaResponseSuccess
+                                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateWhatsAppMessageTemplateMediaResponseSuccess
+
+      interface _DeleteWhatsAppFlowResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteWhatsAppFlowOutput]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/SocialMessaging/Client.html#delete_whats_app_flow-instance_method
+      def delete_whats_app_flow: (
+                                   id: ::String,
+                                   flow_id: ::String
+                                 ) -> _DeleteWhatsAppFlowResponseSuccess
+                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteWhatsAppFlowResponseSuccess
 
       interface _DeleteWhatsAppMessageMediaResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DeleteWhatsAppMessageMediaOutput]
@@ -132,6 +235,28 @@ module Aws
                                             origination_phone_number_id: ::String
                                           ) -> _DeleteWhatsAppMessageMediaResponseSuccess
                                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteWhatsAppMessageMediaResponseSuccess
+
+      interface _DeleteWhatsAppMessageTemplateResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteWhatsAppMessageTemplateOutput]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/SocialMessaging/Client.html#delete_whats_app_message_template-instance_method
+      def delete_whats_app_message_template: (
+                                               ?meta_template_id: ::String,
+                                               ?delete_all_languages: bool,
+                                               id: ::String,
+                                               template_name: ::String
+                                             ) -> _DeleteWhatsAppMessageTemplateResponseSuccess
+                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteWhatsAppMessageTemplateResponseSuccess
+
+      interface _DeprecateWhatsAppFlowResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeprecateWhatsAppFlowOutput]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/SocialMessaging/Client.html#deprecate_whats_app_flow-instance_method
+      def deprecate_whats_app_flow: (
+                                      id: ::String,
+                                      flow_id: ::String
+                                    ) -> _DeprecateWhatsAppFlowResponseSuccess
+                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeprecateWhatsAppFlowResponseSuccess
 
       interface _DisassociateWhatsAppBusinessAccountResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DisassociateWhatsAppBusinessAccountOutput]
@@ -163,6 +288,41 @@ module Aws
                                                               ) -> _GetLinkedWhatsAppBusinessAccountPhoneNumberResponseSuccess
                                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetLinkedWhatsAppBusinessAccountPhoneNumberResponseSuccess
 
+      interface _GetWhatsAppFlowResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetWhatsAppFlowOutput]
+        def flow_id: () -> ::String
+        def flow_name: () -> ::String
+        def flow_status: () -> ::String
+        def categories: () -> ::Array[("SIGN_UP" | "SIGN_IN" | "APPOINTMENT_BOOKING" | "LEAD_GENERATION" | "SHOPPING" | "CONTACT_US" | "CUSTOMER_SUPPORT" | "SURVEY" | "OTHER")]
+        def validation_errors: () -> ::Array[::String]
+        def json_version: () -> ::String
+        def data_api_version: () -> ::String
+        def endpoint_uri: () -> ::String
+        def preview: () -> Types::MetaFlowPreviewInfo
+        def whats_app_business_account: () -> Types::MetaFlowWhatsAppBusinessAccountInfo
+        def application: () -> Types::MetaFlowApplicationInfo
+        def health_status: () -> Types::MetaFlowHealthStatus
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/SocialMessaging/Client.html#get_whats_app_flow-instance_method
+      def get_whats_app_flow: (
+                                id: ::String,
+                                flow_id: ::String
+                              ) -> _GetWhatsAppFlowResponseSuccess
+                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetWhatsAppFlowResponseSuccess
+
+      interface _GetWhatsAppFlowPreviewResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetWhatsAppFlowPreviewOutput]
+        def flow_id: () -> ::String
+        def preview: () -> Types::MetaFlowPreviewInfo
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/SocialMessaging/Client.html#get_whats_app_flow_preview-instance_method
+      def get_whats_app_flow_preview: (
+                                        id: ::String,
+                                        flow_id: ::String,
+                                        ?invalidate: bool
+                                      ) -> _GetWhatsAppFlowPreviewResponseSuccess
+                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetWhatsAppFlowPreviewResponseSuccess
+
       interface _GetWhatsAppMessageMediaResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetWhatsAppMessageMediaOutput]
         def mime_type: () -> ::String
@@ -183,6 +343,19 @@ module Aws
                                          }
                                        ) -> _GetWhatsAppMessageMediaResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetWhatsAppMessageMediaResponseSuccess
+
+      interface _GetWhatsAppMessageTemplateResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetWhatsAppMessageTemplateOutput]
+        def template: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/SocialMessaging/Client.html#get_whats_app_message_template-instance_method
+      def get_whats_app_message_template: (
+                                            ?meta_template_id: ::String,
+                                            id: ::String,
+                                            ?template_name: ::String,
+                                            ?template_language_code: ::String
+                                          ) -> _GetWhatsAppMessageTemplateResponseSuccess
+                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetWhatsAppMessageTemplateResponseSuccess
 
       interface _ListLinkedWhatsAppBusinessAccountsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListLinkedWhatsAppBusinessAccountsOutput]
@@ -207,6 +380,60 @@ module Aws
                                   ) -> _ListTagsForResourceResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListTagsForResourceResponseSuccess
 
+      interface _ListWhatsAppFlowAssetsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListWhatsAppFlowAssetsOutput]
+        def flow_assets: () -> ::Array[Types::MetaFlowAsset]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/SocialMessaging/Client.html#list_whats_app_flow_assets-instance_method
+      def list_whats_app_flow_assets: (
+                                        id: ::String,
+                                        flow_id: ::String,
+                                        ?next_token: ::String,
+                                        ?max_results: ::Integer
+                                      ) -> _ListWhatsAppFlowAssetsResponseSuccess
+                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListWhatsAppFlowAssetsResponseSuccess
+
+      interface _ListWhatsAppFlowsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListWhatsAppFlowsOutput]
+        def flows: () -> ::Array[Types::MetaFlowSummary]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/SocialMessaging/Client.html#list_whats_app_flows-instance_method
+      def list_whats_app_flows: (
+                                  id: ::String,
+                                  ?next_token: ::String,
+                                  ?max_results: ::Integer
+                                ) -> _ListWhatsAppFlowsResponseSuccess
+                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListWhatsAppFlowsResponseSuccess
+
+      interface _ListWhatsAppMessageTemplatesResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListWhatsAppMessageTemplatesOutput]
+        def templates: () -> ::Array[Types::TemplateSummary]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/SocialMessaging/Client.html#list_whats_app_message_templates-instance_method
+      def list_whats_app_message_templates: (
+                                              id: ::String,
+                                              ?next_token: ::String,
+                                              ?max_results: ::Integer
+                                            ) -> _ListWhatsAppMessageTemplatesResponseSuccess
+                                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListWhatsAppMessageTemplatesResponseSuccess
+
+      interface _ListWhatsAppTemplateLibraryResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListWhatsAppTemplateLibraryOutput]
+        def meta_library_templates: () -> ::Array[Types::MetaLibraryTemplateDefinition]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/SocialMessaging/Client.html#list_whats_app_template_library-instance_method
+      def list_whats_app_template_library: (
+                                             ?next_token: ::String,
+                                             ?max_results: ::Integer,
+                                             id: ::String,
+                                             ?filters: Hash[::String, ::String]
+                                           ) -> _ListWhatsAppTemplateLibraryResponseSuccess
+                                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListWhatsAppTemplateLibraryResponseSuccess
+
       interface _PostWhatsAppMessageMediaResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::PostWhatsAppMessageMediaOutput]
         def media_id: () -> ::String
@@ -225,6 +452,16 @@ module Aws
                                         ) -> _PostWhatsAppMessageMediaResponseSuccess
                                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PostWhatsAppMessageMediaResponseSuccess
 
+      interface _PublishWhatsAppFlowResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::PublishWhatsAppFlowOutput]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/SocialMessaging/Client.html#publish_whats_app_flow-instance_method
+      def publish_whats_app_flow: (
+                                    id: ::String,
+                                    flow_id: ::String
+                                  ) -> _PublishWhatsAppFlowResponseSuccess
+                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PublishWhatsAppFlowResponseSuccess
+
       interface _PutWhatsAppBusinessAccountEventDestinationsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::PutWhatsAppBusinessAccountEventDestinationsOutput]
       end
@@ -235,10 +472,22 @@ module Aws
                                                                  {
                                                                    event_destination_arn: ::String,
                                                                    role_arn: ::String?
-                                                                 },
+                                                                 }
                                                                ]
                                                              ) -> _PutWhatsAppBusinessAccountEventDestinationsResponseSuccess
                                                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutWhatsAppBusinessAccountEventDestinationsResponseSuccess
+
+      interface _SendWhatsAppConversionEventResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::SendWhatsAppConversionEventOutput]
+        def request_id: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/SocialMessaging/Client.html#send_whats_app_conversion_event-instance_method
+      def send_whats_app_conversion_event: (
+                                             id: ::String,
+                                             dataset_id: ::String,
+                                             event_data: ::String
+                                           ) -> _SendWhatsAppConversionEventResponseSuccess
+                                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _SendWhatsAppConversionEventResponseSuccess
 
       interface _SendWhatsAppMessageResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::SendWhatsAppMessageOutput]
@@ -263,7 +512,7 @@ module Aws
                             {
                               key: ::String,
                               value: ::String?
-                            },
+                            }
                           ]
                         ) -> _TagResourceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess
@@ -278,6 +527,46 @@ module Aws
                             tag_keys: Array[::String]
                           ) -> _UntagResourceResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UntagResourceResponseSuccess
+
+      interface _UpdateWhatsAppFlowResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateWhatsAppFlowOutput]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/SocialMessaging/Client.html#update_whats_app_flow-instance_method
+      def update_whats_app_flow: (
+                                   id: ::String,
+                                   flow_id: ::String,
+                                   ?flow_name: ::String,
+                                   ?categories: Array[("SIGN_UP" | "SIGN_IN" | "APPOINTMENT_BOOKING" | "LEAD_GENERATION" | "SHOPPING" | "CONTACT_US" | "CUSTOMER_SUPPORT" | "SURVEY" | "OTHER")]
+                                 ) -> _UpdateWhatsAppFlowResponseSuccess
+                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateWhatsAppFlowResponseSuccess
+
+      interface _UpdateWhatsAppFlowAssetsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateWhatsAppFlowAssetsOutput]
+        def validation_errors: () -> ::Array[::String]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/SocialMessaging/Client.html#update_whats_app_flow_assets-instance_method
+      def update_whats_app_flow_assets: (
+                                          id: ::String,
+                                          flow_id: ::String,
+                                          flow_json: ::String
+                                        ) -> _UpdateWhatsAppFlowAssetsResponseSuccess
+                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateWhatsAppFlowAssetsResponseSuccess
+
+      interface _UpdateWhatsAppMessageTemplateResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateWhatsAppMessageTemplateOutput]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/SocialMessaging/Client.html#update_whats_app_message_template-instance_method
+      def update_whats_app_message_template: (
+                                               id: ::String,
+                                               ?meta_template_id: ::String,
+                                               ?template_name: ::String,
+                                               ?template_language_code: ::String,
+                                               ?parameter_format: ::String,
+                                               ?template_category: ::String,
+                                               ?template_components: ::String,
+                                               ?cta_url_link_tracking_opted_out: bool
+                                             ) -> _UpdateWhatsAppMessageTemplateResponseSuccess
+                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateWhatsAppMessageTemplateResponseSuccess
     end
   end
 end

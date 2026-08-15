@@ -17,7 +17,12 @@ module Aws::BedrockDataAutomation
     AccessDeniedException = Shapes::StructureShape.new(name: 'AccessDeniedException')
     AudioExtractionCategory = Shapes::StructureShape.new(name: 'AudioExtractionCategory')
     AudioExtractionCategoryType = Shapes::StringShape.new(name: 'AudioExtractionCategoryType')
+    AudioExtractionCategoryTypeConfiguration = Shapes::StructureShape.new(name: 'AudioExtractionCategoryTypeConfiguration')
     AudioExtractionCategoryTypes = Shapes::ListShape.new(name: 'AudioExtractionCategoryTypes')
+    AudioGenerativeOutputLanguage = Shapes::StringShape.new(name: 'AudioGenerativeOutputLanguage')
+    AudioInputLanguages = Shapes::ListShape.new(name: 'AudioInputLanguages')
+    AudioLanguageConfiguration = Shapes::StructureShape.new(name: 'AudioLanguageConfiguration')
+    AudioOverrideConfiguration = Shapes::StructureShape.new(name: 'AudioOverrideConfiguration')
     AudioStandardExtraction = Shapes::StructureShape.new(name: 'AudioStandardExtraction')
     AudioStandardGenerativeField = Shapes::StructureShape.new(name: 'AudioStandardGenerativeField')
     AudioStandardGenerativeFieldType = Shapes::StringShape.new(name: 'AudioStandardGenerativeFieldType')
@@ -29,21 +34,51 @@ module Aws::BedrockDataAutomation
     BlueprintItem = Shapes::StructureShape.new(name: 'BlueprintItem')
     BlueprintItems = Shapes::ListShape.new(name: 'BlueprintItems')
     BlueprintName = Shapes::StringShape.new(name: 'BlueprintName')
+    BlueprintOptimizationInvocationArn = Shapes::StringShape.new(name: 'BlueprintOptimizationInvocationArn')
+    BlueprintOptimizationJobStatus = Shapes::StringShape.new(name: 'BlueprintOptimizationJobStatus')
+    BlueprintOptimizationObject = Shapes::StructureShape.new(name: 'BlueprintOptimizationObject')
+    BlueprintOptimizationOutputConfiguration = Shapes::StructureShape.new(name: 'BlueprintOptimizationOutputConfiguration')
+    BlueprintOptimizationSample = Shapes::StructureShape.new(name: 'BlueprintOptimizationSample')
+    BlueprintOptimizationSamples = Shapes::ListShape.new(name: 'BlueprintOptimizationSamples')
     BlueprintSchema = Shapes::StringShape.new(name: 'BlueprintSchema')
     BlueprintStage = Shapes::StringShape.new(name: 'BlueprintStage')
     BlueprintStageFilter = Shapes::StringShape.new(name: 'BlueprintStageFilter')
     BlueprintSummary = Shapes::StructureShape.new(name: 'BlueprintSummary')
     BlueprintVersion = Shapes::StringShape.new(name: 'BlueprintVersion')
     Blueprints = Shapes::ListShape.new(name: 'Blueprints')
+    Boolean = Shapes::BooleanShape.new(name: 'Boolean')
+    ChannelLabelingConfiguration = Shapes::StructureShape.new(name: 'ChannelLabelingConfiguration')
     ClientToken = Shapes::StringShape.new(name: 'ClientToken')
     ConflictException = Shapes::StructureShape.new(name: 'ConflictException')
+    CopyBlueprintStageRequest = Shapes::StructureShape.new(name: 'CopyBlueprintStageRequest')
+    CopyBlueprintStageResponse = Shapes::StructureShape.new(name: 'CopyBlueprintStageResponse')
     CreateBlueprintRequest = Shapes::StructureShape.new(name: 'CreateBlueprintRequest')
     CreateBlueprintResponse = Shapes::StructureShape.new(name: 'CreateBlueprintResponse')
     CreateBlueprintVersionRequest = Shapes::StructureShape.new(name: 'CreateBlueprintVersionRequest')
     CreateBlueprintVersionResponse = Shapes::StructureShape.new(name: 'CreateBlueprintVersionResponse')
+    CreateDataAutomationLibraryRequest = Shapes::StructureShape.new(name: 'CreateDataAutomationLibraryRequest')
+    CreateDataAutomationLibraryResponse = Shapes::StructureShape.new(name: 'CreateDataAutomationLibraryResponse')
     CreateDataAutomationProjectRequest = Shapes::StructureShape.new(name: 'CreateDataAutomationProjectRequest')
     CreateDataAutomationProjectResponse = Shapes::StructureShape.new(name: 'CreateDataAutomationProjectResponse')
     CustomOutputConfiguration = Shapes::StructureShape.new(name: 'CustomOutputConfiguration')
+    DataAutomationLibrary = Shapes::StructureShape.new(name: 'DataAutomationLibrary')
+    DataAutomationLibraryArn = Shapes::StringShape.new(name: 'DataAutomationLibraryArn')
+    DataAutomationLibraryConfiguration = Shapes::StructureShape.new(name: 'DataAutomationLibraryConfiguration')
+    DataAutomationLibraryDescription = Shapes::StringShape.new(name: 'DataAutomationLibraryDescription')
+    DataAutomationLibraryEntitySummaries = Shapes::ListShape.new(name: 'DataAutomationLibraryEntitySummaries')
+    DataAutomationLibraryEntitySummary = Shapes::UnionShape.new(name: 'DataAutomationLibraryEntitySummary')
+    DataAutomationLibraryFilter = Shapes::StructureShape.new(name: 'DataAutomationLibraryFilter')
+    DataAutomationLibraryIngestionJob = Shapes::StructureShape.new(name: 'DataAutomationLibraryIngestionJob')
+    DataAutomationLibraryIngestionJobArn = Shapes::StringShape.new(name: 'DataAutomationLibraryIngestionJobArn')
+    DataAutomationLibraryIngestionJobSummaries = Shapes::ListShape.new(name: 'DataAutomationLibraryIngestionJobSummaries')
+    DataAutomationLibraryIngestionJobSummary = Shapes::StructureShape.new(name: 'DataAutomationLibraryIngestionJobSummary')
+    DataAutomationLibraryItem = Shapes::StructureShape.new(name: 'DataAutomationLibraryItem')
+    DataAutomationLibraryItems = Shapes::ListShape.new(name: 'DataAutomationLibraryItems')
+    DataAutomationLibraryName = Shapes::StringShape.new(name: 'DataAutomationLibraryName')
+    DataAutomationLibraryStatus = Shapes::StringShape.new(name: 'DataAutomationLibraryStatus')
+    DataAutomationLibrarySummaries = Shapes::ListShape.new(name: 'DataAutomationLibrarySummaries')
+    DataAutomationLibrarySummary = Shapes::StructureShape.new(name: 'DataAutomationLibrarySummary')
+    DataAutomationProfileArn = Shapes::StringShape.new(name: 'DataAutomationProfileArn')
     DataAutomationProject = Shapes::StructureShape.new(name: 'DataAutomationProject')
     DataAutomationProjectArn = Shapes::StringShape.new(name: 'DataAutomationProjectArn')
     DataAutomationProjectDescription = Shapes::StringShape.new(name: 'DataAutomationProjectDescription')
@@ -54,12 +89,18 @@ module Aws::BedrockDataAutomation
     DataAutomationProjectStatus = Shapes::StringShape.new(name: 'DataAutomationProjectStatus')
     DataAutomationProjectSummaries = Shapes::ListShape.new(name: 'DataAutomationProjectSummaries')
     DataAutomationProjectSummary = Shapes::StructureShape.new(name: 'DataAutomationProjectSummary')
+    DataAutomationProjectType = Shapes::StringShape.new(name: 'DataAutomationProjectType')
     DateTimestamp = Shapes::TimestampShape.new(name: 'DateTimestamp', timestampFormat: "iso8601")
     DeleteBlueprintRequest = Shapes::StructureShape.new(name: 'DeleteBlueprintRequest')
     DeleteBlueprintResponse = Shapes::StructureShape.new(name: 'DeleteBlueprintResponse')
+    DeleteDataAutomationLibraryRequest = Shapes::StructureShape.new(name: 'DeleteDataAutomationLibraryRequest')
+    DeleteDataAutomationLibraryResponse = Shapes::StructureShape.new(name: 'DeleteDataAutomationLibraryResponse')
     DeleteDataAutomationProjectRequest = Shapes::StructureShape.new(name: 'DeleteDataAutomationProjectRequest')
     DeleteDataAutomationProjectResponse = Shapes::StructureShape.new(name: 'DeleteDataAutomationProjectResponse')
+    DeleteEntitiesInfo = Shapes::StructureShape.new(name: 'DeleteEntitiesInfo')
+    DesiredModality = Shapes::StringShape.new(name: 'DesiredModality')
     DocumentBoundingBox = Shapes::StructureShape.new(name: 'DocumentBoundingBox')
+    DocumentCustomOutputConfiguration = Shapes::StructureShape.new(name: 'DocumentCustomOutputConfiguration')
     DocumentExtractionGranularity = Shapes::StructureShape.new(name: 'DocumentExtractionGranularity')
     DocumentExtractionGranularityType = Shapes::StringShape.new(name: 'DocumentExtractionGranularityType')
     DocumentExtractionGranularityTypes = Shapes::ListShape.new(name: 'DocumentExtractionGranularityTypes')
@@ -75,38 +116,93 @@ module Aws::BedrockDataAutomation
     EncryptionConfiguration = Shapes::StructureShape.new(name: 'EncryptionConfiguration')
     EncryptionContextKey = Shapes::StringShape.new(name: 'EncryptionContextKey')
     EncryptionContextValue = Shapes::StringShape.new(name: 'EncryptionContextValue')
+    EntityDescription = Shapes::StringShape.new(name: 'EntityDescription')
+    EntityDetails = Shapes::UnionShape.new(name: 'EntityDetails')
+    EntityId = Shapes::StringShape.new(name: 'EntityId')
+    EntityIdList = Shapes::ListShape.new(name: 'EntityIdList')
+    EntityMetadata = Shapes::StringShape.new(name: 'EntityMetadata')
+    EntityType = Shapes::StringShape.new(name: 'EntityType')
+    EntityTypeInfo = Shapes::StructureShape.new(name: 'EntityTypeInfo')
+    EntityTypeInfoList = Shapes::ListShape.new(name: 'EntityTypeInfoList')
+    EventBridgeConfiguration = Shapes::StructureShape.new(name: 'EventBridgeConfiguration')
+    FallbackBlueprintItems = Shapes::ListShape.new(name: 'FallbackBlueprintItems')
+    GetBlueprintOptimizationStatusRequest = Shapes::StructureShape.new(name: 'GetBlueprintOptimizationStatusRequest')
+    GetBlueprintOptimizationStatusResponse = Shapes::StructureShape.new(name: 'GetBlueprintOptimizationStatusResponse')
     GetBlueprintRequest = Shapes::StructureShape.new(name: 'GetBlueprintRequest')
     GetBlueprintResponse = Shapes::StructureShape.new(name: 'GetBlueprintResponse')
+    GetDataAutomationLibraryEntityRequest = Shapes::StructureShape.new(name: 'GetDataAutomationLibraryEntityRequest')
+    GetDataAutomationLibraryEntityResponse = Shapes::StructureShape.new(name: 'GetDataAutomationLibraryEntityResponse')
+    GetDataAutomationLibraryIngestionJobRequest = Shapes::StructureShape.new(name: 'GetDataAutomationLibraryIngestionJobRequest')
+    GetDataAutomationLibraryIngestionJobResponse = Shapes::StructureShape.new(name: 'GetDataAutomationLibraryIngestionJobResponse')
+    GetDataAutomationLibraryRequest = Shapes::StructureShape.new(name: 'GetDataAutomationLibraryRequest')
+    GetDataAutomationLibraryResponse = Shapes::StructureShape.new(name: 'GetDataAutomationLibraryResponse')
     GetDataAutomationProjectRequest = Shapes::StructureShape.new(name: 'GetDataAutomationProjectRequest')
     GetDataAutomationProjectResponse = Shapes::StructureShape.new(name: 'GetDataAutomationProjectResponse')
     ImageBoundingBox = Shapes::StructureShape.new(name: 'ImageBoundingBox')
     ImageExtractionCategory = Shapes::StructureShape.new(name: 'ImageExtractionCategory')
     ImageExtractionCategoryType = Shapes::StringShape.new(name: 'ImageExtractionCategoryType')
     ImageExtractionCategoryTypes = Shapes::ListShape.new(name: 'ImageExtractionCategoryTypes')
+    ImageOverrideConfiguration = Shapes::StructureShape.new(name: 'ImageOverrideConfiguration')
     ImageStandardExtraction = Shapes::StructureShape.new(name: 'ImageStandardExtraction')
     ImageStandardGenerativeField = Shapes::StructureShape.new(name: 'ImageStandardGenerativeField')
     ImageStandardGenerativeFieldType = Shapes::StringShape.new(name: 'ImageStandardGenerativeFieldType')
     ImageStandardGenerativeFieldTypes = Shapes::ListShape.new(name: 'ImageStandardGenerativeFieldTypes')
     ImageStandardOutputConfiguration = Shapes::StructureShape.new(name: 'ImageStandardOutputConfiguration')
+    InlinePayload = Shapes::UnionShape.new(name: 'InlinePayload')
+    InputConfiguration = Shapes::StructureShape.new(name: 'InputConfiguration')
     InternalServerException = Shapes::StructureShape.new(name: 'InternalServerException')
+    InvokeBlueprintOptimizationAsyncRequest = Shapes::StructureShape.new(name: 'InvokeBlueprintOptimizationAsyncRequest')
+    InvokeBlueprintOptimizationAsyncResponse = Shapes::StructureShape.new(name: 'InvokeBlueprintOptimizationAsyncResponse')
+    InvokeDataAutomationLibraryIngestionJobRequest = Shapes::StructureShape.new(name: 'InvokeDataAutomationLibraryIngestionJobRequest')
+    InvokeDataAutomationLibraryIngestionJobResponse = Shapes::StructureShape.new(name: 'InvokeDataAutomationLibraryIngestionJobResponse')
     KmsEncryptionContext = Shapes::MapShape.new(name: 'KmsEncryptionContext')
     KmsKeyId = Shapes::StringShape.new(name: 'KmsKeyId')
+    Language = Shapes::StringShape.new(name: 'Language')
+    LibraryIngestionJobOperationType = Shapes::StringShape.new(name: 'LibraryIngestionJobOperationType')
+    LibraryIngestionJobStatus = Shapes::StringShape.new(name: 'LibraryIngestionJobStatus')
     ListBlueprintsRequest = Shapes::StructureShape.new(name: 'ListBlueprintsRequest')
     ListBlueprintsResponse = Shapes::StructureShape.new(name: 'ListBlueprintsResponse')
+    ListDataAutomationLibrariesRequest = Shapes::StructureShape.new(name: 'ListDataAutomationLibrariesRequest')
+    ListDataAutomationLibrariesResponse = Shapes::StructureShape.new(name: 'ListDataAutomationLibrariesResponse')
+    ListDataAutomationLibraryEntitiesRequest = Shapes::StructureShape.new(name: 'ListDataAutomationLibraryEntitiesRequest')
+    ListDataAutomationLibraryEntitiesResponse = Shapes::StructureShape.new(name: 'ListDataAutomationLibraryEntitiesResponse')
+    ListDataAutomationLibraryIngestionJobsRequest = Shapes::StructureShape.new(name: 'ListDataAutomationLibraryIngestionJobsRequest')
+    ListDataAutomationLibraryIngestionJobsResponse = Shapes::StructureShape.new(name: 'ListDataAutomationLibraryIngestionJobsResponse')
     ListDataAutomationProjectsRequest = Shapes::StructureShape.new(name: 'ListDataAutomationProjectsRequest')
     ListDataAutomationProjectsResponse = Shapes::StructureShape.new(name: 'ListDataAutomationProjectsResponse')
     ListTagsForResourceRequest = Shapes::StructureShape.new(name: 'ListTagsForResourceRequest')
     ListTagsForResourceResponse = Shapes::StructureShape.new(name: 'ListTagsForResourceResponse')
     MaxResults = Shapes::IntegerShape.new(name: 'MaxResults')
+    ModalityProcessingConfiguration = Shapes::StructureShape.new(name: 'ModalityProcessingConfiguration')
+    ModalityRoutingConfiguration = Shapes::StructureShape.new(name: 'ModalityRoutingConfiguration')
     NextToken = Shapes::StringShape.new(name: 'NextToken')
     NonBlankString = Shapes::StringShape.new(name: 'NonBlankString')
+    NotificationConfiguration = Shapes::StructureShape.new(name: 'NotificationConfiguration')
+    OutputConfiguration = Shapes::StructureShape.new(name: 'OutputConfiguration')
     OverrideConfiguration = Shapes::StructureShape.new(name: 'OverrideConfiguration')
+    PIIEntitiesConfiguration = Shapes::StructureShape.new(name: 'PIIEntitiesConfiguration')
+    PIIEntityType = Shapes::StringShape.new(name: 'PIIEntityType')
+    PIIEntityTypes = Shapes::ListShape.new(name: 'PIIEntityTypes')
+    PIIRedactionMaskMode = Shapes::StringShape.new(name: 'PIIRedactionMaskMode')
+    Phrase = Shapes::StructureShape.new(name: 'Phrase')
+    PhraseDisplayAsText = Shapes::StringShape.new(name: 'PhraseDisplayAsText')
+    PhraseList = Shapes::ListShape.new(name: 'PhraseList')
+    PhraseText = Shapes::StringShape.new(name: 'PhraseText')
     ResourceNotFoundException = Shapes::StructureShape.new(name: 'ResourceNotFoundException')
     ResourceOwner = Shapes::StringShape.new(name: 'ResourceOwner')
+    S3Object = Shapes::StructureShape.new(name: 'S3Object')
+    S3ObjectVersion = Shapes::StringShape.new(name: 'S3ObjectVersion')
+    S3Uri = Shapes::StringShape.new(name: 'S3Uri')
+    SensitiveDataConfiguration = Shapes::StructureShape.new(name: 'SensitiveDataConfiguration')
+    SensitiveDataDetectionMode = Shapes::StringShape.new(name: 'SensitiveDataDetectionMode')
+    SensitiveDataDetectionScope = Shapes::ListShape.new(name: 'SensitiveDataDetectionScope')
+    SensitiveDataDetectionScopeType = Shapes::StringShape.new(name: 'SensitiveDataDetectionScopeType')
     ServiceQuotaExceededException = Shapes::StructureShape.new(name: 'ServiceQuotaExceededException')
+    SpeakerLabelingConfiguration = Shapes::StructureShape.new(name: 'SpeakerLabelingConfiguration')
     SplitterConfiguration = Shapes::StructureShape.new(name: 'SplitterConfiguration')
     StandardOutputConfiguration = Shapes::StructureShape.new(name: 'StandardOutputConfiguration')
     State = Shapes::StringShape.new(name: 'State')
+    String = Shapes::StringShape.new(name: 'String')
     Tag = Shapes::StructureShape.new(name: 'Tag')
     TagKey = Shapes::StringShape.new(name: 'TagKey')
     TagKeyList = Shapes::ListShape.new(name: 'TagKeyList')
@@ -116,13 +212,18 @@ module Aws::BedrockDataAutomation
     TagValue = Shapes::StringShape.new(name: 'TagValue')
     TaggableResourceArn = Shapes::StringShape.new(name: 'TaggableResourceArn')
     ThrottlingException = Shapes::StructureShape.new(name: 'ThrottlingException')
+    TranscriptConfiguration = Shapes::StructureShape.new(name: 'TranscriptConfiguration')
     Type = Shapes::StringShape.new(name: 'Type')
     UntagResourceRequest = Shapes::StructureShape.new(name: 'UntagResourceRequest')
     UntagResourceResponse = Shapes::StructureShape.new(name: 'UntagResourceResponse')
     UpdateBlueprintRequest = Shapes::StructureShape.new(name: 'UpdateBlueprintRequest')
     UpdateBlueprintResponse = Shapes::StructureShape.new(name: 'UpdateBlueprintResponse')
+    UpdateDataAutomationLibraryRequest = Shapes::StructureShape.new(name: 'UpdateDataAutomationLibraryRequest')
+    UpdateDataAutomationLibraryResponse = Shapes::StructureShape.new(name: 'UpdateDataAutomationLibraryResponse')
     UpdateDataAutomationProjectRequest = Shapes::StructureShape.new(name: 'UpdateDataAutomationProjectRequest')
     UpdateDataAutomationProjectResponse = Shapes::StructureShape.new(name: 'UpdateDataAutomationProjectResponse')
+    UpsertEntitiesInfo = Shapes::ListShape.new(name: 'UpsertEntitiesInfo')
+    UpsertEntityInfo = Shapes::UnionShape.new(name: 'UpsertEntityInfo')
     ValidationException = Shapes::StructureShape.new(name: 'ValidationException')
     ValidationExceptionField = Shapes::StructureShape.new(name: 'ValidationExceptionField')
     ValidationExceptionFieldList = Shapes::ListShape.new(name: 'ValidationExceptionFieldList')
@@ -130,20 +231,41 @@ module Aws::BedrockDataAutomation
     VideoExtractionCategory = Shapes::StructureShape.new(name: 'VideoExtractionCategory')
     VideoExtractionCategoryType = Shapes::StringShape.new(name: 'VideoExtractionCategoryType')
     VideoExtractionCategoryTypes = Shapes::ListShape.new(name: 'VideoExtractionCategoryTypes')
+    VideoOverrideConfiguration = Shapes::StructureShape.new(name: 'VideoOverrideConfiguration')
     VideoStandardExtraction = Shapes::StructureShape.new(name: 'VideoStandardExtraction')
     VideoStandardGenerativeField = Shapes::StructureShape.new(name: 'VideoStandardGenerativeField')
     VideoStandardGenerativeFieldType = Shapes::StringShape.new(name: 'VideoStandardGenerativeFieldType')
     VideoStandardGenerativeFieldTypes = Shapes::ListShape.new(name: 'VideoStandardGenerativeFieldTypes')
     VideoStandardOutputConfiguration = Shapes::StructureShape.new(name: 'VideoStandardOutputConfiguration')
+    VocabularyEntity = Shapes::StructureShape.new(name: 'VocabularyEntity')
+    VocabularyEntityInfo = Shapes::StructureShape.new(name: 'VocabularyEntityInfo')
+    VocabularyEntitySummary = Shapes::StructureShape.new(name: 'VocabularyEntitySummary')
+    VocabularyEntitySummaryNumOfPhrasesInteger = Shapes::IntegerShape.new(name: 'VocabularyEntitySummaryNumOfPhrasesInteger')
 
     AccessDeniedException.add_member(:message, Shapes::ShapeRef.new(shape: NonBlankString, location_name: "message"))
     AccessDeniedException.struct_class = Types::AccessDeniedException
 
     AudioExtractionCategory.add_member(:state, Shapes::ShapeRef.new(shape: State, required: true, location_name: "state"))
     AudioExtractionCategory.add_member(:types, Shapes::ShapeRef.new(shape: AudioExtractionCategoryTypes, location_name: "types"))
+    AudioExtractionCategory.add_member(:type_configuration, Shapes::ShapeRef.new(shape: AudioExtractionCategoryTypeConfiguration, location_name: "typeConfiguration"))
     AudioExtractionCategory.struct_class = Types::AudioExtractionCategory
 
+    AudioExtractionCategoryTypeConfiguration.add_member(:transcript, Shapes::ShapeRef.new(shape: TranscriptConfiguration, location_name: "transcript"))
+    AudioExtractionCategoryTypeConfiguration.struct_class = Types::AudioExtractionCategoryTypeConfiguration
+
     AudioExtractionCategoryTypes.member = Shapes::ShapeRef.new(shape: AudioExtractionCategoryType)
+
+    AudioInputLanguages.member = Shapes::ShapeRef.new(shape: Language)
+
+    AudioLanguageConfiguration.add_member(:input_languages, Shapes::ShapeRef.new(shape: AudioInputLanguages, location_name: "inputLanguages"))
+    AudioLanguageConfiguration.add_member(:generative_output_language, Shapes::ShapeRef.new(shape: AudioGenerativeOutputLanguage, location_name: "generativeOutputLanguage"))
+    AudioLanguageConfiguration.add_member(:identify_multiple_languages, Shapes::ShapeRef.new(shape: Boolean, location_name: "identifyMultipleLanguages"))
+    AudioLanguageConfiguration.struct_class = Types::AudioLanguageConfiguration
+
+    AudioOverrideConfiguration.add_member(:modality_processing, Shapes::ShapeRef.new(shape: ModalityProcessingConfiguration, location_name: "modalityProcessing"))
+    AudioOverrideConfiguration.add_member(:language_configuration, Shapes::ShapeRef.new(shape: AudioLanguageConfiguration, location_name: "languageConfiguration"))
+    AudioOverrideConfiguration.add_member(:sensitive_data_configuration, Shapes::ShapeRef.new(shape: SensitiveDataConfiguration, location_name: "sensitiveDataConfiguration"))
+    AudioOverrideConfiguration.struct_class = Types::AudioOverrideConfiguration
 
     AudioStandardExtraction.add_member(:category, Shapes::ShapeRef.new(shape: AudioExtractionCategory, required: true, location_name: "category"))
     AudioStandardExtraction.struct_class = Types::AudioStandardExtraction
@@ -168,6 +290,8 @@ module Aws::BedrockDataAutomation
     Blueprint.add_member(:blueprint_stage, Shapes::ShapeRef.new(shape: BlueprintStage, location_name: "blueprintStage"))
     Blueprint.add_member(:kms_key_id, Shapes::ShapeRef.new(shape: KmsKeyId, location_name: "kmsKeyId"))
     Blueprint.add_member(:kms_encryption_context, Shapes::ShapeRef.new(shape: KmsEncryptionContext, location_name: "kmsEncryptionContext"))
+    Blueprint.add_member(:optimization_samples, Shapes::ShapeRef.new(shape: BlueprintOptimizationSamples, location_name: "optimizationSamples"))
+    Blueprint.add_member(:optimization_time, Shapes::ShapeRef.new(shape: DateTimestamp, location_name: "optimizationTime"))
     Blueprint.struct_class = Types::Blueprint
 
     BlueprintFilter.add_member(:blueprint_arn, Shapes::ShapeRef.new(shape: BlueprintArn, required: true, location_name: "blueprintArn"))
@@ -182,6 +306,19 @@ module Aws::BedrockDataAutomation
 
     BlueprintItems.member = Shapes::ShapeRef.new(shape: BlueprintItem)
 
+    BlueprintOptimizationObject.add_member(:blueprint_arn, Shapes::ShapeRef.new(shape: BlueprintArn, required: true, location_name: "blueprintArn"))
+    BlueprintOptimizationObject.add_member(:stage, Shapes::ShapeRef.new(shape: BlueprintStage, location_name: "stage"))
+    BlueprintOptimizationObject.struct_class = Types::BlueprintOptimizationObject
+
+    BlueprintOptimizationOutputConfiguration.add_member(:s3_object, Shapes::ShapeRef.new(shape: S3Object, required: true, location_name: "s3Object"))
+    BlueprintOptimizationOutputConfiguration.struct_class = Types::BlueprintOptimizationOutputConfiguration
+
+    BlueprintOptimizationSample.add_member(:asset_s3_object, Shapes::ShapeRef.new(shape: S3Object, required: true, location_name: "assetS3Object"))
+    BlueprintOptimizationSample.add_member(:ground_truth_s3_object, Shapes::ShapeRef.new(shape: S3Object, required: true, location_name: "groundTruthS3Object"))
+    BlueprintOptimizationSample.struct_class = Types::BlueprintOptimizationSample
+
+    BlueprintOptimizationSamples.member = Shapes::ShapeRef.new(shape: BlueprintOptimizationSample)
+
     BlueprintSummary.add_member(:blueprint_arn, Shapes::ShapeRef.new(shape: BlueprintArn, required: true, location_name: "blueprintArn"))
     BlueprintSummary.add_member(:blueprint_version, Shapes::ShapeRef.new(shape: BlueprintVersion, location_name: "blueprintVersion"))
     BlueprintSummary.add_member(:blueprint_stage, Shapes::ShapeRef.new(shape: BlueprintStage, location_name: "blueprintStage"))
@@ -192,14 +329,25 @@ module Aws::BedrockDataAutomation
 
     Blueprints.member = Shapes::ShapeRef.new(shape: BlueprintSummary)
 
+    ChannelLabelingConfiguration.add_member(:state, Shapes::ShapeRef.new(shape: State, required: true, location_name: "state"))
+    ChannelLabelingConfiguration.struct_class = Types::ChannelLabelingConfiguration
+
     ConflictException.add_member(:message, Shapes::ShapeRef.new(shape: NonBlankString, location_name: "message"))
     ConflictException.struct_class = Types::ConflictException
+
+    CopyBlueprintStageRequest.add_member(:blueprint_arn, Shapes::ShapeRef.new(shape: BlueprintArn, required: true, location: "uri", location_name: "blueprintArn"))
+    CopyBlueprintStageRequest.add_member(:source_stage, Shapes::ShapeRef.new(shape: BlueprintStage, required: true, location_name: "sourceStage"))
+    CopyBlueprintStageRequest.add_member(:target_stage, Shapes::ShapeRef.new(shape: BlueprintStage, required: true, location_name: "targetStage"))
+    CopyBlueprintStageRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    CopyBlueprintStageRequest.struct_class = Types::CopyBlueprintStageRequest
+
+    CopyBlueprintStageResponse.struct_class = Types::CopyBlueprintStageResponse
 
     CreateBlueprintRequest.add_member(:blueprint_name, Shapes::ShapeRef.new(shape: BlueprintName, required: true, location_name: "blueprintName"))
     CreateBlueprintRequest.add_member(:type, Shapes::ShapeRef.new(shape: Type, required: true, location_name: "type"))
     CreateBlueprintRequest.add_member(:blueprint_stage, Shapes::ShapeRef.new(shape: BlueprintStage, location_name: "blueprintStage"))
     CreateBlueprintRequest.add_member(:schema, Shapes::ShapeRef.new(shape: BlueprintSchema, required: true, location_name: "schema"))
-    CreateBlueprintRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateBlueprintRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateBlueprintRequest.add_member(:encryption_configuration, Shapes::ShapeRef.new(shape: EncryptionConfiguration, location_name: "encryptionConfiguration"))
     CreateBlueprintRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "tags"))
     CreateBlueprintRequest.struct_class = Types::CreateBlueprintRequest
@@ -208,19 +356,32 @@ module Aws::BedrockDataAutomation
     CreateBlueprintResponse.struct_class = Types::CreateBlueprintResponse
 
     CreateBlueprintVersionRequest.add_member(:blueprint_arn, Shapes::ShapeRef.new(shape: BlueprintArn, required: true, location: "uri", location_name: "blueprintArn"))
-    CreateBlueprintVersionRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateBlueprintVersionRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateBlueprintVersionRequest.struct_class = Types::CreateBlueprintVersionRequest
 
     CreateBlueprintVersionResponse.add_member(:blueprint, Shapes::ShapeRef.new(shape: Blueprint, required: true, location_name: "blueprint"))
     CreateBlueprintVersionResponse.struct_class = Types::CreateBlueprintVersionResponse
 
+    CreateDataAutomationLibraryRequest.add_member(:library_name, Shapes::ShapeRef.new(shape: DataAutomationLibraryName, required: true, location_name: "libraryName"))
+    CreateDataAutomationLibraryRequest.add_member(:library_description, Shapes::ShapeRef.new(shape: DataAutomationLibraryDescription, location_name: "libraryDescription"))
+    CreateDataAutomationLibraryRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    CreateDataAutomationLibraryRequest.add_member(:encryption_configuration, Shapes::ShapeRef.new(shape: EncryptionConfiguration, location_name: "encryptionConfiguration"))
+    CreateDataAutomationLibraryRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "tags"))
+    CreateDataAutomationLibraryRequest.struct_class = Types::CreateDataAutomationLibraryRequest
+
+    CreateDataAutomationLibraryResponse.add_member(:library_arn, Shapes::ShapeRef.new(shape: DataAutomationLibraryArn, location_name: "libraryArn"))
+    CreateDataAutomationLibraryResponse.add_member(:status, Shapes::ShapeRef.new(shape: DataAutomationLibraryStatus, location_name: "status"))
+    CreateDataAutomationLibraryResponse.struct_class = Types::CreateDataAutomationLibraryResponse
+
     CreateDataAutomationProjectRequest.add_member(:project_name, Shapes::ShapeRef.new(shape: DataAutomationProjectName, required: true, location_name: "projectName"))
     CreateDataAutomationProjectRequest.add_member(:project_description, Shapes::ShapeRef.new(shape: DataAutomationProjectDescription, location_name: "projectDescription"))
     CreateDataAutomationProjectRequest.add_member(:project_stage, Shapes::ShapeRef.new(shape: DataAutomationProjectStage, location_name: "projectStage"))
+    CreateDataAutomationProjectRequest.add_member(:project_type, Shapes::ShapeRef.new(shape: DataAutomationProjectType, location_name: "projectType"))
     CreateDataAutomationProjectRequest.add_member(:standard_output_configuration, Shapes::ShapeRef.new(shape: StandardOutputConfiguration, required: true, location_name: "standardOutputConfiguration"))
     CreateDataAutomationProjectRequest.add_member(:custom_output_configuration, Shapes::ShapeRef.new(shape: CustomOutputConfiguration, location_name: "customOutputConfiguration"))
     CreateDataAutomationProjectRequest.add_member(:override_configuration, Shapes::ShapeRef.new(shape: OverrideConfiguration, location_name: "overrideConfiguration"))
-    CreateDataAutomationProjectRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateDataAutomationProjectRequest.add_member(:data_automation_library_configuration, Shapes::ShapeRef.new(shape: DataAutomationLibraryConfiguration, location_name: "dataAutomationLibraryConfiguration"))
+    CreateDataAutomationProjectRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateDataAutomationProjectRequest.add_member(:encryption_configuration, Shapes::ShapeRef.new(shape: EncryptionConfiguration, location_name: "encryptionConfiguration"))
     CreateDataAutomationProjectRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "tags"))
     CreateDataAutomationProjectRequest.struct_class = Types::CreateDataAutomationProjectRequest
@@ -231,17 +392,77 @@ module Aws::BedrockDataAutomation
     CreateDataAutomationProjectResponse.struct_class = Types::CreateDataAutomationProjectResponse
 
     CustomOutputConfiguration.add_member(:blueprints, Shapes::ShapeRef.new(shape: BlueprintItems, location_name: "blueprints"))
+    CustomOutputConfiguration.add_member(:document, Shapes::ShapeRef.new(shape: DocumentCustomOutputConfiguration, location_name: "document"))
     CustomOutputConfiguration.struct_class = Types::CustomOutputConfiguration
+
+    DataAutomationLibrary.add_member(:library_arn, Shapes::ShapeRef.new(shape: DataAutomationLibraryArn, required: true, location_name: "libraryArn"))
+    DataAutomationLibrary.add_member(:creation_time, Shapes::ShapeRef.new(shape: DateTimestamp, required: true, location_name: "creationTime"))
+    DataAutomationLibrary.add_member(:library_name, Shapes::ShapeRef.new(shape: DataAutomationLibraryName, required: true, location_name: "libraryName"))
+    DataAutomationLibrary.add_member(:library_description, Shapes::ShapeRef.new(shape: DataAutomationLibraryDescription, location_name: "libraryDescription"))
+    DataAutomationLibrary.add_member(:status, Shapes::ShapeRef.new(shape: DataAutomationLibraryStatus, required: true, location_name: "status"))
+    DataAutomationLibrary.add_member(:entity_types, Shapes::ShapeRef.new(shape: EntityTypeInfoList, location_name: "entityTypes"))
+    DataAutomationLibrary.add_member(:kms_key_id, Shapes::ShapeRef.new(shape: KmsKeyId, location_name: "kmsKeyId"))
+    DataAutomationLibrary.add_member(:kms_encryption_context, Shapes::ShapeRef.new(shape: KmsEncryptionContext, location_name: "kmsEncryptionContext"))
+    DataAutomationLibrary.struct_class = Types::DataAutomationLibrary
+
+    DataAutomationLibraryConfiguration.add_member(:libraries, Shapes::ShapeRef.new(shape: DataAutomationLibraryItems, location_name: "libraries"))
+    DataAutomationLibraryConfiguration.struct_class = Types::DataAutomationLibraryConfiguration
+
+    DataAutomationLibraryEntitySummaries.member = Shapes::ShapeRef.new(shape: DataAutomationLibraryEntitySummary)
+
+    DataAutomationLibraryEntitySummary.add_member(:vocabulary, Shapes::ShapeRef.new(shape: VocabularyEntitySummary, location_name: "vocabulary"))
+    DataAutomationLibraryEntitySummary.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    DataAutomationLibraryEntitySummary.add_member_subclass(:vocabulary, Types::DataAutomationLibraryEntitySummary::Vocabulary)
+    DataAutomationLibraryEntitySummary.add_member_subclass(:unknown, Types::DataAutomationLibraryEntitySummary::Unknown)
+    DataAutomationLibraryEntitySummary.struct_class = Types::DataAutomationLibraryEntitySummary
+
+    DataAutomationLibraryFilter.add_member(:library_arn, Shapes::ShapeRef.new(shape: DataAutomationLibraryArn, required: true, location_name: "libraryArn"))
+    DataAutomationLibraryFilter.struct_class = Types::DataAutomationLibraryFilter
+
+    DataAutomationLibraryIngestionJob.add_member(:job_arn, Shapes::ShapeRef.new(shape: DataAutomationLibraryIngestionJobArn, required: true, location_name: "jobArn"))
+    DataAutomationLibraryIngestionJob.add_member(:creation_time, Shapes::ShapeRef.new(shape: DateTimestamp, required: true, location_name: "creationTime"))
+    DataAutomationLibraryIngestionJob.add_member(:entity_type, Shapes::ShapeRef.new(shape: EntityType, required: true, location_name: "entityType"))
+    DataAutomationLibraryIngestionJob.add_member(:operation_type, Shapes::ShapeRef.new(shape: LibraryIngestionJobOperationType, required: true, location_name: "operationType"))
+    DataAutomationLibraryIngestionJob.add_member(:job_status, Shapes::ShapeRef.new(shape: LibraryIngestionJobStatus, required: true, location_name: "jobStatus"))
+    DataAutomationLibraryIngestionJob.add_member(:output_configuration, Shapes::ShapeRef.new(shape: OutputConfiguration, required: true, location_name: "outputConfiguration"))
+    DataAutomationLibraryIngestionJob.add_member(:completion_time, Shapes::ShapeRef.new(shape: DateTimestamp, location_name: "completionTime"))
+    DataAutomationLibraryIngestionJob.add_member(:error_message, Shapes::ShapeRef.new(shape: String, location_name: "errorMessage"))
+    DataAutomationLibraryIngestionJob.add_member(:error_type, Shapes::ShapeRef.new(shape: String, location_name: "errorType"))
+    DataAutomationLibraryIngestionJob.struct_class = Types::DataAutomationLibraryIngestionJob
+
+    DataAutomationLibraryIngestionJobSummaries.member = Shapes::ShapeRef.new(shape: DataAutomationLibraryIngestionJobSummary)
+
+    DataAutomationLibraryIngestionJobSummary.add_member(:job_arn, Shapes::ShapeRef.new(shape: DataAutomationLibraryIngestionJobArn, required: true, location_name: "jobArn"))
+    DataAutomationLibraryIngestionJobSummary.add_member(:job_status, Shapes::ShapeRef.new(shape: LibraryIngestionJobStatus, required: true, location_name: "jobStatus"))
+    DataAutomationLibraryIngestionJobSummary.add_member(:entity_type, Shapes::ShapeRef.new(shape: EntityType, required: true, location_name: "entityType"))
+    DataAutomationLibraryIngestionJobSummary.add_member(:operation_type, Shapes::ShapeRef.new(shape: LibraryIngestionJobOperationType, required: true, location_name: "operationType"))
+    DataAutomationLibraryIngestionJobSummary.add_member(:creation_time, Shapes::ShapeRef.new(shape: DateTimestamp, required: true, location_name: "creationTime"))
+    DataAutomationLibraryIngestionJobSummary.add_member(:completion_time, Shapes::ShapeRef.new(shape: DateTimestamp, location_name: "completionTime"))
+    DataAutomationLibraryIngestionJobSummary.struct_class = Types::DataAutomationLibraryIngestionJobSummary
+
+    DataAutomationLibraryItem.add_member(:library_arn, Shapes::ShapeRef.new(shape: DataAutomationLibraryArn, required: true, location_name: "libraryArn"))
+    DataAutomationLibraryItem.struct_class = Types::DataAutomationLibraryItem
+
+    DataAutomationLibraryItems.member = Shapes::ShapeRef.new(shape: DataAutomationLibraryItem)
+
+    DataAutomationLibrarySummaries.member = Shapes::ShapeRef.new(shape: DataAutomationLibrarySummary)
+
+    DataAutomationLibrarySummary.add_member(:library_arn, Shapes::ShapeRef.new(shape: DataAutomationLibraryArn, required: true, location_name: "libraryArn"))
+    DataAutomationLibrarySummary.add_member(:library_name, Shapes::ShapeRef.new(shape: DataAutomationLibraryName, location_name: "libraryName"))
+    DataAutomationLibrarySummary.add_member(:creation_time, Shapes::ShapeRef.new(shape: DateTimestamp, required: true, location_name: "creationTime"))
+    DataAutomationLibrarySummary.struct_class = Types::DataAutomationLibrarySummary
 
     DataAutomationProject.add_member(:project_arn, Shapes::ShapeRef.new(shape: DataAutomationProjectArn, required: true, location_name: "projectArn"))
     DataAutomationProject.add_member(:creation_time, Shapes::ShapeRef.new(shape: DateTimestamp, required: true, location_name: "creationTime"))
     DataAutomationProject.add_member(:last_modified_time, Shapes::ShapeRef.new(shape: DateTimestamp, required: true, location_name: "lastModifiedTime"))
     DataAutomationProject.add_member(:project_name, Shapes::ShapeRef.new(shape: DataAutomationProjectName, required: true, location_name: "projectName"))
     DataAutomationProject.add_member(:project_stage, Shapes::ShapeRef.new(shape: DataAutomationProjectStage, location_name: "projectStage"))
+    DataAutomationProject.add_member(:project_type, Shapes::ShapeRef.new(shape: DataAutomationProjectType, location_name: "projectType"))
     DataAutomationProject.add_member(:project_description, Shapes::ShapeRef.new(shape: DataAutomationProjectDescription, location_name: "projectDescription"))
     DataAutomationProject.add_member(:standard_output_configuration, Shapes::ShapeRef.new(shape: StandardOutputConfiguration, location_name: "standardOutputConfiguration"))
     DataAutomationProject.add_member(:custom_output_configuration, Shapes::ShapeRef.new(shape: CustomOutputConfiguration, location_name: "customOutputConfiguration"))
     DataAutomationProject.add_member(:override_configuration, Shapes::ShapeRef.new(shape: OverrideConfiguration, location_name: "overrideConfiguration"))
+    DataAutomationProject.add_member(:data_automation_library_configuration, Shapes::ShapeRef.new(shape: DataAutomationLibraryConfiguration, location_name: "dataAutomationLibraryConfiguration"))
     DataAutomationProject.add_member(:status, Shapes::ShapeRef.new(shape: DataAutomationProjectStatus, required: true, location_name: "status"))
     DataAutomationProject.add_member(:kms_key_id, Shapes::ShapeRef.new(shape: KmsKeyId, location_name: "kmsKeyId"))
     DataAutomationProject.add_member(:kms_encryption_context, Shapes::ShapeRef.new(shape: KmsEncryptionContext, location_name: "kmsEncryptionContext"))
@@ -255,6 +476,7 @@ module Aws::BedrockDataAutomation
 
     DataAutomationProjectSummary.add_member(:project_arn, Shapes::ShapeRef.new(shape: DataAutomationProjectArn, required: true, location_name: "projectArn"))
     DataAutomationProjectSummary.add_member(:project_stage, Shapes::ShapeRef.new(shape: DataAutomationProjectStage, location_name: "projectStage"))
+    DataAutomationProjectSummary.add_member(:project_type, Shapes::ShapeRef.new(shape: DataAutomationProjectType, location_name: "projectType"))
     DataAutomationProjectSummary.add_member(:project_name, Shapes::ShapeRef.new(shape: DataAutomationProjectName, location_name: "projectName"))
     DataAutomationProjectSummary.add_member(:creation_time, Shapes::ShapeRef.new(shape: DateTimestamp, required: true, location_name: "creationTime"))
     DataAutomationProjectSummary.struct_class = Types::DataAutomationProjectSummary
@@ -265,6 +487,13 @@ module Aws::BedrockDataAutomation
 
     DeleteBlueprintResponse.struct_class = Types::DeleteBlueprintResponse
 
+    DeleteDataAutomationLibraryRequest.add_member(:library_arn, Shapes::ShapeRef.new(shape: DataAutomationLibraryArn, required: true, location: "uri", location_name: "libraryArn"))
+    DeleteDataAutomationLibraryRequest.struct_class = Types::DeleteDataAutomationLibraryRequest
+
+    DeleteDataAutomationLibraryResponse.add_member(:library_arn, Shapes::ShapeRef.new(shape: DataAutomationLibraryArn, location_name: "libraryArn"))
+    DeleteDataAutomationLibraryResponse.add_member(:status, Shapes::ShapeRef.new(shape: DataAutomationLibraryStatus, location_name: "status"))
+    DeleteDataAutomationLibraryResponse.struct_class = Types::DeleteDataAutomationLibraryResponse
+
     DeleteDataAutomationProjectRequest.add_member(:project_arn, Shapes::ShapeRef.new(shape: DataAutomationProjectArn, required: true, location: "uri", location_name: "projectArn"))
     DeleteDataAutomationProjectRequest.struct_class = Types::DeleteDataAutomationProjectRequest
 
@@ -272,8 +501,14 @@ module Aws::BedrockDataAutomation
     DeleteDataAutomationProjectResponse.add_member(:status, Shapes::ShapeRef.new(shape: DataAutomationProjectStatus, location_name: "status"))
     DeleteDataAutomationProjectResponse.struct_class = Types::DeleteDataAutomationProjectResponse
 
+    DeleteEntitiesInfo.add_member(:entity_ids, Shapes::ShapeRef.new(shape: EntityIdList, required: true, location_name: "entityIds"))
+    DeleteEntitiesInfo.struct_class = Types::DeleteEntitiesInfo
+
     DocumentBoundingBox.add_member(:state, Shapes::ShapeRef.new(shape: State, required: true, location_name: "state"))
     DocumentBoundingBox.struct_class = Types::DocumentBoundingBox
+
+    DocumentCustomOutputConfiguration.add_member(:fallback_blueprints, Shapes::ShapeRef.new(shape: FallbackBlueprintItems, location_name: "fallbackBlueprints"))
+    DocumentCustomOutputConfiguration.struct_class = Types::DocumentCustomOutputConfiguration
 
     DocumentExtractionGranularity.add_member(:types, Shapes::ShapeRef.new(shape: DocumentExtractionGranularityTypes, location_name: "types"))
     DocumentExtractionGranularity.struct_class = Types::DocumentExtractionGranularity
@@ -293,6 +528,8 @@ module Aws::BedrockDataAutomation
     DocumentOutputTextFormatTypes.member = Shapes::ShapeRef.new(shape: DocumentOutputTextFormatType)
 
     DocumentOverrideConfiguration.add_member(:splitter, Shapes::ShapeRef.new(shape: SplitterConfiguration, location_name: "splitter"))
+    DocumentOverrideConfiguration.add_member(:modality_processing, Shapes::ShapeRef.new(shape: ModalityProcessingConfiguration, location_name: "modalityProcessing"))
+    DocumentOverrideConfiguration.add_member(:sensitive_data_configuration, Shapes::ShapeRef.new(shape: SensitiveDataConfiguration, location_name: "sensitiveDataConfiguration"))
     DocumentOverrideConfiguration.struct_class = Types::DocumentOverrideConfiguration
 
     DocumentStandardExtraction.add_member(:granularity, Shapes::ShapeRef.new(shape: DocumentExtractionGranularity, required: true, location_name: "granularity"))
@@ -311,6 +548,34 @@ module Aws::BedrockDataAutomation
     EncryptionConfiguration.add_member(:kms_encryption_context, Shapes::ShapeRef.new(shape: KmsEncryptionContext, location_name: "kmsEncryptionContext"))
     EncryptionConfiguration.struct_class = Types::EncryptionConfiguration
 
+    EntityDetails.add_member(:vocabulary, Shapes::ShapeRef.new(shape: VocabularyEntity, location_name: "vocabulary"))
+    EntityDetails.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    EntityDetails.add_member_subclass(:vocabulary, Types::EntityDetails::Vocabulary)
+    EntityDetails.add_member_subclass(:unknown, Types::EntityDetails::Unknown)
+    EntityDetails.struct_class = Types::EntityDetails
+
+    EntityIdList.member = Shapes::ShapeRef.new(shape: EntityId)
+
+    EntityTypeInfo.add_member(:entity_type, Shapes::ShapeRef.new(shape: EntityType, required: true, location_name: "entityType"))
+    EntityTypeInfo.add_member(:entity_metadata, Shapes::ShapeRef.new(shape: EntityMetadata, location_name: "entityMetadata"))
+    EntityTypeInfo.struct_class = Types::EntityTypeInfo
+
+    EntityTypeInfoList.member = Shapes::ShapeRef.new(shape: EntityTypeInfo)
+
+    EventBridgeConfiguration.add_member(:event_bridge_enabled, Shapes::ShapeRef.new(shape: Boolean, required: true, location_name: "eventBridgeEnabled"))
+    EventBridgeConfiguration.struct_class = Types::EventBridgeConfiguration
+
+    FallbackBlueprintItems.member = Shapes::ShapeRef.new(shape: BlueprintItem)
+
+    GetBlueprintOptimizationStatusRequest.add_member(:invocation_arn, Shapes::ShapeRef.new(shape: BlueprintOptimizationInvocationArn, required: true, location: "uri", location_name: "invocationArn"))
+    GetBlueprintOptimizationStatusRequest.struct_class = Types::GetBlueprintOptimizationStatusRequest
+
+    GetBlueprintOptimizationStatusResponse.add_member(:status, Shapes::ShapeRef.new(shape: BlueprintOptimizationJobStatus, location_name: "status"))
+    GetBlueprintOptimizationStatusResponse.add_member(:error_type, Shapes::ShapeRef.new(shape: String, location_name: "errorType"))
+    GetBlueprintOptimizationStatusResponse.add_member(:error_message, Shapes::ShapeRef.new(shape: String, location_name: "errorMessage"))
+    GetBlueprintOptimizationStatusResponse.add_member(:output_configuration, Shapes::ShapeRef.new(shape: BlueprintOptimizationOutputConfiguration, location_name: "outputConfiguration"))
+    GetBlueprintOptimizationStatusResponse.struct_class = Types::GetBlueprintOptimizationStatusResponse
+
     GetBlueprintRequest.add_member(:blueprint_arn, Shapes::ShapeRef.new(shape: BlueprintArn, required: true, location: "uri", location_name: "blueprintArn"))
     GetBlueprintRequest.add_member(:blueprint_version, Shapes::ShapeRef.new(shape: BlueprintVersion, location_name: "blueprintVersion"))
     GetBlueprintRequest.add_member(:blueprint_stage, Shapes::ShapeRef.new(shape: BlueprintStage, location_name: "blueprintStage"))
@@ -318,6 +583,27 @@ module Aws::BedrockDataAutomation
 
     GetBlueprintResponse.add_member(:blueprint, Shapes::ShapeRef.new(shape: Blueprint, required: true, location_name: "blueprint"))
     GetBlueprintResponse.struct_class = Types::GetBlueprintResponse
+
+    GetDataAutomationLibraryEntityRequest.add_member(:library_arn, Shapes::ShapeRef.new(shape: DataAutomationLibraryArn, required: true, location: "uri", location_name: "libraryArn"))
+    GetDataAutomationLibraryEntityRequest.add_member(:entity_type, Shapes::ShapeRef.new(shape: EntityType, required: true, location: "uri", location_name: "entityType"))
+    GetDataAutomationLibraryEntityRequest.add_member(:entity_id, Shapes::ShapeRef.new(shape: EntityId, required: true, location: "uri", location_name: "entityId"))
+    GetDataAutomationLibraryEntityRequest.struct_class = Types::GetDataAutomationLibraryEntityRequest
+
+    GetDataAutomationLibraryEntityResponse.add_member(:entity, Shapes::ShapeRef.new(shape: EntityDetails, location_name: "entity"))
+    GetDataAutomationLibraryEntityResponse.struct_class = Types::GetDataAutomationLibraryEntityResponse
+
+    GetDataAutomationLibraryIngestionJobRequest.add_member(:library_arn, Shapes::ShapeRef.new(shape: DataAutomationLibraryArn, required: true, location: "uri", location_name: "libraryArn"))
+    GetDataAutomationLibraryIngestionJobRequest.add_member(:job_arn, Shapes::ShapeRef.new(shape: DataAutomationLibraryIngestionJobArn, required: true, location: "uri", location_name: "jobArn"))
+    GetDataAutomationLibraryIngestionJobRequest.struct_class = Types::GetDataAutomationLibraryIngestionJobRequest
+
+    GetDataAutomationLibraryIngestionJobResponse.add_member(:job, Shapes::ShapeRef.new(shape: DataAutomationLibraryIngestionJob, location_name: "job"))
+    GetDataAutomationLibraryIngestionJobResponse.struct_class = Types::GetDataAutomationLibraryIngestionJobResponse
+
+    GetDataAutomationLibraryRequest.add_member(:library_arn, Shapes::ShapeRef.new(shape: DataAutomationLibraryArn, required: true, location: "uri", location_name: "libraryArn"))
+    GetDataAutomationLibraryRequest.struct_class = Types::GetDataAutomationLibraryRequest
+
+    GetDataAutomationLibraryResponse.add_member(:library, Shapes::ShapeRef.new(shape: DataAutomationLibrary, location_name: "library"))
+    GetDataAutomationLibraryResponse.struct_class = Types::GetDataAutomationLibraryResponse
 
     GetDataAutomationProjectRequest.add_member(:project_arn, Shapes::ShapeRef.new(shape: DataAutomationProjectArn, required: true, location: "uri", location_name: "projectArn"))
     GetDataAutomationProjectRequest.add_member(:project_stage, Shapes::ShapeRef.new(shape: DataAutomationProjectStage, location_name: "projectStage"))
@@ -335,6 +621,10 @@ module Aws::BedrockDataAutomation
 
     ImageExtractionCategoryTypes.member = Shapes::ShapeRef.new(shape: ImageExtractionCategoryType)
 
+    ImageOverrideConfiguration.add_member(:modality_processing, Shapes::ShapeRef.new(shape: ModalityProcessingConfiguration, location_name: "modalityProcessing"))
+    ImageOverrideConfiguration.add_member(:sensitive_data_configuration, Shapes::ShapeRef.new(shape: SensitiveDataConfiguration, location_name: "sensitiveDataConfiguration"))
+    ImageOverrideConfiguration.struct_class = Types::ImageOverrideConfiguration
+
     ImageStandardExtraction.add_member(:category, Shapes::ShapeRef.new(shape: ImageExtractionCategory, required: true, location_name: "category"))
     ImageStandardExtraction.add_member(:bounding_box, Shapes::ShapeRef.new(shape: ImageBoundingBox, required: true, location_name: "boundingBox"))
     ImageStandardExtraction.struct_class = Types::ImageStandardExtraction
@@ -349,8 +639,44 @@ module Aws::BedrockDataAutomation
     ImageStandardOutputConfiguration.add_member(:generative_field, Shapes::ShapeRef.new(shape: ImageStandardGenerativeField, location_name: "generativeField"))
     ImageStandardOutputConfiguration.struct_class = Types::ImageStandardOutputConfiguration
 
+    InlinePayload.add_member(:upsert_entities_info, Shapes::ShapeRef.new(shape: UpsertEntitiesInfo, location_name: "upsertEntitiesInfo"))
+    InlinePayload.add_member(:delete_entities_info, Shapes::ShapeRef.new(shape: DeleteEntitiesInfo, location_name: "deleteEntitiesInfo"))
+    InlinePayload.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    InlinePayload.add_member_subclass(:upsert_entities_info, Types::InlinePayload::UpsertEntitiesInfo)
+    InlinePayload.add_member_subclass(:delete_entities_info, Types::InlinePayload::DeleteEntitiesInfo)
+    InlinePayload.add_member_subclass(:unknown, Types::InlinePayload::Unknown)
+    InlinePayload.struct_class = Types::InlinePayload
+
+    InputConfiguration.add_member(:s3_object, Shapes::ShapeRef.new(shape: S3Object, location_name: "s3Object"))
+    InputConfiguration.add_member(:inline_payload, Shapes::ShapeRef.new(shape: InlinePayload, location_name: "inlinePayload"))
+    InputConfiguration.struct_class = Types::InputConfiguration
+
     InternalServerException.add_member(:message, Shapes::ShapeRef.new(shape: NonBlankString, location_name: "message"))
     InternalServerException.struct_class = Types::InternalServerException
+
+    InvokeBlueprintOptimizationAsyncRequest.add_member(:blueprint, Shapes::ShapeRef.new(shape: BlueprintOptimizationObject, required: true, location_name: "blueprint"))
+    InvokeBlueprintOptimizationAsyncRequest.add_member(:samples, Shapes::ShapeRef.new(shape: BlueprintOptimizationSamples, required: true, location_name: "samples"))
+    InvokeBlueprintOptimizationAsyncRequest.add_member(:output_configuration, Shapes::ShapeRef.new(shape: BlueprintOptimizationOutputConfiguration, required: true, location_name: "outputConfiguration"))
+    InvokeBlueprintOptimizationAsyncRequest.add_member(:data_automation_profile_arn, Shapes::ShapeRef.new(shape: DataAutomationProfileArn, required: true, location_name: "dataAutomationProfileArn"))
+    InvokeBlueprintOptimizationAsyncRequest.add_member(:encryption_configuration, Shapes::ShapeRef.new(shape: EncryptionConfiguration, location_name: "encryptionConfiguration"))
+    InvokeBlueprintOptimizationAsyncRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "tags"))
+    InvokeBlueprintOptimizationAsyncRequest.struct_class = Types::InvokeBlueprintOptimizationAsyncRequest
+
+    InvokeBlueprintOptimizationAsyncResponse.add_member(:invocation_arn, Shapes::ShapeRef.new(shape: BlueprintOptimizationInvocationArn, required: true, location_name: "invocationArn"))
+    InvokeBlueprintOptimizationAsyncResponse.struct_class = Types::InvokeBlueprintOptimizationAsyncResponse
+
+    InvokeDataAutomationLibraryIngestionJobRequest.add_member(:library_arn, Shapes::ShapeRef.new(shape: DataAutomationLibraryArn, required: true, location: "uri", location_name: "libraryArn"))
+    InvokeDataAutomationLibraryIngestionJobRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    InvokeDataAutomationLibraryIngestionJobRequest.add_member(:input_configuration, Shapes::ShapeRef.new(shape: InputConfiguration, required: true, location_name: "inputConfiguration"))
+    InvokeDataAutomationLibraryIngestionJobRequest.add_member(:entity_type, Shapes::ShapeRef.new(shape: EntityType, required: true, location_name: "entityType"))
+    InvokeDataAutomationLibraryIngestionJobRequest.add_member(:operation_type, Shapes::ShapeRef.new(shape: LibraryIngestionJobOperationType, required: true, location_name: "operationType"))
+    InvokeDataAutomationLibraryIngestionJobRequest.add_member(:output_configuration, Shapes::ShapeRef.new(shape: OutputConfiguration, required: true, location_name: "outputConfiguration"))
+    InvokeDataAutomationLibraryIngestionJobRequest.add_member(:notification_configuration, Shapes::ShapeRef.new(shape: NotificationConfiguration, location_name: "notificationConfiguration"))
+    InvokeDataAutomationLibraryIngestionJobRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "tags"))
+    InvokeDataAutomationLibraryIngestionJobRequest.struct_class = Types::InvokeDataAutomationLibraryIngestionJobRequest
+
+    InvokeDataAutomationLibraryIngestionJobResponse.add_member(:job_arn, Shapes::ShapeRef.new(shape: DataAutomationLibraryIngestionJobArn, location_name: "jobArn"))
+    InvokeDataAutomationLibraryIngestionJobResponse.struct_class = Types::InvokeDataAutomationLibraryIngestionJobResponse
 
     KmsEncryptionContext.key = Shapes::ShapeRef.new(shape: EncryptionContextKey)
     KmsEncryptionContext.value = Shapes::ShapeRef.new(shape: EncryptionContextValue)
@@ -367,11 +693,40 @@ module Aws::BedrockDataAutomation
     ListBlueprintsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
     ListBlueprintsResponse.struct_class = Types::ListBlueprintsResponse
 
+    ListDataAutomationLibrariesRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location_name: "maxResults"))
+    ListDataAutomationLibrariesRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    ListDataAutomationLibrariesRequest.add_member(:project_filter, Shapes::ShapeRef.new(shape: DataAutomationProjectFilter, location_name: "projectFilter"))
+    ListDataAutomationLibrariesRequest.struct_class = Types::ListDataAutomationLibrariesRequest
+
+    ListDataAutomationLibrariesResponse.add_member(:libraries, Shapes::ShapeRef.new(shape: DataAutomationLibrarySummaries, location_name: "libraries"))
+    ListDataAutomationLibrariesResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    ListDataAutomationLibrariesResponse.struct_class = Types::ListDataAutomationLibrariesResponse
+
+    ListDataAutomationLibraryEntitiesRequest.add_member(:library_arn, Shapes::ShapeRef.new(shape: DataAutomationLibraryArn, required: true, location: "uri", location_name: "libraryArn"))
+    ListDataAutomationLibraryEntitiesRequest.add_member(:entity_type, Shapes::ShapeRef.new(shape: EntityType, required: true, location: "uri", location_name: "entityType"))
+    ListDataAutomationLibraryEntitiesRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location_name: "maxResults"))
+    ListDataAutomationLibraryEntitiesRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    ListDataAutomationLibraryEntitiesRequest.struct_class = Types::ListDataAutomationLibraryEntitiesRequest
+
+    ListDataAutomationLibraryEntitiesResponse.add_member(:entities, Shapes::ShapeRef.new(shape: DataAutomationLibraryEntitySummaries, location_name: "entities"))
+    ListDataAutomationLibraryEntitiesResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    ListDataAutomationLibraryEntitiesResponse.struct_class = Types::ListDataAutomationLibraryEntitiesResponse
+
+    ListDataAutomationLibraryIngestionJobsRequest.add_member(:library_arn, Shapes::ShapeRef.new(shape: DataAutomationLibraryArn, required: true, location: "uri", location_name: "libraryArn"))
+    ListDataAutomationLibraryIngestionJobsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location_name: "maxResults"))
+    ListDataAutomationLibraryIngestionJobsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    ListDataAutomationLibraryIngestionJobsRequest.struct_class = Types::ListDataAutomationLibraryIngestionJobsRequest
+
+    ListDataAutomationLibraryIngestionJobsResponse.add_member(:jobs, Shapes::ShapeRef.new(shape: DataAutomationLibraryIngestionJobSummaries, location_name: "jobs"))
+    ListDataAutomationLibraryIngestionJobsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    ListDataAutomationLibraryIngestionJobsResponse.struct_class = Types::ListDataAutomationLibraryIngestionJobsResponse
+
     ListDataAutomationProjectsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location_name: "maxResults"))
     ListDataAutomationProjectsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
     ListDataAutomationProjectsRequest.add_member(:project_stage_filter, Shapes::ShapeRef.new(shape: DataAutomationProjectStageFilter, location_name: "projectStageFilter"))
     ListDataAutomationProjectsRequest.add_member(:blueprint_filter, Shapes::ShapeRef.new(shape: BlueprintFilter, location_name: "blueprintFilter"))
     ListDataAutomationProjectsRequest.add_member(:resource_owner, Shapes::ShapeRef.new(shape: ResourceOwner, location_name: "resourceOwner"))
+    ListDataAutomationProjectsRequest.add_member(:library_filter, Shapes::ShapeRef.new(shape: DataAutomationLibraryFilter, location_name: "libraryFilter"))
     ListDataAutomationProjectsRequest.struct_class = Types::ListDataAutomationProjectsRequest
 
     ListDataAutomationProjectsResponse.add_member(:projects, Shapes::ShapeRef.new(shape: DataAutomationProjectSummaries, required: true, location_name: "projects"))
@@ -384,14 +739,59 @@ module Aws::BedrockDataAutomation
     ListTagsForResourceResponse.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "tags"))
     ListTagsForResourceResponse.struct_class = Types::ListTagsForResourceResponse
 
+    ModalityProcessingConfiguration.add_member(:state, Shapes::ShapeRef.new(shape: State, location_name: "state"))
+    ModalityProcessingConfiguration.struct_class = Types::ModalityProcessingConfiguration
+
+    ModalityRoutingConfiguration.add_member(:jpeg, Shapes::ShapeRef.new(shape: DesiredModality, location_name: "jpeg"))
+    ModalityRoutingConfiguration.add_member(:png, Shapes::ShapeRef.new(shape: DesiredModality, location_name: "png"))
+    ModalityRoutingConfiguration.add_member(:mp4, Shapes::ShapeRef.new(shape: DesiredModality, location_name: "mp4"))
+    ModalityRoutingConfiguration.add_member(:mov, Shapes::ShapeRef.new(shape: DesiredModality, location_name: "mov"))
+    ModalityRoutingConfiguration.struct_class = Types::ModalityRoutingConfiguration
+
+    NotificationConfiguration.add_member(:event_bridge_configuration, Shapes::ShapeRef.new(shape: EventBridgeConfiguration, required: true, location_name: "eventBridgeConfiguration"))
+    NotificationConfiguration.struct_class = Types::NotificationConfiguration
+
+    OutputConfiguration.add_member(:s3_uri, Shapes::ShapeRef.new(shape: S3Uri, required: true, location_name: "s3Uri"))
+    OutputConfiguration.struct_class = Types::OutputConfiguration
+
     OverrideConfiguration.add_member(:document, Shapes::ShapeRef.new(shape: DocumentOverrideConfiguration, location_name: "document"))
+    OverrideConfiguration.add_member(:image, Shapes::ShapeRef.new(shape: ImageOverrideConfiguration, location_name: "image"))
+    OverrideConfiguration.add_member(:video, Shapes::ShapeRef.new(shape: VideoOverrideConfiguration, location_name: "video"))
+    OverrideConfiguration.add_member(:audio, Shapes::ShapeRef.new(shape: AudioOverrideConfiguration, location_name: "audio"))
+    OverrideConfiguration.add_member(:modality_routing, Shapes::ShapeRef.new(shape: ModalityRoutingConfiguration, location_name: "modalityRouting"))
     OverrideConfiguration.struct_class = Types::OverrideConfiguration
+
+    PIIEntitiesConfiguration.add_member(:pii_entity_types, Shapes::ShapeRef.new(shape: PIIEntityTypes, location_name: "piiEntityTypes"))
+    PIIEntitiesConfiguration.add_member(:redaction_mask_mode, Shapes::ShapeRef.new(shape: PIIRedactionMaskMode, location_name: "redactionMaskMode"))
+    PIIEntitiesConfiguration.struct_class = Types::PIIEntitiesConfiguration
+
+    PIIEntityTypes.member = Shapes::ShapeRef.new(shape: PIIEntityType)
+
+    Phrase.add_member(:text, Shapes::ShapeRef.new(shape: PhraseText, required: true, location_name: "text"))
+    Phrase.add_member(:display_as_text, Shapes::ShapeRef.new(shape: PhraseDisplayAsText, location_name: "displayAsText"))
+    Phrase.struct_class = Types::Phrase
+
+    PhraseList.member = Shapes::ShapeRef.new(shape: Phrase)
 
     ResourceNotFoundException.add_member(:message, Shapes::ShapeRef.new(shape: NonBlankString, location_name: "message"))
     ResourceNotFoundException.struct_class = Types::ResourceNotFoundException
 
+    S3Object.add_member(:s3_uri, Shapes::ShapeRef.new(shape: S3Uri, required: true, location_name: "s3Uri"))
+    S3Object.add_member(:version, Shapes::ShapeRef.new(shape: S3ObjectVersion, location_name: "version"))
+    S3Object.struct_class = Types::S3Object
+
+    SensitiveDataConfiguration.add_member(:detection_mode, Shapes::ShapeRef.new(shape: SensitiveDataDetectionMode, required: true, location_name: "detectionMode"))
+    SensitiveDataConfiguration.add_member(:detection_scope, Shapes::ShapeRef.new(shape: SensitiveDataDetectionScope, location_name: "detectionScope"))
+    SensitiveDataConfiguration.add_member(:pii_entities_configuration, Shapes::ShapeRef.new(shape: PIIEntitiesConfiguration, location_name: "piiEntitiesConfiguration"))
+    SensitiveDataConfiguration.struct_class = Types::SensitiveDataConfiguration
+
+    SensitiveDataDetectionScope.member = Shapes::ShapeRef.new(shape: SensitiveDataDetectionScopeType)
+
     ServiceQuotaExceededException.add_member(:message, Shapes::ShapeRef.new(shape: NonBlankString, location_name: "message"))
     ServiceQuotaExceededException.struct_class = Types::ServiceQuotaExceededException
+
+    SpeakerLabelingConfiguration.add_member(:state, Shapes::ShapeRef.new(shape: State, required: true, location_name: "state"))
+    SpeakerLabelingConfiguration.struct_class = Types::SpeakerLabelingConfiguration
 
     SplitterConfiguration.add_member(:state, Shapes::ShapeRef.new(shape: State, location_name: "state"))
     SplitterConfiguration.struct_class = Types::SplitterConfiguration
@@ -419,6 +819,10 @@ module Aws::BedrockDataAutomation
     ThrottlingException.add_member(:message, Shapes::ShapeRef.new(shape: NonBlankString, location_name: "message"))
     ThrottlingException.struct_class = Types::ThrottlingException
 
+    TranscriptConfiguration.add_member(:speaker_labeling, Shapes::ShapeRef.new(shape: SpeakerLabelingConfiguration, location_name: "speakerLabeling"))
+    TranscriptConfiguration.add_member(:channel_labeling, Shapes::ShapeRef.new(shape: ChannelLabelingConfiguration, location_name: "channelLabeling"))
+    TranscriptConfiguration.struct_class = Types::TranscriptConfiguration
+
     UntagResourceRequest.add_member(:resource_arn, Shapes::ShapeRef.new(shape: TaggableResourceArn, required: true, location_name: "resourceARN"))
     UntagResourceRequest.add_member(:tag_keys, Shapes::ShapeRef.new(shape: TagKeyList, required: true, location_name: "tagKeys"))
     UntagResourceRequest.struct_class = Types::UntagResourceRequest
@@ -434,12 +838,22 @@ module Aws::BedrockDataAutomation
     UpdateBlueprintResponse.add_member(:blueprint, Shapes::ShapeRef.new(shape: Blueprint, required: true, location_name: "blueprint"))
     UpdateBlueprintResponse.struct_class = Types::UpdateBlueprintResponse
 
+    UpdateDataAutomationLibraryRequest.add_member(:library_arn, Shapes::ShapeRef.new(shape: DataAutomationLibraryArn, required: true, location: "uri", location_name: "libraryArn"))
+    UpdateDataAutomationLibraryRequest.add_member(:library_description, Shapes::ShapeRef.new(shape: DataAutomationLibraryDescription, location_name: "libraryDescription"))
+    UpdateDataAutomationLibraryRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    UpdateDataAutomationLibraryRequest.struct_class = Types::UpdateDataAutomationLibraryRequest
+
+    UpdateDataAutomationLibraryResponse.add_member(:library_arn, Shapes::ShapeRef.new(shape: DataAutomationLibraryArn, location_name: "libraryArn"))
+    UpdateDataAutomationLibraryResponse.add_member(:status, Shapes::ShapeRef.new(shape: DataAutomationLibraryStatus, location_name: "status"))
+    UpdateDataAutomationLibraryResponse.struct_class = Types::UpdateDataAutomationLibraryResponse
+
     UpdateDataAutomationProjectRequest.add_member(:project_arn, Shapes::ShapeRef.new(shape: DataAutomationProjectArn, required: true, location: "uri", location_name: "projectArn"))
     UpdateDataAutomationProjectRequest.add_member(:project_stage, Shapes::ShapeRef.new(shape: DataAutomationProjectStage, location_name: "projectStage"))
     UpdateDataAutomationProjectRequest.add_member(:project_description, Shapes::ShapeRef.new(shape: DataAutomationProjectDescription, location_name: "projectDescription"))
     UpdateDataAutomationProjectRequest.add_member(:standard_output_configuration, Shapes::ShapeRef.new(shape: StandardOutputConfiguration, required: true, location_name: "standardOutputConfiguration"))
     UpdateDataAutomationProjectRequest.add_member(:custom_output_configuration, Shapes::ShapeRef.new(shape: CustomOutputConfiguration, location_name: "customOutputConfiguration"))
     UpdateDataAutomationProjectRequest.add_member(:override_configuration, Shapes::ShapeRef.new(shape: OverrideConfiguration, location_name: "overrideConfiguration"))
+    UpdateDataAutomationProjectRequest.add_member(:data_automation_library_configuration, Shapes::ShapeRef.new(shape: DataAutomationLibraryConfiguration, location_name: "dataAutomationLibraryConfiguration"))
     UpdateDataAutomationProjectRequest.add_member(:encryption_configuration, Shapes::ShapeRef.new(shape: EncryptionConfiguration, location_name: "encryptionConfiguration"))
     UpdateDataAutomationProjectRequest.struct_class = Types::UpdateDataAutomationProjectRequest
 
@@ -447,6 +861,14 @@ module Aws::BedrockDataAutomation
     UpdateDataAutomationProjectResponse.add_member(:project_stage, Shapes::ShapeRef.new(shape: DataAutomationProjectStage, location_name: "projectStage"))
     UpdateDataAutomationProjectResponse.add_member(:status, Shapes::ShapeRef.new(shape: DataAutomationProjectStatus, location_name: "status"))
     UpdateDataAutomationProjectResponse.struct_class = Types::UpdateDataAutomationProjectResponse
+
+    UpsertEntitiesInfo.member = Shapes::ShapeRef.new(shape: UpsertEntityInfo)
+
+    UpsertEntityInfo.add_member(:vocabulary, Shapes::ShapeRef.new(shape: VocabularyEntityInfo, location_name: "vocabulary"))
+    UpsertEntityInfo.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    UpsertEntityInfo.add_member_subclass(:vocabulary, Types::UpsertEntityInfo::Vocabulary)
+    UpsertEntityInfo.add_member_subclass(:unknown, Types::UpsertEntityInfo::Unknown)
+    UpsertEntityInfo.struct_class = Types::UpsertEntityInfo
 
     ValidationException.add_member(:message, Shapes::ShapeRef.new(shape: NonBlankString, location_name: "message"))
     ValidationException.add_member(:field_list, Shapes::ShapeRef.new(shape: ValidationExceptionFieldList, location_name: "fieldList"))
@@ -467,6 +889,10 @@ module Aws::BedrockDataAutomation
 
     VideoExtractionCategoryTypes.member = Shapes::ShapeRef.new(shape: VideoExtractionCategoryType)
 
+    VideoOverrideConfiguration.add_member(:modality_processing, Shapes::ShapeRef.new(shape: ModalityProcessingConfiguration, location_name: "modalityProcessing"))
+    VideoOverrideConfiguration.add_member(:sensitive_data_configuration, Shapes::ShapeRef.new(shape: SensitiveDataConfiguration, location_name: "sensitiveDataConfiguration"))
+    VideoOverrideConfiguration.struct_class = Types::VideoOverrideConfiguration
+
     VideoStandardExtraction.add_member(:category, Shapes::ShapeRef.new(shape: VideoExtractionCategory, required: true, location_name: "category"))
     VideoStandardExtraction.add_member(:bounding_box, Shapes::ShapeRef.new(shape: VideoBoundingBox, required: true, location_name: "boundingBox"))
     VideoStandardExtraction.struct_class = Types::VideoStandardExtraction
@@ -480,6 +906,26 @@ module Aws::BedrockDataAutomation
     VideoStandardOutputConfiguration.add_member(:extraction, Shapes::ShapeRef.new(shape: VideoStandardExtraction, location_name: "extraction"))
     VideoStandardOutputConfiguration.add_member(:generative_field, Shapes::ShapeRef.new(shape: VideoStandardGenerativeField, location_name: "generativeField"))
     VideoStandardOutputConfiguration.struct_class = Types::VideoStandardOutputConfiguration
+
+    VocabularyEntity.add_member(:entity_id, Shapes::ShapeRef.new(shape: EntityId, location_name: "entityId"))
+    VocabularyEntity.add_member(:description, Shapes::ShapeRef.new(shape: EntityDescription, location_name: "description"))
+    VocabularyEntity.add_member(:language, Shapes::ShapeRef.new(shape: Language, location_name: "language"))
+    VocabularyEntity.add_member(:phrases, Shapes::ShapeRef.new(shape: PhraseList, location_name: "phrases"))
+    VocabularyEntity.add_member(:last_modified_time, Shapes::ShapeRef.new(shape: DateTimestamp, location_name: "lastModifiedTime"))
+    VocabularyEntity.struct_class = Types::VocabularyEntity
+
+    VocabularyEntityInfo.add_member(:entity_id, Shapes::ShapeRef.new(shape: EntityId, location_name: "entityId"))
+    VocabularyEntityInfo.add_member(:description, Shapes::ShapeRef.new(shape: EntityDescription, location_name: "description"))
+    VocabularyEntityInfo.add_member(:language, Shapes::ShapeRef.new(shape: Language, required: true, location_name: "language"))
+    VocabularyEntityInfo.add_member(:phrases, Shapes::ShapeRef.new(shape: PhraseList, required: true, location_name: "phrases"))
+    VocabularyEntityInfo.struct_class = Types::VocabularyEntityInfo
+
+    VocabularyEntitySummary.add_member(:entity_id, Shapes::ShapeRef.new(shape: EntityId, location_name: "entityId"))
+    VocabularyEntitySummary.add_member(:description, Shapes::ShapeRef.new(shape: EntityDescription, location_name: "description"))
+    VocabularyEntitySummary.add_member(:language, Shapes::ShapeRef.new(shape: Language, location_name: "language"))
+    VocabularyEntitySummary.add_member(:num_of_phrases, Shapes::ShapeRef.new(shape: VocabularyEntitySummaryNumOfPhrasesInteger, location_name: "numOfPhrases"))
+    VocabularyEntitySummary.add_member(:last_modified_time, Shapes::ShapeRef.new(shape: DateTimestamp, location_name: "lastModifiedTime"))
+    VocabularyEntitySummary.struct_class = Types::VocabularyEntitySummary
 
 
     # @api private
@@ -499,6 +945,19 @@ module Aws::BedrockDataAutomation
         "signingName" => "bedrock",
         "uid" => "bedrock-data-automation-2023-07-26",
       }
+
+      api.add_operation(:copy_blueprint_stage, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CopyBlueprintStage"
+        o.http_method = "PUT"
+        o.http_request_uri = "/blueprints/{blueprintArn}/copy-stage"
+        o.input = Shapes::ShapeRef.new(shape: CopyBlueprintStageRequest)
+        o.output = Shapes::ShapeRef.new(shape: CopyBlueprintStageResponse)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+      end)
 
       api.add_operation(:create_blueprint, Seahorse::Model::Operation.new.tap do |o|
         o.name = "CreateBlueprint"
@@ -528,6 +987,20 @@ module Aws::BedrockDataAutomation
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
       end)
 
+      api.add_operation(:create_data_automation_library, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CreateDataAutomationLibrary"
+        o.http_method = "PUT"
+        o.http_request_uri = "/data-automation-libraries/"
+        o.input = Shapes::ShapeRef.new(shape: CreateDataAutomationLibraryRequest)
+        o.output = Shapes::ShapeRef.new(shape: CreateDataAutomationLibraryResponse)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
       api.add_operation(:create_data_automation_project, Seahorse::Model::Operation.new.tap do |o|
         o.name = "CreateDataAutomationProject"
         o.http_method = "PUT"
@@ -549,6 +1022,20 @@ module Aws::BedrockDataAutomation
         o.input = Shapes::ShapeRef.new(shape: DeleteBlueprintRequest)
         o.output = Shapes::ShapeRef.new(shape: DeleteBlueprintResponse)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+      end)
+
+      api.add_operation(:delete_data_automation_library, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeleteDataAutomationLibrary"
+        o.http_method = "DELETE"
+        o.http_request_uri = "/data-automation-libraries/{libraryArn}/"
+        o.input = Shapes::ShapeRef.new(shape: DeleteDataAutomationLibraryRequest)
+        o.output = Shapes::ShapeRef.new(shape: DeleteDataAutomationLibraryResponse)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
@@ -581,6 +1068,58 @@ module Aws::BedrockDataAutomation
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
       end)
 
+      api.add_operation(:get_blueprint_optimization_status, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetBlueprintOptimizationStatus"
+        o.http_method = "POST"
+        o.http_request_uri = "/getBlueprintOptimizationStatus/{invocationArn}"
+        o.input = Shapes::ShapeRef.new(shape: GetBlueprintOptimizationStatusRequest)
+        o.output = Shapes::ShapeRef.new(shape: GetBlueprintOptimizationStatusResponse)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+      end)
+
+      api.add_operation(:get_data_automation_library, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetDataAutomationLibrary"
+        o.http_method = "POST"
+        o.http_request_uri = "/data-automation-libraries/{libraryArn}/"
+        o.input = Shapes::ShapeRef.new(shape: GetDataAutomationLibraryRequest)
+        o.output = Shapes::ShapeRef.new(shape: GetDataAutomationLibraryResponse)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+      end)
+
+      api.add_operation(:get_data_automation_library_entity, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetDataAutomationLibraryEntity"
+        o.http_method = "POST"
+        o.http_request_uri = "/data-automation-libraries/{libraryArn}/entityType/{entityType}/entities/{entityId}"
+        o.input = Shapes::ShapeRef.new(shape: GetDataAutomationLibraryEntityRequest)
+        o.output = Shapes::ShapeRef.new(shape: GetDataAutomationLibraryEntityResponse)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+      end)
+
+      api.add_operation(:get_data_automation_library_ingestion_job, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetDataAutomationLibraryIngestionJob"
+        o.http_method = "POST"
+        o.http_request_uri = "/data-automation-libraries/{libraryArn}/library-ingestion-jobs/{jobArn}"
+        o.input = Shapes::ShapeRef.new(shape: GetDataAutomationLibraryIngestionJobRequest)
+        o.output = Shapes::ShapeRef.new(shape: GetDataAutomationLibraryIngestionJobResponse)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+      end)
+
       api.add_operation(:get_data_automation_project, Seahorse::Model::Operation.new.tap do |o|
         o.name = "GetDataAutomationProject"
         o.http_method = "POST"
@@ -594,12 +1133,97 @@ module Aws::BedrockDataAutomation
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
       end)
 
+      api.add_operation(:invoke_blueprint_optimization_async, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "InvokeBlueprintOptimizationAsync"
+        o.http_method = "POST"
+        o.http_request_uri = "/invokeBlueprintOptimizationAsync"
+        o.input = Shapes::ShapeRef.new(shape: InvokeBlueprintOptimizationAsyncRequest)
+        o.output = Shapes::ShapeRef.new(shape: InvokeBlueprintOptimizationAsyncResponse)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+      end)
+
+      api.add_operation(:invoke_data_automation_library_ingestion_job, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "InvokeDataAutomationLibraryIngestionJob"
+        o.http_method = "PUT"
+        o.http_request_uri = "/data-automation-libraries/{libraryArn}/library-ingestion-jobs/"
+        o.input = Shapes::ShapeRef.new(shape: InvokeDataAutomationLibraryIngestionJobRequest)
+        o.output = Shapes::ShapeRef.new(shape: InvokeDataAutomationLibraryIngestionJobResponse)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+      end)
+
       api.add_operation(:list_blueprints, Seahorse::Model::Operation.new.tap do |o|
         o.name = "ListBlueprints"
         o.http_method = "POST"
         o.http_request_uri = "/blueprints/"
         o.input = Shapes::ShapeRef.new(shape: ListBlueprintsRequest)
         o.output = Shapes::ShapeRef.new(shape: ListBlueprintsResponse)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:list_data_automation_libraries, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListDataAutomationLibraries"
+        o.http_method = "POST"
+        o.http_request_uri = "/data-automation-libraries/"
+        o.input = Shapes::ShapeRef.new(shape: ListDataAutomationLibrariesRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListDataAutomationLibrariesResponse)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:list_data_automation_library_entities, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListDataAutomationLibraryEntities"
+        o.http_method = "POST"
+        o.http_request_uri = "/data-automation-libraries/{libraryArn}/entityType/{entityType}/entities/"
+        o.input = Shapes::ShapeRef.new(shape: ListDataAutomationLibraryEntitiesRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListDataAutomationLibraryEntitiesResponse)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:list_data_automation_library_ingestion_jobs, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListDataAutomationLibraryIngestionJobs"
+        o.http_method = "POST"
+        o.http_request_uri = "/data-automation-libraries/{libraryArn}/library-ingestion-jobs/"
+        o.input = Shapes::ShapeRef.new(shape: ListDataAutomationLibraryIngestionJobsRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListDataAutomationLibraryIngestionJobsResponse)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
@@ -680,6 +1304,20 @@ module Aws::BedrockDataAutomation
         o.output = Shapes::ShapeRef.new(shape: UpdateBlueprintResponse)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+      end)
+
+      api.add_operation(:update_data_automation_library, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "UpdateDataAutomationLibrary"
+        o.http_method = "PUT"
+        o.http_request_uri = "/data-automation-libraries/{libraryArn}/"
+        o.input = Shapes::ShapeRef.new(shape: UpdateDataAutomationLibraryRequest)
+        o.output = Shapes::ShapeRef.new(shape: UpdateDataAutomationLibraryResponse)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)

@@ -48,6 +48,20 @@ module Aws::AppIntegrationsService
       include Aws::Structure
     end
 
+    # The configuration settings for the application.
+    #
+    # @!attribute [rw] contact_handling
+    #   The contact handling configuration for the application.
+    #   @return [Types::ContactHandling]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/appintegrations-2020-07-29/ApplicationConfig AWS API Documentation
+    #
+    class ApplicationConfig < Struct.new(
+      :contact_handling)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The configuration for where the application should be loaded from.
     #
     # @!attribute [rw] external_url_config
@@ -88,6 +102,14 @@ module Aws::AppIntegrationsService
     #   The time when the application was last modified.
     #   @return [Time]
     #
+    # @!attribute [rw] is_service
+    #   Indicates whether the application is a service.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] application_type
+    #   The type of application.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/appintegrations-2020-07-29/ApplicationSummary AWS API Documentation
     #
     class ApplicationSummary < Struct.new(
@@ -96,7 +118,24 @@ module Aws::AppIntegrationsService
       :name,
       :namespace,
       :created_time,
-      :last_modified_time)
+      :last_modified_time,
+      :is_service,
+      :application_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The contact handling configuration for the application.
+    #
+    # @!attribute [rw] scope
+    #   Indicates whether the application refreshes for each contact or
+    #   refreshes only with each new browser session.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/appintegrations-2020-07-29/ContactHandling AWS API Documentation
+    #
+    class ContactHandling < Struct.new(
+      :scope)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -150,6 +189,27 @@ module Aws::AppIntegrationsService
     #   access to.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] is_service
+    #   Indicates whether the application is a service.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] initialization_timeout
+    #   The maximum time in milliseconds allowed to establish a connection
+    #   with the workspace.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] application_config
+    #   The configuration settings for the application.
+    #   @return [Types::ApplicationConfig]
+    #
+    # @!attribute [rw] iframe_config
+    #   The iframe configuration for the application.
+    #   @return [Types::IframeConfig]
+    #
+    # @!attribute [rw] application_type
+    #   The type of application.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/appintegrations-2020-07-29/CreateApplicationRequest AWS API Documentation
     #
     class CreateApplicationRequest < Struct.new(
@@ -161,7 +221,12 @@ module Aws::AppIntegrationsService
       :publications,
       :client_token,
       :tags,
-      :permissions)
+      :permissions,
+      :is_service,
+      :initialization_timeout,
+      :application_config,
+      :iframe_config,
+      :application_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -801,6 +866,27 @@ module Aws::AppIntegrationsService
     #   access to.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] is_service
+    #   Indicates whether the application is a service.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] initialization_timeout
+    #   The maximum time in milliseconds allowed to establish a connection
+    #   with the workspace.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] application_config
+    #   The configuration settings for the application.
+    #   @return [Types::ApplicationConfig]
+    #
+    # @!attribute [rw] iframe_config
+    #   The iframe configuration for the application.
+    #   @return [Types::IframeConfig]
+    #
+    # @!attribute [rw] application_type
+    #   The type of application.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/appintegrations-2020-07-29/GetApplicationResponse AWS API Documentation
     #
     class GetApplicationResponse < Struct.new(
@@ -815,7 +901,12 @@ module Aws::AppIntegrationsService
       :created_time,
       :last_modified_time,
       :tags,
-      :permissions)
+      :permissions,
+      :is_service,
+      :initialization_timeout,
+      :application_config,
+      :iframe_config,
+      :application_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -943,6 +1034,25 @@ module Aws::AppIntegrationsService
       include Aws::Structure
     end
 
+    # The iframe configuration for the application.
+    #
+    # @!attribute [rw] allow
+    #   The list of features that are allowed in the iframe.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] sandbox
+    #   The list of sandbox attributes for the iframe.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/appintegrations-2020-07-29/IframeConfig AWS API Documentation
+    #
+    class IframeConfig < Struct.new(
+      :allow,
+      :sandbox)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Request processing failed due to an error or failure with the service.
     #
     # @!attribute [rw] message
@@ -1040,11 +1150,16 @@ module Aws::AppIntegrationsService
     #   The maximum number of results to return per page.
     #   @return [Integer]
     #
+    # @!attribute [rw] application_type
+    #   The type of application.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/appintegrations-2020-07-29/ListApplicationsRequest AWS API Documentation
     #
     class ListApplicationsRequest < Struct.new(
       :next_token,
-      :max_results)
+      :max_results,
+      :application_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1465,6 +1580,27 @@ module Aws::AppIntegrationsService
     #   access to.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] is_service
+    #   Indicates whether the application is a service.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] initialization_timeout
+    #   The maximum time in milliseconds allowed to establish a connection
+    #   with the workspace.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] application_config
+    #   The configuration settings for the application.
+    #   @return [Types::ApplicationConfig]
+    #
+    # @!attribute [rw] iframe_config
+    #   The iframe configuration for the application.
+    #   @return [Types::IframeConfig]
+    #
+    # @!attribute [rw] application_type
+    #   The type of application.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/appintegrations-2020-07-29/UpdateApplicationRequest AWS API Documentation
     #
     class UpdateApplicationRequest < Struct.new(
@@ -1474,7 +1610,12 @@ module Aws::AppIntegrationsService
       :application_source_config,
       :subscriptions,
       :publications,
-      :permissions)
+      :permissions,
+      :is_service,
+      :initialization_timeout,
+      :application_config,
+      :iframe_config,
+      :application_type)
       SENSITIVE = []
       include Aws::Structure
     end

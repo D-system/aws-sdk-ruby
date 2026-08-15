@@ -159,11 +159,16 @@ module Aws::Personalize
     DockerURI = Shapes::StringShape.new(name: 'DockerURI')
     Domain = Shapes::StringShape.new(name: 'Domain')
     ErrorMessage = Shapes::StringShape.new(name: 'ErrorMessage')
+    EventParameters = Shapes::StructureShape.new(name: 'EventParameters')
+    EventParametersList = Shapes::ListShape.new(name: 'EventParametersList')
     EventTracker = Shapes::StructureShape.new(name: 'EventTracker')
     EventTrackerSummary = Shapes::StructureShape.new(name: 'EventTrackerSummary')
     EventTrackers = Shapes::ListShape.new(name: 'EventTrackers')
     EventType = Shapes::StringShape.new(name: 'EventType')
+    EventTypeThresholdValue = Shapes::FloatShape.new(name: 'EventTypeThresholdValue')
+    EventTypeWeight = Shapes::FloatShape.new(name: 'EventTypeWeight')
     EventValueThreshold = Shapes::StringShape.new(name: 'EventValueThreshold')
+    EventsConfig = Shapes::StructureShape.new(name: 'EventsConfig')
     ExcludedDatasetColumns = Shapes::MapShape.new(name: 'ExcludedDatasetColumns')
     FailureReason = Shapes::StringShape.new(name: 'FailureReason')
     FeatureTransformation = Shapes::StructureShape.new(name: 'FeatureTransformation')
@@ -184,6 +189,7 @@ module Aws::Personalize
     HyperParameterRanges = Shapes::StructureShape.new(name: 'HyperParameterRanges')
     HyperParameters = Shapes::MapShape.new(name: 'HyperParameters')
     ImportMode = Shapes::StringShape.new(name: 'ImportMode')
+    IncludedDatasetColumns = Shapes::MapShape.new(name: 'IncludedDatasetColumns')
     IngestionMode = Shapes::StringShape.new(name: 'IngestionMode')
     Integer = Shapes::IntegerShape.new(name: 'Integer')
     IntegerHyperParameterRange = Shapes::StructureShape.new(name: 'IntegerHyperParameterRange')
@@ -254,6 +260,10 @@ module Aws::Personalize
     PerformAutoML = Shapes::BooleanShape.new(name: 'PerformAutoML')
     PerformAutoTraining = Shapes::BooleanShape.new(name: 'PerformAutoTraining')
     PerformHPO = Shapes::BooleanShape.new(name: 'PerformHPO')
+    PerformIncrementalUpdate = Shapes::BooleanShape.new(name: 'PerformIncrementalUpdate')
+    RankingInfluence = Shapes::MapShape.new(name: 'RankingInfluence')
+    RankingInfluenceType = Shapes::StringShape.new(name: 'RankingInfluenceType')
+    RankingInfluenceWeight = Shapes::FloatShape.new(name: 'RankingInfluenceWeight')
     Recipe = Shapes::StructureShape.new(name: 'Recipe')
     RecipeProvider = Shapes::StringShape.new(name: 'RecipeProvider')
     RecipeSummary = Shapes::StructureShape.new(name: 'RecipeSummary')
@@ -366,6 +376,7 @@ module Aws::Personalize
     BatchInferenceJob.struct_class = Types::BatchInferenceJob
 
     BatchInferenceJobConfig.add_member(:item_exploration_config, Shapes::ShapeRef.new(shape: HyperParameters, location_name: "itemExplorationConfig"))
+    BatchInferenceJobConfig.add_member(:ranking_influence, Shapes::ShapeRef.new(shape: RankingInfluence, location_name: "rankingInfluence"))
     BatchInferenceJobConfig.struct_class = Types::BatchInferenceJobConfig
 
     BatchInferenceJobInput.add_member(:s3_data_source, Shapes::ShapeRef.new(shape: S3DataConfig, required: true, location_name: "s3DataSource"))
@@ -432,6 +443,7 @@ module Aws::Personalize
     CampaignConfig.add_member(:item_exploration_config, Shapes::ShapeRef.new(shape: HyperParameters, location_name: "itemExplorationConfig"))
     CampaignConfig.add_member(:enable_metadata_with_recommendations, Shapes::ShapeRef.new(shape: Boolean, location_name: "enableMetadataWithRecommendations"))
     CampaignConfig.add_member(:sync_with_latest_solution_version, Shapes::ShapeRef.new(shape: Boolean, location_name: "syncWithLatestSolutionVersion"))
+    CampaignConfig.add_member(:ranking_influence, Shapes::ShapeRef.new(shape: RankingInfluence, location_name: "rankingInfluence"))
     CampaignConfig.struct_class = Types::CampaignConfig
 
     CampaignSummary.add_member(:name, Shapes::ShapeRef.new(shape: Name, location_name: "name"))
@@ -544,7 +556,7 @@ module Aws::Personalize
     CreateDatasetImportJobRequest.add_member(:job_name, Shapes::ShapeRef.new(shape: Name, required: true, location_name: "jobName"))
     CreateDatasetImportJobRequest.add_member(:dataset_arn, Shapes::ShapeRef.new(shape: Arn, required: true, location_name: "datasetArn"))
     CreateDatasetImportJobRequest.add_member(:data_source, Shapes::ShapeRef.new(shape: DataSource, required: true, location_name: "dataSource"))
-    CreateDatasetImportJobRequest.add_member(:role_arn, Shapes::ShapeRef.new(shape: RoleArn, required: true, location_name: "roleArn"))
+    CreateDatasetImportJobRequest.add_member(:role_arn, Shapes::ShapeRef.new(shape: RoleArn, location_name: "roleArn"))
     CreateDatasetImportJobRequest.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
     CreateDatasetImportJobRequest.add_member(:import_mode, Shapes::ShapeRef.new(shape: ImportMode, location_name: "importMode"))
     CreateDatasetImportJobRequest.add_member(:publish_attribution_metrics_to_s3, Shapes::ShapeRef.new(shape: Boolean, location_name: "publishAttributionMetricsToS3"))
@@ -612,6 +624,7 @@ module Aws::Personalize
     CreateSolutionRequest.add_member(:perform_hpo, Shapes::ShapeRef.new(shape: Boolean, location_name: "performHPO"))
     CreateSolutionRequest.add_member(:perform_auto_ml, Shapes::ShapeRef.new(shape: PerformAutoML, location_name: "performAutoML"))
     CreateSolutionRequest.add_member(:perform_auto_training, Shapes::ShapeRef.new(shape: PerformAutoTraining, location_name: "performAutoTraining"))
+    CreateSolutionRequest.add_member(:perform_incremental_update, Shapes::ShapeRef.new(shape: PerformIncrementalUpdate, location_name: "performIncrementalUpdate"))
     CreateSolutionRequest.add_member(:recipe_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "recipeArn"))
     CreateSolutionRequest.add_member(:dataset_group_arn, Shapes::ShapeRef.new(shape: Arn, required: true, location_name: "datasetGroupArn"))
     CreateSolutionRequest.add_member(:event_type, Shapes::ShapeRef.new(shape: EventType, location_name: "eventType"))
@@ -935,6 +948,13 @@ module Aws::Personalize
     DescribeSolutionVersionResponse.add_member(:solution_version, Shapes::ShapeRef.new(shape: SolutionVersion, location_name: "solutionVersion"))
     DescribeSolutionVersionResponse.struct_class = Types::DescribeSolutionVersionResponse
 
+    EventParameters.add_member(:event_type, Shapes::ShapeRef.new(shape: EventType, location_name: "eventType"))
+    EventParameters.add_member(:event_value_threshold, Shapes::ShapeRef.new(shape: EventTypeThresholdValue, location_name: "eventValueThreshold"))
+    EventParameters.add_member(:weight, Shapes::ShapeRef.new(shape: EventTypeWeight, location_name: "weight"))
+    EventParameters.struct_class = Types::EventParameters
+
+    EventParametersList.member = Shapes::ShapeRef.new(shape: EventParameters)
+
     EventTracker.add_member(:name, Shapes::ShapeRef.new(shape: Name, location_name: "name"))
     EventTracker.add_member(:event_tracker_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "eventTrackerArn"))
     EventTracker.add_member(:account_id, Shapes::ShapeRef.new(shape: AccountId, location_name: "accountId"))
@@ -953,6 +973,9 @@ module Aws::Personalize
     EventTrackerSummary.struct_class = Types::EventTrackerSummary
 
     EventTrackers.member = Shapes::ShapeRef.new(shape: EventTrackerSummary)
+
+    EventsConfig.add_member(:event_parameters_list, Shapes::ShapeRef.new(shape: EventParametersList, location_name: "eventParametersList"))
+    EventsConfig.struct_class = Types::EventsConfig
 
     ExcludedDatasetColumns.key = Shapes::ShapeRef.new(shape: DatasetType)
     ExcludedDatasetColumns.value = Shapes::ShapeRef.new(shape: ColumnNamesList)
@@ -1023,6 +1046,9 @@ module Aws::Personalize
 
     HyperParameters.key = Shapes::ShapeRef.new(shape: ParameterName)
     HyperParameters.value = Shapes::ShapeRef.new(shape: ParameterValue)
+
+    IncludedDatasetColumns.key = Shapes::ShapeRef.new(shape: DatasetType)
+    IncludedDatasetColumns.value = Shapes::ShapeRef.new(shape: ColumnNamesList)
 
     IntegerHyperParameterRange.add_member(:name, Shapes::ShapeRef.new(shape: ParameterName, location_name: "name"))
     IntegerHyperParameterRange.add_member(:min_value, Shapes::ShapeRef.new(shape: IntegerMinValue, location_name: "minValue"))
@@ -1238,6 +1264,9 @@ module Aws::Personalize
     OptimizationObjective.add_member(:objective_sensitivity, Shapes::ShapeRef.new(shape: ObjectiveSensitivity, location_name: "objectiveSensitivity"))
     OptimizationObjective.struct_class = Types::OptimizationObjective
 
+    RankingInfluence.key = Shapes::ShapeRef.new(shape: RankingInfluenceType)
+    RankingInfluence.value = Shapes::ShapeRef.new(shape: RankingInfluenceWeight)
+
     Recipe.add_member(:name, Shapes::ShapeRef.new(shape: Name, location_name: "name"))
     Recipe.add_member(:recipe_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "recipeArn"))
     Recipe.add_member(:algorithm_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "algorithmArn"))
@@ -1320,6 +1349,7 @@ module Aws::Personalize
     Solution.add_member(:perform_hpo, Shapes::ShapeRef.new(shape: PerformHPO, location_name: "performHPO"))
     Solution.add_member(:perform_auto_ml, Shapes::ShapeRef.new(shape: PerformAutoML, location_name: "performAutoML"))
     Solution.add_member(:perform_auto_training, Shapes::ShapeRef.new(shape: PerformAutoTraining, location_name: "performAutoTraining"))
+    Solution.add_member(:perform_incremental_update, Shapes::ShapeRef.new(shape: PerformIncrementalUpdate, location_name: "performIncrementalUpdate"))
     Solution.add_member(:recipe_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "recipeArn"))
     Solution.add_member(:dataset_group_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "datasetGroupArn"))
     Solution.add_member(:event_type, Shapes::ShapeRef.new(shape: EventType, location_name: "eventType"))
@@ -1337,6 +1367,7 @@ module Aws::Personalize
     SolutionConfig.add_member(:algorithm_hyper_parameters, Shapes::ShapeRef.new(shape: HyperParameters, location_name: "algorithmHyperParameters"))
     SolutionConfig.add_member(:feature_transformation_parameters, Shapes::ShapeRef.new(shape: FeatureTransformationParameters, location_name: "featureTransformationParameters"))
     SolutionConfig.add_member(:auto_ml_config, Shapes::ShapeRef.new(shape: AutoMLConfig, location_name: "autoMLConfig"))
+    SolutionConfig.add_member(:events_config, Shapes::ShapeRef.new(shape: EventsConfig, location_name: "eventsConfig"))
     SolutionConfig.add_member(:optimization_objective, Shapes::ShapeRef.new(shape: OptimizationObjective, location_name: "optimizationObjective"))
     SolutionConfig.add_member(:training_data_config, Shapes::ShapeRef.new(shape: TrainingDataConfig, location_name: "trainingDataConfig"))
     SolutionConfig.add_member(:auto_training_config, Shapes::ShapeRef.new(shape: AutoTrainingConfig, location_name: "autoTrainingConfig"))
@@ -1351,11 +1382,13 @@ module Aws::Personalize
     SolutionSummary.struct_class = Types::SolutionSummary
 
     SolutionUpdateConfig.add_member(:auto_training_config, Shapes::ShapeRef.new(shape: AutoTrainingConfig, location_name: "autoTrainingConfig"))
+    SolutionUpdateConfig.add_member(:events_config, Shapes::ShapeRef.new(shape: EventsConfig, location_name: "eventsConfig"))
     SolutionUpdateConfig.struct_class = Types::SolutionUpdateConfig
 
     SolutionUpdateSummary.add_member(:solution_update_config, Shapes::ShapeRef.new(shape: SolutionUpdateConfig, location_name: "solutionUpdateConfig"))
     SolutionUpdateSummary.add_member(:status, Shapes::ShapeRef.new(shape: Status, location_name: "status"))
     SolutionUpdateSummary.add_member(:perform_auto_training, Shapes::ShapeRef.new(shape: PerformAutoTraining, location_name: "performAutoTraining"))
+    SolutionUpdateSummary.add_member(:perform_incremental_update, Shapes::ShapeRef.new(shape: PerformIncrementalUpdate, location_name: "performIncrementalUpdate"))
     SolutionUpdateSummary.add_member(:creation_date_time, Shapes::ShapeRef.new(shape: Date, location_name: "creationDateTime"))
     SolutionUpdateSummary.add_member(:last_updated_date_time, Shapes::ShapeRef.new(shape: Date, location_name: "lastUpdatedDateTime"))
     SolutionUpdateSummary.add_member(:failure_reason, Shapes::ShapeRef.new(shape: FailureReason, location_name: "failureReason"))
@@ -1366,6 +1399,7 @@ module Aws::Personalize
     SolutionVersion.add_member(:solution_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "solutionArn"))
     SolutionVersion.add_member(:perform_hpo, Shapes::ShapeRef.new(shape: PerformHPO, location_name: "performHPO"))
     SolutionVersion.add_member(:perform_auto_ml, Shapes::ShapeRef.new(shape: PerformAutoML, location_name: "performAutoML"))
+    SolutionVersion.add_member(:perform_incremental_update, Shapes::ShapeRef.new(shape: PerformIncrementalUpdate, location_name: "performIncrementalUpdate"))
     SolutionVersion.add_member(:recipe_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "recipeArn"))
     SolutionVersion.add_member(:event_type, Shapes::ShapeRef.new(shape: EventType, location_name: "eventType"))
     SolutionVersion.add_member(:dataset_group_arn, Shapes::ShapeRef.new(shape: Arn, location_name: "datasetGroupArn"))
@@ -1432,6 +1466,7 @@ module Aws::Personalize
     TooManyTagsException.struct_class = Types::TooManyTagsException
 
     TrainingDataConfig.add_member(:excluded_dataset_columns, Shapes::ShapeRef.new(shape: ExcludedDatasetColumns, location_name: "excludedDatasetColumns"))
+    TrainingDataConfig.add_member(:included_dataset_columns, Shapes::ShapeRef.new(shape: IncludedDatasetColumns, location_name: "includedDatasetColumns"))
     TrainingDataConfig.struct_class = Types::TrainingDataConfig
 
     TunedHPOParams.add_member(:algorithm_hyper_parameters, Shapes::ShapeRef.new(shape: HyperParameters, location_name: "algorithmHyperParameters"))
@@ -1477,6 +1512,7 @@ module Aws::Personalize
 
     UpdateSolutionRequest.add_member(:solution_arn, Shapes::ShapeRef.new(shape: Arn, required: true, location_name: "solutionArn"))
     UpdateSolutionRequest.add_member(:perform_auto_training, Shapes::ShapeRef.new(shape: PerformAutoTraining, location_name: "performAutoTraining"))
+    UpdateSolutionRequest.add_member(:perform_incremental_update, Shapes::ShapeRef.new(shape: PerformIncrementalUpdate, location_name: "performIncrementalUpdate"))
     UpdateSolutionRequest.add_member(:solution_update_config, Shapes::ShapeRef.new(shape: SolutionUpdateConfig, location_name: "solutionUpdateConfig"))
     UpdateSolutionRequest.struct_class = Types::UpdateSolutionRequest
 

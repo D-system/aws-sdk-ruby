@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -84,6 +85,7 @@ module Aws
         include ::Seahorse::Client::_ResponseSuccess[Types::ApplyGuardrailResponse]
         def usage: () -> Types::GuardrailUsage
         def action: () -> ("NONE" | "GUARDRAIL_INTERVENED")
+        def action_reason: () -> ::String
         def outputs: () -> ::Array[Types::GuardrailOutputContent]
         def assessments: () -> ::Array[Types::GuardrailAssessment]
         def guardrail_coverage: () -> Types::GuardrailCoverage
@@ -105,132 +107,31 @@ module Aws
                                      bytes: ::String?
                                    }
                                  }?
-                               },
-                             ]
+                               }
+                             ],
+                             ?output_scope: ("INTERVENTIONS" | "FULL")
                            ) -> _ApplyGuardrailResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ApplyGuardrailResponseSuccess
 
       interface _ConverseResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ConverseResponse]
         def output: () -> Types::ConverseOutput
-        def stop_reason: () -> ("end_turn" | "tool_use" | "max_tokens" | "stop_sequence" | "guardrail_intervened" | "content_filtered")
+        def stop_reason: () -> ("end_turn" | "tool_use" | "max_tokens" | "stop_sequence" | "guardrail_intervened" | "content_filtered" | "malformed_model_output" | "malformed_tool_use" | "model_context_window_exceeded")
         def usage: () -> Types::TokenUsage
         def metrics: () -> Types::ConverseMetrics
         def additional_model_response_fields: () -> untyped
         def trace: () -> Types::ConverseTrace
         def performance_config: () -> Types::PerformanceConfiguration
+        def service_tier: () -> Types::ServiceTier
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/BedrockRuntime/Client.html#converse-instance_method
       def converse: (
                       model_id: ::String,
                       ?messages: Array[
-                        {
-                          role: ("user" | "assistant"),
-                          content: Array[
-                            {
-                              text: ::String?,
-                              image: {
-                                format: ("png" | "jpeg" | "gif" | "webp"),
-                                source: {
-                                  bytes: ::String?
-                                }
-                              }?,
-                              document: {
-                                format: ("pdf" | "csv" | "doc" | "docx" | "xls" | "xlsx" | "html" | "txt" | "md"),
-                                name: ::String,
-                                source: {
-                                  bytes: ::String?
-                                }
-                              }?,
-                              video: {
-                                format: ("mkv" | "mov" | "mp4" | "webm" | "flv" | "mpeg" | "mpg" | "wmv" | "three_gp"),
-                                source: {
-                                  bytes: ::String?,
-                                  s3_location: {
-                                    uri: ::String,
-                                    bucket_owner: ::String?
-                                  }?
-                                }
-                              }?,
-                              tool_use: {
-                                tool_use_id: ::String,
-                                name: ::String,
-                                input: {
-                                }
-                              }?,
-                              tool_result: {
-                                tool_use_id: ::String,
-                                content: Array[
-                                  {
-                                    json: {
-                                    }?,
-                                    text: ::String?,
-                                    image: {
-                                      format: ("png" | "jpeg" | "gif" | "webp"),
-                                      source: {
-                                        bytes: ::String?
-                                      }
-                                    }?,
-                                    document: {
-                                      format: ("pdf" | "csv" | "doc" | "docx" | "xls" | "xlsx" | "html" | "txt" | "md"),
-                                      name: ::String,
-                                      source: {
-                                        bytes: ::String?
-                                      }
-                                    }?,
-                                    video: {
-                                      format: ("mkv" | "mov" | "mp4" | "webm" | "flv" | "mpeg" | "mpg" | "wmv" | "three_gp"),
-                                      source: {
-                                        bytes: ::String?,
-                                        s3_location: {
-                                          uri: ::String,
-                                          bucket_owner: ::String?
-                                        }?
-                                      }
-                                    }?
-                                  },
-                                ],
-                                status: ("success" | "error")?
-                              }?,
-                              guard_content: {
-                                text: {
-                                  text: ::String,
-                                  qualifiers: Array[("grounding_source" | "query" | "guard_content")]?
-                                }?,
-                                image: {
-                                  format: ("png" | "jpeg"),
-                                  source: {
-                                    bytes: ::String?
-                                  }
-                                }?
-                              }?,
-                              reasoning_content: {
-                                reasoning_text: {
-                                  text: ::String,
-                                  signature: ::String?
-                                }?,
-                                redacted_content: ::String?
-                              }?
-                            },
-                          ]
-                        },
+                        Params::message
                       ],
                       ?system: Array[
-                        {
-                          text: ::String?,
-                          guard_content: {
-                            text: {
-                              text: ::String,
-                              qualifiers: Array[("grounding_source" | "query" | "guard_content")]?
-                            }?,
-                            image: {
-                              format: ("png" | "jpeg"),
-                              source: {
-                                bytes: ::String?
-                              }
-                            }?
-                          }?
-                        },
+                        Params::system_content_block
                       ],
                       ?inference_config: {
                         max_tokens: ::Integer?,
@@ -238,33 +139,11 @@ module Aws
                         top_p: ::Float?,
                         stop_sequences: Array[::String]?
                       },
-                      ?tool_config: {
-                        tools: Array[
-                          {
-                            tool_spec: {
-                              name: ::String,
-                              description: ::String?,
-                              input_schema: {
-                                json: {
-                                }?
-                              }
-                            }?
-                          },
-                        ],
-                        tool_choice: {
-                          auto: {
-                          }?,
-                          any: {
-                          }?,
-                          tool: {
-                            name: ::String
-                          }?
-                        }?
-                      },
+                      ?tool_config: Params::tool_configuration,
                       ?guardrail_config: {
-                        guardrail_identifier: ::String,
-                        guardrail_version: ::String,
-                        trace: ("enabled" | "disabled")?
+                        guardrail_identifier: ::String?,
+                        guardrail_version: ::String?,
+                        trace: ("enabled" | "disabled" | "enabled_full")?
                       },
                       ?additional_model_request_fields: {
                       },
@@ -275,7 +154,11 @@ module Aws
                       ?request_metadata: Hash[::String, ::String],
                       ?performance_config: {
                         latency: ("standard" | "optimized")?
-                      }
+                      },
+                      ?service_tier: {
+                        type: ("priority" | "default" | "flex" | "reserved")
+                      },
+                      ?output_config: Params::output_config
                     ) -> _ConverseResponseSuccess
                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ConverseResponseSuccess
 
@@ -287,113 +170,10 @@ module Aws
       def converse_stream: (
                              model_id: ::String,
                              ?messages: Array[
-                               {
-                                 role: ("user" | "assistant"),
-                                 content: Array[
-                                   {
-                                     text: ::String?,
-                                     image: {
-                                       format: ("png" | "jpeg" | "gif" | "webp"),
-                                       source: {
-                                         bytes: ::String?
-                                       }
-                                     }?,
-                                     document: {
-                                       format: ("pdf" | "csv" | "doc" | "docx" | "xls" | "xlsx" | "html" | "txt" | "md"),
-                                       name: ::String,
-                                       source: {
-                                         bytes: ::String?
-                                       }
-                                     }?,
-                                     video: {
-                                       format: ("mkv" | "mov" | "mp4" | "webm" | "flv" | "mpeg" | "mpg" | "wmv" | "three_gp"),
-                                       source: {
-                                         bytes: ::String?,
-                                         s3_location: {
-                                           uri: ::String,
-                                           bucket_owner: ::String?
-                                         }?
-                                       }
-                                     }?,
-                                     tool_use: {
-                                       tool_use_id: ::String,
-                                       name: ::String,
-                                       input: {
-                                       }
-                                     }?,
-                                     tool_result: {
-                                       tool_use_id: ::String,
-                                       content: Array[
-                                         {
-                                           json: {
-                                           }?,
-                                           text: ::String?,
-                                           image: {
-                                             format: ("png" | "jpeg" | "gif" | "webp"),
-                                             source: {
-                                               bytes: ::String?
-                                             }
-                                           }?,
-                                           document: {
-                                             format: ("pdf" | "csv" | "doc" | "docx" | "xls" | "xlsx" | "html" | "txt" | "md"),
-                                             name: ::String,
-                                             source: {
-                                               bytes: ::String?
-                                             }
-                                           }?,
-                                           video: {
-                                             format: ("mkv" | "mov" | "mp4" | "webm" | "flv" | "mpeg" | "mpg" | "wmv" | "three_gp"),
-                                             source: {
-                                               bytes: ::String?,
-                                               s3_location: {
-                                                 uri: ::String,
-                                                 bucket_owner: ::String?
-                                               }?
-                                             }
-                                           }?
-                                         },
-                                       ],
-                                       status: ("success" | "error")?
-                                     }?,
-                                     guard_content: {
-                                       text: {
-                                         text: ::String,
-                                         qualifiers: Array[("grounding_source" | "query" | "guard_content")]?
-                                       }?,
-                                       image: {
-                                         format: ("png" | "jpeg"),
-                                         source: {
-                                           bytes: ::String?
-                                         }
-                                       }?
-                                     }?,
-                                     reasoning_content: {
-                                       reasoning_text: {
-                                         text: ::String,
-                                         signature: ::String?
-                                       }?,
-                                       redacted_content: ::String?
-                                     }?
-                                   },
-                                 ]
-                               },
+                               Params::message
                              ],
                              ?system: Array[
-                               {
-                                 text: ::String?,
-                                 guard_content: {
-                                   text: {
-                                     text: ::String,
-                                     qualifiers: Array[("grounding_source" | "query" | "guard_content")]?
-                                   }?,
-                                   image: {
-                                     format: ("png" | "jpeg"),
-                                     source: {
-                                       bytes: ::String?
-                                     }
-                                   }?
-                                 }?
-                               },
+                               Params::system_content_block
                              ],
                              ?inference_config: {
                                max_tokens: ::Integer?,
@@ -401,33 +181,11 @@ module Aws
                                top_p: ::Float?,
                                stop_sequences: Array[::String]?
                              },
-                             ?tool_config: {
-                               tools: Array[
-                                 {
-                                   tool_spec: {
-                                     name: ::String,
-                                     description: ::String?,
-                                     input_schema: {
-                                       json: {
-                                       }?
-                                     }
-                                   }?
-                                 },
-                               ],
-                               tool_choice: {
-                                 auto: {
-                                 }?,
-                                 any: {
-                                 }?,
-                                 tool: {
-                                   name: ::String
-                                 }?
-                               }?
-                             },
+                             ?tool_config: Params::tool_configuration,
                              ?guardrail_config: {
-                               guardrail_identifier: ::String,
-                               guardrail_version: ::String,
-                               trace: ("enabled" | "disabled")?,
+                               guardrail_identifier: ::String?,
+                               guardrail_version: ::String?,
+                               trace: ("enabled" | "disabled" | "enabled_full")?,
                                stream_processing_mode: ("sync" | "async")?
                              },
                              ?additional_model_request_fields: {
@@ -439,9 +197,39 @@ module Aws
                              ?request_metadata: Hash[::String, ::String],
                              ?performance_config: {
                                latency: ("standard" | "optimized")?
-                             }
+                             },
+                             ?service_tier: {
+                               type: ("priority" | "default" | "flex" | "reserved")
+                             },
+                             ?output_config: Params::output_config
                            ) ?{ (*untyped) -> void } -> _ConverseStreamResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) ?{ (*untyped) -> void } -> _ConverseStreamResponseSuccess
+
+      interface _CountTokensResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CountTokensResponse]
+        def input_tokens: () -> ::Integer
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/BedrockRuntime/Client.html#count_tokens-instance_method
+      def count_tokens: (
+                          model_id: ::String,
+                          input: {
+                            invoke_model: {
+                              body: ::String
+                            }?,
+                            converse: {
+                              messages: Array[
+                                Params::message
+                              ]?,
+                              system: Array[
+                                Params::system_content_block
+                              ]?,
+                              tool_config: Params::tool_configuration?,
+                              additional_model_request_fields: {
+                              }?
+                            }?
+                          }
+                        ) -> _CountTokensResponseSuccess
+                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CountTokensResponseSuccess
 
       interface _GetAsyncInvokeResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetAsyncInvokeResponse]
@@ -461,11 +249,55 @@ module Aws
                             ) -> _GetAsyncInvokeResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetAsyncInvokeResponseSuccess
 
+      interface _InvokeGuardrailChecksResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::InvokeGuardrailChecksResponse]
+        def results: () -> Types::GuardrailChecksResults
+        def usage: () -> Types::GuardrailChecksUsageResults
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/BedrockRuntime/Client.html#invoke_guardrail_checks-instance_method
+      def invoke_guardrail_checks: (
+                                     messages: Array[
+                                       {
+                                         role: ("user" | "assistant" | "system"),
+                                         content: Array[
+                                           {
+                                             text: ::String?
+                                           }
+                                         ]
+                                       }
+                                     ],
+                                     checks: {
+                                       content_filter: {
+                                         categories: Array[
+                                           {
+                                             category: ("VIOLENCE" | "HATE" | "SEXUAL" | "MISCONDUCT" | "INSULTS")
+                                           }
+                                         ]
+                                       }?,
+                                       prompt_attack: {
+                                         categories: Array[
+                                           {
+                                             category: ("JAILBREAK" | "PROMPT_INJECTION" | "PROMPT_LEAKAGE")
+                                           }
+                                         ]
+                                       }?,
+                                       sensitive_information: {
+                                         entities: Array[
+                                           {
+                                             type: ("ADDRESS" | "AGE" | "AWS_ACCESS_KEY" | "AWS_SECRET_KEY" | "CA_HEALTH_NUMBER" | "CA_SOCIAL_INSURANCE_NUMBER" | "CREDIT_DEBIT_CARD_CVV" | "CREDIT_DEBIT_CARD_EXPIRY" | "CREDIT_DEBIT_CARD_NUMBER" | "DRIVER_ID" | "EMAIL" | "INTERNATIONAL_BANK_ACCOUNT_NUMBER" | "IP_ADDRESS" | "LICENSE_PLATE" | "MAC_ADDRESS" | "NAME" | "PASSWORD" | "PHONE" | "PIN" | "SWIFT_CODE" | "UK_NATIONAL_HEALTH_SERVICE_NUMBER" | "UK_NATIONAL_INSURANCE_NUMBER" | "UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER" | "URL" | "USERNAME" | "US_BANK_ACCOUNT_NUMBER" | "US_BANK_ROUTING_NUMBER" | "US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER" | "US_PASSPORT_NUMBER" | "US_SOCIAL_SECURITY_NUMBER" | "VEHICLE_IDENTIFICATION_NUMBER")
+                                           }
+                                         ]
+                                       }?
+                                     }
+                                   ) -> _InvokeGuardrailChecksResponseSuccess
+                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _InvokeGuardrailChecksResponseSuccess
+
       interface _InvokeModelResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::InvokeModelResponse]
         def body: () -> ::String
         def content_type: () -> ::String
         def performance_config_latency: () -> ("standard" | "optimized")
+        def service_tier: () -> ("priority" | "default" | "flex" | "reserved")
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/BedrockRuntime/Client.html#invoke_model-instance_method
       def invoke_model: (
@@ -473,10 +305,12 @@ module Aws
                           ?content_type: ::String,
                           ?accept: ::String,
                           model_id: ::String,
-                          ?trace: ("ENABLED" | "DISABLED"),
+                          ?trace: ("ENABLED" | "DISABLED" | "ENABLED_FULL"),
                           ?guardrail_identifier: ::String,
                           ?guardrail_version: ::String,
-                          ?performance_config_latency: ("standard" | "optimized")
+                          ?performance_config_latency: ("standard" | "optimized"),
+                          ?service_tier: ("priority" | "default" | "flex" | "reserved"),
+                          ?request_metadata: ::String
                         ) -> _InvokeModelResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _InvokeModelResponseSuccess
 
@@ -485,6 +319,7 @@ module Aws
         def body: () -> Types::ResponseStream
         def content_type: () -> ::String
         def performance_config_latency: () -> ("standard" | "optimized")
+        def service_tier: () -> ("priority" | "default" | "flex" | "reserved")
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/BedrockRuntime/Client.html#invoke_model_with_response_stream-instance_method
       def invoke_model_with_response_stream: (
@@ -492,10 +327,12 @@ module Aws
                                                ?content_type: ::String,
                                                ?accept: ::String,
                                                model_id: ::String,
-                                               ?trace: ("ENABLED" | "DISABLED"),
+                                               ?trace: ("ENABLED" | "DISABLED" | "ENABLED_FULL"),
                                                ?guardrail_identifier: ::String,
                                                ?guardrail_version: ::String,
-                                               ?performance_config_latency: ("standard" | "optimized")
+                                               ?performance_config_latency: ("standard" | "optimized"),
+                                               ?service_tier: ("priority" | "default" | "flex" | "reserved"),
+                                               ?request_metadata: ::String
                                              ) ?{ (*untyped) -> void } -> _InvokeModelWithResponseStreamResponseSuccess
                                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) ?{ (*untyped) -> void } -> _InvokeModelWithResponseStreamResponseSuccess
 
@@ -537,7 +374,7 @@ module Aws
                                   {
                                     key: ::String,
                                     value: ::String
-                                  },
+                                  }
                                 ]
                               ) -> _StartAsyncInvokeResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartAsyncInvokeResponseSuccess

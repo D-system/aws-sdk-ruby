@@ -35,6 +35,7 @@ module Aws::MediaLive
     AccessDenied = Shapes::StructureShape.new(name: 'AccessDenied')
     AccessibilityType = Shapes::StringShape.new(name: 'AccessibilityType')
     AccountConfiguration = Shapes::StructureShape.new(name: 'AccountConfiguration')
+    AdditionalDestinations = Shapes::StructureShape.new(name: 'AdditionalDestinations')
     AfdSignaling = Shapes::StringShape.new(name: 'AfdSignaling')
     Algorithm = Shapes::StringShape.new(name: 'Algorithm')
     AncillarySourceSettings = Shapes::StructureShape.new(name: 'AncillarySourceSettings')
@@ -53,16 +54,20 @@ module Aws::MediaLive
     AudioDescriptionAudioTypeControl = Shapes::StringShape.new(name: 'AudioDescriptionAudioTypeControl')
     AudioDescriptionLanguageCodeControl = Shapes::StringShape.new(name: 'AudioDescriptionLanguageCodeControl')
     AudioDolbyEDecode = Shapes::StructureShape.new(name: 'AudioDolbyEDecode')
+    AudioFeedInput = Shapes::StructureShape.new(name: 'AudioFeedInput')
     AudioHlsRenditionSelection = Shapes::StructureShape.new(name: 'AudioHlsRenditionSelection')
     AudioLanguageSelection = Shapes::StructureShape.new(name: 'AudioLanguageSelection')
     AudioLanguageSelectionPolicy = Shapes::StringShape.new(name: 'AudioLanguageSelectionPolicy')
     AudioNormalizationAlgorithm = Shapes::StringShape.new(name: 'AudioNormalizationAlgorithm')
     AudioNormalizationAlgorithmControl = Shapes::StringShape.new(name: 'AudioNormalizationAlgorithmControl')
+    AudioNormalizationPeakCalculation = Shapes::StringShape.new(name: 'AudioNormalizationPeakCalculation')
     AudioNormalizationSettings = Shapes::StructureShape.new(name: 'AudioNormalizationSettings')
     AudioOnlyHlsSegmentType = Shapes::StringShape.new(name: 'AudioOnlyHlsSegmentType')
     AudioOnlyHlsSettings = Shapes::StructureShape.new(name: 'AudioOnlyHlsSettings')
     AudioOnlyHlsTrackType = Shapes::StringShape.new(name: 'AudioOnlyHlsTrackType')
+    AudioPid = Shapes::StructureShape.new(name: 'AudioPid')
     AudioPidSelection = Shapes::StructureShape.new(name: 'AudioPidSelection')
+    AudioPreMixerSettings = Shapes::StructureShape.new(name: 'AudioPreMixerSettings')
     AudioSelector = Shapes::StructureShape.new(name: 'AudioSelector')
     AudioSelectorSettings = Shapes::StructureShape.new(name: 'AudioSelectorSettings')
     AudioSilenceFailoverSettings = Shapes::StructureShape.new(name: 'AudioSilenceFailoverSettings')
@@ -72,12 +77,17 @@ module Aws::MediaLive
     AudioWatermarkSettings = Shapes::StructureShape.new(name: 'AudioWatermarkSettings')
     AuthenticationScheme = Shapes::StringShape.new(name: 'AuthenticationScheme')
     AutomaticInputFailoverSettings = Shapes::StructureShape.new(name: 'AutomaticInputFailoverSettings')
+    Av1BitDepth = Shapes::StringShape.new(name: 'Av1BitDepth')
     Av1ColorSpaceSettings = Shapes::StructureShape.new(name: 'Av1ColorSpaceSettings')
     Av1GopSizeUnits = Shapes::StringShape.new(name: 'Av1GopSizeUnits')
     Av1Level = Shapes::StringShape.new(name: 'Av1Level')
     Av1LookAheadRateControl = Shapes::StringShape.new(name: 'Av1LookAheadRateControl')
+    Av1RateControlMode = Shapes::StringShape.new(name: 'Av1RateControlMode')
     Av1SceneChangeDetect = Shapes::StringShape.new(name: 'Av1SceneChangeDetect')
     Av1Settings = Shapes::StructureShape.new(name: 'Av1Settings')
+    Av1SpatialAq = Shapes::StringShape.new(name: 'Av1SpatialAq')
+    Av1TemporalAq = Shapes::StringShape.new(name: 'Av1TemporalAq')
+    Av1TimecodeInsertionBehavior = Shapes::StringShape.new(name: 'Av1TimecodeInsertionBehavior')
     AvailBlanking = Shapes::StructureShape.new(name: 'AvailBlanking')
     AvailBlankingState = Shapes::StringShape.new(name: 'AvailBlankingState')
     AvailConfiguration = Shapes::StructureShape.new(name: 'AvailConfiguration')
@@ -115,6 +125,7 @@ module Aws::MediaLive
     BurnInAlignment = Shapes::StringShape.new(name: 'BurnInAlignment')
     BurnInBackgroundColor = Shapes::StringShape.new(name: 'BurnInBackgroundColor')
     BurnInDestinationSettings = Shapes::StructureShape.new(name: 'BurnInDestinationSettings')
+    BurnInDestinationSubtitleRows = Shapes::StringShape.new(name: 'BurnInDestinationSubtitleRows')
     BurnInFontColor = Shapes::StringShape.new(name: 'BurnInFontColor')
     BurnInOutlineColor = Shapes::StringShape.new(name: 'BurnInOutlineColor')
     BurnInShadowColor = Shapes::StringShape.new(name: 'BurnInShadowColor')
@@ -127,9 +138,12 @@ module Aws::MediaLive
     CaptionRectangle = Shapes::StructureShape.new(name: 'CaptionRectangle')
     CaptionSelector = Shapes::StructureShape.new(name: 'CaptionSelector')
     CaptionSelectorSettings = Shapes::StructureShape.new(name: 'CaptionSelectorSettings')
+    CaptionSynchronizationMode = Shapes::StringShape.new(name: 'CaptionSynchronizationMode')
     CdiInputResolution = Shapes::StringShape.new(name: 'CdiInputResolution')
     CdiInputSpecification = Shapes::StructureShape.new(name: 'CdiInputSpecification')
     Channel = Shapes::StructureShape.new(name: 'Channel')
+    ChannelAlert = Shapes::StructureShape.new(name: 'ChannelAlert')
+    ChannelAlertState = Shapes::StringShape.new(name: 'ChannelAlertState')
     ChannelClass = Shapes::StringShape.new(name: 'ChannelClass')
     ChannelConfigurationValidationError = Shapes::StructureShape.new(name: 'ChannelConfigurationValidationError')
     ChannelEgressEndpoint = Shapes::StructureShape.new(name: 'ChannelEgressEndpoint')
@@ -147,23 +161,29 @@ module Aws::MediaLive
     CloudWatchAlarmTemplateSummary = Shapes::StructureShape.new(name: 'CloudWatchAlarmTemplateSummary')
     CloudWatchAlarmTemplateTargetResourceType = Shapes::StringShape.new(name: 'CloudWatchAlarmTemplateTargetResourceType')
     CloudWatchAlarmTemplateTreatMissingData = Shapes::StringShape.new(name: 'CloudWatchAlarmTemplateTreatMissingData')
+    ClusterAlert = Shapes::StructureShape.new(name: 'ClusterAlert')
+    ClusterAlertState = Shapes::StringShape.new(name: 'ClusterAlertState')
     ClusterNetworkSettings = Shapes::StructureShape.new(name: 'ClusterNetworkSettings')
     ClusterNetworkSettingsCreateRequest = Shapes::StructureShape.new(name: 'ClusterNetworkSettingsCreateRequest')
     ClusterNetworkSettingsUpdateRequest = Shapes::StructureShape.new(name: 'ClusterNetworkSettingsUpdateRequest')
     ClusterState = Shapes::StringShape.new(name: 'ClusterState')
     ClusterType = Shapes::StringShape.new(name: 'ClusterType')
     CmafId3Behavior = Shapes::StringShape.new(name: 'CmafId3Behavior')
+    CmafIngestCaptionLanguageMapping = Shapes::StructureShape.new(name: 'CmafIngestCaptionLanguageMapping')
     CmafIngestGroupSettings = Shapes::StructureShape.new(name: 'CmafIngestGroupSettings')
     CmafIngestOutputSettings = Shapes::StructureShape.new(name: 'CmafIngestOutputSettings')
     CmafIngestSegmentLengthUnits = Shapes::StringShape.new(name: 'CmafIngestSegmentLengthUnits')
     CmafKLVBehavior = Shapes::StringShape.new(name: 'CmafKLVBehavior')
     CmafNielsenId3Behavior = Shapes::StringShape.new(name: 'CmafNielsenId3Behavior')
+    CmafTimedMetadataId3Frame = Shapes::StringShape.new(name: 'CmafTimedMetadataId3Frame')
+    CmafTimedMetadataPassthrough = Shapes::StringShape.new(name: 'CmafTimedMetadataPassthrough')
     ColorCorrection = Shapes::StructureShape.new(name: 'ColorCorrection')
     ColorCorrectionSettings = Shapes::StructureShape.new(name: 'ColorCorrectionSettings')
     ColorSpace = Shapes::StringShape.new(name: 'ColorSpace')
     ColorSpacePassthroughSettings = Shapes::StructureShape.new(name: 'ColorSpacePassthroughSettings')
     ConflictException = Shapes::StructureShape.new(name: 'ConflictException')
     ConflictExceptionResponseContent = Shapes::StructureShape.new(name: 'ConflictExceptionResponseContent')
+    ConnectionMode = Shapes::StringShape.new(name: 'ConnectionMode')
     ContentType = Shapes::StringShape.new(name: 'ContentType')
     CreateChannel = Shapes::StructureShape.new(name: 'CreateChannel')
     CreateChannelPlacementGroupRequest = Shapes::StructureShape.new(name: 'CreateChannelPlacementGroupRequest')
@@ -215,6 +235,8 @@ module Aws::MediaLive
     CreatePartnerInputRequest = Shapes::StructureShape.new(name: 'CreatePartnerInputRequest')
     CreatePartnerInputResponse = Shapes::StructureShape.new(name: 'CreatePartnerInputResponse')
     CreatePartnerInputResultModel = Shapes::StructureShape.new(name: 'CreatePartnerInputResultModel')
+    CreateSdiSourceRequest = Shapes::StructureShape.new(name: 'CreateSdiSourceRequest')
+    CreateSdiSourceResponse = Shapes::StructureShape.new(name: 'CreateSdiSourceResponse')
     CreateSignalMapRequest = Shapes::StructureShape.new(name: 'CreateSignalMapRequest')
     CreateSignalMapRequestContent = Shapes::StructureShape.new(name: 'CreateSignalMapRequestContent')
     CreateSignalMapResponse = Shapes::StructureShape.new(name: 'CreateSignalMapResponse')
@@ -248,6 +270,8 @@ module Aws::MediaLive
     DeleteReservationResponse = Shapes::StructureShape.new(name: 'DeleteReservationResponse')
     DeleteScheduleRequest = Shapes::StructureShape.new(name: 'DeleteScheduleRequest')
     DeleteScheduleResponse = Shapes::StructureShape.new(name: 'DeleteScheduleResponse')
+    DeleteSdiSourceRequest = Shapes::StructureShape.new(name: 'DeleteSdiSourceRequest')
+    DeleteSdiSourceResponse = Shapes::StructureShape.new(name: 'DeleteSdiSourceResponse')
     DeleteSignalMapRequest = Shapes::StructureShape.new(name: 'DeleteSignalMapRequest')
     DeleteTagsRequest = Shapes::StructureShape.new(name: 'DeleteTagsRequest')
     DescribeAccountConfigurationRequest = Shapes::StructureShape.new(name: 'DescribeAccountConfigurationRequest')
@@ -264,6 +288,8 @@ module Aws::MediaLive
     DescribeClusterResponse = Shapes::StructureShape.new(name: 'DescribeClusterResponse')
     DescribeClusterResult = Shapes::StructureShape.new(name: 'DescribeClusterResult')
     DescribeClusterSummary = Shapes::StructureShape.new(name: 'DescribeClusterSummary')
+    DescribeFollowerChannelSettings = Shapes::StructureShape.new(name: 'DescribeFollowerChannelSettings')
+    DescribeInferenceSettings = Shapes::StructureShape.new(name: 'DescribeInferenceSettings')
     DescribeInputDeviceRequest = Shapes::StructureShape.new(name: 'DescribeInputDeviceRequest')
     DescribeInputDeviceResponse = Shapes::StructureShape.new(name: 'DescribeInputDeviceResponse')
     DescribeInputDeviceThumbnailRequest = Shapes::StructureShape.new(name: 'DescribeInputDeviceThumbnailRequest')
@@ -272,6 +298,7 @@ module Aws::MediaLive
     DescribeInputResponse = Shapes::StructureShape.new(name: 'DescribeInputResponse')
     DescribeInputSecurityGroupRequest = Shapes::StructureShape.new(name: 'DescribeInputSecurityGroupRequest')
     DescribeInputSecurityGroupResponse = Shapes::StructureShape.new(name: 'DescribeInputSecurityGroupResponse')
+    DescribeLinkedChannelSettings = Shapes::StructureShape.new(name: 'DescribeLinkedChannelSettings')
     DescribeMultiplexProgramRequest = Shapes::StructureShape.new(name: 'DescribeMultiplexProgramRequest')
     DescribeMultiplexProgramResponse = Shapes::StructureShape.new(name: 'DescribeMultiplexProgramResponse')
     DescribeMultiplexRequest = Shapes::StructureShape.new(name: 'DescribeMultiplexRequest')
@@ -286,15 +313,19 @@ module Aws::MediaLive
     DescribeNodeSummary = Shapes::StructureShape.new(name: 'DescribeNodeSummary')
     DescribeOfferingRequest = Shapes::StructureShape.new(name: 'DescribeOfferingRequest')
     DescribeOfferingResponse = Shapes::StructureShape.new(name: 'DescribeOfferingResponse')
+    DescribePrimaryChannelSettings = Shapes::StructureShape.new(name: 'DescribePrimaryChannelSettings')
     DescribeReservationRequest = Shapes::StructureShape.new(name: 'DescribeReservationRequest')
     DescribeReservationResponse = Shapes::StructureShape.new(name: 'DescribeReservationResponse')
     DescribeScheduleRequest = Shapes::StructureShape.new(name: 'DescribeScheduleRequest')
     DescribeScheduleResponse = Shapes::StructureShape.new(name: 'DescribeScheduleResponse')
+    DescribeSdiSourceRequest = Shapes::StructureShape.new(name: 'DescribeSdiSourceRequest')
+    DescribeSdiSourceResponse = Shapes::StructureShape.new(name: 'DescribeSdiSourceResponse')
     DescribeThumbnailsRequest = Shapes::StructureShape.new(name: 'DescribeThumbnailsRequest')
     DescribeThumbnailsResponse = Shapes::StructureShape.new(name: 'DescribeThumbnailsResponse')
     DescribeThumbnailsResultModel = Shapes::StructureShape.new(name: 'DescribeThumbnailsResultModel')
     DeviceSettingsSyncState = Shapes::StringShape.new(name: 'DeviceSettingsSyncState')
     DeviceUpdateStatus = Shapes::StringShape.new(name: 'DeviceUpdateStatus')
+    DisabledLockingSettings = Shapes::StructureShape.new(name: 'DisabledLockingSettings')
     DolbyEProgramSelection = Shapes::StringShape.new(name: 'DolbyEProgramSelection')
     DolbyVision81Settings = Shapes::StructureShape.new(name: 'DolbyVision81Settings')
     DvbDashAccessibility = Shapes::StringShape.new(name: 'DvbDashAccessibility')
@@ -307,6 +338,7 @@ module Aws::MediaLive
     DvbSubDestinationOutlineColor = Shapes::StringShape.new(name: 'DvbSubDestinationOutlineColor')
     DvbSubDestinationSettings = Shapes::StructureShape.new(name: 'DvbSubDestinationSettings')
     DvbSubDestinationShadowColor = Shapes::StringShape.new(name: 'DvbSubDestinationShadowColor')
+    DvbSubDestinationSubtitleRows = Shapes::StringShape.new(name: 'DvbSubDestinationSubtitleRows')
     DvbSubDestinationTeletextGridControl = Shapes::StringShape.new(name: 'DvbSubDestinationTeletextGridControl')
     DvbSubOcrLanguage = Shapes::StringShape.new(name: 'DvbSubOcrLanguage')
     DvbSubSourceSettings = Shapes::StructureShape.new(name: 'DvbSubSourceSettings')
@@ -361,6 +393,7 @@ module Aws::MediaLive
     Fmp4TimedMetadataBehavior = Shapes::StringShape.new(name: 'Fmp4TimedMetadataBehavior')
     FollowModeScheduleActionStartSettings = Shapes::StructureShape.new(name: 'FollowModeScheduleActionStartSettings')
     FollowPoint = Shapes::StringShape.new(name: 'FollowPoint')
+    FollowerChannelSettings = Shapes::StructureShape.new(name: 'FollowerChannelSettings')
     ForbiddenException = Shapes::StructureShape.new(name: 'ForbiddenException')
     ForbiddenExceptionResponseContent = Shapes::StructureShape.new(name: 'ForbiddenExceptionResponseContent')
     FrameCaptureCdnSettings = Shapes::StructureShape.new(name: 'FrameCaptureCdnSettings')
@@ -423,6 +456,7 @@ module Aws::MediaLive
     H265Deblocking = Shapes::StringShape.new(name: 'H265Deblocking')
     H265FilterSettings = Shapes::StructureShape.new(name: 'H265FilterSettings')
     H265FlickerAq = Shapes::StringShape.new(name: 'H265FlickerAq')
+    H265GopBReference = Shapes::StringShape.new(name: 'H265GopBReference')
     H265GopSizeUnits = Shapes::StringShape.new(name: 'H265GopSizeUnits')
     H265Level = Shapes::StringShape.new(name: 'H265Level')
     H265LookAheadRateControl = Shapes::StringShape.new(name: 'H265LookAheadRateControl')
@@ -433,19 +467,23 @@ module Aws::MediaLive
     H265ScanType = Shapes::StringShape.new(name: 'H265ScanType')
     H265SceneChangeDetect = Shapes::StringShape.new(name: 'H265SceneChangeDetect')
     H265Settings = Shapes::StructureShape.new(name: 'H265Settings')
+    H265SubGopLength = Shapes::StringShape.new(name: 'H265SubGopLength')
     H265Tier = Shapes::StringShape.new(name: 'H265Tier')
     H265TilePadding = Shapes::StringShape.new(name: 'H265TilePadding')
     H265TimecodeInsertionBehavior = Shapes::StringShape.new(name: 'H265TimecodeInsertionBehavior')
     H265TreeblockSize = Shapes::StringShape.new(name: 'H265TreeblockSize')
     Hdr10Settings = Shapes::StructureShape.new(name: 'Hdr10Settings')
+    Hlg2020Settings = Shapes::StructureShape.new(name: 'Hlg2020Settings')
     HlsAdMarkers = Shapes::StringShape.new(name: 'HlsAdMarkers')
     HlsAkamaiHttpTransferMode = Shapes::StringShape.new(name: 'HlsAkamaiHttpTransferMode')
     HlsAkamaiSettings = Shapes::StructureShape.new(name: 'HlsAkamaiSettings')
+    HlsAutoSelect = Shapes::StringShape.new(name: 'HlsAutoSelect')
     HlsBasicPutSettings = Shapes::StructureShape.new(name: 'HlsBasicPutSettings')
     HlsCaptionLanguageSetting = Shapes::StringShape.new(name: 'HlsCaptionLanguageSetting')
     HlsCdnSettings = Shapes::StructureShape.new(name: 'HlsCdnSettings')
     HlsClientCache = Shapes::StringShape.new(name: 'HlsClientCache')
     HlsCodecSpecification = Shapes::StringShape.new(name: 'HlsCodecSpecification')
+    HlsDefault = Shapes::StringShape.new(name: 'HlsDefault')
     HlsDirectoryStructure = Shapes::StringShape.new(name: 'HlsDirectoryStructure')
     HlsDiscontinuityTags = Shapes::StringShape.new(name: 'HlsDiscontinuityTags')
     HlsEncryptionType = Shapes::StringShape.new(name: 'HlsEncryptionType')
@@ -483,6 +521,7 @@ module Aws::MediaLive
     Id3SegmentTaggingScheduleActionSettings = Shapes::StructureShape.new(name: 'Id3SegmentTaggingScheduleActionSettings')
     ImmediateModeScheduleActionStartSettings = Shapes::StructureShape.new(name: 'ImmediateModeScheduleActionStartSettings')
     IncludeFillerNalUnits = Shapes::StringShape.new(name: 'IncludeFillerNalUnits')
+    InferenceSettings = Shapes::StructureShape.new(name: 'InferenceSettings')
     Input = Shapes::StructureShape.new(name: 'Input')
     InputAttachment = Shapes::StructureShape.new(name: 'InputAttachment')
     InputChannelLevel = Shapes::StructureShape.new(name: 'InputChannelLevel')
@@ -536,6 +575,8 @@ module Aws::MediaLive
     InputPrepareScheduleActionSettings = Shapes::StructureShape.new(name: 'InputPrepareScheduleActionSettings')
     InputRequestDestinationRoute = Shapes::StructureShape.new(name: 'InputRequestDestinationRoute')
     InputResolution = Shapes::StringShape.new(name: 'InputResolution')
+    InputSdiSources = Shapes::ListShape.new(name: 'InputSdiSources')
+    InputSdpLocation = Shapes::StructureShape.new(name: 'InputSdpLocation')
     InputSecurityGroup = Shapes::StructureShape.new(name: 'InputSecurityGroup')
     InputSecurityGroupState = Shapes::StringShape.new(name: 'InputSecurityGroupState')
     InputSecurityGroupWhitelistRequest = Shapes::StructureShape.new(name: 'InputSecurityGroupWhitelistRequest')
@@ -565,6 +606,11 @@ module Aws::MediaLive
     KeyProviderSettings = Shapes::StructureShape.new(name: 'KeyProviderSettings')
     LastFrameClippingBehavior = Shapes::StringShape.new(name: 'LastFrameClippingBehavior')
     LimitExceeded = Shapes::StructureShape.new(name: 'LimitExceeded')
+    LinkedChannelSettings = Shapes::StructureShape.new(name: 'LinkedChannelSettings')
+    LinkedChannelType = Shapes::StringShape.new(name: 'LinkedChannelType')
+    ListAlertsRequest = Shapes::StructureShape.new(name: 'ListAlertsRequest')
+    ListAlertsResponse = Shapes::StructureShape.new(name: 'ListAlertsResponse')
+    ListAlertsResultModel = Shapes::StructureShape.new(name: 'ListAlertsResultModel')
     ListChannelPlacementGroupsRequest = Shapes::StructureShape.new(name: 'ListChannelPlacementGroupsRequest')
     ListChannelPlacementGroupsResponse = Shapes::StructureShape.new(name: 'ListChannelPlacementGroupsResponse')
     ListChannelPlacementGroupsResult = Shapes::StructureShape.new(name: 'ListChannelPlacementGroupsResult')
@@ -577,6 +623,9 @@ module Aws::MediaLive
     ListCloudWatchAlarmTemplatesRequest = Shapes::StructureShape.new(name: 'ListCloudWatchAlarmTemplatesRequest')
     ListCloudWatchAlarmTemplatesResponse = Shapes::StructureShape.new(name: 'ListCloudWatchAlarmTemplatesResponse')
     ListCloudWatchAlarmTemplatesResponseContent = Shapes::StructureShape.new(name: 'ListCloudWatchAlarmTemplatesResponseContent')
+    ListClusterAlertsRequest = Shapes::StructureShape.new(name: 'ListClusterAlertsRequest')
+    ListClusterAlertsResponse = Shapes::StructureShape.new(name: 'ListClusterAlertsResponse')
+    ListClusterAlertsResultModel = Shapes::StructureShape.new(name: 'ListClusterAlertsResultModel')
     ListClustersRequest = Shapes::StructureShape.new(name: 'ListClustersRequest')
     ListClustersResponse = Shapes::StructureShape.new(name: 'ListClustersResponse')
     ListClustersResult = Shapes::StructureShape.new(name: 'ListClustersResult')
@@ -598,6 +647,9 @@ module Aws::MediaLive
     ListInputsRequest = Shapes::StructureShape.new(name: 'ListInputsRequest')
     ListInputsResponse = Shapes::StructureShape.new(name: 'ListInputsResponse')
     ListInputsResultModel = Shapes::StructureShape.new(name: 'ListInputsResultModel')
+    ListMultiplexAlertsRequest = Shapes::StructureShape.new(name: 'ListMultiplexAlertsRequest')
+    ListMultiplexAlertsResponse = Shapes::StructureShape.new(name: 'ListMultiplexAlertsResponse')
+    ListMultiplexAlertsResultModel = Shapes::StructureShape.new(name: 'ListMultiplexAlertsResultModel')
     ListMultiplexProgramsRequest = Shapes::StructureShape.new(name: 'ListMultiplexProgramsRequest')
     ListMultiplexProgramsResponse = Shapes::StructureShape.new(name: 'ListMultiplexProgramsResponse')
     ListMultiplexProgramsResultModel = Shapes::StructureShape.new(name: 'ListMultiplexProgramsResultModel')
@@ -616,6 +668,8 @@ module Aws::MediaLive
     ListReservationsRequest = Shapes::StructureShape.new(name: 'ListReservationsRequest')
     ListReservationsResponse = Shapes::StructureShape.new(name: 'ListReservationsResponse')
     ListReservationsResultModel = Shapes::StructureShape.new(name: 'ListReservationsResultModel')
+    ListSdiSourcesRequest = Shapes::StructureShape.new(name: 'ListSdiSourcesRequest')
+    ListSdiSourcesResponse = Shapes::StructureShape.new(name: 'ListSdiSourcesResponse')
     ListSignalMapsRequest = Shapes::StructureShape.new(name: 'ListSignalMapsRequest')
     ListSignalMapsResponse = Shapes::StructureShape.new(name: 'ListSignalMapsResponse')
     ListSignalMapsResponseContent = Shapes::StructureShape.new(name: 'ListSignalMapsResponseContent')
@@ -657,9 +711,20 @@ module Aws::MediaLive
     MaxResults = Shapes::IntegerShape.new(name: 'MaxResults')
     MediaConnectFlow = Shapes::StructureShape.new(name: 'MediaConnectFlow')
     MediaConnectFlowRequest = Shapes::StructureShape.new(name: 'MediaConnectFlowRequest')
+    MediaConnectRouterContainerSettings = Shapes::StructureShape.new(name: 'MediaConnectRouterContainerSettings')
+    MediaConnectRouterGroupSettings = Shapes::StructureShape.new(name: 'MediaConnectRouterGroupSettings')
+    MediaConnectRouterOutputConnection = Shapes::StructureShape.new(name: 'MediaConnectRouterOutputConnection')
+    MediaConnectRouterOutputConnectionMap = Shapes::StructureShape.new(name: 'MediaConnectRouterOutputConnectionMap')
+    MediaConnectRouterOutputConnections = Shapes::MapShape.new(name: 'MediaConnectRouterOutputConnections')
+    MediaConnectRouterOutputDestinationSettings = Shapes::StructureShape.new(name: 'MediaConnectRouterOutputDestinationSettings')
+    MediaConnectRouterOutputEncryptionType = Shapes::StringShape.new(name: 'MediaConnectRouterOutputEncryptionType')
+    MediaConnectRouterOutputSettings = Shapes::StructureShape.new(name: 'MediaConnectRouterOutputSettings')
+    MediaPackageAdditionalDestinations = Shapes::StructureShape.new(name: 'MediaPackageAdditionalDestinations')
     MediaPackageGroupSettings = Shapes::StructureShape.new(name: 'MediaPackageGroupSettings')
     MediaPackageOutputDestinationSettings = Shapes::StructureShape.new(name: 'MediaPackageOutputDestinationSettings')
     MediaPackageOutputSettings = Shapes::StructureShape.new(name: 'MediaPackageOutputSettings')
+    MediaPackageV2DestinationSettings = Shapes::StructureShape.new(name: 'MediaPackageV2DestinationSettings')
+    MediaPackageV2GroupSettings = Shapes::StructureShape.new(name: 'MediaPackageV2GroupSettings')
     MediaResource = Shapes::StructureShape.new(name: 'MediaResource')
     MediaResourceMap = Shapes::MapShape.new(name: 'MediaResourceMap')
     MediaResourceNeighbor = Shapes::StructureShape.new(name: 'MediaResourceNeighbor')
@@ -692,6 +757,8 @@ module Aws::MediaLive
     MulticastSourceCreateRequest = Shapes::StructureShape.new(name: 'MulticastSourceCreateRequest')
     MulticastSourceUpdateRequest = Shapes::StructureShape.new(name: 'MulticastSourceUpdateRequest')
     Multiplex = Shapes::StructureShape.new(name: 'Multiplex')
+    MultiplexAlert = Shapes::StructureShape.new(name: 'MultiplexAlert')
+    MultiplexAlertState = Shapes::StringShape.new(name: 'MultiplexAlertState')
     MultiplexConfigurationValidationError = Shapes::StructureShape.new(name: 'MultiplexConfigurationValidationError')
     MultiplexContainerSettings = Shapes::StructureShape.new(name: 'MultiplexContainerSettings')
     MultiplexGroupSettings = Shapes::StructureShape.new(name: 'MultiplexGroupSettings')
@@ -748,9 +815,11 @@ module Aws::MediaLive
     PauseStateScheduleActionSettings = Shapes::StructureShape.new(name: 'PauseStateScheduleActionSettings')
     PipelineDetail = Shapes::StructureShape.new(name: 'PipelineDetail')
     PipelineId = Shapes::StringShape.new(name: 'PipelineId')
+    PipelineLockingMethod = Shapes::StringShape.new(name: 'PipelineLockingMethod')
     PipelineLockingSettings = Shapes::StructureShape.new(name: 'PipelineLockingSettings')
     PipelinePauseStateSettings = Shapes::StructureShape.new(name: 'PipelinePauseStateSettings')
     PreferredChannelPipeline = Shapes::StringShape.new(name: 'PreferredChannelPipeline')
+    PrimaryChannelSettings = Shapes::StructureShape.new(name: 'PrimaryChannelSettings')
     PurchaseOffering = Shapes::StructureShape.new(name: 'PurchaseOffering')
     PurchaseOfferingRequest = Shapes::StructureShape.new(name: 'PurchaseOfferingRequest')
     PurchaseOfferingResponse = Shapes::StructureShape.new(name: 'PurchaseOfferingResponse')
@@ -784,6 +853,11 @@ module Aws::MediaLive
     Route = Shapes::StructureShape.new(name: 'Route')
     RouteCreateRequest = Shapes::StructureShape.new(name: 'RouteCreateRequest')
     RouteUpdateRequest = Shapes::StructureShape.new(name: 'RouteUpdateRequest')
+    RouterDestination = Shapes::StructureShape.new(name: 'RouterDestination')
+    RouterDestinationSettings = Shapes::StructureShape.new(name: 'RouterDestinationSettings')
+    RouterEncryptionType = Shapes::StringShape.new(name: 'RouterEncryptionType')
+    RouterInputSettings = Shapes::StructureShape.new(name: 'RouterInputSettings')
+    RouterSettings = Shapes::StructureShape.new(name: 'RouterSettings')
     RtmpAdMarkers = Shapes::StringShape.new(name: 'RtmpAdMarkers')
     RtmpCacheFullBehavior = Shapes::StringShape.new(name: 'RtmpCacheFullBehavior')
     RtmpCaptionData = Shapes::StringShape.new(name: 'RtmpCaptionData')
@@ -825,9 +899,19 @@ module Aws::MediaLive
     Scte35TimeSignalScheduleActionSettings = Shapes::StructureShape.new(name: 'Scte35TimeSignalScheduleActionSettings')
     Scte35Type = Shapes::StringShape.new(name: 'Scte35Type')
     Scte35WebDeliveryAllowedFlag = Shapes::StringShape.new(name: 'Scte35WebDeliveryAllowedFlag')
+    SdiSource = Shapes::StructureShape.new(name: 'SdiSource')
+    SdiSourceMapping = Shapes::StructureShape.new(name: 'SdiSourceMapping')
+    SdiSourceMappingUpdateRequest = Shapes::StructureShape.new(name: 'SdiSourceMappingUpdateRequest')
+    SdiSourceMappings = Shapes::ListShape.new(name: 'SdiSourceMappings')
+    SdiSourceMappingsUpdateRequest = Shapes::ListShape.new(name: 'SdiSourceMappingsUpdateRequest')
+    SdiSourceMode = Shapes::StringShape.new(name: 'SdiSourceMode')
+    SdiSourceState = Shapes::StringShape.new(name: 'SdiSourceState')
+    SdiSourceSummary = Shapes::StructureShape.new(name: 'SdiSourceSummary')
+    SdiSourceType = Shapes::StringShape.new(name: 'SdiSourceType')
     SignalMapMonitorDeploymentStatus = Shapes::StringShape.new(name: 'SignalMapMonitorDeploymentStatus')
     SignalMapStatus = Shapes::StringShape.new(name: 'SignalMapStatus')
     SignalMapSummary = Shapes::StructureShape.new(name: 'SignalMapSummary')
+    SmartSubtitleSourceSettings = Shapes::StructureShape.new(name: 'SmartSubtitleSourceSettings')
     SmoothGroupAudioOnlyTimecodeControl = Shapes::StringShape.new(name: 'SmoothGroupAudioOnlyTimecodeControl')
     SmoothGroupCertificateMode = Shapes::StringShape.new(name: 'SmoothGroupCertificateMode')
     SmoothGroupEventIdMode = Shapes::StringShape.new(name: 'SmoothGroupEventIdMode')
@@ -837,13 +921,21 @@ module Aws::MediaLive
     SmoothGroupStreamManifestBehavior = Shapes::StringShape.new(name: 'SmoothGroupStreamManifestBehavior')
     SmoothGroupTimestampOffsetMode = Shapes::StringShape.new(name: 'SmoothGroupTimestampOffsetMode')
     Smpte2038DataPreference = Shapes::StringShape.new(name: 'Smpte2038DataPreference')
+    Smpte2110ReceiverGroup = Shapes::StructureShape.new(name: 'Smpte2110ReceiverGroup')
+    Smpte2110ReceiverGroupSdpSettings = Shapes::StructureShape.new(name: 'Smpte2110ReceiverGroupSdpSettings')
+    Smpte2110ReceiverGroupSettings = Shapes::StructureShape.new(name: 'Smpte2110ReceiverGroupSettings')
     SmpteTtDestinationSettings = Shapes::StructureShape.new(name: 'SmpteTtDestinationSettings')
+    SpecialRouterSettings = Shapes::StructureShape.new(name: 'SpecialRouterSettings')
     SrtCallerDecryption = Shapes::StructureShape.new(name: 'SrtCallerDecryption')
     SrtCallerDecryptionRequest = Shapes::StructureShape.new(name: 'SrtCallerDecryptionRequest')
     SrtCallerSource = Shapes::StructureShape.new(name: 'SrtCallerSource')
     SrtCallerSourceRequest = Shapes::StructureShape.new(name: 'SrtCallerSourceRequest')
     SrtEncryptionType = Shapes::StringShape.new(name: 'SrtEncryptionType')
     SrtGroupSettings = Shapes::StructureShape.new(name: 'SrtGroupSettings')
+    SrtListenerDecryption = Shapes::StructureShape.new(name: 'SrtListenerDecryption')
+    SrtListenerDecryptionRequest = Shapes::StructureShape.new(name: 'SrtListenerDecryptionRequest')
+    SrtListenerSettings = Shapes::StructureShape.new(name: 'SrtListenerSettings')
+    SrtListenerSettingsRequest = Shapes::StructureShape.new(name: 'SrtListenerSettingsRequest')
     SrtOutputDestinationSettings = Shapes::StructureShape.new(name: 'SrtOutputDestinationSettings')
     SrtOutputSettings = Shapes::StructureShape.new(name: 'SrtOutputSettings')
     SrtSettings = Shapes::StructureShape.new(name: 'SrtSettings')
@@ -978,6 +1070,8 @@ module Aws::MediaLive
     UpdateReservationRequest = Shapes::StructureShape.new(name: 'UpdateReservationRequest')
     UpdateReservationResponse = Shapes::StructureShape.new(name: 'UpdateReservationResponse')
     UpdateReservationResultModel = Shapes::StructureShape.new(name: 'UpdateReservationResultModel')
+    UpdateSdiSourceRequest = Shapes::StructureShape.new(name: 'UpdateSdiSourceRequest')
+    UpdateSdiSourceResponse = Shapes::StructureShape.new(name: 'UpdateSdiSourceResponse')
     ValidationError = Shapes::StructureShape.new(name: 'ValidationError')
     VideoBlackFailoverSettings = Shapes::StructureShape.new(name: 'VideoBlackFailoverSettings')
     VideoCodecSettings = Shapes::StructureShape.new(name: 'VideoCodecSettings')
@@ -1007,8 +1101,11 @@ module Aws::MediaLive
     __doubleMin1Max65535 = Shapes::FloatShape.new(name: '__doubleMin1Max65535')
     __doubleMin250Max5000 = Shapes::FloatShape.new(name: '__doubleMin250Max5000')
     __doubleMin32Max46 = Shapes::FloatShape.new(name: '__doubleMin32Max46')
+    __doubleMinNegative100Max0 = Shapes::FloatShape.new(name: '__doubleMinNegative100Max0')
     __doubleMinNegative1Max5 = Shapes::FloatShape.new(name: '__doubleMinNegative1Max5')
     __doubleMinNegative59Max0 = Shapes::FloatShape.new(name: '__doubleMinNegative59Max0')
+    __doubleMinNegative60Max60 = Shapes::FloatShape.new(name: '__doubleMinNegative60Max60')
+    __doubleMinNegative8Max0 = Shapes::FloatShape.new(name: '__doubleMinNegative8Max0')
     __integer = Shapes::IntegerShape.new(name: '__integer')
     __integerMax5 = Shapes::IntegerShape.new(name: '__integerMax5')
     __integerMin0 = Shapes::IntegerShape.new(name: '__integerMin0')
@@ -1022,14 +1119,17 @@ module Aws::MediaLive
     __integerMin0Max15 = Shapes::IntegerShape.new(name: '__integerMin0Max15')
     __integerMin0Max2000 = Shapes::IntegerShape.new(name: '__integerMin0Max2000')
     __integerMin0Max255 = Shapes::IntegerShape.new(name: '__integerMin0Max255')
+    __integerMin0Max3 = Shapes::IntegerShape.new(name: '__integerMin0Max3')
     __integerMin0Max30 = Shapes::IntegerShape.new(name: '__integerMin0Max30')
     __integerMin0Max32768 = Shapes::IntegerShape.new(name: '__integerMin0Max32768')
     __integerMin0Max3600 = Shapes::IntegerShape.new(name: '__integerMin0Max3600')
+    __integerMin0Max40000000 = Shapes::IntegerShape.new(name: '__integerMin0Max40000000')
     __integerMin0Max500 = Shapes::IntegerShape.new(name: '__integerMin0Max500')
     __integerMin0Max600 = Shapes::IntegerShape.new(name: '__integerMin0Max600')
     __integerMin0Max65535 = Shapes::IntegerShape.new(name: '__integerMin0Max65535')
     __integerMin0Max65536 = Shapes::IntegerShape.new(name: '__integerMin0Max65536')
     __integerMin0Max7 = Shapes::IntegerShape.new(name: '__integerMin0Max7')
+    __integerMin0Max8000000 = Shapes::IntegerShape.new(name: '__integerMin0Max8000000')
     __integerMin0Max8191 = Shapes::IntegerShape.new(name: '__integerMin0Max8191')
     __integerMin1 = Shapes::IntegerShape.new(name: '__integerMin1')
     __integerMin100 = Shapes::IntegerShape.new(name: '__integerMin100')
@@ -1052,6 +1152,7 @@ module Aws::MediaLive
     __integerMin1Max5 = Shapes::IntegerShape.new(name: '__integerMin1Max5')
     __integerMin1Max51 = Shapes::IntegerShape.new(name: '__integerMin1Max51')
     __integerMin1Max6 = Shapes::IntegerShape.new(name: '__integerMin1Max6')
+    __integerMin1Max65535 = Shapes::IntegerShape.new(name: '__integerMin1Max65535')
     __integerMin1Max8 = Shapes::IntegerShape.new(name: '__integerMin1Max8')
     __integerMin1Max800 = Shapes::IntegerShape.new(name: '__integerMin1Max800')
     __integerMin256Max3840 = Shapes::IntegerShape.new(name: '__integerMin256Max3840')
@@ -1062,8 +1163,8 @@ module Aws::MediaLive
     __integerMin32Max8191 = Shapes::IntegerShape.new(name: '__integerMin32Max8191')
     __integerMin40Max16000 = Shapes::IntegerShape.new(name: '__integerMin40Max16000')
     __integerMin4Max20 = Shapes::IntegerShape.new(name: '__integerMin4Max20')
-    __integerMin50000Max16000000 = Shapes::IntegerShape.new(name: '__integerMin50000Max16000000')
-    __integerMin50000Max8000000 = Shapes::IntegerShape.new(name: '__integerMin50000Max8000000')
+    __integerMin50000Max12000000 = Shapes::IntegerShape.new(name: '__integerMin50000Max12000000')
+    __integerMin50000Max24000000 = Shapes::IntegerShape.new(name: '__integerMin50000Max24000000')
     __integerMin64Max2160 = Shapes::IntegerShape.new(name: '__integerMin64Max2160')
     __integerMin800Max3000 = Shapes::IntegerShape.new(name: '__integerMin800Max3000')
     __integerMin80Max800 = Shapes::IntegerShape.new(name: '__integerMin80Max800')
@@ -1072,8 +1173,11 @@ module Aws::MediaLive
     __integerMinNegative5Max5 = Shapes::IntegerShape.new(name: '__integerMinNegative5Max5')
     __integerMinNegative60Max6 = Shapes::IntegerShape.new(name: '__integerMinNegative60Max6')
     __integerMinNegative60Max60 = Shapes::IntegerShape.new(name: '__integerMinNegative60Max60')
+    __listOfAdditionalDestinations = Shapes::ListShape.new(name: '__listOfAdditionalDestinations')
     __listOfAudioChannelMapping = Shapes::ListShape.new(name: '__listOfAudioChannelMapping')
     __listOfAudioDescription = Shapes::ListShape.new(name: '__listOfAudioDescription')
+    __listOfAudioFeedInput = Shapes::ListShape.new(name: '__listOfAudioFeedInput')
+    __listOfAudioPid = Shapes::ListShape.new(name: '__listOfAudioPid')
     __listOfAudioSelector = Shapes::ListShape.new(name: '__listOfAudioSelector')
     __listOfAudioTrack = Shapes::ListShape.new(name: '__listOfAudioTrack')
     __listOfBatchFailedResultModel = Shapes::ListShape.new(name: '__listOfBatchFailedResultModel')
@@ -1081,12 +1185,15 @@ module Aws::MediaLive
     __listOfCaptionDescription = Shapes::ListShape.new(name: '__listOfCaptionDescription')
     __listOfCaptionLanguageMapping = Shapes::ListShape.new(name: '__listOfCaptionLanguageMapping')
     __listOfCaptionSelector = Shapes::ListShape.new(name: '__listOfCaptionSelector')
+    __listOfChannelAlert = Shapes::ListShape.new(name: '__listOfChannelAlert')
     __listOfChannelEgressEndpoint = Shapes::ListShape.new(name: '__listOfChannelEgressEndpoint')
     __listOfChannelEngineVersionResponse = Shapes::ListShape.new(name: '__listOfChannelEngineVersionResponse')
     __listOfChannelPipelineIdToRestart = Shapes::ListShape.new(name: '__listOfChannelPipelineIdToRestart')
     __listOfChannelSummary = Shapes::ListShape.new(name: '__listOfChannelSummary')
     __listOfCloudWatchAlarmTemplateGroupSummary = Shapes::ListShape.new(name: '__listOfCloudWatchAlarmTemplateGroupSummary')
     __listOfCloudWatchAlarmTemplateSummary = Shapes::ListShape.new(name: '__listOfCloudWatchAlarmTemplateSummary')
+    __listOfClusterAlert = Shapes::ListShape.new(name: '__listOfClusterAlert')
+    __listOfCmafIngestCaptionLanguageMapping = Shapes::ListShape.new(name: '__listOfCmafIngestCaptionLanguageMapping')
     __listOfColorCorrection = Shapes::ListShape.new(name: '__listOfColorCorrection')
     __listOfDashRoleAudio = Shapes::ListShape.new(name: '__listOfDashRoleAudio')
     __listOfDashRoleCaption = Shapes::ListShape.new(name: '__listOfDashRoleCaption')
@@ -1111,6 +1218,7 @@ module Aws::MediaLive
     __listOfInputDeviceSummary = Shapes::ListShape.new(name: '__listOfInputDeviceSummary')
     __listOfInputDeviceUhdAudioChannelPairConfig = Shapes::ListShape.new(name: '__listOfInputDeviceUhdAudioChannelPairConfig')
     __listOfInputRequestDestinationRoute = Shapes::ListShape.new(name: '__listOfInputRequestDestinationRoute')
+    __listOfInputSdpLocation = Shapes::ListShape.new(name: '__listOfInputSdpLocation')
     __listOfInputSecurityGroup = Shapes::ListShape.new(name: '__listOfInputSecurityGroup')
     __listOfInputSource = Shapes::ListShape.new(name: '__listOfInputSource')
     __listOfInputSourceRequest = Shapes::ListShape.new(name: '__listOfInputSourceRequest')
@@ -1124,11 +1232,14 @@ module Aws::MediaLive
     __listOfIpPoolUpdateRequest = Shapes::ListShape.new(name: '__listOfIpPoolUpdateRequest')
     __listOfMediaConnectFlow = Shapes::ListShape.new(name: '__listOfMediaConnectFlow')
     __listOfMediaConnectFlowRequest = Shapes::ListShape.new(name: '__listOfMediaConnectFlowRequest')
+    __listOfMediaConnectRouterOutputDestinationSettings = Shapes::ListShape.new(name: '__listOfMediaConnectRouterOutputDestinationSettings')
+    __listOfMediaPackageAdditionalDestinations = Shapes::ListShape.new(name: '__listOfMediaPackageAdditionalDestinations')
     __listOfMediaPackageOutputDestinationSettings = Shapes::ListShape.new(name: '__listOfMediaPackageOutputDestinationSettings')
     __listOfMediaResourceNeighbor = Shapes::ListShape.new(name: '__listOfMediaResourceNeighbor')
     __listOfMulticastSource = Shapes::ListShape.new(name: '__listOfMulticastSource')
     __listOfMulticastSourceCreateRequest = Shapes::ListShape.new(name: '__listOfMulticastSourceCreateRequest')
     __listOfMulticastSourceUpdateRequest = Shapes::ListShape.new(name: '__listOfMulticastSourceUpdateRequest')
+    __listOfMultiplexAlert = Shapes::ListShape.new(name: '__listOfMultiplexAlert')
     __listOfMultiplexOutputDestination = Shapes::ListShape.new(name: '__listOfMultiplexOutputDestination')
     __listOfMultiplexProgramPipelineDetail = Shapes::ListShape.new(name: '__listOfMultiplexProgramPipelineDetail')
     __listOfMultiplexProgramSummary = Shapes::ListShape.new(name: '__listOfMultiplexProgramSummary')
@@ -1140,16 +1251,21 @@ module Aws::MediaLive
     __listOfOutputDestination = Shapes::ListShape.new(name: '__listOfOutputDestination')
     __listOfOutputDestinationSettings = Shapes::ListShape.new(name: '__listOfOutputDestinationSettings')
     __listOfOutputGroup = Shapes::ListShape.new(name: '__listOfOutputGroup')
+    __listOfOutputLocationRef = Shapes::ListShape.new(name: '__listOfOutputLocationRef')
     __listOfPipelineDetail = Shapes::ListShape.new(name: '__listOfPipelineDetail')
     __listOfPipelinePauseStateSettings = Shapes::ListShape.new(name: '__listOfPipelinePauseStateSettings')
     __listOfReservation = Shapes::ListShape.new(name: '__listOfReservation')
     __listOfRoute = Shapes::ListShape.new(name: '__listOfRoute')
     __listOfRouteCreateRequest = Shapes::ListShape.new(name: '__listOfRouteCreateRequest')
     __listOfRouteUpdateRequest = Shapes::ListShape.new(name: '__listOfRouteUpdateRequest')
+    __listOfRouterDestination = Shapes::ListShape.new(name: '__listOfRouterDestination')
+    __listOfRouterDestinationSettings = Shapes::ListShape.new(name: '__listOfRouterDestinationSettings')
     __listOfRtmpAdMarkers = Shapes::ListShape.new(name: '__listOfRtmpAdMarkers')
     __listOfScheduleAction = Shapes::ListShape.new(name: '__listOfScheduleAction')
     __listOfScte35Descriptor = Shapes::ListShape.new(name: '__listOfScte35Descriptor')
+    __listOfSdiSourceSummary = Shapes::ListShape.new(name: '__listOfSdiSourceSummary')
     __listOfSignalMapSummary = Shapes::ListShape.new(name: '__listOfSignalMapSummary')
+    __listOfSmpte2110ReceiverGroup = Shapes::ListShape.new(name: '__listOfSmpte2110ReceiverGroup')
     __listOfSrtCallerSource = Shapes::ListShape.new(name: '__listOfSrtCallerSource')
     __listOfSrtCallerSourceRequest = Shapes::ListShape.new(name: '__listOfSrtCallerSourceRequest')
     __listOfSrtOutputDestinationSettings = Shapes::ListShape.new(name: '__listOfSrtOutputDestinationSettings')
@@ -1234,6 +1350,9 @@ module Aws::MediaLive
     AccountConfiguration.add_member(:kms_key_id, Shapes::ShapeRef.new(shape: __string, location_name: "kmsKeyId"))
     AccountConfiguration.struct_class = Types::AccountConfiguration
 
+    AdditionalDestinations.add_member(:destination, Shapes::ShapeRef.new(shape: OutputLocationRef, required: true, location_name: "destination"))
+    AdditionalDestinations.struct_class = Types::AdditionalDestinations
+
     AncillarySourceSettings.add_member(:source_ancillary_channel_number, Shapes::ShapeRef.new(shape: __integerMin1Max4, location_name: "sourceAncillaryChannelNumber"))
     AncillarySourceSettings.struct_class = Types::AncillarySourceSettings
 
@@ -1296,6 +1415,10 @@ module Aws::MediaLive
     AudioDolbyEDecode.add_member(:program_selection, Shapes::ShapeRef.new(shape: DolbyEProgramSelection, required: true, location_name: "programSelection"))
     AudioDolbyEDecode.struct_class = Types::AudioDolbyEDecode
 
+    AudioFeedInput.add_member(:audio_selector_name, Shapes::ShapeRef.new(shape: __string, location_name: "audioSelectorName"))
+    AudioFeedInput.add_member(:feed_input, Shapes::ShapeRef.new(shape: __string, location_name: "feedInput"))
+    AudioFeedInput.struct_class = Types::AudioFeedInput
+
     AudioHlsRenditionSelection.add_member(:group_id, Shapes::ShapeRef.new(shape: __stringMin1, required: true, location_name: "groupId"))
     AudioHlsRenditionSelection.add_member(:name, Shapes::ShapeRef.new(shape: __stringMin1, required: true, location_name: "name"))
     AudioHlsRenditionSelection.struct_class = Types::AudioHlsRenditionSelection
@@ -1307,6 +1430,8 @@ module Aws::MediaLive
     AudioNormalizationSettings.add_member(:algorithm, Shapes::ShapeRef.new(shape: AudioNormalizationAlgorithm, location_name: "algorithm"))
     AudioNormalizationSettings.add_member(:algorithm_control, Shapes::ShapeRef.new(shape: AudioNormalizationAlgorithmControl, location_name: "algorithmControl"))
     AudioNormalizationSettings.add_member(:target_lkfs, Shapes::ShapeRef.new(shape: __doubleMinNegative59Max0, location_name: "targetLkfs"))
+    AudioNormalizationSettings.add_member(:peak_calculation, Shapes::ShapeRef.new(shape: AudioNormalizationPeakCalculation, location_name: "peakCalculation"))
+    AudioNormalizationSettings.add_member(:peak_limiter_threshold, Shapes::ShapeRef.new(shape: __doubleMinNegative8Max0, location_name: "peakLimiterThreshold"))
     AudioNormalizationSettings.struct_class = Types::AudioNormalizationSettings
 
     AudioOnlyHlsSettings.add_member(:audio_group_id, Shapes::ShapeRef.new(shape: __string, location_name: "audioGroupId"))
@@ -1315,8 +1440,20 @@ module Aws::MediaLive
     AudioOnlyHlsSettings.add_member(:segment_type, Shapes::ShapeRef.new(shape: AudioOnlyHlsSegmentType, location_name: "segmentType"))
     AudioOnlyHlsSettings.struct_class = Types::AudioOnlyHlsSettings
 
+    AudioPid.add_member(:dolby_e_decode, Shapes::ShapeRef.new(shape: AudioDolbyEDecode, location_name: "dolbyEDecode"))
+    AudioPid.add_member(:pid, Shapes::ShapeRef.new(shape: __integerMin0Max8191, required: true, location_name: "pid"))
+    AudioPid.add_member(:premix_settings, Shapes::ShapeRef.new(shape: AudioPreMixerSettings, location_name: "premixSettings"))
+    AudioPid.struct_class = Types::AudioPid
+
     AudioPidSelection.add_member(:pid, Shapes::ShapeRef.new(shape: __integerMin0Max8191, required: true, location_name: "pid"))
+    AudioPidSelection.add_member(:pids, Shapes::ShapeRef.new(shape: __listOfAudioPid, location_name: "pids"))
     AudioPidSelection.struct_class = Types::AudioPidSelection
+
+    AudioPreMixerSettings.add_member(:audio_normalization_settings, Shapes::ShapeRef.new(shape: AudioNormalizationSettings, location_name: "audioNormalizationSettings"))
+    AudioPreMixerSettings.add_member(:channels, Shapes::ShapeRef.new(shape: __integerMin1Max16, location_name: "channels"))
+    AudioPreMixerSettings.add_member(:gain_db, Shapes::ShapeRef.new(shape: __doubleMinNegative60Max60, location_name: "gainDb"))
+    AudioPreMixerSettings.add_member(:remix_settings, Shapes::ShapeRef.new(shape: RemixSettings, location_name: "remixSettings"))
+    AudioPreMixerSettings.struct_class = Types::AudioPreMixerSettings
 
     AudioSelector.add_member(:name, Shapes::ShapeRef.new(shape: __stringMin1, required: true, location_name: "name"))
     AudioSelector.add_member(:selector_settings, Shapes::ShapeRef.new(shape: AudioSelectorSettings, location_name: "selectorSettings"))
@@ -1333,6 +1470,7 @@ module Aws::MediaLive
     AudioSilenceFailoverSettings.struct_class = Types::AudioSilenceFailoverSettings
 
     AudioTrack.add_member(:track, Shapes::ShapeRef.new(shape: __integerMin1, required: true, location_name: "track"))
+    AudioTrack.add_member(:premix_settings, Shapes::ShapeRef.new(shape: AudioPreMixerSettings, location_name: "premixSettings"))
     AudioTrack.struct_class = Types::AudioTrack
 
     AudioTrackSelection.add_member(:tracks, Shapes::ShapeRef.new(shape: __listOfAudioTrack, required: true, location_name: "tracks"))
@@ -1352,10 +1490,11 @@ module Aws::MediaLive
     Av1ColorSpaceSettings.add_member(:hdr_10_settings, Shapes::ShapeRef.new(shape: Hdr10Settings, location_name: "hdr10Settings"))
     Av1ColorSpaceSettings.add_member(:rec_601_settings, Shapes::ShapeRef.new(shape: Rec601Settings, location_name: "rec601Settings"))
     Av1ColorSpaceSettings.add_member(:rec_709_settings, Shapes::ShapeRef.new(shape: Rec709Settings, location_name: "rec709Settings"))
+    Av1ColorSpaceSettings.add_member(:hlg_2020_settings, Shapes::ShapeRef.new(shape: Hlg2020Settings, location_name: "hlg2020Settings"))
     Av1ColorSpaceSettings.struct_class = Types::Av1ColorSpaceSettings
 
     Av1Settings.add_member(:afd_signaling, Shapes::ShapeRef.new(shape: AfdSignaling, location_name: "afdSignaling"))
-    Av1Settings.add_member(:buf_size, Shapes::ShapeRef.new(shape: __integerMin50000Max16000000, location_name: "bufSize"))
+    Av1Settings.add_member(:buf_size, Shapes::ShapeRef.new(shape: __integerMin50000Max24000000, location_name: "bufSize"))
     Av1Settings.add_member(:color_space_settings, Shapes::ShapeRef.new(shape: Av1ColorSpaceSettings, location_name: "colorSpaceSettings"))
     Av1Settings.add_member(:fixed_afd, Shapes::ShapeRef.new(shape: FixedAfd, location_name: "fixedAfd"))
     Av1Settings.add_member(:framerate_denominator, Shapes::ShapeRef.new(shape: __integerMin1Max3003, required: true, location_name: "framerateDenominator"))
@@ -1364,13 +1503,20 @@ module Aws::MediaLive
     Av1Settings.add_member(:gop_size_units, Shapes::ShapeRef.new(shape: Av1GopSizeUnits, location_name: "gopSizeUnits"))
     Av1Settings.add_member(:level, Shapes::ShapeRef.new(shape: Av1Level, location_name: "level"))
     Av1Settings.add_member(:look_ahead_rate_control, Shapes::ShapeRef.new(shape: Av1LookAheadRateControl, location_name: "lookAheadRateControl"))
-    Av1Settings.add_member(:max_bitrate, Shapes::ShapeRef.new(shape: __integerMin50000Max8000000, location_name: "maxBitrate"))
+    Av1Settings.add_member(:max_bitrate, Shapes::ShapeRef.new(shape: __integerMin50000Max12000000, location_name: "maxBitrate"))
     Av1Settings.add_member(:min_i_interval, Shapes::ShapeRef.new(shape: __integerMin0Max30, location_name: "minIInterval"))
     Av1Settings.add_member(:par_denominator, Shapes::ShapeRef.new(shape: __integerMin1, location_name: "parDenominator"))
     Av1Settings.add_member(:par_numerator, Shapes::ShapeRef.new(shape: __integerMin1, location_name: "parNumerator"))
     Av1Settings.add_member(:qvbr_quality_level, Shapes::ShapeRef.new(shape: __integerMin1Max10, location_name: "qvbrQualityLevel"))
     Av1Settings.add_member(:scene_change_detect, Shapes::ShapeRef.new(shape: Av1SceneChangeDetect, location_name: "sceneChangeDetect"))
     Av1Settings.add_member(:timecode_burnin_settings, Shapes::ShapeRef.new(shape: TimecodeBurninSettings, location_name: "timecodeBurninSettings"))
+    Av1Settings.add_member(:bitrate, Shapes::ShapeRef.new(shape: __integerMin50000Max12000000, location_name: "bitrate"))
+    Av1Settings.add_member(:rate_control_mode, Shapes::ShapeRef.new(shape: Av1RateControlMode, location_name: "rateControlMode"))
+    Av1Settings.add_member(:min_bitrate, Shapes::ShapeRef.new(shape: __integerMin0Max8000000, location_name: "minBitrate"))
+    Av1Settings.add_member(:spatial_aq, Shapes::ShapeRef.new(shape: Av1SpatialAq, location_name: "spatialAq"))
+    Av1Settings.add_member(:temporal_aq, Shapes::ShapeRef.new(shape: Av1TemporalAq, location_name: "temporalAq"))
+    Av1Settings.add_member(:timecode_insertion, Shapes::ShapeRef.new(shape: Av1TimecodeInsertionBehavior, location_name: "timecodeInsertion"))
+    Av1Settings.add_member(:bit_depth, Shapes::ShapeRef.new(shape: Av1BitDepth, location_name: "bitDepth"))
     Av1Settings.struct_class = Types::Av1Settings
 
     AvailBlanking.add_member(:avail_blanking_image, Shapes::ShapeRef.new(shape: InputLocation, location_name: "availBlankingImage"))
@@ -1511,6 +1657,7 @@ module Aws::MediaLive
     BurnInDestinationSettings.add_member(:teletext_grid_control, Shapes::ShapeRef.new(shape: BurnInTeletextGridControl, location_name: "teletextGridControl"))
     BurnInDestinationSettings.add_member(:x_position, Shapes::ShapeRef.new(shape: __integerMin0, location_name: "xPosition"))
     BurnInDestinationSettings.add_member(:y_position, Shapes::ShapeRef.new(shape: __integerMin0, location_name: "yPosition"))
+    BurnInDestinationSettings.add_member(:subtitle_rows, Shapes::ShapeRef.new(shape: BurnInDestinationSubtitleRows, location_name: "subtitleRows"))
     BurnInDestinationSettings.struct_class = Types::BurnInDestinationSettings
 
     CancelInputDeviceTransferRequest.add_member(:input_device_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "inputDeviceId"))
@@ -1566,6 +1713,7 @@ module Aws::MediaLive
     CaptionSelectorSettings.add_member(:scte_20_source_settings, Shapes::ShapeRef.new(shape: Scte20SourceSettings, location_name: "scte20SourceSettings"))
     CaptionSelectorSettings.add_member(:scte_27_source_settings, Shapes::ShapeRef.new(shape: Scte27SourceSettings, location_name: "scte27SourceSettings"))
     CaptionSelectorSettings.add_member(:teletext_source_settings, Shapes::ShapeRef.new(shape: TeletextSourceSettings, location_name: "teletextSourceSettings"))
+    CaptionSelectorSettings.add_member(:smart_subtitle_source_settings, Shapes::ShapeRef.new(shape: SmartSubtitleSourceSettings, location_name: "smartSubtitleSourceSettings"))
     CaptionSelectorSettings.struct_class = Types::CaptionSelectorSettings
 
     CdiInputSpecification.add_member(:resolution, Shapes::ShapeRef.new(shape: CdiInputResolution, location_name: "resolution"))
@@ -1591,7 +1739,19 @@ module Aws::MediaLive
     Channel.add_member(:vpc, Shapes::ShapeRef.new(shape: VpcOutputSettingsDescription, location_name: "vpc"))
     Channel.add_member(:anywhere_settings, Shapes::ShapeRef.new(shape: DescribeAnywhereSettings, location_name: "anywhereSettings"))
     Channel.add_member(:channel_engine_version, Shapes::ShapeRef.new(shape: ChannelEngineVersionResponse, location_name: "channelEngineVersion"))
+    Channel.add_member(:linked_channel_settings, Shapes::ShapeRef.new(shape: DescribeLinkedChannelSettings, location_name: "linkedChannelSettings"))
+    Channel.add_member(:channel_security_groups, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "channelSecurityGroups"))
+    Channel.add_member(:inference_settings, Shapes::ShapeRef.new(shape: DescribeInferenceSettings, location_name: "inferenceSettings"))
     Channel.struct_class = Types::Channel
+
+    ChannelAlert.add_member(:alert_type, Shapes::ShapeRef.new(shape: __string, location_name: "alertType"))
+    ChannelAlert.add_member(:cleared_timestamp, Shapes::ShapeRef.new(shape: __timestampIso8601, location_name: "clearedTimestamp"))
+    ChannelAlert.add_member(:id, Shapes::ShapeRef.new(shape: __string, location_name: "id"))
+    ChannelAlert.add_member(:message, Shapes::ShapeRef.new(shape: __string, location_name: "message"))
+    ChannelAlert.add_member(:pipeline_id, Shapes::ShapeRef.new(shape: __string, location_name: "pipelineId"))
+    ChannelAlert.add_member(:set_timestamp, Shapes::ShapeRef.new(shape: __timestampIso8601, location_name: "setTimestamp"))
+    ChannelAlert.add_member(:state, Shapes::ShapeRef.new(shape: ChannelAlertState, location_name: "state"))
+    ChannelAlert.struct_class = Types::ChannelAlert
 
     ChannelConfigurationValidationError.add_member(:message, Shapes::ShapeRef.new(shape: __string, location_name: "message"))
     ChannelConfigurationValidationError.add_member(:validation_errors, Shapes::ShapeRef.new(shape: __listOfValidationError, location_name: "validationErrors"))
@@ -1626,6 +1786,9 @@ module Aws::MediaLive
     ChannelSummary.add_member(:anywhere_settings, Shapes::ShapeRef.new(shape: DescribeAnywhereSettings, location_name: "anywhereSettings"))
     ChannelSummary.add_member(:channel_engine_version, Shapes::ShapeRef.new(shape: ChannelEngineVersionResponse, location_name: "channelEngineVersion"))
     ChannelSummary.add_member(:used_channel_engine_versions, Shapes::ShapeRef.new(shape: __listOfChannelEngineVersionResponse, location_name: "usedChannelEngineVersions"))
+    ChannelSummary.add_member(:linked_channel_settings, Shapes::ShapeRef.new(shape: DescribeLinkedChannelSettings, location_name: "linkedChannelSettings"))
+    ChannelSummary.add_member(:channel_security_groups, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "channelSecurityGroups"))
+    ChannelSummary.add_member(:inference_settings, Shapes::ShapeRef.new(shape: DescribeInferenceSettings, location_name: "inferenceSettings"))
     ChannelSummary.struct_class = Types::ChannelSummary
 
     ClaimDeviceRequest.add_member(:id, Shapes::ShapeRef.new(shape: __string, location_name: "id"))
@@ -1662,6 +1825,16 @@ module Aws::MediaLive
     CloudWatchAlarmTemplateSummary.add_member(:treat_missing_data, Shapes::ShapeRef.new(shape: CloudWatchAlarmTemplateTreatMissingData, required: true, location_name: "treatMissingData"))
     CloudWatchAlarmTemplateSummary.struct_class = Types::CloudWatchAlarmTemplateSummary
 
+    ClusterAlert.add_member(:alert_type, Shapes::ShapeRef.new(shape: __string, location_name: "alertType"))
+    ClusterAlert.add_member(:channel_id, Shapes::ShapeRef.new(shape: __string, location_name: "channelId"))
+    ClusterAlert.add_member(:cleared_timestamp, Shapes::ShapeRef.new(shape: __timestampIso8601, location_name: "clearedTimestamp"))
+    ClusterAlert.add_member(:id, Shapes::ShapeRef.new(shape: __string, location_name: "id"))
+    ClusterAlert.add_member(:message, Shapes::ShapeRef.new(shape: __string, location_name: "message"))
+    ClusterAlert.add_member(:node_id, Shapes::ShapeRef.new(shape: __string, location_name: "nodeId"))
+    ClusterAlert.add_member(:set_timestamp, Shapes::ShapeRef.new(shape: __timestampIso8601, location_name: "setTimestamp"))
+    ClusterAlert.add_member(:state, Shapes::ShapeRef.new(shape: ClusterAlertState, location_name: "state"))
+    ClusterAlert.struct_class = Types::ClusterAlert
+
     ClusterNetworkSettings.add_member(:default_route, Shapes::ShapeRef.new(shape: __string, location_name: "defaultRoute"))
     ClusterNetworkSettings.add_member(:interface_mappings, Shapes::ShapeRef.new(shape: __listOfInterfaceMapping, location_name: "interfaceMappings"))
     ClusterNetworkSettings.struct_class = Types::ClusterNetworkSettings
@@ -1673,6 +1846,10 @@ module Aws::MediaLive
     ClusterNetworkSettingsUpdateRequest.add_member(:default_route, Shapes::ShapeRef.new(shape: __string, location_name: "defaultRoute"))
     ClusterNetworkSettingsUpdateRequest.add_member(:interface_mappings, Shapes::ShapeRef.new(shape: __listOfInterfaceMappingUpdateRequest, location_name: "interfaceMappings"))
     ClusterNetworkSettingsUpdateRequest.struct_class = Types::ClusterNetworkSettingsUpdateRequest
+
+    CmafIngestCaptionLanguageMapping.add_member(:caption_channel, Shapes::ShapeRef.new(shape: __integerMin1Max4, required: true, location_name: "captionChannel"))
+    CmafIngestCaptionLanguageMapping.add_member(:language_code, Shapes::ShapeRef.new(shape: __stringMin3Max3, required: true, location_name: "languageCode"))
+    CmafIngestCaptionLanguageMapping.struct_class = Types::CmafIngestCaptionLanguageMapping
 
     CmafIngestGroupSettings.add_member(:destination, Shapes::ShapeRef.new(shape: OutputLocationRef, required: true, location_name: "destination"))
     CmafIngestGroupSettings.add_member(:nielsen_id_3_behavior, Shapes::ShapeRef.new(shape: CmafNielsenId3Behavior, location_name: "nielsenId3Behavior"))
@@ -1686,6 +1863,11 @@ module Aws::MediaLive
     CmafIngestGroupSettings.add_member(:scte_35_name_modifier, Shapes::ShapeRef.new(shape: __stringMax100, location_name: "scte35NameModifier"))
     CmafIngestGroupSettings.add_member(:id_3_behavior, Shapes::ShapeRef.new(shape: CmafId3Behavior, location_name: "id3Behavior"))
     CmafIngestGroupSettings.add_member(:id_3_name_modifier, Shapes::ShapeRef.new(shape: __stringMax100, location_name: "id3NameModifier"))
+    CmafIngestGroupSettings.add_member(:caption_language_mappings, Shapes::ShapeRef.new(shape: __listOfCmafIngestCaptionLanguageMapping, location_name: "captionLanguageMappings"))
+    CmafIngestGroupSettings.add_member(:timed_metadata_id_3_frame, Shapes::ShapeRef.new(shape: CmafTimedMetadataId3Frame, location_name: "timedMetadataId3Frame"))
+    CmafIngestGroupSettings.add_member(:timed_metadata_id_3_period, Shapes::ShapeRef.new(shape: __integerMin0Max10000, location_name: "timedMetadataId3Period"))
+    CmafIngestGroupSettings.add_member(:timed_metadata_passthrough, Shapes::ShapeRef.new(shape: CmafTimedMetadataPassthrough, location_name: "timedMetadataPassthrough"))
+    CmafIngestGroupSettings.add_member(:additional_destinations, Shapes::ShapeRef.new(shape: __listOfAdditionalDestinations, location_name: "additionalDestinations"))
     CmafIngestGroupSettings.struct_class = Types::CmafIngestGroupSettings
 
     CmafIngestOutputSettings.add_member(:name_modifier, Shapes::ShapeRef.new(shape: __string, location_name: "nameModifier"))
@@ -1716,7 +1898,7 @@ module Aws::MediaLive
     CreateChannel.add_member(:log_level, Shapes::ShapeRef.new(shape: LogLevel, location_name: "logLevel"))
     CreateChannel.add_member(:maintenance, Shapes::ShapeRef.new(shape: MaintenanceCreateSettings, location_name: "maintenance"))
     CreateChannel.add_member(:name, Shapes::ShapeRef.new(shape: __string, location_name: "name"))
-    CreateChannel.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, location_name: "requestId", metadata: {"idempotencyToken"=>true}))
+    CreateChannel.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, location_name: "requestId", metadata: {"idempotencyToken" => true}))
     CreateChannel.add_member(:reserved, Shapes::ShapeRef.new(shape: __string, deprecated: true, location_name: "reserved"))
     CreateChannel.add_member(:role_arn, Shapes::ShapeRef.new(shape: __string, location_name: "roleArn"))
     CreateChannel.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
@@ -1724,12 +1906,15 @@ module Aws::MediaLive
     CreateChannel.add_member(:anywhere_settings, Shapes::ShapeRef.new(shape: AnywhereSettings, location_name: "anywhereSettings"))
     CreateChannel.add_member(:channel_engine_version, Shapes::ShapeRef.new(shape: ChannelEngineVersionRequest, location_name: "channelEngineVersion"))
     CreateChannel.add_member(:dry_run, Shapes::ShapeRef.new(shape: __boolean, location_name: "dryRun"))
+    CreateChannel.add_member(:linked_channel_settings, Shapes::ShapeRef.new(shape: LinkedChannelSettings, location_name: "linkedChannelSettings"))
+    CreateChannel.add_member(:channel_security_groups, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "channelSecurityGroups"))
+    CreateChannel.add_member(:inference_settings, Shapes::ShapeRef.new(shape: InferenceSettings, location_name: "inferenceSettings"))
     CreateChannel.struct_class = Types::CreateChannel
 
     CreateChannelPlacementGroupRequest.add_member(:cluster_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "clusterId"))
     CreateChannelPlacementGroupRequest.add_member(:name, Shapes::ShapeRef.new(shape: __string, location_name: "name"))
     CreateChannelPlacementGroupRequest.add_member(:nodes, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "nodes"))
-    CreateChannelPlacementGroupRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, location_name: "requestId", metadata: {"idempotencyToken"=>true}))
+    CreateChannelPlacementGroupRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, location_name: "requestId", metadata: {"idempotencyToken" => true}))
     CreateChannelPlacementGroupRequest.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
     CreateChannelPlacementGroupRequest.struct_class = Types::CreateChannelPlacementGroupRequest
 
@@ -1751,7 +1936,7 @@ module Aws::MediaLive
     CreateChannelRequest.add_member(:log_level, Shapes::ShapeRef.new(shape: LogLevel, location_name: "logLevel"))
     CreateChannelRequest.add_member(:maintenance, Shapes::ShapeRef.new(shape: MaintenanceCreateSettings, location_name: "maintenance"))
     CreateChannelRequest.add_member(:name, Shapes::ShapeRef.new(shape: __string, location_name: "name"))
-    CreateChannelRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, location_name: "requestId", metadata: {"idempotencyToken"=>true}))
+    CreateChannelRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, location_name: "requestId", metadata: {"idempotencyToken" => true}))
     CreateChannelRequest.add_member(:reserved, Shapes::ShapeRef.new(shape: __string, deprecated: true, location_name: "reserved"))
     CreateChannelRequest.add_member(:role_arn, Shapes::ShapeRef.new(shape: __string, location_name: "roleArn"))
     CreateChannelRequest.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
@@ -1759,6 +1944,9 @@ module Aws::MediaLive
     CreateChannelRequest.add_member(:anywhere_settings, Shapes::ShapeRef.new(shape: AnywhereSettings, location_name: "anywhereSettings"))
     CreateChannelRequest.add_member(:channel_engine_version, Shapes::ShapeRef.new(shape: ChannelEngineVersionRequest, location_name: "channelEngineVersion"))
     CreateChannelRequest.add_member(:dry_run, Shapes::ShapeRef.new(shape: __boolean, location_name: "dryRun"))
+    CreateChannelRequest.add_member(:linked_channel_settings, Shapes::ShapeRef.new(shape: LinkedChannelSettings, location_name: "linkedChannelSettings"))
+    CreateChannelRequest.add_member(:channel_security_groups, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "channelSecurityGroups"))
+    CreateChannelRequest.add_member(:inference_settings, Shapes::ShapeRef.new(shape: InferenceSettings, location_name: "inferenceSettings"))
     CreateChannelRequest.struct_class = Types::CreateChannelRequest
 
     CreateChannelResponse.add_member(:channel, Shapes::ShapeRef.new(shape: Channel, location_name: "channel"))
@@ -1770,13 +1958,13 @@ module Aws::MediaLive
     CreateCloudWatchAlarmTemplateGroupRequest.add_member(:description, Shapes::ShapeRef.new(shape: __stringMin0Max1024, location_name: "description"))
     CreateCloudWatchAlarmTemplateGroupRequest.add_member(:name, Shapes::ShapeRef.new(shape: __stringMin1Max255PatternS, required: true, location_name: "name"))
     CreateCloudWatchAlarmTemplateGroupRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
-    CreateCloudWatchAlarmTemplateGroupRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __stringMin1Max256PatternS, location_name: "requestId", metadata: {"idempotencyToken"=>true}))
+    CreateCloudWatchAlarmTemplateGroupRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __stringMin1Max256PatternS, location_name: "requestId", metadata: {"idempotencyToken" => true}))
     CreateCloudWatchAlarmTemplateGroupRequest.struct_class = Types::CreateCloudWatchAlarmTemplateGroupRequest
 
     CreateCloudWatchAlarmTemplateGroupRequestContent.add_member(:description, Shapes::ShapeRef.new(shape: __stringMin0Max1024, location_name: "description"))
     CreateCloudWatchAlarmTemplateGroupRequestContent.add_member(:name, Shapes::ShapeRef.new(shape: __stringMin1Max255PatternS, required: true, location_name: "name"))
     CreateCloudWatchAlarmTemplateGroupRequestContent.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
-    CreateCloudWatchAlarmTemplateGroupRequestContent.add_member(:request_id, Shapes::ShapeRef.new(shape: __stringMin1Max256PatternS, location_name: "requestId", metadata: {"idempotencyToken"=>true}))
+    CreateCloudWatchAlarmTemplateGroupRequestContent.add_member(:request_id, Shapes::ShapeRef.new(shape: __stringMin1Max256PatternS, location_name: "requestId", metadata: {"idempotencyToken" => true}))
     CreateCloudWatchAlarmTemplateGroupRequestContent.struct_class = Types::CreateCloudWatchAlarmTemplateGroupRequestContent
 
     CreateCloudWatchAlarmTemplateGroupResponse.add_member(:arn, Shapes::ShapeRef.new(shape: __stringPatternArnMedialiveCloudwatchAlarmTemplateGroup, location_name: "arn"))
@@ -1810,7 +1998,7 @@ module Aws::MediaLive
     CreateCloudWatchAlarmTemplateRequest.add_member(:target_resource_type, Shapes::ShapeRef.new(shape: CloudWatchAlarmTemplateTargetResourceType, required: true, location_name: "targetResourceType"))
     CreateCloudWatchAlarmTemplateRequest.add_member(:threshold, Shapes::ShapeRef.new(shape: __double, required: true, location_name: "threshold"))
     CreateCloudWatchAlarmTemplateRequest.add_member(:treat_missing_data, Shapes::ShapeRef.new(shape: CloudWatchAlarmTemplateTreatMissingData, required: true, location_name: "treatMissingData"))
-    CreateCloudWatchAlarmTemplateRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __stringMin1Max256PatternS, location_name: "requestId", metadata: {"idempotencyToken"=>true}))
+    CreateCloudWatchAlarmTemplateRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __stringMin1Max256PatternS, location_name: "requestId", metadata: {"idempotencyToken" => true}))
     CreateCloudWatchAlarmTemplateRequest.struct_class = Types::CreateCloudWatchAlarmTemplateRequest
 
     CreateCloudWatchAlarmTemplateRequestContent.add_member(:comparison_operator, Shapes::ShapeRef.new(shape: CloudWatchAlarmTemplateComparisonOperator, required: true, location_name: "comparisonOperator"))
@@ -1826,7 +2014,7 @@ module Aws::MediaLive
     CreateCloudWatchAlarmTemplateRequestContent.add_member(:target_resource_type, Shapes::ShapeRef.new(shape: CloudWatchAlarmTemplateTargetResourceType, required: true, location_name: "targetResourceType"))
     CreateCloudWatchAlarmTemplateRequestContent.add_member(:threshold, Shapes::ShapeRef.new(shape: __double, required: true, location_name: "threshold"))
     CreateCloudWatchAlarmTemplateRequestContent.add_member(:treat_missing_data, Shapes::ShapeRef.new(shape: CloudWatchAlarmTemplateTreatMissingData, required: true, location_name: "treatMissingData"))
-    CreateCloudWatchAlarmTemplateRequestContent.add_member(:request_id, Shapes::ShapeRef.new(shape: __stringMin1Max256PatternS, location_name: "requestId", metadata: {"idempotencyToken"=>true}))
+    CreateCloudWatchAlarmTemplateRequestContent.add_member(:request_id, Shapes::ShapeRef.new(shape: __stringMin1Max256PatternS, location_name: "requestId", metadata: {"idempotencyToken" => true}))
     CreateCloudWatchAlarmTemplateRequestContent.struct_class = Types::CreateCloudWatchAlarmTemplateRequestContent
 
     CreateCloudWatchAlarmTemplateResponse.add_member(:arn, Shapes::ShapeRef.new(shape: __stringPatternArnMedialiveCloudwatchAlarmTemplate, location_name: "arn"))
@@ -1871,7 +2059,7 @@ module Aws::MediaLive
     CreateClusterRequest.add_member(:instance_role_arn, Shapes::ShapeRef.new(shape: __string, location_name: "instanceRoleArn"))
     CreateClusterRequest.add_member(:name, Shapes::ShapeRef.new(shape: __string, location_name: "name"))
     CreateClusterRequest.add_member(:network_settings, Shapes::ShapeRef.new(shape: ClusterNetworkSettingsCreateRequest, location_name: "networkSettings"))
-    CreateClusterRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, location_name: "requestId", metadata: {"idempotencyToken"=>true}))
+    CreateClusterRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, location_name: "requestId", metadata: {"idempotencyToken" => true}))
     CreateClusterRequest.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
     CreateClusterRequest.struct_class = Types::CreateClusterRequest
 
@@ -1888,13 +2076,13 @@ module Aws::MediaLive
     CreateEventBridgeRuleTemplateGroupRequest.add_member(:description, Shapes::ShapeRef.new(shape: __stringMin0Max1024, location_name: "description"))
     CreateEventBridgeRuleTemplateGroupRequest.add_member(:name, Shapes::ShapeRef.new(shape: __stringMin1Max255PatternS, required: true, location_name: "name"))
     CreateEventBridgeRuleTemplateGroupRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
-    CreateEventBridgeRuleTemplateGroupRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __stringMin1Max256PatternS, location_name: "requestId", metadata: {"idempotencyToken"=>true}))
+    CreateEventBridgeRuleTemplateGroupRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __stringMin1Max256PatternS, location_name: "requestId", metadata: {"idempotencyToken" => true}))
     CreateEventBridgeRuleTemplateGroupRequest.struct_class = Types::CreateEventBridgeRuleTemplateGroupRequest
 
     CreateEventBridgeRuleTemplateGroupRequestContent.add_member(:description, Shapes::ShapeRef.new(shape: __stringMin0Max1024, location_name: "description"))
     CreateEventBridgeRuleTemplateGroupRequestContent.add_member(:name, Shapes::ShapeRef.new(shape: __stringMin1Max255PatternS, required: true, location_name: "name"))
     CreateEventBridgeRuleTemplateGroupRequestContent.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
-    CreateEventBridgeRuleTemplateGroupRequestContent.add_member(:request_id, Shapes::ShapeRef.new(shape: __stringMin1Max256PatternS, location_name: "requestId", metadata: {"idempotencyToken"=>true}))
+    CreateEventBridgeRuleTemplateGroupRequestContent.add_member(:request_id, Shapes::ShapeRef.new(shape: __stringMin1Max256PatternS, location_name: "requestId", metadata: {"idempotencyToken" => true}))
     CreateEventBridgeRuleTemplateGroupRequestContent.struct_class = Types::CreateEventBridgeRuleTemplateGroupRequestContent
 
     CreateEventBridgeRuleTemplateGroupResponse.add_member(:arn, Shapes::ShapeRef.new(shape: __stringPatternArnMedialiveEventbridgeRuleTemplateGroup, location_name: "arn"))
@@ -1921,7 +2109,7 @@ module Aws::MediaLive
     CreateEventBridgeRuleTemplateRequest.add_member(:group_identifier, Shapes::ShapeRef.new(shape: __stringPatternS, required: true, location_name: "groupIdentifier"))
     CreateEventBridgeRuleTemplateRequest.add_member(:name, Shapes::ShapeRef.new(shape: __stringMin1Max255PatternS, required: true, location_name: "name"))
     CreateEventBridgeRuleTemplateRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
-    CreateEventBridgeRuleTemplateRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __stringMin1Max256PatternS, location_name: "requestId", metadata: {"idempotencyToken"=>true}))
+    CreateEventBridgeRuleTemplateRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __stringMin1Max256PatternS, location_name: "requestId", metadata: {"idempotencyToken" => true}))
     CreateEventBridgeRuleTemplateRequest.struct_class = Types::CreateEventBridgeRuleTemplateRequest
 
     CreateEventBridgeRuleTemplateRequestContent.add_member(:description, Shapes::ShapeRef.new(shape: __stringMin0Max1024, location_name: "description"))
@@ -1930,7 +2118,7 @@ module Aws::MediaLive
     CreateEventBridgeRuleTemplateRequestContent.add_member(:group_identifier, Shapes::ShapeRef.new(shape: __stringPatternS, required: true, location_name: "groupIdentifier"))
     CreateEventBridgeRuleTemplateRequestContent.add_member(:name, Shapes::ShapeRef.new(shape: __stringMin1Max255PatternS, required: true, location_name: "name"))
     CreateEventBridgeRuleTemplateRequestContent.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
-    CreateEventBridgeRuleTemplateRequestContent.add_member(:request_id, Shapes::ShapeRef.new(shape: __stringMin1Max256PatternS, location_name: "requestId", metadata: {"idempotencyToken"=>true}))
+    CreateEventBridgeRuleTemplateRequestContent.add_member(:request_id, Shapes::ShapeRef.new(shape: __stringMin1Max256PatternS, location_name: "requestId", metadata: {"idempotencyToken" => true}))
     CreateEventBridgeRuleTemplateRequestContent.struct_class = Types::CreateEventBridgeRuleTemplateRequestContent
 
     CreateEventBridgeRuleTemplateResponse.add_member(:arn, Shapes::ShapeRef.new(shape: __stringPatternArnMedialiveEventbridgeRuleTemplate, location_name: "arn"))
@@ -1962,7 +2150,7 @@ module Aws::MediaLive
     CreateInput.add_member(:input_security_groups, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "inputSecurityGroups"))
     CreateInput.add_member(:media_connect_flows, Shapes::ShapeRef.new(shape: __listOfMediaConnectFlowRequest, location_name: "mediaConnectFlows"))
     CreateInput.add_member(:name, Shapes::ShapeRef.new(shape: __string, location_name: "name"))
-    CreateInput.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, location_name: "requestId", metadata: {"idempotencyToken"=>true}))
+    CreateInput.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, location_name: "requestId", metadata: {"idempotencyToken" => true}))
     CreateInput.add_member(:role_arn, Shapes::ShapeRef.new(shape: __string, location_name: "roleArn"))
     CreateInput.add_member(:sources, Shapes::ShapeRef.new(shape: __listOfInputSourceRequest, location_name: "sources"))
     CreateInput.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
@@ -1971,6 +2159,9 @@ module Aws::MediaLive
     CreateInput.add_member(:srt_settings, Shapes::ShapeRef.new(shape: SrtSettingsRequest, location_name: "srtSettings"))
     CreateInput.add_member(:input_network_location, Shapes::ShapeRef.new(shape: InputNetworkLocation, location_name: "inputNetworkLocation"))
     CreateInput.add_member(:multicast_settings, Shapes::ShapeRef.new(shape: MulticastSettingsCreateRequest, location_name: "multicastSettings"))
+    CreateInput.add_member(:smpte_2110_receiver_group_settings, Shapes::ShapeRef.new(shape: Smpte2110ReceiverGroupSettings, location_name: "smpte2110ReceiverGroupSettings"))
+    CreateInput.add_member(:sdi_sources, Shapes::ShapeRef.new(shape: InputSdiSources, location_name: "sdiSources"))
+    CreateInput.add_member(:router_settings, Shapes::ShapeRef.new(shape: RouterSettings, location_name: "routerSettings"))
     CreateInput.struct_class = Types::CreateInput
 
     CreateInputRequest.add_member(:destinations, Shapes::ShapeRef.new(shape: __listOfInputDestinationRequest, location_name: "destinations"))
@@ -1978,7 +2169,7 @@ module Aws::MediaLive
     CreateInputRequest.add_member(:input_security_groups, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "inputSecurityGroups"))
     CreateInputRequest.add_member(:media_connect_flows, Shapes::ShapeRef.new(shape: __listOfMediaConnectFlowRequest, location_name: "mediaConnectFlows"))
     CreateInputRequest.add_member(:name, Shapes::ShapeRef.new(shape: __string, location_name: "name"))
-    CreateInputRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, location_name: "requestId", metadata: {"idempotencyToken"=>true}))
+    CreateInputRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, location_name: "requestId", metadata: {"idempotencyToken" => true}))
     CreateInputRequest.add_member(:role_arn, Shapes::ShapeRef.new(shape: __string, location_name: "roleArn"))
     CreateInputRequest.add_member(:sources, Shapes::ShapeRef.new(shape: __listOfInputSourceRequest, location_name: "sources"))
     CreateInputRequest.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
@@ -1987,6 +2178,9 @@ module Aws::MediaLive
     CreateInputRequest.add_member(:srt_settings, Shapes::ShapeRef.new(shape: SrtSettingsRequest, location_name: "srtSettings"))
     CreateInputRequest.add_member(:input_network_location, Shapes::ShapeRef.new(shape: InputNetworkLocation, location_name: "inputNetworkLocation"))
     CreateInputRequest.add_member(:multicast_settings, Shapes::ShapeRef.new(shape: MulticastSettingsCreateRequest, location_name: "multicastSettings"))
+    CreateInputRequest.add_member(:smpte_2110_receiver_group_settings, Shapes::ShapeRef.new(shape: Smpte2110ReceiverGroupSettings, location_name: "smpte2110ReceiverGroupSettings"))
+    CreateInputRequest.add_member(:sdi_sources, Shapes::ShapeRef.new(shape: InputSdiSources, location_name: "sdiSources"))
+    CreateInputRequest.add_member(:router_settings, Shapes::ShapeRef.new(shape: RouterSettings, location_name: "routerSettings"))
     CreateInputRequest.struct_class = Types::CreateInputRequest
 
     CreateInputResponse.add_member(:input, Shapes::ShapeRef.new(shape: Input, location_name: "input"))
@@ -2008,19 +2202,19 @@ module Aws::MediaLive
     CreateMultiplex.add_member(:availability_zones, Shapes::ShapeRef.new(shape: __listOf__string, required: true, location_name: "availabilityZones"))
     CreateMultiplex.add_member(:multiplex_settings, Shapes::ShapeRef.new(shape: MultiplexSettings, required: true, location_name: "multiplexSettings"))
     CreateMultiplex.add_member(:name, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "name"))
-    CreateMultiplex.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "requestId", metadata: {"idempotencyToken"=>true}))
+    CreateMultiplex.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "requestId", metadata: {"idempotencyToken" => true}))
     CreateMultiplex.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
     CreateMultiplex.struct_class = Types::CreateMultiplex
 
     CreateMultiplexProgram.add_member(:multiplex_program_settings, Shapes::ShapeRef.new(shape: MultiplexProgramSettings, required: true, location_name: "multiplexProgramSettings"))
     CreateMultiplexProgram.add_member(:program_name, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "programName"))
-    CreateMultiplexProgram.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "requestId", metadata: {"idempotencyToken"=>true}))
+    CreateMultiplexProgram.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "requestId", metadata: {"idempotencyToken" => true}))
     CreateMultiplexProgram.struct_class = Types::CreateMultiplexProgram
 
     CreateMultiplexProgramRequest.add_member(:multiplex_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "multiplexId"))
     CreateMultiplexProgramRequest.add_member(:multiplex_program_settings, Shapes::ShapeRef.new(shape: MultiplexProgramSettings, required: true, location_name: "multiplexProgramSettings"))
     CreateMultiplexProgramRequest.add_member(:program_name, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "programName"))
-    CreateMultiplexProgramRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "requestId", metadata: {"idempotencyToken"=>true}))
+    CreateMultiplexProgramRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "requestId", metadata: {"idempotencyToken" => true}))
     CreateMultiplexProgramRequest.struct_class = Types::CreateMultiplexProgramRequest
 
     CreateMultiplexProgramResponse.add_member(:multiplex_program, Shapes::ShapeRef.new(shape: MultiplexProgram, location_name: "multiplexProgram"))
@@ -2032,7 +2226,7 @@ module Aws::MediaLive
     CreateMultiplexRequest.add_member(:availability_zones, Shapes::ShapeRef.new(shape: __listOf__string, required: true, location_name: "availabilityZones"))
     CreateMultiplexRequest.add_member(:multiplex_settings, Shapes::ShapeRef.new(shape: MultiplexSettings, required: true, location_name: "multiplexSettings"))
     CreateMultiplexRequest.add_member(:name, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "name"))
-    CreateMultiplexRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "requestId", metadata: {"idempotencyToken"=>true}))
+    CreateMultiplexRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "requestId", metadata: {"idempotencyToken" => true}))
     CreateMultiplexRequest.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
     CreateMultiplexRequest.struct_class = Types::CreateMultiplexRequest
 
@@ -2044,7 +2238,7 @@ module Aws::MediaLive
 
     CreateNetworkRequest.add_member(:ip_pools, Shapes::ShapeRef.new(shape: __listOfIpPoolCreateRequest, location_name: "ipPools"))
     CreateNetworkRequest.add_member(:name, Shapes::ShapeRef.new(shape: __string, location_name: "name"))
-    CreateNetworkRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, location_name: "requestId", metadata: {"idempotencyToken"=>true}))
+    CreateNetworkRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, location_name: "requestId", metadata: {"idempotencyToken" => true}))
     CreateNetworkRequest.add_member(:routes, Shapes::ShapeRef.new(shape: __listOfRouteCreateRequest, location_name: "routes"))
     CreateNetworkRequest.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
     CreateNetworkRequest.struct_class = Types::CreateNetworkRequest
@@ -2062,7 +2256,7 @@ module Aws::MediaLive
     CreateNodeRegistrationScriptRequest.add_member(:id, Shapes::ShapeRef.new(shape: __string, location_name: "id"))
     CreateNodeRegistrationScriptRequest.add_member(:name, Shapes::ShapeRef.new(shape: __string, location_name: "name"))
     CreateNodeRegistrationScriptRequest.add_member(:node_interface_mappings, Shapes::ShapeRef.new(shape: __listOfNodeInterfaceMapping, location_name: "nodeInterfaceMappings"))
-    CreateNodeRegistrationScriptRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, location_name: "requestId", metadata: {"idempotencyToken"=>true}))
+    CreateNodeRegistrationScriptRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, location_name: "requestId", metadata: {"idempotencyToken" => true}))
     CreateNodeRegistrationScriptRequest.add_member(:role, Shapes::ShapeRef.new(shape: NodeRole, location_name: "role"))
     CreateNodeRegistrationScriptRequest.struct_class = Types::CreateNodeRegistrationScriptRequest
 
@@ -2075,7 +2269,7 @@ module Aws::MediaLive
     CreateNodeRequest.add_member(:cluster_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "clusterId"))
     CreateNodeRequest.add_member(:name, Shapes::ShapeRef.new(shape: __string, location_name: "name"))
     CreateNodeRequest.add_member(:node_interface_mappings, Shapes::ShapeRef.new(shape: __listOfNodeInterfaceMappingCreateRequest, location_name: "nodeInterfaceMappings"))
-    CreateNodeRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, location_name: "requestId", metadata: {"idempotencyToken"=>true}))
+    CreateNodeRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, location_name: "requestId", metadata: {"idempotencyToken" => true}))
     CreateNodeRequest.add_member(:role, Shapes::ShapeRef.new(shape: NodeRole, location_name: "role"))
     CreateNodeRequest.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
     CreateNodeRequest.struct_class = Types::CreateNodeRequest
@@ -2090,14 +2284,15 @@ module Aws::MediaLive
     CreateNodeResponse.add_member(:node_interface_mappings, Shapes::ShapeRef.new(shape: __listOfNodeInterfaceMapping, location_name: "nodeInterfaceMappings"))
     CreateNodeResponse.add_member(:role, Shapes::ShapeRef.new(shape: NodeRole, location_name: "role"))
     CreateNodeResponse.add_member(:state, Shapes::ShapeRef.new(shape: NodeState, location_name: "state"))
+    CreateNodeResponse.add_member(:sdi_source_mappings, Shapes::ShapeRef.new(shape: SdiSourceMappings, location_name: "sdiSourceMappings"))
     CreateNodeResponse.struct_class = Types::CreateNodeResponse
 
-    CreatePartnerInput.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, location_name: "requestId", metadata: {"idempotencyToken"=>true}))
+    CreatePartnerInput.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, location_name: "requestId", metadata: {"idempotencyToken" => true}))
     CreatePartnerInput.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
     CreatePartnerInput.struct_class = Types::CreatePartnerInput
 
     CreatePartnerInputRequest.add_member(:input_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "inputId"))
-    CreatePartnerInputRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, location_name: "requestId", metadata: {"idempotencyToken"=>true}))
+    CreatePartnerInputRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, location_name: "requestId", metadata: {"idempotencyToken" => true}))
     CreatePartnerInputRequest.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
     CreatePartnerInputRequest.struct_class = Types::CreatePartnerInputRequest
 
@@ -2107,13 +2302,23 @@ module Aws::MediaLive
     CreatePartnerInputResultModel.add_member(:input, Shapes::ShapeRef.new(shape: Input, location_name: "input"))
     CreatePartnerInputResultModel.struct_class = Types::CreatePartnerInputResultModel
 
+    CreateSdiSourceRequest.add_member(:mode, Shapes::ShapeRef.new(shape: SdiSourceMode, location_name: "mode"))
+    CreateSdiSourceRequest.add_member(:name, Shapes::ShapeRef.new(shape: __string, location_name: "name"))
+    CreateSdiSourceRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, location_name: "requestId", metadata: {"idempotencyToken" => true}))
+    CreateSdiSourceRequest.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    CreateSdiSourceRequest.add_member(:type, Shapes::ShapeRef.new(shape: SdiSourceType, location_name: "type"))
+    CreateSdiSourceRequest.struct_class = Types::CreateSdiSourceRequest
+
+    CreateSdiSourceResponse.add_member(:sdi_source, Shapes::ShapeRef.new(shape: SdiSource, location_name: "sdiSource"))
+    CreateSdiSourceResponse.struct_class = Types::CreateSdiSourceResponse
+
     CreateSignalMapRequest.add_member(:cloud_watch_alarm_template_group_identifiers, Shapes::ShapeRef.new(shape: __listOf__stringPatternS, location_name: "cloudWatchAlarmTemplateGroupIdentifiers"))
     CreateSignalMapRequest.add_member(:description, Shapes::ShapeRef.new(shape: __stringMin0Max1024, location_name: "description"))
     CreateSignalMapRequest.add_member(:discovery_entry_point_arn, Shapes::ShapeRef.new(shape: __stringMin1Max2048, required: true, location_name: "discoveryEntryPointArn"))
     CreateSignalMapRequest.add_member(:event_bridge_rule_template_group_identifiers, Shapes::ShapeRef.new(shape: __listOf__stringPatternS, location_name: "eventBridgeRuleTemplateGroupIdentifiers"))
     CreateSignalMapRequest.add_member(:name, Shapes::ShapeRef.new(shape: __stringMin1Max255PatternS, required: true, location_name: "name"))
     CreateSignalMapRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
-    CreateSignalMapRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __stringMin1Max256PatternS, location_name: "requestId", metadata: {"idempotencyToken"=>true}))
+    CreateSignalMapRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __stringMin1Max256PatternS, location_name: "requestId", metadata: {"idempotencyToken" => true}))
     CreateSignalMapRequest.struct_class = Types::CreateSignalMapRequest
 
     CreateSignalMapRequestContent.add_member(:cloud_watch_alarm_template_group_identifiers, Shapes::ShapeRef.new(shape: __listOf__stringPatternS, location_name: "cloudWatchAlarmTemplateGroupIdentifiers"))
@@ -2122,7 +2327,7 @@ module Aws::MediaLive
     CreateSignalMapRequestContent.add_member(:event_bridge_rule_template_group_identifiers, Shapes::ShapeRef.new(shape: __listOf__stringPatternS, location_name: "eventBridgeRuleTemplateGroupIdentifiers"))
     CreateSignalMapRequestContent.add_member(:name, Shapes::ShapeRef.new(shape: __stringMin1Max255PatternS, required: true, location_name: "name"))
     CreateSignalMapRequestContent.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
-    CreateSignalMapRequestContent.add_member(:request_id, Shapes::ShapeRef.new(shape: __stringMin1Max256PatternS, location_name: "requestId", metadata: {"idempotencyToken"=>true}))
+    CreateSignalMapRequestContent.add_member(:request_id, Shapes::ShapeRef.new(shape: __stringMin1Max256PatternS, location_name: "requestId", metadata: {"idempotencyToken" => true}))
     CreateSignalMapRequestContent.struct_class = Types::CreateSignalMapRequestContent
 
     CreateSignalMapResponse.add_member(:arn, Shapes::ShapeRef.new(shape: __stringPatternArnMedialiveSignalMap, location_name: "arn"))
@@ -2205,6 +2410,9 @@ module Aws::MediaLive
     DeleteChannelResponse.add_member(:vpc, Shapes::ShapeRef.new(shape: VpcOutputSettingsDescription, location_name: "vpc"))
     DeleteChannelResponse.add_member(:anywhere_settings, Shapes::ShapeRef.new(shape: DescribeAnywhereSettings, location_name: "anywhereSettings"))
     DeleteChannelResponse.add_member(:channel_engine_version, Shapes::ShapeRef.new(shape: ChannelEngineVersionResponse, location_name: "channelEngineVersion"))
+    DeleteChannelResponse.add_member(:linked_channel_settings, Shapes::ShapeRef.new(shape: DescribeLinkedChannelSettings, location_name: "linkedChannelSettings"))
+    DeleteChannelResponse.add_member(:channel_security_groups, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "channelSecurityGroups"))
+    DeleteChannelResponse.add_member(:inference_settings, Shapes::ShapeRef.new(shape: DescribeInferenceSettings, location_name: "inferenceSettings"))
     DeleteChannelResponse.struct_class = Types::DeleteChannelResponse
 
     DeleteCloudWatchAlarmTemplateGroupRequest.add_member(:identifier, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "identifier"))
@@ -2294,6 +2502,7 @@ module Aws::MediaLive
     DeleteNodeResponse.add_member(:node_interface_mappings, Shapes::ShapeRef.new(shape: __listOfNodeInterfaceMapping, location_name: "nodeInterfaceMappings"))
     DeleteNodeResponse.add_member(:role, Shapes::ShapeRef.new(shape: NodeRole, location_name: "role"))
     DeleteNodeResponse.add_member(:state, Shapes::ShapeRef.new(shape: NodeState, location_name: "state"))
+    DeleteNodeResponse.add_member(:sdi_source_mappings, Shapes::ShapeRef.new(shape: SdiSourceMappings, location_name: "sdiSourceMappings"))
     DeleteNodeResponse.struct_class = Types::DeleteNodeResponse
 
     DeleteReservationRequest.add_member(:reservation_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "reservationId"))
@@ -2324,6 +2533,12 @@ module Aws::MediaLive
     DeleteScheduleRequest.struct_class = Types::DeleteScheduleRequest
 
     DeleteScheduleResponse.struct_class = Types::DeleteScheduleResponse
+
+    DeleteSdiSourceRequest.add_member(:sdi_source_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "sdiSourceId"))
+    DeleteSdiSourceRequest.struct_class = Types::DeleteSdiSourceRequest
+
+    DeleteSdiSourceResponse.add_member(:sdi_source, Shapes::ShapeRef.new(shape: SdiSource, location_name: "sdiSource"))
+    DeleteSdiSourceResponse.struct_class = Types::DeleteSdiSourceResponse
 
     DeleteSignalMapRequest.add_member(:identifier, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "identifier"))
     DeleteSignalMapRequest.struct_class = Types::DeleteSignalMapRequest
@@ -2398,6 +2613,9 @@ module Aws::MediaLive
     DescribeChannelResponse.add_member(:vpc, Shapes::ShapeRef.new(shape: VpcOutputSettingsDescription, location_name: "vpc"))
     DescribeChannelResponse.add_member(:anywhere_settings, Shapes::ShapeRef.new(shape: DescribeAnywhereSettings, location_name: "anywhereSettings"))
     DescribeChannelResponse.add_member(:channel_engine_version, Shapes::ShapeRef.new(shape: ChannelEngineVersionResponse, location_name: "channelEngineVersion"))
+    DescribeChannelResponse.add_member(:linked_channel_settings, Shapes::ShapeRef.new(shape: DescribeLinkedChannelSettings, location_name: "linkedChannelSettings"))
+    DescribeChannelResponse.add_member(:channel_security_groups, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "channelSecurityGroups"))
+    DescribeChannelResponse.add_member(:inference_settings, Shapes::ShapeRef.new(shape: DescribeInferenceSettings, location_name: "inferenceSettings"))
     DescribeChannelResponse.struct_class = Types::DescribeChannelResponse
 
     DescribeClusterRequest.add_member(:cluster_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "clusterId"))
@@ -2432,6 +2650,14 @@ module Aws::MediaLive
     DescribeClusterSummary.add_member(:network_settings, Shapes::ShapeRef.new(shape: ClusterNetworkSettings, location_name: "networkSettings"))
     DescribeClusterSummary.add_member(:state, Shapes::ShapeRef.new(shape: ClusterState, location_name: "state"))
     DescribeClusterSummary.struct_class = Types::DescribeClusterSummary
+
+    DescribeFollowerChannelSettings.add_member(:linked_channel_type, Shapes::ShapeRef.new(shape: LinkedChannelType, location_name: "linkedChannelType"))
+    DescribeFollowerChannelSettings.add_member(:primary_channel_arn, Shapes::ShapeRef.new(shape: __string, location_name: "primaryChannelArn"))
+    DescribeFollowerChannelSettings.struct_class = Types::DescribeFollowerChannelSettings
+
+    DescribeInferenceSettings.add_member(:feed_arn, Shapes::ShapeRef.new(shape: __string, location_name: "feedArn"))
+    DescribeInferenceSettings.add_member(:audio_feed_inputs, Shapes::ShapeRef.new(shape: __listOfAudioFeedInput, location_name: "audioFeedInputs"))
+    DescribeInferenceSettings.struct_class = Types::DescribeInferenceSettings
 
     DescribeInputDeviceRequest.add_member(:input_device_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "inputDeviceId"))
     DescribeInputDeviceRequest.struct_class = Types::DescribeInputDeviceRequest
@@ -2489,6 +2715,9 @@ module Aws::MediaLive
     DescribeInputResponse.add_member(:srt_settings, Shapes::ShapeRef.new(shape: SrtSettings, location_name: "srtSettings"))
     DescribeInputResponse.add_member(:input_network_location, Shapes::ShapeRef.new(shape: InputNetworkLocation, location_name: "inputNetworkLocation"))
     DescribeInputResponse.add_member(:multicast_settings, Shapes::ShapeRef.new(shape: MulticastSettings, location_name: "multicastSettings"))
+    DescribeInputResponse.add_member(:smpte_2110_receiver_group_settings, Shapes::ShapeRef.new(shape: Smpte2110ReceiverGroupSettings, location_name: "smpte2110ReceiverGroupSettings"))
+    DescribeInputResponse.add_member(:sdi_sources, Shapes::ShapeRef.new(shape: InputSdiSources, location_name: "sdiSources"))
+    DescribeInputResponse.add_member(:router_settings, Shapes::ShapeRef.new(shape: RouterInputSettings, location_name: "routerSettings"))
     DescribeInputResponse.struct_class = Types::DescribeInputResponse
 
     DescribeInputSecurityGroupRequest.add_member(:input_security_group_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "inputSecurityGroupId"))
@@ -2500,7 +2729,12 @@ module Aws::MediaLive
     DescribeInputSecurityGroupResponse.add_member(:state, Shapes::ShapeRef.new(shape: InputSecurityGroupState, location_name: "state"))
     DescribeInputSecurityGroupResponse.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
     DescribeInputSecurityGroupResponse.add_member(:whitelist_rules, Shapes::ShapeRef.new(shape: __listOfInputWhitelistRule, location_name: "whitelistRules"))
+    DescribeInputSecurityGroupResponse.add_member(:channels, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "channels"))
     DescribeInputSecurityGroupResponse.struct_class = Types::DescribeInputSecurityGroupResponse
+
+    DescribeLinkedChannelSettings.add_member(:follower_channel_settings, Shapes::ShapeRef.new(shape: DescribeFollowerChannelSettings, location_name: "followerChannelSettings"))
+    DescribeLinkedChannelSettings.add_member(:primary_channel_settings, Shapes::ShapeRef.new(shape: DescribePrimaryChannelSettings, location_name: "primaryChannelSettings"))
+    DescribeLinkedChannelSettings.struct_class = Types::DescribeLinkedChannelSettings
 
     DescribeMultiplexProgramRequest.add_member(:multiplex_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "multiplexId"))
     DescribeMultiplexProgramRequest.add_member(:program_name, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "programName"))
@@ -2572,6 +2806,7 @@ module Aws::MediaLive
     DescribeNodeResponse.add_member(:node_interface_mappings, Shapes::ShapeRef.new(shape: __listOfNodeInterfaceMapping, location_name: "nodeInterfaceMappings"))
     DescribeNodeResponse.add_member(:role, Shapes::ShapeRef.new(shape: NodeRole, location_name: "role"))
     DescribeNodeResponse.add_member(:state, Shapes::ShapeRef.new(shape: NodeState, location_name: "state"))
+    DescribeNodeResponse.add_member(:sdi_source_mappings, Shapes::ShapeRef.new(shape: SdiSourceMappings, location_name: "sdiSourceMappings"))
     DescribeNodeResponse.struct_class = Types::DescribeNodeResponse
 
     DescribeNodeResult.add_member(:arn, Shapes::ShapeRef.new(shape: __string, location_name: "arn"))
@@ -2584,6 +2819,7 @@ module Aws::MediaLive
     DescribeNodeResult.add_member(:node_interface_mappings, Shapes::ShapeRef.new(shape: __listOfNodeInterfaceMapping, location_name: "nodeInterfaceMappings"))
     DescribeNodeResult.add_member(:role, Shapes::ShapeRef.new(shape: NodeRole, location_name: "role"))
     DescribeNodeResult.add_member(:state, Shapes::ShapeRef.new(shape: NodeState, location_name: "state"))
+    DescribeNodeResult.add_member(:sdi_source_mappings, Shapes::ShapeRef.new(shape: SdiSourceMappings, location_name: "sdiSourceMappings"))
     DescribeNodeResult.struct_class = Types::DescribeNodeResult
 
     DescribeNodeSummary.add_member(:arn, Shapes::ShapeRef.new(shape: __string, location_name: "arn"))
@@ -2597,6 +2833,7 @@ module Aws::MediaLive
     DescribeNodeSummary.add_member(:node_interface_mappings, Shapes::ShapeRef.new(shape: __listOfNodeInterfaceMapping, location_name: "nodeInterfaceMappings"))
     DescribeNodeSummary.add_member(:role, Shapes::ShapeRef.new(shape: NodeRole, location_name: "role"))
     DescribeNodeSummary.add_member(:state, Shapes::ShapeRef.new(shape: NodeState, location_name: "state"))
+    DescribeNodeSummary.add_member(:sdi_source_mappings, Shapes::ShapeRef.new(shape: SdiSourceMappings, location_name: "sdiSourceMappings"))
     DescribeNodeSummary.struct_class = Types::DescribeNodeSummary
 
     DescribeOfferingRequest.add_member(:offering_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "offeringId"))
@@ -2614,6 +2851,10 @@ module Aws::MediaLive
     DescribeOfferingResponse.add_member(:resource_specification, Shapes::ShapeRef.new(shape: ReservationResourceSpecification, location_name: "resourceSpecification"))
     DescribeOfferingResponse.add_member(:usage_price, Shapes::ShapeRef.new(shape: __double, location_name: "usagePrice"))
     DescribeOfferingResponse.struct_class = Types::DescribeOfferingResponse
+
+    DescribePrimaryChannelSettings.add_member(:following_channel_arns, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "followingChannelArns"))
+    DescribePrimaryChannelSettings.add_member(:linked_channel_type, Shapes::ShapeRef.new(shape: LinkedChannelType, location_name: "linkedChannelType"))
+    DescribePrimaryChannelSettings.struct_class = Types::DescribePrimaryChannelSettings
 
     DescribeReservationRequest.add_member(:reservation_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "reservationId"))
     DescribeReservationRequest.struct_class = Types::DescribeReservationRequest
@@ -2648,6 +2889,12 @@ module Aws::MediaLive
     DescribeScheduleResponse.add_member(:schedule_actions, Shapes::ShapeRef.new(shape: __listOfScheduleAction, location_name: "scheduleActions"))
     DescribeScheduleResponse.struct_class = Types::DescribeScheduleResponse
 
+    DescribeSdiSourceRequest.add_member(:sdi_source_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "sdiSourceId"))
+    DescribeSdiSourceRequest.struct_class = Types::DescribeSdiSourceRequest
+
+    DescribeSdiSourceResponse.add_member(:sdi_source, Shapes::ShapeRef.new(shape: SdiSource, location_name: "sdiSource"))
+    DescribeSdiSourceResponse.struct_class = Types::DescribeSdiSourceResponse
+
     DescribeThumbnailsRequest.add_member(:channel_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "channelId"))
     DescribeThumbnailsRequest.add_member(:pipeline_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "querystring", location_name: "pipelineId"))
     DescribeThumbnailsRequest.add_member(:thumbnail_type, Shapes::ShapeRef.new(shape: __string, required: true, location: "querystring", location_name: "thumbnailType"))
@@ -2658,6 +2905,9 @@ module Aws::MediaLive
 
     DescribeThumbnailsResultModel.add_member(:thumbnail_details, Shapes::ShapeRef.new(shape: __listOfThumbnailDetail, location_name: "thumbnailDetails"))
     DescribeThumbnailsResultModel.struct_class = Types::DescribeThumbnailsResultModel
+
+    DisabledLockingSettings.add_member(:custom_epoch, Shapes::ShapeRef.new(shape: __string, location_name: "customEpoch"))
+    DisabledLockingSettings.struct_class = Types::DisabledLockingSettings
 
     DolbyVision81Settings.struct_class = Types::DolbyVision81Settings
 
@@ -2689,6 +2939,7 @@ module Aws::MediaLive
     DvbSubDestinationSettings.add_member(:teletext_grid_control, Shapes::ShapeRef.new(shape: DvbSubDestinationTeletextGridControl, location_name: "teletextGridControl"))
     DvbSubDestinationSettings.add_member(:x_position, Shapes::ShapeRef.new(shape: __integerMin0, location_name: "xPosition"))
     DvbSubDestinationSettings.add_member(:y_position, Shapes::ShapeRef.new(shape: __integerMin0, location_name: "yPosition"))
+    DvbSubDestinationSettings.add_member(:subtitle_rows, Shapes::ShapeRef.new(shape: DvbSubDestinationSubtitleRows, location_name: "subtitleRows"))
     DvbSubDestinationSettings.struct_class = Types::DvbSubDestinationSettings
 
     DvbSubSourceSettings.add_member(:ocr_language, Shapes::ShapeRef.new(shape: DvbSubOcrLanguage, location_name: "ocrLanguage"))
@@ -2833,6 +3084,10 @@ module Aws::MediaLive
     FollowModeScheduleActionStartSettings.add_member(:follow_point, Shapes::ShapeRef.new(shape: FollowPoint, required: true, location_name: "followPoint"))
     FollowModeScheduleActionStartSettings.add_member(:reference_action_name, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "referenceActionName"))
     FollowModeScheduleActionStartSettings.struct_class = Types::FollowModeScheduleActionStartSettings
+
+    FollowerChannelSettings.add_member(:linked_channel_type, Shapes::ShapeRef.new(shape: LinkedChannelType, location_name: "linkedChannelType"))
+    FollowerChannelSettings.add_member(:primary_channel_arn, Shapes::ShapeRef.new(shape: __string, location_name: "primaryChannelArn"))
+    FollowerChannelSettings.struct_class = Types::FollowerChannelSettings
 
     ForbiddenException.add_member(:message, Shapes::ShapeRef.new(shape: __string, location_name: "message"))
     ForbiddenException.struct_class = Types::ForbiddenException
@@ -3077,6 +3332,7 @@ module Aws::MediaLive
     H264Settings.add_member(:timecode_insertion, Shapes::ShapeRef.new(shape: H264TimecodeInsertionBehavior, location_name: "timecodeInsertion"))
     H264Settings.add_member(:timecode_burnin_settings, Shapes::ShapeRef.new(shape: TimecodeBurninSettings, location_name: "timecodeBurninSettings"))
     H264Settings.add_member(:min_qp, Shapes::ShapeRef.new(shape: __integerMin1Max51, location_name: "minQp"))
+    H264Settings.add_member(:min_bitrate, Shapes::ShapeRef.new(shape: __integerMin0, location_name: "minBitrate"))
     H264Settings.struct_class = Types::H264Settings
 
     H265ColorSpaceSettings.add_member(:color_space_passthrough_settings, Shapes::ShapeRef.new(shape: ColorSpacePassthroughSettings, location_name: "colorSpacePassthroughSettings"))
@@ -3084,6 +3340,7 @@ module Aws::MediaLive
     H265ColorSpaceSettings.add_member(:hdr_10_settings, Shapes::ShapeRef.new(shape: Hdr10Settings, location_name: "hdr10Settings"))
     H265ColorSpaceSettings.add_member(:rec_601_settings, Shapes::ShapeRef.new(shape: Rec601Settings, location_name: "rec601Settings"))
     H265ColorSpaceSettings.add_member(:rec_709_settings, Shapes::ShapeRef.new(shape: Rec709Settings, location_name: "rec709Settings"))
+    H265ColorSpaceSettings.add_member(:hlg_2020_settings, Shapes::ShapeRef.new(shape: Hlg2020Settings, location_name: "hlg2020Settings"))
     H265ColorSpaceSettings.struct_class = Types::H265ColorSpaceSettings
 
     H265FilterSettings.add_member(:temporal_filter_settings, Shapes::ShapeRef.new(shape: TemporalFilterSettings, location_name: "temporalFilterSettings"))
@@ -3128,11 +3385,17 @@ module Aws::MediaLive
     H265Settings.add_member(:treeblock_size, Shapes::ShapeRef.new(shape: H265TreeblockSize, location_name: "treeblockSize"))
     H265Settings.add_member(:min_qp, Shapes::ShapeRef.new(shape: __integerMin1Max51, location_name: "minQp"))
     H265Settings.add_member(:deblocking, Shapes::ShapeRef.new(shape: H265Deblocking, location_name: "deblocking"))
+    H265Settings.add_member(:gop_b_reference, Shapes::ShapeRef.new(shape: H265GopBReference, location_name: "gopBReference"))
+    H265Settings.add_member(:gop_num_b_frames, Shapes::ShapeRef.new(shape: __integerMin0Max3, location_name: "gopNumBFrames"))
+    H265Settings.add_member(:min_bitrate, Shapes::ShapeRef.new(shape: __integerMin0Max40000000, location_name: "minBitrate"))
+    H265Settings.add_member(:subgop_length, Shapes::ShapeRef.new(shape: H265SubGopLength, location_name: "subgopLength"))
     H265Settings.struct_class = Types::H265Settings
 
     Hdr10Settings.add_member(:max_cll, Shapes::ShapeRef.new(shape: __integerMin0Max32768, location_name: "maxCll"))
     Hdr10Settings.add_member(:max_fall, Shapes::ShapeRef.new(shape: __integerMin0Max32768, location_name: "maxFall"))
     Hdr10Settings.struct_class = Types::Hdr10Settings
+
+    Hlg2020Settings.struct_class = Types::Hlg2020Settings
 
     HlsAkamaiSettings.add_member(:connection_retry_interval, Shapes::ShapeRef.new(shape: __integerMin0, location_name: "connectionRetryInterval"))
     HlsAkamaiSettings.add_member(:filecache_duration, Shapes::ShapeRef.new(shape: __integerMin0Max600, location_name: "filecacheDuration"))
@@ -3252,6 +3515,10 @@ module Aws::MediaLive
 
     ImmediateModeScheduleActionStartSettings.struct_class = Types::ImmediateModeScheduleActionStartSettings
 
+    InferenceSettings.add_member(:feed_arn, Shapes::ShapeRef.new(shape: __string, location_name: "feedArn"))
+    InferenceSettings.add_member(:audio_feed_inputs, Shapes::ShapeRef.new(shape: __listOfAudioFeedInput, location_name: "audioFeedInputs"))
+    InferenceSettings.struct_class = Types::InferenceSettings
+
     Input.add_member(:arn, Shapes::ShapeRef.new(shape: __string, location_name: "arn"))
     Input.add_member(:attached_channels, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "attachedChannels"))
     Input.add_member(:destinations, Shapes::ShapeRef.new(shape: __listOfInputDestination, location_name: "destinations"))
@@ -3271,6 +3538,9 @@ module Aws::MediaLive
     Input.add_member(:srt_settings, Shapes::ShapeRef.new(shape: SrtSettings, location_name: "srtSettings"))
     Input.add_member(:input_network_location, Shapes::ShapeRef.new(shape: InputNetworkLocation, location_name: "inputNetworkLocation"))
     Input.add_member(:multicast_settings, Shapes::ShapeRef.new(shape: MulticastSettings, location_name: "multicastSettings"))
+    Input.add_member(:smpte_2110_receiver_group_settings, Shapes::ShapeRef.new(shape: Smpte2110ReceiverGroupSettings, location_name: "smpte2110ReceiverGroupSettings"))
+    Input.add_member(:sdi_sources, Shapes::ShapeRef.new(shape: InputSdiSources, location_name: "sdiSources"))
+    Input.add_member(:router_settings, Shapes::ShapeRef.new(shape: RouterInputSettings, location_name: "routerSettings"))
     Input.struct_class = Types::Input
 
     InputAttachment.add_member(:automatic_input_failover_settings, Shapes::ShapeRef.new(shape: AutomaticInputFailoverSettings, location_name: "automaticInputFailoverSettings"))
@@ -3339,6 +3609,7 @@ module Aws::MediaLive
     InputDeviceConfigurableSettings.add_member(:codec, Shapes::ShapeRef.new(shape: InputDeviceCodec, location_name: "codec"))
     InputDeviceConfigurableSettings.add_member(:mediaconnect_settings, Shapes::ShapeRef.new(shape: InputDeviceMediaConnectConfigurableSettings, location_name: "mediaconnectSettings"))
     InputDeviceConfigurableSettings.add_member(:audio_channel_pairs, Shapes::ShapeRef.new(shape: __listOfInputDeviceConfigurableAudioChannelPairConfig, location_name: "audioChannelPairs"))
+    InputDeviceConfigurableSettings.add_member(:input_resolution, Shapes::ShapeRef.new(shape: __string, location_name: "inputResolution"))
     InputDeviceConfigurableSettings.struct_class = Types::InputDeviceConfigurableSettings
 
     InputDeviceConfigurationValidationError.add_member(:message, Shapes::ShapeRef.new(shape: __string, location_name: "message"))
@@ -3415,6 +3686,7 @@ module Aws::MediaLive
     InputDeviceUhdSettings.add_member(:codec, Shapes::ShapeRef.new(shape: InputDeviceCodec, location_name: "codec"))
     InputDeviceUhdSettings.add_member(:mediaconnect_settings, Shapes::ShapeRef.new(shape: InputDeviceMediaConnectSettings, location_name: "mediaconnectSettings"))
     InputDeviceUhdSettings.add_member(:audio_channel_pairs, Shapes::ShapeRef.new(shape: __listOfInputDeviceUhdAudioChannelPairConfig, location_name: "audioChannelPairs"))
+    InputDeviceUhdSettings.add_member(:input_resolution, Shapes::ShapeRef.new(shape: __string, location_name: "inputResolution"))
     InputDeviceUhdSettings.struct_class = Types::InputDeviceUhdSettings
 
     InputLocation.add_member(:password_param, Shapes::ShapeRef.new(shape: __string, location_name: "passwordParam"))
@@ -3441,12 +3713,19 @@ module Aws::MediaLive
     InputRequestDestinationRoute.add_member(:gateway, Shapes::ShapeRef.new(shape: __string, location_name: "gateway"))
     InputRequestDestinationRoute.struct_class = Types::InputRequestDestinationRoute
 
+    InputSdiSources.member = Shapes::ShapeRef.new(shape: __string)
+
+    InputSdpLocation.add_member(:media_index, Shapes::ShapeRef.new(shape: __integer, location_name: "mediaIndex"))
+    InputSdpLocation.add_member(:sdp_url, Shapes::ShapeRef.new(shape: __string, location_name: "sdpUrl"))
+    InputSdpLocation.struct_class = Types::InputSdpLocation
+
     InputSecurityGroup.add_member(:arn, Shapes::ShapeRef.new(shape: __string, location_name: "arn"))
     InputSecurityGroup.add_member(:id, Shapes::ShapeRef.new(shape: __string, location_name: "id"))
     InputSecurityGroup.add_member(:inputs, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "inputs"))
     InputSecurityGroup.add_member(:state, Shapes::ShapeRef.new(shape: InputSecurityGroupState, location_name: "state"))
     InputSecurityGroup.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
     InputSecurityGroup.add_member(:whitelist_rules, Shapes::ShapeRef.new(shape: __listOfInputWhitelistRule, location_name: "whitelistRules"))
+    InputSecurityGroup.add_member(:channels, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "channels"))
     InputSecurityGroup.struct_class = Types::InputSecurityGroup
 
     InputSecurityGroupWhitelistRequest.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
@@ -3535,6 +3814,24 @@ module Aws::MediaLive
     LimitExceeded.add_member(:message, Shapes::ShapeRef.new(shape: __string, location_name: "message"))
     LimitExceeded.struct_class = Types::LimitExceeded
 
+    LinkedChannelSettings.add_member(:follower_channel_settings, Shapes::ShapeRef.new(shape: FollowerChannelSettings, location_name: "followerChannelSettings"))
+    LinkedChannelSettings.add_member(:primary_channel_settings, Shapes::ShapeRef.new(shape: PrimaryChannelSettings, location_name: "primaryChannelSettings"))
+    LinkedChannelSettings.struct_class = Types::LinkedChannelSettings
+
+    ListAlertsRequest.add_member(:channel_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "channelId"))
+    ListAlertsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListAlertsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "nextToken"))
+    ListAlertsRequest.add_member(:state_filter, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "stateFilter"))
+    ListAlertsRequest.struct_class = Types::ListAlertsRequest
+
+    ListAlertsResponse.add_member(:alerts, Shapes::ShapeRef.new(shape: __listOfChannelAlert, location_name: "alerts"))
+    ListAlertsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location_name: "nextToken"))
+    ListAlertsResponse.struct_class = Types::ListAlertsResponse
+
+    ListAlertsResultModel.add_member(:alerts, Shapes::ShapeRef.new(shape: __listOfChannelAlert, location_name: "alerts"))
+    ListAlertsResultModel.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location_name: "nextToken"))
+    ListAlertsResultModel.struct_class = Types::ListAlertsResultModel
+
     ListChannelPlacementGroupsRequest.add_member(:cluster_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "clusterId"))
     ListChannelPlacementGroupsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
     ListChannelPlacementGroupsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "nextToken"))
@@ -3588,6 +3885,20 @@ module Aws::MediaLive
     ListCloudWatchAlarmTemplatesResponseContent.add_member(:cloud_watch_alarm_templates, Shapes::ShapeRef.new(shape: __listOfCloudWatchAlarmTemplateSummary, required: true, location_name: "cloudWatchAlarmTemplates"))
     ListCloudWatchAlarmTemplatesResponseContent.add_member(:next_token, Shapes::ShapeRef.new(shape: __stringMin1Max2048, location_name: "nextToken"))
     ListCloudWatchAlarmTemplatesResponseContent.struct_class = Types::ListCloudWatchAlarmTemplatesResponseContent
+
+    ListClusterAlertsRequest.add_member(:cluster_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "clusterId"))
+    ListClusterAlertsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListClusterAlertsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "nextToken"))
+    ListClusterAlertsRequest.add_member(:state_filter, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "stateFilter"))
+    ListClusterAlertsRequest.struct_class = Types::ListClusterAlertsRequest
+
+    ListClusterAlertsResponse.add_member(:alerts, Shapes::ShapeRef.new(shape: __listOfClusterAlert, location_name: "alerts"))
+    ListClusterAlertsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location_name: "nextToken"))
+    ListClusterAlertsResponse.struct_class = Types::ListClusterAlertsResponse
+
+    ListClusterAlertsResultModel.add_member(:alerts, Shapes::ShapeRef.new(shape: __listOfClusterAlert, location_name: "alerts"))
+    ListClusterAlertsResultModel.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location_name: "nextToken"))
+    ListClusterAlertsResultModel.struct_class = Types::ListClusterAlertsResultModel
 
     ListClustersRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
     ListClustersRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "nextToken"))
@@ -3676,6 +3987,20 @@ module Aws::MediaLive
     ListInputsResultModel.add_member(:inputs, Shapes::ShapeRef.new(shape: __listOfInput, location_name: "inputs"))
     ListInputsResultModel.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location_name: "nextToken"))
     ListInputsResultModel.struct_class = Types::ListInputsResultModel
+
+    ListMultiplexAlertsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListMultiplexAlertsRequest.add_member(:multiplex_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "multiplexId"))
+    ListMultiplexAlertsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "nextToken"))
+    ListMultiplexAlertsRequest.add_member(:state_filter, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "stateFilter"))
+    ListMultiplexAlertsRequest.struct_class = Types::ListMultiplexAlertsRequest
+
+    ListMultiplexAlertsResponse.add_member(:alerts, Shapes::ShapeRef.new(shape: __listOfMultiplexAlert, location_name: "alerts"))
+    ListMultiplexAlertsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location_name: "nextToken"))
+    ListMultiplexAlertsResponse.struct_class = Types::ListMultiplexAlertsResponse
+
+    ListMultiplexAlertsResultModel.add_member(:alerts, Shapes::ShapeRef.new(shape: __listOfMultiplexAlert, location_name: "alerts"))
+    ListMultiplexAlertsResultModel.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location_name: "nextToken"))
+    ListMultiplexAlertsResultModel.struct_class = Types::ListMultiplexAlertsResultModel
 
     ListMultiplexProgramsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
     ListMultiplexProgramsRequest.add_member(:multiplex_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "multiplexId"))
@@ -3768,6 +4093,14 @@ module Aws::MediaLive
     ListReservationsResultModel.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location_name: "nextToken"))
     ListReservationsResultModel.add_member(:reservations, Shapes::ShapeRef.new(shape: __listOfReservation, location_name: "reservations"))
     ListReservationsResultModel.struct_class = Types::ListReservationsResultModel
+
+    ListSdiSourcesRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListSdiSourcesRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "nextToken"))
+    ListSdiSourcesRequest.struct_class = Types::ListSdiSourcesRequest
+
+    ListSdiSourcesResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: __string, location_name: "nextToken"))
+    ListSdiSourcesResponse.add_member(:sdi_sources, Shapes::ShapeRef.new(shape: __listOfSdiSourceSummary, location_name: "sdiSources"))
+    ListSdiSourcesResponse.struct_class = Types::ListSdiSourcesResponse
 
     ListSignalMapsRequest.add_member(:cloud_watch_alarm_template_group_identifier, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "cloudWatchAlarmTemplateGroupIdentifier"))
     ListSignalMapsRequest.add_member(:event_bridge_rule_template_group_identifier, Shapes::ShapeRef.new(shape: __string, location: "querystring", location_name: "eventBridgeRuleTemplateGroupIdentifier"))
@@ -3886,15 +4219,66 @@ module Aws::MediaLive
     MediaConnectFlowRequest.add_member(:flow_arn, Shapes::ShapeRef.new(shape: __string, location_name: "flowArn"))
     MediaConnectFlowRequest.struct_class = Types::MediaConnectFlowRequest
 
+    MediaConnectRouterContainerSettings.add_member(:m2ts_settings, Shapes::ShapeRef.new(shape: M2tsSettings, location_name: "m2tsSettings"))
+    MediaConnectRouterContainerSettings.struct_class = Types::MediaConnectRouterContainerSettings
+
+    MediaConnectRouterGroupSettings.add_member(:availability_zones, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "availabilityZones"))
+    MediaConnectRouterGroupSettings.struct_class = Types::MediaConnectRouterGroupSettings
+
+    MediaConnectRouterOutputConnection.add_member(:router_input_arn, Shapes::ShapeRef.new(shape: __string, location_name: "routerInputArn"))
+    MediaConnectRouterOutputConnection.struct_class = Types::MediaConnectRouterOutputConnection
+
+    MediaConnectRouterOutputConnectionMap.add_member(:pipeline_0, Shapes::ShapeRef.new(shape: __string, location_name: "pipeline0"))
+    MediaConnectRouterOutputConnectionMap.add_member(:pipeline_1, Shapes::ShapeRef.new(shape: __string, location_name: "pipeline1"))
+    MediaConnectRouterOutputConnectionMap.struct_class = Types::MediaConnectRouterOutputConnectionMap
+
+    MediaConnectRouterOutputConnections.key = Shapes::ShapeRef.new(shape: __string)
+    MediaConnectRouterOutputConnections.value = Shapes::ShapeRef.new(shape: MediaConnectRouterOutputConnection)
+
+    MediaConnectRouterOutputDestinationSettings.add_member(:encryption_type, Shapes::ShapeRef.new(shape: MediaConnectRouterOutputEncryptionType, location_name: "encryptionType"))
+    MediaConnectRouterOutputDestinationSettings.add_member(:secret_arn, Shapes::ShapeRef.new(shape: __string, location_name: "secretArn"))
+    MediaConnectRouterOutputDestinationSettings.struct_class = Types::MediaConnectRouterOutputDestinationSettings
+
+    MediaConnectRouterOutputSettings.add_member(:connected_router_inputs, Shapes::ShapeRef.new(shape: MediaConnectRouterOutputConnectionMap, location_name: "connectedRouterInputs"))
+    MediaConnectRouterOutputSettings.add_member(:container_settings, Shapes::ShapeRef.new(shape: MediaConnectRouterContainerSettings, required: true, location_name: "containerSettings"))
+    MediaConnectRouterOutputSettings.add_member(:destination, Shapes::ShapeRef.new(shape: OutputLocationRef, required: true, location_name: "destination"))
+    MediaConnectRouterOutputSettings.struct_class = Types::MediaConnectRouterOutputSettings
+
+    MediaPackageAdditionalDestinations.add_member(:destination, Shapes::ShapeRef.new(shape: OutputLocationRef, required: true, location_name: "destination"))
+    MediaPackageAdditionalDestinations.struct_class = Types::MediaPackageAdditionalDestinations
+
     MediaPackageGroupSettings.add_member(:destination, Shapes::ShapeRef.new(shape: OutputLocationRef, required: true, location_name: "destination"))
+    MediaPackageGroupSettings.add_member(:mediapackage_v2_group_settings, Shapes::ShapeRef.new(shape: MediaPackageV2GroupSettings, location_name: "mediapackageV2GroupSettings"))
     MediaPackageGroupSettings.struct_class = Types::MediaPackageGroupSettings
 
     MediaPackageOutputDestinationSettings.add_member(:channel_id, Shapes::ShapeRef.new(shape: __stringMin1, location_name: "channelId"))
     MediaPackageOutputDestinationSettings.add_member(:channel_group, Shapes::ShapeRef.new(shape: __stringMin1, location_name: "channelGroup"))
     MediaPackageOutputDestinationSettings.add_member(:channel_name, Shapes::ShapeRef.new(shape: __stringMin1, location_name: "channelName"))
+    MediaPackageOutputDestinationSettings.add_member(:channel_endpoint_id, Shapes::ShapeRef.new(shape: __stringMin1, location_name: "channelEndpointId"))
+    MediaPackageOutputDestinationSettings.add_member(:media_package_region_name, Shapes::ShapeRef.new(shape: __stringMin1, location_name: "mediaPackageRegionName"))
     MediaPackageOutputDestinationSettings.struct_class = Types::MediaPackageOutputDestinationSettings
 
+    MediaPackageOutputSettings.add_member(:media_package_v2_destination_settings, Shapes::ShapeRef.new(shape: MediaPackageV2DestinationSettings, location_name: "mediaPackageV2DestinationSettings"))
     MediaPackageOutputSettings.struct_class = Types::MediaPackageOutputSettings
+
+    MediaPackageV2DestinationSettings.add_member(:audio_group_id, Shapes::ShapeRef.new(shape: __string, location_name: "audioGroupId"))
+    MediaPackageV2DestinationSettings.add_member(:audio_rendition_sets, Shapes::ShapeRef.new(shape: __string, location_name: "audioRenditionSets"))
+    MediaPackageV2DestinationSettings.add_member(:hls_auto_select, Shapes::ShapeRef.new(shape: HlsAutoSelect, location_name: "hlsAutoSelect"))
+    MediaPackageV2DestinationSettings.add_member(:hls_default, Shapes::ShapeRef.new(shape: HlsDefault, location_name: "hlsDefault"))
+    MediaPackageV2DestinationSettings.struct_class = Types::MediaPackageV2DestinationSettings
+
+    MediaPackageV2GroupSettings.add_member(:caption_language_mappings, Shapes::ShapeRef.new(shape: __listOfCaptionLanguageMapping, location_name: "captionLanguageMappings"))
+    MediaPackageV2GroupSettings.add_member(:id_3_behavior, Shapes::ShapeRef.new(shape: CmafId3Behavior, location_name: "id3Behavior"))
+    MediaPackageV2GroupSettings.add_member(:klv_behavior, Shapes::ShapeRef.new(shape: CmafKLVBehavior, location_name: "klvBehavior"))
+    MediaPackageV2GroupSettings.add_member(:nielsen_id_3_behavior, Shapes::ShapeRef.new(shape: CmafNielsenId3Behavior, location_name: "nielsenId3Behavior"))
+    MediaPackageV2GroupSettings.add_member(:scte_35_type, Shapes::ShapeRef.new(shape: Scte35Type, location_name: "scte35Type"))
+    MediaPackageV2GroupSettings.add_member(:segment_length, Shapes::ShapeRef.new(shape: __integerMin1, location_name: "segmentLength"))
+    MediaPackageV2GroupSettings.add_member(:segment_length_units, Shapes::ShapeRef.new(shape: CmafIngestSegmentLengthUnits, location_name: "segmentLengthUnits"))
+    MediaPackageV2GroupSettings.add_member(:timed_metadata_id_3_frame, Shapes::ShapeRef.new(shape: CmafTimedMetadataId3Frame, location_name: "timedMetadataId3Frame"))
+    MediaPackageV2GroupSettings.add_member(:timed_metadata_id_3_period, Shapes::ShapeRef.new(shape: __integerMin0Max10000, location_name: "timedMetadataId3Period"))
+    MediaPackageV2GroupSettings.add_member(:timed_metadata_passthrough, Shapes::ShapeRef.new(shape: CmafTimedMetadataPassthrough, location_name: "timedMetadataPassthrough"))
+    MediaPackageV2GroupSettings.add_member(:additional_destinations, Shapes::ShapeRef.new(shape: __listOfMediaPackageAdditionalDestinations, location_name: "additionalDestinations"))
+    MediaPackageV2GroupSettings.struct_class = Types::MediaPackageV2GroupSettings
 
     MediaResource.add_member(:destinations, Shapes::ShapeRef.new(shape: __listOfMediaResourceNeighbor, location_name: "destinations"))
     MediaResource.add_member(:name, Shapes::ShapeRef.new(shape: __stringMin1Max256, location_name: "name"))
@@ -4015,6 +4399,15 @@ module Aws::MediaLive
     Multiplex.add_member(:state, Shapes::ShapeRef.new(shape: MultiplexState, location_name: "state"))
     Multiplex.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
     Multiplex.struct_class = Types::Multiplex
+
+    MultiplexAlert.add_member(:alert_type, Shapes::ShapeRef.new(shape: __string, location_name: "alertType"))
+    MultiplexAlert.add_member(:cleared_timestamp, Shapes::ShapeRef.new(shape: __timestampIso8601, location_name: "clearedTimestamp"))
+    MultiplexAlert.add_member(:id, Shapes::ShapeRef.new(shape: __string, location_name: "id"))
+    MultiplexAlert.add_member(:message, Shapes::ShapeRef.new(shape: __string, location_name: "message"))
+    MultiplexAlert.add_member(:pipeline_id, Shapes::ShapeRef.new(shape: __string, location_name: "pipelineId"))
+    MultiplexAlert.add_member(:set_timestamp, Shapes::ShapeRef.new(shape: __timestampIso8601, location_name: "setTimestamp"))
+    MultiplexAlert.add_member(:state, Shapes::ShapeRef.new(shape: MultiplexAlertState, location_name: "state"))
+    MultiplexAlert.struct_class = Types::MultiplexAlert
 
     MultiplexConfigurationValidationError.add_member(:message, Shapes::ShapeRef.new(shape: __string, location_name: "message"))
     MultiplexConfigurationValidationError.add_member(:validation_errors, Shapes::ShapeRef.new(shape: __listOfValidationError, location_name: "validationErrors"))
@@ -4162,6 +4555,7 @@ module Aws::MediaLive
     NodeInterfaceMapping.add_member(:logical_interface_name, Shapes::ShapeRef.new(shape: __string, location_name: "logicalInterfaceName"))
     NodeInterfaceMapping.add_member(:network_interface_mode, Shapes::ShapeRef.new(shape: NetworkInterfaceMode, location_name: "networkInterfaceMode"))
     NodeInterfaceMapping.add_member(:physical_interface_name, Shapes::ShapeRef.new(shape: __string, location_name: "physicalInterfaceName"))
+    NodeInterfaceMapping.add_member(:physical_interface_ip_addresses, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "physicalInterfaceIpAddresses"))
     NodeInterfaceMapping.struct_class = Types::NodeInterfaceMapping
 
     NodeInterfaceMappingCreateRequest.add_member(:logical_interface_name, Shapes::ShapeRef.new(shape: __string, location_name: "logicalInterfaceName"))
@@ -4200,12 +4594,15 @@ module Aws::MediaLive
     OutputDestination.add_member(:multiplex_settings, Shapes::ShapeRef.new(shape: MultiplexProgramChannelDestinationSettings, location_name: "multiplexSettings"))
     OutputDestination.add_member(:settings, Shapes::ShapeRef.new(shape: __listOfOutputDestinationSettings, location_name: "settings"))
     OutputDestination.add_member(:srt_settings, Shapes::ShapeRef.new(shape: __listOfSrtOutputDestinationSettings, location_name: "srtSettings"))
+    OutputDestination.add_member(:logical_interface_names, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "logicalInterfaceNames"))
+    OutputDestination.add_member(:media_connect_router_settings, Shapes::ShapeRef.new(shape: __listOfMediaConnectRouterOutputDestinationSettings, location_name: "mediaConnectRouterSettings"))
     OutputDestination.struct_class = Types::OutputDestination
 
     OutputDestinationSettings.add_member(:password_param, Shapes::ShapeRef.new(shape: __string, location_name: "passwordParam"))
     OutputDestinationSettings.add_member(:stream_name, Shapes::ShapeRef.new(shape: __string, location_name: "streamName"))
     OutputDestinationSettings.add_member(:url, Shapes::ShapeRef.new(shape: __string, location_name: "url"))
     OutputDestinationSettings.add_member(:username, Shapes::ShapeRef.new(shape: __string, location_name: "username"))
+    OutputDestinationSettings.add_member(:virtual_source_address, Shapes::ShapeRef.new(shape: __string, location_name: "virtualSourceAddress"))
     OutputDestinationSettings.struct_class = Types::OutputDestinationSettings
 
     OutputGroup.add_member(:name, Shapes::ShapeRef.new(shape: __stringMax32, location_name: "name"))
@@ -4223,6 +4620,7 @@ module Aws::MediaLive
     OutputGroupSettings.add_member(:udp_group_settings, Shapes::ShapeRef.new(shape: UdpGroupSettings, location_name: "udpGroupSettings"))
     OutputGroupSettings.add_member(:cmaf_ingest_group_settings, Shapes::ShapeRef.new(shape: CmafIngestGroupSettings, location_name: "cmafIngestGroupSettings"))
     OutputGroupSettings.add_member(:srt_group_settings, Shapes::ShapeRef.new(shape: SrtGroupSettings, location_name: "srtGroupSettings"))
+    OutputGroupSettings.add_member(:media_connect_router_group_settings, Shapes::ShapeRef.new(shape: MediaConnectRouterGroupSettings, location_name: "mediaConnectRouterGroupSettings"))
     OutputGroupSettings.struct_class = Types::OutputGroupSettings
 
     OutputLocationRef.add_member(:destination_ref_id, Shapes::ShapeRef.new(shape: __string, location_name: "destinationRefId"))
@@ -4230,6 +4628,7 @@ module Aws::MediaLive
 
     OutputLockingSettings.add_member(:epoch_locking_settings, Shapes::ShapeRef.new(shape: EpochLockingSettings, location_name: "epochLockingSettings"))
     OutputLockingSettings.add_member(:pipeline_locking_settings, Shapes::ShapeRef.new(shape: PipelineLockingSettings, location_name: "pipelineLockingSettings"))
+    OutputLockingSettings.add_member(:disabled_locking_settings, Shapes::ShapeRef.new(shape: DisabledLockingSettings, location_name: "disabledLockingSettings"))
     OutputLockingSettings.struct_class = Types::OutputLockingSettings
 
     OutputSettings.add_member(:archive_output_settings, Shapes::ShapeRef.new(shape: ArchiveOutputSettings, location_name: "archiveOutputSettings"))
@@ -4242,6 +4641,7 @@ module Aws::MediaLive
     OutputSettings.add_member(:udp_output_settings, Shapes::ShapeRef.new(shape: UdpOutputSettings, location_name: "udpOutputSettings"))
     OutputSettings.add_member(:cmaf_ingest_output_settings, Shapes::ShapeRef.new(shape: CmafIngestOutputSettings, location_name: "cmafIngestOutputSettings"))
     OutputSettings.add_member(:srt_output_settings, Shapes::ShapeRef.new(shape: SrtOutputSettings, location_name: "srtOutputSettings"))
+    OutputSettings.add_member(:media_connect_router_output_settings, Shapes::ShapeRef.new(shape: MediaConnectRouterOutputSettings, location_name: "mediaConnectRouterOutputSettings"))
     OutputSettings.struct_class = Types::OutputSettings
 
     PassThroughSettings.struct_class = Types::PassThroughSettings
@@ -4255,17 +4655,23 @@ module Aws::MediaLive
     PipelineDetail.add_member(:active_motion_graphics_uri, Shapes::ShapeRef.new(shape: __string, location_name: "activeMotionGraphicsUri"))
     PipelineDetail.add_member(:pipeline_id, Shapes::ShapeRef.new(shape: __string, location_name: "pipelineId"))
     PipelineDetail.add_member(:channel_engine_version, Shapes::ShapeRef.new(shape: ChannelEngineVersionResponse, location_name: "channelEngineVersion"))
+    PipelineDetail.add_member(:media_connect_router_output_connection_map, Shapes::ShapeRef.new(shape: MediaConnectRouterOutputConnections, location_name: "mediaConnectRouterOutputConnectionMap"))
     PipelineDetail.struct_class = Types::PipelineDetail
 
+    PipelineLockingSettings.add_member(:pipeline_locking_method, Shapes::ShapeRef.new(shape: PipelineLockingMethod, location_name: "pipelineLockingMethod"))
+    PipelineLockingSettings.add_member(:custom_epoch, Shapes::ShapeRef.new(shape: __string, location_name: "customEpoch"))
     PipelineLockingSettings.struct_class = Types::PipelineLockingSettings
 
     PipelinePauseStateSettings.add_member(:pipeline_id, Shapes::ShapeRef.new(shape: PipelineId, required: true, location_name: "pipelineId"))
     PipelinePauseStateSettings.struct_class = Types::PipelinePauseStateSettings
 
+    PrimaryChannelSettings.add_member(:linked_channel_type, Shapes::ShapeRef.new(shape: LinkedChannelType, location_name: "linkedChannelType"))
+    PrimaryChannelSettings.struct_class = Types::PrimaryChannelSettings
+
     PurchaseOffering.add_member(:count, Shapes::ShapeRef.new(shape: __integerMin1, required: true, location_name: "count"))
     PurchaseOffering.add_member(:name, Shapes::ShapeRef.new(shape: __string, location_name: "name"))
     PurchaseOffering.add_member(:renewal_settings, Shapes::ShapeRef.new(shape: RenewalSettings, location_name: "renewalSettings"))
-    PurchaseOffering.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, location_name: "requestId", metadata: {"idempotencyToken"=>true}))
+    PurchaseOffering.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, location_name: "requestId", metadata: {"idempotencyToken" => true}))
     PurchaseOffering.add_member(:start, Shapes::ShapeRef.new(shape: __string, location_name: "start"))
     PurchaseOffering.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
     PurchaseOffering.struct_class = Types::PurchaseOffering
@@ -4274,7 +4680,7 @@ module Aws::MediaLive
     PurchaseOfferingRequest.add_member(:name, Shapes::ShapeRef.new(shape: __string, location_name: "name"))
     PurchaseOfferingRequest.add_member(:offering_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "offeringId"))
     PurchaseOfferingRequest.add_member(:renewal_settings, Shapes::ShapeRef.new(shape: RenewalSettings, location_name: "renewalSettings"))
-    PurchaseOfferingRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, location_name: "requestId", metadata: {"idempotencyToken"=>true}))
+    PurchaseOfferingRequest.add_member(:request_id, Shapes::ShapeRef.new(shape: __string, location_name: "requestId", metadata: {"idempotencyToken" => true}))
     PurchaseOfferingRequest.add_member(:start, Shapes::ShapeRef.new(shape: __string, location_name: "start"))
     PurchaseOfferingRequest.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
     PurchaseOfferingRequest.struct_class = Types::PurchaseOfferingRequest
@@ -4376,6 +4782,9 @@ module Aws::MediaLive
     RestartChannelPipelinesResponse.add_member(:vpc, Shapes::ShapeRef.new(shape: VpcOutputSettingsDescription, location_name: "vpc"))
     RestartChannelPipelinesResponse.add_member(:anywhere_settings, Shapes::ShapeRef.new(shape: DescribeAnywhereSettings, location_name: "anywhereSettings"))
     RestartChannelPipelinesResponse.add_member(:channel_engine_version, Shapes::ShapeRef.new(shape: ChannelEngineVersionResponse, location_name: "channelEngineVersion"))
+    RestartChannelPipelinesResponse.add_member(:linked_channel_settings, Shapes::ShapeRef.new(shape: DescribeLinkedChannelSettings, location_name: "linkedChannelSettings"))
+    RestartChannelPipelinesResponse.add_member(:channel_security_groups, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "channelSecurityGroups"))
+    RestartChannelPipelinesResponse.add_member(:inference_settings, Shapes::ShapeRef.new(shape: DescribeInferenceSettings, location_name: "inferenceSettings"))
     RestartChannelPipelinesResponse.struct_class = Types::RestartChannelPipelinesResponse
 
     Route.add_member(:cidr, Shapes::ShapeRef.new(shape: __string, location_name: "cidr"))
@@ -4389,6 +4798,23 @@ module Aws::MediaLive
     RouteUpdateRequest.add_member(:cidr, Shapes::ShapeRef.new(shape: __string, location_name: "cidr"))
     RouteUpdateRequest.add_member(:gateway, Shapes::ShapeRef.new(shape: __string, location_name: "gateway"))
     RouteUpdateRequest.struct_class = Types::RouteUpdateRequest
+
+    RouterDestination.add_member(:availability_zone_name, Shapes::ShapeRef.new(shape: __string, location_name: "availabilityZoneName"))
+    RouterDestination.add_member(:router_output_arn, Shapes::ShapeRef.new(shape: __string, location_name: "routerOutputArn"))
+    RouterDestination.struct_class = Types::RouterDestination
+
+    RouterDestinationSettings.add_member(:availability_zone_name, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "availabilityZoneName"))
+    RouterDestinationSettings.struct_class = Types::RouterDestinationSettings
+
+    RouterInputSettings.add_member(:destinations, Shapes::ShapeRef.new(shape: __listOfRouterDestination, location_name: "destinations"))
+    RouterInputSettings.add_member(:encryption_type, Shapes::ShapeRef.new(shape: RouterEncryptionType, location_name: "encryptionType"))
+    RouterInputSettings.add_member(:secret_arn, Shapes::ShapeRef.new(shape: __string, location_name: "secretArn"))
+    RouterInputSettings.struct_class = Types::RouterInputSettings
+
+    RouterSettings.add_member(:destinations, Shapes::ShapeRef.new(shape: __listOfRouterDestinationSettings, location_name: "destinations"))
+    RouterSettings.add_member(:encryption_type, Shapes::ShapeRef.new(shape: RouterEncryptionType, location_name: "encryptionType"))
+    RouterSettings.add_member(:secret_arn, Shapes::ShapeRef.new(shape: __string, location_name: "secretArn"))
+    RouterSettings.struct_class = Types::RouterSettings
 
     RtmpCaptionInfoDestinationSettings.struct_class = Types::RtmpCaptionInfoDestinationSettings
 
@@ -4504,6 +4930,38 @@ module Aws::MediaLive
     Scte35TimeSignalScheduleActionSettings.add_member(:scte_35_descriptors, Shapes::ShapeRef.new(shape: __listOfScte35Descriptor, required: true, location_name: "scte35Descriptors"))
     Scte35TimeSignalScheduleActionSettings.struct_class = Types::Scte35TimeSignalScheduleActionSettings
 
+    SdiSource.add_member(:arn, Shapes::ShapeRef.new(shape: __string, location_name: "arn"))
+    SdiSource.add_member(:id, Shapes::ShapeRef.new(shape: __string, location_name: "id"))
+    SdiSource.add_member(:inputs, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "inputs"))
+    SdiSource.add_member(:mode, Shapes::ShapeRef.new(shape: SdiSourceMode, location_name: "mode"))
+    SdiSource.add_member(:name, Shapes::ShapeRef.new(shape: __string, location_name: "name"))
+    SdiSource.add_member(:state, Shapes::ShapeRef.new(shape: SdiSourceState, location_name: "state"))
+    SdiSource.add_member(:type, Shapes::ShapeRef.new(shape: SdiSourceType, location_name: "type"))
+    SdiSource.struct_class = Types::SdiSource
+
+    SdiSourceMapping.add_member(:card_number, Shapes::ShapeRef.new(shape: __integer, location_name: "cardNumber"))
+    SdiSourceMapping.add_member(:channel_number, Shapes::ShapeRef.new(shape: __integer, location_name: "channelNumber"))
+    SdiSourceMapping.add_member(:sdi_source, Shapes::ShapeRef.new(shape: __string, location_name: "sdiSource"))
+    SdiSourceMapping.struct_class = Types::SdiSourceMapping
+
+    SdiSourceMappingUpdateRequest.add_member(:card_number, Shapes::ShapeRef.new(shape: __integer, location_name: "cardNumber"))
+    SdiSourceMappingUpdateRequest.add_member(:channel_number, Shapes::ShapeRef.new(shape: __integer, location_name: "channelNumber"))
+    SdiSourceMappingUpdateRequest.add_member(:sdi_source, Shapes::ShapeRef.new(shape: __string, location_name: "sdiSource"))
+    SdiSourceMappingUpdateRequest.struct_class = Types::SdiSourceMappingUpdateRequest
+
+    SdiSourceMappings.member = Shapes::ShapeRef.new(shape: SdiSourceMapping)
+
+    SdiSourceMappingsUpdateRequest.member = Shapes::ShapeRef.new(shape: SdiSourceMappingUpdateRequest)
+
+    SdiSourceSummary.add_member(:arn, Shapes::ShapeRef.new(shape: __string, location_name: "arn"))
+    SdiSourceSummary.add_member(:id, Shapes::ShapeRef.new(shape: __string, location_name: "id"))
+    SdiSourceSummary.add_member(:inputs, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "inputs"))
+    SdiSourceSummary.add_member(:mode, Shapes::ShapeRef.new(shape: SdiSourceMode, location_name: "mode"))
+    SdiSourceSummary.add_member(:name, Shapes::ShapeRef.new(shape: __string, location_name: "name"))
+    SdiSourceSummary.add_member(:state, Shapes::ShapeRef.new(shape: SdiSourceState, location_name: "state"))
+    SdiSourceSummary.add_member(:type, Shapes::ShapeRef.new(shape: SdiSourceType, location_name: "type"))
+    SdiSourceSummary.struct_class = Types::SdiSourceSummary
+
     SignalMapSummary.add_member(:arn, Shapes::ShapeRef.new(shape: __stringPatternArnMedialiveSignalMap, required: true, location_name: "arn"))
     SignalMapSummary.add_member(:created_at, Shapes::ShapeRef.new(shape: __timestampIso8601, required: true, location_name: "createdAt"))
     SignalMapSummary.add_member(:description, Shapes::ShapeRef.new(shape: __stringMin0Max1024, location_name: "description"))
@@ -4515,7 +4973,25 @@ module Aws::MediaLive
     SignalMapSummary.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
     SignalMapSummary.struct_class = Types::SignalMapSummary
 
+    SmartSubtitleSourceSettings.add_member(:caption_synchronization_mode, Shapes::ShapeRef.new(shape: CaptionSynchronizationMode, location_name: "captionSynchronizationMode"))
+    SmartSubtitleSourceSettings.add_member(:inference_feed_output, Shapes::ShapeRef.new(shape: __string, location_name: "inferenceFeedOutput"))
+    SmartSubtitleSourceSettings.struct_class = Types::SmartSubtitleSourceSettings
+
+    Smpte2110ReceiverGroup.add_member(:sdp_settings, Shapes::ShapeRef.new(shape: Smpte2110ReceiverGroupSdpSettings, location_name: "sdpSettings"))
+    Smpte2110ReceiverGroup.struct_class = Types::Smpte2110ReceiverGroup
+
+    Smpte2110ReceiverGroupSdpSettings.add_member(:ancillary_sdps, Shapes::ShapeRef.new(shape: __listOfInputSdpLocation, location_name: "ancillarySdps"))
+    Smpte2110ReceiverGroupSdpSettings.add_member(:audio_sdps, Shapes::ShapeRef.new(shape: __listOfInputSdpLocation, location_name: "audioSdps"))
+    Smpte2110ReceiverGroupSdpSettings.add_member(:video_sdp, Shapes::ShapeRef.new(shape: InputSdpLocation, location_name: "videoSdp"))
+    Smpte2110ReceiverGroupSdpSettings.struct_class = Types::Smpte2110ReceiverGroupSdpSettings
+
+    Smpte2110ReceiverGroupSettings.add_member(:smpte_2110_receiver_groups, Shapes::ShapeRef.new(shape: __listOfSmpte2110ReceiverGroup, location_name: "smpte2110ReceiverGroups"))
+    Smpte2110ReceiverGroupSettings.struct_class = Types::Smpte2110ReceiverGroupSettings
+
     SmpteTtDestinationSettings.struct_class = Types::SmpteTtDestinationSettings
+
+    SpecialRouterSettings.add_member(:router_arn, Shapes::ShapeRef.new(shape: __string, location_name: "routerArn"))
+    SpecialRouterSettings.struct_class = Types::SpecialRouterSettings
 
     SrtCallerDecryption.add_member(:algorithm, Shapes::ShapeRef.new(shape: Algorithm, location_name: "algorithm"))
     SrtCallerDecryption.add_member(:passphrase_secret_arn, Shapes::ShapeRef.new(shape: __string, location_name: "passphraseSecretArn"))
@@ -4542,9 +5018,29 @@ module Aws::MediaLive
     SrtGroupSettings.add_member(:input_loss_action, Shapes::ShapeRef.new(shape: InputLossActionForUdpOut, location_name: "inputLossAction"))
     SrtGroupSettings.struct_class = Types::SrtGroupSettings
 
+    SrtListenerDecryption.add_member(:algorithm, Shapes::ShapeRef.new(shape: Algorithm, required: true, location_name: "algorithm"))
+    SrtListenerDecryption.add_member(:passphrase_secret_arn, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "passphraseSecretArn"))
+    SrtListenerDecryption.struct_class = Types::SrtListenerDecryption
+
+    SrtListenerDecryptionRequest.add_member(:algorithm, Shapes::ShapeRef.new(shape: Algorithm, required: true, location_name: "algorithm"))
+    SrtListenerDecryptionRequest.add_member(:passphrase_secret_arn, Shapes::ShapeRef.new(shape: __string, required: true, location_name: "passphraseSecretArn"))
+    SrtListenerDecryptionRequest.struct_class = Types::SrtListenerDecryptionRequest
+
+    SrtListenerSettings.add_member(:decryption, Shapes::ShapeRef.new(shape: SrtListenerDecryption, location_name: "decryption"))
+    SrtListenerSettings.add_member(:minimum_latency, Shapes::ShapeRef.new(shape: __integer, location_name: "minimumLatency"))
+    SrtListenerSettings.add_member(:stream_id, Shapes::ShapeRef.new(shape: __string, location_name: "streamId"))
+    SrtListenerSettings.struct_class = Types::SrtListenerSettings
+
+    SrtListenerSettingsRequest.add_member(:decryption, Shapes::ShapeRef.new(shape: SrtListenerDecryptionRequest, required: true, location_name: "decryption"))
+    SrtListenerSettingsRequest.add_member(:minimum_latency, Shapes::ShapeRef.new(shape: __integer, required: true, location_name: "minimumLatency"))
+    SrtListenerSettingsRequest.add_member(:stream_id, Shapes::ShapeRef.new(shape: __string, location_name: "streamId"))
+    SrtListenerSettingsRequest.struct_class = Types::SrtListenerSettingsRequest
+
     SrtOutputDestinationSettings.add_member(:encryption_passphrase_secret_arn, Shapes::ShapeRef.new(shape: __string, location_name: "encryptionPassphraseSecretArn"))
     SrtOutputDestinationSettings.add_member(:stream_id, Shapes::ShapeRef.new(shape: __string, location_name: "streamId"))
     SrtOutputDestinationSettings.add_member(:url, Shapes::ShapeRef.new(shape: __string, location_name: "url"))
+    SrtOutputDestinationSettings.add_member(:connection_mode, Shapes::ShapeRef.new(shape: ConnectionMode, location_name: "connectionMode"))
+    SrtOutputDestinationSettings.add_member(:listener_port, Shapes::ShapeRef.new(shape: __integerMin1Max65535, location_name: "listenerPort"))
     SrtOutputDestinationSettings.struct_class = Types::SrtOutputDestinationSettings
 
     SrtOutputSettings.add_member(:buffer_msec, Shapes::ShapeRef.new(shape: __integerMin0Max10000, location_name: "bufferMsec"))
@@ -4555,9 +5051,11 @@ module Aws::MediaLive
     SrtOutputSettings.struct_class = Types::SrtOutputSettings
 
     SrtSettings.add_member(:srt_caller_sources, Shapes::ShapeRef.new(shape: __listOfSrtCallerSource, location_name: "srtCallerSources"))
+    SrtSettings.add_member(:srt_listener_settings, Shapes::ShapeRef.new(shape: SrtListenerSettings, location_name: "srtListenerSettings"))
     SrtSettings.struct_class = Types::SrtSettings
 
     SrtSettingsRequest.add_member(:srt_caller_sources, Shapes::ShapeRef.new(shape: __listOfSrtCallerSourceRequest, location_name: "srtCallerSources"))
+    SrtSettingsRequest.add_member(:srt_listener_settings, Shapes::ShapeRef.new(shape: SrtListenerSettingsRequest, location_name: "srtListenerSettings"))
     SrtSettingsRequest.struct_class = Types::SrtSettingsRequest
 
     StandardHlsSettings.add_member(:audio_rendition_sets, Shapes::ShapeRef.new(shape: __string, location_name: "audioRenditionSets"))
@@ -4587,6 +5085,9 @@ module Aws::MediaLive
     StartChannelResponse.add_member(:vpc, Shapes::ShapeRef.new(shape: VpcOutputSettingsDescription, location_name: "vpc"))
     StartChannelResponse.add_member(:anywhere_settings, Shapes::ShapeRef.new(shape: DescribeAnywhereSettings, location_name: "anywhereSettings"))
     StartChannelResponse.add_member(:channel_engine_version, Shapes::ShapeRef.new(shape: ChannelEngineVersionResponse, location_name: "channelEngineVersion"))
+    StartChannelResponse.add_member(:linked_channel_settings, Shapes::ShapeRef.new(shape: DescribeLinkedChannelSettings, location_name: "linkedChannelSettings"))
+    StartChannelResponse.add_member(:channel_security_groups, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "channelSecurityGroups"))
+    StartChannelResponse.add_member(:inference_settings, Shapes::ShapeRef.new(shape: DescribeInferenceSettings, location_name: "inferenceSettings"))
     StartChannelResponse.struct_class = Types::StartChannelResponse
 
     StartDeleteMonitorDeploymentRequest.add_member(:identifier, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "identifier"))
@@ -4825,6 +5326,9 @@ module Aws::MediaLive
     StopChannelResponse.add_member(:vpc, Shapes::ShapeRef.new(shape: VpcOutputSettingsDescription, location_name: "vpc"))
     StopChannelResponse.add_member(:anywhere_settings, Shapes::ShapeRef.new(shape: DescribeAnywhereSettings, location_name: "anywhereSettings"))
     StopChannelResponse.add_member(:channel_engine_version, Shapes::ShapeRef.new(shape: ChannelEngineVersionResponse, location_name: "channelEngineVersion"))
+    StopChannelResponse.add_member(:linked_channel_settings, Shapes::ShapeRef.new(shape: DescribeLinkedChannelSettings, location_name: "linkedChannelSettings"))
+    StopChannelResponse.add_member(:channel_security_groups, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "channelSecurityGroups"))
+    StopChannelResponse.add_member(:inference_settings, Shapes::ShapeRef.new(shape: DescribeInferenceSettings, location_name: "inferenceSettings"))
     StopChannelResponse.struct_class = Types::StopChannelResponse
 
     StopInputDeviceRequest.add_member(:input_device_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "inputDeviceId"))
@@ -4973,6 +5477,11 @@ module Aws::MediaLive
     UpdateChannel.add_member(:role_arn, Shapes::ShapeRef.new(shape: __string, location_name: "roleArn"))
     UpdateChannel.add_member(:channel_engine_version, Shapes::ShapeRef.new(shape: ChannelEngineVersionRequest, location_name: "channelEngineVersion"))
     UpdateChannel.add_member(:dry_run, Shapes::ShapeRef.new(shape: __boolean, location_name: "dryRun"))
+    UpdateChannel.add_member(:anywhere_settings, Shapes::ShapeRef.new(shape: AnywhereSettings, location_name: "anywhereSettings"))
+    UpdateChannel.add_member(:linked_channel_settings, Shapes::ShapeRef.new(shape: LinkedChannelSettings, location_name: "linkedChannelSettings"))
+    UpdateChannel.add_member(:channel_security_groups, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "channelSecurityGroups"))
+    UpdateChannel.add_member(:inference_settings, Shapes::ShapeRef.new(shape: InferenceSettings, location_name: "inferenceSettings"))
+    UpdateChannel.add_member(:special_router_settings, Shapes::ShapeRef.new(shape: SpecialRouterSettings, location_name: "specialRouterSettings"))
     UpdateChannel.struct_class = Types::UpdateChannel
 
     UpdateChannelClass.add_member(:channel_class, Shapes::ShapeRef.new(shape: ChannelClass, required: true, location_name: "channelClass"))
@@ -5014,6 +5523,11 @@ module Aws::MediaLive
     UpdateChannelRequest.add_member(:role_arn, Shapes::ShapeRef.new(shape: __string, location_name: "roleArn"))
     UpdateChannelRequest.add_member(:channel_engine_version, Shapes::ShapeRef.new(shape: ChannelEngineVersionRequest, location_name: "channelEngineVersion"))
     UpdateChannelRequest.add_member(:dry_run, Shapes::ShapeRef.new(shape: __boolean, location_name: "dryRun"))
+    UpdateChannelRequest.add_member(:anywhere_settings, Shapes::ShapeRef.new(shape: AnywhereSettings, location_name: "anywhereSettings"))
+    UpdateChannelRequest.add_member(:linked_channel_settings, Shapes::ShapeRef.new(shape: LinkedChannelSettings, location_name: "linkedChannelSettings"))
+    UpdateChannelRequest.add_member(:channel_security_groups, Shapes::ShapeRef.new(shape: __listOf__string, location_name: "channelSecurityGroups"))
+    UpdateChannelRequest.add_member(:inference_settings, Shapes::ShapeRef.new(shape: InferenceSettings, location_name: "inferenceSettings"))
+    UpdateChannelRequest.add_member(:special_router_settings, Shapes::ShapeRef.new(shape: SpecialRouterSettings, location_name: "specialRouterSettings"))
     UpdateChannelRequest.struct_class = Types::UpdateChannelRequest
 
     UpdateChannelResponse.add_member(:channel, Shapes::ShapeRef.new(shape: Channel, location_name: "channel"))
@@ -5210,6 +5724,9 @@ module Aws::MediaLive
     UpdateInput.add_member(:sources, Shapes::ShapeRef.new(shape: __listOfInputSourceRequest, location_name: "sources"))
     UpdateInput.add_member(:srt_settings, Shapes::ShapeRef.new(shape: SrtSettingsRequest, location_name: "srtSettings"))
     UpdateInput.add_member(:multicast_settings, Shapes::ShapeRef.new(shape: MulticastSettingsUpdateRequest, location_name: "multicastSettings"))
+    UpdateInput.add_member(:smpte_2110_receiver_group_settings, Shapes::ShapeRef.new(shape: Smpte2110ReceiverGroupSettings, location_name: "smpte2110ReceiverGroupSettings"))
+    UpdateInput.add_member(:sdi_sources, Shapes::ShapeRef.new(shape: InputSdiSources, location_name: "sdiSources"))
+    UpdateInput.add_member(:special_router_settings, Shapes::ShapeRef.new(shape: SpecialRouterSettings, location_name: "specialRouterSettings"))
     UpdateInput.struct_class = Types::UpdateInput
 
     UpdateInputDevice.add_member(:hd_device_settings, Shapes::ShapeRef.new(shape: InputDeviceConfigurableSettings, location_name: "hdDeviceSettings"))
@@ -5253,6 +5770,9 @@ module Aws::MediaLive
     UpdateInputRequest.add_member(:sources, Shapes::ShapeRef.new(shape: __listOfInputSourceRequest, location_name: "sources"))
     UpdateInputRequest.add_member(:srt_settings, Shapes::ShapeRef.new(shape: SrtSettingsRequest, location_name: "srtSettings"))
     UpdateInputRequest.add_member(:multicast_settings, Shapes::ShapeRef.new(shape: MulticastSettingsUpdateRequest, location_name: "multicastSettings"))
+    UpdateInputRequest.add_member(:smpte_2110_receiver_group_settings, Shapes::ShapeRef.new(shape: Smpte2110ReceiverGroupSettings, location_name: "smpte2110ReceiverGroupSettings"))
+    UpdateInputRequest.add_member(:sdi_sources, Shapes::ShapeRef.new(shape: InputSdiSources, location_name: "sdiSources"))
+    UpdateInputRequest.add_member(:special_router_settings, Shapes::ShapeRef.new(shape: SpecialRouterSettings, location_name: "specialRouterSettings"))
     UpdateInputRequest.struct_class = Types::UpdateInputRequest
 
     UpdateInputResponse.add_member(:input, Shapes::ShapeRef.new(shape: Input, location_name: "input"))
@@ -5262,7 +5782,7 @@ module Aws::MediaLive
     UpdateInputResultModel.struct_class = Types::UpdateInputResultModel
 
     UpdateInputSecurityGroupRequest.add_member(:input_security_group_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "inputSecurityGroupId"))
-    UpdateInputSecurityGroupRequest.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, deprecated: true, location_name: "tags", metadata: {"deprecatedMessage"=>"This API is deprecated. You must use UpdateTagsForResource instead.", "deprecatedSince"=>"2024-11-20"}))
+    UpdateInputSecurityGroupRequest.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, deprecated: true, location_name: "tags", metadata: {"deprecatedMessage" => "This API is deprecated. You must use UpdateTagsForResource instead.", "deprecatedSince" => "2024-11-20"}))
     UpdateInputSecurityGroupRequest.add_member(:whitelist_rules, Shapes::ShapeRef.new(shape: __listOfInputWhitelistRuleCidr, location_name: "whitelistRules"))
     UpdateInputSecurityGroupRequest.struct_class = Types::UpdateInputSecurityGroupRequest
 
@@ -5331,6 +5851,7 @@ module Aws::MediaLive
     UpdateNodeRequest.add_member(:name, Shapes::ShapeRef.new(shape: __string, location_name: "name"))
     UpdateNodeRequest.add_member(:node_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "nodeId"))
     UpdateNodeRequest.add_member(:role, Shapes::ShapeRef.new(shape: NodeRole, location_name: "role"))
+    UpdateNodeRequest.add_member(:sdi_source_mappings, Shapes::ShapeRef.new(shape: SdiSourceMappingsUpdateRequest, location_name: "sdiSourceMappings"))
     UpdateNodeRequest.struct_class = Types::UpdateNodeRequest
 
     UpdateNodeResponse.add_member(:arn, Shapes::ShapeRef.new(shape: __string, location_name: "arn"))
@@ -5343,6 +5864,7 @@ module Aws::MediaLive
     UpdateNodeResponse.add_member(:node_interface_mappings, Shapes::ShapeRef.new(shape: __listOfNodeInterfaceMapping, location_name: "nodeInterfaceMappings"))
     UpdateNodeResponse.add_member(:role, Shapes::ShapeRef.new(shape: NodeRole, location_name: "role"))
     UpdateNodeResponse.add_member(:state, Shapes::ShapeRef.new(shape: NodeState, location_name: "state"))
+    UpdateNodeResponse.add_member(:sdi_source_mappings, Shapes::ShapeRef.new(shape: SdiSourceMappings, location_name: "sdiSourceMappings"))
     UpdateNodeResponse.struct_class = Types::UpdateNodeResponse
 
     UpdateNodeStateRequest.add_member(:cluster_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "clusterId"))
@@ -5360,6 +5882,7 @@ module Aws::MediaLive
     UpdateNodeStateResponse.add_member(:node_interface_mappings, Shapes::ShapeRef.new(shape: __listOfNodeInterfaceMapping, location_name: "nodeInterfaceMappings"))
     UpdateNodeStateResponse.add_member(:role, Shapes::ShapeRef.new(shape: NodeRole, location_name: "role"))
     UpdateNodeStateResponse.add_member(:state, Shapes::ShapeRef.new(shape: NodeState, location_name: "state"))
+    UpdateNodeStateResponse.add_member(:sdi_source_mappings, Shapes::ShapeRef.new(shape: SdiSourceMappings, location_name: "sdiSourceMappings"))
     UpdateNodeStateResponse.struct_class = Types::UpdateNodeStateResponse
 
     UpdateReservation.add_member(:name, Shapes::ShapeRef.new(shape: __string, location_name: "name"))
@@ -5376,6 +5899,15 @@ module Aws::MediaLive
 
     UpdateReservationResultModel.add_member(:reservation, Shapes::ShapeRef.new(shape: Reservation, location_name: "reservation"))
     UpdateReservationResultModel.struct_class = Types::UpdateReservationResultModel
+
+    UpdateSdiSourceRequest.add_member(:mode, Shapes::ShapeRef.new(shape: SdiSourceMode, location_name: "mode"))
+    UpdateSdiSourceRequest.add_member(:name, Shapes::ShapeRef.new(shape: __string, location_name: "name"))
+    UpdateSdiSourceRequest.add_member(:sdi_source_id, Shapes::ShapeRef.new(shape: __string, required: true, location: "uri", location_name: "sdiSourceId"))
+    UpdateSdiSourceRequest.add_member(:type, Shapes::ShapeRef.new(shape: SdiSourceType, location_name: "type"))
+    UpdateSdiSourceRequest.struct_class = Types::UpdateSdiSourceRequest
+
+    UpdateSdiSourceResponse.add_member(:sdi_source, Shapes::ShapeRef.new(shape: SdiSource, location_name: "sdiSource"))
+    UpdateSdiSourceResponse.struct_class = Types::UpdateSdiSourceResponse
 
     ValidationError.add_member(:element_path, Shapes::ShapeRef.new(shape: __string, location_name: "elementPath"))
     ValidationError.add_member(:error_message, Shapes::ShapeRef.new(shape: __string, location_name: "errorMessage"))
@@ -5439,9 +5971,15 @@ module Aws::MediaLive
     WebvttDestinationSettings.add_member(:style_control, Shapes::ShapeRef.new(shape: WebvttDestinationStyleControl, location_name: "styleControl"))
     WebvttDestinationSettings.struct_class = Types::WebvttDestinationSettings
 
+    __listOfAdditionalDestinations.member = Shapes::ShapeRef.new(shape: AdditionalDestinations)
+
     __listOfAudioChannelMapping.member = Shapes::ShapeRef.new(shape: AudioChannelMapping)
 
     __listOfAudioDescription.member = Shapes::ShapeRef.new(shape: AudioDescription)
+
+    __listOfAudioFeedInput.member = Shapes::ShapeRef.new(shape: AudioFeedInput)
+
+    __listOfAudioPid.member = Shapes::ShapeRef.new(shape: AudioPid)
 
     __listOfAudioSelector.member = Shapes::ShapeRef.new(shape: AudioSelector)
 
@@ -5457,6 +5995,8 @@ module Aws::MediaLive
 
     __listOfCaptionSelector.member = Shapes::ShapeRef.new(shape: CaptionSelector)
 
+    __listOfChannelAlert.member = Shapes::ShapeRef.new(shape: ChannelAlert)
+
     __listOfChannelEgressEndpoint.member = Shapes::ShapeRef.new(shape: ChannelEgressEndpoint)
 
     __listOfChannelEngineVersionResponse.member = Shapes::ShapeRef.new(shape: ChannelEngineVersionResponse)
@@ -5468,6 +6008,10 @@ module Aws::MediaLive
     __listOfCloudWatchAlarmTemplateGroupSummary.member = Shapes::ShapeRef.new(shape: CloudWatchAlarmTemplateGroupSummary)
 
     __listOfCloudWatchAlarmTemplateSummary.member = Shapes::ShapeRef.new(shape: CloudWatchAlarmTemplateSummary)
+
+    __listOfClusterAlert.member = Shapes::ShapeRef.new(shape: ClusterAlert)
+
+    __listOfCmafIngestCaptionLanguageMapping.member = Shapes::ShapeRef.new(shape: CmafIngestCaptionLanguageMapping)
 
     __listOfColorCorrection.member = Shapes::ShapeRef.new(shape: ColorCorrection)
 
@@ -5517,6 +6061,8 @@ module Aws::MediaLive
 
     __listOfInputRequestDestinationRoute.member = Shapes::ShapeRef.new(shape: InputRequestDestinationRoute)
 
+    __listOfInputSdpLocation.member = Shapes::ShapeRef.new(shape: InputSdpLocation)
+
     __listOfInputSecurityGroup.member = Shapes::ShapeRef.new(shape: InputSecurityGroup)
 
     __listOfInputSource.member = Shapes::ShapeRef.new(shape: InputSource)
@@ -5543,6 +6089,10 @@ module Aws::MediaLive
 
     __listOfMediaConnectFlowRequest.member = Shapes::ShapeRef.new(shape: MediaConnectFlowRequest)
 
+    __listOfMediaConnectRouterOutputDestinationSettings.member = Shapes::ShapeRef.new(shape: MediaConnectRouterOutputDestinationSettings)
+
+    __listOfMediaPackageAdditionalDestinations.member = Shapes::ShapeRef.new(shape: MediaPackageAdditionalDestinations)
+
     __listOfMediaPackageOutputDestinationSettings.member = Shapes::ShapeRef.new(shape: MediaPackageOutputDestinationSettings)
 
     __listOfMediaResourceNeighbor.member = Shapes::ShapeRef.new(shape: MediaResourceNeighbor)
@@ -5552,6 +6102,8 @@ module Aws::MediaLive
     __listOfMulticastSourceCreateRequest.member = Shapes::ShapeRef.new(shape: MulticastSourceCreateRequest)
 
     __listOfMulticastSourceUpdateRequest.member = Shapes::ShapeRef.new(shape: MulticastSourceUpdateRequest)
+
+    __listOfMultiplexAlert.member = Shapes::ShapeRef.new(shape: MultiplexAlert)
 
     __listOfMultiplexOutputDestination.member = Shapes::ShapeRef.new(shape: MultiplexOutputDestination)
 
@@ -5575,6 +6127,8 @@ module Aws::MediaLive
 
     __listOfOutputGroup.member = Shapes::ShapeRef.new(shape: OutputGroup)
 
+    __listOfOutputLocationRef.member = Shapes::ShapeRef.new(shape: OutputLocationRef)
+
     __listOfPipelineDetail.member = Shapes::ShapeRef.new(shape: PipelineDetail)
 
     __listOfPipelinePauseStateSettings.member = Shapes::ShapeRef.new(shape: PipelinePauseStateSettings)
@@ -5587,13 +6141,21 @@ module Aws::MediaLive
 
     __listOfRouteUpdateRequest.member = Shapes::ShapeRef.new(shape: RouteUpdateRequest)
 
+    __listOfRouterDestination.member = Shapes::ShapeRef.new(shape: RouterDestination)
+
+    __listOfRouterDestinationSettings.member = Shapes::ShapeRef.new(shape: RouterDestinationSettings)
+
     __listOfRtmpAdMarkers.member = Shapes::ShapeRef.new(shape: RtmpAdMarkers)
 
     __listOfScheduleAction.member = Shapes::ShapeRef.new(shape: ScheduleAction)
 
     __listOfScte35Descriptor.member = Shapes::ShapeRef.new(shape: Scte35Descriptor)
 
+    __listOfSdiSourceSummary.member = Shapes::ShapeRef.new(shape: SdiSourceSummary)
+
     __listOfSignalMapSummary.member = Shapes::ShapeRef.new(shape: SignalMapSummary)
+
+    __listOfSmpte2110ReceiverGroup.member = Shapes::ShapeRef.new(shape: Smpte2110ReceiverGroup)
 
     __listOfSrtCallerSource.member = Shapes::ShapeRef.new(shape: SrtCallerSource)
 
@@ -7460,6 +8022,150 @@ module Aws::MediaLive
         o.errors << Shapes::ShapeRef.new(shape: GatewayTimeoutException)
         o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+      end)
+
+      api.add_operation(:create_sdi_source, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CreateSdiSource"
+        o.http_method = "POST"
+        o.http_request_uri = "/prod/sdiSources"
+        o.input = Shapes::ShapeRef.new(shape: CreateSdiSourceRequest)
+        o.output = Shapes::ShapeRef.new(shape: CreateSdiSourceResponse)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerErrorException)
+        o.errors << Shapes::ShapeRef.new(shape: ForbiddenException)
+        o.errors << Shapes::ShapeRef.new(shape: BadGatewayException)
+        o.errors << Shapes::ShapeRef.new(shape: GatewayTimeoutException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+      end)
+
+      api.add_operation(:delete_sdi_source, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeleteSdiSource"
+        o.http_method = "DELETE"
+        o.http_request_uri = "/prod/sdiSources/{sdiSourceId}"
+        o.input = Shapes::ShapeRef.new(shape: DeleteSdiSourceRequest)
+        o.output = Shapes::ShapeRef.new(shape: DeleteSdiSourceResponse)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerErrorException)
+        o.errors << Shapes::ShapeRef.new(shape: ForbiddenException)
+        o.errors << Shapes::ShapeRef.new(shape: BadGatewayException)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: GatewayTimeoutException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+      end)
+
+      api.add_operation(:describe_sdi_source, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DescribeSdiSource"
+        o.http_method = "GET"
+        o.http_request_uri = "/prod/sdiSources/{sdiSourceId}"
+        o.input = Shapes::ShapeRef.new(shape: DescribeSdiSourceRequest)
+        o.output = Shapes::ShapeRef.new(shape: DescribeSdiSourceResponse)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerErrorException)
+        o.errors << Shapes::ShapeRef.new(shape: ForbiddenException)
+        o.errors << Shapes::ShapeRef.new(shape: BadGatewayException)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: GatewayTimeoutException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+      end)
+
+      api.add_operation(:list_sdi_sources, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListSdiSources"
+        o.http_method = "GET"
+        o.http_request_uri = "/prod/sdiSources"
+        o.input = Shapes::ShapeRef.new(shape: ListSdiSourcesRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListSdiSourcesResponse)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerErrorException)
+        o.errors << Shapes::ShapeRef.new(shape: ForbiddenException)
+        o.errors << Shapes::ShapeRef.new(shape: BadGatewayException)
+        o.errors << Shapes::ShapeRef.new(shape: GatewayTimeoutException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:update_sdi_source, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "UpdateSdiSource"
+        o.http_method = "PUT"
+        o.http_request_uri = "/prod/sdiSources/{sdiSourceId}"
+        o.input = Shapes::ShapeRef.new(shape: UpdateSdiSourceRequest)
+        o.output = Shapes::ShapeRef.new(shape: UpdateSdiSourceResponse)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerErrorException)
+        o.errors << Shapes::ShapeRef.new(shape: ForbiddenException)
+        o.errors << Shapes::ShapeRef.new(shape: BadGatewayException)
+        o.errors << Shapes::ShapeRef.new(shape: GatewayTimeoutException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+      end)
+
+      api.add_operation(:list_alerts, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListAlerts"
+        o.http_method = "GET"
+        o.http_request_uri = "/prod/channels/{channelId}/alerts"
+        o.input = Shapes::ShapeRef.new(shape: ListAlertsRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListAlertsResponse)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerErrorException)
+        o.errors << Shapes::ShapeRef.new(shape: ForbiddenException)
+        o.errors << Shapes::ShapeRef.new(shape: BadGatewayException)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: GatewayTimeoutException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:list_cluster_alerts, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListClusterAlerts"
+        o.http_method = "GET"
+        o.http_request_uri = "/prod/clusters/{clusterId}/alerts"
+        o.input = Shapes::ShapeRef.new(shape: ListClusterAlertsRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListClusterAlertsResponse)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerErrorException)
+        o.errors << Shapes::ShapeRef.new(shape: ForbiddenException)
+        o.errors << Shapes::ShapeRef.new(shape: BadGatewayException)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: GatewayTimeoutException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:list_multiplex_alerts, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListMultiplexAlerts"
+        o.http_method = "GET"
+        o.http_request_uri = "/prod/multiplexes/{multiplexId}/alerts"
+        o.input = Shapes::ShapeRef.new(shape: ListMultiplexAlertsRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListMultiplexAlertsResponse)
+        o.errors << Shapes::ShapeRef.new(shape: BadRequestException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerErrorException)
+        o.errors << Shapes::ShapeRef.new(shape: ForbiddenException)
+        o.errors << Shapes::ShapeRef.new(shape: BadGatewayException)
+        o.errors << Shapes::ShapeRef.new(shape: NotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: GatewayTimeoutException)
+        o.errors << Shapes::ShapeRef.new(shape: TooManyRequestsException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
       end)
     end
 

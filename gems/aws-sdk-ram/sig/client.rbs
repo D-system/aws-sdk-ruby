@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -134,7 +135,7 @@ module Aws
                                  {
                                    key: ::String?,
                                    value: ::String?
-                                 },
+                                 }
                                ]
                              ) -> _CreatePermissionResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreatePermissionResponseSuccess
@@ -166,12 +167,15 @@ module Aws
                                      {
                                        key: ::String?,
                                        value: ::String?
-                                     },
+                                     }
                                    ],
                                    ?allow_external_principals: bool,
                                    ?client_token: ::String,
                                    ?permission_arns: Array[::String],
-                                   ?sources: Array[::String]
+                                   ?sources: Array[::String],
+                                   ?resource_share_configuration: {
+                                     retain_sharing_on_account_leave_organization: bool?
+                                   }
                                  ) -> _CreateResourceShareResponseSuccess
                                | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateResourceShareResponseSuccess
 
@@ -283,11 +287,11 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RAM/Client.html#get_resource_share_associations-instance_method
       def get_resource_share_associations: (
-                                             association_type: ("PRINCIPAL" | "RESOURCE"),
+                                             association_type: ("PRINCIPAL" | "RESOURCE" | "SOURCE"),
                                              ?resource_share_arns: Array[::String],
                                              ?resource_arn: ::String,
                                              ?principal: ::String,
-                                             ?association_status: ("ASSOCIATING" | "ASSOCIATED" | "FAILED" | "DISASSOCIATING" | "DISASSOCIATED"),
+                                             ?association_status: ("ASSOCIATING" | "ASSOCIATED" | "FAILED" | "DISASSOCIATING" | "DISASSOCIATED" | "SUSPENDED" | "SUSPENDING" | "RESTORING"),
                                              ?next_token: ::String,
                                              ?max_results: ::Integer
                                            ) -> _GetResourceShareAssociationsResponseSuccess
@@ -322,7 +326,7 @@ module Aws
                                    {
                                      tag_key: ::String?,
                                      tag_values: Array[::String]?
-                                   },
+                                   }
                                  ],
                                  ?next_token: ::String,
                                  ?max_results: ::Integer,
@@ -354,7 +358,7 @@ module Aws
       def list_permission_associations: (
                                           ?permission_arn: ::String,
                                           ?permission_version: ::Integer,
-                                          ?association_status: ("ASSOCIATING" | "ASSOCIATED" | "FAILED" | "DISASSOCIATING" | "DISASSOCIATED"),
+                                          ?association_status: ("ASSOCIATING" | "ASSOCIATED" | "FAILED" | "DISASSOCIATING" | "DISASSOCIATED" | "SUSPENDED" | "SUSPENDING" | "RESTORING"),
                                           ?resource_type: ::String,
                                           ?feature_set: ("CREATED_FROM_POLICY" | "PROMOTING_TO_STANDARD" | "STANDARD"),
                                           ?default_version: bool,
@@ -465,6 +469,22 @@ module Aws
                           ) -> _ListResourcesResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListResourcesResponseSuccess
 
+      interface _ListSourceAssociationsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListSourceAssociationsResponse]
+        def source_associations: () -> ::Array[Types::AssociatedSource]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RAM/Client.html#list_source_associations-instance_method
+      def list_source_associations: (
+                                      ?resource_share_arns: Array[::String],
+                                      ?source_id: ::String,
+                                      ?source_type: ::String,
+                                      ?association_status: ("ASSOCIATING" | "ASSOCIATED" | "FAILED" | "DISASSOCIATING" | "DISASSOCIATED" | "SUSPENDED" | "SUSPENDING" | "RESTORING"),
+                                      ?next_token: ::String,
+                                      ?max_results: ::Integer
+                                    ) -> _ListSourceAssociationsResponseSuccess
+                                  | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListSourceAssociationsResponseSuccess
+
       interface _PromotePermissionCreatedFromPolicyResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::PromotePermissionCreatedFromPolicyResponse]
         def permission: () -> Types::ResourceSharePermissionSummary
@@ -537,7 +557,7 @@ module Aws
                             {
                               key: ::String?,
                               value: ::String?
-                            },
+                            }
                           ],
                           ?resource_arn: ::String
                         ) -> _TagResourceResponseSuccess

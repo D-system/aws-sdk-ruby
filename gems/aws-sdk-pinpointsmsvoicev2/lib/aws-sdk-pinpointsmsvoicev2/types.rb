@@ -78,10 +78,14 @@ module Aws::PinpointSMSVoiceV2
     # @!attribute [rw] pool_id
     #   The pool to update with the new Identity. This value can be either
     #   the PoolId or PoolArn, and you can find these values using
-    #   DescribePools.
+    #   [DescribePools][1].
     #
-    #   If you are using a shared AWS End User Messaging SMS and Voice
-    #   resource then you must use the full Amazon Resource Name(ARN).
+    #   If you are using a shared End User Messaging SMS; resource then you
+    #   must use the full Amazon Resource Name(ARN).
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/pinpoint/latest/apireference_smsvoicev2/API_DescribePools.html
     #   @return [String]
     #
     # @!attribute [rw] origination_identity
@@ -91,13 +95,15 @@ module Aws::PinpointSMSVoiceV2
     #   PhoneNumberArn, while DescribeSenderIds can be used to get the
     #   values for SenderId and SenderIdArn.
     #
-    #   If you are using a shared AWS End User Messaging SMS and Voice
-    #   resource then you must use the full Amazon Resource Name(ARN).
+    #   If you are using a shared End User Messaging SMS resource then you
+    #   must use the full Amazon Resource Name(ARN).
     #   @return [String]
     #
     # @!attribute [rw] iso_country_code
     #   The new two-character code, in ISO 3166-1 alpha-2 format, for the
-    #   country or region of the origination identity.
+    #   country or region of the origination identity. This field is
+    #   optional and is not required for origination identity types that are
+    #   not country-specific, such as RCS agents.
     #   @return [String]
     #
     # @!attribute [rw] client_token
@@ -196,6 +202,99 @@ module Aws::PinpointSMSVoiceV2
       :configuration_set_name,
       :protect_configuration_arn,
       :protect_configuration_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] phone_number
+    #   The phone number that you want to retrieve information about. You
+    #   can provide the phone number in various formats including special
+    #   characters such as parentheses, brackets, spaces, hyphens, periods,
+    #   and commas. The service automatically converts the input to E164
+    #   format for processing.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/CarrierLookupRequest AWS API Documentation
+    #
+    class CarrierLookupRequest < Struct.new(
+      :phone_number)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] e164_phone_number
+    #   The phone number in E164 format, sanitized from the original input
+    #   by removing any formatting characters.
+    #   @return [String]
+    #
+    # @!attribute [rw] dialing_country_code
+    #   The country or region numeric dialing code for the phone number.
+    #   @return [String]
+    #
+    # @!attribute [rw] iso_country_code
+    #   The two-character country or region code, in ISO 3166-1 alpha-2
+    #   format, for the phone number.
+    #   @return [String]
+    #
+    # @!attribute [rw] country
+    #   The name of the country or region for the phone number.
+    #   @return [String]
+    #
+    # @!attribute [rw] mcc
+    #   The phone number's mobile country code, for mobile phone number
+    #   types
+    #   @return [String]
+    #
+    # @!attribute [rw] mnc
+    #   The phone number's mobile network code, for mobile phone number
+    #   types.
+    #   @return [String]
+    #
+    # @!attribute [rw] carrier
+    #   The carrier or service provider that the phone number is currently
+    #   registered with. In some countries and regions, this value may be
+    #   the carrier or service provider that the phone number was originally
+    #   registered with.
+    #   @return [String]
+    #
+    # @!attribute [rw] phone_number_type
+    #   Describes the type of phone number. Valid values are: MOBILE,
+    #   LANDLINE, OTHER, and INVALID. Avoid sending SMS or voice messages to
+    #   INVALID phone numbers, as these numbers are unlikely to belong to
+    #   actual recipients.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/CarrierLookupResult AWS API Documentation
+    #
+    class CarrierLookupResult < Struct.new(
+      :e164_phone_number,
+      :dialing_country_code,
+      :iso_country_code,
+      :country,
+      :mcc,
+      :mnc,
+      :carrier,
+      :phone_number_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains carrier-level launch status details for an RCS agent within a
+    # country.
+    #
+    # @!attribute [rw] carrier_name
+    #   The name of the carrier.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The launch status for this carrier.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/CarrierStatusInformation AWS API Documentation
+    #
+    class CarrierStatusInformation < Struct.new(
+      :carrier_name,
+      :status)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -331,6 +430,63 @@ module Aws::PinpointSMSVoiceV2
       include Aws::Structure
     end
 
+    # The information for a country launch status that meets a specified
+    # criteria.
+    #
+    # @!attribute [rw] name
+    #   The name of the attribute to filter on.
+    #   @return [String]
+    #
+    # @!attribute [rw] values
+    #   An array values to filter for.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/CountryLaunchStatusFilter AWS API Documentation
+    #
+    class CountryLaunchStatusFilter < Struct.new(
+      :name,
+      :values)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains per-country launch status details for an RCS agent.
+    #
+    # @!attribute [rw] iso_country_code
+    #   The two-character code, in ISO 3166-1 alpha-2 format, for the
+    #   country or region.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The launch status for this country.
+    #   @return [String]
+    #
+    # @!attribute [rw] rcs_platform_id
+    #   The RCS platform identifier for this country.
+    #   @return [String]
+    #
+    # @!attribute [rw] registration_id
+    #   The unique identifier of the registration associated with this
+    #   country launch.
+    #   @return [String]
+    #
+    # @!attribute [rw] carrier_status
+    #   An array of CarrierStatusInformation objects containing
+    #   carrier-level launch status details.
+    #   @return [Array<Types::CarrierStatusInformation>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/CountryLaunchStatusInformation AWS API Documentation
+    #
+    class CountryLaunchStatusInformation < Struct.new(
+      :iso_country_code,
+      :status,
+      :rcs_platform_id,
+      :registration_id,
+      :carrier_status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] configuration_set_name
     #   The name to use for the new configuration set.
     #   @return [String]
@@ -407,8 +563,7 @@ module Aws::PinpointSMSVoiceV2
     #
     # @!attribute [rw] matching_event_types
     #   An array of event types that determine which events to log. If
-    #   "ALL" is used, then AWS End User Messaging SMS and Voice logs
-    #   every event type.
+    #   "ALL" is used, then End User Messaging SMS logs every event type.
     #
     #   <note markdown="1"> The `TEXT_SENT` event type is not supported.
     #
@@ -472,6 +627,164 @@ module Aws::PinpointSMSVoiceV2
       :configuration_set_arn,
       :configuration_set_name,
       :event_destination)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] display_name
+    #   The display name to associate with the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] use_case
+    #   The use case for the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] default_template_id
+    #   The default template identifier to associate with the notify
+    #   configuration. If specified, this template is used when sending
+    #   messages without an explicit template identifier.
+    #   @return [String]
+    #
+    # @!attribute [rw] pool_id
+    #   The identifier of the pool to associate with the notify
+    #   configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] enabled_countries
+    #   An array of two-character ISO country codes, in ISO 3166-1 alpha-2
+    #   format, that are enabled for the notify configuration.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] enabled_channels
+    #   An array of channels to enable for the notify configuration.
+    #   Supported values include `SMS` and `VOICE`.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] deletion_protection_enabled
+    #   By default this is set to false. When set to true the notify
+    #   configuration can't be deleted. You can change this value using the
+    #   UpdateNotifyConfiguration action.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] client_token
+    #   Unique, case-sensitive identifier that you provide to ensure the
+    #   idempotency of the request. If you don't specify a client token, a
+    #   randomly generated token is used for the request to ensure
+    #   idempotency.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   An array of tags (key and value pairs) associated with the notify
+    #   configuration.
+    #   @return [Array<Types::Tag>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/CreateNotifyConfigurationRequest AWS API Documentation
+    #
+    class CreateNotifyConfigurationRequest < Struct.new(
+      :display_name,
+      :use_case,
+      :default_template_id,
+      :pool_id,
+      :enabled_countries,
+      :enabled_channels,
+      :deletion_protection_enabled,
+      :client_token,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] notify_configuration_arn
+    #   The Amazon Resource Name (ARN) for the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] notify_configuration_id
+    #   The unique identifier for the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] display_name
+    #   The display name associated with the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] use_case
+    #   The use case for the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] default_template_id
+    #   The default template identifier associated with the notify
+    #   configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] pool_id
+    #   The identifier of the pool associated with the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] enabled_countries
+    #   An array of two-character ISO country codes, in ISO 3166-1 alpha-2
+    #   format, that are enabled for the notify configuration.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] enabled_channels
+    #   An array of channels enabled for the notify configuration. Supported
+    #   values include `SMS` and `VOICE`.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] tier
+    #   The tier of the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] tier_upgrade_status
+    #   The tier upgrade status of the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] rejection_reason
+    #   The reason the notify configuration was rejected, if applicable.
+    #   @return [String]
+    #
+    # @!attribute [rw] deletion_protection_enabled
+    #   When set to true deletion protection is enabled. By default this is
+    #   set to false.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] tags
+    #   An array of tags (key and value pairs) associated with the notify
+    #   configuration.
+    #   @return [Array<Types::Tag>]
+    #
+    # @!attribute [rw] created_timestamp
+    #   The time when the notify configuration was created, in [UNIX epoch
+    #   time][1] format.
+    #
+    #
+    #
+    #   [1]: https://www.epochconverter.com/
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/CreateNotifyConfigurationResult AWS API Documentation
+    #
+    class CreateNotifyConfigurationResult < Struct.new(
+      :notify_configuration_arn,
+      :notify_configuration_id,
+      :display_name,
+      :use_case,
+      :default_template_id,
+      :pool_id,
+      :enabled_countries,
+      :enabled_channels,
+      :tier,
+      :tier_upgrade_status,
+      :status,
+      :rejection_reason,
+      :deletion_protection_enabled,
+      :tags,
+      :created_timestamp)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -540,24 +853,28 @@ module Aws::PinpointSMSVoiceV2
     # @!attribute [rw] origination_identity
     #   The origination identity to use such as a PhoneNumberId,
     #   PhoneNumberArn, SenderId or SenderIdArn. You can use
-    #   DescribePhoneNumbers to find the values for PhoneNumberId and
-    #   PhoneNumberArn while DescribeSenderIds can be used to get the values
-    #   for SenderId and SenderIdArn.
+    #   [DescribePhoneNumbers][1] to find the values for PhoneNumberId and
+    #   PhoneNumberArn, and use [DescribeSenderIds][2] can be used to get
+    #   the values for SenderId and SenderIdArn.
     #
     #   After the pool is created you can add more origination identities to
-    #   the pool by using [AssociateOriginationIdentity][1].
+    #   the pool by using [AssociateOriginationIdentity][3].
     #
-    #   If you are using a shared AWS End User Messaging SMS and Voice
-    #   resource then you must use the full Amazon Resource Name(ARN).
+    #   If you are using a shared End User Messaging SMS resource then you
+    #   must use the full Amazon Resource Name(ARN).
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/pinpoint/latest/apireference_smsvoicev2/API_AssociateOriginationIdentity.html
+    #   [1]: https://docs.aws.amazon.com/pinpoint/latest/apireference_smsvoicev2/API_DescribePhoneNumbers.html
+    #   [2]: https://docs.aws.amazon.com/pinpoint/latest/apireference_smsvoicev2/API_DescribeSenderIds.html
+    #   [3]: https://docs.aws.amazon.com/pinpoint/latest/apireference_smsvoicev2/API_AssociateOriginationIdentity.html
     #   @return [String]
     #
     # @!attribute [rw] iso_country_code
     #   The new two-character code, in ISO 3166-1 alpha-2 format, for the
-    #   country or region of the new pool.
+    #   country or region of the new pool. This field is optional and is not
+    #   required for origination identity types that are not
+    #   country-specific, such as RCS agents.
     #   @return [String]
     #
     # @!attribute [rw] message_type
@@ -569,7 +886,11 @@ module Aws::PinpointSMSVoiceV2
     #
     # @!attribute [rw] deletion_protection_enabled
     #   By default this is set to false. When set to true the pool can't be
-    #   deleted. You can change this value using the UpdatePool action.
+    #   deleted. You can change this value using the [UpdatePool][1] action.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/pinpoint/latest/apireference_smsvoicev2/API_UpdatePool.html
     #   @return [Boolean]
     #
     # @!attribute [rw] tags
@@ -637,9 +958,9 @@ module Aws::PinpointSMSVoiceV2
     #   @return [String]
     #
     # @!attribute [rw] self_managed_opt_outs_enabled
-    #   By default this is set to false. When an end recipient sends a
-    #   message that begins with HELP or STOP to one of your dedicated
-    #   numbers, AWS End User Messaging SMS and Voice automatically replies
+    #   By default this is set to false. When set to false, and an end
+    #   recipient sends a message that begins with HELP or STOP to one of
+    #   your dedicated numbers, End User Messaging SMS automatically replies
     #   with a customizable message and adds the end recipient to the
     #   OptOutList. When set to true you're responsible for responding to
     #   HELP and STOP requests. You're also responsible for tracking and
@@ -763,6 +1084,140 @@ module Aws::PinpointSMSVoiceV2
       :created_timestamp,
       :account_default,
       :deletion_protection_enabled,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] deletion_protection_enabled
+    #   By default this is set to false. When set to true the RCS agent
+    #   can't be deleted. You can change this value using the
+    #   UpdateRcsAgent action.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] opt_out_list_name
+    #   The OptOutList to associate with the RCS agent. Valid values are
+    #   either OptOutListName or OptOutListArn.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   An array of tags (key and value pairs) associated with the RCS
+    #   agent.
+    #   @return [Array<Types::Tag>]
+    #
+    # @!attribute [rw] client_token
+    #   Unique, case-sensitive identifier that you provide to ensure the
+    #   idempotency of the request. If you don't specify a client token, a
+    #   randomly generated token is used for the request to ensure
+    #   idempotency.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/CreateRcsAgentRequest AWS API Documentation
+    #
+    class CreateRcsAgentRequest < Struct.new(
+      :deletion_protection_enabled,
+      :opt_out_list_name,
+      :tags,
+      :client_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] rcs_agent_arn
+    #   The Amazon Resource Name (ARN) of the newly created RCS agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] rcs_agent_id
+    #   The unique identifier for the RCS agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the RCS agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] deletion_protection_enabled
+    #   When set to true deletion protection is enabled. By default this is
+    #   set to false.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] opt_out_list_name
+    #   The name of the OptOutList associated with the RCS agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_timestamp
+    #   The time when the RCS agent was created, in [UNIX epoch time][1]
+    #   format.
+    #
+    #
+    #
+    #   [1]: https://www.epochconverter.com/
+    #   @return [Time]
+    #
+    # @!attribute [rw] self_managed_opt_outs_enabled
+    #   By default this is set to false. When set to true you're
+    #   responsible for responding to HELP and STOP requests. You're also
+    #   responsible for tracking and honoring opt-out requests.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] two_way_channel_arn
+    #   The Amazon Resource Name (ARN) of the two way channel.
+    #   @return [String]
+    #
+    # @!attribute [rw] two_way_channel_role
+    #   An optional IAM Role Arn for a service to assume, to be able to post
+    #   inbound SMS messages.
+    #   @return [String]
+    #
+    # @!attribute [rw] two_way_enabled
+    #   By default this is set to false. When set to true you can receive
+    #   incoming text messages from your end recipients.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] two_way_media_s3_bucket_name
+    #   The name of the S3 bucket where inbound RCS media files are stored.
+    #   @return [String]
+    #
+    # @!attribute [rw] two_way_media_s3_key_prefix
+    #   The key prefix used for inbound RCS media objects in the S3 bucket.
+    #   @return [String]
+    #
+    # @!attribute [rw] two_way_media_s3_role
+    #   The ARN of the IAM role used to write inbound RCS media files to the
+    #   S3 bucket. The role must have `s3:PutObject` permission on the
+    #   bucket and a trust policy allowing `sms-voice.amazonaws.com` to
+    #   assume it.
+    #   @return [String]
+    #
+    # @!attribute [rw] two_way_rcs_events_enabled
+    #   The list of RCS event types enabled for two-way messaging on the
+    #   agent.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] tags
+    #   An array of tags (key and value pairs) associated with the RCS
+    #   agent.
+    #   @return [Array<Types::Tag>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/CreateRcsAgentResult AWS API Documentation
+    #
+    class CreateRcsAgentResult < Struct.new(
+      :rcs_agent_arn,
+      :rcs_agent_id,
+      :status,
+      :deletion_protection_enabled,
+      :opt_out_list_name,
+      :created_timestamp,
+      :self_managed_opt_outs_enabled,
+      :two_way_channel_arn,
+      :two_way_channel_role,
+      :two_way_enabled,
+      :two_way_media_s3_bucket_name,
+      :two_way_media_s3_key_prefix,
+      :two_way_media_s3_role,
+      :two_way_rcs_events_enabled,
       :tags)
       SENSITIVE = []
       include Aws::Structure
@@ -1104,6 +1559,12 @@ module Aws::PinpointSMSVoiceV2
     #   The verified destination phone number, in E.164 format.
     #   @return [String]
     #
+    # @!attribute [rw] rcs_agent_id
+    #   The unique identifier of the RCS agent to associate with the
+    #   verified destination number. You can use either the RcsAgentId or
+    #   RcsAgentArn.
+    #   @return [String]
+    #
     # @!attribute [rw] tags
     #   An array of tags (key and value pairs) to associate with the
     #   destination number.
@@ -1123,6 +1584,7 @@ module Aws::PinpointSMSVoiceV2
     #
     class CreateVerifiedDestinationNumberRequest < Struct.new(
       :destination_phone_number,
+      :rcs_agent_id,
       :tags,
       :client_token)
       SENSITIVE = []
@@ -1150,6 +1612,11 @@ module Aws::PinpointSMSVoiceV2
     #   * `VERIFIED`: The phone number is verified and can receive messages.
     #   @return [String]
     #
+    # @!attribute [rw] rcs_agent_id
+    #   The unique identifier of the RCS agent associated with the verified
+    #   destination number.
+    #   @return [String]
+    #
     # @!attribute [rw] tags
     #   An array of tags (key and value pairs) to associate with the
     #   destination number.
@@ -1171,6 +1638,7 @@ module Aws::PinpointSMSVoiceV2
       :verified_destination_number_id,
       :destination_phone_number,
       :status,
+      :rcs_agent_id,
       :tags,
       :created_timestamp)
       SENSITIVE = []
@@ -1387,8 +1855,8 @@ module Aws::PinpointSMSVoiceV2
     #   to find the values for PhoneNumberId and PhoneNumberArn and
     #   DescribePools to find the values of PoolId and PoolArn.
     #
-    #   If you are using a shared AWS End User Messaging SMS and Voice
-    #   resource then you must use the full Amazon Resource Name(ARN).
+    #   If you are using a shared End User Messaging SMS resource then you
+    #   must use the full Amazon Resource Name(ARN).
     #   @return [String]
     #
     # @!attribute [rw] keyword
@@ -1454,13 +1922,131 @@ module Aws::PinpointSMSVoiceV2
       include Aws::Structure
     end
 
+    # @!attribute [rw] notify_configuration_id
+    #   The identifier of the notify configuration to delete. The
+    #   NotifyConfigurationId can be found using the
+    #   DescribeNotifyConfigurations operation.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/DeleteNotifyConfigurationRequest AWS API Documentation
+    #
+    class DeleteNotifyConfigurationRequest < Struct.new(
+      :notify_configuration_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] notify_configuration_arn
+    #   The Amazon Resource Name (ARN) for the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] notify_configuration_id
+    #   The unique identifier for the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] display_name
+    #   The display name associated with the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] use_case
+    #   The use case for the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] default_template_id
+    #   The default template identifier associated with the notify
+    #   configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] pool_id
+    #   The identifier of the pool associated with the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] enabled_countries
+    #   An array of two-character ISO country codes, in ISO 3166-1 alpha-2
+    #   format, that are enabled for the notify configuration.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] enabled_channels
+    #   An array of channels enabled for the notify configuration. Supported
+    #   values include `SMS` and `VOICE`.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] tier
+    #   The tier of the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] tier_upgrade_status
+    #   The tier upgrade status of the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] rejection_reason
+    #   The reason the notify configuration was rejected, if applicable.
+    #   @return [String]
+    #
+    # @!attribute [rw] deletion_protection_enabled
+    #   When set to true deletion protection is enabled. By default this is
+    #   set to false.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] created_timestamp
+    #   The time when the notify configuration was created, in [UNIX epoch
+    #   time][1] format.
+    #
+    #
+    #
+    #   [1]: https://www.epochconverter.com/
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/DeleteNotifyConfigurationResult AWS API Documentation
+    #
+    class DeleteNotifyConfigurationResult < Struct.new(
+      :notify_configuration_arn,
+      :notify_configuration_id,
+      :display_name,
+      :use_case,
+      :default_template_id,
+      :pool_id,
+      :enabled_countries,
+      :enabled_channels,
+      :tier,
+      :tier_upgrade_status,
+      :status,
+      :rejection_reason,
+      :deletion_protection_enabled,
+      :created_timestamp)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @api private
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/DeleteNotifyMessageSpendLimitOverrideRequest AWS API Documentation
+    #
+    class DeleteNotifyMessageSpendLimitOverrideRequest < Aws::EmptyStructure; end
+
+    # @!attribute [rw] monthly_limit
+    #   The current monthly limit, in US dollars.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/DeleteNotifyMessageSpendLimitOverrideResult AWS API Documentation
+    #
+    class DeleteNotifyMessageSpendLimitOverrideResult < Struct.new(
+      :monthly_limit)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] opt_out_list_name
     #   The OptOutListName or OptOutListArn of the OptOutList to delete. You
     #   can use DescribeOptOutLists to find the values for OptOutListName
     #   and OptOutListArn.
     #
-    #   If you are using a shared AWS End User Messaging SMS and Voice
-    #   resource then you must use the full Amazon Resource Name(ARN).
+    #   If you are using a shared End User Messaging SMS resource then you
+    #   must use the full Amazon Resource Name(ARN).
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/DeleteOptOutListRequest AWS API Documentation
@@ -1501,8 +2087,8 @@ module Aws::PinpointSMSVoiceV2
     # @!attribute [rw] opt_out_list_name
     #   The OptOutListName or OptOutListArn to remove the phone number from.
     #
-    #   If you are using a shared AWS End User Messaging SMS and Voice
-    #   resource then you must use the full Amazon Resource Name(ARN).
+    #   If you are using a shared End User Messaging SMS resource then you
+    #   must use the full Amazon Resource Name(ARN).
     #   @return [String]
     #
     # @!attribute [rw] opted_out_number
@@ -1560,8 +2146,8 @@ module Aws::PinpointSMSVoiceV2
     #   The PoolId or PoolArn of the pool to delete. You can use
     #   DescribePools to find the values for PoolId and PoolArn .
     #
-    #   If you are using a shared AWS End User Messaging SMS and Voice
-    #   resource then you must use the full Amazon Resource Name(ARN).
+    #   If you are using a shared End User Messaging SMS resource then you
+    #   must use the full Amazon Resource Name(ARN).
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/DeletePoolRequest AWS API Documentation
@@ -1610,9 +2196,9 @@ module Aws::PinpointSMSVoiceV2
     #   @return [String]
     #
     # @!attribute [rw] self_managed_opt_outs_enabled
-    #   By default this is set to false. When an end recipient sends a
-    #   message that begins with HELP or STOP to one of your dedicated
-    #   numbers, AWS End User Messaging SMS and Voice automatically replies
+    #   By default this is set to false. When set to false and an end
+    #   recipient sends a message that begins with HELP or STOP to one of
+    #   your dedicated numbers, End User Messaging SMS automatically replies
     #   with a customizable message and adds the end recipient to the
     #   OptOutList. When set to true you're responsible for responding to
     #   HELP and STOP requests. You're also responsible for tracking and
@@ -1771,6 +2357,111 @@ module Aws::PinpointSMSVoiceV2
       :action,
       :iso_country_code,
       :expiration_timestamp)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] rcs_agent_id
+    #   The unique identifier of the RCS agent to delete. You can use either
+    #   the RcsAgentId or RcsAgentArn.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/DeleteRcsAgentRequest AWS API Documentation
+    #
+    class DeleteRcsAgentRequest < Struct.new(
+      :rcs_agent_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] rcs_agent_arn
+    #   The Amazon Resource Name (ARN) of the deleted RCS agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] rcs_agent_id
+    #   The unique identifier for the deleted RCS agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the RCS agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_timestamp
+    #   The time when the RCS agent was created, in [UNIX epoch time][1]
+    #   format.
+    #
+    #
+    #
+    #   [1]: https://www.epochconverter.com/
+    #   @return [Time]
+    #
+    # @!attribute [rw] deletion_protection_enabled
+    #   When set to true deletion protection is enabled. By default this is
+    #   set to false.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] opt_out_list_name
+    #   The name of the OptOutList that was associated with the deleted RCS
+    #   agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] self_managed_opt_outs_enabled
+    #   By default this is set to false. When set to true you're
+    #   responsible for responding to HELP and STOP requests. You're also
+    #   responsible for tracking and honoring opt-out requests.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] two_way_channel_arn
+    #   The Amazon Resource Name (ARN) of the two way channel.
+    #   @return [String]
+    #
+    # @!attribute [rw] two_way_channel_role
+    #   An optional IAM Role Arn for a service to assume, to be able to post
+    #   inbound SMS messages.
+    #   @return [String]
+    #
+    # @!attribute [rw] two_way_enabled
+    #   By default this is set to false. When set to true you can receive
+    #   incoming text messages from your end recipients.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] two_way_rcs_events_enabled
+    #   The list of RCS event types that were enabled for two-way messaging
+    #   on the deleted agent.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/DeleteRcsAgentResult AWS API Documentation
+    #
+    class DeleteRcsAgentResult < Struct.new(
+      :rcs_agent_arn,
+      :rcs_agent_id,
+      :status,
+      :created_timestamp,
+      :deletion_protection_enabled,
+      :opt_out_list_name,
+      :self_managed_opt_outs_enabled,
+      :two_way_channel_arn,
+      :two_way_channel_role,
+      :two_way_enabled,
+      :two_way_rcs_events_enabled)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @api private
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/DeleteRcsMessageSpendLimitOverrideRequest AWS API Documentation
+    #
+    class DeleteRcsMessageSpendLimitOverrideRequest < Aws::EmptyStructure; end
+
+    # @!attribute [rw] monthly_limit
+    #   The current monthly limit to enforce on RCS message spending.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/DeleteRcsMessageSpendLimitOverrideResult AWS API Documentation
+    #
+    class DeleteRcsMessageSpendLimitOverrideResult < Struct.new(
+      :monthly_limit)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1989,8 +2680,8 @@ module Aws::PinpointSMSVoiceV2
     end
 
     # @!attribute [rw] resource_arn
-    #   The Amazon Resource Name (ARN) of the AWS End User Messaging SMS and
-    #   Voice resource you're deleting the resource-based policy from.
+    #   The Amazon Resource Name (ARN) of the End User Messaging SMS
+    #   resource you're deleting the resource-based policy from.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/DeleteResourcePolicyRequest AWS API Documentation
@@ -2002,8 +2693,8 @@ module Aws::PinpointSMSVoiceV2
     end
 
     # @!attribute [rw] resource_arn
-    #   The Amazon Resource Name (ARN) of the AWS End User Messaging SMS and
-    #   Voice resource that the resource-based policy was deleted from.
+    #   The Amazon Resource Name (ARN) of the End User Messaging SMS
+    #   resource that the resource-based policy was deleted from.
     #   @return [String]
     #
     # @!attribute [rw] policy
@@ -2236,8 +2927,8 @@ module Aws::PinpointSMSVoiceV2
     #   PhoneNumberArn while DescribeSenderIds can be used to get the values
     #   for SenderId and SenderIdArn.
     #
-    #   If you are using a shared AWS End User Messaging SMS and Voice
-    #   resource then you must use the full Amazon Resource Name(ARN).
+    #   If you are using a shared End User Messaging SMS resource then you
+    #   must use the full Amazon Resource Name(ARN).
     #   @return [String]
     #
     # @!attribute [rw] keywords
@@ -2299,12 +2990,107 @@ module Aws::PinpointSMSVoiceV2
       include Aws::Structure
     end
 
+    # @!attribute [rw] notify_configuration_ids
+    #   An array of notify configuration IDs to describe.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] filters
+    #   An array of NotifyConfigurationFilter objects to filter the results
+    #   on.
+    #   @return [Array<Types::NotifyConfigurationFilter>]
+    #
+    # @!attribute [rw] next_token
+    #   The token to be used for the next set of paginated results. You
+    #   don't need to supply a value for this field in the initial request.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per each request.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/DescribeNotifyConfigurationsRequest AWS API Documentation
+    #
+    class DescribeNotifyConfigurationsRequest < Struct.new(
+      :notify_configuration_ids,
+      :filters,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] notify_configurations
+    #   An array of NotifyConfigurationInformation objects that contain the
+    #   results.
+    #   @return [Array<Types::NotifyConfigurationInformation>]
+    #
+    # @!attribute [rw] next_token
+    #   The token to be used for the next set of paginated results. If this
+    #   field is empty then there are no more results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/DescribeNotifyConfigurationsResult AWS API Documentation
+    #
+    class DescribeNotifyConfigurationsResult < Struct.new(
+      :notify_configurations,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] template_ids
+    #   An array of template IDs to describe.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] filters
+    #   An array of NotifyTemplateFilter objects to filter the results on.
+    #   @return [Array<Types::NotifyTemplateFilter>]
+    #
+    # @!attribute [rw] next_token
+    #   The token to be used for the next set of paginated results. You
+    #   don't need to supply a value for this field in the initial request.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per each request.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/DescribeNotifyTemplatesRequest AWS API Documentation
+    #
+    class DescribeNotifyTemplatesRequest < Struct.new(
+      :template_ids,
+      :filters,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] notify_templates
+    #   An array of NotifyTemplateInformation objects that contain the
+    #   results.
+    #   @return [Array<Types::NotifyTemplateInformation>]
+    #
+    # @!attribute [rw] next_token
+    #   The token to be used for the next set of paginated results. If this
+    #   field is empty then there are no more results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/DescribeNotifyTemplatesResult AWS API Documentation
+    #
+    class DescribeNotifyTemplatesResult < Struct.new(
+      :notify_templates,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] opt_out_list_names
     #   The OptOutLists to show the details of. This is an array of strings
     #   that can be either the OptOutListName or OptOutListArn.
     #
-    #   If you are using a shared AWS End User Messaging SMS and Voice
-    #   resource then you must use the full Amazon Resource Name(ARN).
+    #   If you are using a shared End User Messaging SMS resource then you
+    #   must use the full Amazon Resource Name(ARN).
     #   @return [Array<String>]
     #
     # @!attribute [rw] next_token
@@ -2358,8 +3144,8 @@ module Aws::PinpointSMSVoiceV2
     #   DescribeOptOutLists to find the values for OptOutListName and
     #   OptOutListArn.
     #
-    #   If you are using a shared AWS End User Messaging SMS and Voice
-    #   resource then you must use the full Amazon Resource Name(ARN).
+    #   If you are using a shared End User Messaging SMS resource then you
+    #   must use the full Amazon Resource Name(ARN).
     #   @return [String]
     #
     # @!attribute [rw] opted_out_numbers
@@ -2428,8 +3214,8 @@ module Aws::PinpointSMSVoiceV2
     #   This is an array of strings that can be either the PhoneNumberId or
     #   PhoneNumberArn.
     #
-    #   If you are using a shared AWS End User Messaging SMS and Voice
-    #   resource then you must use the full Amazon Resource Name(ARN).
+    #   If you are using a shared End User Messaging SMS resource then you
+    #   must use the full Amazon Resource Name(ARN).
     #   @return [Array<String>]
     #
     # @!attribute [rw] filters
@@ -2487,8 +3273,8 @@ module Aws::PinpointSMSVoiceV2
     #   The unique identifier of pools to find. This is an array of strings
     #   that can be either the PoolId or PoolArn.
     #
-    #   If you are using a shared AWS End User Messaging SMS and Voice
-    #   resource then you must use the full Amazon Resource Name(ARN).
+    #   If you are using a shared End User Messaging SMS resource then you
+    #   must use the full Amazon Resource Name(ARN).
     #   @return [Array<String>]
     #
     # @!attribute [rw] filters
@@ -2584,6 +3370,126 @@ module Aws::PinpointSMSVoiceV2
     #
     class DescribeProtectConfigurationsResult < Struct.new(
       :protect_configurations,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] rcs_agent_id
+    #   The unique identifier of the RCS agent. You can use either the
+    #   RcsAgentId or RcsAgentArn.
+    #   @return [String]
+    #
+    # @!attribute [rw] iso_country_codes
+    #   An array of two-character ISO country codes, in ISO 3166-1 alpha-2
+    #   format, to filter the results.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] filters
+    #   An array of CountryLaunchStatusFilter objects to filter the results.
+    #   @return [Array<Types::CountryLaunchStatusFilter>]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per each request.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   The token to be used for the next set of paginated results. You
+    #   don't need to supply a value for this field in the initial request.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/DescribeRcsAgentCountryLaunchStatusRequest AWS API Documentation
+    #
+    class DescribeRcsAgentCountryLaunchStatusRequest < Struct.new(
+      :rcs_agent_id,
+      :iso_country_codes,
+      :filters,
+      :max_results,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] rcs_agent_id
+    #   The unique identifier for the RCS agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] rcs_agent_arn
+    #   The Amazon Resource Name (ARN) of the RCS agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] country_launch_status
+    #   An array of CountryLaunchStatusInformation objects that contain the
+    #   per-country launch status details.
+    #   @return [Array<Types::CountryLaunchStatusInformation>]
+    #
+    # @!attribute [rw] next_token
+    #   The token to be used for the next set of paginated results. If this
+    #   field is empty then there are no more results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/DescribeRcsAgentCountryLaunchStatusResult AWS API Documentation
+    #
+    class DescribeRcsAgentCountryLaunchStatusResult < Struct.new(
+      :rcs_agent_id,
+      :rcs_agent_arn,
+      :country_launch_status,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] rcs_agent_ids
+    #   An array of unique identifiers for the RCS agents. This is an array
+    #   of strings that can be either the RcsAgentId or RcsAgentArn.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] owner
+    #   Use `SELF` to filter the list of RCS agents to ones your account
+    #   owns or use `SHARED` to filter on RCS agents shared with your
+    #   account. The `Owner` and `RcsAgentIds` parameters can't be used at
+    #   the same time.
+    #   @return [String]
+    #
+    # @!attribute [rw] filters
+    #   An array of RcsAgentFilter objects to filter the results.
+    #   @return [Array<Types::RcsAgentFilter>]
+    #
+    # @!attribute [rw] next_token
+    #   The token to be used for the next set of paginated results. You
+    #   don't need to supply a value for this field in the initial request.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per each request.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/DescribeRcsAgentsRequest AWS API Documentation
+    #
+    class DescribeRcsAgentsRequest < Struct.new(
+      :rcs_agent_ids,
+      :owner,
+      :filters,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] rcs_agents
+    #   An array of RcsAgentInformation objects that contain the details for
+    #   the requested RCS agents.
+    #   @return [Array<Types::RcsAgentInformation>]
+    #
+    # @!attribute [rw] next_token
+    #   The token to be used for the next set of paginated results. If this
+    #   field is empty then there are no more results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/DescribeRcsAgentsResult AWS API Documentation
+    #
+    class DescribeRcsAgentsResult < Struct.new(
+      :rcs_agents,
       :next_token)
       SENSITIVE = []
       include Aws::Structure
@@ -2980,8 +3886,8 @@ module Aws::PinpointSMSVoiceV2
     # @!attribute [rw] sender_ids
     #   An array of SenderIdAndCountry objects to search for.
     #
-    #   If you are using a shared AWS End User Messaging SMS and Voice
-    #   resource then you must use the full Amazon Resource Name(ARN).
+    #   If you are using a shared End User Messaging SMS resource then you
+    #   must use the full Amazon Resource Name(ARN).
     #   @return [Array<Types::SenderIdAndCountry>]
     #
     # @!attribute [rw] filters
@@ -3129,8 +4035,8 @@ module Aws::PinpointSMSVoiceV2
     #   origination identity. This value can be either the PoolId or
     #   PoolArn.
     #
-    #   If you are using a shared AWS End User Messaging SMS and Voice
-    #   resource then you must use the full Amazon Resource Name(ARN).
+    #   If you are using a shared End User Messaging SMS resource then you
+    #   must use the full Amazon Resource Name(ARN).
     #   @return [String]
     #
     # @!attribute [rw] origination_identity
@@ -3140,13 +4046,15 @@ module Aws::PinpointSMSVoiceV2
     #   PhoneNumberArn, or use DescribeSenderIds to get the values for
     #   SenderId and SenderIdArn.
     #
-    #   If you are using a shared AWS End User Messaging SMS and Voice
-    #   resource then you must use the full Amazon Resource Name(ARN).
+    #   If you are using a shared End User Messaging SMS resource then you
+    #   must use the full Amazon Resource Name(ARN).
     #   @return [String]
     #
     # @!attribute [rw] iso_country_code
     #   The two-character code, in ISO 3166-1 alpha-2 format, for the
-    #   country or region.
+    #   country or region. This field is optional and is not required for
+    #   origination identity types that are not country-specific, such as
+    #   RCS agents.
     #   @return [String]
     #
     # @!attribute [rw] client_token
@@ -3403,7 +4311,7 @@ module Aws::PinpointSMSVoiceV2
     #   contain the details for the requested NumberCapability. The Key is
     #   the two-letter ISO country code. For a list of supported ISO country
     #   codes, see [Supported countries and regions (SMS channel)][1] in the
-    #   AWS End User Messaging SMS User Guide.
+    #   End User Messaging SMS User Guide.
     #
     #
     #
@@ -3422,8 +4330,8 @@ module Aws::PinpointSMSVoiceV2
     end
 
     # @!attribute [rw] resource_arn
-    #   The Amazon Resource Name (ARN) of the AWS End User Messaging SMS and
-    #   Voice resource attached to the resource-based policy.
+    #   The Amazon Resource Name (ARN) of the End User Messaging SMS
+    #   resource attached to the resource-based policy.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/GetResourcePolicyRequest AWS API Documentation
@@ -3435,13 +4343,13 @@ module Aws::PinpointSMSVoiceV2
     end
 
     # @!attribute [rw] resource_arn
-    #   The Amazon Resource Name (ARN) of the AWS End User Messaging SMS and
-    #   Voice resource attached to the resource-based policy.
+    #   The Amazon Resource Name (ARN) of the End User Messaging SMS
+    #   resource attached to the resource-based policy.
     #   @return [String]
     #
     # @!attribute [rw] policy
     #   The JSON formatted string that contains the resource-based policy
-    #   attached to the AWS End User Messaging SMS and Voice resource.
+    #   attached to the End User Messaging SMS resource.
     #   @return [String]
     #
     # @!attribute [rw] created_timestamp
@@ -3552,12 +4460,64 @@ module Aws::PinpointSMSVoiceV2
       include Aws::Structure
     end
 
+    # @!attribute [rw] channels
+    #   An array of channels to filter the results by.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] use_cases
+    #   An array of use cases to filter the results by.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] tier
+    #   The tier to filter the results by.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   The token to be used for the next set of paginated results. You
+    #   don't need to supply a value for this field in the initial request.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of results to return per each request.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/ListNotifyCountriesRequest AWS API Documentation
+    #
+    class ListNotifyCountriesRequest < Struct.new(
+      :channels,
+      :use_cases,
+      :tier,
+      :next_token,
+      :max_results)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] notify_countries
+    #   An array of NotifyCountryInformation objects that contain the
+    #   results.
+    #   @return [Array<Types::NotifyCountryInformation>]
+    #
+    # @!attribute [rw] next_token
+    #   The token to be used for the next set of paginated results. If this
+    #   field is empty then there are no more results.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/ListNotifyCountriesResult AWS API Documentation
+    #
+    class ListNotifyCountriesResult < Struct.new(
+      :notify_countries,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] pool_id
     #   The unique identifier for the pool. This value can be either the
     #   PoolId or PoolArn.
     #
-    #   If you are using a shared AWS End User Messaging SMS and Voice
-    #   resource then you must use the full Amazon Resource Name(ARN).
+    #   If you are using a shared End User Messaging SMS resource then you
+    #   must use the full Amazon Resource Name(ARN).
     #   @return [String]
     #
     # @!attribute [rw] filters
@@ -3763,6 +4723,252 @@ module Aws::PinpointSMSVoiceV2
       include Aws::Structure
     end
 
+    # The information for notify configurations that meet a specified
+    # criteria.
+    #
+    # @!attribute [rw] name
+    #   The name of the attribute to filter on.
+    #   @return [String]
+    #
+    # @!attribute [rw] values
+    #   An array values to filter for.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/NotifyConfigurationFilter AWS API Documentation
+    #
+    class NotifyConfigurationFilter < Struct.new(
+      :name,
+      :values)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The information for a notify configuration in an Amazon Web Services
+    # account.
+    #
+    # @!attribute [rw] notify_configuration_arn
+    #   The Amazon Resource Name (ARN) for the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] notify_configuration_id
+    #   The unique identifier for the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] display_name
+    #   The display name associated with the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] use_case
+    #   The use case for the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] default_template_id
+    #   The default template identifier associated with the notify
+    #   configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] pool_id
+    #   The identifier of the pool associated with the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] enabled_countries
+    #   An array of two-character ISO country codes, in ISO 3166-1 alpha-2
+    #   format, that are enabled for the notify configuration.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] enabled_channels
+    #   An array of channels enabled for the notify configuration. Supported
+    #   values include `SMS` and `VOICE`.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] tier
+    #   The tier of the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] tier_upgrade_status
+    #   The tier upgrade status of the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] rejection_reason
+    #   The reason the notify configuration was rejected, if applicable.
+    #   @return [String]
+    #
+    # @!attribute [rw] deletion_protection_enabled
+    #   When set to true deletion protection is enabled. By default this is
+    #   set to false.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] created_timestamp
+    #   The time when the notify configuration was created, in [UNIX epoch
+    #   time][1] format.
+    #
+    #
+    #
+    #   [1]: https://www.epochconverter.com/
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/NotifyConfigurationInformation AWS API Documentation
+    #
+    class NotifyConfigurationInformation < Struct.new(
+      :notify_configuration_arn,
+      :notify_configuration_id,
+      :display_name,
+      :use_case,
+      :default_template_id,
+      :pool_id,
+      :enabled_countries,
+      :enabled_channels,
+      :tier,
+      :tier_upgrade_status,
+      :status,
+      :rejection_reason,
+      :deletion_protection_enabled,
+      :created_timestamp)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The information for a country that supports notify messaging.
+    #
+    # @!attribute [rw] iso_country_code
+    #   The two-character code, in ISO 3166-1 alpha-2 format, for the
+    #   country or region.
+    #   @return [String]
+    #
+    # @!attribute [rw] country_name
+    #   The name of the country.
+    #   @return [String]
+    #
+    # @!attribute [rw] supported_channels
+    #   An array of supported channels for the country. Supported values
+    #   include `SMS` and `VOICE`.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] supported_use_cases
+    #   An array of supported use cases for the country.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] supported_tiers
+    #   An array of supported tiers for the country.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] customer_owned_identity_required
+    #   Whether a customer-owned identity is required to send notify
+    #   messages to this country.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/NotifyCountryInformation AWS API Documentation
+    #
+    class NotifyCountryInformation < Struct.new(
+      :iso_country_code,
+      :country_name,
+      :supported_channels,
+      :supported_use_cases,
+      :supported_tiers,
+      :customer_owned_identity_required)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The information for notify templates that meet a specified criteria.
+    #
+    # @!attribute [rw] name
+    #   The name of the attribute to filter on.
+    #   @return [String]
+    #
+    # @!attribute [rw] values
+    #   An array values to filter for.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/NotifyTemplateFilter AWS API Documentation
+    #
+    class NotifyTemplateFilter < Struct.new(
+      :name,
+      :values)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The information for a system-managed notify template in an Amazon Web
+    # Services account.
+    #
+    # @!attribute [rw] template_id
+    #   The unique identifier for the template.
+    #   @return [String]
+    #
+    # @!attribute [rw] version
+    #   The version of the template.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] template_type
+    #   The type of the template.
+    #   @return [String]
+    #
+    # @!attribute [rw] channels
+    #   The channels for the template. Supported values are `SMS` and
+    #   `VOICE`.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] tier_access
+    #   The tier access level for the template.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] status
+    #   The current status of the template.
+    #   @return [String]
+    #
+    # @!attribute [rw] supported_countries
+    #   An array of supported country codes for the template.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] language_code
+    #   The language code for the template.
+    #   @return [String]
+    #
+    # @!attribute [rw] content
+    #   The content of the template.
+    #   @return [String]
+    #
+    # @!attribute [rw] variables
+    #   An array of template variable metadata for the template.
+    #   @return [Hash<String,Types::TemplateVariableMetadata>]
+    #
+    # @!attribute [rw] supported_voice_ids
+    #   An array of supported voice IDs for voice templates.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] created_timestamp
+    #   The time when the notify template was created, in [UNIX epoch
+    #   time][1] format.
+    #
+    #
+    #
+    #   [1]: https://www.epochconverter.com/
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/NotifyTemplateInformation AWS API Documentation
+    #
+    class NotifyTemplateInformation < Struct.new(
+      :template_id,
+      :version,
+      :template_type,
+      :channels,
+      :tier_access,
+      :status,
+      :supported_countries,
+      :language_code,
+      :content,
+      :variables,
+      :supported_voice_ids,
+      :created_timestamp)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The information for all OptOutList in an Amazon Web Services account.
     #
     # @!attribute [rw] opt_out_list_arn
@@ -3853,7 +5059,9 @@ module Aws::PinpointSMSVoiceV2
     #
     # @!attribute [rw] iso_country_code
     #   The two-character code, in ISO 3166-1 alpha-2 format, for the
-    #   country or region.
+    #   country or region. This field is optional and may not be present for
+    #   origination identity types that are not country-specific, such as
+    #   RCS agents.
     #   @return [String]
     #
     # @!attribute [rw] number_capabilities
@@ -3955,13 +5163,13 @@ module Aws::PinpointSMSVoiceV2
     #   @return [String]
     #
     # @!attribute [rw] self_managed_opt_outs_enabled
-    #   When set to false an end recipient sends a message that begins with
-    #   HELP or STOP to one of your dedicated numbers, AWS End User
-    #   Messaging SMS and Voice automatically replies with a customizable
-    #   message and adds the end recipient to the OptOutList. When set to
-    #   true you're responsible for responding to HELP and STOP requests.
-    #   You're also responsible for tracking and honoring opt-out request.
-    #   For more information see [Self-managed opt-outs][1]
+    #   When set to false and an end recipient sends a message that begins
+    #   with HELP or STOP to one of your dedicated numbers, End User
+    #   Messaging SMS automatically replies with a customizable message and
+    #   adds the end recipient to the OptOutList. When set to true you're
+    #   responsible for responding to HELP and STOP requests. You're also
+    #   responsible for tracking and honoring opt-out request. For more
+    #   information see [Self-managed opt-outs][1]
     #
     #
     #
@@ -3971,6 +5179,11 @@ module Aws::PinpointSMSVoiceV2
     # @!attribute [rw] opt_out_list_name
     #   The name of the OptOutList associated with the phone number.
     #   @return [String]
+    #
+    # @!attribute [rw] international_sending_enabled
+    #   When set to true the international sending of phone number is
+    #   Enabled.
+    #   @return [Boolean]
     #
     # @!attribute [rw] deletion_protection_enabled
     #   When set to true the phone number can't be deleted.
@@ -4010,6 +5223,7 @@ module Aws::PinpointSMSVoiceV2
       :two_way_channel_role,
       :self_managed_opt_outs_enabled,
       :opt_out_list_name,
+      :international_sending_enabled,
       :deletion_protection_enabled,
       :pool_id,
       :registration_id,
@@ -4073,12 +5287,12 @@ module Aws::PinpointSMSVoiceV2
     #
     # @!attribute [rw] self_managed_opt_outs_enabled
     #   When set to false, an end recipient sends a message that begins with
-    #   HELP or STOP to one of your dedicated numbers, AWS End User
-    #   Messaging SMS and Voice automatically replies with a customizable
-    #   message and adds the end recipient to the OptOutList. When set to
-    #   true you're responsible for responding to HELP and STOP requests.
-    #   You're also responsible for tracking and honoring opt-out requests.
-    #   For more information see [Self-managed opt-outs][1]
+    #   HELP or STOP to one of your dedicated numbers, End User Messaging
+    #   SMS automatically replies with a customizable message and adds the
+    #   end recipient to the OptOutList. When set to true you're
+    #   responsible for responding to HELP and STOP requests. You're also
+    #   responsible for tracking and honoring opt-out requests. For more
+    #   information see [Self-managed opt-outs][1]
     #
     #
     #
@@ -4226,7 +5440,8 @@ module Aws::PinpointSMSVoiceV2
       include Aws::Structure
     end
 
-    # Provides details on a RuleSetNumberOverride.
+    # Provides details on phone number rule overrides for a protect
+    # configuration.
     #
     # @!attribute [rw] destination_phone_number
     #   The destination phone number in E.164 format.
@@ -4294,8 +5509,8 @@ module Aws::PinpointSMSVoiceV2
     #   PhoneNumberArn while DescribeSenderIds can be used to get the values
     #   for SenderId and SenderIdArn.
     #
-    #   If you are using a shared AWS End User Messaging SMS and Voice
-    #   resource then you must use the full Amazon Resource Name(ARN).
+    #   If you are using a shared End User Messaging SMS resource then you
+    #   must use the full Amazon Resource Name(ARN).
     #   @return [String]
     #
     # @!attribute [rw] keyword
@@ -4396,8 +5611,8 @@ module Aws::PinpointSMSVoiceV2
     # @!attribute [rw] opt_out_list_name
     #   The OptOutListName or OptOutListArn to add the phone number to.
     #
-    #   If you are using a shared AWS End User Messaging SMS and Voice
-    #   resource then you must use the full Amazon Resource Name(ARN).
+    #   If you are using a shared End User Messaging SMS resource then you
+    #   must use the full Amazon Resource Name(ARN).
     #   @return [String]
     #
     # @!attribute [rw] opted_out_number
@@ -4615,8 +5830,8 @@ module Aws::PinpointSMSVoiceV2
     end
 
     # @!attribute [rw] resource_arn
-    #   The Amazon Resource Name (ARN) of the AWS End User Messaging SMS and
-    #   Voice resource to attach the resource-based policy to.
+    #   The Amazon Resource Name (ARN) of the End User Messaging SMS
+    #   resource to attach the resource-based policy to.
     #   @return [String]
     #
     # @!attribute [rw] policy
@@ -4633,8 +5848,8 @@ module Aws::PinpointSMSVoiceV2
     end
 
     # @!attribute [rw] resource_arn
-    #   The Amazon Resource Name (ARN) of the AWS End User Messaging SMS and
-    #   Voice resource attached to the resource-based policy.
+    #   The Amazon Resource Name (ARN) of the End User Messaging SMS
+    #   resource attached to the resource-based policy.
     #   @return [String]
     #
     # @!attribute [rw] policy
@@ -4656,6 +5871,676 @@ module Aws::PinpointSMSVoiceV2
       :resource_arn,
       :policy,
       :created_timestamp)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The information for an RCS agent that meets a specified criteria.
+    #
+    # @!attribute [rw] name
+    #   The name of the attribute to filter on.
+    #   @return [String]
+    #
+    # @!attribute [rw] values
+    #   An array values to filter for.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/RcsAgentFilter AWS API Documentation
+    #
+    class RcsAgentFilter < Struct.new(
+      :name,
+      :values)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The information for an RCS agent in an Amazon Web Services account.
+    #
+    # @!attribute [rw] rcs_agent_arn
+    #   The Amazon Resource Name (ARN) of the RCS agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] rcs_agent_id
+    #   The unique identifier for the RCS agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the RCS agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_timestamp
+    #   The time when the RCS agent was created, in [UNIX epoch time][1]
+    #   format.
+    #
+    #
+    #
+    #   [1]: https://www.epochconverter.com/
+    #   @return [Time]
+    #
+    # @!attribute [rw] deletion_protection_enabled
+    #   When set to true the RCS agent can't be deleted.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] opt_out_list_name
+    #   The name of the OptOutList associated with the RCS agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] self_managed_opt_outs_enabled
+    #   When set to true you're responsible for responding to HELP and STOP
+    #   requests. You're also responsible for tracking and honoring opt-out
+    #   requests.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] two_way_channel_arn
+    #   The Amazon Resource Name (ARN) of the two way channel.
+    #   @return [String]
+    #
+    # @!attribute [rw] two_way_channel_role
+    #   An optional IAM Role Arn for a service to assume, to be able to post
+    #   inbound SMS messages.
+    #   @return [String]
+    #
+    # @!attribute [rw] two_way_enabled
+    #   When set to true you can receive incoming text messages from your
+    #   end recipients using the TwoWayChannelArn.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] pool_id
+    #   The unique identifier of the pool associated with the RCS agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] two_way_media_s3_bucket_name
+    #   The name of the S3 bucket where inbound RCS media files are stored.
+    #   @return [String]
+    #
+    # @!attribute [rw] two_way_media_s3_key_prefix
+    #   The key prefix used for inbound RCS media objects in the S3 bucket.
+    #   @return [String]
+    #
+    # @!attribute [rw] two_way_media_s3_role
+    #   The ARN of the IAM role used to write inbound RCS media files to the
+    #   S3 bucket.
+    #   @return [String]
+    #
+    # @!attribute [rw] two_way_rcs_events_enabled
+    #   The list of RCS event types enabled for two-way messaging on the
+    #   agent.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] testing_agent
+    #   The testing agent information associated with the RCS agent.
+    #   @return [Types::TestingAgentInformation]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/RcsAgentInformation AWS API Documentation
+    #
+    class RcsAgentInformation < Struct.new(
+      :rcs_agent_arn,
+      :rcs_agent_id,
+      :status,
+      :created_timestamp,
+      :deletion_protection_enabled,
+      :opt_out_list_name,
+      :self_managed_opt_outs_enabled,
+      :two_way_channel_arn,
+      :two_way_channel_role,
+      :two_way_enabled,
+      :pool_id,
+      :two_way_media_s3_bucket_name,
+      :two_way_media_s3_key_prefix,
+      :two_way_media_s3_role,
+      :two_way_rcs_events_enabled,
+      :testing_agent)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The content of a rich card, including title, description, media, and
+    # card-level suggested actions.
+    #
+    # @!attribute [rw] title
+    #   The title of the card. Maximum 200 characters.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   The description text of the card. Maximum 2000 characters.
+    #   @return [String]
+    #
+    # @!attribute [rw] media
+    #   The media content of the card, including the file URL, optional
+    #   thumbnail, and display height.
+    #   @return [Types::RcsCardMedia]
+    #
+    # @!attribute [rw] suggestions
+    #   Card-level suggested actions. Maximum 4 suggestions per card.
+    #   @return [Array<Types::RcsSuggestedAction>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/RcsCardContent AWS API Documentation
+    #
+    class RcsCardContent < Struct.new(
+      :title,
+      :description,
+      :media,
+      :suggestions)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The media content of a rich card, including the file URL, optional
+    # thumbnail, and display height.
+    #
+    # @!attribute [rw] file_url
+    #   The S3 URI of the media file for the card, in the format
+    #   `s3://bucket-name/key`. Maximum 2000 characters.
+    #   @return [String]
+    #
+    # @!attribute [rw] thumbnail_url
+    #   The S3 URI of an optional thumbnail image for the card media.
+    #   Maximum 2000 characters.
+    #   @return [String]
+    #
+    # @!attribute [rw] height
+    #   The display height of the media in the card. Valid values are SHORT,
+    #   MEDIUM, and TALL.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/RcsCardMedia AWS API Documentation
+    #
+    class RcsCardMedia < Struct.new(
+      :file_url,
+      :thumbnail_url,
+      :height)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A carousel of 2 to 10 scrollable rich cards.
+    #
+    # @!attribute [rw] card_width
+    #   The width of cards in the carousel. Valid values are SMALL and
+    #   MEDIUM.
+    #   @return [String]
+    #
+    # @!attribute [rw] card_contents
+    #   The list of cards in the carousel. Minimum 2, maximum 10 cards.
+    #   @return [Array<Types::RcsCarouselCardContent>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/RcsCarousel AWS API Documentation
+    #
+    class RcsCarousel < Struct.new(
+      :card_width,
+      :card_contents)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The content of a carousel card, including title, description, media,
+    # and card-level suggested actions. Media height is restricted to SHORT
+    # or MEDIUM.
+    #
+    # @!attribute [rw] title
+    #   The title of the carousel card. Maximum 200 characters.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   The description text of the carousel card. Maximum 2000 characters.
+    #   @return [String]
+    #
+    # @!attribute [rw] media
+    #   The media content of the carousel card. Media height is restricted
+    #   to SHORT or MEDIUM (TALL is not supported in carousels).
+    #   @return [Types::RcsCarouselCardMedia]
+    #
+    # @!attribute [rw] suggestions
+    #   Card-level suggested actions for this carousel card. Maximum 4
+    #   suggestions per card.
+    #   @return [Array<Types::RcsSuggestedAction>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/RcsCarouselCardContent AWS API Documentation
+    #
+    class RcsCarouselCardContent < Struct.new(
+      :title,
+      :description,
+      :media,
+      :suggestions)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The media content of a carousel card. Display height is restricted to
+    # SHORT or MEDIUM (TALL is not supported in carousels).
+    #
+    # @!attribute [rw] file_url
+    #   The S3 URI of the media file for the carousel card. Maximum 2000
+    #   characters.
+    #   @return [String]
+    #
+    # @!attribute [rw] thumbnail_url
+    #   The S3 URI of an optional thumbnail image for the carousel card
+    #   media. Maximum 2000 characters.
+    #   @return [String]
+    #
+    # @!attribute [rw] height
+    #   The display height of the media in the carousel card. Valid values
+    #   are SHORT and MEDIUM.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/RcsCarouselCardMedia AWS API Documentation
+    #
+    class RcsCarouselCardMedia < Struct.new(
+      :file_url,
+      :thumbnail_url,
+      :height)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The message body of an RCS message. Exactly one content type must be
+    # specified.
+    #
+    # @note RcsContent is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @!attribute [rw] text_message
+    #   A plain text RCS message.
+    #   @return [Types::RcsTextMessage]
+    #
+    # @!attribute [rw] file_message
+    #   A file message containing a media file (image, video, audio, or PDF)
+    #   with an optional thumbnail.
+    #   @return [Types::RcsFileMessage]
+    #
+    # @!attribute [rw] rich_card
+    #   A standalone rich card with media, title, description, and suggested
+    #   actions.
+    #   @return [Types::RcsStandaloneCard]
+    #
+    # @!attribute [rw] carousel
+    #   A carousel of 2 to 10 scrollable cards, each with media, title,
+    #   description, and suggested actions.
+    #   @return [Types::RcsCarousel]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/RcsContent AWS API Documentation
+    #
+    class RcsContent < Struct.new(
+      :text_message,
+      :file_message,
+      :rich_card,
+      :carousel,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class TextMessage < RcsContent; end
+      class FileMessage < RcsContent; end
+      class RichCard < RcsContent; end
+      class Carousel < RcsContent; end
+      class Unknown < RcsContent; end
+    end
+
+    # A suggested action that creates a calendar event on the recipient's
+    # device.
+    #
+    # @!attribute [rw] text
+    #   The display text of the action. Maximum 25 characters.
+    #   @return [String]
+    #
+    # @!attribute [rw] postback_data
+    #   The postback data sent to your webhook when the user taps this
+    #   action. Maximum 2048 characters.
+    #   @return [String]
+    #
+    # @!attribute [rw] title
+    #   The title of the calendar event. Maximum 100 characters.
+    #   @return [String]
+    #
+    # @!attribute [rw] start_time
+    #   The start time of the calendar event in ISO 8601 format.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   The end time of the calendar event in ISO 8601 format.
+    #   @return [Time]
+    #
+    # @!attribute [rw] description
+    #   An optional description for the calendar event. Maximum 500
+    #   characters.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/RcsCreateCalendarEventAction AWS API Documentation
+    #
+    class RcsCreateCalendarEventAction < Struct.new(
+      :text,
+      :postback_data,
+      :title,
+      :start_time,
+      :end_time,
+      :description)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A suggested action that initiates a phone call to a specified number
+    # when tapped by the recipient.
+    #
+    # @!attribute [rw] text
+    #   The display text of the action. Maximum 25 characters.
+    #   @return [String]
+    #
+    # @!attribute [rw] postback_data
+    #   The postback data sent to your webhook when the user taps this
+    #   action. Maximum 2048 characters.
+    #   @return [String]
+    #
+    # @!attribute [rw] phone_number
+    #   The phone number to dial in E.164 format.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/RcsDialPhoneAction AWS API Documentation
+    #
+    class RcsDialPhoneAction < Struct.new(
+      :text,
+      :postback_data,
+      :phone_number)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration for SMS or MMS fallback when RCS delivery fails or the
+    # TimeToLive expires without delivery confirmation.
+    #
+    # @!attribute [rw] channel
+    #   The fallback channel to use when RCS delivery fails. Valid values
+    #   are SMS and MMS. SMS and MMS are mutually exclusive.
+    #   @return [String]
+    #
+    # @!attribute [rw] message_body
+    #   The text body of the fallback message. Required for SMS fallback.
+    #   For MMS fallback, at least one of MessageBody or MediaUrls must be
+    #   provided.
+    #   @return [String]
+    #
+    # @!attribute [rw] media_urls
+    #   An array of S3 URIs to media files for MMS fallback. Only valid when
+    #   Channel is MMS.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] origination_identity
+    #   The origination identity to use for the fallback message. This can
+    #   be a PhoneNumber, PhoneNumberId, PhoneNumberArn, SenderId, or
+    #   SenderIdArn. Pool IDs and pool ARNs are not accepted. If not
+    #   specified and the original message was sent via a pool, the service
+    #   selects a suitable number from the pool.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/RcsFallbackConfiguration AWS API Documentation
+    #
+    class RcsFallbackConfiguration < Struct.new(
+      :channel,
+      :message_body,
+      :media_urls,
+      :origination_identity)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A file message containing a media file (image, video, audio, or PDF)
+    # with an optional thumbnail.
+    #
+    # @!attribute [rw] file_url
+    #   The S3 URI of the media file to send, in the format
+    #   `s3://bucket-name/key`. The service downloads the file from your S3
+    #   bucket, rehosts it, and generates a presigned URL for the
+    #   aggregator. Maximum 2000 characters.
+    #   @return [String]
+    #
+    # @!attribute [rw] thumbnail_url
+    #   The S3 URI of an optional thumbnail image for the media file, in the
+    #   format `s3://bucket-name/key`. Maximum 2000 characters.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/RcsFileMessage AWS API Documentation
+    #
+    class RcsFileMessage < Struct.new(
+      :file_url,
+      :thumbnail_url)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The content of an RCS message, containing the message body (text,
+    # file, rich card, or carousel) and optional message-level suggested
+    # actions.
+    #
+    # @!attribute [rw] content
+    #   The content of the RCS message. Exactly one content type must be
+    #   specified: TextMessage, FileMessage, RichCard, or Carousel.
+    #   @return [Types::RcsContent]
+    #
+    # @!attribute [rw] suggestions
+    #   Message-level suggested actions displayed to the recipient. Maximum
+    #   11 suggestions per message.
+    #   @return [Array<Types::RcsSuggestedAction>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/RcsMessageContent AWS API Documentation
+    #
+    class RcsMessageContent < Struct.new(
+      :content,
+      :suggestions)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A suggested action that opens a URL in the recipient's browser or an
+    # in-app webview.
+    #
+    # @!attribute [rw] text
+    #   The display text of the action. Maximum 25 characters.
+    #   @return [String]
+    #
+    # @!attribute [rw] postback_data
+    #   The postback data sent to your webhook when the user taps this
+    #   action. Maximum 2048 characters.
+    #   @return [String]
+    #
+    # @!attribute [rw] url
+    #   The URL to open. Must start with https://. Maximum 2048 characters.
+    #   @return [String]
+    #
+    # @!attribute [rw] application
+    #   How to open the URL. BROWSER opens in the device's default browser.
+    #   WEBVIEW opens in an in-app webview.
+    #   @return [String]
+    #
+    # @!attribute [rw] webview_view_mode
+    #   The display mode of the webview. Valid values are FULL, HALF, and
+    #   TALL. Only applicable when Application is WEBVIEW.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/RcsOpenUrlAction AWS API Documentation
+    #
+    class RcsOpenUrlAction < Struct.new(
+      :text,
+      :postback_data,
+      :url,
+      :application,
+      :webview_view_mode)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A suggested reply action that sends predefined text and postback data
+    # when tapped by the recipient.
+    #
+    # @!attribute [rw] text
+    #   The display text of the suggested reply. Maximum 25 characters.
+    #   @return [String]
+    #
+    # @!attribute [rw] postback_data
+    #   The postback data sent to your webhook when the user taps this
+    #   reply. Maximum 2048 characters.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/RcsReplyAction AWS API Documentation
+    #
+    class RcsReplyAction < Struct.new(
+      :text,
+      :postback_data)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A suggested action that requests the recipient's current location.
+    #
+    # @!attribute [rw] text
+    #   The display text of the action. Maximum 25 characters.
+    #   @return [String]
+    #
+    # @!attribute [rw] postback_data
+    #   The postback data sent to your webhook when the user taps this
+    #   action. Maximum 2048 characters.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/RcsRequestLocationAction AWS API Documentation
+    #
+    class RcsRequestLocationAction < Struct.new(
+      :text,
+      :postback_data)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A suggested action that shows a location on a map when tapped by the
+    # recipient.
+    #
+    # @!attribute [rw] text
+    #   The display text of the action. Maximum 25 characters.
+    #   @return [String]
+    #
+    # @!attribute [rw] postback_data
+    #   The postback data sent to your webhook when the user taps this
+    #   action. Maximum 2048 characters.
+    #   @return [String]
+    #
+    # @!attribute [rw] latitude
+    #   The latitude of the location. Valid values are -90 to 90.
+    #   @return [Float]
+    #
+    # @!attribute [rw] longitude
+    #   The longitude of the location. Valid values are -180 to 180.
+    #   @return [Float]
+    #
+    # @!attribute [rw] label
+    #   An optional label for the location pin. Maximum 100 characters.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/RcsShowLocationAction AWS API Documentation
+    #
+    class RcsShowLocationAction < Struct.new(
+      :text,
+      :postback_data,
+      :latitude,
+      :longitude,
+      :label)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A standalone rich card with media, title, description, and suggested
+    # actions.
+    #
+    # @!attribute [rw] card_orientation
+    #   The orientation of the rich card. Valid values are HORIZONTAL and
+    #   VERTICAL.
+    #   @return [String]
+    #
+    # @!attribute [rw] thumbnail_image_alignment
+    #   The alignment of the thumbnail image in a horizontal card. Valid
+    #   values are LEFT and RIGHT. Only applicable when CardOrientation is
+    #   HORIZONTAL.
+    #   @return [String]
+    #
+    # @!attribute [rw] card_content
+    #   The content of the rich card, including title, description, media,
+    #   and card-level suggested actions.
+    #   @return [Types::RcsCardContent]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/RcsStandaloneCard AWS API Documentation
+    #
+    class RcsStandaloneCard < Struct.new(
+      :card_orientation,
+      :thumbnail_image_alignment,
+      :card_content)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A suggested action displayed to the RCS message recipient. Can be a
+    # reply, open URL, dial phone, show location, request location, or
+    # create calendar event.
+    #
+    # @note RcsSuggestedAction is a union - when making an API calls you must set exactly one of the members.
+    #
+    # @!attribute [rw] reply
+    #   A suggested reply that sends predefined text and postback data when
+    #   tapped.
+    #   @return [Types::RcsReplyAction]
+    #
+    # @!attribute [rw] open_url
+    #   A suggested action that opens a URL in the user's browser or a
+    #   webview.
+    #   @return [Types::RcsOpenUrlAction]
+    #
+    # @!attribute [rw] dial_phone
+    #   A suggested action that initiates a phone call to the specified
+    #   number.
+    #   @return [Types::RcsDialPhoneAction]
+    #
+    # @!attribute [rw] show_location
+    #   A suggested action that shows a location on a map.
+    #   @return [Types::RcsShowLocationAction]
+    #
+    # @!attribute [rw] request_location
+    #   A suggested action that requests the user's current location.
+    #   @return [Types::RcsRequestLocationAction]
+    #
+    # @!attribute [rw] create_calendar_event
+    #   A suggested action that creates a calendar event on the user's
+    #   device.
+    #   @return [Types::RcsCreateCalendarEventAction]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/RcsSuggestedAction AWS API Documentation
+    #
+    class RcsSuggestedAction < Struct.new(
+      :reply,
+      :open_url,
+      :dial_phone,
+      :show_location,
+      :request_location,
+      :create_calendar_event,
+      :unknown)
+      SENSITIVE = []
+      include Aws::Structure
+      include Aws::Structure::Union
+
+      class Reply < RcsSuggestedAction; end
+      class OpenUrl < RcsSuggestedAction; end
+      class DialPhone < RcsSuggestedAction; end
+      class ShowLocation < RcsSuggestedAction; end
+      class RequestLocation < RcsSuggestedAction; end
+      class CreateCalendarEvent < RcsSuggestedAction; end
+      class Unknown < RcsSuggestedAction; end
+    end
+
+    # A plain text RCS message body.
+    #
+    # @!attribute [rw] body
+    #   The text body of the RCS message. Maximum 3072 characters.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/RcsTextMessage AWS API Documentation
+    #
+    class RcsTextMessage < Struct.new(
+      :body)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4773,6 +6658,11 @@ module Aws::PinpointSMSVoiceV2
     #   [1]: https://www.epochconverter.com/
     #   @return [Time]
     #
+    # @!attribute [rw] attachment_url
+    #   The URL to the document that's associated with the registration
+    #   attachment.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/RegistrationAttachmentsInformation AWS API Documentation
     #
     class RegistrationAttachmentsInformation < Struct.new(
@@ -4780,7 +6670,8 @@ module Aws::PinpointSMSVoiceV2
       :registration_attachment_id,
       :attachment_status,
       :attachment_upload_error_reason,
-      :created_timestamp)
+      :created_timestamp,
+      :attachment_url)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4937,6 +6828,12 @@ module Aws::PinpointSMSVoiceV2
     #   A description of why the registration was denied.
     #   @return [String]
     #
+    # @!attribute [rw] feedback
+    #   Generative AI feedback information provided for this specific field
+    #   during the registration review process. This may include validation
+    #   errors, suggestions for improvement, or additional requirements.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/RegistrationFieldValueInformation AWS API Documentation
     #
     class RegistrationFieldValueInformation < Struct.new(
@@ -4944,7 +6841,8 @@ module Aws::PinpointSMSVoiceV2
       :select_choices,
       :text_value,
       :registration_attachment_id,
-      :denied_reason)
+      :denied_reason,
+      :feedback)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5250,13 +7148,20 @@ module Aws::PinpointSMSVoiceV2
     #   An array of RegistrationDeniedReasonInformation objects.
     #   @return [Array<Types::RegistrationDeniedReasonInformation>]
     #
+    # @!attribute [rw] feedback
+    #   Generative AI feedback information provided during the registration
+    #   review process. This includes comments, suggestions, or additional
+    #   requirements.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/RegistrationVersionInformation AWS API Documentation
     #
     class RegistrationVersionInformation < Struct.new(
       :version_number,
       :registration_version_status,
       :registration_version_status_history,
-      :denied_reasons)
+      :denied_reasons,
+      :feedback)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -5276,6 +7181,15 @@ module Aws::PinpointSMSVoiceV2
     # @!attribute [rw] submitted_timestamp
     #   The time when the registration was in the submitted state, in [UNIX
     #   epoch time][1] format.
+    #
+    #
+    #
+    #   [1]: https://www.epochconverter.com/
+    #   @return [Time]
+    #
+    # @!attribute [rw] aws_reviewing_timestamp
+    #   The time when the registration was in the AWS reviewing state, in
+    #   [UNIX epoch time][1] format.
     #
     #
     #
@@ -5350,6 +7264,7 @@ module Aws::PinpointSMSVoiceV2
     class RegistrationVersionStatusHistory < Struct.new(
       :draft_timestamp,
       :submitted_timestamp,
+      :aws_reviewing_timestamp,
       :reviewing_timestamp,
       :requires_authentication_timestamp,
       :approved_timestamp,
@@ -5366,8 +7281,8 @@ module Aws::PinpointSMSVoiceV2
     #   You can use DescribePhoneNumbers to get the values for PhoneNumberId
     #   and PhoneNumberArn.
     #
-    #   If you are using a shared AWS End User Messaging SMS and Voice
-    #   resource then you must use the full Amazon Resource Name(ARN).
+    #   If you are using a shared End User Messaging SMS resource then you
+    #   must use the full Amazon Resource Name(ARN).
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/ReleasePhoneNumberRequest AWS API Documentation
@@ -5431,9 +7346,9 @@ module Aws::PinpointSMSVoiceV2
     #   @return [String]
     #
     # @!attribute [rw] self_managed_opt_outs_enabled
-    #   By default this is set to false. When an end recipient sends a
-    #   message that begins with HELP or STOP to one of your dedicated
-    #   numbers, AWS End User Messaging SMS and Voice automatically replies
+    #   By default this is set to false. When set to false and an end
+    #   recipient sends a message that begins with HELP or STOP to one of
+    #   your dedicated numbers, End User Messaging SMS automatically replies
     #   with a customizable message and adds the end recipient to the
     #   OptOutList. When set to true you're responsible for responding to
     #   HELP and STOP requests. You're also responsible for tracking and
@@ -5550,8 +7465,8 @@ module Aws::PinpointSMSVoiceV2
     #   @return [String]
     #
     # @!attribute [rw] message_type
-    #   The type of message. Valid values are TRANSACTIONAL for messages
-    #   that are critical or time-sensitive and PROMOTIONAL for messages
+    #   The type of message. Valid values are `TRANSACTIONAL` for messages
+    #   that are critical or time-sensitive and `PROMOTIONAL` for messages
     #   that aren't critical or time-sensitive.
     #   @return [String]
     #
@@ -5562,22 +7477,25 @@ module Aws::PinpointSMSVoiceV2
     #
     # @!attribute [rw] number_type
     #   The type of phone number to request.
+    #
+    #   When you request a `SIMULATOR` phone number, you must set
+    #   **MessageType** as `TRANSACTIONAL`.
     #   @return [String]
     #
     # @!attribute [rw] opt_out_list_name
     #   The name of the OptOutList to associate with the phone number. You
     #   can use the OptOutListName or OptOutListArn.
     #
-    #   If you are using a shared AWS End User Messaging SMS and Voice
-    #   resource then you must use the full Amazon Resource Name(ARN).
+    #   If you are using a shared End User Messaging SMS resource then you
+    #   must use the full Amazon Resource Name(ARN).
     #   @return [String]
     #
     # @!attribute [rw] pool_id
     #   The pool to associated with the phone number. You can use the PoolId
     #   or PoolArn.
     #
-    #   If you are using a shared AWS End User Messaging SMS and Voice
-    #   resource then you must use the full Amazon Resource Name(ARN).
+    #   If you are using a shared End User Messaging SMS resource then you
+    #   must use the full Amazon Resource Name(ARN).
     #   @return [String]
     #
     # @!attribute [rw] registration_id
@@ -5585,14 +7503,19 @@ module Aws::PinpointSMSVoiceV2
     #   registration process.
     #   @return [String]
     #
+    # @!attribute [rw] international_sending_enabled
+    #   By default this is set to false. When set to true the international
+    #   sending of phone number is Enabled.
+    #   @return [Boolean]
+    #
     # @!attribute [rw] deletion_protection_enabled
     #   By default this is set to false. When set to true the phone number
     #   can't be deleted.
     #   @return [Boolean]
     #
     # @!attribute [rw] tags
-    #   An array of tags (key and value pairs) associate with the requested
-    #   phone number.
+    #   An array of tags (key and value pairs) to associate with the
+    #   requested phone number.
     #   @return [Array<Types::Tag>]
     #
     # @!attribute [rw] client_token
@@ -5615,6 +7538,7 @@ module Aws::PinpointSMSVoiceV2
       :opt_out_list_name,
       :pool_id,
       :registration_id,
+      :international_sending_enabled,
       :deletion_protection_enabled,
       :tags,
       :client_token)
@@ -5677,9 +7601,9 @@ module Aws::PinpointSMSVoiceV2
     #   @return [String]
     #
     # @!attribute [rw] self_managed_opt_outs_enabled
-    #   By default this is set to false. When an end recipient sends a
-    #   message that begins with HELP or STOP to one of your dedicated
-    #   numbers, AWS End User Messaging SMS and Voice automatically replies
+    #   By default this is set to false. When set to false and an end
+    #   recipient sends a message that begins with HELP or STOP to one of
+    #   your dedicated numbers, End User Messaging SMS automatically replies
     #   with a customizable message and adds the end recipient to the
     #   OptOutList. When set to true you're responsible for responding to
     #   HELP and STOP requests. You're also responsible for tracking and
@@ -5690,6 +7614,11 @@ module Aws::PinpointSMSVoiceV2
     #   The name of the OptOutList that is associated with the requested
     #   phone number.
     #   @return [String]
+    #
+    # @!attribute [rw] international_sending_enabled
+    #   By default this is set to false. When set to true the international
+    #   sending of phone number is Enabled.
+    #   @return [Boolean]
     #
     # @!attribute [rw] deletion_protection_enabled
     #   By default this is set to false. When set to true the phone number
@@ -5735,6 +7664,7 @@ module Aws::PinpointSMSVoiceV2
       :two_way_channel_role,
       :self_managed_opt_outs_enabled,
       :opt_out_list_name,
+      :international_sending_enabled,
       :deletion_protection_enabled,
       :pool_id,
       :registration_id,
@@ -5745,7 +7675,10 @@ module Aws::PinpointSMSVoiceV2
     end
 
     # @!attribute [rw] sender_id
-    #   The sender ID string to request.
+    #   The sender ID string to request. The sender ID can be 1-11
+    #   alphanumeric characters including letters (A-Z, a-z), numbers (0-9),
+    #   or hyphens (-). The sender ID must contain at least one letter and
+    #   cannot start or end with a hyphen.
     #   @return [String]
     #
     # @!attribute [rw] iso_country_code
@@ -5932,8 +7865,8 @@ module Aws::PinpointSMSVoiceV2
     #   PhoneNumber, PhoneNumberId, PhoneNumberArn, SenderId, SenderIdArn,
     #   PoolId, or PoolArn.
     #
-    #   If you are using a shared AWS End User Messaging SMS and Voice
-    #   resource then you must use the full Amazon Resource Name(ARN).
+    #   If you are using a shared End User Messaging SMS resource then you
+    #   must use the full Amazon Resource Name(ARN).
     #   @return [String]
     #
     # @!attribute [rw] configuration_set_name
@@ -5993,8 +7926,8 @@ module Aws::PinpointSMSVoiceV2
     #   PhoneNumber, PhoneNumberId, PhoneNumberArn, SenderId, SenderIdArn,
     #   PoolId, or PoolArn.
     #
-    #   If you are using a shared AWS End User Messaging SMS and Voice
-    #   resource then you must use the full Amazon Resource Name(ARN).
+    #   If you are using a shared End User Messaging SMS resource then you
+    #   must use the full Amazon Resource Name(ARN).
     #   @return [String]
     #
     # @!attribute [rw] message_body
@@ -6004,17 +7937,20 @@ module Aws::PinpointSMSVoiceV2
     # @!attribute [rw] media_urls
     #   An array of URLs to each media file to send.
     #
-    #   The media files have to be stored in a publicly available S3 bucket.
-    #   Supported media file formats are listed in [MMS file types, size and
-    #   character limits][1]. For more information on creating an S3 bucket
-    #   and managing objects, see [Creating a bucket][2] and [Uploading
-    #   objects][3] in the S3 user guide.
+    #   The media files have to be stored in an S3 bucket. Supported media
+    #   file formats are listed in [MMS file types, size and character
+    #   limits][1]. For more information on creating an S3 bucket and
+    #   managing objects, see [Creating a bucket][2], [Uploading objects][3]
+    #   in the *Amazon S3 User Guide*, and [Setting up an Amazon S3 bucket
+    #   for MMS files][4] in the *Amazon Web Services End User Messaging SMS
+    #   User Guide*.
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/sms-voice/latest/userguide/mms-limitations-character.html
     #   [2]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/create-bucket-overview.html
     #   [3]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/upload-objects.html
+    #   [4]: https://docs.aws.amazon.com/sms-voice/latest/userguide/send-mms-message.html#send-mms-message-bucket
     #   @return [Array<String>]
     #
     # @!attribute [rw] configuration_set_name
@@ -6082,17 +8018,290 @@ module Aws::PinpointSMSVoiceV2
       include Aws::Structure
     end
 
+    # @!attribute [rw] notify_configuration_id
+    #   The unique identifier of the notify configuration to use for sending
+    #   the message. This can be either the NotifyConfigurationId or
+    #   NotifyConfigurationArn.
+    #   @return [String]
+    #
+    # @!attribute [rw] destination_phone_number
+    #   The destination phone number in E.164 format.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_id
+    #   The unique identifier of the template to use for the message.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_variables
+    #   A map of template variable names and their values. All variable
+    #   values are passed as strings regardless of the declared variable
+    #   type. For example, pass `INTEGER` values as `"42"` and `BOOLEAN`
+    #   values as `"true"` or `"false"`.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] time_to_live
+    #   How long the text message is valid for, in seconds. By default this
+    #   is 72 hours.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] context
+    #   You can specify custom data in this field. If you do, that data is
+    #   logged to the event destination.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] configuration_set_name
+    #   The name of the configuration set to use. This can be either the
+    #   ConfigurationSetName or ConfigurationSetArn.
+    #   @return [String]
+    #
+    # @!attribute [rw] dry_run
+    #   When set to true, the message is checked and validated, but isn't
+    #   sent to the end recipient.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] message_feedback_enabled
+    #   Set to true to enable message feedback for the message. When a user
+    #   receives the message you need to update the message status using
+    #   PutMessageFeedback.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/SendNotifyTextMessageRequest AWS API Documentation
+    #
+    class SendNotifyTextMessageRequest < Struct.new(
+      :notify_configuration_id,
+      :destination_phone_number,
+      :template_id,
+      :template_variables,
+      :time_to_live,
+      :context,
+      :configuration_set_name,
+      :dry_run,
+      :message_feedback_enabled)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] message_id
+    #   The unique identifier for the message.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_id
+    #   The unique identifier of the template used for the message.
+    #   @return [String]
+    #
+    # @!attribute [rw] resolved_message_body
+    #   The message body after template variable substitution has been
+    #   applied.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/SendNotifyTextMessageResult AWS API Documentation
+    #
+    class SendNotifyTextMessageResult < Struct.new(
+      :message_id,
+      :template_id,
+      :resolved_message_body)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] notify_configuration_id
+    #   The unique identifier of the notify configuration to use for sending
+    #   the message. This can be either the NotifyConfigurationId or
+    #   NotifyConfigurationArn.
+    #   @return [String]
+    #
+    # @!attribute [rw] destination_phone_number
+    #   The destination phone number in E.164 format.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_id
+    #   The unique identifier of the template to use for the message.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_variables
+    #   A map of template variable names and their values. All variable
+    #   values are passed as strings regardless of the declared variable
+    #   type. For example, pass `INTEGER` values as `"42"` and `BOOLEAN`
+    #   values as `"true"` or `"false"`.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] voice_id
+    #   The voice ID to use for the voice message.
+    #   @return [String]
+    #
+    # @!attribute [rw] time_to_live
+    #   How long the voice message is valid for, in seconds. By default this
+    #   is 72 hours.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] context
+    #   You can specify custom data in this field. If you do, that data is
+    #   logged to the event destination.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] configuration_set_name
+    #   The name of the configuration set to use. This can be either the
+    #   ConfigurationSetName or ConfigurationSetArn.
+    #   @return [String]
+    #
+    # @!attribute [rw] dry_run
+    #   When set to true, the message is checked and validated, but isn't
+    #   sent to the end recipient.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] message_feedback_enabled
+    #   Set to true to enable message feedback for the message. When a user
+    #   receives the message you need to update the message status using
+    #   PutMessageFeedback.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/SendNotifyVoiceMessageRequest AWS API Documentation
+    #
+    class SendNotifyVoiceMessageRequest < Struct.new(
+      :notify_configuration_id,
+      :destination_phone_number,
+      :template_id,
+      :template_variables,
+      :voice_id,
+      :time_to_live,
+      :context,
+      :configuration_set_name,
+      :dry_run,
+      :message_feedback_enabled)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] message_id
+    #   The unique identifier for the message.
+    #   @return [String]
+    #
+    # @!attribute [rw] template_id
+    #   The unique identifier of the template used for the message.
+    #   @return [String]
+    #
+    # @!attribute [rw] resolved_message_body
+    #   The message body after template variable substitution has been
+    #   applied.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/SendNotifyVoiceMessageResult AWS API Documentation
+    #
+    class SendNotifyVoiceMessageResult < Struct.new(
+      :message_id,
+      :template_id,
+      :resolved_message_body)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] destination_phone_number
     #   The destination phone number in E.164 format.
     #   @return [String]
     #
     # @!attribute [rw] origination_identity
     #   The origination identity of the message. This can be either the
-    #   PhoneNumber, PhoneNumberId, PhoneNumberArn, SenderId, SenderIdArn,
-    #   PoolId, or PoolArn.
+    #   RcsAgentId, RcsAgentArn, PoolId, or PoolArn.
+    #   @return [String]
     #
-    #   If you are using a shared AWS End User Messaging SMS and Voice
-    #   resource then you must use the full Amazon Resource Name(ARN).
+    # @!attribute [rw] rcs_message_content
+    #   The content of the RCS message. Contains the message content (text,
+    #   file, rich card, or carousel) and optional message-level suggested
+    #   actions.
+    #   @return [Types::RcsMessageContent]
+    #
+    # @!attribute [rw] time_to_live
+    #   The duration in seconds that the RCS message is valid for delivery.
+    #   If the message cannot be delivered within this duration, it is
+    #   considered expired. Valid values are 1 to 172800 (48 hours). If a
+    #   FallbackConfiguration is provided, the fallback is triggered when
+    #   the duration expires without delivery confirmation.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] message_traffic_type
+    #   The traffic type of the RCS message. Valid values are
+    #   AUTHENTICATION, TRANSACTION, PROMOTION, SERVICE\_REQUEST, and
+    #   ACKNOWLEDGEMENT. This field is reserved for future use.
+    #   @return [String]
+    #
+    # @!attribute [rw] fallback_configuration
+    #   Configuration for SMS or MMS fallback when RCS delivery fails. If
+    #   provided, the service sends a fallback message via the specified
+    #   channel when the RCS message fails or the TimeToLive expires.
+    #   @return [Types::RcsFallbackConfiguration]
+    #
+    # @!attribute [rw] protect_configuration_id
+    #   The unique identifier of the protect configuration to use.
+    #   @return [String]
+    #
+    # @!attribute [rw] configuration_set_name
+    #   The name of the configuration set to use. This can be either the
+    #   ConfigurationSetName or ConfigurationSetArn.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_price
+    #   The maximum amount that you want to spend, in US dollars, per each
+    #   RCS message.
+    #   @return [String]
+    #
+    # @!attribute [rw] dry_run
+    #   When set to true, the message is checked and validated, but isn't
+    #   sent to the end recipient.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] context
+    #   You can specify custom data in this field. If you do, that data is
+    #   logged to the event destination.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] message_feedback_enabled
+    #   Set to true to enable message feedback for the message. When a user
+    #   receives the message you need to update the message status using
+    #   PutMessageFeedback.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/SendRcsMessageRequest AWS API Documentation
+    #
+    class SendRcsMessageRequest < Struct.new(
+      :destination_phone_number,
+      :origination_identity,
+      :rcs_message_content,
+      :time_to_live,
+      :message_traffic_type,
+      :fallback_configuration,
+      :protect_configuration_id,
+      :configuration_set_name,
+      :max_price,
+      :dry_run,
+      :context,
+      :message_feedback_enabled)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] message_id
+    #   The unique identifier for the message.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/SendRcsMessageResult AWS API Documentation
+    #
+    class SendRcsMessageResult < Struct.new(
+      :message_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] destination_phone_number
+    #   The destination phone number in E.164 format.
+    #   @return [String]
+    #
+    # @!attribute [rw] origination_identity
+    #   The origination identity of the message. This can be either the
+    #   PhoneNumber, PhoneNumberId, PhoneNumberArn, RcsAgentId, RcsAgentArn,
+    #   SenderId, SenderIdArn, PoolId, or PoolArn.
+    #
+    #   If you are using a shared End User Messaging SMS resource then you
+    #   must use the full Amazon Resource Name(ARN).
     #   @return [String]
     #
     # @!attribute [rw] message_body
@@ -6164,7 +8373,7 @@ module Aws::PinpointSMSVoiceV2
     #   The Message Parts per Second (MPS) limit when using `DryRun` is
     #   five. If your origination identity has a lower MPS limit then the
     #   lower MPS limit is used. For more information about MPS limits, see
-    #   [Message Parts per Second (MPS) limits][1] in the *AWS End User
+    #   [Message Parts per Second (MPS) limits][1] in the *End User
     #   Messaging SMS User Guide*..
     #
     #
@@ -6222,8 +8431,8 @@ module Aws::PinpointSMSVoiceV2
     #   The origination identity to use for the voice call. This can be the
     #   PhoneNumber, PhoneNumberId, PhoneNumberArn, PoolId, or PoolArn.
     #
-    #   If you are using a shared AWS End User Messaging SMS and Voice
-    #   resource then you must use the full Amazon Resource Name(ARN).
+    #   If you are using a shared End User Messaging SMS resource then you
+    #   must use the full Amazon Resource Name(ARN).
     #   @return [String]
     #
     # @!attribute [rw] message_body
@@ -6321,7 +8530,7 @@ module Aws::PinpointSMSVoiceV2
 
     # The alphanumeric sender ID in a specific country that you want to
     # describe. For more information on sender IDs see [Requesting sender
-    # IDs ][1] in the *AWS End User Messaging SMS User Guide*.
+    # IDs ][1] in the *End User Messaging SMS User Guide*.
     #
     #
     #
@@ -6618,6 +8827,54 @@ module Aws::PinpointSMSVoiceV2
     end
 
     # @!attribute [rw] monthly_limit
+    #   The new monthly limit to enforce on notify messages.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/SetNotifyMessageSpendLimitOverrideRequest AWS API Documentation
+    #
+    class SetNotifyMessageSpendLimitOverrideRequest < Struct.new(
+      :monthly_limit)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] monthly_limit
+    #   The current monthly limit, in US dollars.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/SetNotifyMessageSpendLimitOverrideResult AWS API Documentation
+    #
+    class SetNotifyMessageSpendLimitOverrideResult < Struct.new(
+      :monthly_limit)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] monthly_limit
+    #   The new monthly limit to enforce on RCS message spending.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/SetRcsMessageSpendLimitOverrideRequest AWS API Documentation
+    #
+    class SetRcsMessageSpendLimitOverrideRequest < Struct.new(
+      :monthly_limit)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] monthly_limit
+    #   The current monthly limit to enforce on RCS message spending.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/SetRcsMessageSpendLimitOverrideResult AWS API Documentation
+    #
+    class SetRcsMessageSpendLimitOverrideResult < Struct.new(
+      :monthly_limit)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] monthly_limit
     #   The new monthly limit to enforce on text messages.
     #   @return [Integer]
     #
@@ -6683,7 +8940,7 @@ module Aws::PinpointSMSVoiceV2
 
     # Describes the current monthly spend limits for sending voice and text
     # messages. For more information on increasing your monthly spend limit,
-    # see [ Requesting a spending quota increase ][1] in the *AWS End User
+    # see [ Requesting a spending quota increase ][1] in the *End User
     # Messaging SMS User Guide*.
     #
     #
@@ -6728,10 +8985,17 @@ module Aws::PinpointSMSVoiceV2
     #   The unique identifier for the registration.
     #   @return [String]
     #
+    # @!attribute [rw] aws_review
+    #   Set to true to request AWS review of the registration. When enabled,
+    #   AWS will perform additional validation and review of the
+    #   registration submission before processing.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/SubmitRegistrationVersionRequest AWS API Documentation
     #
     class SubmitRegistrationVersionRequest < Struct.new(
-      :registration_id)
+      :registration_id,
+      :aws_review)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6781,6 +9045,11 @@ module Aws::PinpointSMSVoiceV2
     #   stamps for when the reservations status changes.
     #   @return [Types::RegistrationVersionStatusHistory]
     #
+    # @!attribute [rw] aws_review
+    #   Indicates whether AWS review was requested for this registration
+    #   submission.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/SubmitRegistrationVersionResult AWS API Documentation
     #
     class SubmitRegistrationVersionResult < Struct.new(
@@ -6788,7 +9057,8 @@ module Aws::PinpointSMSVoiceV2
       :registration_id,
       :version_number,
       :registration_version_status,
-      :registration_version_status_history)
+      :registration_version_status_history,
+      :aws_review)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -6812,8 +9082,8 @@ module Aws::PinpointSMSVoiceV2
     #   * `ASSOCIATE_BEFORE_SUBMIT` The origination identity has to be
     #     supplied when creating a registration.
     #
-    #   * `ASSOCIATE_ON_APPROVAL` This applies to all short code
-    #     registrations. The short code will be automatically provisioned
+    #   * `ASSOCIATE_ON_APPROVAL` This applies to all sender ID
+    #     registrations. The sender ID will be automatically provisioned
     #     once the registration is approved.
     #
     #   * `ASSOCIATE_AFTER_COMPLETE` This applies to phone number
@@ -6888,6 +9158,90 @@ module Aws::PinpointSMSVoiceV2
     # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/TagResourceResult AWS API Documentation
     #
     class TagResourceResult < Aws::EmptyStructure; end
+
+    # Contains metadata about a template variable.
+    #
+    # @!attribute [rw] type
+    #   The type of the variable.
+    #   @return [String]
+    #
+    # @!attribute [rw] required
+    #   Whether the variable is required.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] description
+    #   A description of the variable.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_length
+    #   The maximum length for string variables.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] min_value
+    #   The minimum value for numeric variables.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max_value
+    #   The maximum value for numeric variables.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] default_value
+    #   The default value for the variable.
+    #   @return [String]
+    #
+    # @!attribute [rw] pattern
+    #   The regex pattern the variable value must match.
+    #   @return [String]
+    #
+    # @!attribute [rw] sample
+    #   A sample value for the variable.
+    #   @return [String]
+    #
+    # @!attribute [rw] source
+    #   The source of the variable, either `CUSTOMER` or `SYSTEM`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/TemplateVariableMetadata AWS API Documentation
+    #
+    class TemplateVariableMetadata < Struct.new(
+      :type,
+      :required,
+      :description,
+      :max_length,
+      :min_value,
+      :max_value,
+      :default_value,
+      :pattern,
+      :sample,
+      :source)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains details about the testing agent associated with an RCS agent.
+    #
+    # @!attribute [rw] status
+    #   The current status of the testing agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] testing_agent_id
+    #   The unique identifier for the testing agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] registration_id
+    #   The unique identifier of the registration associated with the
+    #   testing agent.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/TestingAgentInformation AWS API Documentation
+    #
+    class TestingAgentInformation < Struct.new(
+      :status,
+      :testing_agent_id,
+      :registration_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # Validation rules for a text field.
     #
@@ -7023,12 +9377,146 @@ module Aws::PinpointSMSVoiceV2
       include Aws::Structure
     end
 
+    # @!attribute [rw] notify_configuration_id
+    #   The identifier of the notify configuration to update. The
+    #   NotifyConfigurationId can be found using the
+    #   DescribeNotifyConfigurations operation.
+    #   @return [String]
+    #
+    # @!attribute [rw] default_template_id
+    #   The default template identifier to associate with the notify
+    #   configuration. If specified, this template is used when sending
+    #   messages without an explicit template identifier. Pass the special
+    #   value `UNSET_DEFAULT_TEMPLATE` to clear the current default template
+    #   from the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] pool_id
+    #   The pool identifier or Amazon Resource Name (ARN) to associate with
+    #   the notify configuration. Pass the special value
+    #   `UNSET_DEFAULT_POOL_FOR_NOTIFY` to clear the current default pool
+    #   from the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] enabled_countries
+    #   An array of two-character ISO country codes, in ISO 3166-1 alpha-2
+    #   format, that are enabled for the notify configuration.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] enabled_channels
+    #   An array of channels to enable for the notify configuration.
+    #   Supported values include `SMS` and `VOICE`.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] deletion_protection_enabled
+    #   When set to true the notify configuration can't be deleted.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/UpdateNotifyConfigurationRequest AWS API Documentation
+    #
+    class UpdateNotifyConfigurationRequest < Struct.new(
+      :notify_configuration_id,
+      :default_template_id,
+      :pool_id,
+      :enabled_countries,
+      :enabled_channels,
+      :deletion_protection_enabled)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] notify_configuration_arn
+    #   The Amazon Resource Name (ARN) for the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] notify_configuration_id
+    #   The unique identifier for the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] display_name
+    #   The display name associated with the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] use_case
+    #   The use case for the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] default_template_id
+    #   The default template identifier associated with the notify
+    #   configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] pool_id
+    #   The identifier of the pool associated with the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] enabled_countries
+    #   An array of two-character ISO country codes, in ISO 3166-1 alpha-2
+    #   format, that are enabled for the notify configuration.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] enabled_channels
+    #   An array of channels enabled for the notify configuration. Supported
+    #   values include `SMS` and `VOICE`.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] tier
+    #   The tier of the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] tier_upgrade_status
+    #   The tier upgrade status of the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the notify configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] rejection_reason
+    #   The reason the notify configuration was rejected, if applicable.
+    #   @return [String]
+    #
+    # @!attribute [rw] deletion_protection_enabled
+    #   When set to true deletion protection is enabled. By default this is
+    #   set to false.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] created_timestamp
+    #   The time when the notify configuration was created, in [UNIX epoch
+    #   time][1] format.
+    #
+    #
+    #
+    #   [1]: https://www.epochconverter.com/
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/UpdateNotifyConfigurationResult AWS API Documentation
+    #
+    class UpdateNotifyConfigurationResult < Struct.new(
+      :notify_configuration_arn,
+      :notify_configuration_id,
+      :display_name,
+      :use_case,
+      :default_template_id,
+      :pool_id,
+      :enabled_countries,
+      :enabled_channels,
+      :tier,
+      :tier_upgrade_status,
+      :status,
+      :rejection_reason,
+      :deletion_protection_enabled,
+      :created_timestamp)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] phone_number_id
     #   The unique identifier of the phone number. Valid values for this
     #   field can be either the PhoneNumberId or PhoneNumberArn.
     #
-    #   If you are using a shared AWS End User Messaging SMS and Voice
-    #   resource then you must use the full Amazon Resource Name(ARN).
+    #   If you are using a shared End User Messaging SMS resource then you
+    #   must use the full Amazon Resource Name(ARN).
     #   @return [String]
     #
     # @!attribute [rw] two_way_enabled
@@ -7046,9 +9534,9 @@ module Aws::PinpointSMSVoiceV2
     #   @return [String]
     #
     # @!attribute [rw] self_managed_opt_outs_enabled
-    #   By default this is set to false. When an end recipient sends a
-    #   message that begins with HELP or STOP to one of your dedicated
-    #   numbers, AWS End User Messaging SMS and Voice automatically replies
+    #   By default this is set to false. When set to false and an end
+    #   recipient sends a message that begins with HELP or STOP to one of
+    #   your dedicated numbers, End User Messaging SMS automatically replies
     #   with a customizable message and adds the end recipient to the
     #   OptOutList. When set to true you're responsible for responding to
     #   HELP and STOP requests. You're also responsible for tracking and
@@ -7056,9 +9544,14 @@ module Aws::PinpointSMSVoiceV2
     #   @return [Boolean]
     #
     # @!attribute [rw] opt_out_list_name
-    #   The OptOutList to add the phone number to. Valid values for this
-    #   field can be either the OutOutListName or OutOutListArn.
+    #   The OptOutList to add the phone number to. You can use either the
+    #   opt out list name or the opt out list ARN.
     #   @return [String]
+    #
+    # @!attribute [rw] international_sending_enabled
+    #   By default this is set to false. When set to true the international
+    #   sending of phone number is Enabled.
+    #   @return [Boolean]
     #
     # @!attribute [rw] deletion_protection_enabled
     #   By default this is set to false. When set to true the phone number
@@ -7074,6 +9567,7 @@ module Aws::PinpointSMSVoiceV2
       :two_way_channel_role,
       :self_managed_opt_outs_enabled,
       :opt_out_list_name,
+      :international_sending_enabled,
       :deletion_protection_enabled)
       SENSITIVE = []
       include Aws::Structure
@@ -7141,6 +9635,11 @@ module Aws::PinpointSMSVoiceV2
     #   The name of the OptOutList associated with the phone number.
     #   @return [String]
     #
+    # @!attribute [rw] international_sending_enabled
+    #   When set to true the international sending of phone number is
+    #   Enabled.
+    #   @return [Boolean]
+    #
     # @!attribute [rw] deletion_protection_enabled
     #   When set to true the phone number can't be deleted.
     #   @return [Boolean]
@@ -7175,6 +9674,7 @@ module Aws::PinpointSMSVoiceV2
       :two_way_channel_role,
       :self_managed_opt_outs_enabled,
       :opt_out_list_name,
+      :international_sending_enabled,
       :deletion_protection_enabled,
       :registration_id,
       :created_timestamp)
@@ -7186,8 +9686,8 @@ module Aws::PinpointSMSVoiceV2
     #   The unique identifier of the pool to update. Valid values are either
     #   the PoolId or PoolArn.
     #
-    #   If you are using a shared AWS End User Messaging SMS and Voice
-    #   resource then you must use the full Amazon Resource Name(ARN).
+    #   If you are using a shared End User Messaging SMS resource then you
+    #   must use the full Amazon Resource Name(ARN).
     #   @return [String]
     #
     # @!attribute [rw] two_way_enabled
@@ -7205,9 +9705,9 @@ module Aws::PinpointSMSVoiceV2
     #   @return [String]
     #
     # @!attribute [rw] self_managed_opt_outs_enabled
-    #   By default this is set to false. When an end recipient sends a
-    #   message that begins with HELP or STOP to one of your dedicated
-    #   numbers, AWS End User Messaging SMS and Voice automatically replies
+    #   By default this is set to false. When set to false and an end
+    #   recipient sends a message that begins with HELP or STOP to one of
+    #   your dedicated numbers, End User Messaging SMS automatically replies
     #   with a customizable message and adds the end recipient to the
     #   OptOutList. When set to true you're responsible for responding to
     #   HELP and STOP requests. You're also responsible for tracking and
@@ -7218,8 +9718,8 @@ module Aws::PinpointSMSVoiceV2
     #   The OptOutList to associate with the pool. Valid values are either
     #   OptOutListName or OptOutListArn.
     #
-    #   If you are using a shared AWS End User Messaging SMS and Voice
-    #   resource then you must use the full Amazon Resource Name(ARN).
+    #   If you are using a shared End User Messaging SMS resource then you
+    #   must use the full Amazon Resource Name(ARN).
     #   @return [String]
     #
     # @!attribute [rw] shared_routes_enabled
@@ -7276,10 +9776,10 @@ module Aws::PinpointSMSVoiceV2
     #   @return [String]
     #
     # @!attribute [rw] self_managed_opt_outs_enabled
-    #   When an end recipient sends a message that begins with HELP or STOP
-    #   to one of your dedicated numbers, AWS End User Messaging SMS and
-    #   Voice automatically replies with a customizable message and adds the
-    #   end recipient to the OptOutList. When set to true you're
+    #   When set to false and an end recipient sends a message that begins
+    #   with HELP or STOP to one of your dedicated numbers, End User
+    #   Messaging SMS automatically replies with a customizable message and
+    #   adds the end recipient to the OptOutList. When set to true you're
     #   responsible for responding to HELP and STOP requests. You're also
     #   responsible for tracking and honoring opt-out requests.
     #   @return [Boolean]
@@ -7336,7 +9836,12 @@ module Aws::PinpointSMSVoiceV2
     #   contain the details for the requested NumberCapability. The Key is
     #   the two-letter ISO country code. For a list of supported ISO country
     #   codes, see [Supported countries and regions (SMS channel)][1] in the
-    #   AWS End User Messaging SMS User Guide.
+    #   End User Messaging SMS User Guide.
+    #
+    #   For example, to set the United States as allowed and Canada as
+    #   blocked, the `CountryRuleSetUpdates` would be formatted as:
+    #   `"CountryRuleSetUpdates": { "US" : { "ProtectStatus": "ALLOW" } "CA"
+    #   \: { "ProtectStatus": "BLOCK" } }`
     #
     #
     #
@@ -7435,6 +9940,176 @@ module Aws::PinpointSMSVoiceV2
       :created_timestamp,
       :account_default,
       :deletion_protection_enabled)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] rcs_agent_id
+    #   The unique identifier of the RCS agent to update. You can use either
+    #   the RcsAgentId or RcsAgentArn.
+    #   @return [String]
+    #
+    # @!attribute [rw] deletion_protection_enabled
+    #   By default this is set to false. When set to true the RCS agent
+    #   can't be deleted.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] opt_out_list_name
+    #   The OptOutList to associate with the RCS agent. Valid values are
+    #   either OptOutListName or OptOutListArn.
+    #   @return [String]
+    #
+    # @!attribute [rw] self_managed_opt_outs_enabled
+    #   By default this is set to false. When set to true you're
+    #   responsible for responding to HELP and STOP requests. You're also
+    #   responsible for tracking and honoring opt-out requests.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] two_way_channel_arn
+    #   The Amazon Resource Name (ARN) of the two way channel.
+    #   @return [String]
+    #
+    # @!attribute [rw] two_way_channel_role
+    #   An optional IAM Role Arn for a service to assume, to be able to post
+    #   inbound SMS messages.
+    #   @return [String]
+    #
+    # @!attribute [rw] two_way_enabled
+    #   By default this is set to false. When set to true you can receive
+    #   incoming text messages from your end recipients.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] two_way_media_s3_bucket_name
+    #   The name of the S3 bucket where inbound RCS media files are stored.
+    #   Two-way messaging must be enabled on the agent. To remove the media
+    #   configuration, pass the sentinel value
+    #   `UNSET_RCS_MEDIA_CONFIGURATION` for both this field and
+    #   TwoWayMediaS3Role.
+    #   @return [String]
+    #
+    # @!attribute [rw] two_way_media_s3_key_prefix
+    #   The key prefix used for inbound RCS media objects in the S3 bucket.
+    #   @return [String]
+    #
+    # @!attribute [rw] two_way_media_s3_role
+    #   The ARN of the IAM role used to write inbound RCS media files to the
+    #   S3 bucket. The role must have `s3:PutObject` permission on the
+    #   bucket and a trust policy allowing `sms-voice.amazonaws.com` to
+    #   assume it. To remove the media configuration, pass the sentinel
+    #   value `UNSET_RCS_MEDIA_CONFIGURATION` for both this field and
+    #   TwoWayMediaS3BucketName.
+    #   @return [String]
+    #
+    # @!attribute [rw] two_way_rcs_events_enabled
+    #   The list of RCS event types to enable for two-way messaging. Pass an
+    #   empty list to disable all event types. The special value `ALL`
+    #   enables all current and future event types and must be the sole
+    #   element if used.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/UpdateRcsAgentRequest AWS API Documentation
+    #
+    class UpdateRcsAgentRequest < Struct.new(
+      :rcs_agent_id,
+      :deletion_protection_enabled,
+      :opt_out_list_name,
+      :self_managed_opt_outs_enabled,
+      :two_way_channel_arn,
+      :two_way_channel_role,
+      :two_way_enabled,
+      :two_way_media_s3_bucket_name,
+      :two_way_media_s3_key_prefix,
+      :two_way_media_s3_role,
+      :two_way_rcs_events_enabled)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] rcs_agent_arn
+    #   The Amazon Resource Name (ARN) of the updated RCS agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] rcs_agent_id
+    #   The unique identifier for the RCS agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current status of the RCS agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_timestamp
+    #   The time when the RCS agent was created, in [UNIX epoch time][1]
+    #   format.
+    #
+    #
+    #
+    #   [1]: https://www.epochconverter.com/
+    #   @return [Time]
+    #
+    # @!attribute [rw] deletion_protection_enabled
+    #   When set to true deletion protection is enabled. By default this is
+    #   set to false.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] opt_out_list_name
+    #   The name of the OptOutList associated with the RCS agent.
+    #   @return [String]
+    #
+    # @!attribute [rw] self_managed_opt_outs_enabled
+    #   By default this is set to false. When set to true you're
+    #   responsible for responding to HELP and STOP requests. You're also
+    #   responsible for tracking and honoring opt-out requests.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] two_way_channel_arn
+    #   The Amazon Resource Name (ARN) of the two way channel.
+    #   @return [String]
+    #
+    # @!attribute [rw] two_way_channel_role
+    #   An optional IAM Role Arn for a service to assume, to be able to post
+    #   inbound SMS messages.
+    #   @return [String]
+    #
+    # @!attribute [rw] two_way_enabled
+    #   By default this is set to false. When set to true you can receive
+    #   incoming text messages from your end recipients.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] two_way_media_s3_bucket_name
+    #   The name of the S3 bucket where inbound RCS media files are stored.
+    #   @return [String]
+    #
+    # @!attribute [rw] two_way_media_s3_key_prefix
+    #   The key prefix used for inbound RCS media objects in the S3 bucket.
+    #   @return [String]
+    #
+    # @!attribute [rw] two_way_media_s3_role
+    #   The ARN of the IAM role used to write inbound RCS media files to the
+    #   S3 bucket.
+    #   @return [String]
+    #
+    # @!attribute [rw] two_way_rcs_events_enabled
+    #   The list of RCS event types enabled for two-way messaging on the
+    #   agent.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/pinpoint-sms-voice-v2-2022-03-31/UpdateRcsAgentResult AWS API Documentation
+    #
+    class UpdateRcsAgentResult < Struct.new(
+      :rcs_agent_arn,
+      :rcs_agent_id,
+      :status,
+      :created_timestamp,
+      :deletion_protection_enabled,
+      :opt_out_list_name,
+      :self_managed_opt_outs_enabled,
+      :two_way_channel_arn,
+      :two_way_channel_role,
+      :two_way_enabled,
+      :two_way_media_s3_bucket_name,
+      :two_way_media_s3_key_prefix,
+      :two_way_media_s3_role,
+      :two_way_rcs_events_enabled)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -7601,6 +10276,11 @@ module Aws::PinpointSMSVoiceV2
     #   * `VERIFIED`: The phone number is verified and can receive messages.
     #   @return [String]
     #
+    # @!attribute [rw] rcs_agent_id
+    #   The unique identifier of the RCS agent associated with the verified
+    #   destination number.
+    #   @return [String]
+    #
     # @!attribute [rw] created_timestamp
     #   The time when the destination phone number was created, in [UNIX
     #   epoch time][1] format.
@@ -7617,6 +10297,7 @@ module Aws::PinpointSMSVoiceV2
       :verified_destination_number_id,
       :destination_phone_number,
       :status,
+      :rcs_agent_id,
       :created_timestamp)
       SENSITIVE = []
       include Aws::Structure

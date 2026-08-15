@@ -95,8 +95,8 @@ module Aws::DSQL
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::DSQL
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::DSQL
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::DSQL
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::DSQL
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::DSQL
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::DSQL
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::DSQL
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -470,11 +474,74 @@ module Aws::DSQL
 
     # @!group API Operations
 
-    # Creates a cluster in Amazon Aurora DSQL.
+    # The CreateCluster API allows you to create both single-Region clusters
+    # and multi-Region clusters. With the addition of the
+    # *multiRegionProperties* parameter, you can create a cluster with
+    # witness Region support and establish peer relationships with clusters
+    # in other Regions during creation.
+    #
+    # <note markdown="1"> Creating multi-Region clusters requires additional IAM permissions
+    # beyond those needed for single-Region clusters, as detailed in the
+    # **Required permissions** section below.
+    #
+    #  </note>
+    #
+    # **Required permissions**
+    #
+    # dsql:CreateCluster
+    #
+    # : Required to create a cluster.
+    #
+    #   Resources: `arn:aws:dsql:region:account-id:cluster/*`
+    #
+    # dsql:TagResource
+    #
+    # : Permission to add tags to a resource.
+    #
+    #   Resources: `arn:aws:dsql:region:account-id:cluster/*`
+    #
+    # dsql:PutMultiRegionProperties
+    #
+    # : Permission to configure multi-Region properties for a cluster.
+    #
+    #   Resources: `arn:aws:dsql:region:account-id:cluster/*`
+    #
+    # dsql:AddPeerCluster
+    #
+    # : When specifying `multiRegionProperties.clusters`, permission to add
+    #   peer clusters.
+    #
+    #   Resources:
+    #
+    #   * Local cluster: `arn:aws:dsql:region:account-id:cluster/*`
+    #
+    #   * Each peer cluster: exact ARN of each specified peer cluster
+    #
+    # dsql:PutWitnessRegion
+    #
+    # : When specifying `multiRegionProperties.witnessRegion`, permission to
+    #   set a witness Region. This permission is checked both in the cluster
+    #   Region and in the witness Region.
+    #
+    #   Resources: `arn:aws:dsql:region:account-id:cluster/*`
+    #
+    #   Condition Keys: `dsql:WitnessRegion` (matching the specified witness
+    #   region)
+    #
+    # * The witness Region specified in
+    #   `multiRegionProperties.witnessRegion` cannot be the same as the
+    #   cluster's Region.
+    #
+    # ^
     #
     # @option params [Boolean] :deletion_protection_enabled
     #   If enabled, you can't delete your cluster. You must first disable
     #   this property before you can delete your cluster.
+    #
+    # @option params [String] :kms_encryption_key
+    #   The KMS key that encrypts and protects the data on your cluster. You
+    #   can specify the ARN, ID, or alias of an existing key or have Amazon
+    #   Web Services create a default key for you.
     #
     # @option params [Hash<String,String>] :tags
     #   A map of key and value pairs to use to tag your cluster.
@@ -493,13 +560,29 @@ module Aws::DSQL
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.**
     #
+    # @option params [Types::MultiRegionProperties] :multi_region_properties
+    #   The configuration settings when creating a multi-Region cluster,
+    #   including the witness region and linked cluster properties.
+    #
+    # @option params [String] :policy
+    #   An optional resource-based policy document in JSON format that defines
+    #   access permissions for the cluster.
+    #
+    # @option params [Boolean] :bypass_policy_lockout_safety_check
+    #   An optional field that controls whether to bypass the lockout
+    #   prevention check. When set to true, this parameter allows you to apply
+    #   a policy that might lock you out of the cluster. Use with caution.
+    #
     # @return [Types::CreateClusterOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateClusterOutput#identifier #identifier} => String
     #   * {Types::CreateClusterOutput#arn #arn} => String
     #   * {Types::CreateClusterOutput#status #status} => String
     #   * {Types::CreateClusterOutput#creation_time #creation_time} => Time
+    #   * {Types::CreateClusterOutput#multi_region_properties #multi_region_properties} => Types::MultiRegionProperties
+    #   * {Types::CreateClusterOutput#encryption_details #encryption_details} => Types::EncryptionDetails
     #   * {Types::CreateClusterOutput#deletion_protection_enabled #deletion_protection_enabled} => Boolean
+    #   * {Types::CreateClusterOutput#endpoint #endpoint} => String
     #
     #
     # @example Example: Create Cluster
@@ -515,19 +598,33 @@ module Aws::DSQL
     #
     #   resp = client.create_cluster({
     #     deletion_protection_enabled: false,
+    #     kms_encryption_key: "KmsEncryptionKey",
     #     tags: {
     #       "TagKey" => "TagValue",
     #     },
     #     client_token: "ClientToken",
+    #     multi_region_properties: {
+    #       witness_region: "Region",
+    #       clusters: ["ClusterArn"],
+    #     },
+    #     policy: "PolicyDocument",
+    #     bypass_policy_lockout_safety_check: false,
     #   })
     #
     # @example Response structure
     #
     #   resp.identifier #=> String
     #   resp.arn #=> String
-    #   resp.status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "DELETED", "FAILED"
+    #   resp.status #=> String, one of "CREATING", "ACTIVE", "IDLE", "INACTIVE", "UPDATING", "DELETING", "DELETED", "FAILED", "PENDING_SETUP", "PENDING_DELETE"
     #   resp.creation_time #=> Time
+    #   resp.multi_region_properties.witness_region #=> String
+    #   resp.multi_region_properties.clusters #=> Array
+    #   resp.multi_region_properties.clusters[0] #=> String
+    #   resp.encryption_details.encryption_type #=> String, one of "AWS_OWNED_KMS_KEY", "CUSTOMER_MANAGED_KMS_KEY"
+    #   resp.encryption_details.kms_key_arn #=> String
+    #   resp.encryption_details.encryption_status #=> String, one of "ENABLED", "UPDATING", "KMS_KEY_INACCESSIBLE", "ENABLING"
     #   resp.deletion_protection_enabled #=> Boolean
+    #   resp.endpoint #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/CreateCluster AWS API Documentation
     #
@@ -538,27 +635,55 @@ module Aws::DSQL
       req.send_request(options)
     end
 
-    # Creates multi-Region clusters in Amazon Aurora DSQL. Multi-Region
-    # clusters require a linked Region list, which is an array of the
-    # Regions in which you want to create linked clusters. Multi-Region
-    # clusters require a witness Region, which participates in quorum in
-    # failure scenarios.
+    # Creates a new change data capture (CDC) stream for a cluster. The
+    # stream captures database changes and delivers them to the specified
+    # target destination.
     #
-    # @option params [required, Array<String>] :linked_region_list
-    #   An array of the Regions in which you want to create additional
-    #   clusters.
+    # **Required permissions**
     #
-    # @option params [Hash<String,Types::LinkedClusterProperties>] :cluster_properties
-    #   A mapping of properties to use when creating linked clusters.
+    # dsql:CreateStream
     #
-    # @option params [required, String] :witness_region
-    #   The witness Region of multi-Region clusters.
+    # : Permission to create a new stream.
+    #
+    #   Resources: `arn:aws:dsql:region:account-id:cluster/cluster-id`
+    #
+    # iam:PassRole
+    #
+    # : Permission to pass the IAM role specified in the target definition
+    #   to the service.
+    #
+    #   Resources: ARN of the IAM role specified in
+    #   `targetDefinition.kinesis.roleArn`
+    #
+    # kms:Decrypt
+    #
+    # : Required when the cluster uses a customer managed KMS key (CMK).
+    #   Permission to decrypt data using the cluster's CMK.
+    #
+    #   Resources: ARN of the KMS key used by the cluster
+    #
+    # @option params [required, String] :cluster_identifier
+    #   The ID of the cluster for which to create the stream.
+    #
+    # @option params [required, Types::TargetDefinition] :target_definition
+    #   The target destination configuration for the stream. Contains Kinesis
+    #   stream configuration including stream ARN and IAM role ARN.
+    #
+    # @option params [required, String] :ordering
+    #   The ordering mode for the stream. Determines how change events are
+    #   ordered when delivered to the target.
+    #
+    # @option params [required, String] :format
+    #   The format of the stream records.
+    #
+    # @option params [Hash<String,String>] :tags
+    #   A map of key and value pairs to use to tag your stream.
     #
     # @option params [String] :client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
     #   idempotency of the request. Idempotency ensures that an API request
     #   completes only once. With an idempotent request, if the original
-    #   request completes successfully. The subsequent retries with the same
+    #   request completes successfully, the subsequent retries with the same
     #   client token return the result from the original successful request
     #   and they have no additional effect.
     #
@@ -568,56 +693,50 @@ module Aws::DSQL
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.**
     #
-    # @return [Types::CreateMultiRegionClustersOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    # @return [Types::CreateStreamOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #   * {Types::CreateMultiRegionClustersOutput#linked_cluster_arns #linked_cluster_arns} => Array&lt;String&gt;
-    #
-    #
-    # @example Example: Create Multi Region Clusters
-    #
-    #   resp = client.create_multi_region_clusters({
-    #     linked_region_list: [
-    #       "us-east-1", 
-    #       "us-east-2", 
-    #     ], 
-    #     witness_region: "us-west-2", 
-    #   })
-    #
-    #   resp.to_h outputs the following:
-    #   {
-    #     linked_cluster_arns: [
-    #       "arn:aws:dsql:us-east-1:111122223333:cluster/abcdefghijklmnopqrst12345", 
-    #       "arn:aws:dsql:us-east-2:111122223333:cluster/klmnopqrstuvwxyzabcd54321", 
-    #     ], 
-    #   }
+    #   * {Types::CreateStreamOutput#cluster_identifier #cluster_identifier} => String
+    #   * {Types::CreateStreamOutput#stream_identifier #stream_identifier} => String
+    #   * {Types::CreateStreamOutput#arn #arn} => String
+    #   * {Types::CreateStreamOutput#status #status} => String
+    #   * {Types::CreateStreamOutput#creation_time #creation_time} => Time
+    #   * {Types::CreateStreamOutput#ordering #ordering} => String
+    #   * {Types::CreateStreamOutput#format #format} => String
     #
     # @example Request syntax with placeholder values
     #
-    #   resp = client.create_multi_region_clusters({
-    #     linked_region_list: ["Region"], # required
-    #     cluster_properties: {
-    #       "Region" => {
-    #         deletion_protection_enabled: false,
-    #         tags: {
-    #           "TagKey" => "TagValue",
-    #         },
+    #   resp = client.create_stream({
+    #     cluster_identifier: "ClusterId", # required
+    #     target_definition: { # required
+    #       kinesis: {
+    #         stream_arn: "KinesisStreamArn", # required
+    #         role_arn: "RoleArn", # required
     #       },
     #     },
-    #     witness_region: "Region", # required
+    #     ordering: "UNORDERED", # required, accepts UNORDERED
+    #     format: "JSON", # required, accepts JSON
+    #     tags: {
+    #       "TagKey" => "TagValue",
+    #     },
     #     client_token: "ClientToken",
     #   })
     #
     # @example Response structure
     #
-    #   resp.linked_cluster_arns #=> Array
-    #   resp.linked_cluster_arns[0] #=> String
+    #   resp.cluster_identifier #=> String
+    #   resp.stream_identifier #=> String
+    #   resp.arn #=> String
+    #   resp.status #=> String, one of "CREATING", "ACTIVE", "DELETING", "DELETED", "FAILED", "IMPAIRED"
+    #   resp.creation_time #=> Time
+    #   resp.ordering #=> String, one of "UNORDERED"
+    #   resp.format #=> String, one of "JSON"
     #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/CreateMultiRegionClusters AWS API Documentation
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/CreateStream AWS API Documentation
     #
-    # @overload create_multi_region_clusters(params = {})
+    # @overload create_stream(params = {})
     # @param [Hash] params ({})
-    def create_multi_region_clusters(params = {}, options = {})
-      req = build_request(:create_multi_region_clusters, params)
+    def create_stream(params = {}, options = {})
+      req = build_request(:create_stream, params)
       req.send_request(options)
     end
 
@@ -646,7 +765,6 @@ module Aws::DSQL
     #   * {Types::DeleteClusterOutput#arn #arn} => String
     #   * {Types::DeleteClusterOutput#status #status} => String
     #   * {Types::DeleteClusterOutput#creation_time #creation_time} => Time
-    #   * {Types::DeleteClusterOutput#deletion_protection_enabled #deletion_protection_enabled} => Boolean
     #
     #
     # @example Example: Delete Cluster
@@ -666,9 +784,8 @@ module Aws::DSQL
     #
     #   resp.identifier #=> String
     #   resp.arn #=> String
-    #   resp.status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "DELETED", "FAILED"
+    #   resp.status #=> String, one of "CREATING", "ACTIVE", "IDLE", "INACTIVE", "UPDATING", "DELETING", "DELETED", "FAILED", "PENDING_SETUP", "PENDING_DELETE"
     #   resp.creation_time #=> Time
-    #   resp.deletion_protection_enabled #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/DeleteCluster AWS API Documentation
     #
@@ -679,17 +796,62 @@ module Aws::DSQL
       req.send_request(options)
     end
 
-    # Deletes a multi-Region cluster in Amazon Aurora DSQL.
+    # Deletes the resource-based policy attached to a cluster. This removes
+    # all access permissions defined by the policy, reverting to default
+    # access controls.
     #
-    # @option params [required, Array<String>] :linked_cluster_arns
-    #   The ARNs of the clusters linked to the cluster you want to delete.
-    #   also deletes these clusters as part of the operation.
+    # @option params [required, String] :identifier
+    #   The ID of the cluster.
+    #
+    # @option params [String] :expected_policy_version
+    #   The expected version of the policy to delete. This parameter ensures
+    #   that you're deleting the correct version of the policy and helps
+    #   prevent accidental deletions.
+    #
+    # @option params [String] :client_token
+    #   Idempotency token so a request is only processed once.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @return [Types::DeleteClusterPolicyOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DeleteClusterPolicyOutput#policy_version #policy_version} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_cluster_policy({
+    #     identifier: "ClusterId", # required
+    #     expected_policy_version: "PolicyVersion",
+    #     client_token: "ClientToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.policy_version #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/DeleteClusterPolicy AWS API Documentation
+    #
+    # @overload delete_cluster_policy(params = {})
+    # @param [Hash] params ({})
+    def delete_cluster_policy(params = {}, options = {})
+      req = build_request(:delete_cluster_policy, params)
+      req.send_request(options)
+    end
+
+    # Deletes a stream from a cluster.
+    #
+    # @option params [required, String] :cluster_identifier
+    #   The ID of the cluster containing the stream to delete.
+    #
+    # @option params [required, String] :stream_identifier
+    #   The ID of the stream to delete.
     #
     # @option params [String] :client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
     #   idempotency of the request. Idempotency ensures that an API request
     #   completes only once. With an idempotent request, if the original
-    #   request completes successfully. The subsequent retries with the same
+    #   request completes successfully, the subsequent retries with the same
     #   client token return the result from the original successful request
     #   and they have no additional effect.
     #
@@ -699,31 +861,36 @@ module Aws::DSQL
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.**
     #
-    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    # @return [Types::DeleteStreamOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
-    #
-    # @example Example: Delete Multi Region Clusters
-    #
-    #   resp = client.delete_multi_region_clusters({
-    #     linked_cluster_arns: [
-    #       "arn:aws:dsql:us-east-1:111122223333:cluster/abcdefghijklmnopqrst12345", 
-    #       "arn:aws:dsql:us-east-2:111122223333:cluster/klmnopqrstuvwxyzabcd54321", 
-    #     ], 
-    #   })
+    #   * {Types::DeleteStreamOutput#cluster_identifier #cluster_identifier} => String
+    #   * {Types::DeleteStreamOutput#stream_identifier #stream_identifier} => String
+    #   * {Types::DeleteStreamOutput#arn #arn} => String
+    #   * {Types::DeleteStreamOutput#status #status} => String
+    #   * {Types::DeleteStreamOutput#creation_time #creation_time} => Time
     #
     # @example Request syntax with placeholder values
     #
-    #   resp = client.delete_multi_region_clusters({
-    #     linked_cluster_arns: ["ClusterArn"], # required
+    #   resp = client.delete_stream({
+    #     cluster_identifier: "ClusterId", # required
+    #     stream_identifier: "StreamId", # required
     #     client_token: "ClientToken",
     #   })
     #
-    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/DeleteMultiRegionClusters AWS API Documentation
+    # @example Response structure
     #
-    # @overload delete_multi_region_clusters(params = {})
+    #   resp.cluster_identifier #=> String
+    #   resp.stream_identifier #=> String
+    #   resp.arn #=> String
+    #   resp.status #=> String, one of "CREATING", "ACTIVE", "DELETING", "DELETED", "FAILED", "IMPAIRED"
+    #   resp.creation_time #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/DeleteStream AWS API Documentation
+    #
+    # @overload delete_stream(params = {})
     # @param [Hash] params ({})
-    def delete_multi_region_clusters(params = {}, options = {})
-      req = build_request(:delete_multi_region_clusters, params)
+    def delete_stream(params = {}, options = {})
+      req = build_request(:delete_stream, params)
       req.send_request(options)
     end
 
@@ -739,8 +906,10 @@ module Aws::DSQL
     #   * {Types::GetClusterOutput#status #status} => String
     #   * {Types::GetClusterOutput#creation_time #creation_time} => Time
     #   * {Types::GetClusterOutput#deletion_protection_enabled #deletion_protection_enabled} => Boolean
-    #   * {Types::GetClusterOutput#witness_region #witness_region} => String
-    #   * {Types::GetClusterOutput#linked_cluster_arns #linked_cluster_arns} => Array&lt;String&gt;
+    #   * {Types::GetClusterOutput#multi_region_properties #multi_region_properties} => Types::MultiRegionProperties
+    #   * {Types::GetClusterOutput#tags #tags} => Hash&lt;String,String&gt;
+    #   * {Types::GetClusterOutput#encryption_details #encryption_details} => Types::EncryptionDetails
+    #   * {Types::GetClusterOutput#endpoint #endpoint} => String
     #
     #
     # @example Example: Get Cluster
@@ -759,12 +928,18 @@ module Aws::DSQL
     #
     #   resp.identifier #=> String
     #   resp.arn #=> String
-    #   resp.status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "DELETED", "FAILED"
+    #   resp.status #=> String, one of "CREATING", "ACTIVE", "IDLE", "INACTIVE", "UPDATING", "DELETING", "DELETED", "FAILED", "PENDING_SETUP", "PENDING_DELETE"
     #   resp.creation_time #=> Time
     #   resp.deletion_protection_enabled #=> Boolean
-    #   resp.witness_region #=> String
-    #   resp.linked_cluster_arns #=> Array
-    #   resp.linked_cluster_arns[0] #=> String
+    #   resp.multi_region_properties.witness_region #=> String
+    #   resp.multi_region_properties.clusters #=> Array
+    #   resp.multi_region_properties.clusters[0] #=> String
+    #   resp.tags #=> Hash
+    #   resp.tags["TagKey"] #=> String
+    #   resp.encryption_details.encryption_type #=> String, one of "AWS_OWNED_KMS_KEY", "CUSTOMER_MANAGED_KMS_KEY"
+    #   resp.encryption_details.kms_key_arn #=> String
+    #   resp.encryption_details.encryption_status #=> String, one of "ENABLED", "UPDATING", "KMS_KEY_INACCESSIBLE", "ENABLING"
+    #   resp.endpoint #=> String
     #
     #
     # The following waiters are defined for this operation (see {Client#wait_until} for detailed usage):
@@ -778,6 +953,134 @@ module Aws::DSQL
     # @param [Hash] params ({})
     def get_cluster(params = {}, options = {})
       req = build_request(:get_cluster, params)
+      req.send_request(options)
+    end
+
+    # Retrieves the resource-based policy document attached to a cluster.
+    # This policy defines the access permissions and conditions for the
+    # cluster.
+    #
+    # @option params [required, String] :identifier
+    #   The ID of the cluster to retrieve the policy from.
+    #
+    # @return [Types::GetClusterPolicyOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetClusterPolicyOutput#policy #policy} => String
+    #   * {Types::GetClusterPolicyOutput#policy_version #policy_version} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_cluster_policy({
+    #     identifier: "ClusterId", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.policy #=> String
+    #   resp.policy_version #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/GetClusterPolicy AWS API Documentation
+    #
+    # @overload get_cluster_policy(params = {})
+    # @param [Hash] params ({})
+    def get_cluster_policy(params = {}, options = {})
+      req = build_request(:get_cluster_policy, params)
+      req.send_request(options)
+    end
+
+    # Retrieves information about a stream.
+    #
+    # @option params [required, String] :cluster_identifier
+    #   The ID of the cluster containing the stream to retrieve.
+    #
+    # @option params [required, String] :stream_identifier
+    #   The ID of the stream to retrieve.
+    #
+    # @return [Types::GetStreamOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetStreamOutput#cluster_identifier #cluster_identifier} => String
+    #   * {Types::GetStreamOutput#stream_identifier #stream_identifier} => String
+    #   * {Types::GetStreamOutput#arn #arn} => String
+    #   * {Types::GetStreamOutput#status #status} => String
+    #   * {Types::GetStreamOutput#creation_time #creation_time} => Time
+    #   * {Types::GetStreamOutput#ordering #ordering} => String
+    #   * {Types::GetStreamOutput#format #format} => String
+    #   * {Types::GetStreamOutput#target_definition #target_definition} => Types::TargetDefinition
+    #   * {Types::GetStreamOutput#status_reason #status_reason} => Types::StatusReason
+    #   * {Types::GetStreamOutput#tags #tags} => Hash&lt;String,String&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_stream({
+    #     cluster_identifier: "ClusterId", # required
+    #     stream_identifier: "StreamId", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.cluster_identifier #=> String
+    #   resp.stream_identifier #=> String
+    #   resp.arn #=> String
+    #   resp.status #=> String, one of "CREATING", "ACTIVE", "DELETING", "DELETED", "FAILED", "IMPAIRED"
+    #   resp.creation_time #=> Time
+    #   resp.ordering #=> String, one of "UNORDERED"
+    #   resp.format #=> String, one of "JSON"
+    #   resp.target_definition.kinesis.stream_arn #=> String
+    #   resp.target_definition.kinesis.role_arn #=> String
+    #   resp.status_reason.error #=> String, one of "KINESIS_THROUGHPUT_EXCEEDED", "KINESIS_STREAM_NOT_FOUND", "ROLE_ACCESS_DENIED", "KINESIS_ACCESS_DENIED", "KINESIS_KMS_ACCESS_DENIED", "KINESIS_OVERSIZE_RECORD", "CLUSTER_CMK_INACCESSIBLE", "INTERNAL_ERROR"
+    #   resp.status_reason.updated_at #=> Time
+    #   resp.tags #=> Hash
+    #   resp.tags["TagKey"] #=> String
+    #
+    #
+    # The following waiters are defined for this operation (see {Client#wait_until} for detailed usage):
+    #
+    #   * stream_active
+    #   * stream_not_exists
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/GetStream AWS API Documentation
+    #
+    # @overload get_stream(params = {})
+    # @param [Hash] params ({})
+    def get_stream(params = {}, options = {})
+      req = build_request(:get_stream, params)
+      req.send_request(options)
+    end
+
+    # Retrieves the VPC endpoint service name.
+    #
+    # @option params [required, String] :identifier
+    #   The ID of the cluster to retrieve.
+    #
+    # @return [Types::GetVpcEndpointServiceNameOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetVpcEndpointServiceNameOutput#service_name #service_name} => String
+    #   * {Types::GetVpcEndpointServiceNameOutput#cluster_vpc_endpoint #cluster_vpc_endpoint} => String
+    #
+    #
+    # @example Example: Get VPC Endpoint Service Name
+    #
+    #   resp = client.get_vpc_endpoint_service_name({
+    #     identifier: "kiqenqglxyl2snyvkvnj2c3s2e", 
+    #   })
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_vpc_endpoint_service_name({
+    #     identifier: "ClusterId", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.service_name #=> String
+    #   resp.cluster_vpc_endpoint #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/GetVpcEndpointServiceName AWS API Documentation
+    #
+    # @overload get_vpc_endpoint_service_name(params = {})
+    # @param [Hash] params ({})
+    def get_vpc_endpoint_service_name(params = {}, options = {})
+      req = build_request(:get_vpc_endpoint_service_name, params)
       req.send_request(options)
     end
 
@@ -829,6 +1132,55 @@ module Aws::DSQL
       req.send_request(options)
     end
 
+    # Retrieves information about a list of streams for a cluster.
+    #
+    # @option params [required, String] :cluster_identifier
+    #   The ID of the cluster for which to list streams.
+    #
+    # @option params [Integer] :max_results
+    #   An optional parameter that specifies the maximum number of results to
+    #   return. You can use nextToken to display the next page of results.
+    #   Default: 10.
+    #
+    # @option params [String] :next_token
+    #   If your initial ListStreams operation returns a nextToken, you can
+    #   include the returned nextToken in following ListStreams operations,
+    #   which returns results in the next page.
+    #
+    # @return [Types::ListStreamsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListStreamsOutput#next_token #next_token} => String
+    #   * {Types::ListStreamsOutput#streams #streams} => Array&lt;Types::StreamSummary&gt;
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_streams({
+    #     cluster_identifier: "ClusterId", # required
+    #     max_results: 1,
+    #     next_token: "NextToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.next_token #=> String
+    #   resp.streams #=> Array
+    #   resp.streams[0].cluster_identifier #=> String
+    #   resp.streams[0].stream_identifier #=> String
+    #   resp.streams[0].arn #=> String
+    #   resp.streams[0].creation_time #=> Time
+    #   resp.streams[0].status #=> String, one of "CREATING", "ACTIVE", "DELETING", "DELETED", "FAILED", "IMPAIRED"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/ListStreams AWS API Documentation
+    #
+    # @overload list_streams(params = {})
+    # @param [Hash] params ({})
+    def list_streams(params = {}, options = {})
+      req = build_request(:list_streams, params)
+      req.send_request(options)
+    end
+
     # Lists all of the tags for a resource.
     #
     # @option params [required, String] :resource_arn
@@ -862,6 +1214,61 @@ module Aws::DSQL
     # @param [Hash] params ({})
     def list_tags_for_resource(params = {}, options = {})
       req = build_request(:list_tags_for_resource, params)
+      req.send_request(options)
+    end
+
+    # Attaches a resource-based policy to a cluster. This policy defines
+    # access permissions and conditions for the cluster, allowing you to
+    # control which principals can perform actions on the cluster.
+    #
+    # @option params [required, String] :identifier
+    #   The ID of the cluster.
+    #
+    # @option params [required, String] :policy
+    #   The resource-based policy document to attach to the cluster. This
+    #   should be a valid JSON policy document that defines permissions and
+    #   conditions.
+    #
+    # @option params [Boolean] :bypass_policy_lockout_safety_check
+    #   A flag that allows you to bypass the policy lockout safety check. When
+    #   set to true, this parameter allows you to apply a policy that might
+    #   lock you out of the cluster. Use with caution.
+    #
+    # @option params [String] :expected_policy_version
+    #   The expected version of the current policy. This parameter ensures
+    #   that you're updating the correct version of the policy and helps
+    #   prevent concurrent modification conflicts.
+    #
+    # @option params [String] :client_token
+    #   Idempotency token so a request is only processed once.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.**
+    #
+    # @return [Types::PutClusterPolicyOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::PutClusterPolicyOutput#policy_version #policy_version} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.put_cluster_policy({
+    #     identifier: "ClusterId", # required
+    #     policy: "PolicyDocument", # required
+    #     bypass_policy_lockout_safety_check: false,
+    #     expected_policy_version: "PolicyVersion",
+    #     client_token: "ClientToken",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.policy_version #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/PutClusterPolicy AWS API Documentation
+    #
+    # @overload put_cluster_policy(params = {})
+    # @param [Hash] params ({})
+    def put_cluster_policy(params = {}, options = {})
+      req = build_request(:put_cluster_policy, params)
       req.send_request(options)
     end
 
@@ -940,13 +1347,98 @@ module Aws::DSQL
       req.send_request(options)
     end
 
-    # Updates a cluster.
+    # The *UpdateCluster* API allows you to modify both single-Region and
+    # multi-Region cluster configurations. With the *multiRegionProperties*
+    # parameter, you can add or modify witness Region support and manage
+    # peer relationships with clusters in other Regions.
+    #
+    # <note markdown="1"> Note that updating multi-Region clusters requires additional IAM
+    # permissions beyond those needed for standard cluster updates, as
+    # detailed in the Permissions section.
+    #
+    #  </note>
+    #
+    # **Required permissions**
+    #
+    # dsql:UpdateCluster
+    #
+    # : Permission to update a DSQL cluster.
+    #
+    #   Resources: `arn:aws:dsql:region:account-id:cluster/cluster-id `
+    # ^
+    #
+    # dsql:PutMultiRegionProperties
+    #
+    # : Permission to configure multi-Region properties for a cluster.
+    #
+    #   Resources: `arn:aws:dsql:region:account-id:cluster/cluster-id `
+    # ^
+    #
+    # dsql:GetCluster
+    #
+    # : Permission to retrieve cluster information.
+    #
+    #   Resources: `arn:aws:dsql:region:account-id:cluster/cluster-id `
+    #
+    # dsql:AddPeerCluster
+    #
+    # : Permission to add peer clusters.
+    #
+    #   Resources:
+    #
+    #   * Local cluster: `arn:aws:dsql:region:account-id:cluster/cluster-id
+    #     `
+    #
+    #   * Each peer cluster: exact ARN of each specified peer cluster
+    #
+    # dsql:RemovePeerCluster
+    #
+    # : Permission to remove peer clusters. When you list peer clusters in
+    #   `multiRegionProperties.clusters`, you need this permission for each
+    #   current peer cluster that your list omits.
+    #
+    #   Resources:
+    #
+    #   * Each removed peer cluster: exact ARN of each removed peer cluster,
+    #     in its own Region
+    #
+    #   ^
+    # ^
+    #
+    # dsql:PutWitnessRegion
+    #
+    # : Permission to set a witness Region.
+    #
+    #   Resources: `arn:aws:dsql:region:account-id:cluster/cluster-id `
+    #
+    #   Condition Keys: dsql:WitnessRegion (matching the specified witness
+    #   Region)
+    #
+    #   **This permission is checked both in the cluster Region and in the
+    #   witness Region.**
+    #
+    # * The witness Region specified in
+    #   `multiRegionProperties.witnessRegion` cannot be the same as the
+    #   cluster's Region.
+    #
+    # * When you list peer clusters in `multiRegionProperties.clusters`, you
+    #   need `dsql:AddPeerCluster` for every peer cluster in your request.
+    #   You need `dsql:RemovePeerCluster` only for the peer clusters that
+    #   the update removes.
     #
     # @option params [required, String] :identifier
     #   The ID of the cluster you want to update.
     #
     # @option params [Boolean] :deletion_protection_enabled
     #   Specifies whether to enable deletion protection in your cluster.
+    #
+    # @option params [String] :kms_encryption_key
+    #   The KMS key that encrypts and protects the data on your cluster. You
+    #   can specify the ARN, ID, or alias of an existing key or have Amazon
+    #   Web Services create a default key for you.
+    #
+    #   To switch to the key owned by Amazon Web Services, specify the
+    #   reserved value `AWS_OWNED_KMS_KEY`.
     #
     # @option params [String] :client_token
     #   A unique, case-sensitive identifier that you provide to ensure the
@@ -962,15 +1454,16 @@ module Aws::DSQL
     #   **A suitable default value is auto-generated.** You should normally
     #   not need to pass this option.**
     #
+    # @option params [Types::MultiRegionProperties] :multi_region_properties
+    #   The new multi-Region cluster configuration settings to be applied
+    #   during an update operation.
+    #
     # @return [Types::UpdateClusterOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::UpdateClusterOutput#identifier #identifier} => String
     #   * {Types::UpdateClusterOutput#arn #arn} => String
     #   * {Types::UpdateClusterOutput#status #status} => String
     #   * {Types::UpdateClusterOutput#creation_time #creation_time} => Time
-    #   * {Types::UpdateClusterOutput#deletion_protection_enabled #deletion_protection_enabled} => Boolean
-    #   * {Types::UpdateClusterOutput#witness_region #witness_region} => String
-    #   * {Types::UpdateClusterOutput#linked_cluster_arns #linked_cluster_arns} => Array&lt;String&gt;
     #
     #
     # @example Example: Update Cluster
@@ -985,19 +1478,20 @@ module Aws::DSQL
     #   resp = client.update_cluster({
     #     identifier: "ClusterId", # required
     #     deletion_protection_enabled: false,
+    #     kms_encryption_key: "KmsEncryptionKey",
     #     client_token: "ClientToken",
+    #     multi_region_properties: {
+    #       witness_region: "Region",
+    #       clusters: ["ClusterArn"],
+    #     },
     #   })
     #
     # @example Response structure
     #
     #   resp.identifier #=> String
     #   resp.arn #=> String
-    #   resp.status #=> String, one of "CREATING", "ACTIVE", "UPDATING", "DELETING", "DELETED", "FAILED"
+    #   resp.status #=> String, one of "CREATING", "ACTIVE", "IDLE", "INACTIVE", "UPDATING", "DELETING", "DELETED", "FAILED", "PENDING_SETUP", "PENDING_DELETE"
     #   resp.creation_time #=> Time
-    #   resp.deletion_protection_enabled #=> Boolean
-    #   resp.witness_region #=> String
-    #   resp.linked_cluster_arns #=> Array
-    #   resp.linked_cluster_arns[0] #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/UpdateCluster AWS API Documentation
     #
@@ -1026,7 +1520,7 @@ module Aws::DSQL
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-dsql'
-      context[:gem_version] = '1.4.0'
+      context[:gem_version] = '1.32.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 
@@ -1096,6 +1590,8 @@ module Aws::DSQL
     # | ------------------ | -------------------- | -------- | ------------- |
     # | cluster_active     | {Client#get_cluster} | 2        | 60            |
     # | cluster_not_exists | {Client#get_cluster} | 2        | 60            |
+    # | stream_active      | {Client#get_stream}  | 2        | 60            |
+    # | stream_not_exists  | {Client#get_stream}  | 2        | 60            |
     #
     # @raise [Errors::FailureStateError] Raised when the waiter terminates
     #   because the waiter has entered a state that it will not transition
@@ -1147,7 +1643,9 @@ module Aws::DSQL
     def waiters
       {
         cluster_active: Waiters::ClusterActive,
-        cluster_not_exists: Waiters::ClusterNotExists
+        cluster_not_exists: Waiters::ClusterNotExists,
+        stream_active: Waiters::StreamActive,
+        stream_not_exists: Waiters::StreamNotExists
       }
     end
 

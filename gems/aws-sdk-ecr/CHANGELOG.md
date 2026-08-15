@@ -1,6 +1,171 @@
 Unreleased Changes
 ------------------
 
+1.131.0 (2026-07-09)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.130.0 (2026-06-01)
+------------------
+
+* Feature - Adding new BDD representation of endpoint ruleset
+
+1.129.0 (2026-05-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.128.0 (2026-05-19)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.127.0 (2026-05-13)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.126.0 (2026-04-29)
+------------------
+
+* Feature - Removes support for registry policy V1
+
+1.125.0 (2026-04-08)
+------------------
+
+* Feature - Add UnableToListUpstreamImageReferrersException in ListImageReferrers
+
+1.124.0 (2026-03-18)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.123.0 (2026-03-12)
+------------------
+
+* Feature - Add Chainguard to PTC upstreamRegistry enum
+
+1.122.0 (2026-02-25)
+------------------
+
+* Feature - Update repository name regex to comply with OCI Distribution Specification
+
+1.121.0 (2026-02-19)
+------------------
+
+* Feature - Adds multiple artifact types filter support in ListImageReferrers API.
+
+1.120.0 (2026-02-16)
+------------------
+
+* Feature - Adds support for enabling blob mounting, and removes support for Clair based image scanning
+
+1.119.0 (2026-01-16)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.118.0 (2026-01-08)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.117.0 (2026-01-05)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.116.0 (2025-12-18)
+------------------
+
+* Feature - Adds support for ECR Create On Push
+
+1.115.0 (2025-11-21)
+------------------
+
+* Feature - Add support for ECR managed signing
+
+1.114.0 (2025-11-19)
+------------------
+
+* Feature - Add support for ECR archival storage class and Inspector org policy for scanning
+
+1.113.0 (2025-11-13)
+------------------
+
+* Feature - Add Amazon ECR FIPS PrivateLink endpoint support
+
+1.112.0 (2025-10-23)
+------------------
+
+* Feature - Update endpoint ruleset parameters casing
+
+1.111.0 (2025-10-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.110.0 (2025-08-28)
+------------------
+
+* Feature - Remove incorrect endpoint tests
+
+1.109.0 (2025-08-26)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.108.0 (2025-08-04)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.107.0 (2025-07-31)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.106.0 (2025-07-22)
+------------------
+
+* Feature - Add support for Image Tag Mutability Exception feature, allowing repositories to define wildcard-based patterns that override the default image tag mutability settings.
+
+1.105.0 (2025-07-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.104.0 (2025-06-16)
+------------------
+
+* Feature - The `DescribeImageScanning` API now includes `lastInUseAt` and `InUseCount` fields that can be used to prioritize vulnerability remediation for images that are actively being used.
+
+1.103.0 (2025-06-02)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.102.0 (2025-05-12)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.101.0 (2025-05-01)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.100.0 (2025-04-30)
+------------------
+
+* Feature - Adds dualstack support for Amazon Elastic Container Registry (Amazon ECR).
+
+1.99.0 (2025-04-02)
+------------------
+
+* Feature - Fix for customer issues related to AWS account ID and size limitation for token.
+
 1.98.0 (2025-03-11)
 ------------------
 

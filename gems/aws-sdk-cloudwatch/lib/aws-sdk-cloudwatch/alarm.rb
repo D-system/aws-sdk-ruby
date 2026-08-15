@@ -189,6 +189,10 @@ module Aws::CloudWatch
     # If this parameter is omitted, the default behavior of `missing` is
     # used.
     #
+    # <note markdown="1"> This parameter is not applicable to PromQL alarms.
+    #
+    #  </note>
+    #
     #
     #
     # [1]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/AlarmThatSendsEmail.html#alarms-and-missing-data
@@ -224,10 +228,18 @@ module Aws::CloudWatch
       data[:threshold_metric_id]
     end
 
-    # If the value of this field is `PARTIAL_DATA`, the alarm is being
-    # evaluated based on only partial data. This happens if the query used
-    # for the alarm returns more than 10,000 metrics. For more information,
-    # see [Create alarms on Metrics Insights queries][1].
+    # If the value of this field is `PARTIAL_DATA`, it indicates that not
+    # all the available data was able to be retrieved due to quota
+    # limitations. For more information, see [Create alarms on Metrics
+    # Insights queries][1].
+    #
+    # If the value of this field is `EVALUATION_ERROR`, it indicates
+    # configuration errors in alarm setup that require review and
+    # correction. Refer to StateReason field of the alarm for more details.
+    #
+    # If the value of this field is `EVALUATION_FAILURE`, it indicates
+    # temporary CloudWatch issues. We recommend manual monitoring until the
+    # issue is resolved
     #
     #
     #
@@ -242,6 +254,31 @@ module Aws::CloudWatch
     # @return [Time]
     def state_transitioned_timestamp
       data[:state_transitioned_timestamp]
+    end
+
+    # The evaluation window that the alarm uses to select the range of
+    # metric data that it evaluates. This is either a sliding window or a
+    # wall clock window. For more information, see [Alarm evaluation
+    # windows][1] in the *CloudWatch User Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/alarm-evaluation-window.html
+    # @return [Types::EvaluationWindow]
+    def evaluation_window
+      data[:evaluation_window]
+    end
+
+    # The evaluation criteria for the alarm.
+    # @return [Types::EvaluationCriteria]
+    def evaluation_criteria
+      data[:evaluation_criteria]
+    end
+
+    # The frequency, in seconds, at which the alarm is evaluated.
+    # @return [Integer]
+    def evaluation_interval
+      data[:evaluation_interval]
     end
 
     # @!endgroup
@@ -431,8 +468,9 @@ module Aws::CloudWatch
     # @example Request syntax with placeholder values
     #
     #   alarm.describe_history({
-    #     alarm_types: ["CompositeAlarm"], # accepts CompositeAlarm, MetricAlarm
-    #     history_item_type: "ConfigurationUpdate", # accepts ConfigurationUpdate, StateUpdate, Action
+    #     alarm_contributor_id: "ContributorId",
+    #     alarm_types: ["CompositeAlarm"], # accepts CompositeAlarm, MetricAlarm, LogAlarm
+    #     history_item_type: "ConfigurationUpdate", # accepts ConfigurationUpdate, StateUpdate, Action, AlarmContributorStateUpdate, AlarmContributorAction
     #     start_date: Time.now,
     #     end_date: Time.now,
     #     max_records: 1,
@@ -440,10 +478,13 @@ module Aws::CloudWatch
     #     scan_by: "TimestampDescending", # accepts TimestampDescending, TimestampAscending
     #   })
     # @param [Hash] options ({})
+    # @option options [String] :alarm_contributor_id
+    #   The unique identifier of a specific alarm contributor to filter the
+    #   alarm history results.
     # @option options [Array<String>] :alarm_types
     #   Use this parameter to specify whether you want the operation to return
-    #   metric alarms or composite alarms. If you omit this parameter, only
-    #   metric alarms are returned.
+    #   metric alarms, composite alarms, or log alarms. If you omit this
+    #   parameter, only metric alarms are returned.
     # @option options [String] :history_item_type
     #   The type of alarm histories to retrieve.
     # @option options [Time,DateTime,Date,Integer,String] :start_date

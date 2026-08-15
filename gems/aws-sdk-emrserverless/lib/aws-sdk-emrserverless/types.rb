@@ -108,6 +108,10 @@ module Aws::EMRServerless
     #   The configuration setting for monitoring.
     #   @return [Types::MonitoringConfiguration]
     #
+    # @!attribute [rw] disk_encryption_configuration
+    #   The configuration object that allows encrypting local disks.
+    #   @return [Types::DiskEncryptionConfiguration]
+    #
     # @!attribute [rw] interactive_configuration
     #   The interactive configuration object that enables the interactive
     #   use cases for an application.
@@ -117,6 +121,15 @@ module Aws::EMRServerless
     #   The scheduler configuration for batch and streaming jobs running on
     #   this application. Supported with release labels emr-7.0.0 and above.
     #   @return [Types::SchedulerConfiguration]
+    #
+    # @!attribute [rw] identity_center_configuration
+    #   The IAM Identity Center configuration applied to enable trusted
+    #   identity propagation.
+    #   @return [Types::IdentityCenterConfiguration]
+    #
+    # @!attribute [rw] job_level_cost_allocation_configuration
+    #   The configuration object that enables job level cost allocation.
+    #   @return [Types::JobLevelCostAllocationConfiguration]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/Application AWS API Documentation
     #
@@ -141,8 +154,11 @@ module Aws::EMRServerless
       :worker_type_specifications,
       :runtime_configuration,
       :monitoring_configuration,
+      :disk_encryption_configuration,
       :interactive_configuration,
-      :scheduler_configuration)
+      :scheduler_configuration,
+      :identity_center_configuration,
+      :job_level_cost_allocation_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -252,11 +268,17 @@ module Aws::EMRServerless
     #   The ID of the job run to cancel.
     #   @return [String]
     #
+    # @!attribute [rw] shutdown_grace_period_in_seconds
+    #   The duration in seconds to wait before forcefully terminating the
+    #   job after cancellation is requested.
+    #   @return [Integer]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/CancelJobRunRequest AWS API Documentation
     #
     class CancelJobRunRequest < Struct.new(
       :application_id,
-      :job_run_id)
+      :job_run_id,
+      :shutdown_grace_period_in_seconds)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -370,11 +392,16 @@ module Aws::EMRServerless
     #   The override configurations for monitoring.
     #   @return [Types::MonitoringConfiguration]
     #
+    # @!attribute [rw] disk_encryption_configuration
+    #   The override configuration to encrypt local disks.
+    #   @return [Types::DiskEncryptionConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/ConfigurationOverrides AWS API Documentation
     #
     class ConfigurationOverrides < Struct.new(
       :application_configuration,
-      :monitoring_configuration)
+      :monitoring_configuration,
+      :disk_encryption_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -477,6 +504,10 @@ module Aws::EMRServerless
     #   The configuration setting for monitoring.
     #   @return [Types::MonitoringConfiguration]
     #
+    # @!attribute [rw] disk_encryption_configuration
+    #   The configuration object that allows encrypting local disks.
+    #   @return [Types::DiskEncryptionConfiguration]
+    #
     # @!attribute [rw] interactive_configuration
     #   The interactive configuration object that enables the interactive
     #   use cases to use when running an application.
@@ -486,6 +517,17 @@ module Aws::EMRServerless
     #   The scheduler configuration for batch and streaming jobs running on
     #   this application. Supported with release labels emr-7.0.0 and above.
     #   @return [Types::SchedulerConfiguration]
+    #
+    # @!attribute [rw] identity_center_configuration
+    #   The IAM Identity Center Configuration accepts the Identity Center
+    #   instance parameter required to enable trusted identity propagation.
+    #   This configuration allows identity propagation between integrated
+    #   services and the Identity Center instance.
+    #   @return [Types::IdentityCenterConfigurationInput]
+    #
+    # @!attribute [rw] job_level_cost_allocation_configuration
+    #   The configuration object that enables job level cost allocation.
+    #   @return [Types::JobLevelCostAllocationConfiguration]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/CreateApplicationRequest AWS API Documentation
     #
@@ -505,8 +547,11 @@ module Aws::EMRServerless
       :worker_type_specifications,
       :runtime_configuration,
       :monitoring_configuration,
+      :disk_encryption_configuration,
       :interactive_configuration,
-      :scheduler_configuration)
+      :scheduler_configuration,
+      :identity_center_configuration,
+      :job_level_cost_allocation_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -548,6 +593,28 @@ module Aws::EMRServerless
     # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/DeleteApplicationResponse AWS API Documentation
     #
     class DeleteApplicationResponse < Aws::EmptyStructure; end
+
+    # The configuration object that allows encrypting local disks.
+    #
+    # @!attribute [rw] encryption_context
+    #   Specifies the optional encryption context that will be used when
+    #   encrypting the data. An encryption context is a collection of
+    #   non-secret key-value pairs that represent additional authenticated
+    #   data.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] encryption_key_arn
+    #   The KMS key ARN to encrypt local disks.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/DiskEncryptionConfiguration AWS API Documentation
+    #
+    class DiskEncryptionConfiguration < Struct.new(
+      :encryption_context,
+      :encryption_key_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # @!attribute [rw] application_id
     #   The ID of the application that will be described.
@@ -651,6 +718,124 @@ module Aws::EMRServerless
       include Aws::Structure
     end
 
+    # @!attribute [rw] application_id
+    #   The ID of the application that the resource belongs to.
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_id
+    #   The ID of the resource.
+    #   @return [String]
+    #
+    # @!attribute [rw] resource_type
+    #   The type of resource to access the dashboard for. Currently, only
+    #   `Session` is supported.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/GetResourceDashboardRequest AWS API Documentation
+    #
+    class GetResourceDashboardRequest < Struct.new(
+      :application_id,
+      :resource_id,
+      :resource_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] url
+    #   A URL to the resource dashboard. For an active resource, this URL
+    #   opens the live application UI. For a terminated resource, this URL
+    #   opens the persistent application UI. This value is not included in
+    #   the response if the URL is not available.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/GetResourceDashboardResponse AWS API Documentation
+    #
+    class GetResourceDashboardResponse < Struct.new(
+      :url)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] application_id
+    #   The ID of the application that the session belongs to.
+    #   @return [String]
+    #
+    # @!attribute [rw] session_id
+    #   The ID of the session.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/GetSessionEndpointRequest AWS API Documentation
+    #
+    class GetSessionEndpointRequest < Struct.new(
+      :application_id,
+      :session_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] application_id
+    #   The output contains the ID of the application.
+    #   @return [String]
+    #
+    # @!attribute [rw] session_id
+    #   The output contains the ID of the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] endpoint
+    #   The endpoint URL for connecting to the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] auth_token
+    #   The authentication token for connecting to the session endpoint.
+    #   Call `GetSessionEndpoint` again to obtain a new token before it
+    #   expires.
+    #   @return [String]
+    #
+    # @!attribute [rw] auth_token_expires_at
+    #   The expiration time of the authentication token.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/GetSessionEndpointResponse AWS API Documentation
+    #
+    class GetSessionEndpointResponse < Struct.new(
+      :application_id,
+      :session_id,
+      :endpoint,
+      :auth_token,
+      :auth_token_expires_at)
+      SENSITIVE = [:auth_token]
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] application_id
+    #   The ID of the application that the session belongs to.
+    #   @return [String]
+    #
+    # @!attribute [rw] session_id
+    #   The ID of the session.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/GetSessionRequest AWS API Documentation
+    #
+    class GetSessionRequest < Struct.new(
+      :application_id,
+      :session_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] session
+    #   The output displays information about the session.
+    #   @return [Types::Session]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/GetSessionResponse AWS API Documentation
+    #
+    class GetSessionResponse < Struct.new(
+      :session)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The configurations for the Hive job driver.
     #
     # @!attribute [rw] query
@@ -675,6 +860,60 @@ module Aws::EMRServerless
       include Aws::Structure
     end
 
+    # The IAM Identity Center Configuration accepts the Identity Center
+    # instance parameter required to enable trusted identity propagation.
+    # This configuration allows identity propagation between integrated
+    # services and the Identity Center instance.
+    #
+    # @!attribute [rw] identity_center_instance_arn
+    #   The ARN of the IAM Identity Center instance.
+    #   @return [String]
+    #
+    # @!attribute [rw] identity_center_application_arn
+    #   The ARN of the EMR Serverless created IAM Identity Center
+    #   Application that provides trusted-identity propagation.
+    #   @return [String]
+    #
+    # @!attribute [rw] user_background_sessions_enabled
+    #   Enables user background sessions for this application so Livy
+    #   sessions can continue running after users log out of their
+    #   interactive notebook or their Identity Center sessions expire.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/IdentityCenterConfiguration AWS API Documentation
+    #
+    class IdentityCenterConfiguration < Struct.new(
+      :identity_center_instance_arn,
+      :identity_center_application_arn,
+      :user_background_sessions_enabled)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The IAM Identity Center Configuration accepts the Identity Center
+    # instance parameter required to enable trusted identity propagation.
+    # This configuration allows identity propagation between integrated
+    # services and the Identity Center instance.
+    #
+    # @!attribute [rw] identity_center_instance_arn
+    #   The ARN of the IAM Identity Center instance.
+    #   @return [String]
+    #
+    # @!attribute [rw] user_background_sessions_enabled
+    #   Enables user background sessions for this application so Livy
+    #   sessions can continue running after users log out of their
+    #   interactive notebook or their Identity Center sessions expire.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/IdentityCenterConfigurationInput AWS API Documentation
+    #
+    class IdentityCenterConfigurationInput < Struct.new(
+      :identity_center_instance_arn,
+      :user_background_sessions_enabled)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The applied image configuration.
     #
     # @!attribute [rw] image_uri
@@ -687,11 +926,20 @@ module Aws::EMRServerless
     #   exist until an application has started.
     #   @return [String]
     #
+    # @!attribute [rw] application_level_digest_resolution
+    #   Boolean value indicating if the digest resolution is application
+    #   level or workload level. If true, a custom image URI is resolved at
+    #   application start time and all workloads submitted will use that
+    #   image digest. If false, the custom image URI is resolved at the
+    #   workload submission time.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/ImageConfiguration AWS API Documentation
     #
     class ImageConfiguration < Struct.new(
       :image_uri,
-      :resolved_image_digest)
+      :resolved_image_digest,
+      :application_level_digest_resolution)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -704,10 +952,19 @@ module Aws::EMRServerless
     #   blank in an update, Amazon EMR will remove the image configuration.
     #   @return [String]
     #
+    # @!attribute [rw] application_level_digest_resolution
+    #   Boolean value indicating if the digest resolution is application
+    #   level or workload level. If true, a custom image URI is resolved at
+    #   application start time and all workloads submitted will use that
+    #   image digest. If false, the custom image URI is resolved at the
+    #   workload submission time.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/ImageConfigurationInput AWS API Documentation
     #
     class ImageConfigurationInput < Struct.new(
-      :image_uri)
+      :image_uri,
+      :application_level_digest_resolution)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -744,11 +1001,18 @@ module Aws::EMRServerless
     #   interactive jobs.
     #   @return [Boolean]
     #
+    # @!attribute [rw] session_enabled
+    #   Enables interactive sessions on the application. When set to `true`,
+    #   you can start interactive sessions using the `StartSession`
+    #   operation.
+    #   @return [Boolean]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/InteractiveConfiguration AWS API Documentation
     #
     class InteractiveConfiguration < Struct.new(
       :studio_enabled,
-      :livy_endpoint_enabled)
+      :livy_endpoint_enabled,
+      :session_enabled)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -796,6 +1060,20 @@ module Aws::EMRServerless
       class Unknown < JobDriver; end
     end
 
+    # The configuration object that enables job level cost allocation.
+    #
+    # @!attribute [rw] enabled
+    #   Enables job level cost allocation for the application.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/JobLevelCostAllocationConfiguration AWS API Documentation
+    #
+    class JobLevelCostAllocationConfiguration < Struct.new(
+      :enabled)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Information about a job run. A job run is a unit of work, such as a
     # Spark JAR, Hive query, or SparkSQL query, that you submit to an Amazon
     # EMR Serverless application.
@@ -831,6 +1109,12 @@ module Aws::EMRServerless
     # @!attribute [rw] execution_role
     #   The execution role ARN of the job run.
     #   @return [String]
+    #
+    # @!attribute [rw] execution_iam_policy
+    #   Optional IAM policy. The resulting job IAM role permissions will be
+    #   an intersection of the policies passed and the policy associated
+    #   with your job execution role.
+    #   @return [Types::JobRunExecutionIamPolicy]
     #
     # @!attribute [rw] state
     #   The state of the job run.
@@ -920,6 +1204,16 @@ module Aws::EMRServerless
     #   The total time for a job in the QUEUED state in milliseconds.
     #   @return [Integer]
     #
+    # @!attribute [rw] image_configuration
+    #   The applied image configuration.
+    #   @return [Types::ImageConfiguration]
+    #
+    # @!attribute [rw] worker_type_specifications
+    #   The specification applied to each worker type. Includes the
+    #   JobRun-level ImageConfiguration when the
+    #   applicationLevelDigestResolution is false for the application.
+    #   @return [Hash<String,Types::WorkerTypeSpecification>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/JobRun AWS API Documentation
     #
     class JobRun < Struct.new(
@@ -931,6 +1225,7 @@ module Aws::EMRServerless
       :created_at,
       :updated_at,
       :execution_role,
+      :execution_iam_policy,
       :state,
       :state_details,
       :release_label,
@@ -949,7 +1244,9 @@ module Aws::EMRServerless
       :attempt_updated_at,
       :started_at,
       :ended_at,
-      :queued_duration_milliseconds)
+      :queued_duration_milliseconds,
+      :image_configuration,
+      :worker_type_specifications)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1035,6 +1332,28 @@ module Aws::EMRServerless
       :release_label,
       :type,
       :attempt)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Optional IAM policy. The resulting job IAM role permissions will be an
+    # intersection of the policies passed and the policy associated with
+    # your job execution role.
+    #
+    # @!attribute [rw] policy
+    #   An IAM inline policy to use as an execution IAM policy.
+    #   @return [String]
+    #
+    # @!attribute [rw] policy_arns
+    #   A list of Amazon Resource Names (ARNs) to use as an execution IAM
+    #   policy.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/JobRunExecutionIamPolicy AWS API Documentation
+    #
+    class JobRunExecutionIamPolicy < Struct.new(
+      :policy,
+      :policy_arns)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1276,6 +1595,64 @@ module Aws::EMRServerless
     #
     class ListJobRunsResponse < Struct.new(
       :job_runs,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] application_id
+    #   The ID of the application to list sessions for.
+    #   @return [String]
+    #
+    # @!attribute [rw] next_token
+    #   The token for the next set of session results.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   The maximum number of sessions to return in each page of results.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] states
+    #   An optional filter for session states. Note that if this filter
+    #   contains multiple states, the resulting list will be grouped by the
+    #   state.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] created_at_after
+    #   The lower bound of the option to filter by creation date and time.
+    #   @return [Time]
+    #
+    # @!attribute [rw] created_at_before
+    #   The upper bound of the option to filter by creation date and time.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/ListSessionsRequest AWS API Documentation
+    #
+    class ListSessionsRequest < Struct.new(
+      :application_id,
+      :next_token,
+      :max_results,
+      :states,
+      :created_at_after,
+      :created_at_before)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] sessions
+    #   The output lists information about the specified sessions.
+    #   @return [Array<Types::SessionSummary>]
+    #
+    # @!attribute [rw] next_token
+    #   The output displays the token for the next set of session results.
+    #   This is required for pagination and is available as a response of
+    #   the previous request.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/ListSessionsResponse AWS API Documentation
+    #
+    class ListSessionsResponse < Struct.new(
+      :sessions,
       :next_token)
       SENSITIVE = []
       include Aws::Structure
@@ -1538,6 +1915,211 @@ module Aws::EMRServerless
       include Aws::Structure
     end
 
+    # Information about a session, including the session state,
+    # configuration, and timestamps.
+    #
+    # @!attribute [rw] application_id
+    #   The ID of the application that the session belongs to.
+    #   @return [String]
+    #
+    # @!attribute [rw] session_id
+    #   The ID of the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The optional name of the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] state
+    #   The state of the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] state_details
+    #   Additional details about the current state of the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] release_label
+    #   The Amazon EMR release label associated with the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] execution_role_arn
+    #   The Amazon Resource Name (ARN) of the execution role for the
+    #   session.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_by
+    #   The IAM principal that created the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_at
+    #   The date and time that the session was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_at
+    #   The date and time that the session was last updated.
+    #   @return [Time]
+    #
+    # @!attribute [rw] started_at
+    #   The date and time that the session moved to a running state.
+    #   @return [Time]
+    #
+    # @!attribute [rw] ended_at
+    #   The date and time that the session was terminated or failed.
+    #   @return [Time]
+    #
+    # @!attribute [rw] idle_since
+    #   The date and time that the session became idle.
+    #   @return [Time]
+    #
+    # @!attribute [rw] configuration_overrides
+    #   The configuration overrides for the session, including runtime
+    #   configuration properties.
+    #   @return [Types::SessionConfigurationOverrides]
+    #
+    # @!attribute [rw] network_configuration
+    #   The network configuration for customer VPC connectivity for the
+    #   session.
+    #   @return [Types::NetworkConfiguration]
+    #
+    # @!attribute [rw] idle_timeout_minutes
+    #   The idle timeout in minutes for the session. After the session
+    #   remains idle for this duration, it is automatically terminated.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] tags
+    #   The tags assigned to the session.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] total_resource_utilization
+    #   The aggregate vCPU, memory, and storage resources used from the time
+    #   the session starts to execute, until the time the session
+    #   terminates, rounded up to the nearest second.
+    #   @return [Types::TotalResourceUtilization]
+    #
+    # @!attribute [rw] billed_resource_utilization
+    #   The aggregate vCPU, memory, and storage that Amazon Web Services has
+    #   billed for the session. The billed resources include a 1-minute
+    #   minimum usage for workers, plus additional storage over 20 GB per
+    #   worker. Note that billed resources do not include usage for idle
+    #   pre-initialized workers.
+    #   @return [Types::ResourceUtilization]
+    #
+    # @!attribute [rw] total_execution_duration_seconds
+    #   The total execution duration of the session in seconds.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/Session AWS API Documentation
+    #
+    class Session < Struct.new(
+      :application_id,
+      :session_id,
+      :arn,
+      :name,
+      :state,
+      :state_details,
+      :release_label,
+      :execution_role_arn,
+      :created_by,
+      :created_at,
+      :updated_at,
+      :started_at,
+      :ended_at,
+      :idle_since,
+      :configuration_overrides,
+      :network_configuration,
+      :idle_timeout_minutes,
+      :tags,
+      :total_resource_utilization,
+      :billed_resource_utilization,
+      :total_execution_duration_seconds)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration overrides for a session.
+    #
+    # @!attribute [rw] runtime_configuration
+    #   The runtime configuration for the session. Contains Spark
+    #   configuration properties specified at session creation time.
+    #   @return [Array<Types::Configuration>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/SessionConfigurationOverrides AWS API Documentation
+    #
+    class SessionConfigurationOverrides < Struct.new(
+      :runtime_configuration)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The summary of attributes associated with a session.
+    #
+    # @!attribute [rw] application_id
+    #   The ID of the application that the session belongs to.
+    #   @return [String]
+    #
+    # @!attribute [rw] session_id
+    #   The ID of the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] name
+    #   The optional name of the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] state
+    #   The state of the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] state_details
+    #   Additional details about the current state of the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] release_label
+    #   The Amazon EMR release label associated with the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] execution_role_arn
+    #   The Amazon Resource Name (ARN) of the execution role for the
+    #   session.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_by
+    #   The IAM principal that created the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] created_at
+    #   The date and time that the session was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] updated_at
+    #   The date and time that the session was last updated.
+    #   @return [Time]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/SessionSummary AWS API Documentation
+    #
+    class SessionSummary < Struct.new(
+      :application_id,
+      :session_id,
+      :arn,
+      :name,
+      :state,
+      :state_details,
+      :release_label,
+      :execution_role_arn,
+      :created_by,
+      :created_at,
+      :updated_at)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The configurations for the Spark submit job driver.
     #
     # @!attribute [rw] entry_point
@@ -1594,6 +2176,12 @@ module Aws::EMRServerless
     #   The execution role ARN for the job run.
     #   @return [String]
     #
+    # @!attribute [rw] execution_iam_policy
+    #   You can pass an optional IAM policy. The resulting job IAM role
+    #   permissions will be an intersection of this policy and the policy
+    #   associated with your job execution role.
+    #   @return [Types::JobRunExecutionIamPolicy]
+    #
     # @!attribute [rw] job_driver
     #   The job driver for the job run.
     #   @return [Types::JobDriver]
@@ -1629,6 +2217,7 @@ module Aws::EMRServerless
       :application_id,
       :client_token,
       :execution_role_arn,
+      :execution_iam_policy,
       :job_driver,
       :configuration_overrides,
       :tags,
@@ -1658,6 +2247,82 @@ module Aws::EMRServerless
     class StartJobRunResponse < Struct.new(
       :application_id,
       :job_run_id,
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] application_id
+    #   The ID of the application on which to start the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] client_token
+    #   A unique, case-sensitive identifier that you provide to ensure the
+    #   idempotency of the request. If you retry a request that completed
+    #   successfully using the same client token, the server returns the
+    #   successful response without performing the operation again.
+    #
+    #   **A suitable default value is auto-generated.** You should normally
+    #   not need to pass this option.
+    #   @return [String]
+    #
+    # @!attribute [rw] execution_role_arn
+    #   The execution role ARN for the session. Amazon EMR Serverless uses
+    #   this role to access Amazon Web Services resources on your behalf
+    #   during session execution.
+    #   @return [String]
+    #
+    # @!attribute [rw] configuration_overrides
+    #   The configuration overrides for the session. Only runtime
+    #   configuration overrides are supported.
+    #   @return [Types::SessionConfigurationOverrides]
+    #
+    # @!attribute [rw] tags
+    #   The tags to assign to the session.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] idle_timeout_minutes
+    #   The idle timeout in minutes for the session. After the session
+    #   remains idle for this duration, Amazon EMR Serverless automatically
+    #   terminates it.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] name
+    #   The optional name for the session.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/StartSessionRequest AWS API Documentation
+    #
+    class StartSessionRequest < Struct.new(
+      :application_id,
+      :client_token,
+      :execution_role_arn,
+      :configuration_overrides,
+      :tags,
+      :idle_timeout_minutes,
+      :name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] application_id
+    #   The output contains the application ID on which the session was
+    #   started.
+    #   @return [String]
+    #
+    # @!attribute [rw] session_id
+    #   The output contains the ID of the session.
+    #   @return [String]
+    #
+    # @!attribute [rw] arn
+    #   The output contains the ARN of the session.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/StartSessionResponse AWS API Documentation
+    #
+    class StartSessionResponse < Struct.new(
+      :application_id,
+      :session_id,
       :arn)
       SENSITIVE = []
       include Aws::Structure
@@ -1702,6 +2367,41 @@ module Aws::EMRServerless
     # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/TagResourceResponse AWS API Documentation
     #
     class TagResourceResponse < Aws::EmptyStructure; end
+
+    # @!attribute [rw] application_id
+    #   The ID of the application that the session belongs to.
+    #   @return [String]
+    #
+    # @!attribute [rw] session_id
+    #   The ID of the session to terminate.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/TerminateSessionRequest AWS API Documentation
+    #
+    class TerminateSessionRequest < Struct.new(
+      :application_id,
+      :session_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] application_id
+    #   The output contains the application ID on which the session was
+    #   terminated.
+    #   @return [String]
+    #
+    # @!attribute [rw] session_id
+    #   The output contains the ID of the terminated session.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/TerminateSessionResponse AWS API Documentation
+    #
+    class TerminateSessionResponse < Struct.new(
+      :application_id,
+      :session_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # The aggregate vCPU, memory, and storage resources used from the time
     # job start executing till the time job is terminated, rounded up to the
@@ -1837,10 +2537,25 @@ module Aws::EMRServerless
     #   The configuration setting for monitoring.
     #   @return [Types::MonitoringConfiguration]
     #
+    # @!attribute [rw] disk_encryption_configuration
+    #   The configuration object that allows encrypting local disks.
+    #   @return [Types::DiskEncryptionConfiguration]
+    #
     # @!attribute [rw] scheduler_configuration
     #   The scheduler configuration for batch and streaming jobs running on
     #   this application. Supported with release labels emr-7.0.0 and above.
     #   @return [Types::SchedulerConfiguration]
+    #
+    # @!attribute [rw] identity_center_configuration
+    #   Specifies the IAM Identity Center configuration used to enable or
+    #   disable trusted identity propagation. When provided, this
+    #   configuration determines how the application interacts with IAM
+    #   Identity Center for user authentication and access control.
+    #   @return [Types::IdentityCenterConfigurationInput]
+    #
+    # @!attribute [rw] job_level_cost_allocation_configuration
+    #   The configuration object that enables job level cost allocation.
+    #   @return [Types::JobLevelCostAllocationConfiguration]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/emr-serverless-2021-07-13/UpdateApplicationRequest AWS API Documentation
     #
@@ -1859,7 +2574,10 @@ module Aws::EMRServerless
       :release_label,
       :runtime_configuration,
       :monitoring_configuration,
-      :scheduler_configuration)
+      :disk_encryption_configuration,
+      :scheduler_configuration,
+      :identity_center_configuration,
+      :job_level_cost_allocation_configuration)
       SENSITIVE = []
       include Aws::Structure
     end

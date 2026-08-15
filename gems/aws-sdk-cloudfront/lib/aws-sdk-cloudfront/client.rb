@@ -95,8 +95,8 @@ module Aws::CloudFront
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::CloudFront
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::CloudFront
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::CloudFront
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::CloudFront
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::CloudFront
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::CloudFront
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::CloudFront
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -470,31 +474,45 @@ module Aws::CloudFront
 
     # @!group API Operations
 
-    # Associates an alias (also known as a CNAME or an alternate domain
-    # name) with a CloudFront distribution.
+    # <note markdown="1"> The `AssociateAlias` API operation only supports
+    # standard
+    # distributions. To move domains between distribution tenants and/or
+    # standard distributions, we recommend that you use the
+    # [UpdateDomainAssociation][1] API operation instead.
     #
-    # With this operation you can move an alias that's already in use on a
-    # CloudFront distribution to a different distribution in one step. This
+    #  </note>
+    #
+    #  Associates an alias with a CloudFront standard distribution. An alias
+    # is commonly known as a custom domain or vanity domain. It can also be
+    # called a CNAME or alternate domain name.
+    #
+    #  With this operation, you can move an alias that's already used for a
+    # standard distribution to a different standard distribution. This
     # prevents the downtime that could occur if you first remove the alias
-    # from one distribution and then separately add the alias to another
-    # distribution.
+    # from one standard distribution and then separately add the alias to
+    # another standard distribution.
     #
-    # To use this operation to associate an alias with a distribution, you
-    # provide the alias and the ID of the target distribution for the alias.
-    # For more information, including how to set up the target distribution,
-    # prerequisites that you must complete, and other restrictions, see
-    # [Moving an alternate domain name to a different distribution][1] in
-    # the *Amazon CloudFront Developer Guide*.
+    #  To use this operation, specify the alias and the ID of the target
+    # standard distribution.
+    #
+    #  For more information, including how to set up the target standard
+    # distribution, prerequisites that you must complete, and other
+    # restrictions, see [Moving an alternate domain name to a different
+    # standard distribution or distribution tenant][2] in the *Amazon
+    # CloudFront Developer Guide*.
     #
     #
     #
-    # [1]: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/CNAMEs.html#alternate-domain-names-move
+    # [1]: https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_UpdateDomainAssociation.html
+    # [2]: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/CNAMEs.html#alternate-domain-names-move
     #
     # @option params [required, String] :target_distribution_id
-    #   The ID of the distribution that you're associating the alias with.
+    #   The ID of the standard distribution that you're associating the alias
+    #   with.
     #
     # @option params [required, String] :alias
-    #   The alias (also known as a CNAME) to add to the target distribution.
+    #   The alias (also known as a CNAME) to add to the target standard
+    #   distribution.
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
@@ -511,6 +529,88 @@ module Aws::CloudFront
     # @param [Hash] params ({})
     def associate_alias(params = {}, options = {})
       req = build_request(:associate_alias, params)
+      req.send_request(options)
+    end
+
+    # Associates the WAF web ACL with a distribution tenant.
+    #
+    # @option params [required, String] :id
+    #   The ID of the distribution tenant.
+    #
+    # @option params [required, String] :web_acl_arn
+    #   The Amazon Resource Name (ARN) of the WAF web ACL to associate.
+    #
+    # @option params [String] :if_match
+    #   The current `ETag` of the distribution tenant. This value is returned
+    #   in the response of the `GetDistributionTenant` API operation.
+    #
+    # @return [Types::AssociateDistributionTenantWebACLResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::AssociateDistributionTenantWebACLResult#id #id} => String
+    #   * {Types::AssociateDistributionTenantWebACLResult#web_acl_arn #web_acl_arn} => String
+    #   * {Types::AssociateDistributionTenantWebACLResult#etag #etag} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.associate_distribution_tenant_web_acl({
+    #     id: "string", # required
+    #     web_acl_arn: "string", # required
+    #     if_match: "string",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.id #=> String
+    #   resp.web_acl_arn #=> String
+    #   resp.etag #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/AssociateDistributionTenantWebACL AWS API Documentation
+    #
+    # @overload associate_distribution_tenant_web_acl(params = {})
+    # @param [Hash] params ({})
+    def associate_distribution_tenant_web_acl(params = {}, options = {})
+      req = build_request(:associate_distribution_tenant_web_acl, params)
+      req.send_request(options)
+    end
+
+    # Associates the WAF web ACL with a distribution.
+    #
+    # @option params [required, String] :id
+    #   The ID of the distribution.
+    #
+    # @option params [required, String] :web_acl_arn
+    #   The Amazon Resource Name (ARN) of the WAF web ACL to associate.
+    #
+    # @option params [String] :if_match
+    #   The value of the `ETag` header that you received when retrieving the
+    #   distribution that you're associating with the WAF web ACL.
+    #
+    # @return [Types::AssociateDistributionWebACLResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::AssociateDistributionWebACLResult#id #id} => String
+    #   * {Types::AssociateDistributionWebACLResult#web_acl_arn #web_acl_arn} => String
+    #   * {Types::AssociateDistributionWebACLResult#etag #etag} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.associate_distribution_web_acl({
+    #     id: "string", # required
+    #     web_acl_arn: "string", # required
+    #     if_match: "string",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.id #=> String
+    #   resp.web_acl_arn #=> String
+    #   resp.etag #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/AssociateDistributionWebACL AWS API Documentation
+    #
+    # @overload associate_distribution_web_acl(params = {})
+    # @param [Hash] params ({})
+    def associate_distribution_web_acl(params = {}, options = {})
+      req = build_request(:associate_distribution_web_acl, params)
       req.send_request(options)
     end
 
@@ -618,6 +718,7 @@ module Aws::CloudFront
     #   resp.distribution.distribution_config.origins.items[0].custom_headers.items[0].header_name #=> String
     #   resp.distribution.distribution_config.origins.items[0].custom_headers.items[0].header_value #=> String
     #   resp.distribution.distribution_config.origins.items[0].s3_origin_config.origin_access_identity #=> String
+    #   resp.distribution.distribution_config.origins.items[0].s3_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.http_port #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.https_port #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_protocol_policy #=> String, one of "http-only", "match-viewer", "https-only"
@@ -626,11 +727,15 @@ module Aws::CloudFront
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_ssl_protocols.items[0] #=> String, one of "SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_keepalive_timeout #=> Integer
+    #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.ip_address_type #=> String, one of "ipv4", "ipv6", "dualstack"
+    #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_mtls_config.client_certificate_arn #=> String
     #   resp.distribution.distribution_config.origins.items[0].vpc_origin_config.vpc_origin_id #=> String
+    #   resp.distribution.distribution_config.origins.items[0].vpc_origin_config.owner_account_id #=> String
     #   resp.distribution.distribution_config.origins.items[0].vpc_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].vpc_origin_config.origin_keepalive_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].connection_attempts #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].connection_timeout #=> Integer
+    #   resp.distribution.distribution_config.origins.items[0].response_completion_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].origin_shield.enabled #=> Boolean
     #   resp.distribution.distribution_config.origins.items[0].origin_shield.origin_shield_region #=> String
     #   resp.distribution.distribution_config.origins.items[0].origin_access_control_id #=> String
@@ -752,13 +857,13 @@ module Aws::CloudFront
     #   resp.distribution.distribution_config.logging.include_cookies #=> Boolean
     #   resp.distribution.distribution_config.logging.bucket #=> String
     #   resp.distribution.distribution_config.logging.prefix #=> String
-    #   resp.distribution.distribution_config.price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All"
+    #   resp.distribution.distribution_config.price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All", "None"
     #   resp.distribution.distribution_config.enabled #=> Boolean
     #   resp.distribution.distribution_config.viewer_certificate.cloud_front_default_certificate #=> Boolean
     #   resp.distribution.distribution_config.viewer_certificate.iam_certificate_id #=> String
     #   resp.distribution.distribution_config.viewer_certificate.acm_certificate_arn #=> String
     #   resp.distribution.distribution_config.viewer_certificate.ssl_support_method #=> String, one of "sni-only", "vip", "static-ip"
-    #   resp.distribution.distribution_config.viewer_certificate.minimum_protocol_version #=> String, one of "SSLv3", "TLSv1", "TLSv1_2016", "TLSv1.1_2016", "TLSv1.2_2018", "TLSv1.2_2019", "TLSv1.2_2021"
+    #   resp.distribution.distribution_config.viewer_certificate.minimum_protocol_version #=> String, one of "SSLv3", "TLSv1", "TLSv1_2016", "TLSv1.1_2016", "TLSv1.2_2018", "TLSv1.2_2019", "TLSv1.2_2021", "TLSv1.3_2025", "TLSv1.2_2025"
     #   resp.distribution.distribution_config.viewer_certificate.certificate #=> String
     #   resp.distribution.distribution_config.viewer_certificate.certificate_source #=> String, one of "cloudfront", "iam", "acm"
     #   resp.distribution.distribution_config.restrictions.geo_restriction.restriction_type #=> String, one of "blacklist", "whitelist", "none"
@@ -771,6 +876,18 @@ module Aws::CloudFront
     #   resp.distribution.distribution_config.continuous_deployment_policy_id #=> String
     #   resp.distribution.distribution_config.staging #=> Boolean
     #   resp.distribution.distribution_config.anycast_ip_list_id #=> String
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions #=> Array
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions[0].name #=> String
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions[0].definition.string_schema.comment #=> String
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions[0].definition.string_schema.default_value #=> String
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions[0].definition.string_schema.required #=> Boolean
+    #   resp.distribution.distribution_config.connection_mode #=> String, one of "direct", "tenant-only"
+    #   resp.distribution.distribution_config.viewer_mtls_config.mode #=> String, one of "required", "optional", "passthrough"
+    #   resp.distribution.distribution_config.viewer_mtls_config.trust_store_config.trust_store_id #=> String
+    #   resp.distribution.distribution_config.viewer_mtls_config.trust_store_config.advertise_trust_store_ca_names #=> Boolean
+    #   resp.distribution.distribution_config.viewer_mtls_config.trust_store_config.ignore_certificate_expiry #=> Boolean
+    #   resp.distribution.distribution_config.connection_function_association.id #=> String
+    #   resp.distribution.distribution_config.cache_tag_config.header_name #=> String
     #   resp.distribution.alias_icp_recordals #=> Array
     #   resp.distribution.alias_icp_recordals[0].cname #=> String
     #   resp.distribution.alias_icp_recordals[0].icp_recordal_status #=> String, one of "APPROVED", "SUSPENDED", "PENDING"
@@ -793,10 +910,24 @@ module Aws::CloudFront
     #
     # @option params [required, Integer] :ip_count
     #   The number of static IP addresses that are allocated to the Anycast
-    #   static IP list.
+    #   static IP list. Valid values: 21 or 3.
     #
     # @option params [Types::Tags] :tags
     #   A complex type that contains zero or more `Tag` elements.
+    #
+    # @option params [String] :ip_address_type
+    #   The IP address type for the Anycast static IP list. You can specify
+    #   one of the following options:
+    #
+    #   * `ipv4` only
+    #
+    #   * `ipv6` only
+    #
+    #   * `dualstack` - Allocate a list of both IPv4 and IPv6 addresses
+    #
+    # @option params [Array<Types::IpamCidrConfig>] :ipam_cidr_configs
+    #   A list of IPAM CIDR configurations that specify the IP address ranges
+    #   and IPAM pool settings for creating the Anycast static IP list.
     #
     # @return [Types::CreateAnycastIpListResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -816,6 +947,15 @@ module Aws::CloudFront
     #         },
     #       ],
     #     },
+    #     ip_address_type: "ipv4", # accepts ipv4, ipv6, dualstack
+    #     ipam_cidr_configs: [
+    #       {
+    #         cidr: "string", # required
+    #         ipam_pool_arn: "string", # required
+    #         anycast_ip: "string",
+    #         status: "provisioned", # accepts provisioned, failed-provision, provisioning, deprovisioned, failed-deprovision, deprovisioning, advertised, failed-advertise, advertising, withdrawn, failed-withdraw, withdrawing
+    #       },
+    #     ],
     #   })
     #
     # @example Response structure
@@ -824,6 +964,13 @@ module Aws::CloudFront
     #   resp.anycast_ip_list.name #=> String
     #   resp.anycast_ip_list.status #=> String
     #   resp.anycast_ip_list.arn #=> String
+    #   resp.anycast_ip_list.ip_address_type #=> String, one of "ipv4", "ipv6", "dualstack"
+    #   resp.anycast_ip_list.ipam_config.quantity #=> Integer
+    #   resp.anycast_ip_list.ipam_config.ipam_cidr_configs #=> Array
+    #   resp.anycast_ip_list.ipam_config.ipam_cidr_configs[0].cidr #=> String
+    #   resp.anycast_ip_list.ipam_config.ipam_cidr_configs[0].ipam_pool_arn #=> String
+    #   resp.anycast_ip_list.ipam_config.ipam_cidr_configs[0].anycast_ip #=> String
+    #   resp.anycast_ip_list.ipam_config.ipam_cidr_configs[0].status #=> String, one of "provisioned", "failed-provision", "provisioning", "deprovisioned", "failed-deprovision", "deprovisioning", "advertised", "failed-advertise", "advertising", "withdrawn", "failed-withdraw", "withdrawing"
     #   resp.anycast_ip_list.anycast_ips #=> Array
     #   resp.anycast_ip_list.anycast_ips[0] #=> String
     #   resp.anycast_ip_list.ip_count #=> Integer
@@ -852,6 +999,11 @@ module Aws::CloudFront
     #
     # * The default, minimum, and maximum time to live (TTL) values that you
     #   want objects to stay in the CloudFront cache.
+    #
+    #   If your minimum TTL is greater than 0, CloudFront will cache content
+    #   for at least the duration specified in the cache policy's minimum
+    #   TTL, even if the `Cache-Control: no-cache`, `no-store`, or `private`
+    #   directives are present in the origin headers.
     #
     # The headers, cookies, and query strings that are included in the cache
     # key are also included in requests that CloudFront sends to the origin.
@@ -995,6 +1147,153 @@ module Aws::CloudFront
       req.send_request(options)
     end
 
+    # Creates a connection function.
+    #
+    # @option params [required, String] :name
+    #   A name for the connection function.
+    #
+    # @option params [required, Types::FunctionConfig] :connection_function_config
+    #   Contains configuration information about a CloudFront function.
+    #
+    # @option params [required, String, StringIO, File] :connection_function_code
+    #   The code for the connection function.
+    #
+    # @option params [Types::Tags] :tags
+    #   A complex type that contains zero or more `Tag` elements.
+    #
+    # @return [Types::CreateConnectionFunctionResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateConnectionFunctionResult#connection_function_summary #connection_function_summary} => Types::ConnectionFunctionSummary
+    #   * {Types::CreateConnectionFunctionResult#location #location} => String
+    #   * {Types::CreateConnectionFunctionResult#etag #etag} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_connection_function({
+    #     name: "FunctionName", # required
+    #     connection_function_config: { # required
+    #       comment: "string", # required
+    #       runtime: "cloudfront-js-1.0", # required, accepts cloudfront-js-1.0, cloudfront-js-2.0
+    #       key_value_store_associations: {
+    #         quantity: 1, # required
+    #         items: [
+    #           {
+    #             key_value_store_arn: "KeyValueStoreARN", # required
+    #           },
+    #         ],
+    #       },
+    #     },
+    #     connection_function_code: "data", # required
+    #     tags: {
+    #       items: [
+    #         {
+    #           key: "TagKey", # required
+    #           value: "TagValue",
+    #         },
+    #       ],
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.connection_function_summary.name #=> String
+    #   resp.connection_function_summary.id #=> String
+    #   resp.connection_function_summary.connection_function_config.comment #=> String
+    #   resp.connection_function_summary.connection_function_config.runtime #=> String, one of "cloudfront-js-1.0", "cloudfront-js-2.0"
+    #   resp.connection_function_summary.connection_function_config.key_value_store_associations.quantity #=> Integer
+    #   resp.connection_function_summary.connection_function_config.key_value_store_associations.items #=> Array
+    #   resp.connection_function_summary.connection_function_config.key_value_store_associations.items[0].key_value_store_arn #=> String
+    #   resp.connection_function_summary.connection_function_arn #=> String
+    #   resp.connection_function_summary.status #=> String
+    #   resp.connection_function_summary.stage #=> String, one of "DEVELOPMENT", "LIVE"
+    #   resp.connection_function_summary.created_time #=> Time
+    #   resp.connection_function_summary.last_modified_time #=> Time
+    #   resp.location #=> String
+    #   resp.etag #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/CreateConnectionFunction AWS API Documentation
+    #
+    # @overload create_connection_function(params = {})
+    # @param [Hash] params ({})
+    def create_connection_function(params = {}, options = {})
+      req = build_request(:create_connection_function, params)
+      req.send_request(options)
+    end
+
+    # Creates a connection group.
+    #
+    # @option params [required, String] :name
+    #   The name of the connection group. Enter a friendly identifier that is
+    #   unique within your Amazon Web Services account. This name can't be
+    #   updated after you create the connection group.
+    #
+    # @option params [Boolean] :ipv_6_enabled
+    #   Enable IPv6 for the connection group. The default is `true`. For more
+    #   information, see [Enable IPv6][1] in the *Amazon CloudFront Developer
+    #   Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html#DownloadDistValuesEnableIPv6
+    #
+    # @option params [Types::Tags] :tags
+    #   A complex type that contains zero or more `Tag` elements.
+    #
+    # @option params [String] :anycast_ip_list_id
+    #   The ID of the Anycast static IP list.
+    #
+    # @option params [Boolean] :enabled
+    #   Enable the connection group.
+    #
+    # @return [Types::CreateConnectionGroupResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateConnectionGroupResult#connection_group #connection_group} => Types::ConnectionGroup
+    #   * {Types::CreateConnectionGroupResult#etag #etag} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_connection_group({
+    #     name: "string", # required
+    #     ipv_6_enabled: false,
+    #     tags: {
+    #       items: [
+    #         {
+    #           key: "TagKey", # required
+    #           value: "TagValue",
+    #         },
+    #       ],
+    #     },
+    #     anycast_ip_list_id: "string",
+    #     enabled: false,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.connection_group.id #=> String
+    #   resp.connection_group.name #=> String
+    #   resp.connection_group.arn #=> String
+    #   resp.connection_group.created_time #=> Time
+    #   resp.connection_group.last_modified_time #=> Time
+    #   resp.connection_group.tags.items #=> Array
+    #   resp.connection_group.tags.items[0].key #=> String
+    #   resp.connection_group.tags.items[0].value #=> String
+    #   resp.connection_group.ipv_6_enabled #=> Boolean
+    #   resp.connection_group.routing_endpoint #=> String
+    #   resp.connection_group.anycast_ip_list_id #=> String
+    #   resp.connection_group.status #=> String
+    #   resp.connection_group.enabled #=> Boolean
+    #   resp.connection_group.is_default #=> Boolean
+    #   resp.etag #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/CreateConnectionGroup AWS API Documentation
+    #
+    # @overload create_connection_group(params = {})
+    # @param [Hash] params ({})
+    def create_connection_group(params = {}, options = {})
+      req = build_request(:create_connection_group, params)
+      req.send_request(options)
+    end
+
     # Creates a continuous deployment policy that distributes traffic for a
     # custom domain name to two different CloudFront distributions.
     #
@@ -1108,6 +1407,7 @@ module Aws::CloudFront
     #             },
     #             s3_origin_config: {
     #               origin_access_identity: "string", # required
+    #               origin_read_timeout: 1,
     #             },
     #             custom_origin_config: {
     #               http_port: 1, # required
@@ -1119,14 +1419,20 @@ module Aws::CloudFront
     #               },
     #               origin_read_timeout: 1,
     #               origin_keepalive_timeout: 1,
+    #               ip_address_type: "ipv4", # accepts ipv4, ipv6, dualstack
+    #               origin_mtls_config: {
+    #                 client_certificate_arn: "string", # required
+    #               },
     #             },
     #             vpc_origin_config: {
     #               vpc_origin_id: "string", # required
+    #               owner_account_id: "string",
     #               origin_read_timeout: 1,
     #               origin_keepalive_timeout: 1,
     #             },
     #             connection_attempts: 1,
     #             connection_timeout: 1,
+    #             response_completion_timeout: 1,
     #             origin_shield: {
     #               enabled: false, # required
     #               origin_shield_region: "OriginShieldRegion",
@@ -1326,14 +1632,14 @@ module Aws::CloudFront
     #         bucket: "string",
     #         prefix: "string",
     #       },
-    #       price_class: "PriceClass_100", # accepts PriceClass_100, PriceClass_200, PriceClass_All
+    #       price_class: "PriceClass_100", # accepts PriceClass_100, PriceClass_200, PriceClass_All, None
     #       enabled: false, # required
     #       viewer_certificate: {
     #         cloud_front_default_certificate: false,
-    #         iam_certificate_id: "string",
+    #         iam_certificate_id: "ServerCertificateId",
     #         acm_certificate_arn: "string",
     #         ssl_support_method: "sni-only", # accepts sni-only, vip, static-ip
-    #         minimum_protocol_version: "SSLv3", # accepts SSLv3, TLSv1, TLSv1_2016, TLSv1.1_2016, TLSv1.2_2018, TLSv1.2_2019, TLSv1.2_2021
+    #         minimum_protocol_version: "SSLv3", # accepts SSLv3, TLSv1, TLSv1_2016, TLSv1.1_2016, TLSv1.2_2018, TLSv1.2_2019, TLSv1.2_2021, TLSv1.3_2025, TLSv1.2_2025
     #         certificate: "string",
     #         certificate_source: "cloudfront", # accepts cloudfront, iam, acm
     #       },
@@ -1350,6 +1656,35 @@ module Aws::CloudFront
     #       continuous_deployment_policy_id: "string",
     #       staging: false,
     #       anycast_ip_list_id: "string",
+    #       tenant_config: {
+    #         parameter_definitions: [
+    #           {
+    #             name: "ParameterName", # required
+    #             definition: { # required
+    #               string_schema: {
+    #                 comment: "sensitiveStringType",
+    #                 default_value: "ParameterValue",
+    #                 required: false, # required
+    #               },
+    #             },
+    #           },
+    #         ],
+    #       },
+    #       connection_mode: "direct", # accepts direct, tenant-only
+    #       viewer_mtls_config: {
+    #         mode: "required", # accepts required, optional, passthrough
+    #         trust_store_config: {
+    #           trust_store_id: "string", # required
+    #           advertise_trust_store_ca_names: false,
+    #           ignore_certificate_expiry: false,
+    #         },
+    #       },
+    #       connection_function_association: {
+    #         id: "ResourceId", # required
+    #       },
+    #       cache_tag_config: {
+    #         header_name: "string", # required
+    #       },
     #     },
     #   })
     #
@@ -1390,6 +1725,7 @@ module Aws::CloudFront
     #   resp.distribution.distribution_config.origins.items[0].custom_headers.items[0].header_name #=> String
     #   resp.distribution.distribution_config.origins.items[0].custom_headers.items[0].header_value #=> String
     #   resp.distribution.distribution_config.origins.items[0].s3_origin_config.origin_access_identity #=> String
+    #   resp.distribution.distribution_config.origins.items[0].s3_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.http_port #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.https_port #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_protocol_policy #=> String, one of "http-only", "match-viewer", "https-only"
@@ -1398,11 +1734,15 @@ module Aws::CloudFront
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_ssl_protocols.items[0] #=> String, one of "SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_keepalive_timeout #=> Integer
+    #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.ip_address_type #=> String, one of "ipv4", "ipv6", "dualstack"
+    #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_mtls_config.client_certificate_arn #=> String
     #   resp.distribution.distribution_config.origins.items[0].vpc_origin_config.vpc_origin_id #=> String
+    #   resp.distribution.distribution_config.origins.items[0].vpc_origin_config.owner_account_id #=> String
     #   resp.distribution.distribution_config.origins.items[0].vpc_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].vpc_origin_config.origin_keepalive_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].connection_attempts #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].connection_timeout #=> Integer
+    #   resp.distribution.distribution_config.origins.items[0].response_completion_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].origin_shield.enabled #=> Boolean
     #   resp.distribution.distribution_config.origins.items[0].origin_shield.origin_shield_region #=> String
     #   resp.distribution.distribution_config.origins.items[0].origin_access_control_id #=> String
@@ -1524,13 +1864,13 @@ module Aws::CloudFront
     #   resp.distribution.distribution_config.logging.include_cookies #=> Boolean
     #   resp.distribution.distribution_config.logging.bucket #=> String
     #   resp.distribution.distribution_config.logging.prefix #=> String
-    #   resp.distribution.distribution_config.price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All"
+    #   resp.distribution.distribution_config.price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All", "None"
     #   resp.distribution.distribution_config.enabled #=> Boolean
     #   resp.distribution.distribution_config.viewer_certificate.cloud_front_default_certificate #=> Boolean
     #   resp.distribution.distribution_config.viewer_certificate.iam_certificate_id #=> String
     #   resp.distribution.distribution_config.viewer_certificate.acm_certificate_arn #=> String
     #   resp.distribution.distribution_config.viewer_certificate.ssl_support_method #=> String, one of "sni-only", "vip", "static-ip"
-    #   resp.distribution.distribution_config.viewer_certificate.minimum_protocol_version #=> String, one of "SSLv3", "TLSv1", "TLSv1_2016", "TLSv1.1_2016", "TLSv1.2_2018", "TLSv1.2_2019", "TLSv1.2_2021"
+    #   resp.distribution.distribution_config.viewer_certificate.minimum_protocol_version #=> String, one of "SSLv3", "TLSv1", "TLSv1_2016", "TLSv1.1_2016", "TLSv1.2_2018", "TLSv1.2_2019", "TLSv1.2_2021", "TLSv1.3_2025", "TLSv1.2_2025"
     #   resp.distribution.distribution_config.viewer_certificate.certificate #=> String
     #   resp.distribution.distribution_config.viewer_certificate.certificate_source #=> String, one of "cloudfront", "iam", "acm"
     #   resp.distribution.distribution_config.restrictions.geo_restriction.restriction_type #=> String, one of "blacklist", "whitelist", "none"
@@ -1543,6 +1883,18 @@ module Aws::CloudFront
     #   resp.distribution.distribution_config.continuous_deployment_policy_id #=> String
     #   resp.distribution.distribution_config.staging #=> Boolean
     #   resp.distribution.distribution_config.anycast_ip_list_id #=> String
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions #=> Array
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions[0].name #=> String
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions[0].definition.string_schema.comment #=> String
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions[0].definition.string_schema.default_value #=> String
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions[0].definition.string_schema.required #=> Boolean
+    #   resp.distribution.distribution_config.connection_mode #=> String, one of "direct", "tenant-only"
+    #   resp.distribution.distribution_config.viewer_mtls_config.mode #=> String, one of "required", "optional", "passthrough"
+    #   resp.distribution.distribution_config.viewer_mtls_config.trust_store_config.trust_store_id #=> String
+    #   resp.distribution.distribution_config.viewer_mtls_config.trust_store_config.advertise_trust_store_ca_names #=> Boolean
+    #   resp.distribution.distribution_config.viewer_mtls_config.trust_store_config.ignore_certificate_expiry #=> Boolean
+    #   resp.distribution.distribution_config.connection_function_association.id #=> String
+    #   resp.distribution.distribution_config.cache_tag_config.header_name #=> String
     #   resp.distribution.alias_icp_recordals #=> Array
     #   resp.distribution.alias_icp_recordals[0].cname #=> String
     #   resp.distribution.alias_icp_recordals[0].icp_recordal_status #=> String, one of "APPROVED", "SUSPENDED", "PENDING"
@@ -1555,6 +1907,138 @@ module Aws::CloudFront
     # @param [Hash] params ({})
     def create_distribution(params = {}, options = {})
       req = build_request(:create_distribution, params)
+      req.send_request(options)
+    end
+
+    # Creates a distribution tenant.
+    #
+    # @option params [required, String] :distribution_id
+    #   The ID of the multi-tenant distribution to use for creating the
+    #   distribution tenant.
+    #
+    # @option params [required, String] :name
+    #   The name of the distribution tenant. Enter a friendly identifier that
+    #   is unique within your Amazon Web Services account. This name can't be
+    #   updated after you create the distribution tenant.
+    #
+    # @option params [required, Array<Types::DomainItem>] :domains
+    #   The domains associated with the distribution tenant. You must specify
+    #   at least one domain in the request.
+    #
+    # @option params [Types::Tags] :tags
+    #   A complex type that contains zero or more `Tag` elements.
+    #
+    # @option params [Types::Customizations] :customizations
+    #   Customizations for the distribution tenant. For each distribution
+    #   tenant, you can specify the geographic restrictions, and the Amazon
+    #   Resource Names (ARNs) for the ACM certificate and WAF web ACL. These
+    #   are specific values that you can override or disable from the
+    #   multi-tenant distribution that was used to create the distribution
+    #   tenant.
+    #
+    # @option params [Array<Types::Parameter>] :parameters
+    #   A list of parameter values to add to the resource. A parameter is
+    #   specified as a key-value pair. A valid parameter value must exist for
+    #   any parameter that is marked as required in the multi-tenant
+    #   distribution.
+    #
+    # @option params [String] :connection_group_id
+    #   The ID of the connection group to associate with the distribution
+    #   tenant.
+    #
+    # @option params [Types::ManagedCertificateRequest] :managed_certificate_request
+    #   The configuration for the CloudFront managed ACM certificate request.
+    #
+    # @option params [Boolean] :enabled
+    #   Indicates whether the distribution tenant should be enabled when
+    #   created. If the distribution tenant is disabled, the distribution
+    #   tenant won't serve traffic.
+    #
+    # @return [Types::CreateDistributionTenantResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateDistributionTenantResult#distribution_tenant #distribution_tenant} => Types::DistributionTenant
+    #   * {Types::CreateDistributionTenantResult#etag #etag} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_distribution_tenant({
+    #     distribution_id: "string", # required
+    #     name: "CreateDistributionTenantRequestNameString", # required
+    #     domains: [ # required
+    #       {
+    #         domain: "string", # required
+    #       },
+    #     ],
+    #     tags: {
+    #       items: [
+    #         {
+    #           key: "TagKey", # required
+    #           value: "TagValue",
+    #         },
+    #       ],
+    #     },
+    #     customizations: {
+    #       web_acl: {
+    #         action: "override", # required, accepts override, disable
+    #         arn: "string",
+    #       },
+    #       certificate: {
+    #         arn: "string", # required
+    #       },
+    #       geo_restrictions: {
+    #         restriction_type: "blacklist", # required, accepts blacklist, whitelist, none
+    #         locations: ["string"],
+    #       },
+    #     },
+    #     parameters: [
+    #       {
+    #         name: "ParameterName", # required
+    #         value: "ParameterValue", # required
+    #       },
+    #     ],
+    #     connection_group_id: "string",
+    #     managed_certificate_request: {
+    #       validation_token_host: "cloudfront", # required, accepts cloudfront, self-hosted
+    #       primary_domain_name: "string",
+    #       certificate_transparency_logging_preference: "enabled", # accepts enabled, disabled
+    #     },
+    #     enabled: false,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.distribution_tenant.id #=> String
+    #   resp.distribution_tenant.distribution_id #=> String
+    #   resp.distribution_tenant.name #=> String
+    #   resp.distribution_tenant.arn #=> String
+    #   resp.distribution_tenant.domains #=> Array
+    #   resp.distribution_tenant.domains[0].domain #=> String
+    #   resp.distribution_tenant.domains[0].status #=> String, one of "active", "inactive"
+    #   resp.distribution_tenant.tags.items #=> Array
+    #   resp.distribution_tenant.tags.items[0].key #=> String
+    #   resp.distribution_tenant.tags.items[0].value #=> String
+    #   resp.distribution_tenant.customizations.web_acl.action #=> String, one of "override", "disable"
+    #   resp.distribution_tenant.customizations.web_acl.arn #=> String
+    #   resp.distribution_tenant.customizations.certificate.arn #=> String
+    #   resp.distribution_tenant.customizations.geo_restrictions.restriction_type #=> String, one of "blacklist", "whitelist", "none"
+    #   resp.distribution_tenant.customizations.geo_restrictions.locations #=> Array
+    #   resp.distribution_tenant.customizations.geo_restrictions.locations[0] #=> String
+    #   resp.distribution_tenant.parameters #=> Array
+    #   resp.distribution_tenant.parameters[0].name #=> String
+    #   resp.distribution_tenant.parameters[0].value #=> String
+    #   resp.distribution_tenant.connection_group_id #=> String
+    #   resp.distribution_tenant.created_time #=> Time
+    #   resp.distribution_tenant.last_modified_time #=> Time
+    #   resp.distribution_tenant.enabled #=> Boolean
+    #   resp.distribution_tenant.status #=> String
+    #   resp.etag #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/CreateDistributionTenant AWS API Documentation
+    #
+    # @overload create_distribution_tenant(params = {})
+    # @param [Hash] params ({})
+    def create_distribution_tenant(params = {}, options = {})
+      req = build_request(:create_distribution_tenant, params)
       req.send_request(options)
     end
 
@@ -1608,6 +2092,7 @@ module Aws::CloudFront
     #               },
     #               s3_origin_config: {
     #                 origin_access_identity: "string", # required
+    #                 origin_read_timeout: 1,
     #               },
     #               custom_origin_config: {
     #                 http_port: 1, # required
@@ -1619,14 +2104,20 @@ module Aws::CloudFront
     #                 },
     #                 origin_read_timeout: 1,
     #                 origin_keepalive_timeout: 1,
+    #                 ip_address_type: "ipv4", # accepts ipv4, ipv6, dualstack
+    #                 origin_mtls_config: {
+    #                   client_certificate_arn: "string", # required
+    #                 },
     #               },
     #               vpc_origin_config: {
     #                 vpc_origin_id: "string", # required
+    #                 owner_account_id: "string",
     #                 origin_read_timeout: 1,
     #                 origin_keepalive_timeout: 1,
     #               },
     #               connection_attempts: 1,
     #               connection_timeout: 1,
+    #               response_completion_timeout: 1,
     #               origin_shield: {
     #                 enabled: false, # required
     #                 origin_shield_region: "OriginShieldRegion",
@@ -1826,14 +2317,14 @@ module Aws::CloudFront
     #           bucket: "string",
     #           prefix: "string",
     #         },
-    #         price_class: "PriceClass_100", # accepts PriceClass_100, PriceClass_200, PriceClass_All
+    #         price_class: "PriceClass_100", # accepts PriceClass_100, PriceClass_200, PriceClass_All, None
     #         enabled: false, # required
     #         viewer_certificate: {
     #           cloud_front_default_certificate: false,
-    #           iam_certificate_id: "string",
+    #           iam_certificate_id: "ServerCertificateId",
     #           acm_certificate_arn: "string",
     #           ssl_support_method: "sni-only", # accepts sni-only, vip, static-ip
-    #           minimum_protocol_version: "SSLv3", # accepts SSLv3, TLSv1, TLSv1_2016, TLSv1.1_2016, TLSv1.2_2018, TLSv1.2_2019, TLSv1.2_2021
+    #           minimum_protocol_version: "SSLv3", # accepts SSLv3, TLSv1, TLSv1_2016, TLSv1.1_2016, TLSv1.2_2018, TLSv1.2_2019, TLSv1.2_2021, TLSv1.3_2025, TLSv1.2_2025
     #           certificate: "string",
     #           certificate_source: "cloudfront", # accepts cloudfront, iam, acm
     #         },
@@ -1850,6 +2341,35 @@ module Aws::CloudFront
     #         continuous_deployment_policy_id: "string",
     #         staging: false,
     #         anycast_ip_list_id: "string",
+    #         tenant_config: {
+    #           parameter_definitions: [
+    #             {
+    #               name: "ParameterName", # required
+    #               definition: { # required
+    #                 string_schema: {
+    #                   comment: "sensitiveStringType",
+    #                   default_value: "ParameterValue",
+    #                   required: false, # required
+    #                 },
+    #               },
+    #             },
+    #           ],
+    #         },
+    #         connection_mode: "direct", # accepts direct, tenant-only
+    #         viewer_mtls_config: {
+    #           mode: "required", # accepts required, optional, passthrough
+    #           trust_store_config: {
+    #             trust_store_id: "string", # required
+    #             advertise_trust_store_ca_names: false,
+    #             ignore_certificate_expiry: false,
+    #           },
+    #         },
+    #         connection_function_association: {
+    #           id: "ResourceId", # required
+    #         },
+    #         cache_tag_config: {
+    #           header_name: "string", # required
+    #         },
     #       },
     #       tags: { # required
     #         items: [
@@ -1899,6 +2419,7 @@ module Aws::CloudFront
     #   resp.distribution.distribution_config.origins.items[0].custom_headers.items[0].header_name #=> String
     #   resp.distribution.distribution_config.origins.items[0].custom_headers.items[0].header_value #=> String
     #   resp.distribution.distribution_config.origins.items[0].s3_origin_config.origin_access_identity #=> String
+    #   resp.distribution.distribution_config.origins.items[0].s3_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.http_port #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.https_port #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_protocol_policy #=> String, one of "http-only", "match-viewer", "https-only"
@@ -1907,11 +2428,15 @@ module Aws::CloudFront
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_ssl_protocols.items[0] #=> String, one of "SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_keepalive_timeout #=> Integer
+    #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.ip_address_type #=> String, one of "ipv4", "ipv6", "dualstack"
+    #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_mtls_config.client_certificate_arn #=> String
     #   resp.distribution.distribution_config.origins.items[0].vpc_origin_config.vpc_origin_id #=> String
+    #   resp.distribution.distribution_config.origins.items[0].vpc_origin_config.owner_account_id #=> String
     #   resp.distribution.distribution_config.origins.items[0].vpc_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].vpc_origin_config.origin_keepalive_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].connection_attempts #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].connection_timeout #=> Integer
+    #   resp.distribution.distribution_config.origins.items[0].response_completion_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].origin_shield.enabled #=> Boolean
     #   resp.distribution.distribution_config.origins.items[0].origin_shield.origin_shield_region #=> String
     #   resp.distribution.distribution_config.origins.items[0].origin_access_control_id #=> String
@@ -2033,13 +2558,13 @@ module Aws::CloudFront
     #   resp.distribution.distribution_config.logging.include_cookies #=> Boolean
     #   resp.distribution.distribution_config.logging.bucket #=> String
     #   resp.distribution.distribution_config.logging.prefix #=> String
-    #   resp.distribution.distribution_config.price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All"
+    #   resp.distribution.distribution_config.price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All", "None"
     #   resp.distribution.distribution_config.enabled #=> Boolean
     #   resp.distribution.distribution_config.viewer_certificate.cloud_front_default_certificate #=> Boolean
     #   resp.distribution.distribution_config.viewer_certificate.iam_certificate_id #=> String
     #   resp.distribution.distribution_config.viewer_certificate.acm_certificate_arn #=> String
     #   resp.distribution.distribution_config.viewer_certificate.ssl_support_method #=> String, one of "sni-only", "vip", "static-ip"
-    #   resp.distribution.distribution_config.viewer_certificate.minimum_protocol_version #=> String, one of "SSLv3", "TLSv1", "TLSv1_2016", "TLSv1.1_2016", "TLSv1.2_2018", "TLSv1.2_2019", "TLSv1.2_2021"
+    #   resp.distribution.distribution_config.viewer_certificate.minimum_protocol_version #=> String, one of "SSLv3", "TLSv1", "TLSv1_2016", "TLSv1.1_2016", "TLSv1.2_2018", "TLSv1.2_2019", "TLSv1.2_2021", "TLSv1.3_2025", "TLSv1.2_2025"
     #   resp.distribution.distribution_config.viewer_certificate.certificate #=> String
     #   resp.distribution.distribution_config.viewer_certificate.certificate_source #=> String, one of "cloudfront", "iam", "acm"
     #   resp.distribution.distribution_config.restrictions.geo_restriction.restriction_type #=> String, one of "blacklist", "whitelist", "none"
@@ -2052,6 +2577,18 @@ module Aws::CloudFront
     #   resp.distribution.distribution_config.continuous_deployment_policy_id #=> String
     #   resp.distribution.distribution_config.staging #=> Boolean
     #   resp.distribution.distribution_config.anycast_ip_list_id #=> String
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions #=> Array
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions[0].name #=> String
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions[0].definition.string_schema.comment #=> String
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions[0].definition.string_schema.default_value #=> String
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions[0].definition.string_schema.required #=> Boolean
+    #   resp.distribution.distribution_config.connection_mode #=> String, one of "direct", "tenant-only"
+    #   resp.distribution.distribution_config.viewer_mtls_config.mode #=> String, one of "required", "optional", "passthrough"
+    #   resp.distribution.distribution_config.viewer_mtls_config.trust_store_config.trust_store_id #=> String
+    #   resp.distribution.distribution_config.viewer_mtls_config.trust_store_config.advertise_trust_store_ca_names #=> Boolean
+    #   resp.distribution.distribution_config.viewer_mtls_config.trust_store_config.ignore_certificate_expiry #=> Boolean
+    #   resp.distribution.distribution_config.connection_function_association.id #=> String
+    #   resp.distribution.distribution_config.cache_tag_config.header_name #=> String
     #   resp.distribution.alias_icp_recordals #=> Array
     #   resp.distribution.alias_icp_recordals[0].cname #=> String
     #   resp.distribution.alias_icp_recordals[0].icp_recordal_status #=> String, one of "APPROVED", "SUSPENDED", "PENDING"
@@ -2233,6 +2770,9 @@ module Aws::CloudFront
     #
     #   [1]: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/writing-function-code.html
     #
+    # @option params [Types::Tags] :tags
+    #   A complex type that contains zero or more `Tag` elements.
+    #
     # @return [Types::CreateFunctionResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateFunctionResult#function_summary #function_summary} => Types::FunctionSummary
@@ -2306,6 +2846,14 @@ module Aws::CloudFront
     #       },
     #     },
     #     function_code: "data", # required
+    #     tags: {
+    #       items: [
+    #         {
+    #           key: "TagKey", # required
+    #           value: "TagValue",
+    #         },
+    #       ],
+    #     },
     #   })
     #
     # @example Response structure
@@ -2384,6 +2932,58 @@ module Aws::CloudFront
       req.send_request(options)
     end
 
+    # Creates an invalidation for a distribution tenant. For more
+    # information, see [Invalidating files][1] in the *Amazon CloudFront
+    # Developer Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Invalidation.html
+    #
+    # @option params [required, String] :id
+    #   The ID of the distribution tenant.
+    #
+    # @option params [required, Types::InvalidationBatch] :invalidation_batch
+    #   An invalidation batch.
+    #
+    # @return [Types::CreateInvalidationForDistributionTenantResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateInvalidationForDistributionTenantResult#location #location} => String
+    #   * {Types::CreateInvalidationForDistributionTenantResult#invalidation #invalidation} => Types::Invalidation
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_invalidation_for_distribution_tenant({
+    #     id: "string", # required
+    #     invalidation_batch: { # required
+    #       paths: { # required
+    #         quantity: 1, # required
+    #         items: ["string"],
+    #       },
+    #       caller_reference: "string", # required
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.location #=> String
+    #   resp.invalidation.id #=> String
+    #   resp.invalidation.status #=> String
+    #   resp.invalidation.create_time #=> Time
+    #   resp.invalidation.invalidation_batch.paths.quantity #=> Integer
+    #   resp.invalidation.invalidation_batch.paths.items #=> Array
+    #   resp.invalidation.invalidation_batch.paths.items[0] #=> String
+    #   resp.invalidation.invalidation_batch.caller_reference #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/CreateInvalidationForDistributionTenant AWS API Documentation
+    #
+    # @overload create_invalidation_for_distribution_tenant(params = {})
+    # @param [Hash] params ({})
+    def create_invalidation_for_distribution_tenant(params = {}, options = {})
+      req = build_request(:create_invalidation_for_distribution_tenant, params)
+      req.send_request(options)
+    end
+
     # Creates a key group that you can use with [CloudFront signed URLs and
     # signed cookies][1].
     #
@@ -2457,6 +3057,9 @@ module Aws::CloudFront
     #   The S3 bucket that provides the source for the import. The source must
     #   be in a valid JSON format.
     #
+    # @option params [Types::Tags] :tags
+    #   A complex type that contains zero or more `Tag` elements.
+    #
     # @return [Types::CreateKeyValueStoreResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreateKeyValueStoreResult#key_value_store #key_value_store} => Types::KeyValueStore
@@ -2499,6 +3102,14 @@ module Aws::CloudFront
     #     import_source: {
     #       source_type: "S3", # required, accepts S3
     #       source_arn: "string", # required
+    #     },
+    #     tags: {
+    #       items: [
+    #         {
+    #           key: "TagKey", # required
+    #           value: "TagValue",
+    #         },
+    #       ],
     #     },
     #   })
     #
@@ -3065,7 +3676,7 @@ module Aws::CloudFront
     #         quantity: 1, # required
     #         items: ["string"],
     #       },
-    #       price_class: "PriceClass_100", # accepts PriceClass_100, PriceClass_200, PriceClass_All
+    #       price_class: "PriceClass_100", # accepts PriceClass_100, PriceClass_200, PriceClass_All, None
     #       enabled: false, # required
     #     },
     #   })
@@ -3098,7 +3709,7 @@ module Aws::CloudFront
     #   resp.streaming_distribution.streaming_distribution_config.trusted_signers.quantity #=> Integer
     #   resp.streaming_distribution.streaming_distribution_config.trusted_signers.items #=> Array
     #   resp.streaming_distribution.streaming_distribution_config.trusted_signers.items[0] #=> String
-    #   resp.streaming_distribution.streaming_distribution_config.price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All"
+    #   resp.streaming_distribution.streaming_distribution_config.price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All", "None"
     #   resp.streaming_distribution.streaming_distribution_config.enabled #=> Boolean
     #   resp.location #=> String
     #   resp.etag #=> String
@@ -3155,7 +3766,7 @@ module Aws::CloudFront
     #           quantity: 1, # required
     #           items: ["string"],
     #         },
-    #         price_class: "PriceClass_100", # accepts PriceClass_100, PriceClass_200, PriceClass_All
+    #         price_class: "PriceClass_100", # accepts PriceClass_100, PriceClass_200, PriceClass_All, None
     #         enabled: false, # required
     #       },
     #       tags: { # required
@@ -3197,7 +3808,7 @@ module Aws::CloudFront
     #   resp.streaming_distribution.streaming_distribution_config.trusted_signers.quantity #=> Integer
     #   resp.streaming_distribution.streaming_distribution_config.trusted_signers.items #=> Array
     #   resp.streaming_distribution.streaming_distribution_config.trusted_signers.items[0] #=> String
-    #   resp.streaming_distribution.streaming_distribution_config.price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All"
+    #   resp.streaming_distribution.streaming_distribution_config.price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All", "None"
     #   resp.streaming_distribution.streaming_distribution_config.enabled #=> Boolean
     #   resp.location #=> String
     #   resp.etag #=> String
@@ -3208,6 +3819,70 @@ module Aws::CloudFront
     # @param [Hash] params ({})
     def create_streaming_distribution_with_tags(params = {}, options = {})
       req = build_request(:create_streaming_distribution_with_tags, params)
+      req.send_request(options)
+    end
+
+    # Creates a trust store.
+    #
+    # @option params [required, String] :name
+    #   A name for the trust store.
+    #
+    # @option params [required, Types::CaCertificatesBundleSource] :ca_certificates_bundle_source
+    #   The CA certificates bundle source for the trust store.
+    #
+    # @option params [Boolean] :use_client_certificate_ocsp_endpoint
+    #   A Boolean that determines whether to use the CA certificate's OCSP
+    #   endpoint to check certificate revocation status.
+    #
+    # @option params [Types::Tags] :tags
+    #   A complex type that contains zero or more `Tag` elements.
+    #
+    # @return [Types::CreateTrustStoreResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreateTrustStoreResult#trust_store #trust_store} => Types::TrustStore
+    #   * {Types::CreateTrustStoreResult#etag #etag} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_trust_store({
+    #     name: "string", # required
+    #     ca_certificates_bundle_source: { # required
+    #       ca_certificates_bundle_s3_location: {
+    #         bucket: "string", # required
+    #         key: "string", # required
+    #         region: "CaCertificatesBundleS3LocationRegionString", # required
+    #         version: "string",
+    #       },
+    #     },
+    #     use_client_certificate_ocsp_endpoint: false,
+    #     tags: {
+    #       items: [
+    #         {
+    #           key: "TagKey", # required
+    #           value: "TagValue",
+    #         },
+    #       ],
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.trust_store.id #=> String
+    #   resp.trust_store.arn #=> String
+    #   resp.trust_store.name #=> String
+    #   resp.trust_store.status #=> String, one of "pending", "active", "failed"
+    #   resp.trust_store.number_of_ca_certificates #=> Integer
+    #   resp.trust_store.last_modified_time #=> Time
+    #   resp.trust_store.reason #=> String
+    #   resp.trust_store.use_client_certificate_ocsp_endpoint #=> Boolean
+    #   resp.etag #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/CreateTrustStore AWS API Documentation
+    #
+    # @overload create_trust_store(params = {})
+    # @param [Hash] params ({})
+    def create_trust_store(params = {}, options = {})
+      req = build_request(:create_trust_store, params)
       req.send_request(options)
     end
 
@@ -3302,6 +3977,7 @@ module Aws::CloudFront
     #
     #   resp.vpc_origin.id #=> String
     #   resp.vpc_origin.arn #=> String
+    #   resp.vpc_origin.account_id #=> String
     #   resp.vpc_origin.status #=> String
     #   resp.vpc_origin.created_time #=> Time
     #   resp.vpc_origin.last_modified_time #=> Time
@@ -3416,6 +4092,60 @@ module Aws::CloudFront
       req.send_request(options)
     end
 
+    # Deletes a connection function.
+    #
+    # @option params [required, String] :id
+    #   The connection function's ID.
+    #
+    # @option params [required, String] :if_match
+    #   The current version (`ETag` value) of the connection function you are
+    #   deleting.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_connection_function({
+    #     id: "ResourceId", # required
+    #     if_match: "string", # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/DeleteConnectionFunction AWS API Documentation
+    #
+    # @overload delete_connection_function(params = {})
+    # @param [Hash] params ({})
+    def delete_connection_function(params = {}, options = {})
+      req = build_request(:delete_connection_function, params)
+      req.send_request(options)
+    end
+
+    # Deletes a connection group.
+    #
+    # @option params [required, String] :id
+    #   The ID of the connection group to delete.
+    #
+    # @option params [required, String] :if_match
+    #   The value of the `ETag` header that you received when retrieving the
+    #   connection group to delete.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_connection_group({
+    #     id: "string", # required
+    #     if_match: "string", # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/DeleteConnectionGroup AWS API Documentation
+    #
+    # @overload delete_connection_group(params = {})
+    # @param [Hash] params ({})
+    def delete_connection_group(params = {}, options = {})
+      req = build_request(:delete_connection_group, params)
+      req.send_request(options)
+    end
+
     # Deletes a continuous deployment policy.
     #
     # You cannot delete a continuous deployment policy that's attached to a
@@ -3450,6 +4180,10 @@ module Aws::CloudFront
 
     # Delete a distribution.
     #
+    # Before you can delete a distribution, you must disable it, which
+    # requires permission to update the distribution. Once deleted, a
+    # distribution cannot be recovered.
+    #
     # @option params [required, String] :id
     #   The distribution ID.
     #
@@ -3472,6 +4206,40 @@ module Aws::CloudFront
     # @param [Hash] params ({})
     def delete_distribution(params = {}, options = {})
       req = build_request(:delete_distribution, params)
+      req.send_request(options)
+    end
+
+    # Deletes a distribution tenant. If you use this API operation to delete
+    # a distribution tenant that is currently enabled, the request will
+    # fail.
+    #
+    # To delete a distribution tenant, you must first disable the
+    # distribution tenant by using the `UpdateDistributionTenant` API
+    # operation.
+    #
+    # @option params [required, String] :id
+    #   The ID of the distribution tenant to delete.
+    #
+    # @option params [required, String] :if_match
+    #   The value of the `ETag` header that you received when retrieving the
+    #   distribution tenant. This value is returned in the response of the
+    #   `GetDistributionTenant` API operation.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_distribution_tenant({
+    #     id: "string", # required
+    #     if_match: "string", # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/DeleteDistributionTenant AWS API Documentation
+    #
+    # @overload delete_distribution_tenant(params = {})
+    # @param [Hash] params ({})
+    def delete_distribution_tenant(params = {}, options = {})
+      req = build_request(:delete_distribution_tenant, params)
       req.send_request(options)
     end
 
@@ -3551,7 +4319,7 @@ module Aws::CloudFront
     # @example Request syntax with placeholder values
     #
     #   resp = client.delete_function({
-    #     name: "string", # required
+    #     name: "FunctionName", # required
     #     if_match: "string", # required
     #   })
     #
@@ -3796,6 +4564,29 @@ module Aws::CloudFront
       req.send_request(options)
     end
 
+    # Deletes the resource policy attached to the CloudFront resource.
+    #
+    # @option params [required, String] :resource_arn
+    #   The Amazon Resource Name (ARN) of the CloudFront resource for which
+    #   the resource policy should be deleted.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_resource_policy({
+    #     resource_arn: "string", # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/DeleteResourcePolicy AWS API Documentation
+    #
+    # @overload delete_resource_policy(params = {})
+    # @param [Hash] params ({})
+    def delete_resource_policy(params = {}, options = {})
+      req = build_request(:delete_resource_policy, params)
+      req.send_request(options)
+    end
+
     # Deletes a response headers policy.
     #
     # You cannot delete a response headers policy if it's attached to a
@@ -3907,6 +4698,33 @@ module Aws::CloudFront
       req.send_request(options)
     end
 
+    # Deletes a trust store.
+    #
+    # @option params [required, String] :id
+    #   The trust store's ID.
+    #
+    # @option params [required, String] :if_match
+    #   The current version (`ETag` value) of the trust store you are
+    #   deleting.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_trust_store({
+    #     id: "ResourceId", # required
+    #     if_match: "string", # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/DeleteTrustStore AWS API Documentation
+    #
+    # @overload delete_trust_store(params = {})
+    # @param [Hash] params ({})
+    def delete_trust_store(params = {}, options = {})
+      req = build_request(:delete_trust_store, params)
+      req.send_request(options)
+    end
+
     # Delete an Amazon CloudFront VPC origin.
     #
     # @option params [required, String] :id
@@ -3968,6 +4786,7 @@ module Aws::CloudFront
     #
     #   resp.vpc_origin.id #=> String
     #   resp.vpc_origin.arn #=> String
+    #   resp.vpc_origin.account_id #=> String
     #   resp.vpc_origin.status #=> String
     #   resp.vpc_origin.created_time #=> Time
     #   resp.vpc_origin.last_modified_time #=> Time
@@ -3987,6 +4806,51 @@ module Aws::CloudFront
     # @param [Hash] params ({})
     def delete_vpc_origin(params = {}, options = {})
       req = build_request(:delete_vpc_origin, params)
+      req.send_request(options)
+    end
+
+    # Describes a connection function.
+    #
+    # @option params [required, String] :identifier
+    #   The connection function's identifier.
+    #
+    # @option params [String] :stage
+    #   The connection function's stage.
+    #
+    # @return [Types::DescribeConnectionFunctionResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DescribeConnectionFunctionResult#connection_function_summary #connection_function_summary} => Types::ConnectionFunctionSummary
+    #   * {Types::DescribeConnectionFunctionResult#etag #etag} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.describe_connection_function({
+    #     identifier: "string", # required
+    #     stage: "DEVELOPMENT", # accepts DEVELOPMENT, LIVE
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.connection_function_summary.name #=> String
+    #   resp.connection_function_summary.id #=> String
+    #   resp.connection_function_summary.connection_function_config.comment #=> String
+    #   resp.connection_function_summary.connection_function_config.runtime #=> String, one of "cloudfront-js-1.0", "cloudfront-js-2.0"
+    #   resp.connection_function_summary.connection_function_config.key_value_store_associations.quantity #=> Integer
+    #   resp.connection_function_summary.connection_function_config.key_value_store_associations.items #=> Array
+    #   resp.connection_function_summary.connection_function_config.key_value_store_associations.items[0].key_value_store_arn #=> String
+    #   resp.connection_function_summary.connection_function_arn #=> String
+    #   resp.connection_function_summary.status #=> String
+    #   resp.connection_function_summary.stage #=> String, one of "DEVELOPMENT", "LIVE"
+    #   resp.connection_function_summary.created_time #=> Time
+    #   resp.connection_function_summary.last_modified_time #=> Time
+    #   resp.etag #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/DescribeConnectionFunction AWS API Documentation
+    #
+    # @overload describe_connection_function(params = {})
+    # @param [Hash] params ({})
+    def describe_connection_function(params = {}, options = {})
+      req = build_request(:describe_connection_function, params)
       req.send_request(options)
     end
 
@@ -4012,7 +4876,7 @@ module Aws::CloudFront
     # @example Request syntax with placeholder values
     #
     #   resp = client.describe_function({
-    #     name: "string", # required
+    #     name: "FunctionName", # required
     #     stage: "DEVELOPMENT", # accepts DEVELOPMENT, LIVE
     #   })
     #
@@ -4097,6 +4961,77 @@ module Aws::CloudFront
       req.send_request(options)
     end
 
+    # Disassociates a distribution tenant from the WAF web ACL.
+    #
+    # @option params [required, String] :id
+    #   The ID of the distribution tenant.
+    #
+    # @option params [String] :if_match
+    #   The current version of the distribution tenant that you're
+    #   disassociating from the WAF web ACL. This is the `ETag` value returned
+    #   in the response to the `GetDistributionTenant` API operation.
+    #
+    # @return [Types::DisassociateDistributionTenantWebACLResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DisassociateDistributionTenantWebACLResult#id #id} => String
+    #   * {Types::DisassociateDistributionTenantWebACLResult#etag #etag} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.disassociate_distribution_tenant_web_acl({
+    #     id: "string", # required
+    #     if_match: "string",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.id #=> String
+    #   resp.etag #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/DisassociateDistributionTenantWebACL AWS API Documentation
+    #
+    # @overload disassociate_distribution_tenant_web_acl(params = {})
+    # @param [Hash] params ({})
+    def disassociate_distribution_tenant_web_acl(params = {}, options = {})
+      req = build_request(:disassociate_distribution_tenant_web_acl, params)
+      req.send_request(options)
+    end
+
+    # Disassociates a distribution from the WAF web ACL.
+    #
+    # @option params [required, String] :id
+    #   The ID of the distribution.
+    #
+    # @option params [String] :if_match
+    #   The value of the `ETag` header that you received when retrieving the
+    #   distribution that you're disassociating from the WAF web ACL.
+    #
+    # @return [Types::DisassociateDistributionWebACLResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::DisassociateDistributionWebACLResult#id #id} => String
+    #   * {Types::DisassociateDistributionWebACLResult#etag #etag} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.disassociate_distribution_web_acl({
+    #     id: "string", # required
+    #     if_match: "string",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.id #=> String
+    #   resp.etag #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/DisassociateDistributionWebACL AWS API Documentation
+    #
+    # @overload disassociate_distribution_web_acl(params = {})
+    # @param [Hash] params ({})
+    def disassociate_distribution_web_acl(params = {}, options = {})
+      req = build_request(:disassociate_distribution_web_acl, params)
+      req.send_request(options)
+    end
+
     # Gets an Anycast static IP list.
     #
     # @option params [required, String] :id
@@ -4119,6 +5054,13 @@ module Aws::CloudFront
     #   resp.anycast_ip_list.name #=> String
     #   resp.anycast_ip_list.status #=> String
     #   resp.anycast_ip_list.arn #=> String
+    #   resp.anycast_ip_list.ip_address_type #=> String, one of "ipv4", "ipv6", "dualstack"
+    #   resp.anycast_ip_list.ipam_config.quantity #=> Integer
+    #   resp.anycast_ip_list.ipam_config.ipam_cidr_configs #=> Array
+    #   resp.anycast_ip_list.ipam_config.ipam_cidr_configs[0].cidr #=> String
+    #   resp.anycast_ip_list.ipam_config.ipam_cidr_configs[0].ipam_pool_arn #=> String
+    #   resp.anycast_ip_list.ipam_config.ipam_cidr_configs[0].anycast_ip #=> String
+    #   resp.anycast_ip_list.ipam_config.ipam_cidr_configs[0].status #=> String, one of "provisioned", "failed-provision", "provisioning", "deprovisioned", "failed-deprovision", "deprovisioning", "advertised", "failed-advertise", "advertising", "withdrawn", "failed-withdraw", "withdrawing"
     #   resp.anycast_ip_list.anycast_ips #=> Array
     #   resp.anycast_ip_list.anycast_ips[0] #=> String
     #   resp.anycast_ip_list.ip_count #=> Integer
@@ -4321,6 +5263,130 @@ module Aws::CloudFront
       req.send_request(options)
     end
 
+    # Gets a connection function.
+    #
+    # @option params [required, String] :identifier
+    #   The connection function's identifier.
+    #
+    # @option params [String] :stage
+    #   The connection function's stage.
+    #
+    # @return [Types::GetConnectionFunctionResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetConnectionFunctionResult#connection_function_code #connection_function_code} => String
+    #   * {Types::GetConnectionFunctionResult#etag #etag} => String
+    #   * {Types::GetConnectionFunctionResult#content_type #content_type} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_connection_function({
+    #     identifier: "string", # required
+    #     stage: "DEVELOPMENT", # accepts DEVELOPMENT, LIVE
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.connection_function_code #=> String
+    #   resp.etag #=> String
+    #   resp.content_type #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/GetConnectionFunction AWS API Documentation
+    #
+    # @overload get_connection_function(params = {})
+    # @param [Hash] params ({})
+    def get_connection_function(params = {}, options = {})
+      req = build_request(:get_connection_function, params)
+      req.send_request(options)
+    end
+
+    # Gets information about a connection group.
+    #
+    # @option params [required, String] :identifier
+    #   The ID, name, or Amazon Resource Name (ARN) of the connection group.
+    #
+    # @return [Types::GetConnectionGroupResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetConnectionGroupResult#connection_group #connection_group} => Types::ConnectionGroup
+    #   * {Types::GetConnectionGroupResult#etag #etag} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_connection_group({
+    #     identifier: "string", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.connection_group.id #=> String
+    #   resp.connection_group.name #=> String
+    #   resp.connection_group.arn #=> String
+    #   resp.connection_group.created_time #=> Time
+    #   resp.connection_group.last_modified_time #=> Time
+    #   resp.connection_group.tags.items #=> Array
+    #   resp.connection_group.tags.items[0].key #=> String
+    #   resp.connection_group.tags.items[0].value #=> String
+    #   resp.connection_group.ipv_6_enabled #=> Boolean
+    #   resp.connection_group.routing_endpoint #=> String
+    #   resp.connection_group.anycast_ip_list_id #=> String
+    #   resp.connection_group.status #=> String
+    #   resp.connection_group.enabled #=> Boolean
+    #   resp.connection_group.is_default #=> Boolean
+    #   resp.etag #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/GetConnectionGroup AWS API Documentation
+    #
+    # @overload get_connection_group(params = {})
+    # @param [Hash] params ({})
+    def get_connection_group(params = {}, options = {})
+      req = build_request(:get_connection_group, params)
+      req.send_request(options)
+    end
+
+    # Gets information about a connection group by using the endpoint that
+    # you specify.
+    #
+    # @option params [required, String] :routing_endpoint
+    #   The routing endpoint for the target connection group, such as
+    #   d111111abcdef8.cloudfront.net.
+    #
+    # @return [Types::GetConnectionGroupByRoutingEndpointResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetConnectionGroupByRoutingEndpointResult#connection_group #connection_group} => Types::ConnectionGroup
+    #   * {Types::GetConnectionGroupByRoutingEndpointResult#etag #etag} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_connection_group_by_routing_endpoint({
+    #     routing_endpoint: "string", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.connection_group.id #=> String
+    #   resp.connection_group.name #=> String
+    #   resp.connection_group.arn #=> String
+    #   resp.connection_group.created_time #=> Time
+    #   resp.connection_group.last_modified_time #=> Time
+    #   resp.connection_group.tags.items #=> Array
+    #   resp.connection_group.tags.items[0].key #=> String
+    #   resp.connection_group.tags.items[0].value #=> String
+    #   resp.connection_group.ipv_6_enabled #=> Boolean
+    #   resp.connection_group.routing_endpoint #=> String
+    #   resp.connection_group.anycast_ip_list_id #=> String
+    #   resp.connection_group.status #=> String
+    #   resp.connection_group.enabled #=> Boolean
+    #   resp.connection_group.is_default #=> Boolean
+    #   resp.etag #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/GetConnectionGroupByRoutingEndpoint AWS API Documentation
+    #
+    # @overload get_connection_group_by_routing_endpoint(params = {})
+    # @param [Hash] params ({})
+    def get_connection_group_by_routing_endpoint(params = {}, options = {})
+      req = build_request(:get_connection_group_by_routing_endpoint, params)
+      req.send_request(options)
+    end
+
     # Gets a continuous deployment policy, including metadata (the policy's
     # identifier and the date and time when the policy was last modified).
     #
@@ -4458,6 +5524,7 @@ module Aws::CloudFront
     #   resp.distribution.distribution_config.origins.items[0].custom_headers.items[0].header_name #=> String
     #   resp.distribution.distribution_config.origins.items[0].custom_headers.items[0].header_value #=> String
     #   resp.distribution.distribution_config.origins.items[0].s3_origin_config.origin_access_identity #=> String
+    #   resp.distribution.distribution_config.origins.items[0].s3_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.http_port #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.https_port #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_protocol_policy #=> String, one of "http-only", "match-viewer", "https-only"
@@ -4466,11 +5533,15 @@ module Aws::CloudFront
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_ssl_protocols.items[0] #=> String, one of "SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_keepalive_timeout #=> Integer
+    #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.ip_address_type #=> String, one of "ipv4", "ipv6", "dualstack"
+    #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_mtls_config.client_certificate_arn #=> String
     #   resp.distribution.distribution_config.origins.items[0].vpc_origin_config.vpc_origin_id #=> String
+    #   resp.distribution.distribution_config.origins.items[0].vpc_origin_config.owner_account_id #=> String
     #   resp.distribution.distribution_config.origins.items[0].vpc_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].vpc_origin_config.origin_keepalive_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].connection_attempts #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].connection_timeout #=> Integer
+    #   resp.distribution.distribution_config.origins.items[0].response_completion_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].origin_shield.enabled #=> Boolean
     #   resp.distribution.distribution_config.origins.items[0].origin_shield.origin_shield_region #=> String
     #   resp.distribution.distribution_config.origins.items[0].origin_access_control_id #=> String
@@ -4592,13 +5663,13 @@ module Aws::CloudFront
     #   resp.distribution.distribution_config.logging.include_cookies #=> Boolean
     #   resp.distribution.distribution_config.logging.bucket #=> String
     #   resp.distribution.distribution_config.logging.prefix #=> String
-    #   resp.distribution.distribution_config.price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All"
+    #   resp.distribution.distribution_config.price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All", "None"
     #   resp.distribution.distribution_config.enabled #=> Boolean
     #   resp.distribution.distribution_config.viewer_certificate.cloud_front_default_certificate #=> Boolean
     #   resp.distribution.distribution_config.viewer_certificate.iam_certificate_id #=> String
     #   resp.distribution.distribution_config.viewer_certificate.acm_certificate_arn #=> String
     #   resp.distribution.distribution_config.viewer_certificate.ssl_support_method #=> String, one of "sni-only", "vip", "static-ip"
-    #   resp.distribution.distribution_config.viewer_certificate.minimum_protocol_version #=> String, one of "SSLv3", "TLSv1", "TLSv1_2016", "TLSv1.1_2016", "TLSv1.2_2018", "TLSv1.2_2019", "TLSv1.2_2021"
+    #   resp.distribution.distribution_config.viewer_certificate.minimum_protocol_version #=> String, one of "SSLv3", "TLSv1", "TLSv1_2016", "TLSv1.1_2016", "TLSv1.2_2018", "TLSv1.2_2019", "TLSv1.2_2021", "TLSv1.3_2025", "TLSv1.2_2025"
     #   resp.distribution.distribution_config.viewer_certificate.certificate #=> String
     #   resp.distribution.distribution_config.viewer_certificate.certificate_source #=> String, one of "cloudfront", "iam", "acm"
     #   resp.distribution.distribution_config.restrictions.geo_restriction.restriction_type #=> String, one of "blacklist", "whitelist", "none"
@@ -4611,6 +5682,18 @@ module Aws::CloudFront
     #   resp.distribution.distribution_config.continuous_deployment_policy_id #=> String
     #   resp.distribution.distribution_config.staging #=> Boolean
     #   resp.distribution.distribution_config.anycast_ip_list_id #=> String
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions #=> Array
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions[0].name #=> String
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions[0].definition.string_schema.comment #=> String
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions[0].definition.string_schema.default_value #=> String
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions[0].definition.string_schema.required #=> Boolean
+    #   resp.distribution.distribution_config.connection_mode #=> String, one of "direct", "tenant-only"
+    #   resp.distribution.distribution_config.viewer_mtls_config.mode #=> String, one of "required", "optional", "passthrough"
+    #   resp.distribution.distribution_config.viewer_mtls_config.trust_store_config.trust_store_id #=> String
+    #   resp.distribution.distribution_config.viewer_mtls_config.trust_store_config.advertise_trust_store_ca_names #=> Boolean
+    #   resp.distribution.distribution_config.viewer_mtls_config.trust_store_config.ignore_certificate_expiry #=> Boolean
+    #   resp.distribution.distribution_config.connection_function_association.id #=> String
+    #   resp.distribution.distribution_config.cache_tag_config.header_name #=> String
     #   resp.distribution.alias_icp_recordals #=> Array
     #   resp.distribution.alias_icp_recordals[0].cname #=> String
     #   resp.distribution.alias_icp_recordals[0].icp_recordal_status #=> String, one of "APPROVED", "SUSPENDED", "PENDING"
@@ -4664,6 +5747,7 @@ module Aws::CloudFront
     #   resp.distribution_config.origins.items[0].custom_headers.items[0].header_name #=> String
     #   resp.distribution_config.origins.items[0].custom_headers.items[0].header_value #=> String
     #   resp.distribution_config.origins.items[0].s3_origin_config.origin_access_identity #=> String
+    #   resp.distribution_config.origins.items[0].s3_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution_config.origins.items[0].custom_origin_config.http_port #=> Integer
     #   resp.distribution_config.origins.items[0].custom_origin_config.https_port #=> Integer
     #   resp.distribution_config.origins.items[0].custom_origin_config.origin_protocol_policy #=> String, one of "http-only", "match-viewer", "https-only"
@@ -4672,11 +5756,15 @@ module Aws::CloudFront
     #   resp.distribution_config.origins.items[0].custom_origin_config.origin_ssl_protocols.items[0] #=> String, one of "SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"
     #   resp.distribution_config.origins.items[0].custom_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution_config.origins.items[0].custom_origin_config.origin_keepalive_timeout #=> Integer
+    #   resp.distribution_config.origins.items[0].custom_origin_config.ip_address_type #=> String, one of "ipv4", "ipv6", "dualstack"
+    #   resp.distribution_config.origins.items[0].custom_origin_config.origin_mtls_config.client_certificate_arn #=> String
     #   resp.distribution_config.origins.items[0].vpc_origin_config.vpc_origin_id #=> String
+    #   resp.distribution_config.origins.items[0].vpc_origin_config.owner_account_id #=> String
     #   resp.distribution_config.origins.items[0].vpc_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution_config.origins.items[0].vpc_origin_config.origin_keepalive_timeout #=> Integer
     #   resp.distribution_config.origins.items[0].connection_attempts #=> Integer
     #   resp.distribution_config.origins.items[0].connection_timeout #=> Integer
+    #   resp.distribution_config.origins.items[0].response_completion_timeout #=> Integer
     #   resp.distribution_config.origins.items[0].origin_shield.enabled #=> Boolean
     #   resp.distribution_config.origins.items[0].origin_shield.origin_shield_region #=> String
     #   resp.distribution_config.origins.items[0].origin_access_control_id #=> String
@@ -4798,13 +5886,13 @@ module Aws::CloudFront
     #   resp.distribution_config.logging.include_cookies #=> Boolean
     #   resp.distribution_config.logging.bucket #=> String
     #   resp.distribution_config.logging.prefix #=> String
-    #   resp.distribution_config.price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All"
+    #   resp.distribution_config.price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All", "None"
     #   resp.distribution_config.enabled #=> Boolean
     #   resp.distribution_config.viewer_certificate.cloud_front_default_certificate #=> Boolean
     #   resp.distribution_config.viewer_certificate.iam_certificate_id #=> String
     #   resp.distribution_config.viewer_certificate.acm_certificate_arn #=> String
     #   resp.distribution_config.viewer_certificate.ssl_support_method #=> String, one of "sni-only", "vip", "static-ip"
-    #   resp.distribution_config.viewer_certificate.minimum_protocol_version #=> String, one of "SSLv3", "TLSv1", "TLSv1_2016", "TLSv1.1_2016", "TLSv1.2_2018", "TLSv1.2_2019", "TLSv1.2_2021"
+    #   resp.distribution_config.viewer_certificate.minimum_protocol_version #=> String, one of "SSLv3", "TLSv1", "TLSv1_2016", "TLSv1.1_2016", "TLSv1.2_2018", "TLSv1.2_2019", "TLSv1.2_2021", "TLSv1.3_2025", "TLSv1.2_2025"
     #   resp.distribution_config.viewer_certificate.certificate #=> String
     #   resp.distribution_config.viewer_certificate.certificate_source #=> String, one of "cloudfront", "iam", "acm"
     #   resp.distribution_config.restrictions.geo_restriction.restriction_type #=> String, one of "blacklist", "whitelist", "none"
@@ -4817,6 +5905,18 @@ module Aws::CloudFront
     #   resp.distribution_config.continuous_deployment_policy_id #=> String
     #   resp.distribution_config.staging #=> Boolean
     #   resp.distribution_config.anycast_ip_list_id #=> String
+    #   resp.distribution_config.tenant_config.parameter_definitions #=> Array
+    #   resp.distribution_config.tenant_config.parameter_definitions[0].name #=> String
+    #   resp.distribution_config.tenant_config.parameter_definitions[0].definition.string_schema.comment #=> String
+    #   resp.distribution_config.tenant_config.parameter_definitions[0].definition.string_schema.default_value #=> String
+    #   resp.distribution_config.tenant_config.parameter_definitions[0].definition.string_schema.required #=> Boolean
+    #   resp.distribution_config.connection_mode #=> String, one of "direct", "tenant-only"
+    #   resp.distribution_config.viewer_mtls_config.mode #=> String, one of "required", "optional", "passthrough"
+    #   resp.distribution_config.viewer_mtls_config.trust_store_config.trust_store_id #=> String
+    #   resp.distribution_config.viewer_mtls_config.trust_store_config.advertise_trust_store_ca_names #=> Boolean
+    #   resp.distribution_config.viewer_mtls_config.trust_store_config.ignore_certificate_expiry #=> Boolean
+    #   resp.distribution_config.connection_function_association.id #=> String
+    #   resp.distribution_config.cache_tag_config.header_name #=> String
     #   resp.etag #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/GetDistributionConfig AWS API Documentation
@@ -4825,6 +5925,113 @@ module Aws::CloudFront
     # @param [Hash] params ({})
     def get_distribution_config(params = {}, options = {})
       req = build_request(:get_distribution_config, params)
+      req.send_request(options)
+    end
+
+    # Gets information about a distribution tenant.
+    #
+    # @option params [required, String] :identifier
+    #   The identifier of the distribution tenant. You can specify the ARN,
+    #   ID, or name of the distribution tenant.
+    #
+    # @return [Types::GetDistributionTenantResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetDistributionTenantResult#distribution_tenant #distribution_tenant} => Types::DistributionTenant
+    #   * {Types::GetDistributionTenantResult#etag #etag} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_distribution_tenant({
+    #     identifier: "string", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.distribution_tenant.id #=> String
+    #   resp.distribution_tenant.distribution_id #=> String
+    #   resp.distribution_tenant.name #=> String
+    #   resp.distribution_tenant.arn #=> String
+    #   resp.distribution_tenant.domains #=> Array
+    #   resp.distribution_tenant.domains[0].domain #=> String
+    #   resp.distribution_tenant.domains[0].status #=> String, one of "active", "inactive"
+    #   resp.distribution_tenant.tags.items #=> Array
+    #   resp.distribution_tenant.tags.items[0].key #=> String
+    #   resp.distribution_tenant.tags.items[0].value #=> String
+    #   resp.distribution_tenant.customizations.web_acl.action #=> String, one of "override", "disable"
+    #   resp.distribution_tenant.customizations.web_acl.arn #=> String
+    #   resp.distribution_tenant.customizations.certificate.arn #=> String
+    #   resp.distribution_tenant.customizations.geo_restrictions.restriction_type #=> String, one of "blacklist", "whitelist", "none"
+    #   resp.distribution_tenant.customizations.geo_restrictions.locations #=> Array
+    #   resp.distribution_tenant.customizations.geo_restrictions.locations[0] #=> String
+    #   resp.distribution_tenant.parameters #=> Array
+    #   resp.distribution_tenant.parameters[0].name #=> String
+    #   resp.distribution_tenant.parameters[0].value #=> String
+    #   resp.distribution_tenant.connection_group_id #=> String
+    #   resp.distribution_tenant.created_time #=> Time
+    #   resp.distribution_tenant.last_modified_time #=> Time
+    #   resp.distribution_tenant.enabled #=> Boolean
+    #   resp.distribution_tenant.status #=> String
+    #   resp.etag #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/GetDistributionTenant AWS API Documentation
+    #
+    # @overload get_distribution_tenant(params = {})
+    # @param [Hash] params ({})
+    def get_distribution_tenant(params = {}, options = {})
+      req = build_request(:get_distribution_tenant, params)
+      req.send_request(options)
+    end
+
+    # Gets information about a distribution tenant by the associated domain.
+    #
+    # @option params [required, String] :domain
+    #   A domain name associated with the target distribution tenant.
+    #
+    # @return [Types::GetDistributionTenantByDomainResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetDistributionTenantByDomainResult#distribution_tenant #distribution_tenant} => Types::DistributionTenant
+    #   * {Types::GetDistributionTenantByDomainResult#etag #etag} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_distribution_tenant_by_domain({
+    #     domain: "string", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.distribution_tenant.id #=> String
+    #   resp.distribution_tenant.distribution_id #=> String
+    #   resp.distribution_tenant.name #=> String
+    #   resp.distribution_tenant.arn #=> String
+    #   resp.distribution_tenant.domains #=> Array
+    #   resp.distribution_tenant.domains[0].domain #=> String
+    #   resp.distribution_tenant.domains[0].status #=> String, one of "active", "inactive"
+    #   resp.distribution_tenant.tags.items #=> Array
+    #   resp.distribution_tenant.tags.items[0].key #=> String
+    #   resp.distribution_tenant.tags.items[0].value #=> String
+    #   resp.distribution_tenant.customizations.web_acl.action #=> String, one of "override", "disable"
+    #   resp.distribution_tenant.customizations.web_acl.arn #=> String
+    #   resp.distribution_tenant.customizations.certificate.arn #=> String
+    #   resp.distribution_tenant.customizations.geo_restrictions.restriction_type #=> String, one of "blacklist", "whitelist", "none"
+    #   resp.distribution_tenant.customizations.geo_restrictions.locations #=> Array
+    #   resp.distribution_tenant.customizations.geo_restrictions.locations[0] #=> String
+    #   resp.distribution_tenant.parameters #=> Array
+    #   resp.distribution_tenant.parameters[0].name #=> String
+    #   resp.distribution_tenant.parameters[0].value #=> String
+    #   resp.distribution_tenant.connection_group_id #=> String
+    #   resp.distribution_tenant.created_time #=> Time
+    #   resp.distribution_tenant.last_modified_time #=> Time
+    #   resp.distribution_tenant.enabled #=> Boolean
+    #   resp.distribution_tenant.status #=> String
+    #   resp.etag #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/GetDistributionTenantByDomain AWS API Documentation
+    #
+    # @overload get_distribution_tenant_by_domain(params = {})
+    # @param [Hash] params ({})
+    def get_distribution_tenant_by_domain(params = {}, options = {})
+      req = build_request(:get_distribution_tenant_by_domain, params)
       req.send_request(options)
     end
 
@@ -5018,7 +6225,7 @@ module Aws::CloudFront
     # @example Request syntax with placeholder values
     #
     #   resp = client.get_function({
-    #     name: "string", # required
+    #     name: "FunctionName", # required
     #     stage: "DEVELOPMENT", # accepts DEVELOPMENT, LIVE
     #   })
     #
@@ -5078,6 +6285,50 @@ module Aws::CloudFront
     # @param [Hash] params ({})
     def get_invalidation(params = {}, options = {})
       req = build_request(:get_invalidation, params)
+      req.send_request(options)
+    end
+
+    # Gets information about a specific invalidation for a distribution
+    # tenant.
+    #
+    # @option params [required, String] :distribution_tenant_id
+    #   The ID of the distribution tenant.
+    #
+    # @option params [required, String] :id
+    #   The ID of the invalidation to retrieve.
+    #
+    # @return [Types::GetInvalidationForDistributionTenantResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetInvalidationForDistributionTenantResult#invalidation #invalidation} => Types::Invalidation
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_invalidation_for_distribution_tenant({
+    #     distribution_tenant_id: "string", # required
+    #     id: "string", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.invalidation.id #=> String
+    #   resp.invalidation.status #=> String
+    #   resp.invalidation.create_time #=> Time
+    #   resp.invalidation.invalidation_batch.paths.quantity #=> Integer
+    #   resp.invalidation.invalidation_batch.paths.items #=> Array
+    #   resp.invalidation.invalidation_batch.paths.items[0] #=> String
+    #   resp.invalidation.invalidation_batch.caller_reference #=> String
+    #
+    #
+    # The following waiters are defined for this operation (see {Client#wait_until} for detailed usage):
+    #
+    #   * invalidation_for_distribution_tenant_completed
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/GetInvalidationForDistributionTenant AWS API Documentation
+    #
+    # @overload get_invalidation_for_distribution_tenant(params = {})
+    # @param [Hash] params ({})
+    def get_invalidation_for_distribution_tenant(params = {}, options = {})
+      req = build_request(:get_invalidation_for_distribution_tenant, params)
       req.send_request(options)
     end
 
@@ -5162,6 +6413,41 @@ module Aws::CloudFront
     # @param [Hash] params ({})
     def get_key_group_config(params = {}, options = {})
       req = build_request(:get_key_group_config, params)
+      req.send_request(options)
+    end
+
+    # Gets details about the CloudFront managed ACM certificate.
+    #
+    # @option params [required, String] :identifier
+    #   The identifier of the distribution tenant. You can specify the ARN,
+    #   ID, or name of the distribution tenant.
+    #
+    # @return [Types::GetManagedCertificateDetailsResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetManagedCertificateDetailsResult#managed_certificate_details #managed_certificate_details} => Types::ManagedCertificateDetails
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_managed_certificate_details({
+    #     identifier: "string", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.managed_certificate_details.certificate_arn #=> String
+    #   resp.managed_certificate_details.certificate_status #=> String, one of "pending-validation", "issued", "inactive", "expired", "validation-timed-out", "revoked", "failed"
+    #   resp.managed_certificate_details.validation_token_host #=> String, one of "cloudfront", "self-hosted"
+    #   resp.managed_certificate_details.validation_token_details #=> Array
+    #   resp.managed_certificate_details.validation_token_details[0].domain #=> String
+    #   resp.managed_certificate_details.validation_token_details[0].redirect_to #=> String
+    #   resp.managed_certificate_details.validation_token_details[0].redirect_from #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/GetManagedCertificateDetails AWS API Documentation
+    #
+    # @overload get_managed_certificate_details(params = {})
+    # @param [Hash] params ({})
+    def get_managed_certificate_details(params = {}, options = {})
+      req = build_request(:get_managed_certificate_details, params)
       req.send_request(options)
     end
 
@@ -5495,6 +6781,38 @@ module Aws::CloudFront
       req.send_request(options)
     end
 
+    # Retrieves the resource policy for the specified CloudFront resource
+    # that you own and have shared.
+    #
+    # @option params [required, String] :resource_arn
+    #   The Amazon Resource Name (ARN) of the CloudFront resource that is
+    #   associated with the resource policy.
+    #
+    # @return [Types::GetResourcePolicyResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetResourcePolicyResult#resource_arn #resource_arn} => String
+    #   * {Types::GetResourcePolicyResult#policy_document #policy_document} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_resource_policy({
+    #     resource_arn: "string", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.resource_arn #=> String
+    #   resp.policy_document #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/GetResourcePolicy AWS API Documentation
+    #
+    # @overload get_resource_policy(params = {})
+    # @param [Hash] params ({})
+    def get_resource_policy(params = {}, options = {})
+      req = build_request(:get_resource_policy, params)
+      req.send_request(options)
+    end
+
     # Gets a response headers policy, including metadata (the policy's
     # identifier and the date and time when the policy was last modified).
     #
@@ -5711,7 +7029,7 @@ module Aws::CloudFront
     #   resp.streaming_distribution.streaming_distribution_config.trusted_signers.quantity #=> Integer
     #   resp.streaming_distribution.streaming_distribution_config.trusted_signers.items #=> Array
     #   resp.streaming_distribution.streaming_distribution_config.trusted_signers.items[0] #=> String
-    #   resp.streaming_distribution.streaming_distribution_config.price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All"
+    #   resp.streaming_distribution.streaming_distribution_config.price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All", "None"
     #   resp.streaming_distribution.streaming_distribution_config.enabled #=> Boolean
     #   resp.etag #=> String
     #
@@ -5761,7 +7079,7 @@ module Aws::CloudFront
     #   resp.streaming_distribution_config.trusted_signers.quantity #=> Integer
     #   resp.streaming_distribution_config.trusted_signers.items #=> Array
     #   resp.streaming_distribution_config.trusted_signers.items[0] #=> String
-    #   resp.streaming_distribution_config.price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All"
+    #   resp.streaming_distribution_config.price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All", "None"
     #   resp.streaming_distribution_config.enabled #=> Boolean
     #   resp.etag #=> String
     #
@@ -5771,6 +7089,43 @@ module Aws::CloudFront
     # @param [Hash] params ({})
     def get_streaming_distribution_config(params = {}, options = {})
       req = build_request(:get_streaming_distribution_config, params)
+      req.send_request(options)
+    end
+
+    # Gets a trust store.
+    #
+    # @option params [required, String] :identifier
+    #   The trust store's identifier.
+    #
+    # @return [Types::GetTrustStoreResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetTrustStoreResult#trust_store #trust_store} => Types::TrustStore
+    #   * {Types::GetTrustStoreResult#etag #etag} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_trust_store({
+    #     identifier: "string", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.trust_store.id #=> String
+    #   resp.trust_store.arn #=> String
+    #   resp.trust_store.name #=> String
+    #   resp.trust_store.status #=> String, one of "pending", "active", "failed"
+    #   resp.trust_store.number_of_ca_certificates #=> Integer
+    #   resp.trust_store.last_modified_time #=> Time
+    #   resp.trust_store.reason #=> String
+    #   resp.trust_store.use_client_certificate_ocsp_endpoint #=> Boolean
+    #   resp.etag #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/GetTrustStore AWS API Documentation
+    #
+    # @overload get_trust_store(params = {})
+    # @param [Hash] params ({})
+    def get_trust_store(params = {}, options = {})
+      req = build_request(:get_trust_store, params)
       req.send_request(options)
     end
 
@@ -5829,6 +7184,7 @@ module Aws::CloudFront
     #
     #   resp.vpc_origin.id #=> String
     #   resp.vpc_origin.arn #=> String
+    #   resp.vpc_origin.account_id #=> String
     #   resp.vpc_origin.status #=> String
     #   resp.vpc_origin.created_time #=> Time
     #   resp.vpc_origin.last_modified_time #=> Time
@@ -5883,6 +7239,14 @@ module Aws::CloudFront
     #   resp.anycast_ip_lists.items[0].arn #=> String
     #   resp.anycast_ip_lists.items[0].ip_count #=> Integer
     #   resp.anycast_ip_lists.items[0].last_modified_time #=> Time
+    #   resp.anycast_ip_lists.items[0].ip_address_type #=> String, one of "ipv4", "ipv6", "dualstack"
+    #   resp.anycast_ip_lists.items[0].etag #=> String
+    #   resp.anycast_ip_lists.items[0].ipam_config.quantity #=> Integer
+    #   resp.anycast_ip_lists.items[0].ipam_config.ipam_cidr_configs #=> Array
+    #   resp.anycast_ip_lists.items[0].ipam_config.ipam_cidr_configs[0].cidr #=> String
+    #   resp.anycast_ip_lists.items[0].ipam_config.ipam_cidr_configs[0].ipam_pool_arn #=> String
+    #   resp.anycast_ip_lists.items[0].ipam_config.ipam_cidr_configs[0].anycast_ip #=> String
+    #   resp.anycast_ip_lists.items[0].ipam_config.ipam_cidr_configs[0].status #=> String, one of "provisioned", "failed-provision", "provisioning", "deprovisioned", "failed-deprovision", "deprovisioning", "advertised", "failed-advertise", "advertising", "withdrawn", "failed-withdraw", "withdrawing"
     #   resp.anycast_ip_lists.marker #=> String
     #   resp.anycast_ip_lists.next_marker #=> String
     #   resp.anycast_ip_lists.max_items #=> Integer
@@ -6029,44 +7393,54 @@ module Aws::CloudFront
       req.send_request(options)
     end
 
-    # Gets a list of aliases (also called CNAMEs or alternate domain names)
-    # that conflict or overlap with the provided alias, and the associated
-    # CloudFront distributions and Amazon Web Services accounts for each
-    # conflicting alias. In the returned list, the distribution and account
-    # IDs are partially hidden, which allows you to identify the
-    # distributions and accounts that you own, but helps to protect the
+    # <note markdown="1"> The `ListConflictingAliases` API operation only
+    # supports standard
+    # distributions. To list domain conflicts for both standard
+    # distributions and distribution tenants, we recommend that you use the
+    # [ListDomainConflicts][1] API operation instead.
+    #
+    #  </note>
+    #
+    #  Gets a list of aliases that conflict or overlap with the provided
+    # alias, and the associated CloudFront standard distribution and Amazon
+    # Web Services accounts for each conflicting alias. An alias is commonly
+    # known as a custom domain or vanity domain. It can also be called a
+    # CNAME or alternate domain name.
+    #
+    #  In the returned list, the standard distribution and account IDs are
+    # partially hidden, which allows you to identify the standard
+    # distribution and accounts that you own, and helps to protect the
     # information of ones that you don't own.
     #
-    # Use this operation to find aliases that are in use in CloudFront that
+    #  Use this operation to find aliases that are in use in CloudFront that
     # conflict or overlap with the provided alias. For example, if you
     # provide `www.example.com` as input, the returned list can include
     # `www.example.com` and the overlapping wildcard alternate domain name
-    # (`*.example.com`), if they exist. If you provide `*.example.com` as
-    # input, the returned list can include `*.example.com` and any alternate
-    # domain names covered by that wildcard (for example, `www.example.com`,
-    # `test.example.com`, `dev.example.com`, and so on), if they exist.
-    #
-    # To list conflicting aliases, you provide the alias to search and the
-    # ID of a distribution in your account that has an attached SSL/TLS
-    # certificate that includes the provided alias. For more information,
-    # including how to set up the distribution and certificate, see [Moving
-    # an alternate domain name to a different distribution][1] in the
-    # *Amazon CloudFront Developer Guide*.
-    #
-    # You can optionally specify the maximum number of items to receive in
-    # the response. If the total number of items in the list exceeds the
-    # maximum that you specify, or the default maximum, the response is
-    # paginated. To get the next page of items, send a subsequent request
-    # that specifies the `NextMarker` value from the current response as the
-    # `Marker` value in the subsequent request.
-    #
+    # (`.example.com</code>), if they exist. If you provide
+    # </em>.example.com as input, the returned list can include
+    # *.example.com and any alternate domain names covered by that wildcard
+    # (for example, www.example.com, test.example.com, dev.example.com, and
+    # so on), if they exist.</p> To list conflicting aliases, specify the
+    # alias to search and the ID of a standard distribution in your account
+    # that has an attached TLS certificate that includes the provided alias.
+    # For more information, including how to set up the standard
+    # distribution and certificate, see Moving an alternate domain name to a
+    # different standard distribution or distribution tenant in the Amazon
+    # CloudFront Developer Guide. You can optionally specify the maximum
+    # number of items to receive in the response. If the total number of
+    # items in the list exceeds the maximum that you specify, or the default
+    # maximum, the response is paginated. To get the next page of items,
+    # send a subsequent request that specifies the NextMarker value from the
+    # current response as the Marker value in the subsequent request.</p>
+    # `
     #
     #
-    # [1]: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/CNAMEs.html#alternate-domain-names-move
+    #
+    # [1]: https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_ListDomainConflicts.html
     #
     # @option params [required, String] :distribution_id
-    #   The ID of a distribution in your account that has an attached SSL/TLS
-    #   certificate that includes the provided alias.
+    #   The ID of a standard distribution in your account that has an attached
+    #   TLS certificate that includes the provided alias.
     #
     # @option params [required, String] :alias
     #   The alias (also called a CNAME) to search for conflicting aliases.
@@ -6111,6 +7485,115 @@ module Aws::CloudFront
     # @param [Hash] params ({})
     def list_conflicting_aliases(params = {}, options = {})
       req = build_request(:list_conflicting_aliases, params)
+      req.send_request(options)
+    end
+
+    # Lists connection functions.
+    #
+    # @option params [String] :marker
+    #   Use this field when paginating results to indicate where to begin in
+    #   your list. The response includes items in the list that occur after
+    #   the marker. To get the next page of the list, set this field's value
+    #   to the value of `NextMarker` from the current page's response.
+    #
+    # @option params [Integer] :max_items
+    #   The maximum number of connection functions that you want returned in
+    #   the response.
+    #
+    # @option params [String] :stage
+    #   The connection function's stage.
+    #
+    # @return [Types::ListConnectionFunctionsResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListConnectionFunctionsResult#next_marker #next_marker} => String
+    #   * {Types::ListConnectionFunctionsResult#connection_functions #connection_functions} => Array&lt;Types::ConnectionFunctionSummary&gt;
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_connection_functions({
+    #     marker: "string",
+    #     max_items: 1,
+    #     stage: "DEVELOPMENT", # accepts DEVELOPMENT, LIVE
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.next_marker #=> String
+    #   resp.connection_functions #=> Array
+    #   resp.connection_functions[0].name #=> String
+    #   resp.connection_functions[0].id #=> String
+    #   resp.connection_functions[0].connection_function_config.comment #=> String
+    #   resp.connection_functions[0].connection_function_config.runtime #=> String, one of "cloudfront-js-1.0", "cloudfront-js-2.0"
+    #   resp.connection_functions[0].connection_function_config.key_value_store_associations.quantity #=> Integer
+    #   resp.connection_functions[0].connection_function_config.key_value_store_associations.items #=> Array
+    #   resp.connection_functions[0].connection_function_config.key_value_store_associations.items[0].key_value_store_arn #=> String
+    #   resp.connection_functions[0].connection_function_arn #=> String
+    #   resp.connection_functions[0].status #=> String
+    #   resp.connection_functions[0].stage #=> String, one of "DEVELOPMENT", "LIVE"
+    #   resp.connection_functions[0].created_time #=> Time
+    #   resp.connection_functions[0].last_modified_time #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListConnectionFunctions AWS API Documentation
+    #
+    # @overload list_connection_functions(params = {})
+    # @param [Hash] params ({})
+    def list_connection_functions(params = {}, options = {})
+      req = build_request(:list_connection_functions, params)
+      req.send_request(options)
+    end
+
+    # Lists the connection groups in your Amazon Web Services account.
+    #
+    # @option params [Types::ConnectionGroupAssociationFilter] :association_filter
+    #   Filter by associated Anycast IP list ID.
+    #
+    # @option params [String] :marker
+    #   The marker for the next set of connection groups to retrieve.
+    #
+    # @option params [Integer] :max_items
+    #   The maximum number of connection groups to return.
+    #
+    # @return [Types::ListConnectionGroupsResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListConnectionGroupsResult#next_marker #next_marker} => String
+    #   * {Types::ListConnectionGroupsResult#connection_groups #connection_groups} => Array&lt;Types::ConnectionGroupSummary&gt;
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_connection_groups({
+    #     association_filter: {
+    #       anycast_ip_list_id: "string",
+    #     },
+    #     marker: "string",
+    #     max_items: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.next_marker #=> String
+    #   resp.connection_groups #=> Array
+    #   resp.connection_groups[0].id #=> String
+    #   resp.connection_groups[0].name #=> String
+    #   resp.connection_groups[0].arn #=> String
+    #   resp.connection_groups[0].routing_endpoint #=> String
+    #   resp.connection_groups[0].created_time #=> Time
+    #   resp.connection_groups[0].last_modified_time #=> Time
+    #   resp.connection_groups[0].etag #=> String
+    #   resp.connection_groups[0].anycast_ip_list_id #=> String
+    #   resp.connection_groups[0].enabled #=> Boolean
+    #   resp.connection_groups[0].status #=> String
+    #   resp.connection_groups[0].is_default #=> Boolean
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListConnectionGroups AWS API Documentation
+    #
+    # @overload list_connection_groups(params = {})
+    # @param [Hash] params ({})
+    def list_connection_groups(params = {}, options = {})
+      req = build_request(:list_connection_groups, params)
       req.send_request(options)
     end
 
@@ -6174,6 +7657,135 @@ module Aws::CloudFront
       req.send_request(options)
     end
 
+    # Lists the distribution tenants in your Amazon Web Services account.
+    #
+    # @option params [Types::DistributionTenantAssociationFilter] :association_filter
+    #   Filter by the associated distribution ID or connection group ID.
+    #
+    # @option params [String] :marker
+    #   The marker for the next set of results.
+    #
+    # @option params [Integer] :max_items
+    #   The maximum number of distribution tenants to return.
+    #
+    # @return [Types::ListDistributionTenantsResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListDistributionTenantsResult#next_marker #next_marker} => String
+    #   * {Types::ListDistributionTenantsResult#distribution_tenant_list #distribution_tenant_list} => Array&lt;Types::DistributionTenantSummary&gt;
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_distribution_tenants({
+    #     association_filter: {
+    #       distribution_id: "string",
+    #       connection_group_id: "string",
+    #     },
+    #     marker: "string",
+    #     max_items: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.next_marker #=> String
+    #   resp.distribution_tenant_list #=> Array
+    #   resp.distribution_tenant_list[0].id #=> String
+    #   resp.distribution_tenant_list[0].distribution_id #=> String
+    #   resp.distribution_tenant_list[0].name #=> String
+    #   resp.distribution_tenant_list[0].arn #=> String
+    #   resp.distribution_tenant_list[0].domains #=> Array
+    #   resp.distribution_tenant_list[0].domains[0].domain #=> String
+    #   resp.distribution_tenant_list[0].domains[0].status #=> String, one of "active", "inactive"
+    #   resp.distribution_tenant_list[0].connection_group_id #=> String
+    #   resp.distribution_tenant_list[0].customizations.web_acl.action #=> String, one of "override", "disable"
+    #   resp.distribution_tenant_list[0].customizations.web_acl.arn #=> String
+    #   resp.distribution_tenant_list[0].customizations.certificate.arn #=> String
+    #   resp.distribution_tenant_list[0].customizations.geo_restrictions.restriction_type #=> String, one of "blacklist", "whitelist", "none"
+    #   resp.distribution_tenant_list[0].customizations.geo_restrictions.locations #=> Array
+    #   resp.distribution_tenant_list[0].customizations.geo_restrictions.locations[0] #=> String
+    #   resp.distribution_tenant_list[0].created_time #=> Time
+    #   resp.distribution_tenant_list[0].last_modified_time #=> Time
+    #   resp.distribution_tenant_list[0].etag #=> String
+    #   resp.distribution_tenant_list[0].enabled #=> Boolean
+    #   resp.distribution_tenant_list[0].status #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListDistributionTenants AWS API Documentation
+    #
+    # @overload list_distribution_tenants(params = {})
+    # @param [Hash] params ({})
+    def list_distribution_tenants(params = {}, options = {})
+      req = build_request(:list_distribution_tenants, params)
+      req.send_request(options)
+    end
+
+    # Lists distribution tenants by the customization that you specify.
+    #
+    # You must specify either the `CertificateArn` parameter or `WebACLArn`
+    # parameter, but not both in the same request.
+    #
+    # @option params [String] :web_acl_arn
+    #   Filter by the ARN of the associated WAF web ACL.
+    #
+    # @option params [String] :certificate_arn
+    #   Filter by the ARN of the associated ACM certificate.
+    #
+    # @option params [String] :marker
+    #   The marker for the next set of results.
+    #
+    # @option params [Integer] :max_items
+    #   The maximum number of distribution tenants to return by the specified
+    #   customization.
+    #
+    # @return [Types::ListDistributionTenantsByCustomizationResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListDistributionTenantsByCustomizationResult#next_marker #next_marker} => String
+    #   * {Types::ListDistributionTenantsByCustomizationResult#distribution_tenant_list #distribution_tenant_list} => Array&lt;Types::DistributionTenantSummary&gt;
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_distribution_tenants_by_customization({
+    #     web_acl_arn: "string",
+    #     certificate_arn: "string",
+    #     marker: "string",
+    #     max_items: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.next_marker #=> String
+    #   resp.distribution_tenant_list #=> Array
+    #   resp.distribution_tenant_list[0].id #=> String
+    #   resp.distribution_tenant_list[0].distribution_id #=> String
+    #   resp.distribution_tenant_list[0].name #=> String
+    #   resp.distribution_tenant_list[0].arn #=> String
+    #   resp.distribution_tenant_list[0].domains #=> Array
+    #   resp.distribution_tenant_list[0].domains[0].domain #=> String
+    #   resp.distribution_tenant_list[0].domains[0].status #=> String, one of "active", "inactive"
+    #   resp.distribution_tenant_list[0].connection_group_id #=> String
+    #   resp.distribution_tenant_list[0].customizations.web_acl.action #=> String, one of "override", "disable"
+    #   resp.distribution_tenant_list[0].customizations.web_acl.arn #=> String
+    #   resp.distribution_tenant_list[0].customizations.certificate.arn #=> String
+    #   resp.distribution_tenant_list[0].customizations.geo_restrictions.restriction_type #=> String, one of "blacklist", "whitelist", "none"
+    #   resp.distribution_tenant_list[0].customizations.geo_restrictions.locations #=> Array
+    #   resp.distribution_tenant_list[0].customizations.geo_restrictions.locations[0] #=> String
+    #   resp.distribution_tenant_list[0].created_time #=> Time
+    #   resp.distribution_tenant_list[0].last_modified_time #=> Time
+    #   resp.distribution_tenant_list[0].etag #=> String
+    #   resp.distribution_tenant_list[0].enabled #=> Boolean
+    #   resp.distribution_tenant_list[0].status #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListDistributionTenantsByCustomization AWS API Documentation
+    #
+    # @overload list_distribution_tenants_by_customization(params = {})
+    # @param [Hash] params ({})
+    def list_distribution_tenants_by_customization(params = {}, options = {})
+      req = build_request(:list_distribution_tenants_by_customization, params)
+      req.send_request(options)
+    end
+
     # List CloudFront distributions.
     #
     # @option params [String] :marker
@@ -6209,6 +7821,7 @@ module Aws::CloudFront
     #   resp.distribution_list.items #=> Array
     #   resp.distribution_list.items[0].id #=> String
     #   resp.distribution_list.items[0].arn #=> String
+    #   resp.distribution_list.items[0].etag #=> String
     #   resp.distribution_list.items[0].status #=> String
     #   resp.distribution_list.items[0].last_modified_time #=> Time
     #   resp.distribution_list.items[0].domain_name #=> String
@@ -6225,6 +7838,7 @@ module Aws::CloudFront
     #   resp.distribution_list.items[0].origins.items[0].custom_headers.items[0].header_name #=> String
     #   resp.distribution_list.items[0].origins.items[0].custom_headers.items[0].header_value #=> String
     #   resp.distribution_list.items[0].origins.items[0].s3_origin_config.origin_access_identity #=> String
+    #   resp.distribution_list.items[0].origins.items[0].s3_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.http_port #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.https_port #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_protocol_policy #=> String, one of "http-only", "match-viewer", "https-only"
@@ -6233,11 +7847,15 @@ module Aws::CloudFront
     #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_ssl_protocols.items[0] #=> String, one of "SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"
     #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_keepalive_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.ip_address_type #=> String, one of "ipv4", "ipv6", "dualstack"
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_mtls_config.client_certificate_arn #=> String
     #   resp.distribution_list.items[0].origins.items[0].vpc_origin_config.vpc_origin_id #=> String
+    #   resp.distribution_list.items[0].origins.items[0].vpc_origin_config.owner_account_id #=> String
     #   resp.distribution_list.items[0].origins.items[0].vpc_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].vpc_origin_config.origin_keepalive_timeout #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].connection_attempts #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].connection_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].response_completion_timeout #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].origin_shield.enabled #=> Boolean
     #   resp.distribution_list.items[0].origins.items[0].origin_shield.origin_shield_region #=> String
     #   resp.distribution_list.items[0].origins.items[0].origin_access_control_id #=> String
@@ -6355,13 +7973,13 @@ module Aws::CloudFront
     #   resp.distribution_list.items[0].custom_error_responses.items[0].response_code #=> String
     #   resp.distribution_list.items[0].custom_error_responses.items[0].error_caching_min_ttl #=> Integer
     #   resp.distribution_list.items[0].comment #=> String
-    #   resp.distribution_list.items[0].price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All"
+    #   resp.distribution_list.items[0].price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All", "None"
     #   resp.distribution_list.items[0].enabled #=> Boolean
     #   resp.distribution_list.items[0].viewer_certificate.cloud_front_default_certificate #=> Boolean
     #   resp.distribution_list.items[0].viewer_certificate.iam_certificate_id #=> String
     #   resp.distribution_list.items[0].viewer_certificate.acm_certificate_arn #=> String
     #   resp.distribution_list.items[0].viewer_certificate.ssl_support_method #=> String, one of "sni-only", "vip", "static-ip"
-    #   resp.distribution_list.items[0].viewer_certificate.minimum_protocol_version #=> String, one of "SSLv3", "TLSv1", "TLSv1_2016", "TLSv1.1_2016", "TLSv1.2_2018", "TLSv1.2_2019", "TLSv1.2_2021"
+    #   resp.distribution_list.items[0].viewer_certificate.minimum_protocol_version #=> String, one of "SSLv3", "TLSv1", "TLSv1_2016", "TLSv1.1_2016", "TLSv1.2_2018", "TLSv1.2_2019", "TLSv1.2_2021", "TLSv1.3_2025", "TLSv1.2_2025"
     #   resp.distribution_list.items[0].viewer_certificate.certificate #=> String
     #   resp.distribution_list.items[0].viewer_certificate.certificate_source #=> String, one of "cloudfront", "iam", "acm"
     #   resp.distribution_list.items[0].restrictions.geo_restriction.restriction_type #=> String, one of "blacklist", "whitelist", "none"
@@ -6375,7 +7993,13 @@ module Aws::CloudFront
     #   resp.distribution_list.items[0].alias_icp_recordals[0].cname #=> String
     #   resp.distribution_list.items[0].alias_icp_recordals[0].icp_recordal_status #=> String, one of "APPROVED", "SUSPENDED", "PENDING"
     #   resp.distribution_list.items[0].staging #=> Boolean
+    #   resp.distribution_list.items[0].connection_mode #=> String, one of "direct", "tenant-only"
     #   resp.distribution_list.items[0].anycast_ip_list_id #=> String
+    #   resp.distribution_list.items[0].viewer_mtls_config.mode #=> String, one of "required", "optional", "passthrough"
+    #   resp.distribution_list.items[0].viewer_mtls_config.trust_store_config.trust_store_id #=> String
+    #   resp.distribution_list.items[0].viewer_mtls_config.trust_store_config.advertise_trust_store_ca_names #=> Boolean
+    #   resp.distribution_list.items[0].viewer_mtls_config.trust_store_config.ignore_certificate_expiry #=> Boolean
+    #   resp.distribution_list.items[0].connection_function_association.id #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListDistributions AWS API Documentation
     #
@@ -6424,6 +8048,7 @@ module Aws::CloudFront
     #   resp.distribution_list.items #=> Array
     #   resp.distribution_list.items[0].id #=> String
     #   resp.distribution_list.items[0].arn #=> String
+    #   resp.distribution_list.items[0].etag #=> String
     #   resp.distribution_list.items[0].status #=> String
     #   resp.distribution_list.items[0].last_modified_time #=> Time
     #   resp.distribution_list.items[0].domain_name #=> String
@@ -6440,6 +8065,7 @@ module Aws::CloudFront
     #   resp.distribution_list.items[0].origins.items[0].custom_headers.items[0].header_name #=> String
     #   resp.distribution_list.items[0].origins.items[0].custom_headers.items[0].header_value #=> String
     #   resp.distribution_list.items[0].origins.items[0].s3_origin_config.origin_access_identity #=> String
+    #   resp.distribution_list.items[0].origins.items[0].s3_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.http_port #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.https_port #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_protocol_policy #=> String, one of "http-only", "match-viewer", "https-only"
@@ -6448,11 +8074,15 @@ module Aws::CloudFront
     #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_ssl_protocols.items[0] #=> String, one of "SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"
     #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_keepalive_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.ip_address_type #=> String, one of "ipv4", "ipv6", "dualstack"
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_mtls_config.client_certificate_arn #=> String
     #   resp.distribution_list.items[0].origins.items[0].vpc_origin_config.vpc_origin_id #=> String
+    #   resp.distribution_list.items[0].origins.items[0].vpc_origin_config.owner_account_id #=> String
     #   resp.distribution_list.items[0].origins.items[0].vpc_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].vpc_origin_config.origin_keepalive_timeout #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].connection_attempts #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].connection_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].response_completion_timeout #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].origin_shield.enabled #=> Boolean
     #   resp.distribution_list.items[0].origins.items[0].origin_shield.origin_shield_region #=> String
     #   resp.distribution_list.items[0].origins.items[0].origin_access_control_id #=> String
@@ -6570,13 +8200,13 @@ module Aws::CloudFront
     #   resp.distribution_list.items[0].custom_error_responses.items[0].response_code #=> String
     #   resp.distribution_list.items[0].custom_error_responses.items[0].error_caching_min_ttl #=> Integer
     #   resp.distribution_list.items[0].comment #=> String
-    #   resp.distribution_list.items[0].price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All"
+    #   resp.distribution_list.items[0].price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All", "None"
     #   resp.distribution_list.items[0].enabled #=> Boolean
     #   resp.distribution_list.items[0].viewer_certificate.cloud_front_default_certificate #=> Boolean
     #   resp.distribution_list.items[0].viewer_certificate.iam_certificate_id #=> String
     #   resp.distribution_list.items[0].viewer_certificate.acm_certificate_arn #=> String
     #   resp.distribution_list.items[0].viewer_certificate.ssl_support_method #=> String, one of "sni-only", "vip", "static-ip"
-    #   resp.distribution_list.items[0].viewer_certificate.minimum_protocol_version #=> String, one of "SSLv3", "TLSv1", "TLSv1_2016", "TLSv1.1_2016", "TLSv1.2_2018", "TLSv1.2_2019", "TLSv1.2_2021"
+    #   resp.distribution_list.items[0].viewer_certificate.minimum_protocol_version #=> String, one of "SSLv3", "TLSv1", "TLSv1_2016", "TLSv1.1_2016", "TLSv1.2_2018", "TLSv1.2_2019", "TLSv1.2_2021", "TLSv1.3_2025", "TLSv1.2_2025"
     #   resp.distribution_list.items[0].viewer_certificate.certificate #=> String
     #   resp.distribution_list.items[0].viewer_certificate.certificate_source #=> String, one of "cloudfront", "iam", "acm"
     #   resp.distribution_list.items[0].restrictions.geo_restriction.restriction_type #=> String, one of "blacklist", "whitelist", "none"
@@ -6590,7 +8220,13 @@ module Aws::CloudFront
     #   resp.distribution_list.items[0].alias_icp_recordals[0].cname #=> String
     #   resp.distribution_list.items[0].alias_icp_recordals[0].icp_recordal_status #=> String, one of "APPROVED", "SUSPENDED", "PENDING"
     #   resp.distribution_list.items[0].staging #=> Boolean
+    #   resp.distribution_list.items[0].connection_mode #=> String, one of "direct", "tenant-only"
     #   resp.distribution_list.items[0].anycast_ip_list_id #=> String
+    #   resp.distribution_list.items[0].viewer_mtls_config.mode #=> String, one of "required", "optional", "passthrough"
+    #   resp.distribution_list.items[0].viewer_mtls_config.trust_store_config.trust_store_id #=> String
+    #   resp.distribution_list.items[0].viewer_mtls_config.trust_store_config.advertise_trust_store_ca_names #=> Boolean
+    #   resp.distribution_list.items[0].viewer_mtls_config.trust_store_config.ignore_certificate_expiry #=> Boolean
+    #   resp.distribution_list.items[0].connection_function_association.id #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListDistributionsByAnycastIpListId AWS API Documentation
     #
@@ -6653,6 +8289,460 @@ module Aws::CloudFront
     # @param [Hash] params ({})
     def list_distributions_by_cache_policy_id(params = {}, options = {})
       req = build_request(:list_distributions_by_cache_policy_id, params)
+      req.send_request(options)
+    end
+
+    # Lists distributions by connection function.
+    #
+    # @option params [String] :marker
+    #   Use this field when paginating results to indicate where to begin in
+    #   your list. The response includes items in the list that occur after
+    #   the marker. To get the next page of the list, set this field's value
+    #   to the value of `NextMarker` from the current page's response.
+    #
+    # @option params [Integer] :max_items
+    #   The maximum number of distributions that you want returned in the
+    #   response.
+    #
+    # @option params [required, String] :connection_function_identifier
+    #   The distributions by connection function identifier.
+    #
+    # @return [Types::ListDistributionsByConnectionFunctionResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListDistributionsByConnectionFunctionResult#distribution_list #distribution_list} => Types::DistributionList
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_distributions_by_connection_function({
+    #     marker: "string",
+    #     max_items: 1,
+    #     connection_function_identifier: "string", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.distribution_list.marker #=> String
+    #   resp.distribution_list.next_marker #=> String
+    #   resp.distribution_list.max_items #=> Integer
+    #   resp.distribution_list.is_truncated #=> Boolean
+    #   resp.distribution_list.quantity #=> Integer
+    #   resp.distribution_list.items #=> Array
+    #   resp.distribution_list.items[0].id #=> String
+    #   resp.distribution_list.items[0].arn #=> String
+    #   resp.distribution_list.items[0].etag #=> String
+    #   resp.distribution_list.items[0].status #=> String
+    #   resp.distribution_list.items[0].last_modified_time #=> Time
+    #   resp.distribution_list.items[0].domain_name #=> String
+    #   resp.distribution_list.items[0].aliases.quantity #=> Integer
+    #   resp.distribution_list.items[0].aliases.items #=> Array
+    #   resp.distribution_list.items[0].aliases.items[0] #=> String
+    #   resp.distribution_list.items[0].origins.quantity #=> Integer
+    #   resp.distribution_list.items[0].origins.items #=> Array
+    #   resp.distribution_list.items[0].origins.items[0].id #=> String
+    #   resp.distribution_list.items[0].origins.items[0].domain_name #=> String
+    #   resp.distribution_list.items[0].origins.items[0].origin_path #=> String
+    #   resp.distribution_list.items[0].origins.items[0].custom_headers.quantity #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].custom_headers.items #=> Array
+    #   resp.distribution_list.items[0].origins.items[0].custom_headers.items[0].header_name #=> String
+    #   resp.distribution_list.items[0].origins.items[0].custom_headers.items[0].header_value #=> String
+    #   resp.distribution_list.items[0].origins.items[0].s3_origin_config.origin_access_identity #=> String
+    #   resp.distribution_list.items[0].origins.items[0].s3_origin_config.origin_read_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.http_port #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.https_port #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_protocol_policy #=> String, one of "http-only", "match-viewer", "https-only"
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_ssl_protocols.quantity #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_ssl_protocols.items #=> Array
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_ssl_protocols.items[0] #=> String, one of "SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_read_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_keepalive_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.ip_address_type #=> String, one of "ipv4", "ipv6", "dualstack"
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_mtls_config.client_certificate_arn #=> String
+    #   resp.distribution_list.items[0].origins.items[0].vpc_origin_config.vpc_origin_id #=> String
+    #   resp.distribution_list.items[0].origins.items[0].vpc_origin_config.owner_account_id #=> String
+    #   resp.distribution_list.items[0].origins.items[0].vpc_origin_config.origin_read_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].vpc_origin_config.origin_keepalive_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].connection_attempts #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].connection_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].response_completion_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].origin_shield.enabled #=> Boolean
+    #   resp.distribution_list.items[0].origins.items[0].origin_shield.origin_shield_region #=> String
+    #   resp.distribution_list.items[0].origins.items[0].origin_access_control_id #=> String
+    #   resp.distribution_list.items[0].origin_groups.quantity #=> Integer
+    #   resp.distribution_list.items[0].origin_groups.items #=> Array
+    #   resp.distribution_list.items[0].origin_groups.items[0].id #=> String
+    #   resp.distribution_list.items[0].origin_groups.items[0].failover_criteria.status_codes.quantity #=> Integer
+    #   resp.distribution_list.items[0].origin_groups.items[0].failover_criteria.status_codes.items #=> Array
+    #   resp.distribution_list.items[0].origin_groups.items[0].failover_criteria.status_codes.items[0] #=> Integer
+    #   resp.distribution_list.items[0].origin_groups.items[0].members.quantity #=> Integer
+    #   resp.distribution_list.items[0].origin_groups.items[0].members.items #=> Array
+    #   resp.distribution_list.items[0].origin_groups.items[0].members.items[0].origin_id #=> String
+    #   resp.distribution_list.items[0].origin_groups.items[0].selection_criteria #=> String, one of "default", "media-quality-based"
+    #   resp.distribution_list.items[0].default_cache_behavior.target_origin_id #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.trusted_signers.enabled #=> Boolean
+    #   resp.distribution_list.items[0].default_cache_behavior.trusted_signers.quantity #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.trusted_signers.items #=> Array
+    #   resp.distribution_list.items[0].default_cache_behavior.trusted_signers.items[0] #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.trusted_key_groups.enabled #=> Boolean
+    #   resp.distribution_list.items[0].default_cache_behavior.trusted_key_groups.quantity #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.trusted_key_groups.items #=> Array
+    #   resp.distribution_list.items[0].default_cache_behavior.trusted_key_groups.items[0] #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.viewer_protocol_policy #=> String, one of "allow-all", "https-only", "redirect-to-https"
+    #   resp.distribution_list.items[0].default_cache_behavior.allowed_methods.quantity #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.allowed_methods.items #=> Array
+    #   resp.distribution_list.items[0].default_cache_behavior.allowed_methods.items[0] #=> String, one of "GET", "HEAD", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"
+    #   resp.distribution_list.items[0].default_cache_behavior.allowed_methods.cached_methods.quantity #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.allowed_methods.cached_methods.items #=> Array
+    #   resp.distribution_list.items[0].default_cache_behavior.allowed_methods.cached_methods.items[0] #=> String, one of "GET", "HEAD", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"
+    #   resp.distribution_list.items[0].default_cache_behavior.smooth_streaming #=> Boolean
+    #   resp.distribution_list.items[0].default_cache_behavior.compress #=> Boolean
+    #   resp.distribution_list.items[0].default_cache_behavior.lambda_function_associations.quantity #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.lambda_function_associations.items #=> Array
+    #   resp.distribution_list.items[0].default_cache_behavior.lambda_function_associations.items[0].lambda_function_arn #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.lambda_function_associations.items[0].event_type #=> String, one of "viewer-request", "viewer-response", "origin-request", "origin-response"
+    #   resp.distribution_list.items[0].default_cache_behavior.lambda_function_associations.items[0].include_body #=> Boolean
+    #   resp.distribution_list.items[0].default_cache_behavior.function_associations.quantity #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.function_associations.items #=> Array
+    #   resp.distribution_list.items[0].default_cache_behavior.function_associations.items[0].function_arn #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.function_associations.items[0].event_type #=> String, one of "viewer-request", "viewer-response", "origin-request", "origin-response"
+    #   resp.distribution_list.items[0].default_cache_behavior.field_level_encryption_id #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.realtime_log_config_arn #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.cache_policy_id #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.origin_request_policy_id #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.response_headers_policy_id #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.grpc_config.enabled #=> Boolean
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.query_string #=> Boolean
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.cookies.forward #=> String, one of "none", "whitelist", "all"
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.cookies.whitelisted_names.quantity #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.cookies.whitelisted_names.items #=> Array
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.cookies.whitelisted_names.items[0] #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.headers.quantity #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.headers.items #=> Array
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.headers.items[0] #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.query_string_cache_keys.quantity #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.query_string_cache_keys.items #=> Array
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.query_string_cache_keys.items[0] #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.min_ttl #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.default_ttl #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.max_ttl #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].path_pattern #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].target_origin_id #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].trusted_signers.enabled #=> Boolean
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].trusted_signers.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].trusted_signers.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].trusted_signers.items[0] #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].trusted_key_groups.enabled #=> Boolean
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].trusted_key_groups.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].trusted_key_groups.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].trusted_key_groups.items[0] #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].viewer_protocol_policy #=> String, one of "allow-all", "https-only", "redirect-to-https"
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].allowed_methods.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].allowed_methods.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].allowed_methods.items[0] #=> String, one of "GET", "HEAD", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].allowed_methods.cached_methods.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].allowed_methods.cached_methods.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].allowed_methods.cached_methods.items[0] #=> String, one of "GET", "HEAD", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].smooth_streaming #=> Boolean
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].compress #=> Boolean
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].lambda_function_associations.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].lambda_function_associations.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].lambda_function_associations.items[0].lambda_function_arn #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].lambda_function_associations.items[0].event_type #=> String, one of "viewer-request", "viewer-response", "origin-request", "origin-response"
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].lambda_function_associations.items[0].include_body #=> Boolean
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].function_associations.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].function_associations.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].function_associations.items[0].function_arn #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].function_associations.items[0].event_type #=> String, one of "viewer-request", "viewer-response", "origin-request", "origin-response"
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].field_level_encryption_id #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].realtime_log_config_arn #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].cache_policy_id #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].origin_request_policy_id #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].response_headers_policy_id #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].grpc_config.enabled #=> Boolean
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.query_string #=> Boolean
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.cookies.forward #=> String, one of "none", "whitelist", "all"
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.cookies.whitelisted_names.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.cookies.whitelisted_names.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.cookies.whitelisted_names.items[0] #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.headers.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.headers.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.headers.items[0] #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.query_string_cache_keys.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.query_string_cache_keys.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.query_string_cache_keys.items[0] #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].min_ttl #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].default_ttl #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].max_ttl #=> Integer
+    #   resp.distribution_list.items[0].custom_error_responses.quantity #=> Integer
+    #   resp.distribution_list.items[0].custom_error_responses.items #=> Array
+    #   resp.distribution_list.items[0].custom_error_responses.items[0].error_code #=> Integer
+    #   resp.distribution_list.items[0].custom_error_responses.items[0].response_page_path #=> String
+    #   resp.distribution_list.items[0].custom_error_responses.items[0].response_code #=> String
+    #   resp.distribution_list.items[0].custom_error_responses.items[0].error_caching_min_ttl #=> Integer
+    #   resp.distribution_list.items[0].comment #=> String
+    #   resp.distribution_list.items[0].price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All", "None"
+    #   resp.distribution_list.items[0].enabled #=> Boolean
+    #   resp.distribution_list.items[0].viewer_certificate.cloud_front_default_certificate #=> Boolean
+    #   resp.distribution_list.items[0].viewer_certificate.iam_certificate_id #=> String
+    #   resp.distribution_list.items[0].viewer_certificate.acm_certificate_arn #=> String
+    #   resp.distribution_list.items[0].viewer_certificate.ssl_support_method #=> String, one of "sni-only", "vip", "static-ip"
+    #   resp.distribution_list.items[0].viewer_certificate.minimum_protocol_version #=> String, one of "SSLv3", "TLSv1", "TLSv1_2016", "TLSv1.1_2016", "TLSv1.2_2018", "TLSv1.2_2019", "TLSv1.2_2021", "TLSv1.3_2025", "TLSv1.2_2025"
+    #   resp.distribution_list.items[0].viewer_certificate.certificate #=> String
+    #   resp.distribution_list.items[0].viewer_certificate.certificate_source #=> String, one of "cloudfront", "iam", "acm"
+    #   resp.distribution_list.items[0].restrictions.geo_restriction.restriction_type #=> String, one of "blacklist", "whitelist", "none"
+    #   resp.distribution_list.items[0].restrictions.geo_restriction.quantity #=> Integer
+    #   resp.distribution_list.items[0].restrictions.geo_restriction.items #=> Array
+    #   resp.distribution_list.items[0].restrictions.geo_restriction.items[0] #=> String
+    #   resp.distribution_list.items[0].web_acl_id #=> String
+    #   resp.distribution_list.items[0].http_version #=> String, one of "http1.1", "http2", "http3", "http2and3"
+    #   resp.distribution_list.items[0].is_ipv6_enabled #=> Boolean
+    #   resp.distribution_list.items[0].alias_icp_recordals #=> Array
+    #   resp.distribution_list.items[0].alias_icp_recordals[0].cname #=> String
+    #   resp.distribution_list.items[0].alias_icp_recordals[0].icp_recordal_status #=> String, one of "APPROVED", "SUSPENDED", "PENDING"
+    #   resp.distribution_list.items[0].staging #=> Boolean
+    #   resp.distribution_list.items[0].connection_mode #=> String, one of "direct", "tenant-only"
+    #   resp.distribution_list.items[0].anycast_ip_list_id #=> String
+    #   resp.distribution_list.items[0].viewer_mtls_config.mode #=> String, one of "required", "optional", "passthrough"
+    #   resp.distribution_list.items[0].viewer_mtls_config.trust_store_config.trust_store_id #=> String
+    #   resp.distribution_list.items[0].viewer_mtls_config.trust_store_config.advertise_trust_store_ca_names #=> Boolean
+    #   resp.distribution_list.items[0].viewer_mtls_config.trust_store_config.ignore_certificate_expiry #=> Boolean
+    #   resp.distribution_list.items[0].connection_function_association.id #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListDistributionsByConnectionFunction AWS API Documentation
+    #
+    # @overload list_distributions_by_connection_function(params = {})
+    # @param [Hash] params ({})
+    def list_distributions_by_connection_function(params = {}, options = {})
+      req = build_request(:list_distributions_by_connection_function, params)
+      req.send_request(options)
+    end
+
+    # Lists the distributions by the connection mode that you specify.
+    #
+    # @option params [String] :marker
+    #   The marker for the next set of distributions to retrieve.
+    #
+    # @option params [Integer] :max_items
+    #   The maximum number of distributions to return.
+    #
+    # @option params [required, String] :connection_mode
+    #   This field specifies whether the connection mode is through a standard
+    #   distribution (direct) or a multi-tenant distribution with distribution
+    #   tenants (tenant-only).
+    #
+    # @return [Types::ListDistributionsByConnectionModeResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListDistributionsByConnectionModeResult#distribution_list #distribution_list} => Types::DistributionList
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_distributions_by_connection_mode({
+    #     marker: "string",
+    #     max_items: 1,
+    #     connection_mode: "direct", # required, accepts direct, tenant-only
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.distribution_list.marker #=> String
+    #   resp.distribution_list.next_marker #=> String
+    #   resp.distribution_list.max_items #=> Integer
+    #   resp.distribution_list.is_truncated #=> Boolean
+    #   resp.distribution_list.quantity #=> Integer
+    #   resp.distribution_list.items #=> Array
+    #   resp.distribution_list.items[0].id #=> String
+    #   resp.distribution_list.items[0].arn #=> String
+    #   resp.distribution_list.items[0].etag #=> String
+    #   resp.distribution_list.items[0].status #=> String
+    #   resp.distribution_list.items[0].last_modified_time #=> Time
+    #   resp.distribution_list.items[0].domain_name #=> String
+    #   resp.distribution_list.items[0].aliases.quantity #=> Integer
+    #   resp.distribution_list.items[0].aliases.items #=> Array
+    #   resp.distribution_list.items[0].aliases.items[0] #=> String
+    #   resp.distribution_list.items[0].origins.quantity #=> Integer
+    #   resp.distribution_list.items[0].origins.items #=> Array
+    #   resp.distribution_list.items[0].origins.items[0].id #=> String
+    #   resp.distribution_list.items[0].origins.items[0].domain_name #=> String
+    #   resp.distribution_list.items[0].origins.items[0].origin_path #=> String
+    #   resp.distribution_list.items[0].origins.items[0].custom_headers.quantity #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].custom_headers.items #=> Array
+    #   resp.distribution_list.items[0].origins.items[0].custom_headers.items[0].header_name #=> String
+    #   resp.distribution_list.items[0].origins.items[0].custom_headers.items[0].header_value #=> String
+    #   resp.distribution_list.items[0].origins.items[0].s3_origin_config.origin_access_identity #=> String
+    #   resp.distribution_list.items[0].origins.items[0].s3_origin_config.origin_read_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.http_port #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.https_port #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_protocol_policy #=> String, one of "http-only", "match-viewer", "https-only"
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_ssl_protocols.quantity #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_ssl_protocols.items #=> Array
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_ssl_protocols.items[0] #=> String, one of "SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_read_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_keepalive_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.ip_address_type #=> String, one of "ipv4", "ipv6", "dualstack"
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_mtls_config.client_certificate_arn #=> String
+    #   resp.distribution_list.items[0].origins.items[0].vpc_origin_config.vpc_origin_id #=> String
+    #   resp.distribution_list.items[0].origins.items[0].vpc_origin_config.owner_account_id #=> String
+    #   resp.distribution_list.items[0].origins.items[0].vpc_origin_config.origin_read_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].vpc_origin_config.origin_keepalive_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].connection_attempts #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].connection_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].response_completion_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].origin_shield.enabled #=> Boolean
+    #   resp.distribution_list.items[0].origins.items[0].origin_shield.origin_shield_region #=> String
+    #   resp.distribution_list.items[0].origins.items[0].origin_access_control_id #=> String
+    #   resp.distribution_list.items[0].origin_groups.quantity #=> Integer
+    #   resp.distribution_list.items[0].origin_groups.items #=> Array
+    #   resp.distribution_list.items[0].origin_groups.items[0].id #=> String
+    #   resp.distribution_list.items[0].origin_groups.items[0].failover_criteria.status_codes.quantity #=> Integer
+    #   resp.distribution_list.items[0].origin_groups.items[0].failover_criteria.status_codes.items #=> Array
+    #   resp.distribution_list.items[0].origin_groups.items[0].failover_criteria.status_codes.items[0] #=> Integer
+    #   resp.distribution_list.items[0].origin_groups.items[0].members.quantity #=> Integer
+    #   resp.distribution_list.items[0].origin_groups.items[0].members.items #=> Array
+    #   resp.distribution_list.items[0].origin_groups.items[0].members.items[0].origin_id #=> String
+    #   resp.distribution_list.items[0].origin_groups.items[0].selection_criteria #=> String, one of "default", "media-quality-based"
+    #   resp.distribution_list.items[0].default_cache_behavior.target_origin_id #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.trusted_signers.enabled #=> Boolean
+    #   resp.distribution_list.items[0].default_cache_behavior.trusted_signers.quantity #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.trusted_signers.items #=> Array
+    #   resp.distribution_list.items[0].default_cache_behavior.trusted_signers.items[0] #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.trusted_key_groups.enabled #=> Boolean
+    #   resp.distribution_list.items[0].default_cache_behavior.trusted_key_groups.quantity #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.trusted_key_groups.items #=> Array
+    #   resp.distribution_list.items[0].default_cache_behavior.trusted_key_groups.items[0] #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.viewer_protocol_policy #=> String, one of "allow-all", "https-only", "redirect-to-https"
+    #   resp.distribution_list.items[0].default_cache_behavior.allowed_methods.quantity #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.allowed_methods.items #=> Array
+    #   resp.distribution_list.items[0].default_cache_behavior.allowed_methods.items[0] #=> String, one of "GET", "HEAD", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"
+    #   resp.distribution_list.items[0].default_cache_behavior.allowed_methods.cached_methods.quantity #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.allowed_methods.cached_methods.items #=> Array
+    #   resp.distribution_list.items[0].default_cache_behavior.allowed_methods.cached_methods.items[0] #=> String, one of "GET", "HEAD", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"
+    #   resp.distribution_list.items[0].default_cache_behavior.smooth_streaming #=> Boolean
+    #   resp.distribution_list.items[0].default_cache_behavior.compress #=> Boolean
+    #   resp.distribution_list.items[0].default_cache_behavior.lambda_function_associations.quantity #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.lambda_function_associations.items #=> Array
+    #   resp.distribution_list.items[0].default_cache_behavior.lambda_function_associations.items[0].lambda_function_arn #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.lambda_function_associations.items[0].event_type #=> String, one of "viewer-request", "viewer-response", "origin-request", "origin-response"
+    #   resp.distribution_list.items[0].default_cache_behavior.lambda_function_associations.items[0].include_body #=> Boolean
+    #   resp.distribution_list.items[0].default_cache_behavior.function_associations.quantity #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.function_associations.items #=> Array
+    #   resp.distribution_list.items[0].default_cache_behavior.function_associations.items[0].function_arn #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.function_associations.items[0].event_type #=> String, one of "viewer-request", "viewer-response", "origin-request", "origin-response"
+    #   resp.distribution_list.items[0].default_cache_behavior.field_level_encryption_id #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.realtime_log_config_arn #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.cache_policy_id #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.origin_request_policy_id #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.response_headers_policy_id #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.grpc_config.enabled #=> Boolean
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.query_string #=> Boolean
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.cookies.forward #=> String, one of "none", "whitelist", "all"
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.cookies.whitelisted_names.quantity #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.cookies.whitelisted_names.items #=> Array
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.cookies.whitelisted_names.items[0] #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.headers.quantity #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.headers.items #=> Array
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.headers.items[0] #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.query_string_cache_keys.quantity #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.query_string_cache_keys.items #=> Array
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.query_string_cache_keys.items[0] #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.min_ttl #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.default_ttl #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.max_ttl #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].path_pattern #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].target_origin_id #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].trusted_signers.enabled #=> Boolean
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].trusted_signers.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].trusted_signers.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].trusted_signers.items[0] #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].trusted_key_groups.enabled #=> Boolean
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].trusted_key_groups.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].trusted_key_groups.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].trusted_key_groups.items[0] #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].viewer_protocol_policy #=> String, one of "allow-all", "https-only", "redirect-to-https"
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].allowed_methods.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].allowed_methods.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].allowed_methods.items[0] #=> String, one of "GET", "HEAD", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].allowed_methods.cached_methods.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].allowed_methods.cached_methods.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].allowed_methods.cached_methods.items[0] #=> String, one of "GET", "HEAD", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].smooth_streaming #=> Boolean
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].compress #=> Boolean
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].lambda_function_associations.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].lambda_function_associations.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].lambda_function_associations.items[0].lambda_function_arn #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].lambda_function_associations.items[0].event_type #=> String, one of "viewer-request", "viewer-response", "origin-request", "origin-response"
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].lambda_function_associations.items[0].include_body #=> Boolean
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].function_associations.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].function_associations.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].function_associations.items[0].function_arn #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].function_associations.items[0].event_type #=> String, one of "viewer-request", "viewer-response", "origin-request", "origin-response"
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].field_level_encryption_id #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].realtime_log_config_arn #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].cache_policy_id #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].origin_request_policy_id #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].response_headers_policy_id #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].grpc_config.enabled #=> Boolean
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.query_string #=> Boolean
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.cookies.forward #=> String, one of "none", "whitelist", "all"
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.cookies.whitelisted_names.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.cookies.whitelisted_names.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.cookies.whitelisted_names.items[0] #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.headers.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.headers.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.headers.items[0] #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.query_string_cache_keys.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.query_string_cache_keys.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.query_string_cache_keys.items[0] #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].min_ttl #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].default_ttl #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].max_ttl #=> Integer
+    #   resp.distribution_list.items[0].custom_error_responses.quantity #=> Integer
+    #   resp.distribution_list.items[0].custom_error_responses.items #=> Array
+    #   resp.distribution_list.items[0].custom_error_responses.items[0].error_code #=> Integer
+    #   resp.distribution_list.items[0].custom_error_responses.items[0].response_page_path #=> String
+    #   resp.distribution_list.items[0].custom_error_responses.items[0].response_code #=> String
+    #   resp.distribution_list.items[0].custom_error_responses.items[0].error_caching_min_ttl #=> Integer
+    #   resp.distribution_list.items[0].comment #=> String
+    #   resp.distribution_list.items[0].price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All", "None"
+    #   resp.distribution_list.items[0].enabled #=> Boolean
+    #   resp.distribution_list.items[0].viewer_certificate.cloud_front_default_certificate #=> Boolean
+    #   resp.distribution_list.items[0].viewer_certificate.iam_certificate_id #=> String
+    #   resp.distribution_list.items[0].viewer_certificate.acm_certificate_arn #=> String
+    #   resp.distribution_list.items[0].viewer_certificate.ssl_support_method #=> String, one of "sni-only", "vip", "static-ip"
+    #   resp.distribution_list.items[0].viewer_certificate.minimum_protocol_version #=> String, one of "SSLv3", "TLSv1", "TLSv1_2016", "TLSv1.1_2016", "TLSv1.2_2018", "TLSv1.2_2019", "TLSv1.2_2021", "TLSv1.3_2025", "TLSv1.2_2025"
+    #   resp.distribution_list.items[0].viewer_certificate.certificate #=> String
+    #   resp.distribution_list.items[0].viewer_certificate.certificate_source #=> String, one of "cloudfront", "iam", "acm"
+    #   resp.distribution_list.items[0].restrictions.geo_restriction.restriction_type #=> String, one of "blacklist", "whitelist", "none"
+    #   resp.distribution_list.items[0].restrictions.geo_restriction.quantity #=> Integer
+    #   resp.distribution_list.items[0].restrictions.geo_restriction.items #=> Array
+    #   resp.distribution_list.items[0].restrictions.geo_restriction.items[0] #=> String
+    #   resp.distribution_list.items[0].web_acl_id #=> String
+    #   resp.distribution_list.items[0].http_version #=> String, one of "http1.1", "http2", "http3", "http2and3"
+    #   resp.distribution_list.items[0].is_ipv6_enabled #=> Boolean
+    #   resp.distribution_list.items[0].alias_icp_recordals #=> Array
+    #   resp.distribution_list.items[0].alias_icp_recordals[0].cname #=> String
+    #   resp.distribution_list.items[0].alias_icp_recordals[0].icp_recordal_status #=> String, one of "APPROVED", "SUSPENDED", "PENDING"
+    #   resp.distribution_list.items[0].staging #=> Boolean
+    #   resp.distribution_list.items[0].connection_mode #=> String, one of "direct", "tenant-only"
+    #   resp.distribution_list.items[0].anycast_ip_list_id #=> String
+    #   resp.distribution_list.items[0].viewer_mtls_config.mode #=> String, one of "required", "optional", "passthrough"
+    #   resp.distribution_list.items[0].viewer_mtls_config.trust_store_config.trust_store_id #=> String
+    #   resp.distribution_list.items[0].viewer_mtls_config.trust_store_config.advertise_trust_store_ca_names #=> Boolean
+    #   resp.distribution_list.items[0].viewer_mtls_config.trust_store_config.ignore_certificate_expiry #=> Boolean
+    #   resp.distribution_list.items[0].connection_function_association.id #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListDistributionsByConnectionMode AWS API Documentation
+    #
+    # @overload list_distributions_by_connection_mode(params = {})
+    # @param [Hash] params ({})
+    def list_distributions_by_connection_mode(params = {}, options = {})
+      req = build_request(:list_distributions_by_connection_mode, params)
       req.send_request(options)
     end
 
@@ -6766,6 +8856,55 @@ module Aws::CloudFront
       req.send_request(options)
     end
 
+    # Lists the CloudFront distributions that are associated with the
+    # specified resource that you own.
+    #
+    # @option params [required, String] :resource_arn
+    #   The ARN of the CloudFront resource that you've shared with other
+    #   Amazon Web Services accounts.
+    #
+    # @option params [String] :marker
+    #   Use this field when paginating results to indicate where to begin in
+    #   your list of distributions. The response includes distributions in the
+    #   list that occur after the marker. To get the next page of the list,
+    #   set this field's value to the value of `NextMarker` from the current
+    #   page's response.
+    #
+    # @option params [Integer] :max_items
+    #   The maximum number of distributions to return.
+    #
+    # @return [Types::ListDistributionsByOwnedResourceResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListDistributionsByOwnedResourceResult#distribution_list #distribution_list} => Types::DistributionIdOwnerList
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_distributions_by_owned_resource({
+    #     resource_arn: "string", # required
+    #     marker: "string",
+    #     max_items: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.distribution_list.marker #=> String
+    #   resp.distribution_list.next_marker #=> String
+    #   resp.distribution_list.max_items #=> Integer
+    #   resp.distribution_list.is_truncated #=> Boolean
+    #   resp.distribution_list.quantity #=> Integer
+    #   resp.distribution_list.items #=> Array
+    #   resp.distribution_list.items[0].distribution_id #=> String
+    #   resp.distribution_list.items[0].owner_account_id #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListDistributionsByOwnedResource AWS API Documentation
+    #
+    # @overload list_distributions_by_owned_resource(params = {})
+    # @param [Hash] params ({})
+    def list_distributions_by_owned_resource(params = {}, options = {})
+      req = build_request(:list_distributions_by_owned_resource, params)
+      req.send_request(options)
+    end
+
     # Gets a list of distributions that have a cache behavior that's
     # associated with the specified real-time log configuration.
     #
@@ -6822,6 +8961,7 @@ module Aws::CloudFront
     #   resp.distribution_list.items #=> Array
     #   resp.distribution_list.items[0].id #=> String
     #   resp.distribution_list.items[0].arn #=> String
+    #   resp.distribution_list.items[0].etag #=> String
     #   resp.distribution_list.items[0].status #=> String
     #   resp.distribution_list.items[0].last_modified_time #=> Time
     #   resp.distribution_list.items[0].domain_name #=> String
@@ -6838,6 +8978,7 @@ module Aws::CloudFront
     #   resp.distribution_list.items[0].origins.items[0].custom_headers.items[0].header_name #=> String
     #   resp.distribution_list.items[0].origins.items[0].custom_headers.items[0].header_value #=> String
     #   resp.distribution_list.items[0].origins.items[0].s3_origin_config.origin_access_identity #=> String
+    #   resp.distribution_list.items[0].origins.items[0].s3_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.http_port #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.https_port #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_protocol_policy #=> String, one of "http-only", "match-viewer", "https-only"
@@ -6846,11 +8987,15 @@ module Aws::CloudFront
     #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_ssl_protocols.items[0] #=> String, one of "SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"
     #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_keepalive_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.ip_address_type #=> String, one of "ipv4", "ipv6", "dualstack"
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_mtls_config.client_certificate_arn #=> String
     #   resp.distribution_list.items[0].origins.items[0].vpc_origin_config.vpc_origin_id #=> String
+    #   resp.distribution_list.items[0].origins.items[0].vpc_origin_config.owner_account_id #=> String
     #   resp.distribution_list.items[0].origins.items[0].vpc_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].vpc_origin_config.origin_keepalive_timeout #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].connection_attempts #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].connection_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].response_completion_timeout #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].origin_shield.enabled #=> Boolean
     #   resp.distribution_list.items[0].origins.items[0].origin_shield.origin_shield_region #=> String
     #   resp.distribution_list.items[0].origins.items[0].origin_access_control_id #=> String
@@ -6968,13 +9113,13 @@ module Aws::CloudFront
     #   resp.distribution_list.items[0].custom_error_responses.items[0].response_code #=> String
     #   resp.distribution_list.items[0].custom_error_responses.items[0].error_caching_min_ttl #=> Integer
     #   resp.distribution_list.items[0].comment #=> String
-    #   resp.distribution_list.items[0].price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All"
+    #   resp.distribution_list.items[0].price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All", "None"
     #   resp.distribution_list.items[0].enabled #=> Boolean
     #   resp.distribution_list.items[0].viewer_certificate.cloud_front_default_certificate #=> Boolean
     #   resp.distribution_list.items[0].viewer_certificate.iam_certificate_id #=> String
     #   resp.distribution_list.items[0].viewer_certificate.acm_certificate_arn #=> String
     #   resp.distribution_list.items[0].viewer_certificate.ssl_support_method #=> String, one of "sni-only", "vip", "static-ip"
-    #   resp.distribution_list.items[0].viewer_certificate.minimum_protocol_version #=> String, one of "SSLv3", "TLSv1", "TLSv1_2016", "TLSv1.1_2016", "TLSv1.2_2018", "TLSv1.2_2019", "TLSv1.2_2021"
+    #   resp.distribution_list.items[0].viewer_certificate.minimum_protocol_version #=> String, one of "SSLv3", "TLSv1", "TLSv1_2016", "TLSv1.1_2016", "TLSv1.2_2018", "TLSv1.2_2019", "TLSv1.2_2021", "TLSv1.3_2025", "TLSv1.2_2025"
     #   resp.distribution_list.items[0].viewer_certificate.certificate #=> String
     #   resp.distribution_list.items[0].viewer_certificate.certificate_source #=> String, one of "cloudfront", "iam", "acm"
     #   resp.distribution_list.items[0].restrictions.geo_restriction.restriction_type #=> String, one of "blacklist", "whitelist", "none"
@@ -6988,7 +9133,13 @@ module Aws::CloudFront
     #   resp.distribution_list.items[0].alias_icp_recordals[0].cname #=> String
     #   resp.distribution_list.items[0].alias_icp_recordals[0].icp_recordal_status #=> String, one of "APPROVED", "SUSPENDED", "PENDING"
     #   resp.distribution_list.items[0].staging #=> Boolean
+    #   resp.distribution_list.items[0].connection_mode #=> String, one of "direct", "tenant-only"
     #   resp.distribution_list.items[0].anycast_ip_list_id #=> String
+    #   resp.distribution_list.items[0].viewer_mtls_config.mode #=> String, one of "required", "optional", "passthrough"
+    #   resp.distribution_list.items[0].viewer_mtls_config.trust_store_config.trust_store_id #=> String
+    #   resp.distribution_list.items[0].viewer_mtls_config.trust_store_config.advertise_trust_store_ca_names #=> Boolean
+    #   resp.distribution_list.items[0].viewer_mtls_config.trust_store_config.ignore_certificate_expiry #=> Boolean
+    #   resp.distribution_list.items[0].connection_function_association.id #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListDistributionsByRealtimeLogConfig AWS API Documentation
     #
@@ -7053,6 +9204,234 @@ module Aws::CloudFront
     # @param [Hash] params ({})
     def list_distributions_by_response_headers_policy_id(params = {}, options = {})
       req = build_request(:list_distributions_by_response_headers_policy_id, params)
+      req.send_request(options)
+    end
+
+    # Lists distributions by trust store.
+    #
+    # @option params [required, String] :trust_store_identifier
+    #   The distributions by trust store identifier.
+    #
+    # @option params [String] :marker
+    #   Use this field when paginating results to indicate where to begin in
+    #   your list. The response includes items in the list that occur after
+    #   the marker. To get the next page of the list, set this field's value
+    #   to the value of `NextMarker` from the current page's response.
+    #
+    # @option params [Integer] :max_items
+    #   The maximum number of distributions that you want returned in the
+    #   response.
+    #
+    # @return [Types::ListDistributionsByTrustStoreResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListDistributionsByTrustStoreResult#distribution_list #distribution_list} => Types::DistributionList
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_distributions_by_trust_store({
+    #     trust_store_identifier: "string", # required
+    #     marker: "string",
+    #     max_items: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.distribution_list.marker #=> String
+    #   resp.distribution_list.next_marker #=> String
+    #   resp.distribution_list.max_items #=> Integer
+    #   resp.distribution_list.is_truncated #=> Boolean
+    #   resp.distribution_list.quantity #=> Integer
+    #   resp.distribution_list.items #=> Array
+    #   resp.distribution_list.items[0].id #=> String
+    #   resp.distribution_list.items[0].arn #=> String
+    #   resp.distribution_list.items[0].etag #=> String
+    #   resp.distribution_list.items[0].status #=> String
+    #   resp.distribution_list.items[0].last_modified_time #=> Time
+    #   resp.distribution_list.items[0].domain_name #=> String
+    #   resp.distribution_list.items[0].aliases.quantity #=> Integer
+    #   resp.distribution_list.items[0].aliases.items #=> Array
+    #   resp.distribution_list.items[0].aliases.items[0] #=> String
+    #   resp.distribution_list.items[0].origins.quantity #=> Integer
+    #   resp.distribution_list.items[0].origins.items #=> Array
+    #   resp.distribution_list.items[0].origins.items[0].id #=> String
+    #   resp.distribution_list.items[0].origins.items[0].domain_name #=> String
+    #   resp.distribution_list.items[0].origins.items[0].origin_path #=> String
+    #   resp.distribution_list.items[0].origins.items[0].custom_headers.quantity #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].custom_headers.items #=> Array
+    #   resp.distribution_list.items[0].origins.items[0].custom_headers.items[0].header_name #=> String
+    #   resp.distribution_list.items[0].origins.items[0].custom_headers.items[0].header_value #=> String
+    #   resp.distribution_list.items[0].origins.items[0].s3_origin_config.origin_access_identity #=> String
+    #   resp.distribution_list.items[0].origins.items[0].s3_origin_config.origin_read_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.http_port #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.https_port #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_protocol_policy #=> String, one of "http-only", "match-viewer", "https-only"
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_ssl_protocols.quantity #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_ssl_protocols.items #=> Array
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_ssl_protocols.items[0] #=> String, one of "SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_read_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_keepalive_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.ip_address_type #=> String, one of "ipv4", "ipv6", "dualstack"
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_mtls_config.client_certificate_arn #=> String
+    #   resp.distribution_list.items[0].origins.items[0].vpc_origin_config.vpc_origin_id #=> String
+    #   resp.distribution_list.items[0].origins.items[0].vpc_origin_config.owner_account_id #=> String
+    #   resp.distribution_list.items[0].origins.items[0].vpc_origin_config.origin_read_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].vpc_origin_config.origin_keepalive_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].connection_attempts #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].connection_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].response_completion_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].origin_shield.enabled #=> Boolean
+    #   resp.distribution_list.items[0].origins.items[0].origin_shield.origin_shield_region #=> String
+    #   resp.distribution_list.items[0].origins.items[0].origin_access_control_id #=> String
+    #   resp.distribution_list.items[0].origin_groups.quantity #=> Integer
+    #   resp.distribution_list.items[0].origin_groups.items #=> Array
+    #   resp.distribution_list.items[0].origin_groups.items[0].id #=> String
+    #   resp.distribution_list.items[0].origin_groups.items[0].failover_criteria.status_codes.quantity #=> Integer
+    #   resp.distribution_list.items[0].origin_groups.items[0].failover_criteria.status_codes.items #=> Array
+    #   resp.distribution_list.items[0].origin_groups.items[0].failover_criteria.status_codes.items[0] #=> Integer
+    #   resp.distribution_list.items[0].origin_groups.items[0].members.quantity #=> Integer
+    #   resp.distribution_list.items[0].origin_groups.items[0].members.items #=> Array
+    #   resp.distribution_list.items[0].origin_groups.items[0].members.items[0].origin_id #=> String
+    #   resp.distribution_list.items[0].origin_groups.items[0].selection_criteria #=> String, one of "default", "media-quality-based"
+    #   resp.distribution_list.items[0].default_cache_behavior.target_origin_id #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.trusted_signers.enabled #=> Boolean
+    #   resp.distribution_list.items[0].default_cache_behavior.trusted_signers.quantity #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.trusted_signers.items #=> Array
+    #   resp.distribution_list.items[0].default_cache_behavior.trusted_signers.items[0] #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.trusted_key_groups.enabled #=> Boolean
+    #   resp.distribution_list.items[0].default_cache_behavior.trusted_key_groups.quantity #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.trusted_key_groups.items #=> Array
+    #   resp.distribution_list.items[0].default_cache_behavior.trusted_key_groups.items[0] #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.viewer_protocol_policy #=> String, one of "allow-all", "https-only", "redirect-to-https"
+    #   resp.distribution_list.items[0].default_cache_behavior.allowed_methods.quantity #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.allowed_methods.items #=> Array
+    #   resp.distribution_list.items[0].default_cache_behavior.allowed_methods.items[0] #=> String, one of "GET", "HEAD", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"
+    #   resp.distribution_list.items[0].default_cache_behavior.allowed_methods.cached_methods.quantity #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.allowed_methods.cached_methods.items #=> Array
+    #   resp.distribution_list.items[0].default_cache_behavior.allowed_methods.cached_methods.items[0] #=> String, one of "GET", "HEAD", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"
+    #   resp.distribution_list.items[0].default_cache_behavior.smooth_streaming #=> Boolean
+    #   resp.distribution_list.items[0].default_cache_behavior.compress #=> Boolean
+    #   resp.distribution_list.items[0].default_cache_behavior.lambda_function_associations.quantity #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.lambda_function_associations.items #=> Array
+    #   resp.distribution_list.items[0].default_cache_behavior.lambda_function_associations.items[0].lambda_function_arn #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.lambda_function_associations.items[0].event_type #=> String, one of "viewer-request", "viewer-response", "origin-request", "origin-response"
+    #   resp.distribution_list.items[0].default_cache_behavior.lambda_function_associations.items[0].include_body #=> Boolean
+    #   resp.distribution_list.items[0].default_cache_behavior.function_associations.quantity #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.function_associations.items #=> Array
+    #   resp.distribution_list.items[0].default_cache_behavior.function_associations.items[0].function_arn #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.function_associations.items[0].event_type #=> String, one of "viewer-request", "viewer-response", "origin-request", "origin-response"
+    #   resp.distribution_list.items[0].default_cache_behavior.field_level_encryption_id #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.realtime_log_config_arn #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.cache_policy_id #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.origin_request_policy_id #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.response_headers_policy_id #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.grpc_config.enabled #=> Boolean
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.query_string #=> Boolean
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.cookies.forward #=> String, one of "none", "whitelist", "all"
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.cookies.whitelisted_names.quantity #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.cookies.whitelisted_names.items #=> Array
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.cookies.whitelisted_names.items[0] #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.headers.quantity #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.headers.items #=> Array
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.headers.items[0] #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.query_string_cache_keys.quantity #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.query_string_cache_keys.items #=> Array
+    #   resp.distribution_list.items[0].default_cache_behavior.forwarded_values.query_string_cache_keys.items[0] #=> String
+    #   resp.distribution_list.items[0].default_cache_behavior.min_ttl #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.default_ttl #=> Integer
+    #   resp.distribution_list.items[0].default_cache_behavior.max_ttl #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].path_pattern #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].target_origin_id #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].trusted_signers.enabled #=> Boolean
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].trusted_signers.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].trusted_signers.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].trusted_signers.items[0] #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].trusted_key_groups.enabled #=> Boolean
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].trusted_key_groups.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].trusted_key_groups.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].trusted_key_groups.items[0] #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].viewer_protocol_policy #=> String, one of "allow-all", "https-only", "redirect-to-https"
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].allowed_methods.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].allowed_methods.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].allowed_methods.items[0] #=> String, one of "GET", "HEAD", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].allowed_methods.cached_methods.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].allowed_methods.cached_methods.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].allowed_methods.cached_methods.items[0] #=> String, one of "GET", "HEAD", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].smooth_streaming #=> Boolean
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].compress #=> Boolean
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].lambda_function_associations.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].lambda_function_associations.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].lambda_function_associations.items[0].lambda_function_arn #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].lambda_function_associations.items[0].event_type #=> String, one of "viewer-request", "viewer-response", "origin-request", "origin-response"
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].lambda_function_associations.items[0].include_body #=> Boolean
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].function_associations.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].function_associations.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].function_associations.items[0].function_arn #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].function_associations.items[0].event_type #=> String, one of "viewer-request", "viewer-response", "origin-request", "origin-response"
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].field_level_encryption_id #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].realtime_log_config_arn #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].cache_policy_id #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].origin_request_policy_id #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].response_headers_policy_id #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].grpc_config.enabled #=> Boolean
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.query_string #=> Boolean
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.cookies.forward #=> String, one of "none", "whitelist", "all"
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.cookies.whitelisted_names.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.cookies.whitelisted_names.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.cookies.whitelisted_names.items[0] #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.headers.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.headers.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.headers.items[0] #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.query_string_cache_keys.quantity #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.query_string_cache_keys.items #=> Array
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].forwarded_values.query_string_cache_keys.items[0] #=> String
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].min_ttl #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].default_ttl #=> Integer
+    #   resp.distribution_list.items[0].cache_behaviors.items[0].max_ttl #=> Integer
+    #   resp.distribution_list.items[0].custom_error_responses.quantity #=> Integer
+    #   resp.distribution_list.items[0].custom_error_responses.items #=> Array
+    #   resp.distribution_list.items[0].custom_error_responses.items[0].error_code #=> Integer
+    #   resp.distribution_list.items[0].custom_error_responses.items[0].response_page_path #=> String
+    #   resp.distribution_list.items[0].custom_error_responses.items[0].response_code #=> String
+    #   resp.distribution_list.items[0].custom_error_responses.items[0].error_caching_min_ttl #=> Integer
+    #   resp.distribution_list.items[0].comment #=> String
+    #   resp.distribution_list.items[0].price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All", "None"
+    #   resp.distribution_list.items[0].enabled #=> Boolean
+    #   resp.distribution_list.items[0].viewer_certificate.cloud_front_default_certificate #=> Boolean
+    #   resp.distribution_list.items[0].viewer_certificate.iam_certificate_id #=> String
+    #   resp.distribution_list.items[0].viewer_certificate.acm_certificate_arn #=> String
+    #   resp.distribution_list.items[0].viewer_certificate.ssl_support_method #=> String, one of "sni-only", "vip", "static-ip"
+    #   resp.distribution_list.items[0].viewer_certificate.minimum_protocol_version #=> String, one of "SSLv3", "TLSv1", "TLSv1_2016", "TLSv1.1_2016", "TLSv1.2_2018", "TLSv1.2_2019", "TLSv1.2_2021", "TLSv1.3_2025", "TLSv1.2_2025"
+    #   resp.distribution_list.items[0].viewer_certificate.certificate #=> String
+    #   resp.distribution_list.items[0].viewer_certificate.certificate_source #=> String, one of "cloudfront", "iam", "acm"
+    #   resp.distribution_list.items[0].restrictions.geo_restriction.restriction_type #=> String, one of "blacklist", "whitelist", "none"
+    #   resp.distribution_list.items[0].restrictions.geo_restriction.quantity #=> Integer
+    #   resp.distribution_list.items[0].restrictions.geo_restriction.items #=> Array
+    #   resp.distribution_list.items[0].restrictions.geo_restriction.items[0] #=> String
+    #   resp.distribution_list.items[0].web_acl_id #=> String
+    #   resp.distribution_list.items[0].http_version #=> String, one of "http1.1", "http2", "http3", "http2and3"
+    #   resp.distribution_list.items[0].is_ipv6_enabled #=> Boolean
+    #   resp.distribution_list.items[0].alias_icp_recordals #=> Array
+    #   resp.distribution_list.items[0].alias_icp_recordals[0].cname #=> String
+    #   resp.distribution_list.items[0].alias_icp_recordals[0].icp_recordal_status #=> String, one of "APPROVED", "SUSPENDED", "PENDING"
+    #   resp.distribution_list.items[0].staging #=> Boolean
+    #   resp.distribution_list.items[0].connection_mode #=> String, one of "direct", "tenant-only"
+    #   resp.distribution_list.items[0].anycast_ip_list_id #=> String
+    #   resp.distribution_list.items[0].viewer_mtls_config.mode #=> String, one of "required", "optional", "passthrough"
+    #   resp.distribution_list.items[0].viewer_mtls_config.trust_store_config.trust_store_id #=> String
+    #   resp.distribution_list.items[0].viewer_mtls_config.trust_store_config.advertise_trust_store_ca_names #=> Boolean
+    #   resp.distribution_list.items[0].viewer_mtls_config.trust_store_config.ignore_certificate_expiry #=> Boolean
+    #   resp.distribution_list.items[0].connection_function_association.id #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListDistributionsByTrustStore AWS API Documentation
+    #
+    # @overload list_distributions_by_trust_store(params = {})
+    # @param [Hash] params ({})
+    def list_distributions_by_trust_store(params = {}, options = {})
+      req = build_request(:list_distributions_by_trust_store, params)
       req.send_request(options)
     end
 
@@ -7167,6 +9546,7 @@ module Aws::CloudFront
     #   resp.distribution_list.items #=> Array
     #   resp.distribution_list.items[0].id #=> String
     #   resp.distribution_list.items[0].arn #=> String
+    #   resp.distribution_list.items[0].etag #=> String
     #   resp.distribution_list.items[0].status #=> String
     #   resp.distribution_list.items[0].last_modified_time #=> Time
     #   resp.distribution_list.items[0].domain_name #=> String
@@ -7183,6 +9563,7 @@ module Aws::CloudFront
     #   resp.distribution_list.items[0].origins.items[0].custom_headers.items[0].header_name #=> String
     #   resp.distribution_list.items[0].origins.items[0].custom_headers.items[0].header_value #=> String
     #   resp.distribution_list.items[0].origins.items[0].s3_origin_config.origin_access_identity #=> String
+    #   resp.distribution_list.items[0].origins.items[0].s3_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.http_port #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.https_port #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_protocol_policy #=> String, one of "http-only", "match-viewer", "https-only"
@@ -7191,11 +9572,15 @@ module Aws::CloudFront
     #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_ssl_protocols.items[0] #=> String, one of "SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"
     #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_keepalive_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.ip_address_type #=> String, one of "ipv4", "ipv6", "dualstack"
+    #   resp.distribution_list.items[0].origins.items[0].custom_origin_config.origin_mtls_config.client_certificate_arn #=> String
     #   resp.distribution_list.items[0].origins.items[0].vpc_origin_config.vpc_origin_id #=> String
+    #   resp.distribution_list.items[0].origins.items[0].vpc_origin_config.owner_account_id #=> String
     #   resp.distribution_list.items[0].origins.items[0].vpc_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].vpc_origin_config.origin_keepalive_timeout #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].connection_attempts #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].connection_timeout #=> Integer
+    #   resp.distribution_list.items[0].origins.items[0].response_completion_timeout #=> Integer
     #   resp.distribution_list.items[0].origins.items[0].origin_shield.enabled #=> Boolean
     #   resp.distribution_list.items[0].origins.items[0].origin_shield.origin_shield_region #=> String
     #   resp.distribution_list.items[0].origins.items[0].origin_access_control_id #=> String
@@ -7313,13 +9698,13 @@ module Aws::CloudFront
     #   resp.distribution_list.items[0].custom_error_responses.items[0].response_code #=> String
     #   resp.distribution_list.items[0].custom_error_responses.items[0].error_caching_min_ttl #=> Integer
     #   resp.distribution_list.items[0].comment #=> String
-    #   resp.distribution_list.items[0].price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All"
+    #   resp.distribution_list.items[0].price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All", "None"
     #   resp.distribution_list.items[0].enabled #=> Boolean
     #   resp.distribution_list.items[0].viewer_certificate.cloud_front_default_certificate #=> Boolean
     #   resp.distribution_list.items[0].viewer_certificate.iam_certificate_id #=> String
     #   resp.distribution_list.items[0].viewer_certificate.acm_certificate_arn #=> String
     #   resp.distribution_list.items[0].viewer_certificate.ssl_support_method #=> String, one of "sni-only", "vip", "static-ip"
-    #   resp.distribution_list.items[0].viewer_certificate.minimum_protocol_version #=> String, one of "SSLv3", "TLSv1", "TLSv1_2016", "TLSv1.1_2016", "TLSv1.2_2018", "TLSv1.2_2019", "TLSv1.2_2021"
+    #   resp.distribution_list.items[0].viewer_certificate.minimum_protocol_version #=> String, one of "SSLv3", "TLSv1", "TLSv1_2016", "TLSv1.1_2016", "TLSv1.2_2018", "TLSv1.2_2019", "TLSv1.2_2021", "TLSv1.3_2025", "TLSv1.2_2025"
     #   resp.distribution_list.items[0].viewer_certificate.certificate #=> String
     #   resp.distribution_list.items[0].viewer_certificate.certificate_source #=> String, one of "cloudfront", "iam", "acm"
     #   resp.distribution_list.items[0].restrictions.geo_restriction.restriction_type #=> String, one of "blacklist", "whitelist", "none"
@@ -7333,7 +9718,13 @@ module Aws::CloudFront
     #   resp.distribution_list.items[0].alias_icp_recordals[0].cname #=> String
     #   resp.distribution_list.items[0].alias_icp_recordals[0].icp_recordal_status #=> String, one of "APPROVED", "SUSPENDED", "PENDING"
     #   resp.distribution_list.items[0].staging #=> Boolean
+    #   resp.distribution_list.items[0].connection_mode #=> String, one of "direct", "tenant-only"
     #   resp.distribution_list.items[0].anycast_ip_list_id #=> String
+    #   resp.distribution_list.items[0].viewer_mtls_config.mode #=> String, one of "required", "optional", "passthrough"
+    #   resp.distribution_list.items[0].viewer_mtls_config.trust_store_config.trust_store_id #=> String
+    #   resp.distribution_list.items[0].viewer_mtls_config.trust_store_config.advertise_trust_store_ca_names #=> Boolean
+    #   resp.distribution_list.items[0].viewer_mtls_config.trust_store_config.ignore_certificate_expiry #=> Boolean
+    #   resp.distribution_list.items[0].connection_function_association.id #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListDistributionsByWebACLId AWS API Documentation
     #
@@ -7341,6 +9732,99 @@ module Aws::CloudFront
     # @param [Hash] params ({})
     def list_distributions_by_web_acl_id(params = {}, options = {})
       req = build_request(:list_distributions_by_web_acl_id, params)
+      req.send_request(options)
+    end
+
+    # <note markdown="1"> We recommend that you use the
+    # `ListDomainConflicts` API operation to
+    # check for domain conflicts, as it supports both standard distributions
+    # and distribution tenants. [ListConflictingAliases][1] performs similar
+    # checks but only supports standard distributions.
+    #
+    #  </note>
+    #
+    #  Lists existing domain associations that conflict with the domain that
+    # you specify.
+    #
+    #  You can use this API operation to identify potential domain conflicts
+    # when moving domains between standard distributions and/or distribution
+    # tenants. Domain conflicts must be resolved first before they can be
+    # moved.
+    #
+    #  For example, if you provide `www.example.com` as input, the returned
+    # list can include `www.example.com` and the overlapping wildcard
+    # alternate domain name (`.example.com</code>), if they exist. If you
+    # provide </em>.example.com as input, the returned list can include
+    # *.example.com and any alternate domain names covered by that wildcard
+    # (for example, www.example.com, test.example.com, dev.example.com, and
+    # so on), if they exist.</p> To list conflicting domains, specify the
+    # following:   The domain to search for   The ID of a standard
+    # distribution or distribution tenant in your account that has an
+    # attached TLS certificate, which covers the specified domain   For more
+    # information, including how to set up the standard distribution or
+    # distribution tenant, and the certificate, see Moving an alternate
+    # domain name to a different standard distribution or distribution
+    # tenant in the Amazon CloudFront Developer Guide. You can optionally
+    # specify the maximum number of items to receive in the response. If the
+    # total number of items in the list exceeds the maximum that you
+    # specify, or the default maximum, the response is paginated. To get the
+    # next page of items, send a subsequent request that specifies the
+    # NextMarker value from the current response as the Marker value in the
+    # subsequent request.</p>
+    # `
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_ListConflictingAliases.html
+    #
+    # @option params [required, String] :domain
+    #   The domain to check for conflicts.
+    #
+    # @option params [required, Types::DistributionResourceId] :domain_control_validation_resource
+    #   The distribution resource identifier. This can be the standard
+    #   distribution or distribution tenant that has a valid certificate,
+    #   which covers the domain that you specify.
+    #
+    # @option params [Integer] :max_items
+    #   The maximum number of domain conflicts to return.
+    #
+    # @option params [String] :marker
+    #   The marker for the next set of domain conflicts.
+    #
+    # @return [Types::ListDomainConflictsResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListDomainConflictsResult#domain_conflicts #domain_conflicts} => Array&lt;Types::DomainConflict&gt;
+    #   * {Types::ListDomainConflictsResult#next_marker #next_marker} => String
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_domain_conflicts({
+    #     domain: "string", # required
+    #     domain_control_validation_resource: { # required
+    #       distribution_id: "string",
+    #       distribution_tenant_id: "string",
+    #     },
+    #     max_items: 1,
+    #     marker: "string",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.domain_conflicts #=> Array
+    #   resp.domain_conflicts[0].domain #=> String
+    #   resp.domain_conflicts[0].resource_type #=> String, one of "distribution", "distribution-tenant"
+    #   resp.domain_conflicts[0].resource_id #=> String
+    #   resp.domain_conflicts[0].account_id #=> String
+    #   resp.next_marker #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListDomainConflicts AWS API Documentation
+    #
+    # @overload list_domain_conflicts(params = {})
+    # @param [Hash] params ({})
+    def list_domain_conflicts(params = {}, options = {})
+      req = build_request(:list_domain_conflicts, params)
       req.send_request(options)
     end
 
@@ -7572,6 +10056,60 @@ module Aws::CloudFront
       req.send_request(options)
     end
 
+    # Lists the invalidations for a distribution tenant.
+    #
+    # @option params [required, String] :id
+    #   The ID of the distribution tenant.
+    #
+    # @option params [String] :marker
+    #   Use this parameter when paginating results to indicate where to begin
+    #   in your list of invalidation batches. Because the results are returned
+    #   in decreasing order from most recent to oldest, the most recent
+    #   results are on the first page, the second page will contain earlier
+    #   results, and so on. To get the next page of results, set `Marker` to
+    #   the value of the `NextMarker` from the current page's response. This
+    #   value is the same as the ID of the last invalidation batch on that
+    #   page.
+    #
+    # @option params [Integer] :max_items
+    #   The maximum number of invalidations to return for the distribution
+    #   tenant.
+    #
+    # @return [Types::ListInvalidationsForDistributionTenantResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListInvalidationsForDistributionTenantResult#invalidation_list #invalidation_list} => Types::InvalidationList
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_invalidations_for_distribution_tenant({
+    #     id: "string", # required
+    #     marker: "string",
+    #     max_items: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.invalidation_list.marker #=> String
+    #   resp.invalidation_list.next_marker #=> String
+    #   resp.invalidation_list.max_items #=> Integer
+    #   resp.invalidation_list.is_truncated #=> Boolean
+    #   resp.invalidation_list.quantity #=> Integer
+    #   resp.invalidation_list.items #=> Array
+    #   resp.invalidation_list.items[0].id #=> String
+    #   resp.invalidation_list.items[0].create_time #=> Time
+    #   resp.invalidation_list.items[0].status #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListInvalidationsForDistributionTenant AWS API Documentation
+    #
+    # @overload list_invalidations_for_distribution_tenant(params = {})
+    # @param [Hash] params ({})
+    def list_invalidations_for_distribution_tenant(params = {}, options = {})
+      req = build_request(:list_invalidations_for_distribution_tenant, params)
+      req.send_request(options)
+    end
+
     # Gets a list of key groups.
     #
     # You can optionally specify the maximum number of items to receive in
@@ -7729,6 +10267,8 @@ module Aws::CloudFront
     # @return [Types::ListOriginAccessControlsResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::ListOriginAccessControlsResult#origin_access_control_list #origin_access_control_list} => Types::OriginAccessControlList
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
     #
     # @example Request syntax with placeholder values
     #
@@ -8095,7 +10635,7 @@ module Aws::CloudFront
     #   resp.streaming_distribution_list.items[0].trusted_signers.items #=> Array
     #   resp.streaming_distribution_list.items[0].trusted_signers.items[0] #=> String
     #   resp.streaming_distribution_list.items[0].comment #=> String
-    #   resp.streaming_distribution_list.items[0].price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All"
+    #   resp.streaming_distribution_list.items[0].price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All", "None"
     #   resp.streaming_distribution_list.items[0].enabled #=> Boolean
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListStreamingDistributions AWS API Documentation
@@ -8140,6 +10680,54 @@ module Aws::CloudFront
     # @param [Hash] params ({})
     def list_tags_for_resource(params = {}, options = {})
       req = build_request(:list_tags_for_resource, params)
+      req.send_request(options)
+    end
+
+    # Lists trust stores.
+    #
+    # @option params [String] :marker
+    #   Use this field when paginating results to indicate where to begin in
+    #   your list. The response includes items in the list that occur after
+    #   the marker. To get the next page of the list, set this field's value
+    #   to the value of `NextMarker` from the current page's response.
+    #
+    # @option params [Integer] :max_items
+    #   The maximum number of trust stores that you want returned in the
+    #   response.
+    #
+    # @return [Types::ListTrustStoresResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListTrustStoresResult#next_marker #next_marker} => String
+    #   * {Types::ListTrustStoresResult#trust_store_list #trust_store_list} => Array&lt;Types::TrustStoreSummary&gt;
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_trust_stores({
+    #     marker: "string",
+    #     max_items: 1,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.next_marker #=> String
+    #   resp.trust_store_list #=> Array
+    #   resp.trust_store_list[0].id #=> String
+    #   resp.trust_store_list[0].arn #=> String
+    #   resp.trust_store_list[0].name #=> String
+    #   resp.trust_store_list[0].status #=> String, one of "pending", "active", "failed"
+    #   resp.trust_store_list[0].number_of_ca_certificates #=> Integer
+    #   resp.trust_store_list[0].last_modified_time #=> Time
+    #   resp.trust_store_list[0].reason #=> String
+    #   resp.trust_store_list[0].etag #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListTrustStores AWS API Documentation
+    #
+    # @overload list_trust_stores(params = {})
+    # @param [Hash] params ({})
+    def list_trust_stores(params = {}, options = {})
+      req = build_request(:list_trust_stores, params)
       req.send_request(options)
     end
 
@@ -8205,6 +10793,7 @@ module Aws::CloudFront
     #   resp.vpc_origin_list.items[0].created_time #=> Time
     #   resp.vpc_origin_list.items[0].last_modified_time #=> Time
     #   resp.vpc_origin_list.items[0].arn #=> String
+    #   resp.vpc_origin_list.items[0].account_id #=> String
     #   resp.vpc_origin_list.items[0].origin_endpoint_arn #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListVpcOrigins AWS API Documentation
@@ -8213,6 +10802,49 @@ module Aws::CloudFront
     # @param [Hash] params ({})
     def list_vpc_origins(params = {}, options = {})
       req = build_request(:list_vpc_origins, params)
+      req.send_request(options)
+    end
+
+    # Publishes a connection function.
+    #
+    # @option params [required, String] :id
+    #   The connection function ID.
+    #
+    # @option params [required, String] :if_match
+    #   The current version (`ETag` value) of the connection function.
+    #
+    # @return [Types::PublishConnectionFunctionResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::PublishConnectionFunctionResult#connection_function_summary #connection_function_summary} => Types::ConnectionFunctionSummary
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.publish_connection_function({
+    #     id: "ResourceId", # required
+    #     if_match: "string", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.connection_function_summary.name #=> String
+    #   resp.connection_function_summary.id #=> String
+    #   resp.connection_function_summary.connection_function_config.comment #=> String
+    #   resp.connection_function_summary.connection_function_config.runtime #=> String, one of "cloudfront-js-1.0", "cloudfront-js-2.0"
+    #   resp.connection_function_summary.connection_function_config.key_value_store_associations.quantity #=> Integer
+    #   resp.connection_function_summary.connection_function_config.key_value_store_associations.items #=> Array
+    #   resp.connection_function_summary.connection_function_config.key_value_store_associations.items[0].key_value_store_arn #=> String
+    #   resp.connection_function_summary.connection_function_arn #=> String
+    #   resp.connection_function_summary.status #=> String
+    #   resp.connection_function_summary.stage #=> String, one of "DEVELOPMENT", "LIVE"
+    #   resp.connection_function_summary.created_time #=> Time
+    #   resp.connection_function_summary.last_modified_time #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/PublishConnectionFunction AWS API Documentation
+    #
+    # @overload publish_connection_function(params = {})
+    # @param [Hash] params ({})
+    def publish_connection_function(params = {}, options = {})
+      req = build_request(:publish_connection_function, params)
       req.send_request(options)
     end
 
@@ -8243,7 +10875,7 @@ module Aws::CloudFront
     # @example Request syntax with placeholder values
     #
     #   resp = client.publish_function({
-    #     name: "string", # required
+    #     name: "FunctionName", # required
     #     if_match: "string", # required
     #   })
     #
@@ -8267,6 +10899,39 @@ module Aws::CloudFront
     # @param [Hash] params ({})
     def publish_function(params = {}, options = {})
       req = build_request(:publish_function, params)
+      req.send_request(options)
+    end
+
+    # Creates a resource control policy for a given CloudFront resource.
+    #
+    # @option params [required, String] :resource_arn
+    #   The Amazon Resource Name (ARN) of the CloudFront resource for which
+    #   the policy is being created.
+    #
+    # @option params [required, String] :policy_document
+    #   The JSON-formatted resource policy to create.
+    #
+    # @return [Types::PutResourcePolicyResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::PutResourcePolicyResult#resource_arn #resource_arn} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.put_resource_policy({
+    #     resource_arn: "string", # required
+    #     policy_document: "string", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.resource_arn #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/PutResourcePolicy AWS API Documentation
+    #
+    # @overload put_resource_policy(params = {})
+    # @param [Hash] params ({})
+    def put_resource_policy(params = {}, options = {})
+      req = build_request(:put_resource_policy, params)
       req.send_request(options)
     end
 
@@ -8305,6 +10970,62 @@ module Aws::CloudFront
     # @param [Hash] params ({})
     def tag_resource(params = {}, options = {})
       req = build_request(:tag_resource, params)
+      req.send_request(options)
+    end
+
+    # Tests a connection function.
+    #
+    # @option params [required, String] :id
+    #   The connection function ID.
+    #
+    # @option params [required, String] :if_match
+    #   The current version (`ETag` value) of the connection function.
+    #
+    # @option params [String] :stage
+    #   The connection function stage.
+    #
+    # @option params [required, String, StringIO, File] :connection_object
+    #   The connection object.
+    #
+    # @return [Types::TestConnectionFunctionResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::TestConnectionFunctionResult#connection_function_test_result #connection_function_test_result} => Types::ConnectionFunctionTestResult
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.test_connection_function({
+    #     id: "ResourceId", # required
+    #     if_match: "string", # required
+    #     stage: "DEVELOPMENT", # accepts DEVELOPMENT, LIVE
+    #     connection_object: "data", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.connection_function_test_result.connection_function_summary.name #=> String
+    #   resp.connection_function_test_result.connection_function_summary.id #=> String
+    #   resp.connection_function_test_result.connection_function_summary.connection_function_config.comment #=> String
+    #   resp.connection_function_test_result.connection_function_summary.connection_function_config.runtime #=> String, one of "cloudfront-js-1.0", "cloudfront-js-2.0"
+    #   resp.connection_function_test_result.connection_function_summary.connection_function_config.key_value_store_associations.quantity #=> Integer
+    #   resp.connection_function_test_result.connection_function_summary.connection_function_config.key_value_store_associations.items #=> Array
+    #   resp.connection_function_test_result.connection_function_summary.connection_function_config.key_value_store_associations.items[0].key_value_store_arn #=> String
+    #   resp.connection_function_test_result.connection_function_summary.connection_function_arn #=> String
+    #   resp.connection_function_test_result.connection_function_summary.status #=> String
+    #   resp.connection_function_test_result.connection_function_summary.stage #=> String, one of "DEVELOPMENT", "LIVE"
+    #   resp.connection_function_test_result.connection_function_summary.created_time #=> Time
+    #   resp.connection_function_test_result.connection_function_summary.last_modified_time #=> Time
+    #   resp.connection_function_test_result.compute_utilization #=> String
+    #   resp.connection_function_test_result.connection_function_execution_logs #=> Array
+    #   resp.connection_function_test_result.connection_function_execution_logs[0] #=> String
+    #   resp.connection_function_test_result.connection_function_error_message #=> String
+    #   resp.connection_function_test_result.connection_function_output #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/TestConnectionFunction AWS API Documentation
+    #
+    # @overload test_connection_function(params = {})
+    # @param [Hash] params ({})
+    def test_connection_function(params = {}, options = {})
+      req = build_request(:test_connection_function, params)
       req.send_request(options)
     end
 
@@ -8354,7 +11075,7 @@ module Aws::CloudFront
     # @example Request syntax with placeholder values
     #
     #   resp = client.test_function({
-    #     name: "string", # required
+    #     name: "FunctionName", # required
     #     if_match: "string", # required
     #     stage: "DEVELOPMENT", # accepts DEVELOPMENT, LIVE
     #     event_object: "data", # required
@@ -8422,6 +11143,78 @@ module Aws::CloudFront
       req.send_request(options)
     end
 
+    # Updates an Anycast static IP list.
+    #
+    # @option params [required, String] :id
+    #   The ID of the Anycast static IP list.
+    #
+    # @option params [String] :ip_address_type
+    #   The IP address type for the Anycast static IP list. You can specify
+    #   one of the following options:
+    #
+    #   * `ipv4` only
+    #
+    #   * `ipv6` only
+    #
+    #   * `dualstack` - Allocate a list of both IPv4 and IPv6 addresses
+    #
+    # @option params [Array<Types::IpamCidrConfig>] :ipam_cidr_configs
+    #   A list of IPAM CIDR configurations that specify the IP address ranges
+    #   and IPAM pool settings for updating the Anycast static IP list.
+    #
+    # @option params [required, String] :if_match
+    #   The current version (ETag value) of the Anycast static IP list that
+    #   you are updating.
+    #
+    # @return [Types::UpdateAnycastIpListResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateAnycastIpListResult#anycast_ip_list #anycast_ip_list} => Types::AnycastIpList
+    #   * {Types::UpdateAnycastIpListResult#etag #etag} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_anycast_ip_list({
+    #     id: "string", # required
+    #     ip_address_type: "ipv4", # accepts ipv4, ipv6, dualstack
+    #     ipam_cidr_configs: [
+    #       {
+    #         cidr: "string", # required
+    #         ipam_pool_arn: "string", # required
+    #         anycast_ip: "string",
+    #         status: "provisioned", # accepts provisioned, failed-provision, provisioning, deprovisioned, failed-deprovision, deprovisioning, advertised, failed-advertise, advertising, withdrawn, failed-withdraw, withdrawing
+    #       },
+    #     ],
+    #     if_match: "string", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.anycast_ip_list.id #=> String
+    #   resp.anycast_ip_list.name #=> String
+    #   resp.anycast_ip_list.status #=> String
+    #   resp.anycast_ip_list.arn #=> String
+    #   resp.anycast_ip_list.ip_address_type #=> String, one of "ipv4", "ipv6", "dualstack"
+    #   resp.anycast_ip_list.ipam_config.quantity #=> Integer
+    #   resp.anycast_ip_list.ipam_config.ipam_cidr_configs #=> Array
+    #   resp.anycast_ip_list.ipam_config.ipam_cidr_configs[0].cidr #=> String
+    #   resp.anycast_ip_list.ipam_config.ipam_cidr_configs[0].ipam_pool_arn #=> String
+    #   resp.anycast_ip_list.ipam_config.ipam_cidr_configs[0].anycast_ip #=> String
+    #   resp.anycast_ip_list.ipam_config.ipam_cidr_configs[0].status #=> String, one of "provisioned", "failed-provision", "provisioning", "deprovisioned", "failed-deprovision", "deprovisioning", "advertised", "failed-advertise", "advertising", "withdrawn", "failed-withdraw", "withdrawing"
+    #   resp.anycast_ip_list.anycast_ips #=> Array
+    #   resp.anycast_ip_list.anycast_ips[0] #=> String
+    #   resp.anycast_ip_list.ip_count #=> Integer
+    #   resp.anycast_ip_list.last_modified_time #=> Time
+    #   resp.etag #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/UpdateAnycastIpList AWS API Documentation
+    #
+    # @overload update_anycast_ip_list(params = {})
+    # @param [Hash] params ({})
+    def update_anycast_ip_list(params = {}, options = {})
+      req = build_request(:update_anycast_ip_list, params)
+      req.send_request(options)
+    end
+
     # Updates a cache policy configuration.
     #
     # When you update a cache policy configuration, all the fields are
@@ -8437,6 +11230,11 @@ module Aws::CloudFront
     # 3.  Call `UpdateCachePolicy` by providing the entire cache policy
     #     configuration, including the fields that you modified and those
     #     that you didn't.
+    #
+    # If your minimum TTL is greater than 0, CloudFront will cache content
+    # for at least the duration specified in the cache policy's minimum
+    # TTL, even if the `Cache-Control: no-cache`, `no-store`, or `private`
+    # directives are present in the origin headers.
     #
     # @option params [required, Types::CachePolicyConfig] :cache_policy_config
     #   A cache policy configuration.
@@ -8571,6 +11369,136 @@ module Aws::CloudFront
     # @param [Hash] params ({})
     def update_cloud_front_origin_access_identity(params = {}, options = {})
       req = build_request(:update_cloud_front_origin_access_identity, params)
+      req.send_request(options)
+    end
+
+    # Updates a connection function.
+    #
+    # @option params [required, String] :id
+    #   The connection function ID.
+    #
+    # @option params [required, String] :if_match
+    #   The current version (`ETag` value) of the connection function you are
+    #   updating.
+    #
+    # @option params [required, Types::FunctionConfig] :connection_function_config
+    #   Contains configuration information about a CloudFront function.
+    #
+    # @option params [required, String, StringIO, File] :connection_function_code
+    #   The connection function code.
+    #
+    # @return [Types::UpdateConnectionFunctionResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateConnectionFunctionResult#connection_function_summary #connection_function_summary} => Types::ConnectionFunctionSummary
+    #   * {Types::UpdateConnectionFunctionResult#etag #etag} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_connection_function({
+    #     id: "ResourceId", # required
+    #     if_match: "string", # required
+    #     connection_function_config: { # required
+    #       comment: "string", # required
+    #       runtime: "cloudfront-js-1.0", # required, accepts cloudfront-js-1.0, cloudfront-js-2.0
+    #       key_value_store_associations: {
+    #         quantity: 1, # required
+    #         items: [
+    #           {
+    #             key_value_store_arn: "KeyValueStoreARN", # required
+    #           },
+    #         ],
+    #       },
+    #     },
+    #     connection_function_code: "data", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.connection_function_summary.name #=> String
+    #   resp.connection_function_summary.id #=> String
+    #   resp.connection_function_summary.connection_function_config.comment #=> String
+    #   resp.connection_function_summary.connection_function_config.runtime #=> String, one of "cloudfront-js-1.0", "cloudfront-js-2.0"
+    #   resp.connection_function_summary.connection_function_config.key_value_store_associations.quantity #=> Integer
+    #   resp.connection_function_summary.connection_function_config.key_value_store_associations.items #=> Array
+    #   resp.connection_function_summary.connection_function_config.key_value_store_associations.items[0].key_value_store_arn #=> String
+    #   resp.connection_function_summary.connection_function_arn #=> String
+    #   resp.connection_function_summary.status #=> String
+    #   resp.connection_function_summary.stage #=> String, one of "DEVELOPMENT", "LIVE"
+    #   resp.connection_function_summary.created_time #=> Time
+    #   resp.connection_function_summary.last_modified_time #=> Time
+    #   resp.etag #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/UpdateConnectionFunction AWS API Documentation
+    #
+    # @overload update_connection_function(params = {})
+    # @param [Hash] params ({})
+    def update_connection_function(params = {}, options = {})
+      req = build_request(:update_connection_function, params)
+      req.send_request(options)
+    end
+
+    # Updates a connection group.
+    #
+    # @option params [required, String] :id
+    #   The ID of the connection group.
+    #
+    # @option params [Boolean] :ipv_6_enabled
+    #   Enable IPv6 for the connection group. For more information, see
+    #   [Enable IPv6][1] in the *Amazon CloudFront Developer Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html#DownloadDistValuesEnableIPv6
+    #
+    # @option params [required, String] :if_match
+    #   The value of the `ETag` header that you received when retrieving the
+    #   connection group that you're updating.
+    #
+    # @option params [String] :anycast_ip_list_id
+    #   The ID of the Anycast static IP list.
+    #
+    # @option params [Boolean] :enabled
+    #   Whether the connection group is enabled.
+    #
+    # @return [Types::UpdateConnectionGroupResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateConnectionGroupResult#connection_group #connection_group} => Types::ConnectionGroup
+    #   * {Types::UpdateConnectionGroupResult#etag #etag} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_connection_group({
+    #     id: "string", # required
+    #     ipv_6_enabled: false,
+    #     if_match: "string", # required
+    #     anycast_ip_list_id: "string",
+    #     enabled: false,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.connection_group.id #=> String
+    #   resp.connection_group.name #=> String
+    #   resp.connection_group.arn #=> String
+    #   resp.connection_group.created_time #=> Time
+    #   resp.connection_group.last_modified_time #=> Time
+    #   resp.connection_group.tags.items #=> Array
+    #   resp.connection_group.tags.items[0].key #=> String
+    #   resp.connection_group.tags.items[0].value #=> String
+    #   resp.connection_group.ipv_6_enabled #=> Boolean
+    #   resp.connection_group.routing_endpoint #=> String
+    #   resp.connection_group.anycast_ip_list_id #=> String
+    #   resp.connection_group.status #=> String
+    #   resp.connection_group.enabled #=> Boolean
+    #   resp.connection_group.is_default #=> Boolean
+    #   resp.etag #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/UpdateConnectionGroup AWS API Documentation
+    #
+    # @overload update_connection_group(params = {})
+    # @param [Hash] params ({})
+    def update_connection_group(params = {}, options = {})
+      req = build_request(:update_connection_group, params)
       req.send_request(options)
     end
 
@@ -8733,6 +11661,7 @@ module Aws::CloudFront
     #             },
     #             s3_origin_config: {
     #               origin_access_identity: "string", # required
+    #               origin_read_timeout: 1,
     #             },
     #             custom_origin_config: {
     #               http_port: 1, # required
@@ -8744,14 +11673,20 @@ module Aws::CloudFront
     #               },
     #               origin_read_timeout: 1,
     #               origin_keepalive_timeout: 1,
+    #               ip_address_type: "ipv4", # accepts ipv4, ipv6, dualstack
+    #               origin_mtls_config: {
+    #                 client_certificate_arn: "string", # required
+    #               },
     #             },
     #             vpc_origin_config: {
     #               vpc_origin_id: "string", # required
+    #               owner_account_id: "string",
     #               origin_read_timeout: 1,
     #               origin_keepalive_timeout: 1,
     #             },
     #             connection_attempts: 1,
     #             connection_timeout: 1,
+    #             response_completion_timeout: 1,
     #             origin_shield: {
     #               enabled: false, # required
     #               origin_shield_region: "OriginShieldRegion",
@@ -8951,14 +11886,14 @@ module Aws::CloudFront
     #         bucket: "string",
     #         prefix: "string",
     #       },
-    #       price_class: "PriceClass_100", # accepts PriceClass_100, PriceClass_200, PriceClass_All
+    #       price_class: "PriceClass_100", # accepts PriceClass_100, PriceClass_200, PriceClass_All, None
     #       enabled: false, # required
     #       viewer_certificate: {
     #         cloud_front_default_certificate: false,
-    #         iam_certificate_id: "string",
+    #         iam_certificate_id: "ServerCertificateId",
     #         acm_certificate_arn: "string",
     #         ssl_support_method: "sni-only", # accepts sni-only, vip, static-ip
-    #         minimum_protocol_version: "SSLv3", # accepts SSLv3, TLSv1, TLSv1_2016, TLSv1.1_2016, TLSv1.2_2018, TLSv1.2_2019, TLSv1.2_2021
+    #         minimum_protocol_version: "SSLv3", # accepts SSLv3, TLSv1, TLSv1_2016, TLSv1.1_2016, TLSv1.2_2018, TLSv1.2_2019, TLSv1.2_2021, TLSv1.3_2025, TLSv1.2_2025
     #         certificate: "string",
     #         certificate_source: "cloudfront", # accepts cloudfront, iam, acm
     #       },
@@ -8975,6 +11910,35 @@ module Aws::CloudFront
     #       continuous_deployment_policy_id: "string",
     #       staging: false,
     #       anycast_ip_list_id: "string",
+    #       tenant_config: {
+    #         parameter_definitions: [
+    #           {
+    #             name: "ParameterName", # required
+    #             definition: { # required
+    #               string_schema: {
+    #                 comment: "sensitiveStringType",
+    #                 default_value: "ParameterValue",
+    #                 required: false, # required
+    #               },
+    #             },
+    #           },
+    #         ],
+    #       },
+    #       connection_mode: "direct", # accepts direct, tenant-only
+    #       viewer_mtls_config: {
+    #         mode: "required", # accepts required, optional, passthrough
+    #         trust_store_config: {
+    #           trust_store_id: "string", # required
+    #           advertise_trust_store_ca_names: false,
+    #           ignore_certificate_expiry: false,
+    #         },
+    #       },
+    #       connection_function_association: {
+    #         id: "ResourceId", # required
+    #       },
+    #       cache_tag_config: {
+    #         header_name: "string", # required
+    #       },
     #     },
     #     id: "string", # required
     #     if_match: "string",
@@ -9017,6 +11981,7 @@ module Aws::CloudFront
     #   resp.distribution.distribution_config.origins.items[0].custom_headers.items[0].header_name #=> String
     #   resp.distribution.distribution_config.origins.items[0].custom_headers.items[0].header_value #=> String
     #   resp.distribution.distribution_config.origins.items[0].s3_origin_config.origin_access_identity #=> String
+    #   resp.distribution.distribution_config.origins.items[0].s3_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.http_port #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.https_port #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_protocol_policy #=> String, one of "http-only", "match-viewer", "https-only"
@@ -9025,11 +11990,15 @@ module Aws::CloudFront
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_ssl_protocols.items[0] #=> String, one of "SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_keepalive_timeout #=> Integer
+    #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.ip_address_type #=> String, one of "ipv4", "ipv6", "dualstack"
+    #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_mtls_config.client_certificate_arn #=> String
     #   resp.distribution.distribution_config.origins.items[0].vpc_origin_config.vpc_origin_id #=> String
+    #   resp.distribution.distribution_config.origins.items[0].vpc_origin_config.owner_account_id #=> String
     #   resp.distribution.distribution_config.origins.items[0].vpc_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].vpc_origin_config.origin_keepalive_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].connection_attempts #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].connection_timeout #=> Integer
+    #   resp.distribution.distribution_config.origins.items[0].response_completion_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].origin_shield.enabled #=> Boolean
     #   resp.distribution.distribution_config.origins.items[0].origin_shield.origin_shield_region #=> String
     #   resp.distribution.distribution_config.origins.items[0].origin_access_control_id #=> String
@@ -9151,13 +12120,13 @@ module Aws::CloudFront
     #   resp.distribution.distribution_config.logging.include_cookies #=> Boolean
     #   resp.distribution.distribution_config.logging.bucket #=> String
     #   resp.distribution.distribution_config.logging.prefix #=> String
-    #   resp.distribution.distribution_config.price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All"
+    #   resp.distribution.distribution_config.price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All", "None"
     #   resp.distribution.distribution_config.enabled #=> Boolean
     #   resp.distribution.distribution_config.viewer_certificate.cloud_front_default_certificate #=> Boolean
     #   resp.distribution.distribution_config.viewer_certificate.iam_certificate_id #=> String
     #   resp.distribution.distribution_config.viewer_certificate.acm_certificate_arn #=> String
     #   resp.distribution.distribution_config.viewer_certificate.ssl_support_method #=> String, one of "sni-only", "vip", "static-ip"
-    #   resp.distribution.distribution_config.viewer_certificate.minimum_protocol_version #=> String, one of "SSLv3", "TLSv1", "TLSv1_2016", "TLSv1.1_2016", "TLSv1.2_2018", "TLSv1.2_2019", "TLSv1.2_2021"
+    #   resp.distribution.distribution_config.viewer_certificate.minimum_protocol_version #=> String, one of "SSLv3", "TLSv1", "TLSv1_2016", "TLSv1.1_2016", "TLSv1.2_2018", "TLSv1.2_2019", "TLSv1.2_2021", "TLSv1.3_2025", "TLSv1.2_2025"
     #   resp.distribution.distribution_config.viewer_certificate.certificate #=> String
     #   resp.distribution.distribution_config.viewer_certificate.certificate_source #=> String, one of "cloudfront", "iam", "acm"
     #   resp.distribution.distribution_config.restrictions.geo_restriction.restriction_type #=> String, one of "blacklist", "whitelist", "none"
@@ -9170,6 +12139,18 @@ module Aws::CloudFront
     #   resp.distribution.distribution_config.continuous_deployment_policy_id #=> String
     #   resp.distribution.distribution_config.staging #=> Boolean
     #   resp.distribution.distribution_config.anycast_ip_list_id #=> String
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions #=> Array
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions[0].name #=> String
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions[0].definition.string_schema.comment #=> String
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions[0].definition.string_schema.default_value #=> String
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions[0].definition.string_schema.required #=> Boolean
+    #   resp.distribution.distribution_config.connection_mode #=> String, one of "direct", "tenant-only"
+    #   resp.distribution.distribution_config.viewer_mtls_config.mode #=> String, one of "required", "optional", "passthrough"
+    #   resp.distribution.distribution_config.viewer_mtls_config.trust_store_config.trust_store_id #=> String
+    #   resp.distribution.distribution_config.viewer_mtls_config.trust_store_config.advertise_trust_store_ca_names #=> Boolean
+    #   resp.distribution.distribution_config.viewer_mtls_config.trust_store_config.ignore_certificate_expiry #=> Boolean
+    #   resp.distribution.distribution_config.connection_function_association.id #=> String
+    #   resp.distribution.distribution_config.cache_tag_config.header_name #=> String
     #   resp.distribution.alias_icp_recordals #=> Array
     #   resp.distribution.alias_icp_recordals[0].cname #=> String
     #   resp.distribution.alias_icp_recordals[0].icp_recordal_status #=> String, one of "APPROVED", "SUSPENDED", "PENDING"
@@ -9181,6 +12162,131 @@ module Aws::CloudFront
     # @param [Hash] params ({})
     def update_distribution(params = {}, options = {})
       req = build_request(:update_distribution, params)
+      req.send_request(options)
+    end
+
+    # Updates a distribution tenant.
+    #
+    # @option params [required, String] :id
+    #   The ID of the distribution tenant.
+    #
+    # @option params [String] :distribution_id
+    #   The ID for the multi-tenant distribution.
+    #
+    # @option params [Array<Types::DomainItem>] :domains
+    #   The domains to update for the distribution tenant. A domain object can
+    #   contain only a domain property. You must specify at least one domain.
+    #   Each distribution tenant can have up to 5 domains.
+    #
+    # @option params [Types::Customizations] :customizations
+    #   Customizations for the distribution tenant. For each distribution
+    #   tenant, you can specify the geographic restrictions, and the Amazon
+    #   Resource Names (ARNs) for the ACM certificate and WAF web ACL. These
+    #   are specific values that you can override or disable from the
+    #   multi-tenant distribution that was used to create the distribution
+    #   tenant.
+    #
+    # @option params [Array<Types::Parameter>] :parameters
+    #   A list of parameter values to add to the resource. A parameter is
+    #   specified as a key-value pair. A valid parameter value must exist for
+    #   any parameter that is marked as required in the multi-tenant
+    #   distribution.
+    #
+    # @option params [String] :connection_group_id
+    #   The ID of the target connection group.
+    #
+    # @option params [required, String] :if_match
+    #   The value of the `ETag` header that you received when retrieving the
+    #   distribution tenant to update. This value is returned in the response
+    #   of the `GetDistributionTenant` API operation.
+    #
+    # @option params [Types::ManagedCertificateRequest] :managed_certificate_request
+    #   An object that contains the CloudFront managed ACM certificate
+    #   request.
+    #
+    # @option params [Boolean] :enabled
+    #   Indicates whether the distribution tenant should be updated to an
+    #   enabled state. If you update the distribution tenant and it's not
+    #   enabled, the distribution tenant won't serve traffic.
+    #
+    # @return [Types::UpdateDistributionTenantResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateDistributionTenantResult#distribution_tenant #distribution_tenant} => Types::DistributionTenant
+    #   * {Types::UpdateDistributionTenantResult#etag #etag} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_distribution_tenant({
+    #     id: "string", # required
+    #     distribution_id: "string",
+    #     domains: [
+    #       {
+    #         domain: "string", # required
+    #       },
+    #     ],
+    #     customizations: {
+    #       web_acl: {
+    #         action: "override", # required, accepts override, disable
+    #         arn: "string",
+    #       },
+    #       certificate: {
+    #         arn: "string", # required
+    #       },
+    #       geo_restrictions: {
+    #         restriction_type: "blacklist", # required, accepts blacklist, whitelist, none
+    #         locations: ["string"],
+    #       },
+    #     },
+    #     parameters: [
+    #       {
+    #         name: "ParameterName", # required
+    #         value: "ParameterValue", # required
+    #       },
+    #     ],
+    #     connection_group_id: "string",
+    #     if_match: "string", # required
+    #     managed_certificate_request: {
+    #       validation_token_host: "cloudfront", # required, accepts cloudfront, self-hosted
+    #       primary_domain_name: "string",
+    #       certificate_transparency_logging_preference: "enabled", # accepts enabled, disabled
+    #     },
+    #     enabled: false,
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.distribution_tenant.id #=> String
+    #   resp.distribution_tenant.distribution_id #=> String
+    #   resp.distribution_tenant.name #=> String
+    #   resp.distribution_tenant.arn #=> String
+    #   resp.distribution_tenant.domains #=> Array
+    #   resp.distribution_tenant.domains[0].domain #=> String
+    #   resp.distribution_tenant.domains[0].status #=> String, one of "active", "inactive"
+    #   resp.distribution_tenant.tags.items #=> Array
+    #   resp.distribution_tenant.tags.items[0].key #=> String
+    #   resp.distribution_tenant.tags.items[0].value #=> String
+    #   resp.distribution_tenant.customizations.web_acl.action #=> String, one of "override", "disable"
+    #   resp.distribution_tenant.customizations.web_acl.arn #=> String
+    #   resp.distribution_tenant.customizations.certificate.arn #=> String
+    #   resp.distribution_tenant.customizations.geo_restrictions.restriction_type #=> String, one of "blacklist", "whitelist", "none"
+    #   resp.distribution_tenant.customizations.geo_restrictions.locations #=> Array
+    #   resp.distribution_tenant.customizations.geo_restrictions.locations[0] #=> String
+    #   resp.distribution_tenant.parameters #=> Array
+    #   resp.distribution_tenant.parameters[0].name #=> String
+    #   resp.distribution_tenant.parameters[0].value #=> String
+    #   resp.distribution_tenant.connection_group_id #=> String
+    #   resp.distribution_tenant.created_time #=> Time
+    #   resp.distribution_tenant.last_modified_time #=> Time
+    #   resp.distribution_tenant.enabled #=> Boolean
+    #   resp.distribution_tenant.status #=> String
+    #   resp.etag #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/UpdateDistributionTenant AWS API Documentation
+    #
+    # @overload update_distribution_tenant(params = {})
+    # @param [Hash] params ({})
+    def update_distribution_tenant(params = {}, options = {})
+      req = build_request(:update_distribution_tenant, params)
       req.send_request(options)
     end
 
@@ -9274,6 +12380,7 @@ module Aws::CloudFront
     #   resp.distribution.distribution_config.origins.items[0].custom_headers.items[0].header_name #=> String
     #   resp.distribution.distribution_config.origins.items[0].custom_headers.items[0].header_value #=> String
     #   resp.distribution.distribution_config.origins.items[0].s3_origin_config.origin_access_identity #=> String
+    #   resp.distribution.distribution_config.origins.items[0].s3_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.http_port #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.https_port #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_protocol_policy #=> String, one of "http-only", "match-viewer", "https-only"
@@ -9282,11 +12389,15 @@ module Aws::CloudFront
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_ssl_protocols.items[0] #=> String, one of "SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_keepalive_timeout #=> Integer
+    #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.ip_address_type #=> String, one of "ipv4", "ipv6", "dualstack"
+    #   resp.distribution.distribution_config.origins.items[0].custom_origin_config.origin_mtls_config.client_certificate_arn #=> String
     #   resp.distribution.distribution_config.origins.items[0].vpc_origin_config.vpc_origin_id #=> String
+    #   resp.distribution.distribution_config.origins.items[0].vpc_origin_config.owner_account_id #=> String
     #   resp.distribution.distribution_config.origins.items[0].vpc_origin_config.origin_read_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].vpc_origin_config.origin_keepalive_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].connection_attempts #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].connection_timeout #=> Integer
+    #   resp.distribution.distribution_config.origins.items[0].response_completion_timeout #=> Integer
     #   resp.distribution.distribution_config.origins.items[0].origin_shield.enabled #=> Boolean
     #   resp.distribution.distribution_config.origins.items[0].origin_shield.origin_shield_region #=> String
     #   resp.distribution.distribution_config.origins.items[0].origin_access_control_id #=> String
@@ -9408,13 +12519,13 @@ module Aws::CloudFront
     #   resp.distribution.distribution_config.logging.include_cookies #=> Boolean
     #   resp.distribution.distribution_config.logging.bucket #=> String
     #   resp.distribution.distribution_config.logging.prefix #=> String
-    #   resp.distribution.distribution_config.price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All"
+    #   resp.distribution.distribution_config.price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All", "None"
     #   resp.distribution.distribution_config.enabled #=> Boolean
     #   resp.distribution.distribution_config.viewer_certificate.cloud_front_default_certificate #=> Boolean
     #   resp.distribution.distribution_config.viewer_certificate.iam_certificate_id #=> String
     #   resp.distribution.distribution_config.viewer_certificate.acm_certificate_arn #=> String
     #   resp.distribution.distribution_config.viewer_certificate.ssl_support_method #=> String, one of "sni-only", "vip", "static-ip"
-    #   resp.distribution.distribution_config.viewer_certificate.minimum_protocol_version #=> String, one of "SSLv3", "TLSv1", "TLSv1_2016", "TLSv1.1_2016", "TLSv1.2_2018", "TLSv1.2_2019", "TLSv1.2_2021"
+    #   resp.distribution.distribution_config.viewer_certificate.minimum_protocol_version #=> String, one of "SSLv3", "TLSv1", "TLSv1_2016", "TLSv1.1_2016", "TLSv1.2_2018", "TLSv1.2_2019", "TLSv1.2_2021", "TLSv1.3_2025", "TLSv1.2_2025"
     #   resp.distribution.distribution_config.viewer_certificate.certificate #=> String
     #   resp.distribution.distribution_config.viewer_certificate.certificate_source #=> String, one of "cloudfront", "iam", "acm"
     #   resp.distribution.distribution_config.restrictions.geo_restriction.restriction_type #=> String, one of "blacklist", "whitelist", "none"
@@ -9427,6 +12538,18 @@ module Aws::CloudFront
     #   resp.distribution.distribution_config.continuous_deployment_policy_id #=> String
     #   resp.distribution.distribution_config.staging #=> Boolean
     #   resp.distribution.distribution_config.anycast_ip_list_id #=> String
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions #=> Array
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions[0].name #=> String
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions[0].definition.string_schema.comment #=> String
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions[0].definition.string_schema.default_value #=> String
+    #   resp.distribution.distribution_config.tenant_config.parameter_definitions[0].definition.string_schema.required #=> Boolean
+    #   resp.distribution.distribution_config.connection_mode #=> String, one of "direct", "tenant-only"
+    #   resp.distribution.distribution_config.viewer_mtls_config.mode #=> String, one of "required", "optional", "passthrough"
+    #   resp.distribution.distribution_config.viewer_mtls_config.trust_store_config.trust_store_id #=> String
+    #   resp.distribution.distribution_config.viewer_mtls_config.trust_store_config.advertise_trust_store_ca_names #=> Boolean
+    #   resp.distribution.distribution_config.viewer_mtls_config.trust_store_config.ignore_certificate_expiry #=> Boolean
+    #   resp.distribution.distribution_config.connection_function_association.id #=> String
+    #   resp.distribution.distribution_config.cache_tag_config.header_name #=> String
     #   resp.distribution.alias_icp_recordals #=> Array
     #   resp.distribution.alias_icp_recordals[0].cname #=> String
     #   resp.distribution.alias_icp_recordals[0].icp_recordal_status #=> String, one of "APPROVED", "SUSPENDED", "PENDING"
@@ -9438,6 +12561,78 @@ module Aws::CloudFront
     # @param [Hash] params ({})
     def update_distribution_with_staging_config(params = {}, options = {})
       req = build_request(:update_distribution_with_staging_config, params)
+      req.send_request(options)
+    end
+
+    # <note markdown="1"> We recommend that you use the
+    # `UpdateDomainAssociation` API operation
+    # to move a domain association, as it supports both standard
+    # distributions and distribution tenants. [AssociateAlias][1] performs
+    # similar checks but only supports standard distributions.
+    #
+    #  </note>
+    #
+    #  Moves a domain from its current standard distribution or distribution
+    # tenant to another one.
+    #
+    #  You must first disable the source distribution (standard distribution
+    # or distribution tenant) and then separately call this operation to
+    # move the domain to another target distribution (standard distribution
+    # or distribution tenant).
+    #
+    #  To use this operation, specify the domain and the ID of the target
+    # resource (standard distribution or distribution tenant). For more
+    # information, including how to set up the target resource,
+    # prerequisites that you must complete, and other restrictions, see
+    # [Moving an alternate domain name to a different standard distribution
+    # or distribution tenant][2] in the *Amazon CloudFront Developer Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_AssociateAlias.html
+    # [2]: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/CNAMEs.html#alternate-domain-names-move
+    #
+    # @option params [required, String] :domain
+    #   The domain to update.
+    #
+    # @option params [required, Types::DistributionResourceId] :target_resource
+    #   The target standard distribution or distribution tenant resource for
+    #   the domain. You can specify either `DistributionId` or
+    #   `DistributionTenantId`, but not both.
+    #
+    # @option params [String] :if_match
+    #   The value of the `ETag` identifier for the standard distribution or
+    #   distribution tenant that will be associated with the domain.
+    #
+    # @return [Types::UpdateDomainAssociationResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateDomainAssociationResult#domain #domain} => String
+    #   * {Types::UpdateDomainAssociationResult#resource_id #resource_id} => String
+    #   * {Types::UpdateDomainAssociationResult#etag #etag} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_domain_association({
+    #     domain: "string", # required
+    #     target_resource: { # required
+    #       distribution_id: "string",
+    #       distribution_tenant_id: "string",
+    #     },
+    #     if_match: "string",
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.domain #=> String
+    #   resp.resource_id #=> String
+    #   resp.etag #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/UpdateDomainAssociation AWS API Documentation
+    #
+    # @overload update_domain_association(params = {})
+    # @param [Hash] params ({})
+    def update_domain_association(params = {}, options = {})
+      req = build_request(:update_domain_association, params)
       req.send_request(options)
     end
 
@@ -9675,7 +12870,7 @@ module Aws::CloudFront
     # @example Request syntax with placeholder values
     #
     #   resp = client.update_function({
-    #     name: "string", # required
+    #     name: "FunctionName", # required
     #     if_match: "string", # required
     #     function_config: { # required
     #       comment: "string", # required
@@ -10345,7 +13540,7 @@ module Aws::CloudFront
     #         quantity: 1, # required
     #         items: ["string"],
     #       },
-    #       price_class: "PriceClass_100", # accepts PriceClass_100, PriceClass_200, PriceClass_All
+    #       price_class: "PriceClass_100", # accepts PriceClass_100, PriceClass_200, PriceClass_All, None
     #       enabled: false, # required
     #     },
     #     id: "string", # required
@@ -10380,7 +13575,7 @@ module Aws::CloudFront
     #   resp.streaming_distribution.streaming_distribution_config.trusted_signers.quantity #=> Integer
     #   resp.streaming_distribution.streaming_distribution_config.trusted_signers.items #=> Array
     #   resp.streaming_distribution.streaming_distribution_config.trusted_signers.items[0] #=> String
-    #   resp.streaming_distribution.streaming_distribution_config.price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All"
+    #   resp.streaming_distribution.streaming_distribution_config.price_class #=> String, one of "PriceClass_100", "PriceClass_200", "PriceClass_All", "None"
     #   resp.streaming_distribution.streaming_distribution_config.enabled #=> Boolean
     #   resp.etag #=> String
     #
@@ -10390,6 +13585,64 @@ module Aws::CloudFront
     # @param [Hash] params ({})
     def update_streaming_distribution(params = {}, options = {})
       req = build_request(:update_streaming_distribution, params)
+      req.send_request(options)
+    end
+
+    # Updates a trust store.
+    #
+    # @option params [required, String] :id
+    #   The trust store ID.
+    #
+    # @option params [Types::CaCertificatesBundleSource] :ca_certificates_bundle_source
+    #   The CA certificates bundle source.
+    #
+    # @option params [Boolean] :use_client_certificate_ocsp_endpoint
+    #   A Boolean that determines whether to use the CA certificate's OCSP
+    #   endpoint to check certificate revocation status.
+    #
+    # @option params [required, String] :if_match
+    #   The current version (`ETag` value) of the trust store you are
+    #   updating.
+    #
+    # @return [Types::UpdateTrustStoreResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::UpdateTrustStoreResult#trust_store #trust_store} => Types::TrustStore
+    #   * {Types::UpdateTrustStoreResult#etag #etag} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.update_trust_store({
+    #     id: "ResourceId", # required
+    #     ca_certificates_bundle_source: {
+    #       ca_certificates_bundle_s3_location: {
+    #         bucket: "string", # required
+    #         key: "string", # required
+    #         region: "CaCertificatesBundleS3LocationRegionString", # required
+    #         version: "string",
+    #       },
+    #     },
+    #     use_client_certificate_ocsp_endpoint: false,
+    #     if_match: "string", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.trust_store.id #=> String
+    #   resp.trust_store.arn #=> String
+    #   resp.trust_store.name #=> String
+    #   resp.trust_store.status #=> String, one of "pending", "active", "failed"
+    #   resp.trust_store.number_of_ca_certificates #=> Integer
+    #   resp.trust_store.last_modified_time #=> Time
+    #   resp.trust_store.reason #=> String
+    #   resp.trust_store.use_client_certificate_ocsp_endpoint #=> Boolean
+    #   resp.etag #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/UpdateTrustStore AWS API Documentation
+    #
+    # @overload update_trust_store(params = {})
+    # @param [Hash] params ({})
+    def update_trust_store(params = {}, options = {})
+      req = build_request(:update_trust_store, params)
       req.send_request(options)
     end
 
@@ -10481,6 +13734,7 @@ module Aws::CloudFront
     #
     #   resp.vpc_origin.id #=> String
     #   resp.vpc_origin.arn #=> String
+    #   resp.vpc_origin.account_id #=> String
     #   resp.vpc_origin.status #=> String
     #   resp.vpc_origin.created_time #=> Time
     #   resp.vpc_origin.last_modified_time #=> Time
@@ -10503,6 +13757,46 @@ module Aws::CloudFront
       req.send_request(options)
     end
 
+    # Verify the DNS configuration for your domain names. This API operation
+    # checks whether your domain name points to the correct routing endpoint
+    # of the connection group, such as d111111abcdef8.cloudfront.net. You
+    # can use this API operation to troubleshoot and resolve DNS
+    # configuration issues.
+    #
+    # @option params [String] :domain
+    #   The domain name that you're verifying.
+    #
+    # @option params [required, String] :identifier
+    #   The identifier of the distribution tenant. You can specify the ARN,
+    #   ID, or name of the distribution tenant.
+    #
+    # @return [Types::VerifyDnsConfigurationResult] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::VerifyDnsConfigurationResult#dns_configuration_list #dns_configuration_list} => Array&lt;Types::DnsConfiguration&gt;
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.verify_dns_configuration({
+    #     domain: "string",
+    #     identifier: "string", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.dns_configuration_list #=> Array
+    #   resp.dns_configuration_list[0].domain #=> String
+    #   resp.dns_configuration_list[0].status #=> String, one of "valid-configuration", "invalid-configuration", "unknown-configuration"
+    #   resp.dns_configuration_list[0].reason #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/VerifyDnsConfiguration AWS API Documentation
+    #
+    # @overload verify_dns_configuration(params = {})
+    # @param [Hash] params ({})
+    def verify_dns_configuration(params = {}, options = {})
+      req = build_request(:verify_dns_configuration, params)
+      req.send_request(options)
+    end
+
     # @!endgroup
 
     # @param params ({})
@@ -10521,7 +13815,7 @@ module Aws::CloudFront
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-cloudfront'
-      context[:gem_version] = '1.114.0'
+      context[:gem_version] = '1.151.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 
@@ -10587,11 +13881,12 @@ module Aws::CloudFront
     # The following table lists the valid waiter names, the operations they call,
     # and the default `:delay` and `:max_attempts` values.
     #
-    # | waiter_name                     | params                              | :delay   | :max_attempts |
-    # | ------------------------------- | ----------------------------------- | -------- | ------------- |
-    # | distribution_deployed           | {Client#get_distribution}           | 60       | 35            |
-    # | invalidation_completed          | {Client#get_invalidation}           | 20       | 30            |
-    # | streaming_distribution_deployed | {Client#get_streaming_distribution} | 60       | 25            |
+    # | waiter_name                                    | params                                            | :delay   | :max_attempts |
+    # | ---------------------------------------------- | ------------------------------------------------- | -------- | ------------- |
+    # | distribution_deployed                          | {Client#get_distribution}                         | 60       | 35            |
+    # | invalidation_completed                         | {Client#get_invalidation}                         | 20       | 30            |
+    # | invalidation_for_distribution_tenant_completed | {Client#get_invalidation_for_distribution_tenant} | 20       | 30            |
+    # | streaming_distribution_deployed                | {Client#get_streaming_distribution}               | 60       | 25            |
     #
     # @raise [Errors::FailureStateError] Raised when the waiter terminates
     #   because the waiter has entered a state that it will not transition
@@ -10644,6 +13939,7 @@ module Aws::CloudFront
       {
         distribution_deployed: Waiters::DistributionDeployed,
         invalidation_completed: Waiters::InvalidationCompleted,
+        invalidation_for_distribution_tenant_completed: Waiters::InvalidationForDistributionTenantCompleted,
         streaming_distribution_deployed: Waiters::StreamingDistributionDeployed
       }
     end

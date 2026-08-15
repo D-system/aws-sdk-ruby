@@ -38,7 +38,7 @@ module Aws::AutoScaling
       attr_accessor cause: ::String
       attr_accessor start_time: ::Time
       attr_accessor end_time: ::Time
-      attr_accessor status_code: ("PendingSpotBidPlacement" | "WaitingForSpotInstanceRequestId" | "WaitingForSpotInstanceId" | "WaitingForInstanceId" | "PreInService" | "InProgress" | "WaitingForELBConnectionDraining" | "MidLifecycleAction" | "WaitingForInstanceWarmup" | "Successful" | "Failed" | "Cancelled" | "WaitingForConnectionDraining")
+      attr_accessor status_code: ("PendingSpotBidPlacement" | "WaitingForSpotInstanceRequestId" | "WaitingForSpotInstanceId" | "WaitingForInstanceId" | "PreInService" | "InProgress" | "WaitingForELBConnectionDraining" | "MidLifecycleAction" | "WaitingForInstanceWarmup" | "Successful" | "Failed" | "Cancelled" | "WaitingForConnectionDraining" | "WaitingForInPlaceUpdateToStart" | "WaitingForInPlaceUpdateToFinalize" | "InPlaceUpdateInProgress")
       attr_accessor status_message: ::String
       attr_accessor progress: ::Integer
       attr_accessor details: ::String
@@ -49,6 +49,7 @@ module Aws::AutoScaling
 
     class ActivityType
       attr_accessor activity: Types::Activity
+      attr_accessor activities: ::Array[Types::Activity]
       SENSITIVE: []
     end
 
@@ -119,6 +120,7 @@ module Aws::AutoScaling
       attr_accessor predicted_capacity: ::Integer
       attr_accessor default_cooldown: ::Integer
       attr_accessor availability_zones: ::Array[::String]
+      attr_accessor availability_zone_ids: ::Array[::String]
       attr_accessor load_balancer_names: ::Array[::String]
       attr_accessor target_group_arns: ::Array[::String]
       attr_accessor health_check_type: ::String
@@ -143,14 +145,18 @@ module Aws::AutoScaling
       attr_accessor default_instance_warmup: ::Integer
       attr_accessor traffic_sources: ::Array[Types::TrafficSourceIdentifier]
       attr_accessor instance_maintenance_policy: Types::InstanceMaintenancePolicy
+      attr_accessor deletion_protection: ("none" | "prevent-force-deletion" | "prevent-all-deletion")
       attr_accessor availability_zone_distribution: Types::AvailabilityZoneDistribution
       attr_accessor availability_zone_impairment_policy: Types::AvailabilityZoneImpairmentPolicy
       attr_accessor capacity_reservation_specification: Types::CapacityReservationSpecification
+      attr_accessor instance_lifecycle_policy: Types::InstanceLifecyclePolicy
+      attr_accessor operator: Types::Operator
       SENSITIVE: []
     end
 
     class AutoScalingGroupNamesType
       attr_accessor auto_scaling_group_names: ::Array[::String]
+      attr_accessor include_instances: bool
       attr_accessor next_token: ::String
       attr_accessor max_records: ::Integer
       attr_accessor filters: ::Array[Types::Filter]
@@ -168,10 +174,12 @@ module Aws::AutoScaling
       attr_accessor instance_type: ::String
       attr_accessor auto_scaling_group_name: ::String
       attr_accessor availability_zone: ::String
+      attr_accessor availability_zone_id: ::String
       attr_accessor lifecycle_state: ::String
       attr_accessor health_status: ::String
       attr_accessor launch_configuration_name: ::String
       attr_accessor launch_template: Types::LaunchTemplateSpecification
+      attr_accessor image_id: ::String
       attr_accessor protected_from_scale_in: bool
       attr_accessor weighted_capacity: ::String
       SENSITIVE: []
@@ -184,7 +192,7 @@ module Aws::AutoScaling
     end
 
     class AvailabilityZoneDistribution
-      attr_accessor capacity_distribution_strategy: ("balanced-only" | "balanced-best-effort")
+      attr_accessor capacity_distribution_strategy: ("balanced-only" | "balanced-best-effort" | "reservations-then-balanced")
       SENSITIVE: []
     end
 
@@ -242,6 +250,7 @@ module Aws::AutoScaling
 
     class CancelInstanceRefreshType
       attr_accessor auto_scaling_group_name: ::String
+      attr_accessor wait_for_transitioning_instances: bool
       SENSITIVE: []
     end
 
@@ -291,6 +300,7 @@ module Aws::AutoScaling
       attr_accessor desired_capacity: ::Integer
       attr_accessor default_cooldown: ::Integer
       attr_accessor availability_zones: ::Array[::String]
+      attr_accessor availability_zone_ids: ::Array[::String]
       attr_accessor load_balancer_names: ::Array[::String]
       attr_accessor target_group_arns: ::Array[::String]
       attr_accessor health_check_type: ::String
@@ -301,6 +311,7 @@ module Aws::AutoScaling
       attr_accessor new_instances_protected_from_scale_in: bool
       attr_accessor capacity_rebalance: bool
       attr_accessor lifecycle_hook_specification_list: ::Array[Types::LifecycleHookSpecification]
+      attr_accessor deletion_protection: ("none" | "prevent-force-deletion" | "prevent-all-deletion")
       attr_accessor tags: ::Array[Types::Tag]
       attr_accessor service_linked_role_arn: ::String
       attr_accessor max_instance_lifetime: ::Integer
@@ -313,6 +324,8 @@ module Aws::AutoScaling
       attr_accessor availability_zone_impairment_policy: Types::AvailabilityZoneImpairmentPolicy
       attr_accessor skip_zonal_shift_validation: bool
       attr_accessor capacity_reservation_specification: Types::CapacityReservationSpecification
+      attr_accessor instance_lifecycle_policy: Types::InstanceLifecyclePolicy
+      attr_accessor operator: Types::Operator
       SENSITIVE: []
     end
 
@@ -517,6 +530,7 @@ module Aws::AutoScaling
       attr_accessor include_deleted_groups: bool
       attr_accessor max_records: ::Integer
       attr_accessor next_token: ::String
+      attr_accessor filters: ::Array[Types::Filter]
       SENSITIVE: []
     end
 
@@ -705,16 +719,43 @@ module Aws::AutoScaling
       SENSITIVE: []
     end
 
+    class IdempotentCallInProgressFault
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class IdempotentParameterMismatchError
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
     class Instance
       attr_accessor instance_id: ::String
       attr_accessor instance_type: ::String
       attr_accessor availability_zone: ::String
-      attr_accessor lifecycle_state: ("Pending" | "Pending:Wait" | "Pending:Proceed" | "Quarantined" | "InService" | "Terminating" | "Terminating:Wait" | "Terminating:Proceed" | "Terminated" | "Detaching" | "Detached" | "EnteringStandby" | "Standby" | "Warmed:Pending" | "Warmed:Pending:Wait" | "Warmed:Pending:Proceed" | "Warmed:Terminating" | "Warmed:Terminating:Wait" | "Warmed:Terminating:Proceed" | "Warmed:Terminated" | "Warmed:Stopped" | "Warmed:Running" | "Warmed:Hibernated")
+      attr_accessor availability_zone_id: ::String
+      attr_accessor lifecycle_state: ("Pending" | "Pending:Wait" | "Pending:Proceed" | "Quarantined" | "InService" | "Terminating" | "Terminating:Wait" | "Terminating:Proceed" | "Terminating:Retained" | "Terminated" | "Detaching" | "Detached" | "EnteringStandby" | "Standby" | "ReplacingRootVolume" | "ReplacingRootVolume:Wait" | "ReplacingRootVolume:Proceed" | "RootVolumeReplaced" | "Warmed:Pending" | "Warmed:Pending:Wait" | "Warmed:Pending:Proceed" | "Warmed:Pending:Retained" | "Warmed:Terminating" | "Warmed:Terminating:Wait" | "Warmed:Terminating:Proceed" | "Warmed:Terminating:Retained" | "Warmed:Terminated" | "Warmed:Stopped" | "Warmed:Running" | "Warmed:Hibernated")
       attr_accessor health_status: ::String
       attr_accessor launch_configuration_name: ::String
       attr_accessor launch_template: Types::LaunchTemplateSpecification
+      attr_accessor image_id: ::String
       attr_accessor protected_from_scale_in: bool
       attr_accessor weighted_capacity: ::String
+      SENSITIVE: []
+    end
+
+    class InstanceCollection
+      attr_accessor instance_type: ::String
+      attr_accessor market_type: ::String
+      attr_accessor subnet_id: ::String
+      attr_accessor availability_zone: ::String
+      attr_accessor availability_zone_id: ::String
+      attr_accessor instance_ids: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class InstanceLifecyclePolicy
+      attr_accessor retention_triggers: Types::RetentionTriggers
       SENSITIVE: []
     end
 
@@ -749,6 +790,7 @@ module Aws::AutoScaling
       attr_accessor preferences: Types::RefreshPreferences
       attr_accessor desired_configuration: Types::DesiredConfiguration
       attr_accessor rollback_details: Types::RollbackDetails
+      attr_accessor strategy: ("Rolling" | "ReplaceRootVolume")
       SENSITIVE: []
     end
 
@@ -778,7 +820,7 @@ module Aws::AutoScaling
     class InstanceRequirements
       attr_accessor v_cpu_count: Types::VCpuCountRequest
       attr_accessor memory_mi_b: Types::MemoryMiBRequest
-      attr_accessor cpu_manufacturers: ::Array[("intel" | "amd" | "amazon-web-services")]
+      attr_accessor cpu_manufacturers: ::Array[("intel" | "amd" | "amazon-web-services" | "apple")]
       attr_accessor memory_gi_b_per_v_cpu: Types::MemoryGiBPerVCpuRequest
       attr_accessor excluded_instance_types: ::Array[::String]
       attr_accessor instance_generations: ::Array[("current" | "previous")]
@@ -871,6 +913,36 @@ module Aws::AutoScaling
       SENSITIVE: []
     end
 
+    class LaunchInstancesError
+      attr_accessor instance_type: ::String
+      attr_accessor market_type: ::String
+      attr_accessor subnet_id: ::String
+      attr_accessor availability_zone: ::String
+      attr_accessor availability_zone_id: ::String
+      attr_accessor error_code: ::String
+      attr_accessor error_message: ::String
+      SENSITIVE: []
+    end
+
+    class LaunchInstancesRequest
+      attr_accessor auto_scaling_group_name: ::String
+      attr_accessor requested_capacity: ::Integer
+      attr_accessor client_token: ::String
+      attr_accessor availability_zones: ::Array[::String]
+      attr_accessor availability_zone_ids: ::Array[::String]
+      attr_accessor subnet_ids: ::Array[::String]
+      attr_accessor retry_strategy: ("retry-with-group-configuration" | "none")
+      SENSITIVE: []
+    end
+
+    class LaunchInstancesResult
+      attr_accessor auto_scaling_group_name: ::String
+      attr_accessor client_token: ::String
+      attr_accessor instances: ::Array[Types::InstanceCollection]
+      attr_accessor errors: ::Array[Types::LaunchInstancesError]
+      SENSITIVE: []
+    end
+
     class LaunchTemplate
       attr_accessor launch_template_specification: Types::LaunchTemplateSpecification
       attr_accessor overrides: ::Array[Types::LaunchTemplateOverrides]
@@ -882,6 +954,7 @@ module Aws::AutoScaling
       attr_accessor weighted_capacity: ::String
       attr_accessor launch_template_specification: Types::LaunchTemplateSpecification
       attr_accessor instance_requirements: Types::InstanceRequirements
+      attr_accessor image_id: ::String
       SENSITIVE: []
     end
 
@@ -1013,6 +1086,11 @@ module Aws::AutoScaling
       attr_accessor auto_scaling_group_name: ::String
       attr_accessor topic_arn: ::String
       attr_accessor notification_type: ::String
+      SENSITIVE: []
+    end
+
+    class Operator
+      attr_accessor principal: ::String
       SENSITIVE: []
     end
 
@@ -1204,6 +1282,11 @@ module Aws::AutoScaling
       SENSITIVE: []
     end
 
+    class RetentionTriggers
+      attr_accessor terminate_hook_abandon: ("retain" | "terminate")
+      SENSITIVE: []
+    end
+
     class RollbackDetails
       attr_accessor rollback_reason: ::String
       attr_accessor rollback_start_time: ::Time
@@ -1323,7 +1406,7 @@ module Aws::AutoScaling
 
     class StartInstanceRefreshType
       attr_accessor auto_scaling_group_name: ::String
-      attr_accessor strategy: ("Rolling")
+      attr_accessor strategy: ("Rolling" | "ReplaceRootVolume")
       attr_accessor desired_configuration: Types::DesiredConfiguration
       attr_accessor preferences: Types::RefreshPreferences
       SENSITIVE: []
@@ -1394,6 +1477,8 @@ module Aws::AutoScaling
 
     class TerminateInstanceInAutoScalingGroupType
       attr_accessor instance_id: ::String
+      attr_accessor instance_ids: ::Array[::String]
+      attr_accessor auto_scaling_group_name: ::String
       attr_accessor should_decrement_desired_capacity: bool
       SENSITIVE: []
     end
@@ -1428,6 +1513,7 @@ module Aws::AutoScaling
       attr_accessor desired_capacity: ::Integer
       attr_accessor default_cooldown: ::Integer
       attr_accessor availability_zones: ::Array[::String]
+      attr_accessor availability_zone_ids: ::Array[::String]
       attr_accessor health_check_type: ::String
       attr_accessor health_check_grace_period: ::Integer
       attr_accessor placement_group: ::String
@@ -1445,6 +1531,8 @@ module Aws::AutoScaling
       attr_accessor availability_zone_impairment_policy: Types::AvailabilityZoneImpairmentPolicy
       attr_accessor skip_zonal_shift_validation: bool
       attr_accessor capacity_reservation_specification: Types::CapacityReservationSpecification
+      attr_accessor instance_lifecycle_policy: Types::InstanceLifecyclePolicy
+      attr_accessor deletion_protection: ("none" | "prevent-force-deletion" | "prevent-all-deletion")
       SENSITIVE: []
     end
 

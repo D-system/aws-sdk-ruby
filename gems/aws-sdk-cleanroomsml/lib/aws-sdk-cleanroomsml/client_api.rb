@@ -14,6 +14,11 @@ module Aws::CleanRoomsML
 
     include Seahorse::Model
 
+    AccessBudget = Shapes::StructureShape.new(name: 'AccessBudget')
+    AccessBudgetDetails = Shapes::StructureShape.new(name: 'AccessBudgetDetails')
+    AccessBudgetDetailsList = Shapes::ListShape.new(name: 'AccessBudgetDetailsList')
+    AccessBudgetType = Shapes::StringShape.new(name: 'AccessBudgetType')
+    AccessBudgets = Shapes::ListShape.new(name: 'AccessBudgets')
     AccessDeniedException = Shapes::StructureShape.new(name: 'AccessDeniedException')
     AccountId = Shapes::StringShape.new(name: 'AccountId')
     AccountIdList = Shapes::ListShape.new(name: 'AccountIdList')
@@ -39,7 +44,10 @@ module Aws::CleanRoomsML
     AudienceSizeConfig = Shapes::StructureShape.new(name: 'AudienceSizeConfig')
     AudienceSizeType = Shapes::StringShape.new(name: 'AudienceSizeType')
     AudienceSizeValue = Shapes::IntegerShape.new(name: 'AudienceSizeValue')
+    AutoRefreshMode = Shapes::StringShape.new(name: 'AutoRefreshMode')
     Boolean = Shapes::BooleanShape.new(name: 'Boolean')
+    Budget = Shapes::IntegerShape.new(name: 'Budget')
+    BudgetedResourceArn = Shapes::StringShape.new(name: 'BudgetedResourceArn')
     CancelTrainedModelInferenceJobRequest = Shapes::StructureShape.new(name: 'CancelTrainedModelInferenceJobRequest')
     CancelTrainedModelRequest = Shapes::StructureShape.new(name: 'CancelTrainedModelRequest')
     CollaborationConfiguredModelAlgorithmAssociationList = Shapes::ListShape.new(name: 'CollaborationConfiguredModelAlgorithmAssociationList')
@@ -53,6 +61,8 @@ module Aws::CleanRoomsML
     CollaborationTrainedModelInferenceJobSummary = Shapes::StructureShape.new(name: 'CollaborationTrainedModelInferenceJobSummary')
     CollaborationTrainedModelList = Shapes::ListShape.new(name: 'CollaborationTrainedModelList')
     CollaborationTrainedModelSummary = Shapes::StructureShape.new(name: 'CollaborationTrainedModelSummary')
+    ColumnClassificationDetails = Shapes::StructureShape.new(name: 'ColumnClassificationDetails')
+    ColumnMappingList = Shapes::ListShape.new(name: 'ColumnMappingList')
     ColumnName = Shapes::StringShape.new(name: 'ColumnName')
     ColumnSchema = Shapes::StructureShape.new(name: 'ColumnSchema')
     ColumnType = Shapes::StringShape.new(name: 'ColumnType')
@@ -92,6 +102,10 @@ module Aws::CleanRoomsML
     CreateTrainingDatasetRequest = Shapes::StructureShape.new(name: 'CreateTrainingDatasetRequest')
     CreateTrainingDatasetRequestTrainingDataList = Shapes::ListShape.new(name: 'CreateTrainingDatasetRequestTrainingDataList')
     CreateTrainingDatasetResponse = Shapes::StructureShape.new(name: 'CreateTrainingDatasetResponse')
+    CustomDataIdentifier = Shapes::StringShape.new(name: 'CustomDataIdentifier')
+    CustomDataIdentifierList = Shapes::ListShape.new(name: 'CustomDataIdentifierList')
+    CustomEntityConfig = Shapes::StructureShape.new(name: 'CustomEntityConfig')
+    DataPrivacyScores = Shapes::StructureShape.new(name: 'DataPrivacyScores')
     DataSource = Shapes::StructureShape.new(name: 'DataSource')
     Dataset = Shapes::StructureShape.new(name: 'Dataset')
     DatasetInputConfig = Shapes::StructureShape.new(name: 'DatasetInputConfig')
@@ -109,6 +123,8 @@ module Aws::CleanRoomsML
     DeleteTrainedModelOutputRequest = Shapes::StructureShape.new(name: 'DeleteTrainedModelOutputRequest')
     DeleteTrainingDatasetRequest = Shapes::StructureShape.new(name: 'DeleteTrainingDatasetRequest')
     Destination = Shapes::StructureShape.new(name: 'Destination')
+    EntityType = Shapes::StringShape.new(name: 'EntityType')
+    EntityTypeList = Shapes::ListShape.new(name: 'EntityTypeList')
     Environment = Shapes::MapShape.new(name: 'Environment')
     EnvironmentKeyString = Shapes::StringShape.new(name: 'EnvironmentKeyString')
     EnvironmentValueString = Shapes::StringShape.new(name: 'EnvironmentValueString')
@@ -156,6 +172,10 @@ module Aws::CleanRoomsML
     HyperParametersKeyString = Shapes::StringShape.new(name: 'HyperParametersKeyString')
     HyperParametersValueString = Shapes::StringShape.new(name: 'HyperParametersValueString')
     IamRoleArn = Shapes::StringShape.new(name: 'IamRoleArn')
+    IncrementalTrainingDataChannel = Shapes::StructureShape.new(name: 'IncrementalTrainingDataChannel')
+    IncrementalTrainingDataChannelOutput = Shapes::StructureShape.new(name: 'IncrementalTrainingDataChannelOutput')
+    IncrementalTrainingDataChannels = Shapes::ListShape.new(name: 'IncrementalTrainingDataChannels')
+    IncrementalTrainingDataChannelsOutput = Shapes::ListShape.new(name: 'IncrementalTrainingDataChannelsOutput')
     InferenceContainerConfig = Shapes::StructureShape.new(name: 'InferenceContainerConfig')
     InferenceContainerExecutionParameters = Shapes::StructureShape.new(name: 'InferenceContainerExecutionParameters')
     InferenceContainerExecutionParametersMaxPayloadInMBInteger = Shapes::IntegerShape.new(name: 'InferenceContainerExecutionParametersMaxPayloadInMBInteger')
@@ -172,6 +192,7 @@ module Aws::CleanRoomsML
     InputChannel = Shapes::StructureShape.new(name: 'InputChannel')
     InputChannelDataSource = Shapes::UnionShape.new(name: 'InputChannelDataSource')
     InstanceType = Shapes::StringShape.new(name: 'InstanceType')
+    InternalServiceException = Shapes::StructureShape.new(name: 'InternalServiceException')
     KmsKeyArn = Shapes::StringShape.new(name: 'KmsKeyArn')
     ListAudienceExportJobsRequest = Shapes::StructureShape.new(name: 'ListAudienceExportJobsRequest')
     ListAudienceExportJobsResponse = Shapes::StructureShape.new(name: 'ListAudienceExportJobsResponse')
@@ -201,10 +222,14 @@ module Aws::CleanRoomsML
     ListTagsForResourceResponse = Shapes::StructureShape.new(name: 'ListTagsForResourceResponse')
     ListTrainedModelInferenceJobsRequest = Shapes::StructureShape.new(name: 'ListTrainedModelInferenceJobsRequest')
     ListTrainedModelInferenceJobsResponse = Shapes::StructureShape.new(name: 'ListTrainedModelInferenceJobsResponse')
+    ListTrainedModelVersionsRequest = Shapes::StructureShape.new(name: 'ListTrainedModelVersionsRequest')
+    ListTrainedModelVersionsResponse = Shapes::StructureShape.new(name: 'ListTrainedModelVersionsResponse')
     ListTrainedModelsRequest = Shapes::StructureShape.new(name: 'ListTrainedModelsRequest')
     ListTrainedModelsResponse = Shapes::StructureShape.new(name: 'ListTrainedModelsResponse')
     ListTrainingDatasetsRequest = Shapes::StructureShape.new(name: 'ListTrainingDatasetsRequest')
     ListTrainingDatasetsResponse = Shapes::StructureShape.new(name: 'ListTrainingDatasetsResponse')
+    LogRedactionConfiguration = Shapes::StructureShape.new(name: 'LogRedactionConfiguration')
+    LogType = Shapes::StringShape.new(name: 'LogType')
     LogsConfigurationPolicy = Shapes::StructureShape.new(name: 'LogsConfigurationPolicy')
     LogsConfigurationPolicyFilterPatternString = Shapes::StringShape.new(name: 'LogsConfigurationPolicyFilterPatternString')
     LogsConfigurationPolicyList = Shapes::ListShape.new(name: 'LogsConfigurationPolicyList')
@@ -215,7 +240,14 @@ module Aws::CleanRoomsML
     MLInputChannelSummaryConfiguredModelAlgorithmAssociationsList = Shapes::ListShape.new(name: 'MLInputChannelSummaryConfiguredModelAlgorithmAssociationsList')
     MLInputChannelsList = Shapes::ListShape.new(name: 'MLInputChannelsList')
     MLOutputConfiguration = Shapes::StructureShape.new(name: 'MLOutputConfiguration')
+    MLSyntheticDataParameters = Shapes::StructureShape.new(name: 'MLSyntheticDataParameters')
+    MLSyntheticDataParametersEpsilonDouble = Shapes::FloatShape.new(name: 'MLSyntheticDataParametersEpsilonDouble')
+    MLSyntheticDataParametersMaxMembershipInferenceAttackScoreDouble = Shapes::FloatShape.new(name: 'MLSyntheticDataParametersMaxMembershipInferenceAttackScoreDouble')
     MaxResults = Shapes::IntegerShape.new(name: 'MaxResults')
+    MembershipInferenceAttackScore = Shapes::StructureShape.new(name: 'MembershipInferenceAttackScore')
+    MembershipInferenceAttackScoreList = Shapes::ListShape.new(name: 'MembershipInferenceAttackScoreList')
+    MembershipInferenceAttackScoreScoreDouble = Shapes::FloatShape.new(name: 'MembershipInferenceAttackScoreScoreDouble')
+    MembershipInferenceAttackVersion = Shapes::StringShape.new(name: 'MembershipInferenceAttackVersion')
     MetricDefinition = Shapes::StructureShape.new(name: 'MetricDefinition')
     MetricDefinitionList = Shapes::ListShape.new(name: 'MetricDefinitionList')
     MetricName = Shapes::StringShape.new(name: 'MetricName')
@@ -231,10 +263,12 @@ module Aws::CleanRoomsML
     NameString = Shapes::StringShape.new(name: 'NameString')
     NextToken = Shapes::StringShape.new(name: 'NextToken')
     NoiseLevelType = Shapes::StringShape.new(name: 'NoiseLevelType')
-    ParameterKey = Shapes::StringShape.new(name: 'ParameterKey')
     ParameterMap = Shapes::MapShape.new(name: 'ParameterMap')
+    ParameterName = Shapes::StringShape.new(name: 'ParameterName')
     ParameterValue = Shapes::StringShape.new(name: 'ParameterValue')
+    PayerConfiguration = Shapes::StructureShape.new(name: 'PayerConfiguration')
     PolicyExistenceCondition = Shapes::StringShape.new(name: 'PolicyExistenceCondition')
+    PrivacyBudgets = Shapes::UnionShape.new(name: 'PrivacyBudgets')
     PrivacyConfiguration = Shapes::StructureShape.new(name: 'PrivacyConfiguration')
     PrivacyConfigurationPolicies = Shapes::StructureShape.new(name: 'PrivacyConfigurationPolicies')
     ProtectedQueryInputParameters = Shapes::StructureShape.new(name: 'ProtectedQueryInputParameters')
@@ -252,10 +286,16 @@ module Aws::CleanRoomsML
     ResourceDescription = Shapes::StringShape.new(name: 'ResourceDescription')
     ResourceNotFoundException = Shapes::StructureShape.new(name: 'ResourceNotFoundException')
     ResourcePolicy = Shapes::StringShape.new(name: 'ResourcePolicy')
+    ResultFormat = Shapes::StringShape.new(name: 'ResultFormat')
     S3ConfigMap = Shapes::StructureShape.new(name: 'S3ConfigMap')
+    S3DataDistributionType = Shapes::StringShape.new(name: 'S3DataDistributionType')
     S3Path = Shapes::StringShape.new(name: 'S3Path')
     ServiceQuotaExceededException = Shapes::StructureShape.new(name: 'ServiceQuotaExceededException')
+    ServiceQuotaExceededExceptionQuotaValueDouble = Shapes::FloatShape.new(name: 'ServiceQuotaExceededExceptionQuotaValueDouble')
     SharedAudienceMetrics = Shapes::StringShape.new(name: 'SharedAudienceMetrics')
+    SparkProperties = Shapes::MapShape.new(name: 'SparkProperties')
+    SparkPropertyKey = Shapes::StringShape.new(name: 'SparkPropertyKey')
+    SparkPropertyValue = Shapes::StringShape.new(name: 'SparkPropertyValue')
     StartAudienceExportJobRequest = Shapes::StructureShape.new(name: 'StartAudienceExportJobRequest')
     StartAudienceGenerationJobRequest = Shapes::StructureShape.new(name: 'StartAudienceGenerationJobRequest')
     StartAudienceGenerationJobResponse = Shapes::StructureShape.new(name: 'StartAudienceGenerationJobResponse')
@@ -266,6 +306,11 @@ module Aws::CleanRoomsML
     StoppingCondition = Shapes::StructureShape.new(name: 'StoppingCondition')
     StoppingConditionMaxRuntimeInSecondsInteger = Shapes::IntegerShape.new(name: 'StoppingConditionMaxRuntimeInSecondsInteger')
     String = Shapes::StringShape.new(name: 'String')
+    SyntheticDataColumnName = Shapes::StringShape.new(name: 'SyntheticDataColumnName')
+    SyntheticDataColumnProperties = Shapes::StructureShape.new(name: 'SyntheticDataColumnProperties')
+    SyntheticDataColumnType = Shapes::StringShape.new(name: 'SyntheticDataColumnType')
+    SyntheticDataConfiguration = Shapes::StructureShape.new(name: 'SyntheticDataConfiguration')
+    SyntheticDataEvaluationScores = Shapes::StructureShape.new(name: 'SyntheticDataEvaluationScores')
     SyntheticTimestamp_date_time = Shapes::TimestampShape.new(name: 'SyntheticTimestamp_date_time', timestampFormat: "iso8601")
     TagKey = Shapes::StringShape.new(name: 'TagKey')
     TagKeys = Shapes::ListShape.new(name: 'TagKeys')
@@ -275,7 +320,11 @@ module Aws::CleanRoomsML
     TagResourceResponse = Shapes::StructureShape.new(name: 'TagResourceResponse')
     TagValue = Shapes::StringShape.new(name: 'TagValue')
     TaggableArn = Shapes::StringShape.new(name: 'TaggableArn')
+    ThrottlingException = Shapes::StructureShape.new(name: 'ThrottlingException')
     TrainedModelArn = Shapes::StringShape.new(name: 'TrainedModelArn')
+    TrainedModelArtifactMaxSize = Shapes::StructureShape.new(name: 'TrainedModelArtifactMaxSize')
+    TrainedModelArtifactMaxSizeUnitType = Shapes::StringShape.new(name: 'TrainedModelArtifactMaxSizeUnitType')
+    TrainedModelArtifactMaxSizeValue = Shapes::FloatShape.new(name: 'TrainedModelArtifactMaxSizeValue')
     TrainedModelExportFileType = Shapes::StringShape.new(name: 'TrainedModelExportFileType')
     TrainedModelExportFileTypeList = Shapes::ListShape.new(name: 'TrainedModelExportFileTypeList')
     TrainedModelExportJobStatus = Shapes::StringShape.new(name: 'TrainedModelExportJobStatus')
@@ -302,6 +351,7 @@ module Aws::CleanRoomsML
     TrainingDatasetList = Shapes::ListShape.new(name: 'TrainingDatasetList')
     TrainingDatasetStatus = Shapes::StringShape.new(name: 'TrainingDatasetStatus')
     TrainingDatasetSummary = Shapes::StructureShape.new(name: 'TrainingDatasetSummary')
+    TrainingInputMode = Shapes::StringShape.new(name: 'TrainingInputMode')
     UUID = Shapes::StringShape.new(name: 'UUID')
     UntagResourceRequest = Shapes::StructureShape.new(name: 'UntagResourceRequest')
     UntagResourceResponse = Shapes::StructureShape.new(name: 'UntagResourceResponse')
@@ -310,7 +360,25 @@ module Aws::CleanRoomsML
     ValidationException = Shapes::StructureShape.new(name: 'ValidationException')
     WorkerComputeConfiguration = Shapes::StructureShape.new(name: 'WorkerComputeConfiguration')
     WorkerComputeConfigurationNumberInteger = Shapes::IntegerShape.new(name: 'WorkerComputeConfigurationNumberInteger')
+    WorkerComputeConfigurationProperties = Shapes::UnionShape.new(name: 'WorkerComputeConfigurationProperties')
     WorkerComputeType = Shapes::StringShape.new(name: 'WorkerComputeType')
+
+    AccessBudget.add_member(:resource_arn, Shapes::ShapeRef.new(shape: BudgetedResourceArn, required: true, location_name: "resourceArn"))
+    AccessBudget.add_member(:details, Shapes::ShapeRef.new(shape: AccessBudgetDetailsList, required: true, location_name: "details"))
+    AccessBudget.add_member(:aggregate_remaining_budget, Shapes::ShapeRef.new(shape: Budget, required: true, location_name: "aggregateRemainingBudget"))
+    AccessBudget.struct_class = Types::AccessBudget
+
+    AccessBudgetDetails.add_member(:start_time, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "startTime"))
+    AccessBudgetDetails.add_member(:end_time, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, location_name: "endTime"))
+    AccessBudgetDetails.add_member(:remaining_budget, Shapes::ShapeRef.new(shape: Budget, required: true, location_name: "remainingBudget"))
+    AccessBudgetDetails.add_member(:budget, Shapes::ShapeRef.new(shape: Budget, required: true, location_name: "budget"))
+    AccessBudgetDetails.add_member(:budget_type, Shapes::ShapeRef.new(shape: AccessBudgetType, required: true, location_name: "budgetType"))
+    AccessBudgetDetails.add_member(:auto_refresh, Shapes::ShapeRef.new(shape: AutoRefreshMode, location_name: "autoRefresh"))
+    AccessBudgetDetails.struct_class = Types::AccessBudgetDetails
+
+    AccessBudgetDetailsList.member = Shapes::ShapeRef.new(shape: AccessBudgetDetails)
+
+    AccessBudgets.member = Shapes::ShapeRef.new(shape: AccessBudget)
 
     AccessDeniedException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
     AccessDeniedException.struct_class = Types::AccessDeniedException
@@ -383,6 +451,7 @@ module Aws::CleanRoomsML
 
     CancelTrainedModelRequest.add_member(:membership_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location: "uri", location_name: "membershipIdentifier"))
     CancelTrainedModelRequest.add_member(:trained_model_arn, Shapes::ShapeRef.new(shape: TrainedModelArn, required: true, location: "uri", location_name: "trainedModelArn"))
+    CancelTrainedModelRequest.add_member(:version_identifier, Shapes::ShapeRef.new(shape: UUID, location: "querystring", location_name: "versionIdentifier"))
     CancelTrainedModelRequest.struct_class = Types::CancelTrainedModelRequest
 
     CollaborationConfiguredModelAlgorithmAssociationList.member = Shapes::ShapeRef.new(shape: CollaborationConfiguredModelAlgorithmAssociationSummary)
@@ -408,6 +477,7 @@ module Aws::CleanRoomsML
     CollaborationMLInputChannelSummary.add_member(:status, Shapes::ShapeRef.new(shape: MLInputChannelStatus, required: true, location_name: "status"))
     CollaborationMLInputChannelSummary.add_member(:creator_account_id, Shapes::ShapeRef.new(shape: AccountId, required: true, location_name: "creatorAccountId"))
     CollaborationMLInputChannelSummary.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, location_name: "description"))
+    CollaborationMLInputChannelSummary.add_member(:payer_configuration, Shapes::ShapeRef.new(shape: PayerConfiguration, location_name: "payerConfiguration"))
     CollaborationMLInputChannelSummary.struct_class = Types::CollaborationMLInputChannelSummary
 
     CollaborationMLInputChannelSummaryConfiguredModelAlgorithmAssociationsList.member = Shapes::ShapeRef.new(shape: ConfiguredModelAlgorithmAssociationArn)
@@ -425,6 +495,7 @@ module Aws::CleanRoomsML
     CollaborationTrainedModelExportJobSummary.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, location_name: "description"))
     CollaborationTrainedModelExportJobSummary.add_member(:creator_account_id, Shapes::ShapeRef.new(shape: AccountId, required: true, location_name: "creatorAccountId"))
     CollaborationTrainedModelExportJobSummary.add_member(:trained_model_arn, Shapes::ShapeRef.new(shape: TrainedModelArn, required: true, location_name: "trainedModelArn"))
+    CollaborationTrainedModelExportJobSummary.add_member(:trained_model_version_identifier, Shapes::ShapeRef.new(shape: UUID, location_name: "trainedModelVersionIdentifier"))
     CollaborationTrainedModelExportJobSummary.add_member(:membership_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location_name: "membershipIdentifier"))
     CollaborationTrainedModelExportJobSummary.add_member(:collaboration_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location_name: "collaborationIdentifier"))
     CollaborationTrainedModelExportJobSummary.struct_class = Types::CollaborationTrainedModelExportJobSummary
@@ -435,6 +506,7 @@ module Aws::CleanRoomsML
     CollaborationTrainedModelInferenceJobSummary.add_member(:configured_model_algorithm_association_arn, Shapes::ShapeRef.new(shape: ConfiguredModelAlgorithmAssociationArn, location_name: "configuredModelAlgorithmAssociationArn"))
     CollaborationTrainedModelInferenceJobSummary.add_member(:membership_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location_name: "membershipIdentifier"))
     CollaborationTrainedModelInferenceJobSummary.add_member(:trained_model_arn, Shapes::ShapeRef.new(shape: TrainedModelArn, required: true, location_name: "trainedModelArn"))
+    CollaborationTrainedModelInferenceJobSummary.add_member(:trained_model_version_identifier, Shapes::ShapeRef.new(shape: UUID, location_name: "trainedModelVersionIdentifier"))
     CollaborationTrainedModelInferenceJobSummary.add_member(:collaboration_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location_name: "collaborationIdentifier"))
     CollaborationTrainedModelInferenceJobSummary.add_member(:status, Shapes::ShapeRef.new(shape: TrainedModelInferenceJobStatus, required: true, location_name: "status"))
     CollaborationTrainedModelInferenceJobSummary.add_member(:output_configuration, Shapes::ShapeRef.new(shape: InferenceOutputConfiguration, required: true, location_name: "outputConfiguration"))
@@ -444,6 +516,7 @@ module Aws::CleanRoomsML
     CollaborationTrainedModelInferenceJobSummary.add_member(:metrics_status_details, Shapes::ShapeRef.new(shape: String, location_name: "metricsStatusDetails"))
     CollaborationTrainedModelInferenceJobSummary.add_member(:logs_status, Shapes::ShapeRef.new(shape: LogsStatus, location_name: "logsStatus"))
     CollaborationTrainedModelInferenceJobSummary.add_member(:logs_status_details, Shapes::ShapeRef.new(shape: String, location_name: "logsStatusDetails"))
+    CollaborationTrainedModelInferenceJobSummary.add_member(:ml_model_inference_payer_account_id, Shapes::ShapeRef.new(shape: AccountId, location_name: "mlModelInferencePayerAccountId"))
     CollaborationTrainedModelInferenceJobSummary.add_member(:create_time, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "createTime"))
     CollaborationTrainedModelInferenceJobSummary.add_member(:update_time, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "updateTime"))
     CollaborationTrainedModelInferenceJobSummary.add_member(:creator_account_id, Shapes::ShapeRef.new(shape: AccountId, required: true, location_name: "creatorAccountId"))
@@ -455,13 +528,21 @@ module Aws::CleanRoomsML
     CollaborationTrainedModelSummary.add_member(:update_time, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "updateTime"))
     CollaborationTrainedModelSummary.add_member(:trained_model_arn, Shapes::ShapeRef.new(shape: TrainedModelArn, required: true, location_name: "trainedModelArn"))
     CollaborationTrainedModelSummary.add_member(:name, Shapes::ShapeRef.new(shape: NameString, required: true, location_name: "name"))
+    CollaborationTrainedModelSummary.add_member(:version_identifier, Shapes::ShapeRef.new(shape: UUID, location_name: "versionIdentifier"))
+    CollaborationTrainedModelSummary.add_member(:incremental_training_data_channels, Shapes::ShapeRef.new(shape: IncrementalTrainingDataChannelsOutput, location_name: "incrementalTrainingDataChannels"))
     CollaborationTrainedModelSummary.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, location_name: "description"))
     CollaborationTrainedModelSummary.add_member(:membership_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location_name: "membershipIdentifier"))
     CollaborationTrainedModelSummary.add_member(:collaboration_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location_name: "collaborationIdentifier"))
     CollaborationTrainedModelSummary.add_member(:status, Shapes::ShapeRef.new(shape: TrainedModelStatus, required: true, location_name: "status"))
     CollaborationTrainedModelSummary.add_member(:configured_model_algorithm_association_arn, Shapes::ShapeRef.new(shape: ConfiguredModelAlgorithmAssociationArn, required: true, location_name: "configuredModelAlgorithmAssociationArn"))
     CollaborationTrainedModelSummary.add_member(:creator_account_id, Shapes::ShapeRef.new(shape: AccountId, required: true, location_name: "creatorAccountId"))
+    CollaborationTrainedModelSummary.add_member(:ml_model_training_payer_account_id, Shapes::ShapeRef.new(shape: AccountId, location_name: "mlModelTrainingPayerAccountId"))
     CollaborationTrainedModelSummary.struct_class = Types::CollaborationTrainedModelSummary
+
+    ColumnClassificationDetails.add_member(:column_mapping, Shapes::ShapeRef.new(shape: ColumnMappingList, required: true, location_name: "columnMapping"))
+    ColumnClassificationDetails.struct_class = Types::ColumnClassificationDetails
+
+    ColumnMappingList.member = Shapes::ShapeRef.new(shape: SyntheticDataColumnProperties)
 
     ColumnSchema.add_member(:column_name, Shapes::ShapeRef.new(shape: ColumnName, required: true, location_name: "columnName"))
     ColumnSchema.add_member(:column_types, Shapes::ShapeRef.new(shape: ColumnTypeList, required: true, location_name: "columnTypes"))
@@ -582,6 +663,7 @@ module Aws::CleanRoomsML
     CreateMLInputChannelRequest.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, location_name: "description"))
     CreateMLInputChannelRequest.add_member(:kms_key_arn, Shapes::ShapeRef.new(shape: KmsKeyArn, location_name: "kmsKeyArn"))
     CreateMLInputChannelRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
+    CreateMLInputChannelRequest.add_member(:payer_configuration, Shapes::ShapeRef.new(shape: PayerConfiguration, location_name: "payerConfiguration"))
     CreateMLInputChannelRequest.struct_class = Types::CreateMLInputChannelRequest
 
     CreateMLInputChannelRequestConfiguredModelAlgorithmAssociationsList.member = Shapes::ShapeRef.new(shape: ConfiguredModelAlgorithmAssociationArn)
@@ -596,13 +678,17 @@ module Aws::CleanRoomsML
     CreateTrainedModelRequest.add_member(:environment, Shapes::ShapeRef.new(shape: Environment, location_name: "environment"))
     CreateTrainedModelRequest.add_member(:resource_config, Shapes::ShapeRef.new(shape: ResourceConfig, required: true, location_name: "resourceConfig"))
     CreateTrainedModelRequest.add_member(:stopping_condition, Shapes::ShapeRef.new(shape: StoppingCondition, location_name: "stoppingCondition"))
+    CreateTrainedModelRequest.add_member(:incremental_training_data_channels, Shapes::ShapeRef.new(shape: IncrementalTrainingDataChannels, location_name: "incrementalTrainingDataChannels"))
     CreateTrainedModelRequest.add_member(:data_channels, Shapes::ShapeRef.new(shape: ModelTrainingDataChannels, required: true, location_name: "dataChannels"))
+    CreateTrainedModelRequest.add_member(:training_input_mode, Shapes::ShapeRef.new(shape: TrainingInputMode, location_name: "trainingInputMode"))
     CreateTrainedModelRequest.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, location_name: "description"))
     CreateTrainedModelRequest.add_member(:kms_key_arn, Shapes::ShapeRef.new(shape: KmsKeyArn, location_name: "kmsKeyArn"))
     CreateTrainedModelRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
+    CreateTrainedModelRequest.add_member(:ml_model_training_payer_account_id, Shapes::ShapeRef.new(shape: AccountId, location_name: "mlModelTrainingPayerAccountId"))
     CreateTrainedModelRequest.struct_class = Types::CreateTrainedModelRequest
 
     CreateTrainedModelResponse.add_member(:trained_model_arn, Shapes::ShapeRef.new(shape: TrainedModelArn, required: true, location_name: "trainedModelArn"))
+    CreateTrainedModelResponse.add_member(:version_identifier, Shapes::ShapeRef.new(shape: UUID, location_name: "versionIdentifier"))
     CreateTrainedModelResponse.struct_class = Types::CreateTrainedModelResponse
 
     CreateTrainingDatasetRequest.add_member(:name, Shapes::ShapeRef.new(shape: NameString, required: true, location_name: "name"))
@@ -616,6 +702,14 @@ module Aws::CleanRoomsML
 
     CreateTrainingDatasetResponse.add_member(:training_dataset_arn, Shapes::ShapeRef.new(shape: TrainingDatasetArn, required: true, location_name: "trainingDatasetArn"))
     CreateTrainingDatasetResponse.struct_class = Types::CreateTrainingDatasetResponse
+
+    CustomDataIdentifierList.member = Shapes::ShapeRef.new(shape: CustomDataIdentifier)
+
+    CustomEntityConfig.add_member(:custom_data_identifiers, Shapes::ShapeRef.new(shape: CustomDataIdentifierList, required: true, location_name: "customDataIdentifiers"))
+    CustomEntityConfig.struct_class = Types::CustomEntityConfig
+
+    DataPrivacyScores.add_member(:membership_inference_attack_scores, Shapes::ShapeRef.new(shape: MembershipInferenceAttackScoreList, required: true, location_name: "membershipInferenceAttackScores"))
+    DataPrivacyScores.struct_class = Types::DataPrivacyScores
 
     DataSource.add_member(:glue_data_source, Shapes::ShapeRef.new(shape: GlueDataSource, required: true, location_name: "glueDataSource"))
     DataSource.struct_class = Types::DataSource
@@ -660,6 +754,7 @@ module Aws::CleanRoomsML
 
     DeleteTrainedModelOutputRequest.add_member(:trained_model_arn, Shapes::ShapeRef.new(shape: TrainedModelArn, required: true, location: "uri", location_name: "trainedModelArn"))
     DeleteTrainedModelOutputRequest.add_member(:membership_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location: "uri", location_name: "membershipIdentifier"))
+    DeleteTrainedModelOutputRequest.add_member(:version_identifier, Shapes::ShapeRef.new(shape: UUID, location: "querystring", location_name: "versionIdentifier"))
     DeleteTrainedModelOutputRequest.struct_class = Types::DeleteTrainedModelOutputRequest
 
     DeleteTrainingDatasetRequest.add_member(:training_dataset_arn, Shapes::ShapeRef.new(shape: TrainingDatasetArn, required: true, location: "uri", location_name: "trainingDatasetArn"))
@@ -667,6 +762,8 @@ module Aws::CleanRoomsML
 
     Destination.add_member(:s3_destination, Shapes::ShapeRef.new(shape: S3ConfigMap, required: true, location_name: "s3Destination"))
     Destination.struct_class = Types::Destination
+
+    EntityTypeList.member = Shapes::ShapeRef.new(shape: EntityType)
 
     Environment.key = Shapes::ShapeRef.new(shape: EnvironmentKeyString)
     Environment.value = Shapes::ShapeRef.new(shape: EnvironmentValueString)
@@ -728,9 +825,6 @@ module Aws::CleanRoomsML
     GetCollaborationMLInputChannelRequest.add_member(:collaboration_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location: "uri", location_name: "collaborationIdentifier"))
     GetCollaborationMLInputChannelRequest.struct_class = Types::GetCollaborationMLInputChannelRequest
 
-    GetCollaborationMLInputChannelResponse.add_member(:create_time, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "createTime"))
-    GetCollaborationMLInputChannelResponse.add_member(:update_time, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "updateTime"))
-    GetCollaborationMLInputChannelResponse.add_member(:creator_account_id, Shapes::ShapeRef.new(shape: AccountId, required: true, location_name: "creatorAccountId"))
     GetCollaborationMLInputChannelResponse.add_member(:membership_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location_name: "membershipIdentifier"))
     GetCollaborationMLInputChannelResponse.add_member(:collaboration_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location_name: "collaborationIdentifier"))
     GetCollaborationMLInputChannelResponse.add_member(:ml_input_channel_arn, Shapes::ShapeRef.new(shape: MLInputChannelArn, required: true, location_name: "mlInputChannelArn"))
@@ -740,30 +834,41 @@ module Aws::CleanRoomsML
     GetCollaborationMLInputChannelResponse.add_member(:status_details, Shapes::ShapeRef.new(shape: StatusDetails, location_name: "statusDetails"))
     GetCollaborationMLInputChannelResponse.add_member(:retention_in_days, Shapes::ShapeRef.new(shape: GetCollaborationMLInputChannelResponseRetentionInDaysInteger, required: true, location_name: "retentionInDays"))
     GetCollaborationMLInputChannelResponse.add_member(:number_of_records, Shapes::ShapeRef.new(shape: GetCollaborationMLInputChannelResponseNumberOfRecordsLong, location_name: "numberOfRecords"))
+    GetCollaborationMLInputChannelResponse.add_member(:privacy_budgets, Shapes::ShapeRef.new(shape: PrivacyBudgets, location_name: "privacyBudgets"))
     GetCollaborationMLInputChannelResponse.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, location_name: "description"))
+    GetCollaborationMLInputChannelResponse.add_member(:synthetic_data_configuration, Shapes::ShapeRef.new(shape: SyntheticDataConfiguration, location_name: "syntheticDataConfiguration"))
+    GetCollaborationMLInputChannelResponse.add_member(:payer_configuration, Shapes::ShapeRef.new(shape: PayerConfiguration, location_name: "payerConfiguration"))
+    GetCollaborationMLInputChannelResponse.add_member(:create_time, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "createTime"))
+    GetCollaborationMLInputChannelResponse.add_member(:update_time, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "updateTime"))
+    GetCollaborationMLInputChannelResponse.add_member(:creator_account_id, Shapes::ShapeRef.new(shape: AccountId, required: true, location_name: "creatorAccountId"))
     GetCollaborationMLInputChannelResponse.struct_class = Types::GetCollaborationMLInputChannelResponse
 
     GetCollaborationMLInputChannelResponseConfiguredModelAlgorithmAssociationsList.member = Shapes::ShapeRef.new(shape: ConfiguredModelAlgorithmAssociationArn)
 
     GetCollaborationTrainedModelRequest.add_member(:trained_model_arn, Shapes::ShapeRef.new(shape: TrainedModelArn, required: true, location: "uri", location_name: "trainedModelArn"))
     GetCollaborationTrainedModelRequest.add_member(:collaboration_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location: "uri", location_name: "collaborationIdentifier"))
+    GetCollaborationTrainedModelRequest.add_member(:version_identifier, Shapes::ShapeRef.new(shape: UUID, location: "querystring", location_name: "versionIdentifier"))
     GetCollaborationTrainedModelRequest.struct_class = Types::GetCollaborationTrainedModelRequest
 
     GetCollaborationTrainedModelResponse.add_member(:membership_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location_name: "membershipIdentifier"))
     GetCollaborationTrainedModelResponse.add_member(:collaboration_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location_name: "collaborationIdentifier"))
     GetCollaborationTrainedModelResponse.add_member(:trained_model_arn, Shapes::ShapeRef.new(shape: TrainedModelArn, required: true, location_name: "trainedModelArn"))
+    GetCollaborationTrainedModelResponse.add_member(:version_identifier, Shapes::ShapeRef.new(shape: UUID, location_name: "versionIdentifier"))
+    GetCollaborationTrainedModelResponse.add_member(:incremental_training_data_channels, Shapes::ShapeRef.new(shape: IncrementalTrainingDataChannelsOutput, location_name: "incrementalTrainingDataChannels"))
     GetCollaborationTrainedModelResponse.add_member(:name, Shapes::ShapeRef.new(shape: NameString, required: true, location_name: "name"))
     GetCollaborationTrainedModelResponse.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, location_name: "description"))
     GetCollaborationTrainedModelResponse.add_member(:status, Shapes::ShapeRef.new(shape: TrainedModelStatus, required: true, location_name: "status"))
     GetCollaborationTrainedModelResponse.add_member(:status_details, Shapes::ShapeRef.new(shape: StatusDetails, location_name: "statusDetails"))
     GetCollaborationTrainedModelResponse.add_member(:configured_model_algorithm_association_arn, Shapes::ShapeRef.new(shape: ConfiguredModelAlgorithmAssociationArn, required: true, location_name: "configuredModelAlgorithmAssociationArn"))
     GetCollaborationTrainedModelResponse.add_member(:resource_config, Shapes::ShapeRef.new(shape: ResourceConfig, location_name: "resourceConfig"))
+    GetCollaborationTrainedModelResponse.add_member(:training_input_mode, Shapes::ShapeRef.new(shape: TrainingInputMode, location_name: "trainingInputMode"))
     GetCollaborationTrainedModelResponse.add_member(:stopping_condition, Shapes::ShapeRef.new(shape: StoppingCondition, location_name: "stoppingCondition"))
     GetCollaborationTrainedModelResponse.add_member(:metrics_status, Shapes::ShapeRef.new(shape: MetricsStatus, location_name: "metricsStatus"))
     GetCollaborationTrainedModelResponse.add_member(:metrics_status_details, Shapes::ShapeRef.new(shape: String, location_name: "metricsStatusDetails"))
     GetCollaborationTrainedModelResponse.add_member(:logs_status, Shapes::ShapeRef.new(shape: LogsStatus, location_name: "logsStatus"))
     GetCollaborationTrainedModelResponse.add_member(:logs_status_details, Shapes::ShapeRef.new(shape: String, location_name: "logsStatusDetails"))
     GetCollaborationTrainedModelResponse.add_member(:training_container_image_digest, Shapes::ShapeRef.new(shape: String, location_name: "trainingContainerImageDigest"))
+    GetCollaborationTrainedModelResponse.add_member(:ml_model_training_payer_account_id, Shapes::ShapeRef.new(shape: AccountId, location_name: "mlModelTrainingPayerAccountId"))
     GetCollaborationTrainedModelResponse.add_member(:create_time, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "createTime"))
     GetCollaborationTrainedModelResponse.add_member(:update_time, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "updateTime"))
     GetCollaborationTrainedModelResponse.add_member(:creator_account_id, Shapes::ShapeRef.new(shape: AccountId, required: true, location_name: "creatorAccountId"))
@@ -839,12 +944,8 @@ module Aws::CleanRoomsML
     GetMLInputChannelRequest.add_member(:membership_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location: "uri", location_name: "membershipIdentifier"))
     GetMLInputChannelRequest.struct_class = Types::GetMLInputChannelRequest
 
-    GetMLInputChannelResponse.add_member(:create_time, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "createTime"))
-    GetMLInputChannelResponse.add_member(:update_time, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "updateTime"))
     GetMLInputChannelResponse.add_member(:membership_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location_name: "membershipIdentifier"))
     GetMLInputChannelResponse.add_member(:collaboration_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location_name: "collaborationIdentifier"))
-    GetMLInputChannelResponse.add_member(:input_channel, Shapes::ShapeRef.new(shape: InputChannel, required: true, location_name: "inputChannel"))
-    GetMLInputChannelResponse.add_member(:protected_query_identifier, Shapes::ShapeRef.new(shape: UUID, location_name: "protectedQueryIdentifier"))
     GetMLInputChannelResponse.add_member(:ml_input_channel_arn, Shapes::ShapeRef.new(shape: MLInputChannelArn, required: true, location_name: "mlInputChannelArn"))
     GetMLInputChannelResponse.add_member(:name, Shapes::ShapeRef.new(shape: NameString, required: true, location_name: "name"))
     GetMLInputChannelResponse.add_member(:configured_model_algorithm_associations, Shapes::ShapeRef.new(shape: GetMLInputChannelResponseConfiguredModelAlgorithmAssociationsList, required: true, location_name: "configuredModelAlgorithmAssociations"))
@@ -852,9 +953,16 @@ module Aws::CleanRoomsML
     GetMLInputChannelResponse.add_member(:status_details, Shapes::ShapeRef.new(shape: StatusDetails, location_name: "statusDetails"))
     GetMLInputChannelResponse.add_member(:retention_in_days, Shapes::ShapeRef.new(shape: GetMLInputChannelResponseRetentionInDaysInteger, required: true, location_name: "retentionInDays"))
     GetMLInputChannelResponse.add_member(:number_of_records, Shapes::ShapeRef.new(shape: GetMLInputChannelResponseNumberOfRecordsLong, location_name: "numberOfRecords"))
+    GetMLInputChannelResponse.add_member(:privacy_budgets, Shapes::ShapeRef.new(shape: PrivacyBudgets, location_name: "privacyBudgets"))
+    GetMLInputChannelResponse.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, location_name: "description"))
+    GetMLInputChannelResponse.add_member(:synthetic_data_configuration, Shapes::ShapeRef.new(shape: SyntheticDataConfiguration, location_name: "syntheticDataConfiguration"))
+    GetMLInputChannelResponse.add_member(:payer_configuration, Shapes::ShapeRef.new(shape: PayerConfiguration, location_name: "payerConfiguration"))
+    GetMLInputChannelResponse.add_member(:create_time, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "createTime"))
+    GetMLInputChannelResponse.add_member(:update_time, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "updateTime"))
+    GetMLInputChannelResponse.add_member(:input_channel, Shapes::ShapeRef.new(shape: InputChannel, required: true, location_name: "inputChannel"))
+    GetMLInputChannelResponse.add_member(:protected_query_identifier, Shapes::ShapeRef.new(shape: UUID, location_name: "protectedQueryIdentifier"))
     GetMLInputChannelResponse.add_member(:number_of_files, Shapes::ShapeRef.new(shape: GetMLInputChannelResponseNumberOfFilesDouble, location_name: "numberOfFiles"))
     GetMLInputChannelResponse.add_member(:size_in_gb, Shapes::ShapeRef.new(shape: GetMLInputChannelResponseSizeInGbDouble, location_name: "sizeInGb"))
-    GetMLInputChannelResponse.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, location_name: "description"))
     GetMLInputChannelResponse.add_member(:kms_key_arn, Shapes::ShapeRef.new(shape: KmsKeyArn, location_name: "kmsKeyArn"))
     GetMLInputChannelResponse.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
     GetMLInputChannelResponse.struct_class = Types::GetMLInputChannelResponse
@@ -872,6 +980,7 @@ module Aws::CleanRoomsML
     GetTrainedModelInferenceJobResponse.add_member(:name, Shapes::ShapeRef.new(shape: NameString, required: true, location_name: "name"))
     GetTrainedModelInferenceJobResponse.add_member(:status, Shapes::ShapeRef.new(shape: TrainedModelInferenceJobStatus, required: true, location_name: "status"))
     GetTrainedModelInferenceJobResponse.add_member(:trained_model_arn, Shapes::ShapeRef.new(shape: TrainedModelArn, required: true, location_name: "trainedModelArn"))
+    GetTrainedModelInferenceJobResponse.add_member(:trained_model_version_identifier, Shapes::ShapeRef.new(shape: UUID, location_name: "trainedModelVersionIdentifier"))
     GetTrainedModelInferenceJobResponse.add_member(:resource_config, Shapes::ShapeRef.new(shape: InferenceResourceConfig, required: true, location_name: "resourceConfig"))
     GetTrainedModelInferenceJobResponse.add_member(:output_configuration, Shapes::ShapeRef.new(shape: InferenceOutputConfiguration, required: true, location_name: "outputConfiguration"))
     GetTrainedModelInferenceJobResponse.add_member(:membership_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location_name: "membershipIdentifier"))
@@ -887,27 +996,33 @@ module Aws::CleanRoomsML
     GetTrainedModelInferenceJobResponse.add_member(:logs_status, Shapes::ShapeRef.new(shape: LogsStatus, location_name: "logsStatus"))
     GetTrainedModelInferenceJobResponse.add_member(:logs_status_details, Shapes::ShapeRef.new(shape: String, location_name: "logsStatusDetails"))
     GetTrainedModelInferenceJobResponse.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
+    GetTrainedModelInferenceJobResponse.add_member(:ml_model_inference_payer_account_id, Shapes::ShapeRef.new(shape: AccountId, location_name: "mlModelInferencePayerAccountId"))
     GetTrainedModelInferenceJobResponse.struct_class = Types::GetTrainedModelInferenceJobResponse
 
     GetTrainedModelRequest.add_member(:trained_model_arn, Shapes::ShapeRef.new(shape: TrainedModelArn, required: true, location: "uri", location_name: "trainedModelArn"))
     GetTrainedModelRequest.add_member(:membership_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location: "uri", location_name: "membershipIdentifier"))
+    GetTrainedModelRequest.add_member(:version_identifier, Shapes::ShapeRef.new(shape: UUID, location: "querystring", location_name: "versionIdentifier"))
     GetTrainedModelRequest.struct_class = Types::GetTrainedModelRequest
 
     GetTrainedModelResponse.add_member(:membership_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location_name: "membershipIdentifier"))
     GetTrainedModelResponse.add_member(:collaboration_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location_name: "collaborationIdentifier"))
     GetTrainedModelResponse.add_member(:trained_model_arn, Shapes::ShapeRef.new(shape: TrainedModelArn, required: true, location_name: "trainedModelArn"))
+    GetTrainedModelResponse.add_member(:version_identifier, Shapes::ShapeRef.new(shape: UUID, location_name: "versionIdentifier"))
+    GetTrainedModelResponse.add_member(:incremental_training_data_channels, Shapes::ShapeRef.new(shape: IncrementalTrainingDataChannelsOutput, location_name: "incrementalTrainingDataChannels"))
     GetTrainedModelResponse.add_member(:name, Shapes::ShapeRef.new(shape: NameString, required: true, location_name: "name"))
     GetTrainedModelResponse.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, location_name: "description"))
     GetTrainedModelResponse.add_member(:status, Shapes::ShapeRef.new(shape: TrainedModelStatus, required: true, location_name: "status"))
     GetTrainedModelResponse.add_member(:status_details, Shapes::ShapeRef.new(shape: StatusDetails, location_name: "statusDetails"))
     GetTrainedModelResponse.add_member(:configured_model_algorithm_association_arn, Shapes::ShapeRef.new(shape: ConfiguredModelAlgorithmAssociationArn, required: true, location_name: "configuredModelAlgorithmAssociationArn"))
     GetTrainedModelResponse.add_member(:resource_config, Shapes::ShapeRef.new(shape: ResourceConfig, location_name: "resourceConfig"))
+    GetTrainedModelResponse.add_member(:training_input_mode, Shapes::ShapeRef.new(shape: TrainingInputMode, location_name: "trainingInputMode"))
     GetTrainedModelResponse.add_member(:stopping_condition, Shapes::ShapeRef.new(shape: StoppingCondition, location_name: "stoppingCondition"))
     GetTrainedModelResponse.add_member(:metrics_status, Shapes::ShapeRef.new(shape: MetricsStatus, location_name: "metricsStatus"))
     GetTrainedModelResponse.add_member(:metrics_status_details, Shapes::ShapeRef.new(shape: String, location_name: "metricsStatusDetails"))
     GetTrainedModelResponse.add_member(:logs_status, Shapes::ShapeRef.new(shape: LogsStatus, location_name: "logsStatus"))
     GetTrainedModelResponse.add_member(:logs_status_details, Shapes::ShapeRef.new(shape: String, location_name: "logsStatusDetails"))
     GetTrainedModelResponse.add_member(:training_container_image_digest, Shapes::ShapeRef.new(shape: String, location_name: "trainingContainerImageDigest"))
+    GetTrainedModelResponse.add_member(:ml_model_training_payer_account_id, Shapes::ShapeRef.new(shape: AccountId, location_name: "mlModelTrainingPayerAccountId"))
     GetTrainedModelResponse.add_member(:create_time, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "createTime"))
     GetTrainedModelResponse.add_member(:update_time, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "updateTime"))
     GetTrainedModelResponse.add_member(:hyperparameters, Shapes::ShapeRef.new(shape: HyperParameters, location_name: "hyperparameters"))
@@ -938,6 +1053,20 @@ module Aws::CleanRoomsML
 
     HyperParameters.key = Shapes::ShapeRef.new(shape: HyperParametersKeyString)
     HyperParameters.value = Shapes::ShapeRef.new(shape: HyperParametersValueString)
+
+    IncrementalTrainingDataChannel.add_member(:trained_model_arn, Shapes::ShapeRef.new(shape: TrainedModelArn, required: true, location_name: "trainedModelArn"))
+    IncrementalTrainingDataChannel.add_member(:version_identifier, Shapes::ShapeRef.new(shape: UUID, location_name: "versionIdentifier"))
+    IncrementalTrainingDataChannel.add_member(:channel_name, Shapes::ShapeRef.new(shape: ModelTrainingDataChannelName, required: true, location_name: "channelName"))
+    IncrementalTrainingDataChannel.struct_class = Types::IncrementalTrainingDataChannel
+
+    IncrementalTrainingDataChannelOutput.add_member(:channel_name, Shapes::ShapeRef.new(shape: ModelTrainingDataChannelName, required: true, location_name: "channelName"))
+    IncrementalTrainingDataChannelOutput.add_member(:version_identifier, Shapes::ShapeRef.new(shape: UUID, location_name: "versionIdentifier"))
+    IncrementalTrainingDataChannelOutput.add_member(:model_name, Shapes::ShapeRef.new(shape: NameString, required: true, location_name: "modelName"))
+    IncrementalTrainingDataChannelOutput.struct_class = Types::IncrementalTrainingDataChannelOutput
+
+    IncrementalTrainingDataChannels.member = Shapes::ShapeRef.new(shape: IncrementalTrainingDataChannel)
+
+    IncrementalTrainingDataChannelsOutput.member = Shapes::ShapeRef.new(shape: IncrementalTrainingDataChannelOutput)
 
     InferenceContainerConfig.add_member(:image_uri, Shapes::ShapeRef.new(shape: AlgorithmImage, required: true, location_name: "imageUri"))
     InferenceContainerConfig.struct_class = Types::InferenceContainerConfig
@@ -970,6 +1099,9 @@ module Aws::CleanRoomsML
     InputChannelDataSource.add_member_subclass(:protected_query_input_parameters, Types::InputChannelDataSource::ProtectedQueryInputParameters)
     InputChannelDataSource.add_member_subclass(:unknown, Types::InputChannelDataSource::Unknown)
     InputChannelDataSource.struct_class = Types::InputChannelDataSource
+
+    InternalServiceException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
+    InternalServiceException.struct_class = Types::InternalServiceException
 
     ListAudienceExportJobsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location: "querystring", location_name: "nextToken"))
     ListAudienceExportJobsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
@@ -1020,6 +1152,7 @@ module Aws::CleanRoomsML
     ListCollaborationTrainedModelExportJobsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
     ListCollaborationTrainedModelExportJobsRequest.add_member(:collaboration_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location: "uri", location_name: "collaborationIdentifier"))
     ListCollaborationTrainedModelExportJobsRequest.add_member(:trained_model_arn, Shapes::ShapeRef.new(shape: TrainedModelArn, required: true, location: "uri", location_name: "trainedModelArn"))
+    ListCollaborationTrainedModelExportJobsRequest.add_member(:trained_model_version_identifier, Shapes::ShapeRef.new(shape: UUID, location: "querystring", location_name: "trainedModelVersionIdentifier"))
     ListCollaborationTrainedModelExportJobsRequest.struct_class = Types::ListCollaborationTrainedModelExportJobsRequest
 
     ListCollaborationTrainedModelExportJobsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
@@ -1030,6 +1163,7 @@ module Aws::CleanRoomsML
     ListCollaborationTrainedModelInferenceJobsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
     ListCollaborationTrainedModelInferenceJobsRequest.add_member(:collaboration_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location: "uri", location_name: "collaborationIdentifier"))
     ListCollaborationTrainedModelInferenceJobsRequest.add_member(:trained_model_arn, Shapes::ShapeRef.new(shape: TrainedModelArn, location: "querystring", location_name: "trainedModelArn"))
+    ListCollaborationTrainedModelInferenceJobsRequest.add_member(:trained_model_version_identifier, Shapes::ShapeRef.new(shape: UUID, location: "querystring", location_name: "trainedModelVersionIdentifier"))
     ListCollaborationTrainedModelInferenceJobsRequest.struct_class = Types::ListCollaborationTrainedModelInferenceJobsRequest
 
     ListCollaborationTrainedModelInferenceJobsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
@@ -1089,11 +1223,23 @@ module Aws::CleanRoomsML
     ListTrainedModelInferenceJobsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
     ListTrainedModelInferenceJobsRequest.add_member(:membership_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location: "uri", location_name: "membershipIdentifier"))
     ListTrainedModelInferenceJobsRequest.add_member(:trained_model_arn, Shapes::ShapeRef.new(shape: TrainedModelArn, location: "querystring", location_name: "trainedModelArn"))
+    ListTrainedModelInferenceJobsRequest.add_member(:trained_model_version_identifier, Shapes::ShapeRef.new(shape: UUID, location: "querystring", location_name: "trainedModelVersionIdentifier"))
     ListTrainedModelInferenceJobsRequest.struct_class = Types::ListTrainedModelInferenceJobsRequest
 
     ListTrainedModelInferenceJobsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
     ListTrainedModelInferenceJobsResponse.add_member(:trained_model_inference_jobs, Shapes::ShapeRef.new(shape: TrainedModelInferenceJobList, required: true, location_name: "trainedModelInferenceJobs"))
     ListTrainedModelInferenceJobsResponse.struct_class = Types::ListTrainedModelInferenceJobsResponse
+
+    ListTrainedModelVersionsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location: "querystring", location_name: "nextToken"))
+    ListTrainedModelVersionsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
+    ListTrainedModelVersionsRequest.add_member(:membership_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location: "uri", location_name: "membershipIdentifier"))
+    ListTrainedModelVersionsRequest.add_member(:trained_model_arn, Shapes::ShapeRef.new(shape: TrainedModelArn, required: true, location: "uri", location_name: "trainedModelArn"))
+    ListTrainedModelVersionsRequest.add_member(:status, Shapes::ShapeRef.new(shape: TrainedModelStatus, location: "querystring", location_name: "status"))
+    ListTrainedModelVersionsRequest.struct_class = Types::ListTrainedModelVersionsRequest
+
+    ListTrainedModelVersionsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    ListTrainedModelVersionsResponse.add_member(:trained_models, Shapes::ShapeRef.new(shape: TrainedModelList, required: true, location_name: "trainedModels"))
+    ListTrainedModelVersionsResponse.struct_class = Types::ListTrainedModelVersionsResponse
 
     ListTrainedModelsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location: "querystring", location_name: "nextToken"))
     ListTrainedModelsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: MaxResults, location: "querystring", location_name: "maxResults"))
@@ -1112,8 +1258,14 @@ module Aws::CleanRoomsML
     ListTrainingDatasetsResponse.add_member(:training_datasets, Shapes::ShapeRef.new(shape: TrainingDatasetList, required: true, location_name: "trainingDatasets"))
     ListTrainingDatasetsResponse.struct_class = Types::ListTrainingDatasetsResponse
 
+    LogRedactionConfiguration.add_member(:entities_to_redact, Shapes::ShapeRef.new(shape: EntityTypeList, required: true, location_name: "entitiesToRedact"))
+    LogRedactionConfiguration.add_member(:custom_entity_config, Shapes::ShapeRef.new(shape: CustomEntityConfig, location_name: "customEntityConfig"))
+    LogRedactionConfiguration.struct_class = Types::LogRedactionConfiguration
+
     LogsConfigurationPolicy.add_member(:allowed_account_ids, Shapes::ShapeRef.new(shape: AccountIdList, required: true, location_name: "allowedAccountIds"))
     LogsConfigurationPolicy.add_member(:filter_pattern, Shapes::ShapeRef.new(shape: LogsConfigurationPolicyFilterPatternString, location_name: "filterPattern"))
+    LogsConfigurationPolicy.add_member(:log_type, Shapes::ShapeRef.new(shape: LogType, location_name: "logType"))
+    LogsConfigurationPolicy.add_member(:log_redaction_configuration, Shapes::ShapeRef.new(shape: LogRedactionConfiguration, location_name: "logRedactionConfiguration"))
     LogsConfigurationPolicy.struct_class = Types::LogsConfigurationPolicy
 
     LogsConfigurationPolicyList.member = Shapes::ShapeRef.new(shape: LogsConfigurationPolicy)
@@ -1128,6 +1280,7 @@ module Aws::CleanRoomsML
     MLInputChannelSummary.add_member(:ml_input_channel_arn, Shapes::ShapeRef.new(shape: MLInputChannelArn, required: true, location_name: "mlInputChannelArn"))
     MLInputChannelSummary.add_member(:status, Shapes::ShapeRef.new(shape: MLInputChannelStatus, required: true, location_name: "status"))
     MLInputChannelSummary.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, location_name: "description"))
+    MLInputChannelSummary.add_member(:payer_configuration, Shapes::ShapeRef.new(shape: PayerConfiguration, location_name: "payerConfiguration"))
     MLInputChannelSummary.struct_class = Types::MLInputChannelSummary
 
     MLInputChannelSummaryConfiguredModelAlgorithmAssociationsList.member = Shapes::ShapeRef.new(shape: ConfiguredModelAlgorithmAssociationArn)
@@ -1137,6 +1290,17 @@ module Aws::CleanRoomsML
     MLOutputConfiguration.add_member(:destination, Shapes::ShapeRef.new(shape: Destination, location_name: "destination"))
     MLOutputConfiguration.add_member(:role_arn, Shapes::ShapeRef.new(shape: IamRoleArn, required: true, location_name: "roleArn"))
     MLOutputConfiguration.struct_class = Types::MLOutputConfiguration
+
+    MLSyntheticDataParameters.add_member(:epsilon, Shapes::ShapeRef.new(shape: MLSyntheticDataParametersEpsilonDouble, required: true, location_name: "epsilon"))
+    MLSyntheticDataParameters.add_member(:max_membership_inference_attack_score, Shapes::ShapeRef.new(shape: MLSyntheticDataParametersMaxMembershipInferenceAttackScoreDouble, required: true, location_name: "maxMembershipInferenceAttackScore"))
+    MLSyntheticDataParameters.add_member(:column_classification, Shapes::ShapeRef.new(shape: ColumnClassificationDetails, location_name: "columnClassification"))
+    MLSyntheticDataParameters.struct_class = Types::MLSyntheticDataParameters
+
+    MembershipInferenceAttackScore.add_member(:attack_version, Shapes::ShapeRef.new(shape: MembershipInferenceAttackVersion, required: true, location_name: "attackVersion"))
+    MembershipInferenceAttackScore.add_member(:score, Shapes::ShapeRef.new(shape: MembershipInferenceAttackScoreScoreDouble, required: true, location_name: "score"))
+    MembershipInferenceAttackScore.struct_class = Types::MembershipInferenceAttackScore
+
+    MembershipInferenceAttackScoreList.member = Shapes::ShapeRef.new(shape: MembershipInferenceAttackScore)
 
     MetricDefinition.add_member(:name, Shapes::ShapeRef.new(shape: MetricName, required: true, location_name: "name"))
     MetricDefinition.add_member(:regex, Shapes::ShapeRef.new(shape: MetricRegex, required: true, location_name: "regex"))
@@ -1154,12 +1318,23 @@ module Aws::CleanRoomsML
 
     ModelTrainingDataChannel.add_member(:ml_input_channel_arn, Shapes::ShapeRef.new(shape: MLInputChannelArn, required: true, location_name: "mlInputChannelArn"))
     ModelTrainingDataChannel.add_member(:channel_name, Shapes::ShapeRef.new(shape: ModelTrainingDataChannelName, required: true, location_name: "channelName"))
+    ModelTrainingDataChannel.add_member(:s3_data_distribution_type, Shapes::ShapeRef.new(shape: S3DataDistributionType, location_name: "s3DataDistributionType"))
     ModelTrainingDataChannel.struct_class = Types::ModelTrainingDataChannel
 
     ModelTrainingDataChannels.member = Shapes::ShapeRef.new(shape: ModelTrainingDataChannel)
 
-    ParameterMap.key = Shapes::ShapeRef.new(shape: ParameterKey)
+    ParameterMap.key = Shapes::ShapeRef.new(shape: ParameterName)
     ParameterMap.value = Shapes::ShapeRef.new(shape: ParameterValue)
+
+    PayerConfiguration.add_member(:compute_payer_account_id, Shapes::ShapeRef.new(shape: AccountId, location_name: "computePayerAccountId"))
+    PayerConfiguration.add_member(:synthetic_data_payer_account_id, Shapes::ShapeRef.new(shape: AccountId, location_name: "syntheticDataPayerAccountId"))
+    PayerConfiguration.struct_class = Types::PayerConfiguration
+
+    PrivacyBudgets.add_member(:access_budgets, Shapes::ShapeRef.new(shape: AccessBudgets, location_name: "accessBudgets"))
+    PrivacyBudgets.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    PrivacyBudgets.add_member_subclass(:access_budgets, Types::PrivacyBudgets::AccessBudgets)
+    PrivacyBudgets.add_member_subclass(:unknown, Types::PrivacyBudgets::Unknown)
+    PrivacyBudgets.struct_class = Types::PrivacyBudgets
 
     PrivacyConfiguration.add_member(:policies, Shapes::ShapeRef.new(shape: PrivacyConfigurationPolicies, required: true, location_name: "policies"))
     PrivacyConfiguration.struct_class = Types::PrivacyConfiguration
@@ -1171,6 +1346,7 @@ module Aws::CleanRoomsML
 
     ProtectedQueryInputParameters.add_member(:sql_parameters, Shapes::ShapeRef.new(shape: ProtectedQuerySQLParameters, required: true, location_name: "sqlParameters"))
     ProtectedQueryInputParameters.add_member(:compute_configuration, Shapes::ShapeRef.new(shape: ComputeConfiguration, location_name: "computeConfiguration"))
+    ProtectedQueryInputParameters.add_member(:result_format, Shapes::ShapeRef.new(shape: ResultFormat, location_name: "resultFormat"))
     ProtectedQueryInputParameters.struct_class = Types::ProtectedQueryInputParameters
 
     ProtectedQuerySQLParameters.add_member(:query_string, Shapes::ShapeRef.new(shape: ProtectedQuerySQLParametersQueryStringString, location_name: "queryString"))
@@ -1210,7 +1386,12 @@ module Aws::CleanRoomsML
     S3ConfigMap.struct_class = Types::S3ConfigMap
 
     ServiceQuotaExceededException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
+    ServiceQuotaExceededException.add_member(:quota_name, Shapes::ShapeRef.new(shape: String, location_name: "quotaName"))
+    ServiceQuotaExceededException.add_member(:quota_value, Shapes::ShapeRef.new(shape: ServiceQuotaExceededExceptionQuotaValueDouble, location_name: "quotaValue"))
     ServiceQuotaExceededException.struct_class = Types::ServiceQuotaExceededException
+
+    SparkProperties.key = Shapes::ShapeRef.new(shape: SparkPropertyKey)
+    SparkProperties.value = Shapes::ShapeRef.new(shape: SparkPropertyValue)
 
     StartAudienceExportJobRequest.add_member(:name, Shapes::ShapeRef.new(shape: NameString, required: true, location_name: "name"))
     StartAudienceExportJobRequest.add_member(:audience_generation_job_arn, Shapes::ShapeRef.new(shape: AudienceGenerationJobArn, required: true, location_name: "audienceGenerationJobArn"))
@@ -1232,6 +1413,7 @@ module Aws::CleanRoomsML
 
     StartTrainedModelExportJobRequest.add_member(:name, Shapes::ShapeRef.new(shape: NameString, required: true, location_name: "name"))
     StartTrainedModelExportJobRequest.add_member(:trained_model_arn, Shapes::ShapeRef.new(shape: TrainedModelArn, required: true, location: "uri", location_name: "trainedModelArn"))
+    StartTrainedModelExportJobRequest.add_member(:trained_model_version_identifier, Shapes::ShapeRef.new(shape: UUID, location_name: "trainedModelVersionIdentifier"))
     StartTrainedModelExportJobRequest.add_member(:membership_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location: "uri", location_name: "membershipIdentifier"))
     StartTrainedModelExportJobRequest.add_member(:output_configuration, Shapes::ShapeRef.new(shape: TrainedModelExportOutputConfiguration, required: true, location_name: "outputConfiguration"))
     StartTrainedModelExportJobRequest.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, location_name: "description"))
@@ -1240,6 +1422,7 @@ module Aws::CleanRoomsML
     StartTrainedModelInferenceJobRequest.add_member(:membership_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location: "uri", location_name: "membershipIdentifier"))
     StartTrainedModelInferenceJobRequest.add_member(:name, Shapes::ShapeRef.new(shape: NameString, required: true, location_name: "name"))
     StartTrainedModelInferenceJobRequest.add_member(:trained_model_arn, Shapes::ShapeRef.new(shape: TrainedModelArn, required: true, location_name: "trainedModelArn"))
+    StartTrainedModelInferenceJobRequest.add_member(:trained_model_version_identifier, Shapes::ShapeRef.new(shape: UUID, location_name: "trainedModelVersionIdentifier"))
     StartTrainedModelInferenceJobRequest.add_member(:configured_model_algorithm_association_arn, Shapes::ShapeRef.new(shape: ConfiguredModelAlgorithmAssociationArn, location_name: "configuredModelAlgorithmAssociationArn"))
     StartTrainedModelInferenceJobRequest.add_member(:resource_config, Shapes::ShapeRef.new(shape: InferenceResourceConfig, required: true, location_name: "resourceConfig"))
     StartTrainedModelInferenceJobRequest.add_member(:output_configuration, Shapes::ShapeRef.new(shape: InferenceOutputConfiguration, required: true, location_name: "outputConfiguration"))
@@ -1249,6 +1432,7 @@ module Aws::CleanRoomsML
     StartTrainedModelInferenceJobRequest.add_member(:environment, Shapes::ShapeRef.new(shape: InferenceEnvironmentMap, location_name: "environment"))
     StartTrainedModelInferenceJobRequest.add_member(:kms_key_arn, Shapes::ShapeRef.new(shape: KmsKeyArn, location_name: "kmsKeyArn"))
     StartTrainedModelInferenceJobRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagMap, location_name: "tags"))
+    StartTrainedModelInferenceJobRequest.add_member(:ml_model_inference_payer_account_id, Shapes::ShapeRef.new(shape: AccountId, location_name: "mlModelInferencePayerAccountId"))
     StartTrainedModelInferenceJobRequest.struct_class = Types::StartTrainedModelInferenceJobRequest
 
     StartTrainedModelInferenceJobResponse.add_member(:trained_model_inference_job_arn, Shapes::ShapeRef.new(shape: TrainedModelInferenceJobArn, required: true, location_name: "trainedModelInferenceJobArn"))
@@ -1261,6 +1445,18 @@ module Aws::CleanRoomsML
     StoppingCondition.add_member(:max_runtime_in_seconds, Shapes::ShapeRef.new(shape: StoppingConditionMaxRuntimeInSecondsInteger, location_name: "maxRuntimeInSeconds"))
     StoppingCondition.struct_class = Types::StoppingCondition
 
+    SyntheticDataColumnProperties.add_member(:column_name, Shapes::ShapeRef.new(shape: SyntheticDataColumnName, required: true, location_name: "columnName"))
+    SyntheticDataColumnProperties.add_member(:column_type, Shapes::ShapeRef.new(shape: SyntheticDataColumnType, required: true, location_name: "columnType"))
+    SyntheticDataColumnProperties.add_member(:is_predictive_value, Shapes::ShapeRef.new(shape: Boolean, required: true, location_name: "isPredictiveValue"))
+    SyntheticDataColumnProperties.struct_class = Types::SyntheticDataColumnProperties
+
+    SyntheticDataConfiguration.add_member(:synthetic_data_parameters, Shapes::ShapeRef.new(shape: MLSyntheticDataParameters, required: true, location_name: "syntheticDataParameters"))
+    SyntheticDataConfiguration.add_member(:synthetic_data_evaluation_scores, Shapes::ShapeRef.new(shape: SyntheticDataEvaluationScores, location_name: "syntheticDataEvaluationScores"))
+    SyntheticDataConfiguration.struct_class = Types::SyntheticDataConfiguration
+
+    SyntheticDataEvaluationScores.add_member(:data_privacy_scores, Shapes::ShapeRef.new(shape: DataPrivacyScores, required: true, location_name: "dataPrivacyScores"))
+    SyntheticDataEvaluationScores.struct_class = Types::SyntheticDataEvaluationScores
+
     TagKeys.member = Shapes::ShapeRef.new(shape: TagKey)
 
     TagMap.key = Shapes::ShapeRef.new(shape: TagKey)
@@ -1271,6 +1467,13 @@ module Aws::CleanRoomsML
     TagResourceRequest.struct_class = Types::TagResourceRequest
 
     TagResourceResponse.struct_class = Types::TagResourceResponse
+
+    ThrottlingException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
+    ThrottlingException.struct_class = Types::ThrottlingException
+
+    TrainedModelArtifactMaxSize.add_member(:unit, Shapes::ShapeRef.new(shape: TrainedModelArtifactMaxSizeUnitType, required: true, location_name: "unit"))
+    TrainedModelArtifactMaxSize.add_member(:value, Shapes::ShapeRef.new(shape: TrainedModelArtifactMaxSizeValue, required: true, location_name: "value"))
+    TrainedModelArtifactMaxSize.struct_class = Types::TrainedModelArtifactMaxSize
 
     TrainedModelExportFileTypeList.member = Shapes::ShapeRef.new(shape: TrainedModelExportFileType)
 
@@ -1296,6 +1499,7 @@ module Aws::CleanRoomsML
     TrainedModelInferenceJobSummary.add_member(:configured_model_algorithm_association_arn, Shapes::ShapeRef.new(shape: ConfiguredModelAlgorithmAssociationArn, location_name: "configuredModelAlgorithmAssociationArn"))
     TrainedModelInferenceJobSummary.add_member(:membership_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location_name: "membershipIdentifier"))
     TrainedModelInferenceJobSummary.add_member(:trained_model_arn, Shapes::ShapeRef.new(shape: TrainedModelArn, required: true, location_name: "trainedModelArn"))
+    TrainedModelInferenceJobSummary.add_member(:trained_model_version_identifier, Shapes::ShapeRef.new(shape: UUID, location_name: "trainedModelVersionIdentifier"))
     TrainedModelInferenceJobSummary.add_member(:collaboration_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location_name: "collaborationIdentifier"))
     TrainedModelInferenceJobSummary.add_member(:status, Shapes::ShapeRef.new(shape: TrainedModelInferenceJobStatus, required: true, location_name: "status"))
     TrainedModelInferenceJobSummary.add_member(:output_configuration, Shapes::ShapeRef.new(shape: InferenceOutputConfiguration, required: true, location_name: "outputConfiguration"))
@@ -1305,6 +1509,7 @@ module Aws::CleanRoomsML
     TrainedModelInferenceJobSummary.add_member(:metrics_status_details, Shapes::ShapeRef.new(shape: String, location_name: "metricsStatusDetails"))
     TrainedModelInferenceJobSummary.add_member(:logs_status, Shapes::ShapeRef.new(shape: LogsStatus, location_name: "logsStatus"))
     TrainedModelInferenceJobSummary.add_member(:logs_status_details, Shapes::ShapeRef.new(shape: String, location_name: "logsStatusDetails"))
+    TrainedModelInferenceJobSummary.add_member(:ml_model_inference_payer_account_id, Shapes::ShapeRef.new(shape: AccountId, location_name: "mlModelInferencePayerAccountId"))
     TrainedModelInferenceJobSummary.add_member(:create_time, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "createTime"))
     TrainedModelInferenceJobSummary.add_member(:update_time, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "updateTime"))
     TrainedModelInferenceJobSummary.struct_class = Types::TrainedModelInferenceJobSummary
@@ -1322,16 +1527,20 @@ module Aws::CleanRoomsML
     TrainedModelSummary.add_member(:create_time, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "createTime"))
     TrainedModelSummary.add_member(:update_time, Shapes::ShapeRef.new(shape: SyntheticTimestamp_date_time, required: true, location_name: "updateTime"))
     TrainedModelSummary.add_member(:trained_model_arn, Shapes::ShapeRef.new(shape: TrainedModelArn, required: true, location_name: "trainedModelArn"))
+    TrainedModelSummary.add_member(:version_identifier, Shapes::ShapeRef.new(shape: UUID, location_name: "versionIdentifier"))
+    TrainedModelSummary.add_member(:incremental_training_data_channels, Shapes::ShapeRef.new(shape: IncrementalTrainingDataChannelsOutput, location_name: "incrementalTrainingDataChannels"))
     TrainedModelSummary.add_member(:name, Shapes::ShapeRef.new(shape: NameString, required: true, location_name: "name"))
     TrainedModelSummary.add_member(:description, Shapes::ShapeRef.new(shape: ResourceDescription, location_name: "description"))
     TrainedModelSummary.add_member(:membership_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location_name: "membershipIdentifier"))
     TrainedModelSummary.add_member(:collaboration_identifier, Shapes::ShapeRef.new(shape: UUID, required: true, location_name: "collaborationIdentifier"))
     TrainedModelSummary.add_member(:status, Shapes::ShapeRef.new(shape: TrainedModelStatus, required: true, location_name: "status"))
     TrainedModelSummary.add_member(:configured_model_algorithm_association_arn, Shapes::ShapeRef.new(shape: ConfiguredModelAlgorithmAssociationArn, required: true, location_name: "configuredModelAlgorithmAssociationArn"))
+    TrainedModelSummary.add_member(:ml_model_training_payer_account_id, Shapes::ShapeRef.new(shape: AccountId, location_name: "mlModelTrainingPayerAccountId"))
     TrainedModelSummary.struct_class = Types::TrainedModelSummary
 
     TrainedModelsConfigurationPolicy.add_member(:container_logs, Shapes::ShapeRef.new(shape: LogsConfigurationPolicyList, location_name: "containerLogs"))
     TrainedModelsConfigurationPolicy.add_member(:container_metrics, Shapes::ShapeRef.new(shape: MetricsConfigurationPolicy, location_name: "containerMetrics"))
+    TrainedModelsConfigurationPolicy.add_member(:max_artifact_size, Shapes::ShapeRef.new(shape: TrainedModelArtifactMaxSize, location_name: "maxArtifactSize"))
     TrainedModelsConfigurationPolicy.struct_class = Types::TrainedModelsConfigurationPolicy
 
     TrainingDatasetList.member = Shapes::ShapeRef.new(shape: TrainingDatasetSummary)
@@ -1367,7 +1576,14 @@ module Aws::CleanRoomsML
 
     WorkerComputeConfiguration.add_member(:type, Shapes::ShapeRef.new(shape: WorkerComputeType, location_name: "type"))
     WorkerComputeConfiguration.add_member(:number, Shapes::ShapeRef.new(shape: WorkerComputeConfigurationNumberInteger, location_name: "number"))
+    WorkerComputeConfiguration.add_member(:properties, Shapes::ShapeRef.new(shape: WorkerComputeConfigurationProperties, location_name: "properties"))
     WorkerComputeConfiguration.struct_class = Types::WorkerComputeConfiguration
+
+    WorkerComputeConfigurationProperties.add_member(:spark, Shapes::ShapeRef.new(shape: SparkProperties, location_name: "spark"))
+    WorkerComputeConfigurationProperties.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    WorkerComputeConfigurationProperties.add_member_subclass(:spark, Types::WorkerComputeConfigurationProperties::Spark)
+    WorkerComputeConfigurationProperties.add_member_subclass(:unknown, Types::WorkerComputeConfigurationProperties::Unknown)
+    WorkerComputeConfigurationProperties.struct_class = Types::WorkerComputeConfigurationProperties
 
 
     # @api private
@@ -1398,6 +1614,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:cancel_trained_model_inference_job, Seahorse::Model::Operation.new.tap do |o|
@@ -1410,6 +1627,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:create_audience_model, Seahorse::Model::Operation.new.tap do |o|
@@ -1422,6 +1640,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
       end)
 
@@ -1435,6 +1654,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
       end)
 
@@ -1447,6 +1667,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
       end)
 
@@ -1460,6 +1681,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
       end)
 
@@ -1473,6 +1695,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
       end)
 
@@ -1486,6 +1709,8 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServiceException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
       end)
 
@@ -1498,6 +1723,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:delete_audience_generation_job, Seahorse::Model::Operation.new.tap do |o|
@@ -1510,6 +1736,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:delete_audience_model, Seahorse::Model::Operation.new.tap do |o|
@@ -1522,6 +1749,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:delete_configured_audience_model, Seahorse::Model::Operation.new.tap do |o|
@@ -1534,6 +1762,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:delete_configured_audience_model_policy, Seahorse::Model::Operation.new.tap do |o|
@@ -1545,6 +1774,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:delete_configured_model_algorithm, Seahorse::Model::Operation.new.tap do |o|
@@ -1557,6 +1787,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:delete_configured_model_algorithm_association, Seahorse::Model::Operation.new.tap do |o|
@@ -1569,6 +1800,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:delete_ml_configuration, Seahorse::Model::Operation.new.tap do |o|
@@ -1580,6 +1812,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:delete_ml_input_channel_data, Seahorse::Model::Operation.new.tap do |o|
@@ -1592,6 +1825,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:delete_trained_model_output, Seahorse::Model::Operation.new.tap do |o|
@@ -1604,6 +1838,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:delete_training_dataset, Seahorse::Model::Operation.new.tap do |o|
@@ -1616,6 +1851,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:get_audience_generation_job, Seahorse::Model::Operation.new.tap do |o|
@@ -1627,6 +1863,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:get_audience_model, Seahorse::Model::Operation.new.tap do |o|
@@ -1638,6 +1875,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:get_collaboration_configured_model_algorithm_association, Seahorse::Model::Operation.new.tap do |o|
@@ -1649,6 +1887,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:get_collaboration_ml_input_channel, Seahorse::Model::Operation.new.tap do |o|
@@ -1660,6 +1899,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:get_collaboration_trained_model, Seahorse::Model::Operation.new.tap do |o|
@@ -1671,6 +1911,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:get_configured_audience_model, Seahorse::Model::Operation.new.tap do |o|
@@ -1682,6 +1923,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:get_configured_audience_model_policy, Seahorse::Model::Operation.new.tap do |o|
@@ -1693,6 +1935,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:get_configured_model_algorithm, Seahorse::Model::Operation.new.tap do |o|
@@ -1704,6 +1947,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:get_configured_model_algorithm_association, Seahorse::Model::Operation.new.tap do |o|
@@ -1715,6 +1959,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:get_ml_configuration, Seahorse::Model::Operation.new.tap do |o|
@@ -1726,6 +1971,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:get_ml_input_channel, Seahorse::Model::Operation.new.tap do |o|
@@ -1737,6 +1983,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:get_trained_model, Seahorse::Model::Operation.new.tap do |o|
@@ -1748,6 +1995,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:get_trained_model_inference_job, Seahorse::Model::Operation.new.tap do |o|
@@ -1759,6 +2007,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:get_training_dataset, Seahorse::Model::Operation.new.tap do |o|
@@ -1770,6 +2019,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:list_audience_export_jobs, Seahorse::Model::Operation.new.tap do |o|
@@ -1780,6 +2030,7 @@ module Aws::CleanRoomsML
         o.output = Shapes::ShapeRef.new(shape: ListAudienceExportJobsResponse)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o[:pager] = Aws::Pager.new(
           limit_key: "max_results",
           tokens: {
@@ -1796,6 +2047,7 @@ module Aws::CleanRoomsML
         o.output = Shapes::ShapeRef.new(shape: ListAudienceGenerationJobsResponse)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o[:pager] = Aws::Pager.new(
           limit_key: "max_results",
           tokens: {
@@ -1812,6 +2064,7 @@ module Aws::CleanRoomsML
         o.output = Shapes::ShapeRef.new(shape: ListAudienceModelsResponse)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o[:pager] = Aws::Pager.new(
           limit_key: "max_results",
           tokens: {
@@ -1828,6 +2081,7 @@ module Aws::CleanRoomsML
         o.output = Shapes::ShapeRef.new(shape: ListCollaborationConfiguredModelAlgorithmAssociationsResponse)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o[:pager] = Aws::Pager.new(
           limit_key: "max_results",
           tokens: {
@@ -1844,6 +2098,7 @@ module Aws::CleanRoomsML
         o.output = Shapes::ShapeRef.new(shape: ListCollaborationMLInputChannelsResponse)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o[:pager] = Aws::Pager.new(
           limit_key: "max_results",
           tokens: {
@@ -1860,6 +2115,7 @@ module Aws::CleanRoomsML
         o.output = Shapes::ShapeRef.new(shape: ListCollaborationTrainedModelExportJobsResponse)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o[:pager] = Aws::Pager.new(
           limit_key: "max_results",
           tokens: {
@@ -1876,6 +2132,7 @@ module Aws::CleanRoomsML
         o.output = Shapes::ShapeRef.new(shape: ListCollaborationTrainedModelInferenceJobsResponse)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o[:pager] = Aws::Pager.new(
           limit_key: "max_results",
           tokens: {
@@ -1892,6 +2149,7 @@ module Aws::CleanRoomsML
         o.output = Shapes::ShapeRef.new(shape: ListCollaborationTrainedModelsResponse)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o[:pager] = Aws::Pager.new(
           limit_key: "max_results",
           tokens: {
@@ -1908,6 +2166,7 @@ module Aws::CleanRoomsML
         o.output = Shapes::ShapeRef.new(shape: ListConfiguredAudienceModelsResponse)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o[:pager] = Aws::Pager.new(
           limit_key: "max_results",
           tokens: {
@@ -1924,6 +2183,7 @@ module Aws::CleanRoomsML
         o.output = Shapes::ShapeRef.new(shape: ListConfiguredModelAlgorithmAssociationsResponse)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o[:pager] = Aws::Pager.new(
           limit_key: "max_results",
           tokens: {
@@ -1940,6 +2200,7 @@ module Aws::CleanRoomsML
         o.output = Shapes::ShapeRef.new(shape: ListConfiguredModelAlgorithmsResponse)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o[:pager] = Aws::Pager.new(
           limit_key: "max_results",
           tokens: {
@@ -1956,6 +2217,7 @@ module Aws::CleanRoomsML
         o.output = Shapes::ShapeRef.new(shape: ListMLInputChannelsResponse)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o[:pager] = Aws::Pager.new(
           limit_key: "max_results",
           tokens: {
@@ -1983,6 +2245,25 @@ module Aws::CleanRoomsML
         o.output = Shapes::ShapeRef.new(shape: ListTrainedModelInferenceJobsResponse)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:list_trained_model_versions, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListTrainedModelVersions"
+        o.http_method = "GET"
+        o.http_request_uri = "/memberships/{membershipIdentifier}/trained-models/{trainedModelArn}/versions"
+        o.input = Shapes::ShapeRef.new(shape: ListTrainedModelVersionsRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListTrainedModelVersionsResponse)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o[:pager] = Aws::Pager.new(
           limit_key: "max_results",
           tokens: {
@@ -1999,6 +2280,7 @@ module Aws::CleanRoomsML
         o.output = Shapes::ShapeRef.new(shape: ListTrainedModelsResponse)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o[:pager] = Aws::Pager.new(
           limit_key: "max_results",
           tokens: {
@@ -2015,6 +2297,7 @@ module Aws::CleanRoomsML
         o.output = Shapes::ShapeRef.new(shape: ListTrainingDatasetsResponse)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o[:pager] = Aws::Pager.new(
           limit_key: "max_results",
           tokens: {
@@ -2032,6 +2315,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:put_ml_configuration, Seahorse::Model::Operation.new.tap do |o|
@@ -2042,6 +2326,7 @@ module Aws::CleanRoomsML
         o.output = Shapes::ShapeRef.new(shape: Shapes::StructureShape.new(struct_class: Aws::EmptyStructure))
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:start_audience_export_job, Seahorse::Model::Operation.new.tap do |o|
@@ -2054,6 +2339,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
       end)
 
@@ -2067,6 +2353,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
       end)
 
@@ -2080,6 +2367,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
 
       api.add_operation(:start_trained_model_inference_job, Seahorse::Model::Operation.new.tap do |o|
@@ -2092,6 +2380,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
       end)
 
@@ -2127,6 +2416,7 @@ module Aws::CleanRoomsML
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
       end)
     end
 

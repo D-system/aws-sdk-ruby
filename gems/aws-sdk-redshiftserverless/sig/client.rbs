@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -91,7 +92,7 @@ module Aws
                                                   {
                                                     key: ::String,
                                                     value: ::String
-                                                  },
+                                                  }
                                                 ]
                                               ) -> _ConvertRecoveryPointToSnapshotResponseSuccess
                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ConvertRecoveryPointToSnapshotResponseSuccess
@@ -146,10 +147,22 @@ module Aws
                                 {
                                   key: ::String,
                                   value: ::String
-                                },
+                                }
                               ]
                             ) -> _CreateNamespaceResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateNamespaceResponseSuccess
+
+      interface _CreateReservationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateReservationResponse]
+        def reservation: () -> Types::Reservation
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RedshiftServerless/Client.html#create_reservation-instance_method
+      def create_reservation: (
+                                capacity: ::Integer,
+                                ?client_token: ::String,
+                                offering_id: ::String
+                              ) -> _CreateReservationResponseSuccess
+                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateReservationResponseSuccess
 
       interface _CreateScheduledActionResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateScheduledActionResponse]
@@ -168,19 +181,7 @@ module Aws
                                      ?scheduled_action_description: ::String,
                                      scheduled_action_name: ::String,
                                      ?start_time: ::Time,
-                                     target_action: {
-                                       create_snapshot: {
-                                         namespace_name: ::String,
-                                         retention_period: ::Integer?,
-                                         snapshot_name_prefix: ::String,
-                                         tags: Array[
-                                           {
-                                             key: ::String,
-                                             value: ::String
-                                           },
-                                         ]?
-                                       }?
-                                     }
+                                     target_action: Params::target_action
                                    ) -> _CreateScheduledActionResponseSuccess
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateScheduledActionResponseSuccess
 
@@ -197,7 +198,7 @@ module Aws
                                {
                                  key: ::String,
                                  value: ::String
-                               },
+                               }
                              ]
                            ) -> _CreateSnapshotResponseSuccess
                          | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateSnapshotResponseSuccess
@@ -240,9 +241,10 @@ module Aws
                                 {
                                   parameter_key: ::String?,
                                   parameter_value: ::String?
-                                },
+                                }
                               ],
                               ?enhanced_vpc_routing: bool,
+                              ?extra_compute_for_automatic_optimization: bool,
                               ?ip_address_type: ::String,
                               ?max_capacity: ::Integer,
                               namespace_name: ::String,
@@ -258,7 +260,7 @@ module Aws
                                 {
                                   key: ::String,
                                   value: ::String
-                                },
+                                }
                               ],
                               ?track_name: ::String,
                               workgroup_name: ::String
@@ -396,6 +398,17 @@ module Aws
                                ) -> _GetEndpointAccessResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetEndpointAccessResponseSuccess
 
+      interface _GetIdentityCenterAuthTokenResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetIdentityCenterAuthTokenResponse]
+        def expiration_time: () -> ::Time
+        def token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RedshiftServerless/Client.html#get_identity_center_auth_token-instance_method
+      def get_identity_center_auth_token: (
+                                            workgroup_names: Array[::String]
+                                          ) -> _GetIdentityCenterAuthTokenResponseSuccess
+                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetIdentityCenterAuthTokenResponseSuccess
+
       interface _GetNamespaceResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetNamespaceResponse]
         def namespace: () -> Types::Namespace
@@ -415,6 +428,26 @@ module Aws
                                 recovery_point_id: ::String
                               ) -> _GetRecoveryPointResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetRecoveryPointResponseSuccess
+
+      interface _GetReservationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetReservationResponse]
+        def reservation: () -> Types::Reservation
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RedshiftServerless/Client.html#get_reservation-instance_method
+      def get_reservation: (
+                             reservation_id: ::String
+                           ) -> _GetReservationResponseSuccess
+                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetReservationResponseSuccess
+
+      interface _GetReservationOfferingResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::GetReservationOfferingResponse]
+        def reservation_offering: () -> Types::ReservationOffering
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RedshiftServerless/Client.html#get_reservation_offering-instance_method
+      def get_reservation_offering: (
+                                      offering_id: ::String
+                                    ) -> _GetReservationOfferingResponseSuccess
+                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetReservationOfferingResponseSuccess
 
       interface _GetResourcePolicyResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetResourcePolicyResponse]
@@ -558,6 +591,30 @@ module Aws
                                 ) -> _ListRecoveryPointsResponseSuccess
                               | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListRecoveryPointsResponseSuccess
 
+      interface _ListReservationOfferingsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListReservationOfferingsResponse]
+        def next_token: () -> ::String
+        def reservation_offerings_list: () -> ::Array[Types::ReservationOffering]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RedshiftServerless/Client.html#list_reservation_offerings-instance_method
+      def list_reservation_offerings: (
+                                        ?max_results: ::Integer,
+                                        ?next_token: ::String
+                                      ) -> _ListReservationOfferingsResponseSuccess
+                                    | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListReservationOfferingsResponseSuccess
+
+      interface _ListReservationsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListReservationsResponse]
+        def next_token: () -> ::String
+        def reservations_list: () -> ::Array[Types::Reservation]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RedshiftServerless/Client.html#list_reservations-instance_method
+      def list_reservations: (
+                               ?max_results: ::Integer,
+                               ?next_token: ::String
+                             ) -> _ListReservationsResponseSuccess
+                           | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListReservationsResponseSuccess
+
       interface _ListScheduledActionsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListScheduledActionsResponse]
         def next_token: () -> ::String
@@ -682,6 +739,7 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RedshiftServerless/Client.html#restore_from_recovery_point-instance_method
       def restore_from_recovery_point: (
+                                         ?maintain_integration: bool,
                                          namespace_name: ::String,
                                          recovery_point_id: ::String,
                                          workgroup_name: ::String
@@ -697,6 +755,7 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RedshiftServerless/Client.html#restore_from_snapshot-instance_method
       def restore_from_snapshot: (
                                    ?admin_password_secret_kms_key_id: ::String,
+                                   ?maintain_integration: bool,
                                    ?manage_admin_password: bool,
                                    namespace_name: ::String,
                                    ?owner_account: ::String,
@@ -754,7 +813,7 @@ module Aws
                             {
                               key: ::String,
                               value: ::String
-                            },
+                            }
                           ]
                         ) -> _TagResourceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess
@@ -795,6 +854,24 @@ module Aws
                                   ) -> _UpdateEndpointAccessResponseSuccess
                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateEndpointAccessResponseSuccess
 
+      interface _UpdateLakehouseConfigurationResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateLakehouseConfigurationResponse]
+        def catalog_arn: () -> ::String
+        def lakehouse_idc_application_arn: () -> ::String
+        def lakehouse_registration_status: () -> ::String
+        def namespace_name: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/RedshiftServerless/Client.html#update_lakehouse_configuration-instance_method
+      def update_lakehouse_configuration: (
+                                            ?catalog_name: ::String,
+                                            ?dry_run: bool,
+                                            ?lakehouse_idc_application_arn: ::String,
+                                            ?lakehouse_idc_registration: ("Associate" | "Disassociate"),
+                                            ?lakehouse_registration: ("Register" | "Deregister"),
+                                            namespace_name: ::String
+                                          ) -> _UpdateLakehouseConfigurationResponseSuccess
+                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateLakehouseConfigurationResponseSuccess
+
       interface _UpdateNamespaceResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::UpdateNamespaceResponse]
         def namespace: () -> Types::Namespace
@@ -829,19 +906,7 @@ module Aws
                                      ?scheduled_action_description: ::String,
                                      scheduled_action_name: ::String,
                                      ?start_time: ::Time,
-                                     ?target_action: {
-                                       create_snapshot: {
-                                         namespace_name: ::String,
-                                         retention_period: ::Integer?,
-                                         snapshot_name_prefix: ::String,
-                                         tags: Array[
-                                           {
-                                             key: ::String,
-                                             value: ::String
-                                           },
-                                         ]?
-                                       }?
-                                     }
+                                     ?target_action: Params::target_action
                                    ) -> _UpdateScheduledActionResponseSuccess
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateScheduledActionResponseSuccess
 
@@ -890,9 +955,10 @@ module Aws
                                 {
                                   parameter_key: ::String?,
                                   parameter_value: ::String?
-                                },
+                                }
                               ],
                               ?enhanced_vpc_routing: bool,
+                              ?extra_compute_for_automatic_optimization: bool,
                               ?ip_address_type: ::String,
                               ?max_capacity: ::Integer,
                               ?port: ::Integer,

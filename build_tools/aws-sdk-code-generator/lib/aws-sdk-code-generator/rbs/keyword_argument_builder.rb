@@ -8,10 +8,11 @@ module AwsSdkCodeGenerator
 
       attr_reader :newline
 
-      def initialize(api:, shape:, newline:)
+      def initialize(api:, shape:, newline:, options: {})
         @api = api
         @shape = shape
         @newline = newline
+        @options = options
       end
 
       def format(indent: '')
@@ -22,6 +23,12 @@ module AwsSdkCodeGenerator
         result << indent if newline
         result.join(joint)
       end
+
+      def format_as_alias(indent: '')
+        struct(@shape, indent, [])
+      end
+
+      private
 
       def struct(struct_shape, i, visited)
         members_str = struct_members(struct_shape, i, visited, keyword: false)
@@ -39,8 +46,11 @@ module AwsSdkCodeGenerator
             next if member_ref['documented'] === false
             more_indent = newline ? "  " : ""
             if @api['shapes'][member_ref['shape']]['eventstream'] === true
-              # FIXME: "input_event_stream_hander: EventStreams::#{member_ref['shape']}.new"
-              lines << "#{i}#{more_indent}input_event_stream_hander: untyped,"
+               # FIXME: "input_event_stream_hander: EventStreams::#{member_ref['shape']}.new"
+              lines << "#{i}#{more_indent}input_event_stream_handler: untyped,"
+              if @options[:bidirectional_eventstreaming]
+                lines << "#{i}#{more_indent}output_event_stream_handler: untyped,"
+              end
             else
               lines << "#{i}#{more_indent}#{struct_member(struct_shape, member_name, member_ref, i, visited, keyword: keyword)}"
             end
@@ -63,11 +73,15 @@ module AwsSdkCodeGenerator
       end
 
       def ref_value(ref, i, visited)
-        if visited.include?(ref['shape'])
-          return "untyped"
-        else
-          visited  = visited + [ref['shape']]
+        return "untyped" if visited.include?(ref['shape'])
+
+        # If this shape should be aliased, emit the alias reference
+        if @options[:aliased_shapes]&.include?(ref['shape'])
+          alias_name = underscore(ref['shape'])
+          return "Params::#{alias_name}"
         end
+
+        visited  = visited + [ref['shape']]
 
         s = shape(ref)
         case s['type']
@@ -111,7 +125,7 @@ module AwsSdkCodeGenerator
 
       def complex_list(member_ref, i, visited)
         newline_indent = newline ? "\n#{i}" : ""
-        "Array[#{newline_indent}#{more_indent}#{ref_value(member_ref, i + more_indent, visited)},#{newline_indent}]"
+        "Array[#{newline_indent}#{more_indent}#{ref_value(member_ref, i + more_indent, visited)}#{newline_indent}]"
       end
 
       def complex?(ref)
@@ -143,7 +157,7 @@ module AwsSdkCodeGenerator
         if string_shape['enum']
           "(#{string_shape['enum'].map { |s| "\"#{s}\"" }.join(" | ")})"
         else ref['shape']
-          "::String"
+             "::String"
         end
       end
 

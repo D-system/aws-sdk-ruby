@@ -18,6 +18,7 @@ module Aws
                         ?account_id: String,
                         ?active_endpoint_cache: bool,
                         ?adaptive_retry_wait_to_fill: bool,
+                        ?auth_scheme_preference: Array[String],
                         ?client_side_monitoring: bool,
                         ?client_side_monitoring_client_id: String,
                         ?client_side_monitoring_host: String,
@@ -52,6 +53,7 @@ module Aws
                         ?secret_access_key: String,
                         ?session_token: String,
                         ?sigv4a_signing_region_set: Array[String],
+                        ?simple_json: bool,
                         ?stub_responses: untyped,
                         ?telemetry_provider: Aws::Telemetry::TelemetryProviderBase,
                         ?token_provider: untyped,
@@ -87,7 +89,7 @@ module Aws
       def alarms: (
                     ?alarm_names: Array[::String],
                     ?alarm_name_prefix: ::String,
-                    ?alarm_types: Array[("CompositeAlarm" | "MetricAlarm")],
+                    ?alarm_types: Array[("CompositeAlarm" | "MetricAlarm" | "LogAlarm")],
                     ?children_of_alarm_name: ::String,
                     ?parents_of_alarm_name: ::String,
                     ?state_value: ("OK" | "ALARM" | "INSUFFICIENT_DATA"),
@@ -102,7 +104,7 @@ module Aws
       def composite_alarms: (
                               ?alarm_names: Array[::String],
                               ?alarm_name_prefix: ::String,
-                              ?alarm_types: Array[("CompositeAlarm" | "MetricAlarm")],
+                              ?alarm_types: Array[("CompositeAlarm" | "MetricAlarm" | "LogAlarm")],
                               ?children_of_alarm_name: ::String,
                               ?parents_of_alarm_name: ::String,
                               ?state_value: ("OK" | "ALARM" | "INSUFFICIENT_DATA"),
@@ -121,7 +123,7 @@ module Aws
                        {
                          name: ::String,
                          value: ::String?
-                       },
+                       }
                      ],
                      ?recently_active: ("PT3H"),
                      ?include_linked_accounts: bool,

@@ -95,8 +95,8 @@ module Aws::VerifiedPermissions
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::VerifiedPermissions
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::VerifiedPermissions
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::VerifiedPermissions
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::VerifiedPermissions
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::VerifiedPermissions
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::VerifiedPermissions
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::VerifiedPermissions
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -524,6 +528,7 @@ module Aws::VerifiedPermissions
     #     ], 
     #     results: [
     #       {
+    #         name: "name/example-policy", 
     #         created_date: Time.parse("2024-10-18T18:53:39.258153Z"), 
     #         definition: {
     #           static: {
@@ -537,6 +542,7 @@ module Aws::VerifiedPermissions
     #         policy_type: "STATIC", 
     #       }, 
     #       {
+    #         name: "name/example-policy-2", 
     #         created_date: Time.parse("2024-10-18T18:57:03.305027Z"), 
     #         definition: {
     #           static: {
@@ -559,6 +565,59 @@ module Aws::VerifiedPermissions
     #         }, 
     #         last_updated_date: Time.parse("2024-10-18T18:57:48.005343Z"), 
     #         policy_id: "77gLjer8H5o3mvrnMGrSL5", 
+    #         policy_store_id: "ERZeDpRc34dkYZeb6FZRVC", 
+    #         policy_type: "STATIC", 
+    #       }, 
+    #     ], 
+    #   }
+    #
+    # @example Example: To retrieve policies by name
+    #
+    #   # The following example retrieves information about policies using their names instead of their IDs.
+    #
+    #   resp = client.batch_get_policy({
+    #     requests: [
+    #       {
+    #         policy_id: "name/example-policy", 
+    #         policy_store_id: "ERZeDpRc34dkYZeb6FZRVC", 
+    #       }, 
+    #       {
+    #         policy_id: "name/example-policy-2", 
+    #         policy_store_id: "ERZeDpRc34dkYZeb6FZRVC", 
+    #       }, 
+    #     ], 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     errors: [
+    #     ], 
+    #     results: [
+    #       {
+    #         name: "name/example-policy", 
+    #         created_date: Time.parse("2024-10-18T18:53:39.258153Z"), 
+    #         definition: {
+    #           static: {
+    #             description: "Users can manage account resources in any account they own", 
+    #             statement: "permit (principal, action in PhotoFlash::Action::\"ManageAccount\",resource) when { resource in principal.Account };", 
+    #           }, 
+    #         }, 
+    #         last_updated_date: Time.parse("2024-10-18T18:53:39.258153Z"), 
+    #         policy_id: "PWv5M6d5HePx3gVVLKY1nK", 
+    #         policy_store_id: "ERZeDpRc34dkYZeb6FZRVC", 
+    #         policy_type: "STATIC", 
+    #       }, 
+    #       {
+    #         name: "name/example-policy-2", 
+    #         created_date: Time.parse("2024-10-18T18:57:03.305027Z"), 
+    #         definition: {
+    #           static: {
+    #             description: "User alice can't delete any photos.", 
+    #             statement: "forbid (principal == PhotoFlash::User::\"alice\", action in [PhotoFlash::Action::\"DeletePhoto\"], resource);", 
+    #           }, 
+    #         }, 
+    #         last_updated_date: Time.parse("2024-10-18T18:57:03.305027Z"), 
+    #         policy_id: "LzFn6KgLWvv4Mbegus35jn", 
     #         policy_store_id: "ERZeDpRc34dkYZeb6FZRVC", 
     #         policy_type: "STATIC", 
     #       }, 
@@ -591,8 +650,9 @@ module Aws::VerifiedPermissions
     #   resp.results[0].definition.template_linked.resource.entity_id #=> String
     #   resp.results[0].created_date #=> Time
     #   resp.results[0].last_updated_date #=> Time
+    #   resp.results[0].name #=> String
     #   resp.errors #=> Array
-    #   resp.errors[0].code #=> String, one of "POLICY_STORE_NOT_FOUND", "POLICY_NOT_FOUND"
+    #   resp.errors[0].code #=> String, one of "POLICY_STORE_NOT_FOUND", "POLICY_NOT_FOUND", "POLICY_STORE_ALIAS_NOT_FOUND"
     #   resp.errors[0].policy_store_id #=> String
     #   resp.errors[0].policy_id #=> String
     #   resp.errors[0].message #=> String
@@ -635,10 +695,25 @@ module Aws::VerifiedPermissions
     #   Specifies the ID of the policy store. Policies in this policy store
     #   will be used to make the authorization decisions for the input.
     #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
+    #
     # @option params [Types::EntitiesDefinition] :entities
-    #   Specifies the list of resources and principals and their associated
-    #   attributes that Verified Permissions can examine when evaluating the
-    #   policies.
+    #   (Optional) Specifies the list of resources and principals and their
+    #   associated attributes that Verified Permissions can examine when
+    #   evaluating the policies. These additional entities and their
+    #   attributes can be referenced and checked by conditional elements in
+    #   the policies in the specified policy store.
     #
     #   <note markdown="1"> You can include only principal and resource entities in this
     #   parameter; you can't include actions. You must specify actions in the
@@ -840,6 +915,31 @@ module Aws::VerifiedPermissions
     #               entity_id: "EntityId", # required
     #             },
     #           ],
+    #           tags: {
+    #             "String" => {
+    #               boolean: false,
+    #               entity_identifier: {
+    #                 entity_type: "EntityType", # required
+    #                 entity_id: "EntityId", # required
+    #               },
+    #               long: 1,
+    #               string: "StringAttribute",
+    #               set: [
+    #                 {
+    #                   # recursive CedarTagValue
+    #                 },
+    #               ],
+    #               record: {
+    #                 "String" => {
+    #                   # recursive CedarTagValue
+    #                 },
+    #               },
+    #               ipaddr: "IpAddr",
+    #               decimal: "Decimal",
+    #               datetime: "DatetimeAttribute",
+    #               duration: "Duration",
+    #             },
+    #           },
     #         },
     #       ],
     #       cedar_json: "CedarJson",
@@ -928,6 +1028,19 @@ module Aws::VerifiedPermissions
     #   Specifies the ID of the policy store. Policies in this policy store
     #   will be used to make an authorization decision for the input.
     #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
+    #
     # @option params [String] :identity_token
     #   Specifies an identity (ID) token for the principal that you want to
     #   authorize in each request. This token is provided to you by the
@@ -947,8 +1060,11 @@ module Aws::VerifiedPermissions
     #   `token_use` claim in the submitted token isn't `access`.
     #
     # @option params [Types::EntitiesDefinition] :entities
-    #   Specifies the list of resources and their associated attributes that
-    #   Verified Permissions can examine when evaluating the policies.
+    #   (Optional) Specifies the list of resources and their associated
+    #   attributes that Verified Permissions can examine when evaluating the
+    #   policies. These additional entities and their attributes can be
+    #   referenced and checked by conditional elements in the policies in the
+    #   specified policy store.
     #
     #   You can't include principals in this parameter, only resource and
     #   action entities. This parameter can't include any entities of a type
@@ -1131,6 +1247,31 @@ module Aws::VerifiedPermissions
     #               entity_id: "EntityId", # required
     #             },
     #           ],
+    #           tags: {
+    #             "String" => {
+    #               boolean: false,
+    #               entity_identifier: {
+    #                 entity_type: "EntityType", # required
+    #                 entity_id: "EntityId", # required
+    #               },
+    #               long: 1,
+    #               string: "StringAttribute",
+    #               set: [
+    #                 {
+    #                   # recursive CedarTagValue
+    #                 },
+    #               ],
+    #               record: {
+    #                 "String" => {
+    #                   # recursive CedarTagValue
+    #                 },
+    #               },
+    #               ipaddr: "IpAddr",
+    #               decimal: "Decimal",
+    #               datetime: "DatetimeAttribute",
+    #               duration: "Duration",
+    #             },
+    #           },
     #         },
     #       ],
     #       cedar_json: "CedarJson",
@@ -1257,6 +1398,19 @@ module Aws::VerifiedPermissions
     #   identity source. Only policies and requests made using this policy
     #   store can reference identities from the identity provider configured
     #   in the new identity source.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #
     # @option params [required, Types::Configuration] :configuration
     #   Specifies the details required to communicate with the identity
@@ -1411,11 +1565,33 @@ module Aws::VerifiedPermissions
     #   Specifies the `PolicyStoreId` of the policy store you want to store
     #   the policy in.
     #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
+    #
     # @option params [required, Types::PolicyDefinition] :definition
     #   A structure that specifies the policy type and content to use for the
     #   new policy. You must include either a static or a templateLinked
     #   element. The policy content must be written in the Cedar policy
     #   language.
+    #
+    # @option params [String] :name
+    #   Specifies a name for the policy that is unique among all policies
+    #   within the policy store. You can use the name in place of the policy
+    #   ID in API operations that reference the policy. The name must be
+    #   prefixed with `name/`.
+    #
+    #   If you specify a name that is already associated with another policy
+    #   in the policy store, you receive a `ConflictException` error.
     #
     # @return [Types::CreatePolicyOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1437,40 +1613,7 @@ module Aws::VerifiedPermissions
     #   # policy scope.
     #
     #   resp = client.create_policy({
-    #     client_token: "a1b2c3d4-e5f6-a1b2-c3d4-TOKEN1111111", 
-    #     definition: {
-    #       static: {
-    #         description: "Grant members of janeFriends UserGroup access to the vacationFolder Album", 
-    #         statement: "permit( principal in UserGroup::\"janeFriends\", action, resource in Album::\"vacationFolder\" );", 
-    #       }, 
-    #     }, 
-    #     policy_store_id: "C7v5xMplfFH3i3e4Jrzb1a", 
-    #   })
-    #
-    #   resp.to_h outputs the following:
-    #   {
-    #     created_date: Time.parse("2024-08-12T18:20:50.99Z"), 
-    #     last_updated_date: Time.parse("2024-08-12T18:20:50.99Z"), 
-    #     policy_id: "9wYxMpljbbZQb5fcZHyJhY", 
-    #     policy_store_id: "C7v5xMplfFH3i3e4Jrzb1a", 
-    #     policy_type: "STATIC", 
-    #     principal: {
-    #       entity_id: "janeFriends", 
-    #       entity_type: "UserGroup", 
-    #     }, 
-    #     resource: {
-    #       entity_id: "vacationFolder", 
-    #       entity_type: "Album", 
-    #     }, 
-    #   }
-    #
-    # @example Example: To create a static policy
-    #
-    #   # The following example request creates a static policy with a policy scope that specifies both a principal and a
-    #   # resource. The response includes both the Principal and Resource elements because both were specified in the request
-    #   # policy scope.
-    #
-    #   resp = client.create_policy({
+    #     name: "name/example-policy", 
     #     client_token: "a1b2c3d4-e5f6-a1b2-c3d4-TOKEN1111111", 
     #     definition: {
     #       static: {
@@ -1504,6 +1647,7 @@ module Aws::VerifiedPermissions
     #   # principal to use with the new template-linked policy.
     #
     #   resp = client.create_policy({
+    #     name: "name/example-template-linked-policy", 
     #     client_token: "a1b2c3d4-e5f6-a1b2-c3d4-TOKEN1111111", 
     #     definition: {
     #       template_linked: {
@@ -1556,6 +1700,7 @@ module Aws::VerifiedPermissions
     #         },
     #       },
     #     },
+    #     name: "PolicyName",
     #   })
     #
     # @example Response structure
@@ -1586,8 +1731,8 @@ module Aws::VerifiedPermissions
     # Creates a policy store. A policy store is a container for policy
     # resources.
     #
-    # <note markdown="1"> Although [Cedar supports multiple namespaces][1], Verified Permissions
-    # currently supports only one namespace per policy store.
+    # <note markdown="1"> As of May 2026, Verified Permissions has aligned with Cedar and now
+    # supports multiple namespaces.
     #
     #  </note>
     #
@@ -1598,10 +1743,6 @@ module Aws::VerifiedPermissions
     # of other Verified Permissions operations.
     #
     #  </note>
-    #
-    #
-    #
-    # [1]: https://docs.cedarpolicy.com/schema/schema.html#namespace
     #
     # @option params [String] :client_token
     #   Specifies a unique, case-sensitive ID that you provide to ensure the
@@ -1649,6 +1790,23 @@ module Aws::VerifiedPermissions
     #   Descriptive text that you can provide to help with identification of
     #   the current policy store.
     #
+    # @option params [String] :deletion_protection
+    #   Specifies whether the policy store can be deleted. If enabled, the
+    #   policy store can't be deleted.
+    #
+    #   The default state is `DISABLED`.
+    #
+    # @option params [Types::EncryptionSettings] :encryption_settings
+    #   Specifies the encryption settings used to encrypt the policy store and
+    #   their child resources. Allows for the ability to use a customer owned
+    #   KMS key for encryption of data.
+    #
+    #   This is an optional field to be used when providing a customer-managed
+    #   KMS key for encryption.
+    #
+    # @option params [Hash<String,String>] :tags
+    #   The list of key-value pairs to associate with the policy store.
+    #
     # @return [Types::CreatePolicyStoreOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::CreatePolicyStoreOutput#policy_store_id #policy_store_id} => String
@@ -1676,6 +1834,33 @@ module Aws::VerifiedPermissions
     #     policy_store_id: "C7v5xMplfFH3i3e4Jrzb1a", 
     #   }
     #
+    # @example Example: To create an encrypted policy store
+    #
+    #   # The following example creates a new policy store with encryption settings based on a provided KMS key.
+    #
+    #   resp = client.create_policy_store({
+    #     client_token: "a1b2c3d4-e5f6-a1b2-c3d4-TOKEN1111111", 
+    #     encryption_settings: {
+    #       kms_encryption_settings: {
+    #         key: "arn:aws:kms:us-east-1:123456789012:key/abcdefgh-ijkl-mnop-qrst-uvwxyz123456", 
+    #         encryption_context: {
+    #           "policy_store_owner" => "Tim", 
+    #         }, 
+    #       }, 
+    #     }, 
+    #     validation_settings: {
+    #       mode: "STRICT", 
+    #     }, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     arn: "arn:aws:verifiedpermissions::123456789012:policy-store/C7v5xMplfFH3i3e4Jrzb1a", 
+    #     created_date: Time.parse("2024-08-12T18:20:50.99Z"), 
+    #     last_updated_date: Time.parse("2024-08-12T18:20:50.99Z"), 
+    #     policy_store_id: "C7v5xMplfFH3i3e4Jrzb1a", 
+    #   }
+    #
     # @example Request syntax with placeholder values
     #
     #   resp = client.create_policy_store({
@@ -1684,6 +1869,20 @@ module Aws::VerifiedPermissions
     #       mode: "OFF", # required, accepts OFF, STRICT
     #     },
     #     description: "PolicyStoreDescription",
+    #     deletion_protection: "ENABLED", # accepts ENABLED, DISABLED
+    #     encryption_settings: {
+    #       kms_encryption_settings: {
+    #         key: "KmsKey", # required
+    #         encryption_context: {
+    #           "EncryptionContextKey" => "EncryptionContextValue",
+    #         },
+    #       },
+    #       default: {
+    #       },
+    #     },
+    #     tags: {
+    #       "TagKey" => "TagValue",
+    #     },
     #   })
     #
     # @example Response structure
@@ -1699,6 +1898,89 @@ module Aws::VerifiedPermissions
     # @param [Hash] params ({})
     def create_policy_store(params = {}, options = {})
       req = build_request(:create_policy_store, params)
+      req.send_request(options)
+    end
+
+    # Creates a policy store alias for the specified policy store. A policy
+    # store alias is an alternative identifier that you can use to reference
+    # a policy store in API operations.
+    #
+    # This operation is idempotent. If multiple CreatePolicyStoreAlias
+    # requests are made where the `aliasName` and `policyStoreId` fields are
+    # the same between the requests, subsequent requests will be ignored.
+    # For each duplicate CreatePolicyStoreAlias request, a Success response
+    # will be returned and a new policy store alias will not be created.
+    #
+    # <note markdown="1"> Verified Permissions is <i> <a
+    # href="https://wikipedia.org/wiki/Eventual_consistency">eventually
+    # consistent</a> </i>. It can take a few seconds for a new or changed
+    # element to propagate through the service and be visible in the results
+    # of other Verified Permissions operations.
+    #
+    #  </note>
+    #
+    # @option params [required, String] :alias_name
+    #   Specifies the name of the policy store alias to create. The name must
+    #   be unique within your Amazon Web Services account and Amazon Web
+    #   Services Region.
+    #
+    #   <note markdown="1"> The alias name must always be prefixed with `policy-store-alias/`.
+    #
+    #    </note>
+    #
+    # @option params [required, String] :policy_store_id
+    #   Specifies the ID of the policy store to associate with the alias.
+    #
+    #   <note markdown="1"> The associated policy store must be specified using its ID. The alias
+    #   name cannot be used.
+    #
+    #    </note>
+    #
+    # @return [Types::CreatePolicyStoreAliasOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::CreatePolicyStoreAliasOutput#alias_name #alias_name} => String
+    #   * {Types::CreatePolicyStoreAliasOutput#policy_store_id #policy_store_id} => String
+    #   * {Types::CreatePolicyStoreAliasOutput#alias_arn #alias_arn} => String
+    #   * {Types::CreatePolicyStoreAliasOutput#created_at #created_at} => Time
+    #
+    #
+    # @example Example: CreatePolicyStoreAlias
+    #
+    #   # The following example creates a new policy store alias.
+    #
+    #   resp = client.create_policy_store_alias({
+    #     alias_name: "policy-store-alias/example-policy-store", 
+    #     policy_store_id: "C7v5xMplfFH3i3e4Jrzb1a", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     alias_arn: "arn:aws:verifiedpermissions:us-east-1:123456789012:policy-store-alias/example-policy-store", 
+    #     alias_name: "policy-store-alias/example-policy-store", 
+    #     created_at: Time.parse("2024-01-15T12:30:00.52Z"), 
+    #     policy_store_id: "C7v5xMplfFH3i3e4Jrzb1a", 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.create_policy_store_alias({
+    #     alias_name: "Alias", # required
+    #     policy_store_id: "PolicyStoreId", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.alias_name #=> String
+    #   resp.policy_store_id #=> String
+    #   resp.alias_arn #=> String
+    #   resp.created_at #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/CreatePolicyStoreAlias AWS API Documentation
+    #
+    # @overload create_policy_store_alias(params = {})
+    # @param [Hash] params ({})
+    def create_policy_store_alias(params = {}, options = {})
+      req = build_request(:create_policy_store_alias, params)
       req.send_request(options)
     end
 
@@ -1748,12 +2030,34 @@ module Aws::VerifiedPermissions
     # @option params [required, String] :policy_store_id
     #   The ID of the policy store in which to create the policy template.
     #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
+    #
     # @option params [String] :description
     #   Specifies a description for the policy template.
     #
     # @option params [required, String] :statement
     #   Specifies the content that you want to use for the new policy
     #   template, written in the Cedar policy language.
+    #
+    # @option params [String] :name
+    #   Specifies a name for the policy template that is unique among all
+    #   policy templates within the policy store. You can use the name in
+    #   place of the policy template ID in API operations that reference the
+    #   policy template. The name must be prefixed with `name/`.
+    #
+    #   If you specify a name that is already associated with another policy
+    #   template in the policy store, you receive a `ConflictException` error.
     #
     # @return [Types::CreatePolicyTemplateOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -1768,6 +2072,7 @@ module Aws::VerifiedPermissions
     #   # The following example creates a policy template that has a placeholder for the principal.
     #
     #   resp = client.create_policy_template({
+    #     name: "name/example-policy-template", 
     #     client_token: "a1b2c3d4-e5f6-a1b2-c3d4-TOKEN1111111", 
     #     description: "Template for research dept", 
     #     policy_store_id: "C7v5xMplfFH3i3e4Jrzb1a", 
@@ -1789,6 +2094,7 @@ module Aws::VerifiedPermissions
     #     policy_store_id: "PolicyStoreId", # required
     #     description: "PolicyTemplateDescription",
     #     statement: "PolicyStatement", # required
+    #     name: "PolicyTemplateName",
     #   })
     #
     # @example Response structure
@@ -1820,6 +2126,19 @@ module Aws::VerifiedPermissions
     # @option params [required, String] :policy_store_id
     #   Specifies the ID of the policy store that contains the identity source
     #   that you want to delete.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #
     # @option params [required, String] :identity_source_id
     #   Specifies the ID of the identity source that you want to delete.
@@ -1866,8 +2185,28 @@ module Aws::VerifiedPermissions
     #   Specifies the ID of the policy store that contains the policy that you
     #   want to delete.
     #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
+    #
     # @option params [required, String] :policy_id
     #   Specifies the ID of the policy that you want to delete.
+    #
+    #   You can use the policy name in place of the policy ID. When using a
+    #   name, prefix it with `name/`. For example:
+    #
+    #   * ID: `SPEXAMPLEabcdefg111111`
+    #
+    #   * Name: `name/example-policy`
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
@@ -1910,6 +2249,11 @@ module Aws::VerifiedPermissions
     # @option params [required, String] :policy_store_id
     #   Specifies the ID of the policy store that you want to delete.
     #
+    #   <note markdown="1"> To specify a policy store, the alias name cannot be used. Only the ID
+    #   can be used.
+    #
+    #    </note>
+    #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
     #
@@ -1940,6 +2284,93 @@ module Aws::VerifiedPermissions
       req.send_request(options)
     end
 
+    # Deletes the specified policy store alias.
+    #
+    # This operation is idempotent. If you specify a policy store alias that
+    # does not exist, the request response will still return a successful
+    # HTTP 200 status code.
+    #
+    # By default, when a policy store alias is deleted, it enters the
+    # `PendingDeletion` state. When a policy store alias is in the
+    # `PendingDeletion` state, new policy store aliases cannot be created
+    # with the same name. If the policy store alias is used in an API that
+    # has a `policyStoreId` field, the operation will fail with a
+    # `ResourceNotFound` exception.
+    #
+    # To immediately delete a policy store alias and bypass the
+    # `PendingDeletion` state, set the `deletionMode` parameter to
+    # `HardDelete`.
+    #
+    # Verified Permissions is eventually consistent. If you hard delete a
+    # policy store alias and then immediately recreate it to be associated
+    # with a different policy store, requests that reference this alias may
+    # continue to be evaluated against the previously associated policy
+    # store for a short period of time.
+    #
+    # @option params [required, String] :alias_name
+    #   Specifies the name of the policy store alias that you want to delete.
+    #
+    #   <note markdown="1"> The alias name must always be prefixed with `policy-store-alias/`.
+    #
+    #    </note>
+    #
+    # @option params [String] :deletion_mode
+    #   Specifies the deletion mode for the policy store alias. The valid
+    #   values are:
+    #
+    #   * **SoftDelete** – The policy store alias enters the `PendingDeletion`
+    #     state. This is the default behavior when no `deletionMode` is
+    #     specified.
+    #
+    #   * **HardDelete** – The policy store alias is immediately deleted,
+    #     bypassing the `PendingDeletion` state.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    #
+    # @example Example: Soft delete a policy store alias
+    #
+    #   # The following example soft deletes the policy store alias with name example-policy-store. The alias enters the
+    #   # PendingDeletion state.
+    #
+    #   resp = client.delete_policy_store_alias({
+    #     alias_name: "policy-store-alias/example-policy-store", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #   }
+    #
+    # @example Example: Hard delete a policy store alias
+    #
+    #   # The following example hard deletes the policy store alias with name example-policy-store. The alias is immediately
+    #   # deleted, bypassing the PendingDeletion state.
+    #
+    #   resp = client.delete_policy_store_alias({
+    #     alias_name: "policy-store-alias/example-policy-store", 
+    #     deletion_mode: "HardDelete", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.delete_policy_store_alias({
+    #     alias_name: "Alias", # required
+    #     deletion_mode: "SoftDelete", # accepts SoftDelete, HardDelete
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/DeletePolicyStoreAlias AWS API Documentation
+    #
+    # @overload delete_policy_store_alias(params = {})
+    # @param [Hash] params ({})
+    def delete_policy_store_alias(params = {}, options = {})
+      req = build_request(:delete_policy_store_alias, params)
+      req.send_request(options)
+    end
+
     # Deletes the specified policy template from the policy store.
     #
     # This operation also deletes any policies that were created from the
@@ -1951,8 +2382,28 @@ module Aws::VerifiedPermissions
     #   Specifies the ID of the policy store that contains the policy template
     #   that you want to delete.
     #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
+    #
     # @option params [required, String] :policy_template_id
     #   Specifies the ID of the policy template that you want to delete.
+    #
+    #   You can use the policy template name in place of the policy template
+    #   ID. When using a name, prefix it with `name/`. For example:
+    #
+    #   * ID: `PTEXAMPLEabcdefg111111`
+    #
+    #   * Name: `name/example-policy-template`
     #
     # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
     #
@@ -1992,6 +2443,19 @@ module Aws::VerifiedPermissions
     # @option params [required, String] :policy_store_id
     #   Specifies the ID of the policy store that contains the identity source
     #   you want information about.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #
     # @option params [required, String] :identity_source_id
     #   Specifies the ID of the identity source you want information about.
@@ -2083,8 +2547,28 @@ module Aws::VerifiedPermissions
     #   Specifies the ID of the policy store that contains the policy that you
     #   want information about.
     #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
+    #
     # @option params [required, String] :policy_id
     #   Specifies the ID of the policy you want information about.
+    #
+    #   You can use the policy name in place of the policy ID. When using a
+    #   name, prefix it with `name/`. For example:
+    #
+    #   * ID: `SPEXAMPLEabcdefg111111`
+    #
+    #   * Name: `name/example-policy`
     #
     # @return [Types::GetPolicyOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -2098,6 +2582,7 @@ module Aws::VerifiedPermissions
     #   * {Types::GetPolicyOutput#created_date #created_date} => Time
     #   * {Types::GetPolicyOutput#last_updated_date #last_updated_date} => Time
     #   * {Types::GetPolicyOutput#effect #effect} => String
+    #   * {Types::GetPolicyOutput#name #name} => String
     #
     #
     # @example Example: To retrieve details about a policy
@@ -2113,6 +2598,35 @@ module Aws::VerifiedPermissions
     #
     #   resp.to_h outputs the following:
     #   {
+    #     created_date: Time.parse("2024-08-12T18:20:50.99Z"), 
+    #     definition: {
+    #       static: {
+    #         description: "Grant everyone of janeFriends UserGroup access to the vacationFolder Album", 
+    #         statement: "permit(principal, action, resource in Album::\"publicFolder\");", 
+    #       }, 
+    #     }, 
+    #     last_updated_date: Time.parse("2024-08-12T18:20:50.99Z"), 
+    #     policy_id: "9wYxMpljbbZQb5fcZHyJhY", 
+    #     policy_store_id: "C7v5xMplfFH3i3e4Jrzb1a", 
+    #     policy_type: "STATIC", 
+    #     resource: {
+    #       entity_id: "publicFolder", 
+    #       entity_type: "Album", 
+    #     }, 
+    #   }
+    #
+    # @example Example: To retrieve a policy by name
+    #
+    #   # The following example retrieves information about a policy using its name instead of its ID.
+    #
+    #   resp = client.get_policy({
+    #     policy_id: "name/example-policy", 
+    #     policy_store_id: "C7v5xMplfFH3i3e4Jrzb1a", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     name: "name/example-policy", 
     #     created_date: Time.parse("2024-08-12T18:20:50.99Z"), 
     #     definition: {
     #       static: {
@@ -2159,6 +2673,7 @@ module Aws::VerifiedPermissions
     #   resp.created_date #=> Time
     #   resp.last_updated_date #=> Time
     #   resp.effect #=> String, one of "Permit", "Forbid"
+    #   resp.name #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/GetPolicy AWS API Documentation
     #
@@ -2172,7 +2687,31 @@ module Aws::VerifiedPermissions
     # Retrieves details about a policy store.
     #
     # @option params [required, String] :policy_store_id
-    #   Specifies the ID of the policy store that you want information about.
+    #   Specifies the policy store that you want information about.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
+    #
+    # @option params [Boolean] :tags
+    #   Specifies whether to return the tags that are attached to the policy
+    #   store. If this parameter is included in the API call, the tags are
+    #   returned, otherwise they are not returned.
+    #
+    #   <note markdown="1"> If this parameter is included in the API call but there are no tags
+    #   attached to the policy store, the `tags` response parameter is omitted
+    #   from the response.
+    #
+    #    </note>
     #
     # @return [Types::GetPolicyStoreOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -2182,6 +2721,10 @@ module Aws::VerifiedPermissions
     #   * {Types::GetPolicyStoreOutput#created_date #created_date} => Time
     #   * {Types::GetPolicyStoreOutput#last_updated_date #last_updated_date} => Time
     #   * {Types::GetPolicyStoreOutput#description #description} => String
+    #   * {Types::GetPolicyStoreOutput#deletion_protection #deletion_protection} => String
+    #   * {Types::GetPolicyStoreOutput#encryption_state #encryption_state} => Types::EncryptionState
+    #   * {Types::GetPolicyStoreOutput#cedar_version #cedar_version} => String
+    #   * {Types::GetPolicyStoreOutput#tags #tags} => Hash&lt;String,String&gt;
     #
     #
     # @example Example: GetPolicyStore
@@ -2196,6 +2739,37 @@ module Aws::VerifiedPermissions
     #   {
     #     arn: "arn:aws:verifiedpermissions::123456789012:policy-store/C7v5xMplfFH3i3e4Jrzb1a", 
     #     created_date: Time.parse("2024-08-12T18:20:50.99Z"), 
+    #     encryption_state: {
+    #       default: {
+    #       }, 
+    #     }, 
+    #     last_updated_date: Time.parse("2024-08-12T18:20:50.99Z"), 
+    #     policy_store_id: "C7v5xMplfFH3i3e4Jrzb1a", 
+    #     validation_settings: {
+    #       mode: "STRICT", 
+    #     }, 
+    #   }
+    #
+    # @example Example: GetPolicyStore that is encrypted
+    #
+    #   # The following example retrieves details about the specified encrypted policy store.
+    #
+    #   resp = client.get_policy_store({
+    #     policy_store_id: "C7v5xMplfFH3i3e4Jrzb1a", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     arn: "arn:aws:verifiedpermissions::123456789012:policy-store/C7v5xMplfFH3i3e4Jrzb1a", 
+    #     created_date: Time.parse("2024-08-12T18:20:50.99Z"), 
+    #     encryption_state: {
+    #       kms_encryption_state: {
+    #         key: "arn:aws:kms:us-east-1:123456789012:key/abcdefgh-ijkl-mnop-qrst-uvwxyz123456", 
+    #         encryption_context: {
+    #           "policy_store_owner" => "Tim", 
+    #         }, 
+    #       }, 
+    #     }, 
     #     last_updated_date: Time.parse("2024-08-12T18:20:50.99Z"), 
     #     policy_store_id: "C7v5xMplfFH3i3e4Jrzb1a", 
     #     validation_settings: {
@@ -2207,6 +2781,7 @@ module Aws::VerifiedPermissions
     #
     #   resp = client.get_policy_store({
     #     policy_store_id: "PolicyStoreId", # required
+    #     tags: false,
     #   })
     #
     # @example Response structure
@@ -2217,6 +2792,13 @@ module Aws::VerifiedPermissions
     #   resp.created_date #=> Time
     #   resp.last_updated_date #=> Time
     #   resp.description #=> String
+    #   resp.deletion_protection #=> String, one of "ENABLED", "DISABLED"
+    #   resp.encryption_state.kms_encryption_state.key #=> String
+    #   resp.encryption_state.kms_encryption_state.encryption_context #=> Hash
+    #   resp.encryption_state.kms_encryption_state.encryption_context["EncryptionContextKey"] #=> String
+    #   resp.cedar_version #=> String, one of "CEDAR_2", "CEDAR_4"
+    #   resp.tags #=> Hash
+    #   resp.tags["TagKey"] #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/GetPolicyStore AWS API Documentation
     #
@@ -2227,6 +2809,65 @@ module Aws::VerifiedPermissions
       req.send_request(options)
     end
 
+    # Retrieves details about the specified policy store alias.
+    #
+    # @option params [required, String] :alias_name
+    #   Specifies the name of the policy store alias that you want information
+    #   about.
+    #
+    #   <note markdown="1"> The alias name must always be prefixed with `policy-store-alias/`.
+    #
+    #    </note>
+    #
+    # @return [Types::GetPolicyStoreAliasOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetPolicyStoreAliasOutput#alias_name #alias_name} => String
+    #   * {Types::GetPolicyStoreAliasOutput#policy_store_id #policy_store_id} => String
+    #   * {Types::GetPolicyStoreAliasOutput#alias_arn #alias_arn} => String
+    #   * {Types::GetPolicyStoreAliasOutput#created_at #created_at} => Time
+    #   * {Types::GetPolicyStoreAliasOutput#state #state} => String
+    #
+    #
+    # @example Example: GetPolicyStoreAlias
+    #
+    #   # The following example retrieves details about the policy store alias with name example-policy-store.
+    #
+    #   resp = client.get_policy_store_alias({
+    #     alias_name: "policy-store-alias/example-policy-store", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     alias_arn: "arn:aws:verifiedpermissions:us-east-1:123456789012:policy-store-alias/example-policy-store", 
+    #     alias_name: "policy-store-alias/example-policy-store", 
+    #     created_at: Time.parse("2024-01-15T12:30:00.52Z"), 
+    #     policy_store_id: "C7v5xMplfFH3i3e4Jrzb1a", 
+    #     state: "Active", 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_policy_store_alias({
+    #     alias_name: "Alias", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.alias_name #=> String
+    #   resp.policy_store_id #=> String
+    #   resp.alias_arn #=> String
+    #   resp.created_at #=> Time
+    #   resp.state #=> String, one of "Active", "PendingDeletion"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/GetPolicyStoreAlias AWS API Documentation
+    #
+    # @overload get_policy_store_alias(params = {})
+    # @param [Hash] params ({})
+    def get_policy_store_alias(params = {}, options = {})
+      req = build_request(:get_policy_store_alias, params)
+      req.send_request(options)
+    end
+
     # Retrieve the details for the specified policy template in the
     # specified policy store.
     #
@@ -2234,9 +2875,29 @@ module Aws::VerifiedPermissions
     #   Specifies the ID of the policy store that contains the policy template
     #   that you want information about.
     #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
+    #
     # @option params [required, String] :policy_template_id
     #   Specifies the ID of the policy template that you want information
     #   about.
+    #
+    #   You can use the policy template name in place of the policy template
+    #   ID. When using a name, prefix it with `name/`. For example:
+    #
+    #   * ID: `PTEXAMPLEabcdefg111111`
+    #
+    #   * Name: `name/example-policy-template`
     #
     # @return [Types::GetPolicyTemplateOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -2246,6 +2907,7 @@ module Aws::VerifiedPermissions
     #   * {Types::GetPolicyTemplateOutput#statement #statement} => String
     #   * {Types::GetPolicyTemplateOutput#created_date #created_date} => Time
     #   * {Types::GetPolicyTemplateOutput#last_updated_date #last_updated_date} => Time
+    #   * {Types::GetPolicyTemplateOutput#name #name} => String
     #
     #
     # @example Example: GetPolicyTemplate
@@ -2259,6 +2921,26 @@ module Aws::VerifiedPermissions
     #
     #   resp.to_h outputs the following:
     #   {
+    #     created_date: Time.parse("2024-08-12T18:20:50.99Z"), 
+    #     description: "Template for research dept", 
+    #     last_updated_date: Time.parse("2024-08-12T18:20:50.99Z"), 
+    #     policy_store_id: "C7v5xMplfFH3i3e4Jrzb1a", 
+    #     policy_template_id: "PTEXAMPLEabcdefg111111", 
+    #     statement: "permit(\n  principal ?principal,\n  action == Action::\"view\",\n  resource in ?resource\n) when {\n  principal has department && principal.department == \"research\" \n};", 
+    #   }
+    #
+    # @example Example: To retrieve a policy template by name
+    #
+    #   # The following example retrieves the details of a policy template using its name instead of its ID.
+    #
+    #   resp = client.get_policy_template({
+    #     policy_store_id: "C7v5xMplfFH3i3e4Jrzb1a", 
+    #     policy_template_id: "name/example-policy-template", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     name: "name/example-policy-template", 
     #     created_date: Time.parse("2024-08-12T18:20:50.99Z"), 
     #     description: "Template for research dept", 
     #     last_updated_date: Time.parse("2024-08-12T18:20:50.99Z"), 
@@ -2282,6 +2964,7 @@ module Aws::VerifiedPermissions
     #   resp.statement #=> String
     #   resp.created_date #=> Time
     #   resp.last_updated_date #=> Time
+    #   resp.name #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/GetPolicyTemplate AWS API Documentation
     #
@@ -2297,6 +2980,19 @@ module Aws::VerifiedPermissions
     #
     # @option params [required, String] :policy_store_id
     #   Specifies the ID of the policy store that contains the schema.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #
     # @return [Types::GetSchemaOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -2365,6 +3061,19 @@ module Aws::VerifiedPermissions
     #   Specifies the ID of the policy store. Policies in this policy store
     #   will be used to make an authorization decision for the input.
     #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
+    #
     # @option params [Types::EntityIdentifier] :principal
     #   Specifies the principal for which the authorization decision is to be
     #   made.
@@ -2382,9 +3091,11 @@ module Aws::VerifiedPermissions
     #   authorization decisions.
     #
     # @option params [Types::EntitiesDefinition] :entities
-    #   Specifies the list of resources and principals and their associated
-    #   attributes that Verified Permissions can examine when evaluating the
-    #   policies.
+    #   (Optional) Specifies the list of resources and principals and their
+    #   associated attributes that Verified Permissions can examine when
+    #   evaluating the policies. These additional entities and their
+    #   attributes can be referenced and checked by conditional elements in
+    #   the policies in the specified policy store.
     #
     #   <note markdown="1"> You can include only principal and resource entities in this
     #   parameter; you can't include actions. You must specify actions in the
@@ -2407,7 +3118,7 @@ module Aws::VerifiedPermissions
     #
     #   resp = client.is_authorized({
     #     action: {
-    #       action_id: "view", 
+    #       action_id: "updatePhoto", 
     #       action_type: "Action", 
     #     }, 
     #     policy_store_id: "C7v5xMplfFH3i3e4Jrzb1a", 
@@ -2502,6 +3213,31 @@ module Aws::VerifiedPermissions
     #               entity_id: "EntityId", # required
     #             },
     #           ],
+    #           tags: {
+    #             "String" => {
+    #               boolean: false,
+    #               entity_identifier: {
+    #                 entity_type: "EntityType", # required
+    #                 entity_id: "EntityId", # required
+    #               },
+    #               long: 1,
+    #               string: "StringAttribute",
+    #               set: [
+    #                 {
+    #                   # recursive CedarTagValue
+    #                 },
+    #               ],
+    #               record: {
+    #                 "String" => {
+    #                   # recursive CedarTagValue
+    #                 },
+    #               },
+    #               ipaddr: "IpAddr",
+    #               decimal: "Decimal",
+    #               datetime: "DatetimeAttribute",
+    #               duration: "Duration",
+    #             },
+    #           },
     #         },
     #       ],
     #       cedar_json: "CedarJson",
@@ -2550,6 +3286,19 @@ module Aws::VerifiedPermissions
     #   Specifies the ID of the policy store. Policies in this policy store
     #   will be used to make an authorization decision for the input.
     #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
+    #
     # @option params [String] :identity_token
     #   Specifies an identity token for the principal to be authorized. This
     #   token is provided to you by the identity provider (IdP) associated
@@ -2582,8 +3331,11 @@ module Aws::VerifiedPermissions
     #   authorization decisions.
     #
     # @option params [Types::EntitiesDefinition] :entities
-    #   Specifies the list of resources and their associated attributes that
-    #   Verified Permissions can examine when evaluating the policies.
+    #   (Optional) Specifies the list of resources and their associated
+    #   attributes that Verified Permissions can examine when evaluating the
+    #   policies. These additional entities and their attributes can be
+    #   referenced and checked by conditional elements in the policies in the
+    #   specified policy store.
     #
     #   You can't include principals in this parameter, only resource and
     #   action entities. This parameter can't include any entities of a type
@@ -2678,6 +3430,31 @@ module Aws::VerifiedPermissions
     #               entity_id: "EntityId", # required
     #             },
     #           ],
+    #           tags: {
+    #             "String" => {
+    #               boolean: false,
+    #               entity_identifier: {
+    #                 entity_type: "EntityType", # required
+    #                 entity_id: "EntityId", # required
+    #               },
+    #               long: 1,
+    #               string: "StringAttribute",
+    #               set: [
+    #                 {
+    #                   # recursive CedarTagValue
+    #                 },
+    #               ],
+    #               record: {
+    #                 "String" => {
+    #                   # recursive CedarTagValue
+    #                 },
+    #               },
+    #               ipaddr: "IpAddr",
+    #               decimal: "Decimal",
+    #               datetime: "DatetimeAttribute",
+    #               duration: "Duration",
+    #             },
+    #           },
     #         },
     #       ],
     #       cedar_json: "CedarJson",
@@ -2709,6 +3486,19 @@ module Aws::VerifiedPermissions
     # @option params [required, String] :policy_store_id
     #   Specifies the ID of the policy store that contains the identity
     #   sources that you want to list.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #
     # @option params [String] :next_token
     #   Specifies that you want to receive the next page of results. Valid
@@ -2830,6 +3620,19 @@ module Aws::VerifiedPermissions
     # @option params [required, String] :policy_store_id
     #   Specifies the ID of the policy store you want to list policies from.
     #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
+    #
     # @option params [String] :next_token
     #   Specifies that you want to receive the next page of results. Valid
     #   only if you received a `NextToken` response in the previous request.
@@ -2876,6 +3679,7 @@ module Aws::VerifiedPermissions
     #   {
     #     policies: [
     #       {
+    #         name: "name/example-policy", 
     #         created_date: Time.parse("2024-08-12T18:20:50.99Z"), 
     #         definition: {
     #           static: {
@@ -2896,6 +3700,7 @@ module Aws::VerifiedPermissions
     #         }, 
     #       }, 
     #       {
+    #         name: "name/example-policy-2", 
     #         created_date: Time.parse("2024-08-12T18:20:50.99Z"), 
     #         definition: {
     #           static: {
@@ -3069,6 +3874,7 @@ module Aws::VerifiedPermissions
     #   resp.policies[0].created_date #=> Time
     #   resp.policies[0].last_updated_date #=> Time
     #   resp.policies[0].effect #=> String, one of "Permit", "Forbid"
+    #   resp.policies[0].name #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/ListPolicies AWS API Documentation
     #
@@ -3076,6 +3882,137 @@ module Aws::VerifiedPermissions
     # @param [Hash] params ({})
     def list_policies(params = {}, options = {})
       req = build_request(:list_policies, params)
+      req.send_request(options)
+    end
+
+    # Returns a paginated list of all policy store aliases in the calling
+    # Amazon Web Services account.
+    #
+    # @option params [String] :next_token
+    #   Specifies that you want to receive the next page of results. Valid
+    #   only if you received a `NextToken` response in the previous request.
+    #   If you did, it indicates that more output is available. Set this
+    #   parameter to the value provided by the previous call's `NextToken`
+    #   response to request the next page of results.
+    #
+    # @option params [Integer] :max_results
+    #   Specifies the total number of results that you want included in each
+    #   response. If additional items exist beyond the number you specify, the
+    #   `NextToken` response element is returned with a value (not null).
+    #   Include the specified value as the `NextToken` request parameter in
+    #   the next call to the operation to get the next set of results. Note
+    #   that the service might return fewer results than the maximum even when
+    #   there are more results available. You should check `NextToken` after
+    #   every operation to ensure that you receive all of the results.
+    #
+    #   If you do not specify this parameter, the operation defaults to 5
+    #   policy store aliases per response. You can specify a maximum of 50
+    #   policy store aliases per response.
+    #
+    # @option params [Types::PolicyStoreAliasFilter] :filter
+    #   Specifies a filter to narrow the results. You can filter by
+    #   `policyStoreId` to list only the policy store aliases associated with
+    #   a specific policy store.
+    #
+    # @return [Types::ListPolicyStoreAliasesOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListPolicyStoreAliasesOutput#next_token #next_token} => String
+    #   * {Types::ListPolicyStoreAliasesOutput#policy_store_aliases #policy_store_aliases} => Array&lt;Types::PolicyStoreAliasItem&gt;
+    #
+    # The returned {Seahorse::Client::Response response} is a pageable response and is Enumerable. For details on usage see {Aws::PageableResponse PageableResponse}.
+    #
+    #
+    # @example Example: ListPolicyStoreAliases - Example 1
+    #
+    #   # The following example lists all policy store aliases in the AWS account in the AWS Region in which you call the
+    #   # operation.
+    #
+    #   resp = client.list_policy_store_aliases({
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     policy_store_aliases: [
+    #       {
+    #         alias_arn: "arn:aws:verifiedpermissions:us-east-1:123456789012:policy-store-alias/example-policy-store", 
+    #         alias_name: "policy-store-alias/example-policy-store", 
+    #         created_at: Time.parse("2024-01-15T12:30:00.52Z"), 
+    #         policy_store_id: "C7v5xMplfFH3i3e4Jrzb1a", 
+    #         state: "Active", 
+    #       }, 
+    #       {
+    #         alias_arn: "arn:aws:verifiedpermissions:us-east-1:123456789012:policy-store-alias/example-policy-store-2", 
+    #         alias_name: "policy-store-alias/example-policy-store-2", 
+    #         created_at: Time.parse("2024-01-16T09:15:00.52Z"), 
+    #         policy_store_id: "C7v5xMplfFH3i3e4Jrzb1a", 
+    #         state: "Active", 
+    #       }, 
+    #       {
+    #         alias_arn: "arn:aws:verifiedpermissions:us-east-1:123456789012:policy-store-alias/example-policy-store-3", 
+    #         alias_name: "policy-store-alias/example-policy-store-3", 
+    #         created_at: Time.parse("2024-01-17T14:45:00.52Z"), 
+    #         policy_store_id: "C7v5xMplfFH3i3e4Jrzb1a", 
+    #         state: "Active", 
+    #       }, 
+    #     ], 
+    #   }
+    #
+    # @example Example: ListPolicyStoreAliases - Example 2
+    #
+    #   # The following example lists all policy store aliases associated with the policy store with ID C7v5xMplfFH3i3e4Jrzb1a
+    #
+    #   resp = client.list_policy_store_aliases({
+    #     filter: {
+    #       policy_store_id: "C7v5xMplfFH3i3e4Jrzb1a", 
+    #     }, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     policy_store_aliases: [
+    #       {
+    #         alias_arn: "arn:aws:verifiedpermissions:us-east-1:123456789012:policy-store-alias/example-policy-store", 
+    #         alias_name: "policy-store-alias/example-policy-store", 
+    #         created_at: Time.parse("2024-01-15T12:30:00.52Z"), 
+    #         policy_store_id: "C7v5xMplfFH3i3e4Jrzb1a", 
+    #         state: "Active", 
+    #       }, 
+    #       {
+    #         alias_arn: "arn:aws:verifiedpermissions:us-east-1:123456789012:policy-store-alias/example-policy-store-2", 
+    #         alias_name: "policy-store-alias/example-policy-store-2", 
+    #         created_at: Time.parse("2024-01-16T09:15:00.52Z"), 
+    #         policy_store_id: "C7v5xMplfFH3i3e4Jrzb1a", 
+    #         state: "Active", 
+    #       }, 
+    #     ], 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_policy_store_aliases({
+    #     next_token: "NextToken",
+    #     max_results: 1,
+    #     filter: {
+    #       policy_store_id: "PolicyStoreId",
+    #     },
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.next_token #=> String
+    #   resp.policy_store_aliases #=> Array
+    #   resp.policy_store_aliases[0].alias_name #=> String
+    #   resp.policy_store_aliases[0].policy_store_id #=> String
+    #   resp.policy_store_aliases[0].alias_arn #=> String
+    #   resp.policy_store_aliases[0].created_at #=> Time
+    #   resp.policy_store_aliases[0].state #=> String, one of "Active", "PendingDeletion"
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/ListPolicyStoreAliases AWS API Documentation
+    #
+    # @overload list_policy_store_aliases(params = {})
+    # @param [Hash] params ({})
+    def list_policy_store_aliases(params = {}, options = {})
+      req = build_request(:list_policy_store_aliases, params)
       req.send_request(options)
     end
 
@@ -3167,6 +4104,19 @@ module Aws::VerifiedPermissions
     #   Specifies the ID of the policy store that contains the policy
     #   templates you want to list.
     #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
+    #
     # @option params [String] :next_token
     #   Specifies that you want to receive the next page of results. Valid
     #   only if you received a `NextToken` response in the previous request.
@@ -3208,6 +4158,7 @@ module Aws::VerifiedPermissions
     #   {
     #     policy_templates: [
     #       {
+    #         name: "name/example-policy-template", 
     #         created_date: Time.parse("2024-08-12T18:20:50.99Z"), 
     #         description: "Generic template", 
     #         last_updated_date: Time.parse("2024-08-12T18:20:50.99Z"), 
@@ -3215,6 +4166,7 @@ module Aws::VerifiedPermissions
     #         policy_template_id: "PTEXAMPLEabcdefg111111", 
     #       }, 
     #       {
+    #         name: "name/example-policy-template-2", 
     #         created_date: Time.parse("2024-08-12T18:20:50.99Z"), 
     #         description: "Template for research dept", 
     #         last_updated_date: Time.parse("2024-08-12T18:20:50.99Z"), 
@@ -3241,6 +4193,7 @@ module Aws::VerifiedPermissions
     #   resp.policy_templates[0].description #=> String
     #   resp.policy_templates[0].created_date #=> Time
     #   resp.policy_templates[0].last_updated_date #=> Time
+    #   resp.policy_templates[0].name #=> String
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/ListPolicyTemplates AWS API Documentation
     #
@@ -3248,6 +4201,54 @@ module Aws::VerifiedPermissions
     # @param [Hash] params ({})
     def list_policy_templates(params = {}, options = {})
       req = build_request(:list_policy_templates, params)
+      req.send_request(options)
+    end
+
+    # Returns the tags associated with the specified Amazon Verified
+    # Permissions resource. In Verified Permissions, policy stores can be
+    # tagged.
+    #
+    # @option params [required, String] :resource_arn
+    #   The ARN of the resource for which you want to view tags.
+    #
+    # @return [Types::ListTagsForResourceOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::ListTagsForResourceOutput#tags #tags} => Hash&lt;String,String&gt;
+    #
+    #
+    # @example Example: ListTagsForResource
+    #
+    #   # The following example lists all the tags for the resource named in the API call.
+    #
+    #   resp = client.list_tags_for_resource({
+    #     resource_arn: "C7v5xMplfFH3i3e4Jrzb1a", 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #     tags: {
+    #       "key1" => "value1", 
+    #       "key2" => "value2", 
+    #     }, 
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.list_tags_for_resource({
+    #     resource_arn: "AmazonResourceName", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.tags #=> Hash
+    #   resp.tags["TagKey"] #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/ListTagsForResource AWS API Documentation
+    #
+    # @overload list_tags_for_resource(params = {})
+    # @param [Hash] params ({})
+    def list_tags_for_resource(params = {}, options = {})
+      req = build_request(:list_tags_for_resource, params)
       req.send_request(options)
     end
 
@@ -3269,6 +4270,19 @@ module Aws::VerifiedPermissions
     #
     # @option params [required, String] :policy_store_id
     #   Specifies the ID of the policy store in which to place the schema.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #
     # @option params [required, Types::SchemaDefinition] :definition
     #   Specifies the definition of the schema to be stored. The schema
@@ -3336,6 +4350,112 @@ module Aws::VerifiedPermissions
       req.send_request(options)
     end
 
+    # Assigns one or more tags (key-value pairs) to the specified Amazon
+    # Verified Permissions resource. Tags can help you organize and
+    # categorize your resources. You can also use them to scope user
+    # permissions by granting a user permission to access or change only
+    # resources with certain tag values. In Verified Permissions, policy
+    # stores can be tagged.
+    #
+    # Tags don't have any semantic meaning to Amazon Web Services and are
+    # interpreted strictly as strings of characters.
+    #
+    # You can use the TagResource action with a resource that already has
+    # tags. If you specify a new tag key, this tag is appended to the list
+    # of tags associated with the resource. If you specify a tag key that is
+    # already associated with the resource, the new tag value that you
+    # specify replaces the previous value for that tag.
+    #
+    # You can associate as many as 50 tags with a resource.
+    #
+    # @option params [required, String] :resource_arn
+    #   The ARN of the resource that you're adding tags to.
+    #
+    # @option params [required, Hash<String,String>] :tags
+    #   The list of key-value pairs to associate with the resource.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    #
+    # @example Example: TagResource
+    #
+    #   # The following example tags the resource.
+    #
+    #   resp = client.tag_resource({
+    #     resource_arn: "C7v5xMplfFH3i3e4Jrzb1a", 
+    #     tags: {
+    #       "key1" => "value1", 
+    #       "key2" => "value2", 
+    #     }, 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.tag_resource({
+    #     resource_arn: "AmazonResourceName", # required
+    #     tags: { # required
+    #       "TagKey" => "TagValue",
+    #     },
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/TagResource AWS API Documentation
+    #
+    # @overload tag_resource(params = {})
+    # @param [Hash] params ({})
+    def tag_resource(params = {}, options = {})
+      req = build_request(:tag_resource, params)
+      req.send_request(options)
+    end
+
+    # Removes one or more tags from the specified Amazon Verified
+    # Permissions resource. In Verified Permissions, policy stores can be
+    # tagged.
+    #
+    # @option params [required, String] :resource_arn
+    #   The ARN of the resource from which you are removing tags.
+    #
+    # @option params [required, Array<String>] :tag_keys
+    #   The list of tag keys to remove from the resource.
+    #
+    # @return [Struct] Returns an empty {Seahorse::Client::Response response}.
+    #
+    #
+    # @example Example: UntagResource
+    #
+    #   # The following example removes the listed tags from the resource.
+    #
+    #   resp = client.untag_resource({
+    #     resource_arn: "C7v5xMplfFH3i3e4Jrzb1a", 
+    #     tag_keys: [
+    #       "key1", 
+    #       "key2", 
+    #     ], 
+    #   })
+    #
+    #   resp.to_h outputs the following:
+    #   {
+    #   }
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.untag_resource({
+    #     resource_arn: "AmazonResourceName", # required
+    #     tag_keys: ["TagKey"], # required
+    #   })
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/UntagResource AWS API Documentation
+    #
+    # @overload untag_resource(params = {})
+    # @param [Hash] params ({})
+    def untag_resource(params = {}, options = {})
+      req = build_request(:untag_resource, params)
+      req.send_request(options)
+    end
+
     # Updates the specified identity source to use a new identity provider
     # (IdP), or to change the mapping of identities from the IdP to a
     # different principal entity type.
@@ -3351,6 +4471,19 @@ module Aws::VerifiedPermissions
     # @option params [required, String] :policy_store_id
     #   Specifies the ID of the policy store that contains the identity source
     #   that you want to update.
+    #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
     #
     # @option params [required, String] :identity_source_id
     #   Specifies the ID of the identity source that you want to update.
@@ -3497,18 +4630,41 @@ module Aws::VerifiedPermissions
     #   Specifies the ID of the policy store that contains the policy that you
     #   want to update.
     #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
+    #
     # @option params [required, String] :policy_id
     #   Specifies the ID of the policy that you want to update. To find this
     #   value, you can use [ListPolicies][1].
+    #
+    #   You can use the policy name in place of the policy ID. When using a
+    #   name, prefix it with `name/`. For example:
+    #
+    #   * ID: `SPEXAMPLEabcdefg111111`
+    #
+    #   * Name: `name/example-policy`
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicies.html
     #
-    # @option params [required, Types::UpdatePolicyDefinition] :definition
+    # @option params [Types::UpdatePolicyDefinition] :definition
     #   Specifies the updated policy content that you want to replace on the
     #   specified policy. The content must be valid Cedar policy language
     #   text.
+    #
+    #   If you don't specify this parameter, the existing policy definition
+    #   remains unchanged.
     #
     #   You can change only the following elements from the policy definition:
     #
@@ -3525,6 +4681,20 @@ module Aws::VerifiedPermissions
     #   * The `principal` referenced by the policy.
     #
     #   * The `resource` referenced by the policy.
+    #
+    # @option params [String] :name
+    #   Specifies a name for the policy that is unique among all policies
+    #   within the policy store. You can use the name in place of the policy
+    #   ID in API operations that reference the policy. The name must be
+    #   prefixed with `name/`.
+    #
+    #   <note markdown="1"> If you don't include the name in an update request, the existing name
+    #   is unchanged. To remove a name, set it to an empty string (`""`).
+    #
+    #    </note>
+    #
+    #   If you specify a name that is already associated with another policy
+    #   in the policy store, you receive a `ConflictException` error.
     #
     # @return [Types::UpdatePolicyOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
@@ -3544,6 +4714,7 @@ module Aws::VerifiedPermissions
     #   # The following example replaces the definition of the specified static policy with a new one.
     #
     #   resp = client.update_policy({
+    #     name: "name/example-policy-2", 
     #     definition: {
     #       static: {
     #         statement: "permit(principal, action, resource in Album::\"public_folder\");", 
@@ -3571,12 +4742,13 @@ module Aws::VerifiedPermissions
     #   resp = client.update_policy({
     #     policy_store_id: "PolicyStoreId", # required
     #     policy_id: "PolicyId", # required
-    #     definition: { # required
+    #     definition: {
     #       static: {
     #         description: "StaticPolicyDescription",
     #         statement: "PolicyStatement", # required
     #       },
     #     },
+    #     name: "PolicyName",
     #   })
     #
     # @example Response structure
@@ -3617,9 +4789,29 @@ module Aws::VerifiedPermissions
     # @option params [required, String] :policy_store_id
     #   Specifies the ID of the policy store that you want to update
     #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
+    #
     # @option params [required, Types::ValidationSettings] :validation_settings
     #   A structure that defines the validation settings that want to enable
     #   for the policy store.
+    #
+    # @option params [String] :deletion_protection
+    #   Specifies whether the policy store can be deleted. If enabled, the
+    #   policy store can't be deleted.
+    #
+    #   When you call `UpdatePolicyStore`, this parameter is unchanged unless
+    #   explicitly included in the call.
     #
     # @option params [String] :description
     #   Descriptive text that you can provide to help with identification of
@@ -3659,6 +4851,7 @@ module Aws::VerifiedPermissions
     #     validation_settings: { # required
     #       mode: "OFF", # required, accepts OFF, STRICT
     #     },
+    #     deletion_protection: "ENABLED", # accepts ENABLED, DISABLED
     #     description: "PolicyStoreDescription",
     #   })
     #
@@ -3702,8 +4895,28 @@ module Aws::VerifiedPermissions
     #   Specifies the ID of the policy store that contains the policy template
     #   that you want to update.
     #
+    #   To specify a policy store, use its ID or alias name. When using an
+    #   alias name, prefix it with `policy-store-alias/`. For example:
+    #
+    #   * ID: `PSEXAMPLEabcdefg111111`
+    #
+    #   * Alias name: `policy-store-alias/example-policy-store`
+    #
+    #   To view aliases, use [ListPolicyStoreAliases][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_ListPolicyStoreAliases.html
+    #
     # @option params [required, String] :policy_template_id
     #   Specifies the ID of the policy template that you want to update.
+    #
+    #   You can use the policy template name in place of the policy template
+    #   ID. When using a name, prefix it with `name/`. For example:
+    #
+    #   * ID: `PTEXAMPLEabcdefg111111`
+    #
+    #   * Name: `name/example-policy-template`
     #
     # @option params [String] :description
     #   Specifies a new description to apply to the policy template.
@@ -3726,6 +4939,20 @@ module Aws::VerifiedPermissions
     #
     #   * The `resource` referenced by the policy template.
     #
+    # @option params [String] :name
+    #   Specifies a name for the policy template that is unique among all
+    #   policy templates within the policy store. You can use the name in
+    #   place of the policy template ID in API operations that reference the
+    #   policy template. The name must be prefixed with `name/`.
+    #
+    #   <note markdown="1"> If you don't include the name in an update request, the existing name
+    #   is unchanged. To remove a name, set it to an empty string (`""`).
+    #
+    #    </note>
+    #
+    #   If you specify a name that is already associated with another policy
+    #   template in the policy store, you receive a `ConflictException` error.
+    #
     # @return [Types::UpdatePolicyTemplateOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::UpdatePolicyTemplateOutput#policy_store_id #policy_store_id} => String
@@ -3747,6 +4974,7 @@ module Aws::VerifiedPermissions
     #   # parameters be submitted as single line strings.
     #
     #   resp = client.update_policy_template({
+    #     name: "name/example-policy-template-2", 
     #     description: "My updated template description", 
     #     policy_store_id: "C7v5xMplfFH3i3e4Jrzb1a", 
     #     policy_template_id: "PTEXAMPLEabcdefg111111", 
@@ -3768,6 +4996,7 @@ module Aws::VerifiedPermissions
     #     policy_template_id: "PolicyTemplateId", # required
     #     description: "PolicyTemplateDescription",
     #     statement: "PolicyStatement", # required
+    #     name: "PolicyTemplateName",
     #   })
     #
     # @example Response structure
@@ -3804,7 +5033,7 @@ module Aws::VerifiedPermissions
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-verifiedpermissions'
-      context[:gem_version] = '1.42.0'
+      context[:gem_version] = '1.68.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

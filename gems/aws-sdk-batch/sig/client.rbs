@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -100,13 +101,13 @@ module Aws
                                         ?unmanagedv_cpus: ::Integer,
                                         ?compute_resources: {
                                           type: ("EC2" | "SPOT" | "FARGATE" | "FARGATE_SPOT"),
-                                          allocation_strategy: ("BEST_FIT" | "BEST_FIT_PROGRESSIVE" | "SPOT_CAPACITY_OPTIMIZED" | "SPOT_PRICE_CAPACITY_OPTIMIZED")?,
+                                          allocation_strategy: ("BEST_FIT" | "BEST_FIT_PROGRESSIVE" | "BEST_FIT_PROGRESSIVE_ORDERED" | "SPOT_CAPACITY_OPTIMIZED" | "SPOT_PRICE_CAPACITY_OPTIMIZED" | "SPOT_CAPACITY_OPTIMIZED_PRIORITIZED")?,
                                           minv_cpus: ::Integer?,
                                           maxv_cpus: ::Integer,
                                           desiredv_cpus: ::Integer?,
                                           instance_types: Array[::String]?,
                                           image_id: ::String?,
-                                          subnets: Array[::String],
+                                          subnets: Array[::String]?,
                                           security_group_ids: Array[::String]?,
                                           ec2_key_pair: ::String?,
                                           instance_role: ::String?,
@@ -114,26 +115,18 @@ module Aws
                                           placement_group: ::String?,
                                           bid_percentage: ::Integer?,
                                           spot_iam_fleet_role: ::String?,
-                                          launch_template: {
-                                            launch_template_id: ::String?,
-                                            launch_template_name: ::String?,
-                                            version: ::String?,
-                                            overrides: Array[
-                                              {
-                                                launch_template_id: ::String?,
-                                                launch_template_name: ::String?,
-                                                version: ::String?,
-                                                target_instance_types: Array[::String]?
-                                              },
-                                            ]?
-                                          }?,
+                                          launch_template: Params::launch_template_specification?,
                                           ec2_configuration: Array[
                                             {
                                               image_type: ::String,
                                               image_id_override: ::String?,
+                                              batch_image_status: ::String?,
                                               image_kubernetes_version: ::String?
-                                            },
-                                          ]?
+                                            }
+                                          ]?,
+                                          scaling_policy: {
+                                            min_scale_down_delay_minutes: ::Integer?
+                                          }?
                                         },
                                         ?service_role: ::String,
                                         ?tags: Hash[::String, ::String],
@@ -170,23 +163,57 @@ module Aws
                               ?state: ("ENABLED" | "DISABLED"),
                               ?scheduling_policy_arn: ::String,
                               priority: ::Integer,
-                              compute_environment_order: Array[
+                              ?compute_environment_order: Array[
                                 {
                                   order: ::Integer,
                                   compute_environment: ::String
-                                },
+                                }
                               ],
+                              ?service_environment_order: Array[
+                                {
+                                  order: ::Integer,
+                                  service_environment: ::String
+                                }
+                              ],
+                              ?job_queue_type: ("EKS" | "ECS" | "ECS_FARGATE" | "SAGEMAKER_TRAINING"),
                               ?tags: Hash[::String, ::String],
                               ?job_state_time_limit_actions: Array[
                                 {
                                   reason: ::String,
                                   state: ("RUNNABLE"),
                                   max_time_seconds: ::Integer,
-                                  action: ("CANCEL")
-                                },
+                                  action: ("CANCEL" | "TERMINATE")
+                                }
                               ]
                             ) -> _CreateJobQueueResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateJobQueueResponseSuccess
+
+      interface _CreateQuotaShareResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateQuotaShareResponse]
+        def quota_share_name: () -> ::String
+        def quota_share_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Batch/Client.html#create_quota_share-instance_method
+      def create_quota_share: (
+                                quota_share_name: ::String,
+                                job_queue: ::String,
+                                capacity_limits: Array[
+                                  {
+                                    max_capacity: ::Integer,
+                                    capacity_unit: ::String
+                                  }
+                                ],
+                                resource_sharing_configuration: {
+                                  strategy: ("RESERVE" | "LEND" | "LEND_AND_BORROW"),
+                                  borrow_limit: ::Integer?
+                                },
+                                preemption_configuration: {
+                                  in_share_preemption: ("ENABLED" | "DISABLED")
+                                },
+                                ?state: ("ENABLED" | "DISABLED"),
+                                ?tags: Hash[::String, ::String]
+                              ) -> _CreateQuotaShareResponseSuccess
+                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateQuotaShareResponseSuccess
 
       interface _CreateSchedulingPolicyResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateSchedulingPolicyResponse]
@@ -196,19 +223,33 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Batch/Client.html#create_scheduling_policy-instance_method
       def create_scheduling_policy: (
                                       name: ::String,
-                                      ?fairshare_policy: {
-                                        share_decay_seconds: ::Integer?,
-                                        compute_reservation: ::Integer?,
-                                        share_distribution: Array[
-                                          {
-                                            share_identifier: ::String,
-                                            weight_factor: ::Float?
-                                          },
-                                        ]?
+                                      ?quota_share_policy: {
+                                        idle_resource_assignment_strategy: ("FIFO")
                                       },
+                                      ?fairshare_policy: Params::fairshare_policy,
                                       ?tags: Hash[::String, ::String]
                                     ) -> _CreateSchedulingPolicyResponseSuccess
                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateSchedulingPolicyResponseSuccess
+
+      interface _CreateServiceEnvironmentResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::CreateServiceEnvironmentResponse]
+        def service_environment_name: () -> ::String
+        def service_environment_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Batch/Client.html#create_service_environment-instance_method
+      def create_service_environment: (
+                                        service_environment_name: ::String,
+                                        service_environment_type: ("SAGEMAKER_TRAINING"),
+                                        ?state: ("ENABLED" | "DISABLED"),
+                                        capacity_limits: Array[
+                                          {
+                                            max_capacity: ::Integer?,
+                                            capacity_unit: ::String?
+                                          }
+                                        ],
+                                        ?tags: Hash[::String, ::String]
+                                      ) -> _CreateServiceEnvironmentResponseSuccess
+                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateServiceEnvironmentResponseSuccess
 
       interface _DeleteComputeEnvironmentResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DeleteComputeEnvironmentResponse]
@@ -237,6 +278,15 @@ module Aws
                             ) -> _DeleteJobQueueResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteJobQueueResponseSuccess
 
+      interface _DeleteQuotaShareResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteQuotaShareResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Batch/Client.html#delete_quota_share-instance_method
+      def delete_quota_share: (
+                                quota_share_arn: ::String
+                              ) -> _DeleteQuotaShareResponseSuccess
+                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteQuotaShareResponseSuccess
+
       interface _DeleteSchedulingPolicyResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DeleteSchedulingPolicyResponse]
       end
@@ -245,6 +295,15 @@ module Aws
                                       arn: ::String
                                     ) -> _DeleteSchedulingPolicyResponseSuccess
                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteSchedulingPolicyResponseSuccess
+
+      interface _DeleteServiceEnvironmentResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DeleteServiceEnvironmentResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Batch/Client.html#delete_service_environment-instance_method
+      def delete_service_environment: (
+                                        service_environment: ::String
+                                      ) -> _DeleteServiceEnvironmentResponseSuccess
+                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DeleteServiceEnvironmentResponseSuccess
 
       interface _DeregisterJobDefinitionResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DeregisterJobDefinitionResponse]
@@ -323,6 +382,24 @@ module Aws
                          ) -> _DescribeJobsResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeJobsResponseSuccess
 
+      interface _DescribeQuotaShareResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DescribeQuotaShareResponse]
+        def quota_share_name: () -> ::String
+        def quota_share_arn: () -> ::String
+        def job_queue_arn: () -> ::String
+        def capacity_limits: () -> ::Array[Types::QuotaShareCapacityLimit]
+        def resource_sharing_configuration: () -> Types::QuotaShareResourceSharingConfiguration
+        def preemption_configuration: () -> Types::QuotaSharePreemptionConfiguration
+        def state: () -> ("ENABLED" | "DISABLED")
+        def status: () -> ("CREATING" | "VALID" | "INVALID" | "UPDATING" | "DELETING")
+        def tags: () -> ::Hash[::String, ::String]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Batch/Client.html#describe_quota_share-instance_method
+      def describe_quota_share: (
+                                  quota_share_arn: ::String
+                                ) -> _DescribeQuotaShareResponseSuccess
+                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeQuotaShareResponseSuccess
+
       interface _DescribeSchedulingPoliciesResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::DescribeSchedulingPoliciesResponse]
         def scheduling_policies: () -> ::Array[Types::SchedulingPolicyDetail]
@@ -333,9 +410,57 @@ module Aws
                                         ) -> _DescribeSchedulingPoliciesResponseSuccess
                                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeSchedulingPoliciesResponseSuccess
 
+      interface _DescribeServiceEnvironmentsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DescribeServiceEnvironmentsResponse]
+        def service_environments: () -> ::Array[Types::ServiceEnvironmentDetail]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Batch/Client.html#describe_service_environments-instance_method
+      def describe_service_environments: (
+                                           ?service_environments: Array[::String],
+                                           ?max_results: ::Integer,
+                                           ?next_token: ::String
+                                         ) -> _DescribeServiceEnvironmentsResponseSuccess
+                                       | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeServiceEnvironmentsResponseSuccess
+
+      interface _DescribeServiceJobResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::DescribeServiceJobResponse]
+        def attempts: () -> ::Array[Types::ServiceJobAttemptDetail]
+        def capacity_usage: () -> ::Array[Types::ServiceJobCapacityUsageDetail]
+        def created_at: () -> ::Integer
+        def is_terminated: () -> bool
+        def job_arn: () -> ::String
+        def job_id: () -> ::String
+        def job_name: () -> ::String
+        def job_queue: () -> ::String
+        def latest_attempt: () -> Types::LatestServiceJobAttempt
+        def retry_strategy: () -> Types::ServiceJobRetryStrategy
+        def scheduled_at: () -> ::Integer
+        def scheduling_priority: () -> ::Integer
+        def service_request_payload: () -> ::String
+        def service_job_type: () -> ("SAGEMAKER_TRAINING")
+        def share_identifier: () -> ::String
+        def quota_share_name: () -> ::String
+        def preemption_configuration: () -> Types::ServiceJobPreemptionConfiguration
+        def preemption_summary: () -> Types::ServiceJobPreemptionSummary
+        def started_at: () -> ::Integer
+        def status: () -> ("SUBMITTED" | "PENDING" | "RUNNABLE" | "SCHEDULED" | "STARTING" | "RUNNING" | "SUCCEEDED" | "FAILED")
+        def status_reason: () -> ::String
+        def stopped_at: () -> ::Integer
+        def tags: () -> ::Hash[::String, ::String]
+        def timeout_config: () -> Types::ServiceJobTimeout
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Batch/Client.html#describe_service_job-instance_method
+      def describe_service_job: (
+                                  job_id: ::String
+                                ) -> _DescribeServiceJobResponseSuccess
+                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _DescribeServiceJobResponseSuccess
+
       interface _GetJobQueueSnapshotResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::GetJobQueueSnapshotResponse]
         def front_of_queue: () -> Types::FrontOfQueueDetail
+        def front_of_quota_shares: () -> Types::FrontOfQuotaSharesDetail
+        def queue_utilization: () -> Types::QueueSnapshotUtilizationDetail
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Batch/Client.html#get_job_queue_snapshot-instance_method
       def get_job_queue_snapshot: (
@@ -354,7 +479,7 @@ module Aws
                                          {
                                            name: ::String?,
                                            values: Array[::String]?
-                                         },
+                                         }
                                        ],
                                        ?max_results: ::Integer,
                                        ?next_token: ::String
@@ -378,7 +503,7 @@ module Aws
                          {
                            name: ::String?,
                            values: Array[::String]?
-                         },
+                         }
                        ]
                      ) -> _ListJobsResponseSuccess
                    | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListJobsResponseSuccess
@@ -395,12 +520,25 @@ module Aws
                                                 {
                                                   name: ::String?,
                                                   values: Array[::String]?
-                                                },
+                                                }
                                               ],
                                               ?max_results: ::Integer,
                                               ?next_token: ::String
                                             ) -> _ListJobsByConsumableResourceResponseSuccess
                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListJobsByConsumableResourceResponseSuccess
+
+      interface _ListQuotaSharesResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListQuotaSharesResponse]
+        def quota_shares: () -> ::Array[Types::QuotaShareDetail]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Batch/Client.html#list_quota_shares-instance_method
+      def list_quota_shares: (
+                               job_queue: ::String,
+                               ?max_results: ::Integer,
+                               ?next_token: ::String
+                             ) -> _ListQuotaSharesResponseSuccess
+                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListQuotaSharesResponseSuccess
 
       interface _ListSchedulingPoliciesResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListSchedulingPoliciesResponse]
@@ -413,6 +551,26 @@ module Aws
                                       ?next_token: ::String
                                     ) -> _ListSchedulingPoliciesResponseSuccess
                                   | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListSchedulingPoliciesResponseSuccess
+
+      interface _ListServiceJobsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListServiceJobsResponse]
+        def job_summary_list: () -> ::Array[Types::ServiceJobSummary]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Batch/Client.html#list_service_jobs-instance_method
+      def list_service_jobs: (
+                               ?job_queue: ::String,
+                               ?job_status: ("SUBMITTED" | "PENDING" | "RUNNABLE" | "SCHEDULED" | "STARTING" | "RUNNING" | "SUCCEEDED" | "FAILED"),
+                               ?max_results: ::Integer,
+                               ?next_token: ::String,
+                               ?filters: Array[
+                                 {
+                                   name: ::String?,
+                                   values: Array[::String]?
+                                 }
+                               ]
+                             ) -> _ListServiceJobsResponseSuccess
+                           | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListServiceJobsResponseSuccess
 
       interface _ListTagsForResourceResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListTagsForResourceResponse]
@@ -436,721 +594,43 @@ module Aws
                                      type: ("container" | "multinode"),
                                      ?parameters: Hash[::String, ::String],
                                      ?scheduling_priority: ::Integer,
-                                     ?container_properties: {
-                                       image: ::String?,
-                                       vcpus: ::Integer?,
-                                       memory: ::Integer?,
-                                       command: Array[::String]?,
-                                       job_role_arn: ::String?,
-                                       execution_role_arn: ::String?,
-                                       volumes: Array[
-                                         {
-                                           host: {
-                                             source_path: ::String?
-                                           }?,
-                                           name: ::String?,
-                                           efs_volume_configuration: {
-                                             file_system_id: ::String,
-                                             root_directory: ::String?,
-                                             transit_encryption: ("ENABLED" | "DISABLED")?,
-                                             transit_encryption_port: ::Integer?,
-                                             authorization_config: {
-                                               access_point_id: ::String?,
-                                               iam: ("ENABLED" | "DISABLED")?
-                                             }?
-                                           }?
-                                         },
-                                       ]?,
-                                       environment: Array[
-                                         {
-                                           name: ::String?,
-                                           value: ::String?
-                                         },
-                                       ]?,
-                                       mount_points: Array[
-                                         {
-                                           container_path: ::String?,
-                                           read_only: bool?,
-                                           source_volume: ::String?
-                                         },
-                                       ]?,
-                                       readonly_root_filesystem: bool?,
-                                       privileged: bool?,
-                                       ulimits: Array[
-                                         {
-                                           hard_limit: ::Integer,
-                                           name: ::String,
-                                           soft_limit: ::Integer
-                                         },
-                                       ]?,
-                                       user: ::String?,
-                                       instance_type: ::String?,
-                                       resource_requirements: Array[
-                                         {
-                                           value: ::String,
-                                           type: ("GPU" | "VCPU" | "MEMORY")
-                                         },
-                                       ]?,
-                                       linux_parameters: {
-                                         devices: Array[
-                                           {
-                                             host_path: ::String,
-                                             container_path: ::String?,
-                                             permissions: Array[("READ" | "WRITE" | "MKNOD")]?
-                                           },
-                                         ]?,
-                                         init_process_enabled: bool?,
-                                         shared_memory_size: ::Integer?,
-                                         tmpfs: Array[
-                                           {
-                                             container_path: ::String,
-                                             size: ::Integer,
-                                             mount_options: Array[::String]?
-                                           },
-                                         ]?,
-                                         max_swap: ::Integer?,
-                                         swappiness: ::Integer?
-                                       }?,
-                                       log_configuration: {
-                                         log_driver: ("json-file" | "syslog" | "journald" | "gelf" | "fluentd" | "awslogs" | "splunk"),
-                                         options: Hash[::String, ::String]?,
-                                         secret_options: Array[
-                                           {
-                                             name: ::String,
-                                             value_from: ::String
-                                           },
-                                         ]?
-                                       }?,
-                                       secrets: Array[
-                                         {
-                                           name: ::String,
-                                           value_from: ::String
-                                         },
-                                       ]?,
-                                       network_configuration: {
-                                         assign_public_ip: ("ENABLED" | "DISABLED")?
-                                       }?,
-                                       fargate_platform_configuration: {
-                                         platform_version: ::String?
-                                       }?,
-                                       ephemeral_storage: {
-                                         size_in_gi_b: ::Integer
-                                       }?,
-                                       runtime_platform: {
-                                         operating_system_family: ::String?,
-                                         cpu_architecture: ::String?
-                                       }?,
-                                       repository_credentials: {
-                                         credentials_parameter: ::String
-                                       }?
-                                     },
+                                     ?container_properties: Params::container_properties,
                                      ?node_properties: {
                                        num_nodes: ::Integer,
                                        main_node: ::Integer,
                                        node_range_properties: Array[
                                          {
                                            target_nodes: ::String,
-                                           container: {
-                                             image: ::String?,
-                                             vcpus: ::Integer?,
-                                             memory: ::Integer?,
-                                             command: Array[::String]?,
-                                             job_role_arn: ::String?,
-                                             execution_role_arn: ::String?,
-                                             volumes: Array[
-                                               {
-                                                 host: {
-                                                   source_path: ::String?
-                                                 }?,
-                                                 name: ::String?,
-                                                 efs_volume_configuration: {
-                                                   file_system_id: ::String,
-                                                   root_directory: ::String?,
-                                                   transit_encryption: ("ENABLED" | "DISABLED")?,
-                                                   transit_encryption_port: ::Integer?,
-                                                   authorization_config: {
-                                                     access_point_id: ::String?,
-                                                     iam: ("ENABLED" | "DISABLED")?
-                                                   }?
-                                                 }?
-                                               },
-                                             ]?,
-                                             environment: Array[
-                                               {
-                                                 name: ::String?,
-                                                 value: ::String?
-                                               },
-                                             ]?,
-                                             mount_points: Array[
-                                               {
-                                                 container_path: ::String?,
-                                                 read_only: bool?,
-                                                 source_volume: ::String?
-                                               },
-                                             ]?,
-                                             readonly_root_filesystem: bool?,
-                                             privileged: bool?,
-                                             ulimits: Array[
-                                               {
-                                                 hard_limit: ::Integer,
-                                                 name: ::String,
-                                                 soft_limit: ::Integer
-                                               },
-                                             ]?,
-                                             user: ::String?,
-                                             instance_type: ::String?,
-                                             resource_requirements: Array[
-                                               {
-                                                 value: ::String,
-                                                 type: ("GPU" | "VCPU" | "MEMORY")
-                                               },
-                                             ]?,
-                                             linux_parameters: {
-                                               devices: Array[
-                                                 {
-                                                   host_path: ::String,
-                                                   container_path: ::String?,
-                                                   permissions: Array[("READ" | "WRITE" | "MKNOD")]?
-                                                 },
-                                               ]?,
-                                               init_process_enabled: bool?,
-                                               shared_memory_size: ::Integer?,
-                                               tmpfs: Array[
-                                                 {
-                                                   container_path: ::String,
-                                                   size: ::Integer,
-                                                   mount_options: Array[::String]?
-                                                 },
-                                               ]?,
-                                               max_swap: ::Integer?,
-                                               swappiness: ::Integer?
-                                             }?,
-                                             log_configuration: {
-                                               log_driver: ("json-file" | "syslog" | "journald" | "gelf" | "fluentd" | "awslogs" | "splunk"),
-                                               options: Hash[::String, ::String]?,
-                                               secret_options: Array[
-                                                 {
-                                                   name: ::String,
-                                                   value_from: ::String
-                                                 },
-                                               ]?
-                                             }?,
-                                             secrets: Array[
-                                               {
-                                                 name: ::String,
-                                                 value_from: ::String
-                                               },
-                                             ]?,
-                                             network_configuration: {
-                                               assign_public_ip: ("ENABLED" | "DISABLED")?
-                                             }?,
-                                             fargate_platform_configuration: {
-                                               platform_version: ::String?
-                                             }?,
-                                             ephemeral_storage: {
-                                               size_in_gi_b: ::Integer
-                                             }?,
-                                             runtime_platform: {
-                                               operating_system_family: ::String?,
-                                               cpu_architecture: ::String?
-                                             }?,
-                                             repository_credentials: {
-                                               credentials_parameter: ::String
-                                             }?
-                                           }?,
+                                           container: Params::container_properties?,
                                            instance_types: Array[::String]?,
-                                           ecs_properties: {
-                                             task_properties: Array[
-                                               {
-                                                 containers: Array[
-                                                   {
-                                                     command: Array[::String]?,
-                                                     depends_on: Array[
-                                                       {
-                                                         container_name: ::String?,
-                                                         condition: ::String?
-                                                       },
-                                                     ]?,
-                                                     environment: Array[
-                                                       {
-                                                         name: ::String?,
-                                                         value: ::String?
-                                                       },
-                                                     ]?,
-                                                     essential: bool?,
-                                                     image: ::String,
-                                                     linux_parameters: {
-                                                       devices: Array[
-                                                         {
-                                                           host_path: ::String,
-                                                           container_path: ::String?,
-                                                           permissions: Array[("READ" | "WRITE" | "MKNOD")]?
-                                                         },
-                                                       ]?,
-                                                       init_process_enabled: bool?,
-                                                       shared_memory_size: ::Integer?,
-                                                       tmpfs: Array[
-                                                         {
-                                                           container_path: ::String,
-                                                           size: ::Integer,
-                                                           mount_options: Array[::String]?
-                                                         },
-                                                       ]?,
-                                                       max_swap: ::Integer?,
-                                                       swappiness: ::Integer?
-                                                     }?,
-                                                     log_configuration: {
-                                                       log_driver: ("json-file" | "syslog" | "journald" | "gelf" | "fluentd" | "awslogs" | "splunk"),
-                                                       options: Hash[::String, ::String]?,
-                                                       secret_options: Array[
-                                                         {
-                                                           name: ::String,
-                                                           value_from: ::String
-                                                         },
-                                                       ]?
-                                                     }?,
-                                                     mount_points: Array[
-                                                       {
-                                                         container_path: ::String?,
-                                                         read_only: bool?,
-                                                         source_volume: ::String?
-                                                       },
-                                                     ]?,
-                                                     name: ::String?,
-                                                     privileged: bool?,
-                                                     readonly_root_filesystem: bool?,
-                                                     repository_credentials: {
-                                                       credentials_parameter: ::String
-                                                     }?,
-                                                     resource_requirements: Array[
-                                                       {
-                                                         value: ::String,
-                                                         type: ("GPU" | "VCPU" | "MEMORY")
-                                                       },
-                                                     ]?,
-                                                     secrets: Array[
-                                                       {
-                                                         name: ::String,
-                                                         value_from: ::String
-                                                       },
-                                                     ]?,
-                                                     ulimits: Array[
-                                                       {
-                                                         hard_limit: ::Integer,
-                                                         name: ::String,
-                                                         soft_limit: ::Integer
-                                                       },
-                                                     ]?,
-                                                     user: ::String?
-                                                   },
-                                                 ],
-                                                 ephemeral_storage: {
-                                                   size_in_gi_b: ::Integer
-                                                 }?,
-                                                 execution_role_arn: ::String?,
-                                                 platform_version: ::String?,
-                                                 ipc_mode: ::String?,
-                                                 task_role_arn: ::String?,
-                                                 pid_mode: ::String?,
-                                                 network_configuration: {
-                                                   assign_public_ip: ("ENABLED" | "DISABLED")?
-                                                 }?,
-                                                 runtime_platform: {
-                                                   operating_system_family: ::String?,
-                                                   cpu_architecture: ::String?
-                                                 }?,
-                                                 volumes: Array[
-                                                   {
-                                                     host: {
-                                                       source_path: ::String?
-                                                     }?,
-                                                     name: ::String?,
-                                                     efs_volume_configuration: {
-                                                       file_system_id: ::String,
-                                                       root_directory: ::String?,
-                                                       transit_encryption: ("ENABLED" | "DISABLED")?,
-                                                       transit_encryption_port: ::Integer?,
-                                                       authorization_config: {
-                                                         access_point_id: ::String?,
-                                                         iam: ("ENABLED" | "DISABLED")?
-                                                       }?
-                                                     }?
-                                                   },
-                                                 ]?
-                                               },
-                                             ]
-                                           }?,
-                                           eks_properties: {
-                                             pod_properties: {
-                                               service_account_name: ::String?,
-                                               host_network: bool?,
-                                               dns_policy: ::String?,
-                                               image_pull_secrets: Array[
-                                                 {
-                                                   name: ::String
-                                                 },
-                                               ]?,
-                                               containers: Array[
-                                                 {
-                                                   name: ::String?,
-                                                   image: ::String,
-                                                   image_pull_policy: ::String?,
-                                                   command: Array[::String]?,
-                                                   args: Array[::String]?,
-                                                   env: Array[
-                                                     {
-                                                       name: ::String,
-                                                       value: ::String?
-                                                     },
-                                                   ]?,
-                                                   resources: {
-                                                     limits: Hash[::String, ::String]?,
-                                                     requests: Hash[::String, ::String]?
-                                                   }?,
-                                                   volume_mounts: Array[
-                                                     {
-                                                       name: ::String?,
-                                                       mount_path: ::String?,
-                                                       sub_path: ::String?,
-                                                       read_only: bool?
-                                                     },
-                                                   ]?,
-                                                   security_context: {
-                                                     run_as_user: ::Integer?,
-                                                     run_as_group: ::Integer?,
-                                                     privileged: bool?,
-                                                     allow_privilege_escalation: bool?,
-                                                     read_only_root_filesystem: bool?,
-                                                     run_as_non_root: bool?
-                                                   }?
-                                                 },
-                                               ]?,
-                                               init_containers: Array[
-                                                 {
-                                                   name: ::String?,
-                                                   image: ::String,
-                                                   image_pull_policy: ::String?,
-                                                   command: Array[::String]?,
-                                                   args: Array[::String]?,
-                                                   env: Array[
-                                                     {
-                                                       name: ::String,
-                                                       value: ::String?
-                                                     },
-                                                   ]?,
-                                                   resources: {
-                                                     limits: Hash[::String, ::String]?,
-                                                     requests: Hash[::String, ::String]?
-                                                   }?,
-                                                   volume_mounts: Array[
-                                                     {
-                                                       name: ::String?,
-                                                       mount_path: ::String?,
-                                                       sub_path: ::String?,
-                                                       read_only: bool?
-                                                     },
-                                                   ]?,
-                                                   security_context: {
-                                                     run_as_user: ::Integer?,
-                                                     run_as_group: ::Integer?,
-                                                     privileged: bool?,
-                                                     allow_privilege_escalation: bool?,
-                                                     read_only_root_filesystem: bool?,
-                                                     run_as_non_root: bool?
-                                                   }?
-                                                 },
-                                               ]?,
-                                               volumes: Array[
-                                                 {
-                                                   name: ::String,
-                                                   host_path: {
-                                                     path: ::String?
-                                                   }?,
-                                                   empty_dir: {
-                                                     medium: ::String?,
-                                                     size_limit: ::String?
-                                                   }?,
-                                                   secret: {
-                                                     secret_name: ::String,
-                                                     optional: bool?
-                                                   }?,
-                                                   persistent_volume_claim: {
-                                                     claim_name: ::String,
-                                                     read_only: bool?
-                                                   }?
-                                                 },
-                                               ]?,
-                                               metadata: {
-                                                 labels: Hash[::String, ::String]?,
-                                                 annotations: Hash[::String, ::String]?,
-                                                 namespace: ::String?
-                                               }?,
-                                               share_process_namespace: bool?
-                                             }?
-                                           }?,
+                                           ecs_properties: Params::ecs_properties?,
+                                           eks_properties: Params::eks_properties?,
                                            consumable_resource_properties: {
                                              consumable_resource_list: Array[
                                                {
                                                  consumable_resource: ::String?,
                                                  quantity: ::Integer?
-                                               },
+                                               }
                                              ]?
                                            }?
-                                         },
+                                         }
                                        ]
                                      },
-                                     ?retry_strategy: {
-                                       attempts: ::Integer?,
-                                       evaluate_on_exit: Array[
-                                         {
-                                           on_status_reason: ::String?,
-                                           on_reason: ::String?,
-                                           on_exit_code: ::String?,
-                                           action: ("RETRY" | "EXIT")
-                                         },
-                                       ]?
-                                     },
+                                     ?retry_strategy: Params::retry_strategy,
                                      ?propagate_tags: bool,
                                      ?timeout: {
                                        attempt_duration_seconds: ::Integer?
                                      },
                                      ?tags: Hash[::String, ::String],
                                      ?platform_capabilities: Array[("EC2" | "FARGATE")],
-                                     ?eks_properties: {
-                                       pod_properties: {
-                                         service_account_name: ::String?,
-                                         host_network: bool?,
-                                         dns_policy: ::String?,
-                                         image_pull_secrets: Array[
-                                           {
-                                             name: ::String
-                                           },
-                                         ]?,
-                                         containers: Array[
-                                           {
-                                             name: ::String?,
-                                             image: ::String,
-                                             image_pull_policy: ::String?,
-                                             command: Array[::String]?,
-                                             args: Array[::String]?,
-                                             env: Array[
-                                               {
-                                                 name: ::String,
-                                                 value: ::String?
-                                               },
-                                             ]?,
-                                             resources: {
-                                               limits: Hash[::String, ::String]?,
-                                               requests: Hash[::String, ::String]?
-                                             }?,
-                                             volume_mounts: Array[
-                                               {
-                                                 name: ::String?,
-                                                 mount_path: ::String?,
-                                                 sub_path: ::String?,
-                                                 read_only: bool?
-                                               },
-                                             ]?,
-                                             security_context: {
-                                               run_as_user: ::Integer?,
-                                               run_as_group: ::Integer?,
-                                               privileged: bool?,
-                                               allow_privilege_escalation: bool?,
-                                               read_only_root_filesystem: bool?,
-                                               run_as_non_root: bool?
-                                             }?
-                                           },
-                                         ]?,
-                                         init_containers: Array[
-                                           {
-                                             name: ::String?,
-                                             image: ::String,
-                                             image_pull_policy: ::String?,
-                                             command: Array[::String]?,
-                                             args: Array[::String]?,
-                                             env: Array[
-                                               {
-                                                 name: ::String,
-                                                 value: ::String?
-                                               },
-                                             ]?,
-                                             resources: {
-                                               limits: Hash[::String, ::String]?,
-                                               requests: Hash[::String, ::String]?
-                                             }?,
-                                             volume_mounts: Array[
-                                               {
-                                                 name: ::String?,
-                                                 mount_path: ::String?,
-                                                 sub_path: ::String?,
-                                                 read_only: bool?
-                                               },
-                                             ]?,
-                                             security_context: {
-                                               run_as_user: ::Integer?,
-                                               run_as_group: ::Integer?,
-                                               privileged: bool?,
-                                               allow_privilege_escalation: bool?,
-                                               read_only_root_filesystem: bool?,
-                                               run_as_non_root: bool?
-                                             }?
-                                           },
-                                         ]?,
-                                         volumes: Array[
-                                           {
-                                             name: ::String,
-                                             host_path: {
-                                               path: ::String?
-                                             }?,
-                                             empty_dir: {
-                                               medium: ::String?,
-                                               size_limit: ::String?
-                                             }?,
-                                             secret: {
-                                               secret_name: ::String,
-                                               optional: bool?
-                                             }?,
-                                             persistent_volume_claim: {
-                                               claim_name: ::String,
-                                               read_only: bool?
-                                             }?
-                                           },
-                                         ]?,
-                                         metadata: {
-                                           labels: Hash[::String, ::String]?,
-                                           annotations: Hash[::String, ::String]?,
-                                           namespace: ::String?
-                                         }?,
-                                         share_process_namespace: bool?
-                                       }?
-                                     },
-                                     ?ecs_properties: {
-                                       task_properties: Array[
-                                         {
-                                           containers: Array[
-                                             {
-                                               command: Array[::String]?,
-                                               depends_on: Array[
-                                                 {
-                                                   container_name: ::String?,
-                                                   condition: ::String?
-                                                 },
-                                               ]?,
-                                               environment: Array[
-                                                 {
-                                                   name: ::String?,
-                                                   value: ::String?
-                                                 },
-                                               ]?,
-                                               essential: bool?,
-                                               image: ::String,
-                                               linux_parameters: {
-                                                 devices: Array[
-                                                   {
-                                                     host_path: ::String,
-                                                     container_path: ::String?,
-                                                     permissions: Array[("READ" | "WRITE" | "MKNOD")]?
-                                                   },
-                                                 ]?,
-                                                 init_process_enabled: bool?,
-                                                 shared_memory_size: ::Integer?,
-                                                 tmpfs: Array[
-                                                   {
-                                                     container_path: ::String,
-                                                     size: ::Integer,
-                                                     mount_options: Array[::String]?
-                                                   },
-                                                 ]?,
-                                                 max_swap: ::Integer?,
-                                                 swappiness: ::Integer?
-                                               }?,
-                                               log_configuration: {
-                                                 log_driver: ("json-file" | "syslog" | "journald" | "gelf" | "fluentd" | "awslogs" | "splunk"),
-                                                 options: Hash[::String, ::String]?,
-                                                 secret_options: Array[
-                                                   {
-                                                     name: ::String,
-                                                     value_from: ::String
-                                                   },
-                                                 ]?
-                                               }?,
-                                               mount_points: Array[
-                                                 {
-                                                   container_path: ::String?,
-                                                   read_only: bool?,
-                                                   source_volume: ::String?
-                                                 },
-                                               ]?,
-                                               name: ::String?,
-                                               privileged: bool?,
-                                               readonly_root_filesystem: bool?,
-                                               repository_credentials: {
-                                                 credentials_parameter: ::String
-                                               }?,
-                                               resource_requirements: Array[
-                                                 {
-                                                   value: ::String,
-                                                   type: ("GPU" | "VCPU" | "MEMORY")
-                                                 },
-                                               ]?,
-                                               secrets: Array[
-                                                 {
-                                                   name: ::String,
-                                                   value_from: ::String
-                                                 },
-                                               ]?,
-                                               ulimits: Array[
-                                                 {
-                                                   hard_limit: ::Integer,
-                                                   name: ::String,
-                                                   soft_limit: ::Integer
-                                                 },
-                                               ]?,
-                                               user: ::String?
-                                             },
-                                           ],
-                                           ephemeral_storage: {
-                                             size_in_gi_b: ::Integer
-                                           }?,
-                                           execution_role_arn: ::String?,
-                                           platform_version: ::String?,
-                                           ipc_mode: ::String?,
-                                           task_role_arn: ::String?,
-                                           pid_mode: ::String?,
-                                           network_configuration: {
-                                             assign_public_ip: ("ENABLED" | "DISABLED")?
-                                           }?,
-                                           runtime_platform: {
-                                             operating_system_family: ::String?,
-                                             cpu_architecture: ::String?
-                                           }?,
-                                           volumes: Array[
-                                             {
-                                               host: {
-                                                 source_path: ::String?
-                                               }?,
-                                               name: ::String?,
-                                               efs_volume_configuration: {
-                                                 file_system_id: ::String,
-                                                 root_directory: ::String?,
-                                                 transit_encryption: ("ENABLED" | "DISABLED")?,
-                                                 transit_encryption_port: ::Integer?,
-                                                 authorization_config: {
-                                                   access_point_id: ::String?,
-                                                   iam: ("ENABLED" | "DISABLED")?
-                                                 }?
-                                               }?
-                                             },
-                                           ]?
-                                         },
-                                       ]
-                                     },
+                                     ?eks_properties: Params::eks_properties,
+                                     ?ecs_properties: Params::ecs_properties,
                                      ?consumable_resource_properties: {
                                        consumable_resource_list: Array[
                                          {
                                            consumable_resource: ::String?,
                                            quantity: ::Integer?
-                                         },
+                                         }
                                        ]?
                                      }
                                    ) -> _RegisterJobDefinitionResponseSuccess
@@ -1175,227 +655,84 @@ module Aws
                           {
                             job_id: ::String?,
                             type: ("N_TO_N" | "SEQUENTIAL")?
-                          },
+                          }
                         ],
                         job_definition: ::String,
                         ?parameters: Hash[::String, ::String],
-                        ?container_overrides: {
-                          vcpus: ::Integer?,
-                          memory: ::Integer?,
-                          command: Array[::String]?,
-                          instance_type: ::String?,
-                          environment: Array[
-                            {
-                              name: ::String?,
-                              value: ::String?
-                            },
-                          ]?,
-                          resource_requirements: Array[
-                            {
-                              value: ::String,
-                              type: ("GPU" | "VCPU" | "MEMORY")
-                            },
-                          ]?
-                        },
+                        ?container_overrides: Params::container_overrides,
                         ?node_overrides: {
                           num_nodes: ::Integer?,
                           node_property_overrides: Array[
                             {
                               target_nodes: ::String,
-                              container_overrides: {
-                                vcpus: ::Integer?,
-                                memory: ::Integer?,
-                                command: Array[::String]?,
-                                instance_type: ::String?,
-                                environment: Array[
-                                  {
-                                    name: ::String?,
-                                    value: ::String?
-                                  },
-                                ]?,
-                                resource_requirements: Array[
-                                  {
-                                    value: ::String,
-                                    type: ("GPU" | "VCPU" | "MEMORY")
-                                  },
-                                ]?
-                              }?,
-                              ecs_properties_override: {
-                                task_properties: Array[
-                                  {
-                                    containers: Array[
-                                      {
-                                        command: Array[::String]?,
-                                        environment: Array[
-                                          {
-                                            name: ::String?,
-                                            value: ::String?
-                                          },
-                                        ]?,
-                                        name: ::String?,
-                                        resource_requirements: Array[
-                                          {
-                                            value: ::String,
-                                            type: ("GPU" | "VCPU" | "MEMORY")
-                                          },
-                                        ]?
-                                      },
-                                    ]?
-                                  },
-                                ]?
-                              }?,
+                              container_overrides: Params::container_overrides?,
+                              ecs_properties_override: Params::ecs_properties_override?,
                               instance_types: Array[::String]?,
-                              eks_properties_override: {
-                                pod_properties: {
-                                  containers: Array[
-                                    {
-                                      name: ::String?,
-                                      image: ::String?,
-                                      command: Array[::String]?,
-                                      args: Array[::String]?,
-                                      env: Array[
-                                        {
-                                          name: ::String,
-                                          value: ::String?
-                                        },
-                                      ]?,
-                                      resources: {
-                                        limits: Hash[::String, ::String]?,
-                                        requests: Hash[::String, ::String]?
-                                      }?
-                                    },
-                                  ]?,
-                                  init_containers: Array[
-                                    {
-                                      name: ::String?,
-                                      image: ::String?,
-                                      command: Array[::String]?,
-                                      args: Array[::String]?,
-                                      env: Array[
-                                        {
-                                          name: ::String,
-                                          value: ::String?
-                                        },
-                                      ]?,
-                                      resources: {
-                                        limits: Hash[::String, ::String]?,
-                                        requests: Hash[::String, ::String]?
-                                      }?
-                                    },
-                                  ]?,
-                                  metadata: {
-                                    labels: Hash[::String, ::String]?,
-                                    annotations: Hash[::String, ::String]?,
-                                    namespace: ::String?
-                                  }?
-                                }?
-                              }?,
+                              eks_properties_override: Params::eks_properties_override?,
                               consumable_resource_properties_override: {
                                 consumable_resource_list: Array[
                                   {
                                     consumable_resource: ::String?,
                                     quantity: ::Integer?
-                                  },
+                                  }
                                 ]?
                               }?
-                            },
+                            }
                           ]?
                         },
-                        ?retry_strategy: {
-                          attempts: ::Integer?,
-                          evaluate_on_exit: Array[
-                            {
-                              on_status_reason: ::String?,
-                              on_reason: ::String?,
-                              on_exit_code: ::String?,
-                              action: ("RETRY" | "EXIT")
-                            },
-                          ]?
-                        },
+                        ?retry_strategy: Params::retry_strategy,
                         ?propagate_tags: bool,
                         ?timeout: {
                           attempt_duration_seconds: ::Integer?
                         },
                         ?tags: Hash[::String, ::String],
-                        ?eks_properties_override: {
-                          pod_properties: {
-                            containers: Array[
-                              {
-                                name: ::String?,
-                                image: ::String?,
-                                command: Array[::String]?,
-                                args: Array[::String]?,
-                                env: Array[
-                                  {
-                                    name: ::String,
-                                    value: ::String?
-                                  },
-                                ]?,
-                                resources: {
-                                  limits: Hash[::String, ::String]?,
-                                  requests: Hash[::String, ::String]?
-                                }?
-                              },
-                            ]?,
-                            init_containers: Array[
-                              {
-                                name: ::String?,
-                                image: ::String?,
-                                command: Array[::String]?,
-                                args: Array[::String]?,
-                                env: Array[
-                                  {
-                                    name: ::String,
-                                    value: ::String?
-                                  },
-                                ]?,
-                                resources: {
-                                  limits: Hash[::String, ::String]?,
-                                  requests: Hash[::String, ::String]?
-                                }?
-                              },
-                            ]?,
-                            metadata: {
-                              labels: Hash[::String, ::String]?,
-                              annotations: Hash[::String, ::String]?,
-                              namespace: ::String?
-                            }?
-                          }?
-                        },
-                        ?ecs_properties_override: {
-                          task_properties: Array[
-                            {
-                              containers: Array[
-                                {
-                                  command: Array[::String]?,
-                                  environment: Array[
-                                    {
-                                      name: ::String?,
-                                      value: ::String?
-                                    },
-                                  ]?,
-                                  name: ::String?,
-                                  resource_requirements: Array[
-                                    {
-                                      value: ::String,
-                                      type: ("GPU" | "VCPU" | "MEMORY")
-                                    },
-                                  ]?
-                                },
-                              ]?
-                            },
-                          ]?
-                        },
+                        ?eks_properties_override: Params::eks_properties_override,
+                        ?ecs_properties_override: Params::ecs_properties_override,
                         ?consumable_resource_properties_override: {
                           consumable_resource_list: Array[
                             {
                               consumable_resource: ::String?,
                               quantity: ::Integer?
-                            },
+                            }
                           ]?
                         }
                       ) -> _SubmitJobResponseSuccess
                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _SubmitJobResponseSuccess
+
+      interface _SubmitServiceJobResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::SubmitServiceJobResponse]
+        def job_arn: () -> ::String
+        def job_name: () -> ::String
+        def job_id: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Batch/Client.html#submit_service_job-instance_method
+      def submit_service_job: (
+                                job_name: ::String,
+                                job_queue: ::String,
+                                ?retry_strategy: {
+                                  attempts: ::Integer,
+                                  evaluate_on_exit: Array[
+                                    {
+                                      action: ("RETRY" | "EXIT")?,
+                                      on_status_reason: ::String?
+                                    }
+                                  ]?
+                                },
+                                ?scheduling_priority: ::Integer,
+                                service_request_payload: ::String,
+                                service_job_type: ("SAGEMAKER_TRAINING"),
+                                ?share_identifier: ::String,
+                                ?quota_share_name: ::String,
+                                ?preemption_configuration: {
+                                  preemption_retries_before_termination: ::Integer?
+                                },
+                                ?timeout_config: {
+                                  attempt_duration_seconds: ::Integer?
+                                },
+                                ?tags: Hash[::String, ::String],
+                                ?client_token: ::String
+                              ) -> _SubmitServiceJobResponseSuccess
+                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _SubmitServiceJobResponseSuccess
 
       interface _TagResourceResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::TagResourceResponse]
@@ -1416,6 +753,16 @@ module Aws
                            reason: ::String
                          ) -> _TerminateJobResponseSuccess
                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TerminateJobResponseSuccess
+
+      interface _TerminateServiceJobResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::TerminateServiceJobResponse]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Batch/Client.html#terminate_service_job-instance_method
+      def terminate_service_job: (
+                                   job_id: ::String,
+                                   reason: ::String
+                                 ) -> _TerminateServiceJobResponseSuccess
+                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TerminateServiceJobResponseSuccess
 
       interface _UntagResourceResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::UntagResourceResponse]
@@ -1443,36 +790,28 @@ module Aws
                                           desiredv_cpus: ::Integer?,
                                           subnets: Array[::String]?,
                                           security_group_ids: Array[::String]?,
-                                          allocation_strategy: ("BEST_FIT_PROGRESSIVE" | "SPOT_CAPACITY_OPTIMIZED" | "SPOT_PRICE_CAPACITY_OPTIMIZED")?,
+                                          allocation_strategy: ("BEST_FIT_PROGRESSIVE" | "BEST_FIT_PROGRESSIVE_ORDERED" | "SPOT_CAPACITY_OPTIMIZED" | "SPOT_PRICE_CAPACITY_OPTIMIZED" | "SPOT_CAPACITY_OPTIMIZED_PRIORITIZED")?,
                                           instance_types: Array[::String]?,
                                           ec2_key_pair: ::String?,
                                           instance_role: ::String?,
                                           tags: Hash[::String, ::String]?,
                                           placement_group: ::String?,
                                           bid_percentage: ::Integer?,
-                                          launch_template: {
-                                            launch_template_id: ::String?,
-                                            launch_template_name: ::String?,
-                                            version: ::String?,
-                                            overrides: Array[
-                                              {
-                                                launch_template_id: ::String?,
-                                                launch_template_name: ::String?,
-                                                version: ::String?,
-                                                target_instance_types: Array[::String]?
-                                              },
-                                            ]?
-                                          }?,
+                                          launch_template: Params::launch_template_specification?,
                                           ec2_configuration: Array[
                                             {
                                               image_type: ::String,
                                               image_id_override: ::String?,
+                                              batch_image_status: ::String?,
                                               image_kubernetes_version: ::String?
-                                            },
+                                            }
                                           ]?,
                                           update_to_latest_image_version: bool?,
                                           type: ("EC2" | "SPOT" | "FARGATE" | "FARGATE_SPOT")?,
-                                          image_id: ::String?
+                                          image_id: ::String?,
+                                          scaling_policy: {
+                                            min_scale_down_delay_minutes: ::Integer?
+                                          }?
                                         },
                                         ?service_role: ::String,
                                         ?update_policy: {
@@ -1513,18 +852,49 @@ module Aws
                                 {
                                   order: ::Integer,
                                   compute_environment: ::String
-                                },
+                                }
+                              ],
+                              ?service_environment_order: Array[
+                                {
+                                  order: ::Integer,
+                                  service_environment: ::String
+                                }
                               ],
                               ?job_state_time_limit_actions: Array[
                                 {
                                   reason: ::String,
                                   state: ("RUNNABLE"),
                                   max_time_seconds: ::Integer,
-                                  action: ("CANCEL")
-                                },
+                                  action: ("CANCEL" | "TERMINATE")
+                                }
                               ]
                             ) -> _UpdateJobQueueResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateJobQueueResponseSuccess
+
+      interface _UpdateQuotaShareResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateQuotaShareResponse]
+        def quota_share_name: () -> ::String
+        def quota_share_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Batch/Client.html#update_quota_share-instance_method
+      def update_quota_share: (
+                                quota_share_arn: ::String,
+                                ?capacity_limits: Array[
+                                  {
+                                    max_capacity: ::Integer,
+                                    capacity_unit: ::String
+                                  }
+                                ],
+                                ?resource_sharing_configuration: {
+                                  strategy: ("RESERVE" | "LEND" | "LEND_AND_BORROW"),
+                                  borrow_limit: ::Integer?
+                                },
+                                ?preemption_configuration: {
+                                  in_share_preemption: ("ENABLED" | "DISABLED")
+                                },
+                                ?state: ("ENABLED" | "DISABLED")
+                              ) -> _UpdateQuotaShareResponseSuccess
+                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateQuotaShareResponseSuccess
 
       interface _UpdateSchedulingPolicyResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::UpdateSchedulingPolicyResponse]
@@ -1532,18 +902,43 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Batch/Client.html#update_scheduling_policy-instance_method
       def update_scheduling_policy: (
                                       arn: ::String,
-                                      ?fairshare_policy: {
-                                        share_decay_seconds: ::Integer?,
-                                        compute_reservation: ::Integer?,
-                                        share_distribution: Array[
-                                          {
-                                            share_identifier: ::String,
-                                            weight_factor: ::Float?
-                                          },
-                                        ]?
-                                      }
+                                      ?quota_share_policy: {
+                                        idle_resource_assignment_strategy: ("FIFO")
+                                      },
+                                      ?fairshare_policy: Params::fairshare_policy
                                     ) -> _UpdateSchedulingPolicyResponseSuccess
                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateSchedulingPolicyResponseSuccess
+
+      interface _UpdateServiceEnvironmentResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateServiceEnvironmentResponse]
+        def service_environment_name: () -> ::String
+        def service_environment_arn: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Batch/Client.html#update_service_environment-instance_method
+      def update_service_environment: (
+                                        service_environment: ::String,
+                                        ?state: ("ENABLED" | "DISABLED"),
+                                        ?capacity_limits: Array[
+                                          {
+                                            max_capacity: ::Integer?,
+                                            capacity_unit: ::String?
+                                          }
+                                        ]
+                                      ) -> _UpdateServiceEnvironmentResponseSuccess
+                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateServiceEnvironmentResponseSuccess
+
+      interface _UpdateServiceJobResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::UpdateServiceJobResponse]
+        def job_arn: () -> ::String
+        def job_name: () -> ::String
+        def job_id: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Batch/Client.html#update_service_job-instance_method
+      def update_service_job: (
+                                job_id: ::String,
+                                scheduling_priority: ::Integer
+                              ) -> _UpdateServiceJobResponseSuccess
+                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateServiceJobResponseSuccess
     end
   end
 end

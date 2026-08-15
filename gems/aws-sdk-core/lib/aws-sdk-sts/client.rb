@@ -97,8 +97,8 @@ module Aws::STS
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -126,22 +126,24 @@ module Aws::STS
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -169,6 +171,11 @@ module Aws::STS
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -194,7 +201,7 @@ module Aws::STS
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -202,8 +209,7 @@ module Aws::STS
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -256,8 +262,8 @@ module Aws::STS
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -319,17 +325,15 @@ module Aws::STS
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::STS
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -613,7 +617,7 @@ module Aws::STS
     #   The regex used to validate this parameter is a string of characters
     #   consisting of upper- and lower-case alphanumeric characters with no
     #   spaces. You can also include underscores or any of the following
-    #   characters: =,.@-
+    #   characters: +=,.@-
     #
     #
     #
@@ -807,7 +811,7 @@ module Aws::STS
     #   The regex used to validate this parameter is a string of characters
     #   consisting of upper- and lower-case alphanumeric characters with no
     #   spaces. You can also include underscores or any of the following
-    #   characters: =,.@:/-
+    #   characters: +=,.@:\\/-
     #
     #
     #
@@ -825,7 +829,7 @@ module Aws::STS
     #   The regex used to validate this parameter is a string of characters
     #   consisting of upper- and lower-case alphanumeric characters with no
     #   spaces. You can also include underscores or any of the following
-    #   characters: =,.@-
+    #   characters: +=/:,.@-
     #
     # @option params [String] :token_code
     #   The value provided by the MFA device, if the trust policy of the role
@@ -886,7 +890,7 @@ module Aws::STS
     #
     #   resp = client.assume_role({
     #     external_id: "123ABC", 
-    #     policy: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"Stmt1\",\"Effect\":\"Allow\",\"Action\":\"s3:ListAllMyBuckets\",\"Resource\":\"*\"}]}", 
+    #     policy: "escaped-JSON-IAM-POLICY", 
     #     role_arn: "arn:aws:iam::123456789012:role/demo", 
     #     role_session_name: "testAssumeRoleSession", 
     #     tags: [
@@ -989,6 +993,11 @@ module Aws::STS
     # of an access key ID, a secret access key, and a security token.
     # Applications can use these temporary security credentials to sign
     # calls to Amazon Web Services services.
+    #
+    # <note markdown="1"> AssumeRoleWithSAML will not work on IAM Identity Center managed roles.
+    # These roles' names start with `AWSReservedSSO_`.
+    #
+    #  </note>
     #
     # **Session Duration**
     #
@@ -1408,7 +1417,8 @@ module Aws::STS
     # (Optional) You can configure your IdP to pass attributes into your web
     # identity token as session tags. Each session tag consists of a key
     # name and an associated value. For more information about session tags,
-    # see [Passing Session Tags in STS][9] in the *IAM User Guide*.
+    # see [Passing session tags using AssumeRoleWithWebIdentity][9] in the
+    # *IAM User Guide*.
     #
     # You can pass up to 50 session tags. The plaintext session tag keys
     # can’t exceed 128 characters and the values can’t exceed 256
@@ -1476,7 +1486,7 @@ module Aws::STS
     # [6]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_update-role-settings.html#id_roles_update-session-duration
     # [7]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use.html
     # [8]: https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html#policies_session
-    # [9]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_session-tags.html
+    # [9]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_session-tags.html#id_session-tags_adding-assume-role-idp
     # [10]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_iam-limits.html#reference_iam-limits-entity-length
     # [11]: https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_attribute-based-access-control.html
     # [12]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_session-tags.html#id_session-tags_role-chaining
@@ -1667,7 +1677,7 @@ module Aws::STS
     #
     #   resp = client.assume_role_with_web_identity({
     #     duration_seconds: 3600, 
-    #     policy: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"Stmt1\",\"Effect\":\"Allow\",\"Action\":\"s3:ListAllMyBuckets\",\"Resource\":\"*\"}]}", 
+    #     policy: "escaped-JSON-IAM-POLICY", 
     #     provider_id: "www.amazon.com", 
     #     role_arn: "arn:aws:iam::123456789012:role/FederatedWebIdentityRole", 
     #     role_session_name: "app1", 
@@ -1732,7 +1742,10 @@ module Aws::STS
     end
 
     # Returns a set of short term credentials you can use to perform
-    # privileged tasks on a member account in your organization.
+    # privileged tasks on a member account in your organization. You must
+    # use credentials from an Organizations management account or a
+    # delegated administrator account for IAM to call `AssumeRoot`. You
+    # cannot use root user credentials to make this call.
     #
     # Before you can launch a privileged session, you must have centralized
     # root access in your organization. For steps to enable this feature,
@@ -1749,19 +1762,29 @@ module Aws::STS
     # were performed in a session. For more information, see [Track
     # privileged tasks in CloudTrail][3] in the *IAM User Guide*.
     #
+    # When granting access to privileged tasks you should only grant the
+    # necessary permissions required to perform that task. For more
+    # information, see [Security best practices in IAM][4]. In addition, you
+    # can use [service control policies][5] (SCPs) to manage and limit
+    # permissions in your organization. See [General examples][6] in the
+    # *Organizations User Guide* for more information on SCPs.
+    #
     #
     #
     # [1]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-enable-root-access.html
     # [2]: https://docs.aws.amazon.com/STS/latest/APIReference/welcome.html#sts-endpoints
     # [3]: https://docs.aws.amazon.com/IAM/latest/UserGuide/cloudtrail-track-privileged-tasks.html
+    # [4]: https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html
+    # [5]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html
+    # [6]: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps_examples_general.html
     #
     # @option params [required, String] :target_principal
     #   The member account principal ARN or account ID.
     #
     # @option params [required, Types::PolicyDescriptorType] :task_policy_arn
     #   The identity based policy that scopes the session to the privileged
-    #   tasks that can be performed. You can use one of following Amazon Web
-    #   Services managed policies to scope root session actions.
+    #   tasks that can be performed. You must use one of following Amazon Web
+    #   Services managed policies to scope root session actions:
     #
     #   * [IAMAuditRootUserCredentials][1]
     #
@@ -2072,6 +2095,46 @@ module Aws::STS
       req.send_request(options)
     end
 
+    # Exchanges a trade-in token for temporary Amazon Web Services
+    # credentials with the permissions associated with the assumed
+    # principal. This operation allows you to obtain credentials for a
+    # specific principal based on a trade-in token, enabling delegation of
+    # access to Amazon Web Services resources.
+    #
+    # @option params [required, String] :trade_in_token
+    #   The token to exchange for temporary Amazon Web Services credentials.
+    #   This token must be valid and unexpired at the time of the request.
+    #
+    # @return [Types::GetDelegatedAccessTokenResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetDelegatedAccessTokenResponse#credentials #credentials} => Types::Credentials
+    #   * {Types::GetDelegatedAccessTokenResponse#packed_policy_size #packed_policy_size} => Integer
+    #   * {Types::GetDelegatedAccessTokenResponse#assumed_principal #assumed_principal} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_delegated_access_token({
+    #     trade_in_token: "tradeInTokenType", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.credentials.access_key_id #=> String
+    #   resp.credentials.secret_access_key #=> String
+    #   resp.credentials.session_token #=> String
+    #   resp.credentials.expiration #=> Time
+    #   resp.packed_policy_size #=> Integer
+    #   resp.assumed_principal #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/GetDelegatedAccessToken AWS API Documentation
+    #
+    # @overload get_delegated_access_token(params = {})
+    # @param [Hash] params ({})
+    def get_delegated_access_token(params = {}, options = {})
+      req = build_request(:get_delegated_access_token, params)
+      req.send_request(options)
+    end
+
     # Returns a set of temporary security credentials (consisting of an
     # access key ID, a secret access key, and a security token) for a user.
     # A typical use is in a proxy application that gets temporary security
@@ -2354,7 +2417,7 @@ module Aws::STS
     #   resp = client.get_federation_token({
     #     duration_seconds: 3600, 
     #     name: "testFedUserSession", 
-    #     policy: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"Stmt1\",\"Effect\":\"Allow\",\"Action\":\"s3:ListAllMyBuckets\",\"Resource\":\"*\"}]}", 
+    #     policy: "escaped-JSON-IAM-POLICY", 
     #     tags: [
     #       {
     #         key: "Project", 
@@ -2577,6 +2640,71 @@ module Aws::STS
       req.send_request(options)
     end
 
+    # Returns a signed JSON Web Token (JWT) that represents the calling
+    # Amazon Web Services identity. The returned JWT can be used to
+    # authenticate with external services that support OIDC discovery. The
+    # token is signed by Amazon Web Services STS and can be publicly
+    # verified using the verification keys published at the issuer's JWKS
+    # endpoint.
+    #
+    # @option params [required, Array<String>] :audience
+    #   The intended recipient of the web identity token. This value populates
+    #   the `aud` claim in the JWT and should identify the service or
+    #   application that will validate and use the token. The external service
+    #   should verify this claim to ensure the token was intended for their
+    #   use.
+    #
+    # @option params [Integer] :duration_seconds
+    #   The duration, in seconds, for which the JSON Web Token (JWT) will
+    #   remain valid. The value can range from 60 seconds (1 minute) to 3600
+    #   seconds (1 hour). If not specified, the default duration is 300
+    #   seconds (5 minutes). The token is designed to be short-lived and
+    #   should be used for proof of identity, then exchanged for credentials
+    #   or short-lived tokens in the external service.
+    #
+    # @option params [required, String] :signing_algorithm
+    #   The cryptographic algorithm to use for signing the JSON Web Token
+    #   (JWT). Valid values are RS256 (RSA with SHA-256) and ES384 (ECDSA
+    #   using P-384 curve with SHA-384).
+    #
+    # @option params [Array<Types::Tag>] :tags
+    #   An optional list of tags to include in the JSON Web Token (JWT). These
+    #   tags are added as custom claims to the JWT and can be used by the
+    #   downstream service for authorization decisions.
+    #
+    # @return [Types::GetWebIdentityTokenResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetWebIdentityTokenResponse#web_identity_token #web_identity_token} => String
+    #   * {Types::GetWebIdentityTokenResponse#expiration #expiration} => Time
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_web_identity_token({
+    #     audience: ["webIdentityTokenAudienceStringType"], # required
+    #     duration_seconds: 1,
+    #     signing_algorithm: "jwtAlgorithmType", # required
+    #     tags: [
+    #       {
+    #         key: "tagKeyType", # required
+    #         value: "tagValueType", # required
+    #       },
+    #     ],
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.web_identity_token #=> String
+    #   resp.expiration #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/GetWebIdentityToken AWS API Documentation
+    #
+    # @overload get_web_identity_token(params = {})
+    # @param [Hash] params ({})
+    def get_web_identity_token(params = {}, options = {})
+      req = build_request(:get_web_identity_token, params)
+      req.send_request(options)
+    end
+
     # @!endgroup
 
     # @param params ({})
@@ -2595,7 +2723,7 @@ module Aws::STS
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-core'
-      context[:gem_version] = '3.221.0'
+      context[:gem_version] = '3.254.1'
       Seahorse::Client::Request.new(handlers, context)
     end
 

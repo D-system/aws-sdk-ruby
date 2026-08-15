@@ -95,8 +95,8 @@ module Aws::MWAA
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::MWAA
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::MWAA
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::MWAA
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::MWAA
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::MWAA
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::MWAA
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -368,8 +372,8 @@ module Aws::MWAA
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -519,7 +523,7 @@ module Aws::MWAA
     #   Access Management (IAM) role that grants MWAA permission to access
     #   Amazon Web Services services and resources used by your environment.
     #   For example, `arn:aws:iam::123456789:role/my-execution-role`. For more
-    #   information, see [Amazon MWAA Execution role][1].
+    #   information, refer to [Amazon MWAA Execution role][1].
     #
     #
     #
@@ -529,7 +533,7 @@ module Aws::MWAA
     #   The Amazon Resource Name (ARN) of the Amazon S3 bucket where your DAG
     #   code and supporting files are stored. For example,
     #   `arn:aws:s3:::my-airflow-bucket-unique-name`. For more information,
-    #   see [Create an Amazon S3 bucket for Amazon MWAA][1].
+    #   refer to [Create an Amazon S3 bucket for Amazon MWAA][1].
     #
     #
     #
@@ -537,7 +541,7 @@ module Aws::MWAA
     #
     # @option params [required, String] :dag_s3_path
     #   The relative path to the DAGs folder on your Amazon S3 bucket. For
-    #   example, `dags`. For more information, see [Adding or updating
+    #   example, `dags`. For more information, refer to [Adding or updating
     #   DAGs][1].
     #
     #
@@ -547,8 +551,8 @@ module Aws::MWAA
     # @option params [required, Types::NetworkConfiguration] :network_configuration
     #   The VPC networking components used to secure and enable network
     #   traffic between the Amazon Web Services resources for your
-    #   environment. For more information, see [About networking on Amazon
-    #   MWAA][1].
+    #   environment. For more information, refer to [About networking on
+    #   Amazon MWAA][1].
     #
     #
     #
@@ -557,7 +561,7 @@ module Aws::MWAA
     # @option params [String] :plugins_s3_path
     #   The relative path to the `plugins.zip` file on your Amazon S3 bucket.
     #   For example, `plugins.zip`. If specified, then the `plugins.zip`
-    #   version is required. For more information, see [Installing custom
+    #   version is required. For more information, refer to [Installing custom
     #   plugins][1].
     #
     #
@@ -567,7 +571,7 @@ module Aws::MWAA
     # @option params [String] :plugins_s3_object_version
     #   The version of the plugins.zip file on your Amazon S3 bucket. You must
     #   specify a version each time a plugins.zip file is updated. For more
-    #   information, see [How S3 Versioning works][1].
+    #   information, refer to [How S3 Versioning works][1].
     #
     #
     #
@@ -576,7 +580,7 @@ module Aws::MWAA
     # @option params [String] :requirements_s3_path
     #   The relative path to the `requirements.txt` file on your Amazon S3
     #   bucket. For example, `requirements.txt`. If specified, then a version
-    #   is required. For more information, see [Installing Python
+    #   is required. For more information, refer to [Installing Python
     #   dependencies][1].
     #
     #
@@ -586,7 +590,7 @@ module Aws::MWAA
     # @option params [String] :requirements_s3_object_version
     #   The version of the `requirements.txt` file on your Amazon S3 bucket.
     #   You must specify a version each time a requirements.txt file is
-    #   updated. For more information, see [How S3 Versioning works][1].
+    #   updated. For more information, refer to [How S3 Versioning works][1].
     #
     #
     #
@@ -599,7 +603,7 @@ module Aws::MWAA
     #   Amazon MWAA runs the script as your environment starts, and before
     #   running the Apache Airflow process. You can use this script to install
     #   dependencies, modify Apache Airflow configuration options, and set
-    #   environment variables. For more information, see [Using a startup
+    #   environment variables. For more information, refer to [Using a startup
     #   script][1].
     #
     #
@@ -616,7 +620,7 @@ module Aws::MWAA
     #
     #   `3sL4kqtJlcpXroDTDmJ+rmSpXd3dIbrHY+MTRCxf3vjVBH40Nr8X8gdRQBpUMLUo`
     #
-    #   For more information, see [Using a startup script][2].
+    #   For more information, refer to [Using a startup script][2].
     #
     #
     #
@@ -626,7 +630,7 @@ module Aws::MWAA
     # @option params [Hash<String,String>] :airflow_configuration_options
     #   A list of key-value pairs containing the Apache Airflow configuration
     #   options you want to attach to your environment. For more information,
-    #   see [Apache Airflow configuration options][1].
+    #   refer to [Apache Airflow configuration options][1].
     #
     #
     #
@@ -635,7 +639,7 @@ module Aws::MWAA
     # @option params [String] :environment_class
     #   The environment class type. Valid values: `mw1.micro`, `mw1.small`,
     #   `mw1.medium`, `mw1.large`, `mw1.xlarge`, and `mw1.2xlarge`. For more
-    #   information, see [Amazon MWAA environment class][1].
+    #   information, refer to [Amazon MWAA environment class][1].
     #
     #
     #
@@ -652,8 +656,8 @@ module Aws::MWAA
     # @option params [String] :kms_key
     #   The Amazon Web Services Key Management Service (KMS) key to encrypt
     #   the data in your environment. You can use an Amazon Web Services owned
-    #   CMK, or a Customer managed CMK (advanced). For more information, see
-    #   [Create an Amazon MWAA environment][1].
+    #   CMK, or a Customer managed CMK (advanced). For more information, refer
+    #   to [Create an Amazon MWAA environment][1].
     #
     #
     #
@@ -662,11 +666,11 @@ module Aws::MWAA
     # @option params [String] :airflow_version
     #   The Apache Airflow version for your environment. If no value is
     #   specified, it defaults to the latest version. For more information,
-    #   see [Apache Airflow versions on Amazon Managed Workflows for Apache
-    #   Airflow (Amazon MWAA)][1].
+    #   refer to [Apache Airflow versions on Amazon Managed Workflows for
+    #   Apache Airflow (Amazon MWAA)][1].
     #
-    #   Valid values: `1.10.12`, `2.0.2`, `2.2.2`, `2.4.3`, `2.5.1`, `2.6.3`,
-    #   `2.7.2`, `2.8.1`, `2.9.2`, `2.10.1`, and `2.10.3`.
+    #   Valid values: `2.7.2`, `2.8.1`, `2.9.2`, `2.10.1`, `2.10.3`, `2.11.0`,
+    #   and `3.0.6`.
     #
     #
     #
@@ -684,7 +688,7 @@ module Aws::MWAA
     #
     # @option params [Hash<String,String>] :tags
     #   The key-value tag pairs you want to associate to your environment. For
-    #   example, `"Environment": "Staging"`. For more information, see
+    #   example, `"Environment": "Staging"`. For more information, refer to
     #   [Tagging Amazon Web Services resources][1].
     #
     #
@@ -693,7 +697,12 @@ module Aws::MWAA
     #
     # @option params [String] :webserver_access_mode
     #   Defines the access mode for the Apache Airflow *web server*. For more
-    #   information, see [Apache Airflow access modes][1].
+    #   information, refer to [Apache Airflow access modes][1].
+    #
+    #   If set to `PUBLIC_AND_PRIVATE`, creates both a public network load
+    #   balancer (NLB) for browser access and a private VPC endpoint (VPCE)
+    #   for worker-to-webserver communication. This mode is only available for
+    #   Apache Airflow version 3.2 and later.
     #
     #
     #
@@ -815,7 +824,7 @@ module Aws::MWAA
     #     tags: {
     #       "TagKey" => "TagValue",
     #     },
-    #     webserver_access_mode: "PRIVATE_ONLY", # accepts PRIVATE_ONLY, PUBLIC_ONLY
+    #     webserver_access_mode: "PRIVATE_ONLY", # accepts PRIVATE_ONLY, PUBLIC_ONLY, PUBLIC_AND_PRIVATE
     #     min_workers: 1,
     #     schedulers: 1,
     #     endpoint_management: "CUSTOMER", # accepts CUSTOMER, SERVICE
@@ -964,10 +973,11 @@ module Aws::MWAA
     #   resp.environment.last_update.error.error_code #=> String
     #   resp.environment.last_update.error.error_message #=> String
     #   resp.environment.last_update.source #=> String
+    #   resp.environment.last_update.worker_replacement_strategy #=> String, one of "FORCED", "GRACEFUL"
     #   resp.environment.weekly_maintenance_window_start #=> String
     #   resp.environment.tags #=> Hash
     #   resp.environment.tags["TagKey"] #=> String
-    #   resp.environment.webserver_access_mode #=> String, one of "PRIVATE_ONLY", "PUBLIC_ONLY"
+    #   resp.environment.webserver_access_mode #=> String, one of "PRIVATE_ONLY", "PUBLIC_ONLY", "PUBLIC_AND_PRIVATE"
     #   resp.environment.min_workers #=> Integer
     #   resp.environment.schedulers #=> Integer
     #   resp.environment.webserver_vpc_endpoint_service #=> String
@@ -1193,7 +1203,7 @@ module Aws::MWAA
     #
     # @option params [required, Hash<String,String>] :tags
     #   The key-value tag pairs you want to associate to your environment. For
-    #   example, `"Environment": "Staging"`. For more information, see
+    #   example, `"Environment": "Staging"`. For more information, refer to
     #   [Tagging Amazon Web Services resources][1].
     #
     #
@@ -1263,134 +1273,60 @@ module Aws::MWAA
     #   allows MWAA to access Amazon Web Services resources in your
     #   environment. For example,
     #   `arn:aws:iam::123456789:role/my-execution-role`. For more information,
-    #   see [Amazon MWAA Execution role][1].
+    #   refer to [Amazon MWAA Execution role][1].
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/mwaa/latest/userguide/mwaa-create-role.html
     #
+    # @option params [Hash<String,String>] :airflow_configuration_options
+    #   A list of key-value pairs containing the Apache Airflow configuration
+    #   options you want to attach to your environment. For more information,
+    #   refer to [Apache Airflow configuration options][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mwaa/latest/userguide/configuring-env-variables.html
+    #
     # @option params [String] :airflow_version
     #   The Apache Airflow version for your environment. To upgrade your
     #   environment, specify a newer version of Apache Airflow supported by
-    #   Amazon MWAA.
+    #   Amazon MWAA. To downgrade your environment, specify an older version
+    #   of Apache Airflow supported by Amazon MWAA.
     #
-    #   Before you upgrade an environment, make sure your requirements, DAGs,
-    #   plugins, and other resources used in your workflows are compatible
-    #   with the new Apache Airflow version. For more information about
-    #   updating your resources, see [Upgrading an Amazon MWAA
-    #   environment][1].
+    #   Before you upgrade or downgrade an environment, make sure your
+    #   requirements, DAGs, plugins, and other resources used in your
+    #   workflows are compatible with the new Apache Airflow version. For more
+    #   information about updating your resources, see [Upgrading and
+    #   downgrading an Amazon MWAA environment][1].
     #
-    #   Valid values: `1.10.12`, `2.0.2`, `2.2.2`, `2.4.3`, `2.5.1`, `2.6.3`,
-    #   `2.7.2`, `2.8.1`, `2.9.2`, `2.10.1`, and `2.10.3`.
+    #   Valid values: `2.7.2`, `2.8.1`, `2.9.2`, `2.10.1`, `2.10.3`, `2.11.0`,
+    #   and `3.0.6`.
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/mwaa/latest/userguide/upgrading-environment.html
     #
-    # @option params [String] :source_bucket_arn
-    #   The Amazon Resource Name (ARN) of the Amazon S3 bucket where your DAG
-    #   code and supporting files are stored. For example,
-    #   `arn:aws:s3:::my-airflow-bucket-unique-name`. For more information,
-    #   see [Create an Amazon S3 bucket for Amazon MWAA][1].
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/mwaa/latest/userguide/mwaa-s3-bucket.html
-    #
     # @option params [String] :dag_s3_path
     #   The relative path to the DAGs folder on your Amazon S3 bucket. For
-    #   example, `dags`. For more information, see [Adding or updating
+    #   example, `dags`. For more information, refer to [Adding or updating
     #   DAGs][1].
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/mwaa/latest/userguide/configuring-dag-folder.html
     #
-    # @option params [String] :plugins_s3_path
-    #   The relative path to the `plugins.zip` file on your Amazon S3 bucket.
-    #   For example, `plugins.zip`. If specified, then the plugins.zip version
-    #   is required. For more information, see [Installing custom plugins][1].
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/mwaa/latest/userguide/configuring-dag-import-plugins.html
-    #
-    # @option params [String] :plugins_s3_object_version
-    #   The version of the plugins.zip file on your Amazon S3 bucket. You must
-    #   specify a version each time a `plugins.zip` file is updated. For more
-    #   information, see [How S3 Versioning works][1].
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/versioning-workflows.html
-    #
-    # @option params [String] :requirements_s3_path
-    #   The relative path to the `requirements.txt` file on your Amazon S3
-    #   bucket. For example, `requirements.txt`. If specified, then a file
-    #   version is required. For more information, see [Installing Python
-    #   dependencies][1].
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/mwaa/latest/userguide/working-dags-dependencies.html
-    #
-    # @option params [String] :requirements_s3_object_version
-    #   The version of the requirements.txt file on your Amazon S3 bucket. You
-    #   must specify a version each time a `requirements.txt` file is updated.
-    #   For more information, see [How S3 Versioning works][1].
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/versioning-workflows.html
-    #
-    # @option params [String] :startup_script_s3_path
-    #   The relative path to the startup shell script in your Amazon S3
-    #   bucket. For example, `s3://mwaa-environment/startup.sh`.
-    #
-    #   Amazon MWAA runs the script as your environment starts, and before
-    #   running the Apache Airflow process. You can use this script to install
-    #   dependencies, modify Apache Airflow configuration options, and set
-    #   environment variables. For more information, see [Using a startup
-    #   script][1].
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/mwaa/latest/userguide/using-startup-script.html
-    #
-    # @option params [String] :startup_script_s3_object_version
-    #   The version of the startup shell script in your Amazon S3 bucket. You
-    #   must specify the [version ID][1] that Amazon S3 assigns to the file
-    #   every time you update the script.
-    #
-    #   Version IDs are Unicode, UTF-8 encoded, URL-ready, opaque strings that
-    #   are no more than 1,024 bytes long. The following is an example:
-    #
-    #   `3sL4kqtJlcpXroDTDmJ+rmSpXd3dIbrHY+MTRCxf3vjVBH40Nr8X8gdRQBpUMLUo`
-    #
-    #   For more information, see [Using a startup script][2].
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/versioning-workflows.html
-    #   [2]: https://docs.aws.amazon.com/mwaa/latest/userguide/using-startup-script.html
-    #
-    # @option params [Hash<String,String>] :airflow_configuration_options
-    #   A list of key-value pairs containing the Apache Airflow configuration
-    #   options you want to attach to your environment. For more information,
-    #   see [Apache Airflow configuration options][1].
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/mwaa/latest/userguide/configuring-env-variables.html
-    #
     # @option params [String] :environment_class
     #   The environment class type. Valid values: `mw1.micro`, `mw1.small`,
     #   `mw1.medium`, `mw1.large`, `mw1.xlarge`, and `mw1.2xlarge`. For more
-    #   information, see [Amazon MWAA environment class][1].
+    #   information, refer to [Amazon MWAA environment class][1].
     #
     #
     #
     #   [1]: https://docs.aws.amazon.com/mwaa/latest/userguide/environment-class.html
+    #
+    # @option params [Types::LoggingConfigurationInput] :logging_configuration
+    #   The Apache Airflow log types to send to CloudWatch Logs.
     #
     # @option params [Integer] :max_workers
     #   The maximum number of workers that you want to run in your
@@ -1400,34 +1336,6 @@ module Aws::MWAA
     #   disposes of the extra workers leaving the one worker that is included
     #   with your environment, or the number you specify in `MinWorkers`.
     #
-    # @option params [Types::UpdateNetworkConfigurationInput] :network_configuration
-    #   The VPC networking components used to secure and enable network
-    #   traffic between the Amazon Web Services resources for your
-    #   environment. For more information, see [About networking on Amazon
-    #   MWAA][1].
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/mwaa/latest/userguide/networking-about.html
-    #
-    # @option params [Types::LoggingConfigurationInput] :logging_configuration
-    #   The Apache Airflow log types to send to CloudWatch Logs.
-    #
-    # @option params [String] :weekly_maintenance_window_start
-    #   The day and time of the week in Coordinated Universal Time (UTC)
-    #   24-hour standard time to start weekly maintenance updates of your
-    #   environment in the following format: `DAY:HH:MM`. For example:
-    #   `TUE:03:30`. You can specify a start time in 30 minute increments
-    #   only.
-    #
-    # @option params [String] :webserver_access_mode
-    #   The Apache Airflow *Web server* access mode. For more information, see
-    #   [Apache Airflow access modes][1].
-    #
-    #
-    #
-    #   [1]: https://docs.aws.amazon.com/mwaa/latest/userguide/configuring-networking.html
-    #
     # @option params [Integer] :min_workers
     #   The minimum number of workers that you want to run in your
     #   environment. MWAA scales the number of Apache Airflow workers up to
@@ -1435,24 +1343,6 @@ module Aws::MWAA
     #   more tasks running, and no more in the queue, MWAA disposes of the
     #   extra workers leaving the worker count you specify in the `MinWorkers`
     #   field. For example, `2`.
-    #
-    # @option params [Integer] :schedulers
-    #   The number of Apache Airflow schedulers to run in your Amazon MWAA
-    #   environment.
-    #
-    # @option params [Integer] :min_webservers
-    #   The minimum number of web servers that you want to run in your
-    #   environment. Amazon MWAA scales the number of Apache Airflow web
-    #   servers up to the number you specify for `MaxWebservers` when you
-    #   interact with your Apache Airflow environment using Apache Airflow
-    #   REST API, or the Apache Airflow CLI. As the transaction-per-second
-    #   rate, and the network load, decrease, Amazon MWAA disposes of the
-    #   additional web servers, and scales down to the number set in
-    #   `MinxWebserers`.
-    #
-    #   Valid values: For environments larger than mw1.micro, accepts values
-    #   from `2` to `5`. Defaults to `2` for all environment sizes except
-    #   mw1.micro, which defaults to `1`.
     #
     # @option params [Integer] :max_webservers
     #   The maximum number of web servers that you want to run in your
@@ -1471,6 +1361,145 @@ module Aws::MWAA
     #   from `2` to `5`. Defaults to `2` for all environment sizes except
     #   mw1.micro, which defaults to `1`.
     #
+    # @option params [Integer] :min_webservers
+    #   The minimum number of web servers that you want to run in your
+    #   environment. Amazon MWAA scales the number of Apache Airflow web
+    #   servers up to the number you specify for `MaxWebservers` when you
+    #   interact with your Apache Airflow environment using Apache Airflow
+    #   REST API, or the Apache Airflow CLI. As the transaction-per-second
+    #   rate, and the network load, decrease, Amazon MWAA disposes of the
+    #   additional web servers, and scales down to the number set in
+    #   `MinxWebserers`.
+    #
+    #   Valid values: For environments larger than mw1.micro, accepts values
+    #   from `2` to `5`. Defaults to `2` for all environment sizes except
+    #   mw1.micro, which defaults to `1`.
+    #
+    # @option params [String] :worker_replacement_strategy
+    #   The worker replacement strategy to use when updating the environment.
+    #
+    #   You can select one of the following strategies:
+    #
+    #   * **Forced -** Stops and replaces Apache Airflow workers without
+    #     waiting for tasks to complete before an update.
+    #
+    #   * **Graceful -** Allows Apache Airflow workers to complete running
+    #     tasks for up to 12 hours during an update before they're stopped
+    #     and replaced.
+    #
+    # @option params [Types::UpdateNetworkConfigurationInput] :network_configuration
+    #   The VPC networking components used to secure and enable network
+    #   traffic between the Amazon Web Services resources for your
+    #   environment. For more information, refer to [About networking on
+    #   Amazon MWAA][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mwaa/latest/userguide/networking-about.html
+    #
+    # @option params [String] :plugins_s3_path
+    #   The relative path to the `plugins.zip` file on your Amazon S3 bucket.
+    #   For example, `plugins.zip`. If specified, then the plugins.zip version
+    #   is required. For more information, refer to [Installing custom
+    #   plugins][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mwaa/latest/userguide/configuring-dag-import-plugins.html
+    #
+    # @option params [String] :plugins_s3_object_version
+    #   The version of the plugins.zip file on your Amazon S3 bucket. You must
+    #   specify a version each time a `plugins.zip` file is updated. For more
+    #   information, refer to [How S3 Versioning works][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/versioning-workflows.html
+    #
+    # @option params [String] :requirements_s3_path
+    #   The relative path to the `requirements.txt` file on your Amazon S3
+    #   bucket. For example, `requirements.txt`. If specified, then a file
+    #   version is required. For more information, refer to [Installing Python
+    #   dependencies][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mwaa/latest/userguide/working-dags-dependencies.html
+    #
+    # @option params [String] :requirements_s3_object_version
+    #   The version of the requirements.txt file on your Amazon S3 bucket. You
+    #   must specify a version each time a `requirements.txt` file is updated.
+    #   For more information, refer to [How S3 Versioning works][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/versioning-workflows.html
+    #
+    # @option params [Integer] :schedulers
+    #   The number of Apache Airflow schedulers to run in your Amazon MWAA
+    #   environment.
+    #
+    # @option params [String] :source_bucket_arn
+    #   The Amazon Resource Name (ARN) of the Amazon S3 bucket where your DAG
+    #   code and supporting files are stored. For example,
+    #   `arn:aws:s3:::my-airflow-bucket-unique-name`. For more information,
+    #   refer to [Create an Amazon S3 bucket for Amazon MWAA][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mwaa/latest/userguide/mwaa-s3-bucket.html
+    #
+    # @option params [String] :startup_script_s3_path
+    #   The relative path to the startup shell script in your Amazon S3
+    #   bucket. For example, `s3://mwaa-environment/startup.sh`.
+    #
+    #   Amazon MWAA runs the script as your environment starts, and before
+    #   running the Apache Airflow process. You can use this script to install
+    #   dependencies, modify Apache Airflow configuration options, and set
+    #   environment variables. For more information, refer to [Using a startup
+    #   script][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mwaa/latest/userguide/using-startup-script.html
+    #
+    # @option params [String] :startup_script_s3_object_version
+    #   The version of the startup shell script in your Amazon S3 bucket. You
+    #   must specify the [version ID][1] that Amazon S3 assigns to the file
+    #   every time you update the script.
+    #
+    #   Version IDs are Unicode, UTF-8 encoded, URL-ready, opaque strings that
+    #   are no more than 1,024 bytes long. The following is an example:
+    #
+    #   `3sL4kqtJlcpXroDTDmJ+rmSpXd3dIbrHY+MTRCxf3vjVBH40Nr8X8gdRQBpUMLUo`
+    #
+    #   For more information, refer to [Using a startup script][2].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/versioning-workflows.html
+    #   [2]: https://docs.aws.amazon.com/mwaa/latest/userguide/using-startup-script.html
+    #
+    # @option params [String] :webserver_access_mode
+    #   The Apache Airflow *Web server* access mode. For more information,
+    #   refer to [Apache Airflow access modes][1].
+    #
+    #   If set to `PUBLIC_AND_PRIVATE`, creates both a public network load
+    #   balancer (NLB) for browser access and a private VPC endpoint (VPCE)
+    #   for worker-to-webserver communication. This mode is only available for
+    #   Apache Airflow version 3.2 and later.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mwaa/latest/userguide/configuring-networking.html
+    #
+    # @option params [String] :weekly_maintenance_window_start
+    #   The day and time of the week in Coordinated Universal Time (UTC)
+    #   24-hour standard time to start weekly maintenance updates of your
+    #   environment in the following format: `DAY:HH:MM`. For example:
+    #   `TUE:03:30`. You can specify a start time in 30 minute increments
+    #   only.
+    #
     # @return [Types::UpdateEnvironmentOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::UpdateEnvironmentOutput#arn #arn} => String
@@ -1480,23 +1509,12 @@ module Aws::MWAA
     #   resp = client.update_environment({
     #     name: "EnvironmentName", # required
     #     execution_role_arn: "IamRoleArn",
-    #     airflow_version: "AirflowVersion",
-    #     source_bucket_arn: "S3BucketArn",
-    #     dag_s3_path: "RelativePath",
-    #     plugins_s3_path: "RelativePath",
-    #     plugins_s3_object_version: "S3ObjectVersion",
-    #     requirements_s3_path: "RelativePath",
-    #     requirements_s3_object_version: "S3ObjectVersion",
-    #     startup_script_s3_path: "RelativePath",
-    #     startup_script_s3_object_version: "S3ObjectVersion",
     #     airflow_configuration_options: {
     #       "ConfigKey" => "ConfigValue",
     #     },
+    #     airflow_version: "AirflowVersion",
+    #     dag_s3_path: "RelativePath",
     #     environment_class: "EnvironmentClass",
-    #     max_workers: 1,
-    #     network_configuration: {
-    #       security_group_ids: ["SecurityGroupId"], # required
-    #     },
     #     logging_configuration: {
     #       dag_processing_logs: {
     #         enabled: false, # required
@@ -1519,12 +1537,24 @@ module Aws::MWAA
     #         log_level: "CRITICAL", # required, accepts CRITICAL, ERROR, WARNING, INFO, DEBUG
     #       },
     #     },
-    #     weekly_maintenance_window_start: "WeeklyMaintenanceWindowStart",
-    #     webserver_access_mode: "PRIVATE_ONLY", # accepts PRIVATE_ONLY, PUBLIC_ONLY
+    #     max_workers: 1,
     #     min_workers: 1,
-    #     schedulers: 1,
-    #     min_webservers: 1,
     #     max_webservers: 1,
+    #     min_webservers: 1,
+    #     worker_replacement_strategy: "FORCED", # accepts FORCED, GRACEFUL
+    #     network_configuration: {
+    #       security_group_ids: ["SecurityGroupId"], # required
+    #     },
+    #     plugins_s3_path: "RelativePath",
+    #     plugins_s3_object_version: "S3ObjectVersion",
+    #     requirements_s3_path: "RelativePath",
+    #     requirements_s3_object_version: "S3ObjectVersion",
+    #     schedulers: 1,
+    #     source_bucket_arn: "S3BucketArn",
+    #     startup_script_s3_path: "RelativePath",
+    #     startup_script_s3_object_version: "S3ObjectVersion",
+    #     webserver_access_mode: "PRIVATE_ONLY", # accepts PRIVATE_ONLY, PUBLIC_ONLY, PUBLIC_AND_PRIVATE
+    #     weekly_maintenance_window_start: "WeeklyMaintenanceWindowStart",
     #   })
     #
     # @example Response structure
@@ -1558,7 +1588,7 @@ module Aws::MWAA
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-mwaa'
-      context[:gem_version] = '1.55.0'
+      context[:gem_version] = '1.78.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

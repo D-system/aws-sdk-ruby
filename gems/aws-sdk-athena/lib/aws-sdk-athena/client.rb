@@ -95,8 +95,8 @@ module Aws::Athena
     #     class name or an instance of a plugin class.
     #
     #   @option options [required, Aws::CredentialProvider] :credentials
-    #     Your AWS credentials. This can be an instance of any one of the
-    #     following classes:
+    #     Your AWS credentials used for authentication. This can be any class that includes and implements
+    #     `Aws::CredentialProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::Credentials` - Used for configuring static, non-refreshing
     #       credentials.
@@ -124,22 +124,24 @@ module Aws::Athena
     #     * `Aws::CognitoIdentityCredentials` - Used for loading credentials
     #       from the Cognito Identity service.
     #
-    #     When `:credentials` are not configured directly, the following
-    #     locations will be searched for credentials:
+    #     When `:credentials` are not configured directly, the following locations will be searched for credentials:
     #
     #     * `Aws.config[:credentials]`
+    #
     #     * The `:access_key_id`, `:secret_access_key`, `:session_token`, and
     #       `:account_id` options.
-    #     * ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'],
-    #       ENV['AWS_SESSION_TOKEN'], and ENV['AWS_ACCOUNT_ID']
+    #
+    #     * `ENV['AWS_ACCESS_KEY_ID']`, `ENV['AWS_SECRET_ACCESS_KEY']`,
+    #       `ENV['AWS_SESSION_TOKEN']`, and `ENV['AWS_ACCOUNT_ID']`.
+    #
     #     * `~/.aws/credentials`
+    #
     #     * `~/.aws/config`
-    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts
-    #       are very aggressive. Construct and pass an instance of
-    #       `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
-    #       enable retries and extended timeouts. Instance profile credential
-    #       fetching can be disabled by setting ENV['AWS_EC2_METADATA_DISABLED']
-    #       to true.
+    #
+    #     * EC2/ECS IMDS instance profile - When used by default, the timeouts are very aggressive.
+    #       Construct and pass an instance of `Aws::InstanceProfileCredentials` or `Aws::ECSCredentials` to
+    #       enable retries and extended timeouts. Instance profile credential fetching can be disabled by
+    #       setting `ENV['AWS_EC2_METADATA_DISABLED']` to `true`.
     #
     #   @option options [required, String] :region
     #     The AWS region to connect to.  The configured `:region` is
@@ -167,6 +169,11 @@ module Aws::Athena
     #     When false, the request will raise a `RetryCapacityNotAvailableError` and will
     #     not retry instead of sleeping.
     #
+    #   @option options [Array<String>] :auth_scheme_preference
+    #     A list of preferred authentication schemes to use when making a request. Supported values are:
+    #     `sigv4`, `sigv4a`, `httpBearerAuth`, and `noAuth`. When set using `ENV['AWS_AUTH_SCHEME_PREFERENCE']` or in
+    #     shared config as `auth_scheme_preference`, the value should be a comma-separated list.
+    #
     #   @option options [Boolean] :client_side_monitoring (false)
     #     When `true`, client-side metrics will be collected for all API requests from
     #     this client.
@@ -192,7 +199,7 @@ module Aws::Athena
     #     the required types.
     #
     #   @option options [Boolean] :correct_clock_skew (true)
-    #     Used only in `standard` and adaptive retry modes. Specifies whether to apply
+    #     Used only in `standard` and `adaptive` retry modes. Specifies whether to apply
     #     a clock skew correction and retry requests with skewed client clocks.
     #
     #   @option options [String] :defaults_mode ("legacy")
@@ -200,8 +207,7 @@ module Aws::Athena
     #     accepted modes and the configuration defaults that are included.
     #
     #   @option options [Boolean] :disable_host_prefix_injection (false)
-    #     Set to true to disable SDK automatically adding host prefix
-    #     to default service endpoint when available.
+    #     When `true`, the SDK will not prepend the modeled host prefix to the endpoint.
     #
     #   @option options [Boolean] :disable_request_compression (false)
     #     When set to 'true' the request body will not be compressed
@@ -254,8 +260,8 @@ module Aws::Athena
     #     4 times. Used in `standard` and `adaptive` retry modes.
     #
     #   @option options [String] :profile ("default")
-    #     Used when loading credentials from the shared credentials file
-    #     at HOME/.aws/credentials.  When not specified, 'default' is used.
+    #     Used when loading credentials from the shared credentials file at `HOME/.aws/credentials`.
+    #     When not specified, 'default' is used.
     #
     #   @option options [String] :request_checksum_calculation ("when_supported")
     #     Determines when a checksum will be calculated for request payloads. Values are:
@@ -317,17 +323,15 @@ module Aws::Athena
     #   @option options [String] :retry_mode ("legacy")
     #     Specifies which retry algorithm to use. Values are:
     #
-    #     * `legacy` - The pre-existing retry behavior.  This is default value if
-    #       no retry mode is provided.
+    #     * `legacy` - The pre-existing retry behavior. This is the default
+    #       value if no retry mode is provided.
     #
     #     * `standard` - A standardized set of retry rules across the AWS SDKs.
     #       This includes support for retry quotas, which limit the number of
     #       unsuccessful retries a client can make.
     #
-    #     * `adaptive` - An experimental retry mode that includes all the
-    #       functionality of `standard` mode along with automatic client side
-    #       throttling.  This is a provisional mode that may change behavior
-    #       in the future.
+    #     * `adaptive` - A retry mode that includes all the functionality of
+    #       `standard` mode along with automatic client side throttling.
     #
     #   @option options [String] :sdk_ua_app_id
     #     A unique and opaque application ID that is appended to the
@@ -375,8 +379,8 @@ module Aws::Athena
     #     `Aws::Telemetry::OTelProvider` for telemetry provider.
     #
     #   @option options [Aws::TokenProvider] :token_provider
-    #     A Bearer Token Provider. This can be an instance of any one of the
-    #     following classes:
+    #     Your Bearer token used for authentication. This can be any class that includes and implements
+    #     `Aws::TokenProvider`, or instance of any one of the following classes:
     #
     #     * `Aws::StaticTokenProvider` - Used for configuring static, non-refreshing
     #       tokens.
@@ -600,6 +604,8 @@ module Aws::Athena
     #   resp.query_executions[0].query_execution_id #=> String
     #   resp.query_executions[0].query #=> String
     #   resp.query_executions[0].statement_type #=> String, one of "DDL", "DML", "UTILITY"
+    #   resp.query_executions[0].managed_query_results_configuration.enabled #=> Boolean
+    #   resp.query_executions[0].managed_query_results_configuration.encryption_configuration.kms_key #=> String
     #   resp.query_executions[0].result_configuration.output_location #=> String
     #   resp.query_executions[0].result_configuration.encryption_configuration.encryption_option #=> String, one of "SSE_S3", "SSE_KMS", "CSE_KMS"
     #   resp.query_executions[0].result_configuration.encryption_configuration.kms_key #=> String
@@ -626,6 +632,7 @@ module Aws::Athena
     #   resp.query_executions[0].statistics.query_planning_time_in_millis #=> Integer
     #   resp.query_executions[0].statistics.service_processing_time_in_millis #=> Integer
     #   resp.query_executions[0].statistics.result_reuse_information.reused_previous_result #=> Boolean
+    #   resp.query_executions[0].statistics.dpu_count #=> Float
     #   resp.query_executions[0].work_group #=> String
     #   resp.query_executions[0].engine_version.selected_engine_version #=> String
     #   resp.query_executions[0].engine_version.effective_engine_version #=> String
@@ -715,7 +722,8 @@ module Aws::Athena
     # properties. Catalogs created are visible to all users of the same
     # Amazon Web Services account.
     #
-    # This API operation creates the following resources.
+    # For a `FEDERATED` catalog, this API operation creates the following
+    # resources.
     #
     # * CFN Stack Name with a maximum length of 128 characters and prefix
     #   `athenafederatedcatalog-CATALOG_NAME_SANITIZED` with length 23
@@ -755,6 +763,8 @@ module Aws::Athena
     #   Hive metastore. `FEDERATED` is a federated catalog for which Athena
     #   creates the connection and the Lambda function for you based on the
     #   parameters that you pass.
+    #
+    #   For `FEDERATED` type, we do not support IAM identity center.
     #
     # @option params [String] :description
     #   A description of the data catalog to be created.
@@ -1089,6 +1099,12 @@ module Aws::Athena
     #           s3_acl_option: "BUCKET_OWNER_FULL_CONTROL", # required, accepts BUCKET_OWNER_FULL_CONTROL
     #         },
     #       },
+    #       managed_query_results_configuration: {
+    #         enabled: false, # required
+    #         encryption_configuration: {
+    #           kms_key: "KmsKey", # required
+    #         },
+    #       },
     #       enforce_work_group_configuration: false,
     #       publish_cloud_watch_metrics_enabled: false,
     #       bytes_scanned_cutoff_per_query: 1,
@@ -1099,6 +1115,44 @@ module Aws::Athena
     #       },
     #       additional_configuration: "NameString",
     #       execution_role: "RoleArn",
+    #       monitoring_configuration: {
+    #         cloud_watch_logging_configuration: {
+    #           enabled: false, # required
+    #           log_group: "LogGroupName",
+    #           log_stream_name_prefix: "LogStreamNamePrefix",
+    #           log_types: {
+    #             "LogTypeKey" => ["LogTypeValue"],
+    #           },
+    #         },
+    #         managed_logging_configuration: {
+    #           enabled: false, # required
+    #           kms_key: "KmsKey",
+    #         },
+    #         s3_logging_configuration: {
+    #           enabled: false, # required
+    #           kms_key: "KmsKey",
+    #           log_location: "S3OutputLocation",
+    #         },
+    #       },
+    #       engine_configuration: {
+    #         coordinator_dpu_size: 1,
+    #         max_concurrent_dpus: 1,
+    #         default_executor_dpu_size: 1,
+    #         additional_configs: {
+    #           "KeyString" => "ParametersMapValue",
+    #         },
+    #         spark_properties: {
+    #           "KeyString" => "ParametersMapValue",
+    #         },
+    #         classifications: [
+    #           {
+    #             name: "NameString",
+    #             properties: {
+    #               "KeyString" => "ParametersMapValue",
+    #             },
+    #           },
+    #         ],
+    #       },
     #       customer_content_encryption_configuration: {
     #         kms_key: "KmsKey", # required
     #       },
@@ -1726,6 +1780,8 @@ module Aws::Athena
     #   resp.query_execution.query_execution_id #=> String
     #   resp.query_execution.query #=> String
     #   resp.query_execution.statement_type #=> String, one of "DDL", "DML", "UTILITY"
+    #   resp.query_execution.managed_query_results_configuration.enabled #=> Boolean
+    #   resp.query_execution.managed_query_results_configuration.encryption_configuration.kms_key #=> String
     #   resp.query_execution.result_configuration.output_location #=> String
     #   resp.query_execution.result_configuration.encryption_configuration.encryption_option #=> String, one of "SSE_S3", "SSE_KMS", "CSE_KMS"
     #   resp.query_execution.result_configuration.encryption_configuration.kms_key #=> String
@@ -1752,6 +1808,7 @@ module Aws::Athena
     #   resp.query_execution.statistics.query_planning_time_in_millis #=> Integer
     #   resp.query_execution.statistics.service_processing_time_in_millis #=> Integer
     #   resp.query_execution.statistics.result_reuse_information.reused_previous_result #=> Boolean
+    #   resp.query_execution.statistics.dpu_count #=> Float
     #   resp.query_execution.work_group #=> String
     #   resp.query_execution.engine_version.selected_engine_version #=> String
     #   resp.query_execution.engine_version.effective_engine_version #=> String
@@ -1804,6 +1861,13 @@ module Aws::Athena
     # @option params [Integer] :max_results
     #   The maximum number of results (rows) to return in this request.
     #
+    # @option params [String] :query_result_type
+    #   When you set this to `DATA_ROWS` or empty, `GetQueryResults` returns
+    #   the query results in rows. If set to `DATA_MANIFEST`, it returns the
+    #   manifest file in rows. Only the query types `CREATE TABLE AS SELECT`,
+    #   `UNLOAD`, and `INSERT` can generate a manifest file. If you use
+    #   `DATA_MANIFEST` for other query types, the query will fail.
+    #
     # @return [Types::GetQueryResultsOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::GetQueryResultsOutput#update_count #update_count} => Integer
@@ -1818,6 +1882,7 @@ module Aws::Athena
     #     query_execution_id: "QueryExecutionId", # required
     #     next_token: "Token",
     #     max_results: 1,
+    #     query_result_type: "DATA_MANIFEST", # accepts DATA_MANIFEST, DATA_ROWS
     #   })
     #
     # @example Response structure
@@ -1855,8 +1920,9 @@ module Aws::Athena
     # SUCCEEDED or FAILED state. The remaining non-timeline statistics in
     # the response (like stage-level input and output row count and data
     # size) are updated asynchronously and may not be available immediately
-    # after a query completes. The non-timeline statistics are also not
-    # included when a query has row-level filters defined in Lake Formation.
+    # after a query completes or, in some cases, may not be returned. The
+    # non-timeline statistics are also not included when a query has
+    # row-level filters defined in Lake Formation.
     #
     # @option params [required, String] :query_execution_id
     #   The unique ID of the query execution.
@@ -1908,6 +1974,34 @@ module Aws::Athena
       req.send_request(options)
     end
 
+    # Gets the Live UI/Persistence UI for a session.
+    #
+    # @option params [required, String] :resource_arn
+    #   The The Amazon Resource Name (ARN) for a session.
+    #
+    # @return [Types::GetResourceDashboardResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetResourceDashboardResponse#url #url} => String
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_resource_dashboard({
+    #     resource_arn: "AmazonResourceName", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.url #=> String
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/athena-2017-05-18/GetResourceDashboard AWS API Documentation
+    #
+    # @overload get_resource_dashboard(params = {})
+    # @param [Hash] params ({})
+    def get_resource_dashboard(params = {}, options = {})
+      req = build_request(:get_resource_dashboard, params)
+      req.send_request(options)
+    end
+
     # Gets the full details of a previously created session, including the
     # session status and configuration.
     #
@@ -1922,6 +2016,7 @@ module Aws::Athena
     #   * {Types::GetSessionResponse#engine_version #engine_version} => String
     #   * {Types::GetSessionResponse#engine_configuration #engine_configuration} => Types::EngineConfiguration
     #   * {Types::GetSessionResponse#notebook_version #notebook_version} => String
+    #   * {Types::GetSessionResponse#monitoring_configuration #monitoring_configuration} => Types::MonitoringConfiguration
     #   * {Types::GetSessionResponse#session_configuration #session_configuration} => Types::SessionConfiguration
     #   * {Types::GetSessionResponse#status #status} => Types::SessionStatus
     #   * {Types::GetSessionResponse#statistics #statistics} => Types::SessionStatistics
@@ -1945,10 +2040,26 @@ module Aws::Athena
     #   resp.engine_configuration.additional_configs["KeyString"] #=> String
     #   resp.engine_configuration.spark_properties #=> Hash
     #   resp.engine_configuration.spark_properties["KeyString"] #=> String
+    #   resp.engine_configuration.classifications #=> Array
+    #   resp.engine_configuration.classifications[0].name #=> String
+    #   resp.engine_configuration.classifications[0].properties #=> Hash
+    #   resp.engine_configuration.classifications[0].properties["KeyString"] #=> String
     #   resp.notebook_version #=> String
+    #   resp.monitoring_configuration.cloud_watch_logging_configuration.enabled #=> Boolean
+    #   resp.monitoring_configuration.cloud_watch_logging_configuration.log_group #=> String
+    #   resp.monitoring_configuration.cloud_watch_logging_configuration.log_stream_name_prefix #=> String
+    #   resp.monitoring_configuration.cloud_watch_logging_configuration.log_types #=> Hash
+    #   resp.monitoring_configuration.cloud_watch_logging_configuration.log_types["LogTypeKey"] #=> Array
+    #   resp.monitoring_configuration.cloud_watch_logging_configuration.log_types["LogTypeKey"][0] #=> String
+    #   resp.monitoring_configuration.managed_logging_configuration.enabled #=> Boolean
+    #   resp.monitoring_configuration.managed_logging_configuration.kms_key #=> String
+    #   resp.monitoring_configuration.s3_logging_configuration.enabled #=> Boolean
+    #   resp.monitoring_configuration.s3_logging_configuration.kms_key #=> String
+    #   resp.monitoring_configuration.s3_logging_configuration.log_location #=> String
     #   resp.session_configuration.execution_role #=> String
     #   resp.session_configuration.working_directory #=> String
     #   resp.session_configuration.idle_timeout_seconds #=> Integer
+    #   resp.session_configuration.session_idle_timeout_in_minutes #=> Integer
     #   resp.session_configuration.encryption_configuration.encryption_option #=> String, one of "SSE_S3", "SSE_KMS", "CSE_KMS"
     #   resp.session_configuration.encryption_configuration.kms_key #=> String
     #   resp.status.start_date_time #=> Time
@@ -1965,6 +2076,39 @@ module Aws::Athena
     # @param [Hash] params ({})
     def get_session(params = {}, options = {})
       req = build_request(:get_session, params)
+      req.send_request(options)
+    end
+
+    # Gets a connection endpoint and authentication token for a given
+    # session Id.
+    #
+    # @option params [required, String] :session_id
+    #   The session ID.
+    #
+    # @return [Types::GetSessionEndpointResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
+    #
+    #   * {Types::GetSessionEndpointResponse#endpoint_url #endpoint_url} => String
+    #   * {Types::GetSessionEndpointResponse#auth_token #auth_token} => String
+    #   * {Types::GetSessionEndpointResponse#auth_token_expiration_time #auth_token_expiration_time} => Time
+    #
+    # @example Request syntax with placeholder values
+    #
+    #   resp = client.get_session_endpoint({
+    #     session_id: "SessionId", # required
+    #   })
+    #
+    # @example Response structure
+    #
+    #   resp.endpoint_url #=> String
+    #   resp.auth_token #=> String
+    #   resp.auth_token_expiration_time #=> Time
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/athena-2017-05-18/GetSessionEndpoint AWS API Documentation
+    #
+    # @overload get_session_endpoint(params = {})
+    # @param [Hash] params ({})
+    def get_session_endpoint(params = {}, options = {})
+      req = build_request(:get_session_endpoint, params)
       req.send_request(options)
     end
 
@@ -2083,6 +2227,8 @@ module Aws::Athena
     #   resp.work_group.configuration.result_configuration.encryption_configuration.kms_key #=> String
     #   resp.work_group.configuration.result_configuration.expected_bucket_owner #=> String
     #   resp.work_group.configuration.result_configuration.acl_configuration.s3_acl_option #=> String, one of "BUCKET_OWNER_FULL_CONTROL"
+    #   resp.work_group.configuration.managed_query_results_configuration.enabled #=> Boolean
+    #   resp.work_group.configuration.managed_query_results_configuration.encryption_configuration.kms_key #=> String
     #   resp.work_group.configuration.enforce_work_group_configuration #=> Boolean
     #   resp.work_group.configuration.publish_cloud_watch_metrics_enabled #=> Boolean
     #   resp.work_group.configuration.bytes_scanned_cutoff_per_query #=> Integer
@@ -2091,6 +2237,28 @@ module Aws::Athena
     #   resp.work_group.configuration.engine_version.effective_engine_version #=> String
     #   resp.work_group.configuration.additional_configuration #=> String
     #   resp.work_group.configuration.execution_role #=> String
+    #   resp.work_group.configuration.monitoring_configuration.cloud_watch_logging_configuration.enabled #=> Boolean
+    #   resp.work_group.configuration.monitoring_configuration.cloud_watch_logging_configuration.log_group #=> String
+    #   resp.work_group.configuration.monitoring_configuration.cloud_watch_logging_configuration.log_stream_name_prefix #=> String
+    #   resp.work_group.configuration.monitoring_configuration.cloud_watch_logging_configuration.log_types #=> Hash
+    #   resp.work_group.configuration.monitoring_configuration.cloud_watch_logging_configuration.log_types["LogTypeKey"] #=> Array
+    #   resp.work_group.configuration.monitoring_configuration.cloud_watch_logging_configuration.log_types["LogTypeKey"][0] #=> String
+    #   resp.work_group.configuration.monitoring_configuration.managed_logging_configuration.enabled #=> Boolean
+    #   resp.work_group.configuration.monitoring_configuration.managed_logging_configuration.kms_key #=> String
+    #   resp.work_group.configuration.monitoring_configuration.s3_logging_configuration.enabled #=> Boolean
+    #   resp.work_group.configuration.monitoring_configuration.s3_logging_configuration.kms_key #=> String
+    #   resp.work_group.configuration.monitoring_configuration.s3_logging_configuration.log_location #=> String
+    #   resp.work_group.configuration.engine_configuration.coordinator_dpu_size #=> Integer
+    #   resp.work_group.configuration.engine_configuration.max_concurrent_dpus #=> Integer
+    #   resp.work_group.configuration.engine_configuration.default_executor_dpu_size #=> Integer
+    #   resp.work_group.configuration.engine_configuration.additional_configs #=> Hash
+    #   resp.work_group.configuration.engine_configuration.additional_configs["KeyString"] #=> String
+    #   resp.work_group.configuration.engine_configuration.spark_properties #=> Hash
+    #   resp.work_group.configuration.engine_configuration.spark_properties["KeyString"] #=> String
+    #   resp.work_group.configuration.engine_configuration.classifications #=> Array
+    #   resp.work_group.configuration.engine_configuration.classifications[0].name #=> String
+    #   resp.work_group.configuration.engine_configuration.classifications[0].properties #=> Hash
+    #   resp.work_group.configuration.engine_configuration.classifications[0].properties["KeyString"] #=> String
     #   resp.work_group.configuration.customer_content_encryption_configuration.kms_key #=> String
     #   resp.work_group.configuration.enable_minimum_encryption_configuration #=> Boolean
     #   resp.work_group.configuration.identity_center_configuration.enable_identity_center #=> Boolean
@@ -3201,6 +3369,19 @@ module Aws::Athena
     # @option params [Types::ResultReuseConfiguration] :result_reuse_configuration
     #   Specifies the query result reuse behavior for the query.
     #
+    # @option params [Types::EngineConfiguration] :engine_configuration
+    #   The engine configuration for the workgroup, which includes the
+    #   minimum/maximum number of Data Processing Units (DPU) that queries
+    #   should use when running in provisioned capacity. If not specified,
+    #   Athena uses default values (Default value for min is 4 and for max is
+    #   Minimum of 124 and allocated DPUs).
+    #
+    #   To specify minimum and maximum DPU values for Capacity Reservations
+    #   queries, the workgroup containing `EngineConfiguration` should have
+    #   the following values: The name of the `Classifications` should be
+    #   `athena-query-engine-properties`, with the only allowed properties as
+    #   `max-dpu-count` and `min-dpu-count`.
+    #
     # @return [Types::StartQueryExecutionOutput] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::StartQueryExecutionOutput#query_execution_id #query_execution_id} => String
@@ -3233,6 +3414,25 @@ module Aws::Athena
     #         max_age_in_minutes: 1,
     #       },
     #     },
+    #     engine_configuration: {
+    #       coordinator_dpu_size: 1,
+    #       max_concurrent_dpus: 1,
+    #       default_executor_dpu_size: 1,
+    #       additional_configs: {
+    #         "KeyString" => "ParametersMapValue",
+    #       },
+    #       spark_properties: {
+    #         "KeyString" => "ParametersMapValue",
+    #       },
+    #       classifications: [
+    #         {
+    #           name: "NameString",
+    #           properties: {
+    #             "KeyString" => "ParametersMapValue",
+    #           },
+    #         },
+    #       ],
+    #     },
     #   })
     #
     # @example Response structure
@@ -3261,6 +3461,17 @@ module Aws::Athena
     #   Contains engine data processing unit (DPU) configuration settings and
     #   parameter mappings.
     #
+    # @option params [String] :execution_role
+    #   The ARN of the execution role used to access user resources for Spark
+    #   sessions and Identity Center enabled workgroups. This property applies
+    #   only to Spark enabled workgroups and Identity Center enabled
+    #   workgroups.
+    #
+    # @option params [Types::MonitoringConfiguration] :monitoring_configuration
+    #   Contains the configuration settings for managed log persistence,
+    #   delivering logs to Amazon S3 buckets, Amazon CloudWatch log groups
+    #   etc.
+    #
     # @option params [String] :notebook_version
     #   The notebook version. This value is supplied automatically for
     #   notebook sessions in the Athena console and is not required for
@@ -3285,6 +3496,12 @@ module Aws::Athena
     #   the Amazon Web Services CLI, you must provide this token or the action
     #   will fail.
     #
+    # @option params [Array<Types::Tag>] :tags
+    #   A list of comma separated tags to add to the session that is created.
+    #
+    # @option params [Boolean] :copy_work_group_tags
+    #   Copies the tags from the Workgroup to the Session when.
+    #
     # @return [Types::StartSessionResponse] Returns a {Seahorse::Client::Response response} object which responds to the following methods:
     #
     #   * {Types::StartSessionResponse#session_id #session_id} => String
@@ -3297,7 +3514,7 @@ module Aws::Athena
     #     work_group: "WorkGroupName", # required
     #     engine_configuration: { # required
     #       coordinator_dpu_size: 1,
-    #       max_concurrent_dpus: 1, # required
+    #       max_concurrent_dpus: 1,
     #       default_executor_dpu_size: 1,
     #       additional_configs: {
     #         "KeyString" => "ParametersMapValue",
@@ -3305,10 +3522,45 @@ module Aws::Athena
     #       spark_properties: {
     #         "KeyString" => "ParametersMapValue",
     #       },
+    #       classifications: [
+    #         {
+    #           name: "NameString",
+    #           properties: {
+    #             "KeyString" => "ParametersMapValue",
+    #           },
+    #         },
+    #       ],
+    #     },
+    #     execution_role: "RoleArn",
+    #     monitoring_configuration: {
+    #       cloud_watch_logging_configuration: {
+    #         enabled: false, # required
+    #         log_group: "LogGroupName",
+    #         log_stream_name_prefix: "LogStreamNamePrefix",
+    #         log_types: {
+    #           "LogTypeKey" => ["LogTypeValue"],
+    #         },
+    #       },
+    #       managed_logging_configuration: {
+    #         enabled: false, # required
+    #         kms_key: "KmsKey",
+    #       },
+    #       s3_logging_configuration: {
+    #         enabled: false, # required
+    #         kms_key: "KmsKey",
+    #         log_location: "S3OutputLocation",
+    #       },
     #     },
     #     notebook_version: "NameString",
     #     session_idle_timeout_in_minutes: 1,
     #     client_request_token: "IdempotencyToken",
+    #     tags: [
+    #       {
+    #         key: "TagKey",
+    #         value: "TagValue",
+    #       },
+    #     ],
+    #     copy_work_group_tags: false,
     #   })
     #
     # @example Response structure
@@ -3781,6 +4033,13 @@ module Aws::Athena
     #         },
     #         remove_acl_configuration: false,
     #       },
+    #       managed_query_results_configuration_updates: {
+    #         enabled: false,
+    #         encryption_configuration: {
+    #           kms_key: "KmsKey", # required
+    #         },
+    #         remove_encryption_configuration: false,
+    #       },
     #       publish_cloud_watch_metrics_enabled: false,
     #       bytes_scanned_cutoff_per_query: 1,
     #       remove_bytes_scanned_cutoff_per_query: false,
@@ -3800,6 +4059,44 @@ module Aws::Athena
     #         enable_s3_access_grants: false, # required
     #         create_user_level_prefix: false,
     #         authentication_type: "DIRECTORY_IDENTITY", # required, accepts DIRECTORY_IDENTITY
+    #       },
+    #       monitoring_configuration: {
+    #         cloud_watch_logging_configuration: {
+    #           enabled: false, # required
+    #           log_group: "LogGroupName",
+    #           log_stream_name_prefix: "LogStreamNamePrefix",
+    #           log_types: {
+    #             "LogTypeKey" => ["LogTypeValue"],
+    #           },
+    #         },
+    #         managed_logging_configuration: {
+    #           enabled: false, # required
+    #           kms_key: "KmsKey",
+    #         },
+    #         s3_logging_configuration: {
+    #           enabled: false, # required
+    #           kms_key: "KmsKey",
+    #           log_location: "S3OutputLocation",
+    #         },
+    #       },
+    #       engine_configuration: {
+    #         coordinator_dpu_size: 1,
+    #         max_concurrent_dpus: 1,
+    #         default_executor_dpu_size: 1,
+    #         additional_configs: {
+    #           "KeyString" => "ParametersMapValue",
+    #         },
+    #         spark_properties: {
+    #           "KeyString" => "ParametersMapValue",
+    #         },
+    #         classifications: [
+    #           {
+    #             name: "NameString",
+    #             properties: {
+    #               "KeyString" => "ParametersMapValue",
+    #             },
+    #           },
+    #         ],
     #       },
     #     },
     #     state: "ENABLED", # accepts ENABLED, DISABLED
@@ -3832,7 +4129,7 @@ module Aws::Athena
         tracer: tracer
       )
       context[:gem_name] = 'aws-sdk-athena'
-      context[:gem_version] = '1.101.0'
+      context[:gem_version] = '1.123.0'
       Seahorse::Client::Request.new(handlers, context)
     end
 

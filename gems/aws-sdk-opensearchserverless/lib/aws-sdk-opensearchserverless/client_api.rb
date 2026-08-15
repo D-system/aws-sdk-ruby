@@ -21,6 +21,9 @@ module Aws::OpenSearchServerless
     AccessPolicyType = Shapes::StringShape.new(name: 'AccessPolicyType')
     AccountSettingsDetail = Shapes::StructureShape.new(name: 'AccountSettingsDetail')
     Arn = Shapes::StringShape.new(name: 'Arn')
+    AutoscalingStatus = Shapes::StringShape.new(name: 'AutoscalingStatus')
+    BatchGetCollectionGroupRequest = Shapes::StructureShape.new(name: 'BatchGetCollectionGroupRequest')
+    BatchGetCollectionGroupResponse = Shapes::StructureShape.new(name: 'BatchGetCollectionGroupResponse')
     BatchGetCollectionRequest = Shapes::StructureShape.new(name: 'BatchGetCollectionRequest')
     BatchGetCollectionResponse = Shapes::StructureShape.new(name: 'BatchGetCollectionResponse')
     BatchGetEffectiveLifecyclePolicyRequest = Shapes::StructureShape.new(name: 'BatchGetEffectiveLifecyclePolicyRequest')
@@ -30,6 +33,7 @@ module Aws::OpenSearchServerless
     BatchGetVpcEndpointRequest = Shapes::StructureShape.new(name: 'BatchGetVpcEndpointRequest')
     BatchGetVpcEndpointResponse = Shapes::StructureShape.new(name: 'BatchGetVpcEndpointResponse')
     Boolean = Shapes::BooleanShape.new(name: 'Boolean')
+    CapacityDetails = Shapes::StructureShape.new(name: 'CapacityDetails')
     CapacityLimits = Shapes::StructureShape.new(name: 'CapacityLimits')
     ClientToken = Shapes::StringShape.new(name: 'ClientToken')
     CollectionDetail = Shapes::StructureShape.new(name: 'CollectionDetail')
@@ -37,6 +41,21 @@ module Aws::OpenSearchServerless
     CollectionErrorDetail = Shapes::StructureShape.new(name: 'CollectionErrorDetail')
     CollectionErrorDetails = Shapes::ListShape.new(name: 'CollectionErrorDetails')
     CollectionFilters = Shapes::StructureShape.new(name: 'CollectionFilters')
+    CollectionGroupCapacityLimits = Shapes::StructureShape.new(name: 'CollectionGroupCapacityLimits')
+    CollectionGroupDetail = Shapes::StructureShape.new(name: 'CollectionGroupDetail')
+    CollectionGroupDetails = Shapes::ListShape.new(name: 'CollectionGroupDetails')
+    CollectionGroupErrorDetail = Shapes::StructureShape.new(name: 'CollectionGroupErrorDetail')
+    CollectionGroupErrorDetails = Shapes::ListShape.new(name: 'CollectionGroupErrorDetails')
+    CollectionGroupId = Shapes::StringShape.new(name: 'CollectionGroupId')
+    CollectionGroupIds = Shapes::ListShape.new(name: 'CollectionGroupIds')
+    CollectionGroupMaxIndexingCapacityValue = Shapes::FloatShape.new(name: 'CollectionGroupMaxIndexingCapacityValue')
+    CollectionGroupMaxSearchCapacityValue = Shapes::FloatShape.new(name: 'CollectionGroupMaxSearchCapacityValue')
+    CollectionGroupMinIndexingCapacityValue = Shapes::FloatShape.new(name: 'CollectionGroupMinIndexingCapacityValue')
+    CollectionGroupMinSearchCapacityValue = Shapes::FloatShape.new(name: 'CollectionGroupMinSearchCapacityValue')
+    CollectionGroupName = Shapes::StringShape.new(name: 'CollectionGroupName')
+    CollectionGroupNames = Shapes::ListShape.new(name: 'CollectionGroupNames')
+    CollectionGroupSummaries = Shapes::ListShape.new(name: 'CollectionGroupSummaries')
+    CollectionGroupSummary = Shapes::StructureShape.new(name: 'CollectionGroupSummary')
     CollectionId = Shapes::StringShape.new(name: 'CollectionId')
     CollectionIds = Shapes::ListShape.new(name: 'CollectionIds')
     CollectionName = Shapes::StringShape.new(name: 'CollectionName')
@@ -51,10 +70,16 @@ module Aws::OpenSearchServerless
     CreateAccessPolicyRequest = Shapes::StructureShape.new(name: 'CreateAccessPolicyRequest')
     CreateAccessPolicyResponse = Shapes::StructureShape.new(name: 'CreateAccessPolicyResponse')
     CreateCollectionDetail = Shapes::StructureShape.new(name: 'CreateCollectionDetail')
+    CreateCollectionGroupDetail = Shapes::StructureShape.new(name: 'CreateCollectionGroupDetail')
+    CreateCollectionGroupRequest = Shapes::StructureShape.new(name: 'CreateCollectionGroupRequest')
+    CreateCollectionGroupRequestDescriptionString = Shapes::StringShape.new(name: 'CreateCollectionGroupRequestDescriptionString')
+    CreateCollectionGroupResponse = Shapes::StructureShape.new(name: 'CreateCollectionGroupResponse')
     CreateCollectionRequest = Shapes::StructureShape.new(name: 'CreateCollectionRequest')
     CreateCollectionRequestDescriptionString = Shapes::StringShape.new(name: 'CreateCollectionRequestDescriptionString')
     CreateCollectionResponse = Shapes::StructureShape.new(name: 'CreateCollectionResponse')
     CreateIamIdentityCenterConfigOptions = Shapes::StructureShape.new(name: 'CreateIamIdentityCenterConfigOptions')
+    CreateIndexRequest = Shapes::StructureShape.new(name: 'CreateIndexRequest')
+    CreateIndexResponse = Shapes::StructureShape.new(name: 'CreateIndexResponse')
     CreateLifecyclePolicyRequest = Shapes::StructureShape.new(name: 'CreateLifecyclePolicyRequest')
     CreateLifecyclePolicyResponse = Shapes::StructureShape.new(name: 'CreateLifecyclePolicyResponse')
     CreateSecurityConfigRequest = Shapes::StructureShape.new(name: 'CreateSecurityConfigRequest')
@@ -64,11 +89,16 @@ module Aws::OpenSearchServerless
     CreateVpcEndpointDetail = Shapes::StructureShape.new(name: 'CreateVpcEndpointDetail')
     CreateVpcEndpointRequest = Shapes::StructureShape.new(name: 'CreateVpcEndpointRequest')
     CreateVpcEndpointResponse = Shapes::StructureShape.new(name: 'CreateVpcEndpointResponse')
+    CurrentCapacity = Shapes::StructureShape.new(name: 'CurrentCapacity')
     DeleteAccessPolicyRequest = Shapes::StructureShape.new(name: 'DeleteAccessPolicyRequest')
     DeleteAccessPolicyResponse = Shapes::StructureShape.new(name: 'DeleteAccessPolicyResponse')
     DeleteCollectionDetail = Shapes::StructureShape.new(name: 'DeleteCollectionDetail')
+    DeleteCollectionGroupRequest = Shapes::StructureShape.new(name: 'DeleteCollectionGroupRequest')
+    DeleteCollectionGroupResponse = Shapes::StructureShape.new(name: 'DeleteCollectionGroupResponse')
     DeleteCollectionRequest = Shapes::StructureShape.new(name: 'DeleteCollectionRequest')
     DeleteCollectionResponse = Shapes::StructureShape.new(name: 'DeleteCollectionResponse')
+    DeleteIndexRequest = Shapes::StructureShape.new(name: 'DeleteIndexRequest')
+    DeleteIndexResponse = Shapes::StructureShape.new(name: 'DeleteIndexResponse')
     DeleteLifecyclePolicyRequest = Shapes::StructureShape.new(name: 'DeleteLifecyclePolicyRequest')
     DeleteLifecyclePolicyResponse = Shapes::StructureShape.new(name: 'DeleteLifecyclePolicyResponse')
     DeleteSecurityConfigRequest = Shapes::StructureShape.new(name: 'DeleteSecurityConfigRequest')
@@ -78,27 +108,38 @@ module Aws::OpenSearchServerless
     DeleteVpcEndpointDetail = Shapes::StructureShape.new(name: 'DeleteVpcEndpointDetail')
     DeleteVpcEndpointRequest = Shapes::StructureShape.new(name: 'DeleteVpcEndpointRequest')
     DeleteVpcEndpointResponse = Shapes::StructureShape.new(name: 'DeleteVpcEndpointResponse')
+    DeletionProtection = Shapes::StringShape.new(name: 'DeletionProtection')
     Document = Shapes::DocumentShape.new(name: 'Document', document: true)
     EffectiveLifecyclePolicyDetail = Shapes::StructureShape.new(name: 'EffectiveLifecyclePolicyDetail')
     EffectiveLifecyclePolicyDetails = Shapes::ListShape.new(name: 'EffectiveLifecyclePolicyDetails')
     EffectiveLifecyclePolicyErrorDetail = Shapes::StructureShape.new(name: 'EffectiveLifecyclePolicyErrorDetail')
     EffectiveLifecyclePolicyErrorDetails = Shapes::ListShape.new(name: 'EffectiveLifecyclePolicyErrorDetails')
+    EncryptionConfig = Shapes::StructureShape.new(name: 'EncryptionConfig')
+    EncryptionConfigKmsKeyArnString = Shapes::StringShape.new(name: 'EncryptionConfigKmsKeyArnString')
+    FipsEndpoints = Shapes::StructureShape.new(name: 'FipsEndpoints')
+    Float = Shapes::FloatShape.new(name: 'Float')
     GetAccessPolicyRequest = Shapes::StructureShape.new(name: 'GetAccessPolicyRequest')
     GetAccessPolicyResponse = Shapes::StructureShape.new(name: 'GetAccessPolicyResponse')
     GetAccountSettingsRequest = Shapes::StructureShape.new(name: 'GetAccountSettingsRequest')
     GetAccountSettingsResponse = Shapes::StructureShape.new(name: 'GetAccountSettingsResponse')
+    GetIndexRequest = Shapes::StructureShape.new(name: 'GetIndexRequest')
+    GetIndexResponse = Shapes::StructureShape.new(name: 'GetIndexResponse')
     GetPoliciesStatsRequest = Shapes::StructureShape.new(name: 'GetPoliciesStatsRequest')
     GetPoliciesStatsResponse = Shapes::StructureShape.new(name: 'GetPoliciesStatsResponse')
     GetSecurityConfigRequest = Shapes::StructureShape.new(name: 'GetSecurityConfigRequest')
     GetSecurityConfigResponse = Shapes::StructureShape.new(name: 'GetSecurityConfigResponse')
     GetSecurityPolicyRequest = Shapes::StructureShape.new(name: 'GetSecurityPolicyRequest')
     GetSecurityPolicyResponse = Shapes::StructureShape.new(name: 'GetSecurityPolicyResponse')
+    IamFederationConfigOptions = Shapes::StructureShape.new(name: 'IamFederationConfigOptions')
     IamIdentityCenterApplicationArn = Shapes::StringShape.new(name: 'IamIdentityCenterApplicationArn')
     IamIdentityCenterConfigOptions = Shapes::StructureShape.new(name: 'IamIdentityCenterConfigOptions')
     IamIdentityCenterGroupAttribute = Shapes::StringShape.new(name: 'IamIdentityCenterGroupAttribute')
     IamIdentityCenterInstanceArn = Shapes::StringShape.new(name: 'IamIdentityCenterInstanceArn')
     IamIdentityCenterUserAttribute = Shapes::StringShape.new(name: 'IamIdentityCenterUserAttribute')
+    IndexName = Shapes::StringShape.new(name: 'IndexName')
+    IndexSchema = Shapes::DocumentShape.new(name: 'IndexSchema', document: true)
     IndexingCapacityValue = Shapes::IntegerShape.new(name: 'IndexingCapacityValue')
+    Integer = Shapes::IntegerShape.new(name: 'Integer')
     InternalServerException = Shapes::StructureShape.new(name: 'InternalServerException')
     LifecyclePolicyDetail = Shapes::StructureShape.new(name: 'LifecyclePolicyDetail')
     LifecyclePolicyDetails = Shapes::ListShape.new(name: 'LifecyclePolicyDetails')
@@ -117,6 +158,9 @@ module Aws::OpenSearchServerless
     ListAccessPoliciesRequestMaxResultsInteger = Shapes::IntegerShape.new(name: 'ListAccessPoliciesRequestMaxResultsInteger')
     ListAccessPoliciesRequestResourceList = Shapes::ListShape.new(name: 'ListAccessPoliciesRequestResourceList')
     ListAccessPoliciesResponse = Shapes::StructureShape.new(name: 'ListAccessPoliciesResponse')
+    ListCollectionGroupsRequest = Shapes::StructureShape.new(name: 'ListCollectionGroupsRequest')
+    ListCollectionGroupsRequestMaxResultsInteger = Shapes::IntegerShape.new(name: 'ListCollectionGroupsRequestMaxResultsInteger')
+    ListCollectionGroupsResponse = Shapes::StructureShape.new(name: 'ListCollectionGroupsResponse')
     ListCollectionsRequest = Shapes::StructureShape.new(name: 'ListCollectionsRequest')
     ListCollectionsRequestMaxResultsInteger = Shapes::IntegerShape.new(name: 'ListCollectionsRequestMaxResultsInteger')
     ListCollectionsResponse = Shapes::StructureShape.new(name: 'ListCollectionsResponse')
@@ -162,6 +206,8 @@ module Aws::OpenSearchServerless
     SecurityPolicySummaries = Shapes::ListShape.new(name: 'SecurityPolicySummaries')
     SecurityPolicySummary = Shapes::StructureShape.new(name: 'SecurityPolicySummary')
     SecurityPolicyType = Shapes::StringShape.new(name: 'SecurityPolicyType')
+    ServerlessGeneration = Shapes::StringShape.new(name: 'ServerlessGeneration')
+    ServerlessVectorAccelerationStatus = Shapes::StringShape.new(name: 'ServerlessVectorAccelerationStatus')
     ServiceQuotaExceededException = Shapes::StructureShape.new(name: 'ServiceQuotaExceededException')
     StandbyReplicas = Shapes::StringShape.new(name: 'StandbyReplicas')
     String = Shapes::StringShape.new(name: 'String')
@@ -181,10 +227,16 @@ module Aws::OpenSearchServerless
     UpdateAccountSettingsRequest = Shapes::StructureShape.new(name: 'UpdateAccountSettingsRequest')
     UpdateAccountSettingsResponse = Shapes::StructureShape.new(name: 'UpdateAccountSettingsResponse')
     UpdateCollectionDetail = Shapes::StructureShape.new(name: 'UpdateCollectionDetail')
+    UpdateCollectionGroupDetail = Shapes::StructureShape.new(name: 'UpdateCollectionGroupDetail')
+    UpdateCollectionGroupRequest = Shapes::StructureShape.new(name: 'UpdateCollectionGroupRequest')
+    UpdateCollectionGroupRequestDescriptionString = Shapes::StringShape.new(name: 'UpdateCollectionGroupRequestDescriptionString')
+    UpdateCollectionGroupResponse = Shapes::StructureShape.new(name: 'UpdateCollectionGroupResponse')
     UpdateCollectionRequest = Shapes::StructureShape.new(name: 'UpdateCollectionRequest')
     UpdateCollectionRequestDescriptionString = Shapes::StringShape.new(name: 'UpdateCollectionRequestDescriptionString')
     UpdateCollectionResponse = Shapes::StructureShape.new(name: 'UpdateCollectionResponse')
     UpdateIamIdentityCenterConfigOptions = Shapes::StructureShape.new(name: 'UpdateIamIdentityCenterConfigOptions')
+    UpdateIndexRequest = Shapes::StructureShape.new(name: 'UpdateIndexRequest')
+    UpdateIndexResponse = Shapes::StructureShape.new(name: 'UpdateIndexResponse')
     UpdateLifecyclePolicyRequest = Shapes::StructureShape.new(name: 'UpdateLifecyclePolicyRequest')
     UpdateLifecyclePolicyResponse = Shapes::StructureShape.new(name: 'UpdateLifecyclePolicyResponse')
     UpdateSecurityConfigRequest = Shapes::StructureShape.new(name: 'UpdateSecurityConfigRequest')
@@ -195,6 +247,7 @@ module Aws::OpenSearchServerless
     UpdateVpcEndpointRequest = Shapes::StructureShape.new(name: 'UpdateVpcEndpointRequest')
     UpdateVpcEndpointResponse = Shapes::StructureShape.new(name: 'UpdateVpcEndpointResponse')
     ValidationException = Shapes::StructureShape.new(name: 'ValidationException')
+    VectorOptions = Shapes::StructureShape.new(name: 'VectorOptions')
     VpcEndpointDetail = Shapes::StructureShape.new(name: 'VpcEndpointDetail')
     VpcEndpointDetails = Shapes::ListShape.new(name: 'VpcEndpointDetails')
     VpcEndpointErrorDetail = Shapes::StructureShape.new(name: 'VpcEndpointErrorDetail')
@@ -207,6 +260,8 @@ module Aws::OpenSearchServerless
     VpcEndpointSummaries = Shapes::ListShape.new(name: 'VpcEndpointSummaries')
     VpcEndpointSummary = Shapes::StructureShape.new(name: 'VpcEndpointSummary')
     VpcId = Shapes::StringShape.new(name: 'VpcId')
+    iamFederationGroupAttribute = Shapes::StringShape.new(name: 'iamFederationGroupAttribute')
+    iamFederationUserAttribute = Shapes::StringShape.new(name: 'iamFederationUserAttribute')
     openSearchServerlessEntityId = Shapes::StringShape.new(name: 'openSearchServerlessEntityId')
     samlGroupAttribute = Shapes::StringShape.new(name: 'samlGroupAttribute')
     samlMetadata = Shapes::StringShape.new(name: 'samlMetadata')
@@ -237,6 +292,14 @@ module Aws::OpenSearchServerless
     AccountSettingsDetail.add_member(:capacity_limits, Shapes::ShapeRef.new(shape: CapacityLimits, location_name: "capacityLimits"))
     AccountSettingsDetail.struct_class = Types::AccountSettingsDetail
 
+    BatchGetCollectionGroupRequest.add_member(:ids, Shapes::ShapeRef.new(shape: CollectionGroupIds, location_name: "ids"))
+    BatchGetCollectionGroupRequest.add_member(:names, Shapes::ShapeRef.new(shape: CollectionGroupNames, location_name: "names"))
+    BatchGetCollectionGroupRequest.struct_class = Types::BatchGetCollectionGroupRequest
+
+    BatchGetCollectionGroupResponse.add_member(:collection_group_details, Shapes::ShapeRef.new(shape: CollectionGroupDetails, location_name: "collectionGroupDetails"))
+    BatchGetCollectionGroupResponse.add_member(:collection_group_error_details, Shapes::ShapeRef.new(shape: CollectionGroupErrorDetails, location_name: "collectionGroupErrorDetails"))
+    BatchGetCollectionGroupResponse.struct_class = Types::BatchGetCollectionGroupResponse
+
     BatchGetCollectionRequest.add_member(:ids, Shapes::ShapeRef.new(shape: CollectionIds, location_name: "ids"))
     BatchGetCollectionRequest.add_member(:names, Shapes::ShapeRef.new(shape: CollectionNames, location_name: "names"))
     BatchGetCollectionRequest.struct_class = Types::BatchGetCollectionRequest
@@ -266,6 +329,10 @@ module Aws::OpenSearchServerless
     BatchGetVpcEndpointResponse.add_member(:vpc_endpoint_error_details, Shapes::ShapeRef.new(shape: VpcEndpointErrorDetails, location_name: "vpcEndpointErrorDetails"))
     BatchGetVpcEndpointResponse.struct_class = Types::BatchGetVpcEndpointResponse
 
+    CapacityDetails.add_member(:capacity_in_ocu, Shapes::ShapeRef.new(shape: Float, location_name: "capacityInOcu"))
+    CapacityDetails.add_member(:autoscaling_status, Shapes::ShapeRef.new(shape: AutoscalingStatus, location_name: "autoscalingStatus"))
+    CapacityDetails.struct_class = Types::CapacityDetails
+
     CapacityLimits.add_member(:max_indexing_capacity_in_ocu, Shapes::ShapeRef.new(shape: IndexingCapacityValue, location_name: "maxIndexingCapacityInOCU"))
     CapacityLimits.add_member(:max_search_capacity_in_ocu, Shapes::ShapeRef.new(shape: SearchCapacityValue, location_name: "maxSearchCapacityInOCU"))
     CapacityLimits.struct_class = Types::CapacityLimits
@@ -278,12 +345,16 @@ module Aws::OpenSearchServerless
     CollectionDetail.add_member(:arn, Shapes::ShapeRef.new(shape: String, location_name: "arn"))
     CollectionDetail.add_member(:kms_key_arn, Shapes::ShapeRef.new(shape: String, location_name: "kmsKeyArn"))
     CollectionDetail.add_member(:standby_replicas, Shapes::ShapeRef.new(shape: StandbyReplicas, location_name: "standbyReplicas"))
+    CollectionDetail.add_member(:deletion_protection, Shapes::ShapeRef.new(shape: DeletionProtection, location_name: "deletionProtection"))
+    CollectionDetail.add_member(:vector_options, Shapes::ShapeRef.new(shape: VectorOptions, location_name: "vectorOptions"))
     CollectionDetail.add_member(:created_date, Shapes::ShapeRef.new(shape: Long, location_name: "createdDate"))
     CollectionDetail.add_member(:last_modified_date, Shapes::ShapeRef.new(shape: Long, location_name: "lastModifiedDate"))
     CollectionDetail.add_member(:collection_endpoint, Shapes::ShapeRef.new(shape: String, location_name: "collectionEndpoint"))
     CollectionDetail.add_member(:dashboard_endpoint, Shapes::ShapeRef.new(shape: String, location_name: "dashboardEndpoint"))
+    CollectionDetail.add_member(:fips_endpoints, Shapes::ShapeRef.new(shape: FipsEndpoints, location_name: "fipsEndpoints"))
     CollectionDetail.add_member(:failure_code, Shapes::ShapeRef.new(shape: String, location_name: "failureCode"))
     CollectionDetail.add_member(:failure_message, Shapes::ShapeRef.new(shape: String, location_name: "failureMessage"))
+    CollectionDetail.add_member(:collection_group_name, Shapes::ShapeRef.new(shape: CollectionGroupName, location_name: "collectionGroupName"))
     CollectionDetail.struct_class = Types::CollectionDetail
 
     CollectionDetails.member = Shapes::ShapeRef.new(shape: CollectionDetail)
@@ -298,7 +369,52 @@ module Aws::OpenSearchServerless
 
     CollectionFilters.add_member(:name, Shapes::ShapeRef.new(shape: CollectionName, location_name: "name"))
     CollectionFilters.add_member(:status, Shapes::ShapeRef.new(shape: CollectionStatus, location_name: "status"))
+    CollectionFilters.add_member(:collection_group_name, Shapes::ShapeRef.new(shape: CollectionGroupName, location_name: "collectionGroupName"))
     CollectionFilters.struct_class = Types::CollectionFilters
+
+    CollectionGroupCapacityLimits.add_member(:max_indexing_capacity_in_ocu, Shapes::ShapeRef.new(shape: CollectionGroupMaxIndexingCapacityValue, location_name: "maxIndexingCapacityInOCU"))
+    CollectionGroupCapacityLimits.add_member(:max_search_capacity_in_ocu, Shapes::ShapeRef.new(shape: CollectionGroupMaxSearchCapacityValue, location_name: "maxSearchCapacityInOCU"))
+    CollectionGroupCapacityLimits.add_member(:min_indexing_capacity_in_ocu, Shapes::ShapeRef.new(shape: CollectionGroupMinIndexingCapacityValue, location_name: "minIndexingCapacityInOCU"))
+    CollectionGroupCapacityLimits.add_member(:min_search_capacity_in_ocu, Shapes::ShapeRef.new(shape: CollectionGroupMinSearchCapacityValue, location_name: "minSearchCapacityInOCU"))
+    CollectionGroupCapacityLimits.struct_class = Types::CollectionGroupCapacityLimits
+
+    CollectionGroupDetail.add_member(:id, Shapes::ShapeRef.new(shape: CollectionGroupId, location_name: "id"))
+    CollectionGroupDetail.add_member(:arn, Shapes::ShapeRef.new(shape: String, location_name: "arn"))
+    CollectionGroupDetail.add_member(:name, Shapes::ShapeRef.new(shape: CollectionGroupName, location_name: "name"))
+    CollectionGroupDetail.add_member(:standby_replicas, Shapes::ShapeRef.new(shape: StandbyReplicas, location_name: "standbyReplicas"))
+    CollectionGroupDetail.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
+    CollectionGroupDetail.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    CollectionGroupDetail.add_member(:created_date, Shapes::ShapeRef.new(shape: Long, location_name: "createdDate"))
+    CollectionGroupDetail.add_member(:capacity_limits, Shapes::ShapeRef.new(shape: CollectionGroupCapacityLimits, location_name: "capacityLimits"))
+    CollectionGroupDetail.add_member(:current_capacity, Shapes::ShapeRef.new(shape: CurrentCapacity, location_name: "currentCapacity"))
+    CollectionGroupDetail.add_member(:number_of_collections, Shapes::ShapeRef.new(shape: Integer, location_name: "numberOfCollections"))
+    CollectionGroupDetail.add_member(:generation, Shapes::ShapeRef.new(shape: ServerlessGeneration, location_name: "generation"))
+    CollectionGroupDetail.struct_class = Types::CollectionGroupDetail
+
+    CollectionGroupDetails.member = Shapes::ShapeRef.new(shape: CollectionGroupDetail)
+
+    CollectionGroupErrorDetail.add_member(:id, Shapes::ShapeRef.new(shape: CollectionGroupId, location_name: "id"))
+    CollectionGroupErrorDetail.add_member(:name, Shapes::ShapeRef.new(shape: CollectionGroupName, location_name: "name"))
+    CollectionGroupErrorDetail.add_member(:error_message, Shapes::ShapeRef.new(shape: String, location_name: "errorMessage"))
+    CollectionGroupErrorDetail.add_member(:error_code, Shapes::ShapeRef.new(shape: String, location_name: "errorCode"))
+    CollectionGroupErrorDetail.struct_class = Types::CollectionGroupErrorDetail
+
+    CollectionGroupErrorDetails.member = Shapes::ShapeRef.new(shape: CollectionGroupErrorDetail)
+
+    CollectionGroupIds.member = Shapes::ShapeRef.new(shape: CollectionGroupId)
+
+    CollectionGroupNames.member = Shapes::ShapeRef.new(shape: CollectionGroupName)
+
+    CollectionGroupSummaries.member = Shapes::ShapeRef.new(shape: CollectionGroupSummary)
+
+    CollectionGroupSummary.add_member(:id, Shapes::ShapeRef.new(shape: CollectionGroupId, location_name: "id"))
+    CollectionGroupSummary.add_member(:arn, Shapes::ShapeRef.new(shape: String, location_name: "arn"))
+    CollectionGroupSummary.add_member(:name, Shapes::ShapeRef.new(shape: CollectionGroupName, location_name: "name"))
+    CollectionGroupSummary.add_member(:number_of_collections, Shapes::ShapeRef.new(shape: Integer, location_name: "numberOfCollections"))
+    CollectionGroupSummary.add_member(:created_date, Shapes::ShapeRef.new(shape: Long, location_name: "createdDate"))
+    CollectionGroupSummary.add_member(:capacity_limits, Shapes::ShapeRef.new(shape: CollectionGroupCapacityLimits, location_name: "capacityLimits"))
+    CollectionGroupSummary.add_member(:generation, Shapes::ShapeRef.new(shape: ServerlessGeneration, location_name: "generation"))
+    CollectionGroupSummary.struct_class = Types::CollectionGroupSummary
 
     CollectionIds.member = Shapes::ShapeRef.new(shape: CollectionId)
 
@@ -310,6 +426,8 @@ module Aws::OpenSearchServerless
     CollectionSummary.add_member(:name, Shapes::ShapeRef.new(shape: CollectionName, location_name: "name"))
     CollectionSummary.add_member(:status, Shapes::ShapeRef.new(shape: CollectionStatus, location_name: "status"))
     CollectionSummary.add_member(:arn, Shapes::ShapeRef.new(shape: String, location_name: "arn"))
+    CollectionSummary.add_member(:kms_key_arn, Shapes::ShapeRef.new(shape: String, location_name: "kmsKeyArn"))
+    CollectionSummary.add_member(:collection_group_name, Shapes::ShapeRef.new(shape: CollectionGroupName, location_name: "collectionGroupName"))
     CollectionSummary.struct_class = Types::CollectionSummary
 
     ConflictException.add_member(:message, Shapes::ShapeRef.new(shape: String, location_name: "message"))
@@ -319,7 +437,7 @@ module Aws::OpenSearchServerless
     CreateAccessPolicyRequest.add_member(:name, Shapes::ShapeRef.new(shape: PolicyName, required: true, location_name: "name"))
     CreateAccessPolicyRequest.add_member(:description, Shapes::ShapeRef.new(shape: PolicyDescription, location_name: "description"))
     CreateAccessPolicyRequest.add_member(:policy, Shapes::ShapeRef.new(shape: PolicyDocument, required: true, location_name: "policy"))
-    CreateAccessPolicyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateAccessPolicyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateAccessPolicyRequest.struct_class = Types::CreateAccessPolicyRequest
 
     CreateAccessPolicyResponse.add_member(:access_policy_detail, Shapes::ShapeRef.new(shape: AccessPolicyDetail, location_name: "accessPolicyDetail"))
@@ -333,16 +451,46 @@ module Aws::OpenSearchServerless
     CreateCollectionDetail.add_member(:arn, Shapes::ShapeRef.new(shape: String, location_name: "arn"))
     CreateCollectionDetail.add_member(:kms_key_arn, Shapes::ShapeRef.new(shape: String, location_name: "kmsKeyArn"))
     CreateCollectionDetail.add_member(:standby_replicas, Shapes::ShapeRef.new(shape: StandbyReplicas, location_name: "standbyReplicas"))
+    CreateCollectionDetail.add_member(:deletion_protection, Shapes::ShapeRef.new(shape: DeletionProtection, location_name: "deletionProtection"))
+    CreateCollectionDetail.add_member(:vector_options, Shapes::ShapeRef.new(shape: VectorOptions, location_name: "vectorOptions"))
     CreateCollectionDetail.add_member(:created_date, Shapes::ShapeRef.new(shape: Long, location_name: "createdDate"))
     CreateCollectionDetail.add_member(:last_modified_date, Shapes::ShapeRef.new(shape: Long, location_name: "lastModifiedDate"))
+    CreateCollectionDetail.add_member(:collection_group_name, Shapes::ShapeRef.new(shape: CollectionGroupName, location_name: "collectionGroupName"))
     CreateCollectionDetail.struct_class = Types::CreateCollectionDetail
+
+    CreateCollectionGroupDetail.add_member(:id, Shapes::ShapeRef.new(shape: CollectionGroupId, location_name: "id"))
+    CreateCollectionGroupDetail.add_member(:arn, Shapes::ShapeRef.new(shape: String, location_name: "arn"))
+    CreateCollectionGroupDetail.add_member(:name, Shapes::ShapeRef.new(shape: CollectionGroupName, location_name: "name"))
+    CreateCollectionGroupDetail.add_member(:standby_replicas, Shapes::ShapeRef.new(shape: StandbyReplicas, location_name: "standbyReplicas"))
+    CreateCollectionGroupDetail.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
+    CreateCollectionGroupDetail.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    CreateCollectionGroupDetail.add_member(:created_date, Shapes::ShapeRef.new(shape: Long, location_name: "createdDate"))
+    CreateCollectionGroupDetail.add_member(:capacity_limits, Shapes::ShapeRef.new(shape: CollectionGroupCapacityLimits, location_name: "capacityLimits"))
+    CreateCollectionGroupDetail.add_member(:generation, Shapes::ShapeRef.new(shape: ServerlessGeneration, location_name: "generation"))
+    CreateCollectionGroupDetail.struct_class = Types::CreateCollectionGroupDetail
+
+    CreateCollectionGroupRequest.add_member(:name, Shapes::ShapeRef.new(shape: CollectionGroupName, required: true, location_name: "name"))
+    CreateCollectionGroupRequest.add_member(:standby_replicas, Shapes::ShapeRef.new(shape: StandbyReplicas, required: true, location_name: "standbyReplicas"))
+    CreateCollectionGroupRequest.add_member(:description, Shapes::ShapeRef.new(shape: CreateCollectionGroupRequestDescriptionString, location_name: "description"))
+    CreateCollectionGroupRequest.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    CreateCollectionGroupRequest.add_member(:capacity_limits, Shapes::ShapeRef.new(shape: CollectionGroupCapacityLimits, location_name: "capacityLimits"))
+    CreateCollectionGroupRequest.add_member(:generation, Shapes::ShapeRef.new(shape: ServerlessGeneration, location_name: "generation"))
+    CreateCollectionGroupRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    CreateCollectionGroupRequest.struct_class = Types::CreateCollectionGroupRequest
+
+    CreateCollectionGroupResponse.add_member(:create_collection_group_detail, Shapes::ShapeRef.new(shape: CreateCollectionGroupDetail, location_name: "createCollectionGroupDetail"))
+    CreateCollectionGroupResponse.struct_class = Types::CreateCollectionGroupResponse
 
     CreateCollectionRequest.add_member(:name, Shapes::ShapeRef.new(shape: CollectionName, required: true, location_name: "name"))
     CreateCollectionRequest.add_member(:type, Shapes::ShapeRef.new(shape: CollectionType, location_name: "type"))
     CreateCollectionRequest.add_member(:description, Shapes::ShapeRef.new(shape: CreateCollectionRequestDescriptionString, location_name: "description"))
     CreateCollectionRequest.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
     CreateCollectionRequest.add_member(:standby_replicas, Shapes::ShapeRef.new(shape: StandbyReplicas, location_name: "standbyReplicas"))
-    CreateCollectionRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateCollectionRequest.add_member(:vector_options, Shapes::ShapeRef.new(shape: VectorOptions, location_name: "vectorOptions"))
+    CreateCollectionRequest.add_member(:collection_group_name, Shapes::ShapeRef.new(shape: CollectionGroupName, location_name: "collectionGroupName"))
+    CreateCollectionRequest.add_member(:encryption_config, Shapes::ShapeRef.new(shape: EncryptionConfig, location_name: "encryptionConfig"))
+    CreateCollectionRequest.add_member(:deletion_protection, Shapes::ShapeRef.new(shape: DeletionProtection, location_name: "deletionProtection"))
+    CreateCollectionRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateCollectionRequest.struct_class = Types::CreateCollectionRequest
 
     CreateCollectionResponse.add_member(:create_collection_detail, Shapes::ShapeRef.new(shape: CreateCollectionDetail, location_name: "createCollectionDetail"))
@@ -353,11 +501,18 @@ module Aws::OpenSearchServerless
     CreateIamIdentityCenterConfigOptions.add_member(:group_attribute, Shapes::ShapeRef.new(shape: IamIdentityCenterGroupAttribute, location_name: "groupAttribute"))
     CreateIamIdentityCenterConfigOptions.struct_class = Types::CreateIamIdentityCenterConfigOptions
 
+    CreateIndexRequest.add_member(:id, Shapes::ShapeRef.new(shape: CollectionId, required: true, location_name: "id"))
+    CreateIndexRequest.add_member(:index_name, Shapes::ShapeRef.new(shape: IndexName, required: true, location_name: "indexName"))
+    CreateIndexRequest.add_member(:index_schema, Shapes::ShapeRef.new(shape: IndexSchema, location_name: "indexSchema"))
+    CreateIndexRequest.struct_class = Types::CreateIndexRequest
+
+    CreateIndexResponse.struct_class = Types::CreateIndexResponse
+
     CreateLifecyclePolicyRequest.add_member(:type, Shapes::ShapeRef.new(shape: LifecyclePolicyType, required: true, location_name: "type"))
     CreateLifecyclePolicyRequest.add_member(:name, Shapes::ShapeRef.new(shape: PolicyName, required: true, location_name: "name"))
     CreateLifecyclePolicyRequest.add_member(:description, Shapes::ShapeRef.new(shape: PolicyDescription, location_name: "description"))
     CreateLifecyclePolicyRequest.add_member(:policy, Shapes::ShapeRef.new(shape: PolicyDocument, required: true, location_name: "policy"))
-    CreateLifecyclePolicyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateLifecyclePolicyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateLifecyclePolicyRequest.struct_class = Types::CreateLifecyclePolicyRequest
 
     CreateLifecyclePolicyResponse.add_member(:lifecycle_policy_detail, Shapes::ShapeRef.new(shape: LifecyclePolicyDetail, location_name: "lifecyclePolicyDetail"))
@@ -368,7 +523,8 @@ module Aws::OpenSearchServerless
     CreateSecurityConfigRequest.add_member(:description, Shapes::ShapeRef.new(shape: ConfigDescription, location_name: "description"))
     CreateSecurityConfigRequest.add_member(:saml_options, Shapes::ShapeRef.new(shape: SamlConfigOptions, location_name: "samlOptions"))
     CreateSecurityConfigRequest.add_member(:iam_identity_center_options, Shapes::ShapeRef.new(shape: CreateIamIdentityCenterConfigOptions, location_name: "iamIdentityCenterOptions"))
-    CreateSecurityConfigRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateSecurityConfigRequest.add_member(:iam_federation_options, Shapes::ShapeRef.new(shape: IamFederationConfigOptions, location_name: "iamFederationOptions"))
+    CreateSecurityConfigRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateSecurityConfigRequest.struct_class = Types::CreateSecurityConfigRequest
 
     CreateSecurityConfigResponse.add_member(:security_config_detail, Shapes::ShapeRef.new(shape: SecurityConfigDetail, location_name: "securityConfigDetail"))
@@ -378,7 +534,7 @@ module Aws::OpenSearchServerless
     CreateSecurityPolicyRequest.add_member(:name, Shapes::ShapeRef.new(shape: PolicyName, required: true, location_name: "name"))
     CreateSecurityPolicyRequest.add_member(:description, Shapes::ShapeRef.new(shape: PolicyDescription, location_name: "description"))
     CreateSecurityPolicyRequest.add_member(:policy, Shapes::ShapeRef.new(shape: PolicyDocument, required: true, location_name: "policy"))
-    CreateSecurityPolicyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateSecurityPolicyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateSecurityPolicyRequest.struct_class = Types::CreateSecurityPolicyRequest
 
     CreateSecurityPolicyResponse.add_member(:security_policy_detail, Shapes::ShapeRef.new(shape: SecurityPolicyDetail, location_name: "securityPolicyDetail"))
@@ -393,15 +549,19 @@ module Aws::OpenSearchServerless
     CreateVpcEndpointRequest.add_member(:vpc_id, Shapes::ShapeRef.new(shape: VpcId, required: true, location_name: "vpcId"))
     CreateVpcEndpointRequest.add_member(:subnet_ids, Shapes::ShapeRef.new(shape: SubnetIds, required: true, location_name: "subnetIds"))
     CreateVpcEndpointRequest.add_member(:security_group_ids, Shapes::ShapeRef.new(shape: SecurityGroupIds, location_name: "securityGroupIds"))
-    CreateVpcEndpointRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    CreateVpcEndpointRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     CreateVpcEndpointRequest.struct_class = Types::CreateVpcEndpointRequest
 
     CreateVpcEndpointResponse.add_member(:create_vpc_endpoint_detail, Shapes::ShapeRef.new(shape: CreateVpcEndpointDetail, location_name: "createVpcEndpointDetail"))
     CreateVpcEndpointResponse.struct_class = Types::CreateVpcEndpointResponse
 
+    CurrentCapacity.add_member(:search, Shapes::ShapeRef.new(shape: CapacityDetails, location_name: "search"))
+    CurrentCapacity.add_member(:indexing, Shapes::ShapeRef.new(shape: CapacityDetails, location_name: "indexing"))
+    CurrentCapacity.struct_class = Types::CurrentCapacity
+
     DeleteAccessPolicyRequest.add_member(:type, Shapes::ShapeRef.new(shape: AccessPolicyType, required: true, location_name: "type"))
     DeleteAccessPolicyRequest.add_member(:name, Shapes::ShapeRef.new(shape: PolicyName, required: true, location_name: "name"))
-    DeleteAccessPolicyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    DeleteAccessPolicyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     DeleteAccessPolicyRequest.struct_class = Types::DeleteAccessPolicyRequest
 
     DeleteAccessPolicyResponse.struct_class = Types::DeleteAccessPolicyResponse
@@ -409,31 +569,44 @@ module Aws::OpenSearchServerless
     DeleteCollectionDetail.add_member(:id, Shapes::ShapeRef.new(shape: CollectionId, location_name: "id"))
     DeleteCollectionDetail.add_member(:name, Shapes::ShapeRef.new(shape: CollectionName, location_name: "name"))
     DeleteCollectionDetail.add_member(:status, Shapes::ShapeRef.new(shape: CollectionStatus, location_name: "status"))
+    DeleteCollectionDetail.add_member(:deletion_protection, Shapes::ShapeRef.new(shape: DeletionProtection, location_name: "deletionProtection"))
     DeleteCollectionDetail.struct_class = Types::DeleteCollectionDetail
 
+    DeleteCollectionGroupRequest.add_member(:id, Shapes::ShapeRef.new(shape: CollectionGroupId, required: true, location_name: "id"))
+    DeleteCollectionGroupRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    DeleteCollectionGroupRequest.struct_class = Types::DeleteCollectionGroupRequest
+
+    DeleteCollectionGroupResponse.struct_class = Types::DeleteCollectionGroupResponse
+
     DeleteCollectionRequest.add_member(:id, Shapes::ShapeRef.new(shape: CollectionId, required: true, location_name: "id"))
-    DeleteCollectionRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    DeleteCollectionRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     DeleteCollectionRequest.struct_class = Types::DeleteCollectionRequest
 
     DeleteCollectionResponse.add_member(:delete_collection_detail, Shapes::ShapeRef.new(shape: DeleteCollectionDetail, location_name: "deleteCollectionDetail"))
     DeleteCollectionResponse.struct_class = Types::DeleteCollectionResponse
 
+    DeleteIndexRequest.add_member(:id, Shapes::ShapeRef.new(shape: CollectionId, required: true, location_name: "id"))
+    DeleteIndexRequest.add_member(:index_name, Shapes::ShapeRef.new(shape: IndexName, required: true, location_name: "indexName"))
+    DeleteIndexRequest.struct_class = Types::DeleteIndexRequest
+
+    DeleteIndexResponse.struct_class = Types::DeleteIndexResponse
+
     DeleteLifecyclePolicyRequest.add_member(:type, Shapes::ShapeRef.new(shape: LifecyclePolicyType, required: true, location_name: "type"))
     DeleteLifecyclePolicyRequest.add_member(:name, Shapes::ShapeRef.new(shape: PolicyName, required: true, location_name: "name"))
-    DeleteLifecyclePolicyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    DeleteLifecyclePolicyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     DeleteLifecyclePolicyRequest.struct_class = Types::DeleteLifecyclePolicyRequest
 
     DeleteLifecyclePolicyResponse.struct_class = Types::DeleteLifecyclePolicyResponse
 
     DeleteSecurityConfigRequest.add_member(:id, Shapes::ShapeRef.new(shape: SecurityConfigId, required: true, location_name: "id"))
-    DeleteSecurityConfigRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    DeleteSecurityConfigRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     DeleteSecurityConfigRequest.struct_class = Types::DeleteSecurityConfigRequest
 
     DeleteSecurityConfigResponse.struct_class = Types::DeleteSecurityConfigResponse
 
     DeleteSecurityPolicyRequest.add_member(:type, Shapes::ShapeRef.new(shape: SecurityPolicyType, required: true, location_name: "type"))
     DeleteSecurityPolicyRequest.add_member(:name, Shapes::ShapeRef.new(shape: PolicyName, required: true, location_name: "name"))
-    DeleteSecurityPolicyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    DeleteSecurityPolicyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     DeleteSecurityPolicyRequest.struct_class = Types::DeleteSecurityPolicyRequest
 
     DeleteSecurityPolicyResponse.struct_class = Types::DeleteSecurityPolicyResponse
@@ -444,7 +617,7 @@ module Aws::OpenSearchServerless
     DeleteVpcEndpointDetail.struct_class = Types::DeleteVpcEndpointDetail
 
     DeleteVpcEndpointRequest.add_member(:id, Shapes::ShapeRef.new(shape: VpcEndpointId, required: true, location_name: "id"))
-    DeleteVpcEndpointRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    DeleteVpcEndpointRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     DeleteVpcEndpointRequest.struct_class = Types::DeleteVpcEndpointRequest
 
     DeleteVpcEndpointResponse.add_member(:delete_vpc_endpoint_detail, Shapes::ShapeRef.new(shape: DeleteVpcEndpointDetail, location_name: "deleteVpcEndpointDetail"))
@@ -468,6 +641,14 @@ module Aws::OpenSearchServerless
 
     EffectiveLifecyclePolicyErrorDetails.member = Shapes::ShapeRef.new(shape: EffectiveLifecyclePolicyErrorDetail)
 
+    EncryptionConfig.add_member(:a_ws_owned_key, Shapes::ShapeRef.new(shape: Boolean, location_name: "aWSOwnedKey"))
+    EncryptionConfig.add_member(:kms_key_arn, Shapes::ShapeRef.new(shape: EncryptionConfigKmsKeyArnString, location_name: "kmsKeyArn"))
+    EncryptionConfig.struct_class = Types::EncryptionConfig
+
+    FipsEndpoints.add_member(:collection_endpoint, Shapes::ShapeRef.new(shape: String, location_name: "collectionEndpoint"))
+    FipsEndpoints.add_member(:dashboard_endpoint, Shapes::ShapeRef.new(shape: String, location_name: "dashboardEndpoint"))
+    FipsEndpoints.struct_class = Types::FipsEndpoints
+
     GetAccessPolicyRequest.add_member(:type, Shapes::ShapeRef.new(shape: AccessPolicyType, required: true, location_name: "type"))
     GetAccessPolicyRequest.add_member(:name, Shapes::ShapeRef.new(shape: PolicyName, required: true, location_name: "name"))
     GetAccessPolicyRequest.struct_class = Types::GetAccessPolicyRequest
@@ -479,6 +660,13 @@ module Aws::OpenSearchServerless
 
     GetAccountSettingsResponse.add_member(:account_settings_detail, Shapes::ShapeRef.new(shape: AccountSettingsDetail, location_name: "accountSettingsDetail"))
     GetAccountSettingsResponse.struct_class = Types::GetAccountSettingsResponse
+
+    GetIndexRequest.add_member(:id, Shapes::ShapeRef.new(shape: CollectionId, required: true, location_name: "id"))
+    GetIndexRequest.add_member(:index_name, Shapes::ShapeRef.new(shape: IndexName, required: true, location_name: "indexName"))
+    GetIndexRequest.struct_class = Types::GetIndexRequest
+
+    GetIndexResponse.add_member(:index_schema, Shapes::ShapeRef.new(shape: IndexSchema, location_name: "indexSchema"))
+    GetIndexResponse.struct_class = Types::GetIndexResponse
 
     GetPoliciesStatsRequest.struct_class = Types::GetPoliciesStatsRequest
 
@@ -501,6 +689,10 @@ module Aws::OpenSearchServerless
 
     GetSecurityPolicyResponse.add_member(:security_policy_detail, Shapes::ShapeRef.new(shape: SecurityPolicyDetail, location_name: "securityPolicyDetail"))
     GetSecurityPolicyResponse.struct_class = Types::GetSecurityPolicyResponse
+
+    IamFederationConfigOptions.add_member(:group_attribute, Shapes::ShapeRef.new(shape: iamFederationGroupAttribute, location_name: "groupAttribute"))
+    IamFederationConfigOptions.add_member(:user_attribute, Shapes::ShapeRef.new(shape: iamFederationUserAttribute, location_name: "userAttribute"))
+    IamFederationConfigOptions.struct_class = Types::IamFederationConfigOptions
 
     IamIdentityCenterConfigOptions.add_member(:instance_arn, Shapes::ShapeRef.new(shape: IamIdentityCenterInstanceArn, location_name: "instanceArn"))
     IamIdentityCenterConfigOptions.add_member(:application_arn, Shapes::ShapeRef.new(shape: IamIdentityCenterApplicationArn, location_name: "applicationArn"))
@@ -568,6 +760,14 @@ module Aws::OpenSearchServerless
     ListAccessPoliciesResponse.add_member(:access_policy_summaries, Shapes::ShapeRef.new(shape: AccessPolicySummaries, location_name: "accessPolicySummaries"))
     ListAccessPoliciesResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: String, location_name: "nextToken"))
     ListAccessPoliciesResponse.struct_class = Types::ListAccessPoliciesResponse
+
+    ListCollectionGroupsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: String, location_name: "nextToken"))
+    ListCollectionGroupsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: ListCollectionGroupsRequestMaxResultsInteger, location_name: "maxResults"))
+    ListCollectionGroupsRequest.struct_class = Types::ListCollectionGroupsRequest
+
+    ListCollectionGroupsResponse.add_member(:collection_group_summaries, Shapes::ShapeRef.new(shape: CollectionGroupSummaries, location_name: "collectionGroupSummaries"))
+    ListCollectionGroupsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: String, location_name: "nextToken"))
+    ListCollectionGroupsResponse.struct_class = Types::ListCollectionGroupsResponse
 
     ListCollectionsRequest.add_member(:collection_filters, Shapes::ShapeRef.new(shape: CollectionFilters, location_name: "collectionFilters"))
     ListCollectionsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: String, location_name: "nextToken"))
@@ -645,6 +845,7 @@ module Aws::OpenSearchServerless
     SecurityConfigDetail.add_member(:description, Shapes::ShapeRef.new(shape: ConfigDescription, location_name: "description"))
     SecurityConfigDetail.add_member(:saml_options, Shapes::ShapeRef.new(shape: SamlConfigOptions, location_name: "samlOptions"))
     SecurityConfigDetail.add_member(:iam_identity_center_options, Shapes::ShapeRef.new(shape: IamIdentityCenterConfigOptions, location_name: "iamIdentityCenterOptions"))
+    SecurityConfigDetail.add_member(:iam_federation_options, Shapes::ShapeRef.new(shape: IamFederationConfigOptions, location_name: "iamFederationOptions"))
     SecurityConfigDetail.add_member(:created_date, Shapes::ShapeRef.new(shape: Long, location_name: "createdDate"))
     SecurityConfigDetail.add_member(:last_modified_date, Shapes::ShapeRef.new(shape: Long, location_name: "lastModifiedDate"))
     SecurityConfigDetail.struct_class = Types::SecurityConfigDetail
@@ -721,7 +922,7 @@ module Aws::OpenSearchServerless
     UpdateAccessPolicyRequest.add_member(:policy_version, Shapes::ShapeRef.new(shape: PolicyVersion, required: true, location_name: "policyVersion"))
     UpdateAccessPolicyRequest.add_member(:description, Shapes::ShapeRef.new(shape: PolicyDescription, location_name: "description"))
     UpdateAccessPolicyRequest.add_member(:policy, Shapes::ShapeRef.new(shape: PolicyDocument, location_name: "policy"))
-    UpdateAccessPolicyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    UpdateAccessPolicyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     UpdateAccessPolicyRequest.struct_class = Types::UpdateAccessPolicyRequest
 
     UpdateAccessPolicyResponse.add_member(:access_policy_detail, Shapes::ShapeRef.new(shape: AccessPolicyDetail, location_name: "accessPolicyDetail"))
@@ -738,14 +939,37 @@ module Aws::OpenSearchServerless
     UpdateCollectionDetail.add_member(:status, Shapes::ShapeRef.new(shape: CollectionStatus, location_name: "status"))
     UpdateCollectionDetail.add_member(:type, Shapes::ShapeRef.new(shape: CollectionType, location_name: "type"))
     UpdateCollectionDetail.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
+    UpdateCollectionDetail.add_member(:vector_options, Shapes::ShapeRef.new(shape: VectorOptions, location_name: "vectorOptions"))
     UpdateCollectionDetail.add_member(:arn, Shapes::ShapeRef.new(shape: String, location_name: "arn"))
     UpdateCollectionDetail.add_member(:created_date, Shapes::ShapeRef.new(shape: Long, location_name: "createdDate"))
     UpdateCollectionDetail.add_member(:last_modified_date, Shapes::ShapeRef.new(shape: Long, location_name: "lastModifiedDate"))
+    UpdateCollectionDetail.add_member(:deletion_protection, Shapes::ShapeRef.new(shape: DeletionProtection, location_name: "deletionProtection"))
     UpdateCollectionDetail.struct_class = Types::UpdateCollectionDetail
+
+    UpdateCollectionGroupDetail.add_member(:id, Shapes::ShapeRef.new(shape: CollectionGroupId, location_name: "id"))
+    UpdateCollectionGroupDetail.add_member(:arn, Shapes::ShapeRef.new(shape: String, location_name: "arn"))
+    UpdateCollectionGroupDetail.add_member(:name, Shapes::ShapeRef.new(shape: CollectionGroupName, location_name: "name"))
+    UpdateCollectionGroupDetail.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "description"))
+    UpdateCollectionGroupDetail.add_member(:capacity_limits, Shapes::ShapeRef.new(shape: CollectionGroupCapacityLimits, location_name: "capacityLimits"))
+    UpdateCollectionGroupDetail.add_member(:created_date, Shapes::ShapeRef.new(shape: Long, location_name: "createdDate"))
+    UpdateCollectionGroupDetail.add_member(:last_modified_date, Shapes::ShapeRef.new(shape: Long, location_name: "lastModifiedDate"))
+    UpdateCollectionGroupDetail.add_member(:generation, Shapes::ShapeRef.new(shape: ServerlessGeneration, location_name: "generation"))
+    UpdateCollectionGroupDetail.struct_class = Types::UpdateCollectionGroupDetail
+
+    UpdateCollectionGroupRequest.add_member(:id, Shapes::ShapeRef.new(shape: CollectionGroupId, required: true, location_name: "id"))
+    UpdateCollectionGroupRequest.add_member(:description, Shapes::ShapeRef.new(shape: UpdateCollectionGroupRequestDescriptionString, location_name: "description"))
+    UpdateCollectionGroupRequest.add_member(:capacity_limits, Shapes::ShapeRef.new(shape: CollectionGroupCapacityLimits, location_name: "capacityLimits"))
+    UpdateCollectionGroupRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    UpdateCollectionGroupRequest.struct_class = Types::UpdateCollectionGroupRequest
+
+    UpdateCollectionGroupResponse.add_member(:update_collection_group_detail, Shapes::ShapeRef.new(shape: UpdateCollectionGroupDetail, location_name: "updateCollectionGroupDetail"))
+    UpdateCollectionGroupResponse.struct_class = Types::UpdateCollectionGroupResponse
 
     UpdateCollectionRequest.add_member(:id, Shapes::ShapeRef.new(shape: CollectionId, required: true, location_name: "id"))
     UpdateCollectionRequest.add_member(:description, Shapes::ShapeRef.new(shape: UpdateCollectionRequestDescriptionString, location_name: "description"))
-    UpdateCollectionRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    UpdateCollectionRequest.add_member(:vector_options, Shapes::ShapeRef.new(shape: VectorOptions, location_name: "vectorOptions"))
+    UpdateCollectionRequest.add_member(:deletion_protection, Shapes::ShapeRef.new(shape: DeletionProtection, location_name: "deletionProtection"))
+    UpdateCollectionRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     UpdateCollectionRequest.struct_class = Types::UpdateCollectionRequest
 
     UpdateCollectionResponse.add_member(:update_collection_detail, Shapes::ShapeRef.new(shape: UpdateCollectionDetail, location_name: "updateCollectionDetail"))
@@ -755,12 +979,19 @@ module Aws::OpenSearchServerless
     UpdateIamIdentityCenterConfigOptions.add_member(:group_attribute, Shapes::ShapeRef.new(shape: IamIdentityCenterGroupAttribute, location_name: "groupAttribute"))
     UpdateIamIdentityCenterConfigOptions.struct_class = Types::UpdateIamIdentityCenterConfigOptions
 
+    UpdateIndexRequest.add_member(:id, Shapes::ShapeRef.new(shape: CollectionId, required: true, location_name: "id"))
+    UpdateIndexRequest.add_member(:index_name, Shapes::ShapeRef.new(shape: IndexName, required: true, location_name: "indexName"))
+    UpdateIndexRequest.add_member(:index_schema, Shapes::ShapeRef.new(shape: IndexSchema, location_name: "indexSchema"))
+    UpdateIndexRequest.struct_class = Types::UpdateIndexRequest
+
+    UpdateIndexResponse.struct_class = Types::UpdateIndexResponse
+
     UpdateLifecyclePolicyRequest.add_member(:type, Shapes::ShapeRef.new(shape: LifecyclePolicyType, required: true, location_name: "type"))
     UpdateLifecyclePolicyRequest.add_member(:name, Shapes::ShapeRef.new(shape: PolicyName, required: true, location_name: "name"))
     UpdateLifecyclePolicyRequest.add_member(:policy_version, Shapes::ShapeRef.new(shape: PolicyVersion, required: true, location_name: "policyVersion"))
     UpdateLifecyclePolicyRequest.add_member(:description, Shapes::ShapeRef.new(shape: PolicyDescription, location_name: "description"))
     UpdateLifecyclePolicyRequest.add_member(:policy, Shapes::ShapeRef.new(shape: PolicyDocument, location_name: "policy"))
-    UpdateLifecyclePolicyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    UpdateLifecyclePolicyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     UpdateLifecyclePolicyRequest.struct_class = Types::UpdateLifecyclePolicyRequest
 
     UpdateLifecyclePolicyResponse.add_member(:lifecycle_policy_detail, Shapes::ShapeRef.new(shape: LifecyclePolicyDetail, location_name: "lifecyclePolicyDetail"))
@@ -771,7 +1002,8 @@ module Aws::OpenSearchServerless
     UpdateSecurityConfigRequest.add_member(:description, Shapes::ShapeRef.new(shape: ConfigDescription, location_name: "description"))
     UpdateSecurityConfigRequest.add_member(:saml_options, Shapes::ShapeRef.new(shape: SamlConfigOptions, location_name: "samlOptions"))
     UpdateSecurityConfigRequest.add_member(:iam_identity_center_options_updates, Shapes::ShapeRef.new(shape: UpdateIamIdentityCenterConfigOptions, location_name: "iamIdentityCenterOptionsUpdates"))
-    UpdateSecurityConfigRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    UpdateSecurityConfigRequest.add_member(:iam_federation_options, Shapes::ShapeRef.new(shape: IamFederationConfigOptions, location_name: "iamFederationOptions"))
+    UpdateSecurityConfigRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     UpdateSecurityConfigRequest.struct_class = Types::UpdateSecurityConfigRequest
 
     UpdateSecurityConfigResponse.add_member(:security_config_detail, Shapes::ShapeRef.new(shape: SecurityConfigDetail, location_name: "securityConfigDetail"))
@@ -782,7 +1014,7 @@ module Aws::OpenSearchServerless
     UpdateSecurityPolicyRequest.add_member(:policy_version, Shapes::ShapeRef.new(shape: PolicyVersion, required: true, location_name: "policyVersion"))
     UpdateSecurityPolicyRequest.add_member(:description, Shapes::ShapeRef.new(shape: PolicyDescription, location_name: "description"))
     UpdateSecurityPolicyRequest.add_member(:policy, Shapes::ShapeRef.new(shape: PolicyDocument, location_name: "policy"))
-    UpdateSecurityPolicyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    UpdateSecurityPolicyRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     UpdateSecurityPolicyRequest.struct_class = Types::UpdateSecurityPolicyRequest
 
     UpdateSecurityPolicyResponse.add_member(:security_policy_detail, Shapes::ShapeRef.new(shape: SecurityPolicyDetail, location_name: "securityPolicyDetail"))
@@ -801,7 +1033,7 @@ module Aws::OpenSearchServerless
     UpdateVpcEndpointRequest.add_member(:remove_subnet_ids, Shapes::ShapeRef.new(shape: SubnetIds, location_name: "removeSubnetIds"))
     UpdateVpcEndpointRequest.add_member(:add_security_group_ids, Shapes::ShapeRef.new(shape: SecurityGroupIds, location_name: "addSecurityGroupIds"))
     UpdateVpcEndpointRequest.add_member(:remove_security_group_ids, Shapes::ShapeRef.new(shape: SecurityGroupIds, location_name: "removeSecurityGroupIds"))
-    UpdateVpcEndpointRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
+    UpdateVpcEndpointRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientToken, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
     UpdateVpcEndpointRequest.struct_class = Types::UpdateVpcEndpointRequest
 
     UpdateVpcEndpointResponse.add_member(:update_vpc_endpoint_detail, Shapes::ShapeRef.new(shape: UpdateVpcEndpointDetail, location_name: "UpdateVpcEndpointDetail"))
@@ -809,6 +1041,9 @@ module Aws::OpenSearchServerless
 
     ValidationException.add_member(:message, Shapes::ShapeRef.new(shape: String, location_name: "message"))
     ValidationException.struct_class = Types::ValidationException
+
+    VectorOptions.add_member(:serverless_vector_acceleration, Shapes::ShapeRef.new(shape: ServerlessVectorAccelerationStatus, required: true, location_name: "ServerlessVectorAcceleration"))
+    VectorOptions.struct_class = Types::VectorOptions
 
     VpcEndpointDetail.add_member(:id, Shapes::ShapeRef.new(shape: VpcEndpointId, location_name: "id"))
     VpcEndpointDetail.add_member(:name, Shapes::ShapeRef.new(shape: VpcEndpointName, location_name: "name"))
@@ -873,6 +1108,16 @@ module Aws::OpenSearchServerless
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
       end)
 
+      api.add_operation(:batch_get_collection_group, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "BatchGetCollectionGroup"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: BatchGetCollectionGroupRequest)
+        o.output = Shapes::ShapeRef.new(shape: BatchGetCollectionGroupResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+      end)
+
       api.add_operation(:batch_get_effective_lifecycle_policy, Seahorse::Model::Operation.new.tap do |o|
         o.name = "BatchGetEffectiveLifecyclePolicy"
         o.http_method = "POST"
@@ -921,11 +1166,35 @@ module Aws::OpenSearchServerless
         o.http_request_uri = "/"
         o.input = Shapes::ShapeRef.new(shape: CreateCollectionRequest)
         o.output = Shapes::ShapeRef.new(shape: CreateCollectionResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o.errors << Shapes::ShapeRef.new(shape: OcuLimitExceededException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+      end)
+
+      api.add_operation(:create_collection_group, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CreateCollectionGroup"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: CreateCollectionGroupRequest)
+        o.output = Shapes::ShapeRef.new(shape: CreateCollectionGroupResponse)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+      end)
+
+      api.add_operation(:create_index, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "CreateIndex"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: CreateIndexRequest)
+        o.output = Shapes::ShapeRef.new(shape: CreateIndexResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
       end)
 
       api.add_operation(:create_lifecycle_policy, Seahorse::Model::Operation.new.tap do |o|
@@ -983,8 +1252,8 @@ module Aws::OpenSearchServerless
         o.input = Shapes::ShapeRef.new(shape: DeleteAccessPolicyRequest)
         o.output = Shapes::ShapeRef.new(shape: DeleteAccessPolicyResponse)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
       end)
 
@@ -995,8 +1264,31 @@ module Aws::OpenSearchServerless
         o.input = Shapes::ShapeRef.new(shape: DeleteCollectionRequest)
         o.output = Shapes::ShapeRef.new(shape: DeleteCollectionResponse)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+      end)
+
+      api.add_operation(:delete_collection_group, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeleteCollectionGroup"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: DeleteCollectionGroupRequest)
+        o.output = Shapes::ShapeRef.new(shape: DeleteCollectionGroupResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+      end)
+
+      api.add_operation(:delete_index, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeleteIndex"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: DeleteIndexRequest)
+        o.output = Shapes::ShapeRef.new(shape: DeleteIndexResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
       end)
 
@@ -1007,8 +1299,8 @@ module Aws::OpenSearchServerless
         o.input = Shapes::ShapeRef.new(shape: DeleteLifecyclePolicyRequest)
         o.output = Shapes::ShapeRef.new(shape: DeleteLifecyclePolicyResponse)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
       end)
 
@@ -1019,8 +1311,8 @@ module Aws::OpenSearchServerless
         o.input = Shapes::ShapeRef.new(shape: DeleteSecurityConfigRequest)
         o.output = Shapes::ShapeRef.new(shape: DeleteSecurityConfigResponse)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
       end)
 
@@ -1031,8 +1323,8 @@ module Aws::OpenSearchServerless
         o.input = Shapes::ShapeRef.new(shape: DeleteSecurityPolicyRequest)
         o.output = Shapes::ShapeRef.new(shape: DeleteSecurityPolicyResponse)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
       end)
 
@@ -1043,8 +1335,8 @@ module Aws::OpenSearchServerless
         o.input = Shapes::ShapeRef.new(shape: DeleteVpcEndpointRequest)
         o.output = Shapes::ShapeRef.new(shape: DeleteVpcEndpointResponse)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
       end)
 
@@ -1066,6 +1358,17 @@ module Aws::OpenSearchServerless
         o.input = Shapes::ShapeRef.new(shape: GetAccountSettingsRequest)
         o.output = Shapes::ShapeRef.new(shape: GetAccountSettingsResponse)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+      end)
+
+      api.add_operation(:get_index, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "GetIndex"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: GetIndexRequest)
+        o.output = Shapes::ShapeRef.new(shape: GetIndexResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
       end)
 
@@ -1106,6 +1409,22 @@ module Aws::OpenSearchServerless
         o.http_request_uri = "/"
         o.input = Shapes::ShapeRef.new(shape: ListAccessPoliciesRequest)
         o.output = Shapes::ShapeRef.new(shape: ListAccessPoliciesResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
+      end)
+
+      api.add_operation(:list_collection_groups, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "ListCollectionGroups"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: ListCollectionGroupsRequest)
+        o.output = Shapes::ShapeRef.new(shape: ListCollectionGroupsResponse)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o[:pager] = Aws::Pager.new(
@@ -1214,8 +1533,8 @@ module Aws::OpenSearchServerless
         o.input = Shapes::ShapeRef.new(shape: TagResourceRequest)
         o.output = Shapes::ShapeRef.new(shape: TagResourceResponse)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
       end)
@@ -1227,8 +1546,8 @@ module Aws::OpenSearchServerless
         o.input = Shapes::ShapeRef.new(shape: UntagResourceRequest)
         o.output = Shapes::ShapeRef.new(shape: UntagResourceResponse)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
       end)
 
@@ -1239,8 +1558,8 @@ module Aws::OpenSearchServerless
         o.input = Shapes::ShapeRef.new(shape: UpdateAccessPolicyRequest)
         o.output = Shapes::ShapeRef.new(shape: UpdateAccessPolicyResponse)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
       end)
 
@@ -1252,6 +1571,7 @@ module Aws::OpenSearchServerless
         o.output = Shapes::ShapeRef.new(shape: UpdateAccountSettingsResponse)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
       end)
 
       api.add_operation(:update_collection, Seahorse::Model::Operation.new.tap do |o|
@@ -1265,6 +1585,29 @@ module Aws::OpenSearchServerless
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
       end)
 
+      api.add_operation(:update_collection_group, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "UpdateCollectionGroup"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: UpdateCollectionGroupRequest)
+        o.output = Shapes::ShapeRef.new(shape: UpdateCollectionGroupResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+      end)
+
+      api.add_operation(:update_index, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "UpdateIndex"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: UpdateIndexRequest)
+        o.output = Shapes::ShapeRef.new(shape: UpdateIndexResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+      end)
+
       api.add_operation(:update_lifecycle_policy, Seahorse::Model::Operation.new.tap do |o|
         o.name = "UpdateLifecyclePolicy"
         o.http_method = "POST"
@@ -1272,8 +1615,8 @@ module Aws::OpenSearchServerless
         o.input = Shapes::ShapeRef.new(shape: UpdateLifecyclePolicyRequest)
         o.output = Shapes::ShapeRef.new(shape: UpdateLifecyclePolicyResponse)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
       end)
@@ -1285,8 +1628,8 @@ module Aws::OpenSearchServerless
         o.input = Shapes::ShapeRef.new(shape: UpdateSecurityConfigRequest)
         o.output = Shapes::ShapeRef.new(shape: UpdateSecurityConfigResponse)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
       end)
 
@@ -1297,8 +1640,8 @@ module Aws::OpenSearchServerless
         o.input = Shapes::ShapeRef.new(shape: UpdateSecurityPolicyRequest)
         o.output = Shapes::ShapeRef.new(shape: UpdateSecurityPolicyResponse)
         o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
-        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
       end)

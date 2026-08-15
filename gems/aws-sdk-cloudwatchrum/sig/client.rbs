@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -88,14 +89,7 @@ module Aws
                                                  destination: ("CloudWatch" | "Evidently"),
                                                  ?destination_arn: ::String,
                                                  metric_definitions: Array[
-                                                   {
-                                                     dimension_keys: Hash[::String, ::String]?,
-                                                     event_pattern: ::String?,
-                                                     name: ::String,
-                                                     namespace: ::String?,
-                                                     unit_label: ::String?,
-                                                     value_key: ::String?
-                                                   },
+                                                   Params::metric_definition_request
                                                  ]
                                                ) -> _BatchCreateRumMetricDefinitionsResponseSuccess
                                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchCreateRumMetricDefinitionsResponseSuccess
@@ -135,31 +129,22 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudWatchRUM/Client.html#create_app_monitor-instance_method
       def create_app_monitor: (
-                                ?app_monitor_configuration: {
-                                  allow_cookies: bool?,
-                                  enable_x_ray: bool?,
-                                  excluded_pages: Array[::String]?,
-                                  favorite_pages: Array[::String]?,
-                                  guest_role_arn: ::String?,
-                                  identity_pool_id: ::String?,
-                                  included_pages: Array[::String]?,
-                                  session_sample_rate: ::Float?,
-                                  telemetries: Array[("errors" | "performance" | "http")]?
-                                },
+                                name: ::String,
+                                ?domain: ::String,
+                                ?domain_list: Array[::String],
+                                ?tags: Hash[::String, ::String],
+                                ?app_monitor_configuration: Params::app_monitor_configuration,
+                                ?cw_log_enabled: bool,
                                 ?custom_events: {
                                   status: ("ENABLED" | "DISABLED")?
                                 },
-                                ?cw_log_enabled: bool,
                                 ?deobfuscation_configuration: {
                                   java_script_source_maps: {
-                                    s3_uri: ::String?,
-                                    status: ("ENABLED" | "DISABLED")
+                                    status: ("ENABLED" | "DISABLED"),
+                                    s3_uri: ::String?
                                   }?
                                 },
-                                ?domain: ::String,
-                                ?domain_list: Array[::String],
-                                name: ::String,
-                                ?tags: Hash[::String, ::String]
+                                ?platform: ("Web" | "Android" | "iOS")
                               ) -> _CreateAppMonitorResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateAppMonitorResponseSuccess
 
@@ -211,19 +196,19 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudWatchRUM/Client.html#get_app_monitor_data-instance_method
       def get_app_monitor_data: (
+                                  name: ::String,
+                                  time_range: {
+                                    after: ::Integer,
+                                    before: ::Integer?
+                                  },
                                   ?filters: Array[
                                     {
                                       name: ::String?,
                                       values: Array[::String]?
-                                    },
+                                    }
                                   ],
                                   ?max_results: ::Integer,
-                                  name: ::String,
-                                  ?next_token: ::String,
-                                  time_range: {
-                                    after: ::Integer,
-                                    before: ::Integer?
-                                  }
+                                  ?next_token: ::String
                                 ) -> _GetAppMonitorDataResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _GetAppMonitorDataResponseSuccess
 
@@ -240,8 +225,8 @@ module Aws
 
       interface _ListAppMonitorsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListAppMonitorsResponse]
-        def app_monitor_summaries: () -> ::Array[Types::AppMonitorSummary]
         def next_token: () -> ::String
+        def app_monitor_summaries: () -> ::Array[Types::AppMonitorSummary]
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudWatchRUM/Client.html#list_app_monitors-instance_method
       def list_app_monitors: (
@@ -292,27 +277,27 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudWatchRUM/Client.html#put_rum_events-instance_method
       def put_rum_events: (
-                            ?alias: ::String,
+                            id: ::String,
+                            batch_id: ::String,
                             app_monitor_details: {
-                              id: ::String?,
                               name: ::String?,
+                              id: ::String?,
                               version: ::String?
                             },
-                            batch_id: ::String,
-                            id: ::String,
+                            user_details: {
+                              user_id: ::String?,
+                              session_id: ::String?
+                            },
                             rum_events: Array[
                               {
-                                details: ::String,
                                 id: ::String,
-                                metadata: ::String?,
                                 timestamp: ::Time,
-                                type: ::String
-                              },
+                                type: ::String,
+                                metadata: ::String?,
+                                details: ::String
+                              }
                             ],
-                            user_details: {
-                              session_id: ::String?,
-                              user_id: ::String?
-                            }
+                            ?alias: ::String
                           ) -> _PutRumEventsResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _PutRumEventsResponseSuccess
 
@@ -353,30 +338,20 @@ module Aws
       end
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CloudWatchRUM/Client.html#update_app_monitor-instance_method
       def update_app_monitor: (
-                                ?app_monitor_configuration: {
-                                  allow_cookies: bool?,
-                                  enable_x_ray: bool?,
-                                  excluded_pages: Array[::String]?,
-                                  favorite_pages: Array[::String]?,
-                                  guest_role_arn: ::String?,
-                                  identity_pool_id: ::String?,
-                                  included_pages: Array[::String]?,
-                                  session_sample_rate: ::Float?,
-                                  telemetries: Array[("errors" | "performance" | "http")]?
-                                },
+                                name: ::String,
+                                ?domain: ::String,
+                                ?domain_list: Array[::String],
+                                ?app_monitor_configuration: Params::app_monitor_configuration,
+                                ?cw_log_enabled: bool,
                                 ?custom_events: {
                                   status: ("ENABLED" | "DISABLED")?
                                 },
-                                ?cw_log_enabled: bool,
                                 ?deobfuscation_configuration: {
                                   java_script_source_maps: {
-                                    s3_uri: ::String?,
-                                    status: ("ENABLED" | "DISABLED")
+                                    status: ("ENABLED" | "DISABLED"),
+                                    s3_uri: ::String?
                                   }?
-                                },
-                                ?domain: ::String,
-                                ?domain_list: Array[::String],
-                                name: ::String
+                                }
                               ) -> _UpdateAppMonitorResponseSuccess
                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateAppMonitorResponseSuccess
 
@@ -388,14 +363,7 @@ module Aws
                                           app_monitor_name: ::String,
                                           destination: ("CloudWatch" | "Evidently"),
                                           ?destination_arn: ::String,
-                                          metric_definition: {
-                                            dimension_keys: Hash[::String, ::String]?,
-                                            event_pattern: ::String?,
-                                            name: ::String,
-                                            namespace: ::String?,
-                                            unit_label: ::String?,
-                                            value_key: ::String?
-                                          },
+                                          metric_definition: Params::metric_definition_request,
                                           metric_definition_id: ::String
                                         ) -> _UpdateRumMetricDefinitionResponseSuccess
                                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateRumMetricDefinitionResponseSuccess

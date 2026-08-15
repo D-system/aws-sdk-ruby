@@ -32,6 +32,7 @@ module Aws::ConnectCases
     BatchGetCaseRuleResponse = Shapes::StructureShape.new(name: 'BatchGetCaseRuleResponse')
     BatchGetCaseRuleResponseCaseRulesList = Shapes::ListShape.new(name: 'BatchGetCaseRuleResponseCaseRulesList')
     BatchGetCaseRuleResponseErrorsList = Shapes::ListShape.new(name: 'BatchGetCaseRuleResponseErrorsList')
+    BatchGetCaseRuleResponseUnprocessedCaseRulesList = Shapes::ListShape.new(name: 'BatchGetCaseRuleResponseUnprocessedCaseRulesList')
     BatchGetFieldIdentifierList = Shapes::ListShape.new(name: 'BatchGetFieldIdentifierList')
     BatchGetFieldRequest = Shapes::StructureShape.new(name: 'BatchGetFieldRequest')
     BatchGetFieldResponse = Shapes::StructureShape.new(name: 'BatchGetFieldResponse')
@@ -67,7 +68,12 @@ module Aws::ConnectCases
     CommentBodyTextType = Shapes::StringShape.new(name: 'CommentBodyTextType')
     CommentContent = Shapes::StructureShape.new(name: 'CommentContent')
     CommentFilter = Shapes::StructureShape.new(name: 'CommentFilter')
+    CommentUpdateContent = Shapes::StructureShape.new(name: 'CommentUpdateContent')
+    CompoundCondition = Shapes::StructureShape.new(name: 'CompoundCondition')
     ConflictException = Shapes::StructureShape.new(name: 'ConflictException')
+    ConnectCaseContent = Shapes::StructureShape.new(name: 'ConnectCaseContent')
+    ConnectCaseFilter = Shapes::StructureShape.new(name: 'ConnectCaseFilter')
+    ConnectCaseInputContent = Shapes::StructureShape.new(name: 'ConnectCaseInputContent')
     ConnectedToSystemTime = Shapes::TimestampShape.new(name: 'ConnectedToSystemTime', timestampFormat: "iso8601")
     Contact = Shapes::StructureShape.new(name: 'Contact')
     ContactArn = Shapes::StringShape.new(name: 'ContactArn')
@@ -91,6 +97,18 @@ module Aws::ConnectCases
     CreateTemplateRequest = Shapes::StructureShape.new(name: 'CreateTemplateRequest')
     CreateTemplateResponse = Shapes::StructureShape.new(name: 'CreateTemplateResponse')
     CreatedTime = Shapes::TimestampShape.new(name: 'CreatedTime', timestampFormat: "iso8601")
+    CustomContent = Shapes::StructureShape.new(name: 'CustomContent')
+    CustomEntity = Shapes::StringShape.new(name: 'CustomEntity')
+    CustomFieldsFilter = Shapes::UnionShape.new(name: 'CustomFieldsFilter')
+    CustomFieldsFilterAndAllList = Shapes::ListShape.new(name: 'CustomFieldsFilterAndAllList')
+    CustomFieldsFilterOrAllList = Shapes::ListShape.new(name: 'CustomFieldsFilterOrAllList')
+    CustomFilter = Shapes::StructureShape.new(name: 'CustomFilter')
+    CustomInputContent = Shapes::StructureShape.new(name: 'CustomInputContent')
+    CustomInputContentFieldsList = Shapes::ListShape.new(name: 'CustomInputContentFieldsList')
+    CustomUpdateContent = Shapes::StructureShape.new(name: 'CustomUpdateContent')
+    CustomUpdateContentFieldsList = Shapes::ListShape.new(name: 'CustomUpdateContentFieldsList')
+    DeleteCaseRequest = Shapes::StructureShape.new(name: 'DeleteCaseRequest')
+    DeleteCaseResponse = Shapes::StructureShape.new(name: 'DeleteCaseResponse')
     DeleteCaseRuleRequest = Shapes::StructureShape.new(name: 'DeleteCaseRuleRequest')
     DeleteCaseRuleResponse = Shapes::StructureShape.new(name: 'DeleteCaseRuleResponse')
     DeleteDomainRequest = Shapes::StructureShape.new(name: 'DeleteDomainRequest')
@@ -99,6 +117,8 @@ module Aws::ConnectCases
     DeleteFieldResponse = Shapes::StructureShape.new(name: 'DeleteFieldResponse')
     DeleteLayoutRequest = Shapes::StructureShape.new(name: 'DeleteLayoutRequest')
     DeleteLayoutResponse = Shapes::StructureShape.new(name: 'DeleteLayoutResponse')
+    DeleteRelatedItemRequest = Shapes::StructureShape.new(name: 'DeleteRelatedItemRequest')
+    DeleteRelatedItemResponse = Shapes::StructureShape.new(name: 'DeleteRelatedItemResponse')
     DeleteTemplateRequest = Shapes::StructureShape.new(name: 'DeleteTemplateRequest')
     DeleteTemplateResponse = Shapes::StructureShape.new(name: 'DeleteTemplateResponse')
     Deleted = Shapes::BooleanShape.new(name: 'Deleted')
@@ -114,6 +134,7 @@ module Aws::ConnectCases
     EventBridgeConfiguration = Shapes::StructureShape.new(name: 'EventBridgeConfiguration')
     EventIncludedData = Shapes::StructureShape.new(name: 'EventIncludedData')
     FieldArn = Shapes::StringShape.new(name: 'FieldArn')
+    FieldAttributes = Shapes::UnionShape.new(name: 'FieldAttributes')
     FieldDescription = Shapes::StringShape.new(name: 'FieldDescription')
     FieldError = Shapes::StructureShape.new(name: 'FieldError')
     FieldFilter = Shapes::UnionShape.new(name: 'FieldFilter')
@@ -129,10 +150,12 @@ module Aws::ConnectCases
     FieldOptionError = Shapes::StructureShape.new(name: 'FieldOptionError')
     FieldOptionName = Shapes::StringShape.new(name: 'FieldOptionName')
     FieldOptionValue = Shapes::StringShape.new(name: 'FieldOptionValue')
+    FieldOptionsCaseRule = Shapes::StructureShape.new(name: 'FieldOptionsCaseRule')
     FieldOptionsList = Shapes::ListShape.new(name: 'FieldOptionsList')
     FieldSummary = Shapes::StructureShape.new(name: 'FieldSummary')
     FieldType = Shapes::StringShape.new(name: 'FieldType')
     FieldValue = Shapes::StructureShape.new(name: 'FieldValue')
+    FieldValueList = Shapes::ListShape.new(name: 'FieldValueList')
     FieldValueUnion = Shapes::UnionShape.new(name: 'FieldValueUnion')
     FieldValueUnionStringValueString = Shapes::StringShape.new(name: 'FieldValueUnionStringValueString')
     FileArn = Shapes::StringShape.new(name: 'FileArn')
@@ -156,6 +179,7 @@ module Aws::ConnectCases
     GetLayoutResponse = Shapes::StructureShape.new(name: 'GetLayoutResponse')
     GetTemplateRequest = Shapes::StructureShape.new(name: 'GetTemplateRequest')
     GetTemplateResponse = Shapes::StructureShape.new(name: 'GetTemplateResponse')
+    HiddenCaseRule = Shapes::StructureShape.new(name: 'HiddenCaseRule')
     IamPrincipalArn = Shapes::StringShape.new(name: 'IamPrincipalArn')
     Integer = Shapes::IntegerShape.new(name: 'Integer')
     InternalServerException = Shapes::StructureShape.new(name: 'InternalServerException')
@@ -191,11 +215,17 @@ module Aws::ConnectCases
     ListTemplatesResponse = Shapes::StructureShape.new(name: 'ListTemplatesResponse')
     ListTemplatesResponseTemplatesList = Shapes::ListShape.new(name: 'ListTemplatesResponseTemplatesList')
     MaxResults = Shapes::IntegerShape.new(name: 'MaxResults')
+    MutableTagKey = Shapes::StringShape.new(name: 'MutableTagKey')
+    MutableTags = Shapes::MapShape.new(name: 'MutableTags')
     NextToken = Shapes::StringShape.new(name: 'NextToken')
     OperandOne = Shapes::UnionShape.new(name: 'OperandOne')
     OperandTwo = Shapes::UnionShape.new(name: 'OperandTwo')
     OperandTwoStringValueString = Shapes::StringShape.new(name: 'OperandTwoStringValueString')
     Order = Shapes::StringShape.new(name: 'Order')
+    ParentChildFieldOptionValue = Shapes::StringShape.new(name: 'ParentChildFieldOptionValue')
+    ParentChildFieldOptionsMapping = Shapes::StructureShape.new(name: 'ParentChildFieldOptionsMapping')
+    ParentChildFieldOptionsMappingChildFieldOptionValuesList = Shapes::ListShape.new(name: 'ParentChildFieldOptionsMappingChildFieldOptionValuesList')
+    ParentChildFieldOptionsMappingList = Shapes::ListShape.new(name: 'ParentChildFieldOptionsMappingList')
     PutCaseEventConfigurationRequest = Shapes::StructureShape.new(name: 'PutCaseEventConfigurationRequest')
     PutCaseEventConfigurationResponse = Shapes::StructureShape.new(name: 'PutCaseEventConfigurationResponse')
     RelatedItemArn = Shapes::StringShape.new(name: 'RelatedItemArn')
@@ -205,11 +235,21 @@ module Aws::ConnectCases
     RelatedItemInputContent = Shapes::UnionShape.new(name: 'RelatedItemInputContent')
     RelatedItemType = Shapes::StringShape.new(name: 'RelatedItemType')
     RelatedItemTypeFilter = Shapes::UnionShape.new(name: 'RelatedItemTypeFilter')
+    RelatedItemUpdateContent = Shapes::UnionShape.new(name: 'RelatedItemUpdateContent')
     RequiredCaseRule = Shapes::StructureShape.new(name: 'RequiredCaseRule')
     RequiredField = Shapes::StructureShape.new(name: 'RequiredField')
     RequiredFieldList = Shapes::ListShape.new(name: 'RequiredFieldList')
     ResourceNotFoundException = Shapes::StructureShape.new(name: 'ResourceNotFoundException')
     RuleType = Shapes::StringShape.new(name: 'RuleType')
+    SearchAllRelatedItemsRequest = Shapes::StructureShape.new(name: 'SearchAllRelatedItemsRequest')
+    SearchAllRelatedItemsRequestFiltersList = Shapes::ListShape.new(name: 'SearchAllRelatedItemsRequestFiltersList')
+    SearchAllRelatedItemsRequestMaxResultsInteger = Shapes::IntegerShape.new(name: 'SearchAllRelatedItemsRequestMaxResultsInteger')
+    SearchAllRelatedItemsRequestSortsList = Shapes::ListShape.new(name: 'SearchAllRelatedItemsRequestSortsList')
+    SearchAllRelatedItemsResponse = Shapes::StructureShape.new(name: 'SearchAllRelatedItemsResponse')
+    SearchAllRelatedItemsResponseItem = Shapes::StructureShape.new(name: 'SearchAllRelatedItemsResponseItem')
+    SearchAllRelatedItemsResponseRelatedItemsList = Shapes::ListShape.new(name: 'SearchAllRelatedItemsResponseRelatedItemsList')
+    SearchAllRelatedItemsSort = Shapes::StructureShape.new(name: 'SearchAllRelatedItemsSort')
+    SearchAllRelatedItemsSortProperty = Shapes::StringShape.new(name: 'SearchAllRelatedItemsSortProperty')
     SearchCasesRequest = Shapes::StructureShape.new(name: 'SearchCasesRequest')
     SearchCasesRequestFieldsList = Shapes::ListShape.new(name: 'SearchCasesRequestFieldsList')
     SearchCasesRequestMaxResultsInteger = Shapes::IntegerShape.new(name: 'SearchCasesRequestMaxResultsInteger')
@@ -225,15 +265,35 @@ module Aws::ConnectCases
     SearchRelatedItemsResponse = Shapes::StructureShape.new(name: 'SearchRelatedItemsResponse')
     SearchRelatedItemsResponseItem = Shapes::StructureShape.new(name: 'SearchRelatedItemsResponseItem')
     SearchRelatedItemsResponseRelatedItemsList = Shapes::ListShape.new(name: 'SearchRelatedItemsResponseRelatedItemsList')
+    SearchTagKey = Shapes::StringShape.new(name: 'SearchTagKey')
     Section = Shapes::UnionShape.new(name: 'Section')
     SectionsList = Shapes::ListShape.new(name: 'SectionsList')
     ServiceQuotaExceededException = Shapes::StructureShape.new(name: 'ServiceQuotaExceededException')
+    SlaCompletionTime = Shapes::TimestampShape.new(name: 'SlaCompletionTime', timestampFormat: "iso8601")
+    SlaConfiguration = Shapes::StructureShape.new(name: 'SlaConfiguration')
+    SlaContent = Shapes::StructureShape.new(name: 'SlaContent')
+    SlaFieldValueUnionList = Shapes::ListShape.new(name: 'SlaFieldValueUnionList')
+    SlaFilter = Shapes::StructureShape.new(name: 'SlaFilter')
+    SlaInputConfiguration = Shapes::StructureShape.new(name: 'SlaInputConfiguration')
+    SlaInputContent = Shapes::UnionShape.new(name: 'SlaInputContent')
+    SlaName = Shapes::StringShape.new(name: 'SlaName')
+    SlaStatus = Shapes::StringShape.new(name: 'SlaStatus')
+    SlaTargetTime = Shapes::TimestampShape.new(name: 'SlaTargetTime', timestampFormat: "iso8601")
+    SlaType = Shapes::StringShape.new(name: 'SlaType')
     Sort = Shapes::StructureShape.new(name: 'Sort')
     String = Shapes::StringShape.new(name: 'String')
+    TagFilter = Shapes::UnionShape.new(name: 'TagFilter')
     TagKey = Shapes::StringShape.new(name: 'TagKey')
     TagKeyList = Shapes::ListShape.new(name: 'TagKeyList')
+    TagPropagationConfiguration = Shapes::StructureShape.new(name: 'TagPropagationConfiguration')
+    TagPropagationConfigurationList = Shapes::ListShape.new(name: 'TagPropagationConfigurationList')
+    TagPropagationConfigurationTagMapMap = Shapes::MapShape.new(name: 'TagPropagationConfigurationTagMapMap')
+    TagPropagationResourceType = Shapes::StringShape.new(name: 'TagPropagationResourceType')
     TagResourceRequest = Shapes::StructureShape.new(name: 'TagResourceRequest')
+    TagValue = Shapes::StructureShape.new(name: 'TagValue')
+    TagValueString = Shapes::StringShape.new(name: 'TagValueString')
     Tags = Shapes::MapShape.new(name: 'Tags')
+    TargetSlaMinutes = Shapes::IntegerShape.new(name: 'TargetSlaMinutes')
     TemplateArn = Shapes::StringShape.new(name: 'TemplateArn')
     TemplateCaseRuleList = Shapes::ListShape.new(name: 'TemplateCaseRuleList')
     TemplateDescription = Shapes::StringShape.new(name: 'TemplateDescription')
@@ -243,7 +303,9 @@ module Aws::ConnectCases
     TemplateStatus = Shapes::StringShape.new(name: 'TemplateStatus')
     TemplateStatusFilters = Shapes::ListShape.new(name: 'TemplateStatusFilters')
     TemplateSummary = Shapes::StructureShape.new(name: 'TemplateSummary')
+    TextAttributes = Shapes::StructureShape.new(name: 'TextAttributes')
     ThrottlingException = Shapes::StructureShape.new(name: 'ThrottlingException')
+    TotalCount = Shapes::IntegerShape.new(name: 'TotalCount')
     UntagResourceRequest = Shapes::StructureShape.new(name: 'UntagResourceRequest')
     UpdateCaseRequest = Shapes::StructureShape.new(name: 'UpdateCaseRequest')
     UpdateCaseRequestFieldsList = Shapes::ListShape.new(name: 'UpdateCaseRequestFieldsList')
@@ -254,6 +316,8 @@ module Aws::ConnectCases
     UpdateFieldResponse = Shapes::StructureShape.new(name: 'UpdateFieldResponse')
     UpdateLayoutRequest = Shapes::StructureShape.new(name: 'UpdateLayoutRequest')
     UpdateLayoutResponse = Shapes::StructureShape.new(name: 'UpdateLayoutResponse')
+    UpdateRelatedItemRequest = Shapes::StructureShape.new(name: 'UpdateRelatedItemRequest')
+    UpdateRelatedItemResponse = Shapes::StructureShape.new(name: 'UpdateRelatedItemResponse')
     UpdateTemplateRequest = Shapes::StructureShape.new(name: 'UpdateTemplateRequest')
     UpdateTemplateResponse = Shapes::StructureShape.new(name: 'UpdateTemplateResponse')
     UserArn = Shapes::StringShape.new(name: 'UserArn')
@@ -266,53 +330,56 @@ module Aws::ConnectCases
     AccessDeniedException.struct_class = Types::AccessDeniedException
 
     AuditEvent.add_member(:event_id, Shapes::ShapeRef.new(shape: AuditEventId, required: true, location_name: "eventId"))
+    AuditEvent.add_member(:type, Shapes::ShapeRef.new(shape: AuditEventType, required: true, location_name: "type"))
+    AuditEvent.add_member(:related_item_type, Shapes::ShapeRef.new(shape: RelatedItemType, location_name: "relatedItemType"))
+    AuditEvent.add_member(:performed_time, Shapes::ShapeRef.new(shape: AuditEventDateTime, required: true, location_name: "performedTime"))
     AuditEvent.add_member(:fields, Shapes::ShapeRef.new(shape: AuditEventFieldList, required: true, location_name: "fields"))
     AuditEvent.add_member(:performed_by, Shapes::ShapeRef.new(shape: AuditEventPerformedBy, location_name: "performedBy"))
-    AuditEvent.add_member(:performed_time, Shapes::ShapeRef.new(shape: AuditEventDateTime, required: true, location_name: "performedTime"))
-    AuditEvent.add_member(:related_item_type, Shapes::ShapeRef.new(shape: RelatedItemType, location_name: "relatedItemType"))
-    AuditEvent.add_member(:type, Shapes::ShapeRef.new(shape: AuditEventType, required: true, location_name: "type"))
     AuditEvent.struct_class = Types::AuditEvent
 
     AuditEventField.add_member(:event_field_id, Shapes::ShapeRef.new(shape: AuditEventFieldId, required: true, location_name: "eventFieldId"))
-    AuditEventField.add_member(:new_value, Shapes::ShapeRef.new(shape: AuditEventFieldValueUnion, required: true, location_name: "newValue"))
     AuditEventField.add_member(:old_value, Shapes::ShapeRef.new(shape: AuditEventFieldValueUnion, location_name: "oldValue"))
+    AuditEventField.add_member(:new_value, Shapes::ShapeRef.new(shape: AuditEventFieldValueUnion, required: true, location_name: "newValue"))
     AuditEventField.struct_class = Types::AuditEventField
 
     AuditEventFieldList.member = Shapes::ShapeRef.new(shape: AuditEventField)
 
-    AuditEventFieldValueUnion.add_member(:boolean_value, Shapes::ShapeRef.new(shape: Boolean, location_name: "booleanValue"))
-    AuditEventFieldValueUnion.add_member(:double_value, Shapes::ShapeRef.new(shape: Double, location_name: "doubleValue"))
-    AuditEventFieldValueUnion.add_member(:empty_value, Shapes::ShapeRef.new(shape: EmptyFieldValue, location_name: "emptyValue"))
     AuditEventFieldValueUnion.add_member(:string_value, Shapes::ShapeRef.new(shape: AuditEventFieldValueUnionStringValueString, location_name: "stringValue"))
+    AuditEventFieldValueUnion.add_member(:double_value, Shapes::ShapeRef.new(shape: Double, location_name: "doubleValue"))
+    AuditEventFieldValueUnion.add_member(:boolean_value, Shapes::ShapeRef.new(shape: Boolean, location_name: "booleanValue"))
+    AuditEventFieldValueUnion.add_member(:empty_value, Shapes::ShapeRef.new(shape: EmptyFieldValue, location_name: "emptyValue"))
     AuditEventFieldValueUnion.add_member(:user_arn_value, Shapes::ShapeRef.new(shape: String, location_name: "userArnValue"))
     AuditEventFieldValueUnion.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
-    AuditEventFieldValueUnion.add_member_subclass(:boolean_value, Types::AuditEventFieldValueUnion::BooleanValue)
-    AuditEventFieldValueUnion.add_member_subclass(:double_value, Types::AuditEventFieldValueUnion::DoubleValue)
-    AuditEventFieldValueUnion.add_member_subclass(:empty_value, Types::AuditEventFieldValueUnion::EmptyValue)
     AuditEventFieldValueUnion.add_member_subclass(:string_value, Types::AuditEventFieldValueUnion::StringValue)
+    AuditEventFieldValueUnion.add_member_subclass(:double_value, Types::AuditEventFieldValueUnion::DoubleValue)
+    AuditEventFieldValueUnion.add_member_subclass(:boolean_value, Types::AuditEventFieldValueUnion::BooleanValue)
+    AuditEventFieldValueUnion.add_member_subclass(:empty_value, Types::AuditEventFieldValueUnion::EmptyValue)
     AuditEventFieldValueUnion.add_member_subclass(:user_arn_value, Types::AuditEventFieldValueUnion::UserArnValue)
     AuditEventFieldValueUnion.add_member_subclass(:unknown, Types::AuditEventFieldValueUnion::Unknown)
     AuditEventFieldValueUnion.struct_class = Types::AuditEventFieldValueUnion
 
-    AuditEventPerformedBy.add_member(:iam_principal_arn, Shapes::ShapeRef.new(shape: IamPrincipalArn, required: true, location_name: "iamPrincipalArn"))
     AuditEventPerformedBy.add_member(:user, Shapes::ShapeRef.new(shape: UserUnion, location_name: "user"))
+    AuditEventPerformedBy.add_member(:iam_principal_arn, Shapes::ShapeRef.new(shape: IamPrincipalArn, required: true, location_name: "iamPrincipalArn"))
     AuditEventPerformedBy.struct_class = Types::AuditEventPerformedBy
 
-    BasicLayout.add_member(:more_info, Shapes::ShapeRef.new(shape: LayoutSections, location_name: "moreInfo"))
     BasicLayout.add_member(:top_panel, Shapes::ShapeRef.new(shape: LayoutSections, location_name: "topPanel"))
+    BasicLayout.add_member(:more_info, Shapes::ShapeRef.new(shape: LayoutSections, location_name: "moreInfo"))
     BasicLayout.struct_class = Types::BasicLayout
 
-    BatchGetCaseRuleRequest.add_member(:case_rules, Shapes::ShapeRef.new(shape: CaseRuleIdentifierList, required: true, location_name: "caseRules"))
     BatchGetCaseRuleRequest.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainId"))
+    BatchGetCaseRuleRequest.add_member(:case_rules, Shapes::ShapeRef.new(shape: CaseRuleIdentifierList, required: true, location_name: "caseRules"))
     BatchGetCaseRuleRequest.struct_class = Types::BatchGetCaseRuleRequest
 
     BatchGetCaseRuleResponse.add_member(:case_rules, Shapes::ShapeRef.new(shape: BatchGetCaseRuleResponseCaseRulesList, required: true, location_name: "caseRules"))
     BatchGetCaseRuleResponse.add_member(:errors, Shapes::ShapeRef.new(shape: BatchGetCaseRuleResponseErrorsList, required: true, location_name: "errors"))
+    BatchGetCaseRuleResponse.add_member(:unprocessed_case_rules, Shapes::ShapeRef.new(shape: BatchGetCaseRuleResponseUnprocessedCaseRulesList, location_name: "unprocessedCaseRules"))
     BatchGetCaseRuleResponse.struct_class = Types::BatchGetCaseRuleResponse
 
     BatchGetCaseRuleResponseCaseRulesList.member = Shapes::ShapeRef.new(shape: GetCaseRuleResponse)
 
     BatchGetCaseRuleResponseErrorsList.member = Shapes::ShapeRef.new(shape: CaseRuleError)
+
+    BatchGetCaseRuleResponseUnprocessedCaseRulesList.member = Shapes::ShapeRef.new(shape: CaseRuleId)
 
     BatchGetFieldIdentifierList.member = Shapes::ShapeRef.new(shape: FieldIdentifier)
 
@@ -320,8 +387,8 @@ module Aws::ConnectCases
     BatchGetFieldRequest.add_member(:fields, Shapes::ShapeRef.new(shape: BatchGetFieldIdentifierList, required: true, location_name: "fields"))
     BatchGetFieldRequest.struct_class = Types::BatchGetFieldRequest
 
-    BatchGetFieldResponse.add_member(:errors, Shapes::ShapeRef.new(shape: BatchGetFieldResponseErrorsList, required: true, location_name: "errors"))
     BatchGetFieldResponse.add_member(:fields, Shapes::ShapeRef.new(shape: BatchGetFieldResponseFieldsList, required: true, location_name: "fields"))
+    BatchGetFieldResponse.add_member(:errors, Shapes::ShapeRef.new(shape: BatchGetFieldResponseErrorsList, required: true, location_name: "errors"))
     BatchGetFieldResponse.struct_class = Types::BatchGetFieldResponse
 
     BatchGetFieldResponseErrorsList.member = Shapes::ShapeRef.new(shape: FieldError)
@@ -342,9 +409,13 @@ module Aws::ConnectCases
 
     BooleanCondition.add_member(:equal_to, Shapes::ShapeRef.new(shape: BooleanOperands, location_name: "equalTo"))
     BooleanCondition.add_member(:not_equal_to, Shapes::ShapeRef.new(shape: BooleanOperands, location_name: "notEqualTo"))
+    BooleanCondition.add_member(:and_all, Shapes::ShapeRef.new(shape: CompoundCondition, location_name: "andAll"))
+    BooleanCondition.add_member(:or_all, Shapes::ShapeRef.new(shape: CompoundCondition, location_name: "orAll"))
     BooleanCondition.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
     BooleanCondition.add_member_subclass(:equal_to, Types::BooleanCondition::EqualTo)
     BooleanCondition.add_member_subclass(:not_equal_to, Types::BooleanCondition::NotEqualTo)
+    BooleanCondition.add_member_subclass(:and_all, Types::BooleanCondition::AndAll)
+    BooleanCondition.add_member_subclass(:or_all, Types::BooleanCondition::OrAll)
     BooleanCondition.add_member_subclass(:unknown, Types::BooleanCondition::Unknown)
     BooleanCondition.struct_class = Types::BooleanCondition
 
@@ -360,14 +431,16 @@ module Aws::ConnectCases
 
     CaseEventIncludedDataFieldsList.member = Shapes::ShapeRef.new(shape: FieldIdentifier)
 
-    CaseFilter.add_member(:and_all, Shapes::ShapeRef.new(shape: CaseFilterAndAllList, location_name: "andAll"))
     CaseFilter.add_member(:field, Shapes::ShapeRef.new(shape: FieldFilter, location_name: "field"))
     CaseFilter.add_member(:not, Shapes::ShapeRef.new(shape: CaseFilter, location_name: "not"))
+    CaseFilter.add_member(:tag, Shapes::ShapeRef.new(shape: TagFilter, location_name: "tag"))
+    CaseFilter.add_member(:and_all, Shapes::ShapeRef.new(shape: CaseFilterAndAllList, location_name: "andAll"))
     CaseFilter.add_member(:or_all, Shapes::ShapeRef.new(shape: CaseFilterOrAllList, location_name: "orAll"))
     CaseFilter.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
-    CaseFilter.add_member_subclass(:and_all, Types::CaseFilter::AndAll)
     CaseFilter.add_member_subclass(:field, Types::CaseFilter::Field)
     CaseFilter.add_member_subclass(:not, Types::CaseFilter::Not)
+    CaseFilter.add_member_subclass(:tag, Types::CaseFilter::Tag)
+    CaseFilter.add_member_subclass(:and_all, Types::CaseFilter::AndAll)
     CaseFilter.add_member_subclass(:or_all, Types::CaseFilter::OrAll)
     CaseFilter.add_member_subclass(:unknown, Types::CaseFilter::Unknown)
     CaseFilter.struct_class = Types::CaseFilter
@@ -377,13 +450,17 @@ module Aws::ConnectCases
     CaseFilterOrAllList.member = Shapes::ShapeRef.new(shape: CaseFilter)
 
     CaseRuleDetails.add_member(:required, Shapes::ShapeRef.new(shape: RequiredCaseRule, location_name: "required"))
+    CaseRuleDetails.add_member(:field_options, Shapes::ShapeRef.new(shape: FieldOptionsCaseRule, location_name: "fieldOptions"))
+    CaseRuleDetails.add_member(:hidden, Shapes::ShapeRef.new(shape: HiddenCaseRule, location_name: "hidden"))
     CaseRuleDetails.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
     CaseRuleDetails.add_member_subclass(:required, Types::CaseRuleDetails::Required)
+    CaseRuleDetails.add_member_subclass(:field_options, Types::CaseRuleDetails::FieldOptions)
+    CaseRuleDetails.add_member_subclass(:hidden, Types::CaseRuleDetails::Hidden)
     CaseRuleDetails.add_member_subclass(:unknown, Types::CaseRuleDetails::Unknown)
     CaseRuleDetails.struct_class = Types::CaseRuleDetails
 
-    CaseRuleError.add_member(:error_code, Shapes::ShapeRef.new(shape: String, required: true, location_name: "errorCode"))
     CaseRuleError.add_member(:id, Shapes::ShapeRef.new(shape: CaseRuleId, required: true, location_name: "id"))
+    CaseRuleError.add_member(:error_code, Shapes::ShapeRef.new(shape: String, required: true, location_name: "errorCode"))
     CaseRuleError.add_member(:message, Shapes::ShapeRef.new(shape: String, location_name: "message"))
     CaseRuleError.struct_class = Types::CaseRuleError
 
@@ -392,11 +469,11 @@ module Aws::ConnectCases
 
     CaseRuleIdentifierList.member = Shapes::ShapeRef.new(shape: CaseRuleIdentifier)
 
-    CaseRuleSummary.add_member(:case_rule_arn, Shapes::ShapeRef.new(shape: CaseRuleArn, required: true, location_name: "caseRuleArn"))
     CaseRuleSummary.add_member(:case_rule_id, Shapes::ShapeRef.new(shape: CaseRuleId, required: true, location_name: "caseRuleId"))
-    CaseRuleSummary.add_member(:description, Shapes::ShapeRef.new(shape: CaseRuleDescription, location_name: "description"))
     CaseRuleSummary.add_member(:name, Shapes::ShapeRef.new(shape: CaseRuleName, required: true, location_name: "name"))
+    CaseRuleSummary.add_member(:case_rule_arn, Shapes::ShapeRef.new(shape: CaseRuleArn, required: true, location_name: "caseRuleArn"))
     CaseRuleSummary.add_member(:rule_type, Shapes::ShapeRef.new(shape: RuleType, required: true, location_name: "ruleType"))
+    CaseRuleSummary.add_member(:description, Shapes::ShapeRef.new(shape: CaseRuleDescription, location_name: "description"))
     CaseRuleSummary.struct_class = Types::CaseRuleSummary
 
     CaseSummary.add_member(:case_id, Shapes::ShapeRef.new(shape: CaseId, required: true, location_name: "caseId"))
@@ -409,15 +486,31 @@ module Aws::ConnectCases
 
     CommentFilter.struct_class = Types::CommentFilter
 
+    CommentUpdateContent.add_member(:body, Shapes::ShapeRef.new(shape: CommentBody, required: true, location_name: "body"))
+    CommentUpdateContent.add_member(:content_type, Shapes::ShapeRef.new(shape: CommentBodyTextType, required: true, location_name: "contentType"))
+    CommentUpdateContent.struct_class = Types::CommentUpdateContent
+
+    CompoundCondition.add_member(:conditions, Shapes::ShapeRef.new(shape: BooleanConditionList, required: true, location_name: "conditions"))
+    CompoundCondition.struct_class = Types::CompoundCondition
+
     ConflictException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
     ConflictException.struct_class = Types::ConflictException
+
+    ConnectCaseContent.add_member(:case_id, Shapes::ShapeRef.new(shape: CaseId, required: true, location_name: "caseId"))
+    ConnectCaseContent.struct_class = Types::ConnectCaseContent
+
+    ConnectCaseFilter.add_member(:case_id, Shapes::ShapeRef.new(shape: CaseId, location_name: "caseId"))
+    ConnectCaseFilter.struct_class = Types::ConnectCaseFilter
+
+    ConnectCaseInputContent.add_member(:case_id, Shapes::ShapeRef.new(shape: CaseId, required: true, location_name: "caseId"))
+    ConnectCaseInputContent.struct_class = Types::ConnectCaseInputContent
 
     Contact.add_member(:contact_arn, Shapes::ShapeRef.new(shape: ContactArn, required: true, location_name: "contactArn"))
     Contact.struct_class = Types::Contact
 
+    ContactContent.add_member(:contact_arn, Shapes::ShapeRef.new(shape: ContactArn, required: true, location_name: "contactArn"))
     ContactContent.add_member(:channel, Shapes::ShapeRef.new(shape: Channel, required: true, location_name: "channel"))
     ContactContent.add_member(:connected_to_system_time, Shapes::ShapeRef.new(shape: ConnectedToSystemTime, required: true, location_name: "connectedToSystemTime"))
-    ContactContent.add_member(:contact_arn, Shapes::ShapeRef.new(shape: ContactArn, required: true, location_name: "contactArn"))
     ContactContent.struct_class = Types::ContactContent
 
     ContactFilter.add_member(:channel, Shapes::ShapeRef.new(shape: ContactFilterChannelList, location_name: "channel"))
@@ -426,82 +519,123 @@ module Aws::ConnectCases
 
     ContactFilterChannelList.member = Shapes::ShapeRef.new(shape: Channel)
 
-    CreateCaseRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: CreateCaseRequestClientTokenString, location_name: "clientToken", metadata: {"idempotencyToken"=>true}))
     CreateCaseRequest.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainId"))
-    CreateCaseRequest.add_member(:fields, Shapes::ShapeRef.new(shape: CreateCaseRequestFieldsList, required: true, location_name: "fields"))
-    CreateCaseRequest.add_member(:performed_by, Shapes::ShapeRef.new(shape: UserUnion, location_name: "performedBy"))
     CreateCaseRequest.add_member(:template_id, Shapes::ShapeRef.new(shape: TemplateId, required: true, location_name: "templateId"))
+    CreateCaseRequest.add_member(:fields, Shapes::ShapeRef.new(shape: CreateCaseRequestFieldsList, required: true, location_name: "fields"))
+    CreateCaseRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: CreateCaseRequestClientTokenString, location_name: "clientToken", metadata: {"idempotencyToken" => true}))
+    CreateCaseRequest.add_member(:performed_by, Shapes::ShapeRef.new(shape: UserUnion, location_name: "performedBy"))
+    CreateCaseRequest.add_member(:tags, Shapes::ShapeRef.new(shape: MutableTags, location_name: "tags"))
     CreateCaseRequest.struct_class = Types::CreateCaseRequest
 
     CreateCaseRequestFieldsList.member = Shapes::ShapeRef.new(shape: FieldValue)
 
-    CreateCaseResponse.add_member(:case_arn, Shapes::ShapeRef.new(shape: CaseArn, required: true, location_name: "caseArn"))
     CreateCaseResponse.add_member(:case_id, Shapes::ShapeRef.new(shape: CaseId, required: true, location_name: "caseId"))
+    CreateCaseResponse.add_member(:case_arn, Shapes::ShapeRef.new(shape: CaseArn, required: true, location_name: "caseArn"))
     CreateCaseResponse.struct_class = Types::CreateCaseResponse
 
-    CreateCaseRuleRequest.add_member(:description, Shapes::ShapeRef.new(shape: CaseRuleDescription, location_name: "description"))
     CreateCaseRuleRequest.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainId"))
     CreateCaseRuleRequest.add_member(:name, Shapes::ShapeRef.new(shape: CaseRuleName, required: true, location_name: "name"))
+    CreateCaseRuleRequest.add_member(:description, Shapes::ShapeRef.new(shape: CaseRuleDescription, location_name: "description"))
     CreateCaseRuleRequest.add_member(:rule, Shapes::ShapeRef.new(shape: CaseRuleDetails, required: true, location_name: "rule"))
     CreateCaseRuleRequest.struct_class = Types::CreateCaseRuleRequest
 
-    CreateCaseRuleResponse.add_member(:case_rule_arn, Shapes::ShapeRef.new(shape: CaseRuleArn, required: true, location_name: "caseRuleArn"))
     CreateCaseRuleResponse.add_member(:case_rule_id, Shapes::ShapeRef.new(shape: CaseRuleId, required: true, location_name: "caseRuleId"))
+    CreateCaseRuleResponse.add_member(:case_rule_arn, Shapes::ShapeRef.new(shape: CaseRuleArn, required: true, location_name: "caseRuleArn"))
     CreateCaseRuleResponse.struct_class = Types::CreateCaseRuleResponse
 
     CreateDomainRequest.add_member(:name, Shapes::ShapeRef.new(shape: DomainName, required: true, location_name: "name"))
     CreateDomainRequest.struct_class = Types::CreateDomainRequest
 
-    CreateDomainResponse.add_member(:domain_arn, Shapes::ShapeRef.new(shape: DomainArn, required: true, location_name: "domainArn"))
     CreateDomainResponse.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    CreateDomainResponse.add_member(:domain_arn, Shapes::ShapeRef.new(shape: DomainArn, required: true, location_name: "domainArn"))
     CreateDomainResponse.add_member(:domain_status, Shapes::ShapeRef.new(shape: DomainStatus, required: true, location_name: "domainStatus"))
     CreateDomainResponse.struct_class = Types::CreateDomainResponse
 
-    CreateFieldRequest.add_member(:description, Shapes::ShapeRef.new(shape: FieldDescription, location_name: "description"))
     CreateFieldRequest.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainId"))
     CreateFieldRequest.add_member(:name, Shapes::ShapeRef.new(shape: FieldName, required: true, location_name: "name"))
     CreateFieldRequest.add_member(:type, Shapes::ShapeRef.new(shape: FieldType, required: true, location_name: "type"))
+    CreateFieldRequest.add_member(:description, Shapes::ShapeRef.new(shape: FieldDescription, location_name: "description"))
+    CreateFieldRequest.add_member(:attributes, Shapes::ShapeRef.new(shape: FieldAttributes, location_name: "attributes"))
     CreateFieldRequest.struct_class = Types::CreateFieldRequest
 
-    CreateFieldResponse.add_member(:field_arn, Shapes::ShapeRef.new(shape: FieldArn, required: true, location_name: "fieldArn"))
     CreateFieldResponse.add_member(:field_id, Shapes::ShapeRef.new(shape: FieldId, required: true, location_name: "fieldId"))
+    CreateFieldResponse.add_member(:field_arn, Shapes::ShapeRef.new(shape: FieldArn, required: true, location_name: "fieldArn"))
     CreateFieldResponse.struct_class = Types::CreateFieldResponse
 
-    CreateLayoutRequest.add_member(:content, Shapes::ShapeRef.new(shape: LayoutContent, required: true, location_name: "content"))
     CreateLayoutRequest.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainId"))
     CreateLayoutRequest.add_member(:name, Shapes::ShapeRef.new(shape: LayoutName, required: true, location_name: "name"))
+    CreateLayoutRequest.add_member(:content, Shapes::ShapeRef.new(shape: LayoutContent, required: true, location_name: "content"))
     CreateLayoutRequest.struct_class = Types::CreateLayoutRequest
 
-    CreateLayoutResponse.add_member(:layout_arn, Shapes::ShapeRef.new(shape: LayoutArn, required: true, location_name: "layoutArn"))
     CreateLayoutResponse.add_member(:layout_id, Shapes::ShapeRef.new(shape: LayoutId, required: true, location_name: "layoutId"))
+    CreateLayoutResponse.add_member(:layout_arn, Shapes::ShapeRef.new(shape: LayoutArn, required: true, location_name: "layoutArn"))
     CreateLayoutResponse.struct_class = Types::CreateLayoutResponse
 
-    CreateRelatedItemRequest.add_member(:case_id, Shapes::ShapeRef.new(shape: CaseId, required: true, location: "uri", location_name: "caseId"))
-    CreateRelatedItemRequest.add_member(:content, Shapes::ShapeRef.new(shape: RelatedItemInputContent, required: true, location_name: "content"))
     CreateRelatedItemRequest.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainId"))
-    CreateRelatedItemRequest.add_member(:performed_by, Shapes::ShapeRef.new(shape: UserUnion, location_name: "performedBy"))
+    CreateRelatedItemRequest.add_member(:case_id, Shapes::ShapeRef.new(shape: CaseId, required: true, location: "uri", location_name: "caseId"))
     CreateRelatedItemRequest.add_member(:type, Shapes::ShapeRef.new(shape: RelatedItemType, required: true, location_name: "type"))
+    CreateRelatedItemRequest.add_member(:content, Shapes::ShapeRef.new(shape: RelatedItemInputContent, required: true, location_name: "content"))
+    CreateRelatedItemRequest.add_member(:performed_by, Shapes::ShapeRef.new(shape: UserUnion, location_name: "performedBy"))
     CreateRelatedItemRequest.struct_class = Types::CreateRelatedItemRequest
 
-    CreateRelatedItemResponse.add_member(:related_item_arn, Shapes::ShapeRef.new(shape: RelatedItemArn, required: true, location_name: "relatedItemArn"))
     CreateRelatedItemResponse.add_member(:related_item_id, Shapes::ShapeRef.new(shape: RelatedItemId, required: true, location_name: "relatedItemId"))
+    CreateRelatedItemResponse.add_member(:related_item_arn, Shapes::ShapeRef.new(shape: RelatedItemArn, required: true, location_name: "relatedItemArn"))
     CreateRelatedItemResponse.struct_class = Types::CreateRelatedItemResponse
 
-    CreateTemplateRequest.add_member(:description, Shapes::ShapeRef.new(shape: TemplateDescription, location_name: "description"))
     CreateTemplateRequest.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainId"))
-    CreateTemplateRequest.add_member(:layout_configuration, Shapes::ShapeRef.new(shape: LayoutConfiguration, location_name: "layoutConfiguration"))
     CreateTemplateRequest.add_member(:name, Shapes::ShapeRef.new(shape: TemplateName, required: true, location_name: "name"))
+    CreateTemplateRequest.add_member(:description, Shapes::ShapeRef.new(shape: TemplateDescription, location_name: "description"))
+    CreateTemplateRequest.add_member(:layout_configuration, Shapes::ShapeRef.new(shape: LayoutConfiguration, location_name: "layoutConfiguration"))
     CreateTemplateRequest.add_member(:required_fields, Shapes::ShapeRef.new(shape: RequiredFieldList, location_name: "requiredFields"))
-    CreateTemplateRequest.add_member(:rules, Shapes::ShapeRef.new(shape: TemplateCaseRuleList, location_name: "rules"))
     CreateTemplateRequest.add_member(:status, Shapes::ShapeRef.new(shape: TemplateStatus, location_name: "status"))
+    CreateTemplateRequest.add_member(:rules, Shapes::ShapeRef.new(shape: TemplateCaseRuleList, location_name: "rules"))
+    CreateTemplateRequest.add_member(:tag_propagation_configurations, Shapes::ShapeRef.new(shape: TagPropagationConfigurationList, location_name: "tagPropagationConfigurations"))
     CreateTemplateRequest.struct_class = Types::CreateTemplateRequest
 
-    CreateTemplateResponse.add_member(:template_arn, Shapes::ShapeRef.new(shape: TemplateArn, required: true, location_name: "templateArn"))
     CreateTemplateResponse.add_member(:template_id, Shapes::ShapeRef.new(shape: TemplateId, required: true, location_name: "templateId"))
+    CreateTemplateResponse.add_member(:template_arn, Shapes::ShapeRef.new(shape: TemplateArn, required: true, location_name: "templateArn"))
     CreateTemplateResponse.struct_class = Types::CreateTemplateResponse
 
-    DeleteCaseRuleRequest.add_member(:case_rule_id, Shapes::ShapeRef.new(shape: CaseRuleId, required: true, location: "uri", location_name: "caseRuleId"))
+    CustomContent.add_member(:fields, Shapes::ShapeRef.new(shape: FieldValueList, required: true, location_name: "fields"))
+    CustomContent.struct_class = Types::CustomContent
+
+    CustomFieldsFilter.add_member(:field, Shapes::ShapeRef.new(shape: FieldFilter, location_name: "field"))
+    CustomFieldsFilter.add_member(:not, Shapes::ShapeRef.new(shape: CustomFieldsFilter, location_name: "not"))
+    CustomFieldsFilter.add_member(:and_all, Shapes::ShapeRef.new(shape: CustomFieldsFilterAndAllList, location_name: "andAll"))
+    CustomFieldsFilter.add_member(:or_all, Shapes::ShapeRef.new(shape: CustomFieldsFilterOrAllList, location_name: "orAll"))
+    CustomFieldsFilter.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    CustomFieldsFilter.add_member_subclass(:field, Types::CustomFieldsFilter::Field)
+    CustomFieldsFilter.add_member_subclass(:not, Types::CustomFieldsFilter::Not)
+    CustomFieldsFilter.add_member_subclass(:and_all, Types::CustomFieldsFilter::AndAll)
+    CustomFieldsFilter.add_member_subclass(:or_all, Types::CustomFieldsFilter::OrAll)
+    CustomFieldsFilter.add_member_subclass(:unknown, Types::CustomFieldsFilter::Unknown)
+    CustomFieldsFilter.struct_class = Types::CustomFieldsFilter
+
+    CustomFieldsFilterAndAllList.member = Shapes::ShapeRef.new(shape: CustomFieldsFilter)
+
+    CustomFieldsFilterOrAllList.member = Shapes::ShapeRef.new(shape: CustomFieldsFilter)
+
+    CustomFilter.add_member(:fields, Shapes::ShapeRef.new(shape: CustomFieldsFilter, location_name: "fields"))
+    CustomFilter.struct_class = Types::CustomFilter
+
+    CustomInputContent.add_member(:fields, Shapes::ShapeRef.new(shape: CustomInputContentFieldsList, required: true, location_name: "fields"))
+    CustomInputContent.struct_class = Types::CustomInputContent
+
+    CustomInputContentFieldsList.member = Shapes::ShapeRef.new(shape: FieldValue)
+
+    CustomUpdateContent.add_member(:fields, Shapes::ShapeRef.new(shape: CustomUpdateContentFieldsList, required: true, location_name: "fields"))
+    CustomUpdateContent.struct_class = Types::CustomUpdateContent
+
+    CustomUpdateContentFieldsList.member = Shapes::ShapeRef.new(shape: FieldValue)
+
+    DeleteCaseRequest.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainId"))
+    DeleteCaseRequest.add_member(:case_id, Shapes::ShapeRef.new(shape: CaseId, required: true, location: "uri", location_name: "caseId"))
+    DeleteCaseRequest.struct_class = Types::DeleteCaseRequest
+
+    DeleteCaseResponse.struct_class = Types::DeleteCaseResponse
+
     DeleteCaseRuleRequest.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainId"))
+    DeleteCaseRuleRequest.add_member(:case_rule_id, Shapes::ShapeRef.new(shape: CaseRuleId, required: true, location: "uri", location_name: "caseRuleId"))
     DeleteCaseRuleRequest.struct_class = Types::DeleteCaseRuleRequest
 
     DeleteCaseRuleResponse.struct_class = Types::DeleteCaseRuleResponse
@@ -523,14 +657,21 @@ module Aws::ConnectCases
 
     DeleteLayoutResponse.struct_class = Types::DeleteLayoutResponse
 
+    DeleteRelatedItemRequest.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainId"))
+    DeleteRelatedItemRequest.add_member(:case_id, Shapes::ShapeRef.new(shape: CaseId, required: true, location: "uri", location_name: "caseId"))
+    DeleteRelatedItemRequest.add_member(:related_item_id, Shapes::ShapeRef.new(shape: RelatedItemId, required: true, location: "uri", location_name: "relatedItemId"))
+    DeleteRelatedItemRequest.struct_class = Types::DeleteRelatedItemRequest
+
+    DeleteRelatedItemResponse.struct_class = Types::DeleteRelatedItemResponse
+
     DeleteTemplateRequest.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainId"))
     DeleteTemplateRequest.add_member(:template_id, Shapes::ShapeRef.new(shape: TemplateId, required: true, location: "uri", location_name: "templateId"))
     DeleteTemplateRequest.struct_class = Types::DeleteTemplateRequest
 
     DeleteTemplateResponse.struct_class = Types::DeleteTemplateResponse
 
-    DomainSummary.add_member(:domain_arn, Shapes::ShapeRef.new(shape: DomainArn, required: true, location_name: "domainArn"))
     DomainSummary.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
+    DomainSummary.add_member(:domain_arn, Shapes::ShapeRef.new(shape: DomainArn, required: true, location_name: "domainArn"))
     DomainSummary.add_member(:name, Shapes::ShapeRef.new(shape: DomainName, required: true, location_name: "name"))
     DomainSummary.struct_class = Types::DomainSummary
 
@@ -548,20 +689,26 @@ module Aws::ConnectCases
     EventIncludedData.add_member(:related_item_data, Shapes::ShapeRef.new(shape: RelatedItemEventIncludedData, location_name: "relatedItemData"))
     EventIncludedData.struct_class = Types::EventIncludedData
 
-    FieldError.add_member(:error_code, Shapes::ShapeRef.new(shape: String, required: true, location_name: "errorCode"))
+    FieldAttributes.add_member(:text, Shapes::ShapeRef.new(shape: TextAttributes, location_name: "text"))
+    FieldAttributes.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    FieldAttributes.add_member_subclass(:text, Types::FieldAttributes::Text)
+    FieldAttributes.add_member_subclass(:unknown, Types::FieldAttributes::Unknown)
+    FieldAttributes.struct_class = Types::FieldAttributes
+
     FieldError.add_member(:id, Shapes::ShapeRef.new(shape: FieldId, required: true, location_name: "id"))
+    FieldError.add_member(:error_code, Shapes::ShapeRef.new(shape: String, required: true, location_name: "errorCode"))
     FieldError.add_member(:message, Shapes::ShapeRef.new(shape: String, location_name: "message"))
     FieldError.struct_class = Types::FieldError
 
-    FieldFilter.add_member(:contains, Shapes::ShapeRef.new(shape: FieldValue, location_name: "contains"))
     FieldFilter.add_member(:equal_to, Shapes::ShapeRef.new(shape: FieldValue, location_name: "equalTo"))
+    FieldFilter.add_member(:contains, Shapes::ShapeRef.new(shape: FieldValue, location_name: "contains"))
     FieldFilter.add_member(:greater_than, Shapes::ShapeRef.new(shape: FieldValue, location_name: "greaterThan"))
     FieldFilter.add_member(:greater_than_or_equal_to, Shapes::ShapeRef.new(shape: FieldValue, location_name: "greaterThanOrEqualTo"))
     FieldFilter.add_member(:less_than, Shapes::ShapeRef.new(shape: FieldValue, location_name: "lessThan"))
     FieldFilter.add_member(:less_than_or_equal_to, Shapes::ShapeRef.new(shape: FieldValue, location_name: "lessThanOrEqualTo"))
     FieldFilter.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
-    FieldFilter.add_member_subclass(:contains, Types::FieldFilter::Contains)
     FieldFilter.add_member_subclass(:equal_to, Types::FieldFilter::EqualTo)
+    FieldFilter.add_member_subclass(:contains, Types::FieldFilter::Contains)
     FieldFilter.add_member_subclass(:greater_than, Types::FieldFilter::GreaterThan)
     FieldFilter.add_member_subclass(:greater_than_or_equal_to, Types::FieldFilter::GreaterThanOrEqualTo)
     FieldFilter.add_member_subclass(:less_than, Types::FieldFilter::LessThan)
@@ -569,8 +716,8 @@ module Aws::ConnectCases
     FieldFilter.add_member_subclass(:unknown, Types::FieldFilter::Unknown)
     FieldFilter.struct_class = Types::FieldFilter
 
-    FieldGroup.add_member(:fields, Shapes::ShapeRef.new(shape: FieldGroupFieldsList, required: true, location_name: "fields"))
     FieldGroup.add_member(:name, Shapes::ShapeRef.new(shape: FieldGroupNameString, location_name: "name"))
+    FieldGroup.add_member(:fields, Shapes::ShapeRef.new(shape: FieldGroupFieldsList, required: true, location_name: "fields"))
     FieldGroup.struct_class = Types::FieldGroup
 
     FieldGroupFieldsList.member = Shapes::ShapeRef.new(shape: FieldItem)
@@ -581,39 +728,47 @@ module Aws::ConnectCases
     FieldItem.add_member(:id, Shapes::ShapeRef.new(shape: FieldId, required: true, location_name: "id"))
     FieldItem.struct_class = Types::FieldItem
 
-    FieldOption.add_member(:active, Shapes::ShapeRef.new(shape: Boolean, required: true, location_name: "active"))
     FieldOption.add_member(:name, Shapes::ShapeRef.new(shape: FieldOptionName, required: true, location_name: "name"))
     FieldOption.add_member(:value, Shapes::ShapeRef.new(shape: FieldOptionValue, required: true, location_name: "value"))
+    FieldOption.add_member(:active, Shapes::ShapeRef.new(shape: Boolean, required: true, location_name: "active"))
     FieldOption.struct_class = Types::FieldOption
 
-    FieldOptionError.add_member(:error_code, Shapes::ShapeRef.new(shape: String, required: true, location_name: "errorCode"))
     FieldOptionError.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
+    FieldOptionError.add_member(:error_code, Shapes::ShapeRef.new(shape: String, required: true, location_name: "errorCode"))
     FieldOptionError.add_member(:value, Shapes::ShapeRef.new(shape: FieldOptionValue, required: true, location_name: "value"))
     FieldOptionError.struct_class = Types::FieldOptionError
 
+    FieldOptionsCaseRule.add_member(:parent_field_id, Shapes::ShapeRef.new(shape: FieldId, location_name: "parentFieldId"))
+    FieldOptionsCaseRule.add_member(:child_field_id, Shapes::ShapeRef.new(shape: FieldId, location_name: "childFieldId"))
+    FieldOptionsCaseRule.add_member(:parent_child_field_options_mappings, Shapes::ShapeRef.new(shape: ParentChildFieldOptionsMappingList, required: true, location_name: "parentChildFieldOptionsMappings"))
+    FieldOptionsCaseRule.struct_class = Types::FieldOptionsCaseRule
+
     FieldOptionsList.member = Shapes::ShapeRef.new(shape: FieldOption)
 
-    FieldSummary.add_member(:field_arn, Shapes::ShapeRef.new(shape: FieldArn, required: true, location_name: "fieldArn"))
     FieldSummary.add_member(:field_id, Shapes::ShapeRef.new(shape: FieldId, required: true, location_name: "fieldId"))
+    FieldSummary.add_member(:field_arn, Shapes::ShapeRef.new(shape: FieldArn, required: true, location_name: "fieldArn"))
     FieldSummary.add_member(:name, Shapes::ShapeRef.new(shape: FieldName, required: true, location_name: "name"))
-    FieldSummary.add_member(:namespace, Shapes::ShapeRef.new(shape: FieldNamespace, required: true, location_name: "namespace"))
     FieldSummary.add_member(:type, Shapes::ShapeRef.new(shape: FieldType, required: true, location_name: "type"))
+    FieldSummary.add_member(:namespace, Shapes::ShapeRef.new(shape: FieldNamespace, required: true, location_name: "namespace"))
+    FieldSummary.add_member(:attributes, Shapes::ShapeRef.new(shape: FieldAttributes, location_name: "attributes"))
     FieldSummary.struct_class = Types::FieldSummary
 
     FieldValue.add_member(:id, Shapes::ShapeRef.new(shape: FieldId, required: true, location_name: "id"))
     FieldValue.add_member(:value, Shapes::ShapeRef.new(shape: FieldValueUnion, required: true, location_name: "value"))
     FieldValue.struct_class = Types::FieldValue
 
-    FieldValueUnion.add_member(:boolean_value, Shapes::ShapeRef.new(shape: Boolean, location_name: "booleanValue"))
-    FieldValueUnion.add_member(:double_value, Shapes::ShapeRef.new(shape: Double, location_name: "doubleValue"))
-    FieldValueUnion.add_member(:empty_value, Shapes::ShapeRef.new(shape: EmptyFieldValue, location_name: "emptyValue"))
+    FieldValueList.member = Shapes::ShapeRef.new(shape: FieldValue)
+
     FieldValueUnion.add_member(:string_value, Shapes::ShapeRef.new(shape: FieldValueUnionStringValueString, location_name: "stringValue"))
+    FieldValueUnion.add_member(:double_value, Shapes::ShapeRef.new(shape: Double, location_name: "doubleValue"))
+    FieldValueUnion.add_member(:boolean_value, Shapes::ShapeRef.new(shape: Boolean, location_name: "booleanValue"))
+    FieldValueUnion.add_member(:empty_value, Shapes::ShapeRef.new(shape: EmptyFieldValue, location_name: "emptyValue"))
     FieldValueUnion.add_member(:user_arn_value, Shapes::ShapeRef.new(shape: String, location_name: "userArnValue"))
     FieldValueUnion.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
-    FieldValueUnion.add_member_subclass(:boolean_value, Types::FieldValueUnion::BooleanValue)
-    FieldValueUnion.add_member_subclass(:double_value, Types::FieldValueUnion::DoubleValue)
-    FieldValueUnion.add_member_subclass(:empty_value, Types::FieldValueUnion::EmptyValue)
     FieldValueUnion.add_member_subclass(:string_value, Types::FieldValueUnion::StringValue)
+    FieldValueUnion.add_member_subclass(:double_value, Types::FieldValueUnion::DoubleValue)
+    FieldValueUnion.add_member_subclass(:boolean_value, Types::FieldValueUnion::BooleanValue)
+    FieldValueUnion.add_member_subclass(:empty_value, Types::FieldValueUnion::EmptyValue)
     FieldValueUnion.add_member_subclass(:user_arn_value, Types::FieldValueUnion::UserArnValue)
     FieldValueUnion.add_member_subclass(:unknown, Types::FieldValueUnion::Unknown)
     FieldValueUnion.struct_class = Types::FieldValueUnion
@@ -630,8 +785,8 @@ module Aws::ConnectCases
     GetCaseAuditEventsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
     GetCaseAuditEventsRequest.struct_class = Types::GetCaseAuditEventsRequest
 
-    GetCaseAuditEventsResponse.add_member(:audit_events, Shapes::ShapeRef.new(shape: GetCaseAuditEventsResponseAuditEventsList, required: true, location_name: "auditEvents"))
     GetCaseAuditEventsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    GetCaseAuditEventsResponse.add_member(:audit_events, Shapes::ShapeRef.new(shape: GetCaseAuditEventsResponseAuditEventsList, required: true, location_name: "auditEvents"))
     GetCaseAuditEventsResponse.struct_class = Types::GetCaseAuditEventsResponse
 
     GetCaseAuditEventsResponseAuditEventsList.member = Shapes::ShapeRef.new(shape: AuditEvent)
@@ -651,78 +806,84 @@ module Aws::ConnectCases
     GetCaseRequestFieldsList.member = Shapes::ShapeRef.new(shape: FieldIdentifier)
 
     GetCaseResponse.add_member(:fields, Shapes::ShapeRef.new(shape: GetCaseResponseFieldsList, required: true, location_name: "fields"))
+    GetCaseResponse.add_member(:template_id, Shapes::ShapeRef.new(shape: TemplateId, required: true, location_name: "templateId"))
     GetCaseResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
     GetCaseResponse.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
-    GetCaseResponse.add_member(:template_id, Shapes::ShapeRef.new(shape: TemplateId, required: true, location_name: "templateId"))
     GetCaseResponse.struct_class = Types::GetCaseResponse
 
     GetCaseResponseFieldsList.member = Shapes::ShapeRef.new(shape: FieldValue)
 
-    GetCaseRuleResponse.add_member(:case_rule_arn, Shapes::ShapeRef.new(shape: CaseRuleArn, required: true, location_name: "caseRuleArn"))
     GetCaseRuleResponse.add_member(:case_rule_id, Shapes::ShapeRef.new(shape: CaseRuleId, required: true, location_name: "caseRuleId"))
-    GetCaseRuleResponse.add_member(:created_time, Shapes::ShapeRef.new(shape: CreatedTime, location_name: "createdTime"))
-    GetCaseRuleResponse.add_member(:deleted, Shapes::ShapeRef.new(shape: Deleted, location_name: "deleted"))
-    GetCaseRuleResponse.add_member(:description, Shapes::ShapeRef.new(shape: CaseRuleDescription, location_name: "description"))
-    GetCaseRuleResponse.add_member(:last_modified_time, Shapes::ShapeRef.new(shape: LastModifiedTime, location_name: "lastModifiedTime"))
     GetCaseRuleResponse.add_member(:name, Shapes::ShapeRef.new(shape: CaseRuleName, required: true, location_name: "name"))
+    GetCaseRuleResponse.add_member(:case_rule_arn, Shapes::ShapeRef.new(shape: CaseRuleArn, required: true, location_name: "caseRuleArn"))
     GetCaseRuleResponse.add_member(:rule, Shapes::ShapeRef.new(shape: CaseRuleDetails, required: true, location_name: "rule"))
+    GetCaseRuleResponse.add_member(:description, Shapes::ShapeRef.new(shape: CaseRuleDescription, location_name: "description"))
+    GetCaseRuleResponse.add_member(:deleted, Shapes::ShapeRef.new(shape: Deleted, location_name: "deleted"))
+    GetCaseRuleResponse.add_member(:created_time, Shapes::ShapeRef.new(shape: CreatedTime, location_name: "createdTime"))
+    GetCaseRuleResponse.add_member(:last_modified_time, Shapes::ShapeRef.new(shape: LastModifiedTime, location_name: "lastModifiedTime"))
     GetCaseRuleResponse.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
     GetCaseRuleResponse.struct_class = Types::GetCaseRuleResponse
 
     GetDomainRequest.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainId"))
     GetDomainRequest.struct_class = Types::GetDomainRequest
 
-    GetDomainResponse.add_member(:created_time, Shapes::ShapeRef.new(shape: CreatedTime, required: true, location_name: "createdTime"))
-    GetDomainResponse.add_member(:domain_arn, Shapes::ShapeRef.new(shape: DomainArn, required: true, location_name: "domainArn"))
     GetDomainResponse.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location_name: "domainId"))
-    GetDomainResponse.add_member(:domain_status, Shapes::ShapeRef.new(shape: DomainStatus, required: true, location_name: "domainStatus"))
+    GetDomainResponse.add_member(:domain_arn, Shapes::ShapeRef.new(shape: DomainArn, required: true, location_name: "domainArn"))
     GetDomainResponse.add_member(:name, Shapes::ShapeRef.new(shape: DomainName, required: true, location_name: "name"))
+    GetDomainResponse.add_member(:created_time, Shapes::ShapeRef.new(shape: CreatedTime, required: true, location_name: "createdTime"))
+    GetDomainResponse.add_member(:domain_status, Shapes::ShapeRef.new(shape: DomainStatus, required: true, location_name: "domainStatus"))
     GetDomainResponse.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
     GetDomainResponse.struct_class = Types::GetDomainResponse
 
-    GetFieldResponse.add_member(:created_time, Shapes::ShapeRef.new(shape: CreatedTime, location_name: "createdTime"))
-    GetFieldResponse.add_member(:deleted, Shapes::ShapeRef.new(shape: Deleted, location_name: "deleted"))
-    GetFieldResponse.add_member(:description, Shapes::ShapeRef.new(shape: FieldDescription, location_name: "description"))
-    GetFieldResponse.add_member(:field_arn, Shapes::ShapeRef.new(shape: FieldArn, required: true, location_name: "fieldArn"))
     GetFieldResponse.add_member(:field_id, Shapes::ShapeRef.new(shape: FieldId, required: true, location_name: "fieldId"))
-    GetFieldResponse.add_member(:last_modified_time, Shapes::ShapeRef.new(shape: LastModifiedTime, location_name: "lastModifiedTime"))
     GetFieldResponse.add_member(:name, Shapes::ShapeRef.new(shape: FieldName, required: true, location_name: "name"))
+    GetFieldResponse.add_member(:field_arn, Shapes::ShapeRef.new(shape: FieldArn, required: true, location_name: "fieldArn"))
+    GetFieldResponse.add_member(:description, Shapes::ShapeRef.new(shape: FieldDescription, location_name: "description"))
+    GetFieldResponse.add_member(:type, Shapes::ShapeRef.new(shape: FieldType, required: true, location_name: "type"))
     GetFieldResponse.add_member(:namespace, Shapes::ShapeRef.new(shape: FieldNamespace, required: true, location_name: "namespace"))
     GetFieldResponse.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
-    GetFieldResponse.add_member(:type, Shapes::ShapeRef.new(shape: FieldType, required: true, location_name: "type"))
+    GetFieldResponse.add_member(:deleted, Shapes::ShapeRef.new(shape: Deleted, location_name: "deleted"))
+    GetFieldResponse.add_member(:created_time, Shapes::ShapeRef.new(shape: CreatedTime, location_name: "createdTime"))
+    GetFieldResponse.add_member(:last_modified_time, Shapes::ShapeRef.new(shape: LastModifiedTime, location_name: "lastModifiedTime"))
+    GetFieldResponse.add_member(:attributes, Shapes::ShapeRef.new(shape: FieldAttributes, location_name: "attributes"))
     GetFieldResponse.struct_class = Types::GetFieldResponse
 
     GetLayoutRequest.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainId"))
     GetLayoutRequest.add_member(:layout_id, Shapes::ShapeRef.new(shape: LayoutId, required: true, location: "uri", location_name: "layoutId"))
     GetLayoutRequest.struct_class = Types::GetLayoutRequest
 
-    GetLayoutResponse.add_member(:content, Shapes::ShapeRef.new(shape: LayoutContent, required: true, location_name: "content"))
-    GetLayoutResponse.add_member(:created_time, Shapes::ShapeRef.new(shape: CreatedTime, location_name: "createdTime"))
-    GetLayoutResponse.add_member(:deleted, Shapes::ShapeRef.new(shape: Deleted, location_name: "deleted"))
-    GetLayoutResponse.add_member(:last_modified_time, Shapes::ShapeRef.new(shape: LastModifiedTime, location_name: "lastModifiedTime"))
-    GetLayoutResponse.add_member(:layout_arn, Shapes::ShapeRef.new(shape: LayoutArn, required: true, location_name: "layoutArn"))
     GetLayoutResponse.add_member(:layout_id, Shapes::ShapeRef.new(shape: LayoutId, required: true, location_name: "layoutId"))
+    GetLayoutResponse.add_member(:layout_arn, Shapes::ShapeRef.new(shape: LayoutArn, required: true, location_name: "layoutArn"))
     GetLayoutResponse.add_member(:name, Shapes::ShapeRef.new(shape: LayoutName, required: true, location_name: "name"))
+    GetLayoutResponse.add_member(:content, Shapes::ShapeRef.new(shape: LayoutContent, required: true, location_name: "content"))
     GetLayoutResponse.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    GetLayoutResponse.add_member(:deleted, Shapes::ShapeRef.new(shape: Deleted, location_name: "deleted"))
+    GetLayoutResponse.add_member(:created_time, Shapes::ShapeRef.new(shape: CreatedTime, location_name: "createdTime"))
+    GetLayoutResponse.add_member(:last_modified_time, Shapes::ShapeRef.new(shape: LastModifiedTime, location_name: "lastModifiedTime"))
     GetLayoutResponse.struct_class = Types::GetLayoutResponse
 
     GetTemplateRequest.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainId"))
     GetTemplateRequest.add_member(:template_id, Shapes::ShapeRef.new(shape: TemplateId, required: true, location: "uri", location_name: "templateId"))
     GetTemplateRequest.struct_class = Types::GetTemplateRequest
 
-    GetTemplateResponse.add_member(:created_time, Shapes::ShapeRef.new(shape: CreatedTime, location_name: "createdTime"))
-    GetTemplateResponse.add_member(:deleted, Shapes::ShapeRef.new(shape: Deleted, location_name: "deleted"))
-    GetTemplateResponse.add_member(:description, Shapes::ShapeRef.new(shape: TemplateDescription, location_name: "description"))
-    GetTemplateResponse.add_member(:last_modified_time, Shapes::ShapeRef.new(shape: LastModifiedTime, location_name: "lastModifiedTime"))
-    GetTemplateResponse.add_member(:layout_configuration, Shapes::ShapeRef.new(shape: LayoutConfiguration, location_name: "layoutConfiguration"))
-    GetTemplateResponse.add_member(:name, Shapes::ShapeRef.new(shape: TemplateName, required: true, location_name: "name"))
-    GetTemplateResponse.add_member(:required_fields, Shapes::ShapeRef.new(shape: RequiredFieldList, location_name: "requiredFields"))
-    GetTemplateResponse.add_member(:rules, Shapes::ShapeRef.new(shape: TemplateCaseRuleList, location_name: "rules"))
-    GetTemplateResponse.add_member(:status, Shapes::ShapeRef.new(shape: TemplateStatus, required: true, location_name: "status"))
-    GetTemplateResponse.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
-    GetTemplateResponse.add_member(:template_arn, Shapes::ShapeRef.new(shape: TemplateArn, required: true, location_name: "templateArn"))
     GetTemplateResponse.add_member(:template_id, Shapes::ShapeRef.new(shape: TemplateId, required: true, location_name: "templateId"))
+    GetTemplateResponse.add_member(:template_arn, Shapes::ShapeRef.new(shape: TemplateArn, required: true, location_name: "templateArn"))
+    GetTemplateResponse.add_member(:name, Shapes::ShapeRef.new(shape: TemplateName, required: true, location_name: "name"))
+    GetTemplateResponse.add_member(:description, Shapes::ShapeRef.new(shape: TemplateDescription, location_name: "description"))
+    GetTemplateResponse.add_member(:layout_configuration, Shapes::ShapeRef.new(shape: LayoutConfiguration, location_name: "layoutConfiguration"))
+    GetTemplateResponse.add_member(:required_fields, Shapes::ShapeRef.new(shape: RequiredFieldList, location_name: "requiredFields"))
+    GetTemplateResponse.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    GetTemplateResponse.add_member(:status, Shapes::ShapeRef.new(shape: TemplateStatus, required: true, location_name: "status"))
+    GetTemplateResponse.add_member(:deleted, Shapes::ShapeRef.new(shape: Deleted, location_name: "deleted"))
+    GetTemplateResponse.add_member(:created_time, Shapes::ShapeRef.new(shape: CreatedTime, location_name: "createdTime"))
+    GetTemplateResponse.add_member(:last_modified_time, Shapes::ShapeRef.new(shape: LastModifiedTime, location_name: "lastModifiedTime"))
+    GetTemplateResponse.add_member(:rules, Shapes::ShapeRef.new(shape: TemplateCaseRuleList, location_name: "rules"))
+    GetTemplateResponse.add_member(:tag_propagation_configurations, Shapes::ShapeRef.new(shape: TagPropagationConfigurationList, location_name: "tagPropagationConfigurations"))
     GetTemplateResponse.struct_class = Types::GetTemplateResponse
+
+    HiddenCaseRule.add_member(:default_value, Shapes::ShapeRef.new(shape: Boolean, required: true, location_name: "defaultValue"))
+    HiddenCaseRule.add_member(:conditions, Shapes::ShapeRef.new(shape: BooleanConditionList, required: true, location_name: "conditions"))
+    HiddenCaseRule.struct_class = Types::HiddenCaseRule
 
     InternalServerException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
     InternalServerException.add_member(:retry_after_seconds, Shapes::ShapeRef.new(shape: Integer, location: "header", location_name: "Retry-After"))
@@ -740,8 +901,8 @@ module Aws::ConnectCases
     LayoutSections.add_member(:sections, Shapes::ShapeRef.new(shape: SectionsList, location_name: "sections"))
     LayoutSections.struct_class = Types::LayoutSections
 
-    LayoutSummary.add_member(:layout_arn, Shapes::ShapeRef.new(shape: LayoutArn, required: true, location_name: "layoutArn"))
     LayoutSummary.add_member(:layout_id, Shapes::ShapeRef.new(shape: LayoutId, required: true, location_name: "layoutId"))
+    LayoutSummary.add_member(:layout_arn, Shapes::ShapeRef.new(shape: LayoutArn, required: true, location_name: "layoutArn"))
     LayoutSummary.add_member(:name, Shapes::ShapeRef.new(shape: LayoutName, required: true, location_name: "name"))
     LayoutSummary.struct_class = Types::LayoutSummary
 
@@ -758,8 +919,8 @@ module Aws::ConnectCases
 
     ListCaseRulesResponseCaseRulesList.member = Shapes::ShapeRef.new(shape: CaseRuleSummary)
 
-    ListCasesForContactRequest.add_member(:contact_arn, Shapes::ShapeRef.new(shape: ContactArn, required: true, location_name: "contactArn"))
     ListCasesForContactRequest.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainId"))
+    ListCasesForContactRequest.add_member(:contact_arn, Shapes::ShapeRef.new(shape: ContactArn, required: true, location_name: "contactArn"))
     ListCasesForContactRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: ListCasesForContactRequestMaxResultsInteger, location_name: "maxResults"))
     ListCasesForContactRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
     ListCasesForContactRequest.struct_class = Types::ListCasesForContactRequest
@@ -785,8 +946,8 @@ module Aws::ConnectCases
     ListFieldOptionsRequest.add_member(:values, Shapes::ShapeRef.new(shape: ValuesList, location: "querystring", location_name: "values"))
     ListFieldOptionsRequest.struct_class = Types::ListFieldOptionsRequest
 
-    ListFieldOptionsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
     ListFieldOptionsResponse.add_member(:options, Shapes::ShapeRef.new(shape: FieldOptionsList, required: true, location_name: "options"))
+    ListFieldOptionsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
     ListFieldOptionsResponse.struct_class = Types::ListFieldOptionsResponse
 
     ListFieldsRequest.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainId"))
@@ -821,11 +982,14 @@ module Aws::ConnectCases
     ListTemplatesRequest.add_member(:status, Shapes::ShapeRef.new(shape: TemplateStatusFilters, location: "querystring", location_name: "status"))
     ListTemplatesRequest.struct_class = Types::ListTemplatesRequest
 
-    ListTemplatesResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
     ListTemplatesResponse.add_member(:templates, Shapes::ShapeRef.new(shape: ListTemplatesResponseTemplatesList, required: true, location_name: "templates"))
+    ListTemplatesResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
     ListTemplatesResponse.struct_class = Types::ListTemplatesResponse
 
     ListTemplatesResponseTemplatesList.member = Shapes::ShapeRef.new(shape: TemplateSummary)
+
+    MutableTags.key = Shapes::ShapeRef.new(shape: MutableTagKey)
+    MutableTags.value = Shapes::ShapeRef.new(shape: TagValueString)
 
     OperandOne.add_member(:field_id, Shapes::ShapeRef.new(shape: FieldId, location_name: "fieldId"))
     OperandOne.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
@@ -833,17 +997,25 @@ module Aws::ConnectCases
     OperandOne.add_member_subclass(:unknown, Types::OperandOne::Unknown)
     OperandOne.struct_class = Types::OperandOne
 
+    OperandTwo.add_member(:string_value, Shapes::ShapeRef.new(shape: OperandTwoStringValueString, location_name: "stringValue"))
     OperandTwo.add_member(:boolean_value, Shapes::ShapeRef.new(shape: Boolean, location_name: "booleanValue"))
     OperandTwo.add_member(:double_value, Shapes::ShapeRef.new(shape: Double, location_name: "doubleValue"))
     OperandTwo.add_member(:empty_value, Shapes::ShapeRef.new(shape: EmptyOperandValue, location_name: "emptyValue"))
-    OperandTwo.add_member(:string_value, Shapes::ShapeRef.new(shape: OperandTwoStringValueString, location_name: "stringValue"))
     OperandTwo.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    OperandTwo.add_member_subclass(:string_value, Types::OperandTwo::StringValue)
     OperandTwo.add_member_subclass(:boolean_value, Types::OperandTwo::BooleanValue)
     OperandTwo.add_member_subclass(:double_value, Types::OperandTwo::DoubleValue)
     OperandTwo.add_member_subclass(:empty_value, Types::OperandTwo::EmptyValue)
-    OperandTwo.add_member_subclass(:string_value, Types::OperandTwo::StringValue)
     OperandTwo.add_member_subclass(:unknown, Types::OperandTwo::Unknown)
     OperandTwo.struct_class = Types::OperandTwo
+
+    ParentChildFieldOptionsMapping.add_member(:parent_field_option_value, Shapes::ShapeRef.new(shape: ParentChildFieldOptionValue, required: true, location_name: "parentFieldOptionValue"))
+    ParentChildFieldOptionsMapping.add_member(:child_field_option_values, Shapes::ShapeRef.new(shape: ParentChildFieldOptionsMappingChildFieldOptionValuesList, required: true, location_name: "childFieldOptionValues"))
+    ParentChildFieldOptionsMapping.struct_class = Types::ParentChildFieldOptionsMapping
+
+    ParentChildFieldOptionsMappingChildFieldOptionValuesList.member = Shapes::ShapeRef.new(shape: ParentChildFieldOptionValue)
+
+    ParentChildFieldOptionsMappingList.member = Shapes::ShapeRef.new(shape: ParentChildFieldOptionsMapping)
 
     PutCaseEventConfigurationRequest.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainId"))
     PutCaseEventConfigurationRequest.add_member(:event_bridge, Shapes::ShapeRef.new(shape: EventBridgeConfiguration, required: true, location_name: "eventBridge"))
@@ -851,41 +1023,67 @@ module Aws::ConnectCases
 
     PutCaseEventConfigurationResponse.struct_class = Types::PutCaseEventConfigurationResponse
 
-    RelatedItemContent.add_member(:comment, Shapes::ShapeRef.new(shape: CommentContent, location_name: "comment"))
     RelatedItemContent.add_member(:contact, Shapes::ShapeRef.new(shape: ContactContent, location_name: "contact"))
+    RelatedItemContent.add_member(:comment, Shapes::ShapeRef.new(shape: CommentContent, location_name: "comment"))
     RelatedItemContent.add_member(:file, Shapes::ShapeRef.new(shape: FileContent, location_name: "file"))
+    RelatedItemContent.add_member(:sla, Shapes::ShapeRef.new(shape: SlaContent, location_name: "sla"))
+    RelatedItemContent.add_member(:connect_case, Shapes::ShapeRef.new(shape: ConnectCaseContent, location_name: "connectCase"))
+    RelatedItemContent.add_member(:custom, Shapes::ShapeRef.new(shape: CustomContent, location_name: "custom"))
     RelatedItemContent.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
-    RelatedItemContent.add_member_subclass(:comment, Types::RelatedItemContent::Comment)
     RelatedItemContent.add_member_subclass(:contact, Types::RelatedItemContent::Contact)
+    RelatedItemContent.add_member_subclass(:comment, Types::RelatedItemContent::Comment)
     RelatedItemContent.add_member_subclass(:file, Types::RelatedItemContent::File)
+    RelatedItemContent.add_member_subclass(:sla, Types::RelatedItemContent::Sla)
+    RelatedItemContent.add_member_subclass(:connect_case, Types::RelatedItemContent::ConnectCase)
+    RelatedItemContent.add_member_subclass(:custom, Types::RelatedItemContent::Custom)
     RelatedItemContent.add_member_subclass(:unknown, Types::RelatedItemContent::Unknown)
     RelatedItemContent.struct_class = Types::RelatedItemContent
 
     RelatedItemEventIncludedData.add_member(:include_content, Shapes::ShapeRef.new(shape: Boolean, required: true, location_name: "includeContent"))
     RelatedItemEventIncludedData.struct_class = Types::RelatedItemEventIncludedData
 
-    RelatedItemInputContent.add_member(:comment, Shapes::ShapeRef.new(shape: CommentContent, location_name: "comment"))
     RelatedItemInputContent.add_member(:contact, Shapes::ShapeRef.new(shape: Contact, location_name: "contact"))
+    RelatedItemInputContent.add_member(:comment, Shapes::ShapeRef.new(shape: CommentContent, location_name: "comment"))
     RelatedItemInputContent.add_member(:file, Shapes::ShapeRef.new(shape: FileContent, location_name: "file"))
+    RelatedItemInputContent.add_member(:sla, Shapes::ShapeRef.new(shape: SlaInputContent, location_name: "sla"))
+    RelatedItemInputContent.add_member(:connect_case, Shapes::ShapeRef.new(shape: ConnectCaseInputContent, location_name: "connectCase"))
+    RelatedItemInputContent.add_member(:custom, Shapes::ShapeRef.new(shape: CustomInputContent, location_name: "custom"))
     RelatedItemInputContent.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
-    RelatedItemInputContent.add_member_subclass(:comment, Types::RelatedItemInputContent::Comment)
     RelatedItemInputContent.add_member_subclass(:contact, Types::RelatedItemInputContent::Contact)
+    RelatedItemInputContent.add_member_subclass(:comment, Types::RelatedItemInputContent::Comment)
     RelatedItemInputContent.add_member_subclass(:file, Types::RelatedItemInputContent::File)
+    RelatedItemInputContent.add_member_subclass(:sla, Types::RelatedItemInputContent::Sla)
+    RelatedItemInputContent.add_member_subclass(:connect_case, Types::RelatedItemInputContent::ConnectCase)
+    RelatedItemInputContent.add_member_subclass(:custom, Types::RelatedItemInputContent::Custom)
     RelatedItemInputContent.add_member_subclass(:unknown, Types::RelatedItemInputContent::Unknown)
     RelatedItemInputContent.struct_class = Types::RelatedItemInputContent
 
-    RelatedItemTypeFilter.add_member(:comment, Shapes::ShapeRef.new(shape: CommentFilter, location_name: "comment"))
     RelatedItemTypeFilter.add_member(:contact, Shapes::ShapeRef.new(shape: ContactFilter, location_name: "contact"))
+    RelatedItemTypeFilter.add_member(:comment, Shapes::ShapeRef.new(shape: CommentFilter, location_name: "comment"))
     RelatedItemTypeFilter.add_member(:file, Shapes::ShapeRef.new(shape: FileFilter, location_name: "file"))
+    RelatedItemTypeFilter.add_member(:sla, Shapes::ShapeRef.new(shape: SlaFilter, location_name: "sla"))
+    RelatedItemTypeFilter.add_member(:connect_case, Shapes::ShapeRef.new(shape: ConnectCaseFilter, location_name: "connectCase"))
+    RelatedItemTypeFilter.add_member(:custom, Shapes::ShapeRef.new(shape: CustomFilter, location_name: "custom"))
     RelatedItemTypeFilter.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
-    RelatedItemTypeFilter.add_member_subclass(:comment, Types::RelatedItemTypeFilter::Comment)
     RelatedItemTypeFilter.add_member_subclass(:contact, Types::RelatedItemTypeFilter::Contact)
+    RelatedItemTypeFilter.add_member_subclass(:comment, Types::RelatedItemTypeFilter::Comment)
     RelatedItemTypeFilter.add_member_subclass(:file, Types::RelatedItemTypeFilter::File)
+    RelatedItemTypeFilter.add_member_subclass(:sla, Types::RelatedItemTypeFilter::Sla)
+    RelatedItemTypeFilter.add_member_subclass(:connect_case, Types::RelatedItemTypeFilter::ConnectCase)
+    RelatedItemTypeFilter.add_member_subclass(:custom, Types::RelatedItemTypeFilter::Custom)
     RelatedItemTypeFilter.add_member_subclass(:unknown, Types::RelatedItemTypeFilter::Unknown)
     RelatedItemTypeFilter.struct_class = Types::RelatedItemTypeFilter
 
-    RequiredCaseRule.add_member(:conditions, Shapes::ShapeRef.new(shape: BooleanConditionList, required: true, location_name: "conditions"))
+    RelatedItemUpdateContent.add_member(:comment, Shapes::ShapeRef.new(shape: CommentUpdateContent, location_name: "comment"))
+    RelatedItemUpdateContent.add_member(:custom, Shapes::ShapeRef.new(shape: CustomUpdateContent, location_name: "custom"))
+    RelatedItemUpdateContent.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    RelatedItemUpdateContent.add_member_subclass(:comment, Types::RelatedItemUpdateContent::Comment)
+    RelatedItemUpdateContent.add_member_subclass(:custom, Types::RelatedItemUpdateContent::Custom)
+    RelatedItemUpdateContent.add_member_subclass(:unknown, Types::RelatedItemUpdateContent::Unknown)
+    RelatedItemUpdateContent.struct_class = Types::RelatedItemUpdateContent
+
     RequiredCaseRule.add_member(:default_value, Shapes::ShapeRef.new(shape: Boolean, required: true, location_name: "defaultValue"))
+    RequiredCaseRule.add_member(:conditions, Shapes::ShapeRef.new(shape: BooleanConditionList, required: true, location_name: "conditions"))
     RequiredCaseRule.struct_class = Types::RequiredCaseRule
 
     RequiredField.add_member(:field_id, Shapes::ShapeRef.new(shape: FieldId, required: true, location_name: "fieldId"))
@@ -898,38 +1096,69 @@ module Aws::ConnectCases
     ResourceNotFoundException.add_member(:resource_type, Shapes::ShapeRef.new(shape: String, required: true, location_name: "resourceType"))
     ResourceNotFoundException.struct_class = Types::ResourceNotFoundException
 
+    SearchAllRelatedItemsRequest.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainId"))
+    SearchAllRelatedItemsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: SearchAllRelatedItemsRequestMaxResultsInteger, location_name: "maxResults"))
+    SearchAllRelatedItemsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    SearchAllRelatedItemsRequest.add_member(:filters, Shapes::ShapeRef.new(shape: SearchAllRelatedItemsRequestFiltersList, location_name: "filters"))
+    SearchAllRelatedItemsRequest.add_member(:sorts, Shapes::ShapeRef.new(shape: SearchAllRelatedItemsRequestSortsList, location_name: "sorts"))
+    SearchAllRelatedItemsRequest.struct_class = Types::SearchAllRelatedItemsRequest
+
+    SearchAllRelatedItemsRequestFiltersList.member = Shapes::ShapeRef.new(shape: RelatedItemTypeFilter)
+
+    SearchAllRelatedItemsRequestSortsList.member = Shapes::ShapeRef.new(shape: SearchAllRelatedItemsSort)
+
+    SearchAllRelatedItemsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    SearchAllRelatedItemsResponse.add_member(:related_items, Shapes::ShapeRef.new(shape: SearchAllRelatedItemsResponseRelatedItemsList, required: true, location_name: "relatedItems"))
+    SearchAllRelatedItemsResponse.struct_class = Types::SearchAllRelatedItemsResponse
+
+    SearchAllRelatedItemsResponseItem.add_member(:related_item_id, Shapes::ShapeRef.new(shape: RelatedItemId, required: true, location_name: "relatedItemId"))
+    SearchAllRelatedItemsResponseItem.add_member(:case_id, Shapes::ShapeRef.new(shape: CaseId, required: true, location_name: "caseId"))
+    SearchAllRelatedItemsResponseItem.add_member(:type, Shapes::ShapeRef.new(shape: RelatedItemType, required: true, location_name: "type"))
+    SearchAllRelatedItemsResponseItem.add_member(:association_time, Shapes::ShapeRef.new(shape: AssociationTime, required: true, location_name: "associationTime"))
+    SearchAllRelatedItemsResponseItem.add_member(:content, Shapes::ShapeRef.new(shape: RelatedItemContent, required: true, location_name: "content"))
+    SearchAllRelatedItemsResponseItem.add_member(:performed_by, Shapes::ShapeRef.new(shape: UserUnion, location_name: "performedBy"))
+    SearchAllRelatedItemsResponseItem.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    SearchAllRelatedItemsResponseItem.struct_class = Types::SearchAllRelatedItemsResponseItem
+
+    SearchAllRelatedItemsResponseRelatedItemsList.member = Shapes::ShapeRef.new(shape: SearchAllRelatedItemsResponseItem)
+
+    SearchAllRelatedItemsSort.add_member(:sort_property, Shapes::ShapeRef.new(shape: SearchAllRelatedItemsSortProperty, required: true, location_name: "sortProperty"))
+    SearchAllRelatedItemsSort.add_member(:sort_order, Shapes::ShapeRef.new(shape: Order, required: true, location_name: "sortOrder"))
+    SearchAllRelatedItemsSort.struct_class = Types::SearchAllRelatedItemsSort
+
     SearchCasesRequest.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainId"))
-    SearchCasesRequest.add_member(:fields, Shapes::ShapeRef.new(shape: SearchCasesRequestFieldsList, location_name: "fields"))
-    SearchCasesRequest.add_member(:filter, Shapes::ShapeRef.new(shape: CaseFilter, location_name: "filter"))
     SearchCasesRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: SearchCasesRequestMaxResultsInteger, location_name: "maxResults"))
     SearchCasesRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
     SearchCasesRequest.add_member(:search_term, Shapes::ShapeRef.new(shape: SearchCasesRequestSearchTermString, location_name: "searchTerm"))
+    SearchCasesRequest.add_member(:filter, Shapes::ShapeRef.new(shape: CaseFilter, location_name: "filter"))
     SearchCasesRequest.add_member(:sorts, Shapes::ShapeRef.new(shape: SearchCasesRequestSortsList, location_name: "sorts"))
+    SearchCasesRequest.add_member(:fields, Shapes::ShapeRef.new(shape: SearchCasesRequestFieldsList, location_name: "fields"))
     SearchCasesRequest.struct_class = Types::SearchCasesRequest
 
     SearchCasesRequestFieldsList.member = Shapes::ShapeRef.new(shape: FieldIdentifier)
 
     SearchCasesRequestSortsList.member = Shapes::ShapeRef.new(shape: Sort)
 
-    SearchCasesResponse.add_member(:cases, Shapes::ShapeRef.new(shape: SearchCasesResponseCasesList, required: true, location_name: "cases"))
     SearchCasesResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    SearchCasesResponse.add_member(:cases, Shapes::ShapeRef.new(shape: SearchCasesResponseCasesList, required: true, location_name: "cases"))
+    SearchCasesResponse.add_member(:total_count, Shapes::ShapeRef.new(shape: TotalCount, location_name: "totalCount"))
     SearchCasesResponse.struct_class = Types::SearchCasesResponse
 
     SearchCasesResponseCasesList.member = Shapes::ShapeRef.new(shape: SearchCasesResponseItem)
 
     SearchCasesResponseItem.add_member(:case_id, Shapes::ShapeRef.new(shape: CaseId, required: true, location_name: "caseId"))
+    SearchCasesResponseItem.add_member(:template_id, Shapes::ShapeRef.new(shape: TemplateId, required: true, location_name: "templateId"))
     SearchCasesResponseItem.add_member(:fields, Shapes::ShapeRef.new(shape: SearchCasesResponseItemFieldsList, required: true, location_name: "fields"))
     SearchCasesResponseItem.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
-    SearchCasesResponseItem.add_member(:template_id, Shapes::ShapeRef.new(shape: TemplateId, required: true, location_name: "templateId"))
     SearchCasesResponseItem.struct_class = Types::SearchCasesResponseItem
 
     SearchCasesResponseItemFieldsList.member = Shapes::ShapeRef.new(shape: FieldValue)
 
-    SearchRelatedItemsRequest.add_member(:case_id, Shapes::ShapeRef.new(shape: CaseId, required: true, location: "uri", location_name: "caseId"))
     SearchRelatedItemsRequest.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainId"))
-    SearchRelatedItemsRequest.add_member(:filters, Shapes::ShapeRef.new(shape: SearchRelatedItemsRequestFiltersList, location_name: "filters"))
+    SearchRelatedItemsRequest.add_member(:case_id, Shapes::ShapeRef.new(shape: CaseId, required: true, location: "uri", location_name: "caseId"))
     SearchRelatedItemsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: SearchRelatedItemsRequestMaxResultsInteger, location_name: "maxResults"))
     SearchRelatedItemsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: NextToken, location_name: "nextToken"))
+    SearchRelatedItemsRequest.add_member(:filters, Shapes::ShapeRef.new(shape: SearchRelatedItemsRequestFiltersList, location_name: "filters"))
     SearchRelatedItemsRequest.struct_class = Types::SearchRelatedItemsRequest
 
     SearchRelatedItemsRequestFiltersList.member = Shapes::ShapeRef.new(shape: RelatedItemTypeFilter)
@@ -938,12 +1167,12 @@ module Aws::ConnectCases
     SearchRelatedItemsResponse.add_member(:related_items, Shapes::ShapeRef.new(shape: SearchRelatedItemsResponseRelatedItemsList, required: true, location_name: "relatedItems"))
     SearchRelatedItemsResponse.struct_class = Types::SearchRelatedItemsResponse
 
+    SearchRelatedItemsResponseItem.add_member(:related_item_id, Shapes::ShapeRef.new(shape: RelatedItemId, required: true, location_name: "relatedItemId"))
+    SearchRelatedItemsResponseItem.add_member(:type, Shapes::ShapeRef.new(shape: RelatedItemType, required: true, location_name: "type"))
     SearchRelatedItemsResponseItem.add_member(:association_time, Shapes::ShapeRef.new(shape: AssociationTime, required: true, location_name: "associationTime"))
     SearchRelatedItemsResponseItem.add_member(:content, Shapes::ShapeRef.new(shape: RelatedItemContent, required: true, location_name: "content"))
-    SearchRelatedItemsResponseItem.add_member(:performed_by, Shapes::ShapeRef.new(shape: UserUnion, location_name: "performedBy"))
-    SearchRelatedItemsResponseItem.add_member(:related_item_id, Shapes::ShapeRef.new(shape: RelatedItemId, required: true, location_name: "relatedItemId"))
     SearchRelatedItemsResponseItem.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
-    SearchRelatedItemsResponseItem.add_member(:type, Shapes::ShapeRef.new(shape: RelatedItemType, required: true, location_name: "type"))
+    SearchRelatedItemsResponseItem.add_member(:performed_by, Shapes::ShapeRef.new(shape: UserUnion, location_name: "performedBy"))
     SearchRelatedItemsResponseItem.struct_class = Types::SearchRelatedItemsResponseItem
 
     SearchRelatedItemsResponseRelatedItemsList.member = Shapes::ShapeRef.new(shape: SearchRelatedItemsResponseItem)
@@ -959,15 +1188,65 @@ module Aws::ConnectCases
     ServiceQuotaExceededException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
     ServiceQuotaExceededException.struct_class = Types::ServiceQuotaExceededException
 
+    SlaConfiguration.add_member(:name, Shapes::ShapeRef.new(shape: SlaName, required: true, location_name: "name"))
+    SlaConfiguration.add_member(:type, Shapes::ShapeRef.new(shape: SlaType, required: true, location_name: "type"))
+    SlaConfiguration.add_member(:status, Shapes::ShapeRef.new(shape: SlaStatus, required: true, location_name: "status"))
+    SlaConfiguration.add_member(:field_id, Shapes::ShapeRef.new(shape: FieldId, location_name: "fieldId"))
+    SlaConfiguration.add_member(:target_field_values, Shapes::ShapeRef.new(shape: SlaFieldValueUnionList, location_name: "targetFieldValues"))
+    SlaConfiguration.add_member(:target_time, Shapes::ShapeRef.new(shape: SlaTargetTime, required: true, location_name: "targetTime"))
+    SlaConfiguration.add_member(:completion_time, Shapes::ShapeRef.new(shape: SlaCompletionTime, location_name: "completionTime"))
+    SlaConfiguration.struct_class = Types::SlaConfiguration
+
+    SlaContent.add_member(:sla_configuration, Shapes::ShapeRef.new(shape: SlaConfiguration, required: true, location_name: "slaConfiguration"))
+    SlaContent.struct_class = Types::SlaContent
+
+    SlaFieldValueUnionList.member = Shapes::ShapeRef.new(shape: FieldValueUnion)
+
+    SlaFilter.add_member(:name, Shapes::ShapeRef.new(shape: SlaName, location_name: "name"))
+    SlaFilter.add_member(:status, Shapes::ShapeRef.new(shape: SlaStatus, location_name: "status"))
+    SlaFilter.struct_class = Types::SlaFilter
+
+    SlaInputConfiguration.add_member(:name, Shapes::ShapeRef.new(shape: SlaName, required: true, location_name: "name"))
+    SlaInputConfiguration.add_member(:type, Shapes::ShapeRef.new(shape: SlaType, required: true, location_name: "type"))
+    SlaInputConfiguration.add_member(:field_id, Shapes::ShapeRef.new(shape: FieldId, location_name: "fieldId"))
+    SlaInputConfiguration.add_member(:target_field_values, Shapes::ShapeRef.new(shape: SlaFieldValueUnionList, location_name: "targetFieldValues"))
+    SlaInputConfiguration.add_member(:target_sla_minutes, Shapes::ShapeRef.new(shape: TargetSlaMinutes, required: true, location_name: "targetSlaMinutes"))
+    SlaInputConfiguration.struct_class = Types::SlaInputConfiguration
+
+    SlaInputContent.add_member(:sla_input_configuration, Shapes::ShapeRef.new(shape: SlaInputConfiguration, location_name: "slaInputConfiguration"))
+    SlaInputContent.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    SlaInputContent.add_member_subclass(:sla_input_configuration, Types::SlaInputContent::SlaInputConfiguration)
+    SlaInputContent.add_member_subclass(:unknown, Types::SlaInputContent::Unknown)
+    SlaInputContent.struct_class = Types::SlaInputContent
+
     Sort.add_member(:field_id, Shapes::ShapeRef.new(shape: FieldId, required: true, location_name: "fieldId"))
     Sort.add_member(:sort_order, Shapes::ShapeRef.new(shape: Order, required: true, location_name: "sortOrder"))
     Sort.struct_class = Types::Sort
 
+    TagFilter.add_member(:equal_to, Shapes::ShapeRef.new(shape: TagValue, location_name: "equalTo"))
+    TagFilter.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
+    TagFilter.add_member_subclass(:equal_to, Types::TagFilter::EqualTo)
+    TagFilter.add_member_subclass(:unknown, Types::TagFilter::Unknown)
+    TagFilter.struct_class = Types::TagFilter
+
     TagKeyList.member = Shapes::ShapeRef.new(shape: TagKey)
+
+    TagPropagationConfiguration.add_member(:resource_type, Shapes::ShapeRef.new(shape: TagPropagationResourceType, required: true, location_name: "resourceType"))
+    TagPropagationConfiguration.add_member(:tag_map, Shapes::ShapeRef.new(shape: TagPropagationConfigurationTagMapMap, required: true, location_name: "tagMap"))
+    TagPropagationConfiguration.struct_class = Types::TagPropagationConfiguration
+
+    TagPropagationConfigurationList.member = Shapes::ShapeRef.new(shape: TagPropagationConfiguration)
+
+    TagPropagationConfigurationTagMapMap.key = Shapes::ShapeRef.new(shape: MutableTagKey)
+    TagPropagationConfigurationTagMapMap.value = Shapes::ShapeRef.new(shape: TagValueString)
 
     TagResourceRequest.add_member(:arn, Shapes::ShapeRef.new(shape: Arn, required: true, location: "uri", location_name: "arn"))
     TagResourceRequest.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, required: true, location_name: "tags"))
     TagResourceRequest.struct_class = Types::TagResourceRequest
+
+    TagValue.add_member(:key, Shapes::ShapeRef.new(shape: SearchTagKey, location_name: "key"))
+    TagValue.add_member(:value, Shapes::ShapeRef.new(shape: TagValueString, location_name: "value"))
+    TagValue.struct_class = Types::TagValue
 
     Tags.key = Shapes::ShapeRef.new(shape: String)
     Tags.value = Shapes::ShapeRef.new(shape: String)
@@ -975,16 +1254,20 @@ module Aws::ConnectCases
     TemplateCaseRuleList.member = Shapes::ShapeRef.new(shape: TemplateRule)
 
     TemplateRule.add_member(:case_rule_id, Shapes::ShapeRef.new(shape: CaseRuleId, required: true, location_name: "caseRuleId"))
-    TemplateRule.add_member(:field_id, Shapes::ShapeRef.new(shape: FieldId, required: true, location_name: "fieldId"))
+    TemplateRule.add_member(:field_id, Shapes::ShapeRef.new(shape: FieldId, location_name: "fieldId"))
     TemplateRule.struct_class = Types::TemplateRule
 
     TemplateStatusFilters.member = Shapes::ShapeRef.new(shape: TemplateStatus)
 
+    TemplateSummary.add_member(:template_id, Shapes::ShapeRef.new(shape: TemplateId, required: true, location_name: "templateId"))
+    TemplateSummary.add_member(:template_arn, Shapes::ShapeRef.new(shape: TemplateArn, required: true, location_name: "templateArn"))
     TemplateSummary.add_member(:name, Shapes::ShapeRef.new(shape: TemplateName, required: true, location_name: "name"))
     TemplateSummary.add_member(:status, Shapes::ShapeRef.new(shape: TemplateStatus, required: true, location_name: "status"))
-    TemplateSummary.add_member(:template_arn, Shapes::ShapeRef.new(shape: TemplateArn, required: true, location_name: "templateArn"))
-    TemplateSummary.add_member(:template_id, Shapes::ShapeRef.new(shape: TemplateId, required: true, location_name: "templateId"))
+    TemplateSummary.add_member(:tag_propagation_configurations, Shapes::ShapeRef.new(shape: TagPropagationConfigurationList, location_name: "tagPropagationConfigurations"))
     TemplateSummary.struct_class = Types::TemplateSummary
+
+    TextAttributes.add_member(:is_multiline, Shapes::ShapeRef.new(shape: Boolean, required: true, location_name: "isMultiline"))
+    TextAttributes.struct_class = Types::TextAttributes
 
     ThrottlingException.add_member(:message, Shapes::ShapeRef.new(shape: String, required: true, location_name: "message"))
     ThrottlingException.struct_class = Types::ThrottlingException
@@ -993,8 +1276,8 @@ module Aws::ConnectCases
     UntagResourceRequest.add_member(:tag_keys, Shapes::ShapeRef.new(shape: TagKeyList, required: true, location: "querystring", location_name: "tagKeys"))
     UntagResourceRequest.struct_class = Types::UntagResourceRequest
 
-    UpdateCaseRequest.add_member(:case_id, Shapes::ShapeRef.new(shape: CaseId, required: true, location: "uri", location_name: "caseId"))
     UpdateCaseRequest.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainId"))
+    UpdateCaseRequest.add_member(:case_id, Shapes::ShapeRef.new(shape: CaseId, required: true, location: "uri", location_name: "caseId"))
     UpdateCaseRequest.add_member(:fields, Shapes::ShapeRef.new(shape: UpdateCaseRequestFieldsList, required: true, location_name: "fields"))
     UpdateCaseRequest.add_member(:performed_by, Shapes::ShapeRef.new(shape: UserUnion, location_name: "performedBy"))
     UpdateCaseRequest.struct_class = Types::UpdateCaseRequest
@@ -1003,46 +1286,67 @@ module Aws::ConnectCases
 
     UpdateCaseResponse.struct_class = Types::UpdateCaseResponse
 
-    UpdateCaseRuleRequest.add_member(:case_rule_id, Shapes::ShapeRef.new(shape: CaseRuleId, required: true, location: "uri", location_name: "caseRuleId"))
-    UpdateCaseRuleRequest.add_member(:description, Shapes::ShapeRef.new(shape: CaseRuleDescription, location_name: "description"))
     UpdateCaseRuleRequest.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainId"))
+    UpdateCaseRuleRequest.add_member(:case_rule_id, Shapes::ShapeRef.new(shape: CaseRuleId, required: true, location: "uri", location_name: "caseRuleId"))
     UpdateCaseRuleRequest.add_member(:name, Shapes::ShapeRef.new(shape: CaseRuleName, location_name: "name"))
+    UpdateCaseRuleRequest.add_member(:description, Shapes::ShapeRef.new(shape: CaseRuleDescription, location_name: "description"))
     UpdateCaseRuleRequest.add_member(:rule, Shapes::ShapeRef.new(shape: CaseRuleDetails, location_name: "rule"))
     UpdateCaseRuleRequest.struct_class = Types::UpdateCaseRuleRequest
 
     UpdateCaseRuleResponse.struct_class = Types::UpdateCaseRuleResponse
 
-    UpdateFieldRequest.add_member(:description, Shapes::ShapeRef.new(shape: FieldDescription, location_name: "description"))
     UpdateFieldRequest.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainId"))
     UpdateFieldRequest.add_member(:field_id, Shapes::ShapeRef.new(shape: FieldId, required: true, location: "uri", location_name: "fieldId"))
     UpdateFieldRequest.add_member(:name, Shapes::ShapeRef.new(shape: FieldName, location_name: "name"))
+    UpdateFieldRequest.add_member(:description, Shapes::ShapeRef.new(shape: FieldDescription, location_name: "description"))
+    UpdateFieldRequest.add_member(:attributes, Shapes::ShapeRef.new(shape: FieldAttributes, location_name: "attributes"))
     UpdateFieldRequest.struct_class = Types::UpdateFieldRequest
 
     UpdateFieldResponse.struct_class = Types::UpdateFieldResponse
 
-    UpdateLayoutRequest.add_member(:content, Shapes::ShapeRef.new(shape: LayoutContent, location_name: "content"))
     UpdateLayoutRequest.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainId"))
     UpdateLayoutRequest.add_member(:layout_id, Shapes::ShapeRef.new(shape: LayoutId, required: true, location: "uri", location_name: "layoutId"))
     UpdateLayoutRequest.add_member(:name, Shapes::ShapeRef.new(shape: LayoutName, location_name: "name"))
+    UpdateLayoutRequest.add_member(:content, Shapes::ShapeRef.new(shape: LayoutContent, location_name: "content"))
     UpdateLayoutRequest.struct_class = Types::UpdateLayoutRequest
 
     UpdateLayoutResponse.struct_class = Types::UpdateLayoutResponse
 
-    UpdateTemplateRequest.add_member(:description, Shapes::ShapeRef.new(shape: TemplateDescription, location_name: "description"))
+    UpdateRelatedItemRequest.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainId"))
+    UpdateRelatedItemRequest.add_member(:case_id, Shapes::ShapeRef.new(shape: CaseId, required: true, location: "uri", location_name: "caseId"))
+    UpdateRelatedItemRequest.add_member(:related_item_id, Shapes::ShapeRef.new(shape: RelatedItemId, required: true, location: "uri", location_name: "relatedItemId"))
+    UpdateRelatedItemRequest.add_member(:content, Shapes::ShapeRef.new(shape: RelatedItemUpdateContent, required: true, location_name: "content"))
+    UpdateRelatedItemRequest.add_member(:performed_by, Shapes::ShapeRef.new(shape: UserUnion, location_name: "performedBy"))
+    UpdateRelatedItemRequest.struct_class = Types::UpdateRelatedItemRequest
+
+    UpdateRelatedItemResponse.add_member(:related_item_id, Shapes::ShapeRef.new(shape: RelatedItemId, required: true, location_name: "relatedItemId"))
+    UpdateRelatedItemResponse.add_member(:related_item_arn, Shapes::ShapeRef.new(shape: RelatedItemArn, required: true, location_name: "relatedItemArn"))
+    UpdateRelatedItemResponse.add_member(:type, Shapes::ShapeRef.new(shape: RelatedItemType, required: true, location_name: "type"))
+    UpdateRelatedItemResponse.add_member(:content, Shapes::ShapeRef.new(shape: RelatedItemContent, required: true, location_name: "content"))
+    UpdateRelatedItemResponse.add_member(:association_time, Shapes::ShapeRef.new(shape: AssociationTime, required: true, location_name: "associationTime"))
+    UpdateRelatedItemResponse.add_member(:tags, Shapes::ShapeRef.new(shape: Tags, location_name: "tags"))
+    UpdateRelatedItemResponse.add_member(:last_updated_user, Shapes::ShapeRef.new(shape: UserUnion, location_name: "lastUpdatedUser"))
+    UpdateRelatedItemResponse.add_member(:created_by, Shapes::ShapeRef.new(shape: UserUnion, location_name: "createdBy"))
+    UpdateRelatedItemResponse.struct_class = Types::UpdateRelatedItemResponse
+
     UpdateTemplateRequest.add_member(:domain_id, Shapes::ShapeRef.new(shape: DomainId, required: true, location: "uri", location_name: "domainId"))
-    UpdateTemplateRequest.add_member(:layout_configuration, Shapes::ShapeRef.new(shape: LayoutConfiguration, location_name: "layoutConfiguration"))
-    UpdateTemplateRequest.add_member(:name, Shapes::ShapeRef.new(shape: TemplateName, location_name: "name"))
-    UpdateTemplateRequest.add_member(:required_fields, Shapes::ShapeRef.new(shape: RequiredFieldList, location_name: "requiredFields"))
-    UpdateTemplateRequest.add_member(:rules, Shapes::ShapeRef.new(shape: TemplateCaseRuleList, location_name: "rules"))
-    UpdateTemplateRequest.add_member(:status, Shapes::ShapeRef.new(shape: TemplateStatus, location_name: "status"))
     UpdateTemplateRequest.add_member(:template_id, Shapes::ShapeRef.new(shape: TemplateId, required: true, location: "uri", location_name: "templateId"))
+    UpdateTemplateRequest.add_member(:name, Shapes::ShapeRef.new(shape: TemplateName, location_name: "name"))
+    UpdateTemplateRequest.add_member(:description, Shapes::ShapeRef.new(shape: TemplateDescription, location_name: "description"))
+    UpdateTemplateRequest.add_member(:layout_configuration, Shapes::ShapeRef.new(shape: LayoutConfiguration, location_name: "layoutConfiguration"))
+    UpdateTemplateRequest.add_member(:required_fields, Shapes::ShapeRef.new(shape: RequiredFieldList, location_name: "requiredFields"))
+    UpdateTemplateRequest.add_member(:status, Shapes::ShapeRef.new(shape: TemplateStatus, location_name: "status"))
+    UpdateTemplateRequest.add_member(:rules, Shapes::ShapeRef.new(shape: TemplateCaseRuleList, location_name: "rules"))
+    UpdateTemplateRequest.add_member(:tag_propagation_configurations, Shapes::ShapeRef.new(shape: TagPropagationConfigurationList, location_name: "tagPropagationConfigurations"))
     UpdateTemplateRequest.struct_class = Types::UpdateTemplateRequest
 
     UpdateTemplateResponse.struct_class = Types::UpdateTemplateResponse
 
     UserUnion.add_member(:user_arn, Shapes::ShapeRef.new(shape: UserArn, location_name: "userArn"))
+    UserUnion.add_member(:custom_entity, Shapes::ShapeRef.new(shape: CustomEntity, location_name: "customEntity"))
     UserUnion.add_member(:unknown, Shapes::ShapeRef.new(shape: nil, location_name: 'unknown'))
     UserUnion.add_member_subclass(:user_arn, Types::UserUnion::UserArn)
+    UserUnion.add_member_subclass(:custom_entity, Types::UserUnion::CustomEntity)
     UserUnion.add_member_subclass(:unknown, Types::UserUnion::Unknown)
     UserUnion.struct_class = Types::UserUnion
 
@@ -1059,9 +1363,10 @@ module Aws::ConnectCases
 
       api.metadata = {
         "apiVersion" => "2022-10-03",
+        "auth" => ["aws.auth#sigv4"],
         "endpointPrefix" => "cases",
-        "jsonVersion" => "1.1",
         "protocol" => "rest-json",
+        "protocols" => ["rest-json"],
         "serviceAbbreviation" => "ConnectCases",
         "serviceFullName" => "Amazon Connect Cases",
         "serviceId" => "ConnectCases",
@@ -1212,6 +1517,19 @@ module Aws::ConnectCases
         o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
       end)
 
+      api.add_operation(:delete_case, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeleteCase"
+        o.http_method = "DELETE"
+        o.http_request_uri = "/domains/{domainId}/cases/{caseId}"
+        o.input = Shapes::ShapeRef.new(shape: DeleteCaseRequest)
+        o.output = Shapes::ShapeRef.new(shape: DeleteCaseResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+      end)
+
       api.add_operation(:delete_case_rule, Seahorse::Model::Operation.new.tap do |o|
         o.name = "DeleteCaseRule"
         o.http_method = "DELETE"
@@ -1266,6 +1584,19 @@ module Aws::ConnectCases
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+      end)
+
+      api.add_operation(:delete_related_item, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DeleteRelatedItem"
+        o.http_method = "DELETE"
+        o.http_request_uri = "/domains/{domainId}/cases/{caseId}/related-items/{relatedItemId}"
+        o.input = Shapes::ShapeRef.new(shape: DeleteRelatedItemRequest)
+        o.output = Shapes::ShapeRef.new(shape: DeleteRelatedItemResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
       end)
 
       api.add_operation(:delete_template, Seahorse::Model::Operation.new.tap do |o|
@@ -1527,6 +1858,26 @@ module Aws::ConnectCases
         o.errors << Shapes::ShapeRef.new(shape: ValidationException)
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+      end)
+
+      api.add_operation(:search_all_related_items, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "SearchAllRelatedItems"
+        o.http_method = "POST"
+        o.http_request_uri = "/domains/{domainId}/related-items-search"
+        o.input = Shapes::ShapeRef.new(shape: SearchAllRelatedItemsRequest)
+        o.output = Shapes::ShapeRef.new(shape: SearchAllRelatedItemsResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o[:pager] = Aws::Pager.new(
+          limit_key: "max_results",
+          tokens: {
+            "next_token" => "next_token"
+          }
+        )
       end)
 
       api.add_operation(:search_cases, Seahorse::Model::Operation.new.tap do |o|
@@ -1618,6 +1969,7 @@ module Aws::ConnectCases
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
       end)
 
       api.add_operation(:update_field, Seahorse::Model::Operation.new.tap do |o|
@@ -1649,6 +2001,20 @@ module Aws::ConnectCases
         o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
       end)
 
+      api.add_operation(:update_related_item, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "UpdateRelatedItem"
+        o.http_method = "PUT"
+        o.http_request_uri = "/domains/{domainId}/cases/{caseId}/related-items/{relatedItemId}"
+        o.input = Shapes::ShapeRef.new(shape: UpdateRelatedItemRequest)
+        o.output = Shapes::ShapeRef.new(shape: UpdateRelatedItemResponse)
+        o.errors << Shapes::ShapeRef.new(shape: InternalServerException)
+        o.errors << Shapes::ShapeRef.new(shape: ResourceNotFoundException)
+        o.errors << Shapes::ShapeRef.new(shape: ValidationException)
+        o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
+        o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
+      end)
+
       api.add_operation(:update_template, Seahorse::Model::Operation.new.tap do |o|
         o.name = "UpdateTemplate"
         o.http_method = "PUT"
@@ -1661,6 +2027,7 @@ module Aws::ConnectCases
         o.errors << Shapes::ShapeRef.new(shape: ThrottlingException)
         o.errors << Shapes::ShapeRef.new(shape: AccessDeniedException)
         o.errors << Shapes::ShapeRef.new(shape: ConflictException)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceQuotaExceededException)
       end)
     end
 

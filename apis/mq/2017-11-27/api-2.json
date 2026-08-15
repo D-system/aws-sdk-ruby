@@ -157,6 +157,37 @@
         }
       ]
     },
+    "DeleteConfiguration": {
+      "name": "DeleteConfiguration",
+      "http": {
+        "method": "DELETE",
+        "requestUri": "/v1/configurations/{configuration-id}",
+        "responseCode": 200
+      },
+      "input": {
+        "shape": "DeleteConfigurationRequest"
+      },
+      "output": {
+        "shape": "DeleteConfigurationResponse"
+      },
+      "errors": [
+        {
+          "shape": "NotFoundException"
+        },
+        {
+          "shape": "BadRequestException"
+        },
+        {
+          "shape": "InternalServerErrorException"
+        },
+        {
+          "shape": "ConflictException"
+        },
+        {
+          "shape": "ForbiddenException"
+        }
+      ]
+    },
     "DeleteTags": {
       "name": "DeleteTags",
       "http": {
@@ -328,6 +359,34 @@
       },
       "output": {
         "shape": "DescribeConfigurationRevisionResponse"
+      },
+      "errors": [
+        {
+          "shape": "NotFoundException"
+        },
+        {
+          "shape": "BadRequestException"
+        },
+        {
+          "shape": "InternalServerErrorException"
+        },
+        {
+          "shape": "ForbiddenException"
+        }
+      ]
+    },
+    "DescribeSharedResources": {
+      "name": "DescribeSharedResources",
+      "http": {
+        "method": "GET",
+        "requestUri": "/v1/brokers/{broker-id}/shared-resources",
+        "responseCode": 200
+      },
+      "input": {
+        "shape": "DescribeSharedResourcesRequest"
+      },
+      "output": {
+        "shape": "DescribeSharedResourcesResponse"
       },
       "errors": [
         {
@@ -674,7 +733,8 @@
       "type": "string",
       "enum": [
         "SIMPLE",
-        "LDAP"
+        "LDAP",
+        "CONFIG_MANAGED"
       ]
     },
     "AvailabilityZone": {
@@ -696,6 +756,10 @@
         "Message": {
           "shape": "__string",
           "locationName": "message"
+        },
+        "ResourceShareErrors": {
+          "shape": "__listOfResourceShareError",
+          "locationName": "resourceShareErrors"
         }
       },
       "exception": true,
@@ -990,6 +1054,10 @@
         "Message": {
           "shape": "__string",
           "locationName": "message"
+        },
+        "ResourceShareErrors": {
+          "shape": "__listOfResourceShareError",
+          "locationName": "resourceShareErrors"
         }
       },
       "exception": true,
@@ -1069,6 +1137,10 @@
           "shape": "__listOf__string",
           "locationName": "securityGroups"
         },
+        "StorageSize": {
+          "shape": "__integer",
+          "locationName": "storageSize"
+        },
         "StorageType": {
           "shape": "BrokerStorageType",
           "locationName": "storageType"
@@ -1088,7 +1160,6 @@
       },
       "required": [
         "HostInstanceType",
-        "Users",
         "BrokerName",
         "DeploymentMode",
         "EngineType",
@@ -1172,6 +1243,10 @@
           "shape": "__listOf__string",
           "locationName": "securityGroups"
         },
+        "StorageSize": {
+          "shape": "__integer",
+          "locationName": "storageSize"
+        },
         "StorageType": {
           "shape": "BrokerStorageType",
           "locationName": "storageType"
@@ -1199,7 +1274,6 @@
       },
       "required": [
         "HostInstanceType",
-        "Users",
         "BrokerName",
         "DeploymentMode",
         "EngineType",
@@ -1421,8 +1495,7 @@
     },
     "CreateUserResponse": {
       "type": "structure",
-      "members": {
-      }
+      "members": {}
     },
     "DataReplicationCounterpart": {
       "type": "structure",
@@ -1507,6 +1580,37 @@
         }
       }
     },
+    "DeleteConfigurationOutput": {
+      "type": "structure",
+      "members": {
+        "ConfigurationId": {
+          "shape": "__string",
+          "locationName": "configurationId"
+        }
+      }
+    },
+    "DeleteConfigurationRequest": {
+      "type": "structure",
+      "members": {
+        "ConfigurationId": {
+          "shape": "__string",
+          "location": "uri",
+          "locationName": "configuration-id"
+        }
+      },
+      "required": [
+        "ConfigurationId"
+      ]
+    },
+    "DeleteConfigurationResponse": {
+      "type": "structure",
+      "members": {
+        "ConfigurationId": {
+          "shape": "__string",
+          "locationName": "configurationId"
+        }
+      }
+    },
     "DeleteTagsRequest": {
       "type": "structure",
       "members": {
@@ -1547,8 +1651,7 @@
     },
     "DeleteUserResponse": {
       "type": "structure",
-      "members": {
-      }
+      "members": {}
     },
     "DeploymentMode": {
       "type": "string",
@@ -1753,6 +1856,10 @@
           "shape": "__listOf__string",
           "locationName": "pendingSecurityGroups"
         },
+        "PendingStorageSize": {
+          "shape": "__integer",
+          "locationName": "pendingStorageSize"
+        },
         "PubliclyAccessible": {
           "shape": "__boolean",
           "locationName": "publiclyAccessible"
@@ -1760,6 +1867,10 @@
         "SecurityGroups": {
           "shape": "__listOf__string",
           "locationName": "securityGroups"
+        },
+        "StorageSize": {
+          "shape": "__integer",
+          "locationName": "storageSize"
         },
         "StorageType": {
           "shape": "BrokerStorageType",
@@ -1893,6 +2004,10 @@
           "shape": "__listOf__string",
           "locationName": "pendingSecurityGroups"
         },
+        "PendingStorageSize": {
+          "shape": "__integer",
+          "locationName": "pendingStorageSize"
+        },
         "PubliclyAccessible": {
           "shape": "__boolean",
           "locationName": "publiclyAccessible"
@@ -1900,6 +2015,10 @@
         "SecurityGroups": {
           "shape": "__listOf__string",
           "locationName": "securityGroups"
+        },
+        "StorageSize": {
+          "shape": "__integer",
+          "locationName": "storageSize"
         },
         "StorageType": {
           "shape": "BrokerStorageType",
@@ -2059,6 +2178,55 @@
         }
       }
     },
+    "DescribeSharedResourcesOutput": {
+      "type": "structure",
+      "members": {
+        "NextToken": {
+          "shape": "__string",
+          "locationName": "nextToken"
+        },
+        "SharedResources": {
+          "shape": "__listOfSharedResource",
+          "locationName": "sharedResources"
+        }
+      }
+    },
+    "DescribeSharedResourcesRequest": {
+      "type": "structure",
+      "members": {
+        "BrokerId": {
+          "shape": "__string",
+          "location": "uri",
+          "locationName": "broker-id"
+        },
+        "MaxResults": {
+          "shape": "MaxResults",
+          "location": "querystring",
+          "locationName": "maxResults"
+        },
+        "NextToken": {
+          "shape": "__string",
+          "location": "querystring",
+          "locationName": "nextToken"
+        }
+      },
+      "required": [
+        "BrokerId"
+      ]
+    },
+    "DescribeSharedResourcesResponse": {
+      "type": "structure",
+      "members": {
+        "NextToken": {
+          "shape": "__string",
+          "locationName": "nextToken"
+        },
+        "SharedResources": {
+          "shape": "__listOfSharedResource",
+          "locationName": "sharedResources"
+        }
+      }
+    },
     "DescribeUserOutput": {
       "type": "structure",
       "members": {
@@ -2182,6 +2350,10 @@
         "Message": {
           "shape": "__string",
           "locationName": "message"
+        },
+        "ResourceShareErrors": {
+          "shape": "__listOfResourceShareError",
+          "locationName": "resourceShareErrors"
         }
       }
     },
@@ -2195,6 +2367,10 @@
         "Message": {
           "shape": "__string",
           "locationName": "message"
+        },
+        "ResourceShareErrors": {
+          "shape": "__listOfResourceShareError",
+          "locationName": "resourceShareErrors"
         }
       },
       "exception": true,
@@ -2212,6 +2388,10 @@
         "Message": {
           "shape": "__string",
           "locationName": "message"
+        },
+        "ResourceShareErrors": {
+          "shape": "__listOfResourceShareError",
+          "locationName": "resourceShareErrors"
         }
       },
       "exception": true,
@@ -2634,6 +2814,10 @@
         "Message": {
           "shape": "__string",
           "locationName": "message"
+        },
+        "ResourceShareErrors": {
+          "shape": "__listOfResourceShareError",
+          "locationName": "resourceShareErrors"
         }
       },
       "exception": true,
@@ -2724,7 +2908,23 @@
     },
     "RebootBrokerResponse": {
       "type": "structure",
+      "members": {}
+    },
+    "ResourceShareError": {
+      "type": "structure",
       "members": {
+        "ErrorCode": {
+          "shape": "__string",
+          "locationName": "errorCode"
+        },
+        "ResourceShareArn": {
+          "shape": "__string",
+          "locationName": "resourceShareArn"
+        },
+        "Status": {
+          "shape": "__string",
+          "locationName": "status"
+        }
       }
     },
     "SanitizationWarning": {
@@ -2755,6 +2955,87 @@
         "INVALID_ATTRIBUTE_VALUE_REMOVED"
       ]
     },
+    "SharedResource": {
+      "type": "structure",
+      "members": {
+        "DnsNames": {
+          "shape": "__listOf__string",
+          "locationName": "dnsNames"
+        },
+        "Error": {
+          "shape": "SharedResourceError",
+          "locationName": "error"
+        },
+        "ResourceArn": {
+          "shape": "__string",
+          "locationName": "resourceArn"
+        },
+        "ResourceShareArns": {
+          "shape": "__listOf__string",
+          "locationName": "resourceShareArns"
+        },
+        "Status": {
+          "shape": "SharedResourceStatus",
+          "locationName": "status"
+        },
+        "Type": {
+          "shape": "SharedResourceType",
+          "locationName": "type"
+        }
+      },
+      "required": [
+        "Status",
+        "ResourceArn",
+        "Type"
+      ]
+    },
+    "SharedResourceError": {
+      "type": "structure",
+      "members": {
+        "Code": {
+          "shape": "SharedResourceErrorCode",
+          "locationName": "code"
+        },
+        "Message": {
+          "shape": "__string",
+          "locationName": "message"
+        }
+      },
+      "required": [
+        "Message",
+        "Code"
+      ]
+    },
+    "SharedResourceErrorCode": {
+      "type": "string",
+      "enum": [
+        "QUOTA_EXCEEDED",
+        "SHARE_NOT_FOUND",
+        "INVITE_FAILED",
+        "SETUP_INCOMPLETE",
+        "INTERNAL_ERROR",
+        "AZ_MISMATCH",
+        "RESOURCE_CONFIGURATION_NOT_FOUND"
+      ]
+    },
+    "SharedResourceStatus": {
+      "type": "string",
+      "enum": [
+        "AVAILABLE",
+        "SETUP_IN_PROGRESS",
+        "DELETION_IN_PROGRESS",
+        "PENDING_CREATE",
+        "PENDING_DELETE",
+        "ERROR"
+      ]
+    },
+    "SharedResourceType": {
+      "type": "string",
+      "enum": [
+        "RESOURCE_SHARE",
+        "RESOURCE"
+      ]
+    },
     "Tags": {
       "type": "structure",
       "members": {
@@ -2774,6 +3055,10 @@
         "Message": {
           "shape": "__string",
           "locationName": "message"
+        },
+        "ResourceShareErrors": {
+          "shape": "__listOfResourceShareError",
+          "locationName": "resourceShareErrors"
         }
       },
       "exception": true,
@@ -2820,9 +3105,17 @@
           "shape": "WeeklyStartTime",
           "locationName": "maintenanceWindowStartTime"
         },
+        "ResourceShareArns": {
+          "shape": "__listOf__string",
+          "locationName": "resourceShareArns"
+        },
         "SecurityGroups": {
           "shape": "__listOf__string",
           "locationName": "securityGroups"
+        },
+        "StorageSize": {
+          "shape": "__integer",
+          "locationName": "storageSize"
         }
       }
     },
@@ -2881,9 +3174,17 @@
           "shape": "DataReplicationMode",
           "locationName": "pendingDataReplicationMode"
         },
+        "ResourceShareArns": {
+          "shape": "__listOf__string",
+          "locationName": "resourceShareArns"
+        },
         "SecurityGroups": {
           "shape": "__listOf__string",
           "locationName": "securityGroups"
+        },
+        "StorageSize": {
+          "shape": "__integer",
+          "locationName": "storageSize"
         }
       },
       "required": [
@@ -2930,9 +3231,17 @@
           "shape": "WeeklyStartTime",
           "locationName": "maintenanceWindowStartTime"
         },
+        "ResourceShareArns": {
+          "shape": "__listOf__string",
+          "locationName": "resourceShareArns"
+        },
         "SecurityGroups": {
           "shape": "__listOf__string",
           "locationName": "securityGroups"
+        },
+        "StorageSize": {
+          "shape": "__integer",
+          "locationName": "storageSize"
         },
         "DataReplicationMode": {
           "shape": "DataReplicationMode",
@@ -2982,6 +3291,10 @@
           "shape": "WeeklyStartTime",
           "locationName": "maintenanceWindowStartTime"
         },
+        "ResourceShareArns": {
+          "shape": "__listOf__string",
+          "locationName": "resourceShareArns"
+        },
         "SecurityGroups": {
           "shape": "__listOf__string",
           "locationName": "securityGroups"
@@ -3001,6 +3314,10 @@
         "PendingDataReplicationMode": {
           "shape": "DataReplicationMode",
           "locationName": "pendingDataReplicationMode"
+        },
+        "StorageSize": {
+          "shape": "__integer",
+          "locationName": "storageSize"
         }
       }
     },
@@ -3164,8 +3481,7 @@
     },
     "UpdateUserResponse": {
       "type": "structure",
-      "members": {
-      }
+      "members": {}
     },
     "User": {
       "type": "structure",
@@ -3333,10 +3649,22 @@
         "shape": "EngineVersion"
       }
     },
+    "__listOfResourceShareError": {
+      "type": "list",
+      "member": {
+        "shape": "ResourceShareError"
+      }
+    },
     "__listOfSanitizationWarning": {
       "type": "list",
       "member": {
         "shape": "SanitizationWarning"
+      }
+    },
+    "__listOfSharedResource": {
+      "type": "list",
+      "member": {
+        "shape": "SharedResource"
       }
     },
     "__listOfUser": {

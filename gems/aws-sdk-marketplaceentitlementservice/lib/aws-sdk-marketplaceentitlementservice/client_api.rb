@@ -39,8 +39,10 @@ module Aws::MarketplaceEntitlementService
     Entitlement.add_member(:product_code, Shapes::ShapeRef.new(shape: ProductCode, location_name: "ProductCode"))
     Entitlement.add_member(:dimension, Shapes::ShapeRef.new(shape: NonEmptyString, location_name: "Dimension"))
     Entitlement.add_member(:customer_identifier, Shapes::ShapeRef.new(shape: NonEmptyString, location_name: "CustomerIdentifier"))
+    Entitlement.add_member(:customer_aws_account_id, Shapes::ShapeRef.new(shape: NonEmptyString, location_name: "CustomerAWSAccountId"))
     Entitlement.add_member(:value, Shapes::ShapeRef.new(shape: EntitlementValue, location_name: "Value"))
     Entitlement.add_member(:expiration_date, Shapes::ShapeRef.new(shape: Timestamp, location_name: "ExpirationDate"))
+    Entitlement.add_member(:license_arn, Shapes::ShapeRef.new(shape: String, location_name: "LicenseArn"))
     Entitlement.struct_class = Types::Entitlement
 
     EntitlementList.member = Shapes::ShapeRef.new(shape: Entitlement)
@@ -86,8 +88,8 @@ module Aws::MarketplaceEntitlementService
         "auth" => ["aws.auth#sigv4"],
         "endpointPrefix" => "entitlement.marketplace",
         "jsonVersion" => "1.1",
-        "protocol" => "json",
-        "protocols" => ["json"],
+        "protocol" => "smithy-rpc-v2-cbor",
+        "protocols" => ["smithy-rpc-v2-cbor", "json"],
         "serviceFullName" => "AWS Marketplace Entitlement Service",
         "serviceId" => "Marketplace Entitlement Service",
         "signatureVersion" => "v4",

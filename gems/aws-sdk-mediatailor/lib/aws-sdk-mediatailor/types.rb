@@ -172,18 +172,41 @@ module Aws::MediaTailor
     #   that MediaTailor must transcode the ads. `NONE` indicates that you
     #   have already transcoded the ads outside of MediaTailor and don't
     #   need them transcoded as part of the ad insertion workflow. For more
-    #   information about ad conditioning see
-    #   [https://docs.aws.amazon.com/precondition-ads.html][1].
+    #   information about ad conditioning see [Using preconditioned ads][1]
+    #   in the Elemental MediaTailor user guide.
     #
     #
     #
-    #   [1]: https://docs.aws.amazon.com/precondition-ads.html
+    #   [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/precondition-ads.html
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/AdConditioningConfiguration AWS API Documentation
     #
     class AdConditioningConfiguration < Struct.new(
       :streaming_media_file_conditioning)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration parameters for customizing HTTP requests sent to the ad
+    # decision server (ADS). This allows you to specify the HTTP method,
+    # headers, request body, and compression settings for ADS requests.
+    #
+    # @!attribute [rw] http_request
+    #   The HTTP request configuration parameters for the ad decision
+    #   server.
+    #   @return [Types::HttpRequest]
+    #
+    # @!attribute [rw] vast_response
+    #   The settings that control how MediaTailor processes VAST responses
+    #   from the ad decision server.
+    #   @return [Types::VastResponse]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/AdDecisionServerConfiguration AWS API Documentation
+    #
+    class AdDecisionServerConfiguration < Struct.new(
+      :http_request,
+      :vast_response)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -205,6 +228,107 @@ module Aws::MediaTailor
     #
     class AdMarkerPassthrough < Struct.new(
       :enabled)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Settings for customizing what events are included in logs for
+    # interactions with the ad decision server (ADS).
+    #
+    # For more information about ADS logs, inlcuding descriptions of the
+    # event types, see [MediaTailor ADS logs description and event types][1]
+    # in Elemental MediaTailor User Guide.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/ads-log-format.html
+    #
+    # @!attribute [rw] publish_opt_in_event_types
+    #   Indicates that MediaTailor emits `RAW_ADS_RESPONSE` logs for
+    #   playback sessions that are initialized with this configuration.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] exclude_event_types
+    #   Indicates that MediaTailor won't emit the selected events in the
+    #   logs for playback sessions that are initialized with this
+    #   configuration.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/AdsInteractionLog AWS API Documentation
+    #
+    class AdsInteractionLog < Struct.new(
+      :publish_opt_in_event_types,
+      :exclude_event_types)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The concurrency settings for ad decision server interactions during ad
+    # personalization.
+    #
+    # @!attribute [rw] max_concurrent_ads_requests
+    #   The maximum number of simultaneous requests that MediaTailor makes
+    #   to the ad decision server per manifest request. The default is 1.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] enable_vod_vast_parallelization
+    #   Enables parallel processing of ad decision server requests in VOD
+    #   workflows when the ADS returns VAST responses. The default is false.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/AdsPersonalizationConcurrency AWS API Documentation
+    #
+    class AdsPersonalizationConcurrency < Struct.new(
+      :max_concurrent_ads_requests,
+      :enable_vod_vast_parallelization)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The timeout settings for ad decision server interactions during ad
+    # personalization.
+    #
+    # @!attribute [rw] ads_request_timeout_milliseconds
+    #   The maximum time, in milliseconds, that MediaTailor waits for a
+    #   single ad decision server response during live or VOD playback. The
+    #   default is 3000.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] live_maximum_ads_personalization_time_milliseconds
+    #   The maximum total time, in milliseconds, that MediaTailor spends on
+    #   ad decision server activity for live manifests, including making
+    #   requests, waiting for responses, and following VAST wrapper
+    #   redirects. The default is 10000.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] vod_maximum_ads_personalization_time_milliseconds
+    #   The maximum total time, in milliseconds, that MediaTailor spends on
+    #   ad decision server activity for VOD manifests, including making
+    #   requests, waiting for responses, and following VAST wrapper
+    #   redirects. The default is 10000.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] prefetch_ads_request_timeout_milliseconds
+    #   The maximum time, in milliseconds, that MediaTailor waits for a
+    #   single ad decision server response during prefetch retrieval. If not
+    #   set, the value of AdsRequestTimeoutMilliseconds is used.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] prefetch_maximum_ads_personalization_time_milliseconds
+    #   The maximum total time, in milliseconds, that MediaTailor spends on
+    #   ad decision server activity during prefetch retrieval, including
+    #   making requests, waiting for responses, and following VAST wrapper
+    #   redirects.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/AdsPersonalizationTimeouts AWS API Documentation
+    #
+    class AdsPersonalizationTimeouts < Struct.new(
+      :ads_request_timeout_milliseconds,
+      :live_maximum_ads_personalization_time_milliseconds,
+      :vod_maximum_ads_personalization_time_milliseconds,
+      :prefetch_ads_request_timeout_milliseconds,
+      :prefetch_maximum_ads_personalization_time_milliseconds)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -594,6 +718,63 @@ module Aws::MediaTailor
       include Aws::Structure
     end
 
+    # The configuration for a `CONCURRENT_EXECUTOR` function. A
+    # `CONCURRENT_EXECUTOR` runs a set of child functions in parallel, up to
+    # a maximum concurrency, and combines their output when all functions
+    # complete. For more information about functions, see [Working with
+    # functions][1] in the *MediaTailor User Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/monetization-functions.html
+    #
+    # @!attribute [rw] runtime
+    #   The expression language used to evaluate expressions in the function
+    #   configuration. Set this to `JSONata`.
+    #   @return [String]
+    #
+    # @!attribute [rw] output
+    #   A map of output bindings that controls which bindings the executor
+    #   commits to the session state after all child functions complete.
+    #   Each key is a namespaced output path, and each value is an
+    #   expression that MediaTailor evaluates against the combined results
+    #   of the child functions.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] function_list
+    #   The list of child functions that MediaTailor runs in parallel. Each
+    #   entry specifies a child function to execute and an optional run
+    #   condition expression that controls whether the function runs.
+    #   @return [Array<Types::FunctionRef>]
+    #
+    # @!attribute [rw] timeout_milliseconds
+    #   The maximum time, in milliseconds, for all child functions to
+    #   complete. This timeout covers every function in the list, including
+    #   any HTTP calls the child functions make. If the executor exceeds
+    #   this timeout, MediaTailor discards all output from the executor and
+    #   proceeds with default behavior.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] max_concurrency
+    #   The maximum number of child functions that MediaTailor runs
+    #   simultaneously. When the list contains more functions than
+    #   `MaxConcurrency`, MediaTailor starts additional functions as running
+    #   ones complete, so that no more than `MaxConcurrency` functions run
+    #   at the same time.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/ConcurrentExecutorConfiguration AWS API Documentation
+    #
+    class ConcurrentExecutorConfiguration < Struct.new(
+      :runtime,
+      :output,
+      :function_list,
+      :timeout_milliseconds,
+      :max_concurrency)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] channel_name
     #   The name of the channel.
     #   @return [String]
@@ -668,12 +849,24 @@ module Aws::MediaTailor
     #   [1]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AWS-logs-and-resource-policy.html#AWS-vended-logs-permissions-V2
     #   @return [Array<String>]
     #
+    # @!attribute [rw] ads_interaction_log
+    #   The event types that MediaTailor emits in logs for interactions with
+    #   the ADS.
+    #   @return [Types::AdsInteractionLog]
+    #
+    # @!attribute [rw] manifest_service_interaction_log
+    #   The event types that MediaTailor emits in logs for interactions with
+    #   the origin server.
+    #   @return [Types::ManifestServiceInteractionLog]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/ConfigureLogsForPlaybackConfigurationRequest AWS API Documentation
     #
     class ConfigureLogsForPlaybackConfigurationRequest < Struct.new(
       :percent_enabled,
       :playback_configuration_name,
-      :enabled_logging_strategies)
+      :enabled_logging_strategies,
+      :ads_interaction_log,
+      :manifest_service_interaction_log)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -696,12 +889,24 @@ module Aws::MediaTailor
     #   Logs log group, Amazon S3 bucket, and Amazon Data Firehose stream.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] ads_interaction_log
+    #   The event types that MediaTailor emits in logs for interactions with
+    #   the ADS.
+    #   @return [Types::AdsInteractionLog]
+    #
+    # @!attribute [rw] manifest_service_interaction_log
+    #   The event types that MediaTailor emits in logs for interactions with
+    #   the origin server.
+    #   @return [Types::ManifestServiceInteractionLog]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/ConfigureLogsForPlaybackConfigurationResponse AWS API Documentation
     #
     class ConfigureLogsForPlaybackConfigurationResponse < Struct.new(
       :percent_enabled,
       :playback_configuration_name,
-      :enabled_logging_strategies)
+      :enabled_logging_strategies,
+      :ads_interaction_log,
+      :manifest_service_interaction_log)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -932,11 +1137,12 @@ module Aws::MediaTailor
     end
 
     # @!attribute [rw] consumption
-    #   The configuration settings for MediaTailor's *consumption* of the
-    #   prefetched ads from the ad decision server. Each consumption
-    #   configuration contains an end time and an optional start time that
-    #   define the *consumption window*. Prefetch schedules automatically
-    #   expire no earlier than seven days after the end time.
+    #   The configuration settings for how and when MediaTailor consumes
+    #   prefetched ads from the ad decision server for single prefetch
+    #   schedules. Each consumption configuration contains an end time and
+    #   an optional start time that define the *consumption window*.
+    #   Prefetch schedules automatically expire no earlier than seven days
+    #   after the end time.
     #   @return [Types::PrefetchConsumption]
     #
     # @!attribute [rw] name
@@ -953,6 +1159,25 @@ module Aws::MediaTailor
     #   and subsequently consumed for each ad break.
     #   @return [Types::PrefetchRetrieval]
     #
+    # @!attribute [rw] recurring_prefetch_configuration
+    #   The configuration that defines how and when MediaTailor performs ad
+    #   prefetching in a live event.
+    #   @return [Types::RecurringPrefetchConfiguration]
+    #
+    # @!attribute [rw] schedule_type
+    #   The frequency that MediaTailor creates prefetch schedules. `SINGLE`
+    #   indicates that this schedule applies to one ad break. `RECURRING`
+    #   indicates that MediaTailor automatically creates a schedule for each
+    #   ad avail in a live event.
+    #
+    #   For more information about the prefetch types and when you might use
+    #   each, see [Prefetching ads in Elemental MediaTailor.][1]
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/prefetching-ads.html
+    #   @return [String]
+    #
     # @!attribute [rw] stream_id
     #   An optional stream identifier that MediaTailor uses to prefetch ads
     #   for multiple streams that use the same playback configuration. If
@@ -962,6 +1187,17 @@ module Aws::MediaTailor
     #   configuration, regardless of `StreamId`.
     #   @return [String]
     #
+    # @!attribute [rw] tags
+    #   The tags to assign to the prefetch schedule. Tags are key-value
+    #   pairs that you can associate with Amazon resources to help with
+    #   organization, access control, and cost tracking. For more
+    #   information, see [Tagging AWS Elemental MediaTailor Resources][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/tagging.html
+    #   @return [Hash<String,String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/CreatePrefetchScheduleRequest AWS API Documentation
     #
     class CreatePrefetchScheduleRequest < Struct.new(
@@ -969,7 +1205,10 @@ module Aws::MediaTailor
       :name,
       :playback_configuration_name,
       :retrieval,
-      :stream_id)
+      :recurring_prefetch_configuration,
+      :schedule_type,
+      :stream_id,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -979,11 +1218,12 @@ module Aws::MediaTailor
     #   @return [String]
     #
     # @!attribute [rw] consumption
-    #   The configuration settings for MediaTailor's *consumption* of the
-    #   prefetched ads from the ad decision server. Each consumption
-    #   configuration contains an end time and an optional start time that
-    #   define the *consumption window*. Prefetch schedules automatically
-    #   expire no earlier than seven days after the end time.
+    #   The configuration settings for how and when MediaTailor consumes
+    #   prefetched ads from the ad decision server for single prefetch
+    #   schedules. Each consumption configuration contains an end time and
+    #   an optional start time that define the *consumption window*.
+    #   Prefetch schedules automatically expire no earlier than seven days
+    #   after the end time.
     #   @return [Types::PrefetchConsumption]
     #
     # @!attribute [rw] name
@@ -1000,6 +1240,18 @@ module Aws::MediaTailor
     #   and subsequently consumed for each ad break.
     #   @return [Types::PrefetchRetrieval]
     #
+    # @!attribute [rw] recurring_prefetch_configuration
+    #   The configuration that defines how MediaTailor performs recurring
+    #   prefetch.
+    #   @return [Types::RecurringPrefetchConfiguration]
+    #
+    # @!attribute [rw] schedule_type
+    #   The frequency that MediaTailor creates prefetch schedules. `SINGLE`
+    #   indicates that this schedule applies to one ad break. `RECURRING`
+    #   indicates that MediaTailor automatically creates a schedule for each
+    #   ad avail in a live event.
+    #   @return [String]
+    #
     # @!attribute [rw] stream_id
     #   An optional stream identifier that MediaTailor uses to prefetch ads
     #   for multiple streams that use the same playback configuration. If
@@ -1009,6 +1261,17 @@ module Aws::MediaTailor
     #   configuration, regardless of `StreamId`.
     #   @return [String]
     #
+    # @!attribute [rw] tags
+    #   The tags assigned to the prefetch schedule. Tags are key-value pairs
+    #   that you can associate with Amazon resources to help with
+    #   organization, access control, and cost tracking. For more
+    #   information, see [Tagging AWS Elemental MediaTailor Resources][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/tagging.html
+    #   @return [Hash<String,String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/CreatePrefetchScheduleResponse AWS API Documentation
     #
     class CreatePrefetchScheduleResponse < Struct.new(
@@ -1017,7 +1280,10 @@ module Aws::MediaTailor
       :name,
       :playback_configuration_name,
       :retrieval,
-      :stream_id)
+      :recurring_prefetch_configuration,
+      :schedule_type,
+      :stream_id,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1054,6 +1320,17 @@ module Aws::MediaTailor
     #   The list of AudienceMedia defined in program.
     #   @return [Array<Types::AudienceMedia>]
     #
+    # @!attribute [rw] tags
+    #   The tags to assign to the program. Tags are key-value pairs that you
+    #   can associate with Amazon resources to help with organization,
+    #   access control, and cost tracking. For more information, see
+    #   [Tagging AWS Elemental MediaTailor Resources][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/tagging.html
+    #   @return [Hash<String,String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/CreateProgramRequest AWS API Documentation
     #
     class CreateProgramRequest < Struct.new(
@@ -1064,7 +1341,8 @@ module Aws::MediaTailor
       :schedule_configuration,
       :source_location_name,
       :vod_source_name,
-      :audience_media)
+      :audience_media,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1117,6 +1395,17 @@ module Aws::MediaTailor
     #   The list of AudienceMedia defined in program.
     #   @return [Array<Types::AudienceMedia>]
     #
+    # @!attribute [rw] tags
+    #   The tags assigned to the program. Tags are key-value pairs that you
+    #   can associate with Amazon resources to help with organization,
+    #   access control, and cost tracking. For more information, see
+    #   [Tagging AWS Elemental MediaTailor Resources][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/tagging.html
+    #   @return [Hash<String,String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/CreateProgramResponse AWS API Documentation
     #
     class CreateProgramResponse < Struct.new(
@@ -1131,7 +1420,8 @@ module Aws::MediaTailor
       :vod_source_name,
       :clip_range,
       :duration_millis,
-      :audience_media)
+      :audience_media,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1331,12 +1621,53 @@ module Aws::MediaTailor
       include Aws::Structure
     end
 
+    # The configuration for a `CUSTOM_OUTPUT` function. MediaTailor
+    # evaluates the output expressions against the current session state and
+    # commits the results as output bindings. `CUSTOM_OUTPUT` functions do
+    # not make external calls. For more information, see [CUSTOM\_OUTPUT][1]
+    # in the *MediaTailor User Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/monetization-functions-types-custom-output.html
+    #
+    # @!attribute [rw] runtime
+    #   The expression language used to evaluate expressions in the function
+    #   configuration. Set this to `JSONata`.
+    #   @return [String]
+    #
+    # @!attribute [rw] output
+    #   A map of output bindings. Each key is a namespaced output path (such
+    #   as `player_params.device_type` or `temp.variant`), and each value is
+    #   an expression that MediaTailor evaluates at runtime against the
+    #   current session state. For more information about expression syntax,
+    #   see [JSONata expression reference][1] in the *MediaTailor User
+    #   Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/monetization-functions-jsonata.html
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/CustomOutputConfiguration AWS API Documentation
+    #
+    class CustomOutputConfiguration < Struct.new(
+      :runtime,
+      :output)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The configuration for DASH content.
     #
     # @!attribute [rw] manifest_endpoint_prefix
-    #   The URL generated by MediaTailor to initiate a playback session. The
-    #   session uses server-side reporting. This setting is ignored in PUT
-    #   operations.
+    #   The URL that MediaTailor generates to initiate a playback session.
+    #   The session uses server-side reporting.
+    #   @return [String]
+    #
+    # @!attribute [rw] dual_stack_manifest_endpoint_prefix
+    #   The dual-stack (IPv4 and IPv6) URL that MediaTailor generates to
+    #   initiate a playback session. The session uses server-side reporting.
     #   @return [String]
     #
     # @!attribute [rw] mpd_location
@@ -1364,6 +1695,7 @@ module Aws::MediaTailor
     #
     class DashConfiguration < Struct.new(
       :manifest_endpoint_prefix,
+      :dual_stack_manifest_endpoint_prefix,
       :mpd_location,
       :origin_manifest_type)
       SENSITIVE = []
@@ -1490,6 +1822,22 @@ module Aws::MediaTailor
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/DeleteChannelResponse AWS API Documentation
     #
     class DeleteChannelResponse < Aws::EmptyStructure; end
+
+    # @!attribute [rw] function_id
+    #   The identifier of the function to delete.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/DeleteFunctionRequest AWS API Documentation
+    #
+    class DeleteFunctionRequest < Struct.new(
+      :function_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/DeleteFunctionResponse AWS API Documentation
+    #
+    class DeleteFunctionResponse < Aws::EmptyStructure; end
 
     # @!attribute [rw] live_source_name
     #   The name of the live source.
@@ -1834,6 +2182,17 @@ module Aws::MediaTailor
     #   The list of AudienceMedia defined in program.
     #   @return [Array<Types::AudienceMedia>]
     #
+    # @!attribute [rw] tags
+    #   The tags assigned to the program. Tags are key-value pairs that you
+    #   can associate with Amazon resources to help with organization,
+    #   access control, and cost tracking. For more information, see
+    #   [Tagging AWS Elemental MediaTailor Resources][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/tagging.html
+    #   @return [Hash<String,String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/DescribeProgramResponse AWS API Documentation
     #
     class DescribeProgramResponse < Struct.new(
@@ -1848,7 +2207,8 @@ module Aws::MediaTailor
       :vod_source_name,
       :clip_range,
       :duration_millis,
-      :audience_media)
+      :audience_media,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1997,6 +2357,104 @@ module Aws::MediaTailor
       include Aws::Structure
     end
 
+    # Defines reusable logic that MediaTailor executes at lifecycle hooks
+    # during ad insertion. The `FunctionType` determines the function's
+    # runtime behavior. For more information about functions, see [Working
+    # with functions][1] in the *MediaTailor User Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/monetization-functions.html
+    #
+    # @!attribute [rw] function_id
+    #   The identifier of the function.
+    #   @return [String]
+    #
+    # @!attribute [rw] function_type
+    #   The type of the function.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A description of the function.
+    #   @return [String]
+    #
+    # @!attribute [rw] http_request_configuration
+    #   The configuration for an `HTTP_REQUEST` function.
+    #   @return [Types::HttpRequestConfiguration]
+    #
+    # @!attribute [rw] custom_output_configuration
+    #   The configuration for a `CUSTOM_OUTPUT` function.
+    #   @return [Types::CustomOutputConfiguration]
+    #
+    # @!attribute [rw] concurrent_executor_configuration
+    #   The configuration for a `CONCURRENT_EXECUTOR` function.
+    #   @return [Types::ConcurrentExecutorConfiguration]
+    #
+    # @!attribute [rw] sequential_executor_configuration
+    #   The configuration for a `SEQUENTIAL_EXECUTOR` function.
+    #   @return [Types::SequentialExecutorConfiguration]
+    #
+    # @!attribute [rw] tags
+    #   The tags assigned to the function. Tags are key-value pairs that you
+    #   can associate with Amazon resources to help with organization,
+    #   access control, and cost tracking. For more information, see
+    #   [Tagging AWS Elemental MediaTailor Resources][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/tagging.html
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the function.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/Function AWS API Documentation
+    #
+    class Function < Struct.new(
+      :function_id,
+      :function_type,
+      :description,
+      :http_request_configuration,
+      :custom_output_configuration,
+      :concurrent_executor_configuration,
+      :sequential_executor_configuration,
+      :tags,
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A reference to a child function within a `SEQUENTIAL_EXECUTOR`
+    # function.
+    #
+    # @!attribute [rw] run_condition
+    #   An optional expression that evaluates to a boolean. MediaTailor
+    #   evaluates this expression immediately before running the step, using
+    #   the accumulated state at that point in the sequence. If the
+    #   expression evaluates to `false`, MediaTailor skips the step and
+    #   moves to the next one. If omitted, the step always runs.
+    #   @return [String]
+    #
+    # @!attribute [rw] function_id
+    #   The identifier of the child function to execute in this step.
+    #   @return [String]
+    #
+    # @!attribute [rw] alias
+    #   An optional alternate name for the function within the executor. If
+    #   omitted, MediaTailor uses the function identifier.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/FunctionRef AWS API Documentation
+    #
+    class FunctionRef < Struct.new(
+      :run_condition,
+      :function_id,
+      :alias)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] channel_name
     #   The name of the channel associated with this Channel Policy.
     #   @return [String]
@@ -2083,6 +2541,81 @@ module Aws::MediaTailor
     class GetChannelScheduleResponse < Struct.new(
       :items,
       :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # -- Request/Response DataStructures --
+    #
+    # @!attribute [rw] function_id
+    #   The identifier of the function.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/GetFunctionRequest AWS API Documentation
+    #
+    class GetFunctionRequest < Struct.new(
+      :function_id)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # -- Define Mixin --
+    #
+    # @!attribute [rw] function_id
+    #   The identifier of the function.
+    #   @return [String]
+    #
+    # @!attribute [rw] function_type
+    #   The type of the function.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A description of the function.
+    #   @return [String]
+    #
+    # @!attribute [rw] http_request_configuration
+    #   The configuration for an `HTTP_REQUEST` function.
+    #   @return [Types::HttpRequestConfiguration]
+    #
+    # @!attribute [rw] custom_output_configuration
+    #   The configuration for a `CUSTOM_OUTPUT` function.
+    #   @return [Types::CustomOutputConfiguration]
+    #
+    # @!attribute [rw] concurrent_executor_configuration
+    #   The configuration for a `CONCURRENT_EXECUTOR` function.
+    #   @return [Types::ConcurrentExecutorConfiguration]
+    #
+    # @!attribute [rw] sequential_executor_configuration
+    #   The configuration for a `SEQUENTIAL_EXECUTOR` function.
+    #   @return [Types::SequentialExecutorConfiguration]
+    #
+    # @!attribute [rw] tags
+    #   The tags assigned to the function. Tags are key-value pairs that you
+    #   can associate with Amazon resources to help with organization,
+    #   access control, and cost tracking. For more information, see
+    #   [Tagging AWS Elemental MediaTailor Resources][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/tagging.html
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the function.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/GetFunctionResponse AWS API Documentation
+    #
+    class GetFunctionResponse < Struct.new(
+      :function_id,
+      :function_type,
+      :description,
+      :http_request_configuration,
+      :custom_output_configuration,
+      :concurrent_executor_configuration,
+      :sequential_executor_configuration,
+      :tags,
+      :arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2200,13 +2733,24 @@ module Aws::MediaTailor
     #   @return [String]
     #
     # @!attribute [rw] playback_endpoint_prefix
-    #   The URL that the player accesses to get a manifest from AWS
-    #   Elemental MediaTailor. This session will use server-side reporting.
+    #   The URL that your player accesses to get a manifest from AWS
+    #   Elemental MediaTailor. The session uses server-side reporting.
+    #   @return [String]
+    #
+    # @!attribute [rw] dual_stack_playback_endpoint_prefix
+    #   The dual-stack (IPv4 and IPv6) URL that your player accesses to get
+    #   a manifest from AWS Elemental MediaTailor. The session uses
+    #   server-side reporting.
     #   @return [String]
     #
     # @!attribute [rw] session_initialization_endpoint_prefix
-    #   The URL that the player uses to initialize a session that uses
+    #   The URL that your player uses to initialize a session that uses
     #   client-side reporting.
+    #   @return [String]
+    #
+    # @!attribute [rw] dual_stack_session_initialization_endpoint_prefix
+    #   The dual-stack (IPv4 and IPv6) URL that your player uses to
+    #   initialize a session that uses client-side reporting.
     #   @return [String]
     #
     # @!attribute [rw] slate_ad_url
@@ -2248,6 +2792,38 @@ module Aws::MediaTailor
     #   priority MediaTailor uses when inserting ads.
     #   @return [Types::AdConditioningConfiguration]
     #
+    # @!attribute [rw] ad_decision_server_configuration
+    #   The configuration for customizing HTTP requests to the ad decision
+    #   server (ADS). This includes settings for request method, headers,
+    #   body content, and compression options.
+    #   @return [Types::AdDecisionServerConfiguration]
+    #
+    # @!attribute [rw] function_mapping
+    #   A map of lifecycle hook event names to function identifiers. The
+    #   function mapping specifies which function MediaTailor executes at
+    #   each lifecycle hook during ad insertion. Valid keys are
+    #   `PRE_SESSION_INITIALIZATION` and `PRE_ADS_REQUEST`. For more
+    #   information, see [Functions lifecycle hooks][1] in the *MediaTailor
+    #   User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/monetization-functions-hooks.html
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] ads_personalization_timeouts
+    #   The timeout settings for ad decision server interactions. These
+    #   settings control how long MediaTailor waits for ADS responses and
+    #   the total time budget for ad personalization across live, VOD, and
+    #   prefetch workflows.
+    #   @return [Types::AdsPersonalizationTimeouts]
+    #
+    # @!attribute [rw] ads_personalization_concurrency
+    #   The concurrency settings for ad decision server interactions. These
+    #   settings control how many simultaneous ADS requests MediaTailor
+    #   makes per manifest request.
+    #   @return [Types::AdsPersonalizationConcurrency]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/GetPlaybackConfigurationResponse AWS API Documentation
     #
     class GetPlaybackConfigurationResponse < Struct.new(
@@ -2266,12 +2842,18 @@ module Aws::MediaTailor
       :personalization_threshold_seconds,
       :playback_configuration_arn,
       :playback_endpoint_prefix,
+      :dual_stack_playback_endpoint_prefix,
       :session_initialization_endpoint_prefix,
+      :dual_stack_session_initialization_endpoint_prefix,
       :slate_ad_url,
       :tags,
       :transcode_profile_name,
       :video_content_source_url,
-      :ad_conditioning_configuration)
+      :ad_conditioning_configuration,
+      :ad_decision_server_configuration,
+      :function_mapping,
+      :ads_personalization_timeouts,
+      :ads_personalization_concurrency)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2303,11 +2885,12 @@ module Aws::MediaTailor
     #   @return [String]
     #
     # @!attribute [rw] consumption
-    #   Consumption settings determine how, and when, MediaTailor places the
-    #   prefetched ads into ad breaks. Ad consumption occurs within a span
-    #   of time that you define, called a *consumption window*. You can
-    #   designate which ad breaks that MediaTailor fills with prefetch ads
-    #   by setting avail matching criteria.
+    #   The configuration settings for how and when MediaTailor consumes
+    #   prefetched ads from the ad decision server for single prefetch
+    #   schedules. Each consumption configuration contains an end time and
+    #   an optional start time that define the *consumption window*.
+    #   Prefetch schedules automatically expire no earlier than seven days
+    #   after the end time.
     #   @return [Types::PrefetchConsumption]
     #
     # @!attribute [rw] name
@@ -2326,11 +2909,34 @@ module Aws::MediaTailor
     #   the ad decision server (ADS).
     #   @return [Types::PrefetchRetrieval]
     #
+    # @!attribute [rw] schedule_type
+    #   The frequency that MediaTailor creates prefetch schedules. `SINGLE`
+    #   indicates that this schedule applies to one ad break. `RECURRING`
+    #   indicates that MediaTailor automatically creates a schedule for each
+    #   ad avail in a live event.
+    #   @return [String]
+    #
+    # @!attribute [rw] recurring_prefetch_configuration
+    #   The configuration that defines how and when MediaTailor performs ad
+    #   prefetching in a live event.
+    #   @return [Types::RecurringPrefetchConfiguration]
+    #
     # @!attribute [rw] stream_id
     #   An optional stream identifier that you can specify in order to
     #   prefetch for multiple streams that use the same playback
     #   configuration.
     #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   The tags assigned to the prefetch schedule. Tags are key-value pairs
+    #   that you can associate with Amazon resources to help with
+    #   organization, access control, and cost tracking. For more
+    #   information, see [Tagging AWS Elemental MediaTailor Resources][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/tagging.html
+    #   @return [Hash<String,String>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/GetPrefetchScheduleResponse AWS API Documentation
     #
@@ -2340,7 +2946,10 @@ module Aws::MediaTailor
       :name,
       :playback_configuration_name,
       :retrieval,
-      :stream_id)
+      :schedule_type,
+      :recurring_prefetch_configuration,
+      :stream_id,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2348,14 +2957,22 @@ module Aws::MediaTailor
     # The configuration for HLS content.
     #
     # @!attribute [rw] manifest_endpoint_prefix
-    #   The URL that is used to initiate a playback session for devices that
-    #   support Apple HLS. The session uses server-side reporting.
+    #   The URL that MediaTailor generates to initiate a playback session
+    #   for devices that support Apple HLS. The session uses server-side
+    #   reporting.
+    #   @return [String]
+    #
+    # @!attribute [rw] dual_stack_manifest_endpoint_prefix
+    #   The dual-stack (IPv4 and IPv6) URL that MediaTailor generates to
+    #   initiate a playback session for devices that support Apple HLS. The
+    #   session uses server-side reporting.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/HlsConfiguration AWS API Documentation
     #
     class HlsConfiguration < Struct.new(
-      :manifest_endpoint_prefix)
+      :manifest_endpoint_prefix,
+      :dual_stack_manifest_endpoint_prefix)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2427,6 +3044,113 @@ module Aws::MediaTailor
       include Aws::Structure
     end
 
+    # HTTP request configuration parameters that define how MediaTailor
+    # communicates with the ad decision server.
+    #
+    # @!attribute [rw] method
+    #   The HTTP method to use when making requests to the ad decision
+    #   server. Supported values are `GET` and `POST`.
+    #   @return [String]
+    #
+    # @!attribute [rw] body
+    #   The request body content to send with HTTP requests to the ad
+    #   decision server. This value is only eligible for `POST` requests.
+    #   @return [String]
+    #
+    # @!attribute [rw] headers
+    #   Custom HTTP headers to include in requests to the ad decision
+    #   server. Specify headers as key-value pairs. This value is only
+    #   eligible for `POST` requests.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] compress_request
+    #   The compression method to apply to requests sent to the ad decision
+    #   server. Supported values are `NONE` and `GZIP`. This value is only
+    #   eligible for `POST` requests.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/HttpRequest AWS API Documentation
+    #
+    class HttpRequest < Struct.new(
+      :method,
+      :body,
+      :headers,
+      :compress_request)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration for an `HTTP_REQUEST` function. Specifies the HTTP
+    # method, URL, headers, body, timeout, and output expressions for the
+    # request. For more information, see [HTTP\_REQUEST][1] in the
+    # *MediaTailor User Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/monetization-functions-types-http-request.html
+    #
+    # @!attribute [rw] runtime
+    #   The expression language used to evaluate expressions in the function
+    #   configuration. Set this to `JSONata`.
+    #   @return [String]
+    #
+    # @!attribute [rw] output
+    #   A map of output bindings. Each key is a namespaced output path (such
+    #   as `player_params.device_type` or `temp.identity`), and each value
+    #   is an expression that MediaTailor evaluates at runtime. Output
+    #   expressions in an `HTTP_REQUEST` function can reference the
+    #   `response` object returned by the HTTP call. For more information
+    #   about expression syntax, see [JSONata expression reference][1] in
+    #   the *MediaTailor User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/monetization-functions-jsonata.html
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] method_type
+    #   The HTTP method for the request. Valid values: `GET` and `POST`.
+    #   @return [String]
+    #
+    # @!attribute [rw] request_timeout_milliseconds
+    #   The maximum time, in milliseconds, that MediaTailor waits for a
+    #   response from the external service. If the call exceeds this
+    #   timeout, MediaTailor sets the response status code to `null` and
+    #   proceeds with output expression evaluation. Valid values: `100` to
+    #   `2000`.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] url
+    #   An expression that evaluates to the request URL. Use `{%...%}`
+    #   delimiters for dynamic expressions. The maximum length after
+    #   evaluation is 2,048 characters.
+    #   @return [String]
+    #
+    # @!attribute [rw] body
+    #   An expression that evaluates to the request body. Used with `POST`
+    #   requests. The maximum size after evaluation is 64 KB.
+    #   @return [String]
+    #
+    # @!attribute [rw] headers
+    #   A map of HTTP header names to expression values. MediaTailor
+    #   evaluates each header value expression at runtime and includes the
+    #   result in the outbound HTTP request. Maximum 50 headers.
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/HttpRequestConfiguration AWS API Documentation
+    #
+    class HttpRequestConfiguration < Struct.new(
+      :runtime,
+      :output,
+      :method_type,
+      :request_timeout_milliseconds,
+      :url,
+      :body,
+      :headers)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # For `SCTE35_ENHANCED` output, defines a key and corresponding value.
     # MediaTailor generates these pairs within the `EXT-X-ASSET`tag.
     #
@@ -2458,12 +3182,25 @@ module Aws::MediaTailor
     #   response to the current request. If there are more than `MaxResults`
     #   alerts, use the value of `NextToken` in the response to get the next
     #   page of results.
+    #
+    #   The default value is 100. MediaTailor uses DynamoDB-based
+    #   pagination, which means that a response might contain fewer than
+    #   `MaxResults` items, including 0 items, even when more results are
+    #   available. To retrieve all results, you must continue making
+    #   requests using the `NextToken` value from each response until the
+    #   response no longer includes a `NextToken` value.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
     #   Pagination token returned by the list request when results exceed
     #   the maximum allowed. Use the token to fetch the next page of
     #   results.
+    #
+    #   For the first `ListAlerts` request, omit this value. For subsequent
+    #   requests, get the value of `NextToken` from the previous response
+    #   and specify that value for `NextToken` in the request. Continue
+    #   making requests until the response no longer includes a `NextToken`
+    #   value, which indicates that all results have been retrieved.
     #   @return [String]
     #
     # @!attribute [rw] resource_arn
@@ -2504,12 +3241,26 @@ module Aws::MediaTailor
     #   in response to the current request. If there are more than
     #   `MaxResults` channels, use the value of `NextToken` in the response
     #   to get the next page of results.
+    #
+    #   The default value is 100. MediaTailor uses DynamoDB-based
+    #   pagination, which means that a response might contain fewer than
+    #   `MaxResults` items, including 0 items, even when more results are
+    #   available. To retrieve all results, you must continue making
+    #   requests using the `NextToken` value from each response until the
+    #   response no longer includes a `NextToken` value.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
     #   Pagination token returned by the list request when results exceed
     #   the maximum allowed. Use the token to fetch the next page of
     #   results.
+    #
+    #   For the first `ListChannels` request, omit this value. For
+    #   subsequent requests, get the value of `NextToken` from the previous
+    #   response and specify that value for `NextToken` in the request.
+    #   Continue making requests until the response no longer includes a
+    #   `NextToken` value, which indicates that all results have been
+    #   retrieved.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/ListChannelsRequest AWS API Documentation
@@ -2541,16 +3292,93 @@ module Aws::MediaTailor
     end
 
     # @!attribute [rw] max_results
-    #   The maximum number of live sources that you want MediaTailor to
-    #   return in response to the current request. If there are more than
-    #   `MaxResults` live sources, use the value of `NextToken` in the
-    #   response to get the next page of results.
+    #   The maximum number of functions that you want MediaTailor to return
+    #   in response to the current request. If there are more than
+    #   `MaxResults` functions, use the value of `NextToken` in the response
+    #   to get the next page of results.
+    #
+    #   The default value is 100. MediaTailor uses token-based pagination,
+    #   which means that a response might contain fewer than `MaxResults`
+    #   items, including 0 items, even when more results are available. To
+    #   retrieve all results, you must continue making requests using the
+    #   `NextToken` value from each response until the response no longer
+    #   includes a `NextToken` value.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
     #   Pagination token returned by the list request when results exceed
     #   the maximum allowed. Use the token to fetch the next page of
     #   results.
+    #
+    #   For the first `ListFunctions` request, omit this value. For
+    #   subsequent requests, get the value of `NextToken` from the previous
+    #   response and specify that value for `NextToken` in the request.
+    #   Continue making requests until the response no longer includes a
+    #   `NextToken` value, which indicates that all results have been
+    #   retrieved.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/ListFunctionsRequest AWS API Documentation
+    #
+    class ListFunctionsRequest < Struct.new(
+      :max_results,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] items
+    #   A list of functions associated with your account in the current
+    #   Region.
+    #   @return [Array<Types::Function>]
+    #
+    # @!attribute [rw] next_token
+    #   Pagination token returned by the list request when results exceed
+    #   the maximum allowed. Use the token to fetch the next page of
+    #   results.
+    #
+    #   For the first `ListFunctions` request, omit this value. For
+    #   subsequent requests, get the value of `NextToken` from the previous
+    #   response and specify that value for `NextToken` in the request.
+    #   Continue making requests until the response no longer includes a
+    #   `NextToken` value, which indicates that all results have been
+    #   retrieved.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/ListFunctionsResponse AWS API Documentation
+    #
+    class ListFunctionsResponse < Struct.new(
+      :items,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] max_results
+    #   The maximum number of live sources that you want MediaTailor to
+    #   return in response to the current request. If there are more than
+    #   `MaxResults` live sources, use the value of `NextToken` in the
+    #   response to get the next page of results.
+    #
+    #   The default value is 100. MediaTailor uses DynamoDB-based
+    #   pagination, which means that a response might contain fewer than
+    #   `MaxResults` items, including 0 items, even when more results are
+    #   available. To retrieve all results, you must continue making
+    #   requests using the `NextToken` value from each response until the
+    #   response no longer includes a `NextToken` value.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   Pagination token returned by the list request when results exceed
+    #   the maximum allowed. Use the token to fetch the next page of
+    #   results.
+    #
+    #   For the first `ListLiveSources` request, omit this value. For
+    #   subsequent requests, get the value of `NextToken` from the previous
+    #   response and specify that value for `NextToken` in the request.
+    #   Continue making requests until the response no longer includes a
+    #   `NextToken` value, which indicates that all results have been
+    #   retrieved.
     #   @return [String]
     #
     # @!attribute [rw] source_location_name
@@ -2592,12 +3420,26 @@ module Aws::MediaTailor
     #   MediaTailor to return in response to the current request. If there
     #   are more than `MaxResults` playback configurations, use the value of
     #   `NextToken` in the response to get the next page of results.
+    #
+    #   The default value is 100. MediaTailor uses DynamoDB-based
+    #   pagination, which means that a response might contain fewer than
+    #   `MaxResults` items, including 0 items, even when more results are
+    #   available. To retrieve all results, you must continue making
+    #   requests using the `NextToken` value from each response until the
+    #   response no longer includes a `NextToken` value.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
     #   Pagination token returned by the list request when results exceed
     #   the maximum allowed. Use the token to fetch the next page of
     #   results.
+    #
+    #   For the first `ListPlaybackConfigurations` request, omit this value.
+    #   For subsequent requests, get the value of `NextToken` from the
+    #   previous response and specify that value for `NextToken` in the
+    #   request. Continue making requests until the response no longer
+    #   includes a `NextToken` value, which indicates that all results have
+    #   been retrieved.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/ListPlaybackConfigurationsRequest AWS API Documentation
@@ -2635,27 +3477,39 @@ module Aws::MediaTailor
     #   to return in response to the current request. If there are more than
     #   `MaxResults` prefetch schedules, use the value of `NextToken` in the
     #   response to get the next page of results.
+    #
+    #   The default value is 100. MediaTailor uses DynamoDB-based
+    #   pagination, which means that a response might contain fewer than
+    #   `MaxResults` items, including 0 items, even when more results are
+    #   available. To retrieve all results, you must continue making
+    #   requests using the `NextToken` value from each response until the
+    #   response no longer includes a `NextToken` value.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
-    #   (Optional) If the playback configuration has more than `MaxResults`
-    #   prefetch schedules, use `NextToken` to get the second and subsequent
-    #   pages of results.
+    #   Pagination token returned by the list request when results exceed
+    #   the maximum allowed. Use the token to fetch the next page of
+    #   results.
     #
-    #   For the first `ListPrefetchSchedulesRequest` request, omit this
-    #   value.
-    #
-    #   For the second and subsequent requests, get the value of `NextToken`
-    #   from the previous response and specify that value for `NextToken` in
-    #   the request.
-    #
-    #   If the previous response didn't include a `NextToken` element,
-    #   there are no more prefetch schedules to get.
+    #   For the first `ListPrefetchSchedules` request, omit this value. For
+    #   subsequent requests, get the value of `NextToken` from the previous
+    #   response and specify that value for `NextToken` in the request.
+    #   Continue making requests until the response no longer includes a
+    #   `NextToken` value, which indicates that all results have been
+    #   retrieved.
     #   @return [String]
     #
     # @!attribute [rw] playback_configuration_name
     #   Retrieves the prefetch schedule(s) for a specific playback
     #   configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] schedule_type
+    #   The type of prefetch schedules that you want to list. `SINGLE`
+    #   indicates that you want to list the configured single prefetch
+    #   schedules. `RECURRING` indicates that you want to list the
+    #   configured recurring prefetch schedules. `ALL` indicates that you
+    #   want to list all configured prefetch schedules.
     #   @return [String]
     #
     # @!attribute [rw] stream_id
@@ -2669,6 +3523,7 @@ module Aws::MediaTailor
       :max_results,
       :next_token,
       :playback_configuration_name,
+      :schedule_type,
       :stream_id)
       SENSITIVE = []
       include Aws::Structure
@@ -2699,12 +3554,26 @@ module Aws::MediaTailor
     #   return in response to the current request. If there are more than
     #   `MaxResults` source locations, use the value of `NextToken` in the
     #   response to get the next page of results.
+    #
+    #   The default value is 100. MediaTailor uses DynamoDB-based
+    #   pagination, which means that a response might contain fewer than
+    #   `MaxResults` items, including 0 items, even when more results are
+    #   available. To retrieve all results, you must continue making
+    #   requests using the `NextToken` value from each response until the
+    #   response no longer includes a `NextToken` value.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
     #   Pagination token returned by the list request when results exceed
     #   the maximum allowed. Use the token to fetch the next page of
     #   results.
+    #
+    #   For the first `ListSourceLocations` request, omit this value. For
+    #   subsequent requests, get the value of `NextToken` from the previous
+    #   response and specify that value for `NextToken` in the request.
+    #   Continue making requests until the response no longer includes a
+    #   `NextToken` value, which indicates that all results have been
+    #   retrieved.
     #   @return [String]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/ListSourceLocationsRequest AWS API Documentation
@@ -2771,12 +3640,26 @@ module Aws::MediaTailor
     #   return in response to the current request. If there are more than
     #   `MaxResults` VOD sources, use the value of `NextToken` in the
     #   response to get the next page of results.
+    #
+    #   The default value is 100. MediaTailor uses DynamoDB-based
+    #   pagination, which means that a response might contain fewer than
+    #   `MaxResults` items, including 0 items, even when more results are
+    #   available. To retrieve all results, you must continue making
+    #   requests using the `NextToken` value from each response until the
+    #   response no longer includes a `NextToken` value.
     #   @return [Integer]
     #
     # @!attribute [rw] next_token
     #   Pagination token returned by the list request when results exceed
     #   the maximum allowed. Use the token to fetch the next page of
     #   results.
+    #
+    #   For the first `ListVodSources` request, omit this value. For
+    #   subsequent requests, get the value of `NextToken` from the previous
+    #   response and specify that value for `NextToken` in the request.
+    #   Continue making requests until the response no longer includes a
+    #   `NextToken` value, which indicates that all results have been
+    #   retrieved.
     #   @return [String]
     #
     # @!attribute [rw] source_location_name
@@ -2831,11 +3714,18 @@ module Aws::MediaTailor
     #   returns.
     #   @return [Integer]
     #
+    # @!attribute [rw] ad_decision_server_configuration
+    #   The configuration for the ad decision server (ADS) for live pre-roll
+    #   ads. The configuration contains settings that control how
+    #   MediaTailor processes VAST responses for pre-roll ad breaks.
+    #   @return [Types::PreRollAdDecisionServerConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/LivePreRollConfiguration AWS API Documentation
     #
     class LivePreRollConfiguration < Struct.new(
       :ad_decision_server_url,
-      :max_duration_seconds)
+      :max_duration_seconds,
+      :ad_decision_server_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2919,11 +3809,23 @@ module Aws::MediaTailor
     #   Logs log group, Amazon S3 bucket, and Amazon Data Firehose stream.
     #   @return [Array<String>]
     #
+    # @!attribute [rw] ads_interaction_log
+    #   Settings for customizing what events are included in logs for
+    #   interactions with the ad decision server (ADS).
+    #   @return [Types::AdsInteractionLog]
+    #
+    # @!attribute [rw] manifest_service_interaction_log
+    #   Settings for customizing what events are included in logs for
+    #   interactions with the origin server.
+    #   @return [Types::ManifestServiceInteractionLog]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/LogConfiguration AWS API Documentation
     #
     class LogConfiguration < Struct.new(
       :percent_enabled,
-      :enabled_logging_strategies)
+      :enabled_logging_strategies,
+      :ads_interaction_log,
+      :manifest_service_interaction_log)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2961,6 +3863,39 @@ module Aws::MediaTailor
     #
     class ManifestProcessingRules < Struct.new(
       :ad_marker_passthrough)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Settings for customizing what events are included in logs for
+    # interactions with the origin server.
+    #
+    # For more information about manifest service logs, including
+    # descriptions of the event types, see [MediaTailor manifest logs
+    # description and event types][1] in Elemental MediaTailor User Guide.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/log-types.html
+    #
+    # @!attribute [rw] publish_opt_in_event_types
+    #   Indicates that MediaTailor will emit the selected events in the logs
+    #   for playback sessions that are initialized with this configuration.
+    #   These events are not emitted by default and must be explicitly opted
+    #   in.
+    #   @return [Array<String>]
+    #
+    # @!attribute [rw] exclude_event_types
+    #   Indicates that MediaTailor won't emit the selected events in the
+    #   logs for playback sessions that are initialized with this
+    #   configuration.
+    #   @return [Array<String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/ManifestServiceInteractionLog AWS API Documentation
+    #
+    class ManifestServiceInteractionLog < Struct.new(
+      :publish_opt_in_event_types,
+      :exclude_event_types)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3074,13 +4009,23 @@ module Aws::MediaTailor
     #   @return [String]
     #
     # @!attribute [rw] playback_endpoint_prefix
-    #   The URL that the player accesses to get a manifest from AWS
+    #   The URL that your player accesses to get a manifest from AWS
     #   Elemental MediaTailor.
     #   @return [String]
     #
+    # @!attribute [rw] dual_stack_playback_endpoint_prefix
+    #   The dual-stack (IPv4 and IPv6) URL that your player accesses to get
+    #   a manifest from AWS Elemental MediaTailor.
+    #   @return [String]
+    #
     # @!attribute [rw] session_initialization_endpoint_prefix
-    #   The URL that the player uses to initialize a session that uses
+    #   The URL that your player uses to initialize a session that uses
     #   client-side reporting.
+    #   @return [String]
+    #
+    # @!attribute [rw] dual_stack_session_initialization_endpoint_prefix
+    #   The dual-stack (IPv4 and IPv6) URL that your player uses to
+    #   initialize a session that uses client-side reporting.
     #   @return [String]
     #
     # @!attribute [rw] slate_ad_url
@@ -3122,6 +4067,39 @@ module Aws::MediaTailor
     #   priority MediaTailor uses when inserting ads.
     #   @return [Types::AdConditioningConfiguration]
     #
+    # @!attribute [rw] ad_decision_server_configuration
+    #   Configuration parameters for customizing HTTP requests sent to the
+    #   ad decision server (ADS). This allows you to specify the HTTP
+    #   method, headers, request body, and compression settings for ADS
+    #   requests.
+    #   @return [Types::AdDecisionServerConfiguration]
+    #
+    # @!attribute [rw] function_mapping
+    #   A map of lifecycle hook event names to function identifiers. The
+    #   function mapping specifies which function MediaTailor executes at
+    #   each lifecycle hook during ad insertion. Valid keys are
+    #   `PRE_SESSION_INITIALIZATION` and `PRE_ADS_REQUEST`. For more
+    #   information, see [Functions lifecycle hooks][1] in the *MediaTailor
+    #   User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/monetization-functions-hooks.html
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] ads_personalization_timeouts
+    #   The timeout settings for ad decision server interactions. These
+    #   settings control how long MediaTailor waits for ADS responses and
+    #   the total time budget for ad personalization across live, VOD, and
+    #   prefetch workflows.
+    #   @return [Types::AdsPersonalizationTimeouts]
+    #
+    # @!attribute [rw] ads_personalization_concurrency
+    #   The concurrency settings for ad decision server interactions. These
+    #   settings control how many simultaneous ADS requests MediaTailor
+    #   makes per manifest request.
+    #   @return [Types::AdsPersonalizationConcurrency]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/PlaybackConfiguration AWS API Documentation
     #
     class PlaybackConfiguration < Struct.new(
@@ -3140,18 +4118,61 @@ module Aws::MediaTailor
       :personalization_threshold_seconds,
       :playback_configuration_arn,
       :playback_endpoint_prefix,
+      :dual_stack_playback_endpoint_prefix,
       :session_initialization_endpoint_prefix,
+      :dual_stack_session_initialization_endpoint_prefix,
       :slate_ad_url,
       :tags,
       :transcode_profile_name,
       :video_content_source_url,
-      :ad_conditioning_configuration)
+      :ad_conditioning_configuration,
+      :ad_decision_server_configuration,
+      :function_mapping,
+      :ads_personalization_timeouts,
+      :ads_personalization_concurrency)
       SENSITIVE = []
       include Aws::Structure
     end
 
-    # A complex type that contains settings that determine how and when that
-    # MediaTailor places prefetched ads into upcoming ad breaks.
+    # The ad decision server configuration for live pre-roll ads. It
+    # contains settings that control how MediaTailor processes VAST
+    # responses for pre-roll ad breaks.
+    #
+    # @!attribute [rw] vast_response
+    #   The settings that control how MediaTailor processes VAST responses
+    #   for live pre-roll ad breaks.
+    #   @return [Types::PreRollVastResponse]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/PreRollAdDecisionServerConfiguration AWS API Documentation
+    #
+    class PreRollAdDecisionServerConfiguration < Struct.new(
+      :vast_response)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The settings that control how MediaTailor processes VAST responses
+    # from the ad decision server for live pre-roll ad breaks.
+    #
+    # @!attribute [rw] ad_sequencing_mode
+    #   The ad sequencing mode for live pre-roll ads. `FOLLOW_AD_SEQUENCE`
+    #   inserts sequenced ads in increasing order and uses standalone ads
+    #   only as replacements when a sequenced ad fails. `IGNORE_AD_SEQUENCE`
+    #   inserts ads in the order they appear in the VAST response,
+    #   regardless of sequence attributes. The default behavior is
+    #   `IGNORE_AD_SEQUENCE`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/PreRollVastResponse AWS API Documentation
+    #
+    class PreRollVastResponse < Struct.new(
+      :ad_sequencing_mode)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # For single prefetch, describes how and when that MediaTailor places
+    # prefetched ads into upcoming ad breaks.
     #
     # @!attribute [rw] avail_matching_criteria
     #   If you only want MediaTailor to insert prefetched ads into avails
@@ -3214,12 +4235,34 @@ module Aws::MediaTailor
     #   prefetch retrieval starts as soon as possible.
     #   @return [Time]
     #
+    # @!attribute [rw] traffic_shaping_type
+    #   Indicates the type of traffic shaping used to limit the number of
+    #   requests to the ADS at one time.
+    #   @return [String]
+    #
+    # @!attribute [rw] traffic_shaping_retrieval_window
+    #   The configuration that tells Elemental MediaTailor how many seconds
+    #   to spread out requests to the ad decision server (ADS). Instead of
+    #   sending ADS requests for all sessions at the same time, MediaTailor
+    #   spreads the requests across the amount of time specified in the
+    #   retrieval window.
+    #   @return [Types::TrafficShapingRetrievalWindow]
+    #
+    # @!attribute [rw] traffic_shaping_tps_configuration
+    #   The configuration for TPS-based traffic shaping. This approach
+    #   limits requests to the ad decision server (ADS) based on
+    #   transactions per second and concurrent users.
+    #   @return [Types::TrafficShapingTpsConfiguration]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/PrefetchRetrieval AWS API Documentation
     #
     class PrefetchRetrieval < Struct.new(
       :dynamic_variables,
       :end_time,
-      :start_time)
+      :start_time,
+      :traffic_shaping_type,
+      :traffic_shaping_retrieval_window,
+      :traffic_shaping_tps_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3239,10 +4282,11 @@ module Aws::MediaTailor
     #
     # @!attribute [rw] consumption
     #   Consumption settings determine how, and when, MediaTailor places the
-    #   prefetched ads into ad breaks. Ad consumption occurs within a span
-    #   of time that you define, called a *consumption window*. You can
-    #   designate which ad breaks that MediaTailor fills with prefetch ads
-    #   by setting avail matching criteria.
+    #   prefetched ads into ad breaks for single prefetch schedules. Ad
+    #   consumption occurs within a span of time that you define, called a
+    #   *consumption window*. You can designate which ad breaks that
+    #   MediaTailor fills with prefetch ads by setting avail matching
+    #   criteria.
     #   @return [Types::PrefetchConsumption]
     #
     # @!attribute [rw] name
@@ -3261,11 +4305,41 @@ module Aws::MediaTailor
     #   the ad decision server (ADS).
     #   @return [Types::PrefetchRetrieval]
     #
+    # @!attribute [rw] schedule_type
+    #   The frequency that MediaTailor creates prefetch schedules. `SINGLE`
+    #   indicates that this schedule applies to one ad break. `RECURRING`
+    #   indicates that MediaTailor automatically creates a schedule for each
+    #   ad avail in a live event.
+    #
+    #   For more information about the prefetch types and when you might use
+    #   each, see [Prefetching ads in Elemental MediaTailor.][1]
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/prefetching-ads.html
+    #   @return [String]
+    #
+    # @!attribute [rw] recurring_prefetch_configuration
+    #   The settings that determine how and when MediaTailor prefetches ads
+    #   and inserts them into ad breaks.
+    #   @return [Types::RecurringPrefetchConfiguration]
+    #
     # @!attribute [rw] stream_id
     #   An optional stream identifier that you can specify in order to
     #   prefetch for multiple streams that use the same playback
     #   configuration.
     #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   The tags assigned to the prefetch schedule. Tags are key-value pairs
+    #   that you can associate with Amazon resources to help with
+    #   organization, access control, and cost tracking. For more
+    #   information, see [Tagging AWS Elemental MediaTailor Resources][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/tagging.html
+    #   @return [Hash<String,String>]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/PrefetchSchedule AWS API Documentation
     #
@@ -3275,7 +4349,10 @@ module Aws::MediaTailor
       :name,
       :playback_configuration_name,
       :retrieval,
-      :stream_id)
+      :schedule_type,
+      :recurring_prefetch_configuration,
+      :stream_id,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3300,6 +4377,146 @@ module Aws::MediaTailor
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/PutChannelPolicyResponse AWS API Documentation
     #
     class PutChannelPolicyResponse < Aws::EmptyStructure; end
+
+    # -- Define Mixin --
+    #
+    # @!attribute [rw] function_id
+    #   The identifier of the function. The identifier must be unique within
+    #   your account.
+    #   @return [String]
+    #
+    # @!attribute [rw] function_type
+    #   The type of the function. The function type determines what the
+    #   function can do at runtime. Valid values: `CUSTOM_OUTPUT` evaluates
+    #   expressions and produces output bindings with no external calls.
+    #   `HTTP_REQUEST` makes an HTTP call to an external service and
+    #   evaluates output expressions that can reference the response.
+    #   `SEQUENTIAL_EXECUTOR` runs a sequence of child functions in order,
+    #   passing data between steps through temporary data. For more
+    #   information, see [Function types and composition][1] in the
+    #   *MediaTailor User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/monetization-functions-types.html
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A description of the function.
+    #   @return [String]
+    #
+    # @!attribute [rw] http_request_configuration
+    #   The configuration for an `HTTP_REQUEST` function. Specifies the HTTP
+    #   method, URL, headers, body, timeout, and output expressions.
+    #   Required when `FunctionType` is `HTTP_REQUEST`.
+    #   @return [Types::HttpRequestConfiguration]
+    #
+    # @!attribute [rw] custom_output_configuration
+    #   The configuration for a `CUSTOM_OUTPUT` function. Specifies the
+    #   runtime and output expressions. Required when `FunctionType` is
+    #   `CUSTOM_OUTPUT`.
+    #   @return [Types::CustomOutputConfiguration]
+    #
+    # @!attribute [rw] concurrent_executor_configuration
+    #   The configuration for a `CONCURRENT_EXECUTOR` function. Specifies
+    #   the list of child functions to run in parallel, the maximum
+    #   concurrency, an optional output block, and a timeout. Required when
+    #   `FunctionType` is `CONCURRENT_EXECUTOR`.
+    #   @return [Types::ConcurrentExecutorConfiguration]
+    #
+    # @!attribute [rw] sequential_executor_configuration
+    #   The configuration for a `SEQUENTIAL_EXECUTOR` function. Specifies
+    #   the ordered list of child functions to execute, an optional output
+    #   block, and a timeout. Required when `FunctionType` is
+    #   `SEQUENTIAL_EXECUTOR`.
+    #   @return [Types::SequentialExecutorConfiguration]
+    #
+    # @!attribute [rw] tags
+    #   The tags to assign to the function. Tags are key-value pairs that
+    #   you can associate with Amazon resources to help with organization,
+    #   access control, and cost tracking. For more information, see
+    #   [Tagging AWS Elemental MediaTailor Resources][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/tagging.html
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/PutFunctionRequest AWS API Documentation
+    #
+    class PutFunctionRequest < Struct.new(
+      :function_id,
+      :function_type,
+      :description,
+      :http_request_configuration,
+      :custom_output_configuration,
+      :concurrent_executor_configuration,
+      :sequential_executor_configuration,
+      :tags)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # -- Define Mixin --
+    #
+    # @!attribute [rw] function_id
+    #   The identifier of the function.
+    #   @return [String]
+    #
+    # @!attribute [rw] function_type
+    #   The type of the function.
+    #   @return [String]
+    #
+    # @!attribute [rw] description
+    #   A description of the function.
+    #   @return [String]
+    #
+    # @!attribute [rw] http_request_configuration
+    #   The configuration for an `HTTP_REQUEST` function.
+    #   @return [Types::HttpRequestConfiguration]
+    #
+    # @!attribute [rw] custom_output_configuration
+    #   The configuration for a `CUSTOM_OUTPUT` function.
+    #   @return [Types::CustomOutputConfiguration]
+    #
+    # @!attribute [rw] concurrent_executor_configuration
+    #   The configuration for a `CONCURRENT_EXECUTOR` function.
+    #   @return [Types::ConcurrentExecutorConfiguration]
+    #
+    # @!attribute [rw] sequential_executor_configuration
+    #   The configuration for a `SEQUENTIAL_EXECUTOR` function.
+    #   @return [Types::SequentialExecutorConfiguration]
+    #
+    # @!attribute [rw] tags
+    #   The tags assigned to the function. Tags are key-value pairs that you
+    #   can associate with Amazon resources to help with organization,
+    #   access control, and cost tracking. For more information, see
+    #   [Tagging AWS Elemental MediaTailor Resources][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/tagging.html
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] arn
+    #   The Amazon Resource Name (ARN) of the function.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/PutFunctionResponse AWS API Documentation
+    #
+    class PutFunctionResponse < Struct.new(
+      :function_id,
+      :function_type,
+      :description,
+      :http_request_configuration,
+      :custom_output_configuration,
+      :concurrent_executor_configuration,
+      :sequential_executor_configuration,
+      :tags,
+      :arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
 
     # @!attribute [rw] ad_decision_server_url
     #   The URL for the ad decision server (ADS). This includes the
@@ -3427,6 +4644,38 @@ module Aws::MediaTailor
     #   priority MediaTailor uses when inserting ads.
     #   @return [Types::AdConditioningConfiguration]
     #
+    # @!attribute [rw] ad_decision_server_configuration
+    #   The configuration for customizing HTTP requests to the ad decision
+    #   server (ADS). This includes settings for request method, headers,
+    #   body content, and compression options.
+    #   @return [Types::AdDecisionServerConfiguration]
+    #
+    # @!attribute [rw] function_mapping
+    #   A map of lifecycle hook event names to function identifiers. The
+    #   function mapping specifies which function MediaTailor executes at
+    #   each lifecycle hook during ad insertion. Valid keys are
+    #   `PRE_SESSION_INITIALIZATION` and `PRE_ADS_REQUEST`. For more
+    #   information, see [Functions lifecycle hooks][1] in the *MediaTailor
+    #   User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/monetization-functions-hooks.html
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] ads_personalization_timeouts
+    #   The timeout settings for ad decision server interactions. These
+    #   settings control how long MediaTailor waits for ADS responses and
+    #   the total time budget for ad personalization across live, VOD, and
+    #   prefetch workflows.
+    #   @return [Types::AdsPersonalizationTimeouts]
+    #
+    # @!attribute [rw] ads_personalization_concurrency
+    #   The concurrency settings for ad decision server interactions. These
+    #   settings control how many simultaneous ADS requests MediaTailor
+    #   makes per manifest request.
+    #   @return [Types::AdsPersonalizationConcurrency]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/PutPlaybackConfigurationRequest AWS API Documentation
     #
     class PutPlaybackConfigurationRequest < Struct.new(
@@ -3445,7 +4694,11 @@ module Aws::MediaTailor
       :tags,
       :transcode_profile_name,
       :video_content_source_url,
-      :ad_conditioning_configuration)
+      :ad_conditioning_configuration,
+      :ad_decision_server_configuration,
+      :function_mapping,
+      :ads_personalization_timeouts,
+      :ads_personalization_concurrency)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3556,9 +4809,19 @@ module Aws::MediaTailor
     #   configuration.
     #   @return [String]
     #
+    # @!attribute [rw] dual_stack_playback_endpoint_prefix
+    #   The dual-stack (IPv4 and IPv6) playback endpoint prefix associated
+    #   with the playback configuration.
+    #   @return [String]
+    #
     # @!attribute [rw] session_initialization_endpoint_prefix
     #   The session initialization endpoint prefix associated with the
     #   playback configuration.
+    #   @return [String]
+    #
+    # @!attribute [rw] dual_stack_session_initialization_endpoint_prefix
+    #   The dual-stack (IPv4 and IPv6) session initialization endpoint
+    #   prefix associated with the playback configuration.
     #   @return [String]
     #
     # @!attribute [rw] slate_ad_url
@@ -3600,6 +4863,38 @@ module Aws::MediaTailor
     #   priority MediaTailor uses when inserting ads.
     #   @return [Types::AdConditioningConfiguration]
     #
+    # @!attribute [rw] ad_decision_server_configuration
+    #   The configuration for customizing HTTP requests to the ad decision
+    #   server (ADS). This includes settings for request method, headers,
+    #   body content, and compression options.
+    #   @return [Types::AdDecisionServerConfiguration]
+    #
+    # @!attribute [rw] function_mapping
+    #   A map of lifecycle hook event names to function identifiers. The
+    #   function mapping specifies which function MediaTailor executes at
+    #   each lifecycle hook during ad insertion. Valid keys are
+    #   `PRE_SESSION_INITIALIZATION` and `PRE_ADS_REQUEST`. For more
+    #   information, see [Functions lifecycle hooks][1] in the *MediaTailor
+    #   User Guide*.
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/monetization-functions-hooks.html
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] ads_personalization_timeouts
+    #   The timeout settings for ad decision server interactions. These
+    #   settings control how long MediaTailor waits for ADS responses and
+    #   the total time budget for ad personalization across live, VOD, and
+    #   prefetch workflows.
+    #   @return [Types::AdsPersonalizationTimeouts]
+    #
+    # @!attribute [rw] ads_personalization_concurrency
+    #   The concurrency settings for ad decision server interactions. These
+    #   settings control how many simultaneous ADS requests MediaTailor
+    #   makes per manifest request.
+    #   @return [Types::AdsPersonalizationConcurrency]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/PutPlaybackConfigurationResponse AWS API Documentation
     #
     class PutPlaybackConfigurationResponse < Struct.new(
@@ -3618,12 +4913,121 @@ module Aws::MediaTailor
       :personalization_threshold_seconds,
       :playback_configuration_arn,
       :playback_endpoint_prefix,
+      :dual_stack_playback_endpoint_prefix,
       :session_initialization_endpoint_prefix,
+      :dual_stack_session_initialization_endpoint_prefix,
       :slate_ad_url,
       :tags,
       :transcode_profile_name,
       :video_content_source_url,
-      :ad_conditioning_configuration)
+      :ad_conditioning_configuration,
+      :ad_decision_server_configuration,
+      :function_mapping,
+      :ads_personalization_timeouts,
+      :ads_personalization_concurrency)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The settings that determine how and when MediaTailor places prefetched
+    # ads into upcoming ad breaks for recurring prefetch scedules.
+    #
+    # @!attribute [rw] retrieved_ad_expiration_seconds
+    #   The number of seconds that an ad is available for insertion after it
+    #   was prefetched.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] avail_matching_criteria
+    #   The configuration for the dynamic variables that determine which ad
+    #   breaks that MediaTailor inserts prefetched ads in.
+    #   @return [Array<Types::AvailMatchingCriteria>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/RecurringConsumption AWS API Documentation
+    #
+    class RecurringConsumption < Struct.new(
+      :retrieved_ad_expiration_seconds,
+      :avail_matching_criteria)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration that defines how MediaTailor performs recurring
+    # prefetch.
+    #
+    # @!attribute [rw] start_time
+    #   The start time for the window that MediaTailor prefetches and
+    #   inserts ads in a live event.
+    #   @return [Time]
+    #
+    # @!attribute [rw] end_time
+    #   The end time for the window that MediaTailor prefetches and inserts
+    #   ads in a live event.
+    #   @return [Time]
+    #
+    # @!attribute [rw] recurring_consumption
+    #   The settings that determine how and when MediaTailor places
+    #   prefetched ads into upcoming ad breaks for recurring prefetch
+    #   scedules.
+    #   @return [Types::RecurringConsumption]
+    #
+    # @!attribute [rw] recurring_retrieval
+    #   The configuration for prefetch ad retrieval from the ADS.
+    #   @return [Types::RecurringRetrieval]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/RecurringPrefetchConfiguration AWS API Documentation
+    #
+    class RecurringPrefetchConfiguration < Struct.new(
+      :start_time,
+      :end_time,
+      :recurring_consumption,
+      :recurring_retrieval)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # With recurring prefetch, MediaTailor automatically prefetches ads for
+    # every avail that occurs during the retrieval window. The following
+    # configurations describe the MediaTailor behavior when prefetching ads
+    # for a live event.
+    #
+    # @!attribute [rw] dynamic_variables
+    #   The dynamic variables to use for substitution during prefetch
+    #   requests to the ADS.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] delay_after_avail_end_seconds
+    #   The number of seconds that MediaTailor waits after an ad avail
+    #   before prefetching ads for the next avail. If not set, the default
+    #   is 0 (no delay).
+    #   @return [Integer]
+    #
+    # @!attribute [rw] traffic_shaping_type
+    #   Indicates the type of traffic shaping used to limit the number of
+    #   requests to the ADS at one time.
+    #   @return [String]
+    #
+    # @!attribute [rw] traffic_shaping_retrieval_window
+    #   The configuration that tells Elemental MediaTailor how many seconds
+    #   to spread out requests to the ad decision server (ADS). Instead of
+    #   sending ADS requests for all sessions at the same time, MediaTailor
+    #   spreads the requests across the amount of time specified in the
+    #   retrieval window.
+    #   @return [Types::TrafficShapingRetrievalWindow]
+    #
+    # @!attribute [rw] traffic_shaping_tps_configuration
+    #   The configuration for TPS-based traffic shaping. This approach
+    #   limits requests to the ad decision server (ADS) based on
+    #   transactions per second and concurrent users.
+    #   @return [Types::TrafficShapingTpsConfiguration]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/RecurringRetrieval AWS API Documentation
+    #
+    class RecurringRetrieval < Struct.new(
+      :dynamic_variables,
+      :delay_after_avail_end_seconds,
+      :traffic_shaping_type,
+      :traffic_shaping_retrieval_window,
+      :traffic_shaping_tps_configuration)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3675,7 +5079,12 @@ module Aws::MediaTailor
     #   @return [String]
     #
     # @!attribute [rw] playback_url
-    #   The URL used for playback by content players.
+    #   The URL that your player uses for playback.
+    #   @return [String]
+    #
+    # @!attribute [rw] dual_stack_playback_url
+    #   The dual-stack (IPv4 and IPv6) URL that your player uses for
+    #   playback.
     #   @return [String]
     #
     # @!attribute [rw] source_group
@@ -3690,6 +5099,7 @@ module Aws::MediaTailor
       :hls_playlist_settings,
       :manifest_name,
       :playback_url,
+      :dual_stack_playback_url,
       :source_group)
       SENSITIVE = []
       include Aws::Structure
@@ -3956,6 +5366,54 @@ module Aws::MediaTailor
       include Aws::Structure
     end
 
+    # The configuration for a `SEQUENTIAL_EXECUTOR` function. A
+    # `SEQUENTIAL_EXECUTOR` runs a sequence of child functions in order,
+    # passing data between steps through temporary data. For more
+    # information, see [SEQUENTIAL\_EXECUTOR][1] in the *MediaTailor User
+    # Guide*.
+    #
+    #
+    #
+    # [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/monetization-functions-types-sequential-executor.html
+    #
+    # @!attribute [rw] runtime
+    #   The expression language used to evaluate expressions in the function
+    #   configuration. Set this to `JSONata`.
+    #   @return [String]
+    #
+    # @!attribute [rw] output
+    #   An optional map of output bindings that controls which bindings the
+    #   sequence commits to the session state after all steps complete. If
+    #   omitted, MediaTailor commits all accumulated output bindings from
+    #   all child steps.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] function_list
+    #   An ordered list of 1 to 10 steps. Each step specifies a child
+    #   function to execute and an optional run condition expression that
+    #   controls whether the step runs. MediaTailor executes steps in order,
+    #   passing data between steps through temporary data.
+    #   @return [Array<Types::FunctionRef>]
+    #
+    # @!attribute [rw] timeout_milliseconds
+    #   The maximum time, in milliseconds, for the entire sequence to
+    #   complete. This timeout covers all steps, including any HTTP calls
+    #   made by child functions. If the sequence exceeds this timeout,
+    #   MediaTailor discards all output from the sequence and proceeds with
+    #   default behavior.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/SequentialExecutorConfiguration AWS API Documentation
+    #
+    class SequentialExecutorConfiguration < Struct.new(
+      :runtime,
+      :output,
+      :function_list,
+      :timeout_milliseconds)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Slate VOD source configuration.
     #
     # @!attribute [rw] source_location_name
@@ -4175,6 +5633,52 @@ module Aws::MediaTailor
     #
     class TimeSignalMessage < Struct.new(
       :segmentation_descriptors)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration that tells Elemental MediaTailor how many seconds to
+    # spread out requests to the ad decision server (ADS). Instead of
+    # sending ADS requests for all sessions at the same time, MediaTailor
+    # spreads the requests across the amount of time specified in the
+    # retrieval window.
+    #
+    # @!attribute [rw] retrieval_window_duration_seconds
+    #   The amount of time, in seconds, that MediaTailor spreads prefetch
+    #   requests to the ADS.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/TrafficShapingRetrievalWindow AWS API Documentation
+    #
+    class TrafficShapingRetrievalWindow < Struct.new(
+      :retrieval_window_duration_seconds)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The configuration for TPS-based traffic shaping. This approach limits
+    # requests to the ad decision server (ADS) based on transactions per
+    # second and concurrent users.
+    #
+    # @!attribute [rw] peak_tps
+    #   The maximum number of transactions per second (TPS) that your ad
+    #   decision server (ADS) can handle. MediaTailor uses this value along
+    #   with concurrent users and headroom multiplier to calculate optimal
+    #   traffic distribution and prevent ADS overload.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] peak_concurrent_users
+    #   The expected peak number of concurrent viewers for your content.
+    #   MediaTailor uses this value along with peak TPS to determine how to
+    #   distribute prefetch requests across the available capacity without
+    #   exceeding your ADS limits.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/TrafficShapingTpsConfiguration AWS API Documentation
+    #
+    class TrafficShapingTpsConfiguration < Struct.new(
+      :peak_tps,
+      :peak_concurrent_users)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4522,6 +6026,17 @@ module Aws::MediaTailor
     #   The list of AudienceMedia defined in program.
     #   @return [Array<Types::AudienceMedia>]
     #
+    # @!attribute [rw] tags
+    #   The tags assigned to the program. Tags are key-value pairs that you
+    #   can associate with Amazon resources to help with organization,
+    #   access control, and cost tracking. For more information, see
+    #   [Tagging AWS Elemental MediaTailor Resources][1].
+    #
+    #
+    #
+    #   [1]: https://docs.aws.amazon.com/mediatailor/latest/ug/tagging.html
+    #   @return [Hash<String,String>]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/UpdateProgramResponse AWS API Documentation
     #
     class UpdateProgramResponse < Struct.new(
@@ -4536,7 +6051,8 @@ module Aws::MediaTailor
       :clip_range,
       :duration_millis,
       :scheduled_start_time,
-      :audience_media)
+      :audience_media,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4750,6 +6266,30 @@ module Aws::MediaTailor
       :source_location_name,
       :tags,
       :vod_source_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The settings that control how MediaTailor processes VAST responses
+    # from the ad decision server.
+    #
+    # @!attribute [rw] ad_sequencing_mode
+    #   The ad sequencing mode that controls how MediaTailor handles
+    #   sequenced and standalone ads in VAST responses. `FOLLOW_AD_SEQUENCE`
+    #   inserts sequenced ads in increasing order for both live and VOD
+    #   workflows, using standalone ads only as replacements when a
+    #   sequenced ad fails. `FOLLOW_AD_SEQUENCE_ONLY_LIVE` enables ad
+    #   sequencing for live workflows only. `FOLLOW_AD_SEQUENCE_ONLY_VOD`
+    #   enables ad sequencing for VOD workflows only. `IGNORE_AD_SEQUENCE`
+    #   inserts ads in the order they appear in the VAST response,
+    #   regardless of sequence attributes. The default behavior is
+    #   `IGNORE_AD_SEQUENCE`.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/VastResponse AWS API Documentation
+    #
+    class VastResponse < Struct.new(
+      :ad_sequencing_mode)
       SENSITIVE = []
       include Aws::Structure
     end

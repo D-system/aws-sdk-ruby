@@ -40,6 +40,7 @@ module Aws::IoTSiteWise
       attr_accessor action_id: ::String
       attr_accessor action_definition_id: ::String
       attr_accessor target_resource: Types::TargetResource
+      attr_accessor resolve_to: Types::ResolveTo
       SENSITIVE: []
     end
 
@@ -63,6 +64,24 @@ module Aws::IoTSiteWise
     class Alarms
       attr_accessor alarm_role_arn: ::String
       attr_accessor notification_lambda_arn: ::String
+      SENSITIVE: []
+    end
+
+    class Annotation < Aws::EmptyStructure
+    end
+
+    class ApplicationSummary
+      attr_accessor arn: ::String
+      attr_accessor id: ::String
+      attr_accessor name: ::String
+      attr_accessor status: ("CREATING" | "ACTIVE" | "DELETING")
+      attr_accessor created_at: ::Time
+      attr_accessor workspace_name: ::String
+      SENSITIVE: []
+    end
+
+    class AssetBindingValueFilter
+      attr_accessor asset_id: ::String
       SENSITIVE: []
     end
 
@@ -101,14 +120,19 @@ module Aws::IoTSiteWise
 
     class AssetHierarchy
       attr_accessor id: ::String
-      attr_accessor name: ::String
       attr_accessor external_id: ::String
+      attr_accessor name: ::String
       SENSITIVE: []
     end
 
     class AssetHierarchyInfo
       attr_accessor parent_asset_id: ::String
       attr_accessor child_asset_id: ::String
+      SENSITIVE: []
+    end
+
+    class AssetModelBindingValueFilter
+      attr_accessor asset_model_id: ::String
       SENSITIVE: []
     end
 
@@ -168,7 +192,7 @@ module Aws::IoTSiteWise
       attr_accessor id: ::String
       attr_accessor external_id: ::String
       attr_accessor name: ::String
-      attr_accessor data_type: ("STRING" | "INTEGER" | "DOUBLE" | "BOOLEAN" | "STRUCT")
+      attr_accessor data_type: ("STRING" | "INTEGER" | "DOUBLE" | "BOOLEAN" | "STRUCT" | "VIDEO" | "ANNOTATION" | "JSON")
       attr_accessor data_type_spec: ::String
       attr_accessor unit: ::String
       attr_accessor type: Types::PropertyType
@@ -176,11 +200,23 @@ module Aws::IoTSiteWise
       SENSITIVE: []
     end
 
+    class AssetModelPropertyBindingValue
+      attr_accessor asset_model_id: ::String
+      attr_accessor property_id: ::String
+      SENSITIVE: []
+    end
+
+    class AssetModelPropertyBindingValueFilter
+      attr_accessor asset_model_id: ::String
+      attr_accessor property_id: ::String
+      SENSITIVE: []
+    end
+
     class AssetModelPropertyDefinition
       attr_accessor id: ::String
       attr_accessor external_id: ::String
       attr_accessor name: ::String
-      attr_accessor data_type: ("STRING" | "INTEGER" | "DOUBLE" | "BOOLEAN" | "STRUCT")
+      attr_accessor data_type: ("STRING" | "INTEGER" | "DOUBLE" | "BOOLEAN" | "STRUCT" | "VIDEO" | "ANNOTATION" | "JSON")
       attr_accessor data_type_spec: ::String
       attr_accessor unit: ::String
       attr_accessor type: Types::PropertyType
@@ -197,12 +233,13 @@ module Aws::IoTSiteWise
       attr_accessor id: ::String
       attr_accessor external_id: ::String
       attr_accessor name: ::String
-      attr_accessor data_type: ("STRING" | "INTEGER" | "DOUBLE" | "BOOLEAN" | "STRUCT")
+      attr_accessor data_type: ("STRING" | "INTEGER" | "DOUBLE" | "BOOLEAN" | "STRUCT" | "VIDEO" | "ANNOTATION" | "JSON")
       attr_accessor data_type_spec: ::String
       attr_accessor unit: ::String
       attr_accessor type: Types::PropertyType
       attr_accessor asset_model_composite_model_id: ::String
       attr_accessor path: ::Array[Types::AssetModelPropertyPathSegment]
+      attr_accessor interface_summaries: ::Array[Types::InterfaceSummary]
       SENSITIVE: []
     end
 
@@ -217,7 +254,7 @@ module Aws::IoTSiteWise
       attr_accessor external_id: ::String
       attr_accessor arn: ::String
       attr_accessor name: ::String
-      attr_accessor asset_model_type: ("ASSET_MODEL" | "COMPONENT_MODEL")
+      attr_accessor asset_model_type: ("ASSET_MODEL" | "COMPONENT_MODEL" | "INTERFACE")
       attr_accessor description: ::String
       attr_accessor creation_date: ::Time
       attr_accessor last_update_date: ::Time
@@ -228,14 +265,26 @@ module Aws::IoTSiteWise
 
     class AssetProperty
       attr_accessor id: ::String
+      attr_accessor external_id: ::String
       attr_accessor name: ::String
       attr_accessor alias: ::String
       attr_accessor notification: Types::PropertyNotification
-      attr_accessor data_type: ("STRING" | "INTEGER" | "DOUBLE" | "BOOLEAN" | "STRUCT")
+      attr_accessor data_type: ("STRING" | "INTEGER" | "DOUBLE" | "BOOLEAN" | "STRUCT" | "VIDEO" | "ANNOTATION" | "JSON")
       attr_accessor data_type_spec: ::String
       attr_accessor unit: ::String
       attr_accessor path: ::Array[Types::AssetPropertyPathSegment]
-      attr_accessor external_id: ::String
+      SENSITIVE: []
+    end
+
+    class AssetPropertyBindingValue
+      attr_accessor asset_id: ::String
+      attr_accessor property_id: ::String
+      SENSITIVE: []
+    end
+
+    class AssetPropertyBindingValueFilter
+      attr_accessor asset_id: ::String
+      attr_accessor property_id: ::String
       SENSITIVE: []
     end
 
@@ -247,12 +296,12 @@ module Aws::IoTSiteWise
 
     class AssetPropertySummary
       attr_accessor id: ::String
+      attr_accessor external_id: ::String
       attr_accessor alias: ::String
       attr_accessor unit: ::String
       attr_accessor notification: Types::PropertyNotification
       attr_accessor asset_composite_model_id: ::String
       attr_accessor path: ::Array[Types::AssetPropertyPathSegment]
-      attr_accessor external_id: ::String
       SENSITIVE: []
     end
 
@@ -277,6 +326,7 @@ module Aws::IoTSiteWise
 
     class AssetSummary
       attr_accessor id: ::String
+      attr_accessor external_id: ::String
       attr_accessor arn: ::String
       attr_accessor name: ::String
       attr_accessor asset_model_id: ::String
@@ -285,7 +335,6 @@ module Aws::IoTSiteWise
       attr_accessor status: Types::AssetStatus
       attr_accessor hierarchies: ::Array[Types::AssetHierarchy]
       attr_accessor description: ::String
-      attr_accessor external_id: ::String
       SENSITIVE: []
     end
 
@@ -294,6 +343,14 @@ module Aws::IoTSiteWise
       attr_accessor hierarchy_id: ::String
       attr_accessor child_asset_id: ::String
       attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class AssociateDataSegmentEntry
+      attr_accessor source_dataset_id: ::String
+      attr_accessor time_series_id: ::String
+      attr_accessor start_timestamp: Types::TimeInNanos
+      attr_accessor end_timestamp: Types::TimeInNanos
       SENSITIVE: []
     end
 
@@ -307,6 +364,7 @@ module Aws::IoTSiteWise
 
     class AssociatedAssetsSummary
       attr_accessor id: ::String
+      attr_accessor external_id: ::String
       attr_accessor arn: ::String
       attr_accessor name: ::String
       attr_accessor asset_model_id: ::String
@@ -315,12 +373,26 @@ module Aws::IoTSiteWise
       attr_accessor status: Types::AssetStatus
       attr_accessor hierarchies: ::Array[Types::AssetHierarchy]
       attr_accessor description: ::String
-      attr_accessor external_id: ::String
       SENSITIVE: []
     end
 
     class Attribute
       attr_accessor default_value: ::String
+      SENSITIVE: []
+    end
+
+    class BatchAssociateDataSegmentsToDatasetRequest
+      attr_accessor dataset_id: ::String
+      attr_accessor workspace_name: ::String
+      attr_accessor associate_data_segment_entries: ::Array[Types::AssociateDataSegmentEntry]
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class BatchAssociateDataSegmentsToDatasetResponse
+      attr_accessor dataset_id: ::String
+      attr_accessor dataset_version: ::String
+      attr_accessor failed_associations: ::Array[Types::FailedDataSegmentAssociation]
       SENSITIVE: []
     end
 
@@ -333,6 +405,36 @@ module Aws::IoTSiteWise
 
     class BatchAssociateProjectAssetsResponse
       attr_accessor errors: ::Array[Types::AssetErrorDetails]
+      SENSITIVE: []
+    end
+
+    class BatchDeleteDatasetDataSegmentsRequest
+      attr_accessor dataset_id: ::String
+      attr_accessor workspace_name: ::String
+      attr_accessor delete_data_segment_entries: ::Array[Types::DeleteDataSegmentEntry]
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class BatchDeleteDatasetDataSegmentsResponse
+      attr_accessor dataset_id: ::String
+      attr_accessor dataset_version: ::String
+      attr_accessor errors: ::Array[Types::FailedDataSegmentDeletion]
+      SENSITIVE: []
+    end
+
+    class BatchDisassociateDataSegmentsFromDatasetRequest
+      attr_accessor dataset_id: ::String
+      attr_accessor workspace_name: ::String
+      attr_accessor disassociate_data_segment_entries: ::Array[Types::DisassociateDataSegmentEntry]
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class BatchDisassociateDataSegmentsFromDatasetResponse
+      attr_accessor dataset_id: ::String
+      attr_accessor dataset_version: ::String
+      attr_accessor failed_disassociations: ::Array[Types::FailedDataSegmentDisassociation]
       SENSITIVE: []
     end
 
@@ -528,6 +630,43 @@ module Aws::IoTSiteWise
       SENSITIVE: []
     end
 
+    class CancelEnrichmentJobRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor job_id: ::String
+      SENSITIVE: []
+    end
+
+    class CancelEnrichmentJobResponse
+      attr_accessor job_id: ::String
+      attr_accessor status: ("PENDING" | "RUNNING" | "COMPLETED" | "FAILED" | "TIMED_OUT" | "CANCELLED")
+      SENSITIVE: []
+    end
+
+    class CancelPipelineExecutionRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor pipeline_name: ::String
+      attr_accessor pipeline_execution_id: ::String
+      attr_accessor reason: ::String
+      SENSITIVE: []
+    end
+
+    class CancelPipelineExecutionResponse
+      attr_accessor state: ("NOT_STARTED" | "RUNNING" | "SUCCEEDED" | "FAILED" | "CANCELLING" | "CANCELLED")
+      SENSITIVE: []
+    end
+
+    class CancelQueryRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor query_id: ::String
+      SENSITIVE: []
+    end
+
+    class CancelQueryResponse
+      attr_accessor query_id: ::String
+      attr_accessor status: ("SUBMITTED" | "RUNNING" | "COMPLETED" | "FAILED" | "CANCELED" | "CANCELING")
+      SENSITIVE: []
+    end
+
     class Citation
       attr_accessor reference: Types::Reference
       attr_accessor content: Types::Content
@@ -537,6 +676,12 @@ module Aws::IoTSiteWise
     class ColumnInfo
       attr_accessor name: ::String
       attr_accessor type: Types::ColumnType
+      SENSITIVE: []
+    end
+
+    class ColumnInformation
+      attr_accessor name: ::String
+      attr_accessor type: ::String
       SENSITIVE: []
     end
 
@@ -571,6 +716,88 @@ module Aws::IoTSiteWise
       SENSITIVE: []
     end
 
+    class ComputationModelAnomalyDetectionConfiguration
+      attr_accessor input_properties: ::String
+      attr_accessor result_property: ::String
+      SENSITIVE: []
+    end
+
+    class ComputationModelConfiguration
+      attr_accessor anomaly_detection: Types::ComputationModelAnomalyDetectionConfiguration
+      SENSITIVE: []
+    end
+
+    class ComputationModelDataBindingUsageSummary
+      attr_accessor computation_model_ids: ::Array[::String]
+      attr_accessor matched_data_binding: Types::MatchedDataBinding
+      SENSITIVE: []
+    end
+
+    class ComputationModelDataBindingValue
+      attr_accessor asset_model_property: Types::AssetModelPropertyBindingValue
+      attr_accessor asset_property: Types::AssetPropertyBindingValue
+      attr_accessor list: ::Array[Types::ComputationModelDataBindingValue]
+      SENSITIVE: []
+    end
+
+    class ComputationModelResolveToResourceSummary
+      attr_accessor resolve_to: Types::ResolveTo
+      SENSITIVE: []
+    end
+
+    class ComputationModelStatus
+      attr_accessor state: ("CREATING" | "ACTIVE" | "UPDATING" | "DELETING" | "FAILED")
+      attr_accessor error: Types::ErrorDetails
+      SENSITIVE: []
+    end
+
+    class ComputationModelSummary
+      attr_accessor id: ::String
+      attr_accessor arn: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor type: ("ANOMALY_DETECTION")
+      attr_accessor creation_date: ::Time
+      attr_accessor last_update_date: ::Time
+      attr_accessor status: Types::ComputationModelStatus
+      attr_accessor version: ::String
+      SENSITIVE: []
+    end
+
+    class ComputeNode
+      attr_accessor compute_node_name: ::String
+      attr_accessor task_name: ::String
+      attr_accessor environment_variables: ::Hash[::String, ::String]
+      attr_accessor depends_on: ::Array[::String]
+      SENSITIVE: [:environment_variables]
+    end
+
+    class ComputeNodeExecutionDetails
+      attr_accessor compute_node_name: ::String
+      attr_accessor task_name: ::String
+      attr_accessor task_arn: ::String
+      attr_accessor task_version: ::String
+      attr_accessor depends_on: ::Array[::String]
+      attr_accessor status: Types::ComputeNodeExecutionStatus
+      attr_accessor start_time: ::Time
+      attr_accessor end_time: ::Time
+      attr_accessor execution_environment_variables: ::Hash[::String, ::String]
+      SENSITIVE: [:execution_environment_variables]
+    end
+
+    class ComputeNodeExecutionStateDetails
+      attr_accessor code: ("VALIDATION_ERROR" | "INTERNAL_FAILURE" | "EXECUTION_ERROR" | "TIMED_OUT")
+      attr_accessor message: ::String
+      attr_accessor details: ::Array[Types::DetailedPipelineError]
+      SENSITIVE: []
+    end
+
+    class ComputeNodeExecutionStatus
+      attr_accessor state: ("NOT_STARTED" | "QUEUED" | "RUNNING" | "SUCCEEDED" | "FAILED")
+      attr_accessor state_details: Types::ComputeNodeExecutionStateDetails
+      SENSITIVE: []
+    end
+
     class ConfigurationErrorDetails
       attr_accessor code: ("VALIDATION_ERROR" | "INTERNAL_FAILURE")
       attr_accessor message: ::String
@@ -591,6 +818,17 @@ module Aws::IoTSiteWise
       SENSITIVE: []
     end
 
+    class ContainerTaskConfiguration
+      attr_accessor ecr_uri: ::String
+      attr_accessor task_execution_role: ::String
+      attr_accessor processing_type: ("GENERIC_COMPUTE_PROCESSING" | "HARDWARE_ACCELERATED_PROCESSING")
+      attr_accessor processing_unit: ("UNITS_2" | "UNITS_4" | "UNITS_8" | "UNITS_12" | "UNITS_16" | "UNITS_24" | "UNITS_32" | "UNITS_36" | "UNITS_48" | "UNITS_60" | "UNITS_64" | "UNITS_72" | "UNITS_84" | "UNITS_96")
+      attr_accessor command: ::Array[::String]
+      attr_accessor timeout_seconds: ::Integer
+      attr_accessor environment_variables: ::Hash[::String, ::String]
+      SENSITIVE: [:ecr_uri, :task_execution_role, :command, :environment_variables]
+    end
+
     class Content
       attr_accessor text: ::String
       SENSITIVE: []
@@ -608,6 +846,25 @@ module Aws::IoTSiteWise
     class CreateAccessPolicyResponse
       attr_accessor access_policy_id: ::String
       attr_accessor access_policy_arn: ::String
+      SENSITIVE: []
+    end
+
+    class CreateApplicationRequest
+      attr_accessor client_token: ::String
+      attr_accessor idc_instance_arn: ::String
+      attr_accessor workspace_name: ::String
+      attr_accessor name: ::String
+      attr_accessor description: ::String
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class CreateApplicationResponse
+      attr_accessor arn: ::String
+      attr_accessor id: ::String
+      attr_accessor dns_subdomain: ::String
+      attr_accessor name: ::String
+      attr_accessor status: ("CREATING" | "ACTIVE" | "DELETING")
       SENSITIVE: []
     end
 
@@ -632,12 +889,13 @@ module Aws::IoTSiteWise
       attr_accessor asset_model_composite_model_id: ::String
       attr_accessor asset_model_composite_model_path: ::Array[Types::AssetModelCompositeModelPathSegment]
       attr_accessor asset_model_status: Types::AssetModelStatus
+      attr_accessor asset_model_id: ::String
       SENSITIVE: []
     end
 
     class CreateAssetModelRequest
       attr_accessor asset_model_name: ::String
-      attr_accessor asset_model_type: ("ASSET_MODEL" | "COMPONENT_MODEL")
+      attr_accessor asset_model_type: ("ASSET_MODEL" | "COMPONENT_MODEL" | "INTERFACE")
       attr_accessor asset_model_id: ::String
       attr_accessor asset_model_external_id: ::String
       attr_accessor asset_model_description: ::String
@@ -659,11 +917,11 @@ module Aws::IoTSiteWise
     class CreateAssetRequest
       attr_accessor asset_name: ::String
       attr_accessor asset_model_id: ::String
+      attr_accessor asset_id: ::String
+      attr_accessor asset_external_id: ::String
       attr_accessor client_token: ::String
       attr_accessor tags: ::Hash[::String, ::String]
       attr_accessor asset_description: ::String
-      attr_accessor asset_id: ::String
-      attr_accessor asset_external_id: ::String
       SENSITIVE: []
     end
 
@@ -682,6 +940,8 @@ module Aws::IoTSiteWise
       attr_accessor job_configuration: Types::JobConfiguration
       attr_accessor adaptive_ingestion: bool
       attr_accessor delete_files_after_import: bool
+      attr_accessor dataset_id: ::String
+      attr_accessor workspace_name: ::String
       SENSITIVE: []
     end
 
@@ -689,6 +949,23 @@ module Aws::IoTSiteWise
       attr_accessor job_id: ::String
       attr_accessor job_name: ::String
       attr_accessor job_status: ("PENDING" | "CANCELLED" | "RUNNING" | "COMPLETED" | "FAILED" | "COMPLETED_WITH_FAILURES")
+      SENSITIVE: []
+    end
+
+    class CreateComputationModelRequest
+      attr_accessor computation_model_name: ::String
+      attr_accessor computation_model_description: ::String
+      attr_accessor computation_model_configuration: Types::ComputationModelConfiguration
+      attr_accessor computation_model_data_binding: ::Hash[::String, Types::ComputationModelDataBindingValue]
+      attr_accessor client_token: ::String
+      attr_accessor tags: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class CreateComputationModelResponse
+      attr_accessor computation_model_id: ::String
+      attr_accessor computation_model_arn: ::String
+      attr_accessor computation_model_status: Types::ComputationModelStatus
       SENSITIVE: []
     end
 
@@ -708,10 +985,29 @@ module Aws::IoTSiteWise
       SENSITIVE: []
     end
 
+    class CreateDatasetExportJobRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor client_token: ::String
+      attr_accessor destination_s3_uri: ::String
+      attr_accessor input: Types::ProcessingInput
+      attr_accessor error_report_location: Types::ExportErrorReportLocation
+      SENSITIVE: []
+    end
+
+    class CreateDatasetExportJobResponse
+      attr_accessor job_id: ::String
+      attr_accessor workspace_name: ::String
+      SENSITIVE: []
+    end
+
     class CreateDatasetRequest
       attr_accessor dataset_id: ::String
       attr_accessor dataset_name: ::String
       attr_accessor dataset_description: ::String
+      attr_accessor dataset_type: ("SESSION" | "CURATED" | "EXTERNAL")
+      attr_accessor dataset_config: Types::DatasetConfig
+      attr_accessor workspace_name: ::String
+      attr_accessor metadata: ::Hash[::String, ::String]
       attr_accessor dataset_source: Types::DatasetSource
       attr_accessor client_token: ::String
       attr_accessor tags: ::Hash[::String, ::String]
@@ -722,6 +1018,20 @@ module Aws::IoTSiteWise
       attr_accessor dataset_id: ::String
       attr_accessor dataset_arn: ::String
       attr_accessor dataset_status: Types::DatasetStatus
+      SENSITIVE: []
+    end
+
+    class CreateEnrichmentJobRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor job_configuration: Types::EnrichmentJobConfiguration
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class CreateEnrichmentJobResponse
+      attr_accessor job_id: ::String
+      attr_accessor status: ("PENDING" | "RUNNING" | "COMPLETED" | "FAILED" | "TIMED_OUT" | "CANCELLED")
+      attr_accessor created_at: ::Time
       SENSITIVE: []
     end
 
@@ -736,6 +1046,25 @@ module Aws::IoTSiteWise
     class CreateGatewayResponse
       attr_accessor gateway_id: ::String
       attr_accessor gateway_arn: ::String
+      SENSITIVE: []
+    end
+
+    class CreatePipelineRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor pipeline_name: ::String
+      attr_accessor description: ::String
+      attr_accessor environment_variables: ::Hash[::String, ::String]
+      attr_accessor computations: ::Array[Types::ComputeNode]
+      attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor client_token: ::String
+      SENSITIVE: [:environment_variables]
+    end
+
+    class CreatePipelineResponse
+      attr_accessor pipeline_name: ::String
+      attr_accessor pipeline_arn: ::String
+      attr_accessor version: ::String
+      attr_accessor status: Types::ResourceStatus
       SENSITIVE: []
     end
 
@@ -779,6 +1108,40 @@ module Aws::IoTSiteWise
       SENSITIVE: []
     end
 
+    class CreateTaskRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor task_name: ::String
+      attr_accessor description: ::String
+      attr_accessor task_configuration: Types::TaskConfiguration
+      attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class CreateTaskResponse
+      attr_accessor task_name: ::String
+      attr_accessor task_arn: ::String
+      attr_accessor version: ::String
+      attr_accessor status: Types::ResourceStatus
+      SENSITIVE: []
+    end
+
+    class CreateWorkspaceRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor workspace_description: ::String
+      attr_accessor encryption_configuration: Types::WorkspaceEncryptionConfiguration
+      attr_accessor tags: ::Hash[::String, ::String]
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class CreateWorkspaceResponse
+      attr_accessor workspace_name: ::String
+      attr_accessor workspace_arn: ::String
+      attr_accessor workspace_status: Types::WorkspaceStatus
+      SENSITIVE: []
+    end
+
     class Csv
       attr_accessor column_names: ::Array[("ALIAS" | "ASSET_ID" | "PROPERTY_ID" | "DATA_TYPE" | "TIMESTAMP_SECONDS" | "TIMESTAMP_NANO_OFFSET" | "QUALITY" | "VALUE")]
       SENSITIVE: []
@@ -799,15 +1162,78 @@ module Aws::IoTSiteWise
       SENSITIVE: []
     end
 
+    class DataBindingValue
+      attr_accessor asset_model_property: Types::AssetModelPropertyBindingValue
+      attr_accessor asset_property: Types::AssetPropertyBindingValue
+      SENSITIVE: []
+    end
+
+    class DataBindingValueFilter
+      attr_accessor asset: Types::AssetBindingValueFilter
+      attr_accessor asset_model: Types::AssetModelBindingValueFilter
+      attr_accessor asset_property: Types::AssetPropertyBindingValueFilter
+      attr_accessor asset_model_property: Types::AssetModelPropertyBindingValueFilter
+      SENSITIVE: []
+    end
+
+    class DataSegmentEnrichment
+      attr_accessor status: ("ENRICHED" | "NOT_ENRICHED")
+      attr_accessor last_enriched_at: ::Time
+      SENSITIVE: []
+    end
+
+    class DataSegmentRelationshipSummary
+      attr_accessor target_dataset_id: ::String
+      attr_accessor source_dataset_id: ::String
+      attr_accessor time_series_id: ::String
+      attr_accessor start_timestamp: Types::TimeInNanos
+      attr_accessor end_timestamp: Types::TimeInNanos
+      SENSITIVE: []
+    end
+
+    class DataSegmentSummary
+      attr_accessor source_dataset_id: ::String
+      attr_accessor time_series_id: ::String
+      attr_accessor start_timestamp: Types::TimeInNanos
+      attr_accessor end_timestamp: Types::TimeInNanos
+      attr_accessor alias: ::String
+      attr_accessor data_type: ("STRING" | "INTEGER" | "DOUBLE" | "BOOLEAN" | "STRUCT" | "VIDEO" | "ANNOTATION" | "JSON")
+      attr_accessor enrichment: Types::DataSegmentEnrichment
+      SENSITIVE: []
+    end
+
     class DataSetReference
       attr_accessor dataset_arn: ::String
       attr_accessor source: Types::Source
       SENSITIVE: []
     end
 
+    class DatasetConfig
+      attr_accessor session: Types::SessionConfig
+      SENSITIVE: []
+    end
+
+    class DatasetEnrichment
+      attr_accessor video: Types::DatasetEnrichmentEntry
+      SENSITIVE: []
+    end
+
+    class DatasetEnrichmentEntry
+      attr_accessor status: ("FULLY_ENRICHED" | "PARTIALLY_ENRICHED" | "NOT_ENRICHED")
+      attr_accessor last_enriched_at: ::Time
+      SENSITIVE: []
+    end
+
+    class DatasetItem
+      attr_accessor dataset_id: ::String
+      attr_accessor trim_settings: Types::TrimSettings
+      attr_accessor export_data_types: ::Array[("VIDEO" | "TELEMETRY" | "ANNOTATION")]
+      SENSITIVE: []
+    end
+
     class DatasetSource
-      attr_accessor source_type: ("KENDRA")
-      attr_accessor source_format: ("KNOWLEDGE_BASE")
+      attr_accessor source_type: ("KENDRA" | "SITEWISE")
+      attr_accessor source_format: ("KNOWLEDGE_BASE" | "TIMESERIES")
       attr_accessor source_detail: Types::SourceDetail
       SENSITIVE: []
     end
@@ -823,9 +1249,12 @@ module Aws::IoTSiteWise
       attr_accessor arn: ::String
       attr_accessor name: ::String
       attr_accessor description: ::String
+      attr_accessor source_type: ("KENDRA" | "SITEWISE")
+      attr_accessor dataset_type: ("SESSION" | "CURATED" | "EXTERNAL")
       attr_accessor creation_date: ::Time
       attr_accessor last_update_date: ::Time
       attr_accessor status: Types::DatasetStatus
+      attr_accessor enrichment_status: Types::DatasetEnrichment
       SENSITIVE: []
     end
 
@@ -846,6 +1275,15 @@ module Aws::IoTSiteWise
     class DeleteAccessPolicyResponse < Aws::EmptyStructure
     end
 
+    class DeleteApplicationRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor id: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteApplicationResponse < Aws::EmptyStructure
+    end
+
     class DeleteAssetModelCompositeModelRequest
       attr_accessor asset_model_id: ::String
       attr_accessor asset_model_composite_model_id: ::String
@@ -857,6 +1295,22 @@ module Aws::IoTSiteWise
     end
 
     class DeleteAssetModelCompositeModelResponse
+      attr_accessor asset_model_status: Types::AssetModelStatus
+      attr_accessor asset_model_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteAssetModelInterfaceRelationshipRequest
+      attr_accessor asset_model_id: ::String
+      attr_accessor interface_asset_model_id: ::String
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteAssetModelInterfaceRelationshipResponse
+      attr_accessor asset_model_id: ::String
+      attr_accessor interface_asset_model_id: ::String
+      attr_accessor asset_model_arn: ::String
       attr_accessor asset_model_status: Types::AssetModelStatus
       SENSITIVE: []
     end
@@ -871,6 +1325,7 @@ module Aws::IoTSiteWise
     end
 
     class DeleteAssetModelResponse
+      attr_accessor asset_model_id: ::String
       attr_accessor asset_model_status: Types::AssetModelStatus
       SENSITIVE: []
     end
@@ -882,7 +1337,19 @@ module Aws::IoTSiteWise
     end
 
     class DeleteAssetResponse
+      attr_accessor asset_id: ::String
       attr_accessor asset_status: Types::AssetStatus
+      SENSITIVE: []
+    end
+
+    class DeleteComputationModelRequest
+      attr_accessor computation_model_id: ::String
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteComputationModelResponse
+      attr_accessor computation_model_status: Types::ComputationModelStatus
       SENSITIVE: []
     end
 
@@ -895,8 +1362,16 @@ module Aws::IoTSiteWise
     class DeleteDashboardResponse < Aws::EmptyStructure
     end
 
+    class DeleteDataSegmentEntry
+      attr_accessor time_series_id: ::String
+      attr_accessor start_timestamp: Types::TimeInNanos
+      attr_accessor end_timestamp: Types::TimeInNanos
+      SENSITIVE: []
+    end
+
     class DeleteDatasetRequest
       attr_accessor dataset_id: ::String
+      attr_accessor workspace_name: ::String
       attr_accessor client_token: ::String
       SENSITIVE: []
     end
@@ -908,6 +1383,17 @@ module Aws::IoTSiteWise
 
     class DeleteGatewayRequest
       attr_accessor gateway_id: ::String
+      SENSITIVE: []
+    end
+
+    class DeletePipelineRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor pipeline_name: ::String
+      SENSITIVE: []
+    end
+
+    class DeletePipelineResponse
+      attr_accessor status: Types::ResourceStatus
       SENSITIVE: []
     end
 
@@ -931,11 +1417,34 @@ module Aws::IoTSiteWise
     class DeleteProjectResponse < Aws::EmptyStructure
     end
 
+    class DeleteTaskRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor task_name: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteTaskResponse
+      attr_accessor status: Types::ResourceStatus
+      SENSITIVE: []
+    end
+
     class DeleteTimeSeriesRequest
       attr_accessor alias: ::String
       attr_accessor asset_id: ::String
       attr_accessor property_id: ::String
       attr_accessor client_token: ::String
+      attr_accessor workspace_name: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteWorkspaceRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class DeleteWorkspaceResponse
+      attr_accessor workspace_status: Types::WorkspaceStatus
       SENSITIVE: []
     end
 
@@ -966,6 +1475,27 @@ module Aws::IoTSiteWise
       attr_accessor action_definition_id: ::String
       attr_accessor action_payload: Types::ActionPayload
       attr_accessor execution_time: ::Time
+      attr_accessor resolve_to: Types::ResolveTo
+      SENSITIVE: []
+    end
+
+    class DescribeApplicationRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor id: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeApplicationResponse
+      attr_accessor arn: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor dns_subdomain: ::String
+      attr_accessor description: ::String
+      attr_accessor id: ::String
+      attr_accessor idc_application_arn: ::String
+      attr_accessor name: ::String
+      attr_accessor status: ("CREATING" | "ACTIVE" | "DELETING")
+      attr_accessor updated_at: ::Time
+      attr_accessor workspace_name: ::String
       SENSITIVE: []
     end
 
@@ -1011,6 +1541,20 @@ module Aws::IoTSiteWise
       SENSITIVE: []
     end
 
+    class DescribeAssetModelInterfaceRelationshipRequest
+      attr_accessor asset_model_id: ::String
+      attr_accessor interface_asset_model_id: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeAssetModelInterfaceRelationshipResponse
+      attr_accessor asset_model_id: ::String
+      attr_accessor interface_asset_model_id: ::String
+      attr_accessor property_mappings: ::Array[Types::PropertyMapping]
+      attr_accessor hierarchy_mappings: ::Array[Types::HierarchyMapping]
+      SENSITIVE: []
+    end
+
     class DescribeAssetModelRequest
       attr_accessor asset_model_id: ::String
       attr_accessor exclude_properties: bool
@@ -1023,7 +1567,7 @@ module Aws::IoTSiteWise
       attr_accessor asset_model_external_id: ::String
       attr_accessor asset_model_arn: ::String
       attr_accessor asset_model_name: ::String
-      attr_accessor asset_model_type: ("ASSET_MODEL" | "COMPONENT_MODEL")
+      attr_accessor asset_model_type: ("ASSET_MODEL" | "COMPONENT_MODEL" | "INTERFACE")
       attr_accessor asset_model_description: ::String
       attr_accessor asset_model_properties: ::Array[Types::AssetModelProperty]
       attr_accessor asset_model_hierarchies: ::Array[Types::AssetModelHierarchy]
@@ -1033,6 +1577,7 @@ module Aws::IoTSiteWise
       attr_accessor asset_model_last_update_date: ::Time
       attr_accessor asset_model_status: Types::AssetModelStatus
       attr_accessor asset_model_version: ::String
+      attr_accessor interface_details: ::Array[Types::InterfaceRelationship]
       attr_accessor e_tag: ::String
       SENSITIVE: []
     end
@@ -1045,11 +1590,11 @@ module Aws::IoTSiteWise
 
     class DescribeAssetPropertyResponse
       attr_accessor asset_id: ::String
+      attr_accessor asset_external_id: ::String
       attr_accessor asset_name: ::String
       attr_accessor asset_model_id: ::String
       attr_accessor asset_property: Types::Property
       attr_accessor composite_model: Types::CompositeModelProperty
-      attr_accessor asset_external_id: ::String
       SENSITIVE: []
     end
 
@@ -1061,6 +1606,7 @@ module Aws::IoTSiteWise
 
     class DescribeAssetResponse
       attr_accessor asset_id: ::String
+      attr_accessor asset_external_id: ::String
       attr_accessor asset_arn: ::String
       attr_accessor asset_name: ::String
       attr_accessor asset_model_id: ::String
@@ -1072,12 +1618,12 @@ module Aws::IoTSiteWise
       attr_accessor asset_status: Types::AssetStatus
       attr_accessor asset_description: ::String
       attr_accessor asset_composite_model_summaries: ::Array[Types::AssetCompositeModelSummary]
-      attr_accessor asset_external_id: ::String
       SENSITIVE: []
     end
 
     class DescribeBulkImportJobRequest
       attr_accessor job_id: ::String
+      attr_accessor workspace_name: ::String
       SENSITIVE: []
     end
 
@@ -1093,6 +1639,43 @@ module Aws::IoTSiteWise
       attr_accessor job_last_update_date: ::Time
       attr_accessor adaptive_ingestion: bool
       attr_accessor delete_files_after_import: bool
+      attr_accessor dataset_id: ::String
+      attr_accessor workspace_name: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeComputationModelExecutionSummaryRequest
+      attr_accessor computation_model_id: ::String
+      attr_accessor resolve_to_resource_type: ("ASSET")
+      attr_accessor resolve_to_resource_id: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeComputationModelExecutionSummaryResponse
+      attr_accessor computation_model_id: ::String
+      attr_accessor resolve_to: Types::ResolveTo
+      attr_accessor computation_model_execution_summary: ::Hash[::String, ::String]
+      SENSITIVE: []
+    end
+
+    class DescribeComputationModelRequest
+      attr_accessor computation_model_id: ::String
+      attr_accessor computation_model_version: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeComputationModelResponse
+      attr_accessor computation_model_id: ::String
+      attr_accessor computation_model_arn: ::String
+      attr_accessor computation_model_name: ::String
+      attr_accessor computation_model_description: ::String
+      attr_accessor computation_model_configuration: Types::ComputationModelConfiguration
+      attr_accessor computation_model_data_binding: ::Hash[::String, Types::ComputationModelDataBindingValue]
+      attr_accessor computation_model_creation_date: ::Time
+      attr_accessor computation_model_last_update_date: ::Time
+      attr_accessor computation_model_status: Types::ComputationModelStatus
+      attr_accessor computation_model_version: ::String
+      attr_accessor action_definitions: ::Array[Types::ActionDefinition]
       SENSITIVE: []
     end
 
@@ -1113,8 +1696,28 @@ module Aws::IoTSiteWise
       SENSITIVE: []
     end
 
+    class DescribeDatasetExportJobRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor job_id: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeDatasetExportJobResponse
+      attr_accessor job_id: ::String
+      attr_accessor workspace_name: ::String
+      attr_accessor status: ("SUBMITTED" | "RUNNING" | "COMPLETED" | "COMPLETED_WITH_ERRORS" | "FAILED")
+      attr_accessor started_at: ::Time
+      attr_accessor completed_at: ::Time
+      attr_accessor destination_s3_uri: ::String
+      attr_accessor error_report_location: Types::ExportErrorReportLocation
+      attr_accessor input: Types::ProcessingInput
+      SENSITIVE: []
+    end
+
     class DescribeDatasetRequest
       attr_accessor dataset_id: ::String
+      attr_accessor workspace_name: ::String
+      attr_accessor dataset_version: ::String
       SENSITIVE: []
     end
 
@@ -1123,11 +1726,16 @@ module Aws::IoTSiteWise
       attr_accessor dataset_arn: ::String
       attr_accessor dataset_name: ::String
       attr_accessor dataset_description: ::String
+      attr_accessor dataset_type: ("SESSION" | "CURATED" | "EXTERNAL")
+      attr_accessor dataset_config: Types::DatasetConfig
+      attr_accessor workspace_name: ::String
+      attr_accessor metadata: ::Hash[::String, ::String]
       attr_accessor dataset_source: Types::DatasetSource
       attr_accessor dataset_status: Types::DatasetStatus
       attr_accessor dataset_creation_date: ::Time
       attr_accessor dataset_last_update_date: ::Time
       attr_accessor dataset_version: ::String
+      attr_accessor enrichment_status: Types::DatasetEnrichment
       SENSITIVE: []
     end
 
@@ -1138,6 +1746,46 @@ module Aws::IoTSiteWise
       attr_accessor encryption_type: ("SITEWISE_DEFAULT_ENCRYPTION" | "KMS_BASED_ENCRYPTION")
       attr_accessor kms_key_arn: ::String
       attr_accessor configuration_status: Types::ConfigurationStatus
+      SENSITIVE: []
+    end
+
+    class DescribeEnrichmentJobRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor job_id: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeEnrichmentJobResponse
+      attr_accessor job_id: ::String
+      attr_accessor status: ("PENDING" | "RUNNING" | "COMPLETED" | "FAILED" | "TIMED_OUT" | "CANCELLED")
+      attr_accessor workspace_name: ::String
+      attr_accessor job_type: ("EVENT_DETECTION")
+      attr_accessor job_configuration: Types::EnrichmentJobConfiguration
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      attr_accessor completed_at: ::Time
+      attr_accessor cancelled_at: ::Time
+      attr_accessor failure_message: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeExecutionRequest
+      attr_accessor execution_id: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeExecutionResponse
+      attr_accessor execution_id: ::String
+      attr_accessor action_type: ::String
+      attr_accessor target_resource: Types::TargetResource
+      attr_accessor target_resource_version: ::String
+      attr_accessor resolve_to: Types::ResolveTo
+      attr_accessor execution_start_time: ::Time
+      attr_accessor execution_end_time: ::Time
+      attr_accessor execution_status: Types::ExecutionStatus
+      attr_accessor execution_result: ::Hash[::String, ::String]
+      attr_accessor execution_details: ::Hash[::String, ::String]
+      attr_accessor execution_entity_version: ::String
       SENSITIVE: []
     end
 
@@ -1172,12 +1820,59 @@ module Aws::IoTSiteWise
       SENSITIVE: []
     end
 
-    class DescribeLoggingOptionsRequest < Aws::EmptyStructure
+    class DescribeLoggingOptionsRequest
+      attr_accessor workspace_name: ::String
+      SENSITIVE: []
     end
 
     class DescribeLoggingOptionsResponse
       attr_accessor logging_options: Types::LoggingOptions
       SENSITIVE: []
+    end
+
+    class DescribePipelineExecutionRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor pipeline_name: ::String
+      attr_accessor pipeline_execution_id: ::String
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class DescribePipelineExecutionResponse
+      attr_accessor pipeline_execution_id: ::String
+      attr_accessor pipeline_name: ::String
+      attr_accessor workspace_name: ::String
+      attr_accessor pipeline_version: ::String
+      attr_accessor status: Types::PipelineExecutionStatus
+      attr_accessor start_time: ::Time
+      attr_accessor end_time: ::Time
+      attr_accessor request_environment_variables: Types::ExecutionEnvironmentVariables
+      attr_accessor execution_priority: ::Integer
+      attr_accessor compute_node_execution_details: ::Array[Types::ComputeNodeExecutionDetails]
+      attr_accessor next_token: ::String
+      SENSITIVE: [:request_environment_variables]
+    end
+
+    class DescribePipelineRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor pipeline_name: ::String
+      attr_accessor pipeline_version: ::String
+      SENSITIVE: []
+    end
+
+    class DescribePipelineResponse
+      attr_accessor pipeline_name: ::String
+      attr_accessor workspace_name: ::String
+      attr_accessor description: ::String
+      attr_accessor pipeline_arn: ::String
+      attr_accessor version: ::String
+      attr_accessor environment_variables: ::Hash[::String, ::String]
+      attr_accessor computations: ::Array[Types::ComputeNode]
+      attr_accessor status: Types::ResourceStatus
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: [:environment_variables]
     end
 
     class DescribePortalRequest
@@ -1222,6 +1917,40 @@ module Aws::IoTSiteWise
       SENSITIVE: []
     end
 
+    class DescribeQueryRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor query_id: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeQueryResponse
+      attr_accessor query_id: ::String
+      attr_accessor status: ("SUBMITTED" | "RUNNING" | "COMPLETED" | "FAILED" | "CANCELED" | "CANCELING")
+      attr_accessor submitted_at: ::Time
+      attr_accessor completed_at: ::Time
+      attr_accessor statistics: Types::QueryStatistics
+      attr_accessor error_message: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeSearchRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor search_id: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeSearchResponse
+      attr_accessor search_id: ::String
+      attr_accessor workspace_name: ::String
+      attr_accessor status: ("QUEUED" | "RUNNING" | "SUCCEEDED" | "FAILED")
+      attr_accessor query_statement: ::String
+      attr_accessor search_type: ("DEEP" | "QUICK")
+      attr_accessor status_reason: ::String
+      attr_accessor started_at: ::Time
+      attr_accessor group_id: ::String
+      SENSITIVE: [:query_statement]
+    end
+
     class DescribeStorageConfigurationRequest < Aws::EmptyStructure
     end
 
@@ -1238,10 +1967,31 @@ module Aws::IoTSiteWise
       SENSITIVE: []
     end
 
+    class DescribeTaskRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor task_name: ::String
+      attr_accessor task_version: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeTaskResponse
+      attr_accessor workspace_name: ::String
+      attr_accessor task_name: ::String
+      attr_accessor description: ::String
+      attr_accessor task_arn: ::String
+      attr_accessor version: ::String
+      attr_accessor task_configuration: Types::TaskConfiguration
+      attr_accessor status: Types::ResourceStatus
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
     class DescribeTimeSeriesRequest
       attr_accessor alias: ::String
       attr_accessor asset_id: ::String
       attr_accessor property_id: ::String
+      attr_accessor workspace_name: ::String
       SENSITIVE: []
     end
 
@@ -1250,16 +2000,39 @@ module Aws::IoTSiteWise
       attr_accessor property_id: ::String
       attr_accessor alias: ::String
       attr_accessor time_series_id: ::String
-      attr_accessor data_type: ("STRING" | "INTEGER" | "DOUBLE" | "BOOLEAN" | "STRUCT")
+      attr_accessor data_type: ("STRING" | "INTEGER" | "DOUBLE" | "BOOLEAN" | "STRUCT" | "VIDEO" | "ANNOTATION" | "JSON")
       attr_accessor data_type_spec: ::String
       attr_accessor time_series_creation_date: ::Time
       attr_accessor time_series_last_update_date: ::Time
       attr_accessor time_series_arn: ::String
+      attr_accessor workspace_name: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeWorkspaceRequest
+      attr_accessor workspace_name: ::String
+      SENSITIVE: []
+    end
+
+    class DescribeWorkspaceResponse
+      attr_accessor workspace_arn: ::String
+      attr_accessor workspace_name: ::String
+      attr_accessor workspace_description: ::String
+      attr_accessor workspace_status: Types::WorkspaceStatus
+      attr_accessor encryption_configuration: Types::WorkspaceEncryptionConfigurationInfo
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
       SENSITIVE: []
     end
 
     class DetailedError
       attr_accessor code: ("INCOMPATIBLE_COMPUTE_LOCATION" | "INCOMPATIBLE_FORWARDING_CONFIGURATION")
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class DetailedPipelineError
+      attr_accessor code: ("VALIDATION_ERROR" | "INTERNAL_FAILURE" | "EXECUTION_ERROR" | "TIMED_OUT")
       attr_accessor message: ::String
       SENSITIVE: []
     end
@@ -1272,11 +2045,49 @@ module Aws::IoTSiteWise
       SENSITIVE: []
     end
 
+    class DisassociateDataSegmentEntry
+      attr_accessor source_dataset_id: ::String
+      attr_accessor time_series_id: ::String
+      attr_accessor start_timestamp: Types::TimeInNanos
+      attr_accessor end_timestamp: Types::TimeInNanos
+      SENSITIVE: []
+    end
+
     class DisassociateTimeSeriesFromAssetPropertyRequest
       attr_accessor alias: ::String
       attr_accessor asset_id: ::String
       attr_accessor property_id: ::String
       attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class EnrichmentJobConfiguration
+      attr_accessor event_detection: Types::EventDetection
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class EventDetection < EnrichmentJobConfiguration
+      end
+      class Unknown < EnrichmentJobConfiguration
+      end
+    end
+
+    class EnrichmentJobSummary
+      attr_accessor job_id: ::String
+      attr_accessor status: ("PENDING" | "RUNNING" | "COMPLETED" | "FAILED" | "TIMED_OUT" | "CANCELLED")
+      attr_accessor workspace_name: ::String
+      attr_accessor job_type: ("EVENT_DETECTION")
+      attr_accessor dataset_id: ::String
+      attr_accessor property_alias: ::String
+      attr_accessor time_series_id: ::String
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
+    end
+
+    class EnrichmentTrimSettings
+      attr_accessor start_time: Types::TimeInNanos
+      attr_accessor end_time: Types::TimeInNanos
       SENSITIVE: []
     end
 
@@ -1293,11 +2104,20 @@ module Aws::IoTSiteWise
       SENSITIVE: []
     end
 
+    class EventDetection
+      attr_accessor dataset_id: ::String
+      attr_accessor time_series_id: ::String
+      attr_accessor property_alias: ::String
+      attr_accessor trim_settings: Types::EnrichmentTrimSettings
+      SENSITIVE: []
+    end
+
     class ExecuteActionRequest
       attr_accessor target_resource: Types::TargetResource
       attr_accessor action_definition_id: ::String
       attr_accessor action_payload: Types::ActionPayload
       attr_accessor client_token: ::String
+      attr_accessor resolve_to: Types::ResolveTo
       SENSITIVE: []
     end
 
@@ -1311,7 +2131,7 @@ module Aws::IoTSiteWise
       attr_accessor next_token: ::String
       attr_accessor max_results: ::Integer
       attr_accessor client_token: ::String
-      SENSITIVE: []
+      SENSITIVE: [:query_statement]
     end
 
     class ExecuteQueryResponse
@@ -1321,9 +2141,76 @@ module Aws::IoTSiteWise
       SENSITIVE: []
     end
 
+    class ExecutionEnvironmentVariables
+      attr_accessor global: ::Hash[::String, ::String]
+      attr_accessor compute_nodes: ::Hash[::String, ::Hash[::String, ::String]]
+      SENSITIVE: [:global]
+    end
+
+    class ExecutionStatus
+      attr_accessor state: ("RUNNING" | "COMPLETED" | "FAILED")
+      SENSITIVE: []
+    end
+
+    class ExecutionSummary
+      attr_accessor execution_id: ::String
+      attr_accessor action_type: ::String
+      attr_accessor target_resource: Types::TargetResource
+      attr_accessor target_resource_version: ::String
+      attr_accessor resolve_to: Types::ResolveTo
+      attr_accessor execution_start_time: ::Time
+      attr_accessor execution_end_time: ::Time
+      attr_accessor execution_status: Types::ExecutionStatus
+      attr_accessor execution_entity_version: ::String
+      SENSITIVE: []
+    end
+
+    class ExportErrorReportLocation
+      attr_accessor s3_uri: ::String
+      SENSITIVE: []
+    end
+
+    class ExportJobSummary
+      attr_accessor job_id: ::String
+      attr_accessor status: ("SUBMITTED" | "RUNNING" | "COMPLETED" | "COMPLETED_WITH_ERRORS" | "FAILED")
+      attr_accessor started_at: ::Time
+      attr_accessor completed_at: ::Time
+      attr_accessor destination_s3_uri: ::String
+      SENSITIVE: []
+    end
+
     class ExpressionVariable
       attr_accessor name: ::String
       attr_accessor value: Types::VariableValue
+      SENSITIVE: []
+    end
+
+    class FailedDataSegmentAssociation
+      attr_accessor source_dataset_id: ::String
+      attr_accessor time_series_id: ::String
+      attr_accessor start_timestamp: Types::TimeInNanos
+      attr_accessor end_timestamp: Types::TimeInNanos
+      attr_accessor error_code: ("INTERNAL_FAILURE" | "VALIDATION_ERROR" | "RESOURCE_NOT_FOUND" | "LIMIT_EXCEEDED" | "CONFLICTING_OPERATION")
+      attr_accessor error_message: ::String
+      SENSITIVE: []
+    end
+
+    class FailedDataSegmentDeletion
+      attr_accessor time_series_id: ::String
+      attr_accessor start_timestamp: Types::TimeInNanos
+      attr_accessor end_timestamp: Types::TimeInNanos
+      attr_accessor error_code: ("INTERNAL_FAILURE" | "VALIDATION_ERROR" | "RESOURCE_NOT_FOUND" | "LIMIT_EXCEEDED" | "CONFLICTING_OPERATION")
+      attr_accessor error_message: ::String
+      SENSITIVE: []
+    end
+
+    class FailedDataSegmentDisassociation
+      attr_accessor source_dataset_id: ::String
+      attr_accessor time_series_id: ::String
+      attr_accessor start_timestamp: Types::TimeInNanos
+      attr_accessor end_timestamp: Types::TimeInNanos
+      attr_accessor error_code: ("INTERNAL_FAILURE" | "VALIDATION_ERROR" | "RESOURCE_NOT_FOUND" | "LIMIT_EXCEEDED" | "CONFLICTING_OPERATION")
+      attr_accessor error_message: ::String
       SENSITIVE: []
     end
 
@@ -1331,12 +2218,24 @@ module Aws::IoTSiteWise
       attr_accessor bucket: ::String
       attr_accessor key: ::String
       attr_accessor version_id: ::String
+      attr_accessor alias: ::String
+      attr_accessor start_time: Types::TimeInNanos
+      attr_accessor file_format: Types::FileFormat
       SENSITIVE: []
     end
 
     class FileFormat
       attr_accessor csv: Types::Csv
       attr_accessor parquet: Types::Parquet
+      attr_accessor mp4: Types::Mp4
+      attr_accessor annotation: Types::Annotation
+      SENSITIVE: []
+    end
+
+    class FormatSettings
+      attr_accessor frames_per_second: ::Integer
+      attr_accessor width_in_pixels: ::Integer
+      attr_accessor height_in_pixels: ::Integer
       SENSITIVE: []
     end
 
@@ -1421,6 +2320,26 @@ module Aws::IoTSiteWise
       SENSITIVE: []
     end
 
+    class GetCaptureDataRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor start_time: Types::TimeInNanos
+      attr_accessor end_time: Types::TimeInNanos
+      attr_accessor time_series_id: ::String
+      attr_accessor property_alias: ::String
+      attr_accessor format_settings: Types::FormatSettings
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class GetCaptureDataResponse
+      attr_accessor data: ::String
+      attr_accessor start_time: Types::TimeInNanos
+      attr_accessor end_time: Types::TimeInNanos
+      attr_accessor data_type: ("VIDEO-MP4")
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
     class GetInterpolatedAssetPropertyValuesRequest
       attr_accessor asset_id: ::String
       attr_accessor property_id: ::String
@@ -1444,6 +2363,35 @@ module Aws::IoTSiteWise
       SENSITIVE: []
     end
 
+    class GetQueryResultsRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor query_id: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class GetQueryResultsResponse
+      attr_accessor column_info: ::Array[Types::ColumnInformation]
+      attr_accessor rows: ::Array[::Array[::String]]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class GetSearchResultsRequest
+      attr_accessor search_id: ::String
+      attr_accessor workspace_name: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class GetSearchResultsResponse
+      attr_accessor search_results: ::Array[Types::SearchResult]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
     class Greengrass
       attr_accessor group_arn: ::String
       SENSITIVE: []
@@ -1457,6 +2405,12 @@ module Aws::IoTSiteWise
 
     class GroupIdentity
       attr_accessor id: ::String
+      SENSITIVE: []
+    end
+
+    class HierarchyMapping
+      attr_accessor asset_model_hierarchy_id: ::String
+      attr_accessor interface_asset_model_hierarchy_id: ::String
       SENSITIVE: []
     end
 
@@ -1493,6 +2447,22 @@ module Aws::IoTSiteWise
     class ImageLocation
       attr_accessor id: ::String
       attr_accessor url: ::String
+      SENSITIVE: []
+    end
+
+    class InterfaceRelationship
+      attr_accessor id: ::String
+      SENSITIVE: []
+    end
+
+    class InterfaceRelationshipSummary
+      attr_accessor id: ::String
+      SENSITIVE: []
+    end
+
+    class InterfaceSummary
+      attr_accessor interface_asset_model_id: ::String
+      attr_accessor interface_asset_model_property_id: ::String
       SENSITIVE: []
     end
 
@@ -1576,16 +2546,30 @@ module Aws::IoTSiteWise
     end
 
     class ListActionsRequest
-      attr_accessor target_resource_type: ("ASSET")
+      attr_accessor target_resource_type: ("ASSET" | "COMPUTATION_MODEL")
       attr_accessor target_resource_id: ::String
       attr_accessor next_token: ::String
       attr_accessor max_results: ::Integer
+      attr_accessor resolve_to_resource_type: ("ASSET")
+      attr_accessor resolve_to_resource_id: ::String
       SENSITIVE: []
     end
 
     class ListActionsResponse
       attr_accessor action_summaries: ::Array[Types::ActionSummary]
       attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListApplicationsRequest
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListApplicationsResponse
+      attr_accessor next_token: ::String
+      attr_accessor applications: ::Array[Types::ApplicationSummary]
       SENSITIVE: []
     end
 
@@ -1619,7 +2603,7 @@ module Aws::IoTSiteWise
     end
 
     class ListAssetModelsRequest
-      attr_accessor asset_model_types: ::Array[("ASSET_MODEL" | "COMPONENT_MODEL")]
+      attr_accessor asset_model_types: ::Array[("ASSET_MODEL" | "COMPONENT_MODEL" | "INTERFACE")]
       attr_accessor next_token: ::String
       attr_accessor max_results: ::Integer
       attr_accessor asset_model_version: ::String
@@ -1693,6 +2677,7 @@ module Aws::IoTSiteWise
       attr_accessor next_token: ::String
       attr_accessor max_results: ::Integer
       attr_accessor filter: ("ALL" | "PENDING" | "RUNNING" | "CANCELLED" | "FAILED" | "COMPLETED_WITH_FAILURES" | "COMPLETED")
+      attr_accessor workspace_name: ::String
       SENSITIVE: []
     end
 
@@ -1715,6 +2700,45 @@ module Aws::IoTSiteWise
       SENSITIVE: []
     end
 
+    class ListComputationModelDataBindingUsagesRequest
+      attr_accessor data_binding_value_filter: Types::DataBindingValueFilter
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListComputationModelDataBindingUsagesResponse
+      attr_accessor data_binding_usage_summaries: ::Array[Types::ComputationModelDataBindingUsageSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListComputationModelResolveToResourcesRequest
+      attr_accessor computation_model_id: ::String
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListComputationModelResolveToResourcesResponse
+      attr_accessor computation_model_resolve_to_resource_summaries: ::Array[Types::ComputationModelResolveToResourceSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListComputationModelsRequest
+      attr_accessor computation_model_type: ("ANOMALY_DETECTION")
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListComputationModelsResponse
+      attr_accessor computation_model_summaries: ::Array[Types::ComputationModelSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
     class ListDashboardsRequest
       attr_accessor project_id: ::String
       attr_accessor next_token: ::String
@@ -1728,8 +2752,53 @@ module Aws::IoTSiteWise
       SENSITIVE: []
     end
 
+    class ListDatasetDataSegmentRelationshipsRequest
+      attr_accessor dataset_id: ::String
+      attr_accessor workspace_name: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListDatasetDataSegmentRelationshipsResponse
+      attr_accessor data_segment_relationship_summaries: ::Array[Types::DataSegmentRelationshipSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListDatasetDataSegmentsRequest
+      attr_accessor dataset_id: ::String
+      attr_accessor workspace_name: ::String
+      attr_accessor dataset_version: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListDatasetDataSegmentsResponse
+      attr_accessor data_segments: ::Array[Types::DataSegmentSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListDatasetExportJobsRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor filter: ("ALL" | "SUBMITTED" | "RUNNING" | "COMPLETED" | "COMPLETED_WITH_ERRORS" | "FAILED")
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListDatasetExportJobsResponse
+      attr_accessor jobs: ::Array[Types::ExportJobSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
     class ListDatasetsRequest
-      attr_accessor source_type: ("KENDRA")
+      attr_accessor source_type: ("KENDRA" | "SITEWISE")
+      attr_accessor workspace_name: ::String
+      attr_accessor dataset_type: ("SESSION" | "CURATED" | "EXTERNAL")
       attr_accessor next_token: ::String
       attr_accessor max_results: ::Integer
       SENSITIVE: []
@@ -1737,6 +2806,44 @@ module Aws::IoTSiteWise
 
     class ListDatasetsResponse
       attr_accessor dataset_summaries: ::Array[Types::DatasetSummary]
+      attr_accessor next_token: ::String
+      attr_accessor workspace_name: ::String
+      SENSITIVE: []
+    end
+
+    class ListEnrichmentJobsRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor dataset_id: ::String
+      attr_accessor property_alias: ::String
+      attr_accessor time_series_id: ::String
+      attr_accessor status: ("PENDING" | "RUNNING" | "COMPLETED" | "FAILED" | "TIMED_OUT" | "CANCELLED")
+      attr_accessor job_type: ("EVENT_DETECTION")
+      attr_accessor start_date: ::Time
+      attr_accessor end_date: ::Time
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListEnrichmentJobsResponse
+      attr_accessor jobs: ::Array[Types::EnrichmentJobSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListExecutionsRequest
+      attr_accessor target_resource_type: ("ASSET" | "COMPUTATION_MODEL")
+      attr_accessor target_resource_id: ::String
+      attr_accessor resolve_to_resource_type: ("ASSET")
+      attr_accessor resolve_to_resource_id: ::String
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor action_type: ::String
+      SENSITIVE: []
+    end
+
+    class ListExecutionsResponse
+      attr_accessor execution_summaries: ::Array[Types::ExecutionSummary]
       attr_accessor next_token: ::String
       SENSITIVE: []
     end
@@ -1749,6 +2856,51 @@ module Aws::IoTSiteWise
 
     class ListGatewaysResponse
       attr_accessor gateway_summaries: ::Array[Types::GatewaySummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListInterfaceRelationshipsRequest
+      attr_accessor interface_asset_model_id: ::String
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListInterfaceRelationshipsResponse
+      attr_accessor interface_relationship_summaries: ::Array[Types::InterfaceRelationshipSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListPipelineExecutionsRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor pipeline_name: ::String
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor state: ("NOT_STARTED" | "RUNNING" | "SUCCEEDED" | "FAILED" | "CANCELLING" | "CANCELLED")
+      attr_accessor start_time_after: ::Time
+      attr_accessor start_time_before: ::Time
+      attr_accessor end_time_after: ::Time
+      attr_accessor end_time_before: ::Time
+      SENSITIVE: []
+    end
+
+    class ListPipelineExecutionsResponse
+      attr_accessor pipeline_execution_summaries: ::Array[Types::PipelineExecutionSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListPipelinesRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListPipelinesResponse
+      attr_accessor pipeline_summaries: ::Array[Types::PipelineSummary]
       attr_accessor next_token: ::String
       SENSITIVE: []
     end
@@ -1791,6 +2943,43 @@ module Aws::IoTSiteWise
       SENSITIVE: []
     end
 
+    class ListQueriesRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor filter: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListQueriesResponse
+      attr_accessor queries: ::Array[Types::QuerySummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListSearchesFilters
+      attr_accessor status_filter: ::Array[("QUEUED" | "RUNNING" | "SUCCEEDED" | "FAILED")]
+      attr_accessor started_after: ::Time
+      attr_accessor started_before: ::Time
+      attr_accessor group_id_filter: ::Array[::String]
+      attr_accessor search_type_filter: ::Array[("DEEP" | "QUICK")]
+      SENSITIVE: []
+    end
+
+    class ListSearchesRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      attr_accessor list_searches_filters: Types::ListSearchesFilters
+      SENSITIVE: []
+    end
+
+    class ListSearchesResponse
+      attr_accessor search_summaries: ::Array[Types::SearchSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
     class ListTagsForResourceRequest
       attr_accessor resource_arn: ::String
       SENSITIVE: []
@@ -1801,17 +2990,44 @@ module Aws::IoTSiteWise
       SENSITIVE: []
     end
 
+    class ListTasksRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListTasksResponse
+      attr_accessor task_summaries: ::Array[Types::TaskSummary]
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
     class ListTimeSeriesRequest
       attr_accessor next_token: ::String
       attr_accessor max_results: ::Integer
       attr_accessor asset_id: ::String
       attr_accessor alias_prefix: ::String
       attr_accessor time_series_type: ("ASSOCIATED" | "DISASSOCIATED")
+      attr_accessor workspace_name: ::String
       SENSITIVE: []
     end
 
     class ListTimeSeriesResponse
       attr_accessor time_series_summaries: ::Array[Types::TimeSeriesSummary]
+      attr_accessor next_token: ::String
+      attr_accessor workspace_name: ::String
+      SENSITIVE: []
+    end
+
+    class ListWorkspacesRequest
+      attr_accessor next_token: ::String
+      attr_accessor max_results: ::Integer
+      SENSITIVE: []
+    end
+
+    class ListWorkspacesResponse
+      attr_accessor workspace_summaries: ::Array[Types::WorkspaceSummary]
       attr_accessor next_token: ::String
       SENSITIVE: []
     end
@@ -1823,6 +3039,11 @@ module Aws::IoTSiteWise
 
     class LoggingOptions
       attr_accessor level: ("ERROR" | "INFO" | "OFF")
+      SENSITIVE: []
+    end
+
+    class MatchedDataBinding
+      attr_accessor value: Types::DataBindingValue
       SENSITIVE: []
     end
 
@@ -1860,12 +3081,49 @@ module Aws::IoTSiteWise
       SENSITIVE: []
     end
 
+    class Mp4 < Aws::EmptyStructure
+    end
+
     class MultiLayerStorage
       attr_accessor customer_managed_s3_storage: Types::CustomerManagedS3Storage
       SENSITIVE: []
     end
 
     class Parquet < Aws::EmptyStructure
+    end
+
+    class PipelineExecutionStateDetails
+      attr_accessor code: ("VALIDATION_ERROR" | "INTERNAL_FAILURE" | "EXECUTION_ERROR" | "TIMED_OUT")
+      attr_accessor message: ::String
+      attr_accessor details: ::Array[Types::DetailedPipelineError]
+      SENSITIVE: []
+    end
+
+    class PipelineExecutionStatus
+      attr_accessor state: ("NOT_STARTED" | "RUNNING" | "SUCCEEDED" | "FAILED" | "CANCELLING" | "CANCELLED")
+      attr_accessor state_details: Types::PipelineExecutionStateDetails
+      SENSITIVE: []
+    end
+
+    class PipelineExecutionSummary
+      attr_accessor pipeline_execution_id: ::String
+      attr_accessor pipeline_version: ::String
+      attr_accessor status: Types::PipelineExecutionStatus
+      attr_accessor execution_priority: ::Integer
+      attr_accessor start_time: ::Time
+      attr_accessor end_time: ::Time
+      SENSITIVE: []
+    end
+
+    class PipelineSummary
+      attr_accessor pipeline_name: ::String
+      attr_accessor description: ::String
+      attr_accessor pipeline_arn: ::String
+      attr_accessor version: ::String
+      attr_accessor status: Types::ResourceStatus
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
+      SENSITIVE: []
     end
 
     class PortalResource
@@ -1904,6 +3162,20 @@ module Aws::IoTSiteWise
       SENSITIVE: []
     end
 
+    class ProcessingInput
+      attr_accessor timeseries: ::Array[Types::TimeseriesItem]
+      attr_accessor dataset: Types::DatasetItem
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class Timeseries < ProcessingInput
+      end
+      class Dataset < ProcessingInput
+      end
+      class Unknown < ProcessingInput
+      end
+    end
+
     class ProjectResource
       attr_accessor id: ::String
       SENSITIVE: []
@@ -1920,14 +3192,27 @@ module Aws::IoTSiteWise
 
     class Property
       attr_accessor id: ::String
+      attr_accessor external_id: ::String
       attr_accessor name: ::String
       attr_accessor alias: ::String
       attr_accessor notification: Types::PropertyNotification
-      attr_accessor data_type: ("STRING" | "INTEGER" | "DOUBLE" | "BOOLEAN" | "STRUCT")
+      attr_accessor data_type: ("STRING" | "INTEGER" | "DOUBLE" | "BOOLEAN" | "STRUCT" | "VIDEO" | "ANNOTATION" | "JSON")
       attr_accessor unit: ::String
       attr_accessor type: Types::PropertyType
       attr_accessor path: ::Array[Types::AssetPropertyPathSegment]
-      attr_accessor external_id: ::String
+      SENSITIVE: []
+    end
+
+    class PropertyMapping
+      attr_accessor asset_model_property_id: ::String
+      attr_accessor interface_asset_model_property_id: ::String
+      SENSITIVE: []
+    end
+
+    class PropertyMappingConfiguration
+      attr_accessor match_by_property_name: bool
+      attr_accessor create_missing_property: bool
+      attr_accessor overrides: ::Array[Types::PropertyMapping]
       SENSITIVE: []
     end
 
@@ -1947,6 +3232,22 @@ module Aws::IoTSiteWise
 
     class PropertyValueNullValue
       attr_accessor value_type: ("D" | "B" | "S" | "I" | "U")
+      SENSITIVE: []
+    end
+
+    class PutAssetModelInterfaceRelationshipRequest
+      attr_accessor asset_model_id: ::String
+      attr_accessor interface_asset_model_id: ::String
+      attr_accessor property_mapping_configuration: Types::PropertyMappingConfiguration
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class PutAssetModelInterfaceRelationshipResponse
+      attr_accessor asset_model_id: ::String
+      attr_accessor interface_asset_model_id: ::String
+      attr_accessor asset_model_arn: ::String
+      attr_accessor asset_model_status: Types::AssetModelStatus
       SENSITIVE: []
     end
 
@@ -1974,6 +3275,7 @@ module Aws::IoTSiteWise
 
     class PutLoggingOptionsRequest
       attr_accessor logging_options: Types::LoggingOptions
+      attr_accessor workspace_name: ::String
       SENSITIVE: []
     end
 
@@ -2003,6 +3305,21 @@ module Aws::IoTSiteWise
       SENSITIVE: []
     end
 
+    class QueryStatistics
+      attr_accessor row_count: ::Integer
+      attr_accessor bytes_scanned: ::Integer
+      attr_accessor execution_time_in_millis: ::Integer
+      SENSITIVE: []
+    end
+
+    class QuerySummary
+      attr_accessor query_id: ::String
+      attr_accessor status: ("SUBMITTED" | "RUNNING" | "COMPLETED" | "FAILED" | "CANCELED" | "CANCELING")
+      attr_accessor submitted_at: ::Time
+      attr_accessor completed_at: ::Time
+      SENSITIVE: []
+    end
+
     class QueryTimeoutException
       attr_accessor message: ::String
       SENSITIVE: []
@@ -2010,6 +3327,11 @@ module Aws::IoTSiteWise
 
     class Reference
       attr_accessor dataset: Types::DataSetReference
+      SENSITIVE: []
+    end
+
+    class ResolveTo
+      attr_accessor asset_id: ::String
       SENSITIVE: []
     end
 
@@ -2026,9 +3348,21 @@ module Aws::IoTSiteWise
       SENSITIVE: []
     end
 
+    class ResourceError
+      attr_accessor code: ("VALIDATION_ERROR" | "INTERNAL_FAILURE")
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
     class ResourceNotFoundException
       attr_accessor message: ::String
       attr_accessor event_type: untyped
+      SENSITIVE: []
+    end
+
+    class ResourceStatus
+      attr_accessor error: Types::ResourceError
+      attr_accessor state: ("CREATING" | "ACTIVE" | "UPDATING" | "DELETING" | "FAILED")
       SENSITIVE: []
     end
 
@@ -2043,8 +3377,45 @@ module Aws::IoTSiteWise
       SENSITIVE: []
     end
 
+    class SearchFilters
+      attr_accessor time_series_ids: ::Array[::String]
+      attr_accessor dataset_ids: ::Array[::String]
+      attr_accessor time_intervals: ::Array[Types::TimeInterval]
+      SENSITIVE: []
+    end
+
+    class SearchResult
+      attr_accessor search_id: ::String
+      attr_accessor workspace_name: ::String
+      attr_accessor dataset_id: ::String
+      attr_accessor time_series_id: ::String
+      attr_accessor start_timestamp: Types::TimeInNanos
+      attr_accessor end_timestamp: Types::TimeInNanos
+      attr_accessor top_timestamp: Types::TimeInNanos
+      attr_accessor score: ::Float
+      SENSITIVE: []
+    end
+
+    class SearchSummary
+      attr_accessor search_id: ::String
+      attr_accessor workspace_name: ::String
+      attr_accessor status: ("QUEUED" | "RUNNING" | "SUCCEEDED" | "FAILED")
+      attr_accessor query_statement: ::String
+      attr_accessor search_type: ("DEEP" | "QUICK")
+      attr_accessor status_reason: ::String
+      attr_accessor started_at: ::Time
+      attr_accessor group_id: ::String
+      SENSITIVE: [:query_statement]
+    end
+
     class ServiceUnavailableException
       attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class SessionConfig
+      attr_accessor session_start_timestamp: Types::TimeInNanos
+      attr_accessor session_end_timestamp: Types::TimeInNanos
       SENSITIVE: []
     end
 
@@ -2064,6 +3435,51 @@ module Aws::IoTSiteWise
       SENSITIVE: []
     end
 
+    class StartPipelineExecutionRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor pipeline_name: ::String
+      attr_accessor execution_environment_variable_overrides: Types::ExecutionEnvironmentVariables
+      attr_accessor execution_priority: ::Integer
+      attr_accessor client_token: ::String
+      SENSITIVE: [:execution_environment_variable_overrides]
+    end
+
+    class StartPipelineExecutionResponse
+      attr_accessor pipeline_execution_id: ::String
+      SENSITIVE: []
+    end
+
+    class StartQueryRequest
+      attr_accessor client_token: ::String
+      attr_accessor workspace_name: ::String
+      attr_accessor query_statement: ::String
+      SENSITIVE: [:query_statement]
+    end
+
+    class StartQueryResponse
+      attr_accessor query_id: ::String
+      attr_accessor status: ("SUBMITTED" | "RUNNING" | "COMPLETED" | "FAILED" | "CANCELED" | "CANCELING")
+      SENSITIVE: []
+    end
+
+    class StartSearchRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor query_statement: ::String
+      attr_accessor client_token: ::String
+      attr_accessor search_type: ("DEEP" | "QUICK")
+      attr_accessor search_filters: Types::SearchFilters
+      attr_accessor group_id: ::String
+      SENSITIVE: [:query_statement]
+    end
+
+    class StartSearchResponse
+      attr_accessor search_id: ::String
+      attr_accessor workspace_name: ::String
+      attr_accessor status: ("QUEUED" | "RUNNING" | "SUCCEEDED" | "FAILED")
+      attr_accessor group_id: ::String
+      SENSITIVE: []
+    end
+
     class TagResourceRequest
       attr_accessor resource_arn: ::String
       attr_accessor tags: ::Hash[::String, ::String]
@@ -2075,6 +3491,29 @@ module Aws::IoTSiteWise
 
     class TargetResource
       attr_accessor asset_id: ::String
+      attr_accessor computation_model_id: ::String
+      SENSITIVE: []
+    end
+
+    class TaskConfiguration
+      attr_accessor container_task_configuration: Types::ContainerTaskConfiguration
+      attr_accessor unknown: untyped
+      SENSITIVE: []
+
+      class ContainerTaskConfiguration < TaskConfiguration
+      end
+      class Unknown < TaskConfiguration
+      end
+    end
+
+    class TaskSummary
+      attr_accessor task_name: ::String
+      attr_accessor description: ::String
+      attr_accessor task_arn: ::String
+      attr_accessor version: ::String
+      attr_accessor status: Types::ResourceStatus
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
       SENSITIVE: []
     end
 
@@ -2090,16 +3529,30 @@ module Aws::IoTSiteWise
       SENSITIVE: []
     end
 
+    class TimeInterval
+      attr_accessor start_time: Types::TimeInNanos
+      attr_accessor end_time: Types::TimeInNanos
+      SENSITIVE: []
+    end
+
     class TimeSeriesSummary
       attr_accessor asset_id: ::String
       attr_accessor property_id: ::String
       attr_accessor alias: ::String
       attr_accessor time_series_id: ::String
-      attr_accessor data_type: ("STRING" | "INTEGER" | "DOUBLE" | "BOOLEAN" | "STRUCT")
+      attr_accessor data_type: ("STRING" | "INTEGER" | "DOUBLE" | "BOOLEAN" | "STRUCT" | "VIDEO" | "ANNOTATION" | "JSON")
       attr_accessor data_type_spec: ::String
       attr_accessor time_series_creation_date: ::Time
       attr_accessor time_series_last_update_date: ::Time
       attr_accessor time_series_arn: ::String
+      SENSITIVE: []
+    end
+
+    class TimeseriesItem
+      attr_accessor time_series_id: ::String
+      attr_accessor property_alias: ::String
+      attr_accessor trim_settings: Types::TrimSettings
+      attr_accessor format_settings: Types::FormatSettings
       SENSITIVE: []
     end
 
@@ -2125,6 +3578,12 @@ module Aws::IoTSiteWise
     class TransformProcessingConfig
       attr_accessor compute_location: ("EDGE" | "CLOUD")
       attr_accessor forwarding_config: Types::ForwardingConfig
+      SENSITIVE: []
+    end
+
+    class TrimSettings
+      attr_accessor start_time: Types::TimeInNanos
+      attr_accessor end_time: Types::TimeInNanos
       SENSITIVE: []
     end
 
@@ -2177,6 +3636,7 @@ module Aws::IoTSiteWise
     class UpdateAssetModelCompositeModelResponse
       attr_accessor asset_model_composite_model_path: ::Array[Types::AssetModelCompositeModelPathSegment]
       attr_accessor asset_model_status: Types::AssetModelStatus
+      attr_accessor asset_model_id: ::String
       SENSITIVE: []
     end
 
@@ -2196,6 +3656,7 @@ module Aws::IoTSiteWise
     end
 
     class UpdateAssetModelResponse
+      attr_accessor asset_model_id: ::String
       attr_accessor asset_model_status: Types::AssetModelStatus
       SENSITIVE: []
     end
@@ -2212,15 +3673,31 @@ module Aws::IoTSiteWise
 
     class UpdateAssetRequest
       attr_accessor asset_id: ::String
+      attr_accessor asset_external_id: ::String
       attr_accessor asset_name: ::String
       attr_accessor client_token: ::String
       attr_accessor asset_description: ::String
-      attr_accessor asset_external_id: ::String
       SENSITIVE: []
     end
 
     class UpdateAssetResponse
+      attr_accessor asset_id: ::String
       attr_accessor asset_status: Types::AssetStatus
+      SENSITIVE: []
+    end
+
+    class UpdateComputationModelRequest
+      attr_accessor computation_model_id: ::String
+      attr_accessor computation_model_name: ::String
+      attr_accessor computation_model_description: ::String
+      attr_accessor computation_model_configuration: Types::ComputationModelConfiguration
+      attr_accessor computation_model_data_binding: ::Hash[::String, Types::ComputationModelDataBindingValue]
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class UpdateComputationModelResponse
+      attr_accessor computation_model_status: Types::ComputationModelStatus
       SENSITIVE: []
     end
 
@@ -2238,8 +3715,11 @@ module Aws::IoTSiteWise
 
     class UpdateDatasetRequest
       attr_accessor dataset_id: ::String
+      attr_accessor workspace_name: ::String
       attr_accessor dataset_name: ::String
       attr_accessor dataset_description: ::String
+      attr_accessor dataset_config: Types::DatasetConfig
+      attr_accessor metadata: ::Hash[::String, ::String]
       attr_accessor dataset_source: Types::DatasetSource
       attr_accessor client_token: ::String
       SENSITIVE: []
@@ -2268,6 +3748,21 @@ module Aws::IoTSiteWise
     class UpdateGatewayRequest
       attr_accessor gateway_id: ::String
       attr_accessor gateway_name: ::String
+      SENSITIVE: []
+    end
+
+    class UpdatePipelineRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor pipeline_name: ::String
+      attr_accessor description: ::String
+      attr_accessor environment_variables: ::Hash[::String, ::String]
+      attr_accessor computations: ::Array[Types::ComputeNode]
+      SENSITIVE: [:environment_variables]
+    end
+
+    class UpdatePipelineResponse
+      attr_accessor version: ::String
+      attr_accessor status: Types::ResourceStatus
       SENSITIVE: []
     end
 
@@ -2302,6 +3797,33 @@ module Aws::IoTSiteWise
     class UpdateProjectResponse < Aws::EmptyStructure
     end
 
+    class UpdateTaskRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor task_name: ::String
+      attr_accessor description: ::String
+      attr_accessor task_configuration: Types::TaskConfiguration
+      SENSITIVE: []
+    end
+
+    class UpdateTaskResponse
+      attr_accessor version: ::String
+      attr_accessor status: Types::ResourceStatus
+      SENSITIVE: []
+    end
+
+    class UpdateWorkspaceRequest
+      attr_accessor workspace_name: ::String
+      attr_accessor workspace_description: ::String
+      attr_accessor encryption_configuration: Types::WorkspaceEncryptionConfiguration
+      attr_accessor client_token: ::String
+      SENSITIVE: []
+    end
+
+    class UpdateWorkspaceResponse
+      attr_accessor workspace_status: Types::WorkspaceStatus
+      SENSITIVE: []
+    end
+
     class UserIdentity
       attr_accessor id: ::String
       SENSITIVE: []
@@ -2331,6 +3853,39 @@ module Aws::IoTSiteWise
     class WarmTierRetentionPeriod
       attr_accessor number_of_days: ::Integer
       attr_accessor unlimited: bool
+      SENSITIVE: []
+    end
+
+    class WorkspaceEncryptionConfiguration
+      attr_accessor encryption_type: ("SITEWISE_DEFAULT_ENCRYPTION" | "KMS_BASED_ENCRYPTION")
+      attr_accessor kms_key_id: ::String
+      SENSITIVE: []
+    end
+
+    class WorkspaceEncryptionConfigurationInfo
+      attr_accessor encryption_type: ("SITEWISE_DEFAULT_ENCRYPTION" | "KMS_BASED_ENCRYPTION")
+      attr_accessor kms_key_arn: ::String
+      SENSITIVE: []
+    end
+
+    class WorkspaceErrorDetails
+      attr_accessor code: ("VALIDATION_ERROR" | "INTERNAL_FAILURE")
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
+    class WorkspaceStatus
+      attr_accessor state: ("CREATING" | "ACTIVE" | "UPDATING" | "DELETING" | "FAILED")
+      attr_accessor error: Types::WorkspaceErrorDetails
+      SENSITIVE: []
+    end
+
+    class WorkspaceSummary
+      attr_accessor name: ::String
+      attr_accessor arn: ::String
+      attr_accessor status: Types::WorkspaceStatus
+      attr_accessor created_at: ::Time
+      attr_accessor updated_at: ::Time
       SENSITIVE: []
     end
 

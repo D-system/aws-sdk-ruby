@@ -88,7 +88,7 @@ module Aws::KendraRanking
     CreateRescoreExecutionPlanRequest.add_member(:description, Shapes::ShapeRef.new(shape: Description, location_name: "Description"))
     CreateRescoreExecutionPlanRequest.add_member(:capacity_units, Shapes::ShapeRef.new(shape: CapacityUnitsConfiguration, location_name: "CapacityUnits"))
     CreateRescoreExecutionPlanRequest.add_member(:tags, Shapes::ShapeRef.new(shape: TagList, location_name: "Tags"))
-    CreateRescoreExecutionPlanRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientTokenName, location_name: "ClientToken", metadata: {"idempotencyToken"=>true}))
+    CreateRescoreExecutionPlanRequest.add_member(:client_token, Shapes::ShapeRef.new(shape: ClientTokenName, location_name: "ClientToken", metadata: {"idempotencyToken" => true}))
     CreateRescoreExecutionPlanRequest.struct_class = Types::CreateRescoreExecutionPlanRequest
 
     CreateRescoreExecutionPlanResponse.add_member(:id, Shapes::ShapeRef.new(shape: RescoreExecutionPlanId, required: true, location_name: "Id"))
@@ -218,8 +218,8 @@ module Aws::KendraRanking
         "auth" => ["aws.auth#sigv4"],
         "endpointPrefix" => "kendra-ranking",
         "jsonVersion" => "1.0",
-        "protocol" => "json",
-        "protocols" => ["json"],
+        "protocol" => "smithy-rpc-v2-cbor",
+        "protocols" => ["smithy-rpc-v2-cbor", "json"],
         "serviceAbbreviation" => "Kendra Ranking",
         "serviceFullName" => "Amazon Kendra Intelligent Ranking",
         "serviceId" => "Kendra Ranking",

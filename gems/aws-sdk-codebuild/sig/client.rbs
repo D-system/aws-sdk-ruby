@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -111,6 +112,18 @@ module Aws
                             ) -> _BatchGetBuildsResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchGetBuildsResponseSuccess
 
+      interface _BatchGetCommandExecutionsResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::BatchGetCommandExecutionsOutput]
+        def command_executions: () -> ::Array[Types::CommandExecution]
+        def command_executions_not_found: () -> ::Array[::String]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CodeBuild/Client.html#batch_get_command_executions-instance_method
+      def batch_get_command_executions: (
+                                          sandbox_id: ::String,
+                                          command_execution_ids: Array[::String]
+                                        ) -> _BatchGetCommandExecutionsResponseSuccess
+                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchGetCommandExecutionsResponseSuccess
+
       interface _BatchGetFleetsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::BatchGetFleetsOutput]
         def fleets: () -> ::Array[Types::Fleet]
@@ -155,6 +168,17 @@ module Aws
                              ) -> _BatchGetReportsResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchGetReportsResponseSuccess
 
+      interface _BatchGetSandboxesResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::BatchGetSandboxesOutput]
+        def sandboxes: () -> ::Array[Types::Sandbox]
+        def sandboxes_not_found: () -> ::Array[::String]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CodeBuild/Client.html#batch_get_sandboxes-instance_method
+      def batch_get_sandboxes: (
+                                 ids: Array[::String]
+                               ) -> _BatchGetSandboxesResponseSuccess
+                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchGetSandboxesResponseSuccess
+
       interface _CreateFleetResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateFleetOutput]
         def fleet: () -> Types::Fleet
@@ -163,47 +187,30 @@ module Aws
       def create_fleet: (
                           name: ::String,
                           base_capacity: ::Integer,
-                          environment_type: ("WINDOWS_CONTAINER" | "LINUX_CONTAINER" | "LINUX_GPU_CONTAINER" | "ARM_CONTAINER" | "WINDOWS_SERVER_2019_CONTAINER" | "LINUX_LAMBDA_CONTAINER" | "ARM_LAMBDA_CONTAINER" | "LINUX_EC2" | "ARM_EC2" | "WINDOWS_EC2" | "MAC_ARM"),
-                          compute_type: ("BUILD_GENERAL1_SMALL" | "BUILD_GENERAL1_MEDIUM" | "BUILD_GENERAL1_LARGE" | "BUILD_GENERAL1_XLARGE" | "BUILD_GENERAL1_2XLARGE" | "BUILD_LAMBDA_1GB" | "BUILD_LAMBDA_2GB" | "BUILD_LAMBDA_4GB" | "BUILD_LAMBDA_8GB" | "BUILD_LAMBDA_10GB" | "ATTRIBUTE_BASED_COMPUTE"),
+                          environment_type: ("WINDOWS_CONTAINER" | "LINUX_CONTAINER" | "LINUX_GPU_CONTAINER" | "ARM_CONTAINER" | "WINDOWS_SERVER_2019_CONTAINER" | "WINDOWS_SERVER_2022_CONTAINER" | "LINUX_LAMBDA_CONTAINER" | "ARM_LAMBDA_CONTAINER" | "LINUX_EC2" | "ARM_EC2" | "WINDOWS_EC2" | "MAC_ARM"),
+                          compute_type: ("BUILD_GENERAL1_SMALL" | "BUILD_GENERAL1_MEDIUM" | "BUILD_GENERAL1_LARGE" | "BUILD_GENERAL1_XLARGE" | "BUILD_GENERAL1_2XLARGE" | "BUILD_LAMBDA_1GB" | "BUILD_LAMBDA_2GB" | "BUILD_LAMBDA_4GB" | "BUILD_LAMBDA_8GB" | "BUILD_LAMBDA_10GB" | "ATTRIBUTE_BASED_COMPUTE" | "CUSTOM_INSTANCE_TYPE"),
                           ?compute_configuration: {
                             v_cpu: ::Integer?,
                             memory: ::Integer?,
                             disk: ::Integer?,
-                            machine_type: ("GENERAL" | "NVME")?
+                            machine_type: ("GENERAL" | "NVME")?,
+                            instance_type: ::String?
                           },
-                          ?scaling_configuration: {
-                            scaling_type: ("TARGET_TRACKING_SCALING")?,
-                            target_tracking_scaling_configs: Array[
-                              {
-                                metric_type: ("FLEET_UTILIZATION_RATE")?,
-                                target_value: ::Float?
-                              },
-                            ]?,
-                            max_capacity: ::Integer?
-                          },
+                          ?scaling_configuration: Params::scaling_configuration_input,
                           ?overflow_behavior: ("QUEUE" | "ON_DEMAND"),
                           ?vpc_config: {
                             vpc_id: ::String?,
                             subnets: Array[::String]?,
                             security_group_ids: Array[::String]?
                           },
-                          ?proxy_configuration: {
-                            default_behavior: ("ALLOW_ALL" | "DENY_ALL")?,
-                            ordered_proxy_rules: Array[
-                              {
-                                type: ("DOMAIN" | "IP"),
-                                effect: ("ALLOW" | "DENY"),
-                                entities: Array[::String]
-                              },
-                            ]?
-                          },
+                          ?proxy_configuration: Params::proxy_configuration,
                           ?image_id: ::String,
                           ?fleet_service_role: ::String,
                           ?tags: Array[
                             {
                               key: ::String?,
                               value: ::String?
-                            },
+                            }
                           ]
                         ) -> _CreateFleetResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateFleetResponseSuccess
@@ -216,114 +223,28 @@ module Aws
       def create_project: (
                             name: ::String,
                             ?description: ::String,
-                            source: {
-                              type: ("CODECOMMIT" | "CODEPIPELINE" | "GITHUB" | "GITLAB" | "GITLAB_SELF_MANAGED" | "S3" | "BITBUCKET" | "GITHUB_ENTERPRISE" | "NO_SOURCE"),
-                              location: ::String?,
-                              git_clone_depth: ::Integer?,
-                              git_submodules_config: {
-                                fetch_submodules: bool
-                              }?,
-                              buildspec: ::String?,
-                              auth: {
-                                type: ("OAUTH" | "CODECONNECTIONS" | "SECRETS_MANAGER"),
-                                resource: ::String?
-                              }?,
-                              report_build_status: bool?,
-                              build_status_config: {
-                                context: ::String?,
-                                target_url: ::String?
-                              }?,
-                              insecure_ssl: bool?,
-                              source_identifier: ::String?
-                            },
+                            source: Params::project_source,
                             ?secondary_sources: Array[
-                              {
-                                type: ("CODECOMMIT" | "CODEPIPELINE" | "GITHUB" | "GITLAB" | "GITLAB_SELF_MANAGED" | "S3" | "BITBUCKET" | "GITHUB_ENTERPRISE" | "NO_SOURCE"),
-                                location: ::String?,
-                                git_clone_depth: ::Integer?,
-                                git_submodules_config: {
-                                  fetch_submodules: bool
-                                }?,
-                                buildspec: ::String?,
-                                auth: {
-                                  type: ("OAUTH" | "CODECONNECTIONS" | "SECRETS_MANAGER"),
-                                  resource: ::String?
-                                }?,
-                                report_build_status: bool?,
-                                build_status_config: {
-                                  context: ::String?,
-                                  target_url: ::String?
-                                }?,
-                                insecure_ssl: bool?,
-                                source_identifier: ::String?
-                              },
+                              Params::project_source
                             ],
                             ?source_version: ::String,
                             ?secondary_source_versions: Array[
                               {
                                 source_identifier: ::String,
                                 source_version: ::String
-                              },
+                              }
                             ],
-                            artifacts: {
-                              type: ("CODEPIPELINE" | "S3" | "NO_ARTIFACTS"),
-                              location: ::String?,
-                              path: ::String?,
-                              namespace_type: ("NONE" | "BUILD_ID")?,
-                              name: ::String?,
-                              packaging: ("NONE" | "ZIP")?,
-                              override_artifact_name: bool?,
-                              encryption_disabled: bool?,
-                              artifact_identifier: ::String?,
-                              bucket_owner_access: ("NONE" | "READ_ONLY" | "FULL")?
-                            },
+                            artifacts: Params::project_artifacts,
                             ?secondary_artifacts: Array[
-                              {
-                                type: ("CODEPIPELINE" | "S3" | "NO_ARTIFACTS"),
-                                location: ::String?,
-                                path: ::String?,
-                                namespace_type: ("NONE" | "BUILD_ID")?,
-                                name: ::String?,
-                                packaging: ("NONE" | "ZIP")?,
-                                override_artifact_name: bool?,
-                                encryption_disabled: bool?,
-                                artifact_identifier: ::String?,
-                                bucket_owner_access: ("NONE" | "READ_ONLY" | "FULL")?
-                              },
+                              Params::project_artifacts
                             ],
                             ?cache: {
                               type: ("NO_CACHE" | "S3" | "LOCAL"),
                               location: ::String?,
-                              modes: Array[("LOCAL_DOCKER_LAYER_CACHE" | "LOCAL_SOURCE_CACHE" | "LOCAL_CUSTOM_CACHE")]?
+                              modes: Array[("LOCAL_DOCKER_LAYER_CACHE" | "LOCAL_SOURCE_CACHE" | "LOCAL_CUSTOM_CACHE")]?,
+                              cache_namespace: ::String?
                             },
-                            environment: {
-                              type: ("WINDOWS_CONTAINER" | "LINUX_CONTAINER" | "LINUX_GPU_CONTAINER" | "ARM_CONTAINER" | "WINDOWS_SERVER_2019_CONTAINER" | "LINUX_LAMBDA_CONTAINER" | "ARM_LAMBDA_CONTAINER" | "LINUX_EC2" | "ARM_EC2" | "WINDOWS_EC2" | "MAC_ARM"),
-                              image: ::String,
-                              compute_type: ("BUILD_GENERAL1_SMALL" | "BUILD_GENERAL1_MEDIUM" | "BUILD_GENERAL1_LARGE" | "BUILD_GENERAL1_XLARGE" | "BUILD_GENERAL1_2XLARGE" | "BUILD_LAMBDA_1GB" | "BUILD_LAMBDA_2GB" | "BUILD_LAMBDA_4GB" | "BUILD_LAMBDA_8GB" | "BUILD_LAMBDA_10GB" | "ATTRIBUTE_BASED_COMPUTE"),
-                              compute_configuration: {
-                                v_cpu: ::Integer?,
-                                memory: ::Integer?,
-                                disk: ::Integer?,
-                                machine_type: ("GENERAL" | "NVME")?
-                              }?,
-                              fleet: {
-                                fleet_arn: ::String?
-                              }?,
-                              environment_variables: Array[
-                                {
-                                  name: ::String,
-                                  value: ::String,
-                                  type: ("PLAINTEXT" | "PARAMETER_STORE" | "SECRETS_MANAGER")?
-                                },
-                              ]?,
-                              privileged_mode: bool?,
-                              certificate: ::String?,
-                              registry_credential: {
-                                credential: ::String,
-                                credential_provider: ("SECRETS_MANAGER")
-                              }?,
-                              image_pull_credentials_type: ("CODEBUILD" | "SERVICE_ROLE")?
-                            },
+                            environment: Params::project_environment,
                             service_role: ::String,
                             ?timeout_in_minutes: ::Integer,
                             ?queued_timeout_in_minutes: ::Integer,
@@ -332,7 +253,7 @@ module Aws
                               {
                                 key: ::String?,
                                 value: ::String?
-                              },
+                              }
                             ],
                             ?vpc_config: {
                               vpc_id: ::String?,
@@ -340,19 +261,7 @@ module Aws
                               security_group_ids: Array[::String]?
                             },
                             ?badge_enabled: bool,
-                            ?logs_config: {
-                              cloud_watch_logs: {
-                                status: ("ENABLED" | "DISABLED"),
-                                group_name: ::String?,
-                                stream_name: ::String?
-                              }?,
-                              s3_logs: {
-                                status: ("ENABLED" | "DISABLED"),
-                                location: ::String?,
-                                encryption_disabled: bool?,
-                                bucket_owner_access: ("NONE" | "READ_ONLY" | "FULL")?
-                              }?
-                            },
+                            ?logs_config: Params::logs_config,
                             ?file_system_locations: Array[
                               {
                                 type: ("EFS")?,
@@ -360,19 +269,9 @@ module Aws
                                 mount_point: ::String?,
                                 identifier: ::String?,
                                 mount_options: ::String?
-                              },
+                              }
                             ],
-                            ?build_batch_config: {
-                              service_role: ::String?,
-                              combine_artifacts: bool?,
-                              restrictions: {
-                                maximum_builds_allowed: ::Integer?,
-                                compute_types_allowed: Array[::String]?,
-                                fleets_allowed: Array[::String]?
-                              }?,
-                              timeout_in_mins: ::Integer?,
-                              batch_report_mode: ("REPORT_INDIVIDUAL_BUILDS" | "REPORT_AGGREGATED_BATCH")?
-                            },
+                            ?build_batch_config: Params::project_build_batch_config,
                             ?concurrent_build_limit: ::Integer,
                             ?auto_retry_limit: ::Integer
                           ) -> _CreateProjectResponseSuccess
@@ -386,22 +285,12 @@ module Aws
       def create_report_group: (
                                  name: ::String,
                                  type: ("TEST" | "CODE_COVERAGE"),
-                                 export_config: {
-                                   export_config_type: ("S3" | "NO_EXPORT")?,
-                                   s3_destination: {
-                                     bucket: ::String?,
-                                     bucket_owner: ::String?,
-                                     path: ::String?,
-                                     packaging: ("ZIP" | "NONE")?,
-                                     encryption_key: ::String?,
-                                     encryption_disabled: bool?
-                                   }?
-                                 },
+                                 export_config: Params::report_export_config,
                                  ?tags: Array[
                                    {
                                      key: ::String?,
                                      value: ::String?
-                                   },
+                                   }
                                  ]
                                ) -> _CreateReportGroupResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateReportGroupResponseSuccess
@@ -420,8 +309,8 @@ module Aws
                                   type: ("EVENT" | "BASE_REF" | "HEAD_REF" | "ACTOR_ACCOUNT_ID" | "FILE_PATH" | "COMMIT_MESSAGE" | "WORKFLOW_NAME" | "TAG_NAME" | "RELEASE_NAME" | "REPOSITORY_NAME" | "ORGANIZATION_NAME"),
                                   pattern: ::String,
                                   exclude_matched_pattern: bool?
-                                },
-                              ],
+                                }
+                              ]
                             ],
                             ?build_type: ("BUILD" | "BUILD_BATCH" | "RUNNER_BUILDKITE_BUILD"),
                             ?manual_creation: bool,
@@ -429,6 +318,10 @@ module Aws
                               name: ::String,
                               domain: ::String?,
                               scope: ("GITHUB_ORGANIZATION" | "GITHUB_GLOBAL" | "GITLAB_GROUP")
+                            },
+                            ?pull_request_build_policy: {
+                              requires_comment_approval: ("DISABLED" | "ALL_PULL_REQUESTS" | "FORK_PULL_REQUESTS"),
+                              approver_roles: Array[("GITHUB_READ" | "GITHUB_TRIAGE" | "GITHUB_WRITE" | "GITHUB_MAINTAIN" | "GITHUB_ADMIN" | "GITLAB_GUEST" | "GITLAB_PLANNER" | "GITLAB_REPORTER" | "GITLAB_DEVELOPER" | "GITLAB_MAINTAINER" | "GITLAB_OWNER" | "BITBUCKET_READ" | "BITBUCKET_WRITE" | "BITBUCKET_ADMIN")]?
                             }
                           ) -> _CreateWebhookResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateWebhookResponseSuccess
@@ -648,6 +541,20 @@ module Aws
                                    ) -> _ListBuildsForProjectResponseSuccess
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListBuildsForProjectResponseSuccess
 
+      interface _ListCommandExecutionsForSandboxResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListCommandExecutionsForSandboxOutput]
+        def command_executions: () -> ::Array[Types::CommandExecution]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CodeBuild/Client.html#list_command_executions_for_sandbox-instance_method
+      def list_command_executions_for_sandbox: (
+                                                 sandbox_id: ::String,
+                                                 ?max_results: ::Integer,
+                                                 ?sort_order: ("ASCENDING" | "DESCENDING"),
+                                                 ?next_token: ::String
+                                               ) -> _ListCommandExecutionsForSandboxResponseSuccess
+                                             | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListCommandExecutionsForSandboxResponseSuccess
+
       interface _ListCuratedEnvironmentImagesResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListCuratedEnvironmentImagesOutput]
         def platforms: () -> ::Array[Types::EnvironmentPlatform]
@@ -731,6 +638,33 @@ module Aws
                                          ) -> _ListReportsForReportGroupResponseSuccess
                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListReportsForReportGroupResponseSuccess
 
+      interface _ListSandboxesResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListSandboxesOutput]
+        def ids: () -> ::Array[::String]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CodeBuild/Client.html#list_sandboxes-instance_method
+      def list_sandboxes: (
+                            ?max_results: ::Integer,
+                            ?sort_order: ("ASCENDING" | "DESCENDING"),
+                            ?next_token: ::String
+                          ) -> _ListSandboxesResponseSuccess
+                        | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListSandboxesResponseSuccess
+
+      interface _ListSandboxesForProjectResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListSandboxesForProjectOutput]
+        def ids: () -> ::Array[::String]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CodeBuild/Client.html#list_sandboxes_for_project-instance_method
+      def list_sandboxes_for_project: (
+                                        project_name: ::String,
+                                        ?max_results: ::Integer,
+                                        ?sort_order: ("ASCENDING" | "DESCENDING"),
+                                        ?next_token: ::String
+                                      ) -> _ListSandboxesForProjectResponseSuccess
+                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListSandboxesForProjectResponseSuccess
+
       interface _ListSharedProjectsResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListSharedProjectsOutput]
         def next_token: () -> ::String
@@ -810,66 +744,25 @@ module Aws
       def start_build: (
                          project_name: ::String,
                          ?secondary_sources_override: Array[
-                           {
-                             type: ("CODECOMMIT" | "CODEPIPELINE" | "GITHUB" | "GITLAB" | "GITLAB_SELF_MANAGED" | "S3" | "BITBUCKET" | "GITHUB_ENTERPRISE" | "NO_SOURCE"),
-                             location: ::String?,
-                             git_clone_depth: ::Integer?,
-                             git_submodules_config: {
-                               fetch_submodules: bool
-                             }?,
-                             buildspec: ::String?,
-                             auth: {
-                               type: ("OAUTH" | "CODECONNECTIONS" | "SECRETS_MANAGER"),
-                               resource: ::String?
-                             }?,
-                             report_build_status: bool?,
-                             build_status_config: {
-                               context: ::String?,
-                               target_url: ::String?
-                             }?,
-                             insecure_ssl: bool?,
-                             source_identifier: ::String?
-                           },
+                           Params::project_source
                          ],
                          ?secondary_sources_version_override: Array[
                            {
                              source_identifier: ::String,
                              source_version: ::String
-                           },
+                           }
                          ],
                          ?source_version: ::String,
-                         ?artifacts_override: {
-                           type: ("CODEPIPELINE" | "S3" | "NO_ARTIFACTS"),
-                           location: ::String?,
-                           path: ::String?,
-                           namespace_type: ("NONE" | "BUILD_ID")?,
-                           name: ::String?,
-                           packaging: ("NONE" | "ZIP")?,
-                           override_artifact_name: bool?,
-                           encryption_disabled: bool?,
-                           artifact_identifier: ::String?,
-                           bucket_owner_access: ("NONE" | "READ_ONLY" | "FULL")?
-                         },
+                         ?artifacts_override: Params::project_artifacts,
                          ?secondary_artifacts_override: Array[
-                           {
-                             type: ("CODEPIPELINE" | "S3" | "NO_ARTIFACTS"),
-                             location: ::String?,
-                             path: ::String?,
-                             namespace_type: ("NONE" | "BUILD_ID")?,
-                             name: ::String?,
-                             packaging: ("NONE" | "ZIP")?,
-                             override_artifact_name: bool?,
-                             encryption_disabled: bool?,
-                             artifact_identifier: ::String?,
-                             bucket_owner_access: ("NONE" | "READ_ONLY" | "FULL")?
-                           },
+                           Params::project_artifacts
                          ],
                          ?environment_variables_override: Array[
                            {
                              name: ::String,
                              value: ::String,
                              type: ("PLAINTEXT" | "PARAMETER_STORE" | "SECRETS_MANAGER")?
-                           },
+                           }
                          ],
                          ?source_type_override: ("CODECOMMIT" | "CODEPIPELINE" | "GITHUB" | "GITLAB" | "GITLAB_SELF_MANAGED" | "S3" | "BITBUCKET" | "GITHUB_ENTERPRISE" | "NO_SOURCE"),
                          ?source_location_override: ::String,
@@ -888,14 +781,15 @@ module Aws
                            context: ::String?,
                            target_url: ::String?
                          },
-                         ?environment_type_override: ("WINDOWS_CONTAINER" | "LINUX_CONTAINER" | "LINUX_GPU_CONTAINER" | "ARM_CONTAINER" | "WINDOWS_SERVER_2019_CONTAINER" | "LINUX_LAMBDA_CONTAINER" | "ARM_LAMBDA_CONTAINER" | "LINUX_EC2" | "ARM_EC2" | "WINDOWS_EC2" | "MAC_ARM"),
+                         ?environment_type_override: ("WINDOWS_CONTAINER" | "LINUX_CONTAINER" | "LINUX_GPU_CONTAINER" | "ARM_CONTAINER" | "WINDOWS_SERVER_2019_CONTAINER" | "WINDOWS_SERVER_2022_CONTAINER" | "LINUX_LAMBDA_CONTAINER" | "ARM_LAMBDA_CONTAINER" | "LINUX_EC2" | "ARM_EC2" | "WINDOWS_EC2" | "MAC_ARM"),
                          ?image_override: ::String,
-                         ?compute_type_override: ("BUILD_GENERAL1_SMALL" | "BUILD_GENERAL1_MEDIUM" | "BUILD_GENERAL1_LARGE" | "BUILD_GENERAL1_XLARGE" | "BUILD_GENERAL1_2XLARGE" | "BUILD_LAMBDA_1GB" | "BUILD_LAMBDA_2GB" | "BUILD_LAMBDA_4GB" | "BUILD_LAMBDA_8GB" | "BUILD_LAMBDA_10GB" | "ATTRIBUTE_BASED_COMPUTE"),
+                         ?compute_type_override: ("BUILD_GENERAL1_SMALL" | "BUILD_GENERAL1_MEDIUM" | "BUILD_GENERAL1_LARGE" | "BUILD_GENERAL1_XLARGE" | "BUILD_GENERAL1_2XLARGE" | "BUILD_LAMBDA_1GB" | "BUILD_LAMBDA_2GB" | "BUILD_LAMBDA_4GB" | "BUILD_LAMBDA_8GB" | "BUILD_LAMBDA_10GB" | "ATTRIBUTE_BASED_COMPUTE" | "CUSTOM_INSTANCE_TYPE"),
                          ?certificate_override: ::String,
                          ?cache_override: {
                            type: ("NO_CACHE" | "S3" | "LOCAL"),
                            location: ::String?,
-                           modes: Array[("LOCAL_DOCKER_LAYER_CACHE" | "LOCAL_SOURCE_CACHE" | "LOCAL_CUSTOM_CACHE")]?
+                           modes: Array[("LOCAL_DOCKER_LAYER_CACHE" | "LOCAL_SOURCE_CACHE" | "LOCAL_CUSTOM_CACHE")]?,
+                           cache_namespace: ::String?
                          },
                          ?service_role_override: ::String,
                          ?privileged_mode_override: bool,
@@ -903,19 +797,7 @@ module Aws
                          ?queued_timeout_in_minutes_override: ::Integer,
                          ?encryption_key_override: ::String,
                          ?idempotency_token: ::String,
-                         ?logs_config_override: {
-                           cloud_watch_logs: {
-                             status: ("ENABLED" | "DISABLED"),
-                             group_name: ::String?,
-                             stream_name: ::String?
-                           }?,
-                           s3_logs: {
-                             status: ("ENABLED" | "DISABLED"),
-                             location: ::String?,
-                             encryption_disabled: bool?,
-                             bucket_owner_access: ("NONE" | "READ_ONLY" | "FULL")?
-                           }?
-                         },
+                         ?logs_config_override: Params::logs_config,
                          ?registry_credential_override: {
                            credential: ::String,
                            credential_provider: ("SECRETS_MANAGER")
@@ -925,7 +807,8 @@ module Aws
                          ?fleet_override: {
                            fleet_arn: ::String?
                          },
-                         ?auto_retry_limit_override: ::Integer
+                         ?auto_retry_limit_override: ::Integer,
+                         ?host_kernel_override: ("LINUX_KERNEL_4" | "LINUX_KERNEL_6" | "LINUX_KERNEL_LATEST")
                        ) -> _StartBuildResponseSuccess
                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartBuildResponseSuccess
 
@@ -937,66 +820,25 @@ module Aws
       def start_build_batch: (
                                project_name: ::String,
                                ?secondary_sources_override: Array[
-                                 {
-                                   type: ("CODECOMMIT" | "CODEPIPELINE" | "GITHUB" | "GITLAB" | "GITLAB_SELF_MANAGED" | "S3" | "BITBUCKET" | "GITHUB_ENTERPRISE" | "NO_SOURCE"),
-                                   location: ::String?,
-                                   git_clone_depth: ::Integer?,
-                                   git_submodules_config: {
-                                     fetch_submodules: bool
-                                   }?,
-                                   buildspec: ::String?,
-                                   auth: {
-                                     type: ("OAUTH" | "CODECONNECTIONS" | "SECRETS_MANAGER"),
-                                     resource: ::String?
-                                   }?,
-                                   report_build_status: bool?,
-                                   build_status_config: {
-                                     context: ::String?,
-                                     target_url: ::String?
-                                   }?,
-                                   insecure_ssl: bool?,
-                                   source_identifier: ::String?
-                                 },
+                                 Params::project_source
                                ],
                                ?secondary_sources_version_override: Array[
                                  {
                                    source_identifier: ::String,
                                    source_version: ::String
-                                 },
+                                 }
                                ],
                                ?source_version: ::String,
-                               ?artifacts_override: {
-                                 type: ("CODEPIPELINE" | "S3" | "NO_ARTIFACTS"),
-                                 location: ::String?,
-                                 path: ::String?,
-                                 namespace_type: ("NONE" | "BUILD_ID")?,
-                                 name: ::String?,
-                                 packaging: ("NONE" | "ZIP")?,
-                                 override_artifact_name: bool?,
-                                 encryption_disabled: bool?,
-                                 artifact_identifier: ::String?,
-                                 bucket_owner_access: ("NONE" | "READ_ONLY" | "FULL")?
-                               },
+                               ?artifacts_override: Params::project_artifacts,
                                ?secondary_artifacts_override: Array[
-                                 {
-                                   type: ("CODEPIPELINE" | "S3" | "NO_ARTIFACTS"),
-                                   location: ::String?,
-                                   path: ::String?,
-                                   namespace_type: ("NONE" | "BUILD_ID")?,
-                                   name: ::String?,
-                                   packaging: ("NONE" | "ZIP")?,
-                                   override_artifact_name: bool?,
-                                   encryption_disabled: bool?,
-                                   artifact_identifier: ::String?,
-                                   bucket_owner_access: ("NONE" | "READ_ONLY" | "FULL")?
-                                 },
+                                 Params::project_artifacts
                                ],
                                ?environment_variables_override: Array[
                                  {
                                    name: ::String,
                                    value: ::String,
                                    type: ("PLAINTEXT" | "PARAMETER_STORE" | "SECRETS_MANAGER")?
-                                 },
+                                 }
                                ],
                                ?source_type_override: ("CODECOMMIT" | "CODEPIPELINE" | "GITHUB" | "GITLAB" | "GITLAB_SELF_MANAGED" | "S3" | "BITBUCKET" | "GITHUB_ENTERPRISE" | "NO_SOURCE"),
                                ?source_location_override: ::String,
@@ -1011,14 +853,15 @@ module Aws
                                ?buildspec_override: ::String,
                                ?insecure_ssl_override: bool,
                                ?report_build_batch_status_override: bool,
-                               ?environment_type_override: ("WINDOWS_CONTAINER" | "LINUX_CONTAINER" | "LINUX_GPU_CONTAINER" | "ARM_CONTAINER" | "WINDOWS_SERVER_2019_CONTAINER" | "LINUX_LAMBDA_CONTAINER" | "ARM_LAMBDA_CONTAINER" | "LINUX_EC2" | "ARM_EC2" | "WINDOWS_EC2" | "MAC_ARM"),
+                               ?environment_type_override: ("WINDOWS_CONTAINER" | "LINUX_CONTAINER" | "LINUX_GPU_CONTAINER" | "ARM_CONTAINER" | "WINDOWS_SERVER_2019_CONTAINER" | "WINDOWS_SERVER_2022_CONTAINER" | "LINUX_LAMBDA_CONTAINER" | "ARM_LAMBDA_CONTAINER" | "LINUX_EC2" | "ARM_EC2" | "WINDOWS_EC2" | "MAC_ARM"),
                                ?image_override: ::String,
-                               ?compute_type_override: ("BUILD_GENERAL1_SMALL" | "BUILD_GENERAL1_MEDIUM" | "BUILD_GENERAL1_LARGE" | "BUILD_GENERAL1_XLARGE" | "BUILD_GENERAL1_2XLARGE" | "BUILD_LAMBDA_1GB" | "BUILD_LAMBDA_2GB" | "BUILD_LAMBDA_4GB" | "BUILD_LAMBDA_8GB" | "BUILD_LAMBDA_10GB" | "ATTRIBUTE_BASED_COMPUTE"),
+                               ?compute_type_override: ("BUILD_GENERAL1_SMALL" | "BUILD_GENERAL1_MEDIUM" | "BUILD_GENERAL1_LARGE" | "BUILD_GENERAL1_XLARGE" | "BUILD_GENERAL1_2XLARGE" | "BUILD_LAMBDA_1GB" | "BUILD_LAMBDA_2GB" | "BUILD_LAMBDA_4GB" | "BUILD_LAMBDA_8GB" | "BUILD_LAMBDA_10GB" | "ATTRIBUTE_BASED_COMPUTE" | "CUSTOM_INSTANCE_TYPE"),
                                ?certificate_override: ::String,
                                ?cache_override: {
                                  type: ("NO_CACHE" | "S3" | "LOCAL"),
                                  location: ::String?,
-                                 modes: Array[("LOCAL_DOCKER_LAYER_CACHE" | "LOCAL_SOURCE_CACHE" | "LOCAL_CUSTOM_CACHE")]?
+                                 modes: Array[("LOCAL_DOCKER_LAYER_CACHE" | "LOCAL_SOURCE_CACHE" | "LOCAL_CUSTOM_CACHE")]?,
+                                 cache_namespace: ::String?
                                },
                                ?service_role_override: ::String,
                                ?privileged_mode_override: bool,
@@ -1026,38 +869,49 @@ module Aws
                                ?queued_timeout_in_minutes_override: ::Integer,
                                ?encryption_key_override: ::String,
                                ?idempotency_token: ::String,
-                               ?logs_config_override: {
-                                 cloud_watch_logs: {
-                                   status: ("ENABLED" | "DISABLED"),
-                                   group_name: ::String?,
-                                   stream_name: ::String?
-                                 }?,
-                                 s3_logs: {
-                                   status: ("ENABLED" | "DISABLED"),
-                                   location: ::String?,
-                                   encryption_disabled: bool?,
-                                   bucket_owner_access: ("NONE" | "READ_ONLY" | "FULL")?
-                                 }?
-                               },
+                               ?logs_config_override: Params::logs_config,
                                ?registry_credential_override: {
                                  credential: ::String,
                                  credential_provider: ("SECRETS_MANAGER")
                                },
                                ?image_pull_credentials_type_override: ("CODEBUILD" | "SERVICE_ROLE"),
-                               ?build_batch_config_override: {
-                                 service_role: ::String?,
-                                 combine_artifacts: bool?,
-                                 restrictions: {
-                                   maximum_builds_allowed: ::Integer?,
-                                   compute_types_allowed: Array[::String]?,
-                                   fleets_allowed: Array[::String]?
-                                 }?,
-                                 timeout_in_mins: ::Integer?,
-                                 batch_report_mode: ("REPORT_INDIVIDUAL_BUILDS" | "REPORT_AGGREGATED_BATCH")?
-                               },
+                               ?build_batch_config_override: Params::project_build_batch_config,
                                ?debug_session_enabled: bool
                              ) -> _StartBuildBatchResponseSuccess
                            | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartBuildBatchResponseSuccess
+
+      interface _StartCommandExecutionResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StartCommandExecutionOutput]
+        def command_execution: () -> Types::CommandExecution
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CodeBuild/Client.html#start_command_execution-instance_method
+      def start_command_execution: (
+                                     sandbox_id: ::String,
+                                     command: ::String,
+                                     ?type: ("SHELL")
+                                   ) -> _StartCommandExecutionResponseSuccess
+                                 | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartCommandExecutionResponseSuccess
+
+      interface _StartSandboxResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StartSandboxOutput]
+        def sandbox: () -> Types::Sandbox
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CodeBuild/Client.html#start_sandbox-instance_method
+      def start_sandbox: (
+                           ?project_name: ::String,
+                           ?idempotency_token: ::String
+                         ) -> _StartSandboxResponseSuccess
+                       | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartSandboxResponseSuccess
+
+      interface _StartSandboxConnectionResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StartSandboxConnectionOutput]
+        def ssm_session: () -> Types::SSMSession
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CodeBuild/Client.html#start_sandbox_connection-instance_method
+      def start_sandbox_connection: (
+                                      sandbox_id: ::String
+                                    ) -> _StartSandboxConnectionResponseSuccess
+                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StartSandboxConnectionResponseSuccess
 
       interface _StopBuildResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::StopBuildOutput]
@@ -1079,6 +933,16 @@ module Aws
                             ) -> _StopBuildBatchResponseSuccess
                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StopBuildBatchResponseSuccess
 
+      interface _StopSandboxResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::StopSandboxOutput]
+        def sandbox: () -> Types::Sandbox
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CodeBuild/Client.html#stop_sandbox-instance_method
+      def stop_sandbox: (
+                          id: ::String
+                        ) -> _StopSandboxResponseSuccess
+                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _StopSandboxResponseSuccess
+
       interface _UpdateFleetResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::UpdateFleetOutput]
         def fleet: () -> Types::Fleet
@@ -1087,47 +951,30 @@ module Aws
       def update_fleet: (
                           arn: ::String,
                           ?base_capacity: ::Integer,
-                          ?environment_type: ("WINDOWS_CONTAINER" | "LINUX_CONTAINER" | "LINUX_GPU_CONTAINER" | "ARM_CONTAINER" | "WINDOWS_SERVER_2019_CONTAINER" | "LINUX_LAMBDA_CONTAINER" | "ARM_LAMBDA_CONTAINER" | "LINUX_EC2" | "ARM_EC2" | "WINDOWS_EC2" | "MAC_ARM"),
-                          ?compute_type: ("BUILD_GENERAL1_SMALL" | "BUILD_GENERAL1_MEDIUM" | "BUILD_GENERAL1_LARGE" | "BUILD_GENERAL1_XLARGE" | "BUILD_GENERAL1_2XLARGE" | "BUILD_LAMBDA_1GB" | "BUILD_LAMBDA_2GB" | "BUILD_LAMBDA_4GB" | "BUILD_LAMBDA_8GB" | "BUILD_LAMBDA_10GB" | "ATTRIBUTE_BASED_COMPUTE"),
+                          ?environment_type: ("WINDOWS_CONTAINER" | "LINUX_CONTAINER" | "LINUX_GPU_CONTAINER" | "ARM_CONTAINER" | "WINDOWS_SERVER_2019_CONTAINER" | "WINDOWS_SERVER_2022_CONTAINER" | "LINUX_LAMBDA_CONTAINER" | "ARM_LAMBDA_CONTAINER" | "LINUX_EC2" | "ARM_EC2" | "WINDOWS_EC2" | "MAC_ARM"),
+                          ?compute_type: ("BUILD_GENERAL1_SMALL" | "BUILD_GENERAL1_MEDIUM" | "BUILD_GENERAL1_LARGE" | "BUILD_GENERAL1_XLARGE" | "BUILD_GENERAL1_2XLARGE" | "BUILD_LAMBDA_1GB" | "BUILD_LAMBDA_2GB" | "BUILD_LAMBDA_4GB" | "BUILD_LAMBDA_8GB" | "BUILD_LAMBDA_10GB" | "ATTRIBUTE_BASED_COMPUTE" | "CUSTOM_INSTANCE_TYPE"),
                           ?compute_configuration: {
                             v_cpu: ::Integer?,
                             memory: ::Integer?,
                             disk: ::Integer?,
-                            machine_type: ("GENERAL" | "NVME")?
+                            machine_type: ("GENERAL" | "NVME")?,
+                            instance_type: ::String?
                           },
-                          ?scaling_configuration: {
-                            scaling_type: ("TARGET_TRACKING_SCALING")?,
-                            target_tracking_scaling_configs: Array[
-                              {
-                                metric_type: ("FLEET_UTILIZATION_RATE")?,
-                                target_value: ::Float?
-                              },
-                            ]?,
-                            max_capacity: ::Integer?
-                          },
+                          ?scaling_configuration: Params::scaling_configuration_input,
                           ?overflow_behavior: ("QUEUE" | "ON_DEMAND"),
                           ?vpc_config: {
                             vpc_id: ::String?,
                             subnets: Array[::String]?,
                             security_group_ids: Array[::String]?
                           },
-                          ?proxy_configuration: {
-                            default_behavior: ("ALLOW_ALL" | "DENY_ALL")?,
-                            ordered_proxy_rules: Array[
-                              {
-                                type: ("DOMAIN" | "IP"),
-                                effect: ("ALLOW" | "DENY"),
-                                entities: Array[::String]
-                              },
-                            ]?
-                          },
+                          ?proxy_configuration: Params::proxy_configuration,
                           ?image_id: ::String,
                           ?fleet_service_role: ::String,
                           ?tags: Array[
                             {
                               key: ::String?,
                               value: ::String?
-                            },
+                            }
                           ]
                         ) -> _UpdateFleetResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateFleetResponseSuccess
@@ -1140,114 +987,28 @@ module Aws
       def update_project: (
                             name: ::String,
                             ?description: ::String,
-                            ?source: {
-                              type: ("CODECOMMIT" | "CODEPIPELINE" | "GITHUB" | "GITLAB" | "GITLAB_SELF_MANAGED" | "S3" | "BITBUCKET" | "GITHUB_ENTERPRISE" | "NO_SOURCE"),
-                              location: ::String?,
-                              git_clone_depth: ::Integer?,
-                              git_submodules_config: {
-                                fetch_submodules: bool
-                              }?,
-                              buildspec: ::String?,
-                              auth: {
-                                type: ("OAUTH" | "CODECONNECTIONS" | "SECRETS_MANAGER"),
-                                resource: ::String?
-                              }?,
-                              report_build_status: bool?,
-                              build_status_config: {
-                                context: ::String?,
-                                target_url: ::String?
-                              }?,
-                              insecure_ssl: bool?,
-                              source_identifier: ::String?
-                            },
+                            ?source: Params::project_source,
                             ?secondary_sources: Array[
-                              {
-                                type: ("CODECOMMIT" | "CODEPIPELINE" | "GITHUB" | "GITLAB" | "GITLAB_SELF_MANAGED" | "S3" | "BITBUCKET" | "GITHUB_ENTERPRISE" | "NO_SOURCE"),
-                                location: ::String?,
-                                git_clone_depth: ::Integer?,
-                                git_submodules_config: {
-                                  fetch_submodules: bool
-                                }?,
-                                buildspec: ::String?,
-                                auth: {
-                                  type: ("OAUTH" | "CODECONNECTIONS" | "SECRETS_MANAGER"),
-                                  resource: ::String?
-                                }?,
-                                report_build_status: bool?,
-                                build_status_config: {
-                                  context: ::String?,
-                                  target_url: ::String?
-                                }?,
-                                insecure_ssl: bool?,
-                                source_identifier: ::String?
-                              },
+                              Params::project_source
                             ],
                             ?source_version: ::String,
                             ?secondary_source_versions: Array[
                               {
                                 source_identifier: ::String,
                                 source_version: ::String
-                              },
+                              }
                             ],
-                            ?artifacts: {
-                              type: ("CODEPIPELINE" | "S3" | "NO_ARTIFACTS"),
-                              location: ::String?,
-                              path: ::String?,
-                              namespace_type: ("NONE" | "BUILD_ID")?,
-                              name: ::String?,
-                              packaging: ("NONE" | "ZIP")?,
-                              override_artifact_name: bool?,
-                              encryption_disabled: bool?,
-                              artifact_identifier: ::String?,
-                              bucket_owner_access: ("NONE" | "READ_ONLY" | "FULL")?
-                            },
+                            ?artifacts: Params::project_artifacts,
                             ?secondary_artifacts: Array[
-                              {
-                                type: ("CODEPIPELINE" | "S3" | "NO_ARTIFACTS"),
-                                location: ::String?,
-                                path: ::String?,
-                                namespace_type: ("NONE" | "BUILD_ID")?,
-                                name: ::String?,
-                                packaging: ("NONE" | "ZIP")?,
-                                override_artifact_name: bool?,
-                                encryption_disabled: bool?,
-                                artifact_identifier: ::String?,
-                                bucket_owner_access: ("NONE" | "READ_ONLY" | "FULL")?
-                              },
+                              Params::project_artifacts
                             ],
                             ?cache: {
                               type: ("NO_CACHE" | "S3" | "LOCAL"),
                               location: ::String?,
-                              modes: Array[("LOCAL_DOCKER_LAYER_CACHE" | "LOCAL_SOURCE_CACHE" | "LOCAL_CUSTOM_CACHE")]?
+                              modes: Array[("LOCAL_DOCKER_LAYER_CACHE" | "LOCAL_SOURCE_CACHE" | "LOCAL_CUSTOM_CACHE")]?,
+                              cache_namespace: ::String?
                             },
-                            ?environment: {
-                              type: ("WINDOWS_CONTAINER" | "LINUX_CONTAINER" | "LINUX_GPU_CONTAINER" | "ARM_CONTAINER" | "WINDOWS_SERVER_2019_CONTAINER" | "LINUX_LAMBDA_CONTAINER" | "ARM_LAMBDA_CONTAINER" | "LINUX_EC2" | "ARM_EC2" | "WINDOWS_EC2" | "MAC_ARM"),
-                              image: ::String,
-                              compute_type: ("BUILD_GENERAL1_SMALL" | "BUILD_GENERAL1_MEDIUM" | "BUILD_GENERAL1_LARGE" | "BUILD_GENERAL1_XLARGE" | "BUILD_GENERAL1_2XLARGE" | "BUILD_LAMBDA_1GB" | "BUILD_LAMBDA_2GB" | "BUILD_LAMBDA_4GB" | "BUILD_LAMBDA_8GB" | "BUILD_LAMBDA_10GB" | "ATTRIBUTE_BASED_COMPUTE"),
-                              compute_configuration: {
-                                v_cpu: ::Integer?,
-                                memory: ::Integer?,
-                                disk: ::Integer?,
-                                machine_type: ("GENERAL" | "NVME")?
-                              }?,
-                              fleet: {
-                                fleet_arn: ::String?
-                              }?,
-                              environment_variables: Array[
-                                {
-                                  name: ::String,
-                                  value: ::String,
-                                  type: ("PLAINTEXT" | "PARAMETER_STORE" | "SECRETS_MANAGER")?
-                                },
-                              ]?,
-                              privileged_mode: bool?,
-                              certificate: ::String?,
-                              registry_credential: {
-                                credential: ::String,
-                                credential_provider: ("SECRETS_MANAGER")
-                              }?,
-                              image_pull_credentials_type: ("CODEBUILD" | "SERVICE_ROLE")?
-                            },
+                            ?environment: Params::project_environment,
                             ?service_role: ::String,
                             ?timeout_in_minutes: ::Integer,
                             ?queued_timeout_in_minutes: ::Integer,
@@ -1256,7 +1017,7 @@ module Aws
                               {
                                 key: ::String?,
                                 value: ::String?
-                              },
+                              }
                             ],
                             ?vpc_config: {
                               vpc_id: ::String?,
@@ -1264,19 +1025,7 @@ module Aws
                               security_group_ids: Array[::String]?
                             },
                             ?badge_enabled: bool,
-                            ?logs_config: {
-                              cloud_watch_logs: {
-                                status: ("ENABLED" | "DISABLED"),
-                                group_name: ::String?,
-                                stream_name: ::String?
-                              }?,
-                              s3_logs: {
-                                status: ("ENABLED" | "DISABLED"),
-                                location: ::String?,
-                                encryption_disabled: bool?,
-                                bucket_owner_access: ("NONE" | "READ_ONLY" | "FULL")?
-                              }?
-                            },
+                            ?logs_config: Params::logs_config,
                             ?file_system_locations: Array[
                               {
                                 type: ("EFS")?,
@@ -1284,19 +1033,9 @@ module Aws
                                 mount_point: ::String?,
                                 identifier: ::String?,
                                 mount_options: ::String?
-                              },
+                              }
                             ],
-                            ?build_batch_config: {
-                              service_role: ::String?,
-                              combine_artifacts: bool?,
-                              restrictions: {
-                                maximum_builds_allowed: ::Integer?,
-                                compute_types_allowed: Array[::String]?,
-                                fleets_allowed: Array[::String]?
-                              }?,
-                              timeout_in_mins: ::Integer?,
-                              batch_report_mode: ("REPORT_INDIVIDUAL_BUILDS" | "REPORT_AGGREGATED_BATCH")?
-                            },
+                            ?build_batch_config: Params::project_build_batch_config,
                             ?concurrent_build_limit: ::Integer,
                             ?auto_retry_limit: ::Integer
                           ) -> _UpdateProjectResponseSuccess
@@ -1323,22 +1062,12 @@ module Aws
       # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/CodeBuild/Client.html#update_report_group-instance_method
       def update_report_group: (
                                  arn: ::String,
-                                 ?export_config: {
-                                   export_config_type: ("S3" | "NO_EXPORT")?,
-                                   s3_destination: {
-                                     bucket: ::String?,
-                                     bucket_owner: ::String?,
-                                     path: ::String?,
-                                     packaging: ("ZIP" | "NONE")?,
-                                     encryption_key: ::String?,
-                                     encryption_disabled: bool?
-                                   }?
-                                 },
+                                 ?export_config: Params::report_export_config,
                                  ?tags: Array[
                                    {
                                      key: ::String?,
                                      value: ::String?
-                                   },
+                                   }
                                  ]
                                ) -> _UpdateReportGroupResponseSuccess
                              | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateReportGroupResponseSuccess
@@ -1358,10 +1087,14 @@ module Aws
                                   type: ("EVENT" | "BASE_REF" | "HEAD_REF" | "ACTOR_ACCOUNT_ID" | "FILE_PATH" | "COMMIT_MESSAGE" | "WORKFLOW_NAME" | "TAG_NAME" | "RELEASE_NAME" | "REPOSITORY_NAME" | "ORGANIZATION_NAME"),
                                   pattern: ::String,
                                   exclude_matched_pattern: bool?
-                                },
-                              ],
+                                }
+                              ]
                             ],
-                            ?build_type: ("BUILD" | "BUILD_BATCH" | "RUNNER_BUILDKITE_BUILD")
+                            ?build_type: ("BUILD" | "BUILD_BATCH" | "RUNNER_BUILDKITE_BUILD"),
+                            ?pull_request_build_policy: {
+                              requires_comment_approval: ("DISABLED" | "ALL_PULL_REQUESTS" | "FORK_PULL_REQUESTS"),
+                              approver_roles: Array[("GITHUB_READ" | "GITHUB_TRIAGE" | "GITHUB_WRITE" | "GITHUB_MAINTAIN" | "GITHUB_ADMIN" | "GITLAB_GUEST" | "GITLAB_PLANNER" | "GITLAB_REPORTER" | "GITLAB_DEVELOPER" | "GITLAB_MAINTAINER" | "GITLAB_OWNER" | "BITBUCKET_READ" | "BITBUCKET_WRITE" | "BITBUCKET_ADMIN")]?
+                            }
                           ) -> _UpdateWebhookResponseSuccess
                         | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateWebhookResponseSuccess
     end

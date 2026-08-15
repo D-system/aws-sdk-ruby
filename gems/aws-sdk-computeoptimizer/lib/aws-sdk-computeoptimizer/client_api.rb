@@ -205,6 +205,11 @@ module Aws::ComputeOptimizer
     High = Shapes::IntegerShape.new(name: 'High')
     Identifier = Shapes::StringShape.new(name: 'Identifier')
     Idle = Shapes::StringShape.new(name: 'Idle')
+    IdleDimension = Shapes::StructureShape.new(name: 'IdleDimension')
+    IdleDimensionKey = Shapes::StringShape.new(name: 'IdleDimensionKey')
+    IdleDimensionValue = Shapes::StringShape.new(name: 'IdleDimensionValue')
+    IdleDimensionValues = Shapes::ListShape.new(name: 'IdleDimensionValues')
+    IdleDimensions = Shapes::ListShape.new(name: 'IdleDimensions')
     IdleEstimatedMonthlySavings = Shapes::StructureShape.new(name: 'IdleEstimatedMonthlySavings')
     IdleFinding = Shapes::StringShape.new(name: 'IdleFinding')
     IdleFindingDescription = Shapes::StringShape.new(name: 'IdleFindingDescription')
@@ -370,6 +375,7 @@ module Aws::ComputeOptimizer
     RDSDatabaseRecommendedOptionProjectedMetric = Shapes::StructureShape.new(name: 'RDSDatabaseRecommendedOptionProjectedMetric')
     RDSDatabaseRecommendedOptionProjectedMetrics = Shapes::ListShape.new(name: 'RDSDatabaseRecommendedOptionProjectedMetrics')
     RDSEffectiveRecommendationPreferences = Shapes::StructureShape.new(name: 'RDSEffectiveRecommendationPreferences')
+    RDSEstimatedMonthlyVolumeIOPsCostVariation = Shapes::StringShape.new(name: 'RDSEstimatedMonthlyVolumeIOPsCostVariation')
     RDSInstanceEstimatedMonthlySavings = Shapes::StructureShape.new(name: 'RDSInstanceEstimatedMonthlySavings')
     RDSInstanceFinding = Shapes::StringShape.new(name: 'RDSInstanceFinding')
     RDSInstanceFindingReasonCode = Shapes::StringShape.new(name: 'RDSInstanceFindingReasonCode')
@@ -571,6 +577,7 @@ module Aws::ComputeOptimizer
     DescribeRecommendationExportJobsResponse.struct_class = Types::DescribeRecommendationExportJobsResponse
 
     EBSEffectiveRecommendationPreferences.add_member(:savings_estimation_mode, Shapes::ShapeRef.new(shape: EBSSavingsEstimationMode, location_name: "savingsEstimationMode"))
+    EBSEffectiveRecommendationPreferences.add_member(:look_back_period, Shapes::ShapeRef.new(shape: LookBackPeriodPreference, location_name: "lookBackPeriod"))
     EBSEffectiveRecommendationPreferences.struct_class = Types::EBSEffectiveRecommendationPreferences
 
     EBSEstimatedMonthlySavings.add_member(:currency, Shapes::ShapeRef.new(shape: Currency, location_name: "currency"))
@@ -598,6 +605,7 @@ module Aws::ComputeOptimizer
     EBSUtilizationMetrics.member = Shapes::ShapeRef.new(shape: EBSUtilizationMetric)
 
     ECSEffectiveRecommendationPreferences.add_member(:savings_estimation_mode, Shapes::ShapeRef.new(shape: ECSSavingsEstimationMode, location_name: "savingsEstimationMode"))
+    ECSEffectiveRecommendationPreferences.add_member(:look_back_period, Shapes::ShapeRef.new(shape: LookBackPeriodPreference, location_name: "lookBackPeriod"))
     ECSEffectiveRecommendationPreferences.struct_class = Types::ECSEffectiveRecommendationPreferences
 
     ECSEstimatedMonthlySavings.add_member(:currency, Shapes::ShapeRef.new(shape: Currency, location_name: "currency"))
@@ -1033,6 +1041,14 @@ module Aws::ComputeOptimizer
 
     Gpus.member = Shapes::ShapeRef.new(shape: Gpu)
 
+    IdleDimension.add_member(:key, Shapes::ShapeRef.new(shape: IdleDimensionKey, location_name: "key"))
+    IdleDimension.add_member(:values, Shapes::ShapeRef.new(shape: IdleDimensionValues, location_name: "values"))
+    IdleDimension.struct_class = Types::IdleDimension
+
+    IdleDimensionValues.member = Shapes::ShapeRef.new(shape: IdleDimensionValue)
+
+    IdleDimensions.member = Shapes::ShapeRef.new(shape: IdleDimension)
+
     IdleEstimatedMonthlySavings.add_member(:currency, Shapes::ShapeRef.new(shape: Currency, location_name: "currency"))
     IdleEstimatedMonthlySavings.add_member(:value, Shapes::ShapeRef.new(shape: Value, location_name: "value"))
     IdleEstimatedMonthlySavings.struct_class = Types::IdleEstimatedMonthlySavings
@@ -1084,6 +1100,7 @@ module Aws::ComputeOptimizer
     IdleUtilizationMetric.add_member(:name, Shapes::ShapeRef.new(shape: IdleMetricName, location_name: "name"))
     IdleUtilizationMetric.add_member(:statistic, Shapes::ShapeRef.new(shape: MetricStatistic, location_name: "statistic"))
     IdleUtilizationMetric.add_member(:value, Shapes::ShapeRef.new(shape: MetricValue, location_name: "value"))
+    IdleUtilizationMetric.add_member(:dimensions, Shapes::ShapeRef.new(shape: IdleDimensions, location_name: "dimensions"))
     IdleUtilizationMetric.struct_class = Types::IdleUtilizationMetric
 
     IdleUtilizationMetrics.member = Shapes::ShapeRef.new(shape: IdleUtilizationMetric)
@@ -1347,6 +1364,7 @@ module Aws::ComputeOptimizer
     RDSDBRecommendation.add_member(:storage_finding, Shapes::ShapeRef.new(shape: RDSStorageFinding, location_name: "storageFinding"))
     RDSDBRecommendation.add_member(:instance_finding_reason_codes, Shapes::ShapeRef.new(shape: RDSInstanceFindingReasonCodes, location_name: "instanceFindingReasonCodes"))
     RDSDBRecommendation.add_member(:current_instance_performance_risk, Shapes::ShapeRef.new(shape: RDSCurrentInstancePerformanceRisk, location_name: "currentInstancePerformanceRisk"))
+    RDSDBRecommendation.add_member(:current_storage_estimated_monthly_volume_io_ps_cost_variation, Shapes::ShapeRef.new(shape: RDSEstimatedMonthlyVolumeIOPsCostVariation, location_name: "currentStorageEstimatedMonthlyVolumeIOPsCostVariation"))
     RDSDBRecommendation.add_member(:storage_finding_reason_codes, Shapes::ShapeRef.new(shape: RDSStorageFindingReasonCodes, location_name: "storageFindingReasonCodes"))
     RDSDBRecommendation.add_member(:instance_recommendation_options, Shapes::ShapeRef.new(shape: RDSDBInstanceRecommendationOptions, location_name: "instanceRecommendationOptions"))
     RDSDBRecommendation.add_member(:storage_recommendation_options, Shapes::ShapeRef.new(shape: RDSDBStorageRecommendationOptions, location_name: "storageRecommendationOptions"))
@@ -1369,6 +1387,7 @@ module Aws::ComputeOptimizer
     RDSDBStorageRecommendationOption.add_member(:rank, Shapes::ShapeRef.new(shape: Rank, location_name: "rank"))
     RDSDBStorageRecommendationOption.add_member(:savings_opportunity, Shapes::ShapeRef.new(shape: SavingsOpportunity, location_name: "savingsOpportunity"))
     RDSDBStorageRecommendationOption.add_member(:savings_opportunity_after_discounts, Shapes::ShapeRef.new(shape: RDSStorageSavingsOpportunityAfterDiscounts, location_name: "savingsOpportunityAfterDiscounts"))
+    RDSDBStorageRecommendationOption.add_member(:estimated_monthly_volume_io_ps_cost_variation, Shapes::ShapeRef.new(shape: RDSEstimatedMonthlyVolumeIOPsCostVariation, location_name: "estimatedMonthlyVolumeIOPsCostVariation"))
     RDSDBStorageRecommendationOption.struct_class = Types::RDSDBStorageRecommendationOption
 
     RDSDBStorageRecommendationOptions.member = Shapes::ShapeRef.new(shape: RDSDBStorageRecommendationOption)
@@ -1605,8 +1624,8 @@ module Aws::ComputeOptimizer
         "auth" => ["aws.auth#sigv4"],
         "endpointPrefix" => "compute-optimizer",
         "jsonVersion" => "1.0",
-        "protocol" => "json",
-        "protocols" => ["json"],
+        "protocol" => "smithy-rpc-v2-cbor",
+        "protocols" => ["smithy-rpc-v2-cbor", "json"],
         "serviceFullName" => "AWS Compute Optimizer",
         "serviceId" => "Compute Optimizer",
         "signatureVersion" => "v4",

@@ -86,6 +86,10 @@ module Aws::MemoryDB
     DescribeEventsResponse = Shapes::StructureShape.new(name: 'DescribeEventsResponse')
     DescribeMultiRegionClustersRequest = Shapes::StructureShape.new(name: 'DescribeMultiRegionClustersRequest')
     DescribeMultiRegionClustersResponse = Shapes::StructureShape.new(name: 'DescribeMultiRegionClustersResponse')
+    DescribeMultiRegionParameterGroupsRequest = Shapes::StructureShape.new(name: 'DescribeMultiRegionParameterGroupsRequest')
+    DescribeMultiRegionParameterGroupsResponse = Shapes::StructureShape.new(name: 'DescribeMultiRegionParameterGroupsResponse')
+    DescribeMultiRegionParametersRequest = Shapes::StructureShape.new(name: 'DescribeMultiRegionParametersRequest')
+    DescribeMultiRegionParametersResponse = Shapes::StructureShape.new(name: 'DescribeMultiRegionParametersResponse')
     DescribeParameterGroupsRequest = Shapes::StructureShape.new(name: 'DescribeParameterGroupsRequest')
     DescribeParameterGroupsResponse = Shapes::StructureShape.new(name: 'DescribeParameterGroupsResponse')
     DescribeParametersRequest = Shapes::StructureShape.new(name: 'DescribeParametersRequest')
@@ -134,6 +138,7 @@ module Aws::MemoryDB
     InvalidSubnet = Shapes::StructureShape.new(name: 'InvalidSubnet')
     InvalidUserStateFault = Shapes::StructureShape.new(name: 'InvalidUserStateFault')
     InvalidVPCNetworkStateFault = Shapes::StructureShape.new(name: 'InvalidVPCNetworkStateFault')
+    IpDiscovery = Shapes::StringShape.new(name: 'IpDiscovery')
     KeyList = Shapes::ListShape.new(name: 'KeyList')
     KmsKeyId = Shapes::StringShape.new(name: 'KmsKeyId')
     ListAllowedMultiRegionClusterUpdatesRequest = Shapes::StructureShape.new(name: 'ListAllowedMultiRegionClusterUpdatesRequest')
@@ -146,7 +151,13 @@ module Aws::MemoryDB
     MultiRegionClusterAlreadyExistsFault = Shapes::StructureShape.new(name: 'MultiRegionClusterAlreadyExistsFault')
     MultiRegionClusterList = Shapes::ListShape.new(name: 'MultiRegionClusterList')
     MultiRegionClusterNotFoundFault = Shapes::StructureShape.new(name: 'MultiRegionClusterNotFoundFault')
+    MultiRegionParameter = Shapes::StructureShape.new(name: 'MultiRegionParameter')
+    MultiRegionParameterGroup = Shapes::StructureShape.new(name: 'MultiRegionParameterGroup')
+    MultiRegionParameterGroupList = Shapes::ListShape.new(name: 'MultiRegionParameterGroupList')
     MultiRegionParameterGroupNotFoundFault = Shapes::StructureShape.new(name: 'MultiRegionParameterGroupNotFoundFault')
+    MultiRegionParametersList = Shapes::ListShape.new(name: 'MultiRegionParametersList')
+    NetworkType = Shapes::StringShape.new(name: 'NetworkType')
+    NetworkTypeList = Shapes::ListShape.new(name: 'NetworkTypeList')
     NoOperationFault = Shapes::StructureShape.new(name: 'NoOperationFault')
     Node = Shapes::StructureShape.new(name: 'Node')
     NodeList = Shapes::ListShape.new(name: 'NodeList')
@@ -336,6 +347,8 @@ module Aws::MemoryDB
     Cluster.add_member(:acl_name, Shapes::ShapeRef.new(shape: ACLName, location_name: "ACLName"))
     Cluster.add_member(:auto_minor_version_upgrade, Shapes::ShapeRef.new(shape: BooleanOptional, location_name: "AutoMinorVersionUpgrade"))
     Cluster.add_member(:data_tiering, Shapes::ShapeRef.new(shape: DataTieringStatus, location_name: "DataTiering"))
+    Cluster.add_member(:network_type, Shapes::ShapeRef.new(shape: NetworkType, location_name: "NetworkType"))
+    Cluster.add_member(:ip_discovery, Shapes::ShapeRef.new(shape: IpDiscovery, location_name: "IpDiscovery"))
     Cluster.struct_class = Types::Cluster
 
     ClusterAlreadyExistsFault.struct_class = Types::ClusterAlreadyExistsFault
@@ -414,6 +427,8 @@ module Aws::MemoryDB
     CreateClusterRequest.add_member(:engine_version, Shapes::ShapeRef.new(shape: String, location_name: "EngineVersion"))
     CreateClusterRequest.add_member(:auto_minor_version_upgrade, Shapes::ShapeRef.new(shape: BooleanOptional, location_name: "AutoMinorVersionUpgrade"))
     CreateClusterRequest.add_member(:data_tiering, Shapes::ShapeRef.new(shape: BooleanOptional, location_name: "DataTiering"))
+    CreateClusterRequest.add_member(:network_type, Shapes::ShapeRef.new(shape: NetworkType, location_name: "NetworkType"))
+    CreateClusterRequest.add_member(:ip_discovery, Shapes::ShapeRef.new(shape: IpDiscovery, location_name: "IpDiscovery"))
     CreateClusterRequest.struct_class = Types::CreateClusterRequest
 
     CreateClusterResponse.add_member(:cluster, Shapes::ShapeRef.new(shape: Cluster, location_name: "Cluster"))
@@ -568,6 +583,25 @@ module Aws::MemoryDB
     DescribeMultiRegionClustersResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: String, location_name: "NextToken"))
     DescribeMultiRegionClustersResponse.add_member(:multi_region_clusters, Shapes::ShapeRef.new(shape: MultiRegionClusterList, location_name: "MultiRegionClusters"))
     DescribeMultiRegionClustersResponse.struct_class = Types::DescribeMultiRegionClustersResponse
+
+    DescribeMultiRegionParameterGroupsRequest.add_member(:multi_region_parameter_group_name, Shapes::ShapeRef.new(shape: String, location_name: "MultiRegionParameterGroupName"))
+    DescribeMultiRegionParameterGroupsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: IntegerOptional, location_name: "MaxResults"))
+    DescribeMultiRegionParameterGroupsRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: String, location_name: "NextToken"))
+    DescribeMultiRegionParameterGroupsRequest.struct_class = Types::DescribeMultiRegionParameterGroupsRequest
+
+    DescribeMultiRegionParameterGroupsResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: String, location_name: "NextToken"))
+    DescribeMultiRegionParameterGroupsResponse.add_member(:multi_region_parameter_groups, Shapes::ShapeRef.new(shape: MultiRegionParameterGroupList, location_name: "MultiRegionParameterGroups"))
+    DescribeMultiRegionParameterGroupsResponse.struct_class = Types::DescribeMultiRegionParameterGroupsResponse
+
+    DescribeMultiRegionParametersRequest.add_member(:multi_region_parameter_group_name, Shapes::ShapeRef.new(shape: String, required: true, location_name: "MultiRegionParameterGroupName"))
+    DescribeMultiRegionParametersRequest.add_member(:source, Shapes::ShapeRef.new(shape: String, location_name: "Source"))
+    DescribeMultiRegionParametersRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: IntegerOptional, location_name: "MaxResults"))
+    DescribeMultiRegionParametersRequest.add_member(:next_token, Shapes::ShapeRef.new(shape: String, location_name: "NextToken"))
+    DescribeMultiRegionParametersRequest.struct_class = Types::DescribeMultiRegionParametersRequest
+
+    DescribeMultiRegionParametersResponse.add_member(:next_token, Shapes::ShapeRef.new(shape: String, location_name: "NextToken"))
+    DescribeMultiRegionParametersResponse.add_member(:multi_region_parameters, Shapes::ShapeRef.new(shape: MultiRegionParametersList, location_name: "MultiRegionParameters"))
+    DescribeMultiRegionParametersResponse.struct_class = Types::DescribeMultiRegionParametersResponse
 
     DescribeParameterGroupsRequest.add_member(:parameter_group_name, Shapes::ShapeRef.new(shape: String, location_name: "ParameterGroupName"))
     DescribeParameterGroupsRequest.add_member(:max_results, Shapes::ShapeRef.new(shape: IntegerOptional, location_name: "MaxResults"))
@@ -764,7 +798,28 @@ module Aws::MemoryDB
 
     MultiRegionClusterNotFoundFault.struct_class = Types::MultiRegionClusterNotFoundFault
 
+    MultiRegionParameter.add_member(:name, Shapes::ShapeRef.new(shape: String, location_name: "Name"))
+    MultiRegionParameter.add_member(:value, Shapes::ShapeRef.new(shape: String, location_name: "Value"))
+    MultiRegionParameter.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "Description"))
+    MultiRegionParameter.add_member(:source, Shapes::ShapeRef.new(shape: String, location_name: "Source"))
+    MultiRegionParameter.add_member(:data_type, Shapes::ShapeRef.new(shape: String, location_name: "DataType"))
+    MultiRegionParameter.add_member(:allowed_values, Shapes::ShapeRef.new(shape: String, location_name: "AllowedValues"))
+    MultiRegionParameter.add_member(:minimum_engine_version, Shapes::ShapeRef.new(shape: String, location_name: "MinimumEngineVersion"))
+    MultiRegionParameter.struct_class = Types::MultiRegionParameter
+
+    MultiRegionParameterGroup.add_member(:name, Shapes::ShapeRef.new(shape: String, location_name: "Name"))
+    MultiRegionParameterGroup.add_member(:family, Shapes::ShapeRef.new(shape: String, location_name: "Family"))
+    MultiRegionParameterGroup.add_member(:description, Shapes::ShapeRef.new(shape: String, location_name: "Description"))
+    MultiRegionParameterGroup.add_member(:arn, Shapes::ShapeRef.new(shape: String, location_name: "ARN"))
+    MultiRegionParameterGroup.struct_class = Types::MultiRegionParameterGroup
+
+    MultiRegionParameterGroupList.member = Shapes::ShapeRef.new(shape: MultiRegionParameterGroup)
+
     MultiRegionParameterGroupNotFoundFault.struct_class = Types::MultiRegionParameterGroupNotFoundFault
+
+    MultiRegionParametersList.member = Shapes::ShapeRef.new(shape: MultiRegionParameter)
+
+    NetworkTypeList.member = Shapes::ShapeRef.new(shape: NetworkType)
 
     NoOperationFault.struct_class = Types::NoOperationFault
 
@@ -975,6 +1030,7 @@ module Aws::MemoryDB
 
     Subnet.add_member(:identifier, Shapes::ShapeRef.new(shape: String, location_name: "Identifier"))
     Subnet.add_member(:availability_zone, Shapes::ShapeRef.new(shape: AvailabilityZone, location_name: "AvailabilityZone"))
+    Subnet.add_member(:supported_network_types, Shapes::ShapeRef.new(shape: NetworkTypeList, location_name: "SupportedNetworkTypes"))
     Subnet.struct_class = Types::Subnet
 
     SubnetGroup.add_member(:name, Shapes::ShapeRef.new(shape: String, location_name: "Name"))
@@ -982,6 +1038,7 @@ module Aws::MemoryDB
     SubnetGroup.add_member(:vpc_id, Shapes::ShapeRef.new(shape: String, location_name: "VpcId"))
     SubnetGroup.add_member(:subnets, Shapes::ShapeRef.new(shape: SubnetList, location_name: "Subnets"))
     SubnetGroup.add_member(:arn, Shapes::ShapeRef.new(shape: String, location_name: "ARN"))
+    SubnetGroup.add_member(:supported_network_types, Shapes::ShapeRef.new(shape: NetworkTypeList, location_name: "SupportedNetworkTypes"))
     SubnetGroup.struct_class = Types::SubnetGroup
 
     SubnetGroupAlreadyExistsFault.struct_class = Types::SubnetGroupAlreadyExistsFault
@@ -1060,6 +1117,7 @@ module Aws::MemoryDB
     UpdateClusterRequest.add_member(:replica_configuration, Shapes::ShapeRef.new(shape: ReplicaConfigurationRequest, location_name: "ReplicaConfiguration"))
     UpdateClusterRequest.add_member(:shard_configuration, Shapes::ShapeRef.new(shape: ShardConfigurationRequest, location_name: "ShardConfiguration"))
     UpdateClusterRequest.add_member(:acl_name, Shapes::ShapeRef.new(shape: ACLName, location_name: "ACLName"))
+    UpdateClusterRequest.add_member(:ip_discovery, Shapes::ShapeRef.new(shape: IpDiscovery, location_name: "IpDiscovery"))
     UpdateClusterRequest.struct_class = Types::UpdateClusterRequest
 
     UpdateClusterResponse.add_member(:cluster, Shapes::ShapeRef.new(shape: Cluster, location_name: "Cluster"))
@@ -1452,6 +1510,30 @@ module Aws::MemoryDB
             "next_token" => "next_token"
           }
         )
+      end)
+
+      api.add_operation(:describe_multi_region_parameter_groups, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DescribeMultiRegionParameterGroups"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: DescribeMultiRegionParameterGroupsRequest)
+        o.output = Shapes::ShapeRef.new(shape: DescribeMultiRegionParameterGroupsResponse)
+        o.errors << Shapes::ShapeRef.new(shape: MultiRegionParameterGroupNotFoundFault)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceLinkedRoleNotFoundFault)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidParameterValueException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidParameterCombinationException)
+      end)
+
+      api.add_operation(:describe_multi_region_parameters, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "DescribeMultiRegionParameters"
+        o.http_method = "POST"
+        o.http_request_uri = "/"
+        o.input = Shapes::ShapeRef.new(shape: DescribeMultiRegionParametersRequest)
+        o.output = Shapes::ShapeRef.new(shape: DescribeMultiRegionParametersResponse)
+        o.errors << Shapes::ShapeRef.new(shape: MultiRegionParameterGroupNotFoundFault)
+        o.errors << Shapes::ShapeRef.new(shape: ServiceLinkedRoleNotFoundFault)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidParameterValueException)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidParameterCombinationException)
       end)
 
       api.add_operation(:describe_parameter_groups, Seahorse::Model::Operation.new.tap do |o|

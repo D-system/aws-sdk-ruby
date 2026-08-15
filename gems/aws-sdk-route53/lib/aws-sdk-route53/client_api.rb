@@ -17,6 +17,8 @@ module Aws::Route53
     ARN = Shapes::StringShape.new(name: 'ARN')
     AWSAccountID = Shapes::StringShape.new(name: 'AWSAccountID')
     AWSRegion = Shapes::StringShape.new(name: 'AWSRegion')
+    AcceleratedRecoveryEnabled = Shapes::BooleanShape.new(name: 'AcceleratedRecoveryEnabled')
+    AcceleratedRecoveryStatus = Shapes::StringShape.new(name: 'AcceleratedRecoveryStatus')
     AccountLimit = Shapes::StructureShape.new(name: 'AccountLimit')
     AccountLimitType = Shapes::StringShape.new(name: 'AccountLimitType')
     ActivateKeySigningKeyRequest = Shapes::StructureShape.new(name: 'ActivateKeySigningKeyRequest')
@@ -139,6 +141,7 @@ module Aws::Route53
     ErrorMessage = Shapes::StringShape.new(name: 'ErrorMessage')
     ErrorMessages = Shapes::ListShape.new(name: 'ErrorMessages')
     EvaluationPeriods = Shapes::IntegerShape.new(name: 'EvaluationPeriods')
+    FailureReason = Shapes::StringShape.new(name: 'FailureReason')
     FailureThreshold = Shapes::IntegerShape.new(name: 'FailureThreshold')
     FullyQualifiedDomainName = Shapes::StringShape.new(name: 'FullyQualifiedDomainName')
     GeoLocation = Shapes::StructureShape.new(name: 'GeoLocation')
@@ -207,6 +210,8 @@ module Aws::Route53
     HostedZoneAlreadyExists = Shapes::StructureShape.new(name: 'HostedZoneAlreadyExists')
     HostedZoneConfig = Shapes::StructureShape.new(name: 'HostedZoneConfig')
     HostedZoneCount = Shapes::IntegerShape.new(name: 'HostedZoneCount')
+    HostedZoneFailureReasons = Shapes::StructureShape.new(name: 'HostedZoneFailureReasons')
+    HostedZoneFeatures = Shapes::StructureShape.new(name: 'HostedZoneFeatures')
     HostedZoneLimit = Shapes::StructureShape.new(name: 'HostedZoneLimit')
     HostedZoneLimitType = Shapes::StringShape.new(name: 'HostedZoneLimitType')
     HostedZoneNotEmpty = Shapes::StructureShape.new(name: 'HostedZoneNotEmpty')
@@ -406,6 +411,8 @@ module Aws::Route53
     UpdateHealthCheckResponse = Shapes::StructureShape.new(name: 'UpdateHealthCheckResponse')
     UpdateHostedZoneCommentRequest = Shapes::StructureShape.new(name: 'UpdateHostedZoneCommentRequest')
     UpdateHostedZoneCommentResponse = Shapes::StructureShape.new(name: 'UpdateHostedZoneCommentResponse')
+    UpdateHostedZoneFeaturesRequest = Shapes::StructureShape.new(name: 'UpdateHostedZoneFeaturesRequest')
+    UpdateHostedZoneFeaturesResponse = Shapes::StructureShape.new(name: 'UpdateHostedZoneFeaturesResponse')
     UpdateTrafficPolicyCommentRequest = Shapes::StructureShape.new(name: 'UpdateTrafficPolicyCommentRequest')
     UpdateTrafficPolicyCommentResponse = Shapes::StructureShape.new(name: 'UpdateTrafficPolicyCommentResponse')
     UpdateTrafficPolicyInstanceRequest = Shapes::StructureShape.new(name: 'UpdateTrafficPolicyInstanceRequest')
@@ -958,6 +965,7 @@ module Aws::Route53
     HostedZone.add_member(:config, Shapes::ShapeRef.new(shape: HostedZoneConfig, location_name: "Config"))
     HostedZone.add_member(:resource_record_set_count, Shapes::ShapeRef.new(shape: HostedZoneRRSetCount, location_name: "ResourceRecordSetCount"))
     HostedZone.add_member(:linked_service, Shapes::ShapeRef.new(shape: LinkedService, location_name: "LinkedService"))
+    HostedZone.add_member(:features, Shapes::ShapeRef.new(shape: HostedZoneFeatures, location_name: "Features"))
     HostedZone.struct_class = Types::HostedZone
 
     HostedZoneAlreadyExists.add_member(:message, Shapes::ShapeRef.new(shape: ErrorMessage, location_name: "message"))
@@ -966,6 +974,13 @@ module Aws::Route53
     HostedZoneConfig.add_member(:comment, Shapes::ShapeRef.new(shape: ResourceDescription, location_name: "Comment"))
     HostedZoneConfig.add_member(:private_zone, Shapes::ShapeRef.new(shape: IsPrivateZone, location_name: "PrivateZone"))
     HostedZoneConfig.struct_class = Types::HostedZoneConfig
+
+    HostedZoneFailureReasons.add_member(:accelerated_recovery, Shapes::ShapeRef.new(shape: FailureReason, location_name: "AcceleratedRecovery"))
+    HostedZoneFailureReasons.struct_class = Types::HostedZoneFailureReasons
+
+    HostedZoneFeatures.add_member(:accelerated_recovery_status, Shapes::ShapeRef.new(shape: AcceleratedRecoveryStatus, location_name: "AcceleratedRecoveryStatus"))
+    HostedZoneFeatures.add_member(:failure_reasons, Shapes::ShapeRef.new(shape: HostedZoneFailureReasons, location_name: "FailureReasons"))
+    HostedZoneFeatures.struct_class = Types::HostedZoneFeatures
 
     HostedZoneLimit.add_member(:type, Shapes::ShapeRef.new(shape: HostedZoneLimitType, required: true, location_name: "Type"))
     HostedZoneLimit.add_member(:value, Shapes::ShapeRef.new(shape: LimitValue, required: true, location_name: "Value"))
@@ -1514,6 +1529,12 @@ module Aws::Route53
     UpdateHostedZoneCommentResponse.add_member(:hosted_zone, Shapes::ShapeRef.new(shape: HostedZone, required: true, location_name: "HostedZone"))
     UpdateHostedZoneCommentResponse.struct_class = Types::UpdateHostedZoneCommentResponse
 
+    UpdateHostedZoneFeaturesRequest.add_member(:hosted_zone_id, Shapes::ShapeRef.new(shape: ResourceId, required: true, location: "uri", location_name: "Id"))
+    UpdateHostedZoneFeaturesRequest.add_member(:enable_accelerated_recovery, Shapes::ShapeRef.new(shape: AcceleratedRecoveryEnabled, location_name: "EnableAcceleratedRecovery"))
+    UpdateHostedZoneFeaturesRequest.struct_class = Types::UpdateHostedZoneFeaturesRequest
+
+    UpdateHostedZoneFeaturesResponse.struct_class = Types::UpdateHostedZoneFeaturesResponse
+
     UpdateTrafficPolicyCommentRequest.add_member(:id, Shapes::ShapeRef.new(shape: TrafficPolicyId, required: true, location: "uri", location_name: "Id"))
     UpdateTrafficPolicyCommentRequest.add_member(:version, Shapes::ShapeRef.new(shape: TrafficPolicyVersion, required: true, location: "uri", location_name: "Version"))
     UpdateTrafficPolicyCommentRequest.add_member(:comment, Shapes::ShapeRef.new(shape: TrafficPolicyComment, required: true, location_name: "Comment"))
@@ -1584,7 +1605,7 @@ module Aws::Route53
         o.input = Shapes::ShapeRef.new(shape: AssociateVPCWithHostedZoneRequest,
           location_name: "AssociateVPCWithHostedZoneRequest",
           metadata: {
-            "xmlNamespace" => {"uri"=>"https://route53.amazonaws.com/doc/2013-04-01/"}
+            "xmlNamespace" => {"uri" => "https://route53.amazonaws.com/doc/2013-04-01/"}
           }
         )
         o.output = Shapes::ShapeRef.new(shape: AssociateVPCWithHostedZoneResponse)
@@ -1605,7 +1626,7 @@ module Aws::Route53
         o.input = Shapes::ShapeRef.new(shape: ChangeCidrCollectionRequest,
           location_name: "ChangeCidrCollectionRequest",
           metadata: {
-            "xmlNamespace" => {"uri"=>"https://route53.amazonaws.com/doc/2013-04-01/"}
+            "xmlNamespace" => {"uri" => "https://route53.amazonaws.com/doc/2013-04-01/"}
           }
         )
         o.output = Shapes::ShapeRef.new(shape: ChangeCidrCollectionResponse)
@@ -1624,7 +1645,7 @@ module Aws::Route53
         o.input = Shapes::ShapeRef.new(shape: ChangeResourceRecordSetsRequest,
           location_name: "ChangeResourceRecordSetsRequest",
           metadata: {
-            "xmlNamespace" => {"uri"=>"https://route53.amazonaws.com/doc/2013-04-01/"}
+            "xmlNamespace" => {"uri" => "https://route53.amazonaws.com/doc/2013-04-01/"}
           }
         )
         o.output = Shapes::ShapeRef.new(shape: ChangeResourceRecordSetsResponse)
@@ -1642,7 +1663,7 @@ module Aws::Route53
         o.input = Shapes::ShapeRef.new(shape: ChangeTagsForResourceRequest,
           location_name: "ChangeTagsForResourceRequest",
           metadata: {
-            "xmlNamespace" => {"uri"=>"https://route53.amazonaws.com/doc/2013-04-01/"}
+            "xmlNamespace" => {"uri" => "https://route53.amazonaws.com/doc/2013-04-01/"}
           }
         )
         o.output = Shapes::ShapeRef.new(shape: ChangeTagsForResourceResponse)
@@ -1660,7 +1681,7 @@ module Aws::Route53
         o.input = Shapes::ShapeRef.new(shape: CreateCidrCollectionRequest,
           location_name: "CreateCidrCollectionRequest",
           metadata: {
-            "xmlNamespace" => {"uri"=>"https://route53.amazonaws.com/doc/2013-04-01/"}
+            "xmlNamespace" => {"uri" => "https://route53.amazonaws.com/doc/2013-04-01/"}
           }
         )
         o.output = Shapes::ShapeRef.new(shape: CreateCidrCollectionResponse)
@@ -1677,7 +1698,7 @@ module Aws::Route53
         o.input = Shapes::ShapeRef.new(shape: CreateHealthCheckRequest,
           location_name: "CreateHealthCheckRequest",
           metadata: {
-            "xmlNamespace" => {"uri"=>"https://route53.amazonaws.com/doc/2013-04-01/"}
+            "xmlNamespace" => {"uri" => "https://route53.amazonaws.com/doc/2013-04-01/"}
           }
         )
         o.output = Shapes::ShapeRef.new(shape: CreateHealthCheckResponse)
@@ -1693,7 +1714,7 @@ module Aws::Route53
         o.input = Shapes::ShapeRef.new(shape: CreateHostedZoneRequest,
           location_name: "CreateHostedZoneRequest",
           metadata: {
-            "xmlNamespace" => {"uri"=>"https://route53.amazonaws.com/doc/2013-04-01/"}
+            "xmlNamespace" => {"uri" => "https://route53.amazonaws.com/doc/2013-04-01/"}
           }
         )
         o.output = Shapes::ShapeRef.new(shape: CreateHostedZoneResponse)
@@ -1715,7 +1736,7 @@ module Aws::Route53
         o.input = Shapes::ShapeRef.new(shape: CreateKeySigningKeyRequest,
           location_name: "CreateKeySigningKeyRequest",
           metadata: {
-            "xmlNamespace" => {"uri"=>"https://route53.amazonaws.com/doc/2013-04-01/"}
+            "xmlNamespace" => {"uri" => "https://route53.amazonaws.com/doc/2013-04-01/"}
           }
         )
         o.output = Shapes::ShapeRef.new(shape: CreateKeySigningKeyResponse)
@@ -1738,7 +1759,7 @@ module Aws::Route53
         o.input = Shapes::ShapeRef.new(shape: CreateQueryLoggingConfigRequest,
           location_name: "CreateQueryLoggingConfigRequest",
           metadata: {
-            "xmlNamespace" => {"uri"=>"https://route53.amazonaws.com/doc/2013-04-01/"}
+            "xmlNamespace" => {"uri" => "https://route53.amazonaws.com/doc/2013-04-01/"}
           }
         )
         o.output = Shapes::ShapeRef.new(shape: CreateQueryLoggingConfigResponse)
@@ -1757,7 +1778,7 @@ module Aws::Route53
         o.input = Shapes::ShapeRef.new(shape: CreateReusableDelegationSetRequest,
           location_name: "CreateReusableDelegationSetRequest",
           metadata: {
-            "xmlNamespace" => {"uri"=>"https://route53.amazonaws.com/doc/2013-04-01/"}
+            "xmlNamespace" => {"uri" => "https://route53.amazonaws.com/doc/2013-04-01/"}
           }
         )
         o.output = Shapes::ShapeRef.new(shape: CreateReusableDelegationSetResponse)
@@ -1777,7 +1798,7 @@ module Aws::Route53
         o.input = Shapes::ShapeRef.new(shape: CreateTrafficPolicyRequest,
           location_name: "CreateTrafficPolicyRequest",
           metadata: {
-            "xmlNamespace" => {"uri"=>"https://route53.amazonaws.com/doc/2013-04-01/"}
+            "xmlNamespace" => {"uri" => "https://route53.amazonaws.com/doc/2013-04-01/"}
           }
         )
         o.output = Shapes::ShapeRef.new(shape: CreateTrafficPolicyResponse)
@@ -1794,7 +1815,7 @@ module Aws::Route53
         o.input = Shapes::ShapeRef.new(shape: CreateTrafficPolicyInstanceRequest,
           location_name: "CreateTrafficPolicyInstanceRequest",
           metadata: {
-            "xmlNamespace" => {"uri"=>"https://route53.amazonaws.com/doc/2013-04-01/"}
+            "xmlNamespace" => {"uri" => "https://route53.amazonaws.com/doc/2013-04-01/"}
           }
         )
         o.output = Shapes::ShapeRef.new(shape: CreateTrafficPolicyInstanceResponse)
@@ -1812,7 +1833,7 @@ module Aws::Route53
         o.input = Shapes::ShapeRef.new(shape: CreateTrafficPolicyVersionRequest,
           location_name: "CreateTrafficPolicyVersionRequest",
           metadata: {
-            "xmlNamespace" => {"uri"=>"https://route53.amazonaws.com/doc/2013-04-01/"}
+            "xmlNamespace" => {"uri" => "https://route53.amazonaws.com/doc/2013-04-01/"}
           }
         )
         o.output = Shapes::ShapeRef.new(shape: CreateTrafficPolicyVersionResponse)
@@ -1830,7 +1851,7 @@ module Aws::Route53
         o.input = Shapes::ShapeRef.new(shape: CreateVPCAssociationAuthorizationRequest,
           location_name: "CreateVPCAssociationAuthorizationRequest",
           metadata: {
-            "xmlNamespace" => {"uri"=>"https://route53.amazonaws.com/doc/2013-04-01/"}
+            "xmlNamespace" => {"uri" => "https://route53.amazonaws.com/doc/2013-04-01/"}
           }
         )
         o.output = Shapes::ShapeRef.new(shape: CreateVPCAssociationAuthorizationResponse)
@@ -1959,7 +1980,7 @@ module Aws::Route53
         o.input = Shapes::ShapeRef.new(shape: DeleteVPCAssociationAuthorizationRequest,
           location_name: "DeleteVPCAssociationAuthorizationRequest",
           metadata: {
-            "xmlNamespace" => {"uri"=>"https://route53.amazonaws.com/doc/2013-04-01/"}
+            "xmlNamespace" => {"uri" => "https://route53.amazonaws.com/doc/2013-04-01/"}
           }
         )
         o.output = Shapes::ShapeRef.new(shape: DeleteVPCAssociationAuthorizationResponse)
@@ -1993,7 +2014,7 @@ module Aws::Route53
         o.input = Shapes::ShapeRef.new(shape: DisassociateVPCFromHostedZoneRequest,
           location_name: "DisassociateVPCFromHostedZoneRequest",
           metadata: {
-            "xmlNamespace" => {"uri"=>"https://route53.amazonaws.com/doc/2013-04-01/"}
+            "xmlNamespace" => {"uri" => "https://route53.amazonaws.com/doc/2013-04-01/"}
           }
         )
         o.output = Shapes::ShapeRef.new(shape: DisassociateVPCFromHostedZoneResponse)
@@ -2374,7 +2395,7 @@ module Aws::Route53
         o.input = Shapes::ShapeRef.new(shape: ListTagsForResourcesRequest,
           location_name: "ListTagsForResourcesRequest",
           metadata: {
-            "xmlNamespace" => {"uri"=>"https://route53.amazonaws.com/doc/2013-04-01/"}
+            "xmlNamespace" => {"uri" => "https://route53.amazonaws.com/doc/2013-04-01/"}
           }
         )
         o.output = Shapes::ShapeRef.new(shape: ListTagsForResourcesResponse)
@@ -2464,7 +2485,7 @@ module Aws::Route53
         o.input = Shapes::ShapeRef.new(shape: UpdateHealthCheckRequest,
           location_name: "UpdateHealthCheckRequest",
           metadata: {
-            "xmlNamespace" => {"uri"=>"https://route53.amazonaws.com/doc/2013-04-01/"}
+            "xmlNamespace" => {"uri" => "https://route53.amazonaws.com/doc/2013-04-01/"}
           }
         )
         o.output = Shapes::ShapeRef.new(shape: UpdateHealthCheckResponse)
@@ -2480,13 +2501,30 @@ module Aws::Route53
         o.input = Shapes::ShapeRef.new(shape: UpdateHostedZoneCommentRequest,
           location_name: "UpdateHostedZoneCommentRequest",
           metadata: {
-            "xmlNamespace" => {"uri"=>"https://route53.amazonaws.com/doc/2013-04-01/"}
+            "xmlNamespace" => {"uri" => "https://route53.amazonaws.com/doc/2013-04-01/"}
           }
         )
         o.output = Shapes::ShapeRef.new(shape: UpdateHostedZoneCommentResponse)
         o.errors << Shapes::ShapeRef.new(shape: NoSuchHostedZone)
         o.errors << Shapes::ShapeRef.new(shape: InvalidInput)
         o.errors << Shapes::ShapeRef.new(shape: PriorRequestNotComplete)
+      end)
+
+      api.add_operation(:update_hosted_zone_features, Seahorse::Model::Operation.new.tap do |o|
+        o.name = "UpdateHostedZoneFeatures"
+        o.http_method = "POST"
+        o.http_request_uri = "/2013-04-01/hostedzone/{Id}/features"
+        o.input = Shapes::ShapeRef.new(shape: UpdateHostedZoneFeaturesRequest,
+          location_name: "UpdateHostedZoneFeaturesRequest",
+          metadata: {
+            "xmlNamespace" => {"uri" => "https://route53.amazonaws.com/doc/2013-04-01/"}
+          }
+        )
+        o.output = Shapes::ShapeRef.new(shape: UpdateHostedZoneFeaturesResponse)
+        o.errors << Shapes::ShapeRef.new(shape: NoSuchHostedZone)
+        o.errors << Shapes::ShapeRef.new(shape: InvalidInput)
+        o.errors << Shapes::ShapeRef.new(shape: PriorRequestNotComplete)
+        o.errors << Shapes::ShapeRef.new(shape: LimitsExceeded)
       end)
 
       api.add_operation(:update_traffic_policy_comment, Seahorse::Model::Operation.new.tap do |o|
@@ -2496,7 +2534,7 @@ module Aws::Route53
         o.input = Shapes::ShapeRef.new(shape: UpdateTrafficPolicyCommentRequest,
           location_name: "UpdateTrafficPolicyCommentRequest",
           metadata: {
-            "xmlNamespace" => {"uri"=>"https://route53.amazonaws.com/doc/2013-04-01/"}
+            "xmlNamespace" => {"uri" => "https://route53.amazonaws.com/doc/2013-04-01/"}
           }
         )
         o.output = Shapes::ShapeRef.new(shape: UpdateTrafficPolicyCommentResponse)
@@ -2512,7 +2550,7 @@ module Aws::Route53
         o.input = Shapes::ShapeRef.new(shape: UpdateTrafficPolicyInstanceRequest,
           location_name: "UpdateTrafficPolicyInstanceRequest",
           metadata: {
-            "xmlNamespace" => {"uri"=>"https://route53.amazonaws.com/doc/2013-04-01/"}
+            "xmlNamespace" => {"uri" => "https://route53.amazonaws.com/doc/2013-04-01/"}
           }
         )
         o.output = Shapes::ShapeRef.new(shape: UpdateTrafficPolicyInstanceResponse)

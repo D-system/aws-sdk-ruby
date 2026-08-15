@@ -18,6 +18,7 @@ module Aws
                       ?account_id: String,
                       ?active_endpoint_cache: bool,
                       ?adaptive_retry_wait_to_fill: bool,
+                      ?auth_scheme_preference: Array[String],
                       ?client_side_monitoring: bool,
                       ?client_side_monitoring_client_id: String,
                       ?client_side_monitoring_host: String,
@@ -94,7 +95,7 @@ module Aws
                                              {
                                                key: ::String,
                                                value: ::String
-                                             },
+                                             }
                                            ]
                                          ) -> _AssociateFirewallRuleGroupResponseSuccess
                                        | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _AssociateFirewallRuleGroupResponseSuccess
@@ -138,6 +139,82 @@ module Aws
                                    ) -> _AssociateResolverRuleResponseSuccess
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _AssociateResolverRuleResponseSuccess
 
+      interface _BatchCreateFirewallRuleResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::BatchCreateFirewallRuleResponse]
+        def created_firewall_rules: () -> ::Array[Types::FirewallRule]
+        def create_errors: () -> ::Array[Types::BatchCreateFirewallRuleError]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Route53Resolver/Client.html#batch_create_firewall_rule-instance_method
+      def batch_create_firewall_rule: (
+                                        create_firewall_rule_entries: Array[
+                                          {
+                                            creator_request_id: ::String,
+                                            firewall_rule_group_id: ::String,
+                                            firewall_domain_list_id: ::String?,
+                                            priority: ::Integer,
+                                            action: ("ALLOW" | "BLOCK" | "ALERT"),
+                                            block_response: ("NODATA" | "NXDOMAIN" | "OVERRIDE")?,
+                                            block_override_domain: ::String?,
+                                            block_override_dns_type: ("CNAME")?,
+                                            block_override_ttl: ::Integer?,
+                                            name: ::String,
+                                            firewall_domain_redirection_action: ("INSPECT_REDIRECTION_DOMAIN" | "TRUST_REDIRECTION_DOMAIN")?,
+                                            qtype: ::String?,
+                                            dns_threat_protection: ("DGA" | "DNS_TUNNELING" | "DICTIONARY_DGA")?,
+                                            confidence_threshold: ("LOW" | "MEDIUM" | "HIGH")?,
+                                            firewall_rule_type: Params::firewall_rule_type?
+                                          }
+                                        ]
+                                      ) -> _BatchCreateFirewallRuleResponseSuccess
+                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchCreateFirewallRuleResponseSuccess
+
+      interface _BatchDeleteFirewallRuleResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::BatchDeleteFirewallRuleResponse]
+        def deleted_firewall_rules: () -> ::Array[Types::FirewallRule]
+        def delete_errors: () -> ::Array[Types::BatchDeleteFirewallRuleError]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Route53Resolver/Client.html#batch_delete_firewall_rule-instance_method
+      def batch_delete_firewall_rule: (
+                                        delete_firewall_rule_entries: Array[
+                                          {
+                                            firewall_rule_group_id: ::String,
+                                            firewall_domain_list_id: ::String?,
+                                            firewall_threat_protection_id: ::String?,
+                                            qtype: ::String?
+                                          }
+                                        ]
+                                      ) -> _BatchDeleteFirewallRuleResponseSuccess
+                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchDeleteFirewallRuleResponseSuccess
+
+      interface _BatchUpdateFirewallRuleResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::BatchUpdateFirewallRuleResponse]
+        def updated_firewall_rules: () -> ::Array[Types::FirewallRule]
+        def update_errors: () -> ::Array[Types::BatchUpdateFirewallRuleError]
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Route53Resolver/Client.html#batch_update_firewall_rule-instance_method
+      def batch_update_firewall_rule: (
+                                        update_firewall_rule_entries: Array[
+                                          {
+                                            firewall_rule_group_id: ::String,
+                                            firewall_domain_list_id: ::String?,
+                                            firewall_threat_protection_id: ::String?,
+                                            priority: ::Integer?,
+                                            action: ("ALLOW" | "BLOCK" | "ALERT")?,
+                                            block_response: ("NODATA" | "NXDOMAIN" | "OVERRIDE")?,
+                                            block_override_domain: ::String?,
+                                            block_override_dns_type: ("CNAME")?,
+                                            block_override_ttl: ::Integer?,
+                                            name: ::String?,
+                                            firewall_domain_redirection_action: ("INSPECT_REDIRECTION_DOMAIN" | "TRUST_REDIRECTION_DOMAIN")?,
+                                            qtype: ::String?,
+                                            dns_threat_protection: ("DGA" | "DNS_TUNNELING" | "DICTIONARY_DGA")?,
+                                            confidence_threshold: ("LOW" | "MEDIUM" | "HIGH")?,
+                                            firewall_rule_type: Params::firewall_rule_type?
+                                          }
+                                        ]
+                                      ) -> _BatchUpdateFirewallRuleResponseSuccess
+                                    | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _BatchUpdateFirewallRuleResponseSuccess
+
       interface _CreateFirewallDomainListResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::CreateFirewallDomainListResponse]
         def firewall_domain_list: () -> Types::FirewallDomainList
@@ -150,7 +227,7 @@ module Aws
                                            {
                                              key: ::String,
                                              value: ::String
-                                           },
+                                           }
                                          ]
                                        ) -> _CreateFirewallDomainListResponseSuccess
                                      | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateFirewallDomainListResponseSuccess
@@ -173,8 +250,9 @@ module Aws
                                   name: ::String,
                                   ?firewall_domain_redirection_action: ("INSPECT_REDIRECTION_DOMAIN" | "TRUST_REDIRECTION_DOMAIN"),
                                   ?qtype: ::String,
-                                  ?dns_threat_protection: ("DGA" | "DNS_TUNNELING"),
-                                  ?confidence_threshold: ("LOW" | "MEDIUM" | "HIGH")
+                                  ?dns_threat_protection: ("DGA" | "DNS_TUNNELING" | "DICTIONARY_DGA"),
+                                  ?confidence_threshold: ("LOW" | "MEDIUM" | "HIGH"),
+                                  ?firewall_rule_type: Params::firewall_rule_type
                                 ) -> _CreateFirewallRuleResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateFirewallRuleResponseSuccess
 
@@ -190,7 +268,7 @@ module Aws
                                           {
                                             key: ::String,
                                             value: ::String
-                                          },
+                                          }
                                         ]
                                       ) -> _CreateFirewallRuleGroupResponseSuccess
                                     | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateFirewallRuleGroupResponseSuccess
@@ -210,7 +288,7 @@ module Aws
                                        {
                                          key: ::String,
                                          value: ::String
-                                       },
+                                       }
                                      ]
                                    ) -> _CreateOutpostResolverResponseSuccess
                                  | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateOutpostResolverResponseSuccess
@@ -224,13 +302,13 @@ module Aws
                                       creator_request_id: ::String,
                                       ?name: ::String,
                                       security_group_ids: Array[::String],
-                                      direction: ("INBOUND" | "OUTBOUND"),
+                                      direction: ("INBOUND" | "OUTBOUND" | "INBOUND_DELEGATION"),
                                       ip_addresses: Array[
                                         {
                                           subnet_id: ::String,
                                           ip: ::String?,
                                           ipv_6: ::String?
-                                        },
+                                        }
                                       ],
                                       ?outpost_arn: ::String,
                                       ?preferred_instance_type: ::String,
@@ -238,10 +316,14 @@ module Aws
                                         {
                                           key: ::String,
                                           value: ::String
-                                        },
+                                        }
                                       ],
                                       ?resolver_endpoint_type: ("IPV6" | "IPV4" | "DUALSTACK"),
-                                      ?protocols: Array[("DoH" | "Do53" | "DoH-FIPS")]
+                                      ?protocols: Array[("DoH" | "Do53" | "DoH-FIPS")],
+                                      ?rni_enhanced_metrics_enabled: bool,
+                                      ?target_name_server_metrics_enabled: bool,
+                                      ?dns_64_enabled: bool,
+                                      ?ipv_6_internet_access_enabled: bool
                                     ) -> _CreateResolverEndpointResponseSuccess
                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateResolverEndpointResponseSuccess
 
@@ -258,7 +340,7 @@ module Aws
                                                 {
                                                   key: ::String,
                                                   value: ::String
-                                                },
+                                                }
                                               ]
                                             ) -> _CreateResolverQueryLogConfigResponseSuccess
                                           | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateResolverQueryLogConfigResponseSuccess
@@ -271,7 +353,7 @@ module Aws
       def create_resolver_rule: (
                                   creator_request_id: ::String,
                                   ?name: ::String,
-                                  rule_type: ("FORWARD" | "SYSTEM" | "RECURSIVE"),
+                                  rule_type: ("FORWARD" | "SYSTEM" | "RECURSIVE" | "DELEGATE"),
                                   ?domain_name: ::String,
                                   ?target_ips: Array[
                                     {
@@ -280,15 +362,16 @@ module Aws
                                       ipv_6: ::String?,
                                       protocol: ("DoH" | "Do53" | "DoH-FIPS")?,
                                       server_name_indication: ::String?
-                                    },
+                                    }
                                   ],
                                   ?resolver_endpoint_id: ::String,
                                   ?tags: Array[
                                     {
                                       key: ::String,
                                       value: ::String
-                                    },
-                                  ]
+                                    }
+                                  ],
+                                  ?delegation_record: ::String
                                 ) -> _CreateResolverRuleResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _CreateResolverRuleResponseSuccess
 
@@ -643,6 +726,19 @@ module Aws
                                      ) -> _ListFirewallRuleGroupsResponseSuccess
                                    | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListFirewallRuleGroupsResponseSuccess
 
+      interface _ListFirewallRuleTypesResponseSuccess
+        include ::Seahorse::Client::_ResponseSuccess[Types::ListFirewallRuleTypesResponse]
+        def firewall_rule_types: () -> ::Array[Types::FirewallRuleTypeDefinition]
+        def next_token: () -> ::String
+      end
+      # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Route53Resolver/Client.html#list_firewall_rule_types-instance_method
+      def list_firewall_rule_types: (
+                                      ?rule_type: ::String,
+                                      ?max_results: ::Integer,
+                                      ?next_token: ::String
+                                    ) -> _ListFirewallRuleTypesResponseSuccess
+                                  | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListFirewallRuleTypesResponseSuccess
+
       interface _ListFirewallRulesResponseSuccess
         include ::Seahorse::Client::_ResponseSuccess[Types::ListFirewallRulesResponse]
         def next_token: () -> ::String
@@ -696,7 +792,7 @@ module Aws
                                             {
                                               name: ::String?,
                                               values: Array[::String]?
-                                            },
+                                            }
                                           ]
                                         ) -> _ListResolverDnssecConfigsResponseSuccess
                                       | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListResolverDnssecConfigsResponseSuccess
@@ -729,7 +825,7 @@ module Aws
                                        {
                                          name: ::String?,
                                          values: Array[::String]?
-                                       },
+                                       }
                                      ]
                                    ) -> _ListResolverEndpointsResponseSuccess
                                  | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListResolverEndpointsResponseSuccess
@@ -749,7 +845,7 @@ module Aws
                                                            {
                                                              name: ::String?,
                                                              values: Array[::String]?
-                                                           },
+                                                           }
                                                          ],
                                                          ?sort_by: ::String,
                                                          ?sort_order: ("ASCENDING" | "DESCENDING")
@@ -771,7 +867,7 @@ module Aws
                                                {
                                                  name: ::String?,
                                                  values: Array[::String]?
-                                               },
+                                               }
                                              ],
                                              ?sort_by: ::String,
                                              ?sort_order: ("ASCENDING" | "DESCENDING")
@@ -792,7 +888,7 @@ module Aws
                                                {
                                                  name: ::String?,
                                                  values: Array[::String]?
-                                               },
+                                               }
                                              ]
                                            ) -> _ListResolverRuleAssociationsResponseSuccess
                                          | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListResolverRuleAssociationsResponseSuccess
@@ -811,7 +907,7 @@ module Aws
                                    {
                                      name: ::String?,
                                      values: Array[::String]?
-                                   },
+                                   }
                                  ]
                                ) -> _ListResolverRulesResponseSuccess
                              | (?Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _ListResolverRulesResponseSuccess
@@ -872,7 +968,7 @@ module Aws
                             {
                               key: ::String,
                               value: ::String
-                            },
+                            }
                           ]
                         ) -> _TagResourceResponseSuccess
                       | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _TagResourceResponseSuccess
@@ -931,8 +1027,9 @@ module Aws
                                   ?name: ::String,
                                   ?firewall_domain_redirection_action: ("INSPECT_REDIRECTION_DOMAIN" | "TRUST_REDIRECTION_DOMAIN"),
                                   ?qtype: ::String,
-                                  ?dns_threat_protection: ("DGA" | "DNS_TUNNELING"),
-                                  ?confidence_threshold: ("LOW" | "MEDIUM" | "HIGH")
+                                  ?dns_threat_protection: ("DGA" | "DNS_TUNNELING" | "DICTIONARY_DGA"),
+                                  ?confidence_threshold: ("LOW" | "MEDIUM" | "HIGH"),
+                                  ?firewall_rule_type: Params::firewall_rule_type
                                 ) -> _UpdateFirewallRuleResponseSuccess
                               | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateFirewallRuleResponseSuccess
 
@@ -997,9 +1094,13 @@ module Aws
                                         {
                                           ip_id: ::String,
                                           ipv_6: ::String
-                                        },
+                                        }
                                       ],
-                                      ?protocols: Array[("DoH" | "Do53" | "DoH-FIPS")]
+                                      ?protocols: Array[("DoH" | "Do53" | "DoH-FIPS")],
+                                      ?rni_enhanced_metrics_enabled: bool,
+                                      ?target_name_server_metrics_enabled: bool,
+                                      ?dns_64_enabled: bool,
+                                      ?ipv_6_internet_access_enabled: bool
                                     ) -> _UpdateResolverEndpointResponseSuccess
                                   | (Hash[Symbol, untyped] params, ?Hash[Symbol, untyped] options) -> _UpdateResolverEndpointResponseSuccess
 
@@ -1019,7 +1120,7 @@ module Aws
                                         ipv_6: ::String?,
                                         protocol: ("DoH" | "Do53" | "DoH-FIPS")?,
                                         server_name_indication: ::String?
-                                      },
+                                      }
                                     ]?,
                                     resolver_endpoint_id: ::String?
                                   }

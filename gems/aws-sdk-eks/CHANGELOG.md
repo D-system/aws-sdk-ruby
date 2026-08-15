@@ -1,6 +1,216 @@
 Unreleased Changes
 ------------------
 
+1.173.0 (2026-08-11)
+------------------
+
+* Feature - This feature would give customers the ability to selectively tune certain configurations of Kubernetes control plane components in an Amazon EKS cluster.
+
+1.172.0 (2026-07-09)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.171.0 (2026-06-30)
+------------------
+
+* Feature - Adds Kubernetes version rollback support, including the CancelUpdate operation to cancel an in-progress VersionRollback update, the RollbackConfig structure with a timeoutMinutes field, and the Cancellation structure surfaced via the new cancellation field on the Update object.
+
+1.170.0 (2026-06-18)
+------------------
+
+* Feature - Adds support for configurable control plane egress routing in Amazon EKS, allowing you to route control plane egress traffic through your VPC and control how the control plane reaches resources in your network such as webhook servers and OIDC providers.
+
+1.169.0 (2026-06-12)
+------------------
+
+* Feature - Patches missing enum values for EKS updates
+
+1.168.0 (2026-06-11)
+------------------
+
+* Feature - Introduce new CreateCluster parameters for Amazon EKS local clusters on AWS Outposts. Added etcdInstanceType for configuring the EC2 instance type for dedicated etcd instances, and spreadLevel for configuring the placement group spread level for Kubernetes control plane and etcd instances.
+
+1.167.0 (2026-05-21)
+------------------
+
+* Feature - Adding new BDD representation of endpoint ruleset
+
+1.166.0 (2026-05-19)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.165.0 (2026-05-13)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.164.0 (2026-04-30)
+------------------
+
+* Feature - Vended logs update param for capability vended logs feature
+
+1.163.0 (2026-04-07)
+------------------
+
+* Feature - EKS MNG WarmPool feature to support ASG WarmPool feature.
+
+1.162.0 (2026-03-18)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.161.0 (2026-03-11)
+------------------
+
+* Feature - Adds support for a new tier in controlPlaneScalingConfig on EKS Clusters.
+
+1.160.0 (2026-02-11)
+------------------
+
+* Feature - This release adds support for Windows Server 2025 in Amazon EKS Managed Node Groups.
+
+1.159.0 (2026-02-10)
+------------------
+
+* Feature - Introducing an optional policy field, an IAM policy applied to pod identity associations in addition to IAM role policies. When specified, pod permissions are the intersection of IAM role policies and the policy field, ensuring the principle of least privilege.
+
+1.158.0 (2026-02-09)
+------------------
+
+* Feature - Amazon EKS adds a new DescribeUpdate update type, VendedLogsUpdate, to support an integration between EKS Auto Mode and Amazon CloudWatch Vended Logs.
+
+1.157.0 (2026-02-04)
+------------------
+
+* Feature - Update delete cluster description
+
+1.156.0 (2026-01-16)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.155.0 (2026-01-14)
+------------------
+
+* Feature - Added support for BOTTLEROCKET NVIDIA FIPS AMIs to AMI types in US regions.
+
+1.154.0 (2026-01-08)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.153.0 (2026-01-05)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.152.0 (2025-12-01)
+------------------
+
+* Feature - This release adds support for EKS Capabilities
+
+1.151.0 (2025-11-21)
+------------------
+
+* Feature - Adds support for controlPlaneScalingConfig on EKS Clusters.
+
+1.150.0 (2025-10-24)
+------------------
+
+* Feature - Update endpoint ruleset parameters casing
+
+1.149.0 (2025-10-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.148.0 (2025-09-22)
+------------------
+
+* Feature - Adds support for RepairConfig overrides and configurations in EKS Managed Node Groups.
+
+1.147.0 (2025-08-27)
+------------------
+
+* Feature - Add support for on-demand refresh of EKS cluster insights
+
+1.146.0 (2025-08-26)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.145.0 (2025-08-25)
+------------------
+
+* Feature - Remove incorrect endpoint tests
+
+1.144.0 (2025-08-20)
+------------------
+
+* Feature - EKS Add-ons Custom Namespace Support
+
+1.143.0 (2025-08-05)
+------------------
+
+* Feature - Add support for deletion protection on EKS clusters
+
+1.142.0 (2025-08-04)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.141.0 (2025-07-31)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.140.0 (2025-07-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.139.0 (2025-06-11)
+------------------
+
+* Feature - Release for EKS Pod Identity Cross Account feature and disableSessionTags flag.
+
+1.138.0 (2025-06-02)
+------------------
+
+* Feature - Add support for filtering ListInsights API calls on MISCONFIGURATION insight category
+
+1.137.0 (2025-05-12)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.136.0 (2025-05-01)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.135.0 (2025-04-16)
+------------------
+
+* Feature - Added support for new AL2023 ARM64 NVIDIA AMIs to the supported AMITypes.
+
+1.134.0 (2025-03-31)
+------------------
+
+* Feature - Add support for updating RemoteNetworkConfig for hybrid nodes on EKS UpdateClusterConfig API
+
+1.133.0 (2025-03-27)
+------------------
+
+* Feature - Added support for BOTTLEROCKET FIPS AMIs to AMI types in US regions.
+
+1.132.0 (2025-03-25)
+------------------
+
+* Feature - Added support to override upgrade-blocking readiness checks via force flag when updating a cluster.
+
 1.131.0 (2025-02-28)
 ------------------
 

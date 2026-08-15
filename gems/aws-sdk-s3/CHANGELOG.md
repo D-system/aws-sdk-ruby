@@ -1,6 +1,318 @@
 Unreleased Changes
 ------------------
 
+1.229.0 (2026-08-06)
+------------------
+
+* Feature - AWS Backup now lets you create read-only access points for Amazon S3 recovery points, enabling you to access backup data using S3 APIs without initiating a restore.
+
+1.228.2 (2026-07-30)
+------------------
+
+* Issue - S3 Encryption Client, encryptionV2 and encryptionV3, returns a decryption error for a malformed material description.
+
+1.228.1 (2026-07-23)
+------------------
+
+* Issue - Ensure the source file is closed on multipart `upload_file` part failure, preventing leaked file descriptors (#3408).
+
+1.228.0 (2026-07-16)
+------------------
+
+* Feature - Documentation update for removing the 30 day minimum restriction for transition to Standard-IA or OneZone-IA storage classes
+
+1.227.0 (2026-07-09)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.226.0 (2026-06-16)
+------------------
+
+* Feature - Added support for annotations. You can now attach up to 1000 annotations (up to 1 MB each) directly to objects and create, retrieve, list, and delete them using new annotation APIs. Also added support for configuring an annotation table in S3 Metadata.
+
+* Feature - Multipart copies now support `tags_directive`, `annotations_directive`, and `metadata_directive` options for controlling which source properties are copied to the destination.
+
+* Issue - Fix error when performing cross-region multipart copies with `copy_source_region`.
+
+1.225.1 (2026-06-10)
+------------------
+
+* Issue - Fix `download_file` single-request mode not writing to a temporary file when given a String/Pathname destination.
+
+1.225.0 (2026-06-02)
+------------------
+
+* Feature - Adding new BDD representation of endpoint ruleset
+
+1.224.0 (2026-05-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.223.0 (2026-05-19)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.222.0 (2026-05-13)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.221.0 (2026-05-06)
+------------------
+
+* Feature - Validate outpost access point resource name
+
+1.220.0 (2026-04-22)
+------------------
+
+* Feature - This release adds five additional checksum algorithms for S3 data integrity (MD5, SHA-512, XXHash3, XXHash64, XXHash128) and support for S3 Inventory on directory buckets (S3 Express One Zone).
+
+1.219.0 (2026-04-07)
+------------------
+
+* Feature - Updated list of the valid AWS Region values for the LocationConstraint parameter for general purpose buckets.
+
+1.218.0 (2026-03-31)
+------------------
+
+* Feature - Add Bucket Metrics configuration support to directory buckets
+
+1.217.1 (2026-03-30)
+------------------
+
+* Issue - Fix `require_https_for_sse_cpk` option being ignored; the HTTPS enforcement for SSE-CPK operations now correctly respects the configured value, allowing it to be disabled for local development.
+
+1.217.0 (2026-03-18)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.216.0 (2026-03-12)
+------------------
+
+* Feature - Adds support for account regional namespaces for general purpose buckets. The account regional namespace is a reserved subdivision of the global bucket namespace where only your account can create general purpose buckets.
+
+1.215.0 (2026-03-05)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+* Issue - Fix `LoadError` when requiring `aws-sdk-s3` due to missing `directory_progress` file. 
+
+1.214.0 (2026-03-04)
+------------------
+
+* Feature - Added `#upload_directory` and `#download_directory` to `Aws::S3::TransferManager` for bulk directory transfers.
+
+1.213.0 (2026-01-28)
+------------------
+
+* Feature - Adds support for the UpdateObjectEncryption API to change the server-side encryption type of objects in general purpose buckets.
+
+1.212.0 (2026-01-16)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.211.0 (2026-01-08)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+* Issue - Falls back to header request checksums when using custom endpoints or endpoint providers for PutObject and UploadPart operations.
+
+1.210.1 (2026-01-06)
+------------------
+
+* Issue - Normalize response encoding to UTF-8 for proper XML error parsing in HTTP 200 responses.
+
+1.210.0 (2026-01-05)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+* Feature - Added `:http_chunk_size` parameter to `TransferManager#upload_file` to control the buffer size when streaming request bodies over HTTP. Larger chunk sizes may improve network throughput at the cost of higher memory usage (Ruby MRI only).
+
+* Feature - Improved memory efficiency when calculating request checksums for large file uploads (Ruby MRI only).
+
+1.209.0 (2025-12-23)
+------------------
+
+* Feature - Add additional validation to Outpost bucket names.
+
+1.208.0 (2025-12-16)
+------------------
+
+* Feature - Updates to the S3 Encryption Client. The V3 S3 Encryption Client now requires key committing algorithm suites by default.
+
+1.207.0 (2025-12-15)
+------------------
+
+* Feature - This release adds support for the new optional field 'LifecycleExpirationDate' in S3 Inventory configurations.
+
+1.206.0 (2025-12-02)
+------------------
+
+* Feature - New S3 Storage Class FSX_ONTAP
+
+1.205.0 (2025-11-20)
+------------------
+
+* Feature - Enable / Disable ABAC on a general purpose bucket.
+
+1.204.0 (2025-11-19)
+------------------
+
+* Feature - Adds support for blocking SSE-C writes to general purpose buckets.
+
+1.203.1 (2025-11-10)
+------------------
+
+* Issue - Deprecated `:checksum_mode` parameter in `FileDownloader#download`. When set to "DISABLED", a deprecation warning is issued and the parameter is ignored. Use `:response_checksum_validation` on the S3 client instead to control checksum validation behavior.
+
+1.203.0 (2025-11-05)
+------------------
+
+* Feature - Launch IPv6 dual-stack support for S3 Express
+
+1.202.0 (2025-10-28)
+------------------
+
+* Feature - Amazon Simple Storage Service / Features: Add conditional writes in CopyObject on destination key to prevent unintended object modifications.
+
+1.201.0 (2025-10-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+* Issue - Fix multipart upload to respect `request_checksum_calculation` `when_required` mode.
+
+1.200.0 (2025-10-15)
+------------------
+
+* Feature - Add lightweight thread pool executor for multipart `download_file`, `upload_file` and `upload_stream`.
+
+* Feature - Add custom executor support for `Aws::S3::TransferManager`.
+
+1.199.1 (2025-09-25)
+------------------
+
+* Issue - Update `TransferManager#download_file` and `Object#download_file` documentation regarding temporary file usage and failure handling for different destination types.
+
+1.199.0 (2025-09-08)
+------------------
+
+* Feature - This release includes backward compatibility work on the "Expires" parameter.
+
+1.198.0 (2025-08-26)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+* Issue - Fix multipart `download_file` to support `Pathname`, `File` and `Tempfile` objects as download destinations.
+
+1.197.0 (2025-08-19)
+------------------
+
+* Issue - When multipart stream uploader fails to complete multipart upload, it calls abort multipart upload.
+
+* Issue - For `Aws::S3::Object` class, the following methods have been deprecated: `download_file`, `upload_file` and `upload_stream`. Use `Aws::S3::TransferManager` instead.
+
+* Feature - Add `Aws::S3::TransferManager`, a S3 transfer utility that provides upload/download capabilities with automatic multipart handling, progress tracking, and handling of large files. 
+
+1.196.1 (2025-08-05)
+------------------
+
+* Issue - Add range validation to multipart download to ensure all parts are successfully processed.
+
+* Issue - When multipart uploader fails to complete multipart upload, it calls abort multipart upload.
+
+* Issue - Clean up partially downloaded file on multipart `download_file` failure while preserving existing file.
+
+1.196.0 (2025-08-04)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.195.0 (2025-07-31)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.194.0 (2025-07-21)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.193.0 (2025-07-15)
+------------------
+
+* Feature - Amazon S3 Metadata live inventory tables provide a queryable inventory of all the objects in your general purpose bucket so that you can determine the latest state of your data. To help minimize your storage costs, use journal table record expiration to set a retention period for your records.
+
+1.192.0 (2025-07-02)
+------------------
+
+* Feature - Added support for directory bucket creation with tags and bucket ARN retrieval in CreateBucket, ListDirectoryBuckets, and HeadBucket operations
+
+1.191.0 (2025-06-25)
+------------------
+
+* Feature - Adds support for additional server-side encryption mode and storage class values for accessing Amazon FSx data from Amazon S3 using S3 Access Points
+
+1.190.0 (2025-06-18)
+------------------
+
+* Feature - Added support for renaming objects within the same bucket using the new RenameObject API.
+
+1.189.1 (2025-06-10)
+------------------
+
+* Issue - Only load required `cgi` modules for Ruby 3.5.
+
+1.189.0 (2025-06-02)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.188.0 (2025-05-29)
+------------------
+
+* Feature - Adding checksum support for S3 PutBucketOwnershipControls API.
+
+1.187.0 (2025-05-28)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+* Issue - Signal data in http response listeners prior to writing, so that data can be inspected or verified before potential mutation.
+
+1.186.1 (2025-05-15)
+------------------
+* Issue - Abort multipart download if object is modified during download.
+
+1.186.0 (2025-05-12)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.185.0 (2025-05-01)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.184.0 (2025-04-28)
+------------------
+
+* Feature - Code Generated Changes, see `./build_tools` or `aws-sdk-core`'s CHANGELOG.md for details.
+
+1.183.0 (2025-03-31)
+------------------
+
+* Feature - Amazon S3 adds support for S3 Access Points for directory buckets in AWS Dedicated Local Zones
+
 1.182.0 (2025-02-18)
 ------------------
 

@@ -24,6 +24,50 @@ module Aws::Kafka
       include Aws::Structure
     end
 
+    # Details of an Apache Kafka Cluster.
+    #
+    # @!attribute [rw] apache_kafka_cluster_id
+    #   The ID of the Apache Kafka cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] bootstrap_broker_string
+    #   The bootstrap broker string of the Apache Kafka cluster.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/ApacheKafkaCluster AWS API Documentation
+    #
+    class ApacheKafkaCluster < Struct.new(
+      :apache_kafka_cluster_id,
+      :bootstrap_broker_string)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The authorizer logs configuration for this MSK cluster.
+    #
+    # @!attribute [rw] cloud_watch_logs
+    #   Details of the CloudWatch Logs destination for authorizer logs.
+    #   @return [Types::CloudWatchLogs]
+    #
+    # @!attribute [rw] firehose
+    #   Details of the Kinesis Data Firehose delivery stream that is the
+    #   destination for authorizer logs.
+    #   @return [Types::Firehose]
+    #
+    # @!attribute [rw] s3
+    #   Details of the Amazon S3 destination for authorizer logs.
+    #   @return [Types::S3]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/AuthorizerLogs AWS API Documentation
+    #
+    class AuthorizerLogs < Struct.new(
+      :cloud_watch_logs,
+      :firehose,
+      :s3)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Request body for BatchAssociateScramSecret.
     #
     # @!attribute [rw] cluster_arn
@@ -251,6 +295,143 @@ module Aws::Kafka
       include Aws::Structure
     end
 
+    # Configuration of the AWS Glue Data Catalog and S3 Tables warehouse
+    # used by the Apache Iceberg destination.
+    #
+    # @!attribute [rw] catalog_arn
+    #   The Amazon Resource Name (ARN) of the federated AWS Glue Data
+    #   Catalog that projects the S3 Tables bucket. If omitted, MSK derives
+    #   the catalog ARN from warehouseLocation.
+    #   @return [String]
+    #
+    # @!attribute [rw] warehouse_location
+    #   The Amazon Resource Name (ARN) of the S3 Tables bucket that backs
+    #   the Apache Iceberg warehouse.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/Catalog AWS API Documentation
+    #
+    class Catalog < Struct.new(
+      :catalog_arn,
+      :warehouse_location)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Summary information about a channel returned by ListChannels.
+    #
+    # @!attribute [rw] channel_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the channel.
+    #   @return [String]
+    #
+    # @!attribute [rw] channel_name
+    #   The name of the channel.
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   The current lifecycle state of the channel.
+    #   @return [String]
+    #
+    # @!attribute [rw] creation_time
+    #   The time when the channel was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] destination_type
+    #   The type of destination configured for the channel.
+    #   @return [String]
+    #
+    # @!attribute [rw] cluster_operation_arn
+    #   The Amazon Resource Name (ARN) of the in-flight cluster operation.
+    #   Returned only while the channel is in CREATING, UPDATING, or
+    #   DELETING.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/ChannelInfo AWS API Documentation
+    #
+    class ChannelInfo < Struct.new(
+      :channel_arn,
+      :channel_name,
+      :status,
+      :creation_time,
+      :destination_type,
+      :cluster_operation_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Additional context for the current channel state, populated when the
+    # channel is in FAILED.
+    #
+    # @!attribute [rw] code
+    #   A short, machine-readable code identifying the failure cause.
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   A human-readable message describing the failure.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/ChannelStateInfo AWS API Documentation
+    #
+    class ChannelStateInfo < Struct.new(
+      :code,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Creates a Channel that streams records from an Amazon MSK Express
+    # cluster topic to Amazon S3 or Apache Iceberg.
+    #
+    # @!attribute [rw] channel_name
+    #   The name of the channel. Must be unique within the cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] cluster_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] encryption_configuration
+    #   The encryption configuration applied to the channel.
+    #   @return [Types::EncryptionConfiguration]
+    #
+    # @!attribute [rw] iceberg_destination_configuration
+    #   The Apache Iceberg destination for the channel. Mutually exclusive
+    #   with s3DestinationConfiguration.
+    #   @return [Types::IcebergDestinationConfiguration]
+    #
+    # @!attribute [rw] logging_info
+    #   The destinations to which the channel publishes operational logs.
+    #   @return [Types::ChannelLoggingInfo]
+    #
+    # @!attribute [rw] s3_destination_configuration
+    #   The Amazon S3 destination for the channel. Mutually exclusive with
+    #   icebergDestinationConfiguration.
+    #   @return [Types::S3DestinationConfiguration]
+    #
+    # @!attribute [rw] tags
+    #   The tags attached to the channel.
+    #   @return [Hash<String,String>]
+    #
+    # @!attribute [rw] topic_configuration_list
+    #   The list of topic configurations for the channel. Currently exactly
+    #   one topic must be specified.
+    #   @return [Array<Types::TopicConfiguration>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/CreateChannelRequest AWS API Documentation
+    #
+    class CreateChannelRequest < Struct.new(
+      :channel_name,
+      :cluster_arn,
+      :encryption_configuration,
+      :iceberg_destination_configuration,
+      :logging_info,
+      :s3_destination_configuration,
+      :tags,
+      :topic_configuration_list)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Includes all client authentication information.
     #
     # @!attribute [rw] sasl
@@ -404,6 +585,12 @@ module Aws::Kafka
     #   This controls storage mode for supported storage tiers.
     #   @return [String]
     #
+    # @!attribute [rw] rebalancing
+    #   Contains information about intelligent rebalancing for new MSK
+    #   Provisioned clusters with Express brokers. By default, intelligent
+    #   rebalancing status is ACTIVE.
+    #   @return [Types::Rebalancing]
+    #
     # @!attribute [rw] customer_action_status
     #   Determines if there is an action required from the customer.
     #   @return [String]
@@ -430,6 +617,7 @@ module Aws::Kafka
       :zookeeper_connect_string,
       :zookeeper_connect_string_tls,
       :storage_mode,
+      :rebalancing,
       :customer_action_status)
       SENSITIVE = []
       include Aws::Structure
@@ -619,6 +807,14 @@ module Aws::Kafka
 
     # Returns information about a serverless cluster operation.
     #
+    # @!attribute [rw] source_cluster_info
+    #   Source cluster connectivity information for the cluster.
+    #   @return [Types::ServerlessConnectivityInfo]
+    #
+    # @!attribute [rw] target_cluster_info
+    #   Target cluster connectivity information for the cluster.
+    #   @return [Types::ServerlessConnectivityInfo]
+    #
     # @!attribute [rw] vpc_connection_info
     #   Description of the VPC connection for CreateVpcConnection and
     #   DeleteVpcConnection operations.
@@ -627,6 +823,8 @@ module Aws::Kafka
     # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/ClusterOperationV2Serverless AWS API Documentation
     #
     class ClusterOperationV2Serverless < Struct.new(
+      :source_cluster_info,
+      :target_cluster_info,
       :vpc_connection_info)
       SENSITIVE = []
       include Aws::Structure
@@ -879,11 +1077,20 @@ module Aws::Kafka
     #   VpcConnectivity control for brokers.
     #   @return [Types::VpcConnectivity]
     #
+    # @!attribute [rw] network_type
+    #   The network type of the cluster, which is IPv4 or DUAL. The DUAL
+    #   network type uses both IPv4 and IPv6 addresses for your cluster and
+    #   its resources.
+    #
+    #   By default, a cluster uses the IPv4 network type.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/ConnectivityInfo AWS API Documentation
     #
     class ConnectivityInfo < Struct.new(
       :public_access,
-      :vpc_connectivity)
+      :vpc_connectivity,
+      :network_type)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -929,13 +1136,22 @@ module Aws::Kafka
     #   \_\_consumer\_offsets.
     #   @return [Boolean]
     #
+    # @!attribute [rw] consumer_group_offset_sync_mode
+    #   The consumer group offset synchronization mode. With LEGACY, offsets
+    #   are synchronized when producers write to the source cluster. With
+    #   ENHANCED, consumer offsets are synchronized regardless of producer
+    #   location. ENHANCED requires a corresponding replicator that
+    #   replicates data from the target cluster to the source cluster.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/ConsumerGroupReplication AWS API Documentation
     #
     class ConsumerGroupReplication < Struct.new(
       :consumer_groups_to_exclude,
       :consumer_groups_to_replicate,
       :detect_and_copy_new_consumer_groups,
-      :synchronise_consumer_group_offsets)
+      :synchronise_consumer_group_offsets,
+      :consumer_group_offset_sync_mode)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -969,6 +1185,26 @@ module Aws::Kafka
       :consumer_groups_to_replicate,
       :detect_and_copy_new_consumer_groups,
       :synchronise_consumer_group_offsets)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Returns the channel ARN and the cluster-operation ARN that tracks the
+    # asynchronous create.
+    #
+    # @!attribute [rw] channel_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the channel.
+    #   @return [String]
+    #
+    # @!attribute [rw] cluster_operation_arn
+    #   The Amazon Resource Name (ARN) of the cluster operation.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/CreateChannelResponse AWS API Documentation
+    #
+    class CreateChannelResponse < Struct.new(
+      :channel_arn,
+      :cluster_operation_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1022,6 +1258,12 @@ module Aws::Kafka
     #   Create tags when creating the cluster.
     #   @return [Hash<String,String>]
     #
+    # @!attribute [rw] rebalancing
+    #   Specifies if intelligent rebalancing should be turned on for the new
+    #   MSK Provisioned cluster with Express brokers. By default,
+    #   intelligent rebalancing status is ACTIVE for all new clusters.
+    #   @return [Types::Rebalancing]
+    #
     # @!attribute [rw] storage_mode
     #   This controls storage mode for supported storage tiers.
     #   @return [String]
@@ -1040,6 +1282,7 @@ module Aws::Kafka
       :number_of_broker_nodes,
       :open_monitoring,
       :tags,
+      :rebalancing,
       :storage_mode)
       SENSITIVE = []
       include Aws::Structure
@@ -1148,6 +1391,11 @@ module Aws::Kafka
     #   replication.
     #   @return [Array<Types::KafkaCluster>]
     #
+    # @!attribute [rw] log_delivery
+    #   Configuration for delivering replicator logs to customer
+    #   destinations.
+    #   @return [Types::LogDelivery]
+    #
     # @!attribute [rw] replication_info_list
     #   A list of replication configurations, where each configuration
     #   targets a given source cluster to target cluster replication flow.
@@ -1172,6 +1420,7 @@ module Aws::Kafka
     class CreateReplicatorRequest < Struct.new(
       :description,
       :kafka_clusters,
+      :log_delivery,
       :replication_info_list,
       :replicator_name,
       :service_execution_role_arn,
@@ -1200,6 +1449,56 @@ module Aws::Kafka
       :replicator_arn,
       :replicator_name,
       :replicator_state)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Request body for CreateTopic.
+    #
+    # @!attribute [rw] cluster_arn
+    #   @return [String]
+    #
+    # @!attribute [rw] topic_name
+    #   @return [String]
+    #
+    # @!attribute [rw] partition_count
+    #   @return [Integer]
+    #
+    # @!attribute [rw] replication_factor
+    #   @return [Integer]
+    #
+    # @!attribute [rw] configs
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/CreateTopicRequest AWS API Documentation
+    #
+    class CreateTopicRequest < Struct.new(
+      :cluster_arn,
+      :topic_name,
+      :partition_count,
+      :replication_factor,
+      :configs)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Response body for CreateTopic.
+    #
+    # @!attribute [rw] topic_arn
+    #   @return [String]
+    #
+    # @!attribute [rw] topic_name
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/CreateTopicResponse AWS API Documentation
+    #
+    class CreateTopicResponse < Struct.new(
+      :topic_arn,
+      :topic_name,
+      :status)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1395,6 +1694,44 @@ module Aws::Kafka
       include Aws::Structure
     end
 
+    # Request body for DeleteTopic.
+    #
+    # @!attribute [rw] cluster_arn
+    #   @return [String]
+    #
+    # @!attribute [rw] topic_name
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/DeleteTopicRequest AWS API Documentation
+    #
+    class DeleteTopicRequest < Struct.new(
+      :cluster_arn,
+      :topic_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Response body for DeleteTopic.
+    #
+    # @!attribute [rw] topic_arn
+    #   @return [String]
+    #
+    # @!attribute [rw] topic_name
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/DeleteTopicResponse AWS API Documentation
+    #
+    class DeleteTopicResponse < Struct.new(
+      :topic_arn,
+      :topic_name,
+      :status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Request body for DeleteVpcConnection.
     #
     # @!attribute [rw] arn
@@ -1428,6 +1765,23 @@ module Aws::Kafka
       include Aws::Structure
     end
 
+    # @!attribute [rw] channel_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the channel.
+    #   @return [String]
+    #
+    # @!attribute [rw] cluster_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the cluster.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/DescribeChannelRequest AWS API Documentation
+    #
+    class DescribeChannelRequest < Struct.new(
+      :channel_arn,
+      :cluster_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] cluster_operation_arn
     #   @return [String]
     #
@@ -1446,6 +1800,83 @@ module Aws::Kafka
     #
     class DescribeClusterOperationV2Request < Struct.new(
       :cluster_operation_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains the current configuration and state of a channel.
+    #
+    # @!attribute [rw] channel_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the channel.
+    #   @return [String]
+    #
+    # @!attribute [rw] channel_name
+    #   The name of the channel.
+    #   @return [String]
+    #
+    # @!attribute [rw] encryption_configuration
+    #   The encryption configuration applied to the channel.
+    #   @return [Types::EncryptionConfiguration]
+    #
+    # @!attribute [rw] iceberg_destination_configuration
+    #   The Apache Iceberg destination for the channel, if configured.
+    #   @return [Types::IcebergDestinationConfiguration]
+    #
+    # @!attribute [rw] s3_destination_configuration
+    #   The Amazon S3 destination for the channel, if configured.
+    #   @return [Types::S3DestinationConfiguration]
+    #
+    # @!attribute [rw] status
+    #   The current lifecycle state of the channel.
+    #   @return [String]
+    #
+    # @!attribute [rw] destination_type
+    #   The type of destination configured for the channel.
+    #   @return [String]
+    #
+    # @!attribute [rw] creation_time
+    #   The time when the channel was created.
+    #   @return [Time]
+    #
+    # @!attribute [rw] topic_configuration_list
+    #   The list of topic configurations for the channel.
+    #   @return [Array<Types::TopicConfiguration>]
+    #
+    # @!attribute [rw] logging_info
+    #   The destinations to which the channel publishes operational logs.
+    #   @return [Types::ChannelLoggingInfo]
+    #
+    # @!attribute [rw] state_info
+    #   Additional context for the current channel state, populated when the
+    #   channel is in FAILED.
+    #   @return [Types::ChannelStateInfo]
+    #
+    # @!attribute [rw] cluster_operation_arn
+    #   The Amazon Resource Name (ARN) of the in-flight cluster operation.
+    #   Returned only while the channel is in CREATING, UPDATING, or
+    #   DELETING.
+    #   @return [String]
+    #
+    # @!attribute [rw] tags
+    #   The tags attached to the channel.
+    #   @return [Hash<String,String>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/DescribeChannelResponse AWS API Documentation
+    #
+    class DescribeChannelResponse < Struct.new(
+      :channel_arn,
+      :channel_name,
+      :encryption_configuration,
+      :iceberg_destination_configuration,
+      :s3_destination_configuration,
+      :status,
+      :destination_type,
+      :creation_time,
+      :topic_configuration_list,
+      :logging_info,
+      :state_info,
+      :cluster_operation_arn,
+      :tags)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -1609,6 +2040,148 @@ module Aws::Kafka
       include Aws::Structure
     end
 
+    # Request body for DescribeTopic.
+    #
+    # @!attribute [rw] cluster_arn
+    #   @return [String]
+    #
+    # @!attribute [rw] topic_name
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/DescribeTopicRequest AWS API Documentation
+    #
+    class DescribeTopicRequest < Struct.new(
+      :cluster_arn,
+      :topic_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Request body for DescribeTopicPartitions.
+    #
+    # @!attribute [rw] cluster_arn
+    #   @return [String]
+    #
+    # @!attribute [rw] topic_name
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/DescribeTopicPartitionsRequest AWS API Documentation
+    #
+    class DescribeTopicPartitionsRequest < Struct.new(
+      :cluster_arn,
+      :topic_name,
+      :max_results,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration of an Apache Iceberg destination table.
+    #
+    # @!attribute [rw] destination_database_name
+    #   The name of the destination namespace (database) in the AWS Glue
+    #   Data Catalog.
+    #   @return [String]
+    #
+    # @!attribute [rw] destination_table_name
+    #   The name of the destination Apache Iceberg table.
+    #   @return [String]
+    #
+    # @!attribute [rw] partition_spec
+    #   The partition specification for the destination table.
+    #   @return [Types::PartitionSpec]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/DestinationTable AWS API Documentation
+    #
+    class DestinationTable < Struct.new(
+      :destination_database_name,
+      :destination_table_name,
+      :partition_spec)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The response containing details for a topic.
+    #
+    # @!attribute [rw] topic_arn
+    #   @return [String]
+    #
+    # @!attribute [rw] topic_name
+    #   @return [String]
+    #
+    # @!attribute [rw] replication_factor
+    #   @return [Integer]
+    #
+    # @!attribute [rw] partition_count
+    #   @return [Integer]
+    #
+    # @!attribute [rw] configs
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/DescribeTopicResponse AWS API Documentation
+    #
+    class DescribeTopicResponse < Struct.new(
+      :topic_arn,
+      :topic_name,
+      :replication_factor,
+      :partition_count,
+      :configs,
+      :status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The response containing partitions details for a topic.
+    #
+    # @!attribute [rw] partitions
+    #   @return [Array<Types::TopicPartitionInfo>]
+    #
+    # @!attribute [rw] next_token
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/DescribeTopicPartitionsResponse AWS API Documentation
+    #
+    class DescribeTopicPartitionsResponse < Struct.new(
+      :partitions,
+      :next_token)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Contains information about a topic partition.
+    #
+    # @!attribute [rw] partition
+    #   @return [Integer]
+    #
+    # @!attribute [rw] leader
+    #   @return [Integer]
+    #
+    # @!attribute [rw] replicas
+    #   @return [Array<Integer>]
+    #
+    # @!attribute [rw] isr
+    #   @return [Array<Integer>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/TopicPartitionInfo AWS API Documentation
+    #
+    class TopicPartitionInfo < Struct.new(
+      :partition,
+      :leader,
+      :replicas,
+      :isr)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] replicator_arn
     #   @return [String]
     #
@@ -1637,6 +2210,10 @@ module Aws::Kafka
     # @!attribute [rw] kafka_clusters
     #   Kafka Clusters used in setting up sources / targets for replication.
     #   @return [Array<Types::KafkaClusterDescription>]
+    #
+    # @!attribute [rw] log_delivery
+    #   Configuration for log delivery for the replicator.
+    #   @return [Types::LogDelivery]
     #
     # @!attribute [rw] replication_info_list
     #   A list of replication configurations, where each configuration
@@ -1685,6 +2262,7 @@ module Aws::Kafka
       :current_version,
       :is_replicator_reference,
       :kafka_clusters,
+      :log_delivery,
       :replication_info_list,
       :replicator_arn,
       :replicator_description,
@@ -1823,6 +2401,21 @@ module Aws::Kafka
       include Aws::Structure
     end
 
+    # The AWS KMS encryption configuration applied to data at rest.
+    #
+    # @!attribute [rw] kms_key_arn
+    #   The Amazon Resource Name (ARN) of the AWS KMS key used to encrypt
+    #   the data.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/EncryptionConfiguration AWS API Documentation
+    #
+    class EncryptionConfiguration < Struct.new(
+      :kms_key_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # The data-volume encryption details.
     #
     # @!attribute [rw] data_volume_kms_key_id
@@ -1912,7 +2505,7 @@ module Aws::Kafka
       include Aws::Structure
     end
 
-    # Firehose details for BrokerLogs.
+    # Firehose details for logs.
     #
     # @!attribute [rw] delivery_stream
     #   The Kinesis Data Firehose delivery stream that is the destination
@@ -2043,6 +2636,26 @@ module Aws::Kafka
     #   pairs for VPC connectivity.
     #   @return [String]
     #
+    # @!attribute [rw] bootstrap_broker_string_ipv_6
+    #   A string that contains one or more DNS names (or IP) and port pairs
+    #   for IPv6 connectivity.
+    #   @return [String]
+    #
+    # @!attribute [rw] bootstrap_broker_string_tls_ipv_6
+    #   A string that contains one or more DNS names (or IP) and TLS port
+    #   pairs for IPv6 connectivity.
+    #   @return [String]
+    #
+    # @!attribute [rw] bootstrap_broker_string_sasl_scram_ipv_6
+    #   A string that contains one or more DNS names (or IP) and SASL SCRAM
+    #   port pairs for IPv6 connectivity.
+    #   @return [String]
+    #
+    # @!attribute [rw] bootstrap_broker_string_sasl_iam_ipv_6
+    #   A string that contains one or more DNS names (or IP) and SASL IAM
+    #   port pairs for IPv6 connectivity.
+    #   @return [String]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/GetBootstrapBrokersResponse AWS API Documentation
     #
     class GetBootstrapBrokersResponse < Struct.new(
@@ -2055,7 +2668,11 @@ module Aws::Kafka
       :bootstrap_broker_string_sasl_iam,
       :bootstrap_broker_string_vpc_connectivity_tls,
       :bootstrap_broker_string_vpc_connectivity_sasl_scram,
-      :bootstrap_broker_string_vpc_connectivity_sasl_iam)
+      :bootstrap_broker_string_vpc_connectivity_sasl_iam,
+      :bootstrap_broker_string_ipv_6,
+      :bootstrap_broker_string_tls_ipv_6,
+      :bootstrap_broker_string_sasl_scram_ipv_6,
+      :bootstrap_broker_string_sasl_iam_ipv_6)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2085,6 +2702,71 @@ module Aws::Kafka
       include Aws::Structure
     end
 
+    # Configuration of an Apache Iceberg destination for a channel.
+    #
+    # @!attribute [rw] append_only
+    #   Whether the destination is append-only. Must be true; updates and
+    #   deletes are not supported.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] catalog
+    #   The AWS Glue Data Catalog and S3 Tables warehouse used by the
+    #   destination.
+    #   @return [Types::Catalog]
+    #
+    # @!attribute [rw] data_freshness_in_seconds
+    #   The maximum time, in seconds, that records buffer in MSK before
+    #   being flushed to the destination. Allowed range: 300 to 900.
+    #   Default: 600.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] dead_letter_queue_s3
+    #   The Amazon S3 bucket and prefix where MSK writes records that fail
+    #   to deliver.
+    #   @return [Types::DeadLetterQueueS3]
+    #
+    # @!attribute [rw] destination_table_list
+    #   The destination Iceberg tables. Currently exactly one table must be
+    #   specified.
+    #   @return [Array<Types::DestinationTable>]
+    #
+    # @!attribute [rw] schema_evolution
+    #   Configuration controlling whether the destination table's schema is
+    #   evolved to match incoming records.
+    #   @return [Types::SchemaEvolution]
+    #
+    # @!attribute [rw] service_execution_role_arn
+    #   The Amazon Resource Name (ARN) of the IAM role that MSK assumes to
+    #   access the destination table, the AWS Glue Data Catalog, and the
+    #   dead-letter Amazon S3 bucket.
+    #   @return [String]
+    #
+    # @!attribute [rw] table_creation
+    #   Configuration controlling whether MSK creates the destination table
+    #   if it does not already exist.
+    #   @return [Types::TableCreation]
+    #
+    # @!attribute [rw] compression_type
+    #   The compression codec for Iceberg table data files. Defaults to
+    #   ZSTD.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/IcebergDestinationConfiguration AWS API Documentation
+    #
+    class IcebergDestinationConfiguration < Struct.new(
+      :append_only,
+      :catalog,
+      :data_freshness_in_seconds,
+      :dead_letter_queue_s3,
+      :destination_table_list,
+      :schema_evolution,
+      :service_execution_role_arn,
+      :table_creation,
+      :compression_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Returns information about an error.
     #
     # @!attribute [rw] invalid_parameter
@@ -2109,16 +2791,32 @@ module Aws::Kafka
     #   Details of an Amazon MSK Cluster.
     #   @return [Types::AmazonMskCluster]
     #
+    # @!attribute [rw] apache_kafka_cluster
+    #   Details of an Apache Kafka Cluster.
+    #   @return [Types::ApacheKafkaCluster]
+    #
     # @!attribute [rw] vpc_config
     #   Details of an Amazon VPC which has network connectivity to the
     #   Apache Kafka cluster.
     #   @return [Types::KafkaClusterClientVpcConfig]
     #
+    # @!attribute [rw] client_authentication
+    #   Details of the client authentication used by the Apache Kafka
+    #   cluster.
+    #   @return [Types::KafkaClusterClientAuthentication]
+    #
+    # @!attribute [rw] encryption_in_transit
+    #   Details of encryption in transit to the Apache Kafka cluster.
+    #   @return [Types::KafkaClusterEncryptionInTransit]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/KafkaCluster AWS API Documentation
     #
     class KafkaCluster < Struct.new(
       :amazon_msk_cluster,
-      :vpc_config)
+      :apache_kafka_cluster,
+      :vpc_config,
+      :client_authentication,
+      :encryption_in_transit)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2140,12 +2838,87 @@ module Aws::Kafka
       include Aws::Structure
     end
 
+    # Details of the client authentication used by the Apache Kafka cluster.
+    #
+    # @!attribute [rw] sasl_scram
+    #   Details for SASL/SCRAM client authentication.
+    #   @return [Types::KafkaClusterSaslScramAuthentication]
+    #
+    # @!attribute [rw] mtls
+    #   Details for mTLS client authentication.
+    #   @return [Types::KafkaClusterMTLSAuthentication]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/KafkaClusterClientAuthentication AWS API Documentation
+    #
+    class KafkaClusterClientAuthentication < Struct.new(
+      :sasl_scram,
+      :mtls)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details for SASL/SCRAM client authentication.
+    #
+    # @!attribute [rw] mechanism
+    #   The SASL/SCRAM authentication mechanism.
+    #   @return [String]
+    #
+    # @!attribute [rw] secret_arn
+    #   The Amazon Resource Name (ARN) of the Secrets Manager secret.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/KafkaClusterSaslScramAuthentication AWS API Documentation
+    #
+    class KafkaClusterSaslScramAuthentication < Struct.new(
+      :mechanism,
+      :secret_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details for mTLS client authentication.
+    #
+    # @!attribute [rw] secret_arn
+    #   The Amazon Resource Name (ARN) of the Secrets Manager secret.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/KafkaClusterMTLSAuthentication AWS API Documentation
+    #
+    class KafkaClusterMTLSAuthentication < Struct.new(
+      :secret_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details of encryption in transit to the Apache Kafka cluster.
+    #
+    # @!attribute [rw] encryption_type
+    #   The type of encryption in transit to the Apache Kafka cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] root_ca_certificate
+    #   The root CA certificate.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/KafkaClusterEncryptionInTransit AWS API Documentation
+    #
+    class KafkaClusterEncryptionInTransit < Struct.new(
+      :encryption_type,
+      :root_ca_certificate)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Information about Kafka Cluster used as source / target for
     # replication.
     #
     # @!attribute [rw] amazon_msk_cluster
     #   Details of an Amazon MSK Cluster.
     #   @return [Types::AmazonMskCluster]
+    #
+    # @!attribute [rw] apache_kafka_cluster
+    #   Details of an Apache Kafka Cluster.
+    #   @return [Types::ApacheKafkaCluster]
     #
     # @!attribute [rw] kafka_cluster_alias
     #   The alias of the Kafka cluster. Used to prefix names of replicated
@@ -2157,12 +2930,24 @@ module Aws::Kafka
     #   Apache Kafka cluster.
     #   @return [Types::KafkaClusterClientVpcConfig]
     #
+    # @!attribute [rw] client_authentication
+    #   Details of the client authentication used by the Apache Kafka
+    #   cluster.
+    #   @return [Types::KafkaClusterClientAuthentication]
+    #
+    # @!attribute [rw] encryption_in_transit
+    #   Details of encryption in transit to the Apache Kafka cluster.
+    #   @return [Types::KafkaClusterEncryptionInTransit]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/KafkaClusterDescription AWS API Documentation
     #
     class KafkaClusterDescription < Struct.new(
       :amazon_msk_cluster,
+      :apache_kafka_cluster,
       :kafka_cluster_alias,
-      :vpc_config)
+      :vpc_config,
+      :client_authentication,
+      :encryption_in_transit)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2176,6 +2961,10 @@ module Aws::Kafka
     #   .
     #   @return [Types::AmazonMskCluster]
     #
+    # @!attribute [rw] apache_kafka_cluster
+    #   Details of an Apache Kafka Cluster.
+    #   @return [Types::ApacheKafkaCluster]
+    #
     # @!attribute [rw] kafka_cluster_alias
     #   The alias of the Kafka cluster. Used to prefix names of replicated
     #   topics.
@@ -2185,6 +2974,7 @@ module Aws::Kafka
     #
     class KafkaClusterSummary < Struct.new(
       :amazon_msk_cluster,
+      :apache_kafka_cluster,
       :kafka_cluster_alias)
       SENSITIVE = []
       include Aws::Structure
@@ -2405,6 +3195,33 @@ module Aws::Kafka
       include Aws::Structure
     end
 
+    # Configuration of the Amazon S3 bucket where records that fail to
+    # deliver are stored.
+    #
+    # @!attribute [rw] bucket_arn
+    #   The Amazon Resource Name (ARN) of the dead-letter Amazon S3 bucket.
+    #   @return [String]
+    #
+    # @!attribute [rw] error_output_prefix
+    #   An optional prefix prepended to every dead-letter Amazon S3 object
+    #   key.
+    #   @return [String]
+    #
+    # @!attribute [rw] expected_bucket_owner
+    #   Optional 12-digit AWS account ID expected to own the dead-letter
+    #   Amazon S3 bucket.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/DeadLetterQueueS3 AWS API Documentation
+    #
+    class DeadLetterQueueS3 < Struct.new(
+      :bucket_arn,
+      :error_output_prefix,
+      :expected_bucket_owner)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] cluster_arn
     #   The Amazon Resource Name (ARN) that uniquely identifies the cluster.
     #   @return [String]
@@ -2428,6 +3245,43 @@ module Aws::Kafka
     #
     class DescribeClusterV2Response < Struct.new(
       :cluster_info)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] channel_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the channel.
+    #   @return [String]
+    #
+    # @!attribute [rw] cluster_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the cluster.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/DeleteChannelRequest AWS API Documentation
+    #
+    class DeleteChannelRequest < Struct.new(
+      :channel_arn,
+      :cluster_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Returns the channel ARN and the cluster-operation ARN that tracks the
+    # asynchronous delete.
+    #
+    # @!attribute [rw] channel_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the channel.
+    #   @return [String]
+    #
+    # @!attribute [rw] cluster_operation_arn
+    #   The Amazon Resource Name (ARN) of the cluster operation.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/DeleteChannelResponse AWS API Documentation
+    #
+    class DeleteChannelResponse < Struct.new(
+      :channel_arn,
+      :cluster_operation_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2479,6 +3333,38 @@ module Aws::Kafka
     class GetClusterPolicyResponse < Struct.new(
       :current_version,
       :policy)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration that controls how Apache Kafka record values are
+    # deserialized for the destination.
+    #
+    # @!attribute [rw] value_converter
+    #   The deserialization format applied to Apache Kafka record values.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/RecordConverter AWS API Documentation
+    #
+    class RecordConverter < Struct.new(
+      :value_converter)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Schema configuration that controls how Apache Kafka record values are
+    # validated.
+    #
+    # @!attribute [rw] gsr_arn
+    #   The Amazon Resource Name (ARN) of the AWS Glue Schema Registry
+    #   schema (not registry) used to validate records for the destination
+    #   Apache Iceberg table.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/RecordSchema AWS API Documentation
+    #
+    class RecordSchema < Struct.new(
+      :gsr_arn)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2586,6 +3472,21 @@ module Aws::Kafka
       include Aws::Structure
     end
 
+    # Includes all rebalancing-related information for the cluster.
+    #
+    # @!attribute [rw] status
+    #   Intelligent rebalancing status. The default intelligent rebalancing
+    #   status is ACTIVE for all new Express-based clusters.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/Rebalancing AWS API Documentation
+    #
+    class Rebalancing < Struct.new(
+      :status)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Creates a provisioned cluster.
     #
     # @!attribute [rw] broker_node_group_info
@@ -2631,6 +3532,13 @@ module Aws::Kafka
     #   This controls storage mode for supported storage tiers.
     #   @return [String]
     #
+    # @!attribute [rw] rebalancing
+    #   Specifies if intelligent rebalancing is turned on for your MSK
+    #   Provisioned cluster with Express brokers. For all new Express-based
+    #   clusters that you create, intelligent rebalancing is turned on by
+    #   default.
+    #   @return [Types::Rebalancing]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/ProvisionedRequest AWS API Documentation
     #
     class ProvisionedRequest < Struct.new(
@@ -2643,7 +3551,8 @@ module Aws::Kafka
       :kafka_version,
       :logging_info,
       :number_of_broker_nodes,
-      :storage_mode)
+      :storage_mode,
+      :rebalancing)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -2707,6 +3616,15 @@ module Aws::Kafka
     #   This controls storage mode for supported storage tiers.
     #   @return [String]
     #
+    # @!attribute [rw] rebalancing
+    #   Specifies whether or not intelligent rebalancing is turned on for a
+    #   newly created MSK Provisioned cluster with Express brokers.
+    #   Intelligent rebalancing performs automatic partition balancing
+    #   operations when you scale your clusters up or down. By default,
+    #   intelligent rebalancing is ACTIVE for all new Express-based
+    #   clusters.
+    #   @return [Types::Rebalancing]
+    #
     # @!attribute [rw] customer_action_status
     #   Determines if there is an action required from the customer.
     #   @return [String]
@@ -2725,6 +3643,7 @@ module Aws::Kafka
       :zookeeper_connect_string,
       :zookeeper_connect_string_tls,
       :storage_mode,
+      :rebalancing,
       :customer_action_status)
       SENSITIVE = []
       include Aws::Structure
@@ -2796,6 +3715,25 @@ module Aws::Kafka
       include Aws::Structure
     end
 
+    # Describes the cluster's connectivity information, such as its network
+    # type, which is IPv4 or DUAL.
+    #
+    # @!attribute [rw] network_type
+    #   The network type of the cluster, which is IPv4 or DUAL. The DUAL
+    #   network type uses both IPv4 and IPv6 addresses for your cluster and
+    #   its resources.
+    #
+    #   By default, a cluster uses the IPv4 network type.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/ServerlessConnectivityInfo AWS API Documentation
+    #
+    class ServerlessConnectivityInfo < Struct.new(
+      :network_type)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Describes the serverless cluster.
     #
     # @!attribute [rw] vpc_configs
@@ -2806,11 +3744,68 @@ module Aws::Kafka
     #   Information about the serverless cluster client authentication.
     #   @return [Types::ServerlessClientAuthentication]
     #
+    # @!attribute [rw] connectivity_info
+    #   Describes the cluster's connectivity information, such as its
+    #   network type, which is IPv4 or DUAL.
+    #   @return [Types::ServerlessConnectivityInfo]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/Serverless AWS API Documentation
     #
     class Serverless < Struct.new(
       :vpc_configs,
-      :client_authentication)
+      :client_authentication,
+      :connectivity_info)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # @!attribute [rw] cluster_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   Maximum number of channels to return in a single response.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   If the response of ListChannels is truncated, it returns a nextToken
+    #   in the response. This nextToken should be sent in the subsequent
+    #   request to ListChannels.
+    #   @return [String]
+    #
+    # @!attribute [rw] topic_name_filter
+    #   Filters results to channels whose topic name matches the specified
+    #   value.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/ListChannelsRequest AWS API Documentation
+    #
+    class ListChannelsRequest < Struct.new(
+      :cluster_arn,
+      :max_results,
+      :next_token,
+      :topic_name_filter)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Returns the list of channels in the cluster.
+    #
+    # @!attribute [rw] channels
+    #   The list of channels in the cluster.
+    #   @return [Array<Types::ChannelInfo>]
+    #
+    # @!attribute [rw] next_token
+    #   If the response from ListChannels is truncated, this token is
+    #   included. Send it as the nextToken parameter on a subsequent
+    #   ListChannels call to retrieve the next page.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/ListChannelsResponse AWS API Documentation
+    #
+    class ListChannelsResponse < Struct.new(
+      :channels,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3075,6 +4070,11 @@ module Aws::Kafka
     # destination types. This is a container for the configuration details
     # related to broker logs.
     #
+    # @!attribute [rw] authorizer_logs
+    #   You can configure your MSK cluster to send authorizer logs to
+    #   different destination types.
+    #   @return [Types::AuthorizerLogs]
+    #
     # @!attribute [rw] broker_logs
     #   You can configure your MSK cluster to send broker logs to different
     #   destination types. This configuration specifies the details of these
@@ -3084,7 +4084,34 @@ module Aws::Kafka
     # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/LoggingInfo AWS API Documentation
     #
     class LoggingInfo < Struct.new(
+      :authorizer_logs,
       :broker_logs)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration for the destinations to which the channel publishes
+    # operational logs.
+    #
+    # @!attribute [rw] cloud_watch_logs
+    #   Details of the CloudWatch Logs destination for Channel logs.
+    #   @return [Types::CloudWatchLogs]
+    #
+    # @!attribute [rw] firehose
+    #   Details of the Kinesis Data Firehose delivery stream that is the
+    #   destination for Channel logs.
+    #   @return [Types::Firehose]
+    #
+    # @!attribute [rw] s3
+    #   Details of the Amazon S3 destination for Channel logs.
+    #   @return [Types::S3]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/ChannelLoggingInfo AWS API Documentation
+    #
+    class ChannelLoggingInfo < Struct.new(
+      :cloud_watch_logs,
+      :firehose,
+      :s3)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3128,6 +4155,48 @@ module Aws::Kafka
     class ListClientVpcConnectionsResponse < Struct.new(
       :next_token,
       :client_vpc_connections)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Request body for ListTopics.
+    #
+    # @!attribute [rw] cluster_arn
+    #   @return [String]
+    #
+    # @!attribute [rw] max_results
+    #   @return [Integer]
+    #
+    # @!attribute [rw] next_token
+    #   @return [String]
+    #
+    # @!attribute [rw] topic_name_filter
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/ListTopicsRequest AWS API Documentation
+    #
+    class ListTopicsRequest < Struct.new(
+      :cluster_arn,
+      :max_results,
+      :next_token,
+      :topic_name_filter)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # The response contains an array of topics on a MSK Cluster.
+    #
+    # @!attribute [rw] topics
+    #   @return [Array<Types::TopicInfo>]
+    #
+    # @!attribute [rw] next_token
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/ListTopicsResponse AWS API Documentation
+    #
+    class ListTopicsResponse < Struct.new(
+      :topics,
+      :next_token)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3286,6 +4355,10 @@ module Aws::Kafka
     #   Information about the broker access configuration.
     #   @return [Types::ConnectivityInfo]
     #
+    # @!attribute [rw] zookeeper_access
+    #   Access control settings for zookeeper
+    #   @return [Types::ZookeeperAccess]
+    #
     # @!attribute [rw] storage_mode
     #   This controls storage mode for supported storage tiers.
     #   @return [String]
@@ -3293,6 +4366,11 @@ module Aws::Kafka
     # @!attribute [rw] broker_count_update_info
     #   Describes brokers being changed during a broker count update.
     #   @return [Types::BrokerCountUpdateInfo]
+    #
+    # @!attribute [rw] rebalancing
+    #   Describes the intelligent rebalancing configuration of an MSK
+    #   Provisioned cluster with Express brokers.
+    #   @return [Types::Rebalancing]
     #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/MutableClusterInfo AWS API Documentation
     #
@@ -3308,8 +4386,10 @@ module Aws::Kafka
       :client_authentication,
       :encryption_info,
       :connectivity_info,
+      :zookeeper_access,
       :storage_mode,
-      :broker_count_update_info)
+      :broker_count_update_info,
+      :rebalancing)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3358,6 +4438,19 @@ module Aws::Kafka
       include Aws::Structure
     end
 
+    # Access control settings for zookeeper
+    #
+    # @!attribute [rw] enabled
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/ZookeeperAccess AWS API Documentation
+    #
+    class ZookeeperAccess < Struct.new(
+      :enabled)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Returns information about an error.
     #
     # @!attribute [rw] invalid_parameter
@@ -3386,6 +4479,10 @@ module Aws::Kafka
     #   The ARN of the source Kafka cluster.
     #   @return [String]
     #
+    # @!attribute [rw] source_kafka_cluster_id
+    #   The ID of the source Kafka cluster.
+    #   @return [String]
+    #
     # @!attribute [rw] target_compression_type
     #   The compression type to use when producing records to target
     #   cluster.
@@ -3393,6 +4490,10 @@ module Aws::Kafka
     #
     # @!attribute [rw] target_kafka_cluster_arn
     #   The ARN of the target Kafka cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] target_kafka_cluster_id
+    #   The ID of the target Kafka cluster.
     #   @return [String]
     #
     # @!attribute [rw] topic_replication
@@ -3404,8 +4505,10 @@ module Aws::Kafka
     class ReplicationInfo < Struct.new(
       :consumer_group_replication,
       :source_kafka_cluster_arn,
+      :source_kafka_cluster_id,
       :target_compression_type,
       :target_kafka_cluster_arn,
+      :target_kafka_cluster_id,
       :topic_replication)
       SENSITIVE = []
       include Aws::Structure
@@ -3499,6 +4602,114 @@ module Aws::Kafka
       include Aws::Structure
     end
 
+    # Details of the CloudWatch Logs destination for replicator logs.
+    #
+    # @!attribute [rw] enabled
+    #   Specifies whether broker logs get sent to the specified CloudWatch
+    #   Logs destination for replication.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] log_group
+    #   The CloudWatch log group that is the destination for replicator
+    #   logs.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/ReplicatorCloudWatchLogs AWS API Documentation
+    #
+    class ReplicatorCloudWatchLogs < Struct.new(
+      :enabled,
+      :log_group)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details of the Kinesis Data Firehose delivery stream that is the
+    # destination for replicator logs.
+    #
+    # @!attribute [rw] delivery_stream
+    #   The Kinesis Data Firehose delivery stream that is the destination
+    #   for replicator logs.
+    #   @return [String]
+    #
+    # @!attribute [rw] enabled
+    #   Specifies whether broker logs get sent to the specified Kinesis Data
+    #   Firehose delivery stream for replication.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/ReplicatorFirehose AWS API Documentation
+    #
+    class ReplicatorFirehose < Struct.new(
+      :delivery_stream,
+      :enabled)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details of the Amazon S3 destination for replicator logs.
+    #
+    # @!attribute [rw] bucket
+    #   The name of the S3 bucket that is the destination for replicator
+    #   logs.
+    #   @return [String]
+    #
+    # @!attribute [rw] enabled
+    #   Specifies whether broker logs get sent to the specified Amazon S3
+    #   destination for replication.
+    #   @return [Boolean]
+    #
+    # @!attribute [rw] prefix
+    #   The S3 prefix that is the destination for replicator logs.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/ReplicatorS3 AWS API Documentation
+    #
+    class ReplicatorS3 < Struct.new(
+      :bucket,
+      :enabled,
+      :prefix)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration for log delivery for the replicator.
+    #
+    # @!attribute [rw] replicator_log_delivery
+    #   The replicator logs configuration for this MSK replicator.
+    #   @return [Types::ReplicatorLogDelivery]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/LogDelivery AWS API Documentation
+    #
+    class LogDelivery < Struct.new(
+      :replicator_log_delivery)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Details of the log delivery for the replicator.
+    #
+    # @!attribute [rw] cloud_watch_logs
+    #   Details of the CloudWatch Logs destination for replicator logs.
+    #   @return [Types::ReplicatorCloudWatchLogs]
+    #
+    # @!attribute [rw] firehose
+    #   Details of the Kinesis Data Firehose delivery stream that is the
+    #   destination for replicator logs.
+    #   @return [Types::ReplicatorFirehose]
+    #
+    # @!attribute [rw] s3
+    #   Details of the Amazon S3 destination for replicator logs.
+    #   @return [Types::ReplicatorS3]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/ReplicatorLogDelivery AWS API Documentation
+    #
+    class ReplicatorLogDelivery < Struct.new(
+      :cloud_watch_logs,
+      :firehose,
+      :s3)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Details about the state of a replicator
     #
     # @!attribute [rw] code
@@ -3571,6 +4782,22 @@ module Aws::Kafka
       :replicator_name,
       :replicator_resource_arn,
       :replicator_state)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration controlling whether the Apache Iceberg destination
+    # table's schema is evolved as incoming records change.
+    #
+    # @!attribute [rw] enable_schema_evolution
+    #   Whether to allow MSK to evolve the destination table's schema. Must
+    #   be false for the current release.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/SchemaEvolution AWS API Documentation
+    #
+    class SchemaEvolution < Struct.new(
+      :enable_schema_evolution)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -3704,6 +4931,22 @@ module Aws::Kafka
       include Aws::Structure
     end
 
+    # Configuration controlling whether MSK creates the destination Apache
+    # Iceberg table if it does not already exist.
+    #
+    # @!attribute [rw] enable_table_creation
+    #   Whether MSK creates the destination table on the customer's behalf.
+    #   Must be true for the current release.
+    #   @return [Boolean]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/TableCreation AWS API Documentation
+    #
+    class TableCreation < Struct.new(
+      :enable_table_creation)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Tag a resource.
     #
     # @!attribute [rw] resource_arn
@@ -3827,6 +5070,61 @@ module Aws::Kafka
       include Aws::Structure
     end
 
+    # Configuration of an Apache Kafka topic that feeds a channel.
+    #
+    # @!attribute [rw] record_converter
+    #   Configuration that controls how Apache Kafka record values are
+    #   deserialized for the destination.
+    #   @return [Types::RecordConverter]
+    #
+    # @!attribute [rw] record_schema
+    #   The schema used to validate records when the value converter
+    #   requires one (for example, JSON\_SCHEMA\_GSR).
+    #   @return [Types::RecordSchema]
+    #
+    # @!attribute [rw] topic_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the topic.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/TopicConfiguration AWS API Documentation
+    #
+    class TopicConfiguration < Struct.new(
+      :record_converter,
+      :record_schema,
+      :topic_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Includes identification info about the topic.
+    #
+    # @!attribute [rw] topic_arn
+    #   @return [String]
+    #
+    # @!attribute [rw] topic_name
+    #   @return [String]
+    #
+    # @!attribute [rw] replication_factor
+    #   @return [Integer]
+    #
+    # @!attribute [rw] partition_count
+    #   @return [Integer]
+    #
+    # @!attribute [rw] out_of_sync_replica_count
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/TopicInfo AWS API Documentation
+    #
+    class TopicInfo < Struct.new(
+      :topic_arn,
+      :topic_name,
+      :replication_factor,
+      :partition_count,
+      :out_of_sync_replica_count)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # @!attribute [rw] enabled
     #   TLS authentication for VPC connectivity is on or off.
     #   @return [Boolean]
@@ -3882,6 +5180,159 @@ module Aws::Kafka
     # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/UnauthorizedException AWS API Documentation
     #
     class UnauthorizedException < Struct.new(
+      :invalid_parameter,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Returns information about an error.
+    #
+    # @!attribute [rw] invalid_parameter
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/TopicExistsException AWS API Documentation
+    #
+    class TopicExistsException < Struct.new(
+      :invalid_parameter,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Returns information about an error.
+    #
+    # @!attribute [rw] invalid_parameter
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/ClusterConnectivityException AWS API Documentation
+    #
+    class ClusterConnectivityException < Struct.new(
+      :invalid_parameter,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Returns information about an error.
+    #
+    # @!attribute [rw] invalid_parameter
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/KafkaTimeoutException AWS API Documentation
+    #
+    class KafkaTimeoutException < Struct.new(
+      :invalid_parameter,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Returns information about an error.
+    #
+    # @!attribute [rw] invalid_parameter
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/UnknownTopicOrPartitionException AWS API Documentation
+    #
+    class UnknownTopicOrPartitionException < Struct.new(
+      :invalid_parameter,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Returns information about an error.
+    #
+    # @!attribute [rw] invalid_parameter
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/ControllerMovedException AWS API Documentation
+    #
+    class ControllerMovedException < Struct.new(
+      :invalid_parameter,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Returns information about an error.
+    #
+    # @!attribute [rw] invalid_parameter
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/NotControllerException AWS API Documentation
+    #
+    class NotControllerException < Struct.new(
+      :invalid_parameter,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Returns information about an error.
+    #
+    # @!attribute [rw] invalid_parameter
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/ReassignmentInProgressException AWS API Documentation
+    #
+    class ReassignmentInProgressException < Struct.new(
+      :invalid_parameter,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Returns information about an error.
+    #
+    # @!attribute [rw] invalid_parameter
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/GroupSubscribedToTopicException AWS API Documentation
+    #
+    class GroupSubscribedToTopicException < Struct.new(
+      :invalid_parameter,
+      :message)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Returns information about an error.
+    #
+    # @!attribute [rw] invalid_parameter
+    #   @return [String]
+    #
+    # @!attribute [rw] message
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/KafkaRequestException AWS API Documentation
+    #
+    class KafkaRequestException < Struct.new(
       :invalid_parameter,
       :message)
       SENSITIVE = []
@@ -4008,6 +5459,50 @@ module Aws::Kafka
       include Aws::Structure
     end
 
+    # Request body for UpdateRebalancing.
+    #
+    # @!attribute [rw] cluster_arn
+    #   The Amazon Resource Name (ARN) of the cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] current_version
+    #   The current version of the cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] rebalancing
+    #   Includes all rebalancing-related information for the cluster.
+    #   @return [Types::Rebalancing]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/UpdateRebalancingRequest AWS API Documentation
+    #
+    class UpdateRebalancingRequest < Struct.new(
+      :cluster_arn,
+      :current_version,
+      :rebalancing)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Response body for UpdateRebalancing.
+    #
+    # @!attribute [rw] cluster_arn
+    #   The Amazon Resource Name (ARN) of the cluster whose intelligent
+    #   rebalancing status you've updated.
+    #   @return [String]
+    #
+    # @!attribute [rw] cluster_operation_arn
+    #   The Amazon Resource Name (ARN) of the cluster operation.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/UpdateRebalancingResponse AWS API Documentation
+    #
+    class UpdateRebalancingResponse < Struct.new(
+      :cluster_arn,
+      :cluster_operation_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
     # Request object for UpdateBrokerStorage.
     #
     # @!attribute [rw] cluster_arn
@@ -4053,6 +5548,167 @@ module Aws::Kafka
     #
     class UpdateBrokerStorageResponse < Struct.new(
       :cluster_arn,
+      :cluster_operation_arn)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Configuration of an Amazon S3 destination for a channel.
+    #
+    # @!attribute [rw] data_freshness_in_seconds
+    #   The maximum time, in seconds, that records buffer in MSK before
+    #   being flushed to the destination. Allowed range: 300 to 900.
+    #   Default: 600.
+    #   @return [Integer]
+    #
+    # @!attribute [rw] dead_letter_queue_s3
+    #   The Amazon S3 bucket and prefix where MSK writes records that fail
+    #   to deliver.
+    #   @return [Types::DeadLetterQueueS3]
+    #
+    # @!attribute [rw] service_execution_role_arn
+    #   The Amazon Resource Name (ARN) of the IAM role that MSK assumes to
+    #   write to the destination Amazon S3 bucket and the dead-letter
+    #   bucket.
+    #   @return [String]
+    #
+    # @!attribute [rw] storage
+    #   The Amazon S3 bucket, prefix, and storage class for delivered
+    #   records.
+    #   @return [Types::S3Storage]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/S3DestinationConfiguration AWS API Documentation
+    #
+    class S3DestinationConfiguration < Struct.new(
+      :data_freshness_in_seconds,
+      :dead_letter_queue_s3,
+      :service_execution_role_arn,
+      :storage)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Update payload for an Apache Iceberg destination.
+    #
+    # @!attribute [rw] data_freshness_in_seconds
+    #   The maximum time, in seconds, that records buffer in MSK before
+    #   being flushed to the destination. Allowed range: 300 to 900.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/IcebergDestinationUpdate AWS API Documentation
+    #
+    class IcebergDestinationUpdate < Struct.new(
+      :data_freshness_in_seconds)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Update payload for an Amazon S3 destination.
+    #
+    # @!attribute [rw] data_freshness_in_seconds
+    #   The maximum time, in seconds, that records buffer in MSK before
+    #   being flushed to the destination. Allowed range: 300 to 900.
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/S3DestinationUpdate AWS API Documentation
+    #
+    class S3DestinationUpdate < Struct.new(
+      :data_freshness_in_seconds)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Storage configuration for an Amazon S3 destination bucket.
+    #
+    # @!attribute [rw] bucket_arn
+    #   The Amazon Resource Name (ARN) of the destination Amazon S3 bucket.
+    #   @return [String]
+    #
+    # @!attribute [rw] compression_type
+    #   The compression codec applied to delivered Amazon S3 objects.
+    #   @return [String]
+    #
+    # @!attribute [rw] output_prefix
+    #   An optional prefix prepended to every Amazon S3 object key written
+    #   by the channel.
+    #   @return [String]
+    #
+    # @!attribute [rw] output_key_template
+    #   An optional template that controls the Amazon S3 object key for each
+    #   delivered record. Supports the placeholders !\{partition-id},
+    #   !\{sequence-number}, and !\{kafka-offset}.
+    #   @return [String]
+    #
+    # @!attribute [rw] storage_class
+    #   The Amazon S3 storage class for delivered objects.
+    #   @return [String]
+    #
+    # @!attribute [rw] expected_bucket_owner
+    #   Optional 12-digit AWS account ID expected to own the Amazon S3
+    #   bucket.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/S3Storage AWS API Documentation
+    #
+    class S3Storage < Struct.new(
+      :bucket_arn,
+      :compression_type,
+      :output_prefix,
+      :output_key_template,
+      :storage_class,
+      :expected_bucket_owner)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Updates an existing channel's destination configuration. You must
+    # update the same destination type the channel was created with; the
+    # destination type cannot be changed.
+    #
+    # @!attribute [rw] channel_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the channel.
+    #   @return [String]
+    #
+    # @!attribute [rw] cluster_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] iceberg_destination_update
+    #   Updates fields on an Apache Iceberg destination. Use only when the
+    #   channel was created with an Iceberg destination.
+    #   @return [Types::IcebergDestinationUpdate]
+    #
+    # @!attribute [rw] s3_destination_update
+    #   Updates fields on an Amazon S3 destination. Use only when the
+    #   channel was created with an Amazon S3 destination.
+    #   @return [Types::S3DestinationUpdate]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/UpdateChannelRequest AWS API Documentation
+    #
+    class UpdateChannelRequest < Struct.new(
+      :channel_arn,
+      :cluster_arn,
+      :iceberg_destination_update,
+      :s3_destination_update)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Returns the channel ARN and the cluster-operation ARN that tracks the
+    # asynchronous update.
+    #
+    # @!attribute [rw] channel_arn
+    #   The Amazon Resource Name (ARN) that uniquely identifies the channel.
+    #   @return [String]
+    #
+    # @!attribute [rw] cluster_operation_arn
+    #   The Amazon Resource Name (ARN) of the cluster operation.
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/UpdateChannelResponse AWS API Documentation
+    #
+    class UpdateChannelResponse < Struct.new(
+      :channel_arn,
       :cluster_operation_arn)
       SENSITIVE = []
       include Aws::Structure
@@ -4203,12 +5859,17 @@ module Aws::Kafka
     #   The current version of the cluster.
     #   @return [String]
     #
+    # @!attribute [rw] zookeeper_access
+    #   Access control settings for zookeeper
+    #   @return [Types::ZookeeperAccess]
+    #
     # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/UpdateConnectivityRequest AWS API Documentation
     #
     class UpdateConnectivityRequest < Struct.new(
       :cluster_arn,
       :connectivity_info,
-      :current_version)
+      :current_version,
+      :zookeeper_access)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4297,6 +5958,11 @@ module Aws::Kafka
     #   Current replicator version.
     #   @return [String]
     #
+    # @!attribute [rw] log_delivery
+    #   Configuration for delivering replicator logs to customer
+    #   destinations.
+    #   @return [Types::LogDelivery]
+    #
     # @!attribute [rw] replicator_arn
     #   @return [String]
     #
@@ -4304,8 +5970,16 @@ module Aws::Kafka
     #   The ARN of the source Kafka cluster.
     #   @return [String]
     #
+    # @!attribute [rw] source_kafka_cluster_id
+    #   The ID of the source Kafka cluster.
+    #   @return [String]
+    #
     # @!attribute [rw] target_kafka_cluster_arn
     #   The ARN of the target Kafka cluster.
+    #   @return [String]
+    #
+    # @!attribute [rw] target_kafka_cluster_id
+    #   The ID of the target Kafka cluster.
     #   @return [String]
     #
     # @!attribute [rw] topic_replication
@@ -4317,9 +5991,12 @@ module Aws::Kafka
     class UpdateReplicationInfoRequest < Struct.new(
       :consumer_group_replication,
       :current_version,
+      :log_delivery,
       :replicator_arn,
       :source_kafka_cluster_arn,
+      :source_kafka_cluster_id,
       :target_kafka_cluster_arn,
+      :target_kafka_cluster_id,
       :topic_replication)
       SENSITIVE = []
       include Aws::Structure
@@ -4423,6 +6100,52 @@ module Aws::Kafka
       :provisioned_throughput,
       :storage_mode,
       :volume_size_gb)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Request body for UpdateTopic.
+    #
+    # @!attribute [rw] cluster_arn
+    #   @return [String]
+    #
+    # @!attribute [rw] topic_name
+    #   @return [String]
+    #
+    # @!attribute [rw] configs
+    #   @return [String]
+    #
+    # @!attribute [rw] partition_count
+    #   @return [Integer]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/UpdateTopicRequest AWS API Documentation
+    #
+    class UpdateTopicRequest < Struct.new(
+      :cluster_arn,
+      :topic_name,
+      :configs,
+      :partition_count)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Response body for UpdateTopic.
+    #
+    # @!attribute [rw] topic_arn
+    #   @return [String]
+    #
+    # @!attribute [rw] topic_name
+    #   @return [String]
+    #
+    # @!attribute [rw] status
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/UpdateTopicResponse AWS API Documentation
+    #
+    class UpdateTopicResponse < Struct.new(
+      :topic_arn,
+      :topic_name,
+      :status)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4536,6 +6259,41 @@ module Aws::Kafka
     #
     class OpenMonitoringInfo < Struct.new(
       :prometheus)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # A source column used by an Apache Iceberg destination table's
+    # partition specification.
+    #
+    # @!attribute [rw] source_name
+    #   @return [String]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/PartitionSource AWS API Documentation
+    #
+    class PartitionSource < Struct.new(
+      :source_name)
+      SENSITIVE = []
+      include Aws::Structure
+    end
+
+    # Partition specification for an Apache Iceberg destination table.
+    #
+    # @!attribute [rw] partition_strategy
+    #   The partitioning strategy applied to records written to the table.
+    #   @return [String]
+    #
+    # @!attribute [rw] source_list
+    #   The source columns used by the partitioning strategy. For
+    #   TIME\_HOUR, must contain exactly one source column whose value is a
+    #   timestamp.
+    #   @return [Array<Types::PartitionSource>]
+    #
+    # @see http://docs.aws.amazon.com/goto/WebAPI/kafka-2018-11-14/PartitionSpec AWS API Documentation
+    #
+    class PartitionSpec < Struct.new(
+      :partition_strategy,
+      :source_list)
       SENSITIVE = []
       include Aws::Structure
     end
@@ -4718,7 +6476,7 @@ module Aws::Kafka
       include Aws::Structure
     end
 
-    # The details of the Amazon S3 destination for broker logs.
+    # The details of the Amazon S3 destination for logs.
     #
     # @!attribute [rw] bucket
     #   The name of the S3 bucket that is the destination for broker logs.

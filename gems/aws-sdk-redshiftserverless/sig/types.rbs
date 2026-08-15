@@ -96,6 +96,18 @@ module Aws::RedshiftServerless
       SENSITIVE: []
     end
 
+    class CreateReservationRequest
+      attr_accessor capacity: ::Integer
+      attr_accessor client_token: ::String
+      attr_accessor offering_id: ::String
+      SENSITIVE: []
+    end
+
+    class CreateReservationResponse
+      attr_accessor reservation: Types::Reservation
+      SENSITIVE: []
+    end
+
     class CreateScheduledActionRequest
       attr_accessor enabled: bool
       attr_accessor end_time: ::Time
@@ -166,6 +178,7 @@ module Aws::RedshiftServerless
       attr_accessor base_capacity: ::Integer
       attr_accessor config_parameters: ::Array[Types::ConfigParameter]
       attr_accessor enhanced_vpc_routing: bool
+      attr_accessor extra_compute_for_automatic_optimization: bool
       attr_accessor ip_address_type: ::String
       attr_accessor max_capacity: ::Integer
       attr_accessor namespace_name: ::String
@@ -274,6 +287,11 @@ module Aws::RedshiftServerless
       SENSITIVE: []
     end
 
+    class DryRunException
+      attr_accessor message: ::String
+      SENSITIVE: []
+    end
+
     class Endpoint
       attr_accessor address: ::String
       attr_accessor port: ::Integer
@@ -335,6 +353,17 @@ module Aws::RedshiftServerless
       SENSITIVE: []
     end
 
+    class GetIdentityCenterAuthTokenRequest
+      attr_accessor workgroup_names: ::Array[::String]
+      SENSITIVE: []
+    end
+
+    class GetIdentityCenterAuthTokenResponse
+      attr_accessor expiration_time: ::Time
+      attr_accessor token: ::String
+      SENSITIVE: []
+    end
+
     class GetNamespaceRequest
       attr_accessor namespace_name: ::String
       SENSITIVE: []
@@ -352,6 +381,26 @@ module Aws::RedshiftServerless
 
     class GetRecoveryPointResponse
       attr_accessor recovery_point: Types::RecoveryPoint
+      SENSITIVE: []
+    end
+
+    class GetReservationOfferingRequest
+      attr_accessor offering_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetReservationOfferingResponse
+      attr_accessor reservation_offering: Types::ReservationOffering
+      SENSITIVE: []
+    end
+
+    class GetReservationRequest
+      attr_accessor reservation_id: ::String
+      SENSITIVE: []
+    end
+
+    class GetReservationResponse
+      attr_accessor reservation: Types::Reservation
       SENSITIVE: []
     end
 
@@ -517,6 +566,30 @@ module Aws::RedshiftServerless
       SENSITIVE: []
     end
 
+    class ListReservationOfferingsRequest
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListReservationOfferingsResponse
+      attr_accessor next_token: ::String
+      attr_accessor reservation_offerings_list: ::Array[Types::ReservationOffering]
+      SENSITIVE: []
+    end
+
+    class ListReservationsRequest
+      attr_accessor max_results: ::Integer
+      attr_accessor next_token: ::String
+      SENSITIVE: []
+    end
+
+    class ListReservationsResponse
+      attr_accessor next_token: ::String
+      attr_accessor reservations_list: ::Array[Types::Reservation]
+      SENSITIVE: []
+    end
+
     class ListScheduledActionsRequest
       attr_accessor max_results: ::Integer
       attr_accessor namespace_name: ::String
@@ -636,11 +709,13 @@ module Aws::RedshiftServerless
       attr_accessor admin_password_secret_arn: ::String
       attr_accessor admin_password_secret_kms_key_id: ::String
       attr_accessor admin_username: ::String
+      attr_accessor catalog_arn: ::String
       attr_accessor creation_date: ::Time
       attr_accessor db_name: ::String
       attr_accessor default_iam_role_arn: ::String
       attr_accessor iam_roles: ::Array[::String]
       attr_accessor kms_key_id: ::String
+      attr_accessor lakehouse_registration_status: ::String
       attr_accessor log_exports: ::Array[("useractivitylog" | "userlog" | "connectionlog")]
       attr_accessor namespace_arn: ::String
       attr_accessor namespace_id: ::String
@@ -685,6 +760,27 @@ module Aws::RedshiftServerless
       SENSITIVE: []
     end
 
+    class Reservation
+      attr_accessor capacity: ::Integer
+      attr_accessor end_date: ::Time
+      attr_accessor offering: Types::ReservationOffering
+      attr_accessor reservation_arn: ::String
+      attr_accessor reservation_id: ::String
+      attr_accessor start_date: ::Time
+      attr_accessor status: ::String
+      SENSITIVE: []
+    end
+
+    class ReservationOffering
+      attr_accessor currency_code: ::String
+      attr_accessor duration: ::Integer
+      attr_accessor hourly_charge: ::Float
+      attr_accessor offering_id: ::String
+      attr_accessor offering_type: ("ALL_UPFRONT" | "NO_UPFRONT")
+      attr_accessor upfront_charge: ::Float
+      SENSITIVE: []
+    end
+
     class ResourceNotFoundException
       attr_accessor message: ::String
       attr_accessor resource_name: ::String
@@ -698,6 +794,7 @@ module Aws::RedshiftServerless
     end
 
     class RestoreFromRecoveryPointRequest
+      attr_accessor maintain_integration: bool
       attr_accessor namespace_name: ::String
       attr_accessor recovery_point_id: ::String
       attr_accessor workgroup_name: ::String
@@ -712,6 +809,7 @@ module Aws::RedshiftServerless
 
     class RestoreFromSnapshotRequest
       attr_accessor admin_password_secret_kms_key_id: ::String
+      attr_accessor maintain_integration: bool
       attr_accessor manage_admin_password: bool
       attr_accessor namespace_name: ::String
       attr_accessor owner_account: ::String
@@ -942,6 +1040,24 @@ module Aws::RedshiftServerless
       SENSITIVE: []
     end
 
+    class UpdateLakehouseConfigurationRequest
+      attr_accessor catalog_name: ::String
+      attr_accessor dry_run: bool
+      attr_accessor lakehouse_idc_application_arn: ::String
+      attr_accessor lakehouse_idc_registration: ("Associate" | "Disassociate")
+      attr_accessor lakehouse_registration: ("Register" | "Deregister")
+      attr_accessor namespace_name: ::String
+      SENSITIVE: []
+    end
+
+    class UpdateLakehouseConfigurationResponse
+      attr_accessor catalog_arn: ::String
+      attr_accessor lakehouse_idc_application_arn: ::String
+      attr_accessor lakehouse_registration_status: ::String
+      attr_accessor namespace_name: ::String
+      SENSITIVE: []
+    end
+
     class UpdateNamespaceRequest
       attr_accessor admin_password_secret_kms_key_id: ::String
       attr_accessor admin_user_password: ::String
@@ -1021,6 +1137,7 @@ module Aws::RedshiftServerless
       attr_accessor base_capacity: ::Integer
       attr_accessor config_parameters: ::Array[Types::ConfigParameter]
       attr_accessor enhanced_vpc_routing: bool
+      attr_accessor extra_compute_for_automatic_optimization: bool
       attr_accessor ip_address_type: ::String
       attr_accessor max_capacity: ::Integer
       attr_accessor port: ::Integer
@@ -1077,6 +1194,7 @@ module Aws::RedshiftServerless
       attr_accessor custom_domain_name: ::String
       attr_accessor endpoint: Types::Endpoint
       attr_accessor enhanced_vpc_routing: bool
+      attr_accessor extra_compute_for_automatic_optimization: bool
       attr_accessor ip_address_type: ::String
       attr_accessor max_capacity: ::Integer
       attr_accessor namespace_name: ::String
